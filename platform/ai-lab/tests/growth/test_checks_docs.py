@@ -132,3 +132,21 @@ def test_the_growth_loops_own_dated_reports_are_not_checked(tmp_path):
     })
     assert snap.get("stale_references") == []
     assert "docs.stale-reference" not in _ids(rules.run_baseline([snap]))
+
+
+def test_ソースルートからの相対パスを誤検知しない(tmp_path):
+    """ドキュメントはモジュールを lib/ や src/ からの相対で書くことが多い。
+
+    Flutter の CLAUDE.md が `ui/pitch_view.dart`（実体は lib/ui/pitch_view.dart）と
+    書くのは普通の書き方で、これを「存在しない」と言い続けると、
+    本当に古い記述が埋もれる（2026-09-21 の点検で soccer-career の6件が該当）。
+    """
+    snap = _snap(tmp_path, "app", {
+        "main.py": PY_APP2,
+        "lib/ui/pitch_view.dart": "class PitchView {}\n",
+        "README.md": (
+            "局面はピッチの絵にする（`ui/pitch_view.dart`）。\n"
+            "やめた機能は `ui/gone_view.dart` にあった。\n"
+        ),
+    })
+    assert snap.get("stale_references") == ["README.md -> ui/gone_view.dart"]

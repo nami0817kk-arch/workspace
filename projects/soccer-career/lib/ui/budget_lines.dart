@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../game/formulas.dart';
 import '../models/career.dart';
 
 /// 今季の収支の見込み。雇う前に足りるかどうかが分かるようにする。
@@ -38,6 +39,20 @@ class BudgetLines extends StatelessWidget {
           '${budget.staff > 0 ? ' − 専属 ${_yen(budget.staff)}' : ''}',
           style: muted,
         ),
+        // **出場給。** 基準の試合数でちょうど 0 になるので、
+        // 普通に出ていれば何も出ない。欠けた年だけ赤く出る。
+        if (budget.appearanceBonus != 0)
+          Text(
+            '出場給 ${budget.appearanceBonus > 0 ? '＋' : '−'}'
+            '${_yen(budget.appearanceBonus.abs())}円'
+            '（${state.seasonStats.appearances}試合 / 基準'
+            '${Formulas.appearanceBaseline}）',
+            style: muted?.copyWith(
+              color: budget.appearanceBonus > 0
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.error,
+            ),
+          ),
         const SizedBox(height: 2),
         Text(
           '手取り ${budget.net >= 0 ? '＋' : '−'}${_yen(budget.net.abs())}円'

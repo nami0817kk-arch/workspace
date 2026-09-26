@@ -20,13 +20,39 @@ enum MatchEventKind {
   ownGoal('あなたのゴール'),
   ownAssist('あなたのアシスト'),
   teammateGoal('味方のゴール'),
-  conceded('失点');
+  conceded('失点'),
+  sentOffThem('相手に退場者'),
+  sentOffUs('味方が退場');
 
   const MatchEventKind(this.label);
 
   final String label;
 
-  bool get isOurs => this != MatchEventKind.conceded;
+  bool get isOurs =>
+      this != MatchEventKind.conceded && this != MatchEventKind.sentOffUs;
+}
+
+/// **試合を動かす展開。** 局面ではないが、残りの試合の条件を変える。
+///
+/// 試合の中でプレイヤーが触るのは 2〜6 の局面だけで、そのあいだ試合は
+/// 何も起きていなかった。「11人対10人になった」「リードされた相手が
+/// 前に出てきた」——**選ぶことはできないが、次の手の意味が変わる**もの。
+enum MatchTurn {
+  /// 相手に退場者。数的優位。
+  numbersUp('相手に退場者'),
+
+  /// 味方が退場。数的不利。
+  numbersDown('味方が退場'),
+
+  /// リードされた相手が前に出てくる。点は取りやすくなる。
+  opponentOpen('相手が前がかり'),
+
+  /// リードした相手が引いて固める。点が取りにくくなる。
+  opponentShut('相手が守りを固めた');
+
+  const MatchTurn(this.label);
+
+  final String label;
 }
 
 /// 試合で起きたこと1つ。
@@ -105,14 +131,17 @@ class MatchInProgress {
     this.moodBonus = 0,
     this.extraRating = 0,
     this.weakFootMoments = const [],
+    this.sentOffThemMinute,
+    this.sentOffUsMinute,
     this.international = false,
     this.cup,
+    this.big = false,
     Random? random,
-  })  : assert(scenarios.length == minutes.length),
-        teammateGoalMinutes = [...teammateGoalMinutes],
-        expectedTeammateGoals =
-            expectedTeammateGoals ?? teammateGoalMinutes.length.toDouble(),
-        _random = random ?? Random() {
+  }) : assert(scenarios.length == minutes.length),
+       teammateGoalMinutes = [...teammateGoalMinutes],
+       expectedTeammateGoals =
+           expectedTeammateGoals ?? teammateGoalMinutes.length.toDouble(),
+       _random = random ?? Random() {
     _adapt();
   }
 
@@ -120,6 +149,7 @@ class MatchInProgress {
   final Club opponent;
   final bool home;
   final Appearance appearance;
+
   /// 引いた局面。展開に合う控えがあれば、その場で差し替わる。
   final List<Scenario> scenarios;
 
@@ -170,8 +200,10 @@ class MatchInProgress {
         ((minute - Formulas.lateFatigueFrom) / (90 - Formulas.lateFatigueFrom))
             .clamp(0.0, 1.0);
     final stamina = player.effective(Detail.stamina);
-    final drop = Formulas.lateFatigueBase -
-        (stamina - Formulas.conditionBaseline) * Formulas.lateFatiguePerStamina +
+    final drop =
+        Formulas.lateFatigueBase -
+        (stamina - Formulas.conditionBaseline) *
+            Formulas.lateFatiguePerStamina +
         fatigue * Formulas.lateFatiguePerFatigue;
     return -drop.clamp(0.0, Formulas.lateFatigueMax) * progress;
   }
@@ -184,6 +216,72 @@ class MatchInProgress {
   /// 監督の求める形に沿った手・逆らった手の数。
   int followedTactic = 0;
   int againstTactic = 0;
+
+  /// その試合の**ノリ** 0〜[Formulas.momentumMax]。
+  ///
+  /// 成功を重ねるほど上がり、失敗で 0 に戻る。効くのは成功率ではなく
+  /// **決まる確率**（ゴール・アシスト）。成功率に乗せると安全な手が
+  /// さらに強くなるだけで、また一本道になる。
+  int momentum = 0;
+
+  /// ノリが、決まる確率を何倍にするか。判定にも画面にも同じここから出す。
+  double get momentumFactor => 1 + momentum * Formulas.momentumPerStep;
+
+  /// 今この局面で、その手が決まる確率（ゴール）。
+  ///
+  /// [combo] は布石が乗っているとき。成功率だけを上げても
+  /// 「通ったが決まらない」が増えるだけなので、ノリと同じで
+  /// **決まる確率のほう**に効かせる。
+  double goalConversionNow({bool combo = false}) =>
+      Formulas.goalConversion *
+      momentumFactor *
+      turnConversionFactor *
+      (combo ? Formulas.comboConversion : 1.0);
+
+  /// 今の局面で構えている切り札。局面が変われば外れる。
+  ///
+  /// 個人技は身に付くと常に少しだけ効くだけの飾りだった。
+  /// 1試合に1回、「この局面で出す」と決められるようにする。
+  Signature? armed;
+
+  /// **布石が通っているか。** その試合のあいだ残り、仕留めで使い切る。
+  ///
+  /// 局面は無作為に引くので「次に仕留めの手が来るか」は分からない。
+  /// 1局面で切れる形にすると、布石はただの賭けになる。試合のあいだ
+  /// 持てるようにして、**代償を「その1手で点を狙わなかったこと」**に置く
+  /// ——ふつうの試合は2局面しかないので、そこが痛い。
+  bool setupReady = false;
+
+  /// この試合でもう切り札を使ったか。
+  bool signatureSpent = false;
+
+  /// 構えて外したか。力んだぶんが、その試合の残りに残る。
+  bool signatureMissed = false;
+
+  /// 今の局面で構えられる切り札。
+  ///
+  /// **その局面に出せる手が無ければ構えられない。** 覚えた技と、
+  /// 目の前の局面が噛み合ったときだけ選択肢になる。
+  List<Signature> get armable {
+    if (isFinished || signatureSpent) return const [];
+    return [
+      for (final s in development.signatures)
+        if (current.options.any((o) => o.detail == s.detail)) s,
+    ];
+  }
+
+  /// その手に、構えた切り札が乗るか。
+  bool signatureLands(ScenarioOption option) =>
+      armed != null && !signatureSpent && option.detail == armed!.detail;
+
+  /// 切り札を構える（null で外す）。乗らない技は構えられない。
+  void arm(Signature? signature) {
+    if (signature == null) {
+      armed = null;
+      return;
+    }
+    if (armable.contains(signature)) armed = signature;
+  }
 
   /// 味方を活かす手を選んだ回数。相方との呼吸はここから伸びる。
   ///
@@ -303,6 +401,13 @@ class MatchInProgress {
   /// 「この後に味方が決める」確率 × 決まる確率。終盤ほど低く、弱いクラブほど
   /// 低い。予定そのものを見ると未来が漏れるので、期待値から出す。
   /// 画面の「アシスト N%」と自動進行の物差しはこれを使う。
+  /// ノリ込みの、アシストが決まる確率。
+  double assistConversionNow(int minute, {bool combo = false}) =>
+      assistConversionAt(minute) *
+      momentumFactor *
+      turnConversionFactor *
+      (combo ? Formulas.comboConversion : 1.0);
+
   double assistConversionAt(int minute) {
     final remaining = ((90 - minute) / 90).clamp(0.0, 1.0);
     final chance = 1 - exp(-expectedTeammateGoals * remaining);
@@ -313,6 +418,44 @@ class MatchInProgress {
   ///
   /// 以前は「抜け出した味方が決めた」と書いてあるのにスコアが 0-0 のままだった。
   /// 引き寄せるだけで足さないのは、足すと自分のクラブだけ点が増えるため。
+  /// **流れの中の1本。** この後に入る予定だった味方の得点を、自分が決める。
+  ///
+  /// **足すのではなく置き換える**——足すと自分のクラブだけ点が増える
+  /// （アシストのときに踏んだのと同じ穴）。取れなければ false。
+  bool _takeTeammateGoal(int minute) {
+    final index = teammateGoalMinutes.indexWhere((m) => m > minute);
+    if (index < 0) return false;
+    final when = teammateGoalMinutes.removeAt(index);
+    ownGoalMinutes.add(when);
+    ownGoalMinutes.sort();
+    return true;
+  }
+
+  /// 局面と局面のあいだに、流れの中で1本決めるか。
+  ///
+  /// **局面でしか点が入らないと、1試合の最大得点が局面の数で頭打ちになる**
+  /// （ふつうの試合は2局面）。実測で、中盤の選手は20年で1試合2点を一度も
+  /// 取らず、守備の選手は通算0ゴールだった。
+  /// ノリが乗っているほど起きる——**自分のしたことが返ってくる形**にする。
+  bool _rollFlowGoal({int? at}) {
+    if (momentum <= 0) return false;
+    final share = Formulas.flowGoalShareFor(player.position.family);
+    if (share <= 0) return false;
+    final chance =
+        Formulas.flowGoalChance * share * momentumFactor * turnConversionFactor;
+    if (_random.nextDouble() >= chance) return false;
+    if (!_takeTeammateGoal(at ?? currentMinute)) return false;
+    // **決めた1本は、次の1本を呼ぶ。** 流れの中の得点が乗りを下げないので、
+    // 乗っている試合では続けて決まる——ハットトリックはそうやって起きる。
+    // これが無いと得点が試合に均されて、中盤の選手は20年で1度も
+    // 2点取らなかった（実測: 1キャリア 0.8回、最多 2点）。
+    momentum = (momentum + Formulas.momentumFromChance).clamp(
+      0,
+      Formulas.momentumMax,
+    );
+    return true;
+  }
+
   void _claimTeammateGoal(int minute) {
     final index = teammateGoalMinutes.indexWhere((m) => m > minute);
     if (index < 0) return;
@@ -375,6 +518,13 @@ class MatchInProgress {
         MatchEvent(minute: m, kind: MatchEventKind.ownGoal),
       for (final m in ownAssistMinutes)
         MatchEvent(minute: m, kind: MatchEventKind.ownAssist),
+      if (sentOffThemMinute != null)
+        MatchEvent(
+          minute: sentOffThemMinute!,
+          kind: MatchEventKind.sentOffThem,
+        ),
+      if (sentOffUsMinute != null)
+        MatchEvent(minute: sentOffUsMinute!, kind: MatchEventKind.sentOffUs),
     ]..sort((a, b) => a.minute.compareTo(b.minute));
     return events;
   }
@@ -384,13 +534,91 @@ class MatchInProgress {
 
   /// 今の局面が逆足で対応するものか。
   bool get weakFootMoment =>
-      !isFinished &&
-      _index < weakFootMoments.length &&
-      weakFootMoments[_index];
+      !isFinished && _index < weakFootMoments.length && weakFootMoments[_index];
 
-  /// 大一番か。格上との対戦と代表戦は、それだけで重い。
+  /// 退場者が出る時間。**試合開始時に決めて固定する。**
+  ///
+  /// 呼ぶたびに引き直すと、画面に出した成功率と判定がずれる
+  /// （逆足の局面と同じ理屈）。null なら起きない。
+  final int? sentOffThemMinute;
+  final int? sentOffUsMinute;
+
+  /// **いま効いている展開。** 局面ではないが、次の手の条件を変える。
+  ///
+  /// 退場は時間で決まり、相手の出方はスコアで決まる。どちらも
+  /// **選べない**——自分の選択でないものが試合を動かしている、という手触り。
+  List<MatchTurn> get turns {
+    if (isFinished) return const [];
+    final minute = currentMinute;
+    final found = <MatchTurn>[];
+    final them = sentOffThemMinute;
+    final us = sentOffUsMinute;
+    if (them != null && minute >= them) found.add(MatchTurn.numbersUp);
+    if (us != null && minute >= us) found.add(MatchTurn.numbersDown);
+    // リードされた相手は前に出る。リードした相手は引く。
+    if (minute >= Formulas.situationalMinute) {
+      if (margin > 0) found.add(MatchTurn.opponentShut);
+      if (margin < 0) found.add(MatchTurn.opponentOpen);
+    }
+    return found;
+  }
+
+  /// 展開が、その手の成功率をどれだけ動かすか。
+  double turnBonusFor(ScenarioOption option) {
+    var total = 0.0;
+    for (final turn in turns) {
+      total += switch (turn) {
+        MatchTurn.numbersUp => Formulas.numbersUpBonus,
+        MatchTurn.numbersDown => -Formulas.numbersDownPenalty,
+        // 相手の出方は、点に絡む手にだけ効く。無難な手は変わらない。
+        MatchTurn.opponentOpen =>
+          option.outcome == Outcome.play ? 0.0 : Formulas.opponentOpenBonus,
+        MatchTurn.opponentShut =>
+          option.outcome == Outcome.play ? 0.0 : -Formulas.opponentShutPenalty,
+      };
+    }
+    return total;
+  }
+
+  /// 展開が、決まる確率に掛かる倍率。
+  double get turnConversionFactor {
+    var factor = 1.0;
+    for (final turn in turns) {
+      factor *= switch (turn) {
+        MatchTurn.numbersUp => Formulas.numbersUpConversion,
+        MatchTurn.numbersDown => Formulas.numbersDownConversion,
+        _ => 1.0,
+      };
+    }
+    return factor;
+  }
+
+  /// 流れの中で決めた本数。局面の外で入ったぶん。
+  int flowGoals = 0;
+
+  /// 流れの中の1本を、どう書くか。守備の選手はセットプレーの的になる。
+  String get _flowGoalText => switch (player.position.family) {
+    ScenarioFamily.forward => 'こぼれ球に詰めていた。流れの中から、押し込んだ。',
+    ScenarioFamily.midfield => '二列目から遅れて入ってきた。流れの中から、叩き込んだ。',
+    ScenarioFamily.defence => 'セットプレー。マークを外して、頭で合わせた。',
+    ScenarioFamily.goalkeeper => '流れの中から決めた。',
+  };
+
+  /// **この試合が重いと、外（`Newsroom.isBigFixture`）で判断されたか。**
+  ///
+  /// 局面の数はこの判断で 2〜6 に変わるのに、**重圧（`bigMatchPressure`）と
+  /// 「大一番に強い／弱い」特性は別の、貧しいほうの定義を読んでいた**
+  /// （格上8以上か代表戦だけ）。実測では、22歳以降そちらが 1〜3% まで
+  /// 落ちる（〜21歳 47.3% / 22-25 3.3% / 26-29 **1.2%** / 34〜 1.1%。
+  /// 1部で 2.9%、2部で 57.6%）。上のリーグに上がると格上がいなくなるので、
+  /// **大一番の特性がキャリアの残り15年ずっと眠る**。
+  /// `test/weight_sim.dart` で測ってある。
+  final bool big;
+
+  /// 大一番か。順位・因縁・勝ち上がり・終盤の山場まで含めて、
+  /// 局面の数を決めているのと同じ判断を読む。
   bool get bigMatch =>
-      international || opponent.strength - club.strength >= 8;
+      international || big || opponent.strength - club.strength >= 8;
 
   /// 「前半 23分」のような表示用の文字列。
   static String minuteLabel(int minute) =>
@@ -405,11 +633,27 @@ class MatchInProgress {
 
   /// 現時点の評価点。基準値から増減を積み上げ、特性の補正を足す。
   double get rating {
-    final total = resolutions.fold<double>(
-            Formulas.baseRating, (sum, r) => sum + r.ratingDelta) +
+    final total =
+        Formulas.baseRating +
+        resolutions.fold<double>(0, (sum, r) => sum + r.ratingDelta) *
+            ratingScale +
         player.traits.ratingBonus +
         extraRating;
     return total.clamp(Formulas.minRating, Formulas.maxRating);
+  }
+
+  /// 局面ごとの評価点を、**1試合ぶんの重み**に割り戻す倍率。
+  ///
+  /// 重い試合は8局面、ふつうの試合は2局面。割り戻さないと、
+  /// 重い試合に出ただけで評価点が跳ね、薄い試合に出ると下がる
+  /// （＝出た試合の重さが、そのまま平均評価になってしまう）。
+  /// 途中出場が先発より軽いことは、これまでどおり残す。
+  double get ratingScale {
+    if (scenarios.isEmpty) return 1;
+    final reference = appearance == Appearance.sub
+        ? Formulas.ratingScenarios * 2 / 3
+        : Formulas.ratingScenarios.toDouble();
+    return reference / scenarios.length;
   }
 
   /// この選択肢の判定に使う能力値。詳細があればそれ、無ければカテゴリ平均。
@@ -433,21 +677,25 @@ class MatchInProgress {
 
   /// その手を特性から見たときの文脈。判定と記録で同じものを使う。
   TraitContext traitContextFor(ScenarioOption option) => TraitContext(
-        minute: currentMinute,
-        home: home,
-        outcome: option.outcome,
-        afterFailure: afterFailure,
-        afterSuccess: afterSuccess,
-        key: option.key,
-        detail: option.detail,
-        scenarioId: current.id,
-        international: international,
-        bigMatch: bigMatch,
-        margin: margin,
-        weakFoot: weakFootMoment && _usesFoot(option),
-        abroad: club.countryId != player.nationality.primary,
-        substitute: appearance == Appearance.sub,
-      );
+    minute: currentMinute,
+    home: home,
+    outcome: option.outcome,
+    afterFailure: afterFailure,
+    afterSuccess: afterSuccess,
+    key: option.key,
+    detail: option.detail,
+    scenarioId: current.id,
+    international: international,
+    bigMatch: bigMatch,
+    margin: margin,
+    weakFoot: weakFootMoment && _usesFoot(option),
+    abroad: club.countryId != player.nationality.primary,
+    substitute: appearance == Appearance.sub,
+  );
+
+  /// その手に布石が乗るか。
+  bool comboLands(ScenarioOption option) =>
+      setupReady && current.roleOf(option) == ComboRole.finish;
 
   /// 能力と難度だけで決まる地力。ここに増減が乗る。
   double baseChanceFor(ScenarioOption option) =>
@@ -469,48 +717,94 @@ class MatchInProgress {
       if (value != 0) factors.add(ChanceFactor(trait.label, value));
     }
 
-    factors.add(
-        ChanceFactor('コンディション', conditionModifier(player.condition)));
+    // 布石が通っている。**乗るのは仕留めの手だけ。**
+    if (comboLands(option)) {
+      factors.add(ChanceFactor('布石が効いている', Formulas.comboBonus));
+    }
+
+    // 試合を動かした展開。**選べないものが効いているときこそ、画面に出す。**
+    for (final turn in turns) {
+      final value = switch (turn) {
+        MatchTurn.numbersUp => Formulas.numbersUpBonus,
+        MatchTurn.numbersDown => -Formulas.numbersDownPenalty,
+        MatchTurn.opponentOpen =>
+          option.outcome == Outcome.play ? 0.0 : Formulas.opponentOpenBonus,
+        MatchTurn.opponentShut =>
+          option.outcome == Outcome.play ? 0.0 : -Formulas.opponentShutPenalty,
+      };
+      if (value != 0) factors.add(ChanceFactor(turn.label, value));
+    }
+
+    factors.add(ChanceFactor('コンディション', conditionModifier(player.condition)));
 
     // 終盤の消耗。スタミナで薄まり、累積疲労で深くなる。
     final late = lateFatigue;
     if (late != 0) factors.add(ChanceFactor('終盤の消耗', late));
 
     // 相手の格。上のリーグほど同じ手が通らなくなる。
-    factors.add(ChanceFactor(
-      opponent.strength >= club.strength ? '格上の相手' : '格下の相手',
-      (Formulas.opponentBaseline - opponent.strength) *
-          Formulas.opponentChanceSlope,
-    ));
+    factors.add(
+      ChanceFactor(
+        opponent.strength >= club.strength ? '格上の相手' : '格下の相手',
+        (Formulas.opponentBaseline - opponent.strength) *
+            Formulas.opponentChanceSlope,
+      ),
+    );
 
     // 自信は小さく効かせる。性格で試合が決まると能力を伸ばす意味が薄れる。
     factors.add(ChanceFactor('自信', player.personality.chanceModifier));
 
     // 積み上げてきたもの。型・個人技・相手への慣れ。
     if (development.identity != null) {
-      factors.add(ChanceFactor(development.identityLabel,
-          development.identityBonusFor(option.key)));
+      factors.add(
+        ChanceFactor(
+          development.identityLabel,
+          development.identityBonusFor(option.key),
+        ),
+      );
     }
     for (final entry
         in development.signatureFactors(option.key, option.detail).entries) {
       factors.add(ChanceFactor(entry.key.label, entry.value));
     }
+    // 構えた切り札。判定にも画面にも、同じここから出る。
+    if (signatureLands(option)) {
+      factors.add(
+        ChanceFactor('${armed!.label}（切り札）', Formulas.signatureArmedBonus),
+      );
+    }
+    // 外したぶんの力み。その試合の残り全部に効く。
+    if (signatureMissed) {
+      factors.add(const ChanceFactor('力んだ', -Formulas.signatureMissPenalty));
+    }
     if (opponentStyle.hardFor == option.key) {
-      factors.add(ChanceFactor(
+      factors.add(
+        ChanceFactor(
           opponentStyle.label,
-          -0.05 +
-              development.adaptationFor(opponentStyle,
-                  factor: player.traits.adaptationFactor)));
+          -Formulas.styleMismatch +
+              development.adaptationFor(
+                opponentStyle,
+                factor: player.traits.adaptationFactor,
+              ),
+        ),
+      );
+    } else if (opponentStyle.openFor == option.key) {
+      // その戦い方が空ける場所。**慣れでは動かない**——
+      // 相手の弱点は、こちらが何度当たっても弱点のまま。
+      factors.add(
+        ChanceFactor('${opponentStyle.label}の裏', Formulas.styleOpening),
+      );
     }
 
     // 大一番の重圧。経験と自信で薄まり、若く自信の無い選手ほど呑まれる。
     if (bigMatch) {
-      factors.add(ChanceFactor(
-        '大一番',
-        -0.05 +
-            development.composure +
-            (player.personality.confidence - 10) * 0.004,
-      ));
+      factors.add(
+        ChanceFactor(
+          '大一番',
+          -Formulas.bigMatchPressure +
+              development.composure +
+              (player.personality.confidence - 10) * 0.004,
+        ),
+      );
     }
 
     // 相方との呼吸。パスを受ける側が動いてくれるかどうか。
@@ -527,8 +821,7 @@ class MatchInProgress {
 
     // 逆サイドの選手は、内へ切り込んで利き足で打てる。
     if (player.isInverted && option.key == AttributeKey.shooting) {
-      factors.add(
-          const ChanceFactor('内へ切り込む', Formulas.invertedShootingBonus));
+      factors.add(const ChanceFactor('内へ切り込む', Formulas.invertedShootingBonus));
     }
 
     factors.sort((a, b) => b.value.abs().compareTo(a.value.abs()));
@@ -563,8 +856,8 @@ class MatchInProgress {
   }
 
   Map<String, double> _factorMap(ScenarioOption option) => {
-        for (final f in factorsFor(option)) f.label: f.value,
-      };
+    for (final f in factorsFor(option)) f.label: f.value,
+  };
 
   /// 足で扱う手か。ヘディングと守備の局面に逆足は関係しない。
   static bool _usesFoot(ScenarioOption option) =>
@@ -601,6 +894,12 @@ class MatchInProgress {
   /// 手そのものの成否と、それが得点になるかは別に扱う。
   /// 良い判断でも点にならない試合があるほうが、決まった1点が重くなる。
   ScenarioResolution choose(ScenarioOption option) {
+    // **布石は、仕留めにいった時点で使い切る**（通っても外しても）。
+    // 外しても残ると、布石がただの上積みになって判断が消える。
+    final role = current.roleOf(option);
+    final combo = comboLands(option);
+    if (role == ComboRole.finish) setupReady = false;
+
     final chance = chanceFor(option);
     final success = _random.nextDouble() < chance;
 
@@ -622,21 +921,30 @@ class MatchInProgress {
       }
     }
 
-    var delta = success ? Formulas.ratingPerSuccess : Formulas.ratingPerFailure;
+    var delta = success
+        ? Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(chance)
+        : Formulas.ratingPerFailure * Formulas.ratingFailureWeight(chance);
     var outcome = option.outcome;
     var text = success ? option.successText : option.failureText;
 
     if (success && outcome != Outcome.play) {
       // 決定機を作った。決まらなくても、無難な手とは違う。
       delta += Formulas.ratingPerChance;
-      final rolled = _random.nextDouble() <
+      // 布石から繋がったぶんは、ここでまとめて返す。
+      if (combo) delta += Formulas.ratingPerCombo;
+      final rolled =
+          _random.nextDouble() <
           (outcome == Outcome.goal
-              ? Formulas.goalConversion
-              : Formulas.assistConversion);
+              ? goalConversionNow(combo: combo)
+              : Formulas.assistConversion *
+                    momentumFactor *
+                    turnConversionFactor *
+                    (combo ? Formulas.comboConversion : 1.0));
       // アシストは、この後に味方が決める予定があるときだけ決まる。
       // 決まった瞬間にその得点を今に引き寄せてスコアに乗せる。
       // 予定が無いのに点を足すと、自分のクラブだけが強くなる。
-      final converts = rolled &&
+      final converts =
+          rolled &&
           (outcome != Outcome.assist || _hasTeammateGoalAfter(currentMinute));
       if (converts) {
         if (outcome == Outcome.assist) {
@@ -648,7 +956,8 @@ class MatchInProgress {
           final before = margin;
           ownGoalMinutes.add(currentMinute);
           final decisive = lateGame && before <= 0;
-          delta += Formulas.ratingPerGoal *
+          delta +=
+              Formulas.ratingPerGoal *
               (decisive ? Formulas.decisiveGoalFactor : 1.0);
         } else {
           delta += Formulas.ratingPerAssist;
@@ -661,8 +970,7 @@ class MatchInProgress {
 
     // 止めた。これから入るはずだった失点が1つ消える。
     if (success && option.preventsGoal) {
-      final index =
-          concededMinutes.indexWhere((m) => m > currentMinute);
+      final index = concededMinutes.indexWhere((m) => m > currentMinute);
       if (index >= 0) {
         concededMinutes.removeAt(index);
         delta += Formulas.ratingPerGoalPrevented;
@@ -681,10 +989,44 @@ class MatchInProgress {
       delta += Formulas.ratingPerYellow;
       _book(minute);
       if (sentOff) delta += Formulas.ratingPerRedCard;
-      text = sentOff
-          ? '$text 2枚目の警告。退場を命じられた。'
-          : '$text 審判が笛を吹き、警告を受けた。';
+      text = sentOff ? '$text 2枚目の警告。退場を命じられた。' : '$text 審判が笛を吹き、警告を受けた。';
     }
+
+    // ノリ。成功を重ねるほど決まるようになり、失敗で消える。
+    // 難しい手を通したほうが乗る（無難な手を積むだけでは上がりきらない）。
+    if (success) {
+      momentum =
+          (momentum +
+                  (option.outcome == Outcome.play
+                      ? 1
+                      : Formulas.momentumFromChance))
+              .clamp(0, Formulas.momentumMax);
+    } else {
+      momentum = 0;
+    }
+
+    // **布石が通った。** 次に仕留めの手を選べば深く効く。
+    // 通らなければ何も残らない——安全な手ほど通るので、そこが釣り合い。
+    if (role == ComboRole.setup && success) {
+      setupReady = true;
+      delta += Formulas.ratingPerSetup;
+    }
+    if (combo) {
+      text = success ? '$text 布石が効いた。' : '$text 作ったものを使い切れなかった。';
+    }
+
+    // 構えた切り札は、乗った手を選んだ時点で使い切る。
+    // 外したら力みが残る（構えるだけならただ得、では判断にならない）。
+    if (signatureLands(option)) {
+      signatureSpent = true;
+      if (success) {
+        text = '$text ${armed!.label}が出た。';
+      } else {
+        signatureMissed = true;
+        text = '$text ${armed!.label}を狙って、力んだ。';
+      }
+    }
+    armed = null;
 
     final resolution = ScenarioResolution(
       success: success,
@@ -695,6 +1037,22 @@ class MatchInProgress {
       detail: option.detail,
     );
     resolutions.add(resolution);
+
+    // **局面のあとも試合は続いている。** ノリが乗っていれば、
+    // 次の局面までのあいだに流れの中から1本決めることがある。
+    if (_rollFlowGoal()) {
+      flowGoals++;
+      resolutions.add(
+        ScenarioResolution(
+          success: true,
+          text: _flowGoalText,
+          outcome: Outcome.goal,
+          ratingDelta: Formulas.ratingPerGoal,
+          key: AttributeKey.shooting,
+        ),
+      );
+    }
+
     _index++;
     _adapt();
     return resolution;
@@ -706,13 +1064,24 @@ class MatchInProgress {
   /// 実際の価値より高く買ってしまう。
   double expectedDelta(ScenarioOption option) {
     final p = chanceFor(option);
-    var gain = Formulas.ratingPerSuccess;
+    var gain = Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(p);
     if (option.outcome != Outcome.play) gain += Formulas.ratingPerChance;
+    if (comboLands(option)) gain += Formulas.ratingPerCombo;
+    // 自動進行にもノリを見せる。見ないと、自動で進めるだけでは
+    // 「刻んでから決めにいく」が一度も起きない（切り札と同じ理屈）。
+    // **布石の「先の価値」は見せない。** 今この手で得られるものだけを数える。
+    // ここに次の局面ぶんを足すと、自動進行も布石を積むようになり、
+    // 人が考えてエンジンに勝つ隙間がまた無くなる（それが元の問題）。
+    // 乗っている布石は見る——今この手に実際に効いているものなので、
+    // 隠すと自動進行がただ弱くなるだけになる。
+    final combo = comboLands(option);
     if (option.outcome == Outcome.goal) {
-      gain += Formulas.ratingPerGoal * Formulas.goalConversion;
+      gain += Formulas.ratingPerGoal * goalConversionNow(combo: combo);
     }
     if (option.outcome == Outcome.assist) {
-      gain += Formulas.ratingPerAssist * assistConversionAt(currentMinute);
+      gain +=
+          Formulas.ratingPerAssist *
+          assistConversionNow(currentMinute, combo: combo);
     }
     // カードのぶんを引く。ここを入れないと、自動進行が「止めるための反則」を
     // 代償なしの安い手として選び続ける。
@@ -723,7 +1092,10 @@ class MatchInProgress {
     final prevented = option.preventsGoal
         ? p * Formulas.ratingPerGoalPrevented
         : 0.0;
-    return p * gain + (1 - p) * Formulas.ratingPerFailure + card + prevented;
+    return p * gain +
+        (1 - p) * Formulas.ratingPerFailure * Formulas.ratingFailureWeight(p) +
+        card +
+        prevented;
   }
 
   /// スタイルに沿って手を1つ選ぶ。
@@ -732,8 +1104,10 @@ class MatchInProgress {
   /// 期待値が最も高いもの。人が選ぶときの癖を3つに絞った。
   ScenarioOption pickFor(SimStyle style) {
     final options = current.options;
-    ScenarioOption best(Iterable<ScenarioOption> from, double Function(ScenarioOption) score) =>
-        from.reduce((a, b) => score(a) >= score(b) ? a : b);
+    ScenarioOption best(
+      Iterable<ScenarioOption> from,
+      double Function(ScenarioOption) score,
+    ) => from.reduce((a, b) => score(a) >= score(b) ? a : b);
 
     // 監督の求める形は、評価点には乗らないが信頼に乗る。
     // 見ないと自動進行が監督を無視し続け、出場機会をじわじわ失う。
@@ -754,9 +1128,25 @@ class MatchInProgress {
     }
   }
 
+  /// 自動で進めるときに、切り札を構えるか決める。
+  ///
+  /// **選ぶはずの手に乗るなら構える。** 見ないと、自動で進めるだけで
+  /// 切り札が一度も使われず、個人技が飾りに戻る（監督の求める形と同じ理屈）。
+  void autoArm(SimStyle style) {
+    if (signatureSpent || armed != null || isFinished) return;
+    final pick = pickFor(style);
+    for (final signature in armable) {
+      if (pick.detail == signature.detail) {
+        arm(signature);
+        return;
+      }
+    }
+  }
+
   /// 残りの局面を自動で解決する。
   void autoPlay(SimStyle style) {
     while (!isFinished) {
+      autoArm(style);
       choose(pickFor(style));
     }
   }
@@ -766,7 +1156,8 @@ class MatchInProgress {
   /// 能力値が難易度ちょうどでも五分にはしない。難しい手を選ぶことに
   /// リスクを残さないと、常に一番おいしい選択肢を押すだけのゲームになる。
   static double successChance(int attribute, int difficulty) {
-    final chance = 0.40 + (attribute - difficulty) * 0.009;
+    final chance =
+        0.40 + (attribute - difficulty) * Formulas.attributeChanceSlope;
     return chance.clamp(0.05, 0.90);
   }
 
@@ -783,14 +1174,13 @@ class MatchInProgress {
   /// 回ってくる。居残り練習が試合の数字に出る唯一の道。
   (int, int) _resolveDeadBall() {
     // セットプレーの名手は、少し早くキッカーを任される。
-    final threshold = SetPieceSkills.takerThreshold +
-        player.traits.deadBallThresholdOffset;
+    final threshold =
+        SetPieceSkills.takerThreshold + player.traits.deadBallThresholdOffset;
     if (player.setPieces[player.setPieces.best] < threshold) return (0, 0);
     final chance = switch (appearance) {
       Appearance.start => Formulas.deadBallChanceStart,
       Appearance.sub => Formulas.deadBallChanceSub,
-      Appearance.benched || Appearance.injured || Appearance.suspended =>
-        0.0,
+      Appearance.benched || Appearance.injured || Appearance.suspended => 0.0,
     };
     if (_random.nextDouble() >= chance) return (0, 0);
 
@@ -805,7 +1195,8 @@ class MatchInProgress {
         if (hit) ownGoalMinutes.add(minute);
         return (hit ? 1 : 0, 0);
       case SetPiece.penalty:
-        final hit = _random.nextDouble() < (0.55 + skill / 260).clamp(0.5, 0.95);
+        final hit =
+            _random.nextDouble() < (0.55 + skill / 260).clamp(0.5, 0.95);
         deadBallText = hit ? 'PKを決めた' : 'PKを止められた';
         if (hit) ownGoalMinutes.add(minute);
         return (hit ? 1 : 0, 0);
@@ -822,6 +1213,17 @@ class MatchInProgress {
   /// スコアはクラブ間の力量差から作り、そこに自分の得点を足す。
   /// 自分が決めた分は必ずチームの得点に反映される。
   MatchResult finish() {
+    // **乗り切ったまま終わった試合には、もう1本ある。**
+    // 流れの中の1本は局面と局面のあいだにしか無いので、ふつうの試合
+    // （2局面）では機会が2回しかなく、**中盤の選手は20年で2点取る試合が
+    // 0.8回**、ハットトリックは一度も無かった（`flow_sim`）。
+    // 乗り切った試合にだけ1回足すと、得点が平らに散らずに
+    // 「爆発した試合」に集まる——ハットトリックはそうやって起きる。
+    if (appearance.played && momentum >= Formulas.momentumMax) {
+      // 終了間際。局面はもう無いので、時間は試合終了で取る
+      // （`currentMinute` は今の局面の時間なので、ここでは範囲の外に出る）。
+      if (_rollFlowGoal(at: 90)) flowGoals++;
+    }
     final teamGoals = teammateGoalMinutes.length;
     final concededGoals = concededMinutes.length;
 
@@ -831,10 +1233,10 @@ class MatchInProgress {
     final defence = defensive == 0
         ? 0.0
         : defensive *
-            ((Formulas.cleanSheetBase - max(0, concededGoals)) *
-                    Formulas.cleanSheetSlope)
-                .clamp(Formulas.cleanSheetMin, Formulas.cleanSheetMax) *
-            (concededGoals == 0 ? player.traits.cleanSheetFactor : 1.0);
+              ((Formulas.cleanSheetBase - max(0, concededGoals)) *
+                      Formulas.cleanSheetSlope)
+                  .clamp(Formulas.cleanSheetMin, Formulas.cleanSheetMax) *
+              (concededGoals == 0 ? player.traits.cleanSheetFactor : 1.0);
 
     final (extraGoals, extraAssists) = _resolveDeadBall();
     final myGoals = goals + extraGoals;
@@ -843,21 +1245,23 @@ class MatchInProgress {
     return MatchResult(
       matchday: matchday,
       opponentName: opponent.name,
+      opponentId: opponent.id,
       home: home,
       scored: scored,
       conceded: max(0, concededGoals),
       appearance: appearance,
       // 出ていない試合に評価点を付けない。付けると平均評価と出場数に
       // 混ざり、出場機会の判断（decideAppearance）まで狂う。
-      rating: appearance == Appearance.benched ||
+      rating:
+          appearance == Appearance.benched ||
               appearance == Appearance.injured ||
               appearance == Appearance.suspended
           ? null
           : (rating +
-                  defence +
-                  extraGoals * Formulas.ratingPerGoal +
-                  extraAssists * Formulas.ratingPerAssist)
-              .clamp(Formulas.minRating, Formulas.maxRating),
+                    defence +
+                    extraGoals * Formulas.ratingPerGoal +
+                    extraAssists * Formulas.ratingPerAssist)
+                .clamp(Formulas.minRating, Formulas.maxRating),
       goals: myGoals,
       assists: assists + extraAssists,
       yellowCards: yellowCards,
@@ -875,12 +1279,17 @@ class MatchInProgress {
   /// 失点の少なさをどれだけ自分の評価に乗せるか。
   ///
   /// GK と最終ラインは丸ごと、守備的MFは半分。前の選手は乗らない。
+  /// 無失点が評価点に乗る割合。
+  ///
+  /// **DM は二重取りになっていた**（2026-09-24 に測って直した）。
+  /// 中盤の局面を引くので得点も積み（実測で 38Gと CM の 34G より多い）、
+  /// その上で守る選手の無失点まで半分受け取っていた。
+  /// 結果、平均評価が 7.61 で、「どのポジションも 7.0〜7.4」を外れていた。
   static double _defensiveWeight(Position position) => switch (position) {
-        Position.gk || Position.cb || Position.sb => 1.0,
-        Position.dm => 0.5,
-        _ => 0.0,
-      };
-
+    Position.gk || Position.cb || Position.sb => 1.0,
+    Position.dm => 0.2,
+    _ => 0.0,
+  };
 }
 
 /// 練習と試合の消耗をまとめた1週間の結果。
@@ -891,9 +1300,12 @@ class WeekOutcome {
     required this.trained,
     this.setPieces = const SetPieceSkills(),
     this.physique = const Physique(
-        heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
+      heightCm: Physique.baseHeight,
+      weightKg: Physique.baseWeight,
+    ),
     this.drilled,
     this.learned,
+    this.polished,
     this.redirected = false,
     this.weakFootAwakened = false,
     this.injury,
@@ -917,6 +1329,9 @@ class WeekOutcome {
 
   /// その週に覚えた個人技。
   final Signature? learned;
+
+  /// **その週に1段深くなった個人技。** 伸びなかった週にだけ起きる。
+  final Signature? polished;
 
   /// 逆足が形になったか。
   final bool weakFootAwakened;
@@ -949,12 +1364,28 @@ class MatchEngine {
   /// 変わらず、一度ベンチに落ちた選手が永久に出られなかった。外れ続けるほど
   /// 評価を甘く見て、[Formulas.benchPatience] 試合外れたら必ず一度は
   /// ベンチに入れる。戻り道が無いと、そこでキャリアが終わってしまう。
+  /// 直近で試合を動かしたぶんの下駄。
+  ///
+  /// **点を取る選手は干されない。** 評価点だけで決めていたので、
+  /// 「6.8だが決めている」選手と「7.0だが何もしていない」選手を
+  /// 区別できていなかった。平均は変動を嫌うので、そのままだと
+  /// 安全な手が常に正しくなる。
+  static double decisiveBonus(List<MatchResult> recent, Position position) {
+    final window = recent.length <= Formulas.formWindow
+        ? recent
+        : recent.sublist(recent.length - Formulas.formWindow);
+    final acts = window.fold<int>(0, (a, r) => a + r.decisiveFor(position));
+    return min(acts * Formulas.decisivePerAct, Formulas.decisiveBonusMax);
+  }
+
   static Appearance decideAppearance(
     List<MatchResult> recent, {
     double bonus = 0,
   }) {
-    final rated =
-        recent.where((r) => r.rating != null).map((r) => r.rating!).toList();
+    final rated = recent
+        .where((r) => r.rating != null)
+        .map((r) => r.rating!)
+        .toList();
     if (rated.isEmpty) return Appearance.start;
 
     final idle = idleRun(recent);
@@ -965,8 +1396,7 @@ class MatchEngine {
     final average = formAverage(rated) + bonus + forgiveness;
 
     if (average >= Formulas.benchThreshold) return Appearance.start;
-    if (average >= Formulas.squadThreshold ||
-        idle >= Formulas.benchPatience) {
+    if (average >= Formulas.squadThreshold || idle >= Formulas.benchPatience) {
       return Appearance.sub;
     }
     return Appearance.benched;
@@ -1006,12 +1436,26 @@ class MatchEngine {
   /// 好調なら毎試合フル出場、では連戦の重みが出ない。ここがあると
   /// 「途中出場から入る試合」が生まれ、コンディションの管理に意味が出る。
   bool rotates({required int condition, required int fatigue}) {
-    final chance = Formulas.rotationBase +
+    final chance =
+        Formulas.rotationBase +
         max(0, Formulas.conditionBaseline - condition) *
             Formulas.rotationPerCondition +
         fatigue * Formulas.rotationPerFatigue;
     return _random.nextDouble() < chance.clamp(0.0, Formulas.rotationMax);
   }
+
+  /// その試合で提示する局面の数。
+  ///
+  /// **重い試合だけを厚くする。** 全部を等しく3局面にすると、1試合が
+  /// 「3回タップして終わり」の薄さに固定される。
+  static int scenarioCount(Appearance appearance, {required bool big}) =>
+      switch (appearance) {
+        Appearance.start =>
+          big ? Formulas.scenariosPerBigStart : Formulas.scenariosPerStart,
+        Appearance.sub =>
+          big ? Formulas.scenariosPerBigSub : Formulas.scenariosPerSub,
+        Appearance.benched || Appearance.injured || Appearance.suspended => 0,
+      };
 
   MatchInProgress start({
     required int matchday,
@@ -1029,19 +1473,28 @@ class MatchEngine {
     List<AttributeKey> favoured = const [],
     int fatigue = 0,
     List<Scenario>? forcedScenarios,
+    bool big = false,
+
+    /// 同じクラブに居続けた季数（今季を含む）。持ち上げの上限に効く。
+    int seasonsAtClub = 1,
   }) {
-    final count = switch (appearance) {
-      Appearance.start => Formulas.scenariosPerStart,
-      Appearance.sub => Formulas.scenariosPerSub,
-      Appearance.benched || Appearance.injured || Appearance.suspended => 0,
-    };
+    final count = scenarioCount(appearance, big: big);
+    // 重さの判断は1つ。局面の数だけに使って重圧に渡さないと、
+    // 「大一番に強い」が上のリーグで一度も効かなくなる。
 
     // 試合の骨格は展開に依らない局面から引き、終盤に効く局面は控えに回す。
     final family = player.position.family;
     final pool = [...ScenarioPool.neutralFor(family)]..shuffle(_random);
     // 管理画面（開発用）から局面を指定して入ることがある。
-    final picked = forcedScenarios != null
-        ? forcedScenarios.take(count).toList()
+    // 管理画面（開発用）から局面を指定して入ることがある。
+    // **渡された数が足りなければ繰り返して埋める**——局面の数は試合の重さで
+    // 2〜6 に変わるので、呼ぶ側が何枚要るかを知りようがない
+    // （3枚決め打ちで渡していて、重い試合に当たると assert で落ちていた）。
+    final picked = forcedScenarios != null && forcedScenarios.isNotEmpty
+        ? [
+            for (var i = 0; i < count; i++)
+              forcedScenarios[i % forcedScenarios.length],
+          ]
         : pool.take(count).toList();
     final reserves = count == 0
         ? const <Scenario>[]
@@ -1056,15 +1509,26 @@ class MatchEngine {
         ? 0.0
         : switch (player.side) {
             Side.center => Formulas.weakFootMomentChance,
-            _ => player.side.matches(player.physique.foot)
-                ? Formulas.weakFootMomentOnSide
-                : Formulas.weakFootMomentInverted,
+            _ =>
+              player.side.matches(player.physique.foot)
+                  ? Formulas.weakFootMomentOnSide
+                  : Formulas.weakFootMomentInverted,
           };
 
     // 味方と相手の得点を、時間まで含めて先に決めておく。
-    final advantage = club.strength - opponent.strength + (home ? 6 : -2);
-    final teammateGoals = _poissonish((1.25 + advantage / 40) *
-        Formulas.teammateGoalShareFor(player.position.family));
+    // **自分が出る試合は、自分のぶんだけクラブが強い。** 力の差がそのまま
+    // 味方の得点と失点に乗る。出ない試合は素のクラブの強さで戦う。
+    final lift = starLift(
+      overall: player.overall,
+      clubStrength: club.strength,
+      appearance: appearance,
+      seasonsAtClub: seasonsAtClub,
+    );
+    final advantage =
+        club.strength - opponent.strength + lift + (home ? 6 : -2);
+    final teammateGoals = _poissonish(
+      (1.25 + advantage / 40) * Formulas.teammateGoalShareFor(player.position),
+    );
     final conceded = _poissonish(1.25 - advantage / 40);
 
     return MatchInProgress(
@@ -1081,8 +1545,9 @@ class MatchEngine {
       favoured: favoured,
       fatigue: fatigue,
       teammateGoalMinutes: _goalMinutes(teammateGoals),
-      expectedTeammateGoals: (1.25 + advantage / 40) *
-          Formulas.teammateGoalShareFor(player.position.family),
+      expectedTeammateGoals:
+          (1.25 + advantage / 40) *
+          Formulas.teammateGoalShareFor(player.position),
       concededMinutes: _goalMinutes(conceded),
       allyBonus: allyBonus,
       moodBonus: moodBonus,
@@ -1090,10 +1555,41 @@ class MatchEngine {
       weakFootMoments: [
         for (var i = 0; i < count; i++) _random.nextDouble() < weakFootChance,
       ],
+      // 退場の時間は試合開始時に決めておく。呼ぶたびに引き直すと、
+      // 画面に出した成功率と判定がずれる（逆足の局面と同じ理屈）。
+      sentOffThemMinute: _random.nextDouble() < Formulas.redCardThemChance
+          ? 20 + _random.nextInt(60)
+          : null,
+      sentOffUsMinute: _random.nextDouble() < Formulas.redCardUsChance
+          ? 20 + _random.nextInt(60)
+          : null,
       international: international,
       cup: cup,
       random: _random,
+      big: big,
     );
+  }
+
+  /// 自分が出ることで、その試合のクラブの強さがどれだけ動くか。
+  ///
+  /// 画面（今日の意味）と判定が同じ値を読む。表示用に別の式を書かない。
+  static double starLift({
+    required int overall,
+    required int clubStrength,
+    required Appearance appearance,
+
+    /// 同じクラブに居続けた季数（今季を含む）。長いほど上限が上がる。
+    int seasonsAtClub = 1,
+  }) {
+    final share = switch (appearance) {
+      Appearance.start => 1.0,
+      Appearance.sub => Formulas.subLiftShare,
+      _ => 0.0,
+    };
+    if (share == 0) return 0;
+    final raw = ((overall - clubStrength) * Formulas.starLiftFor(seasonsAtClub))
+        .clamp(Formulas.starLiftFloor, Formulas.starLiftCapFor(seasonsAtClub));
+    return raw * share;
   }
 
   /// 得点の時間を散らす。1分と90分に固まらないようにする。
@@ -1131,11 +1627,14 @@ class MatchEngine {
     int declineOffset = 0,
     bool plateau = false,
     double environment = 1.0,
+    Development development = const Development(),
+    void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
   }) {
     if (rating == null) return player.attributes;
 
-    final declineAge = Formulas.declineAge +
+    final declineAge =
+        Formulas.declineAge +
         player.traits.declineAgeOffset +
         player.personality.declineAgeOffset +
         declineOffset;
@@ -1149,16 +1648,24 @@ class MatchEngine {
     if (player.atPotential && !transcending) return player.attributes;
 
     // 若いほど伸びる。特性のピーク年齢のぶんだけ、曲線を後ろにずらす。
-    final ageFactor =
-        Formulas.growthByAge(player.age - player.traits.peakAgeOffset);
+    final ageFactor = Formulas.growthByAge(
+      player.age - player.traits.peakAgeOffset,
+    );
     final margin = rating - Formulas.growthRatingThreshold;
     // 停滞期はここを大きく削る。伸び続ける選手は居ない。
-    final base = (0.18 + margin * 0.22) *
+    final base =
+        (0.18 + margin * 0.22) *
         ageFactor *
         player.traits.growthFactor(player.age) *
+        // 伸びしろのある選手は速く伸びる。近づくほど遅くなる。
+        Formulas.potentialDrive(player.overall, player.potential) *
         environment *
         (plateau ? Formulas.plateauGrowthFactor : 1.0);
-    final step = player.age <= Formulas.rapidGrowthAge ? 2 : 1;
+    final step = Formulas.growthStep(
+      player.age,
+      player.overall,
+      player.potential,
+    );
 
     // 伸ばす先を先に決める。ポジションの重みで割り戻すために、
     // どのカテゴリが伸びるのかが分かってから確率を出す。
@@ -1169,7 +1676,8 @@ class MatchEngine {
       wanted = player.transcendDetail!;
     } else if (fromPlay) {
       final pick = used[_random.nextInt(used.length)];
-      wanted = pick.detail ??
+      wanted =
+          pick.detail ??
           pick.key.details[_random.nextInt(pick.key.details.length)];
     } else if (focus.isNotEmpty) {
       // 無作為だったぶんは、選んだ方向に乗せる。
@@ -1179,9 +1687,11 @@ class MatchEngine {
       wanted = _randomDetail();
     }
 
-    final chance = base *
+    final chance =
+        base *
         Formulas.growthShareFactor(
-            Attributes.weightShare(player.position, wanted.category));
+          Attributes.weightShare(player.position, wanted.category),
+        );
     if (_random.nextDouble() >= chance) return player.attributes;
 
     // 自分で振るなら、伸びるはずだったぶんを経験点にして持ち越す。
@@ -1191,10 +1701,19 @@ class MatchEngine {
       return player.attributes;
     }
     // 土台の許す範囲まで。届かなければ土台のほうが伸びる。
-    final target = Dependencies.resolve(wanted, player.attributes,
-        ceilingOf: player.ceilingFor);
-    return player.attributes
-        .bumpDetail(target, step, max: player.ceilingFor(target));
+    // **積んだ項目ほど、土台を先行できる**（尖った選手はここで作られる）。
+    aimed?.call(wanted);
+    final target = Dependencies.resolve(
+      wanted,
+      player.attributes,
+      ceilingOf: player.ceilingFor,
+      dedicationOf: development.dedicationOf,
+    );
+    return player.attributes.bumpDetail(
+      target,
+      step,
+      max: player.ceilingFor(target),
+    );
   }
 
   /// 負傷するかどうかを判定する。
@@ -1205,7 +1724,17 @@ class MatchEngine {
   ///
   /// 画面（管理画面の「効き」）と判定が同じ式を読むために切り出してある。
   /// 別に書くと、数字を触ったときに画面が嘘をつく。
-  static double injuryChance(Player player, {required double baseChance}) {
+  /// [factor] は**式全体に掛かる**倍率。
+  ///
+  /// `baseChance` に掛ける形だと、倍率は確率の一部にしか効かない。
+  /// 実測（8キャリア・5754週）で内訳は 基準 46.6% / 消耗 33.8% / 歳 19.6%
+  /// ——復帰直後の倍率 0.45 を基準にだけ掛けても、怪我の数は 2〜3% しか
+  /// 動かず、通算では誤差に沈んでいた。**選ばせているものはここを通す。**
+  static double injuryChance(
+    Player player, {
+    required double baseChance,
+    double factor = 1.0,
+  }) {
     final worn = (Formulas.conditionBaseline - player.condition)
         .clamp(0, Formulas.conditionMax)
         .toDouble();
@@ -1213,36 +1742,45 @@ class MatchEngine {
     return (baseChance +
             worn * Formulas.injuryConditionSlope +
             age * Formulas.injuryPerAgeYear) *
-        player.traits.injuryFactor;
+        player.traits.injuryFactor *
+        factor;
   }
 
   /// 溜まった疲労で、重傷の割合がどこまで上がるか。
   ///
   /// 数だけ増えて軽傷ばかりなら、無理を通すのはまだ得な賭けになる。
-  static double severeShareFor(int fatigue) =>
-      (Formulas.severeInjuryShare + fatigue * Formulas.severePerFatigue)
-          .clamp(Formulas.severeInjuryShare, Formulas.severeShareMax);
+  /// 溜まった疲労と、身体の消耗で、重傷の割合がどこまで上がるか。
+  ///
+  /// 追い込み続けた身体は、同じ怪我でも重いほうを引く。
+  static double severeShareFor(
+    int fatigue, {
+    double strain = Formulas.strainNeutral,
+  }) =>
+      ((Formulas.severeInjuryShare + fatigue * Formulas.severePerFatigue) *
+              Formulas.severeFactorForStrain(strain))
+          .clamp(0.0, Formulas.severeShareMax);
 
   Injury? rollInjury(
     Player player, {
     required double baseChance,
+    double factor = 1.0,
     int fatigue = 0,
+    double strain = Formulas.strainNeutral,
   }) {
-    final chance = injuryChance(player, baseChance: baseChance);
+    final chance = injuryChance(player, baseChance: baseChance, factor: factor);
 
     if (_random.nextDouble() >= chance) return null;
 
     // 重い怪我ほど出にくくする。軽傷が大半で、たまに長期離脱。
     // 疲れ切った身体ほど、重いほうを引く。
-    final severeShare = severeShareFor(fatigue);
+    final severeShare = severeShareFor(fatigue, strain: strain);
     final roll = _random.nextDouble();
     final severity = roll < 0.6 * (1 - severeShare)
         ? InjurySeverity.light
         : roll < 1 - severeShare
-            ? InjurySeverity.moderate
-            : InjurySeverity.severe;
-    final kinds =
-        InjuryKind.all.where((k) => k.severity == severity).toList();
+        ? InjurySeverity.moderate
+        : InjurySeverity.severe;
+    final kinds = InjuryKind.all.where((k) => k.severity == severity).toList();
     final kind = kinds[_random.nextInt(kinds.length)];
     final span = kind.maxMatches - kind.minMatches + 1;
     return Injury(
@@ -1253,16 +1791,30 @@ class MatchEngine {
   }
 
   /// 重傷の後遺症。能力とポテンシャルを削る。
-  (Attributes, int) applySevereInjury(Player player, Injury injury) {
+  /// 重傷が身体に残すもの。**復帰のときに効かせる。**
+  ///
+  /// 怪我をした瞬間に確定させていた頃は、そのあと「慎重に戻す」を選んでも
+  /// 何も変わらなかった——画面には戻し方の3択が出ているのに、
+  /// 恒久ダメージはもう決まっていた。
+  (Attributes, int) applySevereInjury(
+    Player player,
+    Injury injury, {
+    double factor = 1.0,
+  }) {
     if (injury.severity != InjurySeverity.severe) {
       return (player.attributes, player.potential);
     }
-    final kind = InjuryKind.all.firstWhere((k) => k.name == injury.name,
-        orElse: () => InjuryKind.all.last);
+    final kind = InjuryKind.all.firstWhere(
+      (k) => k.name == injury.name,
+      orElse: () => InjuryKind.all.last,
+    );
     return (
-      player.attributes.bump(kind.affects, -Formulas.severeInjuryAttributeLoss,
-          random: _random),
-      player.potential - Formulas.severeInjuryPotentialLoss,
+      player.attributes.bump(
+        kind.affects,
+        -(Formulas.severeInjuryAttributeLoss * factor).round(),
+        random: _random,
+      ),
+      player.potential - (Formulas.severeInjuryPotentialLoss * factor).round(),
     );
   }
 
@@ -1274,7 +1826,7 @@ class MatchEngine {
       player.condition -
       (played
           ? (Formulas.matchConditionCost * player.traits.conditionCostFactor)
-              .round()
+                .round()
           : 0);
 
   /// 試合後の1週間。試合の消耗と、練習または休養を反映する。
@@ -1292,10 +1844,19 @@ class MatchEngine {
     Habits habits = const Habits(),
     Development development = const Development(),
     List<Detail> focus = const [],
+    Signature? signatureAim,
     bool plateau = false,
     double environment = 1.0,
     int fatigue = 0,
+    void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
+    /// 復帰直後の再発しやすさ（`RehabPlan.relapseFactor`）。
+    ///
+    /// **練習中の負傷はここを読んでいなかった。** 試合まわりの判定
+    /// （`injuryBaseChanceFor`）だけが戻し方を見ていて、
+    /// 「再発しやすい／しにくい」と書いてある選択が、怪我の数を
+    /// 1つも動かしていなかった（48キャリアずつで 1.08 / 1.06 / 1.16）。
+    double relapse = 1.0,
     required bool played,
   }) {
     final costFactor = player.traits.conditionCostFactor;
@@ -1306,6 +1867,7 @@ class MatchEngine {
     Detail? trained;
     SetPiece? drilled;
     Signature? learned;
+    Signature? polished;
     var redirected = false;
     var awakened = false;
 
@@ -1321,30 +1883,40 @@ class MatchEngine {
           );
 
     if (menu.isRest) {
-      condition += (menu.recovery * player.traits.restFactor).round() +
+      condition +=
+          (menu.recovery * player.traits.restFactor).round() +
           staff.recoveryBonus +
           habits.recoveryBonus;
     } else {
       condition -=
           (menu.conditionCost * costFactor * effort.cost * companion.cost)
               .round();
-      final canGrow = attributes.overallFor(player.position) < player.potential;
+      final canGrow =
+          attributes.overallFor(player.position, weights: player.roleWeights) <
+          player.potential;
       // ポテンシャルに達しても、超越の1項目だけはそのカテゴリの練習で伸びる。
       final transcend = player.transcendDetail;
-      final onlyTranscend = !canGrow &&
+      final onlyTranscend =
+          !canGrow &&
           transcend != null &&
           Player.transcending(player, attributes) &&
           menu.keys.contains(transcend.category);
       // プロ意識・専属コーチ・生活習慣が、同じ練習の身になり方を変える。
-      final base = Formulas.trainingGrowthChance *
+      final base =
+          Formulas.trainingGrowthChance *
           Formulas.growthByAge(player.age - player.traits.peakAgeOffset) *
           menu.growthFactor *
           player.personality.trainingFactor *
           player.traits.trainingFactor *
+          Formulas.potentialDrive(player.overall, player.potential) *
           staff.growthFactor *
           habits.growthFactor *
           environment;
-      final step = player.age <= Formulas.rapidGrowthAge ? 2 : 1;
+      final step = Formulas.growthStep(
+        player.age,
+        player.overall,
+        player.potential,
+      );
       final effective = plateau ? base * Formulas.plateauGrowthFactor : base;
       if (canGrow || onlyTranscend) {
         // 大成功なら2回、空回りなら0回。倍率ではなく**引く回数**で効かせる。
@@ -1354,9 +1926,18 @@ class MatchEngine {
             if (onlyTranscend && key != transcend.category) continue;
             // ポジションの重みで割り戻す。同じ練習が、どのポジションでも
             // 同じくらい総合力を動かすようにする。
-            final chance = effective *
+            final chance =
+                effective *
                 Formulas.growthShareFactor(
-                    Attributes.weightShare(player.position, key));
+                  // **役割の重みで割り戻す。** 総合力を役割で測るのに
+                  // 成長の割り戻しだけ標準のままだと、重く見られる能力ほど
+                  // 伸びやすくなって二重取りになる。
+                  Attributes.weightShare(
+                    player.position,
+                    key,
+                    weights: player.roleWeights,
+                  ),
+                );
             if (_random.nextDouble() >= chance) continue;
             // 自分で振るなら、伸びるはずだったぶんを経験点にする。
             if (toPoints != null) {
@@ -1365,15 +1946,27 @@ class MatchEngine {
             }
             // 同じカテゴリの中に方向があれば、そこから選ぶ。
             // 練習が「カテゴリのどれか」ではなく「決めた項目」になる。
-            final inFocus = [for (final d in focus) if (d.category == key) d];
+            final inFocus = [
+              for (final d in focus)
+                if (d.category == key) d,
+            ];
             final ds = inFocus.isEmpty ? key.details : inFocus;
-            final wanted =
-                onlyTranscend ? transcend : ds[_random.nextInt(ds.length)];
-            final target = Dependencies.resolve(wanted, attributes,
-                ceilingOf: player.ceilingFor);
+            final wanted = onlyTranscend
+                ? transcend
+                : ds[_random.nextInt(ds.length)];
+            aimed?.call(wanted);
+            final target = Dependencies.resolve(
+              wanted,
+              attributes,
+              ceilingOf: player.ceilingFor,
+              dedicationOf: development.dedicationOf,
+            );
             if (target != wanted) redirected = true;
-            attributes = attributes.bumpDetail(target, step,
-                max: player.ceilingFor(target));
+            attributes = attributes.bumpDetail(
+              target,
+              step,
+              max: player.ceilingFor(target),
+            );
             trained ??= target;
           }
         }
@@ -1395,14 +1988,49 @@ class MatchEngine {
         attributes: attributes,
         menu: menu,
         development: development,
+        position: player.position,
+        aim: signatureAim,
       );
+
+      // **伸びなかった週に、技のほうを磨く。**
+      //
+      // 25歳を過ぎると伸びる週は 10% を切る（実測: 28〜37歳で 4〜7%）。
+      // 残りの週は練習を選んでも何も起きず、引退までの13年・約680週が
+      // 「疲労を調整するだけ」になっていた。能力で returns が出なくなった
+      // 選手にだけ、別の積み先を開ける——**伸びた週には起きない**ので、
+      // 若いうちに能力の代わりとして稼ぐことはできない。
+      //
+      // **伸びなくなった身体ほど、よく磨ける。**
+      //
+      // ここは2回置き直した。最初は伸びなかった週すべてで磨けるようにしたら、
+      // 磨きが17〜25歳で終わって肝心の後半がまた空になった。
+      // 次に「ポテンシャルに達してから」にしたら、到達する選手が少なくて
+      // **ほぼ一度も起きなかった**（実測 0.17/15）。
+      //
+      // 後半が空なのは伸びしろが尽きるからではなく、**年齢で伸びる確率
+      // そのものが落ちる**から（実測: 伸びる週が 18歳 45% → 28歳 4%）。
+      // だから磨きの確率は、その週の伸びる確率の**余り**から出す——
+      // 若いうちは `effective` が 1 を超えていて余りが無く、
+      // 歳を取るほど余りが増える。境目を決め打ちしないで済む。
+      if (trained == null && learned == null) {
+        final ready = development.polishable(menu.keys);
+        if (ready.isNotEmpty) {
+          final room = (1 - effective).clamp(0.0, 1.0);
+          // 手応えのぶんだけ確率が動く（大成功 rolls=2、空回り 0）。
+          final chance = Formulas.polishChance * outcome.rolls * room;
+          if (_random.nextDouble() < chance) {
+            polished = ready[_random.nextInt(ready.length)];
+          }
+        }
+      }
     }
 
     // 居残り。全体練習の後にもう一段。上に行くほど1本の重みが軽くなる。
     if (drill != null) {
       condition -= Formulas.drillConditionCost;
       final current = setPieces[drill];
-      final chance = Formulas.drillGrowthChance *
+      final chance =
+          Formulas.drillGrowthChance *
           player.personality.trainingFactor *
           player.traits.setPieceFactor *
           staff.growthFactor *
@@ -1420,13 +2048,16 @@ class MatchEngine {
         ? null
         : rollInjury(
             player.copyWith(condition: settled),
-            baseChance: Formulas.injuryTrainingChance *
+            baseChance:
+                Formulas.injuryTrainingChance *
                 menu.injuryFactor *
                 effort.injury *
                 companion.injury *
                 staff.injuryFactor *
                 habits.injuryFactor,
+            factor: relapse,
             fatigue: fatigue,
+            strain: development.strain,
           );
 
     return WeekOutcome(
@@ -1437,6 +2068,7 @@ class MatchEngine {
       physique: physique,
       drilled: drilled,
       learned: learned,
+      polished: polished,
       redirected: redirected,
       weakFootAwakened: awakened,
       injury: injury,
@@ -1476,15 +2108,17 @@ class MatchEngine {
     required int professionalism,
   }) {
     final gap = condition - Formulas.conditionBaseline;
-    final great = (effort.great +
-            companion.greatBonus +
-            gap * Formulas.trainingGreatPerCondition +
-            (professionalism - 10) * Formulas.trainingGreatPerPro)
-        .clamp(0.0, Formulas.trainingGreatMax);
-    final flat = (effort.flat -
-            companion.flatRelief -
-            gap * Formulas.trainingFlatPerCondition)
-        .clamp(0.0, Formulas.trainingFlatMax);
+    final great =
+        (effort.great +
+                companion.greatBonus +
+                gap * Formulas.trainingGreatPerCondition +
+                (professionalism - 10) * Formulas.trainingGreatPerPro)
+            .clamp(0.0, Formulas.trainingGreatMax);
+    final flat =
+        (effort.flat -
+                companion.flatRelief -
+                gap * Formulas.trainingFlatPerCondition)
+            .clamp(0.0, Formulas.trainingFlatMax);
     return (great: great, flat: flat);
   }
 
@@ -1496,21 +2130,41 @@ class MatchEngine {
     required Attributes attributes,
     required TrainingMenu menu,
     required Development development,
+    required Position position,
+    Signature? aim,
   }) {
     if (development.signatures.length >= Signature.maxOwned) return null;
     final candidates = [
-      for (final s in Signature.values)
+      // **そのポジションでやることの中からしか出ない。**
+      // 見ていなかったので、GK の95%が「無回転シュート」を覚えていた。
+      for (final s in Signature.forPosition(position))
         if (menu.keys.contains(s.key) &&
             !development.signatures.contains(s) &&
             attributes.detail(s.detail) >= Signature.requirement)
           s,
     ];
     if (candidates.isEmpty) return null;
+
+    // **狙っている間は、他のものを覚えない。**
+    //
+    // はじめは「狙ったものが出やすくなる」だけにしたが、実測で 30.5% →
+    // 31.5% しか動かなかった。枠は3つしかなく、20年のうちには**先に
+    // 条件を満たしたものから埋まってしまう**ので、確率をいくら上げても
+    // 埋まったあとでは遅い。狙うというのは、**空けて待つ**ということ。
+    //
+    // 代償はそのまま：狙ったものの能力が78に届かなければ、枠は空のまま
+    // キャリアが終わる。それが「狙って取りに行く」ことの値段。
+    if (aim != null && !development.signatures.contains(aim)) {
+      if (!candidates.contains(aim)) return null;
+      if (_random.nextDouble() >= Formulas.signatureAimChance) return null;
+      return aim;
+    }
     if (_random.nextDouble() >= Formulas.signatureChance) return null;
     return candidates[_random.nextInt(candidates.length)];
   }
 
-  Detail _randomDetail() => Detail.values[_random.nextInt(Detail.values.length)];
+  Detail _randomDetail() =>
+      Detail.values[_random.nextInt(Detail.values.length)];
 
   /// 得点数のばらつき。厳密なポアソンではないが、0〜5点の分布として十分。
   int _poissonish(double mean) {

@@ -61,10 +61,17 @@ void main() {
       for (final country in World.countries) {
         for (var tier = 1; tier <= country.tiers; tier++) {
           final league = World.buildLeague(country.id, tier);
-          expect(league.length, country.clubsInTier(tier), reason: country.name);
+          expect(
+            league.length,
+            country.clubsInTier(tier),
+            reason: country.name,
+          );
           final names = league.map((c) => c.name).toSet();
-          expect(names.length, league.length,
-              reason: '${country.name} $tier部で名前が重複');
+          expect(
+            names.length,
+            league.length,
+            reason: '${country.name} $tier部で名前が重複',
+          );
           for (final club in league) {
             expect(club.countryId, country.id);
             expect(club.tier, tier);
@@ -75,10 +82,14 @@ void main() {
 
     test('同じ国の1部と2部でクラブ名が被らない', () {
       for (final country in World.countries.where((c) => c.tiers >= 2)) {
-        final first =
-            World.buildLeague(country.id, 1).map((c) => c.name).toSet();
-        final second =
-            World.buildLeague(country.id, 2).map((c) => c.name).toSet();
+        final first = World.buildLeague(
+          country.id,
+          1,
+        ).map((c) => c.name).toSet();
+        final second = World.buildLeague(
+          country.id,
+          2,
+        ).map((c) => c.name).toSet();
         expect(first.intersection(second), isEmpty, reason: country.name);
       }
     });
@@ -102,8 +113,10 @@ void main() {
     });
 
     test('格が高い国ほど大陸カップの枠が多い', () {
-      expect(World.byId('albion').continentalSlots,
-          greaterThan(World.byId('norden').continentalSlots));
+      expect(
+        World.byId('albion').continentalSlots,
+        greaterThan(World.byId('norden').continentalSlots),
+      );
     });
   });
 
@@ -114,22 +127,30 @@ void main() {
 
     test('自国では外国人にならない', () {
       expect(
-          Eligibility.isForeignIn(yamatoPlayer, World.byId('yamato')), isFalse);
+        Eligibility.isForeignIn(yamatoPlayer, World.byId('yamato')),
+        isFalse,
+      );
     });
 
     test('連盟内自由の国では、同じ連盟の選手は外国人にならない', () {
       // ドイツは連盟内自由。イングランドも同じ欧州。
-      expect(Eligibility.isForeignIn(albionPlayer, World.byId('germania')),
-          isFalse);
+      expect(
+        Eligibility.isForeignIn(albionPlayer, World.byId('germania')),
+        isFalse,
+      );
       // 日本はアジア。ドイツでは外国人。
-      expect(Eligibility.isForeignIn(yamatoPlayer, World.byId('germania')),
-          isTrue);
+      expect(
+        Eligibility.isForeignIn(yamatoPlayer, World.byId('germania')),
+        isTrue,
+      );
     });
 
     test('連盟内自由でない国では、同じ連盟でも外国人', () {
       // イングランドは連盟内自由ではない。
-      expect(Eligibility.isForeignIn(germaniaPlayer, World.byId('albion')),
-          isTrue);
+      expect(
+        Eligibility.isForeignIn(germaniaPlayer, World.byId('albion')),
+        isTrue,
+      );
     });
 
     test('提携国の選手は外国人枠の外に置かれる', () {
@@ -186,16 +207,15 @@ void main() {
       int years = 1,
       int value = 300,
       bool continental = false,
-    }) =>
-        Eligibility.checkPermit(
-          nationality: young,
-          destination: World.byId(destination),
-          origin: World.byId(origin),
-          caps: caps,
-          professionalYears: years,
-          marketValue: value,
-          continentalExperience: continental,
-        );
+    }) => Eligibility.checkPermit(
+      nationality: young,
+      destination: World.byId(destination),
+      origin: World.byId(origin),
+      caps: caps,
+      professionalYears: years,
+      marketValue: value,
+      continentalExperience: continental,
+    );
 
     test('許可の要らない国では常に通る', () {
       final c = check(destination: 'germania', origin: 'pampa');
@@ -224,8 +244,18 @@ void main() {
     });
 
     test('格の低いリーグからは加点されない', () {
-      final low = check(destination: 'albion', origin: 'norden', caps: 20, years: 5);
-      final high = check(destination: 'albion', origin: 'pampa', caps: 20, years: 5);
+      final low = check(
+        destination: 'albion',
+        origin: 'norden',
+        caps: 20,
+        years: 5,
+      );
+      final high = check(
+        destination: 'albion',
+        origin: 'pampa',
+        caps: 20,
+        years: 5,
+      );
       expect(high.points, greaterThan(low.points));
     });
 
@@ -247,8 +277,8 @@ void main() {
     test('強いクラブほど枠が埋まっている', () {
       final country = World.byId('yamato');
       final league = World.buildLeague('yamato', 1);
-      final strong = Eligibility.usedSlots(league.first, country);
-      final weak = Eligibility.usedSlots(league.last, country);
+      final strong = Eligibility.usedSlots(league.first, country, year: 2030);
+      final weak = Eligibility.usedSlots(league.last, country, year: 2030);
       expect(strong, greaterThan(weak));
       expect(strong, lessThanOrEqualTo(country.foreignRule.squadLimit!));
     });
@@ -256,7 +286,7 @@ void main() {
     test('枠が無制限の国では使用数を数えない', () {
       final country = World.byId('batavia');
       final club = World.buildLeague('batavia', 1).first;
-      expect(Eligibility.usedSlots(club, country), 0);
+      expect(Eligibility.usedSlots(club, country, year: 2030), 0);
     });
 
     test('判定は枠と許可の両方を見る', () {
@@ -268,6 +298,7 @@ void main() {
         professionalYears: 1,
         marketValue: 200,
         continentalExperience: false,
+        year: 2030,
       );
       expect(report.foreign, isTrue);
       expect(report.canJoin, isFalse, reason: '許可が下りないのに加入できている');
@@ -296,11 +327,15 @@ void main() {
 
     test('日程の長さはクラブ数で決まる', () {
       final norden = career(countryId: 'norden');
-      expect(norden.fixtures.length,
-          (World.byId('norden').clubsInTier(2) - 1) * 2);
+      expect(
+        norden.fixtures.length,
+        (World.byId('norden').clubsInTier(2) - 1) * 2,
+      );
       final yamato = career(countryId: 'yamato');
-      expect(yamato.fixtures.length,
-          (World.byId('yamato').clubsInTier(2) - 1) * 2);
+      expect(
+        yamato.fixtures.length,
+        (World.byId('yamato').clubsInTier(2) - 1) * 2,
+      );
     });
 
     test('格の高い国ほど同じ実力でも年俸が高い', () {
@@ -314,7 +349,8 @@ void main() {
       var s = career(seed: 3, countryId: 'yamato');
       // 国籍を外国のものに差し替えて、帰化の経路を作る。
       s.player = s.player.copyWith(
-          nationality: const Nationality(primary: 'serena'));
+        nationality: const Nationality(primary: 'serena'),
+      );
       expect(s.player.nationality.has('yamato'), isFalse);
 
       for (var year = 0; year < 5; year++) {
@@ -323,8 +359,11 @@ void main() {
         }
         s = engine.advanceSeason(s, accepted: engine.renewalOffer(s));
       }
-      expect(s.player.nationality.has('yamato'), isTrue,
-          reason: '5年いても帰化していない');
+      expect(
+        s.player.nationality.has('yamato'),
+        isTrue,
+        reason: '5年いても帰化していない',
+      );
     });
 
     test('降格は国のクラブ数に合わせて下から3クラブ', () {
@@ -334,11 +373,16 @@ void main() {
       final country = World.byId('norden');
       expect(country.clubsInTier(1), 16);
       final club = Club(
-          id: 'x', name: 'X', strength: 50, tier: 1, countryId: 'norden');
+        id: 'x',
+        name: 'X',
+        strength: 50,
+        tier: 1,
+        countryId: 'norden',
+      );
       s.club = club;
       s.league = World.buildLeague('norden', 1);
       s.table = [
-        for (final c in s.league) TableRow(clubId: c.id, clubName: c.name)
+        for (final c in s.league) TableRow(clubId: c.id, clubName: c.name),
       ];
       // 自分を最下位にする。
       for (var i = 0; i < s.table.length; i++) {

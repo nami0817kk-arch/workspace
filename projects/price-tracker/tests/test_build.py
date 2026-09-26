@@ -21,13 +21,16 @@ CONFIG = {
 
 
 def make_data(tmp: Path, items: dict, series: dict):
-    """series: {item_code: [価格を古い順に]} から履歴を組み立てる。"""
+    """series: {item_code: [価格を古い順に]} から履歴を組み立てる。
+
+    None を挟むとその日は記録しない。途中から追跡し始めた商品を作るのに使う。
+    """
     summary = {}
     days = max(len(v) for v in series.values())
     for i in range(days):
         day = f"2026-07-{i + 1:02d}"
         rows = [{"item_code": c, "price": p[i], "review_count": 0, "review_average": 0.0}
-                for c, p in series.items() if i < len(p)]
+                for c, p in series.items() if i < len(p) and p[i] is not None]
         summary = store.update_summary(summary, rows, day, 90)
     store.save_json(tmp / "data" / "summary.json", summary)
     store.save_json(tmp / "data" / "items.json", items)
@@ -66,11 +69,30 @@ class BuildTest(unittest.TestCase):
     def read(self, *parts) -> str:
         return (self.out.joinpath(*parts)).read_text(encoding="utf-8")
 
+    def css_name(self) -> str:
+        """配信するスタイルの名前。中身の指紋が入るので毎回変わる。"""
+        found = [p.name for p in self.out.glob("style.*.css")]
+        self.assertEqual(len(found), 1, found)
+        return found[0]
+
     # --- 構成 ---
+    def test_スタイルの名前に中身の指紋が入る(self):
+        """style.css 固定だと、直しても Cloudflare のキャッシュ（実測4時間）が
+        切れるまで読み手に届かない。名前が変われば即座に取りに来る。"""
+        css = self.css_name()
+
+        self.assertRegex(css, r"^style\.[0-9a-f]{8}\.css$")
+        # 全ページが実在するファイルを指していること
+        for path in list(self.out.rglob("*.html"))[:20]:
+            with self.subTest(path=path.name):
+                ref = re.search(r'rel="stylesheet" href="([^"]+)"',
+                                path.read_text(encoding="utf-8")).group(1)
+                self.assertTrue(ref.endswith(css), ref)
+
     def test_expected_pages_exist(self):
         for path in ("index.html", "lows/index.html", "about/index.html",
                      "privacy/index.html", "contact/index.html",
-                     "sitemap.xml", "robots.txt", "style.css"):
+                     "sitemap.xml", "robots.txt"):
             with self.subTest(path=path):
                 self.assertTrue((self.out / path).exists(), path)
 
@@ -131,15 +153,27 @@ class BuildTest(unittest.TestCase):
     # --- 配信 ---
     def test_asset_paths_are_relative(self):
         """GitHub Pages のサブディレクトリ配信で絶対パスは 404 になる。"""
-        self.assertIn('href="style.css"', self.read("index.html"))
-        self.assertIn('href="../style.css"', self.read("lows", "index.html"))
-        self.assertIn('href="../../style.css"',
+        css = self.css_name()
+        self.assertIn(f'href="{css}"', self.read("index.html"))
+        self.assertIn(f'href="../{css}"', self.read("lows", "index.html"))
+        self.assertIn(f'href="../../{css}"',
                       self.read("item", theme.slug("shop:cheap"), "index.html"))
 
     def test_no_absolute_asset_paths_anywhere(self):
+        """404 だけは例外。存在しないパスすべてに返され、URL は要求されたまま
+        （例 /item/存在しない/更に深い/）なので、相対では CSS もリンクも壊れる。
+        その 404 も "/" 決め打ちではなく base_url から導いている（root_prefix）。"""
         for path in self.out.rglob("*.html"):
+            if path.name == "404.html":
+                continue
             with self.subTest(path=path.name):
-                self.assertNotIn('href="/style.css"', path.read_text(encoding="utf-8"))
+                self.assertNotIn('href="/style.', path.read_text(encoding="utf-8"))
+
+    def test_404_uses_the_site_root_not_a_hardcoded_slash(self):
+        # サブディレクトリ配信では "/" 決め打ちが壊れる
+        html = self.read("404.html")
+        self.assertIn('href="/price/style.', html)
+        self.assertIn('href="/price/lows/"', html)
 
     def test_canonical_uses_the_public_url(self):
         self.assertIn('<link rel="canonical" href="https://example.test/price/">',
@@ -168,9 +202,109 @@ class EmptyDataTest(unittest.TestCase):
             out = root / "dist"
             stats = builder.build(root, out)
             self.assertEqual(stats["items"], 0)
+            # トップは「いま条件がそろっている商品」（2026-09-25 に入れ替え）。
+            # 値下がりは動きの少ない日にほぼ空になるため、入口に置かない。
+            top = (out / "index.html").read_text(encoding="utf-8")
+            self.assertIn("条件がそろった商品はまだありません", top)
             self.assertIn("判定できるほどの値下がりはありません",
-                          (out / "index.html").read_text(encoding="utf-8"))
+                          (out / "drops" / "index.html").read_text(encoding="utf-8"))
+            # 空でも行き止まりにしない
+            self.assertIn("商品を探す", top)
 
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class ThinItemTest(unittest.TestCase):
+    """記録が1日しかない商品は索引に載せない。
+
+    どの一覧にも載らないまま検索結果にだけ出るページになる（実測270件）。
+    推移も最安値も示せないので、載せても読み手の役に立たない。
+    ページ自体は残す。見守りや外の記事からの行き先になっている。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:old": {"name": "記録のある商品", "shop": "店A",
+                         "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                         "genre_id": "1"},
+            "shop:new": {"name": "今日から記録した商品", "shop": "店B",
+                         "url": "https://hb.afl.rakuten.co.jp/x/2", "image": "",
+                         "genre_id": "1"},
+        }, {
+            "shop:old": [9000] * 9 + [8000],
+            "shop:new": [None] * 9 + [5000],
+        })
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def page(self, code: str) -> str:
+        return (self.out / "item" / theme.slug(code) / "index.html").read_text(
+            encoding="utf-8")
+
+    def test_1日だけの商品はnoindex(self):
+        self.assertIn('content="noindex,follow"', self.page("shop:new"))
+
+    def test_1日だけの商品はサイトマップに載せない(self):
+        sitemap = (self.out / "sitemap.xml").read_text(encoding="utf-8")
+
+        self.assertNotIn(theme.slug("shop:new"), sitemap)
+
+    def test_ページ自体は残す(self):
+        self.assertTrue((self.out / "item" / theme.slug("shop:new")).exists())
+
+    def test_記録のある商品は索引に載せる(self):
+        sitemap = (self.out / "sitemap.xml").read_text(encoding="utf-8")
+
+        self.assertIn('content="index,follow', self.page("shop:old"))
+        self.assertIn(theme.slug("shop:old"), sitemap)
+
+
+class SearchAppearanceTest(unittest.TestCase):
+    """検索結果に出る文字列。題と説明が他のページと区別が付くこと。"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "【9/25限定！抽選で最大100%P還元※要エントリー】"
+                               "ロイヤルカナン インドア 4kg",
+                       "shop": "店A", "url": "https://hb.afl.rakuten.co.jp/x/1",
+                       "image": "", "genre_id": "1"},
+        }, {"shop:a": [5000] * 9 + [4000]})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_題は宣伝ではなく商品名から始まる(self):
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+        title = re.search(r"<title>([^<]*)</title>", page).group(1)
+
+        self.assertTrue(title.startswith("ロイヤルカナン"), title)
+
+    def test_説明に値段と日付を入れる(self):
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+        desc = re.search(r'name="description" content="([^"]*)"', page).group(1)
+
+        # 商品名を繰り返すだけでは、検索結果に並んだとき見分けが付かない
+        self.assertIn("4,000円", desc)
+        self.assertIn("月", desc)
+
+    def test_検索の索引にも宣伝を積まない(self):
+        index = json.loads((self.out / "search-index.json").read_text(encoding="utf-8"))
+
+        self.assertTrue(index[0][1].startswith("ロイヤルカナン"), index[0][1])

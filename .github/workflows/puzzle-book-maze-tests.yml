@@ -1,0 +1,30 @@
+name: puzzle-book-maze tests
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "projects/puzzle-book-maze/**"
+      - "libs/puzzle-generator/**"
+      - ".github/workflows/puzzle-book-maze-tests.yml"
+  pull_request:
+    paths:
+      - "projects/puzzle-book-maze/**"
+      - "libs/puzzle-generator/**"
+      - ".github/workflows/puzzle-book-maze-tests.yml"
+  workflow_dispatch: {}
+
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/puzzle-book-maze"
+      install: "pip install -r requirements.txt pypdf pytest fonttools"

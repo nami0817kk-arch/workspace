@@ -7,10 +7,14 @@ import '../l10n/tr.dart';
 /// 選手能力値・複合指標・コンディション・契約・戦術など、アプリ内に登場する
 /// 各種指標の意味をまとめた用語集画面。検索とカテゴリ絞り込みに対応する。
 class GlossaryScreen extends StatefulWidget {
-  const GlossaryScreen({super.key, this.initialCategory});
+  const GlossaryScreen({super.key, this.initialCategory, this.initialQuery});
 
   /// 指定した場合、その用語集カテゴリのみを表示した状態で開く。
   final GlossaryCategory? initialCategory;
+
+  /// 指定した場合、その語で検索した状態で開く。画面の数字から
+  /// 「これは何か」を引けるようにするために使う。
+  final String? initialQuery;
 
   /// 検索・カテゴリ絞り込みを適用した用語一覧を返す。UIから切り離してテスト可能にしてある。
   static List<GlossaryEntry> filter(
@@ -48,6 +52,11 @@ class _GlossaryScreenState extends State<GlossaryScreen> {
   void initState() {
     super.initState();
     _category = widget.initialCategory;
+    final q = widget.initialQuery;
+    if (q != null && q.isNotEmpty) {
+      _query = q;
+      _searchController.text = q;
+    }
   }
 
   @override

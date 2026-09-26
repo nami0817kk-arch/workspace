@@ -19,12 +19,21 @@ from kabutan import (
     MODE_ACTIVE as _MODE_ACTIVE,
     MODE_GAINERS as _MODE_GAINERS,
     MODE_LOSERS as _MODE_LOSERS,
+    MODE_STOP_HIGH as _MODE_STOP_HIGH,
     fetch_errors,
 )
 from kabutan import extract_asof_date as _extract_asof_date
 from kabutan import fetch_ranking_html as _lib_fetch_ranking_html
 from kabutan import fetch_stock_name as _fetch_name
 from kabutan import parse_ranking_table as _parse_market_html
+
+
+# ページは取れたのに1行も解析できなかった、という取得をここに記録する。
+#
+# **これはいちばん危ない壊れ方**。先方の表の構造が変わると、通信は成功したまま
+# 0件になり、「休場日でランキングが無い」のと見分けが付かない。休場日でも
+# kabutan は直近営業日のランキングを出すので、ページがあって0件なら解析が壊れている。
+parse_failures: list[str] = []
 
 
 def _fetch_market_html(mode: str, market: int, retries: int = 3) -> str | None:
@@ -46,9 +55,11 @@ def _fetch_ranking(mode: str, label: str, top_n: int) -> tuple[pd.DataFrame, str
     print(f"  {label}取得中（kabutan.jp）...")
     all_rows = []
     asof_date = None
+    pages_fetched = 0
     for market in _KABUTAN_MARKETS:
         html = _fetch_market_html(mode, market)
         if html:
+            pages_fetched += 1
             if asof_date is None:
                 asof_date = _extract_asof_date(html)
             df_m = _parse_market_html(html)
@@ -57,6 +68,13 @@ def _fetch_ranking(mode: str, label: str, top_n: int) -> tuple[pd.DataFrame, str
         time.sleep(1)
 
     if not all_rows:
+        # ストップ高は「その日は1件も無かった」が普通に起こる。
+        # 他のランキング（値上がり等）が0件なら解析の故障だが、ここは違う。
+        if pages_fetched and mode != _MODE_STOP_HIGH:
+            parse_failures.append(
+                f"{label}: ページは{pages_fetched}件取得できたのに1行も解析できませんでした"
+                "（表の構造が変わった可能性があります）"
+            )
         return pd.DataFrame(), asof_date
 
     df = (
@@ -98,4 +116,25 @@ def fetch_active(top_n: int = 30) -> pd.DataFrame:
     if df.empty:
         return df
     df = df.sort_values("metric_value", ascending=False).head(top_n)
+    return _finalize(df, asof_date)
+
+
+def fetch_stop_high() -> pd.DataFrame:
+    """その日ストップ高をつけた銘柄。**上位30銘柄に限らない全件**。
+
+    値上がりランキングからの推定（終値と騰落率から前日終値を逆算し、
+    制限値幅に達したか見る）では、上位30銘柄の中しか分からなかった。
+    取得元には専用のランキングがあるので、そちらを正として取る。
+
+    このランキングは「その日ストップ高を**つけた**銘柄」で、引けまで
+    保ったとは限らない（場中につけて下げた銘柄も載る）。引けで保ったかは
+    `at_limit`（表の S の印）で分かる。**大引け後に取ることが前提**。
+
+    件数は日によって0件になりうる（相場が穏やかな日）。0件は異常ではない。
+    """
+    df, asof_date = _fetch_ranking(_MODE_STOP_HIGH, "ストップ高銘柄", top_n=0)
+    if df.empty:
+        return df
+    # 順位の概念が無いランキングなので、上昇率の高い順に並べておく
+    df = df.sort_values("change_pct", ascending=False)
     return _finalize(df, asof_date)

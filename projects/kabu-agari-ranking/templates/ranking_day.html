@@ -1,9 +1,46 @@
 {% extends "base.html" %}
-{% block title %}{{ rec_date }} {{ heading }}｜値上がり株ランキング{% endblock %}
-{% block description %}{{ rec_date }}時点の{{ heading }}のアーカイブ。{% endblock %}
+{% block title %}{{ rec_date }}の{{ heading }} 上位{{ rows|length }}銘柄{% endblock %}
+{% block description %}{{ rec_date_ja }}の{{ heading }}上位{{ rows|length }}銘柄の記録。{{ summary }}{% endblock %}
+{% block structured_data %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":{{ (rec_date ~ " " ~ heading)|tojson }},"numberOfItems":{{ rows|length }},"itemListElement":[{% for row in rows %}{"@type":"ListItem","position":{{ row.rank }},"name":{{ (row.name ~ "（" ~ row.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"ホーム","item":"{{ SITE_URL }}/"},
+{"@type":"ListItem","position":2,"name":{{ ("過去の" ~ heading ~ "一覧")|tojson }},"item":{{ (canonical.rsplit('/', 1)[0] ~ '/')|tojson }}},
+{"@type":"ListItem","position":3,"name":{{ (rec_date ~ " " ~ heading)|tojson }},"item":{{ canonical|tojson }}}]}
+</script>
+{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "過去の" ~ heading, "href": "archive/" ~ kind_dir ~ "/index.html"},
+  {"label": rec_date}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
-<h1>{{ rec_date }} の{{ heading }}</h1>
+<h1>{{ rec_date_ja }} の{{ heading }}</h1>
+{% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
 {% include "_ranking_table.html" %}
+{% if chart %}
+<figure class="chart-figure">
+  {{ chart|safe }}
+  <figcaption>上位10銘柄の騰落率を並べたもの。数値は上の表にあります。</figcaption>
+</figure>
+{% endif %}
 {% include "_ad_slot.html" %}
-<p><a href="index.html">← 過去の{{ heading }}一覧に戻る</a></p>
+{% if siblings %}
+<p class="same-day">
+  同じ日の他のランキング:
+  {% for sib in siblings %}<a href="{{ base_url }}archive/{{ sib.dir }}/{{ rec_date }}.html">{{ sib.heading }}</a>{% if not loop.last %} ／ {% endif %}{% endfor %}
+</p>
+{% endif %}
+<nav class="day-nav">
+  {% if older %}<a class="prev" href="{{ older }}.html">← {{ older }}</a>{% endif %}
+  <a href="index.html">一覧</a>
+  {% if newer %}<a class="next" href="{{ newer }}.html">{{ newer }} →</a>{% endif %}
+</nav>
+<p>
+  <a href="{{ base_url }}{{ today_href }}">最新の{{ heading }}を見る →</a>
+  ／ <a href="{{ base_url }}weekly/index.html">この週のまとめを見る →</a>
+</p>
 {% endblock %}

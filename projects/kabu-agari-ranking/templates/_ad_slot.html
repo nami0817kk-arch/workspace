@@ -1,4 +1,12 @@
+{# 広告の枠。**枠ID（ADSENSE_SLOT）が入るまで何も出さない。**
+
+   審査に必要なのは head のスクリプトだけで（site_config.ADSENSE_CLIENT が
+   入ると base.html が出す）、枠は自動広告が置いてくれる。
+   data-ad-slot に作り物の値を入れた <ins> を置くと、審査でも配信でも通らない。
+   手で場所を決めたくなったときだけ、本物の枠IDを入れる。 #}
+{% if ADSENSE_CLIENT and ADSENSE_SLOT %}
 <div class="ad-slot">
-  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="0000000000" data-ad-format="auto"></ins>
-  <!-- 広告枠（AdSense審査通過後に有効化） -->
+  <ins class="adsbygoogle" style="display:block" data-ad-client="{{ ADSENSE_CLIENT }}" data-ad-slot="{{ ADSENSE_SLOT }}" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
+{% endif %}

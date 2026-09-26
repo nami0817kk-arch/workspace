@@ -34,10 +34,27 @@ class Manager {
     required this.tactic,
     required this.demand,
     this.tenure = 0,
+    this.fromLegend = false,
   });
 
   final String name;
   final Tactic tactic;
+
+  /// 自分が引退させた選手か。
+  ///
+  /// 殿堂は**見るだけの記録**だった。20年かけて育てた選手が、
+  /// 次のキャリアのロッカールームにも監督室にも居ない。
+  /// 名前を差し替えるだけでは「同姓同名」と区別が付かないので、印を持つ。
+  final bool fromLegend;
+
+  /// 殿堂の選手を、この役に据える。戦術も要求もそのまま。
+  Manager asLegend(String legendName) => Manager(
+    name: legendName,
+    tactic: tactic,
+    demand: demand,
+    tenure: tenure,
+    fromLegend: true,
+  );
 
   /// 要求の厳しさ 1〜5。高いほど信頼が動きやすい。
   final int demand;
@@ -46,20 +63,41 @@ class Manager {
   final int tenure;
 
   static const List<String> _firstNames = [
-    'ラウル', 'ヨナス', 'ミハイル', '相原', 'ディエゴ', 'アルフ',
-    'カルロ', '安永', 'ヘンドリク', 'ソン', 'ファビオ', '黒木',
+    'ラウル',
+    'ヨナス',
+    'ミハイル',
+    '相原',
+    'ディエゴ',
+    'アルフ',
+    'カルロ',
+    '安永',
+    'ヘンドリク',
+    'ソン',
+    'ファビオ',
+    '黒木',
   ];
   static const List<String> _lastNames = [
-    'メンドーサ', 'ベルガー', 'ソコロフ', '達郎', 'アルベス', 'ソレンセン',
-    'ヴィターリ', '慎司', 'デ・フリース', 'ジュンホ', 'ロッシ', '亮平',
+    'メンドーサ',
+    'ベルガー',
+    'ソコロフ',
+    '達郎',
+    'アルベス',
+    'ソレンセン',
+    'ヴィターリ',
+    '慎司',
+    'デ・フリース',
+    'ジュンホ',
+    'ロッシ',
+    '亮平',
   ];
 
   factory Manager.roll(Random random) => Manager(
-        name: '${_firstNames[random.nextInt(_firstNames.length)]}・'
-            '${_lastNames[random.nextInt(_lastNames.length)]}',
-        tactic: Tactic.values[random.nextInt(Tactic.values.length)],
-        demand: 1 + random.nextInt(5),
-      );
+    name:
+        '${_firstNames[random.nextInt(_firstNames.length)]}・'
+        '${_lastNames[random.nextInt(_lastNames.length)]}',
+    tactic: Tactic.values[random.nextInt(Tactic.values.length)],
+    demand: 1 + random.nextInt(5),
+  );
 
   /// 戦術との噛み合い。−1.0〜1.0。
   ///
@@ -67,8 +105,8 @@ class Manager {
   double fitFor(Attributes attributes, Position position) {
     if (tactic.favours.isEmpty) return 0;
     final overall = attributes.overallFor(position);
-    final favoured = tactic.favours
-            .fold(0, (sum, key) => sum + attributes[key]) /
+    final favoured =
+        tactic.favours.fold(0, (sum, key) => sum + attributes[key]) /
         tactic.favours.length;
     return ((favoured - overall) / 12).clamp(-1.0, 1.0);
   }
@@ -103,19 +141,16 @@ class Manager {
     return '戦術に合っていない';
   }
 
-  Manager aged() => Manager(
-        name: name,
-        tactic: tactic,
-        demand: demand,
-        tenure: tenure + 1,
-      );
+  Manager aged() =>
+      Manager(name: name, tactic: tactic, demand: demand, tenure: tenure + 1);
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'tactic': tactic.name,
-        'demand': demand,
-        'tenure': tenure,
-      };
+    'name': name,
+    'tactic': tactic.name,
+    'demand': demand,
+    'tenure': tenure,
+    'fromLegend': fromLegend,
+  };
 
   factory Manager.fromJson(Map<String, dynamic>? json, Random random) {
     if (json == null) return Manager.roll(random);
@@ -126,6 +161,7 @@ class Manager {
           : Tactic.balanced,
       demand: json['demand'] as int? ?? 3,
       tenure: json['tenure'] as int? ?? 0,
+      fromLegend: json['fromLegend'] as bool? ?? false,
     );
   }
 }
@@ -134,11 +170,19 @@ class Manager {
 ///
 /// 何を優先したいかを伝える。通る通らないではなく、優先した分だけ
 /// 別のものを諦める形にしてある。
+/// 監督に何を求めるか。
+///
+/// **効きが小さすぎて、選んでも選ばなくても同じだった**（2026-09-23 に実測。
+/// 4種すべてがピーク 73.3〜74.1 で、基準の 74.1 と変わらない）。
+/// しかも「年俸交渉は通りやすく」と書いてある `negotiationBonus` は
+/// **どこからも読まれていなかった**——表示と判定が食い違っていた。
+///
+/// 求めたものは手に入り、**そのぶん別のものを諦める**形に置き直す。
 enum Directive {
-  playingTime('出場機会が欲しい', '序列で優遇されるが、年俸は伸びない'),
-  winning('勝ちたい', '監督の信頼は得やすいが、出番は保証されない'),
-  money('条件を上げたい', '年俸交渉は通りやすく、ロッカールームでは浮く'),
-  develop('育ててほしい', '練習の効きが上がるが、試合では我慢を強いられる'),
+  playingTime('出場機会が欲しい', '身の丈のクラブから声がかかる。出て点も取れるが、上は狙えない'),
+  winning('勝ちたい', '格上から声がかかり、監督の信頼も厚い。そのぶん序列は下から'),
+  money('条件を上げたい', '年俸の提示も交渉も通りやすいが、ロッカールームでは浮く'),
+  develop('育ててほしい', '練習の効きが上がる。若いうちに伸びる代わりに、試合では我慢する'),
   none('特に伝えない', '');
 
   const Directive(this.label, this.effect);
@@ -147,22 +191,57 @@ enum Directive {
   final String effect;
 
   double get appearanceBonus => switch (this) {
-        Directive.playingTime => 0.12,
-        Directive.develop => -0.08,
-        _ => 0,
-      };
+    Directive.playingTime => 0.12,
+    Directive.winning => -0.06,
+    Directive.develop => -0.20,
+    _ => 0,
+  };
 
-  double get growthFactor => this == Directive.develop ? 1.15 : 1.0;
+  /// **声がかかるクラブの強さの上限**（自分の総合力からの差）。
+  ///
+  /// 出場の軸は飽和していて、1キャリア550試合のうち531〜538は出ている。
+  /// そこを何%動かしても、選んだ実感は出ない（実測で +0.26 にしても
+  /// 出場は4試合しか増えなかった）。**効かせる先を「行き先」に変える。**
+  /// 出場機会が欲しいと言った選手には、身の丈のクラブから声がかかる。
+  int? get reachCap => this == Directive.playingTime ? 2 : null;
 
-  double get negotiationBonus => this == Directive.money ? 0.08 : 0;
+  /// **声がかかるクラブの強さの下限**（同上）。
+  ///
+  /// 勝ちたいと言えば、格下からの話は来なくなる。出番は保証されない。
+  int? get reachFloor => this == Directive.winning ? -6 : null;
+
+  /// 届く範囲そのものの上乗せ。
+  ///
+  /// 下限を上げるだけでは「弱い話が消える」だけで、**行ける先は増えない**
+  /// （実測でリーグ優勝が 2.8 → 2.3 と、何も言わないより下がった）。
+  /// 勝ちたいと言った選手には、格上からの話が来るようにする。
+  int get reachBonus => this == Directive.winning ? 3 : 0;
+
+  double get growthFactor => this == Directive.develop ? 1.40 : 1.0;
+
+  /// 上乗せ交渉の通りやすさ。**使われていなかったので繋いだ。**
+  double get negotiationBonus => this == Directive.money ? 0.20 : 0;
+
+  /// 契約更改で提示される年俸への倍率。
+  ///
+  /// 出場を優先してくれと言った選手は、序列では優遇されるが
+  /// **条件では後回しになる**。書いてあることを、そのまま数字にする。
+  double get salaryFactor => switch (this) {
+    Directive.playingTime => 0.88,
+    Directive.money => 1.10,
+    _ => 1.0,
+  };
+
+  /// 相方との呼吸の育ちやすさ。条件の話ばかりしていると、深まらない。
+  double get synergyFactor => this == Directive.money ? 0.5 : 1.0;
 
   int get managerDrift => switch (this) {
-        Directive.winning => 4,
-        Directive.money => -3,
-        _ => 0,
-      };
+    Directive.winning => 10,
+    Directive.money => -8,
+    _ => 0,
+  };
 
-  int get teammatesDrift => this == Directive.money ? -3 : 0;
+  int get teammatesDrift => this == Directive.money ? -8 : 0;
 }
 
 /// チームメイトとの関係。
@@ -187,6 +266,7 @@ class Teammate {
     required this.overall,
     required this.age,
     this.synergy = 0,
+    this.fromLegend = false,
   });
 
   final String name;
@@ -198,10 +278,44 @@ class Teammate {
   final int synergy;
 
   static const List<String> _names = [
-    'カイル・ベネット', 'ルカ・ドラガン', '南 廉', 'エミール・ノルド',
-    'ジョアン・ピレス', '真木 遼', 'アダム・ケリー', 'ニコ・ヴァルタ',
-    'サム・オコエ', '早瀬 樹', 'マテオ・リカルド', 'イヴァン・ペトロフ',
+    'カイル・ベネット',
+    'ルカ・ドラガン',
+    '南 廉',
+    'エミール・ノルド',
+    'ジョアン・ピレス',
+    '真木 遼',
+    'アダム・ケリー',
+    'ニコ・ヴァルタ',
+    'サム・オコエ',
+    '早瀬 樹',
+    'マテオ・リカルド',
+    'イヴァン・ペトロフ',
   ];
+
+  /// 自分が引退させた選手か（[Manager.fromLegend] と同じ）。
+  final bool fromLegend;
+
+  /// 殿堂の選手を、この役に据える。
+  Teammate asLegend(String legendName) => Teammate(
+    name: legendName,
+    kind: kind,
+    overall: overall,
+    age: age,
+    synergy: synergy,
+    fromLegend: true,
+  );
+
+  /// 名簿の中の1人を、そのままこの役に据える。
+  ///
+  /// 競争相手だけは**別の世界の人では困る**——同じクラブの
+  /// 同じポジションで先発を争っているはずなのに、
+  /// 名簿とは無関係に引いた人だった。
+  factory Teammate.fromSquad({
+    required String name,
+    required TeammateKind kind,
+    required int overall,
+    required int age,
+  }) => Teammate(name: name, kind: kind, overall: overall, age: age);
 
   factory Teammate.roll(
     Random random, {
@@ -222,15 +336,17 @@ class Teammate {
   }
 
   Teammate withSynergy(int value) => Teammate(
-        name: name,
-        kind: kind,
-        overall: overall,
-        age: age,
-        synergy: value.clamp(0, 100),
-      );
+    name: name,
+    kind: kind,
+    overall: overall,
+    age: age,
+    synergy: value.clamp(0, 100),
+    fromLegend: fromLegend,
+  );
 
   /// 相方との呼吸が、味方を活かす手に与える上乗せ。
-  double get synergyBonus => kind == TeammateKind.partner ? synergy * 0.0005 : 0;
+  double get synergyBonus =>
+      kind == TeammateKind.partner ? synergy * 0.0005 : 0;
 
   /// メンターが練習の効きに与える倍率。若いうちだけ効く。
   double mentorFactor(int age) =>
@@ -239,16 +355,17 @@ class Teammate {
   String get synergyLabel => synergy >= 75
       ? 'ほとんど見なくても分かる'
       : synergy >= 40
-          ? '呼吸が合ってきた'
-          : 'まだ手探り';
+      ? '呼吸が合ってきた'
+      : 'まだ手探り';
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'kind': kind.name,
-        'overall': overall,
-        'age': age,
-        'synergy': synergy,
-      };
+    'name': name,
+    'kind': kind.name,
+    'overall': overall,
+    'age': age,
+    'synergy': synergy,
+    'fromLegend': fromLegend,
+  };
 
   static Teammate? fromJson(Map<String, dynamic>? json) {
     if (json == null) return null;
@@ -260,6 +377,7 @@ class Teammate {
       overall: json['overall'] as int? ?? 60,
       age: json['age'] as int? ?? 25,
       synergy: json['synergy'] as int? ?? 0,
+      fromLegend: json['fromLegend'] as bool? ?? false,
     );
   }
 }
@@ -285,36 +403,45 @@ class Rival {
   final int caps;
 
   static const List<String> _names = [
-    'ラファ・ドミンゴ', '御堂 陸', 'エリク・ハンセン', 'ジョシュ・ベイリー',
-    'アンドレア・コンティ', '雨宮 蒼', 'パヴェル・ノヴァク', 'テオ・ランベール',
+    'ラファ・ドミンゴ',
+    '御堂 陸',
+    'エリク・ハンセン',
+    'ジョシュ・ベイリー',
+    'アンドレア・コンティ',
+    '雨宮 蒼',
+    'パヴェル・ノヴァク',
+    'テオ・ランベール',
   ];
 
-  factory Rival.roll(Random random, {required int overall, required String clubName}) =>
-      Rival(
-        name: _names[random.nextInt(_names.length)],
-        clubName: clubName,
-        overall: (overall + random.nextInt(7) - 2).clamp(40, 92),
-      );
+  factory Rival.roll(
+    Random random, {
+    required int overall,
+    required String clubName,
+  }) => Rival(
+    name: _names[random.nextInt(_names.length)],
+    clubName: clubName,
+    overall: (overall + random.nextInt(7) - 2).clamp(40, 92),
+  );
 
   /// 1シーズンぶん進む。伸び方は自分と関係なく決まる。
   Rival advanced(Random random, {required String clubName}) => Rival(
-        name: name,
-        clubName: clubName,
-        overall: (overall + random.nextInt(4) - 1).clamp(40, 94),
-        goals: goals + random.nextInt(14),
-        caps: caps + random.nextInt(6),
-      );
+    name: name,
+    clubName: clubName,
+    overall: (overall + random.nextInt(4) - 1).clamp(40, 94),
+    goals: goals + random.nextInt(14),
+    caps: caps + random.nextInt(6),
+  );
 
   /// 自分より先を行っているか。
   bool leads(int myOverall) => overall > myOverall + 2;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'clubName': clubName,
-        'overall': overall,
-        'goals': goals,
-        'caps': caps,
-      };
+    'name': name,
+    'clubName': clubName,
+    'overall': overall,
+    'goals': goals,
+    'caps': caps,
+  };
 
   static Rival? fromJson(Map<String, dynamic>? json) => json == null
       ? null
@@ -339,8 +466,7 @@ class Facilities {
   final int medical;
 
   factory Facilities.of(Club club, {required int prestige}) {
-    int scale(int base) =>
-        (1 + (base - 45) / 12).round().clamp(1, 5);
+    int scale(int base) => (1 + (base - 45) / 12).round().clamp(1, 5);
     return Facilities(
       training: scale(club.strength + prestige * 2),
       medical: scale(club.strength + prestige),
@@ -360,10 +486,19 @@ class Facilities {
 ///
 /// 早く戻れば試合に出られるが、無理をすれば長く響く。
 /// 怪我を「数試合休むだけ」にしないための選択。
+/// 怪我からの戻し方。
+///
+/// 実測（14キャリアずつ）で、**「慎重に」は選ぶ理由が無かった**——
+/// 標準より離脱が68試合増えるのに、怪我は 18.6 → 21.4 と減りもせず、
+/// 重傷の数（1.71）も同じ。「後を引かない」と書いてあるのに、
+/// 後を引かない仕組みがどこにも無かった。
+///
+/// 重傷の恒久ダメージ（能力とポテンシャルの目減り）を**復帰のときに**、
+/// 戻し方で変える形にした。慎重なら半分、強行なら5割増し。
 enum RehabPlan {
-  cautious('慎重に', '長く休む代わりに、後を引かない'),
+  cautious('慎重に', '長く休む代わりに、重傷が身体に残りにくい'),
   standard('標準', 'クラブの言う通りに進める'),
-  rush('強行', '早く戻るが、再発しやすく、身体に残る');
+  rush('強行', '早く戻るが、再発しやすく、重傷が身体に残る');
 
   const RehabPlan(this.label, this.effect);
 
@@ -372,24 +507,47 @@ enum RehabPlan {
 
   /// 離脱試合数に掛かる倍率。
   double get lengthFactor => switch (this) {
-        RehabPlan.cautious => 1.3,
-        RehabPlan.standard => 1.0,
-        RehabPlan.rush => 0.6,
-      };
+    // **1.15 では、払うものが出場に現れなかった**（48キャリアずつで
+    // 通算出場 554 対 554）。長く休むぶんは試合数で払う。
+    RehabPlan.cautious => 1.35,
+    RehabPlan.standard => 1.0,
+    RehabPlan.rush => 0.6,
+  };
 
   /// 復帰直後の怪我のしやすさ。
   double get relapseFactor => switch (this) {
-        RehabPlan.cautious => 0.7,
-        RehabPlan.standard => 1.0,
-        RehabPlan.rush => 1.8,
-      };
+    RehabPlan.cautious => 0.45,
+    RehabPlan.standard => 1.0,
+    RehabPlan.rush => 1.8,
+  };
+
+  /// 重傷の恒久ダメージに掛かる倍率。**復帰のときに効く。**
+  ///
+  /// ただし能力値の目減りは19シーズンかけて伸び直されるので、
+  /// **ここを厚くしてもピークは動かなかった**（0.5 でも 0.25 でも 75.5）。
+  /// 効き目の中心は下の「衰え」のほうに置いてある。
+  double get damageFactor => switch (this) {
+    RehabPlan.cautious => 0.5,
+    RehabPlan.standard => 1.0,
+    RehabPlan.rush => 1.5,
+  };
+
+  /// **重傷1つが衰え始めを何年早めるか。**
+  ///
+  /// 伸び直せる能力値と違って、衰え始めは戻らない。
+  /// 慎重に戻せば早まらず、強行すれば2年早まる。
+  int get declineYears => switch (this) {
+    RehabPlan.cautious => 0,
+    RehabPlan.standard => 1,
+    RehabPlan.rush => 2,
+  };
 
   /// 復帰時のコンディション。
   int get conditionOnReturn => switch (this) {
-        RehabPlan.cautious => 65,
-        RehabPlan.standard => 45,
-        RehabPlan.rush => 30,
-      };
+    RehabPlan.cautious => 65,
+    RehabPlan.standard => 45,
+    RehabPlan.rush => 30,
+  };
 
   /// 復帰までにかかる試合数を決める。
   int lengthFor(Injury injury) =>

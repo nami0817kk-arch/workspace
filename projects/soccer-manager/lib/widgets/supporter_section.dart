@@ -47,8 +47,8 @@ class _SupporterSectionState extends State<SupporterSection> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  Tr.pick('このアプリでお金が関わるのは次の2つだけです。',
-                      'Only two things in this app involve money.'),
+                  Tr.pick('このアプリでお金が関わるのは次の3つだけです。',
+                      'Only three things in this app involve money.'),
                   style: const TextStyle(fontSize: 13),
                 ),
                 const SizedBox(height: 8),
@@ -76,12 +76,28 @@ class _SupporterSectionState extends State<SupporterSection> {
                       '広告を見ずに同じ協賛金を受け取れるようになり、1日の回数が'
                           '${RewardOffer.dailyLimitFree}回から${RewardOffer.dailyLimitSupporter}回に増えます。'
                           'シーズンの切り替わりの全画面広告も出なくなります。'
-                          '月額ではありません。**選手の成長や試合の勝率は変わりません。**',
+                          '月額ではありません。**サポーター自体は、選手の成長や試合の勝率を'
+                          '変えるものではありません。**',
                       'You take the same money without ads, your daily limit rises from '
                           '${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}, and the '
                           'full-screen ad between seasons stops appearing. '
                           'It is not a subscription. '
-                          '**It does not change player growth or your chances in a match.**'),
+                          '**The supporter purchase itself does not change player growth '
+                          'or your chances in a match.**'),
+                ),
+                const SizedBox(height: 8),
+                _PointRow(
+                  icon: Icons.account_balance_wallet_outlined,
+                  title: Tr.pick('資金の購入（買い切り・任意）', 'Buying funds (optional)'),
+                  body: Tr.pick(
+                      'クラブ経営の画面で、クラブ資金をその場で増やせます。回数の制限は'
+                          'ありません。**これは買えばそのぶん有利になる商品です。**'
+                          '一度も買わずに最後まで遊べるように作っていますが、'
+                          '買った人が早く強いクラブを作れるのは事実です。',
+                      'From the club finances screen you can add money to the budget, '
+                          'as often as you like. **This one does give you an advantage.** '
+                          'The game is built to be finishable without ever buying any, '
+                          'but someone who buys will build a strong club sooner.'),
                 ),
               ],
             ),

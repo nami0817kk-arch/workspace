@@ -55,7 +55,9 @@ class LifeEvents {
     final weighted = [
       for (final e in pool)
         ...List.filled(
-            with_ != null && e.person == with_ ? companionWeight : 1, e),
+          with_ != null && e.person == with_ ? companionWeight : 1,
+          e,
+        ),
     ];
     return weighted[_random.nextInt(weighted.length)];
   }
@@ -68,7 +70,8 @@ class LifeEvents {
     LifeEvent(
       id: 'mentor-drill',
       title: '<mentor>の居残り',
-      body: '練習が終わったピッチに<mentor>が残っていた。'
+      body:
+          '練習が終わったピッチに<mentor>が残っていた。'
           '「一本だけ付き合え」と手招きされる。',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.mentor),
@@ -76,8 +79,7 @@ class LifeEvents {
         LifeChoice(
           label: '付き合う',
           outcome: '足の置き方を直された。翌日、体が覚えている。',
-          effect: LifeEffect(
-              train: Detail.ballControl, fatigue: 2),
+          effect: LifeEffect(train: Detail.ballControl, fatigue: 2),
         ),
         LifeChoice(
           label: '見て覚える',
@@ -94,7 +96,8 @@ class LifeEvents {
     LifeEvent(
       id: 'mentor-secret',
       title: '<mentor>が教えてくれたこと',
-      body: '「これは誰にも言うなよ」と、<mentor>が長年やってきた'
+      body:
+          '「これは誰にも言うなよ」と、<mentor>が長年やってきた'
           '体の使い方を見せてくれた。',
       requirement: LifeRequirement(needsPerson: PersonKind.mentor, minAge: 19),
       choices: [
@@ -113,14 +116,15 @@ class LifeEvents {
     LifeEvent(
       id: 'mentor-retire',
       title: '<mentor>の引退',
-      body: '<mentor>が今季限りで辞めると言った。'
+      body:
+          '<mentor>が今季限りで辞めると言った。'
           '「お前はまだやれる。俺のぶんまでやれ」',
       requirement: LifeRequirement(needsPerson: PersonKind.mentor, minAge: 22),
       choices: [
         LifeChoice(
           label: '受け取る',
           outcome: '背負うものが増えた。悪くない重さだ。',
-          effect: LifeEffect(morale: 6, ambition: 1, professionalism: 1),
+          effect: LifeEffect(morale: 6, ambition: 1),
         ),
         LifeChoice(
           label: '静かに送り出す',
@@ -132,7 +136,8 @@ class LifeEvents {
     LifeEvent(
       id: 'competitor-clash',
       title: '<competitor>との衝突',
-      body: '紅白戦で<competitor>と激しく当たった。'
+      body:
+          '紅白戦で<competitor>と激しく当たった。'
           'ロッカールームの空気が固い。',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.competitor),
@@ -157,7 +162,8 @@ class LifeEvents {
     LifeEvent(
       id: 'competitor-injury',
       title: '<competitor>が離脱した',
-      body: '同じポジションを争う<competitor>が長期離脱した。'
+      body:
+          '同じポジションを争う<competitor>が長期離脱した。'
           '出番は増える。',
       requirement: LifeRequirement(needsPerson: PersonKind.competitor),
       choices: [
@@ -183,8 +189,7 @@ class LifeEvents {
         LifeChoice(
           label: '毎朝やる',
           outcome: '呼吸が合ってきた。言わなくても動きが分かる。',
-          effect: LifeEffect(
-              train: Detail.shortPassing, fatigue: 3),
+          effect: LifeEffect(train: Detail.shortPassing, fatigue: 3),
         ),
         LifeChoice(
           label: '週に一度だけ',
@@ -196,7 +201,8 @@ class LifeEvents {
     LifeEvent(
       id: 'partner-trust',
       title: '<partner>の一言',
-      body: '「お前が出してくれるなら、俺はどこへでも走る」'
+      body:
+          '「お前が出してくれるなら、俺はどこへでも走る」'
           '<partner>がそう言った。',
       requirement: LifeRequirement(needsPerson: PersonKind.partner, minAge: 20),
       choices: [
@@ -215,7 +221,8 @@ class LifeEvents {
     LifeEvent(
       id: 'rival-news',
       title: '<rival>の活躍',
-      body: '同期の<rival>が別のクラブで結果を出している。'
+      body:
+          '同期の<rival>が別のクラブで結果を出している。'
           '記事の見出しに名前が並んでいた。',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.rival),
@@ -235,7 +242,8 @@ class LifeEvents {
     LifeEvent(
       id: 'rival-meet',
       title: '<rival>と会った',
-      body: 'オフに<rival>と食事を挟んで話した。'
+      body:
+          'オフに<rival>と食事を挟んで話した。'
           '互いに、まだ何も掴んでいないことを確かめ合った。',
       requirement: LifeRequirement(needsPerson: PersonKind.rival, minAge: 20),
       choices: [
@@ -247,14 +255,15 @@ class LifeEvents {
         LifeChoice(
           label: '何も言わない',
           outcome: '言葉にしなかったぶん、体を動かした。',
-          effect: LifeEffect(fatigue: 2, morale: 3),
+          effect: LifeEffect(fatigue: 2, morale: 3, teammates: 2),
         ),
       ],
     ),
     LifeEvent(
       id: 'manager-talk',
       title: '<manager>に呼ばれた',
-      body: '監督室に呼ばれた。<manager>は、今の起用について'
+      body:
+          '監督室に呼ばれた。<manager>は、今の起用について'
           'どう思っているかを聞いてきた。',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.manager),
@@ -262,7 +271,7 @@ class LifeEvents {
         LifeChoice(
           label: '納得していないと言う',
           outcome: '空気は張り詰めたが、言いたいことは伝わった。',
-          effect: LifeEffect(manager: -4),
+          effect: LifeEffect(manager: -4, morale: 5),
         ),
         LifeChoice(
           label: '足りないところを聞く',
@@ -272,22 +281,26 @@ class LifeEvents {
         LifeChoice(
           label: '任せますと答える',
           outcome: '何も変わらなかった。',
-          effect: LifeEffect(manager: 2),
+          effect: LifeEffect(manager: 2, teammates: 2),
         ),
       ],
     ),
     LifeEvent(
       id: 'manager-role',
       title: '<manager>の構想',
-      body: '<manager>が、来季の並びに自分をどう置くつもりかを'
+      body:
+          '<manager>が、来季の並びに自分をどう置くつもりかを'
           '図に書いて見せてくれた。',
       requirement: LifeRequirement(
-          needsPerson: PersonKind.manager, minAge: 21, minOverall: 68),
+        needsPerson: PersonKind.manager,
+        minAge: 21,
+        minOverall: 68,
+      ),
       choices: [
         LifeChoice(
           label: 'その役をやり切る',
           outcome: '求められている動きを頭に入れた。',
-          effect: LifeEffect(manager: 5, professionalism: 1),
+          effect: LifeEffect(manager: 5),
         ),
         LifeChoice(
           label: 'もっと前でやりたいと言う',
@@ -299,7 +312,8 @@ class LifeEvents {
     LifeEvent(
       id: 'agent-plan',
       title: '<agent>との打ち合わせ',
-      body: '<agent>が資料を広げた。'
+      body:
+          '<agent>が資料を広げた。'
           '「このままだと、来年の話が薄い」',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.agent, minAge: 20),
@@ -321,14 +335,15 @@ class LifeEvents {
     LifeEvent(
       id: 'drill-breakthrough',
       title: '感触',
-      body: '同じ動きを繰り返しているうちに、'
+      body:
+          '同じ動きを繰り返しているうちに、'
           '急に体の使い方が分かった気がした。',
       once: false,
       choices: [
         LifeChoice(
           label: 'もう一度やってみる',
           outcome: '再現できた。まぐれではない。',
-          effect: LifeEffect(train: Detail.agility, fatigue: 2),
+          effect: LifeEffect(train: Detail.agility, trainAmount: 2, fatigue: 2),
         ),
         LifeChoice(
           label: '今日はここで止める',
@@ -346,8 +361,7 @@ class LifeEvents {
         LifeChoice(
           label: '失敗した場面から見る',
           outcome: '何度も止めて見た。理由が分かると、次が変わる。',
-          effect: LifeEffect(
-              train: Detail.gkPositioning, morale: -1),
+          effect: LifeEffect(train: Detail.gkPositioning, morale: -1),
         ),
         LifeChoice(
           label: '良かった場面を見る',
@@ -364,7 +378,8 @@ class LifeEvents {
     LifeEvent(
       id: 'drill-strain',
       title: '違和感',
-      body: '練習中、太ももに軽い違和感が出た。'
+      body:
+          '練習中、太ももに軽い違和感が出た。'
           '動けないほどではない。',
       once: false,
       choices: [
@@ -376,8 +391,7 @@ class LifeEvents {
         LifeChoice(
           label: '最後までやる',
           outcome: 'やり切った。疲れは残った。',
-          effect: LifeEffect(
-              train: Detail.stamina, fatigue: 6, condition: -8),
+          effect: LifeEffect(train: Detail.stamina, fatigue: 6, condition: -8),
         ),
       ],
     ),
@@ -409,7 +423,8 @@ class LifeEvents {
     LifeEvent(
       id: 'kids-clinic',
       title: '子どもたちの前で',
-      body: '地域のサッカー教室に呼ばれた。'
+      body:
+          '地域のサッカー教室に呼ばれた。'
           '50人の子どもが待っている。',
       once: false,
       requirement: LifeRequirement(minFame: 20),
@@ -429,14 +444,15 @@ class LifeEvents {
     LifeEvent(
       id: 'old-coach',
       title: '恩師からの手紙',
-      body: '育ててくれた指導者から手紙が届いた。'
+      body:
+          '育ててくれた指導者から手紙が届いた。'
           '「見ているよ」とだけ書いてあった。',
       requirement: LifeRequirement(minAge: 20),
       choices: [
         LifeChoice(
           label: '返事を書く',
           outcome: '長い返事になった。書きながら、原点を思い出した。',
-          effect: LifeEffect(morale: 7, professionalism: 1),
+          effect: LifeEffect(morale: 7),
         ),
         LifeChoice(
           label: '結果で返す',
@@ -472,7 +488,8 @@ class LifeEvents {
     LifeEvent(
       id: 'media',
       title: '試合後のインタビュー',
-      body: '記者が、監督の起用法について答えを迫ってくる。'
+      body:
+          '記者が、監督の起用法について答えを迫ってくる。'
           'カメラは回ったままだ。',
       once: false,
       choices: [
@@ -484,7 +501,7 @@ class LifeEvents {
         LifeChoice(
           label: '当たり障りなく流す',
           outcome: '何も起きなかった。それでいい日もある。',
-          effect: LifeEffect(),
+          effect: LifeEffect(temper: -1),
         ),
         LifeChoice(
           label: 'チームメイトを立てる',
@@ -496,14 +513,15 @@ class LifeEvents {
     LifeEvent(
       id: 'chant',
       title: '自分のチャントができた',
-      body: 'ゴール裏が、あなたの名前で歌をつくった。'
+      body:
+          'ゴール裏が、あなたの名前で歌をつくった。'
           '試合前に、その歌がスタンドから降ってくる。',
       requirement: LifeRequirement(minFame: 40),
       choices: [
         LifeChoice(
           label: 'ゴール裏に応える',
           outcome: 'あの日から、ここは自分の場所になった。',
-          effect: LifeEffect(morale: 10, fame: 3, confidence: 1),
+          effect: LifeEffect(morale: 10, fame: 3, confidence: 1, fatigue: 2),
         ),
         LifeChoice(
           label: '照れて手を上げるだけ',
@@ -515,7 +533,8 @@ class LifeEvents {
     LifeEvent(
       id: 'ultras',
       title: '練習場に来た一団',
-      body: '連敗が続き、熱心なサポーターが練習場の前を塞いでいる。'
+      body:
+          '連敗が続き、熱心なサポーターが練習場の前を塞いでいる。'
           '中には、言葉が過ぎる者もいる。',
       requirement: LifeRequirement(minAge: 20),
       once: false,
@@ -523,7 +542,13 @@ class LifeEvents {
         LifeChoice(
           label: '前に出て話を聞く',
           outcome: '罵声は止み、代わりに拍手が起きた。長い話になった。',
-          effect: LifeEffect(morale: -4, fame: 3, teammates: 6, confidence: 1),
+          effect: LifeEffect(
+            morale: -4,
+            fame: 3,
+            teammates: 6,
+            confidence: 1,
+            fatigue: 3,
+          ),
         ),
         LifeChoice(
           label: 'バスの窓から見ている',
@@ -533,26 +558,27 @@ class LifeEvents {
         LifeChoice(
           label: 'クラブに任せる',
           outcome: '警備が入って解散した。それが正しい対応ではあった。',
-          effect: LifeEffect(morale: -2, manager: 2),
+          effect: LifeEffect(morale: -2, manager: 2, fame: -1),
         ),
       ],
     ),
     LifeEvent(
       id: 'family',
       title: '身内からの電話',
-      body: '親戚を名乗る人物から、代理人を替えろと言われている。'
+      body:
+          '親戚を名乗る人物から、代理人を替えろと言われている。'
           '「もっと良い話を持ってこられる人がいる」らしい。',
       requirement: LifeRequirement(minAge: 19, minFame: 25),
       choices: [
         LifeChoice(
           label: '話だけ聞いて断る',
           outcome: '角は立ったが、仕事は仕事だと伝えた。',
-          effect: LifeEffect(morale: -3, professionalism: 1),
+          effect: LifeEffect(morale: -3),
         ),
         LifeChoice(
           label: '任せてみる',
           outcome: '数か月、何も進まなかった。授業料だと思うことにした。',
-          effect: LifeEffect(money: -300, morale: -5),
+          effect: LifeEffect(money: -300, morale: 2),
         ),
         LifeChoice(
           label: '電話に出るのをやめる',
@@ -564,7 +590,8 @@ class LifeEvents {
     LifeEvent(
       id: 'friend',
       title: '親友の退団',
-      body: '同じ日に加入し、同じ部屋で遠征を過ごしてきた選手が、'
+      body:
+          '同じ日に加入し、同じ部屋で遠征を過ごしてきた選手が、'
           '今日クラブを去る。',
       requirement: LifeRequirement(minAge: 20),
       choices: [
@@ -576,14 +603,15 @@ class LifeEvents {
         LifeChoice(
           label: '練習を優先する',
           outcome: 'そういうものだ、と自分に言い聞かせた。',
-          effect: LifeEffect(morale: -8, professionalism: 1),
+          effect: LifeEffect(morale: -8, train: Detail.stamina),
         ),
       ],
     ),
     LifeEvent(
       id: 'dm',
       title: '深夜のDM',
-      body: '負けた日に限って、知らない相手からの言葉が届く。'
+      body:
+          '負けた日に限って、知らない相手からの言葉が届く。'
           '大半は読むに堪えないものだ。',
       requirement: LifeRequirement(minFame: 30),
       once: false,
@@ -591,7 +619,7 @@ class LifeEvents {
         LifeChoice(
           label: 'アプリを消す',
           outcome: '数日で、驚くほど気にならなくなった。',
-          effect: LifeEffect(morale: 4, fame: -2, professionalism: 1),
+          effect: LifeEffect(morale: 4, fame: -2),
         ),
         LifeChoice(
           label: '言い返す',
@@ -608,7 +636,8 @@ class LifeEvents {
     LifeEvent(
       id: 'fame',
       title: '有名税',
-      body: '食事に出れば写真を求められ、断れば不機嫌だと書かれる。'
+      body:
+          '食事に出れば写真を求められ、断れば不機嫌だと書かれる。'
           '自宅の前で待たれていた日もある。',
       requirement: LifeRequirement(minFame: 55),
       once: false,
@@ -628,7 +657,8 @@ class LifeEvents {
     LifeEvent(
       id: 'charity',
       title: '財団の話',
-      body: '育った街に、子どものためのグラウンドを作らないかと'
+      body:
+          '育った街に、子どものためのグラウンドを作らないかと'
           '声をかけられた。金も時間もかかる。',
       requirement: LifeRequirement(minAge: 25, minSavings: 3000),
       choices: [
@@ -636,23 +666,25 @@ class LifeEvents {
           label: '私財を出して設立する',
           outcome: '自分の名前の付いたグラウンドで、子どもが走っている。',
           effect: LifeEffect(
-              money: -2000,
-              fame: 8,
-              morale: 10,
-              ambition: -1,
-              special: LifeSpecial.foundCharity),
+            money: -2000,
+            fame: 8,
+            morale: 10,
+            ambition: -1,
+            special: LifeSpecial.foundCharity,
+          ),
         ),
         LifeChoice(
           label: '現役の間は見送る',
           outcome: '今はサッカーに集中する、と伝えた。',
-          effect: LifeEffect(professionalism: 1),
+          effect: LifeEffect(morale: 3),
         ),
       ],
     ),
     LifeEvent(
       id: 'milestone',
       title: '家族の節目',
-      body: '大事な日と、アウェイの試合が重なった。'
+      body:
+          '大事な日と、アウェイの試合が重なった。'
           '本人は「気にしないで」と言っている。',
       requirement: LifeRequirement(minAge: 24),
       once: false,
@@ -660,7 +692,7 @@ class LifeEvents {
         LifeChoice(
           label: '試合に行く',
           outcome: '勝った。写真だけが手元に残った。',
-          effect: LifeEffect(morale: -6, professionalism: 1),
+          effect: LifeEffect(morale: -6),
         ),
         LifeChoice(
           label: '欠場を願い出る',
@@ -672,15 +704,15 @@ class LifeEvents {
     LifeEvent(
       id: 'abroad',
       title: '言葉と食事',
-      body: '練習の指示が半分も分からない。'
+      body:
+          '練習の指示が半分も分からない。'
           '食事も合わず、体重が落ちてきた。',
       requirement: LifeRequirement(abroad: true),
       choices: [
         LifeChoice(
           label: '語学の時間を作る',
           outcome: '半年後、冗談が分かるようになった。',
-          effect: LifeEffect(
-              morale: 6, teammates: 8, condition: -5, professionalism: 1),
+          effect: LifeEffect(morale: 6, teammates: 8, condition: -5),
         ),
         LifeChoice(
           label: '同郷の選手とだけ過ごす',
@@ -692,7 +724,8 @@ class LifeEvents {
     LifeEvent(
       id: 'injuryFear',
       title: '同じ場所',
-      body: '復帰して数試合。競り合いの瞬間に、'
+      body:
+          '復帰して数試合。競り合いの瞬間に、'
           'あの時と同じ体勢になるのが怖い。',
       requirement: LifeRequirement(afterInjury: true),
       once: false,
@@ -705,14 +738,15 @@ class LifeEvents {
         LifeChoice(
           label: '当たりを避けて組み立てる',
           outcome: '無難にこなした。監督は物足りなさそうだった。',
-          effect: LifeEffect(manager: -3, morale: -2),
+          effect: LifeEffect(manager: -3, morale: -2, fatigue: -3),
         ),
       ],
     ),
     LifeEvent(
       id: 'mental',
       title: '眠れない夜',
-      body: '試合のミスが頭から離れず、朝まで眠れない日が続いている。'
+      body:
+          '試合のミスが頭から離れず、朝まで眠れない日が続いている。'
           'クラブには相談窓口がある。',
       requirement: LifeRequirement(lowMorale: true),
       once: false,
@@ -720,7 +754,7 @@ class LifeEvents {
         LifeChoice(
           label: '専門家に相談する',
           outcome: '話すだけで、少し軽くなった。続けることにした。',
-          effect: LifeEffect(morale: 18, condition: 5, professionalism: 1),
+          effect: LifeEffect(morale: 18, condition: 5, money: -60),
         ),
         LifeChoice(
           label: '誰にも言わない',
@@ -732,15 +766,26 @@ class LifeEvents {
     LifeEvent(
       id: 'sponsor',
       title: 'スパイクの話',
-      body: 'ブランドから、専属契約の打診が来ている。'
-          '露出は増えるが、拘束も増える。',
+      body:
+          'ブランドから、専属契約の打診が来ている。'
+          '年<sponsorAnnual>万円。露出は増えるが、拘束も増える。',
       requirement: LifeRequirement(needsSponsorOffer: true),
       once: false,
       choices: [
         LifeChoice(
           label: '契約する',
-          outcome: '自分の名前が入ったスパイクが店頭に並ぶ。',
-          effect: LifeEffect(fame: 5, special: LifeSpecial.acceptSponsor),
+          outcome:
+              '自分の名前が入ったスパイクが店頭に並ぶ。'
+              '撮影とイベントで、オフは短くなった。',
+          // **「拘束も増える」と書いてあるのに、失うものが無かった。**
+          // 受ければ金と名前がただで増えるだけの選択になっていたので、
+          // 本文どおり身体に返す。
+          effect: LifeEffect(
+            fame: 5,
+            fatigue: 8,
+            condition: -6,
+            special: LifeSpecial.acceptSponsor,
+          ),
         ),
         LifeChoice(
           label: '断る',
@@ -752,25 +797,30 @@ class LifeEvents {
     LifeEvent(
       id: 'captain',
       title: '腕章',
-      body: '監督に呼ばれた。来季のキャプテンをやってほしい、と言う。'
+      body:
+          '監督に呼ばれた。来季のキャプテンをやってほしい、と言う。'
           '責任は重い。',
       requirement: LifeRequirement(needsCaptaincy: true),
       choices: [
         LifeChoice(
           label: '受ける',
-          outcome: 'ロッカールームの空気が、自分に向くようになった。',
+          outcome:
+              'ロッカールームの空気が、自分に向くようになった。'
+              '背負うものも、その日から増えた。',
+          // **「責任は重い」と書いてあるのに、得るものしか無かった。**
+          // 腕章は関係を厚くするが、重圧は自分で引き受ける。
           effect: LifeEffect(
-              manager: 8,
-              teammates: 10,
-              morale: 5,
-              ambition: 1,
-              special: LifeSpecial.takeCaptain),
+            manager: 8,
+            teammates: 10,
+            morale: -4,
+            ambition: 1,
+            special: LifeSpecial.takeCaptain,
+          ),
         ),
         LifeChoice(
           label: '自分より相応しい人がいると伝える',
           outcome: '監督は頷いた。プレーで引っ張れ、と言われた。',
-          effect: LifeEffect(
-              teammates: 4, special: LifeSpecial.declineCaptain),
+          effect: LifeEffect(teammates: 4, special: LifeSpecial.declineCaptain),
         ),
       ],
     ),
@@ -778,7 +828,8 @@ class LifeEvents {
     LifeEvent(
       id: 'push-body',
       title: '身体が重い',
-      body: '追い込んだ翌朝、階段を降りるのに手すりを掴んだ。'
+      body:
+          '追い込んだ翌朝、階段を降りるのに手すりを掴んだ。'
           'まだやれる、とも思う。',
       once: false,
       requirement: LifeRequirement(pushingHard: true),
@@ -787,7 +838,11 @@ class LifeEvents {
           label: '構わず追い込む',
           outcome: '振り切った。身体は正直に軋んだ。',
           effect: LifeEffect(
-              train: Detail.stamina, fatigue: 8, condition: -6, ambition: 1),
+            train: Detail.stamina,
+            fatigue: 8,
+            condition: -6,
+            ambition: 1,
+          ),
         ),
         LifeChoice(
           label: '一日だけ落とす',
@@ -797,14 +852,15 @@ class LifeEvents {
         LifeChoice(
           label: 'トレーナーに診てもらう',
           outcome: '悪いところは無い、と言われた。それだけで少し楽になった。',
-          effect: LifeEffect(condition: 5, morale: 4, professionalism: 1),
+          effect: LifeEffect(condition: 5, morale: 4),
         ),
       ],
     ),
     LifeEvent(
       id: 'push-notice',
       title: '見ている人がいる',
-      body: '誰も居ないはずの時間に走っていたら、'
+      body:
+          '誰も居ないはずの時間に走っていたら、'
           'クラブの職員が黙って水を置いていった。',
       once: false,
       requirement: LifeRequirement(pushingHard: true),
@@ -812,7 +868,7 @@ class LifeEvents {
         LifeChoice(
           label: '礼を言って続ける',
           outcome: '見られていることが、少しだけ背中を押した。',
-          effect: LifeEffect(morale: 6, professionalism: 1, fatigue: 3),
+          effect: LifeEffect(morale: 6, fatigue: 3),
         ),
         LifeChoice(
           label: '切り上げる',
@@ -824,7 +880,8 @@ class LifeEvents {
     LifeEvent(
       id: 'promise-weight',
       title: '言葉の重さ',
-      body: '記者に約束のことを蒸し返された。'
+      body:
+          '記者に約束のことを蒸し返された。'
           '「あれ、本気ですか」と笑いを含んだ声で聞かれる。',
       once: false,
       requirement: LifeRequirement(promised: true),
@@ -837,19 +894,20 @@ class LifeEvents {
         LifeChoice(
           label: '笑ってかわす',
           outcome: '言葉を薄めた。少しだけ楽になった。',
-          effect: LifeEffect(morale: 3, confidence: -1),
+          effect: LifeEffect(morale: 3, confidence: -1, teammates: 2),
         ),
         LifeChoice(
           label: '結果で見せると答える',
           outcome: '余計なことは言わなかった。',
-          effect: LifeEffect(professionalism: 1, teammates: 3),
+          effect: LifeEffect(teammates: 3),
         ),
       ],
     ),
     LifeEvent(
       id: 'promise-doubt',
       title: '眠れない夜',
-      body: '口にした数字が、天井のあたりに浮かんでいる。'
+      body:
+          '口にした数字が、天井のあたりに浮かんでいる。'
           '取り消せないことだけは分かっている。',
       once: false,
       requirement: LifeRequirement(promised: true, lowCondition: true),
@@ -876,8 +934,12 @@ class LifeEvents {
         LifeChoice(
           label: '出ると言う',
           outcome: '無理を通した。監督は頷いた。',
-          effect:
-              LifeEffect(manager: 5, teammates: 3, fatigue: 6, condition: -4),
+          effect: LifeEffect(
+            manager: 5,
+            teammates: 3,
+            fatigue: 6,
+            condition: -4,
+          ),
         ),
         LifeChoice(
           label: '正直に伝える',
@@ -890,7 +952,8 @@ class LifeEvents {
     LifeEvent(
       id: 'partner-dinner',
       title: '<partner>と飯を食う',
-      body: '練習の帰り、<partner>が「行くか」と顎で示した。'
+      body:
+          '練習の帰り、<partner>が「行くか」と顎で示した。'
           '大した話はしない相手だが、居心地は悪くない。',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.partner),
@@ -910,7 +973,8 @@ class LifeEvents {
     LifeEvent(
       id: 'competitor-advice',
       title: '<competitor>の一言',
-      body: '自分が外れた試合の後、<competitor>が'
+      body:
+          '自分が外れた試合の後、<competitor>が'
           '「あそこ、俺なら逆を向く」と言ってきた。悪意は無いらしい。',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.competitor),
@@ -935,7 +999,8 @@ class LifeEvents {
     LifeEvent(
       id: 'mentor-limit',
       title: '<mentor>の身体',
-      body: '<mentor>がアイシングをしながら「もう戻らないところがある」と言った。'
+      body:
+          '<mentor>がアイシングをしながら「もう戻らないところがある」と言った。'
           '笑っていたが、目は笑っていなかった。',
       requirement: LifeRequirement(needsPerson: PersonKind.mentor),
       choices: [
@@ -954,7 +1019,8 @@ class LifeEvents {
     LifeEvent(
       id: 'manager-clash',
       title: '<manager>と噛み合わない',
-      body: 'ミーティングで名指しされた。'
+      body:
+          'ミーティングで名指しされた。'
           '言っていることは分かる。ただ、自分のやり方とは違う。',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.manager),
@@ -972,14 +1038,15 @@ class LifeEvents {
         LifeChoice(
           label: '後で二人で話す',
           outcome: '納得はしていないが、話は通じた。',
-          effect: LifeEffect(manager: 3, professionalism: 1),
+          effect: LifeEffect(manager: 3),
         ),
       ],
     ),
     LifeEvent(
       id: 'agent-offer-talk',
       title: '<agent>からの電話',
-      body: '「動いている話がある」とだけ言われた。'
+      body:
+          '「動いている話がある」とだけ言われた。'
           '詳しくは言わない。今は言えない、ということらしい。',
       once: false,
       requirement: LifeRequirement(needsPerson: PersonKind.agent, minAge: 21),
@@ -992,7 +1059,7 @@ class LifeEvents {
         LifeChoice(
           label: '今は聞きたくないと言う',
           outcome: '目の前の試合に戻った。',
-          effect: LifeEffect(professionalism: 1, condition: 3),
+          effect: LifeEffect(condition: 3),
         ),
       ],
     ),
@@ -1000,7 +1067,8 @@ class LifeEvents {
     LifeEvent(
       id: 'sleep',
       title: '眠れていない',
-      body: '寝つきが悪い日が続いている。'
+      body:
+          '寝つきが悪い日が続いている。'
           '朝の重さは、練習の重さとは違う種類のものだ。',
       once: false,
       requirement: LifeRequirement(lowCondition: true),
@@ -1020,7 +1088,8 @@ class LifeEvents {
     LifeEvent(
       id: 'hometown',
       title: '地元に帰る',
-      body: 'オフの数日、育った街に戻った。'
+      body:
+          'オフの数日、育った街に戻った。'
           '通っていたグラウンドは、記憶より狭かった。',
       once: false,
       requirement: LifeRequirement(minAge: 22),
@@ -1040,7 +1109,8 @@ class LifeEvents {
     LifeEvent(
       id: 'boots',
       title: '道具を見直す',
-      body: '同じモデルを何年も履いている。'
+      body:
+          '同じモデルを何年も履いている。'
           '新しいものを試してみないか、と用具担当に言われた。',
       once: false,
       requirement: LifeRequirement(),
@@ -1060,7 +1130,8 @@ class LifeEvents {
     LifeEvent(
       id: 'video-night',
       title: '相手の映像',
-      body: '次の相手の映像が配られた。'
+      body:
+          '次の相手の映像が配られた。'
           '見なくても試合はできる。見れば、何か見つかるかもしれない。',
       once: false,
       requirement: LifeRequirement(),
@@ -1085,15 +1156,15 @@ class LifeEvents {
     LifeEvent(
       id: 'veteran',
       title: '若手が寄ってくる',
-      body: '練習後、若い選手が質問に来るようになった。'
+      body:
+          '練習後、若い選手が質問に来るようになった。'
           '自分が同じことを聞いていたのは、そう昔でもない。',
       requirement: LifeRequirement(minAge: 31),
       choices: [
         LifeChoice(
           label: '時間を取って教える',
           outcome: '自分の言葉で説明すると、分かっていなかったことに気づいた。',
-          effect: LifeEffect(
-              teammates: 10, morale: 6, professionalism: 1, condition: -5),
+          effect: LifeEffect(teammates: 10, morale: 6, condition: -5),
         ),
         LifeChoice(
           label: '自分のことに集中する',

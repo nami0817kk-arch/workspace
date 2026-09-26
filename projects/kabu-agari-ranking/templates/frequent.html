@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}何度も値上がりランキングに入った銘柄 直近{{ day_count }}営業日{% endblock %}
+{% block description %}直近{{ day_count }}営業日の値上がり・値下がりランキングに、2回以上入った銘柄を回数順に掲載。連続ランクインの最長日数も数えています。{% endblock %}
+{% block content %}
+<h1>何度もランクインした銘柄</h1>
+<p class="updated">集計期間: {{ period_from }} 〜 {{ period_to }}（{{ day_count }}営業日）</p>
+<p>
+  この期間のランキングに<strong>2回以上</strong>入った銘柄を、回数の多い順に並べています。
+  1回だけの銘柄は載せていません（その日たまたま動いただけの銘柄が大半のため）。
+  「連続」はカレンダーの連日ではなく、当サイトの掲載日の並びで数えています。
+  「ストップ高」「ストップ安」は、そのうち制限値幅いっぱいまで動いた日の回数です。
+</p>
+
+<h2>値上がりランキングに複数回</h2>
+{% if gainers %}
+<div class="table-wrap">
+<table class="ranking">
+  <caption>直近{{ day_count }}営業日で値上がりランキングに2回以上入った銘柄</caption>
+  <thead>
+    <tr>
+      <th scope="col">回数</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">最大上昇率</th>
+      <th scope="col">ストップ高</th>
+      <th scope="col">最長連続</th>
+      <th scope="col">直近</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in gainers %}
+    <tr>
+      <th scope="row">{{ e.count }}回</th>
+      <td><a href="{{ base_url }}stock/{{ e.code }}/">{{ e.name }}</a></td>
+      <td>{{ e.code }}</td>
+      <td class="gain">{{ "%+.2f"|format(e.best_pct) }}%</td>
+      <td>{{ e.stops }}回</td>
+      <td>{{ e.streak }}日</td>
+      <td>{{ e.latest }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p>この期間に複数回入った銘柄はありませんでした。</p>
+{% endif %}
+
+<h2>値下がりランキングに複数回</h2>
+{% if losers %}
+<div class="table-wrap">
+<table class="ranking">
+  <caption>直近{{ day_count }}営業日で値下がりランキングに2回以上入った銘柄</caption>
+  <thead>
+    <tr>
+      <th scope="col">回数</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">最大下落率</th>
+      <th scope="col">ストップ安</th>
+      <th scope="col">最長連続</th>
+      <th scope="col">直近</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in losers %}
+    <tr>
+      <th scope="row">{{ e.count }}回</th>
+      <td><a href="{{ base_url }}stock/{{ e.code }}/">{{ e.name }}</a></td>
+      <td>{{ e.code }}</td>
+      <td class="loss">{{ "%+.2f"|format(e.best_pct) }}%</td>
+      <td>{{ e.stops }}回</td>
+      <td>{{ e.streak }}日</td>
+      <td>{{ e.latest }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p>この期間に複数回入った銘柄はありませんでした。</p>
+{% endif %}
+
+<p>
+  回数が多いこと自体は、その銘柄が良い・悪いを意味しません。
+  値動きの大きい銘柄ほど上下どちらのランキングにも現れます。
+  読み方は<a href="{{ base_url }}guide.html">ランキングの読み方</a>を参照してください。
+</p>
+{% include "_ad_slot.html" %}
+{% endblock %}

@@ -370,6 +370,69 @@ List<GlossaryEntry> get glossaryEntries => [
             "An older player (28 or over) paired with a young one. The younger man grows faster, and the mentor's own morale lifts a little from the responsibility."),
       ),
       GlossaryEntry(
+        term: Tr.pick('ユースのメンター', 'Academy mentor'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'ユースの有望株に付ける一軍のベテラン(28歳以上)。施設での成長が速くなり、ユースでは練習では身に付かない性格特性を習得する道が開ける。1人のベテランが見られるのは1人だけで、一軍の若手のメンターとは兼任できない。',
+            "A first-team player of 28 or over, paired with an academy prospect. He grows faster in the academy, and it opens the only route to a personality trait while he is still there. A veteran can only look after one player, and cannot mentor a first-teamer at the same time."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('生え抜き', 'Academy graduate'),
+        category: GlossaryCategory.club,
+        description: Tr.pick(
+            '自クラブのユースから昇格させた選手に付く印。買ってきた選手と、何年もかけて育てた選手を名簿の上で見分けるためのもの。一度付いたら外れない。',
+            'The mark on a player you brought through your own academy, so the ones you bought and the ones you raised can be told apart at a glance. Once earned it never comes off.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('シーズンの振り返り', 'Season review'),
+        category: GlossaryCategory.club,
+        description: Tr.pick(
+            'シーズンが終わった直後にホームへ出るまとめ。順位・勝敗・得失点・獲得タイトル・得点王と、その年の総括が並ぶ。閉じるとそのシーズンについては二度と出ない。過去の年はシーズン成績の画面でいつでも見返せる。',
+            'The summary that appears on the home screen when a season ends: where you finished, your record, the goals, any trophies, the top scorer and a verdict on the year. Close it and it will not come back; past seasons stay in the season history screen.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('試合前の確認', 'Pre-match check'),
+        category: GlossaryCategory.liveMatch,
+        description: Tr.pick(
+            '試合を始める前に、スタメンの取りこぼしを拾って知らせる。出られない選手(負傷・出場停止・代表召集・ローン放出中)がスタメンにいる、11人そろっていない、疲労や実戦感覚が足りない、本職外の配置、控えが3人未満、の5点を見る。問題が無い週は何も出ない。',
+            "Before kick-off, anything left undone in your XI is put in front of you: a man who cannot play (injured, suspended, on international duty, out on loan), fewer than eleven, tired or rusty starters, players out of position, and a bench of fewer than three. On a clean week nothing appears."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('次にやること', 'What to do next'),
+        category: GlossaryCategory.club,
+        description: Tr.pick(
+            'ホームの先頭に出る提案。資金マイナス・スタメン不足・トレーニング未実施・ユースの流出候補・主力の契約切れ間近を見て、いま手を付けるべきことを1件だけ出す。損が確定しているものが先に来る。',
+            "The prompt at the top of the home screen. It watches for a negative balance, an incomplete XI, untouched training, a prospect about to walk and a key contract running down, and names the single thing worth doing now. Whatever is already costing you comes first."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('スタッフの得意分野', 'Staff specialty'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'スタッフが持つ専門(攻撃・守備・GK・フィジカル・万能)。能力値は「どれだけ上手いか」しか表さないため、得意分野が「何を伸ばせるか」を決める。ユースコーチの得意分野は有望株の伸びる能力に直接効き、担当が違う分野(GK専門とフィールドプレーヤーなど)には効かない。候補の半数は万能。',
+            "What a member of staff is specialised in: attacking, defending, goalkeeping, physical or all-round. His attributes say how good he is; the specialty says what he can improve. A youth coach's specialty steers which attributes your prospects gain, and does nothing outside its remit — a goalkeeping coach adds nothing to an outfield player. About half the candidates are all-round."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('ユースリーグ', 'Youth league'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            '自クラブのユースと近隣7クラブのユースで戦う年間リーグ(14節)。毎週の練習試合がこの順位表に積み上がる。全節を終えると順位と得点王がニュースに出る。相手の強さはシーズン開始時に自クラブのユースの水準から決まり、年度ごとに引き直される。',
+            'A 14-round league between your academy and seven neighbouring ones. The weekly youth match feeds this table, and when the rounds are done the finishing position and top scorer make the news. Opponent strength is set from your own academy at the start of each season, and redrawn every year.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('プロ契約(昇格)', 'First professional contract'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う週俸と契約金(一括)が発生する。契約金が払えない、または週給予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
+            "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing fee. Without the fee or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('有望株の流出', 'Losing a prospect'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            '19歳を過ぎた有望株は出場機会を求め、そのままにしておくとユースを去る。20歳を過ぎるとその確率は上がる。伸びしろの大きい選手は他クラブに引き抜かれ、伸び悩んだ選手は自分から去る。いずれも育成補償金が入る。メンターを付ける、ユース施設を上げる、一軍に昇格させる、のいずれかで引き止められる。',
+            'Past 19, a prospect wants first-team football and will leave the academy if nothing changes; past 20 it happens more often. The ones with room to grow get poached, the ones who stalled walk away. Either way you receive a development fee. A mentor, a better academy or a promotion to the first team will keep him.'),
+      ),
+      GlossaryEntry(
         term: Tr.pick('特訓ドリル', 'Focus drill'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
@@ -445,6 +508,13 @@ List<GlossaryEntry> get glossaryEntries => [
         description: Tr.pick(
             '選手に約束する出場機会の立場(キープレイヤー/主力/ローテーション/育成枠)。上の立場ほどベンチに置いたときの不満が大きく、契約交渉で求める週給も高くなる。選手詳細画面で設定する。',
             'What you promise a player about his minutes: key player, first team, rotation or prospect. The higher the billing, the more he resents the bench and the more he asks for in wages. Set from his own page.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('観客動員', 'Attendance'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            '試合に足を運んだ人数。スタジアムの収容人数に動員率を掛けたもので、動員率は順位・監督への信頼度・チケット価格で上下する。下部ディビジョンほど低い。試合日の収入はここから決まるため、勝てないと資金も細る。',
+            'How many came to the match: your stadium capacity times a turnout rate that moves with your league position, the board\'s confidence and your ticket prices, and which is lower the further down the pyramid you are. Matchday income follows from it, so a bad run thins the bank balance too.'),
       ),
       GlossaryEntry(
         term: Tr.pick('週給予算', 'Wage budget'),

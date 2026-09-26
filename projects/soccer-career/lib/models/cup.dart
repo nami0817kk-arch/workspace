@@ -35,13 +35,22 @@ enum CupRound {
 
   final String label;
 
-  /// 2戦合計で決めるラウンドか（大陸カップの決勝トーナメント）。
+  /// 2戦合計で決めるラウンドか。**大陸カップの決勝トーナメントだけ。**
   ///
   /// 決勝だけは中立地の一発勝負。現実のとおり。
-  bool get twoLegged =>
-      this == CupRound.round16 ||
-      this == CupRound.quarter ||
-      this == CupRound.semi;
+  ///
+  /// **大会の種類を見ないと、国内カップが終わらなくなる。** 以前は
+  /// ラウンドだけで決めていたので、国内カップも 16強・準々・準決勝が
+  /// 2戦合計になり、決勝まで 8試合が要った。日程は
+  /// `Cups.domesticMatches`（5試合）しか取ってないので、**勝ち続けた
+  /// シーズンは準決勝で日程が尽き**、季末に `runDomesticCup` が
+  /// 結果を振り直していた——5連勝した選手に「1回戦敗退」と告げていた
+  /// （実測113シーズンで、準決勝まで勝ち上がった35回のうち18回）。
+  bool twoLeggedIn(CupKind kind) =>
+      kind == CupKind.continental &&
+      (this == CupRound.round16 ||
+          this == CupRound.quarter ||
+          this == CupRound.semi);
 
   /// 中立地で行うか。
   bool get neutral => this == CupRound.finalRound;
@@ -97,12 +106,15 @@ class CupTie {
   /// グループステージの何試合目か（1〜6）。それ以外は 0。
   final int groupMatch;
 
+  /// この一戦が2戦合計の一部か。**国内カップは常に一発勝負。**
+  bool get twoLegged => round.twoLeggedIn(kind);
+
   /// 画面に出す一言。「大陸カップ 準々決勝 第2戦」。
   String get label {
     if (round == CupRound.group) {
       return '${kind.label} ${round.label} 第$groupMatch節';
     }
-    if (round.twoLegged) return '${kind.label} ${round.label} 第$leg戦';
+    if (twoLegged) return '${kind.label} ${round.label} 第$leg戦';
     return '${kind.label} ${round.label}';
   }
 

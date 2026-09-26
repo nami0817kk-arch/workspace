@@ -4,13 +4,17 @@ import '../budget_lines.dart';
 import '../readable_width.dart';
 import '../transfer_code.dart';
 import '../../game/career_engine.dart';
+import '../../game/squads.dart';
+import '../../models/player.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
+import '../../models/agent.dart';
 import '../../models/competition.dart';
 import '../../models/life.dart';
-import '../../models/physique.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
+import '../player_banner.dart';
+import '../../models/career.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
 ///
@@ -29,11 +33,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   late List<TransferOffer> _offers;
   bool _busy = false;
 
-  /// オフに身体をどうするか。移籍先を決めるのと同じ画面で選ぶ。
-  BodyPlan _bodyPlan = BodyPlan.maintain;
-
-  /// プレシーズンの過ごし方。
-  PreseasonPlan _preseason = PreseasonPlan.camp;
+  /// オフをどう過ごすか。移籍先を決めるのと同じ画面で選ぶ。
+  Offseason _offseason = Offseason.sharpen;
 
   /// 代理人に一度売り込ませたか。1シーズンに1度だけ。
   bool _solicited = false;
@@ -49,11 +50,13 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(found
-            ? '代理人が${offers.length}件の話を取ってきた。'
-            : '代理人は動いたが、今回は何も取れなかった。'),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            found ? '代理人が${offers.length}件の話を取ってきた。' : '代理人は動いたが、今回は何も取れなかった。',
+          ),
+        ),
+      );
   }
 
   @override
@@ -62,18 +65,60 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     // 大陸カップの結果をここで確定させる。
     widget.controller.finishSeason();
     final renewal = widget.controller.renewalOffer;
-    _offers = [
-      ?renewal,
-      ...widget.controller.offers,
-    ];
+    _offers = [?renewal, ...widget.controller.offers];
   }
 
-  Future<void> _accept(TransferOffer offer) async {
+  /// 代理人を選び直す。違約金は貯蓄から前払いする。
+  Future<void> _changeAgent(BuildContext context) async {
+    final c = widget.controller;
+    final fee = c.agentSwitchFee;
+    final savings = c.state!.finances.savings;
+    final picked = await showDialog<Agent>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('代理人を変える'),
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+            child: Text(
+              savings < fee
+                  ? '違約金 $fee万円。貯蓄は$savings万円で、足りない。'
+                  : '違約金 $fee万円を貯蓄（$savings万円）から払う。',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          for (final a in c.agentChoices)
+            SimpleDialogOption(
+              onPressed: savings < fee
+                  ? null
+                  : () => Navigator.of(context).pop(a),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${a.name}（${a.style}）'),
+                  Text(
+                    a.description,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+    if (picked == null) return;
+    c.changeAgent(picked);
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _accept(TransferOffer offer, {bool incentive = false}) async {
     if (_busy) return;
     setState(() => _busy = true);
-    await widget.controller.setPreseason(_preseason);
-    await widget.controller
-        .advanceSeason(accepted: offer, bodyPlan: _bodyPlan);
+    await widget.controller.advanceSeason(
+      accepted: offer,
+      offseason: _offseason,
+      incentive: incentive,
+    );
     if (!mounted) return;
     Navigator.of(context).pop();
   }
@@ -135,258 +180,273 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     final fate = controller.fate;
     final mustRetire = controller.mustRetire;
     final canRetire = controller.canRetire;
-    final muted = theme.textTheme.bodySmall
-        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${state.year}シーズン終了'),
-        automaticallyImplyLeading: false,
-      ),
-      body: SafeArea(
-        child: ReadableWidth(
-          child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('${state.club.name}  ${state.leaguePosition}位',
-                        style: theme.textTheme.titleLarge),
-                    if (fate != ClubFate.stay) ...[
-                      const SizedBox(height: 6),
-                      _FateChip(fate: fate),
-                    ],
-                    if (state.objective != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        state.objective!.achieved(stats)
-                            ? '監督の期待に応えた（${state.objective!.achievedCount(stats)}/3）'
-                            : '監督の期待には届かなかった（${state.objective!.achievedCount(stats)}/3）',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: state.objective!.achieved(stats)
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.error,
+    // 「戻る」で拠点に抜けさせない。initState で finishSeason() を
+    // 済ませているので、抜けてもう一度入ると大陸カップの結果が
+    // 二度確定する。抜ける道は 契約を選ぶ／引退する のどちらかだけ。
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('${state.year}シーズン終了'),
+          automaticallyImplyLeading: false,
+        ),
+        body: SafeArea(
+          child: ReadableWidth(
+            child: ListView(
+              padding: const EdgeInsets.all(20),
+              children: [
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // **1年の結末に、クラブの色が一つも無かった。**
+                      // 38試合の締めくくりが白いカードの小さな文字で、
+                      // 選手証にも対戦カードにもクラブタブにも帯があるのに、
+                      // ここだけ「どこで戦った1年か」が文字の中に埋もれていた。
+                      _SeasonBand(
+                        state: state,
+                        fate: fate,
+                        position: state.leaguePosition,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (state.objective != null) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                state.objective!.achieved(stats)
+                                    ? '監督の期待に応えた（${state.objective!.achievedCount(stats)}/3）'
+                                    : '監督の期待には届かなかった（${state.objective!.achievedCount(stats)}/3）',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: state.objective!.achieved(stats)
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.error,
+                                ),
+                              ),
+                            ],
+                            if (state.promise != null) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                state.promiseKept!
+                                    ? '約束を果たした（${state.promise!.label}）'
+                                    : '約束に届かなかった（${state.promise!.label}）',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: state.promiseKept!
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.error,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                            if (state.seasonCaps > 0) ...[
+                              const SizedBox(height: 4),
+                              Text('代表 ${state.seasonCaps}試合', style: muted),
+                            ],
+                            if (state.cupStage.participated) ...[
+                              const SizedBox(height: 6),
+                              Chip(
+                                label: Text('国内カップ ${state.cupStage.label}'),
+                                backgroundColor:
+                                    state.cupStage == CupStage.winner
+                                    ? theme.colorScheme.primaryContainer
+                                    : null,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ],
+                            if (state.worldCupStage.participated) ...[
+                              const SizedBox(height: 6),
+                              Chip(
+                                label: Text(
+                                  '世界大会 ${state.worldCupStage.label}',
+                                ),
+                                backgroundColor:
+                                    theme.colorScheme.tertiaryContainer,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ],
+                            if (state.continentalStage.participated) ...[
+                              const SizedBox(height: 6),
+                              Chip(
+                                label: Text(
+                                  '大陸カップ ${state.continentalStage.label}',
+                                ),
+                                backgroundColor:
+                                    state.continentalStage ==
+                                        ContinentalStage.winner
+                                    ? theme.colorScheme.primaryContainer
+                                    : null,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _stat(theme, '出場', '${stats.appearances}'),
+                                _stat(theme, 'ゴール', '${stats.goals}'),
+                                _stat(theme, 'アシスト', '${stats.assists}'),
+                                _stat(
+                                  theme,
+                                  '平均評価',
+                                  stats.appearances == 0
+                                      ? '—'
+                                      : stats.averageRating.toStringAsFixed(2),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ],
-                    if (state.promise != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        state.promiseKept!
-                            ? '約束を果たした（${state.promise!.label}）'
-                            : '約束に届かなかった（${state.promise!.label}）',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: state.promiseKept!
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.error,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                    if (state.seasonCaps > 0) ...[
-                      const SizedBox(height: 4),
-                      Text('代表 ${state.seasonCaps}試合', style: muted),
-                    ],
-                    if (state.cupStage.participated) ...[
-                      const SizedBox(height: 6),
-                      Chip(
-                        label: Text('国内カップ ${state.cupStage.label}'),
-                        backgroundColor: state.cupStage == CupStage.winner
-                            ? theme.colorScheme.primaryContainer
-                            : null,
-                        visualDensity: VisualDensity.compact,
-                      ),
-                    ],
-                    if (state.worldCupStage.participated) ...[
-                      const SizedBox(height: 6),
-                      Chip(
-                        label:
-                            Text('世界大会 ${state.worldCupStage.label}'),
-                        backgroundColor:
-                            theme.colorScheme.tertiaryContainer,
-                        visualDensity: VisualDensity.compact,
-                      ),
-                    ],
-                    if (state.continentalStage.participated) ...[
-                      const SizedBox(height: 6),
-                      Chip(
-                        label: Text(
-                            '大陸カップ ${state.continentalStage.label}'),
-                        backgroundColor:
-                            state.continentalStage == ContinentalStage.winner
-                                ? theme.colorScheme.primaryContainer
-                                : null,
-                        visualDensity: VisualDensity.compact,
-                      ),
-                    ],
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _stat(theme, '出場', '${stats.appearances}'),
-                        _stat(theme, 'ゴール', '${stats.goals}'),
-                        _stat(theme, 'アシスト', '${stats.assists}'),
-                        _stat(
-                            theme,
-                            '平均評価',
-                            stats.appearances == 0
-                                ? '—'
-                                : stats.averageRating.toStringAsFixed(2)),
+                        Text('今季のお金', style: theme.textTheme.titleSmall),
+                        const SizedBox(height: 6),
+                        // 契約を選ぶ前に見えていないと、来季も同じことになる。
+                        BudgetLines(state: state),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('今季のお金', style: theme.textTheme.titleSmall),
-                    const SizedBox(height: 6),
-                    // 契約を選ぶ前に見えていないと、来季も同じことになる。
-                    BudgetLines(state: state),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _BackupCard(
-              years: state.yearsSinceBackup,
-              everBackedUp: state.backedUpYear > 0,
-              onBackup: () =>
-                  TransferCode.show(context, widget.controller),
-            ),
-            const SizedBox(height: 24),
-            if (mustRetire) ...[
-              Text('${state.player.age}歳。体は限界を迎えた。', style: muted),
-              const SizedBox(height: 20),
-              FilledButton(
-                onPressed: _busy ? null : _retire,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text('引退する'),
-                ),
-              ),
-            ] else ...[
-              Text('オフの過ごし方', style: theme.textTheme.titleMedium),
-              const SizedBox(height: 4),
-              Text(
-                '${state.player.physique.label}。'
-                '体重の増減は、当たりの強さと足元のキレを入れ替える。',
-                style: muted,
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final plan in BodyPlan.values)
-                    Tooltip(
-                      message: plan.description,
-                      child: ChoiceChip(
-                        label: Text(plan.label),
-                        selected: _bodyPlan == plan,
-                        onSelected: _busy
-                            ? null
-                            : (_) => setState(() => _bodyPlan = plan),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              // 説明はツールチップに隠さない。スマホでは長押ししないと読めない。
-              Text(_bodyPlan.description, style: muted),
-              const SizedBox(height: 16),
-              Text('プレシーズン', style: theme.textTheme.labelLarge),
-              const SizedBox(height: 6),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final plan in PreseasonPlan.values)
-                    Tooltip(
-                      message: plan.description,
-                      child: ChoiceChip(
-                        label: Text(plan.label),
-                        selected: _preseason == plan,
-                        onSelected: _busy
-                            ? null
-                            : (_) => setState(() => _preseason = plan),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Text(_preseason.description, style: muted),
-              const Divider(height: 32),
-              Row(
-                children: [
-                  Text('契約', style: theme.textTheme.titleMedium),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      '代理人 ${state.agent.name}（${state.agent.description}）',
-                      style: muted,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              if (!_solicited) ...[
-                OutlinedButton(
-                  onPressed: _busy ? null : _solicit,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                        '代理人に売り込ませる（前金 ${controller.solicitCost}万円）'),
                   ),
                 ),
-                const SizedBox(height: 12),
-              ],
-              for (var i = 0; i < _offers.length; i++) ...[
-                _OfferCard(
-                  offer: _offers[i],
-                  takeHome: controller.takeHome(_offers[i].salary),
-                  busy: _busy,
-                  onAccept: () => _accept(_offers[i]),
-                  onNegotiate: _offers[i].negotiated ? null : () => _negotiate(i),
-                ),
-                const SizedBox(height: 12),
-              ],
-              if (_offers.length == 1)
-                Text(
-                  state.contractYears > 1
-                      ? '契約はあと${state.contractYears}年残っている。今は動けない。'
-                      : '他クラブからのオファーは無かった。',
-                  style: muted,
-                ),
-              if (canRetire) ...[
                 const SizedBox(height: 16),
-                OutlinedButton(
-                  onPressed: _busy ? null : _retire,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Text('引退する'),
+                _BackupCard(
+                  years: state.yearsSinceBackup,
+                  everBackedUp: state.backedUpYear > 0,
+                  onBackup: () => TransferCode.show(context, widget.controller),
+                ),
+                const SizedBox(height: 24),
+                if (mustRetire) ...[
+                  Text('${state.player.age}歳。体は限界を迎えた。', style: muted),
+                  const SizedBox(height: 20),
+                  FilledButton(
+                    onPressed: _busy ? null : _retire,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Text('引退する'),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '${Formulas.retirementForcedAge}歳のシーズンを終えると引退になる。',
-                  textAlign: TextAlign.center,
-                  style: muted,
-                ),
+                ] else ...[
+                  Text('オフの過ごし方', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${state.player.physique.label}。'
+                    'ここで決めたことが、来季まるごとに乗る。',
+                    style: muted,
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final plan in Offseason.values)
+                        ChoiceChip(
+                          label: Text(plan.label),
+                          selected: _offseason == plan,
+                          onSelected: _busy
+                              ? null
+                              : (_) => setState(() => _offseason = plan),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  // 説明はツールチップに隠さない。スマホでは長押ししないと読めない。
+                  Text(_offseason.description, style: muted),
+                  const Divider(height: 32),
+                  Text('契約', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 2),
+                  // 1行に押し込むと「手数料 5…」で切れていた。折り返す。
+                  Text(
+                    '代理人 ${state.agent.name}（${state.agent.description}）',
+                    style: muted,
+                  ),
+                  const SizedBox(height: 6),
+                  // **代理人は変えられる。** 18歳のときに選んだ一人で
+                  // 19シーズンを通していた。欲しいものは時期で変わる。
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: OutlinedButton(
+                      onPressed: _busy ? null : () => _changeAgent(context),
+                      child: Text(
+                        '代理人を変える'
+                        '（違約金 ${widget.controller.agentSwitchFee}万）',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (!_solicited) ...[
+                    OutlinedButton(
+                      onPressed: _busy ? null : _solicit,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          '代理人に売り込ませる（前金 ${controller.solicitCost}万円）',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  for (var i = 0; i < _offers.length; i++) ...[
+                    _OfferCard(
+                      offer: _offers[i],
+                      player: controller.state!.player,
+                      year: controller.state!.year,
+                      roleNote: CareerEngine.roleNoteFor(
+                        controller.state!.player.overall,
+                        _offers[i].club,
+                      ),
+                      takeHome: controller.takeHome(_offers[i].salary),
+                      busy: _busy,
+                      onAccept: () => _accept(_offers[i]),
+                      onNegotiate: _offers[i].negotiated
+                          ? null
+                          : () => _negotiate(i),
+                      // ローンと復帰には監督の目標が付かないので、賭けようがない。
+                      onIncentive: _offers[i].loan || _offers[i].returning
+                          ? null
+                          : () => _accept(_offers[i], incentive: true),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  if (_offers.length == 1)
+                    Text(
+                      state.contractYears > 1
+                          ? '契約はあと${state.contractYears}年残っている。今は動けない。'
+                          : '他クラブからのオファーは無かった。',
+                      style: muted,
+                    ),
+                  if (canRetire) ...[
+                    const SizedBox(height: 16),
+                    OutlinedButton(
+                      onPressed: _busy ? null : _retire,
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Text('引退する'),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${Formulas.retirementForcedAge}歳のシーズンを終えると引退になる。',
+                      textAlign: TextAlign.center,
+                      style: muted,
+                    ),
+                  ],
+                ],
               ],
-            ],
-          ],
+            ),
           ),
         ),
       ),
@@ -394,13 +454,16 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   }
 
   Widget _stat(ThemeData theme, String label, String value) => Column(
-        children: [
-          Text(label,
-              style: theme.textTheme.labelSmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-          Text(value, style: theme.textTheme.titleLarge),
-        ],
-      );
+    children: [
+      Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      Text(value, style: theme.textTheme.titleLarge),
+    ],
+  );
 }
 
 class _OfferCard extends StatelessWidget {
@@ -410,7 +473,18 @@ class _OfferCard extends StatelessWidget {
     required this.busy,
     required this.onAccept,
     required this.onNegotiate,
+    required this.onIncentive,
+    required this.player,
+    required this.year,
+    this.roleNote,
   });
+
+  /// 名簿の中での位置を出すために要る。
+  final Player player;
+  final int year;
+
+  /// 起用の約束が実際に何を意味するか。`CareerEngine.roleNoteFor` から引く。
+  final String? roleNote;
 
   final TransferOffer offer;
   final int takeHome;
@@ -418,11 +492,32 @@ class _OfferCard extends StatelessWidget {
   final VoidCallback onAccept;
   final VoidCallback? onNegotiate;
 
+  /// 出来高払いでサインする。目標が無い契約（ローン・復帰）では出さない。
+  final VoidCallback? onIncentive;
+
+  /// 行き先の名簿の中で、自分がどこに入るか。
+  ///
+  /// 登録メンバーの判定（`Competitions.registrationFor`）と
+  /// **同じ数え方を読む**——別に書くと、画面の数字と
+  /// 加入した後の扱いがずれる。
+  String _squadLine() {
+    final squad = Squad.of(offer.club, year: year);
+    final ahead = squad.aheadOf(player.position, player.overall);
+    final quota = Squad.quotaFor(player.position.family);
+    final rivals = squad.rivalsFor(player.position);
+    final top = rivals.isEmpty ? null : rivals.first;
+    final head = ahead == 0 ? 'あなたの枠では一番上' : 'あなたの枠に上が $ahead 人';
+    final fate = ahead >= quota ? '（登録外になる）' : '（定員 $quota）';
+    final face = top == null ? '' : ' ・ 筆頭は ${top.name}（${top.overall}）';
+    return '$head $fate$face';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final muted = theme.textTheme.bodySmall
-        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
     return Card(
       color: offer.isRenewal ? theme.colorScheme.surfaceContainerHigh : null,
       child: Padding(
@@ -442,19 +537,28 @@ class _OfferCard extends StatelessWidget {
                   ),
                 ),
                 Chip(
-                  label: Text(offer.loan
-                      ? 'ローン'
-                      : offer.returning
-                          ? '復帰'
-                          : offer.isRenewal
-                              ? '契約更改'
-                              : '移籍'),
+                  label: Text(
+                    offer.loan
+                        ? 'ローン'
+                        : offer.returning
+                        ? '復帰'
+                        : offer.isRenewal
+                        ? '契約更改'
+                        : '移籍',
+                  ),
                   visualDensity: VisualDensity.compact,
                 ),
               ],
             ),
             const SizedBox(height: 4),
             Text(offer.reason, style: muted),
+            // **そのクラブに、あなたの枠に誰が居るか。**
+            // 行き先を決める材料は年俸・移籍金・契約年数と
+            // 起用の約束だけで、**誰と先発を争うのかは書いていなかった**。
+            if (!offer.isRenewal) ...[
+              const SizedBox(height: 4),
+              Text(_squadLine(), style: muted),
+            ],
             if (offer.terms.isNotEmpty) ...[
               const SizedBox(height: 4),
               Text(offer.terms, style: muted),
@@ -485,8 +589,10 @@ class _OfferCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('年俸 ${offer.salary}万円 ・ ${offer.years}年契約',
-                          style: theme.textTheme.titleMedium),
+                      Text(
+                        '年俸 ${offer.salary}万円 ・ ${offer.years}年契約',
+                        style: theme.textTheme.titleMedium,
+                      ),
                       Text('手取り $takeHome万円（手数料差引後）', style: muted),
                     ],
                   ),
@@ -500,6 +606,13 @@ class _OfferCard extends StatelessWidget {
                 ),
               ],
             ),
+            // **約束が何を意味するか。** 言葉だけだと、「ローテーション」に
+            // 1季を棒に振る危険（実測 4.8%）が含まれることが読めない。
+            // 判定と同じ力の差から引く（`CareerEngine.roleNoteFor`）。
+            if (roleNote != null) ...[
+              const SizedBox(height: 2),
+              Text(roleNote!, style: muted, textAlign: TextAlign.right),
+            ],
             const SizedBox(height: 12),
             Row(
               children: [
@@ -513,17 +626,33 @@ class _OfferCard extends StatelessWidget {
                 Expanded(
                   child: FilledButton(
                     onPressed: busy ? null : onAccept,
-                    child: Text(offer.loan
-                        ? 'ローンに出る'
-                        : offer.returning
-                            ? '戻る'
-                            : offer.isRenewal
-                                ? '残留する'
-                                : '移籍する'),
+                    child: Text(
+                      offer.loan
+                          ? 'ローンに出る'
+                          : offer.returning
+                          ? '戻る'
+                          : offer.isRenewal
+                          ? '残留する'
+                          : '移籍する',
+                    ),
                   ),
                 ),
               ],
             ),
+            // **出来高払い。** 年俸を削る代わりに、監督の目標を的にして賭ける。
+            if (onIncentive != null) ...[
+              const SizedBox(height: 8),
+              OutlinedButton(
+                onPressed: busy ? null : onIncentive,
+                child: Text(
+                  '出来高払いでサインする'
+                  '（年俸 −${Formulas.incentiveCutOf(offer.salary)}万、'
+                  '目標2つで全額・3つで'
+                  '${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull).round()}万）',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -561,19 +690,23 @@ class _BackupCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('セーブの持ち出し',
-                style: theme.textTheme.titleSmall?.copyWith(
-                    color: warn ? theme.colorScheme.onErrorContainer : null)),
+            Text(
+              'セーブの持ち出し',
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: warn ? theme.colorScheme.onErrorContainer : null,
+              ),
+            ),
             const SizedBox(height: 6),
             Text(
               everBackedUp
                   ? '前に控えてから$years年。ブラウザのデータを消すと、'
-                      'そこから先のキャリアは戻せない。'
+                        'そこから先のキャリアは戻せない。'
                   : 'この記録は、この端末の中にしか無い。'
-                      'ブラウザのデータを消すと消える。1度だけ控えておけば、'
-                      '別の端末でも続きから遊べる。',
+                        'ブラウザのデータを消すと消える。1度だけ控えておけば、'
+                        '別の端末でも続きから遊べる。',
               style: theme.textTheme.bodySmall?.copyWith(
-                  color: warn ? theme.colorScheme.onErrorContainer : null),
+                color: warn ? theme.colorScheme.onErrorContainer : null,
+              ),
             ),
             const SizedBox(height: 10),
             Align(
@@ -591,17 +724,24 @@ class _BackupCard extends StatelessWidget {
   }
 }
 
-class _FateChip extends StatelessWidget {
-  const _FateChip({required this.fate});
+/// 昇格・降格の札。**行き先の部を書く。**
+class FateChip extends StatelessWidget {
+  const FateChip({super.key, required this.fate, required this.tier});
 
   final ClubFate fate;
+
+  /// 今季いた部。**行き先はここから決まる。**
+  ///
+  /// 「1部昇格」「2部降格」と決め打ちで書いていたので、
+  /// 3部から2部へ上がったクラブにも「1部昇格」と出ていた。
+  final int tier;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final promoted = fate == ClubFate.promoted;
     return Chip(
-      label: Text(promoted ? '1部昇格' : '2部降格'),
+      label: Text(promoted ? '${tier - 1}部昇格' : '${tier + 1}部降格'),
       backgroundColor: promoted
           ? theme.colorScheme.primaryContainer
           : theme.colorScheme.errorContainer,
@@ -611,6 +751,93 @@ class _FateChip extends StatelessWidget {
             : theme.colorScheme.onErrorContainer,
       ),
       visualDensity: VisualDensity.compact,
+    );
+  }
+}
+
+/// シーズンの結末の帯。**クラブの色・エンブレム・順位を大きく出す。**
+///
+/// 選手証（`PlayerBanner`）と同じ `KitBackground` を使う——見た目のために
+/// 別の色を作らない。順位は「38試合の答え」なので、この画面で一番大きい数字。
+class _SeasonBand extends StatelessWidget {
+  const _SeasonBand({
+    required this.state,
+    required this.fate,
+    required this.position,
+  });
+
+  final CareerState state;
+  final ClubFate fate;
+  final int position;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final identity = ClubIdentity.of(state.club);
+    final on = readableOn(identity.primary);
+    return KitBackground(
+      primary: identity.primary,
+      secondary: identity.secondary,
+      striped: identity.striped,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+        child: Row(
+          children: [
+            ClubCrest(club: state.club, size: 44),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    state.club.name,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: on,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    '${World.byId(state.club.countryId).name} '
+                    '${state.club.tier}部 ・ ${state.year}シーズン',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: on.withValues(alpha: 0.75),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            // 順位は 38試合の答え。この画面で一番大きい数字にする。
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '$position',
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    color: on,
+                    fontWeight: FontWeight.w800,
+                    height: 1,
+                  ),
+                ),
+                Text(
+                  '位 / ${state.league.length}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: on.withValues(alpha: 0.75),
+                  ),
+                ),
+                // 昇格・降格の札。順位のすぐ下が居場所。
+                if (fate != ClubFate.stay) ...[
+                  const SizedBox(height: 6),
+                  FateChip(fate: fate, tier: state.club.tier),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

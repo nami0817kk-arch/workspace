@@ -28,9 +28,30 @@ class _SaveErrorNotifierState extends State<SaveErrorNotifier> {
   /// 既に見せたメッセージ。同じ失敗で毎フレーム出し続けないために持つ。
   String? _shown;
 
+  /// 控えからの復元を知らせたかどうか。1回の復元につき1度だけ出す。
+  bool _restoreShown = false;
+
   @override
   Widget build(BuildContext context) {
-    final error = context.watch<GameState>().lastSaveError;
+    final gameState = context.watch<GameState>();
+    final error = gameState.lastSaveError;
+
+    // セーブが壊れていて控えから戻したときの知らせ。黙って古い状態に
+    // 戻すと、進めたはずの数節が消えたように見える。
+    final restored = gameState.lastBackupRestoreNotice;
+    if (restored != null && !_restoreShown) {
+      _restoreShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+          SnackBar(
+            content: Text(restored),
+            backgroundColor: Colors.orange.shade800,
+            duration: const Duration(seconds: 10),
+          ),
+        );
+      });
+    }
 
     if (error == null) {
       // 保存に成功した。次に失敗したときはまた知らせる。

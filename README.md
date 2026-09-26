@@ -31,7 +31,6 @@
 |---|---|---|
 | [kabu-agari-ranking](projects/kabu-agari-ranking/) | 日本株の値上がり/値下がり/活況ランキングを毎日自動取得して公開する静的サイト。広告収益 | 運用中・公開 |
 | [price-tracker](projects/price-tracker/) | 楽天市場の価格を毎日記録し、値下がりと最安値圏を判定して公開。楽天アフィリエイト | 運用中・公開 |
-| [tool-factory](projects/tool-factory/) | 計算ツールのサイトを量産する仕組み。現在 10 ツール | 運用中・公開 |
 | [soccer-manager](projects/soccer-manager/) | サッカークラブ経営・育成シミュレーションのスマホアプリ（Flutter + Flame） | 開発中・ストア準備 |
 | [youtube-video-creation](projects/youtube-video-creation/) | 台本(Markdown)から、ゆっくり実況風の動画・音声・BGM・字幕・サムネイルを書き出すパイプライン | 開発中 |
 | [ai-side-business](projects/ai-side-business/) | AI で成果物を自動生成して納品する副業のための実行エンジン + 経営管理ツール | 開発中 |

@@ -9,6 +9,7 @@ import '../widgets/player_face_avatar.dart';
 import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
+import 'player_compare_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 
@@ -68,6 +69,11 @@ class _TransferScreenState extends State<TransferScreen>
     with SingleTickerProviderStateMixin {
   PositionGroup? _filter;
   TransferSortOption _sort = TransferSortOption.overall;
+
+  /// 比較モードで選んだ2人。買う判断は「誰と比べて良いか」で決まるのに、
+  /// 市場では横並びで見る手段が無かった(自軍のスカッドにはある)。
+  bool _compareMode = false;
+  final List<String> _compareSelected = [];
   final _searchController = TextEditingController();
   String _query = '';
   late final TabController _tabController;
@@ -111,6 +117,19 @@ class _TransferScreenState extends State<TransferScreen>
               for (final option in TransferSortOption.values)
                 PopupMenuItem(value: option, child: Text(option.label)),
             ],
+          ),
+          IconButton(
+            icon: Icon(_compareMode ? Icons.close : Icons.compare_arrows),
+            tooltip: _compareMode
+                ? Tr.pick('比較をやめる', 'Stop comparing')
+                : Tr.pick('2人を選んで比較', 'Pick two to compare'),
+            onPressed: () {
+              FeedbackService.tap();
+              setState(() {
+                _compareMode = !_compareMode;
+                _compareSelected.clear();
+              });
+            },
           ),
           const QuickAccessMenuButton(),
         ],
@@ -225,6 +244,9 @@ class _TransferScreenState extends State<TransferScreen>
                     return Card(
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
+                        // 説明が2行、右端が「移籍金+ボタン」の2段になるため、
+                        // 既定の高さでは縦にはみ出す(実際に12px溢れた)。
+                        isThreeLine: true,
                         leading: PlayerFaceAvatar(
                           playerId: p.id,
                           position: p.position,
@@ -251,17 +273,47 @@ class _TransferScreenState extends State<TransferScreen>
                             ],
                           ],
                         ),
-                        subtitle: Text(
-                          Tr.pick(
-                              '${p.originClubName ?? '所属不明'} / ${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在 ${p.potential} / 移籍金 ${p.marketValue}万',
-                              "${p.originClubName ?? 'Club unknown'} / age ${p.age} / ${p.position.label} / overall ${p.overall} / potential ${p.potential} / fee ${p.marketValue}"),
+                        // 1行に全部つなげると3行に折り返し、「総/合 69」
+                        // 「移籍/金 1602万」のように語の途中で切れていた。
+                        // 買うかどうかは実力と値段で決めるので、その2つを
+                        // 2行目にまとめ、所属や年齢と分けて読めるようにする。
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              Tr.pick(
+                                  '${p.originClubName ?? '所属不明'} / ${p.age}歳 / ${p.position.label}',
+                                  "${p.originClubName ?? 'Club unknown'} / age ${p.age} / ${p.position.label}"),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              Tr.pick(
+                                  '総合${p.overall} 潜在${p.potential} 移籍金${p.marketValue}万',
+                                  "Overall ${p.overall} / potential ${p.potential} / fee ${p.marketValue}"),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ),
-                        trailing: FilledButton(
-                          onPressed: (squadFull || !windowOpen)
-                              ? null
-                              : () => _showAcquireSheet(context, p),
-                          child: Text(Tr.pick('獲得する', 'Sign him')),
-                        ),
+                        // 値段は説明の2行目に入れる。ボタンの上に積むと、
+                        // タップ領域(48x48)を削るか縦にはみ出すかのどちらかに
+                        // なった(CIのアクセシビリティ検査で両方とも落ちた)。
+                        trailing: _compareMode
+                            ? Checkbox(
+                                value: _compareSelected.contains(p.id),
+                                onChanged: (_) => _toggleCompare(context, p.id),
+                              )
+                            : FilledButton(
+                                onPressed: (squadFull || !windowOpen)
+                                    ? null
+                                    : () => _showAcquireSheet(context, p),
+                                child: Text(Tr.pick('獲得する', 'Sign him')),
+                              ),
+                        onTap: _compareMode
+                            ? () => _toggleCompare(context, p.id)
+                            : null,
                       ),
                     );
                   },
@@ -269,6 +321,39 @@ class _TransferScreenState extends State<TransferScreen>
         ),
       ],
     );
+  }
+
+  /// 比較する選手を選ぶ。2人そろったら比較画面へ進み、戻ったら選択を解く。
+  void _toggleCompare(BuildContext context, String playerId) {
+    FeedbackService.tap();
+    setState(() {
+      if (_compareSelected.contains(playerId)) {
+        _compareSelected.remove(playerId);
+        return;
+      }
+      // 3人目を選んだら古い方を落とす。「選び直すには解除から」だと手数が
+      // 増えるだけで、間違えたときに面倒になる。
+      if (_compareSelected.length >= 2) _compareSelected.removeAt(0);
+      _compareSelected.add(playerId);
+    });
+    if (_compareSelected.length < 2) return;
+
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute<void>(
+            builder: (_) => PlayerCompareScreen(
+              playerAId: _compareSelected[0],
+              playerBId: _compareSelected[1],
+            ),
+          ),
+        )
+        .then((_) {
+      if (!mounted) return;
+      setState(() {
+        _compareMode = false;
+        _compareSelected.clear();
+      });
+    });
   }
 
   Widget _buildFreeAgentTab(

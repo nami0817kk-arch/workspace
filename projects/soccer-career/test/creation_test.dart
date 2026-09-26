@@ -30,11 +30,11 @@ class _MemoryRepository implements SaveRepository {
 }
 
 CareerController controller({int seed = 3}) => CareerController(
-      repository: _MemoryRepository(),
-      careerEngine: CareerEngine(random: Random(seed)),
-      matchEngine: MatchEngine(random: Random(seed)),
-      random: Random(seed),
-    );
+  repository: _MemoryRepository(),
+  careerEngine: CareerEngine(random: Random(seed)),
+  matchEngine: MatchEngine(random: Random(seed)),
+  random: Random(seed),
+);
 
 void main() {
   group('立つ側', () {
@@ -109,10 +109,14 @@ void main() {
 
   group('逆足との噛み合わせ', () {
     test('合う側は逆足の局面が減り、逆サイドは増える', () {
-      expect(Formulas.weakFootMomentOnSide,
-          lessThan(Formulas.weakFootMomentChance));
-      expect(Formulas.weakFootMomentInverted,
-          greaterThan(Formulas.weakFootMomentChance));
+      expect(
+        Formulas.weakFootMomentOnSide,
+        lessThan(Formulas.weakFootMomentChance),
+      );
+      expect(
+        Formulas.weakFootMomentInverted,
+        greaterThan(Formulas.weakFootMomentChance),
+      );
     });
 
     test('実際に、逆サイドのほうが逆足の局面が多い', () async {
@@ -124,8 +128,11 @@ void main() {
           age: 24,
           agent: Agent.pool.first,
           side: side,
-          physique:
-              const Physique(heightCm: 175, weightKg: 70, foot: Foot.right),
+          physique: const Physique(
+            heightCm: 175,
+            weightKg: 70,
+            foot: Foot.right,
+          ),
         );
         var moments = 0;
         for (var i = 0; i < 200; i++) {
@@ -144,8 +151,7 @@ void main() {
 
       final onSide = countFor(Side.right);
       final inverted = countFor(Side.left);
-      expect(inverted, greaterThan(onSide),
-          reason: '逆サイドなのに逆足の局面が増えていない');
+      expect(inverted, greaterThan(onSide), reason: '逆サイドなのに逆足の局面が増えていない');
     });
 
     test('逆サイドは、シュートの手に内へ切り込むぶんが乗る', () async {
@@ -167,9 +173,7 @@ void main() {
         if (match == null) break;
         while (!match.isFinished) {
           for (final option in match.current.options) {
-            if (match
-                .factorsFor(option)
-                .any((f) => f.label == '内へ切り込む')) {
+            if (match.factorsFor(option).any((f) => f.label == '内へ切り込む')) {
               seen = true;
             }
           }
@@ -205,10 +209,11 @@ void main() {
     test('見た目を持たせる前の保存データでも落ちない', () async {
       final c = controller(seed: 62);
       await c.startCareer(
-          name: '古い保存',
-          position: Position.cb,
-          age: 22,
-          agent: Agent.pool.first);
+        name: '古い保存',
+        position: Position.cb,
+        age: 22,
+        agent: Agent.pool.first,
+      );
       final json = c.state!.toJson();
       (json['player'] as Map<String, dynamic>).remove('look');
       final restored = CareerState.fromJson(json);
@@ -217,8 +222,11 @@ void main() {
     });
 
     test('範囲の外の番号が入っていても丸める', () {
-      final look = PlayerLook.fromJson(
-          const {'skin': 99, 'hair': 'なにか', 'hairColor': -3});
+      final look = PlayerLook.fromJson(const {
+        'skin': 99,
+        'hair': 'なにか',
+        'hairColor': -3,
+      });
       expect(look.skin, PlayerLook.skinTones.length - 1);
       expect(look.hairColor, 0);
       expect(look.hair, HairStyle.short);
@@ -244,10 +252,47 @@ void main() {
         final base = CareerEngine.startingBaseFor(position);
         expect(base[AttributeKey.pace], isNotNull, reason: position.name);
         // GK 能力を持つのは GK だけ。
-        expect(base.containsKey(AttributeKey.goalkeeping),
-            position == Position.gk,
-            reason: position.name);
+        expect(
+          base.containsKey(AttributeKey.goalkeeping),
+          position == Position.gk,
+          reason: position.name,
+        );
       }
+    });
+
+    test('始まりの総合力は、ポジションで2より開かない', () {
+      // **ポジションを選んだ時点で差が付いていた。** 基準値の総合力の差は
+      // 2 しか無いが、そこから引くポテンシャル（`rollPotential` は総合力＋25）と
+      // クラブの声がかりが乗るので、引退までにピークが 74.8〜78.4、
+      // 代表キャップが 21.7〜41.8 に開いていた。
+      //
+      // **揃えたのは始まりではなくピークのほう。** 同じ1点でも、重みの
+      // 集中したポジション（GK 0.59）と平らなポジション（AM 0.25）では
+      // 総合力への返り方が違うので、始まりを揃えるとピークが揃わない
+      // （実際に揃えたら SB のピークが 78.6 で突き抜けた）。
+      // `test/position_sim.dart` でピークの幅 0.8・代表の幅 9.3 に合わせてある。
+      // ここは「離れすぎていないか」だけを見る番人。
+      final overalls = <Position, int>{};
+      for (final position in Position.values) {
+        final base = CareerEngine.startingBaseFor(position);
+        overalls[position] = Attributes(
+          pace: base[AttributeKey.pace]!,
+          shooting: base[AttributeKey.shooting]!,
+          passing: base[AttributeKey.passing]!,
+          dribbling: base[AttributeKey.dribbling]!,
+          defending: base[AttributeKey.defending]!,
+          physical: base[AttributeKey.physical]!,
+          goalkeeping:
+              base[AttributeKey.goalkeeping] ?? Formulas.defaultGoalkeeping,
+        ).overallFor(position);
+      }
+      final values = overalls.values.toList();
+      expect(
+        values.reduce((a, b) => a > b ? a : b) -
+            values.reduce((a, b) => a < b ? a : b),
+        lessThanOrEqualTo(2),
+        reason: '始まりの総合力がポジションで開きすぎている: $overalls',
+      );
     });
 
     test('振ったぶんだけ、その能力が動く', () {
@@ -265,10 +310,14 @@ void main() {
         AttributeKey.shooting: 6,
         AttributeKey.defending: -6,
       });
-      expect(tuned.player.attributes[AttributeKey.shooting],
-          plain.player.attributes[AttributeKey.shooting] + 6);
-      expect(tuned.player.attributes[AttributeKey.defending],
-          plain.player.attributes[AttributeKey.defending] - 6);
+      expect(
+        tuned.player.attributes[AttributeKey.shooting],
+        plain.player.attributes[AttributeKey.shooting] + 6,
+      );
+      expect(
+        tuned.player.attributes[AttributeKey.defending],
+        plain.player.attributes[AttributeKey.defending] - 6,
+      );
     });
 
     test('合計0なら、総合力はほとんど変わらない', () {

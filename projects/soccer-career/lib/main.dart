@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'monetize/monetization.dart';
 import 'state/career_controller.dart';
+import 'ui/app_theme.dart';
 import 'ui/club_identity.dart';
 import 'ui/screens/create_player_screen.dart';
 import 'ui/screens/hub_screen.dart';
@@ -26,42 +28,45 @@ class SoccerCareerApp extends StatefulWidget {
 class _SoccerCareerAppState extends State<SoccerCareerApp> {
   final _controller = CareerController();
 
+  /// 広告と課金。**ゲームの状態とは別に持つ。** 購入はストアのアカウントに
+  /// 紐づくもので、どのキャリアを遊んでいるかとは関係がない。
+  final _monetization = Monetization();
+
   @override
   void initState() {
     super.initState();
     _controller.init();
+    // 起動を待たせない。初期化が終わる前に拠点を開いたときは、広告も
+    // 課金の導線も出ないだけで、遊ぶほうは先に進める。
+    _monetization.initialize();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _monetization.dispose();
     super.dispose();
   }
 
   /// 既定の色。まだクラブが決まっていないときに使う。
   static const Color _defaultSeed = Color(0xFF1B5E3F);
 
-  ThemeData _themeFor(Color seed, Brightness brightness) => ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: seed,
-          brightness: brightness,
-        ),
-        useMaterial3: true,
-        fontFamily: _fontFamily,
-      );
+  ThemeData _themeFor(Color seed, Brightness brightness) =>
+      appTheme(seed, brightness, fontFamily: _fontFamily);
 
   @override
   Widget build(BuildContext context) {
     // 色まで含めて作り直したいので、MaterialApp ごと購読する。
     // 中だけを購読すると、移籍しても色が変わらない。
     return AnimatedBuilder(
-      animation: _controller,
+      animation: Listenable.merge([_controller, _monetization]),
       builder: (context, _) {
         // 所属クラブの色でアプリ全体を染める。移籍すれば色が変わるので、
         // 「どこに居るのか」が画面を開いた瞬間に分かる。
         final club = _controller.state?.club;
-        final seed =
-            club == null ? _defaultSeed : ClubIdentity.of(club).primary;
+        final seed = club == null
+            ? _defaultSeed
+            : ClubIdentity.of(club).primary;
         return MaterialApp(
           title: '選手キャリア',
           debugShowCheckedModeBanner: false,
@@ -83,6 +88,6 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
     if (_controller.state!.retired) {
       return RetiredScreen(controller: _controller);
     }
-    return HubScreen(controller: _controller);
+    return HubScreen(controller: _controller, monetization: _monetization);
   }
 }

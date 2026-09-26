@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../models/club.dart';
 import '../models/country.dart';
+import 'formulas.dart';
 
 /// 世界の定義。国・リーグ・外国人ルールはすべてここに集まる。
 ///
@@ -240,8 +241,19 @@ class World {
         Club(
           id: '$countryId-t$tier-c$i',
           name: names[i],
-          strength: (base + (span * (size - 1 - i)) ~/ (size - 1))
-              .clamp(20, 92),
+          // **上に本物の強豪を置く**（`Formulas.leagueGiants`）。
+          //
+          // 等間隔の梯子だった頃は、格5の1部が 60〜86 に均等に並んでいて、
+          // 首位と 6位の差が 7 しか無かった。そこに自分の持ち上げ（`starLift`
+          // 最大 +16）が乗るので、**中位のクラブに居ても優勝できてしまう**
+          // （実測で リーグ優勝の中姮が 4回/19季、無冠のキャリア 18%）。
+          strength:
+              (base +
+                      (span * (size - 1 - i)) ~/ (size - 1) +
+                      (i < Formulas.leagueGiants.length
+                          ? Formulas.leagueGiants[i]
+                          : 0))
+                  .clamp(20, 92),
           tier: tier,
           countryId: countryId,
         ),

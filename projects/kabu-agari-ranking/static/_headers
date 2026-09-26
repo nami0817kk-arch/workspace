@@ -1,0 +1,26 @@
+# Cloudflare Pages が配信時に付けるヘッダ。output/ 直下に置くと効く。
+#
+# このサイトは静的なページだけで、フォームも認証も無い。だから守る対象は
+# 「読む人の安全」と「配信の無駄」の2つに絞っている。
+
+/*
+  # MIME の推測で HTML 扱いされるのを防ぐ
+  X-Content-Type-Options: nosniff
+  # 他サイトに枠として埋め込まれない（中身を自分のものとして見せられない）
+  X-Frame-Options: DENY
+  # 外部へ飛ぶときに、どのページから来たかを渡しすぎない
+  Referrer-Policy: strict-origin-when-cross-origin
+  # 使っていない機能は最初から閉じておく
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()
+
+# 画像は中身が変わらない。1年持たせる。
+/og-image.png
+  Cache-Control: public, max-age=31536000, immutable
+
+# 索引は毎営業日変わる。少しだけ持たせて、変わったら取り直させる。
+/search-index.json
+  Cache-Control: public, max-age=600, must-revalidate
+
+# フィードは読み手側が定期的に取りに来る。長く持たせると更新が届かない。
+/feed.xml
+  Cache-Control: public, max-age=600

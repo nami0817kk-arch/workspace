@@ -2,7 +2,8 @@
 #
 # kabutan が GitHub Actions の IP を 405 でブロックしているため、
 # 取得だけは手元で行い、data/ を push する。push を受けた CI（kabu-daily.yml）が
-# ビルド・X投稿・Cloudflare Pages への公開を行う。
+# ビルドと Cloudflare Pages への公開を行う。X への投稿はこのスクリプトから
+# 投げる（重複投稿を防ぐ記録の置き場が手元しか無いため）。
 #
 # 失敗したときは Windows のデスクトップ通知で知らせる（Notify 関数）。
 # 失敗の原因はたいていネットワーク断で、そのときは GitHub にもメールにも届かない。
@@ -42,6 +43,23 @@ function Run($cmdline) {
     return $LASTEXITCODE
 }
 
+# 時間制限つきで実行する。制限を超えたらプロセスごと止めて 124 を返す。
+# タスク側の実行時間制限（30分）で強制終了されると、このスクリプトも一緒に
+# 殺されて FAILED も通知も残らない。2026-09-08 に build_site.py が応答しないまま
+# 止まり、その日のデータが通知なしで欠測した。だから先にこちらで打ち切る。
+# これはリトライではない（打ち切ったら失敗として知らせるだけ）。
+function RunTimed($cmdline, $minutes) {
+    Add-Content $log ">> $cmdline (timeout ${minutes}m)"
+    $p = Start-Process cmd -ArgumentList "/c `"$cmdline >> `"$log`" 2>&1`"" -NoNewWindow -PassThru
+    [void]$p.Handle  # これを触っておかないと 5.1 では ExitCode が取れない
+    if (-not $p.WaitForExit($minutes * 60 * 1000)) {
+        cmd /c "taskkill /T /F /PID $($p.Id) >nul 2>&1"
+        Add-Content $log "TIMEOUT: ${minutes}分で打ち切り"
+        return 124
+    }
+    return $p.ExitCode
+}
+
 # ネットワーク系のコマンドをリトライ付きで実行する。
 # 16:10 の定時実行で DNS 解決が一時的に失敗する事象が続いたため
 # （2026-09-03 / 09-04 に git pull が getaddrinfo 失敗で即死し、2営業日分を欠測）、
@@ -57,14 +75,28 @@ function RunRetry($cmdline) {
     return 1
 }
 
-Add-Content $log "=== $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ==="
+# ログは毎日追記されるので、放っておくと際限なく伸びる。
+# 1MB を超えたら1世代だけ残して切り替える（消さないのは、直前の失敗を
+# 追えなくなると原因が分からなくなるため）。
+if ((Test-Path $log) -and ((Get-Item $log).Length -gt 1MB)) {
+    Move-Item $log "$log.1" -Force
+}
+
+$started = Get-Date
+Add-Content $log "=== $($started.ToString('yyyy-MM-dd HH:mm:ss')) ==="
 
 if ((RunRetry "git pull --ff-only origin master") -ne 0) {
     Add-Content $log "FAILED: git pull"
     Notify "株ランキングの取得が失敗しました" "git pull がネットワークで失敗しました（3回リトライ済み）。今日のデータは取れていません。"
     exit 1
 }
-if ((Run "`"$repo\.venv\Scripts\python.exe`" src\build_site.py") -ne 0) {
+$rc = RunTimed "`"$repo\.venv\Scripts\python.exe`" src\build_site.py" 15
+if ($rc -eq 124) {
+    Add-Content $log "FAILED: build_site.py (timeout)"
+    Notify "株ランキングの取得が止まりました" "build_site.py が15分たっても終わらないので打ち切りました。今日のうちに src\build_site.py を手で回してください。"
+    exit 1
+}
+if ($rc -ne 0) {
     Add-Content $log "FAILED: build_site.py"
     Notify "株ランキングの取得が失敗しました" "build_site.py が失敗しました。kabutan から取得できていない可能性があります。run-daily.log を確認してください。"
     exit 1
@@ -92,4 +124,46 @@ if ($LASTEXITCODE -ne 0) {
 } else {
     Add-Content $log "no new data to commit"
 }
-Add-Content $log "OK"
+
+# 半端な取得（値上がりだけ取れて値下がり・活況が空）は build_site.py が
+# ログに [WARN] を残す。止めるほどではないが、続くようなら解析が壊れている。
+# 見るのは**今回の実行ぶんだけ**（ログは追記なので、過去の警告を拾わない）。
+$lines = Get-Content $log -Encoding UTF8
+$startIndex = 0
+for ($i = $lines.Count - 1; $i -ge 0; $i--) {
+    if ($lines[$i] -like "=== *") { $startIndex = $i; break }
+}
+$warnLines = @($lines[$startIndex..($lines.Count - 1)] | Where-Object { $_ -like "*[[]WARN]*" })
+if ($warnLines.Count -gt 0) {
+    Notify "株ランキングの取得が半端です" $warnLines[-1].Trim()
+}
+
+# X への投稿。キーが無ければ何もせず正常終了する（post_to_x.py 側で判定）。
+#
+# CI ではなく手元で投げているのは、重複投稿を防ぐ記録（data/last_tweet.txt）が
+# 残る場所がここしか無いため。CI のワークスペースは毎回消える。
+# 投稿の可否は同じ rec_date を二度投げないことだけで判断する。失敗しても
+# サイトの公開には影響しないので、ここでは止めない。
+$envFile = Join-Path $repo ".env"
+if (Test-Path $envFile) {
+    foreach ($line in Get-Content $envFile -Encoding UTF8) {
+        if ($line -match '^\s*([A-Z_]+)\s*=\s*(.+?)\s*$') {
+            [Environment]::SetEnvironmentVariable($matches[1], $matches[2])
+        }
+    }
+}
+Run "`"$repo\.venv\Scripts\python.exe`" src\post_to_x.py" | Out-Null
+
+# ここまでは全部成功していても、当日分が入っていないことがある
+# （kabutan が空を返す、日付がずれる等）。2026-09-08 の欠測はこの形で、
+# exit 0 だったため誰も気づかなかった。取り逃した営業日は二度と取れないので、
+# その日のうちに知らせる。休場日なら鳴らない（判定は src\market_calendar.py）。
+# 知らせるだけで、kabutan への自動リトライはしない。
+if ((Run "`"$repo\.venv\Scripts\python.exe`" src\check_freshness.py --after-fetch") -ne 0) {
+    Add-Content $log "STALE: 当日分のデータが入っていません"
+    Notify "株ランキングが当日分を取れていません" "エラーは出ていませんが、今日のデータが入っていません。今日のうちに src\build_site.py を手で回してください。明日には取れなくなります。"
+}
+# 所要時間を残す。取得先が重くなってきたときに、打ち切り（15分）に
+# ぶつかる前に気づける唯一の手がかりになる。
+$elapsed = [int]((Get-Date) - $started).TotalSeconds
+Add-Content $log "OK ($elapsed 秒)"

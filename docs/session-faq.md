@@ -38,10 +38,10 @@ A. 意図的。モノレポでは動かないため削除した。ワークフ�
 
 **Q. soccer の web.yml が無い**
 A. GitHub Pages が private リポジトリで使えないため意図的に未移植。
-Cloudflare Pages 方式の `soccer-pages.yml` として作り直す（tool-factory-pages.yml が先例。
+Cloudflare Pages 方式の `soccer-pages.yml` として作り直す（kabu-daily.yml が先例。
 Flutter ビルドは `--base-href "/"` に変更が必要）。担当セッションが作業中。
 
-**Q. kabu-daily / tool-factory-pages がデプロイ段で failure**
+**Q. kabu-daily がデプロイ段で failure**
 A. 既知。Cloudflare の Secrets（CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID）の
 ユーザー登録待ち。デプロイ以外のステップが緑なら正常。
 `gh secret list` が空かどうかで、まだ未登録かを判定できる。
@@ -1019,7 +1019,7 @@ python scripts/find-mangled-chars.py
 **古い実行が「キャンセル」で終わっているのは正常**。失敗ではない。
 
 **打ち切らないもの**: 公開・リリース・通知（kabu-daily / price-tracker-daily /
-tool-factory-pages / soccer の各 release / ci-alert）。**途中で止めると害がある**ので、
+soccer の各 release / ci-alert）。**途中で止めると害がある**ので、
 重複は避けつつ最後まで走らせる。
 
 ### 公開リポジトリになった影響
@@ -1086,3 +1086,83 @@ YouTube Data API ／独自ドメイン（未取得）。
 
 なお `MONEYLOOP_BILLING_SECRET` は支出ではなく、**こちらが料金を請求する側**の仕組み
 （`moneyloop.pricing` が料金表の情報源）。名前で誤解しない。
+
+## 公開に関わるもの（名義・ドメイン・連絡先・AdSense）は docs/public-identity.md
+
+2026-09-25 に、公開サイトを `*.pages.dev` から `dailyquarry.com` のサブドメインへ
+寄せた。名義・連絡先・Search Console・AdSense の前提はすべて
+**`docs/public-identity.md`** にまとめてある。外向きの文字列を書く前にそこを読む。
+
+とくに次の3つは、知らずに踏むと手戻りが大きい。
+
+- **公開名義は屋号「つるはし社」だけ。** 個人名・Windows のユーザー名・生年を出さない。
+- **AdSense は `*.pages.dev` では申請できない**（自分のドメインが要る）。
+  サブドメインは1回の申請でまとめて扱われる。
+- **price-tracker に AdSense は載せられない**（楽天ウェブサービス第8条4項）。
+
+## Search Console の所有確認タグは Google アカウント単位（2026-09-25 実測）
+
+ドメインごとに違う値が出ると思い込んでいたが、**同じ Google アカウントなら、
+別のドメインを登録しても同じ値が出る**。kakaku と kabu で同じ値を実測した。
+
+そのため、1つめのサイトでコードに埋めたタグは、2つめのサイトでもそのまま通る。
+**「タグが同じはずがない」と疑う前に、まず貼ってみる**（貼って弾かれてから考えるほうが速い）。
+
+ドメインを移したとき側の注意はこちら:
+
+- 移行先は**新しい URL プレフィックスのプロパティを作り直す**。数字は引き継がれない。
+- 旧ドメインのページに埋まっているタグが古いままだと「所有権を証明できませんでした」になる。
+  タグを持っているファイルは1つに絞ってあるので（kabu は `src/site_config.py`、
+  price-tracker は `config.json`）、そこだけ差し替えて再ビルドする。
+
+## ドメインが空いているかを DNS で判定しない（2026-09-25 の誤り）
+
+`nslookup` が引けないことを「未登録」と読んで、実際には2002年から登録済みの
+ドメインを「空いている」と報告した。**登録されていても DNS を設定していない
+ドメインはいくらでもある。**
+
+判定は **RDAP** で行う。
+
+```bash
+curl -s https://rdap.verisign.com/com/v1/domain/example.com -o /dev/null -w '%{http_code}\n'
+# 404 なら未登録、200 なら登録済み（registration イベントに登録日が入っている）
+```
+
+## ドメイン名にキーワードを入れても検索順位は上がらない（EMD アップデート 2012）
+
+`kabu-ranking.com` のような「中身を表すドメイン」に、順位の上の効果は無い。
+Google は 2012 年の EMD アップデートでこれを打ち消している。
+**短くて覚えやすいほうを選ぶ**ほうが、共有されるぶんだけ得。
+
+## 公開ページに個人名が混ざっていないかは、テストで止める
+
+目視では抜ける。kabu では生成した全HTMLを走査して、個人名・ユーザー名・生年が
+1文字でも含まれていたら落とすテストを置いた
+（`projects/kabu-agari-ranking/tests/test_site_pages.py` の
+`test_公開ページに個人名を出さない`）。
+
+Windows のユーザー名は**パスの一部として混入する**（例外のトレースバックや
+ファイル一覧をページに出したとき）。名前を書かないよう気をつけるだけでは足りない。
+
+## 手元は `python -m pytest`、CI は `pytest`。読み込み先が違う（2026-09-25 実測）
+
+**手元だけ緑で CI が赤くなる**組み合わせがある。
+
+`python -m pytest` は**今いるディレクトリを `sys.path` に足す**が、`pytest` は足さない。
+共通ワークフロー（`python-tests.yml`）は後者で走るので、`from src.foo import ...` の
+ような書き方は手元で通って CI で `ModuleNotFoundError: No module named 'src'` になる。
+
+PJT の直下に `conftest.py` を置いて明示する。テストごとに `sys.path.insert` を
+書くより、**呼び方が変わっても同じになる**ぶん確実。
+
+```python
+import sys
+from pathlib import Path
+
+_ROOT = Path(__file__).resolve().parent
+for path in (_ROOT, _ROOT / "src"):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
+```
+
+手元で確かめるときは `pytest`（`python -m` を付けない）で回すと、CI と同じ条件になる。

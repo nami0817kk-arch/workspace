@@ -1,13 +1,52 @@
 {% extends "base.html" %}
-{% block title %}{{ rec_date }} {{ heading }} TOP{{ rows|length }}｜値上がり株ランキング{% endblock %}
-{% block description %}{{ rec_date }}時点の{{ heading }} TOP{{ rows|length }}を掲載。{% endblock %}
+{% block title %}本日の{{ heading }} TOP{{ rows|length }}｜東証全市場{% endblock %}
+{% block description %}{{ rec_date_ja }}の{{ heading }}上位{{ rows|length }}銘柄。{{ summary }}{% endblock %}
+{% block structured_data %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":{{ (rec_date ~ " " ~ heading)|tojson }},"numberOfItems":{{ rows|length }},"itemListElement":[{% for row in rows %}{"@type":"ListItem","position":{{ row.rank }},"name":{{ (row.name ~ "（" ~ row.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}
+</script>
+{% endblock %}
 {% block content %}
 <h1>本日の{{ heading }}</h1>
-<p>
-  更新日: {{ rec_date }}。{{ intro }}
-  各項目の意味は<a href="{{ base_url }}about.html">このサイトについて</a>の用語解説をご覧ください。
-</p>
+<p class="updated">{{ updated_line }}</p>
+{# 説明より先に表を出す。スマホでは前置きが長いだけで肝心の順位が画面の外に出る。 #}
+{% if highlights %}
+<ul class="highlights">
+  {% for h in highlights %}
+  <li><a href="{{ base_url }}{{ h.href }}">
+    <span class="hl-label">{{ h.label }}</span>
+    <span class="hl-value">{{ h.value }}</span>
+    <span class="hl-note">{{ h.note }}</span>
+  </a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
 {% include "_ranking_table.html" %}
+{% if chart %}
+<figure class="chart-figure">
+  {{ chart|safe }}
+  <figcaption>上位10銘柄の騰落率を並べたもの。数値は上の表にあります。</figcaption>
+</figure>
+{% endif %}
 {% include "_ad_slot.html" %}
+{% if trend_chart %}
+<h2>最近の相場の荒さ</h2>
+<p>
+  直近{{ trend_days }}営業日について、その日のランキング上位30銘柄のうち
+  10%以上動いた銘柄がいくつあったかを並べたものです。数が多い日ほど、
+  値動きの大きい銘柄が広がっていたことを示します。
+</p>
+<figure class="chart-figure">
+  {{ trend_chart|safe }}
+  <figcaption>1日あたりの「10%以上動いた銘柄」の数（上位30銘柄のうち）</figcaption>
+</figure>
+{% endif %}
 <p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}を見る →</a></p>
+<p>
+  {{ intro }}
+  用語の意味は<a href="{{ base_url }}glossary.html">用語解説</a>、
+  順位の見方は<a href="{{ base_url }}guide.html">ランキングの読み方</a>にまとめています。
+  銘柄名から過去の登場日を引くには<a href="{{ base_url }}search.html">銘柄検索</a>をお使いください。
+</p>
 {% endblock %}

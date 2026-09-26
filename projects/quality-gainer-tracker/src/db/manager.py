@@ -7,7 +7,7 @@ data/db/quality_gainers.accdb に毎日の上位20件と
 import pyodbc
 import pandas as pd
 import yfinance as yf
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent.parent.parent / "data" / "db" / "quality_gainers.accdb"
@@ -172,9 +172,15 @@ def update_prices():
         cur = con.cursor()
         for ticker, records in ticker_map.items():
             try:
+                # 期間を「45日」で固定していると、しばらく更新を回さなかった
+                # レコードが範囲の外に落ちる。そのとき基準日が決められず、
+                # 取得できた中でいちばん古い日を d01 にしてしまっていた。
+                # その銘柄の最古の記録日から取りにいく。
+                oldest = min(rec for _, rec in records)
+                start = (date.fromisoformat(oldest) - timedelta(days=7)).isoformat()
                 df = yf.download(
-                    ticker, period="45d", interval="1d",
-                    auto_adjust=True, progress=False
+                    ticker, start=start, interval="1d",
+                    auto_adjust=True, actions=True, progress=False
                 )
                 if df.empty:
                     continue
@@ -189,10 +195,20 @@ def update_prices():
                     try:
                         base_idx = dates_list.index(rec_date)
                     except ValueError:
+                        # 記録日にその銘柄の取引が無い場合は、直前の営業日を基準にする
                         later = [d for d in dates_list if d > rec_date]
                         if not later:
                             continue
                         base_idx = dates_list.index(later[0]) - 1
+                        if base_idx < 0:
+                            # 記録日より後の価格しか無い＝基準日が決められない。
+                            # ここで「いちばん古い行」を d01 にすると、14営業日ぶん
+                            # 丸ごと別の期間の値が入る。数字は埋まるので気づけない。
+                            print(
+                                f"  [WARN] {ticker} {rec_date}: 記録日より後の価格しか"
+                                "取得できず、d01 の基準日を決められません（この回は飛ばします）"
+                            )
+                            continue
 
                     # 現在の d カラム値を取得
                     cur.execute(
@@ -215,6 +231,19 @@ def update_prices():
 
                     if not updates:
                         continue
+
+                    # 記録時終値は kabutan の当日終値（分割前の生値）だが、
+                    # d01〜d14 は調整済みの終値。追跡期間に分割が入ると、
+                    # (d14 - 記録時終値) が実態と合わなくなる。
+                    if "Stock Splits" in df.columns:
+                        window = df.iloc[base_idx + 1: base_idx + 15]
+                        splits = window[window["Stock Splits"] != 0]["Stock Splits"]
+                        if not splits.empty:
+                            print(
+                                f"  [WARN] {ticker} {rec_date}: 追跡期間に株式分割"
+                                f"（{', '.join(f'{v:g}' for v in splits)}）があります。"
+                                "記録時終値は分割前の値のままなので、成績の計算がずれます。"
+                            )
 
                     set_parts = ", ".join(f"[{k}] = ?" for k in updates)
                     set_parts += ", [最終更新] = ?"

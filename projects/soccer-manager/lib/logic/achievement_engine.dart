@@ -227,6 +227,25 @@ class AchievementEngine {
 
         // --- 選手・育成 ---
         Achievement(
+          id: 'academy_graduate',
+          category: AchievementCategory.squad,
+          name: Tr.pick('生え抜き第1号', 'One of Our Own'),
+          description: Tr.pick(
+              'ユースで育てた選手を一軍に送り出す', 'Bring a player through your academy'),
+          isUnlocked: (save, team) => team.players.any((p) => p.academyGraduate),
+        ),
+        Achievement(
+          id: 'academy_backbone',
+          category: AchievementCategory.squad,
+          name: Tr.pick('ユースの背骨', 'Built at Home'),
+          description: Tr.pick('生え抜きを5人、一軍に抱える',
+              'Have five academy graduates in your first team'),
+          isUnlocked: (save, team) =>
+              team.players.where((p) => p.academyGraduate).length >= 5,
+          progress: (save, team) =>
+              (team.players.where((p) => p.academyGraduate).length, 5),
+        ),
+        Achievement(
           id: 'superstar_player',
           category: AchievementCategory.squad,
           name: Tr.pick('スター選手誕生', 'A Star Is Born'),

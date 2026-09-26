@@ -19,37 +19,42 @@ STYLES_FILE = "styles.json"
 #:
 #: 説明は利用者向けなので日本語、モデルへ渡す指定は英語にする。
 #: 生成モデルは英語で学習されているため、日本語の指定を混ぜると追従が落ちる。
+#:
+#: **指定は3〜4語まで。**長く具体的に書くと、短い主題を押しのけて消す
+#: （2026-09-01 実測: 「青空の下でノートPCを使う猫」+ 旧 flat で、青空もノートPCも
+#: 消えて猫だけになった）。絵柄が薄まるより、頼んだものが写らないほうが困る。
+#: `MAX_STYLE_PHRASES` をテストで固定してある。
+MAX_STYLE_PHRASES = 4
+
 BUILTIN_STYLES: dict[str, tuple[str, str]] = {
     "flat": (
         "フラットイラスト。資料やスライドに馴染む",
-        "flat vector illustration, simplified shapes, muted palette, "
-        "generous whitespace, minimal shading",
+        "flat vector illustration, simple shapes, soft palette",
     ),
     "banner": (
         "バナー・OGP画像。中央に余白を残す",
-        "wide banner background, abstract and understated, "
-        "empty space in the center for text, smooth gradient",
+        "wide abstract background, empty center, smooth gradient",
     ),
     "icon": (
-        "アイコン・サムネイル。単一の被写体",
-        "single subject centered, solid background, bold clean outline, "
-        "minimal detail, icon style",
+        "アイコン・サムネイル。単一の被写体"
+        "（単純な物体は崩れやすい。imagegen fetch --source iconify のほうが確実）",
+        "single centered subject, bold outline, solid background",
     ),
     "watercolor": (
         "水彩画",
-        "watercolor painting, soft bleeding colors, paper texture, visible brush strokes",
+        "watercolor painting, soft bleeding colors, paper texture",
     ),
     "line": (
         "線画・スケッチ",
-        "black line art on white background, thin clean lines, no shading, simple sketch",
+        "black line art, thin clean lines, white background",
     ),
     "photo": (
         "写真風",
-        "photorealistic photograph, natural light, shallow depth of field, no text",
+        "photorealistic photo, natural light, shallow depth of field",
     ),
     "diagram": (
         "説明図・図解",
-        "simple explanatory diagram, geometric shapes, limited color palette, no text",
+        "simple diagram, geometric shapes, no text",
     ),
 }
 

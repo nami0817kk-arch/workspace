@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}ストップ高の銘柄一覧と記録｜{{ period_to_ja }}まで{% endblock %}
+{% block description %}{{ period_to_ja }}までの{{ day_count }}営業日に、制限値幅の上限まで買われた（ストップ高）銘柄の一覧。日別の件数、何度もストップ高になった銘柄、最長の連続記録。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "ストップ高の記録", "url": canonical}] %}{% include "_breadcrumb_data.html" %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"複数回ストップ高になった銘柄","numberOfItems":{{ stocks|length }},"itemListElement":[{% for s in stocks %}{"@type":"ListItem","position":{{ loop.index }},"name":{{ (s.name ~ "（" ~ s.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}
+</script>{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "ストップ高の記録"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
+{% block content %}
+<h1>ストップ高の記録</h1>
+<p class="updated">{{ period_from_ja }} 〜 {{ period_to_ja }}（{{ day_count }}営業日）</p>
+<p class="summary">{{ summary }}</p>
+
+<p>
+  株価が1日に動ける幅には上限があり（<a href="{{ base_url }}glossary.html">値幅制限</a>）、
+  そこまで買われた状態を<strong>ストップ高</strong>といいます。
+  同じ「+20%」でも、上限で止まったのか、届かずに終わったのかで需給の強さは違います。
+  当サイトは終値と騰落率から前営業日の終値を割り出し、上限に達していた銘柄を毎営業日記録しています。
+</p>
+<p class="note-scope">
+  {% if has_recorded and not has_estimated %}
+  <strong>取得元のストップ高一覧をそのまま記録したものです。</strong>
+  「その日ストップ高をつけた銘柄」のうち、<strong>引けまで上限を保った銘柄</strong>を数えています
+  （場中につけたあと下げた銘柄は含みません）。
+  {% elif has_recorded %}
+  <strong>{{ recorded_from }} 以降は、取得元のストップ高一覧をそのまま記録しています</strong>
+  （引けまで上限を保った銘柄を数えます）。
+  それ以前は値上がりランキングの上位30銘柄から推定したもので、
+  <strong>上位30銘柄の外にあったストップ高は含みません</strong>。
+  件数を日付をまたいで比べるときは、この違いに注意してください。
+  {% else %}
+  <strong>対象は値上がりランキングの上位30銘柄です。</strong>
+  東証のすべてのストップ高銘柄を網羅したものではありません
+  （当サイトが毎日取得しているのが上位30銘柄までのため）。
+  {% endif %}
+</p>
+
+{% if trend_chart %}
+<h2>日ごとの件数</h2>
+<figure class="chart-figure">
+  {{ trend_chart|safe }}
+  <figcaption>1営業日あたりのストップ高の数（値上がり上位30銘柄のうち）</figcaption>
+</figure>
+{% endif %}
+
+{% if stocks %}
+<h2>複数回ストップ高になった銘柄</h2>
+<p>この期間に2回以上ストップ高になった{{ stocks|length }}銘柄です。「連続」はカレンダーの連日ではなく、当サイトの掲載日の並びで数えています。</p>
+<div class="table-wrap">
+<table class="ranking" data-sortable>
+  <caption>{{ period_from }}〜{{ period_to }} に2回以上ストップ高になった銘柄</caption>
+  <thead>
+    <tr>
+      <th scope="col">回数</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">最大上昇率</th>
+      <th scope="col">最長連続</th>
+      <th scope="col">直近</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in stocks %}
+    <tr>
+      <th scope="row">{{ s.count }}回</th>
+      <td>{% if s.has_page %}<a href="{{ base_url }}stock/{{ s.code }}/">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}</td>
+      <td>{{ s.code }}</td>
+      <td class="gain">{{ "%+.2f"|format(s.best_pct) }}%</td>
+      <td>{{ s.streak }}日</td>
+      <td>{{ s.latest }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+<h2>日ごとの記録</h2>
+<div class="archive-list">
+  {% for day in per_day %}
+  <a href="{{ base_url }}archive/gainers/{{ day.rec_date }}.html">
+    <span class="archive-date">{{ day.rec_date_ja }}</span>
+    <span class="archive-top">
+      {% if day.count %}ストップ高 {{ day.count }}銘柄 ／ {{ day.names }}{% else %}ストップ高なし{% endif %}
+      {% if day.source == "estimated" %}<span class="badge">上位30銘柄から推定</span>{% endif %}
+    </span>
+  </a>
+  {% endfor %}
+</div>
+
+<p>
+  ストップ高の読み方は<a href="{{ base_url }}guide.html">ランキングの読み方</a>に、
+  値幅の一覧は<a href="{{ base_url }}glossary.html">用語解説</a>にあります。
+</p>
+{% include "_ad_slot.html" %}
+{% endblock %}

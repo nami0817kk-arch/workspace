@@ -293,6 +293,10 @@ void main() {
       final controller = await ui.newCareer();
       await ui.pumpHub(tester, controller, height: 2400);
 
+      // 約束は「記録」タブへ移した（今季の目標とその達成を1か所に集める）。
+      await tester.tap(find.widgetWithText(Tab, '記録'));
+      await tester.pumpAndSettle();
+
       expect(find.text('監督に約束するか'), findsOneWidget);
       await tester.tap(find.widgetWithText(FilledButton, '約束する'));
       await tester.pumpAndSettle();

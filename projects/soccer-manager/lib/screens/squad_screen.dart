@@ -380,6 +380,9 @@ class _SquadScreenState extends State<SquadScreen> {
         title: Text(_compareMode
             ? Tr.pick('選手を2人選択', 'Pick two players')
             : Tr.pick('スカッド', 'Squad')),
+        // 下タブの一員でもあり、ホームやガイドから直接開かれもする。
+        // 開かれた場合は戻るボタンを出す(ドロワーがあると既定では出ない)。
+        leading: Navigator.of(context).canPop() ? const BackButton() : null,
         actions: [
           if (!_compareMode) ...[
             IconButton(
@@ -534,12 +537,41 @@ class _SquadScreenState extends State<SquadScreen> {
                                   ),
                             title: Row(
                               children: [
+                                // 背番号。ユースから上げた選手と移籍加入の
+                                // 選手に付く。旧セーブでは未設定なので出さない。
+                                if (p.squadNumber != null) ...[
+                                  Text(
+                                    '${p.squadNumber}',
+                                    style: TextStyle(
+                                      fontFeatures: const [
+                                        FontFeature.tabularFigures()
+                                      ],
+                                      color:
+                                          SemanticColors.subtleText(context),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
                                 Flexible(
                                   child: Text(
                                     p.name,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
+                                // 生え抜き(自クラブのユース出身)。買ってきた
+                                // 選手と育てた選手を見分けられるようにする。
+                                if (p.academyGraduate) ...[
+                                  const SizedBox(width: 6),
+                                  Tooltip(
+                                    message: Tr.pick('生え抜き(自クラブのユース出身)',
+                                        'Came through your academy'),
+                                    child: Icon(
+                                      Icons.eco,
+                                      size: 14,
+                                      color: SemanticColors.positive(context),
+                                    ),
+                                  ),
+                                ],
                                 if (team.captainId == p.id) ...[
                                   const SizedBox(width: 6),
                                   Tooltip(
@@ -695,8 +727,11 @@ class _SquadScreenState extends State<SquadScreen> {
                                                       '${p.loanedOutToClubName}へローン放出中（あと${p.loanedOutWeeksRemaining}週）',
                                                       'On loan at ${p.loanedOutToClubName} (${Tr.plural(p.loanedOutWeeksRemaining, 'week')} left)')
                                                   : Tr.pick(
-                                                      '${p.age}歳 / ${p.position.label} / 総合 ${p.overall}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}',
-                                                      "Age ${p.age} / ${p.position.label} / overall ${p.overall}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}"),
+                                                      // 総合力は右端に大きく出している。ここに重ねて書くと、
+                                                      // 同じ数字が1行に2回並ぶうえ、行が長くなって
+                                                      // 「契約残り3年」が途中で折り返していた。
+                                                      '${p.age}歳 / ${p.position.label}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}',
+                                                      "Age ${p.age} / ${p.position.label}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}"),
                                   style: (p.isInjured ||
                                           p.isSuspended ||
                                           p.isOnInternationalDuty ||

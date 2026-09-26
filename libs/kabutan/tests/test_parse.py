@@ -7,7 +7,7 @@
 
 import pandas as pd
 
-from kabutan import extract_asof_date, parse_ranking_table
+from kabutan import extract_asof_date, parse_daily_prices, parse_ranking_table
 
 
 def _row(cells: list[str]) -> str:
@@ -108,3 +108,94 @@ def test_asof_date_falls_back_to_the_newest_time_tag():
 def test_asof_date_pads_single_digit_month_and_day():
     html = '<div class="meigara_count"><ul><li>2026年1月5日</li></ul></div>'
     assert extract_asof_date(html) == "2026-01-05"
+
+
+# --- 日足（時系列）の解析 ---------------------------------------------------
+
+_DAILY_PAGE = """
+<html><body>
+<table class="stock_kabuka0">
+<tr><th>日付</th><th>始値</th><th>高値</th><th>安値</th><th>終値</th>
+    <th>前日比</th><th>前日比％</th><th>売買高(株)</th></tr>
+<tr><td>26/09/18</td><td>1300</td><td>1600</td><td>1290</td><td>1591</td>
+    <td>300</td><td>23.24</td><td>1000000</td></tr>
+<tr><td>26/09/17</td><td>1380</td><td>1549</td><td>1283</td><td>1291</td>
+    <td>-118</td><td>-8.37</td><td>1294700</td></tr>
+</table>
+</body></html>
+"""
+
+
+def test_日足を日付つきで読む():
+    df = parse_daily_prices(_DAILY_PAGE)
+    assert list(df.columns) == ["date", "close", "change_pct"]
+    assert df["date"].tolist() == ["2026-09-18", "2026-09-17"]
+    assert df["close"].tolist() == [1591, 1291]
+    assert df["change_pct"].tolist() == [23.24, -8.37]
+
+
+def test_日足の表が無ければ空を返す():
+    assert parse_daily_prices("<html><body>表がありません</body></html>").empty
+
+
+# --- ストップ高の印 ---------------------------------------------------------
+
+def test_張り付いている銘柄には印が立つ():
+    # 株価の隣に単独の S が入る（ストップ高／安のランキングと値上がり率で共通）
+    row = _row(["6904", "原田工業", "東Ｓ", "-", "-", "899", "S", "+150", "+20.03%",
+                "", "31.7", "1.25", "1.11"])
+    df = parse_ranking_table(_table([row]))
+    assert bool(df.iloc[0]["at_limit"]) is True
+
+
+def test_印が無ければ立たない():
+    row = _row(["9082", "大和自", "東Ｓ", "-", "-", "2,830", "", "+36", "+1.29%",
+                "", "128", "1.32", "0.35"])
+    df = parse_ranking_table(_table([row]))
+    assert bool(df.iloc[0]["at_limit"]) is False
+
+
+def test_市場の表記を印と取り違えない():
+    # 「東Ｓ」は全角。半角1文字の S とは別物として扱う
+    row = _row(["7203", "トヨタ自動車", "東Ｓ", "-", "-", "2,500", "", "+10", "+0.40%",
+                "1,000", "10.0", "1.0", "2.0"])
+    df = parse_ranking_table(_table([row]))
+    assert bool(df.iloc[0]["at_limit"]) is False
+
+
+# --- 銘柄コードと銘柄名 -----------------------------------------------------
+
+def test_英文字を含むコードを取りこぼさない():
+    """2024年から 627A のようなコードが割り当てられている。
+
+    4桁の数字に限っていた間、新しい形式の銘柄を1件も保存できていなかった
+    （2026-09-25 発覚。その日の値上がり上位に実際に載っていた）。
+    """
+    row = ("<tr><th>アキッパ</th>"
+           + "".join(f"<td>{c}</td>" for c in
+                     ["627A", "東Ｓ", "", "", "1,637", "S", "+300", "+22.44%", "26,969,100",
+                      "-", "-", "-"])
+           + "</tr>")
+    df = parse_ranking_table(_table([row]))
+    assert df.iloc[0]["code"] == "627A"
+    assert df.iloc[0]["name"] == "アキッパ"     # 見出しセルから取る
+    assert bool(df.iloc[0]["at_limit"]) is True
+
+
+def test_見出しセルの名前を使う():
+    """名前は行の見出しにある。読まないと1銘柄ごとに個別ページを叩くことになる。"""
+    row = ("<tr><th>リベルタ</th>"
+           + "".join(f"<td>{c}</td>" for c in
+                     ["4935", "東Ｓ", "", "", "173", "", "+29", "+20.14%", "4,950,400",
+                      "-", "-", "-"])
+           + "</tr>")
+    df = parse_ranking_table(_table([row]))
+    assert df.iloc[0]["name"] == "リベルタ"
+
+
+def test_名前が無ければコードで代替する():
+    row = ("<tr>" + "".join(f"<td>{c}</td>" for c in
+                            ["4935", "東Ｓ", "", "", "173", "", "+29", "+20.14%", "4,950,400",
+                             "-", "-", "-"]) + "</tr>")
+    df = parse_ranking_table(_table([row]))
+    assert df.iloc[0]["name"] == "4935"

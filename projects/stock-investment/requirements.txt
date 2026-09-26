@@ -2,17 +2,22 @@
 # （テスト専用の別ファイルに分けると「本番と CI で入る物が違う」状態になり、
 #  テストが実は対象を import できていない、という事故につながる。）
 # pytest は CI 側で足す。
-yfinance>=1.7.0
-pandas>=3.0.5
-ta>=0.11.0
-plotly>=7.0.0
-matplotlib>=3.11.1
-feedparser>=6.0.14
-anthropic>=1.3.0
-python-dotenv>=1.2.3
-openpyxl>=3.1.5
-requests>=2.34.2
-beautifulsoup4>=4.15.0
-lxml>=6.1.3
-pyodbc>=5.3.0
-pywin32>=312; sys_platform == "win32"
+#
+# **バージョンは固定する。** `>=` のままだと、こちらが何も変えていないのに
+# 上流の新版が出た日に壊れる。更新は Dependabot の PR で受け取り、CI が
+# 通るのを見てから上げる。固定値は 2026-09-24 に、この構成でテストが
+# 通ることを確認して取ったもの（pywin32 / pyodbc があるので Windows で取得）。
+yfinance==1.7.0
+pandas==3.0.6
+ta==0.11.0
+plotly==7.1.0
+matplotlib==3.11.2
+feedparser==6.0.14
+anthropic==1.8.0
+python-dotenv==1.2.3
+openpyxl==3.1.5
+requests==2.34.2
+beautifulsoup4==4.15.0
+lxml==6.1.3
+pyodbc==5.3.0
+pywin32==312; sys_platform == "win32"

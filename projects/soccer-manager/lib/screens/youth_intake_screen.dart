@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/scouting_engine.dart';
+import '../models/player.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
@@ -45,6 +47,10 @@ class YouthIntakeScreen extends StatelessWidget {
                     itemCount: candidates.length,
                     itemBuilder: (context, i) {
                       final p = candidates[i];
+                      final range = ScoutingEngine.estimatedPotentialRange(
+                        p,
+                        scoutLevel: gameState.youthCoachLevel,
+                      );
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
@@ -53,10 +59,14 @@ class YouthIntakeScreen extends StatelessWidget {
                             position: p.position,
                           ),
                           title: Text(p.name),
+                          // 潜在能力をそのまま出していたが、これでは選抜に
+                          // 判断が要らない(数字の大きい順に取るだけ)。
+                          // スカウト候補と同じく見立て(推定幅)にする。
+                          // ユースコーチの見極めが高いほど幅が狭くなる。
                           subtitle: Text(
                             Tr.pick(
-                                '${p.age}歳 / 総合 ${p.overall} / 潜在 ${p.potential}',
-                                'Age ${p.age} / overall ${p.overall} / potential ${p.potential}'),
+                                '${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2}',
+                                'Age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2}'),
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,

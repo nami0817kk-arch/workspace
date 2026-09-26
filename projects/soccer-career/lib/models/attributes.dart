@@ -194,8 +194,12 @@ class Attributes {
   int get goalkeeping => this[AttributeKey.goalkeeping];
 
   /// ポジションごとの重み付き総合力。同じ能力でも ST と CB で評価が変わる。
-  int overallFor(Position position) {
-    final w = _weights[position]!;
+  ///
+  /// [weights] を渡すと、そちらで測る（役割＝`PlayerRole.weights`）。
+  /// **重みの置き換えであって上乗せではない**——守備に寄せれば、
+  /// そのぶんパスやシュートは軽く見られる。
+  int overallFor(Position position, {List<int>? weights}) {
+    final w = weights ?? _weights[position]!;
     final sum = pace * w[0] +
         shooting * w[1] +
         passing * w[2] +
@@ -210,11 +214,11 @@ class Attributes {
     //                pace sho pas dri def phy gk
     Position.gk: [1, 0, 1, 0, 2, 3, 10],
     Position.cb: [2, 0, 2, 1, 6, 5, 0],
-    Position.sb: [4, 1, 3, 3, 4, 3, 0],
+    Position.sb: [4, 0, 3, 1, 6, 4, 0],
     Position.dm: [2, 1, 4, 2, 5, 4, 0],
     Position.cm: [2, 2, 5, 4, 3, 3, 0],
     Position.am: [3, 4, 5, 5, 1, 2, 0],
-    Position.wg: [5, 3, 3, 5, 1, 2, 0],
+    Position.wg: [4, 4, 3, 5, 1, 2, 0],
     Position.st: [3, 6, 2, 3, 0, 4, 0],
   };
 
@@ -223,8 +227,12 @@ class Attributes {
   /// GK は総合力の6割が GK 能力で、しかも詳細が3つしかない。同じ1回の
   /// 練習でも総合力の動き方がポジションで倍近く違い、GK だけが
   /// 9割ポテンシャルに到達していた。成長の側で割り戻すために使う。
-  static double weightShare(Position position, AttributeKey key) {
-    final w = _weights[position]!;
+  static double weightShare(
+    Position position,
+    AttributeKey key, {
+    List<int>? weights,
+  }) {
+    final w = weights ?? _weights[position]!;
     final total = w.reduce((a, b) => a + b);
     return w[AttributeKey.values.indexOf(key)] / total;
   }

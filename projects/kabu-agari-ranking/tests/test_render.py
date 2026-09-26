@@ -94,9 +94,13 @@ def test_build_generates_every_expected_page(site):
     })
     render.build_all()
 
+    # ads.txt は pub-ID が入るまで作らない（test_site_pages.py 側で見ている）
     for name in ("index.html", "losers.html", "active.html",
-                 "about.html", "privacy.html", "guide.html", "glossary.html",
-                 "robots.txt", "ads.txt", "sitemap.xml"):
+                 "about.html", "privacy.html", "operator.html", "contact.html",
+                 "guide.html", "glossary.html",
+                 "frequent.html", "search.html", "404.html",
+                 "weekly/index.html", "stock/index.html",
+                 "robots.txt", "sitemap.xml", "feed.xml"):
         assert (out_dir / name).exists(), name
     for kind in ("gainers", "losers", "active"):
         assert (out_dir / "archive" / kind / "2026-01-05.html").exists()
@@ -158,10 +162,15 @@ def test_sitemap_and_canonical_have_no_html_suffix(site):
     assert f'<link rel="canonical" href="{render.SITE_URL}/guide">' in guide
 
 
-def test_unreliable_dates_are_kept_on_disk_but_not_published(site):
-    """日付が当てにならない回は、ファイルは残したままサイトには出さない。"""
+def test_unreliable_dates_are_kept_on_disk_but_not_published(site, monkeypatch):
+    """日付が当てにならない回は、ファイルは残したままサイトには出さない。
+
+    2026-09-24 に4日分すべての日付を確定させたので、現在この集合は空。
+    仕組み自体は残す（同じことが起きたときにここへ入れる）。
+    """
     data_dir, out_dir = site
-    bad = sorted(render.UNRELIABLE_DATES)[0]
+    bad = "2026-08-20"
+    monkeypatch.setattr(render, "UNRELIABLE_DATES", frozenset({bad}))
     _write_day(data_dir, bad)
     _write_day(data_dir, "2026-09-04")
     render.build_all()
@@ -172,9 +181,10 @@ def test_unreliable_dates_are_kept_on_disk_but_not_published(site):
     assert bad not in (out_dir / "sitemap.xml").read_text(encoding="utf-8")
 
 
-def test_build_still_refuses_when_every_day_is_unreliable(site):
+def test_build_still_refuses_when_every_day_is_unreliable(site, monkeypatch):
     """除外した結果ゼロ件になったら、空のサイトを出さずに止まる。"""
     data_dir, _ = site
+    monkeypatch.setattr(render, "UNRELIABLE_DATES", frozenset({"2026-08-20"}))
     for d in render.UNRELIABLE_DATES:
         _write_day(data_dir, d)
     with pytest.raises(RuntimeError):

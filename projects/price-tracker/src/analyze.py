@@ -7,7 +7,38 @@
 
 # 履歴がこの日数に満たない商品について「過去最安値」を名乗らない。
 # 初日は当然すべてが最安値になるが、それは情報ではないため。
+from .store import entry as _entry
+
 MIN_DAYS_FOR_LOW = 7
+
+
+def last_change(rec: dict) -> str | None:
+    """価格が最後に動いた日。
+
+    sitemap の lastmod に使う。毎日「今日更新」と申告すると、実際には何も
+    変わっていないページまで再クロールさせることになる。
+    """
+    tail = [(e[0], e[1]) for e in map(_entry, rec.get("tail") or [])]
+    for i in range(len(tail) - 1, 0, -1):
+        if tail[i][1] != tail[i - 1][1]:
+            return tail[i][0]
+    return tail[0][0] if tail else None
+
+
+def effective(price, rate) -> int:
+    """ポイント分を引いた実質価格。
+
+    楽天の値引きは価格よりポイント倍率で動く。実測では、価格がほぼ動かなかった
+    2026-09-10 に実質価格は376件が5%以上下がっていた。価格だけを見ると、その日の
+    値引きを丸ごと取り逃す。
+
+    倍率は「購入額の何%が戻るか」に相当する（10倍 = 10%）。実際の付与は SPU や
+    会員ランクでも変わるため、これは目安であって確定額ではない。表示側で必ず
+    そう断ること。
+    """
+    if not price:
+        return 0
+    return round(int(price) * (1 - min(int(rate or 1), 100) / 100))
 
 
 def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dict:
@@ -41,7 +72,22 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
     else:
         label = "横ばい"
 
+    rate = int(rec.get("last_rate") or 1)
+    eff = effective(price, rate)
+    # 倍率を記録し始める前の日は prev_rate が無い。1倍と決めつけると、記録開始の
+    # 翌日に「倍率が下がった/上がった」偽の変化が一斉に出る。分からない日は
+    # 実質の比較そのものをしない。
+    prev_rate = rec.get("prev_rate")
+    if prev and prev_rate is not None:
+        eff_prev = effective(prev, int(prev_rate))
+        eff_drop_pct = (eff_prev - eff) / eff_prev if eff_prev > eff else 0.0
+    else:
+        eff_prev, eff_drop_pct = None, 0.0
+
     return {
+        "changed_date": last_change(rec),
+        "point_rate": rate, "eff_price": eff, "eff_prev": eff_prev,
+        "eff_drop_pct": eff_drop_pct,
         "price": price, "low": low, "high": high, "days": days,
         "prev": prev, "drop_pct": drop_pct, "rise_pct": rise_pct,
         "vs_low_pct": vs_low_pct, "off_high_pct": off_high_pct,
@@ -70,21 +116,21 @@ def evaluate_all(summary: dict, items: dict, drop_threshold: float,
     return out
 
 
-def drops(rows: list[dict], limit: int = 100) -> list[dict]:
+def drops(rows: list[dict], limit: int | None = None) -> list[dict]:
     """前回より安くなったものを、下げ幅の大きい順に。"""
     hit = [r for r in rows if r["dropped"]]
     hit.sort(key=lambda r: (-r["drop_pct"], r["price"]))
-    return hit[:limit]
+    return hit[:limit] if limit else hit
 
 
-def lows(rows: list[dict], limit: int = 100) -> list[dict]:
+def lows(rows: list[dict], limit: int | None = None) -> list[dict]:
     """記録した中で最安、またはそれに近いもの。"""
     hit = [r for r in rows if r["at_low"] or r["near_low"]]
     hit.sort(key=lambda r: (r["vs_low_pct"], -r["days"]))
-    return hit[:limit]
+    return hit[:limit] if limit else hit
 
 
-def rises(rows: list[dict], threshold: float, limit: int = 100) -> list[dict]:
+def rises(rows: list[dict], threshold: float, limit: int | None = None) -> list[dict]:
     """前回より高くなったものを、上げ幅の大きい順に。
 
     値下がりだけを並べると「安いから買え」としか言わないサイトになる。
@@ -92,10 +138,143 @@ def rises(rows: list[dict], threshold: float, limit: int = 100) -> list[dict]:
     """
     hit = [r for r in rows if r.get("rise_pct", 0) >= threshold]
     hit.sort(key=lambda r: (-r["rise_pct"], r["price"]))
-    return hit[:limit]
+    return hit[:limit] if limit else hit
 
 
-def by_genre(rows: list[dict], genre_id: str, limit: int = 100) -> list[dict]:
+def effective_drops(rows: list[dict], threshold: float, limit: int | None = None) -> list[dict]:
+    """ポイント込みで安くなったものを、下げ幅の大きい順に。
+
+    価格が据え置きでも倍率が上がれば実質は下がる。その日を取り逃さないための一覧。
+    """
+    hit = [r for r in rows if r.get("eff_drop_pct", 0) >= threshold]
+    hit.sort(key=lambda r: (-r["eff_drop_pct"], r["price"]))
+    return hit[:limit] if limit else hit
+
+
+def change_count(rec_or_row: dict) -> int:
+    """記録している期間に価格が動いた回数。
+
+    追跡5,506件のうち4,189件は一度も動かない。動く商品を見つけること自体が、
+    毎日ためた履歴からしか作れない情報になる。
+    """
+    prices = [e[1] for e in map(_entry, rec_or_row.get("tail") or [])]
+    return sum(1 for i in range(1, len(prices)) if prices[i] != prices[i - 1])
+
+
+def active(rows: list[dict], limit: int | None = None) -> list[dict]:
+    """よく動く商品を、動いた回数の多い順に。"""
+    hit = [r for r in rows if change_count(r) >= 2]
+    hit.sort(key=lambda r: (-change_count(r), r["vs_low_pct"]))
+    return hit[:limit] if limit else hit
+
+
+def drops_on(rows: list[dict], day: str, threshold: float,
+             limit: int | None = None) -> list[dict]:
+    """その日に前日比で下がった商品。
+
+    「最後に価格が動いたのがその日」ではない。過ぎた日の一覧を作るには、
+    履歴のその日と直前を突き合わせて、当日の下げ幅を出し直す必要がある。
+    """
+    hit = []
+    for row in rows:
+        tail = [_entry(e) for e in (row.get("tail") or [])]
+        for i in range(1, len(tail)):
+            if tail[i][0] != day:
+                continue
+            before, now = tail[i - 1][1], tail[i][1]
+            if before and before > now and (before - now) / before >= threshold:
+                hit.append({**row, "drop_pct": (before - now) / before,
+                            "prev": before, "price": now, "dropped": True})
+            break
+    hit.sort(key=lambda r: (-r["drop_pct"], r["price"]))
+    return hit[:limit] if limit else hit
+
+
+def new_lows(rows: list[dict], day: str, limit: int | None = None) -> list[dict]:
+    """その日に最安値を更新した商品。
+
+    「最安値圏」は近い価格も含むが、こちらは記録を塗り替えた当日だけ。
+    履歴を持っていないと出せない一覧で、買い手にとっては一番強い合図になる。
+    """
+    hit = [r for r in rows
+           if r.get("at_low") and r.get("trustworthy") and r.get("low_date") == day]
+    hit.sort(key=lambda r: (-r.get("off_high_pct", 0), r["price"]))
+    return hit[:limit] if limit else hit
+
+
+def ending_soon(rows: list[dict], today: str, days: int = 3,
+                limit: int | None = None) -> list[dict]:
+    """ポイント倍率の期限が近いもの。
+
+    「10倍がいつまでか」は待つか今かの判断そのものなのに、一覧では見えない。
+    期限つきの倍率を持つ商品を、終わりが早い順に出す。
+    """
+    from datetime import date, timedelta
+    try:
+        start = date.fromisoformat(today)
+    except ValueError:
+        return []
+    last = start + timedelta(days=days)
+    hit = []
+    for row in rows:
+        until = str(row.get("point_until") or "")[:10]
+        if not until or int(row.get("point_rate") or 1) <= 1:
+            continue
+        try:
+            end = date.fromisoformat(until)
+        except ValueError:
+            continue
+        if start <= end <= last:
+            hit.append(row)
+    hit.sort(key=lambda r: (str(r.get("point_until")), -int(r.get("point_rate") or 1)))
+    return hit[:limit] if limit else hit
+
+
+# 条件のそろい具合。四則演算だけで出し、内訳を必ず画面に出す。
+# 「買うべき」とは言わない。どの条件がいくつ満たされたかを並べるだけ。
+SCORE_PARTS = (
+    ("最安値への近さ", 40),
+    ("ポイント込みの下げ幅", 25),
+    ("価格の下げ幅", 20),
+    ("送料無料", 10),
+    ("値動きの多さ", 5),
+)
+
+
+def score_breakdown(row: dict) -> list[tuple[str, int]]:
+    """条件ごとの点を返す。合計ではなく内訳で持つ（根拠を出せる形にする）。"""
+    near = max(0.0, 1 - min(row.get("vs_low_pct", 1.0), 0.3) / 0.3)
+    eff = min(max(row.get("eff_drop_pct", 0.0), 0.0), 0.2) / 0.2
+    drop = min(max(row.get("drop_pct", 0.0), 0.0), 0.2) / 0.2
+    moves = min(change_count(row), 5) / 5
+    return [
+        ("最安値への近さ", round(near * 40)),
+        ("ポイント込みの下げ幅", round(eff * 25)),
+        ("価格の下げ幅", round(drop * 20)),
+        ("送料無料", 10 if row.get("free_shipping") else 0),
+        ("値動きの多さ", round(moves * 5)),
+    ]
+
+
+def condition_score(row: dict) -> int:
+    return sum(p for _, p in score_breakdown(row))
+
+
+def well_stocked(rows: list[dict], limit: int | None = None) -> list[dict]:
+    """条件がそろっている順。
+
+    値下がり・最安値圏・ポイント・送料を別々の一覧で出してきたが、
+    読む側は「結局どれか」を知りたい。判断は代わりにしないまま、
+    満たした条件の数で並べ替えるところまでを引き受ける。
+    記録が7日に満たないものと在庫切れは、比べる土俵に乗らないので外す。
+    """
+    hit = [r for r in rows
+           if r.get("trustworthy") and r.get("in_stock") is not False]
+    hit.sort(key=lambda r: (-condition_score(r), r.get("vs_low_pct", 1.0)))
+    return hit[:limit] if limit else hit
+
+
+def by_genre(rows: list[dict], genre_id: str, limit: int | None = None) -> list[dict]:
     """取得元ジャンルで絞り、注目すべき順に並べる。
 
     単品ページは価格比較サイトと正面から競合して勝ち目が薄い。ジャンル単位の
@@ -106,4 +285,4 @@ def by_genre(rows: list[dict], genre_id: str, limit: int = 100) -> list[dict]:
     """
     hit = [r for r in rows if str(r.get("source_genre") or "") == str(genre_id)]
     hit.sort(key=lambda r: (-r["drop_pct"], r["vs_low_pct"], -r["off_high_pct"]))
-    return hit[:limit]
+    return hit[:limit] if limit else hit

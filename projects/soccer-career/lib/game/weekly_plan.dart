@@ -59,7 +59,8 @@ class WeekPlan {
       return WeekPlan(
         focus: WeekFocus.injured,
         headline: '出場停止',
-        reason: 'あと${state.suspension}試合は出られない。'
+        reason:
+            'あと${state.suspension}試合は出られない。'
             '練習はできるので、戻ったときのために積んでおく。',
       );
     }
@@ -74,13 +75,15 @@ class WeekPlan {
 
     final condition = state.player.condition;
     if (condition <= tiredCondition) {
-      final loss = (Formulas.conditionBaseline - condition) *
+      final loss =
+          (Formulas.conditionBaseline - condition) *
           Formulas.conditionChanceSlope *
           100;
       return WeekPlan(
         focus: WeekFocus.rest,
         headline: '疲れが残っている',
-        reason: 'コンディション$condition。'
+        reason:
+            'コンディション$condition。'
             'このまま出ると、どの手も ${loss.toStringAsFixed(1)}% 通りにくい。',
         suggested: TrainingMenu.lightWork,
       );
@@ -90,17 +93,27 @@ class WeekPlan {
     if (!state.seasonFinished) {
       final opponent = state.opponentFor(state.matchday);
       final style = ClubStyle.of(opponent);
-      final penalty = (-0.05 +
-              state.development.adaptationFor(style,
-                  factor: state.player.traits.adaptationFactor)) *
+      // **判定と同じ定数から出す。** −0.05 と手で書いてあって、
+      // 実際の判定は −0.08 だった（`styleMismatch` を深くしたときに
+      // ここだけ古くなった）。表示と判定の食い違いは、このゲームで
+      // 一番やってはいけないこと。
+      final penalty =
+          (-Formulas.styleMismatch +
+              state.development.adaptationFor(
+                style,
+                factor: state.player.traits.adaptationFactor,
+              )) *
           100;
       final menu = TrainingMenu.forKey(style.hardFor);
       return WeekPlan(
         focus: WeekFocus.matchup,
         headline: '${opponent.name}は${style.label}',
-        reason: '${style.description}。'
+        reason:
+            '${style.description}。'
             '${style.hardFor.label}の局面が ${penalty.toStringAsFixed(1)}% 通りにくい'
-            '（${state.development.faced[style] ?? 0}回戦って慣れてきたぶんを含む）。',
+            '（${state.development.faced[style] ?? 0}回戦って慣れてきたぶんを含む）。'
+            '${style.openFor.label}は +'
+            '${(Formulas.styleOpening * 100).toStringAsFixed(0)}%。',
         suggested: menu.availableFor(state.player.position) ? menu : null,
       );
     }
@@ -131,7 +144,8 @@ class WeekPlan {
     }
     if (stats.goals + stats.assists < objective.contributions) {
       parts.add(
-          '得点関与 あと${objective.contributions - stats.goals - stats.assists}');
+        '得点関与 あと${objective.contributions - stats.goals - stats.assists}',
+      );
     }
     if (stats.averageRating < objective.rating) {
       parts.add('平均評価 ${objective.rating.toStringAsFixed(2)} に届いていない');
@@ -151,6 +165,7 @@ class SelectionOutlook {
     required this.average,
     required this.bonus,
     required this.forgiveness,
+    this.decisive = 0,
     this.debut = false,
     this.outOfSquad = false,
     this.frozenOut = false,
@@ -162,7 +177,7 @@ class SelectionOutlook {
   /// 直近の評価点の平均（下駄を含まない素の値）。
   final double average;
 
-  /// 監督の信頼・方針・競争相手ぶんの下駄。
+  /// 監督の信頼・方針・競争相手ぶんの下駄（決めているぶんも含む）。
   final double bonus;
 
   /// 外れ続けているぶんの情け。
@@ -180,14 +195,19 @@ class SelectionOutlook {
   /// 判定に使われる値。
   double get effective => average + bonus + forgiveness;
 
+  /// そのうち「直近で試合を動かした」ぶん。
+  ///
+  /// 下駄の合計だけを出すと、監督の信頼で上がっているのか
+  /// 決めているから上がっているのかが区別できない。
+  final double decisive;
+
   static SelectionOutlook of(CareerState state, {required double bonus}) {
     // 出られない理由は評価点より先に来る。`startNextMatch` と同じ順で見る。
     // ここを飛ばしていたので、離脱中でも「先発の見込み」と出ていた
     // （headline の injured / suspended にそもそも到達しなかった）。
     if (state.suspended || state.injured) {
       return SelectionOutlook(
-        likely:
-            state.suspended ? Appearance.suspended : Appearance.injured,
+        likely: state.suspended ? Appearance.suspended : Appearance.injured,
         average: 0,
         bonus: 0,
         forgiveness: 0,
@@ -237,6 +257,10 @@ class SelectionOutlook {
       average: average,
       bonus: bonus,
       forgiveness: forgiveness,
+      decisive: MatchEngine.decisiveBonus(
+        state.leagueResults,
+        state.player.position,
+      ),
       debut: false,
     );
   }
@@ -245,12 +269,12 @@ class SelectionOutlook {
   String get headline => frozenOut
       ? '構想外'
       : switch (likely) {
-        Appearance.start => '先発の見込み',
-        Appearance.sub => '途中出場の見込み',
-        Appearance.benched => 'ベンチ外の見込み',
-        Appearance.injured => '出られない',
-        Appearance.suspended => '出場停止',
-      };
+          Appearance.start => '先発の見込み',
+          Appearance.sub => '途中出場の見込み',
+          Appearance.benched => 'ベンチ外の見込み',
+          Appearance.injured => '出られない',
+          Appearance.suspended => '出場停止',
+        };
 
   /// なぜそうなるのか。数字で書く。
   String get reason {
@@ -266,8 +290,10 @@ class SelectionOutlook {
       '直近${Formulas.formWindow}試合の平均 ${average.toStringAsFixed(2)}',
     ];
     if (bonus.abs() >= 0.01) {
-      parts.add('${bonus > 0 ? '信頼と序列で +' : '信頼と序列で '}'
-          '${bonus.toStringAsFixed(2)}');
+      parts.add(
+        '${bonus > 0 ? '信頼と序列で +' : '信頼と序列で '}'
+        '${bonus.toStringAsFixed(2)}',
+      );
     }
     if (forgiveness >= 0.01) {
       parts.add('外れているぶん +${forgiveness.toStringAsFixed(2)}');

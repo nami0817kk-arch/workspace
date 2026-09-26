@@ -3,15 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="google-site-verification" content="0hcqlTHZBjIT-I9RKazTzGUVa2pZKmFREjTWbpvXRlk" />
+<meta name="color-scheme" content="light dark">
+<meta name="google-site-verification" content="{{ SEARCH_CONSOLE_TOKEN }}" />
 <title>{% block title %}値上がり株ランキング{% endblock %}</title>
 <meta name="description" content="{% block description %}日本株の値上がり率ランキングを毎日更新して掲載しています。{% endblock %}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="値上がり株ランキング">
 <meta property="og:title" content="{{ self.title() }}">
 <meta property="og:description" content="{{ self.description() }}">
-<meta property="og:image" content="https://kabu-agari-ranking.pages.dev/og-image.png">
+<meta property="og:image" content="{{ SITE_URL }}/og-image.png">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ self.title() }}">
+<meta name="twitter:description" content="{{ self.description() }}">
 <style>
   :root {
     --bg: #f7f8fa;
@@ -20,8 +25,48 @@
     --muted: #6b7280;
     --accent: #d64545;
     --border: #e5e7eb;
+    --gain: #d64545;
+    --loss: #2563a8;
+    --chart-gain: #d64545;
+    --chart-loss: #2563a8;
+    --note-bg: #fff8e1;
+    --note-border: #f0e0a0;
+    --link: #1d4ed8;
+    --link-visited: #6d28d9;
+  }
+  /* 暗い地は明るい地の反転ではなく、暗い地に対して選び直した値。
+     グラフの2色は #1b1e24 の上で6項目とも検証済み（明るい地の値は暗いと沈む）。 */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --card-bg: #1b1e24;
+      --text: #e6e8ea;
+      --muted: #9aa3ad;
+      --accent: #e05a5a;
+      --border: #2b313a;
+      --gain: #e05a5a;
+      --loss: #6aa9e9;
+      --chart-gain: #e05a5a;
+      --chart-loss: #4a90d9;
+      --note-bg: #26231a;
+      --note-border: #4a4326;
+      --link: #7fb4f0;
+      --link-visited: #bda4ef;
+    }
   }
   * { box-sizing: border-box; }
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    z-index: 10;
+  }
+  .skip-link:focus { left: 0.5rem; top: 0.5rem; }
+  main:focus { outline: none; }
   body {
     margin: 0;
     font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
@@ -49,17 +94,39 @@
     color: var(--text);
     text-decoration: none;
   }
+  header.site-header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+  }
+  /* 「常連銘柄」が行またぎで割れていたので、項目単位で折り返す */
   nav a {
     color: var(--muted);
     text-decoration: none;
-    margin-left: 1rem;
     font-size: 0.9rem;
+    white-space: nowrap;
   }
   nav a:hover { color: var(--accent); }
+  /* 本文のリンクはブラウザ既定のままだと、暗い地で読めない濃い青になる */
+  main a { color: var(--link); }
+  main a:visited { color: var(--link-visited); }
+  main a:hover { text-decoration: none; }
+  /* キーボードで辿っている位置が分かるようにする */
+  a:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
   main {
     max-width: 800px;
     margin: 0 auto;
     padding: 1rem;
+  }
+  /* スマホでは既定の 2em だと見出しが3行になり、肝心の表が画面の外に出る */
+  h1 { font-size: 1.45rem; line-height: 1.35; margin: 0.6rem 0; }
+  h2 { font-size: 1.15rem; }
+  @media (min-width: 600px) {
+    h1 { font-size: 1.9rem; }
+    h2 { font-size: 1.35rem; }
   }
   .ad-slot {
     max-width: 800px;
@@ -77,6 +144,7 @@
   table.ranking {
     width: 100%;
     min-width: 560px;
+    table-layout: auto;
     border-collapse: collapse;
     background: var(--card-bg);
     font-size: 0.9rem;
@@ -90,9 +158,35 @@
   table.ranking th:nth-child(3), table.ranking td:nth-child(3) {
     text-align: left;
   }
+  table.ranking caption {
+    caption-side: top;
+    text-align: left;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
   table.ranking th { color: var(--muted); font-weight: normal; }
-  table.ranking td.gain { color: var(--accent); font-weight: bold; }
-  table.ranking td.loss { color: #2563a8; font-weight: bold; }
+  /* 表の中のリンクは本文色のまま。行ごとに青と黒が混ざると、
+     どれが押せるかより先に「ちらつき」が目に付く。 */
+  table.ranking td a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--border);
+    text-underline-offset: 2px;
+  }
+  table.ranking td a:hover { text-decoration-color: var(--accent); color: var(--accent); }
+  /* 30行スクロールすると見出しが消え、どの列を見ているか分からなくなる */
+  table.ranking thead th {
+    position: sticky;
+    top: 0;
+    background: var(--card-bg);
+    z-index: 1;
+    box-shadow: 0 1px 0 var(--border);
+  }
+  /* 順位は見出しセル（th）だが、見た目はデータとして揃える */
+  table.ranking tbody th { color: var(--text); font-weight: normal; text-align: right; }
+  table.ranking td.gain { color: var(--gain); font-weight: bold; }
+  table.ranking td.loss { color: var(--loss); font-weight: bold; }
   .archive-list a {
     display: block;
     padding: 0.5rem 0;
@@ -100,11 +194,146 @@
     color: var(--text);
     text-decoration: none;
   }
+  .archive-list a:hover .archive-date { color: var(--accent); }
+  .archive-date { font-weight: bold; }
+  .archive-top { display: block; font-size: 0.8rem; color: var(--muted); }
+  .stock-search { display: flex; flex-direction: column; gap: 0.3rem; margin: 1rem 0 0.25rem; }
+  .stock-search input {
+    font-size: 1rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text);
+    width: 100%;
+  }
+  .hit { background: var(--card-bg); border: 1px solid var(--border); padding: 0.75rem 1rem; margin: 0.75rem 0; }
+  .hit h2 { font-size: 1rem; margin: 0 0 0.5rem; }
+  .hit dd a { color: var(--accent); margin-right: 0.3rem; }
+  .hit-facts { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--muted); }
+  .chart-figure {
+    margin: 1rem 0;
+    padding: 0.75rem 0.5rem 0.25rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+  }
+  /* 横幅に合わせて伸縮させる。高さは viewBox 側の比率で決まる */
+  /* SVG は幅に追従する。狭い画面基準（360）で組んであるので、
+     PCで拡大されすぎないよう上限を置く（文字だけ大きくなるのを防ぐ） */
+  .chart-figure svg.chart { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto; }
+  .chart-figure figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: left;
+  }
+  .badge {
+    display: inline-block;
+    margin-left: 0.3rem;
+    padding: 0 0.3rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: normal;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .flag-notes {
+    margin: 0.5rem 0 0;
+    padding-left: 0;
+    list-style: none;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .flag-notes li { margin-top: 0.25rem; }
+  .note-scope {
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+    padding-left: 0.6rem;
+  }
+  /* 並べ替えは JS が動く環境だけの上乗せ。列見出しは既定では普通の見出し */
+  table.ranking th[data-sort] { cursor: pointer; white-space: nowrap; }
+  table.ranking th[data-sort]:hover { color: var(--accent); }
+  table.ranking th[data-sort]::after { content: " ↕"; opacity: 0.35; font-size: 0.8em; }
+  table.ranking th[aria-sort="ascending"]::after { content: " ↑"; opacity: 1; }
+  table.ranking th[aria-sort="descending"]::after { content: " ↓"; opacity: 1; }
+  .crumbs {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+  }
+  .crumbs a { color: var(--muted); }
+  .crumbs span[aria-current] { color: var(--text); }
+  /* 狭い画面では、いちばん見たい騰落率が横スクロールの外に出ていた。
+     出来高（いちばん優先度が低い列）を落として、1画面に収める。 */
+  @media (max-width: 600px) {
+    table.ranking { min-width: 0; font-size: 0.85rem; }
+    table.ranking th, table.ranking td { padding: 0.45rem 0.35rem; }
+    table.ranking th:last-child, table.ranking td:last-child { display: none; }
+    table.ranking caption { font-size: 0.75rem; }
+  }
+  /* 画面がさらに狭いと銘柄名が毎行2行に折り返す。コードは銘柄ページ側にも
+     出ているので、ここでは名前に幅を譲る。 */
+  @media (max-width: 430px) {
+    table.ranking th:nth-child(3), table.ranking td:nth-child(3) { display: none; }
+  }
+  .updated { font-size: 0.85rem; color: var(--muted); margin: 0.25rem 0 1rem; }
+  .highlights {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0;
+  }
+  .highlights a {
+    display: block;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .highlights a:hover { border-color: var(--accent); }
+  .hl-label { display: block; font-size: 0.75rem; color: var(--muted); }
+  .hl-value { display: block; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+  .hl-note { display: block; font-size: 0.75rem; color: var(--muted); }
+  /* 狭い画面では、ハイライトが2段に折り返して 232px を占め、
+     せっかく上げた表がまた画面の外へ出ていた。1行3枚に詰める。 */
+  @media (max-width: 600px) {
+    .highlights { grid-template-columns: repeat(3, 1fr); gap: 0.35rem; margin: 0.75rem 0; }
+    .highlights a { padding: 0.45rem 0.4rem; text-align: center; }
+    .hl-label { font-size: 0.7rem; }
+    .hl-value { font-size: 1.05rem; }
+    .hl-note { display: none; }   /* 補足は詰めると読めないので落とす */
+  }
+  .summary {
+    background: var(--card-bg);
+    border-left: 3px solid var(--accent);
+    padding: 0.6rem 0.8rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .same-day { font-size: 0.9rem; margin: 1rem 0 0.5rem; }
+  .day-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .day-nav a { color: var(--accent); text-decoration: none; }
+  .day-nav a:hover { text-decoration: underline; }
   .disclaimer {
     margin-top: 2rem;
     padding: 1rem;
-    background: #fff8e1;
-    border: 1px solid #f0e0a0;
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
     font-size: 0.8rem;
     color: var(--muted);
   }
@@ -116,7 +345,11 @@
     color: var(--muted);
     text-align: center;
   }
-  footer a { color: var(--muted); margin: 0 0.5rem; }
+  footer a { color: var(--muted); margin: 0 0.4rem; }
+  .footer-group { margin-bottom: 0.6rem; }
+  .footer-group strong { display: block; color: var(--text); font-size: 0.8rem; margin-bottom: 0.2rem; }
+  .to-top { margin-top: 1rem; }
+  .to-top a { color: var(--accent); }
   .date-jump {
     display: flex;
     align-items: center;
@@ -132,37 +365,88 @@
     background: var(--card-bg);
     color: var(--text);
   }
+  /* 紙に出すときは、操作するものと広告枠を落として表だけ残す */
+  @media print {
+    header.site-header nav, .date-jump, .ad-slot, .day-nav, .crumbs,
+    .stock-search, #results, footer { display: none; }
+    body { background: #fff; color: #000; }
+    main { max-width: none; padding: 0; }
+    table.ranking { min-width: 0; font-size: 10pt; }
+    table.ranking th[data-sort]::after { content: ""; }
+    .highlights {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0;
+  }
+  .highlights a {
+    display: block;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .highlights a:hover { border-color: var(--accent); }
+  .hl-label { display: block; font-size: 0.75rem; color: var(--muted); }
+  .hl-value { display: block; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+  .hl-note { display: block; font-size: 0.75rem; color: var(--muted); }
+  /* 狭い画面では、ハイライトが2段に折り返して 232px を占め、
+     せっかく上げた表がまた画面の外へ出ていた。1行3枚に詰める。 */
+  @media (max-width: 600px) {
+    .highlights { grid-template-columns: repeat(3, 1fr); gap: 0.35rem; margin: 0.75rem 0; }
+    .highlights a { padding: 0.45rem 0.4rem; text-align: center; }
+    .hl-label { font-size: 0.7rem; }
+    .hl-value { font-size: 1.05rem; }
+    .hl-note { display: none; }   /* 補足は詰めると読めないので落とす */
+  }
+  .summary { border-left: 2px solid #000; }
+    a[href]::after { content: ""; }
+  }
   dl { margin: 0 0 1rem; }
   dt { margin-top: 0.75rem; }
   dd { margin: 0.25rem 0 0; color: var(--muted); }
 </style>
-<link rel="canonical" href="{{ canonical }}">
+<link rel="alternate" type="application/rss+xml" title="値上がり株ランキングの更新" href="{{ SITE_URL }}/feed.xml">
+{% if canonical %}<link rel="canonical" href="{{ canonical }}">{% else %}<meta name="robots" content="noindex">{% endif %}
+{# AdSense のスクリプトは pub-ID が入ってから読み込む（審査前に空タグを置かない） #}
+{% if ADSENSE_CLIENT %}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ ADSENSE_CLIENT }}" crossorigin="anonymous"></script>
+{% endif %}
+{# 検索結果で「何のページか」を機械にも伝える。表の中身は block structured_data で足す #}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"値上がり株ランキング","url":"{{ SITE_URL }}/","inLanguage":"ja"}
+</script>
+{% block structured_data %}{% endblock %}
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8d25daf2f614e8c8b4e20694bacc1f8"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
 <body>
+{# キーボードや読み上げで来た人が、毎ページ同じナビを通らずに本文へ行けるようにする #}
+<a class="skip-link" href="#main">本文へスキップ</a>
 <header class="site-header">
   <div class="inner">
     <a class="logo" href="{{ base_url }}index.html">値上がり株ランキング</a>
+    {# ヘッダに並べるのは毎日見るものだけ。10項目あった頃はスマホで3行を占め、
+       肝心のランキングが1画面ぶん下に押し出されていた。残りはフッタと本文から辿る。 #}
     <nav>
       <a href="{{ base_url }}index.html">値上がり</a>
       <a href="{{ base_url }}losers.html">値下がり</a>
       <a href="{{ base_url }}active.html">活況</a>
-      <a href="{{ base_url }}guide.html">読み方</a>
-      <a href="{{ base_url }}about.html">このサイトについて</a>
+      <a href="{{ base_url }}stop-high/index.html">ストップ高</a>
+      <a href="{{ base_url }}search.html">銘柄検索</a>
     </nav>
-    <div class="date-jump">
-      <label for="dateJump">📅 日付から探す</label>
-      <input type="date" id="dateJump" min="{{ GAINERS_DATES_MIN }}" max="{{ GAINERS_DATES_MAX }}">
-    </div>
   </div>
 </header>
 
-<!-- TODO: AdSense publisher ID を取得後、下記コメントアウトを外して設置する
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
--->
 
-<main>
-{% include "_ad_slot.html" %}
+<main id="main" tabindex="-1">
+{% block breadcrumb %}{% endblock %}
+{# 本文の先頭に広告を置かない。ここに入れると、来た人が見に来たランキングが
+   1画面ぶん下へ押し出される（表の位置は実測して 849px → 469px まで詰めた）。
+   広告は各ページの本文の後ろにだけ置く。 #}
 {% block content %}{% endblock %}
 
 <div class="disclaimer">
@@ -174,10 +458,31 @@
 </main>
 
 <footer>
-  <a href="{{ base_url }}about.html">このサイトについて</a>
-  <a href="{{ base_url }}guide.html">ランキングの読み方</a>
-  <a href="{{ base_url }}glossary.html">用語解説</a>
-  <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
+  <div class="footer-group">
+    <strong>探す</strong>
+    <a href="{{ base_url }}search.html">銘柄検索</a>
+    <a href="{{ base_url }}stock/index.html">銘柄別</a>
+    <a href="{{ base_url }}archive/gainers/index.html">過去のランキング</a>
+  </div>
+  <div class="footer-group">
+    <strong>まとめて見る</strong>
+    <a href="{{ base_url }}stop-high/index.html">ストップ高の記録</a>
+    <a href="{{ base_url }}market.html">相場の振り返り</a>
+    <a href="{{ base_url }}weekly/index.html">週まとめ</a>
+    <a href="{{ base_url }}monthly/index.html">月まとめ</a>
+    <a href="{{ base_url }}frequent.html">常連銘柄</a>
+  </div>
+  <div class="footer-group">
+    <strong>このサイト</strong>
+    <a href="{{ base_url }}guide.html">読み方</a>
+    <a href="{{ base_url }}glossary.html">用語解説</a>
+    <a href="{{ base_url }}about.html">概要</a>
+    <a href="{{ base_url }}operator.html">運営者情報</a>
+    <a href="{{ base_url }}contact.html">お問い合わせ</a>
+    <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
+    <a href="{{ base_url }}feed.xml">RSS</a>
+  </div>
+  <p class="to-top"><a href="#main">↑ ページの先頭へ</a></p>
 </footer>
 <script>
 (function () {
@@ -196,6 +501,53 @@
     window.location.href = (target === dates[0])
       ? base + "index.html"
       : base + "archive/gainers/" + target + ".html";
+  });
+})();
+</script>
+<script>
+// 表の並べ替え。JS が無い環境では、順位順のまま普通の表として読める
+//（値はすべて HTML に書いてあるので、並べ替えが無くても何も失われない）。
+(function () {
+  function num(text) {
+    // 「+27.94%」「1,234回」「-」などから数値を取り出す
+    var cleaned = text.replace(/[,%円回\s]/g, '').replace(/[＋+]/, '');
+    var value = parseFloat(cleaned);
+    return isNaN(value) ? null : value;
+  }
+  function cellText(row, i) {
+    var cell = row.children[i];
+    return cell ? cell.textContent.trim() : '';
+  }
+  document.querySelectorAll('table.ranking[data-sortable]').forEach(function (table) {
+    var head = table.tHead && table.tHead.rows[0];
+    var body = table.tBodies[0];
+    if (!head || !body) return;
+    var original = Array.prototype.slice.call(body.rows);
+
+    Array.prototype.forEach.call(head.cells, function (th, index) {
+      th.setAttribute('data-sort', '');
+      th.setAttribute('tabindex', '0');
+      function apply() {
+        var current = th.getAttribute('aria-sort');
+        Array.prototype.forEach.call(head.cells, function (o) { o.removeAttribute('aria-sort'); });
+        if (current === 'descending') {           // 3回目で元の並び（順位順）に戻す
+          original.forEach(function (r) { body.appendChild(r); });
+          return;
+        }
+        var dir = current === 'ascending' ? 'descending' : 'ascending';
+        th.setAttribute('aria-sort', dir);
+        var sign = dir === 'ascending' ? 1 : -1;
+        Array.prototype.slice.call(body.rows).sort(function (a, b) {
+          var x = num(cellText(a, index)), y = num(cellText(b, index));
+          if (x !== null && y !== null) return (x - y) * sign;
+          return cellText(a, index).localeCompare(cellText(b, index), 'ja') * sign;
+        }).forEach(function (r) { body.appendChild(r); });
+      }
+      th.addEventListener('click', apply);
+      th.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); apply(); }
+      });
+    });
   });
 })();
 </script>

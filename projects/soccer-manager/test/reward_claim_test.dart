@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
+import 'package:soccer_manager/monetization/funds_pack.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
 import 'package:soccer_manager/state/game_state.dart';
@@ -34,6 +35,13 @@ class _NoStore implements PurchaseService {
   Future<String?> priceLabel() async => null;
   @override
   Future<PurchaseOutcome> buySupporter() async => PurchaseOutcome.unavailable;
+
+  @override
+  Future<String?> priceLabelFor(FundsPack pack) async => null;
+
+  @override
+  Future<PurchaseOutcome> buyFundsPack(FundsPack pack) async =>
+      PurchaseOutcome.unavailable;
   @override
   Future<PurchaseOutcome> restorePurchases() async =>
       PurchaseOutcome.unavailable;

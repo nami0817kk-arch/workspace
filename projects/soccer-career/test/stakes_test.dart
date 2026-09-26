@@ -141,7 +141,19 @@ void main() {
     test('疲れているほど、引くのは重いほうの怪我', () {
       expect(MatchEngine.severeShareFor(80),
           greaterThan(MatchEngine.severeShareFor(0)));
-      expect(MatchEngine.severeShareFor(0), Formulas.severeInjuryShare);
+      // 疲れも消耗も無いときは、元の割合そのもの。
+      expect(
+          MatchEngine.severeShareFor(0, strain: Formulas.strainNeutral),
+          Formulas.severeInjuryShare);
+    });
+
+    test('追い込み続けた身体は、同じ怪我でも重いほうを引く', () {
+      // 「流す」に固有の見返りが一つも無かった（実測: ピーク -2.1、
+      // 平均評価 -0.08、コツ 3%、見返りは怪我が年 0.22回減るだけ）。
+      final worn = MatchEngine.severeShareFor(0, strain: 60);
+      final fresh = MatchEngine.severeShareFor(0, strain: 22);
+      expect(worn, greaterThan(fresh));
+      expect(fresh, greaterThan(0));
     });
 
     test('理不尽にはならない（上限がある）', () {

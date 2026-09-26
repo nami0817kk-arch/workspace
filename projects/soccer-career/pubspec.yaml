@@ -36,6 +36,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # 収益化。**どちらも Android/iOS でしか動かない。**
+  # Web 版は lib/monetize/ が何もしない実装に切り替わるので、
+  # pubspec に入れたままでも `flutter build web` は通る
+  # （soccer-manager が同じ形で Pages に出ている）。
+  google_mobile_ads: ^9.1.0
+  in_app_purchase: ^3.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

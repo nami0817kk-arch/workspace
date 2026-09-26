@@ -17,16 +17,21 @@ import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/knacks.dart';
 import 'package:soccer_career/game/newsroom.dart';
 import 'package:soccer_career/game/world.dart';
+import 'package:soccer_career/game/scenarios.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/competition.dart';
+import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/entourage.dart';
 import 'package:soccer_career/models/life.dart';
-import 'package:soccer_career/models/physique.dart';
+import 'package:soccer_career/models/role.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/support.dart';
+import 'package:soccer_career/models/traits.dart';
 import 'package:soccer_career/models/training.dart';
+import 'package:soccer_career/models/challenge.dart';
+import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/state/career_controller.dart';
 
 class MemoryRepository implements SaveRepository {
@@ -56,12 +61,23 @@ class Playstyle {
     this.directive = Directive.none,
     this.ambitious = true,
     this.habits = const Habits(),
-    this.bodyPlan = BodyPlan.maintain,
-    this.preseason = PreseasonPlan.camp,
+    this.offseason = Offseason.sharpen,
+    this.rehab = RehabPlan.standard,
+    this.eventPick,
+    this.lifestyle,
     this.effort = TrainingEffort.normal,
+    this.easeFrom,
+    this.pick,
+    this.focus = const [],
+    this.menu,
     this.companion = TrainingCompanion.alone,
     this.spendsPoints = false,
     this.autoRestBelow,
+    this.traits,
+    this.pinAbility,
+    this.staysPut = false,
+    this.aim,
+    this.role,
   });
 
   final String name;
@@ -78,6 +94,30 @@ class Playstyle {
 
   /// 週の踏み込み方と、組む相手。
   final TrainingEffort effort;
+
+  /// この歳から「流す」に切り替える。null なら切り替えない。
+  ///
+  /// 一定の踏み込み方しか測っていないと、**踏み込み方を変える**という
+  /// 一番面白い手が測れない。若いうちに伸ばして、身体が効かなくなる前に
+  /// 引くのが効くのかどうかは、混ぜて回さないと分からない。
+  final int? easeFrom;
+
+  /// その歳のときの踏み込み方。
+  TrainingEffort effortAt(int age) =>
+      easeFrom != null && age >= easeFrom! ? TrainingEffort.easy : effort;
+
+  /// 育てる方向。**何を選んだかが選手の形を変えるか**を測るために要る。
+  final List<Detail> focus;
+
+  /// 練習メニューを固定する。null ならポジションの既定。
+  final TrainingMenu? menu;
+
+  /// 局面での手の選び方を差し替える。null なら `SimStyle` に任せる。
+  ///
+  /// **「選択が実際にキャリアを変えているか」を測るために要る。**
+  /// わざと一番悪い手を選び続けたキャリアと最善手のキャリアが同じなら、
+  /// 2280回ある選択は飾りということになる。
+  final ScenarioOption Function(MatchInProgress match)? pick;
   final TrainingCompanion companion;
 
   /// 自分で経験点を振るか。false なら今までどおり自動。
@@ -85,6 +125,28 @@ class Playstyle {
 
   /// 自動休養のしきい値。null なら既定のまま。
   final int? autoRestBelow;
+
+  /// 特性を固定する。null なら今までどおり引く。
+  ///
+  /// **「特性がキャリアをどれだけ変えているか」を測るために要る。**
+  /// 能力値と選び方を揃えて特性だけ差し替え、結果が動かないなら
+  /// 特性は飾りということになる。
+  final List<Trait>? traits;
+
+  /// 毎週この値に能力を固定する。null なら普通に成長する。
+  ///
+  /// **「能力99の選手が底辺の環境で何を残すか」を測るために要る。**
+  /// 普通に回すと、強くなった選手は移籍で環境ごと変わってしまう。
+  final int? pinAbility;
+
+  /// 移籍の話が来ても必ず残留する。環境を固定するための札。
+  final bool staysPut;
+
+  /// 狙う個人技。
+  final Signature? aim;
+
+  /// 就きたい役割。監督が使っていれば就く（毎シーズン試す）。
+  final PlayerRole? role;
 
   /// 居残りでセットプレーを磨く。
   final bool drills;
@@ -95,8 +157,22 @@ class Playstyle {
   final bool ambitious;
 
   final Habits habits;
-  final BodyPlan bodyPlan;
-  final PreseasonPlan preseason;
+
+  /// オフの過ごし方。**1シーズンに1度の選択**をそのまま固定する。
+  final Offseason offseason;
+
+  /// 怪我からの戻し方。**テストから一度も呼ばれていなかった**ので足した。
+  final RehabPlan rehab;
+
+  /// ピッチ外の出来事で、何番目の選択肢を選ぶか。
+  ///
+  /// null なら無作為。**これまで無作為しか無かった**ので、
+  /// 「どちらを選ぶか」を比べられなかった。
+  final int? eventPick;
+
+  /// 生活水準。null なら既定（普通）のまま。
+  /// **`setLifestyle` はテストから一度も呼ばれていなかった。**
+  final int? lifestyle;
 }
 
 /// 1つのキャリアの結末。
@@ -107,6 +183,9 @@ class Career {
 
   int seasons = 0;
   int retireAge = 0;
+
+  /// 引退後の道（引退の直前に控えたもの）。
+  SecondCareer? secondCareer;
   int peakOverall = 0;
   int potential = 0;
   int startOverall = 0;
@@ -119,6 +198,29 @@ class Career {
   int missedMatches = 0;
   int transfers = 0;
   int lastTier = 9;
+
+  /// 去年いたクラブ。**昇格で上がったのか、移籍で上がったのか**は
+  /// クラブが同じかどうかでしか区別できない。
+  String lastClub = '';
+
+  /// そのシーズンに昇格した回数。
+  int promotions = 0;
+
+  /// 特性が実際に効いた局面の数。**持っていることと効くことは別**。
+  int traitHits = 0;
+
+  /// 配られた特性。**枚数が選手を変えているか**を見るために残す。
+  int strengthCount = 0;
+  int flawCount = 0;
+  bool hadRare = false;
+
+  /// 1試合で2点・3点取った回数と、1試合の最多得点。
+  ///
+  /// **「ハットトリックができない」を数字で見るために要る。**
+  /// 通算ゴールが同じでも、毎試合0.5点と「たまに3点」はまるで違う試合になる。
+  int braces = 0;
+  int hatTricks = 0;
+  int bestMatchGoals = 0;
   bool reachedTopByPromotion = false;
   int loans = 0;
   int bestTier = 9;
@@ -133,11 +235,22 @@ class Career {
   int continentalSeasons = 0;
   int cupTitles = 0;
   int leagueTitles = 0;
+  int continentalTitles = 0;
   int worldCups = 0;
   int breakthroughs = 0;
   int greatWeeks = 0;
   int knackAge = 0;
+
+  /// 実際に掴んだコツ。掴まなければ null。
+  Trait? knack;
+
+  /// 引退時に覚えていた個人技。**全員が同じものを揃えるなら、
+  /// それは「その選手にしか無いもの」ではない。**
+  List<Signature> finalSignatures = const [];
   int professionalism = 0;
+  int confidence = 0;
+  int ambition = 0;
+  int temper = 0;
   int atPotentialSeasons = 0;
   int signatures = 0;
   int plateaus = 0;
@@ -153,6 +266,51 @@ class Career {
   int overallAt21 = 0;
   int overallAt25 = 0;
   int overallAt29 = 0;
+
+  /// **衰えはここで見る。** ピークも29歳も、まだ落ちる前のことが多い。
+  int overallAt33 = 0;
+
+  /// 引退したときの総合力と、33歳以降の出場・ゴール。
+  ///
+  /// 「流す」の見返りは**ピークの高さではなく、落ちるのが遅いこと**なので、
+  /// ピークだけを見ていると差が出ているのに見えない。
+  /// じっくりやる試合が、どれだけ来たか。
+  int bigFixtures = 0;
+  int leagueMatches = 0;
+  int scenariosSeen = 0;
+
+  /// 引退時の能力。**選んだことが形に出たか**を見るために残す。
+  Attributes? finalAttributes;
+
+  /// 達成した挑戦。**「作ってあるのに誰も届かない」を探すために数える。**
+  List<Challenge> challenges = const [];
+
+  /// 引退した記録そのもの。殿堂ポイントの計算に使う。
+  Legend? legend;
+
+  /// 監督の目標があった季と、達成した季。
+  /// **出来高払い契約の値付けに要る。**
+  int objectiveSeasons = 0;
+  int objectiveMetSeasons = 0;
+
+  /// 3つのうちいくつ達成したかの内訳。出来高払いの値付けに要る。
+  final List<int> objectiveCounts = [0, 0, 0, 0];
+
+  /// スポンサーが付いていたシーズン数と、受け取った総額。
+  /// **スポンサーはテストに一度も出てこなかった。**
+  int sponsorSeasons = 0;
+  int sponsorIncome = 0;
+
+  /// どの項目を何回狙ったか。
+  Map<Detail, int> dedication = const {};
+  int dedicationOf(Detail detail) => dedication[detail] ?? 0;
+
+  int finalOverall = 0;
+  int lateAppearances = 0;
+  int lateGoals = 0;
+
+  /// 引退時の身体の消耗。
+  double strain = 0;
   int moraleSum = 0;
   int fatigueSum = 0;
   int moraleSamples = 0;
@@ -167,7 +325,28 @@ class Career {
 }
 
 /// 1人ぶんのキャリアを引退まで回す。
-Future<Career> runCareer(Playstyle style, int seed) async {
+///
+/// [onDecision] を渡すと、**自動で選ぶ前に**その局面と選ぶ手を覗ける。
+/// 「何が実際に試合を動かしているか」を測るために要る（`influence_sim`）。
+/// 渡さなければ、これまでどおり `simulateMatch` に任せる。
+Future<Career> runCareer(
+  Playstyle style,
+  int seed, {
+
+  /// 出身国を決め打ちにする（特定の国から出られるかを測るため）。
+  String? countryId,
+  void Function(MatchInProgress match, ScenarioOption option)? onDecision,
+  void Function(int age, Attributes attributes, int overall, int mastery)?
+  onWeek,
+  void Function(CareerState state, SeasonStats stats, CareerController c)?
+  onSeason,
+
+  /// 1週ごとに、コントローラーごと覗かせる。
+  ///
+  /// `onWeek` は選手の能力しか渡さないので、確率の内訳のように
+  /// 状態を跨いで見たいものが測れなかった。
+  void Function(CareerController c)? onWeekState,
+}) async {
   final controller = CareerController(
     repository: MemoryRepository(),
     careerEngine: CareerEngine(random: Random(seed)),
@@ -180,15 +359,26 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     position: style.position,
     age: style.startAge,
     agent: style.agent,
+    traits: style.traits,
+    countryId: countryId,
   );
 
   final career = Career(style)..startOverall = controller.state!.player.overall;
+  final dealt = controller.state!.player.traits;
+  career.strengthCount = dealt.where((t) => !t.flaw).length;
+  career.flawCount = dealt.where((t) => t.flaw).length;
+  career.hadRare = dealt.any((t) => t.rare);
   await controller.setSimStyle(style.sim);
   await controller.setHabits(style.habits);
   if (style.directive != Directive.none) {
     await controller.setDirective(style.directive);
   }
   if (style.drills) await controller.setDrill(SetPiece.freeKick);
+  for (final detail in style.focus) {
+    await controller.toggleFocus(detail);
+  }
+  if (style.aim != null) await controller.aimSignature(style.aim);
+  if (style.role != null) await controller.setRole(style.role);
   await controller.setEffort(style.effort);
   if (style.autoRestBelow != null) {
     await controller.setAutoRestBelow(style.autoRestBelow!);
@@ -196,8 +386,12 @@ Future<Career> runCareer(Playstyle style, int seed) async {
   if (style.spendsPoints) await controller.setAutoSpend(false);
 
   var guard = 0;
+  var hitsSeen = 0;
   while (!controller.state!.retired && guard++ < 30) {
+    hitsSeen = 0;
     final state = controller.state!;
+    // 歳に応じて踏み込み方を切り替える（切り替えない型なら毎季同じ値）。
+    await controller.setEffort(style.effortAt(state.player.age));
     // 重傷でポテンシャルは下がる。伸びの上限として見るのは最大値。
     career.potential = max(career.potential, state.player.potential);
 
@@ -206,21 +400,54 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     // リーグ38節 + カップ最大18 + 代表3。上限で切らないように余裕を持たせる。
     while (!state.seasonFinished && matches++ < 90) {
       // 練習を決める。疲れていたら休む。
-      await controller.setMenu(_menuFor(state, style));
+      await controller.setMenu(style.menu ?? _menuFor(state, style));
       // 組む相手は移籍で入れ替わる。毎週その時点の顔ぶれで選び直す。
-      await controller.setCompanion(state.companionChoices.contains(style.companion)
-          ? style.companion
-          : TrainingCompanion.alone);
+      await controller.setCompanion(
+        state.companionChoices.contains(style.companion)
+            ? style.companion
+            : TrainingCompanion.alone,
+      );
       if (controller.pendingEvent != null) {
         career.events++;
         final choices = controller.pendingEvent!.choices;
-        await controller.resolveEvent(choices[random.nextInt(choices.length)]);
+        final at = style.eventPick == null
+            ? random.nextInt(choices.length)
+            : style.eventPick!.clamp(0, choices.length - 1);
+        await controller.resolveEvent(choices[at]);
       }
       // 「無傷 → 負傷」の瞬間だけ数える。離脱中は毎試合 Injury が作り直される
       // ので、単に別物かどうかで見ると離脱の長さを数えてしまう。
+      // じっくりやる試合が、どれだけ来ているか。
+      if (!state.seasonFinished) {
+        career.leagueMatches++;
+        if (Newsroom.isBigFixture(state)) career.bigFixtures++;
+      }
+      // 能力を固定する型なら、毎週そこへ戻す。
+      if (style.pinAbility != null) {
+        controller.state!.player = controller.state!.player.copyWith(
+          attributes: Attributes.fromDetails({
+            for (final d in Detail.values) d: style.pinAbility!,
+          }),
+        );
+      }
       final wasInjured = state.injured;
-      await controller.simulateMatch();
+      if (onDecision == null && style.pick == null) {
+        await controller.simulateMatch();
+      } else {
+        await _playWatched(controller, style, onDecision);
+      }
       if (style.spendsPoints) await _spendPoints(controller);
+      onWeekState?.call(controller);
+      if (onWeek != null) {
+        final p = controller.state!.player;
+        final dev = controller.state!.development;
+        onWeek(
+          p.age,
+          p.attributes,
+          p.overall,
+          dev.mastery.values.fold(0, (a, b) => a + b),
+        );
+      }
       final after = controller.state!.injury;
       if (!wasInjured && after != null) {
         career.injuries++;
@@ -232,11 +459,17 @@ Future<Career> runCareer(Playstyle style, int seed) async {
       final results = controller.state!.results;
       if (results.isNotEmpty) {
         career.seenStates.add('Appearance.${results.last.appearance.name}');
+        final scored = results.last.goals;
+        if (scored >= 2) career.braces++;
+        if (scored >= 3) career.hatTricks++;
+        career.bestMatchGoals = max(career.bestMatchGoals, scored);
       }
-      career.seenStates
-          .add('FixtureStake.${Newsroom.stakeFor(controller.state!).name}');
-      career.seenStates
-          .add('MomentumState.${controller.state!.form.state.name}');
+      career.seenStates.add(
+        'FixtureStake.${Newsroom.stakeFor(controller.state!).name}',
+      );
+      career.seenStates.add(
+        'MomentumState.${controller.state!.form.state.name}',
+      );
       for (final item in controller.state!.news.take(3)) {
         career.seenStates.add('NewsKind.${item.kind.name}');
       }
@@ -244,15 +477,31 @@ Future<Career> runCareer(Playstyle style, int seed) async {
       // 取り返しのつかない状態に、実際に到達するか。
       if (controller.state!.frozenOut) career.seenStates.add('frozenOut');
       if (controller.state!.trustAtRisk) career.seenStates.add('trustAtRisk');
-      // コツの条件に初めて届いた年齢を控える。
+      // コツの条件に初めて届いた年齢を控え、**実際に掴む**。
+      //
+      // 掴まずに数えていた頃は「掴める割合」しか測れておらず、
+      // 掴んだあと何が起きるか（試合でどれだけ効くか）が一度も測れていなかった。
       if (career.knackAge == 0 && Knacks.canLearn(controller.state!)) {
         career.knackAge = controller.state!.player.age;
+        final offer = Knacks.offer(controller.state!);
+        if (offer.isNotEmpty && await controller.learnKnack(offer.first)) {
+          career.knack = offer.first;
+        }
       }
+      // 特性が効いた局面はシーズンの起点で空になるので、毎週の差を拾う。
+      final hits = controller.state!.traitHits.values.fold<int>(
+        0,
+        (a, b) => a + b,
+      );
+      if (hits > hitsSeen) career.traitHits += hits - hitsSeen;
+      hitsSeen = hits;
       career.moraleSum += controller.state!.morale.value;
       career.fatigueSum += controller.state!.fatigue.value;
       career.moraleSamples++;
-      career.peakOverall =
-          max(career.peakOverall, controller.state!.player.overall);
+      career.peakOverall = max(
+        career.peakOverall,
+        controller.state!.player.overall,
+      );
     }
 
     await controller.finishSeason();
@@ -263,22 +512,36 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     career.goals += stats.goals;
     career.assists += stats.assists;
     career.ratingSum += stats.averageRating * stats.appearances;
-    // 1部にどうやって届いたか。昇格か、移籍か。
+    // **1部にどうやって届いたか。昇格か、移籍か。**
+    //
+    // ここは長いあいだ `career.lastTier == 1` を見ていて、**構造的に
+    // 一度も true にならなかった**（初めて1部に届く瞬間、去年の部は
+    // 必ず1ではない）。「60キャリア全員が移籍で到達、昇格は0人」という
+    // 記録は、この壊れた指標から出ている。**指標そのものを疑う。**
+    // 昇格と移籍を分けるのは部の数字ではなく、**クラブが同じかどうか**。
+    final sameClub = career.lastClub == done.club.name;
+    if (done.club.tier < career.lastTier && sameClub) career.promotions++;
     if (done.club.tier == 1 && career.bestTier > 1) {
-      career.reachedTopByPromotion = career.lastTier == 1;
+      career.reachedTopByPromotion = sameClub;
     }
     career.lastTier = done.club.tier;
+    career.lastClub = done.club.name;
     career.bestTier = min(career.bestTier, done.club.tier);
     if (done.club.tier == 1) {
-      career.bestPrestige =
-          max(career.bestPrestige, World.byId(done.club.countryId).prestige);
+      career.bestPrestige = max(
+        career.bestPrestige,
+        World.byId(done.club.countryId).prestige,
+      );
     }
     career.peakValue = max(career.peakValue, done.reputation.marketValue);
     career.peakSalary = max(career.peakSalary, done.salary);
     career.caps = done.caps;
     career.awards = done.reputation.awards.length;
     career.seenStates.add('SquadStatus.${done.squadStatus.name}');
-    career.minGap = min(career.minGap, done.player.overall - done.club.strength);
+    career.minGap = min(
+      career.minGap,
+      done.player.overall - done.club.strength,
+    );
     career.seenStates.add('ContinentalStage.${done.continentalStage.name}');
     career.seenStates.add('CupStage.${done.cupStage.name}');
     career.seenStates.add('WorldCupStage.${done.worldCupStage.name}');
@@ -298,21 +561,32 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     if (done.manager != null) {
       career.seenStates.add('Tactic.${done.manager!.tactic.name}');
     }
-    if (done.retired) {
-      career.seenStates
-          .add('SecondCareer.${controller.suggestedSecondCareer.name}');
-    }
+    // **引退後の道は、引退の直前に控える。**
+    // `done.retired` で見ていた頃は、シーズンの終わりにまだ引退していないので
+    // **6つの道が1つも記録されず**、`reach_sim` が「一度も起きない」と言っていた
+    // （壊れていたのは仕組みではなく指標のほう。これで7回目）。
+    career.secondCareer = controller.suggestedSecondCareer;
+    // シーズンが1つ終わるたびに、そのときの世界ごと覗かせる。
+    // キャリアの弧（何歳で何に届き、そのあと何が起きるか）を測るために要る。
+    onSeason?.call(done, stats, controller);
     career.savings = done.finances.savings;
     career.signatures = done.development.signatures.length;
+    career.finalSignatures = [...done.development.signatures];
     career.breakthroughs = done.development.breakthroughs;
     career.greatWeeks = done.development.greatWeeks;
     career.professionalism = done.player.personality.professionalism;
+    career.confidence = done.player.personality.confidence;
+    career.ambition = done.player.personality.ambition;
+    career.temper = done.player.personality.temper;
     if (done.player.atPotential) career.atPotentialSeasons++;
     if (done.development.inPlateau) career.plateaus++;
     if (stats.appearances == 0) career.zeroAppearanceSeasons++;
     if (!done.squadStatus.canPlay) career.outOfSquadSeasons++;
     if (done.continentalStage.participated) career.continentalSeasons++;
     if (done.cupStage == CupStage.winner) career.cupTitles++;
+    if (done.continentalStage == ContinentalStage.winner) {
+      career.continentalTitles++;
+    }
     if (done.leaguePosition == 1 && done.club.tier == 1) career.leagueTitles++;
     if (done.worldCupStage.participated) career.worldCups++;
     if (done.player.atPotential) career.reachedPotential = true;
@@ -320,9 +594,30 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     if (age <= 21) career.overallAt21 = done.player.overall;
     if (age <= 25) career.overallAt25 = done.player.overall;
     if (age <= 29) career.overallAt29 = done.player.overall;
+    if (age <= 33) career.overallAt33 = done.player.overall;
+    if (age >= 33) {
+      career.lateAppearances += stats.appearances;
+      career.lateGoals += stats.goals;
+    }
+    if (done.objective != null) {
+      career.objectiveSeasons++;
+      final count = done.objective!.achievedCount(stats);
+      career.objectiveCounts[count]++;
+      if (done.objective!.achieved(stats)) career.objectiveMetSeasons++;
+    }
+    // スポンサーが付いていた季と、その年の受け取り。
+    if (done.sponsor case final sponsor?) {
+      career.sponsorSeasons++;
+      career.sponsorIncome += sponsor.annual;
+    }
+    career.finalOverall = done.player.overall;
+    career.finalAttributes = done.player.attributes;
+    career.dedication = done.development.dedication;
+    career.strain = done.development.strain;
 
     // --- 去就を決める ---
     if (controller.mustRetire) {
+      career.seenStates.add('SecondCareer.${career.secondCareer!.name}');
       await controller.retire();
       break;
     }
@@ -330,6 +625,7 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     if (controller.canRetire &&
         (stats.appearances < 8 || done.player.age >= 35) &&
         random.nextDouble() < 0.5) {
+      career.seenStates.add('SecondCareer.${career.secondCareer!.name}');
       await controller.retire();
       break;
     }
@@ -339,12 +635,14 @@ Future<Career> runCareer(Playstyle style, int seed) async {
       ...controller.offers,
     ];
     if (offers.isEmpty) {
+      career.seenStates.add('SecondCareer.${career.secondCareer!.name}');
       await controller.retire();
       break;
     }
     career.offersSeen += offers.where((o) => !o.isRenewal && !o.loan).length;
-    career.topTierOffers +=
-        offers.where((o) => !o.isRenewal && !o.loan && o.club.tier == 1).length;
+    career.topTierOffers += offers
+        .where((o) => !o.isRenewal && !o.loan && o.club.tier == 1)
+        .length;
     final accepted = _pick(offers, style, done);
     if (accepted.loan) career.loans++;
     if (!accepted.isRenewal && accepted.club.name != done.club.name) {
@@ -353,13 +651,25 @@ Future<Career> runCareer(Playstyle style, int seed) async {
 
     // 稼ぎの使い道。
     if (style.invests) _invest(controller);
+    if (style.lifestyle != null) {
+      await controller.setLifestyle(style.lifestyle!);
+    }
 
-    await controller.setPreseason(style.preseason);
+    // 監督が代わると就ける役割が変わる。毎季かけ直す。
+    if (style.role != null) await controller.setRole(style.role);
+    await controller.setOffseason(style.offseason);
+    await controller.setRehab(style.rehab);
     await controller.advanceSeason(
-        accepted: accepted, bodyPlan: style.bodyPlan);
+      accepted: accepted,
+      offseason: style.offseason,
+    );
   }
 
   career.retireAge = controller.state!.player.age;
+  if (controller.hall.legends.isNotEmpty) {
+    career.legend = controller.hall.legends.first;
+    career.challenges = Hall.challengesOf(controller.hall.legends.first);
+  }
   return career;
 }
 
@@ -379,8 +689,10 @@ Future<void> _spendPoints(CareerController controller) async {
     ];
     if (candidates.isEmpty) return;
     candidates.sort((a, b) {
-      final byWeight = Attributes.weightShare(state.player.position, b.category)
-          .compareTo(Attributes.weightShare(state.player.position, a.category));
+      final byWeight = Attributes.weightShare(
+        state.player.position,
+        b.category,
+      ).compareTo(Attributes.weightShare(state.player.position, a.category));
       if (byWeight != 0) return byWeight;
       return controller.costOf(a).compareTo(controller.costOf(b));
     });
@@ -403,13 +715,18 @@ TrainingMenu _menuFor(CareerState state, Playstyle style) {
 
 /// オファーの選び方。
 TransferOffer _pick(
-    List<TransferOffer> offers, Playstyle style, CareerState state) {
-  if (!style.ambitious) {
+  List<TransferOffer> offers,
+  Playstyle style,
+  CareerState state,
+) {
+  // 環境を固定する型は、何が来ても残る。
+  if (style.staysPut || !style.ambitious) {
     return offers.firstWhere((o) => o.isRenewal, orElse: () => offers.first);
   }
   // 出番が無いならローンでも受ける。あるなら格と年俸で選ぶ。
   final stuck = state.seasonStats.appearances < 8;
-  final ranked = [...offers]..sort((a, b) {
+  final ranked = [...offers]
+    ..sort((a, b) {
       int score(TransferOffer o) =>
           (o.loan ? (stuck ? 3000 : -5000) : 0) +
           o.salary +
@@ -489,6 +806,7 @@ void report(String title, List<Career> careers) {
   final at21 = Stat();
   final at25 = Stat();
   final at29 = Stat();
+  final at33 = Stat();
   final offersSeen = Stat();
   final topOffers = Stat();
   final prestige = Stat();
@@ -519,6 +837,7 @@ void report(String title, List<Career> careers) {
     at21.add(c.overallAt21);
     at25.add(c.overallAt25);
     at29.add(c.overallAt29);
+    at33.add(c.overallAt33);
     offersSeen.add(c.offersSeen);
     topOffers.add(c.topTierOffers);
     prestige.add(c.bestPrestige);
@@ -533,10 +852,35 @@ void report(String title, List<Career> careers) {
       careers.where((c) => c.breakthroughs > 0).length * 100 / careers.length;
   final signature =
       careers.where((c) => c.signatures > 0).length * 100 / careers.length;
-  final loaned = careers.where((c) => c.loans > 0).length * 100 / careers.length;
+  final loaned =
+      careers.where((c) => c.loans > 0).length * 100 / careers.length;
   final league = careers.fold(0, (s, c) => s + c.leagueTitles);
+  // **合計だけだと、「誰もが平らに取る」のか
+  // 「一握りが独り占めする」のかが区別できない。**
+  final titles = Stat();
+  for (final c in careers) {
+    titles.add(c.leagueTitles);
+  }
+  final titleless =
+      careers.where((c) => c.leagueTitles == 0).length * 100 / careers.length;
   final cup = careers.fold(0, (s, c) => s + c.cupTitles);
-  final wc = careers.where((c) => c.worldCups > 0).length * 100 / careers.length;
+  final continental = careers.fold(0, (s, c) => s + c.continentalTitles);
+  // **「無冠」がリーグ優勝だけを見ていた。** カップを5つ獲った選手が
+  // 無冠に数えられていて、カップの数を動かしても この行は動かなかった
+  // ——動かない数字を見て「効いていない」と読む罠になる。
+  final trophyless =
+      careers
+          .where(
+            (c) =>
+                c.leagueTitles == 0 &&
+                c.cupTitles == 0 &&
+                c.continentalTitles == 0,
+          )
+          .length *
+      100 /
+      careers.length;
+  final wc =
+      careers.where((c) => c.worldCups > 0).length * 100 / careers.length;
 
   print('');
   print('== $title  (${careers.length}人) ==');
@@ -545,6 +889,7 @@ void report(String title, List<Career> careers) {
   print(_row('21歳の総合力', at21));
   print(_row('25歳の総合力', at25));
   print(_row('29歳の総合力', at29));
+  print(_row('33歳の総合力', at33));
   print(_row('届いた移籍話', offersSeen, digits: 2));
   print(_row('うち1部から', topOffers, digits: 2));
   print(_row('伸び幅', growth));
@@ -568,13 +913,49 @@ void report(String title, List<Career> careers) {
   print(_row('平均の疲労', fatigue));
   print(_row('無出場シーズン', zero, digits: 2));
   print(_row('出来事', events));
-  print('  ポテンシャル到達 ${reached.toStringAsFixed(0)}%  '
-      '1部到達 ${topTier.toStringAsFixed(0)}%  '
-      '代表経験 ${capped.toStringAsFixed(0)}%  '
-      '限界突破 ${broke.toStringAsFixed(0)}%  '
-      '個人技 ${signature.toStringAsFixed(0)}%  '
-      'ローン ${loaned.toStringAsFixed(0)}%  '
-      'W杯 ${wc.toStringAsFixed(0)}%');
-  print('  リーグ優勝 $league回  国内カップ優勝 $cup回');
+  print(
+    '  ポテンシャル到達 ${reached.toStringAsFixed(0)}%  '
+    '1部到達 ${topTier.toStringAsFixed(0)}%  '
+    '代表経験 ${capped.toStringAsFixed(0)}%  '
+    '限界突破 ${broke.toStringAsFixed(0)}%  '
+    '個人技 ${signature.toStringAsFixed(0)}%  '
+    'ローン ${loaned.toStringAsFixed(0)}%  '
+    'W杯 ${wc.toStringAsFixed(0)}%',
+  );
+  print(_row('リーグ優勝', titles, digits: 1));
+  print(
+    '  リーグ優勝 $league回  国内カップ優勝 $cup回  大陸カップ優勝 $continental回',
+  );
+  print(
+    '  リーグ無冠 ${titleless.toStringAsFixed(0)}%  '
+    '無冠（リーグもカップも） ${trophyless.toStringAsFixed(0)}%',
+  );
 }
 
+/// 自動進行と同じ手を選びながら、選ぶ直前に覗かせる。
+///
+/// `MatchInProgress.autoPlay` と同じことをしている（`pickFor` → `choose`）。
+/// 覗くためだけに本体へ穴を開けたくないので、ここで同じ形をなぞる。
+Future<void> _playWatched(
+  CareerController controller,
+  Playstyle style,
+  void Function(MatchInProgress match, ScenarioOption option)? onDecision,
+) async {
+  final state = controller.state!;
+  if (controller.currentMatch == null) {
+    if (state.pendingCup != null) {
+      controller.startCupMatch();
+    } else {
+      controller.startNextMatch();
+    }
+  }
+  final match = controller.currentMatch;
+  if (match == null) return;
+  while (!match.isFinished) {
+    match.autoArm(state.simStyle);
+    final option = style.pick?.call(match) ?? match.pickFor(state.simStyle);
+    onDecision?.call(match, option);
+    match.choose(option);
+  }
+  await controller.finishMatch();
+}

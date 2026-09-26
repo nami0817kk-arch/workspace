@@ -42,6 +42,28 @@ class Dependencies {
   /// 土台からどれだけ先行できるか。
   static const int headroom = 18;
 
+  /// **積み上げれば、土台を超えて尖れる。**
+  ///
+  /// 土台の仕組みは「筋力20のまま最高速だけ99」を止めるためのものだが、
+  /// そのぶん**狙った1点が伸びず、土台のほうが伸びる**。実測（16キャリア）で、
+  /// シュート一本で20年育てても上位3項目は 敏捷性96・ドリブル96・
+  /// ボールコントロール95 で、**シュート系が1つも入らなかった**
+  /// （狙い通りに一番高くなったのは 75%。パス・守備は 100%）。
+  /// `finishing ← ballControl + shotPower ← strength` と鎖が3段あるので、
+  /// 伸びが全部土台に吸われる。
+  ///
+  /// その1点をやり続けた選手だけ、先行できる幅が広がる。
+  /// **これが「尖った選手」の作り方**——20年の積み上げが形になる。
+  /// **実測で決める。** 1つの項目を20年狙い続けても、狙えるのは
+  /// **54〜78回**（成長の機会そのものが多くない）。40回で+1 では、
+  /// キャリアを通して幅が1しか広がらず、何も変わらなかった。
+  static const int dedicationStep = 6;
+  static const int dedicationMax = 12;
+
+  /// その項目にどれだけ積んだかで決まる、先行できる幅。
+  static int headroomFor(int dedication) =>
+      headroom + (dedication ~/ dedicationStep).clamp(0, dedicationMax);
+
   /// その能力の当面の上限。土台の平均 + [headroom]。
   ///
   /// [ceiling] はその能力そのものの上限（普通は 99、超越の特性なら 109）で、
@@ -49,37 +71,62 @@ class Dependencies {
   /// 99 を超えていても**ここでは丸めない**。丸めると 99 に達した能力の成長が
   /// 土台へ流れて全体が膨らむ（実測で代表経験 57%→63%）。99 で止まるのは
   /// [Attributes.bumpDetail] の側。
-  static int capFor(Detail detail, Attributes attributes,
-      {int ceiling = Formulas.maxAttribute}) {
+  static int capFor(
+    Detail detail,
+    Attributes attributes, {
+    int ceiling = Formulas.maxAttribute,
+    int dedication = 0,
+  }) {
     final base = supports[detail];
     if (base == null || base.isEmpty) return ceiling;
     final sum = base.fold(0, (s, d) => s + attributes.detail(d));
-    return (sum / base.length).round() + headroom;
+    return (sum / base.length).round() + headroomFor(dedication);
   }
 
   /// 今それ以上伸ばせないか。
-  static bool blocked(Detail detail, Attributes attributes,
-          {int ceiling = Formulas.maxAttribute}) =>
-      attributes.detail(detail) >= capFor(detail, attributes, ceiling: ceiling);
+  static bool blocked(
+    Detail detail,
+    Attributes attributes, {
+    int ceiling = Formulas.maxAttribute,
+    int dedication = 0,
+  }) =>
+      attributes.detail(detail) >=
+      capFor(detail, attributes, ceiling: ceiling, dedication: dedication);
 
   /// 頭打ちのとき、代わりに伸ばすべき土台。一番低いところから鍛える。
   static Detail? weakestSupport(Detail detail, Attributes attributes) {
     final base = supports[detail];
     if (base == null || base.isEmpty) return null;
     return base.reduce(
-        (a, b) => attributes.detail(a) <= attributes.detail(b) ? a : b);
+      (a, b) => attributes.detail(a) <= attributes.detail(b) ? a : b,
+    );
   }
 
   /// 伸ばす先を決める。頭打ちなら土台に回す。
   ///
   /// 返すのは実際に伸ばす詳細能力。土台も頭打ちなら、そこからさらに
   /// 下の土台へ回す（最大3段）。
-  static Detail resolve(Detail wanted, Attributes attributes,
-      {int Function(Detail)? ceilingOf}) {
+  ///
+  /// [dedicationOf] はその項目にどれだけ積んだか。積んだ項目ほど
+  /// 土台を先行できるので、鎖に吸われずに尖る。
+  static Detail resolve(
+    Detail wanted,
+    Attributes attributes, {
+    int Function(Detail)? ceilingOf,
+    int Function(Detail)? dedicationOf,
+  }) {
     var target = wanted;
     for (var i = 0; i < 3; i++) {
       final ceiling = ceilingOf?.call(target) ?? Formulas.maxAttribute;
-      if (!blocked(target, attributes, ceiling: ceiling)) return target;
+      final dedication = dedicationOf?.call(target) ?? 0;
+      if (!blocked(
+        target,
+        attributes,
+        ceiling: ceiling,
+        dedication: dedication,
+      )) {
+        return target;
+      }
       final next = weakestSupport(target, attributes);
       if (next == null) return target;
       target = next;

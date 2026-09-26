@@ -19,11 +19,14 @@ import '../widgets/busy_overlay.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/first_run_guide_card.dart';
+import '../widgets/next_action_card.dart';
+import '../widgets/season_review_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import 'calendar_screen.dart';
 import 'cup_screen.dart';
 import 'finance_screen.dart';
+import 'glossary_screen.dart';
 import 'lineup_screen.dart';
 import 'live_match_screen.dart';
 import 'match_screen.dart';
@@ -32,6 +35,8 @@ import 'scout_report_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/match_factor_engine.dart';
+import '../logic/board_target_progress.dart';
+import '../logic/prematch_check.dart';
 import '../models/club_vision.dart';
 import '../models/preseason_camp.dart';
 import '../l10n/tr.dart';
@@ -86,6 +91,11 @@ class HomeScreen extends StatelessWidget {
               // 初見の人を週次サイクルに一周させるガイド。
               // 4ステップ終えるか閉じられると自動的に消える。
               const FirstRunGuideCard(),
+              // いま手を付けるべきこと。画面が30以上あり、どこから見れば
+              // よいか分からない状態だった。出すのは常に1件だけ。
+              const NextActionCard(),
+              // 終わったばかりのシーズンの振り返り。閉じるまで出る。
+              const SeasonReviewCard(),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -114,6 +124,35 @@ class HomeScreen extends StatelessWidget {
                             '目標: ${save.boardTargetRank}位以内${gameState.boardCupTargetLabel != null ? '・カップ${gameState.boardCupTargetLabel}進出' : ''}',
                             "Target: top ${save.boardTargetRank}${gameState.boardCupTargetLabel != null ? ' • reach the ${gameState.boardCupTargetLabel} in the cup' : ''}"),
                         style: TextStyle(color: scheme.onSurfaceVariant),
+                      ),
+                      // 目標だけでは、いま届いているのかが分からない。
+                      // 順位・勝点差・残り節数を添えて、あと何が要るかを言う。
+                      Builder(
+                        builder: (context) {
+                          final progress =
+                              BoardTargetProgressEngine.evaluate(
+                            league: league,
+                            userTeamId: save.userTeamId,
+                            targetRank: save.boardTargetRank,
+                            matchdaysLeft:
+                                gameState.remainingMatchdaysThisSeason,
+                          );
+                          if (progress == null) return const SizedBox.shrink();
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              progress.label,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: progress.onTrack && !progress.tight
+                                    ? SemanticColors.positive(context)
+                                    : progress.tight
+                                        ? SemanticColors.negative(context)
+                                        : scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -153,10 +192,12 @@ class HomeScreen extends StatelessWidget {
                       label: Tr.pick('平均総合力', 'Average overall'),
                       value: '${userTeam.overallRating}',
                       color: Colors.blue.shade700,
+                      glossaryTerm: Tr.pick('総合力', 'Overall'),
                     ),
                     _StatTile(
                       icon: Icons.shield,
                       label: Tr.pick('監督への信頼度', 'Board confidence'),
+                      glossaryTerm: Tr.pick('監督への信頼度', 'Board confidence'),
                       value: '${save.confidence}',
                       progress: save.confidence / 100,
                       color: save.confidence <= 25
@@ -166,6 +207,7 @@ class HomeScreen extends StatelessWidget {
                     _StatTile(
                       icon: Icons.star,
                       label: Tr.pick('監督としての評価', 'Your reputation'),
+                      glossaryTerm: Tr.pick('監督としての評価', 'Reputation'),
                       value: '${gameState.managerReputation}',
                       progress: gameState.managerReputation / 100,
                       color: Colors.deepPurple,
@@ -173,6 +215,7 @@ class HomeScreen extends StatelessWidget {
                     _StatTile(
                       icon: Icons.groups,
                       label: Tr.pick('観客動員', 'Attendance'),
+                      glossaryTerm: Tr.pick('観客動員', 'Attendance'),
                       value: Tr.pick(
                           '${gameState.lastMatchAttendance ?? gameState.expectedAttendance}人',
                           '${gameState.lastMatchAttendance ?? gameState.expectedAttendance}'),
@@ -745,9 +788,68 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  /// 試合前の確認。取りこぼしがあるときだけ止める。
+  ///
+  /// 問題が無い週にも確認を挟むと、毎週タップが1回増えるだけになる。
+  /// 戻り値が false なら試合を始めない(利用者がスタメンを直しに行く)。
+  static Future<bool> _confirmLineup(
+      BuildContext context, GameState gameState) async {
+    final warnings = PreMatchCheck.run(gameState.userTeam);
+    if (warnings.isEmpty) return true;
+
+    final proceed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(Tr.pick('このまま試合に入りますか？', 'Go into the match like this?')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final w in warnings)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      w.serious ? Icons.error_outline : Icons.info_outline,
+                      size: 16,
+                      color: w.serious
+                          ? SemanticColors.negative(context)
+                          : SemanticColors.neutral(context),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(w.message)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx, false);
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const LineupScreen()),
+              );
+            },
+            child: Text(Tr.pick('スタメンを直す', 'Fix the XI')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(Tr.pick('このまま試合へ', 'Play anyway')),
+          ),
+        ],
+      ),
+    );
+    return proceed ?? false;
+  }
+
   Future<void> _playMatch(BuildContext context) async {
     FeedbackService.tap();
     final gameState = context.read<GameState>();
+    if (!await _confirmLineup(context, gameState)) return;
+    if (!context.mounted) return;
     final HalfResult? firstHalf;
     try {
       firstHalf = await gameState.playNextMatchday(interactive: true);
@@ -1064,6 +1166,23 @@ class HomeScreen extends StatelessWidget {
       ));
       gameState.lastAiTransferNews = null;
     }
+    // ユースを去った有望株。ユース画面にも出るが、そこを開かない週に
+    // 起きると、名簿から静かに消えるだけになる。育てていた選手が去った
+    // ことは、その節のうちに知らせる。
+    final departures = gameState.lastYouthDepartures;
+    if (departures.isNotEmpty) {
+      final names =
+          departures.map((d) => d.player.name).join(Tr.pick('、', ', '));
+      final compensation =
+          departures.fold<int>(0, (sum, d) => sum + d.compensation);
+      messages.add((
+        Tr.pick('ユースを去りました: $names(育成補償金 $compensation万円)',
+            'Left the academy: $names (development fee $compensation)'),
+        true
+      ));
+      gameState.lastYouthDepartures = [];
+    }
+
     final budgetCrisis = gameState.lastBudgetCrisisWarning;
     if (budgetCrisis != null) {
       messages.add((budgetCrisis, true));
@@ -1691,6 +1810,10 @@ class _StatTile extends StatelessWidget {
   final Color color;
   final double? progress;
 
+  /// 用語集で引く語。指定すると、タイルを押して意味を読めるようになる。
+  /// 数字の意味が分からないまま画面を眺める時間を無くすためのもの。
+  final String? glossaryTerm;
+
   const _StatTile({
     required this.icon,
     required this.label,
@@ -1698,10 +1821,33 @@ class _StatTile extends StatelessWidget {
     required this.color,
     this.sub,
     this.progress,
+    this.glossaryTerm,
   });
 
   @override
   Widget build(BuildContext context) {
+    final tile = _tile(context);
+    final term = glossaryTerm;
+    if (term == null) return tile;
+    return Semantics(
+      button: true,
+      hint: Tr.pick('用語の説明を開く', 'Open the explanation'),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          FeedbackService.tap();
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => GlossaryScreen(initialQuery: term),
+            ),
+          );
+        },
+        child: tile,
+      ),
+    );
+  }
+
+  Widget _tile(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(

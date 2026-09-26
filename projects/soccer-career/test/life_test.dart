@@ -32,15 +32,14 @@ Player player({
   int potential = 99,
   Position position = Position.cm,
   Attributes? attributes,
-}) =>
-    Player(
-      name: 'P',
-      age: age,
-      position: position,
-      attributes: attributes ?? flat,
-      potential: potential,
-      condition: condition,
-    );
+}) => Player(
+  name: 'P',
+  age: age,
+  position: position,
+  attributes: attributes ?? flat,
+  potential: potential,
+  condition: condition,
+);
 
 MatchResult league(double rating, {int goals = 0, int matchday = 1}) =>
     MatchResult(
@@ -70,8 +69,10 @@ void main() {
         var injured = 0;
         for (var seed = 0; seed < 400; seed++) {
           final engine = MatchEngine(random: Random(seed));
-          if (engine.rollInjury(player(condition: condition),
-                  baseChance: Formulas.injuryBaseChance) !=
+          if (engine.rollInjury(
+                player(condition: condition),
+                baseChance: Formulas.injuryBaseChance,
+              ) !=
               null) {
             injured++;
           }
@@ -87,8 +88,10 @@ void main() {
         var injured = 0;
         for (var seed = 0; seed < 400; seed++) {
           final engine = MatchEngine(random: Random(seed));
-          if (engine.rollInjury(player(age: age),
-                  baseChance: Formulas.injuryBaseChance) !=
+          if (engine.rollInjury(
+                player(age: age),
+                baseChance: Formulas.injuryBaseChance,
+              ) !=
               null) {
             injured++;
           }
@@ -102,18 +105,26 @@ void main() {
     test('離脱試合数は種類の範囲に収まる', () {
       for (var seed = 0; seed < 300; seed++) {
         final engine = MatchEngine(random: Random(seed));
-        final injury = engine.rollInjury(player(condition: 10),
-            baseChance: Formulas.injuryBaseChance);
+        final injury = engine.rollInjury(
+          player(condition: 10),
+          baseChance: Formulas.injuryBaseChance,
+        );
         if (injury == null) continue;
         final kind = InjuryKind.all.firstWhere((k) => k.name == injury.name);
-        expect(injury.matchesOut, inInclusiveRange(kind.minMatches, kind.maxMatches));
+        expect(
+          injury.matchesOut,
+          inInclusiveRange(kind.minMatches, kind.maxMatches),
+        );
         expect(injury.severity, kind.severity);
       }
     });
 
     test('tick で減り、0 で治る', () {
       const injury = Injury(
-          name: '打撲', severity: InjurySeverity.light, matchesOut: 2);
+        name: '打撲',
+        severity: InjurySeverity.light,
+        matchesOut: 2,
+      );
       final once = injury.tick();
       expect(once.matchesOut, 1);
       expect(once.healed, isFalse);
@@ -125,9 +136,10 @@ void main() {
       final p = player(potential: 90);
 
       const severe = Injury(
-          name: '膝の靭帯損傷',
-          severity: InjurySeverity.severe,
-          matchesOut: 15);
+        name: '膝の靭帯損傷',
+        severity: InjurySeverity.severe,
+        matchesOut: 15,
+      );
       final (attrs, potential) = engine.applySevereInjury(p, severe);
       expect(potential, 90 - Formulas.severeInjuryPotentialLoss);
       // スピードの詳細のどれかが削られている。
@@ -137,7 +149,10 @@ void main() {
       expect(lost, Formulas.severeInjuryAttributeLoss);
 
       const light = Injury(
-          name: '打撲', severity: InjurySeverity.light, matchesOut: 1);
+        name: '打撲',
+        severity: InjurySeverity.light,
+        matchesOut: 1,
+      );
       final (sameAttrs, samePotential) = engine.applySevereInjury(p, light);
       expect(samePotential, 90);
       expect(sameAttrs.physical, flat.physical);
@@ -154,7 +169,10 @@ void main() {
     test('保存を往復しても負傷が残る', () {
       final s = freshCareer();
       s.injury = const Injury(
-          name: '疲労骨折', severity: InjurySeverity.moderate, matchesOut: 7);
+        name: '疲労骨折',
+        severity: InjurySeverity.moderate,
+        matchesOut: 7,
+      );
       final restored = CareerState.fromJson(s.toJson());
       expect(restored.injured, isTrue);
       expect(restored.injury!.name, '疲労骨折');
@@ -216,8 +234,13 @@ void main() {
       s.player = Player.rebuild(
         s.player,
         attributes: Attributes(
-            pace: 85, shooting: 85, passing: 85, dribbling: 85,
-            defending: 85, physical: 85),
+          pace: 85,
+          shooting: 85,
+          passing: 85,
+          dribbling: 85,
+          defending: 85,
+          physical: 85,
+        ),
         potential: 99,
       );
       expect(extras.shouldCallUp(s), isFalse);
@@ -228,8 +251,13 @@ void main() {
       s.player = Player.rebuild(
         s.player,
         attributes: Attributes(
-            pace: 85, shooting: 85, passing: 85, dribbling: 85,
-            defending: 85, physical: 85),
+          pace: 85,
+          shooting: 85,
+          passing: 85,
+          dribbling: 85,
+          defending: 85,
+          physical: 85,
+        ),
         potential: 99,
       );
       for (var i = 0; i < 8; i++) {
@@ -294,15 +322,26 @@ void main() {
     final extras = CareerExtras(random: Random(6));
 
     test('3つのうち2つ達成で達成扱い', () {
-      const objective =
-          SeasonObjective(appearances: 20, contributions: 10, rating: 6.5);
+      const objective = SeasonObjective(
+        appearances: 20,
+        contributions: 10,
+        rating: 6.5,
+      );
       const met = SeasonStats(
-          appearances: 25, goals: 8, assists: 4, averageRating: 6.2);
+        appearances: 25,
+        goals: 8,
+        assists: 4,
+        averageRating: 6.2,
+      );
       expect(objective.achievedCount(met), 2);
       expect(objective.achieved(met), isTrue);
 
       const missed = SeasonStats(
-          appearances: 10, goals: 2, assists: 1, averageRating: 6.6);
+        appearances: 10,
+        goals: 2,
+        assists: 1,
+        averageRating: 6.6,
+      );
       expect(objective.achievedCount(missed), 1);
       expect(objective.achieved(missed), isFalse);
     });
@@ -321,10 +360,14 @@ void main() {
 
     test('攻撃のポジションほど得点関与を求められる', () {
       const club = Club(id: 'a', name: 'A', strength: 55, tier: 2);
-      final striker =
-          extras.objectiveFor(player: player(position: Position.st), club: club);
-      final back =
-          extras.objectiveFor(player: player(position: Position.cb), club: club);
+      final striker = extras.objectiveFor(
+        player: player(position: Position.st),
+        club: club,
+      );
+      final back = extras.objectiveFor(
+        player: player(position: Position.cb),
+        club: club,
+      );
       expect(striker.contributions, greaterThan(back.contributions));
     });
 
@@ -332,22 +375,40 @@ void main() {
       int salaryAfter({required bool achieve}) {
         final engine = CareerEngine(random: Random(7));
         final s = engine.startCareer(
-            name: 'S', position: Position.st, age: 24, agent: Agent.pool.first);
-        s.objective =
-            const SeasonObjective(appearances: 5, contributions: 2, rating: 6.0);
+          name: 'S',
+          position: Position.st,
+          age: 24,
+          agent: Agent.pool.first,
+        );
+        s.objective = const SeasonObjective(
+          appearances: 5,
+          contributions: 2,
+          rating: 6.0,
+        );
         for (var i = 0; i < 20; i++) {
-          s.results.add(league(achieve ? 7.2 : 7.2,
-              goals: achieve ? 1 : 0, matchday: i + 1));
+          s.results.add(
+            league(
+              achieve ? 7.2 : 7.2,
+              goals: achieve ? 1 : 0,
+              matchday: i + 1,
+            ),
+          );
         }
         if (!achieve) {
           s.objective = const SeasonObjective(
-              appearances: 99, contributions: 99, rating: 9.9);
+            appearances: 99,
+            contributions: 99,
+            rating: 9.9,
+          );
         }
         s.contractYears = 1;
         return engine.renewalOffer(s).salary;
       }
 
-      expect(salaryAfter(achieve: true), greaterThan(salaryAfter(achieve: false)));
+      expect(
+        salaryAfter(achieve: true),
+        greaterThan(salaryAfter(achieve: false)),
+      );
     });
 
     test('目標は保存を往復しても残り、シーズンを進めると作り直される', () {
@@ -366,20 +427,47 @@ void main() {
     test('開始時の契約は規定の範囲に収まる', () {
       for (var seed = 0; seed < 50; seed++) {
         final s = freshCareer(seed: seed);
-        expect(s.contractYears,
-            inInclusiveRange(Formulas.contractYearsMin, Formulas.contractYearsMax));
+        expect(
+          s.contractYears,
+          inInclusiveRange(
+            Formulas.contractYearsMin,
+            Formulas.contractYearsMax,
+          ),
+        );
       }
     });
 
-    test('契約が残っているとオファーは来ない', () {
+    test('契約が残っていると、行き先が上のクラブだけになる', () {
       final engine = CareerEngine(random: Random(9));
       final s = freshCareer(seed: 9);
       s.contractYears = 3;
       for (var i = 0; i < 20; i++) {
         s.results.add(league(8.5, goals: 1, matchday: i + 1));
       }
-      expect(engine.offersFor(s), isEmpty);
+      // 好調なら話は来る。ただし移籍金を積む理由のある相手だけ。
+      final under = engine.offersFor(s).where((o) => !o.loan).toList();
+      expect(under, isNotEmpty);
+      for (final o in under) {
+        expect(
+          o.club.strength,
+          greaterThanOrEqualTo(
+            s.club.strength + Formulas.transferUnderContractStep,
+          ),
+        );
+      }
 
+      // 平凡な出来なら、契約が残っている間は動かない。
+      s.results.clear();
+      for (var i = 0; i < 20; i++) {
+        s.results.add(league(6.8, matchday: i + 1));
+      }
+      expect(engine.offersFor(s).where((o) => !o.loan), isEmpty);
+
+      // 契約が残り1年なら、上のクラブに限らず話が来る。
+      s.results.clear();
+      for (var i = 0; i < 20; i++) {
+        s.results.add(league(8.5, goals: 1, matchday: i + 1));
+      }
       s.contractYears = 1;
       expect(engine.offersFor(s), isNotEmpty);
     });
@@ -399,8 +487,10 @@ void main() {
       final s = freshCareer(seed: 11);
       // 残り1年になって初めて、新しい契約年数が提示される。
       s.contractYears = 1;
-      expect(engine.renewalOffer(s).years,
-          inInclusiveRange(Formulas.contractYearsMin, Formulas.contractYearsMax));
+      expect(
+        engine.renewalOffer(s).years,
+        inInclusiveRange(Formulas.contractYearsMin, Formulas.contractYearsMax),
+      );
 
       // 残っている間は、残り年数がそのまま1つ減る。
       s.contractYears = 4;
@@ -418,21 +508,26 @@ void main() {
     test('代表数と目標達成が記録に残る', () {
       final engine = CareerEngine(random: Random(13));
       final s = freshCareer(seed: 13);
-      s.objective =
-          const SeasonObjective(appearances: 1, contributions: 0, rating: 0);
+      s.objective = const SeasonObjective(
+        appearances: 1,
+        contributions: 0,
+        rating: 0,
+      );
       s.results.add(league(7.0));
-      s.results.add(MatchResult(
-        matchday: 1,
-        opponentName: '代表相手',
-        home: true,
-        scored: 1,
-        conceded: 0,
-        appearance: Appearance.start,
-        rating: 7.0,
-        goals: 0,
-        assists: 0,
-        international: true,
-      ));
+      s.results.add(
+        MatchResult(
+          matchday: 1,
+          opponentName: '代表相手',
+          home: true,
+          scored: 1,
+          conceded: 0,
+          appearance: Appearance.start,
+          rating: 7.0,
+          goals: 0,
+          assists: 0,
+          international: true,
+        ),
+      );
 
       final next = engine.advanceSeason(s, accepted: engine.renewalOffer(s));
       expect(next.history.last.caps, 1);

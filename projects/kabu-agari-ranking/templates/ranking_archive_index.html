@@ -1,11 +1,26 @@
 {% extends "base.html" %}
-{% block title %}過去の{{ heading }}一覧｜値上がり株ランキング{% endblock %}
-{% block description %}{{ heading }}の過去掲載日一覧。{% endblock %}
+{% block title %}{{ heading }}の過去一覧（日別アーカイブ）{% endblock %}
+{% block description %}{{ heading }}の過去掲載日一覧。日付ごとに当日の上位30銘柄を保存しています。{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "過去の" ~ heading}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>過去の{{ heading }}一覧</h1>
+<p>掲載を始めてからの営業日ごとに、当日の上位30銘柄をそのまま残しています。</p>
+<p class="date-jump">
+  <label for="dateJump">📅 日付から探す</label>
+  <input type="date" id="dateJump" min="{{ GAINERS_DATES_MIN }}" max="{{ GAINERS_DATES_MAX }}">
+</p>
+{% for month in months %}
+<h2>{{ month.label }}</h2>
 <div class="archive-list">
-  {% for d in dates %}
-  <a href="{{ d }}.html">{{ d }} の{{ heading }}</a>
+  {% for d in month.dates %}
+  <a href="{{ d.iso }}.html">
+    <span class="archive-date">{{ d.day }}</span>
+    {% if d.top_name %}<span class="archive-top">首位 {{ d.top_name }}（{{ d.top_code }}） {{ "%+.2f"|format(d.top_pct) }}%{% if d.stops %} ／ {{ d.stop_label }} {{ d.stops }}銘柄{% endif %}</span>{% endif %}
+  </a>
   {% endfor %}
 </div>
+{% endfor %}
 {% endblock %}

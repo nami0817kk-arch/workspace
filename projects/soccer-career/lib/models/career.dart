@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import '../game/formulas.dart';
 
 import 'agent.dart';
@@ -83,58 +84,58 @@ class SeasonRecord {
   final bool promiseKept;
 
   Map<String, dynamic> toJson() => {
-        'year': year,
-        'clubName': clubName,
-        'tier': tier,
-        'leaguePosition': leaguePosition,
-        'appearances': stats.appearances,
-        'goals': stats.goals,
-        'assists': stats.assists,
-        'averageRating': stats.averageRating,
-        'salary': salary,
-        'caps': caps,
-        'objectiveMet': objectiveMet,
-        'countryId': countryId,
-        'continentalStage': continentalStage.name,
-        'cupStage': cupStage.name,
-        'worldCupStage': worldCupStage.name,
-        'onLoan': onLoan,
-        'overall': overall,
-        'promiseLabel': promiseLabel,
-        'promiseKept': promiseKept,
-      };
+    'year': year,
+    'clubName': clubName,
+    'tier': tier,
+    'leaguePosition': leaguePosition,
+    'appearances': stats.appearances,
+    'goals': stats.goals,
+    'assists': stats.assists,
+    'averageRating': stats.averageRating,
+    'salary': salary,
+    'caps': caps,
+    'objectiveMet': objectiveMet,
+    'countryId': countryId,
+    'continentalStage': continentalStage.name,
+    'cupStage': cupStage.name,
+    'worldCupStage': worldCupStage.name,
+    'onLoan': onLoan,
+    'overall': overall,
+    'promiseLabel': promiseLabel,
+    'promiseKept': promiseKept,
+  };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
-        year: json['year'] as int,
-        clubName: json['clubName'] as String,
-        tier: json['tier'] as int,
-        leaguePosition: json['leaguePosition'] as int,
-        stats: SeasonStats(
-          appearances: json['appearances'] as int,
-          goals: json['goals'] as int,
-          assists: json['assists'] as int,
-          averageRating: (json['averageRating'] as num).toDouble(),
-        ),
-        salary: json['salary'] as int? ?? 0,
-        caps: json['caps'] as int? ?? 0,
-        objectiveMet: json['objectiveMet'] as bool? ?? false,
-        countryId: json['countryId'] as String? ?? 'yamato',
-        continentalStage: ContinentalStage.values
-                .any((v) => v.name == json['continentalStage'])
-            ? ContinentalStage.values.byName(json['continentalStage'] as String)
-            : ContinentalStage.none,
-        cupStage: CupStage.values.any((v) => v.name == json['cupStage'])
-            ? CupStage.values.byName(json['cupStage'] as String)
-            : CupStage.none,
-        worldCupStage:
-            WorldCupStage.values.any((v) => v.name == json['worldCupStage'])
-                ? WorldCupStage.values.byName(json['worldCupStage'] as String)
-                : WorldCupStage.none,
-        onLoan: json['onLoan'] as bool? ?? false,
-        overall: json['overall'] as int? ?? 0,
-        promiseLabel: json['promiseLabel'] as String?,
-        promiseKept: json['promiseKept'] as bool? ?? false,
-      );
+    year: json['year'] as int,
+    clubName: json['clubName'] as String,
+    tier: json['tier'] as int,
+    leaguePosition: json['leaguePosition'] as int,
+    stats: SeasonStats(
+      appearances: json['appearances'] as int,
+      goals: json['goals'] as int,
+      assists: json['assists'] as int,
+      averageRating: (json['averageRating'] as num).toDouble(),
+    ),
+    salary: json['salary'] as int? ?? 0,
+    caps: json['caps'] as int? ?? 0,
+    objectiveMet: json['objectiveMet'] as bool? ?? false,
+    countryId: json['countryId'] as String? ?? 'yamato',
+    continentalStage:
+        ContinentalStage.values.any((v) => v.name == json['continentalStage'])
+        ? ContinentalStage.values.byName(json['continentalStage'] as String)
+        : ContinentalStage.none,
+    cupStage: CupStage.values.any((v) => v.name == json['cupStage'])
+        ? CupStage.values.byName(json['cupStage'] as String)
+        : CupStage.none,
+    worldCupStage:
+        WorldCupStage.values.any((v) => v.name == json['worldCupStage'])
+        ? WorldCupStage.values.byName(json['worldCupStage'] as String)
+        : WorldCupStage.none,
+    onLoan: json['onLoan'] as bool? ?? false,
+    overall: json['overall'] as int? ?? 0,
+    promiseLabel: json['promiseLabel'] as String?,
+    promiseKept: json['promiseKept'] as bool? ?? false,
+  );
 }
 
 /// キャリア全体の状態。これ1つを保存すれば続きから再開できる。
@@ -188,7 +189,12 @@ class CareerState {
     this.morale = const Morale(),
     this.fatigue = const Fatigue(),
     this.form = const Momentum(),
-    this.preseason = PreseasonPlan.camp,
+    this.offseason = Offseason.sharpen,
+    this.pendingSevere = false,
+    this.declineYearsLost = 0,
+    this.incentiveCut = 0,
+    this.targetStreak = 0,
+    this.declaredChallenge,
     this.captain = false,
     this.captaincyOffered = false,
     this.squadNumber = 0,
@@ -205,6 +211,7 @@ class CareerState {
     this.backedUpYear = 0,
     this.autoRestBelow = defaultAutoRestBelow,
     this.focus = const [],
+    this.signatureAim,
     this.yellowCards = 0,
     this.suspension = 0,
     this.momentAttempts = const {},
@@ -279,26 +286,23 @@ class CareerState {
   /// 節を決め打ちにすると、16クラブの国（30試合）で日程がはみ出す。
   /// 代表ウィークとぶつけない。**1週1試合の刻みは変えない**。
   List<int> get domesticCupWeeks => Cups.weeksFor(
-        matches: fixtures.length,
-        count: Cups.domesticMatches,
-        taken: National.breakAfterMatchday.toSet(),
-      );
+    matches: fixtures.length,
+    count: Cups.domesticMatches,
+    taken: National.breakAfterMatchday.toSet(),
+  );
 
   /// 大陸カップが入る節。国内カップとも代表ウィークともぶつけない。
   List<int> get continentalCupWeeks => Cups.weeksFor(
-        matches: fixtures.length,
-        count: Cups.continentalMatches,
-        taken: {
-          ...National.breakAfterMatchday,
-          ...domesticCupWeeks,
-        },
-      );
+    matches: fixtures.length,
+    count: Cups.continentalMatches,
+    taken: {...National.breakAfterMatchday, ...domesticCupWeeks},
+  );
 
   /// 今シーズンのカップ戦のうち、まだ戦っているもの。
   List<CupRun> get liveCups => [
-        for (final run in [domesticCup, continentalCup])
-          if (run != null && run.running) run,
-      ];
+    for (final run in [domesticCup, continentalCup])
+      if (run != null && run.running) run,
+  ];
 
   /// カップ戦の週か（リーグ戦の代わりに、その週はカップを戦う）。
   bool get isCupWeek => pendingCup != null;
@@ -317,20 +321,20 @@ class CareerState {
 
   /// 今の顔ぶれで、実際に組める相手。
   List<TrainingCompanion> get companionChoices => [
-        TrainingCompanion.alone,
-        for (final c in TrainingCompanion.values)
-          if (c.needs != null && teammateOf(c.needs!) != null) c,
-      ];
+    TrainingCompanion.alone,
+    for (final c in TrainingCompanion.values)
+      if (c.needs != null && teammateOf(c.needs!) != null) c,
+  ];
 
   /// その役回りの選手。居なければ null。
   ///
   /// `rival` は別クラブで別のキャリアを歩む同期なので、練習の相手は
   /// クラブの中に居る `competitor`（同ポジションの競争相手）のほう。
   Teammate? teammateOf(TeammateKind kind) => switch (kind) {
-        TeammateKind.partner => partner,
-        TeammateKind.mentor => mentor,
-        TeammateKind.rival => competitor,
-      };
+    TeammateKind.partner => partner,
+    TeammateKind.mentor => mentor,
+    TeammateKind.rival => competitor,
+  };
 
   /// 今週の居残り練習。null ならやらない。
   SetPiece? drill;
@@ -381,7 +385,38 @@ class CareerState {
   Momentum form;
 
   /// 今季のプレシーズンの過ごし方。
-  PreseasonPlan preseason;
+  /// オフをどう過ごしたか。開幕時のコンディション・疲労・練習の効きに乗る。
+  Offseason offseason;
+
+  /// **まだ身体に残すぶんを払っていない重傷を抱えているか。**
+  ///
+  /// 恒久ダメージは復帰のときに、戻し方の倍率を掛けて効かせる。
+  /// 怪我をした瞬間に確定させていた頃の保存データは false のままなので、
+  /// 更新をまたいだ怪我で二重に削られることはない。
+  bool pendingSevere;
+
+  /// **重傷で早まった衰え始め（年）。** 戻し方で決まり、後から戻らない。
+  int declineYearsLost;
+
+  /// **今節の的を、何試合続けて達成しているか。**
+  ///
+  /// 出た試合だけで数える。外しても、出られなくても切れる。
+  /// シーズンを跨ぐと 0 に戻る（`advanceSeason` が組み直すので自動）。
+  /// お金だけの報酬は年俸で薄まって終盤ただの飾りになっていた
+  /// （`test/target_sim.dart`: 序盤17% → 9季目以降2%）。
+  int targetStreak;
+
+  /// **出来高払い契約で今季削られている額（万円）。**
+  ///
+  /// 0 なら普通の契約。シーズンの終わりに、監督の目標をいくつ達成したかで
+  /// 戻ってくる（`Formulas.incentivePay`）。
+  int incentiveCut;
+
+  /// **今回のキャリアで狙うと宣言した挑戦。** 引退時の殿堂ポイントに乗る。
+  ///
+  /// 挑戦そのものは宣言しなくても達成できる（引退した記録から静かに判定する）。
+  /// ここは「今回はこれを狙う」と決めることで、run に形を与えるためのもの。
+  String? declaredChallenge;
 
   /// キャプテンか。
   bool captain;
@@ -448,9 +483,22 @@ class CareerState {
   /// 同時に選べる数。全部を伸ばすのは方向とは言わない。
   static const int maxFocus = 3;
 
+  /// **狙っている個人技。**
+  ///
+  /// もともとは「能力値が上がった結果として身に付く」もので、
+  /// **狙って取りに行けなかった**。そのぶん実測（`craft_sim`）で
+  /// 1人3個が自動で埋まり、**どれを覚えるかを選ぶ余地が無かった**。
+  ///
+  /// 狙っても**能力は要る**（`Signature.requirement` に届くまで付かない）。
+  /// 狙えるのは「届いたときに、どれになるか」と「その速さ」だけ——
+  /// ここを崩すと、積み上げずに技だけ買えることになる。
+  Signature? signatureAim;
+
   /// そのカテゴリの中で、方向に入っている詳細。
-  List<Detail> focusIn(AttributeKey key) =>
-      [for (final d in focus) if (d.category == key) d];
+  List<Detail> focusIn(AttributeKey key) => [
+    for (final d in focus)
+      if (d.category == key) d,
+  ];
 
   /// このコンディションを下回ったら、その週は自動で休養にする。
   ///
@@ -509,12 +557,15 @@ class CareerState {
   ///
   /// 実際に引かれるのと同じ式（[Finances.budgetFor]）から出す。
   SeasonBudget get budget => finances.budgetFor(
-        salary: salary,
-        agentFeePercent: agent.feePercent,
-        staffCost: staff.costPerSeason,
-        extraLivingRate: habits.livingCostExtra,
-        sponsor: sponsor?.annual ?? 0,
-      );
+    salary: salary,
+    agentFeePercent: agent.feePercent,
+    staffCost: staff.costPerSeason,
+    extraLivingRate: habits.livingCostExtra,
+    sponsor: sponsor?.annual ?? 0,
+    // **出場給は今の出場数で見込む。** 基準で見せると、
+    // 怪我で半分しか出ていない年でも「足りる」と出てしまう。
+    appearances: seasonStats.appearances,
+  );
 
   /// このシーズンを終えたときの貯蓄の見込み。
   int get projectedSavings => finances.savings + budget.net;
@@ -802,10 +853,16 @@ class CareerState {
     final appearances = all.fold(0, (s, x) => s + x.appearances);
     if (appearances == 0) {
       return const SeasonStats(
-          appearances: 0, goals: 0, assists: 0, averageRating: 0);
+        appearances: 0,
+        goals: 0,
+        assists: 0,
+        averageRating: 0,
+      );
     }
-    final weighted =
-        all.fold<double>(0, (s, x) => s + x.averageRating * x.appearances);
+    final weighted = all.fold<double>(
+      0,
+      (s, x) => s + x.averageRating * x.appearances,
+    );
     return SeasonStats(
       appearances: appearances,
       goals: all.fold(0, (s, x) => s + x.goals),
@@ -815,105 +872,110 @@ class CareerState {
   }
 
   Map<String, dynamic> toJson() => {
-        'retired': retired,
-        'player': player.toJson(),
-        'club': club.toJson(),
-        'league': league.map((c) => c.toJson()).toList(),
-        'year': year,
-        'fixtures': fixtures,
-        'results': results.map((r) => r.toJson()).toList(),
-        'table': table.map((r) => r.toJson()).toList(),
-        'history': history.map((h) => h.toJson()).toList(),
-        'agent': agent.toJson(),
-        'salary': salary,
-        'menu': menu.name,
-        'effort': effort.name,
-        'companion': companion.name,
-        'autoSpend': autoSpend,
-        'learnedKnack': learnedKnack,
-        'domesticCup': domesticCup?.toJson(),
-        'continentalCup': continentalCup?.toJson(),
-        'pendingCup': pendingCup?.toJson(),
-        'drill': drill?.name,
-        'staff': staff.toJson(),
-        'habits': habits.toJson(),
-        'development': development.toJson(),
-        'manager': manager?.toJson(),
-        'directive': directive.name,
-        'competitor': competitor?.toJson(),
-        'partner': partner?.toJson(),
-        'mentor': mentor?.toJson(),
-        'rival': rival?.toJson(),
-        'rehab': rehab.name,
-        'rehabWatch': rehabWatch,
-        'mentorManager': mentorManager,
-        'morale': morale.toJson(),
-        'fatigue': fatigue.toJson(),
-        'form': form.toJson(),
-        'preseason': preseason.name,
-        'captain': captain,
-        'captaincyOffered': captaincyOffered,
-        'squadNumber': squadNumber,
-        'nickname': nickname,
-        'sponsor': sponsor?.toJson(),
-        'sponsorOffer': sponsorOffer?.toJson(),
-        'charity': charity,
-        'nationalTeamId': nationalTeamId,
-        'secondCareer': secondCareer?.name,
-        'seenEvents': seenEvents,
-        'recentEvents': recentEvents,
-        'news': news.map((n) => n.toJson()).toList(),
-        'seasonStart': seasonStart?.toJson(),
-        'backedUpYear': backedUpYear,
-        'autoRestBelow': autoRestBelow,
-        'focus': focus.map((d) => d.name).toList(),
-        'yellowCards': yellowCards,
-        'suspension': suspension,
-        'tampered': tampered,
-        'tacticCredit': tacticCredit,
-        'traitHits': {
-          for (final e in traitHits.entries) e.key.name: e.value,
-        },
-        'momentAttempts': {
-          for (final e in momentAttempts.entries) e.key.name: e.value,
-        },
-        'momentSuccesses': {
-          for (final e in momentSuccesses.entries) e.key.name: e.value,
-        },
-        'contractYears': contractYears,
-        'countryId': countryId,
-        'professionalYears': professionalYears,
-        'continentalExperience': continentalExperience,
-        'continentalStage': continentalStage.name,
-        'cupStage': cupStage.name,
-        'worldCupStage': worldCupStage.name,
-        'parentClub': parentClub?.toJson(),
-        'releaseClause': releaseClause,
-        'loanBuyOption': loanBuyOption,
-        'squadStatus': squadStatus.name,
-        'reputation': reputation.toJson(),
-        'relations': relations.toJson(),
-        'finances': finances.toJson(),
-        'objective': objective?.toJson(),
-        'promise': promise?.toJson(),
-        'injury': injury?.toJson(),
-        'caps': caps,
-        'internationalGoals': internationalGoals,
-        'pendingInternational': pendingInternational,
-        'calledUp': calledUp,
-        'simStyle': simStyle.name,
-      };
+    'retired': retired,
+    'player': player.toJson(),
+    'club': club.toJson(),
+    'league': league.map((c) => c.toJson()).toList(),
+    'year': year,
+    'fixtures': fixtures,
+    'results': results.map((r) => r.toJson()).toList(),
+    'table': table.map((r) => r.toJson()).toList(),
+    'history': history.map((h) => h.toJson()).toList(),
+    'agent': agent.toJson(),
+    'salary': salary,
+    'menu': menu.name,
+    'effort': effort.name,
+    'companion': companion.name,
+    'autoSpend': autoSpend,
+    'learnedKnack': learnedKnack,
+    'domesticCup': domesticCup?.toJson(),
+    'continentalCup': continentalCup?.toJson(),
+    'pendingCup': pendingCup?.toJson(),
+    'drill': drill?.name,
+    'staff': staff.toJson(),
+    'habits': habits.toJson(),
+    'development': development.toJson(),
+    'manager': manager?.toJson(),
+    'directive': directive.name,
+    'competitor': competitor?.toJson(),
+    'partner': partner?.toJson(),
+    'mentor': mentor?.toJson(),
+    'rival': rival?.toJson(),
+    'rehab': rehab.name,
+    'rehabWatch': rehabWatch,
+    'mentorManager': mentorManager,
+    'morale': morale.toJson(),
+    'fatigue': fatigue.toJson(),
+    'form': form.toJson(),
+    'offseason': offseason.name,
+    'pendingSevere': pendingSevere,
+    'declineYearsLost': declineYearsLost,
+    'incentiveCut': incentiveCut,
+    'targetStreak': targetStreak,
+    'declaredChallenge': declaredChallenge,
+    'captain': captain,
+    'captaincyOffered': captaincyOffered,
+    'squadNumber': squadNumber,
+    'nickname': nickname,
+    'sponsor': sponsor?.toJson(),
+    'sponsorOffer': sponsorOffer?.toJson(),
+    'charity': charity,
+    'nationalTeamId': nationalTeamId,
+    'secondCareer': secondCareer?.name,
+    'seenEvents': seenEvents,
+    'recentEvents': recentEvents,
+    'news': news.map((n) => n.toJson()).toList(),
+    'seasonStart': seasonStart?.toJson(),
+    'backedUpYear': backedUpYear,
+    'autoRestBelow': autoRestBelow,
+    'focus': focus.map((d) => d.name).toList(),
+    'signatureAim': signatureAim?.name,
+    'yellowCards': yellowCards,
+    'suspension': suspension,
+    'tampered': tampered,
+    'tacticCredit': tacticCredit,
+    'traitHits': {for (final e in traitHits.entries) e.key.name: e.value},
+    'momentAttempts': {
+      for (final e in momentAttempts.entries) e.key.name: e.value,
+    },
+    'momentSuccesses': {
+      for (final e in momentSuccesses.entries) e.key.name: e.value,
+    },
+    'contractYears': contractYears,
+    'countryId': countryId,
+    'professionalYears': professionalYears,
+    'continentalExperience': continentalExperience,
+    'continentalStage': continentalStage.name,
+    'cupStage': cupStage.name,
+    'worldCupStage': worldCupStage.name,
+    'parentClub': parentClub?.toJson(),
+    'releaseClause': releaseClause,
+    'loanBuyOption': loanBuyOption,
+    'squadStatus': squadStatus.name,
+    'reputation': reputation.toJson(),
+    'relations': relations.toJson(),
+    'finances': finances.toJson(),
+    'objective': objective?.toJson(),
+    'promise': promise?.toJson(),
+    'injury': injury?.toJson(),
+    'caps': caps,
+    'internationalGoals': internationalGoals,
+    'pendingInternational': pendingInternational,
+    'calledUp': calledUp,
+    'simStyle': simStyle.name,
+  };
 
   factory CareerState.fromJson(Map<String, dynamic> json) {
     // 練習はカテゴリ1つを選ぶ方式だった。古い保存データはその対応表で読む。
     final menuName = json['menu'] as String?;
     final legacyKey = json['training'] as String?;
-    final menu = menuName != null &&
-            TrainingMenu.values.any((m) => m.name == menuName)
+    final menu =
+        menuName != null && TrainingMenu.values.any((m) => m.name == menuName)
         ? TrainingMenu.values.byName(menuName)
-        : legacyKey != null && AttributeKey.values.any((k) => k.name == legacyKey)
-            ? TrainingMenu.forKey(AttributeKey.values.byName(legacyKey))
-            : TrainingMenu.rest;
+        : legacyKey != null &&
+              AttributeKey.values.any((k) => k.name == legacyKey)
+        ? TrainingMenu.forKey(AttributeKey.values.byName(legacyKey))
+        : TrainingMenu.rest;
     return CareerState(
       player: Player.fromJson(json['player'] as Map<String, dynamic>),
       club: Club.fromJson(json['club'] as Map<String, dynamic>),
@@ -940,31 +1002,38 @@ class CareerState {
           : TrainingEffort.normal,
       companion:
           TrainingCompanion.values.any((c) => c.name == json['companion'])
-              ? TrainingCompanion.values.byName(json['companion'] as String)
-              : TrainingCompanion.alone,
+          ? TrainingCompanion.values.byName(json['companion'] as String)
+          : TrainingCompanion.alone,
       autoSpend: json['autoSpend'] as bool? ?? true,
       learnedKnack: json['learnedKnack'] as bool? ?? false,
-      domesticCup:
-          CupRun.fromJson(json['domesticCup'] as Map<String, dynamic>?),
-      continentalCup:
-          CupRun.fromJson(json['continentalCup'] as Map<String, dynamic>?),
+      domesticCup: CupRun.fromJson(
+        json['domesticCup'] as Map<String, dynamic>?,
+      ),
+      continentalCup: CupRun.fromJson(
+        json['continentalCup'] as Map<String, dynamic>?,
+      ),
       pendingCup: CupTie.fromJson(json['pendingCup'] as Map<String, dynamic>?),
       drill: SetPiece.values.any((p) => p.name == json['drill'])
           ? SetPiece.values.byName(json['drill'] as String)
           : null,
       staff: StaffTeam.fromJson(json['staff'] as Map<String, dynamic>?),
       habits: Habits.fromJson(json['habits'] as Map<String, dynamic>?),
-      development:
-          Development.fromJson(json['development'] as Map<String, dynamic>?),
+      development: Development.fromJson(
+        json['development'] as Map<String, dynamic>?,
+      ),
       // 監督を持たせる前の保存データには居ない。次のシーズンから付く。
       manager: json['manager'] == null
           ? null
-          : Manager.fromJson(json['manager'] as Map<String, dynamic>?, Random()),
+          : Manager.fromJson(
+              json['manager'] as Map<String, dynamic>?,
+              Random(),
+            ),
       directive: Directive.values.any((d) => d.name == json['directive'])
           ? Directive.values.byName(json['directive'] as String)
           : Directive.none,
-      competitor:
-          Teammate.fromJson(json['competitor'] as Map<String, dynamic>?),
+      competitor: Teammate.fromJson(
+        json['competitor'] as Map<String, dynamic>?,
+      ),
       partner: Teammate.fromJson(json['partner'] as Map<String, dynamic>?),
       mentor: Teammate.fromJson(json['mentor'] as Map<String, dynamic>?),
       rival: Rival.fromJson(json['rival'] as Map<String, dynamic>?),
@@ -976,38 +1045,50 @@ class CareerState {
       morale: Morale.fromJson(json['morale'] as Map<String, dynamic>?),
       fatigue: Fatigue.fromJson(json['fatigue'] as Map<String, dynamic>?),
       form: Momentum.fromJson(json['form'] as Map<String, dynamic>?),
-      preseason: PreseasonPlan.values.any((p) => p.name == json['preseason'])
-          ? PreseasonPlan.values.byName(json['preseason'] as String)
-          : PreseasonPlan.camp,
+      // 肉体改造とプレシーズンを1つに畳む前の保存データは、既定で読む。
+      pendingSevere: json['pendingSevere'] as bool? ?? false,
+      declineYearsLost: json['declineYearsLost'] as int? ?? 0,
+      incentiveCut: json['incentiveCut'] as int? ?? 0,
+      targetStreak: json['targetStreak'] as int? ?? 0,
+      declaredChallenge: json['declaredChallenge'] as String?,
+      offseason: Offseason.values.any((p) => p.name == json['offseason'])
+          ? Offseason.values.byName(json['offseason'] as String)
+          : Offseason.sharpen,
       captain: json['captain'] as bool? ?? false,
       captaincyOffered: json['captaincyOffered'] as bool? ?? false,
       squadNumber: json['squadNumber'] as int? ?? 0,
       nickname: json['nickname'] as String?,
       sponsor: Sponsor.fromJson(json['sponsor'] as Map<String, dynamic>?),
-      sponsorOffer:
-          Sponsor.fromJson(json['sponsorOffer'] as Map<String, dynamic>?),
+      sponsorOffer: Sponsor.fromJson(
+        json['sponsorOffer'] as Map<String, dynamic>?,
+      ),
       charity: json['charity'] as bool? ?? false,
       nationalTeamId: json['nationalTeamId'] as String?,
       secondCareer:
           SecondCareer.values.any((c) => c.name == json['secondCareer'])
-              ? SecondCareer.values.byName(json['secondCareer'] as String)
-              : null,
-      seenEvents:
-          (json['seenEvents'] as List? ?? const []).cast<String>().toList(),
-      recentEvents:
-          (json['recentEvents'] as List? ?? const []).cast<String>().toList(),
+          ? SecondCareer.values.byName(json['secondCareer'] as String)
+          : null,
+      seenEvents: (json['seenEvents'] as List? ?? const [])
+          .cast<String>()
+          .toList(),
+      recentEvents: (json['recentEvents'] as List? ?? const [])
+          .cast<String>()
+          .toList(),
       news: [
         for (final n in (json['news'] as List? ?? const []))
           NewsItem.fromJson(n as Map<String, dynamic>),
       ],
       backedUpYear: json['backedUpYear'] as int? ?? 0,
-      autoRestBelow:
-          json['autoRestBelow'] as int? ?? defaultAutoRestBelow,
+      autoRestBelow: json['autoRestBelow'] as int? ?? defaultAutoRestBelow,
       focus: [
         for (final n in (json['focus'] as List? ?? const []))
           if (Detail.values.any((d) => d.name == n))
             Detail.values.byName(n as String),
       ],
+      // 狙いを知らない保存データは「狙っていない」で読む。
+      signatureAim: Signature.values
+          .where((s) => s.name == json['signatureAim'])
+          .firstOrNull,
       yellowCards: json['yellowCards'] as int? ?? 0,
       suspension: json['suspension'] as int? ?? 0,
       seasonStart: json['seasonStart'] is Map<String, dynamic>
@@ -1022,8 +1103,8 @@ class CareerState {
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,
       continentalExperience: json['continentalExperience'] as bool? ?? false,
-      continentalStage: ContinentalStage.values
-              .any((v) => v.name == json['continentalStage'])
+      continentalStage:
+          ContinentalStage.values.any((v) => v.name == json['continentalStage'])
           ? ContinentalStage.values.byName(json['continentalStage'] as String)
           : ContinentalStage.none,
       cupStage: CupStage.values.any((v) => v.name == json['cupStage'])
@@ -1031,25 +1112,27 @@ class CareerState {
           : CupStage.none,
       worldCupStage:
           WorldCupStage.values.any((v) => v.name == json['worldCupStage'])
-              ? WorldCupStage.values.byName(json['worldCupStage'] as String)
-              : WorldCupStage.none,
+          ? WorldCupStage.values.byName(json['worldCupStage'] as String)
+          : WorldCupStage.none,
       parentClub: json['parentClub'] == null
           ? null
           : Club.fromJson(json['parentClub'] as Map<String, dynamic>),
       releaseClause: json['releaseClause'] as int?,
       loanBuyOption: json['loanBuyOption'] as int?,
-      squadStatus:
-          SquadStatus.values.any((v) => v.name == json['squadStatus'])
-              ? SquadStatus.values.byName(json['squadStatus'] as String)
-              : SquadStatus.registered,
-      reputation:
-          Reputation.fromJson(json['reputation'] as Map<String, dynamic>?),
+      squadStatus: SquadStatus.values.any((v) => v.name == json['squadStatus'])
+          ? SquadStatus.values.byName(json['squadStatus'] as String)
+          : SquadStatus.registered,
+      reputation: Reputation.fromJson(
+        json['reputation'] as Map<String, dynamic>?,
+      ),
       relations: Relations.fromJson(json['relations'] as Map<String, dynamic>?),
       finances: Finances.fromJson(json['finances'] as Map<String, dynamic>?),
-      objective:
-          SeasonObjective.fromJson(json['objective'] as Map<String, dynamic>?),
-      promise:
-          ManagerPromise.fromJson(json['promise'] as Map<String, dynamic>?),
+      objective: SeasonObjective.fromJson(
+        json['objective'] as Map<String, dynamic>?,
+      ),
+      promise: ManagerPromise.fromJson(
+        json['promise'] as Map<String, dynamic>?,
+      ),
       injury: Injury.fromJson(json['injury'] as Map<String, dynamic>?),
       caps: json['caps'] as int? ?? 0,
       internationalGoals: json['internationalGoals'] as int? ?? 0,

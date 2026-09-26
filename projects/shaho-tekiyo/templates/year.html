@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{{ regime.effective_from.year }}年{{ regime.effective_from.month }}月〜：{{ headline }}｜社会保険 加入判定チェッカー{% endblock %}
+{% block description %}{{ regime.label }}。{{ note }}{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <a href="{{ base_url }}year/index.html">年次の変化</a>
+  <span>›</span>
+  <span aria-current="page">{{ regime.effective_from.year }}年{{ regime.effective_from.month }}月</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>{{ regime.effective_from.year }}年{{ regime.effective_from.month }}月〜：{{ headline }}</h1>
+
+<p>{{ note }}</p>
+
+<div class="card">
+  <dl>
+    <dt>適用開始</dt>
+    <dd>{{ regime.effective_from.year }}年{{ regime.effective_from.month }}月1日〜</dd>
+    <dt>賃金要件</dt>
+    <dd>{% if regime.wage_requirement_yen %}月額{{ "{:,}".format(regime.wage_requirement_yen) }}円以上{% else %}撤廃（金額を問わない）{% endif %}</dd>
+    <dt>企業規模要件</dt>
+    <dd>{% if regime.company_size_threshold %}従業員{{ regime.company_size_threshold }}人以上{% else %}撤廃（会社の人数を問わない）{% endif %}</dd>
+    <dt>週の労働時間要件</dt>
+    <dd>20時間以上（この要件はどの段階でも変わりません）</dd>
+  </dl>
+</div>
+
+<h2>全段階との比較</h2>
+<div class="table-wrap">
+<table class="plain">
+  <thead>
+    <tr><th>適用開始</th><th>企業規模要件</th><th>賃金要件</th></tr>
+  </thead>
+  <tbody>
+    {% for r in schedule %}
+    <tr{% if loop.index0 == current_index %} class="current"{% endif %}>
+      <td>{{ r.effective_from.year }}年{{ r.effective_from.month }}月〜</td>
+      <td>{% if r.company_size_threshold %}{{ r.company_size_threshold }}人以上{% else %}撤廃{% endif %}</td>
+      <td>{% if r.wage_requirement_yen %}{{ "{:,}".format(r.wage_requirement_yen) }}円以上{% else %}撤廃{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint" style="font-size:0.8rem;color:var(--muted);">週20時間以上・学生でない・雇用見込み2か月超は、どの段階でも共通の要件です（表には出していません）。</p>
+
+<p>
+  <a href="{{ base_url }}index.html?as_of={{ regime.effective_from.isoformat() }}">この時点で自分が対象になるか計算機で確かめる →</a>
+</p>
+
+<div class="milestone-nav">
+  {% if prev_page %}
+  <a href="{{ prev_page.slug }}.html">← {{ prev_page.regime.effective_from.year }}年{{ prev_page.regime.effective_from.month }}月</a>
+  {% else %}<span></span>{% endif %}
+  {% if next_page %}
+  <a href="{{ next_page.slug }}.html">{{ next_page.regime.effective_from.year }}年{{ next_page.regime.effective_from.month }}月 →</a>
+  {% else %}<span></span>{% endif %}
+</div>
+
+<p>
+  出典: <a href="https://www.mhlw.go.jp/tekiyoukakudai/jugyouin/taisho/" rel="nofollow noopener" target="_blank">厚生労働省 社会保険適用拡大特設サイト</a>
+</p>
+{% endblock %}

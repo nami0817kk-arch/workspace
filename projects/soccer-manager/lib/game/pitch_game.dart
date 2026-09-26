@@ -27,6 +27,11 @@ class PitchGame extends FlameGame {
   final String? homeTeamId;
   final String? awayTeamId;
 
+  /// クラブ名。名前に色の語が入っているクラブは、その色で描く
+  /// (エンブレムと同じ導出。ClubPalette を参照)。
+  final String? homeTeamName;
+  final String? awayTeamName;
+
   PitchGame({
     required this.events,
     this.startMinute = 1,
@@ -37,6 +42,8 @@ class PitchGame extends FlameGame {
     this.onMinuteTick,
     this.homeTeamId,
     this.awayTeamId,
+    this.homeTeamName,
+    this.awayTeamName,
   });
 
   late _Ball _ball;
@@ -82,11 +89,11 @@ class PitchGame extends FlameGame {
 
     final home = homeTeamId == null
         ? const ClubPalette.fromHue(220)
-        : ClubPalette.of(homeTeamId!);
+        : ClubPalette.of(homeTeamId!, clubName: homeTeamName);
     // 色が近いクラブ同士の対戦では、アウェイ側の色相をずらす。
     final away = (awayTeamId == null
             ? const ClubPalette.fromHue(10)
-            : ClubPalette.of(awayTeamId!))
+            : ClubPalette.of(awayTeamId!, clubName: awayTeamName))
         .distinguishedFrom(home);
 
     for (final slot in formation) {

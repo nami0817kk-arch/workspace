@@ -20,6 +20,16 @@
 }
 
 * { box-sizing: border-box; }
+
+/* 読み上げとキーボード操作のための飛ばしリンク。ナビは12項目ある。 */
+.skip { position: absolute; left: -9999px; top: 0; z-index: 10;
+  padding: 10px 16px; background: var(--accent); color: var(--bg);
+  text-decoration: none; border-radius: 0 0 var(--radius) 0; }
+.skip:focus { left: 0; }
+
+/* キーボードで今どこにいるか分かるようにする。 */
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
   font: 16px/1.7 -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif;
@@ -29,9 +39,27 @@ body {
 a { color: var(--accent); }
 
 .site-head { border-bottom: 1px solid var(--line); background: var(--panel); }
-.site-head .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline; padding: 14px 16px; }
+.site-head .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline;
+  padding: 14px 16px; min-width: 0; }
 .site-name { font-weight: 700; font-size: 17px; color: var(--ink); text-decoration: none; }
-.site-nav { display: flex; gap: 16px; font-size: 14px; }
+/* よく使う5つを出し、残りは「ほかの一覧」に畳む。14項目を横に流していたとき、
+   携帯では 1,187px 中 844px が画面の外にあり、見えていたのは3項目だった。 */
+.site-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px;
+  font-size: 14px; min-width: 0; }
+.site-nav > a { white-space: nowrap; padding: 6px 0; }
+.nav-more { position: relative; }
+.nav-more > summary { cursor: pointer; white-space: nowrap; padding: 6px 0;
+  color: var(--accent); list-style: none; }
+.nav-more > summary::-webkit-details-marker { display: none; }
+.nav-more > summary::after { content: " ▾"; }
+.nav-more[open] > summary::after { content: " ▴"; }
+/* 開いた一覧は上に重ねる。押し広げると本文が飛ぶ。 */
+.nav-more-list { position: absolute; z-index: 20; top: 100%; left: 0;
+  display: grid; gap: 2px; min-width: 190px; padding: 8px 4px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .12); }
+.nav-more-list a { padding: 9px 12px; border-radius: 7px; white-space: nowrap; }
+.nav-more-list a:hover { background: var(--bg); }
 
 main { padding: 24px 16px 48px; }
 h1 { font-size: 24px; line-height: 1.4; margin: 0 0 8px; }
@@ -65,19 +93,51 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .card .body { min-width: 0; }
 .card .name { display: block; font-weight: 600; text-decoration: none; color: var(--ink); }
 .card .name:hover { color: var(--accent); }
-.card .price { margin: 6px 0 2px; font-size: 15px; }
+.card .price { margin: 6px 0 2px; font-size: 15px;
+  font-variant-numeric: tabular-nums; }
 .card .price strong { font-size: 19px; }
 .card .meta { margin: 0; font-size: 13px; color: var(--muted); }
 .was { color: var(--muted); text-decoration: line-through; margin-right: 4px; }
 .down { color: var(--down); font-weight: 700; margin-right: 8px; }
 .up { color: var(--near); font-weight: 700; margin-right: 8px; }
+
+/* ポイント込みの実質価格。価格を置き換えず、併記する。 */
+.point-line { margin: 4px 0 0; font-size: 13px; }
+.point-line:empty { display: none; }
+.point { display: inline-block; padding: 1px 8px; margin-right: 8px; border-radius: 999px;
+  font-size: 12px; color: var(--near); border: 1px solid currentColor; }
+.eff { color: var(--ink); font-weight: 600; }
+.eff small { font-weight: 400; color: var(--muted); font-size: 11px; }
 .empty { padding: 24px; text-align: center; color: var(--muted); list-style: none;
   border: 1px dashed var(--line); border-radius: var(--radius); }
+.empty .go { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+  margin-top: 12px; }
+.thin { margin: 0 0 14px; padding: 10px 12px; font-size: 13px; color: var(--muted);
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
 
 .badge { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px;
   font-size: 12px; border: 1px solid currentColor; white-space: nowrap; }
 .badge.low { color: var(--low); } .badge.near { color: var(--near); }
 .badge.drop { color: var(--down); } .badge.flat { color: var(--flat); }
+
+/* 送料と在庫。買うかどうかに直結するので、判定と並べて出す。 */
+.cond { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px;
+  font-size: 12px; white-space: nowrap; }
+.cond.free { color: var(--low); border: 1px solid currentColor; }
+.cond.out { color: var(--down); border: 1px solid currentColor; }
+
+.tools .check { display: flex; align-items: center; gap: 6px; font-size: 13px;
+  color: var(--ink); white-space: nowrap; }
+.tools .check input { width: 18px; height: 18px; }
+
+/* 目標の値段。通知は出せないので、次に来たときに拾えるようにする。 */
+.target { margin: 6px 0 14px; font-size: 14px; }
+.target label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.target input { width: 130px; padding: 7px 10px; font-size: 15px; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.target .note { display: block; margin-top: 4px; }
+.hit.reached { background: color-mix(in srgb, var(--low) 8%, transparent); }
+.down small { font-weight: 400; font-size: 12px; }
 
 /* いまの価格が履歴のどこにあるかを一文で。高いときは高いと書く。 */
 .verdict { margin: 0 0 14px; font-size: 15px; color: var(--ink); }
@@ -87,6 +147,71 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .chart { color: var(--accent); margin: 8px 0 20px; }
 .spark { width: 100%; max-width: 320px; height: auto; }
 .spark-none { color: var(--muted); font-size: 13px; }
+
+/* 一覧の並び替え・絞り込み */
+.tools { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center;
+  margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+.tools select { font-size: 14px; padding: 5px 8px; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+
+/* ページ送り */
+.pager { display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 14px 0; font-size: 14px; }
+.pager a { padding: 4px 9px; border: 1px solid var(--line); border-radius: 8px;
+  text-decoration: none; }
+.pager .now { padding: 4px 9px; border: 1px solid var(--accent); border-radius: 8px;
+  color: var(--accent); font-weight: 700; }
+.pager .gap { color: var(--muted); }
+.pager .of { margin-left: auto; color: var(--muted); font-size: 13px; }
+
+/* 見守り */
+.watch { margin: 16px 0 8px; }
+.watch button { padding: 9px 20px; font-size: 15px; font-weight: 700; cursor: pointer;
+  color: var(--accent); background: var(--panel);
+  border: 1px solid var(--accent); border-radius: var(--radius); }
+.watch button.on { color: var(--bg); background: var(--accent); }
+.watch .note { margin-left: 10px; font-size: 13px; color: var(--muted); }
+
+/* 一覧から直接見守る。商品ページまで開かせない */
+.watch-mini { margin-left: 10px; padding: 2px 9px; font-size: 12px; cursor: pointer;
+  color: var(--muted); background: none;
+  border: 1px solid var(--line); border-radius: 999px; }
+.watch-mini.on { color: var(--accent); border-color: var(--accent); font-weight: 700; }
+
+.tools .scope { color: var(--muted); font-size: 12px; }
+.reset { padding: 5px 12px; font-size: 13px; cursor: pointer; color: var(--accent);
+  background: var(--panel); border: 1px solid var(--accent); border-radius: 8px; }
+
+/* 押せる場所を広げる。携帯では文字だけだと当てにくい。 */
+.card .name { padding: 2px 0; }
+.watch-mini, .reset, .pager a { min-height: 32px; display: inline-flex;
+  align-items: center; }
+.to-top { display: inline-block; margin: 8px 0 0; font-size: 13px; }
+.hit .since { color: var(--muted); font-size: 12px; margin-left: 8px; }
+.hit .badge { margin-left: 8px; }
+
+/* 商品ページの価格推移 */
+.chart-svg { width: 100%; max-width: 560px; height: auto; color: var(--accent); }
+
+/* 商品ページの画像。一覧にあるのに詳細で消えるのは不親切。 */
+.back { margin: 0 0 14px; font-size: 13px; }
+.hero { margin: 4px 0 16px; }
+.hero img { width: 100%; max-width: 260px; height: auto; border-radius: var(--radius);
+  background: var(--panel); }
+/* 広い画面では値段と横に並べる。縦に積むと、開いて最初に見たいものが下がる。 */
+@media (min-width: 720px) {
+  .item .hero { float: right; margin: 0 0 12px 20px; }
+  .item .hero img { max-width: 220px; }
+}
+
+/* 楽天での正式名称。題から外した宣伝が本文の先頭に戻らないよう畳む。 */
+.fullname { max-width: 62em; margin: -2px 0 14px; }
+.fullname > summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.fullname > p { margin: 8px 0 0; padding: 10px 12px; font-size: 13px;
+  color: var(--muted); line-height: 1.7; background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.note { font-size: 13px; color: var(--muted); }
+.history th { font-variant-numeric: tabular-nums; }
 
 /* 一覧に出す小さな推移。履歴がこのサイトの値打ちなので、開く前に形を見せる。 */
 .card-spark { margin-top: 6px; color: var(--accent); opacity: .8; }
@@ -102,7 +227,8 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   padding: 10px 0; border-bottom: 1px solid var(--line); }
 .hit a { color: var(--ink); text-decoration: none; }
 .hit a:hover { color: var(--accent); }
-.hit .price { white-space: nowrap; font-weight: 600; }
+.hit .price { white-space: nowrap; font-weight: 600;
+  font-variant-numeric: tabular-nums; }
 
 .facts { border-collapse: collapse; width: 100%; margin: 0 0 20px;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -123,11 +249,87 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .site-foot .disclaimer, .site-foot .copy, .updated { margin: 8px 0 0; }
 .site-foot .ad-notice { background: none; border: 0; padding: 0; margin: 8px 0 0; }
 
-@media (max-width: 480px) {
+
+@media (max-width: 560px) {
   .card { gap: 10px; }
   .card .thumb { flex-basis: 72px; }
   .card img, .card .noimg { width: 72px; height: 72px; }
   h1 { font-size: 21px; }
   .sep { margin: 0 5px; }
   .stats { font-size: 13px; }
+  /* 並び替えは縦に積む。横並びだと選択肢が潰れる。 */
+  .tools { flex-direction: column; align-items: stretch; gap: 8px; }
+  .tools label { display: flex; justify-content: space-between; align-items: center;
+    gap: 10px; }
+  .tools select { flex: 1; min-width: 0; }
+  .site-head .wrap { padding: 12px 16px; }
+  .site-name { font-size: 16px; }
+  .hit { flex-wrap: wrap; }
+  .pager .of { width: 100%; margin-left: 0; }
+}
+
+/* 10ページごとの飛び先。近辺だけだと81ページの奥まで20回押すことになる */
+.jump { display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+        margin: -6px 0 14px; font-size: 13px; }
+.jump span { color: var(--muted); }
+.jump a { padding: 2px 7px; border: 1px solid var(--line); border-radius: 7px;
+          color: var(--muted); text-decoration: none; }
+.jump a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* --- 条件のそろい具合。CSSが無く、点と内訳が地続きの文字列に見えていた
+   （画面では「100/100最安値への近さ 40・…」）。点を先に、内訳は札で。 */
+.score { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+  margin: 8px 0 0; }
+.score .num { font-size: 17px; font-weight: 700; color: var(--accent);
+  font-variant-numeric: tabular-nums; }
+.score .max { margin-right: 4px; font-size: 12px; color: var(--muted); }
+.score .parts { display: flex; flex-wrap: wrap; gap: 3px; }
+.score .part { display: inline-flex; align-items: baseline; gap: 5px;
+  padding: 1px 8px; font-size: 12px; line-height: 1.6; color: var(--muted);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 999px; }
+.score .part b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* --- ジャンル索引。CSSが無く「パソコン・周辺機器1,524商品」と繋がっていた。 */
+.genres { list-style: none; margin: 8px 0 0; padding: 0;
+  display: grid; gap: 8px; }
+.genre { display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; padding: 12px 14px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.genre a { font-weight: 600; text-decoration: none; }
+.genre a:hover { color: var(--accent); }
+.genre .count { flex: none; font-size: 13px; color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+@media (min-width: 720px) {
+  .genres { grid-template-columns: 1fr 1fr; }
+}
+
+/* --- 絞り込みは畳んでおく。開いたまま置くと、携帯では1件目の商品が
+   730px下（画面まるごと1枚ぶん先）にあった。 */
+.tools-box { margin: 10px 0 14px; }
+.tools-box > summary { display: inline-block; cursor: pointer;
+  padding: 8px 14px; font-size: 14px; color: var(--accent);
+  border: 1px solid var(--line); border-radius: 999px; }
+.tools-box > summary::after { content: " ▾"; }
+.tools-box[open] > summary::after { content: " ▴"; }
+.tools-box > .tools { margin-top: 10px; }
+
+/* --- 押す場所は指で届く大きさにする。ナビは24pxしかなかった。 */
+@media (max-width: 560px) {
+  .site-nav { gap: 0 12px; }
+  .site-nav > a, .nav-more > summary { padding: 9px 0; }
+  .foot-nav { gap: 4px 16px; }
+  .foot-nav a { padding: 8px 0; }
+  .tools select { padding: 9px 10px; }
+  .tools .check { padding: 6px 0; }
+  .to-top { display: inline-block; padding: 9px 0; }
+  .pager a, .pager .now { padding: 9px 13px; }
+  .jump a { padding: 7px 11px; }
+  /* 小さすぎる字を13pxへ。12pxは日本語では読みにくい。 */
+  .badge, .cond, .down small, .watch-mini, .tools .scope,
+  .hit .since { font-size: 13px; }
+  /* 印と説明が画面の両端に離れていて、どちらの話か分かりにくかった */
+  .tools .check { justify-content: flex-start; }
+  .tools label { justify-content: flex-start; gap: 8px; }
+  /* 商品ページの画像が画面の高さの3分の1を占め、値段を画面の外へ押していた */
+  .item .hero img { max-width: 180px; }
 }

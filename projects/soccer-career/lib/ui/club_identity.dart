@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../models/club.dart';
@@ -52,7 +54,8 @@ class ClubIdentity {
   /// クラブのIDから決める。ハッシュではなく符号の和で出すのは、
   /// 実行のたびに変わらないようにするため（ClubStyle と同じ理由）。
   factory ClubIdentity.of(Club club) {
-    final seed = club.id.codeUnits.fold<int>(0, (a, b) => a + b * 7) +
+    final seed =
+        club.id.codeUnits.fold<int>(0, (a, b) => a + b * 7) +
         club.name.codeUnits.fold<int>(0, (a, b) => a + b);
     return ClubIdentity(
       primary: palette[seed % palette.length],
@@ -108,14 +111,31 @@ class _CrestPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = identity.primary;
     final path = _shapePath(size);
-    canvas.drawPath(path, paint);
+    // **落ち影。** エンブレムが台紙に貼った紙に見えていたので、
+    // わずかに浮かせる。光は上から（ピッチの駒と同じ向き）。
+    canvas.drawPath(
+      path.shift(Offset(0, size.height * 0.045)),
+      Paint()
+        ..color = const Color(0x40000000)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, size.width * 0.045),
+    );
+    // 面は、上が明るく下が落ちる。平らな一色だと板に見える。
+    canvas.drawPath(
+      path,
+      Paint()
+        ..shader = ui.Gradient.linear(
+          Offset(size.width * 0.3, 0),
+          Offset(size.width * 0.7, size.height),
+          [_shade(identity.primary, 1.35), _shade(identity.primary, 0.78)],
+        ),
+    );
 
     if (identity.striped) {
       canvas.save();
       canvas.clipPath(path);
-      final stripe = Paint()..color = identity.secondary.withValues(alpha: 0.28);
+      final stripe = Paint()
+        ..color = identity.secondary.withValues(alpha: 0.28);
       final width = size.width / 5;
       for (var x = width; x < size.width; x += width * 2) {
         canvas.drawRect(Rect.fromLTWH(x, 0, width, size.height), stripe);
@@ -130,16 +150,42 @@ class _CrestPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = size.width * 0.06,
     );
+    // 縁の面取り。上の内側に光、下の内側に影を薄く乗せる。
+    canvas.save();
+    canvas.clipPath(path);
+    canvas.drawPath(
+      path.shift(Offset(0, -size.height * 0.06)),
+      Paint()
+        ..color = const Color(0x3DFFFFFF)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = size.width * 0.07,
+    );
+    canvas.drawPath(
+      path.shift(Offset(0, size.height * 0.06)),
+      Paint()
+        ..color = const Color(0x33000000)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = size.width * 0.07,
+    );
+    canvas.restore();
   }
+
+  /// 色を明るく／暗くする。**新しい色は作らない**——クラブの色から出す。
+  static Color _shade(Color base, double factor) => Color.fromARGB(
+    (base.a * 255).round(),
+    ((base.r * 255) * factor).clamp(0, 255).round(),
+    ((base.g * 255) * factor).clamp(0, 255).round(),
+    ((base.b * 255) * factor).clamp(0, 255).round(),
+  );
 
   Path _shapePath(Size size) {
     final w = size.width;
     final h = size.height;
     switch (identity.shape) {
       case CrestShape.circle:
-        return Path()
-          ..addOval(Rect.fromCircle(
-              center: Offset(w / 2, h / 2), radius: w / 2 * 0.92));
+        return Path()..addOval(
+          Rect.fromCircle(center: Offset(w / 2, h / 2), radius: w / 2 * 0.92),
+        );
       case CrestShape.diamond:
         return Path()
           ..moveTo(w / 2, h * 0.04)

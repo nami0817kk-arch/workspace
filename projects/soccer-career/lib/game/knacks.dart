@@ -58,6 +58,18 @@ class Knacks {
     return null;
   }
 
+  /// **いちばん勝負してきた場面の回数。** 取得条件の3つ目。
+  ///
+  /// `missing` は「今いちばん足りないもの」を1つ返すので、残り2つが
+  /// どこまで来ているのかが見えなかった。3つ全部を並べるために要る。
+  static int bestMoments(CareerState state) {
+    var best = 0;
+    for (final count in state.development.choices.values) {
+      if (count > best) best = count;
+    }
+    return best;
+  }
+
   /// 掴める候補。**キャリアから決まるので、待っても引き直せない。**
   ///
   /// 引き直せると「良いコツが出るまで待つ」が最適解になり、
@@ -72,19 +84,43 @@ class Knacks {
     ]..sort((a, b) => (choices[b] ?? 0).compareTo(choices[a] ?? 0));
     if (keys.isEmpty) return const [];
 
+    // **1つの場面からは1つだけ出す。**
+    //
+    // 以前は上位のカテゴリから順に3つ埋めていたので、一番よく選ぶ場面の
+    // 候補だけで枠が埋まり、しかも並び順の先頭が必ず取られた——実測で
+    // CM の90%が「司令塔」、GK の97%が「反応の鬼」、CB の82%が「鉄壁」。
+    // **同じポジションなら同じコツ**になっていた。
+    // 場面ごとに1つずつにすると、3つの候補が**キャリアの形**を映す。
     final picked = <Trait>[];
     for (final key in keys) {
-      for (final trait in Trait.knacks) {
-        if (picked.length >= offerCount) break;
-        if (trait.knackKey != key) continue;
-        if (player.traits.contains(trait)) continue;
-        if (!trait.fitsPosition(player.position)) continue;
-        // すでに持っているものと噛み合わない特性は出さない。
-        if (!player.traits.every((t) => Trait.compatible(t, trait))) continue;
-        if (picked.any((p) => !Trait.compatible(p, trait))) continue;
-        picked.add(trait);
-      }
+      if (picked.length >= offerCount) break;
+      final candidates = [
+        for (final trait in Trait.knacks)
+          if (trait.knackKey == key &&
+              !player.traits.contains(trait) &&
+              trait.fitsPosition(player.position) &&
+              player.traits.every((t) => Trait.compatible(t, trait)) &&
+              picked.every((p) => Trait.compatible(p, trait)))
+            trait,
+      ];
+      if (candidates.isEmpty) continue;
+      picked.add(candidates[_pick(player.name, key) % candidates.length]);
     }
     return picked;
+  }
+
+  /// その選手にとって、その場面から出るのはどれか。
+  ///
+  /// **待っても引き直せないこと**が要（引き直せると「良いコツが出るまで
+  /// 待つ」が最適解になり、何をやってきたかが関係なくなる）。
+  /// 経験値のような育つ数字ではなく、**選手を決めた時点で決まっているもの**
+  /// から出す。文字コードの和にしてあるのは、`String.hashCode` が
+  /// 実行ごとに変わるため（クラブの見た目と同じ理屈）。
+  static int _pick(String name, AttributeKey key) {
+    var sum = key.index * 7;
+    for (final unit in name.codeUnits) {
+      sum += unit;
+    }
+    return sum;
   }
 }

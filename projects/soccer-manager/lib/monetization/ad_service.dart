@@ -84,19 +84,35 @@ class AdMobAdService implements AdService {
   InterstitialAd? _interstitial;
   bool _loadingInterstitial = false;
 
-  static String get _unitId => Platform.isIOS ? _iosUnitId : _androidUnitId;
+  static String get _unitId => _isIOS ? _iosUnitId : _androidUnitId;
 
   static String get _interstitialUnitId =>
-      Platform.isIOS ? _interstitialIosUnitId : _interstitialAndroidUnitId;
+      _isIOS ? _interstitialIosUnitId : _interstitialAndroidUnitId;
+
+  static const _testUnitIdPrefix = 'ca-app-pub-3940256099942544';
 
   /// 既定のテスト用IDのままか。設定画面に警告を出すために使う。
-  /// 4つのうち1つでも差し替え忘れがあれば警告する。
-  static bool get isUsingTestUnitId => const [
-        _androidUnitId,
-        _iosUnitId,
-        _interstitialAndroidUnitId,
-        _interstitialIosUnitId,
-      ].any((id) => id.startsWith('ca-app-pub-3940256099942544'));
+  ///
+  /// **いま動いているプラットフォームのIDだけを見る。** 4つ全部を見ると、
+  /// iOS ビルドでは Android 用の --dart-define が渡らず既定のテストIDのまま
+  /// 残るため、iOS のIDを正しく渡していても警告が出てしまう(実際に出た)。
+  /// Web版は広告SDKを読み込まないので、判定する意味がない。
+  static bool get isUsingTestUnitId {
+    if (kIsWeb) return false;
+    final ids = _isIOS
+        ? const [_iosUnitId, _interstitialIosUnitId]
+        : const [_androidUnitId, _interstitialAndroidUnitId];
+    return ids.any((id) => id.startsWith(_testUnitIdPrefix));
+  }
+
+  /// Platform は Web で参照できない。判定の手前で kIsWeb を見ること。
+  static bool get _isIOS {
+    try {
+      return Platform.isIOS;
+    } catch (_) {
+      return false;
+    }
+  }
 
   @override
   Future<void> initialize() async {

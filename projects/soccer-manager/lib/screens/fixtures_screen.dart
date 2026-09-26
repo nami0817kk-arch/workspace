@@ -12,6 +12,7 @@ import '../widgets/achievement_unlock_notifier.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/quick_access_drawer.dart';
+import '../widgets/youth_league_table.dart';
 import '../widgets/responsive_body.dart';
 import 'scout_report_screen.dart';
 import '../l10n/tr.dart';
@@ -36,11 +37,18 @@ class FixturesScreen extends StatelessWidget {
           (tier, gameState.save!.otherDivisionLeagues[tier - 1]!),
     ];
 
+    // ユースリーグは有望株がいる年だけ存在する。順位表を見に来た流れで
+    // 目に入るよう、ここにも置く(いままではユース画面からしか見られなかった)。
+    final youthLeague = gameState.save!.youthLeague;
+
     return DefaultTabController(
-      length: 2 + otherDivisions.length,
+      length: 2 + otherDivisions.length + (youthLeague == null ? 0 : 1),
       child: Scaffold(
         appBar: AppBar(
           title: Text(Tr.pick('日程・順位表', 'Fixtures & table')),
+          // いまは下タブ専用だが、スタメン・スカッドと同じ作り(ドロワーあり)
+          // なので、どこかから開かれた瞬間に戻れなくなる。先に塞いでおく。
+          leading: Navigator.of(context).canPop() ? const BackButton() : null,
           bottom: TabBar(
             isScrollable: otherDivisions.isNotEmpty,
             tabs: [
@@ -48,6 +56,8 @@ class FixturesScreen extends StatelessWidget {
               Tab(text: Tr.pick('日程', 'Fixtures')),
               for (final (tier, _) in otherDivisions)
                 Tab(text: Tr.pick('$tier部順位表', 'Tier $tier table')),
+              if (youthLeague != null)
+                Tab(text: Tr.pick('ユース', 'Academy')),
             ],
           ),
           actions: [
@@ -80,6 +90,11 @@ class FixturesScreen extends StatelessWidget {
                   league: otherLeague,
                   userTeamId: userTeamId,
                   divisionTier: tier,
+                ),
+              if (youthLeague != null)
+                ListView(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  children: [YouthLeagueTable(league: youthLeague)],
                 ),
             ],
           ),
@@ -142,9 +157,18 @@ class FixturesScreen extends StatelessWidget {
         ),
       ),
     );
-    final results = await gameState.simulateAheadMatchdays(choice);
+    // 閉じる手段の無い進行中ダイアログを出しているので、**何があっても
+    // 必ず閉じる**。途中で例外が出ると、ぐるぐる回る円だけが残って操作が
+    // 一切できなくなる(アプリを再起動するしかない)。
+    final List<MatchResult> results;
+    try {
+      results = await gameState.simulateAheadMatchdays(choice);
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
     if (!context.mounted) return;
-    Navigator.of(context, rootNavigator: true).pop();
 
     final league = gameState.save!.league;
     final userTeamId = gameState.userTeam.id;

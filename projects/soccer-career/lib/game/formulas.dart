@@ -1,4 +1,5 @@
 import '../models/attributes.dart';
+import '../models/injury.dart';
 
 /// ゲームの数値定義を1か所に集めたもの。
 ///
@@ -13,12 +14,81 @@ class Formulas {
   /// リーグのクラブ数。
   static const int clubsPerLeague = 20;
 
-  /// 1試合で提示する局面の数。全38試合に介入する設計なので、
-  /// 1試合を短く保たないとシーズンが終わらない。
-  static const int scenariosPerStart = 3;
+  /// 1試合で提示する局面の数。
+  ///
+  /// **38試合すべてを同じ濃さでプレイする前提をやめた**（2026-09-11）。
+  /// 全部を等しく3局面にすると、1試合が「3回タップして終わり」の薄さに
+  /// 固定される。実測（`matters_sim`）で、**2手で終わる試合では
+  /// 「積んで使う」手筋が成立しない**ことが分かっていた——
+  /// 刻んでから決める型を書いて回したら最下位になった。
+  ///
+  /// 重い試合だけを厚くして、ふつうの試合は薄くする。
+  /// **総量はほぼ変えない**（重い試合は1シーズンに8前後）。
+  static const int scenariosPerStart = 2;
+  static const int scenariosPerSub = 1;
 
-  /// 途中出場のときの局面数。出場時間が短い分だけ見せ場も減る。
-  static const int scenariosPerSub = 2;
+  /// **一芸**。総合力から、これだけ突き抜けていれば「一芸」と呼ぶ。
+  ///
+  /// 総合力はポジションの重みで出すので、**尖らせるほど下がる**——
+  /// 実測（16キャリア）で、中盤の選手を守備一本で育てるとピーク総合力が
+  /// 75.1 → 69.7 に落ちた。つまり**尖った選手を育てること自体が損**で、
+  /// 「尖った選手を育てたい」という遊び方が構造的に成立していなかった。
+  ///
+  /// 突き抜けた1つは、総合力とは別に値札に乗せる。
+  static const int standoutGap = 12;
+
+  /// 一芸と呼べる最低ライン（カテゴリの値）。
+  /// 70の選手の「一番高いカテゴリが82」は一芸ではない。
+  static const int standoutFloor = 88;
+
+  /// 突き抜けた1ごとに、市場価値が何倍になるか。
+  static const double standoutValue = 0.02;
+
+  /// **育てた結果、別のポジションのほうが高くなる差**。
+  ///
+  /// 総合力はポジションの重みで出すので、そのポジションが求めないものを
+  /// 伸ばすほど下がる（実測で、中盤の選手を守備一本で育てるとピークが
+  /// 75.4 → 69.4）。**それは間違った育て方ではなく、別の選手になったということ。**
+  /// 適性のあるポジションでこれだけ高くなるなら、その道を勧める。
+  static const int convertGain = 3;
+
+  /// 一芸があると、代表の総合力の線がどれだけ下がるか。
+  ///
+  /// 「総合力73だが視野99の司令塔」が代表から締め出されるのはおかしい。
+  /// 尖らせるほど総合力は下がるので、ここを開けないと
+  /// **尖った育成を選んだ時点で代表が消える**（実測で 代表12 → 0キャップ）。
+  static const int standoutCallUpRelief = 6;
+
+  /// 一芸が出場機会に履かせる下駄の上限。
+  static const double standoutAppearance = 0.12;
+
+  /// これ以上の力の差がある相手との対戦は、じっくりやる試合にする。
+  ///
+  /// `MatchInProgress.bigMatch`（重圧が掛かる線）は 8 だが、
+  /// そこを使うと下位クラブの半分近くが重い試合になってしまう。
+  /// **重い試合は1シーズンに8前後**に収める。
+  static const int bigFixtureGap = 14;
+
+  /// 終盤、目標や約束に手が届く試合を重くする残り節数。
+  static const int bigFixtureRunIn = 4;
+
+  /// 評価点の物差しにする局面数。
+  ///
+  /// 局面の数が試合の重さで変わるので、**1試合ぶんの重みに割り戻す**。
+  /// 割り戻さないと、重い試合に出ただけで評価点が跳ね、薄い試合では下がる。
+  /// ここは「重さが入る前の先発の局面数」で、動かすとバランスが全部動く。
+  static const int ratingScenarios = 3;
+
+  /// 重い試合（`Fixture.big`）の局面数。ここが密度。
+  ///
+  /// 6局面あれば「刻んでノリを作り、勝負どころで決める」に5手使える。
+  /// 3局面では2手しかなく、積むコストが必ず見返りを上回っていた。
+  ///
+  /// **総量を増やさない**ように決めてある。重い試合が全体の25%として
+  /// 0.25×6 + 0.75×2 = 3.0 ＝ 変更前の1試合3局面と同じ。
+  /// 8局面にしたら ST の通算ゴールが 359 → 702 に膨らんだ（実測）。
+  static const int scenariosPerBigStart = 6;
+  static const int scenariosPerBigSub = 4;
 
   /// 評価点の基準値と上下限。サッカー専門誌の採点に合わせて 4.0〜10.0。
   static const double baseRating = 6.0;
@@ -31,7 +101,10 @@ class Formulas {
   /// 分けないと、3つの局面すべてで強気に行くだけで1試合1.5点になり、
   /// 通算600ゴールのような数字が出る。枠に飛んでも止められるのが
   /// サッカーで、そこが分かれているほうが1点の重みも出る。
-  static const double goalConversion = 0.5;
+  /// ノリが乗ると決定率が最大2倍になるぶん、素の値を下げて釣り合わせる
+  /// （2026-09-11）。0.5 のままだと ST の通算ゴールが 291 → 422 に膨らんだ。
+  static const double goalConversion = 0.42;
+
   /// アシストは「この後に味方が決める予定」があるときだけ決まる（スコアに
   /// 乗せるため）。予定が無いときは決まらないので、そのぶん高めにしてある。
   /// 予定が無くても点を足す形にすると、自分のクラブだけ点が増えて
@@ -59,12 +132,259 @@ class Formulas {
   ///
   /// 差し引く量はポジションで変える。一律にすると、点を取らない選手の
   /// チームだけが弱くなり、GK や CB のクラブが勝てなくなる。
-  static double teammateGoalShareFor(ScenarioFamily family) =>
-      switch (family) {
-        ScenarioFamily.forward => 0.65,
-        ScenarioFamily.midfield => 0.85,
-        ScenarioFamily.defence || ScenarioFamily.goalkeeper => 1.0,
-      };
+  /// **自分がクラブを持ち上げる幅。** 力の差（総合力 − クラブの強さ）1につき、
+  /// 出た試合のクラブの強さがこれだけ上がる（下も同じ傾き、下限は `starLiftFloor`）。
+  ///
+  /// 無かった頃は、総合力73の選手が強さ35のクラブに19年居ても
+  /// **順位が序列より 0.5 しか上がらず、毎年15位・41%で降格**していた
+  /// （`test/world_sim.dart`）。自分の得点は味方の得点を置き換える形なので、
+  /// 局面で何を選んでもクラブの勝ち負けはほぼ動かない——「引っ張り上げた実感」が
+  /// どこにも無かった。出ていない試合には効かない（居ないぶん弱い）。
+  static const double starLift = 0.5;
+
+  /// 知名度が1シーズンで薄れる割合。露出が止まると、有名なほど早く忘れられる。
+  static const double fameFade = 0.22;
+
+  /// 最上位の国のクラブが声をかける線（代表キャップ）。どちらか一方でよい。
+  static const int eliteCaps = 30;
+
+  /// **出場給。** 年俸のうち、出場した試合数で増減する割合。
+  ///
+  /// 基準（[appearanceBaseline] 試合）でちょうど 0 になるので、
+  /// **普通に出ていれば収入は変わらない**。出ずっぱりなら増え、
+  /// 怪我やベンチで欠けたぶんは減る。契約を「座っていても同じ額」から
+  /// 「出た試合で決まる額」に変えるための仕組みで、
+  /// 世界の金額そのものは動かさない。
+  static const double appearanceBonusRate = 0.20;
+
+  /// 出場給の基準になる試合数（1シーズンの目安）。
+  static const int appearanceBaseline = 28;
+
+  /// 増減の上限（基準の ±100%ぶん）。
+  static const double appearanceBonusCap = 1.0;
+
+  /// 出場給（万円）。基準ちょうどなら 0。
+  static int appearanceBonus({required int salary, required int appearances}) {
+    final ratio = ((appearances - appearanceBaseline) / appearanceBaseline)
+        .clamp(-appearanceBonusCap, appearanceBonusCap);
+    return (salary * appearanceBonusRate * ratio).round();
+  }
+
+  /// **今節の的を達成したときの報酬（万円）。**
+  ///
+  /// 参考にした野球のキャリアゲームの「週替わり目標達成！報酬：20万円」。
+  /// **若いうちは効き、年俸が億を超えれば誤差になる**——若手がスタッフを
+  /// 雇う足がかりになる形。
+  ///
+  /// 30万円で測ったら引退時の貯蓄が 60,695 → **70,931（+17%）**になり、
+  /// 前に作った金の希少さ（スタッフの人件費）を薄めてしまった。
+  /// 参考アプリと同じ20万円に下げてある。
+  static const int matchTargetReward = 20;
+
+  /// **的を何回続けて達成すると、節目になるか。**
+  ///
+  /// `test/target_sim.dart` の実測で、出た試合の達成率は 35〜75%、
+  /// 3連続は達成のうち25〜29%、5連続は7〜11%、8連続は1〜2%だった。
+  /// 3 なら「狙えば届くが、休めば切れる」幅に入る。
+  static const int targetStreakStep = 3;
+
+  /// 節目で入る経験点。その的が問うている能力に入る。
+  ///
+  /// お金だけの報酬は年俸で薄まる（序盤17% → 9季目以降2%）。経験点の
+  /// 値段（`experienceCost`）は増えないので、**最後まで同じ重さで効く**。
+  ///
+  /// 伸び1回ぶん（`pointsPerGrowth` = 4）を払ったら、ピーク総合力が
+  /// **77.1 → 78.0** まで上がった。狙いは終盤まで意味を残すことで、
+  /// 上限を上げることではない。半分の2点に置く。
+  static const int targetStreakPoints = pointsPerGrowth ~/ 2;
+
+  /// **殿堂ポイント。** 引退した選手が次のキャリアに残すもの。
+  ///
+  /// 参考にした野球のキャリアゲームは「20ptにつき次の選手の才能+1、
+  /// 最大+80」。こちらはポテンシャルの幅が 71〜90 と狭いので、
+  /// **上限を +6** に抑える。1人ぶんの引退でだいたい 20〜60pt 貯まる。
+  ///
+  /// **積み上げた点は減らない。** 使うのではなく、貯まった総量が
+  /// そのまま次の選手の伸びしろになる。
+  static const int legacyPerPotential = 60;
+
+  /// 持ち越しの上限（ポテンシャル）。
+  static const int legacyPotentialCap = 6;
+
+  /// 貯まった点から、次の選手のポテンシャルへの上乗せ。
+  static int legacyPotentialBonus(int points) =>
+      (points ~/ legacyPerPotential).clamp(0, legacyPotentialCap);
+
+  /// 上限に届くまでに要る点。画面に出す。
+  static int legacyPointsForCap = legacyPerPotential * legacyPotentialCap;
+
+  /// **出来高払い契約で減らす年俸の割合。**
+  ///
+  /// 監督の目標を的にした賭け。実測（753季）で、目標の達成は
+  /// 0/3 が14% / 1/3 が21% / **2/3 が36% / 3/3 が29%**。
+  /// 2つ達成で減額分が戻り、3つすべてなら [incentiveFull] 倍が乗る。
+  /// 期待値は +1.3% で**ほぼ五分**——下振れ −15%、上振れ +22.5% の幅がある。
+  /// 選ぶ理由は、平均ではなく**自分の今季の見込み**のほうにある。
+  static const double incentiveCut = 0.15;
+
+  /// 2つ達成したときに戻る倍率（減額分に対して）。
+  static const double incentiveMet = 1.0;
+
+  /// 3つすべて達成したときの倍率。
+  static const double incentiveFull = 2.5;
+
+  /// 出来高払いで減らす額（万円）。
+  static int incentiveCutOf(int salary) => (salary * incentiveCut).round();
+
+  /// 出来高払いの支給額（万円）。[count] は目標3つのうち達成した数。
+  static int incentivePay(int cut, int count) => switch (count) {
+    3 => (cut * incentiveFull).round(),
+    2 => (cut * incentiveMet).round(),
+    _ => 0,
+  };
+
+  /// **代理人を変えるのにかかる違約金**（今の年俸に対する割合）。
+  ///
+  /// ただで変えられると、そのときいちばん強い代理人に毎年乗り換えるだけになる。
+  /// 年俸に比例させるので、**名前が付いてからの乗り換えほど重い**。
+  static const double agentSwitchFeeRate = 0.5;
+
+  /// 代理人の違約金（万円）。
+  static int agentSwitchFee(int salary) =>
+      (salary * agentSwitchFeeRate).round();
+
+  /// **引退後に実業家の道へ進むのに要る貯蓄（万円）。**
+  ///
+  /// 貯めた金の行き先はここしかない。**スタッフを雇えば届かなくなる**ので、
+  /// 「強くなる」と「残す」が同じ財布を取り合う形になる。
+  /// 画面にも同じ数字を出す（`_SupportCard`）。
+  static const int entrepreneurSavings = 30000;
+
+  /// 引退後、スポーツディレクターに就くのに要る通算出場。
+  static const int directorAppearances = 520;
+
+  /// 引退後、監督になるのに要るプロ意識（腕章も要る）。
+  static const int managerProfessionalism = 12;
+
+  /// 引退後、育成コーチになるのに要るプロ意識。
+  static const int coachProfessionalism = 15;
+
+  /// 引退後、実業家になるのに要る野心。
+  static const int entrepreneurAmbition = 14;
+
+  /// 引退後、解説者に呼ばれる知名度の線。
+  static const int punditFame = 66;
+
+  /// 最上位の国のクラブが声をかける線（知名度）。
+  static const int eliteFame = 68;
+
+  /// 持ち上げる上限。差 34 で頭打ち（強さ35のクラブに 69 の選手で +12）。
+  static const double starLiftCap = 16;
+
+  /// **1つのクラブに居続けると、クラブがその選手に合わせて作られていく。**
+  ///
+  /// 持ち上げの上限が 16 で固定だった頃、移籍を全部断る遊び方は
+  /// **20人中19人が無冠**で終わっていた（`balance_sim`）。実測すると、
+  /// 総合力74の選手が強さ 38.6 のクラブに居て、その国の首位は 72.9
+  /// ——力の差 35 に対して持ち上げは 16 で頭打ちなので、
+  /// **どれだけ長く尽くしても、順位は構造的に届かない**（優勝 0.4%）。
+  ///
+  /// 「1つのクラブを引き上げる」はキャリアものの筋のひとつなので、
+  /// 在籍が長いほど上限を上げる。移籍すれば 0 に戻る。
+  /// **上限ではなく傾きを動かす。** 上限だけ上げても何も起きなかった
+  /// （3位以内 10.6% / 優勝 1.3%）——力の差 34.8 に傾き 0.5 を掛けた 17.4 は
+  /// **もともと 16 の上限をほとんど越えていない**ので、頭打ちは効いていなかった。
+  /// 背負っている差が大きいほど、在籍年数がよく効く形にする。
+  static const int loyaltyLiftFrom = 3;
+  static const double loyaltyLiftPerSeason = 0.05;
+  static const double loyaltyLiftMax = 0.3;
+
+  /// 在籍が長いほど、持ち上げの傾きが立つ（0.5 → 最大 0.8）。
+  static double starLiftFor(int seasonsAtClub) =>
+      starLift +
+      ((seasonsAtClub - loyaltyLiftFrom + 1) * loyaltyLiftPerSeason).clamp(
+        0.0,
+        loyaltyLiftMax,
+      );
+
+  /// 傾きが立つぶん、頭打ちも上げる。上げないと傾きが届かない。
+  static const double loyaltyCapMax = 12;
+
+  static double starLiftCapFor(int seasonsAtClub) =>
+      starLiftCap +
+      (starLiftFor(seasonsAtClub) - starLift) / loyaltyLiftMax * loyaltyCapMax;
+
+  /// 弱いほうへの下限。クラブより下の選手が先発しても、落とすのはここまで。
+  static const double starLiftFloor = 0;
+
+  /// 途中出場なら半分。
+  static const double subLiftShare = 0.5;
+
+  /// **味方の得点の見込みを、自分の得点のぶんだけ差し引く割合。**
+  ///
+  /// 自分の得点は味方の得点に上乗せするので、点を取る選手のクラブだけ
+  /// 強くならないよう、試合開始時の味方の得点を割り引いておく。
+  /// **割り引くのは、そのポジションが実際に取る点のぶんだけ**
+  /// （2026-09-23 に `test/position_sim.dart` で測り直した）。
+  /// 以前はファミリーで 前線0.65 / 中盤0.85 / 守備1.0 と置いていて、
+  /// 中盤の選手は1試合 0.04点しか取らないのに味方の得点を 15% 削られていた
+  /// ——**毎試合 0.18点ぶんクラブが弱かった**。同じ強さのクラブに居ても
+  /// リーグ優勝が CM 1.4 / DM 1.2 / WG 1.1 回、CB・GK は 4.0 回だった。
+  static double teammateGoalShareFor(Position position) => switch (position) {
+    Position.st => 0.70,
+    Position.wg => 0.84,
+    Position.am => 0.97,
+    Position.cm || Position.dm => 0.97,
+    Position.sb || Position.cb || Position.gk => 1.0,
+  };
+
+  /// **試合を動かす展開**（局面ではないが、残りの試合の条件を変えるもの）。
+  ///
+  /// 試合の中でプレイヤーに関わるのは 2〜6 の局面だけで、**そのあいだに
+  /// 試合が動いていなかった**。スコアは開始時に決まっていて時間で動くが、
+  /// 「11人対10人になった」「相手が引いた」といった、**次の手の条件そのものが
+  /// 変わる出来事**が無かった。
+  ///
+  /// 退場は試合開始時に引いて固定する（`weakFootMoments` と同じ理屈——
+  /// 表示のたびに引き直すと、画面に出した成功率と判定がずれる）。
+  static const double redCardThemChance = 0.06;
+  static const double redCardUsChance = 0.05;
+  static const double numbersUpBonus = 0.08;
+  static const double numbersDownPenalty = 0.08;
+
+  /// 数的優位・不利が、決まる確率に掛かる倍率。
+  static const double numbersUpConversion = 1.2;
+  static const double numbersDownConversion = 0.85;
+
+  /// リードされた相手は前に出る。リードした相手は引く。
+  /// 得点に繋がる手にだけ効く（無難な手は変わらない）。
+  static const double opponentOpenBonus = 0.07;
+  static const double opponentShutPenalty = 0.07;
+
+  /// **流れの中の1本。**
+  ///
+  /// 局面でしか点が入らないので、**1試合に取れる最大得点が局面の数**で
+  /// 頭打ちになっていた（ふつうの試合は2局面）。実測で、中盤の選手は
+  /// 20年で 1試合2点を**一度も**取らず、守備の選手は**通算0ゴール**だった。
+  /// ハットトリックは前線の選手だけのものになっていた。
+  ///
+  /// ノリが乗っているとき、**この後に入る予定だった味方の得点を、
+  /// 自分が決めることがある**。`_claimTeammateGoal` と同じで、
+  /// **足すのではなく置き換える**——足すと自分のクラブだけ点が増える。
+  /// 0.10 に置いたら ST の通算ゴールが 216 → 314（+45%）に膨らんだ。
+  /// **置き換えなので味方の得点は減るが、選手の記録は増える。**
+  static const double flowGoalChance = 0.07;
+
+  /// ポジションごとの、流れの中で点に絡む度合い。
+  ///
+  /// 守備の選手が 0 でないのは**セットプレーの的**になるから。
+  /// 実際、20年で1点も取らないセンターバックは football ではない。
+  static double flowGoalShareFor(ScenarioFamily family) => switch (family) {
+    ScenarioFamily.forward => 1.0,
+    ScenarioFamily.midfield => 0.9,
+    ScenarioFamily.defence => 0.45,
+    ScenarioFamily.goalkeeper => 0.0,
+  };
 
   /// 局面の成否が評価点に与える増減。
   ///
@@ -72,7 +392,38 @@ class Formulas {
   /// 手が通るようになった選手の評価点が青天井に上がり、
   /// キャリア平均7.5のような数字になる（実際になっていた）。
   static const double ratingPerSuccess = 0.32;
+
   static const double ratingPerFailure = -0.4;
+
+  /// **難しい手を通したぶんは重く、難しい手を外したぶんは軽く。**
+  ///
+  /// 成否を成功率と無関係に一律で採点していたため、**局面プールの
+  /// 難しいポジションが構造的に損をしていた**。実測（6キャリアずつ）で、
+  /// 選んだ手の成功率は ST 0.649 / WG 0.728 / CM 0.779。ST と WG は
+  /// **同じ前線のプールを共有している**のに、ST は自分の一番の能力
+  /// （シュート）が効く手＝一番難しい手へ寄り、WG は通る手へ寄る。
+  /// 結果として平均評価が ST 7.14 / WG 7.53 と、帯（7.0〜7.4）の
+  /// 上下に割れていた。局面データを触ると両方が動くので、
+  /// **採点のほうを難易度に合わせる。**
+  ///
+  /// 基準は [ratingDifficultyPivot]。これより難しい手は成功が重く失敗が軽い。
+  /// 振れ幅を [ratingDifficultyLimit] で止めるのは、**外しても損をしない手**を
+  /// 作らないため（作れば「常に難しい手を選ぶ」が正解になる）。
+  static const double ratingDifficultyPivot = 0.7;
+  static const double ratingDifficultySlope = 1.4;
+  static const double ratingDifficultyLimit = 0.4;
+
+  static double ratingSuccessWeight(double chance) =>
+      (1 + ratingDifficultySlope * (ratingDifficultyPivot - chance)).clamp(
+        1 - ratingDifficultyLimit,
+        1 + ratingDifficultyLimit,
+      );
+
+  static double ratingFailureWeight(double chance) =>
+      (1 - ratingDifficultySlope * (ratingDifficultyPivot - chance)).clamp(
+        1 - ratingDifficultyLimit,
+        1 + ratingDifficultyLimit,
+      );
   static const double ratingPerGoal = 0.95;
   static const double ratingPerAssist = 1.1;
 
@@ -120,8 +471,244 @@ class Formulas {
   static const double growthRatingThreshold = 6.5;
 
   /// 成長のピーク年齢。これを過ぎると伸びにくくなり、衰え始める。
+  /// リーグの上に置く強豪の上乗せ。上から3クラブ。
+  ///
+  /// **等間隔の梯子だと、リーグの上に「手の届かない相手」が居ない。**
+  /// 現実のリーグは上の2〜3が抜けていて、残りは団子になっている。
+  /// ここを平らにしていたため、中位のクラブに居ても優勝できていた。
+  static const List<int> leagueGiants = [9, 6, 3];
+
   static const int peakAge = 27;
   static const int declineAge = 31;
+
+  /// 身体の消耗 0〜100。**最近どう踏み込んできたか**を映す。
+  ///
+  /// 実測（40キャリア×3条件）で、「流す」に上振れが一つも無かった——
+  /// ピーク 73.0/74.7/75.1、平均評価 6.91/6.99/6.99、コツ 3%/88%/98%。
+  /// 見返りは怪我が年 0.22回減ることだけで、**リスクを避けたことに
+  /// 固有の勝ち筋が無かった**。760回ある週の選択が「追い込む」を
+  /// 押し続ける作業になっていた。
+  ///
+  /// 消耗は累積ではなく、その踏み込み方の落ち着き先へ**寄っていく**。
+  /// 累積にすると若い頃の1年で残りが決まってしまい、30歳で流し始めても
+  /// 何も起きない。寄せる形にすると「若いうちは追い込み、歳を取ったら流す」
+  /// がキャリアの形として成立する。
+  /// 「普通」で来た選手が実際に落ち着く値。ここが真ん中で、
+  /// 衰え始めも重傷の割合も、ここで増減 0 になる。
+  ///
+  /// 落ち着き先（50）より低いのは、疲れた週に自動休養が踏み込み方を
+  /// 「流す」に落とすため。**書いてある落ち着き先ではなく、実際に着く値**で
+  /// 真ん中を取らないと、普通に遊んだ選手に代償が付く。
+  static const double strainNeutral = 38;
+
+  /// 週ごとに落ち着き先へ寄る速さ。1シーズン（38週）でほぼ着く。
+  static const double strainDrift = 0.045;
+
+  /// **ノリ**。その試合で成功を重ねるほど、決まるようになる。
+  ///
+  /// 実測（24キャリア）で、中身の違う3つの遊び方が同じ結果になっていた——
+  /// 最善 74.9/7.07、安全 74.8/7.06、勝負 74.8/7.06。
+  /// **失敗の罰はあるのに、上手くやった見返りが無い。**
+  /// しかも期待値に従うと中盤の選手が20年で9ゴールしか取らない
+  /// （何も読まずに押した選手のほうが36ゴール取る）。
+  ///
+  /// 効かせるのは**成功率ではなく決まる確率**。成功率に乗せると
+  /// 「安全な手をひたすら積む」がさらに強くなるだけで、また一本道になる。
+  /// 決定率に乗せると「刻んでノリを作り、勝負どころで決めにいく」という
+  /// 試合の中の段取りが生まれる。
+  /// **1試合3局面しかないので、段数は2まで。**
+  /// 3段にすると、積むのに2局面使って残り1局面でしか使えない
+  /// （実測で「刻んでから決める」型が最下位になった: 評価 6.92 / 代表4キャップ）。
+  /// 1局面の成功で乗るようにして、初めて段取りが成立する。
+  static const int momentumMax = 2;
+
+  /// ノリ1段ごとに、ゴール・アシストが決まる確率が何倍になるか。
+  static const double momentumPerStep = 0.5;
+
+  /// 決定機の手（ゴール・アシスト）で成功したときに上がる段数。
+  /// 無難な手は1段。難しい手を通したほうが乗る。
+  static const int momentumFromChance = 2;
+
+  /// 相手の戦い方と噛み合わない手の重り。慣れ（`adaptationFor`）で消える。
+  static const double styleMismatch = 0.08;
+
+  /// 相手の戦い方が空ける場所の上乗せ。慣れでは動かない（弱点は弱点のまま）。
+  static const double styleOpening = 0.06;
+
+  /// 大一番の重圧。経験（`composure`）と自信で薄まる。
+  static const double bigMatchPressure = 0.10;
+
+  /// **切り札**。構えた個人技が、その手に乗る大きさ。
+  ///
+  /// 個人技は身に付くと**常に少しだけ**効く飾りだった（実測: 1人あたり2.83個、
+  /// 局面の70%に乗って平均 +3.1%）。**誰でも3つ揃い、選ぶ余地も、
+  /// 使いどころの判断も無い**。積み上げた技が試合を動かした瞬間が無い。
+  ///
+  /// 1試合に1回だけ「ここで出す」と構えられるようにして、
+  /// 受け身の +3% を**使いどころの判断**にする。
+  /// **覚えた技が、その手に噛み合ったときの上乗せ。**
+  ///
+  /// 0.05 / 0.02 では、実測で個人技の持ち分が増減の 6.0% しか無かった。
+  /// **技そのものの手だけを深くする**——同じカテゴリのほうまで上げると、
+  /// 「常に少し効く飾り」に戻る（特性で先に踏んだのと同じ）。
+  static const double signatureOnDetail = 0.10;
+
+  /// **1段磨くごとに、噛み合った手がどれだけ深くなるか。**
+  ///
+  /// 25歳を過ぎると伸びる週は 10% を切る（実測: 28〜37歳で 4〜7%）。
+  /// 能力では returns が出ない後半に、**技のほうを深くする**ことで
+  /// 週の選択に目的を戻す。上限まで磨くと 0.10 → 0.16。
+  static const double signaturePerMastery = 0.02;
+
+  /// 伸びなかった週に技が深くなる確率（手応え1回ぶん・伸びしろの余り1.0ぶん）。
+  ///
+  /// 実際の確率は `polishChance × 手応えの回数 × (1 - その週の伸びる確率)`。
+  /// 若いうちは伸びる確率が 1 を超えているので余りが無く、**磨けない**。
+  /// 歳を取って伸びなくなるほど、磨けるようになる。
+  static const double polishChance = 0.30;
+
+  /// **上のクラブが、強さの差1につき上乗せする年俸の割合。**
+  ///
+  /// 25歳以降に来る「上のクラブからの話」は、強さの差が平均 +5.5。
+  /// 0.02 なら +11%。出来の倍率（`CareerEngine.performanceFactor`）と
+  /// 合わせて、残留の更改に負けない水準に置く。
+  static const double stepUpPayPerPoint = 0.02;
+
+  /// 上乗せの上限。大きく格上のクラブが青天井に払うと、
+  /// 移籍が年俸を吊り上げる装置になる。
+  static const double stepUpPayCap = 0.30;
+
+  /// 上乗せが止まる格。自分の総合力 +3 まで（`_roleFor` の「主力」の線）。
+  /// それより強いクラブは、主力の値段以上は払わない。
+  static const int stepUpStarterMargin = 3;
+
+  /// 自分より強さがこれ以上うえのクラブは、控えとして呼んでいる
+  /// （`_roleFor` の「控え」の線、総合力 −10 より下）。
+  static const int benchOfferGap = 10;
+
+  /// 控えとして呼ぶクラブの年俸の割り引き。
+  static const double benchOfferFactor = 0.75;
+
+  /// **布石が通った後、仕留めの手がどれだけ通りやすくなるか。**
+  ///
+  /// 実測（`matters_sim`）で、中身の違う3つの遊び方（最善・安全・勝負）が
+  /// ほぼ同じ結果になっていた。**ゲーム自身が期待値を計算して画面に
+  /// 出しているので、人がエンジンに勝つ余地が構造的に無い。**
+  ///
+  /// 布石は**その場の見返りがほぼゼロ**なので、1手ぶんしか見ない
+  /// 自動進行は選ばない。**2手先に投資できるのは人だけ**——
+  /// ここが、情報を隠さずに人が上回れる唯一の隙間。
+  static const double comboBonus = 0.20;
+
+  /// 布石の後の仕留めが、どれだけ決まりやすくなるか。
+  ///
+  /// 成功率だけを上げても「通ったが決まらない」が増えるだけ。
+  /// ノリと同じで、**決まる確率のほう**に効かせる。
+  static const double comboConversion = 2.0;
+
+  /// 布石から繋がった仕留めが通ったときの、評価点の上乗せ。
+  ///
+  /// **布石そのものには評価点を付けない。** 付けると無難な手が一律に
+  /// 高くなり、自動進行まで布石を積むようになって隙間が消える。
+  /// 代わりに**繋がったときにまとめて返す**——実測で、布石を挟むと
+  /// 平均評価が 7.22 → 7.10 に薄まり、代表が 35 → 30キャップ落ちていた。
+  static const double ratingPerCombo = 0.20;
+
+  /// **布石が通ったときの評価点。**
+  ///
+  /// 決定機を作ったのと同じ 0.06。布石も「作った」仕事なので、
+  /// ここが 0 だと**刻むコストが必ず見返りを上回る**
+  /// （`matters_sim` で、繋がったときの返しを倍にしても平均評価は
+  /// 7.07 のまま動かなかった。効かないのは返しの薄さではなく、
+  /// 布石そのものが無償だったから）。
+  ///
+  /// **これは `expectedDelta` に入れない。** 入れると自動進行も布石を
+  /// 積み始め、人が2手先を読んで上回る隙間がまた消える——それが
+  /// 元の問題（中身の違う遊び方が同じ結果になる）だった。
+  /// **自動進行は、布石を打たないぶんだけ弱い。それが狙い。**
+  static const double ratingPerSetup = 0.06;
+  static const double signatureOnKey = 0.02;
+
+  static const double signatureArmedBonus = 0.15;
+
+  /// 構えて外したときの、その試合の残りへの重り。力んだぶん。
+  ///
+  /// 代償が無いと「乗る局面が来たら必ず構える」が正解になり、
+  /// 判断がまた消える。
+  static const double signatureMissPenalty = 0.05;
+
+  /// **決定的な仕事**（ゴール・アシスト・守る選手の無失点）が、
+  /// 出場機会の判断に足す下駄。
+  ///
+  /// 平均評価だけがすべての入口だったので、**変動を嫌う＝安全な手が常に正しい**
+  /// 形になっていた。点を取る選手が干されない道を、評価点とは別に1本通す。
+  static const double decisivePerAct = 0.06;
+  static const double decisiveBonusMax = 0.30;
+
+  /// 得点関与だけでも代表に届く線（1試合あたり）。
+  ///
+  /// 評価点が `callUpRating` に届かなくても、これを超えていれば呼ばれる。
+  /// 「6.8だが25ゴール」のシーズンが代表から締め出されるのはおかしい。
+  static const double callUpProduction = 0.55;
+
+  /// 代表の「決めているなら呼ばれる」線は、そのポジションの通貨で見る。
+  ///
+  /// **前線は得点＋アシストを積めるが、GK の通貨は無失点しか無い**。
+  /// 実測で無失点は 1試合あたり 0.35 なので、0.55 を一律に要求すると
+  /// **GK だけがこの道を永久に使えない**——評価点の1本だけで戦うことになり、
+  /// 代表 21.9キャップ（WG は 42.9）だった。そしてキャップが足りないと
+  /// 最上位の国の扉（`eliteCaps`）も開かないので、弱いクラブに留まる。
+  static double callUpProductionFor(Position position) =>
+      position.family == ScenarioFamily.goalkeeper ||
+          position.family == ScenarioFamily.defence
+      ? 0.35
+      : callUpProduction;
+
+  /// 引退させた選手が、次のキャリアの監督・メンターとして現れる確率。
+  ///
+  /// 1.0 にすると毎回同じ顔が出て、世界が自分の過去だけで埋まる。
+  /// 0.1 だと20年遊んで一度も会わない。
+  static const double legendCastChance = 0.4;
+
+  /// 性格が、その季に落ち着き先へ1歩寄る確率。
+  /// 毎季きっちり動くと、同じ立場の選手が同じ速さで同じ値に着く。
+  static const double personalitySettleChance = 0.7;
+
+  /// 消耗が衰え始めを動かす境目。
+  ///
+  /// **落ち着き先（22/50/86）ではなく、実際に着く値で切る。**
+  /// 疲れた週は自動休養が踏み込み方を「流す」に落とすので、
+  /// 追い込み続けても消耗は 86 には行かない（実測 56）。
+  /// 落ち着き先で境目を引くと、追い込んだ選手に何の代償も付かなかった。
+  /// 実測: 流す 22 / 普通 37 / 追い込む 56。
+  static const double strainFresh = 26;
+  static const double strainEased = 32;
+  static const double strainWorn = 46;
+  static const double strainBurnt = 54;
+
+  /// 消耗が重傷の割合を動かす傾き。実測の幅（22〜56）で 0.82〜1.20 になる。
+  static const double strainSevereSlope = 0.011;
+
+  /// 今週ぶんだけ、落ち着き先へ寄せる。
+  static double driftStrain(double now, double target) =>
+      (now + (target - now) * strainDrift).clamp(0.0, 100.0);
+
+  /// 消耗が衰え始めの年齢をどれだけ前後させるか。
+  ///
+  /// 現役年数は 33〜37 で固定なので、**長く走れること**ではなく
+  /// **落ちるのが遅いこと**が見返りになる。通算記録とタイトルの機会が増え、
+  /// それは殿堂に残る。
+  static int declineOffsetForStrain(double strain) {
+    if (strain <= strainFresh) return 2;
+    if (strain <= strainEased) return 1;
+    if (strain >= strainBurnt) return -2;
+    if (strain >= strainWorn) return -1;
+    return 0;
+  }
+
+  /// 消耗が重傷の引きやすさを何倍にするか。
+  static double severeFactorForStrain(double strain) =>
+      (1 + (strain - strainNeutral) * strainSevereSlope).clamp(0.6, 1.5);
 
   /// 年齢ごとの伸びやすさ。
   ///
@@ -135,6 +722,56 @@ class Formulas {
     if (age <= peakAge) return 1.0;
     if (age <= 30) return 0.5;
     return 0.25;
+  }
+
+  /// **ポテンシャルまでの余地が、伸びの速さに乗る。**
+  ///
+  /// 実測（`test/spread_sim.dart`、120キャリア）で、**ピーク総合力の幅
+  /// （下位1割〜上位1割）はたった 6**（72〜78）しかなかった。
+  /// 開始が幅4、ポテンシャルが幅12あるのに、着く場所は同じになる。
+  ///
+  /// 原因はポテンシャルの狭さではなく、**そこへ届かないこと**だった:
+  ///
+  /// | ポテンシャル | ピーク | 残し |
+  /// |---|---|---|
+  /// | 〜77 | 72.0 | **1.3** |
+  /// | 78〜83 | 75.6 | 5.6 |
+  /// | 84〜89 | 76.5 | **9.0** |
+  /// | 90〜 | 81.0 | **11.0** |
+  ///
+  /// **上限が高い選手ほど、届いていない。** 伸びの速さが誰でも同じで、
+  /// 積める量（年齢で決まる）が先に尽きるため。ポテンシャルを広げても
+  /// 上は動かず、**上限は下の選手にしか効いていなかった**。
+  ///
+  /// 伸びしろのある選手は速く伸びる、という形にする。余地が縮むほど
+  /// 遅くなるので、**近づくほど止まる**（誰も上限を突き抜けない）。
+  /// 中心は余地15で 1.0。
+  static double potentialDrive(int overall, int potential) =>
+      (0.55 + (potential - overall) * 0.03).clamp(0.6, 1.5);
+
+  /// **1回の成長で、能力が何段上がるか。**
+  ///
+  /// 伸びる「確率」のほうは、若いうちに 1.0 を超えて張り付いている
+  /// （0.3 × 年齢2.6 × プロ意識1.3 で、掛ける前から 1 を超える）。
+  /// **そこに倍率を掛けても何も起きない**——練習の効き 1.25倍が
+  /// ピークを +0.4 しか動かさなかったのも、伸びしろの倍率を入れても
+  /// 幅が 6 → 5 にしかならなかったのも、これが理由だった。
+  /// **速さではなく、量のほうで差を付ける。**
+  ///
+  /// **才能のある選手は、22歳を過ぎても伸び続ける。**
+  /// 実測で、成功率は22歳で着いたあと15年でほとんど動かなかった——
+  /// 能力値自体がそこで伸び止まるから。伸びしろを残している選手だけ、
+  /// その先も2段ずつ上がる。上限に近づけば余地が縮んで1段に戻るので、
+  /// **突き抜けはしない**。
+  ///
+  /// 若いうちを3段にも上げてみたが、**通算ゴールが +16% に膨らむ割に
+  /// 幅は 10 → 11 しか広がらなかった**ので戻した。
+  /// 22歳を過ぎても2段ずつ伸びる、ポテンシャルまでの残り。
+  static const int growthStepGap = 10;
+
+  static int growthStep(int age, int overall, int potential) {
+    if (age <= rapidGrowthAge) return 2;
+    return potential - overall >= growthStepGap ? 2 : 1;
   }
 
   /// 成長を割り戻すときの基準の重み。
@@ -199,15 +836,103 @@ class Formulas {
   /// 移籍オファーが届く最低シーズン平均評価点。
   static const double transferOfferRating = 6.7;
 
+  /// 移籍の話が来るのに要る出場数。`offersFor` と画面が同じ値を読む。
+  static const int transferOfferAppearances = 10;
+
+  /// **クラブの器を超えている選手は、評価点が届かなくても声がかかる。**
+  ///
+  /// 話が来る門（出場10試合・平均評価 `transferOfferRating`）は、
+  /// **自動進行の評価（7.2前後）を前提に置いてあった**。手で遊んで
+  /// 攻めた手ばかり選ぶと平均 5.84 になり、**門を越えるのは8%のシーズンだけ**
+  /// ——「移籍できない」まま20年が終わる（2026-09-23 に測った）。
+  /// 現実でも、小さいクラブで所属リーグより明らかに格上の選手には、
+  /// 出来が平凡でも話が来る。総合力がクラブの強さをこれだけ超えていて、
+  /// 出場も足りていれば、評価点の門を通す。
+  static const int transferOutgrownGap = 6;
+
+  /// **契約が残っていても、上のクラブは移籍金を払って獲りに来る。**
+  ///
+  /// アプリと同じ手順（自動で進める → シーズン終了）をなぞって測ると、
+  /// 移籍の話が出るのは 33% のシーズンで、**話が来なかった季の約9割を
+  /// 止めていたのは契約年数**だった（戦い方を変えても比率は動かない）。
+  /// 長い契約を1度結ぶと、そこから10季動けないことがある。
+  ///
+  /// そこで契約は「動けない壁」ではなく「移籍先の幅」にする。
+  /// 契約が残っている間に動かせるのは、**今より[transferUnderContractStep]
+  /// 強いクラブが、[transferUnderContractRating] を超える出来に対して**
+  /// 移籍金を積んだときだけ。横移動も格下への移籍もできない。
+  /// 短い契約は行き先を選べるが、放り出される危険も同じだけ近い。
+  static const double transferUnderContractRating = 7.0;
+
+  /// 契約中に動かせる相手の強さの差。
+  static const int transferUnderContractStep = 3;
+
+  /// **能力値1点が、局面の成功率をどれだけ動かすか。**
+  ///
+  /// `Ranking.chanceGainPercent` が画面に出す「能力+1 = 成功率 +◯%」も
+  /// ここから出す。**表示用に別の式を書かない。**
+  ///
+  /// 実測（`test/chance_sim.dart`）では 0.009 でも 19歳→28歳で
+  /// 地力が +22% 動いていて、式の傾きが足りないわけではなかった。
+  /// それでも上げたのは、**1週間に伸びる1点が +0.9% で、画面の丸めに
+  /// 埋もれる**から。育てたことが試合の数字に出る瞬間を作るための幅。
+  static const double attributeChanceSlope = 0.012;
+
   /// 相手の強さが成功率に与える傾き。
   ///
   /// これが無いと、3部でも1部でも同じ手が同じ確率で通り、
   /// 上のリーグへ移る意味が「年俸が上がる」だけになる。
-  static const int opponentBaseline = 60;
-  static const double opponentChanceSlope = 0.004;
+  ///
+  /// **浅すぎた。** `test/chance_sim.dart` で 24キャリアぶんの局面を
+  /// 年齢で束ねて測ると、**22歳で成功率 78% に着き、そこから15年で +6%**
+  /// しか動かなかった（18歳 40% → 22歳 78% → 28歳 84%）。
+  /// 能力の効き（0.9%/点）が弱いのではなく、**効き切ってしまう**のが問題で、
+  /// キャリアの8割が「何を伸ばしても数字が変わらない」時間になっていた。
+  ///
+  /// 原因は世界の側が育たないこと。局面の難易度は 30〜80 で止まっているのに
+  /// 選ぶ手の能力は 95 まで行き、相手の格は平均 −3.0% しか引いていなかった。
+  /// 傾きを深くして、**上のリーグへ行くほど同じ手が通らなくなる**ようにする。
+  /// 基準は測った値（18歳の頃に当たる相手＝52）に合わせて下げる——
+  /// 60 のままで傾きだけ立てると、**駆け出しの頃が今より楽になる**
+  /// （傾きを立てると、格下と当たる若手ほど得をするため。56 で実測 45.0%、
+  /// 変更前は 40.3% だった）。52 なら 18歳の成功率は元のままで、
+  /// 上へ行ったぶんだけが引かれる。
+  static const int opponentBaseline = 52;
+  static const double opponentChanceSlope = 0.008;
 
   /// 選手の総合力と評価点から、移籍先クラブの強さの上限を決める係数。
   static const double transferReachFactor = 1.08;
+
+  /// **名前は値段になる。**
+  ///
+  /// 知名度（`Person.fameFor`）には 代表・大陸カップ・世界大会・ゴール・
+  /// リーグの格・特性（華がある ×1.4／生まれながらの主役 ×2.0）が
+  /// 全部集まってくるのに、**効いていたのは愛称と引退後の道だけ**だった。
+  /// 移籍にも年俸にも一切返らないので、知名度を上げる特性も出来事も飾りになる。
+  ///
+  /// 同じ実力でも、名の知れた選手のほうが高く売れ、上のクラブから声がかかる。
+  /// 知名度は0〜100なので、値札は最大 ×1.3、届く強さは最大 +1.5。
+  ///
+  /// **届く先のほうは効きすぎる。** 最初 0.03 に置いたら、200キャリアで
+  /// リーグ優勝が 252 → 335回（+33%）、無出場シーズンが 0.29 → 0.60 に
+  /// なった——名前で身の丈より上のクラブへ行き、そこで登録から外れる。
+  /// 値札と違って、ここは**世界の側**を動かしてしまう。
+  static const double fameValue = 0.003;
+  static const double fameReach = 0.015;
+
+  /// **スポンサー料が急に大きくなる知名度。**
+  ///
+  /// ここを超えたぶんだけ、`endorsementPerFame` を重ねて払う。
+  /// 線形のままだと知名度の差が年俸に埋もれて、「名前を売る」が
+  /// 金でも負ける選択肢になっていた。
+  static const int fameEndorsement = 60;
+
+  /// 線を超えた知名度1あたりの上乗せ（万円/季）。
+  ///
+  /// 60 だと「名前を売る」の貯蓄が 82665 で、まだ絞る（83940）に負けていた。
+  /// 75 で追い越す。**金だけは一番入る**が、伸びも出場もタイトルも落ちる
+  /// ——という形にして初めて、選ぶ理由のある選択肢になる。
+  static const int endorsementPerFame = 75;
 
   /// 2部でこの順位以内なら昇格。
   static const int promotionPlaces = 2;
@@ -243,11 +968,9 @@ class Formulas {
   /// コンディションを戻すならリカバリー、溜まった疲労を抜くなら休養、と分ける。
   static const int restFatigueRelief = 3;
 
-  /// 練習で消耗するコンディション。
-  static const int trainingConditionCost = 10;
-
-  /// 休養で回復するコンディション。
-  static const int restRecovery = 30;
+  // 練習の消耗と休養の回復は `TrainingMenu` が種類ごとに持っている
+  // （`conditionCost` / `recovery`）。ここに一律の数を置いていたが、
+  // メニューを足した時点で読まれなくなっていた。
 
   /// コンディションが成功率に効く傾き。基準値からの差 × 傾き。
   /// 100 なら +6%、20 なら −6%。疲れたまま練習し続けると試合で払う。
@@ -336,7 +1059,14 @@ class Formulas {
   /// 積み上げてきた選択に値段が付く。
   /// 戻る道はある（監督が代わる・移籍する・出来事で歩み寄る）が、
   /// 「評価点で戻す」道だけは閉じている。出られないのだから。
-  static const int frozenOutTrust = 12;
+  ///
+  /// **12 では、落ちる穴が埋まっていた**（2026-09-24 に測り直し）。
+  /// 入れた当初は15%のキャリアが一度は落ちていたが、実測では
+  /// 3〜8% まで下がっていた（`test/recover_sim.dart`、120キャリア）。
+  /// 一方で警告の線（`trustWarning` 28）は 20〜48% のキャリアで割っている
+  /// ——**警告ばかり出て、落ちない**。警告が空砲になると、警告そのものが
+  /// 読まれなくなる。18 なら警告と落下のあいだが 10 に縮まる。
+  static const int frozenOutTrust = 18;
 
   /// これを下回ったら、構想外が近いことを画面で知らせる。
   ///
@@ -345,6 +1075,10 @@ class Formulas {
 
   /// ここを超えたら、疲労を警告として出す。`Fatigue.label` の段と揃える。
   static const int fatigueWarning = 70;
+
+  /// 1週あたりの怪我の確率が、これを超えたら赤く出す。
+  /// 「今の状態」の目盛りに引く線も同じ数字から出す。
+  static const double injuryWarnChance = 0.05;
 
   /// 溜まった疲労が、重傷の割合に与える傾き。
   ///
@@ -402,6 +1136,13 @@ class Formulas {
   /// 個人技を覚える確率（条件を満たした週）。
   static const double signatureChance = 0.06;
 
+  /// **狙っている技を掴む確率。**
+  ///
+  /// 狙わなければこれまでどおり（`signatureChance`）。狙えば速いが、
+  /// **能力が届いていなければ何も起きない**——狙いは「どれになるか」と
+  /// 「その速さ」を変えるだけで、積み上げの代わりにはならない。
+  static const double signatureAimChance = 0.20;
+
   /// 停滞期のあいだ、成長の確率に掛かる倍率。
   static const double plateauGrowthFactor = 0.25;
 
@@ -410,9 +1151,22 @@ class Formulas {
   ///
   /// 追い込み続けた選手だけが上限を破る。ここを通さないと、週の選択は
   /// ピークに着く速さを変えるだけで、届く高さは変わらない。
-  static const int breakthroughGreatWeeks = 18;
+  static const int breakthroughGreatWeeks = 24;
 
   static const double breakthroughChance = 0.25;
+
+  /// 限界突破が起きうるのは、ピーク年齢から何年後までか。
+  ///
+  /// **上限に届く歳と連動する数字**。ポテンシャルの幅を広げたとき、
+  /// ここを 2 のままにしていたので**限界突破が黙って死んだ**。
+  static const int breakthroughAgeGrace = 5;
+
+  /// 限界突破に要るプロ意識。
+  ///
+  /// **性格の幅と連動する数字**。生まれ持った値は 5〜15で、
+  /// 実測の平均は 10.8——固定で 14 を要求していた頃は
+  /// 上位の尾だけが通る門になっていた。
+  static const int breakthroughProfessionalism = 12;
   static const int breakthroughGain = 3;
 
   /// 上乗せ要求が通る確率 = 基本 + 交渉力 × 係数 + 成績の補正。
@@ -478,20 +1232,57 @@ class Formulas {
   static const int severeInjuryAttributeLoss = 3;
   static const int severeInjuryPotentialLoss = 2;
 
-  /// 復帰直後のコンディション。
-  static const int conditionAfterInjury = 45;
+  // 復帰直後のコンディションは `RehabPlan.conditionOnReturn` が持っている
+  // （戻し方を選べるようにした時点で、一律の数は読まれなくなった）。
 
   /// キャプテンの試合ごとの評価点への上乗せ。
   static const double captainRatingBonus = 0.1;
 
   /// 復帰してから、再発の危険が高い試合数。
+  ///
+  /// **重い怪我ほど、戻ってからが長く危ない。**
+  ///
+  /// 一律3試合だった頃、`RehabPlan.relapseFactor` は 38節のうち
+  /// 3試合、**8%の判定にしか掛からなかった**。実測（48キャリアずつ）で
+  /// 慎重（0.45）の怪我は 1.08、標準（1.0）は 1.06 と**逆に多い**——
+  /// 「再発しにくい」と書いてある側に、再発しにくい仕組みが届いていなかった。
+  ///
+  /// 残り試合数ではなく重さで決める。`Injury.matchesOut` は毎節減るので、
+  /// 復帰した時点では必ず 1 になっていて、元の長さはどこにも残っていない。
   static const int rehabWatchMatches = 3;
+
+  /// **窓が狭すぎると、戻し方は選択にならない。** 一律3試合だった頃、
+  /// 復帰直後は1キャリアの週の **10.0%** しかなく、そこへ 0.45 を掛けても
+  /// 怪我の総数は 2〜3% しか動かなかった（48キャリアずつで 1.13 / 1.14 / 1.12）。
+  /// 重傷なら半季ぶん危ない、という長さにして初めて選択になる。
+  static int rehabWatchFor(InjurySeverity severity) => switch (severity) {
+    InjurySeverity.light => 4,
+    InjurySeverity.moderate => 10,
+    InjurySeverity.severe => 19,
+  };
 
   /// 代表に招集される最低総合力。
   ///
   /// 72 だと、普通に育てた選手のほぼ全員（94%）が代表に入っていた。
   /// 代表は「選ばれること自体が到達点」なので、ここは上位だけに保つ。
   static const int callUpOverall = 77;
+
+  /// **代表の線は、その国の格で動く。**
+  ///
+  /// 以前は国に関係なく 77 で一定だった。すると複数の国籍を持つ選手にとって
+  /// **格の高い国を選ぶのが常に正解**になる——ワールドカップの勝ち上がりだけが
+  /// 国で変わり、選ばれやすさは同じだったから。
+  ///
+  /// 小さい国を選べば呼ばれやすく、その代わり世界大会では勝ち上がれない。
+  /// 強い国を選べば呼ばれにくく、入れれば世界を獲る目がある。
+  /// 3 にすると最上位の国の線が 83 になり、**代表経験が 86% → 73% まで落ちた**
+  /// （平均のピーク総合力が 77 なので、上位1割しか呼ばれない）。
+  /// 2 にすると 81〜73 の幅に収まる。
+  static const int callUpPrestigeStep = 2;
+
+  /// その国の代表に呼ばれる最低総合力。
+  static int callUpLineFor(int prestige) =>
+      callUpOverall + (prestige - 3) * callUpPrestigeStep;
 
   /// 代表に招集される最低の直近平均評価点。
   static const double callUpRating = 6.9;
@@ -533,10 +1324,6 @@ class Formulas {
   /// これが無いと自動進行そのものが罠になる。
   /// 明らかに良い手を覆すほどではない重さにする。
   static const double tacticPickBonus = 0.06;
-
-  /// 登録メンバーに入るのに必要な、クラブの強さとの差。
-  /// これより大きく劣ると25人枠に入れない。
-  static const int squadRegistrationGap = -8;
 
   /// 大陸カップに出た年の年俸倍率。
   static const double continentalSalaryBonus = 1.1;

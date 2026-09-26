@@ -16,21 +16,27 @@ import 'package:soccer_career/models/season.dart';
 
 CareerState career({int seed = 3, int age = 20}) =>
     CareerEngine(random: Random(seed)).startCareer(
-        name: 'T', position: Position.cm, age: age, agent: Agent.pool.first);
+      name: 'T',
+      position: Position.cm,
+      age: age,
+      agent: Agent.pool.first,
+    );
 
 void fillSeason(CareerState state, {double rating = 7.2, int matches = 20}) {
   for (var i = 0; i < matches; i++) {
-    state.results.add(MatchResult(
-      matchday: i + 1,
-      opponentName: 'X',
-      home: true,
-      scored: 1,
-      conceded: 0,
-      appearance: Appearance.start,
-      rating: rating,
-      goals: 1,
-      assists: 0,
-    ));
+    state.results.add(
+      MatchResult(
+        matchday: i + 1,
+        opponentName: 'X',
+        home: true,
+        scored: 1,
+        conceded: 0,
+        appearance: Appearance.start,
+        rating: rating,
+        goals: 1,
+        assists: 0,
+      ),
+    );
   }
 }
 
@@ -43,17 +49,16 @@ LifeContext context({
   bool sponsorOffered = false,
   bool captaincyOffered = false,
   bool lowMorale = false,
-}) =>
-    LifeContext(
-      age: age,
-      fame: fame,
-      savings: savings,
-      abroad: abroad,
-      afterInjury: afterInjury,
-      sponsorOffered: sponsorOffered,
-      captaincyOffered: captaincyOffered,
-      lowMorale: lowMorale,
-    );
+}) => LifeContext(
+  age: age,
+  fame: fame,
+  savings: savings,
+  abroad: abroad,
+  afterInjury: afterInjury,
+  sponsorOffered: sponsorOffered,
+  captaincyOffered: captaincyOffered,
+  lowMorale: lowMorale,
+);
 
 void main() {
   group('気持ちと疲労', () {
@@ -151,8 +156,10 @@ void main() {
     test('一度きりの出来事は繰り返さない', () {
       final events = LifeEvents(random: Random(3));
       for (var i = 0; i < 100; i++) {
-        final e = events.pick(context(age: 26, fame: 60, savings: 50000),
-            seen: {'charity'});
+        final e = events.pick(
+          context(age: 26, fame: 60, savings: 50000),
+          seen: {'charity'},
+        );
         expect(e?.id, isNot('charity'));
       }
     });
@@ -244,11 +251,16 @@ void main() {
     });
 
     test('背番号はポジションらしいものが付く', () {
-      final number = CareerEngine.squadNumberFor(Position.st, Random(1),
-          senior: true);
+      final number = CareerEngine.squadNumberFor(
+        Position.st,
+        Random(1),
+        senior: true,
+      );
       expect(number, 9);
-      expect(CareerEngine.squadNumberFor(Position.gk, Random(1), senior: true),
-          1);
+      expect(
+        CareerEngine.squadNumberFor(Position.gk, Random(1), senior: true),
+        1,
+      );
     });
 
     test('育成年代から始めると一番下の部から', () {
@@ -266,7 +278,11 @@ void main() {
       rich.finances = const Finances(savings: 50000);
       rich.player = rich.player.copyWith(
         personality: const Personality(
-            confidence: 10, ambition: 18, professionalism: 10, temper: 10),
+          confidence: 10,
+          ambition: 18,
+          professionalism: 10,
+          temper: 10,
+        ),
       );
       expect(engine.secondCareerFor(rich), SecondCareer.entrepreneur);
 
@@ -300,18 +316,22 @@ void main() {
         final state = career(seed: seed, age: 33);
         fillSeason(state);
         state.contractYears = 1;
-        state.history.add(SeasonRecord(
-          year: state.year - 5,
-          clubName: '古巣クラブ',
-          tier: state.club.tier,
-          leaguePosition: 8,
-          stats: const SeasonStats(
-              appearances: 30, goals: 8, assists: 5, averageRating: 7.0),
-          countryId: state.club.countryId,
-        ));
-        sawCall = engine
-            .offersFor(state)
-            .any((o) => o.reason.contains('古巣'));
+        state.history.add(
+          SeasonRecord(
+            year: state.year - 5,
+            clubName: '古巣クラブ',
+            tier: state.club.tier,
+            leaguePosition: 8,
+            stats: const SeasonStats(
+              appearances: 30,
+              goals: 8,
+              assists: 5,
+              averageRating: 7.0,
+            ),
+            countryId: state.club.countryId,
+          ),
+        );
+        sawCall = engine.offersFor(state).any((o) => o.reason.contains('古巣'));
       }
       expect(sawCall, isTrue);
     });
@@ -321,17 +341,25 @@ void main() {
       final state = career(age: 24);
       fillSeason(state);
       state.contractYears = 1;
-      state.history.add(SeasonRecord(
-        year: state.year - 2,
-        clubName: '古巣クラブ',
-        tier: state.club.tier,
-        leaguePosition: 8,
-        stats: const SeasonStats(
-            appearances: 30, goals: 8, assists: 5, averageRating: 7.0),
-        countryId: state.club.countryId,
-      ));
-      expect(engine.offersFor(state).any((o) => o.reason.contains('古巣')),
-          isFalse);
+      state.history.add(
+        SeasonRecord(
+          year: state.year - 2,
+          clubName: '古巣クラブ',
+          tier: state.club.tier,
+          leaguePosition: 8,
+          stats: const SeasonStats(
+            appearances: 30,
+            goals: 8,
+            assists: 5,
+            averageRating: 7.0,
+          ),
+          countryId: state.club.countryId,
+        ),
+      );
+      expect(
+        engine.offersFor(state).any((o) => o.reason.contains('古巣')),
+        isFalse,
+      );
     });
   });
 
@@ -342,7 +370,8 @@ void main() {
           ? 'albion'
           : 'yamato';
       state.player = state.player.copyWith(
-          nationality: state.player.nationality.naturalize(other));
+        nationality: state.player.nationality.naturalize(other),
+      );
       expect(state.nationalTeam, state.player.nationality.primary);
 
       state.nationalTeamId = other;
@@ -350,8 +379,10 @@ void main() {
 
       // 選んだ国でワールドカップを戦う。
       final competitions = Competitions(random: Random(2));
-      expect(competitions.runWorldCup(state, calledUp: true).participated,
-          isTrue);
+      expect(
+        competitions.runWorldCup(state, calledUp: true).participated,
+        isTrue,
+      );
     });
   });
 
@@ -360,7 +391,7 @@ void main() {
     state.morale = const Morale(value: 88);
     state.fatigue = const Fatigue(value: 33);
     state.form = const Momentum(state: MomentumState.zone, matches: 2);
-    state.preseason = PreseasonPlan.tour;
+    state.offseason = Offseason.promote;
     state.captain = true;
     state.squadNumber = 10;
     state.nickname = '司令塔';
@@ -372,7 +403,7 @@ void main() {
     expect(r.morale.value, 88);
     expect(r.fatigue.value, 33);
     expect(r.form.state, MomentumState.zone);
-    expect(r.preseason, PreseasonPlan.tour);
+    expect(r.offseason, Offseason.promote);
     expect(r.captain, isTrue);
     expect(r.squadNumber, 10);
     expect(r.nickname, '司令塔');
@@ -380,17 +411,19 @@ void main() {
     expect(r.charity, isTrue);
     expect(r.seenEvents, ['charity', 'chant']);
 
-    final legacy = CareerState.fromJson(state.toJson()
-      ..remove('morale')
-      ..remove('fatigue')
-      ..remove('form')
-      ..remove('preseason')
-      ..remove('captain')
-      ..remove('squadNumber')
-      ..remove('nickname')
-      ..remove('sponsor')
-      ..remove('charity')
-      ..remove('seenEvents'));
+    final legacy = CareerState.fromJson(
+      state.toJson()
+        ..remove('morale')
+        ..remove('fatigue')
+        ..remove('form')
+        ..remove('offseason')
+        ..remove('captain')
+        ..remove('squadNumber')
+        ..remove('nickname')
+        ..remove('sponsor')
+        ..remove('charity')
+        ..remove('seenEvents'),
+    );
     expect(legacy.morale.value, 60);
     expect(legacy.fatigue.value, 0);
     expect(legacy.form.isActive, isFalse);

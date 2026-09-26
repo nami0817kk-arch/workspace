@@ -19,3 +19,6 @@ Thumbs.db
 .pytest_cache/
 commit-msg.tmp
 run-daily.log
+run-daily.log.1
+# X への投稿済み記録（手元だけの状態。CI では使わない）
+data/last_tweet.txt

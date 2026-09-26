@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}相場の振り返り（直近{{ day_count }}営業日）｜値上がり株ランキング{% endblock %}
+{% block description %}直近{{ day_count }}営業日について、10%以上動いた銘柄数・ストップ高とストップ安の数・首位の上昇率の推移をまとめています。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "相場の振り返り", "url": canonical}] %}{% include "_breadcrumb_data.html" %}{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "相場の振り返り"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
+{% block content %}
+<h1>相場の振り返り</h1>
+<p class="updated">{{ period_from_ja }} 〜 {{ period_to_ja }}（{{ day_count }}営業日）</p>
+<p class="summary">{{ summary }}</p>
+<p>
+  値上がりランキングの上位30銘柄から数えた、日ごとの数字です。
+  個別の銘柄ではなく「その日がどれだけ荒かったか」を見るためのページです。
+</p>
+
+<h2>10%以上動いた銘柄の数</h2>
+<p>上位30銘柄のうち、10%以上動いた銘柄がいくつあったか。多い日ほど、大きく動く銘柄が広がっていたことを示します。</p>
+<figure class="chart-figure">
+  {{ big_move_chart|safe }}
+  <figcaption>1日あたりの「10%以上動いた銘柄」の数（上位30銘柄のうち）</figcaption>
+</figure>
+
+<h2>ストップ高の数</h2>
+<p>値幅制限の上限まで買われた銘柄の数です。判定の方法は<a href="{{ base_url }}glossary.html">用語解説</a>にあります。</p>
+<figure class="chart-figure">
+  {{ stop_chart|safe }}
+  <figcaption>1日あたりのストップ高の数（値上がり上位30銘柄のうち）</figcaption>
+</figure>
+
+<h2>首位の上昇率</h2>
+<p>その日いちばん上がった銘柄の上昇率です。上限まで買われて止まる日が続くと、この値も揃いやすくなります。</p>
+<figure class="chart-figure">
+  {{ top_chart|safe }}
+  <figcaption>日ごとの首位の上昇率</figcaption>
+</figure>
+
+<h2>日ごとの数字</h2>
+<div class="table-wrap">
+<table class="ranking" data-sortable>
+  <caption>{{ period_from }}〜{{ period_to }} の日ごとの集計</caption>
+  <thead>
+    <tr>
+      <th scope="col">日付</th>
+      <th scope="col">10%以上</th>
+      <th scope="col">ストップ高</th>
+      <th scope="col">ストップ安</th>
+      <th scope="col">首位の上昇率</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <th scope="row"><a href="{{ base_url }}archive/gainers/{{ row.rec_date }}.html">{{ row.rec_date }}</a></th>
+      <td>{{ row.big }}銘柄</td>
+      <td>{{ row.stop_high }}銘柄</td>
+      <td>{{ row.stop_low }}銘柄</td>
+      <td class="gain">{{ "%+.2f"|format(row.top_pct) }}%</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include "_ad_slot.html" %}
+{% endblock %}

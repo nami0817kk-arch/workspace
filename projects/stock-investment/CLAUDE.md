@@ -33,8 +33,7 @@ python main.py         # 本体
   直すと選定結果が変わるため現状維持にしてあり、その挙動はテストで固定している。
 - `data/watchlist.csv` は入力データ。`market` は JP/US、`cap_type` は large/mid/small。
 - `.env` は git 除外。必要なキーは `.env.example` にある。
-- `requirements.txt` は現状バージョン未固定。上流の新版で壊れうるので、
-  動いている環境で `pip freeze` を取って `==` に固定するとよい
-  （pywin32 / pyodbc を含むため、固定作業は Windows 側で行う必要がある）。
+- `requirements.txt` は `==` で固定済み（2026-09-24、Windows でテストが通る構成から取得）。
+  **`>=` に戻さない。** 更新は Dependabot の PR で受け取り、CI が通るのを見てから上げる。
 - ネットワークに出る処理（yfinance / RSS / Claude API）はテストに含めない。
   テストは常にオフラインで通る状態を保つ。

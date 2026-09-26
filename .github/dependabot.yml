@@ -14,7 +14,11 @@ updates:
       - "/projects/stock-investment"
       - "/projects/youtube-video-creation"
       - "/projects/gemini-api"
+      - "/projects/ipa-kakomon"
+      - "/projects/puzzle-book-maze"
+      - "/projects/shaho-tekiyo"
       - "/libs/kabutan"
+      - "/libs/puzzle-generator"
       - "/platform/ai-lab"
     schedule: { interval: weekly, day: monday }
     open-pull-requests-limit: 6

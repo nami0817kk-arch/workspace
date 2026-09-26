@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{{ m.year }}年{{ m.month }}月のまとめ｜値上がり株ランキング{% endblock %}
+{% block description %}{{ m.year }}年{{ m.month }}月（{{ m.day_count }}営業日）の値上がりランキングを通して集計。最も上昇した銘柄、何度もランクインした銘柄、ストップ高の件数をまとめています。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "月まとめ", "url": SITE_URL ~ "/monthly/"}, {"label": m.year ~ "年" ~ m.month ~ "月", "url": canonical}] %}{% include "_breadcrumb_data.html" %}{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "月まとめ", "href": "monthly/index.html"},
+  {"label": m.year ~ "年" ~ m.month ~ "月"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
+{% block content %}
+<h1>{{ m.year }}年{{ m.month }}月のまとめ</h1>
+<p class="summary">{{ m.summary }}</p>
+
+<h2>この月で最も上昇した20銘柄</h2>
+<p>月内の各営業日の値上がりランキングを通して、上昇率の高い順に並べたものです（同じ銘柄が複数回入ることがあります）。</p>
+<div class="table-wrap">
+<table class="ranking" data-sortable>
+  <caption>{{ m.from }}〜{{ m.to }} の上昇率上位20</caption>
+  <thead>
+    <tr>
+      <th scope="col">順位</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">日付</th>
+      <th scope="col">上昇率</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in m.top_movers %}
+    <tr>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ row.name }}</td>
+      <td>{{ row.code }}</td>
+      <td><a href="{{ base_url }}archive/gainers/{{ row.rec_date }}.html">{{ row.rec_date }}</a></td>
+      <td class="gain">{{ "%+.2f"|format(row.change_pct) }}%</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if m.frequent %}
+<h2>この月に複数回ランクインした銘柄</h2>
+<div class="table-wrap">
+<table class="ranking" data-sortable>
+  <caption>{{ m.from }}〜{{ m.to }} に値上がりランキングへ2回以上入った銘柄</caption>
+  <thead>
+    <tr>
+      <th scope="col">回数</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">最大上昇率</th>
+      <th scope="col">ストップ高</th>
+      <th scope="col">最長連続</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in m.frequent %}
+    <tr>
+      <th scope="row">{{ e.count }}回</th>
+      <td>{{ e.name }}</td>
+      <td>{{ e.code }}</td>
+      <td class="gain">{{ "%+.2f"|format(e.best_pct) }}%</td>
+      <td>{{ e.stops }}回</td>
+      <td>{{ e.streak }}日</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+<nav class="day-nav">
+  {% if older %}<a class="prev" href="{{ older }}.html">← {{ older }}</a>{% endif %}
+  <a href="index.html">月まとめ一覧</a>
+  {% if newer %}<a class="next" href="{{ newer }}.html">{{ newer }} →</a>{% endif %}
+</nav>
+{% include "_ad_slot.html" %}
+{% endblock %}

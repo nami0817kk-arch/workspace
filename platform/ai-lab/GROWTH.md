@@ -2,10 +2,10 @@
 
 このファイルは `growth-loop` ワークフローが自動生成している。手で編集しても次回上書きされる。
 
-- 最終更新: 2026-09-07
-- 平均成熟度: **93** `▁▄▁▇█`
-- これまでに解決: **114** 件
-- 未対応: **8** 件
+- 最終更新: 2026-09-21
+- 平均成熟度: **93** `▁▄▁▇███`
+- これまでに解決: **115** 件
+- 未対応: **11** 件
 
 ## プロジェクト別の成熟度
 
@@ -16,47 +16,34 @@
 | `workspace/projects/gemini-api` | Python | 100 | ±0 | 0 |
 | `workspace/projects/ir-analysis` | Python | 100 | ±0 | 0 |
 | `workspace/projects/kabu-agari-ranking` | Python | 100 | ±0 | 0 |
-| `workspace/projects/price-tracker` | Python | 100 | ±0 | 0 |
+| `workspace/projects/price-tracker` | Python | 100 | ±0 | 1 |
 | `workspace/projects/quality-gainer-tracker` | Python | 100 | ±0 | 0 |
 | `workspace/projects/stock-investment` | Python | 100 | ±0 | 3 |
 | `workspace/projects/tool-factory` | Python | 100 | ±0 | 0 |
-| `workspace/projects/youtube-video-creation` | Python | 100 | ±0 | 1 |
-| `workspace/projects/soccer-clicker` | Flutter | 95 | ±0 | 1 |
+| `workspace/projects/youtube-video-creation` | Python | 100 | ±0 | 2 |
+| `workspace/projects/soccer-career` | Flutter | 95 | ±0 | 2 |
 | `workspace/projects/soccer-manager` | Flutter | 95 | ±0 | 1 |
 | `workspace/libs/kabutan` | Python | 95 | ±0 | 0 |
 | `workspace/projects/cohabitation-budget` | 雛形のみ | 15 | ±0 | 0 |
 
 ## 次にやること
 
-1. **[中] 1つの関数が長くなりすぎている** — `workspace`
-   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
-2. **[中] 1つの関数が長くなりすぎている** — `workspace/projects/ai-side-business`
-   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
-3. **[中] 依存バージョンが固定されていない** — `workspace/projects/stock-investment`
-   - 動いている今の環境で `pip freeze` を取り、`requirements.txt` を `==` で固定する。更新は Dependabot に任せて、上がったときに気づけるようにする。 参考: workspace/projects/youtube-video-creation が既に同じことをやっているので、そこから写すのが早い。
-4. **[中] 1つの関数が長くなりすぎている** — `workspace/projects/stock-investment`
-   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
-5. **[中] 例外を握りつぶしている箇所がある** — `workspace/projects/stock-investment`
+1. **[中] 例外を握りつぶしている箇所がある** — `workspace/projects/youtube-video-creation`
    - 最低でも失敗内容を print / logging で残す。「失敗しても続行してよい」場所なら、なぜよいのかをコメントに書く。
+2. **[中] 1つの関数が長くなりすぎている** — `workspace`
+   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
+3. **[中] 1つの関数が長くなりすぎている** — `workspace/projects/ai-side-business`
+   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
+4. **[中] 依存バージョンが固定されていない** — `workspace/projects/stock-investment`
+   - 動いている今の環境で `pip freeze` を取り、`requirements.txt` を `==` で固定する。更新は Dependabot に任せて、上がったときに気づけるようにする。 参考: workspace/projects/youtube-video-creation が既に同じことをやっているので、そこから写すのが早い。
+5. **[中] 1つの関数が長くなりすぎている** — `workspace/projects/stock-investment`
+   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
 
-詳細と依頼文は `docs/growth/2026-09-07.md` を見る。
+詳細と依頼文は `docs/growth/2026-09-21.md` を見る。
 
 ## 保留中（理由あり）
 
 - `workspace/projects/cohabitation-budget` 雛形だけ作られて中身が無い — index.html 1枚で完結させることが価値の完成品。README に「完成・運用中／構成を分割しない」と明記済み
-
-## 直近で解決したもの
-
-- `workspace/libs/kabutan` .env.example で必要な設定を明示する（開発モノレポ（全PJT） で既に実践中）
-- `workspace/projects/quality-gainer-tracker` 例外を握りつぶしている箇所がある
-- `workspace/projects/kabu-agari-ranking` ドキュメントが存在しないファイルを載せている
-- `workspace/projects/tool-factory` ドキュメントが存在しないファイルを載せている
-- `workspace/projects/tool-factory` .env.example で必要な設定を明示する（開発モノレポ（全PJT） で既に実践中）
-- `workspace/projects/youtube-video-creation` 必要な環境変数の一覧が無い
-- `workspace/projects/youtube-video-creation` 依存バージョンが固定されていない
-- `workspace/projects/gemini-api` CLAUDE.md で AI に前提を渡す（soccer-manager で既に実践中）
-- `workspace/projects/soccer-manager` ドキュメントが存在しないファイルを載せている
-- `workspace/projects/quality-gainer-tracker` 1つの関数が長くなりすぎている
 
 ## 使い方
 

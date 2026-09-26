@@ -1,170 +1,180 @@
+/// **局面以外にも、試合を動かすものがあるか。**
+///
+/// 試合の中でプレイヤーが触るのは 2〜6 の局面だけで、そのあいだ試合は
+/// 何も起きていなかった。そして**局面でしか点が入らない**ので、1試合の
+/// 最大得点が局面の数で頭打ちになっていた——実測（`test/flow_sim.dart`）で、
+/// 中盤の選手は20年で1試合2点を**一度も**取らず、守備の選手は**通算0ゴール**。
+library;
+
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soccer_career/data/save_repository.dart';
-import 'package:soccer_career/models/training.dart';
-import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
-import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
-import 'package:soccer_career/models/career.dart';
+import 'package:soccer_career/models/club.dart';
+import 'package:soccer_career/models/player.dart';
 import 'package:soccer_career/models/season.dart';
-import 'package:soccer_career/state/career_controller.dart';
 
-/// 保存しないリポジトリ。コントローラを端末なしで回すために使う。
-class _MemoryRepository implements SaveRepository {
-  CareerState? _saved;
+Club _club(String id, {int strength = 60}) =>
+    Club(id: id, name: id, strength: strength, tier: 1, countryId: 'yamato');
 
-  @override
-  Future<CareerState?> load() async => _saved;
+Player _player({Position position = Position.st, int ability = 70}) => Player(
+  name: 'P',
+  age: 25,
+  position: position,
+  attributes: Attributes.fromDetails({
+    for (final d in Detail.values) d: ability,
+  }),
+  potential: 99,
+);
 
-  @override
-  Future<void> save(CareerState state) async => _saved = state;
-
-  @override
-  Future<void> clear() async => _saved = null;
-}
-
-CareerController controller({int seed = 1}) => CareerController(
-      repository: _MemoryRepository(),
-      careerEngine: CareerEngine(random: Random(seed)),
-      matchEngine: MatchEngine(random: Random(seed)),
-      // 種を渡さないと、出場機会の判断と出来事だけが実行ごとに変わる。
-      // 同じ種で違う結果が出るので、たまに落ちるテストになっていた。
-      random: Random(seed),
-    );
-
-/// 1試合を最後まで進める。局面は常に最初の選択肢を選ぶ。
-Future<MatchResult?> playOne(CareerController c) async {
-  c.startNextMatch();
-  final match = c.currentMatch;
-  if (match == null) return null;
-  while (!match.isFinished) {
-    c.choose(0);
-  }
-  return c.finishMatch();
+MatchInProgress _match({
+  Position position = Position.st,
+  int opponentStrength = 60,
+  int? sentOffThem,
+  int? sentOffUs,
+  List<int> teammateGoals = const [40, 70],
+  List<int> conceded = const [],
+  int seed = 3,
+}) {
+  final engine = MatchEngine(random: Random(seed));
+  final base = engine.start(
+    matchday: 1,
+    player: _player(position: position),
+    club: _club('home'),
+    opponent: _club('away', strength: opponentStrength),
+    home: true,
+    appearance: Appearance.start,
+  );
+  // 退場とスコアは試合開始時に決まっている。ここでは組んだ形で見たいので
+  // 同じ局面のまま作り直す。
+  return MatchInProgress(
+    matchday: 1,
+    opponent: base.opponent,
+    home: true,
+    appearance: Appearance.start,
+    scenarios: base.scenarios,
+    minutes: base.minutes,
+    player: base.player,
+    club: base.club,
+    teammateGoalMinutes: teammateGoals,
+    concededMinutes: conceded,
+    sentOffThemMinute: sentOffThem,
+    sentOffUsMinute: sentOffUs,
+    random: Random(seed),
+  );
 }
 
 void main() {
-  group('シーズンを通しで回す', () {
-    test('38節を消化でき、代表戦は節に数えない', () async {
-      final c = controller(seed: 3);
-      await c.startCareer(
-          name: 'F', position: Position.st, age: 18, agent: Agent.pool.first);
-
-      var guard = 0;
-      while (!c.state!.seasonFinished && guard < 200) {
-        await playOne(c);
-        guard++;
+  group('試合を動かす展開', () {
+    test('退場者が出るまでは効かない', () {
+      final match = _match(sentOffThem: 80);
+      // 局面は5〜90分に散る。80分より前なら、まだ何も起きていない。
+      if (match.currentMinute < 80) {
+        expect(match.turns, isEmpty);
       }
-
-      final state = c.state!;
-      expect(state.seasonFinished, isTrue, reason: '38節を消化しきれていない');
-      expect(state.leagueResults.length, state.fixtures.length);
-      // 節番号が飛んでいないこと。
-      for (var i = 0; i < state.leagueResults.length; i++) {
-        expect(state.leagueResults[i].matchday, i + 1);
-      }
-      // 順位表は全クラブが同じ試合数を消化している。
-      final played = state.table.map((r) => r.played).toSet();
-      expect(played.length, 1, reason: 'クラブ間で消化数がずれている');
-      expect(played.first, state.fixtures.length);
     });
 
-    test('通しで回しても評価点は 4.0〜10.0 に収まり、出ていない試合には付かない', () async {
-      final c = controller(seed: 5);
-      await c.startCareer(
-          name: 'F', position: Position.cm, age: 19, agent: Agent.pool.first);
+    test('相手に退場者が出ると、残りの手が通りやすくなる', () {
+      final plain = _match();
+      final up = _match(sentOffThem: 1);
+      final option = plain.current.options.first;
+      expect(up.turns, contains(MatchTurn.numbersUp));
+      expect(
+        up.chanceFor(option) - plain.chanceFor(option),
+        closeTo(Formulas.numbersUpBonus, 0.001),
+      );
+    });
 
-      var guard = 0;
-      while (!c.state!.seasonFinished && guard < 200) {
-        await playOne(c);
-        guard++;
-      }
+    test('味方が退場すると、その逆', () {
+      final plain = _match();
+      final down = _match(sentOffUs: 1);
+      final option = plain.current.options.first;
+      expect(down.turns, contains(MatchTurn.numbersDown));
+      expect(down.chanceFor(option), lessThan(plain.chanceFor(option)));
+    });
 
-      for (final r in c.state!.results) {
-        if (r.appearance == Appearance.benched ||
-            r.appearance == Appearance.injured ||
-            r.appearance == Appearance.suspended) {
-          expect(r.rating, isNull, reason: '${r.appearance.label}に評価点が付いている');
-        } else {
-          expect(r.rating, inInclusiveRange(Formulas.minRating, Formulas.maxRating));
+    test('展開は成功率の内訳に出る', () {
+      // **選べないものが効いているときこそ、画面に出す。**
+      // 内訳の合計と判定が一致していることは `cohesion_test` が見張る。
+      final match = _match(sentOffThem: 1);
+      final option = match.current.options.first;
+      expect(
+        match
+            .factorsFor(option)
+            .any((f) => f.label == MatchTurn.numbersUp.label),
+        isTrue,
+      );
+    });
+
+    test('展開は時系列に残る', () {
+      final match = _match(sentOffThem: 30, sentOffUs: 60);
+      final kinds = match.timeline.map((e) => e.kind).toList();
+      expect(kinds, contains(MatchEventKind.sentOffThem));
+      expect(kinds, contains(MatchEventKind.sentOffUs));
+    });
+
+    test('味方の退場は「自分たちの出来事」ではない', () {
+      // 色分けが得点と同じになると、失点と並べたときに読めなくなる。
+      expect(MatchEventKind.sentOffUs.isOurs, isFalse);
+      expect(MatchEventKind.sentOffThem.isOurs, isTrue);
+    });
+
+    test('数的優位は、決まる確率にも乗る', () {
+      final plain = _match();
+      final up = _match(sentOffThem: 1);
+      expect(up.goalConversionNow(), greaterThan(plain.goalConversionNow()));
+    });
+  });
+
+  group('流れの中の1本', () {
+    test('ポジションで、絡む度合いが違う', () {
+      // 守備の選手が 0 でないのは**セットプレーの的**になるから。
+      expect(Formulas.flowGoalShareFor(ScenarioFamily.forward), 1.0);
+      expect(
+        Formulas.flowGoalShareFor(ScenarioFamily.midfield),
+        lessThan(Formulas.flowGoalShareFor(ScenarioFamily.forward)),
+      );
+      expect(
+        Formulas.flowGoalShareFor(ScenarioFamily.defence),
+        greaterThan(0),
+        reason: '20年で1点も取らないセンターバックは football ではない',
+      );
+      expect(Formulas.flowGoalShareFor(ScenarioFamily.goalkeeper), 0);
+    });
+
+    test('足すのではなく、味方の得点を置き換える', () {
+      // **足すと自分のクラブだけ点が増える**（アシストで踏んだのと同じ穴）。
+      var found = false;
+      for (var seed = 0; seed < 200 && !found; seed++) {
+        final match = _match(seed: seed, teammateGoals: const [30, 50, 70, 85]);
+        final before = match.teammateGoalMinutes.length;
+        while (!match.isFinished) {
+          match.choose(match.pickFor(SimStyle.aggressive));
+        }
+        if (match.flowGoals > 0) {
+          found = true;
+          expect(
+            match.teammateGoalMinutes.length + match.ownGoalMinutes.length,
+            greaterThanOrEqualTo(before),
+          );
+          // 置き換えたぶん、味方の得点は減っている。
+          expect(match.teammateGoalMinutes.length, lessThan(before));
         }
       }
+      expect(found, isTrue, reason: '200試合で流れの1本が一度も出ない');
     });
 
-    test('負傷したら離脱し、離脱が明ければ復帰する', () async {
-      // 疲れやすい条件で回す。怪我は確率なので、1つの種に賭けると
-      // 乱数の並びが変わっただけで落ちる。何人か回して見る。
-      var sawInjury = false;
-      var sawRecovery = false;
-      for (var seed = 11; seed < 21 && !(sawInjury && sawRecovery); seed++) {
-        final c = controller(seed: seed);
-        await c.startCareer(
-            name: 'F', position: Position.cb, age: 30, agent: Agent.pool.first);
-        await c.setMenu(TrainingMenu.strengthWork);
-
-        var guard = 0;
-        while (guard < 200 && !c.state!.seasonFinished) {
-          final before = c.state!.injured;
-          await playOne(c);
-          if (!before && c.state!.injured) sawInjury = true;
-          if (before && !c.state!.injured) sawRecovery = true;
-          guard++;
+    test('予定が無ければ起きない', () {
+      // 味方の得点予定が無い試合では、置き換える相手が居ない。
+      for (var seed = 0; seed < 40; seed++) {
+        final match = _match(seed: seed, teammateGoals: const []);
+        while (!match.isFinished) {
+          match.choose(match.pickFor(SimStyle.aggressive));
         }
+        expect(match.flowGoals, 0);
       }
-
-      expect(sawInjury, isTrue, reason: '10人回して怪我が一度も起きなかった');
-      expect(sawRecovery, isTrue, reason: '離脱から復帰しなかった');
-    });
-
-    test('離脱中の試合は欠場として記録され、節は進む', () async {
-      final c = controller(seed: 11);
-      await c.startCareer(
-          name: 'F', position: Position.cb, age: 30, agent: Agent.pool.first);
-      await c.setMenu(TrainingMenu.strengthWork);
-
-      var guard = 0;
-      while (!c.state!.injured && guard < 200) {
-        if (c.state!.seasonFinished) break;
-        await playOne(c);
-        guard++;
-      }
-      // 怪我が起きないままシーズンが終わったら、このテストは対象外。
-      if (!c.state!.injured || c.state!.seasonFinished) return;
-
-      final before = c.state!.matchday;
-      // 代表ウィークは節を消費しないので、当たったらもう一度進める。
-      var result = await playOne(c);
-      result ??= await playOne(c);
-      expect(result, isNotNull);
-      expect(result!.appearance, Appearance.injured);
-      expect(result.rating, isNull);
-      expect(c.state!.matchday, before + 1);
-    });
-
-    test('シーズンを跨いでも保存を往復できる', () async {
-      final c = controller(seed: 7);
-      await c.startCareer(
-          name: 'F', position: Position.wg, age: 20, agent: Agent.pool.first);
-
-      var guard = 0;
-      while (!c.state!.seasonFinished && guard < 200) {
-        await playOne(c);
-        guard++;
-      }
-
-      final renewal = c.renewalOffer!;
-      await c.advanceSeason(accepted: renewal);
-
-      final restored = CareerState.fromJson(c.state!.toJson());
-      expect(restored.year, c.state!.year);
-      expect(restored.player.age, c.state!.player.age);
-      expect(restored.history.length, 1);
-      expect(restored.contractYears, c.state!.contractYears);
-      expect(restored.objective, isNotNull);
-      expect(restored.results, isEmpty);
     });
   });
 }

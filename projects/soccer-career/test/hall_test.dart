@@ -11,6 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/models/challenge.dart';
+import 'package:soccer_career/ui/player_portrait.dart';
+import 'package:soccer_career/ui/screens/retired_screen.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
@@ -56,7 +59,11 @@ Future<CareerController> started({int seed = 3, int age = 34}) async {
     random: Random(seed),
   );
   await c.startCareer(
-      name: '検証', position: Position.cm, age: age, agent: Agent.pool.first);
+    name: '検証',
+    position: Position.cm,
+    age: age,
+    agent: Agent.pool.first,
+  );
   return c;
 }
 
@@ -68,18 +75,21 @@ SeasonRecord record({
   CupStage cup = CupStage.none,
   ContinentalStage continental = ContinentalStage.none,
   int overall = 70,
-}) =>
-    SeasonRecord(
-      year: year,
-      clubName: clubName,
-      tier: tier,
-      leaguePosition: position,
-      stats: const SeasonStats(
-          appearances: 30, goals: 8, assists: 5, averageRating: 7.1),
-      cupStage: cup,
-      continentalStage: continental,
-      overall: overall,
-    );
+}) => SeasonRecord(
+  year: year,
+  clubName: clubName,
+  tier: tier,
+  leaguePosition: position,
+  stats: const SeasonStats(
+    appearances: 30,
+    goals: 8,
+    assists: 5,
+    averageRating: 7.1,
+  ),
+  cupStage: cup,
+  continentalStage: continental,
+  overall: overall,
+);
 
 void main() {
   group('引退した選手が残る', () {
@@ -113,10 +123,11 @@ void main() {
       await c.deleteCareer();
 
       await c.startCareer(
-          name: '2人目',
-          position: Position.st,
-          age: 34,
-          agent: Agent.pool.first);
+        name: '2人目',
+        position: Position.st,
+        age: 34,
+        agent: Agent.pool.first,
+      );
       c.state!.history.add(record(year: 2031, clubName: 'B'));
       await c.retire();
 
@@ -188,10 +199,7 @@ void main() {
       state.history.addAll([
         record(year: 2030, clubName: 'A', position: 1),
         record(year: 2031, clubName: 'A', cup: CupStage.winner),
-        record(
-            year: 2032,
-            clubName: 'A',
-            continental: ContinentalStage.winner),
+        record(year: 2032, clubName: 'A', continental: ContinentalStage.winner),
         record(year: 2033, clubName: 'A', position: 3),
       ]);
       await c.retire();
@@ -215,8 +223,9 @@ void main() {
     test('保存を往復しても中身が残る', () async {
       final c = await started();
       final state = c.state!;
-      state.reputation =
-          state.reputation.copyWith(awards: [Award.debut, Award.topScorer]);
+      state.reputation = state.reputation.copyWith(
+        awards: [Award.debut, Award.topScorer],
+      );
       state.history.add(record(year: 2030, clubName: 'A'));
       await c.retire();
 
@@ -245,6 +254,73 @@ void main() {
       expect(find.textContaining('まだ居ない'), findsOneWidget);
     });
 
+    test('額の格は、獲ったタイトルだけで決まる', () {
+      // 見た目のためだけの数字は作らない。カードに書いてあるものと同じ。
+      Legend with_({int league = 0, int cup = 0, int continental = 0}) =>
+          Legend.fromJson({
+            'name': 'x',
+            'leagueTitles': league,
+            'cupTitles': cup,
+            'continentalTitles': continental,
+          });
+      expect(HallPlaque.of(with_()), HallPlaque.bronze);
+      expect(HallPlaque.of(with_(cup: 1)), HallPlaque.silver);
+      expect(HallPlaque.of(with_(league: 1)), HallPlaque.silver);
+      expect(HallPlaque.of(with_(continental: 1)), HallPlaque.gold);
+      // 大陸を獲っていれば、他が無くても金。
+      expect(HallPlaque.of(with_(league: 3, continental: 1)), HallPlaque.gold);
+    });
+
+    testWidgets('ピーク総合力が額に出る', (tester) async {
+      final c = await started();
+      c.state!.history.add(record(year: 2030, clubName: 'A', overall: 84));
+      await c.retire();
+
+      await tester.pumpWidget(MaterialApp(home: HallScreen(controller: c)));
+      await tester.pumpAndSettle();
+      final peak = c.hall.legends.first.peakOverall;
+      // 歴代の記録カードにも同じ数字が出るので、1つとは限らない。
+      expect(find.text('$peak'), findsWidgets);
+      expect(find.text('ピーク'), findsOneWidget);
+      expect(find.text('歴代の記録'), findsOneWidget);
+    });
+
+    testWidgets('挑戦は畳んで置き、開くと中身が出る', (tester) async {
+      final c = await started();
+      c.state!.history.add(record(year: 2030, clubName: 'A'));
+      await c.retire();
+
+      await tester.pumpWidget(MaterialApp(home: HallScreen(controller: c)));
+      await tester.pumpAndSettle();
+      // 畳んだままなら、見出しと達成数だけ。
+      expect(find.text('挑戦'), findsOneWidget);
+      expect(
+        find.textContaining('/ ${Challenge.values.length} 達成'),
+        findsOneWidget,
+      );
+      expect(find.text(Challenge.oneClub.label), findsNothing);
+
+      await tester.tap(find.text('挑戦'));
+      await tester.pumpAndSettle();
+      expect(find.text(Challenge.oneClub.label), findsOneWidget);
+      expect(find.text(Challenge.oneClub.requirement), findsOneWidget);
+    });
+
+    testWidgets('引退画面に、初めて達成した挑戦が出る', (tester) async {
+      final c = await started();
+      c.state!.history.add(record(year: 2030, clubName: 'A'));
+      await c.retire();
+      c.lastChallenges = [Challenge.marksman];
+
+      await tester.pumpWidget(MaterialApp(home: RetiredScreen(controller: c)));
+      await tester.pumpAndSettle();
+      expect(find.text('初めて達成した挑戦'), findsOneWidget);
+      expect(
+        find.textContaining(Challenge.marksman.requirement),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('引退した選手が並ぶ', (tester) async {
       final c = await started();
       c.state!.history.add(record(year: 2030, clubName: 'アルバ04'));
@@ -252,9 +328,42 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(home: HallScreen(controller: c)));
       await tester.pumpAndSettle();
-      expect(find.text('検証'), findsOneWidget);
+      // 歴代の記録にも名前が出る（1人しか居なければ全部その人）。
+      expect(find.text('検証'), findsWidgets);
       expect(find.textContaining('アルバ04'), findsWidgets);
       expect(find.textContaining('引退後'), findsOneWidget);
+    });
+
+    testWidgets('額の似顔は、テーマの明暗で色が変わらない', (tester) async {
+      // **引退した選手が `theme.colorScheme.primary` を着ていた。**
+      // 明るいテーマと暗いテーマで同じ選手が別の色になる——
+      // ダークモードで撮って初めて見えた（`test/shots.dart`）。
+      final c = await started();
+      await c.retire();
+
+      for (final brightness in [Brightness.light, Brightness.dark]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(useMaterial3: true, brightness: brightness),
+            home: HallScreen(controller: c),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final portrait = tester.widget<PlayerPortrait>(
+          find.byType(PlayerPortrait).first,
+        );
+        // 着るものはクラブから、背は帯から。どちらもテーマを見ない。
+        expect(
+          portrait.club,
+          isNotNull,
+          reason: 'クラブを渡さないと、テーマの色を着る',
+        );
+        expect(
+          portrait.backdrop,
+          isNotNull,
+          reason: '色の付いた帯の上では、背もテーマから取らない',
+        );
+      }
     });
   });
 }

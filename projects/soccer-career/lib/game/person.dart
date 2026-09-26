@@ -1,10 +1,13 @@
 import 'dart:math';
 
+import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/competition.dart';
 import '../models/personality.dart';
+import '../models/player.dart';
 import '../models/reputation.dart';
 import '../models/traits.dart';
+import 'formulas.dart';
 import 'world.dart';
 
 /// 選手を「一人の人間」として扱う部分。
@@ -29,12 +32,12 @@ class Person {
     final ageFactor = age <= 21
         ? 1.35
         : age <= 27
-            ? 1.2
-            : age <= 30
-                ? 0.9
-                : age <= 33
-                    ? 0.5
-                    : 0.2;
+        ? 1.2
+        : age <= 30
+        ? 0.9
+        : age <= 33
+        ? 0.5
+        : 0.2;
 
     // 契約が短いほど安く買える＝値札は下がる。
     final contractFactor = 0.6 + state.contractYears * 0.15;
@@ -49,9 +52,67 @@ class Person {
     final prestige = World.byId(state.club.countryId).prestige;
     final leagueFactor = 0.6 + prestige * 0.18;
 
+    // **一芸は、総合力とは別に値札に乗る。**
+    // 総合力はポジションの重みで出すので、尖らせるほど下がる。
+    // ここが無いと「尖った選手を育てる」がただの損になる。
+    final standout = 1 + standoutOf(state.player) * Formulas.standoutValue;
+
+    // **名前も値段になる。** 知名度はここまで愛称にしか効いておらず、
+    // 代表も大陸カップも「華がある」も、移籍の場面には返っていなかった。
+    final fame = 1 + state.reputation.fame * Formulas.fameValue;
+
     final value =
-        base * ageFactor * contractFactor * form * leagueFactor * 1.6;
+        base *
+        fame *
+        ageFactor *
+        contractFactor *
+        form *
+        leagueFactor *
+        standout *
+        1.6;
     return max(50, (value / 50).round() * 50);
+  }
+
+  /// **突き抜けた1つが、総合力からどれだけ離れているか。**
+  ///
+  /// 一芸と呼べない（`standoutFloor` に届かない、または総合力との差が
+  /// `standoutGap` 未満）なら 0。判定にも画面にも、同じここから出す。
+  /// **測るのは詳細ではなくカテゴリ。**
+  /// 詳細1つで測ると、尖っていない選手でも「視野98・総合力75」のように
+  /// 構造的に差が開くので、**全員に一芸が付いてしまう**（実際に付いた）。
+  /// 総合力はカテゴリの重み付き平均なので、同じ土俵で比べる。
+  /// **ただし GK は分野では測れない。**
+  ///
+  /// GK の総合力はほぼ GK 能力そのもの（重みがそこに寄っている）なので、
+  /// 分野は総合力から離れられない。実測（16キャリアずつ・289シーズン）で
+  /// **GK の最高分野は 83.1 止まりで、`standoutFloor` の 88 に構造的に
+  /// 届かない**——一芸が付いたのは 8%（CB 75% / WG 74%）。
+  /// 一芸は代表の線を `standoutCallUpRelief` ぶん下げるので、
+  /// **GK だけ線が 78.1（CB 74.1）になり、代表キャップが半分だった**
+  /// （GK 21.7 / CB 41.8）。
+  ///
+  /// GK にとっての「突き抜けた1つ」はセービングやハンドリングのほう。
+  /// 実測で最高の詳細は 90.2 で、分野と違って 88 を越えられる。
+  /// **守る選手の入口をその通貨で測ったのと同じこと**（`callUpProductionFor`）。
+  static int standoutOf(Player player) {
+    final key = AttributeKey.values.reduce(
+      (a, b) => player.attributes[a] >= player.attributes[b] ? a : b,
+    );
+    final best = player.position.family == ScenarioFamily.goalkeeper
+        ? key.details
+              .map(player.attributes.detail)
+              .reduce((a, b) => a > b ? a : b)
+        : player.attributes[key];
+    if (best < Formulas.standoutFloor) return 0;
+    return (best - player.overall - Formulas.standoutGap).clamp(0, 40);
+  }
+
+  /// 一芸そのもの。無ければ null。
+  static AttributeKey? standoutKey(Player player) {
+    if (standoutOf(player) == 0) return null;
+    return AttributeKey.values.reduce(
+      (a, b) => player.attributes[a] >= player.attributes[b] ? a : b,
+    );
   }
 
   /// 知名度。活躍と代表と大陸カップで上がり、何もしないと少し落ちる。
@@ -69,15 +130,33 @@ class Person {
     // リーグでの露出は「出場していること」が前提。試合に出ない選手は
     // どんなに格の高いリーグに籍を置いていても忘れられていく。
     if (stats.appearances > 0) {
-      gained += (stats.goals + stats.assists) ~/ 3;
+      // **無失点は守備者にとってのゴール**——評価点と代表の入口では
+      // そう扱っているのに、**知名度だけが得点とアシストしか見ていなかった**。
+      // GK はここが永久に 0 なので名前が上がらず、届く先（`fameReach`）も
+      // 値札も伸びず、**自分より弱いクラブに留まる**。
+      // 実測で GK だけが「総合力−クラブの強さ +0.8」（他は −3〜−4）で、
+      // 代表は 21.9キャップ（WG は 42.9）だった。
+      // 判定に既にある「決定的な仕事」をそのまま読む——
+      // 前線の選手にとっては得点＋アシストと同じ値なので、そちらは動かない。
+      final output = state.leagueResults.fold<int>(
+        0,
+        (a, r) => a + r.decisiveFor(state.player.position),
+      );
+      gained += output ~/ 3;
       if (state.club.tier == 1) gained += 2;
       gained += World.byId(state.club.countryId).prestige;
     }
     // 華のある選手は同じ働きでも名前が広まる。忘れられる速さは同じ。
-    final fame = state.reputation.fame -
-        2 +
-        (gained * state.player.traits.fameFactor).round();
-    return fame.clamp(0, 100);
+    //
+    // **足し算にしない。** 以前は毎季 −2 して露出を足すだけだったので、
+    // 25歳で 3/4 の選手が 99〜100 に張り付いていた（`test/world_sim.dart` の
+    // 調べ）——知名度で値札も届く先も愛称も決めているのに、全員同じ値だった。
+    // 今は「広まるほど広まりにくく、有名なほど早く忘れられる」形にして、
+    // 今の露出に見合う高さへ寄っていく（露出 20 で 60 前後に落ち着く）。
+    final now = state.reputation.fame;
+    final gain = gained * state.player.traits.fameFactor * (100 - now) / 100;
+    final fade = now * Formulas.fameFade;
+    return (now + gain - fade).round().clamp(0, 100);
   }
 
   /// そのシーズンで得た称号。
@@ -168,59 +247,51 @@ class Person {
 
   /// 経験で性格が少しずつ変わる。
   ///
-  /// 上手くいけば自信が付き、干されれば削られる。歳を取るとプロ意識が上がり、
-  /// 気性は丸くなる。1シーズンで動くのは1〜2点まで。
+  /// **足し算をやめて、落ち着き先へ1歩ずつ寄せる。**
+  /// 条件が続く限り足し続ける形だったので、40キャリアを回すと
+  /// 全員がプロ意識 20（上限）・自信 15.8・野心 15.4 で引退していた。
+  /// 性格で選手が違ってくるはずの部分（練習の効き・衰え始めの年齢）が、
+  /// 20年やれば誰でも同じになっていた。
+  ///
+  /// 落ち着き先は**生まれ持った値＋今の立場**。立場が変われば戻る。
   Personality evolve(CareerState state) {
     var personality = state.player.personality;
-    final stats = state.seasonStats;
-
-    if (stats.appearances >= 15 && stats.averageRating >= 7.0) {
-      personality = personality.bump(PersonalityAxis.confidence, 1);
-    } else if (stats.appearances <= 5) {
-      personality = personality.bump(PersonalityAxis.confidence, -1);
-    }
-
-    if (state.player.age >= 28) {
-      if (_random.nextDouble() < 0.5) {
-        personality = personality.bump(PersonalityAxis.professionalism, 1);
-      }
-      if (_random.nextDouble() < 0.4) {
-        personality = personality.bump(PersonalityAxis.temper, -1);
-      }
-    }
-
-    // 格上に移ると野心が満たされ、燻ると強くなる。
-    if (state.relations.manager < 30) {
-      personality = personality.bump(PersonalityAxis.ambition, 1);
-    }
-
-    // 同期に先を行かれると発奮する。比べる相手が居ないと、
-    // 自分の成績が良いのか悪いのかも分からない。
-    if (state.rival?.leads(state.player.overall) ?? false) {
-      personality = personality.bump(PersonalityAxis.ambition, 1);
-    }
-
-    // メンターの居るロッカールームで育つと、姿勢が身に付く。
-    if (state.mentor != null && state.player.age <= 23) {
-      personality = personality.bump(PersonalityAxis.professionalism, 1);
-    }
-
-    // 整えた生活はプロ意識になり、崩した生活は削る。
-    //
-    // `Habits.disciplined` / `reckless` は「プロ意識が上がりやすいか」と
-    // 書いてあるのに、**どこからも読まれていなかった**。生活習慣は
-    // 練習の効き・怪我・回復にしか効いておらず、「整えた生活が人を作る」
-    // という肝心のところが死んでいた。
-    //
-    // 毎季必ず動かすと、プロ意識が練習の効きを押し上げて総合力が膨らむ
-    // （出来事のときに実際に膨らんだ）。半分の確率にして、年齢のぶんと
-    // 同じ重さに揃える。
-    if (state.habits.disciplined && _random.nextDouble() < 0.5) {
-      personality = personality.bump(PersonalityAxis.professionalism, 1);
-    } else if (state.habits.reckless && _random.nextDouble() < 0.5) {
-      personality = personality.bump(PersonalityAxis.professionalism, -1);
+    final born = personality.born;
+    for (final axis in PersonalityAxis.values) {
+      // 毎季きっちり1歩動くと、同じ立場の選手が同じ速さで同じ値に着く。
+      if (_random.nextDouble() >= Formulas.personalitySettleChance) continue;
+      personality = personality.settleToward(
+        axis,
+        born[axis] + _shiftFor(axis, state),
+      );
     }
     return personality;
+  }
+
+  /// 今の立場が、生まれ持った値からどれだけ動かすか。
+  int _shiftFor(PersonalityAxis axis, CareerState state) {
+    final stats = state.seasonStats;
+    return switch (axis) {
+      // 上手くいけば自信が付き、干されれば削られる。
+      PersonalityAxis.confidence =>
+        (stats.appearances >= 15 && stats.averageRating >= 7.0 ? 3 : 0) +
+            (stats.appearances >= 25 && stats.averageRating >= 7.3 ? 2 : 0) +
+            (stats.appearances <= 5 ? -4 : 0),
+      // 燻ると強くなり、満たされると落ち着く。
+      PersonalityAxis.ambition =>
+        (state.relations.manager < 30 ? 3 : 0) +
+            ((state.rival?.leads(state.player.overall) ?? false) ? 2 : 0) +
+            (state.club.tier == 1 && state.leaguePosition <= 3 ? -2 : 0),
+      // 整えた生活と、年齢と、若いうちに見た背中。
+      PersonalityAxis.professionalism =>
+        (state.habits.disciplined ? 4 : 0) +
+            (state.habits.reckless ? -4 : 0) +
+            (state.player.age >= 28 ? 2 : 0) +
+            (state.mentor != null && state.player.age <= 23 ? 2 : 0),
+      // 歳を取ると丸くなる。崩した生活は荒くする。
+      PersonalityAxis.temper =>
+        (state.player.age >= 28 ? -3 : 0) + (state.habits.reckless ? 2 : 0),
+    };
   }
 
   /// 監督の信頼が出場機会に与える下駄。

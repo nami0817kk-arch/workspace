@@ -1,10 +1,10 @@
 {
   "name": "楽天 値下がりウォッチ",
-  "base_url": "https://price-tracker-bpe.pages.dev",
-  "google_site_verification": "oRLCdBuCB30NAm6FK-H9RP6zx8zo6Nvq4jdWjFsB5BY",
+  "base_url": "https://kakaku.dailyquarry.com",
+  "google_site_verification": "JLPv6DMxv7h91q8Hzvo-YfdQx6mz-_zZ-MhHaNzPs4c",
   "description": "楽天市場の価格を毎日記録し、値下がりと過去最安値を機械的に判定して公開しています。",
-  "owner": "",
-  "contact_email": "",
+  "owner": "つるはし社",
+  "contact_email": "info@dailyquarry.com",
   "genres": [
     {
       "genre_id": "100026",
@@ -21,9 +21,25 @@
     {
       "genre_id": "101205",
       "name": "テレビゲーム"
+    },
+    {
+      "genre_id": "112493",
+      "name": "楽器・音響機器"
+    },
+    {
+      "genre_id": "510915",
+      "name": "ビール・洋酒"
+    },
+    {
+      "genre_id": "101213",
+      "name": "ペット・ペットグッズ"
+    },
+    {
+      "genre_id": "100804",
+      "name": "インテリア・寝具・収納"
     }
   ],
-  "hits_per_genre": 1250,
+  "hits_per_genre": 1500,
   "drop_threshold": 0.05,
   "near_low_threshold": 0.02,
   "history_tail_days": 90,
