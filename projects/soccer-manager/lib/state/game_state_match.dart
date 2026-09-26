@@ -385,6 +385,7 @@ extension GameStateMatch on GameState {
               .staffFor(StaffRole.youthCoach)
               ?.specialty ??
           StaffSpecialty.balanced,
+      coachLevel: youthCoachCoachingLevel,
     );
 
     // 昇格の見込みが立たない有望株は、ユースを去る。置いておくほど育つので、

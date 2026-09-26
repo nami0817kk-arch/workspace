@@ -32,11 +32,16 @@ class ScoutingEngine {
     Player prospect, {
     int scoutLevel = 1,
   }) {
-    final uncertainty = (18 - (scoutLevel - 1) * 1.5).clamp(6, 18).round();
+    final uncertainty = estimateUncertainty(scoutLevel);
     final low = (prospect.potential - uncertainty).clamp(1, 99);
     final high = (prospect.potential + uncertainty).clamp(1, 99);
     return (low, high);
   }
+
+  /// 見立ての振れ幅(±いくつ)。画面に「どれだけ正確に見えているか」を
+  /// 出すために切り出してある。
+  static int estimateUncertainty(int scoutLevel) =>
+      (18 - (scoutLevel - 1) * 1.5).clamp(6, 18).round();
 
   /// ユース施設のレベルが高いほど昇格候補の受け入れ枠が増える。
   static int maxProspectsFor(int youthFacilityLevel) =>

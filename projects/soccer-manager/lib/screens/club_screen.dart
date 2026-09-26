@@ -14,7 +14,7 @@ import '../theme/semantic_colors.dart';
 part 'club_screen_staff.dart';
 
 /// スタッフ・施設の現在レベル(と最大未満なら次レベル)の具体的な効果を1行にまとめる。
-String _staffEffectLabel(StaffRole role, int level) {
+String _staffEffectLabel(StaffRole role, int level, {StaffMember? member}) {
   const maxLevel = ClubInfrastructure.maxLevel;
   switch (role) {
     case StaffRole.headCoach:
@@ -44,10 +44,19 @@ String _staffEffectLabel(StaffRole role, int level) {
           '負傷リスク${((1 - cur) * 100).round()}%軽減${next == null ? '' : ' → 次Lv: ${((1 - next) * 100).round()}%軽減'}',
           "Injury risk down ${((1 - cur) * 100).round()}%${next == null ? '' : ' → next level: down ${((1 - next) * 100).round()}%'}");
     case StaffRole.youthCoach:
-      final bonus = (level - 1) * 3;
-      final next = level < maxLevel ? level * 3 : null;
-      return Tr.pick('アカデミー生の質+$bonus${next == null ? '' : ' → 次Lv: +$next'}',
-          "Academy quality +$bonus${next == null ? '' : ' → next level: +$next'}");
+      // ユースコーチだけは2つの能力が別の仕事をしている。混ぜた水準で
+      // 「質+n」とだけ出すと、見極めの高い人と指導の高い人の違いが
+      // 見えず、どちらを雇うかの判断ができない。
+      final judging = member?.levelOf(StaffAttribute.judging) ?? level;
+      final coaching = member?.levelOf(StaffAttribute.coaching) ?? level;
+      final quality = (judging - 1) * 3;
+      final spread = ScoutingEngine.estimateUncertainty(judging);
+      final extraKeys = (coaching - 1).clamp(0, maxLevel - 1);
+      return Tr.pick(
+          '見極め: 入ってくる子の質+$quality・伸びしろの見立て±$spread / '
+              '指導: 練習で手の回る項目+$extraKeys',
+          'Judging: intake quality +$quality, potential read within ±$spread / '
+              'Coaching: +$extraKeys extra attributes worked on');
     case StaffRole.fitnessCoach:
       final cur = ClubInfrastructure.fitnessCoachRecoveryBonus(level);
       final next = level < maxLevel

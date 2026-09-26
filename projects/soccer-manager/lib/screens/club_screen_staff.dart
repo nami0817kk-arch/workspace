@@ -45,7 +45,8 @@ class _StaffCard extends StatelessWidget {
                 ),
               ),
               Text(
-                _staffEffectLabel(role, current.effectiveLevel),
+                _staffEffectLabel(role, current.effectiveLevel,
+                    member: current),
                 style: TextStyle(
                     fontSize: 11, color: SemanticColors.subtleText(context)),
               ),
