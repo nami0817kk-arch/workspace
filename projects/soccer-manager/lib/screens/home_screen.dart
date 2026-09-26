@@ -1166,6 +1166,23 @@ class HomeScreen extends StatelessWidget {
       ));
       gameState.lastAiTransferNews = null;
     }
+    // ユースを去った有望株。ユース画面にも出るが、そこを開かない週に
+    // 起きると、名簿から静かに消えるだけになる。育てていた選手が去った
+    // ことは、その節のうちに知らせる。
+    final departures = gameState.lastYouthDepartures;
+    if (departures.isNotEmpty) {
+      final names =
+          departures.map((d) => d.player.name).join(Tr.pick('、', ', '));
+      final compensation =
+          departures.fold<int>(0, (sum, d) => sum + d.compensation);
+      messages.add((
+        Tr.pick('ユースを去りました: $names(育成補償金 $compensation万円)',
+            'Left the academy: $names (development fee $compensation)'),
+        true
+      ));
+      gameState.lastYouthDepartures = [];
+    }
+
     final budgetCrisis = gameState.lastBudgetCrisisWarning;
     if (budgetCrisis != null) {
       messages.add((budgetCrisis, true));
