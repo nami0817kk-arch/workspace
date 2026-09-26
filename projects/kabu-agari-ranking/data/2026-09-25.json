@@ -725,5 +725,64 @@
       "change_pct": -5.58,
       "metric_value": 5662
     }
-  ]
+  ],
+  "stop_high": [
+    {
+      "rank": 1,
+      "code": "627A",
+      "name": "アキッパ",
+      "close": 1637.0,
+      "change_pct": 22.44,
+      "at_limit": true
+    },
+    {
+      "rank": 2,
+      "code": "7883",
+      "name": "サンメッセ",
+      "close": 485.0,
+      "change_pct": 19.75,
+      "at_limit": true
+    },
+    {
+      "rank": 3,
+      "code": "6904",
+      "name": "原田工業",
+      "close": 885.0,
+      "change_pct": 18.16,
+      "at_limit": false
+    },
+    {
+      "rank": 4,
+      "code": "4967",
+      "name": "小林製薬",
+      "close": 6885.0,
+      "change_pct": 16.99,
+      "at_limit": true
+    },
+    {
+      "rank": 5,
+      "code": "3803",
+      "name": "イメージ情報",
+      "close": 707.0,
+      "change_pct": 16.47,
+      "at_limit": true
+    },
+    {
+      "rank": 6,
+      "code": "4073",
+      "name": "ジィ・シィ",
+      "close": 637.0,
+      "change_pct": -1.85,
+      "at_limit": false
+    },
+    {
+      "rank": 7,
+      "code": "9082",
+      "name": "大和自",
+      "close": 2674.0,
+      "change_pct": -4.29,
+      "at_limit": false
+    }
+  ],
+  "stop_low": []
 }

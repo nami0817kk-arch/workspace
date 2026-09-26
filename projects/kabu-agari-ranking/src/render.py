@@ -642,17 +642,17 @@ def market_rows(days: list[dict]) -> list[dict]:
         if not gainers:
             continue
         losers = day.get("losers") or []
+        # ストップ高・ストップ安は、記録がある日は全件、無い日は上位30銘柄からの推定。
+        # **ストップ高のページと同じ数え方を使う**（別々に数えると、同じ日の
+        # 件数がページによって違うという、直しようのない食い違いになる）。
+        high_rows, high_source = aggregate.stop_high_rows(day)
+        low_rows, _ = aggregate.stop_low_rows(day)
         out.append({
             "rec_date": day["rec_date"],
             "big": sum(1 for r in gainers if abs(r["change_pct"]) >= BIG_MOVE_PCT),
-            "stop_high": sum(
-                1 for r in gainers
-                if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-            ),
-            "stop_low": sum(
-                1 for r in losers
-                if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_LOW
-            ),
+            "stop_high": len(high_rows),
+            "stop_low": len(low_rows),
+            "stop_source": high_source,
             "top_pct": gainers[0]["change_pct"],
         })
     return out
@@ -671,13 +671,13 @@ def market_summary(rows: list[dict]) -> str:
     )
 
 
-def stop_high_summary(history: dict, day_count: int) -> str:
-    """ストップ高の章の一文。数えた事実だけを書く。"""
+def limit_summary(history: dict, day_count: int, term: str) -> str:
+    """ストップ高／ストップ安の章の一文。数えた事実だけを書く。"""
     if not history["total"]:
-        return f"直近{day_count}営業日では、上位30銘柄の中にストップ高はありませんでした。"
+        return f"直近{day_count}営業日では、{term}になった銘柄はありませんでした。"
     busiest = max(history["per_day"], key=lambda d: d["count"])
     parts = [
-        f"直近{day_count}営業日で、のべ{history['total']}銘柄がストップ高になりました"
+        f"直近{day_count}営業日で、のべ{history['total']}銘柄が{term}になりました"
         f"（{len({row['code'] for d in history['per_day'] for row in d['rows']})}銘柄）。"
     ]
     parts.append(
@@ -737,11 +737,40 @@ def _build_monthly_pages(days: list[dict]) -> list[dict]:
     return months
 
 
-def _build_stop_high_page(days: list[dict], stock_pages: set[str],
-                          profiles: dict[str, dict] | None = None) -> None:
-    """ストップ高の章。当日のランキングはどこにでもあるが、
-    「いつ・どの銘柄が上限まで買われたか」を日をまたいで残している場所は少ない。"""
-    history = aggregate.stop_high_history(days)
+# ストップ高とストップ安は、向きが逆なだけで数え方も見せ方も同じ。
+# **語彙だけを差し替えて同じ型で作る**（別々に書くと、片方を直したときに
+# もう片方が置き去りになる）。
+LIMIT_PAGES = [
+    {
+        "dir": "stop-high",
+        "term": "ストップ高",
+        "verb": "買われた",
+        "bound": "上限",
+        "pct_label": "最大上昇率",
+        "pct_class": "gain",
+        "source_rank": "値上がり",
+        "archive": "gainers",
+        "history": "stop_high_history",
+    },
+    {
+        "dir": "stop-low",
+        "term": "ストップ安",
+        "verb": "売られた",
+        "bound": "下限",
+        "pct_label": "最大下落率",
+        "pct_class": "loss",
+        "source_rank": "値下がり",
+        "archive": "losers",
+        "history": "stop_low_history",
+    },
+]
+
+
+def _build_limit_page(days: list[dict], stock_pages: set[str], spec: dict,
+                      profiles: dict[str, dict] | None = None) -> None:
+    """ストップ高／ストップ安の章。当日のランキングはどこにでもあるが、
+    「いつ・どの銘柄が上限（下限）まで動いたか」を日をまたいで残している場所は少ない。"""
+    history = getattr(aggregate, spec["history"])(days)
     per_day = [
         {
             **day,
@@ -756,7 +785,7 @@ def _build_stop_high_page(days: list[dict], stock_pages: set[str],
     recent = list(reversed(history["per_day"][:TREND_DAYS]))
 
     # 市場別・業種別の内訳。**記録した日ぶんだけ**を数える。推定の日を混ぜると
-    # 「上位30銘柄の中のストップ高」と「その日の全ストップ高」が同じ数に見える。
+    # 「上位30銘柄の中の数」と「その日の全件」が同じ数に見える。
     recorded_codes = [
         row["code"]
         for day in history["per_day"] if day["source"] == "recorded"
@@ -770,16 +799,17 @@ def _build_stop_high_page(days: list[dict], stock_pages: set[str],
     industry_total = sum(row["count"] for row in by_industry)
 
     _write(
-        _OUTPUT_DIR / "stop-high" / "index.html",
-        _env.get_template("stop_high.html").render(
+        _OUTPUT_DIR / spec["dir"] / "index.html",
+        _env.get_template("stop_limit.html").render(
             base_url="../",
-            canonical=canonical_url("stop-high/index.html"),
+            canonical=canonical_url(f"{spec['dir']}/index.html"),
+            spec=spec,
             day_count=len(days),
             period_from=days[-1]["rec_date"],
             period_to=days[0]["rec_date"],
             period_from_ja=format_date_ja(days[-1]["rec_date"]),
             period_to_ja=format_date_short_ja(days[0]["rec_date"]),
-            summary=stop_high_summary(history, len(days)),
+            summary=limit_summary(history, len(days), spec["term"]),
             has_recorded=history["has_recorded"],
             has_estimated=history["has_estimated"],
             recorded_from=format_date_ja(min(
@@ -797,7 +827,7 @@ def _build_stop_high_page(days: list[dict], stock_pages: set[str],
             trend_chart=charts.columns(
                 [{"label": format_date_short_ja(d["rec_date"])[:-3], "value": d["count"]}
                  for d in recent],
-                aria_label="日ごとのストップ高の数を示す棒グラフ",
+                aria_label=f"日ごとの{spec['term']}の数を示す棒グラフ",
                 unit="銘柄",
             ),
         ),
@@ -817,6 +847,7 @@ def _build_market_page(days: list[dict]) -> None:
             base_url="",
             canonical=canonical_url("market.html"),
             rows=rows,
+            has_recorded=any(r["stop_source"] == "recorded" for r in rows),
             day_count=len(rows),
             period_from=rows[-1]["rec_date"] if rows else "",
             period_to=rows[0]["rec_date"] if rows else "",
@@ -1042,7 +1073,8 @@ def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict],
              (canonical_url("glossary.html"), None)]
     urls.append((canonical_url("weekly/index.html"), latest_date))
     urls.append((canonical_url("stock/index.html"), latest_date))
-    urls.append((canonical_url("stop-high/index.html"), latest_date))
+    for spec in LIMIT_PAGES:
+        urls.append((canonical_url(f"{spec['dir']}/index.html"), latest_date))
     urls.append((canonical_url("monthly/index.html"), latest_date))
     for month in months:
         urls.append((canonical_url(f"monthly/{month['slug']}.html"), month["to"]))
@@ -1102,7 +1134,8 @@ def build_all() -> None:
     stocks = _build_stock_pages(days, profiles)
     stock_pages = {s["code"] for s in stocks}
     _build_ranking_pages(days, stock_pages)
-    _build_stop_high_page(days, stock_pages, profiles)
+    for spec in LIMIT_PAGES:
+        _build_limit_page(days, stock_pages, spec, profiles)
     months = _build_monthly_pages(days)
     weeks = _build_weekly_pages(days)
     _build_market_page(days)
