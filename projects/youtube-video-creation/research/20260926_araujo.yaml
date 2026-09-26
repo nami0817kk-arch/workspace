@@ -11,7 +11,7 @@ theme:
   topic: リヴァプール
   title: 'アラウホを借りて2か月。リヴァプールで早くも出てきた話'
   question: リヴァプールはアラウホをどうするのか
-short_title: アラウホとリヴァプールの5500万ユーロ
+short_title: アラウホに早くも出てきた話
 thumbnail:
   photo: assets/images/20260926_pair_araujo_iraola/01.jpg
   line1: アラウホ、リヴァプールで
@@ -33,10 +33,11 @@ sections:
     say:
       - 8月、アラウホがバルセロナからリヴァプールへ。2027年6月までの、1年のレンタルです。
       - 買い取りのオプションは**5500万ユーロ**。行使するかどうかは、リヴァプールが決められます。
-      - 加入したとき、アラウホはこう話していました。
-      - voice: アラウホ
-        text: キャリアの今の段階で、理想的な移籍だった。自分に必要な移籍だった
       - 呼んだのは、この夏から指揮を執るイラオラ監督です。
+      - イラオラ監督は、アラウホについてこう話しています。
+      - voice: アンドニ・イラオラ
+        image: assets/images/20260926_pair_iraola_araujo/01.jpg
+        text: 右サイドバックが必要なら右サイドバック、センターバックが必要ならセンターバック。どこでもやる準備ができている
     sources:
       - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-ronald-araujo-loan
       - https://cadenaser.com/nacional/2026/08/10/oficial-ronald-araujo-llega-cedido-al-liverpool-de-andoni-iraola-cadena-ser/
@@ -70,18 +71,15 @@ sections:
     telop: 「この調子なら、買い取りを真剣に考えるかもしれない」と報道
     narrator: キャスター
     say:
-      - text: 'バルサからリヴァプールに貸し出され、出場した時間は無失点のアラウホに、早くも買い取りの話が出ています。'
+      - text: 'バルサから借りたアラウホに、早くも買い取りの話。オプションは5500万ユーロです。'
         short_only: true
       - イラオラ監督とクラブは、アラウホの出だしにとても満足している、と伝えられています。
       - この調子を最後まで保てば、買い取りを真剣に考えるかもしれない、という内容です。
       - ただ、地元の報道は「確実とは程遠い」。
       - リヴァプールがレンタルの選手を完全移籍で獲ったのは、過去に2回だけです。
-      - イラオラ監督は、アラウホについてこう話しています。
+      - それでもイラオラ監督は、アラウホをこう評価しています。
       - voice: アンドニ・イラオラ
-        image: assets/images/20260926_pair_iraola_araujo/01.jpg
         text: ビッグクラブから来た経験のある選手なのに、謙虚にやって来た。こういう変化が必要だったんだと思う
-      - voice: アンドニ・イラオラ
-        text: 右サイドバックが必要なら右サイドバック、センターバックが必要ならセンターバック。どこでもやる準備ができている
     sources:
       - https://www.mundodeportivo.com/futbol/fc-barcelona/20260925/1004231176/cedido-fichaje-araujo-empieza-convencer-liverpool.html
       - https://www.mirror.co.uk/sport/football/news/liverpool-ronald-araujo-transfer-barcelona-37699630
