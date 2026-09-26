@@ -1,0 +1,23 @@
+name: dailyquarry-home tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["projects/dailyquarry-home/**", ".github/workflows/shaho-tests.yml", ".github/workflows/python-tests.yml"]
+  pull_request:
+    paths: ["projects/dailyquarry-home/**", ".github/workflows/shaho-tests.yml", ".github/workflows/python-tests.yml"]
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/dailyquarry-home"
+      cache-dependency-path: "projects/dailyquarry-home/requirements.txt"
