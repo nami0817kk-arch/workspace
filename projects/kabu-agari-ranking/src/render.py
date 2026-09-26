@@ -14,6 +14,7 @@ import charts
 import feed
 import price_limit
 import site_config
+import stock_profile
 from market_calendar import CalendarOutOfRange, is_business_day, next_business_day
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -288,6 +289,9 @@ def day_summary(rows: list[dict], kind: str) -> str:
 # 「1日に10%以上動いた銘柄が何件あったか」を日ごとに並べたもの。
 # その日の相場がどれだけ荒かったかを、1枚で見られるようにするための数字。
 BIG_MOVE_PCT = 10
+# 業種の内訳に出す行数。全33業種を並べても読み取れない。
+INDUSTRY_ROWS = 10
+
 TREND_DAYS = 15
 
 
@@ -590,7 +594,7 @@ def stock_summary(stock: dict, day_count: int) -> str:
     return "".join(parts)
 
 
-def _build_stock_pages(days: list[dict]) -> list[dict]:
+def _build_stock_pages(days: list[dict], profiles: dict[str, dict] | None = None) -> list[dict]:
     """銘柄ごとのページ。登場が少ない銘柄は作らない（薄いページを量産しない）。"""
     stocks = aggregate.stock_histories(days)
     tmpl = _env.get_template("stock.html")
@@ -605,6 +609,9 @@ def _build_stock_pages(days: list[dict]) -> list[dict]:
                 base_url="../../",
                 canonical=canonical_url(f"stock/{stock['code']}/index.html"),
                 s=stock,
+                profile=stock_profile.label((profiles or {}).get(stock["code"])),
+                profile_short=stock_profile.label(
+                    (profiles or {}).get(stock["code"]), unit=False),
                 summary=stock_summary(stock, len(days)),
                 together=aggregate.co_occurring(days, stock["code"]),
                 labels=price_limit.LABELS,
@@ -730,7 +737,8 @@ def _build_monthly_pages(days: list[dict]) -> list[dict]:
     return months
 
 
-def _build_stop_high_page(days: list[dict], stock_pages: set[str]) -> None:
+def _build_stop_high_page(days: list[dict], stock_pages: set[str],
+                          profiles: dict[str, dict] | None = None) -> None:
     """ストップ高の章。当日のランキングはどこにでもあるが、
     「いつ・どの銘柄が上限まで買われたか」を日をまたいで残している場所は少ない。"""
     history = aggregate.stop_high_history(days)
@@ -746,6 +754,20 @@ def _build_stop_high_page(days: list[dict], stock_pages: set[str]) -> None:
     ]
     stocks = [{**s, "has_page": s["code"] in stock_pages} for s in history["stocks"]]
     recent = list(reversed(history["per_day"][:TREND_DAYS]))
+
+    # 市場別・業種別の内訳。**記録した日ぶんだけ**を数える。推定の日を混ぜると
+    # 「上位30銘柄の中のストップ高」と「その日の全ストップ高」が同じ数に見える。
+    recorded_codes = [
+        row["code"]
+        for day in history["per_day"] if day["source"] == "recorded"
+        for row in day["rows"]
+    ]
+    profiles = profiles or {}
+    by_market = aggregate.profile_breakdown(recorded_codes, profiles, "market")
+    by_industry = aggregate.profile_breakdown(recorded_codes, profiles, "industry")
+    # 属性が取れていない銘柄は数えていないので、表ごとに合計が違いうる
+    market_total = sum(row["count"] for row in by_market)
+    industry_total = sum(row["count"] for row in by_industry)
 
     _write(
         _OUTPUT_DIR / "stop-high" / "index.html",
@@ -766,6 +788,12 @@ def _build_stop_high_page(days: list[dict], stock_pages: set[str]) -> None:
             )),
             stocks=stocks,
             per_day=per_day,
+            by_market=by_market,
+            by_industry=by_industry[:INDUSTRY_ROWS],
+            industry_count=len(by_industry),
+            market_total=market_total,
+            industry_total=industry_total,
+            recorded_count=len(recorded_codes),
             trend_chart=charts.columns(
                 [{"label": format_date_short_ja(d["rec_date"])[:-3], "value": d["count"]}
                  for d in recent],
@@ -1046,6 +1074,11 @@ def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict],
     (_OUTPUT_DIR / "sitemap.xml").write_text(xml, encoding="utf-8")
 
 
+def load_days() -> list[dict]:
+    """data/ の全営業日。ビルド以外（銘柄属性の取得など）から使う入口。"""
+    return _load_all_days()
+
+
 def build_all() -> None:
     """output/ を作り直し、各種ランキングページ・固定ページを全て生成する。"""
     if _OUTPUT_DIR.exists():
@@ -1061,11 +1094,15 @@ def build_all() -> None:
     _env.globals["GAINERS_DATES_MIN"] = gainers_dates[-1] if gainers_dates else ""
     _env.globals["GAINERS_DATES_MAX"] = gainers_dates[0] if gainers_dates else ""
 
+    # 銘柄の基本属性。取りに行くのは build_site 側で、ここは貯まっているものを
+    # 読むだけ（CI は取得元へ出られないので、無ければ無いまま描く）。
+    profiles = stock_profile.load(_DATA_DIR / stock_profile.CACHE_NAME)
+
     # 銘柄ページを先に確定させてから表を描く（リンクの有無を知るため）
-    stocks = _build_stock_pages(days)
+    stocks = _build_stock_pages(days, profiles)
     stock_pages = {s["code"] for s in stocks}
     _build_ranking_pages(days, stock_pages)
-    _build_stop_high_page(days, stock_pages)
+    _build_stop_high_page(days, stock_pages, profiles)
     months = _build_monthly_pages(days)
     weeks = _build_weekly_pages(days)
     _build_market_page(days)

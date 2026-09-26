@@ -162,3 +162,54 @@ def parse_daily_prices(html: str) -> pd.DataFrame:
         })
         return out.dropna(subset=["close"]).reset_index(drop=True)
     return pd.DataFrame()
+
+
+# 銘柄の基本属性。**変わらないものだけを取る。**
+#
+# PER・PBR・時価総額も同じページにあるが、毎日変わる。載せるなら毎日
+# 全銘柄ぶん取り直すことになり、取得元への回数が桁で増える。取り直さなければ
+# 古い数字を出し続けることになり、株価指標で古い数字は誤りと同じ。
+# そのうえ、それらは他所にもある数字で、うちが持つ意味が薄い。
+# 取得元は市場名を1文字に略している（東証Ｐ＝プライム）。読み手には通じないので開く。
+# **表に無い表記はそのまま出す**（勝手に当てると別の市場の名前を書くことになる）。
+_MARKET_SHORT = {
+    "東証Ｐ": "東証プライム",
+    "東証Ｓ": "東証スタンダード",
+    "東証Ｇ": "東証グロース",
+    "名証Ｐ": "名証プレミア",
+    "名証Ｍ": "名証メイン",
+    "名証Ｎ": "名証ネクスト",
+    "札証": "札証",
+    "札証Ａ": "札証アンビシャス",
+    "福証": "福証",
+    "福証Ｑ": "福証Q-Board",
+}
+
+
+def parse_stock_profile(html: str) -> dict:
+    """個別ページから、変わらない属性だけを取る。
+
+    Returns:
+        {"market": 市場区分, "industry": 業種, "unit": 売買単位}
+        取れなかった項目は入れない（空文字で埋めない。無いことを区別する）。
+    """
+    soup = BeautifulSoup(html, "lxml")
+    out: dict[str, str] = {}
+
+    market = soup.select_one("#stockinfo_i1 .market")
+    if market:
+        text = market.get_text(strip=True)
+        out["market"] = _MARKET_SHORT.get(text, text)
+
+    box = soup.select_one("#stockinfo_i2")
+    if box:
+        # 業種はこの枠の中の唯一のリンク
+        industry = box.find("a")
+        if industry:
+            out["industry"] = industry.get_text(strip=True)
+        for dl in box.find_all("dl"):
+            dt, dd = dl.find("dt"), dl.find("dd")
+            if dt and dd and dt.get_text(strip=True) == "単位":
+                out["unit"] = dd.get_text(strip=True)
+
+    return out

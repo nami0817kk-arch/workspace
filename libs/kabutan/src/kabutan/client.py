@@ -60,6 +60,21 @@ def fetch_daily_html(code: str, page: int = 1) -> str | None:
         return None
 
 
+def fetch_stock_page(code: str) -> str | None:
+    """個別銘柄のページ。失敗時は None。
+
+    基本属性（市場区分・業種・売買単位）を取るために使う。変わらない情報なので
+    **銘柄ごとに1回でよい**。毎日取り直すものではない。
+    """
+    try:
+        resp = requests.get(f"https://kabutan.jp/stock/?code={code}", headers=HEADERS, timeout=20)
+        resp.raise_for_status()
+        return resp.text
+    except Exception as e:
+        print(f"  [WARN] {code}: 個別ページの取得に失敗しました: {e}")
+        return None
+
+
 def fetch_stock_name(code: str) -> str:
     """個別ページから日本語銘柄名を取得する。失敗時はコードをそのまま返す。"""
     try:

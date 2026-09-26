@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ s.name }}（{{ s.code }}）の値上がり・ストップ高の記録{% endblock %}
-{% block description %}{{ s.name }}（{{ s.code }}）が値上がり・値下がり・活況ランキングに載った日の一覧。{{ summary }}{% endblock %}
+{% block description %}{{ s.name }}（{{ s.code }}{% if profile_short %}／{{ profile_short }}{% endif %}）が値上がり・値下がり・活況ランキングに載った日の一覧。{{ summary }}{% endblock %}
 {% block structured_data %}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
@@ -16,6 +16,9 @@
 ] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>{{ s.name }}（{{ s.code }}）</h1>
+{# 市場区分・業種・売買単位。年に数回しか変わらないので貯めてある値を出す。
+   PER や時価総額のような毎日変わる数字は置かない（古い数字を出すことになる）。 #}
+{% if profile %}<p class="stock-profile">{{ profile }}</p>{% endif %}
 <p class="summary">{{ summary }}</p>
 
 {% if chart %}

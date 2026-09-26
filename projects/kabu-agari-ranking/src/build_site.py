@@ -15,9 +15,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import aggregate
 import fetcher
 from fetcher import fetch_active, fetch_gainers, fetch_losers, fetch_stop_high
 import render
+import stock_profile
 import validate
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
@@ -119,6 +121,16 @@ def main() -> None:
     if rec_date is None and not any(_DATA_DIR.glob("????-??-??.json")):
         print("  data/ に既存データも無いため、サイトのビルドを中止します。")
         return
+
+    # 銘柄の基本属性（市場区分・業種・売買単位）。**未知の銘柄が出たときだけ**
+    # 取りに行く。ここが失敗してもサイトの公開は止めない（属性は飾りで、
+    # 無ければその行を出さないだけ。ランキングが出ないほうが損が大きい）。
+    try:
+        days = render.load_days()
+        codes = stock_profile.needed_codes(days, (s["code"] for s in aggregate.stock_histories(days)))
+        stock_profile.sync(codes)
+    except Exception as e:
+        print(f"  [WARN] 銘柄属性の取得に失敗しました（サイトは続けて作ります）: {e}")
 
     render.build_all()
 
