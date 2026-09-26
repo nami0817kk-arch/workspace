@@ -137,6 +137,9 @@ class Section:
     # **ショートの締めに回す反応**（2026-09-15 指示）。印の付いた反応だけを
     # ショートの最後に足す。付いていなければ今までどおり上から順に取る
     line_short_voices: list = field(default_factory=list)
+    # **長い反応を行に分けたときの「続き」の印**（2026-09-26）。ショートが反応を
+    # 行ごとに拾って前半だけで切れた（久保の回）。続きの行は前の行とひとかたまり
+    line_conts: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
     # **その節の地の文を誰が読むか**（2026-09-09 ユーザー指示）。
     # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
@@ -346,6 +349,7 @@ def build_notes(raw: dict) -> Notes:
         images: list[str] = []
         onlys: list[str] = []
         picks: list[bool] = []
+        conts: list[bool] = []
         mutes: list[bool] = []
         for item in raw_lines:
             if isinstance(item, dict):
@@ -371,6 +375,7 @@ def build_notes(raw: dict) -> Notes:
                 # 上から順に取ると、1件目が見出しの言い直しになる回がある
                 picks.append(bool(item.get("short_voice")))
                 mutes.append(bool(item.get("no_telop")))
+                conts.append(bool(item.get("cont")))
             else:
                 lines.append(str(item).strip())
                 voices.append("")
@@ -380,6 +385,7 @@ def build_notes(raw: dict) -> Notes:
                 onlys.append("")
                 picks.append(False)
                 mutes.append(False)
+                conts.append(False)
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
@@ -395,6 +401,7 @@ def build_notes(raw: dict) -> Notes:
                 line_images=[images[i] for i in keep],
                 line_onlys=[onlys[i] for i in keep],
                 line_short_voices=[picks[i] for i in keep],
+                line_conts=[conts[i] for i in keep],
                 line_no_telops=[mutes[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
@@ -610,7 +617,7 @@ def _check_voice_clash(notes: Notes) -> list[str]:
 
 # 1行ぶんの辞書に書いてよい鍵
 LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image",
-                       "short_only", "short_voice", "no_telop"})
+                       "short_only", "short_voice", "no_telop", "cont"})
 
 
 def _check_card(section: Section) -> list[str]:
@@ -2166,6 +2173,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
             if (number < len(section.line_short_voices)
                     and section.line_short_voices[number]):
                 lines.append("  short_voice: true")
+            if (number < len(section.line_conts)
+                    and section.line_conts[number]):
+                lines.append("  cont: true")
             # **`only: short` の行に節のカードを付けない**（2026-09-18 に踏んだ）。
             # その行は本編では落ちるので、**カードごと消える**。
             # クロップの回で、選手の表が画面に一度も出なかった。

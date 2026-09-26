@@ -298,3 +298,11 @@ def test_人物写真のクレジットも概要欄に出る(tmp_path):
     assert details, "人物写真のクレジットが出ていない"
     assert "CC BY-SA 4.0" in details[0]
     assert image_credits(script, root=tmp_path) == ["画像: Wikimedia Commons"]
+
+
+def test_分けた反応の続きは頭の行と同じ声():
+    """2026-09-26。行ごとに声が変わり、1件の書き込みが別人の声に聞こえた。"""
+    from types import SimpleNamespace as L
+    from src.tts import voice_variants
+    lines = [L(text="頭", cont=False), L(text="続き", cont=True), L(text="別", cont=False)]
+    assert voice_variants(lines) == ["頭", "頭", "別"]

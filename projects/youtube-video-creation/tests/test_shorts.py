@@ -1213,3 +1213,12 @@ def test_冒頭の写真も縦版に差し替える(tmp_path, monkeypatch):
     short.meta = {"thumbnail_photo": "assets/images/20260925_pair_y/01.jpg"}
     _add_face(short)
     assert line.image == "assets/images/20260925_pair_y/01_v.jpg"
+
+
+def test_分けた反応はかたまりで扱う():
+    """2026-09-26 久保の回。長い反応を行に分けたら、ショートが前半だけ拾って途中で切れた。"""
+    from types import SimpleNamespace as L
+    from src.shorts import _voice_groups
+    lines = [L(text="頭1", cont=False), L(text="続き1", cont=True), L(text="頭2", cont=False)]
+    groups = _voice_groups(lines)
+    assert [[l.text for l in g] for g in groups] == [["頭1", "続き1"], ["頭2"]]

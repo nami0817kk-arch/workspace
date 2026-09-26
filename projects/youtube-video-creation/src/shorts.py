@@ -575,17 +575,37 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     rest = [l for l in rest if not _echoes_title(l.text, title)]
     # 冒頭に上げた反応（`_hoist_voice`）は締めに重ねない
     already = {(l.text or "").strip() for l in short.lines}
+    # **反応はかたまりで扱う**（2026-09-26）。長い反応を行に分けると、続きの行
+    # （`cont`）が別の反応として並ぶ。1行ずつ足すと前半だけ入って途中で切れた
+    # （久保の回「代表戦て普段…無理だな。」で終わった）。頭の行に続きをまとめる
+    groups = _voice_groups(source.lines)
+    head_of = {id(g[0]): g for g in groups}
     added = 0
     for line in (picked + rest):
+        group = head_of.get(id(line))
+        if group is None:
+            continue                     # 続きの行は、頭の行と一緒にしか入れない
         if (line.text or "").strip() in already:
             continue
         if added >= VOICES_TAIL_MAX:
             break
-        cost = line.duration or line.estimated_duration()
+        cost = sum(l.duration or l.estimated_duration() for l in group)
         if _estimate(short) + cost > target:
             break
-        short.scenes[-1].lines.append(copy.deepcopy(line))
+        for part in group:
+            short.scenes[-1].lines.append(copy.deepcopy(part))
         added += 1
+
+
+def _voice_groups(lines: list) -> list[list]:
+    """反応の行を、頭の行と続き（`cont`）のかたまりに分ける。"""
+    groups: list[list] = []
+    for line in lines:
+        if getattr(line, "cont", False) and groups:
+            groups[-1].append(line)
+        else:
+            groups.append([line])
+    return groups
 
 
 def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
@@ -1311,7 +1331,14 @@ def enforce_limit(script: Script, max_seconds: float, config) -> int:
         # 「二つ目についての発言」が、何の二つ目か分からないまま流れる。
         # 落とす行が発言なら、**その直前の語り（振り）も一緒に**落とす
         take = [index]
-        if _introduces(lines, index):
+        # **続きの行を落とすなら、頭の行まで一緒に落とす**（2026-09-26）。
+        # 反応の前半だけが残って途中で切れる形にしない
+        head = index
+        while head > 1 and getattr(lines[head], "cont", False):
+            head -= 1
+        if head < index:
+            take = list(range(head, index + 1))
+        elif _introduces(lines, index):
             take.insert(0, index - 1)
         for at in reversed(take):
             lines.pop(at)

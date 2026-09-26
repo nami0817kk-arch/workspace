@@ -287,8 +287,9 @@ def synthesize_script(
     from .reading import apply as _apply_reading, load_dictionary as _load_readings
 
     readings = _load_readings()
+    variants = voice_variants(script.lines)
     for index, line in enumerate(script.lines):
-        member = config.resolve_speaker(line.speaker, line.text or '')
+        member = config.resolve_speaker(line.speaker, variants[index])
         pause = pause_for(config, line)
         # **声に渡す文は、読みの辞書で開く**（2026-09-22）。画面の字（line.text）は変えない。
         # 控えの鍵も開いた文で作るので、辞書を足せば作り直される
@@ -312,7 +313,8 @@ def credits(script: Script, config: ProjectConfig, backend) -> list[str]:
 
     config に定義してあっても、その動画で使っていない話者はクレジットしない。
     """
-    used = {config.resolve_speaker(line.speaker, line.text or '').style_id for line in script.lines}
+    used = {config.resolve_speaker(line.speaker, v).style_id
+            for line, v in zip(script.lines, voice_variants(script.lines))}
     names: list[str] = []
     for style_id in sorted(used):
         name = backend.speaker_name(style_id)
@@ -542,3 +544,21 @@ def image_details(script, root=None) -> list[str]:
     """
     details, _ = _ledger_lines(script, root)
     return [f"※ 画像: {line}" for line in details]
+
+
+def voice_variants(lines) -> list[str]:
+    """声を選ぶときの手がかり（群衆は文から声を選ぶ）。
+
+    **分けた反応の続き（`cont`）は、頭の行と同じ声にする**（2026-09-26）。
+    長い書き込みを文の切れ目で行に分けたら、行ごとに声が変わって
+    1件の書き込みが別々の人の声に聞こえた。
+    """
+    out: list[str] = []
+    head = ""
+    for line in lines:
+        if getattr(line, "cont", False) and head:
+            out.append(head)
+        else:
+            head = line.text or ""
+            out.append(head)
+    return out
