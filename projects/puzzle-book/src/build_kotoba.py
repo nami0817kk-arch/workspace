@@ -102,7 +102,8 @@ def generate_puzzles(spec: KotobaSpec) -> list[dict]:
 
 
 def page_count(spec: KotobaSpec) -> int:
-    total = 2 + spec.puzzle_count + -(-spec.puzzle_count // ANSWERS_PER_PAGE) + 1
+    front = 3  # 表題・遊び方・もくじ
+    total = front + spec.puzzle_count + -(-spec.puzzle_count // ANSWERS_PER_PAGE) + 1
     return total + (total % 2)
 
 
@@ -259,6 +260,41 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
     c.drawString(pg.left, y, "答えは本のうしろにまとめてあります。")
     pg.next()
 
+    # 2b. もくじ（テーマで選んで解けるように）
+    first_page = pg.number + 1
+    top = pg.page_h - pg.top
+    c.setFillColorCMYK(*pal.accent)
+    c.setFont(FONT_BOLD, 28)
+    c.drawString(pg.left, top - 30, "もくじ")
+    c.setStrokeColorCMYK(*pal.accent)
+    c.setLineWidth(2)
+    c.line(pg.left, top - 42, pg.right, top - 42)
+    per_col = -(-len(puzzles) // 2)
+    col_w = pg.content_w / 2
+    row_h = min(24, (top - 70 - pg.bottom - 10) / per_col)
+    for i, record in enumerate(puzzles):
+        col, row = i // per_col, i % per_col
+        x0 = pg.left + col * col_w
+        yy = top - 70 - row * row_h
+        d = record["difficulty"]
+        c.setFillColorCMYK(*pal.main[d])
+        c.circle(x0 + 5, yy + 4.5, 4.5, stroke=0, fill=1)
+        c.setFillColorCMYK(*BLACK)
+        c.setFont(FONT_REGULAR, 13)
+        c.drawString(x0 + 16, yy, f"{i + 1:>2}　{record['board']['theme']}")
+        c.drawRightString(x0 + col_w - 18, yy, str(first_page + i))
+    c.setFont(FONT_REGULAR, 11)
+    legend_y = pg.bottom + 4
+    lx = pg.left
+    for d in ("easy", "medium", "hard"):
+        c.setFillColorCMYK(*pal.main[d])
+        c.circle(lx + 5, legend_y + 4, 4.5, stroke=0, fill=1)
+        c.setFillColorCMYK(*BLACK)
+        label = DIFFICULTY_LABEL_JA[d]
+        c.drawString(lx + 14, legend_y, label)
+        lx += 30 + len(label) * 12
+    pg.next()
+
     # 3. 問題（1ページ1問）
     for i, record in enumerate(puzzles, start=1):
         d = record["difficulty"]
@@ -292,7 +328,7 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
             c.setFillColorCMYK(*BLACK)
             c.drawString(lx + word_fs * 1.2, yy, label)
         c.setFont(FONT_REGULAR, 12)
-        c.drawRightString(pg.right, pg.bottom + 6, "できた日　　月　　日")
+        c.drawRightString(pg.right, pg.bottom + 6, "できた日　　月　　日　　かかった時間　　　分")
         pg.next()
 
     # 4. 答え（1ページ4問）
@@ -379,17 +415,26 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     c.setFont(FONT_BOLD, 52)
     c.drawCentredString(cx, b + th - band_h * 0.48, title_main or spec.title)
     c.setFont(FONT_REGULAR, 20)
-    c.drawCentredString(cx, b + th - band_h * 0.80, spec.subtitle)
-    if count:
-        bx, by, r = front_x0 + tw - safe - 58, b + th - band_h - 20, 54
-        c.setFillColorCMYK(*ORANGE)
-        c.circle(bx, by, r, stroke=0, fill=1)
-        c.setFillColorCMYK(*WHITE)
-        c.setFont(FONT_BOLD, 34)
-        c.drawCentredString(bx, by - 12, count)
+    sub = f"全{count}　{spec.subtitle}" if count else spec.subtitle
+    c.drawCentredString(cx, b + th - band_h * 0.80, sub)
 
-    panel = min(tw - 2 * safe - 80, th - band_h - 2.6 * inch)
-    px, py_top = front_x0 + (tw - panel) / 2, b + th - band_h - 1.0 * inch
+    # Amazon の検索結果では表紙が小さく出る。売りを大きな札で並べて、縮んでも読めるようにする
+    badges = ["大きな文字", "1ページ1問", "答えつき"] + (["オールカラー"] if spec.ink == "premium" else [])
+    badge_fs = 18
+    badge_w = [len(t) * badge_fs + 24 for t in badges]
+    bgap = 12
+    bx0 = cx - (sum(badge_w) + bgap * (len(badges) - 1)) / 2
+    by0 = b + th - band_h - 0.75 * inch
+    for t, bw_ in zip(badges, badge_w):
+        c.setFillColorCMYK(*ORANGE)
+        c.roundRect(bx0, by0, bw_, badge_fs + 18, (badge_fs + 18) / 2, stroke=0, fill=1)
+        c.setFillColorCMYK(*WHITE)
+        c.setFont(FONT_BOLD, badge_fs)
+        c.drawCentredString(bx0 + bw_ / 2, by0 + 10, t)
+        bx0 += bw_ + bgap
+
+    panel = min(tw - 2 * safe - 80, th - band_h - 3.4 * inch)
+    px, py_top = front_x0 + (tw - panel) / 2, b + th - band_h - 1.55 * inch
     c.setFillColorCMYK(*WHITE)
     c.roundRect(px - 24, py_top - panel - 24, panel + 48, panel + 48, 14, stroke=0, fill=1)
     t0 = spec.themes[0]

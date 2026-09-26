@@ -78,3 +78,13 @@ def test_premium_color_cost_table():
     assert kdp_spec.print_cost_jpy(40, "premium") == 475
     assert kdp_spec.royalty_jpy(1200, 78, "premium") == pytest.approx(124)
     assert kdp_spec.print_cost_jpy(78) == 530
+
+
+def test_no_word_repeats_across_the_book():
+    """同じ言葉が別の問題にまた出ると、買った人には手抜きに見える（最初の版で24語が重複していた）。"""
+    spec = KotobaSpec.load(_SPEC)
+    answers = [w["answer"] for t in spec.themes for w in t["words"]]
+    dup = sorted({a for a in answers if answers.count(a) > 1})
+    assert not dup, dup
+    themes = [t["theme"] for t in spec.themes]
+    assert len(set(themes)) == len(themes)
