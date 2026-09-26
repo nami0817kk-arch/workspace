@@ -142,6 +142,26 @@ class SaveSlotSummary {
   bool get hasSave => clubName != null;
 }
 
+/// 手動で取った控え(復元ポイント)の中身の説明。
+///
+/// 「戻せます」とだけ書かれていても、どこへ戻るのか分からなければ押せない。
+/// いつ・どのシーズンの・何節時点かを添えて、戻す前に判断できるようにする。
+class RestorePointInfo {
+  final DateTime takenAt;
+  final String clubName;
+  final int season;
+
+  /// 控えを取った時点で次に控えていた節。シーズンを終えていれば null。
+  final int? matchday;
+
+  RestorePointInfo({
+    required this.takenAt,
+    required this.clubName,
+    required this.season,
+    this.matchday,
+  });
+}
+
 class GameState extends ChangeNotifier {
   /// 旧バージョンで使われていた単一スロットのキー。起動時にスロット0へ移行する。
   static const _legacyPrefsKey = 'soccer_manager_save_v1';
@@ -152,9 +172,16 @@ class GameState extends ChangeNotifier {
   static const int maxSaveSlots = 3;
 
   static String _slotKey(int slot) => '$_slotKeyPrefix$slot';
+  static String _restorePointKey(int slot) => '$_restorePointKeyPrefix$slot';
 
   /// 直近に読み込めたセーブの控え。スロットごとに持つと容量を倍使うため、
   /// 控えは1つだけ持ち、どのスロットのものかを別に覚えておく。
+  /// 手動で取る控えの保存先。スロットごとに1つ持つ。
+  ///
+  /// 自動の控え([_backupKey])と分けているのは、あちらが「壊れたときに
+  /// 戻す」ためのもので、スロットを跨いで上書きされるため。手で取った
+  /// 控えが別スロットを開いただけで消えると、取った意味が無くなる。
+  static const _restorePointKeyPrefix = 'soccer_manager_restore_point_';
   static const _backupKey = 'soccer_manager_save_backup';
   static const _backupSlotKey = 'soccer_manager_save_backup_slot';
 
@@ -427,6 +454,81 @@ class GameState extends ChangeNotifier {
     }
   }
 
+  /// いまの状態を、あとで戻れる控えとして取っておく(スロットごとに1つ)。
+  ///
+  /// クリップボードへの書き出しは端末を移すためのもので、1MBを超える
+  /// JSONをどこかに貼って保管しておく必要がある。移籍や試合の前に
+  /// 「念のため」取るには重すぎるので、端末の中に1つだけ置けるようにする。
+  Future<bool> saveRestorePoint() async {
+    if (_save == null) return false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        _restorePointKey(currentSlot),
+        jsonEncode({
+          'takenAt': DateTime.now().toIso8601String(),
+          'clubName': _save!.clubName,
+          'season': _save!.league.season,
+          'matchday': _save!.league.nextUnplayedFixture?.matchday,
+          'save': _save!.toJson(),
+        }),
+      );
+      _notify();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// いまのスロットに控えがあれば、その中身の説明を返す。
+  Future<RestorePointInfo?> restorePointInfo([int? slot]) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_restorePointKey(slot ?? currentSlot));
+      if (raw == null) return null;
+      final json = jsonDecode(raw) as Map<String, dynamic>;
+      return RestorePointInfo(
+        takenAt: DateTime.parse(json['takenAt'] as String),
+        clubName: json['clubName'] as String? ?? '',
+        season: json['season'] as int? ?? 1,
+        matchday: json['matchday'] as int?,
+      );
+    } catch (_) {
+      // 読めない控えは無いものとして扱う(戻せないものを見せない)。
+      return null;
+    }
+  }
+
+  /// 控えの時点まで戻す。戻せたら true。
+  Future<bool> restoreFromRestorePoint() async {
+    // ここから先は控えが正。予約されている保存(戻す前の状態)を取り消す。
+    // 残したままだと、戻した直後に戻す前の内容が上書きしにくる。
+    _saveGeneration++;
+    _persistTimer?.cancel();
+    _persistTimer = null;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_restorePointKey(currentSlot));
+      if (raw == null) return false;
+      final json = jsonDecode(raw) as Map<String, dynamic>;
+      final restored = SaveGame.fromJson(json['save'] as Map<String, dynamic>);
+      _save = restored;
+      _reseedPlayerIdCounter(restored);
+      _migrateDivisionPyramidIfNeeded();
+      _refreshScoutCandidates();
+      // 戻す前の節の出来事を持ち越すと、戻した後にそれを知らせてしまう。
+      lastContractExpirations = [];
+      lastRetirements = [];
+      lastLoanReturns = [];
+      lastYouthDepartures = [];
+      await _persistNow();
+      _notify();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     // 旧バージョンの単一セーブをスロット0へ移行する(スロット0が未使用の場合のみ)。
@@ -694,6 +796,8 @@ class GameState extends ChangeNotifier {
     await flushPendingSave();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_slotKey(slot));
+    // 控えも一緒に消す。残すと、消したはずのクラブに戻せてしまう。
+    await prefs.remove(_restorePointKey(slot));
     if (slot == currentSlot) {
       _save = null;
       transferMarket = [];
