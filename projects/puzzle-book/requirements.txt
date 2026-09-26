@@ -8,3 +8,6 @@ reportlab==5.0.1
 
 # 表紙・本文の図版（Noto Emoji の SVG）を PDF にベクターのまま描く
 svglib==2.2.0
+# 裏表紙に貼る見本ページを画像にする（表紙の文字は 7pt 以上という KDP の決まりのため）
+pypdfium2==5.13.0
+Pillow>=10

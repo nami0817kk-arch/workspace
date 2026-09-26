@@ -11,13 +11,16 @@
 from __future__ import annotations
 
 import argparse
+import io
 import json
+import zlib
 from dataclasses import dataclass
 from pathlib import Path
 
 from puzzle_generator import DIRS, build_wordsearch, validate_record
 from reportlab.lib.units import inch
 from reportlab.lib.colors import CMYKColor
+from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
 import kdp_spec
@@ -55,6 +58,10 @@ COLOR = Palette(
         (0.30, 0.0, 0.45, 0.0),  # 若草
         (0.22, 0.25, 0.0, 0.0),  # 藤
         (0.0, 0.25, 0.40, 0.0),  # 杏
+        (0.0, 0.18, 0.12, 0.0),  # 薄紅
+        (0.30, 0.0, 0.22, 0.0),  # 青磁
+        (0.10, 0.32, 0.0, 0.0),  # 薄紫
+        (0.22, 0.08, 0.0, 0.0),  # 空
     ],
     line=(0.0, 0.0, 0.0, 0.0),  # 色つきの地に白い罫線
     accent=NAVY,
@@ -78,6 +85,14 @@ class KotobaSpec:
     publisher: str = "つるはし社"
     edition_date: str = ""
     ink: str = "black"  # "black" か "premium"（プレミアムカラー）
+    cover_theme: str = ""  # 表紙の見本に使うテーマ（省略時は最初のテーマ）
+    preview_themes: tuple[str, ...] = ()  # 裏表紙の見本ページ（2つ）
+
+    def theme_index(self, name: str, default: int = 0) -> int:
+        for i, t in enumerate(self.themes):
+            if t["theme"] == name:
+                return i
+        return default
 
     @classmethod
     def load(cls, path: str | Path) -> "KotobaSpec":
@@ -98,14 +113,26 @@ def generate_puzzles(spec: KotobaSpec) -> list[dict]:
     if ranks != sorted(ranks):
         raise ValueError("テーマはやさしい順に並べること")
     return [
-        build_wordsearch(t["words"], t["difficulty"], spec.seed_start + i, theme=t["theme"], script=t["script"])
-        for i, t in enumerate(spec.themes)
+        build_wordsearch(t["words"], t["difficulty"], theme_seed(spec, t), theme=t["theme"], script=t["script"])
+        for t in spec.themes
     ]
+
+
+def theme_seed(spec: KotobaSpec, theme: dict) -> int:
+    """テーマ名から決まる乱数の種。並べ替えても同じテーマは同じ盤面になる。"""
+    return spec.seed_start + zlib.crc32(theme["theme"].encode("utf-8")) % 100_000
+
+
+def difficulty_score(record: dict) -> float:
+    """同じ難易度の中での解きにくさの目安。語の文字数の合計と、ななめの語の数で見る。"""
+    placements = record["solution"]["placements"]
+    return sum(len(p["answer"]) for p in placements) + 3 * sum(p["dir"] == "SE" for p in placements)
 
 
 def page_count(spec: KotobaSpec) -> int:
     front = 3  # 表題・遊び方・もくじ
-    total = front + spec.puzzle_count + -(-spec.puzzle_count // ANSWERS_PER_PAGE) + 1
+    back = 2  # できたこと記録・奥付
+    total = front + spec.puzzle_count + -(-spec.puzzle_count // ANSWERS_PER_PAGE) + back
     return total + (total % 2)
 
 
@@ -184,6 +211,23 @@ def _header_band(
     return top - h
 
 
+def _draw_label(c: canvas.Canvas, label: str, x: float, y: float, room: float, fs: float) -> None:
+    """語の一覧の1語。読み（かな）は大きいまま、かっこの漢字だけを小さくして幅に収める。"""
+    reading, sep, rest = label.partition("（")
+    note = sep + rest
+    w_read = c.stringWidth(reading, FONT_REGULAR, fs)
+    note_fs = fs
+    if note:
+        note_fs = min(fs, max(10, fs * (room - w_read) / max(1, c.stringWidth(note, FONT_REGULAR, fs))))
+    total = w_read + (c.stringWidth(note, FONT_REGULAR, note_fs) if note else 0)
+    scale = min(1.0, room / total) if total else 1.0  # それでも入らなければ全体を縮める
+    c.setFont(FONT_REGULAR, fs * scale)
+    c.drawString(x, y, reading)
+    if note:
+        c.setFont(FONT_REGULAR, note_fs * scale)
+        c.drawString(x + w_read * scale, y, note)
+
+
 def draw_problem_page(
     c: canvas.Canvas,
     record: dict,
@@ -223,24 +267,98 @@ def draw_problem_page(
     gh = draw_grid(c, record, x=gx, y=grid_top, w=gw, show_answer=False, palette=pal)
 
     ly = grid_top - gh - 30
-    col_w = gw / cols
-    c.setFont(FONT_REGULAR, word_fs)
+    # 語の一覧は盤面の幅ではなくページの幅を使う（長い語が隣の列にはみ出さないように）
+    list_w = max(gw, min(right - left, gw + 120))
+    list_x = mid - list_w / 2
+    col_w = list_w / cols
     c.setLineWidth(1.4)
     for k, label in enumerate(labels):
         col, row = k // rows, k % rows
-        lx = gx + col * col_w
+        lx = list_x + col * col_w
         yy = ly - row * word_fs * 1.75
         c.setStrokeColorCMYK(*pal.main[d])
         c.setFillColorCMYK(*WHITE)
         c.roundRect(lx, yy - 2, word_fs * 0.8, word_fs * 0.8, 2, stroke=1, fill=1)
         c.setFillColorCMYK(*BLACK)
-        c.drawString(lx + word_fs * 1.2, yy, label)
+        _draw_label(c, label, lx + word_fs * 1.2, yy, col_w - word_fs * 1.2 - 10, word_fs)
     c.setFont(FONT_REGULAR, 12)
-    c.drawRightString(right, bottom + 6, "できた日　　月　　日　　かかった時間　　　分")
+    c.drawString(left, bottom + 6, f"見つけた数　　　／{len(labels)}語")
+    c.drawRightString(right - 62, bottom + 6, "できた日　　月　　日　　かかった時間　　　分")
+    # はなまる用の丸（ぜんぶ見つけたら、ここに花丸を）
+    c.setStrokeColorCMYK(*pal.main[d])
+    c.setLineWidth(1.2)
+    c.setDash(3, 3)
+    c.circle(right - 24, bottom + 14, 22, stroke=1, fill=0)
+    c.setDash()
+    c.setFillColorCMYK(*pal.main[d])
+    c.setFont(FONT_REGULAR, 7)
+    c.drawCentredString(right - 24, bottom + 11, "はなまる")
 
 
 def _word_columns(labels: list[str]) -> int:
     return 2 if len(labels) > 5 else 1
+
+
+def _draw_howto_example(c: canvas.Canvas, left: float, top: float, width: float, pal: Palette) -> None:
+    """遊び方の見本。小さな盤面で「さくら」を囲んだところを見せる。"""
+    grid = [list("かさくらね"), list("もりのみた"), list("すなはしい"), list("めぬきとる"), list("そおあけに")]
+    rec = {
+        "difficulty": "easy",
+        "board": {"size": 5, "grid": grid},
+        "solution": {"placements": [{"answer": "さくら", "start": [1, 0], "dir": "E"}]},
+    }
+    size = 150
+    c.setFillColorCMYK(*pal.accent)
+    c.setFont(FONT_BOLD, 17)
+    c.drawString(left, top, "れい")
+    draw_grid(c, rec, x=left, y=top - 12, w=size, show_answer=True, palette=pal)
+    c.setFillColorCMYK(*BLACK)
+    c.setFont(FONT_REGULAR, 16)
+    tx = left + size + 30
+    c.drawString(tx, top - 50, "「さくら」は、いちばん上の行に")
+    c.drawString(tx, top - 76, "左から右へならんでいます。")
+    c.drawString(tx, top - 102, "見つけたら、このように丸でかこみます。")
+    c.setStrokeColorCMYK(*pal.main["easy"])
+    c.setLineWidth(1.4)
+    c.roundRect(tx, top - 136, 16, 16, 2, stroke=1, fill=0)
+    c.line(tx + 3, top - 128, tx + 7, top - 133)
+    c.line(tx + 7, top - 133, tx + 14, top - 122)
+    c.drawString(tx + 24, top - 134, "さくら　← 一覧にもしるしを")
+
+
+def _draw_record_sheet(c: canvas.Canvas, pg: _Pager, spec: KotobaSpec, puzzles: list[dict], pal: Palette) -> None:
+    """できたこと記録。60問を3列に並べ、できた日を書きこめるようにする。"""
+    top = pg.page_h - pg.top
+    c.setFillColorCMYK(*pal.accent)
+    c.setFont(FONT_ROUNDED, 26)
+    c.drawString(pg.left, top - 30, "できたこと記録")
+    c.setStrokeColorCMYK(*pal.accent)
+    c.setLineWidth(2)
+    c.line(pg.left, top - 42, pg.right, top - 42)
+    c.setFillColorCMYK(*BLACK)
+    c.setFont(FONT_REGULAR, 12)
+    c.drawString(pg.left, top - 64, "できた日を書きこみましょう。ぜんぶうまったら、ご自分に花丸を。")
+    cols = 3
+    per_col = -(-len(puzzles) // cols)
+    col_w = pg.content_w / cols
+    row_h = min(28, (top - 90 - pg.bottom - 10) / per_col)
+    for i, record in enumerate(puzzles):
+        col, row = i // per_col, i % per_col
+        x0 = pg.left + col * col_w
+        yy = top - 96 - row * row_h
+        d = record["difficulty"]
+        c.setFillColorCMYK(*pal.tint[d] if spec.ink == "premium" else (0, 0, 0, 0.06))
+        c.roundRect(x0 + 2, yy - 7, col_w - 8, row_h - 4, 4, stroke=0, fill=1)
+        c.setFillColorCMYK(*pal.main[d])
+        c.setFont(FONT_BOLD, 11)
+        c.drawString(x0 + 8, yy, f"{i + 1}")
+        c.setFillColorCMYK(*BLACK)
+        theme = record["board"]["theme"]
+        room = col_w - 28 - 70  # 「月　日」の欄を残す
+        c.setFont(FONT_REGULAR, min(10, 10 * room / c.stringWidth(theme, FONT_REGULAR, 10)))
+        c.drawString(x0 + 28, yy, theme)
+        c.setFont(FONT_REGULAR, 10)
+        c.drawRightString(x0 + col_w - 12, yy, "月　　日")
 
 
 def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
@@ -329,6 +447,8 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
     c.drawString(pg.left, y, "逆向き（右から左・下から上）には、ならんでいません。")
     y -= 36
     c.drawString(pg.left, y, "答えは本のうしろにまとめてあります。")
+    y -= 40
+    _draw_howto_example(c, pg.left, y, pg.content_w, pal)
     pg.next()
 
     # 2b. もくじ（テーマで選んで解けるように）
@@ -356,8 +476,13 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
         if spec.themes[i].get("icon"):
             draw_icon(c, spec.themes[i]["icon"], x0 + 38, yy - 3, 15)
         c.drawString(x0 + 58, yy, record["board"]["theme"])
-        c.drawRightString(x0 + col_w - 18, yy, str(first_page + i))
+        c.drawRightString(x0 + col_w - 40, yy, str(first_page + i))
+        c.setStrokeColorCMYK(*pal.main[d])
+        c.setLineWidth(1)
+        c.roundRect(x0 + col_w - 32, yy - 2, 12, 12, 2, stroke=1, fill=0)
+    c.setFillColorCMYK(*BLACK)
     c.setFont(FONT_REGULAR, 11)
+    c.drawRightString(pg.right, top - 30, "できた問題は□にしるしを")
     legend_y = pg.bottom + 4
     lx = pg.left
     for d in ("easy", "medium", "hard"):
@@ -393,14 +518,19 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
             by_top = area_top - row * (ch + gap)
             c.setFillColorCMYK(*pal.main[record["difficulty"]])
             c.setFont(FONT_BOLD, 12)
-            c.drawString(bx, by_top - 12, f"問題 {start + k + 1}　{record['board']['theme']}")
+            icon = spec.themes[start + k].get("icon")
+            if icon:
+                draw_icon(c, icon, bx, by_top - 15, 15)
+            c.drawString(bx + (19 if icon else 0), by_top - 12, f"問題 {start + k + 1}　{record['board']['theme']}")
             side = min(cw, ch - 24)
             draw_grid(
-                c, record, x=bx + (cw - side) / 2, y=by_top - 20, w=side, show_answer=True, palette=pal, bold=False
+                c, record, x=bx + (cw - side) / 2, y=by_top - 20, w=side, show_answer=True, palette=pal, bold=True
             )
         pg.next()
 
-    # 5. 白ページで偶数にそろえ、奥付
+    # 5. できたこと記録（全問の一覧に、できた日を書きこむ）。白ページで偶数にそろえ、奥付
+    _draw_record_sheet(c, pg, spec, puzzles, pal)
+    pg.next()
     while pg.number < total:
         pg.next(folio=False)
     c.setFillColorCMYK(*BLACK)
@@ -426,6 +556,27 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
 
 
 # --- 表紙 ------------------------------------------------------------------
+
+
+def _page_preview(spec: KotobaSpec, puzzles: list[dict], idx: int, width_pt: float, dpi: int = 300) -> ImageReader:
+    """問題ページ1枚を、表紙に貼る CMYK の画像にする（印刷で dpi になる解像度）。"""
+    import pypdfium2
+
+    trim = kdp_spec.TRIMS[spec.trim]
+    page_w, page_h = trim.width_in * inch, trim.height_in * inch
+    buf = io.BytesIO()
+    pc = canvas.Canvas(buf, pagesize=(page_w, page_h))
+    m = 0.6 * inch
+    draw_problem_page(pc, puzzles[idx], idx + 1, spec.themes[idx].get("icon"),
+                      left=m, right=page_w - m, top=page_h - m, bottom=m, palette=spec.palette)
+    pc.save()
+    pdf = pypdfium2.PdfDocument(buf.getvalue())
+    scale = dpi / 72 * (width_pt / page_w)
+    img = pdf[0].render(scale=scale).to_pil().convert("CMYK")
+    out = io.BytesIO()
+    img.save(out, "JPEG", quality=95)
+    out.seek(0)
+    return ImageReader(out)
 
 
 def _seal(c: canvas.Canvas, cx: float, cy: float, r: float, color: CMYK, lines: list[str]) -> None:
@@ -528,7 +679,7 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     # 見本の盤面（少し傾けたカード）と虫めがね
     card = 4.3 * inch
     ccy = top - 6.75 * inch
-    t0 = spec.themes[0]
+    t0 = spec.themes[spec.theme_index(spec.cover_theme)]
     sample = build_wordsearch(
         t0["words"], t0["difficulty"], spec.seed_start + _COVER_SEED_OFFSET, theme=t0["theme"], script=t0["script"]
     )
@@ -579,10 +730,11 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     c.drawString(bx0, top - safe - 50, title_main)
     c.setFont(FONT_BOLD, 15)
     c.drawString(bx0, top - safe - 80, f"全{count}　{spec.subtitle}" if count else spec.subtitle)
+    n_words = sum(len(t["words"]) for t in spec.themes)
     lines = [
         "A4の大きな紙面に、1ページ1問。",
         "ます目の中から言葉をさがして、丸でかこむだけ。",
-        "季節の花、昭和のくらし、ふるさとの味……",
+        f"季節の花、昭和のくらし、ふるさとの味……探す言葉は全部で{n_words}語。",
         "なつかしい言葉が、おしゃべりのきっかけにもなります。",
     ]
     c.setFont(FONT_REGULAR, 13)
@@ -598,19 +750,13 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     mgap = 22
     mx0 = b + (tw - 2 * mini_w - mgap) / 2
     my0 = y - 20 - mini_h
-    for k, idx in enumerate((0, 44)):
+    previews = [spec.theme_index(n, d) for n, d in zip(spec.preview_themes or ("", ""), (0, len(puzzles) - 1))]
+    for k, idx in enumerate(previews):
         px = mx0 + k * (mini_w + mgap)
         c.setFillColorCMYK(*shadow)
         c.rect(px + 5, my0 - 5, mini_w, mini_h, stroke=0, fill=1)
-        c.setFillColorCMYK(*WHITE)
-        c.rect(px, my0, mini_w, mini_h, stroke=0, fill=1)
-        c.saveState()
-        c.translate(px, my0)
-        c.scale(scale, scale)
-        m = 0.6 * inch
-        draw_problem_page(c, puzzles[idx], idx + 1, spec.themes[idx].get("icon"),
-                          left=m, right=page_w - m, top=page_h - m, bottom=m, palette=spec.palette)
-        c.restoreState()
+        # KDP は表紙の文字を 7pt 以上と定めている。縮小した見本の文字はそれを下回るので、画像にして貼る
+        c.drawImage(_page_preview(spec, puzzles, idx, mini_w), px, my0, mini_w, mini_h)
 
     # 難易度の内訳
     counts: dict[str, int] = {}
@@ -625,6 +771,23 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     c.setFillColorCMYK(*NAVY)
     c.setFont(FONT_REGULAR, 12)
     c.drawString(bx0, y - 6, "答えは巻末に、言葉ごとに色を分けてまとめてあります。")
+
+    # こんな方に（買う人の多くは家族や介護の現場の人）。答えの一文の下、左の列に置く
+    boxx, boxw = bx0 - 10, 290
+    box_top = y - 30
+    rows_ = [("1f3e0", "ご自宅での、ひとりの時間に"), ("1f46a", "ご家族との会話のきっかけに"), ("1f375", "デイサービスのレクリエーションに")]
+    box_h = 34 + len(rows_) * 28
+    c.setFillColorCMYK(*WHITE)
+    c.roundRect(boxx, box_top - box_h, boxw, box_h, 12, stroke=0, fill=1)
+    c.setFillColorCMYK(*ORANGE)
+    c.setFont(FONT_ROUNDED, 15)
+    c.drawString(boxx + 14, box_top - 24, "こんな方に")
+    c.setFillColorCMYK(*NAVY)
+    c.setFont(FONT_REGULAR, 12)
+    for k, (code, text) in enumerate(rows_):
+        yy = box_top - 50 - k * 28
+        draw_icon(c, code, boxx + 14, yy - 5, 20)
+        c.drawString(boxx + 42, yy, text)
 
     bw, bh = (v * inch for v in kdp_spec.BARCODE_BOX_IN)
     c.setFillColorCMYK(*WHITE)

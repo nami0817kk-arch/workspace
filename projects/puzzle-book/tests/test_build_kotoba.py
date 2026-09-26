@@ -100,3 +100,38 @@ def test_colophon_credits_icons(built):
     _, _, interior, _, _ = built
     last = PdfReader(str(interior)).pages[-1].extract_text()
     assert "Noto Emoji" in last
+
+
+def _spans(pdf_path):
+    import pymupdf
+
+    for page in pymupdf.open(str(pdf_path)):
+        for block in page.get_text("dict")["blocks"]:
+            for line in block.get("lines", []):
+                for span in line["spans"]:
+                    if span["text"].strip():
+                        yield page, span
+
+
+def test_kdp_minimum_text_size(built):
+    """KDP は本文・表紙とも文字を 7pt 以上と定めている（topic/G201857950）。"""
+    _, _, interior, cover, _ = built
+    for path in (interior, cover):
+        small = {(round(sp["size"], 1), sp["text"][:10]) for _, sp in _spans(path) if sp["size"] < 7 - 0.01}
+        assert not small, (path.name, sorted(small)[:5])
+
+
+def test_cover_text_inside_safe_area(built):
+    """表紙の文字は仕上がり線から 0.125in 以上内側（裁ち落とし 0.125in の外周も除く）。背の上には文字を置かない。"""
+    spec, _, _, cover, total = built
+    trim = kdp_spec.TRIMS[spec.trim]
+    bleed, margin = 0.125 * 72, 0.125 * 72
+    spine = kdp_spec.spine_width_in(total, "white", spec.ink) * 72
+    back = (bleed, bleed + trim.width_in * 72)
+    front = (back[1] + spine, back[1] + spine + trim.width_in * 72)
+    top = bleed + trim.height_in * 72
+    for page, sp in _spans(cover):
+        x0, y0, x1, y1 = sp["bbox"]  # pymupdf は上が原点
+        inside_x = any(lo + margin <= x0 and x1 <= hi - margin for lo, hi in (back, front))
+        assert inside_x, sp["text"]
+        assert bleed + margin <= y0 and y1 <= top - margin, sp["text"]
