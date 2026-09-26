@@ -51,6 +51,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # 文言に字を足したのにフォントを絞り直し忘れると、その字だけ別の書体で出る
+      - name: 同梱フォントに文言の字がすべて入っているか
+        run: |
+          pip install --quiet fonttools
+          python tool/subset_fonts.py --check
+
       - name: Analyze
         if: ${{ inputs.skip_analyze != true }}
         run: flutter analyze

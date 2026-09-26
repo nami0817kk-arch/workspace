@@ -206,7 +206,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rulesIsland =>
-      '• The boat moves one leg at a time: near bank ↔ island ↔ far bank';
+      '• The boat goes bank to island to bank — never straight across';
 
   @override
   String get rolePolice => 'Officer';
@@ -301,5 +301,5 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get intro6Body =>
-      'The boat moves one leg at a time: near bank ↔ island ↔ far bank.\nYou can leave people on the island, but it needs guards too.';
+      'The boat goes bank to island to bank — never straight across.\nYou can leave people on the island, but it needs guards too.';
 }

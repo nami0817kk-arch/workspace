@@ -65,6 +65,17 @@ flutter:
 
   assets:
     - assets/levels.json
+
+  # 画面の文言は固定なので、使う字だけに絞って同梱する（tool/subset_fonts.py）。
+  # 同梱しないと端末ごとに字の形が変わり、Web のプレビューでは字が欠ける。
+  # 400 前後はゴシック（説明文）、700 以上は丸ゴシック（見出し・ボタン）になる。
+  fonts:
+    - family: Goso
+      fonts:
+        - asset: assets/fonts/GosoSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/GosoRounded-ExtraBold.ttf
+          weight: 800
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

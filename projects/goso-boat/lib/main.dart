@@ -39,7 +39,7 @@ class GosoBoatApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Palette.river, surface: Palette.sky),
           scaffoldBackgroundColor: Palette.sky,
-          fontFamilyFallback: const ['Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Noto Sans JP'],
+          fontFamily: 'Goso',
           useMaterial3: true,
         ),
         home: HomeScreen(progress: progress),
