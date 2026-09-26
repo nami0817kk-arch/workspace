@@ -1218,15 +1218,19 @@ def same_shop(rows: list, shop: str) -> str:
 
 
 def related(rows: list, site: dict) -> str:
-    """同じジャンルの商品へ。5,500ページが互いに孤立していると、
-    読み手も検索エンジンも辿れない。"""
+    """名前の近い商品へ。12,658ページが互いに孤立していると、
+    読み手も検索エンジンも辿れない。
+
+    以前は同じジャンルの先頭から取っていたため、同じ顔ぶれを全ページで
+    使い回していた（実測で60ページが33商品・5通り）。名前の近さで選ぶと
+    リンクされる商品が 64 → 12,022種類に広がる。"""
     if not rows:
         return ""
     body = "".join(
         f'<li><a href="../{slug(r["item_code"])}/" title="{esc(r["name"])}">'
         f'{esc(short_name(r["name"]))}</a>'
         f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
-    return f'<h2>同じジャンルの商品</h2><ul class="hits">{body}</ul>'
+    return f'<h2>名前が近い商品</h2><ul class="hits">{body}</ul>'
 
 
 # 見守りの保存は端末の中だけ。登録した時の価格も控えて、次に来たときに

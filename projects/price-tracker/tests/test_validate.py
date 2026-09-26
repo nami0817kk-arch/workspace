@@ -1598,3 +1598,71 @@ class EffectivePriceChartTest(unittest.TestCase):
         out = self.theme.cheaper_days({"price": 1000, "tail": tail})
 
         self.assertNotIn("下がりました", out)
+
+
+class RelatedByNameTest(unittest.TestCase):
+    """似た商品は名前の近さで選ぶ。
+
+    同じジャンルの先頭から8件を取っていたとき、商品ページ60枚が
+    33商品・5通りしか出していなかった（実測 2026-09-26）。読み手には
+    関係のない商品が並び、ページどうしのリンクもひと握りに集中して、
+    残りは一覧のページ送りからしか辿れなかった。
+    """
+
+    def setUp(self):
+        from src import relate
+        self.relate = relate
+
+    def rows(self, *names):
+        return [{"item_code": f"c{i}", "name": n} for i, n in enumerate(names)]
+
+    def related(self, rows, limit=8):
+        return self.relate.related(rows, lambda r: r["name"], limit=limit)
+
+    def test_同じ語を持つ商品を選ぶ(self):
+        rows = self.rows("ワイヤレスイヤホン Bluetooth 骨伝導",
+                         "骨伝導イヤホン Bluetooth ワイヤレス",
+                         "冷蔵庫 二人暮らし 150L")
+
+        out = self.related(rows)
+
+        self.assertEqual([r["item_code"] for r in out["c0"]], ["c1"])
+
+    def test_自分は入れない(self):
+        rows = self.rows("イヤホン ワイヤレス", "イヤホン ワイヤレス")
+
+        self.assertNotIn("c0", [r["item_code"] for r in self.related(rows)["c0"]])
+
+    def test_珍しい語を重く見る(self):
+        # 「ケース」は全件にあるので手がかりにならない。型番で寄せること
+        rows = self.rows("ケース AX-HP117 専用", "ケース AX-HP117 交換用",
+                         "ケース 汎用 ソフト", "ケース 汎用 ハード")
+
+        out = self.related(rows, limit=1)
+
+        self.assertEqual(out["c0"][0]["item_code"], "c1")
+
+    def test_手がかりが無ければ空を返す(self):
+        # 呼ぶ側が従来の埋め方に倒せるようにする
+        rows = self.rows("あ", "い")
+
+        self.assertEqual(self.related(rows)["c0"], [])
+
+    def test_件数の上限を守る(self):
+        # 同じ語を持つ相手が10件いても、出すのは指定した数だけ
+        rows = self.rows(*([f"骨伝導 イヤホン 型番{i}" for i in range(10)]
+                           + [f"冷蔵庫 型番{i}" for i in range(90)]))
+
+        self.assertEqual(len(self.related(rows, limit=5)["c0"]), 5)
+
+    def test_同じ顔ぶれを使い回さない(self):
+        # 束ごとに違う相手が出ること。以前は全ページが同じ8件を指していた
+        groups = []
+        for g in range(10):
+            groups += [f"品目{g} 型番{g}{i}" for i in range(5)]
+        rows = self.rows(*groups)
+
+        out = self.related(rows, limit=3)
+        combos = {tuple(r["item_code"] for r in v) for v in out.values() if v}
+
+        self.assertGreaterEqual(len(combos), 10)

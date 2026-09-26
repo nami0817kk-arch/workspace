@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from src import analyze, pages, store, theme  # noqa: E402
+from src import analyze, pages, relate, store, theme  # noqa: E402
 
 JST = timezone(timedelta(hours=9))
 
@@ -237,10 +237,16 @@ def build(root: Path, out: Path) -> dict:
     # 題は全商品をまとめて決める。同じ題が並ばないようにするため（page_titles）
     titles = theme.page_titles(rows)
 
+    # 似た商品は名前の近さで選ぶ。同じジャンルの先頭から取っていたときは、
+    # 60ページを調べて33商品・5通りしか出ていなかった。読み手には関係のない
+    # 商品が並び、商品ページどうしのリンクもひと握りに集中していた。
+    akin = relate.related(rows, lambda r: theme.clean_name(r["name"]))
+
     for row in rows:
         s = theme.slug(row["item_code"])
-        kin = [r for r in by_gid.get(str(row.get("source_genre") or ""), [])
-               if r["item_code"] != row["item_code"]][:8]
+        kin = akin.get(row["item_code"]) or [
+            r for r in by_gid.get(str(row.get("source_genre") or ""), [])
+            if r["item_code"] != row["item_code"]][:8]
         seen = {row["item_code"]} | {r["item_code"] for r in kin}
         mates = [r for r in by_shop.get(row.get("shop") or "", [])
                  if r["item_code"] not in seen][:6]
