@@ -17,16 +17,23 @@ class Monetization extends ChangeNotifier {
   static const String _noAdsKey = 'monetize.noAds';
   static const String _tipsKey = 'monetize.tips';
 
-  /// **最初の数シーズンは広告を出さない。**
+  /// **何シーズン終えたら広告を出し始めるか。**
   ///
-  /// 始めたばかりの人にとって、シーズンの切れ目は「続きが見たい」瞬間そのもの。
-  /// ここで広告を挟むと、まだ面白さが分かる前に離れる。
-  static const int freeSeasons = 3;
+  /// 前は `freeSeasons = 3`（＝最初の2回の季末が無料）だったが、
+  /// **広告が出る場所は季末しか無く、1キャリアは 18.6季**なので、
+  /// 無料にするぶんがそのまま上限を削る。1 にして「1季目の終わりから」
+  /// にした（2026-09-26、ユーザーの判断「少し上げる」）。
+  ///
+  /// 数え方は `seasonsPlayed >= adsFromSeason`。1季目を終えた時点で
+  /// `seasonsPlayed == 1` なので、**1 なら1季目の終わりから出る**。
+  static const int adsFromSeason = 1;
 
   /// 広告と広告のあいだに必ず空ける時間。
   ///
   /// シーズンは自動で飛ばせるので、間隔を置かないと連続で出る。
-  static const Duration adInterval = Duration(minutes: 4);
+  /// **ここは遊ぶ側を守るための線**で、飛ばして遊ぶ人にだけ効く
+  /// （1シーズンを手で進めれば数十分かかるので、普通は当たらない）。
+  static const Duration adInterval = Duration(minutes: 3);
 
   final AdService _ads;
   final PurchaseService _purchases;
@@ -78,7 +85,7 @@ class Monetization extends ChangeNotifier {
   /// 「4分あいているか」を確かめる方法が無くなる。
   bool shouldShowSeasonAd({required int seasonsPlayed, DateTime? now}) {
     if (noAds) return false;
-    if (seasonsPlayed < freeSeasons) return false;
+    if (seasonsPlayed < adsFromSeason) return false;
     final last = _lastAd;
     if (last == null) return true;
     return (now ?? DateTime.now()).difference(last) >= adInterval;

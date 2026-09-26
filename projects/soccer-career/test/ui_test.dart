@@ -1341,6 +1341,31 @@ void main() {
     expect(buy.onPressed, isNull);
   });
 
+  testWidgets('引退した季も、広告の機会として数える', (tester) async {
+    // 引退はシーズン終了の画面から行くので、`_endSeason` の広告を
+    // そのまま通る（`retire()` が最後の季を履歴に足す）。
+    // **キャリアで一番最後の1回**なので、落とすとそのまま消える。
+    SharedPreferences.setMockInitialValues({});
+    final money = Monetization(
+      ads: NoAdService(),
+      purchases: _FakeStoreForUi(available: true),
+    );
+    await money.initialize();
+
+    final controller = await newCareer(age: 21);
+    while (!controller.state!.seasonFinished) {
+      await controller.simulateMatch();
+    }
+    await controller.finishSeason();
+    final before = controller.state!.history.length;
+    await controller.retire();
+    final after = controller.state!.history.length;
+
+    expect(after, before + 1, reason: '引退した季が履歴に入っていない');
+    expect(controller.state!.retired, isTrue);
+    expect(money.shouldShowSeasonAd(seasonsPlayed: after), isTrue);
+  });
+
   testWidgets('広告が出るようになってから、消せることをシーズン終了に書く', (tester) async {
     // **⋮ の奥にしか置いていなかった。** 広告が出ることは分かっても、
     // 消せることを知らないままになる。広告が出る場所で伝える。
@@ -1376,14 +1401,14 @@ void main() {
     await controller.finishSeason();
 
     // 1季目。まだ広告は出ないので、勧めない。
-    expect(controller.state!.history.length, lessThan(Monetization.freeSeasons));
+    expect(controller.state!.history.length, lessThan(Monetization.adsFromSeason));
     await open(controller, await money());
     expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsNothing);
 
     // 広告が出るようになった頃。
     // 季末の画面では履歴がまだ増えていない（増えるのは advanceSeason）。
     for (var i = controller.state!.history.length;
-        i < Monetization.freeSeasons;
+        i < Monetization.adsFromSeason;
         i++) {
       controller.state!.history.add(
         SeasonRecord(

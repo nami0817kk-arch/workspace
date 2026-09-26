@@ -161,7 +161,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     final money = widget.monetization;
     if (money == null || money.noAds || !money.storeAvailable) return false;
     return (widget.controller.state?.history.length ?? 0) >=
-        Monetization.freeSeasons;
+        Monetization.adsFromSeason;
   }
 
   void _openSupport() {
