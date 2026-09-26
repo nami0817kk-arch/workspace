@@ -1,0 +1,71 @@
+# 護送ボートの「テスト用」Web版を Cloudflare Pages に出す（2026-09-26 ユーザー指示:
+# 「誰でも開けるようにして、ただ、あくまでもテスト用」）。
+#
+# 本番は iOS アプリ。この Web版は試してもらうためだけのもので、
+# 検索に出さない（index.html の meta robots・_headers の X-Robots-Tag・robots.txt）、
+# 画面の下に「テスト版」の札を出す、どこからもリンクしない。
+#
+# 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（soccer-career-pages.yml と同じもの）
+# 検証(analyze + test)は goso-boat-ci.yml が同じコミットに対して回す。
+name: goso-boat テスト用Web版を出す
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/goso-boat/**"
+      - ".github/workflows/goso-boat-web-test.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: goso-boat-web-test
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/goso-boat
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 描画エンジン(CanvasKit)も同梱して外部の CDN に頼らない。
+      # 更新をすぐ試せるよう、古い版を端末に残す service worker は作らない。
+      - name: Build web
+        run: flutter build web --release --base-href "/" --no-web-resources-cdn --pwa-strategy=none
+
+      - name: 検索に出さない設定が入っているか
+        run: |
+          grep -q 'noindex' build/web/index.html
+          grep -q 'X-Robots-Tag: noindex' build/web/_headers
+          grep -q 'Disallow: /' build/web/robots.txt
+          grep -q 'テスト版' build/web/index.html
+
+      # 無ければ作る。既にあれば重複エラーが返るだけ。
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"goso-boat-test","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/goso-boat
+          command: pages deploy build/web --project-name=goso-boat-test --branch=master

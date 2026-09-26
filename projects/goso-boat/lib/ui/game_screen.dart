@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -186,7 +187,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     HapticFeedback.mediumImpact();
     _confetti.forward(from: 0);
     setState(() => phase = _Phase.won);
-    if (widget.progress.shouldAskReview(level, _earnedStars)) {
+    // Web のテスト版には評価の仕組みが無いので出さない
+    if (!kIsWeb && widget.progress.shouldAskReview(level, _earnedStars)) {
       await widget.progress.markReviewAsked(level.world);
       _later(const Duration(milliseconds: 1400), () async {
         final review = InAppReview.instance;

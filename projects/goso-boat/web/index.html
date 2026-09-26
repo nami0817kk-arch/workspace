@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- テスト用。検索に出さない（_headers と robots.txt でも止めている） -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="護送ボート（テスト版）">
+  <meta name="apple-mobile-web-app-title" content="護送ボート">
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <title>護送ボート（テスト版）</title>
+  <style>
+    html, body { height: 100%; margin: 0; background: #bfe6f5; }
+    #boot { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+            font: 700 15px/1.6 "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif; color: #1f2a44; }
+    /* テスト版の札。押す邪魔をしないよう pointer-events は切る */
+    #test-badge { position: fixed; left: 50%; bottom: calc(2px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+                  z-index: 10; pointer-events: none; padding: 1px 8px; border-radius: 99px;
+                  background: rgba(31, 42, 68, .75); color: #fff; font: 700 10px/1.6 sans-serif; letter-spacing: .08em; }
+  </style>
+</head>
+<body>
+  <div id="boot">読み込み中… / Loading…</div>
+  <div id="test-badge">テスト版 / TEST BUILD</div>
+  <script>
+    window.addEventListener('flutter-first-frame', () => document.getElementById('boot')?.remove());
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
