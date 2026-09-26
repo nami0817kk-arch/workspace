@@ -49,16 +49,22 @@ enum PurchaseOutcome {
 
 /// 課金の窓口。
 abstract class PurchaseService {
-  /// **買ったものが届いたら、待っているかどうかに関係なく呼ぶ。**
+  /// ストアの通知を受け取り始める。
   ///
-  /// ストアの通知は購入を始めた瞬間に返ってくるとは限らない——アプリを
-  /// 落としている間に決済が通る、家族の承認を待つ、5分の上限で待つのを
-  /// やめた後に届く、別の端末で買ったものが起動時に流れてくる。
-  /// `await` している側だけに返していた頃、**これらは全部「払ったのに
-  /// 何も起きない」**になっていた（`復元` を押すまで戻らない）。
-  set onDelivered(void Function(Product product)? callback);
-
-  Future<void> initialize();
+  /// **[onDelivered] は必須。** 買ったものが届いたら、待っているかどうかに
+  /// 関係なくこれを呼ぶ。ストアの通知は購入を始めた瞬間に返ってくるとは
+  /// 限らない——アプリを落としている間に決済が通る、家族の承認を待つ、
+  /// 5分の上限で待つのをやめた後に届く、別の端末で買ったものが起動時に
+  /// 流れてくる。`await` している側だけに返していた頃、**これらは全部
+  /// 「払ったのに何も起きない」**になっていた（`復元` を押すまで戻らない）。
+  ///
+  /// **引数にしてあるのは、渡し忘れと順番間違いを構造的に消すため。**
+  /// 別の setter にしていた頃は、通知を受け取り始めたあとに設定することも、
+  /// 設定しないまま始めることもできた。消耗型の商品（応援）は復元できないので、
+  /// 取りこぼすと払った額がそのまま消える。
+  Future<void> initialize({
+    required void Function(Product product) onDelivered,
+  });
 
   /// ストアが使えるか。使えなければ購入の導線を出さない。
   Future<bool> isAvailable();
@@ -78,10 +84,9 @@ abstract class PurchaseService {
 /// 課金を扱わない実装。Web 版・テストで使う。
 class NoPurchaseService implements PurchaseService {
   @override
-  set onDelivered(void Function(Product product)? callback) {}
-
-  @override
-  Future<void> initialize() async {}
+  Future<void> initialize({
+    required void Function(Product product) onDelivered,
+  }) async {}
 
   @override
   Future<bool> isAvailable() async => false;
@@ -102,13 +107,10 @@ class NoPurchaseService implements PurchaseService {
 
 /// ストアの課金基盤を使う実装。
 class StorePurchaseService implements PurchaseService {
-  @override
-  set onDelivered(void Function(Product product)? callback) =>
-      _onDelivered = callback;
-
-  void Function(Product product)? _onDelivered;
-
   final InAppPurchase _iap = InAppPurchase.instance;
+
+  /// 届いたものの渡し先。`initialize` で必ず受け取る。
+  void Function(Product product)? _onDelivered;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   /// 購入・復元の完了を待つ受け皿。結果はストリームで非同期に返ってくるので、
@@ -122,7 +124,12 @@ class StorePurchaseService implements PurchaseService {
   bool _queried = false;
 
   @override
-  Future<void> initialize() async {
+  Future<void> initialize({
+    required void Function(Product product) onDelivered,
+  }) async {
+    // **渡し先を先に持つ。** 起動時に残っていた購入は、購読した直後に
+    // 流れてくる。先に持っていないと、そのぶんが落ちる。
+    _onDelivered = onDelivered;
     _subscription = _iap.purchaseStream.listen(
       _onUpdate,
       onError: (_) => _complete(PurchaseOutcome.failed),

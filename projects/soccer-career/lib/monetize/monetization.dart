@@ -63,10 +63,11 @@ class Monetization extends ChangeNotifier {
     tips = prefs.getInt(_tipsKey) ?? 0;
 
     if (!noAds) await _ads.initialize();
-    // **渡すのはここ1か所。** 買った瞬間に `buy()` の側で渡していた頃、
-    // アプリを落としている間に決済が通った購入は誰も受け取らなかった。
-    _purchases.onDelivered = _grant;
-    await _purchases.initialize();
+    // **受け取るのはここ1か所（`_grant`）。** 買った瞬間に `buy()` の側で
+    // 渡していた頃、アプリを落としている間に決済が通った購入は誰も
+    // 受け取らなかった。`initialize` の引数にしてあるので、渡し忘れると
+    // コンパイルが通らない。
+    await _purchases.initialize(onDelivered: _grant);
     storeAvailable = await _purchases.isAvailable();
     if (storeAvailable) {
       for (final product in Product.values) {

@@ -44,10 +44,6 @@ class FakeStore implements PurchaseService {
   final List<Product> bought = [];
   int restores = 0;
 
-  @override
-  set onDelivered(void Function(Product product)? callback) =>
-      _onDelivered = callback;
-
   void Function(Product product)? _onDelivered;
 
   /// ストアから後から流れてくるぶん（アプリを落としている間に決済が通った、
@@ -55,7 +51,11 @@ class FakeStore implements PurchaseService {
   void deliver(Product product) => _onDelivered?.call(product);
 
   @override
-  Future<void> initialize() async {}
+  Future<void> initialize({
+    required void Function(Product product) onDelivered,
+  }) async {
+    _onDelivered = onDelivered;
+  }
 
   @override
   Future<bool> isAvailable() async => available;
