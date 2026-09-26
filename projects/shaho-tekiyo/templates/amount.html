@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}月収{{ man }}万円のパートの社会保険料はいくら？｜{{ era }}の料率で{{ "{:,}".format(tokyo.total_yen) }}円（東京）{% endblock %}
+{% block description %}月収{{ man }}万円で社会保険に入ると、引かれるのは東京で月{{ "{:,}".format(tokyo.total_yen) }}円（健康保険・子ども・子育て支援金・厚生年金、{{ era }}の料率）。47都道府県の額と、40〜64歳の額、残る額を円単位で。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
+  <span>›</span>
+  <span aria-current="page">月収{{ man }}万円</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>月収{{ man }}万円のパートの社会保険料はいくら？</h1>
+<p class="updated">{{ era }}の料率（{{ period }}）で計算</p>
+
+<div class="verdict ok">東京なら月 {{ "{:,}".format(tokyo.total_yen) }}円 引かれて、残りは {{ "{:,}".format(tokyo.take_home_yen) }}円</div>
+
+<p>
+  月収{{ man }}万円（{{ "{:,}".format(pay) }}円）で勤務先の社会保険に入ると、給与から引かれる保険料（本人負担分）は、
+  東京の会社で<strong>月{{ "{:,}".format(tokyo.total_yen) }}円</strong>、年に直すと約{{ "{:,}".format(tokyo.total_yen * 12) }}円です。
+  都道府県によって{{ "{:,}".format(cheapest.total_yen) }}円（{{ cheapest.prefecture }}）〜{{ "{:,}".format(dearest.total_yen) }}円（{{ dearest.prefecture }}）の差があります。
+  40〜64歳の人は介護保険料が加わり、東京で月{{ "{:,}".format(tokyo_care.total_yen) }}円です。
+</p>
+
+<h2>内訳（東京・39歳以下）</h2>
+<div class="table-wrap">
+<table class="plain premium">
+  <tr><th>健康保険料</th><td>{{ "{:,}".format(tokyo.health_yen) }}円</td></tr>
+  <tr><th>子ども・子育て支援金</th><td>{{ "{:,}".format(tokyo.kodomo_yen) }}円</td></tr>
+  <tr><th>厚生年金保険料</th><td>{{ "{:,}".format(tokyo.pension_yen) }}円</td></tr>
+  <tr class="current"><th>合計</th><td><strong>{{ "{:,}".format(tokyo.total_yen) }}円</strong></td></tr>
+  <tr><th>月収から引いた残り</th><td>{{ "{:,}".format(tokyo.take_home_yen) }}円</td></tr>
+</table>
+</div>
+<p class="hint">
+  保険料は月収そのものではなく「標準報酬月額」で決まります。月収{{ "{:,}".format(pay) }}円は、健康保険で{{ "{:,}".format(tokyo.health_standard) }}円、
+  厚生年金で{{ "{:,}".format(tokyo.pension_standard) }}円の等級に当たります。<strong>通勤手当や残業代の見込みも月収に含めて</strong>等級が決まるので、
+  手当がある人は<a href="{{ base_url }}index.html">計算機</a>で手当込みの額を入れてください。
+  所得税・住民税・雇用保険料は、ここには含めていません。
+</p>
+
+<h2>都道府県別の保険料（月収{{ man }}万円）</h2>
+<p>健康保険料率は、住んでいる所ではなく勤務先の都道府県で決まります（協会けんぽの場合）。</p>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>勤務先</th><th>39歳以下</th><th>40〜64歳</th><th>残り（39歳以下）</th></tr></thead>
+  <tbody>
+    {% for r, rc in rows %}
+    <tr{% if r.prefecture == "東京" %} class="current"{% endif %}><th>{{ r.prefecture }}</th><td>{{ "{:,}".format(r.total_yen) }}円</td><td>{{ "{:,}".format(rc.total_yen) }}円</td><td>{{ "{:,}".format(r.take_home_yen) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<h2>月収が1万円違うと</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>月収</th><th>保険料（東京）</th><th>残り</th></tr></thead>
+  <tbody>
+    {% for n in neighbors %}
+    <tr{% if n.man == man %} class="current"{% endif %}>
+      <th>{% if n.man == man %}{{ n.man }}万円{% else %}<a href="{{ n.slug }}.html">{{ n.man }}万円</a>{% endif %}</th>
+      <td>{{ "{:,}".format(n.r.total_yen) }}円</td><td>{{ "{:,}".format(n.r.take_home_yen) }}円</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<h2>そもそも加入の対象になるか</h2>
+<p>
+  2026年10月からは月収の条件（8.8万円以上）が無くなり、週20時間以上働いていて、勤務先が51人以上の会社で、学生でなければ、
+  月収にかかわらず加入の対象になります（2027年10月からは36人以上の会社に広がります）。
+  自分が当たるかは<a href="{{ base_url }}index.html">加入判定チェッカー</a>で確かめられます。
+</p>
+<p class="hint">
+  企業規模要件を満たさない会社で任意に加入する場合などには、勤務先が本人負担の一部を持つと国の支援を受けられる
+  3年間の制度（保険料調整制度）があります。このページの額は労使折半のままの額です。
+</p>
+
+<h2>ほかの月収</h2>
+<p class="month-links">
+  {% for a in all_amounts %}{% if a.man == man %}<strong>{{ a.man }}万円</strong>{% else %}<a href="{{ a.slug }}.html">{{ a.man }}万円</a>{% endif %}{% if not loop.last %} · {% endif %}{% endfor %}
+</p>
+
+<p class="hint">
+  出典: <a href="{{ source.page }}" rel="nofollow noopener" target="_blank">{{ source.name }}「{{ source.title }}」</a>の料率をもとに当サイトで計算
+  （労使折半、給与から天引きするときの端数処理＝50銭以下切り捨て）。協会けんぽの料率です。健康保険組合に入っている会社では額が違います。
+</p>
+{% endblock %}
