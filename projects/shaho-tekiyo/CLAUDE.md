@@ -4,7 +4,7 @@
 「自分は加入対象になるか」を厚生労働省の公表基準に沿って判定する計算機。
 広告収入が目的。**方式1（`docs/session-briefs/method1.md`）の中で最優先の案。**
 
-公開予定URL: https://shaho.dailyquarry.com/（AdSense・ドメインは `projects/ipa-kakomon` と共用）
+公開URL: https://shaho.dailyquarry.com/（AdSense・ドメインは `projects/ipa-kakomon` と共用）
 
 企画書: https://claude.ai/artifact/JvCm7MmGbxE1y7gz9jEgcH
 
@@ -46,8 +46,14 @@
 
 ### まだやっていないこと
 
-- 都道府県別の料率ページ（企画書の47ページ）
-- 公開（Cloudflare Pages のプロジェクト作成とカスタムドメイン `shaho.dailyquarry.com`）
+- 都道府県別の料率ページ（企画書の47ページ）。検索の量を確かめてから決める
+- Search Console への登録と sitemap の送信（ユーザーの作業）。`shaho.dailyquarry.com` は 2026-09-27 時点でつながっている
+
+### 検索向けの決まり（2026-09-27）
+
+- 表示中の「最終更新」と sitemap の lastmod は `render.py` の `HISTORY` の先頭の日付。**中身を変えたら HISTORY に1行足す**
+- よくある質問（faq.html）の見出しは検索される問いの形にし、`id` を付けてトップから直接リンクしている。id は変えない
+- 月収別ページのタイトルには年収（×12）も入れて、年収での検索も拾う。年収別の別ページは作らない（中身が重複する）
 
 ## 仕組み
 

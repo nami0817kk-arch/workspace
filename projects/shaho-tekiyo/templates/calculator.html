@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-{% block title %}社会保険 加入判定チェッカー｜パート・アルバイトの106万円の壁{% endblock %}
-{% block description %}週の労働時間・月収・勤務先の従業員数を入れると、社会保険（健康保険・厚生年金）の加入対象かどうかと、引かれる保険料の目安を出します。2026年10月の賃金要件撤廃、2027〜2035年の企業規模要件拡大に対応。{% endblock %}
+{% block title %}パートの社会保険 計算｜加入判定・保険料・手取り（2026年10月の改正に対応）{% endblock %}
+{% block description %}パート・アルバイトの社会保険を計算します。週の時間・時給か月収・勤務先の人数で、加入の対象か、保険料と手取りはいくらかを{{ era }}の料率で円単位に。106万円の壁の撤廃（2026年10月）と週20時間の壁にも対応。{% endblock %}
 {% block content %}
-<h1>社会保険 加入判定チェッカー</h1>
+<h1>パートの社会保険 計算機</h1>
 <p>
-  パート・アルバイトで働く人が、社会保険（健康保険・厚生年金）の加入対象になるかどうかを、
-  公表されている基準に沿って判定します。<strong>2026年10月から賃金要件（月額8.8万円＝いわゆる「106万円の壁」）が撤廃</strong>され、
-  企業規模の要件も2035年まで段階的に広がります。時点を選んで確かめてください。
+  パート・アルバイトで働く人が、社会保険（健康保険・厚生年金）に入る対象か、入ったら<strong>保険料と手取りがいくらになるか</strong>を計算します。
+  <strong>2026年10月から月収の条件（月8.8万円＝いわゆる「106万円の壁」）が無くなり</strong>、
+  従業員51人以上の会社では<strong>週20時間以上</strong>で加入します。会社の人数の条件も2035年まで段階的に広がります。
 </p>
+<p class="hint">{{ era }}の料率（協会けんぽ）・雇用保険料率・所得税で計算。最終更新 {{ updated }}。計算はブラウザの中だけで行い、入力は送信しません。</p>
 
 <form id="calc-form" class="card" novalidate>
   <div class="field">
@@ -303,6 +304,38 @@
   render();
 })();
 </script>
+
+<h2>月収別の保険料と手取り（早見表）</h2>
+<p>東京の会社・39歳以下・扶養0人・通勤手当なしの場合です。月収を押すと、47都道府県の額や内訳が見られます。</p>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>月収（年収）</th><th>社会保険料</th><th>手取りの目安</th></tr></thead>
+  <tbody>
+    {% for a in quick_amounts %}
+    <tr><th><a href="getsushu/{{ a.slug }}.html">{{ a.man }}万円</a><span class="sub">年収{{ a.man * 12 }}万円</span></th><td>{{ "{:,}".format(a.total) }}円</td><td>{{ "{:,}".format(a.net) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p><a href="getsushu/index.html">8万〜25万円の一覧を見る →</a></p>
+
+<h2>週20時間の壁 — 増やすと手取りが減るのは本当？</h2>
+<p>
+  扶養に入って週19時間で働いている人が週20時間に増やすと、社会保険料が引かれ始めるので手取りは減ります。
+  たとえば時給{{ "{:,}".format(kabe_example.hourly) }}円なら月{{ "{:,}".format(kabe_example.loss_at_20) }}円減り、
+  <strong>週{{ "%g"|format(kabe_example.breakeven_hours_x10 / 10) }}時間</strong>まで増やすと元の手取りに戻ります。
+  上の計算機に時給を入れると、自分の条件で出ます。
+</p>
+<p><a href="kabe/index.html">時給別の一覧を見る →</a></p>
+
+<h2>よくある質問</h2>
+<ul class="faq-links">
+  <li><a href="faq.html#q-106">「106万円の壁」が無くなると、保険料を払わなくてよくなる？</a></li>
+  <li><a href="faq.html#q-130">「106万円の壁」と「130万円の壁」は何が違う？</a></li>
+  <li><a href="faq.html#q-student">学生は社会保険に入らなくていい？</a></li>
+  <li><a href="faq.html#q-small">従業員が少ない会社なら、ずっと入らなくていい？</a></li>
+  <li><a href="faq.html#q-takehome">社会保険に入ると損？</a></li>
+</ul>
 
 <h2>この5段階で対象が広がります</h2>
 {{ timeline|safe }}
