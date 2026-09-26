@@ -3629,6 +3629,11 @@ lib/
   どのキャリアを遊んでいるかとは関係がない。引き継ぎコードにも載せない
   （他人の端末へ購入が移ってしまう）。
 - **復元の導線は iOS の審査要件。** 出していないと弾かれる。
+- **Bundle ID は `com.namiki.soccercareer`**（2026-09-26、`soccer-manager` の
+  `com.namiki.soccermanager` に揃えた。雛形が作った `dev.namikk.soccerCareer`
+  のままだった）。**App Store に登録したあとは変えられない。**
+  Dart のパッケージ名（`soccer_career`）と商品ID（`soccer_career_no_ads`）は
+  別物なので、そちらは変えない。
 - 広告のIDは既定が **Google のテスト用**。差し替え忘れても規約違反に
   ならないようにしてある。忘れていれば画面に赤字で出る。
 
