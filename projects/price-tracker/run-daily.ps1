@@ -118,8 +118,17 @@ if ($LASTEXITCODE -ne 0) {
     if ((Run "git commit -F `"$msgFile`"") -ne 0) {
         Add-Content $log "FAILED: git commit"; exit 1
     }
+    # 取得に12分かかる。その間に別のセッションが master を進めていると
+    # push が弾かれ、取れた価格が手元に残ったまま公開されない。
+    # 押す直前に取り込み直す。ここで触るのは data/ だけなので rebase で足りる。
     if ((Run "git push origin master") -ne 0) {
-        Add-Content $log "FAILED: git push"; exit 1
+        Add-Content $log "push が弾かれた。取り込み直して押し直す"
+        if ((Run "git pull --rebase origin master") -ne 0) {
+            Add-Content $log "FAILED: git pull --rebase"; exit 1
+        }
+        if ((Run "git push origin master") -ne 0) {
+            Add-Content $log "FAILED: git push"; exit 1
+        }
     }
     Remove-Item $msgFile -ErrorAction SilentlyContinue
     Add-Content $log "pushed new data"

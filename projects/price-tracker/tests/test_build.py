@@ -308,3 +308,53 @@ class SearchAppearanceTest(unittest.TestCase):
         index = json.loads((self.out / "search-index.json").read_text(encoding="utf-8"))
 
         self.assertTrue(index[0][1].startswith("ロイヤルカナン"), index[0][1])
+
+
+class UpdatedDateTest(unittest.TestCase):
+    """「最終更新」は価格を記録した日であること。
+
+    ビルドした日を出していたため、取得が失敗した朝でも「最終更新 今日」と
+    表示され、前日の価格を今日の価格として見せていた（2026-09-26 に発生）。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "記録のある商品", "shop": "店A",
+                       "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [9000] * 9 + [8000]})
+        # 取得できた最後の日を 2026-09-25 とする（今日ではない）
+        snaps = cls.root / "data" / "snapshots"
+        snaps.mkdir(parents=True, exist_ok=True)
+        for day in ("2026-09-24", "2026-09-25"):
+            (snaps / f"{day}.csv.gz").write_bytes(b"")
+        cls.out = cls.root / "dist"
+        cls.stats = builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_最終更新は記録した日を出す(self):
+        self.assertEqual(self.stats["updated"], "2026-09-25")
+        self.assertIn("最終更新: 2026-09-25",
+                      (self.out / "index.html").read_text(encoding="utf-8"))
+
+    def test_ビルドした日は出さない(self):
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+
+        self.assertNotIn(builder.today(), page)
+
+    def test_記録が1日も無ければ今日で組む(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_data(root, {"shop:a": {"name": "商品", "shop": "店", "url": "",
+                                        "image": "", "genre_id": "1"}},
+                      {"shop:a": [1000] * 10})
+
+            stats = builder.build(root, root / "dist")
+
+        self.assertEqual(stats["updated"], builder.today())

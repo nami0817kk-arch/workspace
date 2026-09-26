@@ -96,7 +96,14 @@ def build(root: Path, out: Path) -> dict:
     rows = analyze.evaluate_all(summary, items,
                                 site.get("drop_threshold", 0.05),
                                 site.get("near_low_threshold", 0.02))
-    updated = today()
+    # 「最終更新」は価格を記録した日にする。ビルドした日を出すと、取得が
+    # 失敗した朝でも「最終更新 今日」と表示され、前日の価格を今日の価格として
+    # 見せることになる（2026-09-26 に実際にそうなっていた）。
+    # 記録が1日も無いときだけ、今日の日付で組む。
+    latest_day = max((p.name[:10] for p in (data / "snapshots").glob("*.csv.gz")),
+                     default="")
+    updated = latest_day or today()
+    latest_day = latest_day or updated   # 最安値更新の判定日。記録が無い日は今日
 
     if out.exists():
         shutil.rmtree(out)
@@ -155,8 +162,6 @@ def build(root: Path, out: Path) -> dict:
                   low, site, base, updated,
                   "価格の記録日数がまだ足りません。判定には最低7日分が必要です。", stats, linked=linked)
 
-    latest_day = max((p.name[:10] for p in (data / "snapshots").glob("*.csv.gz")),
-                     default=updated)
     write_listing(out, urls, "new-lows/", "今日 最安値を更新した商品",
                   "記録している期間の最安値を、この日に塗り替えた商品です。"
                   "近い価格を含む最安値圏とは別に、更新した当日だけを出しています。",
