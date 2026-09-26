@@ -563,3 +563,80 @@ class FaviconTest(unittest.TestCase):
         listing = (self.out / "lows" / "index.html").read_text(encoding="utf-8")
 
         self.assertNotIn('"@type": "WebSite"', listing)
+
+
+class OfferFieldsTest(unittest.TestCase):
+    """Offer に何を書き、何を書かないか。
+
+    Search Console から6項目の推奨（重大ではない）が届いた（2026-09-27）。
+    持っていないものを埋めると検索結果に嘘を出すことになるので、
+    正直に書けるものだけ入れる。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:free": {"name": "送料無料の商品", "shop": "店A", "url": "",
+                          "image": "", "genre_id": "1", "free_shipping": True},
+            "shop:paid": {"name": "送料別の商品", "shop": "店B", "url": "",
+                          "image": "", "genre_id": "1", "free_shipping": False},
+        }, {"shop:free": [1000] * 10, "shop:paid": [2000] * 10})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def offer(self, code):
+        page = (self.out / "item" / theme.slug(code) / "index.html").read_text(
+            encoding="utf-8")
+        block = re.search(r'(\{"@context": "https://schema\.org", "@type": "Product".*?\})'
+                          r'</script>', page, re.S).group(1)
+        return json.loads(block.replace("\u003c", "<").replace("\u003e", ">")
+                          .replace("\u0026", "&"))["offers"]
+
+    def test_値段が言える期間を書く(self):
+        offer = self.offer("shop:free")
+
+        self.assertEqual(offer["validFrom"], builder.today())
+        self.assertGreater(offer["priceValidUntil"], offer["validFrom"])
+
+    def test_送料無料の回だけ送料を書く(self):
+        self.assertIn("shippingDetails", self.offer("shop:free"))
+        # 有料の回は金額を知らない。推測で埋めない
+        self.assertNotIn("shippingDetails", self.offer("shop:paid"))
+
+    def test_送料無料は0円として書く(self):
+        rate = self.offer("shop:free")["shippingDetails"]["shippingRate"]
+
+        self.assertEqual(rate["value"], 0)
+        self.assertEqual(rate["currency"], "JPY")
+
+    def test_持っていないレビューを書かない(self):
+        # 楽天のレビューであって当サイトのものではない。画面にも出していない。
+        # 出していないものを構造化データにだけ書くのは、検索側への嘘になる
+        offer = self.offer("shop:free")
+        page = (self.out / "item" / theme.slug("shop:free") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertNotIn("aggregateRating", page)
+        self.assertNotIn('"review"', page)
+        self.assertNotIn("aggregateRating", json.dumps(offer))
+
+    def test_知らない返品条件を書かない(self):
+        # 当サイトは販売者ではない
+        page = (self.out / "item" / theme.slug("shop:free") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertNotIn("hasMerchantReturnPolicy", page)
+
+    def test_推測した型番や銘柄を書かない(self):
+        # 楽天APIが返さない。名前から推測すると外す
+        page = (self.out / "item" / theme.slug("shop:free") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertNotIn('"gtin', page)
+        self.assertNotIn('"brand"', page)

@@ -1503,8 +1503,19 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                    "availability": ("https://schema.org/InStock"
                                     if row.get("in_stock", True)
                                     else "https://schema.org/OutOfStock"),
-                   # 毎日取り直すので、この値段が言えるのは次の取得までとする
+                   # 毎日取り直すので、この値段が言えるのは
+                   # 記録した日から次の取得まで
+                   "validFrom": updated,
                    "priceValidUntil": next_day(updated),
+                   # 送料は「無料かどうか」しか取れない。無料の回だけ書く。
+                   # 有料の回は金額を知らないので、推測で埋めない
+                   **({"shippingDetails": {
+                       "@type": "OfferShippingDetails",
+                       "shippingRate": {"@type": "MonetaryAmount",
+                                        "value": 0, "currency": "JPY"},
+                       "shippingDestination": {"@type": "DefinedRegion",
+                                               "addressCountry": "JP"}}}
+                      if row.get("free_shipping") else {}),
                    "seller": {"@type": "Organization",
                               "name": row.get("shop") or ""}},
     })
