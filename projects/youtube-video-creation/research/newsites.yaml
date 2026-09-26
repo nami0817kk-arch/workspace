@@ -151,12 +151,13 @@ sites:
   - https://blog.domesoccer.jp/archives/60253934.html
   - https://blog.domesoccer.jp/archives/60253949.html
 - host: cittaceleste.it
-  seen: 9
+  seen: 10
   days:
   - '2026-09-10'
   - '2026-09-12'
   - '2026-09-14'
   - '2026-09-24'
+  - '2026-09-26'
   examples:
   - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
   - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
@@ -424,6 +425,30 @@ sites:
   examples:
   - https://www.bavarianfootballworks.com/bayern-munich-transfer-rumors-news/253916/pundit-lauds-nathaniel-browns-versatility-as-big-asset-to-bayern-munich
   - https://www.bavarianfootballworks.com/bayern-munich-finances-board/256752/bayern-munich-exec-talks-history-with-bradley-barcola
+- host: glasgowtimes.co.uk
+  seen: 2
+  days:
+  - '2026-09-05'
+  - '2026-09-26'
+  examples:
+  - https://www.glasgowtimes.co.uk/sport/26525075.mcinnes-explains-rangers-xi-deadline-day-arrivals-miss/
+  - https://www.glasgowtimes.co.uk/sport/26584042.managing-proper-rangers-star-get-back-team/
+- host: thehardtackle.com
+  seen: 2
+  days:
+  - '2026-09-16'
+  - '2026-09-26'
+  examples:
+  - https://thehardtackle.com/round-up/2026/09/16/coventry-city-vs-aston-villa-preview-prediction-probable-lineups-tactics-team-news-key-stats/
+  - https://thehardtackle.com/transfer-news/2026/09/26/michael-olise-prefers-la-liga-move-to-premier-league-return/
+- host: teamtalk.com
+  seen: 2
+  days:
+  - '2026-09-16'
+  - '2026-09-26'
+  examples:
+  - https://www.teamtalk.com/manchester-united/fabrizio-romano-reveals-chances-jj-gabriel-uturn-united-exit
+  - https://www.teamtalk.com/manchester-united/harry-kane-bayern-munich-man-utd-2027-transfer-decision-rule-change
 - host: guardian.ng
   seen: 1
   days:
@@ -472,12 +497,6 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.mancity.com/citytv/eds-academy/u18s-stoke-city-highlights-63924206
-- host: glasgowtimes.co.uk
-  seen: 1
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.glasgowtimes.co.uk/sport/26525075.mcinnes-explains-rangers-xi-deadline-day-arrivals-miss/
 - host: sportbible.com
   seen: 1
   days:
@@ -580,18 +599,6 @@ sites:
   - '2026-09-16'
   examples:
   - https://football360.com.au/man-utd-jj-gabriel-details-premier-league/
-- host: thehardtackle.com
-  seen: 1
-  days:
-  - '2026-09-16'
-  examples:
-  - https://thehardtackle.com/round-up/2026/09/16/coventry-city-vs-aston-villa-preview-prediction-probable-lineups-tactics-team-news-key-stats/
-- host: teamtalk.com
-  seen: 1
-  days:
-  - '2026-09-16'
-  examples:
-  - https://www.teamtalk.com/manchester-united/fabrizio-romano-reveals-chances-jj-gabriel-uturn-united-exit
 - host: fss.rs
   seen: 1
   days:
@@ -676,3 +683,57 @@ sites:
   - '2026-09-25'
   examples:
   - https://www.golssip.it/gossip/calcio/hakimi-rinviato-giudizio-stupro/?intcmp=gazzanet-golssip
+- host: 3addedminutes.com
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.3addedminutes.com/international-football/scotland/-9187264
+- host: footballinsider247.com
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.footballinsider247.com/celtic/next-manager/celtic-consider-return-of-former-boss-to-replace-martin-oneill-it-beggars-belief
+- host: bristolpost.co.uk
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.bristolpost.co.uk/sport/football/football-news/bristol-city-women-targets-detailed-11172160
+- host: independent.com.mt
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.independent.com.mt/articles/2026-09-25/local-news/France-coach-Zinedine-Zidane-s-first-win-soured-by-Mbappe-s-knee-injury-Italy-lose-to-Belgium-6736293212
+- host: theargus.co.uk
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.theargus.co.uk/sport/26583973.sunderlands-dan-ballard-faces-late-hamstring-injury-concern/
+- host: hayters.com
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://hayters.com/sunderland-handed-another-major-injury-concern-following-brobbey-blow/
+- host: celticway.co.uk
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.celticway.co.uk/interviews/26583948.hassan-plays-egypt-despite-manager-seemingly-ruling/
+- host: newsletter.co.uk
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.newsletter.co.uk/sport/football/northern-ireland/-9183334
+- host: irishexaminer.com
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.irishexaminer.com/sport/soccer/arid-41915995.html
