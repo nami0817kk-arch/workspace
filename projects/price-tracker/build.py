@@ -130,7 +130,7 @@ def build(root: Path, out: Path) -> dict:
     urls = []
     # 一覧に載せた商品。ここに入らないものは検索結果にだけ出る行き止まり
     linked = set()
-    write_listing(out, urls, "", "いま条件がそろっている商品",
+    write_listing(out, urls, "now/", "いま条件がそろっている商品",
                   "最安値への近さ・ポイント込みの下げ幅・価格の下げ幅・送料・"
                   "値動きの多さを、それぞれ上限を決めて足した順に並べています。"
                   "買うべきかは決めません。どの条件がいくつ満たされたかを出すだけです。",
@@ -310,8 +310,10 @@ def build(root: Path, out: Path) -> dict:
         "最安値を更新した商品", "new-lows/"))
 
     # どの一覧を見ればよいかの索引。件数が全部そろうのは最後なので、
-    # 書き上がったトップに差し込む（アーカイブの日付送りと同じやり方）。
+    # トップを書くのは他の一覧を全部書き終えてから。
     views = [
+        ("now/", "いま条件がそろっている商品", len(analyze.well_stocked(rows, limit=600)),
+         "最安値への近さ・ポイント・送料などを点にして足した順"),
         ("drops/", "今日の値下がり", len(dropped), "前回の記録より安くなったもの"),
         ("points/", "ポイント込み", len(analyze.effective_drops(
             rows, site.get("drop_threshold", 0.05))), "ポイント分を引くと安いもの"),
@@ -327,14 +329,10 @@ def build(root: Path, out: Path) -> dict:
         ("genre/", "ジャンル別", len(listed), "ジャンルごとに値下がりの大きい順"),
         ("archive/", "日付別", len(archive_counts), "過ぎた日の値下がりの記録"),
     ]
-    home = out / "index.html"
-    text = home.read_text(encoding="utf-8")
-    # 検索窓はトップの一番上。価格を追うサイトで最初にやるのは
-    # 「自分の商品を探す」で、一覧の題より前に来るのが順序として正しい。
-    text = text.replace('<main class="wrap" id="main">',
-                        '<main class="wrap" id="main">' + theme.home_search(), 1)
-    text = text.replace('<footer', theme.views_map(views) + '<footer', 1)
-    home.write_text(text, encoding="utf-8")
+    # トップは商品を並べず、入口だけを置く（2026-09-26 ユーザー指示）。
+    write(out / "index.html",
+          theme.home_page(site, base + "/", updated, stats, views, listed))
+    urls.append("/")
 
     write(out / "sitemap.xml", sitemap(site, urls, updated))
     write(out / "robots.txt", robots(site))

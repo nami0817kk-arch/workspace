@@ -331,7 +331,8 @@ class PagingAndExtrasTest(unittest.TestCase):
         self.assertIn('rel="prev"', second)
 
     def test_一覧に構造化データが入る(self):
-        s = (self.out / "index.html").read_text(encoding="utf-8")
+        # トップは案内ページなので商品を並べない。一覧は /now/
+        s = (self.out / "now" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn("ItemList", s)
 
@@ -737,7 +738,8 @@ class ItemPageTest(unittest.TestCase):
         html = self.html()
 
         self.assertIn('class="onward"', html)
-        for href in ('href="../../"', 'href="../../drops/"', 'href="../../lows/"',
+        # トップは案内ページになったので、行き先は一覧そのもの（/now/）を指す
+        for href in ('href="../../now/"', 'href="../../drops/"', 'href="../../lows/"',
                      'href="../../search/"'):
             with self.subTest(href=href):
                 self.assertIn(href, html.split('class="onward"')[1])

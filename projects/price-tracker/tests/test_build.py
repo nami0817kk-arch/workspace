@@ -102,7 +102,9 @@ class BuildTest(unittest.TestCase):
         self.assertNotIn("履歴のない商品", self.read("index.html") + self.read("lows", "index.html"))
 
     def test_drop_is_listed_on_the_front_page(self):
-        page = self.read("index.html")
+        # トップは案内だけのページになり、点で並べた一覧は /now/ へ移した
+        # （2026-09-26 ユーザー指示）
+        page = self.read("now", "index.html")
         self.assertIn("値下がりした商品", page)
         self.assertIn("▼20.0%", page)
         self.assertIn("10,000円", page)   # 変更前の価格
@@ -202,9 +204,9 @@ class EmptyDataTest(unittest.TestCase):
             out = root / "dist"
             stats = builder.build(root, out)
             self.assertEqual(stats["items"], 0)
-            # トップは「いま条件がそろっている商品」（2026-09-25 に入れ替え）。
+            # 点で並べた一覧は /now/（2026-09-26 にトップを案内ページへ replaced）。
             # 値下がりは動きの少ない日にほぼ空になるため、入口に置かない。
-            top = (out / "index.html").read_text(encoding="utf-8")
+            top = (out / "now" / "index.html").read_text(encoding="utf-8")
             self.assertIn("条件がそろった商品はまだありません", top)
             self.assertIn("判定できるほどの値下がりはありません",
                           (out / "drops" / "index.html").read_text(encoding="utf-8"))
@@ -384,11 +386,17 @@ class HomeSearchTest(unittest.TestCase):
     def tearDownClass(cls):
         cls.tmp.cleanup()
 
-    def test_トップの本文の先頭に置く(self):
+    def test_一覧より前に置く(self):
+        # 検索が第一の用事。一覧の索引より前に来ること
         page = (self.out / "index.html").read_text(encoding="utf-8")
-        body = page.split('id="main">')[1]
 
-        self.assertLess(body.index('class="hero"'), body.index("<h1"))
+        self.assertLess(page.index('class="hero"'), page.index('class="views"'))
+
+    def test_トップに商品を並べない(self):
+        # 案内だけのページにする（2026-09-26 ユーザー指示）
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+
+        self.assertNotIn('class="card"', page)
 
     def test_他の一覧には出さない(self):
         # どのページにも置くと、一覧の題より前に窓が並ぶ
@@ -411,3 +419,66 @@ class HomeSearchTest(unittest.TestCase):
         hero = page.split('class="hero"')[1].split("</form>")[0]
 
         self.assertNotIn("商品を追跡", hero)
+
+
+class LandingPageTest(unittest.TestCase):
+    """トップは案内だけのページ（2026-09-26 ユーザー指示）。
+
+    以前のトップは一覧そのもので、検索から来た人がいきなり600件の並びと
+    採点の説明を読まされていた。一覧は /now/ へ移した。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A",
+                       "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [9000] * 9 + [8000]})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+        cls.home = (cls.out / "index.html").read_text(encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_一覧はnowへ移した(self):
+        self.assertTrue((self.out / "now" / "index.html").exists())
+        self.assertIn("商品A",
+                      (self.out / "now" / "index.html").read_text(encoding="utf-8"))
+
+    def test_入口をひととおり置く(self):
+        for part in ('class="hero"', 'class="views"', "ジャンルから探す",
+                     "何をしているサイトか"):
+            with self.subTest(part=part):
+                self.assertIn(part, self.home)
+
+    def test_一覧の索引の先頭はnow(self):
+        views = self.home.split('class="views"')[1]
+
+        self.assertLess(views.index('href="now/"'), views.index('href="drops/"'))
+
+    def test_ヘッダと同じ文を本文で繰り返さない(self):
+        # ヘッダの tagline が config の description を出している。
+        # 本文の lead で同じ文をもう一度書かないこと
+        lead = re.search(r'<p class="lead">(.*?)</p>', self.home, re.S).group(1)
+        tagline = re.search(r'<p class="tagline">(.*?)</p>', self.home, re.S).group(1)
+
+        self.assertEqual(tagline, CONFIG["description"])
+        self.assertNotEqual(lead, tagline)
+
+    def test_最安値の範囲をトップでも断る(self):
+        # 市場全体の最安値と誤解されないことは、入口でも守る
+        self.assertIn("記録を開始してからの期間内での最安値", self.home)
+
+    def test_サイトマップにトップと一覧の両方を入れる(self):
+        sitemap = (self.out / "sitemap.xml").read_text(encoding="utf-8")
+
+        self.assertIn("<loc>https://example.test/price/</loc>", sitemap)
+        self.assertIn("<loc>https://example.test/price/now/</loc>", sitemap)
+
+    def test_ナビの先頭はnowを指す(self):
+        self.assertIn('<a href="now/">いま条件がそろう</a>', self.home)

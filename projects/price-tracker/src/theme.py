@@ -205,7 +205,7 @@ AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを
 # ナビは14項目を1行に並べていた。実測で携帯（375px）では 1,187px 中 844px が
 # 画面の外にあり、見えていたのは3項目だけだった。横スクロールできる印も無い。
 # よく使う5つを出し、残りは「ほかの一覧」に畳む。どれも1タップで届く。
-NAV_MAIN = [("./", "いま条件がそろう"), ("drops/", "今日の値下がり"),
+NAV_MAIN = [("now/", "いま条件がそろう"), ("drops/", "今日の値下がり"),
             ("lows/", "最安値圏"), ("search/", "商品を探す"), ("watch/", "見守り")]
 NAV_MORE = [("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
             ("rises/", "値上がり"), ("active/", "よく動く"), ("ending/", "期限が近い"),
@@ -828,7 +828,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
                          rank=(start + i + 1) if show_score else 0)
                     for i, r in enumerate(rows)) if rows
             else ('<li class="empty">' + esc(empty)
-                  + f'<span class="go"><a href="{prefix}">いま条件がそろっている商品</a>'
+                  + f'<span class="go"><a href="{prefix}now/">いま条件がそろっている商品</a>'
                   + f'<a href="{prefix}lows/">最安値圏</a>'
                   + f'<a href="{prefix}search/">商品を探す</a></span></li>'))
     total = len(rows) if total is None else total
@@ -851,7 +851,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + nav_top
             + (f'<p class="thin">この一覧は前回の記録との比較なので、'
                f'動きが少ない日は少なくなります。'
-               f'<a href="{prefix}">いま条件がそろっている商品</a>もご覧ください。</p>'
+               f'<a href="{prefix}now/">いま条件がそろっている商品</a>もご覧ください。</p>'
                if 0 < len(rows) < 10 and page == 1 else '')
             + (LIST_TOOLS + WATCH_MINI_JS if rows else "")
             + f'<ul class="cards">{body}</ul>'
@@ -889,6 +889,42 @@ def home_search(prefix: str = "") -> str:
             f'<input id="hq" name="q" type="search" autocomplete="off"'
             f' placeholder="商品名で探す（例: イヤホン）">'
             f'<button type="submit">探す</button></form>')
+
+
+def home_page(site: dict, canonical: str, updated: str, stats: dict,
+              views: list, genres: list) -> str:
+    """トップ。商品は並べず、入口だけを置く。
+
+    以前のトップは一覧そのもの（いま条件がそろっている商品）で、検索から来た人が
+    いきなり600件の並びと採点の説明を読まされていた。一覧は /now/ へ移し、
+    ここは「何ができるか」と「どこへ行くか」に絞る。
+
+    商品を出さないぶん中身が薄くならないよう、記録の規模・一覧の索引・
+    ジャンルの入口・判定のやり方への導線を置く。
+    """
+    # 説明文はヘッダの一行が同じことを言っている。ここでは繰り返さず、
+    # 何をすればよいかを書く（検索の meta には site の description を使う）。
+    lead = "商品名で探すか、下の一覧から選んでください。"
+    genre_links = "".join(
+        f'<li><a href="genre/{esc(str(g["genre_id"]))}/">{esc(g["name"])}</a>'
+        f'<span class="count">{g["count"]:,}商品</span></li>' for g in genres)
+    return (head(site["name"], site.get("description", ""), canonical, site, "")
+            + f'<h1>{esc(site["name"])}</h1><p class="lead">{esc(lead)}</p>'
+            + home_search()
+            + stats_bar(stats)
+            + AD_NOTICE
+            + views_map(views)
+            + (f'<section class="views"><h2>ジャンルから探す</h2>'
+               f'<ul class="genres">{genre_links}</ul></section>' if genres else "")
+            + '<section class="howto"><h2>何をしているサイトか</h2>'
+              '<p>楽天市場の価格を毎日記録し、その履歴から'
+              '「前回より安くなったか」「記録した中での最安値と比べてどうか」を'
+              '計算だけで判定しています。人の主観も生成AIによる文章も入れていません。</p>'
+              '<p>「最安値」は<strong>当サイトが記録を開始してからの期間内での最安値</strong>'
+              'であり、市場全体・全期間の最安値ではありません。'
+              '<a href="about/">判定のやり方と限界</a>に全部書いています。</p>'
+              '</section>'
+            + foot(site, "", updated))
 
 
 def views_map(counts: list, prefix: str = "") -> str:
@@ -1281,7 +1317,7 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
   if (!codes.length) {
     // 空のときに文だけ置くと行き止まりになる。探しに行く先を出す。
     note.innerHTML = 'まだありません。商品ページの「見守る」を押すとここに並びます。'
-      + '<span class="go"><a href="../">いま条件がそろっている商品</a>'
+      + '<span class="go"><a href="../now/">いま条件がそろっている商品</a>'
       + '<a href="../lows/">最安値圏</a><a href="../search/">商品を探す</a></span>';
     return;
   }
@@ -1450,7 +1486,7 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             # 先頭の札は「今日の値下がりへ」のまま ../../ を指していて、
             # トップを値下がりから入れ替えた時に直し忘れていた。
             + '<nav class="onward"><span>ほかの一覧を見る</span>'
-              '<a href="../../">いま条件がそろっている商品</a>'
+              '<a href="../../now/">いま条件がそろっている商品</a>'
               '<a href="../../drops/">今日の値下がり</a>'
               '<a href="../../lows/">最安値圏</a>'
               '<a href="../../search/">商品を探す</a></nav>'
