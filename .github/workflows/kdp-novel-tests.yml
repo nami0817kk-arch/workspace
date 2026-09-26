@@ -1,0 +1,27 @@
+name: kdp-novel tests
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "projects/kdp-novel/**"
+      - ".github/workflows/kdp-novel-tests.yml"
+  pull_request:
+    paths:
+      - "projects/kdp-novel/**"
+      - ".github/workflows/kdp-novel-tests.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/kdp-novel"
+      install: "pip install pytest"
