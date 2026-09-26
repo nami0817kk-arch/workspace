@@ -13,7 +13,11 @@
 <meta property="og:description" content="{{ self.description() }}">
 <meta property="og:url" content="{{ canonical }}">
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{{ SITE_URL }}/static/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ SITE_URL }}/static/og.png">
 <meta name="twitter:title" content="{{ self.title() }}">
 <meta name="twitter:description" content="{{ self.description() }}">
 <style>
@@ -278,6 +282,7 @@
     <nav>
       <a href="{{ base_url }}index.html">計算機</a>
       <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
+      <a href="{{ base_url }}kabe/index.html">週20時間の壁</a>
       <a href="{{ base_url }}year/index.html">年次の変化</a>
       <a href="{{ base_url }}faq.html">よくある誤解</a>
     </nav>
@@ -301,6 +306,7 @@
     <strong>使う</strong>
     <a href="{{ base_url }}index.html">加入判定チェッカー</a>
     <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
+    <a href="{{ base_url }}kabe/index.html">週20時間の壁</a>
     <a href="{{ base_url }}year/index.html">年次の変化を見る</a>
   </div>
   <div class="footer-group">

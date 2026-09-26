@@ -191,6 +191,23 @@
     return html;
   }
 
+  function kabeHtml(asOf, hourly) {
+    var prefecture = document.getElementById('prefecture').value;
+    var age = document.getElementById('age-40-64').checked;
+    var k = calc.kabeAnalyze(TABLES, EXTRAS, asOf, hourly, prefecture, age);
+    if (!k || !k.breakeven) return '';
+    var be = k.breakeven.hoursX10 / 10;
+    var html = '<h2>週20時間の壁（時給' + yen(hourly) + '・扶養に入っている場合）</h2>';
+    html += '<p>週19時間なら手取り月<strong>' + yen(k.net19) + '</strong>、週20時間にして社会保険に入ると月<strong>' + yen(k.net20)
+      + '</strong>で、<strong>' + yen(k.loss) + '減ります</strong>。週' + be + '時間まで増やすと、手取りは' + yen(k.breakeven.net) + 'になり元に戻ります。</p>';
+    if (k.pay19 * 12 >= 1300000) {
+      html += '<p class="note">この時給だと週19時間でも年収' + yen(k.pay19 * 12) + 'で130万円を超えるため、もともと扶養からは外れます。この比べ方は当てはまりません。</p>';
+    }
+    html += '<p class="hint">週19時間は社会保険・雇用保険なし、週20時間以上はどちらもありで、所得税（扶養0人）を引いた額。住民税・通勤手当は含みません。'
+      + '配偶者の会社の配偶者手当が止まる場合もあります。<a href="kabe/index.html">時給別の一覧</a></p>';
+    return html;
+  }
+
   function render() {
     var asOf = resolveAsOf(document.getElementById('as-of').value);
     var hours = parseFloat(document.getElementById('hours').value);
@@ -239,6 +256,7 @@
     html += '<p class="hint">この判定は「継続して2か月を超える雇用が見込まれること」を満たしている前提です。'
       + '短期のアルバイトなど見込みが2か月以下の場合は対象外です。</p>';
     if (r.eligible) html += premiumHtml(asOf, wage, extra, commute, dependents);
+    if (!isNaN(hourly) && hourly > 0 && r.employerSizeOk && r.notStudentOk) html += kabeHtml(asOf < '2026-10-01' ? '2026-10-01' : asOf, Math.round(hourly));
     out.innerHTML = html;
   }
 

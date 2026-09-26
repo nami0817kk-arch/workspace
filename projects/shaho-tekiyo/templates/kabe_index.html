@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}週20時間の壁｜時給別に、手取りがいくら減って何時間で戻るか（{{ era }}）{% endblock %}
+{% block description %}2026年10月から、51人以上の会社では週20時間以上で社会保険に入ります。扶養内のパートが週19時間から20時間に増やすと手取りはいくら減り、何時間で元に戻るかを時給別に。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">週20時間の壁</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>週20時間の壁 — 手取りはいくら減って、何時間で戻るか</h1>
+<p>
+  2026年10月から月収の条件（8.8万円以上）が無くなり、従業員51人以上の会社では週20時間以上働くと社会保険に入ります。
+  扶養に入って週19時間で働いている人が週20時間に増やすと、手取りは減ります。時給ごとに、減る額と、元の手取りに戻る時間をまとめました。
+</p>
+<div class="verdict ng">どの時給でも、元の手取りに戻るのは週{{ common_be }}時間前後</div>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>時給</th><th>週19時間の手取り</th><th>週20時間の手取り</th><th>元に戻る時間</th></tr></thead>
+  <tbody>
+    {% for o in others %}
+    <tr><th><a href="{{ o.hourly }}yen.html">{{ "{:,}".format(o.hourly) }}円</a></th><td>{{ "{:,}".format(o.net_19) }}円</td><td>{{ "{:,}".format(o.net_20) }}円（−{{ "{:,}".format(o.loss_at_20) }}円）</td><td>週{{ "%g"|format(o.breakeven_hours_x10 / 10) }}時間</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">東京・39歳以下・扶養に入っている人・通勤手当なしの場合（{{ era }}の料率・税額）。住民税は含みません。自分の条件では<a href="{{ base_url }}index.html">計算機</a>に時給を入れると出ます。</p>
+{% endblock %}
