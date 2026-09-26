@@ -44,6 +44,7 @@ import '../trait_row.dart';
 import '../training_sheet.dart';
 import '../transfer_code.dart';
 import '../../dev/admin.dart';
+import '../../feedback/review_prompt.dart';
 import '../../monetize/monetization.dart';
 import 'admin_screen.dart';
 import 'guide_screen.dart';
@@ -54,13 +55,21 @@ import 'support_screen.dart';
 
 /// キャリアの拠点。次の試合・練習・成績・順位表・これまでの記録をここから見る。
 class HubScreen extends StatelessWidget {
-  const HubScreen({super.key, required this.controller, this.monetization});
+  const HubScreen({
+    super.key,
+    required this.controller,
+    this.monetization,
+    this.reviewPrompt,
+  });
 
   final CareerController controller;
 
   /// 広告と課金。**渡されなければ何も出さない**（テストと、まだ
   /// 初期化が終わっていない起動直後）。
   final Monetization? monetization;
+
+  /// 星を頼む窓口。渡されなければ頼まない。
+  final ReviewPrompt? reviewPrompt;
 
   Future<void> _playNext(BuildContext context) async {
     // カップ戦の週なら、そちらへ。1週1試合の刻みは変えない。
@@ -112,9 +121,18 @@ class HubScreen extends StatelessWidget {
     // **広告はシーズンの画面を閉じたあと。** 画面の中に挟むと、契約を
     // 選んでいる途中で割り込むことになる。ここなら1シーズンの区切りそのもの。
     // 出すかどうかは `Monetization` が決める（買った人・序盤・連発は出ない）。
-    await monetization?.showSeasonAd(
-      seasonsPlayed: controller.state?.history.length ?? 0,
-    );
+    final adShown =
+        await monetization?.showSeasonAd(
+          seasonsPlayed: controller.state?.history.length ?? 0,
+        ) ??
+        false;
+
+    // **星を頼むのもここ。ただし広告を出した回は見送る。**
+    // 全画面広告を閉じた直後に評価を求めるのは、順番として最悪になる。
+    final state = controller.state;
+    if (state != null) {
+      await reviewPrompt?.askIfEarned(state: state, adShown: adShown);
+    }
   }
 
   void _openSupport(BuildContext context) {

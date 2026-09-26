@@ -96,15 +96,25 @@ class Monetization extends ChangeNotifier {
   ///
   /// 在庫が無ければ [AdService] 側が何もせずに戻るので、広告のせいで
   /// シーズンが進まなくなることはない。
-  Future<void> showSeasonAd({required int seasonsPlayed, DateTime? now}) async {
-    if (!shouldShowSeasonAd(seasonsPlayed: seasonsPlayed, now: now)) return;
+  ///
+  /// **実際に出せたら true。** 呼ぶ側がこれを見て、広告を閉じた直後に
+  /// 星を頼まないようにしている（`ReviewPrompt`）。
+  Future<bool> showSeasonAd({
+    required int seasonsPlayed,
+    DateTime? now,
+  }) async {
+    if (!shouldShowSeasonAd(seasonsPlayed: seasonsPlayed, now: now)) {
+      return false;
+    }
     final at = now ?? DateTime.now();
     // **出せた回だけ間隔を数える。** 前は出す前に記録していたので、
     // 在庫が無くて何も起きなかった回まで「出した」ことになり、
     // **見せていないのに次の機会が潰れていた**（広告の在庫は毎回あるとは
     // 限らないので、そのぶんそのまま収入が消える）。
     // 遊ぶ側から見ても、出ていないものを数える理由は無い。
-    if (await _ads.showInterstitial()) _lastAd = at;
+    if (!await _ads.showInterstitial()) return false;
+    _lastAd = at;
+    return true;
   }
 
   /// 買う。**受け取るのは [_grant] のほう**なので、ここでは結果を返すだけ。

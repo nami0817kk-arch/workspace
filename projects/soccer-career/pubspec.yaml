@@ -42,6 +42,7 @@ dependencies:
   # （soccer-manager が同じ形で Pages に出ている）。
   google_mobile_ads: ^9.1.0
   in_app_purchase: ^3.3.0
+  in_app_review: ^2.0.12
 
 dev_dependencies:
   flutter_test:
