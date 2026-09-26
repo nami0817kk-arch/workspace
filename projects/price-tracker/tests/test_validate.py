@@ -1443,3 +1443,67 @@ class RankAndBadgeTest(unittest.TestCase):
         html = self.theme.card(self.row())
 
         self.assertIn("記録した中で最安", html)
+
+
+class GenreMixTest(unittest.TestCase):
+    """ジャンルごとの取得件数。
+
+    同じ1,500件ずつ取るのは、動かない棚に同じ枠を割いていることになる。
+    実測（2026-09-26・21日分）で、21日のうち一度でも価格が動いた商品は
+    家電28.5%に対してパソコン・周辺機器17.2%だった。
+    """
+
+    def setUp(self):
+        import fetch
+        self.fetch = fetch
+
+    def test_ジャンル側の指定を使う(self):
+        site = {"hits_per_genre": 1500}
+
+        self.assertEqual(self.fetch.hits_for({"genre_id": "1", "hits": 2000}, site), 2000)
+
+    def test_指定が無ければ全体の既定値(self):
+        site = {"hits_per_genre": 1500}
+
+        self.assertEqual(self.fetch.hits_for({"genre_id": "1"}, site), 1500)
+        self.assertEqual(self.fetch.hits_for("1", site), 1500)
+
+    def test_0は指定なし扱いにする(self):
+        # 0件取得は事故にしかならない。既定値へ倒す
+        self.assertEqual(
+            self.fetch.hits_for({"genre_id": "1", "hits": 0}, {"hits_per_genre": 1500}),
+            1500)
+
+
+class GenreReportTest(unittest.TestCase):
+    """どのジャンルを厚く追うかを決めるための集計。
+
+    値動きは履歴でしか測れないので、楽天に問い合わせる explore.py では出せない。
+    """
+
+    def setUp(self):
+        import genre_report
+        self.report = genre_report
+
+    def test_記録が足りないジャンルは判定不可にする(self):
+        # 追加した翌日に0%と出るのは、動かないからではなく比べる相手が無いから。
+        # それを見て切ると、中身を見ずに捨てることになる
+        rows = [{"name": "新しいジャンル", "hits": 1500, "items": 100, "days": 2,
+                 "judgeable": False, "moved": 0.0, "twice": 0.0,
+                 "pointed": 0.13, "ending": 0.14, "median_price": 3300}]
+
+        out = self.report.render(rows)
+
+        self.assertIn("---", out)
+        self.assertNotIn("0.0%", out.split("倍率")[0])
+        self.assertIn("あと5日で判定できる", out)
+
+    def test_記録が足りていれば割合を出す(self):
+        rows = [{"name": "家電", "hits": 2000, "items": 100, "days": 20,
+                 "judgeable": True, "moved": 0.285, "twice": 0.07,
+                 "pointed": 0.213, "ending": 0.228, "median_price": 6384}]
+
+        out = self.report.render(rows)
+
+        self.assertIn("28.5%", out)
+        self.assertNotIn("判定できる", out)

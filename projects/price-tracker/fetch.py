@@ -22,6 +22,21 @@ from src import rakuten, store, validate  # noqa: E402
 JST = timezone(timedelta(hours=9))
 
 
+def hits_for(genre, site: dict) -> int:
+    """このジャンルを何件取るか。
+
+    ジャンルによって価格の動き方が違う。実測（2026-09-26・21日分）では
+    「21日のうち一度でも価格が動いた商品」が家電28.5%に対してパソコン・
+    周辺機器17.2%で、ポイント倍率が通常より高い割合も21.3%対8.3%だった。
+    同じ1,500件ずつ取るのは、動かない棚に同じ枠を割いていることになる。
+    ジャンル側に hits があればそれを使い、無ければ全体の既定値を使う。
+    """
+    default = site.get("hits_per_genre", 90)
+    if isinstance(genre, dict) and genre.get("hits"):
+        return int(genre["hits"])
+    return default
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="楽天から価格を取得して記録する")
     ap.add_argument("--dry-run", action="store_true",
@@ -40,10 +55,13 @@ def main() -> int:
         return 1
 
     if args.dry_run:
-        hits = site.get("hits_per_genre", 90)
+        counts = [hits_for(g, site) for g in genres]
         # 1リクエストで取れるのは rakuten.MAX_HITS 件。端数も1回に数える。
-        reqs = len(genres) * -(-hits // rakuten.MAX_HITS)
-        print(f"対象ジャンル {len(genres)}件 / 1ジャンルあたり{hits}件 = {len(genres) * hits:,}件")
+        reqs = sum(-(-h // rakuten.MAX_HITS) for h in counts)
+        print(f"対象ジャンル {len(genres)}件 / 合計 {sum(counts):,}件")
+        for g, h in zip(genres, counts):
+            name = g.get("name", g.get("genre_id")) if isinstance(g, dict) else g
+            print(f"  {name}: {h:,}件")
         print(f"想定リクエスト数: 約{reqs}回"
               f"（{rakuten.MIN_INTERVAL}秒間隔のため所要 約{reqs * rakuten.MIN_INTERVAL / 60:.1f}分）")
         print(f"保存先: {store.snapshot_path(data, args.day)}")
@@ -56,7 +74,7 @@ def main() -> int:
     for genre in genres:
         gid = str(genre["genre_id"] if isinstance(genre, dict) else genre)
         try:
-            rows = rakuten.search_genre(gid, site.get("hits_per_genre", 90), throttle)
+            rows = rakuten.search_genre(gid, hits_for(genre, site), throttle)
         except Exception as exc:  # 1ジャンル失敗しても他は記録する
             failed.append(f"{gid}: {exc}")
             continue
@@ -93,7 +111,9 @@ def main() -> int:
         # 期待件数は「取得できたジャンル数」から出す。全ジャンル数で見ると、
         # 1ジャンル落ちただけで8割を割り、無事だった残りごと捨てることになる。
         # 落ちたジャンル自体は下の「失敗:」行で残す。
-        rows, expected=(len(genres) - len(failed)) * site.get("hits_per_genre", 90))
+        rows, expected=sum(hits_for(g, site) for g in genres
+                           if not any(str(g.get("genre_id") if isinstance(g, dict) else g)
+                                      == f.split(":")[0] for f in failed)))
     errors = errors + warn2
     for w in warnings:
         print(f"  警告: {w}")
