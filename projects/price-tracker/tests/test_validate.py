@@ -1267,3 +1267,47 @@ class LayoutTest(unittest.TestCase):
 
         self.assertIn('<ul class="genres">', html)
         self.assertIn('<span class="count">1,538商品</span>', html)
+
+
+class BracketKindTest(unittest.TestCase):
+    """囲みは開きと閉じを対で見る。
+
+    どちらも文字の集合で書いていたため【】と[]しか通らず、
+    『送料無料！』「楽天1位」［RSL］（地域限定）が素通りしていた（実測86件）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_全角かぎ括弧の宣伝を落とす(self):
+        for name, want in (
+                ("『送料無料！』（地域限定）サッポロビール ヱビス缶セット",
+                 "サッポロビール ヱビス缶セット"),
+                ("「楽天1位」 カラオケマイク bluetooth", "カラオケマイク bluetooth"),
+                ("［メール便OK]ワリオランドシェイク", "ワリオランドシェイク"),
+                ("《3個セットで500円OFF》シャンプー 詰め替え", "シャンプー 詰め替え")):
+            with self.subTest(name=name):
+                self.assertEqual(self.theme.clean_name(name), want)
+
+    def test_配送とキャンペーンの断りを落とす(self):
+        for name in ("［最強配送］モニター 27インチ", "［RSL］ヘアアイロン カール",
+                     "【60日保証キャンペーン中】電動歯ブラシ 替えブラシ"):
+            with self.subTest(name=name):
+                self.assertFalse(self.theme.clean_name(name).startswith(("［", "【")),
+                                 self.theme.clean_name(name))
+
+    def test_商品を見分ける囲みは残す(self):
+        # 状態・種別・保証は買う側が見分けに使う。落とすと何の商品か分からなくなる
+        for name in ("【中古】シャープ 液晶テレビ", "【新品】Nintendo Switch 2",
+                     "【公式】ダイソン 掃除機", "【2個セット】乾電池 単三",
+                     "（POPOLO／ポポロ） オカリナ アルトC管"):
+            with self.subTest(name=name):
+                self.assertEqual(self.theme.clean_name(name), name)
+
+    def test_全角と半角が混ざった囲みも読む(self):
+        # 「［メール便OK]」のように開きと閉じが混ざる名前が実在するので、
+        # 対を厳密には見ない。落とすかは中身で決めているので行き過ぎない
+        self.assertEqual(self.theme.clean_name("［メール便OK]ワリオランドシェイク"),
+                         "ワリオランドシェイク")
+        self.assertEqual(self.theme.clean_name("【送料無料] テレビ 42型"), "テレビ 42型")
