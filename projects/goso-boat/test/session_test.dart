@@ -101,7 +101,7 @@ void main() {
     expect(s.stars, 2);
   });
 
-  group('全60面をヒントだけで最短で解ける', () {
+  group('全面をヒントだけで最短で解ける', () {
     for (final l in _levels()) {
       test(l.id, () {
         final s = Session(l);

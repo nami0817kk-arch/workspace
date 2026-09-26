@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "levels": [
     {
       "id": "1-1",
@@ -16,9 +16,9 @@
       "world": 1,
       "cast": {
         "police": 4,
-        "prisoner": 3
+        "prisoner": 2
       },
-      "capacity": 4,
+      "capacity": 3,
       "par": 5
     },
     {
@@ -35,10 +35,10 @@
       "id": "1-4",
       "world": 1,
       "cast": {
-        "police": 4,
-        "prisoner": 2
+        "police": 3,
+        "prisoner": 1
       },
-      "capacity": 3,
+      "capacity": 2,
       "par": 5
     },
     {
@@ -55,11 +55,11 @@
       "id": "1-6",
       "world": 1,
       "cast": {
-        "police": 3,
-        "prisoner": 1
+        "police": 5,
+        "prisoner": 3
       },
-      "capacity": 2,
-      "par": 5
+      "capacity": 3,
+      "par": 7
     },
     {
       "id": "1-7",
@@ -75,6 +75,16 @@
       "id": "1-8",
       "world": 1,
       "cast": {
+        "police": 4,
+        "prisoner": 2
+      },
+      "capacity": 2,
+      "par": 9
+    },
+    {
+      "id": "1-9",
+      "world": 1,
+      "cast": {
         "police": 5,
         "prisoner": 2
       },
@@ -82,7 +92,7 @@
       "par": 11
     },
     {
-      "id": "1-9",
+      "id": "1-10",
       "world": 1,
       "cast": {
         "police": 4,
@@ -92,7 +102,7 @@
       "par": 5
     },
     {
-      "id": "1-10",
+      "id": "1-11",
       "world": 1,
       "cast": {
         "police": 5,
@@ -100,6 +110,16 @@
       },
       "capacity": 4,
       "par": 7
+    },
+    {
+      "id": "1-12",
+      "world": 1,
+      "cast": {
+        "police": 6,
+        "prisoner": 6
+      },
+      "capacity": 4,
+      "par": 9
     },
     {
       "id": "2-1",
@@ -118,10 +138,10 @@
       "cast": {
         "police": 1,
         "chief": 2,
-        "prisoner": 2
+        "prisoner": 1
       },
-      "capacity": 4,
-      "par": 3
+      "capacity": 2,
+      "par": 5
     },
     {
       "id": "2-3",
@@ -138,23 +158,23 @@
       "id": "2-4",
       "world": 2,
       "cast": {
-        "police": 1,
+        "police": 2,
         "chief": 2,
-        "prisoner": 1
+        "prisoner": 4
       },
-      "capacity": 2,
-      "par": 5
+      "capacity": 3,
+      "par": 7
     },
     {
       "id": "2-5",
       "world": 2,
       "cast": {
         "police": 2,
-        "chief": 2,
+        "chief": 1,
         "prisoner": 3
       },
-      "capacity": 2,
-      "par": 11
+      "capacity": 4,
+      "par": 3
     },
     {
       "id": "2-6",
@@ -171,6 +191,17 @@
       "id": "2-7",
       "world": 2,
       "cast": {
+        "police": 2,
+        "chief": 2,
+        "prisoner": 3
+      },
+      "capacity": 2,
+      "par": 11
+    },
+    {
+      "id": "2-8",
+      "world": 2,
+      "cast": {
         "police": 1,
         "chief": 2,
         "prisoner": 2
@@ -179,7 +210,7 @@
       "par": 7
     },
     {
-      "id": "2-8",
+      "id": "2-9",
       "world": 2,
       "cast": {
         "police": 2,
@@ -190,7 +221,40 @@
       "par": 5
     },
     {
-      "id": "2-9",
+      "id": "2-10",
+      "world": 2,
+      "cast": {
+        "police": 2,
+        "chief": 2,
+        "prisoner": 5
+      },
+      "capacity": 3,
+      "par": 9
+    },
+    {
+      "id": "2-11",
+      "world": 2,
+      "cast": {
+        "police": 3,
+        "chief": 2,
+        "prisoner": 6
+      },
+      "capacity": 3,
+      "par": 11
+    },
+    {
+      "id": "2-12",
+      "world": 2,
+      "cast": {
+        "police": 3,
+        "chief": 2,
+        "prisoner": 6
+      },
+      "capacity": 4,
+      "par": 7
+    },
+    {
+      "id": "2-13",
       "world": 2,
       "cast": {
         "police": 2,
@@ -201,7 +265,7 @@
       "par": 5
     },
     {
-      "id": "2-10",
+      "id": "2-14",
       "world": 2,
       "cast": {
         "police": 3,
@@ -210,6 +274,17 @@
       },
       "capacity": 4,
       "par": 7
+    },
+    {
+      "id": "2-15",
+      "world": 2,
+      "cast": {
+        "police": 2,
+        "chief": 2,
+        "prisoner": 6
+      },
+      "capacity": 4,
+      "par": 9
     },
     {
       "id": "3-1",
@@ -237,15 +312,49 @@
       "id": "3-3",
       "world": 3,
       "cast": {
-        "police": 6,
-        "prisoner": 3,
+        "police": 1,
+        "chief": 2,
         "cuffed": 1
+      },
+      "capacity": 3,
+      "par": 5
+    },
+    {
+      "id": "3-4",
+      "world": 3,
+      "cast": {
+        "police": 2,
+        "chief": 2,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "par": 5
+    },
+    {
+      "id": "3-5",
+      "world": 3,
+      "cast": {
+        "police": 5,
+        "chief": 1,
+        "prisoner": 2,
+        "cuffed": 2
       },
       "capacity": 4,
       "par": 9
     },
     {
-      "id": "3-4",
+      "id": "3-6",
+      "world": 3,
+      "cast": {
+        "police": 4,
+        "prisoner": 1,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "par": 5
+    },
+    {
+      "id": "3-7",
       "world": 3,
       "cast": {
         "police": 1,
@@ -257,29 +366,39 @@
       "par": 5
     },
     {
-      "id": "3-5",
+      "id": "3-8",
+      "world": 3,
+      "cast": {
+        "police": 6,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "3-9",
+      "world": 3,
+      "cast": {
+        "police": 2,
+        "chief": 2,
+        "cuffed": 2
+      },
+      "capacity": 3,
+      "par": 9
+    },
+    {
+      "id": "3-10",
       "world": 3,
       "cast": {
         "police": 4,
-        "prisoner": 1,
+        "prisoner": 2,
         "cuffed": 1
       },
       "capacity": 4,
       "par": 5
     },
     {
-      "id": "3-6",
-      "world": 3,
-      "cast": {
-        "police": 4,
-        "chief": 1,
-        "cuffed": 2
-      },
-      "capacity": 4,
-      "par": 7
-    },
-    {
-      "id": "3-7",
+      "id": "3-11",
       "world": 3,
       "cast": {
         "police": 3,
@@ -291,7 +410,7 @@
       "par": 11
     },
     {
-      "id": "3-8",
+      "id": "3-12",
       "world": 3,
       "cast": {
         "police": 6,
@@ -302,111 +421,142 @@
       "par": 9
     },
     {
-      "id": "3-9",
+      "id": "3-13",
       "world": 3,
       "cast": {
         "police": 5,
+        "prisoner": 3,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "par": 7
+    },
+    {
+      "id": "3-14",
+      "world": 3,
+      "cast": {
+        "police": 4,
         "chief": 1,
-        "prisoner": 2,
+        "prisoner": 1,
         "cuffed": 2
       },
       "capacity": 3,
-      "par": 13
+      "par": 11
     },
     {
-      "id": "3-10",
+      "id": "3-15",
       "world": 3,
       "cast": {
-        "police": 3,
+        "police": 2,
         "chief": 2,
-        "prisoner": 3,
+        "prisoner": 2,
         "cuffed": 2
       },
       "capacity": 4,
-      "par": 11
+      "par": 9
     },
     {
       "id": "4-1",
       "world": 4,
       "cast": {
-        "police": 1,
-        "chief": 2,
+        "police": 4,
         "boss": 1
       },
-      "capacity": 3,
+      "capacity": 4,
       "par": 3
     },
     {
       "id": "4-2",
       "world": 4,
       "cast": {
-        "police": 2,
-        "chief": 2,
+        "police": 6,
+        "prisoner": 3,
         "boss": 1
       },
-      "capacity": 2,
+      "capacity": 4,
       "par": 7
     },
     {
       "id": "4-3",
       "world": 4,
       "cast": {
-        "police": 1,
+        "police": 2,
         "chief": 2,
-        "boss": 2
+        "boss": 1
       },
-      "capacity": 4,
-      "par": 3
+      "capacity": 2,
+      "par": 7
     },
     {
       "id": "4-4",
       "world": 4,
       "cast": {
-        "police": 1,
-        "chief": 2,
-        "boss": 1
+        "police": 6,
+        "boss": 2
       },
-      "capacity": 2,
+      "capacity": 4,
       "par": 5
     },
     {
       "id": "4-5",
       "world": 4,
       "cast": {
-        "police": 4,
-        "chief": 1,
-        "prisoner": 1,
-        "boss": 2
+        "police": 1,
+        "chief": 2,
+        "boss": 1
       },
-      "capacity": 4,
+      "capacity": 2,
       "par": 5
     },
     {
       "id": "4-6",
       "world": 4,
       "cast": {
-        "police": 4,
-        "chief": 2,
-        "prisoner": 3,
-        "boss": 2
+        "police": 6,
+        "prisoner": 2,
+        "boss": 1
       },
-      "capacity": 4,
-      "par": 7
+      "capacity": 3,
+      "par": 9
     },
     {
       "id": "4-7",
       "world": 4,
       "cast": {
-        "police": 2,
-        "chief": 2,
-        "prisoner": 2,
+        "police": 5,
+        "chief": 1,
+        "prisoner": 4,
         "boss": 1
       },
-      "capacity": 2,
-      "par": 11
+      "capacity": 4,
+      "par": 7
     },
     {
       "id": "4-8",
+      "world": 4,
+      "cast": {
+        "police": 5,
+        "chief": 1,
+        "prisoner": 1,
+        "boss": 2
+      },
+      "capacity": 3,
+      "par": 9
+    },
+    {
+      "id": "4-9",
+      "world": 4,
+      "cast": {
+        "police": 2,
+        "chief": 2,
+        "prisoner": 3,
+        "boss": 1
+      },
+      "capacity": 3,
+      "par": 7
+    },
+    {
+      "id": "4-10",
       "world": 4,
       "cast": {
         "police": 4,
@@ -417,19 +567,53 @@
       "par": 7
     },
     {
-      "id": "4-9",
+      "id": "4-11",
       "world": 4,
       "cast": {
-        "police": 1,
+        "police": 4,
         "chief": 2,
         "prisoner": 3,
+        "boss": 2
+      },
+      "capacity": 3,
+      "par": 9
+    },
+    {
+      "id": "4-12",
+      "world": 4,
+      "cast": {
+        "police": 4,
+        "chief": 2,
+        "prisoner": 5,
+        "boss": 1
+      },
+      "capacity": 3,
+      "par": 11
+    },
+    {
+      "id": "4-13",
+      "world": 4,
+      "cast": {
+        "police": 4,
+        "prisoner": 2,
         "boss": 1
       },
       "capacity": 4,
       "par": 5
     },
     {
-      "id": "4-10",
+      "id": "4-14",
+      "world": 4,
+      "cast": {
+        "police": 6,
+        "prisoner": 1,
+        "boss": 2
+      },
+      "capacity": 3,
+      "par": 9
+    },
+    {
+      "id": "4-15",
       "world": 4,
       "cast": {
         "police": 6,
@@ -443,9 +627,9 @@
       "id": "5-1",
       "world": 5,
       "cast": {
-        "chief": 1,
-        "dog": 2,
-        "prisoner": 1
+        "chief": 2,
+        "dog": 1,
+        "boss": 1
       },
       "capacity": 3,
       "par": 3
@@ -454,12 +638,13 @@
       "id": "5-2",
       "world": 5,
       "cast": {
-        "police": 3,
+        "police": 2,
+        "chief": 1,
         "dog": 2,
-        "prisoner": 1,
-        "boss": 1
+        "prisoner": 3,
+        "cuffed": 1
       },
-      "capacity": 3,
+      "capacity": 4,
       "par": 7
     },
     {
@@ -468,6 +653,7 @@
       "cast": {
         "police": 2,
         "dog": 2,
+        "prisoner": 1,
         "boss": 1
       },
       "capacity": 3,
@@ -477,23 +663,24 @@
       "id": "5-4",
       "world": 5,
       "cast": {
+        "police": 1,
         "chief": 2,
-        "dog": 2,
-        "prisoner": 1
+        "dog": 1,
+        "prisoner": 5
       },
-      "capacity": 2,
-      "par": 7
+      "capacity": 4,
+      "par": 5
     },
     {
       "id": "5-5",
       "world": 5,
       "cast": {
-        "police": 4,
+        "chief": 2,
         "dog": 2,
         "cuffed": 2
       },
       "capacity": 4,
-      "par": 9
+      "par": 5
     },
     {
       "id": "5-6",
@@ -501,65 +688,126 @@
       "cast": {
         "police": 2,
         "dog": 2,
-        "prisoner": 1,
-        "boss": 1
+        "prisoner": 2
       },
-      "capacity": 3,
-      "par": 5
+      "capacity": 2,
+      "par": 9
     },
     {
       "id": "5-7",
       "world": 5,
       "cast": {
+        "police": 1,
         "chief": 1,
         "dog": 2,
-        "prisoner": 3
+        "boss": 2
       },
-      "capacity": 4,
-      "par": 3
+      "capacity": 3,
+      "par": 5
     },
     {
       "id": "5-8",
       "world": 5,
       "cast": {
-        "police": 4,
+        "police": 2,
         "dog": 2,
-        "prisoner": 3,
-        "boss": 1
+        "prisoner": 4
       },
-      "capacity": 3,
-      "par": 9
+      "capacity": 4,
+      "par": 5
     },
     {
       "id": "5-9",
       "world": 5,
       "cast": {
-        "police": 4,
+        "police": 2,
         "dog": 2,
-        "prisoner": 1,
-        "boss": 2
+        "prisoner": 2,
+        "boss": 1
       },
-      "capacity": 3,
-      "par": 9
+      "capacity": 4,
+      "par": 5
     },
     {
       "id": "5-10",
       "world": 5,
       "cast": {
+        "police": 1,
+        "chief": 1,
+        "dog": 2,
+        "prisoner": 1,
+        "boss": 2
+      },
+      "capacity": 4,
+      "par": 5
+    },
+    {
+      "id": "5-11",
+      "world": 5,
+      "cast": {
         "police": 4,
         "dog": 2,
-        "prisoner": 2,
-        "boss": 2
+        "prisoner": 1,
+        "cuffed": 2
       },
       "capacity": 4,
       "par": 9
     },
     {
+      "id": "5-12",
+      "world": 5,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "dog": 2,
+        "cuffed": 2
+      },
+      "capacity": 3,
+      "par": 11
+    },
+    {
+      "id": "5-13",
+      "world": 5,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "dog": 1,
+        "prisoner": 3,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "par": 7
+    },
+    {
+      "id": "5-14",
+      "world": 5,
+      "cast": {
+        "police": 4,
+        "dog": 2,
+        "prisoner": 2,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "5-15",
+      "world": 5,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "dog": 2,
+        "prisoner": 1,
+        "cuffed": 2
+      },
+      "capacity": 3,
+      "par": 11
+    },
+    {
       "id": "6-1",
       "world": 6,
       "cast": {
-        "chief": 1,
-        "dog": 2,
+        "police": 3,
         "prisoner": 1
       },
       "capacity": 3,
@@ -570,24 +818,22 @@
       "id": "6-2",
       "world": 6,
       "cast": {
-        "police": 3,
-        "dog": 2,
-        "prisoner": 2,
-        "cuffed": 1
+        "police": 1,
+        "chief": 2,
+        "prisoner": 3
       },
-      "capacity": 4,
+      "capacity": 3,
       "island": true,
-      "par": 14
+      "par": 10
     },
     {
       "id": "6-3",
       "world": 6,
       "cast": {
-        "police": 1,
-        "chief": 2,
+        "police": 4,
         "cuffed": 1
       },
-      "capacity": 3,
+      "capacity": 4,
       "island": true,
       "par": 10
     },
@@ -595,37 +841,34 @@
       "id": "6-4",
       "world": 6,
       "cast": {
-        "police": 1,
-        "chief": 2,
-        "boss": 2
-      },
-      "capacity": 4,
-      "island": true,
-      "par": 6
-    },
-    {
-      "id": "6-5",
-      "world": 6,
-      "cast": {
         "police": 2,
-        "dog": 2,
-        "prisoner": 1,
-        "cuffed": 1
+        "chief": 2,
+        "cuffed": 2
       },
       "capacity": 4,
       "island": true,
       "par": 10
     },
     {
+      "id": "6-5",
+      "world": 6,
+      "cast": {
+        "police": 3,
+        "prisoner": 3
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 6
+    },
+    {
       "id": "6-6",
       "world": 6,
       "cast": {
-        "police": 1,
+        "police": 2,
         "chief": 2,
-        "prisoner": 1,
-        "cuffed": 1
+        "prisoner": 5
       },
-      "capacity": 3,
+      "capacity": 4,
       "island": true,
       "par": 10
     },
@@ -633,30 +876,261 @@
       "id": "6-7",
       "world": 6,
       "cast": {
-        "police": 4,
+        "police": 5,
         "chief": 1,
+        "prisoner": 1,
         "cuffed": 2
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 26
+    },
+    {
+      "id": "6-8",
+      "world": 6,
+      "cast": {
+        "police": 4,
+        "prisoner": 1,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 10
+    },
+    {
+      "id": "6-9",
+      "world": 6,
+      "cast": {
+        "police": 3,
+        "chief": 2,
+        "prisoner": 4,
+        "cuffed": 1
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 22
+    },
+    {
+      "id": "6-10",
+      "world": 6,
+      "cast": {
+        "police": 4,
+        "prisoner": 4
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 10
+    },
+    {
+      "id": "6-11",
+      "world": 6,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "prisoner": 2,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 10
+    },
+    {
+      "id": "6-12",
+      "world": 6,
+      "cast": {
+        "police": 5,
+        "prisoner": 5
       },
       "capacity": 4,
       "island": true,
       "par": 14
     },
     {
-      "id": "6-8",
+      "id": "6-13",
+      "world": 6,
+      "cast": {
+        "police": 5,
+        "prisoner": 3,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 14
+    },
+    {
+      "id": "6-14",
+      "world": 6,
+      "cast": {
+        "police": 6,
+        "prisoner": 6
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "6-15",
       "world": 6,
       "cast": {
         "police": 2,
         "chief": 2,
-        "prisoner": 1,
+        "prisoner": 2,
         "cuffed": 2
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "7-1",
+      "world": 7,
+      "cast": {
+        "police": 3,
+        "chief": 2,
+        "boss": 1
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 10
+    },
+    {
+      "id": "7-2",
+      "world": 7,
+      "cast": {
+        "police": 3,
+        "chief": 2,
+        "prisoner": 2,
+        "boss": 1,
+        "cuffed": 1
       },
       "capacity": 3,
       "island": true,
       "par": 18
     },
     {
-      "id": "6-9",
-      "world": 6,
+      "id": "7-3",
+      "world": 7,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "dog": 2,
+        "boss": 2
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 14
+    },
+    {
+      "id": "7-4",
+      "world": 7,
+      "cast": {
+        "police": 2,
+        "chief": 2,
+        "dog": 1,
+        "prisoner": 4,
+        "cuffed": 1
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 22
+    },
+    {
+      "id": "7-5",
+      "world": 7,
+      "cast": {
+        "police": 1,
+        "chief": 2,
+        "dog": 1,
+        "prisoner": 3,
+        "boss": 1
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 14
+    },
+    {
+      "id": "7-6",
+      "world": 7,
+      "cast": {
+        "police": 4,
+        "chief": 1,
+        "boss": 1,
+        "cuffed": 1
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "7-7",
+      "world": 7,
+      "cast": {
+        "police": 2,
+        "dog": 2,
+        "prisoner": 2,
+        "boss": 1
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 10
+    },
+    {
+      "id": "7-8",
+      "world": 7,
+      "cast": {
+        "police": 1,
+        "chief": 1,
+        "dog": 2,
+        "prisoner": 1,
+        "boss": 2
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 10
+    },
+    {
+      "id": "7-9",
+      "world": 7,
+      "cast": {
+        "police": 4,
+        "chief": 2,
+        "prisoner": 1,
+        "boss": 1,
+        "cuffed": 2
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 26
+    },
+    {
+      "id": "7-10",
+      "world": 7,
+      "cast": {
+        "police": 3,
+        "dog": 2,
+        "prisoner": 3,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 14
+    },
+    {
+      "id": "7-11",
+      "world": 7,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "dog": 1,
+        "prisoner": 5
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 14
+    },
+    {
+      "id": "7-12",
+      "world": 7,
       "cast": {
         "police": 5,
         "chief": 1,
@@ -668,17 +1142,271 @@
       "par": 26
     },
     {
-      "id": "6-10",
-      "world": 6,
+      "id": "7-13",
+      "world": 7,
       "cast": {
-        "police": 3,
-        "chief": 2,
-        "prisoner": 3,
+        "police": 4,
+        "dog": 2,
+        "prisoner": 2,
         "cuffed": 2
       },
       "capacity": 4,
       "island": true,
+      "par": 18
+    },
+    {
+      "id": "7-14",
+      "world": 7,
+      "cast": {
+        "police": 3,
+        "chief": 2,
+        "prisoner": 1,
+        "boss": 1,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "7-15",
+      "world": 7,
+      "cast": {
+        "police": 4,
+        "chief": 2,
+        "boss": 2,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "8-1",
+      "world": 8,
+      "cast": {
+        "police": 5,
+        "chief": 1,
+        "prisoner": 2,
+        "cuffed": 2
+      },
+      "capacity": 3,
+      "par": 13
+    },
+    {
+      "id": "8-2",
+      "world": 8,
+      "cast": {
+        "police": 4,
+        "dog": 2,
+        "prisoner": 2,
+        "boss": 2
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "8-3",
+      "world": 8,
+      "cast": {
+        "police": 4,
+        "dog": 2,
+        "prisoner": 2,
+        "boss": 1,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "8-4",
+      "world": 8,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "dog": 2,
+        "prisoner": 2,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "8-5",
+      "world": 8,
+      "cast": {
+        "police": 3,
+        "chief": 2,
+        "prisoner": 1,
+        "boss": 1,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "8-6",
+      "world": 8,
+      "cast": {
+        "police": 6,
+        "prisoner": 2,
+        "boss": 1,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "8-7",
+      "world": 8,
+      "cast": {
+        "police": 6,
+        "prisoner": 2,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "8-8",
+      "world": 8,
+      "cast": {
+        "police": 4,
+        "chief": 2,
+        "boss": 2,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "par": 9
+    },
+    {
+      "id": "8-9",
+      "world": 8,
+      "cast": {
+        "police": 5,
+        "chief": 1,
+        "boss": 1,
+        "cuffed": 2
+      },
+      "capacity": 3,
+      "par": 13
+    },
+    {
+      "id": "8-10",
+      "world": 8,
+      "cast": {
+        "police": 4,
+        "dog": 2,
+        "prisoner": 2,
+        "boss": 1,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "8-11",
+      "world": 8,
+      "cast": {
+        "police": 4,
+        "dog": 2,
+        "prisoner": 2,
+        "boss": 2
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "8-12",
+      "world": 8,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "dog": 2,
+        "prisoner": 1,
+        "cuffed": 2
+      },
+      "capacity": 3,
+      "island": true,
       "par": 22
+    },
+    {
+      "id": "8-13",
+      "world": 8,
+      "cast": {
+        "police": 2,
+        "chief": 1,
+        "dog": 2,
+        "prisoner": 2,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "8-14",
+      "world": 8,
+      "cast": {
+        "police": 6,
+        "prisoner": 2,
+        "boss": 1,
+        "cuffed": 1
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "8-15",
+      "world": 8,
+      "cast": {
+        "police": 6,
+        "prisoner": 2,
+        "cuffed": 2
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "8-16",
+      "world": 8,
+      "cast": {
+        "police": 2,
+        "chief": 2,
+        "prisoner": 6
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "8-17",
+      "world": 8,
+      "cast": {
+        "police": 6,
+        "prisoner": 2,
+        "boss": 2
+      },
+      "capacity": 4,
+      "island": true,
+      "par": 18
+    },
+    {
+      "id": "8-18",
+      "world": 8,
+      "cast": {
+        "police": 5,
+        "chief": 1,
+        "boss": 1,
+        "cuffed": 2
+      },
+      "capacity": 3,
+      "island": true,
+      "par": 26
     }
   ]
 }

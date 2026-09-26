@@ -577,6 +577,42 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'舟は「手前の岸と中州」「中州と向こう岸」の間を行き来する。岸から岸へ直接は行けない。\n中州に人を残すこともできる。中州でも見張りが要る。'**
   String get intro6Body;
+
+  /// No description provided for @world7.
+  ///
+  /// In ja, this message translates to:
+  /// **'総力戦'**
+  String get world7;
+
+  /// No description provided for @world8.
+  ///
+  /// In ja, this message translates to:
+  /// **'鬼門'**
+  String get world8;
+
+  /// No description provided for @intro7Title.
+  ///
+  /// In ja, this message translates to:
+  /// **'総力戦'**
+  String get intro7Title;
+
+  /// No description provided for @intro7Body.
+  ///
+  /// In ja, this message translates to:
+  /// **'中州に、看守長も警察犬もボスも手錠の2人も。\nこれまでの決まりを全部使って渡しきる。'**
+  String get intro7Body;
+
+  /// No description provided for @intro8Title.
+  ///
+  /// In ja, this message translates to:
+  /// **'鬼門'**
+  String get intro8Title;
+
+  /// No description provided for @intro8Body.
+  ///
+  /// In ja, this message translates to:
+  /// **'全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。'**
+  String get intro8Body;
 }
 
 class _AppLocalizationsDelegate

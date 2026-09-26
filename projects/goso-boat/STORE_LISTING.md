@@ -55,11 +55,11 @@ But the island needs guards too. Who stays where?
 • Chief — guards two prisoners alone
 • Cuffed pair — chained together, takes two seats
 
-■ 60 levels, 3 stars for the shortest route
+■ 120 levels, 3 stars for the shortest route
 Every level is solvable. Cross in the fewest trips to earn 3 stars.
 Stuck? A hint shows your next move. Undo and restart any time. Plays offline.
 
-Promotional text: Escort prisoners across the river without letting one escape. A river island, a boss, a police dog and cuffed pairs. 60 levels; the shortest route earns 3 stars.
+Promotional text: Escort prisoners across the river without letting one escape. A river island, a boss, a police dog and cuffed pairs. 120 levels; the shortest route earns 3 stars.
 
 ## カテゴリ
 
@@ -69,7 +69,7 @@ Promotional text: Escort prisoners across the river without letting one escape. 
 
 | アプリ | 評価件数 | 中身 | こちらとの違い |
 |---|---|---|---|
-| ぷくぷく川渡り（BEAK、日本、2026-06） | 0 | 動物の川渡り32面。「2席使う子」「漕げる子」「人数の釣り合い」がある | **いちばん近い。** こちらは題材が護送、**中州・ボス・警察犬**が向こうに無い、60面、英語あり |
+| ぷくぷく川渡り（BEAK、日本、2026-06） | 0 | 動物の川渡り32面。「2席使う子」「漕げる子」「人数の釣り合い」がある | **いちばん近い。** こちらは題材が護送、**中州・ボス・警察犬**が向こうに無い、120面、英語あり |
 | River Crossing IQ（米国、2017〜） | 529 | 狼・羊・キャベツ、夫婦などの古典集。絵は簡素 | 古典の詰め合わせ。こちらは1つの世界観で段階的に仕掛けが増える |
 | River Crossing IQ Logic（米国、2017〜） | 213 | 古典の詰め合わせ＋新作 | 同上 |
 
@@ -84,14 +84,14 @@ Promotional text: Escort prisoners across the river without letting one escape. 
 2. 「見張りが足りないと…脱走！」 … 囚人に「!」が出て逃げる場面と「脱走された」の札
 3. 「川の中州で作戦を立てろ」 … 中州のある面（**ほかの川渡りアプリに無い仕掛け**）
 4. 「ボス・警察犬・看守長・手錠の2人」 … 役の紹介を並べる
-5. 「全60面。最短で渡れば★3」 … ステージ選択（ヒントで光っている場面を添える）
+5. 「全120面。最短で渡れば★3」 … ステージ選択（ヒントで光っている場面を添える）
 
 広告で見た人が「あの広告のゲームだ」と気づけるよう、1枚目は広告と同じ構図（川・舟・警官と囚人）にする。
 ただし広告の絵柄そのものは真似しない（Apple 4.3 と著作権の両方のため）。
 
 ## プロモーションテキスト（170字まで・審査なしで差し替えられる）
 
-警官が囚人を舟で護送する川渡りパズル。見張りが足りないと、すぐに脱走！ 川の中州、ボス、警察犬、手錠の2人。全60面、最短で渡れば★3。
+警官が囚人を舟で護送する川渡りパズル。見張りが足りないと、すぐに脱走！ 川の中州、ボス、警察犬、手錠の2人。全120面、最短で渡れば★3。
 
 ## 説明文
 
@@ -112,7 +112,7 @@ Promotional text: Escort prisoners across the river without letting one escape. 
 ・看守長 … 1人で2人分を見張れる
 ・手錠の2人 … 離れられず、舟の席も2つ使う
 
-■ 全60面・最短クリアで★3
+■ 全120面・最短クリアで★3
 すべての面は必ず解けます。最短の回数で渡りきれば星3つ。
 詰まったらヒントで次の一手がわかります。一手戻す・最初からも自由です。
 
