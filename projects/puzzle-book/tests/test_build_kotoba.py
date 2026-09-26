@@ -150,3 +150,13 @@ def test_no_word_is_another_word_plus_a_suffix():
         if a != b and where[a] != where[b] and any(b == a + sfx for sfx in suffixes)
     ]
     assert not bad, bad
+
+
+def test_interior_text_inside_margins(built):
+    """本文の文字は紙の端から 0.25in（KDP の最小の余白）より内側。はみ出しは画像で見ないと気づきにくい。"""
+    _, _, interior, _, _ = built
+    edge = 0.25 * 72
+    for page, sp in _spans(interior):
+        x0, y0, x1, y1 = sp["bbox"]
+        w, h = page.rect.width, page.rect.height
+        assert edge <= x0 and x1 <= w - edge and edge <= y0 and y1 <= h - edge, (page.number + 1, sp["text"])

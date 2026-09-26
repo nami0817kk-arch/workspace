@@ -239,8 +239,12 @@ def draw_problem_page(
     top: float,
     bottom: float,
     palette: Palette,
+    talk: str = "",
 ) -> None:
-    """問題1ページ分。本文と、裏表紙の見本の両方で使う。"""
+    """問題1ページ分。本文と、裏表紙の見本の両方で使う。
+
+    talk は「思い出トーク」（解いたあとの会話のきっかけ）。介護の現場の回想の問いかけとして使える。
+    """
     pal = palette
     d = record["difficulty"]
     mid = (left + right) / 2
@@ -260,8 +264,9 @@ def draw_problem_page(
     rows = -(-len(labels) // cols)
     word_fs = 19
     list_h = rows * word_fs * 1.75 + 10
+    talk_h = 50 if talk else 0
     grid_top = band_bottom - 60
-    avail_h = grid_top - (bottom + 30 + list_h + 20)
+    avail_h = grid_top - (bottom + 30 + list_h + talk_h + 20)
     gw = min(right - left, avail_h)
     gx = mid - gw / 2
     gh = draw_grid(c, record, x=gx, y=grid_top, w=gw, show_answer=False, palette=pal)
@@ -281,6 +286,20 @@ def draw_problem_page(
         c.roundRect(lx, yy - 2, word_fs * 0.8, word_fs * 0.8, 2, stroke=1, fill=1)
         c.setFillColorCMYK(*BLACK)
         _draw_label(c, label, lx + word_fs * 1.2, yy, col_w - word_fs * 1.2 - 10, word_fs)
+    if talk:
+        # 思い出トーク: 淡い地の吹き出し
+        ty = ly - rows * word_fs * 1.75 - 18
+        bh = 38
+        c.setFillColorCMYK(*(pal.tint[d] if pal is COLOR else (0, 0, 0, 0.06)))
+        c.roundRect(list_x, ty - bh + 14, list_w, bh, 10, stroke=0, fill=1)
+        draw_icon(c, "1f4ac", list_x + 10, ty - bh + 21, 24)
+        c.setFillColorCMYK(*pal.main[d])
+        c.setFont(FONT_ROUNDED, 14)
+        c.drawString(list_x + 42, ty - 6, "思い出トーク")
+        c.setFillColorCMYK(*BLACK)
+        room = list_w - 142 - 12
+        c.setFont(FONT_REGULAR, min(16, 16 * room / c.stringWidth(talk, FONT_REGULAR, 16)))
+        c.drawString(list_x + 142, ty - 7, talk)
     c.setFont(FONT_REGULAR, 12)
     c.drawString(left, bottom + 6, f"見つけた数　　　／{len(labels)}語")
     c.drawRightString(right - 62, bottom + 6, "できた日　　月　　日　　かかった時間　　　分")
@@ -425,7 +444,7 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
     c.setFont(FONT_REGULAR, 19)
     for line in lines:
         c.drawString(pg.left, y, line)
-        y -= 36
+        y -= 31
     used: list[str] = []
     for t in spec.themes:
         if t["difficulty"] not in used:
@@ -437,17 +456,22 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
         c.drawString(pg.left + 20, y, f"{DIFFICULTY_STARS[d]} {DIFFICULTY_LABEL_JA[d]}")
         c.setFillColorCMYK(*BLACK)
         c.setFont(FONT_REGULAR, 19)
-        y -= 32
+        y -= 27
         c.drawString(pg.left + 60, y, "・".join(DIR_WORDS[x] for x in dirs[:2]))
-        y -= 32
+        y -= 27
         if len(dirs) > 2:
             c.drawString(pg.left + 60, y, "・" + "・".join(DIR_WORDS[x] for x in dirs[2:]))
-            y -= 32
+            y -= 27
     y -= 10
     c.drawString(pg.left, y, "逆向き（右から左・下から上）には、ならんでいません。")
-    y -= 36
+    y -= 31
     c.drawString(pg.left, y, "答えは本のうしろにまとめてあります。")
-    y -= 40
+    if any(t.get("talk") for t in spec.themes):
+        y -= 31
+        c.drawString(pg.left, y, "ページの下の「思い出トーク」は、")
+        y -= 27
+        c.drawString(pg.left, y, "解いたあとの会話のきっかけにどうぞ。")
+    y -= 34
     _draw_howto_example(c, pg.left, y, pg.content_w, pal)
     pg.next()
 
@@ -499,6 +523,7 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
         draw_problem_page(
             c, record, i, spec.themes[i - 1].get("icon"),
             left=pg.left, right=pg.right, top=pg.page_h - pg.top, bottom=pg.bottom, palette=pal,
+            talk=spec.themes[i - 1].get("talk", ""),
         )
         pg.next()
 
@@ -568,7 +593,8 @@ def _page_preview(spec: KotobaSpec, puzzles: list[dict], idx: int, width_pt: flo
     pc = canvas.Canvas(buf, pagesize=(page_w, page_h))
     m = 0.6 * inch
     draw_problem_page(pc, puzzles[idx], idx + 1, spec.themes[idx].get("icon"),
-                      left=m, right=page_w - m, top=page_h - m, bottom=m, palette=spec.palette)
+                      left=m, right=page_w - m, top=page_h - m, bottom=m, palette=spec.palette,
+                      talk=spec.themes[idx].get("talk", ""))
     pc.save()
     pdf = pypdfium2.PdfDocument(buf.getvalue())
     scale = dpi / 72 * (width_pt / page_w)
@@ -648,7 +674,7 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     if not main_word:
         lead, main_word = "", title_main
 
-    cap = "大きな文字で、目にやさしい"
+    cap = "なつかしい言葉で、会話がはずむ"
     cap_y = top - 0.80 * inch
     c.setFillColorCMYK(*NAVY)
     c.setFont(FONT_BOLD, 20)
@@ -713,7 +739,9 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     ]
     if spec.ink == "premium":
         seals.insert(2, (ORANGE, ["オール", "カラー"]))
-    r = 0.56 * inch
+    if any(t.get("talk") for t in spec.themes):
+        seals.insert(1, ((0.0, 0.55, 0.0, 0.0), ["思い出", "トーク"]))
+    r = (0.56 if len(seals) <= 4 else 0.50) * inch
     gap = (tw - 2 * safe - 2 * r * len(seals)) / (len(seals) + 1)
     sy = b + 1.45 * inch
     for k, (col, lines) in enumerate(seals):
@@ -735,7 +763,7 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
         "A4の大きな紙面に、1ページ1問。",
         "ます目の中から言葉をさがして、丸でかこむだけ。",
         f"季節の花、昭和のくらし、ふるさとの味……探す言葉は全部で{n_words}語。",
-        "なつかしい言葉が、おしゃべりのきっかけにもなります。",
+        "各問に「思い出トーク」つき。解いたあとは、なつかしい話に花を。",
     ]
     c.setFont(FONT_REGULAR, 13)
     y = top - safe - 120
