@@ -124,6 +124,26 @@ void main() {
     expect(dup, isEmpty, reason: '名前かサブタイトルと重複: ${dup.join(", ")}');
   });
 
+  test('アプリアイコンが、App Store の求める形で揃っている', () {
+    // 1024 は**透過も角丸も持てない**（Apple が弾く）。ここを間違えると
+    // アップロードの当日に気付くことになる。
+    final icon = File(
+      'ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png',
+    );
+    expect(icon.existsSync(), isTrue);
+    final bytes = icon.readAsBytesSync();
+    final head = bytes.sublist(16, 26);
+    int be(int at) =>
+        (head[at] << 24) |
+        (head[at + 1] << 16) |
+        (head[at + 2] << 8) |
+        head[at + 3];
+    expect([be(0), be(4)], [1024, 1024]);
+    // IHDR の colour type。4 と 6 がアルファ付き。
+    expect(head[9], isNot(4));
+    expect(head[9], isNot(6));
+  });
+
   test('掲載する絵が、App Store の寸法で揃っている', () {
     const sizes = {
       'marketing/screenshots': [1290, 2796],
