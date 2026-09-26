@@ -1,0 +1,35 @@
+{# 日付から探すためのカレンダー。押せる升目＝その日の掲載がある日。
+   休場日と、取得に失敗した日を見分けられるようにしてある
+   （どちらも「空いている」ように見えるが、意味が違う）。 #}
+<div class="calendar">
+  {% for month in calendar %}
+  <section class="cal-month">
+    <h3>{{ month.label }}<span class="cal-count">掲載 {{ month.count }}日</span></h3>
+    <table class="cal-grid">
+      <caption class="visually-hidden">{{ month.label }}の掲載日。押すとその日のランキングへ移動します</caption>
+      <thead>
+        <tr>{% for d in ["月", "火", "水", "木", "金", "土", "日"] %}<th scope="col">{{ d }}</th>{% endfor %}</tr>
+      </thead>
+      <tbody>
+        {% for week in month.weeks %}
+        <tr>
+          {% for cell in week %}
+          <td class="cal-{{ cell.state }}">
+            {% if cell.state == "data" %}<a href="{{ base_url }}{{ cell.href }}" title="{{ cell.label }}のランキング">{{ cell.day }}</a>
+            {% elif cell.state == "missing" %}<span title="{{ cell.label }}は取得に失敗したため掲載がありません">{{ cell.day }}</span>
+            {% elif cell.state == "blank" %}&nbsp;
+            {% else %}<span>{{ cell.day }}</span>{% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endfor %}
+</div>
+<p class="cal-legend">
+  <span class="cal-key cal-data">10</span> 掲載あり（押せます）
+  <span class="cal-key cal-missing">10</span> 取得に失敗した日
+  <span class="cal-key cal-closed">10</span> 休場日（土日・祝日）
+</p>

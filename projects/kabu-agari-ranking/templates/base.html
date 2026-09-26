@@ -348,6 +348,43 @@
   @media (max-width: 430px) {
     table.ranking th:nth-child(3), table.ranking td:nth-child(3) { display: none; }
   }
+  /* 日付から探すカレンダー。押せる升目がその日の掲載。 */
+  .calendar { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .cal-month {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+  }
+  .cal-month h3 { font-size: 0.9rem; margin: 0 0 0.4rem; display: flex; gap: 0.5rem; align-items: baseline; }
+  .cal-count { font-size: 0.75rem; color: var(--muted); font-weight: normal; }
+  table.cal-grid { border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  table.cal-grid th {
+    font-size: 0.7rem; font-weight: normal; color: var(--muted); padding: 0.1rem 0;
+  }
+  table.cal-grid td {
+    width: 2.1rem; height: 2.1rem; text-align: center; font-size: 0.85rem; padding: 0;
+  }
+  table.cal-grid a, table.cal-grid span { display: block; line-height: 2.1rem; border-radius: 4px; }
+  /* 掲載がある日だけを目立たせる。探しているのはこの升目なので。 */
+  .cal-data a {
+    background: var(--accent); color: #fff; text-decoration: none; font-weight: bold;
+  }
+  .cal-data a:hover { filter: brightness(1.1); }
+  .cal-missing span { color: var(--loss); text-decoration: line-through; }
+  .cal-closed span, .cal-outside span { color: var(--muted); opacity: 0.55; }
+  .cal-legend { font-size: 0.8rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; align-items: center; }
+  .cal-key {
+    display: inline-block; width: 1.8rem; line-height: 1.8rem; text-align: center;
+    border-radius: 4px; font-size: 0.75rem;
+  }
+  .cal-legend .cal-data { background: var(--accent); color: #fff; font-weight: bold; }
+  .cal-legend .cal-missing { color: var(--loss); text-decoration: line-through; }
+  .cal-legend .cal-closed { color: var(--muted); opacity: 0.55; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
   .updated { font-size: 0.85rem; color: var(--muted); margin: 0.25rem 0 1rem; }
   .highlights {
     list-style: none;
