@@ -190,10 +190,16 @@ void main() {
         );
       }
 
-      await shoot('00_start', const StartScreen());
-      await shoot('01_home', const HomeScreen());
-      await shoot('02_squad', const SquadScreen());
-      await shoot('03_lineup', const LineupScreen());
+      // **番号は撮る順ではなく、ストアに並べる順。** 検索結果には先頭3枚しか
+      // 出ないので、そこに何を置くかで見られ方が変わる。起動画面を先頭に
+      // していた頃は、いちばん目立つ枠が「何のゲームか伝わらない絵」で
+      // 埋まっていた。フォーメーション→試合→ホームの順に変えてある。
+      // 撮る順は変えられない(試合はここまで進めないと撮れない)ので、
+      // 名前だけで並べ替えている。
+      await shoot('08_start', const StartScreen());
+      await shoot('02_home', const HomeScreen());
+      await shoot('05_squad', const SquadScreen());
+      await shoot('00_lineup', const LineupScreen());
       // 移籍ウィンドウが閉じている時期に撮ると、「クローズ中」の帯が出て
       // 「獲得する」が全部灰色の画面になる。何もできない画面をストアの
       // 移籍市場として載せていた(1.1.0 の撮り直しで気づいた)。
@@ -205,10 +211,10 @@ void main() {
       });
       expect(gameState.isTransferWindowOpen, isTrue,
           reason: '移籍ウィンドウが閉じたまま移籍市場を撮ろうとしている');
-      await shoot('04_transfer', const TransferScreen());
+      await shoot('03_transfer', const TransferScreen());
       // 日程・順位表。LeagueRankingScreen は得点王ランキングで、順位表ではない。
-      await shoot('05_standings', const FixturesScreen());
-      await shoot('06_scorers', const LeagueRankingScreen());
+      await shoot('04_standings', const FixturesScreen());
+      await shoot('07_scorers', const LeagueRankingScreen());
 
       // 試合はこのアプリの中心なので、実際に進行中の画面を撮る。
       // 後半を消化せずに止めると、ハーフタイムの状態で描画できる。
@@ -217,11 +223,11 @@ void main() {
       });
       // 前半を4.5秒ぶん進めると、実況が数件出て時計も進んだ状態になる。
       // ハーフタイムに到達する手前で止める。
-      await shoot('07_live_match', const LiveMatchScreen(), warmUpFrames: 45);
+      await shoot('01_live_match', const LiveMatchScreen(), warmUpFrames: 45);
       // 同じ画面をさらに進めるとハーフタイムに入る。交代・檄・戦術変更が
       // 並ぶ画面で、このゲームで何を操作するのかがいちばん伝わる。
       // pumpWidget で作り直しても State は残るので、続きから進む。
-      await shoot('08_halftime', const LiveMatchScreen(), warmUpFrames: 25);
+      await shoot('06_halftime', const LiveMatchScreen(), warmUpFrames: 25);
     });
   }
 }
