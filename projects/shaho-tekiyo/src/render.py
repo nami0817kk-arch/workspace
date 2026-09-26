@@ -163,6 +163,61 @@ def _build_year_pages() -> None:
     )
 
 
+# 月収別のページ（/getsushu/10man.html）。8万〜25万円を1万円刻みで。
+AMOUNTS_MAN: tuple[int, ...] = tuple(range(8, 26))
+
+
+def _era(fiscal_year: int) -> str:
+    return f"令和{fiscal_year - 2018}年度"
+
+
+def _build_amount_pages() -> None:
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    period = f"{table.valid_from.year}年{table.valid_from.month}月分〜{table.valid_until.year}年{table.valid_until.month}月分"
+    era = _era(table.fiscal_year)
+
+    def est(pref: str, pay: int, care: bool = False) -> premium.PremiumResult:
+        return premium.estimate(as_of=as_of, prefecture=pref, monthly_pay_yen=pay, age_40_to_64=care)
+
+    all_amounts = [
+        {"man": m, "slug": f"{m}man", "r": est("東京", m * 10_000)} for m in AMOUNTS_MAN
+    ]
+    common = dict(era=era, period=period, source=table.source, all_amounts=all_amounts)
+    tmpl = _env.get_template("amount.html")
+    for i, a in enumerate(all_amounts):
+        pay = a["man"] * 10_000
+        rows = [(est(p, pay), est(p, pay, True)) for p in premium.PREFECTURES]
+        by_total = sorted((r for r, _ in rows), key=lambda r: r.total_yen)
+        rel = f"getsushu/{a['slug']}.html"
+        _write(
+            _OUTPUT_DIR / rel,
+            tmpl.render(
+                base_url="../",
+                canonical=canonical_url(rel),
+                man=a["man"],
+                pay=pay,
+                tokyo=a["r"],
+                tokyo_care=est("東京", pay, True),
+                cheapest=by_total[0],
+                dearest=by_total[-1],
+                rows=rows,
+                neighbors=all_amounts[max(0, i - 1): i + 2],
+                **common,
+            ),
+        )
+    _write(
+        _OUTPUT_DIR / "getsushu" / "index.html",
+        _env.get_template("amount_index.html").render(
+            base_url="../", canonical=canonical_url("getsushu/index.html"), **common
+        ),
+    )
+
+
+def amount_page_paths() -> list[str]:
+    return ["getsushu/index.html"] + [f"getsushu/{m}man.html" for m in AMOUNTS_MAN]
+
+
 def _build_static_pages() -> None:
     for name in ("faq.html", "about.html", "operator.html", "privacy.html", "contact.html"):
         tmpl = _env.get_template(name)
@@ -210,6 +265,7 @@ def _write_sitemap() -> None:
         (canonical_url("privacy.html"), None),
         (canonical_url("year/index.html"), None),
     ]
+    urls += [(canonical_url(p), None) for p in amount_page_paths()]
     for regime in eligibility.MILESTONES:
         slug = _milestone_slug(regime)
         urls.append((canonical_url(f"year/{slug}.html"), None))
@@ -237,6 +293,7 @@ def build_all() -> None:
 
     _build_calculator_page()
     _build_year_pages()
+    _build_amount_pages()
     _build_static_pages()
     _write_robots()
     _write_sitemap()

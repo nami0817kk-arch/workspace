@@ -160,3 +160,24 @@ def test_都道府県は47すべて選べる(site):
     html = (site / "index.html").read_text(encoding="utf-8")
     for pref in premium.PREFECTURES:
         assert f'<option value="{pref}"' in html, pref
+
+
+def test_月収別のページが8万から25万まで(site):
+    for m in render.AMOUNTS_MAN:
+        assert (site / "getsushu" / f"{m}man.html").exists(), m
+    assert (site / "getsushu" / "index.html").exists()
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert f"<loc>{site_config.SITE_URL}/getsushu/10man</loc>" in xml
+
+
+def test_月収10万円_東京の保険料が円単位で出る(site):
+    # 令和8年度・東京: 標準報酬 98,000円 → 健保 4,826（4,826.5 の50銭は切り捨て）+ 支援金 113 + 厚年 8,967
+    html = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert "東京なら月 13,906円 引かれて、残りは 86,094円" in html
+    for pref in premium.PREFECTURES:
+        assert f"<th>{pref}</th>" in html, pref
+
+
+def test_どのページからも月収別の一覧へ行ける(site):
+    for name in ("index.html", "faq.html"):
+        assert "getsushu/index.html" in (site / name).read_text(encoding="utf-8")

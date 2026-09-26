@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}月収別 パートの社会保険料の早見表｜{{ era }}の料率{% endblock %}
+{% block description %}月収8万〜25万円のパート・アルバイトが社会保険に入ったときに引かれる保険料（本人負担）を、{{ era }}の協会けんぽの料率で円単位に。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">月収別の保険料</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>月収別 パートの社会保険料（{{ era }}）</h1>
+<p>
+  社会保険に入ったときに給与から引かれる保険料（健康保険・子ども・子育て支援金・厚生年金の本人負担）を、
+  月収ごとに円単位でまとめました。東京の会社・39歳以下の額です。月収を押すと、47都道府県の額と40〜64歳の額が見られます。
+</p>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>月収</th><th>引かれる保険料</th><th>残り</th></tr></thead>
+  <tbody>
+    {% for a in all_amounts %}
+    <tr><th><a href="{{ a.slug }}.html">{{ a.man }}万円</a></th><td>{{ "{:,}".format(a.r.total_yen) }}円</td><td>{{ "{:,}".format(a.r.take_home_yen) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">
+  出典: <a href="{{ source.page }}" rel="nofollow noopener" target="_blank">{{ source.name }}「{{ source.title }}」</a>の料率をもとに当サイトで計算（{{ period }}）。
+  所得税・住民税・雇用保険料は含みません。
+</p>
+{% endblock %}
