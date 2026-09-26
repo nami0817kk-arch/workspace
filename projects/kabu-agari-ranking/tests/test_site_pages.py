@@ -97,7 +97,9 @@ def test_アーカイブ一覧は年月でまとまる():
 
 # --- 生成物 ---------------------------------------------------------------
 
-def test_審査前は空の広告枠を出さない(site):
+def test_pubIDが空のあいだは広告を出さない(site, monkeypatch):
+    monkeypatch.setattr(render, "ADSENSE_CLIENT", "")
+    monkeypatch.setitem(render._env.globals, "ADSENSE_CLIENT", "")
     data_dir, out_dir = site
     _write_day(data_dir, "2026-09-18")
     render.build_all()
@@ -222,7 +224,8 @@ def test_暗い地の色が定義されている(site):
     assert 'name="color-scheme"' in css
 
 
-def test_審査前はadsテキストを置かない(site):
+def test_pubIDが空のあいだはadsテキストを置かない(site, monkeypatch):
+    monkeypatch.setattr(render, "ADSENSE_CLIENT", "")
     data_dir, out_dir = site
     _write_day(data_dir, "2026-09-18")
     render.build_all()

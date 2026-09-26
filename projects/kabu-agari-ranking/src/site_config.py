@@ -27,7 +27,7 @@ SEARCH_CONSOLE_TOKEN = os.environ.get(
 #     審査を申し込むときは、これだけ入っていればよい。
 #   ADSENSE_SLOT   … 手で置く枠の ID。自動広告に任せるなら空のままでよい。
 # 空のあいだは広告のスクリプトも枠も一切描かない。
-ADSENSE_CLIENT = os.environ.get("KABU_ADSENSE_CLIENT", "")
+ADSENSE_CLIENT = os.environ.get("KABU_ADSENSE_CLIENT", "ca-pub-6409014819339195")
 ADSENSE_SLOT = os.environ.get("KABU_ADSENSE_SLOT", "")
 
 # 公開名義と連絡先。**個人名は出さない**（屋号で通す）。

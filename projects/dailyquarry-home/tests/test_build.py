@@ -38,7 +38,10 @@ def test_mailtoを使わない(out):
     assert "info[at]dailyquarry.com" in (out / "contact.html").read_text(encoding="utf-8")
 
 
-def test_pubIDが空のあいだは広告もadstxtも出さない(out):
+def test_pubIDが空のあいだは広告もadstxtも出さない(tmp_path, monkeypatch):
+    monkeypatch.setattr(site_config, "ADSENSE_CLIENT", "")
+    build.build(tmp_path)
+    out = tmp_path
     assert not (out / "ads.txt").exists()
     for html in _all_html(out).values():
         assert "adsbygoogle" not in html
