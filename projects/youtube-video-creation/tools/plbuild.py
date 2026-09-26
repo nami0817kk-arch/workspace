@@ -195,6 +195,9 @@ def build(key: str, number: int, old_file: str) -> Path:
     facts = json.loads((DATA / f"{key}.json").read_text(encoding="utf-8"))
     raw = json.loads((DATA / f"{key}_raw.json").read_text(encoding="utf-8"))
     kana = json.loads((DATA / "kana.json").read_text(encoding="utf-8"))
+    # クラブごとのカタカナ（kana_<key>.json）も足す。下請けが並んで書くので1つのファイルにしない
+    if (DATA / f"kana_{key}.json").exists():
+        kana.update(json.loads((DATA / f"kana_{key}.json").read_text(encoding="utf-8")))
     legends_path = DATA / LEAGUE["legends"]
     legends_all = json.loads(legends_path.read_text(encoding="utf-8")) if legends_path.exists() else []
     # **旧台本が無いリーグもある**（ラ・リーガは最初からこの形で作る）。`-` なら
@@ -402,6 +405,9 @@ def build(key: str, number: int, old_file: str) -> Path:
     # **自由に使えるものが無い人は写真無し**（作らない・探し回らない）
     faces_path = DATA / "faces.json"
     faces = json.loads(faces_path.read_text(encoding="utf-8")).get(key, {}) if faces_path.exists() else {}
+    # クラブごとの控え（faces_<key>.json。tools/clubfaces.py が書く）も足す
+    if (DATA / f"faces_{key}.json").exists():
+        faces = dict(faces, **json.loads((DATA / f"faces_{key}.json").read_text(encoding="utf-8")).get(key, {}))
     owner_face = next((v["file"] for v in faces.values()
                        if v.get("role") == "owner" and v.get("file")), "")
 
