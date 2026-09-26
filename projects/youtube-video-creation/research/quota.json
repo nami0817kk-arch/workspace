@@ -175,5 +175,12 @@
     "playlistItems.insert": 15,
     "videos.list": 5,
     "videos.update": 5
+  },
+  "2026-09-26": {
+    "channels.list": 8,
+    "playlistItems.list": 8,
+    "videos.insert": 8,
+    "thumbnails.set": 8,
+    "playlistItems.insert": 4
   }
 }
