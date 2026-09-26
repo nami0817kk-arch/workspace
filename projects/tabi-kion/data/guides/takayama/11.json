@@ -1,0 +1,81 @@
+{
+  "checked": "2026-09-26",
+  "headline": "紅葉の終わりと冬の入口が同じ月",
+  "lead": "11月の高山は、月の初めと終わりで別の季節になります。上旬は町なかの紅葉が見頃で、日中は上着1枚で歩けます。下旬になると大イチョウが黄色く色づく一方、朝は氷点下近くまで下がり、雪が舞う日も出てきます。同じ11月でも、行く日によって持っていく服が変わります。",
+  "photos": [
+    {
+      "file": "takayama-nakabashi-2012-11-15.jpg",
+      "alt": "紅葉の残る山に雪が積もり、雨に濡れた中橋の朱色の欄干",
+      "caption": "11月中旬の中橋。紅葉の山に雪がうっすら積もることもある（2012年11月15日撮影）",
+      "author": "Nick Sevarg",
+      "license": "CC BY-SA 3.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Nakabashi%27s_Snowy_Autumn.JPG"
+    },
+    {
+      "file": "takayama-kokubunji-ginkgo-2013-11-23.jpg",
+      "alt": "青空の下で黄色く色づいた飛騨国分寺の大イチョウと鐘楼門",
+      "caption": "飛騨国分寺の大イチョウ（2013年11月23日撮影）",
+      "author": "島倉徳八",
+      "license": "CC BY-SA 3.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "source_url": "https://commons.wikimedia.org/wiki/File:%E9%A3%9B%E9%A8%A8%E5%9B%BD%E5%88%86%E5%AF%BA_%E5%A4%A7%E9%8A%80%E6%9D%8F.01.JPG"
+    }
+  ],
+  "dekads": [
+    {
+      "sights": "高山陣屋・中橋・日枝神社・東山遊歩道など、町なかの紅葉が見頃。週末の夜は飛騨の里でもライトアップがあります。",
+      "clothing": "日中は薄手のニットやシャツに軽いジャケットで歩けます。夜のライトアップに出るなら、冬物のコートか、ダウンベストを1枚重ねられる用意を。"
+    },
+    {
+      "sights": "町なかの紅葉は終わりに近づきます。雪の初日の平年値もこの時期で、山の上から白くなり始めます。",
+      "clothing": "日中もコートがあると安心です。夜は手袋かマフラーがほしくなります。"
+    },
+    {
+      "sights": "飛騨国分寺の大イチョウが色づく時期。紅葉目当てなら遅く、冬の景色にはまだ早い、合間の時期です。",
+      "clothing": "ダウンなど真冬に近い上着に、手袋・帽子。朝晩は路面が凍ったり雪が残ったりする日もあるので、滑りにくい靴で。"
+    }
+  ],
+  "highlights": [
+    {
+      "name": "町なかの紅葉（高山陣屋・中橋・日枝神社・江名子川）",
+      "when": "見頃 10月下旬〜11月上旬",
+      "dekad": 0,
+      "evening": false,
+      "source_title": "飛騨高山旅ガイド「徒歩で行けるおすすめ紅葉スポット」",
+      "source_url": "https://www.hidatakayama.or.jp/special/detail_319.html"
+    },
+    {
+      "name": "秋の中橋ライトアップ",
+      "when": "10月1日〜11月30日の夜",
+      "dekad": null,
+      "evening": true,
+      "source_title": "飛騨高山旅ガイド「徒歩で行けるおすすめ紅葉スポット」",
+      "source_url": "https://www.hidatakayama.or.jp/special/detail_319.html"
+    },
+    {
+      "name": "飛騨の里 紅葉ライトアップ",
+      "when": "2026年10月10日〜11月8日の土日祝、17:30〜20:30",
+      "dekad": 0,
+      "evening": true,
+      "source_title": "飛騨高山旅ガイド「飛騨の里紅葉ライトアップ」",
+      "source_url": "https://www.hidatakayama.or.jp/event/detail_2005.html"
+    },
+    {
+      "name": "日枝宵灯りもみじ祭り（日枝神社）",
+      "when": "2026年11月3日・7日・8日、17:00〜20:00",
+      "dekad": 0,
+      "evening": true,
+      "source_title": "飛騨高山旅ガイド「日枝宵灯りもみじ祭り」",
+      "source_url": "https://www.hidatakayama.or.jp/event/detail_5265.html"
+    },
+    {
+      "name": "飛騨国分寺の大イチョウ",
+      "when": "見頃 11月下旬〜12月上旬",
+      "dekad": 2,
+      "evening": false,
+      "source_title": "飛騨高山旅ガイド「徒歩で行けるおすすめ紅葉スポット」",
+      "source_url": "https://www.hidatakayama.or.jp/special/detail_319.html"
+    }
+  ]
+}

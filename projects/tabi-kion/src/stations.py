@@ -18,6 +18,8 @@ class Station:
     slug: str
     pref: str
     nearby: str = ""  # 近くの観光地（観測所の名前と違うときだけ）
+    # 周辺のアメダス（地点番号, 見出し, 標高m）。標高の違う見どころの気温差を出すのに使う。
+    nearby_points: tuple[tuple[str, str, int], ...] = ()
 
 
 STATIONS: tuple[Station, ...] = (
@@ -36,7 +38,10 @@ STATIONS: tuple[Station, ...] = (
     Station("47618", "松本", "matsumoto", "長野県", "上高地・安曇野"),
     Station("47610", "長野", "nagano", "長野県", "善光寺"),
     Station("47640", "河口湖", "kawaguchiko", "山梨県", "富士五湖"),
-    Station("47617", "高山", "takayama", "岐阜県", "飛騨高山・白川郷"),
+    Station(
+        "47617", "高山", "takayama", "岐阜県", "飛騨高山・白川郷",
+        nearby_points=(("52081", "白川（白川郷）", 478), ("52111", "栃尾（奥飛騨温泉郷）", 765)),
+    ),
     Station("47605", "金沢", "kanazawa", "石川県"),
     Station("47600", "輪島", "wajima", "石川県", "能登"),
     Station("47668", "網代", "ajiro", "静岡県", "熱海"),

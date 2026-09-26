@@ -82,6 +82,7 @@ def build_all() -> None:
     _OUTPUT_DIR.mkdir(parents=True)
 
     month_tmpl = _env.get_template("month.html")
+    rich_tmpl = _env.get_template("month_rich.html")
     station_tmpl = _env.get_template("station.html")
     for st in STATIONS:
         months = [climate.month_climate(st.code, m) for m in range(1, 13)]
@@ -89,6 +90,23 @@ def build_all() -> None:
             i = c.month - 1
             neighbors = [months[(i - 1) % 12], c, months[(i + 1) % 12]]
             rel = f"{st.slug}/{c.month}.html"
+            g = climate.guide(st.slug, c.month)
+            if g is not None:
+                _write(
+                    _OUTPUT_DIR / rel,
+                    rich_tmpl.render(
+                        base_url="../",
+                        canonical=canonical_url(rel),
+                        c=c,
+                        g=g,
+                        dks=climate.dekads(st.code, c.month),
+                        snow=climate.first_snow(st.code),
+                        near=climate.nearby_points(st.code, c.month),
+                        elevation=climate.NORMALS[st.code]["elevation"],
+                        chart=climate.year_chart_svg(st.code, c.month),
+                    ),
+                )
+                continue
             _write(
                 _OUTPUT_DIR / rel,
                 month_tmpl.render(
@@ -109,6 +127,10 @@ def build_all() -> None:
     for name in ("operator.html", "privacy.html", "contact.html"):
         _write(_OUTPUT_DIR / name, _env.get_template(name).render(base_url="", canonical=canonical_url(name), policy_updated=POLICY_UPDATED))
     _write(_OUTPUT_DIR / "404.html", _env.get_template("404.html").render(base_url="/", canonical=""))
+
+    static_src = _ROOT / "static"
+    if static_src.exists():
+        shutil.copytree(static_src, _OUTPUT_DIR / "static", dirs_exist_ok=True)
 
     (_OUTPUT_DIR / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n", encoding="utf-8")
     urls = ["index.html", "about.html", "operator.html", "contact.html", "privacy.html"]

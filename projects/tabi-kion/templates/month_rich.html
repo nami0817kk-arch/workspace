@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% set st = c.station %}
+{% block title %}{{ st.name }}の{{ c.month }}月の気温と服装｜{{ g.headline }}{% endblock %}
+{% block description %}{{ st.name }}の{{ c.month }}月は最高{{ "%.1f"|format(c.tmax) }}℃・最低{{ "%.1f"|format(c.tmin) }}℃（平年値）。上旬・中旬・下旬の気温と服装、見どころの時期とそのときの気温を、気象庁の平年値と公式の観光情報から。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">地点の一覧</a>
+  <span>›</span>
+  <a href="{{ base_url }}{{ st.slug }}/index.html">{{ st.name }}</a>
+  <span>›</span>
+  <span aria-current="page">{{ c.month }}月</span>
+</nav>
+{% endblock %}
+{% block content %}
+{% set p0 = g.photos[0] %}
+<figure class="hero">
+  <img src="{{ base_url }}static/photos/{{ p0.file }}" alt="{{ p0.alt }}" width="1200" height="900">
+  <figcaption>{{ p0.caption }}</figcaption>
+</figure>
+
+<h1>{{ st.name }}の{{ c.month }}月の気温と服装</h1>
+<p class="subtitle">{{ g.headline }}</p>
+
+<div class="stats">
+  <div class="stat"><span class="label">日中の最高</span><span class="value">{{ "%.1f"|format(c.tmax) }}<small>℃</small></span></div>
+  <div class="stat"><span class="label">朝の最低</span><span class="value">{{ "%.1f"|format(c.tmin) }}<small>℃</small></span></div>
+  <div class="stat"><span class="label">雨の日</span><span class="value">{{ "%.0f"|format(c.rain_days) }}<small>日</small></span></div>
+  {% if snow and snow.month == c.month %}
+  <div class="stat"><span class="label">雪の初日</span><span class="value">{{ snow.day }}<small>日ごろ</small></span></div>
+  {% elif c.snow_days %}
+  <div class="stat"><span class="label">雪の日</span><span class="value">{{ "%.0f"|format(c.snow_days) }}<small>日</small></span></div>
+  {% endif %}
+</div>
+
+<p class="lead">{{ g.lead }}</p>
+
+<h2>上旬・中旬・下旬で、こう変わる</h2>
+<div class="dekads">
+  {% for d in dks %}
+  {% set note = g.dekads[loop.index0] %}
+  <section class="dekad">
+    <h3>{{ c.month }}月{{ d.name }}</h3>
+    <p class="temps">
+      <span>日中 <strong>{{ "%.1f"|format(d.tmax) }}℃</strong></span>
+      <span>朝 <strong>{{ "%.1f"|format(d.tmin) }}℃</strong></span>
+      {% if d.evening is not none %}<span>夜8時 <strong>{{ "%.1f"|format(d.evening) }}℃</strong></span>{% endif %}
+    </p>
+    <p class="like">日中は、東京でいえば<strong>{{ d.tokyo_like }}月</strong>ごろの気温</p>
+    <p>{{ note.sights }}</p>
+    <p class="wear"><span class="tag">服装</span>{{ note.clothing }}</p>
+  </section>
+  {% endfor %}
+</div>
+{% if snow and snow.month == c.month %}
+<p class="hint">雪の初日の平年値は{{ snow.month }}月{{ snow.day }}日（{{ snow.from }}〜{{ snow.to }}年の平均）。初めて雪（みぞれを含む）が観測される日の目安です。</p>
+{% endif %}
+
+<h2>見どころの時期と、そのときの気温</h2>
+<div class="table-wrap">
+<table class="plain sights">
+  <thead><tr><th>見どころ</th><th>時期</th><th>そのころの気温</th></tr></thead>
+  <tbody>
+    {% for h in g.highlights %}
+    <tr>
+      <th><a href="{{ h.source_url }}" rel="nofollow noopener" target="_blank">{{ h.name }}</a></th>
+      <td>{{ h.when }}</td>
+      <td class="t">
+        {% if h.evening %}
+          {% if h.dekad is none %}夜8時 {{ "%.0f"|format(dks[0].evening) }}〜{{ "%.0f"|format(dks[2].evening) }}℃
+          {% else %}夜8時 {{ "%.1f"|format(dks[h.dekad].evening) }}℃{% endif %}
+        {% else %}日中 {{ "%.1f"|format(dks[h.dekad].tmax) }}℃{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">時期・時間は各リンク先の公式情報（{{ g.checked }} 確認）。年によって変わるので、お出かけ前に公式の最新情報を確かめてください。気温は平年値です。</p>
+
+{% if g.photos|length > 1 %}
+{% set p1 = g.photos[1] %}
+<figure class="inline">
+  <img src="{{ base_url }}static/photos/{{ p1.file }}" alt="{{ p1.alt }}" width="1200" height="900" loading="lazy">
+  <figcaption>{{ p1.caption }}</figcaption>
+</figure>
+{% endif %}
+
+<h2>1年の中の{{ c.month }}月</h2>
+<figure class="chart-wrap">
+  {{ chart|safe }}
+  <figcaption class="legend">
+    <span class="k main-hi"></span>{{ st.name }}の最高　<span class="k main-lo"></span>{{ st.name }}の最低　<span class="k cmp"></span>東京</figcaption>
+</figure>
+
+{% if near %}
+<h2>足を延ばすなら</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>{{ c.month }}月</th><th>最高</th><th>最低</th><th>{{ st.name }}との差</th></tr></thead>
+  <tbody>
+    <tr class="current"><th>{{ st.name }}（標高{{ elevation }}m）</th><td>{{ "%.1f"|format(c.tmax) }}℃</td><td>{{ "%.1f"|format(c.tmin) }}℃</td><td>—</td></tr>
+    {% for n in near %}
+    <tr><th>{{ n.label }}（標高{{ n.elevation }}m）</th><td>{{ "%.1f"|format(n.tmax) }}℃</td><td>{{ "%.1f"|format(n.tmin) }}℃</td><td>{{ diff_text(n.tmax_diff) }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">周辺はアメダスの平年値。観測点の名前は気象庁のもので、（ ）はその近くの観光地です。</p>
+{% endif %}
+
+<h2>{{ c.month }}月の天気の数字（平年値）</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <tbody>
+    <tr><th>平均気温</th><td>{{ "%.1f"|format(c.temp) }}℃</td></tr>
+    <tr><th>降水量</th><td>{{ "%.0f"|format(c.precip) }}mm</td></tr>
+    <tr><th>雨の日（1mm以上）</th><td>{{ "%.1f"|format(c.rain_days) }}日</td></tr>
+    {% if c.snow_days %}<tr><th>雪の降る日</th><td>{{ "%.1f"|format(c.snow_days) }}日</td></tr>{% endif %}
+    {% if c.frost_days %}<tr><th>冬日（最低気温0℃未満）</th><td>{{ "%.1f"|format(c.frost_days) }}日</td></tr>{% endif %}
+    {% if c.sunshine is not none %}<tr><th>日照時間</th><td>{{ "%.0f"|format(c.sunshine) }}時間</td></tr>{% endif %}
+    {% if c.humidity is not none %}<tr><th>湿度</th><td>{{ c.humidity }}%</td></tr>{% endif %}
+  </tbody>
+</table>
+</div>
+
+<h2>前後の月</h2>
+<p class="month-links">
+  {% for m in range(1, 13) %}{% if m == c.month %}<strong>{{ m }}月</strong>{% else %}<a href="{{ m }}.html">{{ m }}月</a>{% endif %}{% if not loop.last %} · {% endif %}{% endfor %}
+</p>
+
+<div class="source">
+  <p>出典:</p>
+  <ul>
+    <li>気温・雨・雪の数字: <a href="{{ SOURCE.page }}" rel="nofollow noopener" target="_blank">{{ SOURCE.name }}「{{ SOURCE.title }}」</a>（{{ st.name }} 地点番号 {{ st.code }}{% for n in st.nearby_points %}、{{ n[1] }} {{ n[0] }}{% endfor %}）をもとに当サイトで加工。夜8時の気温は日別平年値を旬ごとに平均したもの。数字は1991〜2020年の平均で、予報ではありません</li>
+    <li>見どころの時期: 各リンク先（高山市の観光公式サイト「飛騨高山旅ガイド」）</li>
+    {% for p in g.photos %}
+    <li>写真: {{ p.author }}（<a href="{{ p.source_url }}" rel="nofollow noopener" target="_blank">Wikimedia Commons</a>、<a href="{{ p.license_url }}" rel="nofollow noopener" target="_blank">{{ p.license }}</a>）。縮小して掲載</li>
+    {% endfor %}
+  </ul>
+  <p>服装の書き方は当サイトの目安です。</p>
+</div>
+{% endblock %}

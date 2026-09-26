@@ -149,3 +149,102 @@ def comparison_sentence(comps: list[Comparison]) -> str:
             word = ("高い" if d > 0 else "低い") if last else ("高く" if d > 0 else "低く")
             parts.append(f"{cmp.other.name}より{abs(d):.1f}℃{word}")
     return "最高気温は" + "、".join(parts) + "水準です。" if parts else ""
+
+
+# ---- 厚いページ（data/guides/ がある地点×月）で使うもの ----
+
+_GUIDES = Path(__file__).resolve().parent.parent / "data" / "guides"
+
+
+def guide(slug: str, month: int) -> dict | None:
+    """手で書いた観光情報（出典付き）。無ければ None。"""
+    p = _GUIDES / slug / f"{month}.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+
+
+def tokyo_like_month(tmax: float) -> int:
+    """最高気温がいちばん近い東京の月。「東京でいえば◯月ごろ」と言うのに使う。"""
+    tokyo = NORMALS["47662"]["monthly"]["tmax"]
+    return min(range(12), key=lambda i: abs(tokyo[i] / 10 - tmax)) + 1
+
+
+@dataclass(frozen=True)
+class Dekad:
+    name: str  # 上旬・中旬・下旬
+    tmax: float
+    tmin: float
+    evening: float | None  # 20時の気温
+    tokyo_like: int  # 最高気温が近い東京の月
+
+
+def dekads(code: str, month: int) -> list[Dekad]:
+    d = NORMALS[code]["dekad"]
+    out = []
+    for k in range(3):
+        i = (month - 1) * 3 + k
+        ev = d["evening"][i]
+        hi = d["tmax"][i] / 10
+        out.append(Dekad(_DEKAD_NAMES[k], hi, d["tmin"][i] / 10, None if ev is None else ev / 10, tokyo_like_month(hi)))
+    return out
+
+
+def first_snow(code: str) -> dict | None:
+    return NORMALS[code].get("first_snow")
+
+
+@dataclass(frozen=True)
+class NearbyPoint:
+    label: str
+    elevation: int
+    tmax: float
+    tmin: float
+    tmax_diff: float  # 周辺 − 本地点
+    tmin_diff: float
+
+
+def nearby_points(code: str, month: int) -> list[NearbyPoint]:
+    here = month_climate(code, month)
+    st = BY_CODE[code]
+    out = []
+    for pcode, label, elev in st.nearby_points:
+        n = NORMALS[code]["nearby"][pcode]
+        hi, lo = n["tmax"][month - 1], n["tmin"][month - 1]
+        if hi is None or lo is None:
+            continue
+        out.append(NearbyPoint(label, elev, hi / 10, lo / 10, round(hi / 10 - here.tmax, 1), round(lo / 10 - here.tmin, 1)))
+    return out
+
+
+def year_chart_svg(code: str, month: int, compare: str = "47662") -> str:
+    """1年の最高・最低気温の折れ線（本地点は実線、東京は点線）。その月を帯で示す。"""
+    w, h, left, right, top, bottom = 640, 260, 36, 12, 16, 28
+    here = NORMALS[code]["monthly"]
+    other = NORMALS[compare]["monthly"]
+    series = [here["tmax"], here["tmin"], other["tmax"], other["tmin"]]
+    lo = min(min(s) for s in series) / 10
+    hi = max(max(s) for s in series) / 10
+    lo, hi = (int(lo // 5) * 5), (int(-(-hi // 5)) * 5)
+    pw, ph = w - left - right, h - top - bottom
+
+    def x(i: int) -> float:
+        return left + pw * (i + 0.5) / 12
+
+    def y(v: float) -> float:
+        return top + ph * (hi - v) / (hi - lo)
+
+    parts = [f'<svg viewBox="0 0 {w} {h}" role="img" class="chart" aria-label="1年の最高・最低気温">']
+    band = pw / 12
+    parts.append(f'<rect x="{left + band * (month - 1):.1f}" y="{top}" width="{band:.1f}" height="{ph}" class="band"/>')
+    for t in range(lo, hi + 1, 5):
+        parts.append(f'<line x1="{left}" x2="{w - right}" y1="{y(t):.1f}" y2="{y(t):.1f}" class="grid"/>')
+        parts.append(f'<text x="{left - 6}" y="{y(t) + 4:.1f}" class="axis" text-anchor="end">{t}</text>')
+    for i in range(12):
+        parts.append(f'<text x="{x(i):.1f}" y="{h - 8}" class="axis{" now" if i == month - 1 else ""}" text-anchor="middle">{i + 1}月</text>')
+    for vals, cls in ((other["tmax"], "cmp hi"), (other["tmin"], "cmp lo"), (here["tmax"], "main hi"), (here["tmin"], "main lo")):
+        pts = " ".join(f"{x(i):.1f},{y(v / 10):.1f}" for i, v in enumerate(vals))
+        parts.append(f'<polyline points="{pts}" class="{cls}"/>')
+    i = month - 1
+    for v, cls in ((here["tmax"][i], "hi"), (here["tmin"][i], "lo")):
+        parts.append(f'<circle cx="{x(i):.1f}" cy="{y(v / 10):.1f}" r="4" class="dot {cls}"/>')
+    parts.append("</svg>")
+    return "".join(parts)

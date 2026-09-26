@@ -203,6 +203,49 @@
   .form-subhead { font-size: 1rem; margin: 1.5rem 0 0.25rem; padding-top: 1rem; border-top: 1px solid var(--border); }
   #result .hint { font-size: 0.8rem; color: var(--muted); }
   table.premium td { text-align: right; white-space: nowrap; }
+  /* 厚いページ（month_rich） */
+  figure { margin: 0; }
+  figure.hero { margin: 0.25rem -1rem 0.75rem; }
+  @media (min-width: 760px) { figure.hero { margin: 0.5rem 0 0.75rem; } figure.hero img { border-radius: 8px; } }
+  figure img { display: block; width: 100%; height: auto; }
+  figure.inline { margin: 1.5rem 0; }
+  figure.inline img { border-radius: 8px; }
+  figcaption { font-size: 0.78rem; color: var(--muted); padding: 0.35rem 1rem 0; }
+  figure.inline figcaption, figure.chart-wrap figcaption { padding-left: 0; }
+  .subtitle { color: var(--accent); font-weight: bold; margin: -0.25rem 0 0.75rem; }
+  .lead { font-size: 1.02rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; margin: 0.75rem 0 1rem; }
+  .stat { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.75rem; }
+  .stat .label { display: block; font-size: 0.75rem; color: var(--muted); }
+  .stat .value { font-size: 1.5rem; font-weight: bold; font-variant-numeric: tabular-nums; }
+  .stat small { font-size: 0.8rem; font-weight: normal; margin-left: 0.1rem; }
+  .dekads { display: grid; gap: 0.75rem; }
+  @media (min-width: 700px) { .dekads { grid-template-columns: repeat(3, 1fr); } }
+  .dekad { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 0.9rem; font-size: 0.92rem; }
+  .dekad h3 { margin: 0 0 0.35rem; font-size: 1rem; }
+  .dekad p { margin: 0.4rem 0; }
+  .dekad .temps { display: flex; flex-wrap: wrap; gap: 0.2rem 0.8rem; color: var(--muted); font-size: 0.85rem; }
+  .dekad .temps strong { color: var(--text); font-variant-numeric: tabular-nums; }
+  .dekad .like { font-size: 0.85rem; color: var(--accent); }
+  .dekad .wear { border-top: 1px dashed var(--border); padding-top: 0.45rem; }
+  .tag { display: inline-block; font-size: 0.72rem; background: var(--note-bg); border: 1px solid var(--note-border); border-radius: 4px; padding: 0 0.35rem; margin-right: 0.4rem; }
+  table.sights td.t { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  svg.chart { width: 100%; height: auto; display: block; }
+  svg.chart .band { fill: var(--ok-bg); }
+  svg.chart .grid { stroke: var(--border); stroke-width: 1; }
+  svg.chart .axis { fill: var(--muted); font-size: 11px; }
+  svg.chart .axis.now { fill: var(--text); font-weight: bold; }
+  svg.chart polyline { fill: none; stroke-width: 2.5; stroke-linejoin: round; }
+  svg.chart .main.hi { stroke: var(--ng-text); }
+  svg.chart .main.lo { stroke: var(--link); }
+  svg.chart .cmp { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 4; }
+  svg.chart .dot.hi { fill: var(--ng-text); }
+  svg.chart .dot.lo { fill: var(--link); }
+  .legend .k { display: inline-block; width: 1.2rem; height: 0; border-top: 3px solid; vertical-align: middle; margin: 0 0.3rem 0 0.2rem; }
+  .legend .main-hi { border-color: var(--ng-text); }
+  .legend .main-lo { border-color: var(--link); }
+  .legend .cmp { border-top: 2px dashed var(--muted); }
+  .source ul { margin: 0.25rem 0; padding-left: 1.2rem; }
   .card-title { margin-top: 0; }
   dl.clothing { display: grid; grid-template-columns: max-content 1fr; gap: 0.4rem 1rem; margin: 0.5rem 0; }
   dl.clothing dt { font-weight: bold; }

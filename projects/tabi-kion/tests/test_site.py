@@ -97,3 +97,38 @@ def test_sitemapに全ページ(site):
 
 def test_adsense未設定なら広告を出さない(site):
     assert "adsbygoogle" not in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_東京でいえば何月_は最高気温のいちばん近い月():
+    # 高山11月下旬の最高 10.9℃ は東京2月の最高（10.9℃）にいちばん近い
+    assert climate.tokyo_like_month(10.9) == 2
+
+
+def test_20時の気温は旬ごとに36個():
+    for st in STATIONS:
+        assert len(climate.NORMALS[st.code]["dekad"]["evening"]) == 36
+
+
+def test_手書きの案内があるページは厚いページになり_写真の出典とライセンスが出る(site):
+    html = (site / "takayama" / "11.html").read_text(encoding="utf-8")
+    g = climate.guide("takayama", 11)
+    assert g["headline"] in html
+    for p in g["photos"]:
+        assert p["author"] in html and p["license"] in html and p["source_url"].split("/")[-1][:20] in html
+        assert (site / "static" / "photos" / p["file"]).exists()
+    for h in g["highlights"]:
+        assert h["source_url"] in html
+    assert "予報ではありません" in html
+    assert '<svg viewBox' in html
+
+
+def test_案内ファイルの形():
+    import json
+    from pathlib import Path
+    for p in (Path(climate.__file__).resolve().parent.parent / "data" / "guides").rglob("*.json"):
+        g = json.loads(p.read_text(encoding="utf-8"))
+        assert len(g["dekads"]) == 3, p
+        assert g["checked"] and g["photos"], p
+        for h in g["highlights"]:
+            assert h["source_url"].startswith("https://"), p
+            assert h["dekad"] in (None, 0, 1, 2), p
