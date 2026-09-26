@@ -24,7 +24,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     final progress = await _progress();
-    await tester.pumpWidget(GosoBoatApp(progress: progress));
+    await tester.pumpWidget(GosoBoatApp(progress: progress, locale: const Locale('ja')));
     await tester.tap(find.text('はじめる'));
     // 待機の揺れが止まらないので pumpAndSettle は使えない
     await tester.pump(const Duration(milliseconds: 400));
@@ -56,7 +56,7 @@ void main() {
     addTearDown(tester.view.reset);
     final semantics = tester.ensureSemantics();
     final progress = await _progress({'intro.1': true});
-    await tester.pumpWidget(GosoBoatApp(progress: progress));
+    await tester.pumpWidget(GosoBoatApp(progress: progress, locale: const Locale('ja')));
     await tester.tap(find.text('はじめる'));
     // 待機の揺れが止まらないので pumpAndSettle は使えない
     await tester.pump(const Duration(milliseconds: 400));
@@ -81,7 +81,7 @@ void main() {
   testWidgets('ステージ選択: 1面目だけ開いている', (tester) async {
     final semantics = tester.ensureSemantics();
     final progress = await _progress();
-    await tester.pumpWidget(GosoBoatApp(progress: progress));
+    await tester.pumpWidget(GosoBoatApp(progress: progress, locale: const Locale('ja')));
     await tester.tap(find.text('ステージを選ぶ'));
     await tester.pumpAndSettle();
     expect(find.bySemanticsLabel('1-1'), findsOneWidget);
@@ -99,5 +99,41 @@ void main() {
     expect(progress.shouldAskReview(w1.last, 3), isFalse, reason: '同じ舞台では1回だけ');
     final w4 = progress.levels.where((l) => l.world == 4).toList();
     expect(progress.shouldAskReview(w4.last, 3), isFalse, reason: '舞台4以降は出さない');
+  });
+
+  testWidgets('英語: 端末が日本語以外なら英語で出る（逃げたときの文も英語）', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    final semantics = tester.ensureSemantics();
+    final progress = await _progress();
+    await tester.pumpWidget(GosoBoatApp(progress: progress, locale: const Locale('en')));
+    expect(find.text('Prison Boat'), findsOneWidget);
+    await tester.tap(find.text('Start'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('Get them across'), findsOneWidget);
+    await tester.tap(find.text('Got it'));
+    await tester.pump(const Duration(milliseconds: 400));
+
+    for (var i = 0; i < 3; i++) {
+      await tester.tap(find.bySemanticsLabel('Officer, near bank').first);
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+    await tester.tap(find.text('To far bank'));
+    for (var i = 0; i < 30; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.text('They escaped!'), findsOneWidget);
+    expect(find.text('Prisoners were left alone on the near bank.'), findsOneWidget);
+    semantics.dispose();
+  });
+
+  testWidgets('端末の言語で選ぶ: 日本語以外はすべて英語', (tester) async {
+    tester.platformDispatcher.localesTestValue = const [Locale('fr', 'FR')];
+    addTearDown(tester.platformDispatcher.clearLocalesTestValue);
+    final progress = await _progress();
+    await tester.pumpWidget(GosoBoatApp(progress: progress));
+    expect(find.text('Start'), findsOneWidget);
   });
 }

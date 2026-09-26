@@ -1,0 +1,248 @@
+{
+  "@@locale": "ja",
+  "appTitle": "護送ボート",
+  "tagline": "囚人を向こう岸へ。逃がすな。",
+  "start": "はじめる",
+  "continueAt": "つづきから（{id}）",
+  "@continueAt": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "chooseStage": "ステージを選ぶ",
+  "stages": "ステージ",
+  "levelLocked": "{id}、まだ遊べない",
+  "@levelLocked": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "levelStars": "{id}、星{stars}",
+  "@levelStars": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "placeLeft": "手前の岸",
+  "placeRight": "向こう岸",
+  "placeIsland": "中州",
+  "goTo": "{place}へ",
+  "@goTo": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "boatIsAt": "舟は{place}にある",
+  "@boatIsAt": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "boatSeats": "舟は{n}席まで",
+  "@boatSeats": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "boatSeatsCuffed": "舟は{n}席まで（手錠の2人は2席）",
+  "@boatSeatsCuffed": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "needSomeone": "先に誰かを舟に乗せる",
+  "noRower": "舟を漕げるのは警官と看守長だけ",
+  "notAdjacent": "そこへは直接行けない",
+  "unsolvable": "ここからは渡しきれない。一手戻して",
+  "hintSay": "{load}で{place}へ",
+  "@hintSay": {
+    "placeholders": {
+      "load": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "hintJoin": "＋",
+  "undo": "一手戻す",
+  "restart": "最初から",
+  "hint": "ヒント",
+  "failBoat": "舟の上で 見張り{guard}人分に 囚人{weight}人分。\n見張りが足りず、川へ飛び込んだ。",
+  "@failBoat": {
+    "placeholders": {
+      "guard": {
+        "type": "int"
+      },
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "failAlone": "{place}に囚人だけが残った。",
+  "@failAlone": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "failBank": "{place}で 見張り{guard}人分に 囚人{weight}人分。\n見張りが足りなかった。",
+  "@failBank": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      },
+      "guard": {
+        "type": "int"
+      },
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "personLabel": "{name}、{where}",
+  "@personLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "onBoat": "舟の上",
+  "coachTap": "警官や囚人をタップすると舟に乗る",
+  "coachGo": "乗せたら、下の「{button}」を押す",
+  "@coachGo": {
+    "placeholders": {
+      "button": {
+        "type": "String"
+      }
+    }
+  },
+  "tallyGuard": "見張り{n}",
+  "@tallyGuard": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tallyPrisoner": "囚人{n}",
+  "@tallyPrisoner": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "backToStages": "ステージ選択へ",
+  "tripsCount": "{n}回",
+  "@tripsCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "par": "最短 {n}回",
+  "@par": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "escaped": "脱走された",
+  "cleared": "全員護送",
+  "noteHint": "ヒントを使ったので星2つまで",
+  "noteBest": "最短で渡りきった",
+  "noteParFor3": "{n}回で渡れば星3つ",
+  "@noteParFor3": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "crossedIn": "{n}回で渡りきった",
+  "@crossedIn": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "nextLevel": "次の面へ",
+  "allCleared": "全{n}面 クリア",
+  "@allCleared": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "again": "もう一度",
+  "stageSelect": "ステージ選択",
+  "gotIt": "わかった",
+  "rulesTitle": "決まり",
+  "rulesBody": "・岸でも舟の上でも、見張りが囚人より少ないと逃げる\n・見張りのいない所に囚人を残しても逃げる\n・舟は{cap}席。漕げる人がいないと出せない",
+  "@rulesBody": {
+    "placeholders": {
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "rulesIsland": "・舟は 手前の岸 ↔ 中州 ↔ 向こう岸 を1区間ずつ進む",
+  "rolePolice": "警官",
+  "roleChief": "看守長",
+  "roleDog": "警察犬",
+  "rolePrisoner": "囚人",
+  "roleBoss": "ボス",
+  "roleCuffed": "手錠の2人",
+  "descPolice": "見張り1人分。舟を漕げる",
+  "descChief": "見張り2人分。舟を漕げる",
+  "descDog": "見張り1人分。舟は漕げない",
+  "descPrisoner": "見張りが1人分要る",
+  "descBoss": "1人で見張りが2人分要る",
+  "descCuffed": "2人で見張り2人分。舟の席を2つ使う",
+  "world1": "川べり",
+  "world2": "看守長",
+  "world3": "手錠",
+  "world4": "ボス",
+  "world5": "警察犬",
+  "world6": "中州",
+  "intro1Title": "囚人を向こう岸へ",
+  "intro1Body": "警官や囚人をタップして舟に乗せ、「向こう岸へ」で渡す。\n岸でも舟の上でも、囚人より警官が少ないと逃げる。\n警官のいない岸に囚人を残しても逃げる。",
+  "intro2Title": "看守長が来た",
+  "intro2Body": "看守長は1人で囚人2人分を見張れる。舟も漕げる。",
+  "intro3Title": "手錠の2人",
+  "intro3Body": "2人はつながっていて離れられない。見張りは2人分、舟の席も2つ使う。",
+  "intro4Title": "ボスが来た",
+  "intro4Body": "ボスは1人でも見張りが2人分いる。舟の上でも同じ。",
+  "intro5Title": "警察犬が来た",
+  "intro5Body": "警察犬は囚人1人を見張れる。でも舟は漕げない。",
+  "intro6Title": "川に中州がある",
+  "intro6Body": "舟は 手前の岸 ↔ 中州 ↔ 向こう岸 を1区間ずつ進む。\n中州に人を残すこともできる。中州でも見張りが要る。"
+}

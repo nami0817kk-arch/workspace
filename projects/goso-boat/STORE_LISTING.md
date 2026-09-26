@@ -1,4 +1,4 @@
-# 護送ボート — ストア掲載文の下書き（iOS のみ）
+# 護送ボート / Prison Boat — ストア掲載文の下書き（iOS のみ）
 
 2026-09-26 作成。ユーザーの指示「iOS でインストールされる可能性をあげて」に向けたもの。
 公開名義は「つるはし社」。本名・nami・0817 は入れない。
@@ -17,20 +17,46 @@
 検索の回数そのものは Apple の公開情報では見られない（Apple Search Ads の人気度が要る）。
 上の表は「その語で出てくるアプリがどれだけ遊ばれているか」の目安で、需要の直接の数字ではない。
 
-Apple の表（App Store localizations）では、**日本のストアの追加言語は English (US)**。
-英語（米国）の掲載情報も日本で検索に効くかは公式には書かれていない（ASO では効くとされている）。
-効く前提で、英語（米国）のキーワード欄に日本語の追加キーワードを入れる。
+英語版を作ることにした（2026-09-26 ユーザー決定）。英語（米国）の掲載情報は海外の人が読むので、
+キーワード欄は英語の検索語で埋める（日本の検索のために日本語を入れる案はやめた）。
 
 ## 名前・サブタイトル・キーワード
 
-| 項目 | 日本語（17／19／93字） | English (US)（27／27／96字） |
+| 項目 | 日本語（17／19／93字） | English (US)（27／27／102字） |
 |---|---|---|
 | 名前（30字まで） | 護送ボート：囚人を渡す川渡りパズル | Prison Boat: River Crossing |
 | サブタイトル（30字まで） | 脱獄させるな！頭の体操・ひらめき脳トレ | Logic puzzle & brain teaser |
-| キーワード（100字まで） | 脱出,刑務所,警察,警官,看守,IQ,IQテスト,論理,ロジック,思考力,謎解き,クイズ,暇つぶし,オフライン,無料,舟,船,中州,知育,推理,難問,頭脳,ブレイン,頭を使う,考える | 渡し舟,護送車,大人向け,子供向け,簡単,激ムズ,頭が良くなる,IQ診断,ひっかけ,閃き,ナゾトキ,推理ゲーム,River,Crossing,Prison,Logic,Brain,Escape |
+| キーワード（100字まで） | 脱出,刑務所,警察,警官,看守,IQ,IQテスト,論理,ロジック,思考力,謎解き,クイズ,暇つぶし,オフライン,無料,舟,船,中州,知育,推理,難問,頭脳,ブレイン,頭を使う,考える | prisoner,jail,escape,police,cop,guard,brain,iq,test,riddle,logic,think,ferry,wolf,goat,cabbage,offline |
 
 - 名前とサブタイトルに入れた語（護送・ボート・囚人・渡す・川渡り・パズル・脱獄・頭の体操・ひらめき・脳トレ）はキーワード欄に重ねない
-- ホーム画面の表示名は「護送ボート」
+- ホーム画面の表示名は 日本語「護送ボート」、英語「Prison Boat」（ios/Runner/*.lproj/InfoPlist.strings）
+- 英語のキーワードの wolf, goat, cabbage は「狼と山羊とキャベツ」の川渡り（英語圏で一番知られた形）を探す人向け
+
+## 配信する国
+
+日本と、EU を除く全地域。EU はサカマネと同じく対象外（配信すると販売者として住所などの公開を求められる）。
+中国本土はゲームの配信に許可番号が要るので対象外。
+
+## English description
+
+Transporting prisoners across the river — but if the guards are outnumbered, they escape!
+Load officers and prisoners into the boat and get everyone to the far bank without losing a single one.
+
+■ One simple rule
+On a bank or in the boat, prisoners escape if they outnumber the guards. Leave prisoners with no guard, and they escape too.
+
+■ New helpers, tougher prisoners
+• Chief — guards two prisoners alone
+• Police dog — guards, but can't row
+• Boss — needs two guards alone
+• Cuffed pair — chained together, takes two seats
+• Island — leave people mid-river, but it needs guards too
+
+■ 60 levels, 3 stars for the shortest route
+Every level is solvable. Cross in the fewest trips to earn 3 stars.
+Stuck? A hint shows your next move. Undo and restart any time. Plays offline.
+
+Promotional text: Get the prisoners across the river — without letting a single one escape. 60 brain-teasing levels with chiefs, bosses, cuffed pairs, police dogs and an island.
 
 ## カテゴリ
 

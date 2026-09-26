@@ -7,29 +7,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../engine/puzzle.dart';
 import '../engine/rules.dart';
 
-/// 舞台の名前と、その舞台で初めて出てくるもの。
+/// 舞台。名前と紹介文は lib/l10n の world{no} / intro{no}Title / intro{no}Body。
 class WorldInfo {
-  const WorldInfo(this.no, this.name, this.intro);
+  const WorldInfo(this.no, {this.role});
   final int no;
-  final String name;
-  final Intro? intro;
-}
 
-/// 新しい役・仕掛けの紹介。舞台の1面目の前に1回だけ出す。
-class Intro {
-  const Intro(this.title, this.body, {this.role});
-  final String title;
-  final String body;
+  /// 紹介で絵を出す役（中州の舞台は役ではなく仕掛けなので無し）。
   final Role? role;
 }
 
 const worlds = [
-  WorldInfo(1, '川べり', Intro('囚人を向こう岸へ', '警官や囚人をタップして舟に乗せ、「向こう岸へ」で渡す。\n岸でも舟の上でも、囚人より警官が少ないと逃げる。\n警官のいない岸に囚人を残しても逃げる。', role: Role.police)),
-  WorldInfo(2, '看守長', Intro('看守長が来た', '看守長は1人で囚人2人分を見張れる。舟も漕げる。', role: Role.chief)),
-  WorldInfo(3, '手錠', Intro('手錠の2人', '2人はつながっていて離れられない。見張りは2人分、舟の席も2つ使う。', role: Role.cuffed)),
-  WorldInfo(4, 'ボス', Intro('ボスが来た', 'ボスは1人でも見張りが2人分いる。舟の上でも同じ。', role: Role.boss)),
-  WorldInfo(5, '警察犬', Intro('警察犬が来た', '警察犬は囚人1人を見張れる。でも舟は漕げない。', role: Role.dog)),
-  WorldInfo(6, '中州', Intro('川に中州がある', '舟は 手前の岸 ↔ 中州 ↔ 向こう岸 を1区間ずつ進む。\n中州に人を残すこともできる。中州でも見張りが要る。')),
+  WorldInfo(1, role: Role.police),
+  WorldInfo(2, role: Role.chief),
+  WorldInfo(3, role: Role.cuffed),
+  WorldInfo(4, role: Role.boss),
+  WorldInfo(5, role: Role.dog),
+  WorldInfo(6),
 ];
 
 WorldInfo worldOf(Level l) => worlds[l.world - 1];

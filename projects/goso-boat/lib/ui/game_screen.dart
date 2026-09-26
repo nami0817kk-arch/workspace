@@ -9,17 +9,13 @@ import '../app/progress.dart';
 import '../engine/puzzle.dart';
 import '../engine/rules.dart';
 import '../game/session.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/l10n_ext.dart';
 import 'figures.dart';
 import 'palette.dart';
 
 const _tapMove = Duration(milliseconds: 320);
 const _crossMove = Duration(milliseconds: 900);
-
-String placeName(Place p) => switch (p) {
-      Place.left => '手前の岸',
-      Place.right => '向こう岸',
-      Place.island => '中州',
-    };
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.level, required this.progress});
@@ -82,8 +78,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   Future<void> _maybeIntro() async {
     final w = worldOf(level);
     final first = widget.progress.levels.firstWhere((l) => l.world == level.world);
-    if (first != level || widget.progress.seenIntro(w.no) || w.intro == null) return;
-    await showIntro(context, w.intro!);
+    if (first != level || widget.progress.seenIntro(w.no)) return;
+    await showIntro(context, w);
     await widget.progress.markIntro(w.no);
   }
 
@@ -100,6 +96,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _hintTo = null;
   }
 
+  AppLocalizations get t => context.l10n;
+
   void _tap(Person p) {
     if (phase != _Phase.play) return;
     final r = s.tap(p);
@@ -110,10 +108,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         _clearHint();
       case TapResult.boatElsewhere:
         HapticFeedback.lightImpact();
-        _say('舟は${placeName(s.boat)}にある');
+        _say(t.boatIsAt(t.place(s.boat)));
       case TapResult.full:
         HapticFeedback.lightImpact();
-        _say('舟は${level.capacity}席まで${p.role == Role.cuffed ? '（手錠の2人は2席）' : ''}');
+        _say(p.role == Role.cuffed ? t.boatSeatsCuffed(level.capacity) : t.boatSeats(level.capacity));
       case TapResult.locked:
         return;
     }
@@ -127,10 +125,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       case Refused(:final reason):
         HapticFeedback.lightImpact();
         _say(switch (reason) {
-          RefuseReason.empty => '先に誰かを舟に乗せる',
-          RefuseReason.noRower => '舟を漕げるのは警官と看守長だけ',
-          RefuseReason.overCapacity => '舟は${level.capacity}席まで',
-          RefuseReason.notAdjacent => 'そこへは直接行けない',
+          RefuseReason.empty => t.needSomeone,
+          RefuseReason.noRower => t.noRower,
+          RefuseReason.overCapacity => t.boatSeats(level.capacity),
+          RefuseReason.notAdjacent => t.notAdjacent,
         });
         return;
       case Crossed():
@@ -227,7 +225,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     if (phase != _Phase.play) return;
     final m = s.hint();
     if (m == null) {
-      _say('ここからは渡しきれない。一手戻して');
+      _say(t.unsolvable);
       return;
     }
     setState(() {
@@ -235,8 +233,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       _hintTo = m.to;
       _moveDuration = _tapMove;
     });
-    final load = m.load.entries.map((e) => '${e.key.label}${e.value > 1 ? '×${e.value}' : ''}').join('＋');
-    _say('$loadで${placeName(m.to)}へ');
+    final load = m.load.entries.map((e) => '${t.role(e.key)}${e.value > 1 ? '×${e.value}' : ''}').join(t.hintJoin);
+    _say(t.hintSay(load, t.place(m.to)));
   }
 
   _Geo? _geo;
@@ -250,7 +248,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         child: Column(
           children: [
             _TopBar(
-              title: '${level.id}  ${w.name}',
+              title: '${level.id}  ${t.world(w.no)}',
               trips: s.trips,
               par: level.par,
               onBack: () => Navigator.of(context).pop(),
@@ -260,11 +258,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
               child: Row(
                 children: [
-                  Expanded(child: ChunkyButton(label: '一手戻す', icon: Icons.undo_rounded, onPressed: s.canUndo ? _undo : null, fontSize: 13)),
+                  Expanded(child: ChunkyButton(label: t.undo, icon: Icons.undo_rounded, onPressed: s.canUndo ? _undo : null, fontSize: 13)),
                   const SizedBox(width: 8),
-                  Expanded(child: ChunkyButton(label: '最初から', icon: Icons.refresh_rounded, onPressed: _reset, fontSize: 13)),
+                  Expanded(child: ChunkyButton(label: t.restart, icon: Icons.refresh_rounded, onPressed: _reset, fontSize: 13)),
                   const SizedBox(width: 8),
-                  Expanded(child: ChunkyButton(label: 'ヒント', icon: Icons.lightbulb_rounded, onPressed: phase == _Phase.play ? _hint : null, fontSize: 13)),
+                  Expanded(child: ChunkyButton(label: t.hint, icon: Icons.lightbulb_rounded, onPressed: phase == _Phase.play ? _hint : null, fontSize: 13)),
                 ],
               ),
             ),
@@ -323,9 +321,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       ),
     ).withOverlay( // 結果の札は画面全体にかぶせる
       phase == _Phase.failed
-          ? _ResultCard.fail(message: _failMessage(), onUndo: _undo, onReset: _reset)
+          ? _ResultCard.fail(t: t, message: _failMessage(), onUndo: _undo, onReset: _reset)
           : phase == _Phase.won
               ? _ResultCard.win(
+                  t: t,
+                  total: widget.progress.levels.length,
                   stars: _earnedStars,
                   trips: s.trips,
                   par: level.par,
@@ -350,10 +350,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   String _failMessage() {
     final f = s.failure!;
-    if (f.where == null) return '舟の上で 見張り${f.guard}人分に 囚人${f.weight}人分。\n見張りが足りず、川へ飛び込んだ。';
-    final place = placeName(f.where!);
-    if (f.guard == 0) return '$placeに囚人だけが残った。';
-    return '$placeで 見張り${f.guard}人分に 囚人${f.weight}人分。\n見張りが足りなかった。';
+    if (f.where == null) return t.failBoat(f.guard, f.weight);
+    final place = t.place(f.where!);
+    if (f.guard == 0) return t.failAlone(place);
+    return t.failBank(place, f.guard, f.weight);
   }
 
   List<Person> _sortedPeople() {
@@ -381,7 +381,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         opacity: flee != null ? 0 : 1,
         child: Semantics(
           button: true,
-          label: '${p.role.label}${p.role.weight > 0 ? p.order + 1 : ''}、${p.aboard ? '舟の上' : placeName(p.place)}',
+          label: t.personLabel('${t.role(p.role)}${p.role.weight > 0 ? p.order + 1 : ''}', p.aboard ? t.onBoat : t.place(p.place)),
           excludeSemantics: true,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -418,7 +418,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           child: _Tally(
             guard: s.at(pl).fold(0, (a, p) => a + p.role.guard),
             weight: s.at(pl).fold(0, (a, p) => a + p.role.weight),
-            label: placeName(pl),
+            label: t.place(pl),
+            t: t,
           ),
         ),
     ];
@@ -438,7 +439,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       );
 
   Widget _coach(_Geo g) {
-    final text = s.aboard.isEmpty ? '警官や囚人をタップすると舟に乗る' : '乗せたら、下の「向こう岸へ」を押す';
+    final text = s.aboard.isEmpty ? t.coachTap : t.coachGo(t.goTo(t.placeRight));
     return Positioned(
       left: 16,
       right: 16,
@@ -634,7 +635,8 @@ class _ScenePainter extends CustomPainter {
 }
 
 class _Tally extends StatelessWidget {
-  const _Tally({required this.guard, required this.weight, required this.label});
+  const _Tally({required this.guard, required this.weight, required this.label, required this.t});
+  final AppLocalizations t;
   final int guard;
   final int weight;
   final String label;
@@ -650,9 +652,9 @@ class _Tally extends StatelessWidget {
         child: Text.rich(
           TextSpan(children: [
             TextSpan(text: '$label  ', style: const TextStyle(color: Palette.dim)),
-            TextSpan(text: '見張り$guard', style: const TextStyle(color: Color(0xFF2B4FA8))),
+            TextSpan(text: t.tallyGuard(guard), style: const TextStyle(color: Color(0xFF2B4FA8))),
             const TextSpan(text: ' ・ '),
-            TextSpan(text: '囚人$weight', style: const TextStyle(color: Color(0xFF444444))),
+            TextSpan(text: t.tallyPrisoner(weight), style: const TextStyle(color: Color(0xFF444444))),
           ]),
           style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Palette.ink),
         ),
@@ -672,19 +674,19 @@ class _TopBar extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(4, 4, 12, 8),
         child: Row(
           children: [
-            IconButton(onPressed: onBack, icon: const Icon(Icons.arrow_back_rounded, color: Palette.ink), tooltip: 'ステージ選択へ'),
+            IconButton(onPressed: onBack, icon: const Icon(Icons.arrow_back_rounded, color: Palette.ink), tooltip: context.l10n.backToStages),
             Expanded(
               child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Palette.ink)),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('$trips回', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink, fontFeatures: [FontFeature.tabularFigures()])),
-                Text('最短 $par回', style: const TextStyle(fontSize: 11, color: Palette.dim, fontWeight: FontWeight.w700)),
+                Text(context.l10n.tripsCount(trips), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink, fontFeatures: [FontFeature.tabularFigures()])),
+                Text(context.l10n.par(par), style: const TextStyle(fontSize: 11, color: Palette.dim, fontWeight: FontWeight.w700)),
               ],
             ),
             const SizedBox(width: 6),
-            IconButton(onPressed: onRules, icon: const Icon(Icons.help_outline_rounded, color: Palette.ink), tooltip: '決まり'),
+            IconButton(onPressed: onRules, icon: const Icon(Icons.help_outline_rounded, color: Palette.ink), tooltip: context.l10n.rulesTitle),
           ],
         ),
       );
@@ -709,7 +711,7 @@ class _GoBar extends StatelessWidget {
             if (d != ds.first) const SizedBox(width: 10),
             Expanded(
               child: ChunkyButton(
-                label: '${placeName(d)}へ',
+                label: context.l10n.goTo(context.l10n.place(d)),
                 icon: _up(d) > 0 ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
                 color: hintTo == d ? const Color(0xFFFFE08A) : Palette.gold,
                 shadow: Palette.goldDeep,
@@ -731,24 +733,26 @@ class _GoBar extends StatelessWidget {
 class _ResultCard extends StatelessWidget {
   const _ResultCard._({required this.child});
 
-  factory _ResultCard.fail({required String message, required VoidCallback onUndo, required VoidCallback onReset}) => _ResultCard._(
+  factory _ResultCard.fail({required AppLocalizations t, required String message, required VoidCallback onUndo, required VoidCallback onReset}) => _ResultCard._(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('脱走された', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Palette.bad)),
+            Text(t.escaped, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Palette.bad)),
             const SizedBox(height: 8),
             Text(message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
             const SizedBox(height: 16),
             Row(mainAxisSize: MainAxisSize.min, children: [
-              ChunkyButton(label: '一手戻す', color: Palette.gold, onPressed: onUndo),
+              ChunkyButton(label: t.undo, color: Palette.gold, onPressed: onUndo),
               const SizedBox(width: 10),
-              ChunkyButton(label: '最初から', onPressed: onReset),
+              ChunkyButton(label: t.restart, onPressed: onReset),
             ]),
           ],
         ),
       );
 
   factory _ResultCard.win({
+    required AppLocalizations t,
+    required int total,
     required int stars,
     required int trips,
     required int par,
@@ -759,27 +763,27 @@ class _ResultCard extends StatelessWidget {
     required VoidCallback onMenu,
   }) {
     final note = usedHint && trips <= par
-        ? 'ヒントを使ったので星2つまで'
+        ? t.noteHint
         : trips <= par
-            ? '最短で渡りきった'
-            : '$par回で渡れば星3つ';
+            ? t.noteBest
+            : t.noteParFor3(par);
     return _ResultCard._(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('全員護送', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Palette.ok)),
+          Text(t.cleared, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Palette.ok)),
           const SizedBox(height: 6),
           StarRow(stars, size: 44),
           const SizedBox(height: 6),
-          Text('$trips回で渡りきった\n$note', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
+          Text('${t.crossedIn(trips)}\n$note', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
           const SizedBox(height: 16),
-          if (hasNext) ChunkyButton(label: '次の面へ', color: Palette.gold, fontSize: 18, onPressed: onNext),
-          if (!hasNext) const Text('全60面 クリア', style: TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
+          if (hasNext) ChunkyButton(label: t.nextLevel, color: Palette.gold, fontSize: 18, onPressed: onNext),
+          if (!hasNext) Text(t.allCleared(total), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
           const SizedBox(height: 10),
           Row(mainAxisSize: MainAxisSize.min, children: [
-            ChunkyButton(label: 'もう一度', onPressed: onRetry, fontSize: 13),
+            ChunkyButton(label: t.again, onPressed: onRetry, fontSize: 13),
             const SizedBox(width: 10),
-            ChunkyButton(label: 'ステージ選択', onPressed: onMenu, fontSize: 13),
+            ChunkyButton(label: t.stageSelect, onPressed: onMenu, fontSize: 13),
           ]),
         ],
       ),
@@ -843,37 +847,40 @@ class _ConfettiPainter extends CustomPainter {
 }
 
 /// 新しい役・仕掛けの紹介。
-Future<void> showIntro(BuildContext context, Intro intro) => showDialog<void>(
+Future<void> showIntro(BuildContext context, WorldInfo w) => showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(
-            color: Palette.card,
-            border: Border.all(color: Palette.ink, width: 2),
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: const [BoxShadow(color: Palette.ink, offset: Offset(0, 6))],
+      builder: (ctx) {
+        final t = ctx.l10n;
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              color: Palette.card,
+              border: Border.all(color: Palette.ink, width: 2),
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: const [BoxShadow(color: Palette.ink, offset: Offset(0, 6))],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (w.role != null)
+                  SizedBox(
+                    height: 90,
+                    child: AspectRatio(aspectRatio: Figure.aspect(w.role!), child: Figure(role: w.role!)),
+                  ),
+                const SizedBox(height: 8),
+                Text(t.introTitle(w.no), textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink)),
+                const SizedBox(height: 10),
+                Text(t.introBody(w.no), textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.7, color: Palette.ink)),
+                const SizedBox(height: 18),
+                ChunkyButton(label: t.gotIt, color: Palette.gold, fontSize: 17, onPressed: () => Navigator.of(ctx).pop()),
+              ],
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (intro.role != null)
-                SizedBox(
-                  height: 90,
-                  child: AspectRatio(aspectRatio: Figure.aspect(intro.role!), child: Figure(role: intro.role!)),
-                ),
-              const SizedBox(height: 8),
-              Text(intro.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink)),
-              const SizedBox(height: 10),
-              Text(intro.body, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.7, color: Palette.ink)),
-              const SizedBox(height: 18),
-              ChunkyButton(label: 'わかった', color: Palette.gold, fontSize: 17, onPressed: () => Navigator.of(ctx).pop()),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
 
 /// 決まりの一覧（この面に出てくる役だけ）。
@@ -882,15 +889,8 @@ Future<void> showRules(BuildContext context, Level level) => showModalBottomShee
       backgroundColor: Palette.card,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
       builder: (ctx) {
+        final t = ctx.l10n;
         final roles = Role.values.where((r) => level.count(r) > 0).toList();
-        String desc(Role r) => switch (r) {
-              Role.police => '見張り1人分。舟を漕げる',
-              Role.chief => '見張り2人分。舟を漕げる',
-              Role.dog => '見張り1人分。舟は漕げない',
-              Role.prisoner => '見張りが1人分要る',
-              Role.boss => '1人で見張りが2人分要る',
-              Role.cuffed => '2人で見張り2人分。舟の席を2つ使う',
-            };
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
@@ -898,13 +898,10 @@ Future<void> showRules(BuildContext context, Level level) => showModalBottomShee
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('決まり', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Palette.ink)),
+                Text(t.rulesTitle, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Palette.ink)),
                 const SizedBox(height: 8),
                 Text(
-                  '・岸でも舟の上でも、見張りが囚人より少ないと逃げる\n'
-                  '・見張りのいない所に囚人を残しても逃げる\n'
-                  '・舟は${level.capacity}席。漕げる人がいないと出せない'
-                  '${level.island ? '\n・舟は 手前の岸 ↔ 中州 ↔ 向こう岸 を1区間ずつ進む' : ''}',
+                  [t.rulesBody(level.capacity), if (level.island) t.rulesIsland].join('\n'),
                   style: const TextStyle(fontSize: 14, height: 1.7, color: Palette.ink),
                 ),
                 const SizedBox(height: 12),
@@ -917,8 +914,8 @@ Future<void> showRules(BuildContext context, Level level) => showModalBottomShee
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text.rich(TextSpan(children: [
-                            TextSpan(text: '${r.label}  ', style: const TextStyle(fontWeight: FontWeight.w900)),
-                            TextSpan(text: desc(r)),
+                            TextSpan(text: '${t.role(r)}  ', style: const TextStyle(fontWeight: FontWeight.w900)),
+                            TextSpan(text: t.roleDesc(r)),
                           ])),
                         ),
                       ],
