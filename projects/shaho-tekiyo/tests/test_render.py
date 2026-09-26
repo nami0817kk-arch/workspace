@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 import eligibility
+import premium
 import render
 import site_config
 
@@ -14,7 +15,6 @@ import site_config
 def site(tmp_path, monkeypatch):
     out_dir = tmp_path / "output"
     monkeypatch.setattr(render, "_OUTPUT_DIR", out_dir)
-    monkeypatch.setattr(render, "_ROOT", tmp_path)
     render.build_all()
     return out_dir
 
@@ -139,3 +139,24 @@ def test_canonical_urlはhtml拡張子とindexを落とす():
     assert render.canonical_url("faq.html") == f"{site_config.SITE_URL}/faq"
     assert render.canonical_url("year/index.html") == f"{site_config.SITE_URL}/year/"
     assert render.canonical_url("year/2027-10.html") == f"{site_config.SITE_URL}/year/2027-10"
+
+
+def test_計算機に埋め込まれた料率がdataと一致する(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    m = re.search(r'<script id="rates-data" type="application/json">(.*?)</script>', html, re.S)
+    assert m, "rates-data が見つからない"
+    embedded = json.loads(m.group(1))
+    assert [t["fiscal_year"] for t in embedded] == [t.fiscal_year for t in premium.TABLES]
+    assert embedded[-1]["prefectures"] == premium.TABLES[-1].prefectures
+
+
+def test_計算部分のjsが配信物に入る(site):
+    assert (site / "static" / "calc.js").exists()
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'src="static/calc.js"' in html
+
+
+def test_都道府県は47すべて選べる(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    for pref in premium.PREFECTURES:
+        assert f'<option value="{pref}"' in html, pref

@@ -2,7 +2,7 @@
 
 kabu-agari-ranking の src/render.py と同じ形（canonical_url・sitemap・
 robots.txt の作り方はそちらの先例に合わせてある）。データ取得が要らない分、
-こちらは eligibility.SCHEDULE 以外に外部入力を持たない。
+入力は eligibility.SCHEDULE（法定の日程）と data/ の料率（premium.py 経由）だけ。
 """
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ from jinja2 import Environment, FileSystemLoader
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import eligibility
+import premium
 import site_config
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -117,6 +118,8 @@ def _build_calculator_page() -> None:
             schedule_json=schedule_json(),
             hours_requirement=eligibility.WEEKLY_HOURS_REQUIREMENT,
             milestones=eligibility.MILESTONES,
+            prefectures=premium.PREFECTURES,
+            rates_json=premium.tables_json(),
         ),
     )
 
