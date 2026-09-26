@@ -71,7 +71,7 @@ flutter build ipa --release \
 
 ### 2. App Store Connect
 
-1. 新しい App を作る。**Bundle ID は `dev.namikk.soccerCareer`**
+1. 新しい App を作る。**Bundle ID は `com.namiki.soccercareer`**
    （`ios/Runner.xcodeproj` に既に入っている）。
 2. **App内課金を2つ**登録する。IDは上の表のとおりで、1文字でも違うと
    アプリ側から見つからない。

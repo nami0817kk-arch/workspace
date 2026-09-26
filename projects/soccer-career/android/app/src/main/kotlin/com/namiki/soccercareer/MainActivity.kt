@@ -1,4 +1,4 @@
-package dev.namikk.soccer_career
+package com.namiki.soccercareer
 
 import io.flutter.embedding.android.FlutterActivity
 
