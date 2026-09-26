@@ -397,6 +397,76 @@ def group_by_month(dates: list[str], info: dict[str, dict] | None = None) -> lis
     return months
 
 
+# カレンダーの升目の種類
+CAL_DATA = "data"        # その日の掲載がある（押せる）
+CAL_MISSING = "missing"  # 営業日なのに掲載が無い＝取得に失敗した日
+CAL_CLOSED = "closed"    # 土日・祝日（東証の休場日）
+CAL_OUTSIDE = "outside"  # 掲載を始める前／これから来る日
+CAL_BLANK = "blank"      # 月初・月末の空き升
+
+
+def calendar_months(dates: list[str], dirname: str) -> list[dict]:
+    """掲載日を月ごとのカレンダーにする。
+
+    日付から探すのに、入力欄へ打ち込ませるより「押せる升目」のほうが早い。
+    休場日と、取得に失敗した日（営業日なのに掲載が無い日）を見分けられる形にする
+    ——どちらも「空いている」ように見えるが、意味が違うため。
+
+    週は月曜始まり。相場の週が月〜金なので、土日が右端にまとまる。
+    """
+    if not dates:
+        return []
+    have = set(dates)
+    # 「欠測」と言えるのは、掲載している期間の中だけ。掲載を始める前の日や、
+    # これから来る日を「取得に失敗した日」と見せるのは嘘になる。
+    covered_from = date.fromisoformat(min(dates))
+    covered_to = date.fromisoformat(max(dates))
+    first = covered_from.replace(day=1)
+    last = covered_to
+
+    months, cursor = [], first
+    while cursor <= last:
+        if cursor.month == 12:
+            nxt = cursor.replace(year=cursor.year + 1, month=1)
+        else:
+            nxt = cursor.replace(month=cursor.month + 1)
+
+        cells = [{"state": CAL_BLANK}] * cursor.weekday()   # 月曜始まりの空き
+        day = cursor
+        while day < nxt:
+            iso = day.isoformat()
+            if iso in have:
+                state = CAL_DATA
+            elif not (covered_from <= day <= covered_to):
+                state = CAL_OUTSIDE
+            else:
+                try:
+                    state = CAL_MISSING if is_business_day(day) else CAL_CLOSED
+                except CalendarOutOfRange:
+                    # 祝日表の外。休場かどうか分からないので「欠測」とは言わない。
+                    state = CAL_CLOSED
+            cells.append({
+                "state": state,
+                "day": day.day,
+                "iso": iso,
+                "href": f"archive/{dirname}/{iso}.html" if state == CAL_DATA else "",
+                "label": format_date_ja(iso),
+            })
+            day += timedelta(days=1)
+        while len(cells) % 7:
+            cells.append({"state": CAL_BLANK})
+
+        months.append({
+            "label": f"{cursor.year}年{cursor.month}月",
+            "weeks": [cells[i:i + 7] for i in range(0, len(cells), 7)],
+            "count": sum(1 for c in cells if c["state"] == CAL_DATA),
+        })
+        cursor = nxt
+
+    months.reverse()   # 新しい月が先
+    return months
+
+
 def archive_index_info(with_data: list[tuple[str, list[dict]]], kind: str) -> dict[str, dict]:
     """アーカイブ一覧に添える、その日の一言。"""
     stop_key = price_limit.STOP_HIGH if kind == "gainers" else price_limit.STOP_LOW
@@ -870,6 +940,7 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                 canonical=canonical_url(f"archive/{dirname}/index.html"),
                 heading=heading,
                 months=group_by_month(dates_with_data, archive_index_info(with_data, json_key)),
+                calendar=calendar_months(dates_with_data, dirname),
             ),
         )
 
