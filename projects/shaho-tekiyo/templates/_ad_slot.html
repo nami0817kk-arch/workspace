@@ -1,0 +1,7 @@
+{# ADSENSE_CLIENT が空のあいだは何も出さない（kabu-agari-ranking と同じ理由）。 #}
+{% if ADSENSE_CLIENT %}
+<div class="ad-slot">
+  <ins class="adsbygoogle" style="display:block" data-ad-client="{{ ADSENSE_CLIENT }}" data-ad-slot="0000000000" data-ad-format="auto"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+{% endif %}
