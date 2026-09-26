@@ -1383,3 +1383,63 @@ class FlatChartTest(unittest.TestCase):
         html = self.theme.item_page(self.row([1000] * 20), self.site, "2026-09-26")
 
         self.assertIn("<svg", html.split('class="chart flat"')[1])
+
+
+class RankAndBadgeTest(unittest.TestCase):
+    """順位と判定の札。
+
+    価格.com が順位を出し、camelcamelcamel が判定を札にしているのを見て
+    当てた。点で並べている一覧なのに、順位が画面から読めなかった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "S", "base_url": "https://e.test",
+                     "owner": "o", "contact_email": "c@e.test"}
+
+    def row(self, code="a", **kw):
+        base = {"item_code": code, "name": "テスト商品", "price": 1000,
+                "low": 900, "high": 1200, "days": 20, "vs_low_pct": 0.1,
+                "at_low": True, "near_low": False, "dropped": False,
+                "label": "記録した中で最安", "image": "", "shop": "店",
+                "url": "", "low_date": "2026-09-20", "tail": []}
+        base.update(kw)
+        return base
+
+    def test_点で並べる一覧には順位を出す(self):
+        html = self.theme.listing("題", "説明", [self.row("a"), self.row("b")],
+                                  self.site, "https://e.test/", "2026-09-26",
+                                  show_score=True)
+
+        self.assertIn('<span class="rank">1</span>', html)
+        self.assertIn('<span class="rank">2</span>', html)
+
+    def test_2ページ目の順位は続きから振る(self):
+        html = self.theme.listing("題", "説明", [self.row("a")], self.site,
+                                  "https://e.test/2/", "2026-09-26",
+                                  page=2, pages=3, total=120, show_score=True)
+
+        self.assertIn('<span class="rank">51</span>', html)
+
+    def test_順位に意味が無い一覧には出さない(self):
+        # 値下がりは下げ幅の順で、点の順ではない。番号を振ると順位に見える
+        html = self.theme.listing("題", "説明", [self.row("a")], self.site,
+                                  "https://e.test/", "2026-09-26")
+
+        self.assertNotIn('class="rank"', html)
+
+    def test_判定の札は名前の前に置く(self):
+        # 価格の後ろに並べると、価格・判定・送料が一列に連なって
+        # どれが値段なのか分からなくなっていた
+        html = self.theme.card(self.row())
+        body = html.split('<div class="body">')[1]
+
+        self.assertLess(body.index('class="badge'), body.index('class="name"'))
+        self.assertNotIn('class="badge', html.split('<div class="body">')[0])
+
+    def test_範囲を断る言葉を札から削らない(self):
+        # 「最安」だけにすると市場全体の最安値に読める
+        html = self.theme.card(self.row())
+
+        self.assertIn("記録した中で最安", html)

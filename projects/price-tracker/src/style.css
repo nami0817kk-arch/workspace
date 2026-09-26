@@ -354,7 +354,10 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 @media (min-width: 760px) {
   .card .body { display: grid; grid-template-columns: 1fr 150px;
     column-gap: 20px; align-items: start; }
-  .card .name, .card .price, .card .point-line, .card .meta { grid-column: 1; }
+  .card > .body > .badge, .card .name, .card .price,
+  .card .point-line, .card .meta { grid-column: 1; }
+  /* グリッドの子は既定で列いっぱいに伸びる。札は中身の幅で止める */
+  .card > .body > .badge { justify-self: start; }
   .card .card-spark { grid-column: 2; grid-row: 1 / span 4;
     margin-top: 0; align-self: center; }
   .card .score { grid-column: 1 / -1; }
@@ -405,3 +408,63 @@ h2 { padding-bottom: 6px; border-bottom: 1px solid var(--line); }
   color: var(--ink); background: var(--panel); border: 1px solid var(--line);
   border-radius: 999px; font-family: inherit; }
 .examples button:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ===== 見た目の作り直し（2026-09-26）
+   参考にしたのは価格.com（順位を出す・価格を主役にする）と
+   camelcamelcamel（判定を写真の角に置く・絞り込みを押せる札にする）。 */
+
+/* 順位。並び順に意味があることを画面から読めるようにする。 */
+.card { position: relative; transition: border-color .12s, box-shadow .12s; }
+.card:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
+.rank { position: absolute; top: -8px; left: -8px; z-index: 1;
+  min-width: 26px; height: 26px; padding: 0 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+  color: var(--panel); background: var(--muted); border-radius: 999px; }
+/* 上位3件だけ色を変える。全部を強調すると強調にならない。 */
+.card:nth-child(1) .rank, .card:nth-child(2) .rank, .card:nth-child(3) .rank {
+  background: var(--accent); }
+
+/* 判定は名前の上に1行で出す。価格の後ろに並べると、価格・判定・送料が
+   一列に連なってどれが値段なのか分からなくなる。写真の角に載せる形も
+   試したが、「記録した中で最安」は携帯（72px）で2行になり写真を半分隠した。
+   日本語の長い札は、角より行で置く方が読める。 */
+.card .thumb { align-self: flex-start; }
+.card .body > .badge { display: inline-block; margin: 0 0 4px; padding: 2px 9px;
+  font-size: 12px; font-weight: 600; border: 0; border-radius: 999px;
+  color: var(--panel); }
+.card .body > .badge.low { background: var(--low); }
+.card .body > .badge.near { background: var(--near); }
+.card .body > .badge.drop { background: var(--down); }
+.card .body > .badge.flat { display: none; }   /* 「横ばい」は貼る値打ちがない */
+
+/* 価格を主役にする。カードの中でいちばん大きい字にする。 */
+.card .price { margin: 8px 0 4px; }
+.card .price strong { font-size: 22px; letter-spacing: -.01em; }
+
+/* 商品写真。白背景の写真が紙の上に浮くので、薄い枠で受ける。 */
+.card img, .card .noimg { border: 1px solid var(--line); padding: 4px; }
+
+/* 絞り込みは押せる札にして、畳まずに出す。使うのはこの2つがほとんど。 */
+.quick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin: 0 0 10px; }
+.quick .chip { display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; font-size: 14px; cursor: pointer; white-space: nowrap;
+  color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 999px; }
+.quick .chip:hover { border-color: var(--accent); }
+.quick .chip:has(input:checked) { color: var(--accent);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.quick .chip input { width: 16px; height: 16px; accent-color: var(--accent); }
+.quick .of { margin-left: auto; font-size: 13px; color: var(--muted); }
+
+/* 見出しの段。h1 を大きくして、一覧の題と本文の差をはっきりさせる。 */
+h1 { font-size: 27px; letter-spacing: -.01em; }
+@media (max-width: 560px) {
+  h1 { font-size: 22px; }
+  .card .price strong { font-size: 20px; }
+  .rank { top: -6px; left: -6px; min-width: 23px; height: 23px; font-size: 12px; }
+  .quick .of { width: 100%; margin-left: 0; }
+}

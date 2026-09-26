@@ -414,7 +414,8 @@ def score_bar(row: dict) -> str:
             f'<span class="parts">{parts}</span></p>')
 
 
-def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = False) -> str:
+def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = False,
+         rank: int = 0) -> str:
     href = f'{prefix}item/{slug(row["item_code"])}/'
     change = ""
     if row["dropped"]:
@@ -437,10 +438,12 @@ def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = Fa
     data-days="{row.get("days", 0)}" data-eff="{row.get("eff_price") or row["price"]}"
     data-code="{esc(row["item_code"])}" data-free="{1 if row.get("free_shipping") else 0}"
     data-stock="{0 if row.get("in_stock") is False else 1}">
+  {f'<span class="rank">{rank}</span>' if rank else ""}
   <a class="thumb" href="{href}">{img}</a>
   <div class="body">
+    {badge(row)}
     <a class="name" href="{href}" title="{esc(row["name"])}">{esc(short_name(row["name"]))}</a>
-    <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}{conditions(row)}</p>
+    <p class="price">{change}<strong>{yen(row["price"])}</strong>{conditions(row)}</p>
     <p class="point-line">{point_note(row)}</p>
     <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}
       <button class="watch-mini" type="button" data-code="{esc(row["item_code"])}"
@@ -707,8 +710,13 @@ document.addEventListener('DOMContentLoaded', function () {
 """
 
 LIST_TOOLS = r"""
+<div class="quick">
+  <label class="chip"><input type="checkbox" id="freeonly"> 送料無料だけ</label>
+  <label class="chip"><input type="checkbox" id="instock"> 在庫ありだけ</label>
+  <span id="shown" class="of"></span>
+</div>
 <details class="tools-box">
-<summary>絞り込み・並び替え</summary>
+<summary>並び替え・価格帯</summary>
 <div class="tools">
   <label>並び替え <select id="sort">
     <option value="">既定のまま</option>
@@ -719,8 +727,6 @@ LIST_TOOLS = r"""
     <option value="eff">実質が安い順</option>
     <option value="-days">記録が長い順</option>
   </select></label>
-  <label class="check"><input type="checkbox" id="freeonly"> 送料無料だけ</label>
-  <label class="check"><input type="checkbox" id="instock"> 在庫ありだけ</label>
   <label>価格帯 <select id="range">
     <option value="">すべて</option>
     <option value="0-3000">3,000円まで</option>
@@ -729,7 +735,6 @@ LIST_TOOLS = r"""
     <option value="30000-">30,000円以上</option>
   </select></label>
   <button id="reset" type="button" class="reset" hidden>条件を外す</button>
-  <span id="shown" class="of"></span>
   <span class="scope">このページに出ている分だけを並べ替えます</span>
 </div>
 </details>
@@ -816,7 +821,11 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             stats: dict | None = None, page: int = 1, pages: int = 1,
             page_prefix: str = "", total: int | None = None,
             show_score: bool = False) -> str:
-    body = ("".join(card(r, prefix, eager=i < 3, show_score=show_score)
+    # 点で並べている一覧は順位を出す。並び順に意味があることが
+    # 画面から読めないと、ただ並んでいるだけに見える（価格.com の「1位」に相当）
+    start = (page - 1) * 50
+    body = ("".join(card(r, prefix, eager=i < 3, show_score=show_score,
+                         rank=(start + i + 1) if show_score else 0)
                     for i, r in enumerate(rows)) if rows
             else ('<li class="empty">' + esc(empty)
                   + f'<span class="go"><a href="{prefix}">いま条件がそろっている商品</a>'
