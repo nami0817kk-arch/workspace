@@ -1,0 +1,118 @@
+# 16歳ダウマンがルーニーの記録に並んだ（2026-09-15 の試合）
+#
+# **数字がそのまま引きになる回。**16歳で1試合2得点は、ルーニー以来ふたりめ。
+#
+# 引きは**「並んだ相手がルーニーだった」**。ここが山場（@main）。
+#
+# **「将来の大器」と持ち上げない。**アルテタ自身が「16歳でこれを続けるのは難しい」
+# と釘を刺している。**その一言まで含めて出す。**
+#
+# **反応が取れていない。**まとめスレはまだ立っておらず、`reactions --find` でも
+# 読める書き込みが無かった（試合から数時間）。**水増ししない。**
+format: news
+voice_min: 0
+slot: premier_1
+date: "2026年9月16日"
+
+people:
+  - マックス・ダウマン
+
+short_title: "16歳が並んだ相手はルーニー"
+
+theme:
+  id: dowman_rooney_record
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アーセナル
+  title: 16歳のダウマンが並んだのは、ルーニーの記録だった
+  hook: カラバオ杯の4回戦進出を決めた試合です。
+  question: どんな記録なのか
+
+thumbnail:
+  line1: 16歳が2ゴール
+  line2: 並んだ相手は ●●●●
+  crest_main:
+    - アーセナル
+  crests:
+    - イプスウィッチ
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: アーセナル 4-2 イプスウィッチ。16歳が2点
+    narrator: キャスター
+    card:
+      type: table
+      title: カラバオ杯（9月15日）
+      columns: ["", ""]
+      rows:
+        - ["前半7分", "ダウマン 1点目"]
+        - ["後半開始98秒", "ダウマン 2点目"]
+        - ["ほかの得点", "マドゥエケ／メリーノ"]
+        - ["結果", "アーセナル 4-2 イプスウィッチ"]
+    say:
+      - 現地時間15日のカラバオ杯です。
+      - アーセナルがイプスウィッチを**4対2**で下しました。
+      - 2点を決めたのが、**16歳のマックス・ダウマン**です。
+      - 1点目は前半7分。2点目は後半が始まって**98秒**でした。
+      - アーセナルはこれで、今季すべての大会を通じて**6連勝**になりました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49951994/arsenal-max-dowman-wayne-rooney-carabao-cup-ipswich-record-16
+
+  - id: record
+    heading: 並んだ記録
+    main: true
+    tier: 報道
+    telop: 16歳で1試合2得点は、ルーニー以来ふたりめ
+    narrator: 解説
+    say:
+      - {short_only: true, text: カラバオ杯で、アーセナルの16歳が2点を決めました。}
+      - この2得点で、ひとつの記録に並びました。
+      - "**プレミアリーグのクラブで、16歳が1試合に複数得点を決めた**という記録です。"
+      - それまで唯一の名前が、ウェイン・ルーニーでした。
+      - 2002年10月、エヴァートンでのリーグカップ、レクサム戦です。
+      - ルーニーもそのとき16歳で、同じ試合で2点を取っています。
+      - 24年のあいだ、この欄にはルーニーの名前しかありませんでした。
+      - ダウマンは、そこに並んだふたりめです。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49951994/arsenal-max-dowman-wayne-rooney-carabao-cup-ipswich-record-16
+
+  - id: arteta
+    heading: 監督が言ったこと
+    tier: 報道
+    telop: 「16歳でこれを続けるのは難しい」
+    narrator: キャスター
+    say:
+      - アルテタ監督は、まずこう評しました。
+      - {voice: アルテタ監督, text: ああいうプレーを、彼は苦もなくやってのける}
+      - {voice: アルテタ監督, text: そこが彼のいちばんの長所だ}
+      - ただ、手放しではありませんでした。
+      - リーグ戦の強度のなかで、**16歳がこれを続けることの難しさ**にも触れています。
+      - この選手は今季すでに、**プレミアリーグ史上最年少の得点者**にもなっています。
+      - アーセナル史上最年少の先発も、15歳302日で記録しました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49951994/arsenal-max-dowman-wayne-rooney-carabao-cup-ipswich-record-16
+      - https://www.espn.com/soccer/story/_/id/48206506/max-dowman-16-becomes-youngest-goalscorer-ever-premier-league
+
+  - id: voices
+    heading: 16歳をどう見たか
+    tier: 未確認
+    telop: 「勝ってるー！ダウマン2得点マジ？！」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 勝ってるー！ダウマン2得点マジ？！, short_voice: true}
+      - {voice: ネット民, text: ダウマンは育てる局面というより普通に戦力にみえる, short_voice: true}
+      - {voice: ネット民, text: ウーデゴールの代わりはダウマンだった, short_voice: true}
+      - {voice: ネット民, text: ダウマン調子いいですね, short_voice: true}
+      - {voice: ネット民, text: ダウマン左とか出来ないかな, short_voice: true}
+      - {voice: ネット民, text: ダウマン右で出た時の守備もみたいな, short_voice: true}
+    official: false
+    sources:
+      - https://x.com/search?q=ダウマン&f=live

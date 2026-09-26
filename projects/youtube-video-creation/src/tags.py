@@ -17,7 +17,12 @@ KIND_TAGS = {
     "transfer": ("移籍情報", "移籍市場"),
     # **「ハイライト」を外した**（2026-09-10）。試合映像は権利の関係で使えないので、
     # こちらの動画はハイライトではない。**中身と食い違うタグは付けない**
-    "match": ("試合結果", "チャンピオンズリーグ"),
+    # **「チャンピオンズリーグ」を外した**（2026-09-15）。ハイライトを外したのと
+    # 同じ理由で、**中身と食い違っていた**。`kind: match` の回すべてに付くので、
+    # 書き出し済み29本のうち**26本がCLの試合ではなかった**（ボーンマス対
+    # ブレントフォード、ムシアラのブンデス、コモのコンファレンスリーグ…）。
+    # リーグ名は `league_name` で別に付くので、ここで足す必要も無い
+    "match": ("試合結果",),
     "other": ("解説",),
 }
 
@@ -37,6 +42,39 @@ MAX_TAGS_TEXT = 500      # タグ全体の合計文字数
 MAX_TAG_LENGTH = 30      # タグ1つの長さ
 MAX_DESCRIPTION = 5000
 MAX_TITLE = 100
+
+# **ハッシュタグは16個以上あると、YouTube が全部を無視する**（2026-09-15）。
+# タグをそのまま概要欄へ流していたので、`people:` を丁寧に書いた回ほど
+# 個数が増え、**ハッシュタグが1つも効かない**状態になっていた（実測で5本）。
+# 出しているのは前の3つだけ。動画の上に丸いボタンとして出るのもこの3つで、
+# 4つめから下は概要欄の末尾に並ぶだけなので、数を稼ぐ意味が無い
+HASHTAG_LIMIT = 15       # これを超えると YouTube は全部を無視する
+HASHTAGS = 3             # 実際に出す数
+
+
+def hashtags(tags: list[str]) -> list[str]:
+    """概要欄に出すハッシュタグ。**タグとは別物**（2026-09-15）。
+
+    `#` を付けて概要欄へ並べていたのはタグの配列そのままで、
+    **16個以上あると YouTube はハッシュタグを全部無視する**。
+    タグは500字まで詰めたいので、増やすほどハッシュタグが死ぬ向きだった。
+    切り離して、前から3つだけにする。
+    """
+    return [t for t in tags[:HASHTAGS] if str(t).strip()]
+
+
+def topic_as_tag(topic: str) -> bool:
+    """`topic` をそのままタグにしてよいか（2026-09-15）。
+
+    クラブ名と代表名は片仮名・漢字・英字でできている（ボーンマス、
+    フェネルバフチェ、日本代表、PSV）。**ひらがなが入っていたら、
+    それは話のまとまりを表す言い回し**で、タグには向かない
+    （「メッシとロナウド」「久保の去就」）。
+    """
+    topic = str(topic).strip()
+    if not topic or len(topic) > MAX_TAG_LENGTH:
+        return False
+    return not any("ぁ" <= ch <= "ゟ" for ch in topic)
 
 
 def japanese_players(clubs: list[str], path: str | None = None) -> list[str]:
@@ -91,6 +129,14 @@ def build(title: str, league_name: str = "", kind: str = "transfer",
     lead = club_book.canonical(topic, book) if topic else []
     if lead:
         clubs = lead[:1] + [c for c in clubs if c != lead[0]]
+    elif topic_as_tag(topic):
+        # **辞書に無いクラブでも、topic はそのままタグにする**（2026-09-15）。
+        # `clubs.yaml` は63クラブしか無く、載っていないと**クラブ名のタグが
+        # 1つも付かない**。9/11以降の本編96本のうち22本がこれで、
+        # ボーンマス・シャルケ・フライブルク・サントス・フェネルバフチェ・
+        # ブラックバーン・カリアリが落ちていた。**辞書の更新を待たない。**
+        # topic は取材メモに手で書いた日本語表記なので、推測ではない
+        clubs = [topic.strip()] + clubs
     # **相手クラブは `extra`（サムネの札）にしか出ないことがある。**
     # 日本人選手を引くときは、そちらも一緒に見る
     others = club_book.canonical(" ".join(str(x) for x in (extra or [])), book)

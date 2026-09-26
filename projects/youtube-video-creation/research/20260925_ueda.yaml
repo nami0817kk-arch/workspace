@@ -1,0 +1,113 @@
+date: 2026年9月25日
+slot: japan_3
+format: quote
+voice_min: 0.55
+people: [上田綺世, 久保建英, 森保一]
+theme:
+  id: ueda_pass
+  league: france
+  league_name: 日本代表
+  kind: match
+  topic: 日本代表
+  title: '上田綺世はなぜ、塩貝健人にパスを出したのか'
+  question: なぜ自分で打たなかったのか
+short_title: 上田「打とうかなとも思ったけど」
+thumbnail:
+  photo: assets/images/20260925_ueda3/01.jpg
+  crests: [日本]
+  line1: 上田綺世がパスを出した瞬間
+  line2: 考えていた●●
+sections:
+  - id: what
+    heading: 26分間で1点1アシスト
+    tier: 報道
+    telop: 64分に入って、90＋1分にアシスト、90＋6分にゴール
+    narrator: キャスター
+    say:
+      - 上田綺世は64分に前田大然と交代で入りました。1対1の同点のまま、試合は終盤へ。
+      - 後半アディショナルタイム1分、塩貝健人の決勝点をアシスト。アディショナルタイム6分には、伊東純也のスルーパスから、飛び出したGKをかわして無人のゴールへ。
+      - 代表通算**19点目**です。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459637-459637-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459643-459643-fl
+  - id: pass
+    main: true
+    heading: 打たなかった理由
+    tier: 報道
+    telop: 「シュートコースも空いていたので打とうかなとも思ったけど」
+    narrator: キャスター
+    say:
+      - text: '上田綺世が塩貝健人の決勝点で、自分で打てる場面でパスを選んだ理由を話しました。'
+        short_only: true
+      - 塩貝へのパスの場面を、本人はこう振り返っています。
+      - voice: 上田綺世
+        text: 健人が出して、すぐ動き直しているのが見えた。シュートコースも空いていたので打とうかなとも思ったけど
+      - voice: 上田綺世
+        text: 逆にその動作を相手も察知してシュートコースに滑ってきた。健人とうまく2対1を作れたと思う
+      - voice: 上田綺世
+        text: 同点の状況からどっちが主導権を握って、こういう結果で終われるかというのは雲泥の差があるし、そこが一番難しい
+      - 塩貝についても、こう言いました。
+      - voice: 上田綺世
+        text: 身体能力はあっても、そこまで身長は高くないという中で、それでもヨーロッパで活躍できているのはそういう思考があってこそだと思う
+      - voice: 上田綺世
+        text: 振る舞いはそうは見えないかもしれないけど、アスリートとしての思考力はすごくある選手だと思っている
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459650-459650-fl
+  - id: kubo
+    heading: 外した1本と、久保の一言
+    tier: 報道
+    telop: 久保「綺世くん決めれないかーあれ」
+    narrator: キャスター
+    say:
+      - text: '3点目の5分前、久保のスルーパスから抜け出した1本は、枠を外していました。'
+        image: assets/images/20260925_pair_kubo_ueda/01.jpg
+      - 試合後にスタジアムを回りながら、久保はこうこぼしました。
+      - voice: 久保建英
+        text: 綺世くん決めれないかーあれ
+      - voice: 久保建英
+        text: 本人もイキったって言ってましたね。決まっていたらベストゴールだし、でも彼もその後に決めてくれたんで
+      - voice: 久保建英
+        text: ああやってわかりやすい動き出しをしてくれるストライカーはすごくチームにとって重要なのかなと
+      - text: '森保監督も。'
+        image: assets/images/20260925_pair_moriyasu_ueda/01.jpg
+      - voice: 森保監督
+        text: 綺世はしっかりストライカーとして、日本をけん引してくれているというところを結果で出してくれた
+    sources:
+      - https://football-tribe.com/japan/2026/09/25/359691/
+      - https://web.gekisaka.jp/news/japan/detail/?459652-459652-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459639-459639-fl
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「エースの貫禄」と「あまりにかっこ良すぎる」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 後半途中から出てきて1得点1アシストだもんな。まじでエースの貫禄
+        image: assets/images/20260925_ueda3/01.jpg
+      - voice: ネット民
+        text: 背負って良しパスして良しシュートして良し。日本からこんなFW出るんか
+      - voice: ネット民
+        text: 上田凄いな。FWのエースなんてカズ以来久しぶりだ
+      - voice: ネット民
+        text: 全盛期の高原や大迫を凌駕する日本歴代最高のCF 綺世
+      - voice: ネット民
+        text: 自らシュートの選択肢もある中でギラギラしてる後輩への優しいパス。最後にはお膳立てだけでなく自らも沈めてみせる。あまりにかっこ良すぎるね
+      - voice: ネット民
+        text: 上田は塩貝に優しいアシストするわ、ゴールも決めて主役になっちゃうわで、若手に譲らないところはカッコいいわ
+      - voice: ネット民
+        text: 上田のゴールで塩貝が不機嫌にw
+      - voice: ネット民
+        text: 多彩で整理されたプレー選択肢と判断基準にちょっと圧倒されかけて、それを言語化できる能力もすごいと思いました
+      - voice: ネット民
+        text: 上田綺世の性格の良さが溢れたコメントですね
+      - voice: ネット民
+        text: 綺世を脅かすFWおるんか？
+      - voice: ネット民
+        text: 上田選手は、結果も思考も姿勢もエースストライカー。本当に怪我だけが心配
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/4724261c43b655abec55a82ea45e6ac0f17417a7/comments
+      - https://news.yahoo.co.jp/articles/a56af6e17234220befe954edd1cf748a5e54c42d/comments
+      - https://hayabusa9.5ch.net/test/read.cgi/mnewsplus/1790251701/
+      - https://hayabusa9.5ch.net/test/read.cgi/mnewsplus/1790297251/

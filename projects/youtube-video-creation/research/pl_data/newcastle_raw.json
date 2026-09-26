@@ -1,0 +1,694 @@
+{
+ "club_title": "Newcastle_United_F.C.",
+ "season_title": "2026–27_Newcastle_United_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Nick Pope",
+   "page": "Nick Pope (footballer)",
+   "dob": "1992-04-19",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 10,
+   "club_caps": 107,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Tino Livramento",
+   "page": "Tino Livramento",
+   "dob": "2002-11-12",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 6,
+   "club_caps": 80,
+   "club_goals": 1
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Lewis Hall",
+   "page": "Lewis Hall (footballer)",
+   "dob": "2004-09-08",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 4,
+   "club_caps": 80,
+   "club_goals": 3
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Sven Botman",
+   "page": "Sven Botman",
+   "dob": "2000-01-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 86,
+   "club_goals": 3
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "SUI",
+   "name": "Fabian Schär",
+   "page": "Fabian Schär",
+   "dob": "1991-12-20",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 86,
+   "club_caps": 211,
+   "club_goals": 18
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Nico González",
+   "page": "Nico González (footballer, born 2002)",
+   "dob": "2002-01-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Joelinton",
+   "page": "Joelinton",
+   "dob": "1996-08-14",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 8,
+   "club_caps": 212,
+   "club_goals": 24
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Aladji Bamba",
+   "page": "Aladji Bamba",
+   "dob": "2006-07-14",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "COD",
+   "name": "Yoane Wissa",
+   "page": "Yoane Wissa",
+   "dob": "1996-09-03",
+   "captain": false,
+   "loan": false,
+   "team": "DR Congo",
+   "caps": 43,
+   "club_caps": 21,
+   "club_goals": 2
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "DEN",
+   "name": "William Osula",
+   "page": "William Osula",
+   "dob": "2003-08-04",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 2,
+   "club_caps": 38,
+   "club_goals": 8
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Harvey Barnes",
+   "page": "Harvey Barnes",
+   "dob": "1997-12-09",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 2,
+   "club_caps": 94,
+   "club_goals": 22
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Malick Thiaw",
+   "page": "Malick Thiaw",
+   "dob": "2001-08-08",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 7,
+   "club_caps": 37,
+   "club_goals": 4
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Sean Steur",
+   "page": "Sean Steur",
+   "dob": "2008-01-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "CIV",
+   "name": "Bazoumana Touré",
+   "page": "Bazoumana Touré",
+   "dob": "2006-03-02",
+   "captain": false,
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 9,
+   "club_caps": 2,
+   "club_goals": 1
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "SWE",
+   "name": "Anthony Elanga",
+   "page": "Anthony Elanga",
+   "dob": "2002-04-27",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 34,
+   "club_caps": 34,
+   "club_goals": 2
+  },
+  {
+   "no": "20",
+   "pos": "FW",
+   "nat": "BEL",
+   "name": "Matias Fernandez-Pardo",
+   "page": "Matias Fernandez-Pardo",
+   "dob": "2005-02-03",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 5,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "21",
+   "pos": "GK",
+   "nat": "CZE",
+   "name": "Lukáš Horníček",
+   "page": "Lukáš Horníček",
+   "dob": "2002-07-13",
+   "captain": false,
+   "loan": false,
+   "team": "Czech Republic",
+   "caps": 1,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Jacob Murphy",
+   "page": "Jacob Murphy",
+   "dob": "1995-02-24",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 218,
+   "club_goals": 22
+  },
+  {
+   "no": "24",
+   "pos": "GK",
+   "nat": "FRA",
+   "name": "Ewen Jaouen",
+   "page": "Ewen Jaouen",
+   "dob": "2005-12-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Joe Willock",
+   "page": "Joe Willock",
+   "dob": "1999-08-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 148,
+   "club_goals": 16
+  },
+  {
+   "no": "29",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Mark Gillespie",
+   "page": "Mark Gillespie (footballer)",
+   "dob": "1992-03-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Dan Burn",
+   "page": "Dan Burn",
+   "dob": "1992-05-09",
+   "captain": true,
+   "loan": false,
+   "team": "England",
+   "caps": 11,
+   "club_caps": 153,
+   "club_goals": 5
+  },
+  {
+   "no": "37",
+   "pos": "DF",
+   "nat": "BIH",
+   "name": "Amar Dedić",
+   "page": "Amar Dedić",
+   "dob": "2002-08-18",
+   "captain": false,
+   "loan": false,
+   "team": "Bosnia and Herzegovina",
+   "caps": 31,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "41",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Jacob Ramsey",
+   "page": "Jacob Ramsey",
+   "dob": "2001-05-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 31,
+   "club_goals": 3
+  },
+  {
+   "no": "67",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Lewis Miley",
+   "page": "Lewis Miley",
+   "dob": "2006-05-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 60,
+   "club_goals": 3
+  }
+ ],
+ "results": [
+  [
+   "18 July 2026",
+   "Friendly",
+   "Newcastle United",
+   "3−0",
+   "Darlington"
+  ],
+  [
+   "25 July 2026",
+   "Friendly",
+   "Gateshead",
+   "1–1",
+   "Newcastle United"
+  ],
+  [
+   "29 July 2026",
+   "Friendly",
+   "Bristol City",
+   "4−1",
+   "Newcastle United"
+  ],
+  [
+   "8 August 2026",
+   "Trofeu Taronja",
+   "Valencia",
+   "1–2",
+   "Newcastle United"
+  ],
+  [
+   "12 August 2026",
+   "Friendly",
+   "Newcastle United",
+   "1–3",
+   "Everton"
+  ],
+  [
+   "15 August 2026",
+   "VisitMalta Weekender",
+   "Newcastle United",
+   "1–2",
+   "Bayer Leverkusen"
+  ],
+  [
+   "16 August 2026",
+   "VisitMalta Weekender",
+   "Newcastle United",
+   "1–1",
+   "Strasbourg"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Newcastle United",
+   "2–2",
+   "Liverpool"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Tottenham Hotspur",
+   "0–2",
+   "Newcastle United"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Newcastle United",
+   "2–2",
+   "Bournemouth"
+  ],
+  [
+   "14 September 2026",
+   "4",
+   "Leeds United",
+   "4–1",
+   "Newcastle United"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Newcastle United",
+   "2–1",
+   "Hull City"
+  ],
+  [
+   "12 October 2026",
+   "6",
+   "Coventry City",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Newcastle United",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Crystal Palace",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "2 November 2026",
+   "9",
+   "Newcastle United",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Fulham",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Newcastle United",
+   "| report     =",
+   "Arsenal"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Newcastle United",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Newcastle United",
+   "| report     =",
+   "Sunderland"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Ipswich Town",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Brentford",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Newcastle United",
+   "| report     =",
+   "Manchester City"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Newcastle United",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "3 January 2027",
+   "19",
+   "Chelsea",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "7 January 2027",
+   "20",
+   "Manchester United",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Newcastle United",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Arsenal",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Newcastle United",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Everton",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Newcastle United",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Manchester City",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Newcastle United",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Nottingham Forest",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Bournemouth",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Newcastle United",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Liverpool",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Newcastle United",
+   "| report     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Newcastle United",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Sunderland",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Newcastle United",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Aston Villa",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Newcastle United",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Hull City",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "26 August 2026",
+   "Second round",
+   "Newcastle United",
+   "3–2",
+   "West Bromwich Albion"
+  ],
+  [
+   "8 September 2026",
+   "Third round",
+   "Millwall",
+   "0–1",
+   "Newcastle United"
+  ],
+  [
+   "29 October 2026",
+   "Fourth round",
+   "Everton",
+   "| report     = https://www.efl.com/match-centre/g2687773",
+   "Newcastle United"
+  ]
+ ]
+}

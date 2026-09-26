@@ -1,0 +1,617 @@
+{
+ "club_title": "Brentford_F.C.",
+ "season_title": "2026–27_Brentford_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "IRL",
+   "name": "Caoimhín Kelleher",
+   "page": "Caoimhín Kelleher",
+   "dob": "1998-11-23",
+   "captain": false,
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 32,
+   "club_caps": 42,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "SCO",
+   "name": "Aaron Hickey",
+   "page": "Aaron Hickey",
+   "dob": "2002-06-10",
+   "captain": false,
+   "loan": false,
+   "team": "Scotland",
+   "caps": 22,
+   "club_caps": 61,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "JAM",
+   "name": "Rico Henry",
+   "page": "Rico Henry",
+   "dob": "1997-07-08",
+   "captain": false,
+   "loan": false,
+   "team": "Jamaica",
+   "caps": 1,
+   "club_caps": 216,
+   "club_goals": 5
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Sepp van den Berg",
+   "page": "Sepp van den Berg",
+   "dob": "2001-12-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 63,
+   "club_goals": 0
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "UKR",
+   "name": "Yehor Yarmolyuk",
+   "page": "Yehor Yarmolyuk",
+   "dob": "2004-03-01",
+   "captain": false,
+   "loan": false,
+   "team": "Ukraine",
+   "caps": 9,
+   "club_caps": 96,
+   "club_goals": 1
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Kevin Schade",
+   "page": "Kevin Schade",
+   "dob": "2001-11-27",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 5,
+   "club_caps": 88,
+   "club_goals": 24
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Mathias Jensen",
+   "page": "Mathias Jensen",
+   "dob": "1996-01-01",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 32,
+   "club_caps": 245,
+   "club_goals": 14
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Igor Thiago",
+   "page": "Igor Thiago",
+   "dob": "2001-06-26",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 5,
+   "club_caps": 51,
+   "club_goals": 23
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Josh Dasilva",
+   "page": "Josh Dasilva",
+   "dob": "1998-10-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 139,
+   "club_goals": 20
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "BFA",
+   "name": "Dango Ouattara",
+   "page": "Dango Ouattara",
+   "dob": "2002-02-11",
+   "captain": false,
+   "loan": false,
+   "team": "Burkina Faso",
+   "caps": 44,
+   "club_caps": 32,
+   "club_goals": 7
+  },
+  {
+   "no": "12",
+   "pos": "GK",
+   "nat": "ISL",
+   "name": "Hákon Valdimarsson",
+   "page": "Hákon Valdimarsson",
+   "dob": "2001-10-13",
+   "captain": false,
+   "loan": false,
+   "team": "Iceland",
+   "caps": 22,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "13",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Callum Wilson",
+   "page": "Callum Wilson",
+   "dob": "1992-02-27",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 9,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "POR",
+   "name": "Fábio Carvalho",
+   "page": "Fábio Carvalho (footballer, born 2002)",
+   "dob": "2002-08-30",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 26,
+   "club_goals": 4
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Antoni Milambo",
+   "page": "Antoni Milambo",
+   "dob": "2005-04-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "MLI",
+   "name": "Mamadou Sangaré",
+   "page": "Mamadou Sangaré",
+   "dob": "2002-06-26",
+   "captain": false,
+   "loan": false,
+   "team": "Mali",
+   "caps": 16,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Jaidon Anthony",
+   "page": "Jaidon Anthony",
+   "dob": "1999-12-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 5,
+   "club_goals": 1
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "NOR",
+   "name": "Kristoffer Ajer",
+   "page": "Kristoffer Ajer",
+   "dob": "1998-04-17",
+   "captain": false,
+   "loan": false,
+   "team": "Norway",
+   "caps": 57,
+   "club_caps": 109,
+   "club_goals": 3
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "IRL",
+   "name": "Nathan Collins",
+   "page": "Nathan Collins",
+   "dob": "2001-04-30",
+   "captain": true,
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 40,
+   "club_caps": 105,
+   "club_goals": 4
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Keane Lewis-Potter",
+   "page": "Keane Lewis-Potter",
+   "dob": "2001-02-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 115,
+   "club_goals": 8
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Mikkel Damsgaard",
+   "page": "Mikkel Damsgaard",
+   "dob": "2000-07-03",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 40,
+   "club_caps": 121,
+   "club_goals": 6
+  },
+  {
+   "no": "25",
+   "pos": "DF",
+   "nat": "SEN",
+   "name": "El Hadji Malick Diouf",
+   "page": "El Hadji Malick Diouf",
+   "dob": "2004-12-28",
+   "captain": false,
+   "loan": false,
+   "team": "Senegal",
+   "caps": 23,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Vitaly Janelt",
+   "page": "Vitaly Janelt",
+   "dob": "1998-05-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 205,
+   "club_goals": 15
+  },
+  {
+   "no": "31",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Ellery Balcombe",
+   "page": "Ellery Balcombe",
+   "dob": "1999-10-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Michael Kayode",
+   "page": "Michael Kayode",
+   "dob": "2004-07-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 38,
+   "club_goals": 2
+  },
+  {
+   "no": "36",
+   "pos": "DF",
+   "nat": "KOR",
+   "name": "Kim Ji-soo",
+   "page": "Kim Ji-soo (footballer)",
+   "dob": "2004-12-24",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "39",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Gustavo Nunes",
+   "page": "Gustavo Nunes",
+   "dob": "2005-11-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "44",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Jannik Schuster",
+   "page": "Jannik Schuster",
+   "dob": "",
+   "captain": false,
+   "loan": false,
+   "team": "nationalcaps5 =",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "47",
+   "pos": "FW",
+   "nat": "BEL",
+   "name": "Kaye Furo",
+   "page": "Kaye Furo",
+   "dob": "2007-02-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "48",
+   "pos": "DF",
+   "nat": "NGA",
+   "name": "Benjamin Fredrick",
+   "page": "Benjamin Fredrick",
+   "dob": "2005-05-28",
+   "captain": false,
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 7,
+   "club_caps": 0,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "15 July 2026",
+   "Friendly",
+   "Brentford",
+   "3–2",
+   "AFC Wimbledon"
+  ],
+  [
+   "1 August 2026",
+   "Friendly",
+   "Brentford",
+   "0–1",
+   "Watford"
+  ],
+  [
+   "5 August 2026",
+   "Friendly",
+   "Brentford",
+   "4–1",
+   "Wycombe Wanderers"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Rennes",
+   "1–2",
+   "Brentford"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Rennes",
+   "2–4",
+   "Brentford"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Brentford",
+   "7–0",
+   "Eintracht Frankfurt"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Brentford",
+   "3–0",
+   "Tottenham Hotspur"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "Leeds United",
+   "1–1",
+   "Brentford"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Brentford",
+   "1–1",
+   "Sunderland"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Bournemouth",
+   "2–2",
+   "Brentford"
+  ],
+  [
+   "18 September 2026",
+   "5",
+   "Brentford",
+   "3–0",
+   "Chelsea"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Aston Villa",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Brentford",
+   "| report     =",
+   "Liverpool"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Hull City",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Brentford",
+   "| result     =",
+   "Nottingham Forest"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Brighton & Hove Albion",
+   "| result     =",
+   "Brentford"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Brentford",
+   "| result     =",
+   "Everton"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Manchester United",
+   "| result     =",
+   "Brentford"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Brentford",
+   "| result     =",
+   "Arsenal"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Brentford",
+   "| result     =",
+   "Manchester City"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Fulham",
+   "| result     =",
+   "Brentford"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Brentford",
+   "| result     =",
+   "Newcastle United"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Ipswich Town",
+   "| result     =",
+   "Brentford"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Coventry City",
+   "| result     =",
+   "Brentford"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Brentford",
+   "| result     =",
+   "Crystal Palace"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Arsenal",
+   "| result     =",
+   "Brentford"
+  ],
+  [
+   "25 August 2026",
+   "Second round",
+   "Birmingham City",
+   "1–6",
+   "Brentford"
+  ],
+  [
+   "15 September 2026",
+   "Third round",
+   "Reading",
+   "1–2",
+   "Brentford"
+  ],
+  [
+   "28 October 2026",
+   "Fourth round",
+   "Sunderland",
+   "| report     = https://www.efl.com/match-centre/g2687774",
+   "Brentford"
+  ]
+ ]
+}

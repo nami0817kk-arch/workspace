@@ -1,0 +1,540 @@
+{
+ "club_title": "Leeds_United_F.C.",
+ "season_title": "2026–27_Leeds_United_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "James Trafford",
+   "page": "James Trafford",
+   "dob": "2002-10-10",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 2,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Jayden Bogle",
+   "page": "Jayden Bogle",
+   "dob": "2000-07-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 82,
+   "club_goals": 8
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "SWE",
+   "name": "Gabriel Gudmundsson",
+   "page": "Gabriel Gudmundsson",
+   "dob": "1999-04-29",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 28,
+   "club_caps": 33,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "MF",
+   "nat": "WAL",
+   "name": "Ethan Ampadu",
+   "page": "Ethan Ampadu",
+   "dob": "2000-09-14",
+   "captain": true,
+   "loan": false,
+   "team": "Wales",
+   "caps": 63,
+   "club_caps": 113,
+   "club_goals": 1
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "BIH",
+   "name": "Tarik Muharemović",
+   "page": "Tarik Muharemović",
+   "dob": "2003-02-28",
+   "captain": false,
+   "loan": false,
+   "team": "Bosnia and Herzegovina",
+   "caps": 17,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "WAL",
+   "name": "Joe Rodon",
+   "page": "Joe Rodon",
+   "dob": "1997-10-22",
+   "captain": false,
+   "loan": false,
+   "team": "Wales",
+   "caps": 62,
+   "club_caps": 124,
+   "club_goals": 3
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "WAL",
+   "name": "Daniel James",
+   "page": "Daniel James (footballer)",
+   "dob": "1997-11-10",
+   "captain": false,
+   "loan": false,
+   "team": "Wales",
+   "caps": 65,
+   "club_caps": 132,
+   "club_goals": 29
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Sean Longstaff",
+   "page": "Sean Longstaff",
+   "dob": "1997-10-30",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 24,
+   "club_goals": 2
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Dominic Calvert-Lewin",
+   "page": "Dominic Calvert-Lewin",
+   "dob": "1997-03-16",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 12,
+   "club_caps": 39,
+   "club_goals": 17
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "WAL",
+   "name": "Harry Wilson",
+   "page": "Harry Wilson (footballer, born 1997)",
+   "dob": "1997-03-22",
+   "captain": false,
+   "loan": false,
+   "team": "Wales",
+   "caps": 69,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "11",
+   "pos": "MF",
+   "nat": "USA",
+   "name": "Brenden Aaronson",
+   "page": "Brenden Aaronson",
+   "dob": "2000-10-22",
+   "captain": false,
+   "loan": false,
+   "team": "United States",
+   "caps": 59,
+   "club_caps": 123,
+   "club_goals": 14
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Lukas Nmecha",
+   "page": "Lukas Nmecha",
+   "dob": "1998-12-14",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 7,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "SVN",
+   "name": "Jaka Bijol",
+   "page": "Jaka Bijol",
+   "dob": "1999-02-05",
+   "captain": false,
+   "loan": false,
+   "team": "Slovenia",
+   "caps": 73,
+   "club_caps": 28,
+   "club_goals": 1
+  },
+  {
+   "no": "16",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Michael Zetterer",
+   "page": "Michael Zetterer",
+   "dob": "1995-07-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Anton Stach",
+   "page": "Anton Stach",
+   "dob": "1998-11-15",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 3,
+   "club_caps": 30,
+   "club_goals": 6
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "SUI",
+   "name": "Noah Okafor",
+   "page": "Noah Okafor",
+   "dob": "2000-05-24",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 26,
+   "club_caps": 32,
+   "club_goals": 9
+  },
+  {
+   "no": "21",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Alex Cairns",
+   "page": "Alex Cairns",
+   "dob": "1993-01-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "22",
+   "pos": "MF",
+   "nat": "JPN",
+   "name": "Ao Tanaka",
+   "page": "Ao Tanaka",
+   "dob": "1998-09-10",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 41,
+   "club_caps": 74,
+   "club_goals": 8
+  },
+  {
+   "no": "23",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Jean-Mattéo Bahoya",
+   "page": "Jean-Mattéo Bahoya",
+   "dob": "2005-05-07",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "James Justin",
+   "page": "James Justin",
+   "dob": "1998-02-23",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 1,
+   "club_caps": 31,
+   "club_goals": 2
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Melvin Bard",
+   "page": "Melvin Bard",
+   "dob": "2000-11-06",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "30",
+   "pos": "DF",
+   "nat": "SUI",
+   "name": "Nico Elvedi",
+   "page": "Nico Elvedi",
+   "dob": "1996-09-30",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 73,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "44",
+   "pos": "MF",
+   "nat": "BUL",
+   "name": "Ilia Gruev",
+   "page": "Ilia Gruev (footballer, born 2000)",
+   "dob": "2000-05-06",
+   "captain": false,
+   "loan": false,
+   "team": "Bulgaria",
+   "caps": 27,
+   "club_caps": 75,
+   "club_goals": 1
+  },
+  {
+   "no": "",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Mateo Joseph",
+   "page": "Mateo Joseph",
+   "dob": "2003-10-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 62,
+   "club_goals": 4
+  }
+ ],
+ "results": [
+  [
+   "25 July 2026",
+   "Friendly",
+   "Leeds United",
+   "2–3",
+   "Wrexham"
+  ],
+  [
+   "30 July 2026",
+   "Friendly",
+   "Leeds United",
+   "1–0",
+   "Sunderland"
+  ],
+  [
+   "2 August 2026",
+   "Friendly",
+   "Liverpool",
+   "2–4",
+   "Leeds United"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Leeds United",
+   "2–0",
+   "RB Leipzig"
+  ],
+  [
+   "12 August 2026",
+   "Friendly",
+   "Manchester United",
+   "1–1",
+   "Leeds United"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Leeds United",
+   "4–0",
+   "FC Augsburg"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Nottingham Forest",
+   "0–1",
+   "Leeds United"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "Leeds United",
+   "1–1",
+   "Brentford"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Brighton & Hove Albion",
+   "1–1",
+   "Leeds United"
+  ],
+  [
+   "14 September 2026",
+   "4",
+   "Leeds United",
+   "4–1",
+   "Newcastle United"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Leeds United",
+   "0–0",
+   "Crystal Palace"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Arsenal",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Leeds United",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Sunderland",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Bournemouth",
+   "| result     =",
+   "Leeds United"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Leeds United",
+   "| result     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Chelsea",
+   "| result     =",
+   "Leeds United"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Leeds United",
+   "| result     =",
+   "Coventry City"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Manchester City",
+   "| result     =",
+   "Leeds United"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Leeds United",
+   "| result     =",
+   "Ipswich Town"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Liverpool",
+   "| result     =",
+   "Leeds United"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Leeds United",
+   "| result     =",
+   "Fulham"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Aston Villa",
+   "| result     =",
+   "Leeds United"
+  ],
+  [
+   "29 December 2026",
+   "18",
+   "Hull City",
+   "| result     =",
+   "Leeds United"
+  ],
+  [
+   "1 January 2027",
+   "19",
+   "Leeds United",
+   "| result     =",
+   "Everton"
+  ],
+  [
+   "6 January 2027",
+   "20",
+   "Leeds United",
+   "| result     =",
+   "Manchester City"
+  ],
+  [
+   "25 August 2026",
+   "Second round",
+   "Nottingham Forest",
+   "0–2",
+   "Leeds United"
+  ],
+  [
+   "9 September 2026",
+   "Third round",
+   "Chelsea",
+   "6–3",
+   "Leeds United"
+  ]
+ ]
+}

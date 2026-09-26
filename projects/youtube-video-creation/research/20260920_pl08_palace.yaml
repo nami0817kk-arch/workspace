@@ -1,0 +1,389 @@
+# プレミアリーグ20クラブ紹介 ⑧クリスタル・パレス（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/palace*.json と旧台本 20260916_pl08_palace.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 冨安健洋
+- 鎌田大地
+- クリスタル・パレス
+- フリアン・スペローニ
+short_title: 冨安と鎌田のパレス、120年待ったタイトル
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_08_palace
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: クリスタル・パレス
+  title: 冨安健洋と鎌田大地のクリスタル・パレス。120年待ったタイトルの中身
+  question: どんなクラブなのか
+  hook: 最初の大きなタイトルまで、120年かかりました。
+  lead: 南ロンドンから、**昨季のカンファレンスリーグ**。
+  opening_image: assets/stats/pl_palace_data_t.png
+thumbnail:
+  line1: 120年待った初タイトル
+  line2: 冨安健洋と鎌田大地がいるクラブ
+  crest_main:
+  - クリスタルパレス
+  tags: []
+  points: []
+  board: assets/stats/pl_palace_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 冨安と鎌田。今季はヨーロッパリーグへ
+  narrator: キャスター
+  say:
+  - text: 冨安健洋と鎌田大地。日本代表の**2人**が、同じクラブにいます。
+    image: assets/stats/pl_palace_data_r1.png
+    no_telop: true
+  - text: 名キーパー、スペローニが38歳のときの言葉です。
+    image: assets/stats/pl_palace_data_r1.png
+    no_telop: true
+  - voice: フリアン・スペローニ
+    text: 38歳はキーパーなら悪くない。いまが一番いい状態だ
+    image: assets/stats/pl_palace_data_r1.png
+  - text: 鎌田大地はこのクラブで**3つ**の杯を掲げ、冨安健洋は今夏に加入。今季はヨーロッパリーグです。
+    image: assets/stats/pl_palace_data_r3.png
+    no_telop: true
+  - text: 去年のFAカップが1つ目、昨季のカンファレンスリーグが2つ目のタイトル。
+    image: assets/stats/pl_palace_data_r3.png
+    no_telop: true
+  - image: assets/stats/pl_palace_data0.png
+    text: プロのクラブとしての創立は**1905年**。起源は1861年のアマチュアクラブです。
+    no_telop: true
+  - image: assets/stats/pl_palace_data1.png
+    text: 愛称は「イーグルス」。鷲です。
+    no_telop: true
+  - image: assets/stats/pl_palace_map.png
+    text: ホームタウンは南ロンドンの、クロイドン区セルハースト。
+    no_telop: true
+  - image: assets/backgrounds/stadium_クリスタルパレス.png
+    text: 本拠地はセルハースト・パーク。**2万5194人**が入ります。
+  - image: assets/photos/pl/palace_owner_51aa6fad.jpg
+    text: オーナーは、アメリカンフットボールのニューヨーク・ジェッツの会長、ウッディ・ジョンソン。
+  - image: assets/photos/pl/palace_owner_51aa6fad.jpg
+    text: 2025年に、クラブを買いました。
+  - image: assets/stats/pl_palace_cups.png
+    text: 1部リーグの優勝はありませんが、FAカップを1回、そしてカンファレンスリーグを1回獲っています。
+    no_telop: true
+  - image: assets/stats/pl_palace_data7.png
+    text: その優勝が昨季です。決勝でスペインのラージョ・バジェカーノを1対0で破りました。
+    no_telop: true
+  - image: assets/stats/pl_palace_last.png
+    text: 1部での最高位は、1990年から91年の**3位**。プレミアリーグができる前です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Speroni
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false
+- id: trophy
+  heading: 120年待ったタイトル
+  tier: 背景
+  telop: 2025年のFAカップ。相手はマンチェスター・シティ
+  narrator: 解説
+  card:
+    type: table
+    title: FAカップ決勝の記録
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1990年
+      - 3-3のあと再試合で敗れる
+  say:
+  - image: assets/images/pl_palace_story/scene.jpg
+    text: はじめて大きなタイトルを獲ったのは、**2025年**のFAカップでした。
+  - FAカップの決勝には、それまで2度立って、2度負けていました。
+  - text: どちらもマンチェスター・ユナイテッドに負けました。
+    card:
+      type: table
+      title: FAカップ決勝の記録
+      columns: *id001
+      rows:
+      - - 2016年
+        - 1-2で敗れる
+  - 1990年は引き分けのあとの再試合で0対1、2016年は1対2でした。
+  - 3度目の決勝、相手はマンチェスター・シティです。
+  - text: エベレチ・エゼの1点を守り切り、1対0で勝ちました。
+    card:
+      type: table
+      title: FAカップ決勝の記録
+      columns: *id001
+      rows:
+      - - 2025年
+        - 1-0。クラブ史上初のタイトル
+  - このタイトルで初めてヨーロッパに出て、翌シーズン、その大会も獲りました。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 立て直し役、獲って高く売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 立て直し役の新監督
+    - - 運営の型
+      - オリセを6倍で売却
+    - - クラブの気質
+      - 勝てばもう一度流れる歌
+  say:
+  - text: 新監督サージュは、降格圏のリヨンを6位に、ランスを2位に引き上げてきた立て直し役です。
+    image: assets/photos/pl/palace_manager_761b9ef6.jpg
+  - 掘り出し物を高く売る型。オリセは800万ポンドで獲り、3年後に約5000万ポンドでバイエルンへ。
+  - 1964年から試合前に流れる「グラッド・オール・オーバー」は、勝てば試合後にもう一度流れます。
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://en.wikipedia.org/wiki/Pierre_Sage
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Olympique_Lyonnais_season
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_RC_Lens_season
+  - https://en.wikipedia.org/wiki/Michael_Olise
+  - https://en.wikipedia.org/wiki/Glad_All_Over
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false
+- id: episode
+  heading: 万博の会社が作ったクラブ
+  tier: 背景
+  telop: 「水晶宮」の会社が作った
+  narrator: 解説
+  card:
+    type: table
+    title: 万博の会社が作ったクラブ
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 名前の由来
+      - 万博の建物「水晶宮」
+    - - 1905年
+      - 建物の会社がクラブを作る
+  say:
+  - text: クリスタル・パレスは、もともと「水晶宮」と呼ばれた万博の建物の名前です。
+    image: assets/images/pl_palace_episode/scene.jpg
+  - '**1905年**、その建物を持つ会社が、来場者を増やすために自分たちでプロのクラブを作りました。'
+  - text: 会社が立ち上げを任せたのは、アストン・ヴィラの職員でした。
+    card:
+      type: table
+      title: 万博の会社が作ったクラブ
+      columns: *id002
+      rows:
+      - - 最初のユニフォーム
+        - ヴィラと同じえんじ色と青
+  - だから最初のユニフォームは、ヴィラと同じえんじ色と青です。
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ウィルフリード・ザハ
+      - 2010-2023
+      - クラブのプレミア最多得点
+  say:
+  - text: ウィルフリード・ザハは8歳から下部組織にいた、クロイドン育ちの生え抜きです。
+    image: assets/photos/pl/palace_legend_cd98ad83.jpg
+  - 2013年、マンチェスター・ユナイテッドへ**1000万ポンド**で移り、2015年に戻りました。
+  - プレミアで挙げた**68得点**はクラブ最多。2023年、18年いたクラブを離れました。
+  sources:
+  - https://en.wikipedia.org/wiki/Wilfried_Zaha
+  - https://en.wikipedia.org/wiki/Julian_Speroni
+  - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - フリアン・スペローニ
+      - 2004-2019
+      - 年間最優秀選手4回のGK
+  say:
+  - text: フリアン・スペローニは、2004年にダンディーから来たアルゼンチン人のキーパーです。
+    image: assets/photos/pl/palace_legend_80f288a7.jpg
+  - 2013年の昇格プレーオフ決勝は、ワトフォードに1対0。無失点でプレミア昇格を決めました。
+  - 年間最優秀選手に4回。キーパーとしてクラブ最多の、リーグ戦**371試合**に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Wilfried_Zaha
+  - https://en.wikipedia.org/wiki/Julian_Speroni
+  - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Speroni
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - アンドリュー・ジョンソン
+      - 2002-2006
+      - プレミアで21得点
+  say:
+  - text: アンドリュー・ジョンソンは2002年、バーミンガムとの選手交換で加わったフォワードです。
+    image: assets/photos/pl/palace_legend_3bc227d6.jpg
+  - 2003年から04年は2部で**32得点**。ウェストハムを1対0で破り、プレミアへ昇格しました。
+  - 翌シーズンはプレミアで**21得点**。2006年、860万ポンドでエヴァートンへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Wilfried_Zaha
+  - https://en.wikipedia.org/wiki/Julian_Speroni
+  - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はピエール・サージュ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ピエール・サージュ（フランス）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - ランス
+  say:
+  - text: 今季の監督は、フランス人のピエール・サージュ。**2026年6月**に来た1年目です。
+    image: assets/photos/pl/palace_manager_761b9ef6.jpg
+  - 前はランス。クラブ史上初のフランスカップ優勝に導いてから来ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://en.wikipedia.org/wiki/Pierre_Sage
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_palace_gk.png
+    no_telop: true
+  - image: assets/stats/pl_palace_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_palace_gk_f.png
+    text: 主将を務めるのが**ディーン・ヘンダーソン**。
+    no_telop: true
+  - image: assets/stats/pl_palace_gk_f.png
+    text: リーグ戦で**96試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_palace_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_palace_df_f.png
+    text: 日本の冨安健洋がいます。
+    no_telop: true
+  - image: assets/stats/pl_palace_df_f.png
+    text: タイリック・ミッチェルはリーグ戦で**211試合**。
+    no_telop: true
+  - image: assets/stats/pl_palace_mf_f.png
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/pl_palace_mf_f.png
+    text: 日本の鎌田大地がいます。
+    no_telop: true
+  - image: assets/stats/pl_palace_mf_f.png
+    text: ジェフェルソン・レルマはコロンビア代表で**70試合**。
+    no_telop: true
+  - image: assets/stats/pl_palace_fw_f.png
+    text: フォワードは9人。
+    no_telop: true
+  - image: assets/stats/pl_palace_fw_f.png
+    text: イスマイラ・サールはセネガル代表で**88試合**。
+    no_telop: true
+  - image: assets/stats/pl_palace_fw_f.png
+    text: ジャン＝フィリップ・マテタはリーグ戦で**163試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で1勝1引き分け3敗。15位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - エヴァートン（アウェー）
+      - 0対2
+    - - 第2節
+      - マンチェスター・シティ（ホーム）
+      - 1対4
+    - - 第3節
+      - フラム（アウェー）
+      - 3対2
+    - - 第4節
+      - イプスウィッチ・タウン（ホーム）
+      - 2対3
+    - - 第5節
+      - リーズ・ユナイテッド（アウェー）
+      - 0対0
+  say:
+  - プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
+  - 順位は**15位**、勝ち点は**4**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
+  official: false

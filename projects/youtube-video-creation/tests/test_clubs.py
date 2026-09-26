@@ -44,8 +44,14 @@ def test_英字の別名は語の切れ目でだけ当てる(book):
 
 
 def test_曖昧な略称は辞書に入れない(book):
-    # AFC は AFC Bournemouth にも当たるので、アーセナルの別名にしない
-    assert clubs.canonical("AFC Bournemouth sign a keeper", book) == []
+    """AFC は AFC Bournemouth にも当たるので、アーセナルの別名にしない。
+
+    **2026-09-15 にボーンマスを辞書へ入れた**ので、返りは空ではなくボーンマスになる。
+    見るべきは「アーセナルに化けないこと」で、そこは変わっていない。
+    """
+    got = clubs.canonical("AFC Bournemouth sign a keeper", book)
+    assert "アーセナル" not in got, got
+    assert got == ["ボーンマス"], got
 
 
 def test_リーグは1つに定まるときだけ返す(book):
@@ -110,3 +116,31 @@ def test_候補ファイルに話題とリーグの当たりが入る():
     text = to_yaml(parse("Spurs agree deal\thttps://a.com/spurs-deal"), "2026年8月31日")
     assert 'topic: "トッテナム"' in text
     assert "league: england" in text
+
+
+def test_カタカナが続く語の途中はクラブに当てない():
+    """**「ポルトガル代表」の回に #ポルト が付いた**（2026-09-20）。
+
+    「ポルト」＋「ガ」で、別の語の途中を拾っていた。中身と食い違うタグは付けない
+    （`#ハイライト` や `#チャンピオンズリーグ` を外したのと同じ筋）。
+    """
+    from src import clubs
+
+    assert clubs.canonical("ポルトガル代表に41歳のロナウドが選ばれた") == []
+    # 続きがカタカナでなければ、今までどおり当てる
+    assert clubs.canonical("ポルトがベンフィカに勝った") == ["ポルト", "ベンフィカ"]
+    assert clubs.canonical("ミランのMFが決めた") == ["ミラン"]
+
+
+def test_カタカナの別名は名前の途中から当てない():
+    """「ダニ・カルバハル」の回に #ハル・シティ が付いた（2026-09-24）。
+
+    2026-09-20 に「後ろにカタカナが続くなら当てない」と直したが、
+    **前は見ていなかった**。「バ」＋「ハル」で名前の途中から当たっていた。
+    """
+    from src import clubs
+
+    assert clubs.canonical("ダニ・カルバハルがレアル・マドリードを出た") == ["レアル・マドリード"]
+    # 本物のハル・シティは、これまでどおり当てる
+    assert clubs.canonical("ハル・シティが勝った") == ["ハル・シティ"]
+    assert clubs.canonical("ハルシティが勝った") == ["ハル・シティ"]

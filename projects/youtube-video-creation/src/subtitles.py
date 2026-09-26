@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .script_model import Script
+from . import emphasis
+from .script_model import Script, published_title
 
 
 # 字幕1枚の上限。日本語の字幕は1秒に4文字前後が読みやすいとされる。
@@ -22,7 +23,8 @@ def to_srt(script: Script) -> str:
         # 画面用に短く切ってあるので、そのまま字幕にすると途中で切れる。
         # **確度バッジ（[報道] など）は画面の表示物なので字幕には入れない。**
         # 読み上げていない文字が字幕に出ると、聞こえた音と食い違う。
-        text = line.text or line.telop_text()
+        # **囲みを字幕に出さない**（2026-09-15）。聞こえた音と食い違う
+        text = emphasis.strip(line.text or line.telop_text())
         pause = line.pause or 0.0
         end = line.start + max(0.4, line.duration - pause)
 
@@ -163,6 +165,25 @@ def chapters(script: Script) -> list[tuple[float, str]]:
     return result
 
 
+# Xの検索結果。**反応の取得元の控えであって、概要欄に出す出典ではない**
+_X_HOSTS = ("x.com", "twitter.com", "mobile.twitter.com")
+
+
+def _is_x(url: str) -> bool:
+    from urllib.parse import urlparse
+    host = (urlparse(str(url)).hostname or "").lower()
+    return host.removeprefix("www.") in _X_HOSTS
+
+
+# 概要欄に置く連絡先（2026-09-17 ユーザー決定）。アプリと同じ窓口
+CONTACT = "\n".join((
+    "■ お問い合わせ",
+    "掲載内容や画像について、修正・削除のご希望がありましたら",
+    "下記までご連絡ください。速やかに対応します。",
+    "sakamane.support@gmail.com",
+))
+
+
 def description(script: Script, credits: list[str] | None = None,
                 footnotes: list[str] | None = None) -> str:
     """概要欄のたたき台（本文 + チャプター + クレジット + タグ）。"""
@@ -170,13 +191,24 @@ def description(script: Script, credits: list[str] | None = None,
     marks = chapters(script)
     if len(marks) > 1:
         parts.append("■ 目次\n" + "\n".join(f"{_clock(t)} {title}" for t, title in marks))
-    if script.sources:
-        # ニュース系では出典の明示が要る。frontmatter の sources をそのまま並べる
-        parts.append("■ 出典\n" + "\n".join(script.sources))
+    # **記事の出典は概要欄に出さない**（2026-09-17 ユーザー指示
+    # 「何かあれば連絡としたので、概要への出典記載も不要」）。
+    # 連絡先を置いたので、問い合わせはそちらで受ける。
+    # **台本の `sources` には残す。**確度の札（確定／報道／未確認）の根拠は
+    # そちらにあり、こちらの手元では全部辿れる
     if credits:
         parts.append("■ クレジット\n" + "\n".join(credits))
-    if script.tags:
-        parts.append(" ".join(f"#{tag}" for tag in script.tags))
+    # **連絡先を必ず置く**（2026-09-17。報道写真を使う方針とセット）。
+    # いま権利者に取れる手段は著作権侵害の申し立てしかなく、それは
+    # **指摘ではなく警告**で、3回でチャンネルが消える。メールを1行置けば
+    # 「一度指摘されたら考える」という方針が、実際に成り立つ
+    parts.append(CONTACT)
+    # **ハッシュタグはタグの全部ではない**（2026-09-15）。16個以上あると
+    # YouTube は全部を無視する。タグは500字まで詰めたいので、切り離した
+    from . import tags as tags_mod
+    shown_tags = tags_mod.hashtags(script.tags)
+    if shown_tags:
+        parts.append(" ".join(f"#{tag}" for tag in shown_tags))
     # **ハッシュタグより下に畳む。**表示義務のある写真の詳細は、消せないが
     # 上に並べると読むところが埋まる。YouTube は最初の3行しか初期表示しない
     # （2026-09-06 ユーザーの判断）
@@ -196,7 +228,8 @@ def write_outputs(script: Script, out_dir: Path, credits: list[str] | None = Non
     }
     files["srt"].write_text(to_srt(script), encoding="utf-8")
     files["description"].write_text(
-        f"{script.title}\n\n{description(script, credits, footnotes)}", encoding="utf-8"
+        # 公開する題（シリーズ名の後ろ書き）。読み上げの1行目は script.title のまま
+        f"{published_title(script)}\n\n{description(script, credits, footnotes)}", encoding="utf-8"
     )
     files["script_json"].write_text(script.to_json(), encoding="utf-8")
     return files

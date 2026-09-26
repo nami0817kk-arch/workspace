@@ -1,0 +1,160 @@
+# 鈴木彩艶の好守で、アストン・ヴィラが今季リーグ戦初勝利（2026-09-20）
+#
+# 材料は research/raw/20260920_zion.md（サッカーキング／フットボールチャンネルの本文、
+# Yahoo!ニュースのコメント欄、5ch系まとめのコメント欄を開いて取った）。
+#
+# **スコアの表記が媒体で違う。**サッカーキングは「トッテナム 2-3 ヴィラ」、
+# フットボールチャンネルは「ヴィラ 3-2 トッテナム」。同じ試合の書き方の違いなので、
+# 台本では「3対2でヴィラの勝ち」と言い、順序の食い違いには触れない。
+#
+# **セーブの時間も媒体で1分ずれる**（サヴィオ10分/11分、グレイ20分/21分）。
+# **分は言わずに「前半のうちに3本」とまとめる。**どちらかを選ぶ根拠が無いため。
+#
+# **発言はゼロ。**両記事とも選手・監督の直接引用が無い。だから反応を厚くする。
+#
+# **海外の反応は、まとめブログが訳したものしか無い**（原文の英語はページに載っていない）。
+# 2件だけ「海外のファン」として載せる。原文が確認できていないことはここに残す。
+# 出どころ: https://nofootynolife.net/blog-entry-9360.html
+format: news
+voice_min: 40
+slot: japan_1
+date: "2026年9月20日"
+
+people:
+  - 鈴木彩艶
+
+short_title: "鈴木彩艶、現地採点9"
+
+theme:
+  id: zion_villa_first_win
+  league: england
+  league_name: プレミアリーグ
+  kind: match
+  topic: アストン・ヴィラ
+  title: 鈴木彩艶が止めて、蹴って。ヴィラに初勝利をもたらしたのは
+  hook: 2点目は、キーパーから始まっています。
+  question: 何が勝敗を分けたのか
+
+thumbnail:
+  photo: assets/images/20260920_zion_press/01.jpg
+  line1: 前半の3本を止めた
+  line2: 現地採点は ●●
+  tags:
+    - アストンヴィラ
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/zion_20260920.png
+    telop: ヴィラが3対2で、今季リーグ戦初勝利
+    narrator: キャスター
+    card:
+      type: table
+      title: プレミアリーグ第5節
+      columns: ["", ""]
+      rows:
+        - ["アストン・ヴィラ", "3"]
+        - ["トッテナム", "2"]
+        - ["鈴木彩艶", "先発フル出場"]
+        - ["ヴィラ", "リーグ戦は今季初勝利"]
+    say:
+      - "プレミアリーグ第5節、アストン・ヴィラがトッテナムに**3対2**で勝ちました。"
+      - リーグ戦では今季初めての勝利です。
+      - 鈴木彩艶はゴールキーパーとして先発フル出場しました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260919/2206702.html
+      - https://www.footballchannel.jp/2026/09/20/post1014876/
+
+  - id: saves
+    heading: 前半に止めた3本
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/zion_20260920.png
+    telop: サヴィオ、グレイ、そしてまたサヴィオ
+    narrator: キャスター
+    say:
+      - {short_only: true, text: 鈴木彩艶が、今季初勝利の立役者になりました。}
+      - 試合の入りは、ヴィラが押し込まれる展開でした。
+      - 前半のうちに、鈴木はサヴィオ、アーチー・グレイ、そしてまたサヴィオのシュートを立て続けに止めます。
+      - "グレイのシュートは**かかとの近く**で防ぎ、そのこぼれ球へのボレーにも反応しています。"
+      - "その前半を無失点でしのいだことが、この試合の分かれ目になります。"
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260919/2206702.html
+      - https://www.footballchannel.jp/2026/09/20/post1014876/
+
+  - id: kick
+    heading: 2点目は、ゴールキックから
+    tier: 報道
+    bg: assets/backgrounds/zion_20260920.png
+    telop: 鈴木のロングフィードが、67分の起点
+    narrator: 解説
+    card:
+      type: table
+      title: 3つのゴール
+      columns: [時間, 得点者, きっかけ]
+      rows:
+        - ["45+4分", "ヨハン・マンザンビ", "カマラのアシスト"]
+        - ["67分", "ニコラス・ジャクソン", "鈴木のロングフィード"]
+        - ["79分", "エミリアーノ・ブエンディア", "強烈なミドルシュート"]
+    say:
+      - 前半の終わりぎわ、マンザンビが先制します。
+      - "67分の2点目は、**鈴木のゴールキック**から始まりました。"
+      - そのロングフィードがマンザンビを経由し、ジャクソンが右足のボレーで決めています。
+      - 79分にはブエンディアがミドルシュートを突き刺し、3対0になりました。
+      - トッテナムは86分にギャラガー、後半のアディショナルタイムにファン・ヘッケが返しますが、そこまででした。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260919/2206702.html
+
+  - id: rating
+    heading: 現地の採点
+    tier: 報道
+    bg: assets/backgrounds/zion_20260920.png
+    telop: 3媒体がそろって最高評価
+    narrator: キャスター
+    card:
+      type: table
+      title: 現地メディアの採点
+      columns: [媒体, 採点]
+      rows:
+        - ["Aston Villa Review", "9（チーム最高）"]
+        - ["Aston Villa News", "9（チーム最高）"]
+        - ["Read Aston Villa", "8.5"]
+    say:
+      - 現地の採点は、3つともチームで最も高いものでした。
+      - "2つの媒体がともに**9**。チームで単独の最高評価です。"
+      - "もう1つは8.5をつけ、**鈴木がいなければ大差でもおかしくなかった**と書きました。"
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/20/post1014876/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    bg: assets/backgrounds/zion_20260920.png
+    telop: 「あの時間帯に抑えたのが勝因」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: 試合を見ていた人たちの声です。}
+      - {voice: ネット民, text: 最後の2失点はノーチャンスだった。キックの質もそうだけど、グレイ、サビーニョのシュートストップは見事だったな, short_voice: true}
+      - {voice: ネット民, text: あの押し込まれた時間帯に抑えれたのが勝利のポイントになったと思う}
+      - {voice: ネット民, text: ザイオンから放たれるロングキックの時点でヴィラの選手たちは相手コート深くまで侵入している}
+      - {voice: ネット民, text: それが既に信頼を勝ち取っている証拠ですね}
+      - {voice: ネット民, text: キーパーから1本でゴール前まで迫れるのは並大抵の事ではない}
+      - {voice: ネット民, text: GKは特に成長する時は、突然大きく成長する事があるが、その度合いが顕著だ}
+      - {voice: ネット民, text: 子供達も鈴木彩艶のフィードに憧れてGKのレベルが上がるかもしれませんね, short_voice: true}
+      - {voice: ネット民, text: 前半のピンチを神セーブの連発で乗り切り、いつもの様に長短のパスで攻撃の起点になってた}
+      - {voice: ネット民, text: この活躍続けたらマジで来季はヴィラに居ないかもしれない}
+      - {voice: ネット民, text: 序盤のザイオンの好セーブ連発がなきゃ普通に負けてた試合}
+      - {voice: ネット民, text: これが日本代表に居る奇跡。しかもまだ24歳のシーズン}
+      - {voice: ネット民, text: 今のところ、ヴィラで数試合出てるがザイオンのミスによる失点はゼロ}
+      - {voice: 海外のファン, text: 鈴木はこのリーグでここ数年見てきた中でも最大の戦力アップになった選手だ。セービングは反則級だな}
+      - {voice: 海外のファン, text: 鈴木に移籍金3000万ユーロは今となってはかなりお買い得に見える, short_voice: true}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/bd15a6fbd10038f846a40191ffdbccb060db3c13/comments
+      - https://nofootynolife.net/blog-entry-9360.html

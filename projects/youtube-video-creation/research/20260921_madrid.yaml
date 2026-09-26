@@ -1,0 +1,134 @@
+# モウリーニョ「レッドカードが2枚あった」（2026-09-21）
+#
+# 材料は research/raw/20260921_madrid.md。
+#
+# **分は一切言わない。**試合日すら媒体で割れ（4媒体が9/20、GOALだけ9/19）、
+# 得点3つとも1分ずれ、ハウセンの退場は50・51・52・53分の4通りある。
+#
+# **モウリーニョのスペイン語原文は取れなかった。**あるのは英語（ESPN／Sports Mole）と
+# 日本語訳3種。**レアル公式の訳は「人工知能によって生成された翻訳」とページ自身が
+# 明記しているので使わない。**GOAL の現地取材の訳を使い、画面に媒体名を出す。
+#
+# **GOAL の記事に矛盾がある。**本文は「ロメロとイ・ガンイン」、引用部の注記だけ
+# 「バエナとイ・ガンイン」。他4媒体はロメロなので**ロメロ**を採る。
+#
+# 海外の書き込みは0件（Reddit・コメント欄が読めなかった）。
+# スペインの識者・媒体の評は**「ネットの声」ではなく「現地の評」として別の節**に置く。
+format: news
+voice_min: 40
+slot: laliga_1
+date: "2026年9月21日"
+
+people:
+  - ジョゼ・モウリーニョ
+
+short_title: "モウリーニョ「レッド2枚」"
+
+theme:
+  id: mourinho_derby_ref
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: マドリード・ダービーの後、モウリーニョが会見で見せたのは
+  hook: 会見をやらなくてもいい、と切り出しました。
+  question: 何を問題にしたのか
+
+thumbnail:
+  photo: assets/images/20260921_madrid/01.jpg
+  line1: モウリーニョ激怒
+  line2: 「会見はやらなくていい」
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: アトレティコ2対1レアル・マドリード
+    narrator: キャスター
+    card:
+      type: table
+      title: マドリード・ダービー
+      columns: ["", ""]
+      rows:
+        - ["アトレティコ・マドリード", "2"]
+        - ["レアル・マドリード", "1"]
+        - ["退場", "ハウセン（レアル）"]
+        - ["レアルの得点", "リュディガー"]
+    say:
+      - マドリードのダービーは、アトレティコが2対1で勝ちました。
+      - "レアルは後半に**ハウセンが退場**となり、10人で戦うことになります。"
+      - グリマルドとジョナタン・ダビドが決め、レアルはリュディガーが1点を返すにとどまりました。
+      - 試合後の会見で、レアルを率いるモウリーニョが写真を2枚持ち出しました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49990609/jose-mourinho-blasts-ref-var-two-clear-red-cards-atletico-madrid
+      - https://as.com/futbol/primera/polemica-analisis-y-reacciones-del-atletico-real-madrid-de-laliga-ea-sports-f202609-d/
+
+  - id: mou
+    heading: モウリーニョが会見で言ったこと
+    main: true
+    tier: 報道
+    telop: 「明らかなレッドカードが2枚あった」
+    narrator: 解説
+    say:
+      - {short_only: true, text: モウリーニョが、会見で2枚の写真を示しました。}
+      - "モウリーニョは会見の冒頭で、2枚の写真を示してこう言いました。"
+      - {voice: モウリーニョ, text: 会見を省略してもいいくらいです。この試合の話はここにあります}
+      - {voice: モウリーニョ, text: これは明らかなレッドカードが2枚です}
+      - 指しているのは、ロメロがベリンガムに入れたプレーと、イ・ガンインがバルベルデに足を乗せたプレーです。
+      - {voice: モウリーニョ, text: 退場者が出てからの難しさ、11人対10人での難しさを考えれば、50分間の11人対9人がどうだったかは想像できる}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49990609/jose-mourinho-blasts-ref-var-two-clear-red-cards-atletico-madrid
+      - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
+
+  - id: ref
+    heading: 主審のことも
+    tier: 報道
+    telop: 「41歳で、国際経験がない」
+    narrator: キャスター
+    say:
+      - モウリーニョは主審についても話しました。
+      - {voice: モウリーニョ, text: 41歳にして国際経験のない主審だ}
+      - {voice: モウリーニョ, text: 私は、自分が去った時のリーガとは違ったリーガに出会えると思っていた}
+      - {voice: モウリーニョ, text: 先走って、これが仕組まれたことだとまでは言いたくない}
+      - "一方で、ハウセンの退場そのものについては**「まだ見ていない」**と繰り返しています。"
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49990609/jose-mourinho-blasts-ref-var-two-clear-red-cards-atletico-madrid
+
+  - id: spain
+    heading: 試合そのものは、どう見られたか
+    tier: 報道
+    telop: 「素晴らしいアトレティ、悪いマドリード、もっと悪い主審」
+    narrator: 解説
+    say:
+      - 一方で、試合そのものの評価は、こうです。
+      - {voice: 新聞AS, text: 素晴らしいアトレティ、悪いマドリード、そしてもっと悪い主審}
+      - {voice: 新聞AS, text: オルティス・アリアスはアトレティコの選手への2枚を出し惜しみした。うち1枚はVARの助言に反していた}
+      - {voice: 新聞AS, text: 騒動の前も後も、マドリードはアトレティコより悪かった。基準も強度も無いまま戦っていた}
+      - "**判定は問題にされつつ、レアルの中身も良くなかった**という見方です。"
+    official: false
+    sources:
+      - https://as.com/futbol/primera/triunfa-el-atletico-se-estrellan-ortiz-arias-y-el-madrid-f202609-n/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「審判に文句を言ってもしょうがない」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: このダービーに、こんな声が出ています。}
+      - {voice: ネット民, text: イガンインはレッドでもおかしくなかったけど、ロメロのはかなり微妙だな, short_voice: true}
+      - {voice: ネット民, text: 結局審判の恩恵を受ける試合もあれば、逆の試合もある。審判に文句を言ってもしょうがない}
+      - {voice: ネット民, text: ハウセンのレッドはPA外から腕を掴みPA内に入ってから引き倒してるのがOFRで丸見え。あれは文句のつけようないだろう}
+      - {voice: ネット民, text: 判定ミスはあっただろう。目をひいたのはめちゃくちゃ古めかしいサッカー}
+      - {voice: ネット民, text: プレーしてる選手たちが触れたことのない昔のサッカー。これがバルサやブライトンと同じ時代に行われてるんだから世界は広い}
+      - {voice: ネット民, text: 審判に対して言いたいことがあるのはわかる。ただモウリーニョに期待したのはヴィニエムバペを外せるかどうかだ}
+      - {voice: ネット民, text: 審判も人間だからね。素晴らしい内容のサッカーをしてるチームに肩入れしてしまう}
+      - {voice: ネット民, text: スペースない時に中々崩せないのは中々厳しいよ}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/

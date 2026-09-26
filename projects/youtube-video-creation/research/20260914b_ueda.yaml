@@ -1,0 +1,95 @@
+# 上田綺世が加入後はじめて無得点（2026年9月13日の試合／9月15日に出す）
+#
+# 芯は**チームは勝ったのに、本人だけ辛い点がついた**こと。
+# **採点は Le Petit Lillois の1媒体だけ。**「現地の評価」と一般化しない
+format: news
+voice_min: 22
+slot: japan_2
+date: "2026年9月14日"
+
+people:
+  - 上田綺世
+
+short_title: "上田綺世に地元紙がつけた点"
+
+theme:
+  id: ueda_no_goal
+  league: france
+  kind: other
+  topic: リール
+  title: 上田綺世が加入後はじめて無得点。地元紙がつけた点は
+  hook: 
+  question: 現地はどう見たのか
+
+thumbnail:
+  line1: 上田綺世が加入後初の無得点
+  line2: 地元紙の採点は ●●●●
+  photo: "assets/photos/20260909_ueda/01.jpg"
+  band_full: true
+  tags: []
+  points:
+    - チームは2対0で勝った
+    - 連続得点はここで止まった
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: リールが2対0。上田は71分まで
+    narrator: キャスター
+    card:
+      type: table
+      title: リール 2 - 0 トロワ
+      columns: ["", ""]
+      rows:
+        - ["上田綺世", "先発／71分まで出場"]
+        - ["この試合", "得点なし。3試合続けての得点は止まった"]
+        - ["チーム", "リーグ戦2連勝"]
+    say:
+      - リーグアン第4節、リール対トロワ。リールが2対0で勝ちました。
+      - 上田綺世は先発し、71分までプレーしています。
+      - 3試合続けての得点は、ここで止まりました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20260913/2204610.html
+      - https://www.footballchannel.jp/2026/09/14/post1010331/
+
+  - id: rating
+    heading: 地元紙がつけた点
+    main: true
+    tier: 報道
+    telop: 10点満点で4.5
+    narrator: 解説
+    # **ここが山場。**勝った試合で、本人だけ点が低い
+    card:
+      type: table
+      title: Le Petit Lillois の採点
+      columns: ["", ""]
+      rows:
+        - ["上田綺世", "4.5"]
+    say:
+      # **ショートだけの前置き**。本編では前の節で言い終えている
+      - {short_only: true, text: 相手はトロワ。9月13日のリーグアン第4節です。}
+      - 地元紙『Le Petit Lillois』が、上田に4.5をつけました。
+      - {voice: Le Petit Lillois, text: トロワ陣内では精度を欠いた}
+      - {voice: Le Petit Lillois, text: ハラルドソンからの好パスを受けた際のコントロールミスや、背負ってプレーする場面で何度かためらいを見せていた}
+      - チームは勝ち、本人の評価だけが下がった試合でした。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/14/post1010331/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「ゴール以外の部分でもしっかり貢献していた」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 連続ゴールこそならなかったものの、上田綺世は今日も存在感十分。前線で体を張り、相手DFを押し下げ、何度もチャンスの起点に}
+      - {voice: ネット民, text: ゴール以外の部分でもしっかり貢献していたし、チームに欠かせない存在になってきている}
+      - {voice: ネット民, text: 交代時にはジルーと笑顔でハイタッチ}
+      - {voice: ネット民, text: 上田綺世、良いチームに行ったじゃん}
+      - {voice: ネット民, text: 上田綺世のリールが首位に。この勢いは本物になりそう}
+      - {voice: ネット民, text: 綺世も要所でディフェンス4枚の真ん中で受けなきゃ行けない場面とかあったし、結果残すの難しそう}
+    official: false
+    sources:
+      - https://x.com/search?q=%E4%B8%8A%E7%94%B0%E7%B6%BA%E4%B8%96&f=live

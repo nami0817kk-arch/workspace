@@ -43,9 +43,12 @@ def _raw(**overrides):
         "watch": "本人の決断",
         "sections": [
             _section(),
+            # **節ごとに別のことを言う。**同じ一文を3節に置くと
+            # 「節をまたいだ言い直し」の点検に引っかかる（2026-09-14 に追加）
             _section(id="why", heading="なぜそうなったか", tier="背景", sources=[],
-                     official=False),
-            _section(id="next", heading="これからどうなる", tier="未確認", official=False),
+                     say="ちーむのじじょうがありました。", official=False),
+            _section(id="next", heading="これからどうなる", tier="未確認",
+                     say="つぎのしあいはどようびです。", official=False),
         ],
     }
     return {**base, **overrides}
@@ -96,11 +99,22 @@ def test_context_tier_needs_no_sources():
     assert verify(build_notes(raw), _plan()) == []
 
 
-def test_report_tier_needs_two_sources():
+def test_report_tier_needs_one_source():
+    """報道は**1本でよい**（2026-09-07 のユーザー判断）。
+
+    config だけ 2 のまま残っていたので、取材メモが「2本目の欄」を
+    埋めるために同じ記事を並べるようになっていた（2026-09-12 に発覚）。
+    """
     raw = _raw()
     raw["sections"][0] = _section(tier="報道", official=False)
+    assert not any("出典が" in p for p in verify(build_notes(raw), _plan()))
+
+
+def test_report_tier_needs_at_least_one_source():
+    raw = _raw()
+    raw["sections"][0] = _section(tier="報道", official=False, sources=[])
     problems = verify(build_notes(raw), _plan())
-    assert any("出典が2本必要" in p for p in problems)
+    assert any("出典が1本必要" in p for p in problems)
 
 
 def test_confirmed_tier_needs_an_official_announcement():
@@ -138,8 +152,10 @@ def test_generated_script_opens_with_the_question():
     assert [s.title for s in script.scenes] == [
         "オープニング", "何が起きたか", "なぜそうなったか", "これからどうなる"
     ]
-    # 冒頭で問いを立てる。答えの節は読まない
-    assert any("なぜ金の問題ではないのか" in line.telop_text() for line in script.lines)
+    # **問いは画面に出さない**（2026-09-14 指摘「この今回の問はいらない」）。
+    # 冒頭の2行目は、喋っているつかみがそのまま画面に出る
+    assert not any("今回の問い" in line.telop_text() for line in script.lines)
+    assert any("大きな移籍が動いています" in line.telop_text() for line in script.lines)
     assert "wrap" not in script.cards
 
 
@@ -203,7 +219,8 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
     # 2026-09-07: 他人の声が足りないヒントは、どの取材メモにも出るようになった
     # （参考3チャンネルは尺の58%が他人の声、こちらは14%だった）。札の点検とは別の話
     # 2026-09-08: 中身の量（数字・出典）のヒントも同様にどのメモにも出る
-    volume = ("他人の声", "数字を含む行", "出典が")
+    # 2026-09-25: サムネに名前を入れる決まりも、名前を書いていないメモには必ず出る
+    volume = ("他人の声", "数字を含む行", "出典が", "クラブ名も人名も")
     assert [h for h in advise(build_notes(raw)) if not any(v in h for v in volume)] == []
 
 
@@ -335,8 +352,12 @@ def test_long_notes_are_shortened_for_the_screen():
     two = "問題は金額ではなく「誰に売るか」。ライバルに主力を渡すこと自体を拒んでいる"
     assert len(two) <= TELOP_LIMIT
     assert _telop(two) == two                       # 2文とも出す
-    assert _telop("あ" * 100).endswith("…")
-    assert len(_telop("あ" * 100)) == TELOP_LIMIT
+    # **読み上げる文はぜんぶ出す**（2026-09-14 指示）。100字でも切らない。
+    # 入りきらないぶんは render が字を小さくして収める
+    assert _telop("あ" * 100) == "あ" * 100
+    # 上限そのものは残す。桁違いに長いものだけ落とす
+    assert _telop("あ" * 300).endswith("…")
+    assert len(_telop("あ" * 300)) == TELOP_LIMIT
     assert _telop("") == ""
     # 末尾の。は付けない（枠が狭く見える）
     assert _telop("短い一文です。") == "短い一文です"
@@ -473,12 +494,17 @@ def _reaction_raw(**card_overrides):
     return raw
 
 
-def test_a_reactions_card_without_sources_is_blocked():
+def test_出典の無い反応カードも書き出す():
+    """**止めない**（2026-09-11 ユーザー「出しても良い」）。
+
+    反応そのものを実在する投稿から引く決まりは変えていない。
+    URL を後から足す回まで止めないだけ。
+    """
     plan = _plan()
     raw = _reaction_raw()
     raw["sections"][2]["sources"] = []
     problems = verify(build_notes(raw), plan)
-    assert any("反応カードに出典がありません" in p for p in problems)
+    assert not any("出典がありません" in p for p in problems)
 
 
 def test_a_reactions_card_with_sources_passes():
@@ -717,7 +743,7 @@ def test_サムネに答えを書いたら知らせる():
                   answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
                   thumbnail={"line1": "見出し",
                              "points": ["ハリー・ケイン", "1人目 ●●●"]})
-    said = [w for w in advise(notes) if "サムネの" in w]
+    said = [w for w in advise(notes) if "そのまま入っています" in w]
     assert len(said) == 1 and "ハリー・ケイン" in said[0]
 
 
@@ -727,7 +753,7 @@ def test_伏せ字なら知らせない():
     notes = Notes(date="2026年9月8日", title="題", question="問い",
                   answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
                   thumbnail={"line1": "見出し", "points": ["1人目 ●●●●", "2人目 ●●●"]})
-    assert not [w for w in advise(notes) if "サムネの" in w]
+    assert not [w for w in advise(notes) if "そのまま入っています" in w]
 
 
 # ---- 型（format）2026-09-08 ------------------------------------------------
@@ -826,7 +852,9 @@ def test_つかみが別の一言なら残る():
 
     script = parse_script(to_script(build_notes(_raw()), _plan()))   # hook は別の文
     assert len(script.scenes[0].lines) == 2
-    assert any("今回の問い" in line.telop_text() for line in script.lines)
+    # つかみの行は残る。画面に出るのは**その一言**で、問いではない
+    assert any("大きな移籍が動いています" in line.telop_text() for line in script.lines)
+    assert not any("今回の問い" in line.telop_text() for line in script.lines)
 
 
 def test_節ごとに地の文の読み手を決められる():
@@ -942,3 +970,840 @@ def test_short_titleが台本に書き出される():
 
     del raw["short_title"]
     assert "short_title:" not in to_script(build_notes(raw), load_plan())
+
+
+def test_crest_fills_in_when_there_is_no_photo():
+    """写真が無い回は、エンブレムをカードと入れ替える絵に使う（2026-09-13）。
+
+    エンブレムを主役にした回は `thumbnail.photo` が無い。カードを消すと
+    「カードも写真も無い」画面が続き、実測でアーセナル27秒・
+    チェルシー55秒・リヴァプール58秒、同じ絵のままになっていた。
+    消さないようにすると、今度は同じカードが33秒出たままになった。
+    """
+    raw = _raw()
+    raw["thumbnail"] = {"line1": "帯", "line2": "●●", "crest_main": ["アーセナル", "チェルシー"]}
+    raw["sections"] = [
+        {
+            "id": f"s{n}", "heading": "見出し", "tier": "背景", "telop": "テロップ",
+            "narrator": "キャスター", "official": False, "sources": [],
+            "card": {"type": "points", "title": "表", "items": ["あ", "い"]},
+            "say": ["1行目です。", "2行目です。", "3行目です。", "4行目です。"],
+        }
+        for n in (1, 2, 3)
+    ]
+    text = to_script(build_notes(raw), _plan())
+    # **エンブレムは全画面の下地に使わない**（2026-09-14 指摘
+    # 「右側が黒くなってる」「ユベントスのロゴか見えない」）。写真用の作りは
+    # 同じ写真をぼかして敷くので、背景が透明なエンブレムだと右半分が黒くなる。
+    # 写真が無い回は下地を最後まで替えない
+    assert "assets/crests" not in text
+    # 入れ替える相手が無いので、カードも消さない（意味のない none を出さない）
+    assert "card: none" not in text
+
+
+def test_card_stays_when_there_is_nothing_to_swap_to():
+    """写真もエンブレムも無いなら、カードは消さない（2026-09-13）。"""
+    raw = _raw()
+    raw["thumbnail"] = {"line1": "帯", "line2": "●●", "crest_main": ["実在しないクラブ"]}
+    raw["sections"] = [
+        {
+            "id": f"s{n}", "heading": "見出し", "tier": "背景", "telop": "テロップ",
+            "narrator": "キャスター", "official": False, "sources": [],
+            "card": {"type": "points", "title": "表", "items": ["あ", "い"]},
+            "say": ["1行目です。", "2行目です。", "3行目です。", "4行目です。"],
+        }
+        for n in (1, 2, 3)
+    ]
+    text = to_script(build_notes(raw), _plan())
+    assert "card: none" not in text
+
+
+def test_first_line_of_a_section_shows_what_is_said():
+    """節の1行目も、読み上げた文を画面に出す（2026-09-13 ユーザー指示「A」）。
+
+    それまでは節のテロップ（見出し）で上書きしていたので、
+    **これから言うことが画面に先に出ていた。**アルテタの回の実例:
+      読み「この話が出た翌日、アーセナルはサンダーランドと戦いました」
+      画面「サンダーランドに2対0」← 結果を先に見せている
+    """
+    raw = _raw()
+    raw["sections"] = [
+        {
+            "id": f"s{n}", "heading": "見出し", "tier": "背景",
+            "telop": "先に言ってしまう見出し",
+            "narrator": "キャスター", "official": False, "sources": [],
+            "say": ["この話が出た翌日、試合がありました。", "2行目です。"],
+        }
+        for n in (1, 2, 3)
+    ]
+    text = to_script(build_notes(raw), _plan())
+    assert "telop: この話が出た翌日、試合がありました" in text
+    assert "先に言ってしまう見出し" not in text
+
+
+def test_ショート専用の行がタイトルと重なったら止める():
+    """**`_advise_repeats` には穴があった**（2026-09-15 ユーザー指摘）。
+
+    ショート専用の行（`short_only`）は「本編には出ないので前の節と同じで
+    当たり前」として**まるごと見ていなかった**。ところがショートでは、
+    その行は**タイトルを読む1行目のすぐ下**に来る。遠藤の回で
+    「遠藤航が4試合続けて出番なし」が2秒のあいだに二度読まれていた。
+
+    9/14 に「節をまたいで同じことを言わない」を入れたのに、
+    **同じ型の重複がユーザーの目で見つかった。比べる相手が違っていた。**
+    """
+    from src.research import _advise_short_repeats, build_notes
+
+    raw = _raw()
+    raw["theme"]["title"] = "遠藤航が4試合続けて出番なし。監督が語った理由とは"
+    raw["sections"][1]["say"] = [
+        {"short_only": True,
+         "text": "遠藤航がリーグ戦で4試合続けて出番なし。登録からも外れています。"},
+        "ここから監督の話です。",
+    ]
+    notes = build_notes(raw)
+    got = _advise_short_repeats(notes)
+    assert got and "4試合続けて出番なし" in got[0], got
+
+
+def test_タイトルに無いことだけなら通す():
+    """前の節と重なるのは構わない。ショートにその節は出てこない。"""
+    from src.research import _advise_short_repeats, build_notes
+
+    raw = _raw()
+    raw["theme"]["title"] = "遠藤航が4試合続けて出番なし。監督が語った理由とは"
+    raw["sections"][1]["say"] = [
+        {"short_only": True,
+         "text": "リヴァプールの遠藤航は、チャンピオンズリーグの登録からも外れています。"},
+        "ここから監督の話です。",
+    ]
+    notes = build_notes(raw)
+    assert _advise_short_repeats(notes) == []
+
+
+def test_人名の重なりだけでは鳴らさない():
+    """節の中の他の行は、ショートでも離れて読まれる。本編と同じ12字で見る。
+
+    8字で見ていたら「はフェルナンデス」で鳴った（2026-09-15）。
+    """
+    from src.research import _advise_short_repeats, build_notes
+
+    raw = _raw()
+    raw["theme"]["title"] = "フォーデンの一発退場。解説陣の見方が割れた"
+    raw["sections"][1]["say"] = [
+        {"short_only": True, "text": "先に倒したのはフェルナンデスです。"},
+        "キーンは、フェルナンデスが小突いたと指摘しています。",
+    ]
+    notes = build_notes(raw)
+    assert _advise_short_repeats(notes) == []
+
+
+def test_知らないリーグの鍵で止める():
+    """`league: premier` が `premier` というタグになっていた（2026-09-15）。"""
+    from src.research import build_notes, verify
+
+    raw = _raw()
+    raw["theme"]["league"] = "premier"
+    got = verify(build_notes(raw), _plan())
+    assert any("premier" in p and "知らない鍵" in p for p in got), got
+
+
+def test_リーグ名は取材メモで上書きできる():
+    """**`england` から「プレミアリーグ」が付いていた**（2026-09-15）。
+
+    松木の回はサウサンプトンもブリストル・シティも2部で、中身と食い違う。
+    `league` は集計の鍵なので国の単位までしか持てない。
+    """
+    from src.research import build_notes
+
+    raw = _raw()
+    raw["theme"]["league"] = "england"
+    raw["theme"]["league_name"] = "イングランド2部"
+    assert build_notes(raw).league_name == "イングランド2部"
+
+
+def test_行頭の強調はYAMLで落ちると教える(tmp_path):
+    """**`- **強調**` は YAML の別名扱いで落ちる**（2026-09-16 に3度踏んだ）。
+
+    素の ScannerError は「expected alphabetic or numeric character」としか
+    言わないので、強調のせいだと分からない。行番号を添えて教える。
+    """
+    from src.research import ResearchError, load_notes
+
+    p = tmp_path / "x.yaml"
+    p.write_text("sections:\n  - say:\n      - **4試合**になりました。\n", encoding="utf-8")
+    try:
+        load_notes(p)
+    except ResearchError as err:
+        assert "引用符で囲んで" in str(err)
+        assert "3 行目" in str(err)
+    else:
+        raise AssertionError("落ちなかった")
+
+
+def test_写真の無い回の下地は特定クラブの実写にしない():
+    """**既定の下地がヴォルフスブルクのスタジアムだった**（2026-09-17 に発覚）。
+
+    ユーザー指摘「動画の画面の左側がぼやけている」から書き出した1コマを見て
+    分かった。`crest_still.png` の中身は実写で、LEDの看板に VFL WOLFSBURG と
+    読める。**写真の無い回は全部これ**になるので、ホッフェンハイムの話も
+    PSVの話もマンUの話も、同じドイツのスタジアムの前で喋っていた。
+
+    9/17 の午前に台本4本を手で直したのに、**既定値を直さなかったため
+    その日のうちに新しい台本3本へ戻ってきた**（マンU・トッテナム・ベンフィカ）。
+    手で直すだけでは戻る。
+    """
+    from src.research import STILL_BACKGROUND
+
+    assert "crest_still" not in STILL_BACKGROUND, "クラブの実写に戻っている"
+    assert STILL_BACKGROUND.endswith(".png"), "静止画のはず（動画に差し替わる名前は使わない）"
+
+
+def test_知らないカードの種類はdraftで止める():
+    """**書き出しまで気づけなかった**（2026-09-18）。
+
+    `type: bullets` と書いた取材メモが draft を通り、音声を合成し終えた
+    あとの render で「カードの type は … のいずれか」で落ちた。正しくは `points`。
+    `_check_card` は「落ちる条件を先に見る」ための関数なのに、
+    **中身の欄だけ見て、種類の名前を見ていなかった。**
+    """
+    from src.cards import CARD_TYPES
+    from src.research import Section, _check_card
+
+    def make(card):
+        return Section(id="s", heading="h", tier="報道", telop="t",
+                       say=["a"], sources=["https://example.com/1"], card=card)
+
+    found = _check_card(make({"type": "bullets", "items": ["a", "b"]}))
+    assert found, "知らない type を通している"
+    assert "points" in found[0], "近い綴りを教えていない"
+
+    # 正しい種類は素通しする
+    for kind in CARD_TYPES:
+        card = {"type": kind, "title": "x", "items": ["a"],
+                "columns": ["a", "b"], "rows": [["1", "2"]]}
+        assert not [p for p in _check_card(make(card)) if "知りません" in p], kind
+
+
+def test_節が下地を指定したらオープニングも合わせる(tmp_path):
+    """**オープニングだけ別の下地だった**（2026-09-18 に踏んだ）。
+
+    久保の回で全節に `bg` を書いたのに、オープニングは既定の実写クリップのままで、
+    1つ目の切り替わりで場所が変わって見えた。
+    「下地は1本のあいだ変えない」（2026-09-14 指示）に、ここだけ従っていなかった。
+    """
+    import re
+
+    from src.plan import load_plan
+    from src.research import load_notes, to_script
+
+    body = (tmp_path / "n.yaml")
+    body.write_text("""format: news
+voice_min: 20
+date: "2026年9月18日"
+theme:
+  id: t
+  league: spain
+  kind: other
+  topic: レアル・ソシエダ
+  title: 久保建英が3試合続けて外れた理由とは
+  hook: ひと言だけ。
+  question: なぜか
+thumbnail:
+  line1: あ
+  line2: い
+  photo: assets/photos/x/01.jpg
+sections:
+  - id: a
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/kubo.png
+    telop: て
+    narrator: キャスター
+    say: [いちばん最初の行です。]
+    sources: ["https://example.com/1"]
+  - id: b
+    heading: どう動いたか
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/kubo.png
+    telop: ど
+    narrator: 解説
+    say: [そのあとに起きたことです。]
+    sources: ["https://example.com/2"]
+  - id: c
+    heading: 見通し
+    tier: 背景
+    bg: assets/backgrounds/kubo.png
+    telop: み
+    narrator: キャスター
+    say: [これから何があるかです。]
+    sources: ["https://example.com/3"]
+  - id: voices
+    heading: 反応
+    tier: 未確認
+    bg: assets/backgrounds/kubo.png
+    telop: こ
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: なるほど}
+    sources: ["https://example.com/4"]
+""", encoding="utf-8")
+    text = to_script(load_notes(body), load_plan())
+    backgrounds = re.findall(r"^@bg: (.+)$", text, re.M)
+    assert backgrounds, "下地の指定が1つも無い"
+    assert len(set(backgrounds)) == 1, f"1本の中で下地が変わっている: {set(backgrounds)}"
+    assert "kubo.png" in backgrounds[0]
+
+
+def test_ショート専用の行に節のカードを付けない(tmp_path):
+    """**表が本編に一度も出なかった**（2026-09-18 に画面で見つかった）。
+
+    節のカードは1行目に付く。ところが取材メモの雛形は、節の頭に
+    `only: short` の状況説明を置くことがある。その行は本編では落ちるので、
+    **カードごと消える。**クロップの回で、選手の表が画面に出ていなかった。
+    `_is_voices_scene` が `only: short` の語りを数えて壊れたのと同じ型で、
+    **あの1行はショート専用なのに、節の1行目として扱われていた。**
+    """
+    import re
+
+    from src.plan import load_plan
+    from src.research import load_notes, to_script
+
+    note = tmp_path / "n.yaml"
+    note.write_text("""format: news
+voice_min: 20
+date: "2026年9月18日"
+theme:
+  id: t
+  league: germany
+  kind: other
+  topic: ドイツ代表
+  title: クロップが呼んだ44人は誰だったのか
+  hook: ひと言だけ。
+  question: 誰か
+thumbnail:
+  line1: あ
+  line2: い
+  photo: assets/photos/x/01.jpg
+sections:
+  - id: a
+    heading: 何が起きたか
+    tier: 報道
+    telop: て
+    narrator: キャスター
+    say: [いちばん最初の行です。]
+    sources: ["https://example.com/1"]
+  - id: who
+    heading: 誰が呼ばれたか
+    main: true
+    tier: 報道
+    telop: ひ
+    narrator: キャスター
+    card:
+      type: table
+      title: 初招集
+      columns: ["所属", "名前", "位置", "年齢"]
+      rows:
+        - ["フランクフルト", "エブヌタリブ", "FW", "23"]
+    say:
+      - {short_only: true, text: ショートのための状況説明です。}
+      - 本編に残る最初の行です。
+    sources: ["https://example.com/2"]
+  - id: voices
+    heading: 反応
+    tier: 未確認
+    telop: こ
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: なるほど}
+    sources: ["https://example.com/3"]
+""", encoding="utf-8")
+    text = to_script(load_notes(note), load_plan())
+    block = text.split("## 誰が呼ばれたか")[1].split("\n## ")[0]
+    # カードが付いた行の1つ前の読み上げを探す
+    holder = None
+    for line in block.splitlines():
+        if re.match(r"^[^ \t#@].*?: ", line):
+            holder = line
+        if line.strip() == "card: who_card":
+            break
+    assert holder and "ショートのための状況説明" not in holder, \
+        f"ショート専用の行にカードが付いている: {holder}"
+    assert "本編に残る最初の行" in holder
+
+
+def test_ネットの声が少ない回を知らせる(tmp_path):
+    """**件数を数えていなかった**（2026-09-18 に気づいた）。
+
+    「読み上げる反応は10〜20件」と 2026-09-07 に決めてあるのに、
+    機械は **1件でもあれば通していた**。サンバの回は6件、
+    ヴァツケの回は日本語0件のまま書き出せた。
+    **止めない**（記事が1本しか出ていない題材では数が伸びない）。
+    気づかずに出ることだけを防ぐ。
+    """
+    from src.plan import load_plan
+    from src.research import advise, load_notes
+
+    def note(count):
+        says = "\n".join(f"      - {{voice: ネット民, text: こえ{i}}}" for i in range(count))
+        path = tmp_path / f"n{count}.yaml"
+        path.write_text(f"""format: news
+voice_min: 20
+date: "2026年9月18日"
+theme:
+  id: t
+  league: england
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンチェスター・シティの17歳が見せたものとは
+  hook: ひと言。
+  question: なにか
+thumbnail:
+  line1: あ
+  line2: い
+  photo: assets/photos/x/01.jpg
+sections:
+  - id: a
+    heading: 何が起きたか
+    tier: 報道
+    telop: て
+    narrator: キャスター
+    say: [いちばん最初の行です。]
+    sources: ["https://example.com/1"]
+  - id: voices
+    heading: 反応
+    tier: 未確認
+    telop: こ
+    narrator: キャスター
+    say:
+{says}
+    sources: ["https://example.com/2"]
+""", encoding="utf-8")
+        return advise(load_notes(path), load_plan())
+
+    few = [n for n in note(6) if "ネットの声が" in n]
+    assert few, "6件でも知らせていない"
+    assert "6件" in few[0]
+
+    enough = [n for n in note(12) if "ネットの声が" in n]
+    assert not enough, "12件で鳴っている"
+
+
+def test_1節目がショート専用の行で始まっても落ちない(tmp_path):
+    """**`shown_for` を数え始める前に使って落ちた**（2026-09-20、プレミア20クラブで踏んだ）。
+
+    数え始めは「本編に残る最初の行」なので、`only: short` の行はその前に来る。
+    前の節があればその値が残っていて表に出ないが、**1節目がショート専用の行で
+    始まる台本**（日本人のいないクラブは入口の節が無く、基礎DATAから始まる）で
+    UnboundLocalError になった。
+    """
+    from src.plan import load_plan
+    from src.research import load_notes, to_script
+
+    note = tmp_path / "n.yaml"
+    note.write_text("""format: news
+voice_min: 0
+date: "2026年9月20日"
+theme:
+  id: t
+  league: england
+  kind: other
+  topic: アーセナル
+  title: アーセナルってどんなクラブ？
+  hook: ひと言だけ。
+  question: どんなクラブか
+thumbnail:
+  line1: あ
+  line2: い
+  photo: assets/photos/x/01.jpg
+sections:
+  - id: data
+    heading: 基礎DATA
+    main: true
+    tier: 背景
+    telop: て
+    narrator: 解説
+    say:
+      - {short_only: true, text: このクラブの、基本のデータです。}
+      - 創立は1886年です。
+      - 本拠地はエミレーツ・スタジアムです。
+    sources: ["https://example.com/1"]
+  - id: rival
+    heading: 宿敵
+    tier: 背景
+    telop: と
+    narrator: 解説
+    say: [宿敵はトッテナムです。]
+    sources: ["https://example.com/2"]
+  - id: season
+    heading: 今季
+    tier: 報道
+    telop: き
+    narrator: 解説
+    say: [5試合で4勝です。]
+    sources: ["https://example.com/3"]
+""", encoding="utf-8")
+    text = to_script(load_notes(note), load_plan())
+    assert "創立は1886年です。" in text
+
+
+def test_一言はタイトルより前に読む():
+    """**2026-09-21 指示**「最初にクラブを表す一言を述べてから始める」。
+
+    「1行目はタイトル」の決まり（2026-09-07）は残すので、**一言 → タイトル**の順。
+    """
+    raw = _raw()
+    raw["theme"]["lead"] = "プレミアで一番小さなスタジアムのクラブです。"
+    text = to_script(build_notes(raw), _plan())
+    lines = [x for x in text.splitlines() if x.startswith("キャスター: ")]
+    assert lines[0] == "キャスター: プレミアで一番小さなスタジアムのクラブです。"
+    assert lines[1] == "キャスター: なぜ移籍が決まらないのか。"
+
+
+def test_一言を書いていなければタイトルから始まる():
+    """書いていない回は、今までどおりタイトルが1行目。**既定を変えない**。"""
+    text = to_script(build_notes(_raw()), _plan())
+    lines = [x for x in text.splitlines() if x.startswith("キャスター: ")]
+    assert lines[0] == "キャスター: なぜ移籍が決まらないのか。"
+
+
+def test_一言がタイトルの言い直しなら出さない():
+    """タイトルと同じことを言う一言は、前置きが増えるだけ。**その行ごと出さない**。"""
+    raw = _raw()
+    raw["theme"]["lead"] = "なぜ移籍が決まらないのか"
+    text = to_script(build_notes(raw), _plan())
+    lines = [x for x in text.splitlines() if x.startswith("キャスター: ")]
+    assert lines[0] == "キャスター: なぜ移籍が決まらないのか。"
+    assert len([x for x in lines if "移籍が決まらないのか" in x]) == 1
+
+
+def _raw_kanji():
+    raw = _raw()
+    raw["sections"][0]["say"] = "移籍が決まりました。"
+    return raw
+
+
+def test_サムネが本編で言っていないことを約束していたら知らせる():
+    """**2026-09-21 に4本見つかった。**旧台本から節を落としたのに、サムネの文字だけ
+    残っていて、その話を一度もしない動画になっていた（アーセナル「1919年、票で決まった」）。
+    """
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["thumbnail"] = {"line1": "酒場の投票で決まった", "line2": "ブレントフォード"}
+    hints = _advise_thumbnail_promise(build_notes(raw))
+    assert any("line1" in h for h in hints), hints
+
+
+def test_読み上げに出てくるサムネは知らせない():
+    """言い回しは変わるので、**手がかりが1つでも出てくれば通す**。"""
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["thumbnail"] = {"line1": "移籍のゆくえ", "line2": "なぞ"}
+    assert _advise_thumbnail_promise(build_notes(raw)) == []
+
+
+def test_伏せ字のサムネは見ない():
+    """`●●` は隠すのが目的なので、読み上げに無くて当たり前。"""
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["thumbnail"] = {"line1": "本人が望むのは ●●", "line2": "移籍"}
+    assert _advise_thumbnail_promise(build_notes(raw)) == []
+
+
+def test_サムネの数字は丸ごと一致で見る():
+    """**2桁ずつで見ると通ってしまう**（2026-09-21 実測）。サムネ「1919年」が、
+    読み上げの「2026年5月19日」の "19" に当たって鳴らなくなった。
+    """
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["sections"][0]["say"] = "移籍は2026年5月19日に決まりました。"
+    raw["thumbnail"] = {"line1": "1919年に決まった", "line2": "移籍"}
+    assert _advise_thumbnail_promise(build_notes(raw)), "1919 が 19 で通ってしまう"
+
+
+def test_言い回しが変わっていても通す():
+    """サムネ「6回優勝が、3部にいた」に対して読み上げは「1部で6回も優勝している」。
+    **丸ごとでは当たらないが、同じ話をしている**ので鳴らせない。
+    """
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["sections"][0]["say"] = "1部で6回も優勝しているクラブが3部にいました。"
+    raw["thumbnail"] = {"line1": "6回優勝が、3部にいた", "line2": "移籍"}
+    assert _advise_thumbnail_promise(build_notes(raw)) == []
+
+
+def test_棒グラフの項目は形まで見る():
+    """**2026-09-22 に2本が書き出しの途中で落ちた。**`- ["佐野海舟", 5000]` と書いても
+    `draft` は「items がある」で通していた。形の誤りは書き出す前に止める。"""
+    from src.research import verify
+
+    raw = _raw()
+    raw["sections"][0]["card"] = {"type": "bars", "title": "t", "items": [["佐野海舟", 5000]]}
+    problems = verify(build_notes(raw), _plan())
+    assert any("label" in p for p in problems), problems
+
+    raw["sections"][0]["card"]["items"] = [{"label": "佐野海舟", "value": 5000}]
+    assert not any("bars" in p for p in verify(build_notes(raw), _plan()))
+
+
+def test_行の知らない鍵は止める(tmp_path):
+    """2026-09-22: `short_only: true` を `only: short` と書き、前置きが本編にも入った。"""
+    import pytest
+    from src.research import ResearchError, load_notes
+
+    note = tmp_path / "n.yaml"
+    note.write_text(
+        "theme:\n  title: 題\nsections:\n  - id: a\n    heading: 見出し\n    say:\n"
+        "      - text: 前置き\n        only: short\n      - 本文\n",
+        encoding="utf-8")
+    with pytest.raises(ResearchError, match="知らない鍵"):
+        load_notes(note)
+
+
+def test_main以外の節のshort_onlyは止める(tmp_path):
+    """2026-09-22: 前置きを「何が起きたか」に置き、7本のショートに一度も出なかった。"""
+    import pytest
+    from src.research import ResearchError, load_notes
+
+    note = tmp_path / "n.yaml"
+    note.write_text(
+        "theme:\n  title: 題\nsections:\n  - id: a\n    heading: 見出し\n    say:\n"
+        "      - text: 前置き\n        short_only: true\n      - 本文\n"
+        "  - id: b\n    main: true\n    heading: 山場\n    say:\n      - 山場の本文\n",
+        encoding="utf-8")
+    with pytest.raises(ResearchError, match="main でない節"):
+        load_notes(note)
+
+
+def test_群れの回はサムネも並べる():
+    """2026-09-22: 日本代表の市場価値の回で、佐野1人の写真を出していた。"""
+    from src.research import _advise_group_thumbnail, build_notes
+
+    raw = _raw()
+    raw["people"] = ["佐野海舟", "鈴木彩艶", "上田綺世"]
+    raw["theme"]["title"] = "日本代表の値段が一斉に更新。値上がりしたのは誰か"
+    raw["thumbnail"] = {"photo": "a.jpg", "line1": "x", "line2": "y"}
+    assert _advise_group_thumbnail(build_notes(raw))
+    raw["thumbnail"]["photos"] = ["a.jpg", "b.jpg", "c.jpg"]
+    assert _advise_group_thumbnail(build_notes(raw)) == []
+    raw["thumbnail"].pop("photos")
+    raw["theme"]["title"] = "佐野海舟の値段が上がった"
+    assert _advise_group_thumbnail(build_notes(raw)) == []
+
+
+def test_同じ題の作り直しは重複扱いしない(tmp_path):
+    """2026-09-22: プレミア20クラブの台本を翌日に直したら、全部が「昨日扱ったテーマ」で止まった。"""
+    from datetime import datetime
+    from src import coverage
+    from src.research import build_notes, check_repeats
+
+    ledger = tmp_path / "covered.yaml"
+    now = datetime(2026, 9, 22, 12, 0)
+    coverage.record(ledger, "premier_1", [("pl_clubs_11_hull", "守田英正がいるハル・シティってどんなクラブ？")],
+                    now=datetime(2026, 9, 21, 23, 3))
+    raw = _raw()
+    raw["theme"]["id"] = "pl_clubs_11_hull"
+    raw["theme"]["title"] = "守田英正がいるハル・シティってどんなクラブ？"
+    raw["slot"] = "premier_2"
+    plan = _plan()
+    plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
+    assert check_repeats(build_notes(raw), plan, now=now) == []
+    raw["theme"]["title"] = "ハル・シティの別の話"
+    assert check_repeats(build_notes(raw), plan, now=now)
+
+
+def test_固有名詞だけの重なりは言い直しではない():
+    """2026-09-22: 8字に下げたら「ヨーロッパリーグ」「1部リーグの優勝」で鳴った。"""
+    from src.research import _advise_repeats, build_notes
+
+    raw = _raw()
+    raw["sections"][0]["say"] = ["昨季はヨーロッパリーグで優勝しました。", "1部リーグの優勝は4回です。"]
+    raw["sections"][1]["say"] = ["ヨーロッパリーグの決勝は5月でした。", "1部リーグの優勝から半世紀たちます。"]
+    assert _advise_repeats(build_notes(raw)) == []
+    raw["sections"][1]["say"] = ["リーグ戦を1つも負けずに優勝しました。"]
+    raw["sections"][0]["say"] = ["1つも負けずに優勝したシーズンがあります。"]
+    assert _advise_repeats(build_notes(raw))
+
+
+def test_耳で分からない言い回しを知らせる():
+    """2026-09-22: 流れの点検で20本中十数本に出た型。勝敗の無いスコア・長い行・です×3・アルファベット。"""
+    from src.research import _advise_ear, build_notes
+
+    raw = _raw()
+    raw["sections"][0]["say"] = [
+        "アウェーで2対1。クラブにとって初めての欧州の試合でした。",
+        "オーナーはアメリカのビル・フォーリーで、2022年にクラブを買収し、共同オーナーには俳優もいて話題になりました。",
+        "UEFAの主要な大会をすべて獲った、史上唯一のクラブです。",
+    ]
+    raw["sections"][1]["say"] = ["創立は1899年です。", "愛称はチェリーズです。", "本拠地はディーン・コートです。"]
+    got = "\n".join(_advise_ear(build_notes(raw)))
+    assert "勝敗" in got and "字あります" in got and "アルファベット" in got and "3行続いて" in got
+    raw["sections"][0]["say"] = ["アウェーで2対1の勝ち。初めての欧州の試合でした。"]
+    raw["sections"][1]["say"] = ["創立は1899年です。", "愛称はチェリーズ。", "本拠地はディーン・コートです。"]
+    assert _advise_ear(build_notes(raw)) == []
+
+
+def test_引用の型でもつかみの行に字幕を付ける():
+    """quote / voices の型では、つかみの1行にテロップが付いていなかった
+    （2026-09-24 に発見）。「読み上げた文は、画面にも出す」が型で抜けていた。"""
+    say = [
+        "かいけんで、ほんにんがはなしました。",
+        {"voice": "ほんにん", "text": "わたしはまだここにいる"},
+        {"voice": "ほんにん", "text": "まだちからになれる"},
+        {"voice": "ほんにん", "text": "とうたつしたいし、とうたつする"},
+    ]
+    raw = _raw(format="quote",
+               sections=[_section(say=say, main=True)])
+    raw["theme"]["hook"] = "記者に聞かれる前の、一言目でした。"
+    script = to_script(build_notes(raw), _plan())
+    head = script.split("## ", 2)[1]
+    assert "キャスター: 記者に聞かれる前の、一言目でした。" in head
+    assert "  telop: 記者に聞かれる前の、一言目でした" in head
+
+
+def test_サムネの文字にクラブ名か人名を入れる():
+    """2026-09-25 指示「さむねには、クラブ名か人名入れてね」。
+
+    一覧に並ぶのは題ではなく絵なので、絵の中に名前が無いと誰の話か分からない。
+    """
+    from src.research import _advise_thumbnail_name
+
+    def notes(line1, line2, people, topic):
+        n = build_notes(_raw())
+        n.people, n.topic = people, topic
+        n.thumbnail = {"line1": line1, "line2": line2}
+        return n
+
+    assert _advise_thumbnail_name(
+        notes("19位、勝ち点4からの立て直し", "14年で24人目の監督", ["ハビエル・アギーレ"], "バレンシア"))
+    assert not _advise_thumbnail_name(
+        notes("バレンシア、19位・勝ち点4", "呼んだのは14年で24人目の男", ["ハビエル・アギーレ"], "バレンシア"))
+    # 「マンチェスター・ユナイテッド」を「マンU」と略しても通す
+    assert not _advise_thumbnail_name(
+        notes("マンU、1300億円を稼いだ日", "同じ日に売り出したのは●●", [], "マンチェスター・ユナイテッド"))
+
+
+def test_入れ替えた写真は次の行にも残る():
+    """2026-09-25 指摘「ジダン 背景がジダンだけとなっている」。
+
+    行に写真を指定しても、次の行でサムネの写真へ戻っていた。
+    2枚目が1行で消え、画面は「ジダン → ムバッペ → ジダン」と2回動いていた
+    （絵の入れ替えは1本1回までの決まり）。
+    """
+    raw = _raw()
+    raw["thumbnail"] = {"line1": "みだし", "photo": "assets/images/a/01.jpg"}
+    raw["sections"] = [
+        _section(id="what", main=True, say=[
+            "さいしょのぎょうです。",
+            {"text": "ここからべつのひとのはなしです。", "image": "assets/images/b/01.jpg"},
+            "そのつぎのぎょうです。",
+            "さらにつぎのぎょうです。",
+        ]),
+        _section(id="why", heading="なぜ", say=["あとのせつです。", "もういちぎょう。"]),
+        _section(id="next", heading="これから", say=["さいごのせつです。"]),
+    ]
+    script = to_script(build_notes(raw), _plan())
+    used = [ln.split(": ", 1)[1] for ln in script.splitlines() if ln.startswith("  image: ")]
+    assert used, "写真が1枚も出ていません"
+    # b に替わったら、そのあとは a へ戻らない
+    assert "assets/images/a/01.jpg" not in used[used.index("assets/images/b/01.jpg"):]
+
+
+def test_本文に敷く写真が縦長なら知らせる(tmp_path):
+    """2026-09-25 指摘「左がグレーだめは色の話ではなくて、ちゃんと横に広い写真を使うという意味」。
+
+    縦の写真を右に立てると左に面が残る。面の色を良くするのではなく、面を作らない。
+    """
+    from PIL import Image
+
+    from src.research import _advise_wide_photo
+
+    tall = tmp_path / "tall.jpg"
+    Image.new("RGB", (600, 900), (90, 20, 20)).save(tall)
+    wide = tmp_path / "wide.jpg"
+    Image.new("RGB", (1600, 900), (20, 20, 90)).save(wide)
+
+    n = build_notes(_raw())
+    n.thumbnail = {"photo": str(tall)}
+    assert _advise_wide_photo(n)
+    n.thumbnail = {"photo": str(wide)}
+    assert not _advise_wide_photo(n)
+    # 2枚並べた回は、冒頭に届くのが1枚目だけなので、その1枚目を見る
+    n.thumbnail = {"photos": [str(tall), str(wide)]}
+    assert "pairphoto" in _advise_wide_photo(n)[0]
+
+
+def test_サムネの名前は姓だけでも通る():
+    """「アーリング・ハーランド」の回で line1 に「ハーランド」と書けば名前は入っている（2026-09-25）。"""
+    from src.research import _advise_thumbnail_name, Notes
+    notes = Notes.__new__(Notes)
+    notes.people = ["アーリング・ハーランド"]
+    notes.topic = "マンチェスター・シティ"
+    notes.thumbnail = {"line1": "ハーランドが決勝点のあと", "line2": "真っ先にキスをした●●"}
+    assert _advise_thumbnail_name(notes) == []
+    notes.thumbnail = {"line1": "決勝点のあと", "line2": "真っ先にキスをした●●"}
+    assert _advise_thumbnail_name(notes)
+
+
+def test_行に差し込む縦長の写真は止める(tmp_path):
+    """2026-09-25 指摘「久保とかの写真が映るとき、左がグレー」。語る人の写真は2枚並べにする。"""
+    from PIL import Image
+    from src.research import _check_line_images_wide, Notes
+    tall = tmp_path / "tall.jpg"; Image.new("RGB", (300, 400), "gray").save(tall)
+    wide = tmp_path / "wide.jpg"; Image.new("RGB", (1920, 1080), "gray").save(wide)
+    raw = _raw()
+    raw["sections"] = [
+        _section(id="what", main=True, say=[
+            "さいしょのぎょうです。",
+            {"text": "くぼがかたります。", "image": str(tall)},
+        ]),
+        _section(id="next", heading="つぎ", say=[{"text": "べつのひと。", "image": str(wide)}]),
+    ]
+    problems = _check_line_images_wide(build_notes(raw))
+    assert len(problems) == 1 and "tall.jpg" in problems[0] and "pairphoto" in problems[0]
+
+
+def test_主役の名前が出ない節は知らせる():
+    """2026-09-25 に4本で「この節は不要」と言われた。機械で取れるのは名前の有無だけ。"""
+    from src.research import _advise_offtopic_section
+    raw = _raw()
+    raw["people"] = ["松木玖生"]
+    raw["sections"] = [
+        _section(id="what", main=True, say=["松木玖生が決めました。"]),
+        _section(id="side", heading="抑えられなかった側", say=["相手の左サイドバックはこう書かれました。"]),
+        _section(id="voices", heading="ネットの反応", tier="未確認", say=["すごい。"]),
+    ]
+    hints = _advise_offtopic_section(build_notes(raw))
+    assert len(hints) == 1 and "抑えられなかった側" in hints[0]
+
+
+def test_本人が語る節は主役の節とみなす():
+    """松木の「本人の言葉」（voice が松木）で鳴っていた。声の主も名前に数える。"""
+    from src.research import _advise_offtopic_section
+    raw = _raw()
+    raw["people"] = ["松木玖生"]
+    raw["sections"] = [
+        _section(id="what", main=True, say=["松木玖生が決めました。"]),
+        _section(id="own", heading="本人の言葉", say=[{"voice": "松木玖生", "text": "ほっとしています"}]),
+    ]
+    assert _advise_offtopic_section(build_notes(raw)) == []
+
+
+def test_行の多い表と長い行は重なりを知らせる():
+    """2026-09-25 ラフィーニャ。5行の表に45字の行を重ね、表の下半分が隠れた。"""
+    from src.research import _advise_card_telop_overlap
+    raw = _raw()
+    raw["sections"] = [_section(id="what", main=True,
+        card={"type": "table", "title": "t", "columns": ["", ""], "rows": [[1, "a"], [2, "b"], [3, "c"], [4, "d"], [5, "e"]]},
+        say=["あ" * 45])]
+    assert _advise_card_telop_overlap(build_notes(raw))
+    raw["sections"] = [_section(id="what", main=True,
+        card={"type": "table", "title": "t", "columns": ["", ""], "rows": [[1, "a"], [2, "b"], [3, "c"], [4, "d"], [5, "e"]]},
+        say=["あ" * 30])]
+    assert not _advise_card_telop_overlap(build_notes(raw))

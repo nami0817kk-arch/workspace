@@ -1,0 +1,131 @@
+# 中村敬斗をフランス各メディアがそろって称賛（2026-09-19）
+#
+# quote の型。リヨン加入後の初先発・初ゴールを、仏メディアの採点・見出し・
+# フォンセカ監督の談話・本人談話の順で積む。最後は反応（日本語＋海外）。
+#
+# 事実は getfootballnewsfrance.com（英語・仏サッカー専門）と footmercato.net
+# （仏語）の2系統で一致。フォンセカ監督の談話は footballchannel.jp（Yahoo!配信）。
+# 本人談話は eurosport.fr が仏語原文つきで引用している。
+#
+# 反応: 日本語は sakarabo.blog.jp のスレ（32件中12件を候補で確認、ここから選ぶ）。
+# 海外は world-soccer-fan.com の「海外の反応」翻訳（reddit等の翻訳とみられる）。
+# どちらも rumour 群＝未確認どまりなので tier は未確認。
+format: quote
+slot: japan_1
+date: "2026年9月19日"
+
+people:
+  - 中村敬斗
+
+short_title: "中村敬斗を仏メディアが総称賛"
+
+theme:
+  id: nakamura_lyon_media_praise
+  league: france
+  league_name: リーグアン
+  kind: other
+  topic: 中村敬斗
+  title: 中村敬斗が仏で総称賛。「周囲を熱狂させる」とは
+  hook: 移籍してまだ2週間。その初先発での出来事です。
+
+thumbnail:
+  photo: assets/photos/20260919_nakamura_press/01.jpg
+  line1: 中村敬斗を仏紙が総称賛
+  line2: 「周囲を●●●●」とは
+  tags:
+    - 中村敬斗
+    - リヨン
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/nakamura_20260919.png
+    telop: リヨン移籍後、初めての先発でゴール
+    narrator: キャスター
+    say:
+      - 中村敬斗が、リヨンでの初先発に応えました。
+      - 9月16日、ヨーロッパリーグ・リーグフェーズ第1節。
+      - アウェーのアンデルレヒト戦、左ウイングでフル出場です。
+      - 22分、ペナルティエリアに切り込んでシュート。
+      - 相手にわずかに当たってコースが変わり、ネットが揺れました。
+      - リヨン加入後、公式戦初ゴールです。
+      - 試合はリヨンが2-1で勝ち切りました。
+    card:
+      type: points
+      title: 中村敬斗のこの試合の記録
+      items:
+        - チャンスメイク 4回（チーム最多）
+        - ドリブル成功 4回中3回
+        - 仏『Maxifoot』のマン・オブ・ザ・マッチ
+    official: false
+    sources:
+      - https://www.getfootballnewsfrance.com/2026/player-ratings-anderlecht-1-2-lyon-nakamaura-and-nartey-secure-winning-start-for-les-gones-in-europe/
+      - https://www.footmercato.net/a4066615359154805584-ol-keito-nakamura-est-deja-en-train-de-rendre-tout-le-monde-completement-fou
+
+  - id: media
+    heading: 各紙がこぞって称賛
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/nakamura_20260919.png
+    telop: 「中村が早くも、周囲を熱狂させている」
+    narrator: キャスター
+    say:
+      - 見出しをつけたのは、フランスの『フットメルカト』でした。
+      - "「中村が早くも、周囲を熱狂させている」"
+      - 採点でも、高い評価が並びました。
+      - 『レキップ』は7点。
+      - "「幸運もあったが、日本人ウインガーの初先発は成功に終わった」"
+      - 『ル・プログレ』も7点をつけています。
+      - "「中村はリヨンに、新たな次元をもたらす存在であることを証明した」"
+      - 指揮官のフォンセカ監督も、名指しで褒めました。
+      - {voice: フォンセカ監督, text: 彼は異質な選手だ}
+      - {voice: フォンセカ監督, text: 良い判断を下し、ボールを失うことが少ない}
+      - {voice: フォンセカ監督, text: 攻める時とキープする時を、よく理解していた}
+    official: false
+    sources:
+      - https://www.footmercato.net/a4066615359154805584-ol-keito-nakamura-est-deja-en-train-de-rendre-tout-le-monde-completement-fou
+      - https://www.footballchannel.jp/2026/09/17/post1013295/
+
+  - id: own_words
+    heading: 本人の言葉
+    tier: 報道
+    bg: assets/backgrounds/nakamura_20260919.png
+    telop: 「加入してまだ2週間。もう連係ができている」
+    narrator: キャスター
+    say:
+      - 試合後、中村自身もこう振り返っています。
+      - {voice: 中村敬斗, text: 初ゴールと、初めての勝利をとても嬉しく思う}
+      - {voice: 中村敬斗, text: 初めてのヨーロッパの試合で、とても興奮していた}
+      - {voice: 中村敬斗, text: このシステムでプレーするのが大好きだ}
+      - {voice: 中村敬斗, text: パスを出し、点を取り、動きを作る}
+      - {voice: 中村敬斗, text: 加入してまだ2週間だが、練習でもう連係ができている}
+    official: false
+    sources:
+      - https://www.eurosport.fr/football/ligue-europa/2026-2027/ligue-europa-malick-fofana-nest-plus-la-voila-keito-nakamura-buteur-decisif-contre-anderlecht-avec-lol_sto23337976/story.shtml
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    bg: assets/backgrounds/nakamura_20260919.png
+    telop: 現地からも、日本からも
+    narrator: キャスター
+    say:
+      - この活躍に、書き込みが集まりました。
+      - {voice: ネット民, text: やるやん}
+      - {voice: ネット民, text: 今もウイングって言うんだな}
+      - {voice: ネット民, text: 私はいつも右翼左翼って言ってるｗｗ}
+      - {voice: ネット民, text: スーパーバナナシュート}
+      - {voice: ネット民, text: さすがに、アホすぎるだろw}
+      - {voice: 海外のファン, text: うちの日本人選手、いい感じだね}
+      - {voice: 海外のファン, text: 決めたのは本当に彼だよ}
+      - {voice: 海外のファン, text: 敬斗、本当に素晴らしいよ}
+      - {voice: 海外のファン, text: 見事だね。次に行こう}
+      - {voice: 海外のファン, text: 私たちの2番目のフィニッシャーだね}
+      - {voice: 海外のファン, text: ディフレクトしてなきゃ、シュートは外に出てた}
+      - {voice: 海外のファン, text: ベルギー人はランス時代の試合を見てなかったようだ}
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084506325.html
+      - https://www.world-soccer-fan.com/entry/2026/09/17/062420

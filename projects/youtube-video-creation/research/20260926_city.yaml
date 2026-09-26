@@ -1,0 +1,136 @@
+date: 2026年9月26日
+slot: premier_1
+format: voices
+voice_min: 0.6
+people: [マンチェスター・シティ]
+theme:
+  id: city_115
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: 'マンC、115件中114件で違反認定。これから決まる罰に並ぶもの'
+  question: どんな罰があり得るのか
+short_title: マンC、115件中114件で違反認定
+thumbnail:
+  photo: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  crests: [マンチェスター・シティ]
+  line1: マンC、114件で違反
+  line2: 罰に並ぶのは●●剥奪まで
+sections:
+  - id: what
+    heading: 114件で違反
+    tier: 報道
+    telop: 2009年から2018年の財務。調査への非協力も35件
+    narrator: キャスター
+    card:
+      type: table
+      title: 認定されたとされる違反の中身
+      columns: ['', '']
+      rows:
+        - [財務情報を正確に出さなかった, 54件]
+        - [選手・監督への支払い, 14件]
+        - [UEFAの規則, 5件]
+        - [プレミアの収益ルール, 7件]
+        - [調査に協力しなかった, 35件]
+    say:
+      - マンチェスター・シティの、プレミアリーグ財務規定違反の件です。
+      - "**115件のうち114件**で違反と認められた、と報じられました。"
+      - 問われたのは、2009年から2018年の財務の出し方。
+      - そして、調査に協力しなかったことです。
+      - 告発は2023年2月。審理は2024年12月に終わりました。
+      - そこから結論が出るまで、約2年かかっています。
+    sources:
+      - https://www.bbc.com/sport/football/articles/cr89jjwy4nqpo
+      - https://www.theguardian.com/football/2026/sep/25/manchester-city-found-guilty-of-breaking-premier-leagues-financial-fair-play-rules
+      - https://www.fourfourtwo.com/team/manchester-city-could-be-stripped-of-premier-league-titles-after-guilty-verdict-on-nearly-all-charges-report
+  - id: statement
+    heading: クラブの声明
+    tier: 報道
+    telop: 「手続きはまだ続いている」
+    narrator: キャスター
+    say:
+      - text: 'クラブは、こう出しました。'
+        image: assets/backgrounds/stadium_マンチェスターシティ.png
+      - voice: マンチェスター・シティ
+        text: 手続きはまだ続いており、重要な部分が残っていて、厳しい守秘義務がかかっている
+      - voice: マンチェスター・シティ
+        text: 当クラブは8年間、プレミアの理事会が独立した公正な規制者としてふるまうという前提で
+      - voice: マンチェスター・シティ
+        text: 適正な手続きを誠実に尊重してきた
+    sources:
+      - https://www.manchestereveningnews.co.uk/sport/football/football-news/manchester-city-guilty-115-charges-34673585
+  - id: penalty
+    main: true
+    heading: これから決まる罰
+    tier: 報道
+    telop: 罰金から勝ち点剥奪、プレミアからの追放まで
+    narrator: キャスター
+    say:
+      - text: 'マンチェスター・シティが、財務規定違反のほぼすべてで違反と認められたと報じられました。'
+        short_only: true
+      - 罰はまだ決まっていません。あり得るのは、戒告や罰金から、**勝ち点剥奪、プレミアからの追放**まで。
+      - 1件の違反で勝ち点を引かれたエヴァートンとフォレストと比べる声も出ています。
+      - 勝ち点剥奪はさかのぼっても科せるので、**タイトルの剥奪**もあり得ると書かれています。違反の期間に取ったタイトルは8つ。
+    sources:
+      - https://www.fourfourtwo.com/team/manchester-city-could-be-stripped-of-premier-league-titles-after-guilty-verdict-on-nearly-all-charges-report
+      - https://www.independent.co.uk/sport/football/man-city-appeal-premier-league-charges-b2882547.html
+      - https://www.manchestereveningnews.co.uk/sport/football/football-news/manchester-city-guilty-115-charges-34673585
+  - id: said
+    heading: その日のうちに
+    tier: 報道
+    telop: ファーディナンド「棚にメダルがもう1つ」
+    narrator: キャスター
+    say:
+      - タイトルの剥奪と聞いてすぐ反応したのが、2011-12年の最終節でシティに優勝をさらわれた、マンチェスター・ユナイテッドのファーディナンドです。
+      - voice: リオ・ファーディナンド
+        text: 棚にプレミアのメダルがもう1つ加わるな
+      - 記者のアダム・クラフトンは、こう指摘しています。
+      - voice: 記者のアダム・クラフトン
+        text: 非協力も告発に入っていることを忘れてはいけない。処分の手加減に影響するはずだ
+    sources:
+      - https://www.manchestereveningnews.co.uk/sport/football/football-news/rio-ferdinand-man-united-city-34673805
+      - https://www.si.com/soccer/soccer-world-reacts-man-city-guilty-financial-misconduct
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「追放で」と「罰金で終わり」と「1件は何だった」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 115件中114件有罪は草。逆に無罪だった1件はなんだったんだよ
+      - voice: ネット民
+        text: 1件無罪勝ち取ってるじゃん！　勝ち点の剥奪1点くらい減らしてもらえるかな？？？
+      - voice: ネット民
+        text: 不正件数の推移、115→130→114
+      - voice: ネット民
+        text: エバートンはたった2000万ポンドの超過で勝ち点6を剥奪されました。もちろん基準はこれだよね？
+      - voice: ネット民
+        text: 追放で。間違っても罰金だけで済ませちゃ駄目。あのクラブは罰金なんて痛くも痒くもないんだし
+      - voice: ネット民
+        text: とんでもない額の罰金を払って終わりだろう。金ならいくらでもある
+      - voice: ネット民
+        text: 最強弁護士団を雇って戦ってたみたいだけど見事に負けたみたいだね。完敗
+      - voice: ネット民
+        text: 自分がサッカーに興味持ったとき、プレミアはBIG4だったんだけど、来年それに回帰しそうや
+      - voice: ネット民
+        text: 正直シティの勝ち点が剥奪とかになったら、それはそれでシーズンがつまらなくなるからやめてほしい
+      - voice: ネット民
+        text: やっとか。降格の可能性高いかもね。バーゲンセール価格で選手が移籍しそうだな
+      - voice: ネット民
+        text: シティへの罰で、プレミアにどれだけ度胸があるか分かる。どうせ効かない罰金と補強禁止みたいなもので終わる気がする
+      - voice: ネット民
+        text: シティがやってきたことには全部注釈が付く。ずっとそうだった
+      - voice: ネット民
+        text: 一番公平な解決は、エヴァートンから30点引くことだ
+      - voice: ネット民
+        text: どう決着しても、2位のクラブにタイトルを渡すのには反対だ。彼らは勝っていない
+      - voice: ネット民
+        text: 存在する1番下のリーグまで落ちてほしい
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/0582f31520efab13af277fdd78eabd1131fdc476/comments
+      - https://news.yahoo.co.jp/articles/3cdf958a8b838f0a580e1072fb62aa63cf5fefb1/comments
+      - https://news.yahoo.co.jp/articles/34293795fc5ed6ef95fc5a885dbb259a93d54718/comments
+      - https://search.yahoo.co.jp/realtime/search?p=マンC+115
+      - https://www.si.com/soccer/soccer-world-reacts-man-city-guilty-financial-misconduct

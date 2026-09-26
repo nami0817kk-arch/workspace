@@ -1,0 +1,92 @@
+# フォーデンの一発退場と、解説陣の割れた見方（2026年9月13日の報道／9月15日に出す）
+#
+# **解説陣の言葉で組む回。**キーン・リチャーズ・ネヴィル・マレスカの4人が
+# それぞれ違うことを言っている。**片方に寄せない**のが芯
+format: quote
+voice_min: 30
+slot: premier_1
+date: "2026年9月15日"
+
+people:
+  - フィル・フォーデン
+
+short_title: "フォーデンの退場をめぐって"
+
+theme:
+  id: foden_red_card
+  league: england
+  kind: other
+  topic: マンチェスター・シティ
+  title: フォーデンの一発退場。キーンが口にしたのは
+  hook: 先に蹴ったのは相手のほうではないか、という声が出ています。
+  question: 妥当な判定だったのか
+
+thumbnail:
+  line1: フォーデンの一発退場
+  line2: 解説陣の見方は ●●●●
+  photo: "assets/photos/20260915_foden/01.jpg"
+  focus: 0.15
+  band_full: true
+  note_red: 先に蹴ったのは？
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 23分、蹴り返して一発退場
+    narrator: キャスター
+    card:
+      type: table
+      title: 23分の出来事
+      columns: ["", ""]
+      rows:
+        - ["先に", "フェルナンデスがフォーデンを倒す"]
+        - ["そのあと", "フォーデンが蹴り返す"]
+        - ["判定", "フォーデンに一発退場。フェルナンデスは無罰"]
+    say:
+      - マンチェスター・ダービーの23分。フェルナンデスに倒されたフォーデンが、蹴り返しました。
+      - 主審が出したのは、フォーデンへの一発退場です。フェルナンデスにはカードが出ませんでした。
+      - 主審の説明は「レッドカード、フィル・フォーデン。ブルーノの体への蹴り出し」。VARは「二次的な動き」と伝えています。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13585509/phil-foden-sent-off-in-manchester-derby-bruno-fernandes-role-criticised-by-roy-keane-and-micah-richards
+
+  - id: said
+    heading: 解説陣が言ったこと
+    main: true
+    tier: 報道
+    telop: 「あれはフォーデンへのレッドではない」
+    narrator: 解説
+    # **ここが山場。**ショートはこの節を切り出す。
+    # 割れているのが芯。**片方に寄せない**
+    say:
+      # **ショートだけの前置き**。本編では前の節で言い終えている
+      - {short_only: true, text: マンチェスター・ダービーの23分、フォーデンが蹴り返して一発退場になりました。先に倒したのはフェルナンデスです。}
+      - この判定について、解説陣の見方が割れました。
+      - {voice: ロイ・キーン, text: あれはフォーデンへのレッドカードだとは思わない。本当にそう思わない}
+      - キーンは、フェルナンデスが明らかにファウルをして、倒れた相手を小突いたと指摘しています。
+      - {voice: ミカ・リチャーズ, text: フェルナンデスが当てているじゃないか}
+      - ゲイリー・ネヴィルは、フェルナンデスにお咎めがなかったことに驚いたと伝えられています。
+      - 一方、シティのマレスカ監督は、フォーデンの退場そのものは妥当だと認めたうえで、こう言いました。
+      - {voice: マレスカ, text: それなら、ブルーノにもレッドカードだ}
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13585509/phil-foden-sent-off-in-manchester-derby-bruno-fernandes-role-criticised-by-roy-keane-and-micah-richards
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「ブルーノも普通に蹴ってる」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: フォーデン退場は妥当だけど、ブルーノも普通に蹴ってるからなんとも言えないですよね}
+      - {voice: ネット民, text: 「見える見えない」とか限度で分け始めたら基準ガバガバな気がするし、行為として蹴ってる以上、そこは同列で見るべきやと思います}
+      - {voice: ネット民, text: ブルーノがフォーデンを蹴ったのが発端になったフォーデンの退場で、ブルーノがカード貰ってなかったやつはどうなんだよ}
+      - {voice: ネット民, text: フォーデン報復で退場してるの間抜けすぎる}
+      - {voice: ネット民, text: ユナイテッド的にはフォーデンの退場が裏目に出た感じかな。引かれてスペース無くなって自分たちの得意な形が出なかった}
+      - {voice: ネット民, text: ハーランド、ゴールも見事だったけど一番感動したのはこれ。蹴りで一発退場したフォーデンにブチギレていたシーン}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%95%E3%82%A9%E3%83%BC%E3%83%87%E3%83%B3%20%E9%80%80%E5%A0%B4&f=live

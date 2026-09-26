@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFont
 
 from . import ffmpeg
 from .config import ProjectConfig, _resolve
@@ -94,9 +94,14 @@ NEWS_LABEL = "海外サッカーニュース"
 # 実際、アーセナル対ヴィラの誤審の回で、関係者の誰にも使える
 # クラブユニフォーム姿の写真が無かった
 CREST_MAIN_HEIGHT = 410      # 1280x720 の中での高さ
+# 2つ並べて間に「対」を置くときの間隔。字は132pxなので左右に余白を取る
+CREST_LINK_GAP = 232
 # **暗すぎると `サムネの黒` の点検が止める**（実測で顔の段の75%が黒だった）。
 # 一覧で沈まない明るさにする
 CREST_MAIN_GROUND = (34, 58, 96, 255)
+# **暗いエンブレムのときに使う明るい地**（2026-09-13）。
+# 紺の地に紺のロゴだと何のクラブか分からなかった
+CREST_MAIN_GROUND_LIGHT = (232, 236, 242, 255)
 
 SHORT_SIZE = (1080, 1920)
 SHORT_MARGIN = 56
@@ -141,6 +146,54 @@ def _fit_short(draw: ImageDraw.ImageDraw, text: str, font_path: str,
     return font, wrap_text(draw, text, font, room)[:max_lines]
 
 
+def _short_crest_stage(names: list[str], font_path: str,
+                       link: str = "対") -> Image.Image | None:
+    """縦型の下地に、エンブレムを大きく置く（2026-09-14）。
+
+    横型の `_crest_stage` は 1280x720 前提で、縦に切ると端が落ちる。
+    縦型は**上下に積む**。あいだに「対」を入れる。
+    """
+    from . import crest as crest_mod
+
+    found = [p for p in (crest_mod.find(n) for n in names[:2]) if p is not None]
+    if not found:
+        return None
+    width, height = SHORT_SIZE
+    bright = _crest_brightness(found)
+    dark_marks = bright < 150
+    ground = CREST_MAIN_GROUND_LIGHT if dark_marks else CREST_MAIN_GROUND
+    canvas = Image.new("RGBA", SHORT_SIZE, tuple(ground))
+
+    marks = []
+    room = int(width * 0.62)
+    for path in found:
+        with Image.open(path) as source:
+            mark = source.convert("RGBA")
+        ratio = min(room / mark.width, (height * 0.26) / mark.height)
+        marks.append(mark.resize((max(1, int(mark.width * ratio)),
+                                  max(1, int(mark.height * ratio))), Image.LANCZOS))
+    gap = int(height * 0.08)
+    total = sum(m.height for m in marks) + gap * (len(marks) - 1)
+    # **画面の真ん中に置く**（2026-09-14 指摘「ロゴが上によってる」）。
+    # 0.30 だと題名に重なり、0.42 でも上に寄って下が空いていた。
+    # 上は題名2行、下は引用1行ぶんを空ける
+    y = int(height * 0.52) - total // 2
+    middles = []
+    for index, mark in enumerate(marks):
+        canvas.alpha_composite(mark, ((width - mark.width) // 2, y))
+        y += mark.height
+        if index < len(marks) - 1:
+            middles.append(y + gap // 2)
+            y += gap
+    if len(marks) == 2 and link and middles:
+        font = ImageFont.truetype(font_path, 120)
+        draw = ImageDraw.Draw(canvas)
+        text_w = draw.textlength(link, font=font)
+        draw.text(((width - text_w) / 2, middles[0] - 66), link, font=font,
+                  fill=(40, 56, 84, 240) if dark_marks else (255, 255, 255, 235))
+    return canvas
+
+
 def _short_thumbnail(
     config: ProjectConfig,
     out_path: Path,
@@ -150,14 +203,41 @@ def _short_thumbnail(
     focus: float | None,
     quote: str,
     photos: list[str],
+    crest_main: list[str] | None = None,
+    crest_link: str = "対",
+    focus_x: float | None = None,
 ) -> Path:
     """1080x1920 のサムネイル。ショート専用。"""
     font_path = str(config.video.font_path())
     accent = _hex(config.video.accent)
     width, height = SHORT_SIZE
 
+    # **エンブレムが主役の回は、まずエンブレム**（2026-09-14 指摘）。
+    # 写真が無いと下地（自前で描いた緑のピッチ）が拾われ、
+    # エンブレムの3本が同じ絵に見えていた。写真があればそちらを優先する
+    # **板を指定した回は、縦版の板を敷く**（2026-09-24 指摘「ショートのサムネが
+    # おかしい」）。エンブレムだけの地は、**白っぽい面に紋章が1つ**で一覧では
+    # 何の動画か分からなかった。板の縦版（`<名前>_v.png`）があればそれを使う
+    from .render import _is_board
+
+    stage = None
+    board = str(background or "")
+    if _is_board(board):
+        name = Path(board.replace("\\", "/"))
+        for tall in (name.with_name(name.stem + "_v.png"),
+                     Path("assets/stats") / (name.stem + "_v.png")):
+            if _resolve(tall.as_posix()).exists():
+                background = tall.as_posix()
+                break
+        else:
+            background = None
+    if background is None and not (photos or []) and (crest_main or []):
+        stage = _short_crest_stage(crest_main, font_path, crest_link)
+    elif not _is_board(board) and not (photos or []) and (crest_main or []):
+        stage = _short_crest_stage(crest_main, font_path, crest_link)
+
     source = None
-    for candidate in [*(photos or []), background]:
+    for candidate in ([] if stage is not None else [*(photos or []), background]):
         if not candidate:
             continue
         path = _resolve(candidate)
@@ -170,8 +250,13 @@ def _short_thumbnail(
             break
     if source is not None:
         with Image.open(source) as image:
+            # **横のどこを残すか**（2026-09-18）。横長の写真を縦の画面に
+            # 敷くと真ん中で切られ、端に写っている人が落ちる
             canvas = _cover(image.convert("RGBA"), width, height,
-                            focus=focus if focus is not None else 0.18)
+                            focus=focus if focus is not None else 0.18,
+                            focus_x=focus_x)
+    elif stage is not None:
+        canvas = stage
     else:
         canvas = Image.new("RGBA", SHORT_SIZE, (14, 20, 32, 255))
     _short_scrim(canvas)
@@ -255,6 +340,11 @@ def _prefix_of(title: str) -> str:
     return ""
 
 
+# 並べる顔の上限。**取り上げた選手を全員並べる回がある**（2026-09-22 ユーザー
+# 「一人の写真ではなくて取り上げた選手を並べて」。日本代表の上位5人）
+PHOTOS_MAX = 5
+
+
 def from_meta(meta: dict, title: str) -> dict:
     """台本の frontmatter からサムネの引数を取り出す。
 
@@ -277,20 +367,42 @@ def from_meta(meta: dict, title: str) -> dict:
         # サムネの下地。**選手の顔を敷けるようにする。**参考3チャンネルは
         # どれも人の顔を全面に出しており、文字だけのサムネは一覧で埋もれる
         # （2026-09-05 実測）。指定が無ければ台本の背景を使う
-        "photo": str(meta.get("thumbnail_photo") or ""),
+        # **サムネだけに使う絵**（2026-09-17）。`thumbnail_photo` は動画の中でも
+        # 使われるので、一覧板や数字の図を入れると**カードと節の名前が板の文字に
+        # 重なる**（代表発表の回で、齋藤と松木がカードの下に隠れていた）。
+        # `thumbnail_board` を書くと、**サムネイルだけ**それを敷く。
+        # 動画のほうは `thumbnail_photo`（人の顔）のまま
+        "photo": str(meta.get("thumbnail_board")
+                     or meta.get("thumbnail_photo") or ""),
         # 写真のどこを残すか（0.0=上端 / 1.0=下端）。顔が中央にある写真で使う
         "focus": meta.get("thumbnail_focus"),
+        "focus_x": meta.get("thumbnail_focus_x"),
         # 帯の上に出す反応のひとこと（2026-09-07）。最高再生の2本はどちらも
         # 「変な声出た」「一番強くて草」のような**書き込みの断片**を小窓で出して
         # いた。反応を集めたチャンネルであることが、一覧の時点で分かる
+        # **一覧板の回は小窓を出さない**（2026-09-17）。板そのものが絵なので、
+        # 書き込みの断片を重ねると板の文字が隠れる（松木の所属と年齢が
+        # 「松木遂に代表デビューか！」の小窓の下に入っていた）。
+        # 手で `thumbnail_reaction` を書いたときだけ、板の回でも出す
         "reaction": str(meta.get("thumbnail_reaction") or ""),
+        # 板そのものが絵なので、台本から拾った小窓を重ねない
+        "no_auto_reaction": bool(meta.get("thumbnail_board")
+                                 and not meta.get("thumbnail_reaction")),
         # 左の余白に積む短い言葉（2026-09-08）。縦長の写真を右に置くと
         # 左がぼかしだけになり「ただのぼかし」に見えた（ユーザー指摘）。
         # **中身を置けば余白が情報になる。**3つまで、1つ10字くらい
         "points": [str(x) for x in (meta.get("thumbnail_points") or [])][:3],
+        # **赤で1行だけ足せる口**（2026-09-14 指示「サムネに、佐藤龍之介の
+        # 未来は？？を赤字で入れてください」）。エンブレムの回は points を
+        # 出さないので、言いたい一言を置く場所が帯しか無かった
+        "note_red": str(meta.get("thumbnail_note_red") or ""),
+        # **帯を下いっぱいに広げる**（2026-09-14 指示「サムネの黄色い枠を
+        # 下いっぱいに広げて／久保のサムネみたいな感じ」）。縦長の写真は
+        # 自動で「右に置いて左はぼかし」になり、帯が左半分で止まっていた
+        "band_full": bool(meta.get("thumbnail_band_full", False)),
         # 顔を並べる（2026-09-08）。2〜3枚あれば全面が写真になり、
         # ぼかしの下地が要らない。参考チャンネルは全面が写真だった
-        "photos": [str(x) for x in (meta.get("thumbnail_photos") or [])][:3],
+        "photos": [str(x) for x in (meta.get("thumbnail_photos") or [])][:PHOTOS_MAX],
         # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。
         # 出てくる人のクラブ姿の写真が無いときの逃げ道。写真より優先する
         "crest_main": [str(x) for x in (meta.get("thumbnail_crest_main") or [])][:3],
@@ -351,7 +463,8 @@ def short_quote(script, limit: int = SHORT_QUOTE_MAX) -> str:
             if skip > 0:
                 skip -= 1
                 continue
-            telop = (getattr(line, "telop", "") or "").strip()
+            # 強調の囲みはサムネに持ち込まない（2026-09-15）
+            telop = re.sub(r"\*\*", "", (getattr(line, "telop", "") or "")).strip()
             if 0 < len(telop) <= limit:
                 return telop
     return ""
@@ -414,8 +527,12 @@ def build_thumbnail(
     lines: tuple[str, str] | None = None,
     tags: list[str] | None = None,
     focus: float | None = None,
+    # **横のどこを残すか**（2026-09-18）。縦のサムネだけで効く
+    focus_x: float | None = None,
     reaction: str = "",
     points: list[str] | None = None,
+    note_red: str = "",
+    band_full: bool = False,
     photos: list[str] | None = None,
     quote: str = "",
     crest_main: list[str] | None = None,
@@ -435,7 +552,8 @@ def build_thumbnail(
         return _short_thumbnail(
             config, out_path, (photos or [None])[0] or background,
             lines or (title, subtitle), tags or [], focus,
-            quote or reaction, photos or [],
+            quote or reaction, photos or [], crest_main or [], crest_link,
+            focus_x=focus_x,
         )
     if chosen == "news":
         return _news_thumbnail(
@@ -446,7 +564,8 @@ def build_thumbnail(
         return _band_thumbnail(
             config, out_path, background,
             lines or (title, subtitle), tags or [], focus, reaction, points or [],
-            photos or [], crest_main or [], crests, crest_link, face_link,
+            note_red, band_full, photos or [], crest_main or [], crests, crest_link,
+            face_link,
         )
 
     font_path = str(config.video.font_path())
@@ -499,6 +618,8 @@ def _band_thumbnail(
     focus: float | None = None,
     reaction: str = "",
     points: list[str] | None = None,
+    note_red: str = "",
+    band_full: bool = False,
     photos: list[str] | None = None,
     crest_main: list[str] | None = None,
     crests: list[str] | None = None,
@@ -516,8 +637,18 @@ def _band_thumbnail(
     時点で顔が残らない。
     """
     font_path = str(config.video.font_path())
+    # **板を下地に指定した回は、板をそのまま使う**（2026-09-24 指示
+    # 「もっと、背景は、データを利用」）。プレミア20クラブ紹介は基礎DATAの板を
+    # 背景にする。エンブレムの地（`_crest_stage`）を先に作ると板が捨てられ、
+    # **右下のエンブレムも板の字に重なる**ので、どちらも出さない
+    from .render import _is_board
+
+    on_board = _is_board(str(background or ""))
+    if on_board:
+        crests = []
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    stage = _crest_stage(crest_main or [], font_path, crest_link)
+    stage = None if on_board else _crest_stage(crest_main or [], font_path, crest_link,
+                                               note_room=bool(note_red))
     tiles = [] if stage is not None else [q for q in (photos or []) if _resolve(q).exists()]
     if stage is not None:
         canvas = stage
@@ -531,18 +662,22 @@ def _band_thumbnail(
             crests = []          # 上に置いたので、右下には出さない
         portrait = False
     else:
-        portrait = _is_portrait(background, ratio=0.95)
+        # **左のぼかしは禁止**（2026-09-20 ユーザー指示「サムネについて、
+        # 左がぼやけるのは禁止」）。縦長の写真は、左に**べた塗りの面**を敷いて
+        # その上に文字を置く。全面に敷く案は試したが、幅を埋めるまで拡大すると
+        # **顎から下が帯に隠れた**（鈴木・前田で実際に起きた）
+        portrait = False if band_full else _is_portrait(background, ratio=1.05)
     if stage is not None:
         pass
     elif portrait:
-        canvas = _blur_bed(background)
+        canvas = _flat_bed(background, crests if crests is not None else tags)
         _paste_side(canvas, background)
     elif len(tiles) < 2:
         # **帯が下の4割を覆うので、顔を上に寄せる。**真ん中で切ると、
         # 額と目だけが残って口から下が帯に隠れた（2026-09-07 に書き出して発見）。
         # 指定があればそちらを優先する
         canvas = _base(config, background, out_path,
-                       BAND_FOCUS if focus is None else focus)
+                       _photo_focus(background) if focus is None else focus)
 
     # 写真をそのまま活かすので、暗幕は下側だけ薄くかける
     scrim, draw = _layer(SIZE)
@@ -554,11 +689,14 @@ def _band_thumbnail(
     layer, draw = _layer(SIZE)
     if portrait and points:
         _draw_points(draw, points, font_path)
+    if note_red:
+        _draw_note_red(draw, note_red, font_path)
 
     top_text = (lines[0] or "").replace(chr(92) + "n", " ")
     bottom_text = lines[1] or ""
-    # 縦長の写真を右に置いた回は、帯を左だけにして顔を隠さない
-    right = int(SIZE[0] * 0.52) if portrait else SIZE[0] - 16
+    # **帯はいつも全幅**（2026-09-20）。左半分だけにすると字が小さくなり、
+    # 左のべた塗りが広く空いて見えた。顔は写真の上のほうにあるので隠れない
+    right = SIZE[0] - 16
     # **2行は同じ大きさで描く。**入る字の大きさは行ごとに違うので、
     # 小さいほうに合わせる。1行目だけで決めていたら、2行目が枠を超えて
     # 「GKコーチ」が「G / Kコーチ」に泣き別れた（2026-09-07 に書き出して発見）
@@ -574,14 +712,18 @@ def _band_thumbnail(
                 rows.append((row, ink))
 
     if rows:
+        # **帯の中に余白を残す**（2026-09-13、Gemini にサムネ6枚を見せて指摘された）。
+        # 「上下左右ぎりぎりまで文字が詰まっていて、蛍光イエローで目を引く効果を
+        # 文字自体が塗りつぶしている」。字の高さに合わせて余白も広げる
+        pad_x, pad_y = 46, int(font.size * 0.26)
         line_height = font.size + 10
-        height = line_height * len(rows) + 20
+        height = line_height * len(rows) + pad_y * 2
         bottom = SIZE[1] - 22
         top = bottom - height
         draw.rectangle([16, top, right, bottom], fill=BAND_YELLOW + (255,))
-        y = top + 8
+        y = top + pad_y
         for row, ink in rows:
-            draw.text((34, y), row, font=font, fill=ink + (255,))
+            draw.text((16 + pad_x, y), row, font=font, fill=ink + (255,))
             y += line_height
         if reaction:
             _draw_chip(draw, reaction, font_path, top - 12)
@@ -595,7 +737,7 @@ def _band_thumbnail(
     # **主役にしたときは、小さいほうを出さない。**同じ絵が2つ並ぶ
     if stage is None:
         floor = SIZE[1] - 28
-        if band_top is not None and not portrait:
+        if band_top is not None:
             floor = band_top - 16
         _draw_tags(layer, tags if crests is None else crests, floor)
 
@@ -605,7 +747,59 @@ def _band_thumbnail(
     return out_path
 
 
-def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.Image | None:
+# エンブレムの下地に敷くスタジアムの写真（2026-09-13、Gemini 指摘）。
+# 「無地のグレーだと、素人がパワポで作った画像に見える」。
+# stadium_night.mp4 の1コマ。出どころは assets/grounds/credits.json
+CREST_GROUND_PHOTO = Path("assets/grounds/stadium.jpg")
+# 写真をどれだけ地の色へ寄せるか。**強く寄せる。**
+# 写真をそのまま出すとエンブレムが読めない。欲しいのは「무地ではない」ことだけ
+CREST_GROUND_BLEND = 0.78
+
+
+def _crest_ground(ground: tuple[int, int, int, int], dark_marks: bool) -> Image.Image:
+    """エンブレムを置く下地。**平らな一色にしない**（2026-09-13）。
+
+    スタジアムの写真を敷いてから、地の色へ強く寄せる。
+    暗いエンブレムなら明るい地へ、明るいエンブレムなら暗い地へ寄せるので、
+    **コントラストは今までどおり保ったまま、質感だけ足せる。**
+    写真が無ければ今までどおり一色（取り込んでいない環境でも壊れない）。
+    """
+    flat = Image.new("RGBA", SIZE, ground)
+    if not CREST_GROUND_PHOTO.exists():
+        return flat
+    try:
+        with Image.open(CREST_GROUND_PHOTO) as source:
+            photo = source.convert("RGBA")
+    except Exception:
+        return flat
+    ratio = max(SIZE[0] / photo.width, SIZE[1] / photo.height)
+    photo = photo.resize((max(1, int(photo.width * ratio)),
+                          max(1, int(photo.height * ratio))), Image.LANCZOS)
+    left = (photo.width - SIZE[0]) // 2
+    top = (photo.height - SIZE[1]) // 2
+    photo = photo.crop((left, top, left + SIZE[0], top + SIZE[1]))
+    if dark_marks:
+        # 明るい地に寄せるときは、写真も先に明るく持ち上げる
+        photo = ImageEnhance.Brightness(photo).enhance(1.25)
+    return Image.blend(photo, flat, CREST_GROUND_BLEND)
+
+
+def _crest_brightness(paths) -> float:
+    """エンブレムの明るさ（0=真っ黒 / 255=真っ白）。透けている所は数えない。"""
+    total, count = 0.0, 0
+    for path in paths:
+        with Image.open(path) as source:
+            mark = source.convert("RGBA").resize((64, 64), Image.LANCZOS)
+        for r, g, b, a in mark.getdata():
+            if a < 40:
+                continue
+            total += 0.299 * r + 0.587 * g + 0.114 * b
+            count += 1
+    return total / count if count else 128.0
+
+
+def _crest_stage(names: list[str], font_path: str, link: str = "対",
+                 note_room: bool = False) -> Image.Image | None:
     """エンブレムを大きく並べた下地。写真の代わりに使う。
 
     **元の画像が小さい**（実測で 112x132 など）。拡大するとどうしても
@@ -617,46 +811,77 @@ def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.I
     found = [(n, p) for n, p in found if p is not None]
     if not found:
         return None
-    canvas = Image.new("RGBA", SIZE, CREST_MAIN_GROUND)
-    # 中央をうっすら明るく。**平らな一色は一覧で沈む**
+    # **地の色はエンブレムの明るさで決める**（2026-09-13 ユーザー
+    # 「白枠ではなく背景色をかえて」）。紺の地に紺のトッテナムを置いて
+    # 沈んでいた。白い丸を敷く案は、丸が並んで見た目がうるさかった
+    bright = _crest_brightness([p for _, p in found[:3]])
+    dark_marks = bright < 150
+    ground = CREST_MAIN_GROUND_LIGHT if dark_marks else CREST_MAIN_GROUND
+    canvas = _crest_ground(ground, dark_marks)
+    # 中央をうっすら濃く（明るい地）／明るく（暗い地）。**平らな一色は一覧で沈む**
     glow, glow_draw = _layer(SIZE)
+    tint = (150, 168, 196, 18) if dark_marks else (96, 132, 186, 16)
     for step in range(14):
         radius = int(SIZE[0] * (0.62 - step * 0.04))
         glow_draw.ellipse(
             [SIZE[0] // 2 - radius, int(SIZE[1] * 0.32) - radius // 2,
              SIZE[0] // 2 + radius, int(SIZE[1] * 0.32) + radius // 2],
-            fill=(96, 132, 186, 16),
+            fill=tint,
         )
     canvas.alpha_composite(glow)
     marks = []
     for _, path in found[:3]:
         with Image.open(path) as source:
             mark = source.convert("RGBA")
-        ratio = CREST_MAIN_HEIGHT / mark.height
-        marks.append(mark.resize((max(1, int(mark.width * ratio)), CREST_MAIN_HEIGHT),
+        # **赤い一言を置く回は、その分だけ小さくして下げる**（2026-09-14）。
+        # そうしないとエンブレムの上端に字がかぶる
+        height = int(CREST_MAIN_HEIGHT * (0.84 if note_room else 1.0))
+        ratio = height / mark.height
+        marks.append(mark.resize((max(1, int(mark.width * ratio)), height),
                                  Image.LANCZOS))
-    gap = 96
+    # **「対」が入るだけ間を空ける**（2026-09-14 指摘「サムネの対がロゴと
+    # 被っている」）。110 だと 132px の字が両側のエンブレムに食い込んでいた。
+    # 字の幅＋左右の余白ぶんを確保する
+    gap = CREST_LINK_GAP if (len(marks) == 2 and link) else 110
     total = sum(m.width for m in marks) + gap * (len(marks) - 1)
+    # 広げたぶん、はみ出すなら全体を縮める。**エンブレムが切れるほうが悪い**
+    room = SIZE[0] - 80
+    if total > room:
+        shrink = (room - gap * (len(marks) - 1)) / max(1, sum(m.width for m in marks))
+        marks = [m.resize((max(1, int(m.width * shrink)), max(1, int(m.height * shrink))),
+                          Image.LANCZOS) for m in marks]
+        total = sum(m.width for m in marks) + gap * (len(marks) - 1)
     x = (SIZE[0] - total) // 2
     # 帯が下を覆うので、少し上に置く
-    top = int(SIZE[1] * 0.30) - CREST_MAIN_HEIGHT // 2
+    centre = 0.36 if note_room else 0.30
+    top = int(SIZE[1] * centre) - max(m.height for m in marks) // 2
     middles = []
-    for mark in marks:
+    for index, mark in enumerate(marks):
         canvas.alpha_composite(mark, (x, top))
-        middles.append(x + mark.width // 2)
-        x += mark.width + gap
+        x += mark.width
+        # **間の中央**を覚えておく。エンブレムの中点どうしの真ん中だと、
+        # 幅の違う2枚のときに字が片方へ寄る
+        if index < len(marks) - 1:
+            middles.append(x + gap // 2)
+            x += gap
     if len(marks) == 2 and link:
         # **間の字は「対」だけではない**（2026-09-10）。アラウホの回は
         # 対戦ではなく**バルサからリヴァプールへのレンタル**の話なのに、
         # 「リヴァプール 対 バルセロナ」に見えていた。取材メモの
         # `thumbnail.crest_link` で変えられる（"対" / "→" / 空文字で消す）
-        font = ImageFont.truetype(font_path, 72)
+        # **親指の大きさだと 72px の「対」は消える**（2026-09-13、Gemini に
+        # サムネ4枚を見せて指摘された）。一覧で見る前提の大きさにする
+        font = ImageFont.truetype(font_path, 132)
         draw = ImageDraw.Draw(canvas)
         text = link
         width = draw.textlength(text, font=font)
-        draw.text(((middles[0] + middles[1] - width) / 2,
-                   top + CREST_MAIN_HEIGHT / 2 - 44),
-                  text, font=font, fill=(255, 255, 255, 235))
+        # middles[0] は**空けた間の中央**（2026-09-14 に意味を変えた）
+        draw.text((middles[0] - width / 2,
+                   top + max(m.height for m in marks) / 2 - 44),
+                  # **地の色に合わせる**（2026-09-13）。明るい地に白の「対」だと
+                  # 消える。エンブレムが暗いときは地が明るいので、字は濃く
+                  text, font=font,
+                  fill=(40, 56, 84, 240) if dark_marks else (255, 255, 255, 235))
     return canvas
 
 
@@ -777,63 +1002,6 @@ def _tile_photos(paths: list[str]) -> Image.Image:
     return canvas
 
 
-def _blur_bed(background: str | None) -> Image.Image:
-    """縦長の写真を右に置くとき、**左に敷く下地**を作る。
-
-    2026-09-08 まで、左は塗りつぶしの濃紺だった。実測すると顔の段の
-    **72%が真っ黒**で、一覧に並べると沈んで見えた（ユーザー指摘）。
-    同じ写真を大きく引き伸ばしてぼかし、暗くして敷く。
-    別の写真を持ってこないので、権利の扱いは変わらない。
-    """
-    from PIL import ImageEnhance, ImageFilter
-
-    base = Image.new("RGBA", SIZE, (14, 20, 32, 255))
-    path = _resolve(background or "")
-    if not path.exists():
-        return base
-    with Image.open(path) as source:
-        photo = source.convert("RGB")
-    # 画面を埋める大きさまで拡大してから、真ん中を切る
-    scale = max(SIZE[0] / photo.width, SIZE[1] / photo.height) * 1.35
-    photo = photo.resize((max(1, int(photo.width * scale)),
-                          max(1, int(photo.height * scale))), Image.LANCZOS)
-    left = max(0, (photo.width - SIZE[0]) // 2)
-    top = max(0, (photo.height - SIZE[1]) // 3)
-    photo = photo.crop((left, top, left + SIZE[0], top + SIZE[1]))
-    photo = photo.filter(ImageFilter.GaussianBlur(28))
-    photo = ImageEnhance.Brightness(photo).enhance(0.60)
-    photo = ImageEnhance.Color(photo).enhance(0.85)
-    base.alpha_composite(photo.convert("RGBA"))
-    return base
-
-
-def _paste_side(canvas: Image.Image, background: str | None) -> None:
-    """縦長の写真を、画面の右側に置く。高さいっぱいに使う。"""
-    path = _resolve(background or "")
-    if not path.exists():
-        return
-    with Image.open(path) as source:
-        photo = source.convert("RGBA")
-    # **枠を埋めるまで拡大する。**高さだけ合わせていたので、細い縦写真だと
-    # 幅が足りず、左半分がぼかしのまま残った（2026-09-08 ユーザー指摘）。
-    # 顔は上にあるので、縦は上寄りに切る
-    width = int(SIZE[0] * 0.58)
-    scale = max(width / photo.width, SIZE[1] / photo.height)
-    photo = photo.resize((max(1, int(photo.width * scale)) + 1,
-                          max(1, int(photo.height * scale)) + 1), Image.LANCZOS)
-    left = max(0, (photo.width - width) // 2)
-    top = max(0, min(photo.height - SIZE[1], int(photo.height * 0.04)))
-    photo = photo.crop((left, top, left + width, top + SIZE[1]))
-    canvas.alpha_composite(photo, (SIZE[0] - width, 0))
-
-    # 写真の左端をぼかして地になじませる（切り貼りに見せない）
-    fade, draw = _layer(SIZE)
-    edge = 90
-    for step in range(edge):
-        alpha = int(235 * (1 - step / edge))
-        draw.line([(SIZE[0] - width + step, 0), (SIZE[0] - width + step, SIZE[1])],
-                  fill=(10, 14, 22, alpha))
-    canvas.alpha_composite(fade)
 
 
 def _news_thumbnail(
@@ -853,15 +1021,14 @@ def _news_thumbnail(
     """
     font_path = str(config.video.font_path())
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    portrait = _is_portrait(background, ratio=0.95)
+    # **左のぼかしは禁止**（2026-09-20 ユーザー指示）。縦長は左をべた塗りにする
+    portrait = _is_portrait(background, ratio=1.05)
     if portrait:
-        # **縦長の写真は全面に敷けない。**16:9 に切ると顔が残らず、
-        # 下の見出しとぶつかる（2026-09-05 実測。切る位置を変えても解けなかった）。
-        # 右側に置いて、文字は左に寄せる。参考チャンネルもこの並び
-        canvas = _base(config, None, out_path)
+        canvas = _flat_bed(background, tags)
         _paste_side(canvas, background)
     else:
-        canvas = _base(config, background, out_path, focus)
+        canvas = _base(config, background, out_path,
+                       _photo_focus(background) if focus is None else focus)
     _news_scrim(canvas, narrow=portrait)
 
     layer, draw = _layer(SIZE)
@@ -1016,7 +1183,10 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
     2行目が数文字だけになる（泣き別れ）ときはさらに字を詰める。
     """
     # 縦長の写真を右に置いた回は、帯が画面幅より狭い（顔を隠さないため）
-    width = (room - 40) if room else SIZE[0] - 80
+    # **帯の左右に余白を残す**（2026-09-13、Gemini にサムネ6枚を見せて指摘された）。
+    # 「帯の端まで文字が詰まっていて、蛍光イエローで目を引く効果を
+    # 文字自体が塗りつぶしている」。40/80 では1文字ぶんも空いていなかった
+    width = (room - 96) if room else SIZE[0] - 180
     fallback = None
     for size in BAND_SIZES:
         font = ImageFont.truetype(font_path, size)
@@ -1029,11 +1199,13 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
 
         if len(rows) == 1:
             return font, rows
-        if len(rows) == 2:
+        if len(rows) == 2 and len(rows[-1]) > 3:
+            # **泣き別れしていない2行だけを控えにする**（2026-09-12）。
+            # ここで行数だけ見て控えていたので、「入」1文字が2行目に残った割り方が
+            # いちばん大きい字として返っていた（ギュレルの回で書き出して発見）。
             if fallback is None:
                 fallback = (font, rows)
-            if len(rows[-1]) > 3:
-                return font, rows
+            return font, rows
     if fallback:
         return fallback
     font = ImageFont.truetype(font_path, BAND_SIZES[-1])
@@ -1099,6 +1271,25 @@ def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -
         y += step
 
 
+def _draw_note_red(draw: ImageDraw.ImageDraw, text: str, font_path: str) -> None:
+    """赤い一言を上に置く（2026-09-14）。
+
+    エンブレムの回は `points` を描かないので、帯のほかに言葉を置く場所が
+    無かった。**帯の外に出す**ので、一覧では帯と2段で読める。
+    """
+    size = 72
+    font = ImageFont.truetype(font_path, size)
+    while size > 40 and draw.textlength(text, font=font) > SIZE[0] - 120:
+        size -= 4
+        font = ImageFont.truetype(font_path, size)
+    width = draw.textlength(text, font=font)
+    x = (SIZE[0] - width) / 2
+    y = 26
+    # 赤は背景に負けるので、白で太く縁取る
+    draw.text((x, y), text, font=font, fill=(214, 16, 38, 255),
+              stroke_width=10, stroke_fill=(255, 255, 255, 245))
+
+
 def _crest_px() -> int:
     from . import crest as crest_mod
     return crest_mod.CREST_PX
@@ -1142,6 +1333,108 @@ def _paste_crest(layer: Image.Image, tag: str, right: int, bottom: int) -> int:
 
 
 # ------------------------------------------------------------------ パーツ
+
+
+def _flat_bed(background: str | None, tags: list[str] | None = None) -> Image.Image:
+    """縦長の写真の左に敷く、**べた塗りの面**（2026-09-20）。
+
+    ぼかしは禁止（ユーザー指示）。代わりに、**その写真から拾った色**で
+    上から下へのグラデーションを作る。別の絵を持ってこないので権利は変わらず、
+    ぼけた絵も出ない。2026-09-08 に却下された濃紺のベタとは違い、
+    写真と地続きの色になる。
+    """
+    base = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+    # **まずクラブの色**。エンブレムがあれば、そこから拾うほうが写真の芝より映える
+    source_image = None
+    for tag in tags or []:
+        crest = _crest_image(tag, 64)
+        if crest is not None:
+            source_image = crest.convert("RGB")
+            break
+    if source_image is None:
+        path = _resolve(background or "")
+        if not path.exists():
+            return base
+        with Image.open(path) as opened:
+            source_image = opened.convert("RGB")
+    top = _vivid_color(source_image)
+    bottom = _with_lightness(top, 0.13)
+    draw = ImageDraw.Draw(base)
+    for y in range(SIZE[1]):
+        t = y / SIZE[1]
+        draw.line([(0, y), (SIZE[0], y)],
+                  fill=tuple(round(a + (b - a) * t) for a, b in zip(top, bottom)) + (255,))
+    return base
+
+
+
+def _vivid_color(image: Image.Image) -> tuple[int, int, int]:
+    """その絵の中で、いちばん「色らしい」色を1つ選ぶ（2026-09-24）。
+
+    **平均を取ってはいけない。**平均は必ず灰色に寄る。実際、9/24 のサムネは
+    べた塗りの面が全部くすんだ灰色になり、ユーザーに「ぐれーはダメだよ」と言われた。
+    色の数を8つに減らしてから、**鮮やかさ×面積**でいちばん強いものを取る。
+    黒に近い色と白に近い色は、地の色にならないので外す。
+    """
+    import colorsys
+
+    small = image.convert("RGB").resize((48, 48), Image.LANCZOS)
+    counts: dict[tuple[int, int, int], int] = {}
+    for color in small.quantize(colors=8, method=Image.MEDIANCUT).convert("RGB").getdata():
+        counts[color] = counts.get(color, 0) + 1
+
+    def strength(color: tuple[int, int, int], n: int) -> float:
+        _, light, sat = colorsys.rgb_to_hls(*[v / 255 for v in color])
+        if light < 0.12 or light > 0.92:
+            return 0.0
+        return (sat ** 1.5) * n
+
+    best = max(counts, key=lambda c: strength(c, counts[c]))
+    if strength(best, counts[best]) <= 0:
+        return (18, 26, 42)          # 色らしい色が無い絵。濃紺に逃がす
+    return _with_lightness(best, 0.27)
+
+
+def _with_lightness(color: tuple[int, int, int], light: float) -> tuple[int, int, int]:
+    """色みは残したまま、明るさだけ決める。文字が乗るので暗く、でも灰色にしない。"""
+    import colorsys
+
+    hue, _, sat = colorsys.rgb_to_hls(*[v / 255 for v in color])
+    sat = max(sat, 0.45)
+    return tuple(int(round(v * 255)) for v in colorsys.hls_to_rgb(hue, light, sat))
+
+
+def _paste_side(canvas: Image.Image, background: str | None) -> None:
+    """縦長の写真を、画面の右側に置く。高さいっぱいに使う。
+
+    **左端はぼかさない**（2026-09-20 ユーザー指示）。境目は、べた塗りの面と
+    写真がそのまま隣り合う。
+    """
+    path = _resolve(background or "")
+    if not path.exists():
+        return
+    with Image.open(path) as source:
+        photo = source.convert("RGBA")
+    width = int(SIZE[0] * 0.56)
+    scale = max(width / photo.width, SIZE[1] / photo.height)
+    photo = photo.resize((max(1, int(photo.width * scale)) + 1,
+                          max(1, int(photo.height * scale)) + 1), Image.LANCZOS)
+    left = max(0, (photo.width - width) // 2)
+    top = max(0, min(photo.height - SIZE[1], int(photo.height * 0.04)))
+    canvas.alpha_composite(photo.crop((left, top, left + width, top + SIZE[1])),
+                           (SIZE[0] - width, 0))
+
+
+def _photo_focus(background: str | None) -> float:
+    """切る高さの中心。**縦長の写真は上寄りで切る**（2026-09-20）。
+
+    左のぼかしをやめて全面に敷いたら、既定の 0.38 では**頭の上が切れた**
+    （鈴木・前田・ラフィーニャで実際に起きた）。顔は上のほうにあるので、
+    縦長のときだけ上端寄りにする。
+    """
+    if _is_portrait(background, ratio=1.05):
+        return 0.10
+    return BAND_FOCUS
 
 
 def _base(config: ProjectConfig, background: str | None, out_path: Path,

@@ -1,0 +1,153 @@
+date: 2026年9月24日
+slot: world_3
+format: quote
+voice_min: 0.7
+people: [クリスティアーノ・ロナウド, ジョルジェ・ジェズス]
+theme:
+  id: ronaldo_retirement_thought
+  league: spain
+  league_name: ポルトガル代表
+  kind: other
+  topic: ポルトガル代表
+  title: 'クリスティアーノ・ロナウド、会見で自分から話し始めたこと'
+  question: 何を話したのか
+short_title: ロナウド「引退を考えた」
+thumbnail:
+  photo: assets/images/20260924_ronaldo/01.jpg
+  crest_main: [ポルトガル]
+  line1: ロナウドが自分から切り出した
+  line2: 「あのあと、私は●●を考えた」
+sections:
+  - id: what
+    heading: 自分から切り出した
+    tier: 報道
+    telop: ウェールズ戦の前日、会見で語った
+    narrator: キャスター
+    say:
+      - ウェールズ戦の前日の会見。クリスティアーノ・ロナウドは、こう切り出しました。
+      - voice: ロナウド
+        text: ワールドカップのあと、代表からの引退を考えた
+      - voice: ロナウド
+        text: でも会長と、監督と話した。そして私はまだここにいる
+      - voice: ロナウド
+        text: 私は戦力だ。まだ力になれる
+    sources:
+      - https://www.infobae.com/deportes/2026/09/23/las-confesiones-de-cristiano-ronaldo-a-los-41-anos-hasta-cuando-jugara-la-lucha-por-los-1000-goles-y-la-nueva-era-de-portugal/
+  - id: said
+    main: true
+    heading: 残っている理由
+    tier: 報道
+    telop: 「両方だ。1000ゴールと、代表」
+    narrator: キャスター
+    card:
+      type: table
+      title: 本人が挙げた2つ
+      columns: ['', '']
+      rows:
+        - [いまの通算, 979ゴール]
+        - [目標, 1000ゴール]
+        - [残り, 21]
+        - [もう1つ, ネーションズリーグ]
+    say:
+      - text: 'クリスティアーノ・ロナウドが、代表からの引退を考えたと明かし、それでも残っている理由を自分から話しました。'
+        short_only: true
+      - いま何を目指しているのかを聞かれて、こう答えました。
+      - voice: ロナウド
+        text: 両方だ。1000ゴールと、代表。このネーションズリーグを勝とうとすること
+      - 通算は**979ゴール**。1000まで、**あと21**です。
+      - voice: ロナウド
+        text: 到達したいし、到達する。でも執念かと言われれば、違う
+      - voice: ロナウド
+        text: 執念でやることはない。執念になった瞬間、物事は思うように運ばなくなるから
+      - いつまで続けるのか、という問いにも答えました。
+      - voice: ロナウド
+        text: 長い先のことは考えない。何が起きても、いまこの瞬間を考えるようになった
+      - voice: ロナウド
+        text: もしかしたら。分からない。今日言うことが、明日は嘘になることもある
+      - voice: ロナウド
+        text: 体が許して、頭も許すなら
+    sources:
+      - https://www.infobae.com/deportes/2026/09/23/las-confesiones-de-cristiano-ronaldo-a-los-41-anos-hasta-cuando-jugara-la-lucha-por-los-1000-goles-y-la-nueva-era-de-portugal/
+      - https://www.infobae.com/espana/agencias/2026/09/23/cristiano-y-los-1000-goles-quiero-llegar-y-voy-a-llegar/
+  - id: press
+    heading: 叩かれてきたこと
+    tier: 報道
+    telop: 「その見込みはない。散弾銃でもなければ」
+    narrator: キャスター
+    say:
+      - 書かれ方についても、黙っていませんでした。
+      - voice: ロナウド
+        text: 一部の媒体は私を攻撃して、殺そうとしている
+      - voice: ロナウド
+        text: でも、その見込みはない。散弾銃でもなければ
+      - voice: ロナウド
+        text: 半ダースの人間に好かれていないとしても、それは私には響かない
+      - voice: ロナウド
+        text: 記憶に残るのは、私を好きでいてくれる人たちのほうだ
+      - voice: ロナウド
+        text: ポルトガルがもう私を必要としないなら、今日にでも離れられる。それで何の問題もない
+    sources:
+      - https://www.semana.com/deportes/articulo/cristiano-ronaldo-tuvo-tensionante-rueda-de-prensa-en-portugal-estan-tratando-de-matarme/202604/
+      - https://www.emol.com/noticias/Deportes/2026/09/23/1212226/cristiano-retiro-criticos.html
+  - id: next
+    heading: 今夜からの15日
+    tier: 報道
+    telop: 「15日で4試合。厳しい」
+    narrator: 解説
+    say:
+      - 新しい監督についても、自分から触れています。
+      - voice: ロナウド
+        text: 新しい時代だ。ジョルジェ・ジェズス監督とともに。素晴らしい仕事をしてくれると確信している
+      - voice: ロナウド
+        text: ジョルジェ・ジェズスは完璧な選択だった
+      - voice: ロナウド
+        text: サッカーはより攻撃的になるはずだ。少なくとも、そうしようとする
+      - そのジェズスは、この試合でロナウドを先発させると明言しました。
+      - voice: ジェズス
+        text: 彼は我々の象徴だ
+      - voice: ロナウド
+        text: 15日で4試合。厳しい。全員が必要になる。良い入りをすることだ
+      - voice: ロナウド
+        text: この4試合すべてで90分出ることはない。それは確かだ
+    sources:
+      - https://www.infobae.com/deportes/2026/09/23/las-confesiones-de-cristiano-ronaldo-a-los-41-anos-hasta-cuando-jugara-la-lucha-por-los-1000-goles-y-la-nueva-era-de-portugal/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 外すべきだという声と、時代の話が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 分かりきった事だが、自ら退いてもらわない限りロナウドを外す手はないという事
+      - voice: ネット民
+        text: 年齢や所属チームがどこだろうと、代表は必要なら呼ばれるし、必要でないなら呼ばれない
+      - voice: ネット民
+        text: シンプルにそれだけでは
+      - voice: ネット民
+        text: 明日の試合も憂鬱だ。もう何年もポルトガル代表に迷惑をかけている
+      - voice: ネット民
+        text: 全く動けないわけだから、早く次の世代に譲ってほしい
+      - voice: ネット民
+        text: ぶっちゃけゴールよりも、単独でボールキープができないせいでカウンターが打てないのがキツい
+      - voice: ネット民
+        text: 裸の王様になってる可能性はあるからな
+      - voice: ネット民
+        text: 日本代表がカズを外す感じか
+      - voice: ネット民
+        text: 別に良いんじゃない。誰に強制されてるわけでもないし、話し合って続行を決めて選ばれたなら文句言われる筋合いもないでしょう
+      - voice: ネット民
+        text: それよりも圧倒的な結果を残してるFWがいないことの方が問題だと思う
+      - voice: ネット民
+        text: クリロナに、俺の出る幕はないかな、と思わせるぐらいの存在感ある選手が出てきて欲しいね
+      - voice: ネット民
+        text: アラブ帰りの魔法使いたちの先発を発表したぞ
+      - voice: ネット民
+        text: そうだな、残りの10人の背中に乗っかって続けてくれ
+      - voice: ネット民
+        text: あれはメッシとロナウドの時代だった。数年後には、そう書かれるんだろうな
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/34fd4dbdc99971bec3407de224ca821715d3325c/comments
+      - https://news.yahoo.co.jp/articles/36845702581844f2472119a1557f32abf5cbd0e7/comments
+      - https://forumscp.com/t/selec%C3%A7%C3%A3o-nacional-aa-parte-4/83578/690
+      - https://dynamo.kiev.ua/news/738359-krishtianu-ronaldu-vyi-vidite-menya-sejchas-zdes-eto-oznachaet-chto-ya-prodolzhu-igrat

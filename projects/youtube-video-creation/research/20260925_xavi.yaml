@@ -1,0 +1,125 @@
+date: 2026年9月25日
+slot: other_2
+format: quote
+voice_min: 0.55
+people: [シャビ・エルナンデス, コディ・ガクポ, フィルジル・ファン・ダイク, ルベン・ファン・ボメル]
+theme:
+  id: xavi_debut
+  league: netherlands
+  league_name: オランダ代表
+  kind: match
+  topic: オランダ代表
+  title: 'シャビのオランダ初陣、同点弾のガクポが「非スポーツ的」と責めた場面'
+  question: ガクポは何を言ったのか
+short_title: ガクポ「あれは非スポーツ的だ」
+thumbnail:
+  photo: assets/images/20260925_xavi_vi/01.webp
+  crests: [オランダ]
+  line1: シャビの初陣で同点弾
+  line2: ガクポがドイツに言った●●
+sections:
+  - id: what
+    heading: 90＋2分のボレー
+    tier: 報道
+    telop: デビュー戦のファン・ボメルがアウトサイドで送り、ガクポが合わせた
+    narrator: キャスター
+    card:
+      type: table
+      title: オランダ 1-1 ドイツ（9月24日・アムステルダム）
+      columns: ['', '']
+      rows:
+        - [32分, ヌメチャ（ドイツ）]
+        - [90＋2分, ガクポ（オランダ）]
+        - [取り消し, 13分ファン・ダイク／62分メーアディンク]
+    say:
+      - シャビ監督のオランダ代表初陣は、ドイツと1対1でした。
+      - 32分に先制され、追いついたのは90分を過ぎてから。デビュー戦のルベン・ファン・ボメルがニャブリからボールを奪って走り、右足アウトサイドでファーへ。ガクポがジャンピングボレーで決めました。
+    sources:
+      - https://nos.nl/liveblog/2632281-oranje-speelt-in-extremis-1-1-gelijk-tegen-duitsland-goal-gakpo-op-aangeven-van-bommel
+      - https://www.voetbalprimeur.nl/nieuws/2139519/oranje-speelt-gelijk-tegen-duitsland.html
+  - id: xavi
+    heading: 初陣のシャビ
+    tier: 報道
+    telop: 「正直に言って、ドイツより良かった」
+    narrator: キャスター
+    say:
+      - シャビは試合後、はっきり言い切りました。
+      - voice: オランダのシャビ監督
+        text: 満足している、とても良いプレーだったから。正直に言って、ドイツより良かったと思う
+      - voice: オランダのシャビ監督
+        text: 前半は少し緊張していたかもしれないが、後半のやり方が正しい。これが道だ。これが基準でなければならない
+      - voice: オランダのシャビ監督
+        text: ルベン・ファン・ボメルが違いを作った。これが我々に必要なものだ
+    sources:
+      - https://www.infobae.com/espana/agencias/2026/09/24/xavi-satisfecho-en-su-debut-como-seleccionador-de-unos-paises-bajos-con-ambicion/
+      - https://www.vi.nl/nieuws/xavi-is-heel-blij-met-tweede-helft-en-gaat-vervanger-voor-brobbey-oproepen
+  - id: gakpo
+    main: true
+    heading: ガクポが怒った場面
+    tier: 報道
+    telop: 「僕らからすれば、あれは単純に非スポーツ的だ」
+    narrator: キャスター
+    say:
+      - text: 'シャビのオランダ初陣で同点弾を決めたガクポが、ドイツの先制点についてこう言いました。'
+        short_only: true
+      - ドイツの先制点の直前、ブロビーが接触なしでハムストリングを痛めて座り込んでいました。ドイツは止めずに攻め、ヌメチャが押し込んだ。ガクポは、そこを責めました。
+      - voice: ガクポ
+        text: あいつらのゴールから始まった。僕らからすれば、あれは単純に非スポーツ的だ
+      - voice: ガクポ
+        text: ルールはない。でも、誰かが負傷して倒れていてプレーが続いているなら、止めるのが普通だと思う。彼らはそうしないと決めた
+      - text: 'ファン・ダイクも。'
+        image: assets/images/20260925_pair_vandijk_xavi/01.jpg
+      - voice: ファン・ダイク
+        text: 最初は戻したのに、結局続けた。ボールは出すべきだと思うが、そうならなかった。不運だった
+      - text: 'ドイツ側は、逆のことを言っています。'
+        image: assets/images/20260925_pair_kimmich_xavi/01.jpg
+      - voice: ヨシュア・キミッヒ
+        text: 毎年審判講習で、ああいう場面は続けろと教わっている。ボールを外に蹴り出すルールなんて、単純に存在しない
+      - voice: ユルゲン・クロップ
+        image: assets/images/20260925_pair_klopp_xavi/01.jpg
+        text: ルールもそうなっている。続行される。選手はボールを外に出すなと指示されている。あの状況を見事に使った
+    sources:
+      - https://www.fcupdate.nl/voetbalnieuws/2026/09/gakpo-hekelt-onsportieve-actie-duitsland-dat-scoorde-terwijl-brobbey-geblesseerd-was
+      - https://www.vi.nl/nieuws/van-dijk-gematigd-tevreden-na-debuut-xavi-bij-oranje-er-zit-nog-veel-meer-in
+      - https://www.sportschau.de/fussball/nationalmannschaft/ball-ins-aus-spielen-die-falsche-erwartung-ans-fairplay,fairplay-118.html
+      - https://www.t-online.de/sport/fussball/nationalmannschaft-deutschland/id_101451626/juergen-klopp-das-sagt-der-bundestrainer-zu-umstrittenem-dfb-tor.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「フライングダッチマン」と「止めなくて正解」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ガクポのボレーがスーパーすぎる。まさにフライングダッチマン
+        image: assets/images/20260925_xavi_vi/01.webp
+      - voice: ネット民
+        text: ファンボメル息子、短い出場時間ながらいいシュートと見事な同点アシスト
+      - voice: ネット民
+        text: クーマンの時よりはオランダっぽいチームにはなってるなw
+      - voice: ネット民
+        text: 名将シャビだな
+      - voice: ネット民
+        text: シャビ、ありがとう、これは断然良く見える
+      - voice: ネット民
+        text: この戦い方を見られて何という安堵。ハイプレスで強度が高い。W杯の全チームがそうだった、クーマンのオランダ以外は
+      - voice: ネット民
+        text: ファン・ボメルは15分で主役！　メーアディンクとフェールマンは堂々の8点！
+      - voice: ネット民
+        text: 父親とはまるで違う、良い意味で。PSVは本当に金を握っている
+      - voice: ネット民
+        text: 何と言おうと、ファン・ボメルのパスは世界級。ガクポの仕上げも見事
+      - voice: ネット民
+        text: 負傷者がいるからボールを出すのはフェアプレーじゃなくて温情。プレーを続ける判断をしているのは選手じゃなく審判
+      - voice: ネット民
+        text: 頭を打ったや何か急病じゃない限り、そんなすぐ止める必要はないと思う。特に今回のケースは止めなくて正解
+      - voice: ネット民
+        text: 問題あるのは主審でしょ。ドイツがボールを出せばフェアプレーと賞賛されて当然だが、それをしなかったからと言って批判されるのは理解出来ない
+      - voice: ネット民
+        text: クロップとチャビ初陣痛み分けでまぁ良かったんじゃないですかね
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/5332d7dc0f6a2af9b9649a8cd96a9a4f88419bd3/comments
+      - https://news.yahoo.co.jp/articles/f93695990e72ef0bec62029a46644f34ea294739/comments
+      - https://news.yahoo.co.jp/articles/678568d2b9795e5ebf2583d8801cc812743ec498/comments
+      - https://www.voetbalprimeur.nl/nieuws/2139523/oranje-fans-prijzen-van-bommel-na-invalbeurt-tegen-duitsland.html
+      - https://fr-fans.nl/nieuws/79180/live-nederland-duitsland-1-1-gakpo-scoort-in-de-blessuretijd

@@ -22,6 +22,7 @@ from .config import _resolve
 DEFAULT_PATH = "config/clubs.yaml"
 # 英字の別名は語の切れ目で照合する（"AFC" が "AFCボーンマス" に当たらないように）
 WORD_EDGE = re.compile(r"[A-Za-z0-9]")
+KATAKANA = re.compile(r"[ァ-ヶー・]+")
 
 
 @dataclass
@@ -92,14 +93,36 @@ def find(text: str, clubs: list[Club] | None = None) -> list[Club]:
 
 
 def _search(text: str, name: str) -> int:
-    """名前の位置。英字の別名は語の切れ目でのみ当てる。"""
+    """名前の位置。英字の別名は語の切れ目でのみ当てる。
+
+    **カタカナの別名は、すぐ後ろにカタカナが続くなら当てない**（2026-09-20）。
+    「ポルトガル代表」の回に **#ポルト**（クラブ）が付いた。
+    「ポルト」＋「ガ」で、別の語の途中を拾っていた。
+    """
     lower, needle = text.lower(), name.lower()
     at = lower.find(needle)
     while at >= 0:
         if not _ascii(name) or _edges_clear(lower, at, len(needle)):
-            return at
+            if not _katakana_runs_on(text, at, len(name)):
+                return at
         at = lower.find(needle, at + 1)
     return -1
+
+
+def _katakana_runs_on(text: str, at: int, length: int) -> bool:
+    """カタカナの名前が、別の語の途中を拾っていないか。
+
+    **前と後ろの両方を見る**（2026-09-24）。2026-09-20 に後ろだけ見るようにしたが、
+    「ダニ・**カルバハル**」の回に **#ハル・シティ** が付いた。「バ」＋「ハル」で、
+    **名前の途中から**当たっていて、後ろは読点なので素通りしていた。
+    「ポルトガル代表」に #ポルト が付いたのと同じ壊れ方で、見る向きが逆だった。
+    """
+    if not KATAKANA.fullmatch(text[at:at + length]):
+        return False
+    before = text[at - 1:at] if at > 0 else ""
+    after = text[at + length:at + length + 1]
+    return bool((after and KATAKANA.match(after))
+                or (before and KATAKANA.match(before)))
 
 
 def _ascii(name: str) -> bool:

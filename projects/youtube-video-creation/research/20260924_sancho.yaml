@@ -1,0 +1,149 @@
+date: 2026年9月24日
+slot: premier_2
+format: news
+voice_min: 0.3
+people: [ジェイドン・サンチョ]
+theme:
+  id: sancho_free
+  league: england
+  league_name: プレミアリーグ
+  kind: transfer
+  topic: マンチェスター・ユナイテッド
+  title: 'ジェイドン・サンチョが練習していた、思いがけない場所'
+  question: なぜ、どこも決まらないのか
+short_title: サンチョ、10部のグラウンドで
+thumbnail:
+  photo: assets/images/20260924_sancho2/01.jpg
+  crests: [マンチェスターユナイテッド]
+  line1: 8500万ユーロのサンチョ
+  line2: いま練習しているのは●●部
+  points:
+    - 契約満了から3か月
+    - 正式オファー ゼロ
+sections:
+  - id: where
+    heading: 10部のグラウンド
+    tier: 報道
+    telop: 練習していたのはイングランド10部のクラブ
+    narrator: キャスター
+    say:
+      - かつて、ヨーロッパでいちばん期待されていた若手のひとりでした。
+      - "**8500万ユーロ**でマンチェスター・ユナイテッドへ移った、ジェイドン・サンチョ。"
+      - 6月に契約が切れてから3か月、いまも所属クラブがありません。
+    sources:
+      - https://www.goal.com/en-us/lists/jadon-sancho-10th-tier-man-utd-flixton-fc/bltfc8846a8038cc866
+  - id: ground
+    heading: 10部のグラウンド
+    tier: 報道
+    telop: 練習していたのはイングランド10部のクラブ
+    narrator: キャスター
+    card:
+      type: table
+      title: 練習していたクラブ
+      columns: ['', '']
+      rows:
+        - [リーグ, イングランド10部]
+        - [収容, "2,000人"]
+        - [マンUの練習場から, 5キロ]
+    say:
+      - その本人が8月に練習していたのは、**イングランド10部**のクラブのグラウンドです。
+      - クラブの名前は**フリクストン**。収容は**2,000人**です。
+      - 場所は、ユナイテッドの練習場から**5キロ**ほど。なぜそこだったのかを、本人は話していません。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49519565/jadon-sancho-trains-10th-tier-flixton-fc-not-involved-transfer-discussions
+  - id: owner
+    heading: クラブのオーナーの説明
+    tier: 報道
+    telop: 「テストを受けていたわけでも、移籍の話でもない」
+    narrator: キャスター
+    say:
+      - 加入の話ではありません。クラブのオーナーの説明です。
+      - voice: ガルシア
+        text: ジェイドンはクラブのテストを受けていたわけでも、移籍の話に関わっていたわけでもありません
+      - voice: ガルシア
+        text: 彼はただ、キャリアの次の章に備えてコンディションを保つために、うちの施設を個人練習に使っただけです
+      - voice: ガルシア
+        text: 彼はプロフェッショナルで、謙虚で、自分の時間を惜しみなく使ってくれました
+      - オーナーは、こうも言い添えました。
+      - voice: ガルシア
+        text: 我々がいま戦っているレベルよりはるか上のところで、彼の成功を願っています
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49519565/jadon-sancho-trains-10th-tier-flixton-fc-not-involved-transfer-discussions
+      - https://www.goal.com/en-us/lists/jadon-sancho-10th-tier-man-utd-flixton-fc/bltfc8846a8038cc866
+  - id: why
+    main: true
+    heading: 3か月、誰も獲らない
+    tier: 報道
+    telop: 古巣にも断られ、正式なオファーは1件も届いていない
+    narrator: キャスター
+    say:
+      - text: '8500万ユーロで来たジェイドン・サンチョが、8月にはイングランド10部のグラウンドで1人で練習していました。'
+        short_only: true
+      - text: '契約満了から3か月。いまも所属クラブがありません。'
+        short_only: true
+      - 育てた**ドルトムント**に戻る、という線がありました。若い彼を世に出したクラブです。
+      - その**ドルトムントが、9月9日に復帰を却下**します。
+      - ゲッツェやサヒンのような「帰ってくる移籍」の時代を終わらせる、という方針でした。
+      - 関心はあります。サウジ、アラブ首長国連邦、トルコ、ブラジル、ドイツ。ただ、給与の要求が重い。
+      - そして**9月11日**。**正式なオファーは1件も届いていない**と伝えられました。**26歳**です。
+      - 元マンチェスター・ユナイテッドのスカウト、ミック・ブラウンはこう話しています。
+      - voice: ミック・ブラウン
+        text: サンチョは市場に残っているフリー選手の中でも、最も引く手あまたの一人ではあるでしょう
+      - voice: ミック・ブラウン
+        text: でも、すぐに何かが決まるとは思いません
+      - 9月21日には、元アストン・ヴィラのホートンが、こう言いました。
+      - voice: ホートン
+        text: 『仕事に集中していないとこうなる』と言うのは、誰にとっても簡単なことです
+      - voice: ホートン
+        text: 愛はどこにいったのか、意欲はどこにいったのか、サッカーへの情熱はどこにいったのか
+    sources:
+      - https://sports.yahoo.com/articles/dortmund-reportedly-rule-sancho-return-161200354.html
+      - https://uk.sports.yahoo.com/news/sources-jadon-sancho-transfer-man-150000693.html
+      - https://sports.yahoo.com/articles/where-love-free-agent-jadon-112533365.html
+      - https://www.goal.com/en-in/news/benzema-mahrez-and-a-real-madrid-duo-big-stars-searching-for-clubs-after-the-transfer-window-closes/blt2d288bef8dc40712
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 金の話と、もったいないという声が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: うちに8500万で来た男が、たった26歳でこれか。とんでもない無駄だ
+      - voice: ネット民
+        text: ほとんどのクラブが払う気のある額より多くを欲しがっているんだろう
+      - voice: ネット民
+        text: 去年はチェルシーで長期契約のチャンスがあった、ローマからも同じ話があった
+      - voice: ネット民
+        text: それが今は、安い給料でプレーするくらいなら家で座っている方がいいと
+      - voice: ネット民
+        text: 彼が粘っている金銭条件の問題かもしれない。まだ26歳なんだから
+      - voice: ネット民
+        text: 下位のラ・リーガのチームが合うと思う。彼が大きな存在になって、組み立ての中心になるようなところ
+      - voice: ネット民
+        text: 年俸次第だよね。ドルトムントの最高年俸はシュロッターベックの1400万ユーロ
+      - voice: ネット民
+        text: ドルトムント行ったほうがいいと思う。ドルトムントの時は最高の選手だった
+      - voice: ネット民
+        text: もう一度サンチョにチャンスを与えてください！　頼みますドルトムントのフロントの方々！
+      - voice: ネット民
+        text: 引っかかるのは、本人が不当な扱いを受けたと思っているらしい部分だ
+      - voice: ネット民
+        text: うちがあそこまで我慢した選手は、他に思いつかない
+      - voice: ネット民
+        text: レンタルのあとチェルシーを断ったのを覚えてるか。今それを後悔してるかね
+      - voice: ネット民
+        text: まだ26歳か。10年はあちこちのクラブを彷徨ってる感じしかしない
+      - voice: ネット民
+        text: それにしても転落っぷりが凄い
+      - voice: ネット民
+        text: 若くして成功したタイミングで、どんな大人が周りにいるかって、大事なんでしょうね
+      - voice: ネット民
+        text: ドイツでの良いシーズン1、2回だけであれだけ稼いだことは、評価しないといけない
+      - voice: ネット民
+        text: すべてがあった上で、自分はまだ彼を気の毒に思う。我ながら変だ
+        short_voice: true
+    sources:
+      - https://www.redcafe.net/threads/jadon-sancho-free-agent.489501/page-35
+      - https://www.redcafe.net/threads/jadon-sancho-free-agent.489501/page-36
+      - https://news.yahoo.co.jp/articles/93075f1d74d4275aa44519e837ee0f4d13b6da6c/comments
+      - https://news.yahoo.co.jp/articles/0c68710bfb5e462a37c8e046868f10b7a1571928/comments

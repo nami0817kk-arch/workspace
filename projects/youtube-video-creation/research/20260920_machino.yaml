@@ -1,0 +1,132 @@
+# 町野修斗がPKを決めたが、ボルシアMGは開幕4連敗（2026-09-20）
+#
+# 材料は research/raw/20260920_machino.md。出典はサッカーキング、ゲキサカの試合記録、
+# Football Tribe（暫定監督の会見）。
+#
+# **反応は2件しか取れなかった。**この試合を扱った記事のコメント欄が2件で止まっていた。
+# **足さない。**作らない。海外の反応も見つからなかった。
+# そのため `voice_min` を 25 に下げている（既定は40）。**作った声で埋めるよりは、
+# 少ないまま出す。**反応が2件しか存在しない題材で、割合だけを満たす方法は無い。
+#
+# **暫定監督の言葉は板倉滉についてのもので、試合前（17日の会見）のもの。**
+# 同じ試合に先発した選手の話なので入れるが、**試合後の言葉ではない**ことを混ぜない。
+#
+# 失敗したPKの時間は媒体で56分と57分に割れている。**分は言わない。**
+format: news
+voice_min: 25
+slot: japan_3
+date: "2026年9月20日"
+
+people:
+  - 町野修斗
+  - 佐野海舟
+
+short_title: "町野修斗のPK、佐野海舟のアシスト"
+
+theme:
+  id: machino_sano_bundesliga
+  league: germany
+  league_name: ブンデスリーガ
+  kind: match
+  topic: ボルシアMG
+  title: 町野修斗がPKを決めても届かず。ボルシアMGが4試合で喫したのは
+  hook: 佐野海舟は、この試合でも起点になりました。
+  question: 何が止まらないのか
+
+thumbnail:
+  photo: assets/images/20260920_mainz_press/01.jpg
+  line1: 日本人対決は7ゴールの乱打戦
+  line2: ボルシアMGは4試合で ●●失点
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/machino_20260920.png
+    telop: ボルシアMG3対4マインツ。7点が入った
+    narrator: キャスター
+    card:
+      type: table
+      title: ブンデスリーガ第4節
+      columns: [時間, 得点者]
+      rows:
+        - ["11分", "ノイハウス（ボルシアMG）"]
+        - ["18分", "ティーツ（マインツ）"]
+        - ["45+1分", "ベッカー（マインツ）"]
+        - ["59分", "リドベリ（ボルシアMG）"]
+        - ["78分", "マルテル（マインツ）"]
+        - ["89分", "ダ・コスタ（マインツ）"]
+        - ["90+5分", "町野修斗（PK・ボルシアMG）"]
+    say:
+      - ボルシアMGとマインツが7点を分け合い、3対4でマインツが勝ちました。
+      - 先に点を取ったのはボルシアMGでしたが、前半のうちに逆転されます。
+      - 追いついては、また離される展開でした。
+      - 最後に1点を返したのが、途中出場の町野修斗です。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20260920/2206876.html
+      - https://web.gekisaka.jp/news/world/detail/?459189-459189-fl
+
+  - id: sano
+    heading: 佐野海舟が2つの得点に絡んだ
+    tier: 報道
+    bg: assets/backgrounds/machino_20260920.png
+    telop: 45+1分の起点と、78分のアシスト
+    narrator: 解説
+    say:
+      - マインツの佐野海舟は先発してフル出場しました。
+      - 前半のアディショナルタイム、佐野が右へ展開した流れから、ベッカーが頭で勝ち越し点を決めます。
+      - "78分には、ボックスの角から**柔らかいクロス**。マルテルが頭で合わせました。"
+      - これが佐野の今季2つ目のアシストで、34試合に出た昨季の本数にもう並んでいます。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20260920/2206876.html
+      - https://news.yahoo.co.jp/articles/6f4119ef76b2aed32d7b27a12feee6306b49573e
+
+  - id: machino
+    heading: 町野修斗のPK、そして4連敗
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/machino_20260920.png
+    telop: 開幕4試合で16失点
+    narrator: キャスター
+    card:
+      type: table
+      title: ボルシアMGの開幕4試合
+      columns: ["", ""]
+      rows:
+        - ["第1節", "0対3"]
+        - ["第2節", "3対4"]
+        - ["第3節", "0対5"]
+        - ["第4節", "3対4"]
+        - ["合計", "4連敗、16失点"]
+    say:
+      - {short_only: true, text: 町野修斗が最後にPKを決めましたが、届きませんでした。}
+      - 町野はベンチから出場し、アディショナルタイムのPKを決めました。
+      - ただ、この試合の前にもボルシアMGはPKを1本外しています。
+      - "チームは**開幕から4連敗**。4試合すべてで3失点以上を喫し、失点は**16**になりました。"
+      - この試合の前に監督が代わったばかりで、いまは暫定の指揮官が率いています。
+      - その暫定監督は、先発した板倉滉について試合前にこう話していました。
+      - {voice: 暫定監督, text: 彼は良い選手であり、自身のクオリティーを毎回トレーニングで証明している}
+      - {voice: 暫定監督, text: 本人は理解していることだが、彼のポテンシャルを踏まえると、今、ピッチ上で見せているものは、以前の彼が示していたプレーのレベルには達していない}
+      - {voice: 暫定監督, text: 我々にとって、彼は非常に重要な選手であることに変わりはない}
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20260920/2206876.html
+      - https://football-tribe.com/japan/2026/09/19/359470/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    bg: assets/backgrounds/machino_20260920.png
+    telop: 「クロスが上がれば全部決定機」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この試合を見ていた人たちの声です。}
+      - {voice: ネット民, text: 本当にただゴール前に人数揃えてるだけのボルシアMG。どれだけ数的有利でもクロスが上がれば全部決定機, short_voice: true}
+      - {voice: ネット民, text: 板倉は過大評価}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/6f4119ef76b2aed32d7b27a12feee6306b49573e/comments

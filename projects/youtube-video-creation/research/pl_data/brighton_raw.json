@@ -1,0 +1,799 @@
+{
+ "club_title": "Brighton_&_Hove_Albion_F.C.",
+ "season_title": "2026–27_Brighton_&_Hove_Albion_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "NED",
+   "name": "Bart Verbruggen",
+   "page": "Bart Verbruggen",
+   "dob": "2002-08-18",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 33,
+   "club_caps": 100,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ALG",
+   "name": "Jaouen Hadjam",
+   "page": "Jaouen Hadjam",
+   "dob": "2003-03-26",
+   "captain": false,
+   "loan": false,
+   "team": "Algeria",
+   "caps": 21,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Pascal Struijk",
+   "page": "Pascal Struijk",
+   "dob": "1999-08-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Lewis Dunk",
+   "page": "Lewis Dunk",
+   "dob": "1991-11-21",
+   "captain": true,
+   "loan": false,
+   "team": "England",
+   "caps": 6,
+   "club_caps": 473,
+   "club_goals": 28
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "JPN",
+   "name": "Kaoru Mitoma",
+   "page": "Kaoru Mitoma",
+   "dob": "1997-05-20",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 31,
+   "club_caps": 113,
+   "club_goals": 23
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Jack Hinshelwood",
+   "page": "Jack Hinshelwood",
+   "dob": "2005-04-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 67,
+   "club_goals": 14
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "GRE",
+   "name": "Stefanos Tzimas",
+   "page": "Stefanos Tzimas",
+   "dob": "2006-01-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 9,
+   "club_goals": 1
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Georginio Rutter",
+   "page": "Georginio Rutter",
+   "dob": "2002-04-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 62,
+   "club_goals": 8
+  },
+  {
+   "no": "11",
+   "pos": "MF",
+   "nat": "GAM",
+   "name": "Yankuba Minteh",
+   "page": "Yankuba Minteh",
+   "dob": "2004-07-22",
+   "captain": false,
+   "loan": false,
+   "team": "Gambia",
+   "caps": 20,
+   "club_caps": 66,
+   "club_goals": 9
+  },
+  {
+   "no": "12",
+   "pos": "FW",
+   "nat": "CAN",
+   "name": "Promise David",
+   "page": "Promise David",
+   "dob": "2001-07-03",
+   "captain": false,
+   "loan": true,
+   "team": "Canada",
+   "caps": 14,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "13",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Pascal Groß",
+   "page": "Pascal Groß",
+   "dob": "1991-06-15",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 19,
+   "club_caps": 24,
+   "club_goals": 4
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Chema Andrés",
+   "page": "Chema Andrés",
+   "dob": "2005-04-25",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 1
+  },
+  {
+   "no": "15",
+   "pos": "MF",
+   "nat": "GHA",
+   "name": "Ibrahim Osman",
+   "page": "Ibrahim Osman (footballer, born 2004)",
+   "dob": "2004-11-29",
+   "captain": false,
+   "loan": false,
+   "team": "Ghana",
+   "caps": 3,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "GRE",
+   "name": "Charalampos Kostoulas",
+   "page": "Charalampos Kostoulas",
+   "dob": "2007-05-30",
+   "captain": false,
+   "loan": false,
+   "team": "Greece",
+   "caps": 4,
+   "club_caps": 26,
+   "club_goals": 4
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "POR",
+   "name": "Costinha",
+   "page": "Costinha (footballer, born 2000)",
+   "dob": "2000-03-26",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "21",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Olivier Boscagli",
+   "page": "Olivier Boscagli",
+   "dob": "1997-11-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 12,
+   "club_goals": 0
+  },
+  {
+   "no": "23",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Jason Steele",
+   "page": "Jason Steele (footballer)",
+   "dob": "1990-08-18",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 0,
+   "club_caps": 35,
+   "club_goals": 0
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "TUR",
+   "name": "Ferdi Kadıoğlu",
+   "page": "Ferdi Kadıoğlu",
+   "dob": "1999-10-07",
+   "captain": false,
+   "loan": false,
+   "team": "Turkey",
+   "caps": 32,
+   "club_caps": 47,
+   "club_goals": 2
+  },
+  {
+   "no": "25",
+   "pos": "MF",
+   "nat": "PAR",
+   "name": "Diego Gómez",
+   "page": "Diego Gómez (Paraguayan footballer)",
+   "dob": "2003-03-27",
+   "captain": false,
+   "loan": false,
+   "team": "Paraguay",
+   "caps": 28,
+   "club_caps": 53,
+   "club_goals": 6
+  },
+  {
+   "no": "26",
+   "pos": "MF",
+   "nat": "SWE",
+   "name": "Yasin Ayari",
+   "page": "Yasin Ayari",
+   "dob": "2003-10-06",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 25,
+   "club_caps": 70,
+   "club_goals": 6
+  },
+  {
+   "no": "27",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Mats Wieffer",
+   "page": "Mats Wieffer",
+   "dob": "1999-11-16",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 15,
+   "club_caps": 53,
+   "club_goals": 3
+  },
+  {
+   "no": "28",
+   "pos": "FW",
+   "nat": "IRL",
+   "name": "Evan Ferguson",
+   "page": "Evan Ferguson",
+   "dob": "2004-10-19",
+   "captain": false,
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 26,
+   "club_caps": 60,
+   "club_goals": 13
+  },
+  {
+   "no": "29",
+   "pos": "DF",
+   "nat": "BEL",
+   "name": "Maxim De Cuyper",
+   "page": "Maxim De Cuyper",
+   "dob": "2000-12-22",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 25,
+   "club_caps": 35,
+   "club_goals": 3
+  },
+  {
+   "no": "30",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Michael Svoboda",
+   "page": "Michael Svoboda",
+   "dob": "1998-10-15",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 4,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "33",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Matt O'Riley",
+   "page": "Matt O'Riley",
+   "dob": "2000-11-21",
+   "captain": false,
+   "loan": false,
+   "team": "Denmark",
+   "caps": 6,
+   "club_caps": 29,
+   "club_goals": 3
+  },
+  {
+   "no": "35",
+   "pos": "MF",
+   "nat": "CIV",
+   "name": "Malick Yalcouyé",
+   "page": "Malick Yalcouyé",
+   "dob": "2005-11-18",
+   "captain": false,
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 0,
+   "club_caps": 5,
+   "club_goals": 2
+  },
+  {
+   "no": "36",
+   "pos": "MF",
+   "nat": "NGA",
+   "name": "Zadok Yohanna",
+   "page": "Zadok Yohanna",
+   "dob": "2007-06-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "38",
+   "pos": "GK",
+   "nat": "CAN",
+   "name": "Tom McGill",
+   "page": "Tom McGill",
+   "dob": "2000-03-25",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "39",
+   "pos": "MF",
+   "nat": "NGA",
+   "name": "Femi Azeez",
+   "page": "Femi Azeez",
+   "dob": "2001-06-05",
+   "captain": false,
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 2,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "44",
+   "pos": "DF",
+   "nat": "CRO",
+   "name": "Luka Vušković",
+   "page": "Luka Vušković",
+   "dob": "2007-02-24",
+   "captain": false,
+   "loan": false,
+   "team": "Croatia",
+   "caps": 6,
+   "club_caps": 5,
+   "club_goals": 1
+  }
+ ],
+ "results": [
+  [
+   "18 July 2026",
+   "Friendly",
+   "Brighton & Hove Albion",
+   "4–1",
+   "Wycombe Wanderers"
+  ],
+  [
+   "25 July 2026",
+   "Friendly",
+   "FC Annecy",
+   "Cancelled",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "1 August 2026",
+   "Friendly",
+   "Strasbourg",
+   "3–4",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Brighton & Hove Albion",
+   "3–0",
+   "Roma"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Brighton & Hove Albion",
+   "1–0",
+   "Bologna"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Brighton & Hove Albion",
+   "4–0",
+   "Aston Villa"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "Chelsea",
+   "4–3",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Brighton & Hove Albion",
+   "1–1",
+   "Leeds United"
+  ],
+  [
+   "13 September 2026",
+   "4",
+   "Coventry City",
+   "0–5",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Brighton & Hove Albion",
+   "3–0",
+   "Arsenal"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Sunderland",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Liverpool",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Manchester City",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "8 November 2026",
+   "10",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Hull City",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "29 November 2026",
+   "12",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Bournemouth",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Nottingham Forest",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "13 December 2026",
+   "15",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "20 December 2026",
+   "16",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Fulham",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "29 December 2026",
+   "18",
+   "Tottenham Hotspur",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Brentford",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Manchester City"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Newcastle United",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Hull City"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Manchester United",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Ipswich Town",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Leeds United",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Aston Villa",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "24 April 2025",
+   "33",
+   "Everton",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Sunderland"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Crystal Palace",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Liverpool"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Arsenal",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "16 September 2026",
+   "Third round",
+   "Manchester United",
+   "2–3",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "28 October 2026",
+   "Fourth round",
+   "Manchester City",
+   "| report     = https://www.efl.com/match-centre/g2687772",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "20 August 2026",
+   "First leg",
+   "Tromsø",
+   "0–0",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "27 August 2026",
+   "Second leg",
+   "Brighton & Hove Albion",
+   "4–0",
+   "Tromsø"
+  ],
+  [
+   "15 October 2026",
+   "1",
+   "Brighton & Hove Albion",
+   "| report     = https://www.uefa.com/uefaconferenceleague/match/2050314/",
+   "Kauno Žalgiris"
+  ],
+  [
+   "22 October 2026",
+   "2",
+   "Jablonec",
+   "| report     = https://www.uefa.com/uefaconferenceleague/match/2050338/",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "5 November 2026",
+   "3",
+   "Getafe",
+   "| report     = https://www.uefa.com/uefaconferenceleague/match/2050352/",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "26 November 2026",
+   "4",
+   "Brighton & Hove Albion",
+   "| report     = https://www.uefa.com/uefaconferenceleague/match/2050368/",
+   "Universitatea Craiova"
+  ],
+  [
+   "10 December 2026",
+   "5",
+   "Brighton & Hove Albion",
+   "| report     = https://www.uefa.com/uefaconferenceleague/match/2050383/",
+   "Monaco"
+  ],
+  [
+   "17 December 2026",
+   "6",
+   "Panathinaikos",
+   "| report     = https://www.uefa.com/uefaconferenceleague/match/2050406/",
+   "Brighton & Hove Albion"
+  ]
+ ]
+}

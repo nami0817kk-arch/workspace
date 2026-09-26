@@ -1,0 +1,103 @@
+# 楽天と鈴与が、ヨーロッパのクラブを買いにいっている（2026-09-14）
+#
+# **試合の話ではない回。**「日本の会社が欧州クラブを買う」という切り口は
+# このチャンネルで一度もやっていない。表に出たのは、売る側のオーナーが喋ったから
+format: news
+voice_min: 20
+slot: other_2
+date: "2026年9月15日"
+
+people:
+  - ヴィッセル神戸
+
+short_title: "楽天が欧州クラブを買いにいっている"
+
+theme:
+  id: rakuten_buys_european_club
+  league: japan
+  league_name: ""
+  kind: other
+  topic: ロコモティフ・プロヴディフ
+  title: 楽天がヨーロッパのクラブを買おうとしている。相手はどこか
+  question: どのクラブを買おうとしているのか
+
+thumbnail:
+  line1: 楽天が欧州クラブを買収へ
+  line2: 狙っているのは ●●●●
+  crest_main:
+    - ヴィッセル神戸
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: どこから出てきた話か
+    tier: 報道
+    telop: 売る側のオーナーが、地元紙に喋った
+    narrator: キャスター
+    say:
+      - この話は、日本側からは出ていません。
+      - 売る側が喋ったことで表に出ました。
+      - ブルガリア1部、ロコモティフ・プロヴディフのオーナーが、地元メディア『Sportal』のインタビューに答えています。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/14/359228/
+
+  - id: said
+    heading: オーナーが語ったこと
+    main: true
+    tier: 報道
+    telop: 「彼らは他に3つのクラブも調査している」
+    narrator: 解説
+    say:
+      - {short_only: true, text: ブルガリア1部のクラブのオーナーが、楽天との交渉について語りました。}
+      - 交渉は止まっていない、というのが最初の一言でした。
+      - {voice: オーナー, text: 全く頓挫していない。我々は交渉を続けている}
+      - 相手の進め方についても触れています。
+      - {voice: オーナー, text: 日本人が真面目な人たちであり、調査を行っている。相手がどのような人物なのかをよく知っている}
+      - そして、こう続けました。
+      - {voice: オーナー, text: 彼らは他に3つのクラブも調査している}
+      - {voice: オーナー, text: 自分たちにとって採算が合うのかどうかを判断したところで、その後、プロヴディフに参入するかどうかを決めることになる}
+      - つまり、プロヴディフは4つの候補のうちの1つ、ということになります。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/14/359228/
+
+  - id: another
+    heading: 動いているのは楽天だけではない
+    tier: 報道
+    telop: 清水の親会社・鈴与はデンマーク1部へ
+    narrator: キャスター
+    card:
+      type: table
+      title: 日本の会社と欧州クラブ
+      columns: ["", ""]
+      rows:
+        - ["楽天（神戸）", "ブルガリア1部 ロコモティフ・プロヴディフ ほか3クラブ"]
+        - ["鈴与（清水）", "デンマーク1部 ラナースFC"]
+    say:
+      - 同じ動きが、もう1つ報じられています。
+      - 清水エスパルスの親会社、鈴与です。
+      - デンマークの『amtsavisen』が、1部のラナースFCについて伝えています。
+      - この日本資本は日本人選手の獲得を狙っている、という書き方です。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/14/359228/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「最近買収の話多いよね」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: なんですと？！！}
+      - {voice: ネット民, text: 海外の良い選手を獲得しやすくなるメリットあるね。当然流出のデメリットも}
+      - {voice: ネット民, text: 取り残されないようお金持ちの他クラブ親会社が追随していくか？}
+      - {voice: ネット民, text: サッカークラブの価値って、いま転換点なんだと思う}
+      - {voice: ネット民, text: 最近買収の話多いよね}
+      - {voice: ネット民, text: 経営者は今が底値と思っているのでは？}
+      - {voice: ネット民, text: 企業がクラブを売りたい時にスポンサーに入っているとスムーズ。メルカリの鹿島とmixiのFC東京}
+      - {voice: ネット民, text: ところで鹿島はボルシアとどうなった？}
+    official: false
+    sources:
+      - https://x.com/search?q=%E6%A5%BD%E5%A4%A9%20%E3%82%AF%E3%83%A9%E3%83%96%E8%B2%B7%E5%8F%8E&f=live

@@ -1,0 +1,673 @@
+{
+ "club_title": "Sunderland_A.F.C.",
+ "season_title": "2026–27_Sunderland_A.F.C._season",
+ "squad": [
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Kevin Danso",
+   "page": "Kevin Danso",
+   "dob": "1998-09-19",
+   "captain": false,
+   "loan": true,
+   "team": "Austria",
+   "caps": 36,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "NIR",
+   "name": "Daniel Ballard",
+   "page": "Daniel Ballard",
+   "dob": "1999-09-22",
+   "captain": false,
+   "loan": false,
+   "team": "Northern Ireland",
+   "caps": 33,
+   "club_caps": 115,
+   "club_goals": 7
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Dayann Methalie",
+   "page": "Dayann Methalie",
+   "dob": "2006-02-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "MAR",
+   "name": "Chemsdine Talbi",
+   "page": "Chemsdine Talbi",
+   "dob": "2005-05-09",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 10,
+   "club_caps": 29,
+   "club_goals": 4
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "IRL",
+   "name": "Alan Browne",
+   "page": "Alan Browne (footballer)",
+   "dob": "1995-04-15",
+   "captain": false,
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 39,
+   "club_caps": 22,
+   "club_goals": 1
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "NED",
+   "name": "Brian Brobbey",
+   "page": "Brian Brobbey",
+   "dob": "2002-02-01",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 16,
+   "club_caps": 36,
+   "club_goals": 10
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "ECU",
+   "name": "Nilson Angulo",
+   "page": "Nilson Angulo",
+   "dob": "2003-06-19",
+   "captain": false,
+   "loan": false,
+   "team": "Ecuador",
+   "caps": 18,
+   "club_caps": 12,
+   "club_goals": 1
+  },
+  {
+   "no": "11",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Chris Rigg",
+   "page": "Chris Rigg",
+   "dob": "2007-06-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 82,
+   "club_goals": 7
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "BEL",
+   "name": "Thomas Meunier",
+   "page": "Thomas Meunier",
+   "dob": "1991-09-12",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 83,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "13",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Luke O'Nien",
+   "page": "Luke O'Nien",
+   "dob": "1994-11-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 277,
+   "club_goals": 21
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Romaine Mundle",
+   "page": "Romaine Mundle",
+   "dob": "2003-04-24",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 48,
+   "club_goals": 6
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "PAR",
+   "name": "Omar Alderete",
+   "page": "Omar Alderete",
+   "dob": "1996-12-26",
+   "captain": false,
+   "loan": false,
+   "team": "Paraguay",
+   "caps": 40,
+   "club_caps": 34,
+   "club_goals": 1
+  },
+  {
+   "no": "17",
+   "pos": "DF",
+   "nat": "MOZ",
+   "name": "Reinildo",
+   "page": "Reinildo Mandava",
+   "dob": "1994-01-21",
+   "captain": false,
+   "loan": false,
+   "team": "Mozambique",
+   "caps": 56,
+   "club_caps": 29,
+   "club_goals": 0
+  },
+  {
+   "no": "18",
+   "pos": "FW",
+   "nat": "HAI",
+   "name": "Wilson Isidor",
+   "page": "Wilson Isidor",
+   "dob": "2000-08-27",
+   "captain": false,
+   "loan": false,
+   "team": "Haiti",
+   "caps": 7,
+   "club_caps": 79,
+   "club_goals": 19
+  },
+  {
+   "no": "19",
+   "pos": "MF",
+   "nat": "SEN",
+   "name": "Habib Diarra",
+   "page": "Habib Diarra",
+   "dob": "2004-01-03",
+   "captain": false,
+   "loan": false,
+   "team": "Senegal",
+   "caps": 24,
+   "club_caps": 21,
+   "club_goals": 2
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Nordi Mukiele",
+   "page": "Nordi Mukiele",
+   "dob": "1997-11-01",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 1,
+   "club_caps": 35,
+   "club_goals": 3
+  },
+  {
+   "no": "21",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Simon Moore",
+   "page": "Simon Moore (footballer)",
+   "dob": "1990-05-19",
+   "captain": false,
+   "loan": false,
+   "team": "Isle of Wight",
+   "caps": 5,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "22",
+   "pos": "GK",
+   "nat": "NED",
+   "name": "Robin Roefs",
+   "page": "Robin Roefs",
+   "dob": "2003-01-17",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 1,
+   "club_caps": 39,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "COD",
+   "name": "Noah Sadiki",
+   "page": "Noah Sadiki",
+   "dob": "2004-12-17",
+   "captain": false,
+   "loan": false,
+   "team": "DR Congo",
+   "caps": 24,
+   "club_caps": 37,
+   "club_goals": 0
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Enzo Le Fée",
+   "page": "Enzo Le Fée",
+   "dob": "2000-02-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 55,
+   "club_goals": 7
+  },
+  {
+   "no": "29",
+   "pos": "MF",
+   "nat": "COD",
+   "name": "Jules Ahoka",
+   "page": "Jules Ahoka",
+   "dob": "2006-05-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "31",
+   "pos": "GK",
+   "nat": "SWE",
+   "name": "Melker Ellborg",
+   "page": "Melker Ellborg",
+   "dob": "2003-05-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "32",
+   "pos": "DF",
+   "nat": "NIR",
+   "name": "Trai Hume",
+   "page": "Trai Hume",
+   "dob": "2002-03-18",
+   "captain": false,
+   "loan": false,
+   "team": "Northern Ireland",
+   "caps": 26,
+   "club_caps": 162,
+   "club_goals": 7
+  },
+  {
+   "no": "34",
+   "pos": "MF",
+   "nat": "SUI",
+   "name": "Granit Xhaka",
+   "page": "Granit Xhaka",
+   "dob": "1992-09-27",
+   "captain": true,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": null,
+   "club_caps": 38,
+   "club_goals": 1
+  },
+  {
+   "no": "37",
+   "pos": "FW",
+   "nat": "CIV",
+   "name": "Jocelin Ta Bi",
+   "page": "Jocelin Ta Bi",
+   "dob": "2005-02-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "39",
+   "pos": "FW",
+   "nat": "BEL",
+   "name": "Malick Fofana",
+   "page": "Malick Fofana",
+   "dob": "2005-03-31",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 5,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "42",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Aji Alese",
+   "page": "Aji Alese",
+   "dob": "2001-01-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 40,
+   "club_goals": 1
+  },
+  {
+   "no": "46",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Abdoullah Ba",
+   "page": "Abdoullah Ba",
+   "dob": "2003-07-31",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 66,
+   "club_goals": 4
+  },
+  {
+   "no": "50",
+   "pos": "FW",
+   "nat": "ECU",
+   "name": "Juan Riquelme Angulo",
+   "page": "Juan Riquelme Angulo",
+   "dob": "2008-01-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "18 July 2026",
+   "Friendly",
+   "York City",
+   "1−5",
+   "Sunderland"
+  ],
+  [
+   "25 July 2026",
+   "Friendly",
+   "Liverpool",
+   "4–2",
+   "Sunderland"
+  ],
+  [
+   "30 July 2026",
+   "Friendly",
+   "Leeds United",
+   "1–0",
+   "Sunderland"
+  ],
+  [
+   "2 August 2026",
+   "Friendly",
+   "Sunderland",
+   "1–0",
+   "Wrexham"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Lens",
+   "4–1",
+   "Sunderland"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Lens",
+   "0–2",
+   "Sunderland"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Sunderland",
+   "2−1",
+   "Rennes"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Ipswich Town",
+   "2–1",
+   "Sunderland"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "Sunderland",
+   "1–0",
+   "Fulham"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Brentford",
+   "1–1",
+   "Sunderland"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Sunderland",
+   "0–2",
+   "Arsenal"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Manchester City",
+   "5–3",
+   "Sunderland"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Sunderland",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Bournemouth",
+   "| report     =",
+   "Sunderland"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Sunderland",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Coventry City",
+   "| result     =",
+   "Sunderland"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Sunderland",
+   "| result     =",
+   "Chelsea"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Aston Villa",
+   "| result     =",
+   "Sunderland"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Sunderland",
+   "| result     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Liverpool",
+   "| result     =",
+   "Sunderland"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Newcastle United",
+   "| result     =",
+   "Sunderland"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Sunderland",
+   "| result     =",
+   "Nottingham Forest"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Sunderland",
+   "| result     =",
+   "Crystal Palace"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Everton",
+   "| result     =",
+   "Sunderland"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Manchester United",
+   "| result     =",
+   "Sunderland"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Sunderland",
+   "| result     =",
+   "Hull City"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Sunderland",
+   "| result     =",
+   "Liverpool"
+  ],
+  [
+   "8 September 2026",
+   "Third round",
+   "Sunderland",
+   "1–0",
+   "Hull City"
+  ],
+  [
+   "28 October 2026",
+   "Fourth round",
+   "Sunderland",
+   "| report     = https://www.efl.com/match-centre/g2687774",
+   "Brentford"
+  ],
+  [
+   "16 September 2026",
+   "1",
+   "Sunderland",
+   "1–0",
+   "AZ"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "Torreense",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050091",
+   "Sunderland"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "Lech Poznań",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050101",
+   "Sunderland"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "Sunderland",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050122",
+   "Dinamo Zagreb"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "Sunderland",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050140",
+   "Jagiellonia Białystok"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Milan",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050149",
+   "Sunderland"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Anderlecht",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050172",
+   "Sunderland"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "Sunderland",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050194",
+   "Levski Sofia"
+  ]
+ ]
+}

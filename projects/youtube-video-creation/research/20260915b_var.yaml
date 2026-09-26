@@ -1,0 +1,102 @@
+# ダービーのVAR担当者2人が、今週末の担当から外された（2026-09-15）
+#
+# **9/14 公開の「数時間後に審判団が認めた誤りとは？」の続き。**
+# 誤りを認めただけでは終わらず、担当から外れるところまで来た
+format: news
+voice_min: 25
+slot: premier_1
+date: "2026年9月15日"
+
+people:
+  - マンチェスター・シティ
+
+short_title: "ダービーのVAR担当が外された"
+
+theme:
+  id: derby_var_officials_dropped
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: ハーランドの決勝点を認めたVAR担当は、このあとどうなったか
+  question: 誤りを認めたあと、どうなったのか
+
+thumbnail:
+  line1: ダービーのVAR担当は
+  line2: このあと ●●●●
+  crest_main:
+    - マンチェスターシティ
+    - マンチェスターユナイテッド
+  crest_link: "対"
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: オールド・トラッフォードでの1対0
+    narrator: キャスター
+    say:
+      - 舞台はオールド・トラッフォード。シティが1対0で勝った試合です。
+      - 決勝点はアーリング・ハーランド。ただ、このゴールの前に問題がありました。
+      - 組み立ての場面で、エンソ・フェルナンデスがオフサイドの位置からプレーに関与していたように見えたのです。
+      - VARのレビューを経て、ゴールは認められました。
+    official: false
+    sources:
+      - https://sports.yahoo.com/articles/var-manchester-derby-dropped-premier-155328233.html
+
+  - id: error
+    heading: 誤りの中身
+    tier: 報道
+    telop: 認められたのは「モニターを促さなかったこと」
+    narrator: 解説
+    say:
+      - ただ、誤りの中身は、ゴールを認めたことそのものではありません。
+      - VARのドノヒューが、主審のマイケル・オリバーにモニターでの確認を促さなかったこと。そこが誤りだとされました。
+    official: false
+    sources:
+      - https://sports.yahoo.com/articles/var-manchester-derby-dropped-premier-155328233.html
+
+  - id: after
+    heading: そのあと起きたこと
+    main: true
+    tier: 報道
+    telop: 2人が今週末の担当から外れた
+    narrator: 解説
+    card:
+      type: table
+      title: 外れた2人
+      columns: ["", ""]
+      rows:
+        - ["VAR", "マット・ドノヒュー"]
+        - ["アシスタント", "ブレイク・アントロバス"]
+        - ["復帰の見込み", "国際試合の中断明け以降"]
+    say:
+      - {short_only: true, text: マンチェスター・シティがユナイテッドに1対0で勝ったダービー。その決勝点をめぐる判定の話です。}
+      - 審判の統括団体プロ・レフは、これを判断の誤りだったと認めました。
+      - フェルナンデスの関与がオフサイドに当たるかどうかを、主審自身が見る機会がなかったわけです。
+      - そして、ここからが今回の話です。
+      - VARを務めたマット・ドノヒューと、アシスタントのブレイク・アントロバスが、今週末のプレミアリーグの担当から外れました。
+      - 2人がプレミアリーグの担当に戻るのは、国際試合の中断が明けてからになる見込みです。
+    official: false
+    sources:
+      - https://sports.yahoo.com/articles/var-manchester-derby-dropped-premier-155328233.html
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「VARどこ見たらああいうジャッジになるん？」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: マンチェスターダービー見たけどあれは流石にオフサイドやろ。VARどこ見たらああいうジャッジになるん？}
+      - {voice: ネット民, text: varがある時代にオフサイドの誤審ってこれはなんぞ。しかもマンチェスターダービーでやらかすなんて}
+      - {voice: ネット民, text: エンソは正直関与ありでオフサイドに見えた。決め切るハーランドはさすがだけど}
+      - {voice: ネット民, text: ハーランドの決勝点はエンソの戻りオフサイドで取り消しが妥当だが、どちらにせよユナイテッドの勝機は薄かったように見える}
+      - {voice: ネット民, text: フィールドのオフ判定をわざわざ覆すのにあのエンソを見逃すってさすがに無能すぎない？}
+      - {voice: ネット民, text: 運用する審判がヘボである限り誤審がなくなるわけがない。だから俺はVARは要らないと言っている}
+      - {voice: ネット民, text: 複雑化しすぎた判定基準と手続きの簡略化が必要だ}
+      - {voice: ネット民, text: 昔みたいに、プレイの意思とか関係なしに単純なポジションだけに戻せばいいと思うのよね}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%9E%E3%83%B3%E3%83%81%E3%82%A7%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%80%E3%83%BC%E3%83%93%E3%83%BC%20%E3%82%AA%E3%83%95%E3%82%B5%E3%82%A4%E3%83%89&f=live

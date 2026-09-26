@@ -1,0 +1,397 @@
+# プレミアリーグ20クラブ紹介 ⑭リヴァプール（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/liverpool*.json と旧台本 20260916_pl14_liverpool.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 遠藤航
+- リヴァプール
+- ビル・シャンクリー
+short_title: 遠藤航のリヴァプールが生まれた経緯
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_14_liverpool
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: 遠藤航のリヴァプール。隣のクラブが去った土地で生まれた経緯
+  question: どんなクラブなのか
+  hook: エヴァートンが出ていったスタジアムで、生まれたクラブです。
+  lead: '**1部リーグ20回**。マンチェスター・ユナイテッドと並ぶ最多。'
+  opening_image: assets/stats/pl_liverpool_data_t.png
+thumbnail:
+  line1: エヴァートンが去った跡地に
+  line2: 遠藤航のクラブが生まれた経緯
+  crest_main:
+  - リヴァプール
+  tags: []
+  points: []
+  board: assets/stats/pl_liverpool_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 遠藤航がいる。新監督イラオラの1年目
+  narrator: キャスター
+  say:
+  - text: 日本代表の中盤、遠藤航が、リーグ戦**57試合**を戦ってきたクラブです。
+    image: assets/stats/pl_liverpool_data_r1.png
+    no_telop: true
+  - text: このクラブを作り替えた名将、ビル・シャンクリーの言葉があります。
+    image: assets/stats/pl_liverpool_data_r1.png
+    no_telop: true
+  - voice: ビル・シャンクリー
+    text: 「私の考えは、リヴァプールを無敵の砦に築き上げることだった」
+    image: assets/stats/pl_liverpool_data_r1.png
+  - text: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラが、1年目の指揮を執っています。
+    image: assets/stats/pl_liverpool_data_r2.png
+    no_telop: true
+  - text: 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです。
+    image: assets/stats/pl_liverpool_data_r2.png
+    no_telop: true
+  - text: 生まれたのは1892年。地代でもめたエヴァートンが去り、残った地主がクラブを作りました。
+    image: assets/stats/pl_liverpool_data_r2.png
+    no_telop: true
+  - image: assets/stats/pl_liverpool_data0.png
+    text: 創立は**1892年**です。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_data1.png
+    text: 愛称は「レッズ」。1959年から74年まで率いたビル・シャンクリー監督の時代に定着します。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_map.png
+    text: ホームタウンはリヴァプール。イングランド・マージーサイドです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_リヴァプール.png
+    text: 本拠地はアンフィールド。**約6万1000人**が入ります。2024年に広げたばかりです。
+  - image: assets/backgrounds/stadium_リヴァプール.png
+    text: 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています。
+  - image: assets/stats/pl_liverpool_data4.png
+    text: 2010年から、大リーグのレッドソックスも持つフェンウェイ・スポーツ・グループがオーナーです。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_cups.png
+    text: 1部リーグの優勝は**20回**。マンチェスター・ユナイテッドと並んで最多です。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_cups.png
+    text: FAカップは8回、リーグカップは10回。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_cups.png
+    text: チャンピオンズリーグ**6回**、ヨーロッパリーグ3回、スーパーカップ4回、クラブワールドカップ1回。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_data7.png
+    text: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_last.png
+    text: 昨季は**5位**。勝ち点は60でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
+  - https://en.wikipedia.org/wiki/Bill_Shankly
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false
+- id: birth
+  heading: 空になったスタジアム
+  tier: 背景
+  telop: 1892年、エヴァートンが出ていったあとに作られた
+  narrator: 解説
+  card:
+    type: table
+    title: クラブの成り立ち
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 創設
+      - 1892年
+    - - きっかけ
+      - アンフィールドをめぐる対立
+  say:
+  - text: 生まれたきっかけは、**もめごと**でした。
+    image: assets/images/pl_liverpool_story/01.jpg
+  - アンフィールドという土地を持っていたのは、ジョン・ホールディングでした。
+  - そこを使っていたのが、エヴァートンです。
+  - text: 両者が対立し、エヴァートンはグディソン・パークへ移っていきました。
+    card:
+      type: table
+      title: クラブの成り立ち
+      columns: *id001
+      rows:
+      - - 愛称
+        - The Reds（レッズ）
+      - - 本拠地
+        - アンフィールド／61,276人
+  - '**スタジアムだけが残りました。**'
+  - ホールディングは、そこで戦う新しいクラブを作ります。それがリヴァプールです。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/Bill_Shankly
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 奪って速い。データで買う
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってから速く縦へ
+    - - 運営の型
+      - データで選手を選ぶ
+    - - クラブの気質
+      - ゴール裏は戦場の丘の名
+  say:
+  - text: イラオラのサッカーは、ボールを持つより、奪ってから速く縦に急ぐ。
+    image: assets/photos/pl/liverpool_manager_703e8e97.jpg
+  - データで選手を選ぶ型。2010年に来たアメリカの投資会社が、分析部門を作って補強を決めてきました。
+  - ゴール裏のスタンド「コップ」の名は、1906年、ボーア戦争の戦場になった丘から付けられました。
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/Andoni_Iraola
+  - https://en.wikipedia.org/wiki/Fenway_Sports_Group
+  - https://en.wikipedia.org/wiki/Michael_Edwards_(football_executive)
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false
+- id: episode
+  heading: 触ってはいけない看板
+  tier: 背景
+  telop: 「THIS IS ANFIELD」触るのは優勝のあと
+  narrator: 解説
+  card:
+    type: table
+    title: 触ってはいけない看板
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - THIS IS ANFIELD
+      - シャンクリーが付けた看板
+    - - クロップ監督
+      - 獲るまで触るなと禁じる
+  say:
+  - text: アンフィールドの選手用トンネルに、「ジス・イズ・アンフィールド」の看板があります。
+    image: assets/images/pl_liverpool_episode/01.jpg
+  - シャンクリー監督が付けたもので、相手を怖がらせ、味方が触れば運が付く、というものでした。
+  - text: 2015年に来たクロップ監督は、「タイトルを獲るまで触るな」と禁じました。
+    card:
+      type: table
+      title: 触ってはいけない看板
+      columns: *id002
+      rows:
+      - - 2019年
+        - チャンピオンズリーグ決勝に勝って解禁
+  - '**2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました。'
+  sources:
+  - https://en.wikipedia.org/wiki/Anfield
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - スティーヴン・ジェラード
+      - 1998-2015
+      - イスタンブールの奇跡の主
+  say:
+  - text: 中盤のスティーヴン・ジェラードは、9歳でアカデミーに入り、1998年にデビューしました。
+    image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
+  - 2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました。
+  - リーグ戦で**504試合**。のちに監督となり、レンジャーズを無敗で優勝させています。
+  sources:
+  - https://en.wikipedia.org/wiki/Steven_Gerrard
+  - https://en.wikipedia.org/wiki/Jamie_Carragher
+  - https://en.wikipedia.org/wiki/Mohamed_Salah
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - ジェイミー・キャラガー
+      - 1996-2013
+      - 737試合の生え抜き
+  say:
+  - text: ジェイミー・キャラガーは生え抜きのディフェンダー。少年時代はエヴァートンのファンでした。
+    image: assets/photos/pl/liverpool_legend_1840df0d.jpg
+  - 2001年、FAカップ、リーグカップ、ウエファカップの3冠。副主将を10年、務めました。
+  - 出場**737試合**はクラブ史上2番目。2013年に引退し、いまは解説者をしています。
+  sources:
+  - https://en.wikipedia.org/wiki/Steven_Gerrard
+  - https://en.wikipedia.org/wiki/Jamie_Carragher
+  - https://en.wikipedia.org/wiki/Mohamed_Salah
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - モハメド・サラー
+      - 2017-2026
+      - プレミア1シーズン32得
+  say:
+  - text: モハメド・サラーは2017年、ローマから**3690万ポンド**で来た右ウイングです。
+    image: assets/photos/pl/liverpool_legend_bec22eba.jpg
+  - 2024年から25年は29得点18アシスト。合わせて**47**は、20チームになってからの最多記録でした。
+  - リーグ戦**315試合**で191得点。クラブ史上3番目の得点者となり、この夏、去りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Steven_Gerrard
+  - https://en.wikipedia.org/wiki/Jamie_Carragher
+  - https://en.wikipedia.org/wiki/Mohamed_Salah
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はアンドニ・イラオラ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - アンドニ・イラオラ（スペイン）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - ボーンマス
+  say:
+  - text: 今季の監督は、スペイン人のアンドニ・イラオラ。**2026年6月**に来た1年目です。
+    image: assets/photos/pl/liverpool_manager_703e8e97.jpg
+  - 前はボーンマス。クラブ史上最高の6位と、初めてのヨーロッパに連れていきました。
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/Andoni_Iraola
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は35人です。
+    image: assets/stats/pl_liverpool_gk.png
+    no_telop: true
+  - image: assets/stats/pl_liverpool_gk_f.png
+    text: ゴールキーパーは6人。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_gk_f.png
+    text: アリソン・ベッカーはブラジル代表で**83試合**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_gk_f.png
+    text: ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_df_f.png
+    text: ディフェンダーは12人。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_df_f.png
+    text: 主将を務めるのが**フィルジル・ファン・ダイク**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_df_f.png
+    text: リーグ戦で**277試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_df_f.png
+    text: コスタス・ツィミカスはギリシャ代表で**51試合**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_mf_f.png
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_mf_f.png
+    text: 日本の遠藤航がいます。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_mf_f.png
+    text: ドミニク・ソボスライはハンガリー代表で**65試合**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_fw_f.png
+    text: フォワードは9人。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_fw_f.png
+    text: コーディ・ガクポはオランダ代表で**54試合**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_fw_f.png
+    text: アレクサンデル・イサクはスウェーデン代表で**62試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝3引き分け。6位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ニューカッスル・ユナイテッド（アウェー）
+      - 2対2
+    - - 第2節
+      - ノッティンガム・フォレスト（ホーム）
+      - 2対2
+    - - 第3節
+      - イプスウィッチ・タウン（アウェー）
+      - 2対0
+    - - 第4節
+      - フラム（ホーム）
+      - 0対0
+    - - 第5節
+      - AFCボーンマス（アウェー）
+      - 1対0
+  say:
+  - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
+  - 順位は**6位**、勝ち点は**9**です。
+  - 遠藤航は今年7月、契約を**2031年**まで延ばしました。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
+  official: false

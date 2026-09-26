@@ -1,0 +1,387 @@
+# プレミアリーグ20クラブ紹介 ⑯マンチェスター・ユナイテッド（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/manutd*.json と旧台本 20260916_pl16_manutd.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- マンチェスター・ユナイテッド
+- マット・バズビー
+short_title: マンUが解散命令から生き延びたのは
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_16_manutd
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: 借金で解散命令。マンチェスター・ユナイテッドが生き延びたのは
+  question: どんなクラブなのか
+  hook: このクラブを語るとき、外せない日があります。
+  lead: 収容**7万4158人**。20クラブでいちばん大きなスタジアム。
+  opening_image: assets/stats/pl_manutd_data_t.png
+thumbnail:
+  line1: 操車場のチームが、赤い悪魔に
+  line2: 借金で解散命令を受けた過去
+  crest_main:
+  - マンチェスターユナイテッド
+  tags: []
+  points: []
+  board: assets/stats/pl_manutd_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 3シーズンぶりのチャンピオンズリーグ
+  narrator: キャスター
+  say:
+  - text: '**3シーズンぶり**のチャンピオンズリーグ。この舞台を初めて制した監督、マット・バズビーの言葉があります。'
+    image: assets/stats/pl_manutd_data_r1.png
+    no_telop: true
+  - voice: マット・バズビー
+    text: 「マンチェスターは、私の天国だ」
+    image: assets/stats/pl_manutd_data_r1.png
+  - text: 監督は、かつて主将も務めたマイケル・キャリック。今季から正式な監督です。
+    image: assets/stats/pl_manutd_data_r2.png
+    no_telop: true
+  - text: 昨季は**3位**。ところが今季は開幕から足踏みが続き、順位表の真ん中にいます。
+    image: assets/stats/pl_manutd_data_r3.png
+    no_telop: true
+  - text: 1902年、借金で解散を命じられ、救ったのは主将が見つけた4人の実業家でした。
+    image: assets/stats/pl_manutd_data_r3.png
+    no_telop: true
+  - image: assets/stats/pl_manutd_data0.png
+    text: 創立は**1878年**。鉄道の操車場で働く人たちの、ニュートン・ヒースというチームでした。
+    no_telop: true
+  - image: assets/stats/pl_manutd_data1.png
+    text: 愛称は「レッド・デビルズ」。赤い悪魔です。
+    no_telop: true
+  - image: assets/stats/pl_manutd_map.png
+    text: ホームタウンは、マンチェスターです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+    text: 本拠地はオールド・トラッフォード。1910年から使っています。
+  - image: assets/photos/pl/manutd_owner_3345c4b8.jpg
+    text: オーナーはアメリカのグレイザー家。2024年からは、イネオスという会社のラトクリフ氏も出資しています。
+  - image: assets/stats/pl_manutd_cups.png
+    text: 1部リーグの優勝は**20回**。FAカップは13回、チャンピオンズリーグは3回獲っています。
+    no_telop: true
+  - image: assets/stats/pl_manutd_cups.png
+    text: ヨーロッパリーグ1回、カップウィナーズカップ1回、スーパーカップ1回、クラブワールドカップは2回です。
+    no_telop: true
+  - image: assets/stats/pl_manutd_data6.png
+    text: 2021年2月には、サウサンプトンに**9対0**。プレミアで最も大きな点差の勝利に並ぶ記録です。
+    no_telop: true
+  - image: assets/stats/pl_manutd_data7.png
+    text: 直近のタイトルは、2023年から24年のFAカップ。
+    no_telop: true
+  - image: assets/stats/pl_manutd_last.png
+    text: 昨季は**3位**。勝ち点は71でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
+  - https://en.wikipedia.org/wiki/Matt_Busby
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false
+- id: munich
+  heading: 1958年2月6日
+  tier: 背景
+  telop: ミュンヘンでの事故と、その10年後
+  narrator: 解説
+  card:
+    type: table
+    title: 事故から、頂点まで
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1958年2月6日
+      - ミュンヘンでの航空機事故。23人が亡くなる
+    - - うち選手
+      - 8人
+  say:
+  - text: 1958年2月6日。ヨーロッパの試合の帰り、給油に立ち寄ったミュンヘンでした。
+    image: assets/images/pl_manutd_story/scene.jpg
+  - チームを乗せた飛行機が墜落し、亡くなったのは**23人**。そのうち**8人**が選手でした。
+  - 生き残ったバズビー監督とボビー・チャールトンが、チームを作り直していきます。
+  - text: そして**10年後**の1968年。ヨーロッパカップ、いまのチャンピオンズリーグの決勝です。
+    card:
+      type: table
+      title: 事故から、頂点まで
+      columns: *id001
+      rows:
+      - - 1968年
+        - ヨーロッパカップ優勝。イングランド勢で初
+  - ベンフィカを4対1で下し、**イングランドのクラブとして初めて**ヨーロッパの頂点に立ちました。
+  - チャールトンはこの決勝で2点を決め、主将として優勝杯を掲げました。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://en.wikipedia.org/wiki/Bobby_Charlton
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: わくわく前向き。育てる伝統
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - わくわく、前向きなサッカー
+    - - 運営の型
+      - 1937年から続く育成
+    - - クラブの気質
+      - 買収後、ファンが別クラブ設立
+  say:
+  - text: キャリック監督が掲げるのは、見ていてわくわくする、前向きで表現豊かなサッカーです。
+    image: assets/photos/pl/manutd_manager_ab69d494.jpg
+  - 1937年から4000試合を超えて、毎試合の名簿にユース出身の選手がいる、育てるクラブ。
+  - 2005年にグレイザー家が買収したあと、一部のファンは自分たちで別のクラブを立ち上げました。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://www.manutd.com/en/news/detail/what-will-michael-carrick-style-of-play-be-at-man-utd
+  - https://www.manutd.com/en/news/detail/man-utd-celebrate-unrivalled-academy-milestone-with-4000th-game
+  - https://www.manutd.com/en/news/detail/man-utd-incredible-academy-landmark-reaches-88-years
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false
+- id: episode
+  heading: 解散寸前で生まれた名前
+  tier: 背景
+  telop: 借金2670ポンド、解散命令から
+  narrator: 解説
+  card:
+    type: table
+    title: 解散寸前で生まれた名前
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1902年1月
+      - 借金2670ポンド。解散の命令
+    - - 主将スタッフォード
+      - 実業家4人が500ポンドずつ出資
+  say:
+  - text: '**1902年**1月、まだニュートン・ヒースだったクラブは、2670ポンドの借金で解散の命令を受けました。'
+    image: assets/images/pl_manutd_episode/scene.jpg
+  - いまのお金でおよそ28万ポンド、日本円で数千万円の借金です。
+  - text: 主将のハリー・スタッフォードが、地元の実業家を4人見つけます。
+    card:
+      type: table
+      title: 解散寸前で生まれた名前
+      columns: *id002
+      rows:
+      - - 1902年4月24日
+        - マンチェスター・ユナイテッド誕生
+  - 4人が500ポンドずつ出資し、クラブの経営を引き受けました。
+  - その年の4月24日、マンチェスター・ユナイテッドという名前が生まれました。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ライアン・ギグス
+      - 1990-2014
+      - クラブ最多の963試合
+  say:
+  - text: ライアン・ギグスは、**14歳**の誕生日に入団した左ウイング。リーグ優勝を13度経験しました。
+    image: assets/photos/pl/manutd_legend_f3ad91ce.jpg
+  - 1999年のFAカップ準決勝アーセナル戦。延長で自陣から守備陣を抜き去った一撃は有名です。
+  - クラブ史上最多の**963試合**に出場。引退した2014年には、暫定の監督も務めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Ryan_Giggs
+  - https://en.wikipedia.org/wiki/Wayne_Rooney
+  - https://en.wikipedia.org/wiki/Paul_Scholes
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - ウェイン・ルーニー
+      - 2004-2017
+      - クラブ最多の253得点
+  say:
+  - text: ウェイン・ルーニーは、18歳でエヴァートンから来たフォワード。移籍金は**2560万ポンド**。
+    image: assets/photos/pl/manutd_legend_8c632d7c.jpg
+  - 2011年のマンチェスター・ダービー。オーバーヘッドの決勝点で、シティに**2対1**の勝ちです。
+  - チャールトンを抜いたクラブ史上最多の**253得点**。2017年、古巣エヴァートンへ戻りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Ryan_Giggs
+  - https://en.wikipedia.org/wiki/Wayne_Rooney
+  - https://en.wikipedia.org/wiki/Paul_Scholes
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ポール・スコールズ
+      - 1993-2013
+      - 3冠を支えた中盤
+  say:
+  - text: ポール・スコールズはサルフォード生まれの生え抜き。1994年の初出場で、いきなり**2得点**。
+    image: assets/photos/pl/manutd_legend_15d06a2f.jpg
+  - 2008年のチャンピオンズリーグ準決勝。バルセロナに**1対0**、その1点を決めました。
+  - リーグ優勝は**11回**で、イングランド人の最多。生涯このクラブだけでプレーしました。
+  sources:
+  - https://en.wikipedia.org/wiki/Ryan_Giggs
+  - https://en.wikipedia.org/wiki/Wayne_Rooney
+  - https://en.wikipedia.org/wiki/Paul_Scholes
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はマイケル・キャリック。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マイケル・キャリック（イングランド）
+    - - 就任
+      - 2026年1月・2年目
+    - - 前職
+      - ミドルズブラ
+  say:
+  - text: 監督はイングランド人のマイケル・キャリック。**2026年1月**に暫定で就き、5月に正式に決まりました。
+    image: assets/photos/pl/manutd_manager_ab69d494.jpg
+  - 現役時代は12年間、このクラブの中盤。最後の年は主将でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://en.wikipedia.org/wiki/Michael_Carrick
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は30人です。
+    image: assets/stats/pl_manutd_gk.png
+    no_telop: true
+  - image: assets/stats/pl_manutd_gk_f.png
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/pl_manutd_gk_f.png
+    text: セネ・ラメンスはリーグ戦で**37試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_gk_f.png
+    text: カール・ダーロウはウェールズ代表で**15試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_manutd_df_f.png
+    text: ハリー・マグワイアはイングランド代表で**66試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_df_f.png
+    text: ルーク・ショーはイングランド代表で**34試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_manutd_mf_f.png
+    text: 主将を務めるのが**ブルーノ・フェルナンデス**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_mf_f.png
+    text: リーグ戦で**235試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_manutd_mf_f.png
+    text: ユーリ・ティーレマンスはベルギー代表で**90試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_fw_f.png
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/pl_manutd_fw_f.png
+    text: マーカス・ラッシュフォードはイングランド代表で**78試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_fw_f.png
+    text: ベンヤミン・シェシュコはスロベニア代表で**45試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で1勝2引き分け2敗。12位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ハル・シティ（アウェー）
+      - 0対2
+    - - 第2節
+      - イプスウィッチ・タウン（ホーム）
+      - 5対2
+    - - 第3節
+      - エヴァートン（アウェー）
+      - 2対2
+    - - 第4節
+      - マンチェスター・シティ（ホーム）
+      - 0対1
+    - - 第5節
+      - フラム（アウェー）
+      - 1対1
+  say:
+  - プレミアリーグは5試合を終えて、**1勝2引き分け2敗**です。
+  - 順位は**12位**、勝ち点は**5**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  official: false

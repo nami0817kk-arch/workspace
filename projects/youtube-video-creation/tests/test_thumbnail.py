@@ -383,6 +383,27 @@ def test_正方形に近い写真は右に置く(tmp_path):
     assert sum(left[:3]) > 60
 
 
+def test_帯の2行目に1文字だけ残さない():
+    """**泣き別れした割り方を採用しない**（2026-09-12 ユーザー「サムネをもっとこだわって」）。
+
+    ギュレルの回で「押しのけたのは ●●●億の新加入」が、
+    2行目に「入」だけを残した形で書き出されていた。行数だけ見て控えていたため、
+    **いちばん大きい字＝泣き別れの割り方**が返っていた。
+    """
+    from PIL import Image, ImageDraw
+
+    from src.config import load_config
+    from src.thumbnail import SIZE, _fit_band
+
+    font_path = str(load_config().video.font_path())
+    draw = ImageDraw.Draw(Image.new("RGBA", SIZE))
+    for room in (640, 700, 0):
+        _, rows = _fit_band(draw, "押しのけたのは ●●●億の新加入", font_path, room=room)
+        assert len(rows) <= 2, rows
+        if len(rows) == 2:
+            assert len(rows[-1]) > 3, (room, rows)
+
+
 def test_帯の2行は同じ大きさで1行ずつに収める(tmp_path):
     """1行目だけで字の大きさを決めていて、2行目が泣き別れた（2026-09-07）。"""
     from PIL import ImageDraw
@@ -589,6 +610,10 @@ def test_エンブレムは右下に置く(tmp_path, monkeypatch):
     バルコラの回で、速度ランキング3行の真上にリヴァプールのエンブレムが
     重なり、数字が読めなくなった。ユーザーの指示で右下へ移した。
     言葉（左）とエンブレム（右下）は、**両方出る**のが正しい。
+
+    **2026-09-20 に下端の条件をゆるめた。**左のぼかしを禁じたのに合わせて
+    帯を全幅にしたので、縦長の回でもエンブレムは**帯の上**に乗る。
+    右に寄っていることと、帯に隠れていないことだけを見る。
     """
     from PIL import Image
 
@@ -607,7 +632,7 @@ def test_エンブレムは右下に置く(tmp_path, monkeypatch):
     assert placed, "エンブレムを置いていない"
     right, bottom = placed[0]
     assert right > SIZE[0] * 0.7, f"右に寄っていない: {right}"
-    assert bottom > SIZE[1] * 0.7, f"下に寄っていない: {bottom}"
+    assert bottom > SIZE[1] * 0.4, f"上すぎる: {bottom}"
 
 
 def test_横長の回はエンブレムを帯の上に載せる(tmp_path, monkeypatch):
@@ -837,3 +862,69 @@ def test_3枚並べたら札は真ん中の顔を避ける():
 
     # 札は真ん中の顔より下（画面の6割より下）
     assert th.FACE_CLASH_Y_TRIO > th.FACE_CLASH_Y
+
+
+def test_サムネだけに敷く絵は動画に回さない():
+    """**一覧板を thumbnail_photo に入れると、動画の中でカードと重なる**
+    （2026-09-17 の代表発表の回で、齋藤と松木がカードの下に隠れていた）。
+
+    `thumbnail_board` はサムネイルだけに効く。動画のほうは
+    `thumbnail_photo`（人の顔）のまま。
+    """
+    from src.thumbnail import from_meta
+
+    meta = {"title": "T", "thumbnail_line1": "あ", "thumbnail_line2": "い",
+            "thumbnail_photo": "assets/images/matsuki/01.jpg",
+            "thumbnail_board": "assets/stats/daihyo_new.png"}
+    assert from_meta(meta, "T")["photo"] == "assets/stats/daihyo_new.png"
+
+    del meta["thumbnail_board"]
+    assert from_meta(meta, "T")["photo"] == "assets/images/matsuki/01.jpg"
+
+
+def test_一覧板の回は書き込みの小窓を重ねない():
+    """**板の文字が小窓に隠れていた**（2026-09-17）。
+
+    松木の「サウサンプトン・23歳」が「松木遂に代表デビューか！」の小窓の
+    下に入っていた。板そのものが絵なので、台本から拾った断片は重ねない。
+    手で `thumbnail_reaction` を書いたときだけ出す。
+    """
+    from src.thumbnail import from_meta
+
+    board = {"thumbnail_line1": "あ", "thumbnail_line2": "い",
+             "thumbnail_board": "assets/stats/daihyo_new.png"}
+    assert from_meta(board, "T")["no_auto_reaction"] is True
+
+    board_with_words = dict(board, thumbnail_reaction="手で書いた一言")
+    assert from_meta(board_with_words, "T")["no_auto_reaction"] is False
+    assert from_meta(board_with_words, "T")["reaction"] == "手で書いた一言"
+
+    plain = {"thumbnail_line1": "あ", "thumbnail_line2": "い"}
+    assert from_meta(plain, "T")["no_auto_reaction"] is False
+
+
+def test_縦長の写真でも左をぼかさない(tmp_path):
+    """**左がぼやけるのは禁止**（2026-09-20 ユーザー指示）。
+
+    縦長の写真は右に置き、左は**べた塗りの面**にする。
+    ぼかした写真を敷いていた頃は、左半分に元の絵がうっすら残っていた。
+    面は1色のグラデーションなので、**横に並んだ画素の色がほとんど動かない**。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    photo = tmp_path / "tate.jpg"
+    # 左右で色がはっきり違う縦長の写真（ぼかして敷けば、その差が左に残る）
+    source = Image.new("RGB", (600, 1000), "white")
+    for x in range(300):
+        for y in range(1000):
+            source.putpixel((x, y), (220, 30, 30))
+    source.save(photo)
+
+    out = mod.build_thumbnail(_config(), "", tmp_path / "a.png", style="band",
+                              background=str(photo), lines=("上", "下"), tags=[])
+    with Image.open(out) as made:
+        row = [made.convert("RGB").getpixel((x, 120)) for x in range(0, 480, 40)]
+    spread = max(max(c[i] for c in row) - min(c[i] for c in row) for i in range(3))
+    assert spread < 30, f"左に写真の名残がある（色の振れ幅 {spread}）"

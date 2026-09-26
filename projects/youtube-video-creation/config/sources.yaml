@@ -121,20 +121,24 @@ domains:
              www.chunichi.co.jp, www.jsports.co.jp]
 
   # 複数媒体を横断できる。見出しに媒体名が入る
-  aggregator: [news.yahoo.co.jp]
+  # 2026-09-24 に追加。他社の記事をそのまま載せる形なので、**元がどこか**を見てから使う
+  aggregator: [news.yahoo.co.jp, sports.yahoo.com, uk.sports.yahoo.com]
 
   # 現地語の報道機関。その国のリーグの話はここが速い。
   # 検索はその言語で書く（kicker をドイツ語以外で引いても返らない）
   german: [kicker.de, sport1.de]
   italian: [football-italia.net, calciomercato.com, tuttomercatoweb.com,
             gazzetta.it]
-  french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com]
+  french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com, lyonfoot.com]
   dutch: [voetbalzone.nl, vi.nl]
   # ポルトガル。日本人選手が多く、欧州ビッグクラブへの経由地になる
   portuguese: [abola.pt, record.pt]
   # スペイン語圏。南米(ole / tycsports)もここで引く。検索はスペイン語で書く
   spanish: [besoccer.com, marca.com, as.com, mundodeportivo.com, relevo.com,
-            sport.es, ole.com.ar, tycsports.com]
+            sport.es, ole.com.ar, tycsports.com, eldebate.com]
+
+  # ウクライナ。代表と、東欧に散った選手の話はここでしか出ない（2026-09-24 に追加）
+  ukrainian: [sport.ua, sport-express.ua, ukrfootball.ua, nv.ua, english.nv.ua]
 
   social: [x.com]
 
@@ -161,7 +165,12 @@ domains:
            # そこから辿れるまとめ。反応の取り出しは実測済み（下の注記）
            www.footballtopic.com, football-2ch.com, worldfn.net,
            # 2026-09-07 に追加。海外の反応まとめ。同種のブログに合わせて未確認どまり
-           nofootynolife.net]
+           nofootynolife.net,
+           # 2026-09-24 に追加。移籍の集約サイト。元記事の引き写しなので未確認どまり
+           fichajes.net, yardbarker.com, sportbible.com, eldesmarque.com,
+           bavarianfootballworks.com, romapress.net, africafoot.com,
+           africasoccer.com, insidefutbol.com, voetbalprimeur.be,
+           voetbalkrant.com, qoly.jp]
 
   # 取得できないサイト。ここを検索しても結果は返らない。
   #
@@ -345,6 +354,7 @@ domain_tiers:
   dutch: 報道
   portuguese: 報道
   spanish: 報道
+  ukrainian: 報道
   social: 未確認
   rumour: 未確認
 
@@ -359,6 +369,39 @@ accounts:
   - {handle: MatteMoretto, name: Matteo Moretto, tier: 未確認, note: スペイン・イタリア}
   - {handle: DiMarzio, name: Gianluca Di Marzio, tier: 未確認, note: セリエA}
   - {handle: TheAthleticFC, name: The Athletic Football, tier: 報道, note: 媒体の公式}
+  # 2026-09-15 に追加（ユーザーが一覧を持ってきた）。**ドイツと数字と戦術の穴を埋める。**
+  # ドイツの網は kicker.de と sport1.de の2つしか無く、しかも kicker は403を返す。
+  # 日本人選手はブンデスに多い（堂安・佐野・町田・板倉ほか）のに、現地の速い声が拾えていなかった
+  - {handle: Plettigoal, name: Florian Plettenberg, tier: 未確認, note: ブンデスリーガ専門。Sky Germany}
+  # 数字の1行（「史上◯人目」「◯年ぶり」）が作れる。**数字を含む行が足りないと draft が毎回言う**
+  - {handle: OptaJoe, name: Opta Joe, tier: 未確認, note: 試合中の記録。数字の裏取りは別途}
+  # 戦術。**保留中のプレミア20クラブ動画で、戦術をどう書くかが未決だった**（2026-09-15）
+  - {handle: TifoFootball, name: Tifo Football, tier: 未確認, note: 戦術の解説。図と動画}
+  # 2026-09-15 の2回目の突き合わせ。**フランスとBBCの穴を埋める。**
+  # footmercato.net は24本で使っていて、フランス語の網ではいちばん効いている。
+  # その記者本人を追えていなかった
+  - {handle: Santi_J_FM, name: Santi Aouna, tier: 未確認, note: リーグアン・フランス。Foot Mercato}
+  # **BBCは検索でこちらのUAを弾く**（2026-09-15 実測）。記事は15本で使えているが、
+  # 「探す」ができない。**Xの投稿なら見出しが拾える**ので、そこだけ塞ぐ
+  - {handle: BBCSport, name: BBC Sport, tier: 報道, note: 媒体の公式。検索で本体が引けないぶんの入口}
+  # OptaJoe が試合中の1行、こちらは分析記事とグラフ。役割が違うので両方置く
+  - {handle: OptaAnalyst, name: The Analyst (Opta), tier: 未確認, note: 数字の分析。裏取りは別途}
+  # **@nocontextfooty は入れない。**珍場面の画像・動画を貼るアカウントで、
+  # SNSに出た画像と放送映像は使わない方針（2026-09-06）。出典としての確度も無い
+  # **@pythabol も入れない。**戦術クリップは TifoFootball と役割が重なるうえ、
+  # 中身が動画なので引けるのは言葉だけになる
+  # **@JacobsBen は保留。**チェルシーは効くが、もう半分のサウジリーグは扱わない
+  # （リーグの一覧は欧州7つのまま。2026-09-15 ユーザー判断）。
+  # プレミアは Romano と Ornstein で足りている
+  # **@GettySport は入れない。**Getty との契約は見送り済みで、写真は CC0/BY と
+  # 生成だけで賄う方針（2026-09-06）。SNSに出た画像も使わない。ここに足すと
+  # 「引用できる」と誤解する元になる
+  # **@SkySportsNews も入れない。**skysports.com を記事として32本使っている。
+  # 同じ話なら記事のほうが引用しやすく、確度も上げやすい
+  # クラブ公式（2026-09-11 ユーザー判断「B」）。佐野航大の写真が Commons に
+  # 無く、使えるのはクラブの投稿だけだった。**サムネイルには使えない**ので、
+  # 本文の1カットに限る
+  - {handle: PSV, name: PSV アイントホーフェン（クラブ公式）, tier: 確定, note: オランダ。クラブの公式アカウント}
 
 # 記者の投稿をどう扱うか
 social:
@@ -588,7 +631,11 @@ tiers:
     needs_official: true      # クラブ・リーグ・当事者の発表であること
     description: クラブ・リーグ・当事者が発表した
   報道:
-    needs_sources: 2          # 2社以上で一致していること
+    # **1本でよい**（2026-09-07 のユーザー判断）。それまでは2社以上の一致を
+    # 条件にしていた。**CLAUDE.md には書き換えたのに、ここを直し忘れていた**
+    # （2026-09-12 に発覚）。おかげで取材メモは「2本目のURL」を埋めるために
+    # 同じ記事を並べるようになり、**数を満たすだけの欄**になっていた
+    needs_sources: 1
     needs_official: false
     description: 報道機関が報じた
   未確認:
@@ -630,6 +677,19 @@ scan:
     - {per_league: true, label: 試合結果}
     - {q: "Fabrizio Romano here we go", domains: social, label: 記者（移籍の完了）}
     - {q: "David Ornstein exclusive", domains: social, label: 記者（プレミア）}
+    # **インタビューを、題材を見つける側に置く**（2026-09-15 ユーザー提案）。
+    # deep: には前から「本人の言葉」の行があるが、あれは**題材が決まったあとの
+    # 肉付け**で、インタビューから題材が生まれることは一度も無かった。
+    # 上の行を見れば分かるとおり、探しているのは移籍・試合結果・批判だけ。
+    #
+    # 9/15 のアナリティクスで、本編は1再生あたり10.5秒しか見られておらず、
+    # 4,000時間には1.9倍足りない。視聴時間は**尺 × 維持率**なので、
+    # 2分の試合記事では埋まらない。**インタビュー1本からは5分以上書ける。**
+    # 実測: この2行で、いまの網が取りこぼしていた候補が出た
+    #   ヤマル（Universo Valdano／バロンドールについて）・アンチェロッティ
+    #   （ネイマールと W杯）・小杉啓太（フランクフルトでのデビュー）
+    - {q: "サッカー インタビュー 明かした OR 語った OR 激白", domains: japanese, label: 本人が語ったこと（日本語）}
+    - {q: "exclusive interview \"told\" {today_en}", domains: english, label: 本人が語ったこと（英語）}
   check: |
     1件ずつ candidates に書き出す。この時点では深掘りしない。
     見出しから拾えるものだけを埋め、判断は pick に任せる。
@@ -1057,3 +1117,19 @@ routines:
           - {q: "summer transfer window spending total", domains: english}
           - {q: "transfer window net spend club", domains: stats}
         check: どの範囲の集計か（リーグ全体か1クラブか）を必ず確かめる
+
+# 候補に出さないと決めた題材（2026-09-12 から）
+#
+# **持ち越しを繰り返すのは、決めていないのと同じ。**ムバッペの独裁者ミームは
+# 4日つづけて候補に載せ、4回とも見送られた。毎朝ユーザーの手を止めていた。
+# ここに書いたものは**題材を集めるときに落とす。**理由も一緒に残す
+# （あとで「なぜ外したか」が分からないと、また拾ってくる）。
+excluded_topics:
+  - topic: ムバッペを独裁者に見立てたミームへの本人の反応
+    reason: 独裁者・殺害という言葉が入り、サッカーの話から外れる
+    decided: 2026-09-12
+    source: https://www.espn.com/soccer/story/_/id/49903623/kylian-mbappe-dictator-meme-criticises-lack-political-awareness
+  - topic: ロドリのバレンシアへの侮辱発言と、主将ガヤへの謝罪
+    reason: すでに扱った題材（2026-09-13 ユーザー「もう作ったよ」）
+    decided: 2026-09-13
+    source: https://footballnet.2chblog.jp/archives/60045000.html

@@ -1,0 +1,393 @@
+# プレミアリーグ20クラブ紹介 ⑱ノッティンガム・フォレスト（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/forest*.json と旧台本 20260916_pl18_forest.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- ノッティンガム・フォレスト
+- ブライアン・クラフ
+short_title: 欧州を連覇したフォレストの正体
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_18_forest
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ノッティンガム・フォレスト
+  title: アーセナルの赤はフォレストの贈り物。欧州を連覇したクラブの正体
+  question: どんなクラブなのか
+  hook: 国内よりも、ヨーロッパで勝ってきたクラブです。
+  lead: 創立**1865年**。20クラブのなかで、いちばん古い。
+  opening_image: assets/stats/pl_forest_data_t.png
+thumbnail:
+  line1: 国内より、欧州で獲った
+  line2: アーセナルの赤は、ここからの贈り物
+  crest_main:
+  - ノッティンガムフォレスト
+  tags: []
+  points: []
+  board: assets/stats/pl_forest_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: パレスをFAカップに導いた監督が来た
+  narrator: キャスター
+  say:
+  - text: パレスをFAカップに導いたグラスナーの**1年目**。名将クラフは、最初に獲ったリーグカップをこう語りました。
+    image: assets/stats/pl_forest_data_r1.png
+    no_telop: true
+  - voice: ブライアン・クラフ
+    text: 「つまらない杯だなんてどうかしてる。獲ったから全部変わった」
+    image: assets/stats/pl_forest_data_r1.png
+  - text: 昨季は**16位**。2022年に戻ってきてから、今季でプレミア5シーズン目になります。
+    image: assets/stats/pl_forest_data_r2.png
+    no_telop: true
+  - text: 開幕から**5試合で1勝**。新しい監督の立て直しが、いま始まったところです。
+    image: assets/stats/pl_forest_data_r3.png
+    no_telop: true
+  - text: 1886年にアーセナルへ赤いシャツを贈り、1979年と80年には欧州の頂点に2年続けて立ちました。
+    image: assets/stats/pl_forest_data_r3.png
+    no_telop: true
+  - image: assets/stats/pl_forest_data1.png
+    text: 愛称は「トリッキー・トゥリーズ」。ユニフォームの赤から、「ガリバルディス」「レッズ」とも。
+    no_telop: true
+  - image: assets/stats/pl_forest_map.png
+    text: ホームタウンはウェスト・ブリッジフォード。ノッティンガムの隣町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+    text: いちばん古いクラブの本拠地は、シティ・グラウンド。**3万1212人**が入ります。
+  - image: assets/photos/pl/forest_owner_741d4568.jpg
+    text: オーナーはギリシャの実業家エヴァンゲロス・マリナキス。2017年からクラブを持っています。
+  - image: assets/stats/pl_forest_cups.png
+    text: 1部リーグの優勝は**1回**。FAカップ2回、リーグカップ4回。
+    no_telop: true
+  - image: assets/stats/pl_forest_cups.png
+    text: そしてチャンピオンズリーグを**2回**、スーパーカップを1回獲っています。
+    no_telop: true
+  - image: assets/stats/pl_forest_data6.png
+    text: リーグで**42試合負けなし**という記録も持っています。1シーズンぶんの長さです。
+    no_telop: true
+  - image: assets/stats/pl_forest_last.png
+    text: プレミアでの最高位は、1994年から95年の**3位**です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Nottingham_Forest_F.C._season
+  - https://en.wikipedia.org/wiki/Brian_Clough
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false
+- id: clough
+  heading: 上がって、ヨーロッパを獲って、そして落ちた
+  tier: 背景
+  telop: 2部から上がった翌シーズンに、1部で優勝した
+  narrator: 解説
+  card:
+    type: table
+    title: 上がって、落ちて、戻るまで
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1977年
+      - 2部から昇格（勝ち点52）
+    - - 翌シーズン
+      - 1部優勝。11月から42試合無敗
+  say:
+  - text: 2部から1部に上がったのは1977年。勝ち点**52**は、昇格チームとして**歴代5番目に少ない**数字でした。
+    image: assets/images/pl_forest_story/scene.jpg
+  - ぎりぎりで上がったそのクラブが、翌シーズン、**1部で優勝**します。
+  - この時代を作ったのが、監督のブライアン・クラフと、右腕のピーター・テイラーです。
+  - text: さきほどの負けなしの記録も、1部に上がったその年の11月に始まっています。
+    card:
+      type: table
+      title: 上がって、落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 1979年・1980年
+        - ヨーロッパカップ連覇
+      - - 1993年
+        - プレミア最初のシーズンに降格
+  - さらに次のシーズンからは、ヨーロッパカップ、いまのチャンピオンズリーグです。
+  - 1979年と1980年、**2年続けて**制しました。
+  - text: そして1993年、**プレミアリーグの最初のシーズン**に降格します。
+    card:
+      type: table
+      title: 上がって、落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 1994年
+        - すぐに復帰。翌シーズン3位
+      - - 1999年
+        - 再び降格
+  - クラフが指揮した18年も、そこで終わりました。
+  - 1994年にすぐ戻り、その次のシーズンには**3位**に入りました。
+  - text: ですが1999年に、また落ちます。
+    card:
+      type: table
+      title: 上がって、落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 2022年
+        - 23年ぶりに1部へ（プレーオフ）
+  - ヨーロッパを連覇したクラブが、そこから**23年**、1部にいませんでした。
+  - 戻ってきたのは2022年。プレーオフを勝ち上がっての昇格でした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 整えて攻める。川向こうに隣人
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 激しく整えて、攻めに出る
+    - - 運営の型
+      - 2022年夏に21人を獲得
+    - - クラブの気質
+      - 隣のクラブまで300ヤード
+  say:
+  - text: グラスナー監督のサッカーは、激しく、きっちり整えて、攻めに出る。
+    image: assets/photos/pl/forest_manager_0c9c0210.jpg
+  - オーナーの資金で買う型。23年ぶりに昇格した2022年の夏に21人を獲り、これはイギリスの記録でした。
+  - 川向こう300ヤードに、ノッツ・カウンティの本拠地。国内でいちばん近いスタジアム同士です。
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://www.nottinghamforest.co.uk/news/2026/july/06/in-profile---oliver-glasner/
+  - https://en.wikipedia.org/wiki/Evangelos_Marinakis
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false
+- id: episode
+  heading: アーセナルの赤の由来
+  tier: 背景
+  telop: アーセナルの赤は、フォレストの贈り物
+  narrator: 解説
+  card:
+    type: table
+    title: アーセナルの赤の由来
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1886年
+      - アーセナルにユニフォーム一式を贈る
+    - - アーセナルの赤
+      - その名残
+    - - ほかにも
+      - エヴァートンにシャツ、ブライトンに土地探し
+  say:
+  - text: '**1886年**、できたばかりのアーセナルに、ユニフォームを一式贈りました。'
+    image: assets/images/pl_forest_episode/scene.jpg
+  - アーセナルがいまも赤いのは、そのためです。
+  - エヴァートンにもシャツを贈り、ブライトンには試合をする土地を探す手伝いもしています。
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - スチュアート・ピアース
+      - 1985-1997
+      - 12年間の主将
+  say:
+  - text: スチュアート・ピアースは、コヴェントリーから来た左サイドバック。愛称は「サイコ」です。
+    image: assets/photos/pl/forest_legend_76a123b5.jpg
+  - 1991年のFAカップ決勝、トッテナム戦。フリーキックで決めましたが、**2対1**で敗れました。
+  - リーグカップを2年続けて掲げ、リーグ戦で**401試合**。1996年には選手兼監督も務めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Stuart_Pearce
+  - https://en.wikipedia.org/wiki/Des_Walker
+  - https://en.wikipedia.org/wiki/Stan_Collymore
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - デス・ウォーカー
+      - 1984-2005
+      - 1990年W杯4強のCB
+  say:
+  - text: デス・ウォーカーは生え抜きのセンターバックで、1990年ワールドカップの**4強**メンバーです。
+    image: assets/photos/pl/forest_legend_504f470d.jpg
+  - プロ生活の得点は**1点**だけ。1992年の元日、ルートン戦。1対1の引き分けに持ち込んだ一撃です。
+  - 1992年、**150万ポンド**でサンプドリアへ。10年後に戻ってきて、38歳まで守りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Stuart_Pearce
+  - https://en.wikipedia.org/wiki/Des_Walker
+  - https://en.wikipedia.org/wiki/Stan_Collymore
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - スタン・コリモア
+      - 1993-1995
+      - 昇格即3位のFW
+  say:
+  - text: スタン・コリモアは、1993年にサウスエンドから**225万ポンド**で来たストライカーです。
+    image: assets/photos/pl/forest_legend_fdfd78cc.jpg
+  - 最初のシーズンは28試合で**19得点**。2部から1部へ、クラブを押し上げました。
+  - 翌シーズンも22得点。1995年、英国最高額の**850万ポンド**でリヴァプールへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Stuart_Pearce
+  - https://en.wikipedia.org/wiki/Des_Walker
+  - https://en.wikipedia.org/wiki/Stan_Collymore
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はオリバー・グラスナー。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - オリバー・グラスナー（オーストリア）
+    - - 就任
+      - 2026年7月・1年目
+    - - 前職
+      - クリスタル・パレス
+  say:
+  - text: 今季の監督は、オーストリア人のオリバー・グラスナー。**2026年7月**に来た1年目です。
+    image: assets/photos/pl/forest_manager_0c9c0210.jpg
+  - 前はクリスタル・パレス。2025年、パレスにクラブ初のFAカップをもたらしました。
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://en.wikipedia.org/wiki/Oliver_Glasner
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/pl_forest_gk.png
+    no_telop: true
+  - image: assets/stats/pl_forest_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_forest_gk_f.png
+    text: マッツ・セルスはベルギー代表で**13試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_forest_df_f.png
+    text: ネコ・ウィリアムズはウェールズ代表で**57試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_df_f.png
+    text: ニコラ・ミレンコヴィッチはセルビア代表で**71試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_mf_f.png
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/pl_forest_mf_f.png
+    text: 主将を務めるのが**ライアン・イェーツ**。
+    no_telop: true
+  - image: assets/stats/pl_forest_mf_f.png
+    text: リーグ戦で**238試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_forest_mf_f.png
+    text: イブラヒム・サンガレはコートジボワール代表で**61試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_fw_f.png
+    text: フォワードは6人。
+    no_telop: true
+  - image: assets/stats/pl_forest_fw_f.png
+    text: クリス・ウッドはニュージーランド代表で**93試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_fw_f.png
+    text: ダン・ンドイェはスイス代表で**37試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で1勝2引き分け2敗。13位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - リーズ・ユナイテッド（ホーム）
+      - 0対1
+    - - 第2節
+      - リヴァプール（アウェー）
+      - 2対2
+    - - 第3節
+      - トッテナム・ホットスパー（ホーム）
+      - 0対0
+    - - 第4節
+      - アストン・ヴィラ（アウェー）
+      - 2対1
+    - - 第5節
+      - コヴェントリー・シティ（ホーム）
+      - 0対1
+  say:
+  - プレミアリーグは5試合を終えて、**1勝2引き分け2敗**です。
+  - 順位は**13位**、勝ち点は**5**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Nottingham_Forest_F.C._season
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト_in.png
+  official: false

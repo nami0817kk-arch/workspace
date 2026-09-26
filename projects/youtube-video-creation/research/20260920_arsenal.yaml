@@ -1,0 +1,155 @@
+# アーセナルがブライトンに0対3。王者の風格が消えた夜（2026-09-20）
+#
+# 材料は research/raw/20260920_arsenal.md。
+# 出典は ESPN 2本（英語）と theWORLD（Yahoo!ニュース配信、日本語）。
+#
+# **得点の時間が媒体で違う。**3点目は ESPN が55分、日本語記事が57分。
+# **分を言わずに「後半に入って」とする。**
+#
+# **ウーデゴールの「今は望みがないように感じる」は入れない。**
+# GiveMeSport 経由の引用で、どこで話した言葉かが記事に書かれていない。
+# 裏が取れていないので使わない（アルテタの発言は ESPN の直接取材）。
+#
+# 海外の反応は、ブライトンサポのチャント2つと、シティのラポルテの投稿。
+# **ラポルテは「有名人の投稿」なので名前を出してよい**（匿名の一般人ではない）。
+format: news
+voice_min: 40
+slot: world_1
+date: "2026年9月20日"
+
+people:
+  - ミケル・アルテタ
+
+short_title: "アーセナル、ブライトンに0対3"
+
+theme:
+  id: arsenal_brighton_0_3
+  league: england
+  league_name: プレミアリーグ
+  kind: match
+  topic: アーセナル
+  title: アーセナルが3点差で負けた。アルテタが「程遠かった」と言ったのは
+  hook: 最初のスローインから、と監督は言いました。
+  question: 何が足りなかったのか
+
+thumbnail:
+  # **アルテタ本人**（2026-09-20 ユーザー指示「アーセナルはアルテタに変更」）。
+  # ブライトン戦のタッチラインで頭を抱えている場面
+  photo: assets/images/20260920_arteta_press/01.jpg
+  line1: 王者が、なすすべなし
+  line2: アルテタ「●●から程遠かった」
+  tags:
+    - アーセナル
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/arsenal_20260920.png
+    telop: ブライトンが3対0。王者に完勝
+    narrator: キャスター
+    card:
+      type: table
+      title: プレミアリーグ第5節
+      columns: [時間, 得点者]
+      rows:
+        - ["31分", "パスカル・グロス"]
+        - ["前半終了間際", "ハラランボス・コストゥラス"]
+        - ["後半", "チェマ・アンドレス"]
+    say:
+      - ブライトンがアーセナルに3対0で勝ちました。
+      - 31分にグロス、前半の終わりぎわにコストゥラス、後半に入ってアンドレスが決めています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49978067/arsenal-aura-premier-league-champions-evaporates-brighton-thrash-3-0
+      - https://news.yahoo.co.jp/articles/ba1b94b5653b3fadce2b51f30b3a2f2e7a7a5757
+
+  # **カードを2枚に割った**（2026-09-20）。1枚のままだと21秒動かなかった
+  - id: champion
+    heading: 王者が受けた3点差
+    tier: 報道
+    bg: assets/backgrounds/arsenal_20260920.png
+    telop: 3点差の敗戦は2023年5月以来
+    narrator: 解説
+    card:
+      type: table
+      title: アーセナルの今季
+      columns: ["", ""]
+      rows:
+        - ["昨季", "22年ぶりのプレミア優勝"]
+        - ["今回", "3点差での敗戦"]
+        - ["前回の3点差", "2023年5月"]
+    say:
+      - アーセナルは昨季、22年ぶりにプレミアリーグを制したチームです。
+      - "王者がこれだけ大きな差で敗れたのは、**2023年5月**以来のことです。"
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49978067/arsenal-aura-premier-league-champions-evaporates-brighton-thrash-3-0
+      - https://news.yahoo.co.jp/articles/ba1b94b5653b3fadce2b51f30b3a2f2e7a7a5757
+
+  - id: arteta
+    heading: アルテタが認めたこと
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/arsenal_20260920.png
+    telop: 「最初のスローインの時点で、明らかだった」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: 王者アーセナルが、ブライトンに0対3で敗れました。}
+      - 試合後、ミケル・アルテタ監督はこう話しています。
+      - {voice: アルテタ監督, text: 私は非常に落胆している。しかしまず、ブライトンの勝利を称えなければならない。彼らはそれに値した}
+      - {voice: アルテタ監督, text: プレミアリーグで果たすべき基本的なことがある。しかし我々は、最初の球際の攻防に勝つことから程遠かった}
+      - {voice: アルテタ監督, text: 最初のスローインの時点で、我々が苦しくなることは明らかだった。技術的に非常に拙かった}
+      - {voice: アルテタ監督, text: 結局のところ、これは我々全員にとって大きな教訓だ}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49980636/arsenal-trouble-first-throw-brighton-mikel-arteta
+
+  - id: brighton
+    heading: ブライトンの側から見ると
+    tier: 報道
+    bg: assets/backgrounds/arsenal_20260920.png
+    telop: 3シーズン続けて、前の王者を倒している
+    narrator: 解説
+    card:
+      type: table
+      title: ブライトンが倒してきた前年王者
+      columns: ["", ""]
+      rows:
+        - ["2シーズン前", "リヴァプール"]
+        - ["昨シーズン", "マンチェスター・シティ"]
+        - ["今季", "アーセナル"]
+    say:
+      - ブライトンにとっては、クラブ創設125周年の祝いの試合でもありました。
+      - "そして**3シーズン続けて**、その前の年の王者を倒しています。"
+      - 一昨季がリヴァプール、昨季がマンチェスター・シティ、そして今季がアーセナルです。
+      - この勝利で、ブライトンは3位に上がりました。
+      - 終盤にはアーセナルのライスが相手に蹴りかかって警告を受け、退場でもおかしくない場面もありました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49978067/arsenal-aura-premier-league-champions-evaporates-brighton-thrash-3-0
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    bg: assets/backgrounds/arsenal_20260920.png
+    telop: 「点差以上に一方的すぎた」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この試合を見ていた人たちの声です。}
+      - {voice: 海外のファン, text: お前らは変装したトッテナムか, short_voice: true}
+      - {voice: 海外のファン, text: お前らは冗談だろ、イングランドの王者が、冗談だろ}
+      - {voice: ネット民, text: よく3点でおさまったな、点差以上に一方的すぎた}
+      - {voice: ネット民, text: おそらく優勝争いはしないだろうと思われてるクラブが突如こんな強さを見せるのがプレミアの怖さだね}
+      - {voice: ネット民, text: ブライトンのプレスはそのうち落ちると思ってたけど試合を通じてやり遂げた}
+      - {voice: ネット民, text: 1点目2点目は本当にゴラッソでラヤもあれ以上の事は出来なかったと思う}
+      - {voice: ネット民, text: カラバオで結構ローテした上でこの結果はいただけない}
+      - {voice: ネット民, text: アーセナルは中3日で、ブライトンは中2日。日程差も全然言い訳にならない}
+      - {voice: ネット民, text: 毎年主力抜かれて、無名の若手が加わっても、ハイプレスポゼッションのチームコンセプトは維持してくる}
+      - {voice: ネット民, text: ブライトンの寄せの速さ尋常じゃなかった}
+      - {voice: ネット民, text: アーセナルは為す術がほとんどなく、一方的にボールとスペースを刈り取られた, short_voice: true}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/ba1b94b5653b3fadce2b51f30b3a2f2e7a7a5757/comments
+      - https://www.givemesport.com/piers-morgan-reacts-brighton-chant-arsenal-premier-league/

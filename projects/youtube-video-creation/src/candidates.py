@@ -394,7 +394,10 @@ def assign(
             pool = hit
 
         # 種別で絞る枠（2026-09-07）。試合結果の枠を移籍の話で埋めない。
-        # **該当が無ければ枠を空ける。**埋めるための枠ではない
+        # **該当が無ければ、別の話で埋めて出す**（2026-09-11 ユーザー
+        # 「試合結果は、その日次第なので別軸」「別の話でいいのがあれば共有」）。
+        # それまでは空けていたが、試合が無い日に枠がまるごと消えていた。
+        # 中身がずれていることは印で伝えて、採るかどうかはユーザーが決める。
         kinds = rule.get("require_kind")
         if kinds and pool:
             want = [str(k).strip().lower() for k in
@@ -402,10 +405,9 @@ def assign(
             hit = [c for c in pool if c.kind in want]
             if not hit:
                 fallbacks.setdefault(slot, []).append(
-                    f"種別が{' か '.join(want)}の候補がありません。枠を空けます"
+                    f"種別が{' か '.join(want)}の候補がありません。別の話を入れています"
                 )
-                continue
-            pool = hit
+            pool = hit or pool
 
         tiers = rule.get("require_tier")
         if tiers:
@@ -420,16 +422,16 @@ def assign(
         if pick is None:
             continue
 
-        # 本数を増やすと、埋めるために弱い候補が入る。実測（2026-09-04）で
-        # 枠を5→9に増やしたとたん、2点のブログ雑感が枠に入った。
-        # **点の低いものを出すくらいなら空ける。**枠は埋めるためのものではない。
+        # 下限に届かない候補も**いったん出す**（2026-09-11 ユーザー
+        # 「5てんに届かなくてもいったん共有」）。それまでは黙って見送っていたので、
+        # **弱い日は一覧に何も出ず、判断の材料も残らなかった。**
+        # 弱いことは印で伝えて、採るかどうかはユーザーが決める。
         floor = int(rule.get("min_score", scoring.get("min_score", 0)) or 0)
         if floor and pick.score < floor:
             fallbacks.setdefault(slot, []).append(
-                f"いちばん高い候補でも{pick.score}点で、下限{floor}点に届きません。"
-                "無理に埋めず空けます"
+                f"いちばん高い候補でも{pick.score}点で、目安の{floor}点に届きません。"
+                "弱い候補です"
             )
-            continue
         chosen[slot] = pick
         remaining = [c for c in remaining if c.id != pick.id]
         if pick.topic:

@@ -65,3 +65,52 @@ def test_hints_carry_a_reason():
     (hint,) = check("9月1日")
     assert isinstance(hint, Hint)
     assert hint.why
+
+
+def test_draw_notation_is_flagged():
+    """勝敗表記の「分」は「ふん」と読まれる（2026-09-13）。
+
+    「1分3敗」は引き分けの数なのに、合成音声は時間の「いっぷん」で読む。
+    **聞き返せないので、耳では直せない。**Gemini に台本を読ませて見つかった。
+    9/10 のリヴァプール・PSG、9/12 の佐藤、9/13 のヴィラで実際に鳴っていた。
+    """
+    from src.reading import check
+
+    def flagged(text):
+        return [h for h in check(text) if "勝敗" in h.why]
+
+    assert flagged("ヴィラは開幕から4試合、1分3敗。")
+    assert flagged("プレミアリーグで1勝2分と勝ち切れていませんでした")
+    assert flagged("開幕から2分1敗で、まだ勝ち星がありません")
+    # **試合の時間は拾わない。**45分・後半30分は正しく読まれる
+    assert not flagged("試合は45分で折り返し")
+    assert not flagged("後半30分に交代")
+    assert not flagged("アディショナルタイム7分")
+    # すでに開いてあるものは拾わない
+    assert not flagged("1分け3敗")
+
+
+def test_辞書の読みを合成に渡す文へ開く():
+    """2026-09-22 指示「日本人選手を読む時に読み仮名間違えているから改善して」。
+    辞書は check で知らせるだけで、合成には使っていなかった。"""
+    from src.reading import apply
+
+    d = {"鈴木彩艶": "すずきざいおん", "彩艶": "ざいおん", "鎌田": "かまだ", "鎌田大地": "かまだだいち"}
+    assert apply("鈴木彩艶と鎌田大地。鎌田は", d) == "すずきざいおんとかまだだいち。かまだは"
+    assert apply("彩艶が", d) == "ざいおんが"
+
+
+def test_辞書に無い漢字の人名は下書きで知らせる():
+    from src.research import _advise_readings, build_notes
+
+    raw = _raw_people(["冨安健洋", "架空太郎"])
+    got = _advise_readings(build_notes(raw))
+    assert any("架空太郎" in h for h in got) and not any("冨安健洋" in h for h in got)
+
+
+def _raw_people(people):
+    from tests.test_research import _raw
+
+    raw = _raw()
+    raw["people"] = people
+    return raw

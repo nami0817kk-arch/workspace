@@ -1,0 +1,292 @@
+# ジダンが、フランス代表監督として初めてメンバーを選んだ（2026-09-19）
+#
+# news の型。事実（発表）→ 外れた11人 → 初招集5人 → ジダンの言葉 → 反応。
+#
+# **候補は research/20260919_candidates.yaml の post1014366。**
+# footballchannel.jp の記事をまず読み、goal.com（日本語）・ゲキサカ・日刊スポーツ
+# （Yahoo!ニュース）・football-zone.net で裏を取った。同じ23人・同じ11人・
+# 同じ5人が並んでいたので、人数と名前はここでは確定的に扱ってよい（tier: 報道。
+# FFF公式の発表文そのものには辿り着けていないため「確定」までは上げない）。
+#
+# **外れた11人の所属クラブは、8人ぶんが2026年5月12日時点のもの**
+# （goal.com「フランス代表 最新メンバー｜FIFAワールドカップ2026」・ゲキサカの
+# W杯メンバー表）。9月時点で裏が取れたのはサリバ（アーセナル）・チュアメニ
+# （レアル・マドリード）・テュラム（インテル）の3人だけ（football-zone.net、
+# 9月19日付）。**残り8人（サンバ・ディニュ・ギュスト・L.エルナンデス・
+# T.エルナンデス・カンテ・アクリウシュ・マテタ）は、9月の移籍が無かったかまで
+# 確認できていない。**台本化の前に、可能なら現在の所属を取り直す。
+# 実際、選ばれた側のコナテは5月時点リヴァプール→9月はレアル・マドリードに
+# 移っており、シーズン中の移籍は起きうる
+#
+# **カンテが外れた理由は、情報源によって食い違う。**goal.com（日本語、
+# ジダンの会見を直接訳した記事）は「純粋に競技面の理由」「今はより若い選手たちを
+# 見たい」というジダン本人の言葉を載せている。一方、英語のまとめ記事
+# （worldsoccertalk.com）は「引退したため」と書いている。**ジダン本人の言葉を
+# 直接訳した記事を優先し、「引退」は台本に入れない。**
+#
+# **反応は Yahoo!ニュースのコメント欄2本から。**
+#   footballchannel記事の欄: 8件中7件使用（1件は会見内容の書き起こしで反応ではないため除外）
+#   goal.com記事の欄: 34件中1ページ目8件を使用（2〜4ページ目は未確認）
+# **海外の匿名反応は取れなかった。**発表から数時間しか経っておらず、まとめサイト・
+# 「海外の反応」系ブログにこの発表そのものを扱った投稿がまだ無い。X・redditは
+# ログイン/JS必須でブラウザから読めなかった（反応を集める工程ではJavaScriptを
+# 実行しない決まりのため）。海外ファンの声は空のまま出す。
+#
+# **外れた11人の表から「所属」を落とした**（2026-09-19）。9月時点の裏が
+# 3人ぶんしか取れず、元記事にも載っていなかったため。名前と位置だけにした
+#
+# **サムネ写真は未取得。**build前に portrait でジダンの写真を取ること。
+format: news
+slot: world_1
+date: "2026年9月19日"
+
+people:
+  - ジネディーヌ・ジダン
+
+short_title: "フランス代表、消えた11人"
+
+theme:
+  id: zidane_first_squad
+  league: france
+  league_name: フランス代表
+  kind: other
+  topic: フランス代表
+  title: ジダン新体制のフランス代表、消えたのは
+  hook: フランス代表の新監督が、就任して初めてメンバーを選びました。
+  question: 誰が外れ、誰が呼ばれたのか
+
+thumbnail:
+  line1: ジダン新体制で消えたのは
+  line2: Ｗ杯組から●●人
+  # 顔は必須。まだ取っていない（このメモの作成時点では portrait 未実行）
+  photo: assets/photos/20260919_zidane_face/01.jpg
+  focus: 0.3
+  tags:
+    - フランス代表
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: フランス代表がメンバー23人を発表
+    narrator: キャスター
+    card:
+      type: table
+      title: ジダン新体制、最初のメンバー
+      columns: ["", ""]
+      rows:
+        - ["発表", "9月18日"]
+        - ["選出人数", "23人"]
+    say:
+      - フランス代表は18日、9月から10月にかけてのUEFAネーションズリーグに向けたメンバー23人を発表しました。
+      - 今夏に就任したジネディーヌ・ジダン監督にとって、初めてのメンバー選考です。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/19/post1014366/
+      - https://news.yahoo.co.jp/articles/252a8b4e403b83ebf7748ff468c9bc7d3e10d749
+
+  # **ここも1枚の表を2枚に割ったもの**（2026-09-19）。
+  # 4行を1枚のカードで通したら、同じ絵のまま25秒止まった
+  - id: compare
+    heading: Ｗ杯の26人と比べると
+    tier: 報道
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: Ｗ杯組から残ったのは15人
+    narrator: キャスター
+    card:
+      type: table
+      title: ワールドカップの26人との違い
+      columns: ["", ""]
+      rows:
+        - ["Ｗ杯組から継続", "15人"]
+        - ["メンバー外", "11人"]
+        - ["初招集", "5人"]
+    say:
+      - ことしのワールドカップに登録された26人と比べると、今回も選ばれたのは15人。
+      - "**5人が、A代表に初めて呼ばれました。**"
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/19/post1014366/
+
+  # **選ばれた人を先に見せる**（2026-09-19 ユーザー指示）。
+  # サッカーキングの一覧画像に倣った板を、ポジション別に4枚出す。
+  # **23人を1枚に並べない**（名前が小さくなって読めない。squadboard の注意書き）
+  - id: picked
+    heading: 選ばれた23人
+    tier: 報道
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: GK3人、DF8人、MF6人、FW6人
+    narrator: キャスター
+    say:
+      - {short_only: true, text: ジダンが初めて選んだ23人です。}
+      - "ポジション順に見ていきます。**★が初招集**です。"
+      - {image: assets/stats/fr_gk.png, text: ゴールキーパーは3人。軸はミランのメニャンです。}
+      - {image: assets/stats/fr_df.png, text: "ディフェンダーが**8人**でいちばん多く、コナテ、クンデ、ウパメカノが並びます。"}
+      - {image: assets/stats/fr_mf.png, text: ミッドフィールダーは6人。カマヴィンガ、シェルキ、ラビオが並びます。}
+      - {image: assets/stats/fr_fw.png, text: フォワードも6人。ムバッペ、デンベレ、オリーズ、バルコラ。}
+      - "**うち15人が、ワールドカップにも登録されていました。**"
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/19/post1014366/2/
+
+  # **カードを2枚に割ってある**（2026-09-19）。1枚の表に11人を並べたら、
+  # 同じ絵のまま36秒止まった（検査「カードの持ち」の上限20秒）。
+  # 守る側と、中盤から前で分ける
+  - id: dropped
+    heading: 外れた11人。まず守る側から
+    tier: 報道
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: Ｗ杯組から11人がメンバー外
+    narrator: 解説
+    card:
+      type: table
+      title: 外れた11人 ― 守る側の6人
+      columns: [名前, 位置]
+      rows:
+        - [ブリス・サンバ, GK]
+        - [リュカ・ディニュ, DF]
+        - [マロ・ギュスト, DF]
+        - [リュカ・エルナンデス, DF]
+        - [テオ・エルナンデス, DF]
+        - [ウィリアム・サリバ, DF]
+    say:
+      - ワールドカップのメンバー26人から、外れたのは11人でした。
+      - ゴールキーパーは、ブリス・サンバ。
+      - ディフェンダーは、リュカ・ディニュ、マロ・ギュスト、リュカ・エルナンデス、テオ・エルナンデス、ウィリアム・サリバの5人。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/19/post1014366/
+      - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/france-2026-worldcup-member-profile/blt6377ed94d7c700dd
+      - https://football-zone.net/archives/674092
+
+  - id: dropped2
+    heading: 中盤からは、カンテとチュアメニ
+    tier: 報道
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: 中盤で外れたのは2人
+    narrator: 解説
+    card:
+      type: table
+      title: 外れた11人 ― 中盤の2人
+      columns: [名前, 位置]
+      rows:
+        - [エンゴロ・カンテ, MF]
+        - [オーレリアン・チュアメニ, MF]
+    say:
+      - ミッドフィールダーは、エンゴロ・カンテとオーレリアン・チュアメニ。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/19/post1014366/
+      - https://football-zone.net/archives/674092
+
+  - id: dropped3
+    heading: 前の3人。テュラムの名前もない
+    tier: 報道
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: テュラム、マテタ、アクリウシュが外れた
+    narrator: 解説
+    card:
+      type: table
+      title: 外れた11人 ― 前の3人
+      columns: [名前, 位置]
+      rows:
+        - [マグネス・アクリウシュ, FW]
+        - [ジャン＝フィリップ・マテタ, FW]
+        - [マルクス・テュラム, FW]
+    say:
+      - フォワードは、マグネス・アクリウシュ、ジャン＝フィリップ・マテタ、マルクス・テュラムの3人です。
+      - "外れた11人のうち、**5人はディフェンダー**でした。"
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/19/post1014366/
+      - https://football-zone.net/archives/674092
+
+  # **ショートはここを使う**（2026-09-19 ユーザー指示「新しいメンバーの紹介だけして、
+  # 残りは本編でと伝えて」）。@main をここに置くと、ショートがこの節から作られる
+  - id: new
+    heading: 初招集の5人
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: 初めて代表に呼ばれた5人
+    narrator: キャスター
+    card:
+      type: table
+      title: 初めてフランス代表に呼ばれた5人
+      columns: [名前, 所属, 位置]
+      rows:
+        - ["ギヨーム・レステ", "トゥールーズ", GK]
+        - ["アンディ・ディウフ", "インテル", DF]
+        - ["ジェレミー・ジャケ", "リヴァプール", DF]
+        - ["ルーカス・ダ・クーニャ", "コモ", MF]
+        - ["エステバン・ルポール", "レンヌ", FW]
+    say:
+      - {short_only: true, text: ジダンが初めて選んだ23人のうち、5人が初招集でした。}
+      - 一方で、初めてフランス代表に呼ばれた選手が5人います。
+      - {image: assets/stats/fr_new5.png, text: ゴールキーパーのギヨーム・レステ。}
+      - {image: assets/stats/fr_new5.png, text: ディフェンダーのアンディ・ディウフと、ジェレミー・ジャケ。}
+      - {image: assets/stats/fr_new5.png, text: ミッドフィールダーのルーカス・ダ・クーニャ。}
+      - {image: assets/stats/fr_new5.png, text: フォワードのエステバン・ルポール。}
+      - {image: assets/stats/fr_new5.png, text: ジャケは21歳。今夏レンヌからリヴァプールへ移り、そのままレギュラーに定着しています。}
+      - {short_only: true, text: 選ばれた23人の顔ぶれと、外れた11人は、本編で見られます。}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/19/post1014366/2/
+      - https://football-zone.net/archives/674092
+
+  - id: why
+    heading: ジダン監督が語った理由
+    tier: 報道
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: 「マドリードに残るのが最善だった」
+    narrator: キャスター
+    say:
+      - 外れた選手のうち、2人については理由が語られています。
+      - まず、ミッドフィールダーの1人について、ジダン監督はこう説明しました。
+      - {voice: ジダン, text: オーレリアンは2カ月近く戦列を離れていた選手だ。彼の回復のためには、マドリードに残るのが最善だったと思う}
+      - ベンゼマの復帰や、エンゴロ・カンテについて聞かれると、こう答えています。
+      - {voice: ジダン, text: カリムとはマドリードで素晴らしい数年間を過ごした。だが、N'Goloのケースと少し似ている。}
+      - {voice: ジダン, text: 彼が成し遂げてきたことには敬意を抱いているが、今はより若い選手たちを見たいと思っている}
+    official: false
+    sources:
+      - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/%E3%82%B7%E3%82%99%E3%83%8D%E3%83%86%E3%82%A3%E3%83%BC%E3%83%8C-%E3%82%B7%E3%82%99%E3%82%BF%E3%82%99%E3%83%B3%E3%81%8B%E3%82%99%E3%83%95%E3%83%A9%E3%83%B3%E3%82%B9%E3%81%AE%E6%9C%80%E7%B5%82%E3%83%A1%E3%83%B3%E3%83%8F%E3%82%99%E3%83%BC%E3%82%92%E7%99%BA%E8%A1%A8-%E5%88%9D%E6%8B%9B%E9%9B%865%E4%BA%BA-%E3%83%9B%E3%82%99%E3%82%B9%E3%82%AB%E3%83%AA%E3%81%AF%E9%81%B8%E5%A4%96/blt3b41e9ebc533f72f
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    bg: assets/backgrounds/zidane_20260919.png
+    telop: 発表を見た人たちの反応
+    narrator: キャスター
+    say:
+      - {short_only: true, text: フランス代表からワールドカップ組の11人が外れ、5人が初めて呼ばれました。}
+      - {voice: ネット民, text: ワールドカップ後の状態を見極めて選べるバランス感覚、これがジダン。それがずっと全くないのがポイチ。}
+      - {voice: ネット民, text: 今回も状態、怪我明け、チーム状況、全て無視。やはり限界だったんだなと納得させてくれてよかった。}
+      - {voice: ネット民, text: ジダン監督がどんなサッカーをするのか今から楽しみです。, short_voice: true}
+      - {voice: ネット民, text: 人材豊富で羨ましい, short_voice: true}
+      - {voice: ネット民, text: フィールドプレーヤの中にレンヌ、輝いて見える}
+      - {voice: ネット民, text: ジダンってだけでなんかワクワクするな〜！, short_voice: true}
+      - {voice: ネット民, text: ジタン監督が普通に代表監督の遣り方ですよ}
+      - {voice: ネット民, text: カマちゃん、復帰。嬉しい。ミスを減らし、良いところをもっともっとアピールして。}
+      - {voice: ネット民, text: ジダンは選手としてもクラブ監督しても主要なタイトルを獲得しているので、}
+      - {voice: ネット民, text: サッカー人生で残っているのは代表監督としてワールドカップ優勝くらいだろうが、フランス代表なら十分にチャンスはある。}
+      - {voice: ネット民, text: これだけ常に脚光を浴び続けている人は珍しい。}
+      - {voice: ネット民, text: この常勝メンバーでもボールを持たせないと怖くないという事実を改めて見せつけたスペイン代表}
+      - {voice: ネット民, text: さぁジダン監督、どうポゼッションを撃破する？？}
+      - {voice: ネット民, text: サッカーのこうやって対抗して戦術が進化していくの本当に大好きですわ！！}
+      - {voice: ネット民, text: ジダンはレアルで選手、監督と経験が豊富なのでフランス代表監督での活躍も楽しみ。}
+      - {voice: ネット民, text: 叶わないのだろうけど、交代ジダン（野球で言うと代打オレ）が見てみたいくらい好きな選手。}
+      - {voice: ネット民, text: 本人は中盤でプレイしたくてたまらないディウフ！}
+      - {voice: ネット民, text: しかし、キヴの魔改造により、右サイドでインテリスタのアイドル化し始めたディウフ！}
+      - {voice: ネット民, text: ジダンは、左サイドで試したがっている我らがディウフに幸あれ！}
+      - {voice: ネット民, text: ジダンがレアル・マドリードの監督をした時に現役時代のフランス代表のようにスペクタクルなチームを目指すのかと思ったが違った。}
+      - {voice: ネット民, text: ハメス・ロドリゲスを外して、カミネロとか守備を重視していた。}
+      - {voice: ネット民, text: 今度のフランス代表も見ていて楽しいサッカーを標榜するのか？ちょっと疑問。}
+      - {voice: ネット民, text: 他のポジションがこれだけ豪華だとGKが見劣りしますね。メニャンも十分スゴいGKですが。}
+      - {voice: ネット民, text: フランスは代々ビッグクラブで活躍するGKが少ないのは面白いところです。}
+      - {voice: ネット民, text: CLで正GKとして優勝したのは90年代のマルセイユで優勝したバルテズまで遡る。}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/c7343e443a923bf10fdb7b2c9cbe154b3dbaf4ea/comments
+      - https://news.yahoo.co.jp/articles/aa440220f8eed47b667dcd8f28d1df089dbf8bbc/comments

@@ -1,0 +1,90 @@
+# アストン・ヴィラが最下位。降格争いをどう見るか（2026-09-14）
+#
+# **昨季ヨーロッパを戦ったクラブが19位。**マーソンは降格を否定している。
+# 同じ回でリヴァプールにも触れているが、**ヴィラの話に絞る**（1本1テーマ）
+format: quote
+voice_min: 45
+slot: premier_2
+date: "2026年9月15日"
+
+people:
+  - アストン・ヴィラ
+
+short_title: "ヴィラの降格争いをどう見るか"
+
+theme:
+  id: villa_relegation_talk
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: アストン・ヴィラが降格圏。解説者が口にしたのは
+  question: 降格するのか
+
+thumbnail:
+  line1: アストン・ヴィラが降格圏
+  line2: 解説者が言ったのは ●●●●
+  crest_main:
+    - アストンヴィラ
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: いまどうなっているか
+    tier: 報道
+    telop: 4試合で勝ち点1、19位
+    narrator: キャスター
+    card:
+      type: table
+      title: アストン・ヴィラ 第4節終了時点
+      columns: ["", ""]
+      rows:
+        - ["順位", "19位（20クラブ中）"]
+        - ["成績", "4試合 0勝1分3敗"]
+        - ["勝ち点", "1"]
+        - ["得失点", "-6"]
+    say:
+      - 20クラブ中19位。すぐ下にいるのは、まだ勝ち点のないコヴェントリーだけです。
+      - 4試合を終えて0勝1分3敗。勝ち点は1、得失点差はマイナス6です。
+      - ノッティンガム・フォレスト戦の結果が、とくに重く受け止められました。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13585809/liverpool-paul-merson-worried-after-assessing
+
+  - id: said
+    heading: 解説者はどう見たか
+    main: true
+    tier: 報道
+    telop: 「降格したら、私は衝撃を受ける」
+    narrator: 解説
+    say:
+      - {short_only: true, text: プレミアリーグの開幕4試合で勝ち点1。直近のノッティンガム・フォレスト戦も落としました。}
+      - スカイ・スポーツのポール・マーソンが、降格の可能性を問われました。
+      - 答えは、はっきりしたものでした。
+      - {voice: マーソン, text: いや、いや。正直に言えば、彼らには良い選手が多すぎると思う}
+      - フォレスト戦については、こう言っています。
+      - {voice: マーソン, text: フォレスト戦はひどい結果だった。心配になる内容だった}
+      - {voice: マーソン, text: 支配していたのに、ゴールを決められなかった}
+      - そのうえで、降格については否定しました。
+      - {voice: マーソン, text: だが彼らが降格したら、私は衝撃を受けるだろう}
+      - {voice: マーソン, text: 良い選手が多すぎる}
+      - {voice: マーソン, text: それに、この世界で最高の監督のひとりを持っている}
+      - {voice: マーソン, text: 彼らはいま、少しばかり時間がかかっているだけだ}
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13585809/liverpool-paul-merson-worried-after-assessing
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「降格圏におるやん」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 鈴木彩艶のいるアストンヴィラって降格圏におるやん}
+      - {voice: ネット民, text: アストンヴィラまた勝てなかったのか　降格しそうだな}
+      - {voice: ネット民, text: アストンヴィラ降格あるぞ}
+      - {voice: ネット民, text: アストンヴィラとか言うファールしかできないクソ危険なチームは4部降格しろよ　19位}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%82%A2%E3%82%B9%E3%83%88%E3%83%B3%E3%83%B4%E3%82%A3%E3%83%A9%20%E9%99%8D%E6%A0%BC&f=live

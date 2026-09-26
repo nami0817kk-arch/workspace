@@ -1,0 +1,152 @@
+date: 2026年9月25日
+slot: premier_2
+format: news
+voice_min: 0.4
+people: [ユルゲン・クロップ, ヨシュア・キミッヒ, カイ・ハヴァーツ, ジャマル・ムシアラ]
+theme:
+  id: klopp_debut
+  league: germany
+  league_name: ドイツ代表
+  kind: match
+  topic: ドイツ代表
+  title: 'クロップのドイツ代表初陣、1対1より痛かったのは'
+  question: 何が痛かったのか
+short_title: クロップ初陣、失った2人
+thumbnail:
+  photo: assets/images/20260925_klopp/01.jpg
+  crests: [ドイツ]
+  line1: クロップの初陣で
+  line2: 1対1より痛かった●●
+sections:
+  - id: what
+    heading: 90＋2分に消えた勝利
+    tier: 報道
+    telop: アムステルダムで1対1。ガクポのジャンピングボレー
+    narrator: キャスター
+    card:
+      type: table
+      title: オランダ 1-1 ドイツ（9月24日）
+      columns: ['', '']
+      rows:
+        - [32分, ヌメチャ（ドイツ）]
+        - [90＋2分, ガクポ（オランダ）]
+        - [シュート, オランダ22　ドイツ10]
+        - [枠内, オランダ10　ドイツ2]
+    say:
+      - クロップ監督のドイツ代表初陣は、アムステルダムでオランダと1対1の引き分けでした。
+      - 32分にヌメチャの先制点。そのまま90分を過ぎたところで、途中出場のニャブリがボールを失いました。
+      - デビュー戦のルベン・ファン・ボメルのアウトサイドのクロスを、ガクポがボレー。
+      - クロップ監督は、こう言いました。
+      - voice: ユルゲン・クロップ
+        text: 勝ちたかったが、勝ち点1でも生きていける
+    sources:
+      - https://www.kicker.de/niederlande-gegen-deutschland-2026-uefa-nations-league-5193270/spielinfo
+      - https://www.sportschau.de/fussball/nationalmannschaft/klopp-einstand-mit-enthusiasmus-fehlern-und-remis,spielbericht-nl-niederlande-deutschland-100.html
+  - id: injuries
+    main: true
+    heading: 失った2人
+    tier: 報道
+    telop: ムシアラは試合前、ハヴァーツは30分
+    narrator: キャスター
+    say:
+      - text: 'クロップのドイツ代表初陣は1対1の引き分け。ただ、それより痛いことが2つ起きていました。'
+        short_only: true
+      - 先発予定だったムシアラは、試合前のウォームアップで太ももに違和感を訴えて外れました。
+      - ハヴァーツは22分にティンバーの靴底が右足に入り、30分に交代。どちらも攻撃の中心です。
+      - 2人について、クロップ監督は。
+      - voice: ユルゲン・クロップ
+        text: 2人とも検査に入っている。深刻なものではなく、うちでは多分出られないにしても、比較的早く復帰できることを願う
+      - voice: ユルゲン・クロップ
+        text: 良い知らせではないが、ある意味良い知らせでもある。普通のサッカーの怪我だから。日常への回帰の一部でもある
+      - 次のギリシャ戦は、2人とも欠場の見込みです。
+    sources:
+      - https://www.zdfheute.de/sport/fussball-dfb-team-nations-league-verletzung-kai-havertz-jamal-musiala-100.html
+      - https://www.t-online.de/sport/fussball/nationalmannschaft-deutschland/id_101451640/nations-league-klopp-gibt-update-zu-musiala-und-havertz.html
+      - https://www.espn.com/soccer/story/_/id/50023499/kai-havertz-jamal-musiala-probably-germany-mri
+  - id: klopp
+    heading: 初陣の総括
+    tier: 報道
+    telop: 「勝ち点1でも生きていける」
+    narrator: キャスター
+    say:
+      - text: 'キミッヒは、遅い失点を悔しがりました。'
+        image: assets/images/20260925_pair_kimmich_klopp/01.jpg
+      - voice: ヨシュア・キミッヒ
+        text: リード後に2点目を取るべきだった。最終的には内容通りだが、あんなに遅い時間に失点するのは極めて腹立たしい
+      - text: 'クロップ監督は、試合そのものについてはこう言いました。'
+        image: assets/images/20260925_klopp/01.jpg
+      - voice: ユルゲン・クロップ
+        text: 手順がまだ完全に染み込んでいないときは、球際を勝つために必死に戦わなければいけない局面になる
+      - voice: ユルゲン・クロップ
+        text: もっと良く、もっとサッカーができる。間違いなく
+      - 同点弾の起点になったニャブリのボールロストについては、こう言いました。
+      - voice: ユルゲン・クロップ
+        text: 大したことじゃない、起こりうる、問題ない。ただセルジュは前へ走って離れなきゃいけない
+      - ファン・ボメルのアウトサイドについては、父マルクを知っているだけに、こう言いました。
+      - voice: ユルゲン・クロップ
+        text: 父親譲りじゃない。あのアウトサイドは母親から来てるに違いない
+    sources:
+      - https://www.dfb.de/news/klopp-ich-war-mit-der-gezeigten-leidenschaft-sehr-zufrieden
+      - https://ran.joyn.de/sports/fussball/nations-league-a/dfb-team-vs-niederlande-juergen-klopp-selbstkritisch-nach11-koennen-besser-fussball-spielen-191554
+      - https://www.t-online.de/sport/fussball/nationalmannschaft-deutschland/id_101451630/klopp-nach-bundestrainer-debuet-kann-mit-punkt-leben-.html
+  - id: rules
+    heading: 持ち込んだ決まり
+    tier: 報道
+    telop: 夕食は全員同じ時刻。理髪師は呼ばない
+    narrator: キャスター
+    card:
+      type: table
+      title: クロップが持ち込んだ決まり
+      columns: ['', '']
+      rows:
+        - [夕食, 全員が決まった時刻に着席]
+        - [携帯, 試合当日の体ほぐしとマッサージ中は禁止]
+        - [理髪師, 合宿所に呼ばない]
+        - [家族, 合宿所への訪問は限定的に]
+    say:
+      - この初陣の前から、クロップが合宿に持ち込んだ決まりが伝えられています。
+      - 夕食はそれまで三々五々でよかったのが、**全員が決まった時刻に着席**。携帯は試合当日の体ほぐしとマッサージ中は禁止。
+      - 合宿所に理髪師を呼ばない。家族の訪問は限定的に。ワールドカップでは家族が何かにつけ合宿所に来ていて、「社員旅行」と揶揄されていました。
+    sources:
+      - https://www.spox.com/fussball/news/mit-handyverbot-und-einem-no-go-juergen-klopp-hat-beim-dfb-team-angeblich-drei-neue-regeln-eingefuehrt/blt3c6ba50593c07db8
+      - https://ran.joyn.de/sports/fussball/nations-league-a/dfb-team-friseur-handy-und-essen-das-sind-die-neuen-regeln-unter-juergen-klopp-190332
+      - https://web.gekisaka.jp/news/world/detail/?459629-459629-fl
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「クロップマジック」と「完全にカオスな試合」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: クロップマジック
+      - voice: ネット民
+        text: 引き分けだけど内容ボロクソ過ぎて何とも言えんわ。ムシアラは直前で負傷欠場になるし、攻撃があまりに稚拙過ぎてどうにもならんかった
+      - voice: ネット民
+        text: あんなボロクソみたいな内容で勝つ寸前だったの不思議な感じ。大昔のドイツみてーだ
+      - voice: ネット民
+        text: 収穫はトレウが良かった事かな
+      - voice: ネット民
+        text: たった1試合で上を下への大騒ぎな早漏ども
+      - voice: ネット民
+        text: まあ、これからでしょ。Bチームも楽しみな面子ではあるし、期待しようよ
+      - voice: ネット民
+        text: 俺には完全にカオスな試合で、展開は地区リーグの試合。ただ選手が超タレントなだけ
+      - voice: ネット民
+        text: 少なくともペナルティエリア前でハンドボールみたいに横パス回しはもうない。スピードとゴールへの推進力が出た
+      - voice: ネット民
+        text: このポジティブな枠づけが理解できない。オランダが明らかに上。xG 3対1.5
+      - voice: ネット民
+        text: 妥当な引き分け、もっと見たくなる。何かになるかもしれないが熟成に時間が要る
+      - voice: ネット民
+        text: ターがインタビューでトロイを名指しで褒めた。守備の長が言うなら重みがある。トロイは今後固定。断言する
+      - voice: ネット民
+        text: ドイツ代表、遅刻厳禁だのスマホ制限だの当たり前じゃないの？　子供じゃないんだから
+      - voice: ネット民
+        text: クロップのドイツ代表は強くなりそうだ。クロップならW杯近くなったら親善試合組んでくれそう、日本と
+        short_voice: true
+    sources:
+      - https://rio2016.5ch.io/test/read.cgi/livefoot/1790262261/
+      - https://kizuna.5ch.io/test/read.cgi/football/1789429953/l50
+      - https://news.yahoo.co.jp/articles/9ad8c7761572c1ec5ab1a00cd9527659103fe74d/comments
+      - https://www.transfermarkt.de/dfb-nationalmannschaft/thread/forum/37/thread_id/190874/page/227
+      - https://www.transfermarkt.de/die-deutsche-nationalmannschaft/thread/forum/25/thread_id/66137/page/199

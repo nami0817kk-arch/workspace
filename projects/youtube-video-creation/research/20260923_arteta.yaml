@@ -1,0 +1,119 @@
+date: 2026年9月23日
+slot: premier_1
+format: news
+voice_min: 0.4
+people: [アルテタ]
+theme:
+  id: arteta_contract
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アーセナル
+  title: 'アルテタがアーセナルと新たに4年契約。固まる4日前、本人が口にしていたこと'
+  hook: 今季初めて負けた2日後に、話はまとまりました。コーチ陣も全員が残ります。
+  question: 何が決まって、本人はどう話していたのか
+short_title: アルテタ、アーセナルとあと4年
+thumbnail:
+  photo: assets/images/20260923_arteta/04.jpg
+  line1: 優勝の直後にあと4年
+  line2: 「心配することは何もない」
+  crests: [アーセナル]
+  tags: [アーセナル, ミケル・アルテタ]
+sections:
+  - id: what
+    heading: 何が決まったか
+    tier: 報道
+    telop: 4年の新契約に合意。昇給あり、コーチ陣も全員が新契約
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    card:
+      type: table
+      title: アルテタの新契約
+      columns: ["", ""]
+      rows:
+        - ["期間", "4年"]
+        - ["給与", "昇給あり"]
+        - ["役割", "移籍の統括にも引き続き関わる"]
+        - ["コーチ陣", "全員が新契約を結ぶ"]
+        - ["いまの契約", "2027年6月まで"]
+    say:
+      - アーセナルのアルテタ監督が、新しい長期契約で合意しました。期間は**4年**の見込みです。
+      - 昇給があり、移籍の統括にも引き続き関わります。合意は口頭で、正式な手続きはこれからです。
+      - そして**コーチ陣も全員**、新しい契約を結びます。
+      - いまの契約は来年6月まで。2019年12月の就任なので、2030年まで率いることになります。
+    sources:
+      - https://x.com/FabrizioRomano/status/2102390814232002921
+      - https://x.com/FabrizioRomano/status/2102433379258073397
+      - https://x.com/FabrizioRomano/status/2102515707451969937
+      - https://www.skysports.com/football/news/13588507/mikel-arteta-contract-arsenal-boss-agrees-new-deal-to-extend-stay-at-premier-league-champions
+      - https://www.soccer-king.jp/news/world/eng/20260922/2207941.html
+  - id: said
+    main: true
+    heading: 本人が言っていたこと
+    tier: 報道
+    telop: 「私たちは皆、完全に同じ方向を向いている」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: 'アーセナルのアルテタ監督が、**4年**の新しい契約で合意しました。'
+        short_only: true
+      - まとまる**4日前**、契約について聞かれた本人は、こう答えていました。
+      - voice: アルテタ
+        text: 私たちは皆、**完全に同じ方向を向いている。**
+      - voice: アルテタ
+        text: 時が来れば、契約はまとめる。心配することは何もない。
+      - voice: アルテタ
+        text: 両方が同じ野心と、同じ意志を持っている。だから、時間ができたときに解決する。
+    sources:
+      - https://www.skysports.com/football/news/13588507/mikel-arteta-contract-arsenal-boss-agrees-new-deal-to-extend-stay-at-premier-league-champions
+      - https://x.com/search?q=from%3AFabrizioRomano%20Arteta&f=live
+  - id: loss
+    heading: その2日後の黒星
+    tier: 報道
+    telop: ブライトンに0対2。今季初めての黒星
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - その2日後、ブライトンに**0対2**。今季初めての黒星でした。試合直後の言葉です。
+      - voice: アルテタ
+        text: ブライトンのほうが良いチームだった。プレミアリーグでやらなければならない基本から、私たちはかけ離れていた。
+      - voice: アルテタ
+        text: あれだけの技術的なミス……プレーの原則を、何ひとつ守れなかった。
+    sources:
+      - https://www.skysports.com/football/news/13588507/mikel-arteta-contract-arsenal-boss-agrees-new-deal-to-extend-stay-at-premier-league-champions
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを見た人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: ネット民
+        text: アーセナルはヴェンゲルが22年、その後任のアルテタは、この契約が終わるころには11年以上いることになる。33年で監督が2人……それがアーセナルの伝統だ
+      - voice: ネット民
+        text: ブライトンに0-3で負けた後にアルテタへ4年契約。基準が落ちてる
+      - voice: ネット民
+        text: 悪い試合から目をそらさせる達人。交渉を切り上げて、テーブルに載っていたものをそのまま受け入れたんだ。俺たちの監督
+      - voice: ネット民
+        text: アルテタ政権更にめちゃくちゃ安定するじゃん。この間負けたけど。まあここ数年のチームの感じからしたら契約延長するのは当たり前だなと思う。
+      - voice: ネット民
+        text: 去年優勝しておいて本当によかった。でなきゃファンは大荒れだ。アルテタを信じる
+      - voice: ネット民
+        text: このタイミングでアルテタと契約延長するのはフロントからの信頼も感じられていいね
+      - voice: ネット民
+        text: この人が大好きだ。他のクラブの混乱を見てみろ。どこだって、うちの状況と一瞬で交換したがるよ
+      - voice: ネット民
+        text: エミレーツであと4年のアルテタ。アーセナルは明らかにプロジェクトを信じている。大きな問いは、その4年で何をもたらすかだ
+      - voice: ネット民
+        text: アルテタ長期契約素晴らしい。選手の延長にも影響あっていいことだ
+      - voice: ネット民
+        text: 1月にフォワードを少なくとも1人は取る、と書面に入れておいてくれ。できれば2人
+      - voice: ネット民
+        text: 次は誰だ？ライス？
+        short_voice: true
+    sources:
+      - https://x.com/search?q=Arteta%20contract&f=live
+      - https://x.com/search?q=Arteta%20%22four%20years%22%20lang%3Aen&f=live
+      - https://www.reddit.com/r/Gunners/comments/1wndv4l/ornstein_mikel_arteta_agrees_new_contract/
+      - https://www.reddit.com/r/Gunners/comments/1wn7blr/sami_mokbel_exc_mikel_arteta_reaches_agreement/
+      - https://x.com/search?q=%E3%82%A2%E3%83%AB%E3%83%86%E3%82%BF%20%E5%A5%91%E7%B4%84&f=live

@@ -1,0 +1,399 @@
+# プレミアリーグ20クラブ紹介 ⑲サンダーランド（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/sunderland*.json と旧台本 20260916_pl19_sunderland.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- サンダーランド
+- ナイアル・クイン
+short_title: サンダーランド、半世紀ぶりの欧州で何を見せるのか
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_19_sunderland
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: サンダーランド
+  title: 「イングランド銀行」と呼ばれたサンダーランド。半世紀ぶりの欧州で何を見せるのか
+  question: どんなクラブなのか
+  hook: 3部から7年で、ヨーロッパに手が届きました。
+  lead: '**1部リーグ優勝6回**。その歴史を持つ、北東部の古豪です。'
+  opening_image: assets/stats/pl_sunderland_data_t.png
+thumbnail:
+  line1: 6回優勝が、3部にいた
+  line2: 「イングランド銀行」と呼ばれた頃
+  crest_main:
+  - サンダーランド
+  tags: []
+  points: []
+  board: assets/stats/pl_sunderland_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 半世紀ぶりのヨーロッパの舞台
+  narrator: キャスター
+  say:
+  - text: '**半世紀**ぶりにヨーロッパの舞台へ。元エースで会長も務めたナイアル・クインの言葉があります。'
+    image: assets/stats/pl_sunderland_data_r1.png
+    no_telop: true
+  - voice: ナイアル・クイン
+    text: 「サンダーランドが本当に名乗りを上げる準備は、すべて整った」
+    image: assets/stats/pl_sunderland_data_r1.png
+  - text: リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです。
+    image: assets/stats/pl_sunderland_data_r1.png
+    no_telop: true
+  - text: リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています。
+    image: assets/stats/pl_sunderland_data_r3.png
+    no_telop: true
+  - text: 「イングランド銀行」は、戦後に高い移籍金を使い続けた時代のあだ名です。
+    image: assets/stats/pl_sunderland_data_r3.png
+    no_telop: true
+  - image: assets/stats/pl_sunderland_data0.png
+    text: 創立は**1879年**。地元の先生たちが作ったチームが始まりです。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_data1.png
+    text: 愛称は「ブラック・キャッツ」。黒猫です。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_map.png
+    text: ホームタウンは、サンダーランドの街。
+    no_telop: true
+  - image: assets/backgrounds/stadium_サンダーランド.png
+    text: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
+  - image: assets/stats/pl_sunderland_data4.png
+    text: オーナーはキリル・ルイ＝ドレフュス。2021年から、株の64%を持っています。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_cups.png
+    text: 1部リーグの優勝は、さきほどの**6回**。FAカップも2回獲っています。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_data6.png
+    text: 1998年から99年には、2部で勝ち点**105**。当時のリーグの最多記録でした。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_last.png
+    text: プレミアでの最高位は**7位**。2000年から01年と、昨季の2回です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
+  - https://en.wikipedia.org/wiki/Niall_Quinn
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false
+- id: fall
+  heading: 6回優勝したクラブが、3部へ
+  tier: 背景
+  telop: 6回優勝したクラブが、2018年には3部にいた
+  narrator: 解説
+  card:
+    type: table
+    title: 落ちて、戻るまで
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - リーグ優勝
+      - 6回（1892・1893・1895・1902・1913・1936）
+    - - 1973年
+      - 2部のクラブとしてFAカップ優勝。翌季は欧州へ
+  say:
+  - text: リーグ優勝6回のうち3回は1890年代で、最後は1936年です。
+    image: assets/images/pl_sunderland_story/scene.jpg
+  - 1973年には、**2部**のクラブとしてFAカップを獲りました。翌シーズンはヨーロッパにも出ています。
+  - text: そのクラブが、2018年には**3部**にいました。2年続けて落ちた結果です。
+    card:
+      type: table
+      title: 落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 2018年
+        - 3部へ。2年続けての降格
+      - - 2022年
+        - 2部へ昇格
+  - この時期を追った配信番組が、『**サンダーランド・ティル・アイ・ダイ**』です。
+  - 題の意味は、「死ぬまでサンダーランド」。
+  - text: 2022年に2部へ戻りました。
+    card:
+      type: table
+      title: 落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 2025年5月24日
+        - プレーオフ決勝でシェフィールド・Uに2-1
+      - - 3部から1部まで
+        - 7年
+  - 2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します。
+  - '**3部から1部まで、7年**でした。'
+  - text: そして昨季は、7位に入りました。
+    card:
+      type: table
+      title: 落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 2025-26年
+        - 7位。53年ぶりのヨーロッパ（ヨーロッパリーグ）
+  - 1973年以来、**53年ぶり**のヨーロッパ。今季はヨーロッパリーグに出ます。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 激しく献身。育てて高く売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 激しさと献身
+    - - 運営の型
+      - ベリンガムを高く売る
+    - - クラブの気質
+      - 炭鉱跡の本拠地、紋章に輪
+  say:
+  - text: ル・ブリ監督のサッカーは、激しさと献身。それがサポーターとの絆になりました。
+    image: assets/photos/pl/sunderland_manager_1ba8b156.jpg
+  - 若手を育てて高く売る型。ジョブ・ベリンガムは2025年、3200万ポンドでドルトムントへ。
+  - 本拠地は炭鉱の跡地。エンブレムの上の輪は巻き上げ機で、この土地の炭鉱の歴史を表しています。
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://www.safc.com/news/2026/may/15/the-numbers-behind-r-gis-le-bris--premier-league-manager-of-the-season-nomination/
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Sunderland_A.F.C._season
+  - https://en.wikipedia.org/wiki/Kyril_Louis-Dreyfus
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false
+- id: episode
+  heading: イングランド銀行クラブ
+  tier: 背景
+  telop: 「イングランド銀行クラブ」の代償
+  narrator: 解説
+  card:
+    type: table
+    title: イングランド銀行クラブ
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 戦後
+      - 大金で選手を集める。あだ名「イングランド銀行クラブ」
+    - - 1957年
+      - 上限を超える給料。罰金5000ポンド
+  say:
+  - text: 戦後まもなく、大金で選手を集め、「イングランド銀行クラブ」と呼ばれました。
+    image: assets/images/pl_sunderland_episode/scene.jpg
+  - 当時は選手の給料に上限がありました。ところが**1957年**、それを超える支払いが発覚します。
+  - text: 5000ポンドの罰金。会長と役員3人が資格停止になりました。
+    card:
+      type: table
+      title: イングランド銀行クラブ
+      columns: *id002
+      rows:
+      - - 翌年
+        - 68年で初めて1部から降格
+  - その翌年、リーグに入って68年で初めて、1部から落ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ケヴィン・フィリップス
+      - 1997-2003
+      - プレミア得点王・欧州得点
+  say:
+  - text: ケヴィン・フィリップスは、ワトフォードから**32万5千ポンド**で来たストライカーです。
+    image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
+  - 2000年、プレミアで**30得点**の得点王。ヨーロッパの得点王もイングランド人で初めてでした。
+  - リーグ戦で**208試合113得点**。2003年、325万ポンドでサウサンプトンへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
+  - https://en.wikipedia.org/wiki/Niall_Quinn
+  - https://en.wikipedia.org/wiki/Kevin_Ball
+  - https://en.wikipedia.org/wiki/Kevin_Phillips_(English_footballer)
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - ナイアル・クイン
+      - 1996-2002
+      - 2トップの柱、のちに会長
+  say:
+  - text: ナイアル・クインは、身長**193センチ**のフォワード。マンチェスター・シティから来ました。
+    image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
+  - フィリップスとの2トップで、2人合わせて**194得点**。「大と小」と呼ばれたコンビでした。
+  - 引退試合の収益**100万ポンド**を子どもの病院に寄付。2006年にはクラブの会長になりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
+  - https://en.wikipedia.org/wiki/Niall_Quinn
+  - https://en.wikipedia.org/wiki/Kevin_Ball
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ケヴィン・ボール
+      - 1990-1999
+      - 2度の昇格を率いた主将
+  say:
+  - text: ケヴィン・ボールは、ポーツマスから来たディフェンダー。のちに中盤へ移り、主将になりました。
+    image: assets/photos/pl/sunderland_legend_b6528308.jpg
+  - 1992年、2部にいながらFAカップ決勝へ。リヴァプールに**0対2**で敗れました。
+  - 主将として1996年と99年、クラブを1部へ。引退後も暫定監督を**2度**務めています。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
+  - https://en.wikipedia.org/wiki/Niall_Quinn
+  - https://en.wikipedia.org/wiki/Kevin_Ball
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はレジス・ル・ブリ。3年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - レジス・ル・ブリ（フランス）
+    - - 就任
+      - 2024年7月・3年目
+    - - 前職
+      - ロリアン
+  say:
+  - text: 監督はフランス人のレジス・ル・ブリ。**2024年7月**から、3年目です。
+    image: assets/photos/pl/sunderland_manager_1ba8b156.jpg
+  - 昇格1年目のクラブを7位に。ヨーロッパリーグへ連れていった監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://en.wikipedia.org/wiki/Régis_Le_Bris
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/pl_sunderland_gk.png
+    no_telop: true
+  - image: assets/stats/pl_sunderland_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_gk_f.png
+    text: ロビン・ルーフスはリーグ戦で**39試合**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_df_f.png
+    text: トマ・ムニエはベルギー代表で**83試合**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_df_f.png
+    text: トライ・ヒュームは北アイルランド代表で**26試合**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_mf_f.png
+    text: 主将を務めるのが**グラニト・ジャカ**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_mf_f.png
+    text: ルーク・オナイエンはリーグ戦で**277試合**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_fw_f.png
+    text: ウィルソン・イシドールはリーグ戦で**19得点**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_fw_f.png
+    text: ブライアン・ブロベイはオランダ代表で**16試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で1勝1引き分け3敗。14位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - イプスウィッチ・タウン（アウェー）
+      - 1対2
+    - - 第2節
+      - フラム（ホーム）
+      - 1対0
+    - - 第3節
+      - ブレントフォード（アウェー）
+      - 1対1
+    - - 第4節
+      - アーセナル（ホーム）
+      - 0対2
+    - - 第5節
+      - マンチェスター・シティ（アウェー）
+      - 3対5
+  say:
+  - プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
+  - 順位は**14位**、勝ち点は**4**です。
+  - ヨーロッパリーグの初戦は、ホームで、オランダのアルクマールでした。
+  - '**1対0**の勝ち。ヨーロッパの初戦を白星で飾りました。'
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
+  official: false

@@ -1,0 +1,149 @@
+# チェルシーのオーナーが代わった日（2026-09-18）
+#
+# **ユーザー判断②**（2026-09-18）。もとは「作り直しではなく手入れだった」で
+# 組んでいたが、**その発言への反応が英語で3件・日本語で0件**しか無かった。
+# 同じ9/17に「ベーリーが株を売却、クリアレイクが完全掌握」という大きな話が出て、
+# チェルシー界隈の会話が全部そちらに行っていた。**話題のあるほうへ寄せる。**
+#
+# 引きは**「中心が誰なのかがはっきりしているのは良いことだ」**（@main）。
+#
+# **数字が媒体で割れているものは出さない:**
+#   ・売却後のクリアレイクの持ち株 … Sky は86.5%、insidersport は99.9%
+#   ・2022年の買収額 … £2.3bn／£2.5bn／£4.25bn とばらばら
+#   出せるのは**売却前の61.5%**（一致している）と、FT の**£950m**まで
+#
+# **サッカーキングの「ヴィス氏も12.8%売却」は英語圏の報道とクラブ公式に反する。**
+# 公式は「ヴィスは重要な株主として残る」。**日本語ソースをそのまま引かない**
+#
+# **アロンソの発言は Sky の本文には無い。**AFP 配信の会見記事から取った。
+# 会見の逐語録は公開されていないので、**「原文のまま」とは言わない**
+#
+# **表記はサッカーキングに合わせる**（ベハダ・エグバリ）。ゲキサカに記事は無かった
+#
+# **ベーリーの BlueCo 持ち分の扱いは一次情報が無い。**ストラスブールには触れない
+format: news
+voice_min: 40
+slot: premier_1
+date: "2026年9月18日"
+
+people:
+  - シャビ・アロンソ
+
+short_title: "オーナー交代の日にアロンソは"
+
+theme:
+  id: chelsea_ownership_alonso
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: チェルシー
+  title: チェルシーのオーナーが代わった日、アロンソが口にしたこと
+  hook: 就任して3か月足らずでの出来事です。
+  question: 監督は何と言ったのか
+
+thumbnail:
+  line1: チェルシーのオーナーが交代
+  line2: アロンソ「●●がはっきり」
+  # **顔を2枚並べる**（2026-09-18）。去った会長と、それについて語った監督。
+  # Commons のアロンソは2018年ごろの現役時代だったので、記事の写真に差し替えた。
+  # **Sky の動画用の合成画像は使っていない**（ロゴが焼き込まれていて、放送局のもの）
+  photos:
+    - assets/photos/20260918_boehly_press/01.jpg
+    - assets/photos/20260918_alonso_press/01.jpg
+  tags:
+    - チェルシー
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたのか
+    tier: 確定
+    bg: assets/backgrounds/alonso_20260918.png
+    telop: ベーリーが株を売り、会長を退いた
+    narrator: キャスター
+    card:
+      type: table
+      title: チェルシーのオーナー
+      columns: ["", ""]
+      rows:
+        - ["これまで", "クリアレイクが61.5%"]
+        - ["売った人", "ベーリーとウォルター"]
+        - ["売った額", "2人ぶんで9億5000万ポンド"]
+        - ["残る人", "ヴィス"]
+    say:
+      - チェルシーが16日の夜、オーナーが替わることを発表しました。
+      - 会長のトッド・ベーリーと取締役のマーク・ウォルターが株を売り、買ったのは、もともとの大株主**クリアレイク・キャピタル**です。
+      - これでクリアレイクが、クラブの全権を握ることになりました。
+      - "**ベーリーは会長を、その日のうちに退いています。**"
+      - 役職だけでなく、**株も全部手放しています**。2人ぶんで**9億5000万ポンド**と伝えられています。
+      - クラブ本人の発表は、こう書いています。
+      - {voice: チェルシー, text: クラブの日々の運営、経営体制、戦略に変更はない}
+    official: true
+    sources:
+      - https://www.chelseafc.com/en/news/article/chelsea-fc-announces-ownership-transition
+      - https://www.skysports.com/football/news/11668/13584180/chelsea-todd-boehly-and-fellow-co-owner-mark-walter-to-sell-stakes-in-premier-league-club
+      - https://www.sportspro.com/news/finance-investment/chelsea-owner-todd-boehly-clearlake-mark-walter-stake-sell/
+
+  - id: alonso
+    heading: 監督が言ったこと
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/alonso_20260918.png
+    telop: 「中心が誰なのかがはっきりしているのは良いことだ」
+    narrator: 解説
+    say:
+      - {short_only: true, text: チェルシーの会長トッド・ベーリーが株を売って退き、クリアレイクがクラブの全権を握りました。}
+      - 翌日の会見で、監督のシャビ・アロンソが問われました。
+      - {voice: アロンソ, text: クラブの構造に大きな変化があり、新しいオーナーシップになる。重要な日だと思う}
+      - "**そのうえで、こう続けました。**"
+      - {voice: アロンソ, text: 中心が誰なのかがはっきりしているのは良いことだと思う}
+      - 中心、というのはクリアレイクの共同創業者、ベハダ・エグバリのことです。
+      - {voice: アロンソ, text: ベハダとはとても良い関係だ。マドリードまで来てプロジェクトを説明し、自分を説得してくれたのが彼だった}
+      - {voice: アロンソ, text: 野心はとてもはっきりしている}
+    official: false
+    sources:
+      - https://www.vanguardngr.com/2026/09/chelsea-ambition-very-clear-after-end-of-boehly-era-xabi-alonso/
+      - https://www.goal.com/en-ae/lists/xabi-alonso-clearlake-chelsea-takeover-/bltdd20759492e1769d
+
+  - id: why
+    heading: なぜこうなったのか
+    tier: 報道
+    bg: assets/backgrounds/alonso_20260918.png
+    telop: 2024年から、対立が報じられていた
+    narrator: キャスター
+    say:
+      - 2022年、ロマン・アブラモヴィッチが制裁を受けて手放したクラブを、ベーリーとクリアレイクが一緒に買いました。
+      - ところが2024年、両者の対立が報じられるようになります。
+      - 争点は**競技面の方向性**と、**スタンフォード・ブリッジの建て替え**。たがいに相手の持ち分を買い取る道を探っていた、とも伝えられています。
+      - 会長職は、もともと**来年5月にクリアレイク側へ移す**取り決めがあったとされます。
+      - それが8か月早まった形です。
+      - ベーリー本人は、こう言い残しました。
+      - {voice: ベーリー, text: クリアレイクの指揮の下で、チェルシーが引き続き成功するのに良い位置にあると確信している}
+    official: false
+    sources:
+      - https://www.goal.com/en-us/lists/todd-boehly-sell-chelsea-clearlake-capital-full-control-mark-walter/blt5e431fd4605491be
+      - https://www.chelseafc.com/en/news/article/chelsea-fc-announces-ownership-transition
+      - https://news.mynavi.jp/article/20260917-4982034/
+
+  - id: voices
+    heading: 受け止めは割れた
+    tier: 未確認
+    bg: assets/backgrounds/alonso_20260918.png
+    telop: 「そもそもボーリーが過半数握ってたわけじゃない」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: そもそもボーリーが過半数握ってたわけじゃないからずっとボーリー体制じゃないけどな}
+      - {voice: ネット民, text: これ短期間でボーリー大儲けしてるからな。選手転売と同じく稼ぐ事だけ考えたのでは}
+      - {voice: ネット民, text: ボーリーは酷かった。補強の失敗につぐ失敗。勝つ事より選手の市場価値にしか興味がなかった}
+      - {voice: ネット民, text: アブラモビッチ氏は経営圏を委譲する際に、最低何年間かは売ることを禁じるような内容だったと記憶してるが}
+      - {voice: 海外のファン, text: 無難な答えだな、それ}
+      - {voice: 海外のファン, text: 監督が当たり障りのないことを言うのは定番だ。本音は成績が落ちたときまで取っておくんだろう}
+      - {voice: 海外のファン, text: ベハダはチームを良くするための新しい「ピッチ」を手に入れたようだ}
+      - {voice: ネット民, text: 他サポからしたら嫌なお知らせだわ。補強するより体制が一本化する方が強くなると思ってたから, short_voice: true}
+      - {voice: ネット民, text: ヤバい、チェルシー強くなるやん, short_voice: true}
+      - {voice: 海外のファン, text: チェルシーが戻ってきた。金を使って最高のレベルで戦う準備はできている, short_voice: true}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/9ea718320ea884315be133526f1b6ed359f0ea18/comments
+      - https://news.yahoo.co.jp/articles/abef08c0f8992c58051c32d7c0670eaa91ae98fd/comments
+      - https://x.com/SkySportsNews/status/2100569255255146639

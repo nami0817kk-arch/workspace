@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}お問い合わせ｜{{ OWNER }}{% endblock %}
+{% block description %}{{ OWNER }}へのご連絡先。メールで受け付けています。{% endblock %}
+{% block content %}
+<h1>お問い合わせ</h1>
+
+<p>
+  {{ OWNER }}が運営するサイトへのご連絡は、下記のメールアドレス宛にお願いします。
+  お問い合わせフォームは設けていません。
+</p>
+
+{# mailto: で書くと Cloudflare の Email Address Obfuscation が
+   「[email protected]」に差し替え、JS が動かない相手（AdSense の審査）には読めない。
+   @ を [at] に割った素のテキストで書く（docs/public-identity.md）。 #}
+<p style="font-size:1.15rem; font-weight:bold; margin:1.25rem 0;">
+  {{ CONTACT_EMAIL.replace("@", "[at]") }}
+</p>
+<p style="font-size:0.85rem; color:var(--muted); margin-top:-0.75rem;">
+  迷惑メール対策のため <code>[at]</code> と書いています。送信時は <code>@</code> に置き換えてください。
+</p>
+
+<h2>お受けできる内容</h2>
+<ul>
+  <li>掲載している数値・日付の誤りのご指摘</li>
+  <li>掲載内容の削除・訂正のご依頼</li>
+  <li>取材・掲載・広告に関するお問い合わせ</li>
+  <li>サイトの不具合のご連絡</li>
+</ul>
+
+<h2>お受けできない内容</h2>
+<p>
+  個別の投資判断・保険加入・購入についてのご相談にはお答えできません。
+</p>
+
+<h2>返信について</h2>
+<p>
+  個人で運営しているため、すべてのご連絡に返信できるとは限りません。
+  返信までに日数をいただく場合があります。
+</p>
+
+<p class="updated">運営者: {{ OWNER }}（<a href="/operator">運営者情報</a>）</p>
+{% endblock %}

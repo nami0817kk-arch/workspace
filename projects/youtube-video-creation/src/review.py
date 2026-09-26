@@ -13,6 +13,7 @@ from pathlib import Path
 
 from .config import _resolve
 from .script_model import Script
+from .render import _is_board
 from .subtitles import chapters
 
 # YouTube の実務上の上限。超えると切られる
@@ -56,6 +57,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         findings.append(Finding(False, "概要欄", "description.txt がありません"))
 
     findings.append(_tags(script))
+    findings.append(check_hashtags(out_dir))
     findings.append(_files(out_dir))
     findings.append(_sources(script))
     findings.append(_tiers(script))
@@ -75,6 +77,9 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     reaction = check_reaction_layer(script)
     if reaction is not None:
         findings.append(reaction)
+    pairing = check_reaction_pairing(script)
+    if pairing is not None:
+        findings.append(pairing)
     # **構成の点検は本編だけに当てる。**縦型は本編から1節を切り出したもので、
     # 割合を測っても元の台本の話にならない（2026-09-07）
     findings.append(check_voice_length(script))
@@ -95,6 +100,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
             findings.append(check_wrap_share(script))
         findings.append(check_title_hook(script))
         findings.append(check_title_subject(script))
+        findings.append(check_band_length(script))
     findings.append(_thumbnail_face(script))
     findings.append(check_thumbnail_dark(out_dir))
     findings.append(check_narration(out_dir))
@@ -102,6 +108,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_photo_credits(script, out_dir))
     findings.append(check_thumbnail_photos(script))
     findings.append(check_tag_names(script))
+    findings.append(check_tag_club(script))
     findings.append(check_post_sources(script))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
@@ -110,6 +117,9 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     opening = check_short_opening(out_dir / "video.mp4")
     if opening is not None:
         findings.append(opening)
+    findings.append(check_opening_background(script))
+    findings.append(check_quote_speed(out_dir, portrait))
+    findings.append(check_tail_silence(script, out_dir))
     if duration is not None:
         findings.append(_duration(duration))
     return findings
@@ -137,15 +147,17 @@ def _cues(srt_path: Path) -> list[str]:
 
 
 def _caption_load(srt_path: Path) -> Finding:
-    """字幕1枚に載る量。多いと目で追えない（テレビは全角15字×2行）。"""
+    """字幕1枚の量。**字数では落とさない**（2026-09-11 ユーザー「制約はない」）。
+
+    テレビの全角15字×2行に合わせて38字で落としていたが、**字幕は焼き込みではなく
+    別ファイルの CC** なので、既定では画面に出ない。読み手が出したときの体裁より、
+    読み上げと合っていることのほうが大事。数は出すが、止めはしない。
+    """
     cues = _cues(srt_path)
     if not cues:
         return Finding(False, "字幕の量", "字幕が読めません")
     longest = max(cues, key=len)
-    if len(longest) > CAPTION_MAX:
-        return Finding(False, "字幕の量",
-                       f"{len(longest)}字の枚があります（上限{CAPTION_MAX}）: {longest[:24]}…")
-    return Finding(True, "字幕の量", f"{len(cues)}枚 / 最大{len(longest)}字")
+    return Finding(True, "字幕の量", f"{len(cues)}枚 / 最長{len(longest)}字")
 
 
 def _caption_badges(srt_path: Path) -> Finding:
@@ -189,7 +201,13 @@ SAME_SCREEN_MAX = 20.0
 # 変われば通る**。実測（2026-09-07、出力8本）では、その状態で
 # 本編21.9〜26.5秒 / ショート17.7〜23.1秒 が同じカードのままだった。
 # ショートは尺の6〜7割。伸びている参考チャンネルは8秒で必ず変えている。
-CARD_HOLD_MAX = 12.0
+# **カードが出たままでよい上限**。2026-09-15 にユーザーが「表を出したまま」と
+# 決めたので、12 → 20 に上げた。12 は**下地が静止画だった頃**の数字で、
+# いまは下地が実写の動画で、テロップも1行ごとに変わる。
+# 画面がほんとうに止まっていないかは `見た目の変化`（20秒）が見るので、
+# そちらと同じ物差しにそろえる。**捕まえたいのは引用カードの30〜50秒**
+# （ヴィニシウス53秒・ギュレル54秒）で、表の17〜24秒ではない
+CARD_HOLD_MAX = 20.0
 # ショートはこれより短く見る。31秒の動画で12秒動かないと、尺の4割が同じ絵になる
 # （2026-09-07 に書き出して確認）。参考チャンネルは3〜8秒で必ず変えていた。
 SHORT_CARD_HOLD_MAX = 8.0
@@ -254,6 +272,14 @@ def _telop_coverage(script_json: Path) -> Finding:
     for scene in data.get("scenes", []):
         for line in scene.get("lines", []):
             said += len(line.get("text") or "")
+            # **板を出している行は、板そのものが画面の字**（2026-09-20 指示
+            # 「画面と字幕のが同じ場合は、字幕不要」）。基礎DATAの板や
+            # 登録選手一覧の上に読み上げ文を重ねると、タイルが読めなくなる。
+            # ここで数えないと、板の回だけ「声だけで流れている」と出てしまう
+            if line.get("no_telop") and _is_board(str(line.get("image") or "")):
+                shown += len(line.get("text") or "")
+                previous = None
+                continue
             telop = line.get("telop") or ""
             if not telop or telop == previous:
                 stale += 1
@@ -355,8 +381,22 @@ def _thumbnail_face(script: Script) -> Finding:
     if not photo:
         tiles = [str(x).strip() for x in (meta.get("thumbnail_photos") or [])]
         photo = next((x for x in tiles if x), "")
-    # エンブレムを主役にした回は、顔の代わりにそれを認める（2026-09-09 ユーザー指示）
-    if not photo and [x for x in (meta.get("thumbnail_crest_main") or []) if x]:
+    # エンブレムを主役にした回は、顔の代わりにそれを認める（2026-09-09 ユーザー指示）。
+    # **ただし、そのエンブレムが手元にあるか見る**（2026-09-17）。
+    # 町田浩樹の回は `crest_main: [ホッフェンハイム]` と書いてあり、ここは通ったが、
+    # `assets/crests/` にホッフェンハイムは無い。できあがったのは
+    # **顔もロゴも無い、夜景だけのサムネ**だった。ユーザーが見て気づいた
+    # （「町田の画像はないんだっけ？」）。名前を書けば通る検査は、通るだけ
+    wanted = [str(x) for x in (meta.get("thumbnail_crest_main") or []) if str(x).strip()]
+    if not photo and wanted:
+        from . import crest as _crest
+
+        missing = [name for name in wanted if _crest.find(name) is None]
+        if missing:
+            return Finding(False, "サムネの顔",
+                           f"エンブレムが手元にありません: {'・'.join(missing)}"
+                           "（顔もロゴも無いサムネになります。写真を用意するか、"
+                           "`crest.fetch` で取り込む）")
         return Finding(True, "サムネの顔", "エンブレムを主役にしています")
     if not photo:
         return Finding(False, "サムネの顔",
@@ -430,37 +470,36 @@ def check_post_sources(script: Script) -> Finding:
 
 
 def _photo_credits(script: Script, out_dir: Path) -> Finding:
-    """使った写真のクレジットが概要欄に出ているか。
+    """使った写真のうち、**表示が条件のもの**が概要欄に出ているか。
 
     **CC BY 系は表示が必須。**出ていないと利用条件を満たさないまま公開になる。
     実測（2026-09-04）で、行に差し込んだ写真が1件も拾われていなかった。
+
+    **数え方が2つとも間違っていた**（2026-09-18）。
+      1. 写真を**ファイル名**で数えていた。どのフォルダも中身は `01.jpg` なので、
+         5枚使っていても1枚として数えていた
+      2. 報道写真まで数えていた。報道写真は**1枚ごとの行を出さない**決まり
+         （2026-09-17 ユーザー指示）。出ないものを待って落ちていた
+    いま見るのは「**表示が条件の写真の枚数**」と「**※ 画像: の行数**」。
     """
-    used = sorted({
-        Path(line.image).name for line in script.lines if getattr(line, "image", None)
-    })
-    # **サムネイルの写真も数える。**動画本体には出ないが、サムネイルも配布物で、
-    # 表示義務は同じ。行の画像しか見ておらず、公開済みの5本が
-    # クレジット無しで出ていた（2026-09-06 実測）
-    meta = script.meta or {}
-    thumbs = [str(meta.get("thumbnail_photo") or "")]
-    # 並べて敷く写真も配布物。1枚目しか数えておらず、2枚目の表示義務が
-    # 抜けていた（2026-09-08）
-    thumbs += [str(x) for x in (meta.get("thumbnail_photos") or [])]
-    names = {Path(t).name for t in thumbs if t.strip()}
-    if names:
-        used = sorted(set(used) | names)
-    if not used:
-        return Finding(True, "写真のクレジット", "写真を使っていません")
+    from .tts import image_details
+
     description = out_dir / "description.txt"
+    want = image_details(script)
     if not description.exists():
-        return Finding(False, "写真のクレジット", "概要欄がありません")
+        return Finding(False if want else True, "写真のクレジット",
+                       "概要欄がありません" if want else "写真を使っていません")
+    if not want:
+        return Finding(True, "写真のクレジット", "表示が条件の写真はありません")
     body = description.read_text(encoding="utf-8")
-    credits = [ln for ln in body.splitlines() if ln.startswith("画像:")]
-    if len(credits) < len(used):
-        return Finding(False, "写真のクレジット",
-                       f"写真{len(used)}枚に対しクレジット{len(credits)}件。"
-                       "CC BY 系は表示が必須です")
-    return Finding(True, "写真のクレジット", f"写真{len(used)}枚 / クレジット{len(credits)}件")
+    missing = [line for line in want if line not in body]
+    if missing:
+        return Finding(
+            False, "写真のクレジット",
+            f"表示が条件の写真{len(want)}枚のうち{len(missing)}枚が概要欄にありません。"
+            "CC BY 系は表示が必須です",
+        )
+    return Finding(True, "写真のクレジット", f"表示が条件の写真{len(want)}枚すべてに表示があります")
 
 
 def check_thumbnail_photos(script: Script) -> Finding:
@@ -520,6 +559,32 @@ def check_tag_names(script: Script) -> Finding:
                        "／".join(missing) + " がタグに入っていません。"
                        "分類語だけでは検索に掛からない")
     return Finding(True, "タグの固有名", f"{len(script.tags)}個中に {'／'.join(wanted)}")
+
+
+def check_tag_club(script: Script) -> Finding:
+    """タグにクラブ名（か代表名）が入っているか（2026-09-15）。
+
+    `clubs.yaml` に載っていないクラブだと**1つも付かない**。
+    9/11以降の本編96本のうち22本がこれで、ボーンマス・シャルケ・
+    フライブルク・サントス・フェネルバフチェ・ブラックバーン・カリアリの回は
+    タグが人名と分類語だけだった。**検索はクラブ名でも起きる。**
+    """
+    from . import clubs as club_book
+
+    known = {c.canonical for c in club_book.load()}
+    known |= {n.replace("・", "") for n in known}
+    # 辞書に無いクラブは `crest_main` に書いてある（ボーンマス・シャルケ…）
+    meta = script.meta or {}
+    known |= {str(x).strip() for x in (meta.get("thumbnail_crest_main") or [])}
+    known |= {str(x).strip() for x in (meta.get("thumbnail_crests") or [])}
+    # 辞書に無いクラブは topic からタグにしている（サウサンプトン・シャルケ…）
+    known |= {str(meta.get("topic") or "").strip()}
+    hit = [t for t in script.tags if (t in known and t) or t.endswith("代表")]
+    if hit:
+        return Finding(True, "タグのクラブ名", "／".join(hit[:3]))
+    return Finding(False, "タグのクラブ名",
+                   "クラブ名も代表名も入っていません。"
+                   "取材メモの topic を確かめてください")
 
 
 def _photo_subject(path: Path) -> str:
@@ -767,6 +832,20 @@ def check_reaction_layer(script: Script) -> Finding | None:
              for scene in scenes for line in scene.lines if getattr(line, "card", None)}
     if "reactions" in kinds:
         return Finding(True, "反応の層", "反応カードが出ています")
+    # **2026-09-14 から、反応はカードではなく白い箱で積んでいる**（renderer の stack）。
+    # 匿名の群衆（voice_crowd）の行は、画面に箱として並ぶ。**それも反応の層**。
+    # この検査はそれを知らず、9/15 以降は反応カードを1枚も使っていないのに鳴らなかった。
+    # **見出しを「見ていた人が書いていたこと」にして、探す語（反応・声）を避けていた**
+    # から通っていただけ（2026-09-22 に判明）。見出しで逃がさず、箱の数で見る
+    try:
+        from .config import load_config
+        crowd = set(load_config().voicevox.voice_crowd or [])
+    except Exception:
+        crowd = {"ネット民", "現地サポ", "海外のファン"}
+    stacked = sum(1 for scene in scenes for line in scene.lines
+                  if (getattr(line, "speaker", "") or "") in crowd)
+    if stacked >= 2:
+        return Finding(True, "反応の層", f"白い箱で{stacked}件並びます")
     titles = " / ".join(s.title for s in scenes)
     return Finding(
         False,
@@ -774,6 +853,43 @@ def check_reaction_layer(script: Script) -> Finding | None:
         f"『{titles}』に反応カードがありません。"
         "reactions で数えてからカードにしてください（語りだけだと画面が持ちません）",
     )
+
+
+def check_reaction_pairing(script: Script) -> Finding | None:
+    """**カードに出した反応は、全部読み上げる**（2026-09-11 ユーザー指摘
+    「ネットの反応で使わないのがあるのはなぜ？」）。
+
+    伊藤涼太郎の回で、カードに5件出しながら読み上げは2件だけだった。
+    画面に出しておいて読まない理由が説明できない。**使うなら両方、落とすなら両方。**
+
+    **長い1件は、落とすのではなく行に分ける**（2026-09-11 ユーザー
+    「切らずにのせるはしないの？」）。分けても言葉は欠けないので、
+    ここでは**続けて読んだかどうか**で見る（空白を外してつなげて探す）。
+    落とした分は取材メモに理由を書く。
+    """
+    scenes = [s for s in script.scenes if any(w in (s.title or "") for w in REACTION_HEADINGS)]
+    if not scenes:
+        return None
+    cards = script.cards or {}
+    shown, said = [], []
+    for scene in scenes:
+        for line in scene.lines:
+            got = cards.get(getattr(line, "card", None)) or {}
+            if str(got.get("type", "")).lower() == "reactions":
+                for item in got.get("items") or []:
+                    text = str(item.get("text") or "").strip()
+                    if text:
+                        shown.append(text)
+            if (line.speaker or "") not in NARRATORS:
+                said.append((line.text or "").strip())
+    # **行に分けただけのものを別物にしない。**空白と記号を外してつなげて探す
+    joined = "".join(_bare(t) for t in said)
+    missing = [t for t in shown if _bare(t) not in joined]
+    if missing:
+        return Finding(False, "反応の読み上げ",
+                       f"カードに出して読み上げていない反応が{len(missing)}件あります"
+                       f"（{missing[0][:20]}…）。使うなら両方、落とすなら両方にしてください")
+    return Finding(True, "反応の読み上げ", f"カードの{len(shown)}件とも読み上げています")
 
 
 # 語り手。**「解説」も語り手であって、他人の声ではない。**
@@ -847,7 +963,12 @@ OUTLET = re.compile(
 # 報道機関の名前とは働きが違う。落とすと確度が下がる
 PRIMARY = re.compile(
     r"(?:UEFA|FIFA|プレミアリーグ|ラ・リーガ|ブンデスリーガ|セリエA|リーグ"
-    r"|連盟|協会|クラブ|公式(?:サイト)?)(?:に)?(?:よると|よれば|の(?:発表|計測|集計))")
+    r"|連盟|協会|クラブ|公式(?:サイト)?)(?:に)?(?:よると|よれば|の(?:発表|計測|集計))"
+    # **試合を裁いた側も一次情報**（2026-09-15）。フォーデンの回で
+    # 「主審の説明は『レッドカード、フィル・フォーデン』。VARは『二次的な動き』と
+    # 伝えています」が**媒体名を言っている**として止まっていた。
+    # 主審とVARは報道機関ではなく、その場で判定を下した当人
+    r"|(?:主審|審判団?|レフェリー|VAR)(?:は|が|の)")
 
 # 埋め草。背番号・レンタル料・この先の日程・言い換え
 FILLER = (
@@ -856,6 +977,38 @@ FILLER = (
     (re.compile(r"次は[^。]*(?:対戦|試合)します|次節は"), "この先の日程"),
     (re.compile(r"^(?:なお|ちなみに)[、，]"), "「なお、」"),
     (re.compile(r"ということになります"), "言い換え"),
+    # **件数への感想は言わない**（2026-09-11 ユーザー指摘
+    # 「数として多くありませんとかはいらない」）。件数はそのまま言えばよく、
+    # 多い・少ないの評価を足すと、そのぶん尺を食うだけで中身が増えない。
+    (re.compile(r"数としては|多くありません|少なくありません|多いほうです|少ないほうです"),
+     "件数への感想"),
+    # **どれを引いたかの断りも要らない。**そのまま読み上げに入る。
+    (re.compile(r"(?:だけ|のみ)(?:引きます|紹介します|挙げます)|読めるものを"),
+     "引く前の断り"),
+    # **これから何を言うかを、言わない**（2026-09-17 ユーザー指摘
+    # 「得点の形も書いておきます。こう言うのはいらない」
+    # 「あなたが何を書くかは言う必要ない」）。
+    # 語り手が自分の段取りを説明する行は、中身を持たずに尺だけ使う。
+    # 「ここから本題です」は 2026-09-10 に読み上げから外したのに、
+    # **書く側が別の言い方で戻していた**（この日の遠藤の回）。
+    (re.compile(r"(?:書いて|置いて|並べて|挙げて|触れて|残して|添えて|話して)おきます"
+                r"|ここから(?:が)?本題|ここがこの話の中身"
+                r"|(?:について|のことを)(?:見て|話して)いきます"),
+     "これから何を言うかの説明"),
+    # **自分のチャンネルの過去回に触れない**（2026-09-17 ユーザー指示）。
+    # ベンフィカの回に「このチャンネルでは9月6日に、アモリム監督のミランを
+    # 扱いました」と書いていた。**見ている人には要らない情報**で、
+    # 「まとめサイトでは」を落としたのと同じ筋（`check_board_mention`）。
+    # その回を見ていない人には通じず、見た人にも中身が増えない
+    (re.compile(r"この(?:チャンネル|動画|番組)で(?:は|も)?"
+                r"|前回の(?:動画|回)|以前(?:の回|扱った|お伝えした)"
+                r"|先日(?:の動画|お伝えした)"),
+     "自分のチャンネルの過去回への言及"),
+    # **反応の件数も読み上げない**（2026-09-11 ユーザー指摘「件数もいらない」）。
+    # 母数は残す決まりだったが、取り消した。**反応そのものから入る。**
+    # 出典は概要欄にある。
+    (re.compile(r"[0-9０-９]+件(?:の(?:書き込み|反応|コメント|声)|でした)"),
+     "反応の件数"),
 )
 
 
@@ -872,8 +1025,11 @@ def check_board_mention(script: Script) -> Finding:
     """**まとめサイト・掲示板の名指しは読み上げない**（2026-09-10 ユーザー指示）。
 
     「掲示板のまとめには15件の書き込みがありました」と言う必要はない。
-    反応そのものを読めば足りる。**数えた母数は残してよい**（「47件中12件」）が、
-    どこで数えたかは概要欄に置く。出典を消すわけではない。
+    反応そのものを読めば足りる。どこで数えたかは概要欄に置く。出典を消すわけではない。
+
+    **母数も読み上げない**（2026-09-11 ユーザー指摘「件数もいらない」）。
+    それまでは「数えた母数は残してよい」としていたが、取り消した。
+    件数は `check_filler` の「反応の件数」が止める。
     """
     bad = [line.text for line in _narrator_lines(script) if BOARD.search(line.text or "")]
     if bad:
@@ -951,18 +1107,18 @@ def check_voice_share(script: Script, minimum: float | None = None) -> Finding:
 
 
 def check_voice_length(script: Script) -> Finding:
-    """1件が長すぎないか。長い引用は刻めず、画面も声も止まる。"""
+    """1件の長さ。**字数では落とさない**（2026-09-11 ユーザー
+    「内容がいいものを抜粋する」「文字数は関係ない」）。
+
+    20字で落としていたが、**短いものだけが残る決まりになっていた。**
+    選ぶ基準は長さではなく中身。長い1件は、元の改行で行に分けて全文を載せる
+    （`check_reaction_pairing` が、カードに出して読んでいない反応を止める）。
+    数は出すが、止めはしない。
+    """
     other, _ = _voice_lines(script)
     if not other:
         return Finding(True, "反応の刻み", "他人の声がありません")
-    longest = max(other)
-    if longest > VOICE_LINE_MAX:
-        return Finding(
-            False, "反応の刻み",
-            f"1件が{longest}字あります（上限{VOICE_LINE_MAX}字）。"
-            "短く割ってください。参考は1件3秒＝16字前後です",
-        )
-    return Finding(True, "反応の刻み", f"最長 {longest}字")
+    return Finding(True, "反応の刻み", f"最長 {max(other)}字")
 
 
 def _bare(text: str) -> str:
@@ -1016,10 +1172,64 @@ TITLE_HOOKS = (
     # 「〜か？」しか認めていなかったので、疑問符の無い問いかけが弾かれ、
     # 結果として9本中7本が「〜がこちらです」で揃った。**検査が定型化を招いていた**
     "どこまで", "どうやって", "誰が", "誰か", "何を", "何が", "いくら", "いつ",
+    # **「どんな」も問いかけ**（2026-09-20）。プレミア20クラブ紹介を見本の形に
+    # 作り直したら、「ボーンマスってどんなクラブ？ ①プレミア20クラブ紹介」が
+    # 「答えを言い切っています」で弾かれた。**疑問符はあるのに文の途中**（うしろに
+    # シリーズの名札が付く）で、語尾だけを見る枝には引っかからない。
+    # 9/16 の「リーズ・ユナイテッドとはどんなクラブか」は「とは」で通っていた。
+    # **一覧が形を狭めるのは4度目**（2026-09-08 問いかけ／09-12 体言止め／09-15「〜したのは」）
+    "どんな",
+    # **5度目**（2026-09-22）。「上田綺世が決めた1点。同じゴールに**並んだ言葉は**」が
+    # 弾かれた。「言葉」は TITLE_NOUN_TAILS にあるが、あちらは**末尾**だけを見る枝で、
+    # 「言葉は」と助詞が付くと当たらない。**助詞を許す形をここに置く**
+    "言葉は", "並んだのは", "起きたのは", "待っていたのは", "残したのは",
 )
 
 # 疑問符が無くても、この形で終わっていれば問いかけ
 TITLE_QUESTION_TAILS = ("か", "かも", "のか", "ますか", "だろうか", "でしょうか")
+
+# **体言止めも答えを隠している**（2026-09-12）。CLAUDE.md は
+# 「問いかけ・引用で切る・**体言止め**など形はいくつもある」と書いているのに、
+# 検査は体言止めを1つも認めていなかった。
+# 「ニコ・パスがレアルを断って残った理由」「デンベレ、昨年度受賞者が語る」が
+# どちらも「答えを言い切っている」で弾かれた。**また検査が形を狭めていた。**
+TITLE_NOUN_TAILS = (
+    "理由", "言葉", "一言", "答え", "中身", "真相", "経緯", "決断", "正体",
+    "本音", "条件", "狙い", "背景", "全貌", "行方", "結末",
+    # 「〜の声は」で切る形も、何を言われたかは隠れている（2026-09-12）
+    "の声", "の声は", "の反応", "の反応は",
+    # **「は」で止める形も同じ**（2026-09-13）。「その理由は」「監督は」で切ると、
+    # 中身は隠れたまま。体言止めの一覧に「理由」はあったのに、
+    # 助詞が付いた「理由は」を弾いていた
+    "理由は", "答えは", "中身は", "真相は", "本音は", "評価は", "監督は", "本人は",
+    # **「〜したのは」で止める形も同じ**（2026-09-15）。何を口にしたかは隠れている。
+    # 「フォーデンの一発退場。キーンが口にしたのは」が「答えを言い切っている」で
+    # 弾かれた。**3度目の同じ壊れ方**（2026-09-08 の問いかけ、
+    # 2026-09-12 の体言止めに続く）。検査の一覧が形を狭めている
+    "たのは", "ったのは", "いたのは", "えたのは", "したのは", "ないのは",
+    # **6度目（2026-09-22）。語を数え上げるのをやめる。**
+    # 「キーンが口にしたのは」→「たのは」を足す、「並んだ言葉は」→「言葉は」を足す、
+    # 「選んだ人が書いたのは」→…と、**1本書くたびに1語増えていた**。
+    # 「〜のは」「〜のが」で終わる形は、**それ自体が体言止めで答えを隠している**。
+    # 語尾そのものを認めれば、次からこの形で鳴らない
+    "のは", "のが",
+    # 「〜のあいだで起きたこと」も、何が起きたかは伏せている（2026-09-22）
+    "たこと", "ったこと", "いたこと",
+)
+# 言い切らずに「語る／明かす」で止める形。何を語ったかは隠れている
+TITLE_VERB_TAILS = ("が語る", "が明かす", "が認める", "が口を開く", "を語る", "を明かす",
+                    "を振り返る", "が振り返る", "を明かした", "が語った")
+
+# **7度目（2026-09-25）。語を数えるのをやめて、形で見る。**
+# 「サンチョが練習していた、思いがけない**場所**」「その同じ日に売り出した**もの**」が
+# 「答えを言い切っています」で弾かれた。どちらも体言止めで、答えは伏せてある。
+# 「場所」「もの」を一覧に足しても、次は「値段」「相手」で鳴る。
+# **連体形の動詞（〜た／〜る／〜ない）のすぐ後ろで名詞に止めていれば、体言止め**とする。
+# 「…監督が来た」のように動詞で終わる題は、後ろに名詞が無いので当たらない。
+TITLE_RENTAI_NOUN = re.compile(
+    r"(?:た|だ|る|ない)[一-龥ァ-ヴー]{1,5}$"      # 連体形＋名詞（呼んだ監督／売り出したもの）
+    r"|(?:こと|もの|ところ|とき|ほう|場所|相手)$"   # 形式名詞で止める（伝えられた2つのこと）
+)
 
 
 def check_title_hook(script: Script) -> Finding:
@@ -1036,8 +1246,25 @@ def check_title_hook(script: Script) -> Finding:
         return Finding(False, "タイトルの型", "タイトルがありません")
     if any(word in script.title for word in TITLE_HOOKS):
         return Finding(True, "タイトルの型", "続きを見たくなる形です")
+    if TITLE_RENTAI_NOUN.search(bare):
+        return Finding(True, "タイトルの型", "体言止めで伏せています")
+    # **疑問符で終わるなら問いかけ**（2026-09-22）。`_bare` が「？」を落とすので、
+    # 「歴代何位？」が「何位」になり、言い切りとして弾かれていた
+    quoted_tail = re.sub(r"【[^】]*】", "", script.title or "").strip()
+    if quoted_tail.endswith(("？", "?")):
+        return Finding(True, "タイトルの型", "問いかけで終わっています")
     if bare.rstrip("。！!").endswith(TITLE_QUESTION_TAILS):
         return Finding(True, "タイトルの型", "問いかけで終わっています")
+    tail = bare.rstrip("。！!")
+    if tail.endswith(TITLE_NOUN_TAILS):
+        return Finding(True, "タイトルの型", "体言止めで、答えは隠れています")
+    # **「は」で切ったら、述語がまだ来ていない**（2026-09-13）。
+    # 「日本人3人の活躍は」「世間の声は」「監督は」——どれも答えは言っていない。
+    # 語尾を一覧で持つとキリが無いので、助詞そのもので見る
+    if tail.endswith("は") and len(tail) >= 4:
+        return Finding(True, "タイトルの型", "「〜は」で切っていて、答えは隠れています")
+    if tail.endswith(TITLE_VERB_TAILS):
+        return Finding(True, "タイトルの型", "何を話したかは隠れています")
     # 「解説南さん『鈴木彩艶に関しては・・・』」が25万回。**引用で切ると続きが気になる**。
     # **`_bare` で見てはいけない**（2026-09-09）。`_bare` は鉤括弧ごと落とすので、
     # この枝は一度も通らない死んだコードだった。docstring は「引用で切る形も通す」と
@@ -1063,6 +1290,9 @@ COMMON_KATAKANA = (
     "シーズン", "リーグ", "クラブ", "チーム", "ファン", "サポーター", "コメント",
     "インタビュー", "ランキング", "スタメン", "ベンチ", "オファー", "ポジション",
     "プレー", "パフォーマンス", "トレーニング", "メンバー", "スタジアム",
+    # **3文字まで見るようにしたので、3文字の普通名詞をここへ**（2026-09-22）
+    "ミス", "パス", "シュート", "セーブ", "カード", "ドロー", "ラスト", "ロング",
+    "ハット", "キック", "コーチ", "ホーム", "アウェー", "スタッフ", "データ",
 )
 
 # 文頭に立つが名前ではない漢字語。**ここを増やしすぎない。**
@@ -1104,20 +1334,45 @@ def check_title_subject(script: Script) -> Finding:
     if not title:
         return Finding(False, "タイトルの主語", "タイトルがありません")
 
-    head = re.sub(r"^【[^】]*】", "", title)[:TITLE_HEAD]
+    # **札を剥がして見ない**（2026-09-11）。ここでは剥がしていたので
+    # 「【速報】ヴァーディがバーンリーへ」が「頭に名前」で通っていたが、
+    # **画面に出るタイトルは【速報】から始まっている。**
+    # 実測（12時間以上たった27本、深夜を除く）で、
+    # **1,100回を超えた10本の80%が名前で始まり、群れ17本では29%**だった。
+    # 札を付けた本は、抜けた側で10%・群れで35%。札が名前を頭から押しのけている。
+    if title.startswith("【"):
+        return Finding(
+            False, "タイトルの主語",
+            f"札から始まっています（『{title[:8]}』）。**頭は人名かクラブ名にしてください。**"
+            "札を残すなら後ろへ。抜けた10本の80%が名前で始まり、群れは29%でした",
+        )
+    head = title[:TITLE_HEAD]
     if clubs_mod.find(head):
         return Finding(True, "タイトルの主語", f"頭にクラブ名: {head[:10]}")
     if any(name and name in head for name in _japanese_names()):
         return Finding(True, "タイトルの主語", f"頭に選手名: {head[:10]}")
     # カタカナの連なりは人名のことが多い。**ただし普通名詞も同じ形**なので、
     # よく出るものは名前として数えない（「ウォームアップ中の負傷」で通っていた）
-    for run in re.findall(r"[ァ-ヶー・]{4,}", head):
+    # **4文字以上しか見ていなかった**（2026-09-22 に踏んだ）。
+    # 「メッシが930点目を決めた」が「頭に人名もクラブ名もありません」で × になった。
+    # **メッシ・ヤマル・ロドリ・ジダン・ケインは、どれも3文字。**
+    # このチャンネルがいちばんよく出す名前が、まるごと抜けていた。
+    # 3文字まで下げて、3文字の普通名詞は COMMON_KATAKANA で落とす
+    for run in re.findall(r"[ァ-ヶー・]{3,}", head):
         # 頭で切れた語も落とす（「ウォームア」は「ウォームアップ」の途中）
-        if not any(word in run or run in word for word in COMMON_KATAKANA):
+        # **普通名詞が名前の途中に入っているだけなら名前**（2026-09-26）。
+        # 「インファンティーノ」の中の「ファン」で落ちていた。普通名詞とみなすのは、
+        # 同じ語か、普通名詞で始まるか（「ファンの声」）、普通名詞の途中で切れたとき
+        if not any(run == word or run.startswith(word) or run.endswith(word) or run in word
+                   for word in COMMON_KATAKANA):
             return Finding(True, "タイトルの主語", f"頭に名前: {run[:10]}")
     # 漢字の名前。**文頭にあって助詞か読点が続くもの**だけを見る。
     # 「南野拓実が」「旗手怜央、」は名前、「移籍市場が」は名前ではない
-    kanji = re.match(r"^([一-龥々ヶ]{2,5})(?=[がはのをにへとも、。])", head)
+    # **鉤括弧が続く形を見ていなかった**（2026-09-18 に踏んだ）。
+    # 「佐野航大「行きたかったのですが、できなかった」」が × になる。
+    # 名前のすぐ後ろに発言を置く形は、このチャンネルでよく使う書き方で、
+    # **助詞も読点も挟まない**。引用符と中黒・空白も切れ目として数える
+    kanji = re.match(r"^([一-龥々ヶ]{2,5})(?=[がはのをにへとも、。「『（(　 、])", head)
     if kanji and kanji.group(1) not in COMMON_KANJI_HEADS:
         return Finding(True, "タイトルの主語", f"頭に名前: {kanji.group(1)}")
     return Finding(
@@ -1187,11 +1442,51 @@ def hold_limit(portrait: bool) -> float:
     return SHORT_CARD_HOLD_MAX if portrait else CARD_HOLD_MAX
 
 
-def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
-    """画面の主役が同じまま続く時間。テロップの変化は数えない。
+# 誰かの言葉が出るまでの上限（秒）。research.py の SHORT_QUOTE_BY / MAIN_QUOTE_BY と同じ実測
+QUOTE_SPEED = {"short": 16.0, "main": 46.0}
 
-    下のテロップが変わっていても、カードと写真が同じなら画面はほぼ止まって見える。
-    見ているのは「読む文字」ではなく「絵が変わったか」。
+
+def check_quote_speed(out_dir: Path, portrait: bool) -> Finding:
+    """誰かの言葉が何秒目に出るか。実尺で見る（2026-09-22）。
+
+    直近14日・196本で、ショートは16秒・本編は46秒を境に維持率が7〜10ポイント違った。
+    語りしか無い回（紹介もの）は見ない。
+    """
+    import json
+
+    script_json = out_dir / "script.json"
+    if not script_json.exists():
+        return Finding(False, "言葉の早さ", "script.json がありません")
+    data = json.loads(script_json.read_text(encoding="utf-8"))
+    narrators = {"キャスター", "解説", "ナレーター"}
+    elapsed = 0.0
+    for scene in data.get("scenes", []):
+        for line in scene.get("lines", []):
+            if (line.get("speaker") or "") not in narrators:
+                limit = QUOTE_SPEED["short" if portrait else "main"]
+                if elapsed > limit:
+                    return Finding(False, "言葉の早さ",
+                                   f"最初の言葉が{elapsed:.0f}秒目です（{limit:.0f}秒まで）。"
+                                   "本人の発言か反応を前に置いてください")
+                return Finding(True, "言葉の早さ", f"最初の言葉は{elapsed:.0f}秒目")
+            elapsed += float(line.get("duration") or 0)
+    return Finding(True, "言葉の早さ", "語りだけの回なので見ません")
+
+
+def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
+    """**カード**が同じまま続く時間。テロップの変化は数えない。
+
+    カードは書かれた行で差し替わり、次の地の文にも残る。引用が10行続く回で
+    同じ絵のまま30〜50秒ということが実際に起きていた（ヴィニシウス53秒）。
+
+    **写真は数えない**（2026-09-15）。2026-09-14 にユーザーが
+    「一つの章で背景を変えるのやめて」「背景を何度も変更するのはやめてください」と
+    決めた時点で、**写真は出たら最後まで残るのが正しい形**になった。
+    それを「絵が止まっている」と数えると、**この点検を通すには
+    ユーザーが止めた明滅に戻すしかない**。
+
+    画面がほんとうに止まっていないかは `見た目の変化`（カードもテロップも
+    変わらないまま20秒）が見る。実測でこの3本は 9〜11秒だった。
     """
     import json
 
@@ -1200,15 +1495,31 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
     data = json.loads(script_json.read_text(encoding="utf-8"))
 
     worst, span, current, label = 0.0, 0.0, None, ""
+    seen_photo = False
     for scene in data.get("scenes", []):
         for line in scene.get("lines", []):
-            look = (line.get("card") or "", line.get("image") or "")
-            if look == current:
+            if line.get("image"):
+                seen_photo = True
+            card = line.get("card") or ""
+            # カードが出ていない行は数えない。**止まっているのはカードの話**で、
+            # カードが無い行の画面はテロップが1行ごとに変わっている
+            if card in ("", "none", "なし"):
+                current, span = None, 0.0
+                continue
+            # **入れ替える相手が無いうちは数えない**（2026-09-15 ユーザー判断
+            # 「表を出したまま」）。書き出しの側も、写真が出ていない節では
+            # カードを下ろさない（下ろすと「カードも写真も無い」まま伸びる。
+            # 2026-09-13 にアーセナル27秒・リヴァプール58秒で実測）。
+            # **生成の決まりと点検の基準が食い違っていた**
+            if not seen_photo:
+                current, span = None, 0.0
+                continue
+            if card == current:
                 span += float(line.get("duration") or 0)
             else:
-                current, span = look, float(line.get("duration") or 0)
+                current, span = card, float(line.get("duration") or 0)
             if span > worst:
-                worst, label = span, (look[0] or look[1] or "（カードも写真も無い）")
+                worst, label = span, card
 
     if worst > limit:
         return Finding(
@@ -1232,7 +1543,36 @@ def _tags(script: Script) -> Finding:
         return Finding(False, "タグ", f"長すぎるタグがあります: {long_ones[0]}")
     if length > tags_mod.MAX_TAGS_TEXT:
         return Finding(False, "タグ", f"合計{length}字（上限{tags_mod.MAX_TAGS_TEXT}字）")
-    return Finding(True, "タグ", f"{len(script.tags)}個 / 合計{length}字")
+    return Finding(True, "タグ",
+                   f"{len(script.tags)}個 / 合計{length}字"
+                   f"（枠の{length * 100 // tags_mod.MAX_TAGS_TEXT}%）")
+
+
+def check_hashtags(out_dir: Path) -> Finding:
+    """概要欄のハッシュタグ（2026-09-15）。
+
+    **16個以上あると、YouTube はハッシュタグを全部無視する。**
+    タグの配列をそのまま `#` 付きで流していたので、`people:` を丁寧に
+    書いた回ほど個数が増え、**ハッシュタグが1つも効いていなかった**
+    （書き出し済み220本のうち5本。いちばん多い回で21個）。
+    タグは500字まで詰めたいので、ここだけ別に数える。
+    """
+    from . import tags as tags_mod
+
+    description = out_dir / "description.txt"
+    if not description.exists():
+        return Finding(True, "ハッシュタグ", "description.txt がまだありません")
+    found: list[str] = []
+    for line in description.read_text(encoding="utf-8").splitlines():
+        if line.lstrip().startswith("#"):
+            found += [w for w in line.split() if w.startswith("#")]
+    if len(found) > tags_mod.HASHTAG_LIMIT:
+        return Finding(False, "ハッシュタグ",
+                       f"{len(found)}個です（{tags_mod.HASHTAG_LIMIT}個を超えると"
+                       "YouTube は全部を無視します）")
+    if not found:
+        return Finding(False, "ハッシュタグ", "1つもありません")
+    return Finding(True, "ハッシュタグ", f"{len(found)}個　{' '.join(found)}")
 
 
 def built_duration(out_dir: Path) -> float | None:
@@ -1453,3 +1793,189 @@ def contact_sheet(out_dir: Path, columns: int = 4, limit: int = 24) -> Path | No
     target = out_dir / "contact.jpg"
     sheet.save(target, quality=86)
     return target
+
+
+# 帯の1行目の長さ（2026-09-13、Gemini にサムネ6枚を見せて出た数字）。
+# 「15文字を超えると親指サイズで潰れ、脳が文章として認識を拒否する。
+# 上限12、理想10」と言われた。**いきなり12は今の書き方と合わない**ので、
+# まず14で知らせる。詰まりぐあいを見ながら下げる
+BAND_LINE_MAX = 14
+
+
+def check_band_length(script: Script) -> Finding:
+    """サムネの帯の1行目が長すぎないか。
+
+    長いと `_fit_band` が字を小さくして収める。**収まってはいるが、
+    一覧で読めない。**画面で見ると問題なく見えるので、目視では気づけない。
+    """
+    meta = script.meta or {}
+    line1 = str(meta.get("thumbnail_line1") or "").strip()
+    if not line1:
+        return Finding(True, "帯の1行目", "ありません")
+    if len(line1) > BAND_LINE_MAX:
+        return Finding(False, "帯の1行目",
+                       f"{len(line1)}字あります（{BAND_LINE_MAX}字まで）。"
+                       "親指の大きさだと字が小さくなって読めません: " + line1)
+    return Finding(True, "帯の1行目", f"{len(line1)}字")
+
+
+# 下地に使ってはいけないもの（2026-09-13 指摘）。**自前で描いた抽象画**で、
+# サッカーが写っていない。night.png は玉ぼけ、default.png は無地。
+# 開いた瞬間の1枚がこれだと、何のチャンネルか分からない
+NOT_FOOTBALL_BACKGROUNDS = ("night.png", "default.png")
+
+
+def check_opening_background(script: Script) -> Finding:
+    """最初の画面がサッカーの実写になっているか。
+
+    **ここは長らく night.png の決め打ちだった。**写真のある回は人物の写真が
+    上に載るので気づけないが、エンブレムで作る回は、開いた瞬間が
+    玉ぼけの抽象画になっていた（2026-09-13 にユーザーが実物で気づいた）。
+    """
+    scenes = list(script.scenes or [])
+    if not scenes:
+        return Finding(True, "最初の画面", "節がありません")
+    background = str(getattr(scenes[0], "background", "") or script.background or "")
+    name = background.rsplit("/", 1)[-1]
+    if not background:
+        return Finding(False, "最初の画面", "下地の指定がありません")
+    if name in NOT_FOOTBALL_BACKGROUNDS:
+        return Finding(False, "最初の画面",
+                       f"{name} はサッカーが写っていません。"
+                       "実写のクリップを指してください")
+    return Finding(True, "最初の画面", name)
+
+
+# 読み上げが終わってから動画が終わるまで、許す無音の長さ（2026-09-13）。
+# Gemini に実物のショートを見せたら「最後の3〜4秒が無音で、
+# ショートではここで確実にスワイプされる」と言われた。測ったら
+# 読み上げ37.2秒に対して動画40.2秒。**冒頭の静止カードを外したのと
+# 同じことが、終わりで起きていた**
+TAIL_SILENCE_MAX = 1.5
+# **本編は最後のカードを3秒出す決まり**（締めの挨拶を読み上げない代わり）。
+# そこは意図した無音なので、少しだけ余裕を見る
+TAIL_SILENCE_MAX_MAIN = 3.6
+
+
+def check_tail_silence(script: Script, out_dir) -> Finding:
+    """最後の一言のあと、音の無い時間がどれだけ続くか。
+
+    **音量の点検は平均で見るので、末尾の無音は通ってしまう。**
+    誰も喋っていない時間は、画面が静止していても点検に引っかからない。
+    """
+    from pathlib import Path
+
+    video = Path(out_dir) / "video.mp4"
+    if not video.exists():
+        return Finding(True, "末尾の無音", "書き出し前です")
+    # **台本の Script には尺が入っていない**（ビルドのときに決まる）。
+    # 書き出した script.json のほうを見る（2026-09-13 に直した）
+    spoken = built_duration(Path(out_dir))
+    if not spoken:
+        return Finding(True, "末尾の無音", "読み上げがありません")
+    length = _video_seconds(video)
+    if not length:
+        return Finding(True, "末尾の無音", "尺を測れませんでした")
+    gap = length - spoken
+    # **縦型（ショート）だけ厳しく見る。**本編は最後のカードを3秒出す決まりで、
+    # そこは意図した無音。ショートで3秒空けるとスワイプされるだけだった
+    size = _dimensions(video)
+    portrait = bool(size and size[1] > size[0])
+    limit = TAIL_SILENCE_MAX if portrait else TAIL_SILENCE_MAX_MAIN
+    if gap > limit:
+        return Finding(False, "末尾の無音",
+                       f"最後の {gap:.1f} 秒、誰も喋っていません"
+                       f"（読み上げ {spoken:.1f}秒 / 動画 {length:.1f}秒）")
+    return Finding(True, "末尾の無音", f"{max(gap, 0):.1f} 秒")
+
+
+def _video_seconds(video) -> float | None:
+    """書き出した動画の実尺（秒）。**script.json の合計ではない。**
+
+    script.json は読み上げの終わりまでしか持っていないので、
+    最後のカードぶんの無音が見えない。動画そのものを測る。
+    """
+    import re as _re
+    import subprocess
+
+    from . import ffmpeg as _ff
+
+    try:
+        out = subprocess.run([str(_ff.ffmpeg_exe()), "-i", str(video)],
+                             capture_output=True, text=True,
+                             encoding="utf-8", errors="replace")
+    except Exception:
+        return None
+    found = _re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", out.stderr or "")
+    if not found:
+        return None
+    h, m, sec = found.groups()
+    return int(h) * 3600 + int(m) * 60 + float(sec)
+
+
+def stale_against_notes(script_path) -> str:
+    """取材メモより台本が古ければ、そう言う（2026-09-16）。
+
+    **`draft` は既存の台本を上書きしない。**取材メモを直して掛け直しても
+    「すでにあります」で止まるだけなので、**古い台本のまま先へ進める。**
+    実際に2度踏んだ。2度目は、足したはずのネットの反応が7本ぜんぶ
+    ショートに入っておらず、確認ページも古い中身で公開してしまった。
+
+    消して掛け直せば直る。ここは**気づくための検査**で、直しはしない。
+    """
+    from pathlib import Path
+
+    script = Path(script_path)
+    notes = script.parent.parent / "research" / (script.stem + ".yaml")
+    if not script.exists() or not notes.exists():
+        return ""
+    if notes.stat().st_mtime <= script.stat().st_mtime:
+        return ""
+    return (f"台本が取材メモより古いです（{notes.name} のほうが新しい）。"
+            f"`rm {script}` してから draft を掛け直してください")
+
+
+# **海外の反応を必ず混ぜる**（2026-09-17 ユーザー了承）。
+# 同じ8日間・同じ選手（鈴木彩艶・中村敬斗）を扱っている
+# 「サムライスター情報局」の直近10本は、**10本すべてが「現地ファン騒然」
+# 「仏メディアが絶賛」「欧州騒然」**で、再生の中央値は 11,849回。
+# こちらは同じ期間で1,043回、題名に「現地」「海外」が**1本も無い**。
+#
+# **日本人選手が海外でプレーする話を扱っているのに、読み上げているのは
+# 日本のネット民の声だけ**だった。視聴者が知りたいのは
+# 「何が起きたか」より「**向こうでどう見られているか**」。
+#
+# 話者の型（`現地サポ` / `海外のファン`）は最初から config にある。
+# 仕組みがあるのに使っていなかった。
+OVERSEAS_VOICES = ("現地サポ", "海外のファン")
+
+
+def check_overseas_voices(script) -> Finding:
+    """反応に、現地・海外の声が混ざっているか。**止めない。知らせる。**
+
+    **2026-09-21 の指示で、この検査は当てが外れるようになった。**
+    「どこの国で言われているかの情報不要」「国で分けない。反応は1つの節にまとめ、
+    語り手は**ネット民に統一する**」と決めたので、海外から取った反応も話者は
+    `ネット民` になる。**話者名では、もう見分けられない。**
+
+    それでも消さないのは、**海外の声を混ぜる**という 2026-09-17 の決まり自体は
+    生きているから（同じ題材の他チャンネルは全部が「現地ファン騒然」で、
+    再生の中央値が10倍違った）。**見分けるのは人の仕事に戻った。**
+    話者を国で分けている古い台本だけ、今までどおり数える。
+    """
+    voices = []
+    for scene in getattr(script, "scenes", []) or []:
+        for line in getattr(scene, "lines", []) or []:
+            who = (getattr(line, "speaker", "") or "").strip()
+            if who and who not in ("キャスター", "解説", "ナレーター"):
+                voices.append(who)
+    if not voices:
+        return Finding(True, "海外の反応", "反応そのものがありません（別の検査が見ます）")
+    overseas = [w for w in voices if w in OVERSEAS_VOICES]
+    if overseas:
+        return Finding(True, "海外の反応", f"{len(overseas)}件（話者 {len(voices)}件のうち）")
+    # **話者名で見分けられない以上、無いとは言えない。**〇×ではなく覚え書きを返す
+    return Finding(True, "海外の反応",
+                   f"話者はすべて{'・'.join(sorted(set(voices)))[:40]}。"
+                   "2026-09-21 に国で分けないと決めたので、**ここでは見分けられません**。"
+                   "向こうでどう見られたかが入っているか、取材メモで確かめてください")

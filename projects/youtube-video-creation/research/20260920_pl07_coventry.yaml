@@ -1,0 +1,388 @@
+# プレミアリーグ20クラブ紹介 ⑦コヴェントリー（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/coventry*.json と旧台本 20260916_pl07_coventry.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 坂元達裕
+- コヴェントリー
+- ジョン・シレット
+short_title: 坂元達裕のコヴェントリー、戻れたのはなぜか
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_07_coventry
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: コヴェントリー
+  title: 坂元達裕のコヴェントリー。4部から25年、戻れたのはなぜか
+  question: どんなクラブなのか
+  hook: 4部まで落ちて、25年かけて戻ってきたクラブです。
+  lead: イングランド中部から、**1987年のFAカップ**。
+  opening_image: assets/stats/pl_coventry_data_t.png
+thumbnail:
+  line1: 坂元達裕と、追われた本拠地
+  line2: 4部から25年、戻ってきた古豪
+  crest_main:
+  - コヴェントリー
+  tags: []
+  points: []
+  board: assets/stats/pl_coventry_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 坂元達裕、プレミア初挑戦。25年ぶりの1部
+  narrator: キャスター
+  say:
+  - text: 坂元達裕は、このクラブでリーグ戦**107試合18得点**です。
+    image: assets/stats/pl_coventry_data_r1.png
+    no_telop: true
+  - text: 1987年、FAカップの決勝を延長で制した監督の言葉です。
+    image: assets/stats/pl_coventry_data_r1.png
+    no_telop: true
+  - voice: ジョン・シレット
+    text: 試合が長引くほど、勝てるという確信が強くなっていった
+    image: assets/stats/pl_coventry_data_r1.png
+  - text: 昨季は2部で優勝し、**25年ぶり**の1部。開幕5試合で勝ちは**1つ**、早くも残留争いの中にいます。
+    image: assets/stats/pl_coventry_data_r2.png
+    no_telop: true
+  - text: 4部まで落ちたのは2017年。戻れた理由は、2023年に来たオーナーと監督です。
+    image: assets/stats/pl_coventry_data_r2.png
+    no_telop: true
+  - image: assets/stats/pl_coventry_data0.png
+    text: 創立は**1883年**。自転車を作るシンガー社の工員たちが作りました。
+    no_telop: true
+  - image: assets/stats/pl_coventry_data1.png
+    text: 愛称は「スカイブルーズ」。空色です。
+    no_telop: true
+  - image: assets/stats/pl_coventry_map.png
+    text: ホームタウンはコヴェントリー。ウェスト・ミッドランズの都市です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_コヴェントリー.png
+    text: 本拠地はシービーエス・アリーナ。**3万2609人**が入ります。
+  - image: assets/stats/pl_coventry_data4.png
+    text: オーナーは地元の実業家ダグ・キング。2023年からクラブを持っています。
+    no_telop: true
+  - image: assets/stats/pl_coventry_cups.png
+    text: 1部リーグの優勝も、リーグカップの優勝もありません。FAカップが1回です。
+    no_telop: true
+  - image: assets/stats/pl_coventry_data6.png
+    text: 1シーズンの最多得点は、クラリー・バートンの**50得点**。1931年から32年の記録です。
+    no_telop: true
+  - image: assets/stats/pl_coventry_data7.png
+    text: 直近の優勝は、昨季の2部リーグ。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
+  - https://en.wikipedia.org/wiki/1987_FA_Cup_final
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false
+- id: exile
+  heading: 本拠地を追われた
+  tier: 背景
+  telop: 往復113キロ。ノーサンプトンのスタジアムを間借りした
+  narrator: 解説
+  card:
+    type: table
+    title: 落ちていった10年
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 2001年
+      - 34年続いた1部から降格
+    - - 2013年
+      - ノーサンプトンへ間借り（往復113キロ）
+    - - 2014年
+      - シービーエス・アリーナに帰る
+  say:
+  - image: assets/images/pl_coventry_story/scene.jpg
+    text: まず**2001年**、34年続いた1部から落ちました。
+  - 2013年には、スタジアムの持ち主と家賃でもめて、**家を追われます。**
+  - 移った先はノーサンプトン・タウンのスタジアム。往復およそ**113キロ**の道のりを、1シーズン通いました。
+  - text: 2014年に、いまのシービーエス・アリーナへ帰ります。
+    card:
+      type: table
+      title: 落ちていった10年
+      columns: *id001
+      rows:
+      - - 2017年
+        - 4部まで落ちる
+      - - 2026年4月17日
+        - 25年ぶりの1部復帰
+  - 落ちるところまで落ちて、2017年には4部にいます。
+  - そこから戻ってきました。**2026年4月17日**、25年ぶりのプレミアリーグ昇格が決まります。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 97ゴールの攻撃、地元の主
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 46試合97ゴール
+    - - 運営の型
+      - 本拠地を自分のものに
+    - - クラブの気質
+      - 監督が書いた応援歌
+  say:
+  - text: ランパードのサッカーは点を取って勝つ。昨季は46試合で97ゴール、2部を制しました。
+    image: assets/photos/pl/coventry_manager_ff78bb8a.jpg
+  - オーナー主導の型。2025年、家賃でもめたこともある本拠地を、クラブが初めて自分のものにしました。
+  - ジミー・ヒル監督が1962年に書いた応援歌「スカイ・ブルー・ソング」は、ボート競技の歌の節です。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Coventry_City_F.C._season
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+  - https://en.wikipedia.org/wiki/Doug_King_(businessman)
+  - https://en.wikipedia.org/wiki/Coventry_Building_Society_Arena
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false
+- id: episode
+  heading: 唯一のタイトル
+  tier: 背景
+  telop: 主要タイトルは1987年のFAカップだけ
+  narrator: 解説
+  card:
+    type: table
+    title: 唯一のタイトル
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1987年 FAカップ決勝
+      - トッテナムに3対2
+    - - 同点ゴール
+      - キース・ハウチェンのダイビングヘッド
+  say:
+  - text: 主要なタイトルは、クラブの歴史で1つだけ。**1987年**のFAカップです。
+    image: assets/images/pl_coventry_episode/scene.jpg
+  - 決勝の相手はトッテナム。開始2分で先制され、いったん追いつき、また突き放されます。
+  - text: 後半、キース・ハウチェンのダイビングヘッドで**2対2**。勝負は延長へ。
+    card:
+      type: table
+      title: 唯一のタイトル
+      columns: *id002
+      rows:
+      - - 決勝点
+        - 延長、相手のオウンゴール
+  - 延長、決勝点は相手のオウンゴール。**3対2**で勝ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/1987_FA_Cup_final
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - スティーヴ・オグリゾヴィッチ
+      - 1984-2000
+      - 1987年FA杯優勝のG
+  say:
+  - text: スティーヴ・オグリゾヴィッチは1984年、シュルーズベリーから加わったキーパーです。
+    image: assets/photos/pl/coventry_legend_c8cbdeab.jpg
+  - 1986年、シェフィールド・ウェンズデイ戦。2対2の引き分けで、キーパーながら得点しました。
+  - クラブ記録の**601試合**に出て、引退後も2019年までキーパーのコーチを務めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Steve_Ogrizovic
+  - https://en.wikipedia.org/wiki/Dion_Dublin
+  - https://en.wikipedia.org/wiki/Gary_McAllister
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - ディオン・ダブリン
+      - 1994-1998
+      - クラブ唯一のプレミア得点
+  say:
+  - text: ディオン・ダブリンは1994年、マンチェスター・ユナイテッドから来たフォワードです。
+    image: assets/photos/pl/coventry_legend_5dd33917.jpg
+  - 1997年から98年はプレミアの**得点王**。マイケル・オーウェンらと並んでの受賞でした。
+  - リーグ戦で61得点を残し、1998年に**575万ポンド**でアストン・ヴィラへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Steve_Ogrizovic
+  - https://en.wikipedia.org/wiki/Dion_Dublin
+  - https://en.wikipedia.org/wiki/Gary_McAllister
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ゲイリー・マカリスター
+      - 1996-2000
+      - 残留争いを戦った主将
+  say:
+  - text: ゲイリー・マカリスターは1996年、リーズから**300万ポンド**で来た31歳の司令塔。
+    image: assets/photos/pl/coventry_legend_f86f9736.jpg
+  - 主将として残留争いを戦い抜き、1999年から2000年には年間最優秀選手に選ばれました。
+  - 2000年に35歳でリヴァプールへ移り、2002年には監督兼選手として戻ってきました。
+  sources:
+  - https://en.wikipedia.org/wiki/Steve_Ogrizovic
+  - https://en.wikipedia.org/wiki/Dion_Dublin
+  - https://en.wikipedia.org/wiki/Gary_McAllister
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はフランク・ランパード。3年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - フランク・ランパード（イングランド）
+    - - 就任
+      - 2024年11月・3年目
+    - - 前職
+      - チェルシー暫定監督
+  say:
+  - text: 監督はイングランド人のフランク・ランパード。**2024年11月**から、3年目です。
+    image: assets/photos/pl/coventry_manager_ff78bb8a.jpg
+  - 昨季、2部で優勝させて、プレミアに連れてきた監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_coventry_gk.png
+    no_telop: true
+  - image: assets/stats/pl_coventry_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_coventry_gk_f.png
+    text: ベン・ウィルソンはリーグ戦で**97試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_gk_f.png
+    text: カール・ラッシュワースはリーグ戦で**51試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_coventry_df_f.png
+    text: ジョエル・ラティボーディエールはジャマイカ代表で**31試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_df_f.png
+    text: ジェイ・ダシルヴァはウェールズ代表で**10試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: 主将を務めるのが**マット・グライムズ**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: リーグ戦で**66試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: ジョシュ・エクルズはリーグ戦で**166試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/pl_coventry_fw_f.png
+    text: 日本の坂元達裕がいます。
+    no_telop: true
+  - image: assets/stats/pl_coventry_fw_f.png
+    text: ハジ・ライトはアメリカ代表で**22試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で1勝4敗。18位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - アーセナル（アウェー）
+      - 0対3
+    - - 第2節
+      - ハル・シティ（ホーム）
+      - 0対1
+    - - 第3節
+      - マンチェスター・シティ（アウェー）
+      - 0対1
+    - - 第4節
+      - ブライトン（ホーム）
+      - 0対5
+    - - 第5節
+      - ノッティンガム・フォレスト（アウェー）
+      - 1対0
+  say:
+  - プレミアリーグは5試合を終えて、**1勝4敗**です。
+  - 順位は**18位**、勝ち点は**3**です。
+  - いまは降格圏にいます。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
+  official: false

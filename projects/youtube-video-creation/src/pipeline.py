@@ -25,6 +25,19 @@ class BuildResult:
     backend: str
 
 
+def drop_short_only(script):
+    """**ショート専用の行を本編から落とす**（2026-09-14）。
+
+    ショートは節を1つ切り出して単体で出すので、「いつ・どこの試合か」を
+    節の頭に置く必要がある。本編では前の節で言い終えているため、
+    そのまま残すと**節をまたいだ言い直し**になる（`_advise_repeats` が
+    止めるのと同じ型）。台本には `only: short` と書き、本編でだけ捨てる。
+    """
+    for scene in script.scenes:
+        scene.lines = [l for l in scene.lines if getattr(l, "only", None) != "short"]
+    return script
+
+
 def build(
     script_path: str | Path,
     config: ProjectConfig,
@@ -34,7 +47,7 @@ def build(
 ) -> BuildResult:
     """台本ファイルから書き出す。"""
     return build_script(
-        load_script(script_path),
+        drop_short_only(load_script(script_path)),
         config,
         Path(out_dir) if out_dir else _resolve(f"output/{Path(script_path).stem}"),
         use_tts=use_tts,
@@ -48,6 +61,7 @@ def build_script(
     out_dir: Path,
     use_tts: bool = True,
     keep_work: bool = False,
+    max_seconds: float | None = None,
 ) -> BuildResult:
     """読み込み済みの台本から書き出す。
 
@@ -64,11 +78,25 @@ def build_script(
     backend = create_backend(config, use_tts)
     synthesize_script(script, config, audio_dir, backend=backend)
 
+    # **上限があるなら、実尺で収める**（2026-09-16）。見積りの安全率では
+    # 短くなりすぎるか、超えるかのどちらかにしかならなかった
+    if max_seconds:
+        from .shorts import enforce_limit
+
+        cut = enforce_limit(script, max_seconds, config)
+        if cut:
+            print(f"　上限{max_seconds:.0f}秒に収めるため、後ろから{cut}行落としました")
+
     # 尺が決まってから、長く止まる絵をほぐす。合成の前だと秒数が分からない。
     # 縦型（ショート）は同じ絵を出しておける時間が短い
     from .review import hold_limit
 
     spread_long_cards(script, hold_limit(config.video.height > config.video.width))
+    # **冒頭だけは、もっと早く変える**（2026-09-15）。spread_long_cards の
+    # あとに置く。先に置くと、こちらが挟んだ1枚で「絵が変わった」ことになり、
+    # そのあと20秒の判定が効かなくなる
+    open_early(script)
+    hold_photo(script)
 
     # タイトルカードのぶんの無音を挟み、各セリフの開始時刻を振り直す
     inserts = inserts_mod.plan(script, config)
@@ -97,7 +125,8 @@ def build_script(
 
     look = from_meta(script.meta, script.title)
     # 帯の上に出す反応。指定が無ければ台本から短いものを拾う（2026-09-07）
-    reaction = look.get("reaction") or reaction_line(script)
+    reaction = look.get("reaction") or (
+        "" if look.get("no_auto_reaction") else reaction_line(script))
     thumbnail = build_thumbnail(
         config,
         look["title"],
@@ -105,12 +134,18 @@ def build_script(
         subtitle=look["subtitle"],
         background=look["photo"] or script.background,
         focus=look.get("focus"),
+        focus_x=look.get("focus_x"),
         badge=look["badge"],
         date=script.date,
         lines=look["lines"],
         tags=look["tags"],
         reaction=reaction,
         points=look.get("points") or [],
+        # **書き出しの経路にも渡す**（2026-09-14）。`thumbnail` コマンドにだけ
+        # 渡していたので、単体で作ると正しく、build で上書きすると崩れていた
+        # （バルセロナの帯が左半分のまま／バレンシアの赤い一行が消えていた）
+        note_red=look.get("note_red") or "",
+        band_full=bool(look.get("band_full")),
         photos=look.get("photos") or [],
         # 縦サムネの下に置く一言。横型では使わない
         quote=short_quote(script),
@@ -138,6 +173,93 @@ def build_script(
         backend=backend.name,
     )
 
+
+def hold_photo(script: Script) -> int:
+    """**写真は一度出たら、そのあとも出したままにする**（2026-09-15）。
+
+    `spread_long_cards` は「同じ絵が20秒止まる」ところに写真を1枚挟むが、
+    **次の行で下地へ戻っていた。**フォーデンの回の本編は
+    スタジアム → 写真 → スタジアム → 写真 と**3回**入れ替わっていて、
+    2026-09-14 の指摘「一つの章で背景を変えるのやめて」
+    「この間に一瞬背景が切り替わってるなおして」がそのまま再発していた。
+
+    `research.to_script` の側は「山場の節から写真にして最後まで残す」と
+    書いているのに、**あとから挟むほうがその決まりを知らなかった。**
+    書き出しの最後に、写真を前から後ろへ引き継ぐ。
+
+    `scan_switch.py` で数えると、入れ替えは1本につき1回に収まる。
+
+    **板は引き継がない**（2026-09-20）。ここで言う「写真」は本当に写真のことで、
+    板（`assets/stats/` の一覧板・数字の図）を引き継ぐと**そのあとの節のカードが
+    全部消える。**プレミア20クラブ紹介のボーンマスで、基礎DATAの板が
+    20秒から165秒まで出っぱなしになり、歩んできた道・名選手・宿敵の
+    カードが1枚も画面に出ていなかった。板の上には何も重ねない決まり
+    （render.py の `board`）と噛み合って、**節が進んでも絵が変わらない**。
+    """
+    from .render import _is_board
+
+    filled = 0
+    holding = ""
+    for scene in script.scenes:
+        for line in scene.lines:
+            if line.image:
+                holding = "" if _is_board(line.image) else line.image
+            elif holding:
+                line.image = holding
+                filled += 1
+    return filled
+
+
+# **冒頭で絵が止まっている時間**（2026-09-15）。視聴維持のカーブを読んだら、
+# 崖は 12秒→24秒 の1か所で、82% から 50% へ落ちていた。そこは
+# **1枚目の絵が出っぱなしの区間**で、spread_long_cards が写真を挟むのは
+# 20秒を超えてから。**落ちきってから変えていた。**
+#
+# 参考にしている3チャンネルは8秒で必ず画面を変えている（2026-09-07 実測）。
+# 本編全体を8秒にすると写真1枚では足りないので、**冒頭だけ**詰める。
+OPENING_WINDOW = 25.0     # ここまでを「冒頭」とみなす（秒）
+OPENING_HOLD_MAX = 8.0    # 冒頭で同じ絵が止まってよい秒数
+
+
+def open_early(script: Script, within: float = OPENING_WINDOW,
+               limit: float = OPENING_HOLD_MAX) -> int:
+    """冒頭で、同じ絵が `limit` 秒を超える前に写真へ切り替える。
+
+    `spread_long_cards` と同じ道具（サムネイルの写真）を使う。
+    **1枚しか無いので、挟むのも1回だけ。**そのあとは `hold_photo` が
+    後ろへ引き継ぐので、入れ替えの回数は増えない
+    （`scan_switch.py` で数えて1本1回のまま）。
+
+    写真を持たない回（エンブレムで作る回）は何もしない。
+    """
+    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    if not photo:
+        return 0
+
+    elapsed = 0.0
+    span = 0.0
+    look = None
+    showing = None
+    for scene in script.scenes:
+        showing = None            # カードは節をまたいで引き継がない
+        for line in scene.lines:
+            if elapsed >= within:
+                return 0
+            seconds = float(line.duration or 0)
+            if line.card is not None:
+                showing = None if line.card in ("none", "なし") else line.card
+            now = (showing or "", line.image or "")
+            if now != look:
+                look, span = now, seconds
+                elapsed += seconds
+                continue
+            # **超える行に先回りする。**超えてから挟むと、崖のあとになる
+            if span + seconds > limit and not line.image:
+                line.image = photo
+                return 1
+            span += seconds
+            elapsed += seconds
+    return 0
 
 def spread_long_cards(script: Script, limit: float | None = None) -> int:
     """同じ絵が続きすぎるところに、サムネイルの写真を挟む。

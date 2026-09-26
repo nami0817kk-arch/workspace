@@ -1,0 +1,145 @@
+date: 2026年9月22日
+slot: world_2
+format: quote
+voice_min: 0.6
+people: [ムバッペ, デンベレ, ロテン]
+theme:
+  id: mbappe_dembele
+  league_name: フランス代表
+  kind: other
+  topic: ムバッペ
+  title: 'ムバッペの「選ばれし者」から10日、デンベレとのあいだで起きたこと'
+  hook: デンベレは、教室のいちばん後ろの話で返していました。
+  question: 10日たって、何と言ったのか
+short_title: ムバッペが「選ばれし者」と言った10日後
+thumbnail:
+  photo: assets/images/20260922_mbappe/01.jpg
+  line1: 「僕は選ばれし者」
+  line2: 10日後に口にしたのは
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: 10日前の一言から始まった
+    narrator: キャスター
+    card:
+      type: table
+      title: 10日のあいだに起きたこと
+      columns: ["", ""]
+      rows:
+        - ["9月11日", "ムバッペ「僕はずっと選ばれし者だった」"]
+        - ["9月13日", "デンベレが返す"]
+        - ["9月21日", "ムバッペ「緊張関係などない」"]
+        - ["10月26日", "バロンドールの発表"]
+    say:
+      - 始まりは、今月11日のムバッペの一言でした。
+    sources:
+      - https://le10sport.com/football/equipe-de-france/malaise-avec-ousmane-dembele-autour-du-ballon-dor-kylian-mbappe-reprend-la-parole-791034
+      - https://www.marca.com/futbol/real-madrid/2026/09/21/mbappe-apaga-incendio-dembele.html
+  - id: said1
+    heading: ムバッペが言ったこと
+    tier: 報道
+    telop: 「僕はずっと、選ばれし者として見られてきた」
+    narrator: キャスター
+    say:
+      - voice: ムバッペ
+        text: 彼はずっと、才能のある選手として見られてきた。
+      - voice: ムバッペ
+        text: 僕のほうは、ずっと**選ばれし者**として見られてきた。
+      - voice: ムバッペ
+        text: 僕はすぐに、とても早い段階でトップに立った。
+      - voice: ムバッペ
+        text: 彼は違う道を歩んで、ケガもあったけど、うまく取り返した。
+      - text: 同じ場で、投票についてもこう言っています。
+      - voice: ムバッペ
+        text: "**僕は自分に投票する。**僕より良い選手はいなかった。"
+    sources:
+      - https://le10sport.com/football/equipe-de-france/malaise-avec-ousmane-dembele-autour-du-ballon-dor-kylian-mbappe-reprend-la-parole-791034
+  - id: said2
+    heading: デンベレが返したこと
+    tier: 報道
+    telop: 「僕は一度も、選ばれし者だったことはない」
+    narrator: キャスター
+    say:
+      - 2日後、デンベレはこう返しました。
+      - voice: デンベレ
+        text: 言ったとおり、僕は一度も**選ばれし者**だったことはない。
+      - voice: デンベレ
+        text: でも、ものすごく努力してきた。昨シーズンは報われた。
+      - voice: デンベレ
+        text: 今年はどうなるか見てみよう、落ち着いて。
+      - voice: デンベレ
+        text: 僕はずっと、**教室のいちばん後ろで必死に勉強してきた。**
+      - text: このあと、代表のなかに2つの陣営ができていると言う人まで出ました。
+      - voice: ロテン
+        text: デンベレは非常に悪く受け取った。彼にとっては一種の裏切りだ。
+      - text: ただし、これは言った人の見方です。本人たちは認めていません。
+    sources:
+      - https://www.latercera.com/el-deportivo/noticia/nunca-he-sido-el-elegido-pero-trabaje-duro-y-fui-recompensado-dembele-le-responde-a-mbappe-por-el-balon-de-oro/
+      - https://www.infomercato.fr/equipe-de-france-kylian-mbappe-et-ousmane-dembele-en-froid-38759
+  - id: said3
+    main: true
+    heading: そして10日後
+    tier: 報道
+    telop: 「もう彼とは話した。緊張関係などない」
+    narrator: キャスター
+    say:
+      - text: '今月11日、ムバッペは自分とデンベレを比べて、「僕のほうは、ずっと選ばれし者として見られてきた」と話しました。'
+        short_only: true
+      - text: '2日後、デンベレは「僕はずっと、教室のいちばん後ろで必死に勉強してきた」と返しています。'
+        short_only: true
+      - 代表が集まった日、ムバッペはこう話しました。
+      - voice: ムバッペ
+        text: もう彼とは話した。いや、緊張関係なんてない。
+      - voice: ムバッペ
+        text: 彼は友人だ。そのことで本当の問題があるとは思わない。
+      - voice: ムバッペ
+        text: ただ、代表の時期には、いつも何か議論のタネを見つけないといけないんだと思う。
+      - voice: ムバッペ
+        text: "**そして今回のは、よくできたタネだと思う。**"
+      - デンベレの側は、これには何も言っていません。
+    sources:
+      - https://le10sport.com/football/equipe-de-france/malaise-avec-ousmane-dembele-autour-du-ballon-dor-kylian-mbappe-reprend-la-parole-791034
+      - https://okdiario.com/diariomadridista/real-madrid/mbappe-cierra-polemica-dembele-balon-oro-ya-he-hablado-no-hay-tension-663165
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを見た人が書いていたこと
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 教室の後ろで授業も聞かずゲームばかりしてた少年が、劇的に変わったもんな
+      - voice: ネット民
+        text: どう考えても問題児だったデンベレが、いつの間にか超優等生に見える
+      - voice: ネット民
+        text: デンベレは良い指導者に恵まれて軌道修正して、勝つためのプレーを学んだ
+      - voice: ネット民
+        text: 選ばれし者じゃないかもしれないけど、素直で自分を何度も改めてる
+      - voice: ネット民
+        text: 最近、傲慢な発言が多すぎる
+      - voice: ネット民
+        text: 自分を特別な存在と主張するのはいいけど、誰かと比較するのはイメージ悪いかな
+      - voice: ネット民
+        text: 身近な人なら尚更
+      - voice: ネット民
+        text: 別に不仲じゃなくて、乗っかった発言しただけでしょ
+      - voice: ネット民
+        text: メディアが面白がって報道してるだけやろ
+      - voice: ネット民
+        text: 才能はスタートを決める。努力はゴールを決める
+      - voice: ネット民
+        text: この二人を見てると、この言葉に頷かざるを得ない
+      - voice: ネット民
+        text: インタビューの選ばれし者だな
+      - voice: ネット民
+        text: 笑えるのは、ムバッペがデンベレの代わりに喋ってることだ
+      - voice: ネット民
+        text: デンベレ本人の声は聞こえてこない
+      - voice: ネット民
+        text: 最後の答えは計算だと思う。バロンドールの品位とフェアプレーの基準を意識してる
+      - voice: ネット民
+        text: バロンドールに選ばれたのはデンベレの方だけどね
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/5dc6401e386a69a1fda1997839746cc01a00121f/comments
+      - https://www.youtube.com/watch?v=O7rZaAKr0k8

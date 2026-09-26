@@ -512,7 +512,8 @@
   {
     "build": "20260909_ueda",
     "video_id": "1Hhz2cUxVJM",
-    "at": "2026-09-09T00:12:49+00:00"
+    "at": "2026-09-09T00:12:49+00:00",
+    "deleted": true
   },
   {
     "build": "20260909_ueda_short",
@@ -532,7 +533,8 @@
   {
     "build": "20260909_zion_cl",
     "video_id": "CsUJRExaDTo",
-    "at": "2026-09-09T00:16:23+00:00"
+    "at": "2026-09-09T00:16:23+00:00",
+    "deleted": true
   },
   {
     "build": "20260909_ballondor",
@@ -687,7 +689,8 @@
   {
     "build": "20260910_cl_liverpool_short",
     "video_id": "EN2iNSGfx1o",
-    "at": "2026-09-10T00:12:04+00:00"
+    "at": "2026-09-10T00:12:04+00:00",
+    "deleted": true
   },
   {
     "build": "20260910_cl_psg",
@@ -697,7 +700,8 @@
   {
     "build": "20260910_cl_psg_short",
     "video_id": "mwbrxHjUZtY",
-    "at": "2026-09-10T00:24:41+00:00"
+    "at": "2026-09-10T00:24:41+00:00",
+    "deleted": true
   },
   {
     "build": "20260910_cl_arsenal",
@@ -707,7 +711,8 @@
   {
     "build": "20260910_cl_arsenal_short",
     "video_id": "65ypk-GzLDs",
-    "at": "2026-09-10T00:36:43+00:00"
+    "at": "2026-09-10T00:36:43+00:00",
+    "deleted": true
   },
   {
     "build": "20260910_cl_liverpool_short",
@@ -737,12 +742,14 @@
   {
     "build": "20260910_rodri",
     "video_id": "PC9gmO37M0c",
-    "at": "2026-09-10T03:01:18+00:00"
+    "at": "2026-09-10T03:01:18+00:00",
+    "deleted": true
   },
   {
     "build": "20260910_rodri_short",
     "video_id": "APNmricNj4I",
-    "at": "2026-09-10T03:01:43+00:00"
+    "at": "2026-09-10T03:01:43+00:00",
+    "deleted": true
   },
   {
     "build": "20260910_kamada",
@@ -813,5 +820,1797 @@
     "build": "20260910_brazil_short",
     "video_id": "FQpoqK0GEKY",
     "at": "2026-09-10T10:43:07+00:00"
+  },
+  {
+    "build": "20260910_deco",
+    "video_id": "nHhIUwobKvU",
+    "at": "2026-09-10T14:32:18+00:00"
+  },
+  {
+    "build": "20260910_deco_short",
+    "video_id": "a-_GFT_WRrM",
+    "at": "2026-09-10T14:32:40+00:00"
+  },
+  {
+    "build": "20260911_yamal",
+    "video_id": "PxCdMKtSd10",
+    "at": "2026-09-10T23:39:12+00:00"
+  },
+  {
+    "build": "20260911_yamal_short",
+    "video_id": "qQumCBIpcrs",
+    "at": "2026-09-10T23:39:34+00:00"
+  },
+  {
+    "build": "20260911_manu_short",
+    "video_id": "OhJRUG3Kzt4",
+    "at": "2026-09-11T00:06:22+00:00",
+    "deleted": true
+  },
+  {
+    "build": "20260911_poch_short",
+    "video_id": "HCGYUIC6eSs",
+    "at": "2026-09-11T00:06:45+00:00"
+  },
+  {
+    "build": "20260911_macallister_short",
+    "video_id": "AAJVN-_g9jk",
+    "at": "2026-09-11T00:07:11+00:00"
+  },
+  {
+    "build": "20260911_nakamura_short",
+    "video_id": "_VL8mH2pKfc",
+    "at": "2026-09-11T01:18:07+00:00"
+  },
+  {
+    "build": "20260911_musiala_short",
+    "video_id": "ZCi_Y9z4P7o",
+    "at": "2026-09-11T01:18:44+00:00"
+  },
+  {
+    "build": "20260911_sano_short",
+    "video_id": "OTCnWJQZKyM",
+    "at": "2026-09-11T01:54:30+00:00"
+  },
+  {
+    "build": "20260911_como_short",
+    "video_id": "CRJr_57-xTg",
+    "at": "2026-09-11T03:09:08+00:00"
+  },
+  {
+    "build": "20260911_coutinho_short",
+    "video_id": "04PEQ0Kvz4A",
+    "at": "2026-09-11T03:56:39+00:00"
+  },
+  {
+    "build": "20260911_poch",
+    "video_id": "G24ITBvyAow",
+    "at": "2026-09-11T04:00:19+00:00"
+  },
+  {
+    "build": "20260911_macallister",
+    "video_id": "JR1DtDgzMGo",
+    "at": "2026-09-11T04:01:54+00:00"
+  },
+  {
+    "build": "20260911_nakamura",
+    "video_id": "wUrNHeA-Acs",
+    "at": "2026-09-11T04:03:10+00:00"
+  },
+  {
+    "build": "20260911_musiala",
+    "video_id": "3q4RsKpOoNg",
+    "at": "2026-09-11T04:04:09+00:00"
+  },
+  {
+    "build": "20260911_manu",
+    "video_id": "qJkgpoFxb4o",
+    "at": "2026-09-11T04:05:28+00:00"
+  },
+  {
+    "build": "20260911_sano",
+    "video_id": "oY_Yqrle20Y",
+    "at": "2026-09-11T04:06:46+00:00"
+  },
+  {
+    "build": "20260911_como",
+    "video_id": "L6ZL35Sn0vs",
+    "at": "2026-09-11T04:07:50+00:00"
+  },
+  {
+    "build": "20260911_coutinho",
+    "video_id": "2-DdocBsDBs",
+    "at": "2026-09-11T04:08:39+00:00"
+  },
+  {
+    "build": "20260911_zidane_short",
+    "video_id": "RpCZ5kmX_nU",
+    "at": "2026-09-11T04:09:25+00:00"
+  },
+  {
+    "build": "20260911_zidane",
+    "video_id": "wjonyZroIt0",
+    "at": "2026-09-11T04:10:19+00:00"
+  },
+  {
+    "build": "20260911_goat_short",
+    "video_id": "YJw_hCUpQQc",
+    "at": "2026-09-11T04:48:18+00:00"
+  },
+  {
+    "build": "20260911_goat",
+    "video_id": "Z9-xgzUpphY",
+    "at": "2026-09-11T04:49:01+00:00"
+  },
+  {
+    "build": "20260911_ito",
+    "video_id": "3hQDXrg3tlg",
+    "at": "2026-09-11T04:57:11+00:00",
+    "deleted": true
+  },
+  {
+    "build": "20260911_ito_short",
+    "video_id": "m173D7emRG0",
+    "at": "2026-09-11T04:59:26+00:00"
+  },
+  {
+    "build": "20260911_ito",
+    "video_id": "DxoYy1UexH0",
+    "at": "2026-09-11T06:09:18+00:00"
+  },
+  {
+    "build": "20260911_nakamura_short",
+    "video_id": "DxAcrB0zddA",
+    "at": "2026-09-11T07:38:52+00:00"
+  },
+  {
+    "build": "20260911_nakamura_short",
+    "video_id": "GR4FQA1UWK8",
+    "at": "2026-09-11T07:44:30+00:00",
+    "deleted": true
+  },
+  {
+    "build": "20260911_musiala_short",
+    "video_id": "61gkz_JtcBY",
+    "at": "2026-09-11T07:45:46+00:00"
+  },
+  {
+    "build": "20260910_deco_short",
+    "video_id": "zSoVVqJZ4Ns",
+    "at": "2026-09-11T07:46:06+00:00"
+  },
+  {
+    "build": "20260912_mitoma_short",
+    "video_id": "z25ng7Y9V1g",
+    "at": "2026-09-12T00:13:35+00:00"
+  },
+  {
+    "build": "20260912_mitoma",
+    "video_id": "mJOAT3oGte8",
+    "at": "2026-09-12T00:14:37+00:00"
+  },
+  {
+    "build": "20260912_dembele_short",
+    "video_id": "4XOV3hAaDcY",
+    "at": "2026-09-12T02:40:20+00:00"
+  },
+  {
+    "build": "20260912_dembele",
+    "video_id": "9sj9K4kIHGc",
+    "at": "2026-09-12T02:41:07+00:00"
+  },
+  {
+    "build": "20260912_nicopaz_short",
+    "video_id": "iZ2V-cRsy2o",
+    "at": "2026-09-12T02:59:27+00:00"
+  },
+  {
+    "build": "20260912_nicopaz",
+    "video_id": "mVzSgSTWdIY",
+    "at": "2026-09-12T03:00:02+00:00"
+  },
+  {
+    "build": "20260912_vinicius_short",
+    "video_id": "f9majLf1Y9k",
+    "at": "2026-09-12T03:13:04+00:00"
+  },
+  {
+    "build": "20260912_vinicius",
+    "video_id": "ckmrc9BqJHU",
+    "at": "2026-09-12T03:14:10+00:00"
+  },
+  {
+    "build": "20260912_guler_short",
+    "video_id": "xFWn08qHXwc",
+    "at": "2026-09-12T04:06:52+00:00"
+  },
+  {
+    "build": "20260912_guler",
+    "video_id": "XGsfSo6twj4",
+    "at": "2026-09-12T04:07:43+00:00"
+  },
+  {
+    "build": "20260912_fener_short",
+    "video_id": "D_piyPUZCZM",
+    "at": "2026-09-12T07:07:16+00:00"
+  },
+  {
+    "build": "20260912_fener",
+    "video_id": "-sdEeedtemI",
+    "at": "2026-09-12T07:08:01+00:00"
+  },
+  {
+    "build": "20260912_tanaka_short",
+    "video_id": "RlBAAAian5c",
+    "at": "2026-09-12T07:08:33+00:00"
+  },
+  {
+    "build": "20260912_tanaka",
+    "video_id": "izG7JLLtmtY",
+    "at": "2026-09-12T07:09:21+00:00"
+  },
+  {
+    "build": "20260912_scaloni_short",
+    "video_id": "WINQJFsKW8A",
+    "at": "2026-09-12T07:09:44+00:00"
+  },
+  {
+    "build": "20260912_scaloni",
+    "video_id": "aoOIfdsh15M",
+    "at": "2026-09-12T07:10:32+00:00"
+  },
+  {
+    "build": "20260912_sato_short",
+    "video_id": "4ScOW3-_riE",
+    "at": "2026-09-12T09:39:13+00:00"
+  },
+  {
+    "build": "20260912_sato",
+    "video_id": "nj4uCLHDC6o",
+    "at": "2026-09-12T09:39:52+00:00"
+  },
+  {
+    "build": "20260912_endo_short",
+    "video_id": "nysr0AcjWuY",
+    "at": "2026-09-12T10:49:26+00:00"
+  },
+  {
+    "build": "20260912_endo",
+    "video_id": "vw_w4SlzqsM",
+    "at": "2026-09-12T10:50:02+00:00"
+  },
+  {
+    "build": "20260912_depaul_short",
+    "video_id": "BSGS8wjyNEs",
+    "at": "2026-09-12T10:50:19+00:00"
+  },
+  {
+    "build": "20260912_depaul",
+    "video_id": "zL2I2T5Yos0",
+    "at": "2026-09-12T10:51:05+00:00"
+  },
+  {
+    "build": "20260913_nakamura",
+    "video_id": "KbVtyGvwy8k",
+    "at": "2026-09-12T22:48:28+00:00"
+  },
+  {
+    "build": "20260913_nakamura_short",
+    "video_id": "8KMBGLgvsS4",
+    "at": "2026-09-12T22:48:56+00:00"
+  },
+  {
+    "build": "20260913_minamino",
+    "video_id": "iYyT1FI_E3k",
+    "at": "2026-09-12T22:49:31+00:00"
+  },
+  {
+    "build": "20260913_minamino_short",
+    "video_id": "jFms2ErIJig",
+    "at": "2026-09-12T22:49:44+00:00"
+  },
+  {
+    "build": "20260913_itakura",
+    "video_id": "ACz7A8I2DmY",
+    "at": "2026-09-12T22:50:28+00:00"
+  },
+  {
+    "build": "20260913_itakura_short",
+    "video_id": "5LonOQYfBW0",
+    "at": "2026-09-12T22:50:42+00:00"
+  },
+  {
+    "build": "20260913_shunsuke",
+    "video_id": "b8BHS_j2X7o",
+    "at": "2026-09-12T22:51:22+00:00"
+  },
+  {
+    "build": "20260913_shunsuke_short",
+    "video_id": "kDDVQCvCcu4",
+    "at": "2026-09-12T22:51:39+00:00"
+  },
+  {
+    "build": "20260913_rice",
+    "video_id": "liEgiw6LY0A",
+    "at": "2026-09-12T22:52:18+00:00"
+  },
+  {
+    "build": "20260913_rice_short",
+    "video_id": "2sdEzbNMzB0",
+    "at": "2026-09-12T22:52:34+00:00"
+  },
+  {
+    "build": "20260913_villa",
+    "video_id": "77P91gJ0DWs",
+    "at": "2026-09-13T03:14:18+00:00"
+  },
+  {
+    "build": "20260913_villa_short",
+    "video_id": "VZz50G8DY5A",
+    "at": "2026-09-13T03:14:43+00:00"
+  },
+  {
+    "build": "20260913_arteta",
+    "video_id": "ukDAXT3aed8",
+    "at": "2026-09-13T03:15:21+00:00"
+  },
+  {
+    "build": "20260913_arteta_short",
+    "video_id": "l4MTwzbL7Lg",
+    "at": "2026-09-13T03:15:42+00:00"
+  },
+  {
+    "build": "20260913_palace",
+    "video_id": "a-gtVH1DoGM",
+    "at": "2026-09-13T03:30:51+00:00"
+  },
+  {
+    "build": "20260913_palace_short",
+    "video_id": "GgOcbXAIg6s",
+    "at": "2026-09-13T03:31:28+00:00"
+  },
+  {
+    "build": "20260913_arsenal",
+    "video_id": "i9yhMcCKtHA",
+    "at": "2026-09-13T04:27:38+00:00"
+  },
+  {
+    "build": "20260913_arsenal_short",
+    "video_id": "AblNfeBgL3g",
+    "at": "2026-09-13T04:28:07+00:00"
+  },
+  {
+    "build": "20260913_chelsea",
+    "video_id": "O2XgG57UM68",
+    "at": "2026-09-13T04:28:54+00:00"
+  },
+  {
+    "build": "20260913_chelsea_short",
+    "video_id": "zN63hKiRtdY",
+    "at": "2026-09-13T04:29:24+00:00"
+  },
+  {
+    "build": "20260913_spurs",
+    "video_id": "4tJLKV2yKZY",
+    "at": "2026-09-13T04:31:59+00:00"
+  },
+  {
+    "build": "20260913_spurs_short",
+    "video_id": "ep3A6OFeWhU",
+    "at": "2026-09-13T04:32:35+00:00"
+  },
+  {
+    "build": "20260913_liverpool",
+    "video_id": "dOB8x7wND_k",
+    "at": "2026-09-13T04:42:58+00:00"
+  },
+  {
+    "build": "20260913_liverpool_short",
+    "video_id": "t6xHmu13eA4",
+    "at": "2026-09-13T04:43:48+00:00"
+  },
+  {
+    "build": "20260913_bournemouth",
+    "video_id": "i5nB-LRkfh0",
+    "at": "2026-09-13T04:50:51+00:00"
+  },
+  {
+    "build": "20260913_bournemouth_short",
+    "video_id": "cRDq1iVzvrA",
+    "at": "2026-09-13T04:51:13+00:00"
+  },
+  {
+    "build": "20260914_sugawara",
+    "video_id": "zOU9kfkhmT4",
+    "at": "2026-09-13T23:30:23+00:00"
+  },
+  {
+    "build": "20260914_sugawara_short",
+    "video_id": "L84NMz7nZgg",
+    "at": "2026-09-13T23:30:34+00:00"
+  },
+  {
+    "build": "20260914_nakamura2",
+    "video_id": "qBmEmhyGFdE",
+    "at": "2026-09-13T23:30:58+00:00"
+  },
+  {
+    "build": "20260914_nakamura2_short",
+    "video_id": "QFq_fTJ4lWU",
+    "at": "2026-09-13T23:31:13+00:00"
+  },
+  {
+    "build": "20260914_machida",
+    "video_id": "Eih6zXODWHo",
+    "at": "2026-09-13T23:31:45+00:00"
+  },
+  {
+    "build": "20260914_machida_short",
+    "video_id": "Zu5tXFKT-kI",
+    "at": "2026-09-13T23:32:01+00:00"
+  },
+  {
+    "build": "20260914_spurs2",
+    "video_id": "arHXYZPLPxI",
+    "at": "2026-09-13T23:32:45+00:00"
+  },
+  {
+    "build": "20260914_spurs2_short",
+    "video_id": "AI3zb0JnnR8",
+    "at": "2026-09-13T23:33:20+00:00"
+  },
+  {
+    "build": "20260914_doan",
+    "video_id": "Z936DgLJpZY",
+    "at": "2026-09-13T23:34:04+00:00"
+  },
+  {
+    "build": "20260914_doan_short",
+    "video_id": "uB9R841Toyo",
+    "at": "2026-09-13T23:34:16+00:00"
+  },
+  {
+    "build": "20260914_yuito",
+    "video_id": "xWVeOPV24DU",
+    "at": "2026-09-13T23:34:41+00:00"
+  },
+  {
+    "build": "20260914_yuito_short",
+    "video_id": "6JSMpbkGCeY",
+    "at": "2026-09-13T23:34:57+00:00"
+  },
+  {
+    "build": "20260914b_kubo",
+    "video_id": "-JpwFCCCP4k",
+    "at": "2026-09-14T03:38:50+00:00"
+  },
+  {
+    "build": "20260914b_kubo_short",
+    "video_id": "YYRDuzKaqZs",
+    "at": "2026-09-14T03:39:04+00:00"
+  },
+  {
+    "build": "20260914b_ueda",
+    "video_id": "-pRXFfmoWW4",
+    "at": "2026-09-14T03:39:30+00:00",
+    "deleted": true
+  },
+  {
+    "build": "20260914b_ueda_short",
+    "video_id": "fPiAJQCa0cQ",
+    "at": "2026-09-14T03:39:41+00:00",
+    "deleted": true
+  },
+  {
+    "build": "20260914b_ueda",
+    "video_id": "A2uIFdp1LVs",
+    "at": "2026-09-14T05:15:10+00:00"
+  },
+  {
+    "build": "20260914b_ueda_short",
+    "video_id": "w6e2fofo2wY",
+    "at": "2026-09-14T05:15:24+00:00"
+  },
+  {
+    "build": "20260914b_juve",
+    "video_id": "duhMpYwRJLs",
+    "at": "2026-09-14T05:28:05+00:00"
+  },
+  {
+    "build": "20260914b_juve_short",
+    "video_id": "JtMRNFo6tsM",
+    "at": "2026-09-14T05:28:55+00:00"
+  },
+  {
+    "build": "20260914b_valencia",
+    "video_id": "_aX2Jd98lKY",
+    "at": "2026-09-14T06:40:03+00:00"
+  },
+  {
+    "build": "20260914b_valencia_short",
+    "video_id": "NHwUR0Ksja4",
+    "at": "2026-09-14T06:40:38+00:00"
+  },
+  {
+    "build": "20260914b_derby",
+    "video_id": "o3CLPEewHoM",
+    "at": "2026-09-14T06:41:40+00:00"
+  },
+  {
+    "build": "20260914b_derby_short",
+    "video_id": "H5RnrTkI_Cw",
+    "at": "2026-09-14T06:42:05+00:00",
+    "deleted": true
+  },
+  {
+    "build": "20260914b_barca",
+    "video_id": "z3wXJZ7I484",
+    "at": "2026-09-14T06:42:25+00:00"
+  },
+  {
+    "build": "20260914b_barca_short",
+    "video_id": "agmQQOJ8KAs",
+    "at": "2026-09-14T06:42:41+00:00"
+  },
+  {
+    "build": "20260914b_derby_short",
+    "video_id": "-UHdQiCBLwc",
+    "at": "2026-09-14T07:28:49+00:00"
+  },
+  {
+    "build": "20260915_matsuki",
+    "video_id": "JJwkkF1SX08",
+    "at": "2026-09-14T13:19:59+00:00"
+  },
+  {
+    "build": "20260915_matsuki_short",
+    "video_id": "lbSnwTf_Z-Y",
+    "at": "2026-09-14T13:20:15+00:00"
+  },
+  {
+    "build": "20260915_endo",
+    "video_id": "TDZqlErVYi4",
+    "at": "2026-09-14T13:20:34+00:00"
+  },
+  {
+    "build": "20260915_endo_short",
+    "video_id": "U1c31LaRrn0",
+    "at": "2026-09-14T13:20:48+00:00"
+  },
+  {
+    "build": "20260915_foden",
+    "video_id": "HbMuNEi5508",
+    "at": "2026-09-14T13:21:11+00:00"
+  },
+  {
+    "build": "20260915_foden_short",
+    "video_id": "mCgnsblt50w",
+    "at": "2026-09-14T13:21:22+00:00"
+  },
+  {
+    "build": "20260915b_mbappe",
+    "video_id": "tmzHCQXamTI",
+    "at": "2026-09-15T02:39:32+00:00"
+  },
+  {
+    "build": "20260915b_mbappe_short",
+    "video_id": "zBSmvV0xtL4",
+    "at": "2026-09-15T02:39:46+00:00"
+  },
+  {
+    "build": "20260915b_yamal",
+    "video_id": "gWJqZW-RtDU",
+    "at": "2026-09-15T02:40:09+00:00"
+  },
+  {
+    "build": "20260915b_yamal_short",
+    "video_id": "Je7jVKIix8c",
+    "at": "2026-09-15T02:40:23+00:00"
+  },
+  {
+    "build": "20260915b_dembele",
+    "video_id": "hJ5Qjj1U94M",
+    "at": "2026-09-15T02:40:59+00:00"
+  },
+  {
+    "build": "20260915b_dembele_short",
+    "video_id": "pLlsa4UycGA",
+    "at": "2026-09-15T02:41:15+00:00"
+  },
+  {
+    "build": "20260915b_var",
+    "video_id": "P1m1IGQTQG0",
+    "at": "2026-09-15T02:42:02+00:00"
+  },
+  {
+    "build": "20260915b_var_short",
+    "video_id": "M5yoXYAW0gY",
+    "at": "2026-09-15T02:42:16+00:00"
+  },
+  {
+    "build": "20260915b_inter",
+    "video_id": "aFsyY4p9WwI",
+    "at": "2026-09-15T02:42:39+00:00"
+  },
+  {
+    "build": "20260915b_inter_short",
+    "video_id": "U_NAqsyl5vE",
+    "at": "2026-09-15T02:42:52+00:00"
+  },
+  {
+    "build": "20260915b_calvert",
+    "video_id": "aT-WeEAev88",
+    "at": "2026-09-15T02:43:12+00:00"
+  },
+  {
+    "build": "20260915b_calvert_short",
+    "video_id": "GRvSnY-hMRA",
+    "at": "2026-09-15T02:43:25+00:00"
+  },
+  {
+    "build": "20260915b_rakuten",
+    "video_id": "36ZXzBivYgM",
+    "at": "2026-09-15T02:43:45+00:00"
+  },
+  {
+    "build": "20260915b_rakuten_short",
+    "video_id": "BDs2jpavsZY",
+    "at": "2026-09-15T02:43:58+00:00"
+  },
+  {
+    "build": "20260915b_villa",
+    "video_id": "UZjkutsSuno",
+    "at": "2026-09-15T02:44:14+00:00"
+  },
+  {
+    "build": "20260915b_villa_short",
+    "video_id": "COj8aKiIWvE",
+    "at": "2026-09-15T02:44:24+00:00"
+  },
+  {
+    "build": "20260916_iraola",
+    "video_id": "dOqQ0BYTuns",
+    "at": "2026-09-15T10:17:27+00:00"
+  },
+  {
+    "build": "20260916_iraola_short",
+    "video_id": "o3C06HL_ZHA",
+    "at": "2026-09-15T10:17:40+00:00"
+  },
+  {
+    "build": "20260916_mitoma",
+    "video_id": "M9eDi6wKWj8",
+    "at": "2026-09-15T10:18:02+00:00"
+  },
+  {
+    "build": "20260916_mitoma_short",
+    "video_id": "Y6t8S0ZfG-8",
+    "at": "2026-09-15T10:18:15+00:00"
+  },
+  {
+    "build": "20260916_itakura",
+    "video_id": "pTamhNwjhEs",
+    "at": "2026-09-15T10:18:41+00:00"
+  },
+  {
+    "build": "20260916_itakura_short",
+    "video_id": "TnZ7zq7VwQg",
+    "at": "2026-09-15T10:18:54+00:00"
+  },
+  {
+    "build": "20260916_rodri",
+    "video_id": "ChlV6uMvJN4",
+    "at": "2026-09-15T10:19:15+00:00"
+  },
+  {
+    "build": "20260916_rodri_short",
+    "video_id": "Nq54AyUgLxU",
+    "at": "2026-09-15T10:19:31+00:00"
+  },
+  {
+    "build": "20260916_carragher",
+    "video_id": "O5hhSJoqRng",
+    "at": "2026-09-15T10:19:51+00:00"
+  },
+  {
+    "build": "20260916_carragher_short",
+    "video_id": "HfB3wjjN04s",
+    "at": "2026-09-15T10:20:06+00:00"
+  },
+  {
+    "build": "20260917b_dowman",
+    "video_id": "cpdmc38PWzk",
+    "at": "2026-09-16T07:35:09+00:00"
+  },
+  {
+    "build": "20260917b_dowman_short",
+    "video_id": "n1etW1SbieA",
+    "at": "2026-09-16T07:35:23+00:00"
+  },
+  {
+    "build": "20260917b_endo",
+    "video_id": "zhp7yWTl1Zw",
+    "at": "2026-09-16T07:35:41+00:00"
+  },
+  {
+    "build": "20260917b_endo_short",
+    "video_id": "ZU7QqpW0LUE",
+    "at": "2026-09-16T07:35:59+00:00"
+  },
+  {
+    "build": "20260917b_sato",
+    "video_id": "oLLBfupUFfo",
+    "at": "2026-09-16T07:36:18+00:00"
+  },
+  {
+    "build": "20260917b_sato_short",
+    "video_id": "KU2CL1f6_eM",
+    "at": "2026-09-16T07:36:32+00:00"
+  },
+  {
+    "build": "20260917b_sano",
+    "video_id": "iarJP-Nxe6w",
+    "at": "2026-09-16T07:36:51+00:00"
+  },
+  {
+    "build": "20260917b_sano_short",
+    "video_id": "mR5ZcV1PCyY",
+    "at": "2026-09-16T07:37:06+00:00"
+  },
+  {
+    "build": "20260917b_morita",
+    "video_id": "voBMSvcMzeo",
+    "at": "2026-09-16T07:45:12+00:00"
+  },
+  {
+    "build": "20260917b_morita_short",
+    "video_id": "bnG57iLN48s",
+    "at": "2026-09-16T07:45:26+00:00"
+  },
+  {
+    "build": "20260917b_fujita",
+    "video_id": "LcbwSHtrJkY",
+    "at": "2026-09-16T07:45:46+00:00"
+  },
+  {
+    "build": "20260917b_fujita_short",
+    "video_id": "rfeBKE8Kc6k",
+    "at": "2026-09-16T07:46:02+00:00"
+  },
+  {
+    "build": "20260917b_szoboszlai",
+    "video_id": "jl9Me75jQDk",
+    "at": "2026-09-16T07:46:20+00:00"
+  },
+  {
+    "build": "20260917b_szoboszlai_short",
+    "video_id": "lz7Y6jOD6lQ",
+    "at": "2026-09-16T07:46:32+00:00"
+  },
+  {
+    "build": "20260917_nakamura",
+    "video_id": "eKY6hjKWCew",
+    "at": "2026-09-16T23:48:01+00:00"
+  },
+  {
+    "build": "20260917_nakamura_short",
+    "video_id": "4HXHb1MAPWE",
+    "at": "2026-09-16T23:48:25+00:00"
+  },
+  {
+    "build": "20260917_zion",
+    "video_id": "JMoQNeAkqNc",
+    "at": "2026-09-17T00:54:25+00:00"
+  },
+  {
+    "build": "20260917_zion_short",
+    "video_id": "rrfeK0t4g1o",
+    "at": "2026-09-17T01:12:05+00:00"
+  },
+  {
+    "build": "20260917_machida",
+    "video_id": "YxhBVGePwV4",
+    "at": "2026-09-17T01:12:33+00:00"
+  },
+  {
+    "build": "20260917_machida_short",
+    "video_id": "7M56d-Lv0Sg",
+    "at": "2026-09-17T01:12:56+00:00"
+  },
+  {
+    "build": "20260917_sano",
+    "video_id": "Fp55tDtHGTQ",
+    "at": "2026-09-17T01:34:56+00:00"
+  },
+  {
+    "build": "20260917_sano_short",
+    "video_id": "XofJlytObCQ",
+    "at": "2026-09-17T01:35:13+00:00"
+  },
+  {
+    "build": "20260917_barca",
+    "video_id": "T6DfWra5pk0",
+    "at": "2026-09-17T01:36:16+00:00"
+  },
+  {
+    "build": "20260917_barca_short",
+    "video_id": "3iXSgUaZPk0",
+    "at": "2026-09-17T01:36:27+00:00"
+  },
+  {
+    "build": "20260917_manutd",
+    "video_id": "nDNLXNjGzH8",
+    "at": "2026-09-17T03:22:23+00:00"
+  },
+  {
+    "build": "20260917_manutd_short",
+    "video_id": "fyxhFnCkpfM",
+    "at": "2026-09-17T03:22:36+00:00"
+  },
+  {
+    "build": "20260917_spurs",
+    "video_id": "KtdCztpuVwc",
+    "at": "2026-09-17T03:23:03+00:00"
+  },
+  {
+    "build": "20260917_spurs_short",
+    "video_id": "Q54R3Pg5zZ4",
+    "at": "2026-09-17T03:23:18+00:00"
+  },
+  {
+    "build": "20260917_benfica",
+    "video_id": "H5CP4zURIvM",
+    "at": "2026-09-17T03:30:39+00:00"
+  },
+  {
+    "build": "20260917_benfica_short",
+    "video_id": "CpWYZikeXGg",
+    "at": "2026-09-17T03:30:53+00:00"
+  },
+  {
+    "build": "20260917_daihyo_new",
+    "video_id": "Ho_s3fRwe8c",
+    "at": "2026-09-17T10:04:01+00:00"
+  },
+  {
+    "build": "20260917_daihyo_new_short",
+    "video_id": "Cd2bvmLEutQ",
+    "at": "2026-09-17T10:04:17+00:00"
+  },
+  {
+    "build": "20260917_daihyo_out",
+    "video_id": "HLb0k1uIbAc",
+    "at": "2026-09-17T10:04:42+00:00"
+  },
+  {
+    "build": "20260917_daihyo_out_short",
+    "video_id": "PjL-LXmo4d0",
+    "at": "2026-09-17T10:04:57+00:00"
+  },
+  {
+    "build": "20260918_kubo_short",
+    "video_id": "pQNydq-36n0",
+    "at": "2026-09-18T00:48:59+00:00"
+  },
+  {
+    "build": "20260918_kubo",
+    "video_id": "tXDzU1nktjw",
+    "at": "2026-09-18T01:10:13+00:00"
+  },
+  {
+    "build": "20260918_klopp",
+    "video_id": "1O_GPA-kheM",
+    "at": "2026-09-18T02:31:07+00:00"
+  },
+  {
+    "build": "20260918_klopp_short",
+    "video_id": "WcRhh7amouc",
+    "at": "2026-09-18T02:31:29+00:00"
+  },
+  {
+    "build": "20260918_watzke",
+    "video_id": "ThJ3DKK8SI0",
+    "at": "2026-09-18T04:55:06+00:00"
+  },
+  {
+    "build": "20260918_watzke_short",
+    "video_id": "sc2BrUt2B90",
+    "at": "2026-09-18T04:55:23+00:00"
+  },
+  {
+    "build": "20260918_sano",
+    "video_id": "hZOHdRW-5iI",
+    "at": "2026-09-18T04:55:57+00:00"
+  },
+  {
+    "build": "20260918_sano_short",
+    "video_id": "t1lhg_ogJqk",
+    "at": "2026-09-18T04:56:10+00:00"
+  },
+  {
+    "build": "20260918_ito",
+    "video_id": "wIRAj_Pvqk4",
+    "at": "2026-09-18T04:58:25+00:00"
+  },
+  {
+    "build": "20260918_ito_short",
+    "video_id": "hZ-4tzXXvkQ",
+    "at": "2026-09-18T04:58:40+00:00"
+  },
+  {
+    "build": "20260918_alonso",
+    "video_id": "4NiKaaX_Qhg",
+    "at": "2026-09-18T05:23:31+00:00"
+  },
+  {
+    "build": "20260918_alonso_short",
+    "video_id": "H7taxRhk_Ak",
+    "at": "2026-09-18T05:23:44+00:00"
+  },
+  {
+    "build": "20260918_samba_short",
+    "video_id": "2XopqR4UaPQ",
+    "at": "2026-09-18T07:55:55+00:00"
+  },
+  {
+    "build": "20260918_samba",
+    "video_id": "izl3N9R29MQ",
+    "at": "2026-09-18T07:56:55+00:00"
+  },
+  {
+    "build": "20260918_messi",
+    "video_id": "jB7Vsqc96A0",
+    "at": "2026-09-18T13:28:01+00:00"
+  },
+  {
+    "build": "20260918_messi_short",
+    "video_id": "etjXYC-bCrs",
+    "at": "2026-09-18T13:28:24+00:00"
+  },
+  {
+    "build": "20260919_chelsea",
+    "video_id": "11ppCDFA7Us",
+    "at": "2026-09-19T05:05:07+00:00"
+  },
+  {
+    "build": "20260919_chelsea_short",
+    "video_id": "FQbpHeaLCA0",
+    "at": "2026-09-19T05:05:24+00:00"
+  },
+  {
+    "build": "20260919_kane",
+    "video_id": "fFG2VwTUBBI",
+    "at": "2026-09-19T05:05:51+00:00"
+  },
+  {
+    "build": "20260919_kane_short",
+    "video_id": "48EwMLblZac",
+    "at": "2026-09-19T05:06:05+00:00"
+  },
+  {
+    "build": "20260919_maeda",
+    "video_id": "gx_nxlnXZAE",
+    "at": "2026-09-19T05:06:29+00:00"
+  },
+  {
+    "build": "20260919_maeda_short",
+    "video_id": "IUN9ELo3E6Y",
+    "at": "2026-09-19T05:06:42+00:00"
+  },
+  {
+    "build": "20260919_nakamura",
+    "video_id": "lRR2K6Qlu_o",
+    "at": "2026-09-19T05:07:05+00:00"
+  },
+  {
+    "build": "20260919_nakamura_short",
+    "video_id": "R76l42LQV44",
+    "at": "2026-09-19T05:07:21+00:00"
+  },
+  {
+    "build": "20260919_hasebe",
+    "video_id": "4d_XloIHQTg",
+    "at": "2026-09-19T10:31:05+00:00"
+  },
+  {
+    "build": "20260919_zidane_short",
+    "video_id": "P7mNyz4ttkw",
+    "at": "2026-09-19T10:31:20+00:00"
+  },
+  {
+    "build": "20260919_zidane",
+    "video_id": "zgUNeJArP-8",
+    "at": "2026-09-19T10:31:39+00:00"
+  },
+  {
+    "build": "20260919_hasebe_short",
+    "video_id": "txVg-0IwzBQ",
+    "at": "2026-09-19T10:31:59+00:00"
+  },
+  {
+    "build": "20260920_zion_short",
+    "video_id": "_bXPGxJ3Uq0",
+    "at": "2026-09-20T02:28:17+00:00"
+  },
+  {
+    "build": "20260920_zion",
+    "video_id": "RAISEzEuYDI",
+    "at": "2026-09-20T02:28:35+00:00"
+  },
+  {
+    "build": "20260920_dezerbi_short",
+    "video_id": "x1C999PV-bs",
+    "at": "2026-09-20T02:28:50+00:00"
+  },
+  {
+    "build": "20260920_dezerbi",
+    "video_id": "_R9yUmaCpGg",
+    "at": "2026-09-20T02:29:11+00:00"
+  },
+  {
+    "build": "20260920_doan_short",
+    "video_id": "REtBY-K478I",
+    "at": "2026-09-20T03:25:48+00:00"
+  },
+  {
+    "build": "20260920_doan",
+    "video_id": "8EYmGqseiH0",
+    "at": "2026-09-20T03:26:02+00:00"
+  },
+  {
+    "build": "20260920_machino_short",
+    "video_id": "Yt4E_qUTeiw",
+    "at": "2026-09-20T03:26:15+00:00"
+  },
+  {
+    "build": "20260920_machino",
+    "video_id": "f4wZ8mXuoU0",
+    "at": "2026-09-20T03:26:29+00:00"
+  },
+  {
+    "build": "20260920_nakamura_short",
+    "video_id": "SKFNIWni2cA",
+    "at": "2026-09-20T03:26:46+00:00"
+  },
+  {
+    "build": "20260920_nakamura",
+    "video_id": "XTs7KFs7SOo",
+    "at": "2026-09-20T03:27:01+00:00"
+  },
+  {
+    "build": "20260920_barca_short",
+    "video_id": "ucNuj_eaSSA",
+    "at": "2026-09-20T03:27:18+00:00"
+  },
+  {
+    "build": "20260920_barca",
+    "video_id": "_J_H75JIZSY",
+    "at": "2026-09-20T03:27:33+00:00"
+  },
+  {
+    "build": "20260920_maeda_short",
+    "video_id": "Oe1ZLPx69So",
+    "at": "2026-09-20T03:27:57+00:00"
+  },
+  {
+    "build": "20260920_maeda",
+    "video_id": "75VK3wOo4FE",
+    "at": "2026-09-20T03:28:11+00:00"
+  },
+  {
+    "build": "20260920_arsenal_short",
+    "video_id": "Tle9vT7c2rs",
+    "at": "2026-09-20T03:28:26+00:00"
+  },
+  {
+    "build": "20260920_arsenal",
+    "video_id": "9dpcKt9_Q-c",
+    "at": "2026-09-20T03:28:44+00:00"
+  },
+  {
+    "build": "20260920_ronaldo_short",
+    "video_id": "Oy4jIV3pgcg",
+    "at": "2026-09-20T03:28:57+00:00"
+  },
+  {
+    "build": "20260920_ronaldo",
+    "video_id": "gnc4cbTc2ZM",
+    "at": "2026-09-20T03:29:11+00:00"
+  },
+  {
+    "build": "20260920_second_short",
+    "video_id": "zvKMhnvzejk",
+    "at": "2026-09-20T03:29:23+00:00"
+  },
+  {
+    "build": "20260920_second",
+    "video_id": "79QiV6cERKc",
+    "at": "2026-09-20T03:29:39+00:00"
+  },
+  {
+    "build": "20260921_kubo_short",
+    "video_id": "Sh2uHKx7Z2s",
+    "at": "2026-09-21T05:52:52+00:00"
+  },
+  {
+    "build": "20260921_kubo",
+    "video_id": "hJmdCDRqoaw",
+    "at": "2026-09-21T05:53:10+00:00"
+  },
+  {
+    "build": "20260921_endo_short",
+    "video_id": "-gFWQ_uP1rw",
+    "at": "2026-09-21T05:53:27+00:00"
+  },
+  {
+    "build": "20260921_endo",
+    "video_id": "EUyFqnwO9ac",
+    "at": "2026-09-21T05:53:45+00:00"
+  },
+  {
+    "build": "20260921_ueda_short",
+    "video_id": "1-u_h5sDnxc",
+    "at": "2026-09-21T05:54:01+00:00"
+  },
+  {
+    "build": "20260921_ueda",
+    "video_id": "IwZtadJdcFc",
+    "at": "2026-09-21T05:54:20+00:00"
+  },
+  {
+    "build": "20260921_zion_short",
+    "video_id": "gIhA2FmFwUI",
+    "at": "2026-09-21T05:54:37+00:00"
+  },
+  {
+    "build": "20260921_zion",
+    "video_id": "sOFSIgggYbY",
+    "at": "2026-09-21T05:54:56+00:00"
+  },
+  {
+    "build": "20260921_manu_short",
+    "video_id": "YaRBOukaPcg",
+    "at": "2026-09-21T05:55:10+00:00"
+  },
+  {
+    "build": "20260921_manu",
+    "video_id": "Qm8d8nMZqqE",
+    "at": "2026-09-21T05:55:27+00:00"
+  },
+  {
+    "build": "20260921_madrid_short",
+    "video_id": "G2Qmox-1qR4",
+    "at": "2026-09-21T05:55:43+00:00"
+  },
+  {
+    "build": "20260921_madrid",
+    "video_id": "KgmqNjlbK9w",
+    "at": "2026-09-21T05:56:05+00:00"
+  },
+  {
+    "build": "20260921_psg_short",
+    "video_id": "hrAZwPF3Xaw",
+    "at": "2026-09-21T05:56:19+00:00"
+  },
+  {
+    "build": "20260921_psg",
+    "video_id": "FjUbm6hKSRE",
+    "at": "2026-09-21T05:56:37+00:00"
+  },
+  {
+    "build": "20260921_city_short",
+    "video_id": "H7ubgRTyaQQ",
+    "at": "2026-09-21T05:56:54+00:00"
+  },
+  {
+    "build": "20260921_city",
+    "video_id": "9_XgrMwk7-Y",
+    "at": "2026-09-21T05:57:09+00:00"
+  },
+  {
+    "build": "20260921_tomiyasu_short",
+    "video_id": "I2syj80zHTo",
+    "at": "2026-09-21T05:57:24+00:00"
+  },
+  {
+    "build": "20260921_tomiyasu",
+    "video_id": "KTi1_ck6HB4",
+    "at": "2026-09-21T05:57:39+00:00"
+  },
+  {
+    "build": "20260921_leeds_short",
+    "video_id": "uHuttj0Rbcw",
+    "at": "2026-09-21T05:57:53+00:00"
+  },
+  {
+    "build": "20260921_leeds",
+    "video_id": "SPKLbzMN9x8",
+    "at": "2026-09-21T05:58:11+00:00"
+  },
+  {
+    "build": "20260922_ueda",
+    "video_id": "ez2IOx-qL_Y",
+    "at": "2026-09-22T06:05:41+00:00"
+  },
+  {
+    "build": "20260922_ueda_short",
+    "video_id": "tdw32nkcbzw",
+    "at": "2026-09-22T06:05:56+00:00"
+  },
+  {
+    "build": "20260922_zion",
+    "video_id": "5ve7EZHedu0",
+    "at": "2026-09-22T06:06:12+00:00"
+  },
+  {
+    "build": "20260922_zion_short",
+    "video_id": "5zpVKrmLUS4",
+    "at": "2026-09-22T06:06:27+00:00"
+  },
+  {
+    "build": "20260922_value",
+    "video_id": "BtdeYo4FCgE",
+    "at": "2026-09-22T06:06:40+00:00"
+  },
+  {
+    "build": "20260922_value_short",
+    "video_id": "3sYsU0OTLLg",
+    "at": "2026-09-22T06:06:55+00:00"
+  },
+  {
+    "build": "20260922_raphinha",
+    "video_id": "l_8dXHUxP4w",
+    "at": "2026-09-22T06:07:13+00:00"
+  },
+  {
+    "build": "20260922_raphinha_short",
+    "video_id": "gF20nj1sgkw",
+    "at": "2026-09-22T06:07:27+00:00"
+  },
+  {
+    "build": "20260922_simeone",
+    "video_id": "uKFKrPc4JMI",
+    "at": "2026-09-22T06:07:43+00:00"
+  },
+  {
+    "build": "20260922_simeone_short",
+    "video_id": "LoYU7V503eU",
+    "at": "2026-09-22T06:07:57+00:00"
+  },
+  {
+    "build": "20260922_mbappe",
+    "video_id": "Qj0SkwFfS5Q",
+    "at": "2026-09-22T06:08:16+00:00"
+  },
+  {
+    "build": "20260922_mbappe_short",
+    "video_id": "V0tOmCPJNZw",
+    "at": "2026-09-22T06:08:29+00:00"
+  },
+  {
+    "build": "20260922_messi",
+    "video_id": "631wuST_R84",
+    "at": "2026-09-22T06:08:43+00:00"
+  },
+  {
+    "build": "20260922_messi_short",
+    "video_id": "e9pfUG3z50Y",
+    "at": "2026-09-22T06:09:00+00:00"
+  },
+  {
+    "build": "20260923_doan",
+    "video_id": "ZXiyY9qDZU4",
+    "at": "2026-09-23T05:19:40+00:00"
+  },
+  {
+    "build": "20260923_doan_short",
+    "video_id": "UlT1CntYIts",
+    "at": "2026-09-23T05:20:33+00:00"
+  },
+  {
+    "build": "20260923_arteta",
+    "video_id": "5FsUi0257-k",
+    "at": "2026-09-23T05:21:01+00:00"
+  },
+  {
+    "build": "20260923_ferran",
+    "video_id": "Sr16svSaI9c",
+    "at": "2026-09-23T05:33:55+00:00"
+  },
+  {
+    "build": "20260923_itakura",
+    "video_id": "T8KjWg1QlzA",
+    "at": "2026-09-23T05:58:56+00:00"
+  },
+  {
+    "build": "20260923_macallister",
+    "video_id": "5mQ-CJRgcB4",
+    "at": "2026-09-23T05:59:22+00:00"
+  },
+  {
+    "build": "20260923_matsuki",
+    "video_id": "TBIImLuoDMY",
+    "at": "2026-09-23T06:08:07+00:00"
+  },
+  {
+    "build": "20260923_valverde",
+    "video_id": "wVbSsIEN9uk",
+    "at": "2026-09-23T07:00:14+00:00"
+  },
+  {
+    "build": "20260923_valverde_short",
+    "video_id": "2WEJI5fdZWs",
+    "at": "2026-09-23T07:00:44+00:00"
+  },
+  {
+    "build": "20260923_wirtz",
+    "video_id": "9ZFrYPnz-_8",
+    "at": "2026-09-23T07:03:06+00:00"
+  },
+  {
+    "build": "20260923_wirtz_short",
+    "video_id": "GDEFHn1zWoE",
+    "at": "2026-09-23T07:03:19+00:00"
+  },
+  {
+    "build": "20260923_yamal",
+    "video_id": "848N9Dj_nk8",
+    "at": "2026-09-23T07:03:56+00:00"
+  },
+  {
+    "build": "20260923_yamal_short",
+    "video_id": "oAQj7kf7MDs",
+    "at": "2026-09-23T07:05:10+00:00"
+  },
+  {
+    "build": "20260923_hall",
+    "video_id": "XszHbgj8ZWU",
+    "at": "2026-09-23T07:19:38+00:00"
+  },
+  {
+    "build": "20260923_saito",
+    "video_id": "VQz0Wc7EEIw",
+    "at": "2026-09-23T07:19:59+00:00"
+  },
+  {
+    "build": "20260923_hall_short",
+    "video_id": "rAImHCzWJ0U",
+    "at": "2026-09-23T07:20:17+00:00"
+  },
+  {
+    "build": "20260923_saito_short",
+    "video_id": "Oreg9lCsjqc",
+    "at": "2026-09-23T07:20:32+00:00"
+  },
+  {
+    "build": "20260923_realmadrid",
+    "video_id": "YkVcCsztoY0",
+    "at": "2026-09-23T07:24:09+00:00"
+  },
+  {
+    "build": "20260923_sebango",
+    "video_id": "iFbO6yenh4s",
+    "at": "2026-09-23T07:24:32+00:00"
+  },
+  {
+    "build": "20260923_realmadrid_short",
+    "video_id": "ELV8R_iciS4",
+    "at": "2026-09-23T07:24:48+00:00"
+  },
+  {
+    "build": "20260923_sebango_short",
+    "video_id": "hjP1AvES_lE",
+    "at": "2026-09-23T07:25:02+00:00"
+  },
+  {
+    "build": "20260923_arteta_short",
+    "video_id": "FpFuECCh7IQ",
+    "at": "2026-09-23T07:25:25+00:00"
+  },
+  {
+    "build": "20260923_ferran_short",
+    "video_id": "ItgmsFg7gUE",
+    "at": "2026-09-23T07:25:39+00:00"
+  },
+  {
+    "build": "20260923_itakura_short",
+    "video_id": "FcegML7XsPE",
+    "at": "2026-09-23T07:25:53+00:00"
+  },
+  {
+    "build": "20260923_macallister_short",
+    "video_id": "Ad91yX-ji14",
+    "at": "2026-09-23T07:26:10+00:00"
+  },
+  {
+    "build": "20260923_matsuki_short",
+    "video_id": "fStWZEIf178",
+    "at": "2026-09-23T07:26:29+00:00"
+  },
+  {
+    "build": "20260920_pl01_bournemouth",
+    "video_id": "r0ezyu-jUSo",
+    "at": "2026-09-24T01:58:42+00:00"
+  },
+  {
+    "build": "20260920_pl01_bournemouth_short",
+    "video_id": "U7k_1TWLB-4",
+    "at": "2026-09-24T01:59:06+00:00"
+  },
+  {
+    "build": "20260920_pl02_arsenal",
+    "video_id": "JxmEW34TEBw",
+    "at": "2026-09-24T02:19:40+00:00"
+  },
+  {
+    "build": "20260920_pl02_arsenal_short",
+    "video_id": "TYuX84Vez4I",
+    "at": "2026-09-24T02:20:05+00:00"
+  },
+  {
+    "build": "20260920_pl03_villa",
+    "video_id": "fPW56qfcJVY",
+    "at": "2026-09-24T02:52:13+00:00"
+  },
+  {
+    "build": "20260920_pl03_villa_short",
+    "video_id": "-7LqfN2ysXc",
+    "at": "2026-09-24T02:52:27+00:00"
+  },
+  {
+    "build": "20260920_pl04_brentford",
+    "video_id": "ILS-tqE7DoM",
+    "at": "2026-09-24T03:07:16+00:00"
+  },
+  {
+    "build": "20260920_pl04_brentford_short",
+    "video_id": "87tLlvQ8fPA",
+    "at": "2026-09-24T03:07:30+00:00"
+  },
+  {
+    "build": "20260920_pl05_brighton",
+    "video_id": "MKXFO3mdcwI",
+    "at": "2026-09-24T03:07:52+00:00"
+  },
+  {
+    "build": "20260920_pl05_brighton_short",
+    "video_id": "N31-FoWDpb8",
+    "at": "2026-09-24T03:08:08+00:00"
+  },
+  {
+    "build": "20260920_pl06_chelsea",
+    "video_id": "2aBwopsimhw",
+    "at": "2026-09-24T03:08:30+00:00"
+  },
+  {
+    "build": "20260920_pl06_chelsea_short",
+    "video_id": "-0FF7f-8HLY",
+    "at": "2026-09-24T03:08:44+00:00"
+  },
+  {
+    "build": "20260920_pl07_coventry",
+    "video_id": "VfVyxKvq0e8",
+    "at": "2026-09-24T03:09:04+00:00"
+  },
+  {
+    "build": "20260920_pl07_coventry_short",
+    "video_id": "LgWGA6YWuUY",
+    "at": "2026-09-24T03:09:19+00:00"
+  },
+  {
+    "build": "20260920_pl08_palace",
+    "video_id": "gpUXDJsBvD8",
+    "at": "2026-09-24T03:09:39+00:00"
+  },
+  {
+    "build": "20260920_pl08_palace_short",
+    "video_id": "A5wqL8xtAoc",
+    "at": "2026-09-24T03:09:55+00:00"
+  },
+  {
+    "build": "20260920_pl09_everton",
+    "video_id": "U7dH3SFcKlY",
+    "at": "2026-09-24T03:10:15+00:00"
+  },
+  {
+    "build": "20260920_pl09_everton_short",
+    "video_id": "tGGUkhlkTmc",
+    "at": "2026-09-24T03:10:31+00:00"
+  },
+  {
+    "build": "20260920_pl10_fulham",
+    "video_id": "pPYxysi7o7U",
+    "at": "2026-09-24T03:10:49+00:00"
+  },
+  {
+    "build": "20260920_pl10_fulham_short",
+    "video_id": "7MS-j3enHCo",
+    "at": "2026-09-24T03:11:03+00:00"
+  },
+  {
+    "build": "20260920_pl11_hull",
+    "video_id": "PJxrys1uQwI",
+    "at": "2026-09-24T05:24:46+00:00"
+  },
+  {
+    "build": "20260920_pl11_hull_short",
+    "video_id": "ez2dQw7MtTA",
+    "at": "2026-09-24T05:25:05+00:00"
+  },
+  {
+    "build": "20260920_pl12_ipswich",
+    "video_id": "A9L8PKWEjCM",
+    "at": "2026-09-24T05:25:25+00:00"
+  },
+  {
+    "build": "20260920_pl12_ipswich_short",
+    "video_id": "FTndiznnYx4",
+    "at": "2026-09-24T05:25:40+00:00"
+  },
+  {
+    "build": "20260920_pl13_leeds",
+    "video_id": "hbaqETI0byA",
+    "at": "2026-09-24T05:25:59+00:00"
+  },
+  {
+    "build": "20260920_pl13_leeds_short",
+    "video_id": "sUzJsIEXsIs",
+    "at": "2026-09-24T05:26:18+00:00"
+  },
+  {
+    "build": "20260920_pl14_liverpool",
+    "video_id": "qtlMNi7eMiQ",
+    "at": "2026-09-24T05:26:40+00:00"
+  },
+  {
+    "build": "20260920_pl14_liverpool_short",
+    "video_id": "JHYIcP3FoyQ",
+    "at": "2026-09-24T05:26:53+00:00"
+  },
+  {
+    "build": "20260920_pl15_mancity",
+    "video_id": "xR29TO7ehsk",
+    "at": "2026-09-24T05:27:13+00:00"
+  },
+  {
+    "build": "20260920_pl15_mancity_short",
+    "video_id": "tW0LdVlZExc",
+    "at": "2026-09-24T05:27:32+00:00"
+  },
+  {
+    "build": "20260920_pl16_manutd",
+    "video_id": "W9xdJoDb5o0",
+    "at": "2026-09-24T05:27:52+00:00"
+  },
+  {
+    "build": "20260920_pl16_manutd_short",
+    "video_id": "3l7A-Y1-mBA",
+    "at": "2026-09-24T05:28:09+00:00"
+  },
+  {
+    "build": "20260920_pl17_newcastle",
+    "video_id": "6WAd_RI-1Jw",
+    "at": "2026-09-24T05:28:34+00:00"
+  },
+  {
+    "build": "20260920_pl17_newcastle_short",
+    "video_id": "foXiJ9QVigQ",
+    "at": "2026-09-24T05:28:51+00:00"
+  },
+  {
+    "build": "20260920_pl18_forest",
+    "video_id": "ToTN7RJbK4M",
+    "at": "2026-09-24T05:29:16+00:00"
+  },
+  {
+    "build": "20260920_pl18_forest_short",
+    "video_id": "lf6FpEIWO5Y",
+    "at": "2026-09-24T05:29:32+00:00"
+  },
+  {
+    "build": "20260920_pl19_sunderland",
+    "video_id": "5IfwUBtsObs",
+    "at": "2026-09-24T05:29:57+00:00"
+  },
+  {
+    "build": "20260920_pl19_sunderland_short",
+    "video_id": "-RUhkmr2BRE",
+    "at": "2026-09-24T05:30:12+00:00"
+  },
+  {
+    "build": "20260920_pl20_tottenham",
+    "video_id": "tyNkbe_IdB0",
+    "at": "2026-09-24T05:30:33+00:00"
+  },
+  {
+    "build": "20260920_pl20_tottenham_short",
+    "video_id": "LgrA0NYJeBM",
+    "at": "2026-09-24T05:30:48+00:00"
+  },
+  {
+    "build": "20260924_aguirre",
+    "video_id": "2DLxAA658uA",
+    "at": "2026-09-25T01:21:11+00:00"
+  },
+  {
+    "build": "20260924_sancho",
+    "video_id": "l-ZloKAQOvY",
+    "at": "2026-09-25T01:21:32+00:00"
+  },
+  {
+    "build": "20260924_ronaldo",
+    "video_id": "YPzd8EOdsiY",
+    "at": "2026-09-25T01:21:52+00:00"
+  },
+  {
+    "build": "20260924_mourinho",
+    "video_id": "PVIqz3fULQM",
+    "at": "2026-09-25T01:22:08+00:00"
+  },
+  {
+    "build": "20260924_manutd",
+    "video_id": "1WtHMA4oz0Q",
+    "at": "2026-09-25T01:22:27+00:00"
+  },
+  {
+    "build": "20260924_benzema",
+    "video_id": "jKGCXUs9-7M",
+    "at": "2026-09-25T01:22:49+00:00"
+  },
+  {
+    "build": "20260924_zidane",
+    "video_id": "bIfVtRgKcL0",
+    "at": "2026-09-25T01:23:06+00:00"
+  },
+  {
+    "build": "20260924_carvajal",
+    "video_id": "eVeQahWeRvg",
+    "at": "2026-09-25T01:23:27+00:00"
+  },
+  {
+    "build": "20260924_zinchenko",
+    "video_id": "hDfvKMz6J0w",
+    "at": "2026-09-25T01:23:46+00:00"
+  },
+  {
+    "build": "20260925_matsuki",
+    "video_id": "k-5Wmbn4ARg",
+    "at": "2026-09-25T08:12:04+00:00"
+  },
+  {
+    "build": "20260925_shiogai",
+    "video_id": "8f0T5yCUsVg",
+    "at": "2026-09-25T08:12:25+00:00"
+  },
+  {
+    "build": "20260925_ueda",
+    "video_id": "E2wtivxtisk",
+    "at": "2026-09-25T08:12:43+00:00"
+  },
+  {
+    "build": "20260925_sano",
+    "video_id": "MB-GJawlVq4",
+    "at": "2026-09-25T08:13:04+00:00"
+  },
+  {
+    "build": "20260925_klopp",
+    "video_id": "fS9cswc4ykw",
+    "at": "2026-09-25T08:13:24+00:00"
+  },
+  {
+    "build": "20260925_xavi",
+    "video_id": "paOZB0VxX2s",
+    "at": "2026-09-25T08:13:47+00:00"
+  },
+  {
+    "build": "20260925_ronaldo",
+    "video_id": "42hyreP_oQQ",
+    "at": "2026-09-25T08:14:04+00:00"
+  },
+  {
+    "build": "20260925_haaland",
+    "video_id": "yT_p-9MU7mU",
+    "at": "2026-09-25T08:14:26+00:00"
+  },
+  {
+    "build": "20260925_deco",
+    "video_id": "4Hi8rakCEG4",
+    "at": "2026-09-25T08:14:45+00:00"
+  },
+  {
+    "build": "20260925_raphinha",
+    "video_id": "Nn55ispUjxc",
+    "at": "2026-09-25T14:57:43+00:00",
+    "publish_at": "2026-09-26T00:00:00Z"
+  },
+  {
+    "build": "20260925_raphinha_short",
+    "video_id": "dkwKxtXZ2EE",
+    "at": "2026-09-25T14:57:57+00:00",
+    "publish_at": "2026-09-26T00:30:00Z"
+  },
+  {
+    "build": "20260925_matsuki_short",
+    "video_id": "Z_2qQXm1KiA",
+    "at": "2026-09-25T14:58:11+00:00",
+    "publish_at": "2026-09-26T01:00:00Z"
+  },
+  {
+    "build": "20260925_shiogai_short",
+    "video_id": "la7xHZh42o8",
+    "at": "2026-09-25T14:58:26+00:00",
+    "publish_at": "2026-09-26T01:30:00Z"
+  },
+  {
+    "build": "20260925_ueda_short",
+    "video_id": "WKa7mruYoGc",
+    "at": "2026-09-25T14:58:43+00:00",
+    "publish_at": "2026-09-26T02:00:00Z"
+  },
+  {
+    "build": "20260925_sano_short",
+    "video_id": "0LgdzMoZIQ8",
+    "at": "2026-09-25T14:58:58+00:00",
+    "publish_at": "2026-09-26T02:30:00Z"
+  },
+  {
+    "build": "20260925_klopp_short",
+    "video_id": "ezdkENzG1Wc",
+    "at": "2026-09-25T14:59:14+00:00",
+    "publish_at": "2026-09-26T03:30:00Z"
+  },
+  {
+    "build": "20260925_xavi_short",
+    "video_id": "sFZWp86ZNFY",
+    "at": "2026-09-25T14:59:31+00:00",
+    "publish_at": "2026-09-26T04:30:00Z"
+  },
+  {
+    "build": "20260925_ronaldo_short",
+    "video_id": "55rkvk7N6nY",
+    "at": "2026-09-25T14:59:45+00:00",
+    "publish_at": "2026-09-26T05:30:00Z"
+  },
+  {
+    "build": "20260925_haaland_short",
+    "video_id": "Ki1UJywyn3U",
+    "at": "2026-09-25T15:00:00+00:00",
+    "publish_at": "2026-09-26T06:30:00Z"
+  },
+  {
+    "build": "20260925_deco_short",
+    "video_id": "KABi_0DinX4",
+    "at": "2026-09-25T15:00:18+00:00",
+    "publish_at": "2026-09-26T07:30:00Z"
+  },
+  {
+    "build": "20260926_city",
+    "video_id": "r1pclx3tKRQ",
+    "at": "2026-09-26T02:30:26+00:00",
+    "publish_at": "2026-09-26T03:00:00Z"
+  },
+  {
+    "build": "20260926_messi",
+    "video_id": "zc6jSpEHujg",
+    "at": "2026-09-26T02:30:47+00:00",
+    "publish_at": "2026-09-26T04:00:00Z"
+  },
+  {
+    "build": "20260926_fifa",
+    "video_id": "9HCsn5DCAaY",
+    "at": "2026-09-26T02:31:06+00:00",
+    "publish_at": "2026-09-26T05:00:00Z"
+  },
+  {
+    "build": "20260926_zidane",
+    "video_id": "kXGQXNsxA8E",
+    "at": "2026-09-26T02:31:27+00:00",
+    "publish_at": "2026-09-26T06:00:00Z"
+  },
+  {
+    "build": "20260926_italy",
+    "video_id": "_CvT-lzFTmU",
+    "at": "2026-09-26T02:31:52+00:00",
+    "publish_at": "2026-09-26T07:00:00Z"
   }
 ]

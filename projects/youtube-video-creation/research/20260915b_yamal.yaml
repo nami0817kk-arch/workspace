@@ -1,0 +1,81 @@
+# ヤマル「世界最高の選手は、おそらく2人だと思う」（2026-09-14）
+#
+# **名前を伏せられる回。**誰と誰を挙げたかが引きになる。
+# 挙げた1人がエムバペなので、エムバペの回・デンベレの回と3本でつながる
+format: quote
+voice_min: 50
+slot: spain_1
+date: "2026年9月15日"
+
+people:
+  - ラミン・ヤマル
+
+short_title: "ヤマルが挙げた2人"
+
+theme:
+  id: yamal_two_best
+  league: spain
+  kind: other
+  topic: バルセロナ
+  title: ヤマルが挙げた「世界最高の2人」は誰か
+  question: 誰の名前を出したのか
+
+thumbnail:
+  line1: 世界最高の選手は2人
+  line2: ヤマルが挙げたのは ●●●●
+  photo: "assets/photos/20260915_yamal/01.jpg"
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: どこで語ったか
+    tier: 報道
+    telop: スペインの番組『Universo Valdano』で
+    narrator: キャスター
+    say:
+      - バロンドールの投票が近づいています。
+      - ラミン・ヤマルが、スペインのテレビ番組『ウニベルソ・バルダーノ』で、この話に触れました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/14/post1011102/
+
+  - id: said
+    heading: 挙げた2人
+    main: true
+    tier: 報道
+    telop: 「僕にとって、世界最高の選手は自分とエムバペだ」
+    narrator: 解説
+    say:
+      - {short_only: true, text: ラミン・ヤマルが、世界最高の選手を2人挙げました。}
+      - ヤマルは、まずこう切り出しました。
+      - {voice: ヤマル, text: 世界最高の選手は、おそらく2人だと思う}
+      - そして、その2人を名指しします。
+      - {voice: ヤマル, text: 今年は僕が勝ち取ったものを考えれば、僕が受賞に値すると思う}
+      - {voice: ヤマル, text: 僕にとって、世界最高の選手は自分とエムバペだ}
+      - ただし、自己評価は手放しではありません。
+      - {voice: ヤマル, text: 自分自身については満足していなかった}
+      - {voice: ヤマル, text: 僕にはまだやるべきことが1000個ある}
+      - 18歳の言葉です。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/14/post1011102/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「ヤマルには早すぎる」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: なんかエムバペとヤマルがバロンドールはワシだとか言ってる　時代は変わったね}
+      - {voice: ネット民, text: バロンドール誰になるんやろ？エムバペはタイトル獲ってないからヤマルの方が優勢？}
+      - {voice: ネット民, text: クレとしてバロンドールはバルサの選手がとってほしい。でも、まだヤマルにはとってほしくない}
+      - {voice: ネット民, text: ヤマルには早すぎる。バロンドール受賞は10代の選手のメンタリティが壊れるには十分すぎる出来事だと思うから}
+      - {voice: ネット民, text: バロンドール投票の締切りは9月28日　この日までヤマルPRが続くよ}
+      - {voice: ネット民, text: バロンドール展望　本命ケイン　対抗エムバペ　穴ヤマル}
+      - {voice: ネット民, text: ヤマルはもちろん凄いけど、ロドリやペドリの方が好きやな}
+      - {voice: ネット民, text: 誰になるか楽しみやし、誰になってもどこかから不満が出るんやろな}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%A4%E3%83%9E%E3%83%AB%20%E3%83%90%E3%83%AD%E3%83%B3%E3%83%89%E3%83%BC%E3%83%AB&f=live

@@ -1,0 +1,160 @@
+date: 2026年9月22日
+slot: japan_1
+format: voices
+voice_min: 0.6
+people: [上田綺世, ウォーツ, ドリーセン]
+theme:
+  id: ueda_split
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: リール
+  title: '上田綺世の1点、なぜ評価が真っ二つに割れたのか'
+  hook: 同じゴールに、真逆の評価がついています。
+  question: なぜ評価が割れるのか
+short_title: 上田綺世、オランダの酷評とフランスの神トラップ
+thumbnail:
+  photo: assets/images/20260922_ueda/01.jpg
+  line1: 神トラップ、それとも
+  line2: 同じ1点に真逆の言葉
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: ニース2対1リール。上田綺世が1点を返した
+    narrator: キャスター
+    card:
+      type: table
+      title: リーグ・アン第5節
+      columns: ["", ""]
+      rows:
+        - ["ニース", "2"]
+        - ["リール", "1"]
+        - ["上田綺世", "後半34分に1点"]
+        - ["リール", "リーグ戦で今季初黒星"]
+    say:
+      - ニースに1対2。リールはリーグ戦で今季初めての黒星でした。
+      - 上田のゴールは、後ろから来たボールを**背中に当てて前へ流し**、左足でGKの股下を抜いたものです。
+      - 移籍して4試合で**3ゴール**。数字だけ見れば、文句のつけようがありません。
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459305-459305-fl
+      - https://lepetitlillois.com/2026/09/21/sens-responsable-ueda-apres-ogc-nice-losc/
+  - id: numbers
+    heading: 数字は、こうなっている
+    tier: 報道
+    telop: 移籍金1500万ユーロ。昨季は25ゴールで得点王
+    narrator: 解説
+    card:
+      type: table
+      title: 上田綺世をめぐる数字
+      columns: ["", ""]
+      rows:
+        - ["移籍金", "1500万ユーロ（約27億円）"]
+        - ["リールでの成績", "公式戦4試合3ゴール"]
+        - ["昨季", "リーグ31試合25ゴールで得点王"]
+        - ["この試合の採点", "6点。チームで最も高い"]
+    say:
+      - 移籍金は**1500万ユーロ**でした。
+      - 昨季はオランダで**25ゴール**を挙げて、得点王になりました。
+      - この試合の採点は**6点**。チームで最も高い点です。主将は3点でした。
+      - それでも、言われていることは割れています。
+    sources:
+      - https://www.soccernews.nl/news/dit-is-waarom-feyenoord-ueda-zo-goedkoop-liet-gaan/
+      - https://lepetitlillois.com/2026/09/21/ueda-dessus-andre-difficulte-notes-presse-ogc-nice-losc/
+  - id: said
+    main: true
+    heading: 名前を出して言った人がいる
+    tier: 報道
+    telop: 「5分に1回はボールを失っていた」
+    narrator: キャスター
+    card:
+      type: table
+      title: 名前を出して言った人
+      columns: ["", ""]
+      rows:
+        - ["ウォーツ", "前線でボールを収められない"]
+        - ["ドリーセン", "2500万の話を断ったこと"]
+        - ["上田綺世", "自分に責任を感じる"]
+    say:
+      - text: 上田は今月、オランダのフェイエノールトからリールへ移りました。移籍金は1500万ユーロです。
+        short_only: true
+      - text: 送り出したオランダでは、この額に厳しい声が出ていました。まず、解説者のウォーツです。
+      - voice: ウォーツ
+        text: 彼は前線でボールを収められない。
+      - voice: ウォーツ
+        text: パスを出すと、**5分に1回**はボールを失っていた。
+      - voice: ウォーツ
+        text: 1500万は、獲ったときの倍だ。それで十分だ。
+      - text: 記者のドリーセンは、移籍の決め方を責めました。
+      - voice: ドリーセン
+        text: 2500万を払うというクラブが来たのに、本人がトルコには行きたくないと言う。
+      - voice: ドリーセン
+        text: "**希望を言う権利などない。**"
+      - text: その上田が、リールで決めたのがこの1点です。背中でボールを止めて、GKの股下を抜きました。ただ、試合は1対2で負けています。
+        short_only: true
+      - text: 本人は、試合のあとでこう話しています。
+      - voice: 上田綺世
+        text: 決めきれていれば、チームを別の結果に導けた。
+      - voice: 上田綺世
+        text: そう分かっている以上、**自分に責任を感じます。**
+      - voice: 上田綺世
+        text: いちばん悔やまれるのは、ヘディングです。
+    sources:
+      - https://www.soccernews.nl/news/dit-is-waarom-feyenoord-ueda-zo-goedkoop-liet-gaan/
+      - https://www.fcupdate.nl/voetbalnieuws/2026/09/feyenoord-ayase-ueda-champions-league-selectie-fenerbahce-lille
+      - https://lepetitlillois.com/2026/09/21/sens-responsable-ueda-apres-ogc-nice-losc/
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: 同じ1点に、正反対の言葉
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 背中でトラップしてる
+      - voice: ネット民
+        text: 神トラップ
+      - voice: ネット民
+        text: ベルカンプしてるじゃん
+      - voice: ネット民
+        text: ハーランドやんけ
+      - voice: ネット民
+        text: バケモンすぎ
+      - voice: ネット民
+        text: 自ら起点でフィニッシュまでって…左足炸裂、痺れました
+      - voice: ネット民
+        text: 勝てないなら虚しいゴールだよ
+        short_voice: true
+      - voice: ネット民
+        text: またとったね。やっぱリーグアンの方が程度が低いんだよ
+      - voice: ネット民
+        text: フランスでいまさらホルホルしたくない
+      - voice: ネット民
+        text: もうアラサーだし時間はない
+      - voice: ネット民
+        text: 上田はいいんだけど他が酷くてチームとして心配になったわ
+      - voice: ネット民
+        text: ヘッド2発惜しかったけどあれは相手GKを褒めるしかない
+      - voice: ネット民
+        text: 相手のGKが凄すぎた。ハットトリックだってあり得たのに
+      - voice: ネット民
+        text: ニース相手にここまで苦戦するのは狂ってる
+      - voice: ネット民
+        text: リールの守備はコントか？
+      - voice: ネット民
+        text: 得点王に対して、あまりに貧弱な額だ
+      - voice: ネット民
+        text: 2000万から2500万が現実的だった
+      - voice: ネット民
+        text: 大一番ではほとんど姿が見えなかった。理解はできる
+      - voice: ネット民
+        text: 確かに上位相手にはあまり取らなかった
+      - voice: ネット民
+        text: だが他のクラブ相手には25点取っている
+      - voice: ネット民
+        text: この25点を今度は誰が取るのか見ものだ
+    sources:
+      - https://kizuna.5ch.io/test/read.cgi/football/1787109125/
+      - https://web.gekisaka.jp/news/world/detail/?459305-459305-fl
+      - https://nofootynolife.net/blog-entry-9363.html
+      - https://www.fr-fans.nl/nieuws/78780/feyenoord-fans-verdeeld-over-transfersom-voor-ueda
+      - https://lepetitlillois.com/2026/09/21/prestation-lilloise-lanterne-rouge-reseaux-sociaux-ogc-nice-losc/

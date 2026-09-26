@@ -31,7 +31,8 @@ LINE_RE = re.compile(r"^(?P<speaker>[^:：]{1,20})[:：]\s*(?P<text>.*)$")
 ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
-LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source", "card"}
+LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source",
+              "card", "only", "short_voice"}
 
 # 情報の確度。ニュース系では、これを画面に出さないと視聴者が判断できない
 SOURCE_TIERS = {
@@ -48,7 +49,7 @@ SOURCE_TIERS = {
     "背景": "context",
     "解説": "context",
 }
-SCENE_DIRECTIVES = {"bg", "background"}
+SCENE_DIRECTIVES = {"bg", "background", "main"}
 
 # 読み上げ時間の概算（TTS を使わない --no-tts モード用）
 SECONDS_PER_CHAR = 0.16
@@ -83,6 +84,9 @@ def _scene_lines(scene) -> list[dict]:
             "speaker": line.speaker,
             "text": line.text,
             "telop": headline,
+            # **板と同じ字幕を出さない行の印**（2026-09-20）。review はこれを見て
+            # 「画面に出る字」を数える。記録に残さないと、板の回だけ落ちる
+            "no_telop": line.no_telop,
             "source": source,
             "card": card,
             "emotion": line.emotion,
@@ -108,12 +112,31 @@ class Line:
     pause: float | None = None
     speed: float | None = None
     no_telop: bool = False
+    # **ショートにだけ出す行**（2026-09-14 指示「ショートでは、最初にどことのいつの
+    # 試合か説明」）。ショートは節を切り出して単体で出すので、本編では前の節で
+    # 言い終えている前置きが要る。本編に残すと**節またぎの言い直し**になる
+    only: str | None = None     # "short" のときショート専用
+    # **ショートの締めに回す反応**（2026-09-15 指示）。印の付いた反応だけを
+    # ショートの最後に足す。付いていなければ今までどおり上から順に取る。
+    # `only: short` とは別物で、**本編にもそのまま残る**
+    short_voice: bool = False
     source_line: int = 0
 
     # ビルド中に埋まる
     audio_path: Path | None = None
     duration: float = 0.0
     start: float = 0.0
+
+    def __post_init__(self) -> None:
+        # **強調の囲み `**…**` は画面のためのもの**（2026-09-15）。セリフに書かれて
+        # いたら、囲み付きの文字はテロップへ移し、読み上げる文からは外す。
+        # 外さないと VOICEVOX が「アスタリスク」と読み、字幕にも漏れる
+        from . import emphasis
+
+        if emphasis.marked(self.text):
+            if self.telop is None:
+                self.telop = self.text
+            self.text = emphasis.strip(self.text)
 
     def telop_text(self) -> str:
         """画面に表示する文字列。telop 未指定ならセリフをそのまま使う。"""
@@ -133,6 +156,10 @@ class Scene:
     title: str
     lines: list[Line] = field(default_factory=list)
     background: str | None = None
+    # **答えを出す節の印**（2026-09-10 ユーザー「台本のここからが本題ですはいらない」）。
+    # それまでは読み上げの1行目に「ここからが本題です。」と書いて印にしていたが、
+    # **聞く人には要らない言葉**だった。読み上げから外し、指定だけを残す
+    main: bool = False
 
     @property
     def duration(self) -> float:
@@ -171,12 +198,15 @@ class Script:
     def to_dict(self) -> dict:
         return {
             "title": self.title,
+            # シリーズ名（2026-09-23）。handoff が公開する題を組むのに使う
+            "series": str((self.meta or {}).get("series") or ""),
             "description": self.description,
             "tags": self.tags,
             "scenes": [
                 {
                     "title": scene.title,
                     "background": scene.background,
+                    "main": scene.main,
                     "lines": _scene_lines(scene),
                 }
                 for scene in self.scenes
@@ -185,6 +215,16 @@ class Script:
 
     def to_json(self) -> str:
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
+
+
+def published_title(script: Script) -> str:
+    """公開する題（2026-09-23 指示「サブタイトルにプレミアリーグチーム紹介として」）。
+
+    front matter に `series:` があれば「題｜シリーズ名」。**読み上げの1行目は `title` のまま**で、
+    変わるのは description.txt の1行目（`upload` が読む）だけ。ショートも同じ後ろ書きになる。
+    """
+    series = str((script.meta or {}).get("series") or "").strip()
+    return f"{script.title}｜{series}" if series and script.title else script.title
 
 
 def load_script(path: str | Path) -> Script:
@@ -236,7 +276,11 @@ def parse_script(text: str) -> Script:
             key = directive["key"].lower()
             if key not in SCENE_DIRECTIVES:
                 raise ScriptError(f"{number}行目: 未対応の指定 @{key}")
-            current.background = directive["value"].strip() or None
+            if key == "main":
+                value = directive["value"].strip().lower()
+                current.main = value not in ("false", "no", "0", "いいえ")
+            else:
+                current.background = directive["value"].strip() or None
             continue
 
         # インデントされた行は直前のセリフへの属性指定
@@ -295,8 +339,12 @@ def _apply_attr(line: Line, key: str, value: str, number: int) -> None:
             setattr(line, key, float(value))
         except ValueError as exc:
             raise ScriptError(f"{number}行目: {key} には数値を指定してください") from exc
-    elif key == "no_telop":
-        line.no_telop = value.lower() not in ("false", "no", "0", "")
+    elif key in ("no_telop", "short_voice"):
+        setattr(line, key, value.lower() not in ("false", "no", "0", ""))
+    elif key == "only":
+        if value.strip() not in ("short",):
+            raise ScriptError(f"{number}行目: only に書けるのは short だけです")
+        line.only = value.strip()
     else:
         setattr(line, key, value)
 

@@ -8,7 +8,7 @@ RAW = {
     "domains": {"english": ["skysports.com", "espn.com"], "social": ["x.com"]},
     "tiers": {
         "確定": {"needs_sources": 1, "needs_official": True},
-        "報道": {"needs_sources": 2, "needs_official": False},
+        "報道": {"needs_sources": 1, "needs_official": False},
         "未確認": {"needs_sources": 1, "needs_official": False},
     },
     "cadence": {"per_day": 3, "slots": ["weekly"]},
@@ -291,10 +291,16 @@ def test_an_unknown_league_returns_nothing():
     assert _plan_with_leagues().match_queries("brazil") == []
 
 
-def test_the_league_name_falls_back_to_its_key():
+def test_知らないリーグの鍵はリーグ名にしない():
+    """**鍵そのものを返していた**（2026-09-15）。
+
+    取材メモの `league: premier`（正しくは `england`）が、そのまま
+    `premier` というタグになって公開の手前まで来ていた。
+    鍵はリーグ名ではない。分からないなら何も足さない。
+    """
     plan = _plan_with_leagues()
     assert plan.league_name("germany") == "ブンデスリーガ"
-    assert plan.league_name("brazil") == "brazil"
+    assert plan.league_name("brazil") == ""
 
 
 # 取材メモの雛形に league が無く、書く人が埋めようがなかった。

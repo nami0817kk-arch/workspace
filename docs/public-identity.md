@@ -79,8 +79,13 @@ Email Routing は受信専用で `info@` から送り返せない。屋号名義
 
 - **`*.pages.dev` では申請できない。** 自分のドメインが要る。これが
   `dailyquarry.com` を取った直接の理由。
-- サブドメインは**1回の申請で全部まとめて扱われる**（`ads.txt` で紐づく）。
-  サイトごとに申請し直す必要は無い。
+- **申請するサイトはルートの `dailyquarry.com`。** AdSense はサブドメインをサイトとして
+  足せず、ルートドメイン単位で扱う。`ads.txt` もルート（`dailyquarry.com/ads.txt`）に置く。
+  サブドメインが同じ pub-ID なら、ルートの1枚で足りる（`subdomain=` は販売者が違うときだけ）。
+  ルートには 2026-09-26 まで何も出ていなかったので、`projects/dailyquarry-home/` を置いた。
+  手順はそこの CLAUDE.md
+  （[サイト管理の変更](https://support.google.com/adsense/answer/12170421?hl=ja)、
+  [ads.txt の FAQ](https://support.google.com/adsense/answer/9785052?hl=ja)）。
 - 審査は「誰が運営し、どこへ連絡できるか」が読めることを求める。
   **運営者情報・プライバシーポリシー・問い合わせの3枚が揃うまで出さない。**
   kabu は 2026-09-25 に3枚とも揃えた（`projects/kabu-agari-ranking/templates/`

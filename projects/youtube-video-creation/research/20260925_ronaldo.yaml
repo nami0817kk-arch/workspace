@@ -1,0 +1,133 @@
+date: 2026年9月25日
+slot: world_1
+format: quote
+voice_min: 0.55
+people: [クリスティアーノ・ロナウド, ジョルジェ・ジェズス, ルベン・ネヴェス]
+theme:
+  id: ronaldo_subbed
+  league: spain
+  league_name: ポルトガル代表
+  kind: other
+  topic: ポルトガル代表
+  title: 'ロナウドを67分で下げたジェズス監督、会見ではなぜ言い方が変わったのか'
+  question: 交代は決めていたのか
+short_title: ジェズス「前から計画していた」
+thumbnail:
+  photo: assets/images/20260925_ronaldo/01.jpg
+  crests: [ポルトガル]
+  line1: ロナウドを67分で下げた
+  line2: ジェズス監督の●●
+sections:
+  - id: what
+    heading: 決められなかった夜
+    tier: 報道
+    telop: ウェールズに1対0。ロナウドは7本打って0点
+    narrator: キャスター
+    card:
+      type: table
+      title: ロナウドの9月24日
+      columns: ['', '']
+      rows:
+        - [シュート, 7本（枠内2）]
+        - [49分, ゴール前で外す]
+        - [59分, ゴール取り消し]
+        - [67分, 交代]
+    say:
+      - ポルトガルがウェールズに1対0で勝ちました。ジェズス監督の、ポルトガル代表監督としての初陣です。
+      - 1点は22分のジョアン・フェリックス。
+      - ロナウドは**シュート7本**で0点。49分にゴール前で外し、59分に流し込んだゴールは、オフサイドで取り消し。
+      - そして**67分**、ゴンサロ・ラモスと交代。拍手を受けて下がりました。
+    sources:
+      - https://www.skysports.com/football/news/13591454/portugal-1-0-wales-joao-felix-spares-cristiano-ronaldos-blushes-in-nations-league-win
+      - https://www.espn.com/soccer/report/_/gameId/401861044
+  - id: flash
+    heading: 試合直後の説明
+    tier: 報道
+    telop: 「試合の流れがそうさせた」
+    narrator: キャスター
+    say:
+      - text: '試合直後、ジェズス監督はこう説明しました。'
+        image: assets/images/20260925_pair_jesus_ronaldo/01.jpg
+      - voice: ジョルジェ・ジェズス
+        text: 試合の流れがそうさせた。残り25分、前から追いかけられる元気な選手が必要だった
+      - voice: ジョルジェ・ジェズス
+        text: 技術ではクリスティアーノに及ばないかもしれないが、ゴンサロなら守備で走り回れると分かっていた
+    sources:
+      - https://sapo.pt/artigo/jorge-jesus-a-substituicao-do-ronaldo-foi-o-que-o-jogo-ditou-6ab59137c5a3f84d7f311de9
+      - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/jesus-gostou-do-que-viu-e-explica-substituicao-de-ronaldo-precisavamos-de-alguem-fresquinho-para-pressionar
+  - id: presser
+    main: true
+    heading: 会見では違った
+    tier: 報道
+    telop: 「前から計画していた」
+    narrator: キャスター
+    say:
+      - text: 'ジェズス監督は、ロナウドを交代させた理由を試合直後、「試合の流れがそうさせた」と説明していました。'
+        short_only: true
+      - そのあとの会見では、前から決めていたと言い直しています。
+      - voice: ジョルジェ・ジェズス
+        text: 残り25分でロナウドを下げたのは、元気な選手を入れることが大事だと思ったからだ
+      - voice: ジョルジェ・ジェズス
+        text: クリスがあと5分、長くて10分は出られることも分かっていた
+      - voice: ジョルジェ・ジェズス
+        text: 試合中に下げるつもりで、それは前から計画していた
+      - voice: ジョルジェ・ジェズス
+        text: ゴンサロならそれができると分かっていた。技術で失うものはあっても、別の場面で得るものがあった
+    sources:
+      - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/conferencia-de-imprensa-de-jorge-jesus-em-direto
+      - https://www.abola.pt/video/jorge-jesus-ja-tinha-planeado-tirar-cristiano-ronaldo-do-jogo-2026092422411377570
+  - id: neves
+    heading: 味方の言葉と、本人の投稿
+    tier: 報道
+    telop: ネヴェス「ゴールは出てくる」
+    narrator: キャスター
+    say:
+      - text: '同じ67分に交代したルベン・ネヴェスは、こう庇いました。'
+        image: assets/images/20260925_pair_neves_ronaldo/01.jpg
+      - voice: ルベン・ネヴェス
+        text: クリスティアーノのことは知ってるだろう。点を取れない時は、取った時と同じではない
+      - voice: ルベン・ネヴェス
+        text: 素晴らしい仕事をしたし、彼を通じてチャンスを作れた。ゴールは出てくる
+      - text: 'ロナウド本人は試合のあと、一言だけ投稿しています。'
+        image: assets/images/20260925_ronaldo/01.jpg
+      - voice: ロナウド
+        text: 最初の一歩は踏み出した。行こう、ポルトガル
+    sources:
+      - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/ruben-neves-exibicao-foi-boa-foram-dois-dias-de-treino-e-e-dificil-colocar-as-ideias-em-pratica
+      - https://www.record.pt/futebol/selecoes/detalhe/cristiano-ronaldo-destaca-primeiro-passo-apos-triunfo-diante-do-pais-de-gales
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「ポルトガルの三浦カズ」と「オフザボールは現役トップ」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 結局先発だね。CFがいないなら、ユーロまでの間に色々試して最適解を模索しないといけない時期なのに
+      - voice: ネット民
+        text: 採点5.8は草。もう潔く譲った方がいいよ。ポルトガルのファンが可哀想
+      - voice: ネット民
+        text: ポルトガルの三浦カズ
+      - voice: ネット民
+        text: ロナウドいなくなるとチャンスなくなるもん
+      - voice: ネット民
+        text: 点こそなかったけど、全然良かったな。オフザボールの動きが現役の中でもトップクラス
+      - voice: ネット民
+        text: 今日のポルトガル戦をフルで見ずに数字だけ見てロナウド批判してる奴はあほ
+      - voice: ネット民
+        text: ロナウドがもう全然やれてないのは分かってる。でも彼抜きの20数分を見たら、同じかむしろ悪かった
+      - voice: ネット民
+        text: スタジアムにいた友達が、ロナウドが決められなくて泣いてる子がいたと言ってる。この効果はまだ生きてる
+      - voice: ネット民
+        text: 代表を見るたびに後悔する。でも馬鹿なのは俺だ
+      - voice: ネット民
+        text: ロナウドが決めると思ってた。決めなかったけどw
+      - voice: ネット民
+        text: 得点が取れなくなったロナウド、ついにオフザボールのみで持ち上げられ始める
+      - voice: ネット民
+        text: 君が一生涯費やしてロナウドを批判しても、彼がgoatという事実には抗えない
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/fd90994c5a40b920f7840c554c87cefd7f34fccb/comments
+      - https://search.yahoo.co.jp/realtime/search?p=ロナウド
+      - https://www.forumscp.com/t/selecção-nacional-aa-parte-4/83578
+      - https://www.cardiffcityforum.co.uk/viewtopic.php?f=2&t=250839

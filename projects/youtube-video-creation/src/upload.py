@@ -11,6 +11,7 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from . import posted as posted_mod
 from . import tags as tags_mod
 
 # upload だけでは**公開済み動画の概要欄を書き換えられない**（403）。
@@ -111,6 +112,31 @@ class Draft:
         ]
 
 
+MAIN_LINK_HEADING = "■ この話の本編"
+
+
+def main_video_link(build_dir: Path, path: Path | None = None) -> str:
+    """ショートの概要欄に、同じ題材の本編へ渡る行を作る（2026-09-15）。
+
+    **ショートから本編へ、誰も流れていなかった。**9/1〜9/15 の実測で
+    ショートは72,281再生あるのに、ショート経由の本編再生は**1回**。
+    概要欄にリンクが無く、辿る道がそもそも無かった。
+    収益化に要る4,000時間は**本編の視聴時間しか数えない**ので、
+    いちばん人がいる場所から本編へ橋を架ける。
+
+    本編を先に投稿していないと引けない。**無ければ黙って何も足さない**
+    （ショートだけ先に出す回もある。そこで止めると投稿が止まる）。
+    """
+    name = Path(build_dir).name
+    tail = "_short"
+    if not name.endswith(tail):
+        return ""
+    row = posted_mod.find(name[: -len(tail)], path or posted_mod.LEDGER)
+    if not row or not row.get("video_id"):
+        return ""
+    return f"{MAIN_LINK_HEADING}\nhttps://youtu.be/{row['video_id']}"
+
+
 def prepare(build_dir: Path, privacy: str = "private") -> Draft:
     """書き出したディレクトリから、投稿の中身を組み立てる。
 
@@ -133,16 +159,33 @@ def prepare(build_dir: Path, privacy: str = "private") -> Draft:
         except (OSError, ValueError):
             found = []
 
+    # **本編への橋は、書き出しではなくここで架ける。**本編の動画IDは
+    # 投稿してはじめて決まるので、description.txt には書きようがない
+    body = _with_main_link(body.strip(), main_video_link(build_dir))
+
     thumbnail = build_dir / "thumbnail.png"
     return Draft(
         video=build_dir / "video.mp4",
         title=title.strip() or build_dir.name,
-        description=body.strip(),
+        description=body,
         tags=tags_mod.fit(found),
         thumbnail=thumbnail if thumbnail.exists() else None,
         privacy=privacy,
         source=build_dir,
     )
+
+
+def _with_main_link(body: str, link: str) -> str:
+    """本編への行を、リードのすぐ下に差し込む。
+
+    **いちばん上ではなく2つ目の塊に置く。**概要欄の1行目は題名で、
+    YouTube が畳まずに見せるのはそこから3行ぶん。出典やクレジットの下では
+    誰も開かない
+    """
+    if not link or MAIN_LINK_HEADING in body:
+        return body
+    head, sep, rest = body.partition("\n\n")
+    return f"{head}{sep}{link}\n\n{rest}" if sep else f"{body}\n\n{link}"
 
 
 def recently_uploaded(service, title: str, minutes: int = 90) -> str | None:
@@ -173,9 +216,13 @@ def recently_uploaded(service, title: str, minutes: int = 90) -> str | None:
     return None
 
 
-# **公開は7時から24時**（2026-09-10 ユーザー決定）。深夜に出したショートは
-# 中央値10回で、朝1,035回・夕1,078回と2桁ちがった（126本の実測）
-OPEN_HOUR = 7
+# **公開は9時から24時**（2026-09-16 ユーザー決定。7時→9時）。
+# 「その日の何本目か」の影響を外して測り直したら、**9時より前だけが危なかった**。
+# 7〜8時に出した6本のうち3本が100回未満（1回・26回・18回）で、
+# 9〜20時の68本は中央値1,065回・100回未満ゼロ。0〜6時は6本中5本が100回未満。
+# もとの「7時から」は 2026-09-10 の126本の実測（朝1,035・夕1,078・夜339）に
+# よるものだが、その表は公開の**順番**と混ざっていた
+OPEN_HOUR = 9
 CLOSE_HOUR = 24
 
 
@@ -216,6 +263,24 @@ def when_to_publish(clock: str, now=None) -> str:
     now = now.astimezone(jst)
 
     text = str(clock).strip()
+    # **日付つき（`09-26 09:00` / `2026-09-26 09:00`）も受ける**（2026-09-26）。
+    # 23:56 に `09:00` で11本を投げて全部止まり、`明日09:00` で投げ直したら
+    # 途中で0時をまたいだ。「明日」は投げた瞬間の日付で決まるので、夜中に並べて
+    # 予約するときは**日付を書く**のがいちばん狂わない
+    import re as _re
+    dated = _re.fullmatch(r"(?:(\d{4})-)?(\d{1,2})-(\d{1,2})[ T](\d{1,2}):(\d{2})", text)
+    if dated:
+        year = int(dated.group(1) or now.year)
+        target = now.replace(year=year, month=int(dated.group(2)), day=int(dated.group(3)),
+                             hour=int(dated.group(4)), minute=int(dated.group(5)),
+                             second=0, microsecond=0)
+        if target <= now + timedelta(minutes=1):
+            raise UploadError(f"{text} はもう過ぎています（いま {now:%m-%d %H:%M}）")
+        if not (OPEN_HOUR <= target.hour < CLOSE_HOUR):
+            raise UploadError(
+                f"{target:%m-%d %H:%M} は投稿の枠の外です"
+                f"（公開は{OPEN_HOUR}時から{CLOSE_HOUR}時のあいだ）")
+        return target.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     plus_day = 0
     for head in ("明日", "翌日", "翌"):
         if text.startswith(head):
@@ -246,7 +311,7 @@ def when_to_publish(clock: str, now=None) -> str:
         raise UploadError(
             f"{target:%m-%d %H:%M} は投稿の枠の外です"
             f"（公開は{OPEN_HOUR}時から{CLOSE_HOUR}時のあいだ）。"
-            "深夜に出したショートは中央値10回でした")
+            "9時より前に出したショートは、12本中8本が100回未満でした")
     return target.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
@@ -270,9 +335,26 @@ def get_service(client_secret: Path = CLIENT_SECRET_PATH, token: Path = TOKEN_PA
     if token.exists():
         credentials = Credentials.from_authorized_user_file(str(token), SCOPES)
     if not credentials or not credentials.valid:
+        refreshed = False
         if credentials and credentials.expired and credentials.refresh_token:
-            credentials.refresh(Request())
-        else:
+            try:
+                credentials.refresh(Request())
+                refreshed = True
+            except Exception as err:
+                # **失効していたら、同意画面からやり直す**（2026-09-15）。
+                # それまでは refresh が投げたところで終わっていたので、
+                # 「取り直してください」と案内して同じコマンドを打ってもらっても、
+                # **またここで止まってブラウザが開かなかった**。
+                # 取り直しの手段が、取り直せない状態で使えないのでは意味が無い
+                if "invalid_grant" not in str(err):
+                    raise
+                print(f"■ 保存してある認証が失効していました（{err}）")
+                print("  同意画面をブラウザで開きます。チャンネルを選んで許可してください")
+                gone = token.with_name(token.name + ".revoked")
+                token.replace(gone)
+                print(f"  古いものは {gone} に退けました")
+                credentials = None
+        if not refreshed:
             if not client_secret.exists():
                 raise UploadError(
                     f"OAuth クライアント情報がありません: {client_secret}\n"
@@ -280,7 +362,10 @@ def get_service(client_secret: Path = CLIENT_SECRET_PATH, token: Path = TOKEN_PA
                     "デスクトップアプリの client_secret.json を配置してください。"
                 )
             flow = InstalledAppFlow.from_client_secrets_file(str(client_secret), SCOPES)
-            credentials = flow.run_local_server(port=0)
+            # **毎回 refresh token を出させる**（2026-09-15）。`prompt="consent"`
+            # が無いと、一度承認したアカウントでは refresh token が返らないことがあり、
+            # 次に使うときにまた失効の形になる
+            credentials = flow.run_local_server(port=0, prompt="consent")
         token.parent.mkdir(parents=True, exist_ok=True)
         token.write_text(credentials.to_json(), encoding="utf-8")
     # **包んで返す。**呼ぶ側の書き忘れに頼らず、叩いたぶんを自動で数える

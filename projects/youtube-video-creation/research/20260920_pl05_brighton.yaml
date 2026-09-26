@@ -1,0 +1,382 @@
+# プレミアリーグ20クラブ紹介 ⑤ブライトン（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/brighton*.json と旧台本 20260916_pl05_brighton.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 三笘薫
+- ブライトン
+- ファビアン・ヒュルツェラー
+short_title: 三笘薫のブライトン、家が無かった14年
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_05_brighton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブライトン
+  title: 三笘薫のブライトンが、14年間スタジアムを持てなかったのは
+  question: どんなクラブなのか
+  hook: 1997年から2011年まで、よそのスタジアムを借りて戦っていました。
+  lead: 1部も、FAカップも、リーグカップも。優勝はまだゼロ。
+  opening_image: assets/stats/pl_brighton_data_t.png
+thumbnail:
+  line1: 三笘薫と、14年の●●
+  line2: 1部もカップも、優勝はまだゼロ
+  crest_main:
+  - ブライトン
+  tags: []
+  points: []
+  board: assets/stats/pl_brighton_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 三笘薫のクラブが、いま3位
+  narrator: キャスター
+  say:
+  - text: 三笘薫がリーグ戦**113試合**に出て、**23得点**を挙げているクラブです。
+    image: assets/stats/pl_brighton_data_r1.png
+    no_telop: true
+  - text: 王者アーセナルを破った夜、監督のヒュルツェラーはこう言いました。
+    image: assets/stats/pl_brighton_data_r2.png
+    no_telop: true
+  - voice: ファビアン・ヒュルツェラー
+    text: 「この瞬間を楽しむのは大事。ただ、なぜ勝てたかも知らないと」
+    image: assets/stats/pl_brighton_data_r2.png
+  - text: 開幕から5試合で**3勝**を挙げ、順位は**3位**です。
+    image: assets/stats/pl_brighton_data_r3.png
+    no_telop: true
+  - text: その家を失ったのは1997年、借金を返すためでした。
+    image: assets/stats/pl_brighton_data_r3.png
+    no_telop: true
+  - image: assets/stats/pl_brighton_data0.png
+    text: 創立は**1901年**。1920年にフットボールリーグに加わりました。
+    no_telop: true
+  - image: assets/stats/pl_brighton_data1.png
+    text: 愛称は「シーガルズ」。カモメです。
+    no_telop: true
+  - image: assets/stats/pl_brighton_map.png
+    text: ホームタウンは、イングランド南の海沿いの町、ブライトン・アンド・ホーヴ。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ブライトン.png
+    text: 本拠地はファルマー・スタジアム。**3万2176人**。ようやく持てた、自分たちの家です。
+  - image: assets/photos/pl/brighton_owner_dbf32f4e.jpg
+    text: オーナーはトニー・ブルーム。2009年に会長になり、株の75%を持っています。
+  - image: assets/stats/pl_brighton_cups.png
+    text: 直近のタイトルは、2010年から11年の3部優勝です。
+    no_telop: true
+  - image: assets/stats/pl_brighton_last.png
+    text: プレミアでの最高位は、2022年から23年の**6位**です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
+  - https://www.brightonandhovealbion.com/media-article/mft-interviews-fabian-hurzeler-bha-arsenal-pl-september-2026
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false
+- id: home
+  heading: 本拠地を失った14年
+  tier: 背景
+  telop: 1997年、経営陣が本拠地を売った
+  narrator: 解説
+  card:
+    type: table
+    title: 家を失っていた期間
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1997年
+      - 借金のためゴールドストーン・グラウンドを売却
+    - - 1997-1999年
+      - ジリンガムの本拠地を借りる
+  say:
+  - image: assets/images/pl_brighton_story/scene.jpg
+    text: 1997年、クラブの経営陣が、借金を返すために本拠地のゴールドストーン・グラウンドを売りました。
+  - その年は、最終節の引き分けで、ようやく4部に残りました。
+  - text: 売ってからの2年間は、別のクラブ、ジリンガムの本拠地を借りました。
+    card:
+      type: table
+      title: 家を失っていた期間
+      columns: *id001
+      rows:
+      - - 1999-2011年
+        - 陸上競技場を改造したウィズディーン
+      - - 2011年
+        - ファルマー・スタジアムへ
+  - そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。
+  - image: assets/images/pl_brighton/scene.jpg
+    text: いまのファルマー・スタジアムに入ったのは2011年です。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 高い位置で奪う。育てて売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 高い位置で奪う
+    - - 運営の型
+      - 安く獲って高く売る
+    - - クラブの気質
+      - サビは観客だけで歌う
+  say:
+  - text: ヒュルツェラーのサッカーは高い位置で奪う守りが看板。昨季は敵陣でボールを奪った回数がリーグ最多。
+    image: assets/photos/pl/brighton_manager_f0635d10.jpg
+  - 安く獲って高く売る型。ミッドフィールダーのカイセドは2年半でチェルシーへ、1億ポンド以上でした。
+  - 入場のとき流れる応援歌は、1907年に書かれたサセックスの歌で、最後のサビは観客だけで歌います。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  - https://www.brightonandhovealbion.com/media-article/mft-albion-analytics-2025-26-season-review-june-2026
+  - https://www.brightonandhovealbion.com/media-article/mft-albion-analytics--fabian-hurzeler-october-2024
+  - https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo
+  - https://en.wikipedia.org/wiki/Sussex_by_the_Sea
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false
+- id: episode
+  heading: 決めるはずだった一撃
+  tier: 背景
+  telop: 1983年FAカップ決勝、最後のワンプレー
+  narrator: 解説
+  card:
+    type: table
+    title: 決めるはずだった一撃
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1983年 FAカップ決勝
+      - マンチェスター・ユナイテッドと2対2
+    - - 延長の最後
+      - ブライトンのゴードン・スミスが外す
+  say:
+  - text: 1983年、初めてFAカップの決勝に立ちました。相手はマンチェスター・ユナイテッド。
+    image: assets/backgrounds/stadium_ブライトン_in.png
+  - 2対2の引き分けのまま、延長の最後のワンプレーを迎えます。
+  - text: そこで、ブライトンのゴードン・スミスの決定機が外れました。
+    card:
+      type: table
+      title: 決めるはずだった一撃
+      columns: *id002
+      rows:
+      - - 再試合
+        - 0対4で敗戦。同じシーズンにリーグ最下位
+  - 再試合は0対4で敗れました。同じシーズン、リーグでは最下位で降格しています。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ボビー・ザモラ
+      - 2000-2003
+      - 136試合83得点。2年
+  say:
+  - text: ボビー・ザモラは2000年、ブリストル・ローヴァーズから期限付きで来て、6試合で6得点。
+    image: assets/photos/pl/brighton_legend_17bed45d.jpg
+  - 10万ポンドで買い取ると、2年続けて**28得点**。4部と3部で続けて優勝し、2部へ上げました。
+  - 2003年に150万ポンドでトッテナムへ。12年後に戻り、また得点を決めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Lewis_Dunk
+  - https://en.wikipedia.org/wiki/Glenn_Murray
+  - https://en.wikipedia.org/wiki/Bobby_Zamora
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - グレン・マレー
+      - 2008-2021
+      - プレミア初昇格の得点源
+  say:
+  - text: グレン・マレーは2008年、ロッチデールから**30万ポンド**で来たストライカー。
+    image: assets/photos/pl/brighton_legend_baa41613.jpg
+  - 2011年に離れ、2016年に戻ってプレミア初昇格の得点源に。初のプレミアで12得点です。
+  - クラブ通算**111得点**は歴代2位。1位は1920年代のトミー・クックで、123点です。
+  sources:
+  - https://en.wikipedia.org/wiki/Lewis_Dunk
+  - https://en.wikipedia.org/wiki/Glenn_Murray
+  - https://en.wikipedia.org/wiki/Bobby_Zamora
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ルイス・ダンク
+      - 2010-
+      - 2010年のデビュー以来
+  say:
+  - text: ルイス・ダンクはブライトン生まれ。2003年に育成組織へ入り、3部だった2010年にデビュー。
+    image: assets/photos/pl/brighton_legend_85972114.jpg
+  - 2023年10月、自身初のヨーロッパの試合。マルセイユで0対2から追いついて、2対2のドロー。
+  - 2025年12月、通算**500試合**に到達。イングランド代表でも6試合に出場しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Lewis_Dunk
+  - https://en.wikipedia.org/wiki/Glenn_Murray
+  - https://en.wikipedia.org/wiki/Bobby_Zamora
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はファビアン・ヒュルツェラー。3年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ファビアン・ヒュルツェラー（ドイツ）
+    - - 就任
+      - 2024年6月・3年目
+    - - 前職
+      - ザンクト・パウリ
+  say:
+  - text: 監督はドイツ人のファビアン・ヒュルツェラー。**2024年6月**から、3年目です。
+    image: assets/photos/pl/brighton_manager_f0635d10.jpg
+  - 就任のとき**31歳**。プレミアリーグの正式な監督では、史上最年少でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  - https://en.wikipedia.org/wiki/Fabian_Hürzeler
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は30人です。
+    image: assets/stats/pl_brighton_gk.png
+    no_telop: true
+  - image: assets/stats/pl_brighton_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_brighton_gk_f.png
+    text: バルト・フェルブルッヘンはオランダ代表で**33試合**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_gk_f.png
+    text: ジェイソン・スティールはリーグ戦で**35試合**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_brighton_df_f.png
+    text: 主将を務めるのが**ルイス・ダンク**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_df_f.png
+    text: リーグ戦で**473試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_brighton_df_f.png
+    text: フェルディ・カドゥオールはトルコ代表で**32試合**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_mf_f.png
+    text: ミッドフィールダーは12人。
+    no_telop: true
+  - image: assets/stats/pl_brighton_mf_f.png
+    text: 日本の三笘薫がいます。
+    no_telop: true
+  - image: assets/stats/pl_brighton_mf_f.png
+    text: 日本代表で**31試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_brighton_fw_f.png
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/pl_brighton_fw_f.png
+    text: エヴァン・ファーガソンはアイルランド代表で**26試合**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_fw_f.png
+    text: ジョルジニオ・ルターはリーグ戦で**62試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で3勝1引き分け1敗。3位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - アストン・ヴィラ（ホーム）
+      - 4対0
+    - - 第2節
+      - チェルシー（アウェー）
+      - 3対4
+    - - 第3節
+      - リーズ・ユナイテッド（ホーム）
+      - 1対1
+    - - 第4節
+      - コヴェントリー・シティ（アウェー）
+      - 5対0
+    - - 第5節
+      - アーセナル（ホーム）
+      - 3対0
+  say:
+  - プレミアリーグは5試合を終えて、**3勝1引き分け1敗**です。
+  - 順位は**3位**、勝ち点は**10**です。
+  - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  - 第5節は、昨季王者のアーセナルをホームで3対0で下しました。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
+  bg: assets/backgrounds/stadium_ブライトン_in.png
+  official: false

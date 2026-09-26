@@ -1,0 +1,378 @@
+# プレミアリーグ20クラブ紹介 ⑰ニューカッスル（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/newcastle*.json と旧台本 20260916_pl17_newcastle.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- ニューカッスル
+- アラン・シアラー
+short_title: ニューカッスルが56年待っていたものとは
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_17_newcastle
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ニューカッスル
+  title: 56年間タイトルゼロ。ニューカッスルが待っていたものとは
+  question: どんなクラブなのか
+  hook: 最後に杯を掲げたのは1969年。次は2025年でした。
+  lead: イングランド北東部、白と黒の縞。
+  opening_image: assets/stats/pl_newcastle_data_t.png
+thumbnail:
+  line1: 56年待って、獲ったもの
+  line2: 5万2千人が待った半世紀
+  crest_main:
+  - ニューカッスル
+  tags: []
+  points: []
+  board: assets/stats/pl_newcastle_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 開幕直前に監督交代。38歳の1年目
+  narrator: キャスター
+  say:
+  - text: ハウが去り、**38歳**のヤイスレの1年目。降格危機の2009年に監督を引き受けたシアラーの言葉です。
+    image: assets/stats/pl_newcastle_data_r1.png
+    no_telop: true
+  - voice: アラン・シアラー
+    text: 「愛するクラブだ。落ちてほしくない。できることは全部やる」
+    image: assets/stats/pl_newcastle_data_r1.png
+  - text: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
+    image: assets/stats/pl_newcastle_data_r2.png
+    no_telop: true
+  - text: 待っていたのは新しいオーナー。2021年に代わって、4年後にリーグカップを獲りました。
+    image: assets/stats/pl_newcastle_data_r2.png
+    no_telop: true
+  - image: assets/stats/pl_newcastle_data0.png
+    text: 創立は**1881年**。1892年に今の名前になりました。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_data1.png
+    text: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_map.png
+    text: ホームタウンは、ニューカッスル・アポン・タインです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ニューカッスル.png
+    text: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
+  - image: assets/photos/pl/newcastle_owner_d7f21670.jpg
+    text: オーナーは、サウジアラビアの公共投資基金。
+  - image: assets/stats/pl_newcastle_cups.png
+    text: 1部リーグの優勝は**4回**。FAカップはさきほどの6回。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_cups.png
+    text: リーグカップとフェアーズカップが1回ずつ。インタートトカップも1回です。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_last.png
+    text: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
+  - https://en.wikipedia.org/wiki/Alan_Shearer
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false
+- id: drought
+  heading: 56年待った
+  tier: 背景
+  telop: 2025年のリーグカップ。決勝でリヴァプールに2-1
+  narrator: 解説
+  card:
+    type: table
+    title: タイトルの記録
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - リーグ優勝
+      - 4回（うち3回は1904-1910年、最後は1927年）
+    - - 1955年
+      - FAカップ。国内のタイトルはここまで
+  say:
+  - text: リーグ優勝は、3回が**1904年から1910年**、最後が1927年です。
+    image: assets/images/pl_newcastle_story/scene.jpg
+  - FAカップは1955年が最後。国内のタイトルは、そこで止まりました。
+  - ヨーロッパでは1969年のフェアーズカップ。のちのヨーロッパリーグにつながる大会です。
+  - text: 決勝はハンガリーのウイペシュトに、2試合合計6対2で勝ちました。
+    card:
+      type: table
+      title: タイトルの記録
+      columns: *id001
+      rows:
+      - - 1969年
+        - フェアーズカップ優勝（合計6-2）
+      - - 2021年10月7日
+        - 持ち主が交代（それまでは14年）
+  - ところが、そこから先が長かった。
+  - 変わり目は2021年10月。いまのオーナーが買い取り、14年ぶりにオーナーが代わりました。
+  - text: いまのオーナーが、クラブを買い取った日です。オーナーが代わるのは14年ぶりでした。
+    card:
+      type: table
+      title: タイトルの記録
+      columns: *id001
+      rows:
+      - - 2025年
+        - リーグカップ優勝。56年ぶりのタイトル
+  - そして2025年、リーグカップの決勝でリヴァプールを2対1で下します。
+  - 1969年から数えて、**56年ぶり**のタイトルでした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://en.wikipedia.org/wiki/Inter-Cities_Fairs_Cup
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 奪って速い。街に一つの誇り
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってすぐ、速く攻める
+    - - 運営の型
+      - 3億ポンドで買収
+    - - クラブの気質
+      - 街に一つ。2部でも5万人
+  say:
+  - text: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
+    image: assets/photos/pl/newcastle_manager_37492bb4.jpg
+  - オーナーの資金で買う型。買収額は3億500万ポンドで、そこから4年でタイトルに届きました。
+  - 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://www.newcastleunited.com/en/news/fact-file-matthias-jaissle
+  - https://www.newcastleunited.com/en/news/newcastle-united-appoint-matthias-jaissle-as-the-clubs-new-head-coach
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false
+- id: episode
+  heading: 最初は赤いシャツだった
+  tier: 背景
+  telop: 最初は赤。白黒の縞は1894年から
+  narrator: 解説
+  card:
+    type: table
+    title: 最初は赤いシャツだった
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 最初
+      - 赤いシャツ・白いパンツ・赤いソックス
+    - - 1894年
+      - 白黒の縞へ
+    - - その色
+      - もとはリザーブチームの色
+  say:
+  - text: いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした。
+    image: assets/images/pl_newcastle_episode/scene.jpg
+  - 白黒の縞に変えたのは**1894年**。もともとは、リザーブチームの色でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - アラン・シアラー
+      - 1996-2006
+      - クラブ最多の206得点
+  say:
+  - text: アラン・シアラーは地元生まれのフォワード。世界最高額の**1500万ポンド**で帰ってきました。
+    image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
+  - 2006年の201点目で、1950年代のエース、ミルバーンの記録を**49年ぶり**に抜きました。
+  - クラブ史上最多の**206得点**。タイトルは獲れませんでしたが、スタジアムの前に銅像があります。
+  sources:
+  - https://en.wikipedia.org/wiki/Alan_Shearer
+  - https://en.wikipedia.org/wiki/Shay_Given
+  - https://en.wikipedia.org/wiki/Rob_Lee
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - シェイ・ギヴン
+      - 1997-2009
+      - 12年間守ったGK
+  say:
+  - text: シェイ・ギヴンは、アイルランド代表で**134試合**のキーパー。ブラックバーンから来ました。
+    image: assets/photos/pl/newcastle_legend_03981f93.jpg
+  - '**150万ポンド**で加入し、リーグ戦で354試合。年間ベストイレブンにも2度選ばれました。'
+  - 2009年にマンチェスター・シティへ。クラブの最多出場記録まで、あと**34試合**でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Alan_Shearer
+  - https://en.wikipedia.org/wiki/Shay_Given
+  - https://en.wikipedia.org/wiki/Rob_Lee
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - ロブ・リー
+      - 1992-2002
+      - エンターテイナーズの中心
+  say:
+  - text: ロブ・リーは、チャールトンから来た中盤。「ロンドンに近い」とキーガン監督に口説かれました。
+    image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
+  - 2位になった年の11月、リーグの月間最優秀選手に選ばれています。
+  - 主将も務め、リーグ戦で**303試合**44得点。2019年にはクラブの殿堂入りを果たしました。
+  sources:
+  - https://en.wikipedia.org/wiki/Alan_Shearer
+  - https://en.wikipedia.org/wiki/Shay_Given
+  - https://en.wikipedia.org/wiki/Rob_Lee
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はマティアス・ヤイスレ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マティアス・ヤイスレ（ドイツ）
+    - - 就任
+      - 2026年8月・1年目
+    - - 前職
+      - アル・アハリ
+  say:
+  - text: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です。
+    image: assets/photos/pl/newcastle_manager_37492bb4.jpg
+  - 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://en.wikipedia.org/wiki/Matthias_Jaissle
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/pl_newcastle_gk.png
+    no_telop: true
+  - image: assets/stats/pl_newcastle_gk_f.png
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_gk_f.png
+    text: ニック・ポープはイングランド代表で**10試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: ディフェンダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: 主将を務めるのが**ダン・バーン**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: リーグ戦で**153試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: ファビアン・シェアはスイス代表で**86試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_mf_f.png
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_mf_f.png
+    text: ジェイコブ・マーフィーはリーグ戦で**218試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_mf_f.png
+    text: ジョー・ウィロックはリーグ戦で**148試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_fw_f.png
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_fw_f.png
+    text: ジョエリントンはリーグ戦で**212試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_fw_f.png
+    text: ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝2引き分け1敗。9位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - リヴァプール（ホーム）
+      - 2対2
+    - - 第2節
+      - トッテナム・ホットスパー（アウェー）
+      - 2対0
+    - - 第3節
+      - AFCボーンマス（ホーム）
+      - 2対2
+    - - 第4節
+      - リーズ・ユナイテッド（アウェー）
+      - 1対4
+    - - 第5節
+      - ハル・シティ（ホーム）
+      - 2対1
+  say:
+  - プレミアリーグは5試合を終えて、**2勝2引き分け1敗**です。
+  - 順位は**9位**、勝ち点は**8**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
+  bg: assets/backgrounds/stadium_ニューカッスル_in.png
+  official: false

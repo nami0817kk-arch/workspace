@@ -1,0 +1,813 @@
+{
+ "club_title": "Aston_Villa_F.C.",
+ "season_title": "2026–27_Aston_Villa_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "JPN",
+   "name": "Zion Suzuki",
+   "page": "Zion Suzuki",
+   "dob": "2002-08-21",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 28,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "POL",
+   "name": "Matty Cash",
+   "page": "Matty Cash",
+   "dob": "1997-08-07",
+   "captain": false,
+   "loan": false,
+   "team": "Poland",
+   "caps": 25,
+   "club_caps": 187,
+   "club_goals": 10
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "SWE",
+   "name": "Victor Lindelöf",
+   "page": "Victor Lindelöf",
+   "dob": "1994-07-17",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 80,
+   "club_caps": 22,
+   "club_goals": 0
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Taylor Harwood-Bellis",
+   "page": "Taylor Harwood-Bellis",
+   "dob": "2002-01-30",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 1,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Tyrone Mings",
+   "page": "Tyrone Mings",
+   "dob": "1993-03-13",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 18,
+   "club_caps": 191,
+   "club_goals": 8
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Ross Barkley",
+   "page": "Ross Barkley",
+   "dob": "1993-12-05",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 33,
+   "club_caps": 70,
+   "club_goals": 9
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "SCO",
+   "name": "John McGinn",
+   "page": "John McGinn",
+   "dob": "1994-10-18",
+   "captain": true,
+   "loan": false,
+   "team": "Scotland",
+   "caps": 89,
+   "club_caps": 337,
+   "club_goals": 41
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Boubacar Kamara",
+   "page": "Boubacar Kamara",
+   "dob": "1999-11-23",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 5,
+   "club_caps": 93,
+   "club_goals": 2
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "ARG",
+   "name": "Emiliano Buendía",
+   "page": "Emiliano Buendía",
+   "dob": "1996-12-25",
+   "captain": false,
+   "loan": false,
+   "team": "Argentina",
+   "caps": 2,
+   "club_caps": 126,
+   "club_goals": 16
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "SEN",
+   "name": "Nicolas Jackson",
+   "page": "Nicolas Jackson",
+   "dob": "2001-06-20",
+   "captain": false,
+   "loan": false,
+   "team": "Senegal",
+   "caps": 37,
+   "club_caps": 4,
+   "club_goals": 1
+  },
+  {
+   "no": "13",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Matteo Ruggeri",
+   "page": "Matteo Ruggeri",
+   "dob": "2002-07-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Pau Torres",
+   "page": "Pau Torres",
+   "dob": "1997-01-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "ARG",
+   "name": "Alejandro Garnacho",
+   "page": "Alejandro Garnacho",
+   "dob": "2004-07-01",
+   "captain": false,
+   "loan": true,
+   "team": "Argentina",
+   "caps": 8,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "18",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Tammy Abraham",
+   "page": "Tammy Abraham",
+   "dob": "1997-10-02",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 11,
+   "club_caps": 53,
+   "club_goals": 27
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "SEN",
+   "name": "Ibrahim Mbaye",
+   "page": "Ibrahim Mbaye",
+   "dob": "2008-01-24",
+   "captain": false,
+   "loan": false,
+   "team": "Senegal",
+   "caps": 15,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Jamaldeen Jimoh-Aloba",
+   "page": "Jamaldeen Jimoh-Aloba",
+   "dob": "2006-10-02",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Ian Maatsen",
+   "page": "Ian Maatsen",
+   "dob": "2002-03-10",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 1,
+   "club_caps": 63,
+   "club_goals": 1
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "BEL",
+   "name": "Amadou Onana",
+   "page": "Amadou Onana",
+   "dob": "2001-08-16",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 33,
+   "club_caps": 51,
+   "club_goals": 5
+  },
+  {
+   "no": "26",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Lamare Bogarde",
+   "page": "Lamare Bogarde",
+   "dob": "2004-01-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 37,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Leon Goretzka",
+   "page": "Leon Goretzka",
+   "dob": "1995-02-06",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 73,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "29",
+   "pos": "DF",
+   "nat": "COD",
+   "name": "Aaron Wan-Bissaka",
+   "page": "Aaron Wan-Bissaka",
+   "dob": "1997-11-26",
+   "captain": false,
+   "loan": true,
+   "team": "DR Congo",
+   "caps": 16,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "35",
+   "pos": "MF",
+   "nat": "BRA",
+   "name": "João Gomes",
+   "page": "João Gomes (footballer, born 2001)",
+   "dob": "2001-02-12",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 10,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "39",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Brian Madjo",
+   "page": "Brian Madjo",
+   "dob": "2009-01-12",
+   "captain": false,
+   "loan": false,
+   "team": "Luxembourg",
+   "caps": 3,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "40",
+   "pos": "GK",
+   "nat": "NED",
+   "name": "Marco Bizot",
+   "page": "Marco Bizot",
+   "dob": "1991-03-10",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 1,
+   "club_caps": 8,
+   "club_goals": 0
+  },
+  {
+   "no": "42",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "James Wright",
+   "page": "James Wright (footballer)",
+   "dob": "2004-12-02",
+   "captain": false,
+   "loan": false,
+   "team": "nationalcaps1 =",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "44",
+   "pos": "MF",
+   "nat": "SUI",
+   "name": "Johan Manzambi",
+   "page": "Johan Manzambi",
+   "dob": "2005-10-14",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 16,
+   "club_caps": 2,
+   "club_goals": 1
+  },
+  {
+   "no": "47",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Alysson",
+   "page": "Alysson (footballer, born 2006)",
+   "dob": "2006-05-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 7,
+   "club_goals": 1
+  },
+  {
+   "no": "48",
+   "pos": "DF",
+   "nat": "SEN",
+   "name": "Modou Kéba Cissé",
+   "page": "Modou Kéba Cissé",
+   "dob": "2005-08-04",
+   "captain": false,
+   "loan": false,
+   "team": "nationalcaps1 =",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "53",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "George Hemmings",
+   "page": "George Hemmings",
+   "dob": "2007-03-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 7,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "21 July 2026",
+   "Friendly",
+   "Walsall",
+   "0–5",
+   "Aston Villa"
+  ],
+  [
+   "25 July 2026",
+   "Friendly",
+   "Porto",
+   "2–1",
+   "Aston Villa"
+  ],
+  [
+   "28 July 2026",
+   "Friendly",
+   "Aston Villa",
+   "2−4",
+   "Real Sociedad"
+  ],
+  [
+   "1 August 2026",
+   "Friendly",
+   "Indonesia All Stars",
+   "1–3",
+   "Aston Villa"
+  ],
+  [
+   "4 August 2026",
+   "Friendly",
+   "BG Pathum United",
+   "1–3",
+   "Aston Villa"
+  ],
+  [
+   "7 August 2026",
+   "Friendly",
+   "Bayern Munich",
+   "2–1",
+   "Aston Villa"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Borussia Mönchengladbach",
+   "2–1",
+   "Aston Villa"
+  ],
+  [
+   "2 October 2026",
+   "Friendly",
+   "Sevilla",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Brighton & Hove Albion",
+   "4–0",
+   "Aston Villa"
+  ],
+  [
+   "31 August 2026",
+   "2",
+   "Aston Villa",
+   "0–1",
+   "Arsenal"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Hull City",
+   "0–0",
+   "Aston Villa"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Aston Villa",
+   "1–2",
+   "Nottingham Forest"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Tottenham Hotspur",
+   "2–3",
+   "Aston Villa"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Aston Villa",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Newcastle United",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Aston Villa",
+   "| report     =",
+   "Manchester City"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Aston Villa",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Manchester United",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Aston Villa",
+   "| report     =",
+   "Sunderland"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Ipswich Town",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Aston Villa",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Aston Villa",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Coventry City",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Chelsea",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Aston Villa",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Aston Villa",
+   "| report     =",
+   "Liverpool"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Bournemouth",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Everton",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Aston Villa",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Fulham",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Aston Villa",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Sunderland",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Aston Villa",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Leeds United",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Aston Villa",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Liverpool",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Aston Villa",
+   "| report     =",
+   "Hull City"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Nottingham Forest",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Aston Villa",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Arsenal",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Aston Villa",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Crystal Palace",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Brentford",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Aston Villa",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Manchester City",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Aston Villa",
+   "| report     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "16 September 2026",
+   "Third round",
+   "Coventry City",
+   "1–3",
+   "Aston Villa"
+  ],
+  [
+   "28 October 2026",
+   "Fourth round",
+   "Bournemouth",
+   "| report     = https://www.efl.com/match-centre/g2687778",
+   "Aston Villa"
+  ],
+  [
+   "12 August 2026",
+   "Final",
+   "Paris Saint-Germain",
+   "2–1",
+   "Aston Villa"
+  ],
+  [
+   "8 September 2026",
+   "1",
+   "Club Brugge",
+   "2–3",
+   "Aston Villa"
+  ],
+  [
+   "14 October 2026",
+   "2",
+   "Aston Villa",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049582/",
+   "Fenerbahçe"
+  ],
+  [
+   "21 October 2026",
+   "3",
+   "Aston Villa",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049602/",
+   "Viking"
+  ],
+  [
+   "3 November 2026",
+   "4",
+   "Barcelona",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049607/",
+   "Aston Villa"
+  ],
+  [
+   "24 November 2026",
+   "5",
+   "Galatasaray",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049631/",
+   "Aston Villa"
+  ],
+  [
+   "8 December 2026",
+   "6",
+   "Aston Villa",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049646/",
+   "Paris Saint-Germain"
+  ],
+  [
+   "19 January 2027",
+   "7",
+   "Aston Villa",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049663/",
+   "Borussia Dortmund"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "Slavia Prague",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049694/",
+   "Aston Villa"
+  ]
+ ]
+}

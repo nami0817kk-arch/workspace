@@ -1,0 +1,124 @@
+date: 2026年9月22日
+slot: laliga_1
+format: news
+voice_min: 0.4
+people: [ラフィーニャ, ルイス・ガルシア]
+theme:
+  id: raphinha_two_hats
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: 'ラフィーニャ2試合連続ハットトリック、あのメッシにも無い1点とは'
+  hook: そのうちの1点を、メッシは17年で一度も決めていません。
+  question: なぜこの3点が特別なのか
+short_title: ラフィーニャが2試合続けてハットトリック
+thumbnail:
+  photo: assets/images/20260922_raphinha/01.jpg
+  line1: 2試合で6発
+  line2: メッシにも無い記録
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: セビージャに1対3。ラフィーニャが3点すべて
+    narrator: キャスター
+    card:
+      type: table
+      title: ラ・リーガ第7節
+      columns: ["", ""]
+      rows:
+        - ["セビージャ", "1"]
+        - ["バルセロナ", "3"]
+        - ["ラフィーニャ", "22分・52分・69分"]
+        - ["前の試合でも", "ハットトリック"]
+    say:
+      - 敵地でセビージャに**3対1**。3点とも、ラフィーニャです。
+      - 22分に右足、52分にヘディング、69分に左足のループでした。
+      - その前の試合でも、3点を決めています。**2試合で6ゴール**です。
+    sources:
+      - https://www.soccer-king.jp/news/world/esp/20260920/2206920.html
+      - https://web.gekisaka.jp/photonews/world/detail/?459332-459332-pn
+  - id: record
+    main: true
+    heading: この3点が、なぜ特別なのか
+    tier: 報道
+    telop: 右足・ヘディング・左足。バルサでは20年で2人目
+    narrator: 解説
+    card:
+      type: table
+      title: 3つの記録
+      columns: ["", ""]
+      rows:
+        - ["2試合続けてハット", "21世紀のラ・リーガで6人目"]
+        - ["右足・頭・左足の3点", "バルサでは20年で2人目"]
+        - ["リーグ7戦12ゴール", "83年前のクラブ記録に並ぶ"]
+        - ["公式戦8連勝", "クラブ史上初"]
+    say:
+      - text: 'ラフィーニャが、敵地のセビージャ戦で3点を決めました。前の試合に続いて、2試合連続のハットトリックです。'
+        short_only: true
+      - 2試合続けてのハットトリックは、**21世紀のラ・リーガで6人目**です。
+      - 前の5人は、メッシ、クリスティアーノ・ロナウド、イグアイン、スアレス、グリーズマン。
+      - しかも3点の内訳が、**右足・ヘディング・左足**でした。
+      - これをやったバルセロナの選手は、**20年で2人目**です。
+      - "**メッシは、バルサの17年で一度もありません。**"
+      - リーグ7試合で**12ゴール**は、**83年前のクラブ記録に並ぶ**数字です。
+    sources:
+      - https://www.allfootballapp.com/articles/5399421-raphinha-becomes-sixth-player-century-score
+      - https://www.allfootballapp.com/articles/5399447-raphinha-scores-perfect-hat-la
+      - https://news.yahoo.co.jp/articles/a6bb22e3326063510d500e7af3192ade338732c2
+  - id: said
+    heading: 負けた側の監督が言ったこと
+    tier: 報道
+    telop: 「候補にさえ入っていないのは、全くの茶番だ」
+    narrator: キャスター
+    say:
+      - 破れたセビージャの監督、ルイス・ガルシアはこう言いました。
+      - voice: ルイス・ガルシア
+        text: 彼がバロンドールの候補にさえ入っていない。
+      - voice: ルイス・ガルシア
+        text: "**全くの茶番だ。**この選手が候補に挙がらないなんて。"
+      - バルセロナは**7戦全勝**で首位。31得点7失点です。
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459224-459224-fl=
+      - https://en.wikipedia.org/wiki/2026%E2%80%9327_La_Liga
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: 見ていた人が書いていたこと
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 攻守にフルスプリントしながらの連続ハットトリック
+      - voice: ネット民
+        text: 世界中を見渡しても今これ以上のストライカーはいない
+      - voice: ネット民
+        text: 1点目の超絶切り返しからの右足
+      - voice: ネット民
+        text: 2点目の上手く相手の前に入り込んでのヘディング
+      - voice: ネット民
+        text: 3点目のキーパーと一対一での左足ループ
+      - voice: ネット民
+        text: どれもストライカーらしい完璧なフィニッシュだった
+      - voice: ネット民
+        text: 2試合連続ハット。しかも強敵セビージャのアウェー。この価値は凄いね
+      - voice: ネット民
+        text: 誰がバロンドーラーになっても現在世界最高はラフィーニャですね
+      - voice: ネット民
+        text: ヤマル、俺かエムバペがバロンドールって言ってたが
+      - voice: ネット民
+        text: 自分のチームメイトに格上の選手がいるじゃないか
+      - voice: ネット民
+        text: 右足、左足、頭で決めた。完璧なハットトリックだ
+      - voice: ネット民
+        text: 今季ラフィーニャがケガをしませんように
+      - voice: ネット民
+        text: 彼は2度も賞を奪われた。その答えがこれだ
+      - voice: ネット民
+        text: 7試合12ゴール。今季の入りが信じられない
+      - voice: ネット民
+        text: ケガさえなければ、今季のラフィーニャはメッシやロナウドのレベルになる
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/a6bb22e3326063510d500e7af3192ade338732c2/comments
+      - https://www.youtube.com/watch?v=ZJom79fRhv0

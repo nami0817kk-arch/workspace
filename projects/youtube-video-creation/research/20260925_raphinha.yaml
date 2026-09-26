@@ -1,0 +1,113 @@
+date: 2026年9月25日
+slot: other_1
+format: news
+voice_min: 0.3
+people: [ラフィーニャ, カルロ・アンチェロッティ]
+theme:
+  id: raphinha_ten
+  league: spain
+  league_name: ブラジル代表
+  kind: other
+  topic: バルセロナ
+  title: 'ラフィーニャがブラジルの10番を受け取った日、初めて起きたこと'
+  question: 10番の初戦に何が起きたのか
+short_title: 10番ラフィーニャ、初戦で起きたこと
+thumbnail:
+  photo: assets/images/20260925_raphinha2/01.jpg
+  crests: [ブラジル]
+  line1: 10番を着けたラフィーニャ
+  line2: 初戦で●●できなかった
+sections:
+  - id: what
+    heading: 9月24日の発表
+    tier: 報道
+    telop: ブラジル連盟が背番号を発表。10番はラフィーニャ
+    narrator: キャスター
+    card:
+      type: table
+      title: 新しい背番号（オーストラリア戦・インド戦）
+      columns: ['', '']
+      rows:
+        - [10, ラフィーニャ]
+        - [11, エステヴァン]
+        - [9, エンドリッキ]
+        - [7, ヴィニシウス]
+        - [1, ウーゴ・ソウザ]
+    say:
+      - 9月24日、ブラジルサッカー連盟が、オーストラリア戦とインド戦の背番号を発表しました。
+      - "**10番は、ラフィーニャ**。ネイマールが着けてきた番号です。"
+    sources:
+      - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/quem-e-o-novo-camisa-10-da-selecao-brasileira-confira-a-numeracao-completa/
+      - https://www.lance.com.br/selecao-brasileira/nem-vini-jr-nem-estevao-saiba-que-e-o-novo-camisa-10-da-selecao.html
+  - id: match
+    main: true
+    heading: 10番の初戦
+    tier: 報道
+    telop: オーストラリアに1対1。ラフィーニャはフル出場で0点、最後にアシスト
+    narrator: キャスター
+    card:
+      type: table
+      title: 10番のラフィーニャ（オーストラリア戦）
+      columns: ['', '']
+      rows:
+        - [前半17分, シュートがポストをかすめる]
+        - [前半37分, シュートをブロックされる]
+        - [後半17分, 最大の決定機を外す]
+        - [90＋5分, 左CKからハイアンが同点]
+    say:
+      - text: 'ブラジル代表の新しい背番号が発表され、ネイマールが着けてきた番号をラフィーニャが引き継ぎました。'
+        short_only: true
+      - 翌日のオーストラリア戦で、初めてその番号を着けました。
+      - "結果は**1対1**。本人は**0点、1アシスト**でした。"
+      - ブラジルのコラムニストは、こう書きました。
+      - voice: アリアッチ
+        text: 欧州で今季いちばんの選手ラフィーニャでさえ、ブラジルの凡庸さの網に落ちた。ほぼ何も生まなかった
+      - ラフィーニャはトップ下でフル出場。前半17分にポストをかすめ、37分はブロックされ、後半17分には最大の決定機を外しました。
+      - 後半23分に直接フリーキックで失点。90分を過ぎて、ラフィーニャの左コーナーキックをハイアンが頭で合わせ、同点で終わりました。
+      - text: '試合後、アンチェロッティ監督はこう言っています。'
+        image: assets/images/20260925_pair_ancelotti_raphinha/01.jpg
+      - voice: アンチェロッティ
+        text: 引き分けだから敗北の味ではない。勝てたと思うし、チャンスはあった
+      - voice: アンチェロッティ
+        text: サポーターは辛抱してほしい。公式戦のときには、チームは準備できている
+    sources:
+      - https://www.lance.com.br/selecao-brasileira/rayan-salva-brasil-em-jogo-sem-nenhum-encanto-com-australia.html
+      - https://www.espn.com.br/futebol/selecao-brasileira/artigo/_/id/17300493/rayan-entra-bem-salva-novo-brasil-ancelotti-derrota-australia-inicio-ciclo-copa-2030
+      - https://www.lance.com.br/selecao-brasileira/gol-perdido-em-australia-x-brasil-gera-revolta-nao-consegue.html
+      - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/ancelotti-defende-vinicius-jr-e-exalta-momento-de-raphinha-espetacular/
+      - https://www.lance.com.br/selecao-brasileira/ancelotti-pede-paciencia-a-torcida-apos-jogo-ruim-e-confirma-mudancas-no-brasil.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「10番似合ってる」と「フルで使われてて鬱」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: まじかよラフィーニャ10番かよ。張り切ってまうやんけ、なんしてんねんアンチェロッティ
+        image: assets/images/20260925_raphinha2/01.jpg
+      - voice: ネット民
+        text: ラフィーニャ10番いいね似合ってる
+      - voice: ネット民
+        text: ラフィーニャは素晴らしい選手！　セレソンの10番を背負うのも納得！　ただ、個人的にはヴィニシウスに背負って欲しかった
+      - voice: ネット民
+        text: ラフィーニャみたいなタイプに10番は似合わない
+      - voice: ネット民
+        text: トップ下でもアシストをつけてしまう男ラフィーニャ
+      - voice: ネット民
+        text: お願いです。ハフィーニャを過重労働させないでください。しかし、交代したら負けてたかもしれないと思うとなんとも…
+      - voice: ネット民
+        text: なぜラフィーニャ叩かれてるのか分からん。叩くならトップ下で起用し9番やらせなかったアンチェロッティやろ
+      - voice: ネット民
+        text: どう考えてもハフィーニャ以外のやつらのカスっぷりのほうが酷かったわ
+      - voice: ネット民
+        text: セレソン全部ダメ。相手が豪州。牧草地で豪州戦。牧草地で豪州相手にひどい試合、しかも情けないW杯の後に
+      - voice: ネット民
+        text: ブラジル最大の失敗は、ラフィーニャでなくヴィニ中心にチームを作ったこと
+      - voice: ネット民
+        text: とりあえずラフィーニャ怪我しなくてよかった
+        short_voice: true
+    sources:
+      - https://search.yahoo.co.jp/realtime/search?p=ラフィーニャ
+      - https://search.yahoo.co.jp/realtime/search?p=ハフィーニャ
+      - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/torcedores-criticam-estado-do-gramado-de-australia-x-brasil/
+      - https://x.com/Bri_an2

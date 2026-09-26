@@ -35,8 +35,22 @@ def info(title: str, session=None) -> dict:
                 "page_url": item.get("descriptionurl") or "",
                 "license": _plain(meta.get("LicenseShortName")),
                 "author": _plain(meta.get("Artist")),
+                # **いつ撮られた写真か**（2026-09-18）。Commons には
+                # 「その人が有名になった頃」の写真が多く残っていて、
+                # 機械は被写体とライセンスしか見ていなかったので**年代が古いほうに寄る**。
+                # 同じ日に3件出た: 久保建英=2019年（18歳・レアル時代）、
+                # クロップ=2012年（ドルトムント時代・長髪）、アロンソ=現役時代
+                "taken": _year(meta.get("DateTimeOriginal")),
             }
     raise PortraitError(f"Commons に見つかりません: {title}")
+
+
+def _year(field) -> int:
+    """撮影年。**取れなければ 0**（古いと決めつけない）。"""
+    import re as _re
+    value = _plain(field)
+    found = _re.search(r"(19|20)\d{2}", value or "")
+    return int(found.group(0)) if found else 0
 
 
 def _plain_url(url: str) -> str:
@@ -195,7 +209,12 @@ NOT_A_PERSON = ("(dog)", "(cat)", "(horse)", "dog)", "statue", "mural",
                 # 紋章・盾も人ではない（アラウホの候補に混ざっていた）
                 "coat of arms", "crest of", "escudo de",
                 # 集合写真は顔が小さい（ブラジル代表の候補に混ざっていた）
-                "gruppenfoto", "team photo", "squad photo")
+                "gruppenfoto", "team photo", "squad photo",
+                # **人名の付いた建物**（2026-09-23 実測）。「Lewis Hall」で
+                # `File:Lewis Hall Chapel.jpg`（礼拝堂の内部）を掴み、被写体の
+                # 照合も「Lewis Hall が明記されています」と通した
+                "chapel", "church", "cathedral", "building", "interior",
+                "exterior", "dormitory", "residence hall", "campus")
 
 
 # 画像でない添付。**Commons には音声も動画もある。**
@@ -259,6 +278,25 @@ def crop_to(path: Path, box: str) -> tuple[int, int]:
         return cut.size
 
 
+def used_titles(folder: Path) -> set[str]:
+    """**これまでに使った Commons の File: 名**を、控えを全部読んで集める。
+
+    置き先のフォルダだけを見ても足りない。同じ人でも日付を付けた別フォルダへ
+    落としていることがあり（`nakamura` と `nakamura2609`）、フォルダの中だけ
+    見ると「初めて」に見えてしまう。**assets/images/ を横断して見る。**
+    """
+    root = folder.parent if folder.parent.name else folder
+    titles: set[str] = set()
+    for ledger in root.glob("*/credits.json"):
+        try:
+            for entry in json.loads(ledger.read_text(encoding="utf-8")):
+                if entry.get("title"):
+                    titles.add(entry["title"])
+        except (OSError, ValueError):
+            continue
+    return titles
+
+
 def save(names: list[str], folder: Path, session=None, only: str = "",
          modify: bool = True) -> dict:
     """本人と確認でき、ライセンスも通った1枚を落として控える。
@@ -272,6 +310,15 @@ def save(names: list[str], folder: Path, session=None, only: str = "",
             else sorted([c for c in candidates(names, session=session)
                          if is_image(c) and looks_like_person(c)],
                         key=rank))
+    # **前に使った写真は後ろへ回す**（2026-09-17 ユーザー指摘
+    # 「画像の出典が過去と同じことになってる」）。
+    # ここは候補を点数順に並べて**いつも1位を取る**ので、同じ人はいつも同じ1枚に
+    # なっていた。中村敬斗は 9/6 と 9/17 で同じザルツブルク時代の写真、
+    # 鈴木彩艶も同じタイ戦の写真。**候補は8枚あったのに、毎回1枚目だった。**
+    # 落とすのではなく後ろへ回す（他に通るものが無ければ、結局それを使う）
+    if not only:
+        used = used_titles(folder)
+        pool = [t for t in pool if t not in used] + [t for t in pool if t in used]
     for title in pool:
         ok, reason = verify(title, *names, session=session)
         if not ok:
@@ -312,6 +359,8 @@ def save(names: list[str], folder: Path, session=None, only: str = "",
              "no_derivatives": banned,
              "page_url": meta["page_url"], "image_url": meta["image_url"],
              "license": meta["license"], "author": meta["author"],
+             # **いつの写真か控える**（2026-09-18）。0 は「取れなかった」
+             "taken": meta.get("taken", 0),
              "subject_check": reason}
     path = folder / "credits.json"
     existing = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []

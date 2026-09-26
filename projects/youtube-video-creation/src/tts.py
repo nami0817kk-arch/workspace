@@ -282,13 +282,21 @@ def synthesize_script(
     backend = backend or create_backend(config, use_tts)
 
     cursor = 0.0
+    from dataclasses import replace as _replace
+
+    from .reading import apply as _apply_reading, load_dictionary as _load_readings
+
+    readings = _load_readings()
     for index, line in enumerate(script.lines):
         member = config.resolve_speaker(line.speaker, line.text or '')
         pause = pause_for(config, line)
-        target = out_dir / f"{index:04d}_{member.key}_{_digest(line, member, pause, backend.name)}.wav"
+        # **声に渡す文は、読みの辞書で開く**（2026-09-22）。画面の字（line.text）は変えない。
+        # 控えの鍵も開いた文で作るので、辞書を足せば作り直される
+        spoken = _replace(line, text=_apply_reading(line.text or "", readings))
+        target = out_dir / f"{index:04d}_{member.key}_{_digest(spoken, member, pause, backend.name)}.wav"
 
         if not target.exists():
-            _write_padded(backend.synthesize(line, member), pause, target)
+            _write_padded(backend.synthesize(spoken, member), pause, target)
 
         line.audio_path = target
         line.pause = pause  # 描画側が末尾の無音を口パクから外すために使う
@@ -390,6 +398,45 @@ SITE_NAMES = {
 }
 
 
+# 表示が要らないライセンス。**その場合は1行ごと落とす**（2026-09-15 指示
+# 「省略可能なだけ省略してほしい」）。site 名は概要欄の頭の1行に残るので、
+# 出どころが消えるわけではない
+NO_ATTRIBUTION = ("cc0", "public domain", "pd-", "pexels", "pixabay", "unsplash",
+                  # **報道写真・ネット画像は概要欄に出さない**（2026-09-17 ユーザー指示
+                  # 「何かあれば連絡としたので、概要への出典記載も不要」）。
+                  # 許諾を得ていないので**守るべき表示条件が無い**。
+                  # 出どころは credits.json に残るので、こちらの手元では辿れる。
+                  # **CC BY / BY-SA は別**。あれは条件そのものなので消さない
+                  "許諾は得ていない")
+
+
+def credit_line(title: str, author: str, license_: str, url: str) -> str:
+    """写真1枚ぶんの表示。**義務の範囲だけにする**（2026-09-15）。
+
+    それまでは `題名 / 撮影者 / ライセンス / URL` の4つを並べていて、
+    **1行218字**あった。20クラブに1枚ずつ付けると概要欄の上限5,000字を超える。
+
+    | 部分 | 要る？ |
+    |---|---|
+    | 撮影者 | **要る**（CC BY / BY-SA の条件そのもの） |
+    | ライセンス名 | **要る** |
+    | 元へのリンク | **要る**（CC 4.0 は「URI があれば示す」） |
+    | 題名 | **CC 4.0 では要らない。**3.0 以前は条件に入っているので残す |
+    | 同じ URL の重ね書き | 要らない |
+
+    CC0・パブリックドメイン・Pexels・Pixabay は**表示そのものが要らない**ので、
+    行ごと落とす。出どころは概要欄の頭の「画像: pexels.com」に残る。
+    """
+    low = f"{license_}".lower()
+    if any(word in low for word in NO_ATTRIBUTION):
+        return ""
+    if title and url and title.strip() == url.strip():
+        title = ""                      # 同じものを2回書いていた
+    if "4.0" in low:
+        title = ""                      # 4.0 は題名を求めていない
+    return " / ".join(x for x in (title, author, license_, url) if x)
+
+
 def _ledger_lines(script, root=None) -> tuple[list[str], list[str]]:
     """使った画像の (詳細行, 出どころのサイト名)。
 
@@ -429,6 +476,16 @@ def _ledger_lines(script, root=None) -> tuple[list[str], list[str]]:
     sites: list[str] = []
     ledgers = sorted(root.glob("assets/images/**/credits.json"))
     ledgers += sorted(root.glob("assets/backgrounds/**/credits.json"))
+    # **assets/photos/ を見ていなかった**（2026-09-18 に発覚）。
+    # 人物写真の置き場をここに移したのに、帳簿を探す場所は増やしていなかった。
+    # そのため**今日の12本すべてに「※ 画像:」が1行も入っていない**。
+    # CC BY / BY-SA は表示が条件なので、これは礼儀ではなく**利用条件の不履行**
+    ledgers += sorted(root.glob("assets/photos/**/credits.json"))
+    # **assets/stats/ も見る**（2026-09-20）。こちらで作る板は表示の要らない
+    # 自前の絵だが、**ホームタウンの地図だけは Commons の白地図（CC BY-SA）の
+    # 上に紋章を置いたもの**で、表示が条件。帳簿を置いても探す場所に入って
+    # いなければ、概要欄に1行も出ない（**2026-09-18 と同じ型の抜け**）
+    ledgers += sorted(root.glob("assets/stats/**/credits.json"))
     for ledger in ledgers:
         try:
             rows = json.loads(ledger.read_text(encoding="utf-8"))
@@ -451,7 +508,7 @@ def _ledger_lines(script, root=None) -> tuple[list[str], list[str]]:
             author = _plain(str(row.get("author") or row.get("creator") or "").strip())
             license_ = str(row.get("license", "")).strip()
             url = str(row.get("page_url") or row.get("url") or "").strip()
-            part = " / ".join(x for x in (title, author, license_, url) if x)
+            part = credit_line(title, author, license_, url)
             if part and part not in details:
                 details.append(part)
             where = SITE_NAMES.get(str(row.get("source", "")).strip().lower(), "")
@@ -474,6 +531,14 @@ def image_credits(script, root=None) -> list[str]:
 
 
 def image_details(script, root=None) -> list[str]:
-    """概要欄の末尾に畳む、写真1枚ごとの表示。**表示義務はここで果たす。**"""
+    """概要欄の末尾に畳む、写真1枚ごとの表示。**表示義務はここで果たす。**
+
+    **2026-09-17：報道写真・ネット画像の行は出さない**（ユーザー指示
+    「概要への出典記載も不要」）。連絡先を置いたので、問い合わせはそちらで受ける。
+
+    **CC BY / BY-SA は残す。**あれは礼儀ではなく**ライセンスの条件そのもの**で、
+    消すと、いま合法に使えている写真が無許諾になる。**消して得るものが無い。**
+    控え（credits.json）には全部残るので、こちらの手元では辿れる。
+    """
     details, _ = _ledger_lines(script, root)
     return [f"※ 画像: {line}" for line in details]

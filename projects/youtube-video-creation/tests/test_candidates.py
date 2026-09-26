@@ -813,7 +813,13 @@ def test_試合結果の枠は移籍の話で埋めない():
     assert [c.title for c in picked.values()] == ["試合の話"]
 
 
-def test_試合が無い日は枠を空ける():
+def test_試合が無い日は別の話を入れて出す():
+    """**空けずに出す**（2026-09-11 ユーザー「試合結果は、その日次第なので別軸」
+    「別の話でいいのがあれば共有」）。
+
+    それまでは枠ごと空けていたので、試合が無い日に候補がまるごと消えていた。
+    中身がずれていることは印で伝えて、採るかどうかはユーザーが決める。
+    """
     from src.candidates import Candidate, assign
 
     items = [Candidate(id="a", title="移籍の話", url="https://a.example/1",
@@ -821,5 +827,21 @@ def test_試合が無い日は枠を空ける():
     picked, fallbacks = assign(
         items, {"slots": {"match_1": {"require_kind": "match"}}}, ["match_1"]
     )
-    assert picked == {}
-    assert any("枠を空けます" in m for m in fallbacks.get("match_1", []))
+    assert picked["match_1"].id == "a"
+    assert any("別の話を入れています" in m for m in fallbacks.get("match_1", []))
+
+
+def test_下限に届かない候補も出す():
+    """**いったん共有する**（2026-09-11 ユーザー「5てんに届かなくてもいったん共有」）。
+
+    それまでは黙って見送っていたので、弱い日は一覧に何も出ず、
+    判断の材料も残らなかった。弱いことは印にする。
+    """
+    from src.candidates import Candidate, assign
+
+    items = [Candidate(id="a", title="弱い話", url="https://a.example/1", score=2)]
+    picked, fallbacks = assign(
+        items, {"min_score": 5, "slots": {"world_1": {}}}, ["world_1"]
+    )
+    assert picked["world_1"].id == "a"
+    assert any("弱い候補です" in m for m in fallbacks.get("world_1", []))

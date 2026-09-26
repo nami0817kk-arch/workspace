@@ -1,0 +1,799 @@
+{
+ "club_title": "AFC_Bournemouth",
+ "season_title": "2026–27_AFC_Bournemouth_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "SRB",
+   "name": "Đorđe Petrović",
+   "page": "Đorđe Petrović (footballer)",
+   "dob": "1999-10-08",
+   "captain": false,
+   "loan": false,
+   "team": "Serbia",
+   "caps": 12,
+   "club_caps": 43,
+   "club_goals": 0,
+   "prev_club": "Chelsea"
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "MEX",
+   "name": "Julián Araujo",
+   "page": "Julián Araujo",
+   "dob": "2001-08-13",
+   "captain": false,
+   "loan": false,
+   "team": "Mexico",
+   "caps": 16,
+   "club_caps": 12,
+   "club_goals": 0,
+   "prev_club": "Barcelona B"
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Adrien Truffert",
+   "page": "Adrien Truffert",
+   "dob": "2001-11-20",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 1,
+   "club_caps": 42,
+   "club_goals": 1,
+   "prev_club": "Rennes"
+  },
+  {
+   "no": "4",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Lewis Cook",
+   "page": "Lewis Cook (footballer, born 1997)",
+   "dob": "1997-02-03",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 1,
+   "club_caps": 249,
+   "club_goals": 3,
+   "prev_club": "Leeds United"
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "James Hill",
+   "page": "James Hill (footballer, born 2002)",
+   "dob": "2002-01-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 50,
+   "club_goals": 0,
+   "prev_club": "Fleetwood Town"
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "ARG",
+   "name": "Julio Soler",
+   "page": "Julio Soler",
+   "dob": "2005-02-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 0,
+   "prev_club": "Lanús"
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "WAL",
+   "name": "David Brooks",
+   "page": "David Brooks (footballer)",
+   "dob": "1997-07-08",
+   "captain": false,
+   "loan": false,
+   "team": "Wales",
+   "caps": 45,
+   "club_caps": 157,
+   "club_goals": 18,
+   "prev_club": "Sheffield United"
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Alex Scott",
+   "page": "Alex Scott (footballer, born 2003)",
+   "dob": "2003-08-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 83,
+   "club_goals": 5,
+   "prev_club": "Bristol City"
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Evanilson",
+   "page": "Evanilson (footballer, born 1999)",
+   "dob": "1999-10-06",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 2,
+   "club_caps": 67,
+   "club_goals": 16,
+   "prev_club": "Porto B"
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "SCO",
+   "name": "Ryan Christie",
+   "page": "Ryan Christie",
+   "dob": "1995-02-22",
+   "captain": false,
+   "loan": false,
+   "team": "Scotland",
+   "caps": 71,
+   "club_caps": 164,
+   "club_goals": 8,
+   "prev_club": "Celtic"
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "SCO",
+   "name": "Ben Gannon-Doak",
+   "page": "Ben Gannon-Doak",
+   "dob": "2005-11-11",
+   "captain": false,
+   "loan": false,
+   "team": "Scotland",
+   "caps": 17,
+   "club_caps": 12,
+   "club_goals": 0,
+   "prev_club": "Liverpool"
+  },
+  {
+   "no": "12",
+   "pos": "MF",
+   "nat": "USA",
+   "name": "Tyler Adams",
+   "page": "Tyler Adams",
+   "dob": "1999-02-14",
+   "captain": false,
+   "loan": false,
+   "team": "United States",
+   "caps": 58,
+   "club_caps": 56,
+   "club_goals": 2,
+   "prev_club": "Leeds United"
+  },
+  {
+   "no": "14",
+   "pos": "DF",
+   "nat": "POR",
+   "name": "António Silva",
+   "page": "António Silva (footballer)",
+   "dob": "2003-10-30",
+   "captain": false,
+   "loan": false,
+   "team": "Portugal",
+   "caps": 20,
+   "club_caps": 5,
+   "club_goals": 0,
+   "prev_club": "Benfica"
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Adam Smith",
+   "page": "Adam Smith (footballer, born 1991)",
+   "dob": "1991-04-29",
+   "captain": true,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 350,
+   "club_goals": 5,
+   "prev_club": "Tottenham Hotspur"
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Marcus Tavernier",
+   "page": "Marcus Tavernier",
+   "dob": "1999-03-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 120,
+   "club_goals": 21,
+   "prev_club": "Middlesbrough"
+  },
+  {
+   "no": "17",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Fraser Forster",
+   "page": "Fraser Forster",
+   "dob": "1988-03-17",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 6,
+   "club_caps": 0,
+   "club_goals": 0,
+   "prev_club": "Tottenham Hotspur"
+  },
+  {
+   "no": "18",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Bafodé Diakité",
+   "page": "Bafodé Diakité",
+   "dob": "2001-01-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 16,
+   "club_goals": 0,
+   "prev_club": "Lille"
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "NED",
+   "name": "Justin Kluivert",
+   "page": "Justin Kluivert",
+   "dob": "1999-05-05",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 14,
+   "club_caps": 90,
+   "club_goals": 22,
+   "prev_club": "Roma"
+  },
+  {
+   "no": "20",
+   "pos": "GK",
+   "nat": "ITA",
+   "name": "Michele Di Gregorio",
+   "page": "Michele Di Gregorio",
+   "dob": "1997-07-27",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0,
+   "prev_club": "Juventus"
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "MAR",
+   "name": "Amine Adli",
+   "page": "Amine Adli",
+   "dob": "2000-05-10",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 17,
+   "club_caps": 31,
+   "club_goals": 3,
+   "prev_club": "Bayer Leverkusen"
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Eli Junior Kroupi",
+   "page": "Eli Junior Kroupi",
+   "dob": "2006-06-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 33,
+   "club_goals": 13,
+   "prev_club": "Lorient"
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Juanlu Sánchez",
+   "page": "Juanlu Sánchez",
+   "dob": "2003-08-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0,
+   "prev_club": "Sevilla"
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "HUN",
+   "name": "Alex Tóth",
+   "page": "Alex Tóth",
+   "dob": "2005-10-23",
+   "captain": false,
+   "loan": false,
+   "team": "Hungary",
+   "caps": 13,
+   "club_caps": 10,
+   "club_goals": 0,
+   "prev_club": "Ferencváros"
+  },
+  {
+   "no": "28",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Max Aarons",
+   "page": "Max Aarons",
+   "dob": "2000-01-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 23,
+   "club_goals": 0,
+   "prev_club": "Norwich City"
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "CAN",
+   "name": "Daniel Jebbison",
+   "page": "Daniel Jebbison",
+   "dob": "2003-08-13",
+   "captain": false,
+   "loan": false,
+   "team": "Canada",
+   "caps": 7,
+   "club_caps": 18,
+   "club_goals": 1,
+   "prev_club": "Sheffield United"
+  },
+  {
+   "no": "30",
+   "pos": "FW",
+   "nat": "URU",
+   "name": "Álvaro Rodríguez",
+   "page": "Álvaro Rodríguez (footballer, born 2004)",
+   "dob": "2004-07-14",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0,
+   "prev_club": "Elche"
+  },
+  {
+   "no": "37",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Rayan",
+   "page": "Rayan (footballer, born 2006)",
+   "dob": "2006-08-03",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 6,
+   "club_caps": 19,
+   "club_goals": 5,
+   "prev_club": "Vasco da Gama"
+  },
+  {
+   "no": "44",
+   "pos": "DF",
+   "nat": "SRB",
+   "name": "Veljko Milosavljević",
+   "page": "Veljko Milosavljević",
+   "dob": "2007-06-28",
+   "captain": false,
+   "loan": false,
+   "team": "Serbia",
+   "caps": 2,
+   "club_caps": 7,
+   "club_goals": 0,
+   "prev_club": "Grafičar Beograd (dual)"
+  }
+ ],
+ "results": [
+  [
+   "24 July 2026",
+   "Friendly",
+   "FC St. Pauli",
+   "1–4",
+   "Bournemouth"
+  ],
+  [
+   "30 July 2026",
+   "Friendly",
+   "FC Augsburg",
+   "2–5",
+   "Bournemouth"
+  ],
+  [
+   "4 August 2026",
+   "Friendly",
+   "Bournemouth",
+   "10–1",
+   "Genoa"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Real Betis",
+   "2–2",
+   "Bournemouth"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Mainz 05",
+   "2–1",
+   "Bournemouth"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Manchester City",
+   "2–1",
+   "Bournemouth"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Bournemouth",
+   "1–1",
+   "Everton"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Newcastle United",
+   "2–2",
+   "Bournemouth"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Bournemouth",
+   "2–2",
+   "Brentford"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Bournemouth",
+   "0–1",
+   "Liverpool"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Chelsea",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Bournemouth",
+   "| report     =",
+   "Sunderland"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Manchester United",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Bournemouth",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Ipswich Town",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Bournemouth",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Fulham",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Bournemouth",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Bournemouth",
+   "| report     =",
+   "Hull City"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Arsenal",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Bournemouth",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Tottenham Hotspur",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Crystal Palace",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Bournemouth",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Bournemouth",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Nottingham Forest",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Bournemouth",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Leeds United",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Aston Villa",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Bournemouth",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Coventry City",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Bournemouth",
+   "| report     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Bournemouth",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Brentford",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Bournemouth",
+   "| report     =",
+   "Manchester City"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Everton",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Bournemouth",
+   "| report     =",
+   "Arsenal"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Hull City",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Bournemouth",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Sunderland",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Bournemouth",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Liverpool",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "8 September 2026",
+   "Third round",
+   "Bournemouth",
+   "4–0",
+   "Lincoln City"
+  ],
+  [
+   "28 October 2026",
+   "Fourth round",
+   "Bournemouth",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "17 September 2026",
+   "1",
+   "Real Sociedad",
+   "1–2",
+   "Bournemouth"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "Bournemouth",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050086/",
+   "Sturm Graz"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "Bournemouth",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050102/",
+   "Milan"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "Sparta Prague",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050117/",
+   "Bournemouth"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "Celta Vigo",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050141/",
+   "Bournemouth"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Bournemouth",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050158/",
+   "Viktoria Plzeň"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Lillestrøm",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050180/",
+   "Bournemouth"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "Bournemouth",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050193/",
+   "Hapoel Be'er Sheva"
+  ]
+ ]
+}

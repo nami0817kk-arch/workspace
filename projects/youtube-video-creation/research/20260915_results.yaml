@@ -1,0 +1,56 @@
+# 候補テーマ（2026年9月15日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年9月15日"
+candidates:
+  - id: rayo_vallecano_espanyol
+    title: "Rayo Vallecano 2 - 1 Espanyol（LaLiga）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868069
+    hours_ago: 26.6   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868069
+
+  - id: deportivo_alav_s
+    title: "Deportivo Alavés 0 - 1 Valencia（LaLiga）"
+    topic: "バレンシア"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868061
+    hours_ago: 26.6   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868061
+
+  - id: elche_real_madrid
+    title: "Elche 2 - 3 Real Madrid（LaLiga）"
+    topic: "レアル・マドリード"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868065
+    hours_ago: 26.6   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5868065
+
+  - id: ajax_willem_ii
+    title: "Ajax 5 - 1 Willem II（Eredivisie）"
+    topic: "アヤックス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: netherlands    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5781718
+    hours_ago: 26.6   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5781718
+

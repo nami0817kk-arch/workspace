@@ -1,0 +1,58 @@
+date: 2026年9月24日
+slot: laliga_4
+format: news
+voice_min: 0.3
+people: [ダニー・フレイレ, セスク・ボッシュ]
+theme:
+  id: barca_dany_freire
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: 'バルセロナが16歳と契約。サインしたのは誕生日の当日だった'
+  question: どんな16歳なのか
+short_title: バルサが契約した16歳
+thumbnail:
+  crest_main: [バルセロナ]
+  line1: 16歳になった、その日に
+  line2: バルセロナと契約した
+sections:
+  - id: what
+    heading: 誕生日にサインした
+    tier: 報道
+    telop: ポルトガルのダニー・フレイレがバルセロナへ
+    narrator: キャスター
+    say:
+      - バルセロナが、**ポルトガルのダニー・フレイレ**の加入を発表しました。前線の選手です。
+      - サインした日は土曜日。**16歳になった、その日**でした。
+      - 入るのはバルセロナの下部組織、16歳以下の**ユベニルB**。率いるのはセスク・ボッシュです。
+      - ポルトガルで生まれ、**子どものころにルクセンブルクへ移った**選手です。
+      - 前のクラブは、ルクセンブルクの**ラシン**。**6歳から**、11年いました。
+    sources:
+      - https://www.abola.pt/noticias/oficial-barcelona-anuncia-contratacao-de-perola-portuguesa-de-16-anos-2026092318543903777
+  - id: why
+    main: true
+    heading: 夏に何をしたのか
+    tier: 報道
+    telop: 親善大会で3得点、1試合でMVP
+    narrator: 解説
+    say:
+      - text: 'バルセロナが契約したのは、ルクセンブルクで育った16歳、ダニー・フレイレ。サインは誕生日の当日でした。'
+        short_only: true
+      - 夏の親善大会2つで、**3得点**。うち1試合では**MVP**です。
+      - バルセロナとレアル・マドリードの、**育成年代の対戦で勝った**試合も経験しています。
+      - 代表歴もあります。ポルトガルの**U-15**でプレーし、**U-17にも招集**されました。生まれと育ちが違うので、ルクセンブルクの年代別代表でもプレーしています。
+    sources:
+      - https://www.abola.pt/noticias/oficial-barcelona-anuncia-contratacao-de-perola-portuguesa-de-16-anos-2026092318543903777
+  - id: where
+    heading: どこから来たのか
+    tier: 報道
+    telop: ルクセンブルクのラシン。6歳から11年目
+    narrator: キャスター
+    say:
+      - 生まれた町は、リスボンの対岸にある**アルマダ**です。
+      - そのラシンで、ユース年代のヨーロッパの大会にも出ています。**U-17**のカップ戦では決勝で1得点1アシスト、優勝しました。
+      - サイドでも、中盤でも、前でもプレーできる選手だと紹介されています。
+      - 契約は**2029年まで**。バルセロナは、この16歳を4年おさえました。
+    sources:
+      - https://www.abola.pt/noticias/dany-freire-a-perola-portuguesa-de-16-anos-que-o-barcelona-quis-guardar-2026092114312453160

@@ -1,0 +1,29 @@
+# 候補テーマ（2026年9月17日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年9月17日"
+candidates:
+  - id: real_betis_getafe
+    title: "Real Betis 1 - 0 Getafe（LaLiga）"
+    topic: "ベティス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868063
+    hours_ago: 9.3   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868063
+
+  - id: m_laga_villarreal
+    title: "Málaga 1 - 3 Villarreal（LaLiga）"
+    topic: "ビジャレアル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868068
+    hours_ago: 9.3   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868068
+

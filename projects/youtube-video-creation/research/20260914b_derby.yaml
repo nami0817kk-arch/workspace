@@ -1,0 +1,101 @@
+# マンチェスター・ダービーの誤審（2026年9月13日の試合／9月15日に出す）
+#
+# 芯は**試合の数時間後に審判団が誤りを認めた**こと。
+# **声明は原文のまま訳す。**中の選手名は Sky Sports と ESPN の2媒体とも
+# 「Enzo Fernandez」なので、そのまま引く（別人だろうと決めつけない）。
+# 退場は**フォーデン**で2媒体一致。時間はサッカーキングの23分
+format: news
+voice_min: 22
+slot: premier_1
+date: "2026年9月14日"
+
+people: []
+
+short_title: "審判団が誤りを認めたダービー"
+
+theme:
+  id: manchester_var
+  league: premier
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンチェスターダービー！数時間後に審判団が認めた誤りとは？
+  hook: 試合が終わって数時間後に、声明が出ました。
+  question: 何が誤りだったのか
+
+thumbnail:
+  crest_main: [マンチェスター・シティ, マンチェスター・ユナイテッド]
+  line1: マンチェスターダービー！
+  line2: 審判団が認めた誤りとは？
+  tags: []
+  points:
+    - 10人のシティが勝った
+    - 決勝点をめぐる判定
+
+sections:
+  - id: what
+    heading: 何が起きた試合か
+    tier: 報道
+    telop: 23分に退場。それでも勝った
+    narrator: キャスター
+    card:
+      type: table
+      title: マンチェスター・シティ 1 - 0 マンチェスター・ユナイテッド
+      columns: ["", ""]
+      rows:
+        - ["23分", "フォーデンが退場。シティは10人に"]
+        - ["60分", "ハーランドが決勝点"]
+        - ["シティ", "開幕4連勝"]
+    say:
+      - プレミアリーグのマンチェスター・ダービー。シティが1対0で勝ちました。
+      - シティは23分にフォーデンが退場し、10人になっています。
+      - それでも60分、ハーランドが決めました。この1点が決勝点です。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260914/2204616.html
+      - https://www.skysports.com/football/news/11661/13585607/erling-haalands-man-city-goal-decision-vs-man-utd-an-error-admit-premier-league-referees
+
+  - id: error
+    heading: 審判団が認めたこと
+    main: true
+    tier: 報道
+    telop: 「オンフィールドレビューを勧めるべきだった」
+    narrator: 解説
+    # **ここが山場。**ショートはこの節を切り出す。
+    # 声明は長いので分けて読む。**要約して意味を変えない**
+    card:
+      type: table
+      title: 決勝点をめぐる判定の流れ
+      columns: ["", ""]
+      rows:
+        - ["ピッチ上の判定", "ハーランドにオフサイド"]
+        - ["VARの確認", "ハーランドはオンサイドと判明"]
+        - ["審判団が認めた誤り", "別の選手の位置の影響を見落とした"]
+    say:
+      # **ショートだけの前置き**。本編では前の節で言い終えている
+      - {short_only: true, text: マンチェスター・ダービーは、10人になったシティが1対0で勝ちました。決勝点は60分のハーランドです。}
+      - その決勝点について、プレミアリーグの審判団が声明を出しました。
+      - {voice: 審判団, text: ピッチ上の判定はハーランドへのオフサイドだった。VARが確認し、彼はオンサイドの位置にいたと判明した}
+      - {voice: 審判団, text: 同じ攻撃の中で、エンソ・フェルナンデスはボールをプレーしていなかった。そのためオフサイドの反則かどうかは主観的な判断になる}
+      - {voice: 審判団, text: しかし今回、VARは彼の位置が与えた影響を認識せず、オンフィールドレビューを勧めるべきだった}
+      - {voice: 審判団, text: 今晩、マンチェスター・ユナイテッドに連絡を取り、我々が判断の誤りとみなすものを伝えた}
+      - 試合が終わってから、数時間のことでした。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13585607/erling-haalands-man-city-goal-decision-vs-man-utd-an-error-admit-premier-league-referees
+      - https://www.espn.com/soccer/story/_/id/49932067/premier-league-referees-body-apologises-man-united-derby-offside
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「失った勝ち点は返ってこない」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 試合終了の2、3時間後に明確な誤審認めるって早々ないよな}
+      - {voice: ネット民, text: ミスしたら後でPGMOLが声明を出すだけで、ユナイテッドが失った勝ち点は返ってこない}
+      - {voice: ネット民, text: 10人になったマンCが、11人のマンUを倒した。フォーデン退場、70分以上を数的不利で戦う。それでも最後に決めたのはハーランド}
+      - {voice: ネット民, text: フォーデンが1発レッドで退場して10人になったのにホームで負けるユナイテッド不味すぎ。審判のミスジャッジが有っても1点も獲れなかったわけだから}
+      - {voice: ネット民, text: まだ4節だぞ。残りこの8倍の試合があるのにこんな体たらくでどうするんだよ}
+      - {voice: ネット民, text: 今後の運用がどうなるか気になる話題でもあるよね}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%9E%E3%83%B3%E3%83%81%E3%82%A7%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%80%E3%83%BC%E3%83%93%E3%83%BC&f=live

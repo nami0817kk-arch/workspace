@@ -109,6 +109,11 @@ def test_news_layout_clears_headline_on_no_telop(tmp_path):
 def test_motion_adds_intro_frames(tmp_path):
     config = load_config()
     script = _script_with_timing()
+    # **演出の秒数はテストで決める**（2026-09-14）。企画の設定は 0 にしたが
+    # （「切り替えの時に一瞬暗転」「一瞬背景が切り替わってる」）、
+    # 仕組みは残してあるので、ここでは効かせて確かめる
+    config.motion.telop_in = 0.55
+    config.motion.scene_fade = 0.32
 
     config.motion.enabled = False
     without = len(Renderer(config, tmp_path / "off").frame_entries(script))
@@ -121,6 +126,9 @@ def test_scene_change_uses_crossfade(tmp_path):
     """2つ目のシーンの頭には、前の画面と混ざった中間フレームが入る。"""
     config = load_config()
     script = parse_script("## 章1\n霊夢: あいうえお。\n\n## 章2\n魔理沙: かきくけこ。\n")
+    # 企画の設定では転換を 0 にしてあるので、ここで効かせて仕組みを確かめる
+    config.motion.scene_fade = 0.32
+    config.motion.scene_transition = "crossfade"
     for line in script.lines:
         line.duration, line.pause = 2.0, 0.4
     renderer = Renderer(config, tmp_path)
@@ -514,7 +522,11 @@ def test_積むのは匿名の反応だけ(tmp_path):
     from src.render import Renderer
 
     script = _stack_script()
-    renderer = Renderer(load_config(), tmp_path)
+    config = load_config()
+    # 企画の設定では演出を 0 にしてあるので、ここで効かせて仕組みを確かめる
+    config.motion.telop_in = 0.55
+    config.motion.scene_fade = 0.32
+    renderer = Renderer(config, tmp_path)
     renderer.script_background = script.background
     entries = renderer.frame_entries(script)
     assert entries, "フレームが作られていない"
@@ -591,3 +603,304 @@ def test_顔を並べた回でも冒頭に写真が出る():
                           "thumbnail_photos": ["a.jpg"]}) == "c.jpg"
     assert opening_photo({}) == ""
     assert opening_photo({"thumbnail_photos": []}) == ""
+
+
+def test_反応の箱は3行で切らない():
+    """**「文字が切れてる」**（2026-09-15 指摘）。
+
+    `balanced_wrap(...)[:3]` で切っていたので、4行必要な書き込みが
+    黙って途中で終わっていた（「行為として蹴ってる以上、そこは同」）。
+    「ネットのコメントは、画面に全部出す」と決めてある。
+    """
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.config import load_config
+    from src.render import _stack_height
+
+    draw = ImageDraw.Draw(Image.new("RGBA", (1080, 1920)))
+    font = ImageFont.truetype(str(load_config().video.font_path()), 48)
+    short = ["みじかい書き込み。"]
+    long = ["「見える見えない」とか限度で分け始めたら基準ガバガバな気がするし、"
+            "行為として蹴ってる以上、そこは同列で見るべきやと思います"]
+    room, pad, indents = 900, 14, (0.04,)
+    low = _stack_height(draw, short, font, pad, room, indents, 1080, 0)
+    high = _stack_height(draw, long, font, pad, room, indents, 1080, 0)
+    assert high > low * 2, (low, high)
+
+
+def test_件数が多い節では古いほうから落として字を保つ():
+    """**字を小さくせず、古いほうから落とす**（2026-09-15 指示）。
+
+    2026-09-14 は逆に「全部出す。入りきらないぶんは字を小さくして収める」と
+    決めていたが、件数の多い節で**読めない大きさまで落ちていた**。
+    見せたいのは新しいほうなので、あふれたらいちばん古い1件から捨てる。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    import tempfile
+    from pathlib import Path as _P
+
+    config = load_config()
+    with tempfile.TemporaryDirectory() as work:
+        r = Renderer(config, _P(work))
+        canvas = Image.new("RGBA", (config.video.width, config.video.height))
+        many = tuple(f"ネット民「{i}件目の書き込みです。" + "あ" * 30 + "」" for i in range(12))
+        r._draw_stack(canvas, many)   # 落ちずに描ければよい（字の大きさは中で保つ）
+        assert canvas.getbbox() is not None
+
+
+def test_横長の一覧板は画面いっぱいに敷く(tmp_path):
+    """**左半分がぼかしだけになっていた**（2026-09-17 ユーザー指摘
+    「動画の画面の左側がぼやけている」）。
+
+    写真を右半分に立てる作りは**人物の縦写真のためのもの**で、16:9 の
+    一覧板を入れると左半分がぼかし、板の左半分（齋藤と松木）は画面の外。
+    横長は画面いっぱいに敷く。
+
+    さらに、板は**文字でできた絵**なので、カードや節の名前を上に重ねると
+    板の文字が読めない（ユーザー指示「サムネ画面をだしておいて」）。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    wide = tmp_path / "board.png"
+    Image.new("RGB", (1280, 720), (20, 40, 120)).save(wide)
+    tall = tmp_path / "face.jpg"
+    Image.new("RGB", (480, 680), (200, 180, 160)).save(tall)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    renderer._photo_stage(str(wide))
+    renderer._photo_stage(str(tall))
+    assert str(wide) in renderer._wide_stages, "横長が全面扱いになっていない"
+    assert str(tall) not in renderer._wide_stages, "縦写真まで全面にしている"
+
+    # **4:3 も全面**（2026-09-17 夜）。1.4倍の網では 800x600 が漏れ、
+    # 公開した佐野の回の左が暗いままだった
+    four_three = tmp_path / "43.jpg"
+    Image.new("RGB", (800, 600), (40, 90, 60)).save(four_three)
+    renderer._photo_stage(str(four_three))
+    assert str(four_three) in renderer._wide_stages, "4:3 が右半分に立てられている"
+
+    # **正方形も全面**（2026-09-23 指摘「レアルの背景の左がぼやけている」）。
+    # 「正方形に近いものも全面にする」と書いてあったのに、条件が1.15倍以上で
+    # **ちょうど正方形が漏れていた**。テバスの写真は 1920x1924 だった
+    square = tmp_path / "square.jpg"
+    Image.new("RGB", (1920, 1924), (90, 40, 40)).save(square)
+    renderer._photo_stage(str(square))
+    assert str(square) in renderer._wide_stages, "正方形が右半分に立てられている"
+
+
+def test_数字は途中で割らない():
+    """**「後半38分」が「後半3／8分」に割れていた**（2026-09-18 に画面で見つかった）。
+
+    1文字ずつ幅を見て折り返していたので、数字の真ん中で改行されていた。
+    拗音（チェ→チ／ェ）や熟語（成立→成／立）の割れは直してあったのに、
+    **数字は見ていなかった。**読んでも意味が取れない画面になる。
+    """
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.render import wrap_text
+
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.load_default()
+    for width in range(60, 260, 10):
+        for text in ("そして今回は、後半38分からの出場でした",
+                     "移籍金は9億5000万ポンドでした",
+                     "クリアレイクが61.5%を持っています"):
+            for line in wrap_text(draw, text, font, width):
+                # 行が数字で終わり、次の行が数字で始まる＝数字の途中で割れている
+                pass
+            lines = wrap_text(draw, text, font, width)
+            for before, after in zip(lines, lines[1:]):
+                assert not (before and after and before[-1].isdigit()
+                            and after[0].isdigit()), (text, width, lines)
+
+
+def test_英字も途中で割らない():
+    """Sky Sports が「Sky Spo／rts」になると読めない（2026-09-18）。"""
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.render import wrap_text
+
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.load_default()
+    for width in range(60, 260, 10):
+        lines = wrap_text(draw, "アロンソはSky Sportsに語った", font, width)
+        for before, after in zip(lines, lines[1:]):
+            assert not (before and after and before[-1].isascii() and before[-1].isalpha()
+                        and after[0].isascii() and after[0].isalpha()), (width, lines)
+
+
+def test_数字と助数詞は離さない():
+    """**「72／分から」と単位が離れて読みにくかった**（2026-09-18）。
+
+    数字を割らないようにした直後に見つかった。数字だけくっつけても、
+    「戦は72」で行が終わって次が「分から」では、目で拾い直すことになる。
+    """
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.render import wrap_text
+
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.load_default()
+    for width in range(60, 300, 10):
+        for text in ("アトレティコ・マドリード戦は72分から",
+                     "そして今回は、後半38分からの出場でした",
+                     "選ばれたのは44人。そのうち11人が初招集です"):
+            lines = wrap_text(draw, text, font, width)
+            for before, after in zip(lines, lines[1:]):
+                assert not (before and after and before[-1].isdigit()
+                            and after[0] in "分秒時日月年人名位点個回戦歳億万千円本勝敗"), \
+                    (text, width, lines)
+
+
+def test_横長の写真にはカードを重ねる(tmp_path):
+    """**写真を使う回はカードが1枚も出なくなっていた**（2026-09-18 に画面で見つかった）。
+
+    9/17 に「一覧板の上にはカードも節の名前も重ねない」と決めたとき、
+    **横長の絵すべて**を対象にしてしまった。報道写真を使えるようになってからは
+    写真がほぼ16:9なので、**カードが全部消える**。
+    クロップの選手の表も、久保の表も、画面に出ていなかった。
+    **止めるのは板のときだけ。**
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer, _is_board
+
+    board = tmp_path / "assets" / "stats" / "squad.png"
+    board.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1280, 720), (20, 40, 120)).save(board)
+    photo = tmp_path / "assets" / "photos" / "klopp" / "01.jpg"
+    photo.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1200, 675), (180, 170, 150)).save(photo)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    renderer._photo_stage(str(board))
+    renderer._photo_stage(str(photo))
+
+    # どちらも全面に敷く（左半分がぼかしにならない）
+    assert str(board) in renderer._wide_stages
+    assert str(photo) in renderer._wide_stages
+    # **カードを止めるのは板だけ**
+    assert str(board) in renderer._board_stages, "板にカードが重なる"
+    assert str(photo) not in renderer._board_stages, "写真の回でカードが消える"
+    assert _is_board(str(board)) and not _is_board(str(photo))
+
+
+def test_数字の図の控えがあれば板とみなす(tmp_path):
+    """`statboard` は `<絵>.statboard.txt` を残す。置き場所が違っても板。"""
+    from PIL import Image
+
+    from src.render import _is_board
+
+    made = tmp_path / "run.png"
+    Image.new("RGB", (1280, 720)).save(made)
+    assert not _is_board(str(made))
+    made.with_suffix(".png.statboard.txt").write_text("title: 走行距離", encoding="utf-8")
+    assert _is_board(str(made))
+
+
+def test_横長の写真を縦に敷くとき横の位置を指定できる():
+    """**端に写っている人が落ちていた**（2026-09-18 ユーザー指摘
+    「ショートのサムネのメッシが見切れてる」）。
+
+    `_cover` は横を必ず真ん中で切っていた。横長の写真を縦の画面に敷くと、
+    右端に写っているメッシが**手と膝しか残らなかった**。
+    """
+    from PIL import Image
+
+    from src.render import _cover
+
+    # 右端だけ白、あとは黒の横長。縦に敷いたとき、どこが残るかを見る
+    wide = Image.new("RGB", (1920, 1080), (0, 0, 0))
+    wide.paste(Image.new("RGB", (200, 1080), (255, 255, 255)), (1720, 0))
+
+    middle = _cover(wide.convert("RGBA"), 1080, 1920)
+    assert middle.convert("RGB").getpixel((1000, 960)) == (0, 0, 0), "既定は真ん中のまま"
+
+    right = _cover(wide.convert("RGBA"), 1080, 1920, focus_x=1.0)
+    assert right.convert("RGB").getpixel((1000, 960)) == (255, 255, 255), "右端に寄っていない"
+
+    left = _cover(wide.convert("RGBA"), 1080, 1920, focus_x=0.0)
+    assert left.convert("RGB").getpixel((40, 960)) == (0, 0, 0)
+
+
+def test_縦写真の左はぼかさずべた塗りにする(tmp_path):
+    """2026-09-23 ユーザー選択。サムネは 09-20 に直したのに、動画の中だけ
+    「同じ写真をぼかした敷き布」が残っていて、左がぼやけて見えていた。"""
+    from PIL import Image, ImageStat
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    tall = tmp_path / "face.jpg"
+    # 左右で色が違う縦写真。ぼかして敷くと左に絵の形が残る
+    photo = Image.new("RGB", (480, 900), (200, 40, 40))
+    photo.paste(Image.new("RGB", (240, 900), (20, 20, 200)), (0, 0))
+    photo.save(tall)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    stage = renderer._photo_stage(str(tall))
+    assert stage is not None
+    width = stage.width
+    # 左1/3の各行は、横方向にほぼ一色（べた塗り）であること
+    left = stage.convert("RGB").crop((0, 0, width // 3, stage.height))
+    for y in (int(stage.height * r) for r in (0.2, 0.4)):
+        row = left.crop((0, y, left.width, y + 1))
+        assert max(ImageStat.Stat(row).stddev) < 6, "左に絵が残っている（ぼかした敷き布）"
+
+
+def test_縦の板は縦の画面いっぱいに敷く(tmp_path):
+    """ショート用の縦版（1080x1920）も板として扱う（2026-09-23）。
+
+    横長かどうかだけで見ていたので、縦版の基礎DATAは写真と同じ扱いになり、
+    **節の名前とカードが板の上に重なっていた**（実物を見て分かった）。
+    """
+    from dataclasses import replace as _replace
+    from pathlib import Path as _Path
+
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    config = load_config()
+    config = _replace(config, video=_replace(config.video, width=1080, height=1920))
+    board = _Path("assets/stats/_test_tall_v.png")
+    board.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1080, 1920), (20, 20, 24)).save(board)
+    face = tmp_path / "face.jpg"
+    Image.new("RGB", (480, 680), (200, 180, 160)).save(face)
+    try:
+        renderer = Renderer(config, tmp_path / "work")
+        renderer._photo_stage(str(board))
+        renderer._photo_stage(str(face))
+        assert str(board) in renderer._board_stages, "縦の板に文字を重ねてしまう"
+        assert str(face) not in renderer._board_stages, "縦写真まで板にしている"
+    finally:
+        board.unlink()
+
+
+def test_左半分のカードは縮めずにその幅で描く(tmp_path):
+    """**大きく描いてから0.63倍に縮めていた**（2026-09-23 指摘「表をもう少し大きく」）。
+
+    34px で描いた字が 21px になり、写真の横に出る表が読めなかった。
+    """
+    from src.config import load_config
+    from src.render import Renderer
+
+    config = load_config()
+    renderer = Renderer(config, tmp_path / "work")
+    renderer.script_cards = {"t": {"type": "table", "columns": ["名前", "在籍"],
+                                   "rows": [["ブレット・ピットマン", "2005-2015"]]}}
+    wide = renderer._card("t")
+    beside_photo = renderer._card("t", limit=config.video.width // 2 - 30)
+    assert beside_photo is not None and wide is not None
+    assert beside_photo.width == config.video.width // 2 - 30
+    assert beside_photo.width < wide.width

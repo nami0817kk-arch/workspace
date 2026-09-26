@@ -1,0 +1,126 @@
+date: 2026年9月24日
+slot: other_2
+format: news
+voice_min: 0.3
+people: [リヤド・マフレズ]
+theme:
+  id: mahrez_free
+  league: england
+  league_name: プレミアリーグ
+  kind: transfer
+  topic: マンチェスター・シティ
+  title: 'リヤド・マフレズ、次のクラブとは合意済み。それでも移れない理由'
+  question: 何が止めているのか
+short_title: マフレズ、合意しても移れない
+thumbnail:
+  photo: assets/images/20260924_mahrez/01.jpg
+  crests: [マンチェスターシティ]
+  line1: プレミア4度の王者が
+  line2: 合意しても動けない理由
+  points:
+    - 条件は決まっている
+    - 待っているのは別の選手
+sections:
+  - id: what
+    heading: 3年で、切られた
+    tier: 報道
+    telop: 7月4日、アル・アハリが契約を解除。契約は1年残っていた
+    narrator: キャスター
+    card:
+      type: table
+      title: 切られるまで
+      columns: ['', '']
+      rows:
+        - [在籍, 3年]
+        - [成績, 122試合 37得点50アシスト]
+        - [アジアCL, 2回優勝]
+        - [残っていた契約, 1年]
+    say:
+      - リヤド・マフレズ。レスターで、そしてマンチェスター・シティで**プレミアリーグを勝った**選手です。
+      - そのシティを2023年に出て、サウジアラビアの**アル・アハリ**へ移りました。
+      - 7月4日、**アル・アハリが契約の解除を発表**します。**1年ぶん、残したままの解除**でした。
+      - 3年で**122試合、37得点50アシスト**。アジアのチャンピオンズリーグを2回勝っています。
+      - その少し前、6月のワールドカップでアルジェリアが敗れたあと、本人は代表からの引退も口にしています。
+      - voice: マフレズ
+        text: 代表としても、これが最後の出場です。あれが僕の最後の試合でした
+      - クラブが出したのは、短い別れの言葉でした。**「忘れられない3年間。数えきれないほどの魔法のような瞬間」**。
+    sources:
+      - https://www.goal.com/en-us/lists/riyad-mahrez-contract-al-ahli-algeria-retirement-transfer-speculation-grows/bltf5e2e4398c97bed4
+  - id: stuck
+    main: true
+    heading: 合意しても、登録できない
+    tier: 報道
+    telop: 個人条件は合意済み。外国人枠が空かないと登録できない
+    narrator: キャスター
+    card:
+      type: table
+      title: 止まっている理由
+      columns: ['', '']
+      rows:
+        - [8月30日, 次のクラブと個人条件で合意]
+        - [止める壁 その1, クラブが財務の監視下にある]
+        - [止める壁 その2, 外国人枠が空いていない]
+        - [空けるには, 別の選手が出ていく必要がある]
+        - [9月5日, 会長「48時間で分かる」]
+    say:
+      - text: 'プレミアリーグを勝ったリヤド・マフレズが、次のクラブと合意しているのに、移れないまま止まっています。'
+        short_only: true
+      - "**8月30日**、マフレズは給料などの条件で**アル・シャバブと折り合いました**。ここまでは決まっています。"
+      - 止めている壁が2つあります。
+      - 1つは、そのクラブが**リーグから財政を監視されている**こと。お金の裏づけを示さないと、新しい選手を登録できません。
+      - もう1つが**外国人枠**です。同じクラブにいるベルギー代表の**カラスコが出ていかないと、マフレズを登録できません**。
+      - 9月5日、クラブの会長が、報道陣の前でこう言いました。
+      - voice: アブドゥルアジズ・アル・マリク
+        text: リヤド・マフレズはサウジのサッカーにとって、そして我々にとって大きな収穫だ
+      - voice: アブドゥルアジズ・アル・マリク
+        text: 神の思し召しがあれば、これから48時間で何が起きるか分かるだろう
+      - その48時間から、**3週間**たちました。まだ何も発表されていません。
+    sources:
+      - https://www.yardbarker.com/soccer/articles/mahrez_agrees_terms_with_his_new_club_one_step_delaying_the_announcement/s1_17790_44238134
+      - https://www.goal.com/en/news/the-reason-behind-the-delay-in-riyad-mahrez-joining-saudi-arabia-s-al-shabab/blt504c844d4296c5c0
+      - https://www.goal.com/en-za/news/video-with-a-cryptic-statement-al-shabab-president-sparks-speculation-over-mahrez-s-future/blt0ddb75240478de4f
+  - id: after
+    heading: 手放した側は
+    tier: 未確認
+    telop: 手放したクラブは9位に沈み、責任論が出ている
+    narrator: キャスター
+    say:
+      - 一方、マフレズを手放した**アル・アハリ**のほうが苦しくなっています。6試合を終えて**9位**。3勝3敗です。
+      - クラブの内側からは、「あの放出は**前の監督の判断だった**」という説明が出てきました。
+      - マフレズを含め、この夏に出ていった選手の穴を、クラブは埋められていません。
+      - 9月20日、国際大会で敗れたあと、現地の司会者がこう言いました。
+      - voice: アル・ファラジ
+        text: ヤイスレ、ケシエ、マフレズの後釜について内部調査が行われたら、どんなに素晴らしいことだろう
+    sources:
+      - https://www.goal.com/en/news/ask-yaisle-al-ahli-distances-itself-from-the-departure-of-mahrez-and-kessie/bltd740fb3f4a3c7058
+      - https://www.goal.com/en/news/al-faraj-after-al-ahli-s-defeat-i-hope-there-is-an-investigation-into-the-departures-of-mahrez-and-kessie/blt3558c467ca69f5cb
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 行き先を勝手に考える声が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 最後にひと稼ぎしたいなら、そのまま中東に残れば良いのに
+      - voice: ネット民
+        text: 契約解除したということは、プレイしたいチームがあるのか
+      - voice: ネット民
+        text: 地元アルジェリアに行くのか、もしくはレスター
+      - voice: ネット民
+        text: 金なら残留が1番だろうしなんだろうな。男気レスターなら熱いけど
+      - voice: ネット民
+        text: Jリーグへ来ないかな
+      - voice: ネット民
+        text: 神戸へようこそ
+      - voice: ネット民
+        text: 柏に来ないかなー
+      - voice: ネット民
+        text: Jリーグに来てくれ！　暑さにも慣れてるし、アジアの雰囲気にも慣れてる。観てみたい選手
+      - voice: ネット民
+        text: 魔法の左が見たい。キックフェイントにテレビで見ていても体が動いてしまう
+      - voice: ネット民
+        text: これで最低賃金でレスターとかなら、ファンクラブ入れるわ
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/1dd6fbe5270e71474aca2c8535bb0da70b24a43d/comments
+      - https://news.yahoo.co.jp/articles/1255fae151ca190da5adb6baa49b8b0980a207bf/comments

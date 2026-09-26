@@ -225,3 +225,76 @@ def test_反応の行は無音を詰める():
     assert pause_for(config, crowd) == config.voicevox.pause_crowd
     assert pause_for(config, crowd) < pause_for(config, caster)
     assert pause_for(config, fixed) == 0.9
+
+
+def test_表示が要らないライセンスは行ごと落とす():
+    """**省略可能なだけ省略する**（2026-09-15 指示）。
+
+    それまで `題名 / 撮影者 / ライセンス / URL` の4つを並べて1行218字あった。
+    20クラブに1枚ずつ付けると概要欄の上限5,000字を超える。
+    """
+    from src.tts import credit_line
+
+    # CC0・パブリックドメイン・Pexels は表示そのものが要らない
+    assert credit_line("x", "撮影者", "CC0 1.0", "https://example.org/x") == ""
+    assert credit_line("x", "Marc K", "Pexels License", "https://example.org/x") == ""
+    assert credit_line("x", "", "Public Domain", "https://example.org/x") == ""
+
+
+def test_CC_BY_は撮影者とライセンスとリンクを残す():
+    from src.tts import credit_line
+
+    got = credit_line("File:X.jpg", "Egghead06", "CC BY-SA 4.0",
+                      "https://commons.wikimedia.org/wiki/File:X.jpg")
+    assert "Egghead06" in got and "CC BY-SA 4.0" in got and "commons" in got
+    # 4.0 は題名を求めていない
+    assert "File:X.jpg /" not in got
+
+
+def test_三点ゼロ以前は題名も残す():
+    """CC 3.0 は条件に題名が入っている。**新しい版の話を古い版に当てない。**"""
+    from src.tts import credit_line
+
+    got = credit_line("File:X.jpg", "撮影者", "CC BY-SA 3.0", "https://example.org/x")
+    assert got.startswith("File:X.jpg")
+
+
+def test_同じURLを二度書かない():
+    from src.tts import credit_line
+
+    url = "https://www.pexels.com/video/x/"
+    got = credit_line(url, "撮影者", "CC BY 4.0", url)
+    assert got.count(url) == 1, got
+
+
+def test_人物写真のクレジットも概要欄に出る(tmp_path):
+    """**assets/photos/ の帳簿を見ていなかった**（2026-09-18 に発覚）。
+
+    人物写真の置き場を assets/photos/ に移したのに、クレジットを探す場所は
+    assets/images/ と assets/backgrounds/ のままだった。そのため
+    **9/18 に出した12本すべてに「※ 画像:」が1行も入っていなかった。**
+    CC BY / BY-SA は表示が条件なので、抜けると利用条件を満たさない。
+    """
+    import json
+
+    from src.script_model import parse_script
+    from src.tts import image_credits, image_details
+
+    d = tmp_path / "assets" / "photos" / "someone"
+    d.mkdir(parents=True)
+    (d / "01.jpg").write_bytes(b"")
+    (d / "credits.json").write_text(json.dumps([{
+        "file": "01.jpg", "source": "wikimedia", "title": "File:Someone.jpg",
+        "license": "CC BY-SA 4.0", "author": "撮影者",
+        "page_url": "https://commons.wikimedia.org/wiki/File:Someone.jpg",
+    }], ensure_ascii=False), encoding="utf-8")
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "## 本編", "", "キャスター: 誰かの話です。",
+        "  image: assets/photos/someone/01.jpg", "",
+    ]))
+    details = image_details(script, root=tmp_path)
+    assert details, "人物写真のクレジットが出ていない"
+    assert "CC BY-SA 4.0" in details[0]
+    assert image_credits(script, root=tmp_path) == ["画像: Wikimedia Commons"]

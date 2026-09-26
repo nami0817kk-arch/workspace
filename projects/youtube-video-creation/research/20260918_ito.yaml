@@ -1,0 +1,159 @@
+# 伊藤涼太郎が、9月半ばになっても決まらない（2026-09-18）
+#
+# **昨季ベルギー1部のベストイレブンで、2桁得点。それが無所属のまま。**
+# 話の芯は「断り続けた結果、残ったのが古巣の誘いだけだった」というところ。
+#
+# 引きは**ブラックバーンでメディカルまで受けて、破談になった**こと（@main）。
+#
+# **本人の言葉が1つも無い。**当たった記事すべてに本人コメントが載っていない。
+# 「伊藤は語った」という書き方はできない。喋るのは**モウブレイ監督とベルギー紙**だけ
+#
+# **「今後日本へ」は本人の言葉ではない。**ベルギー紙 VoetbalBelgie の見立てを
+# Football Tribe が訳したもの。**サムネでも読み上げでも本人発言のように扱わない**
+#
+# **昨季のアシスト数が媒体で割れている**（5と7）。カップ戦を含むかどうかの差かも
+# しれないが確かめていないので、**アシストの数字は出さない。**ゴールの10だけ使う
+#
+# **クラブ公式まで辿れたのは代表歴だけ**（JFA）。退団も破談も復帰打診も報道どまり
+# **下地は本人の写真**（2026-09-18 ユーザー指摘「一瞬だけ背景が変わった」）。
+# 写真は山場の節から出るので、それまでの節は下地が見えている。
+# 既定は `stock/match_stadium.mp4` ＝**ヴォルフスブルクのスタジアム**で、
+# LEDの看板にクラブ名が読める。既定も差し替えたが、この回は本人の写真を敷く
+format: news
+voice_min: 25
+slot: japan_1
+date: "2026年9月18日"
+
+people:
+  - 伊藤涼太郎
+
+short_title: "伊藤涼太郎が決まらない"
+
+theme:
+  id: ito_ryotaro_free
+  # **ベルギーの鍵は無い**（england/france/germany/italy/japan/netherlands/spain）。
+  # `japan` は Jリーグなので、当てると #Jリーグ が付いて中身と食い違う。
+  # **空にして、表に出る名前だけ league_name で決める**
+  league: ""
+  league_name: ベルギー1部
+  kind: transfer
+  topic: シント＝トロイデン
+  title: 伊藤涼太郎がまだ決まらない。ベルギー紙が書いたのは
+  hook: 昨季はリーグで2桁得点を挙げています。
+  question: いま何が起きているのか
+
+thumbnail:
+  line1: 昨季10ゴールの28歳
+  line2: 9月半ばの所属は ●●
+  # **左半分がぼかしになっていた**（2026-09-18 ユーザー指摘）。
+  # Commons の写真が縦長なので右半分に立つ作りになる。
+  # 記事の写真（900x600）に差し替えて全面に敷く
+  photo: assets/photos/20260918_ito_press/01.jpg
+  focus: 0.2
+  tags: []
+  points: []
+
+sections:
+  - id: where
+    heading: いまどこにいるのか
+    tier: 報道
+    bg: assets/backgrounds/ito_20260918.png
+    telop: 今夏の契約満了で、シント＝トロイデンを退団
+    narrator: キャスター
+    card:
+      type: table
+      title: 伊藤涼太郎のこれまで
+      columns: ["", ""]
+      rows:
+        - ["2023年夏", "アルビレックス新潟からシント＝トロイデンへ"]
+        - ["昨季", "リーグ35試合10ゴール。ベストイレブン選出"]
+        - ["今夏", "契約満了で退団"]
+        - ["9月半ば", "新しい所属先の発表なし"]
+    say:
+      - 伊藤涼太郎は今年の夏、ベルギー1部の**シント＝トロイデン**を離れました。
+      - 移籍ではなく、**契約満了**でした。
+      - 2023年の夏にアルビレックス新潟から加わり、リーグ戦の通算は104試合19ゴールでした。
+      - 昨季は35試合で**10ゴール**を挙げ、ベルギー1部のベストイレブンにも選ばれています。
+      - その選手が、9月半ばになっても新しい所属先を発表していません。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/17/359372/
+      - https://www.tokyo-sports.co.jp/articles/-/403358
+
+  - id: summer
+    heading: この夏に何があったか
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/ito_20260918.png
+    telop: ブラックバーンでメディカルを受け、そこで止まった
+    narrator: 解説
+    card:
+      type: table
+      title: 決まらなかった夏
+      columns: ["", ""]
+      rows:
+        - ["早い段階", "ヘントの打診を断る"]
+        - ["夏のあいだ", "スペイン・ドイツのクラブが候補に挙がるも動かず"]
+        - ["9月上旬", "ブラックバーンでメディカルチェック"]
+        - ["9月10日", "破談"]
+    say:
+      - {short_only: true, text: シント＝トロイデンを契約満了で離れたあと、所属先の発表がないままです。}
+      - 9月10日、イングランド2部ブラックバーンのモウブレイ監督が、こう話しました。
+      - {voice: モウブレイ監督, text: 正直なところ、私にも分からない}
+      - {voice: モウブレイ監督, text: 今となっては、実現しないだろうということだ}
+      - 伊藤の加入が、**メディカルチェックまで進んだうえで破談になった**ときの言葉です。
+      - 足首の状態が理由と伝えられています。
+      - この夏、動きはそれだけではありませんでした。
+      - はじめに動いたのは同じベルギーのヘント。**伊藤はこれを早い段階で断ります。**
+      - スペインやドイツのクラブも候補に挙がりましたが、実際に動くクラブは現れませんでした。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/17/359372/
+      - https://footballleagueworld.co.uk/blackburn-rovers-huge-transfer-blow-tony-mowbray-miss-ryotaro-ito-0-deal/
+      - https://www.football-zone.net/archives/673703
+
+  - id: back
+    heading: 古巣が動いていた
+    tier: 報道
+    bg: assets/backgrounds/ito_20260918.png
+    telop: シント＝トロイデンが復帰を打診。伊藤は応じなかった
+    narrator: キャスター
+    say:
+      - ここで動いたのが、離れたばかりの**シント＝トロイデン**でした。
+      - 今季の戦いが安定しない中で、クラブが復帰を画策していたと伝えられています。
+      - "**伊藤はこれにも応じていません。**"
+      - 現地の記事は、終わりをこう結んでいます。
+      - {voice: ベルギーの地元紙, text: 技術力の高いこのミッドフィールダーは、今後日本へ戻るとみられている}
+      - 別の地元紙は、さらに厳しく書いています。
+      - {voice: ベルギーの地元紙, text: 本人は非常に高い目標を設定し、関心を示した多くのクラブを断った}
+      - {voice: ベルギーの地元紙, text: バイエルンやリバプールに行けるわけではないと認識すべきだ}
+      - ハンブルガーSVとボルシアMGからの話も、即座に断ったと伝えられています。
+      - 伊藤は2024年1月1日のタイ戦で日本代表に初めて出場し、そのときは先発でした。代表での出場は、その1試合です。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/17/359372/
+      - https://www.tokyo-sports.co.jp/articles/-/403358
+      - https://www.football-zone.net/archives/673703
+      - https://www.jfa.jp/samuraiblue/member/ito_ryotaro.html
+
+  - id: voices
+    heading: この状況をどう見たか
+    tier: 未確認
+    bg: assets/backgrounds/ito_20260918.png
+    telop: 「まさかまさか声掛からないとは」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 本人はシントトロイデンで数字残して、移籍金かからないフリーだから、五大リーグのクラブから声かかると踏んでいたのだろうが、まさかまさか声掛からないとは}
+      - {voice: ネット民, text: 伊藤は最近には少ないファンタジスタタイプの選手でJ時代から好きな選手の1人です}
+      - {voice: ネット民, text: 怪我もあり年齢も若くないので、ベルギーより上のリーグへの移籍は難しいのが現状ですね}
+      - {voice: ネット民, text: 絶滅危惧種の日本産ファンタジスタが5大リーグでどれくらい出来るか見てみたい}
+      - {voice: ネット民, text: 高望みしちゃうのよ。選手も代理人も。ちゃんと自分の実力に合ったチームを選び、身の丈に合ったレベルのリーグでやれないと最後は出戻りになるんだよ}
+      - {voice: ネット民, text: 欧州でのステップアップを夢見て来たのに、またふりだしだよ}
+      - {voice: 現地サポ, text: この男の転落ぶりは前代未聞だ。もう普通に戻ってこいよ、相棒, short_voice: true}
+      - {voice: ネット民, text: いっそのこと、あと3ヶ月、しっかりと怪我を治しながら、トレーニングして、冬移籍までに賭けるのもいいかもしれない, short_voice: true}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/fe52ef18b02eb0e252018758347b5e1919938d62/comments
+      - https://news.yahoo.co.jp/articles/f85387ca635ad9da4447c74dd666ee8241eeb350/comments
+      - https://news.yahoo.co.jp/articles/2f5ac01f89b269d955c543eab1d619674de859e0/comments
+      - https://x.com/search?q=Ito STVV lang%3Anl&f=live

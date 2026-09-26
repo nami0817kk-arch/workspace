@@ -1,0 +1,106 @@
+date: 2026年9月23日
+slot: japan_2
+format: quote
+voice_min: 0.6
+people: [板倉滉, 森保監督]
+theme:
+  id: itakura_asiancup
+  league: germany
+  league_name: 日本代表
+  kind: other
+  topic: 板倉滉
+  title: '板倉滉、アジアカップに出られるのか「自分は拾ってもらった身なので」'
+  hook: 代表とクラブ、どちらも立てながら言葉を選んでいます。
+  question: アジアカップに出られるのか
+short_title: 板倉滉が語ったアジアカップの本音
+thumbnail:
+  photo: assets/images/20260923_itakura/02.jpg
+  line1: 「拾ってもらった身なので」
+  line2: 代表とクラブのあいだで
+sections:
+  - id: what
+    heading: 何が起きているか
+    tier: 報道
+    telop: 来年1月のアジアカップ。辞退が報じられている
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - 板倉は昨季をオランダのアヤックスで過ごしました。
+      - この夏、古巣のボルシア・メンヘングラートバッハに戻りました。
+      - そのクラブのために、来年1月のアジアカップを辞退するのではと報じられています。
+      - ドイツのリーグは、アジアカップのあいだも止まらないからです。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459419-459419-fl
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207878.html
+  - id: said
+    main: true
+    heading: 本人が言ったこと
+    tier: 報道
+    telop: 「自分は拾ってもらった身なので」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: 'この夏ドイツの古巣に戻った板倉滉に、アジアカップの辞退が報じられています。'
+        short_only: true
+      - voice: 板倉滉
+        text: サッカーやってる上でプライオリティが一番高いのは日本代表で、
+      - voice: 板倉滉
+        text: このために普段海外でやっている分、アジアカップについては発言するのが難しい
+      - voice: 板倉滉
+        text: チームの気持ちもわかるし、僕自身もアジアカップに出たいということはもちろん一番あるんですけど、
+      - voice: 板倉滉
+        text: 状況的には話し合いをしているというのは事実
+      - voice: 板倉滉
+        text: アジアカップはシーズン中にやるので、チームの言っていることももちろんリスペクトしないといけない。
+      - voice: 板倉滉
+        text: '**自分は拾ってもらった身なので**、チームに専念しなければいけないというのもある'
+      - voice: 板倉滉
+        text: 決定したわけではないところは一つ希望として残しておきたい
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207878.html
+  - id: decided
+    heading: もう決まったのか
+    tier: 報道
+    telop: 「一つ希望として残しておきたい」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: 板倉滉
+        text: 結構難しいとは思う
+      - 森保監督は、今月の取材でこう話しています。
+      - voice: 森保監督
+        text: アジア杯に出られないのは基本かなとは思っている
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207878.html
+      - https://web.gekisaka.jp/news/japan/detail/?459419-459419-fl
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを聞いた人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: ネット民
+        text: 板倉のボルシアMG復帰の条件にクラブが望んだ場合はアジアカップ出場辞退を申し入れる的な条項があるんだなという雰囲気だな。本人も拾ってもらった立場と言ってるし板倉抜きの可能性は高いな…
+      - voice: ネット民
+        text: 板倉アジアカップ厳しそうやし日本代表の新キャプテン鈴木彩艶ならんかな
+      - voice: ネット民
+        text: キャプテン決めてないなら冨安にしてくれ！次点で堂安。アジアカップ欠場すると噂の板倉はキャプテン外して欲しい。
+      - voice: ネット民
+        text: 板倉ってアジアカップ出ないんでしょ？呼ぶ意味ある？
+      - voice: ネット民
+        text: アジアカップ出られるか分からない板倉さんが代表に呼ばれとるいうことはめぼしい若手CBがJリーグにもおらんちゅうこっちゃね。よう知らんけど
+      - voice: ネット民
+        text: 良い知らせだ。1月のアジアカップには出ない
+      - voice: ネット民
+        text: 板倉は1月で30歳。アジアカップで長く抜ける。それにけがで休むことも多い。ディクスと同じ時期にいないのは、かなりきつい。だからこの補強は喜べない
+      - voice: ネット民
+        text: いい補強だ。でも1月のアジアカップを考えると、ディクスと板倉のセンターバックは大胆だと思う
+      - voice: ネット民
+        text: アジアカップに出ないと言われているのに、なぜ今の状態の板倉が代表に行かなきゃいけないんだ
+      - voice: ネット民
+        text: 板倉滉、もはやアジアカップ戦いたいと言い出せる雰囲気じゃ無さそう…
+        short_voice: true
+    sources:
+      - https://x.com/search?q=%E6%9D%BF%E5%80%89%20%E3%82%A2%E3%82%B8%E3%82%A2%E3%82%AB%E3%83%83%E3%83%97%20lang%3Aja&f=live
+      - https://x.com/search?q=Itakura%20Asien%20lang%3Ade&f=live

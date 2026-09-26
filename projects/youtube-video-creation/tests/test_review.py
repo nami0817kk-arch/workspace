@@ -19,10 +19,12 @@ BODY = (
 GOOD_BODY = """---
 title: アーセナルが勝った理由がこちらです
 sources: [https://example.com/a]
-tags: [サッカー, 海外サッカー]
+tags: [サッカー, アーセナル, 海外サッカー]
 ---
 
 ## 何が起きたか
+
+@bg: assets/backgrounds/stock/match_stadium.mp4
 
 キャスター: アーセナルが勝った理由がこちらです。
   source: 確定
@@ -65,8 +67,10 @@ def _built(tmp_path, seconds=150.0):
         "1\n00:00:01,000 --> 00:00:03,000\n字幕\n", encoding="utf-8"
     )
     # サムネの写真もクレジットが要る（2026-09-06）。見本にも1行入れておく
+    # ハッシュタグも概要欄に出る（2026-09-15）。**タグ全部ではなく前の3つ**
     (tmp_path / "description.txt").write_text(
-        "概要" + chr(10) + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org",
+        "概要" + chr(10) + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org"
+        + chr(10) + chr(10) + "#サッカー #アーセナル #海外サッカー",
         encoding="utf-8")
     (tmp_path / "script.json").write_text(
         json.dumps({"scenes": [{"lines": [{"start": seconds - 10, "duration": 10}]}]}),
@@ -296,14 +300,22 @@ def test_字幕に確度バッジが混ざっていたら弾く(tmp_path):
     assert not _caption_badges(srt).ok
 
 
-def test_字幕1枚が長すぎたら弾く(tmp_path):
+def test_字幕は長くても弾かない(tmp_path):
+    """**字数では落とさない**（2026-09-11 ユーザー「制約はない」）。
+
+    字幕は焼き込みではなく別ファイルの CC なので、既定では画面に出ない。
+    読めないものは弾くが、長さは数を出すだけ。
+    """
     from src.review import _caption_load
 
     srt = tmp_path / "subtitles.srt"
     srt.write_text(
         "1\n00:00:01,000 --> 00:00:06,000\n" + "あ" * 60 + "\n\n", encoding="utf-8"
     )
-    assert not _caption_load(srt).ok
+    finding = _caption_load(srt)
+    assert finding.ok and "60" in finding.detail
+
+    assert not _caption_load(tmp_path / "ない.srt").ok
 
 
 def test_止まりすぎる画面を弾く(tmp_path):
@@ -319,16 +331,40 @@ def test_止まりすぎる画面を弾く(tmp_path):
     assert not _still_length(path).ok
 
 
-def test_写真のクレジットが足りなければ弾く(tmp_path):
+
+
+def _endo_credit(root):
+    """**写真と控えをテストの中で作る**（2026-09-26）。`assets/images/` は git に入らないので、
+    手元の写真に頼ったテストは CI で前提が無くなり、9/18 から落ち続けていた。"""
+    import json
+    folder = root / "assets" / "images" / "endo"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "03.jpg").write_bytes(b"")
+    (folder / "credits.json").write_text(json.dumps([{
+        "file": "03.jpg", "source": "wikimedia", "title": "File:Wataru endo.jpg",
+        "page_url": "https://commons.wikimedia.org/wiki/File:Wataru_endo.jpg",
+        "license": "CC BY 3.0", "author": "Jeollo von VfB-exklusiv.de"}], ensure_ascii=False), encoding="utf-8")
+
+def test_写真のクレジットが足りなければ弾く(tmp_path, monkeypatch):
     from src.review import _photo_credits
 
+    _endo_credit(tmp_path)
+    monkeypatch.chdir(tmp_path)
     (tmp_path / "description.txt").write_text("本文だけ", encoding="utf-8")
     script = _script("## S\nキャスター: 遠藤選手です。\n  image: assets/images/endo/03.jpg\n")
     assert not _photo_credits(script, tmp_path).ok
 
+    # **数え方を2つとも直した**（2026-09-18）。それまでは「写真の**ファイル名**の数」と
+    # 「`画像:` で始まる行の数」を比べていた。どのフォルダも中身は `01.jpg` なので
+    # **何枚使っても1枚**に数えられ、しかも**報道写真まで数えて**いた
+    # （報道写真は1枚ごとの行を出さない決まり）。
+    # いまは `image_details` が出す行が、そのまま概要欄にあるかを見る
+    from src.tts import image_details
+
+    want = image_details(script)
+    assert want, "表示が条件の写真が拾えていない"
     (tmp_path / "description.txt").write_text(
-        "本文\n画像: File:Wataru endo.jpg / Jeollo / CC BY 3.0", encoding="utf-8"
-    )
+        "本文\n" + "\n".join(want), encoding="utf-8")
     assert _photo_credits(script, tmp_path).ok
 
 
@@ -388,33 +424,31 @@ def test_サムネに実在する写真があれば通る(tmp_path, monkeypatch)
     body = "---\ntitle: 見出し\nthumbnail_photo: assets/images/x/face.jpg\n---\n\n## S\nキャスター: あ。\n"
     assert review._thumbnail_face(parse_script(body)).ok
 
-def test_サムネの写真もクレジットが要る(tmp_path):
+def test_サムネの写真もクレジットが要る(tmp_path, monkeypatch):
     """**サムネイルも配布物。**動画本体に出ないからと数えていなかった。
 
     2026-09-06 に、公開済みの5本がクレジット無しで出ていた。
     """
     from src.review import _photo_credits
+    from src.tts import image_details
 
+    _endo_credit(tmp_path)
+    monkeypatch.chdir(tmp_path)
     nl = chr(10)
-
-    class Line:
-        image = None
-
-    class Script:
-        lines = [Line()]
-        meta = {"thumbnail_photo": "assets/images/arteta/01.jpg"}
+    # **動画の行には写真を1枚も出さない。**サムネだけに使う
+    script = _script("## S" + nl + "キャスター: 遠藤選手の話です。" + nl)
+    script.meta = {"thumbnail_photo": "assets/images/endo/03.jpg"}
 
     out = tmp_path
     (out / "description.txt").write_text(
         "■ クレジット" + nl + "音声: VOICEVOX" + nl, encoding="utf-8")
-    finding = _photo_credits(Script(), out)
-    assert not finding.ok, "サムネの写真が数えられていない"
+    assert not _photo_credits(script, out).ok, "サムネの写真が数えられていない"
 
+    want = image_details(script)
+    assert want, "サムネの写真が拾えていない"
     (out / "description.txt").write_text(
-        "■ クレジット" + nl
-        + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org" + nl,
-        encoding="utf-8")
-    assert _photo_credits(Script(), out).ok
+        "■ クレジット" + nl + nl.join(want) + nl, encoding="utf-8")
+    assert _photo_credits(script, out).ok
 
 
 # ショートは冒頭で捨てられる。2026-09-07 の実測で、公開済みショートは
@@ -506,6 +540,45 @@ def test_反応カードがあれば通す():
     assert finding is not None and finding.ok
 
 
+def _reaction_script(shown, said):
+    from src.script_model import Line, Scene, Script
+
+    lines = [Line(speaker="ネット民", text=t, card="c1" if i == 0 else None)
+             for i, t in enumerate(said)] or [Line(speaker="キャスター", text="本文", card="c1")]
+    lines[0].card = "c1"
+    return Script(
+        title="見出し",
+        scenes=[Scene(title="ネットの反応", lines=lines)],
+        cards={"c1": {"type": "reactions",
+                      "items": [{"text": t} for t in shown]}},
+    )
+
+
+def test_カードに出した反応は全部読み上げる():
+    """2026-09-11 ユーザー指摘「ネットの反応で使わないのがあるのはなぜ？」。
+
+    伊藤涼太郎の回で、カードに5件出しながら読み上げは2件だけだった。
+    **画面に出しておいて読まない理由が説明できない。**
+    """
+    from src.review import check_reaction_pairing
+
+    five = ["どこか手を出しそう", "よっぽど重傷なんやな", "磐田いけ",
+            "伊藤の怪我って5月の足首やって", "うむ、そうらしい なんとも間が悪い"]
+    finding = check_reaction_pairing(_reaction_script(five, five))
+    assert finding is not None and finding.ok
+
+    half = check_reaction_pairing(_reaction_script(five, five[2:4]))
+    assert half is not None and not half.ok
+    assert "3件" in half.detail
+
+    # **長い1件を行に分けただけなら通す**（2026-09-11「切らずにのせるはしないの？」）。
+    # 落としていないので、続けて読んでいれば同じこと
+    long = ["メディカル落ちした選手を他のクラブがすぐ拾うだろうか"]
+    split = ["メディカル落ちした選手を", "他のクラブがすぐ拾うだろうか"]
+    finding = check_reaction_pairing(_reaction_script(long, split))
+    assert finding is not None and finding.ok
+
+
 def test_反応の節が無い回では黙る():
     """毎回うるさく言わない。移籍の回に反応を強要しない。"""
     from src.review import check_reaction_layer
@@ -533,14 +606,19 @@ def test_語りだけの台本は他人の声で止まる(tmp_path):
     assert "0%" in result["他人の声の量"].detail
 
 
-def test_長い引用は刻みで止まる(tmp_path):
+def test_長い引用でも刻みで止めない(tmp_path):
+    """**選ぶ基準は長さではなく中身**（2026-09-11 ユーザー
+    「内容がいいものを抜粋する」「文字数は関係ない」）。
+
+    20字で落としていると、**短いものだけが残る決まり**になっていた。
+    数は出すが、止めない。
+    """
     body = GOOD_BODY.replace(
         "ネット民: 完全に別チームだった。",
         "ネット民: 完全に別のチームになっていて見ていて本当に気持ちがよかった一戦だったし"
         "これが続くなら今季は本気で優勝を狙えると思う。")
-    # 上限は45字（2026-09-08 サッカーラボの実測 30〜45字に合わせた）
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
-    assert result["反応の刻み"].ok is False
+    assert result["反応の刻み"].ok is True
 
 
 def test_1行目がタイトルと違うと止まる(tmp_path):
@@ -606,6 +684,25 @@ def test_タイトルの頭に名前が無いと止まる(tmp_path):
         "title: そのとき何が起きたのかがこちらです")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["タイトルの主語"].ok is False
+
+
+def test_名前のあとに鉤括弧が来ても主語と認める(tmp_path):
+    """**発言を名前に続ける書き方を見ていなかった**（2026-09-18）。
+
+    「佐野航大「行きたかったのですが、できなかった」」が
+    「頭14字に人名もクラブ名もありません」で × になった。
+    漢字の名前は**助詞か読点が続くもの**だけを見ていて、
+    **鉤括弧は切れ目として数えていなかった。**
+    名前のすぐ後ろに発言を置くのは、このチャンネルでよく使う形
+    （「ブッフォン「ガットゥーゾは…」」「アロンソ「作り直しではない」」）。
+    """
+    for title in ('佐野航大「行きたかったのですが、できなかった」',
+                  '守田英正『まだ戻れない』と語ったこと',
+                  '南野拓実（モナコ）が見せたもの'):
+        body = GOOD_BODY.replace(
+            "title: アーセナルが勝った理由がこちらです", f"title: {title}")
+        result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+        assert result["タイトルの主語"].ok is True, title
 
 
 def test_普通のカタカナ語は名前と数えない(tmp_path):
@@ -687,6 +784,25 @@ def test_問いかけで終わるタイトルを通す():
     for title in ("アーセナル、2分で失点してから何をしたのか",
                   "レスター、優勝から10年でどこまで落ちたか",
                   "バルサの19歳組、4人目が誰か分かりますか"):
+        script = parse_script(nl.join(["---", f"title: {title}", "---", "",
+                                       "## 本編", "", "キャスター: 本文。", ""]))
+        assert check_title_hook(script).ok, title
+
+
+def test_問いかけのあとにシリーズ名が付いても通す():
+    """**一覧が形を狭めるのは4度目**（2026-09-20）。
+
+    プレミア20クラブ紹介を見本の形に作り直したら、
+    「ボーンマスってどんなクラブ？ ①プレミア20クラブ紹介」が弾かれた。
+    疑問符はあるのに**文の途中**（うしろにシリーズの名札が付く）なので、
+    語尾だけを見る枝に引っかからなかった。
+    """
+    from src.review import check_title_hook
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    for title in ("ボーンマスってどんなクラブ？ ①プレミア20クラブ紹介",
+                  "鈴木彩艶がいるアストン・ヴィラってどんなクラブ？ ③プレミア20クラブ紹介"):
         script = parse_script(nl.join(["---", f"title: {title}", "---", "",
                                        "## 本編", "", "キャスター: 本文。", ""]))
         assert check_title_hook(script).ok, title
@@ -1031,3 +1147,430 @@ def test_埋め草を知らせる():
 
     clean = _said(("キャスター", "17人が入れ替わりました。"))
     assert check_filler(clean).ok
+
+
+def test_体言止めのタイトルを通す():
+    """**体言止めも答えを隠す形**（2026-09-12）。
+
+    CLAUDE.md は「問いかけ・引用で切る・体言止めなど形はいくつもある」と
+    書いているのに、検査は体言止めを1つも認めていなかった。
+    「ニコ・パスがレアルを断って残った理由」が弾かれた。**また検査が形を狭めていた。**
+    """
+    from src.review import check_title_hook
+    from src.script_model import Line, Scene, Script
+
+    def titled(text):
+        return Script(title=text, scenes=[Scene(title="節",
+                      lines=[Line(speaker="キャスター", text="本文")])])
+
+    assert check_title_hook(titled("ニコ・パスがレアルを断って残った理由")).ok
+    assert check_title_hook(titled("デンベレ、バロンドール昨年度受賞者が語る")).ok
+    assert check_title_hook(titled("モウリーニョが返した一言")).ok
+
+    # 言い切りは今までどおり落とす
+    assert not check_title_hook(titled("ヴァーディがバーンリーへ完全移籍で加入")).ok
+
+
+def test_札から始まるタイトルは落とす():
+    """**頭は人名かクラブ名**（2026-09-11 の実測）。
+
+    12時間以上たった27本（深夜を除く）で、1,100回を超えた10本の **80%が名前で始まり**、
+    群れ17本では29%だった。札は抜けた側で10%・群れで35%。
+    **札が名前を頭から押しのけている。**
+    それまでは札を剥がしてから見ていたので、
+    「【速報】ヴァーディがバーンリーへ」が「頭に名前」で通っていた。
+    """
+    from src.review import check_title_subject
+    from src.script_model import Line, Scene, Script
+
+    def titled(text):
+        return Script(title=text, scenes=[Scene(title="節",
+                      lines=[Line(speaker="キャスター", text="本文")])])
+
+    bad = check_title_subject(titled("【速報】ヴァーディがバーンリーへ"))
+    assert not bad.ok and "札から始まって" in bad.detail
+
+    assert check_title_subject(titled("ヴァーディがバーンリーへ。なぜ今なのか")).ok
+    assert check_title_subject(titled("ハーランドが40試合で並んだ記録")).ok
+
+
+def test_件数への感想は埋め草():
+    """**「数としては多くありません」はいらない**（2026-09-11 ユーザー指摘）。
+
+    件数はそのまま言えばよく、多い・少ないの評価を足すと尺を食うだけ。
+    どの2件を引いたかの断りも要らない。そのまま読み上げに入る。
+    """
+    from src.review import check_filler
+
+    for text in ("8件でした。数としては多くありません。",
+                 "そのうち、短くそのまま読めるものを2件だけ引きます。",
+                 "賛成は少なくありません。",
+                 # **母数も読み上げない**（「件数もいらない」）。反応そのものから入る
+                 "ネット上に出ていた書き込みは、8件でした。",
+                 "47件の書き込みがありました。"):
+        assert not check_filler(_said(("解説", text))).ok, text
+
+    # 件数でない数字は通す
+    ok = _said(("解説", "17人が入れ替わりました。"))
+    assert check_filler(ok).ok
+
+
+def test_title_ending_with_wa_hides_the_answer():
+    """「〜は」で切る形も答えは隠れている（2026-09-13）。
+
+    「クリスタル・パレス対イプスウィッチ、日本人3人の活躍は」を
+    言い切りだと弾いていた。述語がまだ来ていないのに。
+    """
+    from src.review import check_title_hook
+    from src.script_model import Script
+
+    ok = Script(title="クリスタル・パレス対イプスウィッチ、日本人3人の活躍は", scenes=[])
+    assert check_title_hook(ok).ok
+    ng = Script(title="クリスタル・パレスがイプスウィッチに逆転負けした", scenes=[])
+    assert not check_title_hook(ng).ok
+
+
+def test_band_first_line_length_is_flagged():
+    """サムネの帯の1行目が長いと、親指の大きさで読めない（2026-09-13）。
+
+    Gemini にサムネ6枚を見せて「15文字を超えると潰れる」と指摘された。
+    収まってはいる（字が小さくなる）ので、画面で見ても気づけない。
+    """
+    from src.review import check_band_length
+    from src.script_model import Script
+
+    ok = Script(title="見出し", scenes=[], meta={"thumbnail_line1": "鎌田大地が2アシスト"})
+    assert check_band_length(ok).ok
+    ng = Script(title="見出し", scenes=[],
+                meta={"thumbnail_line1": "パレス対イプスウィッチ 日本人3人の活躍は"})
+    assert not check_band_length(ng).ok
+
+
+def test_tail_silence_is_flagged(tmp_path, monkeypatch):
+    """最後の一言のあと、誰も喋らない時間が長すぎないか（2026-09-13）。
+
+    Gemini に実物のショートを見せて見つかった。読み上げ37.2秒に対して
+    動画40.2秒で、**最後の3秒が無音**だった。音量の点検は平均で見るので、
+    末尾の無音は通ってしまう。冒頭の静止カードを外したのと同じことが、
+    終わりで起きていた。
+    """
+    from src import review
+    from src.script_model import Line, Scene, Script
+
+    (tmp_path / "video.mp4").write_bytes(b"dummy")
+    (tmp_path / "script.json").write_text(
+        '{"scenes":[{"lines":[{"start":0,"duration":37.2}]}]}', encoding="utf-8")
+    script = Script(title="見出し", scenes=[
+        Scene(title="節", lines=[Line(speaker="キャスター", text="本文")])])
+
+    # 縦型（ショート）: 3秒の無音は止める
+    monkeypatch.setattr(review, "_dimensions", lambda _v: (1080, 1920))
+    monkeypatch.setattr(review, "_video_seconds", lambda _v: 40.2)
+    assert not review.check_tail_silence(script, tmp_path).ok
+
+    monkeypatch.setattr(review, "_video_seconds", lambda _v: 37.6)
+    assert review.check_tail_silence(script, tmp_path).ok
+
+    # **本編は最後のカードを3秒出す決まり**なので、そこは通す
+    monkeypatch.setattr(review, "_dimensions", lambda _v: (1920, 1080))
+    monkeypatch.setattr(review, "_video_seconds", lambda _v: 40.2)
+    assert review.check_tail_silence(script, tmp_path).ok
+
+
+def test_玉ぼけの下地を最初の画面に使わせない():
+    # night.png は自前で描いた抽象画で、サッカーが写っていない。
+    # エンブレムで作る回は、開いた瞬間がこれになっていた（2026-09-13）
+    from src.review import check_opening_background
+
+    body = GOOD_BODY.replace(
+        "@bg: assets/backgrounds/stock/match_stadium.mp4",
+        "@bg: assets/backgrounds/night.png")
+    finding = check_opening_background(parse_script(body))
+    assert not finding.ok
+    assert "night.png" in finding.detail
+
+
+def test_実写のサッカーなら最初の画面は通る():
+    from src.review import check_opening_background
+
+    finding = check_opening_background(parse_script(GOOD_BODY))
+    assert finding.ok
+    assert "match_stadium.mp4" in finding.detail
+
+
+def test_ハッシュタグが多すぎると止まる(tmp_path):
+    """**16個以上あると YouTube はハッシュタグを全部無視する**（2026-09-15）。
+
+    タグをそのまま概要欄へ流していたので、書き出し済み220本のうち5本が
+    これに当たっていた（いちばん多い回で21個）。
+    """
+    from src.review import check_hashtags
+
+    (tmp_path / "description.txt").write_text(
+        "本文" + chr(10) + chr(10) + " ".join(f"#タグ{i}" for i in range(21)),
+        encoding="utf-8")
+    got = check_hashtags(tmp_path)
+    assert not got.ok and "21個" in got.detail
+
+    (tmp_path / "description.txt").write_text(
+        "本文" + chr(10) + chr(10) + "#サッカー #アーセナル #海外サッカー",
+        encoding="utf-8")
+    assert check_hashtags(tmp_path).ok
+
+
+def test_クラブ名のタグが無いと止まる():
+    """**clubs.yaml に無いクラブだとタグが1つも付かない**（2026-09-15 実測）。
+
+    9/11以降の本編96本のうち22本がこれで、ボーンマス・シャルケ・
+    フライブルクの回はタグが人名と分類語だけだった。
+    """
+    from src.review import check_tag_club
+
+    head = "---\ntitle: T\ntags: [%s]\n---\n\n## 章\n\nキャスター: あ。\n  source: 確定\n"
+    assert not check_tag_club(parse_script(head % "サッカー, 移籍市場")).ok
+    assert check_tag_club(parse_script(head % "サッカー, アーセナル")).ok
+    assert check_tag_club(parse_script(head % "サッカー, フランス代表")).ok
+
+
+def test_辞書に無いクラブはエンブレムの名前で通す():
+    """`crest_main` は手で書いたクラブ名。辞書の更新を待たない。"""
+    from src.review import check_tag_club
+
+    body = ("---\ntitle: T\ntags: [サッカー, ボーンマス]\n"
+            "thumbnail_crest_main: [ボーンマス, ブレントフォード]\n---\n\n"
+            "## 章\n\nキャスター: あ。\n  source: 確定\n")
+    assert check_tag_club(parse_script(body)).ok
+
+
+def test_辞書に無いクラブはトピックで通す():
+    """`clubs.yaml` に無いクラブは topic からタグにしている（2026-09-15）。
+
+    サウサンプトンの回が「クラブ名も代表名も入っていません」で × になっていた。
+    """
+    from src.review import check_tag_club
+
+    body = ("---\ntitle: T\ntags: [サッカー, サウサンプトン]\n"
+            "topic: サウサンプトン\n---\n\n"
+            "## 章\n\nキャスター: あ。\n  source: 確定\n")
+    assert check_tag_club(parse_script(body)).ok
+
+
+def test_カードの持ちは写真を数えない():
+    """**写真は出たら最後まで残るのが正しい形**（2026-09-14 のユーザー判断）。
+
+    それを「絵が止まっている」と数えると、この点検を通すには
+    ユーザーが止めた明滅に戻すしかない。画面がほんとうに止まっていないかは
+    `見た目の変化`（カードもテロップも変わらないまま20秒）が見る。
+    """
+    import json
+
+    from src.review import check_card_hold
+
+    def build(tmp, lines):
+        path = tmp / "script.json"
+        path.write_text(json.dumps({"scenes": [{"lines": lines}]}), encoding="utf-8")
+        return path
+
+    import tempfile
+    from pathlib import Path as _P
+
+    with tempfile.TemporaryDirectory() as work:
+        tmp = _P(work)
+        held = [{"image": "a.jpg", "duration": 30} for _ in range(3)]
+        assert check_card_hold(build(tmp, held)).ok, "写真の出しっぱなしで鳴っている"
+        # **入れ替える相手（写真）が出てからのカードだけを数える。**
+        # 写真の無い節でカードを下ろすと「カードも写真も無い」まま伸びる
+        card = [{"image": "a.jpg", "card": "c1", "duration": 30} for _ in range(3)]
+        assert not check_card_hold(build(tmp, card)).ok, "カードの出しっぱなしを見逃した"
+        early = [{"card": "c1", "duration": 30} for _ in range(3)]
+        assert check_card_hold(build(tmp, early)).ok, "写真が出る前のカードで鳴っている"
+
+
+def test_したのはで止める形も答えを隠している():
+    """**3度目の同じ壊れ方**（2026-09-15）。
+
+    2026-09-08 は問いかけ、2026-09-12 は体言止めが弾かれた。今回は
+    「フォーデンの一発退場。キーンが口にしたのは」。**検査の一覧が形を狭めている。**
+    """
+    from src.review import check_title_hook
+
+    def title(text):
+        body = ("---\ntitle: " + text + "\n---\n\n## 章\n\n"
+                "キャスター: " + text + "。\n  source: 確定\n")
+        return check_title_hook(parse_script(body))
+
+    assert title("フォーデンの一発退場。キーンが口にしたのは").ok
+    assert title("久保建英が外れた。監督が挙げたのは").ok
+    # 言い切りは今までどおり止める
+    assert not title("アーセナルがサンダーランドに2対0で勝った").ok
+
+
+def test_取材メモより古い台本を知らせる(tmp_path):
+    """**draft は既存の台本を上書きしない**（2026-09-16 に2度踏んだ）。
+
+    取材メモを直して掛け直しても「すでにあります」で止まるだけで、
+    古い台本のまま先へ進めてしまう。気づけるようにする。
+    """
+    import os
+    from src.review import stale_against_notes
+
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "research").mkdir()
+    script = tmp_path / "scripts" / "a.md"
+    notes = tmp_path / "research" / "a.yaml"
+    script.write_text("古い", encoding="utf-8")
+    notes.write_text("新しい", encoding="utf-8")
+
+    os.utime(script, (1000, 1000))
+    os.utime(notes, (2000, 2000))
+    assert "取材メモより古い" in stale_against_notes(script)
+
+    os.utime(notes, (500, 500))
+    assert stale_against_notes(script) == ""
+
+
+def test_手元に無いエンブレムを主役にしたら止める(tmp_path):
+    """**顔もロゴも無いサムネが通っていた**（2026-09-17 ユーザー「町田の画像はないんだっけ？」）。
+
+    町田浩樹の回は `crest_main: [ホッフェンハイム]` と書いてあり検査は通ったが、
+    `assets/crests/` にホッフェンハイムは無く、できあがったのは**夜景だけ**のサムネ。
+    **名前を書けば通る検査は、通るだけ。**実物があるかを見る。
+    """
+    from src.review import _thumbnail_face
+    from src.script_model import parse_script
+
+    missing = parse_script(
+        "---\ntitle: T\nthumbnail_crest_main:\n- ホッフェンハイム\n---\n\n"
+        "## 何が起きたか\n\nキャスター: あ。\n")
+    found = _thumbnail_face(missing)
+    assert found.ok is False
+    assert "ホッフェンハイム" in found.detail
+
+    有る = parse_script(
+        "---\ntitle: T\nthumbnail_crest_main:\n- アーセナル\n---\n\n"
+        "## 何が起きたか\n\nキャスター: あ。\n")
+    assert _thumbnail_face(有る).ok is True
+
+
+def test_海外の反応が無ければ知らせる():
+    """**日本人選手の海外での話なのに、日本のネット民の声しか読んでいなかった**
+    （2026-09-17）。
+
+    同じ8日間・同じ選手を扱う「サムライスター情報局」の直近10本は、
+    10本すべてが「現地ファン騒然」「仏メディアが絶賛」で、再生の中央値 11,849回。
+    こちらは同じ期間で1,043回、題名に「現地」「海外」が1本も無かった。
+
+    話者の型（現地サポ・海外のファン）は最初から config にある。
+    **仕組みがあるのに使っていなかった。**
+
+    **2026-09-22 に、この検査の前提が外れた。**9/21 の指示
+    「国で分けない。語り手はネット民に統一する」で、海外から取った反応も
+    話者は `ネット民` になる。**話者名では見分けられない。**
+    だから「無い」とは言えなくなり、×ではなく覚え書きを返す。
+    国で分けている古い台本だけ、今までどおり数える。
+    """
+    from src.review import check_overseas_voices
+    from src.script_model import parse_script
+
+    merged = parse_script(
+        "---\ntitle: T\n---\n\n## ネットの声\n\n"
+        "ネット民: すごい\nネット民: たしかに\n")
+    found = check_overseas_voices(merged)
+    # **×にしない。**海外の反応をネット民として混ぜてあるかもしれない
+    assert found.ok is True
+    assert "見分けられません" in found.detail
+
+    old_style = parse_script(
+        "---\ntitle: T\n---\n\n## ネットの声\n\n"
+        "ネット民: すごい\n現地サポ: あちらでも話題になっている\n")
+    hit = check_overseas_voices(old_style)
+    assert hit.ok is True
+    assert "1件" in hit.detail
+
+    none_at_all = parse_script("---\ntitle: T\n---\n\n## 何が起きたか\n\nキャスター: あ\n")
+    assert "反応そのものがありません" in check_overseas_voices(none_at_all).detail
+
+
+def test_3文字のカタカナ名も頭の名前として数える():
+    """**メッシ・ヤマル・ロドリ・ジダン・ケインは、どれも3文字**（2026-09-22）。
+
+    4文字以上しか見ていなかったので、「メッシが930点目を決めた」が
+    「頭に人名もクラブ名もありません」で × になった。
+    このチャンネルがいちばんよく出す名前が、まるごと抜けていた。
+    """
+    from src.review import check_title_subject
+    from src.script_model import parse_script
+
+    for name in ("メッシ", "ヤマル", "ロドリ", "ケイン"):
+        script = parse_script(f"---\ntitle: {name}が決めた1点。残したのは\n---\n\n## あ\n\nキャスター: あ\n")
+        assert check_title_subject(script).ok is True, name
+
+
+def test_3文字の普通名詞は名前として数えない():
+    """下げたぶん、普通名詞が通らないようにする。"""
+    from src.review import check_title_subject
+    from src.script_model import parse_script
+
+    for word in ("ミス", "パス", "セーブ", "ハット"):
+        script = parse_script(f"---\ntitle: {word}が続いた試合で起きたのは\n---\n\n## あ\n\nキャスター: あ\n")
+        assert check_title_subject(script).ok is False, word
+
+
+def test_白い箱で積む反応も反応の層として数える():
+    """**9/14 から反応はカードではなく白い箱で積んでいる。**この検査はそれを知らず、
+    9/21 の10本は見出しを「見ていた人が書いていたこと」にして探す語を避けていたから
+    通っていただけだった（2026-09-22 に判明）。見出しで逃がさず、箱の数で見る。"""
+    from src.review import check_reaction_layer
+    from src.script_model import parse_script
+
+    script = parse_script("---\ntitle: T\n---\n\n## ネットの声\n\n"
+                          "ネット民: すごい\nネット民: たしかに\nネット民: やばい\n")
+    assert check_reaction_layer(script).ok is True
+
+    only_caster = parse_script("---\ntitle: T\n---\n\n## ネットの声\n\n"
+                               "キャスター: 反応を紹介します。\n")
+    assert check_reaction_layer(only_caster).ok is False
+
+
+def test_疑問符で終わる題は問いかけとして通す():
+    """2026-09-22: 「メッシ通算930点目。フリーキックだけなら歴代何位？」が弾かれた。"""
+    from types import SimpleNamespace
+    from src.review import check_title_hook
+
+    assert check_title_hook(SimpleNamespace(title="フリーキックだけなら歴代何位？")).ok
+    assert check_title_hook(SimpleNamespace(title="デンベレとのあいだで起きたこと")).ok
+    assert not check_title_hook(SimpleNamespace(title="メッシが930点目を決めた")).ok
+
+
+def test_連体形のあとに名詞で止める題は隠している():
+    """2026-09-25、7度目。「…売り出したもの」「…思いがけない場所」が弾かれた。
+
+    「場所」「もの」を一覧に足しても、次は「値段」「相手」で鳴る。
+    **形で見る**——連体形の動詞のすぐ後ろで名詞に止めていれば体言止め。
+    """
+    from types import SimpleNamespace
+
+    from src.review import check_title_hook
+
+    def hook(title):
+        return check_title_hook(SimpleNamespace(title=title)).ok
+
+    assert hook("ジェイドン・サンチョが練習していた、思いがけない場所")
+    assert hook("マンチェスター・ユナイテッド、過去最高の収入。その同じ日に売り出したもの")
+    # 動詞で言い切る題は、これまでどおり止める
+    assert not hook("佐藤龍之介のバレンシアに、アギーレ。14年で24人目の監督が来た")
+    assert not hook("ジンチェンコ、膝を痛めた日から7か月。まだどこにも所属していない")
+    # 濁音の連体形（呼んだ／読んだ）も同じ
+    assert hook("佐藤龍之介のバレンシアが、19位からの立て直しに呼んだ監督")
+    # 形式名詞で止める形も同じ（「2つのこと」は直前が動詞ではない）
+    assert hook("ジダンからムバッペへの電話。そこで伝えられた2つのこと")
+    # 名詞で終わっても、前が動詞でなければ言い切り
+    assert not hook("サンチョ、ドルトムントへ移籍")
+
+
+def test_名前の途中に普通名詞があっても名前とみなす():
+    """2026-09-26。「インファンティーノ」の中の「ファン」で、頭に名前が無いと判定されていた。"""
+    from src.review import check_title_subject
+    from src.script_model import Script
+    assert check_title_subject(Script(title="ジャンニ・インファンティーノ会長に、欧州4大リーグが突きつけたもの")).ok
+    assert check_title_subject(Script(title="インファンティーノ会長に、欧州4大リーグが突きつけたもの")).ok

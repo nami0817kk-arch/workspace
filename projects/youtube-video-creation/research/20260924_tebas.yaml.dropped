@@ -1,0 +1,68 @@
+date: 2026年9月24日
+slot: laliga_2
+format: quote
+voice_min: 0.55
+people: [ハビエル・テバス, フロレンティーノ・ペレス]
+theme:
+  id: tebas_florentino
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ラ・リーガ
+  title: 'テバス会長が語った、レアル・マドリードとの関係「修復不能」'
+  question: 何が修復不能なのか
+short_title: テバス「フロレンティーノがいる限り」
+thumbnail:
+  crest_main: [レアル・マドリード]
+  line1: リーグ会長が口にした一言
+  line2: 「子どもの頃からの私のチームだ」
+sections:
+  - id: what
+    heading: 「修復不能」
+    tier: 報道
+    telop: ラ・リーガ会長テバスが、催しの場で語った
+    narrator: キャスター
+    say:
+      - ラ・リーガの会長、ハビエル・テバス。9月23日、記者に囲まれて、こう言い切りました。
+      - voice: テバス
+        text: フロレンティーノがレアル・マドリードの会長でいる限り、関係は修復不能だ
+      - きっかけは、レアル・マドリードが出した声明。強い言葉の言い合いが続いています。
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/09/23/tebas-reaccionamos-ataques-seriamos-imbeciles.html
+  - id: said
+    main: true
+    heading: 何が気に入らないのか
+    tier: 報道
+    telop: 「問題はフロレンティーノのフットボールのモデルだ」
+    narrator: キャスター
+    say:
+      - text: 'リーグの会長が、レアルの会長フロレンティーノ・ペレスとの関係を、修復不能だと言い切りました。'
+        short_only: true
+      - voice: テバス
+        text: 問題はフロレンティーノのフットボールのモデルであり、我々はそのモデルを擁護しない
+      - voice: テバス
+        text: 将来、別の会長になれば、そのときに見てみよう
+      - voice: テバス
+        text: 今の首脳陣にはまったく同意できない。だがレアル・マドリードそのものに恨みはない
+      - voice: テバス
+        text: 子どもの頃からの私のチームだ
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/09/23/tebas-reaccionamos-ataques-seriamos-imbeciles.html
+  - id: why
+    heading: それでも黙らない
+    tier: 報道
+    telop: 「反応しないなら、我々はバカ者だ」
+    narrator: キャスター
+    say:
+      - リーグそのものが歪められている、という批判にも答えました。
+      - voice: テバス
+        text: コンペティションが改ざんされていると言うのは理解できない
+      - 黙っているべきではないか、という声にも答えました。
+      - voice: テバス
+        text: 私は12年ここにいて、今もここにいる
+      - voice: テバス
+        text: ラ・リーガを攻撃するとき、それは全クラブを攻撃している
+      - voice: テバス
+        text: ラ・リーガ会長は黙っていなければならないと思うなら、これに反応しないなら、我々はバカ者ということになる
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/09/23/tebas-reaccionamos-ataques-seriamos-imbeciles.html

@@ -1,0 +1,394 @@
+# プレミアリーグ20クラブ紹介 ⑮マンチェスター・シティ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/mancity*.json と旧台本 20260916_pl15_mancity.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- マンチェスター・シティ
+- エンツォ・マレスカ
+short_title: シティは3部からなぜここまで来たのか
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_15_mancity
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: 初優勝の翌年に降格。シティは3部から、なぜここまで来たのか
+  question: どんなクラブなのか
+  hook: いまの姿になる前に、3部まで落ちています。
+  lead: 1シーズンで**勝ち点100**。この数字を持つのは、ここだけ。
+  opening_image: assets/stats/pl_mancity_data_t.png
+thumbnail:
+  line1: ヨーロッパを獲って、3部へ
+  line2: 初優勝の翌季に、降格したクラブ
+  crest_main:
+  - マンチェスターシティ
+  tags: []
+  points: []
+  board: assets/stats/pl_mancity_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 開幕5連勝で首位。新監督マレスカ
+  narrator: キャスター
+  say:
+  - text: 開幕から**5連勝**。いま、プレミアの首位にいるクラブです。
+    image: assets/stats/pl_mancity_data_r1.png
+    no_telop: true
+  - text: 監督はエンツォ・マレスカ。かつてグアルディオラを支えた助手が、**1年目**の指揮です。
+    image: assets/stats/pl_mancity_data_r2.png
+    no_telop: true
+  - voice: エンツォ・マレスカ
+    text: 「シティは、信じられないほどよく運営されているクラブだ」
+    image: assets/stats/pl_mancity_data_r2.png
+  - text: 昨季はリーグ2位で、カップは**2つ**。リーグの優勝からは、2シーズン遠ざかっています。
+    image: assets/stats/pl_mancity_data_r3.png
+    no_telop: true
+  - text: 3部にいたのは1998年。転機は10年後の買収でした。
+    image: assets/stats/pl_mancity_data_r3.png
+    no_telop: true
+  - image: assets/stats/pl_mancity_data0.png
+    text: 創立は**1880年**。教会のチーム、セント・マークスから、1894年に今の名前になりました。
+    no_telop: true
+  - image: assets/stats/pl_mancity_data1.png
+    text: 愛称は「シチズンズ」。ほかに「ブルーズ」「スカイブルーズ」とも呼ばれます。
+    no_telop: true
+  - image: assets/stats/pl_mancity_map.png
+    text: ホームタウンはマンチェスター。イングランド北西部です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_マンチェスターシティ.png
+    text: 本拠地はエティハド・スタジアム。**約6万1000人**が入ります。
+  - image: assets/photos/pl/mancity_owner_90b48e45.jpg
+    text: オーナーは、アブダビの投資グループです。
+  - image: assets/stats/pl_mancity_cups.png
+    text: 1部リーグの優勝は**10回**。FAカップ8回、リーグカップ9回。
+    no_telop: true
+  - image: assets/stats/pl_mancity_cups.png
+    text: チャンピオンズリーグ1回、カップウィナーズカップ1回、スーパーカップ1回、クラブワールドカップ1回。
+    no_telop: true
+  - image: assets/stats/pl_mancity_data6.png
+    text: 1シーズン勝ち点100を挙げたのは、2017年から18年です。
+    no_telop: true
+  - image: assets/stats/pl_mancity_last.png
+    text: 昨季は**2位**、勝ち点78。FAカップとリーグカップの**2冠**でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false
+- id: fall
+  heading: 3部まで落ちたクラブ
+  tier: 背景
+  telop: 1998年、3部へ。ヨーロッパを獲った経験がありながら
+  narrator: 解説
+  card:
+    type: table
+    title: 落ちて、変わるまで
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1998年
+      - 3部へ降格。1990年代に経営が傾いた末
+    - - 1970年
+      - カップウィナーズカップ優勝
+  say:
+  - text: 1998年、このクラブは**3部**まで落ちました。
+    image: assets/images/pl_mancity_story/01.jpg
+  - 1990年代、経営が傾いた末の降格でした。
+  - 1970年にヨーロッパの**カップウィナーズカップ**を獲ったクラブです。
+  - text: ヨーロッパを制したクラブの3部落ちは、ドイツのマクデブルクに続く**2例目**でした。
+    card:
+      type: table
+      title: 落ちて、変わるまで
+      columns: *id001
+      rows:
+      - - 2008年8月
+        - アブダビの投資グループが買収
+      - - 2012年 最終節
+        - QPRに3-2。決勝点はアグエロ（追加4分目）
+  - 転機は2008年8月。いまのオーナー、アブダビの投資グループがクラブを買い取りました。
+  - 2012年の最終節は、クイーンズ・パーク・レンジャーズ戦でした。
+  - 1対2で負けたまま、**アディショナルタイム**に入ります。
+  - text: そこから2点。2点目を決めたのはセルヒオ・アグエロ、試合終了の直前でした。
+    card:
+      type: table
+      title: 落ちて、変わるまで
+      columns: *id001
+      rows:
+      - - 同じ日
+        - 1968年以来、44年ぶりの優勝
+  - 3対2で勝ち、同じ勝ち点のマンチェスター・ユナイテッドを得失点差で上回りました。
+  - 1968年以来、**44年ぶり**の優勝でした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 持って崩す。王族の資金
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 持って崩し、すぐ奪い返す
+    - - 運営の型
+      - 買収から4年で優勝
+    - - クラブの気質
+      - 東マンチェスターの街
+  say:
+  - text: マレスカのサッカーは、ボールを持って崩し、奪われたらその場で奪い返す。グアルディオラ譲りです。
+    image: assets/photos/pl/mancity_manager_71dabf8d.jpg
+  - オーナー資金で買う型。買収の翌年だけで1億ポンド超を選手に注ぎ、4年で優勝まで駆け上がりました。
+  - 始まりは東マンチェスターの労働者の街。いまも本拠地は、その東側にあります。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
+  - https://en.wikipedia.org/wiki/History_of_Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/City_Football_Group
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false
+- id: episode
+  heading: 優勝の翌年に降格
+  tier: 背景
+  telop: 初優勝の翌年に降格。得点はリーグ最多
+  narrator: 解説
+  card:
+    type: table
+    title: 優勝の翌年に降格
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1937年
+      - 初めての1部優勝
+    - - 翌シーズン
+      - 降格
+    - - その季の得点
+      - リーグで最多
+  say:
+  - text: '**1937年**、このクラブは初めて1部で優勝しました。'
+    image: assets/images/pl_mancity_episode/01.jpg
+  - ところが、その翌シーズンに降格します。
+  - しかも落ちたそのシーズン、リーグでいちばん多くゴールを決めていたのは、マンチェスター・シティでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - セルヒオ・アグエロ
+      - 2011-2021
+      - クラブ最多の260得点
+  say:
+  - text: セルヒオ・アグエロは2011年、アトレティコから**3500万ポンド**で来ました。
+    image: assets/photos/pl/mancity_legend_341b1699.jpg
+  - '**260得点**はクラブ史上最多。ハットトリック**12回**はプレミアで最多です。'
+  - 2021年にバルセロナへ移りましたが、心臓の不整脈が見つかり、12月に引退しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  - https://en.wikipedia.org/wiki/David_Silva
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - ヴァンサン・コンパニ
+      - 2008-2019
+      - 8年間の主将
+  say:
+  - text: ヴァンサン・コンパニはベルギーのセンターバック。2008年8月、ハンブルクから来ました。
+    image: assets/photos/pl/mancity_legend_841b42a0.jpg
+  - 2019年5月、レスターに1対0の勝ち。11年目で初めて、エリアの外から決めた1点でした。
+  - 2019年に去り、アンダーレヒトで選手兼監督に。2024年からはバイエルンを率いています。
+  sources:
+  - https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  - https://en.wikipedia.org/wiki/David_Silva
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - ダビド・シルバ
+      - 2010-2020
+      - 4度優勝の司令塔
+  say:
+  - text: ダビド・シルバは2010年、スペインがワールドカップを獲った年に、バレンシアから来ました。
+    image: assets/photos/pl/mancity_legend_3efbd9fc.jpg
+  - リーグ優勝4回に、FAカップ2回、リーグカップ5回。タイトルは**11**です。
+  - '**436試合**に出て、最後の1年は主将。2020年、レアル・ソシエダへ去りました。'
+  sources:
+  - https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  - https://en.wikipedia.org/wiki/David_Silva
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はエンツォ・マレスカ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - エンツォ・マレスカ（イタリア）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - チェルシー
+  say:
+  - text: 今季の監督は、イタリア人のエンツォ・マレスカ。**2026年6月**に来た1年目です。
+    image: assets/photos/pl/mancity_manager_71dabf8d.jpg
+  - 前はチェルシー。2022年から23年には、このクラブでグアルディオラの助手でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は34人です。
+    image: assets/stats/pl_mancity_gk.png
+    no_telop: true
+  - image: assets/stats/pl_mancity_gk_f.png
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/pl_mancity_gk_f.png
+    text: ジャンルイジ・ドンナルンマはイタリア代表で**83試合**。
+    no_telop: true
+  - image: assets/stats/pl_mancity_gk_f.png
+    text: ピアース・チャールズは北アイルランド代表で**12試合**。
+    no_telop: true
+  - image: assets/stats/pl_mancity_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_mancity_df_f.png
+    text: 主将を務めるのが**ルベン・ディアス**。
+    no_telop: true
+  - image: assets/stats/pl_mancity_df_f.png
+    text: リーグ戦で**174試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_mancity_df_f.png
+    text: ヨシュコ・グヴァルディオルはクロアチア代表で**52試合**。
+    no_telop: true
+  - image: assets/stats/pl_mancity_mf1_f.png
+    text: ミッドフィールダーは13人。
+    no_telop: true
+  - image: assets/stats/pl_mancity_mf1_f.png
+    text: マテオ・コヴァチッチはクロアチア代表で**117試合**。
+    no_telop: true
+  - image: assets/stats/pl_mancity_mf1_f.png
+    text: フィル・フォーデンはイングランド代表で**49試合**。
+    no_telop: true
+  - image: assets/stats/pl_mancity_mf2.png
+    text: ミッドフィールダーの続きです。
+    no_telop: true
+  - image: assets/stats/pl_mancity_fw_f.png
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/pl_mancity_fw_f.png
+    text: アーリング・ハーランドはノルウェー代表で**55試合**。
+    no_telop: true
+  - image: assets/stats/pl_mancity_fw_f.png
+    text: ジェレミー・ドクはベルギー代表で**48試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で5勝。1位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - AFCボーンマス（ホーム）
+      - 2対1
+    - - 第2節
+      - クリスタル・パレス（アウェー）
+      - 4対1
+    - - 第3節
+      - コヴェントリー・シティ（ホーム）
+      - 1対0
+    - - 第4節
+      - マンチェスター・ユナイテッド（アウェー）
+      - 1対0
+    - - 第5節
+      - サンダーランド（ホーム）
+      - 5対3
+  say:
+  - プレミアリーグは5試合を終えて、**5勝**です。
+  - 順位は**1位**、勝ち点は**15**です。
+  - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  official: false

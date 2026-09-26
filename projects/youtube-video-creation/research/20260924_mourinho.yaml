@@ -1,0 +1,102 @@
+date: 2026年9月24日
+slot: laliga_3
+format: news
+voice_min: 0.4
+people: [ジョゼ・モウリーニョ, ヴィニシウス・ジュニオール]
+theme:
+  id: mourinho_vinicius
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: 'モウリーニョとヴィニシウス。ダービーの後半に起きたこと'
+  question: 2人の関係はどうなっているのか
+short_title: モウリーニョとヴィニシウスの距離
+thumbnail:
+  photo: assets/images/20260924_pair_mourinho/01.jpg
+  crests: [レアル・マドリード]
+  line1: モウリーニョとヴィニシウス
+  line2: 勝負が決まる前の交代だった
+sections:
+  - id: what
+    heading: 決めるのはこの人になった
+    tier: 報道
+    telop: 二度目の就任。試合のことだけを預かっているのではない
+    narrator: キャスター
+    say:
+      - text: 'レアル・マドリードに戻ったジョゼ・モウリーニョ。預かっているのは、ベンチの仕事だけではありません。'
+        image: assets/images/20260924_pair_mourinho/01.jpg
+      - voice: モウリーニョ
+        text: 私の場合、ただ練習して試合をするという話ではない
+      - voice: モウリーニョ
+        text: 練習をして、誰が出るかを選んで、交代を行う。それは私には少なすぎる。とても基本的なことだ
+      - 広報、下部組織と一軍の橋渡し、練習場のスタッフの人事、そして移籍市場の方針。**4つを任されています**。
+      - つまり、**誰を使うかも、誰を残すかも、この人が決められる**ということです。
+    sources:
+      - https://as.com/futbol/primera/la-mision-de-mourinho-en-el-madrid-trasciende-al-banquillo-f202609-n/
+  - id: vini
+    main: true
+    heading: 後半が始まって、まもなく
+    tier: 報道
+    telop: 勝負が決まる前の交代は、初めてのことだった
+    narrator: キャスター
+    card:
+      type: table
+      title: 日曜のダービーで起きたこと
+      columns: ['', '']
+      rows:
+        - [場所, メトロポリターノ]
+        - [交代, 後半が始まってまもなく]
+        - [勝負, まだ決まっていない時間]
+        - [この形の交代, レアルに来てから初めて]
+    say:
+      - text: '誰を使うかを任されたモウリーニョが、ダービーの後半早々にヴィニシウス・ジュニオールを下げました。'
+        short_only: true
+      - その権限が、ひとりの選手にはっきり出ました。**ヴィニシウス・ジュニオール**です。
+      - "日曜、メトロポリターノでのダービー。**後半が始まってまもなく**、ベンチへ下がりました。"
+      - 勝負がまだ決まっていない時間に下げられたのは、レアル・マドリードに来てから**初めてのこと**でした。
+      - 本人も、自分の投稿で調子が上がっていないことを認めました。
+      - 監督の側の見方は、こうです。**モウリーニョはヴィニシウスを信頼している。ただし、先発が保証されているわけではない**。
+      - 信頼している、と、出るかどうかは別だ。**その2つが同時に置かれた**ということです。
+    sources:
+      - https://as.com/futbol/primera/vinicius-busca-el-cambio-tras-tocar-fondo-f202609-n/
+      - https://as.com/futbol/primera/la-mision-de-mourinho-en-el-madrid-trasciende-al-banquillo-f202609-n/
+  - id: before
+    heading: 1度目のときの、この人は
+    tier: 背景
+    telop: 23年の在任で、解任されなかった唯一の監督
+    narrator: 解説
+    say:
+      - モウリーニョは、フロレンティーノ・ペレスの23年の在任で**解任されなかった唯一の監督**です。
+      - 1度目のとき、一軍に近づけた若手は30人近く。**公式戦に出たのは17人**でした。そこから根付いたのは、**ナチョとモラタ**の2人だけです。
+      - 練習場には、到着時刻の前倒し、食事の習慣、けがの処置、遅刻への罰則を持ち込みました。
+      - "**近づける選手も、切る選手も、自分で選ぶ**。1度目から、やり方は変わっていません。"
+      - その選び方の前に、いまヴィニシウスが立っているということです。
+    sources:
+      - https://as.com/futbol/primera/la-mision-de-mourinho-en-el-madrid-trasciende-al-banquillo-f202609-n/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 交代を歓迎する声と、監督への不安が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: これでヴィニ外せるならこれまでなんだったんだってなるな
+      - voice: ネット民
+        text: 2シーズン無駄になったわ
+      - voice: ネット民
+        text: ヴィニはなんでこんなに悪くなったんや
+      - voice: ネット民
+        text: エムバペはヴィニシウスより数字残しちゃってるから余計に外せないからな
+      - voice: ネット民
+        text: 半年も持つのか？　モウリーニョ
+      - voice: ネット民
+        text: 補強失敗・監督選び失敗・不要な契約延長。暗黒期の始まりって感じだな
+      - voice: ネット民
+        text: そもそもマドリー相手だとアトレティコはバフ掛かるからな
+      - voice: ネット民
+        text: それがサクッと勝つから意味わからないんだよな
+        short_voice: true
+    sources:
+      - https://kizuna.5ch.io/test/read.cgi/football/1789986617/
+      - https://worldfn.net/archives/63502075.html

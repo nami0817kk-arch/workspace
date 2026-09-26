@@ -1,0 +1,93 @@
+date: 2026年9月24日
+slot: japan_1
+format: quote
+voice_min: 0.45
+people: [鈴木唯人]
+theme:
+  id: suzuki_yuito_freiburg
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: フライブルク
+  title: '鈴木唯人、ブンデス開幕4戦4発。本人が挙げた理由はワールドカップだった'
+  question: なぜ今、点が取れているのか
+short_title: 鈴木唯人、4戦4発の理由
+thumbnail:
+  photo: ''
+  crest_main: [フライブルク]
+  line1: 開幕から4戦4発
+  line2: 本人が挙げたのはW杯の12分
+sections:
+  - id: what
+    heading: 4試合で4点
+    tier: 報道
+    telop: フライブルクの鈴木唯人が、開幕4試合で4得点
+    narrator: キャスター
+    say:
+      - フライブルクの鈴木唯人。ブンデスリーガの**開幕4試合で4得点**です。
+      - このあと、本人がこう話しました。
+      - voice: 鈴木唯人
+        text: やり続けている結果として表れてきているのかなと思っています
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260924/2208253.html
+  - id: why
+    main: true
+    heading: 出られなかった12分間
+    tier: 報道
+    telop: 「ワールドカップがあったおかげで今こうなれている」
+    narrator: キャスター
+    say:
+      - text: '鈴木唯人が、ブンデスで4試合4得点。理由を本人が明かしました。'
+        short_only: true
+      - 鈴木がワールドカップで立ったのは、**チュニジア戦の12分間だけ**でした。
+      - voice: 鈴木唯人
+        text: 悔しいというか不完全燃焼に終わった
+      - voice: 鈴木唯人
+        text: そのパワーをうまく今シーズンにつなげられていると思います
+      - voice: 鈴木唯人
+        text: ワールドカップがあったおかげで今、こうなれていることは間違いないので
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260924/2208253.html
+  - id: next
+    heading: 次はウルグアイ
+    tier: 報道
+    telop: 新しい代表でも、やり方は変えない
+    narrator: 解説
+    say:
+      - その鈴木は、いま日本代表に合流しています。森保一監督にとっては、三度目の就任。その最初の試合で、相手はウルグアイです。
+      - 監督が替わることについては、こう言っています。
+      - voice: 鈴木唯人
+        text: 特別ガラリと変わることはないと思うので
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260924/2208253.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 4戦4発に、驚きと注文が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 鈴木選手の決定力すごいねー
+      - voice: ネット民
+        text: 次のワールドカップのシャドーは確実に鈴木唯人
+      - voice: ネット民
+        text: 鈴木唯人はワールドカップで俺を使えよと言ってたけど伊達じゃなかったか
+      - voice: ネット民
+        text: 4節にしてもう昨シーズンのゴール数に並んでる
+      - voice: ネット民
+        text: アジアカップ前に2桁取っときたいな
+      - voice: ネット民
+        text: 乗りに乗っているとダイレクトボレーも決まる
+      - voice: ネット民
+        text: なんかひょっこりボレーよく決めるよね
+      - voice: ネット民
+        text: 鈴木唯人がW杯で万全だったら
+      - voice: ネット民
+        text: 正直、得点以外は微妙
+      - voice: ネット民
+        text: 周りとの関係の中で点は取れてるが
+      - voice: ネット民
+        text: 鈴木自身の仕掛けとかで攻撃にスイッチ入れられる訳じゃないから
+        short_voice: true
+    sources:
+      - https://footballnet.2chblog.jp/archives/60062179.html

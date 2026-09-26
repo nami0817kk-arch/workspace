@@ -1,0 +1,111 @@
+# 途中から出た選手が、30メートルから決めた（2026-09-15 の試合）
+#
+# **9/16 8:00 に出したイラオラの回と同じ監督の話。**
+# あちらは「前線への注文」、こちらは**控え中心で勝った試合**。
+# 重ならないよう、イラオラの発言は入れない。
+#
+# 引きは**「1点差に詰め寄られた直後だった」**。ここが山場（@main）。
+#
+# **遠藤航の名前は出さない。**同じ日に出す遠藤の回と重なる
+format: news
+voice_min: 20
+slot: premier_2
+date: "2026年9月16日"
+
+people:
+  - ドミニク・ソボスライ
+
+short_title: "30メートルから決めた一撃"
+
+theme:
+  id: szoboszlai_worldie_spurs
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: 1点差に迫られた直後、途中出場の選手が30メートルから決めた
+  hook: 62分から出た選手が、試合を決めました。
+  question: 誰が決めたのか
+
+thumbnail:
+  line1: 約30mからの一撃
+  line2: 決めたのは ●●●●
+  crest_main:
+    - リヴァプール
+  crests:
+    - トッテナム
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 試合の流れ
+    tier: 報道
+    telop: リヴァプール 3-1 トッテナム
+    narrator: キャスター
+    card:
+      type: table
+      title: カラバオ杯3回戦（9月15日）
+      columns: ["", ""]
+      rows:
+        - ["21分", "マック・アリスター"]
+        - ["54分", "ガクポ"]
+        - ["69分", "ギャラガー（トッテナム）"]
+        - ["終盤", "ソボスライ"]
+    say:
+      - カラバオ杯の3回戦、リヴァプール対トッテナムです。
+      - 21分にアレクシス・マック・アリスターが先制。
+      - 54分にはコディ・ガクポが追加点を奪いました。
+      - ところが69分、コナー・ギャラガーに返されて**1点差**になります。
+      - 終盤は、トッテナムに同点の可能性が残る展開でした。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/16/post1011744/
+
+  - id: goal
+    heading: その状況を変えた一撃
+    main: true
+    tier: 報道
+    telop: 62分から出た選手が、約30メートルから
+    narrator: 解説
+    say:
+      - {short_only: true, text: カラバオ杯で、リヴァプールがトッテナムと戦いました。}
+      - 流れを断ち切ったのは、62分から入っていたドミニク・ソボスライでした。
+      - ボールが**地面に落ち切るのを待たず**、右足を振り抜きます。
+      - 約**30メートル**の位置から放たれたハーフボレーでした。
+      - シュートはゴール右上の隅に突き刺さります。
+      - これで3対1。リヴァプールが**4回戦進出**を決めました。
+      - トッテナムは、これで公式戦**4試合**白星がありません。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/16/post1011807/
+
+  - id: who
+    heading: この選手について
+    tier: 背景
+    telop: 中盤も右サイドバックもこなす
+    narrator: キャスター
+    say:
+      - ソボスライは、置かれる場所が試合ごとに変わる選手です。
+      - 中盤、右サイドバック、ウイング。複数のポジションをこなしてきました。
+      - リヴァプールとは**2031年まで**の長期契約を結ぶと報じられています。
+      - この日は先発ではありませんでした。**控えから出て、試合を決めた形**です。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/16/post1011807/
+
+  - id: voices
+    heading: あの一撃への反応
+    tier: 未確認
+    telop: 「ソボスライのミドルは重要無形文化財ですわ」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: ソボスライのミドルは重要無形文化財ですわ, short_voice: true}
+      - {voice: ネット民, text: ソボスライまじでキック上手いな かっけえ〜, short_voice: true}
+      - {voice: ネット民, text: やっぱソボスライはこの距離よな, short_voice: true}
+      - {voice: ネット民, text: ソボスライのトドメの1発は最高でした, short_voice: true}
+      - {voice: ネット民, text: マクアリスターといいソボスライといいプレーで周りを納得させるのかっこよすぎだろ}
+      - {voice: ネット民, text: ソボスライがちであのシュート以外ゴミだったから}
+    official: false
+    sources:
+      - https://x.com/search?q=ソボスライ&f=live

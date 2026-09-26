@@ -1,0 +1,105 @@
+{
+ "note": "プレミアリーグ第5節終了時点（2026-09-21 取得）",
+ "table": {
+  "mancity": {
+   "rank": 1,
+   "points": 15,
+   "record": "5勝0分0敗"
+  },
+  "arsenal": {
+   "rank": 2,
+   "points": 12,
+   "record": "4勝0分1敗"
+  },
+  "brighton": {
+   "rank": 3,
+   "points": 10,
+   "record": "3勝1分1敗"
+  },
+  "brentford": {
+   "rank": 4,
+   "points": 9,
+   "record": "2勝3分0敗"
+  },
+  "leeds": {
+   "rank": 5,
+   "points": 9,
+   "record": "2勝3分0敗"
+  },
+  "liverpool": {
+   "rank": 6,
+   "points": 9,
+   "record": "2勝3分0敗"
+  },
+  "everton": {
+   "rank": 7,
+   "points": 9,
+   "record": "2勝3分0敗"
+  },
+  "hull": {
+   "rank": 8,
+   "points": 8,
+   "record": "2勝2分1敗"
+  },
+  "newcastle": {
+   "rank": 9,
+   "points": 8,
+   "record": "2勝2分1敗"
+  },
+  "chelsea": {
+   "rank": 10,
+   "points": 7,
+   "record": "2勝1分2敗"
+  },
+  "ipswich": {
+   "rank": 11,
+   "points": 6,
+   "record": "2勝0分3敗"
+  },
+  "manutd": {
+   "rank": 12,
+   "points": 5,
+   "record": "1勝2分2敗"
+  },
+  "forest": {
+   "rank": 13,
+   "points": 5,
+   "record": "1勝2分2敗"
+  },
+  "sunderland": {
+   "rank": 14,
+   "points": 4,
+   "record": "1勝1分3敗"
+  },
+  "palace": {
+   "rank": 15,
+   "points": 4,
+   "record": "1勝1分3敗"
+  },
+  "villa": {
+   "rank": 16,
+   "points": 4,
+   "record": "1勝1分3敗"
+  },
+  "bournemouth": {
+   "rank": 17,
+   "points": 3,
+   "record": "0勝3分2敗"
+  },
+  "coventry": {
+   "rank": 18,
+   "points": 3,
+   "record": "1勝0分4敗"
+  },
+  "fulham": {
+   "rank": 19,
+   "points": 2,
+   "record": "0勝2分3敗"
+  },
+  "tottenham": {
+   "rank": 20,
+   "points": 2,
+   "record": "0勝2分3敗"
+  }
+ }
+}

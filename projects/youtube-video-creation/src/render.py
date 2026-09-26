@@ -9,12 +9,13 @@ from __future__ import annotations
 
 import hashlib
 import math
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from . import cards, ffmpeg
+from . import cards, emphasis, ffmpeg
 from .backgrounds import moving_background
 from .inserts import Inserts
 from .ffmpeg import is_video
@@ -43,6 +44,9 @@ class Layout:
     width: int
     height: int
     with_characters: bool = True
+    # **横のどこを残すか**（2026-09-18）。縦型に横長の写真を敷くと、
+    # 横は真ん中で切られる。端に写っている人を残したいときだけ台本から指定する
+    focus_x: float | None = None
 
     @property
     def telop_box(self) -> tuple[int, int, int, int]:
@@ -92,6 +96,15 @@ class Renderer:
         )
         self.frame_dir = work_dir / "frames"
         self._stages: dict[str, Image.Image | None] = {}
+        # **画面いっぱいに敷いた横長の絵**（一覧板・数字の図）の控え。
+        # その上にはカードも節の名前も重ねない（2026-09-17）
+        self._wide_stages: set[str] = set()
+        # **カードを止めるのは「板」のときだけ**（2026-09-18 に踏んだ）。
+        # 9/17 に「一覧板の上にはカードも節の名前も重ねない」と決めたとき、
+        # **横長の絵すべて**を対象にしてしまった。報道写真を使えるように
+        # なってからは写真がほぼ16:9なので、**写真を使う回はカードが1枚も出ない**。
+        # クロップの選手の表も、久保の表も、画面に出ていなかった
+        self._board_stages: set[str] = set()
         # 冒頭の節で敷く写真（frame_entries が台本から入れる）
         self.opening_photo: str = ""
         self.opening_scene: str = ""
@@ -178,7 +191,18 @@ class Renderer:
         # **冒頭の節はサムネの写真を敷く**（2026-09-08）。ぼかした夜景に黒い板では、
         # 最初の3秒が止まって見えた。参考は0秒目からその人の実写が出ている
         opening = scene.title == self.opening_scene and self.opening_photo
-        stage = self._photo_stage(line.image or (self.opening_photo if opening else None))
+        stage_path = line.image or (self.opening_photo if opening else None)
+        stage = self._photo_stage(stage_path)
+        # **板を出している間は、その上に何も重ねない**（2026-09-17 ユーザー指示
+        # 「松木の顔ではなくて、サムネ画面をだしておいて」）。板は文字でできた絵なので、
+        # カードや節の名前を乗せると板の文字が読めなくなる。
+        # 実際、齋藤俊輔と松木玖生がカードの下に隠れていた
+        wide = bool(stage is not None and stage_path
+                    and str(stage_path) in self._wide_stages)
+        # 板（一覧板・数字の図）はそれ自体が読ませる絵なので、上に何も重ねない。
+        # ふつうの写真は重ねてよい
+        board = bool(stage is not None and stage_path
+                     and str(stage_path) in self._board_stages)
         if stage is not None:
             # 写真を主役にした下地。動画背景の上でも不透明に敷く
             canvas = stage.copy()
@@ -189,13 +213,15 @@ class Renderer:
         # 写真を下地にしたときは小さなカードを重ねない。図表だけ左半分に置く。
         # **縦型は左半分に寄せない。**写真が画面いっぱいなので、寄せる相手がいない
         # （2026-09-09。1080の幅をさらに半分にすると図表が読めなくなる）
-        self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
-                         left_half=stage is not None and not self.layout.is_portrait)
+        if not board:
+            self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
+                             left_half=(stage is not None and not wide
+                                        and not self.layout.is_portrait))
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
         # 中身のある節名（「監督は何と言ったか」など）は残す
-        if not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
+        if not board and not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
             self._draw_scene_title(canvas, scene.title)
         if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
             self._draw_channel_card(canvas)
@@ -206,8 +232,13 @@ class Renderer:
             # **前の反応を画面に残す**（2026-09-07）。参考チャンネルは白い吹き出しを
             # 4〜5件積み上げていて、途中から見た人も文脈を拾える。こちらは1行ずつ
             # 消えていた
-            self._draw_stack(canvas, stack)
-            self._draw_headline(canvas, text, telop_t, source)
+            # **反応の最中はテロップを出さない**（2026-09-14 指示
+            # 「ネット民の声の時は複数の声が並ぶ感じで、その時にテロップは不要」）。
+            # 声は白い箱に並ぶので、同じ一文を下でもう一度読ませる意味がない
+            if stack:
+                self._draw_stack(canvas, stack)
+            else:
+                self._draw_headline(canvas, text, telop_t, source)
         # 動画背景のときは重ねる前提なのでアルファを残す
         canvas.save(target) if over_video else canvas.convert("RGB").save(target)
         return target
@@ -272,9 +303,21 @@ class Renderer:
         photo = Image.open(path).convert("RGBA")
         bed = _cover(photo, width, height).filter(ImageFilter.GaussianBlur(30))
         bed = ImageEnhance.Brightness(bed).enhance(0.55)
+        if self.layout.is_portrait and _is_board(image_path):
+            # **縦の板は、そのまま画面いっぱいに敷く**（2026-09-23）。
+            # ショート用に作った 1080x1920 の基礎DATAの板は「横長」ではないので
+            # 下の網から漏れ、写真と同じ扱いになっていた。その結果、
+            # **板の上に節の名前とカードが重なり**、板の字が読めなかった。
+            # 下を暗く落とすのもやめる（最後の行が沈む）
+            self._wide_stages.add(image_path)
+            self._board_stages.add(image_path)
+            stage = _cover(photo, width, height)
+            self._stages[image_path] = stage
+            return stage
         if self.layout.is_portrait:
             # 縦型は横に並べる余地が無い。**写真で画面を埋める**
-            bed.alpha_composite(_cover(photo, width, height, focus=0.18))
+            bed.alpha_composite(_cover(photo, width, height, focus=0.18,
+                                       focus_x=self.layout.focus_x))
             shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
             shade_draw = ImageDraw.Draw(shade)
             start = int(height * 0.60)
@@ -284,6 +327,39 @@ class Renderer:
             bed.alpha_composite(shade)
             self._stages[image_path] = bed
             return bed
+        # **横長の絵は画面いっぱいに敷く**（2026-09-17 ユーザー指摘
+        # 「動画の画面の左側がぼやけている」）。右半分に立てる作りは
+        # **人物の縦写真のためのもの**で、16:9 の絵（一覧板・数字の図）を
+        # 入れると左半分がぼかしだけになり、しかも絵の左半分が切り落とされる。
+        # 代表発表の一覧板では、齋藤と松木が画面から消えていた
+        # **1.4倍では足りなかった**（2026-09-17 夜）。佐野の回に使った写真は
+        # 800x600＝1.33倍で、この網に掛からず、公開した動画の左が暗いままだった。
+        # 縦写真だけを右半分に立てたいので、**横長も正方形に近いものも全面**にする
+        # **1.15 → 0.95**（2026-09-23 指摘「レアルの背景の左がぼやけている」）。
+        # 上に「正方形に近いものも全面にする」と書いてあるのに、条件が
+        # 「横が縦の1.15倍以上」だったので**正方形が漏れていた**。
+        # テバスの写真は 1920x1924 で、ちょうどこの隙間に落ちていた。
+        # 右半分に立てたいのは**はっきり縦長の写真だけ**なので、そこまで下げる
+        if photo.width >= photo.height * 0.95:
+            self._wide_stages.add(image_path)
+            if _is_board(image_path):
+                self._board_stages.add(image_path)
+            bed = _cover(photo, width, height)
+            shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            shade_draw = ImageDraw.Draw(shade)
+            start = int(height * 0.56)
+            for y in range(start, height):
+                alpha = int(150 * (y - start) / (height - start))
+                shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+            bed.alpha_composite(shade)
+            self._stages[image_path] = bed
+            return bed
+        # **左はぼかさず、写真から拾った色のべた塗りにする**（2026-09-23 ユーザー選択）。
+        # サムネは 2026-09-20 に同じ形へ変えてあった（`thumbnail._flat_bed`）のに、
+        # 動画の中だけ「同じ写真をぼかした敷き布」が残っていた。今日2回
+        # 「左がぼやけている」と言われたのは、どちらもこの作りが出たところ。
+        # 別の絵を持ってこないので権利は変わらず、ぼけた絵も出ない
+        bed = _flat_bed(photo, width, height)
         column_w = int(width * 0.5)
         column = _cover(photo, column_w, height)
         # 左端をなじませる。切り口が立つと貼り付けたように見える
@@ -400,7 +476,12 @@ class Renderer:
             if picture is not None:
                 items.append(picture)
         if card_name:
-            card = self._card(card_name, beside=side_by_side)
+            # **縮小して貼らない**（2026-09-23 指摘「表をもう少し大きく」）。
+            # 左半分に置くカードは、大きく描いてから 0.63 倍に縮めていたので、
+            # 34px で描いた字が**21px になっていた**。はじめからその幅で描く
+            # 写真の左90pxはぼかして馴染ませてあるので、そこまで使ってよい
+            limit = (self.layout.width // 2 - 30) if left_half else None
+            card = self._card(card_name, beside=side_by_side, limit=limit)
             if card is not None:
                 items.append(card)
         if not items:
@@ -495,7 +576,7 @@ class Renderer:
         framed.alpha_composite(picture, (8, 8))
         return framed
 
-    def _card(self, name: str, beside: bool = False) -> Image.Image | None:
+    def _card(self, name: str, beside: bool = False, limit: int | None = None) -> Image.Image | None:
         spec = self.script_cards.get(name)
         if not spec:
             return None
@@ -506,7 +587,11 @@ class Renderer:
         elif beside:  # 写真と横に並べるぶん、カードは幅を譲る
             width = int(self.layout.width * (0.52 if not self.layout.with_characters else 0.40))
         else:
-            width = int(self.layout.width * (0.64 if not self.layout.with_characters else 0.46))
+            # **表を大きく**（2026-09-23 指摘）。0.64 → 0.74。
+            # 板の字（34px から縮む）が小さく、耳で追えなかった人が目で追えなかった
+            width = int(self.layout.width * (0.74 if not self.layout.with_characters else 0.46))
+        if limit:
+            width = min(width, limit)
         target = self.card_dir / f"{cards.card_key(spec, width)}.png"
         if not target.exists():
             cards.render(
@@ -584,13 +669,9 @@ class Renderer:
             )
             draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
 
-        if self.script_date:
-            date_w = draw.textlength(self.script_date, font=self.font_date)
-            right = canvas.width - 48
-            draw.text(
-                (right - date_w, 62), self.script_date, font=self.font_date,
-                fill=(206, 214, 226, 255), stroke_width=3, stroke_fill=(0, 0, 0, 190),
-            )
+        # **日付は画面に出さない**（2026-09-14 指示「日付入れなくて良い」）。
+        # 右上に「2026年9月14日」と出していたが、いつの話かは中身で言っている。
+        # 台本の `date` は残す（題材の重複を見るのに使っている）
         canvas.alpha_composite(layer)
 
     def _draw_telop(
@@ -612,7 +693,10 @@ class Renderer:
         # **枠は字の量に合わせて上へ伸ばす**（2026-09-10）。
         # テロップを2行ぶんに広げたので、高さ250pxの決め打ちだと3行目から
         # はみ出す。縦型は1行13.3字しか入らないので、とくに効く
-        lines = wrap_text(draw, text, self.font_telop, right - left - 88)
+        # **強調の囲みを外してから折り返す**（2026-09-15）。囲みを付けても
+        # 行の割れ方が1文字も変わらないようにする。大きさを変えないのも同じ理由
+        plain, spans = emphasis.split(text)
+        lines = wrap_text(draw, plain, self.font_telop, right - left - 88)
         line_height = self.config.video.telop_size + 16
         need = line_height * len(lines) + 44
         if need > bottom - top:
@@ -637,24 +721,59 @@ class Renderer:
             draw.text((box[0] + 22, box[1] + 8), label, font=self.font_name, fill=(16, 16, 20, 255))
 
         y = top + (bottom - top - line_height * len(lines)) // 2 + 12
+        accent = _hex(self.config.video.telop_accent) + (255,)
+        offset = 0
         for chunk in lines:
-            draw.text(
-                (left + 44, y),
-                chunk,
-                font=self.font_telop,
-                fill=(255, 255, 255, 255),
-                stroke_width=4,
-                stroke_fill=(0, 0, 0, 220),
-            )
+            x = left + 44
+            for segment, strong in _emphasis_segments(
+                chunk, emphasis.spans_in(chunk, offset, spans)
+            ):
+                draw.text(
+                    (x, y),
+                    segment,
+                    font=self.font_telop,
+                    fill=accent if strong else (255, 255, 255, 255),
+                    stroke_width=4,
+                    stroke_fill=(0, 0, 0, 220),
+                )
+                width = draw.textlength(segment, font=self.font_telop)
+                if strong:
+                    # **下線も引く。**色だけだと、明るい写真の上で差が薄れる
+                    bar = y + self.config.video.telop_size + 4
+                    draw.rounded_rectangle(
+                        [x, bar, x + width, bar + 6], radius=3, fill=accent
+                    )
+                x += width
+            offset += len(chunk)
             y += line_height
         if telop_t < 1.0:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
         canvas.alpha_composite(layer)
 
-    # 積み上げる反応の見た目。**白い吹き出しに黒文字**（参考チャンネルと同じ）。
+    # 積み上げる反応の見た目。**白い箱に色つきの字**（2026-09-14 にユーザーが
+    # まとめ動画の画面を見本として提示）。1件ごとに色を変えるので、
+    # どこからどこまでが1つの書き込みかが、読まなくても分かる。
     # 何件残すかは、見出しの上に入る高さから決めた（実測で3件）
-    STACK_KEEP = 3
-    STACK_SIZE = 40
+    # **全部出す**（2026-09-14 指示「ネットのコメントは、画面に全部出す」）。
+    # 5件で切っていたので、6件以上ある節では最初の書き込みが消えていた。
+    # 入りきらないぶんは**字を小さくして収める**（下の _draw_stack）
+    STACK_KEEP = 99
+    # **もっと大きく**（2026-09-14 指示）。見本は1行が画面幅の半分以上あった。
+    # ここは上限で、件数が多い節では自動で下がる
+    # **もう少し大きく**（2026-09-14 指摘）。件数が多い節では自動で下がる
+    STACK_SIZE = 72
+    STACK_SIZE_MIN = 34
+    # 見本は箱が左右にずれて置かれていた。**同じ左端に揃えない。**
+    # 画面幅に対する割合で、積んだ通し番号ごとにこの順で寄せる
+    STACK_INDENT = (0.04, 0.16, 0.02, 0.22, 0.10)
+    # 見本と同じ並び。白地で読める濃さにしてある
+    STACK_COLORS = (
+        (0, 132, 160, 255),     # 青緑
+        (176, 122, 0, 255),     # 山吹
+        (22, 132, 48, 255),     # 緑
+        (188, 88, 16, 255),     # 橙
+        (168, 32, 136, 255),    # 紅紫
+    )
 
     def _draw_stack(self, canvas: Image.Image, stack: tuple[str, ...]) -> None:
         """直前までの反応を、見出しの上に白い吹き出しで積む。
@@ -668,24 +787,72 @@ class Renderer:
             return
         from PIL import ImageFont
 
-        font = ImageFont.truetype(str(self.config.video.font_path()),
-                                  int(self.STACK_SIZE * self.layout.width / 1920))
         layer, draw = _layer(canvas.size)
-        left, top, right, _bottom = self.layout.headline_box
-        pad = int(self.layout.width * 0.012)
-        line_height = font.size + pad * 2
-        y = top - pad - line_height * len(stack[-self.STACK_KEEP:])
-        for depth, text in enumerate(stack[-self.STACK_KEEP:]):
-            width = int(draw.textlength(text, font=font)) + pad * 3
-            width = min(width, right - left)
-            # 古いものほど薄い。いちばん下（新しい）がはっきり見える
-            fade = 150 + int(105 * (depth + 1) / len(stack[-self.STACK_KEEP:]))
-            draw.rounded_rectangle([left, y, left + width, y + line_height],
-                                   radius=int(line_height * 0.35),
-                                   fill=(255, 255, 255, fade))
-            draw.text((left + pad, y + pad - 2), text, font=font,
-                      fill=(18, 18, 22, min(255, fade + 60)))
-            y += line_height
+        _left, _top, right, bottom = self.layout.headline_box
+        pad = int(self.layout.width * 0.014)
+        kept = list(stack[-self.STACK_KEEP:])
+        # **反応の最中はテロップを出さない**ので、見出しの居場所を空ける必要がない。
+        # 画面の下まで使えるぶん、字を大きくできる（2026-09-14 指摘「字が小さい」）
+        room_h = int(self.layout.height * 0.92) - int(self.layout.height * STACK_TOP)
+        scale = self.layout.width / 1920
+        size = int(self.STACK_SIZE * scale)
+        floor = max(12, int(self.STACK_SIZE_MIN * scale))
+        # **字を小さくせず、古いほうから落とす**（2026-09-15 指示
+        # 「一番最初のコメントは削除して、大きさが小さくならないようにして」）。
+        # 2026-09-14 は逆に「全部出す。入りきらないぶんは字を小さくして収める」と
+        # 決めていたが、**件数の多い節で字が読めない大きさまで落ちていた**。
+        # 見せたいのは新しいほうなので、あふれたら**いちばん古い1件から捨てる**
+        font = ImageFont.truetype(str(self.config.video.font_path()), size)
+        while len(kept) > 1:
+            total = _stack_height(draw, kept, font, pad, right - _left,
+                                  self.STACK_INDENT, self.layout.width,
+                                  len(stack) - len(kept))
+            if total <= room_h:
+                break
+            kept.pop(0)
+        # 1件だけになっても入らないとき（とても長い書き込み）は、そこで初めて縮める
+        while True:
+            font = ImageFont.truetype(str(self.config.video.font_path()), size)
+            total = _stack_height(draw, kept, font, pad, right - _left,
+                                  self.STACK_INDENT, self.layout.width,
+                                  len(stack) - len(kept))
+            if total <= room_h or size <= floor:
+                break
+            size -= 3
+        # 色と寄せ方は**積んだ通し番号**で決める。画面から消えた分も数に入れるので、
+        # 隣り合う書き込みが同じ色・同じ位置にならない
+        first = len(stack) - len(kept)
+
+        # **書き込みごとに幅も折り返しも変わる。**先に組んでから、
+        # 全体の高さぶんだけ上へ戻して置く（見出しの居場所には入らない）
+        room = right - _left
+        boxes: list[tuple[int, int, list[str], tuple[int, int, int, int]]] = []
+        total = 0
+        for depth, text in enumerate(kept):
+            index = first + depth
+            indent = int(self.layout.width * self.STACK_INDENT[index % len(self.STACK_INDENT)])
+            body = _strip_speaker(text)
+            # **切らない**（2026-09-15 指摘「文字が切れてる」）。_stack_height と同じ
+            lines = balanced_wrap(draw, body, font, room - indent - pad * 3)
+            height = font.size * len(lines) + int(font.size * 0.42) * (len(lines) - 1) + pad * 2
+            width = pad * 3 + max(int(draw.textlength(chunk, font=font)) for chunk in lines)
+            boxes.append((indent, min(width, room - indent), lines,
+                          self.STACK_COLORS[index % len(self.STACK_COLORS)]))
+            total += height + pad
+        # 上から積む。**下に余白が残っても、字の大きさを優先する**
+        y = int(self.layout.height * STACK_TOP)
+
+        for indent, width, lines, ink in boxes:
+            height = font.size * len(lines) + int(font.size * 0.42) * (len(lines) - 1) + pad * 2
+            box_left = _left + indent
+            draw.rounded_rectangle([box_left, y, box_left + width, y + height],
+                                   radius=int(font.size * 0.26),
+                                   fill=(255, 255, 255, 246))
+            text_y = y + pad
+            for chunk in lines:
+                draw.text((box_left + pad + pad // 2, text_y), chunk, font=font, fill=ink)
+                text_y += font.size + int(font.size * 0.42)
+            y += height + pad
         canvas.alpha_composite(layer)
 
     def _draw_headline(
@@ -702,8 +869,26 @@ class Renderer:
         left, top, right, bottom = self.layout.headline_box
         rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
 
-        lines = balanced_wrap(draw, text, self.font_headline, right - left - 90)[:3]
-        line_height = self.config.video.headline_size + 26
+        # **読み上げる文はぜんぶ出す**（2026-09-14 指示）。3行で切っていたので、
+        # 長い一文は「…アンドレス・」で終わっていた。
+        # 4行を超えるようなら字を小さくして、全部を入れる
+        from PIL import ImageFont as _IF
+        font_path = str(self.config.video.font_path())
+        size = self.config.video.headline_size
+        floor = max(22, int(size * 0.52))
+        font = self.font_headline
+        # **強調の囲みを外してから折り返す**（2026-09-15）。囲みで割れ方が変わらない
+        plain, spans = emphasis.split(text)
+        while True:
+            # **右の余白は文字の始まり（left+34）と釣り合う分だけ**（2026-09-18）。
+            # 90 だと縦型（幅1080）で 900px しか使えず、画面の83%で折り返していた
+            lines = balanced_wrap(draw, plain, font, right - left - 48)
+            if len(lines) <= HEADLINE_LINES_MAX or size <= floor:
+                break
+            size -= 4
+            font = _IF.truetype(font_path, size)
+        self.font_headline_fit = font
+        line_height = size + 26
         text_top = bottom - line_height * len(lines) + rise
 
         badge = SOURCE_BADGES.get(source or "")
@@ -715,7 +900,7 @@ class Renderer:
         # 実写の上でも見出しが読めていた。こちらは白文字＋細い縁だけだった。
         band_right = left
         for chunk in lines:
-            band_right = max(band_right, left + 34 + draw.textlength(chunk, font=self.font_headline))
+            band_right = max(band_right, left + 34 + draw.textlength(chunk, font=font))
         draw.rounded_rectangle(
             [left - 8, text_top - 18,
              min(right, int(band_right + 34)), text_top + line_height * len(lines) - 4],
@@ -737,13 +922,31 @@ class Renderer:
                       fill=(16, 16, 20, 255))
 
         y = text_top
+        strong_color = _hex(self.config.video.telop_accent) + (255,)
+        offset = 0
         for chunk in lines:
-            # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
-            draw.text(
-                (left + 34, y), chunk, font=self.font_headline, fill=(255, 255, 255, 255),
-                stroke_width=8 if self.layout.is_portrait else 5,
-                stroke_fill=(0, 0, 0, 235),
-            )
+            # 折り返しが空白を落とすことがあるので、位置は全文から探して合わせる
+            found = plain.find(chunk, offset)
+            offset = found if found >= 0 else offset
+            x = left + 34
+            for segment, strong in _emphasis_segments(
+                chunk, emphasis.spans_in(chunk, offset, spans)
+            ):
+                # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
+                draw.text(
+                    (x, y), segment, font=font,
+                    fill=strong_color if strong else (255, 255, 255, 255),
+                    stroke_width=8 if self.layout.is_portrait else 5,
+                    stroke_fill=(0, 0, 0, 235),
+                )
+                width = draw.textlength(segment, font=font)
+                if strong:
+                    # **下線も引く。**色だけだと明るい写真の上で差が薄れる
+                    bar = y + size + 8
+                    draw.rounded_rectangle([x, bar, x + width, bar + 7], radius=3,
+                                           fill=strong_color)
+                x += width
+            offset += len(chunk)
             y += line_height
 
         if telop_t < 1.0:
@@ -856,6 +1059,11 @@ class Renderer:
         inserts = inserts or Inserts()
         entries: list[tuple[Path, float]] = []
         previous: Path | None = None
+        # **横のどこを残すか**（2026-09-18）。縦型は写真を画面いっぱいに敷くので、
+        # 端に写っている人が落ちる。台本の `thumbnail_focus_x` で寄せる
+        _fx = script.meta.get("thumbnail_focus_x")
+        self.layout.focus_x = float(_fx) if _fx not in (None, "") else None
+        self._stages.clear()
         self.opening_photo = opening_photo(script.meta)
         self.opening_scene = script.scenes[0].title if script.scenes else ""
         self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
@@ -912,13 +1120,16 @@ class Renderer:
                     changed = (headline, card) != before
 
                 crowd = (line.speaker or "").strip() in self.config.voice_crowd
-                shown = tuple(stack) if crowd else ()
+                # **いま読んでいる行も箱に入れる**（2026-09-14）。テロップを
+                # 出さない決まりにしたので、ここに入れないと読んでいる声が
+                # 画面のどこにも出なくなる
+                shown = tuple(stack + [emphasis.strip(line.telop_text() or line.text)]) if crowd else ()
                 closed = self.frame(line, scene, mouth_open=False, panel=current,
                                     stack=shown)
                 opened = self.frame(line, scene, mouth_open=True, panel=current,
                                     stack=shown)
                 # 積むのは匿名の反応だけ。語りが入ったらいったん流す
-                stack = (stack + [line.telop_text() or line.text]) if crowd else []
+                stack = (stack + [emphasis.strip(line.telop_text() or line.text)]) if crowd else []
                 pause = line.pause or 0.0
                 speaking = max(0.0, line.duration - pause)
                 is_scene_head = index == 0
@@ -934,7 +1145,7 @@ class Renderer:
                     ):
                         # 見出しやカードが変わったときだけ、出現のアニメを入れる
                         intro = min(motion.telop_in, speaking * 0.5)
-                        entries += self._intro(line, scene, intro, current)
+                        entries += self._intro(line, scene, intro, current, shown)
 
                 entries += self._mouth_loop(closed, opened, speaking - intro)
                 if pause > 0.01:
@@ -984,6 +1195,7 @@ class Renderer:
         scene: Scene,
         seconds: float,
         panel: tuple[str, str | None, str | None] | None = None,
+        stack: tuple[str, ...] = (),
     ) -> list[tuple[Path, float]]:
         steps = max(1, round(seconds * self.config.motion.fps))
         step = seconds / steps
@@ -993,8 +1205,12 @@ class Renderer:
             # 出現中は口を閉じたままにして、フレームの種類が増えすぎないようにする
             entries.append(
                 (
+                    # **積み上げもここへ渡す**（2026-09-14 指摘「一瞬だけ映る部分は不要」）。
+                    # テロップの出現アニメだけ stack を渡しておらず、
+                    # 反応の行でも0.3秒だけ大テロップが描かれていた
                     self.frame(
-                        line, scene, False, telop_t=progress, hop_t=progress, panel=panel
+                        line, scene, False, telop_t=progress, hop_t=progress,
+                        panel=panel, stack=stack
                     ),
                     step,
                 )
@@ -1042,29 +1258,16 @@ class Renderer:
     MAX_STILL_SECONDS = 7.0
 
     def _split_long(self, name: str, seconds: float, index: int) -> list[tuple[Path, float]]:
-        """長いシーンは背景を2枚に割る。読み上げの途中でも絵が変わる。
+        """シーンの背景は1枚のまま出す。
 
-        割る先は BACKGROUNDS の並びから、いまの絵と違うものを選ぶ。
-        動画の背景（mp4）は元から動いているので割らない。
+        **途中で割らない**（2026-09-14 指示「背景を何度も変更するのはやめて。
+        変更は一度まで」）。それまでは静止画が長いと BACKGROUNDS の並びから
+        別の絵を選んで半分で入れ替えていた。台本の側で下地を1つに固めても、
+        **ここが勝手に差し替えるので節の途中で絵が変わっていた**
+        （エンブレムの下地にしたショートで、25秒あたりからスタジアムに戻った）。
+        画面の動きは `background_zoom` のゆっくりした寄りで作る。
         """
-        source = _resolve(name)
-        if seconds <= self.MAX_STILL_SECONDS or is_video(source):
-            return [(self._moving(source, seconds), seconds)]
-
-        from .research import BACKGROUNDS
-
-        alternatives = [c for c in BACKGROUNDS if Path(c).name != source.name]
-        if not alternatives:
-            return [(self._moving(source, seconds), seconds)]
-        second = _resolve(alternatives[index % len(alternatives)])
-        if not second.exists():
-            return [(self._moving(source, seconds), seconds)]
-
-        half = seconds / 2
-        return [
-            (self._moving(source, half), half),
-            (self._moving(second, seconds - half), seconds - half),
-        ]
+        return [(self._moving(_resolve(name), seconds), seconds)]
 
     def _moving(self, path: Path, seconds: float) -> Path:
         """静止画の背景を、ゆっくり寄っていくクリップに置き換える。
@@ -1117,6 +1320,43 @@ class Renderer:
                 list_path, track, audio_path, out_path, size, self.config.video.fps
             )
         return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps)
+
+
+def _emphasis_segments(chunk: str, spans: list[tuple[int, int]]
+                       ) -> list[tuple[str, bool]]:
+    """1行を「ふつう／強調」の連なりに割る。囲みが無ければ1つだけ返す。"""
+    if not spans:
+        return [(chunk, False)]
+    out: list[tuple[str, bool]] = []
+    at = 0
+    for start, end in spans:
+        if start > at:
+            out.append((chunk[at:start], False))
+        out.append((chunk[start:end], True))
+        at = end
+    if at < len(chunk):
+        out.append((chunk[at:], False))
+    return [(text, strong) for text, strong in out if text]
+
+
+def _is_board(image_path: str) -> bool:
+    """その絵は「板」か。**一覧板・数字の図はそれ自体が読ませる絵**。
+
+    ふつうの写真と見分ける手がかりは置き場所と控え:
+      ・`assets/stats/` … `squadboard.py` と `statboard` の書き出し先
+      ・`<絵>.statboard.txt` … 数字の図が残す控え（review が顔の代わりに認める印）
+    **写真（assets/photos, assets/images）は板ではない。**
+    2026-09-18 に、ここを分けずに「横長なら板」としていたせいで、
+    報道写真の回のカードが全部消えていた
+    """
+    from pathlib import Path as _P
+    text = str(image_path).replace("\\", "/")
+    if "/assets/stats/" in text or text.startswith("assets/stats/"):
+        return True
+    try:
+        return _P(str(image_path) + ".statboard.txt").exists()
+    except OSError:
+        return False
 
 
 def balanced_wrap(
@@ -1222,6 +1462,26 @@ LINE_START_FORBIDDEN = (
 LINE_END_FORBIDDEN = "「『（［｛〈《([{‘“"
 
 
+# 途中で割ってはいけない連なり。数字（小数点・カンマ・時刻の区切りを含む）と英字。
+# **「後半38分」が「後半3／8分」になっていた**（2026-09-18 に画面で見つかった）
+# **助数詞まで一緒に運ぶ**（2026-09-18）。「72」は割れなくなったが、
+# 今度は「アトレティコ・マドリード戦は72／分から」と単位が離れて読みにくかった
+_COUNTER = "分秒時日月年人名位点個回戦歳億万千円点本勝敗試合"
+_UNBREAKABLE = re.compile(
+    r"[0-9０-９]+(?:[.,．，:：][0-9０-９]+)*[%％]?"
+    rf"(?:試合|[{_COUNTER}])?|[A-Za-zＡ-Ｚａ-ｚ]+")
+
+
+def _unbreakable(text: str):
+    """折り返しの単位。**数字と英字のかたまりは1つとして扱う。**"""
+    at = 0
+    for found in _UNBREAKABLE.finditer(text):
+        yield from text[at:found.start()]
+        yield found.group(0)
+        at = found.end()
+    yield from text[at:]
+
+
 def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, max_width: float) -> list[str]:
     """日本語向けに1文字ずつ幅を見て折り返す。行頭・行末の禁則を守る。
 
@@ -1231,7 +1491,11 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
     forbidden = LINE_START_FORBIDDEN
     lines: list[str] = []
     current = ""
-    for char in text:
+    # **数字と英字は途中で割らない**（2026-09-18 ユーザー指摘）。
+    # 1文字ずつ幅を見て折り返していたので、「後半38分」が
+    # **「後半3」「8分」**に割れて、読んでも意味が取れない画面になっていた。
+    # 拗音や熟語の途中で割れる問題は直してあったのに、**数字は見ていなかった**
+    for char in _unbreakable(text):
         if char == "\n":
             lines.append(current)
             current = ""
@@ -1255,6 +1519,41 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
     if current:
         lines.append(current)
     return lines
+
+
+# 積んだ箱の上端。**節名の帯（上から42〜110px）の下**から始める
+STACK_TOP = 0.17
+# 見出しの行数の上限。超えたら字を小さくして全部入れる
+HEADLINE_LINES_MAX = 4
+
+_SPEAKER_WRAP = re.compile(r"^[^「]{1,12}「(.+)」$", re.S)
+
+
+def _stack_height(draw, rows, font, pad, room, indents, width, first) -> int:
+    """積んだ箱ぜんぶの高さ。**字の大きさを決めるために先に測る**（2026-09-14）。"""
+    total = 0
+    for depth, text in enumerate(rows):
+        indent = int(width * indents[(first + depth) % len(indents)])
+        # **3行で切っていた**（2026-09-15 指摘「文字が切れてる」）。
+        # 「ネットのコメントは、画面に全部出す」と決めてあるのに、
+        # 4行必要な書き込みが**黙って途中で終わっていた**
+        # （「行為として蹴ってる以上、そこは同」）。切らずに測って、
+        # 入りきらなければ上の while が字を小さくする
+        lines = balanced_wrap(draw, _strip_speaker(text), font,
+                              max(60, room - indent - pad * 3))
+        total += (font.size * len(lines)
+                  + int(font.size * 0.42) * (len(lines) - 1) + pad * 2 + pad)
+    return total
+
+
+def _strip_speaker(text: str) -> str:
+    """「ネット民「〜」」から中身だけ取り出す（2026-09-14）。
+
+    積んだ箱に毎回おなじ話者名が付くと、**4件並べたときに同じ字が4回**出る。
+    見本の画面も、書き込みの本文だけを置いている。
+    """
+    found = _SPEAKER_WRAP.match(text.strip())
+    return found.group(1) if found else text
 
 
 def _ease_out(t: float) -> float:
@@ -1289,16 +1588,44 @@ def opening_photo(meta: dict) -> str:
     return tiles[0] if tiles else ""
 
 
-def _cover(image: Image.Image, width: int, height: int, focus: float | None = None) -> Image.Image:
+def _flat_bed(photo: Image.Image, width: int, height: int) -> Image.Image:
+    """縦写真の左に敷く、**写真から拾った色のべた塗り**（2026-09-23 ユーザー選択）。
+
+    ぼかした敷き布は 2026-09-20 にサムネからは外してあったが、動画の中には
+    残っていた。上から下へのグラデーションにして、写真と地続きの色にする。
+    """
+    small = photo.convert("RGB").resize((24, 24), Image.LANCZOS)
+    pixels = [c for c in small.getdata() if 60 < sum(c) < 720] or list(small.getdata())
+    top = tuple(sum(c[i] for c in pixels) // len(pixels) for i in range(3))
+    top = tuple(int(c * 0.55 + 18) for c in top)
+    bottom = tuple(int(c * 0.45) for c in top)
+    bed = Image.new("RGBA", (width, height), top + (255,))
+    draw = ImageDraw.Draw(bed)
+    for y in range(height):
+        ratio = y / max(1, height)
+        draw.line([(0, y), (width, y)],
+                  fill=tuple(round(a + (b - a) * ratio) for a, b in zip(top, bottom)) + (255,))
+    return bed
+
+
+def _cover(image: Image.Image, width: int, height: int, focus: float | None = None,
+           focus_x: float | None = None) -> Image.Image:
     """アスペクト比を保ったまま画面いっぱいに敷き詰める。
 
     **縦長の写真は上寄りに切る。**人物写真は顔が上にあるので、真ん中で切ると
     顔が落ちる。実測（2026-09-05）で、サムネに選手の写真を敷いたら胴体だけが
     残り、誰なのか分からなくなった。
+
+    **横も指定できる**（2026-09-18 ユーザー指摘「ショートのサムネのメッシが
+    見切れてる」）。横は必ず真ん中で切っていたので、**横長の写真を縦型に敷くと
+    端に写っている人が落ちる。**バロンドールの回で、右端のメッシが
+    手と膝しか残らなかった。`focus_x` は 0.0=左端 / 1.0=右端
     """
     scale = max(width / image.width, height / image.height)
     resized = image.resize((int(image.width * scale), int(image.height * scale)), Image.LANCZOS)
-    left = (resized.width - width) // 2
+    room = resized.width - width
+    left = (int(room * min(1.0, max(0.0, focus_x)))
+            if focus_x is not None else room // 2)
     spare = resized.height - height
     tall = image.height > image.width * 1.1
     # focus は「縦のどこを残すか」（0.0=上端 / 1.0=下端）。**顔の位置は写真ごとに

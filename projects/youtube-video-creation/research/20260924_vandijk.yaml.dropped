@@ -1,0 +1,83 @@
+date: 2026年9月24日
+slot: world_2
+format: quote
+voice_min: 0.5
+people: [フィルジル・ファン・ダイク, シャビ・エルナンデス]
+theme:
+  id: vandijk_ten_seconds
+  league: netherlands
+  league_name: オランダ代表
+  kind: other
+  topic: オランダ代表
+  title: 'オランダ代表の主将が続投を決めた、10秒の会話'
+  question: その10秒で何を言われたのか
+short_title: オランダの主将、10秒で決めた
+thumbnail:
+  crest_main: [オランダ]
+  line1: 代表を続けるか、迷っていた
+  line2: 決まったのは10秒だった
+sections:
+  - id: what
+    heading: 辞めるかもしれなかった
+    tier: 報道
+    telop: ワールドカップのあと、去就が定まっていなかった
+    narrator: キャスター
+    say:
+      - オランダ代表の主将、フィルジル・ファン・ダイク。リヴァプールの守備を長く支えてきた選手です。
+      - ワールドカップのあと、代表を続けるかどうかは決まっていませんでした。
+      - そこへ、バルセロナを率いていた**シャビ・エルナンデス**が、新しい監督として来ます。
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/09/23/10-segundos-conversacion-xavi-cambiaron-destino-dijk-video.html
+      - https://x.com/FabrizioRomano
+  - id: said
+    main: true
+    heading: 10秒で決まった
+    tier: 報道
+    telop: 「10秒で、続けるとはっきりした」
+    narrator: キャスター
+    say:
+      - text: 'ワールドカップのあと代表を続けるか決めていなかったフィルジル・ファン・ダイクが、新しい監督との10秒で続投を決めました。'
+        short_only: true
+      - voice: ファン・ダイク
+        text: 家族と休みを取る必要があった。そのあとシャビと話す時間を持った
+      - voice: ファン・ダイク
+        text: そして10秒後には、続けるとはっきりしていた
+      - シャビに言われたのは、この一言でした。
+      - voice: ファン・ダイク
+        text: 「お前はフィルジル・ファン・ダイクだ」だよ
+    sources:
+      - https://x.com/FabrizioRomano
+      - https://www.marca.com/futbol/nations-league/2026/09/23/10-segundos-conversacion-xavi-cambiaron-destino-dijk-video.html
+  - id: next
+    heading: 今夜、恩師と
+    tier: 報道
+    telop: 今夜、クロップのドイツと戦う
+    narrator: 解説
+    say:
+      - ファン・ダイクは今夜、アムステルダムでドイツと戦います。
+      - 相手を率いるのは、リヴァプールで長く一緒にやった**ユルゲン・クロップ**。新しい監督のもとでの初戦が、恩師との再会になりました。
+    sources:
+      - https://onefootball.com/en/news/juergen-klopp-era-begins-for-germany-with-netherlands-nations-league-test-43509053
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「10秒で決めた」という言い方に反発も
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 10秒で人を納得させるなんて、そんなのデタラメだ
+      - voice: ネット民
+        text: 最高のディフェンダーが代表にいるんだ、喜べばいい
+      - voice: ネット民
+        text: シャビが若返りを進めると言っていたなら、彼は堂々と去れた
+      - voice: ネット民
+        text: 主将としてのファン・ダイクは生ぬるい。人間的な芯がまるでない
+      - voice: ネット民
+        text: ファン・ダイクは批判に本当に弱い
+      - voice: ネット民
+        text: 成功した選手のエゴが、こんなに脆いとはな
+      - voice: ネット民
+        text: ファン・ダイクはやっぱり泣き言ばかりだ
+        short_voice: true
+    sources:
+      - https://www.voetbalprimeur.nl/nieuws/2139001/driessen-reageert-op-clash-met-van-dijk-bij-oranje.html

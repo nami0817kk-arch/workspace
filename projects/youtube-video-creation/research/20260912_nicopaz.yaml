@@ -1,0 +1,103 @@
+# ニコ・パスがコモに残った理由を語った（2026年9月12日）
+#
+# Sky Sport Italia の取材をフットボール・イタリアが引いたもの。
+# コモが 4-1 でライプツィヒに勝った直後（9月10日）。
+#
+# 引きは**「なぜ残ったのか」**。勝った話より、
+# **本人が残留の理由を言い切ったこと**のほうが中身がある。ここが山場（@main）。
+#
+# **9/11 にコモの回を1本出している。**あれはファブレガスが
+# 22歳と23歳の名前を挙げた話だった。**今回は本人の言葉が芯。**
+#
+# **レアルの買い戻し条項は「去年の夏から引き上げられている」までしか書かない。**
+# 金額は記事に無い。こちらで数字を足さない。
+#
+# **マンマークしていた相手（27番）の名前は書かない。**記事に無い。
+# 反応は入れない
+format: quote
+voice_min: 60
+slot: world
+date: "2026年9月12日"
+
+people:
+  - ニコ・パス
+  - マルティン・バトゥリナ
+  - セスク・ファブレガス
+
+short_title: "レアルを断って残った理由"
+
+theme:
+  id: nicopaz_stay
+  league: italy
+  kind: other
+  topic: コモ
+  title: ニコ・パスがレアルを断って残った理由
+  hook: コモがライプツィヒに4対1。クラブにとって歴史的な一夜でした。
+  question: 何のために、彼はコモに残ったのか
+
+thumbnail:
+  line1: レアルを断って残った
+  line2: その理由は ●●●●
+  # **試合結果と移籍金はサムネに入れない**（2026-09-12 ユーザー指示）
+  photo: "assets/photos/20260912_nicopaz/01.jpg"
+  tags: []
+
+sections:
+  - id: what
+    heading: その夜に何が起きたか
+    tier: 報道
+    telop: 9月10日 コモ 4-1 ライプツィヒ
+    narrator: キャスター
+    card:
+      type: score
+      competition: チャンピオンズリーグ 第1節
+      home: コモ
+      away: ライプツィヒ
+      score: 4 - 1
+    say:
+      - コモがライプツィヒに4対1。試合のあと、ニコ・パスが答えています。
+      - {voice: ニコ・パス, text: 歴史的な夜でした。信じられない試合で、この試合をやれることに興奮していました}
+      - {voice: ニコ・パス, text: 本当にうれしいです}
+    official: false
+    sources:
+      - https://football-italia.net/nico-paz-nights-like-this-why-stay-at-como/
+      - https://football-italia.net/diao-childhood-dream-true-champions-league/
+
+  - id: why
+    heading: 何のために残ったのか
+    main: true
+    tier: 報道
+    telop: 残留の理由を、本人が言い切った
+    narrator: 解説
+    # **ここが山場。**ショートはこの節を切り出す。
+    # 「こういう夜のために残りたかった」が全体でいちばん強い一行
+    say:
+      - 彼にはレアルの買い戻し条項が付いていて、その額は去年の夏から上がっています。
+      - 出ていく道はありました。
+      - {voice: ニコ・パス, text: こういう夜のために、僕は残りたかったんです}
+      - {voice: ニコ・パス, text: ここがいちばん成長できる場所だと分かっていました}
+      - {voice: ニコ・パス, text: 自分の決断に本当に満足しています。正しい選択をしました}
+    official: false
+    sources:
+      - https://football-italia.net/nico-paz-nights-like-this-why-stay-at-como/
+      - https://football-italia.net/capello-diao-better-leao-understand-fabregas/
+
+  - id: game
+    heading: その試合で、何をしていたか
+    tier: 報道
+    telop: ずっとマークが付いていた
+    narrator: キャスター
+    say:
+      - 自分の出来には、抑えた言い方です。
+      - {voice: ニコ・パス, text: 難しい試合でした。相手の27番にずっとマンマークされていましたから}
+      - {voice: ニコ・パス, text: そのぶん、味方に空間ができました}
+      - {voice: ニコ・パス, text: いつもほどボールには触れませんでしたが、後半は少し増えました}
+      - {voice: ニコ・パス, text: もちろん、もっとやれます}
+      - 味方は、はっきり褒めました。
+      - {voice: ニコ・パス, text: バトゥリナは信じられない選手です}
+      - {voice: ニコ・パス, text: ライプツィヒを傷つけられる空間を見つけて、見事な仕事をしました}
+      - {voice: ニコ・パス, text: 最後の数分、あのアシストのための力がどこから出てきたのか分かりません。でも掘り起こしました}
+    official: false
+    sources:
+      - https://football-italia.net/nico-paz-nights-like-this-why-stay-at-como/
+      - https://football-italia.net/como-baturina-strong-start-aston-villa-55m/

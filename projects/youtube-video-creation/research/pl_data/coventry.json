@@ -1,0 +1,102 @@
+{
+ "title": "コヴェントリー・シティ 基礎DATA",
+ "colors": [
+  "#1B75BC",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/コヴェントリー.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1883年",
+   "シンガー社の自転車工員が結成"
+  ],
+  [
+   "愛称",
+   "スカイブルーズ",
+   "空色、という意味"
+  ],
+  [
+   "ホームタウン",
+   "コヴェントリー",
+   "ウェスト・ミッドランズの都市"
+  ],
+  [
+   "本拠地",
+   "CBSアリーナ",
+   "収容 32,609人"
+  ],
+  [
+   "オーナー",
+   "ダグ・キング",
+   "地元実業家（2023年〜）"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "FA杯1・リーグ杯0"
+  ],
+  [
+   "クラブ記録",
+   "1季50得点",
+   "クラリー・バートン 1931-32"
+  ],
+  [
+   "直近のタイトル",
+   "チャンピオンシップ優勝",
+   "2025-26シーズン"
+  ],
+  [
+   "プレミア最高位",
+   "11位",
+   "1993-94、1997-98"
+  ]
+ ],
+ "fans": [
+  {
+   "name": "アヤオ・コマツ",
+   "who": "ハースF1代表",
+   "source": "https://www.planetf1.com/news/ayao-komatsu-christian-horner-coventry-city-invitation"
+  },
+  {
+   "name": "トム・グレナン",
+   "who": "シンガーソングライター",
+   "source": "https://www.coventrytelegraph.net/whats-on/whats-on-news/tom-grennan-massive-sky-blues-26061241"
+  },
+  {
+   "name": "ネヴィル・ステイプル",
+   "who": "ザ・スペシャルズのメンバー",
+   "source": "https://www.coventryobserver.co.uk/news/coventry-city-2-tone-kit-launch-a-sell-out-success/"
+  }
+ ],
+ "fan_story": {
+  "text": "アヤオ・コマツはラフバラ大学在学中にコヴェントリーのファンになったとされ、2026年の日本GP後にはハースの一行がクラブの練習場を訪れた。",
+  "source": "https://formularapida.net/en/surprise-visit-by-ayao-komatsu-to-coventry-city-fc-after-the-japanese-gp/"
+ },
+ "sources": [
+  "https://en.wikipedia.org/wiki/Coventry_City_F.C.",
+  "https://www.planetf1.com/news/ayao-komatsu-christian-horner-coventry-city-invitation",
+  "https://formularapida.net/en/surprise-visit-by-ayao-komatsu-to-coventry-city-fc-after-the-japanese-gp/",
+  "https://www.coventrytelegraph.net/whats-on/whats-on-news/tom-grennan-massive-sky-blues-26061241",
+  "https://www.coventryobserver.co.uk/news/coventry-city-2-tone-kit-launch-a-sell-out-success/"
+ ],
+ "notes": "有名なファンの節にはクリスチャン・ホーナー（元レッドブルF1代表）とリチャード・キーズ（放送人）も挙がっているが、原文に個別の出典（citation needed）が無いため fans には入れず、コマツ・グレナン・ステイプルの3人のみ採用した。プレミア最高位はPL加入後（1992-93〜2000-01)の9季中の最高11位（1993-94、1997-98)。1部優勝は一度も無い。配色はクラブの慣用的なスカイブルーを基準にした目安（原文に厳密な色指定は無い）。",
+ "trophies": [
+  [
+   "1部リーグ",
+   0
+  ],
+  [
+   "FAカップ",
+   1
+  ],
+  [
+   "リーグカップ",
+   0
+  ],
+  [
+   "ヨーロッパ",
+   0
+  ]
+ ]
+}

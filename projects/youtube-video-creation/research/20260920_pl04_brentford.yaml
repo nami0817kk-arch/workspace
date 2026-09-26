@@ -1,0 +1,379 @@
+# プレミアリーグ20クラブ紹介 ④ブレントフォード（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/brentford*.json と旧台本 20260916_pl04_brentford.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- ブレントフォード
+- キース・アンドリュース
+short_title: ブレントフォードが変わった理由
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_04_brentford
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブレントフォード
+  title: ブレントフォード、プレーオフに9回落ちていま4位。変わった理由
+  question: どんなクラブなのか
+  hook: 昇格プレーオフで9回続けて負けたクラブが、いまプレミアにいます。
+  lead: 収容**1万7250人**。20クラブで2番目に小さいスタジアム。
+  opening_image: assets/stats/pl_brentford_data_t.png
+thumbnail:
+  line1: 9回落ちた、その10回目
+  line2: いま4位。何が変わったのか
+  crest_main:
+  - ブレントフォード
+  tags: []
+  points: []
+  board: assets/stats/pl_brentford_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 開幕5戦負けなしで4位
+  narrator: キャスター
+  say:
+  - text: 開幕**5試合**を負けなしで走り、いまは**4位**にいます。
+    image: assets/stats/pl_brentford_data_r1.png
+    no_telop: true
+  - text: 監督のキース・アンドリュースは、就任のときこう言いました。
+    image: assets/stats/pl_brentford_data_r2.png
+    no_telop: true
+  - voice: キース・アンドリュース
+    text: 「ファンが自分たちの代表だと感じるチームにしたい」
+    image: assets/stats/pl_brentford_data_r2.png
+  - text: トッテナムとチェルシーに、どちらも3対0で勝っています。
+    image: assets/stats/pl_brentford_data_r2.png
+    no_telop: true
+  - text: 9回落ちたプレーオフの先で変わったのは、選手の選び方でした。
+    image: assets/stats/pl_brentford_data_r2.png
+    no_telop: true
+  - image: assets/stats/pl_brentford_data0.png
+    text: 創立は**1889年**。ボートを漕ぐクラブの仲間たちが作りました。
+    no_telop: true
+  - image: assets/stats/pl_brentford_data1.png
+    text: 愛称は「ビーズ」。蜂です。
+    no_telop: true
+  - image: assets/stats/pl_brentford_map.png
+    text: 場所は西ロンドン、テムズ川沿いの町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ブレントフォード.png
+    text: 本拠地はブレントフォード・コミュニティ・スタジアム。2020年に移ってきました。
+  - image: assets/stats/pl_brentford_data4.png
+    text: オーナーはマシュー・ベンハム。2012年からクラブを持っています。
+    no_telop: true
+  - image: assets/stats/pl_brentford_cups.png
+    text: 大きなタイトルはまだありません。プレミアに上がったのも、2021年が初めてです。
+    no_telop: true
+  - image: assets/stats/pl_brentford_last.png
+    text: プレミアでの最高位は、2022年から23年の**9位**です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
+  - https://www.brentfordfc.com/en/news/video/interviews-keith-andrews-brentford-head-coach
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false
+- id: history
+  heading: 歩んできた道
+  tier: 背景
+  telop: プレーオフに9回負けてから、10回目で上がった
+  narrator: 解説
+  card:
+    type: table
+    title: 残してきた記録
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 2021年
+      - プレーオフ決勝でスウォンジーに2-0
+  say:
+  - text: プレーオフに出ては敗れる。それが**9回**続きました。イングランドで、ほかにない数です。
+    image: assets/images/pl_brentford_story/scene.jpg
+  - そのうち4回は、決勝まで行って敗れました。1997年から2020年のあいだのことです。
+  - 10回目が2021年でした。決勝でスウォンジー・シティを2対0で下します。
+  - プレミアリーグになってからは初めて。1部としては**74年ぶり**でした。
+  - text: 消えかけた年も、あります。
+    card:
+      type: table
+      title: 残してきた記録
+      columns: *id001
+      rows:
+      - - 1967年
+        - QPRに吸収される話が白紙に。消滅を免れる
+  - 1967年、クイーンズ・パーク・レンジャーズに吸収されて、クラブごと消える話がまとまりかけました。
+  - 止めたのはサポーターです。抗議と寄付で、話は白紙に戻りました。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: ロングボール。データで選ぶ
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 長いボールと空中戦
+    - - 運営の型
+      - データで選手を選ぶ
+    - - クラブの気質
+      - 四つ角すべてにパブ
+  say:
+  - text: アンドリュースのサッカーは、長いボールと空中戦で押し、セットプレーは攻めも守りも武器。
+    image: assets/photos/pl/brentford_manager_9acd4388.jpg
+  - 変わったのは運営。育成組織を2016年に閉じ、賭けの統計会社を持つオーナーのデータで選手を選ぶ。
+  - 2020年まで使ったグリフィン・パークは、四つ角すべてにパブがあるイングランド唯一の球場でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://www.brentfordfc.com/en/news/article/analysis-keith-andrews-new-contract-brentford-premier-league-tactical-evolution
+  - https://www.brentfordfc.com/en/news/article/the-long-read-keith-andrews-first-premier-league-season
+  - https://en.wikipedia.org/wiki/Brentford_F.C._Reserves_and_Academy
+  - https://en.wikipedia.org/wiki/Matthew_Benham
+  - https://en.wikipedia.org/wiki/Griffin_Park
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false
+- id: episode
+  heading: ホーム全勝でも昇格なし
+  tier: 背景
+  telop: ホーム21戦全勝。それでも2位
+  narrator: 解説
+  card:
+    type: table
+    title: ホーム全勝でも昇格なし
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1929-30年 ホーム
+      - 21試合21勝
+    - - イングランド記録
+      - いまも破られていない
+  say:
+  - text: 昇格に届かなかった年は、ほかにもあります。
+    image: assets/images/pl_brentford_episode/scene.jpg
+  - 1929年から30年のシーズン、ホームのリーグ戦**21試合に全部勝ちました**。
+  - text: ホーム全勝は、いまもイングランドの記録です。
+    card:
+      type: table
+      title: ホーム全勝でも昇格なし
+      columns: *id002
+      rows:
+      - - 順位
+        - 3部で2位。上がれるのは1位だけ
+  - それでも3部から上がれませんでした。順位は2位。上がれるのは1位だけだったからです。
+  sources:
+  - https://en.wikipedia.org/wiki/1929%E2%80%9330_Brentford_F.C._season
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ケヴィン・オコナー
+      - 1999-2015
+      - 16年在籍・501試合
+  say:
+  - text: ケヴィン・オコナーはブラックバーン生まれ。1995年に育成組織へ入り、16シーズンで**501試合**。
+    image: assets/photos/pl/brentford_legend_69f3b6b5.jpg
+  - 2004年から主将として200試合以上。4部優勝も2部への昇格も、腕章を巻いて迎えました。
+  - 2015年、契約中のまま殿堂入り。引退後もコーチとしてクラブに残りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
+  - https://en.wikipedia.org/wiki/Ivan_Toney
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - イヴァン・トニー
+      - 2020-2024
+      - 2部で1シーズン31得点
+  say:
+  - text: イヴァン・トニーは2020年、ピーターバラから加入。移籍金はおよそ**500万ポンド**でした。
+    image: assets/photos/pl/brentford_legend_6dfd5356.jpg
+  - 1年目の2020年から21年に2部で**31得点**。1シーズンの得点として、いまも2部の記録です。
+  - 2024年8月、**4000万ポンド**でサウジアラビアのアル・アハリへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
+  - https://en.wikipedia.org/wiki/Ivan_Toney
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ブライアン・エンベウモ
+      - 2019-2025
+      - プレミアで20得点
+  say:
+  - text: ブライアン・エンベウモは2019年、トロワから当時のクラブ最高額**580万ポンド**で加入。
+    image: assets/photos/pl/brentford_legend_df82049f.jpg
+  - リーグ戦で222試合65得点。2024年から25年には、プレミアで**20得点**を挙げました。
+  - 2025年7月、マンチェスター・ユナイテッドへ。移籍金は**6500万ポンド**と報じられました。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
+  - https://en.wikipedia.org/wiki/Ivan_Toney
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はキース・アンドリュース。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - キース・アンドリュース（アイルランド）
+    - - 就任
+      - 2025年6月・2年目
+    - - 前職
+      - このクラブのセットプレー担当コーチ
+  say:
+  - text: 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です。
+    image: assets/photos/pl/brentford_manager_9acd4388.jpg
+  - 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://en.wikipedia.org/wiki/Keith_Andrews_(footballer)
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_brentford_gk.png
+    no_telop: true
+  - image: assets/stats/pl_brentford_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_brentford_gk_f.png
+    text: クィービーン・ケレハーはアイルランド代表で**32試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_gk_f.png
+    text: ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_brentford_df_f.png
+    text: 主将を務めるのが**ネイサン・コリンズ**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_df_f.png
+    text: リーグ戦で**105試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_brentford_df_f.png
+    text: クリストファー・アイエルはノルウェー代表で**57試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_brentford_mf_f.png
+    text: マティアス・イェンセンはデンマーク代表で**32試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_mf_f.png
+    text: ミケル・ダムスゴーはデンマーク代表で**40試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_fw_f.png
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/pl_brentford_fw_f.png
+    text: ダンゴ・ワタラはブルキナファソ代表で**44試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_fw_f.png
+    text: ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝3引き分け。4位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - トッテナム・ホットスパー（ホーム）
+      - 3対0
+    - - 第2節
+      - リーズ・ユナイテッド（アウェー）
+      - 1対1
+    - - 第3節
+      - サンダーランド（ホーム）
+      - 1対1
+    - - 第4節
+      - AFCボーンマス（アウェー）
+      - 2対2
+    - - 第5節
+      - チェルシー（ホーム）
+      - 3対0
+  say:
+  - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
+  - 順位は**4位**、勝ち点は**9**です。
+  - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
+  bg: assets/backgrounds/stadium_ブレントフォード_in.png
+  official: false

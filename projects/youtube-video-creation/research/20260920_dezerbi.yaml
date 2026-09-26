@@ -1,0 +1,122 @@
+# デ・ゼルビ監督が「信じられない」と繰り返した失点（2026-09-20）
+#
+# 材料は research/raw/20260920_dezerbi.md。出典はフットボールチャンネル1本
+# （Yahoo!ニュース転載版も全文一致）。**確度は報道どまり。**
+#
+# **同じ試合を、勝った側（20260920_zion）と負けた側の2本で出す。**
+# こちらは監督の言葉が主役なので quote に寄せた news。
+# **鈴木彩艶の話を厚くしない**（向こうの回と重なる）。あくまでデ・ゼルビの回。
+#
+# **反応は8件しか無い。**記事のコメント欄が全部で8件だった。足さない。
+# 海外の反応は見つからなかった（まとめ4サイトを見た）。
+format: news
+voice_min: 40
+slot: premier_1
+date: "2026年9月20日"
+
+people:
+  - ロベルト・デ・ゼルビ
+
+short_title: "デ・ゼルビ「信じられない」"
+
+theme:
+  id: dezerbi_spurs_criticism
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: トッテナム
+  title: デ・ゼルビ監督が「信じられない」と繰り返したのは、どの場面か
+  hook: 相手のロングボールは、警戒していたはずでした。
+  question: 何に苛立っていたのか
+
+thumbnail:
+  # **デ・ゼルビの顔にする**（2026-09-20 ユーザー指示）。
+  # エンブレムではなく本人。写真はこの試合の記事から
+  photo: assets/images/20260920_dezerbi_press/01.jpg
+  line1: 試合前に、何度も確認していた
+  line2: デ・ゼルビ「信じられない」
+  tags:
+    - トッテナム
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/dezerbi_20260920.png
+    telop: トッテナムがホームで2対3。5試合勝ちなし
+    narrator: キャスター
+    card:
+      type: table
+      title: トッテナムの現在地
+      columns: ["", ""]
+      rows:
+        - ["第5節", "ホームでヴィラに2対3"]
+        - ["今季リーグ戦", "5試合で勝ちなし"]
+        - ["勝ち点", "2。降格圏に転落"]
+        - ["ホーム直近36試合", "5勝"]
+    say:
+      - トッテナムがホームでアストン・ヴィラに2対3で敗れました。
+      - "これで今季のリーグ戦は**5試合勝ちなし**。勝ち点2で降格圏に落ちています。"
+      - ホームでの直近36試合に限ると、勝っているのは5回だけです。
+      - 試合後、指揮官が選手たちを厳しく批判しました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/20/post1014951/
+
+  - id: goal
+    heading: 監督が指した、2失点目
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/dezerbi_20260920.png
+    telop: 事前に警戒していた形から、そのまま失点
+    narrator: 解説
+    say:
+      - {short_only: true, text: トッテナムの監督が、試合後に選手を厳しく批判しました。}
+      - 監督が問題にしたのは、67分の2失点目です。
+      - 相手ゴールキーパーのロングキックから、ジャクソンに抜け出されました。
+      - デ・ゼルビ監督は試合前のミーティングで、相手がロングボールを多く使うこと、そのキックの質について繰り返し確認していました。
+      - "**同じ形から失点したこと**が、監督には受け入れられませんでした。"
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/20/post1014951/
+
+  - id: words
+    heading: 試合後に話したこと
+    tier: 報道
+    bg: assets/backgrounds/dezerbi_20260920.png
+    telop: 「非常に失望し、悲しく、苛立っている」
+    narrator: キャスター
+    say:
+      - 試合後、監督はこう話しています。
+      - {voice: デ・ゼルビ監督, text: 非常に失望し、悲しく、苛立っている}
+      - {voice: デ・ゼルビ監督, text: このような形で試合に負けるわけにはいかないし、2失点目のシーンを許すわけにはいかない}
+      - {voice: デ・ゼルビ監督, text: 負けているからといって、冷静さを失ってはいけない}
+      - {voice: デ・ゼルビ監督, text: 51分に4人の攻撃陣に話しかけ、頭を使うように言った。後半はずっと、落ち着くように言い続けていた}
+      - {voice: デ・ゼルビ監督, text: しかし、信じられない失点だった}
+      - {voice: デ・ゼルビ監督, text: 代表チームに行く選手は試合に出て練習しなければならないし、そうでない選手はもっと練習しなければならない}
+      - {voice: デ・ゼルビ監督, text: 全てが悪いとは言えないが、十分ではない}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/20/post1014951/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    bg: assets/backgrounds/dezerbi_20260920.png
+    telop: 「分かってて止められるのならだれも苦労しない」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この批判を見た人たちの声です。}
+      - {voice: ネット民, text: 分かってて止められるのならだれも苦労しない, short_voice: true}
+      - {voice: ネット民, text: センターバック経験者からすると、ロングボールの処理って、見た目より難しいし、緊張するんだよな}
+      - {voice: ネット民, text: 特に3点目の失点は激怒して当然だろうね。守備が緩すぎて簡単に突破されてるし}
+      - {voice: ネット民, text: ホームであんなプレーされたらファンもガックリするよ}
+      - {voice: ネット民, text: デ・ゼルビの求心力がどんどん低下してるな}
+      - {voice: ネット民, text: 昨季みたいに内紛が起きるのも時間の問題か, short_voice: true}
+      - {voice: ネット民, text: 即席チームだからもっと練習せんとダメでしょ}
+      - {voice: ネット民, text: デゼルビらしいビルドアップも見られないし、デゼルビを使ってる意味がよくわからない}
+      - {voice: ネット民, text: この監督は選手あってでなく、自分あってのチームを作ろうとしてるんやないかと思いたくなる}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/82a068654043baec94f5f3daada4934ccfadc800/comments

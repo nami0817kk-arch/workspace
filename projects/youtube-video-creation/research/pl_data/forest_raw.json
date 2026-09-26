@@ -1,0 +1,680 @@
+{
+ "club_title": "Nottingham_Forest_F.C.",
+ "season_title": "2026–27_Nottingham_Forest_F.C._season",
+ "squad": [
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "CIV",
+   "name": "Ousmane Diomande",
+   "page": "Ousmane Diomande",
+   "dob": "2003-12-04",
+   "captain": false,
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 16,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "WAL",
+   "name": "Neco Williams",
+   "page": "Neco Williams",
+   "dob": "2001-04-13",
+   "captain": false,
+   "loan": false,
+   "team": "Wales",
+   "caps": 57,
+   "club_caps": 131,
+   "club_goals": 4
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Murillo",
+   "page": "Murillo (footballer)",
+   "dob": "2002-07-04",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 1,
+   "club_caps": 94,
+   "club_goals": 3
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "CIV",
+   "name": "Ibrahim Sangaré",
+   "page": "Ibrahim Sangaré (Ivorian footballer)",
+   "dob": "1997-12-02",
+   "captain": false,
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 61,
+   "club_caps": 59,
+   "club_goals": 2
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Callum Hudson-Odoi",
+   "page": "Callum Hudson-Odoi",
+   "dob": "2000-11-07",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 3,
+   "club_caps": 91,
+   "club_goals": 16
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ARG",
+   "name": "Nicolás Domínguez",
+   "page": "Nicolás Domínguez",
+   "dob": "1998-06-28",
+   "captain": false,
+   "loan": false,
+   "team": "Argentina",
+   "caps": 11,
+   "club_caps": 88,
+   "club_goals": 3
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "NZL",
+   "name": "Chris Wood",
+   "page": "Chris Wood (footballer, born 1991)",
+   "dob": "1991-12-07",
+   "captain": false,
+   "loan": false,
+   "team": "New Zealand",
+   "caps": 93,
+   "club_caps": 90,
+   "club_goals": 38
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Morgan Gibbs-White",
+   "page": "Morgan Gibbs-White",
+   "dob": "2000-01-27",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 6,
+   "club_caps": 145,
+   "club_goals": 33
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Igor Jesus",
+   "page": "Igor Jesus (footballer, born 2001)",
+   "dob": "2001-02-25",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 5,
+   "club_caps": 41,
+   "club_goals": 7
+  },
+  {
+   "no": "12",
+   "pos": "GK",
+   "nat": "BRA",
+   "name": "John Victor",
+   "page": "John Victor (Brazilian footballer)",
+   "dob": "1996-02-13",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "SUI",
+   "name": "Dan Ndoye",
+   "page": "Dan Ndoye",
+   "dob": "2000-10-25",
+   "captain": false,
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 37,
+   "club_caps": 26,
+   "club_goals": 2
+  },
+  {
+   "no": "15",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Arnaud Kalimuendo",
+   "page": "Arnaud Kalimuendo",
+   "dob": "2002-01-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 10,
+   "club_goals": 0
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Liam Delap",
+   "page": "Liam Delap",
+   "dob": "2003-02-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 1
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "AUT",
+   "name": "Xaver Schlager",
+   "page": "Xaver Schlager",
+   "dob": "1997-09-28",
+   "captain": false,
+   "loan": false,
+   "team": "Austria",
+   "caps": 55,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "22",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Ryan Yates",
+   "page": "Ryan Yates",
+   "dob": "1997-11-21",
+   "captain": true,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 238,
+   "club_goals": 17
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Jair Cunha",
+   "page": "Jair Cunha",
+   "dob": "2005-03-07",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 11,
+   "club_goals": 0
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "James McAtee",
+   "page": "James McAtee",
+   "dob": "2002-10-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 16,
+   "club_goals": 0
+  },
+  {
+   "no": "25",
+   "pos": "DF",
+   "nat": "GER",
+   "name": "Luca Netz",
+   "page": "Luca Netz",
+   "dob": "2003-05-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 9,
+   "club_goals": 0
+  },
+  {
+   "no": "26",
+   "pos": "GK",
+   "nat": "BEL",
+   "name": "Matz Sels",
+   "page": "Matz Sels",
+   "dob": "1992-02-26",
+   "captain": false,
+   "loan": false,
+   "team": "Belgium",
+   "caps": 13,
+   "club_caps": 87,
+   "club_goals": 0
+  },
+  {
+   "no": "27",
+   "pos": "DF",
+   "nat": "COL",
+   "name": "Daniel Muñoz",
+   "page": "Daniel Muñoz (footballer)",
+   "dob": "1996-05-26",
+   "captain": false,
+   "loan": false,
+   "team": "Colombia",
+   "caps": 51,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "31",
+   "pos": "DF",
+   "nat": "SRB",
+   "name": "Nikola Milenković",
+   "page": "Nikola Milenković",
+   "dob": "1997-10-12",
+   "captain": false,
+   "loan": false,
+   "team": "Serbia",
+   "caps": 71,
+   "club_caps": 78,
+   "club_goals": 5
+  },
+  {
+   "no": "33",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Steven Benda",
+   "page": "Steven Benda",
+   "dob": "1998-10-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "34",
+   "pos": "DF",
+   "nat": "NGA",
+   "name": "Ola Aina",
+   "page": "Ola Aina",
+   "dob": "1996-10-08",
+   "captain": false,
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 48,
+   "club_caps": 77,
+   "club_goals": 3
+  },
+  {
+   "no": "37",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Nicolò Savona",
+   "page": "Nicolò Savona",
+   "dob": "2003-03-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 14,
+   "club_goals": 2
+  }
+ ],
+ "results": [
+  [
+   "18 July 2026",
+   "Friendly",
+   "Notts County",
+   "0–2",
+   "Nottingham Forest"
+  ],
+  [
+   "22 July 2026",
+   "Friendly",
+   "Blackburn Rovers",
+   "0–3",
+   "Nottingham Forest"
+  ],
+  [
+   "26 July 2026",
+   "Friendly",
+   "Vitória de Guimarães",
+   "1–1",
+   "Nottingham Forest"
+  ],
+  [
+   "31 July 2026",
+   "Friendly",
+   "Portimonense",
+   "1–2",
+   "Nottingham Forest"
+  ],
+  [
+   "31 July 2026",
+   "Friendly",
+   "Sporting CP",
+   "4–1",
+   "Nottingham Forest"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Udinese",
+   "1–0",
+   "Nottingham Forest"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Barcelona",
+   "1–0",
+   "Nottingham Forest"
+  ],
+  [
+   "12 August 2026",
+   "Friendly",
+   "Nottingham Forest",
+   "2–1",
+   "Bayer Leverkusen"
+  ],
+  [
+   "16 August 2026",
+   "Friendly",
+   "Nottingham Forest",
+   "2–0",
+   "Brest"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Nottingham Forest",
+   "0–1",
+   "Leeds United"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Liverpool",
+   "2–2",
+   "Nottingham Forest"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Nottingham Forest",
+   "0–0",
+   "Tottenham Hotspur"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Aston Villa",
+   "1–2",
+   "Nottingham Forest"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Nottingham Forest",
+   "0–1",
+   "Coventry City"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "Crystal Palace",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Nottingham Forest",
+   "| report     =",
+   "Arsenal"
+  ],
+  [
+   "23 October 2026",
+   "8",
+   "Ipswich Town",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Brentford",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Nottingham Forest",
+   "| report     =",
+   "Manchester City"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Bournemouth",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Nottingham Forest",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Hull City",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Nottingham Forest",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Sunderland",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Nottingham Forest",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "27 December 2026",
+   "17",
+   "Manchester United",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Newcastle United",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Nottingham Forest",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Nottingham Forest",
+   "| report     =",
+   "Hull City"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Manchester City",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Nottingham Forest",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Chelsea",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Nottingham Forest",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Fulham",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Nottingham Forest",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Everton",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Nottingham Forest",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Tottenham Hotspur",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Nottingham Forest",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Leeds United",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Nottingham Forest",
+   "| report     =",
+   "Liverpool"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Nottingham Forest",
+   "| report     =",
+   "Sunderland"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Nottingham Forest",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Arsenal",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Nottingham Forest",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Coventry City",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "25 August 2026",
+   "Second round",
+   "Nottingham Forest",
+   "0–2",
+   "Leeds United"
+  ]
+ ]
+}

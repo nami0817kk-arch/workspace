@@ -1,0 +1,382 @@
+# プレミアリーグ20クラブ紹介 ⑪ハル・シティ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/hull*.json と旧台本 20260916_pl11_hull.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 守田英正
+- ハル・シティ
+- ディーン・ウィンダス
+short_title: 守田英正のハル、名前を変えられかけた日
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_11_hull
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ハル・シティ
+  title: 守田英正のハル・シティ。名前を変えられかけた日に起きたこと
+  question: どんなクラブなのか
+  hook: この港町のクラブには、忘れられない2013年があります。
+  lead: 東部の港町から、10年ぶりに戻ってきたプレミアリーグ。
+  opening_image: assets/stats/pl_hull_data_t.png
+thumbnail:
+  line1: 4部から5年でプレミアへ
+  line2: 守田英正と、名前を変えられかけた日
+  crest_main:
+  - ハルシティ
+  tags: []
+  points: []
+  board: assets/stats/pl_hull_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 守田英正が今夏加入。昇格1年目で8位
+  narrator: キャスター
+  say:
+  - text: 日本代表**40試合**の中盤、守田英正が、この夏ここを選びました。
+    image: assets/stats/pl_hull_data_r1.png
+    no_telop: true
+  - text: 初めて1部へ上げた、ウィンダスの言葉です。
+    image: assets/stats/pl_hull_data_r1.png
+    no_telop: true
+  - voice: ディーン・ウィンダス
+    text: 「あなたをプレミアリーグへ上げる決勝ゴールは、私が決める」
+    image: assets/stats/pl_hull_data_r1.png
+  - text: 開幕から5試合で**8位**。1部での最高順位、16位より上にいます。
+    image: assets/stats/pl_hull_data_r1.png
+    no_telop: true
+  - text: 指揮を執るのは、ボスニア人として初めてプレミアで勝った監督。**2年目**です。
+    image: assets/stats/pl_hull_data_r3.png
+    no_telop: true
+  - text: 2013年、オーナーがクラブの名前を変えると言い出し、サポーターが立ち上がりました。
+    image: assets/stats/pl_hull_data_r3.png
+    no_telop: true
+  - image: assets/stats/pl_hull_data0.png
+    text: 創立は**1904年**です。
+    no_telop: true
+  - image: assets/stats/pl_hull_data1.png
+    text: 愛称は「タイガース」。黒と琥珀色の縞模様を、昔から着てきました。
+    no_telop: true
+  - image: assets/stats/pl_hull_map.png
+    text: ホームタウンはキングストン・アポン・ハル。イングランド東部です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ハルシティ.png
+    text: 本拠地はエムケーエム・スタジアム。**約2万5000人**が入ります。
+  - image: assets/photos/pl/hull_owner_8739e202.jpg
+    text: オーナーはトルコの実業家アジュン・ウルジャル。2022年からクラブを持っています。
+  - image: assets/stats/pl_hull_data6.png
+    text: 1939年には、カーライル・ユナイテッドに**11対1**で勝っています。クラブ最大の勝利です。
+    no_telop: true
+  - image: assets/stats/pl_hull_cups.png
+    text: 昨季は2部のプレーオフ決勝でミドルズブラを破り、プレミアに上がってきました。
+    no_telop: true
+  - image: assets/stats/pl_hull_data8.png
+    text: プレミアでの最高位は、2013年から14年の**16位**です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Hull_City_A.F.C._season
+  - https://en.wikipedia.org/wiki/Dean_Windass
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: episode
+  heading: 名前を変えられかけた
+  tier: 背景
+  telop: 「ハル・タイガース」への改名、退けられる
+  narrator: 解説
+  card:
+    type: table
+    title: 名前を変えられかけた
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 2013年
+      - オーナーが「ハル・タイガース」への改名を表明
+    - - サポーター
+      - 「City Till We Die」
+  say:
+  - text: '**2013年**、当時のオーナー、アッセム・アラムが「ハル・タイガース」への改名を言い出しました。'
+    image: assets/images/pl_hull_episode/01.jpg
+  - 「シティ」はありふれていて、名前は短いほうが売れる、という理由です。
+  - text: サポーターは「死ぬまでシティ」と声を上げました。
+    card:
+      type: table
+      title: 名前を変えられかけた
+      columns: *id001
+      rows:
+      - - 2014年4月9日
+        - FAが63.5%の票で退ける
+  - 2014年4月、イングランドサッカー協会の評議会が**63.5%**の票で改名を退けました。
+  - そのアラムからクラブを買い取ったのが、いまのオーナー、ウルジャルです。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://en.wikipedia.org/wiki/Acun_Ilıcalı
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: rise
+  heading: 4部からプレミアまで5年
+  tier: 背景
+  telop: 4部からプレミアまで5シーズン
+  narrator: 解説
+  card:
+    type: table
+    title: 駆け上がった5シーズン
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 出発点
+      - 4部
+    - - 2008年
+      - プレーオフ決勝でブリストル・シティに1-0
+  say:
+  - text: はじめて1部に上がったのは**2008年**。4部から**5シーズン**で駆け上がりました。
+    image: assets/images/pl_hull_story/01.jpg
+  - その年のプレーオフ決勝の相手は、ブリストル・シティでした。
+  - text: 決めたのはディーン・ウィンダス。前半の**ボレー1本**でした。
+    card:
+      type: table
+      title: 駆け上がった5シーズン
+      columns: *id002
+      rows:
+      - - 速さ
+        - イングランドで3番目
+  - この1点を守りきり、ハルが1対0で勝ちました。
+  - この上がり方は、イングランドのサッカーで**3番目に速い**とされています。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 前へ放り込む。育てて売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 前へ、ゴール前に放り込む
+    - - 運営の型
+      - 生え抜きを売って回す
+    - - クラブの気質
+      - ラグビーの街にひとつ
+  say:
+  - text: ヤキロヴィッチのサッカーは、ボールを持ったら前へ、ゴール前に放り込む攻めのサッカーです。
+    image: assets/photos/pl/hull_manager_3daf3c84.jpg
+  - 育成出身のグリーヴスとルイス＝ポッターを、プレミアのクラブへ売って回す、生え抜きの型。
+  - ラグビーリーグの盛んな街で、プロのサッカークラブはこの街にひとつだけです。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://www.wearehullcity.co.uk/news/2025/june/11/jakirovic-appointed-new-head-coach/
+  - https://www.wearehullcity.co.uk/news/2025/september/26/match-preview-watford-a/
+  - https://en.wikipedia.org/wiki/Acun_Il%C4%B1cal%C4%B1
+  - https://en.wikipedia.org/wiki/Jacob_Greaves
+  - https://en.wikipedia.org/wiki/Keane_Lewis-Potter
+  - https://en.wikipedia.org/wiki/Assem_Allam
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ディーン・ウィンダス
+      - 1991-2009
+      - 初の1部昇格を決めた
+  say:
+  - text: ディーン・ウィンダスは地元ハル出身のフォワード。1991年、リーグに属さない小さなクラブから来ました。
+    image: assets/photos/pl/hull_legend_f160fd58.jpg
+  - 1995年に**70万ポンド**でアバディーンへ売られ、2007年に戻ってきました。
+  - あのボレーを決めたとき、**39歳**でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Dean_Windass
+  - https://en.wikipedia.org/wiki/Ian_Ashbee
+  - https://en.wikipedia.org/wiki/Nick_Barmby
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - イアン・アシュビー
+      - 2002-2011
+      - 4部から1部まで主将
+  say:
+  - text: イアン・アシュビーは、2002年にケンブリッジから加わった中盤。4部にいたころのことです。
+    image: assets/photos/pl/hull_legend_24d5dcb4.jpg
+  - 2004年、ヨービル戦で決めたゴールが、クラブを4部から3部へ上げました。
+  - 4つのリーグすべてで主将を務めた、ただひとりの男。リーグ戦**243試合**に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Dean_Windass
+  - https://en.wikipedia.org/wiki/Ian_Ashbee
+  - https://en.wikipedia.org/wiki/Nick_Barmby
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ニック・バームビー
+      - 2004-2012
+      - 地元に戻り2度の昇格
+  say:
+  - text: ニック・バームビーは、ハル生まれのイングランド代表。代表で**23試合**に出ています。
+    image: assets/photos/pl/hull_legend_56329695.jpg
+  - 2000年、エヴァートンからリヴァプールへ**600万ポンド**で移った男でもあります。
+  - 2004年、移籍金なしで地元ハルに戻り、2012年には監督も務めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Dean_Windass
+  - https://en.wikipedia.org/wiki/Ian_Ashbee
+  - https://en.wikipedia.org/wiki/Nick_Barmby
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はセルゲイ・ヤキロヴィッチ。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - セルゲイ・ヤキロヴィッチ（ボスニア・ヘルツェゴビナ）
+    - - 就任
+      - 2025年6月・2年目
+    - - 前職
+      - カイセリスポル
+  say:
+  - text: 監督はボスニア出身のセルゲイ・ヤキロヴィッチ。**2025年6月**から、2年目です。
+    image: assets/photos/pl/hull_manager_3daf3c84.jpg
+  - プレミアリーグで指揮を執って勝った、史上初のボスニア人監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://en.wikipedia.org/wiki/Sergej_Jakirović
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は33人です。
+    image: assets/stats/pl_hull_gk.png
+    no_telop: true
+  - image: assets/stats/pl_hull_gk.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_hull_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_hull_df_f.png
+    text: パディ・マクネアは北アイルランド代表で**82試合**。
+    no_telop: true
+  - image: assets/stats/pl_hull_df_f.png
+    text: ルーイ・コイルはリーグ戦で**219試合**。
+    no_telop: true
+  - image: assets/stats/pl_hull_mf1_f.png
+    text: ミッドフィールダーは13人。
+    no_telop: true
+  - image: assets/stats/pl_hull_mf1_f.png
+    text: 日本の守田英正がいます。
+    no_telop: true
+  - image: assets/stats/pl_hull_mf1_f.png
+    text: リーガン・スレイターはリーグ戦で**212試合**。
+    no_telop: true
+  - image: assets/stats/pl_hull_mf2.png
+    text: ミッドフィールダーの続きです。
+    no_telop: true
+  - image: assets/stats/pl_hull_fw_f.png
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/pl_hull_fw_f.png
+    text: オリ・マクバーニーはスコットランド代表で**16試合**。
+    no_telop: true
+  - image: assets/stats/pl_hull_fw_f.png
+    text: ソーバ・トーマスはウェールズ代表で**27試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝2引き分け1敗。8位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - マンチェスター・ユナイテッド（ホーム）
+      - 2対0
+    - - 第2節
+      - コヴェントリー・シティ（アウェー）
+      - 1対0
+    - - 第3節
+      - アストン・ヴィラ（ホーム）
+      - 0対0
+    - - 第4節
+      - チェルシー（アウェー）
+      - 2対2
+    - - 第5節
+      - ニューカッスル・ユナイテッド（アウェー）
+      - 1対2
+  say:
+  - プレミアリーグは5試合を終えて、**2勝2引き分け1敗**です。
+  - 順位は**8位**、勝ち点は**8**です。
+  - 守田英正は今夏、ポルトガルのスポルティングから加わりました。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Hull_City_A.F.C._season
+  bg: assets/backgrounds/stadium_ハルシティ_in.png
+  official: false

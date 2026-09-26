@@ -42,6 +42,121 @@ def _bare(title: str) -> str:
     return re.sub(r"[\s。！!？?]", "", re.sub(r"【[^】]*】", "", title or ""))
 
 
+# 言いさしで切る結び（「〜のは」「〜言葉は」）。**末尾の字面が違っても同じ形**
+DANGLING = "はがをにともへで"
+
+
+def _tail_kind(title: str) -> str:
+    """結び方の形。末尾6字の一致では、言いさしの揃いを見落とした。
+
+    2026-09-22 に7本中7本が「〜のは」「〜言葉は」で終わっていたのに、
+    末尾の字面が1本ずつ違うので「散らばっています」と出た。
+    **助詞で切っているなら、その助詞で1つにまとめる**
+    """
+    bare = _bare(title)
+    if bare and bare[-1] in DANGLING:
+        return f"〜{bare[-1]}（言いさし）"
+    return bare[-6:]
+
+
+# 本のあいだで重なってよい長さ。1本の中（8字）より長め。人名や大会名は重なって当然
+CROSS_REPEAT_MIN = 10
+NARRATORS = ("キャスター", "解説", "ナレーター")
+
+
+def _cross_repeats(scripts: list[Script]) -> list[str]:
+    """語りの行どうしで、10字以上続けて重なるところ。反応（他人の文）は見ない。"""
+    import itertools
+    import re
+
+    def bare(text: str) -> str:
+        # 句読点は空白に置き換える。消すと「勝ち点21。31点」が「2131点」に繋がる
+        return re.sub(r"[「」『』*・]", "", re.sub(r"[。、！？!?\s　]+", " ", text or ""))
+
+    def lines(script: Script) -> list[str]:
+        return [bare(l.text) for sc in script.scenes for l in sc.lines
+                if (getattr(l, "speaker", "") or "") in NARRATORS
+                and (getattr(l, "only", "") or "") != "short"]
+
+    # 同じ数字＋単位を2本で読んでいないか（「31得点7失点」）。research.NUMBER_TOKEN と同じ
+    number = re.compile(r"\d[\d,.]*(?:万|億|点|ゴール|試合|本|人|回|位|歳|分|秒|月|日|戦|失点|得点|勝|敗|ユーロ|ポンド|円|%)")
+
+    def numbers(script: Script) -> set[str]:
+        # **偶然そろう数字は見ない**。クラブ紹介20本で「20点」「10人」が2本ずつ重なり、
+        # 123か所になった。3桁以上か、金額・割合だけを見る（「1500万ユーロ」「63.5%」）
+        found = {tok.replace("得点", "点") for text in lines(script) for tok in number.findall(text)}
+        def digits(tok: str) -> int:
+            return len(re.match(r"[\d,.]+", tok).group(0).replace(",", "").replace(".", ""))
+
+        return {tok for tok in found
+                if (digits(tok) >= 4
+                    or (digits(tok) >= 2 and tok.endswith(("万", "億", "ユーロ", "ポンド", "円", "%"))))
+                and not re.fullmatch(r"\d{4}年?", tok)}
+
+    # **3本以上に出る言い回しは型の文**（2026-09-22）。プレミア20クラブ紹介は
+    # 「リーグは5試合を終えて」「ミッドフィールダーは6人」を全本で読むので、
+    # 対で数えると162か所になった。同じ日の7本でも、決まり文句は同じ。
+    # 2本だけに出る重なりが、言い直し
+    def windows(script: Script) -> set[str]:
+        got: set[str] = set()
+        for x in lines(script):
+            for i in range(len(x) - CROSS_REPEAT_MIN + 1):
+                g = x[i:i + CROSS_REPEAT_MIN]
+                if re.search(r"[ぁ-ん]", re.sub(r"[のとやからまでにはがをでも]", "", g)):
+                    got.add(g)
+        return got
+
+    per_script = [(s, lines(s), windows(s), numbers(s)) for s in scripts]
+    count_w: dict[str, int] = {}
+    count_n: dict[str, int] = {}
+    for _, _, ws, ns in per_script:
+        for w in ws:
+            count_w[w] = count_w.get(w, 0) + 1
+        for n in ns:
+            count_n[n] = count_n.get(n, 0) + 1
+    # 10本を超える並び（シリーズ）は決まり文句が多いので、長い重なりだけ見る
+    least = CROSS_REPEAT_MIN if len(scripts) < 10 else CROSS_REPEAT_MIN + 6
+
+    out: list[str] = []
+    seen: set[str] = set()
+    for (a, la, wa, na), (b, lb, wb, nb) in itertools.combinations(per_script, 2):
+        for tok in sorted(na & nb):
+            if count_n.get(tok, 0) == 2 and tok not in seen:
+                seen.add(tok)
+                out.append(f"『{tok}』（{_short_name(a)} と {_short_name(b)}）")
+        if not (wa & wb):
+            continue
+        # 行どうしで、いちばん長く続けて重なる部分を1つ（窓を並べると1字ずつずれて何度も鳴る）
+        for x in la:
+            for y in lb:
+                shared = _longest_common(x, y)
+                if len(shared) < least or shared in seen:
+                    continue
+                if not re.search(r"[ぁ-ん]", re.sub(r"[のとやからまでにはがをでも]", "", shared)):
+                    continue
+                # 3本以上に出る言い回しを含むなら型の文
+                if any(count_w.get(shared[i:i + CROSS_REPEAT_MIN], 0) >= 3
+                       for i in range(len(shared) - CROSS_REPEAT_MIN + 1)):
+                    continue
+                seen.add(shared)
+                out.append(f"『{shared}』（{_short_name(a)} と {_short_name(b)}）")
+    return out
+
+
+def _longest_common(left: str, right: str) -> str:
+    best = ""
+    for start in range(len(left)):
+        for end in range(len(left), start + len(best), -1):
+            if left[start:end] in right:
+                best = left[start:end]
+                break
+    return best
+
+
+def _short_name(script: Script) -> str:
+    return str((script.meta or {}).get("title") or script.title or "")[:12]
+
+
 def _prefix(script: Script) -> str:
     title = str((script.meta or {}).get("title") or "").strip()
     if title.startswith("【") and "】" in title:
@@ -136,7 +251,7 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
     # **タイトルの結び方が揃っていないか**（2026-09-08 ユーザー指摘）。
     # 9本中7本が「〜がこちらです」で終わっていた。1本ずつの点検は
     # 「答えを隠しているか」しか見ないので、**並べないと気づけない**
-    tails = Counter(_bare(s.title)[-6:] for s in scripts if _bare(s.title))
+    tails = Counter(_tail_kind(s.title) for s in scripts if _bare(s.title))
     top_tail, tail_share = _share(tails, total)
     if tail_share > SAME_TAIL:
         findings.append(Finding(
@@ -145,6 +260,18 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
             "毎回同じ結び方だと、一覧で見分けが付きません"))
     else:
         findings.append(Finding(True, "結び方", "結び方は散らばっています"))
+
+    # **本と本のあいだで同じことを言っていないか**（2026-09-22）。
+    # ラフィーニャとシメオネの回が、どちらも「バルセロナは7戦全勝、31得点7失点」を
+    # 読んでいた。同じ日に出すので、続けて見た人には二度聞こえる。
+    # 1本の中の重複は draft が見るが、本のあいだは並べないと見えない
+    crossed = _cross_repeats(scripts)
+    if crossed:
+        findings.append(Finding(
+            False, "本のあいだ",
+            f"{len(crossed)}か所で同じことを言っています。最初の1つ: {crossed[0]}"))
+    else:
+        findings.append(Finding(True, "本のあいだ", "本どうしで同じ話は重なっていません"))
 
     # **札は毎回付けない**（2026-09-08 ユーザー指示）。付いている本数そのものを見る
     with_badge = [s for s in scripts if _prefix(s)]

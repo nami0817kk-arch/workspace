@@ -1,0 +1,546 @@
+{
+ "arsenal": {
+  "Stan Kroenke": {
+   "role": "owner",
+   "file": "assets/photos/pl/arsenal_owner_87703a59.jpg",
+   "page": "Stan Kroenke"
+  },
+  "ティエリ・アンリ": {
+   "role": "legend",
+   "file": "assets/photos/pl/arsenal_legend_7851c0a6.jpg",
+   "page": "Thierry Henry"
+  },
+  "デニス・ベルカンプ": {
+   "role": "legend",
+   "file": "assets/photos/pl/arsenal_legend_33c1caef.jpg",
+   "page": "Dennis Bergkamp"
+  },
+  "トニー・アダムス": {
+   "role": "legend",
+   "file": "assets/photos/pl/arsenal_legend_2f4344ee.jpg",
+   "page": "Tony Adams"
+  },
+  "ミケル・アルテタ": {
+   "role": "manager",
+   "file": "assets/photos/pl/arsenal_manager_aa6bf3cd.jpg",
+   "page": "Mikel Arteta"
+  }
+ },
+ "bournemouth": {
+  "Bill Foley (businessman)": {
+   "role": "owner",
+   "file": "assets/photos/pl/bournemouth_owner_cf0347c5.jpg",
+   "page": "Bill Foley (businessman)"
+  },
+  "カラム・ウィルソン": {
+   "role": "legend",
+   "file": "assets/photos/pl/bournemouth_legend_224f5148.jpg",
+   "page": "Callum Wilson"
+  },
+  "エディ・ハウ": {
+   "role": "legend",
+   "file": "assets/photos/pl/bournemouth_legend_c837613d.jpg",
+   "page": "Eddie Howe"
+  },
+  "スティーヴ・フレッチャー": {
+   "role": "legend",
+   "file": "",
+   "note": "日本語名で引いたら俳優のデクスター・フレッチャーの写真を拾った（2026-09-20）。Steve Fletcher (footballer) の記事に自由に使える写真が無いので、写真は出さない"
+  },
+  "ライアン・フレイザー": {
+   "role": "legend",
+   "file": "assets/photos/pl/bournemouth_legend_9f069e9f.jpg",
+   "page": "Ryan Fraser"
+  },
+  "ブレット・ピットマン": {
+   "role": "legend",
+   "file": "assets/photos/pl/bournemouth_legend_2f36ed97.jpg",
+   "page": "Brett Pitman"
+  },
+  "マイケル・B・ジョーダン": {
+   "role": "owner_minority",
+   "file": "assets/photos/pl/bournemouth_owner_07f09a4e.jpg",
+   "page": "Michael B. Jordan"
+  },
+  "マルコ・ローゼ": {
+   "role": "manager",
+   "file": "assets/photos/pl/bournemouth_manager_19d3b54a.jpg",
+   "page": "Marco Rose"
+  }
+ },
+ "brentford": {
+  "Matthew Benham": {
+   "role": "owner",
+   "file": ""
+  },
+  "ケヴィン・オコナー": {
+   "role": "legend",
+   "file": "assets/photos/pl/brentford_legend_69f3b6b5.jpg",
+   "page": "Kevin O'Connor (footballer, born 1982)"
+  },
+  "イヴァン・トニー": {
+   "role": "legend",
+   "file": "assets/photos/pl/brentford_legend_6dfd5356.jpg",
+   "page": "Ivan Toney"
+  },
+  "ブライアン・エムベウモ": {
+   "role": "legend",
+   "file": "assets/photos/pl/brentford_legend_df82049f.jpg",
+   "page": "Bryan Mbeumo"
+  },
+  "キース・アンドリュース": {
+   "role": "manager",
+   "file": "assets/photos/pl/brentford_manager_9acd4388.jpg",
+   "page": "Keith Andrews (footballer)"
+  },
+  "ブライアン・エンベウモ": {
+   "role": "legend",
+   "file": "assets/photos/pl/brentford_legend_df82049f.jpg",
+   "page": "Bryan Mbeumo"
+  }
+ },
+ "brighton": {
+  "Tony Bloom": {
+   "role": "owner",
+   "file": "assets/photos/pl/brighton_owner_dbf32f4e.jpg",
+   "page": "Tony Bloom"
+  },
+  "ルイス・ダンク": {
+   "role": "legend",
+   "file": "assets/photos/pl/brighton_legend_85972114.jpg",
+   "page": "Lewis Dunk"
+  },
+  "グレン・マレー": {
+   "role": "legend",
+   "file": "assets/photos/pl/brighton_legend_baa41613.jpg",
+   "page": "Glenn Murray"
+  },
+  "ボビー・ザモラ": {
+   "role": "legend",
+   "file": "assets/photos/pl/brighton_legend_17bed45d.jpg",
+   "page": "Bobby Zamora"
+  },
+  "ファビアン・ヒュルツェラー": {
+   "role": "manager",
+   "file": "assets/photos/pl/brighton_manager_f0635d10.jpg",
+   "page": "Fabian Hürzeler"
+  }
+ },
+ "chelsea": {
+  "フランク・ランパード": {
+   "role": "legend",
+   "file": "assets/photos/pl/chelsea_legend_ff78bb8a.jpg",
+   "page": "Frank Lampard"
+  },
+  "ジョン・テリー": {
+   "role": "legend",
+   "file": "assets/photos/pl/chelsea_legend_322e28ae.jpg",
+   "page": "John Terry"
+  },
+  "ディディエ・ドログバ": {
+   "role": "legend",
+   "file": "assets/photos/pl/chelsea_legend_cc53b1d9.jpg",
+   "page": "Didier Drogba"
+  },
+  "シャビ・アロンソ": {
+   "role": "manager",
+   "file": "assets/photos/pl/chelsea_manager_5f5bf55b.jpg",
+   "page": "Xabi Alonso"
+  }
+ },
+ "coventry": {
+  "Doug King (businessman)": {
+   "role": "owner",
+   "file": ""
+  },
+  "スティーヴ・オグリゾヴィッチ": {
+   "role": "legend",
+   "file": "assets/photos/pl/coventry_legend_c8cbdeab.jpg",
+   "page": "Members News: Oggy is 65 not out 'Happy Birthday' To City's Legendary 'Keeper (& CCFPA's Rich.Too)!! : Coventry City Former Players Association"
+  },
+  "ディオン・ダブリン": {
+   "role": "legend",
+   "file": "assets/photos/pl/coventry_legend_5dd33917.jpg",
+   "page": "Dion Dublin"
+  },
+  "ゲイリー・マカリスター": {
+   "role": "legend",
+   "file": "assets/photos/pl/coventry_legend_f86f9736.jpg",
+   "page": "Gary McAllister"
+  },
+  "フランク・ランパード": {
+   "role": "manager",
+   "file": "assets/photos/pl/coventry_manager_ff78bb8a.jpg",
+   "page": "Frank Lampard"
+  }
+ },
+ "everton": {
+  "Dan Friedkin": {
+   "role": "owner",
+   "file": ""
+  },
+  "ネヴィル・サウスオール": {
+   "role": "legend",
+   "file": "assets/photos/pl/everton_legend_721f5e76.jpg",
+   "page": "Neville Southall"
+  },
+  "シェイマス・コールマン": {
+   "role": "legend",
+   "file": "assets/photos/pl/everton_legend_ee9aaa81.jpg",
+   "page": "Seamus Coleman"
+  },
+  "ティム・ケイヒル": {
+   "role": "legend",
+   "file": "assets/photos/pl/everton_legend_e016a71b.jpg",
+   "page": "Tim Cahill"
+  },
+  "デイヴィッド・モイーズ": {
+   "role": "manager",
+   "file": "assets/photos/pl/everton_manager_c9564519.jpg",
+   "page": "David Moyes"
+  }
+ },
+ "forest": {
+  "Evangelos Marinakis": {
+   "role": "owner",
+   "file": "assets/photos/pl/forest_owner_741d4568.jpg",
+   "page": "Evangelos Marinakis"
+  },
+  "スチュアート・ピアース": {
+   "role": "legend",
+   "file": "assets/photos/pl/forest_legend_76a123b5.jpg",
+   "page": "Stuart Pearce"
+  },
+  "デス・ウォーカー": {
+   "role": "legend",
+   "file": "assets/photos/pl/forest_legend_504f470d.jpg",
+   "page": "Des Walker"
+  },
+  "スタン・コリモア": {
+   "role": "legend",
+   "file": "assets/photos/pl/forest_legend_fdfd78cc.jpg",
+   "page": "Stan Collymore"
+  },
+  "オリバー・グラスナー": {
+   "role": "manager",
+   "file": "assets/photos/pl/forest_manager_0c9c0210.jpg",
+   "page": "Oliver Glasner"
+  }
+ },
+ "fulham": {
+  "Shahid Khan": {
+   "role": "owner",
+   "file": "assets/photos/pl/fulham_owner_9cb77ec2.jpg",
+   "page": "Shahid Khan"
+  },
+  "アレクサンダル・ミトロヴィッチ": {
+   "role": "legend",
+   "file": "assets/photos/pl/fulham_legend_6a9cabb3.jpg",
+   "page": "Aleksandar Mitrović"
+  },
+  "トム・ケアニー": {
+   "role": "legend",
+   "file": "assets/photos/pl/fulham_legend_02ecd663.jpg",
+   "page": "Tom Cairney"
+  },
+  "クリント・デンプシー": {
+   "role": "legend",
+   "file": "assets/photos/pl/fulham_legend_368535cd.jpg",
+   "page": "Clint Dempsey"
+  },
+  "アルバロ・アルベロア": {
+   "role": "manager",
+   "file": "assets/photos/pl/fulham_manager_465c1add.jpg",
+   "page": "Álvaro Arbeloa"
+  }
+ },
+ "hull": {
+  "Acun Ilıcalı": {
+   "role": "owner",
+   "file": "assets/photos/pl/hull_owner_8739e202.jpg",
+   "page": "Acun Ilıcalı"
+  },
+  "ディーン・ウィンダス": {
+   "role": "legend",
+   "file": "assets/photos/pl/hull_legend_f160fd58.jpg",
+   "page": "Dean Windass"
+  },
+  "イアン・アシュビー": {
+   "role": "legend",
+   "file": "assets/photos/pl/hull_legend_24d5dcb4.jpg",
+   "page": "Ian Ashbee"
+  },
+  "ニック・バームビー": {
+   "role": "legend",
+   "file": "assets/photos/pl/hull_legend_56329695.jpg",
+   "page": "Nick Barmby"
+  },
+  "セルゲイ・ヤキロヴィッチ": {
+   "role": "manager",
+   "file": "assets/photos/pl/hull_manager_3daf3c84.jpg",
+   "page": "Sergej Jakirović"
+  }
+ },
+ "ipswich": {
+  "マット・ホランド": {
+   "role": "legend",
+   "file": "assets/photos/pl/ipswich_legend_79ba8f9c.jpg",
+   "page": "Matt Holland"
+  },
+  "ジム・マギルトン": {
+   "role": "legend",
+   "file": "assets/photos/pl/ipswich_legend_7557cc62.jpg",
+   "page": "Jim Magilton"
+  },
+  "マーカス・スチュワート": {
+   "role": "legend",
+   "file": "assets/photos/pl/ipswich_legend_0858d337.jpg",
+   "page": "Marcus Stewart"
+  },
+  "ギャリー・オニール": {
+   "role": "manager",
+   "file": "assets/photos/pl/ipswich_manager_0a40cb8c.jpg",
+   "page": "Gary O'Neil"
+  }
+ },
+ "leeds": {
+  "Denise DeBartolo York": {
+   "role": "owner",
+   "file": ""
+  },
+  "ゲイリー・ケリー": {
+   "role": "legend",
+   "file": "assets/photos/pl/leeds_legend_5b1370c0.jpg",
+   "page": "Gary Kelly: Photo memories of a one club wonder"
+  },
+  "ルーカス・ラデベ": {
+   "role": "legend",
+   "file": "assets/photos/pl/leeds_legend_f81a9796.jpg",
+   "page": "Lucas Radebe"
+  },
+  "マーク・ビドゥカ": {
+   "role": "legend",
+   "file": "assets/photos/pl/leeds_legend_ea0d2287.jpg",
+   "page": "Mark Viduka"
+  },
+  "ダニエル・ファルケ": {
+   "role": "manager",
+   "file": "assets/photos/pl/leeds_manager_7fd3a0aa.jpg",
+   "page": "Daniel Farke"
+  }
+ },
+ "liverpool": {
+  "スティーヴン・ジェラード": {
+   "role": "legend",
+   "file": "assets/photos/pl/liverpool_legend_7c62ed45.jpg",
+   "page": "Steven Gerrard"
+  },
+  "ジェイミー・キャラガー": {
+   "role": "legend",
+   "file": "assets/photos/pl/liverpool_legend_1840df0d.jpg",
+   "page": "Jamie Carragher"
+  },
+  "モハメド・サラー": {
+   "role": "legend",
+   "file": "assets/photos/pl/liverpool_legend_bec22eba.jpg",
+   "page": "Mohamed Salah"
+  },
+  "Tom Werner": {
+   "role": "owner",
+   "file": "",
+   "note": "記事の代表画像がワールドシリーズのトロフィーで、本人の顔ではない（2026-09-20）"
+  },
+  "アンドニ・イラオラ": {
+   "role": "manager",
+   "file": "assets/photos/pl/liverpool_manager_703e8e97.jpg",
+   "page": "Andoni Iraola"
+  }
+ },
+ "mancity": {
+  "Khaldoon Al Mubarak": {
+   "role": "owner",
+   "file": "assets/photos/pl/mancity_owner_90b48e45.jpg",
+   "page": "Khaldoon Al Mubarak"
+  },
+  "セルヒオ・アグエロ": {
+   "role": "legend",
+   "file": "assets/photos/pl/mancity_legend_341b1699.jpg",
+   "page": "Sergio Agüero"
+  },
+  "ヴァンサン・コンパニ": {
+   "role": "legend",
+   "file": "assets/photos/pl/mancity_legend_841b42a0.jpg",
+   "page": "Vincent Kompany"
+  },
+  "ダビド・シルバ": {
+   "role": "legend",
+   "file": "assets/photos/pl/mancity_legend_3efbd9fc.jpg",
+   "page": "David Silva"
+  },
+  "エンツォ・マレスカ": {
+   "role": "manager",
+   "file": "assets/photos/pl/mancity_manager_71dabf8d.jpg",
+   "page": "Enzo Maresca"
+  }
+ },
+ "manutd": {
+  "Joel Glazer": {
+   "role": "owner",
+   "file": "assets/photos/pl/manutd_owner_3345c4b8.jpg",
+   "page": "Joel Glazer"
+  },
+  "ライアン・ギグス": {
+   "role": "legend",
+   "file": "assets/photos/pl/manutd_legend_f3ad91ce.jpg",
+   "page": "Ryan Giggs"
+  },
+  "ウェイン・ルーニー": {
+   "role": "legend",
+   "file": "assets/photos/pl/manutd_legend_8c632d7c.jpg",
+   "page": "Wayne Rooney"
+  },
+  "ポール・スコールズ": {
+   "role": "legend",
+   "file": "assets/photos/pl/manutd_legend_15d06a2f.jpg",
+   "page": "Paul Scholes"
+  },
+  "マイケル・キャリック": {
+   "role": "manager",
+   "file": "assets/photos/pl/manutd_manager_ab69d494.jpg",
+   "page": "Michael Carrick"
+  }
+ },
+ "newcastle": {
+  "Yasir Al-Rumayyan": {
+   "role": "owner",
+   "file": "assets/photos/pl/newcastle_owner_d7f21670.jpg",
+   "page": "Yasir Al-Rumayyan"
+  },
+  "アラン・シアラー": {
+   "role": "legend",
+   "file": "assets/photos/pl/newcastle_legend_f4f90b59.jpg",
+   "page": "Alan Shearer"
+  },
+  "シェイ・ギヴン": {
+   "role": "legend",
+   "file": "assets/photos/pl/newcastle_legend_03981f93.jpg",
+   "page": "Shay Given"
+  },
+  "ロブ・リー": {
+   "role": "legend",
+   "file": "assets/photos/pl/newcastle_legend_69dd2e4f.jpg",
+   "page": "Rob Lee"
+  },
+  "マティアス・ヤイスレ": {
+   "role": "manager",
+   "file": "assets/photos/pl/newcastle_manager_37492bb4.jpg",
+   "page": "Matthias Jaissle"
+  }
+ },
+ "palace": {
+  "Woody Johnson": {
+   "role": "owner",
+   "file": "assets/photos/pl/palace_owner_51aa6fad.jpg",
+   "page": "Woody Johnson"
+  },
+  "ウィルフリード・ザハ": {
+   "role": "legend",
+   "file": "assets/photos/pl/palace_legend_cd98ad83.jpg",
+   "page": "Wilfried Zaha"
+  },
+  "フリアン・スペローニ": {
+   "role": "legend",
+   "file": "assets/photos/pl/palace_legend_80f288a7.jpg",
+   "page": "Julian Speroni"
+  },
+  "アンドリュー・ジョンソン": {
+   "role": "legend",
+   "file": "assets/photos/pl/palace_legend_3bc227d6.jpg",
+   "page": "Andrew Johnson (footballer, born 1981)"
+  },
+  "ピエール・サージュ": {
+   "role": "manager",
+   "file": "assets/photos/pl/palace_manager_761b9ef6.jpg",
+   "page": "Pierre Sage"
+  }
+ },
+ "sunderland": {
+  "Kyril Louis-Dreyfus": {
+   "role": "owner",
+   "file": ""
+  },
+  "ケヴィン・フィリップス": {
+   "role": "legend",
+   "file": "assets/photos/pl/sunderland_legend_1bb9e670.jpg",
+   "page": "Kevin Phillips (footballer)"
+  },
+  "ナイアル・クイン": {
+   "role": "legend",
+   "file": "assets/photos/pl/sunderland_legend_b2b573bf.jpg",
+   "page": "Niall Quinn"
+  },
+  "ケヴィン・ボール": {
+   "role": "legend",
+   "file": "assets/photos/pl/sunderland_legend_b6528308.jpg",
+   "page": "SAFC legend Kevin Ball given Freedom of the City of Sunderland"
+  },
+  "レジス・ル・ブリ": {
+   "role": "manager",
+   "file": "assets/photos/pl/sunderland_manager_1ba8b156.jpg",
+   "page": "Régis Le Bris"
+  }
+ },
+ "tottenham": {
+  "ハリー・ケイン": {
+   "role": "legend",
+   "file": "assets/photos/pl/tottenham_legend_131bf2d1.jpg",
+   "page": "Harry Kane"
+  },
+  "ソン・フンミン": {
+   "role": "legend",
+   "file": "assets/photos/pl/tottenham_legend_41006aeb.jpg",
+   "page": "Son Heung-min"
+  },
+  "レドリー・キング": {
+   "role": "legend",
+   "file": "assets/photos/pl/tottenham_legend_a1b6d580.jpg",
+   "page": "Ledley King"
+  },
+  "ロベルト・デ・ゼルビ": {
+   "role": "manager",
+   "file": "assets/photos/pl/tottenham_manager_57aac009.jpg",
+   "page": "Roberto De Zerbi"
+  }
+ },
+ "villa": {
+  "Nassef Sawiris": {
+   "role": "owner",
+   "file": ""
+  },
+  "ガブリエル・アグボンラホー": {
+   "role": "legend",
+   "file": "assets/photos/pl/villa_legend_27411382.jpg",
+   "page": "Gabriel Agbonlahor"
+  },
+  "オリー・ワトキンス": {
+   "role": "legend",
+   "file": "assets/photos/pl/villa_legend_b8954c93.jpg",
+   "page": "Ollie Watkins"
+  },
+  "ポール・マグラス": {
+   "role": "legend",
+   "file": "assets/photos/pl/villa_legend_1acefaf2.jpg",
+   "page": "Paul McGrath (footballer)"
+  },
+  "ウナイ・エメリ": {
+   "role": "manager",
+   "file": "assets/photos/pl/villa_manager_4b03a7c7.jpg",
+   "page": "Unai Emery"
+  },
+  "ジャック・グリーリッシュ": {
+   "role": "legend",
+   "file": "assets/photos/pl/villa_legend_ad97dc28.jpg",
+   "page": "Jack Grealish"
+  }
+ }
+}

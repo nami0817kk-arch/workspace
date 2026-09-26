@@ -1,0 +1,144 @@
+# 「戦術ザイオン」。中身が説明されないまま広がった話（2026-09-21）
+#
+# 材料は research/raw/20260921_zion.md。
+#
+# **ユーザー指示「このまま作る」（2026-09-21）。**ただし次を守る。
+#   ・**試合は9月12日のノッティンガム・フォレスト戦**（ヴィラ・パークで1-2の敗戦）。
+#     **昨日の試合ではない。**負けた試合であることも隠さない。
+#   ・**配置の中身は「分からない」と言い切る。**記事にあるのは
+#     「鈴木以外の21人が相手コートにいた」の一文だけ。誰がどこに立っていたかは
+#     どの記事にも書かれておらず、映像でも確認できていない。**何分の場面かも不明。**
+#   ・**狙いの説明は作らない。**監督も選手も解説者も、この配置について語っていない。
+#   ・出どころは**サッカーダイジェストWeb1社**。確度は「未確認」。
+#
+# **前半9分のロングフィードの節は落とした**（2026-09-21 ユーザー指示
+# 「内容も戦術ザイオンに当てた内容」）。あれはキックの話で、配置の話ではない。
+format: news
+voice_min: 40
+slot: japan_4
+date: "2026年9月21日"
+
+people:
+  - 鈴木彩艶
+
+short_title: "「戦術ザイオン」自陣に1人"
+
+theme:
+  id: zion_goalkick_talk
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: 戦術ザイオン！？ 鈴木彩艶のゴールキックで起きていたのは
+  hook: 自陣に立っていたのは、鈴木ひとりだけでした。
+  question: 何が起きていたのか
+
+thumbnail:
+  photo: assets/images/20260920_zion_press/01.jpg
+  line1: 戦術ザイオン！？
+  line2: 自陣に立つのは たった1人
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 戦術ザイオンとは
+    main: true
+    tier: 未確認
+    telop: 鈴木以外の21人が、相手コートにいた
+    narrator: キャスター
+    card:
+      type: table
+      title: 戦術ザイオン
+      columns: ["", ""]
+      rows:
+        - ["場面", "鈴木彩艶のゴールキック"]
+        - ["自陣にいたのは", "鈴木ひとり"]
+        - ["相手コートにいたのは", "21人"]
+        - ["味方も相手も", "全員が前に出ていた"]
+    say:
+      - {short_only: true, text: 「戦術ザイオン」が話題になっています。}
+      - "**戦術ザイオン。**そう呼ばれている場面があります。"
+      - 鈴木彩艶がゴールキックを蹴ろうとしたときのことです。
+      - "画面に映っていたのは、**鈴木ひとりだけ**でした。"
+      - "残りの**21人が、全員そろって相手コート**にいたのです。"
+      - キーパーの前に、味方も相手も、誰もいません。
+    official: false
+    sources:
+      - https://www.soccerdigestweb.com/
+
+  - id: which
+    heading: どの試合の話か
+    tier: 報道
+    telop: 9月12日、フォレスト戦。ヴィラは1対2で敗れている
+    narrator: 解説
+    card:
+      type: table
+      title: その試合
+      columns: ["", ""]
+      rows:
+        - ["日付", "9月12日（現地）"]
+        - ["対戦", "アストン・ヴィラ 1対2 ノッティンガム・フォレスト"]
+        - ["会場", "ヴィラ・パーク"]
+        - ["結果", "ヴィラの敗戦"]
+    say:
+      - まず、いつの話なのかをはっきりさせておきます。
+      - "**9月12日のノッティンガム・フォレスト戦**です。昨日の試合ではありません。"
+      - "しかもこの試合、ヴィラは**1対2で負けています。**"
+      - 話題になったのは、それから3日あとのことでした。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/
+
+  - id: unknown
+    heading: 狙いは、誰も説明していない
+    tier: 背景
+    telop: 監督も選手も、何も話していない
+    narrator: キャスター
+    say:
+      - "では、これは何を狙った並びだったのか。"
+      - "**誰も説明していません。**"
+      - 監督も、選手も、解説者も、この配置について一言も話していないのです。
+      - 名前だけが先に広がって、狙いは分からないままです。
+    official: false
+    sources:
+      - https://www.soccerdigestweb.com/
+
+  - id: emery
+    heading: 監督が言っていること
+    tier: 報道
+    telop: 「彼は我々を救ってくれるGKだ」
+    narrator: 解説
+    say:
+      - 配置そのものについては何も語られていませんが、鈴木のキックについては、監督が繰り返し話しています。
+      - {voice: エメリ監督, text: 鈴木はまずゴールを守る選手。そして次に、我々が求める形でビルドアップを助けてくれる選手だ}
+      - {voice: エメリ監督, text: 彼は素晴らしいGKだ。セーブができ、ショートパスでもロングボールでも、我々が望むビルドアップができる}
+      - {voice: エメリ監督, text: 彼は我々を救ってくれるGKだ}
+      - つまり、蹴れることは前提として計算されています。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「自陣だーれもおらんくて笑っちゃった」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この場面に、こんな声が集まりました。}
+      - {voice: ネット民, text: １人くらい自陣におるかな思ったら全員相手側におるのおもろすぎる, short_voice: true}
+      - {voice: ネット民, text: 自陣だーれもおらんくて笑っちゃった}
+      - {voice: ネット民, text: こんなの見たことない}
+      - {voice: ネット民, text: 世界一簡単なビルドアップ}
+      - {voice: ネット民, text: もう誰もいなくて草}
+      - {voice: ネット民, text: やっぱバグだろこのキック}
+      - {voice: ネット民, text: 彩艶のゴールキックは本当に凄い。ぱっと見は軽くけってるように見えるのに、とんでもなく飛ぶ}
+      - {voice: ネット民, text: ロングボールってゾーンプレス系の守備戦術を無効化できる素晴らしい戦術。頭の上を超えちゃえば関係ないからね}
+      - {voice: ネット民, text: 鈴木彩艶という特別なオプションが付いたんだから、アストン・ビラは結果に結びつけてほしい}
+      - {voice: ネット民, text: そのうちロジェリオ・セニとかチラベルトみたいにFKを蹴らされたりして}
+      - {voice: ネット民, text: Zion Suzuki is a gem. That brother is destined for the very very top}
+      - {voice: ネット民, text: Zion Suzuki. I wasn't familiar with your game. Wow}
+      - {voice: ネット民, text: suzuki is not staying at villa for long.}
+    official: false
+    sources:
+      - https://www.soccerdigestweb.com/

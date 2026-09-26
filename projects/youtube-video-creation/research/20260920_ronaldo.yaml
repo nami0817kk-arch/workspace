@@ -1,0 +1,99 @@
+# 41歳のロナウドがポルトガル代表に選ばれた（2026-09-20）
+#
+# 材料は research/raw/20260920_ronaldo.md。出典はゲキサカ（Yahoo!ニュース配信も同じ）。
+#
+# **ジェズス監督の言葉は、ブラジルの『グローボ』への発言をゲキサカが訳したもの。**
+# 原文にあたる記事のURLは、こちらの出典には載っていない。**確度は報道どまり。**
+#
+# **「先発は確約されない」は別記事の見出しだけで、本文を読めていない。**
+# だから台本には入れない。入れてよいのは監督本人の言葉のほう。
+#
+# **反応は7件のうち5件を使う。**2件は選手一覧の表記ミスを指摘するもので、
+# この話への反応ではないため落とした。海外の反応は取れなかった。
+format: news
+voice_min: 30
+slot: world_2
+date: "2026年9月20日"
+
+people:
+  - クリスティアーノ・ロナウド
+
+short_title: "41歳ロナウド、代表に選出"
+
+theme:
+  id: ronaldo_portugal_squad
+  league: spain
+  league_name: ポルトガル代表
+  kind: other
+  topic: ポルトガル代表
+  title: 41歳のロナウドが、また呼ばれた。新監督が口にしたのは
+  hook: バロンドール5回は、判断に関係ないと言いました。
+  question: どんな扱いになるのか
+
+thumbnail:
+  photo: assets/images/20260920_ronaldo_press/01.jpg
+  line1: 41歳、また代表に
+  line2: 新監督「5回の受賞も ●●」
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/ronaldo_20260920.png
+    telop: ポルトガル代表に、41歳のロナウドが選出
+    narrator: キャスター
+    card:
+      type: table
+      title: ポルトガル代表の発表
+      columns: ["", ""]
+      rows:
+        - ["発表", "9月18日、ポルトガルサッカー連盟"]
+        - ["クリスティアーノ・ロナウド", "41歳。選出"]
+        - ["新監督", "ジョルジェ・ジェズス"]
+        - ["相手", "ウェールズ、ノルウェー、デンマーク"]
+    say:
+      - ポルトガルサッカー連盟が、ネーションズリーグに臨むメンバーを発表しました。
+      - "41歳のクリスティアーノ・ロナウドが、**選ばれています**。"
+      - 新しい監督、ジョルジェ・ジェズスのもとでの最初の発表です。
+      - 同じ発表で、ワールドカップに出ていた選手のうち5人が外れました。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459139-459139-fl
+
+  - id: words
+    heading: 新監督が話したこと
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/ronaldo_20260920.png
+    telop: 「クリスは他の選手と同じだ」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: ポルトガル代表のメンバーが発表されました。}
+      - ロナウドの扱いについて、ジェズス監督はこう話しています。
+      - {voice: ジェズス監督, text: クリスは他の選手と同じだ。パフォーマンスが良ければ出場するし、そうでなければ出場しない}
+      - {voice: ジェズス監督, text: 5回もバロンドールを獲得している。だが、それが私の判断に影響するか？ノーだ}
+      - {voice: ジェズス監督, text: 全く影響しない、ゼロだ}
+      - つまり、呼ばれはしたものの、出番が約束されたわけではありません。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459139-459139-fl
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    bg: assets/backgrounds/ronaldo_20260920.png
+    telop: 「メッシが引退するなか、あくまで拘る」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この発表を見た人たちの声です。}
+      - {voice: ネット民, text: メッシが惜しまれながら代表引退するなか、あくまで拘るのは一つの生き方だろうね, short_voice: true}
+      - {voice: ネット民, text: ベンチからスーパーサブなら良いけど、受け入れるのか？}
+      - {voice: ネット民, text: そもそもロナウドはあと数年で引退を示唆する発言をしている}
+      - {voice: ネット民, text: 最後の目標の1000ゴールを達成したら引退すると思っていた人は多いと思う}
+      - {voice: ネット民, text: しれっとスーパーサブでいたりして。空中戦要員で, short_voice: true}
+      - {voice: ネット民, text: こうやってみると前線は帯に短し襷に長しで、核になる選手が存在しませんよね}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/dd0f55f7e6dc4aa81bbb32057c5fc57dc287882e/comments

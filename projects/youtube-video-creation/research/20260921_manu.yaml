@@ -1,0 +1,116 @@
+# ネビルが「かばうのをやめろ」と言った（2026-09-21）
+#
+# 材料は research/raw/20260921_manu.md。
+#
+# **ネビルの発言は媒体で表記が割れている。**Sky は「the worst 15 minutes I have ever
+# seen」、Football365 は「15分」が無い。**Sky の書き方を採り、媒体名を画面に出す。**
+# 開幕記録も Sky／Daily Mail が「並んでワースト」、ESPN だけ「2014年以来のワースト」。
+# **「並んで」を採る**（2媒体が一致）。
+#
+# **ネビルの批判を伝えた日本語記事は、9/21朝の時点で1本も無い。**引用は英語の原文から
+# こちらで訳したもの。画面に「英語からの訳」と分かるように出す。
+#
+# **得点の時間は言わない**（スポーツナビは後半表記、他は通し表記）。
+format: news
+voice_min: 40
+slot: premier_1
+date: "2026年9月21日"
+
+people:
+  - マテウス・クーニャ
+
+short_title: "ネビル「かばうのをやめろ」"
+
+theme:
+  id: neville_carrick_fulham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: マンチェスター・Uにネビルが言ったこと。マネキンと呼んだのは
+  hook: 引き分けに持ち込んだ夜に、出た言葉です。
+  question: 何をそこまで批判したのか
+
+thumbnail:
+  photo: assets/images/20260921_manu/01.jpg
+  line1: ネビル激怒「マネキンだ」
+  line2: 歩いていた、と名指し
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: フルアム1対1マンチェスター・U。土壇場の同点弾
+    narrator: キャスター
+    card:
+      type: table
+      title: プレミアリーグ
+      columns: ["", ""]
+      rows:
+        - ["フルアム", "1"]
+        - ["マンチェスター・U", "1"]
+        - ["先制", "リサンドロ・マルティネスのオウンゴール"]
+        - ["同点", "マテウス・クーニャ"]
+    say:
+      - フルアムとマンチェスター・ユナイテッドが1対1で引き分けました。
+      - 先に入ったのは、リサンドロ・マルティネスのオウンゴールです。
+      - 追いついたのは終盤、マテウス・クーニャでした。
+      - "これでユナイテッドは、公式戦3連敗を**土壇場で**避けています。"
+    official: false
+    sources:
+      - https://www.skysports.com/football/fulham-vs-manchester-united/report/559488
+      - https://www.espn.com/soccer/story/_/id/49991106/carrick-squashes-notion-manchester-united-shape
+
+  - id: neville
+    heading: ネビルが言ったこと
+    main: true
+    tier: 報道
+    telop: 「マイケルは、かばうのをやめなければいけない」
+    narrator: 解説
+    say:
+      - {short_only: true, text: ゲイリー・ネビルが、監督のカリックを名指しで批判しました。}
+      - 試合のあと、スカイ・スポーツでゲイリー・ネビルがこう話しました。
+      - {voice: ネビル, text: あれほどボールを持っていないときに歩いているマンチェスター・ユナイテッドは、見たことがない}
+      - {voice: ネビル, text: マイケルは、彼らをかばうのをやめなければいけない}
+      - {voice: ネビル, text: かばう理由は分かる。彼は義理堅いし、選手に自分のために働いてほしいと思っている}
+      - {voice: ネビル, text: 私は彼らをマネキンと呼んだ}
+      - {voice: ネビル, text: フルアムがボールを持っているとき、彼らはただ歩いていた}
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13590228/gary-neville-michael-carrick-has-got-to-stop-defending-man-utd-players-after-lacklustre-draw-at-fulham
+
+  - id: worst
+    heading: 「努力が足りない」は、めったに言わない
+    tier: 報道
+    telop: 「選手の集団に与えうる最大の批判だ」
+    narrator: キャスター
+    say:
+      - ネビル自身が、この言い方の重さを説明しています。
+      - {voice: ネビル, text: チームが懸命にやっていない、努力が足りない、と私が言うことは滅多にない。それは選手の集団に与えうる最大の批判だ}
+      - {voice: ネビル, text: だからいつも慎重に言うのだが、後半最初の15分、そしておおむね最初の60分は、本当にひどかった}
+      - {voice: ネビル, text: 誰もカリックに圧力をかけてはいない。だが、ああいう内容が続けば、彼は難しい立場に置かれることになる}
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13590228/gary-neville-michael-carrick-has-got-to-stop-defending-man-utd-players-after-lacklustre-draw-at-fulham
+      - https://www.dailymail.com/sport/football/article-16146445/gary-neville-man-united-fulham.html
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「相変わらず選手交代遅いし」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この試合を見ていた人たちの声です。}
+      - {voice: ネット民, text: ギリギリでしかも運よく引き分けに持ち込めたけど、しかしキャリックの選手選考はどうなのか, short_voice: true}
+      - {voice: ネット民, text: リードされてるのに相変わらず選手交代遅いし、学習能力がないとしか言いようがない}
+      - {voice: ネット民, text: なんであんなボールこねくり回すんかね。パスパスパスで結局フィニッシュまでいかんやん}
+      - {voice: ネット民, text: 裏へ抜け出しても誰もおらんし、いくら個人の能力は高くても怖ないよ}
+      - {voice: ネット民, text: もうクーニャの実質0トップやめないか。裏抜けれるストライカーがいないわけだ}
+      - {voice: ネット民, text: フルハムのほうがキングを中心にシンプルな崩しで見てて面白かったわ}
+      - {voice: ネット民, text: 俺はもうキャリックには期待してないので、アウェーで勝ち点１取れただけでも良しとする}
+      - {voice: ネット民, text: ティーレマンスは本当に大きな存在。ボール持つと大体ブルーノに渡す選手が多いが、自分で持って運べる}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/155e092502db9da3bd67cf580e40f27f2dad300e/comments

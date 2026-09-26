@@ -1,0 +1,103 @@
+date: 2026年9月26日
+slot: other_1
+format: voices
+voice_min: 0.6
+people: [リオネル・メッシ]
+theme:
+  id: messi_last
+  league: spain
+  league_name: アルゼンチン代表
+  kind: other
+  topic: アルゼンチン代表
+  title: 'メッシが最後の代表戦で着る一枚。ロゴの場所に入ったのは'
+  question: 何が入ったのか
+short_title: メッシ最後の代表戦のユニフォーム
+thumbnail:
+  photo: assets/images/20260926_messi/01.jpg
+  crests: [アルゼンチン]
+  line1: メッシ最後の代表戦のユニ
+  line2: ロゴの場所に入った●●
+sections:
+  - id: what
+    heading: 10月6日、ベナン戦
+    tier: 報道
+    telop: ブエノスアイレスのモヌメンタル。代表208試合目
+    narrator: キャスター
+    card:
+      type: table
+      title: メッシのアルゼンチン代表
+      columns: ['', '']
+      rows:
+        - [試合, 207（歴代1位）]
+        - [得点, 125（歴代1位）]
+        - [タイトル, W杯2022・コパ2021・コパ2024 ほか]
+    say:
+      - メッシのアルゼンチン代表での最後の試合は、10月6日。ブエノスアイレスのモヌメンタルで、相手はベナンです。
+      - 代表208試合目。8万5千人の入るスタジアムのチケットは、**2時間足らず**で売り切れました。
+    sources:
+      - https://www.infobae.com/deportes/2026/09/24/comienza-la-venta-de-entradas-para-la-despedida-de-messi-de-la-seleccion-argentina/
+      - https://tn.com.ar/deportes/futbol/2026/09/24/entradas-para-los-amistosos-de-la-seleccion-argentina-y-la-despedida-de-messi-a-que-hora-salen-a-la-venta-hoy-y-como-comprar/
+  - id: kit
+    main: true
+    heading: 最後のユニフォーム
+    tier: 報道
+    telop: アディダスのロゴの場所に、メッシの「M」
+    narrator: キャスター
+    say:
+      - text: 'メッシのアルゼンチン代表の最後の試合は、10月6日のベナン戦です。'
+        short_only: true
+      - その試合で着るユニフォームが公開されました。胸から背中まで、国旗の真ん中にある「5月の太陽」が大きく入っています。
+      - いつもアディダスのロゴがある場所に、**メッシの「M」**。紋章と名前と10番は金色です。
+      - メッシ本人は、背中側だけを先に見せて、こう書きました。
+      - voice: リオネル・メッシ
+        text: 最後の試合。一生もののユニフォーム
+      - この試合を引退の場にと説得したのは、スカローニ監督でした。
+      - voice: リオネル・スカローニ
+        text: 称えるなら、今やらなければならない。今しかない、先のことは分からないと、全力で説得した
+      - 長く一緒に戦ってきたデ・パウルは。
+      - voice: ロドリゴ・デ・パウル
+        text: 誰よりもそれに値する。楽しんで、泣こう
+    sources:
+      - https://www.cronica.com.ar/sociedad/la-afa-presento-la-camiseta-especial-que-usara-messi-en-su-partido-despedida-ante-benin/
+      - https://www.iprofesional.com/actualidad/465239-como-sera-la-camiseta-de-messi-para-su-despedida-de-argentina
+      - https://www.infobae.com/deportes/2026/09/21/el-video-que-compartio-messi-sobre-su-despedida-en-la-seleccion-argentina-las-pistas-que-dio-de-la-camiseta/
+      - https://noticiasargentinas.com/deportes/rodrigo-de-paul-sobre-la-despedida-de-messi-de-la-seleccion---vamos-a-disfrutar-y-a-llorar-_a6aac7a154269eea8e125431e
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「19分で売り切れて泣いた」と「NHKでフルにやっていい案件」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: メッシの代表最後のユニ、19分で売り切れて泣いた…
+      - voice: ネット民
+        text: たまたまアプリ開いたらメッシの最後のユニフォームが発売してた。10分後に再度確認したら全サイズsold outしてた
+      - voice: ネット民
+        text: 最後の一枚買いたかったけど無理そうなんで、このお金はそのままニコパスの10番のユニの資金にします。グラシアスメッシ！
+      - voice: ネット民
+        text: ま、まぁメッシ最後のW杯ユニ持ってるしー。全然いいしー。買えなくて悔しいとかないしー
+      - voice: ネット民
+        text: このユニフォーム100年後の値段エグそう。交換やプレゼントはせずにメッシ自身で保管するのかな
+      - voice: ネット民
+        text: ユニフォームを燃やされるほど代表で憎まれた過去があったのを想うと、こんなフィナーレは泣けてくる
+      - voice: ネット民
+        text: メッシはバルサでの退団セレモニーなかったから是非盛大にやって欲しい
+      - voice: ネット民
+        text: なぜブラジル、ポルトガル、ドイツじゃないのか…聞いたことない国だし
+      - voice: ネット民
+        text: NHKでフルにやっていい案件です
+      - voice: ネット民
+        text: 1時間半ネットの列に並んで入れたら、メッシの最後の試合のチケットはもうなかった
+      - voice: ネット民
+        text: メッシの引退試合のチケットを取るために大学を休んだのに、午後ずっと「待ち時間1時間以上」と出続けた
+      - voice: ネット民
+        text: サッカーの一部が死ぬみたいだ。この天才の爪の先に届く者すら、もう出てこない
+      - voice: ネット民
+        text: 全部ありがとう、レオ。僕らに借りなんて何もない
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/4277e8490dda883479c768d5590eafa270b55a07/comments
+      - https://news.yahoo.co.jp/articles/e9495ddff72d5504130a638c9d60f562053cc014/comments
+      - https://search.yahoo.co.jp/realtime/search?p=メッシ+最後
+      - https://www.mendovoz.com/deportes/ftbol/2026/9/25/bronca-en-redes-se-agotaron-en-una-hora-las-entradas-para-la-despedida-de-leo-messi-168829.html
+      - https://www.infobae.com/deportes/2026/08/31/los-memes-y-homenajes-que-inundaron-las-redes-tras-el-retiro-de-messi-de-la-seleccion-del-no-habra-otro-igual-al-retiren-la-10/

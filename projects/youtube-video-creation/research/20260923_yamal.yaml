@@ -1,0 +1,138 @@
+date: 2026年9月23日
+slot: world_2
+format: quote
+voice_min: 0.6
+people: [ラミン・ヤマル, キリアン・ムバッペ]
+theme:
+  id: yamal_ballon_goals
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: 'ヤマル「バロンドールはゴールの数とは関係ない」頭に浮かぶ2人の名前'
+  hook: 得点で選ぶのではないなら、何で選ぶのか。本人の物差しが出ました。
+  question: バロンドールは、何に贈られる賞だと言ったのか
+short_title: ヤマル、バロンドールで思い浮かべる2人
+thumbnail:
+  photo: assets/images/20260923_yamal/03.jpg
+  line1: 「ゴールの数じゃない」
+  line2: 思い浮かべるのは、あの2人
+sections:
+  - id: what
+    heading: いまの状況
+    tier: 報道
+    telop: 発表は10月26日。候補にヤマルとムバッペ
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    card:
+      type: table
+      title: バロンドール2026
+      columns: [項目, 中身]
+      rows:
+        - [発表, 10月26日 ロンドン]
+        - [候補, 30人。ヤマルとムバッペが入る]
+        - [ヤマルの昨季, リーガ16点11アシスト（アシスト最多）]
+        - [ヤマルの夏, ワールドカップ優勝]
+    say:
+      - バロンドールの発表は10月26日、ロンドンです。
+      - 30人の候補に、バルセロナのヤマルとレアル・マドリードのムバッペが入っています。
+      - ヤマルは昨季、リーガで16点11アシスト。アシストはリーグでいちばん多く、年間最優秀選手に選ばれました。
+      - 夏はワールドカップも勝っています。
+      - ヤマルは数日前、スペインのテレビで「80ゴールを決めれば、得点王の賞が与えられる」とも話していました。
+    sources:
+      - https://en.wikipedia.org/wiki/2026_Ballon_d'Or
+      - https://www.fcbarcelona.com/en/news/4514485/lamine-yamal-202526-laliga-player-of-the-season
+      - https://news.yahoo.co.jp/articles/fc5a7ba562f874bc844410218c6978270329746b
+      - https://www.beinsports.com/en-us/soccer/la-liga/articles/yamal-says-ballon-dor-not-about-scoring-80-goals-2026-09-19
+      - https://x.com/FabrizioRomano/status/2102284761993457753
+  - id: said
+    main: true
+    heading: 言ったこと
+    tier: 報道
+    telop: 「見ていると笑顔になる選手たちだ」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: 'バロンドールの発表を前に、バルセロナのヤマルが「この賞は誰に贈られるものか」を自分の言葉で話しました。'
+        short_only: true
+      - voice: ラミン・ヤマル
+        text: バロンドールは、あなたの言うとおり、その年の最高の選手、他とは違う選手に贈られる賞だ。
+      - voice: ラミン・ヤマル
+        text: 見ていて楽しくて、その選手のためだけに試合を見てしまうような選手に。
+      - voice: ラミン・ヤマル
+        text: そういうことだと思う。他とは違う選手だ。
+      - voice: ラミン・ヤマル
+        text: '**決めたゴールの数とは、何の関係もない**し、ほかの何とも関係ない。'
+      - voice: ラミン・ヤマル
+        text: バロンドールのことを考えると、**メッシやロナウジーニョ**のような選手が浮かぶ。
+      - voice: ラミン・ヤマル
+        text: 人と違っていて、見ていると笑顔になる選手たちだ。
+      - voice: ラミン・ヤマル
+        text: サッカーを見ている人はみんな、僕の主張が何か分かっていると思う。
+      - voice: ラミン・ヤマル
+        text: 僕のプレーの仕方が、いちばん強い主張だ。それが僕を、違う選手にしている。
+    sources:
+      - https://x.com/FabrizioRomano/status/2102474892197142747
+      - https://x.com/FabrizioRomano/status/2102475085508378629
+      - https://sports.orange.fr/football/autres/article/ballon-d-or-yamal-ma-maniere-de-jouer-est-mon-argument-le-plus-fort-exclu-CNT000002s2EcZ.html
+      - https://www.footmercato.net/a8165509290072157882-lamine-yamal-devoile-les-criteres-decisifs-pour-le-ballon-dor
+      - https://fr.news.yahoo.com/sport/regardent-football-savent-lamine-yamal-152948555.html
+  - id: mbappe
+    heading: ムバッペの物差し
+    tier: 報道
+    telop: 「それが、いちばん大事な基準だと分かっている」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - 同じ日、ムバッペはラジオで正反対の物差しを口にしています。
+      - voice: キリアン・ムバッペ
+        text: 個人としては大きな1年だった。**それがバロンドールでいちばん大事な基準だと分かっている。**
+      - voice: キリアン・ムバッペ
+        text: 大きな大会すべてで得点王になった。僕にとっていい年になると思う。手応えがある。
+    sources:
+      - https://x.com/FabrizioRomano/status/2102322012077031793
+      - https://fr.news.yahoo.com/sport/ballon-d-or-2026-capacit%C3%A9-091408916.html
+      - https://lejournaldureal.fr/2026/09/22/mbappe-interview-rfi
+      - https://worldsoccertalk.com/news/kylian-mbappe-makes-case-for-2026-ballon-dor-id-be-disappointed-if-i-dont-win/
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを聞いた人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: ネット民
+        text: 2005年のロナウジーニョも全盛期のメッシも、数字じゃなくて、まさにその「笑顔にさせる力」で取った。バロンドールが魔法に報いる賞なら、ヤマルの言い分は通る
+      - voice: ネット民
+        text: ヤマルと同じ意見だね。バロンドーラーが最得点者ならGKやDFは最初から候補にも選ばれないし、ジダンやロナウジーニョの様にゴールだけじゃなく観ててワクワクする選手が選ばれるべきだと思う。世界最高の選手ってそんなもんだろ？
+      - voice: ネット民
+        text: ヤマルとムバッペが毎日、自分にバロンドールをくれと言っている。見ているこっちが恥ずかしい
+      - voice: ネット民
+        text: ネット動画やアプリが無かった時代はベッケンバウアーやカンナバーロといった守備選手もバロンドールを獲得してますね。
+      - voice: ネット民
+        text: 現代は切り抜き動画やアプリで選手評価がされているというのはファンとしても残念です。
+      - voice: ネット民
+        text: 得点王やタイトルだけで判断されてるのは、サッカーの醍醐味が薄れてしまう気がします
+      - voice: ネット民
+        text: ヤマル、バロンドールは人を笑顔にすることだって本当に言ったのか。基準がメッシとロナウジーニョ。自分のサッカー観をまったく隠してない。サッカーは数学になる前に、まずエンターテインメントであるべきだ
+      - voice: ネット民
+        text: であれば、ヤマルよりは1人で攻撃の解決策になり得るエムバペの方がバロンドールにふさわしいように思うし、総合的な能力でいくとベリンガムあたりの方がふさわしい気もする
+      - voice: ネット民
+        text: ヤマル、メッシ、ケインのほうがずっと値する。ムバッペは主要タイトルを1つも取っていないし、どの大会でも最優秀選手に選ばれていない。最多得点にはゴールデンブーツとゲルト・ミュラー賞がある。バロンドールじゃない
+      - voice: ネット民
+        text: ヤマルとムバッペが世界中を回って「自分が取るべき理由」を語ってる。頼むからケインが取ってくれ
+      - voice: ネット民
+        text: エンパぺとヤマルのバロンドール乞食
+      - voice: ネット民
+        text: そもそも誰がヤマルに「君は見ていて楽しい」なんて言ったんだ
+      - voice: ネット民
+        text: ヤマルの数字の議論は確かにあるだろうけど、実際プレーの華麗さで言えば圧倒的だしバロンドール文句ないくらいだと思うんだけど
+        short_voice: true
+    sources:
+      - https://x.com/search?q=Yamal%20Ronaldinho%20Messi%20Ballon%20lang%3Aen&f=live
+      - https://x.com/search?q=Yamal%20Ballon%20lang%3Aen&f=live
+      - https://x.com/search?q=Yamal%20Bal%C3%B3n%20lang%3Aes&f=live
+      - https://x.com/search?q=%E3%83%A4%E3%83%9E%E3%83%AB%20%E3%83%90%E3%83%AD%E3%83%B3%E3%83%89%E3%83%BC%E3%83%AB&f=live
+      - https://x.com/search?q=%E3%83%A4%E3%83%9E%E3%83%AB%20%E3%82%B4%E3%83%BC%E3%83%AB%E6%95%B0%20lang%3Aja&f=live
+      - https://news.yahoo.co.jp/articles/fc5a7ba562f874bc844410218c6978270329746b/comments
+      - https://x.com/FabrizioRomano/status/2102475085508378629

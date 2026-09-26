@@ -1,0 +1,399 @@
+# プレミアリーグ20クラブ紹介 ⑳トッテナム（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/tottenham*.json と旧台本 20260916_pl20_tottenham.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 高井幸大
+- トッテナム
+- ダニー・ブランチフラワー
+short_title: 高井幸大のトッテナム、リーグ外でFAカップを獲った結末
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_20_tottenham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: トッテナム
+  title: 高井幸大のトッテナム。リーグの外からFAカップをつかんだクラブの結末
+  question: どんなクラブなのか
+  hook: 高井幸大は、2025年の夏に川崎フロンターレから来ました。
+  lead: 北ロンドンから、**FAカップ8回**と**ヨーロッパリーグ3回**。
+  opening_image: assets/stats/pl_tottenham_data_t.png
+thumbnail:
+  line1: リーグの外から、FAカップ
+  line2: 高井幸大が入った、スパーズの始まり
+  crest_main:
+  - トッテナム
+  tags: []
+  points: []
+  board: assets/stats/pl_tottenham_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 高井幸大がいるクラブが、いま最下位
+  narrator: キャスター
+  say:
+  - text: 1961年のリーグとカップの2冠を主将として率いた、ブランチフラワーの言葉があります。
+    image: assets/stats/pl_tottenham_data_r1.png
+    no_telop: true
+  - voice: ダニー・ブランチフラワー
+    text: 「サッカーは栄光のためにある。粋に、華やかにやるんだ」
+    image: assets/stats/pl_tottenham_data_r1.png
+  - text: 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます。
+    image: assets/stats/pl_tottenham_data_r1.png
+    no_telop: true
+  - text: '**2025年**のヨーロッパリーグ王者が、いま最下位。デ・ゼルビ監督の**2年目**は、開幕5試合で勝ちなし。'
+    image: assets/stats/pl_tottenham_data_r2.png
+    no_telop: true
+  - text: 1901年、まだリーグに入っていないのにFAカップを制した、唯一のクラブです。
+    image: assets/stats/pl_tottenham_data_r2.png
+    no_telop: true
+  - image: assets/stats/pl_tottenham_data0.png
+    text: 創立は**1882年**。ホットスパーという名前で始まりました。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_data1.png
+    text: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_map.png
+    text: ホームタウンは、ロンドン北部のトッテナムです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_トッテナム.png
+    text: 本拠地はトッテナム・ホットスパー・スタジアム。**6万2850人**が入ります。
+  - image: assets/stats/pl_tottenham_data4.png
+    text: オーナーは投資会社のイーニック。2001年からクラブを持っています。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_cups.png
+    text: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップは4回です。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_cups.png
+    text: ヨーロッパリーグ3回、カップウィナーズカップ1回。合わせて4つ。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_last.png
+    text: プレミアでの最高位は、2016年から17年の**2位**です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
+  - https://en.wikipedia.org/wiki/Danny_Blanchflower
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false
+- id: cup1901
+  heading: リーグに入らないまま、FAカップを獲った
+  tier: 背景
+  telop: 1901年。これ以降、同じ例はない
+  narrator: 解説
+  card:
+    type: table
+    title: 最初に立てた記録
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1901年
+      - リーグ外のクラブとしてFAカップ優勝
+    - - 以降
+      - 同じ例は1つもない
+  say:
+  - text: 1888年に、フットボールリーグができました。
+    image: assets/images/pl_tottenham_story/scene.jpg
+  - それ以来、リーグの外のクラブがFAカップを獲った例は、ひとつだけ。
+  - それが1901年のトッテナム。**リーグに属していないまま**の優勝で、125年前のことです。
+  - text: 1961年には、リーグとカップの両方を獲りました。**20世紀で最初の2冠**です。
+    card:
+      type: table
+      title: 最初に立てた記録
+      columns: *id001
+      rows:
+      - - 1961年
+        - 20世紀で最初の2冠
+      - - 1963年
+        - カップウィナーズカップ。英国勢で初
+  - '**イギリスのクラブで、ヨーロッパのタイトルを最初に獲ったのもトッテナム**でした。'
+  - 1963年のカップウィナーズカップ。国内カップの王者どうしで争った、いまは無い大会です。
+  - 1972年にはウエファカップも獲りました。
+  - text: 種類の違うヨーロッパのタイトルを2つ獲ったのも、イギリス勢では最初でした。
+    card:
+      type: table
+      title: 最初に立てた記録
+      columns: *id001
+      rows:
+      - - 1972年・1984年
+        - UEFAカップ。2種類目も英国勢で初
+      - - 2025年
+        - ヨーロッパリーグ。欧州は4つ目
+  - ウエファカップは1984年にも獲りました。
+  - そして2025年のヨーロッパリーグで、ヨーロッパのタイトルは**4つ**になりました。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: つないで崩す。栄光の歌
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - つないで崩し、前から奪う
+    - - 運営の型
+      - 稼ぎ世界9位、追加で1億
+    - - クラブの気質
+      - 讃美歌から生まれた応援歌
+  say:
+  - text: デ・ゼルビ監督のサッカーは、キーパーからつないで崩し、失えばすぐ前から奪い返す。
+    image: assets/photos/pl/tottenham_manager_57aac009.jpg
+  - 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資。
+  - 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false
+- id: episode
+  heading: 雄鶏と拍車
+  tier: 背景
+  telop: 雄鶏の由来は「拍車」
+  narrator: 解説
+  card:
+    type: table
+    title: 雄鶏と拍車
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - ハリー・ホットスパー
+      - 馬に拍車を蹴り込んだ人
+    - - 拍車
+      - 闘鶏の鶏にも付ける
+  say:
+  - text: クラブ名の由来は、中世の貴族ハリー・ホットスパー。エンブレムの雄鶏も、そこから来ています。
+    image: assets/images/pl_tottenham_episode/scene.jpg
+  - 戦いで馬に拍車を蹴り込むことから、ホットスパーと呼ばれた人物です。
+  - text: その拍車は、闘鶏の鶏にも付けるもの。だから雄鶏、というわけです。
+    card:
+      type: table
+      title: 雄鶏と拍車
+      columns: *id002
+      rows:
+      - - 1909-10年
+        - 元選手が35ポンドで雄鶏の像を作る
+  - 1909年から10年のシーズンの終わり。元選手が**35ポンド**で、ブロンズの雄鶏を作りました。
+  - その雄鶏が、スタンドの屋根に置かれました。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ハリー・ケイン
+      - 2009-2023
+      - クラブ最多の280得点
+  say:
+  - text: ハリー・ケインは**11歳**で入った生え抜き。4度の期限付き移籍を経て、定位置をつかみました。
+    image: assets/photos/pl/tottenham_legend_131bf2d1.jpg
+  - 2023年2月、シティ戦のゴールで、60年代のエース、グリーヴスのクラブ記録を抜きました。
+  - クラブ史上最多の**280得点**を残し、無冠のままバイエルンへ。プレミアの得点王は3回でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Harry_Kane
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Ledley_King
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - ソン・フンミン
+      - 2015-2025
+      - EL優勝の主将
+  say:
+  - text: ソン・フンミンは、レバークーゼンから来た韓国代表。**2200万ポンド**はアジア人の最高額。
+    image: assets/photos/pl/tottenham_legend_41006aeb.jpg
+  - 2021年から22年、サラーと並ぶ**23得点**で得点王。アジアの選手では初めてでした。
+  - 10年目、主将としてヨーロッパリーグの決勝でユナイテッドに**1対0**。初めてのタイトルでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Harry_Kane
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Ledley_King
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - レドリー・キング
+      - 1999-2012
+      - 一筋の主将
+  say:
+  - text: レドリー・キングは生え抜きのセンターバック。クラブ一筋で、リーグ戦**268試合**を戦いました。
+    image: assets/photos/pl/tottenham_legend_a1b6d580.jpg
+  - 2000年12月、ブラッドフォード戦で開始**10秒**のゴール。当時のプレミア最速記録でした。
+  - 膝の軟骨が無く、練習できないまま試合へ。2008年、主将としてリーグカップを掲げました。
+  sources:
+  - https://en.wikipedia.org/wiki/Harry_Kane
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Ledley_King
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はロベルト・デ・ゼルビ。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ロベルト・デ・ゼルビ（イタリア）
+    - - 就任
+      - 2026年3月・2年目
+    - - 前職
+      - マルセイユ
+  say:
+  - text: 監督はイタリア人のロベルト・デ・ゼルビ。**2026年3月**から、2年目です。
+    image: assets/photos/pl/tottenham_manager_57aac009.jpg
+  - 前はマルセイユ。就任した昨季は17位で、最終節で残留を決めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は35人です。
+    image: assets/stats/pl_tottenham_gk.png
+    no_telop: true
+  - image: assets/stats/pl_tottenham_gk_f.png
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_gk_f.png
+    text: マルティン・ドゥーブラフカはスロバキア代表で**60試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_gk_f.png
+    text: グリエルモ・ヴィカーリオはリーグ戦で**93試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_df_f.png
+    text: ディフェンダーは12人。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_df_f.png
+    text: 日本の高井幸大がいます。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_df_f.png
+    text: 主将を務めるのが**ミッキー・ファン・デ・フェン**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_df_f.png
+    text: リーグ戦で**79試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_df_f.png
+    text: ベン・デイヴィスはウェールズ代表で**100試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_mf_f.png
+    text: ロドリゴ・ベンタンクールはウルグアイ代表で**77試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_mf_f.png
+    text: パペ・マタル・サールはセネガル代表で**42試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_fw_f.png
+    text: フォワードは10人。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_fw_f.png
+    text: リシャルリソンはブラジル代表で**54試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_fw_f.png
+    text: デヤン・クルゼフスキはスウェーデン代表で**45試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2引き分け3敗。20位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ブレントフォード（アウェー）
+      - 0対3
+    - - 第2節
+      - ニューカッスル・ユナイテッド（ホーム）
+      - 0対2
+    - - 第3節
+      - ノッティンガム・フォレスト（アウェー）
+      - 0対0
+    - - 第4節
+      - エヴァートン（ホーム）
+      - 0対0
+    - - 第5節
+      - アストン・ヴィラ（ホーム）
+      - 2対3
+  say:
+  - プレミアリーグは5試合を終えて、**2引き分け3敗**です。
+  - 順位は**20位**、勝ち点は**2**です。
+  - いまは降格圏にいます。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
+  bg: assets/backgrounds/stadium_トッテナム_in.png
+  official: false

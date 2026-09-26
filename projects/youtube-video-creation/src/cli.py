@@ -39,6 +39,7 @@ import sys
 import unicodedata
 from pathlib import Path
 
+from . import recency
 from .assets import ensure_assets
 from .config import ConfigError, load_config
 from .pipeline import build
@@ -195,6 +196,8 @@ def main(argv: list[str] | None = None) -> int:
     p_short = sub.add_parser("short", help="同じ台本から縦9:16のショートを作る")
     p_short.add_argument("script")
     p_short.add_argument("--section", default=None, help="どの節を使うか（既定: 冒頭の次）")
+    p_short.add_argument("--tiktok", action="store_true",
+                         help="TikTok 用に1分を超える縦動画を作る（出力先は <名前>_tiktok）")
     p_short.add_argument("--out", default=None)
     p_short.add_argument("--no-tts", action="store_true", help="音声なしで尺だけ確認する")
 
@@ -348,7 +351,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # 公開と同時に最初のコメント（問い＋高評価・コメントへの誘い）を書く（2026-09-08）
     p_comment = sub.add_parser(
-        "comment", help="公開した動画に最初のコメント（問い＋誘い）を書く。固定は Studio で")
+        "comment", help="公開した動画に最初のコメント（問い＋誘い）を書く")
     p_comment.add_argument("build_dir", help="build の出力ディレクトリ")
     p_comment.add_argument("video_id", help="YouTube の動画ID。ハイフン始まりは `--` を挟む")
     p_comment.add_argument("--text", default=None, help="文面を自分で決めるとき")
@@ -386,6 +389,26 @@ def main(argv: list[str] | None = None) -> int:
 
     # 選手・クラブのページの表を数字の材料にする（2026-09-08）。
     # `stats` は「これまで何を出したか」の振り返りに使っているので、こちらは numbers
+    # **台本の確認が済んだことを控える**（2026-09-11 ユーザー
+    # 「どんな時も台本確認は必須です」）。build / short はこれが無いと動かない
+    p_approve = sub.add_parser(
+        "approve", help="台本の確認が済んだことを控える（OKを聞いたときだけ打つ）")
+    p_approve.add_argument("scripts", nargs="+", help="台本のパス")
+    # **声が無い台本は通さない**（2026-09-17 ユーザー指示「声は必ず」）。
+    # 紹介もの（プレミア20クラブ紹介など）だけ、理由を書いて外す
+    p_approve.add_argument("--no-voices", default="",
+                           help="声を入れない型だと分かっている回だけ。理由を書く")
+    # **流れの点検（tools/flow.py）を通していない台本は通さない**（2026-09-22）。
+    # 機械の点検は形式しか見ない。話の流れは Gemini に読ませて穴を言わせる
+    p_approve.add_argument("--no-flow", default="",
+                           help="流れの点検を飛ばす理由（原則書かない）")
+
+    # **投稿の前に動画を見せる**（2026-09-13 ユーザー「今後は投稿する前に動画見して」）。
+    # upload はこれが無いと動かない
+    p_screen = sub.add_parser(
+        "screen", help="出来上がった動画を見せたことを控える（見せて OK を聞いたときだけ打つ）")
+    p_screen.add_argument("build_dirs", nargs="+", help="出力先（output/<名前>）")
+
     p_numbers = sub.add_parser(
         "numbers", help="transfermarkt.jp などのページの表を、行ごとの文字に起こして材料に足す")
     p_numbers.add_argument("url", help="選手・クラブのページのURL（transfermarkt.jp / fotmob）")
@@ -446,6 +469,13 @@ def main(argv: list[str] | None = None) -> int:
     p_queries.add_argument("--days", type=int, default=30)
 
     sub.add_parser("doctor", help="収集の仕組みが効いているかをまとめて点検する")
+
+    p_recent = sub.add_parser("recent", help="その題材を最近すでに読み上げていないか見る")
+    p_recent.add_argument("titles", nargs="+", help="題材の見出し（いくつでも）")
+    p_recent.add_argument("--days", type=int, default=recency.DEFAULT_DAYS,
+                          help=f"さかのぼる日数（既定: {recency.DEFAULT_DAYS}）")
+    p_recent.add_argument("--all", action="store_true",
+                          help="名前を読んだだけの回も出す（既定は題材にした回だけ）")
 
     p_sources = sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
     p_sources.add_argument("--new", action="store_true",
@@ -543,7 +573,15 @@ def _cmd_speakers(args, config) -> int:
 
 
 def _cmd_check(args, config) -> int:
-    script = load_script(args.script)
+    # 本編の尺を見るので、ショート専用の行は落としてから数える
+    from .pipeline import drop_short_only
+    script = drop_short_only(load_script(args.script))
+    # **古い台本のまま進めない**（2026-09-16 に2度踏んだ）
+    from .review import stale_against_notes
+
+    stale = stale_against_notes(args.script)
+    if stale:
+        print(f"■ {stale}", flush=True)
     print(f"タイトル: {script.title}")
     print(f"シーン: {len(script.scenes)} / セリフ: {len(script.lines)} 行 / {script.char_count()} 文字")
     estimate = sum(line.estimated_duration() for line in script.lines)
@@ -571,7 +609,94 @@ def _cmd_check(args, config) -> int:
     return 0
 
 
+def _guard_approved(script_path) -> bool:
+    """**台本の確認が済むまで書き出さない**（2026-09-11 ユーザー
+    「どんな時も台本確認は必須です」）。
+
+    それまでも決まりはあったが人の注意に頼っていたので抜けた。
+    9/11 にマンUと中村敬斗の回を、台本を見せないまま書き出している。
+    """
+    from . import approval
+
+    if approval.is_approved(script_path):
+        return True
+    print(approval.refusal(script_path), file=sys.stderr)
+    return False
+
+
+def _cmd_approve(args, config) -> int:
+    """台本の確認が済んだことを控える。**OKを聞いたときだけ打つ。**"""
+    from . import approval
+    from .script_model import parse_script
+
+    # **声が1件も無い台本は通さない**（2026-09-17 ユーザー指示「声は必ず」）。
+    # `draft` は「ネットの反応が1件もありません」と知らせるだけで、**止めていなかった。**
+    # 実際この日、反応の無い台本を3本作って、そのまま出しかけている。
+    # まとめサイトが試合に追いついていない朝は、**待つのが正しい。**
+    crowd = tuple(getattr(getattr(config, "voicevox", None), "crowd", None)
+                  or ("ネット民", "現地サポ", "海外のファン"))
+    for script in args.scripts:
+        text = Path(script).read_text(encoding="utf-8")
+        spoken = parse_script(text)
+        voices = [line for scene in spoken.scenes for line in scene.lines
+                  if (line.speaker or "") in crowd]
+        if not voices and not args.no_voices:
+            print(f"■ {Path(script).name} には、ネットの声が1件もありません", file=sys.stderr)
+            print("■ 通していません。`reactions <スレURL> --say` で実在の書き込みを足してください",
+                  file=sys.stderr)
+            print("■ 紹介ものなど、声を入れない型だと分かっている回だけ "
+                  "`--no-voices <理由>` を付けてください", file=sys.stderr)
+            return 1
+        # **流れの点検の控えが無ければ通さない**（2026-09-22）。9/13 に作った手順を
+        # 使わないまま、「何を言いたいか分からない」を同じ日に3本で言われた。
+        # 台本を直したら点検もやり直す（控えが台本より古ければ止める）
+        flow = Path("output/flow") / (Path(script).stem + ".md")
+        stale = flow.exists() and flow.stat().st_mtime < Path(script).stat().st_mtime
+        if (not flow.exists() or stale) and not args.no_flow:
+            why = "台本より古いです" if stale else "ありません"
+            print(f"■ {Path(script).name} の流れの点検の控え（{flow}）が{why}", file=sys.stderr)
+            print("■ 通していません。`python tools/flow.py <台本>` を通して、"
+                  "指摘を直してから掛け直してください", file=sys.stderr)
+            return 1
+        stamp = approval.approve(script)
+        note = f"　（声なし: {args.no_voices}）" if not voices else f"　声{len(voices)}件"
+        if args.no_flow:
+            note += f"　（流れ点検なし: {args.no_flow}）"
+        print(f"確認済み: {approval.key_of(script)}　{stamp}{note}")
+    return 0
+
+
+def _cmd_screen(args, config) -> int:
+    """出来上がった動画を見せたことを控える。**見せて OK を聞いたときだけ打つ。**"""
+    from . import screening
+
+    for build_dir in args.build_dirs:
+        video = screening.video_of(build_dir)
+        if not video.exists():
+            print(f"■ {video} がありません。先に書き出してください", file=sys.stderr)
+            return 1
+        stamp = screening.screen(build_dir)
+        print(f"見せ済み: {screening.key_of(build_dir)}　{stamp}")
+    return 0
+
+
+def _guard_screened(build_dir) -> bool:
+    """**投稿の前に動画を見せる**（2026-09-13 ユーザー「今後は投稿する前に動画見して」）。
+
+    台本の確認は通っていても、**画面に何が映るかは台本に書いていない。**
+    9/13 のショートは開いた瞬間が玉ぼけの抽象画だったが、台本は確認済みだった。
+    """
+    from . import screening
+
+    if screening.is_screened(build_dir):
+        return True
+    print(screening.refusal(build_dir), file=sys.stderr)
+    return False
+
+
 def _cmd_build(args, config) -> int:
+    if not _guard_approved(args.script):
+        return 2
     if args.backend:
         config.voicevox.backend = args.backend
     ensure_assets(config)
@@ -598,20 +723,37 @@ def _cmd_short(args, config) -> int:
     from . import shorts
     from .pipeline import build_script
 
+    if not _guard_approved(args.script):
+        return 2
     script = load_script(args.script)
     try:
-        short = shorts.trim(script, args.section or "")
+        # **TikTok 用は1分を超える**（2026-09-16）。報酬の対象が1分以上の動画だけ
+        short = (shorts.tiktok_cut(script, args.section or "") if getattr(args, "tiktok", False)
+                 else shorts.trim(script, args.section or ""))
     except shorts.ShortError as error:
         print(str(error), file=sys.stderr)
         return 1
 
-    out = Path(args.out) if args.out else shorts.default_path(args.script)
+    out = Path(args.out) if args.out else (
+        shorts.tiktok_path(args.script) if getattr(args, "tiktok", False)
+        else shorts.default_path(args.script))
     estimate = shorts._estimate(short)
     print(f"■ ショート　{' → '.join(scene.title for scene in short.scenes)}")
     print(f"　想定尺: 約{estimate:.0f}秒 / セリフ {len(short.lines)}行")
 
+    # **エンブレムの回は下地をエンブレムにする**（2026-09-14 指示）。
+    # ショートの一覧はサムネではなく動画の1コマが出るので、絵は中身に入れる
+    crest_bg = shorts.crest_background(short, out)
+    if crest_bg:
+        short.background = crest_bg
+        for scene in short.scenes:
+            scene.background = crest_bg
+        print(f"　下地: {crest_bg}（エンブレム）")
+
     result = build_script(
-        short, shorts.portrait(config), out, use_tts=not args.no_tts
+        short, shorts.portrait(config), out, use_tts=not args.no_tts,
+        # TikTok 用に上限は無い（1分を超えることが条件）
+        max_seconds=None if getattr(args, "tiktok", False) else shorts.MAX_SECONDS,
     )
     print(f"完成: {result.video}  ({result.duration:.0f}秒)")
     # **どちらも要る点検。**顔が遅い／冒頭で喋っていない、は別の問題
@@ -619,6 +761,12 @@ def _cmd_short(args, config) -> int:
         print(f"  ! {problem}", file=sys.stderr)
     # **発言までの秒数がそのまま維持に効く**（2026-09-10 の実測）
     for problem in shorts.quote_problems(short):
+        print(f"  ! {problem}", file=sys.stderr)
+    # **題名に答えているか**（2026-09-17。同じ日に2回やった）
+    for problem in shorts.subject_problems(short, script):
+        print(f"  ! {problem}", file=sys.stderr)
+    # **冒頭の写真が横長で縦版が無いか**（2026-09-25「子供が主役になってる」）
+    for problem in shorts.photo_problems(script):
         print(f"  ! {problem}", file=sys.stderr)
 
     # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
@@ -628,6 +776,13 @@ def _cmd_short(args, config) -> int:
     opening = check_short_opening(Path(result.video))
     if opening is not None and not opening.ok:
         print(f"! {opening.detail}", file=sys.stderr)
+    if getattr(args, "tiktok", False):
+        # **1分に届かなければ出さない。**届かないまま上げても報酬の対象にならない
+        if result.duration < 60.5:
+            print(f"! {result.duration:.1f}秒しかありません。TikTok の報酬は1分以上の動画だけです。"
+                  "台本の節か反応を足してください", file=sys.stderr)
+            return 1
+        return 0
     if result.duration > shorts.MAX_SECONDS:
         print(
             f"! {result.duration:.0f}秒あります。ショートは60秒までなので、"
@@ -796,9 +951,11 @@ def _cmd_contact(args, config) -> int:
 
 
 def _cmd_review(args, config) -> int:
+    from .pipeline import drop_short_only
     from .review import built_duration, inspect, manual_checks
 
-    script = load_script(args.script)
+    # 点検するのは本編。ショート専用の行は入らない
+    script = drop_short_only(load_script(args.script))
     out = Path(args.out) if args.out else Path(f"output/{Path(args.script).stem}")
     duration = built_duration(out)
 
@@ -860,6 +1017,8 @@ def _cmd_thumbnail(args, config) -> int:
             lines=look["lines"], tags=look["tags"],
             reaction=look.get("reaction") or "",
             points=look.get("points") or [],
+            note_red=look.get("note_red") or "",
+            band_full=bool(look.get("band_full")),
             photos=look.get("photos") or [],
             crest_main=look.get("crest_main") or [],
             crests=look.get("crests"),
@@ -1203,6 +1362,29 @@ def _cmd_queries(args, config) -> int:
     for label in queries_mod.dead(rows):
         print(f"\n! 『{label}』は何度も回して1件も候補になっていません。"
               "検索語を見直すか、config/sources.yaml から外してください")
+    return 0
+
+
+def _cmd_recent(args, config) -> int:
+    """その題材を最近すでに読み上げていないか（2026-09-18）。
+
+    **見出しの重なりだけでは足りない。**9/18 に出した題材8件が全部×になり、
+    5件は前日の代表発表の回で名前を読み上げたばかりだった。
+    """
+    scripts = recency.past(args.days)
+    print(f"■ 直近{args.days}日の台本 {len(scripts)}本と突き合わせます")
+    if not scripts:
+        print("  台本がありません")
+        return 0
+    lines = recency.advise(args.titles, args.days, subjects_only=not args.all)
+    if not lines:
+        print("  重なりはありません")
+        return 0
+    for line in lines:
+        print(f"  ! {line}")
+    # **落とさない。**続報は正しく続報だし、2日あけて同じ人を出すのも普通。
+    # 気づかずに出すことだけを防ぐ
+    print("\n※ 止めてはいません。続報として出すなら、そのつもりで書いてください")
     return 0
 
 
@@ -1929,7 +2111,9 @@ def _cmd_material(args, config) -> int:
 def _cmd_comment(args, config) -> int:
     """公開した動画に、最初のコメント（問い＋高評価・コメントへの誘い）を書く。
 
-    Gemini（2026-09-08）の答え1。**固定は API にできない**ので Studio で行う。
+    Gemini（2026-09-08）の答え1。**固定しない**（2026-09-15 ユーザー決定）。
+    API では固定できず、Studio で1本ずつ手作業になる。1日20本を超える日に
+    その手間は釣り合わない。**案内も出さない**（出すと手作業を促し続ける）。
     文面は build の出力から作り、同じ動画には同じ文になる。
     """
     from . import comments
@@ -1959,7 +2143,7 @@ def _cmd_comment(args, config) -> int:
     except Exception as err:
         print(f"書き込めません: {str(err)[:160]}", file=sys.stderr)
         return 1
-    print(f"書きました: https://youtu.be/{args.video_id}　（固定は Studio で）　{comment_id}")
+    print(f"書きました: https://youtu.be/{args.video_id}　{comment_id}")
     return 0
 
 
@@ -2223,6 +2407,10 @@ def _cmd_variety(args, config) -> int:
     return 1 if bad else 0
 
 
+# **何年前から「古い」と言うか。**5年あれば所属も見た目も変わる
+PORTRAIT_OLD_YEARS = 5
+
+
 def _cmd_portrait(args, config) -> int:
     """本人と確認できた顔写真を1枚落とす。**確かめられなければ落とさない。**"""
     from .portrait import PortraitError, save
@@ -2248,6 +2436,21 @@ def _cmd_portrait(args, config) -> int:
     if entry.get("no_derivatives"):
         print("  ※ 改変不可。**サムネイルと背景には使えません。**"
               "本文に image: で、切らずに出すだけ")
+    # **Commons の写真は年代が古いほうに寄る**（2026-09-18 に同じ日で3件）。
+    # 「その人が有名になった頃」の写真が多く残っていて、機械は被写体と
+    # ライセンスしか見ていない。久保建英=2019年（18歳・レアル時代）、
+    # クロップ=2012年（ドルトムント時代・長髪）、アロンソ=現役時代。
+    # **止めない。**他に無ければ古い写真でも使ってよい（2026-09-10 決定）。
+    # 知らせるだけで、判断は人がする
+    taken = int(entry.get("taken") or 0)
+    if taken:
+        age = datetime.date.today().year - taken
+        if age >= PORTRAIT_OLD_YEARS:
+            print(f"  ! この写真は **{taken}年** のものです（{age}年前）。"
+                  "所属も見た目も変わっているかもしれません。"
+                  "記事の写真を使うなら `tools/articlephoto.py --url <記事>`")
+        else:
+            print(f"  撮影　: {taken}年")
     print(f"  台本に: thumbnail_photo: {folder.as_posix()}/{entry['file']}")
     return 0
 
@@ -2704,6 +2907,12 @@ def _cmd_pick(args, config) -> int:
     for note in saga_mod.advise(list(threads.values()), now):
         print(f"  ! {note}")
 
+    # **`covered.yaml` の id が一致したときしか弾けない**（2026-09-18）。
+    # 見出しが違えば同じ人でも素通りし、代表発表の回で名前を読み上げた6人は
+    # そもそも控えに残らない。**台本の本文まで見る**
+    for note in recency.advise([c.title for c in ranked]):
+        print(f"  ! 最近すでに出ています　{note}")
+
     chosen, fallbacks = candidates_mod.assign(ranked, plan.scoring, plan.slots)
 
     for slot in plan.slots:
@@ -2739,6 +2948,12 @@ def _cmd_pick(args, config) -> int:
     return 0
 
 
+# **これが出たら、そのまま進めない**（2026-09-15）。重複と反応の欠落は、
+# どちらも同じ日に2度ユーザーから指摘された
+MUST_FIX = __import__("re").compile(
+    r"同じことを言っています|重なっています|他人の声が0|反応が1件も")
+
+
 def _cmd_draft(args, config) -> int:
     from .config import _resolve
     from .plan import load_plan
@@ -2768,16 +2983,36 @@ def _cmd_draft(args, config) -> int:
         f"検証OK: 節 {len(notes.sections)}つ / 出典 {len(notes.sources)}本"
         f"\n  タイトル: {notes.video_title}\n  問い　　: {notes.question}"
     )
-    for note in advise(notes, plan):
+    hints = list(advise(notes, plan))
+    for note in hints:
         print(f"  ヒント: {note}")
+    # **見逃せない指摘は、最後にもう一度出して終了コードを1にする**（2026-09-15）。
+    # ヒントは真ん中に並ぶので、`grep 検証` のように絞って読むと**消える**。
+    # 実際 9/15 に同じ日のうちに2度、自分で入れた重複検査の警告を捨てている
+    serious = [n for n in hints if MUST_FIX.search(n)]
+    if not any("ネット民" in str(v) for sec in notes.sections for v in sec.voices):
+        serious.append("ネットの反応が1件もありません。"
+                       "`xread.py <検索語>` で実在の投稿を探して節を足してください")
+    if serious:
+        sys.stdout.flush()
+        print(f"{chr(10)}■ 直したほうがよい指摘が {len(serious)}件あります")
+        for note in serious:
+            print(f"   ・{note}")
+        print("■ 台本は書き出しましたが、このまま進めないでください", flush=True)
     if args.check_only:
-        return 0
+        return 1 if serious else 0
 
     target = Path(args.out) if args.out else _resolve(
         f"scripts/{Path(args.notes).stem}.md"
     )
     if target.exists():
-        print(f"すでにあります: {target}", file=sys.stderr)
+        # **黙って素通りさせない**（2026-09-16 に2度踏んだ）。取材メモを直してから
+        # draft を掛け直しても、ここで止まるだけなので**台本は古いまま**になる。
+        # 実際、反応を足した7本がショートに1件も入らず、確認ページも古い中身で出た。
+        # stderr の1行では見落とすので、最後の行に stdout で出す
+        print(f"■ 台本がすでにあります: {target}", flush=True)
+        print("■ 書き出していません。取材メモの直しは反映されていません。"
+              "反映するには、この台本を消してから掛け直してください", flush=True)
         return 1
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(to_script(notes, plan), encoding="utf-8")
@@ -2790,9 +3025,38 @@ def _cmd_draft(args, config) -> int:
             league=notes.league, kind=notes.kind,
             topic=notes.topic, sources=notes.sources,
         )
+    # **書き出した台本そのものにも、review の検査を掛ける**（2026-09-16）。
+    # `check_filler`（背番号・「なお、」）と `check_title_subject`（頭14字に名前）は
+    # **review にしか無かった。**review は動画を書き出したあとに走るので、
+    # プレミア20クラブの回では**20本つくってから止まる**ところだった。
+    # 動画を見なくても分かる検査は、ここで出す（`--check-only` でも出る）。
+    late = []
+    try:
+        from . import review as _review
+        from .script_model import parse_script
+        _script = parse_script(target.read_text(encoding="utf-8"))
+        for _name in ("check_filler", "check_title_subject",
+                      "check_board_mention", "check_outlet_talk",
+                      # **海外の反応**（2026-09-17）。止めはしないが知らせる
+                      "check_overseas_voices"):
+            _fn = getattr(_review, _name, None)
+            if _fn is None:
+                continue
+            _found = _fn(_script)
+            if getattr(_found, "ok", True) is False:
+                late.append(f"{_found.label}: {_found.detail}")
+    except Exception as err:      # 検査で書き出しを落とさない
+        # **黙って飲み込まない。**2026-09-16 に `Finding.name` を書き間違えて、
+        # この except が全部を吸っていた。**「✓ しか出ない点検」そのもの**だった
+        print(f"  ■ 台本の点検が動きませんでした（直してください）: {err!r}", flush=True)
+    if late:
+        print(f"{chr(10)}■ 台本そのものの点検で {len(late)}件")
+        for note in late:
+            print(f"   ・{note}")
+        print("■ ここは動画を書き出さなくても直せます", flush=True)
     print(f"台本: {target}")
     print(f"`python -m src.cli check {target}` で書式と尺を確認してください")
-    return 0
+    return 1 if late else 0
 
 
 def _cmd_new(args, config) -> int:
@@ -2850,6 +3114,34 @@ def _cmd_make_clip(args, config) -> int:
     return 0
 
 
+def report_upload_failure(err: Exception) -> None:
+    """**投稿できなかったことを、いちばん最後の行に残す**（2026-09-15）。
+
+    それまでは例外が上がるだけだったので、**呼んだ側が末尾しか見ないと、
+    手前に出ている「予約公開 …」の行を見て成功だと思い込む。**
+    実際 9/15 に6本ぶん、1本も投げられていないのに「予約しました」と報告した。
+
+    **stdout に出す。**stderr は行ごとに流れるが stdout はまとめて流れるので、
+    `> file 2>&1` で受けると**エラーが先頭に回り込む**（実際そうなった）。
+    「最後の行に残す」つもりが、いちばん上に出ていては意味が無い。
+    """
+    sys.stdout.flush()
+    print(f"{chr(10)}■ 投稿できませんでした: {type(err).__name__}: {err}")
+    if "invalid_grant" in str(err) or "RefreshError" in type(err).__name__:
+        print("  YouTube の認証が切れています。secrets/token.json を取り直してください:")
+        print('  python -c "from src.upload import get_service; get_service()"')
+    print("■ 投稿は0本です。控え（posted.json）も増えていません", flush=True)
+
+
+# **本編を入れる再生リスト**（2026-09-15 作成・公開）。
+# 再生リストの中の自動再生は、登録者がいなくても動く唯一の道
+MAIN_PLAYLIST = "PLNEp9wyuYKJk"
+# **続き物は別の再生リストへ**（2026-09-24 指示「プレミアリーグのチーム紹介は
+# 別の再生リストにして」）。`series:` の名前で振り分ける。
+# 20本が1つ並ぶので、ニュースの再生リストに混ぜると自動再生が紹介ものだけになる
+SERIES_PLAYLIST = {"プレミアリーグチーム紹介": "PLEG5zd5gf28Q"}
+
+
 def _cmd_upload(args, config) -> int:
     from datetime import datetime, timedelta, timezone
 
@@ -2860,6 +3152,11 @@ def _cmd_upload(args, config) -> int:
     JST = timezone(timedelta(hours=9))
 
     build_dir = Path(args.build_dir)
+
+    # **投稿の前に動画を見せる**（2026-09-13 ユーザー指示）。
+    # 台本の確認とは別の関門。台本には画面に何が映るかが書いていない
+    if not _guard_screened(build_dir) and not args.anyway:
+        return 2
 
     # **同じ動画を二度上げない。**2026-09-07 に、投稿処理がまだ走っている
     # 最中に2本目を起こして本編4本を重複公開し、その分で本数の上限を
@@ -2974,9 +3271,37 @@ def _cmd_upload(args, config) -> int:
             print("それまで投げないでください（手作業でも弾かれます）",
                   file=sys.stderr)
             return 1
-        raise
-    posted.record(build_dir, video_id)
+        report_upload_failure(err)
+        return 1
+    posted.record(build_dir, video_id, publish_at=publish_at)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
+
+    # **本編は再生リストへ入れる**（2026-09-17 ユーザー指示
+    # 「新規の本編動画は再生リストに入れておいてね」）。
+    # 再生リストの中の自動再生は、**登録者がいなくても動く唯一の道**
+    # （ホームと関連動画は登録者がいないと出てこない）。
+    # 手で `tools/playlist.py` を打つ形だと、出した日に入れ忘れる。
+    # **ショートは入れない。**自動再生に乗らないので、枠を使うだけ。
+    if not Path(args.build_dir).name.endswith(("_short", "_tiktok")):
+        try:
+            # **ここで作る。**上の投稿は upload_mod が中で service を作るので、
+            # この関数には api という名前が無かった（2026-09-17 に実際に落ちた）
+            from . import quota as quota_mod
+            api = quota_mod.counted(upload_mod.get_service())
+            # シリーズ名は**公開する題の後ろ書き**にある（「◯◯｜プレミアリーグチーム紹介」）
+            series = draft.title.rsplit("｜", 1)[-1].strip() if "｜" in draft.title else ""
+            playlist = SERIES_PLAYLIST.get(series, MAIN_PLAYLIST)
+            api.playlistItems().insert(
+                part="snippet",
+                body={"snippet": {"playlistId": playlist,
+                                  "resourceId": {"kind": "youtube#video",
+                                                 "videoId": video_id}}},
+            ).execute()
+            print(f"  再生リストに入れました: {playlist}")
+        except Exception as err:      # 入らなくても投稿は成功している
+            print(f"  ■ 再生リストに入れられませんでした（{err}）。"
+                  f"あとで tools/playlist.py で足してください", flush=True)
+
     n = posted.recent()
     if n >= posted.SOFT_MAX:
         print(f"  直近24時間で {n} 本目。開設まもないチャンネルは{posted.SOFT_MAX}本前後で弾かれる")
@@ -3003,6 +3328,7 @@ HANDLERS = {
     "stats": _cmd_stats,
     "queries": _cmd_queries,
     "doctor": _cmd_doctor,
+    "recent": _cmd_recent,
     "sources": _cmd_sources,
     "fresh": _cmd_fresh,
     "x": _cmd_x,
@@ -3014,6 +3340,8 @@ HANDLERS = {
     "comment": _cmd_comment,
     "material": _cmd_material,
     "dig": _cmd_dig,
+    "approve": _cmd_approve,
+    "screen": _cmd_screen,
     "insights": _cmd_insights,
     "numbers": _cmd_numbers,
     "publish": _cmd_publish,

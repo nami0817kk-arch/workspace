@@ -1,0 +1,111 @@
+{
+ "bounds": {
+  "top": 56.0,
+  "bottom": 49.75,
+  "left": -6.75,
+  "right": 2.0,
+  "image": "United Kingdom England adm location map.svg"
+ },
+ "clubs": {
+  "bournemouth": {
+   "ground": "Dean Court",
+   "lat": 50.73527778,
+   "lon": -1.83833333
+  },
+  "arsenal": {
+   "ground": "Emirates Stadium",
+   "lat": 51.555,
+   "lon": -0.10833333
+  },
+  "villa": {
+   "ground": "Villa Park",
+   "lat": 52.50916667,
+   "lon": -1.88472222
+  },
+  "brentford": {
+   "ground": "Brentford Community Stadium",
+   "lat": 51.49083333,
+   "lon": -0.28861111
+  },
+  "brighton": {
+   "ground": "Falmer Stadium",
+   "lat": 50.86182222,
+   "lon": -0.08327778
+  },
+  "chelsea": {
+   "ground": "Stamford Bridge (stadium)",
+   "lat": 51.48166667,
+   "lon": -0.19111111
+  },
+  "coventry": {
+   "ground": "Coventry Building Society Arena",
+   "lat": 52.44805556,
+   "lon": -1.49555556
+  },
+  "palace": {
+   "ground": "Selhurst Park",
+   "lat": 51.39833333,
+   "lon": -0.08555556
+  },
+  "everton": {
+   "ground": "Hill Dickinson Stadium",
+   "lat": 53.4251,
+   "lon": -3.0028
+  },
+  "fulham": {
+   "ground": "Craven Cottage",
+   "lat": 51.475,
+   "lon": -0.22166667
+  },
+  "hull": {
+   "ground": "MKM Stadium",
+   "lat": 53.74611111,
+   "lon": -0.36777778
+  },
+  "ipswich": {
+   "ground": "Portman Road",
+   "lat": 52.055,
+   "lon": 1.14527778
+  },
+  "leeds": {
+   "ground": "Elland Road",
+   "lat": 53.77777778,
+   "lon": -1.57222222
+  },
+  "liverpool": {
+   "ground": "Anfield",
+   "lat": 53.43083333,
+   "lon": -2.96083333
+  },
+  "mancity": {
+   "ground": "City of Manchester Stadium",
+   "lat": 53.483144,
+   "lon": -2.20039
+  },
+  "manutd": {
+   "ground": "Old Trafford",
+   "lat": 53.46305556,
+   "lon": -2.29138889
+  },
+  "newcastle": {
+   "ground": "St James' Park",
+   "lat": 54.97555556,
+   "lon": -1.62166667
+  },
+  "forest": {
+   "ground": "City Ground",
+   "lat": 52.94,
+   "lon": -1.13277778
+  },
+  "sunderland": {
+   "ground": "Stadium of Light",
+   "lat": 54.91442907,
+   "lon": -1.38817297
+  },
+  "tottenham": {
+   "ground": "Tottenham Hotspur Stadium",
+   "lat": 51.6044,
+   "lon": -0.0664
+  }
+ }
+}

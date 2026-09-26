@@ -1,0 +1,376 @@
+# プレミアリーグ20クラブ紹介 ⑩フラム（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/fulham*.json と旧台本 20260916_pl10_fulham.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- フラム
+- ジョージ・コーエン
+short_title: 稲本が歴史を動かしたフラムとは
+series: プレミアリーグチーム紹介
+theme:
+  id: pl_clubs_10_fulham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: フラム
+  title: 稲本潤一が歴史を動かしたフラム。ロンドンで2番目に古いクラブとは
+  question: どんなクラブなのか
+  hook: 日本人が、このクラブの歴史を1つ動かしました。
+  lead: 創立**1879年**。ロンドンのプロクラブでは、2番目の古さ。
+  opening_image: assets/stats/pl_fulham_data_t.png
+thumbnail:
+  line1: ヨーロッパを獲った日本人
+  line2: ロンドンで2番目に古いクラブ
+  crest_main:
+  - フラム
+  tags: []
+  points: []
+  board: assets/stats/pl_fulham_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 監督交代。開幕5試合で勝ちなし
+  narrator: キャスター
+  say:
+  - text: 監督が代わり、アルベロアが来ました。
+    image: assets/stats/pl_fulham_data_r1.png
+    no_telop: true
+  - text: 1966年ワールドカップ優勝の右サイドバック、コーエンが、同僚だった名手ヘインズを語ります。
+    image: assets/stats/pl_fulham_data_r1.png
+    no_telop: true
+  - voice: ジョージ・コーエン
+    text: ヘインズは雨の夜のどうでもいい試合でも鳥肌を立たせてくれた
+    image: assets/stats/pl_fulham_data_r1.png
+  - text: 開幕**5試合**で勝ちがなく下から2番目。**11点**のハリー・ウィルソンら昨季の得点上位2人も去りました。
+    image: assets/stats/pl_fulham_data_r3.png
+    no_telop: true
+  - text: 稲本潤一が決めたのは、2002年、クラブ史上ただ1つの欧州の優勝です。
+    image: assets/stats/pl_fulham_data_r3.png
+    no_telop: true
+  - image: assets/stats/pl_fulham_data0.png
+    text: 教会のクラブとして始まり、ロンドンでは1861年起源のクリスタル・パレスに次いで古いプロクラブです。
+    no_telop: true
+  - image: assets/stats/pl_fulham_data1.png
+    text: 愛称は「コテジャーズ」。小屋に住む人、という意味。
+    no_telop: true
+  - image: assets/stats/pl_fulham_map.png
+    text: ホームタウンはフラム。ロンドン中心部の西です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_フラム.png
+    text: 本拠地はテムズ川沿いのクレイヴン・コテージ。**2万8107人**が入ります。
+  - image: assets/photos/pl/fulham_owner_9cb77ec2.jpg
+    text: オーナーはアメリカの実業家シャヒド・カーン。2013年からクラブを持っています。
+  - image: assets/stats/pl_fulham_cups.png
+    text: 1部リーグの優勝はありませんが、ヨーロッパのインタートトカップを1回獲っています。
+    no_telop: true
+  - image: assets/stats/pl_fulham_data6.png
+    text: クラブ最多出場は、イングランド代表の主将も務めたジョニー・ヘインズ。**658試合**です。
+    no_telop: true
+  - image: assets/stats/pl_fulham_last.png
+    text: プレミアでの最高位は、2008年から09年の**7位**です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Fulham_F.C._season
+  - https://en.wikipedia.org/wiki/Johnny_Haynes
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false
+- id: titles
+  heading: ヨーロッパを獲った日
+  tier: 背景
+  telop: 決めたのは稲本潤一。決勝でハットトリック
+  narrator: キャスター
+  card:
+    type: table
+    title: 獲ってきたもの
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - インタートトカップ
+      - 1回（2002年）
+    - - 決勝のハットトリック
+      - 稲本潤一（2002年8月27日）
+  say:
+  - image: assets/images/pl_fulham_story/scene.jpg
+    text: クラブの歴史でただ1つのヨーロッパのタイトルを決めたのは、**稲本潤一**でした。
+  - 2002年、夏に行われていたヨーロッパの大会、インタートトカップの決勝です。
+  - 相手はイタリアのボローニャ。敵地での第1レグは、2対2の引き分けでした。
+  - text: 第2レグは12分、47分、50分、稲本の**ハットトリック**で3対1。2試合合計5対3で勝ちました。
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: *id001
+      rows:
+      - - FAカップ
+        - 準優勝（1974-75）
+      - - ヨーロッパリーグ
+        - 準優勝（2009-10）
+  - 稲本はこのクラブで2シーズンを過ごし、9得点を残しています。
+  - 大きな決勝はほかに2度。1975年のFAカップと2010年のヨーロッパリーグ、どちらも準優勝でした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://en.wikipedia.org/wiki/Junichi_Inamoto
+  - https://en.wikipedia.org/wiki/2002_UEFA_Intertoto_Cup
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+  bg: assets/backgrounds/stadium_フラム_in.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 育成畑の監督、川沿いの本拠地
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - レアル育成畑の監督
+    - - 運営の型
+      - アメフト球団主が支える
+    - - クラブの気質
+      - 最古のスタンドが現役
+  say:
+  - text: 新監督アルベロアは、レアル・マドリードの14歳以下の監督から、トップの監督まで上ってきた人です。
+    image: assets/photos/pl/fulham_manager_465c1add.jpg
+  - オーナーが支える型。アメフト球団も持つシャヒド・カーンが、13年にわたり資金を出し続けています。
+  - ジョニー・ヘインズ・スタンドは、いまも使われているプロクラブのスタンドで、国内最古です。
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://en.wikipedia.org/wiki/%C3%81lvaro_Arbeloa
+  - https://en.wikipedia.org/wiki/Shahid_Khan
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false
+- id: episode
+  heading: スタジアムの角にある家
+  tier: 背景
+  telop: 名前の由来は1780年の屋敷
+  narrator: 解説
+  card:
+    type: table
+    title: スタジアムの角にある家
+    columns:
+    - ''
+    - ''
+    rows:
+    - - クレイヴン・コテージ
+      - 1780年、クレイヴン男爵の屋敷
+    - - 1888年
+      - 火事で焼ける
+    - - いまのコテージ
+      - 1905年。更衣室と家族の観戦席
+  say:
+  - text: 本拠地の名前、クレイヴン・コテージは、**1780年**にクレイヴン男爵が建てた小さな屋敷から来ています。
+    image: assets/images/pl_fulham_episode/scene.jpg
+  - その建物は1888年の火事で焼けました。いまスタンドの角にある「コテージ」は、1905年に建てたものです。
+  - 選手の更衣室であり、選手の家族がバルコニーから試合を見る場所でもあります。
+  sources:
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - アレクサンダル・ミトロヴィッチ
+      - 2018-2023
+      - 2部で1シーズン43得点
+  say:
+  - text: アレクサンダル・ミトロヴィッチは、ニューカッスルから**2200万ポンド**で来たセルビア人。
+    image: assets/photos/pl/fulham_legend_6a9cabb3.jpg
+  - 2021年から22年、2部で**43得点**。46試合制になってからの1シーズン最多記録です。
+  - 111得点を残し、2023年にクラブ史上最高の**5000万ポンド**でアル・ヒラルへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Aleksandar_Mitrovi%C4%87
+  - https://en.wikipedia.org/wiki/Tom_Cairney
+  - https://en.wikipedia.org/wiki/Clint_Dempsey
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - トム・ケアニー
+      - 2015-
+      - プレーオフ決勝の決勝点
+  say:
+  - text: トム・ケアニーは2015年、ブラックバーンから**300万ポンド**で加わった中盤の選手。
+    image: assets/photos/pl/fulham_legend_02ecd663.jpg
+  - 2018年のプレーオフ決勝は、アストン・ヴィラに**1対0**。その1点を決めたのがケアニーです。
+  - 2016年から17年は2部の最優秀選手。クラブと共に**3回**の昇格を経験しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Aleksandar_Mitrovi%C4%87
+  - https://en.wikipedia.org/wiki/Tom_Cairney
+  - https://en.wikipedia.org/wiki/Clint_Dempsey
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - クリント・デンプシー
+      - 2007-2012
+      - クラブのプレミア最多50
+  say:
+  - text: クリント・デンプシーは2007年、アメリカのリーグから**200万ポンド**で移籍した攻撃の選手。
+    image: assets/photos/pl/fulham_legend_368535cd.jpg
+  - 2010年、ユヴェントスに**4対1**で勝ったヨーロッパの試合で、ループシュートを決めました。
+  - クラブのプレミア最多となる**50得点**を残し、2012年にトッテナムへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Aleksandar_Mitrovi%C4%87
+  - https://en.wikipedia.org/wiki/Tom_Cairney
+  - https://en.wikipedia.org/wiki/Clint_Dempsey
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はアルバロ・アルベロア。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - アルバロ・アルベロア（スペイン）
+    - - 就任
+      - 2026年7月・1年目
+    - - 前職
+      - レアル・マドリード
+  say:
+  - text: 今季の監督は、スペイン人のアルバロ・アルベロア。**2026年7月**に来た1年目です。
+    image: assets/photos/pl/fulham_manager_465c1add.jpg
+  - 前はレアル・マドリード。現役時代はリヴァプールとレアルの右サイドバックでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://en.wikipedia.org/wiki/Álvaro_Arbeloa
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/pl_fulham_gk.png
+    no_telop: true
+  - image: assets/stats/pl_fulham_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/pl_fulham_gk_f.png
+    text: ベルント・レノはリーグ戦で**154試合**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_df_f.png
+    text: ディフェンダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_fulham_df_f.png
+    text: アントニー・ロビンソンはアメリカ代表で**58試合**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_df_f.png
+    text: ティモシー・カスターニュはベルギー代表で**69試合**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: ミッドフィールダーは11人。
+    no_telop: true
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: 主将を務めるのが**トム・ケアニー**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: リーグ戦で**340試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: アレックス・イウォビはナイジェリア代表で**99試合**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_fw_f.png
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/pl_fulham_fw_f.png
+    text: ロドリゴ・ムニスはリーグ戦で**106試合**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_fw_f.png
+    text: オスカー・ボブはノルウェー代表で**26試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2引き分け3敗。19位
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - チェルシー（ホーム）
+      - 2対3
+    - - 第2節
+      - サンダーランド（アウェー）
+      - 0対1
+    - - 第3節
+      - クリスタル・パレス（ホーム）
+      - 2対3
+    - - 第4節
+      - リヴァプール（アウェー）
+      - 0対0
+    - - 第5節
+      - マンチェスター・ユナイテッド（ホーム）
+      - 1対1
+  say:
+  - プレミアリーグは5試合を終えて、**2引き分け3敗**です。
+  - 順位は**19位**、勝ち点は**2**です。
+  - いまは降格圏にいます。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Fulham_F.C._season
+  bg: assets/backgrounds/stadium_フラム_in.png
+  official: false

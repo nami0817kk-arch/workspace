@@ -1,0 +1,113 @@
+{
+ "title": "クリスタル・パレス 基礎DATA",
+ "colors": [
+  "#C4122E",
+  "#1B458F"
+ ],
+ "crest": "assets/crests/クリスタルパレス.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1905年",
+   "起源は1861年のアマチュアクラブ"
+  ],
+  [
+   "愛称",
+   "ジ・イーグルス",
+   "鷲、という意味"
+  ],
+  [
+   "ホームタウン",
+   "セルハースト",
+   "南ロンドン、クロイドン区"
+  ],
+  [
+   "本拠地",
+   "セルハースト・パーク",
+   "収容 25,194人"
+  ],
+  [
+   "オーナー",
+   "ウッディ・ジョンソン",
+   "NYジェッツ会長、2025年に取得"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 0回",
+   "FA杯1・リーグ杯0"
+  ],
+  [
+   "クラブ記録",
+   "昇格PO 4度優勝",
+   "毎回別会場、直近2013年ウェンブリー"
+  ],
+  [
+   "直近のタイトル",
+   "欧州カンファレンスリーグ優勝",
+   "2025-26シーズン"
+  ],
+  [
+   "プレミア最高位",
+   "3位",
+   "1990-91シーズン（当時の1部）"
+  ]
+ ],
+ "fans": [
+  {
+   "name": "ビル・ワイマン",
+   "who": "ローリング・ストーンズのベーシスト",
+   "source": "https://billwyman.com/2015/07/bill-appears-in-crystal-palace-fc-interview-video/"
+  },
+  {
+   "name": "アレックス・イー",
+   "who": "五輪金メダリスト（トライアスロン）",
+   "source": "https://www.cpfc.co.uk/news/club/olympic-champion-crystal-palace-fan-alex-yee-nominated-sports-personality-of-the-year/"
+  },
+  {
+   "name": "ビル・ナイ",
+   "who": "俳優",
+   "source": "https://web.archive.org/web/20130417142910/http://www.tapitlocal.com/cpscc/"
+  },
+  {
+   "name": "ニール・モリッシー",
+   "who": "俳優",
+   "source": "https://web.archive.org/web/20131017055551/http://www.football-league.co.uk/championship/news/20110513/palace-launch-their-own-ale_2293322_2359484"
+  },
+  {
+   "name": "デヴィッド・ジェンセン",
+   "who": "ラジオDJ",
+   "source": "https://www.theguardian.com/money/2011/dec/09/david-jensen-saturday-job"
+  }
+ ],
+ "fan_story": {
+  "text": "俳優ニール・モリッシーは、スタジアムで販売される「パレス・エール」というビールを自ら手がけて発売した。",
+  "source": "https://web.archive.org/web/20131017055551/http://www.football-league.co.uk/championship/news/20110513/palace-launch-their-own-ale_2293322_2359484"
+ },
+ "sources": [
+  "https://en.wikipedia.org/wiki/Crystal_Palace_F.C.",
+  "https://billwyman.com/2015/07/bill-appears-in-crystal-palace-fc-interview-video/",
+  "https://www.cpfc.co.uk/news/club/olympic-champion-crystal-palace-fan-alex-yee-nominated-sports-personality-of-the-year/",
+  "https://web.archive.org/web/20130417142910/http://www.tapitlocal.com/cpscc/",
+  "https://web.archive.org/web/20131017055551/http://www.football-league.co.uk/championship/news/20110513/palace-launch-their-own-ale_2293322_2359484",
+  "https://www.theguardian.com/money/2011/dec/09/david-jensen-saturday-job"
+ ],
+ "notes": "創立年は原文が1905年（プロクラブとしての設立日）を infobox に採用しているが、本文では1861年のアマチュアクラブを起源として2022年にクラブ紋章の年号もそちらに変更したとある。プレミア最高位の3位（1990-91）はプレミアリーグ創設（1992年）より前の『当時の1部』での成績で、原文もこれを『現在のプレミアリーグの前身』として同一視して highest ever league finish としている。有名なファンの節にはエディ・イザード、マーク・スティール、ティモシー・スポール父子なども挙がるが原文に個別の出典URLが無いため fans には入れていない。配色は現行キットの赤(#C4122E)と青(#1B458F)を採用（原文に厳密な公式hex指定は無い）。",
+ "trophies": [
+  [
+   "1部リーグ",
+   0
+  ],
+  [
+   "FAカップ",
+   1
+  ],
+  [
+   "リーグカップ",
+   0
+  ],
+  [
+   "カンファレンスリーグ",
+   1
+  ]
+ ]
+}

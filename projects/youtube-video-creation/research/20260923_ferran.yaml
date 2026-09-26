@@ -1,0 +1,95 @@
+date: 2026年9月23日
+slot: world_1
+format: quote
+voice_min: 0.6
+people: [フェラン・トーレス]
+theme:
+  id: ferran_pedri
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: パリ・サンジェルマン
+  title: 'フェラン・トーレス「連れて来られなかったのはペドリだけ」'
+  hook: 引っ越しの話の途中で、友だちの名前が出ました。
+  question: パリに移って、何を話したのか
+short_title: フェラン、パリに連れて来られなかったもの
+thumbnail:
+  photo: assets/images/20260923_ferran/02.jpg
+  line1: パリに引っ越して
+  line2: ひとつだけ運べなかったもの
+sections:
+  - id: what
+    heading: どんな選手か
+    tier: 報道
+    telop: ワールドカップ決勝の1点を決めて、パリへ
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - フェラン・トーレス。ワールドカップ決勝のアルゼンチン戦で、**試合でただ1つのゴール**、決勝点を決めました。
+      - 大会のあと、バルセロナからパリ・サンジェルマンへ移りました。パリではもう**7点**。直近の3試合で5点です。
+    sources:
+      - https://x.com/FabrizioRomano/status/2101773919841595868
+      - https://www.abola.pt/noticias/ferran-e-a-ida-para-paris-a-unica-coisa-que-nao-pude-levar-foi-o-pedri-2026092206272434641
+  - id: goal
+    heading: 決勝のゴールのこと
+    tier: 報道
+    telop: 「あのゴールは、世界の何とも比べられない」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - 決勝のゴールの映像は、いまも毎日見返しているそうです。
+      - voice: フェラン・トーレス
+        text: あのゴールは、世界の何とも比べられない。
+      - voice: フェラン・トーレス
+        text: 運命を信じている。あのボールは自分のためにあった。あれは自分のゴールじゃない。スペインのみんなの力が、決めさせてくれたと感じた。
+    sources:
+      - https://www.abola.pt/noticias/o-oh-ferran-sinto-muita-vergonha-2026092206030593801
+  - id: said
+    main: true
+    heading: 言ったこと
+    tier: 報道
+    telop: 「連れて来られなかったのは、ペドリだけ」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: 'バルセロナからパリへ移ったフェラン・トーレスが、引っ越しの話をしました。'
+        short_only: true
+      - voice: フェラン・トーレス
+        text: 今週はずっと引っ越しで、バルセロナから自分の荷物を全部パリに運んでいた。
+      - voice: フェラン・トーレス
+        text: 連れて来られなかったのは、**ペドリだけ**。すごく寂しいよ。
+      - 2022年から2026年まで、バルセロナで一緒にプレーした2人です。
+      - スペイン代表でも、ユーロとワールドカップを一緒に勝っています。
+      - voice: フェラン・トーレス
+        text: 大変なんだ。自分だけじゃなく、周りの人にとっても。ある日ここにいたと思ったら、次の日には荷造りをしている。
+    sources:
+      - https://x.com/FabrizioRomano/status/2102292310830817423
+      - https://www.abola.pt/noticias/ferran-e-a-ida-para-paris-a-unica-coisa-que-nao-pude-levar-foi-o-pedri-2026092206272434641
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを聞いた人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: ネット民
+        text: ペドリになりたい。24時間ずっとフェランの頭の中にいられるんだから
+      - voice: ネット民
+        text: 2人は友達で、知り合って7年。バルサで、お互いにいちばん近い存在だったのは明らかだ
+      - voice: ネット民
+        text: フェランのアンチまで、ペドリとの友情をかばってるのを見た
+      - voice: ネット民
+      - voice: ネット民
+        text: バルセロナからパリへの引っ越しはまだいい。でも親友を置いていくのは話が違う。バルサの友情は永遠だ！
+      - voice: ネット民
+        text: フェラン、ペドリの話は気をつけてくれ。ペドリがパリについて行くことは絶対にない。パリを楽しんで、ペドリにはバルサを楽しませてやってくれ。
+        short_voice: true
+      - voice: ネット民
+        text: フェランすげえ笑。ちゃんと活躍するやん笑。デンベレともうマブやん笑。こちらはフェランいなくなったおかげで、ヤマルとペドリにアシストがめちゃくちゃ付きそうです。ちゃんと活躍するフェランウケる笑
+      - voice: ネット民
+        text: フェランをあんな高く買ってくれてこちらこそ頭が上がりません、今後とも良い取引をよろしくお願い致します。おかげでペドリも絶好調です
+    sources:
+      - https://x.com/search?q=Ferran%20Pedri%20lang%3Aes&f=live
+      - https://x.com/search?q=Ferran%20Pedri%20Paris%20lang%3Aen&f=live
+      - https://x.com/FabrizioRomano/status/2102292310830817423
+      - https://x.com/search?q=%E3%83%95%E3%82%A7%E3%83%A9%E3%83%B3%20%E3%83%9A%E3%83%89%E3%83%AA%20lang%3Aja&f=live

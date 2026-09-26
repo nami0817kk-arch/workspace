@@ -1,0 +1,187 @@
+{
+ "season": "2025-26",
+ "league": "プレミアリーグ",
+ "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_Premier_League",
+ "table": [
+  {
+   "rank": 1,
+   "key": "arsenal",
+   "club": "アーセナル",
+   "played": 38,
+   "gd": 44,
+   "points": 85,
+   "band": "cl"
+  },
+  {
+   "rank": 2,
+   "key": "mancity",
+   "club": "マンチェスター・シティ",
+   "played": 38,
+   "gd": 42,
+   "points": 78,
+   "band": "cl"
+  },
+  {
+   "rank": 3,
+   "key": "manutd",
+   "club": "マンチェスター・ユナイテッド",
+   "played": 38,
+   "gd": 19,
+   "points": 71,
+   "band": "cl"
+  },
+  {
+   "rank": 4,
+   "key": "villa",
+   "club": "アストン・ヴィラ",
+   "played": 38,
+   "gd": 7,
+   "points": 65,
+   "band": "cl"
+  },
+  {
+   "rank": 5,
+   "key": "liverpool",
+   "club": "リヴァプール",
+   "played": 38,
+   "gd": 10,
+   "points": 60,
+   "band": "cl"
+  },
+  {
+   "rank": 6,
+   "key": "bournemouth",
+   "club": "ボーンマス",
+   "played": 38,
+   "gd": 4,
+   "points": 57,
+   "band": "el"
+  },
+  {
+   "rank": 7,
+   "key": "sunderland",
+   "club": "サンダーランド",
+   "played": 38,
+   "gd": -6,
+   "points": 54,
+   "band": "el"
+  },
+  {
+   "rank": 8,
+   "key": "brighton",
+   "club": "ブライトン",
+   "played": 38,
+   "gd": 6,
+   "points": 53,
+   "band": "ecl"
+  },
+  {
+   "rank": 9,
+   "key": "brentford",
+   "club": "ブレントフォード",
+   "played": 38,
+   "gd": 3,
+   "points": 53,
+   "band": ""
+  },
+  {
+   "rank": 10,
+   "key": "chelsea",
+   "club": "チェルシー",
+   "played": 38,
+   "gd": 6,
+   "points": 52,
+   "band": ""
+  },
+  {
+   "rank": 11,
+   "key": "fulham",
+   "club": "フラム",
+   "played": 38,
+   "gd": -4,
+   "points": 52,
+   "band": ""
+  },
+  {
+   "rank": 12,
+   "key": "newcastle",
+   "club": "ニューカッスル",
+   "played": 38,
+   "gd": -2,
+   "points": 49,
+   "band": ""
+  },
+  {
+   "rank": 13,
+   "key": "everton",
+   "club": "エヴァートン",
+   "played": 38,
+   "gd": -3,
+   "points": 49,
+   "band": ""
+  },
+  {
+   "rank": 14,
+   "key": "leeds",
+   "club": "リーズ",
+   "played": 38,
+   "gd": -7,
+   "points": 47,
+   "band": ""
+  },
+  {
+   "rank": 15,
+   "key": "palace",
+   "club": "クリスタル・パレス",
+   "played": 38,
+   "gd": -10,
+   "points": 45,
+   "band": ""
+  },
+  {
+   "rank": 16,
+   "key": "forest",
+   "club": "ノッティンガム・フォレスト",
+   "played": 38,
+   "gd": -3,
+   "points": 44,
+   "band": ""
+  },
+  {
+   "rank": 17,
+   "key": "tottenham",
+   "club": "トッテナム",
+   "played": 38,
+   "gd": -9,
+   "points": 41,
+   "band": ""
+  },
+  {
+   "rank": 18,
+   "key": null,
+   "club": "ウェストハム",
+   "played": 38,
+   "gd": -19,
+   "points": 39,
+   "band": "rel"
+  },
+  {
+   "rank": 19,
+   "key": null,
+   "club": "バーンリー",
+   "played": 38,
+   "gd": -37,
+   "points": 22,
+   "band": "rel"
+  },
+  {
+   "rank": 20,
+   "key": null,
+   "club": "ウォルヴァーハンプトン",
+   "played": 38,
+   "gd": -41,
+   "points": 20,
+   "band": "rel"
+  }
+ ]
+}

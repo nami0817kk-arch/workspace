@@ -1,0 +1,883 @@
+{
+ "club_title": "Liverpool_F.C.",
+ "season_title": "2026–27_Liverpool_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "BRA",
+   "name": "Alisson Becker",
+   "page": "Alisson Becker",
+   "dob": "1992-10-02",
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 83,
+   "club_caps": 260,
+   "club_goals": 1
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Joe Gomez",
+   "page": "Joe Gomez",
+   "dob": "1997-05-23",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 15,
+   "club_caps": 170,
+   "club_goals": 0
+  },
+  {
+   "no": "3",
+   "pos": "MF",
+   "nat": "JPN",
+   "name": "Wataru Endo",
+   "page": "Wataru Endo",
+   "dob": "1993-02-09",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 73,
+   "club_caps": 57,
+   "club_goals": 1
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Virgil van Dijk",
+   "page": "Virgil van Dijk",
+   "dob": "1991-07-08",
+   "captain": true,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 96,
+   "club_caps": 277,
+   "club_goals": 27
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Jérémy Jacquet",
+   "page": "Jérémy Jacquet",
+   "dob": "2005-07-13",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "HUN",
+   "name": "Milos Kerkez",
+   "page": "Milos Kerkez",
+   "dob": "2003-11-07",
+   "captain": false,
+   "loan": false,
+   "team": "Hungary",
+   "caps": 32,
+   "club_caps": 39,
+   "club_goals": 2
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Florian Wirtz",
+   "page": "Florian Wirtz",
+   "dob": "2003-05-03",
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 45,
+   "club_caps": 37,
+   "club_goals": 5
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "HUN",
+   "name": "Dominik Szoboszlai",
+   "page": "Dominik Szoboszlai",
+   "dob": "2000-10-25",
+   "captain": false,
+   "loan": false,
+   "team": "Hungary",
+   "caps": 65,
+   "club_caps": 110,
+   "club_goals": 16
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "SWE",
+   "name": "Alexander Isak",
+   "page": "Alexander Isak",
+   "dob": "1999-09-21",
+   "captain": false,
+   "loan": false,
+   "team": "Sweden",
+   "caps": 62,
+   "club_caps": 19,
+   "club_goals": 7
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "ARG",
+   "name": "Alexis Mac Allister",
+   "page": "Alexis Mac Allister",
+   "dob": "1998-12-24",
+   "captain": false,
+   "loan": false,
+   "team": "Argentina",
+   "caps": 54,
+   "club_caps": 110,
+   "club_goals": 12
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "NIR",
+   "name": "Conor Bradley",
+   "page": "Conor Bradley",
+   "dob": "2003-07-09",
+   "captain": false,
+   "loan": false,
+   "team": "Northern Ireland",
+   "caps": 30,
+   "club_caps": 45,
+   "club_goals": 1
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "ITA",
+   "name": "Federico Chiesa",
+   "page": "Federico Chiesa",
+   "dob": "1997-10-25",
+   "captain": false,
+   "loan": false,
+   "team": "Italy",
+   "caps": 51,
+   "club_caps": 32,
+   "club_goals": 2
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Giovanni Leoni",
+   "page": "Giovanni Leoni",
+   "dob": "2006-12-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "18",
+   "pos": "FW",
+   "nat": "NED",
+   "name": "Cody Gakpo",
+   "page": "Cody Gakpo",
+   "dob": "1999-05-07",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 54,
+   "club_caps": 132,
+   "club_goals": 33
+  },
+  {
+   "no": "21",
+   "pos": "DF",
+   "nat": "GRE",
+   "name": "Kostas Tsimikas",
+   "page": "Kostas Tsimikas",
+   "dob": "1996-05-12",
+   "captain": false,
+   "loan": false,
+   "team": "Greece",
+   "caps": 51,
+   "club_caps": 66,
+   "club_goals": 0
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Hugo Ekitike",
+   "page": "Hugo Ekitike",
+   "dob": "2002-06-20",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 8,
+   "club_caps": 28,
+   "club_goals": 11
+  },
+  {
+   "no": "23",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Víctor Muñoz",
+   "page": "Víctor Muñoz (footballer, born 2003)",
+   "dob": "2003-07-13",
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 2,
+   "club_caps": 5,
+   "club_goals": 1
+  },
+  {
+   "no": "25",
+   "pos": "GK",
+   "nat": "GEO",
+   "name": "Giorgi Mamardashvili",
+   "page": "Giorgi Mamardashvili",
+   "dob": "2000-09-29",
+   "captain": false,
+   "loan": false,
+   "team": "Georgia",
+   "caps": 38,
+   "club_caps": 10,
+   "club_goals": 0
+  },
+  {
+   "no": "28",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Freddie Woodman",
+   "page": "Freddie Woodman",
+   "dob": "1997-03-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Bradley Barcola",
+   "page": "Bradley Barcola",
+   "dob": "2002-09-02",
+   "captain": false,
+   "loan": false,
+   "team": "France",
+   "caps": 28,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "30",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Jeremie Frimpong",
+   "page": "Jeremie Frimpong",
+   "dob": "2000-12-10",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 15,
+   "club_caps": 21,
+   "club_goals": 0
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "URU",
+   "name": "Ronald Araújo",
+   "page": "Ronald Araújo",
+   "dob": "1999-03-07",
+   "captain": false,
+   "loan": true,
+   "team": "Uruguay",
+   "caps": 27,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "38",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Ryan Gravenberch",
+   "page": "Ryan Gravenberch",
+   "dob": "2002-05-16",
+   "captain": false,
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 31,
+   "club_caps": 100,
+   "club_goals": 6
+  },
+  {
+   "no": "42",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Trey Nyoni",
+   "page": "Trey Nyoni",
+   "dob": "2007-06-30",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 9,
+   "club_goals": 0
+  },
+  {
+   "no": "44",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Luke Chambers",
+   "page": "Luke Chambers (footballer, born 2004)",
+   "dob": "2004-06-24",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "53",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "James McConnell",
+   "page": "James McConnell (footballer, born 2004)",
+   "dob": "2004-09-13",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "56",
+   "pos": "GK",
+   "nat": "CZE",
+   "name": "Vítězslav Jaroš",
+   "page": "Vítězslav Jaroš",
+   "dob": "2001-07-23",
+   "captain": false,
+   "loan": false,
+   "team": "Czech Republic",
+   "caps": 2,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "67",
+   "pos": "FW",
+   "nat": "WAL",
+   "name": "Lewis Koumas",
+   "page": "Lewis Koumas",
+   "dob": "2005-09-19",
+   "captain": false,
+   "loan": false,
+   "team": "Wales",
+   "caps": 12,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "73",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Rio Ngumoha",
+   "page": "Rio Ngumoha",
+   "dob": "2008-08-29",
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 1,
+   "club_caps": 22,
+   "club_goals": 2
+  },
+  {
+   "no": "76",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Jayden Danns",
+   "page": "Jayden Danns",
+   "dob": "2006-01-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
+  },
+  {
+   "no": "95",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Harvey Davies",
+   "page": "Harvey Davies",
+   "dob": "2003-09-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "19",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Harvey Elliott",
+   "page": "Harvey Elliott",
+   "dob": "2003-04-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 93,
+   "club_goals": 5
+  },
+  {
+   "no": "41",
+   "pos": "GK",
+   "nat": "HUN",
+   "name": "Ármin Pécsi",
+   "page": "Ármin Pécsi",
+   "dob": "2005-02-24",
+   "captain": false,
+   "loan": false,
+   "team": "Hungary",
+   "caps": 1,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "47",
+   "pos": "DF",
+   "nat": "SCO",
+   "name": "Calvin Ramsay",
+   "page": "Calvin Ramsay",
+   "dob": "2003-07-31",
+   "captain": false,
+   "loan": false,
+   "team": "Scotland",
+   "caps": 1,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "83",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Ifeanyi Ndukwe",
+   "page": "Ifeanyi Ndukwe",
+   "dob": "2008-03-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  }
+ ],
+ "results": [
+  [
+   "25 July 2026",
+   "Friendly",
+   "Liverpool",
+   "4–2",
+   "Sunderland"
+  ],
+  [
+   "29 July 2026",
+   "Friendly",
+   "Liverpool",
+   "1–0",
+   "Wrexham"
+  ],
+  [
+   "2 August 2026",
+   "Friendly",
+   "Liverpool",
+   "2–4",
+   "Leeds United"
+  ],
+  [
+   "9 August 2026",
+   "Friendly",
+   "Liverpool",
+   "2–3",
+   "Monaco"
+  ],
+  [
+   "16 August 2026",
+   "BCD Friendly",
+   "Liverpool",
+   "0–0",
+   "Como"
+  ],
+  [
+   "16 August 2026",
+   "Friendly",
+   "Liverpool",
+   "2–0",
+   "Como"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Newcastle United",
+   "2–2",
+   "Liverpool"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Liverpool",
+   "2–2",
+   "Nottingham Forest"
+  ],
+  [
+   "4 September 2026",
+   "3",
+   "Ipswich Town",
+   "0–2",
+   "Liverpool"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Liverpool",
+   "0–0",
+   "Fulham"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Bournemouth",
+   "0–1",
+   "Liverpool"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645252",
+   "Manchester City"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Brentford",
+   "| report     = https://www.premierleague.com/en/match/2645256",
+   "Liverpool"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645272",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "1 November 2026",
+   "9",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645281",
+   "Arsenal"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Crystal Palace",
+   "| report     = https://www.premierleague.com/en/match/2645287",
+   "Liverpool"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645301",
+   "Manchester United"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Everton",
+   "| report     = https://www.premierleague.com/en/match/2645308",
+   "Liverpool"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645321",
+   "Sunderland"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Chelsea",
+   "| report     = https://www.premierleague.com/en/match/2645328",
+   "Liverpool"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645342",
+   "Leeds United"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645351",
+   "Tottenham Hotspur"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Hull City",
+   "| report     = https://www.premierleague.com/en/match/2645360",
+   "Liverpool"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Aston Villa",
+   "| report     = https://www.premierleague.com/en/match/2645365",
+   "Liverpool"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645381",
+   "Coventry City"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Sunderland",
+   "| report     = https://www.premierleague.com/en/match/2645394",
+   "Liverpool"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645401",
+   "Crystal Palace"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Manchester United",
+   "| report     = https://www.premierleague.com/en/match/2645412",
+   "Liverpool"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645421",
+   "Everton"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645425",
+   "Liverpool"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Coventry City",
+   "| report     = https://www.premierleague.com/en/match/2645436",
+   "Liverpool"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645451",
+   "Hull City"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Tottenham Hotspur",
+   "| report     = https://www.premierleague.com/en/match/2645464",
+   "Liverpool"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645471",
+   "Aston Villa"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645481",
+   "Ipswich Town"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Fulham",
+   "| report     = https://www.premierleague.com/en/match/2645489",
+   "Liverpool"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645501",
+   "Newcastle United"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Nottingham Forest",
+   "| report     = https://www.premierleague.com/en/match/2645514",
+   "Liverpool"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Leeds United",
+   "| report     = https://www.premierleague.com/en/match/2645520",
+   "Liverpool"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645532",
+   "Chelsea"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Manchester City",
+   "| report     = https://www.premierleague.com/en/match/2645541",
+   "Liverpool"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645552",
+   "Brentford"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Brighton & Hove Albion",
+   "| report     = https://www.premierleague.com/en/match/2645557",
+   "Liverpool"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645572",
+   "Bournemouth"
+  ],
+  [
+   "8–11 January 2027",
+   "Third round",
+   "TBD",
+   "| report     = https://www.bbc.co.uk/sport/football/live/",
+   "TBD"
+  ],
+  [
+   "15 September 2026",
+   "Third round",
+   "Liverpool",
+   "3–1",
+   "Tottenham Hotspur"
+  ],
+  [
+   "28 October 2026",
+   "Fourth round",
+   "Liverpool",
+   "| report     = https://www.efl.com/match-centre/g2687775",
+   "Chelsea"
+  ],
+  [
+   "9 September 2026",
+   "1",
+   "Liverpool",
+   "2–1",
+   "Atlético Madrid"
+  ],
+  [
+   "14 October 2026",
+   "2",
+   "LASK",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049588",
+   "Liverpool"
+  ],
+  [
+   "20 October 2026",
+   "3",
+   "Liverpool",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049590",
+   "Villarreal"
+  ],
+  [
+   "4 November 2026",
+   "4",
+   "Fenerbahçe",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049620",
+   "Liverpool"
+  ],
+  [
+   "25 November 2026",
+   "5",
+   "Club Brugge",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049638",
+   "Liverpool"
+  ],
+  [
+   "9 December 2026",
+   "6",
+   "Liverpool",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049652",
+   "Porto"
+  ],
+  [
+   "19 January 2027",
+   "7",
+   "Inter Milan",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049662",
+   "Liverpool"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "Liverpool",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049681",
+   "Lens"
+  ]
+ ]
+}

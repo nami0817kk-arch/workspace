@@ -1,0 +1,93 @@
+date: 2026年9月22日
+slot: world_3
+format: quote
+voice_min: 0.6
+people: [シメオネ]
+theme:
+  id: simeone_barca
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アトレティコ・マドリード
+  title: 'シメオネ、ダービー勝利のすぐあとに「バルセロナ」'
+  hook: 名前が出たのは、破ったばかりの相手ではありませんでした。
+  question: 勝った直後に何を言ったのか
+short_title: 'シメオネが勝った直後に挙げた名前'
+thumbnail:
+  photo: assets/images/20260922_simeone/01.jpg
+  line1: 勝った直後に
+  line2: 相手ではなく、別のクラブの話
+sections:
+  - id: what
+    heading: いつ言ったのか
+    tier: 報道
+    telop: マドリード・ダービーに勝った、その直後
+    narrator: キャスター
+    say:
+      - 自分のアトレティコが、マドリード・ダービーに**2対1**で勝った直後です。
+      - 聞かれたのは、優勝争いのことでした。
+      - そこで挙がったのは、**バルセロナ**という名前でした。
+    sources:
+      - https://es-us.noticias.yahoo.com/deportes/diego-simeone-elogi%C3%B3-barcelona-hansi-115500105.html
+  - id: said
+    main: true
+    heading: 言ったこと
+    tier: 報道
+    telop: 「違うスポーツをやっているように見える」
+    narrator: キャスター
+    say:
+      - text: 'アトレティコのシメオネ監督が、マドリード・ダービーに2対1で勝った直後の会見です。'
+        short_only: true
+      - text: '優勝争いについて聞かれて、挙げたのはバルセロナでした。'
+        short_only: true
+      - voice: シメオネ
+        text: 彼らは素晴らしいプレーをする。
+      - voice: シメオネ
+        text: 僕らがやっているのとは、**違うスポーツをやっているように見える。**
+      - voice: シメオネ
+        text: 9番がいなかった。そこに突然ラフィーニャが現れて、7試合で12ゴールだ。
+      - voice: シメオネ
+        text: ヤマルは、間違ってなければ7点。**数字が信じられない。**
+      - voice: シメオネ
+        text: 相手の陣地でプレスをかけて、時間を奪うチームだ。
+      - voice: シメオネ
+        text: リスクを冒すことも、失点することも恐れていない。
+      - voice: シメオネ
+        text: 今この瞬間、彼らのほうが上だ。**リーグ最高のチームだ。**
+    sources:
+      - https://es-us.noticias.yahoo.com/deportes/diego-simeone-elogi%C3%B3-barcelona-hansi-115500105.html
+      - https://barcauniversal.com/atletico-madrid-boss-diego-simeone-names-barcelona-the-best-team-in-la-liga-playing-a-different-sport/
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを聞いた人が書いていたこと
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: アトレティコの方がチームとして走るし、あの熱量を持ってる選手がマドリーにはいない
+      - voice: ネット民
+        text: バルサのラフィーニャだったり、点も取って献身性もある選手が中心のチームは強い
+      - voice: ネット民
+        text: バルサとは、成績はおろか、チームの姿勢が違う
+      - voice: ネット民
+        text: いい選手集めてもチーム作りは難しいてことがよくわかる試合だった
+      - voice: ネット民
+        text: 相変わらず個人のアイデア頼み
+      - voice: ネット民
+        text: リーガが本当に始まるのは今週末からだぞ
+      - voice: ネット民
+        text: 審判のせいにし続けて、計画がないことに気づかないかぎり
+      - voice: ネット民
+        text: バルサにとっては全部順調だ。いい時代が来るぞ
+      - voice: ネット民
+        text: 今、最高のクラブだ
+      - voice: ネット民
+        text: ゴールを決めるだけで最高の選手になるのか
+      - voice: ネット民
+        text: 違う、それは最高の得点者というだけだ
+      - voice: ネット民
+        text: 勝った直後に相手じゃなくバルサの話をするのがシメオネらしい
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/8d2252393914f4d71c1037ec940c3be7cfc067bb/comments
+      - https://www.youtube.com/watch?v=T-7mpK-i8rM

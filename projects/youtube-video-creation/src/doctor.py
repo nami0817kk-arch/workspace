@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from . import coverage, deadlines, freshness, newsites, queries, stats, timing, xposts
+from . import coverage, deadlines, freshness, newsites, queries, rules, stats, timing, xposts
 
 # 情報源の網を確かめ直す間隔。塞がれるサイトも、開くサイトもある
 VERIFY_DAYS = 90
@@ -33,7 +33,7 @@ def diagnose(plan, now: datetime | None = None) -> list[Note]:
     notes = [
         _network(plan, now),
         _index(plan, now),
-        _searches(),
+        _searches(now),
         _reporters(plan),
     ]
     notes.append(_feeds(plan))
@@ -41,7 +41,25 @@ def diagnose(plan, now: datetime | None = None) -> list[Note]:
     notes.append(_newsites())
     notes.append(_clocks(plan, now))
     notes += _coverage(plan, now)
+    notes.append(_rules())
     return notes
+
+
+def _rules() -> Note:
+    """**決まりと、実際に動いているものが合っているか**（2026-09-13）。
+
+    2026-09-07 に「報道の出典は1社でよい」と決めて CLAUDE.md は直したのに、
+    config は 2 のまま**5日間**残っていた。人が両方を見比べ続けるのは無理。
+    """
+    count = rules.counted()
+    if not count:
+        return Note(False, "決まりと実装",
+                    "CLAUDE.md に突き合わせの印がありません（<!-- 突き合わせ: … -->）")
+    gaps = rules.check()
+    if gaps:
+        return Note(False, "決まりと実装",
+                    f"{len(gaps)}件 食い違っています: " + " ／ ".join(g.line() for g in gaps))
+    return Note(True, "決まりと実装", f"{count}件とも合っています")
 
 
 def _clocks(plan, now: datetime) -> Note:
@@ -142,11 +160,13 @@ def _index(plan, now: datetime) -> Note:
     return Note(True, "索引の記録", f"{len(entries)}行。ペースが出せるサイト {len(paces)}件")
 
 
-def _searches() -> Note:
+def _searches(now: datetime | None = None) -> Note:
+    # **診断の「いま」を渡す**（2026-09-26）。実時間で数えていたので、
+    # テストが固定の日付で作った記録が30日の窓から外れ、日がたつと落ちるようになっていた
     runs = queries.load()
     if not runs:
         return Note(True, "検索の実績", "まだ記録がありません（collect --from で貯まります）")
-    rows = queries.tally(runs)
+    rows = queries.tally(runs, now=now)
     empty = queries.dead(rows)
     if empty:
         return Note(False, "検索の実績", f"1件も返していない検索が{len(empty)}本: {' / '.join(empty)}")

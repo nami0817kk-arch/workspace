@@ -1,0 +1,729 @@
+{
+ "club_title": "Ipswich_Town_F.C.",
+ "season_title": "2026–27_Ipswich_Town_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Alex Palmer",
+   "page": "Alex Palmer",
+   "dob": "1996-08-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 23,
+   "club_goals": 0
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Darnell Furlong",
+   "page": "Darnell Furlong",
+   "dob": "1995-10-31",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 41,
+   "club_goals": 1
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Leif Davis",
+   "page": "Leif Davis",
+   "dob": "1999-12-31",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 160,
+   "club_goals": 10
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "CIV",
+   "name": "Cédric Kipré",
+   "page": "Cédric Kipré",
+   "dob": "1996-12-09",
+   "captain": false,
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 1,
+   "club_caps": 32,
+   "club_goals": 3
+  },
+  {
+   "no": "5",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Azor Matusiwa",
+   "page": "Azor Matusiwa",
+   "dob": "1998-04-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 45,
+   "club_goals": 1
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "MAR",
+   "name": "Issa Diop",
+   "page": "Issa Diop (footballer)",
+   "dob": "1997-01-09",
+   "captain": false,
+   "loan": false,
+   "team": "Morocco",
+   "caps": 9,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "GHA",
+   "name": "Abdul Fatawu",
+   "page": "Abdul Fatawu",
+   "dob": "2004-03-08",
+   "captain": false,
+   "loan": false,
+   "team": "Ghana",
+   "caps": 32,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "8",
+   "pos": "FW",
+   "nat": "NOR",
+   "name": "Sindre Walle Egeli",
+   "page": "Sindre Walle Egeli",
+   "dob": "2006-06-21",
+   "captain": false,
+   "loan": false,
+   "team": "Norway",
+   "caps": 1,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "NED",
+   "name": "Zian Flemming",
+   "page": "Zian Flemming",
+   "dob": "1998-08-01",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 1
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "PAR",
+   "name": "Julio Enciso",
+   "page": "Julio Enciso (footballer, born 2004)",
+   "dob": "2004-01-23",
+   "captain": false,
+   "loan": false,
+   "team": "Paraguay",
+   "caps": 37,
+   "club_caps": 16,
+   "club_goals": 2
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Jaden Philogene",
+   "page": "Jaden Philogene",
+   "dob": "2002-02-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 46,
+   "club_goals": 14
+  },
+  {
+   "no": "12",
+   "pos": "MF",
+   "nat": "POR",
+   "name": "Florentino Luís",
+   "page": "Florentino Luís",
+   "dob": "1999-08-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "IRL",
+   "name": "Jack Taylor",
+   "page": "Jack Taylor (footballer, born 1998)",
+   "dob": "1998-06-23",
+   "captain": false,
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 11,
+   "club_caps": 104,
+   "club_goals": 5
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Emersonn",
+   "page": "Emersonn",
+   "dob": "2004-07-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 2
+  },
+  {
+   "no": "20",
+   "pos": "FW",
+   "nat": "IRL",
+   "name": "Kasey McAteer",
+   "page": "Kasey McAteer",
+   "dob": "2001-11-22",
+   "captain": false,
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 8,
+   "club_caps": 29,
+   "club_goals": 3
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "SER",
+   "name": "Saša Lukić",
+   "page": "Saša Lukić",
+   "dob": "1996-08-13",
+   "captain": false,
+   "loan": false,
+   "team": "Serbia",
+   "caps": 62,
+   "club_caps": 5,
+   "club_goals": 0
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Jacob Greaves",
+   "page": "Jacob Greaves",
+   "dob": "2000-09-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 49,
+   "club_goals": 2
+  },
+  {
+   "no": "25",
+   "pos": "MF",
+   "nat": "ARG",
+   "name": "Exequiel Palacios",
+   "page": "Exequiel Palacios",
+   "dob": "1998-10-05",
+   "captain": false,
+   "loan": false,
+   "team": "Argentina",
+   "caps": 41,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "IRL",
+   "name": "Dara O'Shea",
+   "page": "Dara O'Shea",
+   "dob": "1999-03-04",
+   "captain": false,
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 45,
+   "club_caps": 86,
+   "club_goals": 1
+  },
+  {
+   "no": "27",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "David Button",
+   "page": "David Button",
+   "dob": "1989-02-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
+  },
+  {
+   "no": "28",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Christian Walton",
+   "page": "Christian Walton",
+   "dob": "1995-11-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 125,
+   "club_goals": 0
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Chuba Akpom",
+   "page": "Chuba Akpom",
+   "dob": "1995-10-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 31,
+   "club_goals": 3
+  },
+  {
+   "no": "32",
+   "pos": "MF",
+   "nat": "CHI",
+   "name": "Marcelino Núñez",
+   "page": "Marcelino Núñez",
+   "dob": "2000-03-01",
+   "captain": false,
+   "loan": false,
+   "team": "Chile",
+   "caps": 33,
+   "club_caps": 37,
+   "club_goals": 3
+  },
+  {
+   "no": "33",
+   "pos": "FW",
+   "nat": "ALB",
+   "name": "Anis Mehmeti",
+   "page": "Anis Mehmeti",
+   "dob": "2001-01-09",
+   "captain": false,
+   "loan": false,
+   "team": "Albania",
+   "caps": 5,
+   "club_caps": 18,
+   "club_goals": 2
+  },
+  {
+   "no": "37",
+   "pos": "GK",
+   "nat": "NED",
+   "name": "Kjell Scherpen",
+   "page": "Kjell Scherpen",
+   "dob": "2000-01-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 4,
+   "club_goals": 0
+  },
+  {
+   "no": "38",
+   "pos": "FW",
+   "nat": "JPN",
+   "name": "Daizen Maeda",
+   "page": "Daizen Maeda",
+   "dob": "1997-10-20",
+   "captain": false,
+   "loan": false,
+   "team": "Japan",
+   "caps": 30,
+   "club_caps": 2,
+   "club_goals": 0
+  },
+  {
+   "no": "42",
+   "pos": "DF",
+   "nat": "CIV",
+   "name": "Abdoul Ouattara",
+   "page": "Abdoul Ouattara",
+   "dob": "2005-10-22",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
+  },
+  {
+   "no": "47",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Jack Clarke",
+   "page": "Jack Clarke (footballer, born 2000)",
+   "dob": "2000-11-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null,
+   "club_caps": 71,
+   "club_goals": 17
+  }
+ ],
+ "results": [
+  [
+   "29 July 2026",
+   "Friendly",
+   "Ipswich Town",
+   "1–2",
+   "CA Osasuna"
+  ],
+  [
+   "1 August 2026",
+   "Friendly",
+   "Oxford United",
+   "2–0",
+   "Ipswich Town"
+  ],
+  [
+   "1 August 2026",
+   "Friendly",
+   "Wycombe Wanderers",
+   "1–2",
+   "Ipswich Town"
+  ],
+  [
+   "4 August 2026",
+   "Friendly",
+   "Ipswich Town",
+   "1–0",
+   "Le Havre AC"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Ipswich Town",
+   "3−0",
+   "Rayo Vallecano"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Union Berlin",
+   "2–4",
+   "Ipswich Town"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Ipswich Town",
+   "2–1",
+   "Sunderland"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "Manchester United",
+   "5–2",
+   "Ipswich Town"
+  ],
+  [
+   "4 September 2026",
+   "3",
+   "Ipswich Town",
+   "0–2",
+   "Liverpool"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Crystal Palace",
+   "2–3",
+   "Ipswich Town"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Everton",
+   "1–0",
+   "Ipswich Town"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Ipswich Town",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Manchester City",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "23 October 2026",
+   "8",
+   "Ipswich Town",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Hull City",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Ipswich Town",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Tottenham Hotspur",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Ipswich Town",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Coventry City",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Leeds United",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Ipswich Town",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Ipswich Town",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Ipswich Town",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Arsenal",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "6 January 2027",
+   "20",
+   "Ipswich Town",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Bournemouth",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Ipswich Town",
+   "| report     =",
+   "Hull City"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Aston Villa",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Ipswich Town",
+   "| report     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Ipswich Town",
+   "| report     =",
+   "Arsenal"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Chelsea",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Ipswich Town",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Brentford",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Liverpool",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Ipswich Town",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Sunderland",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Ipswich Town",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Newcastle United",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Ipswich Town",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Fulham",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Ipswich Town",
+   "| report     =",
+   "Manchester City"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Nottingham Forest",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Ipswich Town",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "| time       =",
+   "| date       =",
+   "| score      =",
+   "| report     =",
+   "| goals1     ="
+  ],
+  [
+   "25 August 2026",
+   "Second round",
+   "Ipswich Town",
+   "3–1",
+   "Leicester City"
+  ],
+  [
+   "15 September 2026",
+   "Third round",
+   "Ipswich Town",
+   "2–4",
+   "Arsenal"
+  ]
+ ]
+}
