@@ -41,8 +41,9 @@ def ads_txt() -> str | None:
 
 
 def _sitemap() -> str:
+    # Cloudflare Pages は /x.html を /x へ 308 で送るので、転送されない形で載せる。
     urls = [site_config.SITE_URL + "/"] + [
-        f"{site_config.SITE_URL}/{p}" for p in PAGES if p not in ("index.html", "404.html")
+        f"{site_config.SITE_URL}/{p.removesuffix('.html')}" for p in PAGES if p not in ("index.html", "404.html")
     ]
     body = "".join(f"  <url><loc>{u}</loc></url>\n" for u in urls)
     return (

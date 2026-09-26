@@ -75,3 +75,11 @@ def test_sitemapとrobots(out):
     assert "<loc>https://dailyquarry.com/</loc>" in sm
     assert "404" not in sm
     assert "Sitemap: https://dailyquarry.com/sitemap.xml" in (out / "robots.txt").read_text()
+
+
+def test_内部リンクとsitemapはhtmlを付けない(out):
+    # Cloudflare Pages は /x.html を /x へ 308 で転送する。転送を挟まない形で書く。
+    for name, html in _all_html(out).items():
+        assert not re.search(r'href="/[a-z]+\.html"', html), name
+        assert not re.search(r'rel="canonical" href="[^"]+\.html"', html), name
+    assert ".html" not in (out / "sitemap.xml").read_text(encoding="utf-8")
