@@ -12,6 +12,7 @@ import '../engine/rules.dart';
 import '../game/session.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
+import '../monetization/monetization.dart';
 import 'figures.dart';
 import 'palette.dart';
 
@@ -19,9 +20,10 @@ const _tapMove = Duration(milliseconds: 320);
 const _crossMove = Duration(milliseconds: 900);
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key, required this.level, required this.progress});
+  const GameScreen({super.key, required this.level, required this.progress, required this.money});
   final Level level;
   final Progress progress;
+  final Monetization money;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -223,8 +225,19 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _confetti.reset();
   }
 
-  void _hint() {
-    if (phase != _Phase.play) return;
+  bool _hintBusy = false;
+
+  Future<void> _hint() async {
+    if (phase != _Phase.play || _hintBusy) return;
+    // 広告を消していなければ、動画を1本見てからヒントを出す
+    _hintBusy = true;
+    final gate = await widget.money.beforeHint();
+    _hintBusy = false;
+    if (!mounted || phase != _Phase.play) return;
+    if (gate == HintGate.declined) {
+      _say(t.hintDeclined);
+      return;
+    }
     final m = s.hint();
     if (m == null) {
       _say(t.unsolvable);
@@ -264,7 +277,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                   const SizedBox(width: 8),
                   Expanded(child: ChunkyButton(label: t.restart, icon: Icons.refresh_rounded, onPressed: _reset, fontSize: 13)),
                   const SizedBox(width: 8),
-                  Expanded(child: ChunkyButton(label: t.hint, icon: Icons.lightbulb_rounded, onPressed: phase == _Phase.play ? _hint : null, fontSize: 13)),
+                  Expanded(child: ChunkyButton(
+                      label: widget.money.hintNeedsAd ? t.hintWithAd : t.hint,
+                      icon: widget.money.hintNeedsAd ? Icons.smart_display_rounded : Icons.lightbulb_rounded, onPressed: phase == _Phase.play ? _hint : null, fontSize: 13)),
                 ],
               ),
             ),
@@ -341,11 +356,14 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     );
   }
 
-  void _next() {
+  Future<void> _next() async {
     final ls = widget.progress.levels;
     final next = ls[ls.indexOf(level) + 1];
+    // 面と面の間の全画面広告（3面に1回。舞台1と、広告を消した人には出ない）
+    await widget.money.afterClear(level);
+    if (!mounted) return;
     Navigator.of(context).pushReplacement(PageRouteBuilder(
-      pageBuilder: (_, _, _) => GameScreen(level: next, progress: widget.progress),
+      pageBuilder: (_, _, _) => GameScreen(level: next, progress: widget.progress, money: widget.money),
       transitionsBuilder: (_, a, _, child) => FadeTransition(opacity: a, child: child),
     ));
   }

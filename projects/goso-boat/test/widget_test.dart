@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:goso_boat/app/progress.dart';
 import 'package:goso_boat/engine/puzzle.dart';
 import 'package:goso_boat/main.dart';
+import 'package:goso_boat/monetization/monetization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<Level> _levels() {
@@ -24,7 +25,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     final progress = await _progress();
-    await tester.pumpWidget(GosoBoatApp(progress: progress, locale: const Locale('ja')));
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), locale: const Locale('ja')));
     await tester.tap(find.text('はじめる'));
     // 待機の揺れが止まらないので pumpAndSettle は使えない
     await tester.pump(const Duration(milliseconds: 400));
@@ -56,7 +57,7 @@ void main() {
     addTearDown(tester.view.reset);
     final semantics = tester.ensureSemantics();
     final progress = await _progress({'intro.1': true});
-    await tester.pumpWidget(GosoBoatApp(progress: progress, locale: const Locale('ja')));
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), locale: const Locale('ja')));
     await tester.tap(find.text('はじめる'));
     // 待機の揺れが止まらないので pumpAndSettle は使えない
     await tester.pump(const Duration(milliseconds: 400));
@@ -81,7 +82,7 @@ void main() {
   testWidgets('ステージ選択: 1面目だけ開いている', (tester) async {
     final semantics = tester.ensureSemantics();
     final progress = await _progress();
-    await tester.pumpWidget(GosoBoatApp(progress: progress, locale: const Locale('ja')));
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), locale: const Locale('ja')));
     await tester.tap(find.text('ステージを選ぶ'));
     await tester.pumpAndSettle();
     expect(find.bySemanticsLabel('1-1'), findsOneWidget);
@@ -107,7 +108,7 @@ void main() {
     addTearDown(tester.view.reset);
     final semantics = tester.ensureSemantics();
     final progress = await _progress();
-    await tester.pumpWidget(GosoBoatApp(progress: progress, locale: const Locale('en')));
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), locale: const Locale('en')));
     expect(find.text('Prison Boat'), findsOneWidget);
     await tester.tap(find.text('Start'));
     await tester.pump(const Duration(milliseconds: 400));
@@ -133,7 +134,7 @@ void main() {
     tester.platformDispatcher.localesTestValue = const [Locale('fr', 'FR')];
     addTearDown(tester.platformDispatcher.clearLocalesTestValue);
     final progress = await _progress();
-    await tester.pumpWidget(GosoBoatApp(progress: progress));
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest)));
     expect(find.text('Start'), findsOneWidget);
   });
 }

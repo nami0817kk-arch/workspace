@@ -85,5 +85,14 @@
   "intro7Title": "All hands on deck",
   "intro7Body": "The island returns — with chiefs, police dogs, bosses and cuffed pairs.\nEverything you've learned, all at once.",
   "intro8Title": "Nightmare",
-  "intro8Body": "The hardest levels, picked by solving every combination.\nCross in the fewest trips and you're the real deal."
+  "intro8Body": "The hardest levels, picked by solving every combination.\nCross in the fewest trips and you're the real deal.",
+  "hintWithAd": "Hint (video)",
+  "hintDeclined": "Watch the whole video to get a hint",
+  "removeAds": "Remove ads ({price})",
+  "restorePurchases": "Restore purchase",
+  "adFreeOn": "Ad-free",
+  "purchaseThanks": "Ads removed. Thank you!",
+  "purchaseRestored": "Purchase restored",
+  "purchaseNothing": "No purchase to restore",
+  "purchaseFailed": "Purchase failed. Please try again later."
 }

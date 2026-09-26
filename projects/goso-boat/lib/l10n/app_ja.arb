@@ -250,5 +250,21 @@
   "intro7Title": "総力戦",
   "intro7Body": "中州に、看守長も警察犬もボスも手錠の2人も。\nこれまでの決まりを全部使って渡しきる。",
   "intro8Title": "鬼門",
-  "intro8Body": "全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。"
+  "intro8Body": "全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。",
+  "hintWithAd": "ヒント（動画）",
+  "hintDeclined": "動画を最後まで見るとヒントが出る",
+  "removeAds": "広告を消す（{price}）",
+  "@removeAds": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "restorePurchases": "購入を復元",
+  "adFreeOn": "広告なし",
+  "purchaseThanks": "広告を消しました。ありがとう！",
+  "purchaseRestored": "購入を復元しました",
+  "purchaseNothing": "復元できる購入が見つからなかった",
+  "purchaseFailed": "購入できなかった。時間をおいてもう一度"
 }

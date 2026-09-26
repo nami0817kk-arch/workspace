@@ -322,4 +322,33 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get intro8Body =>
       'The hardest levels, picked by solving every combination.\nCross in the fewest trips and you\'re the real deal.';
+
+  @override
+  String get hintWithAd => 'Hint (video)';
+
+  @override
+  String get hintDeclined => 'Watch the whole video to get a hint';
+
+  @override
+  String removeAds(String price) {
+    return 'Remove ads ($price)';
+  }
+
+  @override
+  String get restorePurchases => 'Restore purchase';
+
+  @override
+  String get adFreeOn => 'Ad-free';
+
+  @override
+  String get purchaseThanks => 'Ads removed. Thank you!';
+
+  @override
+  String get purchaseRestored => 'Purchase restored';
+
+  @override
+  String get purchaseNothing => 'No purchase to restore';
+
+  @override
+  String get purchaseFailed => 'Purchase failed. Please try again later.';
 }

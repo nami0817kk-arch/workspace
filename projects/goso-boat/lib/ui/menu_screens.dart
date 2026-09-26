@@ -4,6 +4,8 @@ import '../app/progress.dart';
 import '../engine/puzzle.dart';
 import '../engine/rules.dart';
 import '../l10n/l10n_ext.dart';
+import '../monetization/monetization.dart';
+import '../monetization/purchase_service.dart';
 import 'figures.dart';
 import 'game_screen.dart';
 import 'palette.dart';
@@ -15,8 +17,9 @@ Route<void> _fade(Widget page) => PageRouteBuilder(
 
 /// はじめの画面。
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.progress});
+  const HomeScreen({super.key, required this.progress, required this.money});
   final Progress progress;
+  final Monetization money;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -55,7 +58,7 @@ class HomeScreen extends StatelessWidget {
                         shadow: Palette.goldDeep,
                         fontSize: 22,
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        onPressed: () => Navigator.of(context).push(_fade(GameScreen(level: progress.nextLevel, progress: progress))),
+                        onPressed: () => Navigator.of(context).push(_fade(GameScreen(level: progress.nextLevel, progress: progress, money: money))),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -65,9 +68,11 @@ class HomeScreen extends StatelessWidget {
                         label: context.l10n.chooseStage,
                         fontSize: 17,
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        onPressed: () => Navigator.of(context).push(_fade(StageSelectScreen(progress: progress))),
+                        onPressed: () => Navigator.of(context).push(_fade(StageSelectScreen(progress: progress, money: money))),
                       ),
                     ),
+                    const SizedBox(height: 14),
+                    _RemoveAds(money: money),
                     const Spacer(flex: 2),
                   ],
                 ),
@@ -105,8 +110,9 @@ class _TitleArt extends StatelessWidget {
 
 /// 舞台ごとに10面を並べる。
 class StageSelectScreen extends StatelessWidget {
-  const StageSelectScreen({super.key, required this.progress});
+  const StageSelectScreen({super.key, required this.progress, required this.money});
   final Progress progress;
+  final Monetization money;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -122,7 +128,7 @@ class StageSelectScreen extends StatelessWidget {
           builder: (context, _) => ListView(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
             children: [
-              for (final w in worlds) _WorldCard(world: w, progress: progress),
+              for (final w in worlds) _WorldCard(world: w, progress: progress, money: money),
             ],
           ),
         ),
@@ -130,9 +136,10 @@ class StageSelectScreen extends StatelessWidget {
 }
 
 class _WorldCard extends StatelessWidget {
-  const _WorldCard({required this.world, required this.progress});
+  const _WorldCard({required this.world, required this.progress, required this.money});
   final WorldInfo world;
   final Progress progress;
+  final Monetization money;
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +177,7 @@ class _WorldCard extends StatelessWidget {
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             childAspectRatio: 0.95,
-            children: [for (final l in ls) _LevelTile(level: l, progress: progress)],
+            children: [for (final l in ls) _LevelTile(level: l, progress: progress, money: money)],
           ),
         ],
       ),
@@ -179,9 +186,10 @@ class _WorldCard extends StatelessWidget {
 }
 
 class _LevelTile extends StatelessWidget {
-  const _LevelTile({required this.level, required this.progress});
+  const _LevelTile({required this.level, required this.progress, required this.money});
   final Level level;
   final Progress progress;
+  final Monetization money;
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +202,7 @@ class _LevelTile extends StatelessWidget {
       label: !open ? context.l10n.levelLocked(level.id) : stars > 0 ? context.l10n.levelStars(level.id, stars) : level.id,
       excludeSemantics: true,
       child: GestureDetector(
-        onTap: open ? () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress))) : null,
+        onTap: open ? () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress, money: money))) : null,
         child: Container(
           decoration: BoxDecoration(
             color: current ? Palette.gold : open ? Colors.white : const Color(0xFFE3E8EE),
@@ -214,6 +222,83 @@ class _LevelTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 「広告を消す（¥370）」と「購入を復元」。ストアが使えない所（Web版・テスト）では出さない。
+class _RemoveAds extends StatefulWidget {
+  const _RemoveAds({required this.money});
+  final Monetization money;
+
+  @override
+  State<_RemoveAds> createState() => _RemoveAdsState();
+}
+
+class _RemoveAdsState extends State<_RemoveAds> {
+  bool _available = false;
+  String? _price;
+  bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final ok = await widget.money.store.isAvailable();
+    final price = ok ? await widget.money.price : null;
+    if (!mounted) return;
+    setState(() {
+      _available = ok;
+      _price = price;
+    });
+  }
+
+  Future<void> _run(Future<PurchaseOutcome> Function() f, {required bool restore}) async {
+    final t = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _busy = true);
+    final r = await f();
+    if (!mounted) return;
+    setState(() => _busy = false);
+    final msg = switch (r) {
+      PurchaseOutcome.purchased => restore ? t.purchaseRestored : t.purchaseThanks,
+      PurchaseOutcome.canceled => null,
+      PurchaseOutcome.unavailable => restore ? t.purchaseNothing : t.purchaseFailed,
+      PurchaseOutcome.failed => t.purchaseFailed,
+    };
+    if (msg != null) messenger.showSnackBar(SnackBar(content: Text(msg)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.l10n;
+    return ListenableBuilder(
+      listenable: widget.money,
+      builder: (context, _) {
+        if (widget.money.adFree) {
+          return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Icon(Icons.check_circle_rounded, size: 18, color: Palette.ok),
+            const SizedBox(width: 4),
+            Text(t.adFreeOn, style: const TextStyle(fontWeight: FontWeight.w800, color: Palette.ink)),
+          ]);
+        }
+        if (!_available || _price == null) return const SizedBox.shrink();
+        return Column(children: [
+          ChunkyButton(
+            label: t.removeAds(_price!),
+            icon: Icons.block_rounded,
+            fontSize: 14,
+            onPressed: _busy ? null : () => _run(widget.money.buy, restore: false),
+          ),
+          TextButton(
+            onPressed: _busy ? null : () => _run(widget.money.restore, restore: true),
+            child: Text(t.restorePurchases, style: const TextStyle(color: Palette.dim, fontWeight: FontWeight.w700)),
+          ),
+        ]);
+      },
     );
   }
 }

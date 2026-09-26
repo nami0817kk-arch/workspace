@@ -310,4 +310,33 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get intro8Body => '全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。';
+
+  @override
+  String get hintWithAd => 'ヒント（動画）';
+
+  @override
+  String get hintDeclined => '動画を最後まで見るとヒントが出る';
+
+  @override
+  String removeAds(String price) {
+    return '広告を消す（$price）';
+  }
+
+  @override
+  String get restorePurchases => '購入を復元';
+
+  @override
+  String get adFreeOn => '広告なし';
+
+  @override
+  String get purchaseThanks => '広告を消しました。ありがとう！';
+
+  @override
+  String get purchaseRestored => '購入を復元しました';
+
+  @override
+  String get purchaseNothing => '復元できる購入が見つからなかった';
+
+  @override
+  String get purchaseFailed => '購入できなかった。時間をおいてもう一度';
 }

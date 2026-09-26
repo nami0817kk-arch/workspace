@@ -44,6 +44,10 @@ class Progress extends ChangeNotifier {
       Progress._(await SharedPreferences.getInstance(), levels);
 
   final SharedPreferences _prefs;
+
+  /// テストで同じ保存先を広告の設定にも渡すため。
+  @visibleForTesting
+  SharedPreferences get prefsForTest => _prefs;
   final List<Level> levels;
 
   int stars(Level l) => _prefs.getInt('stars.${l.id}') ?? 0;
