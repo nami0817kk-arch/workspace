@@ -1,0 +1,467 @@
+# プレミアリーグ20クラブ紹介 ⑩エスパニョール（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/espanyol*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- エスパニョール
+- マノロ・ゴンサレス
+short_title: エスパニョール、無敗で逃したヨーロッパの頂点
+series: ラ・リーガチーム紹介
+theme:
+  id: espanyol_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: エスパニョール
+  title: エスパニョール。一度も負けずに、優勝を逃した大会
+  question: どんなクラブなのか
+  hook: 試合が21分になると、スタンドから拍手がわき起こります。
+  lead: リーグ優勝のないまま、1部をいちばん長く戦ってきた。
+  opening_image: assets/stats/ll_espanyol_data_t.png
+thumbnail:
+  line1: 無敗で逃した欧州の頂点
+  line2: エスパニョール 1部で最長の無冠
+  crest_main:
+  - エスパニョール
+  board: assets/stats/ll_espanyol_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 元バス運転手の監督と、無敗で逃した頂点
+  narrator: キャスター
+  say:
+  - text: 率いるのは、元市バスの運転手のマノロ・ゴンサレス監督。9月の敗戦のあと、こう話しました。
+    image: assets/stats/ll_espanyol_data_r1.png
+    no_telop: true
+  - voice: マノロ・ゴンサレス
+    text: すぐにでも頭を切り替えないといけない。責任は私にある
+    image: assets/stats/ll_espanyol_data_r1.png
+  - text: 今季は7試合で**2勝**。昨シーズンは**5連勝**で年を越し、欧州を狙える順位にいました。
+    image: assets/stats/ll_espanyol_data_r2.png
+    no_telop: true
+  - text: そしてこのクラブは、一つの大会を無敗で戦い抜きながら、欧州の頂点を逃しています。
+    image: assets/stats/ll_espanyol_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_espanyol_data0.png
+    text: 創立は**1900年**。スペインで今も続くクラブの中で、**5番目**に古いクラブです。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_data1.png
+    text: 愛称は「ペリキートス」、インコのこと。始まりは、ネコのフィリックスでした。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_data2.png
+    text: ホームタウンはコルネリャ。バルセロナの南西にある、人口**9万**ほどの町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_エスパニョール.png
+    text: 本拠地は、コルネリャ・エル・プラットのスタジアム。クラブの発表では、**4万人**が入ります。
+  - image: assets/stats/ll_espanyol_data4.png
+    text: オーナーは**2025年**から、アメリカのアラン・ペイスの投資会社。バーンリーも持っています。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_cups.png
+    text: 1部の優勝は**0回**。国王杯は**4回**。スーペルコパとヨーロッパは、まだありません。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_data6.png
+    text: 最多出場はフォワードのラウール・タムード。このクラブで**389試合**に出ました。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_data7.png
+    text: 直近のタイトルは**2006年**の国王杯。決勝でサラゴサを**4対1**で破りました。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_data8.png
+    text: 昨季のリーグ戦は**11位**。勝ち点は**46**でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/RCD_Espanyol
+  - https://en.wikipedia.org/wiki/2026–27_RCD_Espanyol_season
+  - https://www.rcdespanyol.com/es/noticia/tenemos-que-volver-a-competir-como-toca/20782
+  - https://es.wikipedia.org/wiki/Manolo_Gonz%C3%A1lez_(entrenador)
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  - https://en.wikipedia.org/wiki/2007_UEFA_Cup_final
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: history
+  heading: 名前は「スペインの」
+  tier: 背景
+  telop: 締め出された選手のために生まれた
+  narrator: 解説
+  card:
+    type: table
+    title: 名前は「スペインの」
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1900年
+      - 街のクラブは外国人が中心
+    - - 新しいクラブ
+      - スペインの選手の受け皿
+    - - 名前の意味
+      - 「スペインの」
+  say:
+  - 1900年のバルセロナ。サッカーのクラブは、外国人の選手が中心でした。
+  - 締め出されたスペインの若者のために、大学生たちが新しいクラブを作ります。
+  - 名前は「スペインの」という意味。今はカタルーニャ語のつづりです。
+  sources:
+  - https://es.wikipedia.org/wiki/Real_Club_Deportivo_Espanyol
+  - https://en.wikipedia.org/wiki/RCD_Espanyol
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: history2
+  heading: 3点のリードから
+  tier: 背景
+  telop: 1988年、1戦目を3対0で勝った決勝
+  narrator: 解説
+  card:
+    type: table
+    title: 1988年 ウエファカップ決勝
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 相手
+      - 西ドイツのレバークーゼン
+    - - 1戦目 ホーム
+      - 3対0で勝利
+  say:
+  - 1988年、ウエファカップの決勝。相手は西ドイツのレバークーゼンです。
+  - ホームの1戦目は**3対0**。優勝に手がかかりました。
+  - text: ところが敵地の2戦目で、そっくり追いつかれます。
+    card:
+      type: table
+      title: 1988年 ウエファカップ決勝
+      columns: *id001
+      rows:
+      - - 2戦目 敵地
+        - 0対3。ピーケー戦で敗れる
+  - 最後はピーケー戦。**2対3**の負けで、初めての頂点を逃しました。
+  sources:
+  - https://en.wikipedia.org/wiki/1988_UEFA_Cup_final
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: history3
+  heading: 負けないまま
+  tier: 背景
+  telop: 2007年、大会で一度も負けずに準優勝
+  narrator: 解説
+  card:
+    type: table
+    title: 2007年 ウエファカップ決勝
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 相手
+      - セビージャ（グラスゴー）
+    - - 試合
+      - 10人で延長、2対2
+  say:
+  - 2007年、ふたたびウエファカップの決勝へ。ここまで負けなしで勝ち上がりました。
+  - 相手は同じスペインのセビージャ。**68分**に1人が退場します。
+  - text: 10人のまま延長の終盤に追いつき、**2対2**の引き分け。ピーケー戦で敗れました。
+    card:
+      type: table
+      title: 2007年 ウエファカップ決勝
+      columns: *id002
+      rows:
+      - - 大会を通して
+        - 無敗。ピーケー戦で準優勝
+  - 無敗で優勝を逃したのは、この大会の歴史でこのクラブだけです。
+  sources:
+  - https://en.wikipedia.org/wiki/2007_UEFA_Cup_final
+  - https://en.wikipedia.org/wiki/RCD_Espanyol
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: history4
+  heading: 家を手放して
+  tier: 背景
+  telop: 本拠地を売り、12シーズンの間借り
+  narrator: 解説
+  card:
+    type: table
+    title: 家を手放して
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1997年
+      - 借金でサリアを手放す
+    - - 1997〜2009年
+      - 五輪の競技場を借りる
+    - - 2009年
+      - 自前の新しい本拠地へ
+  say:
+  - 1997年、借金を返すため、長く使った本拠地サリアを売りました。
+  - そこから**12シーズン**、バルセロナ五輪の競技場を借りて戦います。
+  - 自前の家に戻ったのは2009年。その最初のシーズンには、中村俊輔もいました。
+  sources:
+  - https://es.wikipedia.org/wiki/Real_Club_Deportivo_Espanyol
+  - https://en.wikipedia.org/wiki/RCD_Espanyol
+  - https://en.wikipedia.org/wiki/Shunsuke_Nakamura
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 走る。育てて売る。世界に応援団
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 走って圧をかける
+    - - 運営の型
+      - 育てて売る
+    - - クラブの気質
+      - 公認の応援団が約200
+  say:
+  - マノロ・ゴンサレス監督のチームは、走って、相手に圧をかける。本人の言う持ち味です。
+  - ピッチの外は、育てて売る型。
+  - 下部組織育ちのゴールキーパー、ジョアン・ガルシアは昨年、**2500万ユーロ**でバルセロナへ。
+  - スタンドを支える公認の応援団、ペーニャはおよそ**200**。日本にもあります。
+  sources:
+  - https://en.wikipedia.org/wiki/RCD_Espanyol
+  - https://www.rcdespanyol.com/es/noticia/tenemos-que-volver-a-competir-como-toca/20782
+  - https://www.rcdespanyol.com/ca/noticia/joan-garcia-abona-la-seva-clausula-de-rescissio/18773
+  - https://en.wikipedia.org/wiki/Joan_Garcia
+  - https://es.wikipedia.org/wiki/Real_Club_Deportivo_Espanyol
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: episode
+  heading: 21分の拍手
+  tier: 背景
+  telop: 毎試合21分、スタンドから1分間の拍手
+  narrator: 解説
+  card:
+    type: table
+    title: 21分の拍手
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2009年8月
+      - 主将ハルケが急死、26歳
+    - - 毎試合21分
+      - 背番号にちなんで1分間の拍手
+    - - 2010年
+      - 親友イニエスタが決勝で追悼
+  say:
+  - text: 2009年8月、主将のダニエル・ハルケが、心臓の発作で亡くなりました。**26歳**でした。
+    image: assets/images/ll_espanyol_episode/scene.jpg
+  - それから毎試合、背番号と同じ**21分**に、スタンドが1分間の拍手を送ります。
+  - 翌年のワールドカップ決勝、親友イニエスタは決勝点のあと、彼の名前を胸に見せました。
+  sources:
+  - https://en.wikipedia.org/wiki/RCD_Espanyol
+  - https://en.wikipedia.org/wiki/Daniel_Jarque
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - マウリシオ・ポチェッティーノ
+      - 1994-2006
+      - 選手と監督で
+  say:
+  - text: ポチェッティーノはアルゼンチンのセンターバック。**1994年**、1部に戻ったここへ来ました。
+    image: assets/photos/ll/espanyol/espanyol_legend_09d12f05.jpg
+  - 2000年の国王杯を制し、クラブに**60年**ぶりの主要タイトルをもたらしました。
+  - リーグ戦で**275試合**。2009年には監督の道をここで始め、今はアメリカ代表を率いています。
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+  - https://en.wikipedia.org/wiki/Iv%C3%A1n_de_la_Pe%C3%B1a
+  - https://en.wikipedia.org/wiki/Carlos_Kameni
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - イバン・デ・ラ・ペーニャ
+      - 2002-2011
+      - 小さなブッダ
+  say:
+  - text: デ・ラ・ペーニャはバルセロナ育ちの司令塔。2002年、同じ街のこのクラブへ移りました。
+    image: assets/photos/ll/espanyol/espanyol_legend_49cc5197.jpg
+  - 国王杯を制した2006年の決勝では、フリーキックとパスで得点を演出しています。
+  - 2009年、バルセロナの本拠地で**2得点**。リーグ戦は**179試合8得点**でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+  - https://en.wikipedia.org/wiki/Iv%C3%A1n_de_la_Pe%C3%B1a
+  - https://en.wikipedia.org/wiki/Carlos_Kameni
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - カルロス・カメニ
+      - 2004-2012
+      - 無失点498分
+  say:
+  - text: カメニはカメルーンのゴールキーパー。**2004年**、20歳でル・アーヴルから来ました。
+    image: assets/photos/ll/espanyol/espanyol_legend_75116212.jpg
+  - 2009年、同じカメルーンのヌコノが持っていた、失点しない時間の記録を**498分**に更新。
+  - 8シーズンを過ごし、リーグ戦で**222試合**に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+  - https://en.wikipedia.org/wiki/Iv%C3%A1n_de_la_Pe%C3%B1a
+  - https://en.wikipedia.org/wiki/Carlos_Kameni
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はマノロ・ゴンサレス。下部から昇格
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マノロ・ゴンサレス（スペイン）
+    - - 就任
+      - 2024年3月
+    - - 前職
+      - エスパニョールB
+  say:
+  - 今季の監督はマノロ・ゴンサレス。スペイン出身で、**2024年3月**の就任です。
+  - 前はこのクラブのセカンドチーム。この9月、トップで**100試合**を迎えました。
+  sources:
+  - https://en.wikipedia.org/wiki/RCD_Espanyol
+  - https://en.wikipedia.org/wiki/Manolo_Gonz%C3%A1lez
+  - https://www.rcdespanyol.com/es/noticia/13-derrota-en-el-rcde-stadium/20781
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/ll_espanyol_gk.png
+    no_telop: true
+  - image: assets/stats/ll_espanyol_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_gk_f.png
+    text: マルコ・ドミトロヴィッチはセルビア代表で**19試合**。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_df_f.png
+    text: 主将を務めるのが**レアンドロ・カブレラ**。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_df_f.png
+    text: リーグ戦で**231試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_df_f.png
+    text: オマル・エル・ヒラリはリーグ戦で**145試合**。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_mf_f.png
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_mf_f.png
+    text: ポル・ロサーノはリーグ戦で**119試合**。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_mf_f.png
+    text: エドゥ・エスポジトはリーグ戦で**104試合**。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_fw_f.png
+    text: フォワードは9人。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_fw_f.png
+    text: ハビ・プアドはリーグ戦で**198試合**。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_fw_f.png
+    text: ホフレ・カレーラスはリーグ戦で**104試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/RCD_Espanyol
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で2勝1引き分け4敗。15位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - レバンテ（ホーム）
+      - 3対0
+    - - 第2節
+      - レアル・マドリード（ホーム）
+      - 1対2
+    - - 第3節
+      - レアル・ソシエダ（アウェー）
+      - 1対2
+    - - 第4節
+      - セビージャ（ホーム）
+      - 1対1
+    - - 第5節
+      - オサスナ（アウェー）
+      - 2対0
+    - - 第6節
+      - ラージョ・バジェカーノ（アウェー）
+      - 1対2
+    - - 第7節
+      - エルチェ（ホーム）
+      - 1対3
+  say:
+  - ラ・リーガは7試合を終えて、**2勝1引き分け4敗**です。
+  - 順位は**15位**、勝ち点は**7**です。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/espanyol
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_エスパニョール_in.png
+  official: false

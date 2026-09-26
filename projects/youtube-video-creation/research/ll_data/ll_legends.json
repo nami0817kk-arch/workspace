@@ -76,5 +76,31 @@
     "source": "https://en.wikipedia.org/wiki/Antoine_Griezmann"
    }
   ]
+ },
+ {
+  "club": "バレンシア",
+  "legends": [
+   {
+    "name": "ガイスカ・メンディエタ",
+    "era": "1993-2001",
+    "numbers": "リーグ230試合44得点",
+    "why": "欧州最優秀MFに2年続けて。クラブ最高額の売却",
+    "source": "https://en.wikipedia.org/wiki/Gaizka_Mendieta"
+   },
+   {
+    "name": "ダビド・アルベルダ",
+    "era": "1995-2013",
+    "numbers": "リーグ351試合6得点",
+    "why": "地元育ちの主将。2度のリーグ優勝",
+    "source": "https://en.wikipedia.org/wiki/David_Albelda"
+   },
+   {
+    "name": "ダビド・ビジャ",
+    "era": "2005-2010",
+    "numbers": "リーグ166試合108得点",
+    "why": "2008-09にリーグ28得点。2010年W杯優勝",
+    "source": "https://en.wikipedia.org/wiki/David_Villa"
+   }
+  ]
  }
 ]

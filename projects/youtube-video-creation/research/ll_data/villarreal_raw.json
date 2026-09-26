@@ -1,6 +1,6 @@
 {
  "club_title": "Villarreal_CF",
- "season_title": "2026–27_Villarreal_CF_season\r",
+ "season_title": "2026–27_Villarreal_CF_season",
  "squad": [
   {
    "no": "1",
@@ -339,5 +339,188 @@
    "club_goals": 0
   }
  ],
- "results": []
+ "results": [
+  [
+   "16 August 2026",
+   "1",
+   "Racing Santander",
+   "2–2",
+   "Villarreal"
+  ],
+  [
+   "23 August 2026",
+   "2",
+   "Atlético Madrid",
+   "2–2",
+   "Villarreal"
+  ],
+  [
+   "28 August 2026",
+   "3",
+   "Alavés",
+   "1–0",
+   "Villarreal"
+  ],
+  [
+   "5 September 2026",
+   "4",
+   "Villarreal",
+   "2–3",
+   "Deportivo A Coruña"
+  ],
+  [
+   "14 September 2026",
+   "5",
+   "Villarreal",
+   "1–2",
+   "Real Betis"
+  ],
+  [
+   "17 September 2026",
+   "6",
+   "Málaga",
+   "1–3",
+   "Villarreal"
+  ],
+  [
+   "20 September 2026",
+   "7",
+   "Villarreal",
+   "3–1",
+   "Levante"
+  ],
+  [
+   "10 October 2026",
+   "8",
+   "Real Madrid",
+   "",
+   "Villarreal"
+  ],
+  [
+   "17 October 2026",
+   "9",
+   "Villarreal",
+   "",
+   "Elche"
+  ],
+  [
+   "25 October 2026",
+   "10",
+   "Valencia",
+   "",
+   "Villarreal"
+  ],
+  [
+   "1 November 2026",
+   "11",
+   "Villarreal",
+   "",
+   "Espanyol"
+  ],
+  [
+   "8 November 2026",
+   "12",
+   "Villarreal",
+   "",
+   "Getafe"
+  ],
+  [
+   "22 November 2026",
+   "13",
+   "Barcelona",
+   "",
+   "Villarreal"
+  ],
+  [
+   "29 November 2026",
+   "14",
+   "Celta Vigo",
+   "",
+   "Villarreal"
+  ],
+  [
+   "6 December 2026",
+   "15",
+   "Villarreal",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "13 December 2026",
+   "16",
+   "Villarreal",
+   "",
+   "Rayo Vallecano"
+  ],
+  [
+   "20 December 2026",
+   "17",
+   "Osasuna",
+   "",
+   "Villarreal"
+  ],
+  [
+   "3 January 2027",
+   "18",
+   "Villarreal",
+   "",
+   "Sevilla"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Athletic Bilbao",
+   "",
+   "Villarreal"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Villarreal",
+   "",
+   "Alavés"
+  ],
+  [
+   "24 January 2027",
+   "21",
+   "Espanyol",
+   "",
+   "Villarreal"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Villarreal",
+   "",
+   "Racing Santander"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Getafe",
+   "",
+   "Villarreal"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Villarreal",
+   "",
+   "Barcelona"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Villarreal",
+   "",
+   "Valencia"
+  ],
+  [
+   "8 September 2026",
+   "1",
+   "Borussia Dortmund",
+   "3–2",
+   "Villarreal"
+  ]
+ ]
 }

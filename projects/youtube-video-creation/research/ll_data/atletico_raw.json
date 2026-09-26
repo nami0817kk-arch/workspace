@@ -1,6 +1,6 @@
 {
  "club_title": "Atlético_Madrid",
- "season_title": "2026–27_Atlético_Madrid_season\r",
+ "season_title": "2026–27_Atlético_Madrid_season",
  "squad": [
   {
    "no": "1",
@@ -339,5 +339,335 @@
    "club_goals": 0
   }
  ],
- "results": []
+ "results": [
+  [
+   "19 August 2026",
+   "1",
+   "Atlético Madrid",
+   "2–0",
+   "Málaga"
+  ],
+  [
+   "23 August 2026",
+   "2",
+   "Atlético Madrid",
+   "2–2",
+   "Villarreal"
+  ],
+  [
+   "29 August 2026",
+   "3",
+   "Sevilla",
+   "1–3",
+   "Atlético Madrid"
+  ],
+  [
+   "5 September 2026",
+   "4",
+   "Athletic Bilbao",
+   "3–0",
+   "Atlético Madrid"
+  ],
+  [
+   "13 September 2026",
+   "5",
+   "Real Sociedad",
+   "0–3",
+   "Atlético Madrid"
+  ],
+  [
+   "16 September 2026",
+   "6",
+   "Atlético Madrid",
+   "4–0",
+   "Osasuna"
+  ],
+  [
+   "20 September 2026",
+   "7",
+   "Atlético Madrid",
+   "2–1",
+   "Real Madrid"
+  ],
+  [
+   "10 October 2026",
+   "8",
+   "Alavés",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "17 October 2026",
+   "9",
+   "Espanyol",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "25 October 2026",
+   "10",
+   "Atlético Madrid",
+   "",
+   "Deportivo A Coruña"
+  ],
+  [
+   "1 November 2026",
+   "11",
+   "Levante",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "8 November 2026",
+   "12",
+   "Atlético Madrid",
+   "",
+   "Barcelona"
+  ],
+  [
+   "22 November 2026",
+   "13",
+   "Getafe",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "29 November 2026",
+   "14",
+   "Elche",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "6 December 2026",
+   "15",
+   "Atlético Madrid",
+   "",
+   "Real Betis"
+  ],
+  [
+   "13 December 2026",
+   "16",
+   "Atlético Madrid",
+   "",
+   "Valencia"
+  ],
+  [
+   "20 December 2026",
+   "17",
+   "Celta Vigo",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "3 January 2027",
+   "18",
+   "Rayo Vallecano",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Atlético Madrid",
+   "",
+   "Racing Santander"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Atlético Madrid",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "24 January 2026",
+   "21",
+   "Deportivo A Coruña",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Atlético Madrid",
+   "",
+   "Espanyol"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Barcelona",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Osasuna",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Atlético Madrid",
+   "",
+   "Elche"
+  ],
+  [
+   "28 February 2027",
+   "26",
+   "Málaga",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "7 March 2027",
+   "27",
+   "Atlético Madrid",
+   "",
+   "Celta Vigo"
+  ],
+  [
+   "14 March 2027",
+   "28",
+   "Racing Santander",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "21 March 2027",
+   "29",
+   "Atlético Madrid",
+   "",
+   "Getafe"
+  ],
+  [
+   "4 April 2027",
+   "30",
+   "Real Madrid",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "11 April 2027",
+   "31",
+   "Atlético Madrid",
+   "",
+   "Levante"
+  ],
+  [
+   "18 April 2027",
+   "32",
+   "Atlético Madrid",
+   "",
+   "Sevilla"
+  ],
+  [
+   "21 April 2027",
+   "33",
+   "Villarreal",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "2 May 2027",
+   "34",
+   "Atlético Madrid",
+   "",
+   "Alavés"
+  ],
+  [
+   "9 May 2027",
+   "35",
+   "Valencia",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "16 May 2027",
+   "36",
+   "Atlético Madrid",
+   "",
+   "Rayo Vallecano"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Atlético Madrid",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Real Betis",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "2 February 2027",
+   "Semi-finals",
+   "Barcelona",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "9 September 2026",
+   "1",
+   "Liverpool",
+   "2–1",
+   "Atlético Madrid"
+  ],
+  [
+   "13 October 2026",
+   "2",
+   "Atlético Madrid",
+   "",
+   "Manchester United"
+  ],
+  [
+   "20 October 2026",
+   "3",
+   "VfB Stuttgart",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "3 November 2026",
+   "4",
+   "Atlético Madrid",
+   "",
+   "Bayern Munich"
+  ],
+  [
+   "25 November 2026",
+   "5",
+   "Atlético Madrid",
+   "",
+   "Viking"
+  ],
+  [
+   "9 December 2026",
+   "6",
+   "PSV Eindhoven",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "19 January 2027",
+   "7",
+   "Bodø/Glimt",
+   "",
+   "Atlético Madrid"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "Atlético Madrid",
+   "",
+   "Fenerbahçe"
+  ]
+ ]
 }

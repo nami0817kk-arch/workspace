@@ -1,0 +1,24 @@
+{
+ "osasuna": {
+  "ジャバド・ネクナム": {
+   "role": "legend",
+   "file": "assets/photos/ll/osasuna/osasuna_legend_418029b9.jpg",
+   "page": "Javad Nekounam"
+  },
+  "セサル・アスピリクエタ": {
+   "role": "legend",
+   "file": "assets/photos/ll/osasuna/osasuna_legend_ff057f6e.jpg",
+   "page": "César Azpilicueta"
+  },
+  "ミケル・メリーノ": {
+   "role": "legend",
+   "file": "assets/photos/ll/osasuna/osasuna_legend_381dac82.jpg",
+   "page": "Mikel Merino"
+  },
+  "ルイス・ミゲル・ラミス": {
+   "role": "manager",
+   "file": "assets/photos/ll/osasuna/osasuna_manager_10fb4485.jpg",
+   "page": "Luis Miguel Ramis"
+  }
+ }
+}

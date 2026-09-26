@@ -74,7 +74,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Real_Betis
-  - "https://en.wikipedia.org/wiki/2026–27_Real_Betis_season\r"
+  - https://en.wikipedia.org/wiki/2026–27_Real_Betis_season
   - https://www.marca.com/futbol/betis/2026/09/16/pellegrini-mi-mejor-regalo-cumpleanos-seria-ganar-manana.html
   - https://en.wikipedia.org/wiki/2025%E2%80%9326_Real_Betis_season
   - https://en.wikipedia.org/wiki/Manuel_Pellegrini
@@ -352,7 +352,45 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は0人です。
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/ll_betis_gk.png
+    no_telop: true
+  - image: assets/stats/ll_betis_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_betis_gk_f.png
+    text: アルバロ・バジェスはリーグ戦で**35試合**。
+    no_telop: true
+  - image: assets/stats/ll_betis_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_betis_df_f.png
+    text: マルク・バルトラはスペイン代表で**14試合**。
+    no_telop: true
+  - image: assets/stats/ll_betis_df_f.png
+    text: エクトル・ベジェリンはリーグ戦で**89試合**。
+    no_telop: true
+  - image: assets/stats/ll_betis_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/ll_betis_mf_f.png
+    text: 主将を務めるのが**イスコ**。
+    no_telop: true
+  - image: assets/stats/ll_betis_mf_f.png
+    text: リーグ戦で**66試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_betis_mf_f.png
+    text: ジオバニ・ロ・セルソはアルゼンチン代表で**68試合**。
+    no_telop: true
+  - image: assets/stats/ll_betis_fw_f.png
+    text: フォワードは6人。
+    no_telop: true
+  - image: assets/stats/ll_betis_fw_f.png
+    text: アブデ・エザルズリはモロッコ代表で**37試合**。
+    no_telop: true
+  - image: assets/stats/ll_betis_fw_f.png
+    text: アイトール・ルイバルはリーグ戦で**149試合**。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Real_Betis
   bg: assets/backgrounds/stadium_レアルベティス_in.png
@@ -397,6 +435,8 @@ sections:
   - この順位を保てば、来季のチャンピオンズリーグに出られます。
   - チャンピオンズリーグの初戦は、上田綺世に先制されたリールに、**3対2**で逆転勝ちでした。
   sources:
-  - "https://en.wikipedia.org/wiki/2026–27_Real_Betis_season\r"
+  - https://www.espn.com/soccer/team/results/_/name/betis
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_レアルベティス_in.png
   official: false

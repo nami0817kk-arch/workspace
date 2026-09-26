@@ -1,0 +1,24 @@
+{
+ "elche": {
+  "ホルヘ・モリーナ": {
+   "role": "legend",
+   "file": "assets/photos/ll/elche/elche_legend_f020a92c.jpg",
+   "page": "Jorge Molina (footballer, born 1982)"
+  },
+  "マヌ・エレーラ": {
+   "role": "legend",
+   "file": "assets/photos/ll/elche/elche_legend_3a5faa59.jpg",
+   "page": "Manu Herrera"
+  },
+  "ルーカス・ボジェ": {
+   "role": "legend",
+   "file": "assets/photos/ll/elche/elche_legend_5a670191.jpg",
+   "page": "Lucas Boyé"
+  },
+  "マルティン・アンセルミ": {
+   "role": "manager",
+   "file": "assets/photos/ll/elche/elche_manager_c06b49c5.jpg",
+   "page": "Martín Anselmi"
+  }
+ }
+}

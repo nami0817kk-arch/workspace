@@ -58,6 +58,9 @@ sources:
 - https://en.wikipedia.org/wiki/Ronaldinho
 - https://en.wikipedia.org/wiki/Hansi_Flick
 - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Barcelona_season
+- https://www.espn.com/soccer/team/results/_/name/barcelona
+- https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+- https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
 cards:
   history_card:
     type: table
@@ -190,6 +193,35 @@ cards:
       - 2024年5月
     - - 前職
       - ドイツ代表
+  season_card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - アスレティック・ビルバオ（ホーム）
+      - 2対0
+    - - 第2節
+      - エルチェ（アウェー）
+      - 5対0
+    - - 第3節
+      - ラージョ・バジェカーノ（ホーム）
+      - 5対2
+    - - 第4節
+      - バレンシア（アウェー）
+      - 5対0
+    - - 第5節
+      - レバンテ（アウェー）
+      - 4対2
+    - - 第6節
+      - ラシン・サンタンデール（ホーム）
+      - 7対2
+    - - 第7節
+      - セビージャ（アウェー）
+      - 3対1
 ---
 
 ## オープニング
@@ -427,3 +459,19 @@ cards:
 キャスター: ラミン・ヤマルはスペイン代表で**33試合**。
   no_telop: true
   image: assets/stats/ll_barcelona_fw_f.png
+
+## 今季のここまで
+@bg: assets/backgrounds/stadium_バルセロナ_in.png
+
+解説: ラ・リーガは7試合を終えて、**7勝**です。
+  telop: ラ・リーガは7試合を終えて、**7勝**です
+  source: 報道
+  card: season_card
+解説: 順位は**1位**、勝ち点は**21**です。
+  telop: 順位は**1位**、勝ち点は**21**です
+解説: この順位を保てば、来季のチャンピオンズリーグに出られます。
+  telop: この順位を保てば、来季のチャンピオンズリーグに出られます
+解説: 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました。
+  telop: 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました
+解説: 2015年に欧州を制した顔ぶれは、もう一人も残っていません。
+  telop: 2015年に欧州を制した顔ぶれは、もう一人も残っていません

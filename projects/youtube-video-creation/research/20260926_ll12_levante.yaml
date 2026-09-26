@@ -1,0 +1,463 @@
+# プレミアリーグ20クラブ紹介 ⑫レバンテ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/levante*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- レバンテ
+- ルイス・カストロ
+short_title: レバンテ。内戦中の杯と、86年後の答え
+series: ラ・リーガチーム紹介
+theme:
+  id: levante_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レバンテ
+  title: レバンテ。内戦のさなかに勝ち取った杯と、86年後の答え
+  question: どんなクラブなのか
+  hook: 無敗で終えかけた王者を、止めた夜もあります。
+  lead: バレンシアの街の、いちばんの古株。
+  opening_image: assets/stats/ll_levante_data_t.png
+thumbnail:
+  line1: 内戦中の優勝、86年後に●●
+  line2: バレンシア最古のクラブ、レバンテ
+  crest_main:
+  - レバンテ
+  board: assets/stats/ll_levante_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 最下位からの残留と、86年待った優勝
+  narrator: キャスター
+  say:
+  - text: 昨シーズンは、2部から上がって1年目。最下位から巻き返して、1部に残りました。
+    image: assets/stats/ll_levante_data_r1.png
+    no_telop: true
+  - text: 立て直したのは、ルイス・カストロ監督。ホームの力を、こう話しています。
+    image: assets/stats/ll_levante_data_r2.png
+    no_telop: true
+  - voice: ルイス・カストロ
+    text: 本拠地の空気は違う。1人多く戦えていて、それがホームで大きな力になっている
+    image: assets/stats/ll_levante_data_r2.png
+  - text: そしてこのクラブが内戦のさなかに取った優勝は、**86年**たって、公式に認められました。
+    image: assets/stats/ll_levante_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_levante_data0.png
+    text: 創立は**1909年**。いまの形は**1939年**、同じ年に生まれた2つのクラブの合併です。
+    no_telop: true
+  - image: assets/stats/ll_levante_data1.png
+    text: 愛称は「グラノタ」。バレンシア語で**カエル**。川の中にあった、昔の球場から来た名前。
+    no_telop: true
+  - image: assets/stats/ll_levante_data2.png
+    text: ホームタウンはバレンシア。人口はスペインで**3番目**に多い、地中海の町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_レバンテ.png
+    text: 本拠地はシウダ・デ・バレンシア。**1969年**の開場で、**2万6354人**が入ります。
+  - image: assets/stats/ll_levante_data4.png
+    text: 会長は**2023年**からパブロ・サンチェス。クラブは株式会社の形です。
+    no_telop: true
+  - image: assets/stats/ll_levante_cups.png
+    text: 1部と国王杯、スーペルコパの優勝はありません。2部では**3回**優勝しています。
+    no_telop: true
+  - image: assets/stats/ll_levante_data6.png
+    text: 最多出場は、2度在籍したホセ・ルイス・モラレス。**377試合**に出ました。
+    no_telop: true
+  - image: assets/stats/ll_levante_data7.png
+    text: 直近のタイトルは、2024年から25年の2部優勝。**97分**の決勝点で、昇格を決めました。
+    no_telop: true
+  - image: assets/stats/ll_levante_data8.png
+    text: 昨シーズンは**16位**。勝ち点**42**で3チームが並び、直接対決の成績で残りました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Levante_UD
+  - https://en.wikipedia.org/wiki/2026–27_Levante_UD_season
+  - https://www.marca.com/futbol/levante/2026/09/12/luis-castro-todos-partidos-preparamos-ganar-tambien.html
+  - https://www.marca.com/futbol/levante/2026/09/22/nueve-meses-castrismo.html
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Levante_UD_season
+  - https://www.marca.com/futbol/copa-rey/2023/03/25/641ef935ca47410a6f8b4572.html
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: history
+  heading: 内戦のさなかの杯
+  tier: 背景
+  telop: 1937年、内戦のさなかの杯で優勝
+  narrator: 解説
+  card:
+    type: table
+    title: 内戦のさなかの杯
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1937年
+      - 共和国側の地域で開かれた杯
+    - - 出場
+      - 遠征に出たバルセロナの代わり
+    - - 決勝
+      - バレンシアに1対0
+  say:
+  - 1937年、スペインは内戦のさなか。共和国側の地域で、1つの杯が争われました。
+  - バルセロナがメキシコとアメリカへの遠征を選び、リーグ**5位**のレバンテが代わりに出ます。
+  - 決勝の相手は、同じ街のバレンシア。**1対0**で勝って、優勝しました。
+  sources:
+  - https://en.wikipedia.org/wiki/1937_Copa_de_la_Espa%C3%B1a_Libre
+  - https://en.wikipedia.org/wiki/Levante_UD
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: history2
+  heading: 認められるまで
+  tier: 背景
+  telop: 2023年、連盟が1937年の王者と認める
+  narrator: 解説
+  card:
+    type: table
+    title: 認められるまで
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 戦争のあと
+      - 公式の優勝とされず
+    - - 2007年
+      - 議会が、認めるよう連盟に求める
+  say:
+  - ところが戦争のあと、この優勝は長いあいだ、公式のものとされませんでした。
+  - '**2007年**、国の議会がそろって、認めるよう連盟に求めます。'
+  - text: 連盟が1937年の王者と認めたのは、**2023年3月**のことでした。
+    card:
+      type: table
+      title: 認められるまで
+      columns: *id001
+      rows:
+      - - 2023年3月
+        - 連盟が1937年の王者と認める
+  - ただし、国王杯の優勝の回数には数えられていません。
+  sources:
+  - https://www.marca.com/futbol/copa-rey/2023/03/25/641ef935ca47410a6f8b4572.html
+  - https://en.wikipedia.org/wiki/1937_Copa_de_la_Espa%C3%B1a_Libre
+  - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+  - https://rfef.es/en/noticias/track-record-the-team-in-white-win-their-20th-copa-trophy
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: history3
+  heading: 102年目の首位
+  tier: 背景
+  telop: 2011年、創立102年で初めて首位に
+  narrator: 解説
+  card:
+    type: table
+    title: 102年目の首位
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2011年の秋
+      - 7連勝で、初めて首位に
+    - - 2011-12
+      - 6位で、初めて欧州へ
+    - - 2013年3月
+      - ベスト16、延長で敗退
+  say:
+  - 2011年の秋、クラブで初めての**7連勝**。創立から**102年**で、初めて1部の首位に立ちます。
+  - そのシーズンは**6位**。初めて、欧州の大会への切符を取りました。
+  - 翌シーズンはベスト16まで進み、雪のモスクワで、延長の末に敗れます。
+  sources:
+  - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+  - https://en.wikipedia.org/wiki/Levante_UD
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: history4
+  heading: 王者の無敗を止めた
+  tier: 背景
+  telop: 2018年、王者バルセロナに5対4
+  narrator: 解説
+  card:
+    type: table
+    title: 王者の無敗を止めた
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2018年5月13日
+      - 優勝を決めたバルセロナに5対4
+    - - 後半11分
+      - 5対1とリード
+    - - 止めたもの
+      - リーグ戦43試合無敗
+  say:
+  - 2018年5月、優勝を決めていたバルセロナを、本拠地に迎えます。
+  - ボアテングが3点。後半の途中で**5対1**とリードし、**5対4**の勝ちで逃げ切りました。
+  - 王者のリーグ戦**43試合**無敗は、ここで止まりました。
+  sources:
+  - https://en.wikipedia.org/wiki/2017%E2%80%9318_Levante_UD_season
+  - https://en.wikipedia.org/wiki/2017%E2%80%9318_FC_Barcelona_season
+  - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 失わない。高く売る。上がっては落ちる
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - ボールを失わない
+    - - 運営の型
+      - 安く見つけて高く売る
+    - - クラブの気質
+      - 上がり下がりのエレベーター
+  say:
+  - カストロ監督は、ボールを失わないことを求めます。前へ急ぐだけでは勝てない、と話します。
+  - ピッチの外は、安く見つけて高く売る型。
+  - レルマは**60万ユーロ**で獲り、**3000万ユーロ**で売れました。
+  - 昇格と降格をくり返す「エレベーター」。1部は**18**シーズン目、2部は**41**シーズンです。
+  sources:
+  - https://en.wikipedia.org/wiki/Levante_UD
+  - https://www.marca.com/futbol/levante/2026/09/20/luis-castro-son-buenos-calidad.html
+  - https://en.wikipedia.org/wiki/Jefferson_Lerma
+  - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: episode
+  heading: 2部のクライフ
+  tier: 背景
+  telop: 1981年、2部のレバンテにクライフ
+  narrator: 解説
+  card:
+    type: table
+    title: 2部のクライフ
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1981年3月
+      - クライフが2部でデビュー
+    - - 出場
+      - 10試合2得点
+    - - チーム
+      - 失速して9位
+  say:
+  - 1981年3月、2部のレバンテで、あのヨハン・クライフがデビューしました。
+  - 好調だったチームは、そこから失速して**9位**。約束のお金も、一部しか出ませんでした。
+  sources:
+  - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+  - https://en.wikipedia.org/wiki/Johan_Cruyff
+  - https://es.wikipedia.org/wiki/Johan_Cruyff
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - アルナ・コネ
+      - 2011-2012
+      - 18点で戻る契約
+  say:
+  - text: アルナ・コネは、2011年にセビージャから借りたフォワード。リーグ戦で**34試合15得点**。
+    image: assets/photos/ll/levante/levante_legend_edd31707.jpg
+  - マドリードを**1対0**で破った試合でも、ただ1つのゴールを決めました。
+  - 公式戦で**18点**に届くと、セビージャへ戻る契約。最後の3試合は休みました。
+  sources:
+  - https://en.wikipedia.org/wiki/Arouna_Kon%C3%A9
+  - https://en.wikipedia.org/wiki/Keylor_Navas
+  - https://en.wikipedia.org/wiki/Vicente_Iborra
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - ケイロル・ナバス
+      - 2011-2014
+      - 控えから最優秀の守護神
+  say:
+  - text: ケイロル・ナバスは、コスタリカのゴールキーパー。リーグ戦の出場は**47試合**。
+    image: assets/photos/ll/levante/levante_legend_f389b84d.jpg
+  - 控えから定位置をつかんだ2013年から14年、リーグの最優秀ゴールキーパーに。
+  - 2014年、**1000万ユーロ**でレアル・マドリードへ。チャンピオンズリーグを3連覇しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Arouna_Kon%C3%A9
+  - https://en.wikipedia.org/wiki/Keylor_Navas
+  - https://en.wikipedia.org/wiki/Vicente_Iborra
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - ビセンテ・イボーラ
+      - 2008-13ほか
+      - 育成出身、今はコーチ
+  say:
+  - text: ビセンテ・イボーラは地元の生まれ。レバンテの下部組織で育った中盤です。
+    image: assets/photos/ll/levante/levante_legend_b482c8b0.jpg
+  - 給料の未払いで主力が去ったなか、2008年にデビュー。リーグ戦で計**227試合**。
+  - 最後のシーズンに昇格を果たして引退。今はコーチとして、ベンチにいます。
+  sources:
+  - https://en.wikipedia.org/wiki/Arouna_Kon%C3%A9
+  - https://en.wikipedia.org/wiki/Keylor_Navas
+  - https://en.wikipedia.org/wiki/Vicente_Iborra
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はポルトガルのカストロ
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ルイス・カストロ（ポルトガル）
+    - - 就任
+      - 2025年12月
+    - - 前職
+      - ナント
+  say:
+  - 今シーズンの監督はルイス・カストロ。ポルトガルの人で、**2025年12月**に就任しました。
+  - 前はフランスのナント。ベンフィカでは、19歳以下の欧州大会を制しています。
+  sources:
+  - https://en.wikipedia.org/wiki/Levante_UD
+  - https://en.wikipedia.org/wiki/Lu%C3%ADs_Castro_(football_manager,_born_1980)
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Levante_UD_season
+  - https://www.marca.com/futbol/levante/2026/09/22/nueve-meses-castrismo.html
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/ll_levante_gk.png
+    no_telop: true
+  - image: assets/stats/ll_levante_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/ll_levante_gk_f.png
+    text: マシュー・ライアンはオーストラリア代表で**105試合**。
+    no_telop: true
+  - image: assets/stats/ll_levante_gk_f.png
+    text: アレックス・プリモはリーグ戦で**61試合**。
+    no_telop: true
+  - image: assets/stats/ll_levante_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/ll_levante_df_f.png
+    text: アイサ・マンディはアルジェリア代表で**123試合**。
+    no_telop: true
+  - image: assets/stats/ll_levante_df_f.png
+    text: アドリアン・デラはリーグ戦で**100試合**。
+    no_telop: true
+  - image: assets/stats/ll_levante_mf_f.png
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_levante_mf_f.png
+    text: オリオル・レイはリーグ戦で**95試合**。
+    no_telop: true
+  - image: assets/stats/ll_levante_mf_f.png
+    text: パコ・コルテスはリーグ戦で**51試合**。
+    no_telop: true
+  - image: assets/stats/ll_levante_fw_f.png
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/ll_levante_fw_f.png
+    text: 主将を務めるのが**ロジェール・ブルゲ**。
+    no_telop: true
+  - image: assets/stats/ll_levante_fw_f.png
+    text: リーグ戦で**112試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_levante_fw_f.png
+    text: イバン・ロメロはリーグ戦で**87試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Levante_UD
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 6試合で1勝2引き分け3敗。17位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - エスパニョール（アウェー）
+      - 0対3
+    - - 第2節
+      - オサスナ（アウェー）
+      - 0対0
+    - - 第3節
+      - レアル・ベティス（ホーム）
+      - 5対2
+    - - 第4節
+      - マラガ（アウェー）
+      - 0対0
+    - - 第5節
+      - バルセロナ（ホーム）
+      - 2対4
+    - - 第7節
+      - ビジャレアル（アウェー）
+      - 1対3
+  say:
+  - ラ・リーガは6試合を終えて、**1勝2引き分け3敗**です。
+  - 順位は**17位**、勝ち点は**5**です。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/levante
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_レバンテ_in.png
+  official: false

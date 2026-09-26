@@ -64,6 +64,9 @@ sources:
 - https://en.wikipedia.org/wiki/Pellegrino_Matarazzo
 - https://www.realsociedad.eus/en/news/details/pellegrino-matarazzo-new-real-sociedad-coach
 - https://www.realsociedad.eus/es/noticias/detalle/seguimos-sin-hacerle-caso-al-algoritmo
+- https://www.espn.com/soccer/team/results/_/name/realsociedad
+- https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+- https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
 cards:
   history_card:
     type: table
@@ -435,7 +438,7 @@ cards:
 キャスター: ゴールキーパーは2人。
   no_telop: true
   image: assets/stats/ll_realsociedad_gk_f.png
-キャスター: アレックス・レミーロはリーグ戦で**252試合**。
+キャスター: アレックス・レミロはリーグ戦で**252試合**。
   no_telop: true
   image: assets/stats/ll_realsociedad_gk_f.png
 キャスター: ウナイ・マレーロはリーグ戦で**49試合**。

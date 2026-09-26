@@ -78,7 +78,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Athletic_Bilbao
-  - "https://en.wikipedia.org/wiki/2026–27_Athletic_Bilbao_season\r"
+  - https://en.wikipedia.org/wiki/2026–27_Athletic_Bilbao_season
   - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final
   - https://en.wikipedia.org/wiki/Edin_Terzi%C4%87
   - https://www.deia.eus/athletic/2026/09/25/nico-williams-espinita-san-mames-titulo-europeo-11585395.html
@@ -417,5 +417,45 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Athletic_Bilbao
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 6試合で2勝2引き分け2敗。10位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - バルセロナ（アウェー）
+      - 0対2
+    - - 第2節
+      - セビージャ（ホーム）
+      - 1対3
+    - - 第3節
+      - セルタ（アウェー）
+      - 2対0
+    - - 第4節
+      - アトレティコ・マドリード（ホーム）
+      - 3対0
+    - - 第5節
+      - エルチェ（ホーム）
+      - 1対1
+    - - 第7節
+      - アラベス（ホーム）
+      - 0対0
+  say:
+  - ラ・リーガは6試合を終えて、**2勝2引き分け2敗**です。
+  - 順位は**10位**、勝ち点は**8**です。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/athletic
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
   official: false

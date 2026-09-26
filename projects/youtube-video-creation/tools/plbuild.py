@@ -42,7 +42,7 @@ NUM = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳"
 # **これ未満の出場数は「有名な選手」として出さない。**「1試合」は紹介にならない
 CAPS_MIN = 10
 # 代表の名前（Wikipedia の英語表記）を日本語に
-TEAM_JA = {"England": "イングランド", "Scotland": "スコットランド", "Wales": "ウェールズ",
+TEAM_JA = {"Dominican Republic": "ドミニカ共和国", "Gabon": "ガボン", "Guadeloupe": "グアドループ", "Guinea-Bissau": "ギニアビサウ", "Indonesia": "インドネシア", "Kenya": "ケニア", "Malaysia": "マレーシア", "North Macedonia": "北マケドニア", "Russia": "ロシア", "Togo": "トーゴ", "Venezuela": "ベネズエラ", "England": "イングランド", "Scotland": "スコットランド", "Wales": "ウェールズ",
            "Northern Ireland": "北アイルランド", "Republic of Ireland": "アイルランド",
            "France": "フランス", "Spain": "スペイン", "Portugal": "ポルトガル",
            "Germany": "ドイツ", "Netherlands": "オランダ", "Belgium": "ベルギー",
@@ -635,10 +635,17 @@ def build(key: str, number: int, old_file: str) -> Path:
         seen.add(label)
         here = [p for p in raw["squad"]
                 if dict(POS).get(p["pos"]) == label and age(p["dob"]) is not None]
+        # **紹介するのは、いま映している板に載っている人だけ**（2026-09-27）。
+        # 1つの位置が12人を超えると板が2枚に分かれ、2枚目の選手を読んでいるあいだ
+        # 1枚目が映っていた（エルチェのミッドフィールダー13人）
+        rows = " ".join(a for a in board["args"] if "|" in a)
+        on_board = [p for p in here if f"{kana.get(p['name'], p['name'])}|" in rows]
+        if on_board:
+            here = on_board
         names = [kana.get(p["name"], p["name"]) for p in here]
         jp = [n2 for n2 in names if n2 in jp_names]
         tail = f"日本の{jp[0]}がいます。" if jp else ""
-        if cap and dict(POS).get(cap["pos"]) == label:
+        if cap and dict(POS).get(cap["pos"]) == label and any(p["name"] == cap["name"] for p in here):
             cap_name = kana.get(cap["name"], cap["name"])
             more = f"リーグ戦で**{cap['club_caps']}試合**に出ています。" if (cap.get("club_caps") or 0) >= 50 else ""
             tail += f"主将を務めるのが**{cap_name}**。{more}"
@@ -678,7 +685,8 @@ def build(key: str, number: int, old_file: str) -> Path:
         note = "".join(about(p) for p in known)
         extra = (ov.get("squad") or {}).get(label, "")
         # **読み上げで名前を出す人だけ、板の行を明るくする**
-        lit = ([jp[0]] if jp else []) + ([cap_name] if cap and dict(POS).get(cap["pos"]) == label else [])
+        cap_here = cap and dict(POS).get(cap["pos"]) == label and any(p["name"] == cap["name"] for p in here)
+        lit = ([jp[0]] if jp else []) + ([cap_name] if cap_here else [])
         lit += [kana.get(p["name"], p["name"]) for p in known]
         # **1文ずつ別の行にする**（2026-09-22）。「ディフェンダーは10人。主将は…。◯◯は代表で…」を
         # 1行で読むと50〜80字になり、合成音声で一息に聞き取れない（読み手の指摘）。
@@ -723,7 +731,12 @@ def build(key: str, number: int, old_file: str) -> Path:
                             # 写真を先に置いて3行目で表を下ろす（名選手の節と同じ仕掛け）
                             say=([{"text": say_season[0], "image": str(ov["season_image"])}] + say_season[1:]
                                  if ov.get("season_image") and say_season else say_season) + (ov.get("season") or []),
-                            sources=[season_url]))
+                            # ESPN からまとめて取った回は、その出どころと順位表を出典にする（2026-09-27）。
+                            # シーズン記事の無いクラブで、存在しない記事のURLを出していた
+                            sources=([f"https://www.espn.com/soccer/team/results/_/name/{key}",
+                                      "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard",
+                                      json.loads((DATA / "standings.json").read_text(encoding="utf-8"))["source"]]
+                                     if (DATA / "results.json").exists() else [season_url])))
 
     # **日本人が2人いるクラブは2人とも題に出す**（2026-09-21）。
     # 1人目だけだと、パレスが「冨安健洋がいる」になって鎌田大地が消えていた
@@ -799,8 +812,17 @@ def pl_games(key: str) -> list[list[str]]:
         return any(club_matches(team, t) for t in titles.values())
 
     found = {}
-    for k, v in raws.items():
-        for date, rnd, t1, score, t2 in v["results"]:
+    # **ESPN からまとめて取った結果も読む**（2026-09-27、tools/llresults.py）。
+    # シーズン記事の無いクラブ（エスパニョール・アラベス）は、相手の記事に載った試合しか
+    # 拾えず「1試合を終えて1敗」になっていた。**あるときはこれだけを使う。**記事の番号は
+    # 「そのクラブの何試合目か」のこともあり、節を鍵に上書きすると試合が消えた
+    extra = DATA / "results.json"
+    if extra.exists():
+        sources = [json.loads(extra.read_text(encoding="utf-8"))["results"]]
+    else:
+        sources = [v["results"] for v in raws.values()]
+    for results in sources:
+        for date, rnd, t1, score, t2 in results:
             if not rnd.strip().isdigit() or not _re.fullmatch(r"\d+\s*[–−-]\s*\d+", score.strip()):
                 continue
             if not (is_pl(t1) and is_pl(t2)):

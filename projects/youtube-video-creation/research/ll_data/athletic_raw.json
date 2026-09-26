@@ -1,6 +1,6 @@
 {
  "club_title": "Athletic_Bilbao",
- "season_title": "2026–27_Athletic_Bilbao_season\r",
+ "season_title": "2026–27_Athletic_Bilbao_season",
  "squad": [
   {
    "no": "1",
@@ -367,5 +367,216 @@
    "club_goals": 0
   }
  ],
- "results": []
+ "results": [
+  [
+   "22 August 2026",
+   "2",
+   "Athletic Bilbao",
+   "1–3",
+   "Sevilla"
+  ],
+  [
+   "27 August 2026",
+   "1",
+   "Barcelona",
+   "2–0",
+   "Athletic Bilbao"
+  ],
+  [
+   "30 August 2026",
+   "3",
+   "Celta Vigo",
+   "0–2",
+   "Athletic Bilbao"
+  ],
+  [
+   "5 September 2026",
+   "4",
+   "Athletic Bilbao",
+   "3–0",
+   "Atlético Madrid"
+  ],
+  [
+   "12 September 2026",
+   "5",
+   "Athletic Bilbao",
+   "1–1",
+   "Elche"
+  ],
+  [
+   "19 September 2026",
+   "7",
+   "Athletic Bilbao",
+   "0–0",
+   "Alavés"
+  ],
+  [
+   "11 October 2026",
+   "8",
+   "Rayo Vallecano",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "18 October 2026",
+   "9",
+   "Valencia",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "21 October 2026",
+   "6",
+   "Levante",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "25 October 2026",
+   "10",
+   "Athletic Bilbao",
+   "",
+   "Getafe"
+  ],
+  [
+   "1 November 2026",
+   "11",
+   "Athletic Bilbao",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "8 November 2026",
+   "12",
+   "Osasuna",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "22 November 2026",
+   "13",
+   "Athletic Bilbao",
+   "",
+   "Espanyol"
+  ],
+  [
+   "29 November 2026",
+   "14",
+   "Málaga",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "6 December 2026",
+   "15",
+   "Athletic Bilbao",
+   "",
+   "Real Madrid"
+  ],
+  [
+   "13 December 2026",
+   "16",
+   "Deportivo A Coruña",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "20 December 2026",
+   "17",
+   "Athletic Bilbao",
+   "",
+   "Betis"
+  ],
+  [
+   "3 January 2027",
+   "18",
+   "Racing Santander",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Athletic Bilbao",
+   "",
+   "Villarreal"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Getafe",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "24 January 2027",
+   "21",
+   "Athletic Bilbao",
+   "",
+   "Levante"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Sevilla",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Athletic Bilbao",
+   "",
+   "Osasuna"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Real Madrid",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Athletic Bilbao",
+   "",
+   "Celta Vigo"
+  ],
+  [
+   "28 February 2027",
+   "26",
+   "Athletic Bilbao",
+   "",
+   "Barcelona"
+  ],
+  [
+   "7 March 2027",
+   "27",
+   "Alavés",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "14 March 2027",
+   "28",
+   "Athletic Bilbao",
+   "",
+   "Valencia"
+  ],
+  [
+   "21 March 2027",
+   "29",
+   "Espanyol",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "4 April 2027",
+   "30",
+   "Athletic Bilbao",
+   "",
+   "Racing Santander"
+  ]
+ ]
 }

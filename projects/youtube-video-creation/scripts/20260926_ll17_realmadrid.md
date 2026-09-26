@@ -59,6 +59,8 @@ sources:
 - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
 - https://en.wikipedia.org/wiki/Sergio_Ramos
 - https://www.realmadrid.com/es-ES/noticias/club/ultimas-noticias/comunicado-oficial-mourinho-11-06-2026
+- https://www.espn.com/soccer/team/results/_/name/realmadrid
+- https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
 cards:
   kit_card:
     type: table
@@ -217,6 +219,24 @@ cards:
     - - 第1節
       - レアル・ソシエダ（ホーム）
       - 4対1
+    - - 第2節
+      - エスパニョール（アウェー）
+      - 2対1
+    - - 第3節
+      - マラガ（ホーム）
+      - 4対0
+    - - 第4節
+      - レアル・ベティス（アウェー）
+      - 0対1
+    - - 第5節
+      - ラージョ・バジェカーノ（ホーム）
+      - 4対1
+    - - 第6節
+      - エルチェ（アウェー）
+      - 3対2
+    - - 第7節
+      - アトレティコ・マドリード（アウェー）
+      - 1対2
 ---
 
 ## オープニング
@@ -470,8 +490,8 @@ cards:
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 
-解説: ラ・リーガは1試合を終えて、**1勝**です。
-  telop: ラ・リーガは1試合を終えて、**1勝**です
+解説: ラ・リーガは7試合を終えて、**5勝2敗**です。
+  telop: ラ・リーガは7試合を終えて、**5勝2敗**です
   source: 報道
   card: season_card
 解説: 順位は**4位**、勝ち点は**15**です。

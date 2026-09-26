@@ -1,0 +1,213 @@
+# ラ・リーガ チーム紹介 ⑫レバンテ（2026-09-27）。形は見本のレアル・ソシエダと同じ。
+# 事実はすべて research/ll_data/levante_research.md（出典付き）から。
+# 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない（PK→ピーケー）
+# 題の答え＝1937年、内戦中の共和国側の杯で優勝。2023年3月25日に RFEF が公式と認めた（Marca 2023-03-25）。
+# ただし国王杯には数えない（英語版 1937 Copa de la España Libre「but not as a Copa del Rey」）。reasons の最後の行で答える
+title: レバンテ。内戦のさなかに勝ち取った杯と、86年後の答え
+short_title: レバンテ。内戦中の杯と、86年後の答え
+# クラブを表す一言。英語版「Levante is the oldest football club in the city of Valencia, with rival team Valencia CF not being formed until 1919」
+opening: "バレンシアの街の、いちばんの古株。"
+# 回収先: story_sections の history4（2018年5月13日、優勝を決めていたバルセロナに5対4。リーグ43試合無敗が止まる）
+hook: 無敗で終えかけた王者を、止めた夜もあります。
+thumbnail:
+  line1: 内戦中の優勝、86年後に●●
+  line2: バレンシア最古のクラブ、レバンテ
+  crest_main: [レバンテ]
+
+# いま見る理由。監督の言葉は Marca 2026-09-12（バルセロナ戦の前日会見）の原文
+# 「Sabemos que en nuestro estadio hay un ambiente diferente. Jugamos con uno más y eso nos está dando mucha fuerza en casa.」
+reasons:
+- "昨シーズンは、2部から上がって1年目。最下位から巻き返して、1部に残りました。"
+- "立て直したのは、ルイス・カストロ監督。ホームの力を、こう話しています。"
+- {voice: ルイス・カストロ, text: "本拠地の空気は違う。1人多く戦えていて、それがホームで大きな力になっている"}
+- "そしてこのクラブが内戦のさなかに取った優勝は、**86年**たって、公式に認められました。"
+reasons_focus: [1, 2, 2, 3]
+reasons_telop: 最下位からの残留と、86年待った優勝
+reasons_rows:
+- ["理由1", "最下位から1部に残った"]
+- ["理由2", "カストロ監督とホームの力"]
+- ["理由3", "86年後に認められた優勝"]
+reasons_sources:
+- https://www.marca.com/futbol/levante/2026/09/12/luis-castro-todos-partidos-preparamos-ganar-tambien.html
+- https://www.marca.com/futbol/levante/2026/09/22/nueve-meses-castrismo.html
+- https://en.wikipedia.org/wiki/2025%E2%80%9326_Levante_UD_season
+- https://www.marca.com/futbol/copa-rey/2023/03/25/641ef935ca47410a6f8b4572.html
+people_extra:
+- ルイス・カストロ
+
+# 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→会長→タイトル歴→記録→直近→昨季）
+# 一言で「いちばんの古株」と言うので、創立の行は合併の話にする
+data:
+- 創立は**1909年**。いまの形は**1939年**、同じ年に生まれた2つのクラブの合併です。
+- 愛称は「グラノタ」。バレンシア語で**カエル**。川の中にあった、昔の球場から来た名前。
+- ホームタウンはバレンシア。人口はスペインで**3番目**に多い、地中海の町です。
+- 本拠地はシウダ・デ・バレンシア。**1969年**の開場で、**2万6354人**が入ります。
+- 会長は**2023年**からパブロ・サンチェス。クラブは株式会社の形です。
+- 1部と国王杯、スーペルコパの優勝はありません。2部では**3回**優勝しています。
+- 最多出場は、2度在籍したホセ・ルイス・モラレス。**377試合**に出ました。
+- 直近のタイトルは、2024年から25年の2部優勝。**97分**の決勝点で、昇格を決めました。
+- 昨シーズンは**16位**。勝ち点**42**で3チームが並び、直接対決の成績で残りました。
+data_focus: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# クラブの話。1枚のカードを20秒以上出さないため、4つに割る
+story_sections:
+  - id: history
+    heading: 内戦のさなかの杯
+    tier: 背景
+    telop: 1937年、内戦のさなかの杯で優勝
+    narrator: 解説
+    card:
+      type: table
+      title: 内戦のさなかの杯
+      columns: ["", ""]
+      rows:
+        - ["1937年", "共和国側の地域で開かれた杯"]
+        - ["出場", "遠征に出たバルセロナの代わり"]
+        - ["決勝", "バレンシアに1対0"]
+    say:
+      - 1937年、スペインは内戦のさなか。共和国側の地域で、1つの杯が争われました。
+      - バルセロナがメキシコとアメリカへの遠征を選び、リーグ**5位**のレバンテが代わりに出ます。
+      - 決勝の相手は、同じ街のバレンシア。**1対0**で勝って、優勝しました。
+    sources:
+      - https://en.wikipedia.org/wiki/1937_Copa_de_la_Espa%C3%B1a_Libre
+      - https://en.wikipedia.org/wiki/Levante_UD
+  - id: history2
+    heading: 認められるまで
+    tier: 背景
+    telop: 2023年、連盟が1937年の王者と認める
+    narrator: 解説
+    card:
+      type: table
+      title: 認められるまで
+      columns: ["", ""]
+      rows:
+        - ["戦争のあと", "公式の優勝とされず"]
+        - ["2007年", "議会が、認めるよう連盟に求める"]
+        - ["2023年3月", "連盟が1937年の王者と認める"]
+    say:
+      - ところが戦争のあと、この優勝は長いあいだ、公式のものとされませんでした。
+      - "**2007年**、国の議会がそろって、認めるよう連盟に求めます。"
+      - 連盟が1937年の王者と認めたのは、**2023年3月**のことでした。
+      - ただし、国王杯の優勝の回数には数えられていません。
+    sources:
+      - https://www.marca.com/futbol/copa-rey/2023/03/25/641ef935ca47410a6f8b4572.html
+      - https://en.wikipedia.org/wiki/1937_Copa_de_la_Espa%C3%B1a_Libre
+      - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+      - https://rfef.es/en/noticias/track-record-the-team-in-white-win-their-20th-copa-trophy
+  - id: history3
+    heading: 102年目の首位
+    tier: 背景
+    telop: 2011年、創立102年で初めて首位に
+    narrator: 解説
+    card:
+      type: table
+      title: 102年目の首位
+      columns: ["", ""]
+      rows:
+        - ["2011年の秋", "7連勝で、初めて首位に"]
+        - ["2011-12", "6位で、初めて欧州へ"]
+        - ["2013年3月", "ベスト16、延長で敗退"]
+    say:
+      - 2011年の秋、クラブで初めての**7連勝**。創立から**102年**で、初めて1部の首位に立ちます。
+      - そのシーズンは**6位**。初めて、欧州の大会への切符を取りました。
+      - 翌シーズンはベスト16まで進み、雪のモスクワで、延長の末に敗れます。
+    sources:
+      - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+      - https://en.wikipedia.org/wiki/Levante_UD
+  - id: history4
+    heading: 王者の無敗を止めた
+    tier: 背景
+    telop: 2018年、王者バルセロナに5対4
+    narrator: 解説
+    card:
+      type: table
+      title: 王者の無敗を止めた
+      columns: ["", ""]
+      rows:
+        - ["2018年5月13日", "優勝を決めたバルセロナに5対4"]
+        - ["後半11分", "5対1とリード"]
+        - ["止めたもの", "リーグ戦43試合無敗"]
+    say:
+      - 2018年5月、優勝を決めていたバルセロナを、本拠地に迎えます。
+      - ボアテングが3点。後半の途中で**5対1**とリードし、**5対4**の勝ちで逃げ切りました。
+      - 王者のリーグ戦**43試合**無敗は、ここで止まりました。
+    sources:
+      - https://en.wikipedia.org/wiki/2017%E2%80%9318_Levante_UD_season
+      - https://en.wikipedia.org/wiki/2017%E2%80%9318_FC_Barcelona_season
+      - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+
+# このクラブの特徴（プレーの色・運営の型・クラブの気質）
+features:
+- "カストロ監督は、ボールを失わないことを求めます。前へ急ぐだけでは勝てない、と話します。"
+- "ピッチの外は、安く見つけて高く売る型。"
+- "レルマは**60万ユーロ**で獲り、**3000万ユーロ**で売れました。"
+- "昇格と降格をくり返す「エレベーター」。1部は**18**シーズン目、2部は**41**シーズンです。"
+features_telop: 失わない。高く売る。上がっては落ちる
+features_rows:
+- ["プレーの色", "ボールを失わない"]
+- ["運営の型", "安く見つけて高く売る"]
+- ["クラブの気質", "上がり下がりのエレベーター"]
+features_sources:
+- https://www.marca.com/futbol/levante/2026/09/20/luis-castro-son-buenos-calidad.html
+- https://en.wikipedia.org/wiki/Jefferson_Lerma
+- https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+- https://en.wikipedia.org/wiki/Levante_UD
+
+# 「へえ」の逸話。英語版・西語版のクラブ記事と、クライフ本人の記事で裏を取った。
+# 場面写真（File:Cruyff levante vs palencia.jpg）は Public domain で CC0/BY/BY-SA ではないので付けない
+episode:
+  id: episode
+  heading: 2部のクライフ
+  tier: 背景
+  telop: 1981年、2部のレバンテにクライフ
+  narrator: 解説
+  card:
+    type: table
+    title: 2部のクライフ
+    columns: ["", ""]
+    rows:
+      - ["1981年3月", "クライフが2部でデビュー"]
+      - ["出場", "10試合2得点"]
+      - ["チーム", "失速して9位"]
+  say:
+    - 1981年3月、2部のレバンテで、あのヨハン・クライフがデビューしました。
+    - 好調だったチームは、そこから失速して**9位**。約束のお金も、一部しか出ませんでした。
+  sources:
+    - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
+    - https://en.wikipedia.org/wiki/Johan_Cruyff
+    - https://es.wikipedia.org/wiki/Johan_Cruyff
+
+# このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ
+# モラレスは基礎DATAの最多出場で出るので、同じ人を2つの節に出さない
+legends:
+- - アルナ・コネは、2011年にセビージャから借りたフォワード。リーグ戦で**34試合15得点**。
+  - マドリードを**1対0**で破った試合でも、ただ1つのゴールを決めました。
+  - 公式戦で**18点**に届くと、セビージャへ戻る契約。最後の3試合は休みました。
+- - ケイロル・ナバスは、コスタリカのゴールキーパー。リーグ戦の出場は**47試合**。
+  - 控えから定位置をつかんだ2013年から14年、リーグの最優秀ゴールキーパーに。
+  - 2014年、**1000万ユーロ**でレアル・マドリードへ。チャンピオンズリーグを3連覇しました。
+- - ビセンテ・イボーラは地元の生まれ。レバンテの下部組織で育った中盤です。
+  - 給料の未払いで主力が去ったなか、2008年にデビュー。リーグ戦で計**227試合**。
+  - 最後のシーズンに昇格を果たして引退。今はコーチとして、ベンチにいます。
+legend_rows:
+- ["アルナ・コネ", "2011-2012", "18点で戻る契約"]
+- ["ケイロル・ナバス", "2011-2014", "控えから最優秀の守護神"]
+- ["ビセンテ・イボーラ", "2008-13ほか", "育成出身、今はコーチ"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Arouna_Kon%C3%A9
+- - https://en.wikipedia.org/wiki/Keylor_Navas
+- - https://en.wikipedia.org/wiki/Vicente_Iborra
+
+# 今季の監督（Commons の写真は 120x183 の1枚だけなので写真なし）
+manager:
+- 今シーズンの監督はルイス・カストロ。ポルトガルの人で、**2025年12月**に就任しました。
+- 前はフランスのナント。ベンフィカでは、19歳以下の欧州大会を制しています。
+manager_telop: 監督はポルトガルのカストロ
+manager_rows:
+- ["監督", "ルイス・カストロ（ポルトガル）"]
+- ["就任", "2025年12月"]
+- ["前職", "ナント"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Lu%C3%ADs_Castro_(football_manager,_born_1980)
+- https://en.wikipedia.org/wiki/2025%E2%80%9326_Levante_UD_season
+- https://www.marca.com/futbol/levante/2026/09/22/nueve-meses-castrismo.html

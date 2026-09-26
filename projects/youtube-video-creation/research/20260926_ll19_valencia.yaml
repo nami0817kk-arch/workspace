@@ -1,0 +1,440 @@
+# プレミアリーグ20クラブ紹介 ⑲バレンシア（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/valencia*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- 佐藤龍之介
+- バレンシア
+- 佐藤龍之介
+short_title: 佐藤龍之介のバレンシアってどんなクラブ？
+series: ラ・リーガチーム紹介
+theme:
+  id: valencia_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バレンシア
+  title: 佐藤龍之介のバレンシア。1923年から続いて、今シーズンで終わるもの
+  question: どんなクラブなのか
+  hook: 次の本拠地は、長いあいだ工事が止まったままでした。
+  lead: ヨーロッパで、いちばん急なスタンド。
+  opening_image: assets/stats/ll_valencia_data_t.png
+thumbnail:
+  line1: 本拠地、最後のシーズン
+  line2: 佐藤龍之介のいるバレンシア
+  crest_main:
+  - バレンシア
+  board: assets/stats/ll_valencia_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 初の日本人・佐藤龍之介と、本拠地の最後の1年
+  narrator: キャスター
+  say:
+  - text: 日本の**佐藤龍之介**が、この夏に加わりました。トップチームで、クラブ初の日本人です。
+    image: assets/stats/ll_valencia_data_r1.png
+    no_telop: true
+  - text: 佐藤は、加入したときにこう話しています。
+    image: assets/stats/ll_valencia_data_r1.png
+    no_telop: true
+  - voice: 佐藤龍之介
+    text: 最後のシーズンが始まる、ちょうどいい時に来た。ファンの誇りになる年にしたい
+    image: assets/stats/ll_valencia_data_r1.png
+  - text: チームはいま**19位**。9月には、日本代表も率いたアギーレ監督を呼びました。
+    image: assets/stats/ll_valencia_data_r2.png
+    no_telop: true
+  - text: そして今シーズンは、1923年から使ってきた本拠地メスタージャの、最後のシーズンです。
+    image: assets/stats/ll_valencia_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_valencia_data0.png
+    text: 創立は**1919年**。町のバルに集まった若者たちが、クラブを作りました。
+    no_telop: true
+  - image: assets/stats/ll_valencia_data1.png
+    text: 愛称は「チェ」。バレンシアの人が呼びかけに使う、「ねえ」にあたる言葉です。
+    no_telop: true
+  - image: assets/stats/ll_valencia_data2.png
+    text: ホームタウンはバレンシア。人口およそ**82万人**、スペインで3番目の都市です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_バレンシア.png
+    text: 本拠地はメスタージャ。**4万9430人**が入ります。
+  - image: assets/stats/ll_valencia_data4.png
+    text: オーナーは、シンガポールの実業家ピーター・リム。**2014年**に買い取りました。
+    no_telop: true
+  - image: assets/stats/ll_valencia_cups.png
+    text: 1部の優勝は**6回**。国王杯は**8回**、スーペルコパは**1回**。
+    no_telop: true
+  - image: assets/stats/ll_valencia_data6.png
+    text: 最多出場はフェルナンド・ゴメス。1983年から1998年までに、**556試合**です。
+    no_telop: true
+  - image: assets/stats/ll_valencia_data7.png
+    text: 直近のタイトルは、創立100年のシーズンの国王杯。決勝でバルセロナを**2対1**で破りました。
+    no_telop: true
+  - image: assets/stats/ll_valencia_data8.png
+    text: 昨シーズンのリーグ戦は**9位**。勝ち点は**49**でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  - https://en.wikipedia.org/wiki/2026–27_Valencia_CF_season
+  - https://www.valenciacf.com/conoce-mejor-a-ryunosuke-sato-el-nuevo-fichaje-y-el-primer-japones-en-la-historia-del-primer-equipo-valencianista
+  - https://www.valenciacf.com/comunicado-oficial-ryunosuke-sato
+  - https://www.valenciacf.com/official-statement-javier-aguirre
+  - https://www.valenciacf.com/el-valencia-cf-y-lawerta-rendiran-homenaje-a-la-ultima-temporada-del-camp-de-mestalla-en-cada-partido-como-local-con-la-colleccio-mestalla-es-etern
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: history
+  heading: 2年続けて決勝へ
+  tier: 背景
+  telop: ヨーロッパの頂点に、2年続けてあと一歩
+  narrator: 解説
+  card:
+    type: table
+    title: 2年続けて決勝へ
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2000年 パリ
+      - レアル・マドリードに0対3
+    - - 2001年 ミラノ
+      - バイエルンにピーケー戦で敗戦
+  say:
+  - 2000年、クラブは初めて、チャンピオンズリーグの決勝に進みます。
+  - パリでの相手はレアル・マドリード。**0対3**で敗れました。
+  - 翌年も決勝へ。バイエルンと**1対1**のあと、ピーケー戦で力尽きます。
+  sources:
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  - https://en.wikipedia.org/wiki/2001_UEFA_Champions_League_final
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: history2
+  heading: 31年ぶりの優勝
+  tier: 背景
+  telop: 31年ぶりの優勝。2004年は2冠
+  narrator: 解説
+  card:
+    type: table
+    title: 31年ぶりの優勝
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2001-02
+      - 31年ぶりのリーグ優勝
+    - - 2003-04
+      - リーグとヨーロッパの大会の2冠
+    - - 2004年
+      - 世界最優秀クラブに選ばれる
+  say:
+  - 2002年、ベニテス監督のもとで、**31年**ぶりにリーグを制します。
+  - 2004年はリーグに加えて、いまのヨーロッパリーグにあたる大会も制覇。
+  - この年、国際サッカー歴史統計連盟から、世界最優秀クラブに選ばれました。
+  sources:
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  - https://en.wikipedia.org/wiki/Santiago_Ca%C3%B1izares
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: nou
+  heading: 止まった新スタジアム
+  tier: 背景
+  telop: 新スタジアムの工事は、16年近く止まった
+  narrator: 解説
+  card:
+    type: table
+    title: 止まった新スタジアム
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 2007年
+      - 新スタジアムの工事が始まる
+    - - 2009年
+      - 財政難で中断
+  say:
+  - 新しいスタジアムの工事は、**2007年**に始まりました。
+  - ところが**2009年**、財政難で中断。クラブの借金は、4億ユーロを超えていました。
+  - text: 再開は**2025年1月**。止まっていた期間は、**16年**近くに及びます。
+    card:
+      type: table
+      title: 止まった新スタジアム
+      columns: *id001
+      rows:
+      - - 2025年1月
+        - 工事を再開。収容7万44人
+  - 完成すれば**7万44人**が入り、引っ越しは来シーズンの予定です。
+  sources:
+  - https://en.wikipedia.org/wiki/Nou_Mestalla
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 粘り強く戦う。育てて売る。会員の多いクラブ
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 粘り強く戦う
+    - - 運営の型
+      - 育てて売る
+    - - クラブの気質
+      - 会員は5万人近く
+  say:
+  - text: アギーレ監督は、形にこだわらず、粘り強く戦う監督として知られています。
+    image: assets/photos/ll/valencia/valencia_manager_200422af.jpg
+  - ピッチの外は、育てて売る型。
+  - 下部組織育ちのフェラン・トーレスは2020年、マンチェスター・シティへ**2300万ユーロ**。
+  - スタンドの熱も強い。年間シートを持つ会員は、多い時で**5万人**近くいました。
+  sources:
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  - https://en.wikipedia.org/wiki/Javier_Aguirre
+  - https://es.wikipedia.org/wiki/Valencia_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: episode
+  heading: コイン投げの初代会長
+  tier: 背景
+  telop: 初代会長はコイン投げ。ただし結果は決めてあった
+  narrator: 解説
+  card:
+    type: table
+    title: コイン投げの初代会長
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 初代会長
+      - コイン投げで決定
+    - - その結果
+      - 仲間内で前もって決めてあった
+    - - 負けた側
+      - 結婚を1年延ばし、グラウンドを用意
+  say:
+  - text: 初代の会長は、コイン投げで決まりました。
+    image: assets/images/ll_valencia_episode/scene.jpg
+  - 争ったのは、クラブを作った中心の2人。ただし勝つ側は、仲間内で前もって決めてありました。
+  - 負けた側は、自分の結婚を**1年**延ばして、最初のグラウンドを用意しました。
+  sources:
+  - https://es.wikipedia.org/wiki/Valencia_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - ガイスカ・メンディエタ
+      - 1993-2001
+      - 欧州最優秀の中盤
+  say:
+  - text: ガイスカ・メンディエタは、2部のカステジョンから来た中盤。リーグ戦で**230試合44得点**。
+    image: assets/photos/ll/valencia/valencia_legend_b13e7c87.jpg
+  - 欧州の大舞台で輝き、2年続けてヨーロッパ最優秀のミッドフィルダーに選ばれました。
+  - 2001年にラツィオへ。**4800万ユーロ**は、クラブが受け取った最高の移籍金です。
+  sources:
+  - https://en.wikipedia.org/wiki/Gaizka_Mendieta
+  - https://en.wikipedia.org/wiki/David_Albelda
+  - https://en.wikipedia.org/wiki/David_Villa
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - ダビド・アルベルダ
+      - 1995-2013
+      - 2度の優勝の主将
+  say:
+  - text: ダビド・アルベルダは、地元バレンシア州生まれの守備的な中盤。リーグ戦で**351試合**です。
+    image: assets/photos/ll/valencia/valencia_legend_a622fa72.jpg
+  - 長く主将を務め、**2度**のリーグ優勝と、ヨーロッパの大会の制覇を支えました。
+  - 一度は新監督に外されても移籍せず、春に戻って、残留を決めた試合に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Gaizka_Mendieta
+  - https://en.wikipedia.org/wiki/David_Albelda
+  - https://en.wikipedia.org/wiki/David_Villa
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - ダビド・ビジャ
+      - 2005-2010
+      - リーグ108得点
+  say:
+  - text: ダビド・ビジャは2005年、サラゴサから**1200万ユーロ**で来たストライカーです。
+    image: assets/photos/ll/valencia/valencia_legend_e6568f32.jpg
+  - 2008年から09年のシーズンは、リーグ戦で**28得点**。リーグで3番目の多さでした。
+  - リーグ戦で**166試合108得点**。2010年にバルセロナへ移り、その夏に世界王者に。
+  sources:
+  - https://en.wikipedia.org/wiki/Gaizka_Mendieta
+  - https://en.wikipedia.org/wiki/David_Albelda
+  - https://en.wikipedia.org/wiki/David_Villa
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はアギーレ。この夏まではメキシコ代表
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ハビエル・アギーレ（メキシコ）
+    - - 就任
+      - 2026年9月
+    - - 前職
+      - メキシコ代表
+  say:
+  - text: 今シーズンの監督は、メキシコのハビエル・アギーレ。**2026年9月23日**の就任です。
+    image: assets/photos/ll/valencia/valencia_manager_200422af.jpg
+  - 前はメキシコ代表。この夏のワールドカップで、ベスト16まで進みました。
+  sources:
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  - https://en.wikipedia.org/wiki/Javier_Aguirre
+  - https://www.valenciacf.com/official-statement-javier-aguirre
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/ll_valencia_gk.png
+    no_telop: true
+  - image: assets/stats/ll_valencia_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/ll_valencia_gk_f.png
+    text: ストレ・ディミトリエフスキは北マケドニア代表で**90試合**。
+    no_telop: true
+  - image: assets/stats/ll_valencia_gk_f.png
+    text: クリスティアン・リベロはリーグ戦で**81試合**。
+    no_telop: true
+  - image: assets/stats/ll_valencia_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/ll_valencia_df_f.png
+    text: 主将を務めるのが**ホセ・ガヤ**。
+    no_telop: true
+  - image: assets/stats/ll_valencia_df_f.png
+    text: リーグ戦で**407試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_valencia_df_f.png
+    text: ムクタール・ディアカビはギニア代表で**18試合**。
+    no_telop: true
+  - image: assets/stats/ll_valencia_mf_f.png
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/ll_valencia_mf_f.png
+    text: 日本の佐藤龍之介がいます。
+    no_telop: true
+  - image: assets/stats/ll_valencia_mf_f.png
+    text: ハビ・ゲラはリーグ戦で**170試合**。
+    no_telop: true
+  - image: assets/stats/ll_valencia_fw_f.png
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/ll_valencia_fw_f.png
+    text: ディエゴ・ロペスはリーグ戦で**170試合**。
+    no_telop: true
+  - image: assets/stats/ll_valencia_fw_f.png
+    text: ウーゴ・ドゥロはリーグ戦で**164試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Valencia_CF
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で1勝1引き分け5敗。19位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - レアル・ベティス（ホーム）
+      - 0対1
+    - - 第2節
+      - セルタ（ホーム）
+      - 0対0
+    - - 第3節
+      - デポルティーボ・ラ・コルーニャ（アウェー）
+      - 1対3
+    - - 第4節
+      - バルセロナ（ホーム）
+      - 0対5
+    - - 第5節
+      - セビージャ（アウェー）
+      - 0対1
+    - - 第6節
+      - アラベス（アウェー）
+      - 1対0
+    - - 第7節
+      - レアル・ソシエダ（ホーム）
+      - 2対3
+  say:
+  - ラ・リーガは7試合を終えて、**1勝1引き分け5敗**です。
+  - 順位は**19位**、勝ち点は**4**です。
+  - いまは降格圏にいます。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/valencia
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_バレンシア_in.png
+  official: false

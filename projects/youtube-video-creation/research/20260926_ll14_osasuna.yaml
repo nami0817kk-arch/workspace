@@ -1,0 +1,474 @@
+# プレミアリーグ20クラブ紹介 ⑭オサスナ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/osasuna*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- オサスナ
+- ルイス・ミゲル・ラミス
+short_title: オサスナってどんなクラブ？
+series: ラ・リーガチーム紹介
+theme:
+  id: osasuna_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: オサスナ
+  title: オサスナ。3部にいたクラブが、9シーズン後に立っていた舞台
+  question: どんなクラブなのか
+  hook: このクラブのマスコットは、一度捨てられています。
+  lead: ラ・リーガでただひとつ、バスク語の名前。
+  opening_image: assets/stats/ll_osasuna_data_t.png
+thumbnail:
+  line1: 3部から9シーズンで欧州へ
+  line2: ブディミルのいるオサスナ
+  crest_main:
+  - オサスナ
+  board: assets/stats/ll_osasuna_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 通算100得点のエースと、1部が初めての監督
+  narrator: キャスター
+  say:
+  - text: クロアチア代表のブディミルは9月、ラ・リーガ通算**100得点**に届きました。
+    image: assets/stats/ll_osasuna_data_r1.png
+    no_telop: true
+  - text: 率いるのは、1部が初めてのラミス監督。こう話しています。
+    image: assets/stats/ll_osasuna_data_r2.png
+    no_telop: true
+  - voice: ルイス・ミゲル・ラミス
+    text: 前に出るのは一歩ではなく三歩だ。一歩で済む状況ではない
+    image: assets/stats/ll_osasuna_data_r2.png
+  - text: 昨シーズンは終盤に**5連敗**。この夏に、監督を替えたばかりです。
+    image: assets/stats/ll_osasuna_data_r2.png
+    no_telop: true
+  - text: そしてこのクラブは、3部で戦ったシーズンから、わずか**9シーズン**でヨーロッパに出ています。
+    image: assets/stats/ll_osasuna_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_osasuna_data0.png
+    text: 創立は**1920年**。「オサスナ」は、バスク語で「健康」という意味です。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_data1.png
+    text: 愛称は「ロス・ロヒージョス」。スペイン語で「小さな赤たち」。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_data2.png
+    text: ホームタウンはパンプローナ。7月の牛追い祭りで、世界に知られる町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_オサスナ.png
+    text: 本拠地はエル・サダール。**1967年**に開き、**2万3576人**が入ります。
+  - image: assets/stats/ll_osasuna_data4.png
+    text: 会長は**2014年**からルイス・サバルサ。株式会社ではなく、会員が持つクラブです。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_cups.png
+    text: 1部も国王杯もスーペルコパも、優勝はまだありません。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_data6.png
+    text: 最多出場は、ナバラ生まれの中盤パチ・プニャル。このクラブで**513試合**です。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_data7.png
+    text: 直近のタイトルは、2018年から19年のシーズンの2部優勝。勝ち点は**87**でした。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_data8.png
+    text: 昨シーズンのリーグ戦は**17位**。勝ち点42で3チームが並び、直接対決の差で残りました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/CA_Osasuna
+  - https://en.wikipedia.org/wiki/2026–27_CA_Osasuna_season
+  - https://www.osasuna.es/cronica-osasunarayo-2026/27
+  - https://www.osasuna.es/rueda-prensa-osasuna-rayo-2026-27
+  - https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: history
+  heading: 3部からヨーロッパへ
+  tier: 背景
+  telop: 2部と3部を行き来した時代から、欧州の舞台へ
+  narrator: 解説
+  card:
+    type: table
+    title: 3部からヨーロッパへ
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1976-77
+      - 3部で優勝して昇格
+    - - 1980年
+      - 17年ぶりに1部へ
+  say:
+  - 1970年代のオサスナは、2部と3部を行き来していました。
+  - 1977年に3部を抜けると、**1980年**には17年ぶりに1部へ戻ります。
+  - text: '**1985年**、前のシーズンの6位で、初めてヨーロッパの大会に出場。'
+    card:
+      type: table
+      title: 3部からヨーロッパへ
+      columns: *id001
+      rows:
+      - - 1985年
+        - 初めてのヨーロッパの大会
+  - 1回戦では、スコットランドのレンジャーズを合計**2対1**で破りました。
+  sources:
+  - https://en.wikipedia.org/wiki/CA_Osasuna
+  - https://es.wikipedia.org/wiki/Historia_del_Club_Atl%C3%A9tico_Osasuna
+  - https://en.wikipedia.org/wiki/1985%E2%80%9386_UEFA_Cup
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: history2
+  heading: 4位と、予選の壁
+  tier: 背景
+  telop: 2006年、4位。初めて最高峰の大会へ
+  narrator: 解説
+  card:
+    type: table
+    title: 4位と、予選の壁
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 2005-06
+      - リーグ4位。クラブ最高に並ぶ
+    - - 監督
+      - ハビエル・アギーレ
+  say:
+  - 2006年、いまバレンシアを率いるアギーレ監督のもとで、リーグ**4位**。
+  - 5位のセビージャとは勝ち点が同じで、2チームの対戦成績で上回りました。
+  - text: 初めてのチャンピオンズリーグは、予選からの出場。
+    card:
+      type: table
+      title: 4位と、予選の壁
+      columns: *id002
+      rows:
+      - - 予選
+        - ハンブルクにアウェーゴールの差
+  - ハンブルクとは2試合とも引き分け、アウェーゴールの差で敗れます。
+  sources:
+  - https://en.wikipedia.org/wiki/CA_Osasuna
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: history3
+  heading: ヨーロッパの4強
+  tier: 背景
+  telop: 2007年、欧州で4強
+  narrator: 解説
+  card:
+    type: table
+    title: ヨーロッパの4強
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - 準々決勝
+      - レバークーゼンに敵地で3対0
+  say:
+  - 回ったのは、いまのヨーロッパリーグにあたる大会です。
+  - 準々決勝では、ドイツのレバークーゼンに、敵地で**3対0**。
+  - text: 準決勝はセビージャ。ホームで勝ったものの、敵地で**0対2**と敗れました。
+    card:
+      type: table
+      title: ヨーロッパの4強
+      columns: *id003
+      rows:
+      - - 準決勝
+        - セビージャにホーム1対0、敵地0対2
+  - セビージャは、そのまま優勝しています。
+  sources:
+  - https://en.wikipedia.org/wiki/2006%E2%80%9307_UEFA_Cup_knockout_stage
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: finals
+  heading: 2度の決勝
+  tier: 背景
+  telop: 国王杯の決勝は2度。どちらも1点差
+  narrator: 解説
+  card:
+    type: table
+    title: 2度の決勝
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2005年
+      - ベティスに延長で1対2
+    - - 2023年
+      - レアル・マドリードに1対2
+  say:
+  - 国王杯では、**2度**決勝に進んでいます。
+  - '**2005年**はベティスに、延長の末**1対2**で敗れました。'
+  - '**2023年**はレアル・マドリードに、また**1対2**で敗れます。'
+  sources:
+  - https://en.wikipedia.org/wiki/2005_Copa_del_Rey_final
+  - https://en.wikipedia.org/wiki/2023_Copa_del_Rey_final
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 守りから入る。地元で育てる。改修も投票で
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 守りから入る
+    - - 運営の型
+      - ナバラの100超のクラブと
+    - - クラブの気質
+      - 改修案も投票で決める
+  say:
+  - text: ラミス監督は、守りから入る監督。前のチームは、2部で失点がいちばん少なかった。
+    image: assets/photos/ll/osasuna/osasuna_manager_10fb4485.jpg
+  - ピッチの外は、地元で育てる型。
+  - ナバラ州の**100**を超えるクラブと手を組んで、選手を育てています。
+  - スタジアムの改修案も、会員の投票で選びました。投票率は**75**パーセントです。
+  sources:
+  - https://en.wikipedia.org/wiki/CA_Osasuna
+  - https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
+  - https://www.osasuna.es/historia-de-el-sadar
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: episode
+  heading: コンテナから帰ったマスコット
+  tier: 背景
+  telop: 捨てられたマスコットが、コンテナから帰ってきた
+  narrator: 解説
+  card:
+    type: table
+    title: コンテナから帰ったマスコット
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2002年
+      - 新会長が衣装をコンテナへ
+    - - 2016年3月
+      - ピッチ中央のコンテナから復活
+  say:
+  - text: マスコットのロヒージョは**2002年**、新しい会長に工事現場のコンテナへ捨てられました。
+    image: assets/images/ll_osasuna_episode/scene.jpg
+  - '**14年**後、町のあちこちのコンテナに、「戻りたい」と書いた腕が現れます。'
+  - 翌日の試合前、ピッチの真ん中に置かれたコンテナから、ロヒージョが出てきました。
+  sources:
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_Osasuna
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id004
+      - ジャバド・ネクナム
+      - 2006-2012、2014-2015
+      - 延長120分の決勝点
+  say:
+  - text: ジャバド・ネクナムはイラン代表の中盤。2006年のワールドカップのあと、ここへ来ました。
+    image: assets/photos/ll/osasuna/osasuna_legend_418029b9.jpg
+  - 2007年、4強まで進んだ大会のボルドー戦。延長**120分**に決勝点を決めました。
+  - リーグ戦で**173試合29得点**。一度離れたあと、2014年に戻ってきています。
+  sources:
+  - https://en.wikipedia.org/wiki/Javad_Nekounam
+  - https://en.wikipedia.org/wiki/C%C3%A9sar_Azpilicueta
+  - https://en.wikipedia.org/wiki/Mikel_Merino
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - &id005
+      - セサル・アスピリクエタ
+      - 2007-2010
+      - チェルシーの主将に
+  say:
+  - text: セサル・アスピリクエタは、ナバラ州生まれ。このクラブの下部組織で育ちました。
+    image: assets/photos/ll/osasuna/osasuna_legend_ff057f6e.jpg
+  - '**17歳**で1部にデビュー。リーグ戦で**99試合**に出ました。'
+  - 2010年にマルセイユへ。のちにチェルシーの主将として、ヨーロッパの頂点に立ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Javad_Nekounam
+  - https://en.wikipedia.org/wiki/C%C3%A9sar_Azpilicueta
+  - https://en.wikipedia.org/wiki/Mikel_Merino
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - *id005
+    - - ミケル・メリーノ
+      - 2014-2016
+      - 父子で同じ競技場
+  say:
+  - text: ミケル・メリーノはパンプローナ生まれ。父も、オサスナでプレーした選手です。
+    image: assets/photos/ll/osasuna/osasuna_legend_381dac82.jpg
+  - 2部にいた2016年、昇格のプレーオフで**3得点**。チームを1部へ戻しました。
+  - 2024年のユーロではシュトゥットガルトで勝ち越し点。1991年に父が点を取った場所です。
+  sources:
+  - https://en.wikipedia.org/wiki/Javad_Nekounam
+  - https://en.wikipedia.org/wiki/C%C3%A9sar_Azpilicueta
+  - https://en.wikipedia.org/wiki/Mikel_Merino
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はラミス。前は2部のブルゴス
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ルイス・ミゲル・ラミス（スペイン）
+    - - 就任
+      - 2026年6月
+    - - 前職
+      - ブルゴス（2部）
+  say:
+  - text: 今シーズンの監督は、スペインのルイス・ミゲル・ラミス。**2026年6月**の就任です。
+    image: assets/photos/ll/osasuna/osasuna_manager_10fb4485.jpg
+  - 前は2部のブルゴス。契約は**2028年**までの2年です。
+  sources:
+  - https://en.wikipedia.org/wiki/CA_Osasuna
+  - https://en.wikipedia.org/wiki/Luis_Miguel_Ramis
+  - https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は23人です。
+    image: assets/stats/ll_osasuna_gk.png
+    no_telop: true
+  - image: assets/stats/ll_osasuna_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_gk_f.png
+    text: セルヒオ・エレーラはリーグ戦で**258試合**。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_gk_f.png
+    text: アイトール・フェルナンデスはリーグ戦で**31試合**。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_df_f.png
+    text: アレハンドロ・カテナはリーグ戦で**100試合**。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_df_f.png
+    text: エンソ・ボヨモはリーグ戦で**64試合**。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_mf_f.png
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_mf_f.png
+    text: ルベン・ガルシアはリーグ戦で**271試合**。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_mf_f.png
+    text: ジョン・モンカジョラはリーグ戦で**237試合**。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_fw_f.png
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_fw_f.png
+    text: 主将を務めるのが**キケ・バルハ**。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_fw_f.png
+    text: リーグ戦で**204試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_osasuna_fw_f.png
+    text: アンテ・ブディミルはクロアチア代表で**41試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/CA_Osasuna
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で2勝2引き分け3敗。13位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - セルタ（アウェー）
+      - 2対1
+    - - 第2節
+      - レバンテ（ホーム）
+      - 0対0
+    - - 第3節
+      - ヘタフェ（ホーム）
+      - 1対0
+    - - 第4節
+      - アラベス（アウェー）
+      - 2対5
+    - - 第5節
+      - エスパニョール（ホーム）
+      - 0対2
+    - - 第6節
+      - アトレティコ・マドリード（アウェー）
+      - 0対4
+    - - 第7節
+      - ラージョ・バジェカーノ（ホーム）
+      - 1対1
+  say:
+  - ラ・リーガは7試合を終えて、**2勝2引き分け3敗**です。
+  - 順位は**13位**、勝ち点は**8**です。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/osasuna
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_オサスナ_in.png
+  official: false

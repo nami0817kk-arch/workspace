@@ -78,7 +78,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Atlético_Madrid
-  - "https://en.wikipedia.org/wiki/2026–27_Atlético_Madrid_season\r"
+  - https://en.wikipedia.org/wiki/2026–27_Atlético_Madrid_season
   - https://www.mundodeportivo.com/futbol/atletico-madrid/20260920/1004229492/no-dejar-hablar-gran-partido-equipo-puedan-hablar-otros.html
   - https://www.mundodeportivo.com/futbol/atletico-madrid/20260922/1004230171/record-metropolitano.html
   - https://en.wikipedia.org/wiki/2026%E2%80%9327_Atl%C3%A9tico_Madrid_season
@@ -409,7 +409,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 1試合で1勝。2位
+  telop: 7試合で5勝1引き分け1敗。2位
   narrator: 解説
   card:
     type: table
@@ -419,14 +419,34 @@ sections:
     - 相手
     - 結果
     rows:
+    - - 第1節
+      - マラガ（ホーム）
+      - 2対0
+    - - 第2節
+      - ビジャレアル（ホーム）
+      - 2対2
+    - - 第3節
+      - セビージャ（アウェー）
+      - 3対1
+    - - 第4節
+      - アスレティック・ビルバオ（アウェー）
+      - 0対3
     - - 第5節
       - レアル・ソシエダ（アウェー）
       - 3対0
+    - - 第6節
+      - オサスナ（ホーム）
+      - 4対0
+    - - 第7節
+      - レアル・マドリード（ホーム）
+      - 2対1
   say:
-  - ラ・リーガは1試合を終えて、**1勝**です。
+  - ラ・リーガは7試合を終えて、**5勝1引き分け1敗**です。
   - 順位は**2位**、勝ち点は**16**です。
   - この順位を保てば、来季のチャンピオンズリーグに出られます。
   sources:
-  - "https://en.wikipedia.org/wiki/2026–27_Atlético_Madrid_season\r"
+  - https://www.espn.com/soccer/team/results/_/name/atletico
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
   official: false

@@ -1,0 +1,200 @@
+# ラ・リーガ チーム紹介 ⑪ヘタフェ（見本はレアル・ソシエダ）。
+# 事実はすべて research/ll_data/getafe_research.md（出典付き）から。
+# 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない
+# 題はバイエルン戦（2008年）のカーンの談話「lo de esta noche es increíble」（El Mundo 2008-04-11）。
+# 答え（10人で延長の最後まで追い詰めた夜）は、いま見る理由の最後の行と逸話で言う
+title: ヘタフェ。あのカーンが「信じられない」と言った夜
+short_title: ヘタフェ、カーンが驚いた夜
+# クラブを表す一言（体言止め）。英語版 infobox の founded で比べて、20クラブで最も新しい（次はマラガ1948年）
+opening: "創立**1983年**。20クラブで、いちばん若い。"
+# 特徴の節（監督の決めぜりふ「これがサッカーだ、パパ」がスタンドの決まり文句）で回収する
+hook: 監督のひと言が、ファンの合言葉になっています。
+thumbnail:
+  line1: カーンが驚いた夜
+  line2: いちばん若いヘタフェ
+  crest_main: [ヘタフェ]
+
+# いま見る理由。監督の言葉は Marca 2026-09-20（マラガ戦のあと）の原文
+# 「están haciendo un esfuerzo titánico, muchos están aguantando en el campo con las fuerzas justas」
+reasons:
+- "ヨーロッパは**2020年**以来。パルチザンを合計**4対3**で破りました。"
+- "就任**10シーズン目**のボルダラス監督は、こう話します。"
+- {voice: ホセ・ボルダラス, text: "選手たちは、とてつもない努力をしている"}
+- {voice: ホセ・ボルダラス, text: "多くの選手が、ぎりぎりの力でピッチに立っている"}
+- "そしてこのクラブは、あのバイエルンを、10人で延長の最後まで追い詰めました。"
+reasons_focus: [1, 2, 2, 2, 3]
+reasons_telop: 2020年以来の欧州と、10シーズン目の監督
+reasons_rows:
+- ["理由1", "2020年以来のヨーロッパ"]
+- ["理由2", "就任10シーズン目の監督"]
+- ["理由3", "10人でバイエルンを追い詰めた"]
+reasons_sources:
+- https://www.marca.com/futbol/getafe/2026/09/20/bordalas-contento-esto-sinvivir.html
+- https://www.marca.com/futbol/getafe/2026/09/26/decada-futbol-papa.html
+- https://www.superdeporte.es/futbol/2026/08/27/getafe-sufre-pierde-belgrado-partizan-133720081.html
+- https://en.wikipedia.org/wiki/2007%E2%80%9308_UEFA_Cup_knockout_stage
+people_extra:
+- ホセ・ボルダラス
+
+# 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→オーナー→タイトル歴→記録→直近→昨季）
+# 冒頭の一言で創立年を言うので、1行目で1983年を繰り返さない
+data:
+- 前のクラブが借金で解散した**1週間後**に、今のクラブが生まれました。
+- 愛称は「アスロネス」。濃い青のことで、工場の作業着の色から、とも言われます。
+- ホームタウンは、マドリードの中心から南へ**13キロ**のヘタフェです。
+- 本拠地はコリセウム。いまは改修中で、完成すると**1万8500人**ほどが入ります。
+- オーナーは**2002年**からアンヘル・トーレス。町長に頼まれて、クラブを買いました。
+- 1部も国王杯も、まだ優勝がありません。ヨーロッパのタイトルも無し。
+- 最多出場は、キーパーのペドロ・カバジェロで**335試合**。今の主将ジェネが迫ります。
+- 直近のタイトルは、**1998年**から99年のシーズン、当時の3部リーグの優勝。
+- 昨シーズンは**7位**。得点**32**は、リーグで2番目に少ない数でした。
+data_focus: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# クラブの話。1枚のカードを20秒以上出さないため、3つに割る
+story_sections:
+  - id: history
+    heading: 7部からの出発
+    tier: 背景
+    telop: 7部の地域リーグから、4年続けて昇格
+    narrator: 解説
+    card:
+      type: table
+      title: 7部からの出発
+      columns: ["", ""]
+      rows:
+        - ["1983年", "7部にあたる地域リーグ"]
+        - ["最初の選手", "決まった給料なし"]
+        - ["1987年まで", "4年続けて昇格"]
+    say:
+      - 1983年、最初に戦ったのは、7部にあたる地域リーグでした。
+      - 選手に決まった給料は無く、結果に応じた手当だけ。
+      - それでも勝ち続け、**4年**続けて昇格します。
+    sources:
+      - https://en.wikipedia.org/wiki/Getafe_CF
+      - https://es.wikipedia.org/wiki/Getafe_Club_de_F%C3%BAtbol
+  - id: history2
+    heading: サン・パチョンの日
+    tier: 背景
+    telop: 2004年、最終節の5点で初めて1部へ
+    narrator: 解説
+    card:
+      type: table
+      title: 2004年6月19日
+      columns: ["", ""]
+      rows:
+        - ["相手", "テネリフェ（敵地）"]
+        - ["結果", "5対3で勝利"]
+        - ["得点", "セルヒオ・パチョンが5点"]
+    say:
+      - 2004年6月、2部の最終節。勝てば、初めての1部です。
+      - 敵地のテネリフェで**5対3**の勝ち。セルヒオ・パチョンが、**5点**すべてを決めました。
+      - 首都の外にあるマドリード州のクラブで、1部に上がったのは初めて。
+      - この日は、いまも「サン・パチョン」と呼ばれています。
+    sources:
+      - https://en.wikipedia.org/wiki/Getafe_CF
+      - https://en.wikipedia.org/wiki/Sergio_Pach%C3%B3n
+      - https://www.marca.com/futbol/getafe/2024/06/19/66731350ca4741984b8b45a4.html
+  - id: history3
+    heading: 2年続けて決勝へ
+    tier: 背景
+    telop: バルサに4対0。2年続けて国王杯の決勝へ
+    narrator: 解説
+    card:
+      type: table
+      title: 国王杯の2年
+      columns: ["", ""]
+      rows:
+        - ["2007年 準決勝", "バルサに2対5、4対0"]
+        - ["2007年 決勝", "セビージャに0対1"]
+        - ["2008年 決勝", "バレンシアに1対3"]
+    say:
+      - 2007年の国王杯の準決勝。1戦目は、敵地でバルセロナに**2対5**の負け。
+      - この試合でメッシは、マラドーナの伝説のゴールに似た一撃を決めています。
+      - ところがホームの2戦目は**4対0**の勝ち。合計でひっくり返し、初めての決勝へ。
+      - 決勝はセビージャに**0対1**で敗戦。翌年もバレンシアとの決勝に敗れました。
+    sources:
+      - https://en.wikipedia.org/wiki/2007_Copa_del_Rey_final
+      - https://en.wikipedia.org/wiki/2008_Copa_del_Rey_final
+      - https://en.wikipedia.org/wiki/Lionel_Messi
+
+# このクラブの特徴（プレーの色・運営の型・クラブの気質）
+features:
+- "ボルダラス監督のサッカーは、荒々しく、しぶとい。"
+- "口ぐせの「これがサッカーだ、パパ」は、スタンドの決まり文句になりました。"
+- "昨シーズンの失点は**38**。少ないほうから、リーグで3番目でした。"
+- "ピッチの外は、限られた戦力でやりくりする型。"
+- "昨シーズンは、選手**13人**で開幕を迎えました。"
+- "宣伝は型破り。**2015年**には、スタジアムで出会うためのアプリまで作りました。"
+features_telop: 荒々しく、しぶとい。やりくり上手で型破り
+features_rows:
+- ["プレーの色", "荒々しく、しぶとい"]
+- ["運営の型", "少ない戦力でやりくり"]
+- ["クラブの気質", "型破りな宣伝"]
+features_sources:
+- https://www.marca.com/futbol/getafe/2026/09/26/decada-futbol-papa.html
+- https://en.wikipedia.org/wiki/Jos%C3%A9_Bordal%C3%A1s
+- https://www.marca.com/futbol/getafe/2026/05/23/bordalas-vuelve-getafe-regresa-europa.html
+- https://www.marca.com/2015/10/15/futbol/equipos/getafe/1444939561.html
+
+# 「へえ」の逸話。英語版クラブ記事・2007–08 UEFA Cup knockout stage と、El Mundo 2008-04-11 のカーンの談話で裏を取った
+episode:
+  id: episode
+  heading: 10人の120分
+  tier: 背景
+  telop: 10人で延長へ。最後の5分で追いつかれた
+  narrator: 解説
+  card:
+    type: table
+    title: 2008年 ヨーロッパの準々決勝
+    columns: ["", ""]
+    rows:
+      - ["相手", "バイエルン"]
+      - ["ホームの2戦目", "延長で3対1から3対3"]
+      - ["結果", "アウェーゴールの差で敗退"]
+  say:
+    - {text: "2008年、ヨーロッパの大会の準々決勝。相手はバイエルンでした。", image: assets/images/ll_getafe_episode/scene.jpg}
+    - ホームの2戦目は、開始早々に1人が退場。それでも延長で**3対1**、勝ちが見えていました。
+    - ところが**115分**と**120分**にトニの2点。アウェーゴールの差で敗れました。
+    - 試合後、カーンは「40年で、こんな経験は無かった」と話しました。
+  sources:
+    - https://en.wikipedia.org/wiki/Getafe_CF
+    - https://en.wikipedia.org/wiki/2007%E2%80%9308_UEFA_Cup_knockout_stage
+    - http://www.elmundo.es/elmundodeporte/2008/04/11/futbol/1207865743.html
+
+# このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ
+legends:
+- - ハビエル・カスケロは、**30歳**で加わった中盤。すぐに先発に定着しました。
+  - ヨーロッパで8強に進んだシーズンは、公式戦**50試合**で**8得点**。
+  - リーグ戦で**190試合21得点**。**36歳**になるまで、このクラブで戦いました。
+- - ハイメ・マタは、**29歳**で初めて1部の試合に出たストライカーです。
+  - 1年目にリーグ戦で**14得点**。2019年には、スペイン代表にも選ばれました。
+  - リーグ戦で**176試合37得点**。遅咲きの点取り屋が、この町で花開きました。
+- - ククレジャは2019年、バルセロナから期限付きで来た左サイドの選手。
+  - ヨーロッパリーグでは16強まで戦い、翌年に完全移籍しました。
+  - リーグ戦で**75試合4得点**。その後、スペイン代表で世界の頂点に立ちました。
+legend_rows:
+- ["ハビエル・カスケロ", "2006-2012", "欧州8強の中盤"]
+- ["ハイメ・マタ", "2018-2024", "29歳で1部デビュー"]
+- ["マルク・ククレジャ", "2019-2021", "のちの世界王者"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Javier_Casquero
+- - https://en.wikipedia.org/wiki/Jaime_Mata
+- - https://en.wikipedia.org/wiki/Marc_Cucurella
+
+# 今季の監督
+manager:
+- 今シーズンの監督はホセ・ボルダラス。スペイン出身で、2度目の就任は**2023年4月**です。
+- 前はバレンシア。6月には、契約を**2年**延ばしました。
+manager_telop: 監督はボルダラス。2度目の就任
+manager_rows:
+- ["監督", "ホセ・ボルダラス（スペイン）"]
+- ["就任", "2023年4月（2度目）"]
+- ["前職", "バレンシア"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Jos%C3%A9_Bordal%C3%A1s
+- https://www.marca.com/futbol/getafe/2026/09/26/decada-futbol-papa.html
+
+# 登録選手の節の一文の差し替え。グデリの代表75試合が、ククレジャのリーグ戦75試合と同じ数字になるため
+# （クラブ公式 2026-08-30「Nemanja Gudelj, experience and leadership for Getafe CF」、セビージャから自由移籍）
+squad_about:
+  ネマニャ・グデリ: ネマニャ・グデリは、セビージャから移ってきたセルビア代表の中盤です。

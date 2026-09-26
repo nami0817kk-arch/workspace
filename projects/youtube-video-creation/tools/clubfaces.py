@@ -67,7 +67,12 @@ def main() -> int:
         role, name_ja, fname, page, crop = (p.strip() for p in parts)
         row, im = _fetch(fname)
         if crop:
-            im = im.crop(tuple(int(v) for v in crop.split(",")))
+            box = tuple(int(v) for v in crop.split(","))
+            # **範囲の外を指定すると、黙って黒く塗られる**（2026-09-27、レバンテのイボーラ）。
+            # 座標は取り込んだ画像（縮めた版のことがある）の大きさで数える
+            if box[0] < 0 or box[1] < 0 or box[2] > im.width or box[3] > im.height:
+                raise SystemExit(f"■ {name_ja}: 切り出し {box} が画像 {im.size} の外にはみ出しています")
+            im = im.crop(box)
         slug = f"{args.key}_{role}_{hashlib.md5(name_ja.encode('utf-8')).hexdigest()[:8]}.jpg"
         im.save(out_dir / slug, quality=92)
         entry[name_ja] = {"role": role, "file": f"assets/photos/{TAG}/{args.key}/{slug}", "page": page or name_ja}

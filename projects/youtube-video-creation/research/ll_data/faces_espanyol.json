@@ -1,0 +1,19 @@
+{
+ "espanyol": {
+  "マウリシオ・ポチェッティーノ": {
+   "role": "legend",
+   "file": "assets/photos/ll/espanyol/espanyol_legend_09d12f05.jpg",
+   "page": "Mauricio Pochettino"
+  },
+  "イバン・デ・ラ・ペーニャ": {
+   "role": "legend",
+   "file": "assets/photos/ll/espanyol/espanyol_legend_49cc5197.jpg",
+   "page": "Iván de la Peña"
+  },
+  "カルロス・カメニ": {
+   "role": "legend",
+   "file": "assets/photos/ll/espanyol/espanyol_legend_75116212.jpg",
+   "page": "Carlos Kameni"
+  }
+ }
+}

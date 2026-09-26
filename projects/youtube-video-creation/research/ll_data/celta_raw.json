@@ -1,6 +1,6 @@
 {
  "club_title": "RC_Celta_de_Vigo",
- "season_title": "2026–27_RC_Celta_de_Vigo_season\r",
+ "season_title": "2026–27_RC_Celta_de_Vigo_season",
  "squad": [
   {
    "no": "1",
@@ -353,5 +353,42 @@
    "club_goals": 2
   }
  ],
- "results": []
+ "results": [
+  [
+   "22 August 2026",
+   "2",
+   "Valencia",
+   "0–0",
+   "Celta Vigo"
+  ],
+  [
+   "27 August 2026",
+   "1",
+   "Celta Vigo",
+   "1–2",
+   "Osasuna"
+  ],
+  [
+   "30 August 2026",
+   "3",
+   "Celta Vigo",
+   "0–2",
+   "Athletic Bilbao"
+  ],
+  [
+   "3 September 2026",
+   "6",
+   "Real Sociedad",
+   "0–0",
+   "Celta Vigo"
+  ],
+  [
+   "16 September 2026",
+   "1",
+   "Omonia",
+   "1–0",
+   "Celta Vigo"
+  ]
+ ],
+ "results_note": "2026-09-27 セルタの取材で足した。2026–27 シーズン記事は第6節（9/3）までの4試合しか載っていないので、第4・5・7節はクラブ公式の試合記事（rccelta.es/equipo/actualidad/ の Getafe 1-1、Málaga 1-1、Racing 5-0）で確認。第4節の日付は記事の公開日（9/7）から"
 }

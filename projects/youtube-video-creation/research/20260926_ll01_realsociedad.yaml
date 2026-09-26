@@ -382,7 +382,7 @@ sections:
     text: ゴールキーパーは2人。
     no_telop: true
   - image: assets/stats/ll_realsociedad_gk_f.png
-    text: アレックス・レミーロはリーグ戦で**252試合**。
+    text: アレックス・レミロはリーグ戦で**252試合**。
     no_telop: true
   - image: assets/stats/ll_realsociedad_gk_f.png
     text: ウナイ・マレーロはリーグ戦で**49試合**。
@@ -460,6 +460,8 @@ sections:
   - 順位は**8位**、勝ち点は**10**です。
   - ヨーロッパリーグの初戦は、プレミアリーグのボーンマスに**1対2**で敗れました。
   sources:
-  - https://en.wikipedia.org/wiki/2026–27_Real_Sociedad_season
+  - https://www.espn.com/soccer/team/results/_/name/realsociedad
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_レアルソシエダ_in.png
   official: false

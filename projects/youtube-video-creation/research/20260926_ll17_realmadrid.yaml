@@ -74,7 +74,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Real_Madrid_CF
-  - "https://en.wikipedia.org/wiki/2026–27_Real_Madrid_CF_season\r"
+  - https://en.wikipedia.org/wiki/2026–27_Real_Madrid_CF_season
   - https://www.marca.com/futbol/real-madrid/2026/09/25/mourinho-esclarece-decidio-volver-madrid-me-dijeron-necesitamos-inicies-decada-prodigiosa-video.html
   - https://en.wikipedia.org/wiki/2025%E2%80%9326_Real_Madrid_CF_season
   - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u
@@ -436,7 +436,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 1試合で1勝。4位
+  telop: 7試合で5勝2敗。4位
   narrator: 解説
   card:
     type: table
@@ -449,12 +449,32 @@ sections:
     - - 第1節
       - レアル・ソシエダ（ホーム）
       - 4対1
+    - - 第2節
+      - エスパニョール（アウェー）
+      - 2対1
+    - - 第3節
+      - マラガ（ホーム）
+      - 4対0
+    - - 第4節
+      - レアル・ベティス（アウェー）
+      - 0対1
+    - - 第5節
+      - ラージョ・バジェカーノ（ホーム）
+      - 4対1
+    - - 第6節
+      - エルチェ（アウェー）
+      - 3対2
+    - - 第7節
+      - アトレティコ・マドリード（アウェー）
+      - 1対2
   say:
-  - ラ・リーガは1試合を終えて、**1勝**です。
+  - ラ・リーガは7試合を終えて、**5勝2敗**です。
   - 順位は**4位**、勝ち点は**15**です。
   - この順位を保てば、来季のチャンピオンズリーグに出られます。
   - チャンピオンズリーグの初戦は、ホームでインテルに**2対1**で勝ちました。
   sources:
-  - "https://en.wikipedia.org/wiki/2026–27_Real_Madrid_CF_season\r"
+  - https://www.espn.com/soccer/team/results/_/name/realmadrid
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_レアルマドリード_in.png
   official: false

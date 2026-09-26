@@ -1,0 +1,207 @@
+# ラ・リーガ チーム紹介 ⑩エスパニョール（見本はレアル・ソシエダ）。
+# 事実はすべて research/ll_data/espanyol_research.md（出典付き）から。
+# 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない（PK→ピーケー、UEFA→ウエファ）
+title: エスパニョール。一度も負けずに、優勝を逃した大会
+short_title: エスパニョール、無敗で逃したヨーロッパの頂点
+# クラブを表す一言（体言止め）。1部89シーズンで優勝0回。優勝の無いクラブで2番目はセルタの60シーズン
+# （es 版「Clasificación histórica de la Primera División」2025-26 終了時点）
+opening: "リーグ優勝のないまま、1部をいちばん長く戦ってきた。"
+# 逸話（ダニエル・ハルケの21分）で回収する
+hook: 試合が21分になると、スタンドから拍手がわき起こります。
+thumbnail:
+  line1: 無敗で逃した欧州の頂点
+  line2: エスパニョール 1部で最長の無冠
+  crest_main: [エスパニョール]
+
+# いま見る理由。監督の言葉はクラブ公式 2026-09-18（エルチェに1対3で敗れたあとの会見）の原文
+# 「tenemos que cambiar el chip urgentemente, la responsabilidad es mía.」
+reasons:
+- "率いるのは、元市バスの運転手のマノロ・ゴンサレス監督。9月の敗戦のあと、こう話しました。"
+- {voice: マノロ・ゴンサレス, text: "すぐにでも頭を切り替えないといけない。責任は私にある"}
+- "今季は7試合で**2勝**。昨シーズンは**5連勝**で年を越し、欧州を狙える順位にいました。"
+- "そしてこのクラブは、一つの大会を無敗で戦い抜きながら、欧州の頂点を逃しています。"
+reasons_focus: [1, 1, 2, 3]
+reasons_telop: 元バス運転手の監督と、無敗で逃した頂点
+reasons_rows:
+- ["理由1", "元バス運転手の監督"]
+- ["理由2", "年末は欧州圏、今季は苦戦"]
+- ["理由3", "無敗で逃した欧州の頂点"]
+reasons_sources:
+- https://www.rcdespanyol.com/es/noticia/tenemos-que-volver-a-competir-como-toca/20782
+- https://es.wikipedia.org/wiki/Manolo_Gonz%C3%A1lez_(entrenador)
+- https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+- https://en.wikipedia.org/wiki/2007_UEFA_Cup_final
+people_extra:
+- マノロ・ゴンサレス
+
+# 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→オーナー→タイトル歴→記録→直近→昨季）
+data:
+- 創立は**1900年**。スペインで今も続くクラブの中で、**5番目**に古いクラブです。
+- 愛称は「ペリキートス」、インコのこと。始まりは、ネコのフィリックスでした。
+- ホームタウンはコルネリャ。バルセロナの南西にある、人口**9万**ほどの町です。
+- 本拠地は、コルネリャ・エル・プラットのスタジアム。クラブの発表では、**4万人**が入ります。
+- オーナーは**2025年**から、アメリカのアラン・ペイスの投資会社。バーンリーも持っています。
+- 1部の優勝は**0回**。国王杯は**4回**。スーペルコパとヨーロッパは、まだありません。
+- 最多出場はフォワードのラウール・タムード。このクラブで**389試合**に出ました。
+- 直近のタイトルは**2006年**の国王杯。決勝でサラゴサを**4対1**で破りました。
+- 昨季のリーグ戦は**11位**。勝ち点は**46**でした。
+data_focus: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# クラブの話。1枚のカードを20秒以上出さないため、4つに割る
+story_sections:
+  - id: history
+    heading: 名前は「スペインの」
+    tier: 背景
+    telop: 締め出された選手のために生まれた
+    narrator: 解説
+    card:
+      type: table
+      title: 名前は「スペインの」
+      columns: ["", ""]
+      rows:
+        - ["1900年", "街のクラブは外国人が中心"]
+        - ["新しいクラブ", "スペインの選手の受け皿"]
+        - ["名前の意味", "「スペインの」"]
+    say:
+      - 1900年のバルセロナ。サッカーのクラブは、外国人の選手が中心でした。
+      - 締め出されたスペインの若者のために、大学生たちが新しいクラブを作ります。
+      - 名前は「スペインの」という意味。今はカタルーニャ語のつづりです。
+    sources:
+      - https://es.wikipedia.org/wiki/Real_Club_Deportivo_Espanyol
+      - https://en.wikipedia.org/wiki/RCD_Espanyol
+  - id: history2
+    heading: 3点のリードから
+    tier: 背景
+    telop: 1988年、1戦目を3対0で勝った決勝
+    narrator: 解説
+    card:
+      type: table
+      title: 1988年 ウエファカップ決勝
+      columns: ["", ""]
+      rows:
+        - ["相手", "西ドイツのレバークーゼン"]
+        - ["1戦目 ホーム", "3対0で勝利"]
+        - ["2戦目 敵地", "0対3。ピーケー戦で敗れる"]
+    say:
+      - 1988年、ウエファカップの決勝。相手は西ドイツのレバークーゼンです。
+      - ホームの1戦目は**3対0**。優勝に手がかかりました。
+      - ところが敵地の2戦目で、そっくり追いつかれます。
+      - 最後はピーケー戦。**2対3**の負けで、初めての頂点を逃しました。
+    sources:
+      - https://en.wikipedia.org/wiki/1988_UEFA_Cup_final
+  - id: history3
+    heading: 負けないまま
+    tier: 背景
+    telop: 2007年、大会で一度も負けずに準優勝
+    narrator: 解説
+    card:
+      type: table
+      title: 2007年 ウエファカップ決勝
+      columns: ["", ""]
+      rows:
+        - ["相手", "セビージャ（グラスゴー）"]
+        - ["試合", "10人で延長、2対2"]
+        - ["大会を通して", "無敗。ピーケー戦で準優勝"]
+    say:
+      - 2007年、ふたたびウエファカップの決勝へ。ここまで負けなしで勝ち上がりました。
+      - 相手は同じスペインのセビージャ。**68分**に1人が退場します。
+      - 10人のまま延長の終盤に追いつき、**2対2**の引き分け。ピーケー戦で敗れました。
+      - 無敗で優勝を逃したのは、この大会の歴史でこのクラブだけです。
+    sources:
+      - https://en.wikipedia.org/wiki/2007_UEFA_Cup_final
+      - https://en.wikipedia.org/wiki/RCD_Espanyol
+  - id: history4
+    heading: 家を手放して
+    tier: 背景
+    telop: 本拠地を売り、12シーズンの間借り
+    narrator: 解説
+    card:
+      type: table
+      title: 家を手放して
+      columns: ["", ""]
+      rows:
+        - ["1997年", "借金でサリアを手放す"]
+        - ["1997〜2009年", "五輪の競技場を借りる"]
+        - ["2009年", "自前の新しい本拠地へ"]
+    say:
+      - 1997年、借金を返すため、長く使った本拠地サリアを売りました。
+      - そこから**12シーズン**、バルセロナ五輪の競技場を借りて戦います。
+      - 自前の家に戻ったのは2009年。その最初のシーズンには、中村俊輔もいました。
+    sources:
+      - https://es.wikipedia.org/wiki/Real_Club_Deportivo_Espanyol
+      - https://en.wikipedia.org/wiki/RCD_Espanyol
+      - https://en.wikipedia.org/wiki/Shunsuke_Nakamura
+
+# このクラブの特徴（プレーの色・運営の型・クラブの気質）
+features:
+- "マノロ・ゴンサレス監督のチームは、走って、相手に圧をかける。本人の言う持ち味です。"
+- "ピッチの外は、育てて売る型。"
+- "下部組織育ちのゴールキーパー、ジョアン・ガルシアは昨年、**2500万ユーロ**でバルセロナへ。"
+- "スタンドを支える公認の応援団、ペーニャはおよそ**200**。日本にもあります。"
+features_telop: 走る。育てて売る。世界に応援団
+features_rows:
+- ["プレーの色", "走って圧をかける"]
+- ["運営の型", "育てて売る"]
+- ["クラブの気質", "公認の応援団が約200"]
+features_sources:
+- https://www.rcdespanyol.com/es/noticia/tenemos-que-volver-a-competir-como-toca/20782
+- https://www.rcdespanyol.com/ca/noticia/joan-garcia-abona-la-seva-clausula-de-rescissio/18773
+- https://en.wikipedia.org/wiki/Joan_Garcia
+- https://es.wikipedia.org/wiki/Real_Club_Deportivo_Espanyol
+
+# 「へえ」の逸話。英語版クラブ記事（21分の拍手）と英語版ダニエル・ハルケの記事（イニエスタ）で裏を取った
+episode:
+  id: episode
+  heading: 21分の拍手
+  tier: 背景
+  telop: 毎試合21分、スタンドから1分間の拍手
+  narrator: 解説
+  card:
+    type: table
+    title: 21分の拍手
+    columns: ["", ""]
+    rows:
+      - ["2009年8月", "主将ハルケが急死、26歳"]
+      - ["毎試合21分", "背番号にちなんで1分間の拍手"]
+      - ["2010年", "親友イニエスタが決勝で追悼"]
+  say:
+    - {text: "2009年8月、主将のダニエル・ハルケが、心臓の発作で亡くなりました。**26歳**でした。", image: assets/images/ll_espanyol_episode/scene.jpg}
+    - それから毎試合、背番号と同じ**21分**に、スタンドが1分間の拍手を送ります。
+    - 翌年のワールドカップ決勝、親友イニエスタは決勝点のあと、彼の名前を胸に見せました。
+  sources:
+    - https://en.wikipedia.org/wiki/RCD_Espanyol
+    - https://en.wikipedia.org/wiki/Daniel_Jarque
+
+# このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ
+# タムードは基礎DATAの最多出場で出るので、同じ人を2つの節に出さない
+legends:
+- - ポチェッティーノはアルゼンチンのセンターバック。**1994年**、1部に戻ったここへ来ました。
+  - 2000年の国王杯を制し、クラブに**60年**ぶりの主要タイトルをもたらしました。
+  - リーグ戦で**275試合**。2009年には監督の道をここで始め、今はアメリカ代表を率いています。
+- - デ・ラ・ペーニャはバルセロナ育ちの司令塔。2002年、同じ街のこのクラブへ移りました。
+  - 国王杯を制した2006年の決勝では、フリーキックとパスで得点を演出しています。
+  - 2009年、バルセロナの本拠地で**2得点**。リーグ戦は**179試合8得点**でした。
+- - カメニはカメルーンのゴールキーパー。**2004年**、20歳でル・アーヴルから来ました。
+  - 2009年、同じカメルーンのヌコノが持っていた、失点しない時間の記録を**498分**に更新。
+  - 8シーズンを過ごし、リーグ戦で**222試合**に出ました。
+legend_rows:
+- ["マウリシオ・ポチェッティーノ", "1994-2006", "選手と監督で"]
+- ["イバン・デ・ラ・ペーニャ", "2002-2011", "小さなブッダ"]
+- ["カルロス・カメニ", "2004-2012", "無失点498分"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Mauricio_Pochettino
+- - https://en.wikipedia.org/wiki/Iv%C3%A1n_de_la_Pe%C3%B1a
+- - https://en.wikipedia.org/wiki/Carlos_Kameni
+
+# 今季の監督（自由なライセンスで顔の分かる写真が無いので、写真なし）
+manager:
+- 今季の監督はマノロ・ゴンサレス。スペイン出身で、**2024年3月**の就任です。
+- 前はこのクラブのセカンドチーム。この9月、トップで**100試合**を迎えました。
+manager_telop: 監督はマノロ・ゴンサレス。下部から昇格
+manager_rows:
+- ["監督", "マノロ・ゴンサレス（スペイン）"]
+- ["就任", "2024年3月"]
+- ["前職", "エスパニョールB"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Manolo_Gonz%C3%A1lez
+- https://www.rcdespanyol.com/es/noticia/13-derrota-en-el-rcde-stadium/20781

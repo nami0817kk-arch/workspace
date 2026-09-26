@@ -1,6 +1,6 @@
 {
  "club_title": "Sevilla_FC",
- "season_title": "2026–27_Sevilla_FC_season\r",
+ "season_title": "2026–27_Sevilla_FC_season",
  "squad": [
   {
    "no": "1",
@@ -339,5 +339,272 @@
    "club_goals": 0
   }
  ],
- "results": []
+ "results": [
+  [
+   "15 August 2026",
+   "1",
+   "Sevilla",
+   "2–1",
+   "Rayo Vallecano"
+  ],
+  [
+   "22 August 2026",
+   "2",
+   "Athletic Bilbao",
+   "1–3",
+   "Sevilla"
+  ],
+  [
+   "29 August 2026",
+   "3",
+   "Sevilla",
+   "1–3",
+   "Atlético Madrid"
+  ],
+  [
+   "6 September 2026",
+   "4",
+   "Espanyol",
+   "1–1",
+   "Sevilla"
+  ],
+  [
+   "11 September 2026",
+   "5",
+   "Sevilla",
+   "1–0",
+   "Valencia"
+  ],
+  [
+   "16 September 2026",
+   "6",
+   "Deportivo A Coruña",
+   "0–1",
+   "Sevilla"
+  ],
+  [
+   "19 September 2026",
+   "7",
+   "Sevilla",
+   "1–3",
+   "Barcelona"
+  ],
+  [
+   "12 October 2026",
+   "8",
+   "Levante",
+   "",
+   "Sevilla"
+  ],
+  [
+   "18 October 2026",
+   "9",
+   "Real Madrid",
+   "",
+   "Sevilla"
+  ],
+  [
+   "26 October 2026",
+   "10",
+   "Sevilla",
+   "",
+   "Osasuna"
+  ],
+  [
+   "1 November 2026",
+   "11",
+   "Getafe",
+   "",
+   "Sevilla"
+  ],
+  [
+   "8 November 2026",
+   "12",
+   "Sevilla",
+   "",
+   "Alavés"
+  ],
+  [
+   "22 November 2026",
+   "13",
+   "Sevilla",
+   "",
+   "Real Betis"
+  ],
+  [
+   "29 November 2026",
+   "14",
+   "Real Sociedad",
+   "",
+   "Sevilla"
+  ],
+  [
+   "6 December 2026",
+   "15",
+   "Sevilla",
+   "",
+   "Málaga"
+  ],
+  [
+   "13 December 2026",
+   "16",
+   "Elche",
+   "",
+   "Sevilla"
+  ],
+  [
+   "20 December 2026",
+   "17",
+   "Sevilla",
+   "",
+   "Racing Santander"
+  ],
+  [
+   "3 January 2027",
+   "18",
+   "Villarreal",
+   "",
+   "Sevilla"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Sevilla",
+   "",
+   "Celta Vigo"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Rayo Vallecano",
+   "",
+   "Sevilla"
+  ],
+  [
+   "24 January 2027",
+   "21",
+   "Valencia",
+   "",
+   "Sevilla"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Sevilla",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Real Betis",
+   "",
+   "Sevilla"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Sevilla",
+   "",
+   "Espanyol"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Sevilla",
+   "",
+   "Real Madrid"
+  ],
+  [
+   "28 February 2027",
+   "26",
+   "Osasuna",
+   "",
+   "Sevilla"
+  ],
+  [
+   "7 March 2027",
+   "27",
+   "Sevilla",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "14 March 2027",
+   "28",
+   "Alavés",
+   "",
+   "Sevilla"
+  ],
+  [
+   "21 March 2027",
+   "29",
+   "Sevilla",
+   "",
+   "Elche"
+  ],
+  [
+   "4 April 2027",
+   "30",
+   "Barcelona",
+   "",
+   "Sevilla"
+  ],
+  [
+   "11 April 2027",
+   "31",
+   "Sevilla",
+   "",
+   "Deportivo A Coruña"
+  ],
+  [
+   "18 April 2027",
+   "32",
+   "Atlético Madrid",
+   "",
+   "Sevilla"
+  ],
+  [
+   "21 April 2027",
+   "33",
+   "Sevilla",
+   "",
+   "Levante"
+  ],
+  [
+   "2 May 2027",
+   "34",
+   "Celta Vigo",
+   "",
+   "Sevilla"
+  ],
+  [
+   "9 May 2027",
+   "35",
+   "Racing Santander",
+   "",
+   "Sevilla"
+  ],
+  [
+   "16 May 2027",
+   "36",
+   "Sevilla",
+   "",
+   "Villarreal"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Sevilla",
+   "",
+   "Getafe"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Málaga",
+   "",
+   "Sevilla"
+  ]
+ ]
 }

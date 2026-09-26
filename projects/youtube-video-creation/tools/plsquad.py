@@ -24,6 +24,7 @@ OUT = clubleague.data_dir()
 
 
 def raw(title: str) -> str:
+    title = title.strip()   # 区切りファイルの行末の改行コード（CR）が記事名に残って0件になった（2026-09-27）
     url = ("https://en.wikipedia.org/w/index.php?title="
            + urllib.parse.quote(title.replace(" ", "_")) + "&action=raw")
     # **続けて叩くと弾かれる**（2026-09-19、マンUの27人ぶん生年月日が空で返った）。
@@ -33,8 +34,14 @@ def raw(title: str) -> str:
     # 記事の原文なら必ず `{{` を含むので、それが無ければ弾かれたとみなす
     for wait in (0, 5, 20, 60, 120):
         time.sleep(wait)
-        text = subprocess.run(["curl", "-sL", "-A", "kaigai-soccer-research/1.0 (nami.0817.kk@gmail.com)", url],
-                              capture_output=True).stdout.decode("utf-8", "replace")
+        got = subprocess.run(["curl", "-sL", "-w", "\n%{http_code}", "-A",
+                              "kaigai-soccer-research/1.0 (nami.0817.kk@gmail.com)", url],
+                             capture_output=True).stdout.decode("utf-8", "replace")
+        text, _, code = got.rpartition("\n")
+        # 記事が無い（404）のは弾かれたのではない。待っても出てこないので、すぐ返す
+        # （アラベスはシーズン記事が無く、1クラブで10分以上待っていた）
+        if code.strip() == "404":
+            return ""
         if text.lower().startswith("#redirect"):
             break
         if not text.lstrip().startswith("<") and "{{" in text:
@@ -117,7 +124,8 @@ def squad(club_title: str) -> list[dict]:
         # 原文は `other=[[Captain (association football)|vice-captain]]` で、
         # `|` の手前だけ見ると副主将が「Captain」に見える。
         # **リヴァプールで4人が「主将」になったのはこれ。**丸ごと取る
-        om = re.search(r"other=\s*(\[\[[^\]]*\]\]|[^|}]+)", r)
+        # `other={{small|[[Captain…|captain]]}}` と小さい字で囲む記事もある（ヘタフェ、2026-09-27）
+        om = re.search(r"other=\s*(?:\{\{\s*small\s*\|\s*)?(\[\[[^\]]*\]\]|[^|}]+)", r)
         other = om.group(1).strip() if om else ""
         team, caps = senior_caps(page)
         players.append({

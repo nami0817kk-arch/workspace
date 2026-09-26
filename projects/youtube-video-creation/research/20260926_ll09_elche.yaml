@@ -1,0 +1,473 @@
+# プレミアリーグ20クラブ紹介 ⑨エルチェ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/elche*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- エルチェ
+- マルティン・アンセルミ
+short_title: エルチェ、13位でも2部へ落ちたクラブ
+series: ラ・リーガチーム紹介
+theme:
+  id: elche_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: エルチェ
+  title: エルチェ。13位で残留を決めたのに、2部へ落ちたシーズン
+  question: どんなクラブなのか
+  hook: ワールドカップで一度きりの記録も、この町で生まれています。
+  lead: 入場料を、選手たちで分け合った過去。
+  opening_image: assets/stats/ll_elche_data_t.png
+thumbnail:
+  line1: 13位で残留、なのに2部へ
+  line2: エルチェ 落ちた理由は●●
+  crest_main:
+  - エルチェ
+  board: assets/stats/ll_elche_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 記者の学校を出た監督と、10人で挙げた初勝利
+  narrator: キャスター
+  say:
+  - text: 率いるのはアンセルミ監督。記者の学校を出た人です。
+    image: assets/stats/ll_elche_data_r1.png
+    no_telop: true
+  - text: 今季ただ一つの勝利は、ほぼ**10人**で挙げたもの。監督はこう話します。
+    image: assets/stats/ll_elche_data_r2.png
+    no_telop: true
+  - voice: マルティン・アンセルミ
+    text: リーグの初勝利は、エルチェらしい形で来るしかなかった
+    image: assets/stats/ll_elche_data_r2.png
+  - text: そして13位で落ちた理由は、借金。スペインで初めての例でした。
+    image: assets/stats/ll_elche_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_elche_data0.png
+    text: 創立は**1923年**。町のクラブの代表が、花火師の作業場に集まって作りました。
+    no_telop: true
+  - image: assets/stats/ll_elche_data1.png
+    text: 愛称は「フランヒベルデス」。白いシャツに通した、緑の帯から来ています。
+    no_telop: true
+  - image: assets/stats/ll_elche_data2.png
+    text: ホームタウンはエルチェ。ヤシの林は世界遺産で、胸の緑はその色だと伝わります。
+    no_telop: true
+  - image: assets/backgrounds/stadium_エルチェ.png
+    text: 本拠地はマルティネス・バレーロ。クラブの発表では、**3万1388人**が入ります。
+  - image: assets/stats/ll_elche_data4.png
+    text: オーナーは**2019年**から、アルゼンチンのブラガルニク。元はレンタルビデオ店の店主です。
+    no_telop: true
+  - image: assets/stats/ll_elche_cups.png
+    text: 1部、国王杯、スーペルコパ、ヨーロッパ。優勝はどれも、まだありません。
+    no_telop: true
+  - image: assets/stats/ll_elche_data6.png
+    text: 最多出場はフォワードのニーノ。**461試合**に出て、**135点**もクラブ最多です。
+    no_telop: true
+  - image: assets/stats/ll_elche_data7.png
+    text: 直近のタイトルは**2013年**の2部優勝。開幕から最終節まで、首位のままでした。
+    no_telop: true
+  - image: assets/stats/ll_elche_data8.png
+    text: 昨季のリーグ戦は**15位**。勝ち点**43**で、1部に残りました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Elche_CF
+  - https://en.wikipedia.org/wiki/2026–27_Elche_CF_season
+  - https://www.elchecf.es/noticias/martin-anselmi-la-primera-victoria-en-laliga-tenia-que-llegar-a-lo-elche
+  - https://www.elchecf.es/noticias/cronica-or-un-elche-cf-brillante-conquista-el-rcde-stadium-1-3
+  - https://en.wikipedia.org/wiki/Mart%C3%ADn_Anselmi
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: history
+  heading: 選手が切り盛りした
+  tier: 背景
+  telop: 1953年、選手たちがクラブを動かした
+  narrator: 解説
+  card:
+    type: table
+    title: 選手が切り盛りした
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1953年
+      - お金の問題で消えかける
+    - - 協同組合
+      - 入場料から経費を引き、選手で分ける
+  say:
+  - 1953年、お金の問題で、クラブは消えかけていました。
+  - そこで選手たちが、自分たちでクラブを動かす形をとります。
+  - text: 入場料から経費を引き、残りを選手で分ける。協同組合の形です。
+    card:
+      type: table
+      title: 選手が切り盛りした
+      columns: *id001
+      rows:
+      - - 開幕前
+        - 選手がスタンドを掃除し、壁を塗る
+  - 開幕の前には、選手がスタンドを掃除し、本拠地の壁を白く塗りました。
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_Elche_Club_de_F%C3%BAtbol
+  - https://es.wikipedia.org/wiki/Elche_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: history2
+  heading: 1部で5位、そして決勝へ
+  tier: 背景
+  telop: 1959年に初の1部。1969年は国王杯の決勝へ
+  narrator: 解説
+  card:
+    type: table
+    title: 1部で5位、そして決勝へ
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1959年
+      - 初めて1部へ
+    - - 1963-64
+      - 5位。今もクラブ最高
+    - - 1969年
+      - 国王杯の決勝でアスレティックに0対1
+  say:
+  - 2年続けて昇格し、**1959年**に初めて1部へ上がります。
+  - 1963年からのシーズンは**5位**。これが今も、クラブの最高順位です。
+  - 1969年には国王杯の決勝へ。アスレティック・ビルバオに**0対1**で敗れました。
+  sources:
+  - https://en.wikipedia.org/wiki/Elche_CF
+  - https://es.wikipedia.org/wiki/Elche_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: history3
+  heading: 13位で、2部へ
+  tier: 背景
+  telop: 2015年、1部に残ったのに2部へ
+  narrator: 解説
+  card:
+    type: table
+    title: 13位で、2部へ
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 2014-15
+      - 1部で13位。残留を決める
+    - - 税務当局に
+      - 670万ユーロ
+  say:
+  - 2015年、1部を**13位**で終え、残り4節で残留も決めていました。
+  - ところが、税務当局に**670万ユーロ**、選手協会に**550万ユーロ**の借金。
+  - text: 借金を縛るリーグの新しい規則で、2部へ落とされます。
+    card:
+      type: table
+      title: 13位で、2部へ
+      columns: *id002
+      rows:
+      - - 選手協会に
+        - 550万ユーロ
+  - 2年後には、さらに3部まで落ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Elche_CF
+  - https://es.wikipedia.org/wiki/Elche_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: history4
+  heading: 96分の1点
+  tier: 背景
+  telop: 3部から戻り、96分の1点で1部へ
+  narrator: 解説
+  card:
+    type: table
+    title: 96分の1点
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2018年
+      - 3部から2部へ
+    - - 2020年
+      - 昇格の決勝でジローナに勝つ
+    - - 決勝点
+      - 途中出場のペレ・ミージャ
+  say:
+  - 3部は1年で抜け出し、2020年には1部への昇格をかけた決勝へ。
+  - 相手はジローナ。途中から出たペレ・ミージャが、**96分**に決めました。
+  - これで、**5年**ぶりの1部です。
+  sources:
+  - https://en.wikipedia.org/wiki/Elche_CF
+  - https://es.wikipedia.org/wiki/Historia_del_Elche_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Pere_Milla
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 位置取りで握る。南米から補強。年間シートのスタンド
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 位置を取って握る
+    - - 運営の型
+      - 南米から補強、6人
+    - - クラブの気質
+      - 8割超が年間シート
+  say:
+  - text: アンセルミ監督は、位置取りでボールを握るサッカー。自分たちから攻めに出ます。
+    image: assets/photos/ll/elche/elche_manager_c06b49c5.jpg
+  - 運営の型は、南米からの補強。登録選手の**6人**が、アルゼンチン国籍です。
+  - 年間シートは**2万7000**席を超え、席の**8割**以上を占めます。
+  - ホームの試合前には、スタンドで歌「アロマス・イリシタノス」を歌います。
+  sources:
+  - https://en.wikipedia.org/wiki/Elche_CF
+  - https://www.elchecf.es/noticias/martin-anselmi-nuevo-entrenador-del-elche-cf-para-la-temporada-202627
+  - https://www.elchecf.es/estadio
+  - https://es.wikipedia.org/wiki/Elche_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: episode
+  heading: ワールドカップの10点
+  tier: 背景
+  telop: 1982年、この本拠地でワールドカップの10対1
+  narrator: 解説
+  card:
+    type: table
+    title: ワールドカップの10点
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1982年6月15日
+      - ハンガリー 10対1 エルサルバドル
+    - - 本大会
+      - 2桁の点はこの試合だけ
+    - - 途中出場のキシュ
+      - 7分でハットトリック
+  say:
+  - text: 1982年6月15日、この本拠地でワールドカップの試合がありました。
+    image: assets/images/ll_elche_episode/scene.jpg
+  - ハンガリーが**10対1**でエルサルバドルに勝利。本大会で2桁の点は、この試合だけです。
+  - 途中から出たキシュは、**7分**でハットトリック。交代選手では、ほかにいません。
+  sources:
+  - https://en.wikipedia.org/wiki/Hungary_v_El_Salvador_(1982_FIFA_World_Cup)
+  - https://www.elchecf.es/estadio
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ホルヘ・モリーナ
+      - 2009-2010
+      - 2部の得点王
+  say:
+  - text: ホルヘ・モリーナは同じ県のアルコイ生まれ。2009年、ポリ・エヒードから来ました。
+    image: assets/photos/ll/elche/elche_legend_f020a92c.jpg
+  - 1シーズン目はリーグ戦で**38試合26得点**。2部の得点王になりました。
+  - 翌年ベティスへ。40歳を過ぎても点を取り、国王杯の最年長得点を塗り替えました。
+  sources:
+  - https://en.wikipedia.org/wiki/Jorge_Molina_(footballer,_born_1982)
+  - https://en.wikipedia.org/wiki/Manu_Herrera
+  - https://en.wikipedia.org/wiki/Lucas_Boy%C3%A9
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - マヌ・エレーラ
+      - 2012-2015
+      - 優勝の年の守護神
+  say:
+  - text: マヌ・エレーラは2012年、アルコルコンから来たゴールキーパーです。
+    image: assets/photos/ll/elche/elche_legend_3a5faa59.jpg
+  - 1シーズン目に、2部で最も失点の少ないキーパーの賞。チームは優勝しました。
+  - '**31歳**で1部デビュー。リーグ戦で**76試合**に出て、2015年に去りました。'
+  sources:
+  - https://en.wikipedia.org/wiki/Jorge_Molina_(footballer,_born_1982)
+  - https://en.wikipedia.org/wiki/Manu_Herrera
+  - https://en.wikipedia.org/wiki/Lucas_Boy%C3%A9
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ルーカス・ボジェ
+      - 2020-2023
+      - 在籍中に代表入り
+  say:
+  - text: ルーカス・ボジェは2020年、上がったばかりのエルチェに期限付きで来たフォワード。
+    image: assets/photos/ll/elche/elche_legend_5a670191.jpg
+  - 翌年に完全移籍。2022年3月、在籍中にアルゼンチン代表へ初めて呼ばれました。
+  - リーグ戦で**96試合22得点**。2023年に、グラナダへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Jorge_Molina_(footballer,_born_1982)
+  - https://en.wikipedia.org/wiki/Manu_Herrera
+  - https://en.wikipedia.org/wiki/Lucas_Boy%C3%A9
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はアンセルミ。前はボタフォゴ
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マルティン・アンセルミ（アルゼンチン）
+    - - 就任
+      - 2026年6月
+    - - 前職
+      - ボタフォゴ
+  say:
+  - text: 今季の監督はマルティン・アンセルミ。**2026年6月**に、1年契約で就任しました。
+    image: assets/photos/ll/elche/elche_manager_c06b49c5.jpg
+  - 前はブラジルのボタフォゴ。ポルトや、メキシコのクルス・アスルも率いました。
+  sources:
+  - https://en.wikipedia.org/wiki/Elche_CF
+  - https://en.wikipedia.org/wiki/Mart%C3%ADn_Anselmi
+  - https://www.elchecf.es/noticias/martin-anselmi-nuevo-entrenador-del-elche-cf-para-la-temporada-202627
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/ll_elche_gk.png
+    no_telop: true
+  - image: assets/stats/ll_elche_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_elche_gk_f.png
+    text: マティアス・ディトゥロはリーグ戦で**81試合**。
+    no_telop: true
+  - image: assets/stats/ll_elche_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_elche_df_f.png
+    text: 主将を務めるのが**ペドロ・ビガス**。
+    no_telop: true
+  - image: assets/stats/ll_elche_df_f.png
+    text: リーグ戦で**146試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_elche_df_f.png
+    text: ロイ・レビボはイスラエル代表で**21試合**。
+    no_telop: true
+  - image: assets/stats/ll_elche_mf1_f.png
+    text: ミッドフィールダーは13人。
+    no_telop: true
+  - image: assets/stats/ll_elche_mf1_f.png
+    text: ゴンサロ・ビジャールはリーグ戦で**50試合**。
+    no_telop: true
+  - image: assets/stats/ll_elche_mf1_f.png
+    text: ヘルマン・バレラはリーグ戦で**52試合**。
+    no_telop: true
+  - image: assets/stats/ll_elche_mf2.png
+    text: ミッドフィールダーの続きです。
+    no_telop: true
+  - image: assets/stats/ll_elche_fw_f.png
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/ll_elche_fw_f.png
+    text: テテ・モレンテはリーグ戦で**146試合**。
+    no_telop: true
+  - image: assets/stats/ll_elche_fw_f.png
+    text: ルーカス・セペダはチリ代表で**14試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Elche_CF
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で1勝2引き分け4敗。18位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - デポルティーボ・ラ・コルーニャ（アウェー）
+      - 1対1
+    - - 第2節
+      - バルセロナ（ホーム）
+      - 0対5
+    - - 第3節
+      - ラシン・サンタンデール（アウェー）
+      - 2対3
+    - - 第4節
+      - レアル・ソシエダ（ホーム）
+      - 2対3
+    - - 第5節
+      - アスレティック・ビルバオ（アウェー）
+      - 1対1
+    - - 第6節
+      - レアル・マドリード（ホーム）
+      - 2対3
+    - - 第7節
+      - エスパニョール（アウェー）
+      - 3対1
+  say:
+  - ラ・リーガは7試合を終えて、**1勝2引き分け4敗**です。
+  - 順位は**18位**、勝ち点は**5**です。
+  - いまは降格圏にいます。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/elche
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_エルチェ_in.png
+  official: false

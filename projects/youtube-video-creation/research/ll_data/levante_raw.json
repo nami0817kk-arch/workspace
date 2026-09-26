@@ -1,6 +1,6 @@
 {
  "club_title": "Levante_UD",
- "season_title": "2026–27_Levante_UD_season\r",
+ "season_title": "2026–27_Levante_UD_season",
  "squad": [
   {
    "no": "1",
@@ -353,5 +353,34 @@
    "club_goals": 0
   }
  ],
- "results": []
+ "results": [
+  [
+   "16 August 2026",
+   "1",
+   "Espanyol",
+   "3–0",
+   "Levante"
+  ],
+  [
+   "24 August 2026",
+   "2",
+   "Osasuna",
+   "0–0",
+   "Levante"
+  ],
+  [
+   "29 August 2026",
+   "3",
+   "Levante",
+   "5–2",
+   "Real Betis"
+  ],
+  [
+   "6 September 2026",
+   "4",
+   "Málaga",
+   "0–0",
+   "Levante"
+  ]
+ ]
 }

@@ -77,7 +77,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sevilla_FC
-  - "https://en.wikipedia.org/wiki/2026–27_Sevilla_FC_season\r"
+  - https://en.wikipedia.org/wiki/2026–27_Sevilla_FC_season
   - https://www.marca.com/futbol/sevilla/2026/09/16/luis-garcia-plaza-respeto-hemos-quedado-cortos.html
   - https://en.wikipedia.org/wiki/2026%E2%80%9327_Sevilla_FC_season
   - https://en.wikipedia.org/wiki/2025%E2%80%9326_Sevilla_FC_season
@@ -422,5 +422,48 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sevilla_FC
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で4勝1引き分け2敗。5位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ラージョ・バジェカーノ（ホーム）
+      - 2対1
+    - - 第2節
+      - アスレティック・ビルバオ（アウェー）
+      - 3対1
+    - - 第3節
+      - アトレティコ・マドリード（ホーム）
+      - 1対3
+    - - 第4節
+      - エスパニョール（アウェー）
+      - 1対1
+    - - 第5節
+      - バレンシア（ホーム）
+      - 1対0
+    - - 第6節
+      - デポルティーボ・ラ・コルーニャ（アウェー）
+      - 1対0
+    - - 第7節
+      - バルセロナ（ホーム）
+      - 1対3
+  say:
+  - ラ・リーガは7試合を終えて、**4勝1引き分け2敗**です。
+  - 順位は**5位**、勝ち点は**13**です。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/sevilla
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_セビージャ_in.png
   official: false

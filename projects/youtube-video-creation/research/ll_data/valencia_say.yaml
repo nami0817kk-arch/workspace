@@ -3,7 +3,7 @@
 # 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない（PK→ピーケー）
 # 題の答え＝今シーズンがメスタージャ最後のシーズン（クラブ公式 2026-08-19「la última temporada del Camp de Mestalla」）。
 # reasons の最後の行で答える
-title: 佐藤龍之介のバレンシア。1923年から続いたものが、今シーズンで終わる
+title: 佐藤龍之介のバレンシア。1923年から続いて、今シーズンで終わるもの
 short_title: 佐藤龍之介のバレンシアってどんなクラブ？
 # クラブを表す一言。英語版 Mestalla Stadium「commonly recognized as the steepest in Europe」（BBC 2018-11-09）
 opening: "ヨーロッパで、いちばん急なスタンド。"
@@ -187,3 +187,5 @@ manager_sources:
 
 squad_about:
   佐藤龍之介: 佐藤龍之介は、リーグ戦で**5試合**に出ています。
+  # 代表名の辞書（plbuild.TEAM_JA）に北マケドニアが無く、英語のまま読まれるため手で書く（数は valencia_raw.json の caps）
+  ストレ・ディミトリエフスキ: ストレ・ディミトリエフスキは北マケドニア代表で**90試合**。

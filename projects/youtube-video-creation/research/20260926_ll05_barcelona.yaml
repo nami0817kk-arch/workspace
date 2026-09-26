@@ -74,7 +74,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/FC_Barcelona
-  - "https://en.wikipedia.org/wiki/2026–27_FC_Barcelona_season\r"
+  - https://en.wikipedia.org/wiki/2026–27_FC_Barcelona_season
   - https://www.fcbarcelona.com/en/football/first-team/news/4578296/hansi-flick-were-focused-on-our-own-job
   - https://www.fcbarcelona.com/en/football/first-team/news/4579409/flicks-barca-is-a-goal-machine
   - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
@@ -404,5 +404,51 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/FC_Barcelona
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で7勝。1位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - アスレティック・ビルバオ（ホーム）
+      - 2対0
+    - - 第2節
+      - エルチェ（アウェー）
+      - 5対0
+    - - 第3節
+      - ラージョ・バジェカーノ（ホーム）
+      - 5対2
+    - - 第4節
+      - バレンシア（アウェー）
+      - 5対0
+    - - 第5節
+      - レバンテ（アウェー）
+      - 4対2
+    - - 第6節
+      - ラシン・サンタンデール（ホーム）
+      - 7対2
+    - - 第7節
+      - セビージャ（アウェー）
+      - 3対1
+  say:
+  - ラ・リーガは7試合を終えて、**7勝**です。
+  - 順位は**1位**、勝ち点は**21**です。
+  - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  - 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました。
+  - 2015年に欧州を制した顔ぶれは、もう一人も残っていません。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/barcelona
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_バルセロナ_in.png
   official: false

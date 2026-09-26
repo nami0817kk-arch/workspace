@@ -1,0 +1,24 @@
+{
+ "getafe": {
+  "ハビエル・カスケロ": {
+   "role": "legend",
+   "file": "assets/photos/ll/getafe/getafe_legend_34a0af96.jpg",
+   "page": "Javier Casquero"
+  },
+  "ハイメ・マタ": {
+   "role": "legend",
+   "file": "assets/photos/ll/getafe/getafe_legend_a5359426.jpg",
+   "page": "Jaime Mata"
+  },
+  "マルク・ククレジャ": {
+   "role": "legend",
+   "file": "assets/photos/ll/getafe/getafe_legend_d54bf9cd.jpg",
+   "page": "Marc Cucurella"
+  },
+  "ホセ・ボルダラス": {
+   "role": "manager",
+   "file": "assets/photos/ll/getafe/getafe_manager_b5e6eb46.jpg",
+   "page": "José Bordalás"
+  }
+ }
+}

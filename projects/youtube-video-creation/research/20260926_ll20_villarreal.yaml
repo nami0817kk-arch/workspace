@@ -1,0 +1,451 @@
+# プレミアリーグ20クラブ紹介 ⑳ビジャレアル（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/villarreal*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- ビジャレアル
+- イニゴ・ペレス
+short_title: ビジャレアル、人口5万の町の黄色い潜水艦
+series: ラ・リーガチーム紹介
+theme:
+  id: villarreal_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ビジャレアル
+  title: ビジャレアル。人口5万の町が、ヨーロッパを制した夜
+  question: どんなクラブなのか
+  hook: あの黄色いユニフォームは、ある店の品切れから生まれました。
+  lead: ラ・リーガの20クラブで、いちばん人口の少ない町。
+  opening_image: assets/stats/ll_villarreal_data_t.png
+thumbnail:
+  line1: 5万人の町が欧州制覇
+  line2: 黄色い潜水艦ビジャレアル
+  crest_main:
+  - ビジャレアル
+  board: assets/stats/ll_villarreal_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 2年続けて欧州の最高峰。新監督はイニゴ・ペレス
+  narrator: キャスター
+  say:
+  - text: 今季は2シーズン続けて、チャンピオンズリーグで戦います。
+    image: assets/stats/ll_villarreal_data_r1.png
+    no_telop: true
+  - text: 就任したばかりのイニゴ・ペレス監督は、こう話しました。
+    image: assets/stats/ll_villarreal_data_r2.png
+    no_telop: true
+  - voice: イニゴ・ペレス
+    text: チャンピオンズリーグで指揮をとれるのは、とてもうれしい。ずっと見てきた大会だ
+    image: assets/stats/ll_villarreal_data_r2.png
+  - text: そしてこのクラブは、人口**5万**ほどの町から、ヨーロッパの大会を制しています。
+    image: assets/stats/ll_villarreal_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_villarreal_data0.png
+    text: 創立は**1923年**。入場料は男性が半ペセタで、女性は無料でした。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_data1.png
+    text: 愛称は「黄色い潜水艦」。**1967年**の昇格を、ビートルズの曲で祝ったのが始まりです。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_data2.png
+    text: ホームタウンはビジャレアル。人口**5万3623人**、タイル作りが盛んな町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ビジャレアル.png
+    text: 本拠地はエスタディオ・デ・ラ・セラミカ。クラブの発表では、**2万3173人**が入ります。
+  - image: assets/stats/ll_villarreal_data4.png
+    text: オーナーは**1997年**からフェルナンド・ロイグ。陶磁器の会社も持つ実業家です。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_cups.png
+    text: 1部も国王杯も、優勝はまだ**0回**。ヨーロッパリーグ**1回**、インタートトカップ**2回**。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_data6.png
+    text: 最多出場は、中盤のマヌ・トリゲロス。このクラブで**477試合**に出ました。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_data7.png
+    text: 直近のタイトルは、**2021年**のヨーロッパリーグです。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_data8.png
+    text: 昨季のリーグ戦は**3位**。勝ち点は**72**でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Villarreal_CF
+  - https://en.wikipedia.org/wiki/2026–27_Villarreal_CF_season
+  - https://villarrealcf.es/presentacion-de-inigo-perez-villarreal-cf/
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Villarreal_CF_season
+  - https://en.wikipedia.org/wiki/2021_UEFA_Europa_League_final
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: history
+  heading: 下のリーグから1部へ
+  tier: 背景
+  telop: 1998年、初めて1部へ
+  narrator: 解説
+  card:
+    type: table
+    title: 下のリーグから1部へ
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1970年
+      - 初めて2部へ
+    - - 1998年
+      - 初めて1部へ
+  say:
+  - 歴史の大半は、下のリーグでした。初めて2部に上がったのは**1970年**です。
+  - 1998年、1部への昇格をかけた2試合は、どちらも引き分け。
+  - text: アウェーゴールの差で、クラブ史上初めて1部に上がりました。
+    card:
+      type: table
+      title: 下のリーグから1部へ
+      columns: *id001
+      rows:
+      - - 決め手
+        - アウェーゴールの差
+  - 1部の最初の試合はベルナベウ。**3分**で先制し、1対4で敗れました。
+  sources:
+  - https://en.wikipedia.org/wiki/Villarreal_CF
+  - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: history2
+  heading: 1年で戻った
+  tier: 背景
+  telop: 2012年に2部へ。1年で戻る
+  narrator: 解説
+  card:
+    type: table
+    title: 1年で戻った
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 2012年
+      - 18位で2部へ
+    - - 2013年
+      - 2部で2位、1部へ
+  say:
+  - 2012年、最終節でアトレティコに敗れ、2部に落ちます。
+  - 決めたのはファルカオ。終了間際の1点でした。
+  - text: 翌シーズンは2部で2位。最後の試合で昇格を決め、1年で戻りました。
+    card:
+      type: table
+      title: 1年で戻った
+      columns: *id002
+      rows:
+      - - 今季
+        - 14シーズン続けて1部
+  - そこから一度も落ちず、今季で**14シーズン**続けて1部です。
+  sources:
+  - https://en.wikipedia.org/wiki/Villarreal_CF
+  - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Villarreal_CF_season
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: history3
+  heading: ゴールキーパーのピーケー
+  tier: 背景
+  telop: ピーケー戦11対10。初めての主要タイトル
+  narrator: 解説
+  card:
+    type: table
+    title: 2021年 ヨーロッパリーグ決勝
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - 相手
+      - マンチェスター・ユナイテッド
+    - - 試合
+      - 延長まで1対1
+  say:
+  - 2021年、ヨーロッパリーグの決勝。相手はマンチェスター・ユナイテッドでした。
+  - 1対1の引き分けで、ピーケー戦へ。両チームの10人ずつが、全員決めます。
+  - text: 最後はゴールキーパーの番。ルリが決め、デ・ヘアのキックを止めました。
+    card:
+      type: table
+      title: 2021年 ヨーロッパリーグ決勝
+      columns: *id003
+      rows:
+      - - ピーケー戦
+        - 11対10
+  - ピーケー戦を**11対10**で制し、創立から98年で、初めての主要タイトルでした。
+  sources:
+  - https://en.wikipedia.org/wiki/2021_UEFA_Europa_League_final
+  - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 支配する。売っても崩れない。町ぐるみのクラブ
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 試合を支配して攻める
+    - - 運営の型
+      - 主力を売っても崩れない
+    - - クラブの気質
+      - 町の3分の1が年間シート
+  say:
+  - text: イニゴ・ペレス監督のチームは、試合を支配して攻める。課題は決め切ること、と本人。
+    image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
+  - ピッチの外は、主力を売っても崩れない型。
+  - 昨シーズンの前、中盤のバエナを**4200万ユーロ**でアトレティコへ売りました。
+  - それでも終わってみれば、そのアトレティコより上でした。
+  - スタンドは町ぐるみ。年間シートは**1万9000人**を超え、町の人口の3分の1より多い数です。
+  sources:
+  - https://en.wikipedia.org/wiki/Villarreal_CF
+  - https://villarrealcf.es/inigo-perez-el-triunfo-nos-va-a-venir-muy-bien-para-el-paron/
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Atl%C3%A9tico_Madrid_season
+  - https://villarrealcf.es/mas-de-19-000-razones-para-luchar/
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: episode
+  heading: 黄色は品切れから
+  tier: 背景
+  telop: 店にあったのは、黄色だけ
+  narrator: 解説
+  card:
+    type: table
+    title: 黄色は品切れから
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1947年
+      - 白いシャツと黒いパンツを買いに
+    - - 店にあったのは
+      - 黄色だけ
+    - - パンツ
+      - 選手の投票で青に
+  say:
+  - text: 1947年、当時の会長の息子が、ユニフォームを買いにバレンシアへ行きました。
+    image: assets/images/ll_villarreal_episode/scene.jpg
+  - 欲しかったのは白いシャツと黒いパンツ。店にどちらも無く、あったのは黄色だけ。
+  - 黒いパンツは選手に嫌われ、白を買って、投票で青に染めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Villarreal_CF
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id004
+      - フアン・ロマン・リケルメ
+      - 2003-2007
+      - 初の欧州4強の司令塔
+  say:
+  - text: リケルメはアルゼンチンの司令塔。バルセロナで外国人枠からあふれ、期限付きで来ました。
+    image: assets/photos/ll/villarreal/villarreal_legend_a75286ad.jpg
+  - 2006年、チャンピオンズリーグの準決勝。決めれば延長のピーケーを、止められました。
+  - リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です。
+  sources:
+  - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme
+  - https://en.wikipedia.org/wiki/Marcos_Senna
+  - https://en.wikipedia.org/wiki/Santi_Cazorla
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - &id005
+      - マルコス・セナ
+      - 2002-2013
+      - 欧州王者になった中盤
+  say:
+  - text: マルコス・セナはブラジル生まれの中盤。2002年に来て、11シーズンを過ごしました。
+    image: assets/photos/ll/villarreal/villarreal_legend_25513b35.jpg
+  - スペイン代表として、2008年のヨーロッパ選手権を制しています。
+  - リーグ戦で**292試合25得点**。お別れの試合は、背番号と同じ**19分**から1分間の拍手。
+  sources:
+  - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme
+  - https://en.wikipedia.org/wiki/Marcos_Senna
+  - https://en.wikipedia.org/wiki/Santi_Cazorla
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - *id005
+    - - サンティ・カソルラ
+      - 2003-2020
+      - 3度在籍した中盤
+  say:
+  - text: カソルラは、地元オビエドの財政難で、18歳になる前にここへ来た中盤です。
+    image: assets/photos/ll/villarreal/villarreal_legend_4ca6fa77.jpg
+  - 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」。
+  - 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme
+  - https://en.wikipedia.org/wiki/Marcos_Senna
+  - https://en.wikipedia.org/wiki/Santi_Cazorla
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はイニゴ・ペレス。前はラージョ
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - イニゴ・ペレス（スペイン）
+    - - 就任
+      - 2026年6月
+    - - 前職
+      - ラージョ・バジェカーノ
+  say:
+  - text: 今季の監督はイニゴ・ペレス。スペイン出身で、**2026年6月**の就任です。
+    image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
+  - 前はラージョ・バジェカーノ。昨シーズン、カンファレンスリーグの決勝まで進みました。
+  sources:
+  - https://en.wikipedia.org/wiki/Villarreal_CF
+  - https://en.wikipedia.org/wiki/I%C3%B1igo_P%C3%A9rez
+  - https://villarrealcf.es/presentacion-de-inigo-perez-villarreal-cf/
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/ll_villarreal_gk.png
+    no_telop: true
+  - image: assets/stats/ll_villarreal_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_gk_f.png
+    text: ペーテル・グラーチはハンガリー代表で**58試合**。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_gk_f.png
+    text: ルイス・ジュニオールはリーグ戦で**45試合**。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_df_f.png
+    text: フアン・フォイスはアルゼンチン代表で**22試合**。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_df_f.png
+    text: ローガン・コスタはカーボベルデ代表で**26試合**。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_mf_f.png
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_mf_f.png
+    text: タジョン・ブキャナンはカナダ代表で**65試合**。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_mf_f.png
+    text: パペ・ゲイェはセネガル代表で**46試合**。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_fw_f.png
+    text: フォワードは6人。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_fw_f.png
+    text: 主将を務めるのが**ジェラール・モレノ**。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_fw_f.png
+    text: リーグ戦で**294試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_villarreal_fw_f.png
+    text: ニコラ・ペペはコートジボワール代表で**60試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Villarreal_CF
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で2勝2引き分け3敗。9位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ラシン・サンタンデール（アウェー）
+      - 2対2
+    - - 第2節
+      - アトレティコ・マドリード（アウェー）
+      - 2対2
+    - - 第3節
+      - アラベス（アウェー）
+      - 0対1
+    - - 第4節
+      - デポルティーボ・ラ・コルーニャ（ホーム）
+      - 2対3
+    - - 第5節
+      - レアル・ベティス（ホーム）
+      - 1対2
+    - - 第6節
+      - マラガ（アウェー）
+      - 3対1
+    - - 第7節
+      - レバンテ（ホーム）
+      - 3対1
+  say:
+  - ラ・リーガは7試合を終えて、**2勝2引き分け3敗**です。
+  - 順位は**9位**、勝ち点は**8**です。
+  - チャンピオンズリーグの初戦は、ドルトムントに**2対3**で敗れました。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/villarreal
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_ビジャレアル_in.png
+  official: false
