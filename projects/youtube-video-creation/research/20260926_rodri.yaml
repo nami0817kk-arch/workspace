@@ -1,0 +1,117 @@
+date: 2026年9月26日
+slot: premier_2
+format: quote
+voice_min: 0.55
+people: [ロドリ, アンディ・ロバートソン]
+theme:
+  id: rodri_city
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: 'ロドリとロバートソン、マンCの違反認定に口にしたこと'
+  question: ロドリは何と言ったのか
+short_title: ロドリ「クラブの無実を信じる」
+thumbnail:
+  photo: assets/images/20260926_pair_rodri_robertson/01.jpg
+  line1: ロドリとロバートソン
+  line2: マンCの違反認定に●●
+sections:
+  - id: what
+    heading: 翌日の会見で
+    tier: 報道
+    telop: スペイン代表の会見。ロドリは主将として出席
+    narrator: キャスター
+    say:
+      - マンチェスター・シティが、財務規定違反115件のうち114件で違反と認められた、と報じられた日の夜。
+      - ウェンブリーでのスペイン代表の会見に、主将のロドリが座りました。
+      - この夏にバルセロナへ移るまで、シティで12のタイトルを取った選手です。
+      - まず持ち出したのは、2020年のことでした。
+      - voice: ロドリ
+        text: 2020年にも似たことがあった。告発の中身は違うが、手続きは似ていた
+      - voice: ロドリ
+        text: あの時も最初は有罪とされた。でも僕らはクラブの潔白を信じ、最後は無罪になった
+    sources:
+      - https://www.theguardian.com/football/2026/sep/25/rodri-adamant-manchester-city-deserved-success-despite-being-found-guilty-of-rule-breaking
+      - https://metro.co.uk/2026/09/25/rodri-breaks-silence-man-city-guilty-verdict-possible-punishment-29654829/
+  - id: rodri
+    main: true
+    heading: 誰にも奪えない
+    tier: 報道
+    telop: 「金で買ったものではなく、努力で手に入れたものだ」
+    narrator: キャスター
+    say:
+      - text: 'マンチェスター・シティの違反認定の報道を受けて、古巣のロドリが会見で話しました。'
+        short_only: true
+      - text: '2020年に一度は処分を受け、最後に覆った前例を挙げて、こう続けました。'
+        short_only: true
+      - voice: ロドリ
+        text: だから僕は司法制度を信じるし、クラブの無実を信じている
+      - voice: ロドリ
+        text: 僕らが成し遂げたことは、誰にも奪えない。金で買ったものではなく、努力で手に入れたものだ
+      - voice: ロドリ
+        text: このウェンブリーでも多くの成功を収めた。すべて正当に勝ち取ったものだと言える
+      - 質問が続いたところで、スペイン代表の広報が会見を打ち切りました。
+      - ロドリは広報を指して、こう言って席を立っています。
+      - voice: ロドリ
+        text: 決めるのは彼だから
+    sources:
+      - https://www.theguardian.com/football/2026/sep/25/rodri-adamant-manchester-city-deserved-success-despite-being-found-guilty-of-rule-breaking
+      - https://www.bbc.com/sport/football/articles/cmkgwwze9r28o
+      - https://www.manchestereveningnews.co.uk/sport/football/football-news/rodri-manchester-city-charges-verdict-34675245
+      - https://www.mirror.co.uk/sport/football/news/rodri-man-city-charges-verdict-37704499
+  - id: robertson
+    heading: 争った側から
+    tier: 報道
+    telop: ロバートソン「選手に非があることはないと思う」
+    narrator: キャスター
+    say:
+      - text: 'ロドリのいたシティと何度も優勝を争った、リヴァプールのロバートソン。'
+        image: assets/images/20260926_pair_robertson_rodri/01.jpg
+      - 遠征先のスロベニアで、この報道を知らされました。
+      - voice: アンディ・ロバートソン
+        text: 声で驚いているのが分かると思う。実はまだニュースを見ていないんだ
+      - voice: アンディ・ロバートソン
+        text: 彼らは信じられないほど強いチームで、戦うのが楽しかった相手だ
+      - voice: アンディ・ロバートソン
+        text: こういう問題で、選手に非があることはないと思う。僕が言えるのはそれだけだ
+    sources:
+      - https://www.theguardian.com/football/2026/sep/25/andy-robertson-says-players-are-not-to-blame-for-manchester-citys-actions
+      - https://www.heraldscotland.com/sport/26582862.former-liverpool-star-robertson-says-city-players-not-blame/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「ロドリは好感が持てる」と「金で買ったわけじゃない、は無理がある」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ロドリはなんかすごい好感が持てるなあ…いい時期にシティを抜けたね
+        image: assets/images/20260926_rodri/01.jpg
+      - voice: ネット民
+        text: なにが「金で買ったわけじゃない」だよ。思いっきり金だろ
+      - voice: ネット民
+        text: それは無理がある。みんな分かってた。そもそも給与貰ってた側なんだからよりわかるだろ
+      - voice: ネット民
+        text: ペップや選手たちのサッカーそのものは素晴らしく、正に最強といえる存在だった。が、それを作り上げる為の手段が不正だらけだった訳で
+      - voice: ネット民
+        text: 異議申し立ての審理にまた3年ぐらいかかるんで心配ないだろう
+      - voice: ネット民
+        text: ロドリもペップもニコも逃げ切れてておもろい
+      - voice: ネット民
+        text: 有罪喰らったとはいえ選手に罪は無いから、タイトル剥奪とかになったら流石に可哀想だなー
+      - voice: ネット民
+        text: 勝ち点剥奪等はしゃーなしやね。ただこれまでの功績、タイトル等がなかった事にはしないでほしい
+      - voice: ネット民
+        text: 今までこの犯罪クラブが得て来たタイトルは剥奪で良い。真剣に戦って来た選手やクラブが報われない
+      - voice: ネット民
+        text: シティにいる選手達も可哀想やわ。もし4部降格とかになったら選手生命がほぼ終わるみたいなもんだし
+      - voice: ネット民
+        text: 僕はイスタンブールにいた。あの日の体験は誰にも奪えない
+      - voice: ネット民
+        text: シティが有罪なら、シティのファンも被害者だ。僕らの気持ちも利用されたのだから
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/ecf89c7b8ef20333abfa092862aeaf275b4eeb31/comments
+      - https://news.yahoo.co.jp/articles/34d953bbaec870a72d4ee9c11cdc60f8f8b4b115/comments
+      - https://search.yahoo.co.jp/realtime/search?p=ロドリ+マンC
+      - https://www.bbc.com/sport/football/articles/cwy7zzdmn4v7o

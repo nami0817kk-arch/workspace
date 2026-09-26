@@ -33,6 +33,15 @@ sections:
     say:
       - マンチーニ監督が戻ってきたイタリア代表。3大会続けてワールドカップを逃したあとの最初の試合です。
       - ホームのローマで、ベルギーに0対2で負けました。
+    sources:
+      - https://www.gazzetta.it/Calcio/Nazionale/25-09-2026/italia-belgio-live-risultato-e-gol-in-diretta-nations-league.shtml
+      - https://www.ansa.it/sito/notizie/sport/calcio/2026/09/25/mancini-fischi-ci-stanno-ma-nel-secondo-tempo-meglio-noi_7936ea15-4403-4d12-98cf-a859b3b80998.html
+  - id: boos
+    heading: ブーイングの中で
+    tier: 報道
+    telop: マンチーニ「ブーイングは当然だ」
+    narrator: キャスター
+    say:
       - 前半が終わったときも、試合が終わったときも、スタンドからはブーイング。マンチーニは、こう言いました。
       - voice: ロベルト・マンチーニ
         text: 負ければ誰も喜ばない。ブーイングは当然だ
@@ -44,8 +53,8 @@ sections:
       - voice: ロベルト・マンチーニ
         text: エベレストの頂上に着いたときのほうが素晴らしい。結末はもっと素晴らしいものになる
     sources:
-      - https://www.gazzetta.it/Calcio/Nazionale/25-09-2026/italia-belgio-live-risultato-e-gol-in-diretta-nations-league.shtml
       - https://www.ansa.it/sito/notizie/sport/calcio/2026/09/25/mancini-fischi-ci-stanno-ma-nel-secondo-tempo-meglio-noi_7936ea15-4403-4d12-98cf-a859b3b80998.html
+      - https://www.tuttomercatoweb.com/serie-a/italia-conferenza-stampa-roberto-mancini-2277437
   - id: lukaku
     main: true
     heading: 試合のあとで
