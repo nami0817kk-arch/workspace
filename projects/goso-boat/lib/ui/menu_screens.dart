@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../app/progress.dart';
 import '../engine/puzzle.dart';
 import '../engine/rules.dart';
+import '../l10n/l10n_ext.dart';
 import 'figures.dart';
 import 'game_screen.dart';
 import 'palette.dart';
@@ -31,9 +32,9 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const Spacer(flex: 2),
-                    const Text('護送ボート', style: TextStyle(fontSize: 44, fontWeight: FontWeight.w900, color: Palette.ink, letterSpacing: 2)),
+                    Text(context.l10n.appTitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 44, fontWeight: FontWeight.w900, color: Palette.ink, letterSpacing: 2)),
                     const SizedBox(height: 6),
-                    const Text('囚人を向こう岸へ。逃がすな。', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Palette.dim)),
+                    Text(context.l10n.tagline, textAlign: TextAlign.center, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Palette.dim)),
                     const Spacer(),
                     const _TitleArt(),
                     const Spacer(),
@@ -49,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ChunkyButton(
-                        label: progress.totalStars == 0 ? 'はじめる' : 'つづきから（${progress.nextLevel.id}）',
+                        label: progress.totalStars == 0 ? context.l10n.start : context.l10n.continueAt(progress.nextLevel.id),
                         color: Palette.gold,
                         shadow: Palette.goldDeep,
                         fontSize: 22,
@@ -61,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ChunkyButton(
-                        label: 'ステージを選ぶ',
+                        label: context.l10n.chooseStage,
                         fontSize: 17,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         onPressed: () => Navigator.of(context).push(_fade(StageSelectScreen(progress: progress))),
@@ -114,7 +115,7 @@ class StageSelectScreen extends StatelessWidget {
           backgroundColor: Palette.sky,
           foregroundColor: Palette.ink,
           elevation: 0,
-          title: const Text('ステージ', style: TextStyle(fontWeight: FontWeight.w900)),
+          title: Text(context.l10n.stages, style: const TextStyle(fontWeight: FontWeight.w900)),
         ),
         body: ListenableBuilder(
           listenable: progress,
@@ -151,11 +152,11 @@ class _WorldCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              if (world.intro?.role != null)
-                SizedBox(width: 30, height: 38, child: Figure(role: world.intro!.role!)),
+              if (world.role != null)
+                SizedBox(width: 30, height: 38, child: Figure(role: world.role!)),
               const SizedBox(width: 8),
               Expanded(
-                child: Text('${world.no}. ${world.name}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Palette.ink)),
+                child: Text('${world.no}. ${context.l10n.world(world.no)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Palette.ink)),
               ),
               const Icon(Icons.star_rounded, color: Palette.gold, size: 18),
               Text(' $got/${ls.length * 3}', style: const TextStyle(fontWeight: FontWeight.w800, color: Palette.ink)),
@@ -190,7 +191,7 @@ class _LevelTile extends StatelessWidget {
     return Semantics(
       button: true,
       enabled: open,
-      label: '${level.id}${open ? '' : '、まだ遊べない'}${stars > 0 ? '、星$stars' : ''}',
+      label: !open ? context.l10n.levelLocked(level.id) : stars > 0 ? context.l10n.levelStars(level.id, stars) : level.id,
       excludeSemantics: true,
       child: GestureDetector(
         onTap: open ? () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress))) : null,

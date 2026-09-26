@@ -9,9 +9,10 @@
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>ja</string>
+		<string>en</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-	<string>護送ボート</string>
+	<string>Prison Boat</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

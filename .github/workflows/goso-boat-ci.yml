@@ -21,6 +21,10 @@ on:
         description: "analyze を飛ばす"
         type: boolean
         default: false
+      build_ios:
+        description: "iOS の署名なしビルドも回す（Xcode の設定を触ったとき用。macOS なので手動のときだけ）"
+        type: boolean
+        default: false
 
 # 同じブランチで新しい実行が始まったら、古い方は打ち切る。
 # 連続で push したとき、途中の版のテストに時間を使わないため。
@@ -53,3 +57,26 @@ jobs:
 
       - name: Run tests
         run: flutter test ${{ inputs.target }}
+
+  # Xcode のプロジェクト設定（project.pbxproj・Info.plist・言語ごとの InfoPlist.strings）を
+  # Windows では確かめられないので、触ったときに手動で回す。
+  ios-build:
+    if: ${{ inputs.build_ios == true }}
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: projects/goso-boat
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter build ios --release --no-codesign
+      - name: 言語ごとのホーム画面名が入っているか
+        run: |
+          app=build/ios/iphoneos/Runner.app
+          plutil -p "$app/ja.lproj/InfoPlist.strings" | grep '護送ボート'
+          plutil -p "$app/en.lproj/InfoPlist.strings" | grep 'Prison Boat'
+
