@@ -81,11 +81,15 @@ void main() {
   });
 
   test('掲載する文面が、App Store の文字数に収まっている', () {
-    final subtitle = RegExp(r'\| サブタイトル（30字以内） \| ([^|]+) \|')
-        .firstMatch(_listing)!
-        .group(1)!
-        .trim();
-    expect(subtitle.length, lessThanOrEqualTo(30), reason: subtitle);
+    // 名前とサブタイトルは、**検索で当たる語をここに置く**ぶん長くなりやすい。
+    // 30字を1字でも超えると App Store Connect の入力欄が受け付けない。
+    for (final row in [
+      r'\| App 名（30字以内・ストア） \| ([^|]+) \|',
+      r'\| サブタイトル（30字以内） \| ([^|]+) \|',
+    ]) {
+      final value = RegExp(row).firstMatch(_listing)!.group(1)!.trim();
+      expect(value.length, lessThanOrEqualTo(30), reason: value);
+    }
 
     final blocks = _blocks;
     expect(blocks.length, greaterThanOrEqualTo(3),
@@ -98,6 +102,26 @@ void main() {
     );
     expect(blocks[1].length, lessThanOrEqualTo(4000), reason: '説明');
     expect(blocks[2].trim().length, lessThanOrEqualTo(100), reason: 'キーワード');
+  });
+
+  test('名前とサブタイトルの語を、キーワードに重ねていない', () {
+    // App Store は「名前 + サブタイトル + キーワード」をまとめて索引し、
+    // 語の組み合わせは自分で作る。**同じ語を二度書くと、その字数ぶんだけ
+    // 当たる語が減る。** 字数は100しかない。
+    final listing = _listing;
+    final name = RegExp(r'\| App 名（30字以内・ストア） \| ([^|]+) \|')
+        .firstMatch(listing)!
+        .group(1)!;
+    final subtitle = RegExp(r'\| サブタイトル（30字以内） \| ([^|]+) \|')
+        .firstMatch(listing)!
+        .group(1)!;
+    final taken = '$name $subtitle';
+    final dup = _blocks[2]
+        .trim()
+        .split(',')
+        .where((word) => taken.contains(word))
+        .toList();
+    expect(dup, isEmpty, reason: '名前かサブタイトルと重複: ${dup.join(", ")}');
   });
 
   test('掲載する絵が、App Store の寸法で揃っている', () {
