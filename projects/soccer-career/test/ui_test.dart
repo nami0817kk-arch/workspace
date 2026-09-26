@@ -20,6 +20,7 @@ import 'package:soccer_career/ui/trait_row.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/models/attributes.dart';
+import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/training.dart';
@@ -1339,4 +1340,109 @@ void main() {
     );
     expect(buy.onPressed, isNull);
   });
+
+  testWidgets('広告が出るようになってから、消せることをシーズン終了に書く', (tester) async {
+    // **⋮ の奥にしか置いていなかった。** 広告が出ることは分かっても、
+    // 消せることを知らないままになる。広告が出る場所で伝える。
+    Future<Monetization> money({bool bought = false, bool store = true}) async {
+      SharedPreferences.setMockInitialValues(
+        bought ? {'monetize.noAds': true} : {},
+      );
+      final m = Monetization(
+        ads: NoAdService(),
+        purchases: _FakeStoreForUi(available: store),
+      );
+      await m.initialize();
+      return m;
+    }
+
+    Future<void> open(CareerController c, Monetization m) async {
+      tester.view.physicalSize = const Size(390, 3200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(useMaterial3: true),
+          home: SeasonEndScreen(controller: c, monetization: m),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    final controller = await newCareer();
+    while (!controller.state!.seasonFinished) {
+      await controller.simulateMatch();
+    }
+    await controller.finishSeason();
+
+    // 1季目。まだ広告は出ないので、勧めない。
+    expect(controller.state!.history.length, lessThan(Monetization.freeSeasons));
+    await open(controller, await money());
+    expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsNothing);
+
+    // 広告が出るようになった頃。
+    // 季末の画面では履歴がまだ増えていない（増えるのは advanceSeason）。
+    for (var i = controller.state!.history.length;
+        i < Monetization.freeSeasons;
+        i++) {
+      controller.state!.history.add(
+        SeasonRecord(
+          year: 2026 + i,
+          clubName: controller.state!.club.name,
+          tier: controller.state!.club.tier,
+          leaguePosition: 5,
+          stats: const SeasonStats(
+            appearances: 0,
+            goals: 0,
+            assists: 0,
+            averageRating: 0,
+          ),
+          salary: 1000,
+          caps: 0,
+          objectiveMet: false,
+          countryId: controller.state!.countryId,
+        ),
+      );
+    }
+    await open(controller, await money());
+    expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsOneWidget);
+
+    // 買った人には出さない。
+    await open(controller, await money(bought: true));
+    expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsNothing);
+
+    // ストアに繋がらない環境（ブラウザ版）にも出さない。
+    await open(controller, await money(store: false));
+    expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsNothing);
+  });
+}
+
+/// 価格まで返す偽のストア。`monetize_test` の偽物は本文側に置いてあるので、
+/// ここでは画面に必要なぶんだけ持つ。
+class _FakeStoreForUi implements PurchaseService {
+  _FakeStoreForUi({required this.available});
+
+  final bool available;
+
+  @override
+  set onDelivered(void Function(Product product)? callback) {}
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<bool> isAvailable() async => available;
+
+  @override
+  Future<String?> priceOf(Product product) async => available ? '¥400' : null;
+
+  @override
+  Future<PurchaseOutcome> buy(Product product) async =>
+      PurchaseOutcome.unavailable;
+
+  @override
+  Future<PurchaseOutcome> restore() async => PurchaseOutcome.unavailable;
+
+  @override
+  void dispose() {}
 }

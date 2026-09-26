@@ -56,6 +56,9 @@ class Monetization extends ChangeNotifier {
     tips = prefs.getInt(_tipsKey) ?? 0;
 
     if (!noAds) await _ads.initialize();
+    // **渡すのはここ1か所。** 買った瞬間に `buy()` の側で渡していた頃、
+    // アプリを落としている間に決済が通った購入は誰も受け取らなかった。
+    _purchases.onDelivered = _grant;
     await _purchases.initialize();
     storeAvailable = await _purchases.isAvailable();
     if (storeAvailable) {
@@ -87,39 +90,35 @@ class Monetization extends ChangeNotifier {
   /// シーズンが進まなくなることはない。
   Future<void> showSeasonAd({required int seasonsPlayed, DateTime? now}) async {
     if (!shouldShowSeasonAd(seasonsPlayed: seasonsPlayed, now: now)) return;
-    // **出したことにするのは、出す前。** 出したあとに記録すると、
-    // 在庫切れで即座に戻ったときに間隔が空かず、次のシーズンでまた出る。
-    _lastAd = now ?? DateTime.now();
-    await _ads.showInterstitial();
+    final at = now ?? DateTime.now();
+    // **出せた回だけ間隔を数える。** 前は出す前に記録していたので、
+    // 在庫が無くて何も起きなかった回まで「出した」ことになり、
+    // **見せていないのに次の機会が潰れていた**（広告の在庫は毎回あるとは
+    // 限らないので、そのぶんそのまま収入が消える）。
+    // 遊ぶ側から見ても、出ていないものを数える理由は無い。
+    if (await _ads.showInterstitial()) _lastAd = at;
   }
 
-  Future<PurchaseOutcome> buy(Product product) async {
-    final outcome = await _purchases.buy(product);
-    if (outcome != PurchaseOutcome.purchased) return outcome;
+  /// 買う。**受け取るのは [_grant] のほう**なので、ここでは結果を返すだけ。
+  Future<PurchaseOutcome> buy(Product product) => _purchases.buy(product);
+
+  Future<PurchaseOutcome> restore() => _purchases.restore();
+
+  /// 届いたものを受け取る。ストアから流れてきたぶんも、買った直後のぶんも、
+  /// 復元したぶんも、全部ここを通る。
+  Future<void> _grant(Product product) async {
+    final prefs = await SharedPreferences.getInstance();
     switch (product) {
       case Product.noAds:
-        await _markNoAds();
+        if (noAds) return;
+        noAds = true;
+        // もう出さないので、読み込み済みの広告も手放す。
+        _ads.dispose();
+        await prefs.setBool(_noAdsKey, true);
       case Product.tip:
         tips++;
-        final prefs = await SharedPreferences.getInstance();
         await prefs.setInt(_tipsKey, tips);
-        notifyListeners();
     }
-    return outcome;
-  }
-
-  Future<PurchaseOutcome> restore() async {
-    final outcome = await _purchases.restore();
-    if (outcome == PurchaseOutcome.purchased) await _markNoAds();
-    return outcome;
-  }
-
-  Future<void> _markNoAds() async {
-    noAds = true;
-    // もう出さないので、読み込み済みの広告も手放す。
-    _ads.dispose();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_noAdsKey, true);
     notifyListeners();
   }
 

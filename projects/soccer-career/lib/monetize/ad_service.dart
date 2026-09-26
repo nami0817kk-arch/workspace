@@ -23,7 +23,10 @@ abstract class AdService {
 
   /// 全画面広告を出し、閉じられるまで待つ。
   /// 在庫が無いときは何もせずに戻る（広告のために進行を止めない）。
-  Future<void> showInterstitial();
+  ///
+  /// **実際に出せたかどうかを返す。** 返さないと、在庫が無くて何も
+  /// 起きなかった回まで「出した」ことになり、次の機会が潰れる。
+  Future<bool> showInterstitial();
 
   void dispose();
 }
@@ -37,7 +40,7 @@ class NoAdService implements AdService {
   bool get isInterstitialReady => false;
 
   @override
-  Future<void> showInterstitial() async {}
+  Future<bool> showInterstitial() async => false;
 
   @override
   void dispose() {}
@@ -123,11 +126,11 @@ class AdMobAdService implements AdService {
   bool get isInterstitialReady => _ad != null;
 
   @override
-  Future<void> showInterstitial() async {
+  Future<bool> showInterstitial() async {
     final ad = _ad;
     if (ad == null) {
       unawaited(_load());
-      return;
+      return false;
     }
     _ad = null;
 
@@ -146,6 +149,7 @@ class AdMobAdService implements AdService {
     );
     await ad.show();
     await closed.future;
+    return true;
   }
 
   @override
