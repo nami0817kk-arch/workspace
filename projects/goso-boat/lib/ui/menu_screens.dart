@@ -35,6 +35,13 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const Spacer(flex: 2),
+                    // 名前は合わせ技（2026-09-27 ユーザー決定）: ストアの検索は「脱獄させるな！」で拾い、
+                    // ホーム画面とアプリの中では「護送ボート」で覚えてもらう
+                    Transform.rotate(
+                      angle: -0.04,
+                      child: Text(context.l10n.kicker, textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.bad)),
+                    ),
+                    const SizedBox(height: 2),
                     Text(context.l10n.appTitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 44, fontWeight: FontWeight.w900, color: Palette.ink, letterSpacing: 2)),
                     const SizedBox(height: 6),
                     Text(context.l10n.tagline, textAlign: TextAlign.center, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Palette.dim)),

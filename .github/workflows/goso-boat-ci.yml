@@ -84,5 +84,5 @@ jobs:
         run: |
           app=build/ios/iphoneos/Runner.app
           plutil -p "$app/ja.lproj/InfoPlist.strings" | grep '護送ボート'
-          plutil -p "$app/en.lproj/InfoPlist.strings" | grep 'Prison Boat'
+          plutil -p "$app/en.lproj/InfoPlist.strings" | grep 'Prison Ferry'
 

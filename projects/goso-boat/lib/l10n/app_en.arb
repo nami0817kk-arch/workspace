@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
-  "appTitle": "Prison Boat",
-  "tagline": "Get the prisoners across. Don't let them escape.",
+  "appTitle": "Prison Ferry",
+  "tagline": "Get every prisoner across the river.",
   "start": "Start",
   "continueAt": "Continue ({id})",
   "chooseStage": "Choose a stage",
@@ -94,5 +94,6 @@
   "purchaseThanks": "Ads removed. Thank you!",
   "purchaseRestored": "Purchase restored",
   "purchaseNothing": "No purchase to restore",
-  "purchaseFailed": "Purchase failed. Please try again later."
+  "purchaseFailed": "Purchase failed. Please try again later.",
+  "kicker": "Don't let them escape!"
 }

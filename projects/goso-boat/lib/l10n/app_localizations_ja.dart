@@ -13,7 +13,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => '護送ボート';
 
   @override
-  String get tagline => '囚人を向こう岸へ。逃がすな。';
+  String get tagline => '囚人を舟で向こう岸へ。1人も逃がすな。';
 
   @override
   String get start => 'はじめる';
@@ -339,4 +339,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get purchaseFailed => '購入できなかった。時間をおいてもう一度';
+
+  @override
+  String get kicker => '脱獄させるな！';
 }

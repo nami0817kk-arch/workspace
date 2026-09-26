@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @tagline.
   ///
   /// In ja, this message translates to:
-  /// **'囚人を向こう岸へ。逃がすな。'**
+  /// **'囚人を舟で向こう岸へ。1人も逃がすな。'**
   String get tagline;
 
   /// No description provided for @start.
@@ -667,6 +667,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'購入できなかった。時間をおいてもう一度'**
   String get purchaseFailed;
+
+  /// No description provided for @kicker.
+  ///
+  /// In ja, this message translates to:
+  /// **'脱獄させるな！'**
+  String get kicker;
 }
 
 class _AppLocalizationsDelegate
