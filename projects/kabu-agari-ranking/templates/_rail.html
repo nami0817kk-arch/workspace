@@ -1,0 +1,40 @@
+{# 画面の横が余っている PC では、章への入口を常に見える場所に置く。
+   スマホでは本文の下へ回る（ランキングの表より先に出さない）。 #}
+<aside class="rail" aria-label="サイト内の案内">
+  <section class="rail-box">
+    <h2>本日のランキング</h2>
+    <ul>
+      <li><a href="{{ base_url }}index.html">値上がり率</a></li>
+      <li><a href="{{ base_url }}losers.html">値下がり率</a></li>
+      <li><a href="{{ base_url }}active.html">活況銘柄（約定回数）</a></li>
+    </ul>
+  </section>
+
+  <section class="rail-box">
+    <h2>ためた記録から</h2>
+    <ul>
+      <li><a href="{{ base_url }}stop-high/index.html">ストップ高の記録</a></li>
+      <li><a href="{{ base_url }}frequent.html">何度も入った銘柄</a></li>
+      <li><a href="{{ base_url }}market.html">相場の振り返り</a></li>
+      <li><a href="{{ base_url }}weekly/index.html">週まとめ</a></li>
+      <li><a href="{{ base_url }}monthly/index.html">月まとめ</a></li>
+    </ul>
+  </section>
+
+  <section class="rail-box">
+    <h2>探す</h2>
+    <ul>
+      <li><a href="{{ base_url }}search.html">銘柄検索</a></li>
+      <li><a href="{{ base_url }}stock/index.html">銘柄別ページ</a></li>
+      <li><a href="{{ base_url }}archive/gainers/index.html">過去のランキング</a></li>
+    </ul>
+  </section>
+
+  <section class="rail-box">
+    <h2>読み方</h2>
+    <ul>
+      <li><a href="{{ base_url }}guide.html">ランキングの読み方</a></li>
+      <li><a href="{{ base_url }}glossary.html">用語解説</a></li>
+    </ul>
+  </section>
+</aside>

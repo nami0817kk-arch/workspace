@@ -38,6 +38,14 @@ def built(tmp_path_factory):
             json.dumps(payload, ensure_ascii=False), encoding="utf-8"
         )
 
+    # 実際のビルドは static/ を output/ へ写す。ここを用意しないと、
+    # アイコンなど静的ファイルへのリンクが「切れている」と誤検出される。
+    static_dir = tmp_path / "static"
+    static_dir.mkdir()
+    for name in (p.name for p in (Path(__file__).resolve().parents[1] / "static").iterdir()
+                 if p.is_file()):
+        (static_dir / name).write_text("stub", encoding="utf-8")
+
     out_dir = tmp_path / "output"
     orig = (render._DATA_DIR, render._OUTPUT_DIR, render._ROOT)
     render._DATA_DIR, render._OUTPUT_DIR, render._ROOT = data_dir, out_dir, tmp_path

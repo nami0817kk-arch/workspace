@@ -594,3 +594,36 @@ def test_広告を本文の先頭に置かない(site, monkeypatch):
     html = (out_dir / "index.html").read_text(encoding="utf-8")
     body = html[html.index("<main"):]
     assert body.index("<table") < body.index("<ins"), "表より先に広告が出ている"
+
+
+def test_案内は本文の後ろに置く(site):
+    """横の案内（rail）が本文より先に来ると、スマホでランキングの前に
+    リンクの列が挟まる。HTML の順序で本文を先にしておく。"""
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert html.index("<main") < html.index('class="rail"')
+    assert html.index("<table") < html.index('class="rail"')
+
+
+def test_アイコンを配る(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert 'rel="icon"' in html
+    assert (Path(__file__).resolve().parents[1] / "static" / "favicon.svg").exists()
+
+
+def test_列幅の指定は広い画面だけに当てる(site):
+    """狭い画面に当てると銘柄名の幅が足りず、毎行2行に折り返す。"""
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    css = (out_dir / "index.html").read_text(encoding="utf-8")
+    block = css[css.index("余った幅は銘柄名に回し"):]
+    assert "@media (min-width: 601px)" in block[:400]

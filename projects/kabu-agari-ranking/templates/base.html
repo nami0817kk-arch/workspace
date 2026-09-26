@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
+<link rel="icon" href="{{ base_url }}favicon.svg" type="image/svg+xml">
 <meta name="google-site-verification" content="{{ SEARCH_CONSOLE_TOKEN }}" />
 <title>{% block title %}値上がり株ランキング{% endblock %}</title>
 <meta name="description" content="{% block description %}日本株の値上がり率ランキングを毎日更新して掲載しています。{% endblock %}">
@@ -89,11 +90,18 @@
     gap: 0.5rem;
   }
   header.site-header a.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-weight: bold;
     font-size: 1.1rem;
     color: var(--text);
     text-decoration: none;
   }
+  .logo-mark { border-radius: 6px; flex: none; }
+  .logo-text { display: flex; flex-direction: column; line-height: 1.25; }
+  .logo-sub { font-size: 0.7rem; font-weight: normal; color: var(--muted); }
+  header.site-header .inner { max-width: 1180px; }
   header.site-header nav {
     display: flex;
     flex-wrap: wrap;
@@ -116,10 +124,48 @@
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
-  main {
-    max-width: 800px;
+  /* 横に余った幅を案内に使う。1000px を切ったら1列に畳み、案内は本文の下へ回る
+     （スマホでランキングの表より先に案内が出ないようにするため）。 */
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 1.75rem;
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 0 1rem;
+    align-items: start;
+  }
+  @media (max-width: 1000px) {
+    .layout { grid-template-columns: 1fr; gap: 0; padding: 0; }
+  }
+  main {
+    min-width: 0;
+    padding: 1rem 0;
+  }
+  @media (max-width: 1000px) {
+    main { padding: 1rem; }
+  }
+  .rail { padding: 1rem 0; font-size: 0.85rem; }
+  .rail-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+  .rail-box h2 {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.4rem;
+    font-weight: normal;
+  }
+  .rail-box ul { list-style: none; margin: 0; padding: 0; }
+  .rail-box li { margin: 0.3rem 0; }
+  .rail-box a { color: var(--text); text-decoration: none; }
+  .rail-box a:hover { color: var(--accent); text-decoration: underline; }
+  @media (max-width: 1000px) {
+    .rail { padding: 0 1rem 1rem; }
+    .rail-box { display: inline-block; vertical-align: top; width: 100%; }
   }
   /* スマホでは既定の 2em だと見出しが3行になり、肝心の表が画面の外に出る */
   h1 { font-size: 1.45rem; line-height: 1.35; margin: 0.6rem 0; }
@@ -140,6 +186,9 @@
   .table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
   }
   table.ranking {
     width: 100%;
@@ -149,11 +198,26 @@
     background: var(--card-bg);
     font-size: 0.9rem;
   }
+  table.ranking td { font-variant-numeric: tabular-nums; }
+  /* 画面が広いと列が間延びして、数字どうしが離れて読みにくくなる。
+     余った幅は銘柄名に回し、数字の列は必要なぶんだけにする。
+     **狭い画面には当てない。** 当てると銘柄名の幅が足りず、毎行2行に折り返す。 */
+  @media (min-width: 601px) {
+    table.ranking th:nth-child(1), table.ranking td:nth-child(1) { width: 4em; }
+    table.ranking th:nth-child(3), table.ranking td:nth-child(3) { width: 5em; }
+    table.ranking th:nth-child(4), table.ranking td:nth-child(4) { width: 6em; }
+    /* 騰落率の欄は「+22.44% ストップ高」が1行に収まる幅にする。
+       折り返すと、印の付いた行だけ背が高くなって表が波打つ。 */
+    table.ranking th:nth-child(5), table.ranking td:nth-child(5) { width: 12em; white-space: nowrap; }
+    table.ranking th:nth-child(6), table.ranking td:nth-child(6) { width: 8em; }
+  }
   table.ranking th, table.ranking td {
     padding: 0.5rem 0.6rem;
     border-bottom: 1px solid var(--border);
     text-align: right;
   }
+  table.ranking tbody tr:last-child th,
+  table.ranking tbody tr:last-child td { border-bottom: none; }
   table.ranking th:nth-child(2), table.ranking td:nth-child(2),
   table.ranking th:nth-child(3), table.ranking td:nth-child(3) {
     text-align: left;
@@ -161,9 +225,12 @@
   table.ranking caption {
     caption-side: top;
     text-align: left;
-    padding: 0.5rem 0.6rem;
+    padding: 0.6rem 0.8rem;
     font-size: 0.8rem;
     color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 6px 6px 0 0;
   }
   table.ranking th { color: var(--muted); font-weight: normal; }
   /* 表の中のリンクは本文色のまま。行ごとに青と黒が混ざると、
@@ -428,7 +495,10 @@
 <a class="skip-link" href="#main">本文へスキップ</a>
 <header class="site-header">
   <div class="inner">
-    <a class="logo" href="{{ base_url }}index.html">値上がり株ランキング</a>
+    <a class="logo" href="{{ base_url }}index.html">
+      <img class="logo-mark" src="{{ base_url }}favicon.svg" width="28" height="28" alt="">
+      <span class="logo-text">値上がり株ランキング<span class="logo-sub">東証全市場・毎営業日更新</span></span>
+    </a>
     {# ヘッダに並べるのは毎日見るものだけ。10項目あった頃はスマホで3行を占め、
        肝心のランキングが1画面ぶん下に押し出されていた。残りはフッタと本文から辿る。 #}
     <nav>
@@ -442,6 +512,7 @@
 </header>
 
 
+<div class="layout">
 <main id="main" tabindex="-1">
 {% block breadcrumb %}{% endblock %}
 {# 本文の先頭に広告を置かない。ここに入れると、来た人が見に来たランキングが
@@ -456,6 +527,8 @@
   詳しくは<a href="{{ base_url }}about.html">このサイトについて</a>をご覧ください。
 </div>
 </main>
+{% include "_rail.html" %}
+</div>
 
 <footer>
   <div class="footer-group">
