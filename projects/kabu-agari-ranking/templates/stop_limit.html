@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{# ストップ高とストップ安で共用する。向きが逆なだけで数え方も見せ方も同じなので、
+   spec（語彙）だけを差し替える。片方だけ直して食い違うのを防ぐため1枚にしてある。 #}
+{% block title %}{{ spec.term }}の銘柄一覧と記録｜{{ period_to_ja }}まで{% endblock %}
+{% block description %}{{ period_to_ja }}までの{{ day_count }}営業日に、制限値幅の{{ spec.bound }}まで{{ spec.verb }}（{{ spec.term }}）銘柄の一覧。日別の件数、何度も{{ spec.term }}になった銘柄、最長の連続記録。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": spec.term ~ "の記録", "url": canonical}] %}{% include "_breadcrumb_data.html" %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":{{ ("複数回" ~ spec.term ~ "になった銘柄")|tojson }},"numberOfItems":{{ stocks|length }},"itemListElement":[{% for s in stocks %}{"@type":"ListItem","position":{{ loop.index }},"name":{{ (s.name ~ "（" ~ s.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}
+</script>{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": spec.term ~ "の記録"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
+{% block content %}
+<h1>{{ spec.term }}の記録</h1>
+<p class="updated">{{ period_from_ja }} 〜 {{ period_to_ja }}（{{ day_count }}営業日）</p>
+<p class="summary">{{ summary }}</p>
+
+<p>
+  株価が1日に動ける幅には制限があり（<a href="{{ base_url }}glossary.html">値幅制限</a>）、
+  そこまで{{ spec.verb }}状態を<strong>{{ spec.term }}</strong>といいます。
+  同じ値動きでも、{{ spec.bound }}で止まったのか、届かずに終わったのかで需給の強さは違います。
+  当サイトは{{ spec.term }}になった銘柄を毎営業日記録しています。
+</p>
+<p class="note-scope">
+  {% if has_recorded and not has_estimated %}
+  <strong>取得元の{{ spec.term }}一覧をそのまま記録したものです。</strong>
+  「その日{{ spec.term }}をつけた銘柄」のうち、<strong>引けまで{{ spec.bound }}を保った銘柄</strong>を数えています
+  （場中につけたあと戻した銘柄は含みません）。
+  {% elif has_recorded %}
+  <strong>{{ recorded_from }} 以降は、取得元の{{ spec.term }}一覧をそのまま記録しています</strong>
+  （引けまで{{ spec.bound }}を保った銘柄を数えます）。
+  それ以前は{{ spec.source_rank }}ランキングの上位30銘柄から推定したもので、
+  <strong>上位30銘柄の外にあった{{ spec.term }}は含みません</strong>。
+  件数を日付をまたいで比べるときは、この違いに注意してください。
+  {% else %}
+  <strong>対象は{{ spec.source_rank }}ランキングの上位30銘柄です。</strong>
+  東証のすべての{{ spec.term }}銘柄を網羅したものではありません
+  （当サイトが毎日取得しているのが上位30銘柄までのため）。
+  {% endif %}
+</p>
+
+{% if trend_chart %}
+<h2>日ごとの件数</h2>
+<figure class="chart-figure">
+  {{ trend_chart|safe }}
+  <figcaption>1営業日あたりの{{ spec.term }}の数</figcaption>
+</figure>
+{% endif %}
+
+{% if by_market %}
+<h2>どの市場・どの業種で起きているか</h2>
+<p>
+  取得元の一覧をそのまま記録した{{ recorded_count }}件の内訳です。
+  同じ銘柄が別の日に{{ spec.term }}になれば2件と数えています。
+  {%- if market_total < recorded_count or industry_total < recorded_count %}
+  市場区分や業種が分からない銘柄は数えていません（表ごとの合計は見出しの横にあります）。
+  {%- endif %}
+</p>
+<div class="breakdown">
+  <div>
+    <h3>市場区分</h3>
+    <table class="breakdown-table">
+      <caption>{{ spec.term }}の市場区分別の内訳（{{ market_total }}件）</caption>
+      <thead><tr><th scope="col">市場</th><th scope="col">件数</th><th scope="col">割合</th></tr></thead>
+      <tbody>
+        {% for row in by_market %}
+        <tr><th scope="row">{{ row.label }}</th><td>{{ row.count }}</td><td>{{ row.share }}%</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h3>業種{% if industry_count > by_industry|length %}（多い順に{{ by_industry|length }}業種）{% endif %}</h3>
+    <table class="breakdown-table">
+      <caption>{{ spec.term }}の業種別の内訳（{{ industry_total }}件）</caption>
+      <thead><tr><th scope="col">業種</th><th scope="col">件数</th><th scope="col">割合</th></tr></thead>
+      <tbody>
+        {% for row in by_industry %}
+        <tr><th scope="row">{{ row.label }}</th><td>{{ row.count }}</td><td>{{ row.share }}%</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if stocks %}
+<h2>複数回{{ spec.term }}になった銘柄</h2>
+<p>この期間に2回以上{{ spec.term }}になった{{ stocks|length }}銘柄です。「連続」はカレンダーの連日ではなく、当サイトの掲載日の並びで数えています。</p>
+<div class="table-wrap">
+<table class="ranking" data-sortable>
+  <caption>{{ period_from }}〜{{ period_to }} に2回以上{{ spec.term }}になった銘柄</caption>
+  <thead>
+    <tr>
+      <th scope="col">回数</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">{{ spec.pct_label }}</th>
+      <th scope="col">最長連続</th>
+      <th scope="col">直近</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in stocks %}
+    <tr>
+      <th scope="row">{{ s.count }}回</th>
+      <td>{% if s.has_page %}<a href="{{ base_url }}stock/{{ s.code }}/">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}</td>
+      <td>{{ s.code }}</td>
+      <td class="{{ spec.pct_class }}">{{ "%+.2f"|format(s.best_pct) }}%</td>
+      <td>{{ s.streak }}日</td>
+      <td>{{ s.latest }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+<h2>日ごとの記録</h2>
+<div class="archive-list">
+  {% for day in per_day %}
+  <a href="{{ base_url }}archive/{{ spec.archive }}/{{ day.rec_date }}.html">
+    <span class="archive-date">{{ day.rec_date_ja }}</span>
+    <span class="archive-top">
+      {% if day.count %}{{ spec.term }} {{ day.count }}銘柄 ／ {{ day.names }}{% else %}{{ spec.term }}なし{% endif %}
+      {% if day.source == "estimated" %}<span class="badge">上位30銘柄から推定</span>{% endif %}
+    </span>
+  </a>
+  {% endfor %}
+</div>
+
+<p>
+  {{ spec.term }}の読み方は<a href="{{ base_url }}guide.html">ランキングの読み方</a>に、
+  値幅の一覧は<a href="{{ base_url }}glossary.html">用語解説</a>にあります。
+</p>
+{% include "_ad_slot.html" %}
+{% endblock %}

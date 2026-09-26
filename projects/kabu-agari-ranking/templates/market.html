@@ -11,8 +11,9 @@
 <p class="updated">{{ period_from_ja }} 〜 {{ period_to_ja }}（{{ day_count }}営業日）</p>
 <p class="summary">{{ summary }}</p>
 <p>
-  値上がりランキングの上位30銘柄から数えた、日ごとの数字です。
-  個別の銘柄ではなく「その日がどれだけ荒かったか」を見るためのページです。
+  日ごとの数字を並べたページです。個別の銘柄ではなく
+  「その日がどれだけ荒かったか」を見るためのものです。
+  「10%以上」と「首位の上昇率」は値上がりランキングの上位30銘柄から数えています。
 </p>
 
 <h2>10%以上動いた銘柄の数</h2>
@@ -23,10 +24,16 @@
 </figure>
 
 <h2>ストップ高の数</h2>
-<p>値幅制限の上限まで買われた銘柄の数です。判定の方法は<a href="{{ base_url }}glossary.html">用語解説</a>にあります。</p>
+<p>
+  値幅制限の上限まで買われた銘柄の数です。判定の方法は<a href="{{ base_url }}glossary.html">用語解説</a>にあります。
+  {% if has_recorded %}取得元の一覧をそのまま記録した日は全件、それ以前の日は値上がり上位30銘柄からの推定です
+  （下の表で出どころが分かります）。{% else %}値上がり上位30銘柄から数えたものです。{% endif %}
+  日ごとの顔ぶれは<a href="{{ base_url }}stop-high/index.html">ストップ高の記録</a>、
+  下限まで売られた銘柄は<a href="{{ base_url }}stop-low/index.html">ストップ安の記録</a>にあります。
+</p>
 <figure class="chart-figure">
   {{ stop_chart|safe }}
-  <figcaption>1日あたりのストップ高の数（値上がり上位30銘柄のうち）</figcaption>
+  <figcaption>1日あたりのストップ高の数</figcaption>
 </figure>
 
 <h2>首位の上昇率</h2>
@@ -54,7 +61,7 @@
     <tr>
       <th scope="row"><a href="{{ base_url }}archive/gainers/{{ row.rec_date }}.html">{{ row.rec_date }}</a></th>
       <td>{{ row.big }}銘柄</td>
-      <td>{{ row.stop_high }}銘柄</td>
+      <td>{{ row.stop_high }}銘柄{% if row.stop_source == "estimated" %}<span class="badge">推定</span>{% endif %}</td>
       <td>{{ row.stop_low }}銘柄</td>
       <td class="gain">{{ "%+.2f"|format(row.top_pct) }}%</td>
     </tr>

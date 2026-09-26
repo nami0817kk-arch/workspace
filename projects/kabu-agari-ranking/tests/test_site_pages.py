@@ -298,7 +298,39 @@ def test_相場の振り返りは日ごとの数字を持つ():
     }]
     row = render.market_rows(days)[0]
     assert row == {"rec_date": "2026-09-18", "big": 1, "stop_high": 1,
-                   "stop_low": 1, "top_pct": 44.25}
+                   "stop_low": 1, "stop_source": "estimated", "top_pct": 44.25}
+
+
+def test_相場の振り返りは記録がある日は全件を数える():
+    """ストップ高のページと同じ数え方を使う。別々に数えると、同じ日の件数が
+    ページによって違うという、直しようのない食い違いになる。"""
+    days = [{
+        "rec_date": "2026-09-28",
+        # 値上がり上位30銘柄には1件しか出ていないが、
+        "gainers": [
+            {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+             "change_pct": 44.25, "metric_value": 1},
+        ],
+        "losers": [],
+        "active": [],
+        # 取得元の一覧には3件あった（うち引けまで保ったのは2件）
+        "stop_high": [
+            {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+             "change_pct": 44.25, "at_limit": True},
+            {"rank": 2, "code": "9999", "name": "上位外", "close": 500.0,
+             "change_pct": 20.0, "at_limit": True},
+            {"rank": 3, "code": "8888", "name": "場中だけ", "close": 700.0,
+             "change_pct": 15.0, "at_limit": False},
+        ],
+        "stop_low": [
+            {"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+             "change_pct": -25.08, "at_limit": True},
+        ],
+    }]
+    row = render.market_rows(days)[0]
+    assert row["stop_high"] == 2
+    assert row["stop_low"] == 1
+    assert row["stop_source"] == "recorded"
 
 
 def test_相場の振り返りの一文は最も荒れた日を指す():
