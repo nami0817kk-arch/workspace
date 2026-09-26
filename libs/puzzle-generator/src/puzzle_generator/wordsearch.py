@@ -43,6 +43,10 @@ HIRAGANA = list(
     "がぎぐげござじずぜぞだでどばびぶべぼぱぴぷぺぽ"
 )
 KATAKANA = [chr(ord(c) + 0x60) for c in HIRAGANA]
+# ひらがなの埋め草には半濁音（ぱ行）を使わない。和語にほとんど出ず、盤面がざわついて見える
+# （「春の花」の盤面が ぱ・ぷ・ぽ だらけに見えた。2026-09-26）。カタカナは外来語で多いので残す
+HIRAGANA_FILLER = [ch for ch in HIRAGANA if ch not in "ぱぴぷぺぽ"]
+_SMALL_KANA = set("ぁぃぅぇぉゃゅょっゎァィゥェォャュョッヮ")
 
 # 埋め草で偶然できてはいけない語。ひらがな・カタカナの両方で調べる。
 # 盤面の読者は高齢者と介護の現場。死・暴言・下品な語を避ける。
@@ -200,8 +204,9 @@ def build_wordsearch(
             if a != b and (a in b or a[::-1] in b):
                 raise ValueError(f"「{a}」が「{b}」の中に含まれている")
 
-    alphabet = KATAKANA + ["ー"] if script == "katakana" else HIRAGANA
-    word_chars = [c for a in answers for c in a]
+    alphabet = KATAKANA + ["ー"] if script == "katakana" else HIRAGANA_FILLER
+    # 小書き文字（ゃ・っ）が埋め草に単独で浮くと不自然なので、語の文字から選ぶときも除く
+    word_chars = [c for a in answers for c in a if c not in _SMALL_KANA] or alphabet
     rng = random.Random(seed)
     for _ in range(max_attempts):
         placed = _place_words(answers, size, directions, rng)
@@ -211,8 +216,9 @@ def build_wordsearch(
         fixed = {(x, y) for y in range(size) for x in range(size) if base[y][x] is not None}
 
         def draw() -> str:
-            # 半分は語に出てくる文字から選ぶ（語の文字だけが目立たないように）
-            return rng.choice(word_chars) if rng.random() < 0.5 else rng.choice(alphabet)
+            # 3割は語に出てくる文字から選ぶ（語の文字だけが目立たないように）。
+            # 5割にしたら「たんぽぽ」の盤面が「ぽ」だらけになった（2026-09-26）
+            return rng.choice(word_chars) if rng.random() < 0.3 else rng.choice(alphabet)
 
         grid = [[base[y][x] if base[y][x] is not None else draw() for x in range(size)] for y in range(size)]
         by_answer = {p["answer"]: p for p in placements}

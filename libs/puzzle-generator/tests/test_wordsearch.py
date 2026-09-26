@@ -4,6 +4,7 @@ import pytest
 
 from puzzle_generator import (
     BLOCKED_WORDS,
+    DIRS,
     build_wordsearch,
     find_all,
     validate_record,
@@ -80,3 +81,17 @@ def test_katakana_script():
     assert verify_wordsearch(rec)
     hira = set("あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわん")
     assert not any(ch in hira for row in rec["board"]["grid"] for ch in row)
+
+
+def test_filler_has_no_lone_small_kana():
+    words = [{"answer": a, "label": a} for a in ["きゅうり", "ちょう", "じゃがいも", "しょうゆ"]]
+    for seed in range(20):
+        rec = build_wordsearch(words, "medium", seed)
+        used = set()
+        for p in rec["solution"]["placements"]:
+            dx, dy = DIRS[p["dir"]]
+            used |= {(p["start"][0] + dx * i, p["start"][1] + dy * i) for i in range(len(p["answer"]))}
+        for y, row in enumerate(rec["board"]["grid"]):
+            for x, ch in enumerate(row):
+                if (x, y) not in used:
+                    assert ch not in "ゃゅょっ", (seed, x, y, ch)
