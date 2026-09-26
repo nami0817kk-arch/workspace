@@ -64,6 +64,15 @@ LARGE_FLAT_COST_JPY = 530
 LARGE_FIXED_JPY = 206
 LARGE_PER_PAGE_JPY = 3
 
+# プレミアムカラー（大判）。A4 は標準カラーが使えない（topic/GX56BFPW4BKNPGFW）ので、カラーならこれ。
+# 24〜40 ページは一律 475 円、42 ページ以上は 206 円 + 1ページ 5 円（topic/G201834340、2026-09-26 確認）
+PREMIUM_LARGE_FLAT_MAX_PAGES = 40
+PREMIUM_LARGE_FLAT_COST_JPY = 475
+PREMIUM_LARGE_FIXED_JPY = 206
+PREMIUM_LARGE_PER_PAGE_JPY = 5
+# 背幅はインクで変わる。プレミアムカラーは 1ページ 0.002347 in（topic/G201953020）
+SPINE_PER_PAGE_PREMIUM_IN = 0.002347
+
 
 def inside_margin_in(page_count: int) -> float:
     for max_pages, margin in _INSIDE_MARGIN_TABLE:
@@ -72,21 +81,27 @@ def inside_margin_in(page_count: int) -> float:
     raise ValueError(f"KDP のペーパーバックの上限を超えている: {page_count}ページ")
 
 
-def print_cost_jpy(page_count: int) -> int:
-    """amazon.co.jp の印刷コスト（大判・白黒）。"""
+def print_cost_jpy(page_count: int, ink: str = "black") -> int:
+    """amazon.co.jp の印刷コスト（大判）。ink は "black" か "premium"（プレミアムカラー）。"""
+    if ink == "premium":
+        if page_count <= PREMIUM_LARGE_FLAT_MAX_PAGES:
+            return PREMIUM_LARGE_FLAT_COST_JPY
+        return PREMIUM_LARGE_FIXED_JPY + PREMIUM_LARGE_PER_PAGE_JPY * page_count
     if page_count <= LARGE_FLAT_MAX_PAGES:
         return LARGE_FLAT_COST_JPY
     return LARGE_FIXED_JPY + LARGE_PER_PAGE_JPY * page_count
 
 
-def royalty_jpy(list_price_ex_tax: int, page_count: int) -> float:
+def royalty_jpy(list_price_ex_tax: int, page_count: int, ink: str = "black") -> float:
     """1冊あたりの印税。価格は税抜で入力する（消費税は Amazon が足す）。topic/G201834330
 
     999円以下は 50%、1,000円以上は 60%。
     """
     rate = 0.6 if list_price_ex_tax >= 1000 else 0.5
-    return rate * list_price_ex_tax - print_cost_jpy(page_count)
+    return rate * list_price_ex_tax - print_cost_jpy(page_count, ink)
 
 
-def spine_width_in(page_count: int, paper: str = "white") -> float:
+def spine_width_in(page_count: int, paper: str = "white", ink: str = "black") -> float:
+    if ink == "premium":
+        return page_count * SPINE_PER_PAGE_PREMIUM_IN
     return page_count * SPINE_PER_PAGE_IN[paper]

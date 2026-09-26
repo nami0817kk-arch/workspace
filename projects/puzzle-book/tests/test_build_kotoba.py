@@ -48,7 +48,8 @@ def test_cover_size_follows_kdp_formula(built):
     spec, _, _, cover, total = built
     trim = kdp_spec.TRIMS[spec.trim]
     box = PdfReader(str(cover)).pages[0].mediabox
-    assert float(box.width) == pytest.approx((0.25 + trim.width_in * 2 + total * 0.002252) * 72, abs=0.05)
+    spine_per_page = 0.002347 if spec.ink == "premium" else 0.002252  # プレミアムカラーは背が厚い
+    assert float(box.width) == pytest.approx((0.25 + trim.width_in * 2 + total * spine_per_page) * 72, abs=0.05)
     assert float(box.height) == pytest.approx((0.25 + trim.height_in) * 72, abs=0.05)
 
 
@@ -69,3 +70,11 @@ def test_themes_must_be_in_order(tmp_path):
     spec.themes = [spec.themes[-1], spec.themes[0]]
     with pytest.raises(ValueError):
         generate_puzzles(spec)
+
+
+def test_premium_color_cost_table():
+    """A4 のカラーはプレミアムカラーのみ。42ページ以上は 206円 + 5円/ページ（topic/G201834340）。"""
+    assert kdp_spec.print_cost_jpy(78, "premium") == 596
+    assert kdp_spec.print_cost_jpy(40, "premium") == 475
+    assert kdp_spec.royalty_jpy(1200, 78, "premium") == pytest.approx(124)
+    assert kdp_spec.print_cost_jpy(78) == 530
