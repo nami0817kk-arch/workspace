@@ -47,8 +47,13 @@ class Progress extends ChangeNotifier {
   int stars(Level l) => _prefs.getInt('stars.${l.id}') ?? 0;
   bool cleared(Level l) => stars(l) > 0;
 
+  /// テスト用 Web版だけ全面を最初から開ける（goso-boat-web-test.yml が
+  /// `--dart-define=GOSO_UNLOCK_ALL=true` を付ける）。iOS アプリには付けない。
+  static const unlockAll = bool.fromEnvironment('GOSO_UNLOCK_ALL');
+
   /// 1つ前の面を解いていれば遊べる。
   bool unlocked(Level l) {
+    if (unlockAll) return true;
     final i = levels.indexOf(l);
     return i <= 0 || cleared(levels[i - 1]);
   }
