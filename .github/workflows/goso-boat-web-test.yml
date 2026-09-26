@@ -41,10 +41,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # 試す人がどの面でもすぐ遊べるよう、テスト版だけ全面を開ける（ユーザー指示「最難関やってみたい」）。
       # 描画エンジン(CanvasKit)も同梱して外部の CDN に頼らない。
       # 更新をすぐ試せるよう、古い版を端末に残す service worker は作らない。
       - name: Build web
-        run: flutter build web --release --base-href "/" --no-web-resources-cdn --pwa-strategy=none
+        run: flutter build web --release --base-href "/" --no-web-resources-cdn --pwa-strategy=none --dart-define=GOSO_UNLOCK_ALL=true
 
       - name: 検索に出さない設定が入っているか
         run: |
