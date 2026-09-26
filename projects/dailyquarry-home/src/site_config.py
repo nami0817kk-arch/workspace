@@ -16,7 +16,7 @@ SEARCH_CONSOLE_TOKEN = os.environ.get(
 
 # "ca-pub-..."。**空のあいだは広告スクリプトも ads.txt も出さない。**
 # 入れると head にスクリプト（所有確認を兼ねる）と、ルートの ads.txt が出る。
-ADSENSE_CLIENT = os.environ.get("DQ_ADSENSE_CLIENT", "")
+ADSENSE_CLIENT = os.environ.get("DQ_ADSENSE_CLIENT", "ca-pub-6409014819339195")
 
 # 公開名義と連絡先。個人名は出さない。転送先はここに書かない（リポジトリは public）。
 OWNER = "つるはし社"
