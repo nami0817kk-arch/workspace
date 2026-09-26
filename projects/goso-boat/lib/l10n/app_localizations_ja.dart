@@ -292,4 +292,22 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get intro6Body =>
       '舟は「手前の岸と中州」「中州と向こう岸」の間を行き来する。岸から岸へ直接は行けない。\n中州に人を残すこともできる。中州でも見張りが要る。';
+
+  @override
+  String get world7 => '総力戦';
+
+  @override
+  String get world8 => '鬼門';
+
+  @override
+  String get intro7Title => '総力戦';
+
+  @override
+  String get intro7Body => '中州に、看守長も警察犬もボスも手錠の2人も。\nこれまでの決まりを全部使って渡しきる。';
+
+  @override
+  String get intro8Title => '鬼門';
+
+  @override
+  String get intro8Body => '全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。';
 }
