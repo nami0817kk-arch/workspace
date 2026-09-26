@@ -12,6 +12,7 @@ import 'package:soccer_career/monetize/monetization.dart';
 import 'package:soccer_career/monetize/purchase_service.dart';
 
 class FakeAds implements AdService {
+  int tried = 0;
   int shown = 0;
   bool disposed = false;
   bool ready = true;
@@ -23,7 +24,13 @@ class FakeAds implements AdService {
   bool get isInterstitialReady => ready;
 
   @override
-  Future<void> showInterstitial() async => shown++;
+  Future<bool> showInterstitial() async {
+    tried++;
+    // 在庫が無ければ、出さずに false を返す（本物と同じ振る舞い）。
+    if (!ready) return false;
+    shown++;
+    return true;
+  }
 
   @override
   void dispose() => disposed = true;
@@ -38,6 +45,16 @@ class FakeStore implements PurchaseService {
   int restores = 0;
 
   @override
+  set onDelivered(void Function(Product product)? callback) =>
+      _onDelivered = callback;
+
+  void Function(Product product)? _onDelivered;
+
+  /// ストアから後から流れてくるぶん（アプリを落としている間に決済が通った、
+  /// 家族の承認が下りた、別の端末で買った）。
+  void deliver(Product product) => _onDelivered?.call(product);
+
+  @override
   Future<void> initialize() async {}
 
   @override
@@ -49,13 +66,19 @@ class FakeStore implements PurchaseService {
 
   @override
   Future<PurchaseOutcome> buy(Product product) async {
-    if (outcome == PurchaseOutcome.purchased) bought.add(product);
+    if (outcome == PurchaseOutcome.purchased) {
+      bought.add(product);
+      _onDelivered?.call(product);
+    }
     return outcome;
   }
 
   @override
   Future<PurchaseOutcome> restore() async {
     restores++;
+    if (outcome == PurchaseOutcome.purchased) {
+      _onDelivered?.call(Product.noAds);
+    }
     return outcome;
   }
 
@@ -135,13 +158,32 @@ void main() {
       expect(ads.shown, 2);
     });
 
-    test('在庫が無くても、間隔は空けたことにする', () async {
-      // **出したことにするのは出す前。** 出したあとに記録すると、
-      // 在庫切れで即座に戻ったときに間隔が空かず、次の季でまた出る。
+    test('在庫が無かった回は、間隔を数えない', () async {
+      // **出せた回だけ数える。** 出す前に記録していた頃は、在庫が無くて
+      // 何も起きなかった回まで「出した」ことになり、**見せていないのに
+      // 次の機会が潰れていた**（そのぶんそのまま収入が消える）。
       final ads = FakeAds()..ready = false;
       final money = await started(ads: ads);
       final now = DateTime(2026, 9, 25, 12);
       await money.showSeasonAd(seasonsPlayed: 5, now: now);
+      expect(ads.tried, 1);
+      expect(ads.shown, 0);
+      expect(
+        money.shouldShowSeasonAd(
+          seasonsPlayed: 6,
+          now: now.add(const Duration(minutes: 1)),
+        ),
+        isTrue,
+        reason: '出していない回で間隔を潰している',
+      );
+    });
+
+    test('出せた回のあとは、間隔を空ける', () async {
+      final ads = FakeAds();
+      final money = await started(ads: ads);
+      final now = DateTime(2026, 9, 25, 12);
+      await money.showSeasonAd(seasonsPlayed: 5, now: now);
+      expect(ads.shown, 1);
       expect(
         money.shouldShowSeasonAd(
           seasonsPlayed: 6,
@@ -205,6 +247,35 @@ void main() {
       expect(await money.restore(), PurchaseOutcome.purchased);
       expect(store.restores, 1);
       expect(money.noAds, isTrue);
+    });
+
+    test('アプリを落としている間に決済が通っても、ちゃんと受け取る', () async {
+      // **払ったのに何も起きない**を潰す検査。ストアの通知は購入を始めた
+      // 瞬間に返ってくるとは限らない（家族の承認、5分の上限を過ぎた後、
+      // 別の端末で買ったぶん）。待っている人が居なくても受け取る。
+      final ads = FakeAds();
+      final store = FakeStore();
+      final money = await started(ads: ads, store: store);
+      expect(money.noAds, isFalse);
+
+      store.deliver(Product.noAds); // 誰も await していない
+      await Future<void>.delayed(Duration.zero);
+
+      expect(money.noAds, isTrue);
+      expect(money.shouldShowSeasonAd(seasonsPlayed: 10), isFalse);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool('monetize.noAds'), isTrue);
+    });
+
+    test('同じ購入が二度流れてきても、応援を二重に数えない', () async {
+      final store = FakeStore();
+      final money = await started(store: store);
+      store.deliver(Product.noAds);
+      store.deliver(Product.noAds);
+      await Future<void>.delayed(Duration.zero);
+      expect(money.noAds, isTrue);
+      // 広告を消すのは何度届いても1回ぶん。
+      expect(money.tips, 0);
     });
 
     test('ストアに繋がらなければ、購入の導線を出さない', () async {

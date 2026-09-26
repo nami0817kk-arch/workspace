@@ -11,6 +11,8 @@ import '../../game/world.dart';
 import '../../models/agent.dart';
 import '../../models/competition.dart';
 import '../../models/life.dart';
+import '../../monetize/monetization.dart';
+import 'support_screen.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../player_banner.dart';
@@ -21,9 +23,16 @@ import '../../models/career.dart';
 /// オファーごとに「受け入れる」か「上乗せを要求する」かを選べる。
 /// 要求は代理人の交渉力次第で、失敗するとオファーが消えることもある。
 class SeasonEndScreen extends StatefulWidget {
-  const SeasonEndScreen({super.key, required this.controller});
+  const SeasonEndScreen({
+    super.key,
+    required this.controller,
+    this.monetization,
+  });
 
   final CareerController controller;
+
+  /// 広告と課金。**渡されなければ何も出さない**（テストとブラウザ版）。
+  final Monetization? monetization;
 
   @override
   State<SeasonEndScreen> createState() => _SeasonEndScreenState();
@@ -143,6 +152,26 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  /// 「広告を消す」を勧めてよいか。
+  ///
+  /// 出る前に勧めても何の話か分からないので、**広告が出るようになってから**。
+  bool get _offersNoAds {
+    final money = widget.monetization;
+    if (money == null || money.noAds || !money.storeAvailable) return false;
+    return (widget.controller.state?.history.length ?? 0) >=
+        Monetization.freeSeasons;
+  }
+
+  void _openSupport() {
+    final money = widget.monetization;
+    if (money == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SupportScreen(monetization: money),
+      ),
+    );
   }
 
   Future<void> _retire() async {
@@ -328,6 +357,14 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   everBackedUp: state.backedUpYear > 0,
                   onBackup: () => TransferCode.show(context, widget.controller),
                 ),
+                // **広告を消せることは、広告が出る場所で伝える。**
+                // ⋮ の奥にしか置いていなかったので、出るのは知っていても
+                // 消せることを知らないままになる。
+                // 広告が出る前（最初の数季）と、買った人には出さない。
+                if (_offersNoAds) ...[
+                  const SizedBox(height: 12),
+                  _NoAdsCard(onOpen: _openSupport),
+                ],
                 const SizedBox(height: 24),
                 if (mustRetire) ...[
                   Text('${state.player.age}歳。体は限界を迎えた。', style: muted),
@@ -834,6 +871,44 @@ class _SeasonBand extends StatelessWidget {
                   FateChip(fate: fate, tier: state.club.tier),
                 ],
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 「広告を消す」への入口。シーズンの切れ目——広告が出る場所に置く。
+class _NoAdsCard extends StatelessWidget {
+  const _NoAdsCard({required this.onOpen});
+
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('広告', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 6),
+            Text(
+              'シーズンの切れ目に1回だけ出る。買い切りで消せる。'
+              '強くなる課金は置いていない。',
+              style: theme.textTheme.bodySmall,
+            ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton.icon(
+                onPressed: onOpen,
+                icon: const Icon(Icons.block, size: 18),
+                label: const Text('広告を消す'),
+              ),
             ),
           ],
         ),
