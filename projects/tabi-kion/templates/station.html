@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ st.name }}の気温と服装｜月ごとの平年値{% endblock %}
+{% block description %}{{ st.name }}（{{ st.pref }}）の1月〜12月の最高・最低気温、雨や雪の日数と服装の目安の一覧。気象庁の平年値（1991〜2020年）から。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">地点の一覧</a>
+  <span>›</span>
+  <span aria-current="page">{{ st.name }}</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>{{ st.name }}の気温と服装（月ごと）</h1>
+<p class="updated">{{ st.pref }}{% if st.nearby %}・近くの観光地: {{ st.nearby }}{% endif %}</p>
+
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>月</th><th>最高</th><th>最低</th><th>雨の日</th><th>日中の服装</th></tr></thead>
+  <tbody>
+    {% for m in months %}
+    <tr>
+      <th><a href="{{ m.month }}.html">{{ m.month }}月</a></th>
+      <td>{{ "%.1f"|format(m.tmax) }}℃</td><td>{{ "%.1f"|format(m.tmin) }}℃</td>
+      <td>{% if m.rain_days is not none %}{{ "%.0f"|format(m.rain_days) }}日{% else %}—{% endif %}</td>
+      <td class="wrap">{{ m.day_clothing }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<p class="source">
+  出典: <a href="{{ SOURCE.page }}" rel="nofollow noopener" target="_blank">{{ SOURCE.name }}「{{ SOURCE.title }}」</a>（{{ st.name }}、地点番号 {{ st.code }}）をもとに当サイトで加工して作成。
+</p>
+{% endblock %}

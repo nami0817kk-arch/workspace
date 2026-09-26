@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% set st = c.station %}
+{% block title %}{{ st.name }}の{{ c.month }}月の気温と服装｜平年の最高{{ "%.1f"|format(c.tmax) }}℃・最低{{ "%.1f"|format(c.tmin) }}℃{% endblock %}
+{% block description %}{{ st.name }}（{{ st.pref }}）の{{ c.month }}月は、日中の最高気温が平年{{ "%.1f"|format(c.tmax) }}℃、朝晩の最低気温が{{ "%.1f"|format(c.tmin) }}℃。上旬・中旬・下旬の気温、雨や雪の日数、{% for cmp in comparisons %}{{ cmp.other.name }}{% if not loop.last %}・{% endif %}{% endfor %}との差と服装の目安。気象庁の平年値から。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">地点の一覧</a>
+  <span>›</span>
+  <a href="{{ base_url }}{{ st.slug }}/index.html">{{ st.name }}</a>
+  <span>›</span>
+  <span aria-current="page">{{ c.month }}月</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>{{ st.name }}の{{ c.month }}月の気温と服装</h1>
+<p class="updated">{{ st.pref }}{% if st.nearby %}・近くの観光地: {{ st.nearby }}{% endif %}</p>
+
+<p>
+  {{ st.name }}の{{ c.month }}月は、日中の最高気温が平年<strong>{{ "%.1f"|format(c.tmax) }}℃</strong>、
+  朝晩の最低気温が<strong>{{ "%.1f"|format(c.tmin) }}℃</strong>です。
+  {{ comparison_sentence(comparisons) }}
+</p>
+
+<div class="card">
+  <h2 class="card-title">服装の目安</h2>
+  <dl class="clothing">
+    <dt>日中（最高 {{ "%.1f"|format(c.tmax) }}℃）</dt>
+    <dd>{{ c.day_clothing }}</dd>
+    <dt>朝晩（最低 {{ "%.1f"|format(c.tmin) }}℃）</dt>
+    <dd>{{ c.night_clothing }}</dd>
+  </dl>
+  {% if c.notes() %}
+  <ul class="notes">
+    {% for n in c.notes() %}<li>{{ n }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  <p class="hint">服装の目安は、最高・最低気温から当サイトの決めた区切りで出したものです。風や日差しで体感は変わります。</p>
+</div>
+
+<h2>上旬・中旬・下旬の気温</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th></th><th>最高気温</th><th>最低気温</th></tr></thead>
+  <tbody>
+    {% for name, hi, lo in c.dekads %}
+    <tr><th>{{ c.month }}月{{ name }}</th><td>{{ "%.1f"|format(hi) }}℃</td><td>{{ "%.1f"|format(lo) }}℃</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% set first, last = c.dekads[0], c.dekads[2] %}
+<p>
+  月の初めと終わりで、最高気温は{{ "%.1f"|format((last[1] - first[1])|abs) }}℃{{ "上がり" if last[1] > first[1] else "下がり" }}ます。
+  旅行の日程が月の{{ "終わり" if last[1] < first[1] else "初め" }}なら、表より少し寒めの用意を。
+</p>
+
+<h2>{{ c.month }}月の天気の数字（平年値）</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <tbody>
+    <tr><th>平均気温</th><td>{{ "%.1f"|format(c.temp) }}℃</td></tr>
+    <tr><th>最高気温の平均</th><td>{{ "%.1f"|format(c.tmax) }}℃</td></tr>
+    <tr><th>最低気温の平均</th><td>{{ "%.1f"|format(c.tmin) }}℃</td></tr>
+    {% if c.precip is not none %}<tr><th>降水量</th><td>{{ "%.0f"|format(c.precip) }}mm</td></tr>{% endif %}
+    {% if c.rain_days is not none %}<tr><th>雨の日（1mm以上）</th><td>{{ "%.1f"|format(c.rain_days) }}日</td></tr>{% endif %}
+    {% if c.snow_days %}<tr><th>雪の降る日</th><td>{{ "%.1f"|format(c.snow_days) }}日</td></tr>{% endif %}
+    {% if c.snow_depth_max %}<tr><th>積雪の深さ（月の最大の平年値）</th><td>{{ c.snow_depth_max }}cm</td></tr>{% endif %}
+    {% if c.hot_days %}<tr><th>真夏日（30℃以上）</th><td>{{ "%.1f"|format(c.hot_days) }}日</td></tr>{% endif %}
+    {% if c.frost_days %}<tr><th>冬日（最低気温0℃未満）</th><td>{{ "%.1f"|format(c.frost_days) }}日</td></tr>{% endif %}
+    {% if c.sunshine is not none %}<tr><th>日照時間</th><td>{{ "%.0f"|format(c.sunshine) }}時間</td></tr>{% endif %}
+    {% if c.humidity is not none %}<tr><th>湿度</th><td>{{ c.humidity }}%</td></tr>{% endif %}
+  </tbody>
+</table>
+</div>
+
+<h2>前後の月と比べる</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th></th><th>最高</th><th>最低</th><th>雨の日</th></tr></thead>
+  <tbody>
+    {% for m in neighbors %}
+    <tr{% if m.month == c.month %} class="current"{% endif %}>
+      <th>{% if m.month == c.month %}{{ m.month }}月{% else %}<a href="{{ m.month }}.html">{{ m.month }}月</a>{% endif %}</th>
+      <td>{{ "%.1f"|format(m.tmax) }}℃</td><td>{{ "%.1f"|format(m.tmin) }}℃</td>
+      <td>{% if m.rain_days is not none %}{{ "%.1f"|format(m.rain_days) }}日{% else %}—{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if comparisons %}
+<h2>出発地との違い</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>{{ c.month }}月</th><th>最高気温</th><th>最低気温</th></tr></thead>
+  <tbody>
+    {% for cmp in comparisons %}
+    <tr><th><a href="{{ base_url }}{{ cmp.other.slug }}/{{ c.month }}.html">{{ cmp.other.name }}</a>より</th><td>{{ diff_text(cmp.tmax_diff) }}</td><td>{{ diff_text(cmp.tmin_diff) }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p>ふだん{% for cmp in comparisons %}{{ cmp.other.name }}{% if not loop.last %}や{% endif %}{% endfor %}で着ている服から、どれくらい足すか引くかの目安にしてください。</p>
+{% endif %}
+
+<h2>ほかの月</h2>
+<p class="month-links">
+  {% for m in range(1, 13) %}{% if m == c.month %}<strong>{{ m }}月</strong>{% else %}<a href="{{ m }}.html">{{ m }}月</a>{% endif %}{% if not loop.last %} · {% endif %}{% endfor %}
+</p>
+
+<h2>{{ c.month }}月のほかの地点</h2>
+<p class="month-links">
+  {% for other in same_month_others %}<a href="{{ base_url }}{{ other.slug }}/{{ c.month }}.html">{{ other.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+</p>
+
+<p class="source">
+  出典: <a href="{{ SOURCE.page }}" rel="nofollow noopener" target="_blank">{{ SOURCE.name }}「{{ SOURCE.title }}」</a>（{{ st.name }}、地点番号 {{ st.code }}）をもとに当サイトで加工して作成。
+  数字は1991〜2020年の平均で、予報ではありません。
+</p>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}このサイトについて｜旅先の気温と服装{% endblock %}
+{% block description %}旅先の気温と服装が、どのデータから何を出しているか。{% endblock %}
+{% block content %}
+<h1>このサイトについて</h1>
+
+<h2>何を載せているか</h2>
+<p>
+  旅行先の月ごとの気温・雨の日・雪の日などと、服装の目安です。
+  数字は<a href="{{ SOURCE.page }}" rel="nofollow noopener" target="_blank">気象庁の平年値</a>
+  （統計期間1991〜2020年）の地上気象観測の値を、プログラムで読み取って載せています。
+</p>
+
+<h2>地点の名前について</h2>
+<p>
+  地点の名前は、気象庁の観測所の名前のままにしています。観光地の名前に置き換えると、
+  別の場所で測った数字をその観光地の数字のように見せてしまうためです。
+  観測所の近くにある観光地は「近くの観光地」として書き添えていますが、標高や海からの距離が違えば気温も変わります。
+</p>
+
+<h2>服装の目安の決め方</h2>
+<p>最高気温（日中）と最低気温（朝晩）を、次の区切りに当てはめています。当サイトの決めごとで、気象庁の情報ではありません。</p>
+<div class="table-wrap">
+<table class="plain">
+  <thead><tr><th>気温</th><th>服装の目安</th></tr></thead>
+  <tbody>
+    {% for label, text in clothing_rows %}<tr><td>{{ label }}</td><td>{{ text }}</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+
+<h2>天気予報ではありません</h2>
+<p>
+  平年値は過去30年の平均で、これからの天気の予想ではありません。当サイトは天気予報を行いません。
+  お出かけの前には、気象庁などの最新の予報をご確認ください。
+</p>
+
+<h2>出典</h2>
+<p>
+  出典: <a href="{{ SOURCE.page }}" rel="nofollow noopener" target="_blank">{{ SOURCE.name }}「{{ SOURCE.title }}」</a>。
+  当サイトで数字を整理し、服装の目安などを加えています（加工あり）。
+</p>
+
+<h2>関連するページ</h2>
+<ul>
+  <li><a href="{{ base_url }}operator.html">運営者情報</a></li>
+  <li><a href="{{ base_url }}privacy.html">プライバシーポリシー</a></li>
+  <li><a href="{{ base_url }}contact.html">お問い合わせ</a></li>
+</ul>
+{% endblock %}

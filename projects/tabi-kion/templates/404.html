@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}ページが見つかりません｜旅先の気温と服装{% endblock %}
+{% block description %}お探しのページは見つかりませんでした。{% endblock %}
+{% block content %}
+<h1>ページが見つかりません</h1>
+<p>お探しのページは移動したか、もともと存在しません。</p>
+<ul>
+  <li><a href="{{ base_url }}index.html">地点の一覧</a></li>
+  <li><a href="{{ base_url }}about.html">このサイトについて</a></li>
+</ul>
+{% endblock %}

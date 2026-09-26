@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}旅先の気温と服装｜月ごとの平年値と服装の目安{% endblock %}
+{% block content %}
+<h1>旅先の気温と服装</h1>
+<p>
+  旅行先の「その月」の最高・最低気温、上旬・中旬・下旬の変化、雨や雪の日数と、服装の目安をまとめています。
+  数字はすべて気象庁の平年値（1991〜2020年の平均）です。
+</p>
+
+{% for pref, stations in by_pref %}
+<h2>{{ pref }}</h2>
+<ul class="station-list">
+  {% for st in stations %}
+  <li><a href="{{ st.slug }}/index.html">{{ st.name }}</a>{% if st.nearby %}<span class="nearby">（{{ st.nearby }}）</span>{% endif %}</li>
+  {% endfor %}
+</ul>
+{% endfor %}
+{% endblock %}
