@@ -23,6 +23,7 @@
     <tr><th>雇用保険料</th><td>総支給額（通勤手当を含む）× {{ koyo.worker_per_mille }}/1,000（{{ koyo.note }}）</td><td><a href="{{ koyo.source.page }}" rel="nofollow noopener" target="_blank">{{ koyo.source.name }}「{{ koyo.source.title }}」</a></td></tr>
     <tr><th>将来の年金の増え方</th><td>標準報酬月額 × 5.481/1,000 × 加入月数（老齢厚生年金の報酬比例部分。今の価値での目安）</td><td><a href="{{ other.pension_accrual.source.page }}" rel="nofollow noopener" target="_blank">{{ other.pension_accrual.source.name }}「{{ other.pension_accrual.source.title }}」</a></td></tr>
     <tr><th>傷病手当金（1日）</th><td>標準報酬月額 ÷ 30（10円未満四捨五入）× 2/3（1円未満四捨五入）</td><td><a href="{{ other.sickness_allowance.source.page }}" rel="nofollow noopener" target="_blank">{{ other.sickness_allowance.source.name }}「{{ other.sickness_allowance.source.title }}」</a></td></tr>
+    <tr><th>所得税</th><td>（給与 − 通勤手当 − 社会保険料 − 雇用保険料）から、給与所得控除・扶養1人31,667円・基礎控除を引き、税率（5.105%〜）をかける。10円未満四捨五入。月額表の税額と数十円ずれることがある（年末調整で精算）</td><td><a href="{{ other.withholding[-1].source.page }}" rel="nofollow noopener" target="_blank">{{ other.withholding[-1].source.name }}「{{ other.withholding[-1].source.title }}」</a></td></tr>
     <tr><th>国民年金保険料</th><td>月{{ "{:,}".format(kokumin.monthly_yen) }}円（令和8年度）。加入前と比べるのに使う</td><td><a href="{{ kokumin.source.page }}" rel="nofollow noopener" target="_blank">{{ kokumin.source.name }}「{{ kokumin.source.title }}」</a></td></tr>
   </tbody>
 </table>
@@ -38,7 +39,7 @@
 
 <h2>計算していないもの</h2>
 <ul>
-  <li>所得税・住民税（前の年の所得や扶養の人数で変わるため）</li>
+  <li>住民税（前の年の所得で決まるため）</li>
   <li>国民健康保険料（市区町村ごとに計算のしかたが違うため）</li>
   <li>賞与にかかる保険料</li>
 </ul>

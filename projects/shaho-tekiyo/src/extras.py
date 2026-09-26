@@ -67,3 +67,35 @@ def pref_full(short: str) -> str:
 
 def extras_json() -> str:
     return json.dumps(RATES, ensure_ascii=False, separators=(",", ":"))
+
+
+def _band(rows: list, amount: int) -> list:
+    for r in rows:
+        lo, hi = r[0], r[1]
+        if amount >= lo and (hi is None or amount <= hi):
+            return r
+    raise ValueError(amount)
+
+
+def income_tax_yen(as_of: date, after_social_yen: int, dependents: int = 0) -> int | None:
+    """月々の給与から天引きされる所得税（源泉徴収税額）の目安。国税庁「電算機計算の特例」（月額表・甲欄）の式どおり。
+
+    after_social_yen: その月の社会保険料等控除後の給与等の金額（課税される給与 − 社会保険料 − 雇用保険料。通勤手当は含めない）
+    dependents: 源泉控除対象配偶者と源泉控除対象親族の数（1人につき31,667円を控除）
+    税額表（月額表）の額とは数十円ずれることがある（特例の注記どおり。差は年末調整で精算される）。
+    """
+    w = _period(RATES["withholding"], as_of)
+    if w is None:
+        return None
+    a = max(after_social_yen, 0)
+    _, _, rate, const = _band(w["employment_deduction"], a)
+    kyuyo = -(-a * rate // 100_000) + const  # 1円未満切り上げ
+    basic = _band(w["basic_deduction"], a)[2]
+    b = a - kyuyo - w["dependent_deduction"] * dependents - basic
+    if b <= 0:
+        return 0
+    _, _, rate, const = _band(w["rates"], b)
+    num = b * rate - const * 100_000  # 単位: 1/100000 円
+    if num <= 0:
+        return 0
+    return (num + 500_000) // 1_000_000 * 10  # 10円未満四捨五入
