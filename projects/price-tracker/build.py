@@ -328,10 +328,13 @@ def build(root: Path, out: Path) -> dict:
         ("archive/", "日付別", len(archive_counts), "過ぎた日の値下がりの記録"),
     ]
     home = out / "index.html"
-    home.write_text(
-        home.read_text(encoding="utf-8").replace(
-            '<footer', theme.views_map(views) + '<footer', 1),
-        encoding="utf-8")
+    text = home.read_text(encoding="utf-8")
+    # 検索窓はトップの一番上。価格を追うサイトで最初にやるのは
+    # 「自分の商品を探す」で、一覧の題より前に来るのが順序として正しい。
+    text = text.replace('<main class="wrap" id="main">',
+                        '<main class="wrap" id="main">' + theme.home_search(), 1)
+    text = text.replace('<footer', theme.views_map(views) + '<footer', 1)
+    home.write_text(text, encoding="utf-8")
 
     write(out / "sitemap.xml", sitemap(site, urls, updated))
     write(out / "robots.txt", robots(site))

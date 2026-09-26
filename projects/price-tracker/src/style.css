@@ -468,3 +468,19 @@ h1 { font-size: 27px; letter-spacing: -.01em; }
   .rank { top: -6px; left: -6px; min-width: 23px; height: 23px; font-size: 12px; }
   .quick .of { width: 100%; margin-left: 0; }
 }
+
+/* トップの一番上の検索窓。価格を追うサイトで最初にやるのは
+   「自分の商品を探す」。camelcamelcamel も入口の一番上が検索窓だった。 */
+.hero { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+.hero input { flex: 1 1 260px; min-width: 0; padding: 12px 15px; font-size: 16px;
+  color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.hero input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.hero button { padding: 12px 24px; font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: inherit; color: var(--panel);
+  background: var(--accent); border: 1px solid var(--accent);
+  border-radius: var(--radius); }
+.hero button:hover { filter: brightness(1.08); }
+/* 読み上げにだけ渡す見出し。目で見る人には placeholder が同じことを言う。 */
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

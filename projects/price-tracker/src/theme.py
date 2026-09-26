@@ -871,6 +871,26 @@ def archive_nav(day: str, older: str | None, newer: str | None) -> str:
     return f'<nav class="pager">{"".join(parts)}</nav>'
 
 
+def home_search(prefix: str = "") -> str:
+    """トップの先頭に置く検索窓。
+
+    トップは一覧そのもので、検索から来た人はいきなり600件の並びと採点の説明を
+    読まされていた。価格を追うサイトで最初にやることは「自分の商品を探す」で、
+    camelcamelcamel も入口の一番上が検索窓だった。
+
+    form の GET で search/?q= に飛ばす。JavaScript を待たないので、
+    読み込みが終わる前に打ち始めても取りこぼさない（検索ページ側は
+    URL の q を読んで、そのまま結果を出す）。
+
+    件数はすぐ下の stats が出すので、ここでは繰り返さない。
+    """
+    return (f'<form class="hero" action="{prefix}search/" method="get" role="search">'
+            f'<label class="sr" for="hq">商品名で探す</label>'
+            f'<input id="hq" name="q" type="search" autocomplete="off"'
+            f' placeholder="商品名で探す（例: イヤホン）">'
+            f'<button type="submit">探す</button></form>')
+
+
 def views_map(counts: list, prefix: str = "") -> str:
     """どの一覧が何を出すのかの索引。
 

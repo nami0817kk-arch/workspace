@@ -358,3 +358,56 @@ class UpdatedDateTest(unittest.TestCase):
             stats = builder.build(root, root / "dist")
 
         self.assertEqual(stats["updated"], builder.today())
+
+
+class HomeSearchTest(unittest.TestCase):
+    """トップの一番上の検索窓。
+
+    トップは一覧そのもので、検索から来た人はいきなり600件の並びと採点の
+    説明を読まされていた。価格を追うサイトで最初にやるのは
+    「自分の商品を探す」。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A",
+                       "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [9000] * 9 + [8000]})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_トップの本文の先頭に置く(self):
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        body = page.split('id="main">')[1]
+
+        self.assertLess(body.index('class="hero"'), body.index("<h1"))
+
+    def test_他の一覧には出さない(self):
+        # どのページにも置くと、一覧の題より前に窓が並ぶ
+        self.assertNotIn('class="hero"',
+                         (self.out / "lows" / "index.html").read_text(encoding="utf-8"))
+
+    def test_JavaScriptを待たずに飛べる(self):
+        # 読み込みが終わる前に打ち始めても取りこぼさないこと。
+        # 検索ページは URL の q を読んでそのまま結果を出す
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        form = page.split('class="hero"')[1].split("</form>")[0]
+
+        self.assertIn('method="get"', page.split('<form class="hero"')[0][-80:]
+                      + page.split('class="hero"')[1][:80])
+        self.assertIn('name="q"', form)
+        self.assertIn('action="search/"', page)
+
+    def test_件数は下の行と二度出さない(self):
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        hero = page.split('class="hero"')[1].split("</form>")[0]
+
+        self.assertNotIn("商品を追跡", hero)
