@@ -34,7 +34,8 @@ permissions:
 jobs:
   build:
     # Apple のツールチェーンは macOS でしか動かないため、ここだけ macOS ランナー。
-    # 非公開リポジトリのため macOS ランナーは無料枠の対象外（分単位で消費する）。
+    # このリポジトリは 2026-09-08 から public なので、macOS ランナーも無料枠で動く
+    # （非公開だった頃は分単位で消費していた。その前提で書かれた注記を訂正）。
     runs-on: macos-latest
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
     timeout-minutes: 60

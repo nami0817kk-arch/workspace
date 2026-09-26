@@ -39,9 +39,6 @@
 
 | プロジェクト | 何をするもの | 状態 |
 |---|---|---|
-| [stock-investment](projects/stock-investment/) | 日本株・米国株の投資支援システム | 運用中 |
-| [ir-analysis](projects/ir-analysis/) | 適時開示(IR)の PDF を取得し、Claude API で要約・関連度判定して Excel 出力 | 運用中 |
-| [quality-gainer-tracker](projects/quality-gainer-tracker/) | 「質の高い値上がり」をスクリーニングして記録し、14営業日の追跡でパフォーマンス検証 | 運用中 |
 
 ### 道具
 
@@ -49,7 +46,7 @@
 |---|---|---|
 | [gemini-api](projects/gemini-api/) | Gemini API を叩いて JSON で返す自分用の FastAPI ゲートウェイ。APIキーを1か所に閉じ込める | 運用中 |
 | [cohabitation-budget](projects/cohabitation-budget/) | 同棲の初期費用・生活費から分担額を出す1ページのツール | **完成**（`index.html` 1枚。分割しない） |
-| [libs/kabutan](libs/kabutan/) | kabutan.jp のランキング取得・解析クライアント。kabu-agari-ranking と quality-gainer-tracker が共用 | 運用中 |
+| [libs/kabutan](libs/kabutan/) | kabutan.jp のランキング取得・解析クライアント。kabu-agari-ranking が使う | 運用中 |
 | [platform/ai-lab](platform/ai-lab/) | 各PJTで使う機能・仕組みの開発場所。growth 点検ループの本体 | 運用中 |
 
 ## 動かし方

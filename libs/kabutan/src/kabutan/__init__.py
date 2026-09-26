@@ -1,6 +1,6 @@
 """kabutan.jp のランキング取得・解析の共有クライアント。
 
-kabu-agari-ranking（公開サイト）と quality-gainer-tracker（記録・追跡）が
+kabu-agari-ranking（公開サイト）が
 同じ解析ロジックを二重に持っていたのを、ここに一本化した。
 kabutan の HTML 構造が変わったときに直す場所はこのパッケージだけ。
 

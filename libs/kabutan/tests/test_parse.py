@@ -1,6 +1,6 @@
 """kabutan の HTML 解析のテスト。
 
-ここが壊れると、利用側（kabu-agari-ranking / quality-gainer-tracker）は
+ここが壊れると、利用側（kabu-agari-ranking）は
 「エラーも出さずにランキングが空になる」という一番気づきにくい壊れ方をする。
 取得先の HTML 構造は先方の都合で変わるので、想定している形を固定しておく。
 """

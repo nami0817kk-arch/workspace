@@ -11,6 +11,13 @@ import 'package:soccer_manager/monetization/reward_offer.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
 class _FakePurchases implements PurchaseService {
+  /// 受け取り口。本物は待っているかどうかに関係なく呼ぶ。
+  @override
+  set onDelivered(Future<void> Function(String productId)? callback) =>
+      onDeliveredCallback = callback;
+
+  Future<void> Function(String productId)? onDeliveredCallback;
+
   _FakePurchases({this.outcome = PurchaseOutcome.purchased});
 
   PurchaseOutcome outcome;

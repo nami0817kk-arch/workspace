@@ -2,7 +2,7 @@
 
 kabutan.jp のランキングページ（`/warning/`）の取得・解析クライアント。
 
-`kabu-agari-ranking`（公開サイト）と `quality-gainer-tracker`（記録・追跡）が
+`kabu-agari-ranking`（公開サイト）と、2026-09-26 に廃止した `quality-gainer-tracker` が
 同じ stock_table 解析を二重に持っていたのを、ここに一本化した。
 **kabutan の HTML 構造が変わったときに直す場所はこのリポジトリだけ。**
 

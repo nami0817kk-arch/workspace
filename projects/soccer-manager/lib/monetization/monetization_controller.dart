@@ -32,6 +32,14 @@ class MonetizationController extends ChangeNotifier {
         _purchases = purchases ?? createPurchaseService();
 
   static const _supporterKey = 'monetization.supporter';
+
+  /// 届いたがまだクラブ資金に移していない資金パックの商品ID(順番付き)。
+  ///
+  /// 資金はセーブの中(クラブ資金)に入るので、セーブが無いあいだ・別の
+  /// スロットを開いているあいだは渡せない。端末側に預かっておき、
+  /// セーブが開かれたときに移す。消費型なので「復元」では戻らない——
+  /// ここで預かり損ねると、払った額がそのまま消える。
+  static const _undeliveredFundsKey = 'monetization.undeliveredFunds';
   static const _claimDayKey = 'monetization.claimDay';
   static const _claimCountKey = 'monetization.claimCount';
 
@@ -51,6 +59,9 @@ class MonetizationController extends ChangeNotifier {
 
   /// ストアが使えるか。使えない環境では購入導線を出さない。
   bool storeAvailable = false;
+
+  /// 届いたが、まだクラブ資金に移していない資金パック。
+  List<FundsPack> undeliveredFundsPacks = const [];
 
   /// 表示用の価格。取得できていなければ null。
   String? priceLabel;
@@ -87,7 +98,13 @@ class MonetizationController extends ChangeNotifier {
     claimedToday = prefs.getInt(_claimCountKey) ?? 0;
     _rolloverIfNewDay();
 
+    undeliveredFundsPacks = _readUndelivered(prefs);
+
     await _ads.initialize();
+    // **受け取りはここ1か所。** 買った瞬間に呼び出し側で渡していた頃、
+    // アプリを落としている間に決済が通った購入は誰も受け取らなかった。
+    // initialize() より先に繋ぐ(起動時に溜まっていた通知が流れてくる)。
+    _purchases.onDelivered = _grant;
     await _purchases.initialize();
     storeAvailable = await _purchases.isAvailable();
     if (storeAvailable) {
@@ -170,16 +187,55 @@ class MonetizationController extends ChangeNotifier {
   Future<PurchaseOutcome> buyFundsPack(FundsPack pack) =>
       _purchases.buyFundsPack(pack);
 
-  Future<PurchaseOutcome> buySupporter() async {
-    final outcome = await _purchases.buySupporter();
-    if (outcome == PurchaseOutcome.purchased) await _markSupporter();
-    return outcome;
+  /// 買う。**受け取るのは [_grant] のほう**なので、ここでは結果を返すだけ。
+  Future<PurchaseOutcome> buySupporter() => _purchases.buySupporter();
+
+  Future<PurchaseOutcome> restorePurchases() => _purchases.restorePurchases();
+
+  /// 届いたものを受け取る。買った直後のぶんも、アプリを落としている間に
+  /// 決済が通ったぶんも、復元したぶんも、全部ここを通る。
+  ///
+  /// ここで失敗すると窓口は完了通知を返さないので、次の起動でまた届く。
+  Future<void> _grant(String productId) async {
+    if (productId == PurchaseService.supporterProductId) {
+      if (isSupporter) return; // 既に渡してある
+      await _markSupporter();
+      return;
+    }
+
+    final pack = FundsPack.values
+        .where((p) => p.productId == productId)
+        .firstOrNull;
+    if (pack == null) return;
+
+    // 資金はセーブの中に入るため、ここでは預かるだけ。
+    final prefs = await SharedPreferences.getInstance();
+    final queued = [..._readUndelivered(prefs), pack];
+    await prefs.setStringList(
+        _undeliveredFundsKey, queued.map((p) => p.productId).toList());
+    undeliveredFundsPacks = queued;
+    notifyListeners();
   }
 
-  Future<PurchaseOutcome> restorePurchases() async {
-    final outcome = await _purchases.restorePurchases();
-    if (outcome == PurchaseOutcome.purchased) await _markSupporter();
-    return outcome;
+  /// 預かっている資金パックをクラブ資金へ移したあとに呼ぶ。
+  Future<void> markFundsPackDelivered(FundsPack pack) async {
+    final remaining = [...undeliveredFundsPacks];
+    final at = remaining.indexOf(pack);
+    if (at < 0) return;
+    remaining.removeAt(at); // 同じパックを複数抱えていても1つだけ消す
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+        _undeliveredFundsKey, remaining.map((p) => p.productId).toList());
+    undeliveredFundsPacks = remaining;
+    notifyListeners();
+  }
+
+  static List<FundsPack> _readUndelivered(SharedPreferences prefs) {
+    final ids = prefs.getStringList(_undeliveredFundsKey) ?? const [];
+    return [
+      for (final id in ids)
+        ...FundsPack.values.where((p) => p.productId == id),
+    ];
   }
 
   Future<void> _markSupporter() async {
