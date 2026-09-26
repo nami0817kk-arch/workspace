@@ -475,6 +475,8 @@ class _Geo {
   _Geo(this.size, this.level) {
     final units = math.max(guardUnits, captiveUnits).toDouble();
     s = math.min(size.width / (units + 1.2), 78.0);
+    // 中州は幅の 58% しかないので、1列が中州に収まる大きさまで縮める
+    if (level.island) s = math.min(s, (size.width * 0.58 - 16) / (units * 0.95));
     // 高さ: 岸2つ（各 2.5s+34）＋舟の通り道（中州の面は中州 2.5s+24 も）
     s = math.min(s, (size.height - (level.island ? 110 : 80)) / (level.island ? 10.6 : 7.8));
     figH = s * 1.25;

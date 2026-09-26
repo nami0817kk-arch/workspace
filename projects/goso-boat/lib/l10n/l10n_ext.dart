@@ -34,7 +34,7 @@ extension L10nNames on AppLocalizations {
         Role.cuffed => descCuffed,
       };
 
-  String world(int no) => [world1, world2, world3, world4, world5, world6][no - 1];
-  String introTitle(int no) => [intro1Title, intro2Title, intro3Title, intro4Title, intro5Title, intro6Title][no - 1];
-  String introBody(int no) => [intro1Body, intro2Body, intro3Body, intro4Body, intro5Body, intro6Body][no - 1];
+  String world(int no) => [world1, world2, world3, world4, world5, world6, world7, world8][no - 1];
+  String introTitle(int no) => [intro1Title, intro2Title, intro3Title, intro4Title, intro5Title, intro6Title, intro7Title, intro8Title][no - 1];
+  String introBody(int no) => [intro1Body, intro2Body, intro3Body, intro4Body, intro5Body, intro6Body, intro7Body, intro8Body][no - 1];
 }

@@ -302,4 +302,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get intro6Body =>
       'The boat goes bank to island to bank — never straight across.\nYou can leave people on the island, but it needs guards too.';
+
+  @override
+  String get world7 => 'All Hands';
+
+  @override
+  String get world8 => 'Nightmare';
+
+  @override
+  String get intro7Title => 'All hands on deck';
+
+  @override
+  String get intro7Body =>
+      'The island returns — with chiefs, police dogs, bosses and cuffed pairs.\nEverything you\'ve learned, all at once.';
+
+  @override
+  String get intro8Title => 'Nightmare';
+
+  @override
+  String get intro8Body =>
+      'The hardest levels, picked by solving every combination.\nCross in the fewest trips and you\'re the real deal.';
 }

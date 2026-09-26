@@ -23,6 +23,8 @@ const worlds = [
   WorldInfo(4, role: Role.boss),
   WorldInfo(5, role: Role.dog),
   WorldInfo(6),
+  WorldInfo(7, role: Role.boss),
+  WorldInfo(8, role: Role.chief),
 ];
 
 WorldInfo worldOf(Level l) => worlds[l.world - 1];

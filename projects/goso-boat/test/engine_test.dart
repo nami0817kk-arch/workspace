@@ -84,12 +84,16 @@ void main() {
     final data = jsonDecode(File('assets/levels.json').readAsStringSync()) as Map<String, Object?>;
     final levels = (data['levels']! as List).map((e) => Level.fromJson(e as Map<String, Object?>)).toList();
 
-    test('6舞台×10面', () {
-      expect(levels, hasLength(60));
-      expect(levels.map((l) => l.id).toSet(), hasLength(60));
-      for (var w = 1; w <= 6; w++) {
-        expect(levels.where((l) => l.world == w), hasLength(10), reason: '舞台$w');
-      }
+    test('8舞台・120面（2026-09-26 に60面から増やした）', () {
+      expect(levels, hasLength(120));
+      expect(levels.map((l) => l.id).toSet(), hasLength(120));
+      final perWorld = {1: 12, 2: 15, 3: 15, 4: 15, 5: 15, 6: 15, 7: 15, 8: 18};
+      perWorld.forEach((w, count) => expect(levels.where((l) => l.world == w), hasLength(count), reason: '舞台$w'));
+    });
+
+    test('同じ組み合わせの面が2つない', () {
+      final keys = levels.map((l) => '${Role.values.map(l.count).join(',')}|${l.capacity}|${l.island}').toSet();
+      expect(keys, hasLength(levels.length));
     });
 
     for (final l in levels) {
@@ -99,12 +103,12 @@ void main() {
       });
     }
 
-    test('画面に収まる人数（片側の列が6人まで）', () {
+    test('画面に収まる人数（片側の列が6人分まで）', () {
       for (final l in levels) {
         final guards = l.count(Role.police) + l.count(Role.chief) + l.count(Role.dog);
-        final captives = l.count(Role.prisoner) + l.count(Role.boss) + l.count(Role.cuffed);
+        final captives = l.count(Role.prisoner) + l.count(Role.boss) + l.count(Role.cuffed) * 2;
         expect(guards, lessThanOrEqualTo(6), reason: l.id);
-        expect(captives, lessThanOrEqualTo(6), reason: l.id);
+        expect(captives, lessThanOrEqualTo(6), reason: '${l.id}（手錠の2人は2人分の幅）');
       }
     });
   });
