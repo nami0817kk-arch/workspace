@@ -132,6 +132,89 @@ App Store Connect / Google Play Console の「このバージョンの新機能�
 弱小クラブを勝たせる監督シミュレーション
 ```
 
+## 英語圏向けの掲載（App Store の英語ローカライズ）
+
+アプリは UI だけでなく**選手名・クラブ名まで英語のプールを持っている**
+（`lib/data/name_pool.dart` が `Tr.isEnglish` で切り替える）。英語版として
+完成しているのに掲載が日本語だけだったため、英語圏では存在しないのと同じ
+だった。日本語圏の検索は激戦（公開3日で露出148回）で、同じ商品のまま
+市場をもう1つ増やせるのがこの欄。
+
+**画像は `marketing/screenshots_en/` と `marketing/screenshots_ipad_en/`。**
+日本語の画面に英語の説明文を添えると、中身が伝わらないどころか不信を招く。
+
+### アプリ名（30字以内）
+
+```
+Underdog FC: Soccer Club Sim
+```
+
+`Soccer Manager` `Football Manager` はどちらも実在のアプリ・シリーズの名前
+なので、その並びは避けている。`Underdog` で中身（弱小クラブ）を出し、
+`Soccer` `Club` `Sim` で検索の手がかりを確保する。
+
+### サブタイトル（30字以内）
+
+```
+Take a small club to the top
+```
+
+### キーワード（100字以内）
+
+アプリ名に入れた `soccer` `club` `sim` は繰り返さない。
+
+```
+manager,management,tactics,transfer,youth,squad,league,promotion,scout,simulation,coach,football
+```
+
+### プロモーション用テキスト（170字以内・審査なしで差し替え可）
+
+```
+Start with nothing but a badge and a shoestring budget. Sign, train and sell players, pick your tactics, and drag a fifth-tier club all the way up.
+```
+
+### 説明文
+
+```
+Take charge of a broke fifth-tier club and drag it to the top.
+
+You are the owner and the manager. Nobody else picks the team, balances the
+books or decides who to sell.
+
+- BUILD A SQUAD
+Set training for each player, pair a veteran with a prospect as his mentor,
+and send the ones who cannot get a game out on loan. Players peak and decline
+by position, and game time changes how fast they grow.
+
+- RUN AN ACADEMY
+Your academy plays its own season, so prospects get real matches. Pair them
+with a first-team veteran and they pick up his traits. But once they turn 19
+they want first-team football, and clubs will come for the ones you leave
+behind. Deciding when to hand out a professional contract is the job.
+
+- WIN ON MATCHDAY
+Pick the shape, set the instructions, and watch it play out minute by minute.
+At half time you can change the tactics, make substitutions and pick the words
+you use in the dressing room.
+
+- KEEP THE CLUB ALIVE
+Wages, transfer fees, gate receipts, sponsors, bank loans, ticket prices,
+stadium and facility upgrades. Miss the board's target for too long and you
+are out of a job.
+
+- CLIMB
+Five divisions, promotion play-offs, domestic cups and a continental cup.
+Top scorers, player of the season and a team of the season along the way.
+
+Your progress is saved on your device. No account, no sign-in.
+
+The rewarded video is there for people who want it; you can finish the game
+without watching a single one. One full-screen ad appears when a season rolls
+over, never during a match or while you are in the menus. There are no banners.
+Buying Supporter removes the full-screen ad. You can also buy club funds if you
+want to grow faster, but you never have to.
+```
+
 ## キーワード（App Store キーワードフィールド、100字以内目安）
 
 **アプリ名・サブタイトルに入っている語をここで繰り返さない。** 検索の突き合わせは
@@ -162,8 +245,15 @@ flutter test tool/screenshots/feature_graphic_test.dart --update-goldens
 
 | 出力先 | 寸法 | 用途 |
 |---|---|---|
-| `marketing/screenshots/` | 1290x2796 | iPhone 6.7インチ。Google Play もこのまま通る |
-| `marketing/screenshots_ipad/` | 2064x2752 | iPad 13インチ |
+| `marketing/screenshots/` | 1290x2796 | iPhone 6.9インチ・日本語 |
+| `marketing/screenshots_ipad/` | 2064x2752 | iPad 13インチ・日本語 |
+| `marketing/screenshots_en/` | 1290x2796 | iPhone 6.9インチ・英語 |
+| `marketing/screenshots_ipad_en/` | 2064x2752 | iPad 13インチ・英語 |
+
+英語ぶんは**翻訳ではなく、英語で動かしたアプリを撮ったもの**。選手名・クラブ名
+まで英語のプールに切り替わる。生成器は言語を決めてからシミュレーションに入る
+（記者会見やニュースは作られた時点の言語で確定し、後から切り替えても遡って
+訳されない）。撮る前に、記者会見と選手名がその言語になっているかを検査している。
 
 iPad ぶんが要るのは、アプリが iPad でも動く設定になっているため。iPhone
 だけだと「13インチのiPadディスプレイのスクリーンショットをアップロード

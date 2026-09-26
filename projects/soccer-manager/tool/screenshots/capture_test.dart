@@ -60,6 +60,16 @@ const _tablet = (dir: 'screenshots_ipad', logical: Size(1032, 1376), ratio: 2.0)
 
 const _devices = <_Device>[_phone, _tablet];
 
+/// 撮る言語。ストアの掲載は言語ごとに画像を持てる。アプリは選手名・クラブ名
+/// まで英語のプールを持っているので、英語圏には英語の画面を出す。日本語の
+/// 画面に英語の説明文を添えても、中身が伝わらないどころか不信を招く。
+typedef _Locale = ({AppLanguage language, String code, String suffix});
+
+const _ja = (language: AppLanguage.japanese, code: 'ja', suffix: '');
+const _en = (language: AppLanguage.english, code: 'en', suffix: '_en');
+
+const _locales = <_Locale>[_ja, _en];
+
 /// 同梱フォントと、Flutter SDK が持つアイコンフォントを読み込む。
 ///
 /// アイコンフォントを読まないと、天気やナビゲーションのアイコンが
@@ -105,7 +115,9 @@ void main() {
   setUpAll(_loadFonts);
 
   for (final device in _devices) {
-    testWidgets('ストア用スクリーンショットを書き出す (${device.dir})',
+    for (final locale in _locales) {
+      final outDir = '${device.dir}${locale.suffix}';
+      testWidgets('ストア用スクリーンショットを書き出す ($outDir)',
         (tester) async {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -127,7 +139,7 @@ void main() {
         // 遡って訳されない。ここを撮影直前に置いていたため、日本語の画面に英語の
         // 記者会見が写った画像がストアに載っていた (1.0 の掲載画像が実際にそう)。
         // init() が保存値(既定=端末準拠)を書き戻すので、その後で決めること。
-        Tr.language = AppLanguage.japanese;
+        Tr.language = locale.language;
         monetization = MonetizationController(
           adService: NoOpAdService(),
           purchases: _StubPurchaseService(),
@@ -150,8 +162,17 @@ void main() {
       // 人が1枚ずつ見返さないので、混ざっていても気づかないまま出てしまう。
       final press = gameState.save!.pendingPressConference;
       expect(press, isNotNull, reason: '記者会見が出ていない状態で撮ろうとしている');
-      expect(press!.prompt, matches(RegExp(r'[ぁ-んァ-ヴ一-龠]')),
-          reason: '記者会見が日本語になっていない: ${press.prompt}');
+      final hasJapanese = RegExp(r'[ぁ-んァ-ヴ一-龠]').hasMatch(press!.prompt);
+      expect(hasJapanese, locale.language == AppLanguage.japanese,
+          reason: '記者会見が${locale.code}になっていない: ${press.prompt}');
+
+      // 選手名も撮る言語に合っているか見る。英語の画面に日本人名が並ぶと、
+      // 英語圏の人には「翻訳し切れていないアプリ」に見える。名前のプールは
+      // Tr.isEnglish で切り替わるので、言語を決める順を間違えると混ざる。
+      final aPlayer = gameState.userTeam.players.first.name;
+      expect(RegExp(r'[ぁ-んァ-ヴ一-龠]').hasMatch(aPlayer),
+          locale.language == AppLanguage.japanese,
+          reason: '選手名が${locale.code}になっていない: $aPlayer');
 
       Widget wrap(Widget child) => MultiProvider(
             providers: [
@@ -161,7 +182,7 @@ void main() {
                   value: monetization),
             ],
             child: MaterialApp(
-              locale: const Locale('ja'),
+              locale: Locale(locale.code),
               theme: const SoccerManagerApp()
                   .buildTheme(Brightness.light, boldText: false),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -186,7 +207,7 @@ void main() {
         expect(tester.takeException(), isNull, reason: '$name の描画で例外が出ている');
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('../../marketing/${device.dir}/$name.png'),
+          matchesGoldenFile('../../marketing/$outDir/$name.png'),
         );
       }
 
@@ -228,7 +249,8 @@ void main() {
       // 並ぶ画面で、このゲームで何を操作するのかがいちばん伝わる。
       // pumpWidget で作り直しても State は残るので、続きから進む。
       await shoot('06_halftime', const LiveMatchScreen(), warmUpFrames: 25);
-    });
+      });
+    }
   }
 }
 
