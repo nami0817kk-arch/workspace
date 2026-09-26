@@ -409,17 +409,7 @@ class _ScenarioView extends StatelessWidget {
                         Wrap(
                           spacing: 10,
                           runSpacing: 2,
-                          children: [
-                            for (final f in shared)
-                              Text(
-                                '${f.label} ${f.percent > 0 ? '+' : ''}${f.percent}%',
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: f.value > 0
-                                      ? theme.colorScheme.primary
-                                      : theme.colorScheme.error,
-                                ),
-                              ),
-                          ],
+                          children: [for (final f in shared) _FactorText(f)],
                         ),
                       ],
                     ],
@@ -492,16 +482,20 @@ class _TrumpCard extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color.alphaBlend(const Color(0x1F000000), tray),
+            // **上端を強く落とす。** 0x1F では地との差が小さく、
+            // 窪みではなく「少し暗い板」に見えていた。
+            Color.alphaBlend(const Color(0x3D000000), tray),
             tray,
             Color.alphaBlend(
-              theme.colorScheme.surface.withValues(alpha: 0.30),
+              theme.colorScheme.surface.withValues(alpha: 0.45),
               tray,
             ),
           ],
-          stops: const [0.0, 0.4, 1.0],
+          stops: const [0.0, 0.35, 1.0],
         ),
         borderRadius: BorderRadius.circular(12),
+        // 縁。窪みの口を1本の線で締める。
+        border: Border.all(color: theme.colorScheme.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -510,17 +504,40 @@ class _TrumpCard extends StatelessWidget {
           // このカードは 140px あって、出た局面では3つの手が全部
           // 画面の外に出ていた（`scroll_sim` の「match screen fold」）。
           // 毎回同じ文を2行読ませるより、決める材料を見せるほうが先。
-          Text(
-            armed == null
-                ? '切り札（この試合に1回）'
-                      '　乗る手に +${(Formulas.signatureArmedBonus * 100).round()}%'
-                      ' / 外すと残り -${(Formulas.signatureMissPenalty * 100).round()}%'
-                : '${armed.label}を構えた。${armed.detail.label}の手に乗る。',
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+          // **見出しと但し書きを段で分ける。** 1つの文に畳んでいた頃は
+          // 「乗る手に +15% / 外すと残り」で折り返していて、2行なのに
+          // 段が無いぶん走り書きに見えた。行数は同じで、読む順だけ付ける。
+          Row(
+            children: [
+              Text(
+                armed == null ? '切り札' : '${armed.label}を構えた',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: armed == null
+                      ? theme.colorScheme.onSurfaceVariant
+                      : theme.colorScheme.onTertiaryContainer,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  armed == null ? 'この試合に1回' : '${armed.detail.label}の手に乗る',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 6),
+          if (armed == null)
+            Text(
+              '乗る手に +${(Formulas.signatureArmedBonus * 100).round()}%'
+              ' ／ 外すと残り -'
+              '${(Formulas.signatureMissPenalty * 100).round()}%',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 6,
@@ -641,12 +658,68 @@ class _OptionButton extends StatelessWidget {
         ? theme.colorScheme.tertiary
         : theme.colorScheme.error;
 
+    // **このゲームで一番押す場所が、画面で一番平らだった。**
+    // 白い角丸の枠だけで、周りのカードが紙として浮いたぶん逆に沈んで見える。
+    // `OutlinedButton` はやめない——押せるものの見分けは M3 の形と
+    // 波紋が担っているので、そこを自前に替えると失うものが大きい。
+    // **面を紙と同じ白にして、左端に成功率の色の背骨を通す。**
+    // 背骨は飾りではなく、3つの手を見比べるときに最初に目が行く情報
+    // （堅い手か、賭けか）。
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+        backgroundColor: theme.colorScheme.surfaceContainerLowest,
+        shadowColor: theme.colorScheme.shadow,
+        elevation: 1,
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+        // **角を締める。** 既定の丸さ（スタジアム型）だと、左端の背骨が
+        // 丸みの外へ逃げて「縁に沿わせた線」に見える。周りのカードと
+        // 同じ 12 にすると、背骨が面の一部として立つ。
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
       ),
+      // **`IntrinsicHeight` が要る。** ボタンは中身に合わせて高さが決まるので、
+      // 素の `Row` に `stretch` を渡すと高さが無限のまま伸ばそうとして落ちる。
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 背骨。ボタンの高さいっぱいに通す。
+            Container(
+              width: 5,
+              margin: const EdgeInsets.fromLTRB(0, 6, 12, 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.alphaBlend(const Color(0x40FFFFFF), color),
+                    color,
+                    Color.alphaBlend(const Color(0x33000000), color),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(child: _body(context, theme, percent, color, shown)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _body(
+    BuildContext context,
+    ThemeData theme,
+    int percent,
+    Color color,
+    List<ChanceFactor> shown,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -747,17 +820,7 @@ class _OptionButton extends StatelessWidget {
             Wrap(
               spacing: 10,
               runSpacing: 2,
-              children: [
-                for (final f in shown)
-                  Text(
-                    '${f.label} ${f.percent > 0 ? '+' : ''}${f.percent}%',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: f.value > 0
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.error,
-                    ),
-                  ),
-              ],
+              children: [for (final f in shown) _FactorText(f)],
             ),
           ],
         ],
@@ -1317,6 +1380,42 @@ class _Timeline extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+/// 成功率を作っている1つを、**ラベルは静かに・数字だけ色で**出す。
+///
+/// 全部を色付きの文字で書いていた頃は、不利が重なった局面が
+/// **赤い文字の壁**になって、どれが大きいのか読めなかった
+/// （「格上の相手 -22% 大一番 -11% 気持ち・波 -5% …」が2行）。
+/// 数字だけに色を残すと、同じ情報量で目が数字に行く。
+class _FactorText extends StatelessWidget {
+  const _FactorText(this.factor);
+
+  final ChanceFactor factor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final label = theme.textTheme.labelSmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(text: '${factor.label} ', style: label),
+          TextSpan(
+            text: '${factor.percent > 0 ? '+' : ''}${factor.percent}%',
+            style: label?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: factor.value > 0
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.error,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
