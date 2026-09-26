@@ -395,7 +395,7 @@ abstract class AppLocalizations {
   /// No description provided for @rulesIsland.
   ///
   /// In ja, this message translates to:
-  /// **'・舟は 手前の岸 ↔ 中州 ↔ 向こう岸 を1区間ずつ進む'**
+  /// **'・舟は「手前の岸と中州」「中州と向こう岸」の間を行き来する。岸から岸へ直接は行けない'**
   String get rulesIsland;
 
   /// No description provided for @rolePolice.
@@ -575,7 +575,7 @@ abstract class AppLocalizations {
   /// No description provided for @intro6Body.
   ///
   /// In ja, this message translates to:
-  /// **'舟は 手前の岸 ↔ 中州 ↔ 向こう岸 を1区間ずつ進む。\n中州に人を残すこともできる。中州でも見張りが要る。'**
+  /// **'舟は「手前の岸と中州」「中州と向こう岸」の間を行き来する。岸から岸へ直接は行けない。\n中州に人を残すこともできる。中州でも見張りが要る。'**
   String get intro6Body;
 }
 

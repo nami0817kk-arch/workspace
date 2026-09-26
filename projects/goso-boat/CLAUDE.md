@@ -37,6 +37,12 @@
 −最短手順の通り数（多いほど迷わない）で並べて等間隔に拾う。
 `test/engine_test.dart` が全面を解き直して最短回数を検査する。
 
+## 文言とフォント
+
+画面の文言は `lib/l10n/app_ja.arb`（原本）と `app_en.arb`。端末が日本語なら日本語、それ以外は英語。
+フォントは使う字だけに絞って同梱している（丸ゴシック＝M PLUS Rounded 1c ExtraBold、本文＝Noto Sans JP、どちらも OFL）。
+**ARB に字を足したら `python tool/subset_fonts.py` を回す。** 忘れると CI の --check が落ちる。
+
 ## 公開まわり
 
 公開名義は「つるはし社」。本名・nami・0817 は公開する文面に出さない。

@@ -49,7 +49,7 @@
   "gotIt": "Got it",
   "rulesTitle": "Rules",
   "rulesBody": "• On a bank or in the boat, prisoners escape if they outnumber the guards\n• Prisoners left with no guard escape too\n• The boat has {cap} seats and needs someone who can row",
-  "rulesIsland": "• The boat moves one leg at a time: near bank ↔ island ↔ far bank",
+  "rulesIsland": "• The boat goes bank to island to bank — never straight across",
   "rolePolice": "Officer",
   "roleChief": "Chief",
   "roleDog": "Police dog",
@@ -79,5 +79,5 @@
   "intro5Title": "The police dog",
   "intro5Body": "A police dog can guard one prisoner, but can't row the boat.",
   "intro6Title": "An island in the river",
-  "intro6Body": "The boat moves one leg at a time: near bank ↔ island ↔ far bank.\nYou can leave people on the island, but it needs guards too."
+  "intro6Body": "The boat goes bank to island to bank — never straight across.\nYou can leave people on the island, but it needs guards too."
 }

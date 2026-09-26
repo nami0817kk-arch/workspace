@@ -199,7 +199,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get rulesIsland => '・舟は 手前の岸 ↔ 中州 ↔ 向こう岸 を1区間ずつ進む';
+  String get rulesIsland => '・舟は「手前の岸と中州」「中州と向こう岸」の間を行き来する。岸から岸へ直接は行けない';
 
   @override
   String get rolePolice => '警官';
@@ -291,5 +291,5 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get intro6Body =>
-      '舟は 手前の岸 ↔ 中州 ↔ 向こう岸 を1区間ずつ進む。\n中州に人を残すこともできる。中州でも見張りが要る。';
+      '舟は「手前の岸と中州」「中州と向こう岸」の間を行き来する。岸から岸へ直接は行けない。\n中州に人を残すこともできる。中州でも見張りが要る。';
 }
