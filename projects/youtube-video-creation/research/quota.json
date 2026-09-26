@@ -168,10 +168,12 @@
     "playlistItems.insert": 9
   },
   "2026-09-25": {
-    "channels.list": 31,
-    "playlistItems.list": 31,
-    "videos.insert": 20,
-    "thumbnails.set": 21,
-    "playlistItems.insert": 10
+    "channels.list": 36,
+    "playlistItems.list": 36,
+    "videos.insert": 25,
+    "thumbnails.set": 26,
+    "playlistItems.insert": 15,
+    "videos.list": 5,
+    "videos.update": 5
   }
 }
