@@ -47,7 +47,22 @@ def move(service, video_id: str, clock: str) -> str:
     status.pop("publishTime", None)
     service.videos().update(part="status",
                             body={"id": video_id, "status": status}).execute()
+    _note(video_id, status["publishAt"])
     return clock
+
+
+def _note(video_id: str, publish_at: str) -> None:
+    """**控え（posted.json）の予約時刻も書き換える**（2026-09-26）。
+
+    YouTube 側だけ動かしていたので、`tools/slots.py` が古い時刻を出し、
+    本編とショートが同じ時刻に並んで見えた。
+    """
+    rows = json.loads(POSTED.read_text(encoding="utf-8"))
+    for row in rows:
+        if str(row.get("video_id")) == video_id:
+            row["publish_at"] = publish_at
+    POSTED.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + "
+", encoding="utf-8")
 
 
 def main() -> int:
