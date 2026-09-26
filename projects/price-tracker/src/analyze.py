@@ -161,6 +161,33 @@ def change_count(rec_or_row: dict) -> int:
     return sum(1 for i in range(1, len(prices)) if prices[i] != prices[i - 1])
 
 
+def effective_series(rec_or_row: dict) -> list[tuple]:
+    """ポイント分を引いた実質価格の推移。[(日付, 実質価格), ...]
+
+    履歴には倍率も控えてある（[日付, 価格, 倍率]）。価格だけを線にすると、
+    楽天でいちばんよく動く値引きが画面から消える。
+    """
+    out = []
+    for e in map(_entry, rec_or_row.get("tail") or []):
+        price = e[1]
+        if not price:
+            continue
+        rate = e[2] if len(e) > 2 and e[2] else 1
+        out.append((e[0], effective(price, rate)))
+    return out
+
+
+def effective_change_count(rec_or_row: dict) -> int:
+    """実質価格が動いた回数。
+
+    価格だけで数えると動いたのは 1,486件（13.9%）だが、ポイントを含めると
+    2,252件（21.0%）になる（実測 2026-09-26・記録2日以上の10,701件）。
+    「この商品に見せる履歴があるか」はこちらで判断する。
+    """
+    values = [v for _, v in effective_series(rec_or_row)]
+    return sum(1 for i in range(1, len(values)) if values[i] != values[i - 1])
+
+
 def active(rows: list[dict], limit: int | None = None) -> list[dict]:
     """よく動く商品を、動いた回数の多い順に。"""
     hit = [r for r in rows if change_count(r) >= 2]

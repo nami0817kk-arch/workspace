@@ -1509,3 +1509,92 @@ class GenreReportTest(unittest.TestCase):
 
         self.assertIn("28.5%", out)
         self.assertNotIn("判定できる", out)
+
+
+class EffectivePriceChartTest(unittest.TestCase):
+    """ポイント分を引いた実質価格の推移。
+
+    楽天の値引きは価格より倍率で動く。価格だけで「動いたか」を数えると
+    1,486件（13.9%）だが、ポイントを含めると2,252件（21.0%）になる
+    （実測 2026-09-26・記録2日以上の10,701件）。価格だけで畳むと、
+    766件の「実際には動いていた」商品の図を隠すことになる。
+    """
+
+    def setUp(self):
+        from src import analyze, theme
+        self.analyze = analyze
+        self.theme = theme
+
+    def rec(self, tail):
+        return {"tail": tail}
+
+    def test_倍率の変化を実質価格に映す(self):
+        # 価格は据え置きで倍率だけ上がった日
+        out = self.analyze.effective_series(self.rec(
+            [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 10]]))
+
+        self.assertEqual(out, [("2026-09-01", 990), ("2026-09-02", 900)])
+
+    def test_価格が動かなくても実質は動いたと数える(self):
+        rec = self.rec([["2026-09-01", 1000, 1], ["2026-09-02", 1000, 10]])
+
+        self.assertEqual(self.analyze.change_count(rec), 0)
+        self.assertEqual(self.analyze.effective_change_count(rec), 1)
+
+    def test_倍率が無い記録も読める(self):
+        # 倍率を控える前の古い記録は2要素しかない
+        out = self.analyze.effective_series(self.rec(
+            [["2026-09-01", 1000], ["2026-09-02", 900]]))
+
+        self.assertEqual(out, [("2026-09-01", 990), ("2026-09-02", 891)])
+
+    def test_図に破線を重ねる(self):
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 10]]
+        eff = self.analyze.effective_series(self.rec(tail))
+
+        self.assertIn("eff-line", self.theme.chart(tail, effective=eff))
+        self.assertNotIn("eff-line", self.theme.chart(tail))
+
+    def test_数が合わない実質は重ねない(self):
+        # 日付がずれた線を描くと、読み手に嘘を見せることになる
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 10]]
+
+        out = self.theme.chart(tail, effective=[("2026-09-01", 990)])
+
+        self.assertNotIn("eff-line", out)
+
+    def test_目盛りは実質価格まで含めて取る(self):
+        # 実質が価格より下にあるのに、目盛りを価格だけで取ると枠からはみ出す
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 50]]
+        eff = self.analyze.effective_series(self.rec(tail))
+
+        out = self.theme.chart(tail, effective=eff)
+
+        self.assertIn("500", out)   # 実質の下限が目盛りに出ている
+
+    def test_価格は横ばいでも実質が下がったら書く(self):
+        # そこで文を止めると、すぐ下の図（破線）と食い違って見える
+        tail = ([["2026-09-%02d" % i, 14850, 1] for i in range(1, 12)]
+                + [["2026-09-%02d" % i, 14850, 10] for i in range(12, 19)])
+
+        out = self.theme.cheaper_days({"price": 14850, "tail": tail})
+
+        self.assertIn("変わっていません", out)
+        self.assertIn("実質", out)
+        self.assertIn("13,365円", out)
+
+    def test_実質も動いていなければ余計なことを書かない(self):
+        tail = [["2026-09-%02d" % i, 1000, 1] for i in range(1, 12)]
+
+        out = self.theme.cheaper_days({"price": 1000, "tail": tail})
+
+        self.assertNotIn("実質", out)
+
+    def test_実質が上がっただけのときは下がったと書かない(self):
+        # 倍率が下がって実質が上がった場合。「下がりました」は嘘になる
+        tail = ([["2026-09-%02d" % i, 1000, 10] for i in range(1, 12)]
+                + [["2026-09-%02d" % i, 1000, 1] for i in range(12, 19)])
+
+        out = self.theme.cheaper_days({"price": 1000, "tail": tail})
+
+        self.assertNotIn("下がりました", out)

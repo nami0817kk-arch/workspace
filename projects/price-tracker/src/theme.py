@@ -5,7 +5,8 @@ import json
 import re
 from datetime import datetime, timedelta
 
-from .analyze import MIN_DAYS_FOR_LOW, change_count
+from .analyze import (MIN_DAYS_FOR_LOW, effective_change_count,
+                      effective_series)
 from .store import entry as store_entry
 
 SAFE = re.compile(r"[^a-z0-9]+")
@@ -979,17 +980,27 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
             + foot(site, prefix, updated))
 
 
-def chart(tail: list, width: int = 560, height: int = 180) -> str:
+def chart(tail: list, width: int = 560, height: int = 180,
+          effective: list | None = None) -> str:
     """商品ページの価格推移。日付と価格の目盛りを付ける。
 
     一覧の小さな線は形が分かればよいが、商品ページでは「いつ・いくら」まで
     読めないと判断に使えない。
+
+    effective を渡すと、ポイント分を引いた実質価格を破線で重ねる。
+    楽天の値引きは価格より倍率で動くので、価格の線だけだと
+    いちばんよく動く値引きが画面から消える（実測で、動いた商品は
+    価格だけなら1,486件、ポイントを含めると2,252件）。
     """
     points = [(e[0], e[1]) for e in map(store_entry, tail) if e[1]]
     if len(points) < 2:
         return '<span class="spark-none">記録が足りません</span>'
     prices = [p for _, p in points]
-    low, high = min(prices), max(prices)
+    effs = [v for _, v in (effective or [])]
+    if len(effs) != len(prices):
+        effs = []   # 数が合わないものは重ねない（描くと日付がずれる）
+    low = min(prices + effs)
+    high = max(prices + effs)
     span = (high - low) or 1
     # 値が動いていないと線が下端に張り付き、余白だけの図に見える。
     # その場合は中央に引く。
@@ -1015,11 +1026,20 @@ def chart(tail: list, width: int = 560, height: int = 180) -> str:
         f'<text x="{pad_l + i * step:.1f}" y="{height - 6}" text-anchor="middle" '
         f'font-size="11" fill="currentColor" opacity=".65">{points[i][0][5:]}</text>'
         for i in ({0, len(points) - 1} if len(points) > 1 else {0}))
+    eff_line = ""
+    if effs:
+        eff_coords = " ".join(
+            f"{pad_l + i * step:.1f},{y(v):.1f}" for i, v in enumerate(effs))
+        eff_line = (f'<polyline class="eff-line" points="{eff_coords}" fill="none" '
+                    f'stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" '
+                    f'stroke-linejoin="round" stroke-linecap="round" opacity=".75"/>')
     return (f'<svg class="chart-svg" viewBox="0 0 {width} {height}" role="img" '
-            f'aria-label="{len(points)}日分の価格推移。最安 {low:,}円、最高 {high:,}円">'
+            f'aria-label="{len(points)}日分の価格推移。最安 {low:,}円、最高 {high:,}円'
+            + ('。破線はポイント分を引いた実質価格' if effs else '') + '">'
             f'{grid}{labels}'
             f'<polyline points="{coords}" fill="none" stroke="currentColor" '
             f'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+            f'{eff_line}'
             f'<circle cx="{pad_l + (len(points) - 1) * step:.1f}" '
             f'cy="{y(prices[-1]):.1f}" r="3.5" fill="currentColor"/></svg>')
 
@@ -1035,6 +1055,13 @@ def cheaper_days(row: dict) -> str:
         return ""
     now = row["price"]
     if len(set(prices)) == 1:
+        # 価格は動いていないが、ポイント倍率で実質が動いていることがある。
+        # そこで文を止めると、すぐ下の図（破線）と食い違って見える。
+        effs = [v for _, v in effective_series(row)]
+        if effs and len(set(effs)) > 1 and effs[-1] < max(effs):
+            return (f'記録{len(prices)}日のあいだ、価格は{yen(now)}のまま'
+                    f'変わっていません。ただしポイント倍率が上がったぶん、'
+                    f'実質は{yen(max(effs))}から{yen(effs[-1])}まで下がりました。')
         # 一度も動いていない。「100%」と出しても何も伝わらない
         return f'記録{len(prices)}日のあいだ、価格は{yen(now)}のまま変わっていません。'
     n = sum(1 for p in prices if p <= now)
@@ -1408,6 +1435,18 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                if int(row.get("days") or 0) < 2
                else f'{row["days"]}日分の記録では{state}です。'))
 
+    # ポイント分を引いた実質価格の推移。倍率が一度も動かない商品では
+    # 価格の線と重なるだけなので、その時は重ねない。
+    eff = effective_series(row)
+    rates = [e[2] if len(e) > 2 and e[2] else 1
+             for e in map(store_entry, row.get("tail") or [])]
+    if len(set(rates)) <= 1 and max(rates or [1]) == 1:
+        eff, eff_note = [], ""
+    else:
+        eff_note = ('<p class="note">破線はポイント分を引いた実質価格です。'
+                    '倍率は購入額の何%が戻るかの目安で、実際の付与は'
+                    'キャンペーンや会員ランクでも変わります。</p>')
+
     rows_html = [("現在の価格", yen(row["price"])),
                  ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
                  ("記録した中での最高値", yen(row["high"])),
@@ -1463,14 +1502,16 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
             + f'<p class="verdict">{esc(verdict_note(row))}</p>'
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
-            # 追跡中の88%（11,172件）は一度も価格が動いていない。その図は
-            # 横一直線で、180pxを使って「何も起きていない」としか言わない。
-            # 動いた商品の図と同じ扱いにすると、動いた回のほうが埋もれる。
-            + (f'<div class="chart">{chart(row.get("tail") or [])}</div>'
-               if change_count(row) else
+            # 見せる履歴があるかは実質価格で見る。価格だけで数えると動いたのは
+            # 1,486件（13.9%）だが、ポイントを含めると2,252件（21.0%）になる。
+            # 楽天の値引きは倍率で動くので、価格だけで畳むと766件の
+            # 「実際には動いていた」商品の図を隠すことになる。
+            + (f'<div class="chart">{chart(row.get("tail") or [], effective=eff)}'
+               f'</div>{eff_note}'
+               if effective_change_count(row) else
                # 動いていないことは直前の注記が書いている。ここは入口だけ
                f'<details class="chart flat"><summary>記録{row["days"]}日分の図を見る'
-               f'</summary>{chart(row.get("tail") or [])}</details>')
+               f'</summary>{chart(row.get("tail") or [], effective=eff)}</details>')
             + f'<table class="facts">{table}</table>'
             + caption_block(row)
             + history_table(row)
