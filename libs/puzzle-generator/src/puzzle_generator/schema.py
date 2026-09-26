@@ -42,6 +42,8 @@ def validate_record(record: dict) -> None:
 
     if record["type"] == "maze":
         _validate_maze(record)
+    elif record["type"] == "wordsearch":
+        _validate_wordsearch(record)
     else:
         raise ValueError(f"未知の type: {record['type']!r}")
 
@@ -62,3 +64,14 @@ def _validate_maze(record: dict) -> None:
         raise ValueError("solution.path が start から始まっていない")
     if list(path[-1]) != list(board["goal"]):
         raise ValueError("solution.path が goal で終わっていない")
+
+
+def _validate_wordsearch(record: dict) -> None:
+    from .wordsearch import verify_wordsearch
+
+    board = record["board"]
+    for key in ("size", "grid", "words"):
+        if key not in board:
+            raise ValueError(f"board.{key} が無い")
+    if not verify_wordsearch(record):
+        raise ValueError(f"ことば探しの検証に落ちた: id={record['id']!r}")

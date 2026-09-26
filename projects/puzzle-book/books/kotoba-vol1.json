@@ -1,0 +1,2350 @@
+{
+ "title": "ゆったり ことば探し 60問",
+ "subtitle": "季節とくらしの、なつかしい言葉",
+ "publisher": "つるはし社",
+ "trim": "a4",
+ "seed_start": 200000,
+ "edition_date": "",
+ "themes": [
+  {
+   "theme": "春の花",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "さくら",
+     "label": "さくら（桜）"
+    },
+    {
+     "answer": "たんぽぽ",
+     "label": "たんぽぽ"
+    },
+    {
+     "answer": "すみれ",
+     "label": "すみれ（菫）"
+    },
+    {
+     "answer": "なのはな",
+     "label": "なのはな（菜の花）"
+    },
+    {
+     "answer": "つつじ",
+     "label": "つつじ"
+    },
+    {
+     "answer": "れんげ",
+     "label": "れんげ"
+    }
+   ]
+  },
+  {
+   "theme": "畑の野菜",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "だいこん",
+     "label": "だいこん（大根）"
+    },
+    {
+     "answer": "にんじん",
+     "label": "にんじん（人参）"
+    },
+    {
+     "answer": "ごぼう",
+     "label": "ごぼう（牛蒡）"
+    },
+    {
+     "answer": "かぶ",
+     "label": "かぶ（蕪）"
+    },
+    {
+     "answer": "なす",
+     "label": "なす（茄子）"
+    },
+    {
+     "answer": "きゅうり",
+     "label": "きゅうり（胡瓜）"
+    }
+   ]
+  },
+  {
+   "theme": "くだもの",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "りんご",
+     "label": "りんご"
+    },
+    {
+     "answer": "みかん",
+     "label": "みかん"
+    },
+    {
+     "answer": "ぶどう",
+     "label": "ぶどう"
+    },
+    {
+     "answer": "もも",
+     "label": "もも（桃）"
+    },
+    {
+     "answer": "かき",
+     "label": "かき（柿）"
+    },
+    {
+     "answer": "なし",
+     "label": "なし（梨）"
+    }
+   ]
+  },
+  {
+   "theme": "海の魚",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "さんま",
+     "label": "さんま（秋刀魚）"
+    },
+    {
+     "answer": "いわし",
+     "label": "いわし（鰯）"
+    },
+    {
+     "answer": "あじ",
+     "label": "あじ（鯵）"
+    },
+    {
+     "answer": "さば",
+     "label": "さば（鯖）"
+    },
+    {
+     "answer": "たい",
+     "label": "たい（鯛）"
+    },
+    {
+     "answer": "ひらめ",
+     "label": "ひらめ（鮃）"
+    }
+   ]
+  },
+  {
+   "theme": "動物園",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ぞう",
+     "label": "ぞう（象）"
+    },
+    {
+     "answer": "きりん",
+     "label": "きりん"
+    },
+    {
+     "answer": "らいおん",
+     "label": "らいおん"
+    },
+    {
+     "answer": "さる",
+     "label": "さる（猿）"
+    },
+    {
+     "answer": "かば",
+     "label": "かば（河馬）"
+    },
+    {
+     "answer": "しまうま",
+     "label": "しまうま（縞馬）"
+    }
+   ]
+  },
+  {
+   "theme": "台所の道具",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "なべ",
+     "label": "なべ（鍋）"
+    },
+    {
+     "answer": "ほうちょう",
+     "label": "ほうちょう（包丁）"
+    },
+    {
+     "answer": "まないた",
+     "label": "まないた（まな板）"
+    },
+    {
+     "answer": "やかん",
+     "label": "やかん"
+    },
+    {
+     "answer": "おたま",
+     "label": "おたま"
+    },
+    {
+     "answer": "ざる",
+     "label": "ざる"
+    }
+   ]
+  },
+  {
+   "theme": "お正月",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "おもち",
+     "label": "おもち（お餅）"
+    },
+    {
+     "answer": "かどまつ",
+     "label": "かどまつ（門松）"
+    },
+    {
+     "answer": "こま",
+     "label": "こま（独楽）"
+    },
+    {
+     "answer": "たこあげ",
+     "label": "たこあげ（凧揚げ）"
+    },
+    {
+     "answer": "おせち",
+     "label": "おせち"
+    },
+    {
+     "answer": "はつもうで",
+     "label": "はつもうで（初詣）"
+    }
+   ]
+  },
+  {
+   "theme": "お天気",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "はれ",
+     "label": "はれ（晴れ）"
+    },
+    {
+     "answer": "くもり",
+     "label": "くもり（曇り）"
+    },
+    {
+     "answer": "あめ",
+     "label": "あめ（雨）"
+    },
+    {
+     "answer": "ゆき",
+     "label": "ゆき（雪）"
+    },
+    {
+     "answer": "かぜ",
+     "label": "かぜ（風）"
+    },
+    {
+     "answer": "にじ",
+     "label": "にじ（虹）"
+    }
+   ]
+  },
+  {
+   "theme": "からだ",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "あたま",
+     "label": "あたま（頭）"
+    },
+    {
+     "answer": "かた",
+     "label": "かた（肩）"
+    },
+    {
+     "answer": "ひざ",
+     "label": "ひざ（膝）"
+    },
+    {
+     "answer": "ゆび",
+     "label": "ゆび（指）"
+    },
+    {
+     "answer": "おなか",
+     "label": "おなか"
+    },
+    {
+     "answer": "せなか",
+     "label": "せなか（背中）"
+    }
+   ]
+  },
+  {
+   "theme": "いろ",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "あか",
+     "label": "あか（赤）"
+    },
+    {
+     "answer": "あお",
+     "label": "あお（青）"
+    },
+    {
+     "answer": "きいろ",
+     "label": "きいろ（黄色）"
+    },
+    {
+     "answer": "みどり",
+     "label": "みどり（緑）"
+    },
+    {
+     "answer": "しろ",
+     "label": "しろ（白）"
+    },
+    {
+     "answer": "くろ",
+     "label": "くろ（黒）"
+    }
+   ]
+  },
+  {
+   "theme": "身近な鳥",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "すずめ",
+     "label": "すずめ（雀）"
+    },
+    {
+     "answer": "からす",
+     "label": "からす（烏）"
+    },
+    {
+     "answer": "つばめ",
+     "label": "つばめ（燕）"
+    },
+    {
+     "answer": "はと",
+     "label": "はと（鳩）"
+    },
+    {
+     "answer": "うぐいす",
+     "label": "うぐいす（鶯）"
+    },
+    {
+     "answer": "かもめ",
+     "label": "かもめ（鴎）"
+    }
+   ]
+  },
+  {
+   "theme": "夏の虫",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "とんぼ",
+     "label": "とんぼ"
+    },
+    {
+     "answer": "ちょう",
+     "label": "ちょう（蝶）"
+    },
+    {
+     "answer": "せみ",
+     "label": "せみ（蝉）"
+    },
+    {
+     "answer": "ほたる",
+     "label": "ほたる（蛍）"
+    },
+    {
+     "answer": "かぶとむし",
+     "label": "かぶとむし（兜虫）"
+    },
+    {
+     "answer": "ばった",
+     "label": "ばった"
+    }
+   ]
+  },
+  {
+   "theme": "家族",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ちち",
+     "label": "ちち（父）"
+    },
+    {
+     "answer": "はは",
+     "label": "はは（母）"
+    },
+    {
+     "answer": "あに",
+     "label": "あに（兄）"
+    },
+    {
+     "answer": "あね",
+     "label": "あね（姉）"
+    },
+    {
+     "answer": "まご",
+     "label": "まご（孫）"
+    },
+    {
+     "answer": "そふ",
+     "label": "そふ（祖父）"
+    }
+   ]
+  },
+  {
+   "theme": "和菓子",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "だんご",
+     "label": "だんご（団子）"
+    },
+    {
+     "answer": "もなか",
+     "label": "もなか（最中）"
+    },
+    {
+     "answer": "ようかん",
+     "label": "ようかん（羊羹）"
+    },
+    {
+     "answer": "おはぎ",
+     "label": "おはぎ"
+    },
+    {
+     "answer": "せんべい",
+     "label": "せんべい（煎餅）"
+    },
+    {
+     "answer": "まんじゅう",
+     "label": "まんじゅう（饅頭）"
+    }
+   ]
+  },
+  {
+   "theme": "乗り物",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "でんしゃ",
+     "label": "でんしゃ（電車）"
+    },
+    {
+     "answer": "ふね",
+     "label": "ふね（船）"
+    },
+    {
+     "answer": "じてんしゃ",
+     "label": "じてんしゃ（自転車）"
+    },
+    {
+     "answer": "ひこうき",
+     "label": "ひこうき（飛行機）"
+    },
+    {
+     "answer": "くるま",
+     "label": "くるま（車）"
+    },
+    {
+     "answer": "じんりきしゃ",
+     "label": "じんりきしゃ（人力車）"
+    }
+   ]
+  },
+  {
+   "theme": "秋の味覚",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "くり",
+     "label": "くり（栗）"
+    },
+    {
+     "answer": "まつたけ",
+     "label": "まつたけ（松茸）"
+    },
+    {
+     "answer": "さつまいも",
+     "label": "さつまいも"
+    },
+    {
+     "answer": "ぎんなん",
+     "label": "ぎんなん（銀杏）"
+    },
+    {
+     "answer": "さんま",
+     "label": "さんま（秋刀魚）"
+    },
+    {
+     "answer": "しんまい",
+     "label": "しんまい（新米）"
+    }
+   ]
+  },
+  {
+   "theme": "夏の風物",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "すいか",
+     "label": "すいか（西瓜）"
+    },
+    {
+     "answer": "はなび",
+     "label": "はなび（花火）"
+    },
+    {
+     "answer": "うちわ",
+     "label": "うちわ"
+    },
+    {
+     "answer": "ふうりん",
+     "label": "ふうりん（風鈴）"
+    },
+    {
+     "answer": "かきごおり",
+     "label": "かきごおり（かき氷）"
+    },
+    {
+     "answer": "ゆかた",
+     "label": "ゆかた（浴衣）"
+    }
+   ]
+  },
+  {
+   "theme": "冬のあたたまり",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "こたつ",
+     "label": "こたつ"
+    },
+    {
+     "answer": "てぶくろ",
+     "label": "てぶくろ（手袋）"
+    },
+    {
+     "answer": "ゆきだるま",
+     "label": "ゆきだるま（雪だるま）"
+    },
+    {
+     "answer": "ひばち",
+     "label": "ひばち（火鉢）"
+    },
+    {
+     "answer": "どてら",
+     "label": "どてら"
+    },
+    {
+     "answer": "ゆたんぽ",
+     "label": "ゆたんぽ（湯たんぽ）"
+    }
+   ]
+  },
+  {
+   "theme": "公園",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "すべりだい",
+     "label": "すべりだい（すべり台）"
+    },
+    {
+     "answer": "ぶらんこ",
+     "label": "ぶらんこ"
+    },
+    {
+     "answer": "すなば",
+     "label": "すなば（砂場）"
+    },
+    {
+     "answer": "てつぼう",
+     "label": "てつぼう（鉄棒）"
+    },
+    {
+     "answer": "いけ",
+     "label": "いけ（池）"
+    },
+    {
+     "answer": "ふんすい",
+     "label": "ふんすい（噴水）"
+    }
+   ]
+  },
+  {
+   "theme": "文房具",
+   "difficulty": "easy",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "えんぴつ",
+     "label": "えんぴつ（鉛筆）"
+    },
+    {
+     "answer": "けしごむ",
+     "label": "けしごむ（消しゴム）"
+    },
+    {
+     "answer": "のり",
+     "label": "のり（糊）"
+    },
+    {
+     "answer": "はさみ",
+     "label": "はさみ"
+    },
+    {
+     "answer": "ものさし",
+     "label": "ものさし"
+    },
+    {
+     "answer": "ふでばこ",
+     "label": "ふでばこ（筆箱）"
+    }
+   ]
+  },
+  {
+   "theme": "昭和のくらし",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ちゃぶだい",
+     "label": "ちゃぶだい（ちゃぶ台）"
+    },
+    {
+     "answer": "くろでんわ",
+     "label": "くろでんわ（黒電話）"
+    },
+    {
+     "answer": "せんとう",
+     "label": "せんとう（銭湯）"
+    },
+    {
+     "answer": "げた",
+     "label": "げた（下駄）"
+    },
+    {
+     "answer": "ほうき",
+     "label": "ほうき"
+    },
+    {
+     "answer": "めんこ",
+     "label": "めんこ"
+    },
+    {
+     "answer": "おはじき",
+     "label": "おはじき"
+    },
+    {
+     "answer": "たらい",
+     "label": "たらい"
+    }
+   ]
+  },
+  {
+   "theme": "おみそ汁の具",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "とうふ",
+     "label": "とうふ（豆腐）"
+    },
+    {
+     "answer": "わかめ",
+     "label": "わかめ"
+    },
+    {
+     "answer": "あぶらあげ",
+     "label": "あぶらあげ（油揚げ）"
+    },
+    {
+     "answer": "ねぎ",
+     "label": "ねぎ（葱）"
+    },
+    {
+     "answer": "だいこん",
+     "label": "だいこん（大根）"
+    },
+    {
+     "answer": "なめこ",
+     "label": "なめこ"
+    },
+    {
+     "answer": "しじみ",
+     "label": "しじみ（蜆）"
+    },
+    {
+     "answer": "じゃがいも",
+     "label": "じゃがいも"
+    }
+   ]
+  },
+  {
+   "theme": "日本の山",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ふじさん",
+     "label": "ふじさん（富士山）"
+    },
+    {
+     "answer": "あそさん",
+     "label": "あそさん（阿蘇山）"
+    },
+    {
+     "answer": "たかおさん",
+     "label": "たかおさん（高尾山）"
+    },
+    {
+     "answer": "つくばさん",
+     "label": "つくばさん（筑波山）"
+    },
+    {
+     "answer": "ろっこうさん",
+     "label": "ろっこうさん（六甲山）"
+    },
+    {
+     "answer": "あさまやま",
+     "label": "あさまやま（浅間山）"
+    },
+    {
+     "answer": "おんたけさん",
+     "label": "おんたけさん（御嶽山）"
+    },
+    {
+     "answer": "ほたかだけ",
+     "label": "ほたかだけ（穂高岳）"
+    }
+   ]
+  },
+  {
+   "theme": "東日本の県",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ほっかいどう",
+     "label": "ほっかいどう（北海道）"
+    },
+    {
+     "answer": "あおもり",
+     "label": "あおもり（青森）"
+    },
+    {
+     "answer": "いわて",
+     "label": "いわて（岩手）"
+    },
+    {
+     "answer": "みやぎ",
+     "label": "みやぎ（宮城）"
+    },
+    {
+     "answer": "あきた",
+     "label": "あきた（秋田）"
+    },
+    {
+     "answer": "やまがた",
+     "label": "やまがた（山形）"
+    },
+    {
+     "answer": "ふくしま",
+     "label": "ふくしま（福島）"
+    },
+    {
+     "answer": "にいがた",
+     "label": "にいがた（新潟）"
+    }
+   ]
+  },
+  {
+   "theme": "西日本の府県",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "おおさか",
+     "label": "おおさか（大阪）"
+    },
+    {
+     "answer": "きょうと",
+     "label": "きょうと（京都）"
+    },
+    {
+     "answer": "ひろしま",
+     "label": "ひろしま（広島）"
+    },
+    {
+     "answer": "おかやま",
+     "label": "おかやま（岡山）"
+    },
+    {
+     "answer": "ふくおか",
+     "label": "ふくおか（福岡）"
+    },
+    {
+     "answer": "くまもと",
+     "label": "くまもと（熊本）"
+    },
+    {
+     "answer": "かごしま",
+     "label": "かごしま（鹿児島）"
+    },
+    {
+     "answer": "おきなわ",
+     "label": "おきなわ（沖縄）"
+    }
+   ]
+  },
+  {
+   "theme": "夏と秋の花",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ひまわり",
+     "label": "ひまわり（向日葵）"
+    },
+    {
+     "answer": "あさがお",
+     "label": "あさがお（朝顔）"
+    },
+    {
+     "answer": "あじさい",
+     "label": "あじさい（紫陽花）"
+    },
+    {
+     "answer": "ゆり",
+     "label": "ゆり（百合）"
+    },
+    {
+     "answer": "こすもす",
+     "label": "こすもす（秋桜）"
+    },
+    {
+     "answer": "ききょう",
+     "label": "ききょう（桔梗）"
+    },
+    {
+     "answer": "はぎ",
+     "label": "はぎ（萩）"
+    },
+    {
+     "answer": "りんどう",
+     "label": "りんどう（竜胆）"
+    }
+   ]
+  },
+  {
+   "theme": "おすし",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "まぐろ",
+     "label": "まぐろ（鮪）"
+    },
+    {
+     "answer": "いくら",
+     "label": "いくら"
+    },
+    {
+     "answer": "うに",
+     "label": "うに（雲丹）"
+    },
+    {
+     "answer": "えび",
+     "label": "えび（海老）"
+    },
+    {
+     "answer": "たまご",
+     "label": "たまご（玉子）"
+    },
+    {
+     "answer": "いか",
+     "label": "いか（烏賊）"
+    },
+    {
+     "answer": "あなご",
+     "label": "あなご（穴子）"
+    },
+    {
+     "answer": "かっぱまき",
+     "label": "かっぱまき（かっぱ巻き）"
+    }
+   ]
+  },
+  {
+   "theme": "おでん",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "だいこん",
+     "label": "だいこん（大根）"
+    },
+    {
+     "answer": "たまご",
+     "label": "たまご（卵）"
+    },
+    {
+     "answer": "こんにゃく",
+     "label": "こんにゃく"
+    },
+    {
+     "answer": "ちくわ",
+     "label": "ちくわ"
+    },
+    {
+     "answer": "はんぺん",
+     "label": "はんぺん"
+    },
+    {
+     "answer": "がんもどき",
+     "label": "がんもどき"
+    },
+    {
+     "answer": "ごぼうまき",
+     "label": "ごぼうまき（ごぼう巻き）"
+    },
+    {
+     "answer": "しらたき",
+     "label": "しらたき"
+    }
+   ]
+  },
+  {
+   "theme": "学校の思い出",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "こくばん",
+     "label": "こくばん（黒板）"
+    },
+    {
+     "answer": "きょうしつ",
+     "label": "きょうしつ（教室）"
+    },
+    {
+     "answer": "うんどうかい",
+     "label": "うんどうかい（運動会）"
+    },
+    {
+     "answer": "えんそく",
+     "label": "えんそく（遠足）"
+    },
+    {
+     "answer": "きゅうしょく",
+     "label": "きゅうしょく（給食）"
+    },
+    {
+     "answer": "たいいくかん",
+     "label": "たいいくかん（体育館）"
+    },
+    {
+     "answer": "ろうか",
+     "label": "ろうか（廊下）"
+    },
+    {
+     "answer": "ちょうれい",
+     "label": "ちょうれい（朝礼）"
+    }
+   ]
+  },
+  {
+   "theme": "手習い・たしなみ",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "あみもの",
+     "label": "あみもの（編み物）"
+    },
+    {
+     "answer": "ししゅう",
+     "label": "ししゅう（刺繍）"
+    },
+    {
+     "answer": "さいほう",
+     "label": "さいほう（裁縫）"
+    },
+    {
+     "answer": "いけばな",
+     "label": "いけばな（生け花）"
+    },
+    {
+     "answer": "しょどう",
+     "label": "しょどう（書道）"
+    },
+    {
+     "answer": "はいく",
+     "label": "はいく（俳句）"
+    },
+    {
+     "answer": "さどう",
+     "label": "さどう（茶道）"
+    },
+    {
+     "answer": "ぼんさい",
+     "label": "ぼんさい（盆栽）"
+    }
+   ]
+  },
+  {
+   "theme": "昔話",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ももたろう",
+     "label": "ももたろう（桃太郎）"
+    },
+    {
+     "answer": "かぐやひめ",
+     "label": "かぐやひめ（かぐや姫）"
+    },
+    {
+     "answer": "うらしまたろう",
+     "label": "うらしまたろう（浦島太郎）"
+    },
+    {
+     "answer": "きんたろう",
+     "label": "きんたろう（金太郎）"
+    },
+    {
+     "answer": "いっすんぼうし",
+     "label": "いっすんぼうし（一寸法師）"
+    },
+    {
+     "answer": "はなさかじいさん",
+     "label": "はなさかじいさん（花咲かじいさん）"
+    },
+    {
+     "answer": "かちかちやま",
+     "label": "かちかちやま（かちかち山）"
+    },
+    {
+     "answer": "つるのおんがえし",
+     "label": "つるのおんがえし（鶴の恩返し）"
+    }
+   ]
+  },
+  {
+   "theme": "大工道具",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "かなづち",
+     "label": "かなづち（金槌）"
+    },
+    {
+     "answer": "のこぎり",
+     "label": "のこぎり（鋸）"
+    },
+    {
+     "answer": "かんな",
+     "label": "かんな（鉋）"
+    },
+    {
+     "answer": "のみ",
+     "label": "のみ（鑿）"
+    },
+    {
+     "answer": "くぎ",
+     "label": "くぎ（釘）"
+    },
+    {
+     "answer": "きり",
+     "label": "きり（錐）"
+    },
+    {
+     "answer": "やすり",
+     "label": "やすり"
+    },
+    {
+     "answer": "さしがね",
+     "label": "さしがね（差し金）"
+    }
+   ]
+  },
+  {
+   "theme": "お漬物",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "たくあん",
+     "label": "たくあん（沢庵）"
+    },
+    {
+     "answer": "うめぼし",
+     "label": "うめぼし（梅干し）"
+    },
+    {
+     "answer": "ぬかづけ",
+     "label": "ぬかづけ（ぬか漬け）"
+    },
+    {
+     "answer": "しばづけ",
+     "label": "しばづけ（しば漬け）"
+    },
+    {
+     "answer": "らっきょう",
+     "label": "らっきょう"
+    },
+    {
+     "answer": "なすづけ",
+     "label": "なすづけ（なす漬け）"
+    },
+    {
+     "answer": "べったらづけ",
+     "label": "べったらづけ（べったら漬け）"
+    },
+    {
+     "answer": "ならづけ",
+     "label": "ならづけ（奈良漬け）"
+    }
+   ]
+  },
+  {
+   "theme": "夏祭り",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "みこし",
+     "label": "みこし（神輿）"
+    },
+    {
+     "answer": "やたい",
+     "label": "やたい（屋台）"
+    },
+    {
+     "answer": "ちょうちん",
+     "label": "ちょうちん（提灯）"
+    },
+    {
+     "answer": "たいこ",
+     "label": "たいこ（太鼓）"
+    },
+    {
+     "answer": "ふえ",
+     "label": "ふえ（笛）"
+    },
+    {
+     "answer": "わたあめ",
+     "label": "わたあめ（綿あめ）"
+    },
+    {
+     "answer": "きんぎょすくい",
+     "label": "きんぎょすくい（金魚すくい）"
+    },
+    {
+     "answer": "ぼんおどり",
+     "label": "ぼんおどり（盆踊り）"
+    }
+   ]
+  },
+  {
+   "theme": "台所の調味料",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "しお",
+     "label": "しお（塩）"
+    },
+    {
+     "answer": "さとう",
+     "label": "さとう（砂糖）"
+    },
+    {
+     "answer": "しょうゆ",
+     "label": "しょうゆ（醤油）"
+    },
+    {
+     "answer": "みそ",
+     "label": "みそ（味噌）"
+    },
+    {
+     "answer": "みりん",
+     "label": "みりん"
+    },
+    {
+     "answer": "からし",
+     "label": "からし（辛子）"
+    },
+    {
+     "answer": "わさび",
+     "label": "わさび"
+    },
+    {
+     "answer": "こしょう",
+     "label": "こしょう（胡椒）"
+    }
+   ]
+  },
+  {
+   "theme": "雨の日",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "かさ",
+     "label": "かさ（傘）"
+    },
+    {
+     "answer": "ながぐつ",
+     "label": "ながぐつ（長靴）"
+    },
+    {
+     "answer": "かっぱ",
+     "label": "かっぱ（合羽）"
+    },
+    {
+     "answer": "あまやどり",
+     "label": "あまやどり（雨宿り）"
+    },
+    {
+     "answer": "かみなり",
+     "label": "かみなり（雷）"
+    },
+    {
+     "answer": "つゆ",
+     "label": "つゆ（梅雨）"
+    },
+    {
+     "answer": "あじさい",
+     "label": "あじさい（紫陽花）"
+    },
+    {
+     "answer": "にわかあめ",
+     "label": "にわかあめ（にわか雨）"
+    }
+   ]
+  },
+  {
+   "theme": "朝ごはん",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ごはん",
+     "label": "ごはん（ご飯）"
+    },
+    {
+     "answer": "みそしる",
+     "label": "みそしる（味噌汁）"
+    },
+    {
+     "answer": "なっとう",
+     "label": "なっとう（納豆）"
+    },
+    {
+     "answer": "たまごやき",
+     "label": "たまごやき（卵焼き）"
+    },
+    {
+     "answer": "のり",
+     "label": "のり（海苔）"
+    },
+    {
+     "answer": "つけもの",
+     "label": "つけもの（漬物）"
+    },
+    {
+     "answer": "やきざかな",
+     "label": "やきざかな（焼き魚）"
+    },
+    {
+     "answer": "おちゃ",
+     "label": "おちゃ（お茶）"
+    }
+   ]
+  },
+  {
+   "theme": "昔の遊び",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "おてだま",
+     "label": "おてだま（お手玉）"
+    },
+    {
+     "answer": "あやとり",
+     "label": "あやとり"
+    },
+    {
+     "answer": "けんだま",
+     "label": "けんだま（けん玉）"
+    },
+    {
+     "answer": "たこあげ",
+     "label": "たこあげ（凧揚げ）"
+    },
+    {
+     "answer": "こままわし",
+     "label": "こままわし（こま回し）"
+    },
+    {
+     "answer": "かくれんぼ",
+     "label": "かくれんぼ"
+    },
+    {
+     "answer": "なわとび",
+     "label": "なわとび（縄跳び）"
+    },
+    {
+     "answer": "おにごっこ",
+     "label": "おにごっこ（鬼ごっこ）"
+    }
+   ]
+  },
+  {
+   "theme": "春の行事",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ひなまつり",
+     "label": "ひなまつり（ひな祭り）"
+    },
+    {
+     "answer": "そつぎょう",
+     "label": "そつぎょう（卒業）"
+    },
+    {
+     "answer": "にゅうがく",
+     "label": "にゅうがく（入学）"
+    },
+    {
+     "answer": "はなみ",
+     "label": "はなみ（花見）"
+    },
+    {
+     "answer": "こどものひ",
+     "label": "こどものひ（こどもの日）"
+    },
+    {
+     "answer": "しおひがり",
+     "label": "しおひがり（潮干狩り）"
+    },
+    {
+     "answer": "おひがん",
+     "label": "おひがん（お彼岸）"
+    },
+    {
+     "answer": "ぼたもち",
+     "label": "ぼたもち"
+    }
+   ]
+  },
+  {
+   "theme": "海辺",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "すなはま",
+     "label": "すなはま（砂浜）"
+    },
+    {
+     "answer": "かいがら",
+     "label": "かいがら（貝殻）"
+    },
+    {
+     "answer": "しおかぜ",
+     "label": "しおかぜ（潮風）"
+    },
+    {
+     "answer": "かもめ",
+     "label": "かもめ（鴎）"
+    },
+    {
+     "answer": "とうだい",
+     "label": "とうだい（灯台）"
+    },
+    {
+     "answer": "ふね",
+     "label": "ふね（船）"
+    },
+    {
+     "answer": "うきわ",
+     "label": "うきわ（浮き輪）"
+    },
+    {
+     "answer": "ひやけ",
+     "label": "ひやけ（日焼け）"
+    }
+   ]
+  },
+  {
+   "theme": "日本の川",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "しなのがわ",
+     "label": "しなのがわ（信濃川）"
+    },
+    {
+     "answer": "とねがわ",
+     "label": "とねがわ（利根川）"
+    },
+    {
+     "answer": "きそがわ",
+     "label": "きそがわ（木曽川）"
+    },
+    {
+     "answer": "よどがわ",
+     "label": "よどがわ（淀川）"
+    },
+    {
+     "answer": "しまんとがわ",
+     "label": "しまんとがわ（四万十川）"
+    },
+    {
+     "answer": "ちくごがわ",
+     "label": "ちくごがわ（筑後川）"
+    },
+    {
+     "answer": "もがみがわ",
+     "label": "もがみがわ（最上川）"
+    },
+    {
+     "answer": "てんりゅうがわ",
+     "label": "てんりゅうがわ（天竜川）"
+    },
+    {
+     "answer": "かもがわ",
+     "label": "かもがわ（鴨川）"
+    },
+    {
+     "answer": "たまがわ",
+     "label": "たまがわ（多摩川）"
+    }
+   ]
+  },
+  {
+   "theme": "着物と小物",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ゆかた",
+     "label": "ゆかた（浴衣）"
+    },
+    {
+     "answer": "はかま",
+     "label": "はかま（袴）"
+    },
+    {
+     "answer": "おび",
+     "label": "おび（帯）"
+    },
+    {
+     "answer": "たび",
+     "label": "たび（足袋）"
+    },
+    {
+     "answer": "ぞうり",
+     "label": "ぞうり（草履）"
+    },
+    {
+     "answer": "はおり",
+     "label": "はおり（羽織）"
+    },
+    {
+     "answer": "ふりそで",
+     "label": "ふりそで（振袖）"
+    },
+    {
+     "answer": "とめそで",
+     "label": "とめそで（留袖）"
+    },
+    {
+     "answer": "げた",
+     "label": "げた（下駄）"
+    },
+    {
+     "answer": "かんざし",
+     "label": "かんざし（簪）"
+    }
+   ]
+  },
+  {
+   "theme": "花だより",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "さくら",
+     "label": "さくら（桜）"
+    },
+    {
+     "answer": "うめ",
+     "label": "うめ（梅）"
+    },
+    {
+     "answer": "もも",
+     "label": "もも（桃）"
+    },
+    {
+     "answer": "つばき",
+     "label": "つばき（椿）"
+    },
+    {
+     "answer": "ぼたん",
+     "label": "ぼたん（牡丹）"
+    },
+    {
+     "answer": "しゃくやく",
+     "label": "しゃくやく（芍薬）"
+    },
+    {
+     "answer": "あやめ",
+     "label": "あやめ（菖蒲）"
+    },
+    {
+     "answer": "ふじ",
+     "label": "ふじ（藤）"
+    },
+    {
+     "answer": "かきつばた",
+     "label": "かきつばた（杜若）"
+    },
+    {
+     "answer": "れんげそう",
+     "label": "れんげそう（れんげ草）"
+    }
+   ]
+  },
+  {
+   "theme": "魚屋さん",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "まぐろ",
+     "label": "まぐろ（鮪）"
+    },
+    {
+     "answer": "かつお",
+     "label": "かつお（鰹）"
+    },
+    {
+     "answer": "ぶり",
+     "label": "ぶり（鰤）"
+    },
+    {
+     "answer": "さけ",
+     "label": "さけ（鮭）"
+    },
+    {
+     "answer": "たら",
+     "label": "たら（鱈）"
+    },
+    {
+     "answer": "ほっけ",
+     "label": "ほっけ"
+    },
+    {
+     "answer": "さわら",
+     "label": "さわら（鰆）"
+    },
+    {
+     "answer": "きんめだい",
+     "label": "きんめだい（金目鯛）"
+    },
+    {
+     "answer": "かれい",
+     "label": "かれい（鰈）"
+    },
+    {
+     "answer": "あゆ",
+     "label": "あゆ（鮎）"
+    }
+   ]
+  },
+  {
+   "theme": "家の中",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "げんかん",
+     "label": "げんかん（玄関）"
+    },
+    {
+     "answer": "だいどころ",
+     "label": "だいどころ（台所）"
+    },
+    {
+     "answer": "ふろば",
+     "label": "ふろば（風呂場）"
+    },
+    {
+     "answer": "えんがわ",
+     "label": "えんがわ（縁側）"
+    },
+    {
+     "answer": "とこのま",
+     "label": "とこのま（床の間）"
+    },
+    {
+     "answer": "ざしき",
+     "label": "ざしき（座敷）"
+    },
+    {
+     "answer": "ろうか",
+     "label": "ろうか（廊下）"
+    },
+    {
+     "answer": "しょうじ",
+     "label": "しょうじ（障子）"
+    },
+    {
+     "answer": "ふすま",
+     "label": "ふすま（襖）"
+    },
+    {
+     "answer": "たたみ",
+     "label": "たたみ（畳）"
+    }
+   ]
+  },
+  {
+   "theme": "年中行事",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "しょうがつ",
+     "label": "しょうがつ（正月）"
+    },
+    {
+     "answer": "せつぶん",
+     "label": "せつぶん（節分）"
+    },
+    {
+     "answer": "ひなまつり",
+     "label": "ひなまつり（ひな祭り）"
+    },
+    {
+     "answer": "たなばた",
+     "label": "たなばた（七夕）"
+    },
+    {
+     "answer": "おぼん",
+     "label": "おぼん（お盆）"
+    },
+    {
+     "answer": "つきみ",
+     "label": "つきみ（月見）"
+    },
+    {
+     "answer": "しちごさん",
+     "label": "しちごさん（七五三）"
+    },
+    {
+     "answer": "おおみそか",
+     "label": "おおみそか（大晦日）"
+    },
+    {
+     "answer": "ひがん",
+     "label": "ひがん（彼岸）"
+    },
+    {
+     "answer": "もちつき",
+     "label": "もちつき（餅つき）"
+    }
+   ]
+  },
+  {
+   "theme": "野菜いろいろ",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ほうれんそう",
+     "label": "ほうれんそう（ほうれん草）"
+    },
+    {
+     "answer": "はくさい",
+     "label": "はくさい（白菜）"
+    },
+    {
+     "answer": "きゃべつ",
+     "label": "きゃべつ"
+    },
+    {
+     "answer": "たまねぎ",
+     "label": "たまねぎ（玉ねぎ）"
+    },
+    {
+     "answer": "れんこん",
+     "label": "れんこん（蓮根）"
+    },
+    {
+     "answer": "さといも",
+     "label": "さといも（里芋）"
+    },
+    {
+     "answer": "かぼちゃ",
+     "label": "かぼちゃ（南瓜）"
+    },
+    {
+     "answer": "とうもろこし",
+     "label": "とうもろこし"
+    },
+    {
+     "answer": "みょうが",
+     "label": "みょうが（茗荷）"
+    },
+    {
+     "answer": "しそ",
+     "label": "しそ（紫蘇）"
+    }
+   ]
+  },
+  {
+   "theme": "日本のお城",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ひめじじょう",
+     "label": "ひめじじょう（姫路城）"
+    },
+    {
+     "answer": "おおさかじょう",
+     "label": "おおさかじょう（大阪城）"
+    },
+    {
+     "answer": "くまもとじょう",
+     "label": "くまもとじょう（熊本城）"
+    },
+    {
+     "answer": "まつもとじょう",
+     "label": "まつもとじょう（松本城）"
+    },
+    {
+     "answer": "なごやじょう",
+     "label": "なごやじょう（名古屋城）"
+    },
+    {
+     "answer": "ひこねじょう",
+     "label": "ひこねじょう（彦根城）"
+    },
+    {
+     "answer": "にじょうじょう",
+     "label": "にじょうじょう（二条城）"
+    },
+    {
+     "answer": "いぬやまじょう",
+     "label": "いぬやまじょう（犬山城）"
+    },
+    {
+     "answer": "ひろさきじょう",
+     "label": "ひろさきじょう（弘前城）"
+    },
+    {
+     "answer": "しゅりじょう",
+     "label": "しゅりじょう（首里城）"
+    }
+   ]
+  },
+  {
+   "theme": "昔の道具",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "そろばん",
+     "label": "そろばん（算盤）"
+    },
+    {
+     "answer": "みしん",
+     "label": "みしん"
+    },
+    {
+     "answer": "ちゃがま",
+     "label": "ちゃがま（茶釜）"
+    },
+    {
+     "answer": "いろり",
+     "label": "いろり（囲炉裏）"
+    },
+    {
+     "answer": "かまど",
+     "label": "かまど（竈）"
+    },
+    {
+     "answer": "あんどん",
+     "label": "あんどん（行灯）"
+    },
+    {
+     "answer": "ひばち",
+     "label": "ひばち（火鉢）"
+    },
+    {
+     "answer": "たらい",
+     "label": "たらい"
+    },
+    {
+     "answer": "せんたくいた",
+     "label": "せんたくいた（洗濯板）"
+    },
+    {
+     "answer": "ゆたんぽ",
+     "label": "ゆたんぽ（湯たんぽ）"
+    }
+   ]
+  },
+  {
+   "theme": "洋食屋さん",
+   "difficulty": "hard",
+   "script": "katakana",
+   "words": [
+    {
+     "answer": "オムライス",
+     "label": "オムライス"
+    },
+    {
+     "answer": "ハンバーグ",
+     "label": "ハンバーグ"
+    },
+    {
+     "answer": "コロッケ",
+     "label": "コロッケ"
+    },
+    {
+     "answer": "カレーライス",
+     "label": "カレーライス"
+    },
+    {
+     "answer": "グラタン",
+     "label": "グラタン"
+    },
+    {
+     "answer": "シチュー",
+     "label": "シチュー"
+    },
+    {
+     "answer": "ナポリタン",
+     "label": "ナポリタン"
+    },
+    {
+     "answer": "ドリア",
+     "label": "ドリア"
+    },
+    {
+     "answer": "エビフライ",
+     "label": "エビフライ"
+    },
+    {
+     "answer": "プリン",
+     "label": "プリン"
+    }
+   ]
+  },
+  {
+   "theme": "スポーツ",
+   "difficulty": "hard",
+   "script": "katakana",
+   "words": [
+    {
+     "answer": "ゴルフ",
+     "label": "ゴルフ"
+    },
+    {
+     "answer": "テニス",
+     "label": "テニス"
+    },
+    {
+     "answer": "サッカー",
+     "label": "サッカー"
+    },
+    {
+     "answer": "バレーボール",
+     "label": "バレーボール"
+    },
+    {
+     "answer": "マラソン",
+     "label": "マラソン"
+    },
+    {
+     "answer": "スキー",
+     "label": "スキー"
+    },
+    {
+     "answer": "ボウリング",
+     "label": "ボウリング"
+    },
+    {
+     "answer": "ゲートボール",
+     "label": "ゲートボール"
+    },
+    {
+     "answer": "ソフトボール",
+     "label": "ソフトボール"
+    },
+    {
+     "answer": "バスケット",
+     "label": "バスケット"
+    }
+   ]
+  },
+  {
+   "theme": "世界の国",
+   "difficulty": "hard",
+   "script": "katakana",
+   "words": [
+    {
+     "answer": "アメリカ",
+     "label": "アメリカ"
+    },
+    {
+     "answer": "イギリス",
+     "label": "イギリス"
+    },
+    {
+     "answer": "フランス",
+     "label": "フランス"
+    },
+    {
+     "answer": "ドイツ",
+     "label": "ドイツ"
+    },
+    {
+     "answer": "イタリア",
+     "label": "イタリア"
+    },
+    {
+     "answer": "スペイン",
+     "label": "スペイン"
+    },
+    {
+     "answer": "ブラジル",
+     "label": "ブラジル"
+    },
+    {
+     "answer": "カナダ",
+     "label": "カナダ"
+    },
+    {
+     "answer": "インド",
+     "label": "インド"
+    },
+    {
+     "answer": "エジプト",
+     "label": "エジプト"
+    }
+   ]
+  },
+  {
+   "theme": "洋菓子",
+   "difficulty": "hard",
+   "script": "katakana",
+   "words": [
+    {
+     "answer": "チョコレート",
+     "label": "チョコレート"
+    },
+    {
+     "answer": "キャラメル",
+     "label": "キャラメル"
+    },
+    {
+     "answer": "ビスケット",
+     "label": "ビスケット"
+    },
+    {
+     "answer": "クッキー",
+     "label": "クッキー"
+    },
+    {
+     "answer": "ドーナツ",
+     "label": "ドーナツ"
+    },
+    {
+     "answer": "ケーキ",
+     "label": "ケーキ"
+    },
+    {
+     "answer": "ゼリー",
+     "label": "ゼリー"
+    },
+    {
+     "answer": "カステラ",
+     "label": "カステラ"
+    },
+    {
+     "answer": "ワッフル",
+     "label": "ワッフル"
+    },
+    {
+     "answer": "シュークリーム",
+     "label": "シュークリーム"
+    }
+   ]
+  },
+  {
+   "theme": "わらべ遊び",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "かごめかごめ",
+     "label": "かごめかごめ"
+    },
+    {
+     "answer": "はないちもんめ",
+     "label": "はないちもんめ"
+    },
+    {
+     "answer": "だるまさんがころんだ",
+     "label": "だるまさんがころんだ"
+    },
+    {
+     "answer": "おしくらまんじゅう",
+     "label": "おしくらまんじゅう"
+    },
+    {
+     "answer": "けんけんぱ",
+     "label": "けんけんぱ"
+    },
+    {
+     "answer": "かんけり",
+     "label": "かんけり（缶けり）"
+    },
+    {
+     "answer": "たけうま",
+     "label": "たけうま（竹馬）"
+    },
+    {
+     "answer": "いろおに",
+     "label": "いろおに（色鬼）"
+    },
+    {
+     "answer": "めんこ",
+     "label": "めんこ"
+    },
+    {
+     "answer": "あやとり",
+     "label": "あやとり"
+    }
+   ]
+  },
+  {
+   "theme": "秋の野山",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "はぎ",
+     "label": "はぎ（萩）"
+    },
+    {
+     "answer": "すすき",
+     "label": "すすき（芒）"
+    },
+    {
+     "answer": "なでしこ",
+     "label": "なでしこ（撫子）"
+    },
+    {
+     "answer": "おみなえし",
+     "label": "おみなえし（女郎花）"
+    },
+    {
+     "answer": "ふじばかま",
+     "label": "ふじばかま（藤袴）"
+    },
+    {
+     "answer": "ききょう",
+     "label": "ききょう（桔梗）"
+    },
+    {
+     "answer": "もみじ",
+     "label": "もみじ（紅葉）"
+    },
+    {
+     "answer": "いちょう",
+     "label": "いちょう（銀杏）"
+    },
+    {
+     "answer": "どんぐり",
+     "label": "どんぐり"
+    },
+    {
+     "answer": "まつぼっくり",
+     "label": "まつぼっくり"
+    }
+   ]
+  },
+  {
+   "theme": "お鍋",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "すきやき",
+     "label": "すきやき（すき焼き）"
+    },
+    {
+     "answer": "しゃぶしゃぶ",
+     "label": "しゃぶしゃぶ"
+    },
+    {
+     "answer": "よせなべ",
+     "label": "よせなべ（寄せ鍋）"
+    },
+    {
+     "answer": "ちゃんこなべ",
+     "label": "ちゃんこなべ（ちゃんこ鍋）"
+    },
+    {
+     "answer": "もつなべ",
+     "label": "もつなべ（もつ鍋）"
+    },
+    {
+     "answer": "ゆどうふ",
+     "label": "ゆどうふ（湯豆腐）"
+    },
+    {
+     "answer": "きりたんぽ",
+     "label": "きりたんぽ"
+    },
+    {
+     "answer": "おでん",
+     "label": "おでん"
+    },
+    {
+     "answer": "みずたき",
+     "label": "みずたき（水炊き）"
+    },
+    {
+     "answer": "かにすき",
+     "label": "かにすき"
+    }
+   ]
+  },
+  {
+   "theme": "日本の名所",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "きんかくじ",
+     "label": "きんかくじ（金閣寺）"
+    },
+    {
+     "answer": "ぎんかくじ",
+     "label": "ぎんかくじ（銀閣寺）"
+    },
+    {
+     "answer": "きよみずでら",
+     "label": "きよみずでら（清水寺）"
+    },
+    {
+     "answer": "いつくしま",
+     "label": "いつくしま（厳島）"
+    },
+    {
+     "answer": "にっこう",
+     "label": "にっこう（日光）"
+    },
+    {
+     "answer": "あまのはしだて",
+     "label": "あまのはしだて（天橋立）"
+    },
+    {
+     "answer": "まつしま",
+     "label": "まつしま（松島）"
+    },
+    {
+     "answer": "いせじんぐう",
+     "label": "いせじんぐう（伊勢神宮）"
+    },
+    {
+     "answer": "とうだいじ",
+     "label": "とうだいじ（東大寺）"
+    },
+    {
+     "answer": "ほうりゅうじ",
+     "label": "ほうりゅうじ（法隆寺）"
+    }
+   ]
+  },
+  {
+   "theme": "まちのお店と仕事",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "だいく",
+     "label": "だいく（大工）"
+    },
+    {
+     "answer": "さかなや",
+     "label": "さかなや（魚屋）"
+    },
+    {
+     "answer": "やおや",
+     "label": "やおや（八百屋）"
+    },
+    {
+     "answer": "はなや",
+     "label": "はなや（花屋）"
+    },
+    {
+     "answer": "ゆうびんや",
+     "label": "ゆうびんや（郵便屋）"
+    },
+    {
+     "answer": "おいしゃさん",
+     "label": "おいしゃさん（お医者さん）"
+    },
+    {
+     "answer": "かんごし",
+     "label": "かんごし（看護師）"
+    },
+    {
+     "answer": "けいさつかん",
+     "label": "けいさつかん（警察官）"
+    },
+    {
+     "answer": "しょうぼうし",
+     "label": "しょうぼうし（消防士）"
+    },
+    {
+     "answer": "せんせい",
+     "label": "せんせい（先生）"
+    }
+   ]
+  },
+  {
+   "theme": "お茶の時間",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "りょくちゃ",
+     "label": "りょくちゃ（緑茶）"
+    },
+    {
+     "answer": "ほうじちゃ",
+     "label": "ほうじちゃ（ほうじ茶）"
+    },
+    {
+     "answer": "むぎちゃ",
+     "label": "むぎちゃ（麦茶）"
+    },
+    {
+     "answer": "げんまいちゃ",
+     "label": "げんまいちゃ（玄米茶）"
+    },
+    {
+     "answer": "こぶちゃ",
+     "label": "こぶちゃ（昆布茶）"
+    },
+    {
+     "answer": "まっちゃ",
+     "label": "まっちゃ（抹茶）"
+    },
+    {
+     "answer": "せんちゃ",
+     "label": "せんちゃ（煎茶）"
+    },
+    {
+     "answer": "ぎょくろ",
+     "label": "ぎょくろ（玉露）"
+    },
+    {
+     "answer": "ようかん",
+     "label": "ようかん（羊羹）"
+    },
+    {
+     "answer": "おせんべい",
+     "label": "おせんべい（お煎餅）"
+    }
+   ]
+  },
+  {
+   "theme": "冬のことば",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "しもばしら",
+     "label": "しもばしら（霜柱）"
+    },
+    {
+     "answer": "つらら",
+     "label": "つらら"
+    },
+    {
+     "answer": "こがらし",
+     "label": "こがらし（木枯らし）"
+    },
+    {
+     "answer": "ゆきがっせん",
+     "label": "ゆきがっせん（雪合戦）"
+    },
+    {
+     "answer": "かまくら",
+     "label": "かまくら"
+    },
+    {
+     "answer": "おおみそか",
+     "label": "おおみそか（大晦日）"
+    },
+    {
+     "answer": "としこし",
+     "label": "としこし（年越し）"
+    },
+    {
+     "answer": "はつゆき",
+     "label": "はつゆき（初雪）"
+    },
+    {
+     "answer": "ふゆごもり",
+     "label": "ふゆごもり（冬ごもり）"
+    },
+    {
+     "answer": "だんぼう",
+     "label": "だんぼう（暖房）"
+    }
+   ]
+  }
+ ]
+}

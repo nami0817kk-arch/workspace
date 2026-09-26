@@ -91,7 +91,45 @@
 | hard | 22 × 30 |
 
 具体的な冊子1ページあたりの物理サイズ（何mm四方のマスにするか等）は
-KDPの入稿サイズに依存するため、`projects/puzzle-book-maze` 側で決める。
+KDPの入稿サイズに依存するため、`projects/puzzle-book` 側で決める。
+
+## type: `"wordsearch"`（ことば探し）
+
+2026-09-26 に追加（方式5の1冊目。介護向けの紙の本）。**文字は1マス1文字の文字列**
+として扱うので、言語に依存しない（日本語のひらがな・カタカナでも、英語でも同じ形）。
+
+```json
+"params": {"size": 10, "directions": ["E", "S"]},
+"board": {
+  "size": 10,
+  "grid": [["だ", "い", "こ", "ん", ...], ...],
+  "words": [{"answer": "だいこん", "label": "だいこん（大根）"}, ...],
+  "theme": "畑の野菜"
+},
+"solution": {
+  "placements": [{"answer": "だいこん", "start": [0, 0], "dir": "E"}, ...]
+}
+```
+
+- `grid[y][x]` は1マスの文字（`len == 1`）。小書き文字（ゃ・っ）や長音（ー）も1マス。
+- `words[].answer` が盤面に並ぶ文字列、`label` は語の一覧に出す表記（漢字の添え書きなど）。
+- `dir` は `E`（→）`S`（↓）`SE`（↘）`W` `N` `NW` `NE` `SW` のどれか。
+  `start` は `[x, y]`。`params.directions` がその盤面で使った向き。
+- **検証（`verified: true` の条件）**: 8方向すべてを数えて、どの `answer` も盤面に
+  **ちょうど1回だけ**現れ、その位置が `placements` と一致すること。逆向きや斜めに
+  偶然もう1回できていたら落とす。加えて、埋め草の文字で**不適切な語**
+  （`wordsearch.BLOCKED_WORDS`）が8方向のどこにもできていないこと。
+
+### 難易度とパラメータ
+
+`puzzle_generator.WORDSEARCH_DIFFICULTIES` に定義。高齢者向けの紙面を先に決めたので、
+既定は**逆向きを使わない**（→と↓だけ。むずかしいで↘を足す）。
+
+| difficulty | size | directions |
+|---|---|---|
+| easy | 8 | E, S |
+| medium | 10 | E, S |
+| hard | 12 | E, S, SE |
 
 ## 将来 type を増やすとき
 

@@ -31,7 +31,7 @@ Difficulty = Literal["easy", "medium", "hard"]
 
 # 難易度は盤面の大きさで制御する（棒倒し法は盤面が大きいほど行き止まりと
 # 折り返しが増え、自然に難しくなる）。具体的な冊子の紙面設計は
-# projects/puzzle-book-maze 側で決める。
+# projects/puzzle-book 側で決める。
 DIFFICULTIES: dict[Difficulty, dict[str, int]] = {
     "easy": {"width": 10, "height": 10},
     "medium": {"width": 16, "height": 16},
