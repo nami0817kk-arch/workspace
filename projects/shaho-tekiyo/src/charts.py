@@ -124,17 +124,18 @@ def stages_timeline(stages: list[tuple[str, str, bool]], caption: str) -> str:
 
 
 def hbars(items: list[tuple[str, int, str]], caption: str) -> str:
-    """横棒で金額を並べる（0から）。items: (名前, 金額, 色の番号)。金額は棒の先に書く。"""
-    w, row, label_w = 640, 40, 150
+    """横棒で金額を並べる（0から）。items: (名前, 金額, 色の番号)。
+    名前は棒の上の行に書く（左に置くと、スマホで文字を大きくしたときに左端からはみ出す）。金額は棒の先。"""
+    w, row = 640, 76
     h = row * len(items)
     vmax = max(v for _, v, _ in items)
-    pw = w - label_w - 90
+    pw = w - 150
     out = [f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{escape(caption)}" class="hbars">']
     for i, (name, value, color) in enumerate(items):
-        y0 = i * row + 8
+        y0 = i * row
         bw = max(pw * value / vmax, 2)
-        out.append(f'<text x="{label_w - 8}" y="{y0 + 17}" text-anchor="end" class="axis strong">{escape(name)}</text>')
-        out.append(f'<rect x="{label_w}" y="{y0}" width="{bw:.1f}" height="24" rx="4" class="fill-{color}"><title>{escape(name)} {_yen(value)}</title></rect>')
-        out.append(f'<text x="{label_w + bw + 8:.1f}" y="{y0 + 17}" class="val">{_yen(value)}</text>')
+        out.append(f'<text x="0" y="{y0 + 22}" class="axis strong">{escape(name)}</text>')
+        out.append(f'<rect x="0" y="{y0 + 34}" width="{bw:.1f}" height="28" rx="4" class="fill-{color}"><title>{escape(name)} {_yen(value)}</title></rect>')
+        out.append(f'<text x="{bw + 10:.1f}" y="{y0 + 55}" class="val">{_yen(value)}</text>')
     out.append("</svg>")
     return f'<figure class="viz">{"".join(out)}<figcaption>{escape(caption)}</figcaption></figure>'
