@@ -363,7 +363,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                 // **広告を消せることは、広告が出る場所で伝える。**
                 // ⋮ の奥にしか置いていなかったので、出るのは知っていても
                 // 消せることを知らないままになる。
-                // 広告が出る前（最初の数季）と、買った人には出さない。
+                // 広告が出る前（`adsFromSeason` に届く前）と、買った人には出さない。
                 if (_offersNoAds) ...[
                   const SizedBox(height: 12),
                   _NoAdsCard(onOpen: _openSupport),

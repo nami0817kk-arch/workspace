@@ -5,6 +5,8 @@
 /// バランスが金で飛ばせるものになる。
 library;
 
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_career/monetize/ad_service.dart';
@@ -101,6 +103,35 @@ Future<Monetization> started({
 }
 
 void main() {
+  /// **利用者に配る文面も、実装と突き合わせる。**
+  ///
+  /// サポートページに「始めてから数シーズンのあいだは広告を出さない」と
+  /// 書いてあったが、`adsFromSeason` を 3 → 1 にした時点で**嘘になっていた**
+  /// （1シーズン目の終わりから出る）。ガイド（`guide_test`）は見張っていたが、
+  /// **法務ページを見ている検査が1つも無かった**。
+  ///
+  /// HTML を細かく読み解くことはしない——広告の頻度のように
+  /// **数字が変われば嘘になる記述**だけを、最小限の形で縛る。
+  test('サポートページの広告の説明が、実装と食い違っていない', () {
+    final page = File('legal/support.html').readAsStringSync();
+
+    // 「いつから出るか」。1季目の終わりから出るなら、数シーズン待たせない。
+    expect(Monetization.adsFromSeason, 1);
+    expect(page.contains('1シーズン目の終わりから'), isTrue);
+    expect(
+      page.contains('数シーズン'),
+      isFalse,
+      reason: '広告が1季目の終わりから出るのに「数シーズン出さない」と書いてある',
+    );
+
+    // 「どこに出るか」。ここは仕組みの側（季末だけ・バナー無し）と揃える。
+    expect(page.contains('シーズンの切れ目にだけ'), isTrue);
+    expect(page.contains('バナー広告は出しません'), isTrue);
+
+    // 売り物は2つだけ、という約束もここに書いてある。
+    expect(Product.values.length, 2);
+  });
+
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('売っているもの', () {

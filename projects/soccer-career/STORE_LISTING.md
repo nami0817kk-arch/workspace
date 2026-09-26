@@ -235,6 +235,23 @@ iPad の絵を9枚用意している。
   パーソナライズ広告は使えないが、同意ダイアログも出ない。
 - 詳細は AdMob の公式ガイダンスに従う。
 
+## 出す前の点検
+
+```bash
+python tool/preflight.py
+```
+
+28項目を機械で当てる（アイコンの枚数とアルファ・絵の寸法・商品ID・
+バンドルID・法務ページのURL・Info.plist・雛形の残り・公開文面の名義）。
+**CI のテストの後で毎回回る**ので、普段は意識しなくてよい。
+提出の直前に手元で1回走らせて、`要対応 0 件` を確かめる。
+
+ビルドしたものに管理画面が入っていないかは別の道具:
+
+```bash
+flutter build web --release && python tool/check_release.py
+```
+
 ## 申請チェックリスト
 
 コンソール側の作業手順は [`docs/MONETIZATION.md`](docs/MONETIZATION.md) の
