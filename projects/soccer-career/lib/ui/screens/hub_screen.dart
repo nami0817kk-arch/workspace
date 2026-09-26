@@ -105,7 +105,8 @@ class HubScreen extends StatelessWidget {
   Future<void> _endSeason(BuildContext context) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => SeasonEndScreen(controller: controller),
+        builder: (_) =>
+            SeasonEndScreen(controller: controller, monetization: monetization),
       ),
     );
     // **広告はシーズンの画面を閉じたあと。** 画面の中に挟むと、契約を

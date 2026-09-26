@@ -49,6 +49,15 @@ enum PurchaseOutcome {
 
 /// 課金の窓口。
 abstract class PurchaseService {
+  /// **買ったものが届いたら、待っているかどうかに関係なく呼ぶ。**
+  ///
+  /// ストアの通知は購入を始めた瞬間に返ってくるとは限らない——アプリを
+  /// 落としている間に決済が通る、家族の承認を待つ、5分の上限で待つのを
+  /// やめた後に届く、別の端末で買ったものが起動時に流れてくる。
+  /// `await` している側だけに返していた頃、**これらは全部「払ったのに
+  /// 何も起きない」**になっていた（`復元` を押すまで戻らない）。
+  set onDelivered(void Function(Product product)? callback);
+
   Future<void> initialize();
 
   /// ストアが使えるか。使えなければ購入の導線を出さない。
@@ -68,6 +77,9 @@ abstract class PurchaseService {
 
 /// 課金を扱わない実装。Web 版・テストで使う。
 class NoPurchaseService implements PurchaseService {
+  @override
+  set onDelivered(void Function(Product product)? callback) {}
+
   @override
   Future<void> initialize() async {}
 
@@ -90,6 +102,12 @@ class NoPurchaseService implements PurchaseService {
 
 /// ストアの課金基盤を使う実装。
 class StorePurchaseService implements PurchaseService {
+  @override
+  set onDelivered(void Function(Product product)? callback) =>
+      _onDelivered = callback;
+
+  void Function(Product product)? _onDelivered;
+
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
@@ -113,29 +131,36 @@ class StorePurchaseService implements PurchaseService {
 
   void _onUpdate(List<PurchaseDetails> purchases) {
     for (final purchase in purchases) {
-      // 知らない商品IDは無視する。取り違えて別のものを渡さないため。
-      if (!Product.ids.contains(purchase.productID)) continue;
-      if (_pendingId != null && purchase.productID != _pendingId) {
-        // 待っているものと違うなら、完了通知だけ返して見送る。
-        // 返さないとストアが同じ購入を送り続ける。
-        if (purchase.pendingCompletePurchase) {
-          unawaited(_iap.completePurchase(purchase));
+      // 知らない商品IDは触らない。取り違えて別のものを渡さないため。
+      final product = Product.byId(purchase.productID);
+      if (product == null) continue;
+      if (purchase.status == PurchaseStatus.pending) continue;
+
+      // **渡すほうは、待っているかどうかを見ない。** ここを
+      // `await` している側だけに返していたので、アプリを落としている間に
+      // 決済が通った購入は受け取り手が居ないまま完了通知だけ返され、
+      // **払ったのに何も起きない**状態になっていた。
+      if (purchase.status == PurchaseStatus.purchased ||
+          purchase.status == PurchaseStatus.restored) {
+        _onDelivered?.call(product);
+      }
+
+      // 結果を `await` している側へ返すのは、待っている商品のときだけ。
+      if (_pendingId == null || purchase.productID == _pendingId) {
+        switch (purchase.status) {
+          case PurchaseStatus.pending:
+            break;
+          case PurchaseStatus.purchased:
+          case PurchaseStatus.restored:
+            _complete(PurchaseOutcome.purchased);
+          case PurchaseStatus.canceled:
+            _complete(PurchaseOutcome.canceled);
+          case PurchaseStatus.error:
+            _complete(PurchaseOutcome.failed);
         }
-        continue;
       }
 
-      switch (purchase.status) {
-        case PurchaseStatus.pending:
-          continue;
-        case PurchaseStatus.purchased:
-        case PurchaseStatus.restored:
-          _complete(PurchaseOutcome.purchased);
-        case PurchaseStatus.canceled:
-          _complete(PurchaseOutcome.canceled);
-        case PurchaseStatus.error:
-          _complete(PurchaseOutcome.failed);
-      }
-
+      // 完了通知を返さないと、ストアが同じ購入を送り続ける。
       if (purchase.pendingCompletePurchase) {
         unawaited(_iap.completePurchase(purchase));
       }
