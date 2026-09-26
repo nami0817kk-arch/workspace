@@ -22,11 +22,11 @@
 
 ## 名前・サブタイトル・キーワード
 
-| 項目 | 日本語（17／19／93字） | English (US)（27／27／102字） |
+| 項目 | 日本語（17／19／93字） | English (US)（27／27／94字） |
 |---|---|---|
 | 名前（30字まで） | 護送ボート：囚人を渡す川渡りパズル | Prison Boat: River Crossing |
 | サブタイトル（30字まで） | 脱獄させるな！頭の体操・ひらめき脳トレ | Logic puzzle & brain teaser |
-| キーワード（100字まで） | 脱出,刑務所,警察,警官,看守,IQ,IQテスト,論理,ロジック,思考力,謎解き,クイズ,暇つぶし,オフライン,無料,舟,船,中州,知育,推理,難問,頭脳,ブレイン,頭を使う,考える | prisoner,jail,escape,police,cop,guard,brain,iq,test,riddle,logic,think,ferry,wolf,goat,cabbage,offline |
+| キーワード（100字まで） | 脱出,刑務所,警察,警官,看守,IQ,IQテスト,論理,ロジック,思考力,謎解き,クイズ,暇つぶし,オフライン,無料,舟,船,中州,知育,推理,難問,頭脳,ブレイン,頭を使う,考える | prisoner,jail,escape,police,cop,guard,brain,iq,test,riddle,logic,think,ferry,wolf,goat,cabbage |
 
 - 名前とサブタイトルに入れた語（護送・ボート・囚人・渡す・川渡り・パズル・脱獄・頭の体操・ひらめき・脳トレ）はキーワード欄に重ねない
 - ホーム画面の表示名は 日本語「護送ボート」、英語「Prison Boat」（ios/Runner/*.lproj/InfoPlist.strings）
