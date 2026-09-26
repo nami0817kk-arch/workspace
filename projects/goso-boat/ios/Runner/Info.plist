@@ -12,7 +12,7 @@
 		<string>en</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-	<string>Prison Boat</string>
+	<string>Prison Ferry</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

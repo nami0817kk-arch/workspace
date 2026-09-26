@@ -1,4 +1,4 @@
-# 護送ボート / Prison Boat — ストア掲載文の下書き（iOS のみ）
+# 護送ボート / Prison Ferry — ストア掲載文の下書き（iOS のみ）
 
 2026-09-26 作成。ユーザーの指示「iOS でインストールされる可能性をあげて」に向けたもの。
 公開名義は「つるはし社」。本名・nami・0817 は入れない。
@@ -22,14 +22,18 @@
 
 ## 名前・サブタイトル・キーワード
 
-| 項目 | 日本語（17／19／93字） | English (US)（27／27／94字） |
+| 項目 | 日本語（19／17／91字） | English (US)（24／27／95字） |
 |---|---|---|
-| 名前（30字まで） | 護送ボート：囚人を渡す川渡りパズル | Prison Boat: River Crossing |
-| サブタイトル（30字まで） | 脱獄させるな！頭の体操・ひらめき脳トレ | Logic puzzle & brain teaser |
-| キーワード（100字まで） | 脱出,刑務所,警察,警官,看守,IQ,IQテスト,論理,ロジック,思考力,謎解き,クイズ,暇つぶし,オフライン,無料,舟,船,中州,知育,推理,難問,頭脳,ブレイン,頭を使う,考える | prisoner,jail,escape,police,cop,guard,brain,iq,test,riddle,logic,think,ferry,wolf,goat,cabbage |
+| 名前（30字まで） | 脱獄させるな！護送ボート：川渡りパズル | Prison Ferry: No Escape! |
+| サブタイトル（30字まで） | 囚人を渡す頭の体操・ひらめき脳トレ | River crossing logic puzzle |
+| キーワード（100字まで） | 脱出,刑務所,警察,警官,看守,IQ,IQテスト,論理,ロジック,思考力,謎解き,クイズ,暇つぶし,オフライン,無料,舟,船,中州,知育,推理,難問,頭脳,ブレイン,頭を使う,考える | prisoner,jail,police,cop,guard,brain,iq,test,riddle,think,boat,wolf,goat,cabbage,teaser,offline |
 
-- 名前とサブタイトルに入れた語（護送・ボート・囚人・渡す・川渡り・パズル・脱獄・頭の体操・ひらめき・脳トレ）はキーワード欄に重ねない
-- ホーム画面の表示名は 日本語「護送ボート」、英語「Prison Boat」（ios/Runner/*.lproj/InfoPlist.strings）
+**名前は合わせ技**（2026-09-27 ユーザー決定）。ストアの正式名に、検索される「脱獄」と覚えやすい「護送ボート」の両方を入れる。
+ホーム画面の名前は短い方（日本語「護送ボート」、英語「Prison Ferry」）。英語は「Prison Boat」だと米国で
+刑務所への差し入れ・面会サービスのアプリと並ぶので、同名の無い「Prison Ferry」にした。
+
+- 名前とサブタイトルに入れた語（脱獄・護送・ボート・川渡り・パズル・囚人・渡す・頭の体操・ひらめき・脳トレ／Prison・Ferry・Escape・River・Crossing・Logic・Puzzle）はキーワード欄に重ねない
+- ホーム画面の表示名は 日本語「護送ボート」、英語「Prison Ferry」（ios/Runner/*.lproj/InfoPlist.strings）
 - 英語のキーワードの wolf, goat, cabbage は「狼と山羊とキャベツ」の川渡り（英語圏で一番知られた形）を探す人向け
 
 ## 配信する国

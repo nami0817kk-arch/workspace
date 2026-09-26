@@ -1,7 +1,7 @@
 {
   "@@locale": "ja",
   "appTitle": "護送ボート",
-  "tagline": "囚人を向こう岸へ。逃がすな。",
+  "tagline": "囚人を舟で向こう岸へ。1人も逃がすな。",
   "start": "はじめる",
   "continueAt": "つづきから（{id}）",
   "@continueAt": {
@@ -266,5 +266,6 @@
   "purchaseThanks": "広告を消しました。ありがとう！",
   "purchaseRestored": "購入を復元しました",
   "purchaseNothing": "復元できる購入が見つからなかった",
-  "purchaseFailed": "購入できなかった。時間をおいてもう一度"
+  "purchaseFailed": "購入できなかった。時間をおいてもう一度",
+  "kicker": "脱獄させるな！"
 }

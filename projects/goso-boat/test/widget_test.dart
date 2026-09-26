@@ -109,7 +109,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     final progress = await _progress();
     await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), locale: const Locale('en')));
-    expect(find.text('Prison Boat'), findsOneWidget);
+    expect(find.text('Prison Ferry'), findsOneWidget);
     await tester.tap(find.text('Start'));
     await tester.pump(const Duration(milliseconds: 400));
     await tester.pump(const Duration(milliseconds: 400));

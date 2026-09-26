@@ -10,10 +10,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Prison Boat';
+  String get appTitle => 'Prison Ferry';
 
   @override
-  String get tagline => 'Get the prisoners across. Don\'t let them escape.';
+  String get tagline => 'Get every prisoner across the river.';
 
   @override
   String get start => 'Start';
@@ -351,4 +351,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get purchaseFailed => 'Purchase failed. Please try again later.';
+
+  @override
+  String get kicker => 'Don\'t let them escape!';
 }
