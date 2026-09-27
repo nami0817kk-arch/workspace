@@ -111,7 +111,7 @@
       if (s.s) { facts.push('ストップ高・安 ' + s.s + '回'); }
       var factLine = facts.length ? '<p class="hit-facts">' + facts.join(' ／ ') + '</p>' : '';
       var total = (s.g || []).length + (s.l || []).length + (s.a || []).length;
-      var head = total >= 3
+      var head = total >= {{ STOCK_PAGE_MIN_APPEARANCES }}
         ? '<a href="stock/' + encodeURIComponent(s.c) + '/">' + escape(s.n) + '（' + escape(s.c) + '）</a>'
         : escape(s.n) + '（' + escape(s.c) + '）';
       return '<section class="hit"><h2>' + head + '</h2>'

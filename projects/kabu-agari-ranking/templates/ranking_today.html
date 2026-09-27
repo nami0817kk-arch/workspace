@@ -22,6 +22,12 @@
 </ul>
 {% endif %}
 {% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
+{% if stop_note %}
+<p class="stop-note">
+  この日{{ stop_note.term }}になったのは<strong>{{ stop_note.count }}銘柄</strong>です{% if stop_note.outside %}（うち{{ stop_note.outside }}銘柄はこの表の外）{% endif %}。
+  <a href="{{ base_url }}{{ stop_note.href }}">{{ stop_note.term }}の記録を見る →</a>
+</p>
+{% endif %}
 {% include "_ranking_table.html" %}
 {% if chart %}
 <figure class="chart-figure">
