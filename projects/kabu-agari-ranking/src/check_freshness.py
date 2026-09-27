@@ -94,8 +94,17 @@ def main() -> int:
         print(f"::error::{latest} がありません。")
         return 1
 
-    payload = json.loads(latest.read_text(encoding="utf-8"))
-    rec_date = date.fromisoformat(payload["rec_date"])
+    # 「無い」は丁寧に扱うのに「壊れている」は素の traceback、では
+    # ログを見た人が何をすればよいか分からない（黙って止まるのと同じ）。
+    try:
+        payload = json.loads(latest.read_text(encoding="utf-8"))
+        rec_date = date.fromisoformat(payload["rec_date"])
+    except (json.JSONDecodeError, KeyError, ValueError) as e:
+        print(f"::error::{latest} を読めません（{e}）。")
+        print("::error::直前の取得が途中で止まった可能性があります。"
+              "data/latest.json の中身を確認し、壊れていれば当日分の "
+              "data/YYYY-MM-DD.json から作り直してください。")
+        return 1
     now = datetime.now(JST)
     try:
         behind, message = check(rec_date, now, after_fetch=args.after_fetch)

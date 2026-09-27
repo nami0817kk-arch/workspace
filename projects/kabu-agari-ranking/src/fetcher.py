@@ -42,6 +42,10 @@ parse_failures: list[str] = []
 # 「取れなかった日」を「1件も無かった日」として記録してしまう。
 pages_fetched: dict[str, int] = {}
 
+# ランキングの名前。ログ・pages_fetched のキー・失敗の通知で同じものを使う。
+GAINERS_LABEL = "値上がりランキング"
+LOSERS_LABEL = "値下がりランキング"
+ACTIVE_LABEL = "活況銘柄ランキング"
 STOP_HIGH_LABEL = "ストップ高銘柄"
 STOP_LOW_LABEL = "ストップ安銘柄"
 
@@ -97,9 +101,22 @@ def _fetch_ranking(mode: str, label: str, top_n: int) -> tuple[pd.DataFrame, str
     return df, asof_date
 
 
-def _finalize(df: pd.DataFrame, rec_date: str | None) -> pd.DataFrame:
+def _finalize(df: pd.DataFrame, rec_date: str | None, label: str = "") -> pd.DataFrame:
+    """順位を振り、相場日を入れて返す。
+
+    **相場日が取れなければ空のままにする。** 以前は実行日で埋めていたが、
+    それが正しい保証はない（ページが前営業日を出していたかもしれない）。
+    大引け後の営業日に実行すると実行日と一致してしまうので、
+    保存前の検査もすり抜ける。2026-09-07 に月曜分が金曜のファイルを
+    上書きしたのと同じ型の事故になる。空なら validate が必ず弾く。
+    """
     df = _fill_names(df.reset_index(drop=True))
-    df["rec_date"] = rec_date or str(date.today())
+    if not rec_date:
+        parse_failures.append(
+            f"{label or 'ランキング'}: ページから相場日を読み取れませんでした"
+            "（日付の欄の作りが変わった可能性があります）"
+        )
+    df["rec_date"] = rec_date or ""
     df.insert(0, "rank", range(1, len(df) + 1))
     return df
 
@@ -111,29 +128,29 @@ _ZERO_OK_MODES = frozenset({_MODE_STOP_HIGH, _MODE_STOP_LOW})
 
 def fetch_gainers(top_n: int = 30) -> pd.DataFrame:
     """値上がり率上位 top_n 件。columns: rank,ticker,code,name,close,change_pct,metric_value(出来高),rec_date"""
-    df, asof_date = _fetch_ranking(_MODE_GAINERS, "値上がりランキング", top_n)
+    df, asof_date = _fetch_ranking(_MODE_GAINERS, GAINERS_LABEL, top_n)
     if df.empty:
         return df
     df = df[df["change_pct"] > 0].sort_values("change_pct", ascending=False).head(top_n)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, GAINERS_LABEL)
 
 
 def fetch_losers(top_n: int = 30) -> pd.DataFrame:
     """値下がり率上位 top_n 件（下落率が大きい順）。columns同上（change_pctは負値）。"""
-    df, asof_date = _fetch_ranking(_MODE_LOSERS, "値下がりランキング", top_n)
+    df, asof_date = _fetch_ranking(_MODE_LOSERS, LOSERS_LABEL, top_n)
     if df.empty:
         return df
     df = df[df["change_pct"] < 0].sort_values("change_pct", ascending=True).head(top_n)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, LOSERS_LABEL)
 
 
 def fetch_active(top_n: int = 30) -> pd.DataFrame:
     """約定回数（取引の活発さ）上位 top_n 件。metric_valueは約定回数。"""
-    df, asof_date = _fetch_ranking(_MODE_ACTIVE, "活況銘柄ランキング", top_n)
+    df, asof_date = _fetch_ranking(_MODE_ACTIVE, ACTIVE_LABEL, top_n)
     if df.empty:
         return df
     df = df.sort_values("metric_value", ascending=False).head(top_n)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, ACTIVE_LABEL)
 
 
 def fetch_stop_high() -> pd.DataFrame:
@@ -154,7 +171,7 @@ def fetch_stop_high() -> pd.DataFrame:
         return df
     # 順位の概念が無いランキングなので、上昇率の高い順に並べておく
     df = df.sort_values("change_pct", ascending=False)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, STOP_HIGH_LABEL)
 
 
 def fetch_stop_low() -> pd.DataFrame:
@@ -174,4 +191,4 @@ def fetch_stop_low() -> pd.DataFrame:
         return df
     # 順位の概念が無いランキングなので、下落率の大きい順に並べておく
     df = df.sort_values("change_pct", ascending=True)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, STOP_LOW_LABEL)

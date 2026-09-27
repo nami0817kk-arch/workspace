@@ -121,3 +121,18 @@ def test_記録がある期間の0件は言い切ってよい():
     text = render.limit_summary(history, 20, render.LIMIT_PAGES["losers"])
     assert "上位30銘柄" not in text
     assert "ストップ安になった銘柄はありませんでした" in text
+
+
+# --- 壊れたデータの扱い -------------------------------------------------------
+
+def test_latest_jsonが壊れていても何をすればよいか分かる(tmp_path, monkeypatch, capsys):
+    """「無い」は丁寧に扱うのに「壊れている」は素の traceback、では
+    ログを見た人が動けない。"""
+    import check_freshness
+    monkeypatch.setattr(check_freshness, "_DATA_DIR", tmp_path)
+    (tmp_path / "latest.json").write_text("{壊れている", encoding="utf-8")
+    monkeypatch.setattr("sys.argv", ["check_freshness.py"])
+    assert check_freshness.main() == 1
+    out = capsys.readouterr().out
+    assert "読めません" in out
+    assert "作り直して" in out
