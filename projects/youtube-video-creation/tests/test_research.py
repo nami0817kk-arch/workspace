@@ -1822,3 +1822,50 @@ def test_行の多い表と長い行は重なりを知らせる():
         card={"type": "table", "title": "t", "columns": ["", ""], "rows": [[1, "a"], [2, "b"], [3, "c"], [4, "d"], [5, "e"]]},
         say=["あ" * 30])]
     assert not _advise_card_telop_overlap(build_notes(raw))
+
+
+def _reaction_notes(tmp_path, say, sources):
+    import yaml
+    from src.research import load_notes
+
+    note = {
+        "date": "2026年9月27日", "slot": "japanese_1", "format": "news",
+        "theme": {"id": "t", "league": "spain", "kind": "other", "topic": "バルセロナ",
+                  "title": "バルセロナの話", "question": "何が起きたか"},
+        "sections": [
+            {"id": "a", "heading": "何が起きたか", "tier": "報道", "telop": "t", "narrator": "キャスター",
+             "say": ["バルセロナが勝ちました。"], "sources": ["https://www.espn.com/x"]},
+            {"id": "voices", "heading": "ネットの反応", "tier": "未確認", "telop": "t", "narrator": "キャスター",
+             "say": say, "sources": sources},
+        ],
+    }
+    p = tmp_path / "n.yaml"
+    p.write_text(yaml.safe_dump(note, allow_unicode=True), encoding="utf-8")
+    return load_notes(p)
+
+
+def test_分けていない長い反応を止める(tmp_path):
+    """**2026-09-27「過去の指摘は平気？」**。9/26 に決めた「長い反応は分けて cont」が1件残っていた。"""
+    from src.research import _advise_reactions
+
+    long = "イングランドに住むスペイン人です。クラブも代表もスペインのスタイルをまねしようとしているのを見てきたが、上には行けない"
+    notes = _reaction_notes(tmp_path, [{"voice": "ネット民", "text": long}], ["https://x.com/someone/status/1"])
+    assert any("長い反応が分かれていません" in w for w in _advise_reactions(notes))
+
+
+def test_分けてあれば通す(tmp_path):
+    from src.research import _advise_reactions
+
+    say = [{"voice": "ネット民", "text": "イングランドに住むスペイン人です。まねしようとしているのを見てきた。とても長い前半の文です。"},
+           {"voice": "ネット民", "text": "でも上には行けない", "cont": True}]
+    notes = _reaction_notes(tmp_path, say, ["https://x.com/someone/status/1"])
+    assert not any("長い反応" in w for w in _advise_reactions(notes))
+
+
+def test_報道アカウントの見出しを反応に入れない(tmp_path):
+    """**2026-09-27**。ESPN FC や AS の Bluesky の見出しを「ネット民」で読んでいた。"""
+    from src.research import _advise_reactions
+
+    notes = _reaction_notes(tmp_path, [{"voice": "ネット民", "text": "ラフィーニャがハットトリック！"}],
+                            ["https://bsky.app/profile/espnfc-m.bsky.social/post/3mvv"])
+    assert any("報道・まとめ" in w for w in _advise_reactions(notes))

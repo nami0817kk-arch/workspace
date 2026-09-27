@@ -1222,3 +1222,20 @@ def test_分けた反応はかたまりで扱う():
     lines = [L(text="頭1", cont=False), L(text="続き1", cont=True), L(text="頭2", cont=False)]
     groups = _voice_groups(lines)
     assert [[l.text for l in g] for g in groups] == [["頭1", "続き1"], ["頭2"]]
+
+
+def test_話者の名前が入った振りは残す():
+    """**2026-09-27 ユーザー指摘「板倉のショートは流れが変」。**
+    「先発が有力な鈴木淳之介は、こう話します。」まで振りとして落ち、ショートでは
+    誰だか分からないまま本人の言葉が続いた。名前の入った振りは話者を名乗る行として残す。"""
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: タイトルです。", "", "## 本編", ""]
+    body += ["キャスター: 空いた3バックに誰が入るのか。", ""]
+    body += ["キャスター: 先発が有力な鈴木淳之介は、こう話します。", ""]
+    body += ["鈴木淳之介: どうにか食らいつくところは終わった", ""]
+    short = trim(parse_script(nl.join(body)))
+    texts = [line.text for line in short.scenes[-1].lines]
+    assert "先発が有力な鈴木淳之介は、こう話します。" in texts, texts

@@ -932,12 +932,19 @@ def _drop_lead_in(scene: Scene) -> None:
     発言までの秒数がそのまま維持に効く。**話者を名乗る行は残す
     （「ショート単体で分かるように」の決まりと衝突するため）。
     """
+    # **話者を名乗る振りは残す**（2026-09-27）。上の決まりどおりにしていなかった。
+    # 板倉の回で「先発が有力な鈴木淳之介は、こう話します。」まで落ち、ショートでは
+    # **誰だか分からないまま本人の言葉が続いた**（ユーザー指摘「板倉のショートは流れが変」）
+    first_voice = next(((getattr(l, "speaker", "") or "").strip() for l in scene.lines
+                        if (getattr(l, "speaker", "") or "").strip() not in NARRATORS), "")
+    names = {first_voice} | {part for part in first_voice.split("・") if len(part) >= 2}
     out = []
     for index, line in enumerate(scene.lines):
         who = (getattr(line, "speaker", "") or "").strip()
         if who not in NARRATORS:
             break
-        if _is_lead_in(line):
+        text = getattr(line, "text", "") or ""
+        if _is_lead_in(line) and not any(n and n in text for n in names):
             out.append(index)
     for index in reversed(out):
         del scene.lines[index]

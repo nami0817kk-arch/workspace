@@ -833,6 +833,7 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     notes_warnings += _advise_posts(notes, plan, now)
     notes_warnings += _advise_sources(notes, plan)
     notes_warnings += _advise_voices(notes)
+    notes_warnings += _advise_reactions(notes)
     notes_warnings += _advise_spread(notes, plan)
     return notes_warnings
 
@@ -1673,6 +1674,44 @@ def _advise_material(notes: Notes) -> list[str]:
         hints.append(f"出典が{len(sources)}本・{len(outlets)}媒体です"
                      f"（目安{VOLUME_SOURCES}本・{VOLUME_OUTLETS}媒体）")
     return hints
+
+
+REACTION_SPLIT_AT = 55   # これを超える反応は、文の終わりで分けて cont を付ける（2026-09-26）
+# 報道・まとめ・転載のアカウントに多い字面。**個人の声ではない**ものが「ネット民」で
+# 読まれていた（2026-09-27、バルサ・ゴールデンシューの回で6件）
+NEWSISH_HANDLE = re.compile(
+    r"(news|espn|marca|as\.com|sport|football|futbol|goal|times|daily|trend|official|"
+    r"yopro|media|press|tv\.|radio|report|fcbarcelona-|blaugrana)", re.I)
+
+
+def _advise_reactions(notes: Notes) -> list[str]:
+    """反応の2つの決まりを機械で見る（2026-09-27 ユーザー「過去の指摘は平気？」を2回）。
+
+    1. **長い反応は文の終わりで分けて `cont: true`**（2026-09-26）。分けないとショートが
+       途中で切れ、画面の箱が12〜26秒止まった。表の決まりにあったのに、9/27 に1件残った
+    2. **報道・まとめアカウントの見出しを反応に入れない**。9/27 に ESPN FC、AS、
+       ロマーノの転載アカウントなどの見出しを「ネット民」で読んでいた
+    """
+    out: list[str] = []
+    for sec in notes.sections:
+        crowd = [i for i, v in enumerate(sec.voices)
+                 if str(v or "").strip() in ("ネット民", "現地サポ", "海外のファン")]
+        if not crowd:
+            continue
+        conts = list(sec.line_conts) + [False] * len(sec.say)
+        for i in crowd:
+            text = str(sec.say[i]) if i < len(sec.say) else ""
+            nxt_cont = i + 1 < len(sec.say) and bool(conts[i + 1])
+            if len(text) > REACTION_SPLIT_AT and not nxt_cont and "。" in text[:-1]:
+                out.append(f"節『{sec.heading}』: 長い反応が分かれていません（{len(text)}字）"
+                           f"『{text[:20]}…』。文の終わりで分け、2行目以降に cont: true を"
+                           "付けてください（2026-09-26）")
+        for url in sec.sources:
+            handle = re.search(r"(?:bsky\.app/profile/|x\.com/|twitter\.com/)([^/]+)", url)
+            if handle and NEWSISH_HANDLE.search(handle.group(1)):
+                out.append(f"節『{sec.heading}』: 反応の出典 {handle.group(1)} は報道・まとめの"
+                           "アカウントに見えます。個人の投稿か確かめてください（見出しは反応に入れない。2026-09-27）")
+    return out
 
 
 def _advise_voices(notes: Notes) -> list[str]:
