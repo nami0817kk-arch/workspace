@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+import copy
 from functools import lru_cache
 from pathlib import Path
 
@@ -62,9 +63,38 @@ def _load(code: str) -> Drawing:
     return d
 
 
+MIN_LINE_PT = 0.75  # KDP の最小の線の太さ（topic/G201857950）
+
+
+@lru_cache(maxsize=None)
+def _thicken(code: str, size: float) -> Drawing:
+    """縮めたあとの線が 0.75pt 未満にならないよう、その大きさ用に線を太らせた図を返す。
+
+    小さく描く絵（もくじの 15pt など）の中の線は 0.06pt まで細くなり、印刷でかすれる恐れがあった
+    （2026-09-27 の最終点検で見つけた）。
+    """
+    d = copy.deepcopy(_load(code))
+    s = size / max(d.width, d.height)
+
+    def walk(node, scale: float) -> None:
+        # SVG の中の group にも縮小（transform）が入っているので、掛け合わせた倍率で太さを見る
+        t = getattr(node, "transform", None)
+        if isinstance(node, Group) and t is not None and len(t) == 6:
+            scale *= abs(t[0] * t[3] - t[1] * t[2]) ** 0.5
+        w = getattr(node, "strokeWidth", None)
+        if w is not None and getattr(node, "strokeColor", None) is not None and w * scale < MIN_LINE_PT:
+            node.strokeWidth = MIN_LINE_PT / scale
+        if isinstance(node, (Group, Drawing)):
+            for child in node.contents:
+                walk(child, scale)
+
+    walk(d, s)
+    return d
+
+
 def draw_icon(c: canvas.Canvas, code: str, x: float, y: float, size: float, *, rotate: float = 0) -> None:
     """(x, y) を左下とする size 四方に絵文字の図版を描く。"""
-    d = _load(code)
+    d = _thicken(code, size)
     s = size / max(d.width, d.height)
     c.saveState()
     c.translate(x + size / 2, y + size / 2)

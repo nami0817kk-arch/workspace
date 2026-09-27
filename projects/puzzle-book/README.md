@@ -61,6 +61,12 @@ python src/build_cover.py books/vol1.json   # 表紙 -> output/vol1-cover.pdf
 
 「大きな迷路」は商標上は空いているが、**同じ題名の KDP 本（2026-08-18 発売）が既に amazon.co.jp にある**ので避けた。
 
+## 納品前の点検
+
+```
+python tools/qa_kotoba.py   # 50項目。入稿の直前に必ず回し、50/50 を確かめる
+```
+
 ## 入稿の手順
 
 KDP の登録・本人確認・税務情報・口座はユーザーの担当。入力する値は次のとおり。

@@ -211,3 +211,19 @@ def test_cover_uses_cmyk_only(built):
     doc = pymupdf.open(str(cover))
     raw = b"".join(doc.xref_stream(x) for x in doc[0].get_contents())
     assert not re.findall(rb"(?<![\w.])(?:[\d.]+\s+){3}(?:rg|RG)(?!\w)", raw)
+
+
+def test_min_line_width(built):
+    """KDP は線の太さを 0.75pt 以上と定めている（topic/G201857950）。小さく描いた絵の中の線が
+    0.06pt まで細くなっていたことがある（2026-09-27 の最終点検で見つけた）。"""
+    import pymupdf
+
+    _, _, interior, cover, _ = built
+    for path in (interior, cover):
+        thin = [
+            (page.number + 1, round(d["width"], 2))
+            for page in pymupdf.open(str(path))
+            for d in page.get_drawings()
+            if d.get("type") in ("s", "fs") and d.get("width") and d["width"] < 0.74
+        ]
+        assert not thin, (path.name, thin[:5])
