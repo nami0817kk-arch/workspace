@@ -664,4 +664,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get achDesc_nightmareNoUndo => '一手も戻さずに鬼門の面を解く';
+
+  @override
+  String get sep => '・';
+
+  @override
+  String get colon => '：';
 }

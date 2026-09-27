@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../app/progress.dart';
@@ -11,6 +13,15 @@ import 'game_screen.dart';
 import 'palette.dart';
 import 'records_screen.dart';
 import 'settings_screen.dart';
+
+/// 面の札の2度押しよけ（同じ画面が2枚積まれないように）。押してから少しの間は受け付けない。
+bool _tileCooling = false;
+bool _tapOk() {
+  if (_tileCooling) return false;
+  _tileCooling = true;
+  Timer(const Duration(milliseconds: 600), () => _tileCooling = false);
+  return true;
+}
 
 Route<void> _fade(Widget page) => PageRouteBuilder(
       pageBuilder: (_, _, _) => page,
@@ -32,7 +43,12 @@ class HomeScreen extends StatelessWidget {
           child: SafeArea(
             child: ListenableBuilder(
               listenable: progress,
-              builder: (context, _) => Padding(
+              builder: (context, _) => LayoutBuilder(
+                builder: (context, box) => SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: box.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
@@ -64,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                     const _TitleArt(),
                     const Spacer(),
                     Text(
-                      [context.l10n.rankName(progress.rank), if (progress.starsToNextRank != null) context.l10n.rankNext(progress.starsToNextRank!)].join('・'),
+                      [context.l10n.rankName(progress.rank), if (progress.starsToNextRank != null) context.l10n.rankNext(progress.starsToNextRank!)].join(context.l10n.sep),
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Palette.dim),
                     ),
                     const SizedBox(height: 2),
@@ -103,6 +119,10 @@ class HomeScreen extends StatelessWidget {
                     _RemoveAds(money: money),
                     const Spacer(flex: 2),
                   ],
+                ),
+              ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -283,7 +303,11 @@ class _LevelTile extends StatelessWidget {
       label: !open ? context.l10n.levelLocked(level.id) : stars > 0 ? context.l10n.levelStars(level.id, stars) : level.id,
       excludeSemantics: true,
       child: GestureDetector(
-        onTap: open ? () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress, money: money))) : null,
+        onTap: open
+            ? () {
+                if (_tapOk()) Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress, money: money)));
+              }
+            : null,
         child: Container(
           decoration: BoxDecoration(
             color: current ? Palette.gold : open ? Colors.white : const Color(0xFFE3E8EE),
@@ -291,15 +315,22 @@ class _LevelTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             boxShadow: open ? const [BoxShadow(color: Palette.ink, offset: Offset(0, 2))] : null,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              open
-                  ? Text(level.id.split('-').last, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Palette.ink))
-                  : const Icon(Icons.lock_rounded, size: 18, color: Palette.dim),
-              const SizedBox(height: 2),
-              StarRow(stars, size: 11),
-            ],
+          // 小さい画面や大きい文字では、はみ出さずに縮める（iPhone SE・文字1.3倍で 2.8px はみ出していた）
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  open
+                      ? Text(level.id.split('-').last, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Palette.ink))
+                      : const Icon(Icons.lock_rounded, size: 18, color: Palette.dim),
+                  const SizedBox(height: 2),
+                  StarRow(stars, size: 11),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -403,7 +434,7 @@ class _Daily extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: ChunkyButton(
-          label: [done ? t.dailyDoneLabel : t.daily(level.id), if (streak > 0) t.dailyStreak(streak)].join('・'),
+          label: [done ? t.dailyDoneLabel : t.daily(level.id), if (streak > 0) t.dailyStreak(streak)].join(t.sep),
           icon: done ? Icons.check_circle_rounded : Icons.today_rounded,
           color: done ? Palette.card : const Color(0xFFFFF1C2),
           fontSize: 15,

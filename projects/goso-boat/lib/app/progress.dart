@@ -170,12 +170,14 @@ class Progress extends ChangeNotifier {
 
   /// 今日（済んでいなければ昨日）から遡って、続けて達成した日数。
   int dailyStreak(DateTime now) {
+    // 暦の上で1日ずつ戻る（夏時間の始まる日は23時間なので、24時間を引くと日がずれる）
+    DateTime prev(DateTime x) => DateTime(x.year, x.month, x.day - 1);
     var d = DateTime(now.year, now.month, now.day);
-    if (!dailyDone(d)) d = d.subtract(const Duration(days: 1));
+    if (!dailyDone(d)) d = prev(d);
     var n = 0;
     while (dailyDone(d)) {
       n++;
-      d = d.subtract(const Duration(days: 1));
+      d = prev(d);
     }
     return n;
   }

@@ -1261,6 +1261,18 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'一手も戻さずに鬼門の面を解く'**
   String get achDesc_nightmareNoUndo;
+
+  /// No description provided for @sep.
+  ///
+  /// In ja, this message translates to:
+  /// **'・'**
+  String get sep;
+
+  /// No description provided for @colon.
+  ///
+  /// In ja, this message translates to:
+  /// **'：'**
+  String get colon;
 }
 
 class _AppLocalizationsDelegate

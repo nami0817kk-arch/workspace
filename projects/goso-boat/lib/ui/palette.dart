@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../app/settings.dart';
@@ -111,6 +113,16 @@ class ChunkyButton extends StatefulWidget {
 class _ChunkyButtonState extends State<ChunkyButton> {
   bool _down = false;
 
+  /// 2度押しよけ（画面の移動や広告の数えが二重にならないように）。押してから少しの間は受け付けない。
+  bool _cooling = false;
+  Timer? _cool;
+
+  @override
+  void dispose() {
+    _cool?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null;
@@ -125,6 +137,9 @@ class _ChunkyButtonState extends State<ChunkyButton> {
         onTapUp: enabled
             ? (_) {
                 setState(() => _down = false);
+                if (_cooling) return;
+                _cooling = true;
+                _cool = Timer(const Duration(milliseconds: 500), () => _cooling = false);
                 if (!widget.silent) AppScope.maybeOf(context)?.play(Sfx.tap);
                 widget.onPressed!();
               }
@@ -149,12 +164,15 @@ class _ChunkyButtonState extends State<ChunkyButton> {
                   Icon(widget.icon, size: widget.fontSize + 3, color: Palette.ink),
                   const SizedBox(width: 4),
                 ],
+                // 狭いボタンでは「…」で切らず、文字を縮めて全部見せる
                 Flexible(
-                  child: Text(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
                     widget.label,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.w800, color: Palette.ink),
+                  ),
                   ),
                 ),
               ],
