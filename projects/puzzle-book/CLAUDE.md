@@ -1,6 +1,6 @@
 # puzzle-book
 
-KDP の紙のパズル本。**ことば探し**（`src/build_kotoba.py`、1冊目 `books/kotoba-vol1.json`）と
+KDP の紙のパズル本。**あたまの体操**（`src/build_notore.py`、脳トレの詰め合わせ30日分）、**ことば探し**（`src/build_kotoba.py`、1冊目 `books/kotoba-vol1.json`）と
 **迷路**（`src/build_book.py`、`books/vol1.json`。売れ行きの比較で見送り、入稿データのまま保留）。
 2026-09-26 に `puzzle-book-maze` から改名した（フォント12MBを二重に持たないため）。
 
@@ -36,3 +36,4 @@ KDP の紙のパズル本。**ことば探し**（`src/build_kotoba.py`、1冊�
   奥付に出典を入れている（`art.ICON_CREDIT`）。題字は M PLUS Rounded 1c（OFL）
 - reportlab の文字の描き方（Tr）は BT/ET をまたいで残る。縁取り文字は縁の段を q/Q で閉じる
   （閉じ忘れで題字が白く抜けた。2026-09-26）
+- 題名に「脳トレ」を使わない（第16類に単独の登録がある）
