@@ -32,7 +32,10 @@ SITE_URL = site_config.SITE_URL
 # AdSense の設定は site_config にある（公開URLと同じく1箇所にまとめる）
 ADSENSE_CLIENT = site_config.ADSENSE_CLIENT
 
-_env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)))
+# **銘柄名は取得元から来る文字列**で、`&` を含む社名（A&D ホロンなど）が実在する。
+# 自動エスケープを切っていると、そのまま HTML に流れて実体参照として不正になり、
+# `<` が混ざればその先のマークアップごと壊れる。JS へ埋め込む値だけ `|safe`。
+_env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)), autoescape=True)
 _env.globals["ADSENSE_CLIENT"] = ADSENSE_CLIENT
 _env.globals["ADSENSE_SLOT"] = site_config.ADSENSE_SLOT
 _env.globals["SITE_URL"] = SITE_URL
