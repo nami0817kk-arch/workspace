@@ -1,0 +1,118 @@
+title: 9月28日の題材
+lead: 9/27 の21時半までに出た見出しから14件
+note: <b>○×を付けてください。</b>明日は9:00〜10:30にマンCの2本（本編・ショート）が入っているので、空いているのは10:30のあとです。<br><br>①は、午後に「元の記事が無い」として外した、堂安と塩貝の「大喧嘩」の噂の続きです。今日の会見で森保監督と本人たちが否定したので、<b>否定した側の言葉</b>として入れています。噂の中身と、配信した人の名前は扱いません。<br><br>日本代表のベネズエラ戦（③）は<b>明日の夜</b>です。決まりどおり、試合の後に作ります。今夜ある欧州の代表戦（ドイツ対ギリシャ、オランダ対セルビアなど）の結果は、朝にもう一度集めて足します。クロップとヴィルツの回（午後の⑧）は、ドイツ対ギリシャの結果を入れて明日お見せします。<br><br>ロマーノの投稿は今回も読めませんでした。中身はまだ<b>見出しだけ</b>です。
+items:
+- num: 1
+  slot: 日本人
+  head: 森保監督が会見で異例のお願い「選手が傷つくような配信はやめてもらいたい」。堂安「逆にちょっとかわいそう」、塩貝「律くんとは普通に話すし、すごくリスペクト」
+  why: '一部の動画配信で流れた「代表の中で揉めた」という話を、監督と当の2人が公の場で否定した、という記事。**本人たちの言葉**がある。
+    '
+  src: ゲキサカ・サッカーキング・フットボールチャンネル（9/27）
+  url: https://web.gekisaka.jp/news/japan/detail/?459845-459845-fl
+  fmt: quote
+- num: 2
+  slot: 日本人
+  head: 久保建英、ベネズエラ代表で来日したソシエダの同僚2人と笑顔の再会。「ぶち抜かれてほしいなと（笑）」
+  why: '前日練習のあと、ミックスゾーンにちょうどベネズエラの選手が入ってきた、という記事。**久保の言葉**がある。
+    '
+  src: ゲキサカ（9/27）
+  url: https://web.gekisaka.jp/news/japan/detail/?459852-459852-fl
+  fmt: quote
+- num: 3
+  slot: 日本人
+  head: 日本対ベネズエラ（明日9/28・広島）。森保監督は「初キャップの選手や経験の浅い選手をスタートで」
+  why: '中野就斗は地元広島で代表デビューの見込み、GK小久保玲央ブライアンや田中聡にも出番の見込み、という前日の記事。**試合の後に結果で作る。**
+    '
+  src: フットボールチャンネル・サッカーキング・ゲキサカ（9/27）
+  url: https://www.footballchannel.jp/2026/09/27/post1020492/
+  fmt: news
+- num: 4
+  slot: 日本人
+  head: 伊藤洋輝、バイエルンが冬の移籍市場で売却する意向。今季の出場は1試合10分
+  why: 'まとめ系の日本語サイトの見出し。元のドイツの報道を当たる必要がある。
+    '
+  src: Football Tribe Japan（9/27）
+  url: https://football-tribe.com/japan/2026/09/27/359760/
+  fmt: news
+  weak: true
+- num: 5
+  slot: 日本人
+  head: エヴァートン、上田綺世の獲得を見送った判断は「今や大きく裏目に」
+  why: 'イングランドの記事を紹介した日本語サイトの見出し。元の記事を当たる必要がある。
+    '
+  src: Football Tribe Japan（9/27）
+  url: https://football-tribe.com/japan/2026/09/27/359762/
+  fmt: voices
+  weak: true
+- num: 6
+  slot: プレミア
+  head: アルジェリア代表、マンCのアイト＝ヌーリを帰国させる。ザンビア戦のベンチでの振る舞いが理由
+  why: '連盟が本人をメンバーから外した、という記事。
+    '
+  src: Voetbal International（9/27）
+  url: https://www.vi.nl/nieuws/algerije-stuurt-weigerende-manchester-city-verdediger-naar-huis
+  fmt: news
+- num: 7
+  slot: プレミア
+  head: イサク、軽いけがでスウェーデン代表を離れてリヴァプールへ。ルーマニア戦では得点
+  why: 'リヴァプールで出番が続いている選手の、代表中のけがの話。
+    '
+  src: スカイスポーツ・サッカーキング（9/27）
+  url: https://www.soccer-king.jp/news/world/world_other/20260927/2209945.html
+  fmt: news
+- num: 8
+  slot: プレミア
+  head: ロイ・キーン、代表を辞退したパルマーを酷評「悪い癖が多すぎる」
+  why: 'イングランド代表を離れたチェルシーのパルマーについて。今日のマンCの回（ノエルとキーン）とは別の話。
+    '
+  src: デイリー・メール（9/27）
+  url: https://www.dailymail.com/sport/football/article-16162951/roy-keane-cole-palmer-england-thomas-tuchel.html
+  fmt: quote
+- num: 9
+  slot: ラリーガ
+  head: ヤマル、バロンドールについて「勝って、勝って、勝てば、議論は終わる」。年齢が不利になるのではと心配も
+  why: 'スペイン対クロアチアを前にした言葉。**本人の言葉**がある。午後に×が付いたヤマルの回（イングランド戦のあと）とは別の話。
+    '
+  src: アス・Voetbal International（9/27）
+  url: https://as.com/futbol/seleccion/lamine-el-balon-de-oro-si-gano-gano-y-gano-se-acabara-el-debate-f202609-n/
+  fmt: quote
+- num: 10
+  slot: その他
+  head: ロベルト・カルロス、現役で稼いだ1億6000万ユーロを「ほとんど失った」
+  why: '元レアル・マドリード、ブラジル代表の左サイドバックが、お金の失敗を明かした、という記事。**本人の言葉**がある。
+    '
+  src: Voetbal International（9/27）
+  url: https://www.vi.nl/nieuws/roberto-carlos-na-loopbaan-voor-160-miljoen-de-boot-in-was-vrijwel-alles-kw
+  fmt: quote
+- num: 11
+  slot: その他
+  head: ブラジル代表のアンチェロッティ監督、フリックのバルサを手本に立て直しへ
+  why: '勝てていないブラジル代表が、バルサでうまくいっている形を取り入れる、という記事。
+    '
+  src: Foot Mercato（9/27）
+  url: https://www.footmercato.net/a1633442693772949882-bresil-carlo-ancelotti-veut-sinspirer-dhansi-flick
+  fmt: news
+- num: 12
+  slot: その他
+  head: ジダン監督、デンベレをフランス代表の柱に。ムバッペ離脱のなかで「新しい役割」
+  why: '午後のムバッペ離脱の続き。ジダンの言葉がある。
+    '
+  src: Foot Mercato（9/27）
+  url: https://www.footmercato.net/a8393989594291565561-equipe-de-france-les-mots-forts-de-zidane-sur-le-nouveau-role-de-dembele
+  fmt: quote
+- num: 13
+  slot: その他
+  head: イタリア代表のマンチーニ監督、ベルギーに0対2で負けたあと、バレッラやマルディーニら10人をトルコ戦に連れて行かず
+  why: '新生イタリアの2試合目を前にした大きな入れ替え、という記事。
+    '
+  src: Football Italia・アス（9/27）
+  url: https://football-italia.net/mancini-10-players-italy-coverciano-turkey/
+  fmt: news
+- num: 14
+  slot: その他
+  head: ノルウェー代表のソルバッケン監督、マンCの騒動からハーランドを守る
+  why: '代表の会見で、ハーランドにマンCの件を聞かせないようにした、という記事。
+    '
+  src: GOAL（9/27）
+  url: https://www.goal.com/en-gb/lists/norway-coach-stale-solbakken-shields-erling-haaland-from-media-storm-following-man-city-s-114-charge/blt15ee3c944742bf97
+  fmt: news
