@@ -131,6 +131,43 @@ KDPの入稿サイズに依存するため、`projects/puzzle-book` 側で決め
 | medium | 10 | E, S |
 | hard | 12 | E, S, SE |
 
+## 脳トレ用の小さなパズル（2026-09-27 追加、`puzzle_generator.drills`）
+
+高齢者向けの脳トレ詰め合わせの本（方式5）のために足した。どれも答えを計算で出せるので、
+**生成した時点で正しさが決まる**（検証は「形が崩れていないか」と「答えが問題から再計算して一致するか」）。
+
+### type: `"arithmetic"`（計算）
+```json
+"params": {"count": 10, "ops": ["+", "-"], "digits": 2, "carry": true},
+"board": {"problems": [{"a": 23, "op": "+", "b": 45}, ...]},
+"solution": {"answers": [68, ...]}
+```
+- 引き算の答えは0以上。`op` は `"+"` `"-"` `"×"`。
+
+### type: `"number_search"`（数字さがし。1から順に指でたどる）
+```json
+"params": {"size": 5},
+"board": {"size": 5, "grid": [[17, 3, ...], ...]},
+"solution": {"order": [[x, y], ...]}
+```
+- `grid` は 1〜size² をちょうど1回ずつ含む。`order[k]` は数 `k+1` の位置 `[x, y]`。
+
+### type: `"clock"`（時計の読み取り）
+```json
+"params": {"count": 3, "step": 15},
+"board": {"times": [[3, 15], [10, 30], ...]},
+"solution": {"answers": ["3時15分", "10時30分", ...]}
+```
+- 時は 1〜12、分は `step` の倍数（0〜55）。
+
+### type: `"pair_search"`（同じ絵さがし）
+```json
+"params": {"rows": 6, "cols": 6},
+"board": {"rows": 6, "cols": 6, "grid": [["1f338", "1f33b", ...], ...]},
+"solution": {"pair": [[x1, y1], [x2, y2]]}
+```
+- `grid` の絵（絵文字のコード）は、**ちょうど1組だけ**が同じで、それ以外はすべて違う。
+
 ## 将来 type を増やすとき
 
 ナンプレ等を足す場合は、この文書に `type: "nanpure"` の節を追加し、

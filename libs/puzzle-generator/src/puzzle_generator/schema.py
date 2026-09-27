@@ -44,6 +44,11 @@ def validate_record(record: dict) -> None:
         _validate_maze(record)
     elif record["type"] == "wordsearch":
         _validate_wordsearch(record)
+    elif record["type"] in ("arithmetic", "number_search", "clock", "pair_search"):
+        from .drills import VERIFIERS
+
+        if not VERIFIERS[record["type"]](record):
+            raise ValueError(f"{record['type']} の検証に落ちた: id={record['id']!r}")
     else:
         raise ValueError(f"未知の type: {record['type']!r}")
 
