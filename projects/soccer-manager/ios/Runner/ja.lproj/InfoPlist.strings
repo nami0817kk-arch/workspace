@@ -1,0 +1,5 @@
+/* 日本語に対応していることを実体として示すためのファイル。
+   Info.plist の CFBundleLocalizations だけでは App Store が言語として
+   認めず、「言語: 英語」のままになる(実際にそうなった)。 */
+"CFBundleDisplayName" = "サッカー経営マネージャー";
+"CFBundleName" = "サカマネ";
