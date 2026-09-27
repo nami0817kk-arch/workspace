@@ -191,7 +191,8 @@ class SearchIndexTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             subprocess.run([sys.executable, str(root / "build.py"), "--out", tmp],
                            cwd=root, check=True, capture_output=True)
-            idx = json.loads((Path(tmp) / "search-index.json").read_text(encoding="utf-8"))
+            idx = json.loads(next(Path(tmp).glob("search-index.*.json"))
+                             .read_text(encoding="utf-8"))
             page = (Path(tmp) / "search" / "index.html").read_text(encoding="utf-8")
 
         self.assertTrue(idx, "索引が空")
@@ -617,8 +618,10 @@ class ScriptTimingTest(unittest.TestCase):
         self.assertNotIn("var PTWatch", self.html)
 
     def test_配布用の大きなファイルはクロールさせない(self):
-        for name in ("history.csv", "data.csv", "search-index.json"):
-            self.assertIn(f"Disallow: /{name}", self.robots)
+        # 索引の名前には指紋が入るので、前方一致で塞いでいる
+        for name in ("history.csv", "data.csv", "search-index."):
+            with self.subTest(name=name):
+                self.assertIn(f"Disallow: /{name}", self.robots)
 
 
 class ShortNameTest(unittest.TestCase):
@@ -1794,3 +1797,42 @@ class ThemeToggleTest(unittest.TestCase):
 
         self.assertIn('id="theme"', out)
         self.assertNotIn("最終更新", out)
+
+
+class ToTopTest(unittest.TestCase):
+    """「先頭へ」はスクロールに追従させる。
+
+    一覧は携帯で19,000px 近くになる。末尾にだけ置いた戻りリンクは、
+    途中で読むのをやめた人には届かない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def row(self, i):
+        return {"item_code": f"c{i}", "name": f"商品{i}", "price": 1000,
+                "dropped": False, "days": 10, "at_low": False, "near_low": False,
+                "label": "横ばい", "image": "", "shop": "店", "tail": []}
+
+    def listing(self, n):
+        return self.theme.listing("題", "説明", [self.row(i) for i in range(n)],
+                                  {"name": "S", "base_url": "https://e.test",
+                                   "owner": "o", "contact_email": "c@e.test"},
+                                  "https://e.test/", "2026-09-27")
+
+    def test_長い一覧にだけ置く(self):
+        self.assertIn('class="to-top"', self.listing(20))
+        self.assertNotIn('class="to-top"', self.listing(5))
+
+    def test_読み上げ用の名前を付ける(self):
+        # 「▲」だけでは何の押しどころか伝わらない
+        self.assertIn('aria-label="ページの先頭へ戻る"', self.listing(20))
+
+    def test_最初は出さない(self):
+        # ひと目盛り分スクロールしてから出す。上にいる人には要らない
+        from src import theme
+
+        self.assertIn(".to-top.on", theme.__file__ and open(
+            theme.__file__.replace("theme.py", "style.css"),
+            encoding="utf-8").read())

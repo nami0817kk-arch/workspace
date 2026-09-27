@@ -51,7 +51,9 @@ def robots(site: dict) -> str:
         "Allow: /\n"
         "Disallow: /history.csv\n"
         "Disallow: /data.csv\n"
-        "Disallow: /search-index.json\n"
+        # 索引の名前には中身の指紋が入る（search-index.<8桁>.json）。
+        # 前方一致で塞ぐ
+        "Disallow: /search-index.\n"
         f"\nSitemap: {site['base_url'].rstrip('/')}/sitemap.xml\n")
 
 
@@ -268,14 +270,21 @@ def build(root: Path, out: Path) -> dict:
             urls.append((f"/item/{s}/", row.get("changed_date") or updated))
 
     # 検索用の索引。数百KBあるので、検索ページで必要になったときだけ読ませる。
-    write(out / "search-index.json", json.dumps(
+    index_text = json.dumps(
         # 判定は符号1文字で持つ。文字列で持つと索引が数百KB太る。
         # 名前は宣伝を落としてから積む。検索窓で「9/25限定」に当たっても仕方ない
         [[theme.slug(r["item_code"]), theme.clean_name(r["name"]), r["price"],
           r["item_code"],
           3 if r["at_low"] else (2 if r["near_low"] else (1 if r["dropped"] else 0))]
          for r in rows],
-        ensure_ascii=False, separators=(",", ":")))
+        ensure_ascii=False, separators=(",", ":"))
+    # 索引は 3.9MB（圧縮後 1.1MB）ある。名前が固定だと毎回取り直しになるので
+    # 中身の指紋を付けて長く持たせる。中身が変われば名前も変わるので、
+    # 翌日の更新はきちんと届く（スタイルや JS と同じ扱い）。
+    index_name = (f"search-index.{hashlib.sha1(index_text.encode('utf-8')).hexdigest()[:8]}"
+                  ".json")
+    write(out / index_name, index_text)
+    site["search_index"] = index_name
     write(out / "search" / "index.html",
           theme.search_page(site, base + "/search/", updated, stats))
     urls.append("/search/")

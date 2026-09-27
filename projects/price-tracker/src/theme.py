@@ -517,7 +517,7 @@ SEARCH_JS = r"""
     if (index || loading) { return; }
     loading = true;
     note.textContent = '商品一覧を読み込んでいます…';
-    fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
+    fetch('../' + PT_INDEX).then(function (r) { return r.json(); }).then(function (data) {
       // 正規化した名前を持たせておく（入力のたびに作り直さない）
       // 判定(r[4])を残したまま、正規化した名前を末尾に足す。
       // 4要素に詰め直していたため判定が落ち、バッジが出ていなかった。
@@ -628,6 +628,8 @@ def search_page(site: dict, canonical: str, updated: str, stats: dict) -> str:
                          for w in SEARCH_EXAMPLES)
                + '</p>')
             + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
+            # 索引の名前は中身の指紋で毎日変わる。ページ側に渡す
+            + f'<script>var PT_INDEX={safe_json(site.get("search_index", "search-index.json"))};</script>'
             + f'<script>{SEARCH_JS}</script>'
             + foot(site, "../", updated))
 
@@ -870,7 +872,10 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + (LIST_TOOLS if rows else "")
             + f'<ul class="cards">{body}</ul>'
             + nav
-            + ('<a class="to-top" href="#main">▲ ページの先頭へ</a>' if len(rows) > 10 else '')
+            # 一覧は携帯で19,000px 近くになる。末尾にだけ置いた戻りリンクは、
+            # 途中で読むのをやめた人には届かない。スクロールに追従させる。
+            + ('<a class="to-top" href="#main" aria-label="ページの先頭へ戻る">'
+               '▲<span>先頭へ</span></a>' if len(rows) > 10 else '')
             + foot(site, prefix, updated))
 
 
@@ -1424,6 +1429,15 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// 追従する「先頭へ」。ひと目盛り分スクロールしたら出す。
+document.addEventListener('DOMContentLoaded', function () {
+  var top = document.querySelector('.to-top');
+  if (!top) { return; }
+  function check() { top.classList.toggle('on', scrollY > innerHeight); }
+  check();
+  addEventListener('scroll', check, {passive: true});
+});
+
 // 明暗の切り替え。style.css は data-theme に対応していたのに、
 // 切り替える手立てをどこにも置いていなかった（使えない仕組みが眠っていた）。
 (function () {
@@ -1483,6 +1497,7 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + AD_NOTICE
             + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
+            + f'<script>var PT_INDEX={safe_json(site.get("search_index", "search-index.json"))};</script>'
             + """<script>
 (function () {
   var out = document.getElementById('results');
@@ -1497,7 +1512,7 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
     return;
   }
   note.textContent = '読み込んでいます…';
-  fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
+  fetch('../' + PT_INDEX).then(function (r) { return r.json(); }).then(function (data) {
     var hits = data.filter(function (r) { return store[r[3]]; }).map(function (r) {
       var e = store[r[3]];
       var was = e.p || 0;

@@ -307,7 +307,9 @@ class SearchAppearanceTest(unittest.TestCase):
         self.assertIn("月", desc)
 
     def test_検索の索引にも宣伝を積まない(self):
-        index = json.loads((self.out / "search-index.json").read_text(encoding="utf-8"))
+        # 名前には中身の指紋が入る（2026-09-27 から）
+        index = json.loads(next(self.out.glob("search-index.*.json"))
+                           .read_text(encoding="utf-8"))
 
         self.assertTrue(index[0][1].startswith("ロイヤルカナン"), index[0][1])
 
@@ -715,3 +717,62 @@ class SharedScriptTest(unittest.TestCase):
             encoding="utf-8")
 
         self.assertIn(f'src="../../{app}"', page)
+
+
+class SearchIndexCacheTest(unittest.TestCase):
+    """検索の索引も指紋を付けて長く持たせる。
+
+    3.9MB（圧縮後1.1MB）あるのに名前が固定で、Cloudflare の指定が
+    max-age=0 だった。検索のたびに取り直していた。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A", "url": "", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [1000] * 10})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_指紋付きの名前で書き出す(self):
+        got = sorted(p.name for p in self.out.glob("search-index.*.json"))
+
+        self.assertEqual(len(got), 1, got)
+        self.assertRegex(got[0], r"^search-index\.[0-9a-f]{8}\.json$")
+
+    def test_固定の名前では置かない(self):
+        # 残しておくと、古い方を読みに行くページが出る
+        self.assertFalse((self.out / "search-index.json").exists())
+
+    def test_使う側に名前を渡す(self):
+        name = next(self.out.glob("search-index.*.json")).name
+        for rel in ("search/index.html", "watch/index.html"):
+            with self.subTest(rel=rel):
+                page = (self.out / rel).read_text(encoding="utf-8")
+                self.assertIn(f'var PT_INDEX="{name}"', page)
+
+    def test_クロールさせない(self):
+        # 3.9MB を毎回取りに来られても検索結果の役には立たない
+        robots = (self.out / "robots.txt").read_text(encoding="utf-8")
+
+        self.assertIn("Disallow: /search-index.", robots)
+
+    def test_中身が変われば名前も変わる(self):
+        first = next(self.out.glob("search-index.*.json")).name
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_data(root, {
+                "shop:b": {"name": "別の商品", "shop": "店B", "url": "",
+                           "image": "", "genre_id": "1"},
+            }, {"shop:b": [2000] * 10})
+            builder.build(root, root / "dist")
+            second = next((root / "dist").glob("search-index.*.json")).name
+
+        self.assertNotEqual(first, second)

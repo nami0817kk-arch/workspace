@@ -26,3 +26,8 @@
 
 /list.*.js
   Cache-Control: public, max-age=31536000, immutable
+
+# 検索の索引。3.9MB（圧縮後1.1MB）あり、名前が固定だと検索のたび取り直しに
+# なっていた。指紋付きなので、この名前のものは二度と変わらない。
+/search-index.*.json
+  Cache-Control: public, max-age=31536000, immutable

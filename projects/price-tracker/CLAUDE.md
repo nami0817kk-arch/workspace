@@ -145,6 +145,10 @@ python build.py       # data/ から静的サイトを生成（通信しない�
   `el.hidden = false` と書いても何も起きず、目印が出たままになる。
   SVG の中で出し入れするものは**クラスと CSS**で切り替える（`.reading`）。
   2026-09-27 に図の読み取りを入れたとき実際に踏んだ。
+- **検索の索引も指紋を付ける（`search-index.<8桁>.json`）。** 3.9MB
+  （圧縮後1.1MB）あるのに名前が固定で、Cloudflare の指定が max-age=0 だった
+  ため検索のたびに取り直していた。名前は `PT_INDEX` としてページ側へ渡す
+  （検索と見守りの2枚）。`robots.txt` は前方一致（`Disallow: /search-index.`）で塞ぐ。
 - **`src/style.css` を直したら、配信されているか名前で確かめる。**
   中身の指紋をファイル名に入れている（`style.<8桁>.css`）。以前は名前が
   固定で、`_headers` の max-age=3600 も Cloudflare 側に 14400 へ上書きされ、
