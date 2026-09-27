@@ -285,6 +285,12 @@ flutter build web --release && python tool/check_release.py
 
 ## 注意
 
+- **販売元には本名が出る。** 個人の Apple Developer アカウントで出すと、
+  App Store の「販売元（Seller）」に**登録した個人名がそのまま表示される**
+  ——公開名義の「つるはし社」ではない。`soccer-manager` を出したときに
+  そうなっている（2026-09-24）。
+  屋号で出すには組織アカウント（D-U-N-S 番号の取得が要る）へ切り替えるしかなく、
+  **アプリ側でできることは何も無い**。出す前に知っておくこと。
 - バンドルID `com.namiki.soccercareer` は**公開後は変更できない**。
   `soccer-manager`（`com.namiki.soccermanager`）と発行者を揃えてある。
 - Dart のパッケージ名は `soccer_career` のままでよい（ストアからは見えない）。
