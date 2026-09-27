@@ -1,0 +1,4 @@
+/* 英語に対応していることを実体として示すためのファイル。
+   英語の端末では、ホーム画面の名前も英語になる。 */
+"CFBundleDisplayName" = "Underdog FC";
+"CFBundleName" = "Underdog FC";
