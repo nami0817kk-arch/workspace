@@ -26,6 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import aggregate
 from market_calendar import (
     CalendarOutOfRange,
     business_days_between,
@@ -76,7 +77,7 @@ def missing_stop_records(payload: dict) -> list[str]:
     """
     if date.fromisoformat(payload["rec_date"]) < STOP_RECORDS_FROM:
         return []
-    return [key for key in ("stop_high", "stop_low") if key not in payload]
+    return [key for key in aggregate.LIMIT_KEYS if key not in payload]
 
 
 def main() -> int:

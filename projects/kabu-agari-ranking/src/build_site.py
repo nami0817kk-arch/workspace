@@ -74,7 +74,7 @@ def _save_today(gainers, losers, active, stop_high=None, stop_low=None, *,
     }
 
     # 取れなかったランキングはキーごと落とす（0件と取り違えさせない）
-    for key in ("stop_high", "stop_low"):
+    for key in aggregate.LIMIT_KEYS:
         if payload[key] is None:
             del payload[key]
 

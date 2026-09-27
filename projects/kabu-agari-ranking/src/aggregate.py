@@ -235,6 +235,31 @@ def stock_histories(days: list[dict], min_appearances: int = STOCK_PAGE_MIN_APPE
 # （取得していたのがそこまで）。それ以降は取得元の専用ランキングから全件取る。
 # **出どころが違うものを同じ数として見せない**。見せる側で必ず区別を書く。
 
+# 値幅の上限側と下限側。**向きの対応表はここ1つだけ。**
+# 以前は「どのランキングがどの記録に対応するか」を render に3つ、
+# stock_profile に1つ、と別々に持っていた。片方を直したときにもう片方が
+# 置き去りになり、実際に stock_profile がストップ安を拾い損ねていた
+# （2026-09-28 に1本化）。表示の語彙は render.LIMIT_PAGES がここを参照する。
+LIMIT_SIDES = {
+    "gainers": {
+        "kind": "gainers",
+        "key": "stop_high",
+        "flag": price_limit.STOP_HIGH,
+        "worst": max,
+    },
+    "losers": {
+        "kind": "losers",
+        "key": "stop_low",
+        "flag": price_limit.STOP_LOW,
+        "worst": min,
+    },
+}
+
+# 日次ファイルに記録として入るキー。**側を足したら自動で増える。**
+# 保存・欠落の監視・属性の取得が、それぞれ別の一覧を持たないようにするため。
+LIMIT_KEYS = tuple(side["key"] for side in LIMIT_SIDES.values())
+
+
 def _limit_rows(day: dict, key: str, estimate_from: str, flag: str) -> tuple[list[dict], str]:
     """その日のストップ高／ストップ安の銘柄と、その出どころ。
 
@@ -256,14 +281,24 @@ def _limit_rows(day: dict, key: str, estimate_from: str, flag: str) -> tuple[lis
     ], "estimated"
 
 
+def limit_rows(day: dict, kind: str) -> tuple[list[dict], str]:
+    """その日、値幅の上限（下限）まで動いた銘柄と、その出どころ。
+
+    Args:
+        kind: "gainers"（ストップ高）か "losers"（ストップ安）。
+    """
+    side = LIMIT_SIDES[kind]
+    return _limit_rows(day, side["key"], side["kind"], side["flag"])
+
+
 def stop_high_rows(day: dict) -> tuple[list[dict], str]:
     """その日ストップ高だった銘柄と、その出どころ。"""
-    return _limit_rows(day, "stop_high", "gainers", price_limit.STOP_HIGH)
+    return limit_rows(day, "gainers")
 
 
 def stop_low_rows(day: dict) -> tuple[list[dict], str]:
     """その日ストップ安だった銘柄と、その出どころ。"""
-    return _limit_rows(day, "stop_low", "losers", price_limit.STOP_LOW)
+    return limit_rows(day, "losers")
 
 
 def _limit_history(days: list[dict], row_fn, *, worst) -> dict:
@@ -315,14 +350,20 @@ def _limit_history(days: list[dict], row_fn, *, worst) -> dict:
     }
 
 
+def limit_history(days: list[dict], kind: str) -> dict:
+    """上限側／下限側の日別・銘柄別のまとめ。"""
+    side = LIMIT_SIDES[kind]
+    return _limit_history(days, lambda day: limit_rows(day, kind), worst=side["worst"])
+
+
 def stop_high_history(days: list[dict]) -> dict:
     """ストップ高の日別・銘柄別のまとめ。"""
-    return _limit_history(days, stop_high_rows, worst=max)
+    return limit_history(days, "gainers")
 
 
 def stop_low_history(days: list[dict]) -> dict:
     """ストップ安の日別・銘柄別のまとめ。"""
-    return _limit_history(days, stop_low_rows, worst=min)
+    return limit_history(days, "losers")
 
 
 def stop_counts(days: list[dict]) -> dict:
@@ -333,16 +374,18 @@ def stop_counts(days: list[dict]) -> dict:
     記録を使い始めると同じ日の件数がページによって違う、という
     直しようのない食い違いになっていた（2026-09-27 に揃えた）。
     """
-    high = low = 0
+    counts = {kind: 0 for kind in LIMIT_SIDES}
     sources = set()
     for day in days:
-        rows, source = stop_high_rows(day)
-        high += len(rows)
-        sources.add(source)
-        low += len(stop_low_rows(day)[0])
+        for kind in LIMIT_SIDES:
+            rows, source = limit_rows(day, kind)
+            counts[kind] += len(rows)
+            # **両側の出どころを見る。** 上限側だけを見ていたため、
+            # ストップ安が推定でも「推定が混じる」と断らなかった（2026-09-28 に修正）。
+            sources.add(source)
     return {
-        "stop_highs": high,
-        "stop_lows": low,
+        "stop_highs": counts["gainers"],
+        "stop_lows": counts["losers"],
         # 期間の中に推定の日が混じっていれば、画面でその旨を断る
         "has_estimated": "estimated" in sources,
     }

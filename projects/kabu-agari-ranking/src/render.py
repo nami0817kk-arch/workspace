@@ -206,25 +206,6 @@ def flag_notes(rows: list[dict]) -> list[dict]:
     return seen
 
 
-# ハイライトの語彙。値上がりのページにはストップ高、値下がりのページには
-# ストップ安を出す。**逆を出さない**。値上がりランキングを見に来た人に
-# 「ストップ安 3銘柄」を見せても、そのページの話ではない。
-_HIGHLIGHT_SPECS = {
-    "gainers": {
-        "rows_fn": "stop_high_rows",
-        "term": "ストップ高",
-        "dir": "stop-high",
-        "move_label": "10%以上の上昇",
-    },
-    "losers": {
-        "rows_fn": "stop_low_rows",
-        "term": "ストップ安",
-        "dir": "stop-low",
-        "move_label": "10%以上の下落",
-    },
-}
-
-
 def highlights(days: list[dict], stock_pages: set[str], kind: str = "gainers") -> list[dict]:
     """そのページに出す「今日のハイライト」。
 
@@ -233,16 +214,16 @@ def highlights(days: list[dict], stock_pages: set[str], kind: str = "gainers") -
     **狭い画面では1行3枚に詰めてある**ので、4枚目を足すと2行になり、
     せっかく上へ寄せた表がまた画面の外へ出る。
     """
-    if not days or kind not in _HIGHLIGHT_SPECS:
+    if not days or kind not in LIMIT_PAGES:
         return []
-    spec = _HIGHLIGHT_SPECS[kind]
+    spec = LIMIT_PAGES[kind]
     today = days[0]
     rows = today.get(kind, [])
     out = []
 
     # **ストップ高／ストップ安のページと同じ数え方を使う。** 押した先の数と
     # 違う数を見出しに出すと、どちらが正しいのか読み手には確かめようがない。
-    stops, _ = getattr(aggregate, spec["rows_fn"])(today)
+    stops, _ = aggregate.limit_rows(today, kind)
     if stops:
         out.append({
             "label": spec["term"],
@@ -711,18 +692,20 @@ def market_rows(days: list[dict]) -> list[dict]:
         gainers = day.get("gainers") or []
         if not gainers:
             continue
-        losers = day.get("losers") or []
-        # ストップ高・ストップ安は、記録がある日は全件、無い日は上位30銘柄からの推定。
+            # ストップ高・ストップ安は、記録がある日は全件、無い日は上位30銘柄からの推定。
         # **ストップ高のページと同じ数え方を使う**（別々に数えると、同じ日の
         # 件数がページによって違うという、直しようのない食い違いになる）。
-        high_rows, high_source = aggregate.stop_high_rows(day)
-        low_rows, _ = aggregate.stop_low_rows(day)
+        # **両側の出どころを持つ。** 片方だけを持っていたため、ストップ安が
+        # 推定の日にも札が出なかった（2026-09-28 に修正）。
+        high_rows, high_source = aggregate.limit_rows(day, "gainers")
+        low_rows, low_source = aggregate.limit_rows(day, "losers")
         out.append({
             "rec_date": day["rec_date"],
             "big": sum(1 for r in gainers if abs(r["change_pct"]) >= BIG_MOVE_PCT),
             "stop_high": len(high_rows),
             "stop_low": len(low_rows),
-            "stop_source": high_source,
+            "stop_high_source": high_source,
+            "stop_low_source": low_source,
             "top_pct": gainers[0]["change_pct"],
         })
     return out
@@ -741,10 +724,19 @@ def market_summary(rows: list[dict]) -> str:
     )
 
 
-def limit_summary(history: dict, day_count: int, term: str) -> str:
-    """ストップ高／ストップ安の章の一文。数えた事実だけを書く。"""
+def limit_summary(history: dict, day_count: int, spec: dict) -> str:
+    """ストップ高／ストップ安の章の一文。数えた事実だけを書く。
+
+    **0件のときに範囲を断る。** 記録がまだ無い期間は上位30銘柄の中しか
+    見ていないので、「1件もありませんでした」と言い切ると嘘になりうる
+    （同じページの注意書きとも矛盾する）。
+    """
+    term = spec["term"]
     if not history["total"]:
-        return f"直近{day_count}営業日では、{term}になった銘柄はありませんでした。"
+        if history["has_recorded"]:
+            return f"直近{day_count}営業日では、{term}になった銘柄はありませんでした。"
+        return (f"直近{day_count}営業日では、{spec['source_rank']}ランキングの"
+                f"上位30銘柄の中に{term}はありませんでした。")
     busiest = max(history["per_day"], key=lambda d: d["count"])
     parts = [
         f"直近{day_count}営業日で、のべ{history['total']}銘柄が{term}になりました"
@@ -813,10 +805,12 @@ def _build_monthly_pages(days: list[dict]) -> list[dict]:
 
 
 # ストップ高とストップ安は、向きが逆なだけで数え方も見せ方も同じ。
-# **語彙だけを差し替えて同じ型で作る**（別々に書くと、片方を直したときに
-# もう片方が置き去りになる）。
-LIMIT_PAGES = [
-    {
+# **語彙の対応表はここ1つだけ。** ハイライト・日別ページの案内・章の3箇所に
+# 分けて持っていたため、片方を直したときにもう片方が置き去りになった
+# （2026-09-28 に1本化）。データ側の対応は aggregate.LIMIT_SIDES にある。
+LIMIT_PAGES = {
+    "gainers": {
+        "kind": "gainers",
         "dir": "stop-high",
         "term": "ストップ高",
         "verb": "買われた",
@@ -825,9 +819,10 @@ LIMIT_PAGES = [
         "pct_class": "gain",
         "source_rank": "値上がり",
         "archive": "gainers",
-        "history": "stop_high_history",
+        "move_label": "10%以上の上昇",
     },
-    {
+    "losers": {
+        "kind": "losers",
         "dir": "stop-low",
         "term": "ストップ安",
         "verb": "売られた",
@@ -836,16 +831,17 @@ LIMIT_PAGES = [
         "pct_class": "loss",
         "source_rank": "値下がり",
         "archive": "losers",
-        "history": "stop_low_history",
+        "move_label": "10%以上の下落",
     },
-]
+}
 
 
-def _build_limit_page(days: list[dict], stock_pages: set[str], spec: dict,
+def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
                       profiles: dict[str, dict] | None = None) -> None:
     """ストップ高／ストップ安の章。当日のランキングはどこにでもあるが、
     「いつ・どの銘柄が上限（下限）まで動いたか」を日をまたいで残している場所は少ない。"""
-    history = getattr(aggregate, spec["history"])(days)
+    spec = LIMIT_PAGES[kind]
+    history = aggregate.limit_history(days, kind)
     # その日のアーカイブが**ある日だけ**リンクにする。掲載を始めた頃は
     # 値上がりランキングしか取っていない日があり、ストップ安の一覧から
     # 値下がりアーカイブへ張ると 404 になる（2026-08-24 で実際に切れていた）。
@@ -890,7 +886,7 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], spec: dict,
             period_to=days[0]["rec_date"],
             period_from_ja=format_date_ja(days[-1]["rec_date"]),
             period_to_ja=format_date_short_ja(days[0]["rec_date"]),
-            summary=limit_summary(history, len(days), spec["term"]),
+            summary=limit_summary(history, len(days), spec),
             has_recorded=history["has_recorded"],
             has_estimated=history["has_estimated"],
             recorded_from=format_date_ja(min(
@@ -928,7 +924,8 @@ def _build_market_page(days: list[dict]) -> None:
             base_url="",
             canonical=canonical_url("market.html"),
             rows=rows,
-            has_recorded=any(r["stop_source"] == "recorded" for r in rows),
+            has_recorded=any(r["stop_high_source"] == "recorded"
+                             or r["stop_low_source"] == "recorded" for r in rows),
             day_count=len(rows),
             period_from=rows[-1]["rec_date"] if rows else "",
             period_to=rows[0]["rec_date"] if rows else "",
@@ -993,14 +990,6 @@ def _write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
-# 日別ページで、その日の記録へ案内する。値上がりのページにはストップ高、
-# 値下がりにはストップ安。活況には出さない（約定回数の話ではない）。
-_DAY_STOP_SPECS = {
-    "gainers": {"rows_fn": "stop_high_rows", "term": "ストップ高", "dir": "stop-high"},
-    "losers": {"rows_fn": "stop_low_rows", "term": "ストップ安", "dir": "stop-low"},
-}
-
-
 def day_stop_note(day: dict, json_key: str) -> dict | None:
     """その日のストップ高／ストップ安の件数と、記録への案内。
 
@@ -1008,10 +997,11 @@ def day_stop_note(day: dict, json_key: str) -> dict | None:
     何件だったかはこのページで言える**（それを言わないと、蓄積している意味が
     いちばん人の来るページに届かない）。
     """
-    spec = _DAY_STOP_SPECS.get(json_key)
+    # 活況のページには出さない（約定回数の話ではない）
+    spec = LIMIT_PAGES.get(json_key)
     if not spec:
         return None
-    rows, source = getattr(aggregate, spec["rows_fn"])(day)
+    rows, source = aggregate.limit_rows(day, json_key)
     if source != "recorded":
         # 推定しか無い日は、表の札（行ごとの「ストップ高」）で足りる。
         # 上位30銘柄の中の数を「その日の件数」として書かない。
@@ -1205,7 +1195,7 @@ def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict],
              (canonical_url("glossary.html"), None)]
     urls.append((canonical_url("weekly/index.html"), latest_date))
     urls.append((canonical_url("stock/index.html"), latest_date))
-    for spec in LIMIT_PAGES:
+    for spec in LIMIT_PAGES.values():
         urls.append((canonical_url(f"{spec['dir']}/index.html"), latest_date))
     urls.append((canonical_url("monthly/index.html"), latest_date))
     for month in months:
@@ -1282,8 +1272,8 @@ def build_all() -> None:
     stocks = _build_stock_pages(days, profiles)
     stock_pages = {s["code"] for s in stocks}
     _build_ranking_pages(days, stock_pages)
-    for spec in LIMIT_PAGES:
-        _build_limit_page(days, stock_pages, spec, profiles)
+    for kind in LIMIT_PAGES:
+        _build_limit_page(days, stock_pages, kind, profiles)
     months = _build_monthly_pages(days)
     weeks = _build_weekly_pages(days)
     _build_market_page(days)
