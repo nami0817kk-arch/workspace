@@ -1081,6 +1081,22 @@ class GameState extends ChangeNotifier {
 
   /// ダービー戦は観客動員(収入)・監督への信頼度への影響がともに増幅される。
   static const double derbyAttendanceMultiplier = 1.5;
+
+  /// ダービーの収入。**入れる人数以上からは入場料を取れない。**
+  ///
+  /// 観客数だけを収容人数で頭打ちにして、収入には倍率をそのまま掛けていた。
+  /// 画面に「満員」と出ているのに、収入はその1.5倍で計算されていた。
+  /// 実際に入った人数の比で掛ける。空席があるダービーでは今まで通り伸び、
+  /// 既に満員のクラブでは伸びない(その代わり、スタジアムを大きくする価値が
+  /// そのぶん増える)。
+  static int derbyAdjustedIncome(
+    int income, {
+    required int baseAttendance,
+    required int actualAttendance,
+  }) {
+    if (baseAttendance <= 0) return income;
+    return (income * (actualAttendance / baseAttendance)).round();
+  }
   static const double derbyConfidenceMultiplier = 1.5;
 
   /// 直近の試合の観客動員数(ダービーなら増幅される)。未実施の場合はnull。
