@@ -212,22 +212,37 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id004
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id005
+      - プレーの色
       - 守りから入る
-    - - 運営の型
-      - ナバラの100超のクラブと
-    - - クラブの気質
-      - 改修案も投票で決める
   say:
   - text: ラミス監督は、守りから入る監督。前のチームは、2部で失点がいちばん少なかった。
     image: assets/photos/ll/osasuna/osasuna_manager_10fb4485.jpg
-  - ピッチの外は、地元で育てる型。
+  - text: ピッチの外は、地元で育てる型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id004
+      rows:
+      - *id005
+      - &id006
+        - 運営の型
+        - ナバラの100超のクラブと
   - ナバラ州の**100**を超えるクラブと手を組んで、選手を育てています。
-  - スタジアムの改修案も、会員の投票で選びました。投票率は**75**パーセントです。
+  - text: スタジアムの改修案も、会員の投票で選びました。投票率は**75**パーセントです。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id004
+      rows:
+      - *id005
+      - *id006
+      - - クラブの気質
+        - 改修案も投票で決める
   sources:
   - https://en.wikipedia.org/wiki/CA_Osasuna
   - https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
@@ -273,7 +288,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - ジャバド・ネクナム
       - 2006-2012、2014-2015
       - 延長120分の決勝点
@@ -301,8 +316,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - セサル・アスピリクエタ
       - 2007-2010
       - チェルシーの主将に
@@ -330,8 +345,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - ミケル・メリーノ
       - 2014-2016
       - 父子で同じ競技場

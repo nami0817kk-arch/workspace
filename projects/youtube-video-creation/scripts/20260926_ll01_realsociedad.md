@@ -129,14 +129,29 @@ cards:
   features_card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id003
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id004
+      - プレーの色
       - よく走る
-    - - 運営の型
+  features_2_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id003
+    rows:
+    - *id004
+    - &id005
+      - 運営の型
       - 育てて売る
+  features_4_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id003
+    rows:
+    - *id004
+    - *id005
     - - クラブの気質
       - 県の5%が年間シート
   episode_card:
@@ -158,7 +173,7 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - &id003
+    - &id006
       - シャビ・アロンソ
       - 1999-2004
       - 20歳で主将
@@ -170,8 +185,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - &id004
+    - *id006
+    - &id007
       - アントワーヌ・グリーズマン
       - 2009-2014
       - 昇格と欧州の得点
@@ -183,8 +198,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - *id004
+    - *id006
+    - *id007
     - - マルティン・スビメンディ
       - 2019-2025
       - 地元育ちの中盤
@@ -361,12 +376,14 @@ cards:
   telop: 時速21キロを超える全力の走りで、走った距離がリーグで**2番目**です
 解説: ピッチの外は、育てて売る型。
   telop: ピッチの外は、育てて売る型
+  card: features_2_card
   image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
 解説: オドリオソラは2018年、レアル・マドリードへ**3000万ユーロ**。今は戻っています。
   telop: オドリオソラは2018年、レアル・マドリードへ**3000万ユーロ**。今は戻っています
   image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
 解説: スタンドは、ギプスコア県ぐるみ。
   telop: スタンドは、ギプスコア県ぐるみ
+  card: features_4_card
   image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
 解説: 2022年の年間シートは**3万7584人**。県の人口の5パーセントを超えます。
   telop: 2022年の年間シートは**3万7584人**。県の人口の5パーセントを超えます

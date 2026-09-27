@@ -121,14 +121,29 @@ cards:
   features_card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id002
+      - プレーの色
       - 守って好機を待つ
-    - - 運営の型
+  features_1_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id001
+    rows:
+    - *id002
+    - &id003
+      - 運営の型
       - 借金ゼロからの出直し
+  features_3_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id001
+    rows:
+    - *id002
+    - *id003
     - - クラブの気質
       - 3部でも年間シート2万5千
   episode_card:
@@ -152,7 +167,7 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id004
       - ベベット
       - 1992-1996
       - 1年目に得点王
@@ -164,8 +179,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id004
+    - &id005
       - ロイ・マカーイ
       - 1999-2003
       - ヨーロッパの得点王
@@ -177,8 +192,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id004
+    - *id005
     - - ルーカス・ペレス
       - 4度在籍
       - 自腹で3部へ
@@ -342,11 +357,14 @@ cards:
   image: assets/photos/ll/deportivo/deportivo_manager_7a979908.jpg
 解説: ピッチの外は、借金を消しての出直し。
   telop: ピッチの外は、借金を消しての出直し
+  card: features_1_card
+  image: assets/photos/ll/deportivo/deportivo_manager_7a979908.jpg
 解説: 1部を離れた頃の借金は**1億ユーロ**超。2024年の夏に**ゼロ**になったと、クラブは言います。
   telop: 1部を離れた頃の借金は**1億ユーロ**超。2024年の夏に**ゼロ**になったと、クラブは言います
   image: assets/photos/ll/deportivo/deportivo_manager_7a979908.jpg
 解説: 3部でも、ファンは離れませんでした。2022年から23年の年間シートは**2万5001人**です。
   telop: 3部でも、ファンは離れませんでした。2022年から23年の年間シートは**2万5001人**です
+  card: features_3_card
   image: assets/photos/ll/deportivo/deportivo_manager_7a979908.jpg
 
 ## 100歳の誕生日に

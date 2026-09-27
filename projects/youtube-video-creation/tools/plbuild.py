@@ -536,11 +536,24 @@ def build(key: str, number: int, old_file: str) -> Path:
                        if isinstance(v, dict) and v.get("role") == "manager"), "")
         if f_face:
             f_say[0] = {"text": f_say[0], "image": f_face}
+        f_card = {"type": "table", "title": "このクラブの特徴", "columns": ["", ""],
+                  "rows": ov.get("features_rows") or []}
+        # **表を話に合わせて1段ずつ増やす**（2026-09-28）。ラ・リーガは特徴を4〜7行で語るので、
+        # 3行ぶんの表が1枚のまま20〜33秒出ていた（20本すべてで review「カードの持ち」）。
+        # `features_marks` に「運営の話が始まる行」「気質の話が始まる行」を書く。
+        # 行で等分しないのは、まだ話していない段が先に画面へ出るから
+        marks = [int(m) for m in (ov.get("features_marks") or [])]
+        if marks and len(f_card["rows"]) > len(marks):
+            for k, m in enumerate(marks, start=2):
+                item = f_say[m]
+                item = dict(item) if isinstance(item, dict) else {"text": item}
+                item["card"] = dict(f_card, rows=f_card["rows"][:k])
+                f_say[m] = item
+            f_card = dict(f_card, rows=f_card["rows"][:1])
         sections.append(sec(id="features", heading="このクラブの特徴", tier="背景",
                             telop=str(ov.get("features_telop") or "このクラブの特徴"),
                             narrator="解説",
-                            card={"type": "table", "title": "このクラブの特徴", "columns": ["", ""],
-                                  "rows": ov.get("features_rows") or []},
+                            card=f_card,
                             say=f_say,
                             sources=[wiki] + [u for u in (ov.get("features_sources") or []) if u != wiki],
                             **({"bg": bg} if bg else {})))

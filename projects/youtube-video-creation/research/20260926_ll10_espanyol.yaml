@@ -230,21 +230,36 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id003
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id004
+      - プレーの色
       - 走って圧をかける
-    - - 運営の型
-      - 育てて売る
-    - - クラブの気質
-      - 公認の応援団が約200
   say:
   - マノロ・ゴンサレス監督のチームは、走って、相手に圧をかける。本人の言う持ち味です。
-  - ピッチの外は、育てて売る型。
+  - text: ピッチの外は、育てて売る型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - &id005
+        - 運営の型
+        - 育てて売る
   - 下部組織育ちのゴールキーパー、ジョアン・ガルシアは昨年、**2500万ユーロ**でバルセロナへ。
-  - スタンドを支える公認の応援団、ペーニャはおよそ**200**。日本にもあります。
+  - text: スタンドを支える公認の応援団、ペーニャはおよそ**200**。日本にもあります。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - *id005
+      - - クラブの気質
+        - 公認の応援団が約200
   sources:
   - https://en.wikipedia.org/wiki/RCD_Espanyol
   - https://www.rcdespanyol.com/es/noticia/tenemos-que-volver-a-competir-como-toca/20782
@@ -261,7 +276,7 @@ sections:
   card:
     type: table
     title: 21分の拍手
-    columns: &id003
+    columns: &id006
     - ''
     - ''
     rows:
@@ -277,7 +292,7 @@ sections:
     card:
       type: table
       title: 21分の拍手
-      columns: *id003
+      columns: *id006
       rows:
       - - 2010年
         - 親友イニエスタが決勝で追悼
@@ -300,7 +315,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - マウリシオ・ポチェッティーノ
       - 1994-2006
       - 選手と監督で
@@ -328,8 +343,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - セルヒオ・ガルシア
       - 2010-2019
       - 2度在籍した主将
@@ -357,8 +372,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - ウー・レイ
       - 2019-2022
       - 中国人初の1部得点

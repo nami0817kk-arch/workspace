@@ -118,14 +118,29 @@ cards:
   features_card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id004
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id005
+      - プレーの色
       - 試合を支配して攻める
-    - - 運営の型
+  features_1_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id004
+    rows:
+    - *id005
+    - &id006
+      - 運営の型
       - 主力を売っても崩れない
+  features_4_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id004
+    rows:
+    - *id005
+    - *id006
     - - クラブの気質
       - 町の3分の1が年間シート
   episode_card:
@@ -149,7 +164,7 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - フアン・ロマン・リケルメ
       - 2003-2007
       - 初の欧州4強の司令塔
@@ -161,8 +176,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - マルコス・セナ
       - 2002-2013
       - 欧州王者になった中盤
@@ -174,8 +189,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - サンティ・カソルラ
       - 2003-2020
       - 3度在籍した中盤
@@ -338,6 +353,8 @@ cards:
   image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
 解説: ピッチの外は、主力を売っても崩れない型。
   telop: ピッチの外は、主力を売っても崩れない型
+  card: features_1_card
+  image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
 解説: 昨シーズンの前、中盤のバエナを**4200万ユーロ**でアトレティコへ売りました。
   telop: 昨シーズンの前、中盤のバエナを**4200万ユーロ**でアトレティコへ売りました
   image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
@@ -346,6 +363,7 @@ cards:
   image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
 解説: スタンドは町ぐるみ。年間シートは**1万9000人**を超え、町の人口の3分の1より多い数です。
   telop: スタンドは町ぐるみ。年間シートは**1万9000人**を超え、町の人口の3分の1より多い数です
+  card: features_4_card
   image: assets/photos/ll/villarreal/villarreal_manager_1c383d6e.jpg
 
 ## 黄色は品切れから

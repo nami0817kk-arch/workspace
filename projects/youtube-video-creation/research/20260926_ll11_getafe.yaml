@@ -191,24 +191,39 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id003
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id004
+      - プレーの色
       - 荒々しく、しぶとい
-    - - 運営の型
-      - 少ない戦力でやりくり
-    - - クラブの気質
-      - 型破りな宣伝
   say:
   - text: ボルダラス監督のサッカーは、荒々しく、しぶとい。
     image: assets/photos/ll/getafe/getafe_manager_b5e6eb46.jpg
   - 口ぐせの「これがサッカーだ、パパ」は、スタンドの決まり文句になりました。
   - 昨シーズンの失点は**38**。少ないほうから、リーグで3番目でした。
-  - ピッチの外は、限られた戦力でやりくりする型。
+  - text: ピッチの外は、限られた戦力でやりくりする型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - &id005
+        - 運営の型
+        - 少ない戦力でやりくり
   - 昨シーズンは、選手**13人**で開幕を迎えました。
-  - 宣伝は型破り。**2015年**には、スタジアムで出会うためのアプリまで作りました。
+  - text: 宣伝は型破り。**2015年**には、スタジアムで出会うためのアプリまで作りました。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - *id005
+      - - クラブの気質
+        - 型破りな宣伝
   sources:
   - https://en.wikipedia.org/wiki/Getafe_CF
   - https://www.marca.com/futbol/getafe/2026/09/26/decada-futbol-papa.html
@@ -225,7 +240,7 @@ sections:
   card:
     type: table
     title: 2008年 ヨーロッパの準々決勝
-    columns: &id003
+    columns: &id006
     - ''
     - ''
     rows:
@@ -242,7 +257,7 @@ sections:
     card:
       type: table
       title: 2008年 ヨーロッパの準々決勝
-      columns: *id003
+      columns: *id006
       rows:
       - - 結果
         - アウェーゴールの差で敗退
@@ -269,7 +284,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - ハビエル・カスケロ
       - 2006-2012
       - 欧州8強の中盤
@@ -297,8 +312,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - ハイメ・マタ
       - 2018-2024
       - 29歳で1部デビュー
@@ -326,8 +341,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - マルク・ククレジャ
       - 2019-2021
       - のちの世界王者

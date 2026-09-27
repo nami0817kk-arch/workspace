@@ -175,22 +175,37 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id003
+      - プレーの色
       - 粘り強く戦う
-    - - 運営の型
-      - 育てて売る
-    - - クラブの気質
-      - 会員は5万人近く
   say:
   - text: アギーレ監督は、形にこだわらず、粘り強く戦う監督として知られています。
     image: assets/photos/ll/valencia/valencia_manager_200422af.jpg
-  - ピッチの外は、育てて売る型。
+  - text: ピッチの外は、育てて売る型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - &id004
+        - 運営の型
+        - 育てて売る
   - 下部組織育ちのフェラン・トーレスは2020年、マンチェスター・シティへ**2300万ユーロ**。
-  - スタンドの熱も強い。年間シートを持つ会員は、多い時で**5万人**近くいました。
+  - text: スタンドの熱も強い。年間シートを持つ会員は、多い時で**5万人**近くいました。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - *id004
+      - - クラブの気質
+        - 会員は5万人近く
   sources:
   - https://en.wikipedia.org/wiki/Valencia_CF
   - https://en.wikipedia.org/wiki/Javier_Aguirre
@@ -205,7 +220,7 @@ sections:
   card:
     type: table
     title: コイン投げの初代会長
-    columns: &id002
+    columns: &id005
     - ''
     - ''
     rows:
@@ -221,7 +236,7 @@ sections:
     card:
       type: table
       title: コイン投げの初代会長
-      columns: *id002
+      columns: *id005
       rows:
       - - ゴンサロ・メディナ
         - 結婚を1年延ばし、グラウンドを用意
@@ -244,7 +259,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id003
+    - &id006
       - ガイスカ・メンディエタ
       - 1993-2001
       - 欧州最優秀の中盤
@@ -272,8 +287,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - &id004
+    - *id006
+    - &id007
       - ダビド・アルベルダ
       - 1995-2013
       - 2度の優勝の主将
@@ -301,8 +316,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - *id004
+    - *id006
+    - *id007
     - - ダビド・ビジャ
       - 2005-2010
       - リーグ108得点

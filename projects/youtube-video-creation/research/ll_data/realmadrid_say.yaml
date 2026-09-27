@@ -209,3 +209,4 @@ manager_sources:
 # 今季。欧州の初戦（2026–27 Real Madrid CF season の原文で確認）
 season:
 - チャンピオンズリーグの初戦は、ホームでインテルに**2対1**で勝ちました。
+features_marks: [1, 3]

@@ -135,14 +135,29 @@ cards:
   features_card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id004
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id005
+      - プレーの色
       - 守って速く攻める
-    - - 運営の型
+  features_1_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id004
+    rows:
+    - *id005
+    - &id006
+      - 運営の型
       - 売上10億ユーロ超
+  features_3_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id004
+    rows:
+    - *id005
+    - *id006
     - - クラブの気質
       - 92か国に公認ファン
   episode_card:
@@ -166,7 +181,7 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - ジネディーヌ・ジダン
       - 2001-2006
       - 決勝のボレー
@@ -178,8 +193,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - クリスティアーノ・ロナウド
       - 2009-2018
       - 歴代最多450得点
@@ -191,8 +206,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - セルヒオ・ラモス
       - 2005-2021
       - 93分の同点弾
@@ -367,11 +382,14 @@ cards:
   image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
 解説: ピッチの外は、稼いだぶんで戦う型。
   telop: ピッチの外は、稼いだぶんで戦う型
+  card: features_1_card
+  image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
 解説: 2023年から24年のシーズン、サッカークラブで初めて、売上が**10億ユーロ**を超えました。
   telop: 2023年から24年のシーズン、サッカークラブで初めて、売上が**10億ユーロ**を超えました
   image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
 解説: 応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります。
   telop: 応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります
+  card: features_3_card
   image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
 
 ## ビートルズになった4人

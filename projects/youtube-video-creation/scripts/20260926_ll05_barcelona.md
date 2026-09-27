@@ -119,14 +119,29 @@ cards:
   features_card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id004
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id005
+      - プレーの色
       - 前から奪って点を取る
-    - - 運営の型
+  features_1_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id004
+    rows:
+    - *id005
+    - &id006
+      - 運営の型
       - ラ・マシアで育てる
+  features_3_card:
+    type: table
+    title: このクラブの特徴
+    columns: *id004
+    rows:
+    - *id005
+    - *id006
     - - クラブの気質
       - 「クラブ以上の存在」
   episode_card:
@@ -150,7 +165,7 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - シャビ・エルナンデス
       - 1998-2015
       - 3冠の中心
@@ -162,8 +177,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - アンドレス・イニエスタ
       - 2002-2018
       - 終了間際の同点弾
@@ -175,8 +190,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - リオネル・メッシ
       - 2004-2021
       - 1年で91得点
@@ -342,11 +357,14 @@ cards:
   image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
 解説: 運営の型は、育てて使う。育成組織のラ・マシアには、**300人**を超える若手がいます。
   telop: 運営の型は、育てて使う。育成組織のラ・マシアには、**300人**を超える若手がいます
+  card: features_1_card
+  image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
 解説: 2010年のバロンドールは、最終候補の**3人**とも、ラ・マシアの出身でした。
   telop: 2010年のバロンドールは、最終候補の**3人**とも、ラ・マシアの出身でした
   image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
 解説: 気質を表す合言葉は「クラブ以上の存在」。カタルーニャの誇りを背負ってきました。
   telop: 気質を表す合言葉は「クラブ以上の存在」。カタルーニャの誇りを背負ってきました
+  card: features_3_card
   image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
 
 ## ファンの呼び名は「お尻」

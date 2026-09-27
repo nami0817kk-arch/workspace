@@ -211,22 +211,37 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id003
+      - プレーの色
       - 攻めて取る
-    - - 運営の型
-      - 見いだして売る
-    - - クラブの気質
-      - 地元の民謡で応援
   say:
   - text: ホセ・アルベルト監督のチームは、攻めて取る。昨シーズンの2部で**90得点**、リーグ最多です。
     image: assets/photos/ll/racing/racing_manager_ca76efd7.jpg
-  - ピッチの外は、見いだして売る型。
+  - text: ピッチの外は、見いだして売る型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - &id004
+        - 運営の型
+        - 見いだして売る
   - ガライは**2008年**、レアル・マドリードへ**1000万ユーロ**で移りました。
-  - スタンドで歌うのは、地元の民謡「カチョの泉」。
+  - text: スタンドで歌うのは、地元の民謡「カチョの泉」。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id002
+      rows:
+      - *id003
+      - *id004
+      - - クラブの気質
+        - 地元の民謡で応援
   - '**25**あるサポーターの会のうち、**22**がカンタブリアにあります。'
   sources:
   - https://en.wikipedia.org/wiki/Racing_de_Santander
@@ -243,7 +258,7 @@ sections:
   card:
     type: table
     title: 負けるまで剃らない
-    columns: &id002
+    columns: &id005
     - ''
     - ''
     rows:
@@ -258,7 +273,7 @@ sections:
     card:
       type: table
       title: 負けるまで剃らない
-      columns: *id002
+      columns: *id005
       rows:
       - - 初めての負け
         - ラージョ・バジェカーノ戦
@@ -281,7 +296,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id003
+    - &id006
       - ペドロ・ムニティス
       - 1995-2012
       - 地元育ちの攻撃役
@@ -309,8 +324,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - &id004
+    - *id006
+    - &id007
       - ニコラ・ジギッチ
       - 2006-2009
       - 2メートルの点取り屋
@@ -338,8 +353,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - *id004
+    - *id006
+    - *id007
     - - キケ・セティエン
       - 1992-1996
       - ファン投票で史上最高

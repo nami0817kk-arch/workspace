@@ -189,24 +189,39 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id003
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id004
+      - プレーの色
       - とにかく打つ
-    - - 運営の型
-      - 行き場を失った実力者を拾う
-    - - クラブの気質
-      - 2部優勝7回。落ちても戻る
   say:
   - text: ペジェグリーニ監督のチームは、とにかく打つ。
     image: assets/photos/ll/betis/betis_manager_56bb9280.jpg
   - リーグ戦5試合を終えた9月半ばの時点で、シュートは**89本**でした。
-  - ピッチの外は、行き場を失った実力者を拾う型。
+  - text: ピッチの外は、行き場を失った実力者を拾う型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - &id005
+        - 運営の型
+        - 行き場を失った実力者を拾う
   - イスコはセビージャとの契約を解き、次の移籍も破談。所属先の無いまま、2023年に加入。
   - そのシーズン、試合の最優秀選手に**19回**。リーグ最多でした。
-  - そして、落ちても戻ってくる。2部での優勝は**7回**あります。
+  - text: そして、落ちても戻ってくる。2部での優勝は**7回**あります。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - *id005
+      - - クラブの気質
+        - 2部優勝7回。落ちても戻る
   sources:
   - https://en.wikipedia.org/wiki/Real_Betis
   - https://www.marca.com/futbol/betis/2026/09/16/bombardeo-ofensivo-betis-100-remates-seis-partidos.html
@@ -254,7 +269,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id003
+    - &id006
       - デニウソン
       - 1998-2005
       - 当時の世界最高額
@@ -282,8 +297,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - &id004
+    - *id006
+    - &id007
       - ルベン・カストロ
       - 2010-2018
       - クラブ最多148得点
@@ -311,8 +326,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - *id004
+    - *id006
+    - *id007
     - - ボルハ・イグレシアス
       - 2019-2025
       - 決勝の先制点

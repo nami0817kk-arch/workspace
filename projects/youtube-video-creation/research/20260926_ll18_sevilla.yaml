@@ -216,23 +216,38 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id003
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id004
+      - プレーの色
       - 球際に強い
-    - - 運営の型
-      - 見つけて、売る
-    - - クラブの気質
-      - アンダルシアの盟主
   say:
   - text: ルイス・ガルシア監督のチームは、球際に強い。競り合いとボール奪取で、リーグの先頭です。
     image: assets/photos/ll/sevilla/sevilla_manager_46745b5c.jpg
-  - ピッチの外は、見つけて売る型。
+  - text: ピッチの外は、見つけて売る型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - &id005
+        - 運営の型
+        - 見つけて、売る
   - 強化部長だったモンチは、世界に**700人**を超えるスカウト網を作りました。
   - 移籍で出した利益は、およそ**2億ユーロ**です。
-  - そしてアンダルシアの盟主。国際タイトルを持つのは、州でここだけです。
+  - text: そしてアンダルシアの盟主。国際タイトルを持つのは、州でここだけです。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - *id005
+      - - クラブの気質
+        - アンダルシアの盟主
   sources:
   - https://en.wikipedia.org/wiki/Sevilla_FC
   - https://www.diariodesevilla.es/sevillafc/ecuacion-complica-sevilla-garcia-plaza-laliga_0_2008056663.html
@@ -248,7 +263,7 @@ sections:
   card:
     type: table
     title: 100周年の歌
-    columns: &id003
+    columns: &id006
     - ''
     - ''
     rows:
@@ -264,7 +279,7 @@ sections:
     card:
       type: table
       title: 100周年の歌
-      columns: *id003
+      columns: *id006
       rows:
       - - 売り上げ
         - スペインのシングル1位
@@ -290,7 +305,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - アンドレス・パロップ
       - 2005-2013
       - 点も取った守護神
@@ -318,8 +333,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - フレデリック・カヌーテ
       - 2005-2012
       - 外国人の最多得点
@@ -347,8 +362,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - イヴァン・ラキティッチ
       - 2011-2024
       - 主将で欧州制覇

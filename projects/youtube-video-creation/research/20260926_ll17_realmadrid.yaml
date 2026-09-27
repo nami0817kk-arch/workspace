@@ -216,22 +216,37 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id004
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id005
+      - プレーの色
       - 守って速く攻める
-    - - 運営の型
-      - 売上10億ユーロ超
-    - - クラブの気質
-      - 92か国に公認ファン
   say:
   - text: モウリーニョのチームは、守ってから速く攻める。リーグ戦7試合で**18得点**です。
     image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
-  - ピッチの外は、稼いだぶんで戦う型。
+  - text: ピッチの外は、稼いだぶんで戦う型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id004
+      rows:
+      - *id005
+      - &id006
+        - 運営の型
+        - 売上10億ユーロ超
   - 2023年から24年のシーズン、サッカークラブで初めて、売上が**10億ユーロ**を超えました。
-  - 応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります。
+  - text: 応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id004
+      rows:
+      - *id005
+      - *id006
+      - - クラブの気質
+        - 92か国に公認ファン
   sources:
   - https://en.wikipedia.org/wiki/Real_Madrid_CF
   - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
@@ -280,7 +295,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - ジネディーヌ・ジダン
       - 2001-2006
       - 決勝のボレー
@@ -308,8 +323,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - クリスティアーノ・ロナウド
       - 2009-2018
       - 歴代最多450得点
@@ -338,8 +353,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - セルヒオ・ラモス
       - 2005-2021
       - 93分の同点弾

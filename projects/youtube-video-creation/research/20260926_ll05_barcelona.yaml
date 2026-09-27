@@ -191,22 +191,37 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id004
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id005
+      - プレーの色
       - 前から奪って点を取る
-    - - 運営の型
-      - ラ・マシアで育てる
-    - - クラブの気質
-      - 「クラブ以上の存在」
   say:
   - text: フリック監督のチームは、前から奪って点を取る。就任から**125試合**で**354得点**です。
     image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
-  - 運営の型は、育てて使う。育成組織のラ・マシアには、**300人**を超える若手がいます。
+  - text: 運営の型は、育てて使う。育成組織のラ・マシアには、**300人**を超える若手がいます。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id004
+      rows:
+      - *id005
+      - &id006
+        - 運営の型
+        - ラ・マシアで育てる
   - 2010年のバロンドールは、最終候補の**3人**とも、ラ・マシアの出身でした。
-  - 気質を表す合言葉は「クラブ以上の存在」。カタルーニャの誇りを背負ってきました。
+  - text: 気質を表す合言葉は「クラブ以上の存在」。カタルーニャの誇りを背負ってきました。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id004
+      rows:
+      - *id005
+      - *id006
+      - - クラブの気質
+        - 「クラブ以上の存在」
   sources:
   - https://en.wikipedia.org/wiki/FC_Barcelona
   - https://www.fcbarcelona.com/en/football/first-team/news/4579409/flicks-barca-is-a-goal-machine
@@ -256,7 +271,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id007
       - シャビ・エルナンデス
       - 1998-2015
       - 3冠の中心
@@ -284,8 +299,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id007
+    - &id008
       - アンドレス・イニエスタ
       - 2002-2018
       - 終了間際の同点弾
@@ -313,8 +328,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - *id005
+    - *id007
+    - *id008
     - - リオネル・メッシ
       - 2004-2021
       - 1年で91得点

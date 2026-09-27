@@ -198,22 +198,37 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id002
+      - プレーの色
       - 守って好機を待つ
-    - - 運営の型
-      - 借金ゼロからの出直し
-    - - クラブの気質
-      - 3部でも年間シート2万5千
   say:
   - text: ヒダルゴ監督のチームは、守って好機を待つ。昇格したシーズンも、この戦い方でした。
     image: assets/photos/ll/deportivo/deportivo_manager_7a979908.jpg
-  - ピッチの外は、借金を消しての出直し。
+  - text: ピッチの外は、借金を消しての出直し。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id001
+      rows:
+      - *id002
+      - &id003
+        - 運営の型
+        - 借金ゼロからの出直し
   - 1部を離れた頃の借金は**1億ユーロ**超。2024年の夏に**ゼロ**になったと、クラブは言います。
-  - 3部でも、ファンは離れませんでした。2022年から23年の年間シートは**2万5001人**です。
+  - text: 3部でも、ファンは離れませんでした。2022年から23年の年間シートは**2万5001人**です。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id001
+      rows:
+      - *id002
+      - *id003
+      - - クラブの気質
+        - 3部でも年間シート2万5千
   sources:
   - https://en.wikipedia.org/wiki/Deportivo_de_A_Coruña
   - https://www.mundodeportivo.com/en/soccer/20260818/1004217118/1-1-depor-and-elche-share-the-points-after-stunning-goals-from-aubameyang-and-aguado.html
@@ -262,7 +277,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id004
       - ベベット
       - 1992-1996
       - 1年目に得点王
@@ -291,8 +306,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id004
+    - &id005
       - ロイ・マカーイ
       - 1999-2003
       - ヨーロッパの得点王
@@ -320,8 +335,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id004
+    - *id005
     - - ルーカス・ペレス
       - 4度在籍
       - 自腹で3部へ

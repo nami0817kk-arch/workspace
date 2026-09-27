@@ -195,23 +195,38 @@ sections:
   card:
     type: table
     title: このクラブの特徴
-    columns:
+    columns: &id003
     - ''
     - ''
     rows:
-    - - プレーの色
+    - &id004
+      - プレーの色
       - 走りすぎずに守る
-    - - 運営の型
-      - 系列のクラブで回す
-    - - クラブの気質
-      - 5分遅れて入る抗議
   say:
   - text: キケ監督のチームは、走る距離がリーグで**4番目**に短い。
     image: assets/photos/ll/alaves/alaves_manager_9f0d84e4.jpg
   - それでも失点**6**は、リーグで最も少ない数に並びます。
-  - ピッチの外は、系列のクラブで選手を回す型。
+  - text: ピッチの外は、系列のクラブで選手を回す型。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - &id005
+        - 運営の型
+        - 系列のクラブで回す
   - '**2018年**、クロアチアのイストラの株を**85%**取得。守備の要のコスキも、そこから来ました。'
-  - スタンドは物を言う。**2019年**、月曜夜の試合に抗議し、ファンは**5分**遅れて席に着きました。
+  - text: スタンドは物を言う。**2019年**、月曜夜の試合に抗議し、ファンは**5分**遅れて席に着きました。
+    card:
+      type: table
+      title: このクラブの特徴
+      columns: *id003
+      rows:
+      - *id004
+      - *id005
+      - - クラブの気質
+        - 5分遅れて入る抗議
   sources:
   - https://en.wikipedia.org/wiki/Deportivo_Alavés
   - https://www.marca.com/futbol/alaves/2026/09/23/quique-reduce-kilometraje-alaves.html
@@ -258,7 +273,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id003
+    - &id006
       - コスミン・コントラ
       - 1999-2001
       - 決勝で2点を演出
@@ -287,8 +302,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - &id004
+    - *id006
+    - &id007
       - テオ・エルナンデス
       - 2016-2017
       - 国王杯決勝で同点弾
@@ -317,8 +332,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id003
-    - *id004
+    - *id006
+    - *id007
     - - ホセル
       - 2019-2022
       - ベルナベウで20年ぶり
