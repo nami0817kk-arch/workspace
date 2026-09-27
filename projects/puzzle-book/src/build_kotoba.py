@@ -579,7 +579,7 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
     c.setFillColorCMYK(*BLACK)
     y = pg.bottom + 190
     c.setFont(FONT_BOLD, 16)
-    c.drawString(pg.left, y, spec.title)
+    c.drawString(pg.left, y, spec.title.rpartition(" ")[0] or spec.title)  # 表紙・KDP のタイトルにそろえる（問題数は付けない）
     c.setFont(FONT_REGULAR, 11)
     y -= 26
     if spec.edition_date:
