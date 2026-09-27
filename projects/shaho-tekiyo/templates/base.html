@@ -99,11 +99,16 @@
     gap: 0.5rem;
   }
   header.site-header a.logo {
-    font-weight: bold;
-    font-size: 1.05rem;
+    display: flex; align-items: center; gap: 0.55rem;
     color: var(--text);
     text-decoration: none;
   }
+  .logo-mark { width: 2.2rem; height: 2.2rem; flex: none; }
+  .logo-mark rect { fill: var(--accent); }
+  .logo-mark path { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .logo-text { display: flex; flex-direction: column; line-height: 1.3; }
+  .logo-name { font-weight: bold; font-size: 1.05rem; }
+  .logo-tag { font-size: 0.75rem; color: var(--muted); }
   header.site-header nav { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; }
   nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; white-space: nowrap; }
   nav a:hover { color: var(--accent); }
@@ -225,6 +230,17 @@
   .hero-band { background: var(--ok-bg); border: 1px solid var(--ok-border); border-radius: 12px; padding: 1.1rem 1.2rem; margin: 0.5rem 0 1rem; }
   .hero-band h1 { margin: 0 0 0.35rem; }
   .hero-lead { margin: 0 0 0.6rem; }
+  .hero-eyebrow { margin: 0 0 0.2rem; font-size: 0.85rem; font-weight: bold; color: var(--ok-text); }
+  ul.hero-points { list-style: none; padding: 0; margin: 0.2rem 0 0.8rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  ul.hero-points li { display: flex; align-items: center; gap: 0.5rem; background: var(--card-bg); border: 1px solid var(--ok-border); border-radius: 10px; padding: 0.5rem 0.6rem; font-size: 0.88rem; line-height: 1.4; }
+  ul.hero-points svg { width: 2.1rem; height: 2.1rem; flex: none; }
+  ul.hero-points .num { display: block; font-size: 0.72rem; color: var(--muted); }
+  @media (max-width: 560px) {
+    ul.hero-points li { flex-direction: column; text-align: center; gap: 0.3rem; padding: 0.5rem 0.35rem; font-size: 0.8rem; }
+    ul.hero-points svg { width: 1.8rem; height: 1.8rem; }
+  }
+  .hero-news { margin: 0 0 0.7rem; padding: 0.55rem 0.75rem; border-radius: 8px; background: var(--card-bg); border-left: 4px solid var(--s4); font-size: 0.9rem; }
+  .hero-news strong { color: var(--text); }
   ul.badges { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
   ul.badges li { font-size: 0.78rem; background: var(--card-bg); border: 1px solid var(--ok-border); color: var(--ok-text); border-radius: 999px; padding: 0.15rem 0.6rem; }
   .calc-layout { display: grid; gap: 1rem; align-items: start; }
@@ -363,6 +379,9 @@
     main { max-width: none; padding: 0; }
   }
 </style>
+<link rel="icon" href="{{ base_url }}static/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{{ base_url }}static/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="{{ base_url }}static/apple-touch-icon.png">
 {% if canonical %}<link rel="canonical" href="{{ canonical }}">{% else %}<meta name="robots" content="noindex">{% endif %}
 {% if ADSENSE_CLIENT %}
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ ADSENSE_CLIENT }}" crossorigin="anonymous"></script>
@@ -377,7 +396,10 @@
 <a class="skip-link" href="#main">本文へスキップ</a>
 <header class="site-header">
   <div class="inner">
-    <a class="logo" href="{{ base_url }}index.html">パートの社会保険 計算機</a>
+    <a class="logo" href="{{ base_url }}index.html">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10"/><path d="M12 9l8 11 8-11M20 20v11M13.5 21.5h13M13.5 26h13"/></svg>
+      <span class="logo-text"><span class="logo-name">パートの社会保険 計算機</span><span class="logo-tag">パート・アルバイトの保険料と手取りを計算</span></span>
+    </a>
     <nav>
       <a href="{{ base_url }}index.html">計算機</a>
       <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
