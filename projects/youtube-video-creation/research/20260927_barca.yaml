@@ -33,8 +33,11 @@ sections:
     say:
       - 今季のバルセロナは、公式戦8試合で8勝。点は**36**取って、取られたのは**8**です。
       - 5点以上を取った試合が、8試合のうち**5回**あります。
+      - いちばん点を取っているのは、主将のラフィーニャ。公式戦で**14点**です。
       - ラ・リーガは7連勝で首位。2位のアトレティコに、勝ち点で**5**の差をつけています。
-      - 8試合目の相手、セビージャのルイス・ガルシア監督は、こう話しています。
+      - 8試合目は敵地のセビージャ戦。ラフィーニャが2試合続けてハットトリックを決め、3対1で勝ちました。
+      - text: 敗れたセビージャのルイス・ガルシア監督は、こう話しています。
+        image: assets/images/20260927_pair_luisgarcia_raphinha/01.jpg
       - voice: ルイス・ガルシア
         text: バルサは最高の水準でプレーしている。ただ、私の関心はセビージャだ
     sources:
@@ -56,9 +59,10 @@ sections:
         - [スペイン, バルセロナ 2026-27, ＋28]
         - [ドイツ, バイエルン 2016-17, ＋26]
     say:
-      - text: 'バルセロナが公式戦で8連勝。点を取っているのは、主将のラフィーニャです。'
+      - text: 'バルセロナが公式戦で8連勝。36点取って、取られたのは8点です。'
         short_only: true
-      - この滑り出しは、ヨーロッパの5大リーグで、ほぼ100年ぶりのものです。
+      - text: この滑り出しは、ヨーロッパの5大リーグで、ほぼ100年ぶりのものです。
+        image: assets/images/20260927_barca/01.jpg
       - 比べたのは、シーズン最初の8試合の得失点差。バルサは**プラス28**。
       - ドイツの最高、2016年のバイエルンでも**プラス26**です。
       - これを上回るのは、98年前、1928年のレアル・マドリードだけ。**プラス31**でした。
@@ -67,33 +71,6 @@ sections:
       - https://www.espn.com/soccer/story/_/id/50004145/why-barcelona-start-season-laliga-champions-league-best-europe-top-5-leagues-almost-100-years
       - https://now.core.api.espn.com/v1/sports/news/50004145
       - https://www.espn.com/soccer/story/_/id/49983111/raphinha-ballon-dor-sevilla-luis-garcia-joke-barcelona-hat-trick
-  - id: raphinha
-    heading: センターフォワードのラフィーニャ
-    tier: 報道
-    telop: ラフィーニャは公式戦8試合で14得点。2試合続けてハットトリック
-    narrator: キャスター
-    card:
-      type: table
-      title: 点を取っている2人
-      columns: [所属, 名前, 位置, 年齢]
-      rows:
-        - [バルセロナ, ラフィーニャ, FW, 29歳]
-        - [バルセロナ, ラミン・ヤマル, FW, 19歳]
-    say:
-      - 36点のうち**14点**は、主将のラフィーニャ。ラミン・ヤマルが**8点**で続きます。
-      - ラフィーニャは本来、右のウイング。今季はセンターフォワードで使われ、2試合続けてハットトリック。
-      - ルイス・ガルシア監督は、ラフィーニャについてもこう話しました。
-      - voice: ルイス・ガルシア
-        text: 彼がバロンドールの候補にすら入っていないのは、冗談だ
-      - ラフィーニャ本人は、センターフォワードについて、こう語っています。
-      - voice: ラフィーニャ
-        text: 本来の右ウイングでやりたいと言ったら、試合に出られない。だから合わせないといけない
-      - voice: ラフィーニャ
-        text: このポジションが、こんなに心地いいとは思っていなかった
-    sources:
-      - https://www.espn.com/soccer/story/_/id/49983111/raphinha-ballon-dor-sevilla-luis-garcia-joke-barcelona-hat-trick
-      - https://www.fotmob.com/it/news/10px5awsan9951jge923q17t72-flick-hat-trick-hero-raphinha-best-captain-barcelona-could-have
-      - https://www.fcbarcelona.com/en/news/4578857/sevilla-1-3-fc-barcelona-raphinha-does-it-again
   - id: voices
     heading: ネットの反応
     tier: 未確認
@@ -119,15 +96,6 @@ sections:
       - voice: ネット民
         text: 一時メッシ超えの記録も11-12の50ゴールが異次元と再認識させられるのか記録に迫ってラフィーニャすげえってなるのか楽しみ
       - voice: ネット民
-        text: 18分の18……。バルサはラシンを7対2で粉砕して全勝を伸ばし、クラブ史上最高のシーズンスタートを記録。
-      - voice: ネット民
-        text: 7連勝したバルサは、これまでなかった。
-        cont: true
-      - voice: ネット民
-        text: またラフィーニャのハットトリック！ 14得点。まだ9月半ばだ
-      - voice: ネット民
-        text: フリックのバルサは、全員をバックミラー越しに見ている
-      - voice: ネット民
         text: 難所攻略。こりゃバルサもハフィーニャも止まらんな。
       - voice: ネット民
         text: バルサファンは向こう数年は楽しそうだね
@@ -135,6 +103,3 @@ sections:
     sources:
       - https://news.yahoo.co.jp/articles/a6bb22e3326063510d500e7af3192ade338732c2/comments
       - https://news.yahoo.co.jp/articles/98e8d5103daf41f679caf88457b3ed54b96515fd/comments
-      - https://bsky.app/profile/tercertiempo.bsky.social/post/3mvpi5wr43k2n
-      - https://bsky.app/profile/fabrizioromano.yopro20.com/post/3mvvjvypncb25
-      - https://bsky.app/profile/trendjpnews.bsky.social/post/3mvo45ia67g2z

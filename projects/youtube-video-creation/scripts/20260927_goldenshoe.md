@@ -1,7 +1,7 @@
 ---
 title: ラフィーニャを1ポイント上回る、ゴールデンシュー首位の男
 format: news
-voice_min: 0.3
+voice_min: 0.25
 short_title: ラフィーニャより上にいる、ゴールデンシュー首位
 topic: ラフィーニャ
 thumbnail_line1: ゴールデンシュー首位は
@@ -46,7 +46,6 @@ sources:
 - https://www.espn.com/soccer/story/_/id/50010819/european-golden-shoe-whos-leading-raphinha-mbappe-haaland
 - https://now.core.api.espn.com/v1/sports/news/50010819
 - https://fkliepaja.lv/lv/2026/09/15/danila-patijcuks-oloko-tas-ir-kosmoss-vina-speli-vajag-redzet/
-- https://fkliepaja.lv/lv/2026/07/02/oloko-ede-futbola-nekas-nav-viegli/
 - https://fkliepaja.lv/lv/2026/09/11/oloko-25-uzbrucejs-izglabj-mums-speli/
 - https://soccernet.ng/2026/09/super-eagles-oloko-rohr-nigeria-benin.html
 - https://sportacentrs.com/futbols/virsliga/09092026-liepajnieks_ede_domine_augusta_un_virslig
@@ -54,10 +53,6 @@ sources:
 - https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401920037
 - https://fkliepaja.lv/lv/2026/09/12/curro-torres-japalidz-oloko-vel-vairak/
 - https://fkliepaja.lv/lv/2026/09/23/beknazs-almazbekovs-mums-obligati-jaspele-eirokausos/
-- https://bsky.app/profile/balticfootball.bsky.social/post/3mvq4ilvqzl2u
-- https://bsky.app/profile/kristil.bsky.social/post/3mv5yhzixjx2l
-- https://bsky.app/profile/fcbarcelona-news.bsky.social/post/3mw2xw2qdon2l
-- https://x.com/Montaito3/status/2097748137637003317
 cards:
   race_card:
     type: table
@@ -142,16 +137,8 @@ cards:
   telop: チームメイトは、オロコをこう評します
   card: none
   image: assets/images/20260927_oloko2/01.jpg
-ダニーラ・パティイチュク: 僕にとって、オロコは宇宙だよ。彼がやっていることは、ファンタジーだ
-  telop: ダニーラ・パティイチュク「僕にとって、オロコは宇宙だよ。彼がやっていることは、ファンタジーだ」
-  card: none
-  image: assets/images/20260927_oloko2/01.jpg
-キャスター: 本人は、点を取ることについて、こう語っています。
-  telop: 本人は、点を取ることについて、こう語っています
-  card: none
-  image: assets/images/20260927_oloko2/01.jpg
-ジョセフ・エデ・オロコ: ストライカーは、ピッチの上である意味エゴイストでないといけない。そうでなければ、たくさん点は取れない
-  telop: ジョセフ・エデ・オロコ「ストライカーは、ピッチの上である意味エゴイストでないといけない。そうでなければ、たくさん点は取れない」
+ダニーラ・パティイチュク: 僕にとって、オロコは別次元。彼がやっていることは、とにかくすごい
+  telop: ダニーラ・パティイチュク「僕にとって、オロコは別次元。彼がやっていることは、とにかくすごい」
   card: none
   image: assets/images/20260927_oloko2/01.jpg
 
@@ -166,8 +153,8 @@ cards:
   telop: 所属はFKリエパーヤ。今年は開幕から別のクラブへ貸し出され、そこで**16試合16点**
   card: none
   image: assets/images/20260927_oloko2/01.jpg
-キャスター: 6月にリエパーヤへ戻ってからも点を取り続け、合わせて25点です。
-  telop: 6月にリエパーヤへ戻ってからも点を取り続け、合わせて25点です
+キャスター: 6月にリエパーヤへ戻ってからは、**9点**を足しました。
+  telop: 6月にリエパーヤへ戻ってからは、**9点**を足しました
   card: none
   image: assets/images/20260927_oloko2/01.jpg
 キャスター: この活躍で、ベナン代表に初めて呼ばれました。
@@ -190,9 +177,13 @@ cards:
 ## 残りは5試合
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: ただ、ラトビアのリーグは春に始まり、11月に終わります。オロコは残り**5試合**。
-  telop: ただ、ラトビアのリーグは春に始まり、11月に終わります。オロコは残り**5試合**
+キャスター: ゴールデンシューの争いに戻ります。
+  telop: ゴールデンシューの争いに戻ります
   source: 報道
+  image: assets/images/20260927_oloko2/01.jpg
+キャスター: ラトビアのリーグは春に始まり、11月に終わります。オロコは残り**5試合**。
+  telop: ラトビアのリーグは春に始まり、11月に終わります。オロコは残り**5試合**
+  card: none
   image: assets/images/20260927_oloko2/01.jpg
 キャスター: ラフィーニャたちのシーズンは、まだ始まったばかりです。
   telop: ラフィーニャたちのシーズンは、まだ始まったばかりです
@@ -212,31 +203,5 @@ cards:
   image: assets/images/20260927_oloko2/01.jpg
 ベクナズ・アルマズベコフ: オロコには30点取ってほしい。僕も必ず手伝う
   telop: ベクナズ・アルマズベコフ「オロコには30点取ってほしい。僕も必ず手伝う」
-  card: none
-  image: assets/images/20260927_oloko2/01.jpg
-
-## ネットの反応
-@bg: assets/backgrounds/stock/stadium_night.mp4
-
-ネット民: ジョセフ・エデ・オロコ、ヴィルスリーガでの量産でベナン代表初招集。
-  telop: ネット民「ジョセフ・エデ・オロコ、ヴィルスリーガでの量産でベナン代表初招集」
-  source: 未確認
-  image: assets/images/20260927_oloko2/01.jpg
-ネット民: エデ・オロコ、爆発的な8月で、またも月間最優秀選手
-  telop: ネット民「エデ・オロコ、爆発的な8月で、またも月間最優秀選手」
-  card: none
-  image: assets/images/20260927_oloko2/01.jpg
-ネット民: ラフィーニャ、欧州ゴールデンシューの有力候補に浮上
-  telop: ネット民「ラフィーニャ、欧州ゴールデンシューの有力候補に浮上」
-  card: none
-  image: assets/images/20260927_oloko2/01.jpg
-ネット民: ラフィーニャドブレテ！！やっと裏抜けに出してもらえたな。しかしこんな決定力高い人だったっけ？
-  telop: ネット民「ラフィーニャドブレテ！！やっと裏抜けに出してもらえたな。しかしこんな決定力高い人だったっけ？」
-  card: none
-  image: assets/images/20260927_oloko2/01.jpg
-ネット民: 怪我しなけりゃゴールデンシューいけるレベルじゃない？
-  short_voice: true
-  cont: true
-  telop: ネット民「怪我しなけりゃゴールデンシューいけるレベルじゃない？」
   card: none
   image: assets/images/20260927_oloko2/01.jpg
