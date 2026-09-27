@@ -424,6 +424,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-27", "何のサイトか分かるように: ロゴの印と説明の一行、トップに「分かること3つ」と10月の変更のお知らせ、ブラウザのタブ・検索結果に出るアイコン"),
     ("2026-09-27", "年収別の手取り早見表（90万〜200万円、社会保険に入る場合と扶養内の場合）を追加。よくある質問に交通費・残業代、130万円の壁の月額と19〜22歳の150万円、ダブルワーク、加入を断れるかの4問を追加。サイト名を「パートの社会保険 計算機」に"),
     ("2026-09-27", "公開のたびに IndexNow（Bing など）へページの一覧を知らせるようにした"),
     ("2026-09-27", "計算機の見た目を作り直し: 冒頭の帯、入力を5項目＋「詳しく入力する」に、結果の要約を大きな数字で入力の横に（スマホは画面下にも）、関連ページのカード"),
@@ -551,6 +552,8 @@ def build_all() -> None:
     static_src = _ROOT / "static"
     if static_src.exists():
         shutil.copytree(static_src, _OUTPUT_DIR / "static", dirs_exist_ok=True)
+        # ブラウザや検索エンジンが決め打ちで読みに来る /favicon.ico も置く
+        shutil.copy(static_src / "favicon.ico", _OUTPUT_DIR / "favicon.ico")
 
 
 if __name__ == "__main__":

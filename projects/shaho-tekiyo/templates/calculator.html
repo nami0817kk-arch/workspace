@@ -4,8 +4,15 @@
 {% block main_class %}wide{% endblock %}
 {% block content %}
 <section class="hero-band">
+  <p class="hero-eyebrow">パート・アルバイトで働く人のための計算サイト</p>
   <h1>パートの社会保険 計算機</h1>
-  <p class="hero-lead">社会保険に入る対象か、入ったら<strong>保険料と手取りがいくらになるか</strong>を、円単位で計算します。</p>
+  <p class="hero-lead">週の労働時間と月の賃金（または時給）、勤務先の人数を入れると、次の3つが分かります。</p>
+  <ul class="hero-points">
+    <li><svg viewBox="0 0 40 40" aria-hidden="true"><rect class="ico-bg" width="40" height="40" rx="10"/><path class="ico-fg" d="M12 20.5l5.5 5.5L28 15"/></svg><span><span class="num">1</span><strong>加入の対象か</strong></span></li>
+    <li><svg viewBox="0 0 40 40" aria-hidden="true"><rect class="ico-bg" width="40" height="40" rx="10"/><rect class="ico-fg" x="11" y="9" width="18" height="22" rx="2"/><path class="ico-fg" d="M15 15h10M15 20h10M15 25h6"/></svg><span><span class="num">2</span><strong>保険料の額</strong></span></li>
+    <li><svg viewBox="0 0 40 40" aria-hidden="true"><rect class="ico-bg" width="40" height="40" rx="10"/><path class="ico-fg" d="M13 10l7 9.5 7-9.5M20 19.5V30M14.5 21h11M14.5 25h11"/></svg><span><span class="num">3</span><strong>毎月の手取り</strong></span></li>
+  </ul>
+  <p class="hero-news"><strong>2026年10月から「106万円の壁」が無くなります。</strong>従業員51人以上の会社なら、週20時間以上で月収にかかわらず加入の対象です。<a href="faq.html#q-oct">何が変わる？</a></p>
   <ul class="badges">
     <li>{{ era }}の料率（協会けんぽ）</li>
     <li>2026年10月の改正に対応</li>
