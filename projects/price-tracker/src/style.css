@@ -606,3 +606,55 @@ h1 .count { display: inline-block; padding: 2px 10px; margin-left: 8px;
   .lede .headline { flex: 1 1 140px; }
   .item .headline strong { font-size: 26px; }
 }
+
+/* ===== 第2回（2026-09-28）。トップ・ジャンル・見出し・押しどころ ===== */
+
+/* 12. トップの検索窓が小さく、入口に見えなかった。Amazon も楽天も入口の窓は
+   横いっぱいで大きい。ボタンを窓と同じ行に置いて、押しどころを1つにする。 */
+.hero { gap: 0; }
+.hero input { flex: 1 1 200px; padding: 14px 16px; font-size: 16px;
+  border-radius: var(--radius) 0 0 var(--radius); border-right: 0; }
+.hero button { flex: 0 0 auto; padding: 14px 22px;
+  border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* 13. ジャンルの入口に件数しか無く、どれが厚いか一目で分からなかった。
+   件数を数字として揃える（表と同じ扱い）。 */
+.genre .count { font-variant-numeric: tabular-nums; }
+
+/* 14. 一覧の索引とジャンルの入口で、押せる範囲がリンクの文字だけだった。
+   Amazon も楽天も行ごと押せる。枠の中を全部押せるようにする。 */
+.views li, .genre { position: relative; transition: border-color .12s; }
+.views li:hover, .genre:hover { border-color: var(--accent); }
+.views li a::after, .genre > a::after { content: ""; position: absolute;
+  inset: 0; }
+
+/* 15. 見出しの下の余白が題ごとにばらついていた */
+h2 { margin: 32px 0 12px; }
+.views h2, .howto h2 { margin-top: 36px; }
+
+/* 16. 本文の行長。画面が広いと1行が長くなりすぎて目が戻れない */
+.howto p, .verdict, .note { max-width: 42em; }
+
+/* 17. パンくずが本文と同じ濃さで、見出しと競っていた */
+.crumb { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+/* 18. 商品の説明（楽天の文章）が本文と同じ濃さで、こちらの判定と紛れていた */
+.caption { color: var(--muted); font-size: 14px; line-height: 1.8; }
+
+/* 19. 「似た商品」「同じ店の商品」の一覧が詰まっていた。行ごとに区切る。 */
+.hits { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.hits li { display: flex; flex-wrap: wrap; align-items: baseline;
+  justify-content: space-between; gap: 4px 12px; padding: 11px 14px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); }
+.hits li:hover { border-color: var(--accent); }
+.hits a { text-decoration: none; }
+.hits .price { flex: none; font-variant-numeric: tabular-nums; color: var(--ink); }
+@media (min-width: 720px) { .hits { grid-template-columns: 1fr 1fr; } }
+
+/* 20. 押しどころの当たり判定。一覧の索引・ジャンルは行が細かった */
+@media (max-width: 560px) {
+  .views li { padding: 13px 14px; }
+  .genre { padding: 14px 15px; }
+  .hits li { padding: 13px 14px; }
+}
