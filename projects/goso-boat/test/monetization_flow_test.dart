@@ -120,6 +120,14 @@ Future<void> _solveWithHints(WidgetTester tester, int par) async {
   await tester.pump(const Duration(milliseconds: 800));
 }
 
+/// 設定画面の中の項目（ListView は画面外を作らないので、そこまで送ってから探す）。
+Future<Finder> _inSettings(WidgetTester tester, String text) async {
+  final f = find.descendant(of: find.byType(ListView), matching: find.text(text));
+  await tester.scrollUntilVisible(f, 200, scrollable: find.byType(Scrollable).last);
+  await tester.pump(const Duration(milliseconds: 100));
+  return f;
+}
+
 void main() {
   group('広告を消す（買い切り）', () {
     testWidgets('ホームに値段つきで出て、買うと「広告なし」に変わる', (tester) async {
@@ -195,13 +203,14 @@ void main() {
       await _pumpApp(tester, p, m, st);
       await tester.tap(find.byTooltip('設定'));
       await tester.pump(const Duration(milliseconds: 600));
-      await tester.tap(find.text('購入を復元').last);
+      final restore = await _inSettings(tester, '購入を復元');
+      await tester.tap(restore);
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('復元できる購入が見つからなかった'), findsOneWidget);
       expect(m.adFree, isFalse);
       await tester.pump(const Duration(seconds: 5));
       store.restoreResult = PurchaseOutcome.purchased;
-      await tester.tap(find.text('購入を復元').last);
+      await tester.tap(restore);
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('購入を復元しました'), findsOneWidget);
       expect(m.adFree, isTrue);
@@ -214,8 +223,8 @@ void main() {
     await _pumpApp(tester, p, m, st);
     await tester.tap(find.byTooltip('設定'));
     await tester.pump(const Duration(milliseconds: 600));
-    expect(find.text('プライバシーポリシー'), findsOneWidget);
-    expect(find.text('お問い合わせ・広告の報告'), findsOneWidget);
+    expect(await _inSettings(tester, 'プライバシーポリシー'), findsOneWidget);
+    expect(await _inSettings(tester, 'お問い合わせ・広告の報告'), findsOneWidget);
   });
 
   group('ヒントの動画', () {
