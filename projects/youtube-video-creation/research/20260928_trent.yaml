@@ -1,0 +1,132 @@
+date: 2026年9月28日
+slot: laliga_1
+format: news
+voice_min: 0.4
+people: [トレント・アレクサンダー＝アーノルド]
+theme:
+  id: trent_return_rumour
+  league: spain
+  league_name: ラ・リーガ
+  kind: transfer
+  topic: レアル・マドリード
+  title: 'トレント・アレクサンダー＝アーノルド、代理人が古巣に接触。レアルと代表で起きていること'
+  question: トレントは、なぜ古巣への移籍がうわさされているのか
+  opening_image: assets/images/20260928_trent/01.jpg
+short_title: トレント、代理人が古巣に接触
+thumbnail:
+  photo: assets/images/20260928_trent/01.jpg
+  line1: トレント、古巣へ戻るのか
+  line2: 今季レアルでの先発は●試合
+sections:
+  - id: report
+    heading: 代理人が4クラブに
+    tier: 報道
+    telop: 代理人側がリヴァプールなど4クラブに接触と報道
+    narrator: キャスター
+    say:
+      - text: レアル・マドリードのトレント・アレクサンダー＝アーノルド。
+        image: assets/images/20260928_trent/01.jpg
+      - その代理人の側が、プレミアの4つのクラブに話を持ちかけた、とイングランドで報じられました。
+      - 古巣のリヴァプールに、アーセナル、マンチェスター・シティ、チェルシーです。
+      - ただ、本人もレアルも、1月の移籍は考えていない。見直すのはシーズンが終わってから、という内容です。
+      - ドイツでは、レアルが話を聞くとしても7000万から8000万ユーロから、という見立ても出ています。
+      - リヴァプールについて、トレントは8月のインタビューで、こう語っています。
+      - voice: トレント・アレクサンダー＝アーノルド
+        text: 何があってもリヴァプールは心の中にある。僕にとって故郷なんだ
+    sources:
+      - https://www.teamtalk.com/news/liverpool-arsenal-manchester-city-chelsea-trent-alexander-arnold-real-madrid
+      - https://fussball-news.de/2026/09/25/rueckkehr-nach-england-arsenal-beschaeftigt-sich-mit-real-star-alexander-arnold/
+      - https://www.mirror.co.uk/sport/football/trent-alexander-arnold-liverpool-madrid-37581204
+  - id: madrid
+    main: true
+    heading: レアルでの今季
+    tier: 報道
+    telop: 公式戦8試合で先発は3試合
+    narrator: キャスター
+    card:
+      type: table
+      title: トレントの今季（レアル・マドリード）
+      columns: [出方, 試合]
+      rows:
+        - [先発, 3]
+        - [途中から, 2]
+        - [出番なし, 3]
+    say:
+      - text: 代理人がプレミアの4クラブに接触した、と報じられたレアルの右サイドバック。
+        short_only: true
+      - 今季のレアルは公式戦8試合。トレントの先発は、そのうち**3試合**です。
+      - 右サイドバックの先発は、この夏に来たダンフリース。8試合のうち6試合に出ています。
+      - 新しく来た選手に、定位置を奪われている形です。
+      - チャンピオンズリーグのインテル戦では、トレントが中盤で先発しました。
+      - モウリーニョ監督は試合のあと、中盤での起用をこう振り返りました。
+      - voice: ジョゼ・モウリーニョ
+        text: リヴァプールや代表で何度かあそこでやったことはあるが、彼は中盤の選手ではない
+      - voice: ジョゼ・モウリーニョ
+        text: それでも全部出し切った。チームのためにしてくれた努力に感謝している
+      - 9月20日のマドリード・ダービーでは、ベンチから出ることはありませんでした。
+    sources:
+      - https://site.web.api.espn.com/apis/common/v3/sports/soccer/athletes/223532/gamelog?season=2026
+      - https://www.marca.com/futbol/real-madrid/2026/09/15/dumfries-le-gana-partida-trent.html
+      - https://www.futbolfantasy.com/laliga/noticias/150848-mourinho-valora-el-triunfo-y-habla-de-brahim-diomande-vinicius-trent-y-el-inter
+  - id: england
+    heading: 代表でも
+    tier: 報道
+    telop: 代表で最後に出てから477日
+    narrator: キャスター
+    say:
+      - トレントは、イングランド代表には9月18日に呼び戻されました。
+      - ところが9月26日のスペイン戦は、出番なし。
+      - 右サイドバックには、本職がセンターバックのクアンサーが入りました。
+      - 代表で最後に出たのは2025年の6月。**477日**前です。
+      - 呼び戻した日、トゥヘル監督はワールドカップの選考について、こう認めています。
+      - voice: トーマス・トゥヘル
+        text: いつも公平だったか？ 私の側からすれば、そうではなかったかもしれない
+    sources:
+      - https://www.bbc.com/sport/football/articles/cmly4gpnwk2go
+      - https://www.dailymail.co.uk/sport/football/article-16163989/thomas-tuchel-trent-alexander-arnold-england.html
+      - https://www.mirror.co.uk/sport/football/news/england-trent-alexander-arnold-tuchel-37678690
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「トレントを連れ戻せたらなあ」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ジョゼはレアルでいい仕事をしてる…どうせクリスマスまでにいなくなるだろうけど。
+      - voice: ネット民
+        text: トレントを連れ戻せたらなあ、ベンチは似合わないよ
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: アーノルドがアーセナルにいるのみたい
+      - voice: ネット民
+        text: 今季ずっとレアルでベンチなら、シーズン終わりに出たがると思う。君なら彼を連れ戻す？
+      - voice: ネット民
+        text: アーセナルの右SBの役割を考えればアーノルドのクロスは滅茶苦茶脅威になるよな。守備はヤバいけど。
+      - voice: ネット民
+        text: 待って、トレントを戻せって本気で言ってる人いるの？
+        short_voice: true
+      - voice: ネット民
+        text: アーノルド、リヴァプールに帰って来なよ。
+      - voice: ネット民
+        text: 今じゃイサクにエキティケにバルコラにムニョスにヴィルツが居る。何でも出来るよ。
+        cont: true
+      - voice: ネット民
+        text: レアルが1000万ポンドでトレントをくれるなら取るね。今はもう要らないみたいだし
+      - voice: ネット民
+        text: トレントは流石にそろそろマドリーの一員になってほしい。まだ移籍してきた外様のイメージ
+      - voice: ネット民
+        text: トゥヘルって本当にトレントが好きじゃないんだな
+      - voice: ネット民
+        text: ダンフリースも好きだしプレーも最高なんだけど、アーノルドのクロスと雰囲気も好きなんだよなぁ。
+    sources:
+      - https://bsky.app/profile/oldhamletsghost.bsky.social/post/3mvxmtbjm722n
+      - https://x.com/yukidaruma0317/status/2103695919845970098
+      - https://bsky.app/profile/adamtalbot.bsky.social/post/3mvxssxphjc2u
+      - https://x.com/Csaku310/status/2103769930424635486
+      - https://bsky.app/profile/10millionhardbacks.bsky.social/post/3mwbxddcvek2b
+      - https://x.com/PeDxdb/status/2097615453527134471
+      - https://bsky.app/profile/konzan.bsky.social/post/3mvkscho3ic2t
+      - https://x.com/cristianoro7ldo/status/2097399556023763250
+      - https://bsky.app/profile/tshrewsburyspur.bsky.social/post/3mwh46mbsa22j
+      - https://x.com/yzc8q/status/2102600273709645934
