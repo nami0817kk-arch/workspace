@@ -384,7 +384,7 @@ def history_note(row: dict) -> str:
     days = int(row.get("days") or 0)
     if days <= 0:
         return ""
-    return f'<span class="sep">/</span>記録{days}日'
+    return f'<span class="since">記録{days}日</span>'
 
 
 def card_spark(row: dict) -> str:
@@ -452,7 +452,7 @@ def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = Fa
     <a class="name" href="{href}" title="{esc(row["name"])}">{esc(short_name(row["name"]))}</a>
     <p class="price">{change}<strong>{yen(row["price"])}</strong>{conditions(row)}</p>
     <p class="point-line">{point_note(row)}</p>
-    <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}
+    <p class="meta"><span class="shop">{esc(row.get("shop", ""))}</span>{history_note(row)}
       <button class="watch-mini" type="button" data-code="{esc(row["item_code"])}"
               data-price="{row["price"]}" aria-label="この商品を見守る">見守る</button></p>
     {score_bar(row) if show_score else ""}

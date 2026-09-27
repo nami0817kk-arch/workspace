@@ -547,7 +547,8 @@ h1 { font-size: 27px; letter-spacing: -.01em; }
 
 /* 3. 点の内訳を2列に並べる。幅が足りず1つずつ改行していた（147px＝カードの3割） */
 .score .parts { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
-.score .part { justify-content: space-between; }
+/* 札の中で名前と数字を離しすぎない（右端まで飛んで対に見えなかった） */
+.score .part { justify-content: flex-start; }
 
 /* 4. カードの区切りを強くする。間隔12pxだけでは切れ目が読めなかった */
 .cards { gap: 14px; }
@@ -581,10 +582,13 @@ h1 .count { display: inline-block; padding: 2px 10px; margin-left: 8px;
 .facts { border: 1px solid var(--line); border-radius: var(--radius);
   overflow: hidden; }
 
-/* 8. 店名の行。店・記録日数・見守りが詰まって読めなかった */
-.card .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
-  margin-top: 6px; }
-.card .meta .sep { display: none; }
+/* 8. 店名の行。店・記録日数・見守りが詰まって読めなかった。
+   区切り記号を消しただけでは地の文が繋がるので、それぞれを要素に分ける。 */
+.card .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
+  margin-top: 6px; min-width: 0; }
+.card .meta .shop { min-width: 0; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; max-width: 60%; }
+.card .meta .since { flex: none; }
 .watch-mini { margin-left: 0; }
 
 /* 9. 商品名の行間。3行になると詰まって読みにくい */
@@ -657,4 +661,50 @@ h2 { margin: 32px 0 12px; }
   .views li { padding: 13px 14px; }
   .genre { padding: 14px 15px; }
   .hits li { padding: 13px 14px; }
+}
+
+/* ===== 第3回（2026-09-28）。広い画面の使い方と、細部 ===== */
+
+/* 21. 広い画面でカードの中身が左に寄り、右が空いていた。
+   推移の図を大きくして、空きを埋める（この図がこのサイトの持ち物） */
+@media (min-width: 760px) {
+  .card .body { grid-template-columns: 1fr 190px; }
+  .card-spark .spark { max-width: 190px; }
+}
+
+/* 22. 一覧の並び順が変わったとき、何で並んでいるか画面に残らなかった */
+.tools-box > summary { font-weight: 600; }
+.quick .chip:has(input:checked)::after { content: " ●"; font-size: 9px; }
+
+/* 23. ページ送りの現在地が他と同じ大きさで埋もれていた */
+.pager .now { font-size: 15px; }
+
+/* 24. 統計の行（12,658商品を追跡…）が本文と同じ濃さで、読み飛ばせなかった */
+.stats { padding: 10px 0; border-bottom: 1px solid var(--line); }
+
+/* 25. 広告表示が本文と同じ幅で、文章の一部に見えていた */
+.ad-notice { max-width: 46em; }
+
+/* 26. 商品ページの見出しが長く、2〜4行になっても行間が本文と同じだった */
+.item h1 { line-height: 1.45; margin-bottom: 6px; }
+
+/* 27. 価格の記録の表（日付ごと）が facts と同じ見た目で、区別が付かなかった */
+.history th { width: 34%; }
+.history td:last-child { color: var(--muted); }
+
+/* 28. 「次の行き先」が本文と地続きで、終わりに見えなかった */
+.onward { margin-top: 36px; padding-top: 18px; }
+.onward a { padding: 7px 0; }
+
+/* 29. 暗い配色のとき、カードの影が背景に溶けて枠が見えなかった */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .card:hover,
+  :root:not([data-theme="light"]) .views li:hover { box-shadow: none; }
+}
+:root[data-theme="dark"] .card:hover,
+:root[data-theme="dark"] .views li:hover { box-shadow: none; }
+
+/* 30. 動きを減らす設定の端末では、色や枠の変化も止める */
+@media (prefers-reduced-motion: reduce) {
+  .card, .views li, .genre, .hits li { transition: none; }
 }
