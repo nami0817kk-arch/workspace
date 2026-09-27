@@ -20,3 +20,7 @@ OWNER = os.environ.get("SHAHO_OWNER", "つるはし社")
 # Cloudflare の Email Routing（無料）で受けて、個人のメールへ転送する。
 # 転送先はここに書かない（workspace は public リポジトリ）。
 CONTACT_EMAIL = os.environ.get("SHAHO_CONTACT_EMAIL", "info@dailyquarry.com")
+
+# IndexNow（Bing・Yandex・Naver などに「ページが増えた・変わった」と知らせる仕組み）のキー。
+# 秘密ではない（サイトの直下に {キー}.txt として公開する決まり）。変えると登録し直しになるので変えない。
+INDEXNOW_KEY = "95def501989a98c0ad2ab3bf6697ea30"

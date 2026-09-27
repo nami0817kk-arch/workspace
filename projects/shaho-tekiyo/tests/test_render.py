@@ -299,3 +299,9 @@ def test_計算機の新しいレイアウト(site):
     for page in ("index.html", "getsushu/10man.html", "kabe/1100yen.html"):
         assert html.count('class="card-link"') == 5 if page == "index.html" else True
         assert 'class="card-link"' in (site / page).read_text(encoding="utf-8"), page
+
+
+def test_indexnowのキーファイルがサイト直下にある(site):
+    key = site_config.INDEXNOW_KEY
+    assert re.fullmatch(r"[0-9a-f]{32}", key)
+    assert (site / f"{key}.txt").read_text(encoding="utf-8") == key

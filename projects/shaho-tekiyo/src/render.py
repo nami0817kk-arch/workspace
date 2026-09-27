@@ -383,6 +383,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-27", "公開のたびに IndexNow（Bing など）へページの一覧を知らせるようにした"),
     ("2026-09-27", "計算機の見た目を作り直し: 冒頭の帯、入力を5項目＋「詳しく入力する」に、結果の要約を大きな数字で入力の横に（スマホは画面下にも）、関連ページのカード"),
     ("2026-09-27", "トップに月収別の早見表と週20時間の壁の要約を追加。よくある質問を質問の形に直し、10月の変更・週20時間ちょうど・8.8万円未満の3問を追加。各ページに最終更新日"),
     ("2026-09-26", "週20時間の壁（週19時間から増やしたときの手取りと、元に戻る時間）のページと計算を追加"),
@@ -495,6 +496,8 @@ def build_all() -> None:
     _build_keisan_page()
     _build_static_pages()
     _write_robots()
+    # IndexNow のキーファイル（サイト直下）。tools/indexnow.py が公開後に使う
+    (_OUTPUT_DIR / f"{site_config.INDEXNOW_KEY}.txt").write_text(site_config.INDEXNOW_KEY, encoding="utf-8")
     _write_sitemap()
 
     ads_txt = _ads_txt()
