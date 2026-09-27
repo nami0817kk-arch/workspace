@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 
+import '../app/achievements.dart';
 import '../app/progress.dart';
 import '../app/settings.dart';
 import '../engine/puzzle.dart';
@@ -61,6 +62,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   bool _resultUsedHint = false;
   int? _best;
   bool _newRecord = false;
+
+  /// 結果の札に添える知らせ（今日の1問の達成・新しく取れた実績）。
+  List<String> _notes = [];
   final List<Timer> _timers = [];
 
   Level get level => widget.level;
@@ -175,6 +179,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         });
         _later(_crossMove, () {
           s.depart(to);
+          widget.progress.bump('trips');
           fx.play(Sfx.arrive);
           setState(() {
             _boatOverride = null;
@@ -198,6 +203,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           s.depart(to);
           fx.buzz(Buzz.heavy);
           fx.play(Sfx.escape);
+          _countEscape();
           setState(() => _moveDuration = _tapMove);
           _later(const Duration(milliseconds: 650), () {
             final g = _geo!;
@@ -225,12 +231,28 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> _countEscape() async {
+    await widget.progress.bump('escapes');
+    await widget.progress.bump('trips');
+    final fresh = await collectNewAchievements(widget.progress);
+    if (!mounted) return;
+    _notes = [for (final a in fresh) t.achUnlocked(t.achName(a))];
+  }
+
   Future<void> _win() async {
     _earnedStars = s.stars;
     _resultTrips = s.trips;
     _resultUsedHint = s.usedHint;
     _newRecord = await widget.progress.record(level, _earnedStars, trips: s.trips);
     _best = widget.progress.best(level);
+    final now = DateTime.now();
+    final daily = await widget.progress.recordDaily(level, _earnedStars, now);
+    final fresh = await collectNewAchievements(widget.progress);
+    if (!mounted) return;
+    _notes = [
+      if (daily) t.dailyCleared(widget.progress.dailyStreak(now)),
+      for (final a in fresh) t.achUnlocked(t.achName(a)),
+    ];
     fx.buzz(Buzz.medium);
     fx.play(Sfx.clear);
     // 星の数だけ「きらっ」を鳴らす（結果の札に星が並ぶのに合わせる）
@@ -276,6 +298,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _boatOverride = null;
     _flee.clear();
     _splashes.clear();
+    _notes = [];
     _fleeing = false;
     _moveDuration = _tapMove;
     _clearHint();
@@ -403,7 +426,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       ),
     ).withOverlay( // 結果の札は画面全体にかぶせる
       phase == _Phase.failed
-          ? _ResultCard.fail(t: t, message: _failMessage(), onReset: _reset)
+          ? _ResultCard.fail(t: t, message: _failMessage(), notes: _notes, onReset: _reset)
           : phase == _Phase.won
               ? _ResultCard.win(
                   t: t,
@@ -414,6 +437,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                   usedHint: _resultUsedHint,
                   best: _best,
                   newRecord: _newRecord,
+                  notes: _notes,
                   hasNext: widget.progress.levels.last != level,
                   onNext: _next,
                   onRetry: _reset,
@@ -949,13 +973,14 @@ class _GoBar extends StatelessWidget {
 class _ResultCard extends StatelessWidget {
   const _ResultCard._({required this.child});
 
-  factory _ResultCard.fail({required AppLocalizations t, required String message, required VoidCallback onReset}) => _ResultCard._(
+  factory _ResultCard.fail({required AppLocalizations t, required String message, required List<String> notes, required VoidCallback onReset}) => _ResultCard._(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(t.escaped, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Palette.bad)),
             const SizedBox(height: 8),
             Text(message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
+            ..._noteChips(notes),
             const SizedBox(height: 16),
             ChunkyButton(label: t.restart, icon: Icons.refresh_rounded, color: Palette.gold, fontSize: 18, onPressed: onReset),
           ],
@@ -971,6 +996,7 @@ class _ResultCard extends StatelessWidget {
     required bool usedHint,
     required int? best,
     required bool newRecord,
+    required List<String> notes,
     required bool hasNext,
     required VoidCallback onNext,
     required VoidCallback onRetry,
@@ -1004,6 +1030,7 @@ class _ResultCard extends StatelessWidget {
               ],
             ]),
           ],
+          ..._noteChips(notes),
           const SizedBox(height: 16),
           if (hasNext) ChunkyButton(label: t.nextLevel, color: Palette.gold, fontSize: 18, onPressed: onNext),
           if (!hasNext) Text(t.allCleared(total), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
@@ -1045,6 +1072,26 @@ class _ResultCard extends StatelessWidget {
         ),
       );
 }
+
+/// 結果の札に添える知らせ（金色の札）。
+List<Widget> _noteChips(List<String> notes) => [
+      for (final n in notes) ...[
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFF1C2),
+            border: Border.all(color: Palette.goldDeep, width: 1.5),
+            borderRadius: BorderRadius.circular(99),
+          ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.emoji_events_rounded, size: 16, color: Palette.goldDeep),
+            const SizedBox(width: 6),
+            Flexible(child: Text(n, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Palette.ink))),
+          ]),
+        ),
+      ],
+    ];
 
 class _ConfettiPainter extends CustomPainter {
   _ConfettiPainter(this.t) : super(repaint: t);

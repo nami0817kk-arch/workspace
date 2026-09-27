@@ -289,5 +289,78 @@
   "newRecord": "新記録！",
   "placeBoat": "舟",
   "lockedHint": "前の面を解くと開く",
-  "hintNoAd": "動画を読み込めなかった。少し待ってもう一度"
+  "hintNoAd": "動画を読み込めなかった。少し待ってもう一度",
+  "daily": "今日の1問（{id}）",
+  "@daily": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyDoneLabel": "今日の1問 達成済み",
+  "dailyStreak": "連続{n}日",
+  "@dailyStreak": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyCleared": "今日の1問 達成！ 連続{n}日",
+  "@dailyCleared": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyAbout": "星3で解くと達成",
+  "records": "記録",
+  "statClears": "解いた面",
+  "statStars": "星",
+  "statThree": "星3の面",
+  "statEscapes": "脱走された回数",
+  "statTrips": "舟を出した回数",
+  "statStreak": "今日の1問の最長連続",
+  "achievementsTitle": "実績",
+  "achUnlocked": "実績: {name}",
+  "@achUnlocked": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nightmareLock": "舞台1〜7で★{need}を集めると開く（いま★{now}）",
+  "@nightmareLock": {
+    "placeholders": {
+      "need": {
+        "type": "int"
+      },
+      "now": {
+        "type": "int"
+      }
+    }
+  },
+  "ach_firstClear": "初めての護送",
+  "achDesc_firstClear": "最初の面を解く",
+  "ach_clears10": "見習い看守",
+  "achDesc_clears10": "10面を解く",
+  "ach_clears60": "一人前の看守",
+  "achDesc_clears60": "60面を解く",
+  "ach_allClear": "伝説の看守",
+  "achDesc_allClear": "全120面を解く",
+  "ach_threeStar30": "最短の達人",
+  "achDesc_threeStar30": "30面を星3で解く",
+  "ach_threeStarAll": "完全護送",
+  "achDesc_threeStarAll": "全面を星3で解く",
+  "ach_escape10": "逃げられ上手",
+  "achDesc_escape10": "10回脱走される",
+  "ach_escape100": "脱獄の名所",
+  "achDesc_escape100": "100回脱走される",
+  "ach_nightmareThree": "鬼門を越えて",
+  "achDesc_nightmareThree": "鬼門の面を星3で解く",
+  "ach_dailyWeek": "毎日の見回り",
+  "achDesc_dailyWeek": "今日の1問を7日続けて達成"
 }

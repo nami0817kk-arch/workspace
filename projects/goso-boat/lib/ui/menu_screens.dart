@@ -9,6 +9,7 @@ import '../monetization/purchase_service.dart';
 import 'figures.dart';
 import 'game_screen.dart';
 import 'palette.dart';
+import 'records_screen.dart';
 import 'settings_screen.dart';
 
 Route<void> _fade(Widget page) => PageRouteBuilder(
@@ -35,14 +36,19 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
+                    Row(children: [
+                      IconButton(
+                        tooltip: context.l10n.records,
+                        icon: const Icon(Icons.emoji_events_rounded, color: Palette.ink),
+                        onPressed: () => Navigator.of(context).push(_fade(RecordsScreen(progress: progress))),
+                      ),
+                      const Spacer(),
+                      IconButton(
                         tooltip: context.l10n.settingsTitle,
                         icon: const Icon(Icons.settings_rounded, color: Palette.ink),
                         onPressed: () => Navigator.of(context).push(_fade(SettingsScreen(progress: progress, money: money))),
                       ),
-                    ),
+                    ]),
                     const Spacer(flex: 2),
                     // 名前は合わせ技（2026-09-27 ユーザー決定）: ストアの検索は「脱獄させるな！」で拾い、
                     // ホーム画面とアプリの中では「護送ボート」で覚えてもらう
@@ -87,6 +93,7 @@ class HomeScreen extends StatelessWidget {
                         onPressed: () => Navigator.of(context).push(_fade(StageSelectScreen(progress: progress, money: money))),
                       ),
                     ),
+                    _Daily(progress: progress, money: money),
                     const SizedBox(height: 14),
                     _RemoveAds(money: money),
                     const Spacer(flex: 2),
@@ -231,7 +238,12 @@ class _WorldCard extends StatelessWidget {
           ),
           if (!open) ...[
             const SizedBox(height: 4),
-            Text(context.l10n.lockedHint, style: const TextStyle(fontSize: 12, color: Palette.dim, fontWeight: FontWeight.w700)),
+            Text(
+              world.no == 8 && !progress.nightmareOpen
+                  ? context.l10n.nightmareLock(Progress.nightmareStars, progress.starsBeforeNightmare)
+                  : context.l10n.lockedHint,
+              style: const TextStyle(fontSize: 12, color: Palette.dim, fontWeight: FontWeight.w700),
+            ),
           ],
           const SizedBox(height: 10),
           GridView.count(
@@ -366,3 +378,35 @@ class _RemoveAdsState extends State<_RemoveAds> {
     );
   }
 }
+
+/// 今日の1問。まだ1面も解いていなければ出さない。
+class _Daily extends StatelessWidget {
+  const _Daily({required this.progress, required this.money});
+  final Progress progress;
+  final Monetization money;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.l10n;
+    final now = DateTime.now();
+    final level = progress.dailyLevel(now);
+    if (level == null) return const SizedBox.shrink();
+    final done = progress.dailyDone(now);
+    final streak = progress.dailyStreak(now);
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: SizedBox(
+        width: double.infinity,
+        child: ChunkyButton(
+          label: [done ? t.dailyDoneLabel : t.daily(level.id), if (streak > 0) t.dailyStreak(streak)].join('・'),
+          icon: done ? Icons.check_circle_rounded : Icons.today_rounded,
+          color: done ? Palette.card : const Color(0xFFFFF1C2),
+          fontSize: 15,
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          onPressed: () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress, money: money))),
+        ),
+      ),
+    );
+  }
+}
+

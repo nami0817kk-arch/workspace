@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../app/achievements.dart';
 import '../engine/rules.dart';
 import 'app_localizations.dart';
 
@@ -32,6 +33,32 @@ extension L10nNames on AppLocalizations {
         Role.prisoner => descPrisoner,
         Role.boss => descBoss,
         Role.cuffed => descCuffed,
+      };
+
+  String achName(Achievement a) => switch (a) {
+        Achievement.firstClear => ach_firstClear,
+        Achievement.clears10 => ach_clears10,
+        Achievement.clears60 => ach_clears60,
+        Achievement.allClear => ach_allClear,
+        Achievement.threeStar30 => ach_threeStar30,
+        Achievement.threeStarAll => ach_threeStarAll,
+        Achievement.escape10 => ach_escape10,
+        Achievement.escape100 => ach_escape100,
+        Achievement.nightmareThree => ach_nightmareThree,
+        Achievement.dailyWeek => ach_dailyWeek,
+      };
+
+  String achDesc(Achievement a) => switch (a) {
+        Achievement.firstClear => achDesc_firstClear,
+        Achievement.clears10 => achDesc_clears10,
+        Achievement.clears60 => achDesc_clears60,
+        Achievement.allClear => achDesc_allClear,
+        Achievement.threeStar30 => achDesc_threeStar30,
+        Achievement.threeStarAll => achDesc_threeStarAll,
+        Achievement.escape10 => achDesc_escape10,
+        Achievement.escape100 => achDesc_escape100,
+        Achievement.nightmareThree => achDesc_nightmareThree,
+        Achievement.dailyWeek => achDesc_dailyWeek,
       };
 
   String world(int no) => [world1, world2, world3, world4, world5, world6, world7, world8][no - 1];
