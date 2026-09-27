@@ -11,10 +11,10 @@ theme:
   topic: レアル・マドリード
   title: 'トレント・アレクサンダー＝アーノルド、代理人が古巣に接触。レアルと代表で起きていること'
   question: トレントは、なぜ古巣への移籍がうわさされているのか
-  opening_image: assets/images/20260928_trent/01.jpg
+  opening_image: assets/images/20260928_trent_rm/01.jpg
 short_title: トレント、代理人が古巣に接触
 thumbnail:
-  photo: assets/images/20260928_trent/01.jpg
+  photo: assets/images/20260928_trent_rm/01.jpg
   line1: トレント、古巣へ戻るのか
   line2: 今季レアルでの先発は●試合
 sections:
@@ -25,7 +25,7 @@ sections:
     narrator: キャスター
     say:
       - text: レアル・マドリードのトレント・アレクサンダー＝アーノルド。
-        image: assets/images/20260928_trent/01.jpg
+        image: assets/images/20260928_trent_rm/01.jpg
       - その代理人の側が、プレミアの4つのクラブに話を持ちかけた、とイングランドで報じられました。
       - 古巣のリヴァプールに、アーセナル、マンチェスター・シティ、チェルシーです。
       - ただ、本人もレアルも、1月の移籍は考えていない。見直すのはシーズンが終わってから、という内容です。
