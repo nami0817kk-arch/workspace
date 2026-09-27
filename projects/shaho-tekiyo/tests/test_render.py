@@ -289,3 +289,13 @@ def test_説明文とタイトルの長さ(site):
         assert m and 40 <= len(m.group(1)) <= 160, (path, len(m.group(1)) if m else None)
         t = re.search(r"<title>(.*?)</title>", html, re.S).group(1)
         assert len(t) <= 70, (path, len(t))
+
+
+def test_計算機の新しいレイアウト(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'class="hero-band"' in html and 'class="calc-layout"' in html
+    assert 'id="summary"' in html and 'id="mobile-bar"' in html
+    assert '<details class="more">' in html  # 詳しい入力はたたむ
+    for page in ("index.html", "getsushu/10man.html", "kabe/1100yen.html"):
+        assert html.count('class="card-link"') == 5 if page == "index.html" else True
+        assert 'class="card-link"' in (site / page).read_text(encoding="utf-8"), page
