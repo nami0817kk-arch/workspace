@@ -71,7 +71,10 @@ def fetch_stock_page(code: str) -> str | None:
         resp.raise_for_status()
         return resp.text
     except Exception as e:
+        # **他の取得と同じく記録に残す。** 残さないと、取得元が丸ごと落ちている
+        # のか、その銘柄のページだけ無いのかを呼び出し元が区別できない。
         print(f"  [WARN] {code}: 個別ページの取得に失敗しました: {e}")
+        fetch_errors.append(f"stock code={code}: {e}")
         return None
 
 
