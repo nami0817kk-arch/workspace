@@ -55,7 +55,7 @@ sources:
 - https://en.wikipedia.org/wiki/Camp_de_la_Ind%C3%BAstria
 - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
 - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
-- https://en.wikipedia.org/wiki/Ronaldinho
+- https://en.wikipedia.org/wiki/Lionel_Messi
 - https://en.wikipedia.org/wiki/Hansi_Flick
 - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Barcelona_season
 - https://www.espn.com/soccer/team/results/_/name/barcelona
@@ -177,9 +177,9 @@ cards:
     rows:
     - *id004
     - *id005
-    - - ロナウジーニョ
-      - 2003-2008
-      - 敵地で拍手
+    - - リオネル・メッシ
+      - 2004-2021
+      - 1年で91得点
   manager_card:
     type: table
     title: 今季の監督
@@ -394,16 +394,16 @@ cards:
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_バルセロナ_in.png
 
-キャスター: ロナウジーニョは**2003年**、パリ・サンジェルマンから**3000万ユーロ**で来ました。
-  telop: ロナウジーニョは**2003年**、パリ・サンジェルマンから**3000万ユーロ**で来ました
+キャスター: メッシは**13歳**で、アルゼンチンから来ました。2000年、紙ナプキンに書いた契約が始まりです。
+  telop: メッシは**13歳**で、アルゼンチンから来ました。2000年、紙ナプキンに書いた契約が始まりです
   source: 背景
   card: legends3_card
-  image: assets/photos/ll/barcelona/barcelona_legend_92cbb0d2.jpg
-キャスター: 2005年11月、敵地ベルナベウで2得点。レアルのファンが、拍手を送りました。
-  telop: 2005年11月、敵地ベルナベウで2得点。レアルのファンが、拍手を送りました
-キャスター: その年は、バロンドールにも選ばれました。リーグ戦で**145試合70得点**。
-  telop: その年は、バロンドールにも選ばれました。リーグ戦で**145試合70得点**
-  image: assets/photos/ll/barcelona/barcelona_legend_92cbb0d2.jpg
+  image: assets/photos/ll/barcelona/barcelona_legend_88f8ece0.jpg
+キャスター: 2012年、バルサと代表で**91得点**。1年の得点で、ゲルト・ミュラーの記録を抜きました。
+  telop: 2012年、バルサと代表で**91得点**。1年の得点で、ゲルト・ミュラーの記録を抜きました
+キャスター: リーグ戦で**520試合474得点**。2021年、財政難で契約できず、涙の会見で去りました。
+  telop: リーグ戦で**520試合474得点**。2021年、財政難で契約できず、涙の会見で去りました
+  image: assets/photos/ll/barcelona/barcelona_legend_88f8ece0.jpg
 
 ## 今季の監督
 @bg: assets/backgrounds/stadium_バルセロナ_in.png
