@@ -3,10 +3,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 import '../app/progress.dart';
+import '../app/settings.dart';
 import '../engine/puzzle.dart';
 import '../engine/rules.dart';
 import '../game/session.dart';
@@ -29,7 +29,7 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreenState();
 }
 
-enum _Phase { play, moving, escaping, failed, won }
+enum _Phase { play, moving, escaping, failed, won, demo }
 
 class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   late Session s = Session(widget.level);
@@ -46,12 +46,25 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   /// 逃げた人の行き先。
   final Map<int, Offset> _flee = {};
+
+  /// 川に飛び込んだ所（水しぶきを出す）。
+  final List<Offset> _splashes = [];
   bool _fleeing = false;
   Set<int> _hinted = {};
   Place? _hintTo;
   String? _toast;
   Timer? _toastTimer;
   int _earnedStars = 0;
+
+  // 結果の札に出す値（お手本を再生すると s が変わるので、クリアした時点で控える）
+  int _resultTrips = 0;
+  bool _resultUsedHint = false;
+  int? _best;
+  bool _newRecord = false;
+
+  /// お手本の何手目か（0 なら再生していない）。
+  int _demoStep = 0;
+  int _demoTotal = 0;
   final List<Timer> _timers = [];
 
   Level get level => widget.level;
@@ -61,6 +74,19 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeIntro());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 端末の「視差効果を減らす」が入っていれば、待機の揺れを止める
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _idle
+        ..stop()
+        ..value = 0;
+    } else if (!_idle.isAnimating) {
+      _idle.repeat();
+    }
   }
 
   @override
@@ -100,20 +126,27 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   AppLocalizations get t => context.l10n;
+  GameSettings get fx => AppScope.of(context);
 
   void _tap(Person p) {
     if (phase != _Phase.play) return;
     final r = s.tap(p);
     switch (r) {
       case TapResult.boarded:
+        fx.buzz(Buzz.select);
+        fx.play(Sfx.board);
+        _clearHint();
       case TapResult.left:
-        HapticFeedback.selectionClick();
+        fx.buzz(Buzz.select);
+        fx.play(Sfx.unboard);
         _clearHint();
       case TapResult.boatElsewhere:
-        HapticFeedback.lightImpact();
+        fx.buzz(Buzz.light);
+        fx.play(Sfx.nope);
         _say(t.boatIsAt(t.place(s.boat)));
       case TapResult.full:
-        HapticFeedback.lightImpact();
+        fx.buzz(Buzz.light);
+        fx.play(Sfx.nope);
         _say(p.role == Role.cuffed ? t.boatSeatsCuffed(level.capacity) : t.boatSeats(level.capacity));
       case TapResult.locked:
         return;
@@ -126,7 +159,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     final r = s.check(to);
     switch (r) {
       case Refused(:final reason):
-        HapticFeedback.lightImpact();
+        fx.buzz(Buzz.light);
+        fx.play(Sfx.nope);
         _say(switch (reason) {
           RefuseReason.empty => t.needSomeone,
           RefuseReason.noRower => t.noRower,
@@ -136,7 +170,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         return;
       case Crossed():
         _clearHint();
-        HapticFeedback.mediumImpact();
+        fx.buzz(Buzz.medium);
+        fx.play(Sfx.depart);
         setState(() {
           phase = _Phase.moving;
           _moveDuration = _crossMove;
@@ -144,6 +179,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         });
         _later(_crossMove, () {
           s.depart(to);
+          fx.play(Sfx.arrive);
           setState(() {
             _boatOverride = null;
             _moveDuration = _tapMove;
@@ -153,6 +189,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         });
       case Escaped(:final where):
         _clearHint();
+        fx.play(Sfx.depart);
         final from = s.boat;
         setState(() {
           phase = _Phase.escaping;
@@ -163,7 +200,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         });
         _later(Duration(milliseconds: where == null ? 700 : 450), () {
           s.depart(to);
-          HapticFeedback.heavyImpact();
+          fx.buzz(Buzz.heavy);
+          fx.play(Sfx.escape);
           setState(() => _moveDuration = _tapMove);
           _later(const Duration(milliseconds: 650), () {
             final g = _geo!;
@@ -177,6 +215,14 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               }
               _fleeing = true;
             });
+            if (where == null) {
+              fx.play(Sfx.splash);
+              setState(() {
+                for (final p in s.escaped) {
+                  _splashes.add(g.personPos(s, p, _boatOverride) + Offset(0, g.boatH));
+                }
+              });
+            }
             _later(const Duration(milliseconds: 1100), () => setState(() => phase = _Phase.failed));
           });
         });
@@ -185,8 +231,16 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   Future<void> _win() async {
     _earnedStars = s.stars;
-    await widget.progress.record(level, _earnedStars);
-    HapticFeedback.mediumImpact();
+    _resultTrips = s.trips;
+    _resultUsedHint = s.usedHint;
+    _newRecord = await widget.progress.record(level, _earnedStars, trips: s.trips);
+    _best = widget.progress.best(level);
+    fx.buzz(Buzz.medium);
+    fx.play(Sfx.clear);
+    // 星の数だけ「きらっ」を鳴らす（結果の札に星が並ぶのに合わせる）
+    for (var i = 0; i < _earnedStars; i++) {
+      _later(Duration(milliseconds: 550 + i * 220), () => fx.play(Sfx.star));
+    }
     _confetti.forward(from: 0);
     setState(() => phase = _Phase.won);
     // Web のテスト版には評価の仕組みが無いので出さない
@@ -200,7 +254,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   void _undo() {
-    if (!s.canUndo || phase == _Phase.moving || phase == _Phase.escaping) return;
+    if (!s.canUndo || phase == _Phase.moving || phase == _Phase.escaping || phase == _Phase.demo) return;
+    fx.play(Sfx.tap);
     setState(() {
       s.undo();
       _resetVisual();
@@ -208,7 +263,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   void _reset() {
-    if (phase == _Phase.moving || phase == _Phase.escaping) return;
+    if (phase == _Phase.moving || phase == _Phase.escaping || phase == _Phase.demo) return;
+    fx.play(Sfx.tap);
     setState(() {
       s.reset();
       _resetVisual();
@@ -219,10 +275,56 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     phase = _Phase.play;
     _boatOverride = null;
     _flee.clear();
+    _splashes.clear();
     _fleeing = false;
     _moveDuration = _tapMove;
     _clearHint();
     _confetti.reset();
+  }
+
+  /// クリア後に最短手順を自動で再生する（星や記録には関わらない）。
+  Future<void> _playDemo() async {
+    final path = solveFrom(Board.start(level.cast), level);
+    if (path == null) return;
+    setState(() {
+      s.reset();
+      _resetVisual();
+      phase = _Phase.demo;
+      _demoTotal = path.length;
+      _demoStep = 0;
+    });
+    Future<bool> wait(int ms) async {
+      await Future<void>.delayed(Duration(milliseconds: ms));
+      return mounted && phase == _Phase.demo;
+    }
+
+    for (final m in path) {
+      if (!await wait(350)) return;
+      fx.play(Sfx.board);
+      setState(() {
+        _demoStep++;
+        s.seat(m);
+        _moveDuration = _tapMove;
+      });
+      if (!await wait(550)) return;
+      fx.play(Sfx.depart);
+      setState(() {
+        _moveDuration = _crossMove;
+        _boatOverride = _geo!.boatAt(m.to);
+      });
+      if (!await wait(_crossMove.inMilliseconds)) return;
+      s.depart(m.to);
+      fx.play(Sfx.arrive);
+      setState(() {
+        _boatOverride = null;
+        _moveDuration = _tapMove;
+      });
+    }
+    if (!await wait(700)) return;
+    setState(() {
+      _demoStep = 0;
+      phase = _Phase.won;
+    });
   }
 
   bool _hintBusy = false;
@@ -243,6 +345,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       _say(t.unsolvable);
       return;
     }
+    fx.play(Sfx.hint);
     setState(() {
       _hinted = s.aboard.map((p) => p.id).toSet();
       _hintTo = m.to;
@@ -258,7 +361,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final w = worldOf(level);
     return Scaffold(
-      backgroundColor: Palette.sky,
+      backgroundColor: SceneTheme.forWorld(level.world).background,
       body: SafeArea(
         child: Column(
           children: [
@@ -298,7 +401,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                       return Stack(
                         clipBehavior: Clip.hardEdge,
                         children: [
-                          Positioned.fill(child: CustomPaint(painter: _ScenePainter(g, _idle))),
+                          Positioned.fill(child: CustomPaint(painter: _ScenePainter(g, _idle, SceneTheme.forWorld(level.world)))),
+                          if (_boatOverride != null && _moveDuration == _crossMove) _wake(g),
                           ..._tallies(g),
                           AnimatedPositioned(
                             duration: _moveDuration,
@@ -316,8 +420,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                               child: const CustomPaint(painter: BoatPainter()),
                             ),
                           ),
+                          if (s.aboard.isNotEmpty) _boatTally(g),
                           for (final p in _sortedPeople()) _person(g, p),
+                          for (final o in _splashes) _splash(o),
                           if (_toast != null) _toastView(),
+                          if (phase == _Phase.demo) _demoBanner(g),
                           if (_tutorial && phase == _Phase.play && s.trips == 0) _coach(g),
                           if (phase == _Phase.won) Positioned.fill(child: IgnorePointer(child: CustomPaint(painter: _ConfettiPainter(_confetti)))),
                         ],
@@ -344,9 +451,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                   t: t,
                   total: widget.progress.levels.length,
                   stars: _earnedStars,
-                  trips: s.trips,
+                  trips: _resultTrips,
                   par: level.par,
-                  usedHint: s.usedHint,
+                  usedHint: _resultUsedHint,
+                  best: _best,
+                  newRecord: _newRecord,
+                  onDemo: _playDemo,
                   hasNext: widget.progress.levels.last != level,
                   onNext: _next,
                   onRetry: _reset,
@@ -445,6 +555,65 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     ];
   }
 
+  /// 舟の上の人数札（出す前に、乗っている見張りと囚人を数えやすくする）。
+  Widget _boatTally(_Geo g) {
+    final at = _boatOverride ?? g.boatAt(s.boat);
+    final riders = s.aboard;
+    return AnimatedPositioned(
+      duration: _moveDuration,
+      curve: Curves.easeInOut,
+      left: at.dx - 70,
+      width: 140,
+      top: at.dy + g.boatH + 4,
+      child: IgnorePointer(
+        child: Center(
+          child: _Tally(
+            guard: riders.fold(0, (a, p) => a + p.role.guard),
+            weight: riders.fold(0, (a, p) => a + p.role.weight),
+            label: t.placeBoat,
+            t: t,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 渡っている舟の後ろに残る航跡。
+  Widget _wake(_Geo g) {
+    final from = g.boatAt(s.boat), to = _boatOverride!;
+    final up = to.dy < from.dy;
+    return AnimatedPositioned(
+      duration: _moveDuration,
+      curve: Curves.easeInOut,
+      left: to.dx - g.boatW / 2,
+      width: g.boatW,
+      top: up ? to.dy + g.boatH : to.dy - 40,
+      height: 40,
+      child: IgnorePointer(
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: 1),
+          duration: _crossMove,
+          builder: (_, v, _) => CustomPaint(painter: _WakePainter(v, up)),
+        ),
+      ),
+    );
+  }
+
+  /// 飛び込んだ所に広がる輪。
+  Widget _splash(Offset o) => Positioned(
+        left: o.dx - 40,
+        top: o.dy - 16,
+        width: 80,
+        height: 32,
+        child: IgnorePointer(
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: const Duration(milliseconds: 900),
+            builder: (_, v, _) => CustomPaint(painter: _SplashPainter(v)),
+          ),
+        ),
+      );
+
   Widget _toastView() => Positioned(
         left: 0,
         right: 0,
@@ -454,6 +623,21 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
             decoration: BoxDecoration(color: Palette.ink, borderRadius: BorderRadius.circular(99)),
             child: Text(_toast!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13)),
+          ),
+        ),
+      );
+
+  Widget _demoBanner(_Geo g) => Positioned(
+        left: 0,
+        right: 0,
+        top: g.riverTop + 8,
+        child: IgnorePointer(
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(color: Palette.gold, border: Border.all(color: Palette.ink, width: 2), borderRadius: BorderRadius.circular(99)),
+              child: Text(t.demoPlaying(_demoStep, _demoTotal), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
+            ),
           ),
         ),
       );
@@ -593,25 +777,35 @@ class _Geo {
 
 /// 背景（空・岸・川・中州）。川の波だけ動かす。
 class _ScenePainter extends CustomPainter {
-  _ScenePainter(this.g, this.t) : super(repaint: t);
+  _ScenePainter(this.g, this.t, this.th) : super(repaint: t);
   final _Geo g;
   final Animation<double> t;
+  final SceneTheme th;
 
   @override
   void paint(Canvas c, Size size) {
     final w = size.width;
     // 川
-    c.drawRect(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom), Paint()..color = Palette.river);
+    c.drawRect(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom), Paint()..color = th.river);
     final edge = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [Palette.riverDeep.withValues(alpha: 0.6), Palette.river.withValues(alpha: 0), Palette.river.withValues(alpha: 0), Palette.riverDeep.withValues(alpha: 0.6)],
+        colors: [th.riverDeep.withValues(alpha: 0.6), th.river.withValues(alpha: 0), th.river.withValues(alpha: 0), th.riverDeep.withValues(alpha: 0.6)],
         stops: const [0, 0.15, 0.85, 1],
       ).createShader(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom));
     c.drawRect(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom), edge);
     // 流れ（左から右へ流れる白い筋）
-    final wave = Paint()..color = Colors.white.withValues(alpha: 0.45);
+    // 夜は川面に星を映す
+    if (th.stars) {
+      final sr = math.Random(11);
+      for (var i = 0; i < 26; i++) {
+        final p = Offset(sr.nextDouble() * w, g.riverTop + 6 + sr.nextDouble() * (g.riverBottom - g.riverTop - 12));
+        final tw = 0.35 + 0.35 * math.sin((t.value + i * 0.13) * math.pi * 2).abs();
+        c.drawCircle(p, 1 + sr.nextDouble() * 1.2, Paint()..color = Colors.white.withValues(alpha: tw));
+      }
+    }
+    final wave = Paint()..color = Colors.white.withValues(alpha: th.wave);
     final rnd = math.Random(7);
     for (var i = 0; i < 14; i++) {
       final y = g.riverTop + 10 + rnd.nextDouble() * (g.riverBottom - g.riverTop - 20);
@@ -621,12 +815,12 @@ class _ScenePainter extends CustomPainter {
     }
     // 岸
     void bank(Rect r, bool top) {
-      c.drawRect(r, Paint()..color = Palette.sand);
+      c.drawRect(r, Paint()..color = th.sand);
       final lip = top ? Rect.fromLTWH(0, r.bottom - 5, w, 5) : Rect.fromLTWH(0, r.top, w, 5);
-      c.drawRect(lip, Paint()..color = Palette.sandEdge);
+      c.drawRect(lip, Paint()..color = th.sandEdge);
       final grass = top ? Rect.fromLTWH(0, 0, w, 14) : Rect.fromLTWH(0, r.bottom - 14, w, 14);
-      c.drawRect(grass, Paint()..color = Palette.grass);
-      c.drawRect(top ? Rect.fromLTWH(0, 14, w, 3) : Rect.fromLTWH(0, r.bottom - 17, w, 3), Paint()..color = Palette.grassDark);
+      c.drawRect(grass, Paint()..color = th.grass);
+      c.drawRect(top ? Rect.fromLTWH(0, 14, w, 3) : Rect.fromLTWH(0, r.bottom - 17, w, 3), Paint()..color = th.grassDark);
     }
 
     bank(Rect.fromLTWH(0, 0, w, g.bankH), true);
@@ -634,8 +828,8 @@ class _ScenePainter extends CustomPainter {
     if (g.level.island) {
       final r = g.island;
       final rr = RRect.fromRectAndCorners(r, topRight: const Radius.circular(26), bottomRight: const Radius.circular(26));
-      c.drawRRect(rr.inflate(4), Paint()..color = Palette.sandEdge);
-      c.drawRRect(rr, Paint()..color = Palette.sand);
+      c.drawRRect(rr.inflate(4), Paint()..color = th.sandEdge);
+      c.drawRRect(rr, Paint()..color = th.sand);
       // 桟橋
       c.drawRect(Rect.fromLTWH(r.right - 2, r.center.dy - 5, 12, 10), Paint()..color = const Color(0xFF9C6B3F));
     }
@@ -653,7 +847,57 @@ class _ScenePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_ScenePainter old) => old.g.size != g.size || old.g.level != g.level;
+  bool shouldRepaint(_ScenePainter old) => old.g.size != g.size || old.g.level != g.level || old.th != th;
+}
+
+class _WakePainter extends CustomPainter {
+  _WakePainter(this.v, this.up);
+  final double v;
+  final bool up;
+
+  @override
+  void paint(Canvas c, Size s) {
+    final p = Paint()
+      ..color = Colors.white.withValues(alpha: 0.55 * (1 - v * 0.6))
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+    for (var i = 0; i < 3; i++) {
+      final y = up ? 6.0 + i * 11 : s.height - 6 - i * 11;
+      final spread = s.width * (0.2 + i * 0.12);
+      final path = Path()
+        ..moveTo(s.width / 2 - spread, y + (up ? 6 : -6))
+        ..quadraticBezierTo(s.width / 2, y, s.width / 2 + spread, y + (up ? 6 : -6));
+      c.drawPath(path, p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_WakePainter old) => old.v != v;
+}
+
+class _SplashPainter extends CustomPainter {
+  _SplashPainter(this.v);
+  final double v;
+
+  @override
+  void paint(Canvas c, Size s) {
+    final center = s.center(Offset.zero);
+    for (var i = 0; i < 2; i++) {
+      final k = (v - i * 0.2).clamp(0.0, 1.0);
+      if (k == 0) continue;
+      c.drawOval(
+        Rect.fromCenter(center: center, width: s.width * k, height: s.height * k),
+        Paint()
+          ..color = Colors.white.withValues(alpha: 1 - k)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_SplashPainter old) => old.v != v;
 }
 
 class _Tally extends StatelessWidget {
@@ -779,6 +1023,9 @@ class _ResultCard extends StatelessWidget {
     required int trips,
     required int par,
     required bool usedHint,
+    required int? best,
+    required bool newRecord,
+    required VoidCallback onDemo,
     required bool hasNext,
     required VoidCallback onNext,
     required VoidCallback onRetry,
@@ -798,6 +1045,20 @@ class _ResultCard extends StatelessWidget {
           StarRow(stars, size: 44),
           const SizedBox(height: 6),
           Text('${t.crossedIn(trips)}\n$note', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
+          if (best != null) ...[
+            const SizedBox(height: 6),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(t.personalBest(best), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Palette.ink)),
+              if (newRecord) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(color: Palette.bad, borderRadius: BorderRadius.circular(99)),
+                  child: Text(t.newRecord, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Colors.white)),
+                ),
+              ],
+            ]),
+          ],
           const SizedBox(height: 16),
           if (hasNext) ChunkyButton(label: t.nextLevel, color: Palette.gold, fontSize: 18, onPressed: onNext),
           if (!hasNext) Text(t.allCleared(total), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
@@ -807,6 +1068,15 @@ class _ResultCard extends StatelessWidget {
             const SizedBox(width: 10),
             ChunkyButton(label: t.stageSelect, onPressed: onMenu, fontSize: 13),
           ]),
+          // 星3でなければ、最短手順を見て学べるようにする
+          if (stars < 3 || trips > par) ...[
+            const SizedBox(height: 6),
+            TextButton.icon(
+              onPressed: onDemo,
+              icon: const Icon(Icons.play_circle_outline_rounded, color: Palette.ink),
+              label: Text(t.watchSolution, style: const TextStyle(fontWeight: FontWeight.w800, color: Palette.ink)),
+            ),
+          ],
         ],
       ),
     );

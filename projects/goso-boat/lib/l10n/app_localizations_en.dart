@@ -354,4 +354,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kicker => 'Don\'t let them escape!';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingSound => 'Sound effects';
+
+  @override
+  String get settingHaptics => 'Vibration';
+
+  @override
+  String get licenses => 'Licenses';
+
+  @override
+  String get resetProgress => 'Reset progress';
+
+  @override
+  String get resetConfirmTitle => 'Reset progress?';
+
+  @override
+  String get resetConfirmBody =>
+      'All stars and records will be deleted. Your ad-free purchase stays.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get doReset => 'Reset';
+
+  @override
+  String get resetDone => 'Progress reset';
+
+  @override
+  String get watchSolution => 'Watch solution';
+
+  @override
+  String demoPlaying(int i, int n) {
+    return 'Solution $i/$n';
+  }
+
+  @override
+  String personalBest(int n) {
+    return 'Your best: $n';
+  }
+
+  @override
+  String get newRecord => 'New record!';
+
+  @override
+  String get placeBoat => 'Boat';
+
+  @override
+  String get lockedHint => 'Clear the previous level to unlock';
 }

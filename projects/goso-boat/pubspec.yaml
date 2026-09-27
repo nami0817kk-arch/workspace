@@ -41,6 +41,7 @@ dependencies:
   in_app_review: ^2.0.12
   google_mobile_ads: ^9.1.0
   in_app_purchase: ^3.3.1
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,9 @@ flutter:
 
   assets:
     - assets/levels.json
+    - assets/sfx/
+    - assets/fonts/OFL-MPLUSRounded1c.txt
+    - assets/fonts/OFL-NotoSansJP.txt
 
   # 画面の文言は固定なので、使う字だけに絞って同梱する（tool/subset_fonts.py）。
   # 同梱しないと端末ごとに字の形が変わり、Web のプレビューでは字が欠ける。

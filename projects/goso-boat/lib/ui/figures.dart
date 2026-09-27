@@ -190,7 +190,7 @@ class _FigurePainter extends CustomPainter {
     c.drawRRect(vest, fill(const Color(0xFF2B4FA8)));
     c.drawRRect(body, _stroke);
     final tp = TextPainter(
-      text: const TextSpan(text: 'K9', style: TextStyle(fontSize: 5.5, fontWeight: FontWeight.w900, color: Colors.white)),
+      text: const TextSpan(text: 'K9', style: TextStyle(fontFamily: 'Goso', fontSize: 5.5, fontWeight: FontWeight.w900, color: Colors.white)),
       textDirection: TextDirection.ltr,
     )..layout();
     tp.paint(c, Offset(21 - tp.width / 2, 31));
@@ -239,7 +239,7 @@ class _FigurePainter extends CustomPainter {
         ..color = Palette.gold);
     } else {
       final tp = TextPainter(
-        text: TextSpan(text: '$number', style: const TextStyle(fontSize: 6, fontWeight: FontWeight.w900, color: Palette.bad)),
+        text: TextSpan(text: '$number', style: const TextStyle(fontFamily: 'Goso', fontSize: 6, fontWeight: FontWeight.w900, color: Palette.bad)),
         textDirection: TextDirection.ltr,
       )..layout();
       final bg = Rect.fromCenter(center: const Offset(20, 35), width: tp.width + 3, height: 7);
@@ -292,7 +292,7 @@ class _FigurePainter extends CustomPainter {
     c.drawCircle(o, 6, fill(Palette.bad));
     c.drawCircle(o, 6, _stroke);
     final tp = TextPainter(
-      text: const TextSpan(text: '!', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: Colors.white)),
+      text: const TextSpan(text: '!', style: TextStyle(fontFamily: 'Goso', fontSize: 9, fontWeight: FontWeight.w900, color: Colors.white)),
       textDirection: TextDirection.ltr,
     )..layout();
     tp.paint(c, o - Offset(tp.width / 2, tp.height / 2));

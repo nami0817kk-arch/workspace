@@ -70,11 +70,22 @@ class Progress extends ChangeNotifier {
   /// 「つづきから」で開く面。全部解いていれば最後の面。
   Level get nextLevel => levels.firstWhere((l) => !cleared(l), orElse: () => levels.last);
 
-  Future<void> record(Level l, int stars) async {
-    if (stars > this.stars(l)) {
-      await _prefs.setInt('stars.${l.id}', stars);
-      notifyListeners();
+  /// 自己ベスト（最少の往復回数）。まだ解いていなければ null。
+  int? best(Level l) => _prefs.getInt('best.${l.id}');
+
+  /// クリアを記録する。自己ベストを縮めたとき（前の記録があって、それより少ない）だけ true。
+  Future<bool> record(Level l, int stars, {int? trips}) async {
+    if (stars > this.stars(l)) await _prefs.setInt('stars.${l.id}', stars);
+    var improved = false;
+    if (trips != null) {
+      final prev = best(l);
+      if (prev == null || trips < prev) {
+        await _prefs.setInt('best.${l.id}', trips);
+        improved = prev != null;
+      }
     }
+    notifyListeners();
+    return improved;
   }
 
   /// 評価のお願いを出してよいか。舞台の最後の面を星2つ以上で解いた直後だけ、舞台ごとに1回。
@@ -86,12 +97,18 @@ class Progress extends ChangeNotifier {
 
   Future<void> markReviewAsked(int world) => _prefs.setBool('review.$world', true);
 
+  /// 星・紹介の既読・評価のお願いの記録をすべて消す（設定画面の「進み具合を消す」）。
+  /// 広告を消した購入と、音・振動の設定は残す。
+  Future<void> resetAll() async {
+    for (final k in _prefs.getKeys().toList()) {
+      if (k.startsWith('stars.') || k.startsWith('best.') || k.startsWith('intro.') || k.startsWith('review.')) {
+        await _prefs.remove(k);
+      }
+    }
+    notifyListeners();
+  }
+
   bool seenIntro(int world) => _prefs.getBool('intro.$world') ?? false;
   Future<void> markIntro(int world) => _prefs.setBool('intro.$world', true);
 
-  bool get soundOn => _prefs.getBool('sound') ?? true;
-  Future<void> setSound(bool v) async {
-    await _prefs.setBool('sound', v);
-    notifyListeners();
-  }
 }

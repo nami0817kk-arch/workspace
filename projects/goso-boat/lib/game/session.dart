@@ -146,16 +146,21 @@ class Session {
     if (path == null || path.isEmpty) return null;
     usedHint = true;
     final m = path.first;
+    seat(m);
+    return m;
+  }
+
+  /// [m] で運ぶ人を舟に乗せる（ヒントとお手本で使う）。
+  void seat(Move m) {
     for (final p in people) {
       p.seat = -1;
     }
-    var seat = 0;
-    m.load.forEach((role, n) {
-      for (final p in at(boat).where((p) => p.role == role).take(n)) {
-        p.seat = seat++;
+    var n = 0;
+    m.load.forEach((role, count) {
+      for (final p in at(boat).where((p) => p.role == role).take(count)) {
+        p.seat = n++;
       }
     });
-    return m;
   }
 
   /// 星の数。最短で3、少し回り道で2、それ以外は1。ヒントを使うと2まで。

@@ -267,5 +267,38 @@
   "purchaseRestored": "購入を復元しました",
   "purchaseNothing": "復元できる購入が見つからなかった",
   "purchaseFailed": "購入できなかった。時間をおいてもう一度",
-  "kicker": "脱獄させるな！"
+  "kicker": "脱獄させるな！",
+  "settingsTitle": "設定",
+  "settingSound": "効果音",
+  "settingHaptics": "振動",
+  "licenses": "ライセンス",
+  "resetProgress": "進み具合を消す",
+  "resetConfirmTitle": "進み具合を消しますか？",
+  "resetConfirmBody": "星と記録がすべて消えます。広告を消した購入は残ります。",
+  "cancel": "やめる",
+  "doReset": "消す",
+  "resetDone": "進み具合を消しました",
+  "watchSolution": "お手本を見る",
+  "demoPlaying": "お手本 {i}/{n}",
+  "@demoPlaying": {
+    "placeholders": {
+      "i": {
+        "type": "int"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "personalBest": "自己ベスト {n}回",
+  "@personalBest": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "newRecord": "新記録！",
+  "placeBoat": "舟",
+  "lockedHint": "前の面を解くと開く"
 }

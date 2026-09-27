@@ -9,6 +9,7 @@ import '../monetization/purchase_service.dart';
 import 'figures.dart';
 import 'game_screen.dart';
 import 'palette.dart';
+import 'settings_screen.dart';
 
 Route<void> _fade(Widget page) => PageRouteBuilder(
       pageBuilder: (_, _, _) => page,
@@ -34,6 +35,14 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        tooltip: context.l10n.settingsTitle,
+                        icon: const Icon(Icons.settings_rounded, color: Palette.ink),
+                        onPressed: () => Navigator.of(context).push(_fade(SettingsScreen(progress: progress, money: money))),
+                      ),
+                    ),
                     const Spacer(flex: 2),
                     // 名前は合わせ技（2026-09-27 ユーザー決定）: ストアの検索は「脱獄させるな！」で拾い、
                     // ホーム画面とアプリの中では「護送ボート」で覚えてもらう
@@ -116,34 +125,77 @@ class _TitleArt extends StatelessWidget {
 }
 
 /// 舞台ごとに10面を並べる。
-class StageSelectScreen extends StatelessWidget {
+class StageSelectScreen extends StatefulWidget {
   const StageSelectScreen({super.key, required this.progress, required this.money});
   final Progress progress;
   final Monetization money;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  State<StageSelectScreen> createState() => _StageSelectScreenState();
+}
+
+class _StageSelectScreenState extends State<StageSelectScreen> {
+  /// 舞台ごとの札。開いたときに、次に遊ぶ面のある舞台まで送るために使う。
+  final _keys = {for (final w in worlds) w.no: GlobalKey()};
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _keys[widget.progress.nextLevel.world]?.currentContext;
+      if (ctx != null && widget.progress.nextLevel.world > 1) {
+        Scrollable.ensureVisible(ctx, alignment: 0.05, duration: const Duration(milliseconds: 450), curve: Curves.easeOutCubic);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = widget.progress;
+    return Scaffold(
+      backgroundColor: Palette.sky,
+      appBar: AppBar(
         backgroundColor: Palette.sky,
-        appBar: AppBar(
-          backgroundColor: Palette.sky,
-          foregroundColor: Palette.ink,
-          elevation: 0,
-          title: Text(context.l10n.stages, style: const TextStyle(fontWeight: FontWeight.w900)),
+        foregroundColor: Palette.ink,
+        elevation: 0,
+        title: Text(context.l10n.stages, style: const TextStyle(fontWeight: FontWeight.w900)),
+      ),
+      body: ListenableBuilder(
+        listenable: progress,
+        builder: (context, _) => ListView(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+          children: [
+            // 全体の進み具合
+            Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Row(children: [
+                const Icon(Icons.star_rounded, color: Palette.gold, size: 22),
+                const SizedBox(width: 4),
+                Text('${progress.totalStars} / ${progress.maxStars}', style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(99),
+                    child: LinearProgressIndicator(
+                      value: progress.maxStars == 0 ? 0 : progress.totalStars / progress.maxStars,
+                      minHeight: 10,
+                      backgroundColor: Palette.card,
+                      color: Palette.gold,
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+            for (final w in worlds) _WorldCard(key: _keys[w.no], world: w, progress: progress, money: widget.money),
+          ],
         ),
-        body: ListenableBuilder(
-          listenable: progress,
-          builder: (context, _) => ListView(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-            children: [
-              for (final w in worlds) _WorldCard(world: w, progress: progress, money: money),
-            ],
-          ),
-        ),
-      );
+      ),
+    );
+  }
 }
 
 class _WorldCard extends StatelessWidget {
-  const _WorldCard({required this.world, required this.progress, required this.money});
+  const _WorldCard({super.key, required this.world, required this.progress, required this.money});
   final WorldInfo world;
   final Progress progress;
   final Monetization money;
@@ -172,10 +224,15 @@ class _WorldCard extends StatelessWidget {
               Expanded(
                 child: Text('${world.no}. ${context.l10n.world(world.no)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Palette.ink)),
               ),
+              if (!open) const Icon(Icons.lock_rounded, color: Palette.dim, size: 18),
               const Icon(Icons.star_rounded, color: Palette.gold, size: 18),
               Text(' $got/${ls.length * 3}', style: const TextStyle(fontWeight: FontWeight.w800, color: Palette.ink)),
             ],
           ),
+          if (!open) ...[
+            const SizedBox(height: 4),
+            Text(context.l10n.lockedHint, style: const TextStyle(fontSize: 12, color: Palette.dim, fontWeight: FontWeight.w700)),
+          ],
           const SizedBox(height: 10),
           GridView.count(
             crossAxisCount: 5,
