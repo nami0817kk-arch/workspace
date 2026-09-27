@@ -93,6 +93,29 @@ class Progress extends ChangeNotifier {
     await _prefs.setInt('stat.$key', stat(key) + by);
   }
 
+  // ---- タイム（面ごとの最速） ----
+
+  /// 最速タイム（ミリ秒）。まだ無ければ null。
+  int? bestTime(Level l) => _prefs.getInt('time.${l.id}');
+
+  /// タイムを記録する。前の記録より速かったときだけ true（初回は記録するだけ）。
+  Future<bool> recordTime(Level l, int ms) async {
+    final prev = bestTime(l);
+    if (prev != null && ms >= prev) return false;
+    await _prefs.setInt('time.${l.id}', ms);
+    return prev != null;
+  }
+
+  // ---- 階級（星の合計で上がる） ----
+
+  /// 階級が上がる星の数。名前は lib/l10n の rank0〜rank9。
+  static const rankStars = [0, 10, 30, 60, 100, 150, 200, 260, 320, 360];
+
+  int get rank => rankStars.lastIndexWhere((n) => totalStars >= n);
+
+  /// 次の階級まで あといくつか。最上位なら null。
+  int? get starsToNextRank => rank + 1 < rankStars.length ? rankStars[rank + 1] - totalStars : null;
+
   // ---- 面ごとの挑戦回数 ----
 
   int tries(Level l) => _prefs.getInt('tries.${l.id}') ?? 0;
@@ -198,7 +221,7 @@ class Progress extends ChangeNotifier {
   /// 広告を消した購入と、音・振動の設定は残す。
   Future<void> resetAll() async {
     for (final k in _prefs.getKeys().toList()) {
-      if (['stars.', 'best.', 'intro.', 'review.', 'stat.', 'daily.', 'ach.', 'tries.', 'resume.'].any(k.startsWith)) {
+      if (['stars.', 'best.', 'intro.', 'review.', 'stat.', 'daily.', 'ach.', 'tries.', 'resume.', 'time.'].any(k.startsWith)) {
         await _prefs.remove(k);
       }
     }

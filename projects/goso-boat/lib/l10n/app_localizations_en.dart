@@ -552,4 +552,130 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get taunt4 => 'Freedom!';
+
+  @override
+  String timeLine(String t) {
+    return 'Time $t';
+  }
+
+  @override
+  String bestTimeLine(String t) {
+    return 'Best $t';
+  }
+
+  @override
+  String get fastest => 'Fastest!';
+
+  @override
+  String get noUndoClear => 'Cleared without undo';
+
+  @override
+  String rankUp(String name) {
+    return 'Promoted: $name';
+  }
+
+  @override
+  String rankNext(int n) {
+    return '★$n to next rank';
+  }
+
+  @override
+  String get reminder => 'Daily puzzle reminder';
+
+  @override
+  String get reminderBody => 'Today\'s puzzle is ready. Clear it with 3 stars!';
+
+  @override
+  String get reminderDenied =>
+      'Notifications are off. Allow them in your iPhone Settings.';
+
+  @override
+  String get rank0 => 'Cadet';
+
+  @override
+  String get rank1 => 'Officer';
+
+  @override
+  String get rank2 => 'Senior Officer';
+
+  @override
+  String get rank3 => 'Sergeant';
+
+  @override
+  String get rank4 => 'Lieutenant';
+
+  @override
+  String get rank5 => 'Captain';
+
+  @override
+  String get rank6 => 'Major';
+
+  @override
+  String get rank7 => 'Commander';
+
+  @override
+  String get rank8 => 'Deputy Chief';
+
+  @override
+  String get rank9 => 'Commissioner';
+
+  @override
+  String get ach_perfect1 => 'Riverside master';
+
+  @override
+  String get achDesc_perfect1 => 'Get 3 stars on every level in world 1';
+
+  @override
+  String get ach_perfect2 => 'The Chief master';
+
+  @override
+  String get achDesc_perfect2 => 'Get 3 stars on every level in world 2';
+
+  @override
+  String get ach_perfect3 => 'Handcuffs master';
+
+  @override
+  String get achDesc_perfect3 => 'Get 3 stars on every level in world 3';
+
+  @override
+  String get ach_perfect4 => 'The Boss master';
+
+  @override
+  String get achDesc_perfect4 => 'Get 3 stars on every level in world 4';
+
+  @override
+  String get ach_perfect5 => 'K9 Unit master';
+
+  @override
+  String get achDesc_perfect5 => 'Get 3 stars on every level in world 5';
+
+  @override
+  String get ach_perfect6 => 'The Island master';
+
+  @override
+  String get achDesc_perfect6 => 'Get 3 stars on every level in world 6';
+
+  @override
+  String get ach_perfect7 => 'All Hands master';
+
+  @override
+  String get achDesc_perfect7 => 'Get 3 stars on every level in world 7';
+
+  @override
+  String get ach_perfect8 => 'Nightmare master';
+
+  @override
+  String get achDesc_perfect8 => 'Get 3 stars on every level in world 8';
+
+  @override
+  String get ach_firstTryThree => 'One-shot escort';
+
+  @override
+  String get achDesc_firstTryThree => 'Get 3 stars on your first try';
+
+  @override
+  String get ach_nightmareNoUndo => 'No turning back';
+
+  @override
+  String get achDesc_nightmareNoUndo => 'Clear a Nightmare level without undo';
 }

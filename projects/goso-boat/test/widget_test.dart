@@ -54,6 +54,8 @@ void main() {
     expect(progress.stars(progress.levels.first), 2, reason: 'ヒントを使ったので星2');
     expect(find.text('自己ベスト 3回'), findsOneWidget);
     expect(find.text('1回目の挑戦でクリア！'), findsOneWidget);
+    expect(find.text('一手も戻さずにクリア'), findsOneWidget);
+    expect(find.textContaining('タイム '), findsOneWidget);
     // お手本の再生はしない（2026-09-27 ユーザー判断: 答えを見せると繰り返し遊ぶ理由が減る）
     expect(find.text('お手本を見る'), findsNothing);
     await tester.pump(const Duration(seconds: 3));
@@ -193,5 +195,11 @@ void main() {
     expect(find.text('警官：見張り1人分。舟を漕げる'), findsOneWidget);
     await tester.pump(const Duration(seconds: 3));
     semantics.dispose();
+  });
+
+  testWidgets('ホームに階級と次の階級までの星', (tester) async {
+    final progress = await _progress();
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), settings: GameSettings(progress.prefsForTest, silent: true), locale: const Locale('ja')));
+    expect(find.text('見習い・次の階級まで ★10'), findsOneWidget);
   });
 }

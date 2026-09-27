@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app/progress.dart';
+import '../app/reminder.dart';
 import '../app/settings.dart';
 import '../l10n/l10n_ext.dart';
 import '../monetization/monetization.dart';
@@ -90,6 +91,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   if (v) fx.play(Sfx.tap);
                 },
               ),
+              if (Reminder.supported)
+                SwitchListTile(
+                  title: Text(t.reminder, style: const TextStyle(fontWeight: FontWeight.w800)),
+                  secondary: const Icon(Icons.notifications_active_rounded, color: Palette.ink),
+                  value: fx.reminder,
+                  onChanged: (v) async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    if (!v) {
+                      await Reminder.disable();
+                      await fx.setReminder(false);
+                      return;
+                    }
+                    final ok = await Reminder.enable(title: t.appTitle, body: t.reminderBody);
+                    if (ok) {
+                      await fx.setReminder(true);
+                    } else {
+                      messenger.showSnackBar(SnackBar(content: Text(t.reminderDenied)));
+                    }
+                  },
+                ),
               SwitchListTile(
                 title: Text(t.settingHaptics, style: const TextStyle(fontWeight: FontWeight.w800)),
                 secondary: const Icon(Icons.vibration_rounded, color: Palette.ink),

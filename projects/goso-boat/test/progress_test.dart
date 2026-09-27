@@ -102,6 +102,70 @@ void main() {
     expect(p.tries(l), 0);
     expect(p.resumeFor(l), isNull);
   });
+
+  test('最速タイム: 初回は記録だけ、縮めたときだけ最速', () async {
+    final p = await open();
+    final l = p.levels.first;
+    expect(await p.recordTime(l, 30000), isFalse);
+    expect(p.bestTime(l), 30000);
+    expect(await p.recordTime(l, 40000), isFalse);
+    expect(p.bestTime(l), 30000);
+    expect(await p.recordTime(l, 25000), isTrue);
+    expect(p.bestTime(l), 25000);
+  });
+
+  test('階級は星の合計で上がる', () async {
+    var p = await openWith({});
+    expect(p.rank, 0);
+    expect(p.starsToNextRank, 10);
+    p = await openWith({for (final id in ['1-1', '1-2', '1-3', '1-4']) 'stars.$id': 3});
+    expect(p.totalStars, 12);
+    expect(p.rank, 1);
+    expect(p.starsToNextRank, 18);
+  });
+
+  test('実績: 舞台の全面を星3で「達人」、一発護送は記録から', () async {
+    final p0 = await open();
+    final w1 = p0.levels.where((l) => l.world == 1).toList();
+    final p = await openWith({for (final l in w1) 'stars.${l.id}': 3});
+    final got = await collectNewAchievements(p);
+    expect(got, contains(Achievement.perfect1));
+    expect(got, isNot(contains(Achievement.perfect2)));
+    await p.bump('firstTryThree');
+    expect(await collectNewAchievements(p), [Achievement.firstTryThree]);
+  });
+
+  test('最速タイム: 初回は記録だけ、縮めたときだけ最速', () async {
+    final p = await open();
+    final l = p.levels.first;
+    expect(await p.recordTime(l, 30000), isFalse);
+    expect(p.bestTime(l), 30000);
+    expect(await p.recordTime(l, 40000), isFalse);
+    expect(p.bestTime(l), 30000);
+    expect(await p.recordTime(l, 25000), isTrue);
+    expect(p.bestTime(l), 25000);
+  });
+
+  test('階級は星の合計で上がる', () async {
+    var p = await openWith({});
+    expect(p.rank, 0);
+    expect(p.starsToNextRank, 10);
+    p = await openWith({for (final id in ['1-1', '1-2', '1-3', '1-4']) 'stars.$id': 3});
+    expect(p.totalStars, 12);
+    expect(p.rank, 1);
+    expect(p.starsToNextRank, 18);
+  });
+
+  test('実績: 舞台の全面を星3で「達人」、一発護送は記録から', () async {
+    final p0 = await open();
+    final w1 = p0.levels.where((l) => l.world == 1).toList();
+    final p = await openWith({for (final l in w1) 'stars.${l.id}': 3});
+    final got = await collectNewAchievements(p);
+    expect(got, contains(Achievement.perfect1));
+    expect(got, isNot(contains(Achievement.perfect2)));
+    await p.bump('firstTryThree');
+    expect(await collectNewAchievements(p), [Achievement.firstTryThree]);
+  });
 }
 
 Future<Progress> openWith(Map<String, Object> saved) async {

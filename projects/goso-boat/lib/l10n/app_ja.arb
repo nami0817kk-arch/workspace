@@ -408,5 +408,72 @@
   "taunt1": "あばよ！",
   "taunt2": "お先に〜",
   "taunt3": "へへっ",
-  "taunt4": "自由だー！"
+  "taunt4": "自由だー！",
+  "timeLine": "タイム {t}",
+  "@timeLine": {
+    "placeholders": {
+      "t": {
+        "type": "String"
+      }
+    }
+  },
+  "bestTimeLine": "最速 {t}",
+  "@bestTimeLine": {
+    "placeholders": {
+      "t": {
+        "type": "String"
+      }
+    }
+  },
+  "fastest": "最速！",
+  "noUndoClear": "一手も戻さずにクリア",
+  "rankUp": "階級が上がった: {name}",
+  "@rankUp": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rankNext": "次の階級まで ★{n}",
+  "@rankNext": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "reminder": "今日の1問のお知らせ",
+  "reminderBody": "今日の1問が届いています。星3で達成！",
+  "reminderDenied": "お知らせが許可されていません。iPhone の設定から許可してください",
+  "rank0": "見習い",
+  "rank1": "巡査",
+  "rank2": "巡査長",
+  "rank3": "巡査部長",
+  "rank4": "警部補",
+  "rank5": "警部",
+  "rank6": "警視",
+  "rank7": "警視正",
+  "rank8": "警視長",
+  "rank9": "警視総監",
+  "ach_perfect1": "川べりの達人",
+  "achDesc_perfect1": "舞台1「川べり」の全面を星3で解く",
+  "ach_perfect2": "看守長の達人",
+  "achDesc_perfect2": "舞台2「看守長」の全面を星3で解く",
+  "ach_perfect3": "手錠の達人",
+  "achDesc_perfect3": "舞台3「手錠」の全面を星3で解く",
+  "ach_perfect4": "ボスの達人",
+  "achDesc_perfect4": "舞台4「ボス」の全面を星3で解く",
+  "ach_perfect5": "警察犬の達人",
+  "achDesc_perfect5": "舞台5「警察犬」の全面を星3で解く",
+  "ach_perfect6": "中州の達人",
+  "achDesc_perfect6": "舞台6「中州」の全面を星3で解く",
+  "ach_perfect7": "総力戦の達人",
+  "achDesc_perfect7": "舞台7「総力戦」の全面を星3で解く",
+  "ach_perfect8": "鬼門の達人",
+  "achDesc_perfect8": "舞台8「鬼門」の全面を星3で解く",
+  "ach_firstTryThree": "一発護送",
+  "achDesc_firstTryThree": "1回目の挑戦で星3を取る",
+  "ach_nightmareNoUndo": "戻らない勇気",
+  "achDesc_nightmareNoUndo": "一手も戻さずに鬼門の面を解く"
 }

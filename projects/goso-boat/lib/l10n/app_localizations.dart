@@ -1027,6 +1027,240 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'自由だー！'**
   String get taunt4;
+
+  /// No description provided for @timeLine.
+  ///
+  /// In ja, this message translates to:
+  /// **'タイム {t}'**
+  String timeLine(String t);
+
+  /// No description provided for @bestTimeLine.
+  ///
+  /// In ja, this message translates to:
+  /// **'最速 {t}'**
+  String bestTimeLine(String t);
+
+  /// No description provided for @fastest.
+  ///
+  /// In ja, this message translates to:
+  /// **'最速！'**
+  String get fastest;
+
+  /// No description provided for @noUndoClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'一手も戻さずにクリア'**
+  String get noUndoClear;
+
+  /// No description provided for @rankUp.
+  ///
+  /// In ja, this message translates to:
+  /// **'階級が上がった: {name}'**
+  String rankUp(String name);
+
+  /// No description provided for @rankNext.
+  ///
+  /// In ja, this message translates to:
+  /// **'次の階級まで ★{n}'**
+  String rankNext(int n);
+
+  /// No description provided for @reminder.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問のお知らせ'**
+  String get reminder;
+
+  /// No description provided for @reminderBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問が届いています。星3で達成！'**
+  String get reminderBody;
+
+  /// No description provided for @reminderDenied.
+  ///
+  /// In ja, this message translates to:
+  /// **'お知らせが許可されていません。iPhone の設定から許可してください'**
+  String get reminderDenied;
+
+  /// No description provided for @rank0.
+  ///
+  /// In ja, this message translates to:
+  /// **'見習い'**
+  String get rank0;
+
+  /// No description provided for @rank1.
+  ///
+  /// In ja, this message translates to:
+  /// **'巡査'**
+  String get rank1;
+
+  /// No description provided for @rank2.
+  ///
+  /// In ja, this message translates to:
+  /// **'巡査長'**
+  String get rank2;
+
+  /// No description provided for @rank3.
+  ///
+  /// In ja, this message translates to:
+  /// **'巡査部長'**
+  String get rank3;
+
+  /// No description provided for @rank4.
+  ///
+  /// In ja, this message translates to:
+  /// **'警部補'**
+  String get rank4;
+
+  /// No description provided for @rank5.
+  ///
+  /// In ja, this message translates to:
+  /// **'警部'**
+  String get rank5;
+
+  /// No description provided for @rank6.
+  ///
+  /// In ja, this message translates to:
+  /// **'警視'**
+  String get rank6;
+
+  /// No description provided for @rank7.
+  ///
+  /// In ja, this message translates to:
+  /// **'警視正'**
+  String get rank7;
+
+  /// No description provided for @rank8.
+  ///
+  /// In ja, this message translates to:
+  /// **'警視長'**
+  String get rank8;
+
+  /// No description provided for @rank9.
+  ///
+  /// In ja, this message translates to:
+  /// **'警視総監'**
+  String get rank9;
+
+  /// No description provided for @ach_perfect1.
+  ///
+  /// In ja, this message translates to:
+  /// **'川べりの達人'**
+  String get ach_perfect1;
+
+  /// No description provided for @achDesc_perfect1.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台1「川べり」の全面を星3で解く'**
+  String get achDesc_perfect1;
+
+  /// No description provided for @ach_perfect2.
+  ///
+  /// In ja, this message translates to:
+  /// **'看守長の達人'**
+  String get ach_perfect2;
+
+  /// No description provided for @achDesc_perfect2.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台2「看守長」の全面を星3で解く'**
+  String get achDesc_perfect2;
+
+  /// No description provided for @ach_perfect3.
+  ///
+  /// In ja, this message translates to:
+  /// **'手錠の達人'**
+  String get ach_perfect3;
+
+  /// No description provided for @achDesc_perfect3.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台3「手錠」の全面を星3で解く'**
+  String get achDesc_perfect3;
+
+  /// No description provided for @ach_perfect4.
+  ///
+  /// In ja, this message translates to:
+  /// **'ボスの達人'**
+  String get ach_perfect4;
+
+  /// No description provided for @achDesc_perfect4.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台4「ボス」の全面を星3で解く'**
+  String get achDesc_perfect4;
+
+  /// No description provided for @ach_perfect5.
+  ///
+  /// In ja, this message translates to:
+  /// **'警察犬の達人'**
+  String get ach_perfect5;
+
+  /// No description provided for @achDesc_perfect5.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台5「警察犬」の全面を星3で解く'**
+  String get achDesc_perfect5;
+
+  /// No description provided for @ach_perfect6.
+  ///
+  /// In ja, this message translates to:
+  /// **'中州の達人'**
+  String get ach_perfect6;
+
+  /// No description provided for @achDesc_perfect6.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台6「中州」の全面を星3で解く'**
+  String get achDesc_perfect6;
+
+  /// No description provided for @ach_perfect7.
+  ///
+  /// In ja, this message translates to:
+  /// **'総力戦の達人'**
+  String get ach_perfect7;
+
+  /// No description provided for @achDesc_perfect7.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台7「総力戦」の全面を星3で解く'**
+  String get achDesc_perfect7;
+
+  /// No description provided for @ach_perfect8.
+  ///
+  /// In ja, this message translates to:
+  /// **'鬼門の達人'**
+  String get ach_perfect8;
+
+  /// No description provided for @achDesc_perfect8.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台8「鬼門」の全面を星3で解く'**
+  String get achDesc_perfect8;
+
+  /// No description provided for @ach_firstTryThree.
+  ///
+  /// In ja, this message translates to:
+  /// **'一発護送'**
+  String get ach_firstTryThree;
+
+  /// No description provided for @achDesc_firstTryThree.
+  ///
+  /// In ja, this message translates to:
+  /// **'1回目の挑戦で星3を取る'**
+  String get achDesc_firstTryThree;
+
+  /// No description provided for @ach_nightmareNoUndo.
+  ///
+  /// In ja, this message translates to:
+  /// **'戻らない勇気'**
+  String get ach_nightmareNoUndo;
+
+  /// No description provided for @achDesc_nightmareNoUndo.
+  ///
+  /// In ja, this message translates to:
+  /// **'一手も戻さずに鬼門の面を解く'**
+  String get achDesc_nightmareNoUndo;
 }
 
 class _AppLocalizationsDelegate

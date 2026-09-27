@@ -91,6 +91,51 @@ void main() {
     expect(s.canUndo, isFalse);
   });
 
+  test('星2は最短+2回まで（中州なし）、+4回まで（中州あり）', () {
+    int starsFor(Level l, int trips) => (Session(l)..trips = trips).stars;
+    final plain = lv({Role.police: 3, Role.prisoner: 1}, par: 5);
+    expect(starsFor(plain, 5), 3);
+    expect(starsFor(plain, 7), 2);
+    expect(starsFor(plain, 8), 1);
+    final isl = lv({Role.police: 3, Role.prisoner: 1}, par: 6, island: true);
+    expect(starsFor(isl, 10), 2);
+    expect(starsFor(isl, 11), 1);
+  });
+
+  test('途中の盤面を保存して戻せる。合わない形は受け付けない', () {
+    final l = lv({Role.police: 3, Role.prisoner: 1});
+    final a = Session(l);
+    a.tap(first(a, Role.police));
+    a.tap(first(a, Role.prisoner));
+    a.depart(Place.right);
+    a.usedHint = true;
+    final b = Session(l);
+    expect(b.restore(a.toJson()), isTrue);
+    expect(b.trips, 1);
+    expect(b.boat, Place.right);
+    expect(b.at(Place.right), hasLength(2));
+    expect(b.usedHint, isTrue, reason: 'ヒントを使った印も戻す（星2までのまま）');
+    expect(b.canUndo, isFalse, reason: '一手戻すの履歴は持たない');
+    expect(Session(lv({Role.police: 2, Role.prisoner: 1})).restore(a.toJson()), isFalse, reason: '人数が違う面');
+    expect(Session(l).restore({'places': 'x'}), isFalse);
+  });
+
+  test('一手戻すを使った印: 続きからでも残り、最初からで消える', () {
+    final l = lv({Role.police: 3, Role.prisoner: 1});
+    final a = Session(l);
+    a.tap(first(a, Role.police));
+    a.depart(Place.right);
+    expect(a.usedUndo, isFalse);
+    a.undo();
+    expect(a.usedUndo, isTrue);
+    a.tap(first(a, Role.police));
+    a.depart(Place.right);
+    final c = Session(l)..restore(a.toJson());
+    expect(c.usedUndo, isTrue);
+    a.reset();
+    expect(a.usedUndo, isFalse);
+  });
+
   test('星: 最短で3、ヒントを使うと2まで', () {
     final s = Session(lv({Role.police: 3, Role.prisoner: 1}, par: 5));
     while (!s.cleared) {
