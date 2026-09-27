@@ -218,6 +218,66 @@
   .updated-footer { font-size: 0.78rem; color: var(--muted); text-align: center; }
   ul.faq-links li { margin: 0.35rem 0; }
   h2[id] { scroll-margin-top: 1rem; }
+
+  /* ---- レイアウト（似たサイトを参考に: 冒頭の帯・入力と結果の2列・大きな結論・見出しの色線・カード） ---- */
+  main.wide { max-width: 1080px; }
+  main h2:not(.card-head):not(.form-subhead):not(.card-title) { border-left: 4px solid var(--accent); padding-left: 0.6rem; }
+  .hero-band { background: var(--ok-bg); border: 1px solid var(--ok-border); border-radius: 12px; padding: 1.1rem 1.2rem; margin: 0.5rem 0 1rem; }
+  .hero-band h1 { margin: 0 0 0.35rem; }
+  .hero-lead { margin: 0 0 0.6rem; }
+  ul.badges { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  ul.badges li { font-size: 0.78rem; background: var(--card-bg); border: 1px solid var(--ok-border); color: var(--ok-text); border-radius: 999px; padding: 0.15rem 0.6rem; }
+  .calc-layout { display: grid; gap: 1rem; align-items: start; }
+  @media (min-width: 900px) {
+    .calc-layout { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+    .calc-side { position: sticky; top: 1rem; }
+  }
+  .calc-form { margin: 0; }
+  .card-head { font-size: 1rem; margin: 0 0 0.6rem; }
+  .calc-form .row { margin: 0.7rem 0; }
+  .calc-form .row > label { display: block; font-weight: bold; font-size: 0.92rem; margin-bottom: 0.25rem; }
+  .calc-form .ctl { display: flex; align-items: center; gap: 0.4rem; }
+  .calc-form .ctl input, .calc-form .ctl select { flex: 1; font-size: 1.05rem; padding: 0.5rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); min-width: 0; }
+  .calc-form .unit { color: var(--muted); font-size: 0.9rem; min-width: 2.2em; }
+  .calc-form .hint { font-size: 0.78rem; color: var(--muted); margin: 0.2rem 0 0; }
+  .calc-form .row.check { display: flex; align-items: center; gap: 0.5rem; }
+  .calc-form .row.check label { font-weight: normal; }
+  @media (min-width: 600px) {
+    .calc-form .row:not(.check) { display: grid; grid-template-columns: 9.5em 1fr; column-gap: 0.8rem; align-items: center; }
+    .calc-form .row:not(.check) > label { margin: 0; }
+    .calc-form .row:not(.check) > .hint { grid-column: 2; }
+  }
+  .opt { font-size: 0.7rem; font-weight: normal; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 0.3rem; margin-left: 0.4rem; }
+  details.more { margin-top: 0.8rem; border-top: 1px solid var(--border); padding-top: 0.6rem; }
+  details.more summary { cursor: pointer; color: var(--link); font-size: 0.92rem; }
+  .summary-card { background: var(--card-bg); border: 2px solid var(--accent); border-radius: 12px; padding: 1rem 1.1rem; }
+  .summary-card .pill { display: inline-block; font-size: 0.85rem; font-weight: bold; border-radius: 999px; padding: 0.2rem 0.75rem; }
+  .summary-card .pill.ok { background: var(--ok-bg); color: var(--ok-text); border: 1px solid var(--ok-border); }
+  .summary-card .pill.ng { background: var(--ng-bg); color: var(--ng-text); border: 1px solid var(--ng-border); }
+  .summary-card .big-label { margin: 0.8rem 0 0; font-size: 0.85rem; color: var(--muted); }
+  .summary-card .big-num { margin: 0; font-size: 2.6rem; font-weight: bold; line-height: 1.15; color: var(--text); }
+  .summary-card .big-num small { font-size: 1rem; margin-left: 0.2rem; }
+  .summary-card .why { margin: 0.2rem 0 0.4rem; font-size: 1.2rem; font-weight: bold; }
+  dl.sum-rows { display: grid; grid-template-columns: 1fr auto; gap: 0.25rem 1rem; margin: 0.7rem 0; font-size: 0.92rem; }
+  dl.sum-rows dt, dl.sum-rows dd { margin: 0; padding: 0; line-height: 1.6; }
+  dl.sum-rows dt { color: var(--muted); font-weight: normal; }
+  dl.sum-rows dd { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+  .mobile-bar { display: none; }
+  @media (max-width: 899px) {
+    .mobile-bar:not([hidden]) { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; gap: 0.6rem; align-items: baseline; justify-content: center;
+      background: var(--card-bg); border-top: 2px solid var(--accent); padding: 0.55rem 1rem calc(0.55rem + env(safe-area-inset-bottom)); color: var(--text); text-decoration: none; font-size: 0.85rem; }
+    .mobile-bar strong { font-size: 1.15rem; }
+    .mobile-bar span { color: var(--muted); }
+    main.wide { padding-bottom: 4rem; }
+  }
+  .result-head { margin-top: 1.5rem; }
+  .cards { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin: 0.75rem 0 1.25rem; }
+  a.card-link { display: flex; gap: 0.75rem; align-items: center; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 0.9rem; text-decoration: none; color: var(--text); }
+  a.card-link:hover { border-color: var(--accent); }
+  a.card-link svg { flex: none; width: 40px; height: 40px; }
+  a.card-link strong { display: block; font-size: 0.95rem; }
+  a.card-link span { font-size: 0.8rem; color: var(--muted); }
+  .ico-bg { fill: var(--ok-bg); } .ico-fg { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
   /* 図 */
   figure.viz { margin: 1rem 0 1.25rem; }
   figure.viz svg { width: 100%; height: auto; display: block; overflow: visible; }
@@ -328,7 +388,7 @@
   </div>
 </header>
 
-<main id="main" tabindex="-1">
+<main id="main" tabindex="-1" class="{% block main_class %}{% endblock %}">
 {% block breadcrumb %}{% endblock %}
 {% include "_ad_slot.html" %}
 {% block content %}{% endblock %}
