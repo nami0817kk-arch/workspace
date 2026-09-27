@@ -312,7 +312,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get intro8Body => '全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。';
 
   @override
-  String get hintWithAd => '動画でヒント';
+  String get hintWithAd => '動画で\nヒント';
 
   @override
   String get hintDeclined => '動画を最後まで見るとヒントが出る';

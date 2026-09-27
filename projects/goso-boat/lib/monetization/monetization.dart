@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../engine/puzzle.dart';
@@ -42,40 +42,52 @@ class Monetization extends ChangeNotifier {
 
   Future<void> start() async {
     store.onDelivered = (id) async {
-      if (id == PurchaseService.removeAdsId) await _setAdFree();
+      if (id != PurchaseService.removeAdsId) return;
+      _deliveries++;
+      await _setAdFree();
     };
     store.onRevoked = (id) async {
       if (id != PurchaseService.removeAdsId) return;
       // 家族から共有された分や買い直した分など、ほかに有効な取引が残っていれば広告は戻さない
-      if (await store.hasEntitlement() == true) return;
+      final seen = _deliveries;
+      if (await store.hasEntitlement() == true || seen != _deliveries) return;
       await _clearAdFree();
     };
-    // ストアと広告の準備は並べて進める（ストアを待って広告の先読みが遅れないように）
-    await Future.wait([
-      () async {
-        try {
-          await store.initialize();
-        } catch (_) {
-          // ストアの準備に失敗しても、広告は準備する
-        }
-      }(),
-      if (!adFree) ads.initialize(),
-    ]);
-    await _reconcile();
+    try {
+      await store.initialize();
+    } catch (_) {
+      // ストアの準備に失敗しても、広告は準備する
+    }
+    // 購入記録との照合を先に済ませる（再インストール後に買った人の端末で広告の準備をしない）。
+    // 端末の中の記録を読むだけなので速い。念のため上限を置く
+    try {
+      await _reconcile().timeout(const Duration(seconds: 3));
+    } catch (_) {}
+    if (!adFree) {
+      try {
+        await ads.initialize();
+      } catch (_) {}
+    }
   }
+
+  /// 届いた購入の数。照合の最中に購入が届いたら、古い記録での判定を捨てるために使う。
+  int _deliveries = 0;
 
   /// 端末の購入記録と照らし合わせる。アプリを閉じている間に返金された分を戻し、
   /// 再インストール後は「購入を復元」を押さなくても広告なしに戻す。記録が読めなければ何もしない。
   Future<void> _reconcile() async {
+    final seen = _deliveries;
     final e = await store.hasEntitlement();
     if (e == true && !adFree) await _setAdFree();
-    if (e == false && adFree) await _clearAdFree();
+    if (e == false && adFree && seen == _deliveries) await _clearAdFree();
   }
 
   /// 返金されたら広告を戻す。
   Future<void> _clearAdFree() async {
     if (!adFree) return;
     await _prefs.setBool('adFree', false);
+    // 戻ってすぐの「次の面へ」で全画面広告が出ないよう、数えは始めから
+    await _prefs.setInt('clearsSinceAd', 0);
     notifyListeners();
     try {
       await ads.initialize();
@@ -106,7 +118,9 @@ class Monetization extends ChangeNotifier {
   }
 
   /// 面をクリアして次へ進む直前に呼ぶ。出すべきなら全画面広告を出し、閉じるまで待つ。
-  Future<bool> afterClear(Level level) async {
+  ///
+  /// [mayShow] が false なら、番でも出さずに次の回へ回す（直前に間を置けなかったとき。押した指が広告に当たらないように）。
+  Future<bool> afterClear(Level level, {bool mayShow = true}) async {
     if (adFree || level.world == 1) return false;
     final n = (_prefs.getInt('clearsSinceAd') ?? 0) + 1;
     if (n < interstitialEvery) {
@@ -115,6 +129,10 @@ class Monetization extends ChangeNotifier {
     }
     // 出せたときだけ数え直す。在庫が無くて出せなければ、次の「次の面へ」でもう一度試す
     // 出す前に数え直しておく（広告の途中で終了されても、次のクリアで続けて出ないように）
+    if (!mayShow || !_foreground) {
+      await _prefs.setInt('clearsSinceAd', n);
+      return false;
+    }
     await _prefs.setInt('clearsSinceAd', 0);
     final shown = await ads.showInterstitialAd();
     if (!shown) await _prefs.setInt('clearsSinceAd', n);
@@ -134,6 +152,8 @@ class Monetization extends ChangeNotifier {
         return adFree ? HintGate.granted : HintGate.unavailable;
       }
     }
+    // 待っている間にアプリを裏へ回したなら出さない（戻った瞬間に広告を差し込まない）
+    if (!_foreground) return HintGate.unavailable;
     final r = await ads.showRewardedAd();
     // 動画を見ている間に「広告を消す」が届いた（家族の承認など）なら、そのままヒントを出す
     if (adFree) return HintGate.granted;
@@ -143,6 +163,15 @@ class Monetization extends ChangeNotifier {
       RewardResult.unavailable => HintGate.unavailable,
       RewardResult.showFailed => HintGate.showFailed,
     };
+  }
+
+  /// アプリが前面にあるか（テストなどで分からないときは前面とみなす）。
+  bool get _foreground {
+    try {
+      return (WidgetsBinding.instance.lifecycleState ?? AppLifecycleState.resumed) == AppLifecycleState.resumed;
+    } catch (_) {
+      return true; // 画面の仕組みが無い所（単体テスト）
+    }
   }
 
   /// ヒントのボタンに「動画」の印を付けるか（広告を消した人以外は、いつも動画が要る）。

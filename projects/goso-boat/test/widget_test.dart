@@ -139,7 +139,7 @@ void main() {
       await tester.tap(find.bySemanticsLabel('Officer, near bank').first);
       await tester.pump(const Duration(milliseconds: 400));
     }
-    await tester.tap(find.text('To far bank'));
+    await tester.tap(find.text('To the far bank'));
     for (var i = 0; i < 30; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:goso_boat/engine/puzzle.dart';
 import 'package:goso_boat/engine/rules.dart';
@@ -219,4 +221,60 @@ void main() {
     m.prepareNext(lv(2));
     expect(ads.reloads, before + 1);
   });
+
+  test('表示に失敗・在庫なしはタダで出さない。見ている間に広告を消せば出す。広告なしでは読み直さない', () async {
+    SharedPreferences.setMockInitialValues({});
+    final ads = _ResultAds(), store = FakeStore();
+    final m = Monetization(await SharedPreferences.getInstance(), ads: ads, store: store);
+    await m.start();
+    expect(await m.beforeHint(), HintGate.showFailed);
+    ads.result = RewardResult.unavailable;
+    expect(await m.beforeHint(), HintGate.unavailable);
+    final r0 = ads.reloads;
+    m.refreshAds();
+    expect(ads.reloads, r0 + 1);
+    ads
+      ..result = RewardResult.closedEarly
+      ..during = store.deliver;
+    expect(await m.beforeHint(), HintGate.granted);
+    m.refreshAds();
+    expect(ads.reloads, r0 + 1, reason: '広告を消した後は読み直さない');
+  });
+
+  test('読み込み中なら知らせてから6秒まで待ち、届けば動画を見せる', () async {
+    SharedPreferences.setMockInitialValues({});
+    final ads = _WaitingAds()..rewardedReady = false;
+    final m = Monetization(await SharedPreferences.getInstance(), ads: ads, store: FakeStore());
+    await m.start();
+    var waiting = 0;
+    final gate = m.beforeHint(onWaiting: () => waiting++);
+    await Future<void>.delayed(Duration.zero);
+    expect(waiting, 1);
+    expect(ads.waitedFor, const Duration(seconds: 6));
+    expect(ads.rewardeds, 0, reason: '届く前には見せない');
+    ads.arrive.complete(true);
+    expect(await gate, HintGate.granted);
+    expect(ads.rewardeds, 1);
+  });
+}
+
+class _ResultAds extends FakeAds {
+  RewardResult result = RewardResult.showFailed;
+  Future<void> Function()? during;
+  @override
+  Future<RewardResult> showRewardedAd() async {
+    rewardeds++;
+    await during?.call();
+    return result;
+  }
+}
+
+class _WaitingAds extends FakeAds {
+  final arrive = Completer<bool>();
+  Duration? waitedFor;
+  @override
+  Future<bool> waitForRewarded(Duration max) {
+    waitedFor = max;
+    return arrive.future.then((ok) => rewardedReady = ok);
+  }
 }

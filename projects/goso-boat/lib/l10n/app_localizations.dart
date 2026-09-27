@@ -617,7 +617,7 @@ abstract class AppLocalizations {
   /// No description provided for @hintWithAd.
   ///
   /// In ja, this message translates to:
-  /// **'動画でヒント'**
+  /// **'動画で\nヒント'**
   String get hintWithAd;
 
   /// No description provided for @hintDeclined.

@@ -78,7 +78,7 @@ GitHub の Actions → **Build 護送ボート (iOS Release)** → Run workflow 
 
 ```
 No login is required.
-In-app purchase: one non-consumable, "Remove Ads" (goso_boat_remove_ads), shown at the bottom of the title screen.
+In-app purchase: one non-consumable, "Remove Ads" (goso_boat_remove_ads), shown at the bottom of the title screen and in Settings (the buttons appear once the App Store price has loaded).
 "Restore purchases" is on the title screen and in Settings.
 Hints: each hint requires watching a rewarded video ad (no video after purchasing Remove Ads).
 Interstitial ads: from World 2 on, once every 3 cleared levels when tapping "Next level". World 1 has no interstitial ads.
@@ -91,15 +91,17 @@ Privacy policy and "Support / report an ad" are in Settings.
 Google の AdMob の開示（https://developers.google.com/admob/ios/privacy/data-disclosure ）に合わせる。
 提供者（つるはし社）自身は何も集めない。AdMob が集めるもの:
 
-| データの種類 | 用途 | ユーザーに紐づく | トラッキング |
-|---|---|---|---|
-| おおよその位置（IP アドレスから） | 第三者の広告・分析 | 答える前に Google の表で確かめる | いいえ（ATT を使わない） |
-| デバイス ID | 第三者の広告・分析 | 同上 | いいえ |
-| 製品の操作（広告のタップ・視聴） | 第三者の広告・分析 | 同上 | いいえ |
-| その他の使用状況データ（広告データ） | 第三者の広告 | 同上 | いいえ |
-| クラッシュデータ・パフォーマンスデータ | 分析 | 同上 | いいえ |
+**サカマネで審査に通った答え方にそろえる**（記憶「サカマネ iOS の公開状況」）:
 
-サカマネの申告（記憶の「サカマネ iOS の公開状況」に正解がある）と同じ答え方にそろえる。
+| データの種類 | 用途 | ユーザーに関連付け | トラッキング |
+|---|---|---|---|
+| デバイス ID | サードパーティ広告 | いいえ | いいえ（ATT を使わず IDFA を取らない） |
+
+「関連付けあり・追跡あり」に変えない。SDK のプライバシーマニフェストは項目が多いが、サカマネはこの1行で通っている。
+Google の開示に合わせて項目を増やすなら、プライバシーポリシー（legal/privacy.html）には既に全部書いてあるので食い違いは出ない。
+
+**URL の欄**: App Store Connect の「プライバシーポリシー URL」と「サポート URL」に、アプリの設定画面と同じ
+`https://goso-boat.pages.dev/privacy.html` と `https://goso-boat.pages.dev/support.html` を入れる（公開してから）。
 
 **年齢区分**: 質問票の「広告」は「あり」。暴力の項目（囚人が逃げる・捕まえる表現）をどう答えるかはユーザー判断（4+ か 9+）。
 

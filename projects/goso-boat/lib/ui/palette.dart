@@ -52,33 +52,62 @@ class SceneTheme {
   final bool stars;
 
   static const day = SceneTheme(
-    background: Palette.sky, sand: Palette.sand, sandEdge: Palette.sandEdge,
-    grass: Palette.grass, grassDark: Palette.grassDark, river: Palette.river, riverDeep: Palette.riverDeep,
+    background: Palette.sky,
+    sand: Palette.sand,
+    sandEdge: Palette.sandEdge,
+    grass: Palette.grass,
+    grassDark: Palette.grassDark,
+    river: Palette.river,
+    riverDeep: Palette.riverDeep,
   );
   static const afternoon = SceneTheme(
-    background: Color(0xFFCDE7EE), sand: Color(0xFFF2D49A), sandEdge: Color(0xFFDDB872),
-    grass: Color(0xFF7CC152), grassDark: Color(0xFF58973D), river: Color(0xFF3A9AD9), riverDeep: Color(0xFF2677C2),
+    background: Color(0xFFCDE7EE),
+    sand: Color(0xFFF2D49A),
+    sandEdge: Color(0xFFDDB872),
+    grass: Color(0xFF7CC152),
+    grassDark: Color(0xFF58973D),
+    river: Color(0xFF3A9AD9),
+    riverDeep: Color(0xFF2677C2),
   );
   static const evening = SceneTheme(
-    background: Color(0xFFF7DDC4), sand: Color(0xFFF0C48E), sandEdge: Color(0xFFD9A263),
-    grass: Color(0xFF8FB85A), grassDark: Color(0xFF6A9142), river: Color(0xFF4A86C8), riverDeep: Color(0xFF2F5FA6), wave: 0.4,
+    background: Color(0xFFF7DDC4),
+    sand: Color(0xFFF0C48E),
+    sandEdge: Color(0xFFD9A263),
+    grass: Color(0xFF8FB85A),
+    grassDark: Color(0xFF6A9142),
+    river: Color(0xFF4A86C8),
+    riverDeep: Color(0xFF2F5FA6),
+    wave: 0.4,
   );
   static const dusk = SceneTheme(
-    background: Color(0xFFE3D6EE), sand: Color(0xFFD9B98F), sandEdge: Color(0xFFBC9A6E),
-    grass: Color(0xFF5E9A5C), grassDark: Color(0xFF437646), river: Color(0xFF4B6FB5), riverDeep: Color(0xFF33477F), wave: 0.35,
+    background: Color(0xFFE3D6EE),
+    sand: Color(0xFFD9B98F),
+    sandEdge: Color(0xFFBC9A6E),
+    grass: Color(0xFF5E9A5C),
+    grassDark: Color(0xFF437646),
+    river: Color(0xFF4B6FB5),
+    riverDeep: Color(0xFF33477F),
+    wave: 0.35,
   );
   static const night = SceneTheme(
-    background: Color(0xFFC9D2EA), sand: Color(0xFFB9A58A), sandEdge: Color(0xFF9A876D),
-    grass: Color(0xFF3E6B4A), grassDark: Color(0xFF2B4F36), river: Color(0xFF26406E), riverDeep: Color(0xFF16294D), wave: 0.3, stars: true,
+    background: Color(0xFFC9D2EA),
+    sand: Color(0xFFB9A58A),
+    sandEdge: Color(0xFF9A876D),
+    grass: Color(0xFF3E6B4A),
+    grassDark: Color(0xFF2B4F36),
+    river: Color(0xFF26406E),
+    riverDeep: Color(0xFF16294D),
+    wave: 0.3,
+    stars: true,
   );
 
   static SceneTheme forWorld(int world) => switch (world) {
-        1 || 2 => day,
-        3 || 4 => afternoon,
-        5 => evening,
-        6 || 7 => dusk,
-        _ => night,
-      };
+    1 || 2 => day,
+    3 || 4 => afternoon,
+    5 => evening,
+    6 || 7 => dusk,
+    _ => night,
+  };
 }
 
 /// 太い縁取りの押せるボタン（絵本調の見た目をそろえるため自前で持つ）。
@@ -127,6 +156,14 @@ class _ChunkyButtonState extends State<ChunkyButton> {
     super.dispose();
   }
 
+  void _press() {
+    if (_cooling || widget.onPressed == null) return;
+    _cooling = true;
+    _cool = Timer(const Duration(milliseconds: 500), () => _cooling = false);
+    if (!widget.silent) AppScope.maybeOf(context)?.play(Sfx.tap);
+    widget.onPressed!();
+  }
+
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null;
@@ -135,25 +172,24 @@ class _ChunkyButtonState extends State<ChunkyButton> {
       button: true,
       enabled: enabled,
       label: widget.label,
-      // 中の Text と名前が二重に読まれないように
+      // 中の Text と名前が二重に読まれないように。そのぶん押す操作はここで渡す
       excludeSemantics: true,
+      onTap: enabled ? _press : null,
       child: GestureDetector(
         onTapDown: enabled ? (_) => setState(() => _down = true) : null,
         onTapCancel: () => setState(() => _down = false),
         onTapUp: enabled
             ? (_) {
                 setState(() => _down = false);
-                if (_cooling) return;
-                _cooling = true;
-                _cool = Timer(const Duration(milliseconds: 500), () => _cooling = false);
-                if (!widget.silent) AppScope.maybeOf(context)?.play(Sfx.tap);
-                widget.onPressed!();
+                _press();
               }
             : null,
         child: Opacity(
           opacity: enabled ? 1 : 0.45,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 60),
+            // 並べたボタンの背をそろえたとき、中身を縦の真ん中に置く
+            alignment: widget.wrap ? Alignment.center : null,
             margin: EdgeInsets.only(top: 3 - depth, bottom: depth),
             padding: widget.padding,
             decoration: BoxDecoration(
@@ -173,16 +209,20 @@ class _ChunkyButtonState extends State<ChunkyButton> {
                 // 狭いボタンでは「…」で切らず、文字を縮めて全部見せる
                 Flexible(
                   child: widget.wrap
-                      // 狭い所に3つ並べるボタンは、字を縮めすぎないよう2行まで折り返す（それでも入らなければ縮める）
+                      // 狭い所に3つ並べるボタンは、文言の改行位置で2行にして字を縮めすぎない（入らなければ縮める）。
+                      // 自動の折り返しには任せない（語の途中で切れたり、3行目が落ちたりするため）
                       ? FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: widget.fontSize * 5.2),
-                            child: Text(
-                              widget.label,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: widget.fontSize, height: 1.15, fontWeight: FontWeight.w800, color: Palette.ink),
+                          child: Text(
+                            widget.label,
+                            maxLines: 2,
+                            softWrap: false,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: widget.fontSize,
+                              height: 1.15,
+                              fontWeight: FontWeight.w800,
+                              color: Palette.ink,
                             ),
                           ),
                         )
@@ -191,7 +231,11 @@ class _ChunkyButtonState extends State<ChunkyButton> {
                           child: Text(
                             widget.label,
                             maxLines: 1,
-                            style: TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.w800, color: Palette.ink),
+                            style: TextStyle(
+                              fontSize: widget.fontSize,
+                              fontWeight: FontWeight.w800,
+                              color: Palette.ink,
+                            ),
                           ),
                         ),
                 ),
@@ -213,10 +257,10 @@ class StarRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (var i = 0; i < max; i++)
-            Icon(Icons.star_rounded, size: size, color: i < stars ? Palette.gold : Palette.starOff),
-        ],
-      );
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      for (var i = 0; i < max; i++)
+        Icon(Icons.star_rounded, size: size, color: i < stars ? Palette.gold : Palette.starOff),
+    ],
+  );
 }

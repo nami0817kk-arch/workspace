@@ -394,10 +394,14 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
         bool ok() =>
             mounted && !_leaving && phase == _Phase.won && (WidgetsBinding.instance.lifecycleState ?? AppLifecycleState.resumed) == AppLifecycleState.resumed;
         if (!ok()) return;
-        final review = InAppReview.instance;
-        if (!await review.isAvailable() || !ok()) return;
-        await widget.progress.markReviewAsked(level.world);
-        await review.requestReview();
+        try {
+          final review = InAppReview.instance;
+          if (!await review.isAvailable() || !ok()) return;
+          await widget.progress.markReviewAsked(level.world);
+          await review.requestReview();
+        } catch (_) {
+          // 評価のお願いが出せなくても、遊びは止めない
+        }
       });
     }
   }
@@ -418,6 +422,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   void _reset() {
     // 「次の面へ」を押して広告を待っている間は、やり直さない（直後に次の面へ移るので捨てられる）
     if (phase == _Phase.moving || phase == _Phase.escaping || _leaving || _hintBusy) return;
+    // クリアした後の「もう一度」は新しい挑戦。前の回のヒントの縛りは持ち越さない
+    if (phase == _Phase.won) _hintedHere = false;
     setState(() {
       s.reset();
       // ヒントを見た面は、最初からやり直しても星2まで（一手戻すと同じ扱い）
@@ -527,7 +533,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-              child: Row(
+              // 2行のボタンがあっても3つの背をそろえる
+              child: IntrinsicHeight(
+                child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(child: ChunkyButton(label: t.undo, icon: Icons.undo_rounded, onPressed: _canUndo ? _undo : null, fontSize: 13, wrap: true)),
                   const SizedBox(width: 8),
@@ -537,6 +546,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
                       label: widget.money.hintNeedsAd ? t.hintWithAd : t.hint,
                       icon: widget.money.hintNeedsAd ? Icons.smart_display_rounded : Icons.lightbulb_rounded, onPressed: phase == _Phase.play ? _hint : null, fontSize: 13, wrap: true)),
                 ],
+              ),
               ),
             ),
             Expanded(
@@ -651,15 +661,25 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     if (next == null || _leaving) return;
     setState(() => _leaving = true);
     // 全画面広告が出るときは、押した指がそのまま広告に当たらないよう少し間を置く（AdMob の推奨）
-    if (widget.money.interstitialDue(level)) await Future<void>.delayed(const Duration(milliseconds: 600));
-    if (!mounted || !(ModalRoute.of(context)?.isCurrent ?? false)) return;
+    final due = widget.money.interstitialDue(level);
+    if (due) await Future<void>.delayed(const Duration(milliseconds: 600));
+    if (!mounted) return;
+    if (!(ModalRoute.of(context)?.isCurrent ?? false)) {
+      setState(() => _leaving = false); // 札を押せないまま残さない
+      return;
+    }
     // 面と面の間の全画面広告（3面に1回。舞台1と、広告を消した人には出ない）
     try {
-      await widget.money.afterClear(level);
+      // 間を置かなかった回（手元に広告が無かった）は、直前に届いても出さない
+      await widget.money.afterClear(level, mayShow: due);
     } catch (_) {
       // 広告で何が起きても、次の面へは進める
     }
-    if (!mounted || !(ModalRoute.of(context)?.isCurrent ?? false)) return;
+    if (!mounted) return;
+    if (!(ModalRoute.of(context)?.isCurrent ?? false)) {
+      setState(() => _leaving = false);
+      return;
+    }
     Navigator.of(context).pushReplacement(PageRouteBuilder(
       pageBuilder: (_, _, _) => GameScreen(level: next, progress: widget.progress, money: widget.money),
       transitionsBuilder: (_, a, _, child) => FadeTransition(opacity: a, child: child),

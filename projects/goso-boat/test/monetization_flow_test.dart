@@ -26,7 +26,8 @@ class FakeAds implements AdService {
   @override
   bool get isRewardedAdReady => ready;
   @override
-  bool get isInterstitialReady => true;
+  bool get isInterstitialReady => interstitialReady;
+  bool interstitialReady = true;
   @override
   Future<bool> waitForRewarded(Duration max) async => ready;
   @override
@@ -39,6 +40,7 @@ class FakeAds implements AdService {
 
   @override
   Future<bool> showInterstitialAd() async {
+    if (!interstitialReady) return false;
     interstitials++;
     return true;
   }
@@ -172,7 +174,7 @@ void main() {
       await tester.tap(find.text('広告を消す（¥370）'));
       await tester.pump(const Duration(milliseconds: 300));
       expect(m.adFree, isFalse);
-      expect(find.text('購入できませんでした。時間をおいてもう一度お試しください'), findsOneWidget);
+      expect(find.text('購入できませんでした。支払いが済んでいれば、少しして自動で広告が消えます'), findsOneWidget);
       await tester.pump(const Duration(seconds: 5));
     });
 
@@ -242,8 +244,8 @@ void main() {
       final (p, m, ads, _, st) = await _open();
       await _pumpApp(tester, p, m, st);
       await _enterGame(tester);
-      expect(find.text('動画でヒント'), findsOneWidget, reason: '動画が要ることをボタンに書く');
-      await tester.tap(find.text('動画でヒント'));
+      expect(find.text('動画で\nヒント'), findsOneWidget, reason: '動画が要ることをボタンに書く');
+      await tester.tap(find.text('動画で\nヒント'));
       await tester.pump(const Duration(milliseconds: 300));
       expect(ads.rewarded, 1);
       expect(find.textContaining('で向こう岸へ'), findsOneWidget);
@@ -255,13 +257,13 @@ void main() {
       await _pumpApp(tester, p, m, st);
       await _enterGame(tester);
       ads.watchToEnd = false;
-      await tester.tap(find.text('動画でヒント'));
+      await tester.tap(find.text('動画で\nヒント'));
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('動画を最後まで見るとヒントが出る'), findsOneWidget);
       expect(find.textContaining('で向こう岸へ'), findsNothing);
       await tester.pump(const Duration(seconds: 2));
       ads.ready = false;
-      await tester.tap(find.text('動画でヒント'));
+      await tester.tap(find.text('動画で\nヒント'));
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('動画の準備ができていません。少し待ってもう一度'), findsOneWidget);
       expect(ads.rewarded, 1, reason: '読み込めていない動画は出そうとしない');
@@ -303,6 +305,48 @@ void main() {
   });
 
   group('全画面広告', () {
+    testWidgets('広告の番では600ms置いてから出し、その間に2度押ししても1回だけ', (tester) async {
+      final ls = _levels();
+      final w2 = ls.firstWhere((l) => l.world == 2);
+      final (p, m, ads, _, st) = await _open({
+        for (final l in ls.where((l) => l.world == 1)) 'stars.${l.id}': 3,
+        'clearsSinceAd': 2,
+      });
+      await _pumpApp(tester, p, m, st);
+      await _enterGame(tester);
+      await _solveWithHints(tester, w2.par);
+      await tester.tap(find.text('次の面へ'));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(ads.interstitials, 0, reason: '押した指が広告に当たらないよう、まだ出さない');
+      await tester.tap(find.text('次の面へ'), warnIfMissed: false);
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(ads.interstitials, 1);
+      expect(p.prefsForTest.getInt('clearsSinceAd'), 0);
+      await tester.pump(const Duration(seconds: 3));
+      expect(ads.interstitials, 1);
+    });
+
+    testWidgets('広告の番で手元に無ければ、「次の面へ」は待たせずに進み、次の面でもう一度試す', (tester) async {
+      final ls = _levels();
+      final w2 = ls.where((l) => l.world == 2).toList();
+      final (p, m, ads, _, st) = await _open({
+        for (final l in ls.where((l) => l.world == 1)) 'stars.${l.id}': 3,
+        'clearsSinceAd': 2,
+      });
+      ads.interstitialReady = false;
+      await _pumpApp(tester, p, m, st);
+      await _enterGame(tester);
+      final before = ads.reloads;
+      await _solveWithHints(tester, w2.first.par);
+      expect(ads.reloads, greaterThan(before), reason: '結果の札の間に読み込みを始める');
+      await tester.tap(find.text('次の面へ'));
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(seconds: 2));
+      expect(ads.interstitials, 0);
+      expect(p.prefsForTest.getInt('clearsSinceAd'), 3, reason: '出せなければ次でもう一度');
+      await tester.pump(const Duration(seconds: 3));
+    });
+
     testWidgets('「次の面へ」を2度押ししても1回ぶんしか数えない（舞台2）', (tester) async {
       final ls = _levels();
       final w2 = ls.firstWhere((l) => l.world == 2);

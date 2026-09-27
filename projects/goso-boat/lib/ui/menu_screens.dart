@@ -383,6 +383,7 @@ class _RemoveAdsState extends State<_RemoveAds> {
     });
     // 値段が取れなければ、間を空けて何度か取り直す（アプリを出入りしなくても電波が戻れば買えるように）
     if (ok && price == null && _tries < 3) {
+      _retry?.cancel(); // 取り直しが重なっても、タイマーは1本だけ
       _retry = Timer(Duration(seconds: 5 * (1 << (_tries * 2))), _load); // 5秒→20秒→80秒
       _tries++;
     }

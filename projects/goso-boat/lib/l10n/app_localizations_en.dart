@@ -324,7 +324,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The hardest levels, picked by solving every combination.\nCross in the fewest trips and you\'re the real deal.';
 
   @override
-  String get hintWithAd => 'Hint (watch ad)';
+  String get hintWithAd => 'Hint\n(watch ad)';
 
   @override
   String get hintDeclined => 'Watch the whole video to get a hint.';

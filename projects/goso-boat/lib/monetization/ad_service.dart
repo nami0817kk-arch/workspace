@@ -116,6 +116,7 @@ class AdMobAdService implements AdService {
 
   /// 全年齢向けの設定と SDK の準備が済んだか。済むまでは読み込まない（設定の掛かっていない広告を読まないため）。
   bool _initialized = false;
+  final _ready = Completer<void>();
 
   final _rewardedSlot = _Slot<RewardedAd>();
   final _interstitialSlot = _Slot<InterstitialAd>();
@@ -125,9 +126,16 @@ class AdMobAdService implements AdService {
     // 広告を消した後に返金されたときは、もう一度ここから始める
     _disposed = false;
     // 広告の中身は全年齢向け（G）まで。4+ のアプリに合わない広告を出さない（Apple 2.5.18）
-    await MobileAds.instance.updateRequestConfiguration(RequestConfiguration(maxAdContentRating: MaxAdContentRating.g));
-    await MobileAds.instance.initialize();
+    try {
+      await MobileAds.instance.updateRequestConfiguration(
+        RequestConfiguration(maxAdContentRating: MaxAdContentRating.g),
+      );
+      await MobileAds.instance.initialize();
+    } catch (_) {
+      // 準備が失敗しても読み込みは試す（止めたままだと、その起動の間ヒントが一切出せなくなる）
+    }
     _initialized = true;
+    if (!_ready.isCompleted) _ready.complete();
     _loadRewarded();
     _loadInterstitial();
   }
@@ -204,9 +212,15 @@ class AdMobAdService implements AdService {
   @override
   Future<bool> waitForRewarded(Duration max) async {
     if (_rewardedSlot.ready) return true;
-    if (_rewardedSlot.loadingSince == null) return false;
+    final until = DateTime.now().add(max);
     try {
-      await _rewardedSlot.changed().timeout(max);
+      // 起動直後で SDK の準備がまだなら、それも待つ
+      if (!_initialized) await _ready.future.timeout(max);
+      _loadRewarded();
+      if (_rewardedSlot.ready) return true;
+      if (_rewardedSlot.loadingSince == null) return false;
+      final left = until.difference(DateTime.now());
+      if (left > Duration.zero) await _rewardedSlot.changed().timeout(left);
     } on TimeoutException {
       // 間に合わなかった
     }
@@ -325,6 +339,8 @@ class AdMobAdService implements AdService {
     _disposed = true;
     _rewardedSlot.clear();
     _interstitialSlot.clear();
+    // 動画を待っている人がいれば起こす（広告を消した直後に6秒待たせない）
+    _rewardedSlot.notify();
   }
 }
 
