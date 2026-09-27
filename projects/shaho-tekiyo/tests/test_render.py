@@ -22,7 +22,7 @@ def site(tmp_path, monkeypatch):
 
 def test_計算機ページが生成される(site):
     html = (site / "index.html").read_text(encoding="utf-8")
-    assert "加入判定チェッカー" in html
+    assert "パートの社会保険 計算機" in html
     assert 'id="calc-form"' in html
 
 
@@ -297,7 +297,7 @@ def test_計算機の新しいレイアウト(site):
     assert 'id="summary"' in html and 'id="mobile-bar"' in html
     assert '<details class="more">' in html  # 詳しい入力はたたむ
     for page in ("index.html", "getsushu/10man.html", "kabe/1100yen.html"):
-        assert html.count('class="card-link"') == 5 if page == "index.html" else True
+        assert html.count('class="card-link"') == 6 if page == "index.html" else True
         assert 'class="card-link"' in (site / page).read_text(encoding="utf-8"), page
 
 
@@ -305,3 +305,17 @@ def test_indexnowのキーファイルがサイト直下にある(site):
     key = site_config.INDEXNOW_KEY
     assert re.fullmatch(r"[0-9a-f]{32}", key)
     assert (site / f"{key}.txt").read_text(encoding="utf-8") == key
+
+
+def test_年収別の手取り早見表(site):
+    html = (site / "nenshu.html").read_text(encoding="utf-8")
+    assert "<title>パートの年収別 手取り早見表" in html
+    rows = render._nenshu_rows(premium.TABLES[-1].valid_from)
+    by = {r["man"]: r for r in rows}
+    # 入る場合は保険料の分だけ手取りが少ない。130万円以上は扶養内の列を出さない
+    assert by[120]["net_in"] < by[120]["net_out"] <= 1_200_000
+    assert by[130]["net_out"] is None and by[200]["net_out"] is None
+    assert f'{by[120]["net_in"]:,}円' in html
+    assert "108,334円" in html  # 130万円の壁の月額
+    assert f"<loc>{site_config.SITE_URL}/nenshu</loc>" in (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert 'href="nenshu.html"' in (site / "index.html").read_text(encoding="utf-8")

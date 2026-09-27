@@ -317,6 +317,47 @@ def _build_amount_pages() -> None:
     )
 
 
+# 年収別の手取り早見表（/nenshu.html）。「パート 年収 手取り 表」で探す人向け。
+NENSHU_MAN: tuple[int, ...] = (90, 100, 106, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)
+
+
+def _nenshu_rows(as_of: date) -> list[dict]:
+    """年収ごとに、勤務先の社保に入る場合と入らない場合（扶養内・週20時間未満）の手取り（年額）の目安。
+    賞与なし・毎月同じ額・東京・39歳以下・扶養0人。所得税は毎月の源泉徴収の目安×12（年末調整前）、住民税は含めない。"""
+    rows = []
+    for man in NENSHU_MAN:
+        monthly = round(man * 10_000 / 12)
+        r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=monthly, age_40_to_64=False)
+        koyo = extras.employment_yen(as_of, monthly) or 0
+        tax_in = extras.income_tax_yen(as_of, monthly - r.total_yen - koyo, 0) or 0
+        tax_out = extras.income_tax_yen(as_of, monthly, 0) or 0
+        annual = man * 10_000
+        net_in = annual - (r.total_yen + koyo + tax_in) * 12
+        # 130万円以上は配偶者などの扶養から外れるので「入らない＝扶養内」の手取りは出さない
+        net_out = annual - tax_out * 12 if man < 130 else None
+        rows.append(dict(man=man, monthly=monthly, social=r.total_yen * 12, koyo=koyo * 12,
+                         tax_in=tax_in * 12, net_in=net_in, tax_out=tax_out * 12, net_out=net_out,
+                         near=min(AMOUNTS_MAN, key=lambda m: abs(m * 10_000 - monthly))))
+    return rows
+
+
+def _build_nenshu_page() -> None:
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    rows = _nenshu_rows(as_of)
+    _write(
+        _OUTPUT_DIR / "nenshu.html",
+        _env.get_template("nenshu.html").render(
+            base_url="",
+            canonical=canonical_url("nenshu.html"),
+            rows=rows,
+            era=_era(table.fiscal_year),
+            source=table.source,
+            kokumin=extras.kokumin_nenkin_yen(as_of),
+        ),
+    )
+
+
 # 週20時間の壁のページ（/kabe/1100yen.html）。週19時間でも年収130万円を超えない時給まで。
 KABE_HOURLY: tuple[int, ...] = tuple(range(1050, 1301, 50))
 _KABE_ROWS_X10: tuple[int, ...] = (190, 200, 210, 220, 225, 230, 240, 250, 300)
@@ -383,6 +424,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-27", "年収別の手取り早見表（90万〜200万円、社会保険に入る場合と扶養内の場合）を追加。よくある質問に交通費・残業代、130万円の壁の月額と19〜22歳の150万円、ダブルワーク、加入を断れるかの4問を追加。サイト名を「パートの社会保険 計算機」に"),
     ("2026-09-27", "公開のたびに IndexNow（Bing など）へページの一覧を知らせるようにした"),
     ("2026-09-27", "計算機の見た目を作り直し: 冒頭の帯、入力を5項目＋「詳しく入力する」に、結果の要約を大きな数字で入力の横に（スマホは画面下にも）、関連ページのカード"),
     ("2026-09-27", "トップに月収別の早見表と週20時間の壁の要約を追加。よくある質問を質問の形に直し、10月の変更・週20時間ちょうど・8.8万円未満の3問を追加。各ページに最終更新日"),
@@ -461,6 +503,7 @@ def _write_sitemap() -> None:
         (canonical_url("privacy.html"), None),
         (canonical_url("year/index.html"), None),
         (canonical_url("keisan.html"), None),
+        (canonical_url("nenshu.html"), None),
     ]
     urls += [(canonical_url(p), None) for p in amount_page_paths() + kabe_page_paths()]
     for regime in eligibility.MILESTONES:
@@ -493,6 +536,7 @@ def build_all() -> None:
     _build_year_pages()
     _build_amount_pages()
     _build_kabe_pages()
+    _build_nenshu_page()
     _build_keisan_page()
     _build_static_pages()
     _write_robots()
