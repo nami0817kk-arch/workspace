@@ -11,6 +11,15 @@ from pathlib import Path
 import pytest
 
 import render
+
+# 見た目は 2026-09-27 に base.html の <style> から static/site.css へ移した
+# （1枚 16.6KB が 200 ページ全部に複製されていた）。CSS を見るテストは
+# ここから読む。**出来上がった output の中身を見る**ので、実際に配られる
+# ものと同じであることが保証される。
+def _built_css(out_dir):
+    files = list(out_dir.glob("site.*.css"))
+    assert len(files) == 1, f"見た目のファイルが {len(files)} 個ある"
+    return files[0].read_text(encoding="utf-8")
 import site_config
 
 
@@ -217,11 +226,13 @@ def test_暗い地の色が定義されている(site):
     _write_day(data_dir, "2026-09-18")
     render.build_all()
 
-    css = (out_dir / "index.html").read_text(encoding="utf-8")
+    css = _built_css(out_dir)
     assert "prefers-color-scheme: dark" in css
     # グラフの2色は明暗それぞれで定義する（片方だけだと暗い地で沈む）
     assert css.count("--chart-gain:") == 2 and css.count("--chart-loss:") == 2
-    assert 'name="color-scheme"' in css
+    # この1つだけは HTML 側（<meta>）。地の色をブラウザに先に伝えるもので、
+    # CSS が届く前に白く光らせないために head に置いてある。
+    assert 'name="color-scheme"' in (out_dir / "index.html").read_text(encoding="utf-8")
 
 
 def test_pubIDが空のあいだはadsテキストを置かない(site, monkeypatch):
@@ -481,7 +492,7 @@ def test_スマホで一番見たい列が横スクロールの外に出ない(s
     headers = re.findall(r'<th scope="col">([^<]*)</th>', html)
     assert headers[:5] == ["順位", "銘柄名", "コード", "終値", "騰落率"]
     assert headers[5] == "出来高", "最後の列（狭い画面で落とす列）が出来高でなくなっている"
-    assert "max-width: 600px" in html
+    assert "max-width: 600px" in _built_css(out_dir)
 
 
 def test_銘柄ページがある銘柄だけ名前をリンクにする(site):
@@ -659,7 +670,7 @@ def test_列幅の指定は広い画面だけに当てる(site):
     _write_day(data_dir, "2026-09-18")
     render.build_all()
 
-    css = (out_dir / "index.html").read_text(encoding="utf-8")
+    css = _built_css(out_dir)
     block = css[css.index("余った幅は銘柄名に回し"):]
     assert "@media (min-width: 601px)" in block[:400]
 
@@ -697,7 +708,7 @@ def test_印刷用のCSSに画面用の定義を混ぜない(tmp_path):
     """@media print の中に .highlights 一式が丸ごと貼り込まれていた
     （2026-09-27 に除去）。二重定義は、片方を直したときにもう片方が残る。"""
     import re
-    css = (Path(__file__).resolve().parents[1] / "templates" / "base.html").read_text(
+    css = (Path(__file__).resolve().parents[1] / "static" / "site.css").read_text(
         encoding="utf-8")
     block = re.search(r"@media print \{(.*?)\n  \}", css, re.S)
     assert block, "@media print のブロックが見つからない"

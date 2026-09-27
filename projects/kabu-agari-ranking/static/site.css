@@ -1,0 +1,518 @@
+/* このサイトの見た目。**全ページで同じものを使う。**
+ *
+ * 以前は base.html の <style> に直接書いていた。1枚あたり 16.6KB が
+ * 203 ページ全部に複製され、ページを移るたびに同じものを送り直していた。
+ * 外に出すと、2ページ目からは取りに来ない（ファイル名に中身のハッシュを
+ * 付けてあるので、変えたときだけ新しいものを取りに行く）。
+ */
+:root {
+    --bg: #f7f8fa;
+    --card-bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --accent: #d64545;
+    --border: #e5e7eb;
+    --gain: #d64545;
+    --loss: #2563a8;
+    --chart-gain: #d64545;
+    --chart-loss: #2563a8;
+    --note-bg: #fff8e1;
+    --note-border: #f0e0a0;
+    --link: #1d4ed8;
+    --link-visited: #6d28d9;
+  }
+  /* 暗い地は明るい地の反転ではなく、暗い地に対して選び直した値。
+     グラフの2色は #1b1e24 の上で6項目とも検証済み（明るい地の値は暗いと沈む）。 */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --card-bg: #1b1e24;
+      --text: #e6e8ea;
+      --muted: #9aa3ad;
+      --accent: #e05a5a;
+      --border: #2b313a;
+      --gain: #e05a5a;
+      --loss: #6aa9e9;
+      --chart-gain: #e05a5a;
+      --chart-loss: #4a90d9;
+      --note-bg: #26231a;
+      --note-border: #4a4326;
+      --link: #7fb4f0;
+      --link-visited: #bda4ef;
+    }
+  }
+  * { box-sizing: border-box; }
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    z-index: 10;
+  }
+  .skip-link:focus { left: 0.5rem; top: 0.5rem; }
+  main:focus { outline: none; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header.site-header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+  }
+  header.site-header .inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  header.site-header a.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .logo-mark { border-radius: 6px; flex: none; }
+  .logo-text { display: flex; flex-direction: column; line-height: 1.25; }
+  .logo-sub { font-size: 0.7rem; font-weight: normal; color: var(--muted); }
+  header.site-header .inner { max-width: 1180px; }
+  header.site-header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+  }
+  /* 「常連銘柄」が行またぎで割れていたので、項目単位で折り返す */
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--accent); }
+  /* 本文のリンクはブラウザ既定のままだと、暗い地で読めない濃い青になる */
+  main a { color: var(--link); }
+  main a:visited { color: var(--link-visited); }
+  main a:hover { text-decoration: none; }
+  /* キーボードで辿っている位置が分かるようにする */
+  a:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  /* 横に余った幅を案内に使う。1000px を切ったら1列に畳み、案内は本文の下へ回る
+     （スマホでランキングの表より先に案内が出ないようにするため）。 */
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 1.75rem;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    align-items: start;
+  }
+  @media (max-width: 1000px) {
+    .layout { grid-template-columns: 1fr; gap: 0; padding: 0; }
+  }
+  main {
+    min-width: 0;
+    padding: 1rem 0;
+  }
+  @media (max-width: 1000px) {
+    main { padding: 1rem; }
+  }
+  .rail { padding: 1rem 0; font-size: 0.85rem; }
+  .rail-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+  .rail-box h2 {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.4rem;
+    font-weight: normal;
+  }
+  .rail-box ul { list-style: none; margin: 0; padding: 0; }
+  .rail-box li { margin: 0.3rem 0; }
+  .rail-box a { color: var(--text); text-decoration: none; }
+  .rail-box a:hover { color: var(--accent); text-decoration: underline; }
+  @media (max-width: 1000px) {
+    .rail { padding: 0 1rem 1rem; }
+    .rail-box { display: inline-block; vertical-align: top; width: 100%; }
+  }
+  /* スマホでは既定の 2em だと見出しが3行になり、肝心の表が画面の外に出る */
+  h1 { font-size: 1.45rem; line-height: 1.35; margin: 0.6rem 0; }
+  h2 { font-size: 1.15rem; }
+  @media (min-width: 600px) {
+    h1 { font-size: 1.9rem; }
+    h2 { font-size: 1.35rem; }
+  }
+  .ad-slot {
+    max-width: 800px;
+    margin: 1rem auto;
+    padding: 0.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    border: 1px dashed var(--border);
+  }
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  table.ranking {
+    width: 100%;
+    min-width: 560px;
+    table-layout: auto;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    font-size: 0.9rem;
+  }
+  table.ranking td { font-variant-numeric: tabular-nums; }
+  /* 画面が広いと列が間延びして、数字どうしが離れて読みにくくなる。
+     余った幅は銘柄名に回し、数字の列は必要なぶんだけにする。
+     **狭い画面には当てない。** 当てると銘柄名の幅が足りず、毎行2行に折り返す。 */
+  @media (min-width: 601px) {
+    table.ranking th:nth-child(1), table.ranking td:nth-child(1) { width: 4em; }
+    table.ranking th:nth-child(3), table.ranking td:nth-child(3) { width: 5em; }
+    table.ranking th:nth-child(4), table.ranking td:nth-child(4) { width: 6em; }
+    /* 騰落率の欄は「+22.44% ストップ高」が1行に収まる幅にする。
+       折り返すと、印の付いた行だけ背が高くなって表が波打つ。 */
+    table.ranking th:nth-child(5), table.ranking td:nth-child(5) { width: 12em; white-space: nowrap; }
+    table.ranking th:nth-child(6), table.ranking td:nth-child(6) { width: 8em; }
+  }
+  table.ranking th, table.ranking td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    text-align: right;
+  }
+  table.ranking tbody tr:last-child th,
+  table.ranking tbody tr:last-child td { border-bottom: none; }
+  table.ranking th:nth-child(2), table.ranking td:nth-child(2),
+  table.ranking th:nth-child(3), table.ranking td:nth-child(3) {
+    text-align: left;
+  }
+  table.ranking caption {
+    caption-side: top;
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 6px 6px 0 0;
+  }
+  table.ranking th { color: var(--muted); font-weight: normal; }
+  /* 表の中のリンクは本文色のまま。行ごとに青と黒が混ざると、
+     どれが押せるかより先に「ちらつき」が目に付く。 */
+  table.ranking td a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--border);
+    text-underline-offset: 2px;
+  }
+  table.ranking td a:hover { text-decoration-color: var(--accent); color: var(--accent); }
+  /* 30行スクロールすると見出しが消え、どの列を見ているか分からなくなる */
+  table.ranking thead th {
+    position: sticky;
+    top: 0;
+    background: var(--card-bg);
+    z-index: 1;
+    box-shadow: 0 1px 0 var(--border);
+  }
+  /* 順位は見出しセル（th）だが、見た目はデータとして揃える */
+  table.ranking tbody th { color: var(--text); font-weight: normal; text-align: right; }
+  table.ranking td.gain { color: var(--gain); font-weight: bold; }
+  table.ranking td.loss { color: var(--loss); font-weight: bold; }
+  .archive-list a {
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+  }
+  .archive-list a:hover .archive-date { color: var(--accent); }
+  .archive-date { font-weight: bold; }
+  .archive-top { display: block; font-size: 0.8rem; color: var(--muted); }
+  .stock-search { display: flex; flex-direction: column; gap: 0.3rem; margin: 1rem 0 0.25rem; }
+  .stock-search input {
+    font-size: 1rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text);
+    width: 100%;
+  }
+  .hit { background: var(--card-bg); border: 1px solid var(--border); padding: 0.75rem 1rem; margin: 0.75rem 0; }
+  .hit h2 { font-size: 1rem; margin: 0 0 0.5rem; }
+  .hit dd a { color: var(--accent); margin-right: 0.3rem; }
+  .hit-facts { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--muted); }
+  .chart-figure {
+    margin: 1rem 0;
+    padding: 0.75rem 0.5rem 0.25rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+  }
+  /* 横幅に合わせて伸縮させる。高さは viewBox 側の比率で決まる */
+  /* SVG は幅に追従する。狭い画面基準（360）で組んであるので、
+     PCで拡大されすぎないよう上限を置く（文字だけ大きくなるのを防ぐ） */
+  .chart-figure svg.chart { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto; }
+  .chart-figure figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: left;
+  }
+  .badge {
+    display: inline-block;
+    margin-left: 0.3rem;
+    padding: 0 0.3rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: normal;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .flag-notes {
+    margin: 0.5rem 0 0;
+    padding-left: 0;
+    list-style: none;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .flag-notes li { margin-top: 0.25rem; }
+  .note-scope {
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+    padding-left: 0.6rem;
+  }
+  /* 並べ替えは JS が動く環境だけの上乗せ。列見出しは既定では普通の見出し */
+  table.ranking th[data-sort] { cursor: pointer; white-space: nowrap; }
+  table.ranking th[data-sort]:hover { color: var(--accent); }
+  table.ranking th[data-sort]::after { content: " ↕"; opacity: 0.35; font-size: 0.8em; }
+  table.ranking th[aria-sort="ascending"]::after { content: " ↑"; opacity: 1; }
+  table.ranking th[aria-sort="descending"]::after { content: " ↓"; opacity: 1; }
+  .crumbs {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.4rem;
+  }
+  .crumbs a { color: var(--muted); }
+  .crumbs span[aria-current] { color: var(--text); }
+  /* 狭い画面では、いちばん見たい騰落率が横スクロールの外に出ていた。
+     出来高（いちばん優先度が低い列）を落として、1画面に収める。 */
+  @media (max-width: 600px) {
+    table.ranking { min-width: 0; font-size: 0.85rem; }
+    table.ranking th, table.ranking td { padding: 0.45rem 0.35rem; }
+    table.ranking th:last-child, table.ranking td:last-child { display: none; }
+    table.ranking caption { font-size: 0.75rem; }
+  }
+  /* 画面がさらに狭いと銘柄名が毎行2行に折り返す。コードは銘柄ページ側にも
+     出ているので、ここでは名前に幅を譲る。 */
+  @media (max-width: 430px) {
+    table.ranking th:nth-child(3), table.ranking td:nth-child(3) { display: none; }
+  }
+  /* 日付から探すカレンダー。押せる升目がその日の掲載。 */
+  .calendar { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .cal-month {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+  }
+  .cal-month h3 { font-size: 0.9rem; margin: 0 0 0.4rem; display: flex; gap: 0.5rem; align-items: baseline; }
+  .cal-count { font-size: 0.75rem; color: var(--muted); font-weight: normal; }
+  table.cal-grid { border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  table.cal-grid th {
+    font-size: 0.7rem; font-weight: normal; color: var(--muted); padding: 0.1rem 0;
+  }
+  table.cal-grid td {
+    width: 2.1rem; height: 2.1rem; text-align: center; font-size: 0.85rem; padding: 0;
+  }
+  table.cal-grid a, table.cal-grid span { display: block; line-height: 2.1rem; border-radius: 4px; }
+  /* 掲載がある日だけを目立たせる。探しているのはこの升目なので。 */
+  .cal-data a {
+    background: var(--accent); color: #fff; text-decoration: none; font-weight: bold;
+  }
+  .cal-data a:hover { filter: brightness(1.1); }
+  /* いま見ている日。押せる升目の中で、どれを見ているのかが分かるようにする */
+  .cal-current a { outline: 2px solid var(--text); outline-offset: 1px; }
+  .cal-missing span { color: var(--loss); text-decoration: line-through; }
+  .cal-closed span, .cal-outside span { color: var(--muted); opacity: 0.55; }
+  .cal-legend { font-size: 0.8rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; align-items: center; }
+  .cal-key {
+    display: inline-block; width: 1.8rem; line-height: 1.8rem; text-align: center;
+    border-radius: 4px; font-size: 0.75rem;
+  }
+  .cal-legend .cal-data { background: var(--accent); color: #fff; font-weight: bold; }
+  .cal-legend .cal-missing { color: var(--loss); text-decoration: line-through; }
+  .cal-legend .cal-closed { color: var(--muted); opacity: 0.55; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .updated { font-size: 0.85rem; color: var(--muted); margin: 0.25rem 0 1rem; }
+  .highlights {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0;
+  }
+  .highlights a {
+    display: block;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .highlights a:hover { border-color: var(--accent); }
+  .hl-label { display: block; font-size: 0.75rem; color: var(--muted); }
+  .hl-value { display: block; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+  .hl-note { display: block; font-size: 0.75rem; color: var(--muted); }
+  /* 狭い画面では、ハイライトが2段に折り返して 232px を占め、
+     せっかく上げた表がまた画面の外へ出ていた。1行3枚に詰める。 */
+  @media (max-width: 600px) {
+    .highlights { grid-template-columns: repeat(3, 1fr); gap: 0.35rem; margin: 0.75rem 0; }
+    .highlights a { padding: 0.45rem 0.4rem; text-align: center; }
+    .hl-label { font-size: 0.7rem; }
+    .hl-value { font-size: 1.05rem; }
+    .hl-note { display: none; }   /* 補足は詰めると読めないので落とす */
+  }
+  .summary {
+    background: var(--card-bg);
+    border-left: 3px solid var(--accent);
+    padding: 0.6rem 0.8rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .same-day { font-size: 0.9rem; margin: 1rem 0 0.5rem; }
+  .stop-note { font-size: 0.9rem; margin: 0.75rem 0; }
+  /* アーカイブが無くてリンクにできない行。並びは崩さず、押せないことだけ伝える */
+  .archive-list .archive-plain { color: var(--muted); }
+  /* 市場区分・業種・売買単位。見出しの直下に小さく置く（本文の邪魔をしない） */
+  .stock-profile {
+    margin: -0.4rem 0 0.8rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  /* 市場別・業種別の内訳。広い画面では2つ並べ、狭い画面では縦に積む。
+     **ランキングの表（table.ranking）の見た目は使い回さない。** あちらは
+     狭い画面で最後の列を消す・最低幅560pxを持つ、という前提で組んであり、
+     3列しかないこの表に当てると割合の列が消え、2列に並べたときにはみ出す。 */
+  .breakdown { display: grid; gap: 1rem; margin: 0 0 1.5rem; }
+  .breakdown h3 { font-size: 0.95rem; margin: 0 0 0.4rem; }
+  table.breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+  table.breakdown-table caption {
+    caption-side: top;
+    text-align: left;
+    padding: 0.5rem 0.6rem 0;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  table.breakdown-table th, table.breakdown-table td {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  table.breakdown-table th[scope="row"] { text-align: left; font-weight: normal; }
+  table.breakdown-table thead th { text-align: right; font-size: 0.8rem; color: var(--muted); }
+  table.breakdown-table thead th:first-child { text-align: left; }
+  table.breakdown-table td { text-align: right; font-variant-numeric: tabular-nums; }
+  table.breakdown-table tbody tr:last-child th,
+  table.breakdown-table tbody tr:last-child td { border-bottom: none; }
+  @media (min-width: 720px) {
+    .breakdown { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  }
+  .day-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .day-nav a { color: var(--accent); text-decoration: none; }
+  .day-nav a:hover { text-decoration: underline; }
+  .disclaimer {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  footer {
+    max-width: 800px;
+    margin: 2rem auto 1rem;
+    padding: 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  footer a { color: var(--muted); margin: 0 0.4rem; }
+  .footer-group { margin-bottom: 0.6rem; }
+  .footer-group strong { display: block; color: var(--text); font-size: 0.8rem; margin-bottom: 0.2rem; }
+  .sibling a { display: inline-block; margin: 0.15rem 0.4rem; }
+  .sibling-note { display: block; font-size: 0.7rem; opacity: 0.8; }
+  .to-top { margin-top: 1rem; }
+  .to-top a { color: var(--accent); }
+  .date-jump {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .date-jump input[type="date"] {
+    font-size: 0.85rem;
+    padding: 0.15rem 0.3rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--card-bg);
+    color: var(--text);
+  }
+  /* 紙に出すときは、操作するものと広告枠を落として表だけ残す */
+  @media print {
+    header.site-header nav, .date-jump, .ad-slot, .day-nav, .crumbs,
+    .stock-search, #results, footer { display: none; }
+    body { background: #fff; color: #000; }
+    main { max-width: none; padding: 0; }
+    table.ranking { min-width: 0; font-size: 10pt; }
+    table.ranking th[data-sort]::after { content: ""; }
+    .summary { border-left: 2px solid #000; }
+    a[href]::after { content: ""; }
+  }
+  dl { margin: 0 0 1rem; }
+  dt { margin-top: 0.75rem; }
+  dd { margin: 0.25rem 0 0; color: var(--muted); }

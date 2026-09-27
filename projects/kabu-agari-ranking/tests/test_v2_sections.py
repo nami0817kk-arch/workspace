@@ -306,8 +306,32 @@ def test_ストップ安の章が作られる(site):
     assert "ストップ安の記録" in html
     # 上位30銘柄に限られることを必ず断る（全ストップ安だと誤解させない）
     assert "上位30銘柄です" in html
-    # 日ごとの記録は値下がりのアーカイブへ（値上がりではない）
-    assert "archive/losers/" in html
+    # この fixture は値上がりしか持たない日ばかりなので、値下がりアーカイブが
+    # 作られない。**無いものへリンクしない**のが正しい（2026-09-27 に 404 を直した）。
+    import re
+    day_links = re.findall(r"archive/(\w+)/\d{4}-\d{2}-\d{2}\.html", html)
+    assert not day_links, f"無いアーカイブへ張っている: {day_links}"
+    assert html.count('<div class="archive-plain">') == 3, "リンクにできない日は押せない行として出す"
+
+
+def test_ストップ安の記録は値下がりのアーカイブへ張る(tmp_path, monkeypatch):
+    """アーカイブがある日は、値上がりではなく値下がりの日別ページへ行く。"""
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    monkeypatch.setattr(render, "_DATA_DIR", data_dir)
+    monkeypatch.setattr(render, "_OUTPUT_DIR", tmp_path / "output")
+    monkeypatch.setattr(render, "_ROOT", tmp_path)
+    (data_dir / "2026-09-18.json").write_text(json.dumps({
+        "rec_date": "2026-09-18",
+        "gainers": [_row("5131", "リンカーズ")],
+        "losers": [_low_row("4599", "ステムリム")],
+        "active": [],
+    }, ensure_ascii=False), encoding="utf-8")
+    render.build_all()
+    import re
+    html = (tmp_path / "output" / "stop-low" / "index.html").read_text(encoding="utf-8")
+    assert "archive/losers/2026-09-18.html" in html
+    assert set(re.findall(r"archive/(\w+)/\d{4}-\d{2}-\d{2}\.html", html)) == {"losers"}
 
 
 def test_ストップ安がsitemapに載る(site):

@@ -213,6 +213,10 @@ def stock_histories(days: list[dict], min_appearances: int = STOCK_PAGE_MIN_APPE
         e["stops"] = sum(
             1 for r in e["rows"] if r["flag"] in (price_limit.STOP_HIGH, price_limit.STOP_LOW)
         )
+        # 上限と下限は分けて数える。「3回いっぱいまで動いた」とだけ書くと、
+        # 上がって止まったのか下がって止まったのかが読み手に分からない。
+        e["stop_highs"] = sum(1 for r in e["rows"] if r["flag"] == price_limit.STOP_HIGH)
+        e["stop_lows"] = sum(1 for r in e["rows"] if r["flag"] == price_limit.STOP_LOW)
         e["first"] = e["rows"][-1]["rec_date"]
         e["latest"] = e["rows"][0]["rec_date"]
         out.append(e)

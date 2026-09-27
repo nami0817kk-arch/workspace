@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}月ごとのまとめ一覧｜値上がり株ランキング{% endblock %}
 {% block description %}値上がりランキングを月単位で集計したまとめの一覧です。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "月まとめ", "url": canonical}] %}{% include "_breadcrumb_data.html" %}{% endblock %}
 {% block breadcrumb %}{% set crumbs = [
   {"label": "ホーム", "href": "index.html"},
   {"label": "月まとめ"}
