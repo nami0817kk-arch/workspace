@@ -36,17 +36,31 @@ _ROW_COLS = ["rank", "code", "name", "close", "change_pct", "metric_value"]
 _STOP_COLS = ["rank", "code", "name", "close", "change_pct", "at_limit"]
 
 
-def _stop_rows(df, label):
+def _stop_rows(df, label, rec_date=None):
     """ストップ高／ストップ安の一覧を保存する形に直す。
 
     **1ページも取得できなかった日は `None` を返す**（呼び出し側がキーごと落とす）。
     空リスト（その日は本当に0件だった）と区別するため。0件は相場が穏やかなだけで
     異常ではないが、取れなかった日を0件として記録すると、あとから見たときに
     「その日はストップ高が無かった」という嘘になる。
+
+    `rec_date` を渡すと、**その日のものでなければ入れない**。ランキングとは
+    別のページから取っているので、片方だけ前営業日を指していることがありうる。
+    混ぜると、あとから見分けられない形で記録が濁る。
     """
     if not fetcher.pages_fetched.get(label):
         return None
-    return df[_STOP_COLS].to_dict(orient="records") if df is not None and not df.empty else []
+    if df is None or df.empty:
+        return []
+    if rec_date and "rec_date" in df.columns:
+        got = set(df["rec_date"].unique())
+        if got != {rec_date}:
+            fetcher.parse_failures.append(
+                f"{label}: 相場日がランキングと違います"
+                f"（ランキング={rec_date} / この一覧={sorted(got)}）。記録しません。"
+            )
+            return None
+    return df[_STOP_COLS].to_dict(orient="records")
 
 
 def _count(payload, key):
@@ -64,10 +78,10 @@ def _save_today(gainers, losers, active, stop_high=None, stop_low=None, *,
         "rec_date": rec_date,
         # その日ストップ高をつけた銘柄の全件。上位30銘柄からの推定ではない。
         # 0件の日もある（相場が穏やかな日）。取得できなかった日はキーごと無い。
-        "stop_high": _stop_rows(stop_high, fetcher.STOP_HIGH_LABEL),
+        "stop_high": _stop_rows(stop_high, fetcher.STOP_HIGH_LABEL, rec_date),
         # ストップ安も同じ形で全件記録する。値下がり上位30銘柄からの推定では
         # 30位の外にあったストップ安が数えられない（ストップ高と同じ理由）。
-        "stop_low": _stop_rows(stop_low, fetcher.STOP_LOW_LABEL),
+        "stop_low": _stop_rows(stop_low, fetcher.STOP_LOW_LABEL, rec_date),
         "gainers": gainers[_ROW_COLS].to_dict(orient="records"),
         "losers": losers[_ROW_COLS].to_dict(orient="records") if not losers.empty else [],
         "active": active[_ROW_COLS].to_dict(orient="records") if not active.empty else [],

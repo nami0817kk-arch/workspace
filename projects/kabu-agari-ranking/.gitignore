@@ -17,6 +17,8 @@ Thumbs.db
 
 # 実行時の一時ファイル
 .pytest_cache/
+.coverage
+htmlcov/
 commit-msg.tmp
 run-daily.log
 run-daily.log.1

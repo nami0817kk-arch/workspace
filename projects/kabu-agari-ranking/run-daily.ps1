@@ -160,8 +160,19 @@ Run "`"$repo\.venv\Scripts\python.exe`" src\post_to_x.py" | Out-Null
 # その日のうちに知らせる。休場日なら鳴らない（判定は src\market_calendar.py）。
 # 知らせるだけで、kabutan への自動リトライはしない。
 if ((Run "`"$repo\.venv\Scripts\python.exe`" src\check_freshness.py --after-fetch") -ne 0) {
-    Add-Content $log "STALE: 当日分のデータが入っていません"
-    Notify "株ランキングが当日分を取れていません" "エラーは出ていませんが、今日のデータが入っていません。今日のうちに src\build_site.py を手で回してください。明日には取れなくなります。"
+    # **通知の本文は check_freshness が書いたものをそのまま使う。**
+    # ここで文面を決め打ちすると、理由が増えたときに嘘になる（ストップ高だけ
+    # 取れなかった日にも「今日のデータが入っていません」と出ていた。
+    # そのときに必要なのは build_site ではなく tools\fetch_stop_records）。
+    $checkLines = @(Get-Content $log -Encoding UTF8 | Select-Object -Last 20)
+    $reasons = @($checkLines | Where-Object { $_ -like "*::error::*" })
+    if ($reasons.Count -gt 0) {
+        $body = (($reasons | ForEach-Object { $_ -replace '.*::error::', '' }) -join " ")
+    } else {
+        $body = "今日のデータが入っていません。今日のうちに src\build_site.py を手で回してください。明日には取れなくなります。"
+    }
+    Add-Content $log "STALE: $body"
+    Notify "株ランキングの当日分に欠けがあります" $body
 }
 # 所要時間を残す。取得先が重くなってきたときに、打ち切り（15分）に
 # ぶつかる前に気づける唯一の手がかりになる。

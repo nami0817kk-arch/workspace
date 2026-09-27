@@ -63,3 +63,29 @@ def test_取れなかったランキングはキーごと保存しない(tmp_pat
     saved = json.loads((tmp_path / "2026-09-28.json").read_text(encoding="utf-8"))
     assert saved["stop_high"] == [_ROW]
     assert "stop_low" not in saved
+
+
+def test_相場日がランキングと違う一覧は記録しない():
+    """ストップ高の一覧はランキングとは別のページから取っている。
+    片方だけ前営業日を指していることがありうる。混ぜると、あとから
+    見分けられない形で記録が濁る（2026-09-28 に足した）。"""
+    fetcher.pages_fetched[fetcher.STOP_HIGH_LABEL] = 3
+    fetcher.parse_failures.clear()
+    df = _df([{**_ROW, "rec_date": "2026-09-25"}])
+    assert build_site._stop_rows(df, fetcher.STOP_HIGH_LABEL, "2026-09-28") is None
+    assert any("相場日がランキングと違います" in m for m in fetcher.parse_failures)
+    fetcher.parse_failures.clear()
+
+
+def test_相場日が一致すれば記録する():
+    fetcher.pages_fetched[fetcher.STOP_HIGH_LABEL] = 3
+    df = _df([{**_ROW, "rec_date": "2026-09-28"}])
+    rows = build_site._stop_rows(df, fetcher.STOP_HIGH_LABEL, "2026-09-28")
+    assert rows == [_ROW]
+
+
+def test_相場日を渡さなければ見ない():
+    """道具（tools/fetch_stop_records.py）からは一覧そのものが基準になる。"""
+    fetcher.pages_fetched[fetcher.STOP_HIGH_LABEL] = 3
+    df = _df([{**_ROW, "rec_date": "2026-09-25"}])
+    assert build_site._stop_rows(df, fetcher.STOP_HIGH_LABEL) == [_ROW]
