@@ -1967,6 +1967,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # **赤で1行**（2026-09-14 指示）。エンブレムの回は points を出さないので、
         # 言いたい一言を置く場所が帯しか無かった
         "thumbnail_note_red": str(thumbnail.get("note_red") or ""),
+        # 帯の上の小窓に出す反応のひとこと（2026-09-28 指示「サムネにコメント入れて、もっと人が興味引くように」）。
+        # 書き出し側（thumbnail.py の thumbnail_reaction）にはあったが、取材メモから渡す口が無かった
+        **({"thumbnail_reaction": str(thumbnail["reaction"])} if thumbnail.get("reaction") else {}),
         "thumbnail_band_full": bool(thumbnail.get("band_full", False)),
         # **ショートに反応を入れない回**（2026-09-14 指示）。取材メモに
         # `short_voices: false` と書く。既定は入れる
