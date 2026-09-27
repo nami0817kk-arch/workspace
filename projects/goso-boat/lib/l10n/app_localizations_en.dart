@@ -402,4 +402,119 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hintNoAd => 'Couldn\'t load the video. Try again in a moment.';
+
+  @override
+  String daily(String id) {
+    return 'Daily puzzle ($id)';
+  }
+
+  @override
+  String get dailyDoneLabel => 'Daily puzzle done';
+
+  @override
+  String dailyStreak(int n) {
+    return '$n-day streak';
+  }
+
+  @override
+  String dailyCleared(int n) {
+    return 'Daily puzzle done! $n-day streak';
+  }
+
+  @override
+  String get dailyAbout => 'Clear it with 3 stars';
+
+  @override
+  String get records => 'Records';
+
+  @override
+  String get statClears => 'Levels cleared';
+
+  @override
+  String get statStars => 'Stars';
+
+  @override
+  String get statThree => '3-star levels';
+
+  @override
+  String get statEscapes => 'Escapes';
+
+  @override
+  String get statTrips => 'Boat trips';
+
+  @override
+  String get statStreak => 'Longest daily streak';
+
+  @override
+  String get achievementsTitle => 'Achievements';
+
+  @override
+  String achUnlocked(String name) {
+    return 'Achievement: $name';
+  }
+
+  @override
+  String nightmareLock(int need, int now) {
+    return 'Collect ★$need in worlds 1-7 to unlock (now ★$now)';
+  }
+
+  @override
+  String get ach_firstClear => 'First escort';
+
+  @override
+  String get achDesc_firstClear => 'Clear your first level';
+
+  @override
+  String get ach_clears10 => 'Rookie guard';
+
+  @override
+  String get achDesc_clears10 => 'Clear 10 levels';
+
+  @override
+  String get ach_clears60 => 'Seasoned guard';
+
+  @override
+  String get achDesc_clears60 => 'Clear 60 levels';
+
+  @override
+  String get ach_allClear => 'Legendary guard';
+
+  @override
+  String get achDesc_allClear => 'Clear all 120 levels';
+
+  @override
+  String get ach_threeStar30 => 'Shortcut master';
+
+  @override
+  String get achDesc_threeStar30 => 'Get 3 stars on 30 levels';
+
+  @override
+  String get ach_threeStarAll => 'Perfect escort';
+
+  @override
+  String get achDesc_threeStarAll => 'Get 3 stars on every level';
+
+  @override
+  String get ach_escape10 => 'Oops';
+
+  @override
+  String get achDesc_escape10 => 'Let prisoners escape 10 times';
+
+  @override
+  String get ach_escape100 => 'Jailbreak hotspot';
+
+  @override
+  String get achDesc_escape100 => 'Let prisoners escape 100 times';
+
+  @override
+  String get ach_nightmareThree => 'Beyond the nightmare';
+
+  @override
+  String get achDesc_nightmareThree => 'Get 3 stars on a Nightmare level';
+
+  @override
+  String get ach_dailyWeek => 'Daily patrol';
+
+  @override
+  String get achDesc_dailyWeek => 'Finish the daily puzzle 7 days in a row';
 }

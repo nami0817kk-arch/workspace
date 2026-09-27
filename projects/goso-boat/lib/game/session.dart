@@ -164,8 +164,9 @@ class Session {
   }
 
   /// 星の数。最短で3、少し回り道で2、それ以外は1。ヒントを使うと2まで。
+  /// 星2の幅は狭め（2026-09-27 に 4/6 → 2/4 回に。星を取り直す挑戦を増やすため）。
   int get stars {
-    final slack = level.island ? 6 : 4;
+    final slack = level.island ? 4 : 2;
     var s = trips <= level.par ? 3 : trips <= level.par + slack ? 2 : 1;
     if (usedHint && s > 2) s = 2;
     return s;

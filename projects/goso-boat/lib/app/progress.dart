@@ -57,18 +57,89 @@ class Progress extends ChangeNotifier {
   /// `--dart-define=GOSO_UNLOCK_ALL=true` を付ける）。iOS アプリには付けない。
   static const unlockAll = bool.fromEnvironment('GOSO_UNLOCK_ALL');
 
-  /// 1つ前の面を解いていれば遊べる。
+  /// 舞台8「鬼門」を開くのに要る、舞台1〜7の星の数（最大306）。
+  /// 前の面を星3で解き直す理由にする（2026-09-27）。
+  static const nightmareStars = 200;
+
+  int get starsBeforeNightmare => levels.where((l) => l.world < 8).fold(0, (s, l) => s + stars(l));
+  bool get nightmareOpen => unlockAll || starsBeforeNightmare >= nightmareStars;
+
+  /// 1つ前の面を解いていれば遊べる。舞台8の1面目だけは星も要る。
   bool unlocked(Level l) {
     if (unlockAll) return true;
     final i = levels.indexOf(l);
-    return i <= 0 || cleared(levels[i - 1]);
+    if (i <= 0) return true;
+    if (!cleared(levels[i - 1])) return false;
+    if (l.world == 8 && levels[i - 1].world != 8) return nightmareOpen;
+    return true;
   }
 
   int get totalStars => levels.fold(0, (s, l) => s + stars(l));
   int get maxStars => levels.length * 3;
 
-  /// 「つづきから」で開く面。全部解いていれば最後の面。
-  Level get nextLevel => levels.firstWhere((l) => !cleared(l), orElse: () => levels.last);
+  /// 「つづきから」で開く面。まだ解いていない遊べる面、なければ星3でない面、なければ最後の面。
+  Level get nextLevel => levels.firstWhere(
+        (l) => !cleared(l) && unlocked(l),
+        orElse: () => levels.firstWhere((l) => stars(l) < 3, orElse: () => levels.last),
+      );
+
+  int get clearedCount => levels.where(cleared).length;
+  int get threeStarCount => levels.where((l) => stars(l) == 3).length;
+
+  // ---- 記録（回数） ----
+
+  int stat(String key) => _prefs.getInt('stat.$key') ?? 0;
+  Future<void> bump(String key, [int by = 1]) async {
+    await _prefs.setInt('stat.$key', stat(key) + by);
+  }
+
+  // ---- 今日の1問 ----
+
+  static String dayKey(DateTime d) =>
+      '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+  /// 今日の1問。解いたけれど星3でない面から、日付で1つ選ぶ（なければ解いた面から）。
+  /// 選んだ面はその日のあいだ固定する（星3にした途端に別の面へ変わらないように）。
+  Level? dailyLevel(DateTime now) {
+    final key = dayKey(now);
+    final saved = _prefs.getString('daily.pick.$key');
+    if (saved != null) {
+      for (final l in levels) {
+        if (l.id == saved) return l;
+      }
+    }
+    var pool = levels.where((l) => cleared(l) && stars(l) < 3).toList();
+    if (pool.isEmpty) pool = levels.where(cleared).toList();
+    if (pool.isEmpty) return null;
+    final h = key.codeUnits.fold(7, (h, c) => (h * 31 + c) & 0x7fffffff);
+    final pick = pool[h % pool.length];
+    _prefs.setString('daily.pick.$key', pick.id);
+    return pick;
+  }
+
+  bool dailyDone(DateTime now) => _prefs.getBool('daily.done.${dayKey(now)}') ?? false;
+
+  /// 今日（済んでいなければ昨日）から遡って、続けて達成した日数。
+  int dailyStreak(DateTime now) {
+    var d = DateTime(now.year, now.month, now.day);
+    if (!dailyDone(d)) d = d.subtract(const Duration(days: 1));
+    var n = 0;
+    while (dailyDone(d)) {
+      n++;
+      d = d.subtract(const Duration(days: 1));
+    }
+    return n;
+  }
+
+  /// 今日の1問を星3で解いたら達成にする。今回はじめて達成したときだけ true。
+  Future<bool> recordDaily(Level l, int stars, DateTime now) async {
+    if (stars < 3 || dailyDone(now) || dailyLevel(now) != l) return false;
+    await _prefs.setBool('daily.done.${dayKey(now)}', true);
+    final streak = dailyStreak(now);
+    if (streak > stat('maxStreak')) await _prefs.setInt('stat.maxStreak', streak);
+    notifyListeners();
+    return true;
+  }
 
   /// 自己ベスト（最少の往復回数）。まだ解いていなければ null。
   int? best(Level l) => _prefs.getInt('best.${l.id}');
@@ -97,11 +168,11 @@ class Progress extends ChangeNotifier {
 
   Future<void> markReviewAsked(int world) => _prefs.setBool('review.$world', true);
 
-  /// 星・紹介の既読・評価のお願いの記録をすべて消す（設定画面の「進み具合を消す」）。
+  /// 星・自己ベスト・紹介の既読・評価のお願い・記録・今日の1問・実績をすべて消す（設定画面の「進み具合を消す」）。
   /// 広告を消した購入と、音・振動の設定は残す。
   Future<void> resetAll() async {
     for (final k in _prefs.getKeys().toList()) {
-      if (k.startsWith('stars.') || k.startsWith('best.') || k.startsWith('intro.') || k.startsWith('review.')) {
+      if (['stars.', 'best.', 'intro.', 'review.', 'stat.', 'daily.', 'ach.'].any(k.startsWith)) {
         await _prefs.remove(k);
       }
     }
@@ -110,5 +181,10 @@ class Progress extends ChangeNotifier {
 
   bool seenIntro(int world) => _prefs.getBool('intro.$world') ?? false;
   Future<void> markIntro(int world) => _prefs.setBool('intro.$world', true);
+
+  // ---- 実績（lib/app/achievements.dart が条件を持つ） ----
+
+  bool hasAchievement(String id) => _prefs.getBool('ach.$id') ?? false;
+  Future<void> markAchievement(String id) => _prefs.setBool('ach.$id', true);
 
 }

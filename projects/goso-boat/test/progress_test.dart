@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:goso_boat/app/achievements.dart';
 import 'package:goso_boat/app/progress.dart';
 import 'package:goso_boat/engine/puzzle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,4 +37,63 @@ void main() {
     expect(p.stars(l), 0);
     expect(p.best(l), isNull);
   });
+
+  test('鬼門（舞台8）は、舞台1〜7の星が200に届くまで開かない', () async {
+    // 舞台7まで全部を星2で解く（102面×2＝204だが、1面だけ星1にして203）
+    final p0 = await open();
+    final before = p0.levels.where((l) => l.world < 8).toList();
+    final saved = <String, Object>{for (final l in before) 'stars.${l.id}': 2};
+    final first8 = p0.levels.firstWhere((l) => l.world == 8);
+
+    var p = await openWith({...saved, for (final l in before.take(5)) 'stars.${l.id}': 1});
+    expect(p.starsBeforeNightmare, 199);
+    expect(p.unlocked(first8), isFalse);
+    expect(p.nextLevel, isNot(first8), reason: '開いていない面を「つづきから」にしない');
+    expect(p.stars(p.nextLevel), lessThan(3), reason: '代わりに星を取り直せる面を出す');
+
+    p = await openWith({...saved, for (final l in before.take(4)) 'stars.${l.id}': 1});
+    expect(p.starsBeforeNightmare, 200);
+    expect(p.unlocked(first8), isTrue);
+    expect(p.nextLevel, first8);
+  });
+
+  test('今日の1問: 解いたが星3でない面から選び、その日のあいだは変わらない', () async {
+    final p = await openWith({'stars.1-1': 3, 'stars.1-2': 2, 'stars.1-3': 1});
+    final day = DateTime(2026, 9, 27);
+    final l = p.dailyLevel(day)!;
+    expect(['1-2', '1-3'], contains(l.id));
+    expect(await p.recordDaily(l, 2, day), isFalse, reason: '星3でないと達成にしない');
+    expect(await p.recordDaily(l, 3, day), isTrue);
+    await p.record(l, 3);
+    expect(p.dailyLevel(day), l, reason: '星3にしても、その日の問題は変えない');
+    expect(await p.recordDaily(l, 3, day), isFalse, reason: '1日1回');
+    expect(p.dailyStreak(day), 1);
+  });
+
+  test('今日の1問: 連続日数は途切れたら数え直す', () async {
+    final p = await openWith({
+      'stars.1-2': 1,
+      'daily.done.2026-09-24': true,
+      'daily.done.2026-09-25': true,
+      'daily.done.2026-09-26': true,
+    });
+    expect(p.dailyStreak(DateTime(2026, 9, 27)), 3, reason: '今日まだでも昨日までの連続を出す');
+    expect(p.dailyStreak(DateTime(2026, 9, 28)), 0, reason: '昨日（27日）を落とすと途切れる');
+    expect((await openWith({})).dailyLevel(DateTime(2026, 9, 27)), isNull, reason: 'まだ1面も解いていなければ出さない');
+  });
+
+  test('実績: 満たしたときに1回だけ取れる。脱走にも実績がある', () async {
+    final p = await openWith({'stars.1-1': 1});
+    expect(await collectNewAchievements(p), [Achievement.firstClear]);
+    expect(await collectNewAchievements(p), isEmpty, reason: '2回目は出さない');
+    await p.bump('escapes', 10);
+    expect(await collectNewAchievements(p), [Achievement.escape10]);
+    expect(p.hasAchievement('escape10'), isTrue);
+  });
+}
+
+Future<Progress> openWith(Map<String, Object> saved) async {
+  SharedPreferences.setMockInitialValues(saved);
+  final data = jsonDecode(File('assets/levels.json').readAsStringSync()) as Map<String, Object?>;
+  return Progress.open((data['levels']! as List).map((e) => Level.fromJson(e as Map<String, Object?>)).toList());
 }

@@ -389,4 +389,119 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get hintNoAd => '動画を読み込めなかった。少し待ってもう一度';
+
+  @override
+  String daily(String id) {
+    return '今日の1問（$id）';
+  }
+
+  @override
+  String get dailyDoneLabel => '今日の1問 達成済み';
+
+  @override
+  String dailyStreak(int n) {
+    return '連続$n日';
+  }
+
+  @override
+  String dailyCleared(int n) {
+    return '今日の1問 達成！ 連続$n日';
+  }
+
+  @override
+  String get dailyAbout => '星3で解くと達成';
+
+  @override
+  String get records => '記録';
+
+  @override
+  String get statClears => '解いた面';
+
+  @override
+  String get statStars => '星';
+
+  @override
+  String get statThree => '星3の面';
+
+  @override
+  String get statEscapes => '脱走された回数';
+
+  @override
+  String get statTrips => '舟を出した回数';
+
+  @override
+  String get statStreak => '今日の1問の最長連続';
+
+  @override
+  String get achievementsTitle => '実績';
+
+  @override
+  String achUnlocked(String name) {
+    return '実績: $name';
+  }
+
+  @override
+  String nightmareLock(int need, int now) {
+    return '舞台1〜7で★$needを集めると開く（いま★$now）';
+  }
+
+  @override
+  String get ach_firstClear => '初めての護送';
+
+  @override
+  String get achDesc_firstClear => '最初の面を解く';
+
+  @override
+  String get ach_clears10 => '見習い看守';
+
+  @override
+  String get achDesc_clears10 => '10面を解く';
+
+  @override
+  String get ach_clears60 => '一人前の看守';
+
+  @override
+  String get achDesc_clears60 => '60面を解く';
+
+  @override
+  String get ach_allClear => '伝説の看守';
+
+  @override
+  String get achDesc_allClear => '全120面を解く';
+
+  @override
+  String get ach_threeStar30 => '最短の達人';
+
+  @override
+  String get achDesc_threeStar30 => '30面を星3で解く';
+
+  @override
+  String get ach_threeStarAll => '完全護送';
+
+  @override
+  String get achDesc_threeStarAll => '全面を星3で解く';
+
+  @override
+  String get ach_escape10 => '逃げられ上手';
+
+  @override
+  String get achDesc_escape10 => '10回脱走される';
+
+  @override
+  String get ach_escape100 => '脱獄の名所';
+
+  @override
+  String get achDesc_escape100 => '100回脱走される';
+
+  @override
+  String get ach_nightmareThree => '鬼門を越えて';
+
+  @override
+  String get achDesc_nightmareThree => '鬼門の面を星3で解く';
+
+  @override
+  String get ach_dailyWeek => '毎日の見回り';
+
+  @override
+  String get achDesc_dailyWeek => '今日の1問を7日続けて達成';
 }

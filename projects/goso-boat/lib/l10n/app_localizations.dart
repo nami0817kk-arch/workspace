@@ -763,6 +763,216 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'動画を読み込めなかった。少し待ってもう一度'**
   String get hintNoAd;
+
+  /// No description provided for @daily.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問（{id}）'**
+  String daily(String id);
+
+  /// No description provided for @dailyDoneLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問 達成済み'**
+  String get dailyDoneLabel;
+
+  /// No description provided for @dailyStreak.
+  ///
+  /// In ja, this message translates to:
+  /// **'連続{n}日'**
+  String dailyStreak(int n);
+
+  /// No description provided for @dailyCleared.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問 達成！ 連続{n}日'**
+  String dailyCleared(int n);
+
+  /// No description provided for @dailyAbout.
+  ///
+  /// In ja, this message translates to:
+  /// **'星3で解くと達成'**
+  String get dailyAbout;
+
+  /// No description provided for @records.
+  ///
+  /// In ja, this message translates to:
+  /// **'記録'**
+  String get records;
+
+  /// No description provided for @statClears.
+  ///
+  /// In ja, this message translates to:
+  /// **'解いた面'**
+  String get statClears;
+
+  /// No description provided for @statStars.
+  ///
+  /// In ja, this message translates to:
+  /// **'星'**
+  String get statStars;
+
+  /// No description provided for @statThree.
+  ///
+  /// In ja, this message translates to:
+  /// **'星3の面'**
+  String get statThree;
+
+  /// No description provided for @statEscapes.
+  ///
+  /// In ja, this message translates to:
+  /// **'脱走された回数'**
+  String get statEscapes;
+
+  /// No description provided for @statTrips.
+  ///
+  /// In ja, this message translates to:
+  /// **'舟を出した回数'**
+  String get statTrips;
+
+  /// No description provided for @statStreak.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問の最長連続'**
+  String get statStreak;
+
+  /// No description provided for @achievementsTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'実績'**
+  String get achievementsTitle;
+
+  /// No description provided for @achUnlocked.
+  ///
+  /// In ja, this message translates to:
+  /// **'実績: {name}'**
+  String achUnlocked(String name);
+
+  /// No description provided for @nightmareLock.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台1〜7で★{need}を集めると開く（いま★{now}）'**
+  String nightmareLock(int need, int now);
+
+  /// No description provided for @ach_firstClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'初めての護送'**
+  String get ach_firstClear;
+
+  /// No description provided for @achDesc_firstClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'最初の面を解く'**
+  String get achDesc_firstClear;
+
+  /// No description provided for @ach_clears10.
+  ///
+  /// In ja, this message translates to:
+  /// **'見習い看守'**
+  String get ach_clears10;
+
+  /// No description provided for @achDesc_clears10.
+  ///
+  /// In ja, this message translates to:
+  /// **'10面を解く'**
+  String get achDesc_clears10;
+
+  /// No description provided for @ach_clears60.
+  ///
+  /// In ja, this message translates to:
+  /// **'一人前の看守'**
+  String get ach_clears60;
+
+  /// No description provided for @achDesc_clears60.
+  ///
+  /// In ja, this message translates to:
+  /// **'60面を解く'**
+  String get achDesc_clears60;
+
+  /// No description provided for @ach_allClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'伝説の看守'**
+  String get ach_allClear;
+
+  /// No description provided for @achDesc_allClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'全120面を解く'**
+  String get achDesc_allClear;
+
+  /// No description provided for @ach_threeStar30.
+  ///
+  /// In ja, this message translates to:
+  /// **'最短の達人'**
+  String get ach_threeStar30;
+
+  /// No description provided for @achDesc_threeStar30.
+  ///
+  /// In ja, this message translates to:
+  /// **'30面を星3で解く'**
+  String get achDesc_threeStar30;
+
+  /// No description provided for @ach_threeStarAll.
+  ///
+  /// In ja, this message translates to:
+  /// **'完全護送'**
+  String get ach_threeStarAll;
+
+  /// No description provided for @achDesc_threeStarAll.
+  ///
+  /// In ja, this message translates to:
+  /// **'全面を星3で解く'**
+  String get achDesc_threeStarAll;
+
+  /// No description provided for @ach_escape10.
+  ///
+  /// In ja, this message translates to:
+  /// **'逃げられ上手'**
+  String get ach_escape10;
+
+  /// No description provided for @achDesc_escape10.
+  ///
+  /// In ja, this message translates to:
+  /// **'10回脱走される'**
+  String get achDesc_escape10;
+
+  /// No description provided for @ach_escape100.
+  ///
+  /// In ja, this message translates to:
+  /// **'脱獄の名所'**
+  String get ach_escape100;
+
+  /// No description provided for @achDesc_escape100.
+  ///
+  /// In ja, this message translates to:
+  /// **'100回脱走される'**
+  String get achDesc_escape100;
+
+  /// No description provided for @ach_nightmareThree.
+  ///
+  /// In ja, this message translates to:
+  /// **'鬼門を越えて'**
+  String get ach_nightmareThree;
+
+  /// No description provided for @achDesc_nightmareThree.
+  ///
+  /// In ja, this message translates to:
+  /// **'鬼門の面を星3で解く'**
+  String get achDesc_nightmareThree;
+
+  /// No description provided for @ach_dailyWeek.
+  ///
+  /// In ja, this message translates to:
+  /// **'毎日の見回り'**
+  String get ach_dailyWeek;
+
+  /// No description provided for @achDesc_dailyWeek.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問を7日続けて達成'**
+  String get achDesc_dailyWeek;
 }
 
 class _AppLocalizationsDelegate
