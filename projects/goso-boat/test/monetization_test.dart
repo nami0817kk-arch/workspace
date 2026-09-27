@@ -9,21 +9,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FakeAds implements AdService {
   bool rewardedReady = true;
   bool watchToEnd = true;
+  bool interstitialReady = true;
   int interstitials = 0;
   int rewardeds = 0;
+  int reloads = 0;
 
   @override
   Future<void> initialize() async {}
   @override
   bool get isRewardedAdReady => rewardedReady;
   @override
-  Future<bool> showRewardedAd() async {
+  void ensureLoaded() => reloads++;
+  @override
+  Future<RewardResult> showRewardedAd() async {
     rewardeds++;
-    return watchToEnd;
+    return watchToEnd ? RewardResult.earned : RewardResult.closedEarly;
   }
 
   @override
-  Future<void> showInterstitialAd() async => interstitials++;
+  Future<bool> showInterstitialAd() async {
+    if (!interstitialReady) return false;
+    interstitials++;
+    return true;
+  }
   @override
   void dispose() {}
 }
@@ -75,6 +83,24 @@ void main() {
     expect(m.hintNeedsAd, isTrue);
     expect(await m.beforeHint(), HintGate.unavailable);
     expect(ads.rewardeds, 0);
+    expect(ads.reloads, 1, reason: '読み込めていなければ、次に押すときのために読み直しを始める');
+  });
+
+  test('全画面広告を出せなかった（在庫なし）ときは数えを戻さず、次の面でもう一度試す', () async {
+    final (m, ads, _) = await make();
+    ads.interstitialReady = false;
+    final shown = [for (var i = 0; i < 4; i++) await m.afterClear(lv(2))];
+    expect(shown, [false, false, false, false]);
+    ads.interstitialReady = true;
+    expect(await m.afterClear(lv(2)), isTrue, reason: '出せるようになった最初の「次の面へ」で出す');
+    expect(await m.afterClear(lv(2)), isFalse, reason: '出した後は数え直す');
+  });
+
+  test('保護者の承認待ちでは、まだ広告なしにしない', () async {
+    final (m, _, store) = await make();
+    store.next = PurchaseOutcome.pending;
+    expect(await m.buy(), PurchaseOutcome.pending);
+    expect(m.adFree, isFalse);
   });
 
   test('広告を消すと、全画面広告も動画も出ない', () async {

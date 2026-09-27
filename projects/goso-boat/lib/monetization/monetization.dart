@@ -26,8 +26,8 @@ enum HintGate {
 /// - 広告を消す: 全画面広告が出なくなり、ヒントも動画なしで使える。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
-      : ads = ads ?? NoOpAdService(),
-        store = store ?? NoOpPurchaseService();
+    : ads = ads ?? NoOpAdService(),
+      store = store ?? NoOpPurchaseService();
 
   static const interstitialEvery = 3;
 
@@ -46,6 +46,8 @@ class Monetization extends ChangeNotifier {
   }
 
   Future<void> _setAdFree() async {
+    // 読み込み済みの広告と、電波が無いときの読み直しを止める
+    if (!adFree) ads.dispose();
     await _prefs.setBool('adFree', true);
     notifyListeners();
   }
@@ -58,16 +60,28 @@ class Monetization extends ChangeNotifier {
       await _prefs.setInt('clearsSinceAd', n);
       return false;
     }
-    await _prefs.setInt('clearsSinceAd', 0);
-    await ads.showInterstitialAd();
-    return true;
+    // 出せたときだけ数え直す。在庫が無くて出せなければ、次の「次の面へ」でもう一度試す
+    final shown = await ads.showInterstitialAd();
+    await _prefs.setInt('clearsSinceAd', shown ? 0 : n);
+    return shown;
   }
 
   /// ヒントの前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
   Future<HintGate> beforeHint() async {
     if (adFree) return HintGate.granted;
-    if (!ads.isRewardedAdReady) return HintGate.unavailable;
-    return await ads.showRewardedAd() ? HintGate.granted : HintGate.declined;
+    if (!ads.isRewardedAdReady) {
+      // 読み込みに失敗したままにならないよう、ここで読み直しを始める
+      ads.ensureLoaded();
+      return HintGate.unavailable;
+    }
+    final r = await ads.showRewardedAd();
+    // 動画を見ている間に「広告を消す」が届いた（家族の承認など）なら、そのままヒントを出す
+    if (adFree) return HintGate.granted;
+    return switch (r) {
+      RewardResult.earned => HintGate.granted,
+      RewardResult.closedEarly => HintGate.declined,
+      RewardResult.unavailable => HintGate.unavailable,
+    };
   }
 
   /// ヒントのボタンに「動画」の印を付けるか（広告を消した人以外は、いつも動画が要る）。
