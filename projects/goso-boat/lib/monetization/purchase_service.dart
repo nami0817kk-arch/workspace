@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
@@ -32,6 +33,9 @@ abstract class PurchaseService {
   /// 瞬間に返るとは限らない（家族の承認・別の端末での購入・起動時の再送）。
   set onDelivered(Future<void> Function(String productId)? callback);
 
+  /// 返金・取り消しされた購入が届いたら呼ぶ（広告を戻す）。
+  set onRevoked(Future<void> Function(String productId)? callback);
+
   Future<void> initialize();
   Future<bool> isAvailable();
 
@@ -50,6 +54,9 @@ abstract class PurchaseService {
 class NoOpPurchaseService implements PurchaseService {
   @override
   set onDelivered(Future<void> Function(String productId)? callback) {}
+
+  @override
+  set onRevoked(Future<void> Function(String productId)? callback) {}
 
   @override
   Future<void> initialize() async {}
@@ -75,6 +82,7 @@ class StorePurchaseService implements PurchaseService {
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
   Future<void> Function(String productId)? _onDelivered;
+  Future<void> Function(String productId)? _onRevoked;
 
   /// いま待っている購入と復元。重ねて押されたら同じものを返す（2度押しで結果が食い違わないように）。
   /// 別々に持つのは、復元の「対象なし」が購入の結果として返らないようにするため。
@@ -84,6 +92,20 @@ class StorePurchaseService implements PurchaseService {
 
   @override
   set onDelivered(Future<void> Function(String productId)? callback) => _onDelivered = callback;
+
+  @override
+  set onRevoked(Future<void> Function(String productId)? callback) => _onRevoked = callback;
+
+  /// 返金・取り消し済みの取引か。StoreKit 2 のプラグインは取り消された取引も「購入」として流してくるので、
+  /// 取引の JSON（Transaction.jsonRepresentation）の revocationDate で見分ける。
+  static bool isRevoked(PurchaseDetails p) {
+    try {
+      final j = jsonDecode(p.verificationData.localVerificationData);
+      return j is Map && j['revocationDate'] != null;
+    } catch (_) {
+      return false; // JSON でない（StoreKit 1 のレシートなど）
+    }
+  }
 
   @override
   Future<void> initialize() async {
@@ -102,6 +124,14 @@ class StorePurchaseService implements PurchaseService {
       if (p.status == PurchaseStatus.pending) {
         // 保護者の承認待ち。待っている側には「承認待ち」と返し、承認されたら改めて届く
         _finish(_buying, PurchaseOutcome.pending);
+        continue;
+      }
+      if ((p.status == PurchaseStatus.purchased || p.status == PurchaseStatus.restored) && isRevoked(p)) {
+        // 返金された。広告を戻し、取引は片付ける。待っている購入・復元には「広告なし」と返さない
+        try {
+          await _onRevoked?.call(p.productID);
+        } catch (_) {}
+        if (p.pendingCompletePurchase) unawaited(_iap.completePurchase(p));
         continue;
       }
       var received = true;
@@ -186,9 +216,10 @@ class StorePurchaseService implements PurchaseService {
           return PurchaseOutcome.canceled;
         },
       );
-    } catch (_) {
-      _finish(c, PurchaseOutcome.failed);
-      return c.future;
+    } catch (e) {
+      // StoreKit が取りやめを例外で返すことがある。自分でやめたのを「失敗」と出さない
+      _finish(c, '$e'.contains('userCancelled') ? PurchaseOutcome.canceled : PurchaseOutcome.failed);
+      return await c.future;
     }
   }
 
@@ -202,7 +233,8 @@ class StorePurchaseService implements PurchaseService {
       // 通知は少し遅れて届くので短く待ち、来なければ「対象なし」で確定する
       await _iap.restorePurchases();
       return await c.future.timeout(
-        const Duration(seconds: 3),
+        // 審査の担当が買った直後に試しても「見つからない」と出ないよう、少し長めに待つ
+        const Duration(seconds: 5),
         onTimeout: () {
           _finish(c, PurchaseOutcome.unavailable);
           return PurchaseOutcome.unavailable;

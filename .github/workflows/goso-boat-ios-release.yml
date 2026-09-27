@@ -42,6 +42,9 @@ jobs:
     runs-on: macos-latest
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
     timeout-minutes: 60
+    env:
+      # 法務ページ（プライバシーポリシー・サポート）の置き場所。アプリへの埋め込みと公開の確認の両方がここを見る
+      LEGAL_BASE_URL: https://goso-boat.pages.dev
     defaults:
       run:
         working-directory: projects/goso-boat
@@ -62,6 +65,10 @@ jobs:
         run: flutter test
 
       # 同梱フォントに文言の字が揃っているか（goso-boat-ci.yml と同じ検査）
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Check bundled fonts
         run: |
           pip3 install --quiet fonttools
@@ -117,6 +124,9 @@ jobs:
           for v in "$ADMOB_REWARDED" "$ADMOB_INTERSTITIAL"; do
             echo "$v" | grep -Eq '^ca-app-pub-[0-9]{16}/[0-9]{10}$'               || { echo "::error::広告ユニットIDの形（ca-app-pub-…/…）ではない Secret があります（REWARDED / INTERSTITIAL）。"; exit 1; }
           done
+          pub() { echo "$1" | sed -E 's/^ca-app-pub-([0-9]{16}).*/\1/'; }
+          [ "$(pub "$ADMOB_APP_ID")" = "$(pub "$ADMOB_REWARDED")" ] && [ "$(pub "$ADMOB_APP_ID")" = "$(pub "$ADMOB_INTERSTITIAL")" ] \
+            || { echo "::error::アプリIDと広告ユニットIDが別の AdMob アカウントのものです。"; exit 1; }
           [ "$ADMOB_REWARDED" != "$ADMOB_INTERSTITIAL" ]             || { echo "::error::動画と全画面に同じ広告ユニットIDが入っています。"; exit 1; }
           plutil -replace GADApplicationIdentifier -string "$ADMOB_APP_ID" ios/Runner/Info.plist
           # 置換できたことを確かめる。見逃すとテスト用IDのまま出る。
@@ -127,8 +137,12 @@ jobs:
           [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ]             || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
           echo "Info.plist の GADApplicationIdentifier を本番IDに置き換えました。"
           # 設定画面のリンク先（lib/app/links.dart の既定）が開けること。404 のまま出すと審査で却下される
+          # 設定画面のリンク先が開けて、中身が本物か（404 や別のページのまま出すと審査で却下される）
           for page in privacy support; do
-            curl -fsSL -o /dev/null "https://goso-boat.pages.dev/$page.html"               || { echo "::error::https://goso-boat.pages.dev/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
+            body=$(curl -fsSL "$LEGAL_BASE_URL/$page.html") \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
+            echo "$body" | grep -q "護送ボート" \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身が護送ボートのページではありません。"; exit 1; }
           done
 
       - name: Import signing certificate into a temporary keychain
@@ -160,7 +174,9 @@ jobs:
           security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
 
           echo "インポートされた署名 ID:"
-          security find-identity -v -p codesigning "$KEYCHAIN"
+          # 公開ログに証明書の持ち主の名前を出さない。件数だけ出す
+          security find-identity -v -p codesigning "$KEYCHAIN" | grep -c "Apple Distribution" \
+            || { echo "::error::署名用の証明書が見つかりません。"; exit 1; }
 
       - name: Install provisioning profile
         env:
@@ -249,16 +265,20 @@ jobs:
         env:
           ADMOB_REWARDED: ${{ secrets.GOSO_ADMOB_REWARDED_IOS }}
           ADMOB_INTERSTITIAL: ${{ secrets.GOSO_ADMOB_INTERSTITIAL_IOS }}
+          BUILD_NUMBER: ${{ github.event.inputs.build_number }}
         run: |
           set -euo pipefail
           EXTRA=""
-          if [ -n "${{ github.event.inputs.build_number }}" ]; then
-            EXTRA="--build-number=${{ github.event.inputs.build_number }}"
+          if [ -n "$BUILD_NUMBER" ]; then
+            # 入力欄の値をそのままシェルに埋め込まない。数字だけ受け付ける
+            [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::ビルド番号は数字だけで入れてください。"; exit 1; }
+            EXTRA="--build-number=$BUILD_NUMBER"
           fi
           flutter build ipa --release \
             --export-options-plist=ios/ExportOptions.plist $EXTRA \
             --dart-define=ADMOB_REWARDED_IOS="$ADMOB_REWARDED" \
-            --dart-define=ADMOB_INTERSTITIAL_IOS="$ADMOB_INTERSTITIAL"
+            --dart-define=ADMOB_INTERSTITIAL_IOS="$ADMOB_INTERSTITIAL" \
+            --dart-define=LEGAL_BASE_URL="$LEGAL_BASE_URL"
           ls -la build/ios/ipa/
 
       - name: Upload to TestFlight

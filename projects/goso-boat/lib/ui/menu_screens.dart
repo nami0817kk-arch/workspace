@@ -383,15 +383,21 @@ class _RemoveAdsState extends State<_RemoveAds> {
     final t = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
-    final r = await f();
+    PurchaseOutcome r;
+    try {
+      r = await f();
+    } catch (_) {
+      r = PurchaseOutcome.failed;
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
     if (!mounted) return;
-    setState(() => _busy = false);
     final msg = switch (r) {
       PurchaseOutcome.purchased => restore ? t.purchaseRestored : t.purchaseThanks,
       PurchaseOutcome.pending => t.purchasePending,
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable => restore ? t.purchaseNothing : t.purchaseFailed,
-      PurchaseOutcome.failed => t.purchaseFailed,
+      PurchaseOutcome.failed => restore ? t.restoreFailed : t.purchaseFailed,
     };
     if (msg != null) {
       messenger.removeCurrentSnackBar();

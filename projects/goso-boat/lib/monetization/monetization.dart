@@ -41,8 +41,30 @@ class Monetization extends ChangeNotifier {
     store.onDelivered = (id) async {
       if (id == PurchaseService.removeAdsId) await _setAdFree();
     };
-    await store.initialize();
+    store.onRevoked = (id) async {
+      if (id == PurchaseService.removeAdsId) await _clearAdFree();
+    };
+    try {
+      await store.initialize();
+    } catch (_) {
+      // ストアの準備に失敗しても、広告（全年齢向けの設定を含む）は準備する
+    }
     if (!adFree) await ads.initialize();
+  }
+
+  /// 返金されたら広告を戻す。
+  Future<void> _clearAdFree() async {
+    if (!adFree) return;
+    await _prefs.setBool('adFree', false);
+    notifyListeners();
+    try {
+      await ads.initialize();
+    } catch (_) {}
+  }
+
+  /// アプリが前面に戻ったときに呼ぶ。期限切れの広告を読み直す。
+  void refreshAds() {
+    if (!adFree) ads.ensureLoaded();
   }
 
   Future<void> _setAdFree() async {
@@ -51,6 +73,10 @@ class Monetization extends ChangeNotifier {
     await _prefs.setBool('adFree', true);
     notifyListeners();
   }
+
+  /// 次の「次の面へ」で全画面広告を出す番か（出す前に少し間を置くため）。
+  bool interstitialDue(Level level) =>
+      !adFree && level.world != 1 && (_prefs.getInt('clearsSinceAd') ?? 0) + 1 >= interstitialEvery;
 
   /// 面をクリアして次へ進む直前に呼ぶ。出すべきなら全画面広告を出し、閉じるまで待つ。
   Future<bool> afterClear(Level level) async {
@@ -61,8 +87,10 @@ class Monetization extends ChangeNotifier {
       return false;
     }
     // 出せたときだけ数え直す。在庫が無くて出せなければ、次の「次の面へ」でもう一度試す
+    // 出す前に数え直しておく（広告の途中で終了されても、次のクリアで続けて出ないように）
+    await _prefs.setInt('clearsSinceAd', 0);
     final shown = await ads.showInterstitialAd();
-    await _prefs.setInt('clearsSinceAd', shown ? 0 : n);
+    if (!shown) await _prefs.setInt('clearsSinceAd', n);
     return shown;
   }
 

@@ -49,7 +49,8 @@ API では作れないので、画面で作る。
 1. 作ったアプリ → **App内課金** → **＋** → **非消耗型**
 2. 参照名 `Remove Ads`、製品ID **`goso_boat_remove_ads`**（アプリ側に固定で書いてある）
 3. 価格 **370円**（ユーザー決定）。表示名「広告を消す」／英語「Remove Ads」、説明「全画面広告が出なくなり、ヒントも動画なしで使えます」
-4. 審査用のスクリーンショットは、TestFlight で撮れるようになってから入れればよい
+4. 審査用のスクリーンショット（「広告を消す（¥370）」のボタンが写ったタイトル画面）が無いと提出できない。TestFlight で撮れるようになってから入れる
+5. **最初の課金アイテムは、アプリのバージョンと一緒に審査に出す。** バージョンのページの「App内課金」で「広告を消す」を添付してから提出する（添付を忘れると、審査の担当者の端末で値段が取れずボタンが出ない＝「課金が見つからない」で却下される）
 
 ### 5. AdMob にアプリと広告ユニットを作る
 
@@ -70,3 +71,35 @@ GitHub の Actions → **Build 護送ボート (iOS Release)** → Run workflow 
 1. App Store Connect → アプリ → **TestFlight** → 内部テスト → グループを作り、自分（Apple ID）を入れる
 2. アップロード後、処理に10〜30分ほど。iPhone の **TestFlight** アプリに出てくるので、インストール
 3. 課金は TestFlight ではお金がかからない（Sandbox）。広告は本物のIDでもテスト表示になることがある
+
+### 審査に出すときに書くこと
+
+**審査メモ（App Review Information → Notes、英語で）**
+
+```
+No login is required.
+In-app purchase: one non-consumable, "Remove Ads" (goso_boat_remove_ads), shown at the bottom of the title screen.
+"Restore purchases" is on the title screen and in Settings.
+Hints: each hint requires watching a rewarded video ad (no video after purchasing Remove Ads).
+Interstitial ads: from World 2 on, once every 3 cleared levels when tapping "Next level". World 1 has no interstitial ads.
+The app does not use App Tracking Transparency and does not track users.
+Privacy policy and "Support / report an ad" are in Settings.
+```
+
+**App のプライバシー（App Store Connect → App のプライバシー）**
+
+Google の AdMob の開示（https://developers.google.com/admob/ios/privacy/data-disclosure ）に合わせる。
+提供者（つるはし社）自身は何も集めない。AdMob が集めるもの:
+
+| データの種類 | 用途 | ユーザーに紐づく | トラッキング |
+|---|---|---|---|
+| おおよその位置（IP アドレスから） | 第三者の広告・分析 | 答える前に Google の表で確かめる | いいえ（ATT を使わない） |
+| デバイス ID | 第三者の広告・分析 | 同上 | いいえ |
+| 製品の操作（広告のタップ・視聴） | 第三者の広告・分析 | 同上 | いいえ |
+| その他の使用状況データ（広告データ） | 第三者の広告 | 同上 | いいえ |
+| クラッシュデータ・パフォーマンスデータ | 分析 | 同上 | いいえ |
+
+サカマネの申告（記憶の「サカマネ iOS の公開状況」に正解がある）と同じ答え方にそろえる。
+
+**年齢区分**: 質問票の「広告」は「あり」。暴力の項目（囚人が逃げる・捕まえる表現）をどう答えるかはユーザー判断（4+ か 9+）。
+

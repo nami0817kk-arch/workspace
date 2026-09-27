@@ -145,6 +145,13 @@ class Session {
   }
 
   /// 次の一手を舟に乗せて返す。今の盤面から解けなければ null。
+  /// いまヒントを出せるか（解けない局面で動画をむだに見せないため、動画の前に確かめる）。
+  bool get canHint {
+    if (failed || cleared) return false;
+    final path = solveFrom(board, level);
+    return path != null && path.isNotEmpty;
+  }
+
   Move? hint() {
     if (failed || cleared) return null;
     final path = solveFrom(board, level);

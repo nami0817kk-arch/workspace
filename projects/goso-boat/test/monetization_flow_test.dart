@@ -52,6 +52,9 @@ class FakeStore implements PurchaseService {
 
   @override
   set onDelivered(Future<void> Function(String productId)? cb) => delivered = cb;
+  Future<void> Function(String)? revoked;
+  @override
+  set onRevoked(Future<void> Function(String productId)? cb) => revoked = cb;
   @override
   Future<void> initialize() async {}
   @override
@@ -141,7 +144,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       expect(store.buys, 1);
       expect(m.adFree, isTrue);
-      expect(find.text('広告を消しました。ありがとう！'), findsOneWidget);
+      expect(find.text('広告を消しました。ご購入ありがとうございます！'), findsOneWidget);
       expect(find.text('広告なし'), findsOneWidget);
       expect(find.text('広告を消す（¥370）'), findsNothing, reason: '買った後はボタンを出さない');
       await tester.pump(const Duration(seconds: 5));
@@ -162,7 +165,7 @@ void main() {
       await tester.tap(find.text('広告を消す（¥370）'));
       await tester.pump(const Duration(milliseconds: 300));
       expect(m.adFree, isFalse);
-      expect(find.text('購入できなかった。時間をおいてもう一度'), findsOneWidget);
+      expect(find.text('購入できませんでした。時間をおいてもう一度お試しください'), findsOneWidget);
       await tester.pump(const Duration(seconds: 5));
     });
 
@@ -184,7 +187,7 @@ void main() {
       expect(find.text('購入を復元'), findsNothing);
     });
 
-    testWidgets('保護者の承認待ちは、そう知らせて広告はまだ消さない', (tester) async {
+    testWidgets('購入の保留（承認待ち）は、そう知らせて広告はまだ消さない', (tester) async {
       final (p, m, _, store, st) = await _open();
       store.buyResult = PurchaseOutcome.pending;
       await _pumpApp(tester, p, m, st);
@@ -192,7 +195,7 @@ void main() {
       await tester.ensureVisible(find.text('広告を消す（¥370）'));
       await tester.tap(find.text('広告を消す（¥370）'));
       await tester.pump(const Duration(milliseconds: 300));
-      expect(find.text('保護者の承認待ちです。承認されると広告が消えます'), findsOneWidget);
+      expect(find.text('購入の手続きが保留中です。完了すると広告が消えます'), findsOneWidget);
       expect(m.adFree, isFalse);
       await tester.pump(const Duration(seconds: 5));
     });
@@ -206,7 +209,7 @@ void main() {
       final restore = await _inSettings(tester, '購入を復元');
       await tester.tap(restore);
       await tester.pump(const Duration(milliseconds: 300));
-      expect(find.text('復元できる購入が見つからなかった'), findsOneWidget);
+      expect(find.textContaining('復元できる購入が見つかりませんでした'), findsOneWidget);
       expect(m.adFree, isFalse);
       await tester.pump(const Duration(seconds: 5));
       store.restoreResult = PurchaseOutcome.purchased;
@@ -228,12 +231,12 @@ void main() {
   });
 
   group('ヒントの動画', () {
-    testWidgets('「動画を見てヒント」を押すと動画を1本見せ、見終えたらヒントが出る', (tester) async {
+    testWidgets('「動画でヒント」を押すと動画を1本見せ、見終えたらヒントが出る', (tester) async {
       final (p, m, ads, _, st) = await _open();
       await _pumpApp(tester, p, m, st);
       await _enterGame(tester);
-      expect(find.text('動画を見てヒント'), findsOneWidget, reason: '動画が要ることをボタンに書く');
-      await tester.tap(find.text('動画を見てヒント'));
+      expect(find.text('動画でヒント'), findsOneWidget, reason: '動画が要ることをボタンに書く');
+      await tester.tap(find.text('動画でヒント'));
       await tester.pump(const Duration(milliseconds: 300));
       expect(ads.rewarded, 1);
       expect(find.textContaining('で向こう岸へ'), findsOneWidget);
@@ -245,15 +248,15 @@ void main() {
       await _pumpApp(tester, p, m, st);
       await _enterGame(tester);
       ads.watchToEnd = false;
-      await tester.tap(find.text('動画を見てヒント'));
+      await tester.tap(find.text('動画でヒント'));
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('動画を最後まで見るとヒントが出る'), findsOneWidget);
       expect(find.textContaining('で向こう岸へ'), findsNothing);
       await tester.pump(const Duration(seconds: 2));
       ads.ready = false;
-      await tester.tap(find.text('動画を見てヒント'));
+      await tester.tap(find.text('動画でヒント'));
       await tester.pump(const Duration(milliseconds: 300));
-      expect(find.text('動画を読み込めなかった。少し待ってもう一度'), findsOneWidget);
+      expect(find.text('動画の準備ができていません。少し待ってもう一度'), findsOneWidget);
       expect(ads.rewarded, 1, reason: '読み込めていない動画は出そうとしない');
       expect(ads.reloads, 1, reason: '読み込み直しを始める');
       await tester.pump(const Duration(seconds: 3));
@@ -270,6 +273,26 @@ void main() {
       expect(find.textContaining('で向こう岸へ'), findsOneWidget);
       await tester.pump(const Duration(seconds: 3));
     });
+  });
+
+  testWidgets('クリア後に「もう一度」でやり直しても、2回目のクリアで結果の札が出る（ヒントを見た面は星2のまま）', (tester) async {
+    final ls = _levels();
+    final w2 = ls.firstWhere((l) => l.world == 2);
+    final (p, m, ads, _, st) = await _open({
+      for (final l in ls.where((l) => l.world == 1)) 'stars.${l.id}': 3,
+    });
+    await _pumpApp(tester, p, m, st);
+    await _enterGame(tester);
+    await _solveWithHints(tester, w2.par);
+    expect(find.text('全員護送'), findsOneWidget);
+    await tester.tap(find.text('もう一度'));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text('全員護送'), findsNothing);
+    await _solveWithHints(tester, w2.par);
+    expect(find.text('全員護送'), findsOneWidget, reason: '2回目のクリアでも結果の札が出る');
+    expect(find.text('ヒントを使ったので星2つまで'), findsOneWidget);
+    expect(ads.rewarded, w2.par * 2, reason: '動画1本でヒント1回');
+    await tester.pump(const Duration(seconds: 3));
   });
 
   group('全画面広告', () {

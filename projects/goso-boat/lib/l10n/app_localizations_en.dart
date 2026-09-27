@@ -324,10 +324,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'The hardest levels, picked by solving every combination.\nCross in the fewest trips and you\'re the real deal.';
 
   @override
-  String get hintWithAd => 'Watch ad for hint';
+  String get hintWithAd => 'Hint (ad)';
 
   @override
-  String get hintDeclined => 'Watch the whole video to get a hint';
+  String get hintDeclined => 'Watch the whole video to get a hint.';
 
   @override
   String removeAds(String price) {
@@ -335,22 +335,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get restorePurchases => 'Restore purchase';
+  String get restorePurchases => 'Restore purchases';
 
   @override
   String get adFreeOn => 'Ad-free';
 
   @override
-  String get purchaseThanks => 'Ads removed. Thank you!';
+  String get purchaseThanks => 'Ads removed. Thanks for your purchase!';
 
   @override
   String get purchaseRestored => 'Purchase restored';
 
   @override
-  String get purchaseNothing => 'No purchase to restore';
+  String get purchaseNothing =>
+      'No purchase found to restore. Make sure you\'re signed in with the Apple ID you used to buy.';
 
   @override
-  String get purchaseFailed => 'Purchase failed. Please try again later.';
+  String get purchaseFailed =>
+      'Couldn\'t complete the purchase. Please try again later.';
 
   @override
   String get kicker => 'Don\'t let them escape!';
@@ -375,7 +377,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetConfirmBody =>
-      'All stars and records will be deleted. Your ad-free purchase stays.';
+      'All stars, records and achievements will be deleted. Your ad removal purchase won\'t be affected.';
 
   @override
   String get cancel => 'Cancel';
@@ -401,7 +403,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lockedHint => 'Clear the previous level to unlock';
 
   @override
-  String get hintNoAd => 'Couldn\'t load the video. Try again in a moment.';
+  String get hintNoAd => 'The video isn\'t ready yet. Try again in a moment.';
 
   @override
   String daily(String id) {
@@ -687,7 +689,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get purchasePending =>
-      'Waiting for approval. Ads will be removed once it\'s approved.';
+      'Your purchase is pending. Ads will be removed once it\'s complete.';
 
   @override
   String get privacyPolicy => 'Privacy Policy';
@@ -699,4 +701,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String linkFailed(String url) {
     return 'Couldn\'t open $url';
   }
+
+  @override
+  String get restoreFailed =>
+      'Couldn\'t restore your purchase. Please try again later.';
 }

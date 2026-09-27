@@ -13,9 +13,11 @@ class FakeAds implements AdService {
   int interstitials = 0;
   int rewardeds = 0;
   int reloads = 0;
+  int initializes = 0;
+  int disposes = 0;
 
   @override
-  Future<void> initialize() async {}
+  Future<void> initialize() async => initializes++;
   @override
   bool get isRewardedAdReady => rewardedReady;
   @override
@@ -33,11 +35,21 @@ class FakeAds implements AdService {
     return true;
   }
   @override
-  void dispose() {}
+  void dispose() => disposes++;
 }
 
 class FakeStore extends NoOpPurchaseService {
   PurchaseOutcome next = PurchaseOutcome.purchased;
+  Future<void> Function(String)? _delivered;
+  Future<void> Function(String)? _revoked;
+  @override
+  set onDelivered(Future<void> Function(String productId)? cb) => _delivered = cb;
+  @override
+  set onRevoked(Future<void> Function(String productId)? cb) => _revoked = cb;
+
+  /// ストアから直接届く（家族の承認・起動時の再送）。
+  Future<void> deliver([String id = PurchaseService.removeAdsId]) async => _delivered?.call(id);
+  Future<void> revoke() async => _revoked?.call(PurchaseService.removeAdsId);
   @override
   Future<bool> isAvailable() async => true;
   @override
@@ -48,8 +60,8 @@ class FakeStore extends NoOpPurchaseService {
 
 Level lv(int world) => Level(id: '$world-1', world: world, cast: const {Role.police: 3, Role.prisoner: 1}, capacity: 2, par: 5);
 
-Future<(Monetization, FakeAds, FakeStore)> make() async {
-  SharedPreferences.setMockInitialValues({});
+Future<(Monetization, FakeAds, FakeStore)> make([Map<String, Object> saved = const {}]) async {
+  SharedPreferences.setMockInitialValues(saved);
   final ads = FakeAds(), store = FakeStore();
   final m = Monetization(await SharedPreferences.getInstance(), ads: ads, store: store);
   await m.start();
@@ -63,6 +75,8 @@ void main() {
       await m.afterClear(lv(1));
     }
     expect(ads.interstitials, 0, reason: '舞台1');
+    expect((await SharedPreferences.getInstance()).getInt('clearsSinceAd'), isNull, reason: '舞台1は数えもしない');
+    expect(m.interstitialDue(lv(2)), isFalse);
     final shown = [for (var i = 0; i < 6; i++) await m.afterClear(lv(2))];
     expect(shown, [false, false, true, false, false, true]);
     expect(ads.interstitials, 2);
@@ -128,5 +142,45 @@ void main() {
     store.next = PurchaseOutcome.purchased;
     await m.restore();
     expect(m.adFree, isTrue);
+  });
+
+  test('買った人は、起動しても広告を準備しない', () async {
+    final (_, ads, _) = await make({'adFree': true});
+    expect(ads.initializes, 0);
+  });
+
+  test('「買う」を押さずに届いた購入でも広告が消え、別の商品では消えない', () async {
+    final (m, ads, store) = await make();
+    await store.deliver('other_product');
+    expect(m.adFree, isFalse);
+    await store.deliver();
+    expect(m.adFree, isTrue);
+    expect(ads.disposes, 1, reason: '読み込み済みの広告も捨てる');
+    for (var i = 0; i < 9; i++) {
+      await m.afterClear(lv(2));
+    }
+    expect(ads.interstitials, 0);
+  });
+
+  test('返金されたら広告が戻る', () async {
+    final (m, ads, store) = await make();
+    await m.buy();
+    expect(m.adFree, isTrue);
+    await store.revoke();
+    expect(m.adFree, isFalse);
+    expect(m.hintNeedsAd, isTrue);
+    expect(ads.initializes, 2, reason: '広告の準備をやり直す');
+    for (var i = 0; i < 3; i++) {
+      await m.afterClear(lv(2));
+    }
+    expect(ads.interstitials, 1, reason: '返金の後は全画面広告も戻る');
+  });
+
+  test('全画面広告の数えは再起動しても続く', () async {
+    final (m, ads, _) = await make({'clearsSinceAd': 2});
+    expect(m.interstitialDue(lv(2)), isTrue);
+    expect(await m.afterClear(lv(2)), isTrue);
+    expect(ads.interstitials, 1);
+    expect(m.interstitialDue(lv(2)), isFalse);
   });
 }

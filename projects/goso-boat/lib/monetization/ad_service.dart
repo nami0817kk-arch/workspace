@@ -82,6 +82,7 @@ class AdMobAdService implements AdService {
 
   /// 読み込みに失敗したら、この間隔を空けて読み直す（在庫切れ・電波なしが続いても叩きすぎない）。
   static const _retryAfter = Duration(seconds: 30);
+  static const _maxRetry = Duration(minutes: 5);
 
   /// 表示が終わったことが伝わってこない場合の上限（固まらないように）。
   static const _showTimeout = Duration(minutes: 3);
@@ -103,6 +104,8 @@ class AdMobAdService implements AdService {
 
   @override
   Future<void> initialize() async {
+    // 広告を消した後に返金されたときは、もう一度ここから始める
+    _disposed = false;
     // 広告の中身は全年齢向け（G）まで。4+ のアプリに合わない広告を出さない（Apple 2.5.18）
     await MobileAds.instance.updateRequestConfiguration(RequestConfiguration(maxAdContentRating: MaxAdContentRating.g));
     await MobileAds.instance.initialize();
@@ -144,7 +147,10 @@ class AdMobAdService implements AdService {
       slot.loadingToken = null;
       slot.loadingSince = null;
       // 在庫切れ・通信断は珍しくない。間を空けて読み直す
-      slot.timer = Timer(_retryAfter, again);
+      // 失敗が続くほど間を空ける（30秒→1分→2分→…最大5分）
+      final wait = _retryAfter * (1 << slot.failures.clamp(0, 3));
+      slot.failures++;
+      slot.timer = Timer(wait > _maxRetry ? _maxRetry : wait, again);
     }
 
     try {
@@ -157,6 +163,7 @@ class AdMobAdService implements AdService {
         slot.loadingSince = null;
         slot.ad = ad;
         slot.loadedAt = DateTime.now();
+        slot.failures = 0;
         // 期限が切れる前に、次を読み込んでおく（長く遊んだ後の最初のヒントで失敗しないように）
         slot.timer = Timer(_maxAge, () {
           slot.loadedAt = null; // 端末の時計を戻されても、経過時間で必ず読み直す
@@ -291,6 +298,9 @@ class _Slot<T extends AdWithoutView> {
 
   /// 読み直しの予約（失敗後の再試行、または期限切れの前の読み直し）。
   Timer? timer;
+
+  /// 続けて読み込みに失敗した回数（読み直しの間隔を伸ばす）。
+  int failures = 0;
 
   bool get ready => ad != null && loadedAt != null && DateTime.now().difference(loadedAt!) < AdMobAdService._maxAge;
 

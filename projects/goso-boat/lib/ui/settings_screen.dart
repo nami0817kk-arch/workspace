@@ -46,14 +46,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final messenger = ScaffoldMessenger.of(context);
     if (_restoring) return;
     setState(() => _restoring = true);
-    final r = await widget.money.restore();
-    if (mounted) setState(() => _restoring = false);
+    PurchaseOutcome r;
+    try {
+      r = await widget.money.restore();
+    } catch (_) {
+      r = PurchaseOutcome.failed;
+    } finally {
+      if (mounted) setState(() => _restoring = false);
+    }
     final msg = switch (r) {
       PurchaseOutcome.purchased => t.purchaseRestored,
       PurchaseOutcome.pending => t.purchasePending,
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable => t.purchaseNothing,
-      PurchaseOutcome.failed => t.purchaseFailed,
+      PurchaseOutcome.failed => t.restoreFailed,
     };
     if (msg != null) {
       messenger.removeCurrentSnackBar();
