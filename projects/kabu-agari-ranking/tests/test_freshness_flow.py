@@ -73,3 +73,25 @@ class _FrozenDatetime:
 
     def __getattr__(self, name):
         return getattr(datetime, name)
+
+
+def test_休場日の表が切れる前に知らせる(data_dir, monkeypatch, capsys):
+    """切れてから気づくのでは遅い。表の外に出ると休場日の判定ができず、
+    鮮度の監視そのものが止まる。"""
+    import market_calendar
+    last = date(max(market_calendar.COVERED_YEARS), 12, 31)
+    near = last - timedelta(days=30)
+    _write(data_dir, "2027-12-01", stop_high=[], stop_low=[])
+    monkeypatch.setattr(check_freshness, "datetime", _FrozenDatetime(near))
+    check_freshness.main()
+    out = capsys.readouterr().out
+    assert "休場日の表が" in out
+    assert "syukujitsu.csv" in out
+
+
+def test_余裕があるうちは黙る(data_dir, monkeypatch, capsys):
+    rec = _today_business_day()
+    _write(data_dir, rec.isoformat(), stop_high=[], stop_low=[])
+    monkeypatch.setattr(check_freshness, "datetime", _FrozenDatetime(rec))
+    check_freshness.main()
+    assert "休場日の表が" not in capsys.readouterr().out

@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import aggregate
 from market_calendar import (
+    COVERED_YEARS,
     CalendarOutOfRange,
     business_days_between,
     is_business_day,
@@ -45,6 +46,10 @@ _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 # ストップ高・ストップ安の一覧を記録し始めた日。これより前のファイルには
 # キーが無いのが正しいので、欠落として数えない。
 STOP_RECORDS_FROM = date(2026, 9, 28)
+
+# 休場日の表が切れる何日前から知らせるか。年をまたぐ前に気づければよいので
+# 余裕をとる（切れてからでは鮮度の監視そのものが止まる）。
+HOLIDAY_TABLE_WARN_DAYS = 90
 
 
 def expected_rec_date(now: datetime, *, after_fetch: bool = False) -> date:
@@ -128,6 +133,18 @@ def main() -> int:
             "当日中に src\\build_site.py を回さないと、その営業日は二度と取れません。"
         )
         status = 1
+
+    # **切れてから気づくのでは遅い。** 表の外に出ると休場日の判定ができず、
+    # 鮮度の監視そのものが止まる。年末に追記する作業を思い出せるよう、
+    # 余裕があるうちから知らせる。
+    last_covered = date(max(COVERED_YEARS), 12, 31)
+    days_left = (now.date() - last_covered).days * -1
+    if days_left <= HOLIDAY_TABLE_WARN_DAYS:
+        print(
+            f"::warning::休場日の表が {last_covered} で切れます（残り {days_left} 日）。"
+            "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv から"
+            "src/market_calendar.py に翌年ぶんを追記してください。"
+        )
 
     missing = missing_stop_records(payload)
     if missing:

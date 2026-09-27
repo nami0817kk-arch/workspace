@@ -1,6 +1,8 @@
 {# 日付から探すためのカレンダー。押せる升目＝その日の掲載がある日。
-   休場日と、取得に失敗した日を見分けられるようにしてある
-   （どちらも「空いている」ように見えるが、意味が違う）。 #}
+   休場日と、営業日なのに掲載が無い日を見分けられるようにしてある
+   （どちらも「空いている」ように見えるが、意味が違う）。
+   **掲載が無い理由は断定しない。** 取得に失敗した日もあれば、
+   まだ毎日の取得を始めていなかった日もある。 #}
 <div class="calendar">
   {% for month in calendar %}
   <section class="cal-month">
@@ -19,7 +21,9 @@
                どの月の24日か分からない。title は読まれないことがあるので
                aria-label でも名乗る（2026-09-28）。 #}
             {% if cell.state == "data" %}<a href="{{ base_url }}{{ cell.href }}" title="{{ cell.label }}のランキング" aria-label="{{ cell.label }}のランキング">{{ cell.day }}</a>
-            {% elif cell.state == "missing" %}<span title="{{ cell.label }}は取得に失敗したため掲載がありません">{{ cell.day }}</span>
+            {# **理由は断定しない。** 取得に失敗した日もあれば、まだ毎日の取得を
+               始めていなかった日もある。どちらかは升目からは分からない。 #}
+            {% elif cell.state == "missing" %}<span title="{{ cell.label }}は掲載がありません" aria-label="{{ cell.label }}は掲載がありません">{{ cell.day }}</span>
             {% elif cell.state == "blank" %}&nbsp;
             {% else %}<span>{{ cell.day }}</span>{% endif %}
           </td>
@@ -33,7 +37,7 @@
 </div>
 <p class="cal-legend">
   <span class="cal-key cal-data">10</span> 掲載あり（押せます）
-  <span class="cal-key cal-missing">10</span> 取得に失敗した日
+  <span class="cal-key cal-missing">10</span> 掲載のない営業日
   <span class="cal-key cal-closed">10</span> 休場日（土日・祝日）
   {% if calendar and calendar[0].weeks|length and current_note %}<span class="cal-note">{{ current_note }}</span>{% endif %}
 </p>
