@@ -359,3 +359,22 @@ def test_計算機の入力例と共有とページからの直リンク(site):
     assert 'href="../index.html?w=100000"' in (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
     assert 'href="../index.html?h=20&amp;hr=1100"' in (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
     assert "入る・40〜64歳" in (site / "nenshu.html").read_text(encoding="utf-8")
+
+
+def test_長いページに目次が入りidが重ならない(site):
+    for rel in ("getsushu/10man.html", "kabe/1100yen.html", "nenshu.html", "jyoken.html"):
+        html = (site / rel).read_text(encoding="utf-8")
+        toc = re.search(r'<nav class="toc" aria-label="このページの目次">.*?</nav>', html, re.S)
+        assert toc, rel
+        ids = re.findall(r'<h2 id="([^"]+)"', html)
+        assert len(ids) == len(set(ids)), rel
+        for target in re.findall(r'href="#([^"]+)"', toc.group(0)):
+            assert f'id="{target}"' in html, (rel, target)
+
+
+def test_計算機に年収の壁と1日の時間(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert "function wallsHtml(" in html and 'id="per-day"' in html and 'id="days"' in html
+    for wall in ("1230000", "1300000", "1600000"):
+        assert wall in html
+    assert "【2026年版】" in html

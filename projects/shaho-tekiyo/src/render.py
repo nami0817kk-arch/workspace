@@ -112,12 +112,43 @@ def faq_ld(html: str) -> str | None:
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
 
 
+_TOC_PAGES = re.compile(r"^(getsushu/\d+man|kabe/\d+yen|nenshu|jyoken|hyoujun)\.html$")
+_H2 = re.compile(r"<h2( id=\"([^\"]+)\")?>(.*?)</h2>", re.S)
+
+
+def add_toc(html: str) -> str:
+    """長いページの最初の h2 の前に目次を入れる。id の無い h2 には sec-1… を振る。
+    「ほかの計算・解説」（関連カード）は目次に入れない。"""
+    head, sep, body = html.partition("<main")
+    if not sep:
+        return html
+    items: list[tuple[str, str]] = []
+    count = iter(range(1, 1000))
+
+    def name(m: re.Match) -> str:
+        text = re.sub(r"<[^>]+>", "", m.group(3)).strip()
+        hid = m.group(2) or f"sec-{next(count)}"
+        if text != "ほかの計算・解説":
+            items.append((hid, text))
+        return f'<h2 id="{hid}">{m.group(3)}</h2>'
+
+    body = _H2.sub(name, body)
+    if len(items) < 3:
+        return html
+    toc = '<nav class="toc" aria-label="このページの目次"><strong>目次</strong>\n<ol>\n' + "".join(
+        f'  <li><a href="#{i}">{t}</a></li>\n' for i, t in items) + "</ol>\n</nav>\n"
+    first = body.find("<h2 ")
+    return head + sep + body[:first] + toc + body[first:]
+
+
 def _write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.suffix == ".html" and path.name != "404.html":
         ld = breadcrumb_ld(content, path.relative_to(_OUTPUT_DIR).as_posix())
         if ld:
             content = content.replace("</head>", ld + "\n</head>", 1)
+        if _TOC_PAGES.match(path.relative_to(_OUTPUT_DIR).as_posix()):
+            content = add_toc(content)
         if path.name == "faq.html":
             content = content.replace("</head>", (faq_ld(content.split("<main", 1)[1]) or "") + "\n</head>", 1)
     path.write_text(content, encoding="utf-8")
@@ -499,6 +530,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-27", "人気の計算サイトを参考に: 計算結果に年収の壁チェック（106万・123万・130万・160万円）、1日の時間×週の日数での入力、会社負担の額、長いページに目次。タイトルに2026年版"),
     ("2026-09-27", "加入条件のページと標準報酬月額の等級表を追加。月収別の一覧に手取りからの逆算、年収別に40〜64歳の列。計算機に入力例と条件のリンクのコピー（入力を URL に残す）。よくある質問に目次、検索エンジン向けの FAQ・計算ツールの構造化データ"),
     ("2026-09-27", "何のサイトか分かるように: ロゴの印と説明の一行、トップに「分かること3つ」と10月の変更のお知らせ、ブラウザのタブ・検索結果に出るアイコン"),
     ("2026-09-27", "年収別の手取り早見表（90万〜200万円、社会保険に入る場合と扶養内の場合）を追加。よくある質問に交通費・残業代、130万円の壁の月額と19〜22歳の150万円、ダブルワーク、加入を断れるかの4問を追加。サイト名を「パートの社会保険 計算機」に"),
