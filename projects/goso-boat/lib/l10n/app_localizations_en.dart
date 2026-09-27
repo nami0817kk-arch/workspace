@@ -401,4 +401,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newRecord => 'New record!';
+
+  @override
+  String get placeBoat => 'Boat';
+
+  @override
+  String get lockedHint => 'Clear the previous level to unlock';
 }

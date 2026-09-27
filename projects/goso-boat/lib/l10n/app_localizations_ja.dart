@@ -388,4 +388,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get newRecord => '新記録！';
+
+  @override
+  String get placeBoat => '舟';
+
+  @override
+  String get lockedHint => '前の面を解くと開く';
 }

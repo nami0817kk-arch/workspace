@@ -109,5 +109,7 @@
   "watchSolution": "Watch solution",
   "demoPlaying": "Solution {i}/{n}",
   "personalBest": "Your best: {n}",
-  "newRecord": "New record!"
+  "newRecord": "New record!",
+  "placeBoat": "Boat",
+  "lockedHint": "Clear the previous level to unlock"
 }

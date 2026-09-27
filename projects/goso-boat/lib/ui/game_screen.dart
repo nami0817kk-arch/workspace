@@ -46,6 +46,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   /// 逃げた人の行き先。
   final Map<int, Offset> _flee = {};
+
+  /// 川に飛び込んだ所（水しぶきを出す）。
+  final List<Offset> _splashes = [];
   bool _fleeing = false;
   Set<int> _hinted = {};
   Place? _hintTo;
@@ -212,7 +215,14 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               }
               _fleeing = true;
             });
-            if (where == null) fx.play(Sfx.splash);
+            if (where == null) {
+              fx.play(Sfx.splash);
+              setState(() {
+                for (final p in s.escaped) {
+                  _splashes.add(g.personPos(s, p, _boatOverride) + Offset(0, g.boatH));
+                }
+              });
+            }
             _later(const Duration(milliseconds: 1100), () => setState(() => phase = _Phase.failed));
           });
         });
@@ -265,6 +275,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     phase = _Phase.play;
     _boatOverride = null;
     _flee.clear();
+    _splashes.clear();
     _fleeing = false;
     _moveDuration = _tapMove;
     _clearHint();
@@ -350,7 +361,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final w = worldOf(level);
     return Scaffold(
-      backgroundColor: Palette.sky,
+      backgroundColor: SceneTheme.forWorld(level.world).background,
       body: SafeArea(
         child: Column(
           children: [
@@ -390,7 +401,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                       return Stack(
                         clipBehavior: Clip.hardEdge,
                         children: [
-                          Positioned.fill(child: CustomPaint(painter: _ScenePainter(g, _idle))),
+                          Positioned.fill(child: CustomPaint(painter: _ScenePainter(g, _idle, SceneTheme.forWorld(level.world)))),
+                          if (_boatOverride != null && _moveDuration == _crossMove) _wake(g),
                           ..._tallies(g),
                           AnimatedPositioned(
                             duration: _moveDuration,
@@ -408,7 +420,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                               child: const CustomPaint(painter: BoatPainter()),
                             ),
                           ),
+                          if (s.aboard.isNotEmpty) _boatTally(g),
                           for (final p in _sortedPeople()) _person(g, p),
+                          for (final o in _splashes) _splash(o),
                           if (_toast != null) _toastView(),
                           if (phase == _Phase.demo) _demoBanner(g),
                           if (_tutorial && phase == _Phase.play && s.trips == 0) _coach(g),
@@ -540,6 +554,65 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         ),
     ];
   }
+
+  /// 舟の上の人数札（出す前に、乗っている見張りと囚人を数えやすくする）。
+  Widget _boatTally(_Geo g) {
+    final at = _boatOverride ?? g.boatAt(s.boat);
+    final riders = s.aboard;
+    return AnimatedPositioned(
+      duration: _moveDuration,
+      curve: Curves.easeInOut,
+      left: at.dx - 70,
+      width: 140,
+      top: at.dy + g.boatH + 4,
+      child: IgnorePointer(
+        child: Center(
+          child: _Tally(
+            guard: riders.fold(0, (a, p) => a + p.role.guard),
+            weight: riders.fold(0, (a, p) => a + p.role.weight),
+            label: t.placeBoat,
+            t: t,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 渡っている舟の後ろに残る航跡。
+  Widget _wake(_Geo g) {
+    final from = g.boatAt(s.boat), to = _boatOverride!;
+    final up = to.dy < from.dy;
+    return AnimatedPositioned(
+      duration: _moveDuration,
+      curve: Curves.easeInOut,
+      left: to.dx - g.boatW / 2,
+      width: g.boatW,
+      top: up ? to.dy + g.boatH : to.dy - 40,
+      height: 40,
+      child: IgnorePointer(
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: 1),
+          duration: _crossMove,
+          builder: (_, v, _) => CustomPaint(painter: _WakePainter(v, up)),
+        ),
+      ),
+    );
+  }
+
+  /// 飛び込んだ所に広がる輪。
+  Widget _splash(Offset o) => Positioned(
+        left: o.dx - 40,
+        top: o.dy - 16,
+        width: 80,
+        height: 32,
+        child: IgnorePointer(
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: const Duration(milliseconds: 900),
+            builder: (_, v, _) => CustomPaint(painter: _SplashPainter(v)),
+          ),
+        ),
+      );
 
   Widget _toastView() => Positioned(
         left: 0,
@@ -704,25 +777,35 @@ class _Geo {
 
 /// 背景（空・岸・川・中州）。川の波だけ動かす。
 class _ScenePainter extends CustomPainter {
-  _ScenePainter(this.g, this.t) : super(repaint: t);
+  _ScenePainter(this.g, this.t, this.th) : super(repaint: t);
   final _Geo g;
   final Animation<double> t;
+  final SceneTheme th;
 
   @override
   void paint(Canvas c, Size size) {
     final w = size.width;
     // 川
-    c.drawRect(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom), Paint()..color = Palette.river);
+    c.drawRect(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom), Paint()..color = th.river);
     final edge = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [Palette.riverDeep.withValues(alpha: 0.6), Palette.river.withValues(alpha: 0), Palette.river.withValues(alpha: 0), Palette.riverDeep.withValues(alpha: 0.6)],
+        colors: [th.riverDeep.withValues(alpha: 0.6), th.river.withValues(alpha: 0), th.river.withValues(alpha: 0), th.riverDeep.withValues(alpha: 0.6)],
         stops: const [0, 0.15, 0.85, 1],
       ).createShader(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom));
     c.drawRect(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom), edge);
     // 流れ（左から右へ流れる白い筋）
-    final wave = Paint()..color = Colors.white.withValues(alpha: 0.45);
+    // 夜は川面に星を映す
+    if (th.stars) {
+      final sr = math.Random(11);
+      for (var i = 0; i < 26; i++) {
+        final p = Offset(sr.nextDouble() * w, g.riverTop + 6 + sr.nextDouble() * (g.riverBottom - g.riverTop - 12));
+        final tw = 0.35 + 0.35 * math.sin((t.value + i * 0.13) * math.pi * 2).abs();
+        c.drawCircle(p, 1 + sr.nextDouble() * 1.2, Paint()..color = Colors.white.withValues(alpha: tw));
+      }
+    }
+    final wave = Paint()..color = Colors.white.withValues(alpha: th.wave);
     final rnd = math.Random(7);
     for (var i = 0; i < 14; i++) {
       final y = g.riverTop + 10 + rnd.nextDouble() * (g.riverBottom - g.riverTop - 20);
@@ -732,12 +815,12 @@ class _ScenePainter extends CustomPainter {
     }
     // 岸
     void bank(Rect r, bool top) {
-      c.drawRect(r, Paint()..color = Palette.sand);
+      c.drawRect(r, Paint()..color = th.sand);
       final lip = top ? Rect.fromLTWH(0, r.bottom - 5, w, 5) : Rect.fromLTWH(0, r.top, w, 5);
-      c.drawRect(lip, Paint()..color = Palette.sandEdge);
+      c.drawRect(lip, Paint()..color = th.sandEdge);
       final grass = top ? Rect.fromLTWH(0, 0, w, 14) : Rect.fromLTWH(0, r.bottom - 14, w, 14);
-      c.drawRect(grass, Paint()..color = Palette.grass);
-      c.drawRect(top ? Rect.fromLTWH(0, 14, w, 3) : Rect.fromLTWH(0, r.bottom - 17, w, 3), Paint()..color = Palette.grassDark);
+      c.drawRect(grass, Paint()..color = th.grass);
+      c.drawRect(top ? Rect.fromLTWH(0, 14, w, 3) : Rect.fromLTWH(0, r.bottom - 17, w, 3), Paint()..color = th.grassDark);
     }
 
     bank(Rect.fromLTWH(0, 0, w, g.bankH), true);
@@ -745,8 +828,8 @@ class _ScenePainter extends CustomPainter {
     if (g.level.island) {
       final r = g.island;
       final rr = RRect.fromRectAndCorners(r, topRight: const Radius.circular(26), bottomRight: const Radius.circular(26));
-      c.drawRRect(rr.inflate(4), Paint()..color = Palette.sandEdge);
-      c.drawRRect(rr, Paint()..color = Palette.sand);
+      c.drawRRect(rr.inflate(4), Paint()..color = th.sandEdge);
+      c.drawRRect(rr, Paint()..color = th.sand);
       // 桟橋
       c.drawRect(Rect.fromLTWH(r.right - 2, r.center.dy - 5, 12, 10), Paint()..color = const Color(0xFF9C6B3F));
     }
@@ -764,7 +847,57 @@ class _ScenePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_ScenePainter old) => old.g.size != g.size || old.g.level != g.level;
+  bool shouldRepaint(_ScenePainter old) => old.g.size != g.size || old.g.level != g.level || old.th != th;
+}
+
+class _WakePainter extends CustomPainter {
+  _WakePainter(this.v, this.up);
+  final double v;
+  final bool up;
+
+  @override
+  void paint(Canvas c, Size s) {
+    final p = Paint()
+      ..color = Colors.white.withValues(alpha: 0.55 * (1 - v * 0.6))
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+    for (var i = 0; i < 3; i++) {
+      final y = up ? 6.0 + i * 11 : s.height - 6 - i * 11;
+      final spread = s.width * (0.2 + i * 0.12);
+      final path = Path()
+        ..moveTo(s.width / 2 - spread, y + (up ? 6 : -6))
+        ..quadraticBezierTo(s.width / 2, y, s.width / 2 + spread, y + (up ? 6 : -6));
+      c.drawPath(path, p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_WakePainter old) => old.v != v;
+}
+
+class _SplashPainter extends CustomPainter {
+  _SplashPainter(this.v);
+  final double v;
+
+  @override
+  void paint(Canvas c, Size s) {
+    final center = s.center(Offset.zero);
+    for (var i = 0; i < 2; i++) {
+      final k = (v - i * 0.2).clamp(0.0, 1.0);
+      if (k == 0) continue;
+      c.drawOval(
+        Rect.fromCenter(center: center, width: s.width * k, height: s.height * k),
+        Paint()
+          ..color = Colors.white.withValues(alpha: 1 - k)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_SplashPainter old) => old.v != v;
 }
 
 class _Tally extends StatelessWidget {

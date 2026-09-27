@@ -298,5 +298,7 @@
       }
     }
   },
-  "newRecord": "新記録！"
+  "newRecord": "新記録！",
+  "placeBoat": "舟",
+  "lockedHint": "前の面を解くと開く"
 }

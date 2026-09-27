@@ -757,6 +757,18 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'新記録！'**
   String get newRecord;
+
+  /// No description provided for @placeBoat.
+  ///
+  /// In ja, this message translates to:
+  /// **'舟'**
+  String get placeBoat;
+
+  /// No description provided for @lockedHint.
+  ///
+  /// In ja, this message translates to:
+  /// **'前の面を解くと開く'**
+  String get lockedHint;
 }
 
 class _AppLocalizationsDelegate
