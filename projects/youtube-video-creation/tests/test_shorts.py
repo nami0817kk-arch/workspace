@@ -1239,3 +1239,24 @@ def test_話者の名前が入った振りは残す():
     short = trim(parse_script(nl.join(body)))
     texts = [line.text for line in short.scenes[-1].lines]
     assert "先発が有力な鈴木淳之介は、こう話します。" in texts, texts
+
+
+def test_尺を埋める語りは反応より前に入れる():
+    """**反応のあとに、次の節の語りが続いていた**（2026-09-28、伊藤洋輝のショート）。
+
+    反応を締めに足しても尺が余ると、`_add_more_body` が次の節の語り
+    （けがの話）を**いちばん後ろ**に足していた。「ネットの声は最後」（2026-09-16）が崩れ、
+    9/27 の板倉のショート「流れが変」と同じ形になった。語りは反応の手前に差し込む。
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import trim
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題名です")])
+    story = Scene(title="山場", main=True, lines=[Line(speaker="キャスター", text="ここが芯です")])
+    after = Scene(title="その前の話", lines=[Line(speaker="キャスター", text="足の骨を折りました")])
+    voices = Scene(title="ネットの反応",
+                   lines=[Line(speaker="ネット民", text="出るべきなのでは", short_voice=True)])
+    short = trim(Script(title="見出し", scenes=[opening, story, after, voices]))
+    said = [l.text for l in short.scenes[-1].lines]
+    assert "足の骨を折りました" in said and "出るべきなのでは" in said
+    assert said.index("足の骨を折りました") < said.index("出るべきなのでは"), said

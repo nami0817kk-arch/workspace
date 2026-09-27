@@ -631,6 +631,13 @@ def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
             continue
         if passed and not _is_voices_scene(scene):
             after.append(scene)
+    # **足すのは反応の手前**（2026-09-28）。反応が締めに入っている回で、反応のあとに
+    # 次の節の語り（伊藤のけがの話）が続き、「ネットの声は最後」（2026-09-16）が崩れた。
+    # 9/27 の板倉のショート「流れが変」と同じ形。反応の節から来た行の最初の位置に差し込む
+    voiced = {(l.text or "").strip()
+              for sc in script.scenes if _is_voices_scene(sc) for l in sc.lines}
+    lines = short.scenes[-1].lines
+    at = next((i for i, l in enumerate(lines) if (l.text or "").strip() in voiced), None)
     for scene in after:
         for line in scene.lines:
             if str(getattr(line, "only", "") or "").strip() == "short":
@@ -640,7 +647,11 @@ def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
             cost = line.duration or line.estimated_duration()
             if _estimate(short) + cost > target:
                 return
-            short.scenes[-1].lines.append(copy.deepcopy(line))
+            if at is None:
+                lines.append(copy.deepcopy(line))
+            else:
+                lines.insert(at, copy.deepcopy(line))
+                at += 1
             seen.add(str(line.text))
 
 
