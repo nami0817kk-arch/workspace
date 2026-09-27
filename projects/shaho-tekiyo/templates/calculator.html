@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}パートの社会保険 計算シミュレーション｜加入条件・保険料・手取り（2026年10月の改正に対応）{% endblock %}
+{% block title %}パートの社会保険 計算シミュレーション【2026年版】｜加入条件・保険料・手取り・年収の壁{% endblock %}
 {% block description %}パート・アルバイトの社会保険を計算します。週の時間・時給か月収・勤務先の人数で、加入の対象か、保険料と手取りはいくらかを{{ era }}の料率で円単位に。106万円の壁の撤廃（2026年10月）と週20時間の壁にも対応。{% endblock %}
 {% block main_class %}wide{% endblock %}
 {% block structured_data %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"パートの社会保険 計算機","url":"{{ SITE_URL }}/","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ja","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"description":"パート・アルバイトが勤務先の社会保険に入る対象か、保険料と手取りはいくらかを{{ era }}の料率で計算する"}</script>{% endblock %}
@@ -18,6 +18,7 @@
     <li>{{ era }}の料率（協会けんぽ）</li>
     <li>2026年10月の改正に対応</li>
     <li>入力は送信しません</li>
+    <li><a href="keisan.html">額表・国税庁の計算例と照合済み</a></li>
   </ul>
 </section>
 
@@ -36,6 +37,7 @@
     <label for="hours">週の労働時間</label>
     <div class="ctl"><input type="number" id="hours" min="0" max="80" step="0.5" value="20" inputmode="decimal"><span class="unit">時間</span></div>
     <p class="hint">契約やシフトで決まっている時間（残業は除く）</p>
+    <p class="hint per-day">1日 <input type="number" id="per-day" min="0" max="24" step="0.5" inputmode="decimal" aria-label="1日の時間"> 時間 × 週 <input type="number" id="days" min="0" max="7" step="1" inputmode="numeric" aria-label="週の日数"> 日 で入れる</p>
   </div>
 
   <div class="row">
@@ -225,7 +227,7 @@
         ['雇用保険料・所得税', koyo + (tax || 0), 's4']
       ], pay, yen(pay) + 'の行き先');
     }
-    html += '<p class="hint">会社も同じ額の社会保険料を負担しています（労使折半）。</p>';
+    html += '<p class="hint">会社もほぼ同じ額（月約' + yen(p.total) + '）の社会保険料を負担しています（労使折半）。会社が払う分は、あなたの給与からは引かれません。</p>';
 
     html += '<h2>加入する前と比べると</h2><ul class="compare">';
     html += '<li><strong>配偶者や親の扶養に入っていた人</strong>: それまで0円だった保険料が、月' + yen(p.total) + '増えます。</li>';
@@ -282,7 +284,48 @@
     return html;
   }
 
+  // 1日の時間×週の日数から、週の労働時間を埋める
+  function fillHoursFromDays() {
+    var perDay = parseFloat(document.getElementById('per-day').value);
+    var days = parseFloat(document.getElementById('days').value);
+    if (!isNaN(perDay) && !isNaN(days) && perDay > 0 && days > 0) {
+      document.getElementById('hours').value = Math.round(perDay * days * 10) / 10;
+    }
+  }
+
+  // 年収の壁（106万・123万・130万・160万円）を、入力から見込む年収で並べて判定する
+  function wallsHtml(asOf, r, wage, extra, commute) {
+    var taxable = (wage + extra) * 12;   // 税の年収（通勤手当は非課税）
+    var depend = (wage + commute) * 12;  // 扶養の年収（通勤手当を含む。2026年4月から残業代は含めない）
+    function row(ok, wall, text) {
+      return '<tr><th>' + wall + '</th><td><span class="wall ' + (ok ? 'in' : 'over') + '">' + (ok ? '内' : '超える') + '</span></td><td>' + text + '</td></tr>';
+    }
+    var html = '<h2 id="walls">年収の壁チェック</h2>';
+    html += '<p>入力から見込む年収は <strong>' + yen(taxable) + '</strong>（税）、<strong>' + yen(depend) + '</strong>（扶養。通勤手当を含む）です。</p>';
+    html += '<div class="table-wrap"><table class="plain walls">';
+    html += '<tr><th>106万円<span class="sub">勤務先の社会保険</span></th><td><span class="wall gone">' + (asOf >= '2026-10-01' ? '廃止' : '10月廃止') + '</span></td><td>2026年10月1日に無くなり、入るかどうかは週20時間などで決まります（上の判定）。</td></tr>';
+    html += row(taxable <= 1230000, '123万円<span class="sub">配偶者控除</span>', taxable <= 1230000
+      ? '配偶者の税金で配偶者控除が受けられる年収です。'
+      : '配偶者控除から配偶者特別控除に切り替わります（160万円までは同じ額の控除）。');
+    if (r.eligible) {
+      html += '<tr><th>130万円<span class="sub">社会保険の扶養</span></th><td><span class="wall gone">対象外</span></td><td>自分が勤務先の社会保険に入るので、年収にかかわらず配偶者や親の扶養からは外れます。</td></tr>';
+    } else {
+      html += row(depend < 1300000, '130万円<span class="sub">社会保険の扶養</span>', depend < 1300000
+        ? '配偶者や親の健康保険の扶養に入っていられる年収です（19〜22歳は150万円未満）。'
+        : '扶養から外れる見込みです。自分で国民健康保険と国民年金を払うことになります。');
+    }
+    html += row(taxable <= 1600000, '160万円<span class="sub">本人の所得税・配偶者特別控除</span>', taxable <= 1600000
+      ? '本人の所得税はかかりません（毎月引かれた分は年末調整で戻ります）。配偶者特別控除も満額です。'
+      : '本人に所得税がかかり、配偶者特別控除は年収が上がるにつれ減っていきます。');
+    html += '</table></div>';
+    html += '<p class="hint">賞与なし・毎月同じ額で12か月働いた見込みです。住民税がかかり始める年収（市区町村で違う）は含めていません。'
+      + '税の扱いは国税庁「令和7年度税制改正による所得税の基礎控除の見直し等について」、扶養は日本年金機構の案内によります。'
+      + '<a href="nenshu.html">年収別の手取り</a>・<a href="faq.html#q-130">130万円の壁との違い</a></p>';
+    return html;
+  }
+
   function render() {
+    fillHoursFromDays();
     var asOf = resolveAsOf(document.getElementById('as-of').value);
     var hours = parseFloat(document.getElementById('hours').value);
     var hourly = parseFloat(document.getElementById('hourly').value);
@@ -334,6 +377,7 @@
     html += '<p class="hint">この判定は「継続して2か月を超える雇用が見込まれること」を満たしている前提です。'
       + '短期のアルバイトなど見込みが2か月以下の場合は対象外です。</p>';
     if (r.eligible) html += premiumHtml(asOf, wage, extra, commute, dependents);
+    html += wallsHtml(asOf, r, wage, extra, commute);
     if (!isNaN(hourly) && hourly > 0 && r.employerSizeOk && r.notStudentOk) html += kabeHtml(asOf < '2026-10-01' ? '2026-10-01' : asOf, Math.round(hourly));
     out.innerHTML = '<h2 class="result-head">くわしい結果</h2>' + html;
     summary.innerHTML = summaryHtml(r, wage + extra + commute);
@@ -383,7 +427,10 @@
   function saveState() {
     try { history.replaceState(null, '', window.location.pathname + '?' + stateQuery()); } catch (e) { /* 保存できなくても計算は動く */ }
   }
-  function onInput() { render(); saveState(); }
+  function onInput(e) {
+    if (e && e.target && e.target.id === 'hours') { document.getElementById('per-day').value = ''; document.getElementById('days').value = ''; }
+    render(); saveState();
+  }
   document.getElementById('calc-form').addEventListener('input', onInput);
   document.getElementById('calc-form').addEventListener('change', onInput);
   Array.prototype.forEach.call(document.querySelectorAll('[data-preset]'), function (btn) {
