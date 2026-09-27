@@ -65,6 +65,14 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   /// 結果の札に添える知らせ（今日の1問の達成・新しく取れた実績）。
   List<String> _notes = [];
+
+  /// 面の始まりの札（面番号・目標）を出しているか。
+  bool _banner = false;
+  bool _resumed = false;
+
+  /// 逃げる囚人の捨てぜりふ。
+  String? _taunt;
+  Offset? _tauntAt;
   final List<Timer> _timers = [];
 
   Level get level => widget.level;
@@ -73,7 +81,23 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeIntro());
+    // 10. アプリを閉じても、途中まで渡した盤面から続ける
+    final saved = widget.progress.resumeFor(level);
+    if (saved != null) _resumed = s.restore(saved);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _maybeIntro();
+      if (!mounted) return;
+      setState(() => _banner = true);
+      _later(const Duration(milliseconds: 1900), () => setState(() => _banner = false));
+    });
+  }
+
+  void _saveResume() {
+    if (s.trips > 0 && !s.failed && !s.cleared) {
+      widget.progress.saveResume(level, s.toJson());
+    } else {
+      widget.progress.clearResume(level);
+    }
   }
 
   @override
@@ -180,6 +204,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         _later(_crossMove, () {
           s.depart(to);
           widget.progress.bump('trips');
+          _saveResume();
           fx.play(Sfx.arrive);
           setState(() {
             _boatOverride = null;
@@ -204,7 +229,15 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           fx.buzz(Buzz.heavy);
           fx.play(Sfx.escape);
           _countEscape();
-          setState(() => _moveDuration = _tapMove);
+          final g0 = _geo!;
+          setState(() {
+            _moveDuration = _tapMove;
+            if (s.escaped.isNotEmpty) {
+              final taunts = [t.taunt1, t.taunt2, t.taunt3, t.taunt4];
+              _taunt = taunts[math.Random().nextInt(taunts.length)];
+              _tauntAt = g0.personPos(s, s.escaped.first, _boatOverride) - Offset(0, g0.figH + 6);
+            }
+          });
           _later(const Duration(milliseconds: 650), () {
             final g = _geo!;
             setState(() {
@@ -232,6 +265,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _countEscape() async {
+    await widget.progress.clearResume(level);
+    await widget.progress.addTry(level);
     await widget.progress.bump('escapes');
     await widget.progress.bump('trips');
     final fresh = await collectNewAchievements(widget.progress);
@@ -240,6 +275,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _win() async {
+    final firstClear = !widget.progress.cleared(level);
+    final tries = await widget.progress.addTry(level);
+    await widget.progress.clearResume(level);
     _earnedStars = s.stars;
     _resultTrips = s.trips;
     _resultUsedHint = s.usedHint;
@@ -249,8 +287,14 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     final daily = await widget.progress.recordDaily(level, _earnedStars, now);
     final fresh = await collectNewAchievements(widget.progress);
     if (!mounted) return;
+    final worldLevels = widget.progress.levels.where((l) => l.world == level.world).toList();
+    final worldDone = firstClear && worldLevels.last == level;
+    final p = widget.progress;
     _notes = [
-      if (daily) t.dailyCleared(widget.progress.dailyStreak(now)),
+      if (firstClear) t.triesClear(tries),
+      if (worldDone) t.worldClear(level.world, t.world(level.world), worldLevels.fold(0, (a, l) => a + p.stars(l)), worldLevels.length * 3),
+      if (worldDone && level.world == 7 && !p.nightmareOpen) t.nightmareNeed(Progress.nightmareStars - p.starsBeforeNightmare),
+      if (daily) t.dailyCleared(p.dailyStreak(now)),
       for (final a in fresh) t.achUnlocked(t.achName(a)),
     ];
     fx.buzz(Buzz.medium);
@@ -277,20 +321,20 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   void _undo() {
     if (!_canUndo) return;
-    fx.play(Sfx.tap);
     setState(() {
       s.undo();
       _resetVisual();
     });
+    _saveResume();
   }
 
   void _reset() {
     if (phase == _Phase.moving || phase == _Phase.escaping) return;
-    fx.play(Sfx.tap);
     setState(() {
       s.reset();
       _resetVisual();
     });
+    widget.progress.clearResume(level);
   }
 
   void _resetVisual() {
@@ -299,6 +343,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _flee.clear();
     _splashes.clear();
     _notes = [];
+    _taunt = null;
     _fleeing = false;
     _moveDuration = _tapMove;
     _clearHint();
@@ -351,6 +396,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               title: '${level.id}  ${t.world(w.no)}',
               trips: s.trips,
               par: level.par,
+              stars: s.stars,
               onBack: () => Navigator.of(context).pop(),
               onRules: () => showRules(context, level),
             ),
@@ -402,10 +448,13 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                               child: const CustomPaint(painter: BoatPainter()),
                             ),
                           ),
+                          ..._seatMarks(g),
                           if (s.aboard.isNotEmpty) _boatTally(g),
                           for (final p in _sortedPeople()) _person(g, p),
                           for (final o in _splashes) _splash(o),
                           if (_toast != null) _toastView(),
+                          if (_taunt != null && _tauntAt != null && (phase == _Phase.escaping || phase == _Phase.failed)) _tauntBubble(),
+                          _startBanner(g),
                           if (_tutorial && phase == _Phase.play && s.trips == 0) _coach(g),
                           if (phase == _Phase.won) Positioned.fill(child: IgnorePointer(child: CustomPaint(painter: _ConfettiPainter(_confetti)))),
                         ],
@@ -497,6 +546,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () => _tap(p),
+            onLongPress: () {
+              fx.buzz(Buzz.light);
+              _say('${t.role(p.role)}：${t.roleDesc(p.role)}');
+            },
             child: AnimatedBuilder(
               animation: _idle,
               builder: (_, _) => DecoratedBox(
@@ -599,6 +652,82 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             tween: Tween(begin: 0, end: 1),
             duration: const Duration(milliseconds: 900),
             builder: (_, v, _) => CustomPaint(painter: _SplashPainter(v)),
+          ),
+        ),
+      );
+
+  /// 3. 舟の空いている席の印（定員がひと目で分かるように）。
+  List<Widget> _seatMarks(_Geo g) {
+    final at = _boatOverride ?? g.boatAt(s.boat);
+    final used = s.seatsUsed;
+    final x0 = at.dx - level.capacity * g.seatW / 2;
+    return [
+      for (var k = used; k < level.capacity; k++)
+        AnimatedPositioned(
+          key: ValueKey('seat$k'),
+          duration: _moveDuration,
+          curve: Curves.easeInOut,
+          left: x0 + (k + 0.5) * g.seatW - g.seatW * 0.28,
+          top: at.dy - g.boatH * 0.02,
+          width: g.seatW * 0.56,
+          height: g.boatH * 0.3,
+          child: IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.75),
+                border: Border.all(color: Palette.ink.withValues(alpha: 0.5), width: 1.5),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+        ),
+    ];
+  }
+
+  /// 5. 逃げる囚人の捨てぜりふ。
+  Widget _tauntBubble() => Positioned(
+        left: _tauntAt!.dx - 60,
+        width: 120,
+        top: _tauntAt!.dy - 30,
+        child: IgnorePointer(
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Palette.ink, width: 2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(_taunt!, style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.bad, fontSize: 14)),
+            ),
+          ),
+        ),
+      );
+
+  /// 2. 面の始まりの札（面番号・舞台・目標）。
+  Widget _startBanner(_Geo g) => Positioned(
+        left: 24,
+        right: 24,
+        top: (g.riverTop + g.riverBottom) / 2 - 48,
+        child: IgnorePointer(
+          child: AnimatedOpacity(
+            opacity: _banner ? 1 : 0,
+            duration: const Duration(milliseconds: 350),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Palette.card,
+                border: Border.all(color: Palette.ink, width: 2),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: const [BoxShadow(color: Palette.ink, offset: Offset(0, 4))],
+              ),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Text('${level.id}  ${t.world(level.world)}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink)),
+                const SizedBox(height: 4),
+                Text(_resumed ? '${t.resumed}・${t.tripsCount(s.trips)}' : t.startGoal(level.par),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Palette.goldDeep)),
+              ]),
+            ),
           ),
         ),
       );
@@ -717,13 +846,14 @@ class _Geo {
   }
 
   /// 人の足元の位置（x は中央）。
+  /// 舟の1席の幅。定員ぶんが船体に収まるようにする。
+  double get seatW => math.min(s * 0.82, (boatW - s * 0.3) / level.capacity);
+
   Offset personPos(Session sess, Person p, Offset? boatOverride) {
     if (p.aboard) {
       final top = boatOverride ?? boatAt(sess.boat);
       final riders = sess.aboard;
-      final seatW = s * 0.82;
-      final used = riders.fold(0, (a, x) => a + x.role.seats);
-      var x = top.dx - used * seatW / 2;
+      var x = top.dx - level.capacity * seatW / 2;
       for (final r in riders) {
         if (r == p) break;
         x += r.role.seats * seatW;
@@ -902,10 +1032,13 @@ class _Tally extends StatelessWidget {
 }
 
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title, required this.trips, required this.par, required this.onBack, required this.onRules});
+  const _TopBar({required this.title, required this.trips, required this.par, required this.stars, required this.onBack, required this.onRules});
   final String title;
   final int trips;
   final int par;
+
+  /// 今のままなら取れる星の上限（最短を超えると減る。ヒントを使うと2まで）。
+  final int stars;
   final VoidCallback onBack;
   final VoidCallback onRules;
 
@@ -922,7 +1055,11 @@ class _TopBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(context.l10n.tripsCount(trips), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink, fontFeatures: [FontFeature.tabularFigures()])),
-                Text(context.l10n.par(par), style: const TextStyle(fontSize: 11, color: Palette.dim, fontWeight: FontWeight.w700)),
+                Row(mainAxisSize: MainAxisSize.min, children: [
+                  StarRow(stars, size: 13),
+                  const SizedBox(width: 4),
+                  Text(context.l10n.par(par), style: const TextStyle(fontSize: 11, color: Palette.dim, fontWeight: FontWeight.w700)),
+                ]),
               ],
             ),
             const SizedBox(width: 6),
@@ -956,6 +1093,7 @@ class _GoBar extends StatelessWidget {
                 color: hintTo == d ? const Color(0xFFFFE08A) : Palette.gold,
                 shadow: Palette.goldDeep,
                 fontSize: 18,
+                silent: true,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 onPressed: enabled ? () => onGo(d) : null,
               ),
@@ -1013,7 +1151,7 @@ class _ResultCard extends StatelessWidget {
         children: [
           Text(t.cleared, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Palette.ok)),
           const SizedBox(height: 6),
-          StarRow(stars, size: 44),
+          _StarPop(stars),
           const SizedBox(height: 6),
           Text('${t.crossedIn(trips)}\n$note', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
           if (best != null) ...[
@@ -1092,6 +1230,43 @@ List<Widget> _noteChips(List<String> notes) => [
         ),
       ],
     ];
+
+/// 6. 結果の札の星を、効果音に合わせて1つずつはじけるように出す。
+class _StarPop extends StatefulWidget {
+  const _StarPop(this.stars);
+  final int stars;
+
+  @override
+  State<_StarPop> createState() => _StarPopState();
+}
+
+class _StarPopState extends State<_StarPop> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))..forward();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (MediaQuery.disableAnimationsOf(context)) return StarRow(widget.stars, size: 44);
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (_, _) => Row(mainAxisSize: MainAxisSize.min, children: [
+        for (var i = 0; i < 3; i++)
+          Transform.scale(
+            // 結果の札が出てから 550ms＋220ms ずつ（Sfx.star と同じ間隔）
+            scale: i >= widget.stars
+                ? 1
+                : Curves.elasticOut.transform(((_c.value * 1400 - 250 - i * 220) / 450).clamp(0.0, 1.0)),
+            child: Icon(Icons.star_rounded, size: 44, color: i < widget.stars ? Palette.gold : Palette.starOff),
+          ),
+      ]),
+    );
+  }
+}
 
 class _ConfettiPainter extends CustomPainter {
   _ConfettiPainter(this.t) : super(repaint: t);

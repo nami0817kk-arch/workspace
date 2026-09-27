@@ -145,5 +145,14 @@
   "ach_nightmareThree": "Beyond the nightmare",
   "achDesc_nightmareThree": "Get 3 stars on a Nightmare level",
   "ach_dailyWeek": "Daily patrol",
-  "achDesc_dailyWeek": "Finish the daily puzzle 7 days in a row"
+  "achDesc_dailyWeek": "Finish the daily puzzle 7 days in a row",
+  "startGoal": "★3 in {n} trips",
+  "resumed": "Resumed",
+  "triesClear": "Cleared on try #{n}!",
+  "worldClear": "World {no} \"{name}\" cleared! ★{got}/{max}",
+  "nightmareNeed": "{n} more ★ to unlock Nightmare",
+  "taunt1": "See ya!",
+  "taunt2": "Bye-bye!",
+  "taunt3": "Heh heh!",
+  "taunt4": "Freedom!"
 }

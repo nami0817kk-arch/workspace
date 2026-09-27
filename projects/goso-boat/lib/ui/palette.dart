@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../app/settings.dart';
+
 /// 色はここだけで決める。昼の川べりの明るい絵本調。
 abstract final class Palette {
   static const skyTop = Color(0xFFD9F1FA);
@@ -88,6 +90,7 @@ class ChunkyButton extends StatefulWidget {
     this.fontSize = 15,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.icon,
+    this.silent = false,
   });
 
   final String label;
@@ -97,6 +100,9 @@ class ChunkyButton extends StatefulWidget {
   final double fontSize;
   final EdgeInsets padding;
   final IconData? icon;
+
+  /// タップ音を鳴らさない（押したあとに別の音を鳴らすボタン用）。
+  final bool silent;
 
   @override
   State<ChunkyButton> createState() => _ChunkyButtonState();
@@ -119,6 +125,7 @@ class _ChunkyButtonState extends State<ChunkyButton> {
         onTapUp: enabled
             ? (_) {
                 setState(() => _down = false);
+                if (!widget.silent) AppScope.maybeOf(context)?.play(Sfx.tap);
                 widget.onPressed!();
               }
             : null,

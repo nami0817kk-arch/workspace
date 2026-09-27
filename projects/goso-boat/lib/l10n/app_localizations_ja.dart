@@ -504,4 +504,39 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get achDesc_dailyWeek => '今日の1問を7日続けて達成';
+
+  @override
+  String startGoal(int n) {
+    return '最短$n回で★3';
+  }
+
+  @override
+  String get resumed => '続きから';
+
+  @override
+  String triesClear(int n) {
+    return '$n回目の挑戦でクリア！';
+  }
+
+  @override
+  String worldClear(int no, String name, int got, int max) {
+    return '舞台$no「$name」クリア！ ★$got/$max';
+  }
+
+  @override
+  String nightmareNeed(int n) {
+    return '鬼門まで あと★$n';
+  }
+
+  @override
+  String get taunt1 => 'あばよ！';
+
+  @override
+  String get taunt2 => 'お先に〜';
+
+  @override
+  String get taunt3 => 'へへっ';
+
+  @override
+  String get taunt4 => '自由だー！';
 }

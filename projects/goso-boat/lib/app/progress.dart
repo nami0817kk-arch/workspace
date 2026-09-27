@@ -93,6 +93,32 @@ class Progress extends ChangeNotifier {
     await _prefs.setInt('stat.$key', stat(key) + by);
   }
 
+  // ---- 面ごとの挑戦回数 ----
+
+  int tries(Level l) => _prefs.getInt('tries.${l.id}') ?? 0;
+
+  /// 挑戦が1回終わった（クリアか、逃げられた）。新しい回数を返す。
+  Future<int> addTry(Level l) async {
+    final n = tries(l) + 1;
+    await _prefs.setInt('tries.${l.id}', n);
+    return n;
+  }
+
+  // ---- 中断した盤面（アプリを閉じても続きから） ----
+
+  Map<String, Object?>? resumeFor(Level l) {
+    final raw = _prefs.getString('resume.${l.id}');
+    if (raw == null) return null;
+    try {
+      return jsonDecode(raw) as Map<String, Object?>;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> saveResume(Level l, Map<String, Object?> state) => _prefs.setString('resume.${l.id}', jsonEncode(state));
+  Future<void> clearResume(Level l) => _prefs.remove('resume.${l.id}');
+
   // ---- 今日の1問 ----
 
   static String dayKey(DateTime d) =>
@@ -172,7 +198,7 @@ class Progress extends ChangeNotifier {
   /// 広告を消した購入と、音・振動の設定は残す。
   Future<void> resetAll() async {
     for (final k in _prefs.getKeys().toList()) {
-      if (['stars.', 'best.', 'intro.', 'review.', 'stat.', 'daily.', 'ach.'].any(k.startsWith)) {
+      if (['stars.', 'best.', 'intro.', 'review.', 'stat.', 'daily.', 'ach.', 'tries.', 'resume.'].any(k.startsWith)) {
         await _prefs.remove(k);
       }
     }

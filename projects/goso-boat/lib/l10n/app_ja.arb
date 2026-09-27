@@ -362,5 +362,51 @@
   "ach_nightmareThree": "鬼門を越えて",
   "achDesc_nightmareThree": "鬼門の面を星3で解く",
   "ach_dailyWeek": "毎日の見回り",
-  "achDesc_dailyWeek": "今日の1問を7日続けて達成"
+  "achDesc_dailyWeek": "今日の1問を7日続けて達成",
+  "startGoal": "最短{n}回で★3",
+  "@startGoal": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "resumed": "続きから",
+  "triesClear": "{n}回目の挑戦でクリア！",
+  "@triesClear": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "worldClear": "舞台{no}「{name}」クリア！ ★{got}/{max}",
+  "@worldClear": {
+    "placeholders": {
+      "no": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      },
+      "got": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "nightmareNeed": "鬼門まで あと★{n}",
+  "@nightmareNeed": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "taunt1": "あばよ！",
+  "taunt2": "お先に〜",
+  "taunt3": "へへっ",
+  "taunt4": "自由だー！"
 }

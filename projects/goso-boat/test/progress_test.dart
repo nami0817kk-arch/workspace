@@ -90,6 +90,18 @@ void main() {
     expect(await collectNewAchievements(p), [Achievement.escape10]);
     expect(p.hasAchievement('escape10'), isTrue);
   });
+
+  test('挑戦回数と中断した盤面。進み具合を消すとどちらも消える', () async {
+    final p = await open();
+    final l = p.levels.first;
+    expect(await p.addTry(l), 1);
+    expect(await p.addTry(l), 2);
+    await p.saveResume(l, {'trips': 2});
+    expect(p.resumeFor(l), {'trips': 2});
+    await p.resetAll();
+    expect(p.tries(l), 0);
+    expect(p.resumeFor(l), isNull);
+  });
 }
 
 Future<Progress> openWith(Map<String, Object> saved) async {
