@@ -216,8 +216,16 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
     # 三つ組が丸ごと一致することは少ない。実際に問題として出たのは
     # 「9本が『何が起きたか』で始まり、7本が『これからどうなる』で終わる」
     # という**入口と出口の一致**だった（2026-09-06）
+    # **締め方は、反応の節の手前で見る**（2026-09-27）。この点検は 09-06 に入ったが、
+    # 09-08 に「news の型は反応の節で終わる」が決まりになった。決まりどおりに書くと
+    # 毎日「3本中3本が『ネットの反応』」で止まり、直す道が無かった。
+    # 見たいのは「何の話で締めているか」なので、反応の節は数えない
+    def _ending(s):
+        body = [t for t in _skeleton(s) if "反応" not in t]
+        return tuple(body[-1:])
+
     for label, pick in (("入り方", lambda s: _skeleton(s)[:1]),
-                        ("締め方", lambda s: _skeleton(s)[-1:])):
+                        ("締め方", _ending)):
         counts = Counter(pick(s) for s in scripts if pick(s))
         top, share = _share(counts, total)
         if share > SAME_SHAPE:

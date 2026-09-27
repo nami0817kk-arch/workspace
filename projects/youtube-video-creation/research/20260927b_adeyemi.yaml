@@ -1,0 +1,164 @@
+date: 2026年9月27日
+slot: laliga_1
+format: quote
+voice_min: 0.55
+people: [カリム・アデイェミ]
+theme:
+  id: adeyemi_barca
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: 'アデイェミがバルサでの2か月を語る。「まだ完全には…」'
+  question: アデイェミは、バルサでの最初の数か月をどう感じているのか
+short_title: アデイェミ「まだ完全には…」
+thumbnail:
+  photo: assets/images/20260927b_adeyemi/01.jpg
+  line1: アデイェミ、8試合3点
+  line2: それでも本人は「まだ●●●●」
+sections:
+  - id: start
+    heading: バルサでの出だし
+    tier: 報道
+    telop: 移籍金2200万ユーロ。公式戦8試合で3得点
+    narrator: キャスター
+    say:
+      - 7月、アデイェミはドルトムントからバルセロナへ。移籍金は**2200万ユーロ**でした。
+      - text: ここまで公式戦**8試合**すべてに出て、**3得点**。先発は3試合で、残りは途中から出ています。
+        card: {type: table, title: 今季の3得点, columns: [日付, 相手, 結果], rows: [[8月23日, エルチェ, 5対0で勝ち], [9月9日, フェイエノールト, 5対1で勝ち], [9月13日, レバンテ, 4対2で勝ち]]}
+      - ドイツ代表に合流する前、アデイェミはバルセロナでの日々を語りました。
+      - いい試合ができるのは、どんなときか。
+      - voice: カリム・アデイェミ
+        text: 一番いい試合ができるのは、ピッチで何も考えずに、体が自然に動いているとき
+      - voice: カリム・アデイェミ
+        text: 何かを生み出そうとして、それがうまくいくように願っている
+      - voice: カリム・アデイェミ
+        text: こんなにいい仲間とプレーできて、うれしいよ
+    sources:
+      - https://www.bvb.de/de/de/aktuelles/news/news.html/2026/7/23/Karim-Adeyemi-wechselt-zum-FC-Barcelona.html
+      - https://www.sport.es/es/noticias/barca/adeyemi-mar-dudas-chollo-verano-134512908
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/83/schedule?season=2026
+      - https://www.sport.es/es/noticias/barca/adeyemi-mejores-partidos-son-pienso-134706051
+  - id: fit
+    main: true
+    heading: まだ完全には
+    tier: 報道
+    telop: 「すごく気分はいい。でも、まだ完全には…」
+    narrator: キャスター
+    say:
+      - text: 'ドルトムントからバルセロナへ移ったアデイェミ。8試合3点の本人が、暮らしを明かしました。'
+        short_only: true
+      - バルセロナでの暮らしについては、こう話しています。
+      - voice: カリム・アデイェミ
+        text: なんとも言えないな。気分は、すごく、すごくいいんだけど
+      - voice: カリム・アデイェミ
+        text: 何もかも落ち着いたかというと、まだそこまでは行っていない
+      - voice: カリム・アデイェミ
+        text: まだ完全には、ここの人間になれていないんだ
+      - voice: カリム・アデイェミ
+        text: これから言葉を覚えないといけない。それは僕にとって大事なこと
+      - voice: カリム・アデイェミ
+        text: 1、2か月で100パーセントなじむのは、やっぱり難しいよ
+      - voice: カリム・アデイェミ
+        text: でも本当に居心地がいい。ここでの時間が、これから楽しみだ
+      - 着いてすぐ向かった場所も、明かしています。
+      - voice: カリム・アデイェミ
+        text: バルセロナに来て最初にしたのは、ビーチに行って、海で泳ぐこと
+      - voice: カリム・アデイェミ
+        text: あれが一番うれしかったな
+      - voice: カリム・アデイェミ
+        text: 今でもときどき行くよ。いい天気を楽しむのが一番
+      - voice: カリム・アデイェミ
+        text: でも、家にいるのも好きなんだ
+    sources:
+      - https://www.fichajes.com/a7437835356741660348-karim-adeyemi-recuerda-su-pasado-en-el-bayern
+      - https://www.sport.es/es/noticias/barca/adeyemi-mejores-partidos-son-pienso-134706051
+      - https://www.vermouth-deportivo.com.ar/karim-adeyemi-estuve-en-bayern-munich-por-tres-anos-y-me-echaron/
+      - https://www.footmercato.net/a1371375273103104103-karim-adeyemi-se-livre-sur-ses-premiers-mois-au-barca
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「今夏最大のバーゲン」と「なぜ手放した」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: アデイェミを安く取れたのは本当に良き ありがとうドルトムント
+      - voice: ネット民
+        text: アデイェミ、めちゃくちゃデンベレっぽい。
+      - voice: ネット民
+        text: でも、デンベレよりずっと多くをもたらしてくれると思う
+        cont: true
+      - voice: ネット民
+        text: まじでもう既にアデイェミの虜になりつつある コイツはやべえ
+      - voice: ネット民
+        text: より決定力がついてムラっ気さえ無くなれば本当に覚醒する 今夏最大のバーゲンだ
+        cont: true
+      - voice: ネット民
+        text: アデイェミの値段はディオマンデの5分の1。それで、ずっといい補強になっていると思う
+      - voice: ネット民
+        text: アデイェミ、バルサ移籍してから覚醒した？パチンコ当たり続けてる。
+      - voice: ネット民
+        text: アデイェミはドルトムントで何かやらかしたに違いない。
+      - voice: ネット民
+        text: そうでなきゃ、2200万から2300万で手放すはずがない。
+        cont: true
+      - voice: ネット民
+        text: 平凡なフォワードでも5000万以上する時代だ。
+        cont: true
+      - voice: ネット民
+        text: アデイェミは若くて速い。両足でボールを扱えて、運ぶのもうまい。
+        cont: true
+      - voice: ネット民
+        text: アデイェミ覚醒してるなぁ ちょっと寂しい
+      - voice: ネット民
+        text: アデイェミ、なんて見事な個人技のゴールだ。
+      - voice: ネット民
+        text: アデイェミはこの試合だけ見ると2200万€で獲得できたのが信じられないな。
+      - voice: ネット民
+        text: ポテンシャルはすごい。あとは継続性の部分かな。
+        cont: true
+      - voice: ネット民
+        text: もうちょい守備固くてスペースない場合にどうなるか？もちゃんと見る必要はあるが。
+        cont: true
+      - voice: ネット民
+        text: アデイェミ、とんでもないやつだ！ ルックマンって、こういう選手だと思ってたんだけどな……
+      - voice: ネット民
+        text: ドルトムントほんまにありがとう、もうアデイェミは最高のWGです。 活躍できて笑かしてくれてまじで大好き
+      - voice: ネット民
+        text: 最優秀選手はアデイェミで決まりだ。このドイツ人、とんだショーを見せてくれた。すごすぎる！
+      - voice: ネット民
+        text: アデイェミ、プレスの掛け方がフリックバルサすぎて好き
+      - voice: ネット民
+        text: アデイェミがマジでなんも変わってなくてこれを活かしてるバルサ凄いなと
+      - voice: ネット民
+        text: （リーグの環境があってるとかもあるんだろうが）
+        cont: true
+      - voice: ネット民
+        text: で、なんで代表に来たのはドルトムントのアデイェミで、バルサのアデイェミじゃないんだ？
+      - voice: ネット民
+        text: バルサで一番好きな選手は誰？ そして、なぜアデイェミなの？
+      - voice: ネット民
+        text: アデイェミとペドリも既に仲良しっぽいんだよな。アデイェミはスペイン語喋れるの？
+        short_voice: true
+      - voice: ネット民
+        text: カンプ・ノウに電話しておこう。誰も教えてなくて、アデイェミがまだ走り続けてるかもしれないから
+        short_voice: true
+    sources:
+      - https://x.com/gairu_p90/status/2100336819531620846
+      - https://bsky.app/profile/guillemhs.eurosky.social/post/3mvfym46nb22p
+      - https://x.com/leo33_yuu/status/2100340056406008153
+      - https://bsky.app/profile/4freedoms.es/post/3mvfym6wckgim
+      - https://x.com/miroBayern/status/2100403688238096862
+      - https://bsky.app/profile/sudosigns.bsky.social/post/3mvnynt5rck2l
+      - https://x.com/Ninja40005/status/2100448644872966490
+      - https://bsky.app/profile/sudosigns.bsky.social/post/3mvfynzgac22j
+      - https://x.com/BarcaHikota/status/2101231029562597510
+      - https://bsky.app/profile/majillo.bsky.social/post/3mvnxqdpfj22y
+      - https://x.com/culecky_desu/status/2100337687253356922
+      - https://bsky.app/profile/herrfcb.bsky.social/post/3mvo3m2vek22m
+      - https://x.com/auf_gehts_japan/status/2103200431698739281
+      - https://x.com/hubuki0315/status/2103265027935682751
+      - https://bsky.app/profile/brandtlhuber.bsky.social/post/3mwc3d7g2ws27
+      - https://bsky.app/profile/ivithewarrior.bsky.social/post/3mvvkyo5hbc2m
+      - https://x.com/Rietia_206/status/2097751651008557162
+      - https://bsky.app/profile/anxolopez.bsky.social/post/3mvpi4lrmhk2p

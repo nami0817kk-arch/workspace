@@ -1,0 +1,152 @@
+date: 2026年9月27日
+slot: japanese_1
+format: news
+voice_min: 0.45
+people: [板倉滉, 鈴木淳之介, 冨安健洋, 安藤智哉, 渡辺剛, 中野就斗]
+theme:
+  id: itakura_ankle
+  league: germany
+  league_name: 日本代表
+  kind: other
+  topic: 板倉滉
+  title: '板倉滉まで全体練習を欠席。ベネズエラ戦、空いた3バックに入る選手'
+  question: 板倉が抜けた3バックを、誰が埋めるのか
+short_title: 板倉滉まで欠席。3バックに入るのは
+thumbnail:
+  photo: assets/images/20260927b_itakura/01.jpg
+  line1: 板倉滉が左足首を痛め
+  line2: センターバック●人目の不在
+sections:
+  - id: injury
+    heading: ウルグアイ戦で左足首
+    tier: 報道
+    telop: 前半15分ごろに左足首を痛め、後半の途中で交代
+    narrator: キャスター
+    card:
+      type: table
+      title: 板倉滉の3日間
+      columns: [日, 出来事]
+      rows:
+        - [9月24日 前半15分ごろ, 競り合いのあと左足首を痛める]
+        - [9月24日 後半の途中, 鈴木淳之介と交代]
+        - [9月26日, 広島での練習を欠席]
+    say:
+      - 9月24日のウルグアイ戦。板倉滉は3バックの真ん中で先発しました。
+      - 前半15分ごろ、相手のフォワードと競り合ったあとに、左足首を痛めます。
+      - プレーは続けましたが、後半の途中で鈴木淳之介と交代。ベンチで足首を冷やしていました。
+      - そして26日。広島での練習に、板倉の姿はありませんでした。
+      - 代表の広報担当者は、こう説明しています。
+      - voice: 代表の広報担当
+        text: ウルグアイ戦で左足首を痛めて、ホテルで治療と別メニューで調整しています
+      - ベネズエラ戦に出るかどうかは、様子を見て決めるとされています。
+    sources:
+      - https://www.nikkansports.com/soccer/japan/news/202609260001211.html
+      - https://www.football-zone.net/archives/675617
+      - https://www.football-zone.net/archives/675626
+      - https://hochi.news/articles/20260926-OHT1T51274.html
+      - https://www.jfa.jp/samuraiblue/news/00036813/
+  - id: three
+    heading: センターバックが3人
+    tier: 報道
+    telop: 冨安健洋、安藤智哉、そして板倉滉
+    narrator: キャスター
+    say:
+      - 今回の日本代表は、センターバックが次々に欠けています。
+      - text: まず冨安健洋。クラブでふくらはぎを痛め、合流する前に不参加が決まりました。
+        card: {type: table, title: 欠けたセンターバック, columns: [所属, 名前, 位置, 年齢], rows: [[クリスタル・パレス, 冨安健洋, DF, 27歳]]}
+      - text: 次に安藤智哉。腰痛で千葉に残り、広島には来ていません。
+        card: {type: table, title: 欠けたセンターバック, columns: [所属, 名前, 位置, 年齢], rows: [[クリスタル・パレス, 冨安健洋, DF, 27歳], [ザンクトパウリ, 安藤智哉, DF, 27歳]]}
+      - text: そして板倉滉。これで3人目です。
+        card: {type: table, title: 欠けたセンターバック, columns: [所属, 名前, 位置, 年齢], rows: [[クリスタル・パレス, 冨安健洋, DF, 27歳], [ザンクトパウリ, 安藤智哉, DF, 27歳], [ボルシアMG, 板倉滉, DF, 29歳]]}
+      - 27日の昼の時点で、代わりの選手の追加招集は発表されていません。
+    sources:
+      - https://www.jfa.jp/samuraiblue/news/00036782/
+      - https://hochi.news/articles/20260926-OHT1T51274.html
+      - https://news.yahoo.co.jp/articles/90625fc779eb3cec69ca5eac26b50b9465fe3eba
+      - https://news.yahoo.co.jp/articles/3c174009037de4bd6e2c323e6b42fe2d322e97fd
+      - https://news.yahoo.co.jp/articles/7751f494d8371c33f9136b37796409d49e959adc
+  - id: fill
+    main: true
+    heading: 穴を埋めるのは
+    tier: 報道
+    telop: 渡辺剛、鈴木淳之介、そして初招集の中野就斗
+    narrator: キャスター
+    say:
+      - text: センターバックの離脱が続く日本代表。板倉滉まで欠け、空いた3バックに誰が入るのか。
+        short_only: true
+      - text: ベネズエラ戦で先発が有力な鈴木淳之介は、こう話します。
+        image: assets/images/20260927b_pair_suzuki_itakura/01.jpg
+      - voice: 鈴木淳之介
+        text: どうにか食らいつくというところは終わったと思っていて
+      - voice: 鈴木淳之介
+        text: ワールドカップにも出たし、一度ああいうのを経験したので、どんどん良さを出していければ
+      - voice: 鈴木淳之介
+        text: 後ろからの押し上げ、リスク管理はもう一回徹底するようにミーティングでも言われている
+      - voice: 鈴木淳之介
+        text: 求められていることをしっかりやれれば。もし次の試合に出ることがあれば、そういうところを発揮したい
+      - フル出場した瀬古歩夢と伊藤洋輝を休ませるなら、3バックは大きく入れ替わります。
+      - text: その候補が、ウルグアイ戦で出番の無かった渡辺剛。先発が有力とみられています。
+        card: {type: table, title: 3バックの候補, columns: [所属, 名前, 位置, 年齢], rows: [[コペンハーゲン, 鈴木淳之介, DF, 23歳], [フェイエノールト, 渡辺剛, DF, 29歳]]}
+      - text: 先発を大きく入れ替えるなら、初めて呼ばれた中野就斗にも出番が回りそうです。
+        card: {type: table, title: 3バックの候補, columns: [所属, 名前, 位置, 年齢], rows: [[コペンハーゲン, 鈴木淳之介, DF, 23歳], [フェイエノールト, 渡辺剛, DF, 29歳], [サンフレッチェ広島, 中野就斗, MF/FW, 26歳]]}
+      - 中野の所属は広島。地元のスタジアムで、代表デビューとなるかもしれません。
+    sources:
+      - https://news.yahoo.co.jp/articles/7751f494d8371c33f9136b37796409d49e959adc
+      - https://web.gekisaka.jp/news/japan/detail/?459808-459808-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459785-459785-fl
+      - https://news.yahoo.co.jp/articles/109c64c17062cc9906af8b09404b194242ad235d
+      - https://www.jfa.jp/samuraiblue/news/00036771/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「センターバック追加招集しないんか」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 結構怖い感じだな足首 大丈夫か板倉
+      - voice: ネット民
+        text: 板倉滉まで、けがかよ……
+      - voice: ネット民
+        text: DF陣大丈夫か…
+      - voice: ネット民
+        text: 日本のCBはここ数年ずっと誰かが常に怪我し続けてる。
+      - voice: ネット民
+        text: 安藤板倉冨安不在なのやばすぎやん、、 CB追加招集するべきでしょうよ、、、
+      - voice: ネット民
+        text: センターバック追加招集しないんか
+      - voice: ネット民
+        text: 冨安さんの分の追加招集ないし、板倉さん欠けたら4人になるのきつすぎる。中野さん使うのかな？
+      - voice: ネット民
+        text: 板倉滉練習欠席…DF陣離脱痛い。短いスパンで瀬古歩夢と伊藤洋輝酷使しないといけないのも痛い。
+      - voice: ネット民
+        text: J若手の注目株で、稲村隼翔とか呼ばない？あと、経験枠で荒木隼人は？広島にいるでしょ！
+        cont: true
+      - voice: ネット民
+        text: 冨安、安藤に続いて板倉も…。
+      - voice: ネット民
+        text: フル出場した瀬古、伊藤を休ませるとなると・・・鈴木淳、渡辺剛、中野のスタメンで3バックか。
+        cont: true
+      - voice: ネット民
+        text: ４バックも試したかっただろうが、DFの離脱が続くと苦しいな。
+        cont: true
+      - voice: ネット民
+        text: 松木とかクラブで緊急サイドバックを務めたこともあるらしいけど。
+        cont: true
+      - voice: ネット民
+        text: クラブでの起用を考えたら親善試合ですし無理はさせれませんですね。
+        short_voice: true
+      - voice: ネット民
+        text: 中野選手は地元で巡ってきたチャンスですし是非とも観たいです。
+        cont: true
+        short_voice: true
+    sources:
+      - https://x.com/aozakura0714/status/2103068457084518690
+      - https://bsky.app/profile/rbyryo.bsky.social/post/3mwftnmd5ik2v
+      - https://news.yahoo.co.jp/profile/news/comments/0d0c2459-bc46-438a-8f28-8db7158b16d7
+      - https://news.yahoo.co.jp/profile/news/comments/fa760673-cc20-49bc-9f8f-43670476bdde
+      - https://x.com/harude_su/status/2103779752800886843
+      - https://news.yahoo.co.jp/profile/news/comments/33a0567e-4b6b-4873-8a35-a29553adf27d
+      - https://x.com/zqtqwx/status/2103876483597181084
+      - https://x.com/f_o_greatest_s/status/2103838837168570714
+      - https://news.yahoo.co.jp/profile/news/comments/f1b53ade-d006-481c-bd7e-db1ac5cbb283
+      - https://news.yahoo.co.jp/profile/news/comments/551b0d48-6ed0-4dcc-b3c2-b235614d360f

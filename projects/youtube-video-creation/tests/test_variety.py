@@ -178,3 +178,24 @@ def test_本のあいだの重なりは語りだけを見て名前は数えな�
     c = script("C", "前の5人は、メッシ、クリスティアーノ・ロナウド、イグアイン。")
     d = script("D", "クリスティアーノ・ロナウドは64本、マラドーナは61本です。")
     assert _cross_repeats([c, d]) == []
+
+
+def test_反応の節で終わるのは締め方に数えない():
+    """**news の型は反応の節で終わる決まり**（2026-09-08）。締め方の点検がそれを数えると、
+    決まりどおりの台本が毎日止まった（2026-09-27）。手前の節で比べる。"""
+    from src.variety import inspect_day
+
+    scripts = [_script("A", ["何が起きたか", "ケインの足もと", "ネットの反応"]),
+               _script("B", ["8戦全勝", "98年前の1チーム", "ネットの反応"]),
+               _script("C", ["モナコの企画", "夏のワールドカップ", "ネットの反応"])]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert found["締め方"].ok, found["締め方"].detail
+
+
+def test_反応の手前が揃っていれば止める():
+    from src.variety import inspect_day
+
+    scripts = [_script(f"T{i}", [f"話{i}", "これからどうなる", "ネットの反応"]) for i in range(3)]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert not found["締め方"].ok
+    assert "これからどうなる" in found["締め方"].detail
