@@ -1,0 +1,135 @@
+date: 2026年9月28日
+slot: japanese_2
+format: news
+voice_min: 0.4
+people: [伊藤洋輝]
+theme:
+  id: ito_bayern_sale
+  league: germany
+  league_name: ブンデスリーガ
+  kind: transfer
+  topic: バイエルン
+  title: '伊藤洋輝、バイエルンが冬に手放す考え。今季の出場時間に表れていたもの'
+  question: 伊藤洋輝は、なぜバイエルンで手放されようとしているのか
+  opening_image: assets/images/20260928_pair_ito_allianz/01.jpg
+short_title: 伊藤洋輝、バイエルンが冬に売却検討
+thumbnail:
+  photos:
+    - assets/images/20260928_ito/01.jpg
+    - assets/images/20260928_allianz/01.jpg
+  line1: 伊藤洋輝、冬に売却か
+  line2: 今季の出場は、わずか●●分
+sections:
+  - id: report
+    heading: 冬に手放す考え
+    tier: 報道
+    telop: バイエルン、伊藤を冬に売却する考えと報道
+    narrator: キャスター
+    say:
+      - text: 日本代表のセンターバック、伊藤洋輝。
+        image: assets/images/20260928_pair_ito_allianz/01.jpg
+      - 所属するバイエルンが、冬の移籍市場で手放すことを考えている、とドイツで報じられました。
+      - 1月にふさわしい話が来なければ、契約が残り1年になる来年の夏、という見方です。
+      - クラブの発表ではありません。
+      - 9月の初めには、クラブのスポーツディレクター、フロイントがこう話していました。
+      - voice: クリストフ・フロイント
+        text: 伊藤洋輝について、急を要する動きはない。洋輝はうちに残るという前提で計画している
+      - その3週間後に、この報道です。
+    sources:
+      - https://www.kicker.de/fuenf-bayern-profis-im-fokus-der-stand-bei-ito-boey-und-co-1255634/artikel
+      - https://www.fussballtransfers.com/a5843758260632671537-bericht-bayern-beschliesst-ito-verkauf
+      - https://fcbinside.de/2026/09/26/millionen-flops-vor-dem-aus-bayern-will-defensive-umbauen/
+      - https://www.4-4-2.com/bundesliga/fc-bayern-munchen/fc-bayern-hiroki-ito-entscheidung-getroffen/
+      - https://www.fussballeuropa.com/news/last-minute-abgang-von-hiroki-ito-bayern-boss-spricht-klartext-2026-09
+  - id: minutes
+    main: true
+    heading: 今季は10分だけ
+    tier: 報道
+    telop: 公式戦7試合で出場10分
+    narrator: キャスター
+    card:
+      type: table
+      title: 伊藤洋輝の今季（バイエルン）
+      columns: [大会, 出場]
+      rows:
+        - [ブンデスリーガ, 0分]
+        - [チャンピオンズリーグ, 10分]
+        - [ドイツ杯, 0分]
+        - [スーパーカップ, 0分]
+    say:
+      - text: 所属するバイエルンが、冬の移籍市場で売却を考えている、とドイツで報じられました。
+        short_only: true
+      - 今季、バイエルンの公式戦は7試合。伊藤は、すべてベンチには入っています。
+      - それでも出たのは、チャンピオンズリーグの1試合、80分からの**10分**だけ。
+      - ブンデスリーガでは、まだ1分も出ていません。
+      - センターバックは、ウパメカノとターが先発で、キム・ミンジェが3番手。
+      - 伊藤は4番手と見られています。
+    sources:
+      - https://tmapi-alpha.transfermarkt.technology/player/353892/performance-game?season=2026
+      - https://www.goal.com/de/meldungen/kein-grosses-thema-christoph-freund-widerspricht-max-eberl-bei-angeblichem-transferkandidat-des-fc-bayern/blt2b198d1c2c58209c
+      - https://www.4-4-2.com/bundesliga/fc-bayern-munchen/fc-bayern-hiroki-ito-entscheidung-getroffen/
+  - id: past
+    heading: 2年で重なったけが
+    tier: 報道
+    telop: 移籍金2350万ユーロ、契約は2028年まで
+    narrator: キャスター
+    say:
+      - 伊藤は2024年の夏、シュツットガルトから**2350万ユーロ**で加入しました。
+      - ところが、その夏の練習試合で足の甲の骨を折ります。
+      - それからも、同じ場所のけがが続きました。
+      - 契約は2028年の6月まで。
+      - 一方、日本代表では、9月24日のウルグアイ戦に先発し、最後まで出ています。
+    sources:
+      - https://www.transfermarkt.de/hiroki-ito/verletzungen/spieler/353892
+      - https://news.at-s.com/article/2063014
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「冬に移籍できるなら試合でれるとこに」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 伊藤洋輝ほんとクラブで試合にでれてないの勿体ないな､､､ほんといい選手なのに。
+        short_voice: true
+      - voice: ネット民
+        text: 冬に移籍できるなら試合でれるとこに移籍してほしいな
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: 伊藤洋輝はバイエルンを出るべきなのでは？
+      - voice: ネット民
+        text: いいね。でも、なんでスタニシッチ、伊藤、ボエがまだいるの？
+      - voice: ネット民
+        text: 試合に出ないとドンドン試合勘も錆び付いていく。
+      - voice: ネット民
+        text: 絶対王者のバイエルンだと、毎年スーパーな新加入選手も居るし、実績のない状態だと調子が戻って来るまで待ってもらえない。
+        cont: true
+      - voice: ネット民
+        text: ここはスパッと切り替えて試合に出れるクラブに移籍するのがいいと思うのですが・・・
+        cont: true
+      - voice: ネット民
+        text: 伊藤がアヤックスへという突飛な噂は、フロイントによれば根拠なし。ミュンヘンは彼を戦力として計画している。
+      - voice: ネット民
+        text: そうでなければそれこそバカげている。経験のあるセンターバックは4人要るんだから
+        cont: true
+      - voice: ネット民
+        text: トップチームのCBはウパメカノ、ター、ミンジェしかいなくない？そんな状態で伊藤を売ることはできんわな
+      - voice: ネット民
+        text: 上振れも少ないけど下振れもなく、良くも悪くも堅実という感じで大崩れはしないし。
+        cont: true
+      - voice: ネット民
+        text: 伊藤洋輝が移籍？誤植か…しかし久保建英は序列下がったとか心配されてるのに同じ日本代表なのに伊藤洋輝の方は誰も心配してない…
+      - voice: ネット民
+        text: 今季は明らかに序列落ちの1試合出場 10数分しかプレーしてないのよ
+        cont: true
+      - voice: ネット民
+        text: 日本のDFの要なのに不思議なくらい無視されてるの怖いわ
+        cont: true
+    sources:
+      - https://x.com/ashinotume888/status/2103149701419946346
+      - https://x.com/FroCule/status/2103160661052367260
+      - https://bsky.app/profile/christianschwaegerl.mastodon.social.ap.brid.gy/post/3mv6mvudcplx2
+      - https://news.yahoo.co.jp/profile/news/comments/35963716-51ff-4372-bd96-69dd81dbba72
+      - https://bsky.app/profile/floschuller.bsky.social/post/3mugy4bd5ak2b
+      - https://news.yahoo.co.jp/profile/news/comments/7bc0e409-84d4-41db-8a06-533f7c182152
+      - https://x.com/takitarozaemon/status/2102440099808243869

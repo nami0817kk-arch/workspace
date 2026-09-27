@@ -1,0 +1,54 @@
+title: 9月28日の題材（3回目）
+lead: 移籍の話と、騒動になっている話を中心に6件
+note: <b>○×を付けてください。</b>いまは代表ウィークなので、クラブの試合が無く、見出しの数そのものが少なめです。今夜の欧州の代表戦（ドイツ対ギリシャ、オランダ対セルビア、スペイン対クロアチアなど）の結果が明日の朝に出そろうので、<b>朝にもう一度集めます</b>。中身はまだ<b>見出しだけ</b>です。
+items:
+- num: 1
+  slot: 日本人
+  head: 鈴木唯人、ブンデスリーガで4試合4得点。オリーセらと並んで得点ランキングの首位、3年続けて得点王のケインより上
+  why: '開幕戦の日本人初ハットトリックに続いて、代表前の最後の試合でも同点弾。ブンデスの日本語版公式Xが取り上げて「ケインに勝ってる！」と反響、という記事。ドイツの記事ではケインの4年続いた記録が途切れたとも。
+    '
+  src: FOOTBALL ZONE（9/26）・kicker（9/27）
+  url: https://news.yahoo.co.jp/articles/5d6b3f231c556e9d58967ea56575c6a9681e84c8
+  fmt: voices
+- num: 2
+  slot: プレミア
+  head: マンC、「114件で有罪」でも今シーズンの優勝トロフィーは掲げられる見通し。控訴で長引くため
+  why: '法律の専門家の見立てとして、処分が決まるのは今季が終わったあと、という記事。9/27の2本（訴え・ノエルとキーン）とは別の角度。
+    '
+  src: デイリー・メール（9/27）
+  url: https://www.dailymail.com/sport/football/article-16164175/Guilty-Man-City-lift-Premier-League-title-season-legal-delays-expected.html
+  fmt: news
+- num: 3
+  slot: プレミア
+  head: リヴァプール、レアル・マドリードへ去ったアレクサンダー＝アーノルドの復帰に関心
+  why: 'プレミアの複数のクラブが目を付けている、という移籍の噂の記事。噂の段階。
+    '
+  src: ESPN（9/27）
+  url: https://www.espn.com/soccer/story/_/id/50040914/transfer-rumors-news-liverpool-clubs-interested-alexander-arnold
+  fmt: news
+  weak: true
+- num: 4
+  slot: その他
+  head: イタリアのサッカー連盟に、政府が管理人を送る見通し。UEFAのチェフェリン会長「政治の介入は、ユーロ2032への信頼を損なう」
+  why: 'イタリアが開催を予定しているユーロ2032に、UEFAが警告した、という記事。ベルギーに0対2で負けた新生イタリアの足元の話。
+    '
+  src: Football Italia（9/27）
+  url: https://football-italia.net/ceferin-political-interference-uefa-trust-euro/
+  fmt: news
+- num: 5
+  slot: その他
+  head: 37歳のGKネトが、今シーズン終わりまでの短い契約でユヴェントスへ
+  why: 'ユヴェントスの守護神が足りない、という話。トリノに着いた場面の記事。
+    '
+  src: Football Italia・サッカーキング（9/27）
+  url: https://football-italia.net/video-neto-lands-turin-juventus-transfer-2027/
+  fmt: news
+- num: 6
+  slot: プレミア
+  head: チェルシーのエステヴァン、出番が増えない19歳に、バルサが注目
+  why: '期待されて入ったブラジルの若手が、今季はなかなか出られていない、という記事。噂の段階。
+    '
+  src: Foot Mercato（9/27）
+  url: https://www.footmercato.net/a5631275415567369389-le-barca-surveille-de-pres-la-situation-destevao
+  fmt: news
+  weak: true

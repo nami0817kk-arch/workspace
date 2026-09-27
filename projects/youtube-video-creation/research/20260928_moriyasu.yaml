@@ -1,0 +1,140 @@
+date: 2026年9月28日
+slot: japanese_1
+format: quote
+voice_min: 0.55
+people: [森保一, 堂安律, 塩貝健人]
+theme:
+  id: moriyasu_media
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: '森保監督が会見の最後に、自分から切り出したお願い。名前の出た堂安と塩貝は'
+  question: 森保監督は何を頼み、堂安と塩貝は何と話したのか
+  opening_image: assets/images/20260928_moriyasu/01.jpg
+short_title: 森保監督の異例のお願い
+thumbnail:
+  photos:
+    - assets/images/20260928_moriyasu/01.jpg
+    - assets/images/20260928_doan_shiogai/01.jpg
+  line1: 森保監督、会見で異例のお願い
+  line2: 堂安「逆にちょっと●●●●●」
+sections:
+  - id: request
+    heading: 会見の最後に
+    tier: 報道
+    telop: 「選手たちが傷つくような配信はやめてほしい」
+    narrator: キャスター
+    say:
+      - text: 9月27日、ベネズエラ戦の前日会見。質問が終わると、森保監督が自分から口を開きました。
+        image: assets/images/20260928_moriyasu/01.jpg
+      - 一部の動画配信で、ワールドカップのあいだに代表の中で揉めた、という話が流れていました。
+      - 名前が出たのは、堂安律と塩貝健人。その切り抜きが、ネットで広がっていました。
+      - voice: 森保一
+        text: 一部メディア配信で選手たちのことを取り上げて、かつ事実でないことを取り上げて配信されている
+      - voice: 森保一
+        text: それが選手自身が傷つくことになっているということがありますので、ぜひ選手たちが傷つくような配信はやめてほしい
+      - voice: 森保一
+        text: 実際にその配信の中でも、本人は見てなくて、人から聞いたということで配信をされています
+      - voice: 森保一
+        text: 実際、我々が練習をする時には、選手同士がぶつかり合うっていうことがあります。その時も建設的なやりとりがありました
+      - voice: 森保一
+        text: ぜひその発信の先に、選手たちがどうなるかということも踏まえて、発信をしていただければ
+    sources:
+      - https://news.yahoo.co.jp/articles/e520e995fd9399a5bd61ed2b21fe57c849af291f
+      - https://web.gekisaka.jp/news/japan/detail/?459845-459845-fl
+      - https://www.soccer-king.jp/news/japan/national/20260927/2209943.html
+      - https://hochi.news/articles/20260927-OHT1T51209.html
+  - id: doan
+    main: true
+    heading: 堂安「もったいない」
+    tier: 報道
+    telop: 「逆にちょっとかわいそうですよね」
+    narrator: キャスター
+    say:
+      - text: 堂安と塩貝が揉めた、という一部の配信を森保監督が否定。当の堂安も口を開きました。
+        short_only: true
+      - text: 今回の活動でキャプテンを務める堂安律は、こう話しました。
+        image: assets/images/20260928_doan_shiogai/01.jpg
+      - voice: 堂安律
+        text: まあ、もったいないなと思いますね
+      - voice: 堂安律
+        text: ちゃんと僕の意見を聞いて書いてくれるメディアもちゃんといるのは知ってる
+      - voice: 堂安律
+        text: その築いてきた信頼関係が、一人の人が言うことで、選手が話したくないってメディア嫌いになるのはもったいない
+      - voice: 堂安律
+        text: 逆にちょっとかわいそうですよね。そちら側に選手が「いやや、話したくない」なんて言われたら
+      - voice: 堂安律
+        text: 僕たちも人間なんで、僕たちも機械じゃないし、感情的になる
+      - voice: 堂安律
+        text: 選手の感情を聞きたいと思ってみんな記事にしてくれてると思う。だからこそ違うこと書かれると、という選手は多いと思います
+      - 監督が会見で話したことは、こう受け止めていました。
+      - voice: 堂安律
+        text: 俺のことを守ろうとしたというよりも、多分全選手やと思います
+    sources:
+      - https://www.footballchannel.jp/2026/09/27/post1020522/
+      - https://news.yahoo.co.jp/articles/81d229a3cc4ce7245bfa7013ec25daab89cd3961
+      - https://www.football-zone.net/archives/675836
+      - https://news.yahoo.co.jp/articles/05222ca7f54506c02111d19d332023a110fe9538
+  - id: shiogai
+    heading: 塩貝「リスペクトしている」
+    tier: 報道
+    telop: 「僕と律くんは今も全然普通に話します」
+    narrator: キャスター
+    say:
+      - 9月24日のウルグアイ戦で代表初ゴールを決めたばかりの塩貝健人は、声を強めて話しました。
+      - voice: 塩貝健人
+        text: あんな発言は本当になかった。リスペクトがないなと思いました
+      - voice: 塩貝健人
+        text: 証拠というか、確かなエビデンスもないのに、僕に対しても失礼なこと言ったし、律くんに対しても
+      - voice: 塩貝健人
+        text: 僕と律くんは今も全然普通に話しますし、すごい僕もリスペクトをしている
+    sources:
+      - https://news.yahoo.co.jp/articles/460c146c92cb9eaba696aa9ad0296f5570285ed0
+      - https://news.yahoo.co.jp/articles/f34fae337d0bb5af4215a57d8248ef7298c93081
+      - https://www.sponichi.co.jp/soccer/news/2026/09/27/kiji/20260927s00002014399000c.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「発信の先に選手たちがどうなるか、これに尽きる」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: このような形で記者からの質問を待つのではなく、監督自ら発信したのはとてもいい事だと思います。
+      - voice: ネット民
+        text: 事実ではない憶測をそのままにせずに、しっかり選手を守る発言を行った森保監督の行動は、とても評価できることだと思います。
+        cont: true
+      - voice: ネット民
+        text: 森保監督って、随所に、あらゆる人に対してのリスペクトが表れていて、カッコいいなと思う。
+      - voice: ネット民
+        text: 今回だって、怒りの感情は少なからずある中で、冷静に伝えるべきことを伝える術は、人間力の高さだと思う。
+        cont: true
+      - voice: ネット民
+        text: 森保監督の「その発信の先に選手たちがどうなるかということも踏まえて…」これに尽きる。
+        short_voice: true
+      - voice: ネット民
+        text: 発信に対して無責任。不確定な話題を拡散する子どものいじめと同じ構図だ。
+        cont: true
+      - voice: ネット民
+        text: 「傷ついている」「やめてほしい」「リスペクトに欠ける」柔らかな語り口ですが、どれもとても重い内容の発言です。
+        cont: true
+      - voice: ネット民
+        text: 塩貝はメディア対応慣れしてないから、今の感情を素直に伝えてる。
+      - voice: ネット民
+        text: 堂安はメディアとの上手い付き合い方が日本サッカーの発展に繋がることを先輩から教えて貰ってるからこその大人な発言。
+        cont: true
+      - voice: ネット民
+        text: どちらも真摯に向き合ってて偉い。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: 森保さんは批判・批評をするなとは言ってなくって、デマを流すなと言ってんのよ。
+      - voice: ネット民
+        text: 別に異例でもなく当たり前のこと。これを言論統制とかいうなら、小学校に戻って国語の勉強し直しな。
+        cont: true
+    sources:
+      - https://news.yahoo.co.jp/profile/news/comments/250fc23e-be08-48d2-a587-79858cb62458
+      - https://news.yahoo.co.jp/profile/news/comments/40a89c5c-1c3b-46ee-a7d1-0bc004825c7e
+      - https://news.yahoo.co.jp/profile/news/comments/156c2222-43bb-40b5-af1e-3a366f4b3620
+      - https://x.com/samurai_sbcom/status/2104154472381562941
+      - https://x.com/yasuhiko1010/status/2104195592557908080
