@@ -227,3 +227,15 @@ def test_min_line_width(built):
             if d.get("type") in ("s", "fs") and d.get("width") and d["width"] < 0.74
         ]
         assert not thin, (path.name, thin[:5])
+
+
+def test_every_puzzle_can_be_solved_from_the_printed_page(built):
+    """生成データを使わず、PDF の紙面だけを読んで全問を解く。どの語も遊び方に書いた向きで
+    ちょうど1回見つかり、答えのページの色の帯がその位置と一致すること（tools/solve_from_pdf.py）。"""
+    import subprocess
+    import sys
+
+    _, _, interior, _, _ = built
+    tool = _ROOT / "tools" / "solve_from_pdf.py"
+    r = subprocess.run([sys.executable, str(tool), str(interior)], capture_output=True, text=True, encoding="utf-8")
+    assert r.returncode == 0, r.stdout[-2000:]

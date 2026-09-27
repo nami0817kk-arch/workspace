@@ -64,7 +64,8 @@ python src/build_cover.py books/vol1.json   # 表紙 -> output/vol1-cover.pdf
 ## 納品前の点検
 
 ```
-python tools/qa_kotoba.py   # 50項目。入稿の直前に必ず回し、50/50 を確かめる
+python tools/qa_kotoba.py      # 50項目。入稿の直前に必ず回し、50/50 を確かめる
+python tools/solve_from_pdf.py # 紙面だけを読んで全問を解き、答えの帯と照合する（60/60）
 ```
 
 ## 入稿の手順
