@@ -291,6 +291,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       _say(t.hintDeclined);
       return;
     }
+    if (gate == HintGate.unavailable) {
+      _say(t.hintNoAd);
+      return;
+    }
     final m = s.hint();
     if (m == null) {
       _say(t.unsolvable);
@@ -525,7 +529,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             TextSpan(children: [
               TextSpan(text: t.tallyGuard(guard), style: const TextStyle(color: Color(0xFF2B4FA8))),
               const TextSpan(text: ' ・ '),
-              TextSpan(text: t.tallyPrisoner(weight), style: TextStyle(color: weight > guard ? Palette.bad : const Color(0xFF444444))),
+              // 多い・少ないの色分けはしない（出す前に逃げると分かってしまう。2026-09-27 ユーザー指示「人のやる回数を減らすものはやめて」）
+              TextSpan(text: t.tallyPrisoner(weight), style: const TextStyle(color: Color(0xFF444444))),
             ]),
             style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Palette.ink),
           ),

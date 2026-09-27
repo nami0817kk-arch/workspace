@@ -25,7 +25,8 @@ void main() {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
-    final progress = await _progress();
+    // 広告SDKはテストに無いので、ヒントは「広告を消した」状態で使う
+    final progress = await _progress({'adFree': true});
     await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), settings: GameSettings(progress.prefsForTest, silent: true), locale: const Locale('ja')));
     await tester.tap(find.text('はじめる'));
     // 待機の揺れが止まらないので pumpAndSettle は使えない

@@ -757,6 +757,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'前の面を解くと開く'**
   String get lockedHint;
+
+  /// No description provided for @hintNoAd.
+  ///
+  /// In ja, this message translates to:
+  /// **'動画を読み込めなかった。少し待ってもう一度'**
+  String get hintNoAd;
 }
 
 class _AppLocalizationsDelegate
