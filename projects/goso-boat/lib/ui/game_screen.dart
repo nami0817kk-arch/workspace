@@ -249,8 +249,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     }
   }
 
+  /// 一手戻すのは、逃げられるまでの途中だけ。逃げられたら最初からやり直す
+  /// （2026-09-27 ユーザー決定。失敗の直前に戻れると、挑戦の回数が減るため）。
+  bool get _canUndo => s.canUndo && phase == _Phase.play;
+
   void _undo() {
-    if (!s.canUndo || phase == _Phase.moving || phase == _Phase.escaping) return;
+    if (!_canUndo) return;
     fx.play(Sfx.tap);
     setState(() {
       s.undo();
@@ -331,7 +335,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
               child: Row(
                 children: [
-                  Expanded(child: ChunkyButton(label: t.undo, icon: Icons.undo_rounded, onPressed: s.canUndo ? _undo : null, fontSize: 13)),
+                  Expanded(child: ChunkyButton(label: t.undo, icon: Icons.undo_rounded, onPressed: _canUndo ? _undo : null, fontSize: 13)),
                   const SizedBox(width: 8),
                   Expanded(child: ChunkyButton(label: t.restart, icon: Icons.refresh_rounded, onPressed: _reset, fontSize: 13)),
                   const SizedBox(width: 8),
@@ -399,7 +403,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       ),
     ).withOverlay( // 結果の札は画面全体にかぶせる
       phase == _Phase.failed
-          ? _ResultCard.fail(t: t, message: _failMessage(), onUndo: _undo, onReset: _reset)
+          ? _ResultCard.fail(t: t, message: _failMessage(), onReset: _reset)
           : phase == _Phase.won
               ? _ResultCard.win(
                   t: t,
@@ -945,7 +949,7 @@ class _GoBar extends StatelessWidget {
 class _ResultCard extends StatelessWidget {
   const _ResultCard._({required this.child});
 
-  factory _ResultCard.fail({required AppLocalizations t, required String message, required VoidCallback onUndo, required VoidCallback onReset}) => _ResultCard._(
+  factory _ResultCard.fail({required AppLocalizations t, required String message, required VoidCallback onReset}) => _ResultCard._(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -953,11 +957,7 @@ class _ResultCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
             const SizedBox(height: 16),
-            Row(mainAxisSize: MainAxisSize.min, children: [
-              ChunkyButton(label: t.undo, color: Palette.gold, onPressed: onUndo),
-              const SizedBox(width: 10),
-              ChunkyButton(label: t.restart, onPressed: onReset),
-            ]),
+            ChunkyButton(label: t.restart, icon: Icons.refresh_rounded, color: Palette.gold, fontSize: 18, onPressed: onReset),
           ],
         ),
       );
