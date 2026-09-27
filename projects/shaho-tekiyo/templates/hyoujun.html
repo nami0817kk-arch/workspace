@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}標準報酬月額の等級表と社会保険料（{{ era }}・協会けんぽ 東京）｜月収いくらから何等級？{% endblock %}
+{% block description %}標準報酬月額の等級ごとに、報酬月額の範囲と本人負担の社会保険料（健康保険・子ども・子育て支援金・厚生年金）を一覧に。{{ era }}の協会けんぽ 東京の料率で、39歳以下と40〜64歳の額を円単位で。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">標準報酬月額の等級表</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>標準報酬月額の等級表と社会保険料</h1>
+<p class="updated">{{ era }}の料率（{{ period }}・協会けんぽ 東京）</p>
+<p>
+  社会保険料は、毎月の給与そのものではなく、給与を区切りごとにまとめた<strong>標準報酬月額</strong>に料率を掛けて決まります。
+  月収（報酬月額）がどの等級に当たるかと、そのとき給与から引かれる保険料（本人負担）をまとめました。
+</p>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>等級<span class="sub">健保（厚年）</span></th><th>標準報酬月額</th><th>報酬月額</th><th>本人負担<span class="sub">39歳以下</span></th><th>本人負担<span class="sub">40〜64歳</span></th></tr></thead>
+  <tbody>
+    {% for g in grades %}
+    <tr><th>{{ g.grade }}（{{ g.pension_grade }}）</th><td>{{ "{:,}".format(g.standard) }}円</td>
+      <td>{{ "{:,}".format(g.lower) }}円〜{% if g.upper %}{{ "{:,}".format(g.upper - 1) }}円{% endif %}</td>
+      <td>{{ "{:,}".format(g.total) }}円</td><td>{{ "{:,}".format(g.total_care) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">
+  本人負担は、健康保険料（40〜64歳は介護保険料込み）・子ども・子育て支援金・厚生年金保険料の合計で、会社も同じ額を払います。
+  厚生年金の等級は1等級（8.8万円）から32等級（65万円）までで、健康保険の等級と区切りが違うため（ ）に書いています。
+  報酬月額には通勤手当や残業代も含みます。表は標準報酬月額65万円までです。
+  出典: <a href="{{ source.page }}" rel="nofollow noopener" target="_blank">{{ source.name }}「{{ source.title }}」</a>の料率をもとに当サイトで計算。
+  都道府県ごとの額は<a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>の各ページに、自分の条件なら<a href="{{ base_url }}index.html">計算機</a>で。
+</p>
+
+<h2 id="how">標準報酬月額はどう決まる？</h2>
+<p>
+  毎年4月・5月・6月の給与の平均で決まり、その年の9月から1年間使われます（定時決定）。
+  入社したときは、雇用契約の給与の見込みで決まります。給与が大きく変わったとき（2等級以上の差が3か月続いたとき）は途中で変わります（随時改定）。
+  「4月から6月に残業すると保険料が上がる」と言われるのはこのためです。
+</p>
+
+{% include "_cards.html" %}
+{% endblock %}

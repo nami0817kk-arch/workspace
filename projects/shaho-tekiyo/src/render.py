@@ -92,12 +92,34 @@ def breadcrumb_ld(html: str, rel_path: str) -> str | None:
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
 
 
+_FAQ_ITEM = re.compile(r'<h2 id="q-[^"]+">(.*?)</h2>(.*?)(?=<h2|<div class="disclaimer">)', re.S)
+_TAG = re.compile(r"<[^>]+>")
+
+
+def faq_ld(html: str) -> str | None:
+    """よくある質問の見出し（h2 id="q-…"）と、その下の本文から FAQPage（JSON-LD）を作る。
+    見た目の質問と中身がずれないように HTML から読み取る。出典の注記（p.hint）は答えに含めない。"""
+    items = []
+    for q, body in _FAQ_ITEM.findall(html):
+        body = re.sub(r'<p class="hint">.*?</p>', "", body, flags=re.S)
+        answer = re.sub(r"\s+", " ", _TAG.sub("", body)).strip()
+        if answer:
+            items.append({"@type": "Question", "name": _TAG.sub("", q).strip(),
+                          "acceptedAnswer": {"@type": "Answer", "text": answer}})
+    if not items:
+        return None
+    data = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": items}
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+
+
 def _write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.suffix == ".html" and path.name != "404.html":
         ld = breadcrumb_ld(content, path.relative_to(_OUTPUT_DIR).as_posix())
         if ld:
             content = content.replace("</head>", ld + "\n</head>", 1)
+        if path.name == "faq.html":
+            content = content.replace("</head>", (faq_ld(content.split("<main", 1)[1]) or "") + "\n</head>", 1)
     path.write_text(content, encoding="utf-8")
 
 
@@ -312,9 +334,59 @@ def _build_amount_pages() -> None:
     _write(
         _OUTPUT_DIR / "getsushu" / "index.html",
         _env.get_template("amount_index.html").render(
-            base_url="../", canonical=canonical_url("getsushu/index.html"), **common
+            base_url="../", canonical=canonical_url("getsushu/index.html"),
+            reverse=_reverse_rows(as_of), **common
         ),
     )
+    _write(
+        _OUTPUT_DIR / "hyoujun.html",
+        _env.get_template("hyoujun.html").render(
+            base_url="", canonical=canonical_url("hyoujun.html"), grades=_grade_rows(as_of), **common
+        ),
+    )
+
+
+def _net_monthly(as_of: date, pay: int) -> int:
+    """社会保険に入ったときの手取りの目安（月、東京・39歳以下・扶養0人・通勤手当なし）。"""
+    r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=False)
+    koyo = extras.employment_yen(as_of, pay) or 0
+    tax = extras.income_tax_yen(as_of, pay - r.total_yen - koyo, 0) or 0
+    return pay - r.total_yen - koyo - tax
+
+
+# 手取りから月収を逆算する表（月収別の一覧の下）。「パート 手取り12万 社会保険」で探す人向け。
+REVERSE_NET_MAN: tuple[int, ...] = tuple(range(7, 21))
+
+
+def _reverse_rows(as_of: date) -> list[dict]:
+    """手取り n 万円に届く最小の月収（100円単位）。等級の境目で手取りが下がることがあるので、
+    「その月収以上なら、どの額でも手取りが n 万円を下回らない」額を探す。"""
+    rows = []
+    for man in REVERSE_NET_MAN:
+        target = man * 10_000
+        pay = 350_000
+        while pay - 100 > 0 and _net_monthly(as_of, pay - 100) >= target:
+            pay -= 100
+        rows.append({"net_man": man, "pay": pay, "net": _net_monthly(as_of, pay),
+                     "hourly_20": -(-pay * 12 // (52 * 20))})
+    return rows
+
+
+def _grade_rows(as_of: date) -> list[dict]:
+    """標準報酬月額の等級表（健康保険の等級ごと、厚生年金の上限 65万円まで）と本人負担（東京）。"""
+    table = premium.table_for(as_of)
+    rows = []
+    grades = table.health_grades
+    for i, (grade, standard, lower) in enumerate(grades):
+        if standard > 650_000:
+            break
+        upper = grades[i + 1][2] if i + 1 < len(grades) else None
+        pay = max(lower, 1)
+        r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=False)
+        rc = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=True)
+        rows.append({"grade": grade, "pension_grade": r.pension_grade, "standard": standard, "lower": lower,
+                     "upper": upper, "total": r.total_yen, "total_care": rc.total_yen, "pension": r.pension_yen})
+    return rows
 
 
 # 年収別の手取り早見表（/nenshu.html）。「パート 年収 手取り 表」で探す人向け。
@@ -333,10 +405,13 @@ def _nenshu_rows(as_of: date) -> list[dict]:
         tax_out = extras.income_tax_yen(as_of, monthly, 0) or 0
         annual = man * 10_000
         net_in = annual - (r.total_yen + koyo + tax_in) * 12
+        rc = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=monthly, age_40_to_64=True)
+        tax_c = extras.income_tax_yen(as_of, monthly - rc.total_yen - koyo, 0) or 0
+        net_in_care = annual - (rc.total_yen + koyo + tax_c) * 12
         # 130万円以上は配偶者などの扶養から外れるので「入らない＝扶養内」の手取りは出さない
         net_out = annual - tax_out * 12 if man < 130 else None
         rows.append(dict(man=man, monthly=monthly, social=r.total_yen * 12, koyo=koyo * 12,
-                         tax_in=tax_in * 12, net_in=net_in, tax_out=tax_out * 12, net_out=net_out,
+                         tax_in=tax_in * 12, net_in=net_in, net_in_care=net_in_care, tax_out=tax_out * 12, net_out=net_out,
                          near=min(AMOUNTS_MAN, key=lambda m: abs(m * 10_000 - monthly))))
     return rows
 
@@ -424,6 +499,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-27", "加入条件のページと標準報酬月額の等級表を追加。月収別の一覧に手取りからの逆算、年収別に40〜64歳の列。計算機に入力例と条件のリンクのコピー（入力を URL に残す）。よくある質問に目次、検索エンジン向けの FAQ・計算ツールの構造化データ"),
     ("2026-09-27", "何のサイトか分かるように: ロゴの印と説明の一行、トップに「分かること3つ」と10月の変更のお知らせ、ブラウザのタブ・検索結果に出るアイコン"),
     ("2026-09-27", "年収別の手取り早見表（90万〜200万円、社会保険に入る場合と扶養内の場合）を追加。よくある質問に交通費・残業代、130万円の壁の月額と19〜22歳の150万円、ダブルワーク、加入を断れるかの4問を追加。サイト名を「パートの社会保険 計算機」に"),
     ("2026-09-27", "公開のたびに IndexNow（Bing など）へページの一覧を知らせるようにした"),
@@ -458,7 +534,9 @@ def _build_keisan_page() -> None:
 
 
 def _build_static_pages() -> None:
-    for name in ("faq.html", "about.html", "operator.html", "privacy.html", "contact.html"):
+    table = premium.TABLES[-1]
+    ex10 = premium.estimate(as_of=table.valid_from, prefecture="東京", monthly_pay_yen=100_000, age_40_to_64=False)
+    for name in ("faq.html", "jyoken.html", "about.html", "operator.html", "privacy.html", "contact.html"):
         tmpl = _env.get_template(name)
         _write(
             _OUTPUT_DIR / name,
@@ -468,6 +546,7 @@ def _build_static_pages() -> None:
                 policy_updated=POLICY_UPDATED,
                 schedule=eligibility.SCHEDULE,
                 milestones=eligibility.MILESTONES,
+                ex10=ex10,
             ),
         )
 
@@ -498,12 +577,14 @@ def _write_sitemap() -> None:
     urls: list[tuple[str, str | None]] = [
         (canonical_url("index.html"), None),
         (canonical_url("faq.html"), None),
+        (canonical_url("jyoken.html"), None),
         (canonical_url("about.html"), None),
         (canonical_url("operator.html"), None),
         (canonical_url("contact.html"), None),
         (canonical_url("privacy.html"), None),
         (canonical_url("year/index.html"), None),
         (canonical_url("keisan.html"), None),
+        (canonical_url("hyoujun.html"), None),
         (canonical_url("nenshu.html"), None),
     ]
     urls += [(canonical_url(p), None) for p in amount_page_paths() + kabe_page_paths()]

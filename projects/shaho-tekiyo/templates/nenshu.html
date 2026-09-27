@@ -22,7 +22,7 @@
 <div class="table-wrap">
 <table class="plain num">
   <thead>
-    <tr><th>年収</th><th>月あたり</th><th>社会保険に入る<span class="sub">手取り（年）</span></th><th>扶養内で入らない<span class="sub">手取り（年）</span></th></tr>
+    <tr><th>年収</th><th>月あたり</th><th>社会保険に入る<span class="sub">手取り（年）</span></th><th>入る・40〜64歳<span class="sub">介護保険料込み</span></th><th>扶養内で入らない<span class="sub">手取り（年）</span></th></tr>
   </thead>
   <tbody>
     {% for r in rows %}
@@ -30,6 +30,7 @@
       <th><a href="{{ base_url }}getsushu/{{ r.near }}man.html">{{ r.man }}万円</a></th>
       <td>{{ "{:,}".format(r.monthly) }}円</td>
       <td>{{ "{:,}".format(r.net_in) }}円</td>
+      <td>{{ "{:,}".format(r.net_in_care) }}円</td>
       <td>{% if r.net_out is not none %}{{ "{:,}".format(r.net_out) }}円{% else %}<span class="sub">扶養から外れる</span>{% endif %}</td>
     </tr>
     {% endfor %}
@@ -37,7 +38,7 @@
 </table>
 </div>
 <p class="hint">
-  賞与なし・毎月同じ額・東京の会社・39歳以下・扶養している家族0人の目安です。
+  賞与なし・毎月同じ額・東京の会社・扶養している家族0人の目安です（「入る・40〜64歳」以外は39歳以下）。
   「社会保険に入る」は健康保険・子ども・子育て支援金・厚生年金・雇用保険の保険料と所得税を引いた額、
   「扶養内で入らない」は週20時間未満で働き、所得税だけが引かれる場合の額です。
   所得税は毎月の天引き額×12（年末調整の前）で、<strong>住民税は含みません</strong>。年収を押すと、近い月収の内訳が見られます。
