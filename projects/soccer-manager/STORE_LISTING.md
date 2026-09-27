@@ -87,6 +87,28 @@
 > **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
 > 記述が残っているのは、出すことになったときのため。当面は iOS だけを見る。
 
+## このバージョンの新機能（1.1.1）
+
+App Store Connect の「このバージョンの新機能」に貼る文面。**日本語と英語で別々に入れる。**
+
+中身の変更は1件だけで、あとはストアの掲載（名前・サブタイトル・キーワード・
+掲載画像・英語ローカライズ）の更新。掲載の更新はバージョンを出さないと
+反映されないため、この版を出す。
+
+### 日本語
+
+```
+・ダービーの収入が、実際に入れた人数で決まるようになりました。満員でも
+　入れる人数を超えて入場料が入っていたのを直しています
+```
+
+### 英語
+
+```
+- Derby income is now based on how many people actually got in. It used to
+  count gate receipts for more than the stadium holds.
+```
+
 ## このバージョンの新機能（1.1.0）
 
 App Store Connect / Google Play Console の「このバージョンの新機能」に貼る文面。
