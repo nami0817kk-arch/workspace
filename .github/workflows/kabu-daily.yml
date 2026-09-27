@@ -14,6 +14,8 @@ on:
       - "projects/kabu-agari-ranking/src/**"
       - "projects/kabu-agari-ranking/templates/**"
       - "projects/kabu-agari-ranking/static/**"
+      # 依存の版が変われば出来上がるページも変わりうる（Jinja2 など）。
+      - "projects/kabu-agari-ranking/requirements.txt"
       - "libs/kabutan/**"
       - ".github/workflows/kabu-daily.yml"
   schedule:

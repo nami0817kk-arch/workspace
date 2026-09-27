@@ -92,11 +92,16 @@ def _save_today(gainers, losers, active, stop_high=None, stop_low=None, *,
     (_DATA_DIR / "latest.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    print(
-        f"  {day_path} に保存しました"
-        f"(値上がり{len(payload['gainers'])}/値下がり{len(payload['losers'])}"
-        f"/活況{len(payload['active'])}/ストップ高{len(payload['stop_high'])}件)"
+    # **落ちたキーを直に読まない。** 取れなかったランキングはキーごと消して
+    # あるので、ここで payload['stop_high'] と書くと KeyError で落ちる。
+    # 保存は済んでいるのにサイトのビルドまで行かず、その日が公開されなくなる。
+    counts = "/".join(
+        f"{label}{_count(payload, key)}"
+        for label, key in (("値上がり", "gainers"), ("値下がり", "losers"),
+                           ("活況", "active"), ("ストップ高", "stop_high"),
+                           ("ストップ安", "stop_low"))
     )
+    print(f"  {day_path} に保存しました（{counts}）")
     return rec_date
 
 
