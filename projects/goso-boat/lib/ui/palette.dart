@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../app/settings.dart';
@@ -111,8 +113,15 @@ class ChunkyButton extends StatefulWidget {
 class _ChunkyButtonState extends State<ChunkyButton> {
   bool _down = false;
 
-  /// 2度押しよけ（画面の移動や広告の数えが二重にならないように）。
-  DateTime _lastTap = DateTime(2000);
+  /// 2度押しよけ（画面の移動や広告の数えが二重にならないように）。押してから少しの間は受け付けない。
+  bool _cooling = false;
+  Timer? _cool;
+
+  @override
+  void dispose() {
+    _cool?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +137,9 @@ class _ChunkyButtonState extends State<ChunkyButton> {
         onTapUp: enabled
             ? (_) {
                 setState(() => _down = false);
-                final now = DateTime.now();
-                if (now.difference(_lastTap) < const Duration(milliseconds: 500)) return;
-                _lastTap = now;
+                if (_cooling) return;
+                _cooling = true;
+                _cool = Timer(const Duration(milliseconds: 500), () => _cooling = false);
                 if (!widget.silent) AppScope.maybeOf(context)?.play(Sfx.tap);
                 widget.onPressed!();
               }

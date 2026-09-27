@@ -1277,7 +1277,7 @@ class _ResultCard extends StatelessWidget {
           Text('${t.crossedIn(trips)}\n$note', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
           if (best != null) ...[
             const SizedBox(height: 6),
-            Row(mainAxisSize: MainAxisSize.min, children: [
+            Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, runSpacing: 6, children: [
               Text(t.personalBest(best), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Palette.ink)),
               if (newRecord) ...[
                 const SizedBox(width: 8),
@@ -1290,7 +1290,7 @@ class _ResultCard extends StatelessWidget {
             ]),
           ],
           const SizedBox(height: 6),
-          Row(mainAxisSize: MainAxisSize.min, children: [
+          Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, runSpacing: 6, children: [
             Text(t.timeLine(_clockText(timeMs)), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Palette.ink)),
             if (bestMs != null && !fastest) ...[
               const SizedBox(width: 10),
@@ -1310,7 +1310,7 @@ class _ResultCard extends StatelessWidget {
           if (hasNext) ChunkyButton(label: t.nextLevel, color: Palette.gold, fontSize: 18, onPressed: onNext),
           if (isLast) Text(t.allCleared(total), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
           const SizedBox(height: 10),
-          Row(mainAxisSize: MainAxisSize.min, children: [
+          Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, runSpacing: 6, children: [
             ChunkyButton(label: t.again, onPressed: onRetry, fontSize: 13),
             const SizedBox(width: 10),
             ChunkyButton(label: t.stageSelect, onPressed: onMenu, fontSize: 13),

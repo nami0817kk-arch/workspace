@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../app/progress.dart';
@@ -12,9 +14,14 @@ import 'palette.dart';
 import 'records_screen.dart';
 import 'settings_screen.dart';
 
-/// 面の札の2度押しよけ（同じ画面が2枚積まれないように）。
-DateTime _lastTileTap = DateTime(2000);
-bool _tapOk() => DateTime.now().difference(_lastTileTap) > const Duration(milliseconds: 600);
+/// 面の札の2度押しよけ（同じ画面が2枚積まれないように）。押してから少しの間は受け付けない。
+bool _tileCooling = false;
+bool _tapOk() {
+  if (_tileCooling) return false;
+  _tileCooling = true;
+  Timer(const Duration(milliseconds: 600), () => _tileCooling = false);
+  return true;
+}
 
 Route<void> _fade(Widget page) => PageRouteBuilder(
       pageBuilder: (_, _, _) => page,
@@ -296,7 +303,11 @@ class _LevelTile extends StatelessWidget {
       label: !open ? context.l10n.levelLocked(level.id) : stars > 0 ? context.l10n.levelStars(level.id, stars) : level.id,
       excludeSemantics: true,
       child: GestureDetector(
-        onTap: open && _tapOk() ? () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress, money: money))) : null,
+        onTap: open
+            ? () {
+                if (_tapOk()) Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress, money: money)));
+              }
+            : null,
         child: Container(
           decoration: BoxDecoration(
             color: current ? Palette.gold : open ? Colors.white : const Color(0xFFE3E8EE),
@@ -304,15 +315,22 @@ class _LevelTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             boxShadow: open ? const [BoxShadow(color: Palette.ink, offset: Offset(0, 2))] : null,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              open
-                  ? Text(level.id.split('-').last, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Palette.ink))
-                  : const Icon(Icons.lock_rounded, size: 18, color: Palette.dim),
-              const SizedBox(height: 2),
-              StarRow(stars, size: 11),
-            ],
+          // 小さい画面や大きい文字では、はみ出さずに縮める（iPhone SE・文字1.3倍で 2.8px はみ出していた）
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  open
+                      ? Text(level.id.split('-').last, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Palette.ink))
+                      : const Icon(Icons.lock_rounded, size: 18, color: Palette.dim),
+                  const SizedBox(height: 2),
+                  StarRow(stars, size: 11),
+                ],
+              ),
+            ),
           ),
         ),
       ),

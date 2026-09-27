@@ -132,7 +132,11 @@ void main() {
       final (p, m, st) = await _deps({'adFree': true, 'stat.escapes': 9});
       await tester.pumpWidget(GosoBoatApp(progress: p, money: m, settings: st, locale: locale));
       await tester.pump(const Duration(milliseconds: 300));
-      await tester.tap(find.text(locale.languageCode == 'ja' ? 'はじめる' : 'Start'));
+      // 小さい画面ではホームがスクロールするので、ボタンを見える所まで送ってから押す
+      final start = find.text(locale.languageCode == 'ja' ? 'はじめる' : 'Start');
+      await tester.ensureVisible(start);
+      await tester.pump();
+      await tester.tap(start);
       await tester.pump(const Duration(milliseconds: 400));
       await tester.pump(const Duration(seconds: 2));
       for (var i = 0; i < 3; i++) {
