@@ -77,15 +77,15 @@ def test_arithmetic_answers_match_printed_problems(built):
             assert answers.get(k) == want, (day["day"], k, a, op, b, answers.get(k))
 
 
-def test_words_unique_and_not_in_vol1():
-    spec = json.loads(_SPEC.read_text(encoding="utf-8"))
-    vol1 = {w["answer"] for t in json.loads((_ROOT / "books" / "kotoba-vol1.json").read_text(encoding="utf-8"))["themes"]
-            for w in t["words"]}
-    words = [w["answer"] for d in spec["days"] if d["right"]["kind"] == "wordsearch" for w in d["right"]["words"]]
-    assert len(words) == len(set(words)) == 75
-    assert not set(words) & vol1
-    bad = [(a, b) for a in words for b in words if a != b and any(b == a + s for s in ("まき", "づけ", "やき", "しる"))]
-    assert not bad, bad
+def test_no_wordsearch_and_mazes_grow(built):
+    """ことば探しは別の本があるので入れない（2026-09-27 指示）。奇数日は迷路で、10日ごとに大きくなる。"""
+    _, days, interior, _, _ = built
+    kinds = [d["right"]["type"] for d in days]
+    assert kinds == ["maze", "pair_search"] * 15
+    sizes = [d["right"]["board"]["width"] for d in days if d["right"]["type"] == "maze"]
+    assert sizes[0] < sizes[5] < sizes[-1]
+    text = "".join(p.get_text() for p in pymupdf.open(str(interior)))
+    assert "ことば探し" not in text
 
 
 def test_talks_are_questions_without_sad_topics():

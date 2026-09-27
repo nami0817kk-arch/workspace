@@ -98,3 +98,12 @@ def test_render_svg_contains_expected_elements():
 
     svg_with_answer = render_svg(record, show_solution=True)
     assert "<polyline" in svg_with_answer
+
+
+def test_build_maze_with_custom_size():
+    from puzzle_generator import build_maze, validate_record
+
+    for seed in range(10):
+        rec = build_maze(11, 11, seed, "medium")
+        validate_record(rec)
+        assert rec["board"]["width"] == rec["board"]["height"] == 11

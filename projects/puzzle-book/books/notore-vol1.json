@@ -1,6 +1,6 @@
 {
  "title": "ゆったり あたまの体操 30日",
- "subtitle": "計算・時計・数字さがし・ことば探し・同じ絵さがし",
+ "subtitle": "計算・時計・数字さがし・迷路・同じ絵さがし",
  "publisher": "つるはし社",
  "trim": "a4",
  "ink": "premium",
@@ -13,31 +13,7 @@
    "difficulty": "easy",
    "talk": "子どものころの朝ごはんは、何でしたか？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "朝のしたく",
-    "icon": "1f9fa",
-    "words": [
-     {
-      "answer": "はみがき",
-      "label": "はみがき（歯磨き）"
-     },
-     {
-      "answer": "せんがん",
-      "label": "せんがん（洗顔）"
-     },
-     {
-      "answer": "きがえ",
-      "label": "きがえ（着替え）"
-     },
-     {
-      "answer": "くし",
-      "label": "くし（櫛）"
-     },
-     {
-      "answer": "かがみ",
-      "label": "かがみ（鏡）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -53,31 +29,7 @@
    "difficulty": "easy",
    "talk": "はじめて海を見たのは、いつでしたか？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "お弁当",
-    "icon": "1f359",
-    "words": [
-     {
-      "answer": "おにぎり",
-      "label": "おにぎり"
-     },
-     {
-      "answer": "からあげ",
-      "label": "からあげ（唐揚げ）"
-     },
-     {
-      "answer": "ふりかけ",
-      "label": "ふりかけ"
-     },
-     {
-      "answer": "はし",
-      "label": "はし（箸）"
-     },
-     {
-      "answer": "おかず",
-      "label": "おかず"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -93,31 +45,7 @@
    "difficulty": "easy",
    "talk": "銭湯に行った思い出はありますか？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "海の生き物",
-    "icon": "1f41f",
-    "words": [
-     {
-      "answer": "くじら",
-      "label": "くじら（鯨）"
-     },
-     {
-      "answer": "いるか",
-      "label": "いるか"
-     },
-     {
-      "answer": "ひとで",
-      "label": "ひとで"
-     },
-     {
-      "answer": "かに",
-      "label": "かに（蟹）"
-     },
-     {
-      "answer": "くらげ",
-      "label": "くらげ"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -133,31 +61,7 @@
    "difficulty": "easy",
    "talk": "星空がきれいだった夜の思い出は？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "文房具",
-    "icon": "270f",
-    "words": [
-     {
-      "answer": "えんぴつ",
-      "label": "えんぴつ（鉛筆）"
-     },
-     {
-      "answer": "けしごむ",
-      "label": "けしごむ（消しゴム）"
-     },
-     {
-      "answer": "のり",
-      "label": "のり（糊）"
-     },
-     {
-      "answer": "ふでばこ",
-      "label": "ふでばこ（筆箱）"
-     },
-     {
-      "answer": "じょうぎ",
-      "label": "じょうぎ（定規）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -173,31 +77,7 @@
    "difficulty": "easy",
    "talk": "お気に入りだった服を覚えていますか？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "お風呂",
-    "icon": "2668",
-    "words": [
-     {
-      "answer": "ゆぶね",
-      "label": "ゆぶね（湯船）"
-     },
-     {
-      "answer": "せっけん",
-      "label": "せっけん（石鹸）"
-     },
-     {
-      "answer": "おけ",
-      "label": "おけ（桶）"
-     },
-     {
-      "answer": "ゆげ",
-      "label": "ゆげ（湯気）"
-     },
-     {
-      "answer": "あかすり",
-      "label": "あかすり"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -213,31 +93,7 @@
    "difficulty": "medium",
    "talk": "お米づくりを見たり手伝ったりしたことは？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "山の生き物",
-    "icon": "1f333",
-    "words": [
-     {
-      "answer": "たぬき",
-      "label": "たぬき（狸）"
-     },
-     {
-      "answer": "きつね",
-      "label": "きつね（狐）"
-     },
-     {
-      "answer": "いのしし",
-      "label": "いのしし（猪）"
-     },
-     {
-      "answer": "しか",
-      "label": "しか（鹿）"
-     },
-     {
-      "answer": "りす",
-      "label": "りす（栗鼠）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -253,31 +109,7 @@
    "difficulty": "medium",
    "talk": "縁日でいちばん楽しみだったものは？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "空と星",
-    "icon": "1f308",
-    "words": [
-     {
-      "answer": "たいよう",
-      "label": "たいよう（太陽）"
-     },
-     {
-      "answer": "つき",
-      "label": "つき（月）"
-     },
-     {
-      "answer": "ほし",
-      "label": "ほし（星）"
-     },
-     {
-      "answer": "くも",
-      "label": "くも（雲）"
-     },
-     {
-      "answer": "ながれぼし",
-      "label": "ながれぼし（流れ星）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -293,31 +125,7 @@
    "difficulty": "medium",
    "talk": "散歩でよく歩いた道は？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "駅の風景",
-    "icon": "1f683",
-    "words": [
-     {
-      "answer": "えきいん",
-      "label": "えきいん（駅員）"
-     },
-     {
-      "answer": "まちあい",
-      "label": "まちあい（待合）"
-     },
-     {
-      "answer": "せんろ",
-      "label": "せんろ（線路）"
-     },
-     {
-      "answer": "ばいてん",
-      "label": "ばいてん（売店）"
-     },
-     {
-      "answer": "のりば",
-      "label": "のりば（乗り場）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -333,31 +141,7 @@
    "difficulty": "medium",
    "talk": "好きな季節と、その理由は？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "昔の着るもの",
-    "icon": "1f458",
-    "words": [
-     {
-      "answer": "ぼうし",
-      "label": "ぼうし（帽子）"
-     },
-     {
-      "answer": "くつした",
-      "label": "くつした（靴下）"
-     },
-     {
-      "answer": "えりまき",
-      "label": "えりまき（襟巻）"
-     },
-     {
-      "answer": "はんてん",
-      "label": "はんてん（半纏）"
-     },
-     {
-      "answer": "もんぺ",
-      "label": "もんぺ"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -373,31 +157,7 @@
    "difficulty": "medium",
    "talk": "得意な家事は何ですか？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "お祝い",
-    "icon": "1f38d",
-    "words": [
-     {
-      "answer": "せきはん",
-      "label": "せきはん（赤飯）"
-     },
-     {
-      "answer": "こうはく",
-      "label": "こうはく（紅白）"
-     },
-     {
-      "answer": "のし",
-      "label": "のし（熨斗）"
-     },
-     {
-      "answer": "みずひき",
-      "label": "みずひき（水引）"
-     },
-     {
-      "answer": "ことぶき",
-      "label": "ことぶき（寿）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -413,31 +173,7 @@
    "difficulty": "hard",
    "talk": "子どものころのあだ名は？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "田んぼ",
-    "icon": "1f33b",
-    "words": [
-     {
-      "answer": "いなほ",
-      "label": "いなほ（稲穂）"
-     },
-     {
-      "answer": "かかし",
-      "label": "かかし（案山子）"
-     },
-     {
-      "answer": "たうえ",
-      "label": "たうえ（田植え）"
-     },
-     {
-      "answer": "いねかり",
-      "label": "いねかり（稲刈り）"
-     },
-     {
-      "answer": "あぜみち",
-      "label": "あぜみち（あぜ道）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -453,31 +189,7 @@
    "difficulty": "hard",
    "talk": "はじめて自分で買った大きなものは？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "秋の虫の声",
-    "icon": "1f98b",
-    "words": [
-     {
-      "answer": "すずむし",
-      "label": "すずむし（鈴虫）"
-     },
-     {
-      "answer": "こおろぎ",
-      "label": "こおろぎ"
-     },
-     {
-      "answer": "まつむし",
-      "label": "まつむし（松虫）"
-     },
-     {
-      "answer": "くつわむし",
-      "label": "くつわむし"
-     },
-     {
-      "answer": "きりぎりす",
-      "label": "きりぎりす"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -493,31 +205,7 @@
    "difficulty": "hard",
    "talk": "育てたことのある植物や動物は？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "縁日の食べもの",
-    "icon": "1f3ee",
-    "words": [
-     {
-      "answer": "やきそば",
-      "label": "やきそば（焼きそば）"
-     },
-     {
-      "answer": "たこやき",
-      "label": "たこやき（たこ焼き）"
-     },
-     {
-      "answer": "りんごあめ",
-      "label": "りんごあめ"
-     },
-     {
-      "answer": "いかやき",
-      "label": "いかやき（いか焼き）"
-     },
-     {
-      "answer": "おこのみやき",
-      "label": "おこのみやき（お好み焼き）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -533,31 +221,7 @@
    "difficulty": "hard",
    "talk": "好きなお菓子と、よく買ったお店は？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "おそうじ",
-    "icon": "1f3e0",
-    "words": [
-     {
-      "answer": "ちりとり",
-      "label": "ちりとり"
-     },
-     {
-      "answer": "ぞうきん",
-      "label": "ぞうきん（雑巾）"
-     },
-     {
-      "answer": "はたき",
-      "label": "はたき"
-     },
-     {
-      "answer": "ばけつ",
-      "label": "ばけつ"
-     },
-     {
-      "answer": "たわし",
-      "label": "たわし"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
@@ -573,31 +237,7 @@
    "difficulty": "hard",
    "talk": "今いちばん会いたい人は誰ですか？",
    "right": {
-    "kind": "wordsearch",
-    "theme": "朝のさんぽ",
-    "icon": "1f338",
-    "words": [
-     {
-      "answer": "あさひ",
-      "label": "あさひ（朝日）"
-     },
-     {
-      "answer": "いぬ",
-      "label": "いぬ（犬）"
-     },
-     {
-      "answer": "あいさつ",
-      "label": "あいさつ（挨拶）"
-     },
-     {
-      "answer": "さんぽみち",
-      "label": "さんぽみち（散歩道）"
-     },
-     {
-      "answer": "つゆくさ",
-      "label": "つゆくさ（露草）"
-     }
-    ]
+    "kind": "maze"
    }
   },
   {
