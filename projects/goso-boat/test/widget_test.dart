@@ -49,6 +49,19 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
     expect(find.text('全員護送'), findsOneWidget);
     expect(progress.stars(progress.levels.first), 2, reason: 'ヒントを使ったので星2');
+    expect(find.text('自己ベスト 3回'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
+
+    // 星3でないので「お手本を見る」が出る。最短手順を再生して、また結果の札に戻る
+    await tester.tap(find.text('お手本を見る'));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('全員護送'), findsNothing);
+    expect(find.textContaining('お手本 '), findsOneWidget);
+    for (var i = 0; i < 80; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.text('全員護送'), findsOneWidget);
+    expect(progress.stars(progress.levels.first), 2, reason: 'お手本は星に関わらない');
     await tester.pump(const Duration(seconds: 3));
   });
 

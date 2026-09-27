@@ -105,5 +105,9 @@
   "resetConfirmBody": "All stars and records will be deleted. Your ad-free purchase stays.",
   "cancel": "Cancel",
   "doReset": "Reset",
-  "resetDone": "Progress reset"
+  "resetDone": "Progress reset",
+  "watchSolution": "Watch solution",
+  "demoPlaying": "Solution {i}/{n}",
+  "personalBest": "Your best: {n}",
+  "newRecord": "New record!"
 }

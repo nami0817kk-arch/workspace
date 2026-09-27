@@ -70,11 +70,22 @@ class Progress extends ChangeNotifier {
   /// 「つづきから」で開く面。全部解いていれば最後の面。
   Level get nextLevel => levels.firstWhere((l) => !cleared(l), orElse: () => levels.last);
 
-  Future<void> record(Level l, int stars) async {
-    if (stars > this.stars(l)) {
-      await _prefs.setInt('stars.${l.id}', stars);
-      notifyListeners();
+  /// 自己ベスト（最少の往復回数）。まだ解いていなければ null。
+  int? best(Level l) => _prefs.getInt('best.${l.id}');
+
+  /// クリアを記録する。自己ベストを縮めたとき（前の記録があって、それより少ない）だけ true。
+  Future<bool> record(Level l, int stars, {int? trips}) async {
+    if (stars > this.stars(l)) await _prefs.setInt('stars.${l.id}', stars);
+    var improved = false;
+    if (trips != null) {
+      final prev = best(l);
+      if (prev == null || trips < prev) {
+        await _prefs.setInt('best.${l.id}', trips);
+        improved = prev != null;
+      }
     }
+    notifyListeners();
+    return improved;
   }
 
   /// 評価のお願いを出してよいか。舞台の最後の面を星2つ以上で解いた直後だけ、舞台ごとに1回。

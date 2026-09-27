@@ -29,7 +29,7 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreenState();
 }
 
-enum _Phase { play, moving, escaping, failed, won }
+enum _Phase { play, moving, escaping, failed, won, demo }
 
 class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   late Session s = Session(widget.level);
@@ -52,6 +52,16 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   String? _toast;
   Timer? _toastTimer;
   int _earnedStars = 0;
+
+  // 結果の札に出す値（お手本を再生すると s が変わるので、クリアした時点で控える）
+  int _resultTrips = 0;
+  bool _resultUsedHint = false;
+  int? _best;
+  bool _newRecord = false;
+
+  /// お手本の何手目か（0 なら再生していない）。
+  int _demoStep = 0;
+  int _demoTotal = 0;
   final List<Timer> _timers = [];
 
   Level get level => widget.level;
@@ -211,7 +221,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   Future<void> _win() async {
     _earnedStars = s.stars;
-    await widget.progress.record(level, _earnedStars);
+    _resultTrips = s.trips;
+    _resultUsedHint = s.usedHint;
+    _newRecord = await widget.progress.record(level, _earnedStars, trips: s.trips);
+    _best = widget.progress.best(level);
     fx.buzz(Buzz.medium);
     fx.play(Sfx.clear);
     // 星の数だけ「きらっ」を鳴らす（結果の札に星が並ぶのに合わせる）
@@ -231,7 +244,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   void _undo() {
-    if (!s.canUndo || phase == _Phase.moving || phase == _Phase.escaping) return;
+    if (!s.canUndo || phase == _Phase.moving || phase == _Phase.escaping || phase == _Phase.demo) return;
     fx.play(Sfx.tap);
     setState(() {
       s.undo();
@@ -240,7 +253,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   void _reset() {
-    if (phase == _Phase.moving || phase == _Phase.escaping) return;
+    if (phase == _Phase.moving || phase == _Phase.escaping || phase == _Phase.demo) return;
     fx.play(Sfx.tap);
     setState(() {
       s.reset();
@@ -256,6 +269,51 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _moveDuration = _tapMove;
     _clearHint();
     _confetti.reset();
+  }
+
+  /// クリア後に最短手順を自動で再生する（星や記録には関わらない）。
+  Future<void> _playDemo() async {
+    final path = solveFrom(Board.start(level.cast), level);
+    if (path == null) return;
+    setState(() {
+      s.reset();
+      _resetVisual();
+      phase = _Phase.demo;
+      _demoTotal = path.length;
+      _demoStep = 0;
+    });
+    Future<bool> wait(int ms) async {
+      await Future<void>.delayed(Duration(milliseconds: ms));
+      return mounted && phase == _Phase.demo;
+    }
+
+    for (final m in path) {
+      if (!await wait(350)) return;
+      fx.play(Sfx.board);
+      setState(() {
+        _demoStep++;
+        s.seat(m);
+        _moveDuration = _tapMove;
+      });
+      if (!await wait(550)) return;
+      fx.play(Sfx.depart);
+      setState(() {
+        _moveDuration = _crossMove;
+        _boatOverride = _geo!.boatAt(m.to);
+      });
+      if (!await wait(_crossMove.inMilliseconds)) return;
+      s.depart(m.to);
+      fx.play(Sfx.arrive);
+      setState(() {
+        _boatOverride = null;
+        _moveDuration = _tapMove;
+      });
+    }
+    if (!await wait(700)) return;
+    setState(() {
+      _demoStep = 0;
+      phase = _Phase.won;
+    });
   }
 
   bool _hintBusy = false;
@@ -352,6 +410,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                           ),
                           for (final p in _sortedPeople()) _person(g, p),
                           if (_toast != null) _toastView(),
+                          if (phase == _Phase.demo) _demoBanner(g),
                           if (_tutorial && phase == _Phase.play && s.trips == 0) _coach(g),
                           if (phase == _Phase.won) Positioned.fill(child: IgnorePointer(child: CustomPaint(painter: _ConfettiPainter(_confetti)))),
                         ],
@@ -378,9 +437,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                   t: t,
                   total: widget.progress.levels.length,
                   stars: _earnedStars,
-                  trips: s.trips,
+                  trips: _resultTrips,
                   par: level.par,
-                  usedHint: s.usedHint,
+                  usedHint: _resultUsedHint,
+                  best: _best,
+                  newRecord: _newRecord,
+                  onDemo: _playDemo,
                   hasNext: widget.progress.levels.last != level,
                   onNext: _next,
                   onRetry: _reset,
@@ -488,6 +550,21 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
             decoration: BoxDecoration(color: Palette.ink, borderRadius: BorderRadius.circular(99)),
             child: Text(_toast!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13)),
+          ),
+        ),
+      );
+
+  Widget _demoBanner(_Geo g) => Positioned(
+        left: 0,
+        right: 0,
+        top: g.riverTop + 8,
+        child: IgnorePointer(
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(color: Palette.gold, border: Border.all(color: Palette.ink, width: 2), borderRadius: BorderRadius.circular(99)),
+              child: Text(t.demoPlaying(_demoStep, _demoTotal), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
+            ),
           ),
         ),
       );
@@ -813,6 +890,9 @@ class _ResultCard extends StatelessWidget {
     required int trips,
     required int par,
     required bool usedHint,
+    required int? best,
+    required bool newRecord,
+    required VoidCallback onDemo,
     required bool hasNext,
     required VoidCallback onNext,
     required VoidCallback onRetry,
@@ -832,6 +912,20 @@ class _ResultCard extends StatelessWidget {
           StarRow(stars, size: 44),
           const SizedBox(height: 6),
           Text('${t.crossedIn(trips)}\n$note', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.6, color: Palette.dim)),
+          if (best != null) ...[
+            const SizedBox(height: 6),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(t.personalBest(best), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Palette.ink)),
+              if (newRecord) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(color: Palette.bad, borderRadius: BorderRadius.circular(99)),
+                  child: Text(t.newRecord, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Colors.white)),
+                ),
+              ],
+            ]),
+          ],
           const SizedBox(height: 16),
           if (hasNext) ChunkyButton(label: t.nextLevel, color: Palette.gold, fontSize: 18, onPressed: onNext),
           if (!hasNext) Text(t.allCleared(total), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
@@ -841,6 +935,15 @@ class _ResultCard extends StatelessWidget {
             const SizedBox(width: 10),
             ChunkyButton(label: t.stageSelect, onPressed: onMenu, fontSize: 13),
           ]),
+          // 星3でなければ、最短手順を見て学べるようにする
+          if (stars < 3 || trips > par) ...[
+            const SizedBox(height: 6),
+            TextButton.icon(
+              onPressed: onDemo,
+              icon: const Icon(Icons.play_circle_outline_rounded, color: Palette.ink),
+              label: Text(t.watchSolution, style: const TextStyle(fontWeight: FontWeight.w800, color: Palette.ink)),
+            ),
+          ],
         ],
       ),
     );

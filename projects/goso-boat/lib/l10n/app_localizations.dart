@@ -733,6 +733,30 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'進み具合を消しました'**
   String get resetDone;
+
+  /// No description provided for @watchSolution.
+  ///
+  /// In ja, this message translates to:
+  /// **'お手本を見る'**
+  String get watchSolution;
+
+  /// No description provided for @demoPlaying.
+  ///
+  /// In ja, this message translates to:
+  /// **'お手本 {i}/{n}'**
+  String demoPlaying(int i, int n);
+
+  /// No description provided for @personalBest.
+  ///
+  /// In ja, this message translates to:
+  /// **'自己ベスト {n}回'**
+  String personalBest(int n);
+
+  /// No description provided for @newRecord.
+  ///
+  /// In ja, this message translates to:
+  /// **'新記録！'**
+  String get newRecord;
 }
 
 class _AppLocalizationsDelegate

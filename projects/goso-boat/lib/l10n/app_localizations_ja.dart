@@ -372,4 +372,20 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get resetDone => '進み具合を消しました';
+
+  @override
+  String get watchSolution => 'お手本を見る';
+
+  @override
+  String demoPlaying(int i, int n) {
+    return 'お手本 $i/$n';
+  }
+
+  @override
+  String personalBest(int n) {
+    return '自己ベスト $n回';
+  }
+
+  @override
+  String get newRecord => '新記録！';
 }

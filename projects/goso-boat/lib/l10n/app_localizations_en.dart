@@ -385,4 +385,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetDone => 'Progress reset';
+
+  @override
+  String get watchSolution => 'Watch solution';
+
+  @override
+  String demoPlaying(int i, int n) {
+    return 'Solution $i/$n';
+  }
+
+  @override
+  String personalBest(int n) {
+    return 'Your best: $n';
+  }
+
+  @override
+  String get newRecord => 'New record!';
 }

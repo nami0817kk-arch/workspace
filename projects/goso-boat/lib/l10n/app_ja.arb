@@ -277,5 +277,26 @@
   "resetConfirmBody": "星と記録がすべて消えます。広告を消した購入は残ります。",
   "cancel": "やめる",
   "doReset": "消す",
-  "resetDone": "進み具合を消しました"
+  "resetDone": "進み具合を消しました",
+  "watchSolution": "お手本を見る",
+  "demoPlaying": "お手本 {i}/{n}",
+  "@demoPlaying": {
+    "placeholders": {
+      "i": {
+        "type": "int"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "personalBest": "自己ベスト {n}回",
+  "@personalBest": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "newRecord": "新記録！"
 }
