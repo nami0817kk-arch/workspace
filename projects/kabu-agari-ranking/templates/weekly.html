@@ -50,33 +50,10 @@
 
 {% if w.frequent %}
 <h2>この週に複数回ランクインした銘柄</h2>
-<div class="table-wrap">
-<table class="ranking">
-  <caption>{{ w.from }}〜{{ w.to }} に値上がりランキングへ2回以上入った銘柄</caption>
-  <thead>
-    <tr>
-      <th scope="col">回数</th>
-      <th scope="col">銘柄名</th>
-      <th scope="col">コード</th>
-      <th scope="col">最大上昇率</th>
-      <th scope="col">ストップ高</th>
-      <th scope="col">最長連続</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for e in w.frequent %}
-    <tr>
-      <th scope="row">{{ e.count }}回</th>
-      <td>{{ e.name }}</td>
-      <td>{{ e.code }}</td>
-      <td class="gain">{{ "%+.2f"|format(e.best_pct) }}%</td>
-      <td>{{ e.stops }}回</td>
-      <td>{{ e.streak }}日</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-</div>
+{% set rows = w.frequent %}
+{% set caption = w.from ~ "〜" ~ w.to ~ " に値上がりランキングへ2回以上入った銘柄" %}
+{% set side = LIMIT_PAGES["gainers"] %}{% set show_latest = false %}
+{% include "_frequent_table.html" %}
 {% endif %}
 
 <h2>日ごとの首位</h2>

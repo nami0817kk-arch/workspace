@@ -50,6 +50,15 @@ _CSS_SOURCE = "site.css"
 
 _env.globals["STOCK_PAGE_MIN_APPEARANCES"] = aggregate.STOCK_PAGE_MIN_APPEARANCES
 
+
+def _register_limit_pages() -> None:
+    """語彙の対応表をテンプレートからも引けるようにする。
+
+    表の列名や色を上限側／下限側で切り替えるのに使う。**テンプレート側で
+    書き分けない**（片方を直したときにもう片方が置き去りになる）。
+    """
+    _env.globals["LIMIT_PAGES"] = LIMIT_PAGES
+
 _WEEKDAY_JA = "月火水木金土日"
 
 # プライバシーポリシーの文面を最後に直した日。**文面を変えたらここも変える。**
@@ -585,9 +594,23 @@ def week_summary(week: dict) -> str:
     return "".join(parts)
 
 
-def _build_weekly_pages(days: list[dict]) -> list[dict]:
+def _mark_pages(rows: list[dict], stock_pages: set[str] | None) -> list[dict]:
+    """常連銘柄に「銘柄ページがあるか」を付ける。
+
+    付けないと、ページがあるのに名前が素のテキストのまま並び、
+    回遊が途切れる（常連銘柄のページだけがリンクになっていた）。
+    """
+    pages = stock_pages or set()
+    for row in rows:
+        row["has_page"] = row["code"] in pages
+    return rows
+
+
+def _build_weekly_pages(days: list[dict], stock_pages: set[str] | None = None) -> list[dict]:
     """週まとめを書き出し、sitemap 用に slug の一覧を返す。"""
     weeks = aggregate.weekly_summaries(days)
+    for week in weeks:
+        _mark_pages(week["frequent"], stock_pages)
     tmpl = _env.get_template("weekly.html")
     for i, week in enumerate(weeks):
         week["summary"] = week_summary(week)
@@ -780,9 +803,11 @@ def month_summary(month: dict) -> str:
     return "".join(parts)
 
 
-def _build_monthly_pages(days: list[dict]) -> list[dict]:
+def _build_monthly_pages(days: list[dict], stock_pages: set[str] | None = None) -> list[dict]:
     """月ごとのまとめ。週より長い目で見たいときのため。"""
     months = aggregate.monthly_summaries(days)
+    for month in months:
+        _mark_pages(month["frequent"], stock_pages)
     tmpl = _env.get_template("monthly.html")
     for i, month in enumerate(months):
         month["summary"] = month_summary(month)
@@ -1256,6 +1281,7 @@ def build_all() -> None:
         shutil.rmtree(_OUTPUT_DIR)
     _OUTPUT_DIR.mkdir(parents=True)
 
+    _register_limit_pages()
     _env.globals["CSS_HREF"] = _write_stylesheet()
 
     days = _load_all_days()
@@ -1277,8 +1303,8 @@ def build_all() -> None:
     _build_ranking_pages(days, stock_pages)
     for kind in LIMIT_PAGES:
         _build_limit_page(days, stock_pages, kind, profiles)
-    months = _build_monthly_pages(days)
-    weeks = _build_weekly_pages(days)
+    months = _build_monthly_pages(days, stock_pages)
+    weeks = _build_weekly_pages(days, stock_pages)
     _build_market_page(days)
 
     search_data = aggregate.search_index(days)
@@ -1304,8 +1330,8 @@ def build_all() -> None:
             day_count=len(days),
             period_from=days[-1]["rec_date"],
             period_to=days[0]["rec_date"],
-            gainers=aggregate.frequent(days, "gainers"),
-            losers=aggregate.frequent(days, "losers"),
+            gainers=_mark_pages(aggregate.frequent(days, "gainers"), stock_pages),
+            losers=_mark_pages(aggregate.frequent(days, "losers"), stock_pages),
         ),
     )
 

@@ -136,3 +136,61 @@ def test_latest_jsonが壊れていても何をすればよいか分かる(tmp_p
     out = capsys.readouterr().out
     assert "読めません" in out
     assert "作り直して" in out
+
+
+# --- 常連銘柄の表 -------------------------------------------------------------
+
+def test_常連銘柄の表はどのページでも同じ作り(tmp_path_factory, monkeypatch):
+    """週まとめ・月まとめ・常連銘柄で別々に書いていたため、銘柄名が
+    リンクになっているのが常連銘柄のページだけだった（2026-09-28 に1枚に）。"""
+    import json
+    tmp = tmp_path_factory.mktemp("freq")
+    data = tmp / "data"
+    data.mkdir()
+    orig = (render._DATA_DIR, render._OUTPUT_DIR, render._ROOT)
+    render._DATA_DIR, render._OUTPUT_DIR, render._ROOT = data, tmp / "output", tmp
+    try:
+        for d in ("2026-09-16", "2026-09-17", "2026-09-18"):
+            (data / f"{d}.json").write_text(json.dumps({
+                "rec_date": d,
+                "gainers": [{"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+                             "change_pct": 44.25, "metric_value": 100}],
+                "losers": [{"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+                            "change_pct": -25.08, "metric_value": 100}],
+                "active": [],
+            }, ensure_ascii=False), encoding="utf-8")
+        render.build_all()
+        out = render._OUTPUT_DIR
+        for rel in ("frequent.html", "monthly/2026-09.html", "weekly/2026-W38.html"):
+            html = (out / rel).read_text(encoding="utf-8")
+            assert "stock/5131/" in html, f"{rel} で常連銘柄がリンクになっていない"
+    finally:
+        render._DATA_DIR, render._OUTPUT_DIR, render._ROOT = orig
+
+
+def test_値下がりの常連は下落率と下限側の語で出す(tmp_path_factory):
+    """1枚のテンプレートを共用するので、向きを渡し忘れると上昇の語が出る。"""
+    import json
+    tmp = tmp_path_factory.mktemp("freq2")
+    data = tmp / "data"
+    data.mkdir()
+    orig = (render._DATA_DIR, render._OUTPUT_DIR, render._ROOT)
+    render._DATA_DIR, render._OUTPUT_DIR, render._ROOT = data, tmp / "output", tmp
+    try:
+        for d in ("2026-09-17", "2026-09-18"):
+            (data / f"{d}.json").write_text(json.dumps({
+                "rec_date": d,
+                "gainers": [{"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+                             "change_pct": 44.25, "metric_value": 100}],
+                "losers": [{"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+                            "change_pct": -25.08, "metric_value": 100}],
+                "active": [],
+            }, ensure_ascii=False), encoding="utf-8")
+        render.build_all()
+        html = (render._OUTPUT_DIR / "frequent.html").read_text(encoding="utf-8")
+        body = html.split("値下がりランキングに複数回", 1)[1]
+        assert "最大下落率" in body
+        assert "ストップ安" in body
+        assert 'class="loss"' in body
+    finally:
+        render._DATA_DIR, render._OUTPUT_DIR, render._ROOT = orig
