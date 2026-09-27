@@ -9,6 +9,9 @@ enum PurchaseOutcome {
   /// 購入が成立した、または過去の購入が復元された。
   purchased,
 
+  /// 保護者の承認待ち（ファミリー共有の「承認と購入のリクエスト」）。承認されたら届く。
+  pending,
+
   /// 利用者が自分で取りやめた。エラー扱いにしない。
   canceled,
 
@@ -72,6 +75,8 @@ class StorePurchaseService implements PurchaseService {
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
   Future<void> Function(String productId)? _onDelivered;
+
+  /// いま待っている購入または復元。重ねて押されたら同じものを返す（2度押しで結果が食い違わないように）。
   Completer<PurchaseOutcome>? _pending;
   ProductDetails? _product;
 
@@ -85,7 +90,12 @@ class StorePurchaseService implements PurchaseService {
 
   Future<void> _onUpdate(List<PurchaseDetails> purchases) async {
     for (final p in purchases) {
-      if (p.productID != PurchaseService.removeAdsId || p.status == PurchaseStatus.pending) continue;
+      if (p.productID != PurchaseService.removeAdsId) continue;
+      if (p.status == PurchaseStatus.pending) {
+        // 保護者の承認待ち。待っている側には「承認待ち」と返し、承認されたら改めて届く
+        _complete(PurchaseOutcome.pending);
+        continue;
+      }
       var received = true;
       if (p.status == PurchaseStatus.purchased || p.status == PurchaseStatus.restored) {
         try {
@@ -143,6 +153,8 @@ class StorePurchaseService implements PurchaseService {
 
   @override
   Future<PurchaseOutcome> buyRemoveAds() async {
+    final running = _pending;
+    if (running != null && !running.isCompleted) return running.future;
     try {
       final product = await _load();
       if (product == null) return PurchaseOutcome.unavailable;
@@ -153,7 +165,10 @@ class StorePurchaseService implements PurchaseService {
         return PurchaseOutcome.failed;
       }
       // ストアの画面から戻ってこない場合に永久に待たない
-      return await c.future.timeout(const Duration(minutes: 5), onTimeout: () => PurchaseOutcome.canceled);
+      return await c.future.timeout(const Duration(minutes: 5), onTimeout: () {
+        _pending = null;
+        return PurchaseOutcome.canceled;
+      });
     } catch (_) {
       _pending = null;
       return PurchaseOutcome.failed;
@@ -162,11 +177,19 @@ class StorePurchaseService implements PurchaseService {
 
   @override
   Future<PurchaseOutcome> restore() async {
+    final running = _pending;
+    if (running != null && !running.isCompleted) return running.future;
     try {
       final c = _pending = Completer<PurchaseOutcome>();
+      // restorePurchases は、ストアが復元を終えるまで待ってから戻る。
+      // 購入があれば、その間に通知が届いて c が完了している。
       await _iap.restorePurchases();
-      // 購入履歴が無いと何も流れてこないので、待ち続けずに「対象なし」で返す
-      return await c.future.timeout(const Duration(seconds: 20), onTimeout: () => PurchaseOutcome.unavailable);
+      if (c.isCompleted) return await c.future;
+      // 通知が少し遅れて届くことがあるので短く待ち、来なければ「対象なし」で確定する
+      return await c.future.timeout(const Duration(seconds: 3), onTimeout: () {
+        _pending = null;
+        return PurchaseOutcome.unavailable;
+      });
     } catch (_) {
       _pending = null;
       return PurchaseOutcome.failed;

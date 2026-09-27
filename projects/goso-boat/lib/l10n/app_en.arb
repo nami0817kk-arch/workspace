@@ -86,7 +86,7 @@
   "intro7Body": "The island returns — with chiefs, police dogs, bosses and cuffed pairs.\nEverything you've learned, all at once.",
   "intro8Title": "Nightmare",
   "intro8Body": "The hardest levels, picked by solving every combination.\nCross in the fewest trips and you're the real deal.",
-  "hintWithAd": "Hint (video)",
+  "hintWithAd": "Watch ad for hint",
   "hintDeclined": "Watch the whole video to get a hint",
   "removeAds": "Remove ads ({price})",
   "restorePurchases": "Restore purchase",
@@ -195,5 +195,9 @@
   "ach_nightmareNoUndo": "No turning back",
   "achDesc_nightmareNoUndo": "Clear a Nightmare level without undo",
   "sep": " / ",
-  "colon": ": "
+  "colon": ": ",
+  "purchasePending": "Waiting for approval. Ads will be removed once it's approved.",
+  "privacyPolicy": "Privacy Policy",
+  "supportAndAdReport": "Support / report an ad",
+  "linkFailed": "Couldn't open {url}"
 }

@@ -617,7 +617,7 @@ abstract class AppLocalizations {
   /// No description provided for @hintWithAd.
   ///
   /// In ja, this message translates to:
-  /// **'ヒント（動画）'**
+  /// **'動画を見てヒント'**
   String get hintWithAd;
 
   /// No description provided for @hintDeclined.
@@ -1273,6 +1273,30 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'：'**
   String get colon;
+
+  /// No description provided for @purchasePending.
+  ///
+  /// In ja, this message translates to:
+  /// **'保護者の承認待ちです。承認されると広告が消えます'**
+  String get purchasePending;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In ja, this message translates to:
+  /// **'プライバシーポリシー'**
+  String get privacyPolicy;
+
+  /// No description provided for @supportAndAdReport.
+  ///
+  /// In ja, this message translates to:
+  /// **'お問い合わせ・広告の報告'**
+  String get supportAndAdReport;
+
+  /// No description provided for @linkFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'開けなかった: {url}'**
+  String linkFailed(String url);
 }
 
 class _AppLocalizationsDelegate

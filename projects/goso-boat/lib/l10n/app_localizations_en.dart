@@ -324,7 +324,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The hardest levels, picked by solving every combination.\nCross in the fewest trips and you\'re the real deal.';
 
   @override
-  String get hintWithAd => 'Hint (video)';
+  String get hintWithAd => 'Watch ad for hint';
 
   @override
   String get hintDeclined => 'Watch the whole video to get a hint';
@@ -684,4 +684,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colon => ': ';
+
+  @override
+  String get purchasePending =>
+      'Waiting for approval. Ads will be removed once it\'s approved.';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get supportAndAdReport => 'Support / report an ad';
+
+  @override
+  String linkFailed(String url) {
+    return 'Couldn\'t open $url';
+  }
 }

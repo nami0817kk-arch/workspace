@@ -58,16 +58,25 @@ class Monetization extends ChangeNotifier {
       await _prefs.setInt('clearsSinceAd', n);
       return false;
     }
-    await _prefs.setInt('clearsSinceAd', 0);
-    await ads.showInterstitialAd();
-    return true;
+    // 出せたときだけ数え直す。在庫が無くて出せなければ、次の「次の面へ」でもう一度試す
+    final shown = await ads.showInterstitialAd();
+    await _prefs.setInt('clearsSinceAd', shown ? 0 : n);
+    return shown;
   }
 
   /// ヒントの前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
   Future<HintGate> beforeHint() async {
     if (adFree) return HintGate.granted;
-    if (!ads.isRewardedAdReady) return HintGate.unavailable;
-    return await ads.showRewardedAd() ? HintGate.granted : HintGate.declined;
+    if (!ads.isRewardedAdReady) {
+      // 読み込みに失敗したままにならないよう、ここで読み直しを始める
+      ads.ensureLoaded();
+      return HintGate.unavailable;
+    }
+    return switch (await ads.showRewardedAd()) {
+      RewardResult.earned => HintGate.granted,
+      RewardResult.closedEarly => HintGate.declined,
+      RewardResult.unavailable => HintGate.unavailable,
+    };
   }
 
   /// ヒントのボタンに「動画」の印を付けるか（広告を消した人以外は、いつも動画が要る）。

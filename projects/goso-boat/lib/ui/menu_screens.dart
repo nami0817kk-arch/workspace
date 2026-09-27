@@ -351,11 +351,22 @@ class _RemoveAdsState extends State<_RemoveAds> {
   bool _available = false;
   String? _price;
   bool _busy = false;
+  late final AppLifecycleListener _life;
 
   @override
   void initState() {
     super.initState();
     _load();
+    // 電波の悪い所で起動して値段が取れなかったとき、アプリに戻ってきたら取り直す
+    _life = AppLifecycleListener(onResume: () {
+      if (_price == null) _load();
+    });
+  }
+
+  @override
+  void dispose() {
+    _life.dispose();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -377,6 +388,7 @@ class _RemoveAdsState extends State<_RemoveAds> {
     setState(() => _busy = false);
     final msg = switch (r) {
       PurchaseOutcome.purchased => restore ? t.purchaseRestored : t.purchaseThanks,
+      PurchaseOutcome.pending => t.purchasePending,
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable => restore ? t.purchaseNothing : t.purchaseFailed,
       PurchaseOutcome.failed => t.purchaseFailed,
@@ -397,14 +409,16 @@ class _RemoveAdsState extends State<_RemoveAds> {
             Text(t.adFreeOn, style: const TextStyle(fontWeight: FontWeight.w800, color: Palette.ink)),
           ]);
         }
-        if (!_available || _price == null) return const SizedBox.shrink();
+        if (!_available) return const SizedBox.shrink();
         return Column(children: [
-          ChunkyButton(
-            label: t.removeAds(_price!),
-            icon: Icons.block_rounded,
-            fontSize: 14,
-            onPressed: _busy ? null : () => _run(widget.money.buy, restore: false),
-          ),
+          // 値段が取れないとき（商品情報の取得に失敗）は買うボタンだけ隠し、復元は残す
+          if (_price != null)
+            ChunkyButton(
+              label: t.removeAds(_price!),
+              icon: Icons.block_rounded,
+              fontSize: 14,
+              onPressed: _busy ? null : () => _run(widget.money.buy, restore: false),
+            ),
           TextButton(
             onPressed: _busy ? null : () => _run(widget.money.restore, restore: true),
             child: Text(t.restorePurchases, style: const TextStyle(color: Palette.dim, fontWeight: FontWeight.w700)),
