@@ -109,5 +109,6 @@
   "personalBest": "Your best: {n}",
   "newRecord": "New record!",
   "placeBoat": "Boat",
-  "lockedHint": "Clear the previous level to unlock"
+  "lockedHint": "Clear the previous level to unlock",
+  "hintNoAd": "Couldn't load the video. Try again in a moment."
 }

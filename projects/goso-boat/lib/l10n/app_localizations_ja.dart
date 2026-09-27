@@ -386,4 +386,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get lockedHint => '前の面を解くと開く';
+
+  @override
+  String get hintNoAd => '動画を読み込めなかった。少し待ってもう一度';
 }

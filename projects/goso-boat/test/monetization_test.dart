@@ -69,11 +69,11 @@ void main() {
     expect(ads.rewardeds, 2);
   });
 
-  test('ヒント: 動画が読み込めていなければ、そのまま出す（詰まらせない）', () async {
+  test('ヒント: 動画が読み込めていなければ出さない（タダの逃げ道は作らない）', () async {
     final (m, ads, _) = await make();
     ads.rewardedReady = false;
-    expect(m.hintNeedsAd, isFalse);
-    expect(await m.beforeHint(), HintGate.granted);
+    expect(m.hintNeedsAd, isTrue);
+    expect(await m.beforeHint(), HintGate.unavailable);
     expect(ads.rewardeds, 0);
   });
 

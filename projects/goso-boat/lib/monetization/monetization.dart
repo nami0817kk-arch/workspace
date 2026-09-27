@@ -12,14 +12,17 @@ enum HintGate {
 
   /// 動画を途中で閉じた。ヒントは出さない。
   declined,
+
+  /// 動画を読み込めていない（通信なし・在庫切れ）。**タダでは出さない**。
+  unavailable,
 }
 
 /// 広告と「広告を消す」の決まり（2026-09-27 ユーザー決定: 無料＋広告＋広告を消す 370円）。
 ///
 /// - 全画面広告: 面をクリアして次へ進むとき、3面に1回。舞台1のあいだと、広告を消した人には出さない。
 ///   失敗したとき（逃げられたとき）には出さない。
-/// - 動画広告: 見るとヒントが1回使える。**読み込めていないときはそのままヒントを出す**
-///   （通信が無い・在庫切れで詰まらせないため）。
+/// - 動画広告: 見るとヒントが1回使える。読み込めていないときはヒントを出さない
+///   （2026-09-27 ユーザー指示「人のやる回数を減らすものはやめて」で、無料で出す逃げ道を外した）。
 /// - 広告を消す: 全画面広告が出なくなり、ヒントも動画なしで使える。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
@@ -62,12 +65,13 @@ class Monetization extends ChangeNotifier {
 
   /// ヒントの前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
   Future<HintGate> beforeHint() async {
-    if (adFree || !ads.isRewardedAdReady) return HintGate.granted;
+    if (adFree) return HintGate.granted;
+    if (!ads.isRewardedAdReady) return HintGate.unavailable;
     return await ads.showRewardedAd() ? HintGate.granted : HintGate.declined;
   }
 
-  /// ヒントのボタンに「動画」の印を付けるか。
-  bool get hintNeedsAd => !adFree && ads.isRewardedAdReady;
+  /// ヒントのボタンに「動画」の印を付けるか（広告を消した人以外は、いつも動画が要る）。
+  bool get hintNeedsAd => !adFree;
 
   Future<bool> get canBuy async => !adFree && await store.isAvailable();
   Future<String?> get price => store.priceLabel();

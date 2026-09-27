@@ -288,5 +288,6 @@
   },
   "newRecord": "新記録！",
   "placeBoat": "舟",
-  "lockedHint": "前の面を解くと開く"
+  "lockedHint": "前の面を解くと開く",
+  "hintNoAd": "動画を読み込めなかった。少し待ってもう一度"
 }

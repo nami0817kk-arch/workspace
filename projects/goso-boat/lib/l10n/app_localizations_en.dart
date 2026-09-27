@@ -399,4 +399,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lockedHint => 'Clear the previous level to unlock';
+
+  @override
+  String get hintNoAd => 'Couldn\'t load the video. Try again in a moment.';
 }
