@@ -17,6 +17,7 @@ import 'package:goso_boat/main.dart';
 import 'package:goso_boat/monetization/monetization.dart';
 import 'package:goso_boat/ui/game_screen.dart';
 import 'package:goso_boat/ui/menu_screens.dart';
+import 'package:goso_boat/monetization/purchase_service.dart';
 import 'package:goso_boat/ui/records_screen.dart';
 import 'package:goso_boat/ui/settings_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,20 @@ const devices = {
   'iPhone SE（第3世代）': (Size(375, 667), 2.0),
   'iPhone 16 Pro Max': (Size(440, 956), 3.0),
   'iPad': (Size(820, 1180), 2.0),
+  // iPad では縦固定が効かない（マルチタスク対応のため）。横向きと、分割画面の細い方も見る
+  'iPad 横': (Size(1180, 820), 2.0),
+  'iPad 分割': (Size(320, 1180), 2.0),
 };
+
+/// ストアが使える状態（値段の出るボタンを描かせるため）。値段は長めの表記も試す。
+class _Store extends NoOpPurchaseService {
+  _Store(this.price);
+  final String price;
+  @override
+  Future<bool> isAvailable() async => true;
+  @override
+  Future<String?> priceLabel() async => price;
+}
 
 List<Level> _levels() {
   final data = jsonDecode(File('assets/levels.json').readAsStringSync()) as Map<String, Object?>;
@@ -72,13 +86,13 @@ Widget _wrap(Widget child, Locale locale, GameSettings settings) => MaterialApp(
       home: child,
     );
 
-Future<(Progress, Monetization, GameSettings)> _deps([Map<String, Object> saved = const {}]) async {
+Future<(Progress, Monetization, GameSettings)> _deps([Map<String, Object> saved = const {}, PurchaseService? store]) async {
   SharedPreferences.setMockInitialValues({
     for (var w = 1; w <= 8; w++) 'intro.$w': true,
     ...saved,
   });
   final p = await Progress.open(_levels());
-  return (p, Monetization(p.prefsForTest), GameSettings(p.prefsForTest, silent: true));
+  return (p, Monetization(p.prefsForTest, store: store), GameSettings(p.prefsForTest, silent: true));
 }
 
 void main() {
@@ -104,19 +118,32 @@ void main() {
     testWidgets('メニューの画面が収まる: 最小の iPhone・${locale.languageCode}・文字1.3倍', (tester) async {
       _setDevice(tester, 'iPhone SE（第1世代）');
       addTearDown(() => _resetDevice(tester));
-      // 星・今日の1問・実績・広告なしなど、表示が増える状態にしておく
+      // 星・今日の1問・実績と、ストアの「広告を消す（値段）」「購入を復元」が出て表示が増える状態にしておく
       final (p, m, st) = await _deps({
         for (final id in ['1-1', '1-2', '1-3', '1-4']) 'stars.$id': 2,
         'stat.escapes': 12345,
         'stat.trips': 99999,
         'ach.firstClear': true,
-      });
+      }, _Store('Rp 49.000'));
       for (final screen in <Widget>[
         HomeScreen(progress: p, money: m),
         StageSelectScreen(progress: p, money: m),
         SettingsScreen(progress: p, money: m),
         RecordsScreen(progress: p),
       ]) {
+        await tester.pumpWidget(_wrap(screen, locale, st));
+        await tester.pump(const Duration(milliseconds: 600));
+        expect(tester.takeException(), isNull, reason: '${screen.runtimeType} で例外（はみ出しなど）');
+      }
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(seconds: 1));
+    });
+
+    testWidgets('広告を消した後のメニューが収まる: 最小の iPhone・${locale.languageCode}・文字1.3倍', (tester) async {
+      _setDevice(tester, 'iPhone SE（第1世代）');
+      addTearDown(() => _resetDevice(tester));
+      final (p, m, st) = await _deps({'adFree': true}, _Store('¥370'));
+      for (final screen in <Widget>[HomeScreen(progress: p, money: m), SettingsScreen(progress: p, money: m)]) {
         await tester.pumpWidget(_wrap(screen, locale, st));
         await tester.pump(const Duration(milliseconds: 600));
         expect(tester.takeException(), isNull, reason: '${screen.runtimeType} で例外（はみ出しなど）');
@@ -142,8 +169,8 @@ void main() {
       for (var i = 0; i < 3; i++) {
         await tester.tap(find.text(locale.languageCode == 'ja' ? 'ヒント' : 'Hint'));
         await tester.pump(const Duration(milliseconds: 400));
-        final up = find.textContaining(locale.languageCode == 'ja' ? '向こう岸へ' : 'To far bank');
-        await tester.tap(up.evaluate().isNotEmpty ? up.last : find.textContaining(locale.languageCode == 'ja' ? '手前の岸へ' : 'To near bank').last);
+        final up = find.textContaining(locale.languageCode == 'ja' ? '向こう岸へ' : 'To the far bank');
+        await tester.tap(up.evaluate().isNotEmpty ? up.last : find.textContaining(locale.languageCode == 'ja' ? '手前の岸へ' : 'To the near bank').last);
         await tester.pump(const Duration(milliseconds: 1000));
         await tester.pump(const Duration(milliseconds: 500));
       }

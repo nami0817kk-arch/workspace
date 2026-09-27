@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 import '../app/achievements.dart';
@@ -94,28 +95,41 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   Level get level => widget.level;
   bool get _tutorial => level.id == '1-1' && !widget.progress.cleared(level);
 
+  void _onMoney() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
+    // 遊んでいる最中に「広告を消す」が届いたら、ヒントのボタンの「動画」の印をすぐ外す
+    widget.money.addListener(_onMoney);
     // 10. アプリを閉じても、途中まで渡した盤面から続ける
     final saved = widget.progress.resumeFor(level);
     if (saved != null) {
       _resumed = s.restore(saved);
       if (_resumed && saved['ms'] is int) _baseMs = saved['ms']! as int;
+      // 途中保存でヒントを使っていたら、「最初から」でも星2までのまま
+      if (_resumed) _hintedHere = s.usedHint;
     }
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _maybeIntro();
       if (!mounted) return;
       // 時計は紹介を読み終えてから動かす
+      _started = true;
       _clock.start();
       setState(() => _banner = true);
       _later(const Duration(milliseconds: 1900), () => setState(() => _banner = false));
     });
   }
 
+  /// 紹介を読み終えて、時計を動かしてよくなったか（紹介中に裏から戻っても時計を動かさない）。
+  bool _started = false;
+
   void _saveResume() {
-    if (s.trips > 0 && !s.failed && !s.cleared) {
+    // ヒントを使っていれば、まだ1往復もしていなくても残す（開き直して星3を取れないように）
+    if ((s.trips > 0 || s.usedHint) && !s.failed && !s.cleared) {
       widget.progress.saveResume(level, {...s.toJson(), 'ms': _elapsedMs});
     } else {
       widget.progress.clearResume(level);
@@ -139,7 +153,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       // 動画広告から App Store へ行って戻ったときなど、ヒントの待ち中は止めたまま（_hint が再開する）
-      if (phase != _Phase.won && phase != _Phase.failed && !_hintBusy) _clock.start();
+      if (_started && phase != _Phase.won && phase != _Phase.failed && !_hintBusy) _clock.start();
     } else {
       _clock.stop();
       if (phase == _Phase.play) _saveResume();
@@ -148,6 +162,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
 
   @override
   void dispose() {
+    widget.money.removeListener(_onMoney);
     WidgetsBinding.instance.removeObserver(this);
     _shake.dispose();
     _hop.dispose();
@@ -175,6 +190,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   void _say(String msg) {
     _toastTimer?.cancel();
     setState(() => _toast = msg);
+    // 読み上げ（VoiceOver）にも伝える。消える知らせは画面を見ていないと分からないため
+    SemanticsService.sendAnnouncement(View.of(context), msg, Directionality.of(context));
     _toastTimer = Timer(const Duration(milliseconds: 1600), () {
       if (mounted) setState(() => _toast = null);
     });
@@ -189,7 +206,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   GameSettings get fx => AppScope.of(context);
 
   void _tap(Person p) {
-    if (phase != _Phase.play) return;
+    // ヒントの動画を待っている間は盤面を動かさない（動画のあとのヒントが無駄になる）
+    if (phase != _Phase.play || _hintBusy) return;
     final r = s.tap(p);
     switch (r) {
       case TapResult.boarded:
@@ -215,7 +233,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   }
 
   void _depart(Place to) {
-    if (phase != _Phase.play) return;
+    if (phase != _Phase.play || _hintBusy) return;
     final r = s.check(to);
     switch (r) {
       case Refused(:final reason):
@@ -339,6 +357,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     // 今日の1問は、面を開いた日の問題として数える（日付をまたいで解いても達成になる）
     final now = _openedAt;
     final daily = await widget.progress.recordDaily(level, _earnedStars, now);
+    // 今日の1問でヒントを使うと星2までなので達成にならない。黙っていると分からないので知らせる
+    final dailyMissed = !daily && s.usedHint && widget.progress.dailyLevel(now) == level && !widget.progress.dailyDone(now);
+    // 次の「次の面へ」で全画面広告を出す番なら、結果を見ている間に読み込んでおく
+    widget.money.prepareNext(level);
     final fresh = await collectNewAchievements(widget.progress);
     // 記録は済ませてから、舟が着いた余韻のあとで札を出す
     await Future<void>.delayed(const Duration(milliseconds: 450));
@@ -353,6 +375,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
       if (worldDone) t.worldClear(level.world, t.world(level.world), worldLevels.fold(0, (a, l) => a + p.stars(l)), worldLevels.length * 3),
       if (worldDone && level.world == 7 && !p.nightmareOpen) t.nightmareNeed(Progress.nightmareStars - p.starsBeforeNightmare),
       if (daily) t.dailyCleared(p.dailyStreak(now)),
+      if (dailyMissed) t.dailyNeedsNoHint,
       for (final a in fresh) t.achUnlocked(t.achName(a)),
     ];
     fx.buzz(Buzz.medium);
@@ -365,10 +388,20 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     setState(() => phase = _Phase.won);
     // Web のテスト版には評価の仕組みが無いので出さない
     if (!kIsWeb && widget.progress.shouldAskReview(level, _earnedStars)) {
-      await widget.progress.markReviewAsked(level.world);
       _later(const Duration(milliseconds: 1400), () async {
-        final review = InAppReview.instance;
-        if (await review.isAvailable()) await review.requestReview();
+        // 「次の面へ」「もう一度」を押した後や、裏にいるときは出さない（広告に重ねない・無駄打ちしない）。
+        // 出さなかったときは「頼んだ」と記録しないので、次の機会に回る
+        bool ok() =>
+            mounted && !_leaving && phase == _Phase.won && (WidgetsBinding.instance.lifecycleState ?? AppLifecycleState.resumed) == AppLifecycleState.resumed;
+        if (!ok()) return;
+        try {
+          final review = InAppReview.instance;
+          if (!await review.isAvailable() || !ok()) return;
+          await widget.progress.markReviewAsked(level.world);
+          await review.requestReview();
+        } catch (_) {
+          // 評価のお願いが出せなくても、遊びは止めない
+        }
       });
     }
   }
@@ -378,7 +411,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   bool get _canUndo => s.canUndo && phase == _Phase.play;
 
   void _undo() {
-    if (!_canUndo) return;
+    if (!_canUndo || _hintBusy) return;
     setState(() {
       s.undo();
       _resetVisual();
@@ -387,20 +420,28 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   }
 
   void _reset() {
-    if (phase == _Phase.moving || phase == _Phase.escaping) return;
+    // 「次の面へ」を押して広告を待っている間は、やり直さない（直後に次の面へ移るので捨てられる）
+    if (phase == _Phase.moving || phase == _Phase.escaping || _leaving || _hintBusy) return;
+    // クリアした後の「もう一度」は新しい挑戦。前の回のヒントの縛りは持ち越さない
+    if (phase == _Phase.won) _hintedHere = false;
     setState(() {
       s.reset();
+      // ヒントを見た面は、最初からやり直しても星2まで（一手戻すと同じ扱い）
+      if (_hintedHere) s.usedHint = true;
       _resetVisual();
     });
     _baseMs = 0;
     _clock
       ..reset()
       ..start();
-    widget.progress.clearResume(level);
+    // ヒントを使っていれば0往復でも残す（抜けて開き直して星3を取れないように）。使っていなければ消える
+    _saveResume();
   }
 
   void _resetVisual() {
     phase = _Phase.play;
+    // 「もう一度」で2回目をクリアしたときも結果の札を出す（立てたままだと止まる）
+    _winning = false;
     _boatOverride = null;
     _flee.clear();
     _splashes.clear();
@@ -414,14 +455,23 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
 
   bool _hintBusy = false;
 
+  /// この画面でヒントを使ったか（「最初から」でも消さない）。
+  bool _hintedHere = false;
+
   Future<void> _hint() async {
     if (phase != _Phase.play || _hintBusy) return;
+    if (!s.canHint) {
+      _say(context.l10n.unsolvable);
+      return;
+    }
     // 広告を消していなければ、動画を1本見てからヒントを出す
     _hintBusy = true;
     _clock.stop();
     HintGate gate;
     try {
-      gate = await widget.money.beforeHint();
+      gate = await widget.money.beforeHint(onWaiting: () {
+        if (mounted) _say(t.hintLoading);
+      });
     } catch (_) {
       gate = HintGate.unavailable;
     } finally {
@@ -440,11 +490,17 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
       _say(t.hintNoAd);
       return;
     }
+    if (gate == HintGate.showFailed) {
+      _say(t.hintShowFailed);
+      return;
+    }
     final m = s.hint();
     if (m == null) {
       _say(t.unsolvable);
       return;
     }
+    _hintedHere = true;
+    _saveResume();
     fx.play(Sfx.hint);
     setState(() {
       _hinted = s.aboard.map((p) => p.id).toSet();
@@ -470,21 +526,27 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
               trips: s.trips,
               par: level.par,
               stars: s.stars,
-              onBack: () => Navigator.of(context).pop(),
+              onBack: () {
+                if (!_hintBusy) Navigator.of(context).pop();
+              },
               onRules: () => showRules(context, level),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-              child: Row(
+              // 2行のボタンがあっても3つの背をそろえる
+              child: IntrinsicHeight(
+                child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(child: ChunkyButton(label: t.undo, icon: Icons.undo_rounded, onPressed: _canUndo ? _undo : null, fontSize: 13)),
+                  Expanded(child: ChunkyButton(label: t.undo, icon: Icons.undo_rounded, onPressed: _canUndo ? _undo : null, fontSize: 13, wrap: true)),
                   const SizedBox(width: 8),
-                  Expanded(child: ChunkyButton(label: t.restart, icon: Icons.refresh_rounded, onPressed: _reset, fontSize: 13)),
+                  Expanded(child: ChunkyButton(label: t.restart, icon: Icons.refresh_rounded, onPressed: _reset, fontSize: 13, wrap: true)),
                   const SizedBox(width: 8),
                   Expanded(child: ChunkyButton(
                       label: widget.money.hintNeedsAd ? t.hintWithAd : t.hint,
-                      icon: widget.money.hintNeedsAd ? Icons.smart_display_rounded : Icons.lightbulb_rounded, onPressed: phase == _Phase.play ? _hint : null, fontSize: 13)),
+                      icon: widget.money.hintNeedsAd ? Icons.smart_display_rounded : Icons.lightbulb_rounded, onPressed: phase == _Phase.play ? _hint : null, fontSize: 13, wrap: true)),
                 ],
+              ),
               ),
             ),
             Expanded(
@@ -558,7 +620,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
       phase == _Phase.failed
           ? _ResultCard.fail(t: t, message: _failMessage(), notes: _notes, onReset: _reset)
           : phase == _Phase.won
-              ? _ResultCard.win(
+              // 「次の面へ」の後、広告が出るまでは札のボタンを受け付けない（誤タップを広告に当てない）
+              ? AbsorbPointer(absorbing: _leaving, child: _ResultCard.win(
                   t: t,
                   total: widget.progress.levels.length,
                   stars: _earnedStars,
@@ -576,7 +639,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
                   onNext: _next,
                   onRetry: _reset,
                   onMenu: () => Navigator.of(context).pop(),
-                )
+                ))
               : null,
     );
   }
@@ -596,14 +659,27 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     final next = _nextLevel;
     // 2度押しで広告の数えや画面が二重にならないように
     if (next == null || _leaving) return;
-    _leaving = true;
+    setState(() => _leaving = true);
+    // 全画面広告が出るときは、押した指がそのまま広告に当たらないよう少し間を置く（AdMob の推奨）
+    final due = widget.money.interstitialDue(level);
+    if (due) await Future<void>.delayed(const Duration(milliseconds: 600));
+    if (!mounted) return;
+    if (!(ModalRoute.of(context)?.isCurrent ?? false)) {
+      setState(() => _leaving = false); // 札を押せないまま残さない
+      return;
+    }
     // 面と面の間の全画面広告（3面に1回。舞台1と、広告を消した人には出ない）
     try {
-      await widget.money.afterClear(level);
+      // 間を置かなかった回（手元に広告が無かった）は、直前に届いても出さない
+      await widget.money.afterClear(level, mayShow: due);
     } catch (_) {
       // 広告で何が起きても、次の面へは進める
     }
     if (!mounted) return;
+    if (!(ModalRoute.of(context)?.isCurrent ?? false)) {
+      setState(() => _leaving = false);
+      return;
+    }
     Navigator.of(context).pushReplacement(PageRouteBuilder(
       pageBuilder: (_, _, _) => GameScreen(level: next, progress: widget.progress, money: widget.money),
       transitionsBuilder: (_, a, _, child) => FadeTransition(opacity: a, child: child),

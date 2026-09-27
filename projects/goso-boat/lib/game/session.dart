@@ -92,8 +92,7 @@ class Session {
   }
 
   /// 出したらどうなるかを、盤面を変えずに調べる（画面の演出を先に決めるため）。
-  Outcome check(Place to) =>
-      cross(board, _moveTo(to), capacity: level.capacity, island: level.island);
+  Outcome check(Place to) => cross(board, _moveTo(to), capacity: level.capacity, island: level.island);
 
   /// 舟を出す。渡れたら人と舟を動かし、逃げられたら止める。
   Outcome depart(Place to) {
@@ -144,10 +143,29 @@ class Session {
     escaped = const [];
   }
 
+  /// いまヒントを出せるか（解けない局面で動画をむだに見せないため、動画の前に確かめる）。
+  bool get canHint {
+    if (failed || cleared) return false;
+    final path = _pathHere();
+    return path != null && path.isNotEmpty;
+  }
+
+  // 解探索は重い面で数十ms かかるので、同じ盤面なら canHint と hint で1回だけ回す
+  String? _pathKey;
+  List<Move>? _path;
+  List<Move>? _pathHere() {
+    final k = board.key;
+    if (_pathKey != k) {
+      _path = solveFrom(board, level);
+      _pathKey = k;
+    }
+    return _path;
+  }
+
   /// 次の一手を舟に乗せて返す。今の盤面から解けなければ null。
   Move? hint() {
     if (failed || cleared) return null;
-    final path = solveFrom(board, level);
+    final path = _pathHere();
     if (path == null || path.isEmpty) return null;
     usedHint = true;
     final m = path.first;
@@ -172,12 +190,12 @@ class Session {
   /// 途中の盤面を保存する形（アプリを閉じても続きから遊べるように）。
   /// 一手戻すの履歴は持たない。逃げられた後・クリアした後は保存しない。
   Map<String, Object?> toJson() => {
-        'places': [for (final p in people) p.place.index],
-        'boat': boat.index,
-        'trips': trips,
-        'hint': usedHint,
-        'undo': usedUndo,
-      };
+    'places': [for (final p in people) p.place.index],
+    'boat': boat.index,
+    'trips': trips,
+    'hint': usedHint,
+    'undo': usedUndo,
+  };
 
   /// [toJson] の形から戻す。面の人数が合わないなど、使えないときは false で何もしない。
   bool restore(Map<String, Object?> j) {
@@ -205,16 +223,16 @@ class Session {
   /// 途中で見ると「今のままなら取れる星の上限」になる（回数は増える一方なので）。
   int get stars {
     final slack = level.island ? 4 : 2;
-    var s = trips <= level.par ? 3 : trips <= level.par + slack ? 2 : 1;
+    var s = trips <= level.par
+        ? 3
+        : trips <= level.par + slack
+        ? 2
+        : 1;
     if (usedHint && s > 2) s = 2;
     return s;
   }
 
-  _Snap _snap() => _Snap(
-        [for (final p in people) (p.place, p.seat)],
-        boat,
-        trips,
-      );
+  _Snap _snap() => _Snap([for (final p in people) (p.place, p.seat)], boat, trips);
 
   void _restore(_Snap s) {
     for (var i = 0; i < people.length; i++) {

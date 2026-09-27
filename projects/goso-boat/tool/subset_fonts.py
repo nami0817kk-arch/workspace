@@ -29,10 +29,14 @@ OUT = HERE / "assets/fonts"
 
 # 数字・英字・よく使う記号は ARB に無くても（面の番号・回数など）出るので必ず入れる
 BASE = "".join(chr(c) for c in range(0x20, 0x7F)) + "×＋・↑↓★☆…—•「」『』（）、。！？：〜ー 　"
+# ストアの値段（displayPrice）で使われる通貨記号と空白。ARB には出てこないので明示する。
+# 値段は太字（丸ゴシック）のボタンにしか出ない。本文の書体は元からこれらを持たないので求めない
+PRICE = set("€£¥￥₩₪₫₱฿₦" + chr(0xA0))
+PRICE_FONT = "GosoRounded-ExtraBold.ttf"
 
 
 def used_chars() -> set[str]:
-    chars = set(BASE)
+    chars = set(BASE) | PRICE
     for arb in (HERE / "lib/l10n").glob("*.arb"):
         data = json.loads(arb.read_text(encoding="utf-8"))
         for k, v in data.items():
@@ -52,7 +56,7 @@ def main() -> int:
     if "--check" in sys.argv:
         bad = False
         for name in SOURCES:
-            lack = missing(OUT / name, chars)
+            lack = missing(OUT / name, chars if name == PRICE_FONT else chars - PRICE)
             if lack:
                 bad = True
                 print(f"{name} に無い字: {''.join(lack)}  → python tool/subset_fonts.py を回し直す")

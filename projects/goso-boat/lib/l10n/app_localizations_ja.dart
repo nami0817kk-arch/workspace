@@ -312,7 +312,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get intro8Body => '全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。';
 
   @override
-  String get hintWithAd => '動画を見てヒント';
+  String get hintWithAd => '動画で\nヒント';
 
   @override
   String get hintDeclined => '動画を最後まで見るとヒントが出る';
@@ -329,16 +329,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get adFreeOn => '広告なし';
 
   @override
-  String get purchaseThanks => '広告を消しました。ありがとう！';
+  String get purchaseThanks => '広告を消しました。ご購入ありがとうございます！';
 
   @override
   String get purchaseRestored => '購入を復元しました';
 
   @override
-  String get purchaseNothing => '復元できる購入が見つからなかった';
+  String get purchaseNothing =>
+      '復元できる購入が見つかりませんでした。電波のある所で、購入したときの Apple ID でサインインしているか確かめてください';
 
   @override
-  String get purchaseFailed => '購入できなかった。時間をおいてもう一度';
+  String get purchaseFailed => '購入できませんでした。支払いが済んでいれば、少しして自動で広告が消えます';
 
   @override
   String get kicker => '脱獄させるな！';
@@ -362,7 +363,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get resetConfirmTitle => '進み具合を消しますか？';
 
   @override
-  String get resetConfirmBody => '星と記録がすべて消えます。広告を消した購入は残ります。';
+  String get resetConfirmBody => '星・記録・実績がすべて消えます。「広告を消す」の購入はそのまま残ります。';
 
   @override
   String get cancel => 'やめる';
@@ -388,7 +389,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get lockedHint => '前の面を解くと開く';
 
   @override
-  String get hintNoAd => '動画を読み込めなかった。少し待ってもう一度';
+  String get hintNoAd => '動画の準備ができていません。少し待ってもう一度';
 
   @override
   String daily(String id) {
@@ -672,7 +673,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get colon => '：';
 
   @override
-  String get purchasePending => '保護者の承認待ちです。承認されると広告が消えます';
+  String get purchasePending => '購入の手続きが保留中です。完了すると広告が消えます';
 
   @override
   String get privacyPolicy => 'プライバシーポリシー';
@@ -684,4 +685,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String linkFailed(String url) {
     return '開けなかった: $url';
   }
+
+  @override
+  String get restoreFailed => '購入を復元できませんでした。時間をおいてもう一度お試しください';
+
+  @override
+  String get hintLoading => '動画を読み込んでいます…';
+
+  @override
+  String get hintShowFailed => '動画を表示できませんでした。全画面表示にしてもう一度';
+
+  @override
+  String get dailyNeedsNoHint => '今日の1問は、ヒントなしの星3で達成になります';
 }

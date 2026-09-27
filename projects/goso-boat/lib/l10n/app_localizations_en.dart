@@ -50,7 +50,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String goTo(String place) {
-    return 'To $place';
+    return 'To the $place';
   }
 
   @override
@@ -99,7 +99,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String failBoat(int guard, int weight) {
-    return 'On the boat: $guard guard vs $weight prisoner.\nNot enough guards — they jumped into the river!';
+    return 'On the boat: guards $guard, prisoners $weight.\nNot enough guards — they jumped into the river!';
   }
 
   @override
@@ -109,7 +109,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String failBank(String place, int guard, int weight) {
-    return 'On the $place: $guard guard vs $weight prisoner.\nNot enough guards!';
+    return 'On the $place: guards $guard, prisoners $weight.\nNot enough guards!';
   }
 
   @override
@@ -154,7 +154,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String par(int n) {
-    return 'Best: $n';
+    return 'Shortest: $n';
   }
 
   @override
@@ -239,7 +239,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get descPrisoner => 'Needs 1 guard.';
 
   @override
-  String get descBoss => 'Needs 2 guards alone.';
+  String get descBoss => 'Needs 2 guards on his own.';
 
   @override
   String get descCuffed => 'Needs 2 guards. Takes 2 seats.';
@@ -324,10 +324,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'The hardest levels, picked by solving every combination.\nCross in the fewest trips and you\'re the real deal.';
 
   @override
-  String get hintWithAd => 'Watch ad for hint';
+  String get hintWithAd => 'Hint\n(watch ad)';
 
   @override
-  String get hintDeclined => 'Watch the whole video to get a hint';
+  String get hintDeclined => 'Watch the whole video to get a hint.';
 
   @override
   String removeAds(String price) {
@@ -335,22 +335,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get restorePurchases => 'Restore purchase';
+  String get restorePurchases => 'Restore purchases';
 
   @override
   String get adFreeOn => 'Ad-free';
 
   @override
-  String get purchaseThanks => 'Ads removed. Thank you!';
+  String get purchaseThanks => 'Ads removed. Thanks for your purchase!';
 
   @override
   String get purchaseRestored => 'Purchase restored';
 
   @override
-  String get purchaseNothing => 'No purchase to restore';
+  String get purchaseNothing =>
+      'No purchase found to restore. Check your connection and that you\'re signed in with the Apple ID you used to buy.';
 
   @override
-  String get purchaseFailed => 'Purchase failed. Please try again later.';
+  String get purchaseFailed =>
+      'Couldn\'t complete the purchase. If you were charged, ads will be removed automatically shortly.';
 
   @override
   String get kicker => 'Don\'t let them escape!';
@@ -375,7 +377,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetConfirmBody =>
-      'All stars and records will be deleted. Your ad-free purchase stays.';
+      'All stars, records and achievements will be deleted. Your ad removal purchase won\'t be affected.';
 
   @override
   String get cancel => 'Cancel';
@@ -401,7 +403,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lockedHint => 'Clear the previous level to unlock';
 
   @override
-  String get hintNoAd => 'Couldn\'t load the video. Try again in a moment.';
+  String get hintNoAd => 'The video isn\'t ready yet. Try again in a moment.';
 
   @override
   String daily(String id) {
@@ -586,8 +588,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reminderBody => 'Today\'s puzzle is ready. Clear it with 3 stars!';
 
   @override
-  String get reminderDenied =>
-      'Notifications are off. Allow them in your iPhone Settings.';
+  String get reminderDenied => 'Notifications are off. Allow them in Settings.';
 
   @override
   String get rank0 => 'Cadet';
@@ -687,7 +688,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get purchasePending =>
-      'Waiting for approval. Ads will be removed once it\'s approved.';
+      'Your purchase is pending. Ads will be removed once it\'s complete.';
 
   @override
   String get privacyPolicy => 'Privacy Policy';
@@ -699,4 +700,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String linkFailed(String url) {
     return 'Couldn\'t open $url';
   }
+
+  @override
+  String get restoreFailed =>
+      'Couldn\'t restore your purchase. Please try again later.';
+
+  @override
+  String get hintLoading => 'Loading the video…';
+
+  @override
+  String get hintShowFailed =>
+      'Couldn\'t show the video. Switch to full screen and try again.';
+
+  @override
+  String get dailyNeedsNoHint =>
+      'The daily puzzle counts with 3 stars and no hints.';
 }

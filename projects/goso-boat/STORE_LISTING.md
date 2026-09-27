@@ -26,7 +26,7 @@
 |---|---|---|
 | 名前（30字まで） | 脱獄させるな！護送ボート：川渡りパズル | Prison Ferry: No Escape! |
 | サブタイトル（30字まで） | 囚人を渡す頭の体操・ひらめき脳トレ | River crossing logic puzzle |
-| キーワード（100字まで） | 脱出,刑務所,警察,警官,看守,IQ,IQテスト,論理,ロジック,思考力,謎解き,クイズ,暇つぶし,オフライン,無料,舟,船,中州,知育,推理,難問,頭脳,ブレイン,頭を使う,考える | prisoner,jail,police,cop,guard,brain,iq,test,riddle,think,boat,wolf,goat,cabbage,teaser,offline |
+| キーワード（100字まで） | 脱出,刑務所,警察,警官,看守,IQ,IQテスト,論理,ロジック,思考力,謎解き,クイズ,暇つぶし,オフライン,舟,船,中州,頭の体操,推理,難問,頭脳,ブレイン,頭を使う,考える | prisoner,jail,police,cop,guard,brain,iq,test,riddle,think,boat,wolf,goat,cabbage,teaser,offline |
 
 **名前は合わせ技**（2026-09-27 ユーザー決定）。ストアの正式名に、検索される「脱獄」と覚えやすい「護送ボート」の両方を入れる。
 ホーム画面の名前は短い方（日本語「護送ボート」、英語「Prison Ferry」）。英語は「Prison Boat」だと米国で
@@ -39,6 +39,8 @@
 ## 配信する国
 
 日本と、EU を除く全地域。EU はサカマネと同じく対象外（配信すると販売者として住所などの公開を求められる）。
+
+**未決（ユーザー判断）**: 英国・スイス・ノルウェー・アイスランド・リヒテンシュタインは今の「EU を除く」に入らないが、AdMob は同意画面（UMP）なしだと広告を絞る（違反ではない、収益が下がるだけ）。外すか、UMP を入れるかを決める。
 中国本土はゲームの配信に許可番号が要るので対象外。
 
 ## English description
@@ -61,7 +63,9 @@ But the island needs guards too. Who stays where?
 
 ■ 120 levels, 3 stars for the shortest route
 Every level is solvable. Cross in the fewest trips to earn 3 stars.
-Stuck? A hint shows your next move. Undo and restart any time. Plays offline.
+Stuck? Watch a short video to see your next move (no video with Remove Ads). Undo before anyone escapes; restart any time. The puzzles play offline (hint videos need a connection).
+
+Contains ads. The in-app purchase "Remove Ads" turns off full-screen ads and lets you use hints without videos.
 
 Promotional text: Escort prisoners across the river without letting one escape. A river island, a boss, a police dog and cuffed pairs. 120 levels; the shortest route earns 3 stars.
 
@@ -89,6 +93,8 @@ Promotional text: Escort prisoners across the river without letting one escape. 
 3. 「川の中州で作戦を立てろ」 … 中州のある面（**ほかの川渡りアプリに無い仕掛け**）
 4. 「ボス・警察犬・看守長・手錠の2人」 … 役の紹介を並べる
 5. 「全120面。最短で渡れば★3」 … ステージ選択（ヒントで光っている場面を添える）
+
+**撮るときの決まり**（Apple 2.3.2・2.3.7）: 広告を消していない状態で撮る（ヒントのボタンが「動画でヒント」になっている）。タイトル画面を使うなら「広告を消す（¥370）」のボタンは写さない（スクリーンショットに値段を入れない）。
 
 広告で見た人が「あの広告のゲームだ」と気づけるよう、1枚目は広告と同じ構図（川・舟・警官と囚人）にする。
 ただし広告の絵柄そのものは真似しない（Apple 4.3 と著作権の両方のため）。
@@ -118,9 +124,12 @@ Promotional text: Escort prisoners across the river without letting one escape. 
 
 ■ 全120面・最短クリアで★3
 すべての面は必ず解けます。最短の回数で渡りきれば星3つ。
-詰まったらヒントで次の一手がわかります。一手戻す・最初からも自由です。
+詰まったら、短い動画を見るとヒントで次の一手がわかります（「広告を消す」を購入すると動画なし）。逃げられる前なら一手戻せて、最初からのやり直しはいつでもできます。
+
+■ 広告と課金
+広告が表示されます。App内課金「広告を消す」（買い切り）を購入すると、面と面の間の全画面広告が出なくなり、ヒントも動画なしで使えます。
 
 ■ こんな人に
 ・ひらめき系、論理パズル、頭の体操が好きな人
 ・家族や友だちと一緒に考えたい人
-・通信なしで、すき間時間に遊べるゲームを探している人
+・通信なしで、すき間時間に遊べるゲームを探している人（ヒントの動画には通信が要ります）

@@ -28,6 +28,8 @@ Future<void> main() async {
   final money = Monetization(await SharedPreferences.getInstance(), ads: createAdService(), store: createPurchaseService());
   // 広告SDKの準備は待たずに画面を出す（読み込みは裏で続く）
   unawaited(money.start());
+  // 長く裏にいた後は手元の広告が期限切れになっている。戻ったら読み直す（最初のヒントで失敗しないように）
+  AppLifecycleListener(onResume: money.refreshAds);
   runApp(GosoBoatApp(progress: progress, money: money, settings: GameSettings(await SharedPreferences.getInstance())));
 }
 

@@ -352,6 +352,8 @@ class _RemoveAdsState extends State<_RemoveAds> {
   String? _price;
   bool _busy = false;
   late final AppLifecycleListener _life;
+  Timer? _retry;
+  int _tries = 0;
 
   @override
   void initState() {
@@ -366,10 +368,12 @@ class _RemoveAdsState extends State<_RemoveAds> {
   @override
   void dispose() {
     _life.dispose();
+    _retry?.cancel();
     super.dispose();
   }
 
   Future<void> _load() async {
+    _retry?.cancel();
     final ok = await widget.money.store.isAvailable();
     final price = ok ? await widget.money.price : null;
     if (!mounted) return;
@@ -377,21 +381,33 @@ class _RemoveAdsState extends State<_RemoveAds> {
       _available = ok;
       _price = price;
     });
+    // 値段が取れなければ、間を空けて何度か取り直す（アプリを出入りしなくても電波が戻れば買えるように）
+    if (ok && price == null && _tries < 3) {
+      _retry?.cancel(); // 取り直しが重なっても、タイマーは1本だけ
+      _retry = Timer(Duration(seconds: 5 * (1 << (_tries * 2))), _load); // 5秒→20秒→80秒
+      _tries++;
+    }
   }
 
   Future<void> _run(Future<PurchaseOutcome> Function() f, {required bool restore}) async {
     final t = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
-    final r = await f();
+    PurchaseOutcome r;
+    try {
+      r = await f();
+    } catch (_) {
+      r = PurchaseOutcome.failed;
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
     if (!mounted) return;
-    setState(() => _busy = false);
     final msg = switch (r) {
       PurchaseOutcome.purchased => restore ? t.purchaseRestored : t.purchaseThanks,
       PurchaseOutcome.pending => t.purchasePending,
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable => restore ? t.purchaseNothing : t.purchaseFailed,
-      PurchaseOutcome.failed => t.purchaseFailed,
+      PurchaseOutcome.failed => restore ? t.restoreFailed : t.purchaseFailed,
     };
     if (msg != null) {
       messenger.removeCurrentSnackBar();

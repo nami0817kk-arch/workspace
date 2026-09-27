@@ -49,7 +49,8 @@ API では作れないので、画面で作る。
 1. 作ったアプリ → **App内課金** → **＋** → **非消耗型**
 2. 参照名 `Remove Ads`、製品ID **`goso_boat_remove_ads`**（アプリ側に固定で書いてある）
 3. 価格 **370円**（ユーザー決定）。表示名「広告を消す」／英語「Remove Ads」、説明「全画面広告が出なくなり、ヒントも動画なしで使えます」
-4. 審査用のスクリーンショットは、TestFlight で撮れるようになってから入れればよい
+4. 審査用のスクリーンショット（「広告を消す（¥370）」のボタンが写ったタイトル画面）が無いと提出できない。TestFlight で撮れるようになってから入れる
+5. **最初の課金アイテムは、アプリのバージョンと一緒に審査に出す。** バージョンのページの「App内課金」で「広告を消す」を添付してから提出する（添付を忘れると、審査の担当者の端末で値段が取れずボタンが出ない＝「課金が見つからない」で却下される）
 
 ### 5. AdMob にアプリと広告ユニットを作る
 
@@ -70,3 +71,37 @@ GitHub の Actions → **Build 護送ボート (iOS Release)** → Run workflow 
 1. App Store Connect → アプリ → **TestFlight** → 内部テスト → グループを作り、自分（Apple ID）を入れる
 2. アップロード後、処理に10〜30分ほど。iPhone の **TestFlight** アプリに出てくるので、インストール
 3. 課金は TestFlight ではお金がかからない（Sandbox）。広告は本物のIDでもテスト表示になることがある
+
+### 審査に出すときに書くこと
+
+**審査メモ（App Review Information → Notes、英語で）**
+
+```
+No login is required.
+In-app purchase: one non-consumable, "Remove Ads" (goso_boat_remove_ads), shown at the bottom of the title screen and in Settings (the buttons appear once the App Store price has loaded).
+"Restore purchases" is on the title screen and in Settings.
+Hints: each hint requires watching a rewarded video ad (no video after purchasing Remove Ads).
+Interstitial ads: from World 2 on, once every 3 cleared levels when tapping "Next level". World 1 has no interstitial ads.
+The app does not use App Tracking Transparency and does not track users.
+Privacy policy and "Support / report an ad" are in Settings.
+```
+
+**App のプライバシー（App Store Connect → App のプライバシー）**
+
+Google の AdMob の開示（https://developers.google.com/admob/ios/privacy/data-disclosure ）に合わせる。
+提供者（つるはし社）自身は何も集めない。AdMob が集めるもの:
+
+**サカマネで審査に通った答え方にそろえる**（記憶「サカマネ iOS の公開状況」）:
+
+| データの種類 | 用途 | ユーザーに関連付け | トラッキング |
+|---|---|---|---|
+| デバイス ID | サードパーティ広告 | いいえ | いいえ（ATT を使わず IDFA を取らない） |
+
+「関連付けあり・追跡あり」に変えない。SDK のプライバシーマニフェストは項目が多いが、サカマネはこの1行で通っている。
+Google の開示に合わせて項目を増やすなら、プライバシーポリシー（legal/privacy.html）には既に全部書いてあるので食い違いは出ない。
+
+**URL の欄**: App Store Connect の「プライバシーポリシー URL」と「サポート URL」に、アプリの設定画面と同じ
+`https://goso-boat.pages.dev/privacy.html` と `https://goso-boat.pages.dev/support.html` を入れる（公開してから）。
+
+**年齢区分**: 質問票の「広告」は「あり」。暴力の項目（囚人が逃げる・捕まえる表現）をどう答えるかはユーザー判断（4+ か 9+）。
+

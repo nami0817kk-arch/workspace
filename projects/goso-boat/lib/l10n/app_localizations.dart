@@ -617,7 +617,7 @@ abstract class AppLocalizations {
   /// No description provided for @hintWithAd.
   ///
   /// In ja, this message translates to:
-  /// **'動画を見てヒント'**
+  /// **'動画で\nヒント'**
   String get hintWithAd;
 
   /// No description provided for @hintDeclined.
@@ -647,7 +647,7 @@ abstract class AppLocalizations {
   /// No description provided for @purchaseThanks.
   ///
   /// In ja, this message translates to:
-  /// **'広告を消しました。ありがとう！'**
+  /// **'広告を消しました。ご購入ありがとうございます！'**
   String get purchaseThanks;
 
   /// No description provided for @purchaseRestored.
@@ -659,13 +659,13 @@ abstract class AppLocalizations {
   /// No description provided for @purchaseNothing.
   ///
   /// In ja, this message translates to:
-  /// **'復元できる購入が見つからなかった'**
+  /// **'復元できる購入が見つかりませんでした。電波のある所で、購入したときの Apple ID でサインインしているか確かめてください'**
   String get purchaseNothing;
 
   /// No description provided for @purchaseFailed.
   ///
   /// In ja, this message translates to:
-  /// **'購入できなかった。時間をおいてもう一度'**
+  /// **'購入できませんでした。支払いが済んでいれば、少しして自動で広告が消えます'**
   String get purchaseFailed;
 
   /// No description provided for @kicker.
@@ -713,7 +713,7 @@ abstract class AppLocalizations {
   /// No description provided for @resetConfirmBody.
   ///
   /// In ja, this message translates to:
-  /// **'星と記録がすべて消えます。広告を消した購入は残ります。'**
+  /// **'星・記録・実績がすべて消えます。「広告を消す」の購入はそのまま残ります。'**
   String get resetConfirmBody;
 
   /// No description provided for @cancel.
@@ -761,7 +761,7 @@ abstract class AppLocalizations {
   /// No description provided for @hintNoAd.
   ///
   /// In ja, this message translates to:
-  /// **'動画を読み込めなかった。少し待ってもう一度'**
+  /// **'動画の準備ができていません。少し待ってもう一度'**
   String get hintNoAd;
 
   /// No description provided for @daily.
@@ -1277,7 +1277,7 @@ abstract class AppLocalizations {
   /// No description provided for @purchasePending.
   ///
   /// In ja, this message translates to:
-  /// **'保護者の承認待ちです。承認されると広告が消えます'**
+  /// **'購入の手続きが保留中です。完了すると広告が消えます'**
   String get purchasePending;
 
   /// No description provided for @privacyPolicy.
@@ -1297,6 +1297,30 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'開けなかった: {url}'**
   String linkFailed(String url);
+
+  /// No description provided for @restoreFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入を復元できませんでした。時間をおいてもう一度お試しください'**
+  String get restoreFailed;
+
+  /// No description provided for @hintLoading.
+  ///
+  /// In ja, this message translates to:
+  /// **'動画を読み込んでいます…'**
+  String get hintLoading;
+
+  /// No description provided for @hintShowFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'動画を表示できませんでした。全画面表示にしてもう一度'**
+  String get hintShowFailed;
+
+  /// No description provided for @dailyNeedsNoHint.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問は、ヒントなしの星3で達成になります'**
+  String get dailyNeedsNoHint;
 }
 
 class _AppLocalizationsDelegate
