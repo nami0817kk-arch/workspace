@@ -76,6 +76,53 @@ def apply(text: str, dictionary: dict[str, str] | None = None) -> str:
     return out
 
 
+KANA_ONLY = re.compile(r"[ぁ-ゖァ-ヺー]+")
+HAS_DIGIT = re.compile(r"[0-9０-９]")
+
+
+LONG_O_U = "オコソトノホモヨロゴゾドボポョォヲウクスツヌフムユルグズヅブプュゥ"
+
+
+def to_katakana(text: str) -> str:
+    """ひらがなをカタカナに。**オ段・ウ段のあとの「ウ」は「ー」にする**（「いとう」→「イトー」）。
+
+    ユーザー辞書は書いたとおりに読むので、「イトウ」と渡すと「イ・ト・ウ」と
+    ウをはっきり発音する（組み込みの辞書は「イトオ」と伸ばしている）。
+    """
+    kata = "".join(chr(ord(c) + 0x60) if "ぁ" <= c <= "ゖ" else c for c in text)
+    return "".join("ー" if c == "ウ" and i and kata[i - 1] in LONG_O_U else c
+                   for i, c in enumerate(kata))
+
+
+def split_dictionary(dictionary: dict[str, str]) -> tuple[dict[str, str], dict[str, str]]:
+    """読みの辞書を、**VOICEVOX のユーザー辞書に載せる語**と**文で開く語**に分ける（2026-09-28）。
+
+    ユーザー指摘「日本人選手の呼び方が間違えている」「りつをただしと呼んだりしてる」。
+    それまでは全部を**ひらがなで文に埋め込んで**いたので、前後の助詞とくっついて
+    区切りを取り違えていた（audio_query の kana で実測）:
+
+    - 「堂安と塩貝は」→「どうあんとしおがいは」→ **ドオアント／シ／オガイワ**
+    - 「鎌田大地の」→ **カ／マダ／ダイチノ**、「旗手は」→ **ワタテ**
+    - 辞書に無い「律くん」は **タダシクン**
+
+    固有名詞としてユーザー辞書に登録すると、文の区切りで名前が割れない。
+    **数字を含む語（1分3敗など）は登録しても当たらない**ので、今までどおり文で開く。
+    """
+    words: dict[str, str] = {}
+    inline: dict[str, str] = {}
+    for surface, spoken in dictionary.items():
+        if KANA_ONLY.fullmatch(spoken) and not HAS_DIGIT.search(surface):
+            words[surface] = to_katakana(spoken)
+        else:
+            inline[surface] = spoken
+    return words, inline
+
+
+def words_in(text: str, words: dict[str, str]) -> str:
+    """その文に効くユーザー辞書の語。控えの鍵に混ぜ、辞書を直したら作り直させる。"""
+    return "|".join(f"{k}={v}" for k, v in sorted(words.items()) if k in (text or ""))
+
+
 def date_reading(month: int, day: int) -> str:
     """「9月1日」→「くがつついたち」。"""
     return MONTHS.get(month, f"{month}がつ") + DAYS.get(day, f"{day}にち")

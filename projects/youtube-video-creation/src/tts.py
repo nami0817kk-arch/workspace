@@ -79,6 +79,33 @@ class EngineBackend:
             return None
         return None
 
+    def sync_user_dict(self, words: dict[str, str]) -> None:
+        """読みの辞書の固有名詞を、ENGINE のユーザー辞書にそろえる（2026-09-28）。
+
+        文にひらがなで埋めると前後とくっついて名前が割れる（src/reading.split_dictionary）。
+        **優先度は最大**にする。既定の5では「鎌田大地」「旗手」が組み込みの辞書に負けた。
+        """
+        try:
+            have = requests.get(f"{self.url}/user_dict", timeout=self.timeout).json()
+            by_surface = {}
+            for uid, word in (have or {}).items():
+                by_surface.setdefault(_zenkaku(word.get("surface", "")), (uid, word))
+            for surface, spoken in words.items():
+                params = {"surface": surface, "pronunciation": spoken, "accent_type": 0,
+                          "word_type": "PROPER_NOUN", "priority": 10}
+                got = by_surface.get(_zenkaku(surface))
+                if got and got[1].get("pronunciation") == spoken and got[1].get("priority") == 10:
+                    continue
+                if got:
+                    response = requests.put(f"{self.url}/user_dict_word/{got[0]}",
+                                            params=params, timeout=self.timeout)
+                else:
+                    response = requests.post(f"{self.url}/user_dict_word",
+                                             params=params, timeout=self.timeout)
+                response.raise_for_status()
+        except requests.RequestException as exc:
+            raise TtsError(f"VOICEVOX ENGINE のユーザー辞書を更新できません（{self.url}）: {exc}") from exc
+
     def synthesize(self, line: Line, member: CastMember) -> bytes:
         try:
             query = requests.post(
@@ -285,8 +312,16 @@ def synthesize_script(
     from dataclasses import replace as _replace
 
     from .reading import apply as _apply_reading, load_dictionary as _load_readings
+    from .reading import split_dictionary, words_in
 
     readings = _load_readings()
+    # **名前はユーザー辞書で読ませる**（2026-09-28）。文にひらがなで埋めると、
+    # 前後とくっついて「堂安と塩貝」が「ドオアント／シ／オガイ」になった。
+    # ユーザー辞書を持たない合成（core・無音）は、今までどおり全部を文で開く
+    words: dict[str, str] = {}
+    if hasattr(backend, "sync_user_dict"):
+        words, readings = split_dictionary(readings)
+        backend.sync_user_dict(words)
     variants = voice_variants(script.lines)
     for index, line in enumerate(script.lines):
         member = config.resolve_speaker(line.speaker, variants[index])
@@ -294,7 +329,10 @@ def synthesize_script(
         # **声に渡す文は、読みの辞書で開く**（2026-09-22）。画面の字（line.text）は変えない。
         # 控えの鍵も開いた文で作るので、辞書を足せば作り直される
         spoken = _replace(line, text=_apply_reading(line.text or "", readings))
-        target = out_dir / f"{index:04d}_{member.key}_{_digest(spoken, member, pause, backend.name)}.wav"
+        # 控えの鍵に、その文に効くユーザー辞書の語を混ぜる。文の字は変わらないので、
+        # 混ぜないと辞書を直しても古い声のまま残る
+        seed = _replace(spoken, text=f"{spoken.text}#{words_in(spoken.text, words)}") if words_in(spoken.text, words) else spoken
+        target = out_dir / f"{index:04d}_{member.key}_{_digest(seed, member, pause, backend.name)}.wav"
 
         if not target.exists():
             _write_padded(backend.synthesize(spoken, member), pause, target)
@@ -373,6 +411,13 @@ def _write_wav(target: Path, channels: int, sampwidth: int, framerate: int, fram
         out.setsampwidth(sampwidth)
         out.setframerate(framerate)
         out.writeframes(frames)
+
+
+def _zenkaku(text: str) -> str:
+    """ENGINE はユーザー辞書の表記を全角にして返す。突き合わせるために同じ形へそろえる。"""
+    import unicodedata
+
+    return unicodedata.normalize("NFKC", text or "")
 
 
 def _digest(line: Line, member: CastMember, pause: float, backend: str) -> str:

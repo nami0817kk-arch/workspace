@@ -306,3 +306,51 @@ def test_分けた反応の続きは頭の行と同じ声():
     from src.tts import voice_variants
     lines = [L(text="頭", cont=False), L(text="続き", cont=True), L(text="別", cont=False)]
     assert voice_variants(lines) == ["頭", "頭", "別"]
+
+
+class _DictBackend(SilentBackend):
+    """ユーザー辞書を持つ合成の身代わり。渡された文と辞書を控える。"""
+
+    def __init__(self):
+        self.texts = []
+        self.words = {}
+
+    def sync_user_dict(self, words):
+        self.words = dict(words)
+
+    def synthesize(self, line, member):
+        self.texts.append(line.text)
+        return super().synthesize(line, member)
+
+
+def test_名前はユーザー辞書で読ませ文には埋め込まない(tmp_path):
+    """2026-09-28 指摘「日本人選手の呼び方が間違えている」「りつをただしと呼んだりしてる」。
+
+    ひらがなで文に埋めると「堂安と塩貝は」が「ドオアント／シ／オガイワ」に割れた。
+    名前はユーザー辞書へ、数字の入った勝敗は今までどおり文で開く。
+    """
+    backend = _DictBackend()
+    script = parse_script("## S\n霊夢: 堂安と塩貝は1分3敗。\n霊夢: 律くんと話した。\n")
+    synthesize_script(script, _config(), tmp_path, backend=backend)
+    assert backend.words.get("塩貝") == "シオガイ"
+    assert backend.words.get("律くん") == "リツクン"
+    assert "1分3敗" not in backend.words
+    assert backend.texts[0] == "堂安と塩貝はいちわけさんぱい。"
+    assert backend.texts[1] == "律くんと話した。"
+
+
+def test_ユーザー辞書を直したら名前の行だけ作り直す(tmp_path, monkeypatch):
+    """文の字は変わらないので、辞書の読みを鍵に混ぜないと古い声が残る。"""
+    import src.reading as reading
+
+    script = parse_script("## S\n霊夢: 塩貝が来た。\n霊夢: 雨が降った。\n")
+    monkeypatch.setattr(reading, "load_dictionary", lambda *a, **k: {"塩貝": "しおがい"})
+    synthesize_script(script, _config(), tmp_path, backend=_DictBackend())
+    first = [line.audio_path.name for line in script.lines]
+
+    again = parse_script("## S\n霊夢: 塩貝が来た。\n霊夢: 雨が降った。\n")
+    monkeypatch.setattr(reading, "load_dictionary", lambda *a, **k: {"塩貝": "しおかい"})
+    synthesize_script(again, _config(), tmp_path, backend=_DictBackend())
+    second = [line.audio_path.name for line in again.lines]
+    assert first[0] != second[0]
+    assert first[1] == second[1]

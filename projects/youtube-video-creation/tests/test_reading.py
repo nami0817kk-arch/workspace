@@ -114,3 +114,21 @@ def _raw_people(people):
     raw = _raw()
     raw["people"] = people
     return raw
+
+
+def test_辞書の名前はカタカナでユーザー辞書側へ分ける():
+    from src.reading import split_dictionary
+
+    words, inline = split_dictionary({"塩貝健人": "しおがいけんと", "1分3敗": "いちわけさんぱい",
+                                      "昨季": "さっき", "Xシモンズ": "シャビシモンズ"})
+    assert words == {"塩貝健人": "シオガイケント", "昨季": "サッキ", "Xシモンズ": "シャビシモンズ"}
+    assert inline == {"1分3敗": "いちわけさんぱい"}
+
+
+def test_ユーザー辞書の読みは伸ばす音をーにする():
+    from src.reading import to_katakana
+
+    assert to_katakana("いとうひろき") == "イトーヒロキ"
+    assert to_katakana("どうあんりつ") == "ドーアンリツ"
+    assert to_katakana("さとうりゅうのすけ") == "サトーリューノスケ"
+    assert to_katakana("しおがいけんと") == "シオガイケント"
