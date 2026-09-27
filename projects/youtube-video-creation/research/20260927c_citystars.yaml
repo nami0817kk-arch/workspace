@@ -1,0 +1,150 @@
+date: 2026年9月27日
+slot: premier_2
+format: voices
+voice_min: 0.6
+people: [ノエル・ギャラガー, ロイ・キーン, イアン・ライト]
+theme:
+  id: city_stars_react
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: 'ノエル・ギャラガーとロイ・キーン、マンCの違反報道にどう言ったか'
+  question: クラブの外の有名人は、マンCの違反報道をどう受け止めたのか
+  opening_image: assets/images/20260927c_pair_noel_keane/01.jpg
+short_title: ノエル・ギャラガー「俺は見た」
+thumbnail:
+  photos:
+    - assets/images/20260927c_noel/01.jpg
+    - assets/images/20260927c_keane/01.jpg
+  line1: ノエルとキーン、マンCに
+  line2: 「悲しい」と「●●●●●」
+sections:
+  - id: news
+    heading: 114件の報道
+    tier: 報道
+    telop: 115件のうち114件で違反と報道
+    narrator: キャスター
+    say:
+      - text: マンCが、115件の告発のうち114件で違反と判断された、と報じられました。リーグもクラブも、まだ認めていません。
+        image: assets/images/20260927c_pair_noel_keane/01.jpg
+      - クラブの外の有名人も、それぞれに口を開いています。
+    sources:
+      - https://www.bbc.com/sport/football/articles/cw7v44ezry5go
+      - https://www.standard.co.uk/sport/football/noel-gallagher-man-city-charges-verdict-b1298483.html
+  - id: noel
+    main: true
+    heading: ノエル・ギャラガー
+    tier: 報道
+    telop: 「でも俺は、自分が何を見たかをわかってる」
+    narrator: キャスター
+    say:
+      - text: 財務規則を破って強くなったのでは、という疑い。マンCが114件で違反という報道です。
+        short_only: true
+      - オアシスのノエル・ギャラガーは、子どものころからのシティファン。シティのポッドキャストで話しました。
+      - voice: ノエル・ギャラガー
+        text: 今日の午後、ラジオで聞いて、ちょっと驚いたよ
+      - voice: ノエル・ギャラガー
+        text: クラブはずっと、容疑はひとつ残らず否定していると言い続けてきたからね
+      - voice: ノエル・ギャラガー
+        text: でも結局のところ、ただ悲しいよ。ファンにとっても、選手にとってもね
+      - voice: ノエル・ギャラガー
+        text: 役員室で何があろうと、サポーターにも選手にも関係ない
+      - voice: ノエル・ギャラガー
+        text: あの試合もあの優勝も、選手がピッチで勝ち取ったものだ
+      - 話は、2012年の優勝に及びました。アグエロの劇的なゴールで決めた優勝です。
+      - その意味は変わるのか、と聞かれて、こう答えています。
+      - voice: ノエル・ギャラガー
+        text: 汚れるのかって？ イングランドのほかの連中から見れば、そうなんだろう
+      - voice: ノエル・ギャラガー
+        text: でも俺は、自分が何を見て、何を感じたかをわかってる
+    sources:
+      - https://www.standard.co.uk/sport/football/noel-gallagher-man-city-charges-verdict-b1298483.html
+      - https://www.standard.co.uk/culture/music/noel-gallagher-manchester-city-the-city-oasis-sad-b1298481.html
+      - https://www.soccer-king.jp/news/world/eng/20260927/2209787.html
+  - id: keane
+    heading: ロイ・キーンとイアン・ライト
+    tier: 報道
+    telop: 「ズルはズルだ。罰は受けるしかない」
+    narrator: キャスター
+    say:
+      - text: 報道が出た日、スペイン代表のロドリは会見で「すべて相応しかった」とシティを擁護しました。
+        image: assets/images/20260927c_pair_keane_wright/01.jpg
+      - 翌日のイングランド対スペイン。中継の解説席で、元マンU主将のロイ・キーンはこう言いました。
+      - voice: ロイ・キーン
+        text: ロドリの言い分には、はっきり反対だね
+      - voice: ロイ・キーン
+        text: ズルをすると決めたのはクラブだ。何を勝ち取っていようと、罰を受けて当然だよ
+      - voice: ロイ・キーン
+        text: ズルはズルだ。有罪になったんだから、もう罰はおとなしく受けるしかない
+      - 隣に座った元アーセナルのイアン・ライトも続きました。
+      - voice: イアン・ライト
+        text: 彼らは素晴らしい思い出を味わえたのかもしれない
+      - voice: イアン・ライト
+        text: でも、彼らを追いかけていたチームは、ちゃんとルールを守っていたんだ
+      - voice: イアン・ライト
+        text: ロイの言うとおり、彼らはズルで勝った。そのせいで、とんでもないチャンスを逃した選手たちがいる
+      - 報道の影響は、ピッチにも出たのか。
+      - イングランドは、シティに所属する選手のミスから失点し、2対3で敗れています。
+      - キーンは試合のあと、こう話しています。
+      - voice: ロイ・キーン
+        text: 一流の選手がこれだけミスを重ねたんだ。影響があったのは間違いないよ
+    sources:
+      - https://www.manchestereveningnews.co.uk/sport/football/football-news/wright-keane-man-city-charges-34677608
+      - https://www.dailymail.com/sport/football/article-16162801/Roy-Keane-tells-cheating-Man-City-medicine-guilty-verdict-REJECTS-Rodris-claims-titles-deserved-despite-vast-majority-115-charges-proven.html
+      - https://www.bbc.co.uk/sport/football/articles/c6j4jjg5qxero
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「ノエルは資本が入る前からの筋金入り」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ノエルは資本が入る前からの筋金入りのファンだからショックだろうな
+      - voice: ネット民
+        text: ノエルはかっこいいな。シティへの熱量はここまでじゃないけど、ベガルタに置き換えたら同じ気持ちだな。
+        short_voice: true
+      - voice: ネット民
+        text: この国の9割は、ノエル・ギャラガーがいるってだけでマンCを罰してほしいんだ
+      - voice: ネット民
+        text: ノエルギャラガー、マンチェスターシティへの愛は本物に見えるが、
+      - voice: ネット民
+        text: 本当にクラブを思うなら、数々のの違反や運営に対するシビアな言及もすべき
+        cont: true
+      - voice: ネット民
+        text: ノエル・ギャラガーは今日から、生まれてこのかたセルティックファンってことにしてるんだろうな
+      - voice: ネット民
+        text: どんな時でも平常運転で中指を立て続けるリアム。選手やサポーターは悪くないと擁護するノエル。
+      - voice: ネット民
+        text: ギャラガー兄弟が一番頼もしい。皆Oasis聴こう。
+        cont: true
+      - voice: ネット民
+        text: いまITVでキーン、ライト、マタがマンCのことをすごくいい感じに話してる。考えるまでもない。
+      - voice: ネット民
+        text: ズルをした。罰を受けるべきだ
+        cont: true
+      - voice: ネット民
+        text: ロイ・キーンが見事に言ったとおり。今すぐ罰を受けろ！
+      - voice: ネット民
+        text: シティとオアシスどっちが大事なのって言われたらマジで同じくらいの両方人生なので、
+      - voice: ネット民
+        text: そこを切り話せる人になんか言われると本当に本当にほっといてくれとなる、、、
+        cont: true
+      - voice: ネット民
+        text: 少なくとも私はノエルとリアムがシティズンでよかったと思う。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: リアムのリプやノエルのコメント聞いてちょっとだけ元気出た
+        cont: true
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/profile/news/comments/b9238612-c490-4836-8e3f-8c04c31a771c
+      - https://x.com/scipe13/status/2104071650669219879
+      - https://bsky.app/profile/deeceebee72.bsky.social/post/3mwfwmgsutc2k
+      - https://x.com/Kgoonercoyg/status/2104064870614552932
+      - https://bsky.app/profile/docmufc.bsky.social/post/3mwfuen6sd22x
+      - https://x.com/skybluesoul24/status/2103779298067071036
+      - https://bsky.app/profile/lenvoi.bsky.social/post/3mwgunw3mdc2l
+      - https://bsky.app/profile/dpe93.bsky.social/post/3mwi3hlip322m
+      - https://x.com/nabocub/status/2103825613966721235

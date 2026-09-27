@@ -1,0 +1,172 @@
+date: 2026年9月27日
+slot: premier_1
+format: news
+voice_min: 0.35
+people: [ハルドゥーン・アル・ムバラク, クリスチャン・パースロー, トニー・ピューリス]
+theme:
+  id: city_compensation
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: 'マンCを訴える権利を残していた4クラブ。最初に通知を出したのは'
+  question: どのクラブが、マンCに何を、いくら求めるのか
+  opening_image: assets/images/20260927c_pair_kroenke_khaldoon/01.jpg
+short_title: マンCを訴える準備、4クラブ
+thumbnail:
+  photos:
+    - assets/images/20260927c_kroenke/01.jpg
+    - assets/images/20260927c_khaldoon/01.jpg
+  face_link: VS
+  line1: マンCに賠償請求へ、4クラブ
+  line2: 最初に通知したのは●●●●●
+sections:
+  - id: four
+    heading: 権利を残した4クラブ
+    tier: 報道
+    telop: アーセナル・マンU・リヴァプール・スパーズ
+    narrator: キャスター
+    card:
+      type: table
+      title: マンCに賠償を求める権利を残したクラブ
+      columns: [クラブ, マンCがいた頃に逃したもの]
+      rows:
+        - [マンチェスター・ユナイテッド, 2012年と2018年の優勝]
+        - [リヴァプール, 2014年の優勝]
+        - [アーセナル, 権利を残した最初のクラブ]
+        - [トッテナム, チャンピオンズリーグの出場権]
+    say:
+      - text: マンCが、115件の告発のほとんどで違反と判断された、という報道。
+        image: assets/images/20260927c_pair_kroenke_khaldoon/01.jpg
+      - 正式な発表は、まだありません。
+      - マンCが有罪になったら、損害賠償を求める。
+      - その権利を残す通知を、4つのクラブが出していました。
+      - アーセナル、マンチェスター・ユナイテッド、リヴァプール、トッテナム。
+      - 4クラブのうち、最初にこの通知を出したのはアーセナルでした。
+    sources:
+      - https://www.independent.co.uk/sport/football/man-city-verdict-premier-league-man-utd-arsenal-liverpool-compensation-b3056684.html
+      - https://www.espn.com/soccer/story/_/id/50032007/man-city-charges-115-premier-league-clubs-seeking-legal-advice-amid-expected-guilty-verdicts
+      - https://www.bbc.co.uk/sport/football/articles/cr89jjwy4nqpo
+      - https://www.dailymail.com/sport/football/article-16162559/Furious-Premier-League-clubs-set-trigger-800MILLION-lawsuits-against-Man-City-seismic-115-charges-verdict-lawyers-prepare-case-drag-TWO-YEARS.html
+  - id: money
+    main: true
+    heading: 何を、いくら
+    tier: 報道
+    telop: 1クラブで2億ポンド超とも
+    narrator: キャスター
+    card:
+      type: table
+      title: 伝えられている額
+      columns: [誰が, 額]
+      rows:
+        - [一部のクラブ, 2億ポンド超]
+        - [リヴァプール, 1億ポンド]
+        - [4クラブの合計, 最大8億ポンド]
+    say:
+      - text: マンCの財務違反の報道。損をしたライバルクラブが、賠償を求めて動いています。
+        short_only: true
+      - 求めるのは、逃した賞金、スポンサーのボーナス、ヨーロッパの大会の収入です。
+      - 元リヴァプールの幹部、クリスチャン・パースローはこう話しました。
+      - voice: クリスチャン・パースロー
+        text: マンCが規則を破っていた9シーズン。その年のライバル19クラブは、どこも損をしている
+      - voice: クリスチャン・パースロー
+        text: プレミアの順位は、1つ上がるごとに300万ポンドの価値があった
+      - voice: クリスチャン・パースロー
+        text: 9年分の請求を全部足したら、手に負えなくなるおそれは大きい
+      - たとえばユナイテッドは、2012年と2018年に、マンCに優勝をさらわれています。
+      - リヴァプールも2014年に2位でした。
+      - 額は、一部のクラブで**2億ポンド**を超えるという見方があります。
+      - 4クラブ合わせて、最大**8億ポンド**。日本円でおよそ1600億円という報道もあります。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50032007/man-city-charges-115-premier-league-clubs-seeking-legal-advice-amid-expected-guilty-verdicts
+      - https://www.bbc.co.uk/sport/football/articles/c6d944ylqkkeo
+      - https://www.independent.co.uk/sport/football/man-city-verdict-premier-league-man-utd-arsenal-liverpool-compensation-b3056684.html
+      - https://www.liverpoolecho.co.uk/sport/football/football-news/liverpool-man-city-charges-pl-34674968
+      - https://news.yahoo.co.jp/articles/92734c75817bb4aceb3538f1d5d28b3b62d83748
+  - id: burnley
+    heading: 先にあった例
+    tier: 報道
+    telop: エヴァートンにバーンリーへ3500万ポンド
+    narrator: キャスター
+    card:
+      type: table
+      title: エヴァートンとバーンリー
+      columns: [いつ, 何が]
+      rows:
+        - [2021-22, エヴァートン16位、バーンリー18位で降格]
+        - [2026年6月, エヴァートンに3500万ポンドの支払い命令]
+        - [いま, エヴァートンが控訴中]
+    say:
+      - ほかのクラブへの支払いが命じられた例は、この6月にありました。
+      - 財務規則を破ったエヴァートンに、バーンリーへ**3500万ポンド**を払うよう命じたものです。
+      - 違反がバーンリーの降格を招いた可能性の方が高い、という判断でした。エヴァートンは控訴しています。
+      - では、マンCに負けたクラブの人たちは、いまどう感じているのか。
+      - 2011年のFAカップ決勝で敗れた、ストークの当時の監督トニー・ピューリスです。
+      - voice: トニー・ピューリス
+        text: シティのしたことで影響を受けたクラブは、どこも法的な手段を考えるはずだ
+      - voice: トニー・ピューリス
+        text: それでも、だまされたと感じる。あの日は、もう戻ってこない
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cqx1wqr3yjno
+      - https://www.bbc.co.uk/sport/football/articles/c60m33473zxpo
+  - id: city
+    heading: マンCの言い分と、この先
+    tier: 報道
+    telop: 訴えられるのは、控訴が終わってから
+    narrator: キャスター
+    say:
+      - マンCのムバラク会長は、サポーターへの手紙でこう書きました。
+      - voice: ハルドゥーン・アル・ムバラク
+        text: 早々と結論を出す人もいて、周りは騒がしい。でも、何も変わっていない
+      - 有罪と出れば、マンCはすぐに控訴するとみられています。
+      - 各クラブが実際に裁判を起こせるのは、控訴を含めてすべてが終わってから。
+      - イギリスの裁判所まで持ち込まれれば、あと2年かかるとも言われています。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50033305/man-city-chairman-club-premier-league-charges-case-changed
+      - https://www.independent.co.uk/sport/football/man-city-verdict-premier-league-man-utd-arsenal-liverpool-compensation-b3056684.html
+      - https://www.dailymail.com/sport/football/article-16162559/Furious-Premier-League-clubs-set-trigger-800MILLION-lawsuits-against-Man-City-seismic-115-charges-verdict-lawyers-prepare-case-drag-TWO-YEARS.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「シティが居なければ優勝できた」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: プレミアリーグクラブがシティに集団訴訟する投稿見たけど、不正確定したら妥当よな
+      - voice: ネット民
+        text: ・シティが居なければ優勝できた ・シティが居なければCL権を取れた ・シティが居なければPL残留が出来た
+        cont: true
+      - voice: ネット民
+        text: ひとつの順位のズレでクラブ経営が大きく変わっていた可能性もあったもんな…
+        cont: true
+      - voice: ネット民
+        text: 5位でCLに届かなかったチームは、失った収入のことでマンCを訴えられるのか。
+      - voice: ネット民
+        text: 18位のチームは、降格させられたと訴えられるのか。どのクラブも、失った賞金で訴えるのか。
+        cont: true
+      - voice: ネット民
+        text: とんでもない請求額になりそうだな。実際に払われているケースが有るとなればなおさら。
+      - voice: ネット民
+        text: バーンリーがエヴァートンを訴えられるなら、ほぼ誰でもシティを訴えられる。
+      - voice: ネット民
+        text: 潰れるかもしれない。自業自得だけど、それも望んでいない。ダービーの日がなくなるのは寂しいから！
+        cont: true
+      - voice: ネット民
+        text: 権利を最初に残したのはアーセナルだと読んだ。そうなったら、ハーランドの形をした落としどころで手を打てると思う
+        short_voice: true
+      - voice: ネット民
+        text: シティを訴えるクラブはみんな、つり上がった移籍金でシティに選手を売って大もうけしたことを忘れている。
+      - voice: ネット民
+        text: あいつらも手を貸したんだ。
+        cont: true
+      - voice: ネット民
+        text: シティが不正して優勝したシーズンで2位のクラブは本来は優勝出来てたわけで経済損失凄いし、訴訟してお金むしり取って欲しいわ。
+        short_voice: true
+    sources:
+      - https://x.com/Silvajr21city/status/2103777052243665313
+      - https://bsky.app/profile/orbinho.bsky.social/post/3mwdzh7zi7k2h
+      - https://news.yahoo.co.jp/profile/news/comments/81a0d7eb-9cb2-4b3d-9882-bb1e6df74650
+      - https://bsky.app/profile/mikethered77.bsky.social/post/3mwgti47efs2a
+      - https://bsky.app/profile/rjmacready.bsky.social/post/3mwet4foqdk25
+      - https://bsky.app/profile/stevegroves2004.bsky.social/post/3mwfuevvef223
+      - https://x.com/karesansui198/status/2103857236036788414

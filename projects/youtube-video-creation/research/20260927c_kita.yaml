@@ -1,0 +1,141 @@
+date: 2026年9月27日
+slot: japanese_1
+format: news
+voice_min: 0.35
+people: [喜多壱也]
+theme:
+  id: kita_first_goal
+  league: spain
+  league_name: スペイン2部
+  kind: match
+  topic: レアル・ソシエダ
+  title: '喜多壱也、スペイン2部でプロ初ゴール。その18分後に起きたこと'
+  question: 初ゴールのあと、何が起きたのか
+short_title: 喜多壱也、初ゴールの18分後
+thumbnail:
+  photo: assets/images/20260927c_kita/01.png
+  line1: 喜多壱也、プロ初ゴール
+  line2: その18分後に●●
+sections:
+  - id: goal
+    heading: 待っていた1点
+    tier: 報道
+    telop: 48分、左足で先制。プロ初ゴール
+    narrator: キャスター
+    card:
+      type: table
+      title: 喜多壱也
+      columns: [所属, 名前, 位置, 年齢]
+      rows:
+        - [ソシエダB, 喜多壱也, DF, 21]
+    say:
+      - text: レアル・ソシエダのBチームでプレーする、21歳のセンターバック、喜多壱也。
+        image: assets/images/20260927c_kita/01.png
+      - 開幕から7試合、すべてに先発しています。
+      - 9月26日、スペイン2部のセウタ戦。33分に味方のフォワードが一発退場し、10人になります。
+      - 44分には、喜多に1枚目の警告が出ています。
+      - そして48分、後半が始まってすぐ。コーナーキックの流れから、こぼれ球を左足で決めて先制。
+      - 京都サンガ時代を含めて、これがプロ初ゴールでした。
+      - voice: ネット民
+        text: 喜多くん初ゴール決めました！！！！
+      - voice: ネット民
+        text: 待ち望んだ初ゴール
+    sources:
+      - https://www.realsociedad.eus/es/noticias/detalle/condicionados-3
+      - https://web.gekisaka.jp/news/world/detail/?459825-459825-fl
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883166
+      - https://x.com/tareme316/status/2103835431356059851
+      - https://x.com/azuki_sanga/status/2103837925171696037
+  - id: red
+    main: true
+    heading: 18分後の2枚目
+    tier: 報道
+    telop: 66分に2枚目の警告で退場。9人に
+    narrator: キャスター
+    card:
+      type: table
+      title: セウタ対ソシエダB
+      columns: [時間, 出来事]
+      rows:
+        - [33分, 味方のフォワードが一発退場]
+        - [44分, 喜多に1枚目の警告]
+        - [48分, 喜多が先制点]
+        - [66分, 喜多に2枚目の警告、退場]
+        - [67分, 同点]
+        - [81分と90+9分, 逆転され1対3]
+    say:
+      - text: レアル・ソシエダのBチームの喜多壱也が、48分にプロ初ゴールを決めた試合。
+        short_only: true
+      - text: ところが66分。喜多に2枚目のイエローカード。退場です。
+        image: assets/images/20260927c_kita_match/01.jpg
+      - 2枚目は、センターサークルでボールに伸ばした足が、相手を蹴ったと判定されました。
+      - 前半にもう1人退場していたソシエダBは、これで9人。
+      - 直後の67分に同点。81分に逆転され、最後は1対3で敗れました。
+      - 相手のセウタは、この試合まで最下位。これが今季初めての勝利でした。
+      - 試合の終わりには、両チームがもみ合う場面もありました。
+      - ソシエダBのアンソテギ監督は、判定よりも自分たちの振る舞いを責めています。
+      - voice: ジョン・アンソテギ
+        text: 審判が退場だと思ったのなら、それは退場だ。私から言うことはない
+      - voice: ジョン・アンソテギ
+        text: 監督になってまだ日が浅いが、今日は最悪の日だ
+      - voice: ジョン・アンソテギ
+        text: サッカーの中身の話ではない。それ以外のすべてだ
+      - voice: ジョン・アンソテギ
+        text: 挑発に乗って、言い返して、押し合う。そんな姿を見せてはいけない
+    sources:
+      - https://www.realsociedad.eus/es/noticias/detalle/condicionados-3
+      - https://web.gekisaka.jp/news/world/detail/?459825-459825-fl
+      - https://www.laverdaddeceuta.com/deportes/noticias/deportes/a-d-ceuta/ansotegi-muy-critico-con-la-actuacion-de-la-real-sociedad-b-no-podemos-caer-en-provocaciones
+      - https://www.diariovasco.com/real-sociedad/ansotegi-critico-equipo-provocaciones-insultos-pueden-sacar-20260926183056-nt.html
+      - https://www.mundodeportivo.com/futbol/real-sociedad/20260926/1004231502/enfado-monumental-ansotegi-ceuta-mi-peor-dia-entrenador-no-futbolistico.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「初ゴール決めてる！！って思ったら」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 喜多ゴール決めてる！！ そして退場してる
+        short_voice: true
+      - voice: ネット民
+        text: 喜多くん初ゴール決めてる！！って思ったらなんか退場してて、しかもマリエスクレナもやし情報量多いな
+      - voice: ネット民
+        text: 1枚目のレッドもひどいし、喜多の1枚目のイエローも同じだ……
+      - voice: ネット民
+        text: 喜多ちゃん初ゴール決めて退場とか持ってるのか、持ってないのか？
+        short_voice: true
+      - voice: ネット民
+        text: スペインのVARはまったく意味が分からない。今日のセウタ戦、ソシエダBはとんでもない判定泥棒にあった
+      - voice: ネット民
+        text: 9人では耐え切れなかったか…。せめて喜多壱也選手が残っていれば違ったのかな…。
+      - voice: ネット民
+        text: DFとしては得点でのプラスよりも退場したマイナスで評価される。痛い。
+      - voice: ネット民
+        text: 若者たちはクラブのために全力を尽くした。今日はばかにされた。クラブは彼らを守るべきだ
+      - voice: ネット民
+        text: サンセは喜多くん退場する前に前半に1人退場してたのね。
+      - voice: ネット民
+        text: Sofascoreでは退場してるのに評価むっちゃいい。退場するまでは良かったのかな。
+        cont: true
+      - voice: ネット民
+        text: プロ初ゴールおめでとう。出来たら勝ちたかったけどね。
+      - voice: ネット民
+        text: 2人目の退場者となって負けたのは大いに反省して、次試合出る時はチームの勝利に貢献して欲しいと思います。
+        cont: true
+      - voice: ネット民
+        text: 応援してます。頑張って！
+        cont: true
+        short_voice: true
+    sources:
+      - https://x.com/tareme316/status/2103835431356059851
+      - https://x.com/azuki_sanga/status/2103837925171696037
+      - https://x.com/cheche_xyz/status/2103844757692903653
+      - https://x.com/punpun88neko2/status/2103870435117174854
+      - https://bsky.app/profile/peleida710.bsky.social/post/3mwghce5ris2n
+      - https://x.com/Lapsang_Souchon/status/2103997333063319694
+      - https://bsky.app/profile/rodracuesta.bsky.social/post/3mwglleuxj22o
+      - https://x.com/murasa_kirara/status/2103850158404628637
+      - https://news.yahoo.co.jp/profile/news/comments/7cab52b5-cd74-4d74-85b5-96cb807023d9
+      - https://bsky.app/profile/peleida710.bsky.social/post/3mwggxks55s2n
+      - https://x.com/shootiverse001/status/2103853972419498164
+      - https://news.yahoo.co.jp/profile/news/comments/31e80d8d-fc2b-4eca-990b-97bfb119da71

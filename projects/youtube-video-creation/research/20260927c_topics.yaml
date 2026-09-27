@@ -1,0 +1,126 @@
+title: 9月27日の題材（夕方）
+lead: 午後の一覧のあと、16時までに出た見出しから15件
+note: <b>○×を付けてください。</b>今日のショートの枠（1日10本）は、あと<b>1本</b>です。ここで○を付けたものは、主に明日（9/28）の枠に入ります。<br><br>日本代表のベネズエラ戦は<b>明日9/28</b>です。①は試合の前にメンバー紹介として出すこともできますし、試合の後に結果と合わせて作ることもできます。<br><br>ロマーノの投稿は、手元の Chrome に接続したところで読み取りが止まり、今回も読めませんでした。「W杯中に堂安と塩貝が大喧嘩した」というまとめ（記者の話の又聞きの又聞き）は、確かめる元の記事が無いので入れていません。<br><br>午前・午後の一覧に出した題材と、作ったマンCの回（9/26）、イングランド対スペインの回は入れていません。中身はまだ<b>見出しだけ</b>です。
+items:
+- num: 1
+  slot: 日本人
+  head: 明日の日本代表戦、ベネズエラ代表の来日メンバーが決定。レアル・ソシエダで久保建英と同僚の2選手も
+  why: '対戦は2019年以来。そのときはサロモン・ロンドンにハットトリックを許している、という記事。試合は明日9/28。
+    '
+  src: ゲキサカ（9/27）
+  url: https://web.gekisaka.jp/news/japan/detail/?459833-459833-fl
+  fmt: news
+- num: 2
+  slot: 日本人
+  head: ソシエダBの喜多壱也、スペイン2部で左足ボレーのプロ初ゴール。ところが後半に2枚目の警告で退場し、9人になって逆転負け
+  why: 'ラ・リーガ2部第7節のセウタ戦（1-3）。開幕から全試合に先発している、という記事。
+    '
+  src: ゲキサカ（9/27）
+  url: https://web.gekisaka.jp/news/world/detail/?459825-459825-fl
+  fmt: news
+- num: 3
+  slot: 日本人
+  head: U-21日本代表、アジア大会の準決勝は30日にウズベキスタンと。主将の市原吏音「何としても優勝」
+  why: 'ここまで4戦全勝・13得点無失点。同世代のA代表入りにも「みんなに負けたくない」と話している。**本人の言葉**がある。
+    '
+  src: サッカーキング・フットボールチャンネル（9/27）
+  url: https://www.soccer-king.jp/news/japan/national/20260927/2209814.html
+  fmt: quote
+- num: 4
+  slot: 日本人
+  head: 北朝鮮戦で被シュート20本を耐えたU-21日本代表。岡部タリクカナイ颯斗「命を懸けるくらいだった」
+  why: '守り切った側の言葉。GK荒木琉偉の写真ギャラリーもある。③と同じ大会の話なので、選ぶならどちらか。
+    '
+  src: ゲキサカ（9/27）
+  url: https://web.gekisaka.jp/news/japan/detail/?459824-459824-fl
+  fmt: quote
+- num: 5
+  slot: その他
+  head: マンCの違反認定の報道が出た翌日、イングランド代表でマンCの選手のミスが続く。トゥヘル監督「選手にとっては影響があったかもしれない」
+  why: 'ESPNの見出しは「気は散らなかった」で、伝え方が割れている。今朝のイングランド対スペインの回とは別の角度（マンCの件が代表に及んだか）。
+    '
+  src: ゲキサカ・ESPN（9/27）
+  url: https://web.gekisaka.jp/news/world/detail/?459832-459832-fl
+  fmt: news
+- num: 6
+  slot: プレミア
+  head: プレミアの複数のクラブが、マンCへの訴えに向けて法律の助言を求めている。損害は総額8億ポンドとも
+  why: '9/26のマンCの回は「罰」の話。こちらは他のクラブが損をした分を取り返しにいく話。ESPN（関係者の話）とデイリー・メール。
+    '
+  src: ESPN・デイリー・メール（9/26〜27）
+  url: https://www.espn.com/soccer/story/_/id/50032007/man-city-charges-115-premier-league-clubs-seeking-legal-advice
+  fmt: news
+- num: 7
+  slot: プレミア
+  head: マンCファンのノエル・ギャラガー「本当に悲しい」。ロイ・キーンは「罰を受け入れろ」
+  why: '有名人の反応を並べる回。9/26のロドリ・ロバートソンの回はクラブの中の声だったので、外からの声になる。
+    '
+  src: サッカーキング・デイリー・メール（9/27）
+  url: https://www.soccer-king.jp/news/world/eng/20260927/2209787.html
+  fmt: voices
+- num: 8
+  slot: ラリーガ
+  head: ヤマル、ウェンブリーのあとに「嫌われても好かれても構わない」。先制点は「高い位置から奪えと強く言われている」
+  why: '試合の回とは別に、本人の言葉だけで作る回。今朝のイングランド対スペインで先制点を取ったのがヤマル。
+    '
+  src: Barca Blaugranes・アス（9/27）
+  url: https://www.barcablaugranes.com/barcelona-internationals/133573/hate-me-or-love-me-i-dont-care-lamine-yamal-sends-message-after-spain-beat-england
+  fmt: quote
+- num: 9
+  slot: その他
+  head: ベリンガム、試合のあとペドリとフェランに見せたフェアプレー。スペインの記者は「完全なリーダー」
+  why: 'アスの動画の見出しだけで、中身をまだ確かめていない。
+    '
+  src: アス（9/27）
+  url: https://as.com/futbol/videos/es-un-lider-total-el-gesto-de-fair-play-de-bellingham-con-pedri-y-ferran-al-terminar-el-partido-f202609-v/
+  fmt: news
+  weak: true
+- num: 10
+  slot: プレミア
+  head: ピックフォードか、トラフォードか。イングランド代表の正GK争いが始まった
+  why: '長く正GKだったピックフォードに、シティのトラフォードが迫っている、というBBCの記事。スペイン戦の失点とあわせて。
+    '
+  src: BBC（9/27）
+  url: https://www.bbc.co.uk/sport/football/articles/ckm2qqpjv7nro
+  fmt: news
+- num: 11
+  slot: その他
+  head: アイルランド代表、イスラエル戦を選手の投票で予定どおり開催へ。GKバズヌは「信念の問題」と辞退
+  why: 'ホテルで4時間話し合ったうえでの投票。試合は日曜、ハンガリーのデブレツェンで。政治の話が絡む題材。
+    '
+  src: ESPN（9/27）
+  url: https://www.espn.com/soccer/story/_/id/50036685/gavin-bazunu-confirms-withdrawal-republic-of-ireland-matches-israel
+  fmt: news
+- num: 12
+  slot: その他
+  head: フリンポン、オランダ代表のセルビア戦でメンバー外。キャプテンのファン・ダイクは代表100試合が目前
+  why: 'UEFAが日曜に出した登録リストで分かった、という記事。リヴァプールの2人の話。
+    '
+  src: Voetbal International（9/27）
+  url: https://www.vi.nl/nieuws/frimpong-valt-buiten-oranje-selectie
+  fmt: news
+- num: 13
+  slot: ラリーガ
+  head: ラ・リーガ20クラブのうち、バルサにいたことのある選手がいないのは2クラブだけ
+  why: 'ラ・マシア出身の選手がリーグ中に散らばっている、という数え上げ。ラ・リーガ20クラブ紹介とつながる。バルサのファンサイトの記事なので、数え直しが要る。
+    '
+  src: Barca Universal（9/27）
+  url: https://barcauniversal.com/only-two-la-liga-clubs-have-no-player-with-a-barcelona-past-this-season
+  fmt: news
+  weak: true
+- num: 14
+  slot: プレミア
+  head: チェルシーのギテンス、U-21イングランド代表の試合で負傷。試合のあとは松葉杖
+  why: 'イブニング・スタンダードの報道。けがの程度はまだ分かっていない。
+    '
+  src: サッカーキング（9/27）
+  url: https://www.soccer-king.jp/news/world/eng/20260927/2209789.html
+  fmt: news
+- num: 15
+  slot: その他
+  head: 34歳のイングス、3部ウィコムに入った翌日に劇的な同点ゴール
+  why: '元リヴァプール・元イングランド代表。バーンリーで名を上げた選手の、キャリアの終盤の話。
+    '
+  src: サッカーキング（9/27）
+  url: https://www.soccer-king.jp/news/world/eng/20260927/2209752.html
+  fmt: news
