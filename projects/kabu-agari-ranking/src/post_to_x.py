@@ -18,6 +18,7 @@ from requests_oauthlib import OAuth1Session
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import aggregate
 import price_limit
 import site_config
 
@@ -78,12 +79,14 @@ def _build_tweet(payload: dict) -> str:
             stop = "（S高）"
         lines.append(f"{row['rank']}位 {_truncate(row['name'])} +{row['change_pct']:.2f}%{stop}")
 
-    stops = sum(
-        1 for r in gainers
-        if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-    )
+    # サイトと同じ数え方を使う。記録がある日はその日の全件、
+    # 無い日は上位30銘柄からの推定なので、断り方を変える。
+    stops, source = aggregate.stop_high_rows(payload)
     if stops:
-        lines.append(f"上位{len(gainers)}銘柄のうちストップ高は{stops}銘柄")
+        if source == "recorded":
+            lines.append(f"この日のストップ高は{len(stops)}銘柄")
+        else:
+            lines.append(f"上位{len(gainers)}銘柄のうちストップ高は{len(stops)}銘柄")
 
     lines.append("")
     lines.append(_day_url(payload["rec_date"]))

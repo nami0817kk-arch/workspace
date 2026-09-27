@@ -177,28 +177,49 @@ def flag_notes(rows: list[dict]) -> list[dict]:
     return seen
 
 
-def highlights(days: list[dict], stock_pages: set[str]) -> list[dict]:
-    """トップに出す「今日のハイライト」。
+# ハイライトの語彙。値上がりのページにはストップ高、値下がりのページには
+# ストップ安を出す。**逆を出さない**。値上がりランキングを見に来た人に
+# 「ストップ安 3銘柄」を見せても、そのページの話ではない。
+_HIGHLIGHT_SPECS = {
+    "gainers": {
+        "rows_fn": "stop_high_rows",
+        "term": "ストップ高",
+        "dir": "stop-high",
+        "move_label": "10%以上の上昇",
+    },
+    "losers": {
+        "rows_fn": "stop_low_rows",
+        "term": "ストップ安",
+        "dir": "stop-low",
+        "move_label": "10%以上の下落",
+    },
+}
+
+
+def highlights(days: list[dict], stock_pages: set[str], kind: str = "gainers") -> list[dict]:
+    """そのページに出す「今日のハイライト」。
 
     表の数字だけでは、その日が普通の日なのか特別な日なのかが分からない。
     数えれば言えることだけを、リンク付きで3つまで並べる。
+    **狭い画面では1行3枚に詰めてある**ので、4枚目を足すと2行になり、
+    せっかく上へ寄せた表がまた画面の外へ出る。
     """
-    if not days:
+    if not days or kind not in _HIGHLIGHT_SPECS:
         return []
+    spec = _HIGHLIGHT_SPECS[kind]
     today = days[0]
-    rows = today.get("gainers", [])
+    rows = today.get(kind, [])
     out = []
 
-    stops = [
-        r for r in rows
-        if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-    ]
+    # **ストップ高／ストップ安のページと同じ数え方を使う。** 押した先の数と
+    # 違う数を見出しに出すと、どちらが正しいのか読み手には確かめようがない。
+    stops, _ = getattr(aggregate, spec["rows_fn"])(today)
     if stops:
         out.append({
-            "label": "ストップ高",
+            "label": spec["term"],
             "value": f"{len(stops)}銘柄",
             "note": "、".join(r["name"] for r in stops[:3]) + ("ほか" if len(stops) > 3 else ""),
-            "href": "stop-high/index.html",
+            "href": f"{spec['dir']}/index.html",
         })
 
     # 連続でランクインしている銘柄（今日を含む連続日数が2日以上）
@@ -206,7 +227,7 @@ def highlights(days: list[dict], stock_pages: set[str]) -> list[dict]:
     streaks = []
     order = [d["rec_date"] for d in sorted(days, key=lambda d: d["rec_date"])]
     for stock in history:
-        dates = sorted({r["rec_date"] for r in stock["rows"] if r["kind"] == "gainers"})
+        dates = sorted({r["rec_date"] for r in stock["rows"] if r["kind"] == kind})
         if not dates or dates[-1] != today["rec_date"]:
             continue
         run, idx = 1, order.index(dates[-1])
@@ -223,9 +244,9 @@ def highlights(days: list[dict], stock_pages: set[str]) -> list[dict]:
             "href": f"stock/{stock['code']}/" if stock["code"] in stock_pages else "frequent.html",
         })
 
-    big = sum(1 for r in rows if abs(r["change_pct"]) >= 10)
+    big = sum(1 for r in rows if abs(r["change_pct"]) >= BIG_MOVE_PCT)
     out.append({
-        "label": "10%以上の上昇",
+        "label": spec["move_label"],
         "value": f"{big}銘柄",
         "note": f"上位{len(rows)}銘柄のうち",
         "href": "market.html",
@@ -703,8 +724,13 @@ def month_summary(month: dict) -> str:
         f"最も上昇したのは{format_date_short_ja(top['rec_date'])}の{top['name']}"
         f"（{top['code']}）で{top['change_pct']:.2f}%でした。"
     ]
-    if month["stop_highs"]:
-        parts.append(f"ストップ高はのべ{month['stop_highs']}銘柄。")
+    if month["stop_highs"] or month["stop_lows"]:
+        # 推定の日が混じる期間は、そう断る。件数の意味が日によって違う。
+        note = "（一部は値上がり・値下がり上位30銘柄からの推定）" if month["stops_estimated"] else ""
+        parts.append(
+            f"ストップ高はのべ{month['stop_highs']}銘柄、"
+            f"ストップ安はのべ{month['stop_lows']}銘柄{note}。"
+        )
     if month["frequent"]:
         parts.append(f"2回以上ランクインした銘柄は{len(month['frequent'])}銘柄です。")
     return "".join(parts)
@@ -951,7 +977,7 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                 metric_label=metric_label,
                 intro=intro_fmt.format(n=len(rows)),
                 summary=day_summary(rows, json_key),
-                highlights=highlights(days, stock_pages or set()) if json_key == "gainers" else [],
+                highlights=highlights(days, stock_pages or set(), json_key),
                 turnover=turnover_note(
                     rows, annotate_rows(days[1].get(json_key, [])) if len(days) > 1 else None
                 ),

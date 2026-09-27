@@ -691,3 +691,18 @@ def test_姉妹サイトへ戻る線がある(site):
     assert 'href="https://dailyquarry.com/"' in html
     # 自分自身は姉妹サイトに並べない
     assert html.count('href="https://kabu.dailyquarry.com/"') <= 1
+
+
+def test_印刷用のCSSに画面用の定義を混ぜない(tmp_path):
+    """@media print の中に .highlights 一式が丸ごと貼り込まれていた
+    （2026-09-27 に除去）。二重定義は、片方を直したときにもう片方が残る。"""
+    import re
+    css = (Path(__file__).resolve().parents[1] / "templates" / "base.html").read_text(
+        encoding="utf-8")
+    block = re.search(r"@media print \{(.*?)\n  \}", css, re.S)
+    assert block, "@media print のブロックが見つからない"
+    body = block.group(1)
+    # 印刷では「落とすもの」と「色を戻すもの」だけを書く。
+    # 画面用のレイアウトをここで組み直さない。
+    assert "grid-template-columns" not in body
+    assert "@media" not in body, "入れ子のメディアクエリが残っている"

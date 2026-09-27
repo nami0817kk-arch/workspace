@@ -41,6 +41,10 @@ FETCH_DONE_AT = time(16, 40)
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
+# ストップ高・ストップ安の一覧を記録し始めた日。これより前のファイルには
+# キーが無いのが正しいので、欠落として数えない。
+STOP_RECORDS_FROM = date(2026, 9, 28)
+
 
 def expected_rec_date(now: datetime, *, after_fetch: bool = False) -> date:
     """この時点で最新であるべき相場日。
@@ -62,6 +66,19 @@ def check(rec_date: date, now: datetime, *, after_fetch: bool = False) -> tuple[
     return behind, f"latest rec_date={rec_date} / 期待={expected} / 営業日で{behind}日ぶん遅れ"
 
 
+def missing_stop_records(payload: dict) -> list[str]:
+    """当日分に、ストップ高／ストップ安の記録が欠けていないか。
+
+    **0件の日は空リストが入る**ので、キーが無い＝1ページも取れなかった日。
+    ランキングのほうは取れているので鮮度の判定には引っかからず、
+    黙って推定にフォールバックしてしまう。**当日中しか取り直せない**ので、
+    気づけないことの損が大きい（翌日には取得元が次の営業日に切り替わる）。
+    """
+    if date.fromisoformat(payload["rec_date"]) < STOP_RECORDS_FROM:
+        return []
+    return [key for key in ("stop_high", "stop_low") if key not in payload]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="ランキングデータの鮮度を確認する")
     parser.add_argument(
@@ -76,7 +93,8 @@ def main() -> int:
         print(f"::error::{latest} がありません。")
         return 1
 
-    rec_date = date.fromisoformat(json.loads(latest.read_text(encoding="utf-8"))["rec_date"])
+    payload = json.loads(latest.read_text(encoding="utf-8"))
+    rec_date = date.fromisoformat(payload["rec_date"])
     now = datetime.now(JST)
     try:
         behind, message = check(rec_date, now, after_fetch=args.after_fetch)
