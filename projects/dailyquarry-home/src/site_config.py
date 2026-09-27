@@ -36,7 +36,7 @@ SITES = [
         "ads": True,
     },
     {
-        "name": "社会保険 加入判定チェッカー",
+        "name": "パートの社会保険 計算機",
         "url": "https://shaho.dailyquarry.com/",
         "summary": "週の労働時間・月収・勤務先の従業員数から、パート・アルバイトが社会保険の加入対象になるかと保険料の目安を出します。",
         "ads": True,

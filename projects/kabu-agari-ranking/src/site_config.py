@@ -38,7 +38,7 @@ ADSENSE_SLOT = os.environ.get("KABU_ADSENSE_SLOT", "")
 SIBLING_SITES = [
     {"url": "https://dailyquarry.com/", "name": "つるはし社", "note": "運営しているサイトの一覧"},
     {"url": "https://kakaku.dailyquarry.com/", "name": "楽天 値下がりウォッチ", "note": "毎日の値下がりと最安値圏"},
-    {"url": "https://shaho.dailyquarry.com/", "name": "社会保険 加入判定チェッカー", "note": "106万円の壁の判定"},
+    {"url": "https://shaho.dailyquarry.com/", "name": "パートの社会保険 計算機", "note": "106万円の壁の判定"},
 ]
 
 # 公開名義と連絡先。**個人名は出さない**（屋号で通す）。
