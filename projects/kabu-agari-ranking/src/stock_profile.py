@@ -16,6 +16,7 @@ import json
 import time
 from pathlib import Path
 
+import aggregate
 from kabutan import fetch_stock_page, parse_stock_profile
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
@@ -78,15 +79,20 @@ def label(profile: dict | None, *, unit: bool = True) -> str:
 def needed_codes(days: list[dict], stock_page_codes) -> list[str]:
     """属性を画面に出す銘柄のコード。
 
-    出すのは**銘柄ページを持つ銘柄**と**ストップ高になった銘柄**だけ。
+    出すのは**銘柄ページを持つ銘柄**と**ストップ高・ストップ安になった銘柄**。
     ランキングの表には出さない（列を増やすとスマホで銘柄名が折り返す。
     表の位置を 849px → 469px まで詰めた意味が消える）。
+
+    **記録のキーは `aggregate.LIMIT_KEYS` から引く。** ここで独自に
+    `"stop_high"` とだけ書いていたため、ストップ安の銘柄の属性を取りに行かず、
+    /stop-low/ の市場別・業種別の内訳が丸ごと出ていなかった（2026-09-28 に修正）。
     """
     codes = {str(c) for c in stock_page_codes}
     for day in days:
-        for row in day.get("stop_high") or []:
-            if row.get("at_limit"):
-                codes.add(str(row["code"]))
+        for key in aggregate.LIMIT_KEYS:
+            for row in day.get(key) or []:
+                if row.get("at_limit"):
+                    codes.add(str(row["code"]))
     return sorted(codes)
 
 

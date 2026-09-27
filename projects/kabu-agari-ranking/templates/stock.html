@@ -20,12 +20,15 @@
    PER や時価総額のような毎日変わる数字は置かない（古い数字を出すことになる）。 #}
 {% if profile %}<p class="stock-profile">{{ profile }}</p>{% endif %}
 <p class="summary">{{ summary }}</p>
-{# 「いっぱいまで動いた」と書くなら、その記録の置き場所まで案内する #}
+{# 「いっぱいまで動いた」と書くなら、その記録の置き場所まで案内する。
+   **数えているのはランキングに載った日のうち**なので、そう断る。
+   記録のページは全件を数えているので、同じ銘柄でも回数が違いうる。 #}
 {% if s.stop_highs or s.stop_lows %}
 <p class="stop-note">
-  {% if s.stop_highs %}この期間に<strong>ストップ高 {{ s.stop_highs }}回</strong>{% endif %}
+  ランキングに載った日のうち
+  {%- if s.stop_highs %}<strong>ストップ高 {{ s.stop_highs }}回</strong>{% endif %}
   {%- if s.stop_highs and s.stop_lows %}、{% endif %}
-  {%- if s.stop_lows %}<strong>ストップ安 {{ s.stop_lows }}回</strong>{% endif %}。
+  {%- if s.stop_lows %}<strong>ストップ安 {{ s.stop_lows }}回</strong>{% endif %}です。
   {% if s.stop_highs %}<a href="{{ base_url }}stop-high/index.html">ストップ高の記録</a>{% endif %}
   {%- if s.stop_highs and s.stop_lows %} ／ {% endif %}
   {%- if s.stop_lows %}<a href="{{ base_url }}stop-low/index.html">ストップ安の記録</a>{% endif %}

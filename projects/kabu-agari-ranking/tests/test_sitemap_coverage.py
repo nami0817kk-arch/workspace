@@ -167,3 +167,13 @@ def test_全ページが同じ見た目のファイルを指す(site):
         # 相対ではなくルートからの絶対パスで指すのが正しい。
         base = site if m.group(1).startswith("/") else path.parent
         assert (base / m.group(1).lstrip("/")).resolve().exists()
+
+
+def test_READMEのページ表に章が揃っている(site):
+    """章を足したときに README を直し忘れると、次に読む人が全体像を
+    取り違える（/stop-low/ が抜けていた）。"""
+    readme = (Path(__file__).resolve().parents[1] / "README.md").read_text(encoding="utf-8")
+    table = readme.split("## ページ", 1)[1].split("## 構成", 1)[0]
+    for section in ("/stop-high/", "/stop-low/", "/weekly/", "/monthly/",
+                    "/market", "/search", "/frequent"):
+        assert section in table, f"README のページ表に {section} が無い"
