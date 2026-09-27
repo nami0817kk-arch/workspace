@@ -64,20 +64,26 @@ def test_日付は和暦風の表記と曜日を出す():
 
 
 def test_次回更新予定は次の営業日():
-    assert "2026年9月18日（金）" in render.next_update_note("2026-09-17")
+    """**画面に出ているほう（updated_line）を見る。** 同じことをする関数が
+    2つあり、テストが出ていないほうを見ていた（2026-09-28 に片方を消した）。"""
+    line = render.updated_line("2026-09-17")
+    assert "9月18日（金）" in line
     # 連休を挟まないので、余計な但し書きは付けない
-    assert "休場" not in render.next_update_note("2026-09-17")
+    assert "休場" not in line
 
 
 def test_連休前は休場だと言う():
-    note = render.next_update_note("2026-09-18")
-    assert "2026年9月24日（木）" in note
-    assert "休場" in note
+    """連休中に来た人が「止まったサイト」と思って離れるのを防ぐ。"""
+    line = render.updated_line("2026-09-18")
+    assert "9月24日（木）" in line
+    assert "休場" in line
 
 
-def test_祝日表の範囲外なら黙る():
+def test_祝日表の範囲外なら次回を書かない():
     # 嘘の更新予定を出すくらいなら何も言わない
-    assert render.next_update_note("2030-05-07") == ""
+    line = render.updated_line("2030-05-07")
+    assert "次回" not in line
+    assert "更新: 2030年5月7日" in line
 
 
 def test_要約は首位と件数を数字で言う():

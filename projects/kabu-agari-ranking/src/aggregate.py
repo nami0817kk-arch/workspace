@@ -356,16 +356,6 @@ def limit_history(days: list[dict], kind: str) -> dict:
     return _limit_history(days, lambda day: limit_rows(day, kind), worst=side["worst"])
 
 
-def stop_high_history(days: list[dict]) -> dict:
-    """ストップ高の日別・銘柄別のまとめ。"""
-    return limit_history(days, "gainers")
-
-
-def stop_low_history(days: list[dict]) -> dict:
-    """ストップ安の日別・銘柄別のまとめ。"""
-    return limit_history(days, "losers")
-
-
 def stop_counts(days: list[dict]) -> dict:
     """その期間の、のべ件数と出どころ。
 

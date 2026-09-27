@@ -149,25 +149,6 @@ def updated_line(rec_date: str) -> str:
     return line
 
 
-def next_update_note(rec_date: str) -> str:
-    """「次回更新予定」の一文。休場を挟むときはそれも言う。
-
-    連休中に来た読者が「止まっているサイト」と思って離れるのを防ぐ。
-    最終更新日から次の営業日は決まるので、見る時刻によらず正しい。
-    """
-    d = date.fromisoformat(rec_date)
-    try:
-        nxt = next_business_day(d)
-    except CalendarOutOfRange:
-        # 祝日表の範囲外。嘘の予定を出すより黙る。
-        return ""
-    gap = (nxt - d).days
-    note = f"次回更新予定: {format_date_ja(nxt.isoformat())} の16時ごろ"
-    if gap > 1:
-        note += "（それまでは東証が休場のため、ランキングは更新されません）"
-    return note
-
-
 def missing_business_days(days: list[dict]) -> list[str]:
     """掲載期間のうち、データが無い営業日。
 
