@@ -104,29 +104,27 @@ class AdMobAdService implements AdService {
   @override
   Future<void> initialize() async {
     // 広告の中身は全年齢向け（G）まで。4+ のアプリに合わない広告を出さない（Apple 2.5.18）
-    await MobileAds.instance.updateRequestConfiguration(
-      RequestConfiguration(maxAdContentRating: MaxAdContentRating.g),
-    );
+    await MobileAds.instance.updateRequestConfiguration(RequestConfiguration(maxAdContentRating: MaxAdContentRating.g));
     await MobileAds.instance.initialize();
     _loadRewarded();
     _loadInterstitial();
   }
 
   void _loadRewarded() => _load(_rewardedSlot, _loadRewarded, (onLoaded, onFailed) {
-        return RewardedAd.load(
-          adUnitId: _rewardedUnitId,
-          request: const AdRequest(),
-          rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: onLoaded, onAdFailedToLoad: onFailed),
-        );
-      });
+    return RewardedAd.load(
+      adUnitId: _rewardedUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: onLoaded, onAdFailedToLoad: onFailed),
+    );
+  });
 
   void _loadInterstitial() => _load(_interstitialSlot, _loadInterstitial, (onLoaded, onFailed) {
-        return InterstitialAd.load(
-          adUnitId: _interstitialUnitId,
-          request: const AdRequest(),
-          adLoadCallback: InterstitialAdLoadCallback(onAdLoaded: onLoaded, onAdFailedToLoad: onFailed),
-        );
-      });
+    return InterstitialAd.load(
+      adUnitId: _interstitialUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(onAdLoaded: onLoaded, onAdFailedToLoad: onFailed),
+    );
+  });
 
   /// 1枠ぶんの読み込み。失敗したら間を空けて読み直し、読み込めたら期限の少し前に読み直す。
   void _load<T extends AdWithoutView>(
@@ -160,7 +158,10 @@ class AdMobAdService implements AdService {
         slot.ad = ad;
         slot.loadedAt = DateTime.now();
         // 期限が切れる前に、次を読み込んでおく（長く遊んだ後の最初のヒントで失敗しないように）
-        slot.timer = Timer(_maxAge, again);
+        slot.timer = Timer(_maxAge, () {
+          slot.loadedAt = null; // 端末の時計を戻されても、経過時間で必ず読み直す
+          again();
+        });
       }, (_) => failed()).catchError((_) => failed());
     } catch (_) {
       failed();
@@ -177,24 +178,33 @@ class AdMobAdService implements AdService {
   }
 
   /// 全画面の広告を出して、閉じられるまで待つ。出せなければ false。
-  Future<bool> _present(AdWithoutView ad, void Function(FullScreenContentCallback<AdWithoutView>) setCallback,
-      Future<void> Function() show) async {
+  ///
+  /// [keepAfterDismiss] が true なら、閉じた通知では広告を捨てない（呼んだ側が後で捨てる）。
+  /// 捨てた広告の通知はプラグインが握りつぶすので、閉じた後に届く報酬の通知を受けるにはこれが要る。
+  Future<bool> _present(
+    AdWithoutView ad,
+    void Function(FullScreenContentCallback<AdWithoutView>) setCallback,
+    Future<void> Function() show, {
+    bool keepAfterDismiss = false,
+  }) async {
     final closed = Completer<bool>();
     final started = Completer<void>();
-    setCallback(FullScreenContentCallback(
-      onAdShowedFullScreenContent: (_) {
-        if (!started.isCompleted) started.complete();
-      },
-      onAdDismissedFullScreenContent: (a) {
-        a.dispose();
-        if (!started.isCompleted) started.complete();
-        if (!closed.isCompleted) closed.complete(true);
-      },
-      onAdFailedToShowFullScreenContent: (a, _) {
-        a.dispose();
-        if (!closed.isCompleted) closed.complete(false);
-      },
-    ));
+    setCallback(
+      FullScreenContentCallback(
+        onAdShowedFullScreenContent: (_) {
+          if (!started.isCompleted) started.complete();
+        },
+        onAdDismissedFullScreenContent: (a) {
+          if (!keepAfterDismiss) a.dispose();
+          if (!started.isCompleted) started.complete();
+          if (!closed.isCompleted) closed.complete(true);
+        },
+        onAdFailedToShowFullScreenContent: (a, _) {
+          a.dispose();
+          if (!closed.isCompleted) closed.complete(false);
+        },
+      ),
+    );
     try {
       await show();
     } catch (_) {
@@ -231,9 +241,11 @@ class AdMobAdService implements AdService {
         onAdFailedToShowFullScreenContent: cb.onAdFailedToShowFullScreenContent,
       ),
       () => ad.show(onUserEarnedReward: (_, _) => earned = true),
+      keepAfterDismiss: true,
     );
-    // 閉じた通知が報酬の通知より先に届くことがあるので、少しだけ待つ
+    // 閉じた通知が報酬の通知より先に届くことがあるので、少しだけ待ってから捨てる
     if (shown && !earned) await Future<void>.delayed(_rewardGrace);
+    ad.dispose(); // 2回目の dispose はプラグイン側で何もしない
     _loadRewarded(); // 次のヒントのために先読み
     if (earned) return RewardResult.earned;
     return shown ? RewardResult.closedEarly : RewardResult.unavailable;

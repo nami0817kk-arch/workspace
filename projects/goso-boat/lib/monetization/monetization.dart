@@ -26,8 +26,8 @@ enum HintGate {
 /// - 広告を消す: 全画面広告が出なくなり、ヒントも動画なしで使える。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
-      : ads = ads ?? NoOpAdService(),
-        store = store ?? NoOpPurchaseService();
+    : ads = ads ?? NoOpAdService(),
+      store = store ?? NoOpPurchaseService();
 
   static const interstitialEvery = 3;
 
@@ -74,7 +74,10 @@ class Monetization extends ChangeNotifier {
       ads.ensureLoaded();
       return HintGate.unavailable;
     }
-    return switch (await ads.showRewardedAd()) {
+    final r = await ads.showRewardedAd();
+    // 動画を見ている間に「広告を消す」が届いた（家族の承認など）なら、そのままヒントを出す
+    if (adFree) return HintGate.granted;
+    return switch (r) {
       RewardResult.earned => HintGate.granted,
       RewardResult.closedEarly => HintGate.declined,
       RewardResult.unavailable => HintGate.unavailable,

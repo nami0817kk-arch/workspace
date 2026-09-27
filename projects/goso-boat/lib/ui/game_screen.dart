@@ -427,7 +427,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     } finally {
       // 広告の途中で何が起きても、ヒントのボタンと時計が止まったままにならないように
       _hintBusy = false;
-      if (mounted && phase == _Phase.play) _clock.start();
+      // アプリが前面にあるときだけ再開する（裏にいる間の時間を記録に入れない）
+      final life = WidgetsBinding.instance.lifecycleState ?? AppLifecycleState.resumed;
+      if (mounted && phase == _Phase.play && life == AppLifecycleState.resumed) _clock.start();
     }
     if (!mounted || phase != _Phase.play) return;
     if (gate == HintGate.declined) {

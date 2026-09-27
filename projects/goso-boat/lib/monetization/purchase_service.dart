@@ -87,10 +87,13 @@ class StorePurchaseService implements PurchaseService {
 
   @override
   Future<void> initialize() async {
-    _subscription = _iap.purchaseStream.listen(_onUpdate, onError: (_) {
-      _finish(_buying, PurchaseOutcome.failed);
-      _finish(_restoring, PurchaseOutcome.failed);
-    });
+    _subscription = _iap.purchaseStream.listen(
+      _onUpdate,
+      onError: (_) {
+        _finish(_buying, PurchaseOutcome.failed);
+        _finish(_restoring, PurchaseOutcome.failed);
+      },
+    );
   }
 
   Future<void> _onUpdate(List<PurchaseDetails> purchases) async {
@@ -167,6 +170,7 @@ class StorePurchaseService implements PurchaseService {
     final c = _buying = Completer<PurchaseOutcome>();
     try {
       final product = await _load();
+      if (c.isCompleted) return await c.future; // 取得中に購入が届いた（起動時の再送・家族の承認）
       if (product == null) {
         _finish(c, PurchaseOutcome.unavailable);
         return await c.future;
@@ -175,10 +179,13 @@ class StorePurchaseService implements PurchaseService {
       if (!started) _finish(c, PurchaseOutcome.failed);
       // StoreKit 2 では購入の画面が閉じてから戻り、結果は通知で届く。
       // 通知が来ないまま待ち続けないための上限（届けば onDelivered で広告は消える）
-      return await c.future.timeout(const Duration(minutes: 5), onTimeout: () {
-        _finish(c, PurchaseOutcome.canceled);
-        return PurchaseOutcome.canceled;
-      });
+      return await c.future.timeout(
+        const Duration(minutes: 5),
+        onTimeout: () {
+          _finish(c, PurchaseOutcome.canceled);
+          return PurchaseOutcome.canceled;
+        },
+      );
     } catch (_) {
       _finish(c, PurchaseOutcome.failed);
       return c.future;
@@ -194,13 +201,22 @@ class StorePurchaseService implements PurchaseService {
       // StoreKit 2 の restorePurchases は、手元の購入の記録を通知に流してすぐ戻る。
       // 通知は少し遅れて届くので短く待ち、来なければ「対象なし」で確定する
       await _iap.restorePurchases();
-      return await c.future.timeout(const Duration(seconds: 3), onTimeout: () {
-        _finish(c, PurchaseOutcome.unavailable);
-        return PurchaseOutcome.unavailable;
-      });
+      return await c.future.timeout(
+        const Duration(seconds: 3),
+        onTimeout: () {
+          _finish(c, PurchaseOutcome.unavailable);
+          return PurchaseOutcome.unavailable;
+        },
+      );
     } catch (_) {
-      _finish(c, PurchaseOutcome.failed);
-      return c.future;
+      // 確認できない購入が混じるとエラーで戻るが、確認できた分は通知で届く。少し待ってから失敗にする
+      return await c.future.timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {
+          _finish(c, PurchaseOutcome.failed);
+          return PurchaseOutcome.failed;
+        },
+      );
     }
   }
 
