@@ -399,7 +399,7 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
         raise ValueError(f"KDP の最小ページ数 {kdp_spec.MIN_PAGES} に足りない: {total}")
     pal = spec.palette
 
-    c = canvas.Canvas(output_path, pagesize=(trim.width_in * inch, trim.height_in * inch))
+    c = canvas.Canvas(output_path, pagesize=(trim.width_in * inch, trim.height_in * inch), initialFontName=FONT_REGULAR)
     c.setTitle(spec.title)
     c.setAuthor(spec.publisher)
     c.setCreator(spec.publisher)
@@ -608,7 +608,7 @@ def _page_preview(spec: KotobaSpec, puzzles: list[dict], idx: int, width_pt: flo
     trim = kdp_spec.TRIMS[spec.trim]
     page_w, page_h = trim.width_in * inch, trim.height_in * inch
     buf = io.BytesIO()
-    pc = canvas.Canvas(buf, pagesize=(page_w, page_h))
+    pc = canvas.Canvas(buf, pagesize=(page_w, page_h), initialFontName=FONT_REGULAR)
     m = 0.6 * inch
     draw_problem_page(pc, puzzles[idx], idx + 1, spec.themes[idx].get("icon"),
                       left=m, right=page_w - m, top=page_h - m, bottom=m, palette=spec.palette,
@@ -657,7 +657,7 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     blue: CMYK = (0.90, 0.55, 0.0, 0.10)
     shadow: CMYK = (0.0, 0.10, 0.25, 0.12)  # 影は濃い地色で描く（透明度は使わない）
 
-    c = canvas.Canvas(output_path, pagesize=(W, H))
+    c = canvas.Canvas(output_path, pagesize=(W, H), initialFontName=FONT_REGULAR)  # 初期値の Helvetica（埋め込みなし）を使わない
     c.setTitle(f"{spec.title}（表紙）")
     c.setAuthor(spec.publisher)
     c.setFillColorCMYK(*warm)

@@ -188,3 +188,26 @@ def test_cover_texts_do_not_overlap(built):
             ox = min(a[2], b[2]) - max(a[0], b[0])
             oy = min(a[3], b[3]) - max(a[1], b[1])
             assert not (ox > 1 and oy > 1), (ta, tb)
+
+
+def test_all_fonts_embedded(built):
+    """KDP は書体をすべて埋め込むよう求める。reportlab の初期値（Helvetica・Times-Roman）が
+    埋め込みなしで紛れ込んでいたことがある（2026-09-27 の最終点検で見つけた）。"""
+    import pymupdf
+
+    _, _, interior, cover, _ = built
+    for path in (interior, cover):
+        missing = {f[3] for page in pymupdf.open(str(path)) for f in page.get_fonts() if f[1] == "n/a"}
+        assert not missing, (path.name, missing)
+
+
+def test_cover_uses_cmyk_only(built):
+    """KDP は表紙を CMYK で求める。図形の描画の初期値の黒（RGB）が紛れ込んでいたことがある。"""
+    import re
+
+    import pymupdf
+
+    _, _, _, cover, _ = built
+    doc = pymupdf.open(str(cover))
+    raw = b"".join(doc.xref_stream(x) for x in doc[0].get_contents())
+    assert not re.findall(rb"(?<![\w.])(?:[\d.]+\s+){3}(?:rg|RG)(?!\w)", raw)

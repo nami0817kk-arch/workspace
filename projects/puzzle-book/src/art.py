@@ -13,7 +13,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from reportlab.graphics import renderPDF
-from reportlab.graphics.shapes import Drawing, Group
+from reportlab.graphics.shapes import STATE_DEFAULTS, Drawing, Group
 from reportlab.lib.colors import CMYKColor, Color
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -23,6 +23,12 @@ from svglib.svglib import svg2rlg
 _ASSETS = Path(__file__).resolve().parent.parent / "assets"
 FONT_ROUNDED = "MPLUSRounded1c-ExtraBold"
 pdfmetrics.registerFont(TTFont(FONT_ROUNDED, str(_ASSETS / "fonts" / "MPLUSRounded1c-ExtraBold.ttf")))
+
+# 図形の描画（renderPDF）は、描き始めに「黒=RGB、書体=Times-Roman」を書き込む。
+# KDP は表紙を CMYK で、書体はすべて埋め込みで求めるので、初期値を差し替える（2026-09-27 の最終点検で見つけた）
+STATE_DEFAULTS.update(
+    fontName=FONT_ROUNDED, fillColor=CMYKColor(0, 0, 0, 1), strokeColor=CMYKColor(0, 0, 0, 1)
+)
 
 ICON_CREDIT = "イラスト: Noto Emoji（Google、SIL Open Font License 1.1）"
 
