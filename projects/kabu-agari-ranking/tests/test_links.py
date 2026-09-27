@@ -22,17 +22,23 @@ def built(tmp_path_factory):
     tmp_path = tmp_path_factory.mktemp("site")
     data_dir = tmp_path / "data"
     data_dir.mkdir()
-    # 週をまたぐ数日分（週まとめの前後ナビも張られる状態にする）
+    # 週をまたぐ数日分（週まとめの前後ナビも張られる状態にする）。
+    # **掲載を始めた頃は値上がりしか取っていない日がある。** その日を混ぜないと、
+    # 「値下がりアーカイブへのリンク」を張っている章の切れを見逃す
+    # （ストップ安の一覧が 2026-08-24 へ張って 404 になっていた）。
     for rec_date in ("2026-09-14", "2026-09-15", "2026-09-18", "2026-09-24"):
+        gainers_only = rec_date == "2026-09-14"
         payload = {
             "rec_date": rec_date,
             "gainers": [{"rank": i + 1, "code": f"{7200 + i}", "name": f"銘柄{i}",
                          "close": 900.0, "change_pct": 12.0 - i, "metric_value": 500}
                         for i in range(3)],
-            "losers": [{"rank": 1, "code": "6501", "name": "下落銘柄",
-                        "close": 500.0, "change_pct": -8.0, "metric_value": 200}],
-            "active": [{"rank": 1, "code": "7203", "name": "活況銘柄",
-                        "close": 2500.0, "change_pct": 1.0, "metric_value": 9999}],
+            "losers": [] if gainers_only else [
+                {"rank": 1, "code": "6501", "name": "下落銘柄",
+                 "close": 500.0, "change_pct": -8.0, "metric_value": 200}],
+            "active": [] if gainers_only else [
+                {"rank": 1, "code": "7203", "name": "活況銘柄",
+                 "close": 2500.0, "change_pct": 1.0, "metric_value": 9999}],
         }
         (data_dir / f"{rec_date}.json").write_text(
             json.dumps(payload, ensure_ascii=False), encoding="utf-8"

@@ -4,9 +4,18 @@
 {% block content %}
 <h1>週ごとのまとめ</h1>
 <p>営業日ごとのランキングを、週（月曜〜金曜）単位で集計したものです。</p>
+{# 日付だけを並べても、どの週を開けばよいか決められない。
+   月の一覧と同じく、その週に何があったかを1行で見せる。 #}
 <div class="archive-list">
   {% for w in weeks %}
-  <a href="{{ w.slug }}.html">{{ w.from_ja }} 〜 {{ w.to_ja }}（{{ w.day_count }}営業日）</a>
+  <a href="{{ w.slug }}.html">
+    <span class="archive-date">{{ w.from_ja }} 〜 {{ w.to_ja }}</span>
+    <span class="archive-top">
+      {{ w.day_count }}営業日
+      {%- if w.top_movers %} ／ 最大 {{ w.top_movers[0].name }} {{ "%+.2f"|format(w.top_movers[0].change_pct) }}%{% endif %}
+      {%- if w.stop_highs %} ／ ストップ高 のべ{{ w.stop_highs }}銘柄{% endif %}
+    </span>
+  </a>
   {% endfor %}
 </div>
 {% endblock %}

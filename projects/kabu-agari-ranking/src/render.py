@@ -556,6 +556,14 @@ def week_summary(week: dict) -> str:
     ]
     if repeat:
         parts.append(f"この週に2回以上ランキングへ入った銘柄は{repeat}銘柄です。")
+    # 月まとめと同じことを書く。週は「その週に何が起きたか」を見る場所なのに、
+    # 数えてあるストップ高・ストップ安をどこにも出していなかった（2026-09-27）。
+    if week["stop_highs"] or week["stop_lows"]:
+        note = "（一部は上位30銘柄からの推定）" if week["stops_estimated"] else ""
+        parts.append(
+            f"ストップ高はのべ{week['stop_highs']}銘柄、"
+            f"ストップ安はのべ{week['stop_lows']}銘柄{note}。"
+        )
     return "".join(parts)
 
 
@@ -797,10 +805,15 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], spec: dict,
     """ストップ高／ストップ安の章。当日のランキングはどこにでもあるが、
     「いつ・どの銘柄が上限（下限）まで動いたか」を日をまたいで残している場所は少ない。"""
     history = getattr(aggregate, spec["history"])(days)
+    # その日のアーカイブが**ある日だけ**リンクにする。掲載を始めた頃は
+    # 値上がりランキングしか取っていない日があり、ストップ安の一覧から
+    # 値下がりアーカイブへ張ると 404 になる（2026-08-24 で実際に切れていた）。
+    has_archive = {d["rec_date"] for d in days if d.get(spec["archive"])}
     per_day = [
         {
             **day,
             "rec_date_ja": format_date_ja(day["rec_date"]),
+            "has_archive": day["rec_date"] in has_archive,
             # 一覧の時点で顔ぶれが見えるようにする（3件まで）
             "names": "、".join(r["name"] for r in day["rows"][:3])
                      + ("ほか" if len(day["rows"]) > 3 else ""),
@@ -1087,6 +1100,9 @@ def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict],
         for name in (
             "index.html", "losers.html", "active.html",
             "about.html", "frequent.html", "search.html",
+            # market.html が抜けていて、相場の振り返りだけ検索側に
+            # 知らせていなかった（2026-09-27 に気づいた）。
+            "market.html",
         )
     ]
     # 文章だけのページは毎日変わらない。データの日付を書くと

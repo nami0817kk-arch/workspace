@@ -147,3 +147,31 @@ def test_記録を始める前の日は欠落として数えない():
     import check_freshness
     payload = {"rec_date": "2026-09-18", "gainers": []}
     assert check_freshness.missing_stop_records(payload) == []
+
+
+# --- 数えたのに出していない ---------------------------------------------------
+
+def test_週まとめもストップ高とストップ安を出す():
+    """週は「その週に何が起きたか」を見る場所。数えてあるのに
+    どこにも出していなかった（月まとめだけ出していた）。"""
+    week = {
+        "day_count": 1, "stop_highs": 31, "stop_lows": 2, "stops_estimated": False,
+        "from": "2026-09-28", "to": "2026-09-28",
+        "top_movers": [{"rec_date": "2026-09-28", "name": "銘柄1", "code": "1001",
+                        "change_pct": 44.25}],
+        "frequent": [],
+    }
+    text = render.week_summary(week)
+    assert "ストップ高はのべ31銘柄" in text
+    assert "ストップ安はのべ2銘柄" in text
+
+
+def test_週まとめも推定が混じればそう断る():
+    week = {
+        "day_count": 1, "stop_highs": 5, "stop_lows": 0, "stops_estimated": True,
+        "from": "2026-09-18", "to": "2026-09-18",
+        "top_movers": [{"rec_date": "2026-09-18", "name": "銘柄1", "code": "1001",
+                        "change_pct": 44.25}],
+        "frequent": [],
+    }
+    assert "推定" in render.week_summary(week)

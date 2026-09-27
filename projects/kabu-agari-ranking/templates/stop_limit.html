@@ -120,13 +120,15 @@
 <h2>日ごとの記録</h2>
 <div class="archive-list">
   {% for day in per_day %}
-  <a href="{{ base_url }}archive/{{ spec.archive }}/{{ day.rec_date }}.html">
+  {# その日のアーカイブが無い日はリンクにしない（掲載開始の頃は
+     値上がりランキングしか取っていない日がある） #}
+  {% if day.has_archive %}<a href="{{ base_url }}archive/{{ spec.archive }}/{{ day.rec_date }}.html">{% else %}<div class="archive-plain">{% endif %}
     <span class="archive-date">{{ day.rec_date_ja }}</span>
     <span class="archive-top">
       {% if day.count %}{{ spec.term }} {{ day.count }}銘柄 ／ {{ day.names }}{% else %}{{ spec.term }}なし{% endif %}
       {% if day.source == "estimated" %}<span class="badge">上位30銘柄から推定</span>{% endif %}
     </span>
-  </a>
+  {% if day.has_archive %}</a>{% else %}</div>{% endif %}
   {% endfor %}
 </div>
 
