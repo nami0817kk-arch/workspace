@@ -605,12 +605,27 @@ extension GameStateMatch on GameState {
 
     var income = weeklyIncomeFor(_save!.userTeamId);
     final isDerby = userFixture != null && isRivalFixture(userFixture);
+
+    // ダービーは客が増える。ただし**入れる人数以上からは入場料を取れない**。
+    // 観客数だけを収容人数で頭打ちにして、収入には倍率をそのまま掛けていた
+    // ため、「満員」と出ているのに収入はその1.5倍、という食い違いがあった。
+    // 実際に入った人数の比で掛ける。空席があるダービーでは今まで通り伸び、
+    // 既に満員に近いクラブでは伸びしろが小さくなる。
+    final baseAttendance = expectedAttendance;
+    var attendance = baseAttendance;
     if (isDerby) {
-      income = (income * GameState.derbyAttendanceMultiplier).round();
+      attendance =
+          (attendance * GameState.derbyAttendanceMultiplier).round();
     }
-    var attendance = expectedAttendance;
-    if (isDerby) attendance = (attendance * GameState.derbyAttendanceMultiplier).round();
-    lastMatchAttendance = attendance.clamp(0, stadiumCapacity);
+    final actualAttendance = attendance.clamp(0, stadiumCapacity);
+    lastMatchAttendance = actualAttendance;
+    if (isDerby) {
+      income = GameState.derbyAdjustedIncome(
+        income,
+        baseAttendance: baseAttendance,
+        actualAttendance: actualAttendance,
+      );
+    }
     _save!.budget += income;
     _save!.budget -= weeklyWageBill;
 
