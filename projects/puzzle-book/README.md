@@ -80,6 +80,7 @@ python src/build_cover.py books/vol1.json   # 表紙 -> output/vol1-cover.pdf
 
 ```
 python tools/qa_kotoba.py      # 50項目。入稿の直前に必ず回し、50/50 を確かめる
+python tools/qa_notore.py      # あたまの体操の50項目。計算・時計の針・迷路・絵さがしの丸を紙面から読み直す
 python tools/solve_from_pdf.py # 紙面だけを読んで全問を解き、答えの帯と照合する（60/60）
 ```
 
