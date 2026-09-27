@@ -90,15 +90,16 @@ class AdMobAdService implements AdService {
   static bool get isUsingTestUnitId =>
       _rewardedUnitId.startsWith(_testUnitIdPrefix) || _interstitialUnitId.startsWith(_testUnitIdPrefix);
 
-  RewardedAd? _rewarded;
-  DateTime? _rewardedAt;
-  bool _loadingRewarded = false;
-  Timer? _rewardedRetry;
+  /// 読み込み中のまま返事が来ないときの上限（これを過ぎたら読み直してよい）。
+  static const _loadTimeout = Duration(minutes: 1);
 
-  InterstitialAd? _interstitial;
-  DateTime? _interstitialAt;
-  bool _loadingInterstitial = false;
-  Timer? _interstitialRetry;
+  /// 動画を閉じた通知が、報酬の通知より先に届いたときに待つ時間。
+  static const _rewardGrace = Duration(milliseconds: 500);
+
+  bool _disposed = false;
+
+  final _rewardedSlot = _Slot<RewardedAd>();
+  final _interstitialSlot = _Slot<InterstitialAd>();
 
   @override
   Future<void> initialize() async {
@@ -111,69 +112,63 @@ class AdMobAdService implements AdService {
     _loadInterstitial();
   }
 
-  bool _fresh(DateTime? at) => at != null && DateTime.now().difference(at) < _maxAge;
+  void _loadRewarded() => _load(_rewardedSlot, _loadRewarded, (onLoaded, onFailed) {
+        return RewardedAd.load(
+          adUnitId: _rewardedUnitId,
+          request: const AdRequest(),
+          rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: onLoaded, onAdFailedToLoad: onFailed),
+        );
+      });
 
-  void _loadRewarded() {
-    if (_loadingRewarded) return;
-    if (_rewarded != null && _fresh(_rewardedAt)) return;
-    _rewarded?.dispose();
-    _rewarded = null;
-    _loadingRewarded = true;
-    _rewardedRetry?.cancel();
-    try {
-      RewardedAd.load(
-        adUnitId: _rewardedUnitId,
-        request: const AdRequest(),
-        rewardedAdLoadCallback: RewardedAdLoadCallback(
-          onAdLoaded: (ad) {
-            _rewarded = ad;
-            _rewardedAt = DateTime.now();
-            _loadingRewarded = false;
-          },
-          // 在庫切れ・通信断は珍しくない。間を空けて読み直す
-          onAdFailedToLoad: (_) {
-            _loadingRewarded = false;
-            _rewardedRetry = Timer(_retryAfter, _loadRewarded);
-          },
-        ),
-      );
-    } catch (_) {
-      _loadingRewarded = false;
-      _rewardedRetry = Timer(_retryAfter, _loadRewarded);
+  void _loadInterstitial() => _load(_interstitialSlot, _loadInterstitial, (onLoaded, onFailed) {
+        return InterstitialAd.load(
+          adUnitId: _interstitialUnitId,
+          request: const AdRequest(),
+          adLoadCallback: InterstitialAdLoadCallback(onAdLoaded: onLoaded, onAdFailedToLoad: onFailed),
+        );
+      });
+
+  /// 1枠ぶんの読み込み。失敗したら間を空けて読み直し、読み込めたら期限の少し前に読み直す。
+  void _load<T extends AdWithoutView>(
+    _Slot<T> slot,
+    void Function() again,
+    Future<void> Function(void Function(T) onLoaded, void Function(LoadAdError) onFailed) start,
+  ) {
+    if (_disposed || slot.ready) return;
+    // 読み込み中でも、返事が来ないまま長く経っていれば読み直す
+    if (slot.loadingSince != null && DateTime.now().difference(slot.loadingSince!) < _loadTimeout) return;
+    slot.clear();
+    final token = Object();
+    slot.loadingToken = token;
+    slot.loadingSince = DateTime.now();
+    void failed() {
+      if (_disposed || !identical(slot.loadingToken, token)) return;
+      slot.loadingToken = null;
+      slot.loadingSince = null;
+      // 在庫切れ・通信断は珍しくない。間を空けて読み直す
+      slot.timer = Timer(_retryAfter, again);
     }
-  }
 
-  void _loadInterstitial() {
-    if (_loadingInterstitial) return;
-    if (_interstitial != null && _fresh(_interstitialAt)) return;
-    _interstitial?.dispose();
-    _interstitial = null;
-    _loadingInterstitial = true;
-    _interstitialRetry?.cancel();
     try {
-      InterstitialAd.load(
-        adUnitId: _interstitialUnitId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (ad) {
-            _interstitial = ad;
-            _interstitialAt = DateTime.now();
-            _loadingInterstitial = false;
-          },
-          onAdFailedToLoad: (_) {
-            _loadingInterstitial = false;
-            _interstitialRetry = Timer(_retryAfter, _loadInterstitial);
-          },
-        ),
-      );
+      start((ad) {
+        if (_disposed || !identical(slot.loadingToken, token)) {
+          ad.dispose();
+          return;
+        }
+        slot.loadingToken = null;
+        slot.loadingSince = null;
+        slot.ad = ad;
+        slot.loadedAt = DateTime.now();
+        // 期限が切れる前に、次を読み込んでおく（長く遊んだ後の最初のヒントで失敗しないように）
+        slot.timer = Timer(_maxAge, again);
+      }, (_) => failed()).catchError((_) => failed());
     } catch (_) {
-      _loadingInterstitial = false;
-      _interstitialRetry = Timer(_retryAfter, _loadInterstitial);
+      failed();
     }
   }
 
   @override
-  bool get isRewardedAdReady => _rewarded != null && _fresh(_rewardedAt);
+  bool get isRewardedAdReady => _rewardedSlot.ready;
 
   @override
   void ensureLoaded() {
@@ -185,9 +180,14 @@ class AdMobAdService implements AdService {
   Future<bool> _present(AdWithoutView ad, void Function(FullScreenContentCallback<AdWithoutView>) setCallback,
       Future<void> Function() show) async {
     final closed = Completer<bool>();
+    final started = Completer<void>();
     setCallback(FullScreenContentCallback(
+      onAdShowedFullScreenContent: (_) {
+        if (!started.isCompleted) started.complete();
+      },
       onAdDismissedFullScreenContent: (a) {
         a.dispose();
+        if (!started.isCompleted) started.complete();
         if (!closed.isCompleted) closed.complete(true);
       },
       onAdFailedToShowFullScreenContent: (a, _) {
@@ -201,26 +201,39 @@ class AdMobAdService implements AdService {
       ad.dispose();
       return false;
     }
-    return closed.future.timeout(_showTimeout, onTimeout: () => false);
+    // 表示が始まらないまま返事が無いときだけ打ち切る。始まった後は、広告から App Store へ
+    // 行って長く戻らなくても、閉じられるまで待つ（途中で打ち切ると、見終えた報酬を取りこぼす）
+    final began = await Future.any([
+      started.future.then((_) => true),
+      closed.future.then((_) => true),
+      Future.delayed(_showTimeout, () => false),
+    ]);
+    if (!began) {
+      ad.dispose();
+      return false;
+    }
+    return closed.future;
   }
 
   @override
   Future<RewardResult> showRewardedAd() async {
-    final ad = _rewarded;
-    if (ad == null || !_fresh(_rewardedAt)) {
+    final ad = _rewardedSlot.take();
+    if (ad == null) {
       _loadRewarded();
       return RewardResult.unavailable;
     }
-    _rewarded = null;
     var earned = false;
     final shown = await _present(
       ad,
       (cb) => ad.fullScreenContentCallback = FullScreenContentCallback<RewardedAd>(
+        onAdShowedFullScreenContent: cb.onAdShowedFullScreenContent,
         onAdDismissedFullScreenContent: cb.onAdDismissedFullScreenContent,
         onAdFailedToShowFullScreenContent: cb.onAdFailedToShowFullScreenContent,
       ),
       () => ad.show(onUserEarnedReward: (_, _) => earned = true),
     );
+    // 閉じた通知が報酬の通知より先に届くことがあるので、少しだけ待つ
+    if (shown && !earned) await Future<void>.delayed(_rewardGrace);
     _loadRewarded(); // 次のヒントのために先読み
     if (earned) return RewardResult.earned;
     return shown ? RewardResult.closedEarly : RewardResult.unavailable;
@@ -228,16 +241,16 @@ class AdMobAdService implements AdService {
 
   @override
   Future<bool> showInterstitialAd() async {
-    final ad = _interstitial;
-    if (ad == null || !_fresh(_interstitialAt)) {
+    final ad = _interstitialSlot.take();
+    if (ad == null) {
       _loadInterstitial();
       return false;
     }
-    _interstitial = null;
     // 閉じられるまで待たないと、広告の裏で次の面が始まってしまう
     final shown = await _present(
       ad,
       (cb) => ad.fullScreenContentCallback = FullScreenContentCallback<InterstitialAd>(
+        onAdShowedFullScreenContent: cb.onAdShowedFullScreenContent,
         onAdDismissedFullScreenContent: cb.onAdDismissedFullScreenContent,
         onAdFailedToShowFullScreenContent: cb.onAdFailedToShowFullScreenContent,
       ),
@@ -249,12 +262,50 @@ class AdMobAdService implements AdService {
 
   @override
   void dispose() {
-    _rewardedRetry?.cancel();
-    _interstitialRetry?.cancel();
-    _rewarded?.dispose();
-    _rewarded = null;
-    _interstitial?.dispose();
-    _interstitial = null;
+    _disposed = true;
+    _rewardedSlot.clear();
+    _interstitialSlot.clear();
+  }
+}
+
+/// 読み込んだ広告1本と、その読み込みの状態。
+class _Slot<T extends AdWithoutView> {
+  T? ad;
+  DateTime? loadedAt;
+
+  /// 読み込み中の印（古い読み込みの返事を見分ける）と、始めた時刻。
+  Object? loadingToken;
+  DateTime? loadingSince;
+
+  /// 読み直しの予約（失敗後の再試行、または期限切れの前の読み直し）。
+  Timer? timer;
+
+  bool get ready => ad != null && loadedAt != null && DateTime.now().difference(loadedAt!) < AdMobAdService._maxAge;
+
+  /// 出せる広告を取り出す（取り出したら枠は空になる）。期限切れなら捨てて null。
+  T? take() {
+    final a = ready ? ad : null;
+    if (a != null) {
+      ad = null;
+      loadedAt = null;
+      timer?.cancel();
+    } else if (ad != null) {
+      // 期限切れ。読み込み中の分は触らない
+      ad!.dispose();
+      ad = null;
+      loadedAt = null;
+    }
+    return a;
+  }
+
+  void clear() {
+    timer?.cancel();
+    timer = null;
+    ad?.dispose();
+    ad = null;
+    loadedAt = null;
+    loadingToken = null;
+    loadingSince = null;
   }
 }
 

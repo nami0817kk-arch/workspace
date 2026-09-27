@@ -55,7 +55,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       PurchaseOutcome.unavailable => t.purchaseNothing,
       PurchaseOutcome.failed => t.purchaseFailed,
     };
-    if (msg != null) messenger.showSnackBar(SnackBar(content: Text(msg)));
+    if (msg != null) {
+      messenger.removeCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(msg)));
+    }
   }
 
   Future<void> _reset() async {

@@ -124,8 +124,12 @@ jobs:
             echo "::error::Info.plist にテスト用IDが残っています。置換に失敗しました。"
             exit 1
           fi
-          [ "$(plutil -extract GADApplicationIdentifier raw ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ]             || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
+          [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ]             || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
           echo "Info.plist の GADApplicationIdentifier を本番IDに置き換えました。"
+          # 設定画面のリンク先（lib/app/links.dart の既定）が開けること。404 のまま出すと審査で却下される
+          for page in privacy support; do
+            curl -fsSL -o /dev/null "https://goso-boat.pages.dev/$page.html"               || { echo "::error::https://goso-boat.pages.dev/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
+          done
 
       - name: Import signing certificate into a temporary keychain
         env:

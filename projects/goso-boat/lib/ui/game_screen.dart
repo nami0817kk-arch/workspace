@@ -138,7 +138,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      if (phase != _Phase.won && phase != _Phase.failed) _clock.start();
+      // 動画広告から App Store へ行って戻ったときなど、ヒントの待ち中は止めたまま（_hint が再開する）
+      if (phase != _Phase.won && phase != _Phase.failed && !_hintBusy) _clock.start();
     } else {
       _clock.stop();
       if (phase == _Phase.play) _saveResume();

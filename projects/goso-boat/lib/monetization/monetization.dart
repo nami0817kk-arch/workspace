@@ -46,6 +46,8 @@ class Monetization extends ChangeNotifier {
   }
 
   Future<void> _setAdFree() async {
+    // 読み込み済みの広告と、電波が無いときの読み直しを止める
+    if (!adFree) ads.dispose();
     await _prefs.setBool('adFree', true);
     notifyListeners();
   }

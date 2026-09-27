@@ -393,7 +393,10 @@ class _RemoveAdsState extends State<_RemoveAds> {
       PurchaseOutcome.unavailable => restore ? t.purchaseNothing : t.purchaseFailed,
       PurchaseOutcome.failed => t.purchaseFailed,
     };
-    if (msg != null) messenger.showSnackBar(SnackBar(content: Text(msg)));
+    if (msg != null) {
+      messenger.removeCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(msg)));
+    }
   }
 
   @override
