@@ -21,6 +21,20 @@ thumbnail:
   line1: マンCに賠償請求へ、4クラブ
   line2: 最初に通知したのは●●●●●
 sections:
+  - id: report
+    heading: 違反の報道
+    tier: 報道
+    telop: 115件のほとんどで違反と報道
+    narrator: キャスター
+    say:
+      - text: マンCが、115件の告発のほとんどで違反と判断された、という報道。
+        image: assets/images/20260927c_pair_kroenke_khaldoon/01.jpg
+      - 正式な発表は、まだありません。
+    sources:
+      - https://www.independent.co.uk/sport/football/man-city-verdict-premier-league-man-utd-arsenal-liverpool-compensation-b3056684.html
+      - https://www.espn.com/soccer/story/_/id/50032007/man-city-charges-115-premier-league-clubs-seeking-legal-advice-amid-expected-guilty-verdicts
+      - https://www.bbc.co.uk/sport/football/articles/cr89jjwy4nqpo
+      - https://www.dailymail.com/sport/football/article-16162559/Furious-Premier-League-clubs-set-trigger-800MILLION-lawsuits-against-Man-City-seismic-115-charges-verdict-lawyers-prepare-case-drag-TWO-YEARS.html
   - id: four
     heading: 権利を残した4クラブ
     tier: 報道
@@ -36,13 +50,11 @@ sections:
         - [アーセナル, 権利を残した最初のクラブ]
         - [トッテナム, チャンピオンズリーグの出場権]
     say:
-      - text: マンCが、115件の告発のほとんどで違反と判断された、という報道。
-        image: assets/images/20260927c_pair_kroenke_khaldoon/01.jpg
-      - 正式な発表は、まだありません。
       - マンCが有罪になったら、損害賠償を求める。
       - その権利を残す通知を、4つのクラブが出していました。
       - アーセナル、マンチェスター・ユナイテッド、リヴァプール、トッテナム。
-      - 4クラブのうち、最初にこの通知を出したのはアーセナルでした。
+      - text: 4クラブのうち、最初にこの通知を出したのはアーセナルでした。
+        image: assets/images/20260927c_kroenke_w/01.jpg
     sources:
       - https://www.independent.co.uk/sport/football/man-city-verdict-premier-league-man-utd-arsenal-liverpool-compensation-b3056684.html
       - https://www.espn.com/soccer/story/_/id/50032007/man-city-charges-115-premier-league-clubs-seeking-legal-advice-amid-expected-guilty-verdicts
@@ -65,7 +77,8 @@ sections:
     say:
       - text: マンCの財務違反の報道。損をしたライバルクラブが、賠償を求めて動いています。
         short_only: true
-      - 求めるのは、逃した賞金、スポンサーのボーナス、ヨーロッパの大会の収入です。
+      - text: 求めるのは、逃した賞金、スポンサーのボーナス、ヨーロッパの大会の収入です。
+        image: assets/images/20260927c_pair_kroenke_khaldoon/01.jpg
       - 元リヴァプールの幹部、クリスチャン・パースローはこう話しました。
       - voice: クリスチャン・パースロー
         text: マンCが規則を破っていた9シーズン。その年のライバル19クラブは、どこも損をしている
