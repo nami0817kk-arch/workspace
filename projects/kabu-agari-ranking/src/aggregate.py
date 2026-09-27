@@ -144,13 +144,12 @@ def weekly_summaries(days: list[dict]) -> list[dict]:
         big = sum(
             1 for day in group for r in day.get("gainers", []) if abs(r["change_pct"]) >= 10
         )
-        stops = sum(
-            1 for day in group for r in day.get("gainers", [])
-            if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-        )
+        counts = stop_counts(group)
         out.append({
             "big_moves": big,
-            "stop_highs": stops,
+            "stop_highs": counts["stop_highs"],
+            "stop_lows": counts["stop_lows"],
+            "stops_estimated": counts["has_estimated"],
             "slug": f"{year}-W{week:02d}",
             "year": year,
             "week": week,
@@ -228,8 +227,9 @@ def stock_histories(days: list[dict], min_appearances: int = STOCK_PAGE_MIN_APPE
 # 日をまたいで残している場所はほとんど無い。**このサイトの持ち札はここ**なので、
 # 独立した章として出せる形にまとめる。
 #
-# 対象は値上がりランキングの上位30銘柄に限られる（取得しているのがそこまで）。
-# 「東証の全ストップ高」ではないので、見せる側でその旨を必ず書く。
+# 2026-09-28 より前の日は、値上がり／値下がり上位30銘柄からの推定しか無い
+# （取得していたのがそこまで）。それ以降は取得元の専用ランキングから全件取る。
+# **出どころが違うものを同じ数として見せない**。見せる側で必ず区別を書く。
 
 def _limit_rows(day: dict, key: str, estimate_from: str, flag: str) -> tuple[list[dict], str]:
     """その日のストップ高／ストップ安の銘柄と、その出どころ。
@@ -321,6 +321,29 @@ def stop_low_history(days: list[dict]) -> dict:
     return _limit_history(days, stop_low_rows, worst=min)
 
 
+def stop_counts(days: list[dict]) -> dict:
+    """その期間の、のべ件数と出どころ。
+
+    **数えるのは `stop_high_rows` / `stop_low_rows` と同じ道を通す。**
+    週まとめ・月まとめ・トップのハイライトが別々に数え直していたため、
+    記録を使い始めると同じ日の件数がページによって違う、という
+    直しようのない食い違いになっていた（2026-09-27 に揃えた）。
+    """
+    high = low = 0
+    sources = set()
+    for day in days:
+        rows, source = stop_high_rows(day)
+        high += len(rows)
+        sources.add(source)
+        low += len(stop_low_rows(day)[0])
+    return {
+        "stop_highs": high,
+        "stop_lows": low,
+        # 期間の中に推定の日が混じっていれば、画面でその旨を断る
+        "has_estimated": "estimated" in sources,
+    }
+
+
 # --- 月ごと -----------------------------------------------------------------
 
 def monthly_summaries(days: list[dict]) -> list[dict]:
@@ -341,10 +364,7 @@ def monthly_summaries(days: list[dict]) -> list[dict]:
             for day in group for row in day.get("gainers", [])
         ]
         movers.sort(key=lambda r: r["change_pct"], reverse=True)
-        stops = sum(
-            1 for day in group for r in day.get("gainers", [])
-            if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-        )
+        counts = stop_counts(group)
         out.append({
             "slug": month,
             "year": int(month[:4]),
@@ -352,7 +372,9 @@ def monthly_summaries(days: list[dict]) -> list[dict]:
             "from": group[-1]["rec_date"],
             "to": group[0]["rec_date"],
             "day_count": len(group),
-            "stop_highs": stops,
+            "stop_highs": counts["stop_highs"],
+            "stop_lows": counts["stop_lows"],
+            "stops_estimated": counts["has_estimated"],
             "top_movers": movers[:20],
             "frequent": frequent(group, "gainers", top_n=20),
         })

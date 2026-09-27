@@ -521,37 +521,7 @@
     main { max-width: none; padding: 0; }
     table.ranking { min-width: 0; font-size: 10pt; }
     table.ranking th[data-sort]::after { content: ""; }
-    .highlights {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0.5rem;
-    margin: 1rem 0;
-    padding: 0;
-  }
-  .highlights a {
-    display: block;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.6rem 0.7rem;
-    color: inherit;
-    text-decoration: none;
-  }
-  .highlights a:hover { border-color: var(--accent); }
-  .hl-label { display: block; font-size: 0.75rem; color: var(--muted); }
-  .hl-value { display: block; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
-  .hl-note { display: block; font-size: 0.75rem; color: var(--muted); }
-  /* 狭い画面では、ハイライトが2段に折り返して 232px を占め、
-     せっかく上げた表がまた画面の外へ出ていた。1行3枚に詰める。 */
-  @media (max-width: 600px) {
-    .highlights { grid-template-columns: repeat(3, 1fr); gap: 0.35rem; margin: 0.75rem 0; }
-    .highlights a { padding: 0.45rem 0.4rem; text-align: center; }
-    .hl-label { font-size: 0.7rem; }
-    .hl-value { font-size: 1.05rem; }
-    .hl-note { display: none; }   /* 補足は詰めると読めないので落とす */
-  }
-  .summary { border-left: 2px solid #000; }
+    .summary { border-left: 2px solid #000; }
     a[href]::after { content: ""; }
   }
   dl { margin: 0 0 1rem; }

@@ -12,7 +12,7 @@
   {% for m in months %}
   <a href="{{ m.slug }}.html">
     <span class="archive-date">{{ m.year }}年{{ m.month }}月</span>
-    <span class="archive-top">{{ m.day_count }}営業日 ／ ストップ高 のべ{{ m.stop_highs }}銘柄</span>
+    <span class="archive-top">{{ m.day_count }}営業日 ／ ストップ高 のべ{{ m.stop_highs }}銘柄 ／ ストップ安 のべ{{ m.stop_lows }}銘柄{% if m.stops_estimated %}<span class="badge">一部推定</span>{% endif %}</span>
   </a>
   {% endfor %}
 </div>
