@@ -673,6 +673,66 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'脱獄させるな！'**
   String get kicker;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'設定'**
+  String get settingsTitle;
+
+  /// No description provided for @settingSound.
+  ///
+  /// In ja, this message translates to:
+  /// **'効果音'**
+  String get settingSound;
+
+  /// No description provided for @settingHaptics.
+  ///
+  /// In ja, this message translates to:
+  /// **'振動'**
+  String get settingHaptics;
+
+  /// No description provided for @licenses.
+  ///
+  /// In ja, this message translates to:
+  /// **'ライセンス'**
+  String get licenses;
+
+  /// No description provided for @resetProgress.
+  ///
+  /// In ja, this message translates to:
+  /// **'進み具合を消す'**
+  String get resetProgress;
+
+  /// No description provided for @resetConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'進み具合を消しますか？'**
+  String get resetConfirmTitle;
+
+  /// No description provided for @resetConfirmBody.
+  ///
+  /// In ja, this message translates to:
+  /// **'星と記録がすべて消えます。広告を消した購入は残ります。'**
+  String get resetConfirmBody;
+
+  /// No description provided for @cancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'やめる'**
+  String get cancel;
+
+  /// No description provided for @doReset.
+  ///
+  /// In ja, this message translates to:
+  /// **'消す'**
+  String get doReset;
+
+  /// No description provided for @resetDone.
+  ///
+  /// In ja, this message translates to:
+  /// **'進み具合を消しました'**
+  String get resetDone;
 }
 
 class _AppLocalizationsDelegate

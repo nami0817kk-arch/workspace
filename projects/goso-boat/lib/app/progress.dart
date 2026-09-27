@@ -86,12 +86,18 @@ class Progress extends ChangeNotifier {
 
   Future<void> markReviewAsked(int world) => _prefs.setBool('review.$world', true);
 
+  /// 星・紹介の既読・評価のお願いの記録をすべて消す（設定画面の「進み具合を消す」）。
+  /// 広告を消した購入と、音・振動の設定は残す。
+  Future<void> resetAll() async {
+    for (final k in _prefs.getKeys().toList()) {
+      if (k.startsWith('stars.') || k.startsWith('best.') || k.startsWith('intro.') || k.startsWith('review.')) {
+        await _prefs.remove(k);
+      }
+    }
+    notifyListeners();
+  }
+
   bool seenIntro(int world) => _prefs.getBool('intro.$world') ?? false;
   Future<void> markIntro(int world) => _prefs.setBool('intro.$world', true);
 
-  bool get soundOn => _prefs.getBool('sound') ?? true;
-  Future<void> setSound(bool v) async {
-    await _prefs.setBool('sound', v);
-    notifyListeners();
-  }
 }

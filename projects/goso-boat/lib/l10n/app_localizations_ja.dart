@@ -342,4 +342,34 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get kicker => '脱獄させるな！';
+
+  @override
+  String get settingsTitle => '設定';
+
+  @override
+  String get settingSound => '効果音';
+
+  @override
+  String get settingHaptics => '振動';
+
+  @override
+  String get licenses => 'ライセンス';
+
+  @override
+  String get resetProgress => '進み具合を消す';
+
+  @override
+  String get resetConfirmTitle => '進み具合を消しますか？';
+
+  @override
+  String get resetConfirmBody => '星と記録がすべて消えます。広告を消した購入は残ります。';
+
+  @override
+  String get cancel => 'やめる';
+
+  @override
+  String get doReset => '消す';
+
+  @override
+  String get resetDone => '進み具合を消しました';
 }

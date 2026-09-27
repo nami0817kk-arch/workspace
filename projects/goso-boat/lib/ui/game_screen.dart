@@ -3,10 +3,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 import '../app/progress.dart';
+import '../app/settings.dart';
 import '../engine/puzzle.dart';
 import '../engine/rules.dart';
 import '../game/session.dart';
@@ -64,6 +64,19 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 端末の「視差効果を減らす」が入っていれば、待機の揺れを止める
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _idle
+        ..stop()
+        ..value = 0;
+    } else if (!_idle.isAnimating) {
+      _idle.repeat();
+    }
+  }
+
+  @override
   void dispose() {
     _idle.dispose();
     _confetti.dispose();
@@ -100,20 +113,27 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   AppLocalizations get t => context.l10n;
+  GameSettings get fx => AppScope.of(context);
 
   void _tap(Person p) {
     if (phase != _Phase.play) return;
     final r = s.tap(p);
     switch (r) {
       case TapResult.boarded:
+        fx.buzz(Buzz.select);
+        fx.play(Sfx.board);
+        _clearHint();
       case TapResult.left:
-        HapticFeedback.selectionClick();
+        fx.buzz(Buzz.select);
+        fx.play(Sfx.unboard);
         _clearHint();
       case TapResult.boatElsewhere:
-        HapticFeedback.lightImpact();
+        fx.buzz(Buzz.light);
+        fx.play(Sfx.nope);
         _say(t.boatIsAt(t.place(s.boat)));
       case TapResult.full:
-        HapticFeedback.lightImpact();
+        fx.buzz(Buzz.light);
+        fx.play(Sfx.nope);
         _say(p.role == Role.cuffed ? t.boatSeatsCuffed(level.capacity) : t.boatSeats(level.capacity));
       case TapResult.locked:
         return;
@@ -126,7 +146,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     final r = s.check(to);
     switch (r) {
       case Refused(:final reason):
-        HapticFeedback.lightImpact();
+        fx.buzz(Buzz.light);
+        fx.play(Sfx.nope);
         _say(switch (reason) {
           RefuseReason.empty => t.needSomeone,
           RefuseReason.noRower => t.noRower,
@@ -136,7 +157,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         return;
       case Crossed():
         _clearHint();
-        HapticFeedback.mediumImpact();
+        fx.buzz(Buzz.medium);
+        fx.play(Sfx.depart);
         setState(() {
           phase = _Phase.moving;
           _moveDuration = _crossMove;
@@ -144,6 +166,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         });
         _later(_crossMove, () {
           s.depart(to);
+          fx.play(Sfx.arrive);
           setState(() {
             _boatOverride = null;
             _moveDuration = _tapMove;
@@ -153,6 +176,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         });
       case Escaped(:final where):
         _clearHint();
+        fx.play(Sfx.depart);
         final from = s.boat;
         setState(() {
           phase = _Phase.escaping;
@@ -163,7 +187,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         });
         _later(Duration(milliseconds: where == null ? 700 : 450), () {
           s.depart(to);
-          HapticFeedback.heavyImpact();
+          fx.buzz(Buzz.heavy);
+          fx.play(Sfx.escape);
           setState(() => _moveDuration = _tapMove);
           _later(const Duration(milliseconds: 650), () {
             final g = _geo!;
@@ -177,6 +202,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               }
               _fleeing = true;
             });
+            if (where == null) fx.play(Sfx.splash);
             _later(const Duration(milliseconds: 1100), () => setState(() => phase = _Phase.failed));
           });
         });
@@ -186,7 +212,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   Future<void> _win() async {
     _earnedStars = s.stars;
     await widget.progress.record(level, _earnedStars);
-    HapticFeedback.mediumImpact();
+    fx.buzz(Buzz.medium);
+    fx.play(Sfx.clear);
+    // 星の数だけ「きらっ」を鳴らす（結果の札に星が並ぶのに合わせる）
+    for (var i = 0; i < _earnedStars; i++) {
+      _later(Duration(milliseconds: 550 + i * 220), () => fx.play(Sfx.star));
+    }
     _confetti.forward(from: 0);
     setState(() => phase = _Phase.won);
     // Web のテスト版には評価の仕組みが無いので出さない
@@ -201,6 +232,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   void _undo() {
     if (!s.canUndo || phase == _Phase.moving || phase == _Phase.escaping) return;
+    fx.play(Sfx.tap);
     setState(() {
       s.undo();
       _resetVisual();
@@ -209,6 +241,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   void _reset() {
     if (phase == _Phase.moving || phase == _Phase.escaping) return;
+    fx.play(Sfx.tap);
     setState(() {
       s.reset();
       _resetVisual();
@@ -243,6 +276,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       _say(t.unsolvable);
       return;
     }
+    fx.play(Sfx.hint);
     setState(() {
       _hinted = s.aboard.map((p) => p.id).toSet();
       _hintTo = m.to;

@@ -95,5 +95,15 @@
   "purchaseRestored": "Purchase restored",
   "purchaseNothing": "No purchase to restore",
   "purchaseFailed": "Purchase failed. Please try again later.",
-  "kicker": "Don't let them escape!"
+  "kicker": "Don't let them escape!",
+  "settingsTitle": "Settings",
+  "settingSound": "Sound effects",
+  "settingHaptics": "Vibration",
+  "licenses": "Licenses",
+  "resetProgress": "Reset progress",
+  "resetConfirmTitle": "Reset progress?",
+  "resetConfirmBody": "All stars and records will be deleted. Your ad-free purchase stays.",
+  "cancel": "Cancel",
+  "doReset": "Reset",
+  "resetDone": "Progress reset"
 }

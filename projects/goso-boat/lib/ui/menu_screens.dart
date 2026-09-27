@@ -9,6 +9,7 @@ import '../monetization/purchase_service.dart';
 import 'figures.dart';
 import 'game_screen.dart';
 import 'palette.dart';
+import 'settings_screen.dart';
 
 Route<void> _fade(Widget page) => PageRouteBuilder(
       pageBuilder: (_, _, _) => page,
@@ -34,6 +35,14 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        tooltip: context.l10n.settingsTitle,
+                        icon: const Icon(Icons.settings_rounded, color: Palette.ink),
+                        onPressed: () => Navigator.of(context).push(_fade(SettingsScreen(progress: progress, money: money))),
+                      ),
+                    ),
                     const Spacer(flex: 2),
                     // 名前は合わせ技（2026-09-27 ユーザー決定）: ストアの検索は「脱獄させるな！」で拾い、
                     // ホーム画面とアプリの中では「護送ボート」で覚えてもらう
