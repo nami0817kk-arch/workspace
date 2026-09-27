@@ -555,23 +555,30 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     ];
   }
 
-  /// 舟の上の人数札（出す前に、乗っている見張りと囚人を数えやすくする）。
+  /// 舟の上の人数（出す前に、乗っている見張りと囚人を数えやすくする）。
+  /// 岸の人と重ならないよう、舟の白い船体の上に書く。
   Widget _boatTally(_Geo g) {
     final at = _boatOverride ?? g.boatAt(s.boat);
     final riders = s.aboard;
+    final guard = riders.fold(0, (a, p) => a + p.role.guard);
+    final weight = riders.fold(0, (a, p) => a + p.role.weight);
     return AnimatedPositioned(
       duration: _moveDuration,
       curve: Curves.easeInOut,
-      left: at.dx - 70,
-      width: 140,
-      top: at.dy + g.boatH + 4,
+      left: at.dx - g.boatW * 0.36,
+      width: g.boatW * 0.72,
+      top: at.dy + g.boatH * 0.3,
+      height: g.boatH * 0.5,
       child: IgnorePointer(
-        child: Center(
-          child: _Tally(
-            guard: riders.fold(0, (a, p) => a + p.role.guard),
-            weight: riders.fold(0, (a, p) => a + p.role.weight),
-            label: t.placeBoat,
-            t: t,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text.rich(
+            TextSpan(children: [
+              TextSpan(text: t.tallyGuard(guard), style: const TextStyle(color: Color(0xFF2B4FA8))),
+              const TextSpan(text: ' ・ '),
+              TextSpan(text: t.tallyPrisoner(weight), style: TextStyle(color: weight > guard ? Palette.bad : const Color(0xFF444444))),
+            ]),
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Palette.ink),
           ),
         ),
       ),
