@@ -305,7 +305,10 @@ class _FigurePainter extends CustomPainter {
 
 /// 舟。席の数で横幅が変わる。
 class BoatPainter extends CustomPainter {
-  const BoatPainter();
+  const BoatPainter({this.oar});
+
+  /// 渡っている間のオールの位相（0〜1）。null なら描かない。
+  final double? oar;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -318,6 +321,20 @@ class BoatPainter extends CustomPainter {
       ..lineTo(w * 0.16, h)
       ..quadraticBezierTo(w * 0.1, h, w * 0.08, h * 0.85)
       ..close();
+    // オール（船体の左右から水面へ）
+    final o = oar;
+    if (o != null) {
+      final swing = math.sin(o * math.pi * 4) * 0.5;
+      final p = Paint()
+        ..color = const Color(0xFF8A5A2B)
+        ..strokeWidth = math.max(3, h * 0.12)
+        ..strokeCap = StrokeCap.round;
+      for (final side in [-1.0, 1.0]) {
+        final base = Offset(side < 0 ? w * 0.06 : w * 0.94, h * 0.45);
+        final tip = base + Offset(side * h * (0.9 + swing * 0.4), h * (0.8 - swing));
+        canvas.drawLine(base, tip, p);
+      }
+    }
     canvas.drawPath(hull, Paint()..color = const Color(0xFFFBFBFB));
     canvas.drawLine(Offset(w * 0.04, h * 0.5), Offset(w * 0.96, h * 0.5), Paint()
       ..color = Palette.riverDeep
@@ -333,5 +350,5 @@ class BoatPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(BoatPainter oldDelegate) => false;
+  bool shouldRepaint(BoatPainter oldDelegate) => oldDelegate.oar != oar;
 }

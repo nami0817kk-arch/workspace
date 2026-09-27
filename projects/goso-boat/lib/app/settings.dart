@@ -20,6 +20,14 @@ class GameSettings extends ChangeNotifier {
   bool get sound => _prefs.getBool('sound') ?? true;
   bool get haptics => _prefs.getBool('haptics') ?? true;
 
+  /// 今日の1問のお知らせ。最初はオフ。
+  bool get reminder => _prefs.getBool('reminder') ?? false;
+
+  Future<void> setReminder(bool v) async {
+    await _prefs.setBool('reminder', v);
+    notifyListeners();
+  }
+
   Future<void> setSound(bool v) async {
     await _prefs.setBool('sound', v);
     notifyListeners();

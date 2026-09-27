@@ -46,6 +46,16 @@ extension L10nNames on AppLocalizations {
         Achievement.escape100 => ach_escape100,
         Achievement.nightmareThree => ach_nightmareThree,
         Achievement.dailyWeek => ach_dailyWeek,
+        Achievement.perfect1 => ach_perfect1,
+        Achievement.perfect2 => ach_perfect2,
+        Achievement.perfect3 => ach_perfect3,
+        Achievement.perfect4 => ach_perfect4,
+        Achievement.perfect5 => ach_perfect5,
+        Achievement.perfect6 => ach_perfect6,
+        Achievement.perfect7 => ach_perfect7,
+        Achievement.perfect8 => ach_perfect8,
+        Achievement.firstTryThree => ach_firstTryThree,
+        Achievement.nightmareNoUndo => ach_nightmareNoUndo,
       };
 
   String achDesc(Achievement a) => switch (a) {
@@ -59,7 +69,19 @@ extension L10nNames on AppLocalizations {
         Achievement.escape100 => achDesc_escape100,
         Achievement.nightmareThree => achDesc_nightmareThree,
         Achievement.dailyWeek => achDesc_dailyWeek,
+        Achievement.perfect1 => achDesc_perfect1,
+        Achievement.perfect2 => achDesc_perfect2,
+        Achievement.perfect3 => achDesc_perfect3,
+        Achievement.perfect4 => achDesc_perfect4,
+        Achievement.perfect5 => achDesc_perfect5,
+        Achievement.perfect6 => achDesc_perfect6,
+        Achievement.perfect7 => achDesc_perfect7,
+        Achievement.perfect8 => achDesc_perfect8,
+        Achievement.firstTryThree => achDesc_firstTryThree,
+        Achievement.nightmareNoUndo => achDesc_nightmareNoUndo,
       };
+
+  String rankName(int r) => [rank0, rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9][r];
 
   String world(int no) => [world1, world2, world3, world4, world5, world6, world7, world8][no - 1];
   String introTitle(int no) => [intro1Title, intro2Title, intro3Title, intro4Title, intro5Title, intro6Title, intro7Title, intro8Title][no - 1];

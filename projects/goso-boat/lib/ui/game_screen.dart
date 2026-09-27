@@ -32,10 +32,25 @@ class GameScreen extends StatefulWidget {
 
 enum _Phase { play, moving, escaping, failed, won }
 
-class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
+class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   late Session s = Session(widget.level);
   late final AnimationController _idle =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 1800))..repeat();
+  /// 5. 逃げられたときの画面の揺れ
+  late final AnimationController _shake = AnimationController(vsync: this, duration: const Duration(milliseconds: 450));
+
+  /// 7. 岸に着いた人が跳ねる
+  late final AnimationController _hop = AnimationController(vsync: this, duration: const Duration(milliseconds: 380));
+  Set<int> _hopIds = {};
+
+  /// 1. タイム（アプリを閉じている間は止める）
+  final Stopwatch _clock = Stopwatch();
+  int _baseMs = 0;
+  int get _elapsedMs => _baseMs + _clock.elapsedMilliseconds;
+  int _resultMs = 0;
+  int? _bestMs;
+  bool _fastest = false;
+
   late final AnimationController _confetti =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 2600));
 
@@ -83,7 +98,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     super.initState();
     // 10. アプリを閉じても、途中まで渡した盤面から続ける
     final saved = widget.progress.resumeFor(level);
-    if (saved != null) _resumed = s.restore(saved);
+    if (saved != null) {
+      _resumed = s.restore(saved);
+      if (_resumed && saved['ms'] is int) _baseMs = saved['ms']! as int;
+    }
+    WidgetsBinding.instance.addObserver(this);
+    _clock.start();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _maybeIntro();
       if (!mounted) return;
@@ -94,7 +114,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   void _saveResume() {
     if (s.trips > 0 && !s.failed && !s.cleared) {
-      widget.progress.saveResume(level, s.toJson());
+      widget.progress.saveResume(level, {...s.toJson(), 'ms': _elapsedMs});
     } else {
       widget.progress.clearResume(level);
     }
@@ -114,7 +134,20 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (phase != _Phase.won && phase != _Phase.failed) _clock.start();
+    } else {
+      _clock.stop();
+      if (phase == _Phase.play) _saveResume();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _shake.dispose();
+    _hop.dispose();
     _idle.dispose();
     _confetti.dispose();
     _toastTimer?.cancel();
@@ -201,8 +234,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           _moveDuration = _crossMove;
           _boatOverride = _geo!.boatAt(to);
         });
+        final riders = s.aboard.map((p) => p.id).toSet();
         _later(_crossMove, () {
           s.depart(to);
+          _hopIds = riders;
+          _hop.forward(from: 0);
           widget.progress.bump('trips');
           _saveResume();
           fx.play(Sfx.arrive);
@@ -228,6 +264,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           s.depart(to);
           fx.buzz(Buzz.heavy);
           fx.play(Sfx.escape);
+          _clock.stop();
+          if (!MediaQuery.disableAnimationsOf(context)) _shake.forward(from: 0);
           _countEscape();
           final g0 = _geo!;
           setState(() {
@@ -275,6 +313,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _win() async {
+    _clock.stop();
+    _resultMs = _elapsedMs;
+    final rankBefore = widget.progress.rank;
     final firstClear = !widget.progress.cleared(level);
     final tries = await widget.progress.addTry(level);
     await widget.progress.clearResume(level);
@@ -283,6 +324,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     _resultUsedHint = s.usedHint;
     _newRecord = await widget.progress.record(level, _earnedStars, trips: s.trips);
     _best = widget.progress.best(level);
+    _fastest = await widget.progress.recordTime(level, _resultMs);
+    _bestMs = widget.progress.bestTime(level);
+    if (tries == 1 && _earnedStars == 3) await widget.progress.bump('firstTryThree');
+    if (level.world == 8 && !s.usedUndo) await widget.progress.bump('nightmareNoUndo');
     final now = DateTime.now();
     final daily = await widget.progress.recordDaily(level, _earnedStars, now);
     final fresh = await collectNewAchievements(widget.progress);
@@ -292,6 +337,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     final p = widget.progress;
     _notes = [
       if (firstClear) t.triesClear(tries),
+      if (!s.usedUndo) t.noUndoClear,
+      if (widget.progress.rank > rankBefore) t.rankUp(t.rankName(widget.progress.rank)),
       if (worldDone) t.worldClear(level.world, t.world(level.world), worldLevels.fold(0, (a, l) => a + p.stars(l)), worldLevels.length * 3),
       if (worldDone && level.world == 7 && !p.nightmareOpen) t.nightmareNeed(Progress.nightmareStars - p.starsBeforeNightmare),
       if (daily) t.dailyCleared(p.dailyStreak(now)),
@@ -334,6 +381,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       s.reset();
       _resetVisual();
     });
+    _baseMs = 0;
+    _clock
+      ..reset()
+      ..start();
     widget.progress.clearResume(level);
   }
 
@@ -426,7 +477,13 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     ),
                     child: LayoutBuilder(builder: (context, c) {
                       final g = _geo = _Geo(c.biggest, level);
-                      return Stack(
+                      return AnimatedBuilder(
+                        animation: _shake,
+                        builder: (_, child) => Transform.translate(
+                          offset: Offset(math.sin(_shake.value * math.pi * 10) * 8 * (1 - _shake.value), 0),
+                          child: child,
+                        ),
+                        child: Stack(
                         clipBehavior: Clip.hardEdge,
                         children: [
                           Positioned.fill(child: CustomPaint(painter: _ScenePainter(g, _idle, SceneTheme.forWorld(level.world)))),
@@ -441,11 +498,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             height: g.boatH,
                             child: AnimatedBuilder(
                               animation: _idle,
-                              builder: (_, child) => Transform.rotate(
+                              builder: (_, _) => Transform.rotate(
                                 angle: math.sin(_idle.value * math.pi * 2) * 0.012,
-                                child: child,
+                                child: CustomPaint(
+                                  painter: BoatPainter(oar: _boatOverride != null && _moveDuration == _crossMove ? _idle.value : null),
+                                ),
                               ),
-                              child: const CustomPaint(painter: BoatPainter()),
                             ),
                           ),
                           ..._seatMarks(g),
@@ -458,6 +516,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                           if (_tutorial && phase == _Phase.play && s.trips == 0) _coach(g),
                           if (phase == _Phase.won) Positioned.fill(child: IgnorePointer(child: CustomPaint(painter: _ConfettiPainter(_confetti)))),
                         ],
+                      ),
                       );
                     }),
                   ),
@@ -487,6 +546,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                   best: _best,
                   newRecord: _newRecord,
                   notes: _notes,
+                  timeMs: _resultMs,
+                  bestMs: _bestMs,
+                  fastest: _fastest,
                   hasNext: widget.progress.levels.last != level,
                   onNext: _next,
                   onRetry: _reset,
@@ -551,8 +613,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               _say('${t.role(p.role)}：${t.roleDesc(p.role)}');
             },
             child: AnimatedBuilder(
-              animation: _idle,
-              builder: (_, _) => DecoratedBox(
+              animation: Listenable.merge([_idle, _hop]),
+              builder: (_, _) => Transform.translate(
+                offset: Offset(0, _hopIds.contains(p.id) && _hop.isAnimating ? -math.sin(_hop.value * math.pi) * 10 : 0),
+                child: DecoratedBox(
                 decoration: BoxDecoration(
                   boxShadow: _hinted.contains(p.id)
                       ? [BoxShadow(color: Palette.gold.withValues(alpha: 0.35 + 0.35 * math.sin(_idle.value * math.pi * 6).abs()), blurRadius: 14, spreadRadius: 2)]
@@ -564,6 +628,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                   mood: alert ? Mood.alert : happy ? Mood.happy : Mood.calm,
                   bob: _idle.value,
                 ),
+              ),
               ),
             ),
           ),
@@ -899,6 +964,25 @@ class _ScenePainter extends CustomPainter {
         stops: const [0, 0.15, 0.85, 1],
       ).createShader(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom));
     c.drawRect(Rect.fromLTRB(0, g.riverTop, w, g.riverBottom), edge);
+    // 8. ときどき魚が跳ねる（6秒に1回、場所は回ごとに変える）
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final cycle = now ~/ 6000;
+    final ph = (now % 6000) / 6000;
+    if (t.isAnimating && ph < 0.18) {
+      final k = ph / 0.18;
+      final fr = math.Random(cycle);
+      final x0 = w * (0.15 + fr.nextDouble() * 0.6);
+      final y0 = g.riverTop + 20 + fr.nextDouble() * (g.riverBottom - g.riverTop - 40);
+      final fx = x0 + k * 34, fy = y0 - math.sin(k * math.pi) * 22;
+      c.save();
+      c.translate(fx, fy);
+      c.rotate(-math.cos(k * math.pi) * 0.9);
+      final fish = Paint()..color = th.riverDeep.withValues(alpha: 0.85);
+      c.drawOval(const Rect.fromLTWH(-8, -3.5, 16, 7), fish);
+      c.drawPath(Path()..moveTo(-7, 0)..lineTo(-13, -4)..lineTo(-13, 4)..close(), fish);
+      c.restore();
+      if (k > 0.85) c.drawOval(Rect.fromCenter(center: Offset(x0 + 34, y0 + 2), width: 18, height: 5), Paint()..color = Colors.white.withValues(alpha: 0.6)..style = PaintingStyle.stroke..strokeWidth = 1.5);
+    }
     // 流れ（左から右へ流れる白い筋）
     // 夜は川面に星を映す
     if (th.stars) {
@@ -1054,7 +1138,14 @@ class _TopBar extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(context.l10n.tripsCount(trips), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink, fontFeatures: [FontFeature.tabularFigures()])),
+                TweenAnimationBuilder<double>(
+                  key: ValueKey(trips),
+                  tween: Tween(begin: trips == 0 ? 1 : 1.35, end: 1),
+                  duration: const Duration(milliseconds: 320),
+                  curve: Curves.easeOutBack,
+                  builder: (_, v, child) => Transform.scale(scale: v, alignment: Alignment.centerRight, child: child),
+                  child: Text(context.l10n.tripsCount(trips), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink, fontFeatures: [FontFeature.tabularFigures()])),
+                ),
                 Row(mainAxisSize: MainAxisSize.min, children: [
                   StarRow(stars, size: 13),
                   const SizedBox(width: 4),
@@ -1135,6 +1226,9 @@ class _ResultCard extends StatelessWidget {
     required int? best,
     required bool newRecord,
     required List<String> notes,
+    required int timeMs,
+    required int? bestMs,
+    required bool fastest,
     required bool hasNext,
     required VoidCallback onNext,
     required VoidCallback onRetry,
@@ -1168,6 +1262,22 @@ class _ResultCard extends StatelessWidget {
               ],
             ]),
           ],
+          const SizedBox(height: 6),
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(t.timeLine(_clockText(timeMs)), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Palette.ink)),
+            if (bestMs != null && !fastest) ...[
+              const SizedBox(width: 10),
+              Text(t.bestTimeLine(_clockText(bestMs)), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Palette.dim)),
+            ],
+            if (fastest) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(color: Palette.bad, borderRadius: BorderRadius.circular(99)),
+                child: Text(t.fastest, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Colors.white)),
+              ),
+            ],
+          ]),
           ..._noteChips(notes),
           const SizedBox(height: 16),
           if (hasNext) ChunkyButton(label: t.nextLevel, color: Palette.gold, fontSize: 18, onPressed: onNext),
@@ -1212,6 +1322,11 @@ class _ResultCard extends StatelessWidget {
 }
 
 /// 結果の札に添える知らせ（金色の札）。
+String _clockText(int ms) {
+  final s = ms ~/ 1000;
+  return '${s ~/ 60}:${(s % 60).toString().padLeft(2, '0')}';
+}
+
 List<Widget> _noteChips(List<String> notes) => [
       for (final n in notes) ...[
         const SizedBox(height: 8),

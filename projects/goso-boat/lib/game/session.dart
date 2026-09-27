@@ -36,6 +36,9 @@ class Session {
   int trips = 0;
   bool usedHint = false;
 
+  /// この挑戦で「一手戻す」を使ったか。
+  bool usedUndo = false;
+
   /// 逃げられて止まっている間の、逃げた人たち。
   List<Person> escaped = const [];
   Escaped? failure;
@@ -123,6 +126,7 @@ class Session {
 
   void undo() {
     if (_history.isEmpty) return;
+    usedUndo = true;
     _restore(_history.removeLast());
   }
 
@@ -135,6 +139,7 @@ class Session {
     boat = Place.left;
     trips = 0;
     usedHint = false;
+    usedUndo = false;
     failure = null;
     escaped = const [];
   }
@@ -171,6 +176,7 @@ class Session {
         'boat': boat.index,
         'trips': trips,
         'hint': usedHint,
+        'undo': usedUndo,
       };
 
   /// [toJson] の形から戻す。面の人数が合わないなど、使えないときは false で何もしない。
@@ -188,6 +194,7 @@ class Session {
     boat = Place.values[boatIndex];
     trips = t;
     usedHint = j['hint'] == true;
+    usedUndo = j['undo'] == true;
     _history.clear();
     failure = null;
     escaped = const [];

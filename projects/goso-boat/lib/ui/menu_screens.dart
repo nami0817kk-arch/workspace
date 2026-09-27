@@ -63,6 +63,11 @@ class HomeScreen extends StatelessWidget {
                     const Spacer(),
                     const _TitleArt(),
                     const Spacer(),
+                    Text(
+                      [context.l10n.rankName(progress.rank), if (progress.starsToNextRank != null) context.l10n.rankNext(progress.starsToNextRank!)].join('・'),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Palette.dim),
+                    ),
+                    const SizedBox(height: 2),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

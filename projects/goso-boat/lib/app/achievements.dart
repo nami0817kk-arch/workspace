@@ -14,7 +14,20 @@ enum Achievement {
   escape10,
   escape100,
   nightmareThree,
-  dailyWeek;
+  dailyWeek,
+  perfect1,
+  perfect2,
+  perfect3,
+  perfect4,
+  perfect5,
+  perfect6,
+  perfect7,
+  perfect8,
+  firstTryThree,
+  nightmareNoUndo;
+
+  /// 舞台 [w] の全面を星3で解いたか。
+  static bool _worldPerfect(Progress p, int w) => p.levels.where((l) => l.world == w).every((l) => p.stars(l) == 3);
 
   bool earned(Progress p) => switch (this) {
         firstClear => p.clearedCount >= 1,
@@ -27,6 +40,16 @@ enum Achievement {
         escape100 => p.stat('escapes') >= 100,
         nightmareThree => p.levels.any((l) => l.world == 8 && p.stars(l) == 3),
         dailyWeek => p.stat('maxStreak') >= 7,
+        perfect1 => _worldPerfect(p, 1),
+        perfect2 => _worldPerfect(p, 2),
+        perfect3 => _worldPerfect(p, 3),
+        perfect4 => _worldPerfect(p, 4),
+        perfect5 => _worldPerfect(p, 5),
+        perfect6 => _worldPerfect(p, 6),
+        perfect7 => _worldPerfect(p, 7),
+        perfect8 => _worldPerfect(p, 8),
+        firstTryThree => p.stat('firstTryThree') >= 1,
+        nightmareNoUndo => p.stat('nightmareNoUndo') >= 1,
       };
 }
 

@@ -539,4 +539,129 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get taunt4 => '自由だー！';
+
+  @override
+  String timeLine(String t) {
+    return 'タイム $t';
+  }
+
+  @override
+  String bestTimeLine(String t) {
+    return '最速 $t';
+  }
+
+  @override
+  String get fastest => '最速！';
+
+  @override
+  String get noUndoClear => '一手も戻さずにクリア';
+
+  @override
+  String rankUp(String name) {
+    return '階級が上がった: $name';
+  }
+
+  @override
+  String rankNext(int n) {
+    return '次の階級まで ★$n';
+  }
+
+  @override
+  String get reminder => '今日の1問のお知らせ';
+
+  @override
+  String get reminderBody => '今日の1問が届いています。星3で達成！';
+
+  @override
+  String get reminderDenied => 'お知らせが許可されていません。iPhone の設定から許可してください';
+
+  @override
+  String get rank0 => '見習い';
+
+  @override
+  String get rank1 => '巡査';
+
+  @override
+  String get rank2 => '巡査長';
+
+  @override
+  String get rank3 => '巡査部長';
+
+  @override
+  String get rank4 => '警部補';
+
+  @override
+  String get rank5 => '警部';
+
+  @override
+  String get rank6 => '警視';
+
+  @override
+  String get rank7 => '警視正';
+
+  @override
+  String get rank8 => '警視長';
+
+  @override
+  String get rank9 => '警視総監';
+
+  @override
+  String get ach_perfect1 => '川べりの達人';
+
+  @override
+  String get achDesc_perfect1 => '舞台1「川べり」の全面を星3で解く';
+
+  @override
+  String get ach_perfect2 => '看守長の達人';
+
+  @override
+  String get achDesc_perfect2 => '舞台2「看守長」の全面を星3で解く';
+
+  @override
+  String get ach_perfect3 => '手錠の達人';
+
+  @override
+  String get achDesc_perfect3 => '舞台3「手錠」の全面を星3で解く';
+
+  @override
+  String get ach_perfect4 => 'ボスの達人';
+
+  @override
+  String get achDesc_perfect4 => '舞台4「ボス」の全面を星3で解く';
+
+  @override
+  String get ach_perfect5 => '警察犬の達人';
+
+  @override
+  String get achDesc_perfect5 => '舞台5「警察犬」の全面を星3で解く';
+
+  @override
+  String get ach_perfect6 => '中州の達人';
+
+  @override
+  String get achDesc_perfect6 => '舞台6「中州」の全面を星3で解く';
+
+  @override
+  String get ach_perfect7 => '総力戦の達人';
+
+  @override
+  String get achDesc_perfect7 => '舞台7「総力戦」の全面を星3で解く';
+
+  @override
+  String get ach_perfect8 => '鬼門の達人';
+
+  @override
+  String get achDesc_perfect8 => '舞台8「鬼門」の全面を星3で解く';
+
+  @override
+  String get ach_firstTryThree => '一発護送';
+
+  @override
+  String get achDesc_firstTryThree => '1回目の挑戦で星3を取る';
+
+  @override
+  String get ach_nightmareNoUndo => '戻らない勇気';
+
+  @override
+  String get achDesc_nightmareNoUndo => '一手も戻さずに鬼門の面を解く';
 }
