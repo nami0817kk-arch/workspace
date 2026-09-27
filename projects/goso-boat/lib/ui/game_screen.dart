@@ -84,6 +84,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   /// 面の始まりの札（面番号・目標）を出しているか。
   bool _banner = false;
   bool _resumed = false;
+  final DateTime _openedAt = DateTime.now();
 
   /// 逃げる囚人の捨てぜりふ。
   String? _taunt;
@@ -103,10 +104,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
       if (_resumed && saved['ms'] is int) _baseMs = saved['ms']! as int;
     }
     WidgetsBinding.instance.addObserver(this);
-    _clock.start();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _maybeIntro();
       if (!mounted) return;
+      // 時計は紹介を読み終えてから動かす
+      _clock.start();
       setState(() => _banner = true);
       _later(const Duration(milliseconds: 1900), () => setState(() => _banner = false));
     });
@@ -245,12 +247,15 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
           setState(() {
             _boatOverride = null;
             _moveDuration = _tapMove;
-            phase = _Phase.play;
+            // 渡りきったら結果の札が出るまで操作させない（その隙の「最初から」で記録が壊れた）
+            phase = s.cleared ? _Phase.moving : _Phase.play;
           });
-          if (s.cleared) _later(const Duration(milliseconds: 450), _win);
+          if (s.cleared) _win();
         });
       case Escaped(:final where):
         _clearHint();
+        _clock.stop();
+        _countEscape();
         fx.play(Sfx.depart);
         final from = s.boat;
         setState(() {
@@ -264,9 +269,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
           s.depart(to);
           fx.buzz(Buzz.heavy);
           fx.play(Sfx.escape);
-          _clock.stop();
           if (!MediaQuery.disableAnimationsOf(context)) _shake.forward(from: 0);
-          _countEscape();
           final g0 = _geo!;
           setState(() {
             _moveDuration = _tapMove;
@@ -312,7 +315,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     _notes = [for (final a in fresh) t.achUnlocked(t.achName(a))];
   }
 
+  bool _winning = false;
+
   Future<void> _win() async {
+    if (!s.cleared || _winning) return;
+    _winning = true;
     _clock.stop();
     _resultMs = _elapsedMs;
     final rankBefore = widget.progress.rank;
@@ -328,9 +335,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     _bestMs = widget.progress.bestTime(level);
     if (tries == 1 && _earnedStars == 3) await widget.progress.bump('firstTryThree');
     if (level.world == 8 && !s.usedUndo) await widget.progress.bump('nightmareNoUndo');
-    final now = DateTime.now();
+    // 今日の1問は、面を開いた日の問題として数える（日付をまたいで解いても達成になる）
+    final now = _openedAt;
     final daily = await widget.progress.recordDaily(level, _earnedStars, now);
     final fresh = await collectNewAchievements(widget.progress);
+    // 記録は済ませてから、舟が着いた余韻のあとで札を出す
+    await Future<void>.delayed(const Duration(milliseconds: 450));
     if (!mounted) return;
     final worldLevels = widget.progress.levels.where((l) => l.world == level.world).toList();
     final worldDone = firstClear && worldLevels.last == level;
@@ -407,7 +417,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     if (phase != _Phase.play || _hintBusy) return;
     // 広告を消していなければ、動画を1本見てからヒントを出す
     _hintBusy = true;
+    _clock.stop();
     final gate = await widget.money.beforeHint();
+    if (phase == _Phase.play) _clock.start();
     _hintBusy = false;
     if (!mounted || phase != _Phase.play) return;
     if (gate == HintGate.declined) {
@@ -549,7 +561,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
                   timeMs: _resultMs,
                   bestMs: _bestMs,
                   fastest: _fastest,
-                  hasNext: widget.progress.levels.last != level,
+                  hasNext: _nextLevel != null,
+                  isLast: widget.progress.levels.last == level,
                   onNext: _next,
                   onRetry: _reset,
                   onMenu: () => Navigator.of(context).pop(),
@@ -558,9 +571,22 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     );
   }
 
-  Future<void> _next() async {
+  /// 次の面。開いていなければ null（鬼門は星が要るので、舞台7の最後から先へ進めないことがある）。
+  Level? get _nextLevel {
     final ls = widget.progress.levels;
-    final next = ls[ls.indexOf(level) + 1];
+    final i = ls.indexOf(level);
+    if (i < 0 || i + 1 >= ls.length) return null;
+    final n = ls[i + 1];
+    return widget.progress.unlocked(n) ? n : null;
+  }
+
+  bool _leaving = false;
+
+  Future<void> _next() async {
+    final next = _nextLevel;
+    // 2度押しで広告の数えや画面が二重にならないように
+    if (next == null || _leaving) return;
+    _leaving = true;
     // 面と面の間の全画面広告（3面に1回。舞台1と、広告を消した人には出ない）
     await widget.money.afterClear(level);
     if (!mounted) return;
@@ -610,7 +636,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
             onTap: () => _tap(p),
             onLongPress: () {
               fx.buzz(Buzz.light);
-              _say('${t.role(p.role)}：${t.roleDesc(p.role)}');
+              _say('${t.role(p.role)}${t.colon}${t.roleDesc(p.role)}');
             },
             child: AnimatedBuilder(
               animation: Listenable.merge([_idle, _hop]),
@@ -789,7 +815,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Text('${level.id}  ${t.world(level.world)}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink)),
                 const SizedBox(height: 4),
-                Text(_resumed ? '${t.resumed}・${t.tripsCount(s.trips)}' : t.startGoal(level.par),
+                Text(_resumed ? '${t.resumed}${t.sep}${t.tripsCount(s.trips)}' : t.startGoal(level.par),
                     style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Palette.goldDeep)),
               ]),
             ),
@@ -1230,6 +1256,7 @@ class _ResultCard extends StatelessWidget {
     required int? bestMs,
     required bool fastest,
     required bool hasNext,
+    required bool isLast,
     required VoidCallback onNext,
     required VoidCallback onRetry,
     required VoidCallback onMenu,
@@ -1281,7 +1308,7 @@ class _ResultCard extends StatelessWidget {
           ..._noteChips(notes),
           const SizedBox(height: 16),
           if (hasNext) ChunkyButton(label: t.nextLevel, color: Palette.gold, fontSize: 18, onPressed: onNext),
-          if (!hasNext) Text(t.allCleared(total), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
+          if (isLast) Text(t.allCleared(total), style: const TextStyle(fontWeight: FontWeight.w900, color: Palette.ink)),
           const SizedBox(height: 10),
           Row(mainAxisSize: MainAxisSize.min, children: [
             ChunkyButton(label: t.again, onPressed: onRetry, fontSize: 13),
@@ -1307,14 +1334,14 @@ class _ResultCard extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.all(24),
               padding: const EdgeInsets.all(22),
-              constraints: const BoxConstraints(maxWidth: 340),
+              constraints: BoxConstraints(maxWidth: 340, maxHeight: MediaQuery.sizeOf(context).height * 0.86),
               decoration: BoxDecoration(
                 color: Palette.card,
                 border: Border.all(color: Palette.ink, width: 2),
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: const [BoxShadow(color: Palette.ink, offset: Offset(0, 6))],
               ),
-              child: child,
+              child: SingleChildScrollView(child: child),
             ),
           ),
         ),

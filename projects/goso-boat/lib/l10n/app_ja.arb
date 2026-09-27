@@ -475,5 +475,7 @@
   "ach_firstTryThree": "一発護送",
   "achDesc_firstTryThree": "1回目の挑戦で星3を取る",
   "ach_nightmareNoUndo": "戻らない勇気",
-  "achDesc_nightmareNoUndo": "一手も戻さずに鬼門の面を解く"
+  "achDesc_nightmareNoUndo": "一手も戻さずに鬼門の面を解く",
+  "sep": "・",
+  "colon": "："
 }

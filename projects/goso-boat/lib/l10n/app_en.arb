@@ -193,5 +193,7 @@
   "ach_firstTryThree": "One-shot escort",
   "achDesc_firstTryThree": "Get 3 stars on your first try",
   "ach_nightmareNoUndo": "No turning back",
-  "achDesc_nightmareNoUndo": "Clear a Nightmare level without undo"
+  "achDesc_nightmareNoUndo": "Clear a Nightmare level without undo",
+  "sep": " / ",
+  "colon": ": "
 }

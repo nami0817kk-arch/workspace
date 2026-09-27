@@ -12,6 +12,10 @@ import 'palette.dart';
 import 'records_screen.dart';
 import 'settings_screen.dart';
 
+/// 面の札の2度押しよけ（同じ画面が2枚積まれないように）。
+DateTime _lastTileTap = DateTime(2000);
+bool _tapOk() => DateTime.now().difference(_lastTileTap) > const Duration(milliseconds: 600);
+
 Route<void> _fade(Widget page) => PageRouteBuilder(
       pageBuilder: (_, _, _) => page,
       transitionsBuilder: (_, a, _, child) => FadeTransition(opacity: a, child: child),
@@ -32,7 +36,12 @@ class HomeScreen extends StatelessWidget {
           child: SafeArea(
             child: ListenableBuilder(
               listenable: progress,
-              builder: (context, _) => Padding(
+              builder: (context, _) => LayoutBuilder(
+                builder: (context, box) => SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: box.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
@@ -64,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                     const _TitleArt(),
                     const Spacer(),
                     Text(
-                      [context.l10n.rankName(progress.rank), if (progress.starsToNextRank != null) context.l10n.rankNext(progress.starsToNextRank!)].join('・'),
+                      [context.l10n.rankName(progress.rank), if (progress.starsToNextRank != null) context.l10n.rankNext(progress.starsToNextRank!)].join(context.l10n.sep),
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Palette.dim),
                     ),
                     const SizedBox(height: 2),
@@ -103,6 +112,10 @@ class HomeScreen extends StatelessWidget {
                     _RemoveAds(money: money),
                     const Spacer(flex: 2),
                   ],
+                ),
+              ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -283,7 +296,7 @@ class _LevelTile extends StatelessWidget {
       label: !open ? context.l10n.levelLocked(level.id) : stars > 0 ? context.l10n.levelStars(level.id, stars) : level.id,
       excludeSemantics: true,
       child: GestureDetector(
-        onTap: open ? () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress, money: money))) : null,
+        onTap: open && _tapOk() ? () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress, money: money))) : null,
         child: Container(
           decoration: BoxDecoration(
             color: current ? Palette.gold : open ? Colors.white : const Color(0xFFE3E8EE),
@@ -403,7 +416,7 @@ class _Daily extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: ChunkyButton(
-          label: [done ? t.dailyDoneLabel : t.daily(level.id), if (streak > 0) t.dailyStreak(streak)].join('・'),
+          label: [done ? t.dailyDoneLabel : t.daily(level.id), if (streak > 0) t.dailyStreak(streak)].join(t.sep),
           icon: done ? Icons.check_circle_rounded : Icons.today_rounded,
           color: done ? Palette.card : const Color(0xFFFFF1C2),
           fontSize: 15,

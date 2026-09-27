@@ -111,6 +111,9 @@ class ChunkyButton extends StatefulWidget {
 class _ChunkyButtonState extends State<ChunkyButton> {
   bool _down = false;
 
+  /// 2度押しよけ（画面の移動や広告の数えが二重にならないように）。
+  DateTime _lastTap = DateTime(2000);
+
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null;
@@ -125,6 +128,9 @@ class _ChunkyButtonState extends State<ChunkyButton> {
         onTapUp: enabled
             ? (_) {
                 setState(() => _down = false);
+                final now = DateTime.now();
+                if (now.difference(_lastTap) < const Duration(milliseconds: 500)) return;
+                _lastTap = now;
                 if (!widget.silent) AppScope.maybeOf(context)?.play(Sfx.tap);
                 widget.onPressed!();
               }
@@ -149,12 +155,15 @@ class _ChunkyButtonState extends State<ChunkyButton> {
                   Icon(widget.icon, size: widget.fontSize + 3, color: Palette.ink),
                   const SizedBox(width: 4),
                 ],
+                // 狭いボタンでは「…」で切らず、文字を縮めて全部見せる
                 Flexible(
-                  child: Text(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
                     widget.label,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.w800, color: Palette.ink),
+                  ),
                   ),
                 ),
               ],

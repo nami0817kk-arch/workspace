@@ -678,4 +678,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get achDesc_nightmareNoUndo => 'Clear a Nightmare level without undo';
+
+  @override
+  String get sep => ' / ';
+
+  @override
+  String get colon => ': ';
 }

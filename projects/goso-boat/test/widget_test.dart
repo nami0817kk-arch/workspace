@@ -78,13 +78,16 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400));
     }
     await tester.tap(find.text('向こう岸へ'));
+    await tester.pump(const Duration(milliseconds: 100));
+    // 演出の途中（まだ札は出ていない）でも、失敗はもう記録されている
+    expect(progress.tries(progress.levels.first), 1, reason: '逃げると決まった時点で記録する');
+    expect(progress.resumeFor(progress.levels.first), isNull);
     for (var i = 0; i < 30; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
     expect(find.text('脱走された'), findsOneWidget);
     expect(find.textContaining('囚人だけが残った'), findsOneWidget);
     expect(find.byWidgetPredicate((w) => w is Text && ['あばよ！', 'お先に〜', 'へへっ', '自由だー！'].contains(w.data)), findsOneWidget, reason: '捨てぜりふ');
-    expect(progress.tries(progress.levels.first), 1);
     // 逃げられたら「最初から」だけ（一手戻すは出さない。2026-09-27 ユーザー決定）
     expect(find.text('一手戻す'), findsOneWidget, reason: '上の段のボタン（押せない）だけで、札には出さない');
     await tester.tap(find.text('最初から').last);
@@ -201,5 +204,66 @@ void main() {
     final progress = await _progress();
     await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), settings: GameSettings(progress.prefsForTest, silent: true), locale: const Locale('ja')));
     expect(find.text('見習い・次の階級まで ★10'), findsOneWidget);
+  });
+
+  testWidgets('渡りきった直後に「最初から」を押しても、記録は壊れない', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    final progress = await _progress({'adFree': true, 'intro.1': true});
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), settings: GameSettings(progress.prefsForTest, silent: true), locale: const Locale('ja')));
+    await tester.tap(find.text('はじめる'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(seconds: 2));
+    for (var i = 0; i < 3; i++) {
+      await tester.tap(find.text('ヒント'));
+      await tester.pump(const Duration(milliseconds: 400));
+      final up = find.text('向こう岸へ');
+      await tester.tap(up.evaluate().isNotEmpty ? up : find.text('手前の岸へ'));
+      await tester.pump(const Duration(milliseconds: 1000));
+      if (i < 2) await tester.pump(const Duration(milliseconds: 500));
+    }
+    // 舟が着いた直後（札が出る前）に「最初から」を押す
+    await tester.tap(find.text('最初から'));
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text('全員護送'), findsOneWidget);
+    expect(progress.best(progress.levels.first), 3, reason: '0回などの壊れた記録にならない');
+    expect(progress.stars(progress.levels.first), 2);
+    await tester.pump(const Duration(seconds: 3));
+  });
+
+  testWidgets('鬼門の星が足りなければ、舞台7の最後から「次の面へ」を出さない', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    final ls = _levels();
+    final last7 = ls.lastWhere((l) => l.world == 7);
+    // 舞台1〜7を全部星1で解いた状態（102★ < 200★）。7-15 はまだ
+    final progress = await _progress({
+      'adFree': true,
+      for (var w = 1; w <= 8; w++) 'intro.$w': true,
+      for (final l in ls.where((l) => l.world < 7 || (l.world == 7 && l != last7))) 'stars.${l.id}': 1,
+    });
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), settings: GameSettings(progress.prefsForTest, silent: true), locale: const Locale('ja')));
+    await tester.tap(find.textContaining('つづきから'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.textContaining(last7.id), findsWidgets);
+    for (var i = 0; i < last7.par; i++) {
+      await tester.tap(find.text('ヒント'));
+      await tester.pump(const Duration(milliseconds: 300));
+      // ヒントの知らせ「…で中州へ」から行き先を読み、そのボタンを押す
+      final target = ['向こう岸', '中州', '手前の岸'].firstWhere((pl) => find.textContaining('で$plへ').evaluate().isNotEmpty);
+      await tester.tap(find.text('$targetへ'));
+      await tester.pump(const Duration(milliseconds: 1000));
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+    await tester.pump(const Duration(milliseconds: 800));
+    expect(find.text('全員護送'), findsOneWidget);
+    expect(find.text('次の面へ'), findsNothing, reason: '鬼門は★200まで開かない');
+    expect(find.textContaining('鬼門まで あと★'), findsOneWidget);
+    expect(find.textContaining('全120面'), findsNothing);
+    await tester.pump(const Duration(seconds: 3));
   });
 }
