@@ -1167,13 +1167,25 @@ def _ads_txt() -> str | None:
     return f"google.com, {pub_id}, DIRECT, f08c47fec0942fa0\n"
 
 
+def _feed_summary(day: dict) -> str:
+    """RSS の説明文。日別ページの本文と同じ数え方を使う。"""
+    note = day_stop_note(day, "gainers")
+    text = day_summary(day.get("gainers") or [], "gainers", omit_stops=note is not None)
+    if note:
+        outside = f"（うち{note['outside']}銘柄は上位30銘柄の外）" if note["outside"] else ""
+        text += f"この日{note['term']}になったのは{note['count']}銘柄です{outside}。"
+    return text
+
+
 def _write_feed(days: list[dict]) -> None:
     (_OUTPUT_DIR / "feed.xml").write_text(
         feed.build(
             days,
             site_url=SITE_URL,
             url_for=lambda rec: canonical_url(f"archive/gainers/{rec}.html"),
-            summarize=lambda rows: day_summary(rows, "gainers"),
+            # **日別ページと同じ文にする。** 記録がある日は件数を要約から
+            # 落とし、代わりに全件を1文添える（サイトと RSS で数が違わないように）。
+            summarize=_feed_summary,
         ),
         encoding="utf-8",
     )

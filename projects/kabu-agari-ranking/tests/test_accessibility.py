@@ -94,3 +94,14 @@ def test_リンクの文字だけで行き先が分かる(site):
             if text.strip() in vague:
                 bad.append(f"{path.relative_to(site).as_posix()}: {text.strip()}")
     assert not bad, "\n".join(bad[:10])
+
+
+def test_カレンダーの升目は日付を名乗る(site):
+    """升目の文字は「24」だけ。リンクだけを拾って読む人には、
+    どの月の24日か分からない（title は読まれないことがある）。"""
+    html = (site / "index.html").read_text(encoding="utf-8")
+    links = re.findall(r'<a [^>]*href="[^"]*archive/[^"]*"[^>]*>\d+</a>', html)
+    assert links, "カレンダーの升目が見つからない"
+    for link in links:
+        assert "aria-label=" in link, link
+        assert re.search(r'aria-label="\d{4}年\d+月\d+日', link), link

@@ -22,7 +22,10 @@ def build(days: list[dict], *, site_url: str, url_for, summarize) -> str:
     """RSS 2.0 の XML を組み立てて返す。
 
     url_for(rec_date) … その日のページの URL
-    summarize(rows) … その日の一言（本文に出しているものと同じ）
+    summarize(day) … その日の一言。**本文に出しているものと同じ**にする。
+        行だけを渡していたため、記録がある日に「上位30銘柄のうち N 銘柄は
+        ストップ高です」という別の数え方が RSS にだけ残っていた
+        （2026-09-28 に日ごと渡す形に変えた）。
     """
     items = []
     for day in days[:FEED_ITEMS]:
@@ -39,7 +42,7 @@ def build(days: list[dict], *, site_url: str, url_for, summarize) -> str:
             f"      <link>{escape(url)}</link>\n"
             f'      <guid isPermaLink="true">{escape(url)}</guid>\n'
             f"      <pubDate>{format_datetime(published)}</pubDate>\n"
-            f"      <description>{escape(summarize(rows))}</description>\n"
+            f"      <description>{escape(summarize(day))}</description>\n"
             "    </item>"
         )
 
