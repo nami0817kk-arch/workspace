@@ -177,10 +177,10 @@
     "videos.update": 5
   },
   "2026-09-26": {
-    "channels.list": 14,
-    "playlistItems.list": 14,
-    "videos.insert": 14,
-    "thumbnails.set": 14,
-    "playlistItems.insert": 7
+    "channels.list": 18,
+    "playlistItems.list": 18,
+    "videos.insert": 18,
+    "thumbnails.set": 18,
+    "playlistItems.insert": 9
   }
 }

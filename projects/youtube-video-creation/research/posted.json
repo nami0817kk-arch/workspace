@@ -2696,5 +2696,29 @@
     "video_id": "6Ag03YVQFp8",
     "at": "2026-09-27T05:45:32+00:00",
     "publish_at": "2026-09-27T06:30:00Z"
+  },
+  {
+    "build": "20260927b_itakura",
+    "video_id": "hCuov5_JrRw",
+    "at": "2026-09-27T06:29:20+00:00",
+    "publish_at": "2026-09-27T07:00:00Z"
+  },
+  {
+    "build": "20260927b_itakura_short",
+    "video_id": "6eS2P68opTs",
+    "at": "2026-09-27T06:29:34+00:00",
+    "publish_at": "2026-09-27T07:30:00Z"
+  },
+  {
+    "build": "20260927b_minamino",
+    "video_id": "F5LIgQ8ZqXg",
+    "at": "2026-09-27T06:29:50+00:00",
+    "publish_at": "2026-09-27T08:00:00Z"
+  },
+  {
+    "build": "20260927b_minamino_short",
+    "video_id": "6T3p7PkULTQ",
+    "at": "2026-09-27T06:30:05+00:00",
+    "publish_at": "2026-09-27T08:30:00Z"
   }
 ]
