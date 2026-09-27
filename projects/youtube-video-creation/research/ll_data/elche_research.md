@@ -98,6 +98,7 @@
 - アリカンテ県アルコイ生まれ。23歳まで Tercera División だけでプレー。2009年夏、2部のポリ・エヒードからエルチェへ（出典 Diario Información 2009-06-11「El Elche ficha a Jorge Molina y Julián Cerdá del Poli Ejido」）。
 - 在籍 2009–2010、リーグ **38試合26得点**。2部の得点王（「led the scoring charts with 26」）。2010年6月19日、優勝したレアル・ソシエダに4-1で、1人で4点。
 - 2010年6月29日ベティスへ160万ユーロ。のちヘタフェ、グラナダ。2022年11月13日、40歳205日で国王杯の最年長得点記録。
+  - （2026-09-27 追記）この得点は**グラナダ**の選手として（英語版の本人記事「===Granada===」の節「On 13 November 2022, Molina closed a 3–2 win over Yeclano Deportivo in the first round of the domestic cup and, at the age of 40 years and 205 days, became the oldest scorer in the history of the tournament」。infobox もグラナダ 2020–2023）。それまでの記録はエルチェのニーノ（2021年、40歳189日）。
 - 写真: `File:JorgeMolina.JPG`（CC BY 3.0、Matias Segarra、説明「Jorge Molina (Elche CF, 2009/10)」、600×900）
 
 **② Manu Herrera（マヌ・エレーラ）** https://en.wikipedia.org/wiki/Manu_Herrera

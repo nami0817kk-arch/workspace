@@ -17,7 +17,7 @@ theme:
   topic: ヘタフェ
   title: ヘタフェ。あのカーンが「信じられない」と言った夜
   question: どんなクラブなのか
-  hook: 監督のひと言が、ファンの合言葉になっています。
+  hook: 監督の口ぐせが、ファンの合言葉になっています。
   lead: 創立**1983年**。20クラブで、いちばん若い。
   opening_image: assets/stats/ll_getafe_data_t.png
 thumbnail:
@@ -37,7 +37,7 @@ sections:
   - text: ヨーロッパは**2020年**以来。パルチザンを合計**4対3**で破りました。
     image: assets/stats/ll_getafe_data_r1.png
     no_telop: true
-  - text: 通算**10シーズン目**のボルダラス監督は、こう話します。
+  - text: 通算**10シーズン目**のボルダラス監督。マラガに競り勝ったあと、こう話しました。
     image: assets/stats/ll_getafe_data_r2.png
     no_telop: true
   - voice: ホセ・ボルダラス
@@ -47,6 +47,9 @@ sections:
     text: 多くの選手が、ぎりぎりの力でピッチに立っている
     image: assets/stats/ll_getafe_data_r2.png
   - text: '**2008年**には、あのバイエルンを10人で延長の最後まで追い詰めました。'
+    image: assets/stats/ll_getafe_data_r3.png
+    no_telop: true
+  - text: 相手のキーパー、カーンは「今夜のことは信じられない」と話しました。
     image: assets/stats/ll_getafe_data_r3.png
     no_telop: true
   - image: assets/stats/ll_getafe_data0.png
@@ -82,6 +85,7 @@ sections:
   - https://www.marca.com/futbol/getafe/2026/09/26/decada-futbol-papa.html
   - https://www.superdeporte.es/futbol/2026/08/27/getafe-sufre-pierde-belgrado-partizan-133720081.html
   - https://en.wikipedia.org/wiki/2007%E2%80%9308_UEFA_Cup_knockout_stage
+  - http://www.elmundo.es/elmundodeporte/2008/04/11/futbol/1207865743.html
   bg: assets/backgrounds/stadium_ヘタフェ_in.png
   official: false
 - id: history
@@ -242,8 +246,8 @@ sections:
       rows:
       - - 結果
         - アウェーゴールの差で敗退
-  - 試合後、バイエルンのキーパー、カーンはこう話しました。
-  - 「今夜のことは信じられない。40年で、こんな経験は無かった」
+  - 試合後、カーンはこうも話しています。
+  - 「40年で、こんな経験は無かった」
   sources:
   - https://en.wikipedia.org/wiki/Getafe_CF
   - https://en.wikipedia.org/wiki/2007%E2%80%9308_UEFA_Cup_knockout_stage

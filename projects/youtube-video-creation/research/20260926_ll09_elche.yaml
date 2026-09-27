@@ -284,7 +284,7 @@ sections:
   - text: ホルヘ・モリーナは同じ県のアルコイ生まれ。2009年、ポリ・エヒードから来ました。
     image: assets/photos/ll/elche/elche_legend_f020a92c.jpg
   - 1シーズン目はリーグ戦で**38試合26得点**。2部の得点王になりました。
-  - 翌年ベティスへ。40歳を過ぎても点を取り、国王杯の最年長得点を塗り替えました。
+  - 翌年ベティスへ。のちグラナダで、40歳を過ぎて国王杯の最年長得点を記録しました。
   sources:
   - https://en.wikipedia.org/wiki/Jorge_Molina_(footballer,_born_1982)
   - https://en.wikipedia.org/wiki/Manu_Herrera
@@ -414,7 +414,7 @@ sections:
     text: ヘルマン・バレラはリーグ戦で**52試合**。
     no_telop: true
   - image: assets/stats/ll_elche_mf2.png
-    text: ミッドフィールダーの残りは6人です。
+    text: ミッドフィールダーの2枚目、6人です。
     no_telop: true
   - image: assets/stats/ll_elche_fw_f.png
     text: フォワードは5人。

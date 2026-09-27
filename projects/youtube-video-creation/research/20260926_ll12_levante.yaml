@@ -34,7 +34,7 @@ sections:
   telop: 最下位からの残留と、86年待った優勝
   narrator: キャスター
   say:
-  - text: 昨シーズンは、2部から上がって1年目。最下位から巻き返して、1部に残りました。
+  - text: レバンテは昨シーズン、昇格1年目。最下位から巻き返して、1部に残りました。
     image: assets/stats/ll_levante_data_r1.png
     no_telop: true
   - text: 立て直したのは、ルイス・カストロ監督。ホームの力を、こう話しています。
@@ -43,7 +43,7 @@ sections:
   - voice: ルイス・カストロ
     text: 本拠地の空気は違う。1人多く戦えていて、それがホームで大きな力になっている
     image: assets/stats/ll_levante_data_r2.png
-  - text: そしてこのクラブが内戦のさなかに取った優勝は、**86年**たって、公式に認められました。
+  - text: そして内戦のさなかに取った「自由スペイン杯」の優勝は、**86年**たって、公式に認められました。
     image: assets/stats/ll_levante_data_r3.png
     no_telop: true
   - image: assets/stats/ll_levante_data0.png
@@ -277,11 +277,12 @@ sections:
   - text: アルナ・コネは、2011年にセビージャから借りたフォワード。リーグ戦で**34試合15得点**。
     image: assets/photos/ll/levante/levante_legend_edd31707.jpg
   - マドリードを**1対0**で破った試合でも、ただ1つのゴールを決めました。
-  - '**18点**でセビージャへ戻る契約。あと1点に迫り、けがもあって最後の3試合は休みました。'
+  - 公式戦では**17点**。**18点**でセビージャへ戻る契約で、けがもあり最後の3試合は休みました。
   sources:
   - https://en.wikipedia.org/wiki/Arouna_Kon%C3%A9
   - https://en.wikipedia.org/wiki/Keylor_Navas
   - https://en.wikipedia.org/wiki/Vicente_Iborra
+  - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
   bg: assets/backgrounds/stadium_レバンテ_in.png
   official: false
 - id: legends2

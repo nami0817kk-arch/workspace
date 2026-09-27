@@ -227,18 +227,24 @@ sections:
   card:
     type: table
     title: 手放した15歳
-    columns:
+    columns: &id004
     - ''
     - ''
     rows:
     - - 1992年
       - 会長が下部組織を閉じる
-    - - 15歳のラウール
-      - レアル・マドリードへ
   say:
   - 1992年、会長のヘスス・ヒルは、お金を理由に下部組織を閉じます。
   - そこにいた15歳のラウールは、レアル・マドリードへ移りました。
-  - ヒルはテレビで、この少年を未来の看板だと自慢していたのです。
+  - text: ヒルはテレビで、この少年を未来の看板だと自慢していたのです。
+    card:
+      type: table
+      title: 手放した15歳
+      columns: *id004
+      rows:
+      - - 15歳のラウール
+        - レアル・マドリードへ
+  - ラウールはそのレアル・マドリードで16年、主将も務めて**323得点**を挙げました。
   sources:
   - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
   - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
@@ -258,7 +264,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id004
+    - &id005
       - フェルナンド・トーレス
       - 2001-07, 2015-18
       - 19歳で主将
@@ -286,8 +292,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
-    - &id005
+    - *id005
+    - &id006
       - ディエゴ・ゴディン
       - 2010-2019
       - 優勝を決めた頭
@@ -315,8 +321,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id004
     - *id005
+    - *id006
     - - アントワーヌ・グリーズマン
       - 2014-19, 2021-26
       - 歴代最多得点
@@ -352,6 +358,7 @@ sections:
   say:
   - text: 今シーズンの監督はディエゴ・シメオネ。アルゼンチン出身で、**2011年12月**の就任です。
     image: assets/photos/ll/atletico/atletico_manager_b58576f1.jpg
+  - 今年で15年目。20クラブの監督で、いちばん長く務めています。
   - 前はアルゼンチンのラシン。ここで指揮した試合は、**808**を数えます。
   sources:
   - https://en.wikipedia.org/wiki/Atlético_Madrid

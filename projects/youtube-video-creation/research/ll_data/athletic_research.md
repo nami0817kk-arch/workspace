@@ -53,6 +53,7 @@
 - 1911年、国王杯でイングランド人選手の出場資格をめぐり**レアル・ソシエダと揉めた**（当時支部だったアトレティコ・マドリードの非バスク人選手も使っていた）。これを受けて連盟が**翌年の大会から「選手はスペイン国籍に限る」**と決めた。規則がゆるんだあとも、クラブは地元の選手だけのやり方を続けた。[EN-POLICY]
 - 西語版は「他クラブ（とくにソシエダ）の抗議を受けて、1911年に連盟が国籍の規則を作った」「意図した決定だったか偶然かを示す文書は無い」と書く。[ES-AB] Filosofía deportiva
 - 【食い違い】規則ができた年：英語版は「翌年の大会から」、西語版は「1911年に」。動画は「翌年から」とせず「連盟が、選手はスペイン国籍に限ると決めます」とだけ言う。
+- （2026-09-27 追記、流れの点検で「スペイン国籍限定→地元限定」のつなぎを確かめた）国籍の規則のあと地元だけになった理由: 原文「As a large proportion of the best players in that early era were Basque, relying on locals was no impediment to Athletic and they chose to maintain that approach even when the regulations were relaxed some years later.」＝当時の有力選手の多くがバスク人で、地元だけに頼っても支障がなかった。[EN-POLICY] History
 - 監督は対象外（イングランド、ハンガリー、ドイツ、フランス、アルゼンチンの監督がいた）。[EN-POLICY]
 - この方針が効いている根拠として、英語版は「一度も降格していない3クラブの1つ」を挙げる。[EN-POLICY]
 

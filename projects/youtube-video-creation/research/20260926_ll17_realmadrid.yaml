@@ -43,7 +43,7 @@ sections:
   - voice: ジョゼ・モウリーニョ
     text: それでもレアル・マドリードは、レアル・マドリードだ
     image: assets/stats/ll_realmadrid_data_r2.png
-  - text: そしてヨーロッパの王者を決める大会。作った一人は、当時の会長でした。
+  - text: そしてヨーロッパの王者を決める大会。作った一人は、会長のサンティアゴ・ベルナベウでした。
     image: assets/stats/ll_realmadrid_data_r3.png
     no_telop: true
   - image: assets/stats/ll_realmadrid_data0.png
@@ -131,7 +131,7 @@ sections:
       - 1943年から78年に亡くなるまで
   say:
   - いまのチャンピオンズリーグは、各国の王者を集める大会として始まりました。
-  - 作った一人が、**35年**近く会長を務めたサンティアゴ・ベルナベウです。
+  - ベルナベウは、**35年**近くこのクラブの会長を務めた人です。
   - text: 1955年、フランスの記者の案を受け、パリのホテルで立ち上げを決めました。
     card:
       type: table

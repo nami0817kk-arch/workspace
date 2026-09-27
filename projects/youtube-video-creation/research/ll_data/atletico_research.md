@@ -72,6 +72,7 @@
 
 1. **下部組織を閉じ、15歳のラウールを手放した**: 1992年、会長ヘスス・ヒルが費用削減で下部組織を閉じ、15歳のラウールはレアル・マドリードへ移った。[EN-ATM] The Transition years／https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
    - 西語版のラウールの記事: ヒルは**テレビでラウールを未来の看板選手だと自慢していた**が、「深刻な経済問題」を理由に下部組織をなくした。ラウールは1994年末になってもアトレティコのファンだと言い、戻るつもりだったが、バルダーノ監督が引き留めた。https://es.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez_Blanco
+   - （2026-09-27 追記）その後: 英語版ラウールの記事の冒頭「Raúl spent 16 years of his career playing for Real Madrid」「two years later became captain of Real Madrid」「Raúl left the club in 2010 with 323 goals scored for them」＝レアル・マドリードで16年、主将、323得点。https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
    - 【食い違い】年齢: 英語版クラブ記事は「15-year-old」。ラウールは1977年6月27日生まれなので、1992年の夏の時点で15歳。
    - 場面写真: Commons に1992年の自由な写真は見当たらず、**取り込んでいない**。
 2. （候補）2014年5月17日、最終節のカンプ・ノウでゴディンの同点ヘッド→18年ぶりの優勝。→ 名選手の節で使うので逸話にはしない。

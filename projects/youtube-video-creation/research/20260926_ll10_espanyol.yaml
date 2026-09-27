@@ -49,17 +49,26 @@ sections:
   - text: 今季も、ここまで7試合で**2勝**です。
     image: assets/stats/ll_espanyol_data_r2.png
     no_telop: true
-  - text: そしてこのクラブは、一つの大会を無敗で戦い抜きながら、欧州の頂点を逃しています。
+  - text: そして2007年のウエファカップ。一度も負けずに、決勝まで進みました。
+    image: assets/stats/ll_espanyol_data_r3.png
+    no_telop: true
+  - text: それでも最後のピーケー戦で、欧州の頂点を逃しています。
     image: assets/stats/ll_espanyol_data_r3.png
     no_telop: true
   - image: assets/stats/ll_espanyol_data0.png
     text: 創立は**1900年**。スペインで今も続くクラブの中で、**5番目**に古いクラブです。
     no_telop: true
   - image: assets/stats/ll_espanyol_data1.png
-    text: 愛称は「ペリキートス」、インコのこと。ネコのフィリックスの、カタルーニャでの呼び名です。
+    text: 愛称は「ペリキートス」、インコのこと。もとは、からかいの言葉です。
     no_telop: true
   - image: assets/stats/ll_espanyol_data1.png
-    text: 会員が少なく「4匹のネコ」とからかわれたファンが、この名で呼ばれるようになりました。
+    text: 会員が少なく、ファンは「4匹のネコ」と笑われていました。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_data1.png
+    text: そのころ人気のネコ、フィリックスは、カタルーニャで「インコのネコ」と呼ばれます。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_data1.png
+    text: そこでファンも、「4匹のインコのネコ」と呼ばれるようになりました。
     no_telop: true
   - image: assets/stats/ll_espanyol_data2.png
     text: ホームタウンはコルネリャ。バルセロナの南西にある、人口**9万**ほどの町です。
@@ -71,6 +80,9 @@ sections:
     no_telop: true
   - image: assets/stats/ll_espanyol_cups.png
     text: 1部の優勝は**0回**。国王杯は**4回**。スーペルコパとヨーロッパは、まだありません。
+    no_telop: true
+  - image: assets/stats/ll_espanyol_cups.png
+    text: 1部は**89シーズン**。優勝の無いクラブでは、いちばん長く戦っています。
     no_telop: true
   - image: assets/stats/ll_espanyol_data6.png
     text: 最多出場はフォワードのラウール・タムード。このクラブで**389試合**に出ました。
@@ -166,7 +178,7 @@ sections:
     - - 試合
       - 10人で延長、2対2
   say:
-  - 2007年、ふたたびウエファカップの決勝へ。ここまで負けなしで勝ち上がりました。
+  - 2007年、ふたたびウエファカップの決勝へ。グループの試合は、すべて勝っていました。
   - 相手は同じスペインのセビージャ。**68分**に、エスパニョールの1人が退場します。
   - text: 10人のまま延長の終盤に追いつき、**2対2**の引き分け。ピーケー戦で敗れました。
     card:

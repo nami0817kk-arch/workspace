@@ -631,12 +631,15 @@ def build(key: str, number: int, old_file: str) -> Path:
     first_board = squad_boards[0]["out"] if squad_boards else ""
     ssay = [{"text": f"今季の登録選手は{total}人です。", "image": first_board, "no_telop": True}
             if first_board else f"今季の登録選手は{total}人です。"]
-    seen = set()
+    seen, sheets = set(), {}
     for board in squad_boards:
         out, label, n = board["out"], board["label"], board["count"]
         if label in seen:
-            # 「◯◯の続きです。」だけだと中身の無い行になる（2026-09-27 流れの点検）。人数を言う
-            ssay.append({"image": out, "text": f"{label}の残りは{board.get('shown', n)}人です。", "no_telop": True})
+            # 「◯◯の続きです。」だけだと中身の無い行になる（2026-09-27 流れの点検）。人数を言う。
+            # 「残りは6人」だと、直前に2人の名前を読んだあとなので「13−2＝11のはず」と数が合わなく
+            # 聞こえた（エルチェ・マラガ、同じ日の2回目の点検）。**2枚目の板の人数**だと分かる言い方にする
+            sheets[label] = sheets.get(label, 1) + 1
+            ssay.append({"image": out, "text": f"{label}の{sheets[label]}枚目、{board.get('shown', n)}人です。", "no_telop": True})
             continue
         seen.add(label)
         here = [p for p in raw["squad"]

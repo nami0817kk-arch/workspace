@@ -47,7 +47,7 @@ sections:
   - text: 今季からは、ドルトムントを欧州の決勝へ導いたテルジッチ監督が率います。
     image: assets/stats/ll_athletic_data_r3.png
     no_telop: true
-  - text: 決勝までは進んだことがあります。それでも、欧州の大会の優勝には**一度も**届いていません。
+  - text: アスレティック・ビルバオも欧州の決勝に2度進みましたが、優勝には**一度も**届いていません。
     image: assets/stats/ll_athletic_data_r3.png
     no_telop: true
   - image: assets/stats/ll_athletic_data0.png
@@ -105,6 +105,7 @@ sections:
   - このクラブが地元の選手だけで戦うようになったのは、**1911年**からです。
   - 国王杯で、このクラブが使ったイングランド人選手の資格に、ソシエダが抗議したのがきっかけ。
   - 連盟は、選手をスペイン国籍に限ると決めます。
+  - 当時の有力な選手は、多くがバスクの人。地元だけで組んでも困りませんでした。
   - text: 国籍の規則がゆるんだあとも、クラブは地元の選手に限るやり方を続けました。
     card:
       type: table

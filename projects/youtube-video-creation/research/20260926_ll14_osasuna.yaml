@@ -43,7 +43,7 @@ sections:
   - voice: ルイス・ミゲル・ラミス
     text: 前に出るのは一歩ではなく三歩だ。一歩で済む状況ではない
     image: assets/stats/ll_osasuna_data_r2.png
-  - text: オサスナは**1977年**まで3部。そこから**9シーズン**後の**1985年**、ヨーロッパの舞台へ。
+  - text: オサスナは**1976年**から77年のシーズンに3部。その**9シーズン**後に、ヨーロッパへ。
     image: assets/stats/ll_osasuna_data_r3.png
     no_telop: true
   - image: assets/stats/ll_osasuna_data0.png
@@ -99,7 +99,7 @@ sections:
       - 17年ぶりに1部へ
   say:
   - 1970年代のオサスナは、2部と3部を行き来していました。
-  - 1977年に3部を抜けると、**1980年**には17年ぶりに1部へ戻ります。
+  - 3部で優勝して上がると、**1980年**には17年ぶりに1部へ戻ります。
   - text: '**1985年**、前のシーズンの6位で、初めてヨーロッパの大会に出場。'
     card:
       type: table

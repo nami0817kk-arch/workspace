@@ -70,7 +70,7 @@ sections:
     text: 最多出場は、中盤のミゲリ。前身のクラブの時代を含めて**405試合**です。
     no_telop: true
   - image: assets/stats/ll_malaga_data7.png
-    text: 直近のタイトルは**2002年**のインタートトカップ。決勝でビジャレアルを破りました。
+    text: 直近のタイトルは**2002年**のインタートトカップ。アンダルシアのクラブで初の欧州タイトル。
     no_telop: true
   - image: assets/stats/ll_malaga_data8.png
     text: 昨シーズンは2部で**4位**、勝ち点**73**。プレーオフを勝ち抜いての昇格です。
@@ -229,7 +229,7 @@ sections:
     - - クラブの気質
       - 昇格の決勝に3万83人
   say:
-  - フネス監督のチームは、ボールを回して崩す。敵地のセルタ戦でも、支配率は7割近く。
+  - フネス監督のチームは、ボールを回して崩す。監督の話では、敵地のセルタ戦は支配率7割近く。
   - 運営の型は、下部組織。登録**28人**のうち**13人**が、ここで育ちました。
   - スタンドは熱い。昇格を決めたプレーオフの決勝では、ホームに**3万83人**。
   sources:
@@ -417,7 +417,7 @@ sections:
     text: ダビド・ラルビアはリーグ戦で**121試合**。
     no_telop: true
   - image: assets/stats/ll_malaga_mf2.png
-    text: ミッドフィールダーの残りは6人です。
+    text: ミッドフィールダーの2枚目、6人です。
     no_telop: true
   - image: assets/stats/ll_malaga_fw_f.png
     text: フォワードは3人。

@@ -73,7 +73,7 @@ sections:
     text: 最多出場は、地元生まれのキーパー、セバージョス。このクラブだけで**460試合**。
     no_telop: true
   - image: assets/stats/ll_racing_data7.png
-    text: 直近のタイトルは昨シーズンの2部優勝。最終節は、カディスに**4対1**で勝ちました。
+    text: 直近のタイトルは昨シーズンの2部優勝。最終節、ホームのカディス戦で優勝を決めました。
     no_telop: true
   - image: assets/stats/ll_racing_data8.png
     text: 昨シーズンは2部で**1位**。勝ち点**82**で、2位に**5**差をつけています。
@@ -195,7 +195,7 @@ sections:
   - text: 2部と3部を行き来したあと、**2022年**に3部を制して2部へ戻ります。
     image: assets/images/ll_racing_history4/scene.jpg
   - そして**2026年5月16日**、ホームでバジャドリードに**4対1**で勝ちます。
-  - 1部への復帰が決まり、次の日、選手を乗せたバスを大勢の人が囲みました。
+  - '**14年**ぶりの1部復帰が決まり、次の日、選手を乗せたバスを大勢の人が囲みました。'
   sources:
   - https://en.wikipedia.org/wiki/Racing_de_Santander
   - https://es.wikipedia.org/wiki/Real_Racing_Club_de_Santander
