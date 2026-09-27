@@ -230,6 +230,18 @@
   .hero-band { background: var(--ok-bg); border: 1px solid var(--ok-border); border-radius: 12px; padding: 1.1rem 1.2rem; margin: 0.5rem 0 1rem; }
   .hero-band h1 { margin: 0 0 0.35rem; }
   .hero-lead { margin: 0 0 0.6rem; }
+  .presets { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; margin: 0 0 0.9rem; }
+  .presets-label { font-size: 0.78rem; color: var(--muted); margin-right: 0.15rem; }
+  .presets button, .share-row button { font: inherit; font-size: 0.8rem; color: var(--accent); background: var(--card-bg); border: 1px solid var(--border); border-radius: 999px; padding: 0.25rem 0.7rem; cursor: pointer; }
+  .presets button:hover, .share-row button:hover { border-color: var(--accent); }
+  .share-row { margin: 0.8rem 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+  .share-row .hint { margin: 0; word-break: break-all; }
+  tr.muted-row th, tr.muted-row td { color: var(--muted); }
+  nav.toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 1rem; margin: 0.8rem 0 1.2rem; }
+  nav.toc ol { margin: 0; padding-left: 1.3rem; }
+  nav.toc li { margin: 0.2rem 0; font-size: 0.92rem; }
+  a.btn-link { display: inline-block; font-weight: bold; color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; padding: 0.45rem 0.9rem; text-decoration: none; }
+  a.btn-link:hover { background: var(--ok-bg); }
   .hero-eyebrow { margin: 0 0 0.2rem; font-size: 0.85rem; font-weight: bold; color: var(--ok-text); }
   ul.hero-points { list-style: none; padding: 0; margin: 0.2rem 0 0.8rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
   ul.hero-points li { display: flex; align-items: center; gap: 0.5rem; background: var(--card-bg); border: 1px solid var(--ok-border); border-radius: 10px; padding: 0.5rem 0.6rem; font-size: 0.88rem; line-height: 1.4; }
@@ -405,7 +417,7 @@
       <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
       <a href="{{ base_url }}nenshu.html">年収別の手取り</a>
       <a href="{{ base_url }}kabe/index.html">週20時間の壁</a>
-      <a href="{{ base_url }}year/index.html">年次の変化</a>
+      <a href="{{ base_url }}jyoken.html">加入条件</a>
       <a href="{{ base_url }}faq.html">よくある質問</a>
     </nav>
   </div>
@@ -430,6 +442,8 @@
     <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
     <a href="{{ base_url }}nenshu.html">年収別の手取り</a>
     <a href="{{ base_url }}kabe/index.html">週20時間の壁</a>
+    <a href="{{ base_url }}jyoken.html">加入条件</a>
+    <a href="{{ base_url }}hyoujun.html">標準報酬月額の等級表</a>
     <a href="{{ base_url }}year/index.html">年次の変化を見る</a>
   </div>
   <div class="footer-group">

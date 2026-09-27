@@ -2,6 +2,7 @@
 {% block title %}パートの社会保険 計算シミュレーション｜加入条件・保険料・手取り（2026年10月の改正に対応）{% endblock %}
 {% block description %}パート・アルバイトの社会保険を計算します。週の時間・時給か月収・勤務先の人数で、加入の対象か、保険料と手取りはいくらかを{{ era }}の料率で円単位に。106万円の壁の撤廃（2026年10月）と週20時間の壁にも対応。{% endblock %}
 {% block main_class %}wide{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"パートの社会保険 計算機","url":"{{ SITE_URL }}/","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ja","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"description":"パート・アルバイトが勤務先の社会保険に入る対象か、保険料と手取りはいくらかを{{ era }}の料率で計算する"}</script>{% endblock %}
 {% block content %}
 <section class="hero-band">
   <p class="hero-eyebrow">パート・アルバイトで働く人のための計算サイト</p>
@@ -23,6 +24,13 @@
 <div class="calc-layout">
 <form id="calc-form" class="card calc-form" novalidate>
   <h2 class="card-head">入力</h2>
+  <div class="presets" role="group" aria-label="入力例">
+    <span class="presets-label">入力例</span>
+    <button type="button" data-preset="h=19&amp;hr=1100">扶養内・週19時間</button>
+    <button type="button" data-preset="h=20&amp;hr=1100">週20時間に増やす</button>
+    <button type="button" data-preset="h=30&amp;w=150000">月収15万円・週30時間</button>
+    <button type="button" data-preset="h=20&amp;hr=1100&amp;s=1">昼間の学生</button>
+  </div>
 
   <div class="row">
     <label for="hours">週の労働時間</label>
@@ -110,6 +118,7 @@
       <p class="hint">会社の人数の条件は時点で変わる。将来の時点も確かめられる</p>
     </div>
   </details>
+  <p class="share-row"><button type="button" id="copy-link">この条件のリンクをコピー</button><span id="copy-status" class="hint" aria-live="polite"></span></p>
 </form>
 
 <aside class="calc-side">
@@ -338,28 +347,81 @@
     bar.hidden = false;
   }
 
-  document.getElementById('calc-form').addEventListener('input', render);
-  document.getElementById('calc-form').addEventListener('change', render);
+  // 入力を URL（?h=20&w=90000…）に残す。ブックマークや共有で同じ結果を開ける
+  var FIELDS = [
+    ['h', 'hours'], ['hr', 'hourly'], ['w', 'wage'], ['n', 'employer-size'], ['p', 'prefecture'],
+    ['c', 'commute'], ['x', 'extra'], ['d', 'dependents'], ['a', 'age-40-64'], ['s', 'is-student'], ['as_of', 'as-of']
+  ];
+  function applyParams(params, reset) {
+    FIELDS.forEach(function (f) {
+      var el = document.getElementById(f[1]);
+      var v = params.get(f[0]);
+      if (el.type === 'checkbox') {
+        if (v !== null) { el.checked = v === '1'; } else if (reset) { el.checked = false; }
+      } else if (v !== null) {
+        el.value = v;
+      } else if (reset && (f[0] === 'hr' || f[0] === 'w')) {
+        el.value = '';
+      }
+    });
+    if (params.get('s') === '1' || params.get('a') === '1' || params.get('c') || params.get('x') || params.get('d')) {
+      document.querySelector('details.more').open = true;
+    }
+  }
+  function stateQuery() {
+    var q = [];
+    FIELDS.forEach(function (f) {
+      var el = document.getElementById(f[1]);
+      if (el.type === 'checkbox') { if (el.checked) q.push(f[0] + '=1'); return; }
+      if (el.value === '' || (f[0] === 'as_of' && el.value === 'today')) return;
+      if ((f[0] === 'c' || f[0] === 'x' || f[0] === 'd') && el.value === '0') return;
+      if (f[0] === 'w' && document.getElementById('hourly').value !== '') return;  // 時給から計算した額は残さない
+      q.push(f[0] + '=' + encodeURIComponent(el.value));
+    });
+    return q.join('&');
+  }
+  function saveState() {
+    try { history.replaceState(null, '', window.location.pathname + '?' + stateQuery()); } catch (e) { /* 保存できなくても計算は動く */ }
+  }
+  function onInput() { render(); saveState(); }
+  document.getElementById('calc-form').addEventListener('input', onInput);
+  document.getElementById('calc-form').addEventListener('change', onInput);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-preset]'), function (btn) {
+    btn.addEventListener('click', function () {
+      applyParams(new URLSearchParams(btn.getAttribute('data-preset')), true);
+      onInput();
+    });
+  });
+  document.getElementById('copy-link').addEventListener('click', function () {
+    saveState();
+    var status = document.getElementById('copy-status');
+    var url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { status.textContent = 'コピーしました'; },
+        function () { status.textContent = url; });
+    } else {
+      status.textContent = url;
+    }
+  });
 
   // 「今日時点」の選択肢に、閲覧している端末の実際の日付を出す。
   try {
     document.getElementById('today-option').textContent = '今日（' + todayIso() + '）時点';
   } catch (e) { /* 失敗しても "今日時点" のまま動く */ }
 
-  // 年次ページの「この時点で確かめる」リンク（?as_of=2027-10-01）から来た場合、
-  // その時点をあらかじめ選んでおく。
+  // URL の条件（共有されたリンクや、年次ページの「この時点で確かめる」の ?as_of=2027-10-01）を入力に戻す。
+  // 選択肢に無い値（古い時点など）は既定値のまま。
   try {
     var params = new URLSearchParams(window.location.search);
+    var select = document.getElementById('as-of');
     var wanted = params.get('as_of');
-    if (wanted) {
-      var select = document.getElementById('as-of');
-      for (var i = 0; i < select.options.length; i++) {
-        if (select.options[i].value === wanted) {
-          select.selectedIndex = i;
-          break;
-        }
-      }
-    }
+    applyParams(params, false);
+    if (wanted && select.value !== wanted) { select.value = 'today'; }
+    if (select.selectedIndex < 0) { select.value = 'today'; }
+    ['prefecture', 'dependents'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el.selectedIndex < 0) { el.selectedIndex = id === 'prefecture' ? Array.prototype.map.call(el.options, function (o) { return o.value; }).indexOf('東京') : 0; }
+    });
   } catch (e) { /* URLSearchParams非対応の環境では既定値のまま */ }
 
   render();
@@ -403,7 +465,9 @@
   <li><a href="faq.html#q-106">「106万円の壁」が無くなると、保険料を払わなくてよくなる？</a></li>
   <li><a href="faq.html#q-130">「106万円の壁」と「130万円の壁」は何が違う？</a></li>
   <li><a href="faq.html#q-student">学生は社会保険に入らなくていい？</a></li>
-  <li><a href="faq.html#q-small">従業員が少ない会社なら、ずっと入らなくていい？</a></li>
+  <li><a href="faq.html#q-small">従業員50人以下の会社なら、ずっと入らなくていい？</a></li>
+  <li><a href="faq.html#q-commute">交通費（通勤手当）や残業代は含める？</a></li>
+  <li><a href="faq.html#q-double">ダブルワーク（掛け持ち）は時間を合計する？</a></li>
   <li><a href="faq.html#q-takehome">社会保険に入ると損？</a></li>
 </ul>
 

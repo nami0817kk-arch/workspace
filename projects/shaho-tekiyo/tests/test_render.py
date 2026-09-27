@@ -319,3 +319,43 @@ def test_年収別の手取り早見表(site):
     assert "108,334円" in html  # 130万円の壁の月額
     assert f"<loc>{site_config.SITE_URL}/nenshu</loc>" in (site / "sitemap.xml").read_text(encoding="utf-8")
     assert 'href="nenshu.html"' in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_加入条件と等級表のページ(site):
+    html = (site / "jyoken.html").read_text(encoding="utf-8")
+    assert "<h1>パートの社会保険の加入条件</h1>" in html
+    for m in eligibility.MILESTONES:
+        assert f"{m.effective_from.year}年{m.effective_from.month}月" in html
+    g = (site / "hyoujun.html").read_text(encoding="utf-8")
+    # 4等級（標準 88,000円）: 月収9万円の計算機の既定値と同じ 12,487円
+    assert "<th>4（1）</th><td>88,000円</td>" in g and "12,487円" in g
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    for p in ("jyoken", "hyoujun"):
+        assert f"<loc>{site_config.SITE_URL}/{p}</loc>" in xml
+
+
+def test_手取りからの逆算は届く最小の月収(site):
+    as_of = premium.TABLES[-1].valid_from
+    for r in render._reverse_rows(as_of):
+        target = r["net_man"] * 10_000
+        assert render._net_monthly(as_of, r["pay"]) >= target
+        assert render._net_monthly(as_of, r["pay"] - 100) < target
+    assert "手取り◯万円にするには月収いくら" in (site / "getsushu" / "index.html").read_text(encoding="utf-8")
+
+
+def test_faqの構造化データは見出しと同じ数(site):
+    html = (site / "faq.html").read_text(encoding="utf-8")
+    n = len(re.findall(r'<h2 id="q-', html))
+    blocks = [json.loads(b) for b in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)]
+    faq = [b for b in blocks if b.get("@type") == "FAQPage"][0]
+    assert len(faq["mainEntity"]) == n >= 14
+    assert all(q["acceptedAnswer"]["text"] for q in faq["mainEntity"])
+    assert '"@type":"WebApplication"' in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_計算機の入力例と共有とページからの直リンク(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert html.count("data-preset=") == 4 and 'id="copy-link"' in html
+    assert 'href="../index.html?w=100000"' in (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert 'href="../index.html?h=20&amp;hr=1100"' in (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert "入る・40〜64歳" in (site / "nenshu.html").read_text(encoding="utf-8")

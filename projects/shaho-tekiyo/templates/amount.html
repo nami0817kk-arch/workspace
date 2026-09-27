@@ -91,6 +91,8 @@
 </table>
 </div>
 
+<p><a class="btn-link" href="{{ base_url }}index.html?w={{ pay }}">月収{{ man }}万円を計算機で開く（都道府県・年齢・通勤手当を変えられる）→</a></p>
+
 <h2>時給で考えるなら</h2>
 <p>
   月収{{ man }}万円は、週20時間なら時給およそ{{ "{:,}".format(((man * 10000 * 12 / 52 / 20) / 10)|round|int * 10) }}円、
