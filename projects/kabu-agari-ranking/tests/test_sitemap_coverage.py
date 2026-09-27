@@ -141,3 +141,29 @@ def test_検索が張るアーカイブリンクは必ず実在する(site):
                 if not (site / "archive" / dirname / f"{rec_date}.html").exists():
                     dead.append(f"{s['c']} {dirname}/{rec_date}")
     assert not dead, f"存在しないアーカイブへのリンク: {dead[:5]}"
+
+
+def test_見た目はページに埋め込まず1枚にまとめる(site):
+    """16.6KB の CSS が 200 ページ全部に複製されていた（2026-09-27 に外へ出した）。
+    ページを移るたびに同じものを送り直していたことになる。"""
+    embedded = [p.relative_to(site).as_posix()
+                for p in site.rglob("*.html") if "<style>" in p.read_text(encoding="utf-8")]
+    assert not embedded, f"CSS を埋め込んでいるページ: {embedded[:5]}"
+
+    sheets = list(site.glob("site.*.css"))
+    assert len(sheets) == 1, f"見た目のファイルが {len(sheets)} 個ある"
+    # 名前に中身のハッシュが入っていること（固定名だと直しても古いものが残る）
+    assert re.fullmatch(r"site\.[0-9a-f]{8}\.css", sheets[0].name), sheets[0].name
+
+
+def test_全ページが同じ見た目のファイルを指す(site):
+    sheet = next(site.glob("site.*.css")).name
+    for path in sorted(site.rglob("*.html")):
+        html = path.read_text(encoding="utf-8")
+        m = re.search(r'<link rel="stylesheet" href="([^"]+)"', html)
+        assert m, f"{path.relative_to(site).as_posix()} に見た目のファイルが無い"
+        assert m.group(1).endswith(sheet), f"{path.relative_to(site).as_posix()} -> {m.group(1)}"
+        # 深い階層からも辿れること。404 だけは任意の階層で表示されるので、
+        # 相対ではなくルートからの絶対パスで指すのが正しい。
+        base = site if m.group(1).startswith("/") else path.parent
+        assert (base / m.group(1).lstrip("/")).resolve().exists()

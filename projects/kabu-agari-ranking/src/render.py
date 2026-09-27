@@ -1,5 +1,6 @@
 """data/*.json を読み込み、Jinja2 テンプレートから output/ に静的HTMLを生成する。"""
 import json
+import hashlib
 import shutil
 import sys
 from datetime import date, timedelta
@@ -19,6 +20,9 @@ from market_calendar import CalendarOutOfRange, is_business_day, next_business_d
 
 _ROOT = Path(__file__).resolve().parent.parent
 _TEMPLATES_DIR = _ROOT / "templates"
+# 見た目のファイルはテンプレートと同じ「ビルドの入力」。_ROOT を差し替えても
+# ここは動かさない（templates と同じ扱い）。
+_STATIC_DIR = _ROOT / "static"
 _DATA_DIR = _ROOT / "data"
 _OUTPUT_DIR = _ROOT / "output"
 
@@ -38,6 +42,9 @@ _env.globals["OWNER"] = site_config.OWNER
 _env.globals["CONTACT_EMAIL"] = site_config.CONTACT_EMAIL
 # 検索ページの JS が「銘柄ページへリンクしてよいか」を判断するのに使う。
 # **べた書きにしない。** 閾値を変えたときに、ページの無い銘柄へリンクする。
+# 見た目のファイル。ビルドのたびに中身のハッシュで名前が決まる。
+_CSS_SOURCE = "site.css"
+
 _env.globals["STOCK_PAGE_MIN_APPEARANCES"] = aggregate.STOCK_PAGE_MIN_APPEARANCES
 
 _WEEKDAY_JA = "月火水木金土日"
@@ -91,6 +98,25 @@ def format_date_short_ja(iso: str) -> str:
     """2026-09-18 → 9月18日（金）。同じ年の日付を並べるときに使う。"""
     d = date.fromisoformat(iso)
     return f"{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"
+
+
+def date_list_labels(dates) -> dict[str, str]:
+    """日付が縦に並ぶ一覧のための表記。**年は変わるところだけ出す。**
+
+    同じ一覧なのに、アーカイブ一覧は「9月25日（金）」、ストップ高の記録は
+    「2026年9月25日（金）」と書いていた（2026-09-27 に揃えた）。
+    毎行に年を繰り返すと読みにくく、かといって全部落とすと年をまたいだときに
+    どの年の話か分からなくなる。
+
+    Args:
+        dates: ISO の日付。順序はそのまま（新しい順でも古い順でもよい）。
+    """
+    labels, previous_year = {}, None
+    for iso in dates:
+        year = iso[:4]
+        labels[iso] = format_date_ja(iso) if year != previous_year else format_date_short_ja(iso)
+        previous_year = year
+    return labels
 
 
 def updated_line(rec_date: str) -> str:
@@ -276,12 +302,17 @@ def turnover_note(rows: list[dict], prev_rows: list[dict] | None) -> str:
     )
 
 
-def day_summary(rows: list[dict], kind: str) -> str:
+def day_summary(rows: list[dict], kind: str, *, omit_stops: bool = False) -> str:
     """その日のランキングを一文で説明する。
 
     アーカイブの各日ページは表しか無いと、どの日も同じ見た目の薄いページに
     なってしまう（広告審査でいちばん嫌われる形）。数字から言えることだけを
     書く。ここで相場観や見通しは書かない。
+
+    Args:
+        omit_stops: ストップ高／安の件数をここでは書かない。記録がある日は
+            すぐ下の行で「この日ストップ高になったのは N 銘柄」と全件を出すので、
+            ここでも上位30銘柄の中の数を書くと、**同じページに違う数が2つ並ぶ**。
     """
     if not rows:
         return ""
@@ -303,7 +334,7 @@ def day_summary(rows: list[dict], kind: str) -> str:
     parts.append(f"上位{n}銘柄のうち{big}銘柄が10%以上{verb}しました。")
     stop_key = price_limit.STOP_HIGH if kind == "gainers" else price_limit.STOP_LOW
     stopped = sum(1 for r in rows if price_limit.classify(r.get("close"), r.get("change_pct")) == stop_key)
-    if stopped:
+    if stopped and not omit_stops:
         parts.append(f"うち{stopped}銘柄は{price_limit.LABELS[stop_key]}です。")
     if cheap:
         parts.append(f"終値1,000円未満の低位株が{cheap}銘柄含まれます。")
@@ -621,14 +652,16 @@ def stock_summary(stock: dict, day_count: int) -> str:
     parts.append("、".join(detail) + "）。")
     if stock["best_pct"] is not None:
         parts.append(f"この期間の最大の変動は{stock['best_pct']:+.2f}%。")
-    if stock["stops"]:
-        parts.append(f"うち{stock['stops']}回は制限値幅いっぱいまで動いています。")
+    # **「制限値幅いっぱい」の回数はここでは書かない。** すぐ下の行で
+    # 「ストップ高 N 回」と上下を分けて書いており、同じことを二度言うことになる
+    # （しかも合計だけだと、上がって止まったのか下がって止まったのか分からない）。
     return "".join(parts)
 
 
 def _build_stock_pages(days: list[dict], profiles: dict[str, dict] | None = None) -> list[dict]:
     """銘柄ごとのページ。登場が少ない銘柄は作らない（薄いページを量産しない）。"""
     stocks = aggregate.stock_histories(days)
+    codes = {s["code"] for s in stocks}
     tmpl = _env.get_template("stock.html")
     for stock in stocks:
         points = [
@@ -645,7 +678,12 @@ def _build_stock_pages(days: list[dict], profiles: dict[str, dict] | None = None
                 profile_short=stock_profile.label(
                     (profiles or {}).get(stock["code"]), unit=False),
                 summary=stock_summary(stock, len(days)),
-                together=aggregate.co_occurring(days, stock["code"]),
+                # 一緒に載った銘柄にもページがあれば繋ぐ。**素のテキストで
+                # 並べると、行き先があるのに回遊が途切れる。**
+                together=[
+                    {**e, "has_page": e["code"] in codes}
+                    for e in aggregate.co_occurring(days, stock["code"])
+                ],
                 labels=price_limit.LABELS,
                 chart=charts.columns(
                     points,
@@ -812,10 +850,11 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], spec: dict,
     # 値上がりランキングしか取っていない日があり、ストップ安の一覧から
     # 値下がりアーカイブへ張ると 404 になる（2026-08-24 で実際に切れていた）。
     has_archive = {d["rec_date"] for d in days if d.get(spec["archive"])}
+    labels = date_list_labels(d["rec_date"] for d in history["per_day"])
     per_day = [
         {
             **day,
-            "rec_date_ja": format_date_ja(day["rec_date"]),
+            "rec_date_ja": labels[day["rec_date"]],
             "has_archive": day["rec_date"] in has_archive,
             # 一覧の時点で顔ぶれが見えるようにする（3件まで）
             "names": "、".join(r["name"] for r in day["rows"][:3])
@@ -1034,7 +1073,9 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                 heading=heading,
                 metric_label=metric_label,
                 intro=intro_fmt.format(n=len(rows)),
-                summary=day_summary(rows, json_key),
+                summary=day_summary(rows, json_key,
+                                    omit_stops=day_stop_note(latest, json_key) is not None),
+                stop_note=day_stop_note(latest, json_key),
                 highlights=highlights(days, stock_pages or set(), json_key),
                 turnover=turnover_note(
                     rows, annotate_rows(days[1].get(json_key, [])) if len(days) > 1 else None
@@ -1057,6 +1098,7 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
         )
 
         # 新しい順。前後ナビを付けるので、先に対象日を確定させてから描く。
+        stop_notes = {d["rec_date"]: day_stop_note(d, json_key) for d in days}
         with_data = [(d["rec_date"], annotate_rows(d[json_key], stock_pages)) for d in days if d.get(json_key)]
         dates_with_data = [rec for rec, _ in with_data]
 
@@ -1072,10 +1114,10 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                     notes=flag_notes(day_rows),
                     heading=heading,
                     metric_label=metric_label,
-                    summary=day_summary(day_rows, json_key),
+                    summary=day_summary(day_rows, json_key,
+                                        omit_stops=stop_notes.get(rec) is not None),
                     kind_dir=dirname,
-                    stop_note=day_stop_note(
-                        next(d for d in days if d["rec_date"] == rec), json_key),
+                    stop_note=stop_notes.get(rec),
                     week_href=week_href_for(rec),
                     siblings=[e for e in siblings[rec] if e["kind"] != json_key],
                     turnover=turnover_note(
@@ -1201,11 +1243,27 @@ def load_days() -> list[dict]:
     return _load_all_days()
 
 
+def _write_stylesheet() -> str:
+    """見た目を1枚のファイルにして書き出し、その場所を返す。
+
+    **ファイル名に中身のハッシュを入れる。** 名前が固定だと、直したときに
+    古いものが読み手の手元に残って表示が崩れる。ハッシュなら、変えたときだけ
+    新しい名前になり、変えていないあいだは取りに来ない。
+    """
+    css = (_STATIC_DIR / _CSS_SOURCE).read_text(encoding="utf-8")
+    digest = hashlib.sha256(css.encode("utf-8")).hexdigest()[:8]
+    name = f"site.{digest}.css"
+    (_OUTPUT_DIR / name).write_text(css, encoding="utf-8")
+    return name
+
+
 def build_all() -> None:
     """output/ を作り直し、各種ランキングページ・固定ページを全て生成する。"""
     if _OUTPUT_DIR.exists():
         shutil.rmtree(_OUTPUT_DIR)
     _OUTPUT_DIR.mkdir(parents=True)
+
+    _env.globals["CSS_HREF"] = _write_stylesheet()
 
     days = _load_all_days()
     if not days:
@@ -1291,7 +1349,8 @@ def build_all() -> None:
     static_dir = _ROOT / "static"
     if static_dir.exists():
         for f in static_dir.iterdir():
-            if f.is_file():
+            # site.css は中身のハッシュを付けた名前で別に書き出す
+            if f.is_file() and f.name != _CSS_SOURCE:
                 shutil.copy(f, _OUTPUT_DIR / f.name)
 
     print(f"  output/ を生成しました（{len(days)}日分）")

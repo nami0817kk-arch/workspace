@@ -213,3 +213,71 @@ def test_この週のまとめはその週へ行く():
     """「この週のまとめを見る」と書きながら週の一覧へ飛ばしていた。"""
     assert render.week_href_for("2026-09-25") == "weekly/2026-W39.html"
     assert render.week_href_for("2026-09-28") == "weekly/2026-W40.html"
+
+
+# --- 銘柄ページ ---------------------------------------------------------------
+
+def _stock_day(rec_date, *, gainer=True):
+    """ストップ高（163円 / +44.25%）の日。"""
+    row = {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+           "change_pct": 44.25, "metric_value": 100}
+    low = {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 239.0,
+           "change_pct": -25.08, "metric_value": 100}
+    return {"rec_date": rec_date,
+            "gainers": [row] if gainer else [],
+            "losers": [] if gainer else [low],
+            "active": []}
+
+
+def test_銘柄ページは上限と下限を分けて数える():
+    """合計だけだと、上がって止まったのか下がって止まったのかが分からない。"""
+    import aggregate
+    days = [_stock_day("2026-09-18"), _stock_day("2026-09-17"),
+            _stock_day("2026-09-16", gainer=False)]
+    stock = next(s for s in aggregate.stock_histories(days) if s["code"] == "5131")
+    assert stock["stop_highs"] == 2
+    assert stock["stop_lows"] == 1
+    assert stock["stops"] == 3
+
+
+def test_銘柄ページの一文は回数を二度書かない():
+    """すぐ下の行で「ストップ高 N 回」と出すので、要約では言わない。"""
+    import aggregate
+    days = [_stock_day("2026-09-18"), _stock_day("2026-09-17"), _stock_day("2026-09-16")]
+    stock = next(s for s in aggregate.stock_histories(days) if s["code"] == "5131")
+    text = render.stock_summary(stock, len(days))
+    assert "制限値幅いっぱい" not in text
+    assert "3回登場" in text
+
+
+# --- 表記の揺れ ---------------------------------------------------------------
+
+def test_一覧の日付は年が変わるところだけ年を出す():
+    """毎行に年を繰り返すと読みにくく、全部落とすと年をまたいだとき
+    どの年か分からない。アーカイブ一覧とストップ高の記録で
+    年の有無が食い違っていた（2026-09-27 に揃えた）。"""
+    labels = render.date_list_labels(
+        ["2027-01-05", "2026-12-30", "2026-12-29"])
+    assert labels["2027-01-05"] == "2027年1月5日（火）"
+    assert labels["2026-12-30"] == "2026年12月30日（水）"   # 年が変わった行
+    assert labels["2026-12-29"] == "12月29日（火）"          # 同じ年は短く
+
+
+def test_同じ年だけの一覧は先頭にだけ年が出る():
+    labels = render.date_list_labels(["2026-09-25", "2026-09-24"])
+    assert labels["2026-09-25"].startswith("2026年")
+    assert not labels["2026-09-24"].startswith("2026年")
+
+
+def test_日別ページに同じ数を二度書かない():
+    """記録がある日は、要約の「うち N 銘柄はストップ高です」（上位30銘柄の中の数）と
+    案内の「この日ストップ高になったのは N 銘柄」（全件）が**違う数で並ぶ**。
+    同じページに違う数が2つあると、読み手はどちらが正しいか決められない。"""
+    day = _day_with_31_stop_highs()
+    rows = day["gainers"]
+    with_stops = render.day_summary(rows, "gainers")
+    without = render.day_summary(rows, "gainers", omit_stops=True)
+    assert "ストップ高です" in with_stops
+    assert "ストップ高です" not in without
+    # 落としても、ほかの事実は残る
+    assert "首位は" in without and "10%以上" in without
