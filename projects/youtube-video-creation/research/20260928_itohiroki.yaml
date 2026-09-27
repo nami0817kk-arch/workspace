@@ -29,10 +29,12 @@ sections:
       - 所属するバイエルンが、冬の移籍市場で手放すことを考えている、とドイツで報じられました。
       - 1月にふさわしい話が来なければ、契約が残り1年になる来年の夏、という見方です。
       - クラブの発表ではありません。
-      - 9月の初めには、クラブのスポーツディレクター、フロイントがこう話していました。
+      - text: 9月の初めには、クラブのスポーツディレクター、フロイントがこう話していました。
+        image: assets/images/20260928_pair_freund_ito/01.jpg
       - voice: クリストフ・フロイント
         text: 伊藤洋輝について、急を要する動きはない。洋輝はうちに残るという前提で計画している
-      - その3週間後に、この報道です。
+      - text: その3週間後に、この報道です。
+        image: assets/images/20260928_ito_geki/01.jpg
     sources:
       - https://www.kicker.de/fuenf-bayern-profis-im-fokus-der-stand-bei-ito-boey-und-co-1255634/artikel
       - https://www.fussballtransfers.com/a5843758260632671537-bericht-bayern-beschliesst-ito-verkauf

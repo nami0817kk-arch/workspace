@@ -58,12 +58,14 @@ sections:
       - 右サイドバックの先発は、この夏に来たダンフリース。8試合のうち6試合に出ています。
       - 新しく来た選手に、定位置を奪われている形です。
       - チャンピオンズリーグのインテル戦では、トレントが中盤で先発しました。
-      - モウリーニョ監督は試合のあと、中盤での起用をこう振り返りました。
+      - text: モウリーニョ監督は試合のあと、中盤での起用をこう振り返りました。
+        image: assets/images/20260928_pair_mourinho_trent/01.jpg
       - voice: ジョゼ・モウリーニョ
         text: リヴァプールや代表で何度かあそこでやったことはあるが、彼は中盤の選手ではない
       - voice: ジョゼ・モウリーニョ
         text: それでも全部出し切った。チームのためにしてくれた努力に感謝している
-      - 9月20日のマドリード・ダービーでは、ベンチから出ることはありませんでした。
+      - text: 9月20日のマドリード・ダービーでは、ベンチから出ることはありませんでした。
+        image: assets/images/20260928_trent_rm/01.jpg
     sources:
       - https://site.web.api.espn.com/apis/common/v3/sports/soccer/athletes/223532/gamelog?season=2026
       - https://www.marca.com/futbol/real-madrid/2026/09/15/dumfries-le-gana-partida-trent.html
@@ -78,7 +80,8 @@ sections:
       - ところが9月26日のスペイン戦は、出番なし。
       - 右サイドバックには、本職がセンターバックのクアンサーが入りました。
       - 代表で最後に出たのは2025年の6月。**477日**前です。
-      - 呼び戻した日、トゥヘル監督はワールドカップの選考について、こう認めています。
+      - text: 呼び戻した日、トゥヘル監督はワールドカップの選考について、こう認めています。
+        image: assets/images/20260928_pair_tuchel_trent/01.jpg
       - voice: トーマス・トゥヘル
         text: いつも公平だったか？ 私の側からすれば、そうではなかったかもしれない
     sources:
@@ -93,6 +96,7 @@ sections:
     say:
       - voice: ネット民
         text: ジョゼはレアルでいい仕事をしてる…どうせクリスマスまでにいなくなるだろうけど。
+        image: assets/images/20260928_trent_rm/01.jpg
       - voice: ネット民
         text: トレントを連れ戻せたらなあ、ベンチは似合わないよ
         cont: true

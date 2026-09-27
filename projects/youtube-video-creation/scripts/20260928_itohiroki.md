@@ -102,10 +102,10 @@ cards:
   image: assets/images/20260928_ito_geki/01.jpg
 キャスター: 9月の初めには、クラブのスポーツディレクター、フロイントがこう話していました。
   telop: 9月の初めには、クラブのスポーツディレクター、フロイントがこう話していました
-  image: assets/images/20260928_ito_geki/01.jpg
+  image: assets/images/20260928_pair_freund_ito/01.jpg
 クリストフ・フロイント: 伊藤洋輝について、急を要する動きはない。洋輝はうちに残るという前提で計画している
   telop: クリストフ・フロイント「伊藤洋輝について、急を要する動きはない。洋輝はうちに残るという前提で計画している」
-  image: assets/images/20260928_ito_geki/01.jpg
+  image: assets/images/20260928_pair_freund_ito/01.jpg
 キャスター: その3週間後に、この報道です。
   telop: その3週間後に、この報道です
   image: assets/images/20260928_ito_geki/01.jpg
