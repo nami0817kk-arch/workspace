@@ -14,11 +14,9 @@ theme:
   opening_image: assets/images/20260928_moriyasu/01.jpg
 short_title: 森保監督の異例のお願い
 thumbnail:
-  photos:
-    - assets/images/20260928_moriyasu/01.jpg
-    - assets/images/20260928_doan_shiogai/01.jpg
+  photo: assets/images/20260928_moriyasu/01.jpg
   line1: 森保監督、会見で異例のお願い
-  line2: 堂安「逆にちょっと●●●●●」
+  line2: 「選手が●●●配信はやめて」
 sections:
   - id: request
     heading: 会見の最後に

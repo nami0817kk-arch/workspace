@@ -11,12 +11,10 @@ theme:
   topic: バイエルン
   title: '伊藤洋輝、バイエルンが冬に手放す考え。今季の出場時間に表れていたもの'
   question: 伊藤洋輝は、なぜバイエルンで手放されようとしているのか
-  opening_image: assets/images/20260928_pair_ito_allianz/01.jpg
+  opening_image: assets/images/20260928_ito_w/01.jpg
 short_title: 伊藤洋輝、バイエルンが冬に売却検討
 thumbnail:
-  photos:
-    - assets/images/20260928_ito/01.jpg
-    - assets/images/20260928_allianz/01.jpg
+  photo: assets/images/20260928_ito_w/01.jpg
   line1: 伊藤洋輝、冬に売却か
   line2: 今季の出場は、わずか●●分
 sections:
@@ -27,7 +25,7 @@ sections:
     narrator: キャスター
     say:
       - text: 日本代表のセンターバック、伊藤洋輝。
-        image: assets/images/20260928_pair_ito_allianz/01.jpg
+        image: assets/images/20260928_ito_w/01.jpg
       - 所属するバイエルンが、冬の移籍市場で手放すことを考えている、とドイツで報じられました。
       - 1月にふさわしい話が来なければ、契約が残り1年になる来年の夏、という見方です。
       - クラブの発表ではありません。
