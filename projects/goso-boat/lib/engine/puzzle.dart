@@ -29,6 +29,13 @@ class Level {
 
   int count(Role r) => cast[r] ?? 0;
 
+  /// 面は番号で見分ける（読み込み直した別のオブジェクトでも同じ面として扱う）。
+  @override
+  bool operator ==(Object other) => other is Level && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
+
   Map<String, Object?> toJson() => {
         'id': id,
         'world': world,
