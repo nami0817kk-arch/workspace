@@ -164,7 +164,38 @@ class Session {
   }
 
   /// 星の数。最短で3、少し回り道で2、それ以外は1。ヒントを使うと2まで。
+  /// 途中の盤面を保存する形（アプリを閉じても続きから遊べるように）。
+  /// 一手戻すの履歴は持たない。逃げられた後・クリアした後は保存しない。
+  Map<String, Object?> toJson() => {
+        'places': [for (final p in people) p.place.index],
+        'boat': boat.index,
+        'trips': trips,
+        'hint': usedHint,
+      };
+
+  /// [toJson] の形から戻す。面の人数が合わないなど、使えないときは false で何もしない。
+  bool restore(Map<String, Object?> j) {
+    final places = j['places'];
+    if (places is! List || places.length != people.length) return false;
+    final boatIndex = j['boat'];
+    final t = j['trips'];
+    if (boatIndex is! int || t is! int || boatIndex >= Place.values.length) return false;
+    if (places.any((x) => x is! int || x >= Place.values.length)) return false;
+    for (var i = 0; i < people.length; i++) {
+      people[i].place = Place.values[places[i] as int];
+      people[i].seat = -1;
+    }
+    boat = Place.values[boatIndex];
+    trips = t;
+    usedHint = j['hint'] == true;
+    _history.clear();
+    failure = null;
+    escaped = const [];
+    return true;
+  }
+
   /// 星2の幅は狭め（2026-09-27 に 4/6 → 2/4 回に。星を取り直す挑戦を増やすため）。
+  /// 途中で見ると「今のままなら取れる星の上限」になる（回数は増える一方なので）。
   int get stars {
     final slack = level.island ? 4 : 2;
     var s = trips <= level.par ? 3 : trips <= level.par + slack ? 2 : 1;

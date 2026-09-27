@@ -517,4 +517,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get achDesc_dailyWeek => 'Finish the daily puzzle 7 days in a row';
+
+  @override
+  String startGoal(int n) {
+    return '★3 in $n trips';
+  }
+
+  @override
+  String get resumed => 'Resumed';
+
+  @override
+  String triesClear(int n) {
+    return 'Cleared on try #$n!';
+  }
+
+  @override
+  String worldClear(int no, String name, int got, int max) {
+    return 'World $no \"$name\" cleared! ★$got/$max';
+  }
+
+  @override
+  String nightmareNeed(int n) {
+    return '$n more ★ to unlock Nightmare';
+  }
+
+  @override
+  String get taunt1 => 'See ya!';
+
+  @override
+  String get taunt2 => 'Bye-bye!';
+
+  @override
+  String get taunt3 => 'Heh heh!';
+
+  @override
+  String get taunt4 => 'Freedom!';
 }

@@ -37,6 +37,8 @@ void main() {
     expect(find.text('囚人を向こう岸へ'), findsOneWidget);
     await tester.tap(find.text('わかった'));
     await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('最短3回で★3'), findsOneWidget, reason: '面の始まりの札');
+    await tester.pump(const Duration(seconds: 2));
 
     // 1-1 は 警官3・囚人1・定員3、最短3回。ヒントに従って渡しきる
     for (var i = 0; i < 3; i++) {
@@ -51,6 +53,7 @@ void main() {
     expect(find.text('全員護送'), findsOneWidget);
     expect(progress.stars(progress.levels.first), 2, reason: 'ヒントを使ったので星2');
     expect(find.text('自己ベスト 3回'), findsOneWidget);
+    expect(find.text('1回目の挑戦でクリア！'), findsOneWidget);
     // お手本の再生はしない（2026-09-27 ユーザー判断: 答えを見せると繰り返し遊ぶ理由が減る）
     expect(find.text('お手本を見る'), findsNothing);
     await tester.pump(const Duration(seconds: 3));
@@ -78,6 +81,8 @@ void main() {
     }
     expect(find.text('脱走された'), findsOneWidget);
     expect(find.textContaining('囚人だけが残った'), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is Text && ['あばよ！', 'お先に〜', 'へへっ', '自由だー！'].contains(w.data)), findsOneWidget, reason: '捨てぜりふ');
+    expect(progress.tries(progress.levels.first), 1);
     // 逃げられたら「最初から」だけ（一手戻すは出さない。2026-09-27 ユーザー決定）
     expect(find.text('一手戻す'), findsOneWidget, reason: '上の段のボタン（押せない）だけで、札には出さない');
     await tester.tap(find.text('最初から').last);
@@ -163,5 +168,30 @@ void main() {
     expect(progress.stars(progress.levels.first), 0);
     expect(progress.seenIntro(1), isFalse);
     expect(Monetization(progress.prefsForTest).adFree, isTrue, reason: '購入は消さない');
+  });
+
+  testWidgets('中断した盤面から続けられる／長押しで役の説明', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    final semantics = tester.ensureSemantics();
+    // 1-1（警官3・囚人1）で、警官1と囚人1を向こう岸に渡した途中
+    final progress = await _progress({
+      'intro.1': true,
+      'resume.1-1': '{"places":[1,0,0,1],"boat":1,"trips":1,"hint":false}',
+    });
+    await tester.pumpWidget(GosoBoatApp(progress: progress, money: Monetization(progress.prefsForTest), settings: GameSettings(progress.prefsForTest, silent: true), locale: const Locale('ja')));
+    await tester.tap(find.text('はじめる'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('1回'), findsOneWidget);
+    expect(find.text('続きから・1回'), findsOneWidget);
+    expect(find.bySemanticsLabel('警官、向こう岸'), findsOneWidget);
+
+    await tester.longPress(find.bySemanticsLabel('警官、手前の岸').first);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('警官：見張り1人分。舟を漕げる'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
+    semantics.dispose();
   });
 }

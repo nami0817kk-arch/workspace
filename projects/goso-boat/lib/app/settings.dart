@@ -67,6 +67,10 @@ class AppScope extends InheritedWidget {
   static GameSettings of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<AppScope>()!.settings;
 
+  /// 無ければ null（アプリの外で作ったボタン・テストなど）。
+  static GameSettings? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<AppScope>()?.settings;
+
   @override
   bool updateShouldNotify(AppScope old) => old.settings != settings;
 }

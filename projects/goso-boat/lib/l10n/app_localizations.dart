@@ -973,6 +973,60 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'今日の1問を7日続けて達成'**
   String get achDesc_dailyWeek;
+
+  /// No description provided for @startGoal.
+  ///
+  /// In ja, this message translates to:
+  /// **'最短{n}回で★3'**
+  String startGoal(int n);
+
+  /// No description provided for @resumed.
+  ///
+  /// In ja, this message translates to:
+  /// **'続きから'**
+  String get resumed;
+
+  /// No description provided for @triesClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'{n}回目の挑戦でクリア！'**
+  String triesClear(int n);
+
+  /// No description provided for @worldClear.
+  ///
+  /// In ja, this message translates to:
+  /// **'舞台{no}「{name}」クリア！ ★{got}/{max}'**
+  String worldClear(int no, String name, int got, int max);
+
+  /// No description provided for @nightmareNeed.
+  ///
+  /// In ja, this message translates to:
+  /// **'鬼門まで あと★{n}'**
+  String nightmareNeed(int n);
+
+  /// No description provided for @taunt1.
+  ///
+  /// In ja, this message translates to:
+  /// **'あばよ！'**
+  String get taunt1;
+
+  /// No description provided for @taunt2.
+  ///
+  /// In ja, this message translates to:
+  /// **'お先に〜'**
+  String get taunt2;
+
+  /// No description provided for @taunt3.
+  ///
+  /// In ja, this message translates to:
+  /// **'へへっ'**
+  String get taunt3;
+
+  /// No description provided for @taunt4.
+  ///
+  /// In ja, this message translates to:
+  /// **'自由だー！'**
+  String get taunt4;
 }
 
 class _AppLocalizationsDelegate
