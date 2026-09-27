@@ -78,9 +78,12 @@ void main() {
     }
     expect(find.text('脱走された'), findsOneWidget);
     expect(find.textContaining('囚人だけが残った'), findsOneWidget);
-    await tester.tap(find.text('一手戻す').last);
+    // 逃げられたら「最初から」だけ（一手戻すは出さない。2026-09-27 ユーザー決定）
+    expect(find.text('一手戻す'), findsOneWidget, reason: '上の段のボタン（押せない）だけで、札には出さない');
+    await tester.tap(find.text('最初から').last);
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('脱走された'), findsNothing);
+    expect(find.text('0回'), findsOneWidget);
     semantics.dispose();
   });
 
