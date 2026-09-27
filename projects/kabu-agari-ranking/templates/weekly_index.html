@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}週ごとのまとめ一覧｜値上がり株ランキング{% endblock %}
 {% block description %}値上がりランキングを週単位で集計したまとめの一覧です。週ごとの最大上昇銘柄と複数回ランクインした銘柄を掲載しています。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "週まとめ", "url": canonical}] %}{% include "_breadcrumb_data.html" %}{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "週まとめ"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>週ごとのまとめ</h1>
 <p>営業日ごとのランキングを、週（月曜〜金曜）単位で集計したものです。</p>

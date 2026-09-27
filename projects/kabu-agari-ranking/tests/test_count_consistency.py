@@ -175,3 +175,41 @@ def test_週まとめも推定が混じればそう断る():
         "frequent": [],
     }
     assert "推定" in render.week_summary(week)
+
+
+# --- 日別ページから記録へ ------------------------------------------------------
+
+def test_日別ページはその日の全件を言う():
+    """日別の表は上位30銘柄まで。記録があるなら、その日の全件が何件だったかは
+    このページで言える。言わないと、ためている意味がいちばん人の来るページに届かない。"""
+    day = _day_with_31_stop_highs()
+    note = render.day_stop_note(day, "gainers")
+    assert note["count"] == 31
+    assert note["outside"] == 1        # 表の外にいた1銘柄
+    assert note["href"] == "stop-high/index.html"
+
+
+def test_推定しか無い日は件数を言わない():
+    """上位30銘柄の中の数を「その日の件数」として書かない。"""
+    day = _day_with_31_stop_highs()
+    del day["stop_high"]
+    assert render.day_stop_note(day, "gainers") is None
+
+
+def test_活況のページには出さない():
+    assert render.day_stop_note(_day_with_31_stop_highs(), "active") is None
+
+
+def test_値下がりの日別ページにはストップ安を出す():
+    day = _day_with_31_stop_highs()
+    day["stop_low"] = [{"rank": 1, "code": "4599", "name": "ステムリム",
+                        "close": 239.0, "change_pct": -25.08, "at_limit": True}]
+    note = render.day_stop_note(day, "losers")
+    assert note["term"] == "ストップ安"
+    assert note["href"] == "stop-low/index.html"
+
+
+def test_この週のまとめはその週へ行く():
+    """「この週のまとめを見る」と書きながら週の一覧へ飛ばしていた。"""
+    assert render.week_href_for("2026-09-25") == "weekly/2026-W39.html"
+    assert render.week_href_for("2026-09-28") == "weekly/2026-W40.html"

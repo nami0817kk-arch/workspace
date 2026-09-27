@@ -36,6 +36,9 @@ _env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
 _env.globals["SIBLING_SITES"] = site_config.SIBLING_SITES
 _env.globals["OWNER"] = site_config.OWNER
 _env.globals["CONTACT_EMAIL"] = site_config.CONTACT_EMAIL
+# 検索ページの JS が「銘柄ページへリンクしてよいか」を判断するのに使う。
+# **べた書きにしない。** 閾値を変えたときに、ページの無い銘柄へリンクする。
+_env.globals["STOCK_PAGE_MIN_APPEARANCES"] = aggregate.STOCK_PAGE_MIN_APPEARANCES
 
 _WEEKDAY_JA = "月火水木金土日"
 
@@ -951,6 +954,48 @@ def _write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
+# 日別ページで、その日の記録へ案内する。値上がりのページにはストップ高、
+# 値下がりにはストップ安。活況には出さない（約定回数の話ではない）。
+_DAY_STOP_SPECS = {
+    "gainers": {"rows_fn": "stop_high_rows", "term": "ストップ高", "dir": "stop-high"},
+    "losers": {"rows_fn": "stop_low_rows", "term": "ストップ安", "dir": "stop-low"},
+}
+
+
+def day_stop_note(day: dict, json_key: str) -> dict | None:
+    """その日のストップ高／ストップ安の件数と、記録への案内。
+
+    日別ページは上位30銘柄しか見せていない。**記録があるなら、その日の全件が
+    何件だったかはこのページで言える**（それを言わないと、蓄積している意味が
+    いちばん人の来るページに届かない）。
+    """
+    spec = _DAY_STOP_SPECS.get(json_key)
+    if not spec:
+        return None
+    rows, source = getattr(aggregate, spec["rows_fn"])(day)
+    if source != "recorded":
+        # 推定しか無い日は、表の札（行ごとの「ストップ高」）で足りる。
+        # 上位30銘柄の中の数を「その日の件数」として書かない。
+        return None
+    shown = {r["code"] for r in day.get(json_key) or []}
+    return {
+        "term": spec["term"],
+        "href": f"{spec['dir']}/index.html",
+        "count": len(rows),
+        "outside": sum(1 for r in rows if r["code"] not in shown),
+    }
+
+
+def week_href_for(rec_date: str) -> str:
+    """その日が属する週まとめの場所。
+
+    「この週のまとめを見る」と書きながら週の一覧へ飛ばしていた
+    （2026-09-27 に気づいた）。書いてあるとおりの場所へ行く。
+    """
+    year, week = aggregate._iso_week(rec_date)
+    return f"weekly/{year}-W{week:02d}.html"
+
+
 def siblings_for(days: list[dict]) -> dict[str, list[dict]]:
     """日付 → その日にデータがあるランキングの一覧。
 
@@ -1029,6 +1074,9 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                     metric_label=metric_label,
                     summary=day_summary(day_rows, json_key),
                     kind_dir=dirname,
+                    stop_note=day_stop_note(
+                        next(d for d in days if d["rec_date"] == rec), json_key),
+                    week_href=week_href_for(rec),
                     siblings=[e for e in siblings[rec] if e["kind"] != json_key],
                     turnover=turnover_note(
                         day_rows, with_data[i + 1][1] if i + 1 < len(with_data) else None

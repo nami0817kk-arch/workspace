@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}銘柄別ページの一覧｜値上がり株ランキング{% endblock %}
 {% block description %}ランキングに3回以上登場した銘柄の一覧です。銘柄ごとに、登場した日と騰落率をまとめています。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "銘柄別", "url": canonical}] %}{% include "_breadcrumb_data.html" %}{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "銘柄別"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>銘柄別ページ</h1>
 <p>

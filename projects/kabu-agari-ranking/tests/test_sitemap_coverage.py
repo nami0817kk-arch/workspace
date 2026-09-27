@@ -87,3 +87,57 @@ def test_公開するページには必ず説明文がある(site):
         if not re.search(r'<meta name="description" content=".{10,}?"', html, re.S):
             missing.append(path.relative_to(site).as_posix())
     assert not missing, f"説明文が無いページ: {missing}"
+
+
+def test_画面のパンくずと構造化データが食い違わない(site):
+    """どちらか片方だけがあると、検索側に見せている階層と
+    読み手に見せている階層が違うことになる。
+    一覧ページ4枚（アーカイブ3種と月まとめ）で実際に食い違っていた。"""
+    mismatched = []
+    for path in sorted(site.rglob("*.html")):
+        html = path.read_text(encoding="utf-8")
+        visual = 'class="crumbs"' in html
+        structured = "BreadcrumbList" in html
+        if visual != structured:
+            mismatched.append(
+                f"{path.relative_to(site).as_posix()} 画面={visual} 構造化={structured}")
+    assert not mismatched, "パンくずの食い違い:\n" + "\n".join(mismatched)
+
+
+def test_一覧ページにはパンくずがある(site):
+    """ホーム直下でない index は、どこにいるのかを示す。"""
+    for rel in ("archive/gainers/index.html", "monthly/index.html",
+                "weekly/index.html", "stock/index.html",
+                "stop-high/index.html", "stop-low/index.html"):
+        html = (site / rel).read_text(encoding="utf-8")
+        assert 'class="crumbs"' in html, f"{rel} に画面のパンくずが無い"
+        assert "BreadcrumbList" in html, f"{rel} に構造化データが無い"
+
+
+def test_検索が張る銘柄リンクは必ず実在する(site):
+    """検索の結果は JS が組み立てるので、リンク検査では歩けない。
+    ページが無い銘柄へ張ると、押した先が 404 になる。"""
+    index = json.loads((site / "search-index.json").read_text(encoding="utf-8"))
+    import aggregate
+    threshold = aggregate.STOCK_PAGE_MIN_APPEARANCES
+    # JS 側の閾値が Python 側とずれていないこと（ずれると 404 を張る）
+    search_html = (site / "search.html").read_text(encoding="utf-8")
+    assert f"total >= {threshold}" in search_html
+
+    missing = []
+    for s in index["stocks"]:
+        total = sum(len(s.get(k) or []) for k in ("g", "l", "a"))
+        if total >= threshold and not (site / "stock" / s["c"] / "index.html").exists():
+            missing.append(s["c"])
+    assert not missing, f"ページが無いのにリンクする銘柄: {missing}"
+
+
+def test_検索が張るアーカイブリンクは必ず実在する(site):
+    index = json.loads((site / "search-index.json").read_text(encoding="utf-8"))
+    dead = []
+    for s in index["stocks"]:
+        for key, dirname in (("g", "gainers"), ("l", "losers"), ("a", "active")):
+            for rec_date in s.get(key) or []:
+                if not (site / "archive" / dirname / f"{rec_date}.html").exists():
+                    dead.append(f"{s['c']} {dirname}/{rec_date}")
+    assert not dead, f"存在しないアーカイブへのリンク: {dead[:5]}"
