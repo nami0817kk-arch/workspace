@@ -29,10 +29,10 @@ sections:
       - その代理人の側が、プレミアの4つのクラブに話を持ちかけた、とイングランドで報じられました。
       - 古巣のリヴァプールに、アーセナル、マンチェスター・シティ、チェルシーです。
       - ただ、本人もレアルも、1月の移籍は考えていない。見直すのはシーズンが終わってから、という内容です。
-      - ドイツでは、レアルが話を聞くとしても7000万から8000万ユーロから、という見立ても出ています。
       - リヴァプールについて、トレントは8月のインタビューで、こう語っています。
       - voice: トレント・アレクサンダー＝アーノルド
         text: 何があってもリヴァプールは心の中にある。僕にとって故郷なんだ
+      - ドイツでは、レアルが交渉に応じるのは7000万〜8000万ユーロ規模の話から、という見立ても出ています。
     sources:
       - https://www.teamtalk.com/news/liverpool-arsenal-manchester-city-chelsea-trent-alexander-arnold-real-madrid
       - https://fussball-news.de/2026/09/25/rueckkehr-nach-england-arsenal-beschaeftigt-sich-mit-real-star-alexander-arnold/
@@ -80,10 +80,11 @@ sections:
       - ところが9月26日のスペイン戦は、出番なし。
       - 右サイドバックには、本職がセンターバックのクアンサーが入りました。
       - 代表で最後に出たのは2025年の6月。**477日**前です。
-      - text: 呼び戻した日、トゥヘル監督はワールドカップの選考について、こう認めています。
+      - トレントは、この夏のワールドカップのメンバーから外れていました。
+      - text: 呼び戻した日、トゥヘル監督はその選考について、こう認めています。
         image: assets/images/20260928_pair_tuchel_trent/01.jpg
       - voice: トーマス・トゥヘル
-        text: いつも公平だったか？ 私の側からすれば、そうではなかったかもしれない
+        text: 公平だったかと言えば、私のほうに、そうでない面もあったかもしれない
     sources:
       - https://www.bbc.com/sport/football/articles/cmly4gpnwk2go
       - https://www.dailymail.co.uk/sport/football/article-16163989/thomas-tuchel-trent-alexander-arnold-england.html
@@ -95,16 +96,11 @@ sections:
     narrator: キャスター
     say:
       - voice: ネット民
-        text: ジョゼはレアルでいい仕事をしてる…どうせクリスマスまでにいなくなるだろうけど。
+        text: アーノルドがアーセナルにいるのみたい
         image: assets/images/20260928_trent_rm/01.jpg
       - voice: ネット民
-        text: トレントを連れ戻せたらなあ、ベンチは似合わないよ
-        cont: true
+        text: 今季ずっとレアルでベンチなら、シーズンが終わったら出たがると思う。みんなは連れ戻したい？
         short_voice: true
-      - voice: ネット民
-        text: アーノルドがアーセナルにいるのみたい
-      - voice: ネット民
-        text: 今季ずっとレアルでベンチなら、シーズン終わりに出たがると思う。君なら彼を連れ戻す？
       - voice: ネット民
         text: アーセナルの右SBの役割を考えればアーノルドのクロスは滅茶苦茶脅威になるよな。守備はヤバいけど。
       - voice: ネット民
@@ -118,19 +114,15 @@ sections:
       - voice: ネット民
         text: レアルが1000万ポンドでトレントをくれるなら取るね。今はもう要らないみたいだし
       - voice: ネット民
-        text: トレントは流石にそろそろマドリーの一員になってほしい。まだ移籍してきた外様のイメージ
-      - voice: ネット民
         text: トゥヘルって本当にトレントが好きじゃないんだな
       - voice: ネット民
         text: ダンフリースも好きだしプレーも最高なんだけど、アーノルドのクロスと雰囲気も好きなんだよなぁ。
     sources:
-      - https://bsky.app/profile/oldhamletsghost.bsky.social/post/3mvxmtbjm722n
       - https://x.com/yukidaruma0317/status/2103695919845970098
       - https://bsky.app/profile/adamtalbot.bsky.social/post/3mvxssxphjc2u
       - https://x.com/Csaku310/status/2103769930424635486
       - https://bsky.app/profile/10millionhardbacks.bsky.social/post/3mwbxddcvek2b
       - https://x.com/PeDxdb/status/2097615453527134471
       - https://bsky.app/profile/konzan.bsky.social/post/3mvkscho3ic2t
-      - https://x.com/cristianoro7ldo/status/2097399556023763250
       - https://bsky.app/profile/tshrewsburyspur.bsky.social/post/3mwh46mbsa22j
       - https://x.com/yzc8q/status/2102600273709645934

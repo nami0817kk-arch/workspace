@@ -54,9 +54,7 @@ sources:
 - https://news.at-s.com/article/2063014
 - https://x.com/ashinotume888/status/2103149701419946346
 - https://x.com/FroCule/status/2103160661052367260
-- https://bsky.app/profile/christianschwaegerl.mastodon.social.ap.brid.gy/post/3mv6mvudcplx2
 - https://news.yahoo.co.jp/profile/news/comments/35963716-51ff-4372-bd96-69dd81dbba72
-- https://bsky.app/profile/floschuller.bsky.social/post/3mugy4bd5ak2b
 - https://news.yahoo.co.jp/profile/news/comments/7bc0e409-84d4-41db-8a06-533f7c182152
 - https://x.com/takitarozaemon/status/2102440099808243869
 cards:
@@ -94,8 +92,11 @@ cards:
   image: assets/images/20260928_ito_geki/01.jpg
 キャスター: 所属するバイエルンが、冬の移籍市場で手放すことを考えている、とドイツで報じられました。
   telop: 所属するバイエルンが、冬の移籍市場で手放すことを考えている、とドイツで報じられました
-キャスター: 1月にふさわしい話が来なければ、契約が残り1年になる来年の夏、という見方です。
-  telop: 1月にふさわしい話が来なければ、契約が残り1年になる来年の夏、という見方です
+キャスター: 1月に合うオファーが来なければ、契約が残り1年になる来年の夏に売る、という見方です。
+  telop: 1月に合うオファーが来なければ、契約が残り1年になる来年の夏に売る、という見方です
+  image: assets/images/20260928_ito_geki/01.jpg
+キャスター: 契約は2028年の6月までです。
+  telop: 契約は2028年の6月までです
   image: assets/images/20260928_ito_geki/01.jpg
 キャスター: クラブの発表ではありません。
   telop: クラブの発表ではありません
@@ -114,9 +115,9 @@ cards:
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @main: true
 
-キャスター: 所属するバイエルンが、冬の移籍市場で売却を考えている、とドイツで報じられました。
+キャスター: 日本代表のセンターバック、伊藤洋輝。バイエルンが冬に売ることを考えている、と報じられました。
   only: short
-  telop: 所属するバイエルンが、冬の移籍市場で売却を考えている、とドイツで報じられました
+  telop: 日本代表のセンターバック、伊藤洋輝。バイエルンが冬に売ることを考えている、と報じられました
   card: none
   image: assets/images/20260928_ito_geki/01.jpg
 キャスター: 今季、バイエルンの公式戦は7試合。伊藤は、すべてベンチには入っています。
@@ -156,12 +157,8 @@ cards:
   telop: それからも、同じ場所のけがが続きました
   card: none
   image: assets/images/20260928_ito_geki/01.jpg
-キャスター: 契約は2028年の6月まで。
-  telop: 契約は2028年の6月まで
-  card: none
-  image: assets/images/20260928_ito_geki/01.jpg
-キャスター: 一方、日本代表では、9月24日のウルグアイ戦に先発し、最後まで出ています。
-  telop: 一方、日本代表では、9月24日のウルグアイ戦に先発し、最後まで出ています
+キャスター: 日本代表では、9月24日のウルグアイ戦に先発し、最後まで出ています。
+  telop: 日本代表では、9月24日のウルグアイ戦に先発し、最後まで出ています
   card: none
   image: assets/images/20260928_ito_geki/01.jpg
 
@@ -183,10 +180,6 @@ cards:
   telop: ネット民「伊藤洋輝はバイエルンを出るべきなのでは？」
   card: none
   image: assets/images/20260928_ito_geki/01.jpg
-ネット民: いいね。でも、なんでスタニシッチ、伊藤、ボエがまだいるの？
-  telop: ネット民「いいね。でも、なんでスタニシッチ、伊藤、ボエがまだいるの？」
-  card: none
-  image: assets/images/20260928_ito_geki/01.jpg
 ネット民: 試合に出ないとドンドン試合勘も錆び付いていく。
   telop: ネット民「試合に出ないとドンドン試合勘も錆び付いていく」
   card: none
@@ -199,15 +192,6 @@ cards:
 ネット民: ここはスパッと切り替えて試合に出れるクラブに移籍するのがいいと思うのですが・・・
   cont: true
   telop: ネット民「ここはスパッと切り替えて試合に出れるクラブに移籍するのがいいと思うのですが・・・」
-  card: none
-  image: assets/images/20260928_ito_geki/01.jpg
-ネット民: 伊藤がアヤックスへという突飛な噂は、フロイントによれば根拠なし。ミュンヘンは彼を戦力として計画している。
-  telop: ネット民「伊藤がアヤックスへという突飛な噂は、フロイントによれば根拠なし。ミュンヘンは彼を戦力として計画している」
-  card: none
-  image: assets/images/20260928_ito_geki/01.jpg
-ネット民: そうでなければそれこそバカげている。経験のあるセンターバックは4人要るんだから
-  cont: true
-  telop: ネット民「そうでなければそれこそバカげている。経験のあるセンターバックは4人要るんだから」
   card: none
   image: assets/images/20260928_ito_geki/01.jpg
 ネット民: トップチームのCBはウパメカノ、ター、ミンジェしかいなくない？そんな状態で伊藤を売ることはできんわな

@@ -27,7 +27,8 @@ sections:
       - text: 日本代表のセンターバック、伊藤洋輝。
         image: assets/images/20260928_ito_geki/01.jpg
       - 所属するバイエルンが、冬の移籍市場で手放すことを考えている、とドイツで報じられました。
-      - 1月にふさわしい話が来なければ、契約が残り1年になる来年の夏、という見方です。
+      - 1月に合うオファーが来なければ、契約が残り1年になる来年の夏に売る、という見方です。
+      - 契約は2028年の6月までです。
       - クラブの発表ではありません。
       - text: 9月の初めには、クラブのスポーツディレクター、フロイントがこう話していました。
         image: assets/images/20260928_pair_freund_ito/01.jpg
@@ -57,7 +58,7 @@ sections:
         - [ドイツ杯, 0分]
         - [スーパーカップ, 0分]
     say:
-      - text: 所属するバイエルンが、冬の移籍市場で売却を考えている、とドイツで報じられました。
+      - text: 日本代表のセンターバック、伊藤洋輝。バイエルンが冬に売ることを考えている、と報じられました。
         short_only: true
       - 今季、バイエルンの公式戦は7試合。伊藤は、すべてベンチには入っています。
       - それでも出たのは、チャンピオンズリーグの1試合、80分からの**10分**だけ。
@@ -77,8 +78,7 @@ sections:
       - 伊藤は2024年の夏、シュツットガルトから**2350万ユーロ**で加入しました。
       - ところが、その夏の練習試合で足の甲の骨を折ります。
       - それからも、同じ場所のけがが続きました。
-      - 契約は2028年の6月まで。
-      - 一方、日本代表では、9月24日のウルグアイ戦に先発し、最後まで出ています。
+      - 日本代表では、9月24日のウルグアイ戦に先発し、最後まで出ています。
     sources:
       - https://www.transfermarkt.de/hiroki-ito/verletzungen/spieler/353892
       - https://news.at-s.com/article/2063014
@@ -98,19 +98,12 @@ sections:
       - voice: ネット民
         text: 伊藤洋輝はバイエルンを出るべきなのでは？
       - voice: ネット民
-        text: いいね。でも、なんでスタニシッチ、伊藤、ボエがまだいるの？
-      - voice: ネット民
         text: 試合に出ないとドンドン試合勘も錆び付いていく。
       - voice: ネット民
         text: 絶対王者のバイエルンだと、毎年スーパーな新加入選手も居るし、実績のない状態だと調子が戻って来るまで待ってもらえない。
         cont: true
       - voice: ネット民
         text: ここはスパッと切り替えて試合に出れるクラブに移籍するのがいいと思うのですが・・・
-        cont: true
-      - voice: ネット民
-        text: 伊藤がアヤックスへという突飛な噂は、フロイントによれば根拠なし。ミュンヘンは彼を戦力として計画している。
-      - voice: ネット民
-        text: そうでなければそれこそバカげている。経験のあるセンターバックは4人要るんだから
         cont: true
       - voice: ネット民
         text: トップチームのCBはウパメカノ、ター、ミンジェしかいなくない？そんな状態で伊藤を売ることはできんわな
@@ -128,8 +121,6 @@ sections:
     sources:
       - https://x.com/ashinotume888/status/2103149701419946346
       - https://x.com/FroCule/status/2103160661052367260
-      - https://bsky.app/profile/christianschwaegerl.mastodon.social.ap.brid.gy/post/3mv6mvudcplx2
       - https://news.yahoo.co.jp/profile/news/comments/35963716-51ff-4372-bd96-69dd81dbba72
-      - https://bsky.app/profile/floschuller.bsky.social/post/3mugy4bd5ak2b
       - https://news.yahoo.co.jp/profile/news/comments/7bc0e409-84d4-41db-8a06-533f7c182152
       - https://x.com/takitarozaemon/status/2102440099808243869
