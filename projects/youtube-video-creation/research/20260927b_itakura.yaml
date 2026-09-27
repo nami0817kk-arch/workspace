@@ -68,14 +68,10 @@ sections:
     say:
       - text: センターバックの離脱が続く日本代表。板倉滉まで欠け、空いた3バックに誰が入るのか。
         short_only: true
-      - text: ベネズエラ戦で先発が有力な鈴木淳之介は、こう話します。
+      - text: 先発が有力なのは、ウルグアイ戦で板倉と交代で入った鈴木淳之介。
         image: assets/images/20260927b_pair_suzuki_itakura/01.jpg
       - voice: 鈴木淳之介
         text: どうにか食らいつくというところは終わったと思っていて
-      - voice: 鈴木淳之介
-        text: ワールドカップにも出たし、一度ああいうのを経験したので、どんどん良さを出していければ
-      - voice: 鈴木淳之介
-        text: 後ろからの押し上げ、リスク管理はもう一回徹底するようにミーティングでも言われている
       - voice: 鈴木淳之介
         text: 求められていることをしっかりやれれば。もし次の試合に出ることがあれば、そういうところを発揮したい
       - フル出場した瀬古歩夢と伊藤洋輝を休ませるなら、3バックは大きく入れ替わります。
@@ -110,6 +106,7 @@ sections:
         text: センターバック追加招集しないんか
       - voice: ネット民
         text: 冨安さんの分の追加招集ないし、板倉さん欠けたら4人になるのきつすぎる。中野さん使うのかな？
+        short_voice: true
       - voice: ネット民
         text: 板倉滉練習欠席…DF陣離脱痛い。短いスパンで瀬古歩夢と伊藤洋輝酷使しないといけないのも痛い。
       - voice: ネット民
@@ -117,6 +114,7 @@ sections:
         cont: true
       - voice: ネット民
         text: 冨安、安藤に続いて板倉も…。
+        short_voice: true
       - voice: ネット民
         text: フル出場した瀬古、伊藤を休ませるとなると・・・鈴木淳、渡辺剛、中野のスタメンで3バックか。
         cont: true
@@ -128,11 +126,9 @@ sections:
         cont: true
       - voice: ネット民
         text: クラブでの起用を考えたら親善試合ですし無理はさせれませんですね。
-        short_voice: true
       - voice: ネット民
         text: 中野選手は地元で巡ってきたチャンスですし是非とも観たいです。
         cont: true
-        short_voice: true
     sources:
       - https://x.com/aozakura0714/status/2103068457084518690
       - https://bsky.app/profile/rbyryo.bsky.social/post/3mwftnmd5ik2v

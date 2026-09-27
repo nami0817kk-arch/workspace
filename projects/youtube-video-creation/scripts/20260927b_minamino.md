@@ -99,11 +99,11 @@ cards: {}
 キャスター: 南野が挙げたのは、代表の仲間の久保建英でした。
   telop: 南野が挙げたのは、代表の仲間の久保建英でした
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 キャスター: ほかの答えには、ペレやジダン、イニエスタ、ロナウジーニョが挙がっています。
   telop: ほかの答えには、ペレやジダン、イニエスタ、ロナウジーニョが挙がっています
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 
 ## ネットの反応
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -111,63 +111,63 @@ cards: {}
 ネット民: 自国の代表チームで最高な選手は？に、拓実くんは久保くんを指名
   telop: ネット民「自国の代表チームで最高な選手は？に、拓実くんは久保くんを指名」
   source: 未確認
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: ミナミーノ好きや
   telop: ネット民「ミナミーノ好きや」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: 南野がタケを絶賛するのも納得。やっぱり同業者であるプロの目から見ても別格なんだな。
   telop: ネット民「南野がタケを絶賛するのも納得。やっぱり同業者であるプロの目から見ても別格なんだな」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: アジアのサッカー史上で見ても、間違いなく歴代トップの選手だよ。
   cont: true
   telop: ネット民「アジアのサッカー史上で見ても、間違いなく歴代トップの選手だよ」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: 同じセレッソ出身の香川でもなく久保を選ぶか。見て育ったヒデや俊輔でもなく。
   telop: ネット民「同じセレッソ出身の香川でもなく久保を選ぶか。見て育ったヒデや俊輔でもなく」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: チームメイトからの信頼は相当厚いんだなー。
   cont: true
   telop: ネット民「チームメイトからの信頼は相当厚いんだなー」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: 鎌田も守田も久保は上手すぎるって言うくらい全く違うんだろうね。
   telop: ネット民「鎌田も守田も久保は上手すぎるって言うくらい全く違うんだろうね」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: チーム全体が久保を認めてるから代表では上手くいくんじゃないかな？
   cont: true
   telop: ネット民「チーム全体が久保を認めてるから代表では上手くいくんじゃないかな？」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: 南野拓実が日本で最高の選手は久保建英と言っていて、おーー！！と思ったんだけど
   telop: ネット民「南野拓実が日本で最高の選手は久保建英と言っていて、おーー！！と思ったんだけど」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: GOAT史上最高と言ったんだね！それは言いすぎ！
   cont: true
   telop: ネット民「GOAT史上最高と言ったんだね！それは言いすぎ！」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: やっぱ久保選手だよなあ。上手いもんなあ。クラブで何であんなに不調なのか謎すぎる。
   telop: ネット民「やっぱ久保選手だよなあ。上手いもんなあ。クラブで何であんなに不調なのか謎すぎる」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: ミナミノ？まだ生きていたか。
   telop: ネット民「ミナミノ？まだ生きていたか」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: サッカー技術も勿論高いたけだけど、性格も良くて愛されて、信頼も厚いんだろうなあ。
   short_voice: true
   telop: ネット民「サッカー技術も勿論高いたけだけど、性格も良くて愛されて、信頼も厚いんだろうなあ」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg
 ネット民: たけが結構言われてる中で最高選手をたけって答えてくれる南野最高。
   short_voice: true
   cont: true
   telop: ネット民「たけが結構言われてる中で最高選手をたけって答えてくれる南野最高」
   card: none
-  image: assets/images/20260927b_pair_minamino_kubo/01.jpg
+  image: assets/images/20260927b_pair_minamino_kubo2/01.jpg

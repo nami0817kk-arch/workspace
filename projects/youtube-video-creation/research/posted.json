@@ -2684,5 +2684,17 @@
     "video_id": "S0Kf25sxogg",
     "at": "2026-09-27T02:53:13+00:00",
     "publish_at": "2026-09-27T05:30:00Z"
+  },
+  {
+    "build": "20260927b_adeyemi",
+    "video_id": "4qpOUuwXQsU",
+    "at": "2026-09-27T05:45:14+00:00",
+    "publish_at": "2026-09-27T06:00:00Z"
+  },
+  {
+    "build": "20260927b_adeyemi_short",
+    "video_id": "6Ag03YVQFp8",
+    "at": "2026-09-27T05:45:32+00:00",
+    "publish_at": "2026-09-27T06:30:00Z"
   }
 ]
