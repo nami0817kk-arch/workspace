@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../app/links.dart';
 import '../app/progress.dart';
 import '../app/reminder.dart';
 import '../app/settings.dart';
@@ -21,6 +22,9 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _storeAvailable = false;
 
+  /// 復元の2度押しよけ（重ねると結果の表示が食い違う）
+  bool _restoring = false;
+
   @override
   void initState() {
     super.initState();
@@ -29,17 +33,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
+  Future<void> _openLink(Uri url) async {
+    final t = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    if (!await Links.open(url)) {
+      messenger.showSnackBar(SnackBar(content: Text(t.linkFailed(url.toString()))));
+    }
+  }
+
   Future<void> _restore() async {
     final t = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
+    if (_restoring) return;
+    setState(() => _restoring = true);
     final r = await widget.money.restore();
+    if (mounted) setState(() => _restoring = false);
     final msg = switch (r) {
       PurchaseOutcome.purchased => t.purchaseRestored,
+      PurchaseOutcome.pending => t.purchasePending,
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable => t.purchaseNothing,
       PurchaseOutcome.failed => t.purchaseFailed,
     };
-    if (msg != null) messenger.showSnackBar(SnackBar(content: Text(msg)));
+    if (msg != null) {
+      messenger.removeCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(msg)));
+    }
   }
 
   Future<void> _reset() async {
@@ -132,10 +151,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     leading: const Icon(Icons.restore_rounded, color: Palette.ink),
                     title: Text(t.restorePurchases, style: const TextStyle(fontWeight: FontWeight.w800)),
+                    enabled: !_restoring,
                     onTap: _restore,
                   ),
               ]),
             _Card(children: [
+              // プライバシーポリシーはアプリの中からも開けること（Apple 5.1.1）
+              ListTile(
+                leading: const Icon(Icons.privacy_tip_outlined, color: Palette.ink),
+                title: Text(t.privacyPolicy, style: const TextStyle(fontWeight: FontWeight.w800)),
+                trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                onTap: () => _openLink(Links.privacy),
+              ),
+              // 不適切な広告を報告できる手段を用意すること（Apple 2.5.18）
+              ListTile(
+                leading: const Icon(Icons.support_agent_rounded, color: Palette.ink),
+                title: Text(t.supportAndAdReport, style: const TextStyle(fontWeight: FontWeight.w800)),
+                trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                onTap: () => _openLink(Links.support),
+              ),
               ListTile(
                 leading: const Icon(Icons.description_outlined, color: Palette.ink),
                 title: Text(t.licenses, style: const TextStyle(fontWeight: FontWeight.w800)),

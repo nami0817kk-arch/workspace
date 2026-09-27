@@ -112,13 +112,24 @@ jobs:
               echo "::error::Google のテスト用IDが登録されています。自分の AdMob のIDに置き換えてください。"
               exit 1 ;;
           esac
+          # アプリIDは「~」、広告ユニットIDは「/」で区切る。取り違えると広告が1本も出ない
+          echo "$ADMOB_APP_ID" | grep -Eq '^ca-app-pub-[0-9]{16}~[0-9]{10}$'             || { echo "::error::GOSO_ADMOB_APP_ID_IOS がアプリIDの形（ca-app-pub-…~…）ではありません。"; exit 1; }
+          for v in "$ADMOB_REWARDED" "$ADMOB_INTERSTITIAL"; do
+            echo "$v" | grep -Eq '^ca-app-pub-[0-9]{16}/[0-9]{10}$'               || { echo "::error::広告ユニットIDの形（ca-app-pub-…/…）ではない Secret があります（REWARDED / INTERSTITIAL）。"; exit 1; }
+          done
+          [ "$ADMOB_REWARDED" != "$ADMOB_INTERSTITIAL" ]             || { echo "::error::動画と全画面に同じ広告ユニットIDが入っています。"; exit 1; }
           plutil -replace GADApplicationIdentifier -string "$ADMOB_APP_ID" ios/Runner/Info.plist
           # 置換できたことを確かめる。見逃すとテスト用IDのまま出る。
           if grep -q "ca-app-pub-3940256099942544" ios/Runner/Info.plist; then
             echo "::error::Info.plist にテスト用IDが残っています。置換に失敗しました。"
             exit 1
           fi
+          [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ]             || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
           echo "Info.plist の GADApplicationIdentifier を本番IDに置き換えました。"
+          # 設定画面のリンク先（lib/app/links.dart の既定）が開けること。404 のまま出すと審査で却下される
+          for page in privacy support; do
+            curl -fsSL -o /dev/null "https://goso-boat.pages.dev/$page.html"               || { echo "::error::https://goso-boat.pages.dev/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
+          done
 
       - name: Import signing certificate into a temporary keychain
         env:

@@ -312,7 +312,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get intro8Body => '全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。';
 
   @override
-  String get hintWithAd => 'ヒント（動画）';
+  String get hintWithAd => '動画を見てヒント';
 
   @override
   String get hintDeclined => '動画を最後まで見るとヒントが出る';
@@ -670,4 +670,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get colon => '：';
+
+  @override
+  String get purchasePending => '保護者の承認待ちです。承認されると広告が消えます';
+
+  @override
+  String get privacyPolicy => 'プライバシーポリシー';
+
+  @override
+  String get supportAndAdReport => 'お問い合わせ・広告の報告';
+
+  @override
+  String linkFailed(String url) {
+    return '開けなかった: $url';
+  }
 }

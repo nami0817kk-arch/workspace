@@ -29,7 +29,7 @@ def test_ストップ高だけを日ごとに数える():
                             _row("7203", "トヨタ", close=2500.0, pct=1.5, rank=2)]),
         _day("2026-09-17", [_row("5131", "リンカーズ")]),
     ]
-    h = aggregate.stop_high_history(days)
+    h = aggregate.limit_history(days, "gainers")
     assert h["total"] == 2                       # トヨタは上限に届いていない
     assert h["per_day"][0]["rec_date"] == "2026-09-18"
     assert h["per_day"][0]["count"] == 1
@@ -39,12 +39,12 @@ def test_ストップ高だけを日ごとに数える():
 
 def test_1回だけの銘柄は一覧に出さない():
     days = [_day("2026-09-18", [_row("5131", "リンカーズ")])]
-    assert aggregate.stop_high_history(days)["stocks"] == []
+    assert aggregate.limit_history(days, "gainers")["stocks"] == []
 
 
 def test_ストップ高が無い日も記録に残す():
     days = [_day("2026-09-18", [_row("7203", "トヨタ", close=2500.0, pct=1.5)])]
-    h = aggregate.stop_high_history(days)
+    h = aggregate.limit_history(days, "gainers")
     assert h["total"] == 0
     assert h["per_day"][0]["count"] == 0          # 「無かった」ことも記録
 
@@ -177,7 +177,7 @@ def test_出どころが混ざっていることを画面で断る():
             {"code": "9999", "name": "圏外", "close": 500.0, "change_pct": 19.0, "at_limit": True}]},
         _day("2026-09-25", [_row("5131", "リンカーズ")]),
     ]
-    h = aggregate.stop_high_history(days)
+    h = aggregate.limit_history(days, "gainers")
     assert h["has_recorded"] and h["has_estimated"]
     assert [d["source"] for d in h["per_day"]] == ["recorded", "estimated"]
 
@@ -297,7 +297,7 @@ def test_ストップ安の最大は最も下げた日を指す():
             {"code": "4599", "name": "ステムリム", "close": 300.0,
              "change_pct": -15.0, "at_limit": True}]},
     ]
-    h = aggregate.stop_low_history(days)
+    h = aggregate.limit_history(days, "losers")
     assert h["stocks"][0]["best_pct"] == -25.08
 
 

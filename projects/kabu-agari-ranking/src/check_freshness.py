@@ -26,6 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import aggregate
 from market_calendar import (
     CalendarOutOfRange,
     business_days_between,
@@ -76,7 +77,7 @@ def missing_stop_records(payload: dict) -> list[str]:
     """
     if date.fromisoformat(payload["rec_date"]) < STOP_RECORDS_FROM:
         return []
-    return [key for key in ("stop_high", "stop_low") if key not in payload]
+    return [key for key in aggregate.LIMIT_KEYS if key not in payload]
 
 
 def main() -> int:
@@ -93,8 +94,17 @@ def main() -> int:
         print(f"::error::{latest} がありません。")
         return 1
 
-    payload = json.loads(latest.read_text(encoding="utf-8"))
-    rec_date = date.fromisoformat(payload["rec_date"])
+    # 「無い」は丁寧に扱うのに「壊れている」は素の traceback、では
+    # ログを見た人が何をすればよいか分からない（黙って止まるのと同じ）。
+    try:
+        payload = json.loads(latest.read_text(encoding="utf-8"))
+        rec_date = date.fromisoformat(payload["rec_date"])
+    except (json.JSONDecodeError, KeyError, ValueError) as e:
+        print(f"::error::{latest} を読めません（{e}）。")
+        print("::error::直前の取得が途中で止まった可能性があります。"
+              "data/latest.json の中身を確認し、壊れていれば当日分の "
+              "data/YYYY-MM-DD.json から作り直してください。")
+        return 1
     now = datetime.now(JST)
     try:
         behind, message = check(rec_date, now, after_fetch=args.after_fetch)
@@ -106,6 +116,10 @@ def main() -> int:
         return 1
     print(message)
 
+    # **途中で return しない。** 鮮度が古いところで止めると、そのあとの
+    # 「ストップ高・ストップ安が取れていない」を見ないまま終わる。
+    status = 0
+
     if behind >= 1:
         print(
             f"::error::ランキングデータが{behind}営業日ぶん古いままです（最新 {rec_date}）。"
@@ -113,8 +127,21 @@ def main() -> int:
             "同ディレクトリの run-daily.log を確認してください。"
             "当日中に src\\build_site.py を回さないと、その営業日は二度と取れません。"
         )
-        return 1
-    return 0
+        status = 1
+
+    missing = missing_stop_records(payload)
+    if missing:
+        names = {"stop_high": "ストップ高", "stop_low": "ストップ安"}
+        print(
+            f"::error::{rec_date} の"
+            + "・".join(names.get(key, key) for key in missing)
+            + "の一覧が取れていません（ランキング自体は取れています）。"
+            "当日中に tools\\fetch_stop_records.py --write を回せば拾えます。"
+            "翌営業日になると取得元が次の日に切り替わり、二度と取れません。"
+        )
+        status = 1
+
+    return status
 
 
 if __name__ == "__main__":

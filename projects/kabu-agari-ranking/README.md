@@ -35,7 +35,9 @@ GitHub Actions（kabu-daily.yml）
 | `/` `/losers` `/active` | 本日の値上がり・値下がり・活況（約定回数）ランキング |
 | `/archive/{gainers,losers,active}/` | 営業日ごとのアーカイブと、その一覧 |
 | `/weekly/` | 週ごとのまとめ（日をまたいだ最大上昇・複数回ランクイン） |
-| `/stop-high/` | ストップ高になった銘柄の記録（日別・複数回・連続） |
+| `/stop-high/` `/stop-low/` | ストップ高・ストップ安の記録（日別・複数回・連続・市場別と業種別の内訳） |
+| `/market` | 相場の振り返り（10%以上動いた数・ストップ高安の数・首位の上昇率） |
+| `/stock/` | 3回以上登場した銘柄のページ（市場区分・業種・売買単位、同じ日の顔ぶれ） |
 | `/monthly/` | 月ごとのまとめ |
 | `/frequent` | 何度もランクインした銘柄 |
 | `/search` | 銘柄名・コードから過去の登場日を引く（索引は `search-index.json`） |
@@ -57,9 +59,11 @@ src/
   market_calendar.py 東証の休場日（内閣府の祝日表＋年末年始）
   check_freshness.py データが止まっていないかの監視
   feed.py            RSS 2.0
-  post_to_x.py       X への投稿
+  post_to_x.py       X への投稿（上限は X の数え方で測る）
+  stock_profile.py   銘柄の基本属性（市場区分・業種・売買単位）を data/stocks.json に貯める
 templates/           ページテンプレート（Jinja2）
-static/              og-image.png など、そのまま output/ へ写すもの
+static/              site.css（見た目は1枚）・og-image.png・_headers
+tools/               単発で使う道具（相場日の確定、当日分の記録の取り直し）
 data/                日別ランキング（YYYY-MM-DD.json）。**取り直しがきかない資産**
 output/              ビルド成果物（gitignore 済み。毎回作り直す）
 ```
@@ -108,6 +112,13 @@ python src/build_site.py --force       # 検査を飛ばして保存（誤検知
 | `test_charts.py` | グラフの軸・はみ出し・ラベル・色 |
 | `test_feed.py` | RSS が妥当な XML か |
 | `test_links.py` | 全リンクが実在するか、孤立ページが無いか |
+| `test_limit_sides.py` | 上限側と下限側を片方だけ直していないか |
+| `test_count_consistency.py` | 同じ日の件数がページによって違わないか |
+| `test_escaping.py` | 取得元の文字列がそのまま HTML に流れていないか |
+| `test_sitemap_coverage.py` | 出したページが sitemap に載っているか、パンくずが食い違わないか |
+| `test_accessibility.py` | 見出しの階層・表とグラフの説明・リンクの文字 |
+| `test_build_flow.py` | どの失敗で止め、どの失敗で止めないか |
+| `test_stock_profile.py` `test_stop_records.py` | 銘柄属性の取得、0件と取得失敗の区別 |
 
 取得先の HTML 構造が変わると、例外ではなく「空のランキング」という形で壊れる。
 `src/fetcher.py` や `libs/kabutan` を触ったらテストも合わせて更新する。

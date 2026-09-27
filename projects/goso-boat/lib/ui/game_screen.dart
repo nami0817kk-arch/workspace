@@ -138,7 +138,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      if (phase != _Phase.won && phase != _Phase.failed) _clock.start();
+      // 動画広告から App Store へ行って戻ったときなど、ヒントの待ち中は止めたまま（_hint が再開する）
+      if (phase != _Phase.won && phase != _Phase.failed && !_hintBusy) _clock.start();
     } else {
       _clock.stop();
       if (phase == _Phase.play) _saveResume();
@@ -418,9 +419,18 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     // 広告を消していなければ、動画を1本見てからヒントを出す
     _hintBusy = true;
     _clock.stop();
-    final gate = await widget.money.beforeHint();
-    if (phase == _Phase.play) _clock.start();
-    _hintBusy = false;
+    HintGate gate;
+    try {
+      gate = await widget.money.beforeHint();
+    } catch (_) {
+      gate = HintGate.unavailable;
+    } finally {
+      // 広告の途中で何が起きても、ヒントのボタンと時計が止まったままにならないように
+      _hintBusy = false;
+      // アプリが前面にあるときだけ再開する（裏にいる間の時間を記録に入れない）
+      final life = WidgetsBinding.instance.lifecycleState ?? AppLifecycleState.resumed;
+      if (mounted && phase == _Phase.play && life == AppLifecycleState.resumed) _clock.start();
+    }
     if (!mounted || phase != _Phase.play) return;
     if (gate == HintGate.declined) {
       _say(t.hintDeclined);
@@ -588,7 +598,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin, 
     if (next == null || _leaving) return;
     _leaving = true;
     // 面と面の間の全画面広告（3面に1回。舞台1と、広告を消した人には出ない）
-    await widget.money.afterClear(level);
+    try {
+      await widget.money.afterClear(level);
+    } catch (_) {
+      // 広告で何が起きても、次の面へは進める
+    }
     if (!mounted) return;
     Navigator.of(context).pushReplacement(PageRouteBuilder(
       pageBuilder: (_, _, _) => GameScreen(level: next, progress: widget.progress, money: widget.money),

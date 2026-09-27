@@ -64,20 +64,26 @@ def test_日付は和暦風の表記と曜日を出す():
 
 
 def test_次回更新予定は次の営業日():
-    assert "2026年9月18日（金）" in render.next_update_note("2026-09-17")
+    """**画面に出ているほう（updated_line）を見る。** 同じことをする関数が
+    2つあり、テストが出ていないほうを見ていた（2026-09-28 に片方を消した）。"""
+    line = render.updated_line("2026-09-17")
+    assert "9月18日（金）" in line
     # 連休を挟まないので、余計な但し書きは付けない
-    assert "休場" not in render.next_update_note("2026-09-17")
+    assert "休場" not in line
 
 
 def test_連休前は休場だと言う():
-    note = render.next_update_note("2026-09-18")
-    assert "2026年9月24日（木）" in note
-    assert "休場" in note
+    """連休中に来た人が「止まったサイト」と思って離れるのを防ぐ。"""
+    line = render.updated_line("2026-09-18")
+    assert "9月24日（木）" in line
+    assert "休場" in line
 
 
-def test_祝日表の範囲外なら黙る():
+def test_祝日表の範囲外なら次回を書かない():
     # 嘘の更新予定を出すくらいなら何も言わない
-    assert render.next_update_note("2030-05-07") == ""
+    line = render.updated_line("2030-05-07")
+    assert "次回" not in line
+    assert "更新: 2030年5月7日" in line
 
 
 def test_要約は首位と件数を数字で言う():
@@ -308,8 +314,9 @@ def test_相場の振り返りは日ごとの数字を持つ():
         "active": [],
     }]
     row = render.market_rows(days)[0]
-    assert row == {"rec_date": "2026-09-18", "big": 1, "stop_high": 1,
-                   "stop_low": 1, "stop_source": "estimated", "top_pct": 44.25}
+    assert row == {"rec_date": "2026-09-18", "big": 1, "stop_high": 1, "stop_low": 1,
+                   "stop_high_source": "estimated", "stop_low_source": "estimated",
+                   "top_pct": 44.25}
 
 
 def test_相場の振り返りは記録がある日は全件を数える():
@@ -341,7 +348,26 @@ def test_相場の振り返りは記録がある日は全件を数える():
     row = render.market_rows(days)[0]
     assert row["stop_high"] == 2
     assert row["stop_low"] == 1
-    assert row["stop_source"] == "recorded"
+    assert row["stop_high_source"] == "recorded"
+    assert row["stop_low_source"] == "recorded"
+
+
+def test_相場の振り返りは上下それぞれの出どころを持つ():
+    """片方だけを持っていたため、ストップ安が推定の日にも札が出なかった。"""
+    days = [{
+        "rec_date": "2026-09-28",
+        "gainers": [{"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+                     "change_pct": 44.25, "metric_value": 1}],
+        "losers": [{"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+                    "change_pct": -25.08, "metric_value": 1}],
+        "active": [],
+        # ストップ高は記録できたが、ストップ安のページは1枚も取れなかった日
+        "stop_high": [{"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+                       "change_pct": 44.25, "at_limit": True}],
+    }]
+    row = render.market_rows(days)[0]
+    assert row["stop_high_source"] == "recorded"
+    assert row["stop_low_source"] == "estimated"
 
 
 def test_相場の振り返りの一文は最も荒れた日を指す():

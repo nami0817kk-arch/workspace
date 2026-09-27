@@ -61,8 +61,8 @@
     <tr>
       <th scope="row"><a href="{{ base_url }}archive/gainers/{{ row.rec_date }}.html">{{ row.rec_date }}</a></th>
       <td>{{ row.big }}銘柄</td>
-      <td>{{ row.stop_high }}銘柄{% if row.stop_source == "estimated" %}<span class="badge">推定</span>{% endif %}</td>
-      <td>{{ row.stop_low }}銘柄</td>
+      <td>{{ row.stop_high }}銘柄{% if row.stop_high_source == "estimated" %}<span class="badge">推定</span>{% endif %}</td>
+      <td>{{ row.stop_low }}銘柄{% if row.stop_low_source == "estimated" %}<span class="badge">推定</span>{% endif %}</td>
       <td class="gain">{{ "%+.2f"|format(row.top_pct) }}%</td>
     </tr>
     {% endfor %}
