@@ -106,8 +106,6 @@
   "cancel": "Cancel",
   "doReset": "Reset",
   "resetDone": "Progress reset",
-  "watchSolution": "Watch solution",
-  "demoPlaying": "Solution {i}/{n}",
   "personalBest": "Your best: {n}",
   "newRecord": "New record!",
   "placeBoat": "Boat",
