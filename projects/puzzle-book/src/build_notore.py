@@ -1,8 +1,9 @@
 """「あたまの体操 30日」（高齢者向けの脳トレ詰め合わせ）の本文PDFと表紙PDFを組む。
 
-1日2ページ×30日。左のページは計算と数字さがし、右のページはことば探し（奇数日）か
+1日2ページ×30日。左のページは計算と数字さがし、右のページは迷路（奇数日）か
 同じ絵さがし（偶数日）と、時計の読み取り、思い出トーク。難しさは10日ごとに上げる。
-パズルの生成と検証は libs/puzzle-generator（drills と wordsearch）。ここは紙面だけ。
+ことば探しは入れない（別に1冊あるので中身をかぶらせない。2026-09-27 ユーザー指示）。
+パズルの生成と検証は libs/puzzle-generator（drills と maze）。ここは紙面だけ。
 紙面の部品（色・見出しの帯・盤面・絵・余白）はことば探しの本（build_kotoba.py）と共通。
 """
 
@@ -19,8 +20,8 @@ from puzzle_generator import (
     build_arithmetic,
     build_clock,
     build_number_search,
+    build_maze,
     build_pair_search,
-    build_wordsearch,
     validate_record,
 )
 from reportlab.lib.colors import CMYKColor
@@ -30,7 +31,7 @@ from reportlab.pdfgen import canvas
 
 import kdp_spec
 from art import FONT_ROUNDED, ICON_CREDIT, draw_icon, outlined_text
-from build_book import DIFFICULTY_LABEL_JA, DIFFICULTY_STARS, FONT_BOLD, FONT_REGULAR, _Pager
+from build_book import DIFFICULTY_LABEL_JA, DIFFICULTY_STARS, FONT_BOLD, FONT_REGULAR, _draw_arrow_label, _Pager, draw_maze
 from build_cover import CREAM, NAVY, ORANGE, WHITE
 from build_kotoba import BLACK, COLOR, COPY_PERMISSION, GRAY, CMYK, Palette, _draw_label, _header_band, _seal, draw_grid
 
@@ -40,12 +41,12 @@ PAIR_ICONS = sorted(p.stem.removeprefix("emoji_u") for p in (_ASSETS / "emoji").
                     if p.stem not in ("emoji_u1f50d", "emoji_u1f4ac"))
 
 LEVEL_PARAMS = {
-    # 数字さがしの大きさ、同じ絵さがしの盤面、ことば探しの盤面と向き
-    "easy": {"number": 4, "pair": (4, 5), "ws_size": 7, "ws_dirs": ["E", "S"]},
-    "medium": {"number": 5, "pair": (5, 6), "ws_size": 7, "ws_dirs": ["E", "S"]},
-    "hard": {"number": 6, "pair": (6, 6), "ws_size": 8, "ws_dirs": ["E", "S", "SE"]},
+    # 数字さがしの大きさ、同じ絵さがしの盤面、迷路のマスの数（紙面の半分に収まる大きさ）
+    "easy": {"number": 4, "pair": (4, 5), "maze": 8},
+    "medium": {"number": 5, "pair": (5, 6), "maze": 11},
+    "hard": {"number": 6, "pair": (6, 6), "maze": 14},
 }
-PUZZLE_NAMES = ["計算", "数字さがし", "ことば探し", "同じ絵さがし", "時計"]
+PUZZLE_NAMES = ["計算", "数字さがし", "迷路", "同じ絵さがし", "時計"]
 
 
 @dataclass
@@ -77,9 +78,8 @@ def generate_days(spec: NotoreSpec) -> list[dict]:
         lv = d["difficulty"]
         p = LEVEL_PARAMS[lv]
         right = d["right"]
-        if right["kind"] == "wordsearch":
-            r = build_wordsearch(right["words"], lv, seed + 3, theme=right["theme"],
-                                 size=p["ws_size"], directions=p["ws_dirs"])
+        if right["kind"] == "maze":
+            r = build_maze(p["maze"], p["maze"], seed + 3, lv)
         else:
             rows, cols = p["pair"]
             r = build_pair_search(PAIR_ICONS, rows, cols, seed + 3, lv)
@@ -256,28 +256,16 @@ def draw_day_right(c: canvas.Canvas, day: dict, *, left: float, right: float, to
     clock_h = 210
     talk_h = 50
     avail = y - 14 - (bottom + 30 + talk_h + clock_h + 40)
-    if r["type"] == "wordsearch":
-        dirs = "よこ・たて" + ("・ななめ" if "SE" in r["params"]["directions"] else "")
-        _section_title(c, left, y, "3", "ことば探し", f"テーマ「{r['board']['theme']}」（{dirs}）", pal.main[d])
-        if day.get("icon"):
-            draw_icon(c, day["icon"], right - 30, y - 6, 28)
-        labels = [wd["label"] for wd in r["board"]["words"]]
-        list_h = 3 * 19 * 1.75
-        gsize = min(w * 0.62, avail - list_h - 10)
-        gx = left + (w - gsize) / 2
-        gh = draw_grid(c, r, x=gx, y=y - 14, w=gsize, show_answer=False, palette=pal)
-        ly = y - 14 - gh - 28
-        col_w = w / 2
-        c.setLineWidth(1.4)
-        for k, label in enumerate(labels):
-            col, row = k % 2, k // 2
-            lx = left + 20 + col * col_w
-            yy = ly - row * 19 * 1.75
-            c.setStrokeColorCMYK(*pal.main[d])
-            c.setFillColorCMYK(*WHITE)
-            c.roundRect(lx, yy - 2, 15, 15, 2, stroke=1, fill=1)
-            c.setFillColorCMYK(*BLACK)
-            _draw_label(c, label, lx + 23, yy, col_w - 40, 19)
+    if r["type"] == "maze":
+        _section_title(c, left, y, "3", "迷路", "スタートからゴールまで、線でたどりましょう", pal.main[d])
+        label = 15
+        box_top = y - 14 - label * 3
+        box_h = avail - label * 6
+        box_w = min(w * 0.7, box_h)
+        bx = left + (w - box_w) / 2
+        draw_maze(c, r, x=bx, y=box_top - box_h, w=box_w, h=box_h, show_solution=False,
+                  line_width=2.0 if d == "easy" else 1.6)
+        _draw_arrow_label(c, r, x=bx, y=box_top - box_h, w=box_w, h=box_h, font_size=label)
     else:
         _section_title(c, left, y, "3", "同じ絵さがし", "同じ絵が2つあります。丸でかこみましょう", pal.main[d])
         draw_pair_search(c, r, x=left, top=y - 20, w=w, h=avail - 10, pal=pal, d=d)
@@ -347,10 +335,13 @@ def draw_answers_block(c: canvas.Canvas, day: dict, *, left: float, right: float
     rw = w - 200
     c.setFont(FONT_BOLD, 12)
     c.setFillColorCMYK(*BLACK)
-    c.drawString(rx, top - 40, "3 " + ("ことば探し" if r["type"] == "wordsearch" else "同じ絵さがし"))
+    c.drawString(rx, top - 40, "3 " + ("迷路" if r["type"] == "maze" else "同じ絵さがし"))
     size = min(rw, height - 70)
-    if r["type"] == "wordsearch":
-        draw_grid(c, r, x=rx + (rw - size) / 2, y=top - 52, w=size, show_answer=True, palette=pal, bold=True)
+    if r["type"] == "maze":
+        # 答えの線は入口から枠の上へはみ出すので、見出しとの間を空けて少し小さく描く
+        ms = size - 16
+        draw_maze(c, r, x=rx + (rw - ms) / 2, y=top - 68 - ms, w=ms, h=ms, show_solution=True,
+                  line_width=kdp_spec.MIN_LINE_PT)
     else:
         draw_pair_search(c, r, x=rx, top=top - 56, w=rw, h=size - 8, pal=pal, d=d, answers=True)
     # 数字さがしの答えは無い（たどれたら正解）ことを、左の列の時計の答えの下に書く
@@ -419,8 +410,8 @@ def build_pdf(days: list[dict], output_path: str, spec: NotoreSpec) -> int:
     howto = [
         ("1", "計算", "たし算・ひき算（むずかしい日は、かけ算も）の答えを□に書きます。"),
         ("2", "数字さがし", "ます目の中から、1、2、3…と順番に数字をさがし、指でたどります。\n時間をはかって、日ごとの記録をくらべるのも楽しみです。"),
-        ("3", "ことば探し", "ます目の中から、下にならんだ言葉をさがして丸でかこみます。\n言葉は「よこ（左から右）」と「たて（上から下）」にならびます。\nむずかしい日は「ななめ（左上から右下）」も加わります。\n逆向きにはならびません。"),
-        ("3", "同じ絵さがし", "絵がたくさんならんでいます。その中に、同じ絵が2つだけあります。\nさがして、2つとも丸でかこみます（ことば探しと1日おきです）。"),
+        ("3", "迷路", "「スタート」から入って「ゴール」まで、道をえんぴつでたどります。\n線（かべ）はこえられません。ゴールまでの道は1本だけです。\n10日ごとに、迷路が大きくなります。"),
+        ("3", "同じ絵さがし", "絵がたくさんならんでいます。その中に、同じ絵が2つだけあります。\nさがして、2つとも丸でかこみます（迷路と1日おきです）。"),
         ("4", "時計", "時計の針を読んで、何時何分かを書きます。\nやさしい日は30分ごと、ふつうは15分ごと、\nむずかしい日は5分ごとです。"),
     ]
     for page_no, page_items in enumerate((howto[:3], howto[3:])):
@@ -635,7 +626,7 @@ def build_cover(spec: NotoreSpec, days: list[dict], output_path: str, *, paper: 
     c.drawString(bx0, top - safe - 80, f"{count}　{spec.subtitle}")
     lines = [
         "A4の大きな紙面に、1日2ページずつ30日分。",
-        "計算・数字さがし・ことば探し・同じ絵さがし・時計の5種類を、毎日少しずつ。",
+        "計算・数字さがし・迷路・同じ絵さがし・時計の5種類を、毎日少しずつ。",
         "10日ごとに、やさしい → ふつう → むずかしい と進みます。",
         "毎日の「思い出トーク」で、解いたあとは会話に花を。",
     ]

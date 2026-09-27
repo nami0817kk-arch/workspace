@@ -188,6 +188,17 @@ def to_record(maze: Maze, difficulty: Difficulty, path: list[Cell]) -> dict:
     }
 
 
+def build_maze(width: int, height: int, seed: int, difficulty: Difficulty = "easy") -> dict:
+    """大きさを指定して、検証済みの迷路を1問作る（脳トレの本で紙面の半分に収めるため）。
+
+    検証は build_puzzle と同じ。通らない盤面は例外にする。
+    """
+    maze = generate_maze(width, height, seed=seed)
+    if not verify_unique_solution(maze):
+        raise RuntimeError(f"seed={seed} の迷路が一意解の検証に落ちた。本に入れてはいけない。")
+    return to_record(maze, difficulty, solve(maze))
+
+
 def build_puzzle(difficulty: Difficulty, seed: int) -> dict:
     """難易度とシードから、検証済みの1問を組み立てる。
 

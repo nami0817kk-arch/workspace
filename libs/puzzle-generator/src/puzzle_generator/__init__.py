@@ -1,4 +1,5 @@
 from .maze import (
+    build_maze,
     DIFFICULTIES,
     Maze,
     build_puzzle,
@@ -45,6 +46,7 @@ __all__ = [
     "build_wordsearch",
     "find_all",
     "verify_wordsearch",
+    "build_maze",
     "build_arithmetic",
     "build_clock",
     "build_number_search",
