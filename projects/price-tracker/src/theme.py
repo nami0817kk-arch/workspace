@@ -215,13 +215,30 @@ NAV_MORE = [("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
 NAV = NAV_MAIN + NAV_MORE
 
 
-def nav_html(prefix: str) -> str:
+def nav_html(prefix: str, here: str = "") -> str:
+    """上の並びを組む。here は今いるページの、site の根からの道のり。
+
+    どの一覧を見ているのかが並びの中で分からず、行ったり来たりしないと
+    自分の居場所が掴めなかった。今いる一覧に印を付ける。
+    枝のページ（genre/562637/ など）では、その親の一覧に印を付ける。
+    """
     def link(href, label):
-        return f'<a href="{(prefix + href).replace("/./", "/")}">{esc(label)}</a>'
+        if here == href:
+            mark = ' aria-current="page"'
+        elif here.startswith(href) and href:
+            mark = ' aria-current="true"'
+        else:
+            mark = ""
+        return (f'<a href="{(prefix + href).replace("/./", "/")}"{mark}>'
+                f'{esc(label)}</a>')
     main = "".join(link(h, l) for h, l in NAV_MAIN)
     more = "".join(link(h, l) for h, l in NAV_MORE)
+    # 開いたままにすると、畳みの中身が本文の上に覆いかぶさる（携帯で全面が隠れた）。
+    # 開かずに、畳みの見出しの方に印を付ける。
+    in_more = any(h == here or (here.startswith(h) and h) for h, _ in NAV_MORE)
     return (f'<nav class="site-nav">{main}'
-            f'<details class="nav-more"><summary>ほかの一覧</summary>'
+            f'<details class="nav-more{" here" if in_more else ""}">'
+            f'<summary>ほかの一覧</summary>'
             f'<div class="nav-more-list">{more}</div></details></nav>')
 
 
@@ -238,6 +255,17 @@ def _verification(site: dict) -> str:
     return f'\n<meta name="google-site-verification" content="{esc(token)}">'
 
 
+def _here(canonical: str, site: dict) -> str:
+    """canonical から、site の根を除いた道のりを取り出す。
+
+    head() を呼ぶ箇所は40か所以上あり、どのページかを別引数で渡して回ると
+    渡し忘れが必ず出る。canonical は全ページが必ず正しく持っている。
+    """
+    base = str(site.get("base_url") or "").rstrip("/") + "/"
+    c = str(canonical or "")
+    return c[len(base):] if c.startswith(base) else ""
+
+
 def head(title: str, description: str, canonical: str, site: dict, prefix: str = "",
          extra: str = "", indexable: bool = True) -> str:
     robots = ("index,follow,max-image-preview:large" if indexable
@@ -247,6 +275,8 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17161a" media="(prefers-color-scheme: dark)">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{esc(canonical)}">
@@ -270,7 +300,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <header class="site-head"><div class="wrap">
   <a class="site-name" href="{prefix or './'}"><span class="mark" aria-hidden="true"></span>{esc(site['name'])}</a>
   <p class="tagline">{esc(site.get('description', ''))}</p>
-  {nav_html(prefix)}
+  {nav_html(prefix, _here(canonical, site))}
 </div></header>
 <main class="wrap" id="main">"""
 
@@ -440,13 +470,18 @@ def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = Fa
     img = (f'<img src="{esc(row["image"])}" alt="{esc(short_name(row["name"], 40))}" '
            f'loading="{"eager" if eager else "lazy"}" decoding="async" '
            f'width="120" height="120">'
-           if row.get("image") else '<span class="noimg"></span>')
+           if row.get("image") else '')
+    # 画像の無い商品でリンクだけ残すと、名前も絵も無いリンクになる
+    # （読み上げは「リンク」としか言えず、Tab の行き先も増える）。
+    # カード全体が押せるので、ここは枠だけ置く。
+    thumb = (f'<a class="thumb" href="{href}">{img}</a>' if img
+             else '<span class="thumb noimg"></span>')
     return f"""<li class="card" data-price="{row["price"]}" data-drop="{row.get("drop_pct", 0):.4f}"
     data-days="{row.get("days", 0)}" data-eff="{row.get("eff_price") or row["price"]}"
     data-code="{esc(row["item_code"])}" data-free="{1 if row.get("free_shipping") else 0}"
     data-stock="{0 if row.get("in_stock") is False else 1}">
   {f'<span class="rank">{rank}</span>' if rank else ""}
-  <a class="thumb" href="{href}">{img}</a>
+  {thumb}
   <div class="body">
     {badge(row)}
     <a class="name" href="{href}" title="{esc(row["name"])}">{esc(short_name(row["name"]))}</a>
@@ -1048,7 +1083,9 @@ def chart(tail: list, width: int = 560, height: int = 180,
     # 値が動いていないと線が下端に張り付き、余白だけの図に見える。
     # その場合は中央に引く。
     flat = high == low
-    pad_l, pad_b, pad_t = 64, 22, 10
+    # 日付は SVG の外（HTML）に出した。下の余白は、いちばん下の目盛りの
+    # 文字（外に置いてあり高さ13px）が絵からはみ出さない分だけ残す。
+    pad_l, pad_b, pad_t = 64, 16, 10
     w = width - pad_l - 8
     h = height - pad_b - pad_t
     step = w / (len(points) - 1)
@@ -1059,16 +1096,18 @@ def chart(tail: list, width: int = 560, height: int = 180,
         return pad_t + h - (v - low) / span * h
 
     coords = " ".join(f"{pad_l + i * step:.1f},{y(p):.1f}" for i, p in enumerate(prices))
+    # 目盛りの文字は SVG の外（HTML）に置く。中に置くと viewBox ごと縮むため、
+    # 幅343pxの携帯では font-size="11" が実寸 6.7px まで小さくなっていた
+    # （560 の絵を 343 に縮めているので 0.61 倍）。右端の日付も切れていた。
     grid = "".join(
         f'<line x1="{pad_l}" y1="{y(v):.1f}" x2="{width - 8}" y2="{y(v):.1f}" '
         f'stroke="currentColor" stroke-opacity=".15"/>'
-        f'<text x="{pad_l - 8}" y="{y(v) + 4:.1f}" text-anchor="end" '
-        f'font-size="11" fill="currentColor" opacity=".65">{v:,}</text>'
         for v in sorted({low, high}, reverse=True))
-    labels = "".join(
-        f'<text x="{pad_l + i * step:.1f}" y="{height - 6}" text-anchor="middle" '
-        f'font-size="11" fill="currentColor" opacity=".65">{points[i][0][5:]}</text>'
-        for i in ({0, len(points) - 1} if len(points) > 1 else {0}))
+    ticks = "".join(
+        f'<span class="chart-tick" style="top:{y(v) / height * 100:.2f}%">{v:,}</span>'
+        for v in sorted({low, high}, reverse=True))
+    dates = (f'<p class="chart-dates"><span>{esc(points[0][0][5:])}</span>'
+             f'<span>{esc(points[-1][0][5:])}</span></p>')
     eff_line = ""
     if effs:
         eff_coords = " ".join(
@@ -1089,17 +1128,20 @@ def chart(tail: list, width: int = 560, height: int = 180,
              f'<circle class="chart-dot" r="4" fill="currentColor"/>'
              + ('<circle class="chart-dot-eff" r="4" fill="currentColor" '
                 'opacity=".75"/>' if effs else ''))
-    return (f'<svg class="chart-svg" viewBox="0 0 {width} {height}" role="img" '
+    return (f'<div class="chart-box" style="--gutter:{pad_l / width * 100:.2f}%">'
+            f'<div class="chart-plot">'
+            f'<svg class="chart-svg" viewBox="0 0 {width} {height}" role="img" '
             f'data-series="{esc(series)}" data-pad="{pad_l}" data-step="{step:.4f}" '
             f'aria-label="{len(points)}日分の価格推移。最安 {low:,}円、最高 {high:,}円'
             + ('。破線はポイント分を引いた実質価格' if effs else '') + '">'
-            f'{grid}{labels}{guide}'
+            f'{grid}{guide}'
             f'<polyline points="{coords}" fill="none" stroke="currentColor" '
             f'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
             f'{eff_line}'
             f'<circle cx="{pad_l + (len(points) - 1) * step:.1f}" '
             f'cy="{y(prices[-1]):.1f}" r="3.5" fill="currentColor"/></svg>'
-            f'<p class="chart-read" aria-live="polite"></p>')
+            f'{ticks}</div>{dates}'
+            f'<p class="chart-read" aria-live="polite"></p></div>')
 
 
 def cheaper_days(row: dict) -> str:
@@ -1264,14 +1306,49 @@ def breadcrumb(site: dict, name: str, prefix: str) -> str:
             f'<script type="application/ld+json">{ld}</script>')
 
 
+def distinct_short(rows: list, limit: int = 46) -> list:
+    """並べたときに見分けの付く短い名前を返す。
+
+    名前の近い商品を選ぶ作りなので、頭が同じで末尾だけ違う商品
+    （枚数違い・色違い）が隣り合う。切り詰めた結果が同じになると、
+    行き先の違うリンクが3本とも同じ文字になり、どれを押せばよいか分からない。
+    同じになった組だけ、名前が分かれる位置から先を足す。
+    それでも同じなら店名を添える。
+    """
+    full = [clean_name(r["name"]) for r in rows]
+    out = [t if len(t) <= limit else t[:limit].rstrip() + "…" for t in full]
+    groups = {}
+    for i, t in enumerate(out):
+        groups.setdefault(t, []).append(i)
+    for text, idx in groups.items():
+        if len(idx) < 2:
+            continue
+        names = [full[i] for i in idx]
+        head = 0
+        while head < min(len(n) for n in names) and len({n[head] for n in names}) == 1:
+            head += 1
+        stem = text[:-1].rstrip() if text.endswith("…") else text
+        for i, n in zip(idx, names):
+            tail = n[head:head + 16].strip()
+            if tail:
+                out[i] = stem + "…" + tail + ("…" if len(n) > head + 16 else "")
+            else:
+                shop = (rows[i].get("shop") or "").strip()
+                if shop:
+                    out[i] = text + "（" + shop + "）"
+    return out
+
+
 def same_shop(rows: list, shop: str) -> str:
     """同じ店の商品。店ごとにポイント倍率や送料の条件が揃うことが多い。"""
     if not rows or not shop:
         return ""
+    labels = distinct_short(rows)
     body = "".join(
         f'<li><a href="../{slug(r["item_code"])}/" title="{esc(r["name"])}">'
-        f'{esc(short_name(r["name"]))}</a>'
-        f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
+        f'{esc(label)}</a>'
+        f'<span class="price">{yen(r["price"])}</span></li>'
+        for r, label in zip(rows, labels))
     return f'<h2>{esc(shop)} の他の商品</h2><ul class="hits">{body}</ul>'
 
 
@@ -1284,10 +1361,12 @@ def related(rows: list, site: dict) -> str:
     リンクされる商品が 64 → 12,022種類に広がる。"""
     if not rows:
         return ""
+    labels = distinct_short(rows)
     body = "".join(
         f'<li><a href="../{slug(r["item_code"])}/" title="{esc(r["name"])}">'
-        f'{esc(short_name(r["name"]))}</a>'
-        f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
+        f'{esc(label)}</a>'
+        f'<span class="price">{yen(r["price"])}</span></li>'
+        for r, label in zip(rows, labels))
     return f'<h2>名前が近い商品</h2><ul class="hits">{body}</ul>'
 
 
@@ -1380,7 +1459,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     if (rows.length < 2) { return; }
     var pad = +svg.dataset.pad, step = +svg.dataset.step;
-    var out = svg.parentNode.querySelector('.chart-read');
+    // 目盛りを HTML に出した都合で、svg の親は .chart-plot になった。
+    var wrap = svg.closest('.chart-box') || svg.parentNode;
+    var out = wrap.querySelector('.chart-read');
     var guide = svg.querySelector('.chart-guide');
     var dot = svg.querySelector('.chart-dot');
     var dotEff = svg.querySelector('.chart-dot-eff');
@@ -1675,7 +1756,8 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + '<div class="lede">'
             + (f'<p class="hero"><img src="{esc(row["image"])}" '
                f'alt="{esc(short_name(row["name"], 40))}" width="300" height="300" '
-               f'decoding="async"></p>' if row.get("image") else '')
+               f'loading="eager" fetchpriority="high" decoding="async"></p>'
+               if row.get("image") else '')
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
             + '</div>'
             + AD_NOTICE

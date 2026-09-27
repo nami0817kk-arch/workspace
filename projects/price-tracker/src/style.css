@@ -708,3 +708,111 @@ h2 { margin: 32px 0 12px; }
 @media (prefers-reduced-motion: reduce) {
   .card, .views li, .genre, .hits li { transition: none; }
 }
+
+/* 31. 幅360pxの端末で「記録」の表が画面から89pxはみ出していた。
+   見出しセルに白ヌケ防止の nowrap が残っていて、長い項目名が折り返せなかった。 */
+.facts th { white-space: normal; }
+
+/* 32. 同じく幅360pxで、店名の長い商品のカードが画面から出ていた（最大29px）。
+   一覧は1列のグリッドだが、列幅の下限が中身の最小幅になるため、
+   縮められない中身があると列ごと画面外へ伸びていた。 */
+.cards { grid-template-columns: minmax(0, 1fr); }
+.card { min-width: 0; }
+.card .meta .shop { max-width: 100%; }
+
+/* 33. 日付別・記録の一覧は、枠に触れると色が変わるのに押せるのは文字だけだった。
+   押せる範囲を行全体に広げる（一覧カードと同じやり方）。 */
+.hits li { position: relative; }
+.hits li > a::after { content: ""; position: absolute; inset: 0; }
+
+/* 34. 記録ページの表に並ぶ日付・ジャンルのリンクが、
+   セルの中で高さ21pxしか無く、指で押しにくかった。 */
+.facts th > a:only-child { display: block; margin: -11px -14px; padding: 11px 14px; }
+
+/* 35. 商品ページの折り畳み2つ（商品名・図）が高さ22pxで、
+   ヘッダの折り畳みだけ42pxあり、揃っていなかった。 */
+.fullname > summary, .chart.flat > summary {
+  padding: 9px 0; min-height: 40px; display: flex; align-items: center; }
+
+/* 36. ヘッダのサイト名が高さ27px。押しどころとして小さい。 */
+.site-name { padding: 6px 0; }
+
+/* 37. 並び替え・価格帯の選択と「条件を外す」が高さ32px未満だった。 */
+.tools select { min-height: 38px; }
+.reset { min-height: 38px; }
+
+/* 38. 画面が広いとき、本文が1行52〜64字になって目が戻れなかった。
+   日本語は1行40字前後までが読みやすい。
+   説明ページ（.static）は 62em の指定が残っていて、これが1行52字の原因だった。 */
+.tagline, .site-foot .disclaimer, .howto p,
+main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 40em; }
+.static p, .static li { max-width: 40em; }
+.caption, .card-note, .item-note { max-width: 40em; }
+
+/* 39. 実質価格の脇の「（目安）」だけが11pxで、他の注記より一段小さかった。 */
+.eff small { font-size: 12px; }
+
+/* 40. 上の並びに、いま見ている一覧の印が無く、自分の居場所が分からなかった。 */
+.site-nav > a[aria-current] { color: var(--accent); font-weight: 700; }
+.site-nav > a[aria-current="page"] { box-shadow: inset 0 -2px 0 var(--accent); }
+.nav-more-list a[aria-current] { color: var(--accent); font-weight: 700; }
+.nav-more.here > summary { color: var(--accent); font-weight: 700; }
+
+/* 41. 価格の図の目盛りが、携帯で実寸 6.7px までつぶれていた。
+   560 の絵を幅 343 に縮めているので、SVG の中に書いた font-size="11" は
+   0.61 倍になる。右端の日付も絵の枠から出て切れていた。
+   目盛りは SVG の外に HTML として置き、縮まないようにする。 */
+.chart-box { max-width: 560px; }
+.chart-plot { position: relative; }
+.chart-plot .chart-svg { display: block; width: 100%; max-width: none; height: auto; }
+.chart-tick { position: absolute; left: 0; width: var(--gutter);
+  padding-right: 8px; transform: translateY(-50%);
+  text-align: right; font-size: 12px; line-height: 1.1; color: var(--muted);
+  font-variant-numeric: tabular-nums; pointer-events: none; }
+.chart-dates { display: flex; justify-content: space-between;
+  margin: 2px 0 0 var(--gutter); padding-right: 1.5%;
+  font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* 42. 目盛りを図の外に出したぶん行が増え、日付の行と
+   「図に触れると〜」の行が重なった（-12px は目盛りが中にあった頃の詰め）。 */
+.chart-read { margin-top: 6px; }
+
+/* 43. 点の内訳の数字が11px。同じ並びの他の文字より一段小さく、
+   携帯では読みづらかった（折り返しは増えない。実測で行数は5のまま）。 */
+@media (max-width: 560px) { .score .part { font-size: 12px; } }
+
+/* 44. 広い画面のときだけ、上の並びの押しどころが 35.8px と
+   携帯（41.8px）より小さかった。指でもマウスでも同じにする。 */
+.site-nav > a, .nav-more > summary { padding: 8px 0; }
+
+/* 45. 一覧のカードは、押せるのが写真（88px）と商品名の行（1行だと29px）だけで、
+   カードの他の場所に触れても何も起きなかった。一覧の行・ジャンルの枠は
+   すでに全体が押せるのに、いちばん数の多いカードだけ揃っていなかった。 */
+.card > .body > .name::after { content: ""; position: absolute; inset: 0; }
+.card .thumb, .card .watch-mini { position: relative; z-index: 1; }
+
+/* 46. 下の並びのリンクが、広い画面でだけ高さ22pxだった（余白が狭い画面にしか無い）。 */
+.foot-nav a { padding: 8px 0; }
+
+/* 47. 上の並びが2行に折り返したとき、上の行と下の行の当たり判定が
+   隙間0pxで接していた（「最安値圏」の下端＝「商品を探す」の上端）。
+   触った指が少しずれただけで隣の一覧へ飛ぶ。下の並びも4pxしかなかった。 */
+@media (max-width: 560px) { .site-nav { gap: 6px 12px; } }
+.foot-nav { gap: 6px 16px; }
+
+/* 48. ページ送りの数字が高さ34pxで、同じ並びの他の押しどころより小さかった。 */
+.watch-mini, .reset, .pager a { min-height: 36px; }
+
+/* 49. ページ飛び（5ページごとの数字）と明暗の切り替えだけが
+   高さ28px・31pxで、他の押しどころ（36px）と揃っていなかった。 */
+.jump a, .theme-btn { min-height: 36px; display: inline-flex;
+  align-items: center; justify-content: center; }
+
+/* 50. 「ほかの一覧」を開くと、幅360pxの端末で畳みの中身が画面から8px出て
+   横スクロールが生まれていた。畳みの位置（並びの何番目に来るか）を基準に
+   していたため、折り返し方によって左にも右にもはみ出す。
+   基準を並び全体にして、並びの左端から出すようにする。 */
+.site-nav { position: relative; }
+.nav-more { position: static; }
+.nav-more-list { left: 0; right: auto; max-width: calc(100vw - 32px); }
+.nav-more-list a { white-space: normal; }
