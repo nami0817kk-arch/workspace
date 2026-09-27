@@ -659,13 +659,13 @@ abstract class AppLocalizations {
   /// No description provided for @purchaseNothing.
   ///
   /// In ja, this message translates to:
-  /// **'復元できる購入が見つかりませんでした。購入したときの Apple ID でサインインしているか確かめてください'**
+  /// **'復元できる購入が見つかりませんでした。電波のある所で、購入したときの Apple ID でサインインしているか確かめてください'**
   String get purchaseNothing;
 
   /// No description provided for @purchaseFailed.
   ///
   /// In ja, this message translates to:
-  /// **'購入できませんでした。時間をおいてもう一度お試しください'**
+  /// **'購入できませんでした。支払いが済んでいれば、少しして自動で広告が消えます'**
   String get purchaseFailed;
 
   /// No description provided for @kicker.
@@ -1303,6 +1303,24 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'購入を復元できませんでした。時間をおいてもう一度お試しください'**
   String get restoreFailed;
+
+  /// No description provided for @hintLoading.
+  ///
+  /// In ja, this message translates to:
+  /// **'動画を読み込んでいます…'**
+  String get hintLoading;
+
+  /// No description provided for @hintShowFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'動画を表示できませんでした。全画面表示にしてもう一度'**
+  String get hintShowFailed;
+
+  /// No description provided for @dailyNeedsNoHint.
+  ///
+  /// In ja, this message translates to:
+  /// **'今日の1問は、ヒントなしの星3で達成になります'**
+  String get dailyNeedsNoHint;
 }
 
 class _AppLocalizationsDelegate

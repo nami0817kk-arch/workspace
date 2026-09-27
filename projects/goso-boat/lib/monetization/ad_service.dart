@@ -12,8 +12,11 @@ enum RewardResult {
   /// 途中で閉じた。
   closedEarly,
 
-  /// 出せなかった（読み込めていない・期限切れ・表示に失敗）。
+  /// 出せなかった（読み込めていない・期限切れ）。
   unavailable,
+
+  /// 読み込めていたのに表示に失敗した（iPad の分割画面・小さいウィンドウなど）。
+  showFailed,
 }
 
 /// 広告の読み込みと表示（soccer-manager の ad_service.dart を iOS だけに絞り、
@@ -26,6 +29,12 @@ abstract class AdService {
 
   /// 表示できる動画広告が手元にあるか。
   bool get isRewardedAdReady;
+
+  /// 表示できる全画面広告が手元にあるか。
+  bool get isInterstitialReady;
+
+  /// 動画広告が読み込み中なら、届くまで最大 [max] 待つ。手元に出せる動画があれば true。
+  Future<bool> waitForRewarded(Duration max);
 
   /// 手元に無ければ読み込みを始める（読み込み失敗の後、次に使うときのため）。
   void ensureLoaded();
@@ -47,6 +56,12 @@ class NoOpAdService implements AdService {
 
   @override
   bool get isRewardedAdReady => false;
+
+  @override
+  bool get isInterstitialReady => false;
+
+  @override
+  Future<bool> waitForRewarded(Duration max) async => false;
 
   @override
   void ensureLoaded() {}
@@ -99,6 +114,9 @@ class AdMobAdService implements AdService {
 
   bool _disposed = false;
 
+  /// 全年齢向けの設定と SDK の準備が済んだか。済むまでは読み込まない（設定の掛かっていない広告を読まないため）。
+  bool _initialized = false;
+
   final _rewardedSlot = _Slot<RewardedAd>();
   final _interstitialSlot = _Slot<InterstitialAd>();
 
@@ -109,6 +127,7 @@ class AdMobAdService implements AdService {
     // 広告の中身は全年齢向け（G）まで。4+ のアプリに合わない広告を出さない（Apple 2.5.18）
     await MobileAds.instance.updateRequestConfiguration(RequestConfiguration(maxAdContentRating: MaxAdContentRating.g));
     await MobileAds.instance.initialize();
+    _initialized = true;
     _loadRewarded();
     _loadInterstitial();
   }
@@ -135,7 +154,7 @@ class AdMobAdService implements AdService {
     void Function() again,
     Future<void> Function(void Function(T) onLoaded, void Function(LoadAdError) onFailed) start,
   ) {
-    if (_disposed || slot.ready) return;
+    if (_disposed || !_initialized || slot.ready) return;
     // 読み込み中でも、返事が来ないまま長く経っていれば読み直す
     if (slot.loadingSince != null && DateTime.now().difference(slot.loadingSince!) < _loadTimeout) return;
     slot.clear();
@@ -146,8 +165,8 @@ class AdMobAdService implements AdService {
       if (_disposed || !identical(slot.loadingToken, token)) return;
       slot.loadingToken = null;
       slot.loadingSince = null;
-      // 在庫切れ・通信断は珍しくない。間を空けて読み直す
-      // 失敗が続くほど間を空ける（30秒→1分→2分→…最大5分）
+      slot.notify();
+      // 在庫切れ・通信断は珍しくない。失敗が続くほど間を空けて読み直す（30秒→1分→2分→4分で止める）
       final wait = _retryAfter * (1 << slot.failures.clamp(0, 3));
       slot.failures++;
       slot.timer = Timer(wait > _maxRetry ? _maxRetry : wait, again);
@@ -164,6 +183,7 @@ class AdMobAdService implements AdService {
         slot.ad = ad;
         slot.loadedAt = DateTime.now();
         slot.failures = 0;
+        slot.notify();
         // 期限が切れる前に、次を読み込んでおく（長く遊んだ後の最初のヒントで失敗しないように）
         slot.timer = Timer(_maxAge, () {
           slot.loadedAt = null; // 端末の時計を戻されても、経過時間で必ず読み直す
@@ -179,7 +199,25 @@ class AdMobAdService implements AdService {
   bool get isRewardedAdReady => _rewardedSlot.ready;
 
   @override
+  bool get isInterstitialReady => _interstitialSlot.ready;
+
+  @override
+  Future<bool> waitForRewarded(Duration max) async {
+    if (_rewardedSlot.ready) return true;
+    if (_rewardedSlot.loadingSince == null) return false;
+    try {
+      await _rewardedSlot.changed().timeout(max);
+    } on TimeoutException {
+      // 間に合わなかった
+    }
+    return _rewardedSlot.ready;
+  }
+
+  @override
   void ensureLoaded() {
+    // 利用者が広告を求めた（アプリに戻った・ヒントを押した）ので、延びていた読み直しの間隔を戻してすぐ読む
+    _rewardedSlot.failures = 0;
+    _interstitialSlot.failures = 0;
     _loadRewarded();
     _loadInterstitial();
   }
@@ -239,6 +277,8 @@ class AdMobAdService implements AdService {
       _loadRewarded();
       return RewardResult.unavailable;
     }
+    // 見ている間に次の1本を読み始める（続けてヒントを押したときに待たせない）
+    _loadRewarded();
     var earned = false;
     final shown = await _present(
       ad,
@@ -253,9 +293,9 @@ class AdMobAdService implements AdService {
     // 閉じた通知が報酬の通知より先に届くことがあるので、少しだけ待ってから捨てる
     if (shown && !earned) await Future<void>.delayed(_rewardGrace);
     ad.dispose(); // 2回目の dispose はプラグイン側で何もしない
-    _loadRewarded(); // 次のヒントのために先読み
+    _loadRewarded(); // 見ている間の読み込みに失敗していたときのため
     if (earned) return RewardResult.earned;
-    return shown ? RewardResult.closedEarly : RewardResult.unavailable;
+    return shown ? RewardResult.closedEarly : RewardResult.showFailed;
   }
 
   @override
@@ -275,7 +315,8 @@ class AdMobAdService implements AdService {
       ),
       () => ad.show(),
     );
-    _loadInterstitial();
+    // 次の面への切り替えと重ならないよう、少し置いてから次を読む
+    unawaited(Future<void>.delayed(const Duration(seconds: 2), _loadInterstitial));
     return shown;
   }
 
@@ -298,6 +339,17 @@ class _Slot<T extends AdWithoutView> {
 
   /// 読み直しの予約（失敗後の再試行、または期限切れの前の読み直し）。
   Timer? timer;
+
+  Completer<void>? _changed;
+
+  /// 読み込みが終わる（成功・失敗）まで待つ。
+  Future<void> changed() => (_changed ??= Completer<void>()).future;
+
+  void notify() {
+    final c = _changed;
+    _changed = null;
+    if (c != null && !c.isCompleted) c.complete();
+  }
 
   /// 続けて読み込みに失敗した回数（読み直しの間隔を伸ばす）。
   int failures = 0;

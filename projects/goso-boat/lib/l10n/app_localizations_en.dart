@@ -50,7 +50,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String goTo(String place) {
-    return 'To $place';
+    return 'To the $place';
   }
 
   @override
@@ -99,7 +99,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String failBoat(int guard, int weight) {
-    return 'On the boat: $guard guard vs $weight prisoner.\nNot enough guards — they jumped into the river!';
+    return 'On the boat: guards $guard, prisoners $weight.\nNot enough guards — they jumped into the river!';
   }
 
   @override
@@ -109,7 +109,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String failBank(String place, int guard, int weight) {
-    return 'On the $place: $guard guard vs $weight prisoner.\nNot enough guards!';
+    return 'On the $place: guards $guard, prisoners $weight.\nNot enough guards!';
   }
 
   @override
@@ -154,7 +154,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String par(int n) {
-    return 'Best: $n';
+    return 'Shortest: $n';
   }
 
   @override
@@ -239,7 +239,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get descPrisoner => 'Needs 1 guard.';
 
   @override
-  String get descBoss => 'Needs 2 guards alone.';
+  String get descBoss => 'Needs 2 guards on his own.';
 
   @override
   String get descCuffed => 'Needs 2 guards. Takes 2 seats.';
@@ -324,7 +324,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The hardest levels, picked by solving every combination.\nCross in the fewest trips and you\'re the real deal.';
 
   @override
-  String get hintWithAd => 'Hint (ad)';
+  String get hintWithAd => 'Hint (watch ad)';
 
   @override
   String get hintDeclined => 'Watch the whole video to get a hint.';
@@ -348,11 +348,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get purchaseNothing =>
-      'No purchase found to restore. Make sure you\'re signed in with the Apple ID you used to buy.';
+      'No purchase found to restore. Check your connection and that you\'re signed in with the Apple ID you used to buy.';
 
   @override
   String get purchaseFailed =>
-      'Couldn\'t complete the purchase. Please try again later.';
+      'Couldn\'t complete the purchase. If you were charged, ads will be removed automatically shortly.';
 
   @override
   String get kicker => 'Don\'t let them escape!';
@@ -588,8 +588,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reminderBody => 'Today\'s puzzle is ready. Clear it with 3 stars!';
 
   @override
-  String get reminderDenied =>
-      'Notifications are off. Allow them in your iPhone Settings.';
+  String get reminderDenied => 'Notifications are off. Allow them in Settings.';
 
   @override
   String get rank0 => 'Cadet';
@@ -705,4 +704,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get restoreFailed =>
       'Couldn\'t restore your purchase. Please try again later.';
+
+  @override
+  String get hintLoading => 'Loading the video…';
+
+  @override
+  String get hintShowFailed =>
+      'Couldn\'t show the video. Switch to full screen and try again.';
+
+  @override
+  String get dailyNeedsNoHint =>
+      'The daily puzzle counts with 3 stars and no hints.';
 }

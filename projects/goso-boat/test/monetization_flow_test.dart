@@ -26,6 +26,10 @@ class FakeAds implements AdService {
   @override
   bool get isRewardedAdReady => ready;
   @override
+  bool get isInterstitialReady => true;
+  @override
+  Future<bool> waitForRewarded(Duration max) async => ready;
+  @override
   void ensureLoaded() => reloads++;
   @override
   Future<RewardResult> showRewardedAd() async {
@@ -68,6 +72,9 @@ class FakeStore implements PurchaseService {
     if (buyResult == PurchaseOutcome.purchased) await delivered?.call(PurchaseService.removeAdsId);
     return buyResult;
   }
+
+  @override
+  Future<bool?> hasEntitlement() async => null;
 
   @override
   Future<PurchaseOutcome> restore() async {
@@ -290,7 +297,7 @@ void main() {
     expect(find.text('全員護送'), findsNothing);
     await _solveWithHints(tester, w2.par);
     expect(find.text('全員護送'), findsOneWidget, reason: '2回目のクリアでも結果の札が出る');
-    expect(find.text('ヒントを使ったので星2つまで'), findsOneWidget);
+    expect(find.textContaining('ヒントを使ったので星2つまで'), findsOneWidget);
     expect(ads.rewarded, w2.par * 2, reason: '動画1本でヒント1回');
     await tester.pump(const Duration(seconds: 3));
   });

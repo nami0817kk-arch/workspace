@@ -64,11 +64,12 @@ jobs:
       - name: Run tests
         run: flutter test
 
-      # 同梱フォントに文言の字が揃っているか（goso-boat-ci.yml と同じ検査）
+      # macOS の Python は pip で入れられないことがあるので、ここで用意する
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
+      # 同梱フォントに文言の字が揃っているか（goso-boat-ci.yml と同じ検査）
       - name: Check bundled fonts
         run: |
           pip3 install --quiet fonttools
@@ -141,7 +142,7 @@ jobs:
           for page in privacy support; do
             body=$(curl -fsSL "$LEGAL_BASE_URL/$page.html") \
               || { echo "::error::$LEGAL_BASE_URL/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
-            echo "$body" | grep -q "護送ボート" \
+            grep -q "護送ボート" <<<"$body" \
               || { echo "::error::$LEGAL_BASE_URL/$page.html の中身が護送ボートのページではありません。"; exit 1; }
           done
 
@@ -317,4 +318,5 @@ jobs:
           name: goso-boat-ios
           path: projects/goso-boat/build/ios/ipa/*.ipa
           if-no-files-found: error
-          retention-days: 14
+          # public リポジトリの成果物は誰でも取れるので、置いておく期間を短くする
+          retention-days: 1

@@ -21,6 +21,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _storeAvailable = false;
+  String? _price;
 
   /// 復元の2度押しよけ（重ねると結果の表示が食い違う）
   bool _restoring = false;
@@ -28,8 +29,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    widget.money.store.isAvailable().then((v) {
-      if (mounted) setState(() => _storeAvailable = v);
+    widget.money.store.isAvailable().then((v) async {
+      final price = v && !widget.money.adFree ? await widget.money.price : null;
+      if (mounted) {
+        setState(() {
+          _storeAvailable = v;
+          _price = price;
+        });
+      }
     });
   }
 
@@ -41,25 +48,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  Future<void> _restore() async {
+  Future<void> _restore() => _run(restore: true);
+
+  Future<void> _run({required bool restore}) async {
     final t = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     if (_restoring) return;
     setState(() => _restoring = true);
     PurchaseOutcome r;
     try {
-      r = await widget.money.restore();
+      r = await (restore ? widget.money.restore() : widget.money.buy());
     } catch (_) {
       r = PurchaseOutcome.failed;
     } finally {
       if (mounted) setState(() => _restoring = false);
     }
     final msg = switch (r) {
-      PurchaseOutcome.purchased => t.purchaseRestored,
+      PurchaseOutcome.purchased => restore ? t.purchaseRestored : t.purchaseThanks,
       PurchaseOutcome.pending => t.purchasePending,
       PurchaseOutcome.canceled => null,
-      PurchaseOutcome.unavailable => t.purchaseNothing,
-      PurchaseOutcome.failed => t.restoreFailed,
+      PurchaseOutcome.unavailable => restore ? t.purchaseNothing : t.purchaseFailed,
+      PurchaseOutcome.failed => restore ? t.restoreFailed : t.purchaseFailed,
     };
     if (msg != null) {
       messenger.removeCurrentSnackBar();
@@ -152,6 +161,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     leading: const Icon(Icons.check_circle_rounded, color: Palette.ok),
                     title: Text(t.adFreeOn, style: const TextStyle(fontWeight: FontWeight.w800)),
+                  ),
+                // 買う入口はホームだけだと見つけにくい（小さい画面では下まで送らないと見えない）
+                if (_storeAvailable && !widget.money.adFree && _price != null)
+                  ListTile(
+                    leading: const Icon(Icons.block_rounded, color: Palette.ink),
+                    title: Text(t.removeAds(_price!), style: const TextStyle(fontWeight: FontWeight.w800)),
+                    enabled: !_restoring,
+                    onTap: () => _run(restore: false),
                   ),
                 if (_storeAvailable)
                   ListTile(

@@ -265,8 +265,8 @@
   "adFreeOn": "広告なし",
   "purchaseThanks": "広告を消しました。ご購入ありがとうございます！",
   "purchaseRestored": "購入を復元しました",
-  "purchaseNothing": "復元できる購入が見つかりませんでした。購入したときの Apple ID でサインインしているか確かめてください",
-  "purchaseFailed": "購入できませんでした。時間をおいてもう一度お試しください",
+  "purchaseNothing": "復元できる購入が見つかりませんでした。電波のある所で、購入したときの Apple ID でサインインしているか確かめてください",
+  "purchaseFailed": "購入できませんでした。支払いが済んでいれば、少しして自動で広告が消えます",
   "kicker": "脱獄させるな！",
   "settingsTitle": "設定",
   "settingSound": "効果音",
@@ -483,5 +483,8 @@
   "supportAndAdReport": "お問い合わせ・広告の報告",
   "linkFailed": "開けなかった: {url}",
   "@linkFailed": {"placeholders": {"url": {"type": "String"}}},
-  "restoreFailed": "購入を復元できませんでした。時間をおいてもう一度お試しください"
+  "restoreFailed": "購入を復元できませんでした。時間をおいてもう一度お試しください",
+  "hintLoading": "動画を読み込んでいます…",
+  "hintShowFailed": "動画を表示できませんでした。全画面表示にしてもう一度",
+  "dailyNeedsNoHint": "今日の1問は、ヒントなしの星3で達成になります"
 }

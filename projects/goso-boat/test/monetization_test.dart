@@ -21,6 +21,10 @@ class FakeAds implements AdService {
   @override
   bool get isRewardedAdReady => rewardedReady;
   @override
+  bool get isInterstitialReady => interstitialReady;
+  @override
+  Future<bool> waitForRewarded(Duration max) async => rewardedReady;
+  @override
   void ensureLoaded() => reloads++;
   @override
   Future<RewardResult> showRewardedAd() async {
@@ -34,6 +38,7 @@ class FakeAds implements AdService {
     interstitials++;
     return true;
   }
+
   @override
   void dispose() => disposes++;
 }
@@ -50,6 +55,11 @@ class FakeStore extends NoOpPurchaseService {
   /// ストアから直接届く（家族の承認・起動時の再送）。
   Future<void> deliver([String id = PurchaseService.removeAdsId]) async => _delivered?.call(id);
   Future<void> revoke() async => _revoked?.call(PurchaseService.removeAdsId);
+
+  /// 端末の購入記録（null=読めない）。
+  bool? entitlement;
+  @override
+  Future<bool?> hasEntitlement() async => entitlement;
   @override
   Future<bool> isAvailable() async => true;
   @override
@@ -58,11 +68,12 @@ class FakeStore extends NoOpPurchaseService {
   Future<PurchaseOutcome> restore() async => next;
 }
 
-Level lv(int world) => Level(id: '$world-1', world: world, cast: const {Role.police: 3, Role.prisoner: 1}, capacity: 2, par: 5);
+Level lv(int world) =>
+    Level(id: '$world-1', world: world, cast: const {Role.police: 3, Role.prisoner: 1}, capacity: 2, par: 5);
 
-Future<(Monetization, FakeAds, FakeStore)> make([Map<String, Object> saved = const {}]) async {
+Future<(Monetization, FakeAds, FakeStore)> make([Map<String, Object> saved = const {}, bool? entitlement]) async {
   SharedPreferences.setMockInitialValues(saved);
-  final ads = FakeAds(), store = FakeStore();
+  final ads = FakeAds(), store = FakeStore()..entitlement = entitlement;
   final m = Monetization(await SharedPreferences.getInstance(), ads: ads, store: store);
   await m.start();
   return (m, ads, store);
@@ -182,5 +193,30 @@ void main() {
     expect(await m.afterClear(lv(2)), isTrue);
     expect(ads.interstitials, 1);
     expect(m.interstitialDue(lv(2)), isFalse);
+  });
+
+  test('起動時に購入記録と照らし合わせる: 閉じている間の返金で広告が戻り、再インストール後は自動で広告なしに戻る', () async {
+    final (m1, _, _) = await make({'adFree': true}, false);
+    expect(m1.adFree, isFalse, reason: '記録が全部返金済みなら広告を戻す');
+    final (m2, _, _) = await make({}, true);
+    expect(m2.adFree, isTrue, reason: '有効な記録があれば「購入を復元」を押さなくても戻る');
+    final (m3, _, _) = await make({'adFree': true}, null);
+    expect(m3.adFree, isTrue, reason: '記録が読めないときは何もしない');
+  });
+
+  test('返金の通知が来ても、ほかに有効な取引があれば広告は戻さない', () async {
+    final (m, _, store) = await make({'adFree': true}, null);
+    store.entitlement = true;
+    await store.revoke();
+    expect(m.adFree, isTrue);
+  });
+
+  test('全画面広告の番で手元に無ければ、クリアした時点で読み込みを始める', () async {
+    final (m, ads, _) = await make({'clearsSinceAd': 2});
+    ads.interstitialReady = false;
+    expect(m.interstitialDue(lv(2)), isFalse, reason: '手元に無いときは待たせない');
+    final before = ads.reloads;
+    m.prepareNext(lv(2));
+    expect(ads.reloads, before + 1);
   });
 }

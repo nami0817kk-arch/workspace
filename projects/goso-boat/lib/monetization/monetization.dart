@@ -15,6 +15,9 @@ enum HintGate {
 
   /// 動画を読み込めていない（通信なし・在庫切れ）。**タダでは出さない**。
   unavailable,
+
+  /// 動画はあったが表示に失敗した（iPad の分割画面など）。**タダでは出さない**。
+  showFailed,
 }
 
 /// 広告と「広告を消す」の決まり（2026-09-27 ユーザー決定: 無料＋広告＋広告を消す 370円）。
@@ -42,14 +45,31 @@ class Monetization extends ChangeNotifier {
       if (id == PurchaseService.removeAdsId) await _setAdFree();
     };
     store.onRevoked = (id) async {
-      if (id == PurchaseService.removeAdsId) await _clearAdFree();
+      if (id != PurchaseService.removeAdsId) return;
+      // 家族から共有された分や買い直した分など、ほかに有効な取引が残っていれば広告は戻さない
+      if (await store.hasEntitlement() == true) return;
+      await _clearAdFree();
     };
-    try {
-      await store.initialize();
-    } catch (_) {
-      // ストアの準備に失敗しても、広告（全年齢向けの設定を含む）は準備する
-    }
-    if (!adFree) await ads.initialize();
+    // ストアと広告の準備は並べて進める（ストアを待って広告の先読みが遅れないように）
+    await Future.wait([
+      () async {
+        try {
+          await store.initialize();
+        } catch (_) {
+          // ストアの準備に失敗しても、広告は準備する
+        }
+      }(),
+      if (!adFree) ads.initialize(),
+    ]);
+    await _reconcile();
+  }
+
+  /// 端末の購入記録と照らし合わせる。アプリを閉じている間に返金された分を戻し、
+  /// 再インストール後は「購入を復元」を押さなくても広告なしに戻す。記録が読めなければ何もしない。
+  Future<void> _reconcile() async {
+    final e = await store.hasEntitlement();
+    if (e == true && !adFree) await _setAdFree();
+    if (e == false && adFree) await _clearAdFree();
   }
 
   /// 返金されたら広告を戻す。
@@ -75,8 +95,15 @@ class Monetization extends ChangeNotifier {
   }
 
   /// 次の「次の面へ」で全画面広告を出す番か（出す前に少し間を置くため）。
-  bool interstitialDue(Level level) =>
+  bool interstitialDue(Level level) => _interstitialTurn(level) && ads.isInterstitialReady;
+
+  bool _interstitialTurn(Level level) =>
       !adFree && level.world != 1 && (_prefs.getInt('clearsSinceAd') ?? 0) + 1 >= interstitialEvery;
+
+  /// 面をクリアしたときに呼ぶ。次の「次の面へ」で広告を出す番なら、結果を見ている間に読み込んでおく。
+  void prepareNext(Level level) {
+    if (_interstitialTurn(level) && !ads.isInterstitialReady) ads.ensureLoaded();
+  }
 
   /// 面をクリアして次へ進む直前に呼ぶ。出すべきなら全画面広告を出し、閉じるまで待つ。
   Future<bool> afterClear(Level level) async {
@@ -95,12 +122,17 @@ class Monetization extends ChangeNotifier {
   }
 
   /// ヒントの前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
-  Future<HintGate> beforeHint() async {
+  ///
+  /// 動画を読み込み中なら少しだけ待つ（[onWaiting] で「読み込み中」を出せる）。届かなければ出さない。
+  Future<HintGate> beforeHint({void Function()? onWaiting}) async {
     if (adFree) return HintGate.granted;
     if (!ads.isRewardedAdReady) {
       // 読み込みに失敗したままにならないよう、ここで読み直しを始める
       ads.ensureLoaded();
-      return HintGate.unavailable;
+      onWaiting?.call();
+      if (!await ads.waitForRewarded(const Duration(seconds: 6))) {
+        return adFree ? HintGate.granted : HintGate.unavailable;
+      }
     }
     final r = await ads.showRewardedAd();
     // 動画を見ている間に「広告を消す」が届いた（家族の承認など）なら、そのままヒントを出す
@@ -109,6 +141,7 @@ class Monetization extends ChangeNotifier {
       RewardResult.earned => HintGate.granted,
       RewardResult.closedEarly => HintGate.declined,
       RewardResult.unavailable => HintGate.unavailable,
+      RewardResult.showFailed => HintGate.showFailed,
     };
   }
 

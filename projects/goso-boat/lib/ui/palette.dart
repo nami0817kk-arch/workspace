@@ -93,6 +93,7 @@ class ChunkyButton extends StatefulWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.icon,
     this.silent = false,
+    this.wrap = false,
   });
 
   final String label;
@@ -105,6 +106,9 @@ class ChunkyButton extends StatefulWidget {
 
   /// タップ音を鳴らさない（押したあとに別の音を鳴らすボタン用）。
   final bool silent;
+
+  /// 狭い所に並べるボタン用。字を縮めすぎないよう2行まで折り返す。
+  final bool wrap;
 
   @override
   State<ChunkyButton> createState() => _ChunkyButtonState();
@@ -131,6 +135,8 @@ class _ChunkyButtonState extends State<ChunkyButton> {
       button: true,
       enabled: enabled,
       label: widget.label,
+      // 中の Text と名前が二重に読まれないように
+      excludeSemantics: true,
       child: GestureDetector(
         onTapDown: enabled ? (_) => setState(() => _down = true) : null,
         onTapCancel: () => setState(() => _down = false),
@@ -166,14 +172,28 @@ class _ChunkyButtonState extends State<ChunkyButton> {
                 ],
                 // 狭いボタンでは「…」で切らず、文字を縮めて全部見せる
                 Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                    widget.label,
-                    maxLines: 1,
-                    style: TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.w800, color: Palette.ink),
-                  ),
-                  ),
+                  child: widget.wrap
+                      // 狭い所に3つ並べるボタンは、字を縮めすぎないよう2行まで折り返す（それでも入らなければ縮める）
+                      ? FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: widget.fontSize * 5.2),
+                            child: Text(
+                              widget.label,
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: widget.fontSize, height: 1.15, fontWeight: FontWeight.w800, color: Palette.ink),
+                            ),
+                          ),
+                        )
+                      : FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            widget.label,
+                            maxLines: 1,
+                            style: TextStyle(fontSize: widget.fontSize, fontWeight: FontWeight.w800, color: Palette.ink),
+                          ),
+                        ),
                 ),
               ],
             ),

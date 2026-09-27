@@ -336,10 +336,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get purchaseNothing =>
-      '復元できる購入が見つかりませんでした。購入したときの Apple ID でサインインしているか確かめてください';
+      '復元できる購入が見つかりませんでした。電波のある所で、購入したときの Apple ID でサインインしているか確かめてください';
 
   @override
-  String get purchaseFailed => '購入できませんでした。時間をおいてもう一度お試しください';
+  String get purchaseFailed => '購入できませんでした。支払いが済んでいれば、少しして自動で広告が消えます';
 
   @override
   String get kicker => '脱獄させるな！';
@@ -688,4 +688,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get restoreFailed => '購入を復元できませんでした。時間をおいてもう一度お試しください';
+
+  @override
+  String get hintLoading => '動画を読み込んでいます…';
+
+  @override
+  String get hintShowFailed => '動画を表示できませんでした。全画面表示にしてもう一度';
+
+  @override
+  String get dailyNeedsNoHint => '今日の1問は、ヒントなしの星3で達成になります';
 }
