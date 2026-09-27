@@ -22,6 +22,8 @@ concurrency:
 
 permissions:
   contents: read
+  # 失敗を Issue で知らせるために必要
+  issues: write
 
 jobs:
   build:
