@@ -528,3 +528,81 @@ h1 { font-size: 27px; letter-spacing: -.01em; }
 @media (max-width: 560px) {
   .theme-btn { padding: 8px 14px; }
 }
+
+/* ===== 一覧カードの作り直し（2026-09-28）
+   Amazon の検索結果を見て当てた。あちらは商品画像が大きく、価格が一行で強く、
+   付帯情報はその下に小さく積む。こちらは画像が72pxしかなく、価格と下げ幅が
+   2行に分かれ、点の内訳が5段に縦積みになってカードの3割を占めていた。 */
+
+/* 1. 商品画像を大きくする。文字が主役になっていて、何の商品か分かりにくかった */
+.card .thumb { flex: 0 0 104px; }
+.card img, .card .noimg { width: 104px; height: 104px; }
+
+/* 2. 価格の行を詰める。変化・元の値段・現在の値段・送料が1行に収まらず、
+   2行に割れて視線が上下に飛んでいた。元の値段は小さくして場所を空ける。 */
+.card .price { display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: 2px 7px; margin: 6px 0 0; }
+.card .price .was { margin-right: 0; font-size: 13px; }
+.card .down small, .card .up small { font-size: 12px; }
+
+/* 3. 点の内訳を2列に並べる。幅が足りず1つずつ改行していた（147px＝カードの3割） */
+.score .parts { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.score .part { justify-content: space-between; }
+
+/* 4. カードの区切りを強くする。間隔12pxだけでは切れ目が読めなかった */
+.cards { gap: 14px; }
+
+@media (max-width: 560px) {
+  .card .thumb { flex-basis: 88px; }
+  .card img, .card .noimg { width: 88px; height: 88px; }
+  /* 内訳は狭い画面では1列。2列にすると「ポイント込みの下げ幅」が折り返して
+     かえって背が伸びた（実測で札が22→39px）。字と余白だけ詰める。 */
+  .score .parts { grid-template-columns: 1fr; gap: 2px; }
+  .score .part { padding: 1px 7px; font-size: 11px; gap: 4px; }
+}
+
+/* 5. 見出しと本文の間隔をそろえる。h1 直後の説明文だけ詰まっていた */
+h1 { margin-bottom: 10px; }
+.lead { line-height: 1.75; max-width: 40em; }
+
+/* 6. 一覧の題と件数を対にする。件数が題から離れて読めていた */
+h1 .count { display: inline-block; padding: 2px 10px; margin-left: 8px;
+  font-size: 14px; color: var(--muted); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 999px; vertical-align: middle; }
+
+/* 7. 表の読みやすさ。行の区切りが無く、目が横に滑っていた（Amazon の仕様表と同じ形） */
+.facts { width: 100%; border-collapse: collapse; margin: 14px 0 20px; }
+.facts th, .facts td { padding: 11px 14px; text-align: left; vertical-align: top;
+  border-bottom: 1px solid var(--line); }
+.facts th { width: 42%; font-weight: 500; color: var(--muted);
+  background: var(--panel); }
+.facts td { font-variant-numeric: tabular-nums; }
+.facts tr:last-child th, .facts tr:last-child td { border-bottom: 0; }
+.facts { border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; }
+
+/* 8. 店名の行。店・記録日数・見守りが詰まって読めなかった */
+.card .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+  margin-top: 6px; }
+.card .meta .sep { display: none; }
+.watch-mini { margin-left: 0; }
+
+/* 9. 商品名の行間。3行になると詰まって読みにくい */
+.card .name { line-height: 1.55; }
+
+/* 10. 一覧の画像が縦長・横長でも枠の中で揃える（Amazon は正方形の枠で統一） */
+.card img { object-fit: contain; }
+
+/* 11. 商品ページの頭。画像と値段をひとまとまりにする。
+   間に広告表示を挟んでいたため、携帯では値段が690px下にあって
+   最初の画面に入らなかった（Amazon も楽天も画像の隣に値段が来る）。 */
+.lede { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px;
+  margin: 8px 0 14px; }
+.lede .hero { margin: 0; flex: 0 0 auto; }
+.lede .headline { margin: 0; flex: 1 1 200px; }
+@media (max-width: 560px) {
+  .lede { gap: 2px 14px; align-items: flex-start; }
+  .lede .hero img { max-width: 132px; }
+  .lede .headline { flex: 1 1 140px; }
+  .item .headline strong { font-size: 26px; }
+}

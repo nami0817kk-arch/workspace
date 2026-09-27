@@ -1670,11 +1670,15 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                f'<p>{esc(row["name"])}</p></details>'
                if clean_name(row["name"]) != row["name"]
                or len(row["name"]) > 70 else '')
+            # 画像と値段をひとまとまりにする。間に広告表示を挟んでいたため、
+            # 携帯では値段が690px下にあって最初の画面に入らなかった。
+            + '<div class="lede">'
             + (f'<p class="hero"><img src="{esc(row["image"])}" '
                f'alt="{esc(short_name(row["name"], 40))}" width="300" height="300" '
                f'decoding="async"></p>' if row.get("image") else '')
-            + AD_NOTICE
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
+            + '</div>'
+            + AD_NOTICE
             + f'<p class="verdict">{esc(verdict_note(row))}</p>'
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
             # 見せる履歴があるかは実質価格で見る。価格だけで数えると動いたのは

@@ -1836,3 +1836,45 @@ class ToTopTest(unittest.TestCase):
         self.assertIn(".to-top.on", theme.__file__ and open(
             theme.__file__.replace("theme.py", "style.css"),
             encoding="utf-8").read())
+
+
+class ItemLedeTest(unittest.TestCase):
+    """商品ページの頭。画像と値段をひとまとまりにする。
+
+    間に広告表示を挟んでいたため、携帯では値段が690px下にあり、
+    最初の画面に入らなかった（Amazon も楽天も画像の隣に値段が来る）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "S", "base_url": "https://e.test",
+                     "owner": "o", "contact_email": "c@e.test"}
+
+    def row(self, image="https://img.test/a.jpg"):
+        return {"item_code": "a", "name": "テスト商品", "price": 14850,
+                "low": 14850, "high": 14850, "days": 19, "vs_low_pct": 0,
+                "at_low": True, "near_low": False, "dropped": False,
+                "label": "記録した中で最安", "image": image, "shop": "店",
+                "url": "", "low_date": "2026-09-08", "tail": []}
+
+    def test_画像と値段を同じ塊に入れる(self):
+        html = self.theme.item_page(self.row(), self.site, "2026-09-27")
+        lede = html.split('class="lede"')[1].split("</div>")[0]
+
+        self.assertIn('class="hero"', lede)
+        self.assertIn('class="headline"', lede)
+
+    def test_広告表示は塊の後ろに置く(self):
+        # 間に挟むと値段が押し下げられる。表示義務は位置ではなく有無
+        html = self.theme.item_page(self.row(), self.site, "2026-09-27")
+
+        self.assertLess(html.index('class="headline"'), html.index("ad-notice"))
+        self.assertIn("楽天アフィリエイト", html)
+
+    def test_画像が無くても値段は出す(self):
+        html = self.theme.item_page(self.row(image=""), self.site, "2026-09-27")
+
+        self.assertIn('class="lede"', html)
+        self.assertIn("14,850円", html)
+        self.assertNotIn('class="hero"', html)
