@@ -2720,5 +2720,41 @@
     "video_id": "6T3p7PkULTQ",
     "at": "2026-09-27T06:30:05+00:00",
     "publish_at": "2026-09-27T08:30:00Z"
+  },
+  {
+    "build": "20260927c_kita",
+    "video_id": "yBXSQa1nfbc",
+    "at": "2026-09-27T09:58:47+00:00",
+    "publish_at": "2026-09-27T10:30:00Z"
+  },
+  {
+    "build": "20260927c_kita_short",
+    "video_id": "s-pd0GlH2yo",
+    "at": "2026-09-27T09:59:05+00:00",
+    "publish_at": "2026-09-27T11:00:00Z"
+  },
+  {
+    "build": "20260927c_citysue",
+    "video_id": "Re6u25H3zdk",
+    "at": "2026-09-27T09:59:27+00:00",
+    "publish_at": "2026-09-28T00:00:00Z"
+  },
+  {
+    "build": "20260927c_citysue_short",
+    "video_id": "sVYGRoKfUcQ",
+    "at": "2026-09-27T09:59:44+00:00",
+    "publish_at": "2026-09-28T00:30:00Z"
+  },
+  {
+    "build": "20260927c_citystars",
+    "video_id": "pYFwYczPQcc",
+    "at": "2026-09-27T10:00:07+00:00",
+    "publish_at": "2026-09-28T01:00:00Z"
+  },
+  {
+    "build": "20260927c_citystars_short",
+    "video_id": "NzN2Zj3OFWU",
+    "at": "2026-09-27T10:00:25+00:00",
+    "publish_at": "2026-09-28T01:30:00Z"
   }
 ]
