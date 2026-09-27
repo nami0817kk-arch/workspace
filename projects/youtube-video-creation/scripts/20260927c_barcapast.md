@@ -70,7 +70,6 @@ sources:
 - https://x.com/Netherlands103/status/2101697943204196474
 - https://bsky.app/profile/n1osferatu.bsky.social/post/3mut3jeglek2l
 - https://x.com/Kokia82771988/status/2100696450619646136
-- https://x.com/maromaro1875/status/2096463804645466262
 cards:
   count_card:
     type: table
@@ -372,14 +371,5 @@ cards:
   short_voice: true
   cont: true
   telop: ネット民「もちろんアランブルみたいな強度は期待できないかもしれないけど、一緒に使ってみてほしいな…」
-  card: none
-  image: assets/images/20260921_kubo/01.jpg
-ネット民: 久保ももう少し数字つけば絶対需要は出てくるはずだから、ガチで頑張って欲しい。
-  telop: ネット民「久保ももう少し数字つけば絶対需要は出てくるはずだから、ガチで頑張って欲しい」
-  card: none
-  image: assets/images/20260921_kubo/01.jpg
-ネット民: フォルトとのラマシア コンビでめっちゃ活躍してくれ。
-  cont: true
-  telop: ネット民「フォルトとのラマシア コンビでめっちゃ活躍してくれ」
   card: none
   image: assets/images/20260921_kubo/01.jpg

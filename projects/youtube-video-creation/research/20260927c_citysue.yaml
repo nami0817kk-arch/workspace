@@ -118,8 +118,7 @@ sections:
       - マンCのムバラク会長は、サポーターへの手紙でこう書きました。
       - voice: ハルドゥーン・アル・ムバラク
         text: 早々と結論を出す人もいて、周りは騒がしい。でも、何も変わっていない
-      - 有罪と出れば、マンCはすぐに控訴するとみられています。
-      - 各クラブが実際に裁判を起こせるのは、控訴を含めてすべてが終わってから。
+      - 各クラブが実際に裁判を起こせるのは、マンCの控訴を含めてすべてが終わってから。
       - イギリスの裁判所まで持ち込まれれば、あと2年かかるとも言われています。
     sources:
       - https://www.espn.com/soccer/story/_/id/50033305/man-city-chairman-club-premier-league-charges-case-changed
@@ -140,19 +139,27 @@ sections:
         text: ひとつの順位のズレでクラブ経営が大きく変わっていた可能性もあったもんな…
         cont: true
       - voice: ネット民
-        text: 5位でCLに届かなかったチームは、失った収入のことでマンCを訴えられるのか。
+        text: 面白い論点がたくさんある。
+      - voice: ネット民
+        text: 5位でCLを逃したチーム、欧州の枠を逃したチームは、失った収入のことでマンCを訴えられるのか。
+        cont: true
       - voice: ネット民
         text: 18位のチームは、降格させられたと訴えられるのか。どのクラブも、失った賞金で訴えるのか。
         cont: true
       - voice: ネット民
-        text: とんでもない請求額になりそうだな。実際に払われているケースが有るとなればなおさら。
+        text: 不正で取ったトロフィーを他に回してほしくはない。意味がないから。でもシティからは取り上げるべきだ。
       - voice: ネット民
-        text: バーンリーがエヴァートンを訴えられるなら、ほぼ誰でもシティを訴えられる。
+        text: それに、バーンリーがエヴァートンを訴えられるなら、ほぼ誰でもシティを訴えられる。
+        cont: true
       - voice: ネット民
         text: 潰れるかもしれない。自業自得だけど、それも望んでいない。ダービーの日がなくなるのは寂しいから！
         cont: true
       - voice: ネット民
-        text: 権利を最初に残したのはアーセナルだと読んだ。そうなったら、ハーランドの形をした落としどころで手を打てると思う
+        text: シティへの賠償請求は2億ポンドにもなり得て、権利を最初に残したのはアーセナルだと読んだところ。
+        short_voice: true
+      - voice: ネット民
+        text: そうなったら、ハーランドの形をした落としどころで手を打てると思う
+        cont: true
         short_voice: true
       - voice: ネット民
         text: シティを訴えるクラブはみんな、つり上がった移籍金でシティに選手を売って大もうけしたことを忘れている。
@@ -165,7 +172,6 @@ sections:
     sources:
       - https://x.com/Silvajr21city/status/2103777052243665313
       - https://bsky.app/profile/orbinho.bsky.social/post/3mwdzh7zi7k2h
-      - https://news.yahoo.co.jp/profile/news/comments/81a0d7eb-9cb2-4b3d-9882-bb1e6df74650
       - https://bsky.app/profile/mikethered77.bsky.social/post/3mwgti47efs2a
       - https://bsky.app/profile/rjmacready.bsky.social/post/3mwet4foqdk25
       - https://bsky.app/profile/stevegroves2004.bsky.social/post/3mwfuevvef223
