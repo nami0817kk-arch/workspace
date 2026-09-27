@@ -276,7 +276,12 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 
 
 def foot(site: dict, prefix: str = "", updated: str = "") -> str:
-    stamp = f'<p class="updated">最終更新: {esc(updated)}</p>' if updated else ""
+    # 配色の切り替え。CSS は data-theme に対応済みだったのに、
+    # 切り替える手立てがどこにも無く、使えない仕組みになっていた。
+    stamp = ('<p class="updated">'
+             + (f'最終更新: {esc(updated)}' if updated else '')
+             + '<button id="theme" type="button" class="theme-btn">暗く</button>'
+             + '</p>')
     owner = esc(site.get("owner") or site["name"])
     return f"""</main>
 <footer class="site-foot"><div class="wrap">
@@ -1066,15 +1071,30 @@ def chart(tail: list, width: int = 560, height: int = 180,
         eff_line = (f'<polyline class="eff-line" points="{eff_coords}" fill="none" '
                     f'stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" '
                     f'stroke-linejoin="round" stroke-linecap="round" opacity=".75"/>')
+    # 値を読めるようにする。価格.com も Keepa も、図に触れればその日の値が出る。
+    # こちらは最安と最高の目盛りしか無く、途中の日がいくらだったか読めなかった。
+    # 日付と値は data- に持たせ、描き直しは JS 側（app.js）が受け持つ。
+    series = ";".join(
+        f'{points[i][0]},{prices[i]}' + (f',{effs[i]}' if effs else '')
+        for i in range(len(points)))
+    # SVG の要素に hidden プロパティは無い（HTML要素のもの）。JS で代入しても
+    # 何も起きないので、表示の切り替えはクラスと CSS で行う。
+    guide = (f'<line class="chart-guide" x1="0" y1="{pad_t}" x2="0" '
+             f'y2="{pad_t + h}" stroke="currentColor" stroke-opacity=".35"/>'
+             f'<circle class="chart-dot" r="4" fill="currentColor"/>'
+             + ('<circle class="chart-dot-eff" r="4" fill="currentColor" '
+                'opacity=".75"/>' if effs else ''))
     return (f'<svg class="chart-svg" viewBox="0 0 {width} {height}" role="img" '
+            f'data-series="{esc(series)}" data-pad="{pad_l}" data-step="{step:.4f}" '
             f'aria-label="{len(points)}日分の価格推移。最安 {low:,}円、最高 {high:,}円'
             + ('。破線はポイント分を引いた実質価格' if effs else '') + '">'
-            f'{grid}{labels}'
+            f'{grid}{labels}{guide}'
             f'<polyline points="{coords}" fill="none" stroke="currentColor" '
             f'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
             f'{eff_line}'
             f'<circle cx="{pad_l + (len(points) - 1) * step:.1f}" '
-            f'cy="{y(prices[-1]):.1f}" r="3.5" fill="currentColor"/></svg>')
+            f'cy="{y(prices[-1]):.1f}" r="3.5" fill="currentColor"/></svg>'
+            f'<p class="chart-read" aria-live="polite"></p>')
 
 
 def cheaper_days(row: dict) -> str:
@@ -1344,6 +1364,96 @@ document.addEventListener('DOMContentLoaded', function () {
     PTWatch.setTarget(btn.dataset.code, parseInt(input.value, 10) || 0);
   });
 });
+
+// 価格の図。触れた位置の日付と値を読めるようにする。
+// 目盛りは最安と最高しか無く、途中の日がいくらだったか読めなかった。
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.chart-svg[data-series]').forEach(function (svg) {
+    var rows = svg.dataset.series.split(';').map(function (r) {
+      var c = r.split(',');
+      return {date: c[0], price: +c[1], eff: c.length > 2 ? +c[2] : null};
+    });
+    if (rows.length < 2) { return; }
+    var pad = +svg.dataset.pad, step = +svg.dataset.step;
+    var out = svg.parentNode.querySelector('.chart-read');
+    var guide = svg.querySelector('.chart-guide');
+    var dot = svg.querySelector('.chart-dot');
+    var dotEff = svg.querySelector('.chart-dot-eff');
+    var line = svg.querySelector('polyline:not(.eff-line)');
+    var effLine = svg.querySelector('.eff-line');
+
+    function at(i) { return line.points.getItem(i); }
+
+    function show(i) {
+      var r = rows[i], p = at(i);
+      if (!r) { return; }
+      guide.setAttribute('x1', p.x); guide.setAttribute('x2', p.x);
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
+      if (effLine && dotEff) {
+        var q = effLine.points.getItem(i);
+        dotEff.setAttribute('cx', q.x); dotEff.setAttribute('cy', q.y);
+      }
+      svg.classList.add('reading');
+      var text = r.date + '　' + r.price.toLocaleString() + '円';
+      if (r.eff !== null && r.eff !== r.price) {
+        text += '（ポイント込み ' + r.eff.toLocaleString() + '円）';
+      }
+      out.textContent = text;
+    }
+
+    function hide() {
+      svg.classList.remove('reading');
+      out.textContent = '';
+    }
+
+    function pick(ev) {
+      // 画面の座標を図の座標へ直す。viewBox で拡大されているのでそのままでは合わない
+      var box = svg.getBoundingClientRect();
+      // 畳んだ図（details）は開くまで実寸が0。割ると NaN になって落ちる
+      if (!box.width) { return; }
+      var vb = svg.viewBox.baseVal;
+      var x = (ev.clientX - box.left) / box.width * vb.width;
+      var i = Math.round((x - pad) / step);
+      if (!isFinite(i)) { return; }
+      show(Math.max(0, Math.min(rows.length - 1, i)));
+    }
+
+    svg.addEventListener('pointermove', pick);
+    svg.addEventListener('pointerdown', pick);
+    svg.addEventListener('pointerleave', hide);
+  });
+});
+
+// 明暗の切り替え。style.css は data-theme に対応していたのに、
+// 切り替える手立てをどこにも置いていなかった（使えない仕組みが眠っていた）。
+(function () {
+  var KEY = 'pt-theme';
+  function apply(v) {
+    if (v) { document.documentElement.dataset.theme = v; }
+    else { delete document.documentElement.dataset.theme; }
+  }
+  try { apply(localStorage.getItem(KEY)); } catch (e) {}
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('theme');
+    if (!btn) { return; }
+    function label() {
+      var v = document.documentElement.dataset.theme;
+      btn.textContent = v === 'dark' ? '明るく' : v === 'light' ? '端末に合わせる' : '暗く';
+      btn.setAttribute('aria-label', '配色を変える（いまは'
+        + (v === 'dark' ? '暗い' : v === 'light' ? '明るい' : '端末の設定') + '）');
+    }
+    label();
+    btn.addEventListener('click', function () {
+      // 端末の設定 → 暗く → 明るく → 端末の設定 の順に回す
+      var v = document.documentElement.dataset.theme;
+      var next = v === 'dark' ? 'light' : v === 'light' ? '' : 'dark';
+      apply(next);
+      try { next ? localStorage.setItem(KEY, next) : localStorage.removeItem(KEY); }
+      catch (e) {}
+      label();
+    });
+  });
+})();
 """
 
 WATCH_BUTTON = r"""
@@ -1481,9 +1591,10 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     if len(set(rates)) <= 1 and max(rates or [1]) == 1:
         eff, eff_note = [], ""
     else:
-        eff_note = ('<p class="note">破線はポイント分を引いた実質価格です。'
-                    '倍率は購入額の何%が戻るかの目安で、実際の付与は'
-                    'キャンペーンや会員ランクでも変わります。</p>')
+        eff_note = ('<p class="legend"><span class="k-price">価格</span>'
+                    '<span class="k-eff">ポイント込みの実質価格</span></p>'
+                    '<p class="note">倍率は購入額の何%が戻るかの目安で、'
+                    '実際の付与はキャンペーンや会員ランクでも変わります。</p>')
 
     rows_html = [("現在の価格", yen(row["price"])),
                  ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),

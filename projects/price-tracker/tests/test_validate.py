@@ -602,11 +602,14 @@ class ScriptTimingTest(unittest.TestCase):
         self.assertLess(self.html.index('id="sort"'), self.html.index('<ul class="cards">'))
         self.assertGreaterEqual(self.list_js.count("DOMContentLoaded"), 2)
 
-    def test_商品ページの見守りもDOMを待つ(self):
-        # 共有ファイルは head で読むので、この時点では #watch がまだ無い
-        after = self.app.split("DOMContentLoaded")[-1]
-
-        self.assertIn("getElementById('watch')", after)
+    def test_要素を触る処理はDOMを待ってから動く(self):
+        # 共有ファイルは head で読むので、この時点では要素がまだ無い。
+        # 待つ塊が増えても壊れないよう、位置の前後関係で見る
+        for target in ("getElementById('watch')", ".chart-svg[data-series]",
+                       "getElementById('theme')"):
+            with self.subTest(target=target):
+                self.assertLess(self.app.index("DOMContentLoaded"),
+                                self.app.index(target))
 
     def test_見守りの仕組みは1回だけ定義する(self):
         # ページごとに直書きしていた頃の名残が残っていないこと
@@ -1715,3 +1718,79 @@ class StatsConsistencyTest(unittest.TestCase):
 
         self.assertIn("10,406 件", html)
         self.assertNotIn("11,172", html)
+
+
+class ChartReadTest(unittest.TestCase):
+    """図の値を読めるようにする。
+
+    価格.com も Keepa も、図に触れればその日の値が出る。こちらは最安と最高の
+    目盛りしか無く、途中の日がいくらだったか読めなかった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def tail(self, n=5):
+        return [[f"2026-09-{i + 1:02d}", 1000 + i * 10, 1] for i in range(n)]
+
+    def test_日付と値を図に持たせる(self):
+        out = self.theme.chart(self.tail())
+
+        self.assertIn('data-series="2026-09-01,1000;', out)
+        self.assertIn("data-pad=", out)
+        self.assertIn("data-step=", out)
+
+    def test_実質価格も持たせる(self):
+        tail = self.tail()
+        eff = [(d, p - 100) for d, p, _ in tail]
+
+        out = self.theme.chart(tail, effective=eff)
+
+        self.assertIn("2026-09-01,1000,900;", out)
+
+    def test_読み取り欄を置く(self):
+        self.assertIn('class="chart-read"', self.theme.chart(self.tail()))
+
+    def test_目印はhidden属性で隠さない(self):
+        # SVG の要素に hidden プロパティは無い（HTML要素のもの）。
+        # JS で代入しても何も起きず、目印が出たままになる
+        out = self.theme.chart(self.tail())
+
+        self.assertIn('class="chart-guide"', out)
+        self.assertNotIn("hidden", out)
+
+    def test_実質が無ければ実質の点も置かない(self):
+        self.assertNotIn("chart-dot-eff", self.theme.chart(self.tail()))
+        self.assertIn("chart-dot-eff",
+                      self.theme.chart(self.tail(),
+                                       effective=[(d, p - 50)
+                                                  for d, p, _ in self.tail()]))
+
+    def test_記録が足りなければ図を出さない(self):
+        out = self.theme.chart([["2026-09-01", 1000, 1]])
+
+        self.assertNotIn("data-series", out)
+
+
+class ThemeToggleTest(unittest.TestCase):
+    """配色の切り替え。
+
+    style.css は data-theme に対応していたのに、切り替える手立てを
+    どこにも置いていなかった（使えない仕組みが眠っていた）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_切り替えの押しどころを置く(self):
+        out = self.theme.foot({"name": "S", "owner": "o"}, "", "2026-09-27")
+
+        self.assertIn('id="theme"', out)
+
+    def test_最終更新が無い日でも押しどころは出す(self):
+        out = self.theme.foot({"name": "S", "owner": "o"}, "", "")
+
+        self.assertIn('id="theme"', out)
+        self.assertNotIn("最終更新", out)
