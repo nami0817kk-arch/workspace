@@ -1,0 +1,134 @@
+title: 9月27日の題材（午後）
+lead: 午前の一覧のあと、11時半までに出た見出しから14件
+note: <b>○×を付けてください。</b>欧州は代表戦の中断中で、昨日の欧州のリーグ戦はありません（Jリーグだけでした）。代表戦と、代表の合宿で出た言葉・移籍の話が中心です。<br><br>ロマーノの投稿は、手元の Chrome に接続はできたものの読み取りの途中で止まり、今回も読めませんでした。ロマーノの話を引いた記事も、元の記事までたどれなかったので入れていません。<br><br>午前の一覧に出した題材（松木の移籍話、佐野・後藤、谷村、ルカクのマンC発言など）と、今朝作ったイングランド対スペインは入れていません。中身はまだ<b>見出しだけ</b>です。
+items:
+- num: 1
+  slot: 日本人
+  head: 板倉滉、ウルグアイ戦で左足首を痛めて全体練習を欠席。冨安・安藤も離脱で、森保ジャパンはセンターバックが足りない
+  why: 'ベネズエラ戦に向けて広島で28人が始動したが、センターバックの離脱が続いている、という見出し。
+
+    '
+  src: ゲキサカ（9/27）
+  url: https://web.gekisaka.jp/photonews/japan/detail/?459820-459820-pn
+  fmt: news
+- num: 2
+  slot: 日本人
+  head: 鈴木淳之介「どうにか食らいつくところは終わった」。守備陣に離脱が続くなか、増す責任感
+  why: '板倉・冨安らが抜けるなかで、代表に定着しつつある本人が話した、という見出し。**本人の言葉**がある。
+
+    '
+  src: ゲキサカ（9/26）
+  url: https://web.gekisaka.jp/news/japan/detail/?459808-459808-fl
+  fmt: quote
+- num: 3
+  slot: 日本人
+  head: 南野拓実、「母国で最高の選手は？」に即答「タケフサ・クボ！」。ほかの国の選手はペレ、イニエスタ、メッシ
+  why: 'モナコの企画で、他国の選手が歴代の名選手を挙げるなか、南野は久保の名前を出した、という見出し。**元の動画か記事を確かめる必要がある**（見出しはまとめサイト）。
+
+    '
+  src: まとめ（9/26）
+  url: https://worldfn.net/archives/63507067.html
+  fmt: quote
+  weak: true
+- num: 4
+  slot: 日本人
+  head: 「日本代表は韓国代表より強い」。日本と対戦するエクアドルの現地メディアが日韓を比べて警戒
+  why: '相手国の報道が日本をどう見ているか、という見出し。**海外の声**の型。
+
+    '
+  src: フットボールチャンネル（9/27）
+  url: https://www.footballchannel.jp/2026/09/27/post1020369/
+  fmt: voices
+- num: 5
+  slot: 日本人
+  head: 最新のFIFAランキング。北中米W杯を終えて、日本代表は何位か
+  why: '9月27日付のランキング。順位表を出して、表から1つ話を拾う定型の回。
+
+    '
+  src: フットボールチャンネル（9/27）
+  url: https://www.footballchannel.jp/2026/09/27/post484208/
+  fmt: news
+- num: 6
+  slot: その他
+  head: ムバッペ、ジダン監督の初陣で得点したあと膝を痛めてフランス代表を離脱。レアルは「2週間ほど」
+  why: 'イタリア戦とローマ戦を欠く可能性、という見出し。ジダンの初陣で起きた出来事。
+
+    '
+  src: ESPN・Football Italia（9/26）
+  url: https://www.espn.com/soccer/story/_/id/50029181/mbappe-exits-knee-injury-scoring-france-zidane-debut
+  fmt: news
+- num: 7
+  slot: その他
+  head: 41歳モドリッチ、チェコ戦で圧巻のゴール。新監督デニアの初陣を台無しに
+  why: 'クロアチアがチェコに2対1。前日は熱があったのに出た、という別の見出しもある。
+
+    '
+  src: MARCA・Gazzetta（9/26）
+  url: https://www.marca.com/futbol/nations-league/cronica/2026/09/26/gran-gol-eterno-modric-amarga-debut-santi-denia-republica-checa.html
+  fmt: news
+- num: 8
+  slot: プレミア
+  head: ドイツ代表のクロップ監督、リヴァプールで苦しむヴィルツを擁護
+  why: 'クロップがドイツ代表を率いて2試合目。古巣で結果が出ないヴィルツについて話した、という見出し。**本人の言葉**がある。
+
+    '
+  src: ESPN・kicker（9/27）
+  url: https://www.espn.com/soccer/story/_/id/50037458/jurgen-klopp-defends-florian-wirtz-liverpool-struggles
+  fmt: quote
+- num: 9
+  slot: その他
+  head: クロップのドイツ代表、2試合目でテア・シュテーゲンがゴールを外れる
+  why: 'クロップ体制の2試合目で、正GKが先発しない、という見出し。
+
+    '
+  src: VI（9/26）
+  url: https://www.vi.nl/nieuws/geen-ter-stegen-onder-de-lat-bij-tweede-duel-duitsland-onder-klopp
+  fmt: news
+  weak: true
+- num: 10
+  slot: プレミア
+  head: ファン・デ・フェン「スパーズを少し離れられて、悪くない。苦しい数週間だった」。シャビのオランダ代表は「みんなに受けがいい」
+  why: 'トッテナムの不振について本人が話した、という見出し。シャビ監督のオランダ代表の話もある。**本人の言葉**がある。
+
+    '
+  src: VI（9/26）
+  url: https://www.vi.nl/video/van-de-ven-vindt-het-niet-erg-om-even-weg-van-spurs-te-zijn-waren-lastige-weken
+  fmt: quote
+- num: 11
+  slot: その他
+  head: ポルトガル代表ヴェイガ「ハーランドはペナルティエリアの中では最高。外ではそれほどでもない」
+  why: 'ノルウェー戦を前に、対戦相手の選手がハーランドを評した、という見出し。ロナウドの到着に地元の人が集まった話もある。
+
+    '
+  src: A Bola（9/26）
+  url: https://www.abola.pt/video/haaland-e-o-melhor-dentro-da-grande-area-fora-ja-nao-e-isso-tudo-2026092616153555113
+  fmt: quote
+- num: 12
+  slot: ラリーガ
+  head: バイエルンがバルサのオルモを狙う。バルサはバルデの今冬の放出も
+  why: 'イギリスの日曜のゴシップ欄と、フランスの移籍サイトの見出し。移籍の噂なので確度は低め。
+
+    '
+  src: BBC・Foot Mercato（9/27）
+  url: https://www.bbc.co.uk/sport/football/articles/cw770034l523o
+  fmt: news
+  weak: true
+- num: 13
+  slot: その他
+  head: ユヴェントス、2027年夏にコヴァチッチ、ラウム、トモリを移籍金ゼロで狙う
+  why: '契約が切れる3人をまとめて狙う、というイタリアの報道。
+
+    '
+  src: Football Italia（9/26）
+  url: https://football-italia.net/report-juventus-want-kovacic-raum-tomori-free/
+  fmt: news
+  weak: true
+- num: 14
+  slot: ラリーガ
+  head: アデイェミ、バルサでの最初の数か月を語る
+  why: 'ドルトムントから来たアデイェミが、バルサでの日々を話した、という見出し。**本人の言葉**がある。今朝のバルサの回とは別の話。
+
+    '
+  src: Foot Mercato（9/27）
+  url: https://www.footmercato.net/a1371375273103104103-karim-adeyemi-se-livre-sur-ses-premiers-mois-au-barca
+  fmt: quote
