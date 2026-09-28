@@ -883,6 +883,12 @@ main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 
 .history td small { display: block; font-size: 11px; color: var(--muted);
   line-height: 1.3; }
 
+/* 58. 商品ページの頭。送料・在庫・ポイント倍率・実質価格は一覧のカードには
+   出していたのに、商品ページには無かった。価格の次に大きい数字なので、
+   価格のすぐ下に置く。 */
+.lede .point-line { margin: 6px 0 0; font-size: 14px; }
+.lede .headline .cond { vertical-align: middle; }
+
 /* 57. 「記録を始めてからの変化」。価格.com の価格推移ページにある
    「初値 / 現在 / 差額・値下がり率」の3行表に倣う。
    いくらから、いくらまで、いくら動いたかが一目で分かる。

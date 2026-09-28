@@ -2056,7 +2056,13 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                f'alt="{esc(short_name(row["name"], 40))}" width="300" height="300" '
                f'loading="eager" fetchpriority="high" decoding="async"></p>'
                if row.get("image") else '')
-            + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
+            # 送料・在庫・ポイントは一覧のカードには出していたのに、商品ページの
+            # 頭には無かった。倍率が付いた商品では実質価格が19%も違うことがあり
+            # （dentendo-10026508-15813ae1）、いちばん大事な数字が頭に出ていない。
+            # 送料無料は構造化データにだけ書いていて、画面には出していなかった。
+            + f'<p class="headline"><strong>{yen(row["price"])}</strong> '
+            + f'{badge(row)}{conditions(row)}</p>'
+            + f'<p class="point-line">{point_note(row)}</p>'
             + '</div>'
             + AD_NOTICE
             + (f'<p class="verdict">{esc(verdict_note(row))}</p>'

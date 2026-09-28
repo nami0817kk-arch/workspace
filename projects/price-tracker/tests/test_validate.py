@@ -1995,3 +1995,48 @@ class 同じ数字を繰り返さないTest(unittest.TestCase):
 
         self.assertIn("<th>現在の価格</th>", html)
         self.assertIn("<th>ポイント倍率</th>", html)
+
+
+class 商品ページの頭Test(unittest.TestCase):
+    """送料・在庫・ポイント倍率・実質価格は一覧のカードには出ていたのに、
+    商品ページの頭には無かった（2026-09-28 実測）。
+
+    送料無料にいたっては構造化データにだけ書いていて、画面には出していなかった。
+    画面に出していないものを検索側にだけ伝えるのは、こちらの決まりに反する。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://e.dev"}
+
+    def row(self, **kw):
+        base = {"item_code": "a", "name": "テスト商品", "price": 1408, "prev": 1408,
+                "low": 1408, "high": 1408, "days": 20, "vs_low_pct": 0.0,
+                "off_high_pct": 0.0, "at_low": False, "near_low": False,
+                "dropped": False, "trustworthy": True, "label": "変動なし",
+                "shop": "店", "moved": False, "low_date": "2026-09-08",
+                "tail": [["2026-09-27", 1408, 1], ["2026-09-28", 1408, 20]]}
+        base.update(kw)
+        return base
+
+    def head(self, **kw):
+        html = self.theme.item_page(self.row(**kw), self.site, "2026-09-28")
+        return html.split('class="lede"', 1)[-1].split("</div>", 1)[0]
+
+    def test_ポイント倍率と実質価格を価格のすぐ下に出す(self):
+        # 倍率20倍だと実質は19%下。価格だけを頭に出すと、いちばん大事な数字が消える
+        out = self.head(point_rate=20, eff_price=1126)
+
+        self.assertIn("ポイント20倍", out)
+        self.assertIn("1,126円", out)
+
+    def test_送料無料を画面にも出す(self):
+        out = self.head(free_shipping=True)
+
+        self.assertIn("送料無料", out)
+
+    def test_在庫切れを画面にも出す(self):
+        out = self.head(in_stock=False)
+
+        self.assertIn("在庫切れ", out)
