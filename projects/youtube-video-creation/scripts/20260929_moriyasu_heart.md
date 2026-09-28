@@ -94,8 +94,8 @@ cards:
   telop: 後半アディショナルタイム6分、上田綺世のPK
   card: none
   image: assets/images/20260929_moriyasu/01.jpg
-キャスター: その直後、森保監督はスタンドに向けてハートマークを見せました。
-  telop: その直後、森保監督はスタンドに向けてハートマークを見せました
+キャスター: その直後、両手で作ったハートをスタンドへ。
+  telop: その直後、両手で作ったハートをスタンドへ
   card: none
   image: assets/images/20260929_moriyasu/01.jpg
 キャスター: 試合後、その意味をこう話しています。
@@ -130,8 +130,8 @@ cards:
 ## 10人で得たPK
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: この試合、前半8分に代表デビューの熊坂光希が負傷交代。
-  telop: この試合、前半8分に代表デビューの熊坂光希が負傷交代
+キャスター: 時間を戻します。前半8分、代表デビューの熊坂光希がけがで交代。
+  telop: 時間を戻します。前半8分、代表デビューの熊坂光希がけがで交代
   source: 報道
   card: ten_card
   image: assets/images/20260929_moriyasu/01.jpg
@@ -139,12 +139,16 @@ cards:
   telop: 後半開始26秒で失点し、その4分後に上田綺世が追いつきました
   card: none
   image: assets/images/20260929_moriyasu/01.jpg
-キャスター: 終盤には渡辺剛もプレーを続けられず、交代枠は使い切っていました。
-  telop: 終盤には渡辺剛もプレーを続けられず、交代枠は使い切っていました
+キャスター: 終盤には渡辺剛もけがでピッチを離れ、交代枠は使い切っていて10人に。
+  telop: 終盤には渡辺剛もけがでピッチを離れ、交代枠は使い切っていて10人に
   card: none
   image: assets/images/20260929_moriyasu/01.jpg
 キャスター: 残りの10分ほどを10人で戦い、その中でPKを得ています。
   telop: 残りの10分ほどを10人で戦い、その中でPKを得ています
+  card: none
+  image: assets/images/20260929_moriyasu/01.jpg
+キャスター: ベネズエラ側は判定に不満で、試合後も収まりませんでした。
+  telop: ベネズエラ側は判定に不満で、試合後も収まりませんでした
   card: none
   image: assets/images/20260929_moriyasu/01.jpg
 キャスター: 監督は、選手たちのことをこう話しました。
@@ -175,10 +179,14 @@ cards:
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @viewpoint: true
 
-解説: 森保一監督の言葉は選手全員へ。ただ、点に絡んだのは後半から入った選手でした。
-  telop: 森保一監督の言葉は選手全員へ。ただ、点に絡んだのは後半から入った選手でした
+解説: 森保一監督の3期目は、就任から2戦2勝。
+  telop: 森保一監督の3期目は、就任から2戦2勝
   source: 背景
   card: view_card
+  image: assets/images/20260929_moriyasu/01.jpg
+解説: 言葉は選手全員へ。ただ、点に絡んだのは後半から入った選手でした。
+  telop: 言葉は選手全員へ。ただ、点に絡んだのは後半から入った選手でした
+  card: none
   image: assets/images/20260929_moriyasu/01.jpg
 解説: 同点弾は伊東純也のクロスに上田綺世。24日のウルグアイ戦に続く2試合連続の形です。
   telop: 同点弾は伊東純也のクロスに上田綺世。24日のウルグアイ戦に続く2試合連続の形です
@@ -190,10 +198,6 @@ cards:
   image: assets/images/20260929_moriyasu/01.jpg
 解説: 先発には代表デビューが4人。前半は無得点で折り返しています。
   telop: 先発には代表デビューが4人。前半は無得点で折り返しています
-  card: none
-  image: assets/images/20260929_moriyasu/01.jpg
-解説: 森保体制3期目は、これで2戦2勝。
-  telop: 森保体制3期目は、これで2戦2勝
   card: none
   image: assets/images/20260929_moriyasu/01.jpg
 解説: 粘りは本物でも、先発組が点を取れなかった差は残りました。
