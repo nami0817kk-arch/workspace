@@ -207,13 +207,13 @@ def build(root: Path, out: Path) -> dict:
     archive_counts = []
     for day in archive_days:
         hit = analyze.drops_on(rows, day, site.get("drop_threshold", 0.05))
-        write_listing(out, urls, f"archive/{day}/", f"{day} の値下がり",
+        write_listing(out, urls, f"archive/{day}/", f"{day} に安くなった商品",
                       f"{day} に安くなった商品の記録です。"
                       f"価格が下がったものと、ポイント倍率が上がって"
                       f"実質価格が下がったものを含みます。",
                       hit, site, base, updated,
                       "この日は記録できる値下がりがありませんでした。", stats,
-                      linked=linked, parent=("日付別の値下がり", "archive/"))
+                      linked=linked, parent=("日付別 安くなった商品", "archive/"))
         archive_counts.append((day, len(hit)))
         pos = archive_days.index(day)
         newer = archive_days[pos - 1] if pos > 0 else None
@@ -384,7 +384,7 @@ def build(root: Path, out: Path) -> dict:
         ("ending/", "期限が近い", len(analyze.ending_soon(rows, updated)),
          "ポイント倍率が3日以内に終わるもの"),
         ("genre/", "ジャンル別", len(listed), "ジャンルごとの価格記録（値下がりの大きい順）"),
-        ("archive/", "日付別", len(archive_counts), "過ぎた日の値下がりの記録"),
+        ("archive/", "日付別", len(archive_counts), "過ぎた日に安くなった商品の記録"),
     ]
     # トップは商品を並べず、入口だけを置く（2026-09-26 ユーザー指示）。
     write(out / "index.html",
