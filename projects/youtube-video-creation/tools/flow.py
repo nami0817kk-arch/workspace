@@ -88,8 +88,11 @@ def ask(text: str, model: str | None = None) -> str:
     # 429（枠切れ）は待っても戻らないので、その周では次のモデルへ進むだけ
     for round_ in range(3):
         if round_:
+            if not saw_503:
+                break   # 全部 429（枠切れ）なら待っても戻らない。その日は Claude の下請けで読む
             print(f"  （全モデルが混雑。{90 * round_}秒待って {round_ + 1}周目）")
             time.sleep(90 * round_)
+        saw_503 = False
         for name in order:
             for attempt in range(2):
                 try:
@@ -101,6 +104,7 @@ def ask(text: str, model: str | None = None) -> str:
                         raise
                     if err.code == 429:
                         break          # 枠切れは待っても戻らない。次のモデルへ
+                    saw_503 = True
                     time.sleep(20)
             if data is not None:
                 if name != first:
