@@ -580,7 +580,16 @@ SEARCH_JS = r"""
   var note = document.getElementById('note');
   var index = null, loading = false, LIMIT = 60, MAX_SCAN = 400;
 
-  function norm(s) { return s.normalize('NFKC').toLowerCase().replace(/\\s+/g, ''); }
+  // 「いやほん」と打っても「イヤホン」に当たるようにする。
+  // NFKC は半角カナを全角カナに直すが（ｲﾔﾎﾝ→イヤホン、実測476件に当たる）、
+  // ひらがなはカタカナにしない。日本語は仮名の並びが同じなので、
+  // ひらがなを機械的にカタカナへ寄せるだけで足りる（辞書は要らない）。
+  function norm(s) {
+    return s.normalize('NFKC').toLowerCase().replace(/\\s+/g, '')
+      .replace(/[\u3041-\u3096]/g, function (c) {
+        return String.fromCharCode(c.charCodeAt(0) + 0x60);
+      });
+  }
 
   function terms() {
     return input.value.trim().split(/\\s+/).map(norm).filter(Boolean);
@@ -1762,9 +1771,16 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
     // 目標に達したものを先に。次が下げ幅の大きい順。
     hits.sort(function (a, b) { return (b.hit - a.hit) || (b.diff - a.diff); });
     var reached = hits.filter(function (h) { return h.hit; }).length;
-    note.textContent = reached
+    // 見守った商品が記録から外れる（販売終了・取得対象から外れる）ことがある。
+    // そのとき「0件」とだけ出すと、消えた理由が読み手に分からない。
+    var gone = codes.length - hits.length;
+    var lost = gone > 0
+      ? '（見守り中の' + codes.length + '件のうち' + gone
+        + '件は、いま記録にありません。販売終了などで取得できなくなった商品です）'
+      : '';
+    note.textContent = (reached
       ? hits.length + '件のうち ' + reached + '件が目標の値段に達しています'
-      : hits.length + '件';
+      : hits.length + '件') + lost;
     out.textContent = '';
     hits.forEach(function (h) {
       var li = document.createElement('li');

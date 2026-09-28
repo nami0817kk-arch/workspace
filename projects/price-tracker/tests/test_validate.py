@@ -892,6 +892,35 @@ class PointDeadlineTest(unittest.TestCase):
             self.theme.caption_block({"caption": "ぜひどうぞ。オススメです。"}), "")
 
 
+class 検索の読み替えTest(unittest.TestCase):
+    """「いやほん」と打っても「イヤホン」に当たるようにする。
+
+    NFKC は半角カナを全角カナに直すが（ｲﾔﾎﾝ→イヤホン）、ひらがなは
+    カタカナにしない。実測（2026-09-28）で「いやほん」「すいっち」
+    「けーす」はどれも0件だった（カタカナなら476/655/1,423件）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def js(self):
+        return self.theme.search_page(
+            {"name": "見本", "base_url": "https://example.com",
+             "description": "見本", "owner": "見本"},
+            "https://example.com/search/", "2026-09-28",
+            {"items": 1, "days": 1, "updated": "2026-09-28"})
+
+    def test_ひらがなをカタカナへ寄せる(self):
+        out = self.js()
+
+        self.assertIn("u3041", out)
+        self.assertIn("0x60", out)
+
+    def test_半角カナの読み替えは残す(self):
+        self.assertIn("normalize('NFKC')", self.js())
+
+
 class SearchDisplayTest(unittest.TestCase):
     """検索と見守りの表示。
 
