@@ -45,27 +45,29 @@
 
 ## English description
 
-You're the escort: ferry prisoners across the river — but if the guards are outnumbered, they escape!
+**App Store Connect は一部の記号を「無効な文字」として弾く**（2026-09-28 の提出で確認）。「★」はプロモーションテキストで弾かれた。説明文も弾かれたので、■ … ―― • — を使わない形にして通した。見出しは日本語【】、英語 [ ]、箇条書きは・と - にする。
+
+You're the escort: ferry prisoners across the river. But if the guards are outnumbered, they escape!
 Load officers and prisoners into the boat and get everyone to the far bank without losing a single one.
 
-■ One simple rule
+[One simple rule]
 On a bank or in the boat, prisoners escape if they outnumber the guards. Leave prisoners with no guard, and they escape too.
 
-■ Plan your moves on a river island
-Leave people on an island mid-river. The boat can't go straight across — it stops at the island on the way.
+[Plan your moves on a river island]
+Leave people on an island mid-river. The boat can't go straight across; it stops at the island on the way.
 But the island needs guards too. Who stays where?
 
-■ New helpers, tougher prisoners
-• Boss — needs two guards alone
-• Police dog — guards, but can't row
-• Chief — guards two prisoners alone
-• Cuffed pair — chained together, takes two seats
+[New helpers, tougher prisoners]
+- Boss: needs two guards alone
+- Police dog: guards, but can't row
+- Chief: guards two prisoners alone
+- Cuffed pair: chained together, takes two seats
 
-■ 120 levels, 3 stars for the shortest route
+[120 levels, 3 stars for the shortest route]
 Every level is solvable. Cross in the fewest trips to earn 3 stars.
 Stuck? Watch a short video to see your next move (no video with Remove Ads). Undo before anyone escapes; restart any time. The puzzles play offline (hint videos need a connection).
 
-Contains ads. The in-app purchase "Remove Ads" turns off full-screen ads and lets you use hints without videos.
+Contains ads. The in-app purchase Remove Ads turns off full-screen ads and lets you use hints without videos.
 
 Promotional text: Escort prisoners across the river without letting one escape. A river island, a boss, a police dog and cuffed pairs. 120 levels; the shortest route earns 3 stars.
 
@@ -101,35 +103,35 @@ Promotional text: Escort prisoners across the river without letting one escape. 
 
 ## プロモーションテキスト（170字まで・審査なしで差し替えられる）
 
-警官が囚人を舟で護送する川渡りパズル。見張りが足りないと、すぐに脱走！ 川の中州、ボス、警察犬、手錠の2人。全120面、最短で渡れば★3。
+警官が囚人を舟で護送する川渡りパズル。見張りが足りないと、すぐに脱走！ 川の中州、ボス、警察犬、手錠の2人。全120面、最短で渡れば星3。
 
 ## 説明文
 
 あなたの仕事は、囚人を舟で向こう岸へ運ぶ「護送」。
-でも見張りが足りないと、囚人はすぐに逃げ出してしまう――。
+でも見張りが足りないと、囚人はすぐに逃げ出してしまう。
 警官と囚人を舟に乗せ、1人も逃がさずに全員を向こう岸へ渡しきる、頭を使う川渡りパズルです。
 
-■ 決まりはひとつ
+【決まりはひとつ】
 岸でも舟の上でも、見張りが囚人より少ないと逃げる。見張りのいない所に囚人を残しても逃げる。
 
-■ 川の中州で作戦を立てる
+【川の中州で作戦を立てる】
 川の途中にある中州に、人を残しておける。岸から岸へ直接は行けず、中州を経由して1区間ずつ運ぶ。
 でも中州でも見張りが要る。誰をどこに残すか、先を読む力が試される。
 
-■ 新しい仲間と、やっかいな囚人
-・ボス … 1人でも見張りが2人分いる
-・警察犬 … 見張れるけれど舟は漕げない
-・看守長 … 1人で2人分を見張れる
-・手錠の2人 … 離れられず、舟の席も2つ使う
+【新しい仲間と、やっかいな囚人】
+・ボス：1人でも見張りが2人分いる
+・警察犬：見張れるけれど舟は漕げない
+・看守長：1人で2人分を見張れる
+・手錠の2人：離れられず、舟の席も2つ使う
 
-■ 全120面・最短クリアで★3
+【全120面、最短クリアで星3】
 すべての面は必ず解けます。最短の回数で渡りきれば星3つ。
 詰まったら、短い動画を見るとヒントで次の一手がわかります（「広告を消す」を購入すると動画なし）。逃げられる前なら一手戻せて、最初からのやり直しはいつでもできます。
 
-■ 広告と課金
+【広告と課金】
 広告が表示されます。App内課金「広告を消す」（買い切り）を購入すると、面と面の間の全画面広告が出なくなり、ヒントも動画なしで使えます。
 
-■ こんな人に
+【こんな人に】
 ・ひらめき系、論理パズル、頭の体操が好きな人
 ・家族や友だちと一緒に考えたい人
 ・通信なしで、すき間時間に遊べるゲームを探している人（ヒントの動画には通信が要ります）
