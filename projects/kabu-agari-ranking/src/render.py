@@ -321,6 +321,11 @@ BIG_MOVE_PCT = 10
 # 業種の内訳に出す行数。全33業種を並べても読み取れない。
 INDUSTRY_ROWS = 10
 
+# 「日ごとの記録」に並べる営業日の数。**放っておくと毎日1行ずつ伸びる。**
+# 1年で245行、5年で1,200行になり、下にある案内まで誰も辿り着かない。
+# それより前は月まとめから辿る。
+DAY_LIST_LIMIT = 60
+
 TREND_DAYS = 15
 
 
@@ -895,6 +900,7 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
     ]
     stocks = [{**s, "has_page": s["code"] in stock_pages} for s in history["stocks"]]
     recent = list(reversed(history["per_day"][:TREND_DAYS]))
+    listed_days, omitted_days = per_day[:DAY_LIST_LIMIT], max(0, len(per_day) - DAY_LIST_LIMIT)
 
     # 市場別・業種別の内訳。**記録した日ぶんだけ**を数える。推定の日を混ぜると
     # 「上位30銘柄の中の数」と「その日の全件」が同じ数に見える。
@@ -933,7 +939,8 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
                 default=days[0]["rec_date"],
             )),
             stocks=stocks,
-            per_day=per_day,
+            per_day=listed_days,
+            omitted_days=omitted_days,
             by_market=by_market,
             by_industry=by_industry[:INDUSTRY_ROWS],
             industry_count=len(by_industry),
@@ -1059,6 +1066,15 @@ def day_stop_note(day: dict, json_key: str) -> dict | None:
     }
 
 
+def month_href_for(rec_date: str) -> str:
+    """その日が属する月まとめの場所。
+
+    日別ページから週まとめへは行けるのに、月まとめへは行けなかった
+    （2026-09-28）。長い目で見たい人がそこで止まる。
+    """
+    return f"monthly/{rec_date[:7]}.html"
+
+
 def week_href_for(rec_date: str) -> str:
     """その日が属する週まとめの場所。
 
@@ -1153,6 +1169,7 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                     kind_dir=dirname,
                     stop_note=stop_notes.get(rec),
                     week_href=week_href_for(rec),
+                    month_href=month_href_for(rec),
                     siblings=[e for e in siblings[rec] if e["kind"] != json_key],
                     turnover=turnover_note(
                         day_rows, with_data[i + 1][1] if i + 1 < len(with_data) else None
@@ -1335,7 +1352,7 @@ def build_all() -> None:
     weeks = _build_weekly_pages(days, stock_pages)
     _build_market_page(days)
 
-    search_data = aggregate.search_index(days)
+    search_data = aggregate.search_index(days, profiles)
     (_OUTPUT_DIR / "search-index.json").write_text(
         json.dumps(search_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
     )

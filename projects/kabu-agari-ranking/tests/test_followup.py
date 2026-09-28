@@ -181,3 +181,10 @@ def test_相場の振り返りは上下ともグラフを出す(tmp_path, monkey
     assert "<h2>ストップ高の数</h2>" in html
     assert "<h2>ストップ安の数</h2>" in html
     assert html.count("chart-figure") >= 4
+
+
+def test_日別ページから月まとめへ行ける():
+    """週まとめへは行けるのに、月まとめへは行けなかった。
+    長い目で見たい人がそこで止まる。"""
+    assert render.month_href_for("2026-09-28") == "monthly/2026-09.html"
+    assert render.month_href_for("2027-01-05") == "monthly/2027-01.html"

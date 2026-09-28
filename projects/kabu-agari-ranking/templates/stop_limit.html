@@ -175,6 +175,13 @@
 {% endif %}
 
 <h2>日ごとの記録</h2>
+{% if omitted_days %}
+<p>
+  直近{{ per_day|length }}営業日ぶんを並べています。
+  それより前は<a href="{{ base_url }}monthly/index.html">月まとめ</a>から辿れます
+  （あと{{ omitted_days }}営業日ぶん）。
+</p>
+{% endif %}
 <div class="archive-list">
   {% for day in per_day %}
   {# その日のアーカイブが無い日はリンクにしない（掲載開始の頃は

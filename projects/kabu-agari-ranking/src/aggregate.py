@@ -76,14 +76,17 @@ def _longest_run(dates: list[str], all_dates: list[str]) -> int:
 SEARCH_WINDOW_DAYS = 60
 
 
-def search_index(days: list[dict]) -> dict:
+def search_index(days: list[dict], profiles: dict[str, dict] | None = None) -> dict:
     """銘柄名・コードから登場日を引くための索引。
 
     { "from": 最古の日, "to": 最新の日,
-      "stocks": [ {"c": コード, "n": 名前, "g": [日...], "l": [...], "a": [...]} ] }
+      "ind": [業種名...],
+      "stocks": [ {"c": コード, "n": 名前, "i": 業種の番号,
+                   "g": [日...], "l": [...], "a": [...]} ] }
 
     キーを1文字にしているのは、そのままブラウザに配る JSON だから。
     銘柄数×日数ぶん繰り返されるので、ここのバイト数がそのまま読み込み時間になる。
+    **業種は名前ではなく番号で持つ**（同じ文字列が何百回も繰り返されるのを避ける）。
     """
     window = days[:SEARCH_WINDOW_DAYS]
     if not window:
@@ -109,9 +112,23 @@ def search_index(days: list[dict]) -> dict:
                 ):
                     e["s"] += 1
 
+    # 業種は名前の一覧を1度だけ持ち、銘柄側は番号で指す。
+    # 名前をそのまま入れると「情報・通信業」だけで数百回ぶん重くなる。
+    industries: list[str] = []
+    index_of: dict[str, int] = {}
+    for entry in stocks.values():
+        name = ((profiles or {}).get(entry["c"]) or {}).get("industry")
+        if not name:
+            continue
+        if name not in index_of:
+            index_of[name] = len(industries)
+            industries.append(name)
+        entry["i"] = index_of[name]
+
     return {
         "from": window[-1]["rec_date"],
         "to": window[0]["rec_date"],
+        "ind": industries,
         "stocks": sorted(stocks.values(), key=lambda e: e["c"]),
     }
 
