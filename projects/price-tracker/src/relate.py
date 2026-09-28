@@ -77,3 +77,74 @@ def related(rows: list[dict], name_of, limit: int = 8) -> dict:
         best = [by_code[c] for c, _ in score.most_common(limit)]
         out[code] = best
     return out
+
+
+# 数量・容量で終わる語は「何があるか」を伝えない（350ml・24本・2ケース）。
+UNIT_TAIL = re.compile(r"(?:ml|cc|kg|mg|mm|cm|pk|[0-9])(?:本|個|枚|袋|缶|箱|入|"
+                       r"ケース|パック|セット|色|点|台|足|膳|食|人前)?$")
+MIN_SHARE = 0.02      # そのジャンルの2%以上に出る語だけ見る
+TERM_LIMIT = 5
+# 既に採った語とこれだけ一緒に出るなら、同じものの別表記とみなす
+SAME_THING = 0.7
+
+
+def genre_terms(names_by_genre: dict, limit: int = TERM_LIMIT) -> dict:
+    """ジャンルごとに「そのジャンルらしい語」を選ぶ。
+
+    価格.com のトップは、カテゴリの下に「ノートパソコン タブレット
+    ハードディスク PCパーツ 周辺機器」とサブ項目を2行置いている。あれが面の
+    情報量を作っていて、「ここに何があるか」が一目で分かる。うちは楽天の
+    ジャンルを8つしか取っておらず、その下の階層を持っていないので、
+    **商品名から出す**。
+
+    ただ数えるだけだと、どのジャンルにもある語（セット・送料無料）が並ぶ。
+    そのジャンルでの出現率を全体の出現率で割った値（どれだけ偏っているか）で
+    選ぶと、家電なら「静音・コンパクト・省エネ」、テレビゲームなら
+    「switch・nintendo・コントローラー」が出る（2026-09-28 実測）。
+    """
+    per, total, all_n = {}, collections.Counter(), 0
+    for genre, names in names_by_genre.items():
+        count = collections.Counter()
+        sets = []
+        for name in names:
+            words = set(tokens(name))
+            sets.append(words)
+            for word in words:
+                count[word] += 1
+        per[genre] = (count, len(names), sets)
+        total.update(count)
+        all_n += len(names)
+    if not all_n:
+        return {}
+
+    out = {}
+    for genre, (count, n, sets) in per.items():
+        scored = []
+        for word, k in count.items():
+            if k < n * MIN_SHARE or len(word) < 2 or UNIT_TAIL.search(word):
+                continue
+            share = k / n
+            lift = share / (total[word] / all_n)
+            scored.append((lift * share, word))
+        scored.sort(reverse=True)
+        picked = []
+        for _, word in scored:
+            # 「イヤホン」を採ったあとに「ワイヤレスイヤホン」を並べても
+            # 行き先が増えない。どちらかが他方を含む語は飛ばす。
+            if any(word in got or got in word for got in picked):
+                continue
+            # 文字種が違ううえ同じ商品名に一緒に書かれてばかりなら、同じものの
+            # 別表記。「ヤマハ」と「yamaha」、「スイッチ」と「switch」がこれで、
+            # 読みの対応は辞書なしでは付けられないが、共起なら数えられる。
+            # 文字種の条件が無いと、同じ商品群にしか出ない別のもの
+            # （「ヤマハ」と「電子ピアノ」）まで落ちる。
+            if any(word.isascii() != got.isascii()
+                   and (sum(1 for ws in sets if word in ws and got in ws)
+                        >= min(count[word], count[got]) * SAME_THING)
+                   for got in picked):
+                continue
+            picked.append(word)
+            if len(picked) >= limit:
+                break
+        out[genre] = picked
+    return out

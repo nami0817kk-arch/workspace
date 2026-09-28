@@ -1164,3 +1164,55 @@ class 日付別の題Test(unittest.TestCase):
         self.assertIn("日付別 安くなった商品", html)
         self.assertNotIn("日付別の値下がり", html)
         self.assertIn("実質価格が下がったもの", html)
+
+
+class ジャンルらしい語Test(unittest.TestCase):
+    """価格.com のトップはカテゴリの下にサブ項目を2行置いていて、それが
+    「ここに何があるか」を伝えている。うちは楽天のジャンルを8つしか取って
+    おらず下の階層を持たないので、商品名から出す。
+    """
+
+    def setUp(self):
+        from src import relate
+        self.relate = relate
+
+    def test_そのジャンルに偏った語を選ぶ(self):
+        # 「セット」はどのジャンルにもあるので手がかりにならない
+        got = self.relate.genre_terms({
+            "a": ["イヤホン セット"] * 100,
+            "b": ["ドッグフード セット"] * 100,
+            "c": ["ギター セット"] * 100}, limit=1)
+
+        self.assertEqual(got["a"], ["イヤホン"])
+        self.assertEqual(got["b"], ["ドッグフード"])
+        self.assertEqual(got["c"], ["ギター"])
+
+    def test_同じものの別表記を並べない(self):
+        """「ヤマハ」と「yamaha」は同じ商品名に両方書かれている。
+        読みの対応は辞書なしでは付けられないが、共起なら数えられる。"""
+        got = self.relate.genre_terms({
+            "a": ["ヤマハ yamaha 電子ピアノ"] * 60 + ["ギター 初心者"] * 40})
+
+        self.assertEqual(len([w for w in got["a"] if w in ("ヤマハ", "yamaha")]), 1)
+
+    def test_同じ商品群にしか出ない別のものは落とさない(self):
+        """文字種の条件が無いと、「ヤマハ」と「電子ピアノ」まで同一視していた。"""
+        got = self.relate.genre_terms({
+            "a": ["ヤマハ 電子ピアノ"] * 60 + ["ギター 初心者"] * 40})
+
+        self.assertIn("ヤマハ", got["a"])
+        self.assertIn("電子ピアノ", got["a"])
+
+    def test_数量の語は選ばない(self):
+        got = self.relate.genre_terms({
+            "a": ["ビール 350ml 24本 4pk"] * 80 + ["ワイン 750ml"] * 20})
+
+        for word in ("350ml", "24本", "750ml", "4pk"):
+            self.assertNotIn(word, got["a"])
+
+    def test_言葉を含む方だけを残す(self):
+        got = self.relate.genre_terms({
+            "a": ["イヤホン"] * 50 + ["ワイヤレスイヤホン"] * 50,
+            "b": ["まったく別の語"] * 100})
+
+        self.assertEqual(len([w for w in got["a"] if "イヤホン" in w]), 1)
