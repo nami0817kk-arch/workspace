@@ -148,3 +148,14 @@ def test_賞与の保険料もpythonと一致する():
     got = _run_node(cases)
     mismatches = [(c, g, e) for c, g, e in zip(cases, got, expected) if g != e]
     assert not mismatches, mismatches[:5]
+
+
+def test_年末調整後の所得税もpythonと一致する():
+    cases = [[g, soc] for g in (0, 1_000_000, 1_780_000, 1_780_999, 1_790_000, 1_900_000, 2_000_000, 2_400_000, 3_000_000, 3_600_000, 3_600_001)
+             for soc in (0, 150_000, 290_000)]
+    script = f"""
+const calc = require({json.dumps(str(_CALC_JS))});
+process.stdout.write(JSON.stringify({json.dumps(cases)}.map(c => calc.annualIncomeTaxYen(c[0], c[1]))));
+"""
+    got = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, encoding="utf-8", check=True).stdout)
+    assert got == [extras.annual_income_tax_yen(g, s) for g, s in cases]

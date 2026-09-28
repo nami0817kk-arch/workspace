@@ -237,11 +237,11 @@
     html += '<p class="hint">会社もほぼ同じ額（月約' + yen(p.total) + '）の社会保険料を負担しています（労使折半）。会社が払う分は、あなたの給与からは引かれません。</p>';
 
     html += '<h2>加入する前と比べると</h2><ul class="compare">';
-    html += '<li><strong>配偶者や親の扶養に入っていた人</strong>: それまで0円だった保険料が、月' + yen(p.total) + '増えます。</li>';
+    html += '<li><strong>配偶者の扶養に入っていた人</strong>（国民年金の第3号）: それまで0円だった保険料が、月' + yen(p.total) + '増えます。</li>';
     var kokumin = calc.kokuminNenkinYen(EXTRAS, asOf);
     if (kokumin !== null) {
       var diff = kokumin - p.pension;
-      html += '<li><strong>自分で国民年金を払っていた人</strong>: 国民年金保険料（月' + yen(kokumin) + '）がなくなり、厚生年金保険料（月'
+      html += '<li><strong>自分で国民年金を払っていた人</strong>（親の扶養に入っていた20歳以上の人も）: 国民年金保険料（月' + yen(kokumin) + '）がなくなり、厚生年金保険料（月'
         + yen(p.pension) + '）に替わります。年金の分だけで月' + yen(Math.abs(diff)) + (diff > 0 ? '安く' : '高く')
         + 'なります。国民健康保険も勤務先の健康保険に替わります（国民健康保険料は市区町村で違うので、ここでは比べていません）。</li>';
     }
@@ -261,8 +261,7 @@
     html += '<p class="hint">標準報酬月額: 健康保険 ' + yen(p.healthStandard) + '・厚生年金 ' + yen(p.pensionStandard)
       + '。' + calc.prefFull(prefecture) + 'の料率（' + p.table.source.title + '）で、労使折半・端数は50銭以下切り捨てで計算しています。'
       + '健康保険組合に入っている会社では料率が違います。計算のしかたは<a href="keisan.html">計算方法と出典</a>に。</p>';
-    html += '<p class="hint">2026年10月以降に新しく対象になった会社（人数の条件が広がった会社や、同意で加入した会社）では、'
-      + '月収（標準報酬月額）がおよそ12.6万円以下の人について、勤務先が本人負担の一部を肩代わりすると国がその分を支援する3年間の制度（保険料調整制度）があります。使うかどうかは勤務先が決め、本人が申し込むものではありません。'
+    html += '<p class="hint">月収（標準報酬月額）およそ12.6万円以下の人は、会社が選べば本人負担が3年間軽くなる制度（保険料調整制度）があります。使うかは勤務先に聞いてみてください（<a href="faq.html#q-small">くわしく</a>）。'
       + 'この目安は労使折半のままの額です。</p>';
     return html;
   }
@@ -273,7 +272,7 @@
     var k = calc.kabeAnalyze(TABLES, EXTRAS, asOf, hourly, prefecture, age);
     if (!k || !k.breakeven) return '';
     var be = k.breakeven.hoursX10 / 10;
-    var html = '<h2>週20時間の壁（時給' + yen(hourly) + '・扶養に入っている場合）</h2>';
+    var html = '<h2>週20時間の壁（時給' + yen(hourly) + '・配偶者の扶養に入っている場合）</h2>';
     html += '<p>週19時間なら手取り月<strong>' + yen(k.net19) + '</strong>、週20時間にして社会保険に入ると月<strong>' + yen(k.net20)
       + '</strong>で、<strong>' + yen(k.loss) + '減ります</strong>。週' + be + '時間まで増やすと、手取りは' + yen(k.breakeven.net) + 'になり元に戻ります。</p>';
     if (k.pay19 * 12 >= 1300000) {
@@ -286,7 +285,7 @@
                labelValue: row.hoursX10 === 190 || row.hoursX10 === 200 || row.hoursX10 === k.breakeven.hoursX10 };
     });
     html += window.ShahoCharts.wallColumns(chartRows, k.net19, '時給' + yen(hourly) + '・週の時間ごとの手取り');
-    html += '<p class="hint">週19時間は社会保険・雇用保険なし、週20時間以上はどちらもありで、所得税（扶養する家族0人）を引いた額。住民税・通勤手当は含みません。'
+    html += '<p class="hint">週19時間は社会保険・雇用保険なし、週20時間以上はどちらもありで、所得税は年末調整のあとで見た額（この範囲では0円）。住民税・通勤手当は含みません。'
       + '配偶者の会社の配偶者手当が止まる場合もあります。<a href="kabe/index.html">時給別の一覧</a></p>';
     return html;
   }
@@ -330,7 +329,7 @@
       return '<tr><th>' + wall + '</th><td><span class="wall ' + (ok ? 'in' : 'over') + '">' + (ok ? '内' : '超える') + '</span></td><td>' + text + '</td></tr>';
     }
     var html = '<h2 id="walls">年収の壁チェック</h2>';
-    html += '<p>入力から見込む年収は <strong>' + yen(taxable) + '</strong>（税）、<strong>' + yen(depend) + '</strong>（扶養。通勤手当を含む）です。</p>';
+    html += '<p>入力から見込む年収は <strong>' + yen(taxable) + '</strong>（税の判定に使う額）、<strong>' + yen(depend) + '</strong>（扶養の判定に使う額。交通費込み）です。</p>';
     html += '<div class="table-wrap"><table class="plain walls">';
     html += '<tr><th>106万円<span class="sub">勤務先の社会保険</span></th><td><span class="wall gone">' + (asOf >= '2026-10-01' ? '廃止' : '10月廃止') + '</span></td><td>2026年10月1日に無くなり、入るかどうかは週20時間などで決まります（上の判定）。</td></tr>';
     if (r.eligible) {
@@ -536,7 +535,7 @@
 
 <h2>週20時間の壁 — 増やすと手取りが減るのは本当？</h2>
 <p>
-  扶養に入って週19時間で働いている人が週20時間に増やすと、社会保険料が引かれ始めるので手取りは減ります。
+  配偶者の扶養に入って週19時間で働いている人が週20時間に増やすと、社会保険料が引かれ始めるので手取りは減ります。
   たとえば時給{{ "{:,}".format(kabe_example.hourly) }}円なら月{{ "{:,}".format(kabe_example.loss_at_20) }}円減り、
   <strong>週{{ "%g"|format(kabe_example.breakeven_hours_x10 / 10) }}時間</strong>まで増やすと元の手取りに戻ります。
   上の計算機に時給を入れると、自分の条件で出ます。

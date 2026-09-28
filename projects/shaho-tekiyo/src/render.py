@@ -206,7 +206,8 @@ _MILESTONE_NOTES: dict[str, str] = {
     ),
     "2035-10": (
         "企業規模要件そのものが撤廃されます。会社の人数にかかわらず、"
-        "週20時間以上・学生でない・継続2か月超の見込みという要件を満たせば加入対象になります。"
+        "週20時間以上・学生でない・継続2か月超の見込みという要件を満たせば加入対象になります"
+        "（従業員5人未満の個人事業所など、もともと社会保険の事業所でないところは別です）。"
     ),
 }
 
@@ -224,7 +225,7 @@ def size_timeline(as_of: date | None = None, here: str = "いまの段階") -> s
         when = "いま" if r is eligibility.SCHEDULE[0] else f"{r.effective_from.year}年{r.effective_from.month}月"
         who = f"{size}人以上" if size else "すべて"
         stages.append((when, who, size == today_size))
-    return charts.stages_timeline(stages, f"社会保険に入る会社の規模（従業員数）は、2035年までに4回広がる（2026年10月の賃金要件撤廃と合わせて5段階）。濃い色が{here}")
+    return charts.stages_timeline(stages, f"社会保険に入る会社の規模（従業員数）は、2035年までに段階的に広がる。濃い色が{here}")
 
 
 def _quick_amounts() -> list[dict]:
@@ -502,7 +503,7 @@ def _build_kabe_pages() -> None:
                 "label": row["label"], "short": f'{row["hx10"] / 10:g}', "net": row["net"], "base": row["hx10"] == 190,
                 "label_value": row["hx10"] in (190, 200, k.breakeven_hours_x10),
             })
-        chart = charts.wall_columns(chart_rows, k.net_19, f"時給{k.hourly:,}円・週の時間ごとの手取り（東京・39歳以下・扶養に入っている人）")
+        chart = charts.wall_columns(chart_rows, k.net_19, f"時給{k.hourly:,}円・週の時間ごとの手取り（東京・39歳以下・配偶者の扶養に入っている人）")
         p20 = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=k.pay_20, age_40_to_64=False)
         rel = f"kabe/{k.hourly}yen.html"
         _write(
@@ -540,6 +541,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-28", "週20時間の壁の手取りを年末調整後の所得税で比べるように。保険料0円で比べるのは配偶者の扶養（国民年金の第3号）の人だけと明記し、親の扶養の人の比べ方を案内。保険料調整制度の説明を短く、随時改定・2035年の書き方を正確に"),
     ("2026-09-28", "年収の壁を令和8年度税制改正の数字（配偶者控除136万・配偶者特別控除の満額169万・本人の所得税178万円）に直した。年収別の手取りの所得税を年末調整後の年額に。実際の労働時間が2か月続けて20時間以上の場合、保険料調整制度の対象（12.6万円以下・会社が選ぶ）、雇用保険の週10時間化（2028年10月）を書き足し、言い回しの食い違いを揃えた"),
     ("2026-09-28", "スマホで「詳しく入力する」を開いたときと、よくある質問の目次で、画面の横にはみ出していたのを直した"),
     ("2026-09-28", "計算機に賞与（1回あたりの額と年の回数）を追加。賞与から引かれる保険料（標準賞与額・上限つき）を出し、年収の壁の判定にも足す"),

@@ -15,7 +15,7 @@
 <p class="subtitle-plain">年収に直すと{{ man * 12 }}万円（賞与なし）</p>
 <p class="updated">{{ era }}の料率（{{ period }}）で計算</p>
 
-<div class="verdict ok">東京なら月 {{ "{:,}".format(tokyo.total_yen) }}円 引かれて、保険料だけ引いた残りは {{ "{:,}".format(tokyo.take_home_yen) }}円</div>
+<div class="verdict ok">東京なら月 {{ "{:,}".format(tokyo.total_yen) }}円 引かれて、手取りは {{ "{:,}".format(tokyo.take_home_yen - koyo - (tax or 0)) }}円</div>
 {% set net = tokyo.take_home_yen - koyo - (tax or 0) %}
 
 <p>
@@ -44,9 +44,9 @@
 <h2>加入する前と比べると</h2>
 {{ pension_chart|safe }}
 <ul class="compare">
-  <li><strong>配偶者や親の扶養に入っていた人</strong>: それまで0円だった保険料が、月{{ "{:,}".format(tokyo.total_yen) }}円（年{{ "{:,}".format(tokyo.total_yen * 12) }}円）増えます。</li>
+  <li><strong>配偶者の扶養に入っていた人</strong>（国民年金の第3号）: それまで0円だった保険料が、月{{ "{:,}".format(tokyo.total_yen) }}円（年{{ "{:,}".format(tokyo.total_yen * 12) }}円）増えます。</li>
   {% set d = kokumin - tokyo.pension_yen %}
-  <li><strong>自分で国民年金を払っていた人</strong>: 国民年金保険料（月{{ "{:,}".format(kokumin) }}円）がなくなり、厚生年金保険料（月{{ "{:,}".format(tokyo.pension_yen) }}円）に替わります。
+  <li><strong>自分で国民年金を払っていた人</strong>（親の扶養に入っていた20歳以上の人も）: 国民年金保険料（月{{ "{:,}".format(kokumin) }}円）がなくなり、厚生年金保険料（月{{ "{:,}".format(tokyo.pension_yen) }}円）に替わります。
     年金の分だけで月{{ "{:,}".format(d|abs) }}円{{ "安く" if d > 0 else "高く" }}なります。国民健康保険も勤務先の健康保険に替わります（国民健康保険料は市区町村で違うので、ここでは比べていません）。</li>
 </ul>
 
@@ -97,7 +97,7 @@
 <p>
   月収{{ man }}万円は、週20時間なら時給およそ{{ "{:,}".format(((man * 10000 * 12 / 52 / 20) / 10)|round|int * 10) }}円、
   週30時間なら時給およそ{{ "{:,}".format(((man * 10000 * 12 / 52 / 30) / 10)|round|int * 10) }}円です。
-  扶養に入って週19時間で働いている人が週20時間に増やすと手取りがどう変わるかは、<a href="{{ base_url }}kabe/index.html">週20時間の壁</a>にまとめています。
+  配偶者の扶養に入って週19時間で働いている人が週20時間に増やすと手取りがどう変わるかは、<a href="{{ base_url }}kabe/index.html">週20時間の壁</a>にまとめています。
 </p>
 
 <h2>そもそも加入の対象になるか</h2>
@@ -107,7 +107,7 @@
   自分が当たるかは<a href="{{ base_url }}index.html">計算機</a>で確かめられます。
 </p>
 <p class="hint">
-  2026年10月以降に新しく対象になった会社（人数の条件が広がった会社や、同意で加入した会社）では、月収（標準報酬月額）がおよそ12.6万円以下の人について、勤務先が本人負担の一部を肩代わりすると国がその分を支援する3年間の制度（保険料調整制度）があります。使うかどうかは勤務先が決め、本人が申し込むものではありません。このページの額は労使折半のままの額です。
+  月収（標準報酬月額）およそ12.6万円以下の人は、会社が選べば本人負担が3年間軽くなる制度（保険料調整制度）があります。使うかは勤務先に聞いてみてください（<a href="{{ base_url }}faq.html#q-small">くわしく</a>）。このページの額は労使折半のままの額です。
 </p>
 
 <h2>ほかの月収</h2>

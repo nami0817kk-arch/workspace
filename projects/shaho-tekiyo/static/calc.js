@@ -154,7 +154,24 @@
     return Math.floor((num + 500000) / 1000000) * 10;
   }
 
+  // extras.annual_income_tax_yen の写し（年末調整後の所得税・令和8年分）
+  function annualIncomeTaxYen(gross, social) {
+    if (gross > 3600000) return null;
+    var ded = Math.max(740000, Math.floor(gross * 3 / 10) + 80000);
+    var inc = Math.max(gross - ded, 0);
+    if (inc > 1320000) return null;
+    var taxable = Math.floor(Math.max(inc - social - 1040000, 0) / 1000) * 1000;
+    var base = taxable <= 1950000 ? Math.floor(taxable * 5 / 100) : Math.floor(taxable * 10 / 100) - 97500;
+    return Math.floor(Math.floor(base * 1021 / 1000) / 100) * 100;
+  }
+
   // ---- kabe.py の写し（週20時間の壁） ----
+  function kabeTax(extras, asOfIso, pay, social) {
+    if (incomeTaxYen(extras, asOfIso, pay - social, 0) === null) return null;
+    var annual = annualIncomeTaxYen(pay * 12, social * 12);
+    return annual !== null ? Math.floor(annual / 12) : incomeTaxYen(extras, asOfIso, pay - social, 0);
+  }
+
   function kabePay(hourly, hoursX10) {
     return Math.floor((hourly * hoursX10 * 52 * 2 + 120) / 240);
   }
@@ -164,14 +181,14 @@
     if (!p) return null;
     var koyo = employmentYen(extras, asOfIso, pay);
     if (koyo === null) return null;
-    var tax = incomeTaxYen(extras, asOfIso, pay - p.total - koyo, 0);
+    var tax = kabeTax(extras, asOfIso, pay, p.total + koyo);
     if (tax === null) return null;
     return pay - p.total - koyo - tax;
   }
 
   function kabeAnalyze(tables, extras, asOfIso, hourly, prefecture, age) {
     var pay19 = kabePay(hourly, 190);
-    var tax19 = incomeTaxYen(extras, asOfIso, pay19, 0);
+    var tax19 = kabeTax(extras, asOfIso, pay19, 0);
     var pay20 = kabePay(hourly, 200);
     var net20 = netCovered(tables, extras, asOfIso, pay20, prefecture, age);
     if (tax19 === null || net20 === null) return null;
@@ -210,7 +227,7 @@
   var api = {
     regimeFor: regimeFor, evaluate: evaluate, tableFor: tableFor, estimate: estimate, bonusEstimate: bonusEstimate,
     employmentYen: employmentYen, kokuminNenkinYen: kokuminNenkinYen,
-    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, incomeTaxYen: incomeTaxYen, kabeAnalyze: kabeAnalyze, kabeRows: kabeRows, prefFull: prefFull
+    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, incomeTaxYen: incomeTaxYen, annualIncomeTaxYen: annualIncomeTaxYen, kabeAnalyze: kabeAnalyze, kabeRows: kabeRows, prefFull: prefFull
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ShahoCalc = api;
