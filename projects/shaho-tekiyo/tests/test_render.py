@@ -174,7 +174,7 @@ def test_月収別のページが8万から25万まで(site):
 def test_月収10万円_東京の保険料が円単位で出る(site):
     # 令和8年度・東京: 標準報酬 98,000円 → 健保 4,826（4,826.5 の50銭は切り捨て）+ 支援金 113 + 厚年 8,967
     html = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
-    assert "東京なら月 13,906円 引かれて、保険料だけ引いた残りは 86,094円" in html
+    assert "東京なら月 13,906円 引かれて、手取りは 85,594円" in html
     for pref in premium.PREFECTURES:
         assert f"<th>{extras.pref_full(pref)}</th>" in html, pref
     assert "<strong>85,594円" in html  # 雇用保険料 500円（5/1,000）も引いた手取りの目安
