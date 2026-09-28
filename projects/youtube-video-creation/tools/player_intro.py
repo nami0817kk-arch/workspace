@@ -154,6 +154,40 @@ def next_player(day: datetime.date) -> str:
     return ""
 
 
+# **型の定型文は本ごとに言い換える**（品質100回の88）。①②③を並べたら同じ文が12か所あり、
+# 審査が対象外にする「続けて数本視聴した後、繰り返しのように感じられる」の芽だった。
+# 雛形は選手の番号で言い回しを回す。人が書き換えてよい
+TEMPLATES = {
+    "style": ["{short}のプレースタイルを、{group}と比べた数字で見ます。",
+              "{group}の中で、{short}はどこが尖っているか。レーダーで見ます。",
+              "{short}のプレースタイルは、{group}との比較で見ると分かりやすい。レーダーです。",
+              "{short}の武器と弱点を、{group}と並べた数字で。"],
+    "past": ["{short}の直近5シーズン、代表を含む全公式戦です。古い順に見ます。",
+             "5シーズン前まで戻ります。{short}の、代表を含む全公式戦の数字です。",
+             "次に、{short}の5シーズンの推移。代表を含む全公式戦を、古いほうから追います。",
+             "{short}の5年を数字で。代表を含む全公式戦、古い季から並べます。"],
+    "story": ["数字の外側に、この選手らしい話が2つあります。",
+              "ここからは数字を離れて、{short}らしい話を2つ。",
+              "数字を置いて、人となりの話を2つ。",
+              "表に出ない{short}の話を、2つだけ。"],
+    "view": ["話を数字に戻して、最後に見立てです。",
+             "最後に、数字でこの先を見ます。",
+             "締めは、この先の見立てです。",
+             "終わりに、これからの{short}を数字で見立てます。"],
+    "pace": ["{m}分に1点のペースです。", "{m}分に1点。", "1点あたり{m}分です。", "計算すると{m}分に1点。"],
+    "value_up": ["前回の{before}から、さらに上がりました。", "この夏、{before}から上がりました。",
+                 "{before}から、また上がりました。", "前回は{before}でした。"],
+    "body": ["身長は{h}、利き足は{foot}。{contract}", "身長は{h}。{foot}利きで、{contract}", "{foot}利き、身長{h}。{contract}"],
+    "contract": ["契約は{y}年まで残っています。", "契約は{y}年まで。", "{y}年まで契約があります。"],
+}
+
+
+def phrase(key: str, seed: int, **kw) -> str:
+    """定型文を選手ごとに回す。同じ選手はいつも同じ言い回し（作り直しても変わらない）。"""
+    options = TEMPLATES[key]
+    return options[seed % len(options)].format(**kw)
+
+
 def _circled(n: int) -> str:
     return chr(0x2460 + n - 1) if 1 <= n <= 20 else f"{n}."
 
@@ -211,9 +245,9 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
     data_rows = [r for r in data_rows if r[1]]
     career = career_rows(p["history"])
     season = season_rows(p["season"])
-    value_move = ""
-    if p["value_prev"] and p["value"] != p["value_prev"]:
-        value_move = f"市場価値は前回の{compact_value(p['value_prev'])}から{compact_value(p['value'])}に{'上がりました' if p['value'] > p['value_prev'] else '下がりました'}。"
+    # 言い回しを回す種。選手の番号（無ければ名前）で決めるので、作り直しても同じ選手は同じ文になる
+    seed = sum(ord(c) for c in str(p.get("id") or p.get("name") or ""))
+    value_before = compact_value(p["value_prev"]) if p["value_prev"] and p["value"] > p["value_prev"] else ""
     boards = fb.get("boards") or {}
     strong, weak = fb.get("strong") or [], fb.get("weak") or []
     past = p.get("past") or []
@@ -233,8 +267,9 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
          "card": {"type": "table", "title": f"{name}（{p['club']}）", "columns": ["項目", "内容"], "rows": data_rows, "source": "Transfermarkt"},
          "say": [f"{name}、{p['age']}歳。{p['club']}の{p['position']}です。",
                  "（生まれた場所と家族の話を1行。出典つき）"]
-                + ([f"身長は{_meters(p['height'])}、利き足は{p['foot']}。" + (f"契約は{p['contract'][:4]}年まで残っています。" if p["contract"] else "")] if p["height"] and p["foot"] else [])
-                + ([f"市場価値は{compact_value(p['value'])}。" + (value_move.replace("市場価値は", "").replace("前回の", "前回の") if value_move else "")] if p["value"] else []),
+                + ([phrase("body", seed, h=_meters(p['height']), foot=p['foot'],
+                           contract=(phrase("contract", seed, y=p['contract'][:4]) if p["contract"] else ""))] if p["height"] and p["foot"] else [])
+                + ([f"市場価値は{compact_value(p['value'])}。" + (phrase("value_up", seed, before=value_before) if value_before else "")] if p["value"] else []),
          "sources": [url]},
         {"id": "career", "heading": "歩んできた道と転機", "tier": "報道", "telop": "（どこで値が跳ねたかを一言で）", "narrator": "解説",
          "card": {"type": "table", "title": "歩んできた道", "columns": ["シーズン", "クラブ", "年齢", "市場価値"], "rows": career[-6:], "source": "Transfermarkt"},
@@ -247,7 +282,7 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
          **({"card": {"type": "bars", "title": f"{fb.get('group', '同じポジション')}の中での位置（100が最上位）", "unit": "",
                       "items": [{"label": s_["ja"], "value": int(s_["pct"]), "highlight": i == 0} for i, s_ in enumerate(strong)]
                                + [{"label": w["ja"], "value": int(w["pct"])} for w in weak], "source": "FotMob"}} if strong else {}),
-         "say": ([line(f"{short}のプレースタイルを、{fb.get('group', '同じポジション')}と比べた数字で見ます。", image=boards["radar"], no_telop=True)] if boards.get("radar") else [f"{short}のプレースタイルを、同じポジションと比べた数字で見ます。"])
+         "say": ([line(phrase("style", seed, short=short, group=fb.get('group', '同じポジション')), image=boards["radar"], no_telop=True)] if boards.get("radar") else [phrase("style", seed, short=short, group="同じポジション")])
                 + ["（6つの軸のうち最上位と最下位を言う）",
                    "（つまりどういう選手か、を1行で）",
                    "（弱点を1つ。数字で）"]
@@ -258,7 +293,7 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
         {"id": "past", "heading": "過去5シーズンの数字", "tier": "報道", "telop": "直近5シーズンの試合と得点", "narrator": "解説",
          "card": {"type": "table", "title": f"{name} 直近5シーズン（代表を含む全公式戦）", "columns": ["シーズン", "試合", "得点", "アシスト", "出場時間"],
                   "rows": list(reversed(past)), "source": "Transfermarkt"},
-         "say": [f"{short}の直近5シーズン、代表を含む全公式戦です。古い順に見ます。"]
+         "say": [phrase("past", seed, short=short)]
                 + ([f"{_season_ja(past[-1][0])}は{past[-1][1]}試合で{past[-1][2]}点。"] if past else [])
                 + ["（いちばん多かったシーズンと、その意味を1行。記録があれば出典つきで）",
                    "そのあとのシーズンも表のとおり。（傾向を1行）"],
@@ -268,13 +303,13 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
                   "rows": fb.get("recent") or [], "source": "FotMob"},
          "say": [{"text": f"（前置き1行：{short}はどういう選手か＋題の答えを一言で。ショートはここから）", "short_only": True},
                  f"今季はここまで{tot['apps']}試合で{tot['goals']}得点{tot['assists']}アシスト、出場時間は{tot['minutes']}分。"
-                 + (f"{tot['minutes'] // tot['goals']}分に1点のペースです。" if tot["goals"] and tot["minutes"] else "")]
+                 + (phrase("pace", seed, m=tot['minutes'] // tot['goals']) if tot["goals"] and tot["minutes"] else "")]
                 + [f"{r[0]}は{r[1]}試合で{r[2]}得点{r[3]}アシスト。" for r in season[:2]]
                 + ["（直近5試合の表から1行：出場時間・得点・10点満点の評点）",
                    "（題の答えを1行。ショートはこの節だけで完結させる）"],
          "sources": [url, fm_url]},
         {"id": "story", "heading": "マル秘話", "tier": "報道", "telop": "（エピソードを一言で）", "narrator": "解説",
-         "say": ["数字の外側に、この選手らしい話が2つあります。",
+         "say": [phrase("story", seed, short=short),
                  "（1つ目：食事・家族・背番号の由来・憧れの選手など。出典つき）",
                  {"voice": short, "text": "（本人の言葉。記事の訳をそのまま。30字で割る。最後の行に pause: 0.6）"},
                  "（2つ目のエピソード）",
@@ -282,7 +317,7 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
          "sources": ["（記事のURL）"]},
         {"id": "view", "heading": "見立て", "tier": "背景", "viewpoint": True, "narrator": "解説",
          "telop": (f"{nxt['when']}、{nxt['home']}対{nxt['away']}" if nxt else "次の試合で見るところ"),
-         "say": ["話を数字に戻して、最後に見立てです。",
+         "say": [phrase("view", seed, short=short),
                  "（同じポジションの選手1人と比べる数字を1つ）",
                  "（数字が落ちていないか・伸びているか。1行）"]
                 + ([f"クラブの次の試合は{nxt['when']}、{nxt['home']}対{nxt['away']}。", "（そこで何を見るか）"] if nxt else ["（次の試合で何を見るか）"]),

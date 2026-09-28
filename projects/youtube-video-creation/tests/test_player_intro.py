@@ -59,7 +59,7 @@ def test_雛形は8節で_数字の行は埋まり_残りは人が書く(tmp_pat
     assert style["say"][0]["image"] == "assets/stats/r.png" and style["say"][0]["no_telop"] is True
     season = note["sections"][5]
     assert season["main"] is True and season["say"][0]["short_only"] is True
-    assert "今季はここまで8試合で9得点2アシスト、出場時間は720分。80分に1点のペースです。" in season["say"][1]
+    assert "今季はここまで8試合で9得点2アシスト、出場時間は720分。" in season["say"][1] and "80分" in season["say"][1]   # 語尾は選手ごとに回る（品質100回の88）
     assert note["sections"][4]["card"]["rows"][0][0] == "24/25"      # 古い順
     assert note["sections"][7]["telop"] == "10月12日、リバプール対マンチェスター・シティ"
     assert note["sections"][1]["say"][2].startswith("身長は1メートル78、利き足は右。契約は2029年まで")
