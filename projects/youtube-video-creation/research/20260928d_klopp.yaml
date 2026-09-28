@@ -1,0 +1,158 @@
+date: 2026年9月28日
+slot: result_1
+format: news
+people: [ユルゲン・クロップ, ヨシュア・キミッヒ, バスティアン・シュヴァインシュタイガー]
+theme:
+  id: klopp_greece
+  league: germany
+  league_name: UEFAネーションズリーグ
+  kind: match
+  topic: ドイツ代表
+  title: 'クロップのドイツ、ギリシャに11戦目で初黒星。何が足りなかったのか'
+  question: クロップのドイツは、なぜボールを持ってもギリシャに勝てなかったのか
+  opening_image: assets/images/20260928d_pair_schweini_klopp/01.jpg
+short_title: クロップのドイツ、ギリシャに初黒星
+thumbnail:
+  photos:
+    - assets/images/20260928d_schweini/01.jpg
+    - assets/images/20260927b_klopp/01.jpg
+  line1: クロップのドイツ、初黒星
+  line2: 解説者「もう●のチームだ」
+  reaction: 見る側も多少辛抱はいる
+sections:
+  - id: report
+    heading: 11戦目で初めて
+    tier: 報道
+    telop: ドイツ 0-1 ギリシャ。74分にクルベリス
+    narrator: キャスター
+    card:
+      type: table
+      title: ドイツ 0-1 ギリシャ（9月27日）
+      columns: ['', '']
+      rows:
+        - [決勝点, 74分 クルベリス]
+        - [ギリシャとの対戦, 11戦目で初黒星]
+        - [クロップ, 就任2試合で勝ちなし]
+    say:
+      - text: 9月27日のネーションズリーグ。ドイツはホームで、ギリシャに0対1で敗れました。
+        image: assets/images/20260928d_klopp_w/01.jpg
+      - 新しく監督になったクロップの、まだ2試合目。勝ちはありません。
+      - それまでギリシャとは10回戦って7勝3引き分け。一度も負けたことがありませんでした。
+      - 決勝点は74分。途中から入ったクルベリスのシュートが、キミッヒに当たってコースが変わりました。
+      - voice: ユルゲン・クロップ
+        text: 勝てなかった、というだけなら受け入れられた。でも、負けてはいけない試合だった
+    sources:
+      - https://www.sportschau.de/fussball/nationalmannschaft/wunderheilung-vertagt-griechenland-bestraft-deutschlands-fehler,spielbericht-nations-league-deutschland-griechenland-100.html
+      - https://www.espn.com/soccer/match/_/gameId/401861074
+      - https://www.welt.de/sport/fussball/article6ab97fc8af5f8e38ce15b3ab/pleite-gegen-griechenland-wir-sind-im-mittelmass-angekommen-juergen-klopp-ist-nicht-der-zauberer.html
+  - id: numbers
+    main: true
+    heading: 75%持っても
+    tier: 報道
+    telop: ボール保持75.5%、枠内シュートは5本
+    narrator: キャスター
+    card:
+      type: table
+      title: ドイツ 0-1 ギリシャ
+      columns: ['', ドイツ, ギリシャ]
+      rows:
+        - [ボール保持, 75.5%, 24.5%]
+        - [シュート, 16本, 8本]
+        - [枠内シュート, 5本, 1本]
+        - [GKのセーブ, 0回, 5回]
+    say:
+      - text: 新監督クロップのドイツが0対1で敗戦。ギリシャに負けたのは、11回目の対戦で初めてです。
+        short_only: true
+      - ボールを持っていた時間は、ドイツが75.5%。
+      - シュートは16本で、ギリシャの2倍です。
+      - ただ、枠をとらえたのは5本だけ。ギリシャのGKが、その5本を全部止めました。
+      - ギリシャの枠内シュートは、決勝点の1本だけです。
+      - 持っていても、引いた相手の守りを崩す形が作れなかった試合でした。
+      - text: 主将のキミッヒも、試合のあとにこう認めています。
+        image: assets/images/20260928d_pair_kimmich_klopp/01.jpg
+      - voice: ヨシュア・キミッヒ
+        text: 全体に動きが止まっていて、工夫がなかった。人が動かず、アイデアも出てこなかった
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401861074
+      - https://www.ran.de/sports/fussball/nations-league-a/dfb-team-im-mittelmass-angekommen-weltmeister-zerlegt-dfb-stars-stimmen-zur-griechenland-pleite-192842
+  - id: why
+    heading: 115試合と99試合
+    tier: 報道
+    telop: 先発の代表出場、キミッヒ1人で115試合
+    narrator: 解説
+    card:
+      type: table
+      title: この試合の先発
+      columns: ['', '']
+      rows:
+        - [キミッヒの代表出場, 115試合]
+        - [残りの先発10人の合計, 99試合]
+        - [初めて先発した選手, 4人]
+        - [前の試合から変えた先発, 5人]
+    say:
+      - text: 負けた理由の1つは、先発の顔ぶれにあります。
+        image: assets/images/20260928d_klopp_w/01.jpg
+      - クロップは今回、44人を呼び、2試合ずつ別の顔ぶれで戦う形をとっています。
+      - この試合は、前のオランダ戦から先発を5人入れ替え、4人が初めての先発でした。
+      - この日の先発11人のうち、キミッヒ1人で代表115試合。
+      - 残りの10人を全部足しても、99試合にしかなりません。
+      - voice: ユルゲン・クロップ
+        text: わたしから見れば、こうするしかなかった。わたしはこのやり方を100%支持する
+      - text: 元ドイツ代表の主将で、テレビで解説したシュヴァインシュタイガーは厳しく見ています。
+        image: assets/images/20260928d_pair_schweini_klopp/01.jpg
+      - voice: バスティアン・シュヴァインシュタイガー
+        text: わたしたちは、もうトップチームじゃない。並のチームになってしまった
+      - voice: バスティアン・シュヴァインシュタイガー
+        text: クロップは魔法使いじゃない。地道な仕事だ。いまはまだ、全員を試している段階だ
+    sources:
+      - https://www.tz.de/sport/fussball/deutschland-droht-nach-griechenland-pleite-nations-league-desaster-94513148.html
+      - https://www.welt.de/sport/fussball/article6ab97fc8af5f8e38ce15b3ab/pleite-gegen-griechenland-wir-sind-im-mittelmass-angekommen-juergen-klopp-ist-nicht-der-zauberer.html
+      - https://www.t-online.de/sport/fussball/nationalmannschaft-deutschland/id_101455100/bastian-schweinsteiger-faellt-hartes-urteil-zur-deutschen-nationalelf.html
+      - https://www.n-tv.de/sport/fussball/Griechenland-verdirbt-Juergen-Klopp-die-Heimpremiere-id31353704.html
+  - id: next
+    heading: 1週間後にまたギリシャ
+    tier: 報道
+    telop: 10月1日セルビア戦、4日にギリシャと再戦
+    narrator: キャスター
+    say:
+      - text: ただ、試している時間は多くありません。
+        image: assets/images/20260928d_klopp_w/01.jpg
+      - ネーションズリーグのこの組は4チーム。準々決勝に進めるのは上の2チームだけで、ドイツはいま3番目です。
+      - 次は10月1日にミュンヘンでセルビアと戦い、4日には敵地でギリシャともう一度戦います。
+      - それでもクロップは、次の2試合を、今回は出なかったもう1つの顔ぶれで戦う予定です。
+      - voice: ユルゲン・クロップ
+        text: 悪い終わり方より、悪いスタートのほうがいい。正しいことをしていれば、すべてうまく収まる
+    sources:
+      - https://www.tz.de/sport/fussball/deutschland-droht-nach-griechenland-pleite-nations-league-desaster-94513148.html
+      - https://www.n-tv.de/sport/fussball/Griechenland-verdirbt-Juergen-Klopp-die-Heimpremiere-id31353704.html
+      - https://www.welt.de/sport/fussball/article6ab97fc8af5f8e38ce15b3ab/pleite-gegen-griechenland-wir-sind-im-mittelmass-angekommen-juergen-klopp-ist-nicht-der-zauberer.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「最大値を引き出せるまで、見る側も辛抱」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 水の上を歩こうとして、救世主は溺れた。
+      - voice: ネット民
+        text: ギリシャ連勝か
+        short_voice: true
+      - voice: ネット民
+        text: ドイツはもう少しメンバーが噛み合えばって感じか。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: クロップ負けてたのに笑ってたし収穫があったのか、笑うしかなかったのか。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: クロップドイツが必ず成功するという保証は当然ないけど
+        short_voice: true
+      - voice: ネット民
+        text: それでも最大値を引き出せるようになるまで見る側も多少辛抱はいるんでしょうね
+        cont: true
+        short_voice: true
+    sources:
+      - https://mastodon.social/@Telegehirn/117344933797406755
+      - https://x.com/hiro_Gegenpress/status/2104310976275443841
+      - https://x.com/soty422/status/2104346253710807053

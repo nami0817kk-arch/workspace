@@ -1,0 +1,205 @@
+date: 2026年9月28日
+slot: premier_1
+format: news
+people: [アーリング・ハーランド]
+theme:
+  id: haaland_nl_22
+  league: england
+  league_name: UEFAネーションズリーグ
+  kind: match
+  topic: ノルウェー代表
+  title: 'ハーランド、ネーションズリーグ22点目。シュート22本で負けたノルウェー'
+  question: ハーランドが記録を伸ばしたのに、ノルウェーはなぜ負けたのか
+  opening_image: assets/images/20260928d_haaland_c/01.jpg
+short_title: ハーランド、記録更新の夜に黒星
+thumbnail:
+  photo: assets/images/20260928d_haaland_c/01.jpg
+  crests: [ノルウェー]
+  line1: ハーランド、歴代1位を更新
+  line2: 2位ロナウドとの差は●点に
+  reaction: 57試合で65ゴールはえぐいて
+sections:
+  - id: report
+    heading: 同点弾の3分後に
+    tier: 報道
+    telop: ノルウェー 1-2 ポルトガル（9月27日・オスロ）
+    narrator: キャスター
+    card:
+      type: table
+      title: ノルウェー 1-2 ポルトガル（9月27日・オスロ）
+      columns: ['', 得点, スコア]
+      rows:
+        - [17分, ジョアン・フェリックス, 0-1]
+        - [51分, ハーランド, 1-1]
+        - [54分, ゴンサロ・ラモス, 1-2]
+    say:
+      - text: 9月27日のネーションズリーグ。ノルウェーはホームでポルトガルに1対2で敗れました。
+        image: assets/images/20260928d_haaland_c/01.jpg
+      - 17分に先制され、51分にハーランドが至近距離から押し込んで同点。
+      - ところが、そのわずか3分後に勝ち越し点を奪われます。
+      - ホームでは14試合負けていなかったチームの黒星です。
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861073
+      - https://www.nrk.no/sport/nasjonsligaen_-erling-braut-haaland-bommet-pa-tre-store-sjanser-mot-portugal-1.18038087
+      - https://www.vg.no/sport/i/6qLWlQ/landslaget-norge-portugal
+  - id: coach
+    heading: 監督は内容を誇った
+    tier: 報道
+    telop: ソルバッケン監督「普通の日なら勝っている」
+    narrator: キャスター
+    say:
+      - text: それでもソルバッケン監督は、負けを悔やむより、ハーランドたちの内容を誇りました。
+        image: assets/images/20260928d_pair_solbakken/01.jpg
+      - voice: ストーレ・ソルバッケン
+        text: 普通の日なら、1点か2点差で勝っている
+    sources:
+      - https://www.fvn.no/sport/n/GxpO2q/grov-nyland-tabbe-ga-portugal-seier-paa-ullevaal-en-fryktelig-feil
+  - id: record
+    main: true
+    heading: 22点の中身
+    tier: 報道
+    telop: ネーションズリーグ通算22点。2位に7点差
+    narrator: キャスター
+    card: &nl_breakdown
+      type: table
+      title: ハーランドのネーションズリーグ得点
+      columns: [回, 所属, 得点]
+      rows:
+        - [2020-21年, リーグB, 6点]
+        - [2022-23年, リーグB, 6点]
+        - [2024-25年, リーグB, 7点]
+        - [2026-27年, リーグA, 3点]
+    say:
+      - text: ノルウェーはポルトガルに1対2。ハーランドの同点弾の3分後、GKのミスで勝ち越されました。
+        short_only: true
+        image: assets/images/20260928d_haaland_c/01.jpg
+      - text: ハーランドのネーションズリーグ通算は22点。歴代最多をさらに伸ばしました。
+        image: assets/images/20260928d_haaland_c/01.jpg
+      - text: 内訳は6点、6点、7点。前の3回は、どれも2部にあたるリーグBでした。
+        card: *nl_breakdown
+      - text: 1部のリーグAに上がった今回も、2試合でもう3点です。
+        card: *nl_breakdown
+      - text: 歴代2位のロナウドとミトロヴィッチは15点。差は**7点**に開きました。
+        card:
+          type: table
+          title: ネーションズリーグ通算得点
+          columns: ['', 選手, 得点]
+          rows:
+            - [1位, ハーランド, 22点]
+            - [2位, ロナウド, 15点]
+            - [2位, ミトロヴィッチ, 15点]
+    sources:
+      - https://www.espn.com/soccer/report/_/gameId/401861073
+      - https://www.mancity.com/news/mens/norway-portugal-nations-league-match-report-63926139
+      - https://punchng.com/haaland-leads-ronaldo-mitrovic-gyokeres-in-nations-league-all-time-scoring-chart/
+  - id: form
+    heading: 止まらない得点
+    tier: 報道
+    telop: 代表の公式戦、出た17試合のうち16試合で得点
+    narrator: キャスター
+    card: &form_table
+      type: table
+      title: ハーランドの得点
+      columns: ['', 試合, 得点]
+      rows:
+        - [代表の公式戦（直近）, 17, 30]
+        - [代表の通算, 57, 65]
+    say:
+      - 代表の公式戦では、ハーランド本人が出た直近17試合のうち、16試合で得点。
+      - 取れなかったのは、この夏のワールドカップ準々決勝、イングランド戦だけです。
+      - text: 17試合で合わせて30点です。
+        card: *form_table
+    sources:
+      - https://www.goal.com/en/lists/norway-portugal-erling-haaland-goncalo-ramos-orjan-nyland-nations-league/blt4bcba2b30816c7e6
+      - https://www.mancity.com/news/mens/norway-portugal-nations-league-match-report-63926139
+      - https://www.express.co.uk/sport/football/2251888/Man-City-Erling-Haaland-115-charges
+  - id: why
+    heading: 押していたのに
+    tier: 報道
+    telop: 支配率62%、シュート22本。それでも1点
+    narrator: キャスター
+    card:
+      type: table
+      title: ノルウェー 1-2 ポルトガル
+      columns: ['', ノルウェー, ポルトガル]
+      rows:
+        - [ボール支配率, 62%, 38%]
+        - [シュート, 22本, 12本]
+        - [枠内シュート, 6本, 4本]
+    say:
+      - では、なぜ負けたのか。支配率は62%、シュートは22本。ポルトガルの12本のほぼ倍です。
+      - text: ハーランドひとりで8本を打ち、枠に飛んだのは4本。決まったのは1本です。
+        card:
+          type: table
+          title: この試合のハーランド
+          columns: ['', '']
+          rows:
+            - [シュート, 8本]
+            - [枠内, 4本]
+            - [得点, 1点]
+      - 前半の決定機は、ポルトガルのGKディオゴ・コスタと、シティの同僚ルベン・ディアスに止められました。
+      - そして同点直後、ノルウェーのGKニーランのパスがゴンサロ・ラモスに渡り、ループで決められます。
+      - その直後にもニーランのミスからラモスが決めましたが、これはオフサイドで取り消されています。
+      - 押しながら決めきれず、GKのミスで決まった試合でした。
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401861073
+      - https://www.vg.no/sport/i/6qLWlQ/landslaget-norge-portugal
+      - https://www.goal.com/en/lists/norway-portugal-erling-haaland-goncalo-ramos-orjan-nyland-nations-league/blt4bcba2b30816c7e6
+  - id: next
+    heading: 1週間後に再戦
+    tier: 報道
+    telop: 次は敵地でウェールズ、そしてポルトガルと再戦
+    narrator: キャスター
+    say:
+      - 順位は、2連勝のポルトガルが勝ち点6で首位。ノルウェーは勝ち点3で2位です。
+      - 次は木曜にウェールズ、日曜にはポルトでポルトガルとの再戦。どちらもアウェーです。
+      - 問われるのは、ハーランドたちが敵地で、押している時間に決めきれるかどうか。
+      - text: 監督のソルバッケンは、この負けでも自信を崩していません。
+        image: assets/images/20260928d_pair_solbakken/01.jpg
+      - voice: ストーレ・ソルバッケン
+        text: 私たちは、どこでも、いつでも、
+      - voice: ストーレ・ソルバッケン
+        text: どんな相手にも勝てるチームになった
+        cont: true
+    sources:
+      - https://www.espn.com/soccer/table/_/league/uefa.nations
+      - https://www.fvn.no/sport/n/GxpO2q/grov-nyland-tabbe-ga-portugal-seier-paa-ullevaal-en-fryktelig-feil
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「57試合で65ゴールはえぐいて」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 負けはしたけどノルウェーの強さをあらためて実感！
+        image: assets/images/20260928d_haaland_c/01.jpg
+      - voice: ネット民
+        text: ハーランドが軸なのは当然だけど周りの集中がすごいいい
+        cont: true
+      - voice: ネット民
+        text: ニーランは気を落とさず頑張って欲しい
+        cont: true
+      - voice: ネット民
+        text: ほんとに腹が立つ。
+      - voice: ネット民
+        text: ハーランドはいつになく決めきれず、ニーランはまたミス。
+        cont: true
+      - voice: ネット民
+        text: ポルトガルは肝心なところで冷徹だった。
+        cont: true
+      - voice: ネット民
+        text: 本当に上に行くには、まだ伸ばすところがある。
+        cont: true
+      - voice: ネット民
+        text: それでも全体的にはいい内容だった。
+        cont: true
+      - voice: ネット民
+        text: 最後の15分から20分はいろいろあったけど。
+        cont: true
+      - voice: ネット民
+        text: ハーランド代表通算57試合で65ゴールはえぐいて
+        short_voice: true
+    sources:
+      - https://x.com/very_mcfc/status/2104370555965374860
+      - https://bsky.app/profile/kjetil-b.bsky.social/post/3mwjoqshg4c2t
+      - https://x.com/iktCR7/status/2104345735856878006

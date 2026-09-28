@@ -1,0 +1,183 @@
+date: 2026年9月28日
+slot: result_1
+format: news
+people: [シャビ・エルナンデス, メックス・ミールディンク, コディ・ガクポ]
+theme:
+  id: xavi_first_win_serbia
+  league: netherlands
+  league_name: オランダ代表
+  kind: match
+  topic: オランダ代表
+  title: 'シャビのオランダが初勝利。2発の23歳が1週間前まで置かれていた立場'
+  question: 2点を決めた23歳は、1週間前までどんな立場だったのか
+  opening_image: assets/images/20260928d_xavi/01.jpg
+short_title: シャビ体制初勝利、23歳が2発
+thumbnail:
+  photo: assets/images/20260928d_xavi/01.jpg
+  line1: シャビのオランダ、初勝利
+  line2: 2発の23歳は、もともと●●●
+  reaction: 立場を固めちゃったっていいんだよ
+sections:
+  - id: result
+    heading: 敵地で初勝利
+    tier: 確定
+    official: true
+    telop: セルビア 1-2 オランダ　シャビ体制で初勝利
+    narrator: キャスター
+    say:
+      - text: シャビ監督が率いるオランダ代表。
+        image: assets/images/20260928d_xavi/01.jpg
+      - ネーションズリーグで、敵地のセルビアに2対1。シャビ体制で初めての勝利です。
+      - voice: シャビ
+        text: いつだって一番大事なのは、勝ち点3を取ること
+      - voice: シャビ
+        text: それができてうれしい
+    sources:
+      - https://www.onsoranje.nl/nieuws/nederlands-elftal-mannen/82723/nieuwkomer-meerdink-schiet-oranje-naar-overwinning-belgrado
+      - https://nos.nl/artikel/2632806-xavi-tevreden-na-eerste-week-bij-oranje-volgende-doel-ruimtes-meer-aanvallen
+  - id: meerdink
+    main: true
+    heading: 招集外からの2得点
+    tier: 報道
+    telop: 当初はメンバー外、1週間で代表初先発
+    narrator: キャスター
+    card:
+      type: table
+      title: セルビア 1-2 オランダ（9月27日・ベオグラード）
+      columns: [時間, 得点]
+      rows:
+        - [30分, ミールディンク（PK）]
+        - [46分, ヨヴィッチ（セルビア）]
+        - [69分, ミールディンク]
+    say:
+      - text: 新監督シャビが率いるオランダが、ネーションズリーグで敵地のセルビアに2対1。就任後初の勝利。
+        short_only: true
+      - 2点とも、初先発の23歳ミールディンク。30分のPKで先制し、69分に勝ち越しました。
+      - PKのキッカーは本来ガクポ。そのガクポは、前半に足首を痛めて退いていました。
+      - voice: シャビ
+        text: 彼には満足している。点を取ったからだけではない
+      - voice: シャビ
+        text: よく走り、プレスとこぼれ球の争いで、大事な役割を果たした
+      - ただ、ミールディンクは最初、このメンバーに入っていませんでした。
+      - 外れたとき本人は、もっと良くならないといけないと話していました。
+      - text: 9月20日、けがで抜けたマレンの代わりに追加招集。24日のドイツ戦でデビューしたばかりです。
+        card:
+          type: table
+          title: ミールディンクの1週間
+          columns: [日付, 出来事]
+          rows:
+            - [9月20日, マレンの代わりに追加招集]
+            - [9月24日, ドイツ戦で途中出場、代表デビュー]
+            - [9月27日, セルビア戦で初先発、2得点]
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861068
+      - https://www.az.nl/inside-az/nieuws/2026/september/overzicht-van-onze-internationals
+      - https://nos.nl/artikel/2631831-til-en-meerdink-vervangen-kluivert-en-malen-bij-oranje-valente-blijft-balend-achter
+      - https://nos.nl/artikel/2632792-meerdink-zoekt-na-jongensdroom-in-oranje-naar-woorden-was-aangewezen-penaltynemer
+      - https://www.vi.nl/nieuws/tevreden-xavi-gaat-dieper-in-op-hoe-oranje-de-ruimtes-moet-aanvallen
+  - id: numbers
+    heading: 数字が映す課題
+    tier: 報道
+    telop: 支配率67%、シュート25本で2点
+    narrator: キャスター
+    card:
+      type: table
+      title: セルビア戦の数字
+      columns: ['', オランダ, セルビア]
+      rows:
+        - [支配率, 67%, 33%]
+        - [シュート, 25本, 11本]
+        - [枠内, 8本, 6本]
+    say:
+      - 支配率は67%、シュートは25本。セルビアの11本を大きく上回りました。
+      - それでも枠に飛んだのは8本で、セルビアの6本とほとんど変わりません。
+      - シャビが選手と初めて練習したのは、試合の6日前。まだ1週間です。
+      - voice: シャビ
+        text: スペースを突くべき場面が、たくさんあったのに
+      - voice: シャビ
+        text: そうしなかった。そこは改善しないといけない
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861068
+      - https://nos.nl/artikel/2632806-xavi-tevreden-na-eerste-week-bij-oranje-volgende-doel-ruimtes-meer-aanvallen
+  - id: next
+    heading: ブロビー不在の前線、次は首位と
+    tier: 報道
+    telop: AZで7試合3得点2アシスト　10月1日に首位ギリシャ戦
+    narrator: キャスター
+    card:
+      type: table
+      title: ミールディンクの数字
+      columns: ['', 試合, 得点]
+      rows:
+        - [AZ（今季リーグ戦）, 7, 3]
+        - [オランダ代表, 2, 2]
+    say:
+      - ミールディンクはAZでも、今季リーグ戦7試合すべてに先発し、3得点2アシストです。
+      - マレンが抜けた時点で、シャビの手元のセンターフォワードは、ブロビー1人でした。
+      - そのブロビーがドイツ戦で負傷し、セルビア戦の先発がミールディンクに回りました。
+      - 本人は、ほかにも良いストライカーはいるので、毎日練習を続けるだけだと話しています。
+      - text: オランダは勝ち点4で2位。10月1日に敵地で首位ギリシャ、4日にホームでセルビアと戦います。
+        card:
+          type: table
+          title: オランダの次の2試合
+          columns: [日付, 相手, 場所]
+          rows:
+            - [10月1日, ギリシャ, 敵地（テッサロニキ）]
+            - [10月4日, セルビア, ホーム（アイントホーフェン）]
+    sources:
+      - https://www.onsoranje.nl/nieuws/nederlands-elftal-mannen/82723/nieuwkomer-meerdink-schiet-oranje-naar-overwinning-belgrado
+      - https://www.fcupdate.nl/voetbalnieuws/2026/09/meerdink-basisdebuut-oranje-servie-doelpunt
+      - https://nos.nl/artikel/2631831-til-en-meerdink-vervangen-kluivert-en-malen-bij-oranje-valente-blijft-balend-achter
+      - https://www.onsoranje.nl/nieuws/nederlands-elftal-mannen/82724/meerdink-steelt-show-servi%C3%AB-dit-een-jongensdroom
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「もう彼を不動の1番手にしろ」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: オランダ対セルビア戦の感想
+      - voice: ネット民
+        text: 数回の決定機逸もあったが、
+        cont: true
+      - voice: ネット民
+        text: それ以前の問題でなんとか勝てたという印象。
+        cont: true
+      - voice: ネット民
+        text: ボールは支配していたが引いた相手に、
+        cont: true
+      - voice: ネット民
+        text: （前半は特に）攻めあぐね、カウンターで裏を取られピンチに。
+        cont: true
+      - voice: ネット民
+        text: 通常より代表期間が長いという好条件下で
+        cont: true
+      - voice: ネット民
+        text: シャビが果たしてどれだけチームを作れるか。
+        cont: true
+      - voice: ネット民
+        text: ブロビーやマレンがいない間に
+        short_voice: true
+      - voice: ネット民
+        text: 立場を固めちゃったっていいんだよ、メールディンク
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: 「オランダ代表にはまだ力が足りない」と言っていた選手が、
+        short_voice: true
+      - voice: ネット民
+        text: あっさり代表で2点。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: もう彼を、オランダの不動の1番手ストライカーにしろ。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: ブロビーは2番手だ。
+        cont: true
+        short_voice: true
+    sources:
+      - https://x.com/VNL50889411/status/2104304544947835191
+      - https://x.com/chat_noir680yen/status/2104265369364087074
+      - https://www.fcupdate.nl/voetbalnieuws/2026/09/meerdink-basisdebuut-oranje-servie-doelpunt#comment-188807

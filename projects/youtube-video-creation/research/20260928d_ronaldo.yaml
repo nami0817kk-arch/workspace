@@ -1,0 +1,194 @@
+date: 2026年9月28日
+slot: other_1
+format: news
+people: [クリスティアーノ・ロナウド, ジョルジェ・ジェズス]
+theme:
+  id: ronaldo_unused_norway
+  league: spain
+  league_name: UEFAネーションズリーグ
+  kind: other
+  topic: ポルトガル代表
+  title: 'ロナウド、出られる状態で出番なし。試合後に1人だけ向かった先'
+  question: ロナウドの出番なしは、ポルトガル代表で何が変わったことを示しているのか
+  opening_image: assets/images/20260928d_ronaldo/01.jpg
+short_title: ロナウド、出番なしの夜に取った行動
+thumbnail:
+  photos: [assets/images/20260928d_ronaldo/01.jpg, assets/images/20260928d_jesus/01.jpg]
+  line1: ロナウド、90分ベンチのまま
+  line2: 公式戦では●●●●日ぶり
+  reaction: そこは輪に加わろうよ
+sections:
+  - id: report
+    heading: 最後まで声がかからず
+    tier: 報道
+    telop: ノルウェー 1-2 ポルトガル。ロナウドは出番なし
+    narrator: キャスター
+    card:
+      type: table
+      title: ノルウェー 1-2 ポルトガル（9月27日）
+      columns: ['', '']
+      rows:
+        - [17分, フェリックス（ポルトガル）]
+        - [51分, ハーランド（ノルウェー）]
+        - [54分, ゴンサロ・ラモス（ポルトガル）]
+    say:
+      - text: 9月27日、オスロ。ポルトガルはノルウェーに2対1で勝ちました。
+        image: assets/images/20260928d_ronaldo/01.jpg
+      - 決勝点は54分、ロナウドに代わって先発したゴンサロ・ラモスでした。
+      - ロナウドには、最後まで声がかかりません。
+      - voice: ジョルジェ・ジェズス
+        text: 残りの30分で入れる、と本人とも決めていた
+        image: assets/images/20260928d_pair_jesus/01.jpg
+      - voice: ジョルジェ・ジェズス
+        text: だが、試合がそれを求めていなかった
+      - voice: ジョルジェ・ジェズス
+        text: 体を守るために外したのではない
+      - voice: ジョルジェ・ジェズス
+        text: 私が望むだけ、出られる状態だった
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861073
+      - https://www.abola.pt/noticias/jesus-ronaldo-estava-em-condicoes-para-jogar-o-tempo-que-eu-quisesse-2026092720543870038
+      - https://www.abola.pt/noticias/a-saida-antecipada-de-ronaldo-e-o-dilema-vitinha-neves-tudo-o-que-disse-jorge-jesus-2026092722033098422
+  - id: count
+    heading: 6678日ぶり
+    tier: 報道
+    telop: 出られるのに公式戦で出番なしは、2008年6月以来
+    narrator: 解説
+    card:
+      type: table
+      title: ロナウドが出られる状態で出番なし（ポルトガル代表）
+      columns: ['', '']
+      rows:
+        - [2008年6月15日, EURO2008 スイス戦（公式戦）]
+        - [2024年6月, クロアチア戦（親善試合）]
+        - [2026年9月27日, ノルウェー戦（公式戦）]
+        - [公式戦の間隔, 6678日]
+    say:
+      - text: ロナウドが出られるのに公式戦で使われないのは、2008年6月15日以来。
+        image: assets/images/20260928d_ronaldo/01.jpg
+      - 勝ち抜け後に主力を休ませた、ユーロ2008のスイス戦。
+      - そこから今回まで、**6678日**。親善試合まで入れても、2024年6月以来です。
+    sources:
+      - https://www.marca.com/futbol/2026/09/27/cristiano-banquillo-6-678-dias-despues.html
+      - https://www.beinsports.com/es-us/football/uefa-nations-league/articles/cristiano-ronaldo-rompe-una-hist%C3%B3rica-racha-tras-quedarse-en-la-banca-con-portugal-2026-09-27
+      - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/ronaldo-passou-um-jogo-inteiro-da-selecao-no-banco-apenas-pela-terceira-vez-na-carreira
+  - id: after
+    main: true
+    heading: 1人だけロッカールームへ
+    tier: 報道
+    telop: ほかの選手がサポーターにあいさつする中、ロナウドはロッカールームへ
+    narrator: キャスター
+    say:
+      - text: ノルウェーに2対1で勝った試合で、ロナウドはけがもないのに、最後まで使われませんでした。
+        short_only: true
+      - text: 終了の笛が鳴ると、ロナウドはまっすぐロッカールームへ向かいました。
+        image: assets/images/20260928d_ronaldo/01.jpg
+      - ほかの選手は控えも含めて、ゴール裏のサポーターにあいさつしています。
+      - voice: ジョルジェ・ジェズス
+        text: 私は気づきもしなかった。答えられるのは彼だけだ
+        image: assets/images/20260928d_pair_jesus/01.jpg
+      - voice: ジョルジェ・ジェズス
+        text: もちろん、彼とは話さなければならない
+      - text: 本人の言葉は、インスタのストーリーの「行くぞ」だけ。
+        image: assets/images/20260928d_ronaldo/01.jpg
+    sources:
+      - https://www.abola.pt/noticias/jesus-reage-a-atitude-de-ronaldo-no-final-do-jogo-vou-falar-com-ele-2026092721490141633
+      - https://www.abola.pt/noticias/a-saida-antecipada-de-ronaldo-e-o-dilema-vitinha-neves-tudo-o-que-disse-jorge-jesus-2026092722033098422
+      - https://www.ojogo.pt/amp/18131186/ronaldo-nao-agradeceu-aos-portugueses-na-noruega-so-ele-e-que-pode-responder
+      - https://www.abola.pt/noticias/ronaldo-recolheu-aos-balnearios-logo-apos-o-final-do-noruega-portugal-video-2026092721231739137
+      - https://www.abola.pt/noticias/a-reacao-de-cristiano-ronaldo-a-vitoria-de-portugal-na-noruega-2026092722274692434
+  - id: coach
+    heading: 変わったのは監督
+    tier: 報道
+    telop: 7月にジェズス監督が就任。アル・ナスルでもロナウドを率いた
+    narrator: 解説
+    card:
+      type: table
+      title: ジェズス監督とロナウド
+      columns: ['', '']
+      rows:
+        - [昨季アル・ナスル, リーグ戦で16回交代、国王杯で90分ベンチ]
+        - [2026年7月, ポルトガル代表の監督に就任]
+        - [9月24日 ウェールズ戦, 先発して67分に交代]
+    say:
+      - 18年続いた形が、なぜ崩れたのか。変わったのは監督です。
+      - 7月に就いたジェズス監督は、昨季アル・ナスルでもロナウドの監督でした。
+      - リーグ戦で16回交代させ、サウジの国王杯では90分ベンチに置いています。
+      - ノルウェー戦の前日には、24日のウェールズ戦で67分まで出たロナウドについて、こう話しています。
+      - voice: ジョルジェ・ジェズス
+        text: 認めたくなくても、クリスはジョアン・ネヴェスではない
+        image: assets/images/20260928d_pair_jesus/01.jpg
+      - voice: ジョルジェ・ジェズス
+        text: 3日おきに続けて出られる20歳ではない
+      - text: 続けて90分は出さず、残り30分で使う。それが前日からの予定でした。
+        image: assets/images/20260928d_ronaldo/01.jpg
+    sources:
+      - https://www.ojogo.pt/internacional/artigo/jorge-jesus-cristiano-ronaldo-nunca-vai-ser-um-problema-para-a-selecao-nem-para-mim/18104771
+      - https://cnnportugal.iol.pt/jorge-jesus/joao-neves/ainda-nao-sei-se-cristiano-joga-de-inicio-ele-nao-e-o-joao-neves
+      - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/ronaldo-passou-um-jogo-inteiro-da-selecao-no-banco-apenas-pela-terceira-vez-na-carreira
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861044
+  - id: next
+    heading: 残ると決めた代表で
+    tier: 報道
+    telop: 次は10月1日、敵地でデンマーク戦
+    narrator: 解説
+    card:
+      type: table
+      title: 代表を続けると決めてから
+      columns: ['', '']
+      rows:
+        - [7月 W杯で敗退, 「考える時間を取る」]
+        - [9月23日 会見, 「出なくても、必要なことは何でもやる」]
+        - [10月1日, デンマーク戦（コペンハーゲン）]
+    say:
+      - text: ロナウドはワールドカップで敗れたあと、考える時間を取る、と話しました。
+        image: assets/images/20260928d_ronaldo/01.jpg
+      - 9月23日の会見では、会長と監督に頼りにされ、続けると決めたと明かしました。
+      - その場で、先発でも途中でも、出なくても、監督が必要なことは何でもやる、と話しています。
+      - その4日後が、今回の使われない夜でした。
+      - 次は10月1日、敵地でのデンマーク戦。監督は、出るかもしれないと話しています。
+      - 使われても使われなくても、どう振る舞うか。続けると決めた本人が問われます。
+    sources:
+      - https://www.dn.pt/mundial-2026/cristiano-ronaldo-futuro-na-seleo-foi-o-meu-ltimo-mundial-terei-agora-tempo-para-pensar
+      - https://www.record.pt/futebol/selecoes/detalhe/em-direto-cristiano-ronaldo-faz-a-antevisao-ao-portugal-pais-de-gales
+      - https://www.abola.pt/noticias/jesus-ronaldo-estava-em-condicoes-para-jogar-o-tempo-que-eu-quisesse-2026092720543870038
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「そこは輪に加わろうよ」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 最後だけが残念。そこは輪に加わろうよ、と。
+        short_voice: true
+      - voice: ネット民
+        text: ロナウドはたしかに凄いんやけど、
+      - voice: ネット民
+        text: こうやってロナウド抜きで結果を出すとね
+        cont: true
+      - voice: ネット民
+        text: 本当にロナウドってスタメンで出すほど必要なのかって思っちゃう
+        cont: true
+      - voice: ネット民
+        text: ジェズスが彼を入れなかったのは正しい。
+        short_voice: true
+      - voice: ネット民
+        text: ノルウェーに押されていて、9人で守る余裕はなかった
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: レオンの時点で、もう1人少ないようなものだったからね
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: スーパーサブの役割を受け入れるなら大歓迎。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: でも駄々をこね始めるなら、今までありがとう、さようならだ
+        cont: true
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/profile/news/comments/62d56a02-79db-42bb-b2aa-82c5fb81cb27
+      - https://x.com/so_chan630744/status/2104361693082194199
+      - https://www.reddit.com/r/soccer/comments/1wrx3dx/a_bola_cristiano_ronaldo_was_the_only_portuguese/pcglg84/
