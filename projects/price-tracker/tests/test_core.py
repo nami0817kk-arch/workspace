@@ -253,6 +253,95 @@ class 価格の位置の言い方Test(unittest.TestCase):
         self.assertIn("今日だけ", out)
 
 
+class 題の重複Test(unittest.TestCase):
+    """64文字まで伸ばしても同じになる商品がある。
+
+    同じ商品を複数の店が出しているためで、実測（2026-09-28）では
+    重複していた598枚のうち290枚は組の中の店が全部違った。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def rows(self, *pairs):
+        return [{"item_code": f"s{i}:1", "name": n, "shop": shop}
+                for i, (n, shop) in enumerate(pairs)]
+
+    def test_店が違えば店名で分ける(self):
+        name = "ワイヤレスイヤホン " * 10
+        out = self.theme.page_titles(self.rows((name, "A店"), (name, "B店")))
+
+        self.assertEqual(len(set(out.values())), 2)
+        self.assertTrue(any("（A店）" in t for t in out.values()))
+        self.assertTrue(any("（B店）" in t for t in out.values()))
+
+    def test_同じ店なら無理に分けない(self):
+        """分ける材料が無いのに番号を足しても読み手の役に立たない。"""
+        name = "ワイヤレスイヤホン " * 10
+        out = self.theme.page_titles(self.rows((name, "A店"), (name, "A店")))
+
+        self.assertEqual(len(set(out.values())), 1)
+        self.assertNotIn("（", list(out.values())[0])
+
+    def test_ぶつからない題は短いまま(self):
+        out = self.theme.page_titles(self.rows(("まったく違う商品", "A店"),
+                                               ("ぜんぜん別の品", "B店")))
+
+        for t in out.values():
+            with self.subTest(t=t):
+                self.assertNotIn("（A店）", t)
+                self.assertNotIn("（B店）", t)
+
+
+class 期限切れの倍率Test(unittest.TestCase):
+    """楽天は期限の過ぎた倍率を返してくることがある。
+
+    実測（2026-09-28・取得日と同じ日のビルド）で93件あり、うち63件は
+    倍率が1より大きかった。そのまま出すと「ポイント2倍 / 実質13,710円」と、
+    もう受け取れない値引きを見せることになる。
+    """
+
+    def summary(self, last_date, rate):
+        return {"a:1": {"last": 1000, "min": 900, "max": 1100, "days": 10,
+                        "prev": 1000, "last_rate": rate, "prev_rate": rate,
+                        "last_date": last_date, "min_date": "2026-09-20",
+                        "tail": [[f"2026-09-{d:02d}", 1000, rate] for d in range(19, 29)]}}
+
+    def rows(self, until, last_date="2026-09-28", rate=2):
+        return analyze.evaluate_all(
+            self.summary(last_date, rate),
+            {"a:1": {"name": "見本", "point_until": until}}, 0.05, 0.02)
+
+    def test_期限が取得日より前なら倍率を出さない(self):
+        row = self.rows("2026-09-27")[0]
+
+        self.assertEqual(row["point_rate"], 1)
+        self.assertIsNone(row["point_until"])
+        self.assertTrue(row["point_rate_expired"])
+        # 倍率1は「通常ポイント1%」なので価格と同じにはならない。
+        # 期限切れの2倍ではなく、1倍で計算されていることを見る。
+        self.assertEqual(row["eff_price"], analyze.effective(row["price"], 1))
+        self.assertNotEqual(row["eff_price"], analyze.effective(row["price"], 2))
+
+    def test_期限が当日なら残す(self):
+        row = self.rows("2026-09-28")[0]
+
+        self.assertEqual(row["point_rate"], 2)
+        self.assertEqual(row["point_until"], "2026-09-28")
+
+    def test_期限が先なら残す(self):
+        row = self.rows("2026-10-05")[0]
+
+        self.assertEqual(row["point_rate"], 2)
+
+    def test_期限が無ければそのまま(self):
+        row = self.rows(None)[0]
+
+        self.assertEqual(row["point_rate"], 2)
+        self.assertFalse(row.get("point_rate_expired"))
+
+
 class AnalyzeTest(unittest.TestCase):
     def rec(self, prices, start_day=1):
         summary = {}

@@ -122,11 +122,20 @@ def evaluate_all(summary: dict, items: dict, drop_threshold: float,
     履歴にしか無い商品（販売終了などで今日取得できなかったもの）は、
     価格が今日のものだと誤解されるため出さない。
     """
+    # 取得した日より前に終わっている倍率は、倍率1として扱う。
+    # 楽天が期限切れの倍率を返してくることがあり（実測2026-09-28に93件、
+    # うち63件は倍率が1より大きかった）、そのまま出すと
+    # 「ポイント2倍 / 実質13,710円」と、もう受け取れない値引きを見せることになる。
+    latest = max((str(r.get("last_date") or "") for r in summary.values()), default="")
     out = []
     for code, meta in items.items():
         rec = summary.get(code)
         if not rec:
             continue
+        until = str(meta.get("point_until") or "")[:10]
+        if until and latest and until < latest:
+            rec = {**rec, "last_rate": 1}
+            meta = {**meta, "point_until": None, "point_rate_expired": True}
         verdict = evaluate(rec, drop_threshold, near_low_threshold)
         if not verdict:
             continue

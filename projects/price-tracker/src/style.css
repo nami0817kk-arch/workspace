@@ -830,3 +830,17 @@ main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 
 .noimg { display: block; background: var(--bg);
   border: 1px solid var(--line); border-radius: 6px; }
 .hero .noimg { width: 100%; max-width: 260px; aspect-ratio: 1 / 1; }
+
+/* 53. 価格の記録の表に見出し行が無く、3列目は名前も中身も無い空セルだった。
+   見出しを付けたので、左端の日付だけ色を変えて行の見出しだと分かるようにする。 */
+.history thead th { background: var(--panel); color: var(--ink); font-weight: 600;
+  white-space: nowrap; }
+.history tbody th { font-variant-numeric: tabular-nums; }
+.history td:last-child { color: var(--muted); }
+
+/* 54. 空の一覧・見守りが空のときに出す「行き先」のリンクが高さ27pxだった。
+   ここは他に押すものが無い場所なので、いちばん押しやすくしておく。 */
+.go a { display: inline-flex; align-items: center; min-height: 40px;
+  padding: 0 14px; border: 1px solid var(--line); border-radius: 999px;
+  text-decoration: none; }
+.go a:hover { border-color: var(--accent); }

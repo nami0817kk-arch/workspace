@@ -294,7 +294,7 @@ def build(root: Path, out: Path) -> dict:
 
     write(out / "watch" / "index.html",
           theme.watch_page(site, base + "/watch/", updated))
-    urls.append("/watch/")
+    # 見守りは noindex（中身が端末の中にしか無い）。sitemap にも載せない。
 
 
     # その日の記録を CSV でも出す。表計算で開いて自分で調べられるようにする。

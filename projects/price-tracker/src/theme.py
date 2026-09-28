@@ -177,6 +177,25 @@ def page_titles(rows: list, limit: int = 28, cap: int = 64) -> dict:
             else:
                 rest.extend(members)
         pending, width = rest, width + 6
+
+    # 64文字まで伸ばしても同じになる組が残る。同じ商品を複数の店が出している
+    # ことが多く（実測2026-09-28で598枚のうち290枚は組の中の店が全部違った）、
+    # その場合は店名で分かれる。名前は短いほう（limit）に戻してから足すので、
+    # 題が長くなりすぎることもない。
+    # 同じ店で名前も同じものは分ける材料が無いので、そのままにする
+    # （意味のない番号を足しても読み手の役に立たない）。
+    by_title = {}
+    for row in rows:
+        t = out.get(row["item_code"])
+        if t:
+            by_title.setdefault(t, []).append(row)
+    for title, members in by_title.items():
+        if len(members) < 2:
+            continue
+        shops = [str(r.get("shop") or "").strip() for r in members]
+        if all(shops) and len(set(shops)) == len(members):
+            for row, shop in zip(members, shops):
+                out[row["item_code"]] = f'{short_name(row["name"], limit)}（{shop}）'
     return out
 
 
@@ -319,6 +338,8 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <meta name="twitter:card" content="summary">
 <meta property="og:image" content="{esc(site["base_url"].rstrip("/"))}/og.svg">
 <link rel="alternate" type="application/rss+xml" title="今日の値下がり" href="{prefix}feed.xml">
+<link rel="preconnect" href="https://thumbnail.image.rakuten.co.jp" crossorigin>
+<link rel="dns-prefetch" href="https://thumbnail.image.rakuten.co.jp">
 <link rel="icon" href="{prefix}{ICON_PNG}" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="{prefix}{ICON_PNG}">
 <link rel="stylesheet" href="{prefix}{site.get("css", "style.css")}">
@@ -641,7 +662,7 @@ def stats_page(site: dict, canonical: str, updated: str, stats: dict,
     title = "記録の全体像"
     lead = "当サイトが何をどれだけ記録しているかをまとめています。"
     rows = [("記録している商品", f'{stats["items"]:,} 件'),
-            ("記録した日数", f'{stats["days"]} 日'),
+            ("記録日数", f'{stats["days"]} 日'),
             # 楽天の値引きは倍率で動くので、価格だけの数と実質の数を並べて出す。
             # 価格だけで数えていたとき、この表だけが11,172件を
             # 「一度も動いていない」と書いていて、商品ページの判定とずれていた。
@@ -824,6 +845,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     list.textContent = '';
     keep.forEach(function (li) { list.appendChild(li); });
+    // 全部消えたときに何も出さないと、ページが空白になって壊れたように見える。
+    // 空の一覧（該当0件）のときと同じ書き方で、外し方まで出す。
+    var none = document.getElementById('nofit');
+    if (!none) {
+      none = document.createElement('p');
+      none.id = 'nofit';
+      none.className = 'empty';
+      list.parentNode.insertBefore(none, list);
+    }
+    none.hidden = keep.length > 0;
+    if (!keep.length) {
+      none.textContent = 'この条件に合う商品はこのページにありません。'
+        + '「条件を外す」で元に戻せます。';
+    }
     shown.textContent = keep.length === all.length
       ? '' : keep.length + ' / ' + all.length + ' 件を表示';
     reset.hidden = !(sort.value || range.value || freeonly.checked || instock.checked);
@@ -1172,7 +1207,7 @@ def chart(tail: list, width: int = 560, height: int = 180,
             f'<svg class="chart-svg" viewBox="0 0 {width} {height}" role="img" '
             f'data-series="{esc(series)}" data-pad="{pad_l}" data-step="{step:.4f}" '
             f'aria-label="{len(points)}日分の価格推移。最安 {low:,}円、最高 {high:,}円'
-            + ('。破線はポイント分を引いた実質価格' if effs else '') + '">'
+            + ('。破線はポイント込みの実質価格' if effs else '') + '">'
             f'{grid}{guide}'
             f'<polyline points="{coords}" fill="none" stroke="currentColor" '
             f'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
@@ -1271,12 +1306,16 @@ def history_table(row: dict) -> str:
     tail = [store_entry(e) for e in (row.get("tail") or [])][-14:]
     if len(tail) < 2:
         return ""
+    # 見出し行が無く、3列目は名前も中身も無い空のセルだった。
+    # 表として読むと「何の列か」が分からず、読み上げでは「空白」としか言えない。
     body = "".join(
-        f"<tr><th>{esc(day)}</th><td>{yen(price)}</td>"
-        f"<td>{('ポイント' + str(rate) + '倍') if rate > 1 else ''}</td></tr>"
+        f'<tr><th scope="row">{esc(day)}</th><td>{yen(price)}</td>'
+        f"<td>{('ポイント' + str(rate) + '倍') if rate > 1 else '—'}</td></tr>"
         for day, price, rate in reversed(tail))
+    head_row = ('<thead><tr><th scope="col">日付</th><th scope="col">価格</th>'
+                '<th scope="col">ポイント倍率</th></tr></thead>')
     return ('<h2>価格の記録</h2>'
-            f'<table class="facts history">{body}</table>')
+            f'<table class="facts history">{head_row}<tbody>{body}</tbody></table>')
 
 
 def og_image(site: dict, stats: dict) -> str:
@@ -1667,10 +1706,18 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
     title = "見守り中の商品"
     lead = ("商品ページで「見守る」を押した商品を、見始めた時からの差が大きい順に並べます。"
             "保存先はお使いの端末の中だけです。")
-    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
+    # 中身は端末の中にしか無い。他人が検索から来ても空のページしか見えないので、
+    # 索引に載せない（sitemap からも自動で外れる）。
+    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../",
+                 indexable=False)
             + breadcrumb(site, title, "../")
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + AD_NOTICE
+            + '<noscript><p class="empty">この一覧は端末に保存した控えから作ります。'
+              'ブラウザの JavaScript を有効にするとご覧いただけます。</p></noscript>'
+            + '<noscript><p class="empty">絞り込みはブラウザの中で行うため、'
+              'JavaScript を有効にするとお使いいただけます。'
+              '下の「よく使われる言葉」からは JavaScript 無しでも辿れます。</p></noscript>'
             + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
             + f'<script>var PT_INDEX={safe_json(site.get("search_index", "search-index.json"))};</script>'
             + """<script>
@@ -1797,7 +1844,9 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                  ("記録日数", f'{row["days"]}日')]
     if int(row.get("point_rate") or 1) > 1:
         rows_html.insert(1, ("ポイント倍率", f'{row["point_rate"]}倍'))
-        rows_html.insert(2, ("ポイント分を引いた実質価格",
+        # 図の凡例が「ポイント込みの実質価格」なので、表もその言い方に揃える。
+        # 同じ商品ページに2つの呼び方が出ていた。
+        rows_html.insert(2, ("ポイント込みの実質価格",
                              f'{yen(row["eff_price"])}（目安）'))
     if row.get("prev"):
         rows_html.insert(1, ("前回の価格", yen(row["prev"])))
