@@ -58,8 +58,9 @@ sections:
     text: 自分にとってはそちらの方が自然だった
     cont: true
     pause: 0.5
-  - 同じ攻撃的MFとウイング100人の中で、作ったチャンスは1位、空中戦は下から23番目。
-  - その作りを、数字と話で見ます。
+  - いま、数字はこうなっています。
+  - 同じ位置の選手100人と比べると、作ったチャンスは1位、空中戦は下から23番目。
+  - その左足がどう育ったか、数字と話で追います。
   sources:
   - https://www.fotmob.com/players/1029063
   - https://www.bundesliga.com/en/bundesliga/news/michael-olise-france-fifa-world-cup-assist-record-pele-38193
@@ -96,8 +97,8 @@ sections:
     image: assets/images/20261003_olise_bayern2026/01.jpg
   - 生まれはロンドン西部のハマースミス。
   - 父はナイジェリア人、母はアルジェリア系のフランス人です。
-  - 利き足は左。契約は2029年まで残っています。
-  - 市場価値は1.7億ユーロ。前回の1.5億ユーロから、さらに上がりました。
+  - 左利き。契約は2029年6月まで。
+  - 市場価値は1.7億ユーロ。1.5億から、また上がりました。
   sources:
   - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
   - https://www.cpfc.co.uk/news/club/otd-olise-joins-crystal-palace-from-reading-2021-2025/
@@ -136,7 +137,10 @@ sections:
   say:
   - text: オリーズの17歳は、イングランド2部レディングの育成組織。
     image: assets/images/20261003_olise_palace2022/01.jpg
-  - 市場価値は20万ユーロでした。
+  - その前に、アーセナル、チェルシー、シティの育成組織を離れています。
+  - チェルシーを出たのは、授業に出なかったから。
+  - シティでは腕が細く、腕立て伏せで笑われて去った、と当時の監督が話しています。
+  - レディング時代の市場価値は20万ユーロ。
   - text: 19歳で1500万ユーロ。2部で7点12アシストを挙げた年です。
     image: assets/stats/player_20261003_1029063_value.png
     no_telop: true
@@ -150,6 +154,7 @@ sections:
   - https://www.cpfc.co.uk/news/club/otd-olise-joins-crystal-palace-from-reading-2021-2025/
   - https://www.soccer-king.jp/news/world/eng/20240708/1904190.html
   - https://www.bundesliga.com/en/bundesliga/news/player-of-the-month-2025-26-vote-winners-ea-sports-olise-34233
+  - https://www.si.com/soccer/why-arsenal-chelsea-man-city-missed-out-michael-olise
 - id: style
   heading: プレースタイル
   tier: 報道
@@ -173,11 +178,11 @@ sections:
       value: 35
     source: FotMob
   say:
-  - text: オリーズのプレースタイルを、同じ攻撃的MF・ウイングと比べた数字で見ます。
+  - text: オリーズのプレースタイルは、同じ攻撃的MF・ウイングとの比較で見ると分かりやすい。レーダーです。
     image: assets/stats/player_20261003_1029063_radar.png
     no_telop: true
-  - 6つの軸のうち、チャンス創出とボールタッチは最上位。空中戦と守備の関与は最下位です。
-  - つまり、右サイドで受けて中へ切れ込み、左足で決めるか作るかの選手です。
+  - 6つの軸で頂点にあるのはチャンス創出とボールタッチ。いちばん低いのは空中戦と守備です。
+  - つまり、右サイドで受けて中へ切れ込み、左足で決めるか作るかの選手。
   - text: では、どこでボールを持つか。右サイドの高い位置と、その内側。
     image: assets/stats/player_20261003_1029063_heat.png
     no_telop: true
@@ -185,7 +190,7 @@ sections:
   - text: 今季のシュートは17本、うち左足が15本。ペナルティエリアの外から2点を決めています。
     image: assets/stats/player_20261003_1029063_shots.png
     no_telop: true
-  - 弱点は空中戦で、同じ位置の中で下から23番目。
+  - 弱点は空中戦。同じ位置の選手の中で、下から4分の1に入る低さです。
   - もう1つは負傷歴。2023年からのシーズンは太もも裏を痛め、リーグ戦19試合しか出ていません。
   sources:
   - https://www.fotmob.com/players/1029063
@@ -234,14 +239,15 @@ sections:
       - 4894分
     source: Transfermarkt
   say:
-  - text: オリーズの直近5シーズン、代表を含む全公式戦です。古い順に見ます。
+  - text: 次に、オリーズの5シーズンの推移。代表を含む全公式戦を、古いほうから追います。
     image: assets/images/20261003_olise_norway/01.jpg
-  - 2021年からのシーズンは33試合で4点。パレスの1年目です。
+  - パレス1年目の2021年は、33試合で4点。
   - 2022年からは46試合で12アシスト。
   - パレス史上初の、プレミア1季で2桁アシストでした。
+  - 翌シーズンは28試合で15点12アシスト。けがで試合は減っても、点は増えました。
   - 跳ねたのはバイエルンに来てから。2024年からは68試合で24点25アシスト。
   - 2025年からは64試合で25点39アシスト。
-  - ブンデスリーガの最優秀選手に選ばれました。
+  - ブンデスリーガの年間最優秀選手です。
   sources:
   - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
   - https://www.cpfc.co.uk/news/club/otd-olise-joins-crystal-palace-from-reading-2021-2025/
@@ -291,12 +297,12 @@ sections:
   say:
   - text: バイエルンのオリーズ、24歳。ペレを抜いた左足は、いま得点ランキングの首位に並んでいます。
     short_only: true
-  - text: 今季はここまで8試合で8得点5アシスト、出場時間は648分。81分に1点のペースです。
+  - text: 今季はここまで8試合で8得点5アシスト。648分に出て、81分に1点。
     image: assets/images/20261003_olise_spain_wide/01.jpg
   - ブンデスリーガは4試合で4点2アシスト、スーパーカップは1試合で1点1アシスト。
   - 直近5試合は5点3アシスト。ウニオン・ベルリン戦は3点1アシストで、評点は9.9。
-  - 10点満点の評点は、直近5試合のうち4試合で8.4以上です。
-  - リーグの得点ランキングは首位に並び、ドリブルとシュートの数も最多です。
+  - 評点は5試合のうち4試合で8.4以上。10点満点の物差しです。
+  - ドリブルとシュートの数はリーグ最多。攻撃の起点が、この右サイドにあります。
   sources:
   - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
   - https://www.fotmob.com/players/1029063
@@ -314,7 +320,7 @@ sections:
     - 右脚に漢字の「改善」のタトゥー。パレスのコーチの言葉から
     - チェスの相手はムシアラ。チェルシーの育成で一緒だった
   say:
-  - text: 数字の外側に、この選手らしい話が2つあります。
+  - text: 数字を置いて、人となりの話を2つ。
     image: assets/images/20261003_olise_paraguay_wide/01.jpg
   - 1つ目は、インタビューが極端に短いこと。
   - 2022年、決勝点を決めたあとに「振り返ってみて」と聞かれて、こう答えました。
@@ -342,12 +348,12 @@ sections:
   narrator: 解説
   telop: 10月10日、アウクスブルク戦
   say:
-  - text: 話を数字に戻して、最後に見立てです。
+  - text: 締めは、この先の見立てです。
     image: assets/images/20261003_olise_norway_w/01.jpg
   - 比べる相手は、同じ右ウイングのヤマル。今季9試合で9点6アシスト。
   - オリーズは8試合で8点5アシスト。1試合1点の形で並んでいます。
-  - 世界年間最優秀選手、バロンドールの候補30人に、今年は2人とも入っています。発表は10月26日。
-  - クラブの次の試合は10月10日、アウクスブルク戦。
+  - 世界最優秀選手を選ぶバロンドール。候補30人に今年は2人とも入り、発表は10月26日です。
+  - バイエルンは10月10日、アウクスブルクとの試合で再開します。
   - リーグ最多のドリブルとシュートが続くか。そして、2人で挟まれたときに消えないかを見ます。
   sources:
   - https://www.transfermarkt.com/michael-olise/profil/spieler/566723

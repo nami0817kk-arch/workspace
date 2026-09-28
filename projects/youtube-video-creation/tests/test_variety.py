@@ -199,3 +199,21 @@ def test_反応の手前が揃っていれば止める():
     found = {f.label: f for f in inspect_day(scripts)}
     assert not found["締め方"].ok
     assert "これからどうなる" in found["締め方"].detail
+
+
+def test_紹介のシリーズは節の並びが同じでも止めない():
+    """クラブ紹介・選手紹介は8節の型で量産する企画（2026-09-28）。入り方・締め方・話の型は見ず、本のあいだの重なりだけ見る。"""
+    from src.script_model import parse_script
+    from src.variety import inspect_day, is_series_intro
+
+    def script(name, first_line):
+        return parse_script(
+            f"---\ntitle: {name}ってどんな選手？\nseries: 有名選手の紹介\n---\n\n"
+            f"## どんな選手か\n\nキャスター: {first_line}\n\n## 基礎DATA\n\nキャスター: {name}、19歳。\n\n## 見立て\n\n解説: {name}の次の試合を見ます。\n")
+
+    scripts = [script("ハーランド", "ボールに触らないのに点だけ取る。"), script("ヤマル", "メッシの腕の中にいた赤ん坊。"),
+               script("オリーズ", "3度追い出された少年。")]
+    assert all(is_series_intro(s) for s in scripts)
+    labels = {f.label: f.ok for f in inspect_day(scripts)}
+    assert labels["話の型"] is True and "入り方" not in labels and "締め方" not in labels
+    assert "本のあいだ" in labels

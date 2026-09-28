@@ -224,6 +224,14 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
         body = [t for t in _skeleton(s) if "反応" not in t]
         return tuple(body[-1:])
 
+    # **紹介のシリーズは節の並びが型どおりでよい**（品質100回の85）。クラブ紹介・選手紹介は
+    # 「8節の型」を決めて量産する企画で、入り方・締め方・並びが同じなのは設計。
+    # 見るべきは読み上げの文が同じでないか（「本のあいだ」）で、そちらは今までどおり見る。
+    # プレミア20クラブ紹介のときも「結び方が20本とも同じなのは連番シリーズなので受け入れる」と書いた
+    if all(is_series_intro(s) for s in scripts):
+        findings.append(Finding(True, "話の型", "紹介のシリーズ。節の並びは型どおりでよい（本のあいだの重なりだけ見る）"))
+        return findings + _inspect_wording(scripts, total)
+
     for label, pick in (("入り方", lambda s: _skeleton(s)[:1]),
                         ("締め方", _ending)):
         counts = Counter(pick(s) for s in scripts if pick(s))
@@ -246,7 +254,17 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
             f"{int(share * total)}本が同じ並びです（{' → '.join(top[:3])}）"))
     else:
         findings.append(Finding(True, "話の型", f"同じ並びは最大{int(share * total)}本"))
+    return findings + _inspect_wording(scripts, total)
 
+
+def is_series_intro(script: Script) -> bool:
+    """クラブ紹介・選手紹介のシリーズか（front matter の `series` に「紹介」）。"""
+    return "紹介" in str((getattr(script, "meta", None) or {}).get("series") or "")
+
+
+def _inspect_wording(scripts: list[Script], total: int) -> list[Finding]:
+    """並びではなく言葉の側の点検（出だし・結び方・本のあいだ・札・接頭辞・代弁）。"""
+    findings: list[Finding] = []
     starts = Counter(_opening(s) for s in scripts if _opening(s))
     top, share = _share(starts, total)
     if share > SAME_SHAPE:
