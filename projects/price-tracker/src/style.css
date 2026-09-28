@@ -910,6 +910,33 @@ main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 
 .allhist:hover { background: var(--panel); }
 .allhist-toggle:focus-visible ~ .allhist { outline: 2px solid var(--accent);
   outline-offset: 2px; }
+
+/* 60. 索引は広い画面では面で並べる。縦1列だと、幅1900pxで右がまるごと空き、
+   11項目が縦に伸びて一画面に収まらなかった（2026-09-28 にユーザーの画面で
+   価格.com のトップと並べて確認）。あちらは全カテゴリを3列のます目で出す。
+   1マスが狭くなるので、中では「名前＋件数」と「何を出すか」を縦に積む。 */
+@media (min-width: 640px) {
+  .views > ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .views li { grid-template-columns: 1fr auto; align-items: baseline; }
+  .views .what { grid-column: 1 / -1; margin-top: 2px; }
+}
+/* トップは索引だけのページなので、広い画面では本文の幅も広げる。
+   860px のままだと幅1900pxで右がまるごと空く。カードも表も無いページなので
+   広げても間延びしない（他のページは 860px のまま）。
+   `.howto` はトップにしか無い。:has() が効かない環境では 860px のままで、
+   それでも読めるので害はない。 */
+@media (min-width: 1100px) {
+  main.wrap:has(> .howto) { max-width: 1120px; }
+}
+@media (min-width: 1040px) {
+  .views > ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .genres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+/* 名前が長い一覧（「ポイント込みで安くなった商品」）は折り返してよい。
+   nowrap のままだと1マスからはみ出す */
+@media (min-width: 640px) {
+  .views a { white-space: normal; }
+}
 @media print {
   /* 紙には全部出す（畳んだままだと記録が欠ける） */
   .history.limited tbody tr { display: table-row; }
