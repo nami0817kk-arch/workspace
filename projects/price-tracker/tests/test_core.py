@@ -1011,3 +1011,101 @@ class ポイント込みの最安Test(unittest.TestCase):
         self.assertFalse(row["moved"])
         self.assertTrue(row["eff_at_low"])
         self.assertIn("ポイント倍率が上がった", theme.verdict_note(row))
+
+
+class ポイントが減って高くなるTest(unittest.TestCase):
+    """倍率が下がる（期限切れを含む）と、価格が同じでも実質は上がる。
+    「もう得ではない」は、待っていた人にいちばん要る知らせで、
+    価格しか見ない作りでは出せない。
+
+    実測（2026-09-28・しきい値5%）で、価格が上がったのは45件だが実質では
+    139件あり、101件は価格では上がっていなかった。
+    """
+
+    def rec(self, price, rate, prev, prev_rate):
+        days = [[f"2026-09-{i + 1:02d}", prev, prev_rate] for i in range(7)]
+        days.append(["2026-09-08", price, rate])
+        return {"last": price, "prev": prev, "prev_rate": prev_rate,
+                "last_rate": rate, "min": min(price, prev),
+                "max": max(price, prev), "days": 8,
+                "min_date": "2026-09-01", "tail": days}
+
+    def ev(self, price, rate, prev, prev_rate):
+        return analyze.evaluate(self.rec(price, rate, prev, prev_rate), 0.05, 0.02)
+
+    def test_価格が同じでも倍率が下がれば実質は上がる(self):
+        # 倍率 20 → 1。価格は 1,000 のまま
+        out = self.ev(1000, 1, 1000, 20)
+
+        self.assertEqual(out["rise_pct"], 0.0)
+        self.assertGreater(out["eff_rise_pct"], 0.05)
+
+    def test_値上がりの一覧に入れる(self):
+        row = self.ev(1000, 1, 1000, 20)
+        row["price"] = 1000
+
+        self.assertEqual(analyze.rises([row], 0.05), [row])
+
+    def test_一文で何が起きたかを言う(self):
+        from src import theme
+        row = self.ev(1000, 1, 1000, 20)
+
+        out = theme.verdict_note(row)
+
+        self.assertIn("ポイント倍率が下がった", out)
+        self.assertIn("高くなっています", out)
+
+    def test_価格も上がった回は印を繰り返さない(self):
+        """同じ割合がカードの価格の行にも出る。1枚に2回並んでいた。"""
+        from src import theme
+        row = self.ev(2000, 1, 1000, 1)
+
+        self.assertGreater(row["rise_pct"], 0.05)
+        self.assertNotIn("▲", theme.point_note(row))
+
+    def test_倍率が1に戻っても実質の行を出す(self):
+        """倍率1で打ち切っていたので、いちばん知らせるべき回に何も出なかった。"""
+        from src import theme
+        row = self.ev(1000, 1, 1000, 20)
+
+        out = theme.point_note(row)
+
+        self.assertIn("実質", out)
+        self.assertIn("▲", out)
+        self.assertNotIn("ポイント1倍", out)
+
+
+class 期限切れの倍率を履歴にも反映するTest(unittest.TestCase):
+    """期限が切れた倍率は1として扱うが、`last_rate` しか直していなかった。
+
+    図も「記録を始めてからの変化」も「価格の記録」も tail から作るので、
+    画面の中で食い違う。実測（2026-09-28）で、頭は「実質 27,225円 ▲16.5%」
+    なのに表の同じ日が 23,375円 になっている商品があった。
+    """
+
+    def setUp(self):
+        self.summary = {"a": {
+            "last": 27500, "prev": 27500, "min": 27500, "max": 27500,
+            "days": 8, "last_rate": 15, "prev_rate": 15,
+            "last_date": "2026-09-28", "min_date": "2026-09-21",
+            "tail": [[f"2026-09-{20 + i:02d}", 27500, 15] for i in range(9)]}}
+        self.items = {"a": {"name": "空気清浄機", "price": 27500,
+                            "point_until": "2026-09-20", "shop": "店"}}
+
+    def test_履歴の最終日の倍率も1に直す(self):
+        rows = analyze.evaluate_all(self.summary, self.items, 0.05, 0.02)
+
+        row = rows[0]
+        self.assertEqual(row["point_rate"], 1)
+        self.assertEqual(row["tail"][-1][2], 1)
+        # 表が使う最終日の実質と、頭が使う eff_price が同じであること
+        last = row["tail"][-1]
+        self.assertEqual(analyze.effective(last[1], last[2]), row["eff_price"])
+
+    def test_期限が切れていなければ触らない(self):
+        self.items["a"]["point_until"] = "2026-10-31"
+
+        row = analyze.evaluate_all(self.summary, self.items, 0.05, 0.02)[0]
+
+        self.assertEqual(row["point_rate"], 15)
+        self.assertEqual(row["tail"][-1][2], 15)
