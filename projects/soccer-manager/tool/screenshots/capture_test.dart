@@ -41,7 +41,8 @@ import 'package:soccer_manager/screens/league_ranking_screen.dart';
 import 'package:soccer_manager/screens/lineup_screen.dart';
 import 'package:soccer_manager/screens/live_match_screen.dart';
 import 'package:soccer_manager/screens/squad_screen.dart';
-import 'package:soccer_manager/screens/start_screen.dart';
+import 'package:soccer_manager/models/club_infrastructure.dart';
+import 'package:soccer_manager/screens/club_screen.dart';
 import 'package:soccer_manager/screens/transfer_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
@@ -199,12 +200,26 @@ void main() {
       Future<void> shoot(String name, Widget screen,
           {int warmUpFrames = 0}) async {
         await tester.pumpWidget(wrap(screen));
+        // **裏で読み込みを待つ画面は、疑似時間の pump では終わらない。**
+        // 開始画面はセーブ一覧(SharedPreferences)を待つ FutureBuilder を
+        // 持っており、読み込み中の丸だけが写った白紙をストアの1枚目として
+        // 出していた(2026-09-28 に指摘された)。実時間を少し進めて終わらせる。
+        await tester
+            .runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
         await tester.pump(const Duration(milliseconds: 350));
         for (var i = 0; i < warmUpFrames; i++) {
           await tester.pump(const Duration(milliseconds: 100));
         }
         // はみ出しや例外を抱えたまま掲載画像を作らない。
         expect(tester.takeException(), isNull, reason: '$name の描画で例外が出ている');
+
+        // **何も描かれていない絵を掲載画像にしない。** 上の白紙は、例外も
+        // はみ出しも出さないので、それまでの検査を全部すり抜けていた。
+        // 人は9枚を1枚ずつ見返さないので、機械で気づけるようにしておく。
+        expect(find.byType(CircularProgressIndicator), findsNothing,
+            reason: '$name が読み込み中のまま撮られている');
+        expect(find.byType(Text), findsAtLeastNWidgets(3),
+            reason: '$name に文字がほとんど無い(描画を待たずに撮っている)');
         await expectLater(
           find.byType(MaterialApp),
           matchesGoldenFile('../../marketing/$outDir/$name.png'),
@@ -217,7 +232,24 @@ void main() {
       // 埋まっていた。フォーメーション→試合→ホームの順に変えてある。
       // 撮る順は変えられない(試合はここまで進めないと撮れない)ので、
       // 名前だけで並べ替えている。
-      await shoot('08_start', const StartScreen());
+      //
+      // **開始画面は撮らない。** セーブ一覧の読み込みを待つ画面で、
+      // 読み込み中の丸だけが写った白紙になっていた(それを1枚目として
+      // ストアに出していた)。そもそもタイトルとスロット選択なので、
+      // 何ができるゲームかを伝えない。代わりにクラブ画面を撮る。
+      // 空席のまま撮ると「就いている人がいない」の赤字だけが目立つ。
+      // 雇った状態にして、能力と得意分野で人を選ぶ画面として見せる。
+      await tester.runAsync(() async {
+        for (final role in StaffRole.values) {
+          final candidates = gameState.staffCandidatesFor(role);
+          if (candidates.isEmpty) continue;
+          // いちばん質の高い候補を雇う。
+          final best = candidates
+              .reduce((a, b) => a.effectiveLevel >= b.effectiveLevel ? a : b);
+          await gameState.hireStaff(best.id);
+        }
+      });
+      await shoot('08_club', const ClubScreen());
       await shoot('02_home', const HomeScreen());
       await shoot('05_squad', const SquadScreen());
       await shoot('00_lineup', const LineupScreen());
