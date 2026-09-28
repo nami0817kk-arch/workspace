@@ -1,7 +1,6 @@
-# ラミン・ヤマル（バルセロナ）の紹介。8節の型。数字は Transfermarkt（https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958）と FotMob（https://www.fotmob.com/players/1467236）。
-# （…）の行は人が書く。材料は research/raw/<日付>_<選手>_material.md に下請けが出典つきで集める（docs/player_material_prompt.md）。
-# 写真は時期ごとに image: を置く（同じ選手を横に並べない。表の無い節は横長に切る）。スタジアムの写真は使わない。
-# 武器（同じポジション比のパーセンタイル）: 得点 100、xGOT（枠内の質） 100、xG（ゴール期待値） 96 ／ 弱点: 守備アクション 9
+# ラミン・ヤマル（バルセロナ）の紹介。8節の型（2026-09-28）。材料と出典は research/raw/20261002_yamal_material.md。
+# 数字は Transfermarkt・FotMob・バルサ公式・ラ・リーガ公式。本人の言葉はサッカーキング／東スポWEB／Qoly／Goal日本の訳をそのまま。
+# 身長は Transfermarkt（1.83m）ではなくクラブ公式の 178cm を使う（材料の「数字の食い違い」）。W杯初ゴールの「史上2位」は使わない。
 date: 2026年10月02日
 slot: other_1
 format: news
@@ -13,35 +12,51 @@ theme:
   league: spain
   kind: other
   topic: バルセロナ
-  title: ヤマルってどんな選手？（答えを伏せた言い換えを足す。例：ボールに触らないのに点だけ取る理由）
-  question: ラミン・ヤマルはどういう作りの選手で、なぜ数字が出るのか
-  takeaway: （数字で分かったことを1文で）
-  nameplate: ラミン・ヤマル｜バルセロナ FW
+  title: ヤマルってどんな選手？メッシに抱かれた赤ん坊が19年後にしたこと
+  question: ラミン・ヤマルはどういう作りの選手で、なぜ19歳で数字が出るのか
+  takeaway: シュートの数は同じ位置の100人で最上位、守備は下から9番目。右から中へ左足で打つ形だけで、19歳でユーロとW杯を獲った
+  nameplate: ラミン・ヤマル｜バルセロナ FW／スペイン代表
   bgm: assets/audio/bgm_calm.wav
 watch: 明日は③ミカエル・オリーズ
 short_title: ヤマルってどんな選手？
 thumbnail:
   line1: ヤマル
-  line2: （いちばん強い事実を伏せる。例：ボールに触らないのに●●）
+  line2: メッシに抱かれた赤ん坊が●●
   tags:
   - バルセロナ
-  photo: （横長の顔写真1枚。縦なら tools/widecrop.py）
+  - ラミネ・ヤマル
+  - 選手紹介
+  - プレースタイル
+  note_red: 有名選手の紹介 ②
+  photo: assets/images/20261002_yamal_final_face_w/01.jpg
   photos: []
 sections:
 - id: hook
   heading: どんな選手か
   tier: 報道
-  telop: （一言の定義。例：ボールに触らないのに、点だけ取る）
+  telop: メッシに抱かれた赤ん坊が、メッシからワールドカップを奪った
   narrator: キャスター
   say:
-  - （ラミン・ヤマルを一言で定義する1行。数字か意外な事実を1つ）
-  - （同じポジションの中でどこが最上位・最下位かを、100人の中の何番目、の言い方で）
-  - （幼少期の逸話を1つ）
+  - text: ラミン・ヤマル。メッシの腕の中にいた赤ん坊が、そのメッシからワールドカップを奪いました。
+    image: assets/images/20261002_yamal_final_face_w/01.jpg
+  - 同じ攻撃的MFとウイング100人の中で、シュートの数はいちばん多い側。空中戦はいちばん少ない側です。
+  - 2007年12月、生後5か月。ユニセフの撮影で、20歳のメッシが沐浴させた写真が残っています。
+  - 19年後のワールドカップ決勝で、その2人が対戦。勝ったあと、本人はこう言いました。
   - voice: ヤマル
-    text: （本人の言葉を1つ。声は16秒までに。記事の訳をそのまま）
+    text: もし数年前にメッシと対戦した後に
+  - voice: ヤマル
+    text: ワールドカップを掲げることになると誰かに言われていたら、
+    cont: true
+  - voice: ヤマル
+    text: その人のことをどうかしてると思っただろうね
+    cont: true
     pause: 0.5
+  - 10代でユーロとワールドカップを両方獲った、史上ただ1人の選手。その作りを数字と話で見ます。
   sources:
   - https://www.fotmob.com/players/1467236
+  - https://www.soccer-king.jp/news/world/wc/20260717/2184841.html
+  - https://qoly.jp/q1/17853871
+  - https://www.nbcsports.com/soccer/news/lamine-yamal-shines-in-world-cup-final-as-lionel-messi-passes-the-baton
 - id: data
   heading: 基礎DATA
   tier: 報道
@@ -61,53 +76,77 @@ sections:
     - - 生年月日
       - 2007年7月13日（19歳）
     - - 身長
-      - 1.83m
+      - 1.78m
     - - 利き足
       - 左
     - - 契約
       - 2031年まで
     - - 市場価値
       - 2.2億ユーロ
-    source: Transfermarkt
+    source: Transfermarkt・バルサ公式
   say:
-  - ラミン・ヤマル、19歳。バルセロナの右ウイングです。
-  - （生まれた場所と家族の話を1行。出典つき）
-  - 身長は1メートル83、利き足は左。契約は2031年まで残っています。
-  - 市場価値は2.2億ユーロ。前回の2億ユーロから2.2億ユーロに上がりました。
+  - text: ラミン・ヤマル、19歳。バルセロナの右ウイングです。
+    image: assets/images/20261002_yamal_spain2025/01.jpg
+  - 生まれはバルセロナの郊外。父はモロッコ、母は赤道ギニアから来た、移民の家の子です。
+  - 身長は1メートル78、利き足は左。契約は2031年まで残っています。
+  - 市場価値は2.2億ユーロ。前回の2億ユーロから、さらに上がりました。
   sources:
   - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
+  - https://www.fcbarcelona.jp/ja/football/first-team/players/129404/lamine-yamal-nasraoui-ebana
+  - https://www.jiji.com/jc/article?k=2026071400210&g=spo
 - id: career
   heading: 歩んできた道と転機
   tier: 報道
-  telop: （どこで値が跳ねたかを一言で）
+  telop: 15歳でデビュー、16歳で最年少ゴール、19歳でW杯
   narrator: 解説
   card:
     type: table
     title: 歩んできた道
     columns:
-    - シーズン
-    - クラブ
+    - 日付
+    - 出来事
     - 年齢
-    - 市場価値
     rows:
-    - - 23/24〜26/27
-      - バルセロナ
-      - 16歳〜19歳
-      - 最高 2.2億ユーロ
-    source: Transfermarkt
+    - - 2023年4月29日
+      - トップデビュー（ベティス戦）
+      - 15歳290日
+    - - 2023年9月8日
+      - 代表デビューで初ゴール（ジョージア戦）
+      - 16歳57日
+    - - 2024年7月9日
+      - ユーロ準決勝で最年少ゴール（フランス戦）
+      - 16歳362日
+    - - 2025年7月16日
+      - バルセロナの10番に
+      - 18歳
+    - - 2026年7月19日
+      - ワールドカップ優勝（決勝アルゼンチン戦）
+      - 19歳
+    source: サッカーキング・AFPBB・Football ZONE・バルサ公式
   say:
-  - ヤマルの16歳はバルセロナ。市場価値は2.2億ユーロでした。
-  - text: （2つ目のクラブと年齢・市場価値を1行）
+  - text: ヤマルの道は、7歳で入ったバルセロナの育成組織から、一度も外に出ていません。
+    image: assets/images/20261002_yamal_semi_face/01.jpg
+  - text: 市場価値は16歳のときから伸び続けて、いまが最高額です。
     image: assets/stats/player_20261002_1467236_value.png
     no_telop: true
-  - （転機を1つ：入団拒否・大怪我・大舞台での一撃、など。日付と相手を入れる。出典つき）
-  - （いまのクラブまでの道を1〜2行。「そしていまの額に」で締める）
+  - 転機は2023年4月29日、ベティス戦。
+  - 15歳290日で、クラブ最年少のトップデビューでした。
+  - 同じ年の9月に代表デビューして初ゴール。
+  - 10月にはラ・リーガの最年少ゴールも塗り替えました。
+  - 翌年のユーロ準決勝、フランス戦。16歳362日で、大会の最年少ゴールです。
+  - text: 2025年7月16日、契約を2031年まで延ばした日に10番を受け取り、
+    image: assets/images/20261002_yamal_barca10/01.jpg
+  - その1年後、19歳でワールドカップを掲げました。
   sources:
   - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
+  - https://www.soccer-king.jp/news/world/esp/20230430/1763245.html
+  - https://www.afpbb.com/articles/-/3480879
+  - https://www.football-zone.net/archives/543440
+  - https://www.fcbarcelona.com/en/news/4314453/lamine-yamal-is-the-fc-barcelona-no10
 - id: style
   heading: プレースタイル
   tier: 報道
-  telop: （左足・ボックスの中・ボールは持たない、のような3語）
+  telop: 右から中へ、左足で打つ。守らない
   narrator: 解説
   card:
     type: bars
@@ -130,18 +169,22 @@ sections:
   - text: ヤマルのプレースタイルを、同じ攻撃的MF・ウイングと比べた数字で見ます。
     image: assets/stats/player_20261002_1467236_radar.png
     no_telop: true
-  - （6つの軸のうち最上位と最下位を言う）
-  - （つまりどういう選手か、を1行で）
-  - （弱点を1つ。数字で）
-  - text: （では、その強みはどこから来るか。動きの話を1〜2行。出典つき）
+  - 6つの軸のうち、シュートの数と得点は最上位。空中戦と守備の関与は最下位です。
+  - つまり、右サイドから中へ持ち込んで、左足で自分が打つ選手です。
+  - 弱点は守備。守備のアクションは、同じ位置の中で下から9番目。
+  - 2025年4月のドルトムント戦では走る量がチームでいちばん少なく、味方から直接言われました。
+  - text: では、どこでボールを持つか。右サイドの高い位置から、中へ入る動きです。
     image: assets/stats/player_20261002_1467236_heat.png
     no_telop: true
-  - text: （今季のシュートの傾向を1行：本数・ペナルティエリアの中の割合）
+  - ドリブルは今季30回成功、成功率60%。作ったチャンスは27回で、上位3%です。
+  - text: 今季のシュートは、ラ・リーガ7試合で38本。1試合に5本以上打って、7点を取っています。
     image: assets/stats/player_20261002_1467236_shots.png
     no_telop: true
-  - （体の数字：身長・最高速度など1行）
   sources:
   - https://www.fotmob.com/players/1467236
+  - https://learning.coachesvoice.com/cv/barcelona-extraordinary-talent-lamine-yamal-style-of-play/
+  - https://www.tokyo-sports.co.jp/articles/-/341486
+  - https://the-footballanalyst.com/lamine-yamal-player-analysis/
 - id: past
   heading: 過去5シーズンの数字
   tier: 報道
@@ -151,7 +194,7 @@ sections:
     type: table
     title: ラミン・ヤマル 直近5シーズン（代表を含む全公式戦）
     columns:
-    - シーズン
+    - 季
     - 試合
     - 得点
     - アシスト
@@ -184,12 +227,15 @@ sections:
       - 4425分
     source: Transfermarkt
   say:
-  - ヤマルの直近5シーズン、代表を含む全公式戦です。古い順に見ます。
-  - 2021年からのシーズンは10試合で4点。
-  - （いちばん多かったシーズンと、その意味を1行。記録があれば出典つきで）
-  - そのあとのシーズンも表のとおり。（傾向を1行）
+  - text: ヤマルの直近5シーズン、代表を含む全公式戦です。古い順に見ます。
+    image: assets/images/20261002_yamal_spain2025_w/01.jpg
+  - 2021年からのシーズンは10試合で4点。まだ育成年代の数字です。
+  - 跳ねたのは2023年から。60試合に出ました。
+  - 翌年は64試合で21点29アシスト。国内3冠の年です。
+  - 2025年からは55試合で25点。ラ・リーガの最優秀選手に選ばれました。
   sources:
   - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
+  - https://www.laliga.com/en-GB/news/lamine-yamal-ea-sports-laliga-player-of-the-season-2025-2026
 - id: season
   heading: 今季の数字と直近5試合
   tier: 報道
@@ -233,31 +279,69 @@ sections:
       - '9.5'
     source: FotMob
   say:
-  - text: （前置き1行：ヤマルはどういう選手か＋題の答えを一言で。ショートはここから）
+  - text: バルセロナのヤマル、19歳。10代でユーロもワールドカップも獲った右ウイング。今季も点が止まりません。
     short_only: true
-  - 今季はここまで9試合で9得点6アシスト、出場時間は761分。84分に1点のペースです。
+  - text: 今季はここまで9試合で9得点6アシスト、出場時間は761分。84分に1点のペースです。
+    image: assets/images/20261002_yamal_final_wide/01.jpg
   - ラ・リーガは7試合で7得点4アシスト。
   - チャンピオンズリーグは1試合で1得点2アシスト。
-  - （直近5試合の表から1行：出場時間・得点・10点満点の評点）
-  - （題の答えを1行。ショートはこの節だけで完結させる）
+  - 直近5試合は5点6アシスト。10点満点の評点は、いちばん低い試合でも8.8です。
+  - 点も、作る数も落ちていない。右から中へ、左足で打つ形が毎試合出ています。
   sources:
   - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
   - https://www.fotmob.com/players/1467236
 - id: story
   heading: マル秘話
   tier: 報道
-  telop: （エピソードを一言で）
+  telop: 「304」と、メッシではない10番
   narrator: 解説
+  card:
+    type: points
+    title: ヤマルの原点
+    items:
+    - 「304」：育ったロカフォンダ地区の郵便番号の下3桁
+    - 子どもの頃の憧れはメッシではなくネイマール
+    - 背番号は41→27→19→10。10番はアンス・ファティから
   say:
-  - 数字の外側に、この選手らしい話が2つあります。
-  - （1つ目：食事・家族・背番号の由来・憧れの選手など。出典つき）
+  - text: 数字の外側に、この選手らしい話が2つあります。
+    image: assets/images/20261002_yamal_medal_w/01.jpg
+  - 1つ目は「304」。ワールドカップのサウジアラビア戦で、ゴールのあと両手で作った数字です。
+  - 育ったマタロのロカフォンダ地区、郵便番号の下3桁。移民の労働者が多く住む街です。
+  - 子どもの頃を、本人はこう話しています。
   - voice: ヤマル
-    text: '（本人の言葉。記事の訳をそのまま。30字で割る。最後の行に pause: 0.6）'
-  - （2つ目のエピソード）
-  - text: （締めの1行）
+    text: 昔はキッチンと寝室が一緒になっているような
+  - voice: ヤマル
+    text: 狭いアパートに住んでいました。
+    cont: true
+  - voice: ヤマル
+    text: だから今、母が幸せそうにしていて、
+    cont: true
+  - voice: ヤマル
+    text: 弟が僕の理想としていたような
+    cont: true
+  - voice: ヤマル
+    text: 恵まれた子供時代を送れているのを見ることが、
+    cont: true
+  - voice: ヤマル
+    text: 僕にとって一番の幸せなんです
+    cont: true
+    pause: 0.6
+  - 2つ目は背番号。41、27、19と来て、2025年7月16日に10番を受け取りました。
+  - 子どもの頃の憧れはメッシではなくネイマールだった、と本人が話しています。10番については、こう。
+  - voice: ヤマル
+    text: バルサは私の人生です。7歳からここにいます
+  - voice: ヤマル
+    text: メッシは自分の道を歩んだ。私も自分の道を歩む
+    cont: true
+    pause: 0.6
+  - text: その翌年の夏、代表の19番で世界一になりました。
     pause: 0.5
   sources:
-  - （記事のURL）
+  - https://www.jiji.com/jc/article?k=2026071400210&g=spo
+  - https://news.yahoo.co.jp/articles/4465c4d1b687c1fea77c97420097e2810d8bde6f
+  - https://www.fcbarcelona.com/en/news/4314453/lamine-yamal-is-the-fc-barcelona-no10
+  - https://www.tokyo-sports.co.jp/articles/-/352354
+  - https://www.sportbible.com/football/la-liga/fc-barcelona/lamine-yamal-lionel-messi-barcelona-257853-20241022
 - id: view
   heading: 見立て
   tier: 背景
@@ -265,11 +349,21 @@ sections:
   narrator: 解説
   telop: 10月11日、バルセロナ対ヘタフェ
   say:
-  - 話を数字に戻して、最後に見立てです。
-  - （同じポジションの選手1人と比べる数字を1つ）
-  - （数字が落ちていないか・伸びているか。1行）
-  - クラブの次の試合は10月11日、バルセロナ対ヘタフェ。
-  - （そこで何を見るか）
+  - text: 話を数字に戻して、最後に見立てです。
+    image: assets/images/20261002_yamal_semi_face_w/01.jpg
+  - 比べる相手は、本人が名指ししたエムバペ。今季9試合で9点、779分。
+  - ヤマルも9試合で9点、時間もほぼ同じ。点は同じで、そこに6アシストが乗ります。
+  - バロンドールの発表は10月26日。本人は9月に、こう言いました。
+  - voice: ヤマル
+    text: 世界最高の選手は僕たち2人だと思っていて、
+  - voice: ヤマル
+    text: 今年は勝ち取ったタイトルから僕が受賞に値するはずだ
+    cont: true
+    pause: 0.6
+  - いまは各国の代表戦のためリーグが中断中で、クラブの次の試合は10月11日、ヘタフェ戦。
+  - 1試合5本のシュートが続くか。そして、下から9番目の守備の数字が動くかを見ます。
   sources:
   - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
+  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
   - https://www.fotmob.com/players/1467236
+  - https://www.goal.com/jp/ニュース/barcelona-yamal-mbappe-real-madrid-loga-football-soccer-20260914/blt1cbcbe62c89b3ec7
