@@ -71,7 +71,7 @@ clubs:
   - {canonical: バルセロナ, league: spain, big: true,
      aka: [Barcelona, Barca, Barça, FCB, バルサ]}
   - {canonical: アトレティコ・マドリード, league: spain, big: true,
-     aka: [Atletico Madrid, Atlético Madrid, Atleti, アトレティコ, アトレティコ・マドリー]}
+     aka: [Atletico Madrid, Atlético Madrid, Atlético de Madrid, Atleti, アトレティコ, アトレティコ・マドリー]}
   - {canonical: セビージャ, league: spain, big: false, aka: [Sevilla, セビリア]}
   - {canonical: ビジャレアル, league: spain, big: false, aka: [Villarreal, ビリャレアル]}
   - {canonical: アスレティック・ビルバオ, league: spain, big: false,
@@ -132,7 +132,7 @@ clubs:
   # 2026-09-11 に追加。CL初出場の回で、タイトルの主語の検査が名前と認めなかった
   - {canonical: コモ, league: italy, big: false, aka: [Como, Como 1907, コモ1907]}
   - {canonical: ローマ, league: italy, big: false, aka: [AS Roma, Roma, ASローマ]}
-  - {canonical: ラツィオ, league: italy, big: false, aka: [Lazio]}
+  - {canonical: ラツィオ, league: italy, big: false, aka: [SS Lazio, Lazio]}
   - {canonical: アタランタ, league: italy, big: false, aka: [Atalanta]}
   - {canonical: フィオレンティーナ, league: italy, big: false, aka: [Fiorentina]}
   # 2026-09-28 に追加（順位表シリーズ）
@@ -153,9 +153,9 @@ clubs:
      aka: [Paris Saint-Germain, Paris St-Germain, PSG, パリSG, パリ・サンジェルマンFC]}
   - {canonical: マルセイユ, league: france, big: false,
      aka: [Olympique Marseille, Marseille, OM]}
-  - {canonical: リヨン, league: france, big: false, aka: [Olympique Lyonnais, Lyon]}
+  - {canonical: リヨン, league: france, big: false, aka: [Olympique Lyonnais, Olympique Lyon, Lyon]}
   - {canonical: モナコ, league: france, big: false, aka: [AS Monaco, Monaco]}
-  - {canonical: リール, league: france, big: false, aka: [Lille, LOSC]}
+  - {canonical: リール, league: france, big: false, aka: [LOSC Lille, Lille, LOSC]}
   # 2026-09-28 に追加（順位表シリーズ）。Nice / Lens / Brest / Angers は英語の普通の語と
   # 同じ綴りなので、見出しの照合には長い形だけを置く（FotMob の短い名前は standings.py が長い形に直す）
   - {canonical: パリFC, league: france, big: false, aka: [Paris FC]}

@@ -1,0 +1,226 @@
+title: 有名選手の紹介・10月の人選
+lead: 市場価値の順にリーグとクラブをばらして並べた。○を付けた人から毎日1人
+labels:
+- ○ 作る
+- △ 保留
+- ✖ 外す
+legend: false
+note: 数字は Transfermarkt（市場価値・年齢・契約）。日本語名は Wikidata。呼び方が違えば直す
+items:
+- num: 1
+  head: アーリング・ハーランド（マンチェスター・シティ）
+  slot: プレミア
+  fmt: 紹介
+  why: センターフォワード・26歳・市場価値 €220M・契約 2034年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/418560
+  src: Transfermarkt
+- num: 2
+  head: ラミン・ヤマル（バルセロナ）
+  slot: ラ・リーガ
+  fmt: 紹介
+  why: 右ウイング・19歳・市場価値 €220M・契約 2031年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/937958
+  src: Transfermarkt
+- num: 3
+  head: ミカエル・オリーズ（バイエルン）
+  slot: ブンデス
+  fmt: 紹介
+  why: 右ウイング・24歳・市場価値 €170M・契約 2029年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/566723
+  src: Transfermarkt
+- num: 4
+  head: キリアン・エムバペ（レアル・マドリード）
+  slot: ラ・リーガ
+  fmt: 紹介
+  why: センターフォワード・27歳・市場価値 €200M・契約 2029年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/342229
+  src: Transfermarkt
+- num: 5
+  head: ヴィティーニャ（パリ・サンジェルマン）
+  slot: リーグ・アン
+  fmt: 紹介
+  why: 守備的MF・26歳・市場価値 €140M・契約 2029年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/487469
+  src: Transfermarkt
+- num: 6
+  head: ジュード・ベリンガム（レアル・マドリード）
+  slot: ラ・リーガ
+  fmt: 紹介
+  why: 攻撃的MF・23歳・市場価値 €160M・契約 2029年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/581678
+  src: Transfermarkt
+- num: 7
+  head: ジョアン・ネヴェス（パリ・サンジェルマン）
+  slot: リーグ・アン
+  fmt: 紹介
+  why: セントラルMF・22歳・市場価値 €140M・契約 2031年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/670681
+  src: Transfermarkt
+- num: 8
+  head: ペドリ（バルセロナ）
+  slot: ラ・リーガ
+  fmt: 紹介
+  why: セントラルMF・23歳・市場価値 €150M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/683840
+  src: Transfermarkt
+- num: 9
+  head: デクラン・ライス（アーセナル）
+  slot: プレミア
+  fmt: 紹介
+  why: セントラルMF・27歳・市場価値 €120M・契約 2028年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/357662
+  src: Transfermarkt
+- num: 10
+  head: フリアン・アルバレス（アトレティコ・マドリード）
+  slot: ラ・リーガ
+  fmt: 紹介
+  why: センターフォワード・26歳・市場価値 €120M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/576024
+  src: Transfermarkt
+- num: 11
+  head: エリオット・アンダーソン（マンチェスター・シティ）
+  slot: プレミア
+  fmt: 紹介
+  why: 守備的MF・23歳・市場価値 €110M・契約 2031年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/567576
+  src: Transfermarkt
+- num: 12
+  head: ジャマル・ムシアラ（バイエルン）
+  slot: ブンデス
+  fmt: 紹介
+  why: 攻撃的MF・23歳・市場価値 €100M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/580195
+  src: Transfermarkt
+- num: 13
+  head: ブカヨ・サカ（アーセナル）
+  slot: プレミア
+  fmt: 紹介
+  why: 右ウイング・25歳・市場価値 €110M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/433177
+  src: Transfermarkt
+- num: 14
+  head: ラウタロ・マルティネス（インテル）
+  slot: セリエA
+  fmt: 紹介
+  why: センターフォワード・29歳・市場価値 €85M・契約 2029年まで・主将
+  url: https://www.transfermarkt.com/-/profil/spieler/406625
+  src: Transfermarkt
+- num: 15
+  head: モーガン・ロジャーズ（チェルシー）
+  slot: プレミア
+  fmt: 紹介
+  why: 攻撃的MF・24歳・市場価値 €110M・契約 2033年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/503743
+  src: Transfermarkt
+- num: 16
+  head: ケナン・ユルドゥズ（ユヴェントス）
+  slot: セリエA
+  fmt: 紹介
+  why: 左ウイング・21歳・市場価値 €75M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/845654
+  src: Transfermarkt
+- num: 17
+  head: フロリアン・ヴィルツ（リバプール）
+  slot: プレミア
+  fmt: 紹介
+  why: 攻撃的MF・23歳・市場価値 €100M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/598577
+  src: Transfermarkt
+- num: 18
+  head: アレッサンドロ・バストーニ（インテル）
+  slot: セリエA
+  fmt: 紹介
+  why: センターバック・27歳・市場価値 €65M・契約 2028年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/315853
+  src: Transfermarkt
+- num: 19
+  head: ドミニク・ソボスライ（リバプール）
+  slot: プレミア
+  fmt: 紹介
+  why: 攻撃的MF・25歳・市場価値 €100M・契約 2031年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/451276
+  src: Transfermarkt
+- num: 20
+  head: マヌ・コネ（ローマ）
+  slot: セリエA
+  fmt: 紹介
+  why: セントラルMF・25歳・市場価値 €60M・契約 2029年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/624690
+  src: Transfermarkt
+- num: 21
+  head: モイセス・カイセド（チェルシー）
+  slot: プレミア
+  fmt: 紹介
+  why: 守備的MF・24歳・市場価値 €100M・契約 2033年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/687626
+  src: Transfermarkt
+- num: 22
+  head: パブロ・バリオス（アトレティコ・マドリード）
+  slot: ラ・リーガ
+  fmt: 紹介
+  why: セントラルMF・23歳・市場価値 €55M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/775605
+  src: Transfermarkt
+- num: 23
+  head: サンドロ・トナーリ（トッテナム）
+  slot: プレミア
+  fmt: 紹介
+  why: 守備的MF・26歳・市場価値 €80M・契約 2032年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/397033
+  src: Transfermarkt
+- num: 24
+  head: ニコ・シュロッターベック（ドルトムント）
+  slot: ブンデス
+  fmt: 紹介
+  why: センターバック・26歳・市場価値 €55M・契約 2031年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/388198
+  src: Transfermarkt
+- num: 25
+  head: ブライアン・ムベウモ（マンチェスター・ユナイテッド）
+  slot: プレミア
+  fmt: 紹介
+  why: 右ウイング・27歳・市場価値 €75M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/413039
+  src: Transfermarkt
+- num: 26
+  head: フェリックス・ヌメチャ（ドルトムント）
+  slot: ブンデス
+  fmt: 紹介
+  why: セントラルMF・25歳・市場価値 €55M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/406640
+  src: Transfermarkt
+- num: 27
+  head: マテウス・クーニャ（マンチェスター・ユナイテッド）
+  slot: プレミア
+  fmt: 紹介
+  why: センターフォワード・27歳・市場価値 €75M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/517894
+  src: Transfermarkt
+- num: 28
+  head: ドニエル・マレン（ローマ）
+  slot: セリエA
+  fmt: 紹介
+  why: センターフォワード・27歳・市場価値 €55M・契約 2030年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/326029
+  src: Transfermarkt
+- num: 29
+  head: イゴール・チアゴ（ブレントフォード）
+  slot: プレミア
+  fmt: 紹介
+  why: センターフォワード・25歳・市場価値 €65M・契約 2031年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/739443
+  src: Transfermarkt
+- num: 30
+  head: ラミン・カマラ（モナコ）
+  slot: リーグ・アン
+  fmt: 紹介
+  why: セントラルMF・22歳・市場価値 €55M・契約 2029年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/918969
+  src: Transfermarkt
+- num: 31
+  head: ルカ・ヴシュコヴィッチ（ブライトン）
+  slot: プレミア
+  fmt: 紹介
+  why: センターバック・19歳・市場価値 €60M・契約 2031年まで
+  url: https://www.transfermarkt.com/-/profil/spieler/892160
+  src: Transfermarkt

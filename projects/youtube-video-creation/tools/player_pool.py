@@ -199,6 +199,11 @@ def main(argv: list[str]) -> int:
         build()
         return 0
     rows = json.loads(POOL.read_text(encoding="utf-8"))
+    # 呼び方の上書きとクラブ名の辞書は、控えを作り直さなくても読むときに当てる
+    over = overrides()
+    for r in rows:
+        r["ja"] = over.get(r["name"]) or r["ja"]
+        r["club"] = ja_mod.club_ja(r["club"])
     if args.cmd == "page":
         import yaml
 
