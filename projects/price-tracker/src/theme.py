@@ -353,8 +353,17 @@ def verdict_note(row: dict) -> str:
     if not row.get("trustworthy"):
         return (f"記録は{days}日分です。最安値かどうかを言うには"
                 f"{MIN_DAYS_FOR_LOW}日分必要なため、まだ判断できません。")
+    if row.get("moved") is False:
+        # 価格が動いていないことは cheaper_days が言う（ポイントで実質だけが
+        # 動いた場合もあちらが拾う）。ここで言うと同じ文が2行続く。
+        # 最安値と最高値も同じ数字なので、並べると同じ数を2回読ませることになる。
+        return ""
     if row.get("at_low"):
-        return "記録した中で最も安い価格です。"
+        # 「どれだけ下がって最安に来たか」を添える。最安値だと言うだけでは、
+        # 値幅0.4%の商品と30%の商品が同じ顔になる。
+        return (f'記録した中で最も安い価格です。'
+                f'記録{days}日の最高値 {yen(row["high"])} から '
+                f'{pct(row["off_high_pct"])} 下がっています。')
     if row.get("near_low"):
         return f'記録した中の最安値 {yen(row["low"])} に近い価格です。'
     if row.get("rise_pct"):
@@ -1696,6 +1705,10 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                  ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
                  ("記録した中での最高値", yen(row["high"])),
                  ("最安値との差", pct(row["vs_low_pct"]) if row["vs_low_pct"] else "最安値と同じ"),
+                 ("記録した中の値幅",
+                  (f'{yen(row["low"])} 〜 {yen(row["high"])}'
+                   f'（{pct((row["high"] - row["low"]) / row["high"])}）')
+                  if row.get("moved") else "動いていません"),
                  ("記録日数", f'{row["days"]}日')]
     if int(row.get("point_rate") or 1) > 1:
         rows_html.insert(1, ("ポイント倍率", f'{row["point_rate"]}倍'))
@@ -1761,7 +1774,8 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
             + '</div>'
             + AD_NOTICE
-            + f'<p class="verdict">{esc(verdict_note(row))}</p>'
+            + (f'<p class="verdict">{esc(verdict_note(row))}</p>'
+               if verdict_note(row) else '')
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
             # 見せる履歴があるかは実質価格で見る。価格だけで数えると動いたのは
             # 1,486件（13.9%）だが、ポイントを含めると2,252件（21.0%）になる。

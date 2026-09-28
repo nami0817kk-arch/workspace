@@ -186,6 +186,60 @@ class AnalyzeTest(unittest.TestCase):
         self.assertFalse(v["at_low"])
         self.assertAlmostEqual(v["vs_low_pct"], 0.0125)
 
+    def test_一度も動いていない商品は最安値を名乗らない(self):
+        """ずっと同じ値段なら、その値段が自動的に記録上の最安値になる。
+
+        安くなったわけではないのに札が付くと、読み手は値下がりがあったと
+        受け取る。実測（2026-09-28・記録23日）では、「記録した中で最安」の
+        札が付いていた3,925件のうち3,701件（94.3%）が1円も動いていなかった。
+        """
+        v = analyze.evaluate(self.rec([1000] * 10), 0.05, 0.02)
+
+        self.assertTrue(v["trustworthy"])
+        self.assertFalse(v["moved"])
+        self.assertFalse(v["at_low"])
+        self.assertFalse(v["near_low"])
+        self.assertEqual(v["label"], "変動なし")
+
+    def test_動いて最安に来た商品は最安値を名乗る(self):
+        v = analyze.evaluate(self.rec([1200] * 7 + [1000]), 0.05, 0.02)
+
+        self.assertTrue(v["moved"])
+        self.assertTrue(v["at_low"])
+        self.assertEqual(v["label"], "記録した中で最安")
+
+    def test_値幅が小さい商品は最安値に近いと言わない(self):
+        """値幅がしきい値以下だと、どの日を取っても「最安値に近い」になる。
+
+        実測では「最安値に近い」87件のうち66件がこれで、そのうち50件は
+        いまが記録上の最高値だった。
+        """
+        # 全体の値幅は 1000→1010 の1.0%で、しきい値2%より小さい
+        v = analyze.evaluate(self.rec([1000] + [1010] * 7), 0.05, 0.02)
+
+        self.assertTrue(v["moved"])
+        self.assertFalse(v["near_low"])
+        self.assertFalse(v["at_low"])
+        self.assertAlmostEqual(v["spread_pct"], 10 / 1010)
+
+    def test_値幅が十分あれば最安値に近いと言う(self):
+        v = analyze.evaluate(self.rec([800] + [1000] * 6 + [810]), 0.05, 0.02)
+
+        self.assertTrue(v["near_low"])
+        self.assertGreater(v["spread_pct"], 0.02)
+
+    def test_動いていない商品は最安値への近さで点を取らない(self):
+        """自分の値段と自分の最安値を比べているだけなので情報にならない。
+
+        直す前は「いま条件がそろっている商品」600件のうち358件がこれだった。
+        """
+        flat = analyze.evaluate(self.rec([1000] * 10), 0.05, 0.02)
+        moved = analyze.evaluate(self.rec([1200] * 7 + [1000]), 0.05, 0.02)
+
+        parts = dict(analyze.score_breakdown(flat))
+        self.assertEqual(parts["最安値への近さ"], 0)
+        self.assertEqual(dict(analyze.score_breakdown(moved))["最安値への近さ"], 40)
+
     def test_drop_percentage(self):
         v = analyze.evaluate(self.rec([2000, 1800]), 0.05, 0.02)
         self.assertTrue(v["dropped"])
