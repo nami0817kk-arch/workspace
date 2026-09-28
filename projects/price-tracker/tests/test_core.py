@@ -875,3 +875,35 @@ class 一覧の道具Test(unittest.TestCase):
 
         self.assertIn("p.set('free', '1')", js)
         self.assertIn("q.get('free')", js)
+
+
+class 記録を全部残すTest(unittest.TestCase):
+    """価格履歴の蓄積がこのPJTの価値なので、古い日を捨てない。
+    既定は直近14日で、それより前は畳んでおく（開く印を出す）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def tail(self, n):
+        return [[f"2026-09-{i + 1:02d}", 1000 + i, 1] for i in range(n)]
+
+    def test_14日を超えたら古い日も表に残す(self):
+        out = self.theme.history_table({"tail": self.tail(20)})
+
+        self.assertIn("09/01", out)          # いちばん古い日
+        self.assertIn("記録20日ぶんをすべて見る", out)
+        self.assertIn("limited", out)
+
+    def test_14日以下なら畳む印を出さない(self):
+        out = self.theme.history_table({"tail": self.tail(10)})
+
+        self.assertNotIn("すべて見る", out)
+        self.assertNotIn("limited", out)
+
+    def test_表を2枚出さない(self):
+        # 13,406ページあるので、同じ表を2枚書くと配信物がその分ふくらむ
+        out = self.theme.history_table({"tail": self.tail(30)})
+
+        self.assertEqual(out.count("<table"), 1)

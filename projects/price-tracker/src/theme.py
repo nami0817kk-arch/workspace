@@ -1393,9 +1393,13 @@ def history_table(row: dict) -> str:
     折れ線は形しか分からない。「いつ・いくらだったか」を読めるようにする。
     倍率が付いている日はそれも出す（実質いくらだったかを後から確かめられる）。
     """
-    tail = [store_entry(e) for e in (row.get("tail") or [])][-14:]
+    tail = [store_entry(e) for e in (row.get("tail") or [])]
     if len(tail) < 2:
         return ""
+    # 記録が伸びるほど価値が出るものなので、古い日を捨てない。既定は直近14日で、
+    # それより前は畳んでおく。表を2枚出すと配信物がその分ふくらむので
+    # （13,406ページある）、1枚の表の行を CSS で隠し、印で開く。
+    limited = len(tail) > 14
 
     def move(now, before):
         """前の日からの差。価格.com の「変動額」に当たる列。
@@ -1431,10 +1435,17 @@ def history_table(row: dict) -> str:
                 '<th scope="col">実質</th><th scope="col">前日差</th></tr></thead>')
     cols = ('<colgroup><col class="c-day"><col class="c-price">'
             '<col class="c-move"><col class="c-price"><col class="c-move"></colgroup>')
+    more = ('<input type="checkbox" id="allhist" class="allhist-toggle">'
+            if limited else "")
+    opener = (f'<label for="allhist" class="allhist">記録{len(tail)}日ぶんを'
+              f'すべて見る</label>' if limited else "")
     return ('<h2>価格の記録</h2>'
-            f'<table class="facts history">{cols}{head_row}'
+            + more
+            + f'<table class="facts history{" limited" if limited else ""}">'
+            f'{cols}{head_row}'
             f'<tbody>{"".join(body)}</tbody></table>'
-            '<p class="note">「実質」はポイント分を引いた目安です。'
+            + opener
+            + '<p class="note">「実質」はポイント分を引いた目安です。'
             '楽天の値引きは価格ではなく倍率で動くことが多いため、'
             '価格が同じ日でも実質は動きます。</p>')
 

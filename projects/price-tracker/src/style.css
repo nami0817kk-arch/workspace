@@ -889,6 +889,26 @@ main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 
 .lede .point-line { margin: 6px 0 0; font-size: 14px; }
 .lede .headline .cond { vertical-align: middle; }
 
+/* 59. 価格の記録は、古い日を捨てずに畳んでおく。表を2枚出すと配信物が
+   ふくらむ（13,406ページある）ので、1枚の表の行を隠して印で開く。
+   JS は使わない（読み込む前でも開ける）。 */
+.allhist-toggle { position: absolute; width: 1px; height: 1px;
+  opacity: 0; pointer-events: none; }
+.history.limited tbody tr:nth-child(n+15) { display: none; }
+.allhist-toggle:checked ~ .history.limited tbody tr { display: table-row; }
+.allhist-toggle:checked ~ .allhist { display: none; }
+.allhist { display: inline-block; margin: 8px 0 0; padding: 8px 14px;
+  min-height: 36px; border: 1px solid var(--line); border-radius: 8px;
+  font-size: 13px; color: var(--ink); cursor: pointer; }
+.allhist:hover { background: var(--panel); }
+.allhist-toggle:focus-visible ~ .allhist { outline: 2px solid var(--accent);
+  outline-offset: 2px; }
+@media print {
+  /* 紙には全部出す（畳んだままだと記録が欠ける） */
+  .history.limited tbody tr { display: table-row; }
+  .allhist { display: none; }
+}
+
 /* 57. 「記録を始めてからの変化」。価格.com の価格推移ページにある
    「初値 / 現在 / 差額・値下がり率」の3行表に倣う。
    いくらから、いくらまで、いくら動いたかが一目で分かる。
