@@ -24,14 +24,19 @@ BAR_HIGHLIGHT = (89, 176, 255)   # 注目させる1本。7.8:1
 # カード面の上に直接描くので、半透明ではなく塗り込んだ色を使う
 # （RGBA で半透明を描くと下地を置き換えてしまい、帯が白く抜ける）
 GRID = (62, 72, 90, 255)
-ZEBRA = (32, 41, 58, 255)
+ZEBRA = (22, 28, 38, 255)
 BUBBLE = (30, 38, 54, 255)      # 反応カードの吹き出し
 
-PANEL = (16, 22, 34, 232)
-BORDER = (255, 255, 255, 46)
+# **見た目の作り直し**（2026-09-28 ユーザー「全体的に画面描画の質を上げたい」「もう少し見やすく」）。
+# 板は写真を透けさせない（ほぼ不透明）。色はチャンネルの2色（深い緑＋黄）で通す
+PANEL = (12, 18, 28, 248)
+BORDER = (255, 255, 255, 50)
 TEXT = (245, 247, 250, 255)
 SUB = (168, 178, 194, 255)
-DEFAULT_ACCENT = "#3ea6ff"
+BRAND_GREEN = (11, 61, 46, 255)     # 表の見出し行・節のピル
+BRAND_GOLD = (255, 213, 74, 255)    # 見出しの字・話している行の印・数字
+HILITE = (44, 50, 60, 255)          # 話している行
+DEFAULT_ACCENT = "#ffd54a"   # 板の左の縦帯もチャンネルの黄に（2026-09-28）
 
 PAD = 44
 RADIUS = 22
@@ -522,9 +527,10 @@ def _fit_cell(draw, text: str, font, room: float) -> str:
 
 def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
     """順位表のような表。1行だけ強調できる。"""
-    title_font = ImageFont.truetype(font_path, 42)
+    # 字を一回り大きく（2026-09-28「もう少し見やすく」）。34 → 40。入らなければ縮む
+    title_font = ImageFont.truetype(font_path, 44)
     head_font = ImageFont.truetype(font_path, 30)
-    cell_font = ImageFont.truetype(font_path, 34)
+    cell_font = ImageFont.truetype(font_path, 40)
 
     columns = [str(c) for c in (spec.get("columns") or [])]
     rows = [[str(cell) for cell in row] for row in (spec.get("rows") or [])]
@@ -550,7 +556,7 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
 
     # **入らなければ字を縮める。**切って「…」にすると中身が消える
     # （2026-09-14 に「ハーランドはオンサイドと…」で実際に消えた）
-    size = 34
+    size = 40
     natural = _natural(cell_font)
     while sum(natural) > inner and size > 22:
         size -= 2
@@ -576,37 +582,44 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
     if title:
         blocks.append(
             {
-                "height": 62,
+                "height": 66,
                 "draw": lambda draw, y: draw.text(
                     (PAD + 12, y), title, font=title_font, fill=TEXT
                 ),
             }
         )
 
+    # 見出し行は緑の帯に黄色の字（罫線1本より目が行く）
     def draw_head(draw, y):
+        draw.rectangle([PAD - 8, y - 6, width - PAD + 8, y + 44], fill=BRAND_GREEN)
         x = PAD + 12
         for index, name in enumerate(columns):
-            draw.text((x, y), name, font=head_font, fill=SUB)
+            draw.text((x, y + 2), name, font=head_font, fill=BRAND_GOLD)
             x += widths[index]
-        draw.line([(PAD + 12, y + 42), (width - PAD, y + 42)], fill=GRID, width=2)
 
-    blocks.append({"height": 56, "draw": draw_head})
+    blocks.append({"height": 58, "draw": draw_head})
 
+    row_h = 72
     for number, row in enumerate(rows[:6]):
         def draw_row(draw, y, row=row, number=number):
             if number == highlight:
+                # 話している行：明るい地＋左に黄色の印。数字も黄色
                 draw.rounded_rectangle(
-                    [PAD + 4, y - 4, width - PAD + 4, y + 44], radius=8, fill=ZEBRA
+                    [PAD - 8, y - 4, width - PAD + 8, y + row_h - 8], radius=10, fill=HILITE
                 )
+                draw.rectangle([PAD - 8, y + 4, PAD - 2, y + row_h - 16], fill=BRAND_GOLD)
+            elif number % 2 == 0:
+                draw.rectangle([PAD - 8, y - 4, width - PAD + 8, y + row_h - 8], fill=ZEBRA)
             x = PAD + 12
             for index, cell in enumerate(row):
-                color = TEXT if index != 0 else SUB
+                last = index == len(row) - 1
+                color = BRAND_GOLD if (number == highlight and last) else (TEXT if index != 0 else SUB)
                 # **列からはみ出させない。**はみ出すと隣の字に重なる
                 shown = _fit_cell(draw, cell, cell_font, widths[index] - 16)
-                draw.text((x, y), shown, font=cell_font, fill=color)
+                draw.text((x, y + 10), shown, font=cell_font, fill=color)
                 x += widths[index]
 
-        blocks.append({"height": 52, "draw": draw_row})
+        blocks.append({"height": row_h, "draw": draw_row})
     return blocks
 
 

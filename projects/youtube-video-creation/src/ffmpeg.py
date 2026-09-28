@@ -197,6 +197,28 @@ def grab_frame(clip: Path, out_path: Path, at: float = 1.0) -> Path:
     return out_path
 
 
+PROGRESS_COLOR = "0xffd54a"   # 進捗バーの色（チャンネルの黄）
+
+
+def progress_chains(source: str, size: tuple[int, int], fps: int,
+                    progress: tuple[float, int] | None) -> tuple[list[str], str]:
+    """画面下端の進捗バー（2026-09-28）。**overlay の x を時間で動かす**ので、フレームは増えない。
+
+    drawbox は式を最初に1回しか評価しないので動かない。黄色い帯を色の源から作り、
+    左の画面外から t/T の割合だけ滑り込ませる。返すのは (追加のチェーン, 出力ラベル)。
+    """
+    if not progress:
+        return [], source
+    total, height = progress
+    width, _ = size
+    chains = [
+        f"[{source}]drawbox=x=0:y=ih-{height}:w=iw:h={height}:color=white@0.25:t=fill[pbase]",
+        f"color=c={PROGRESS_COLOR}:s={width}x{height}:r={fps}[pbar]",
+        f"[pbase][pbar]overlay=x='-w+W*min(1\\,t/{total:.3f})':y=H-{height}:eval=frame:shortest=1[pv]",
+    ]
+    return chains, "pv"
+
+
 def encode_video_over_clip(
     frame_list: Path,
     clip: Path,
@@ -204,6 +226,7 @@ def encode_video_over_clip(
     out_path: Path,
     size: tuple[int, int],
     fps: int = 30,
+    progress: tuple[float, int] | None = None,
 ) -> Path:
     """背景動画の上に、透過PNGのフレーム列を重ねて書き出す。
 
@@ -223,9 +246,11 @@ def encode_video_over_clip(
         f"[1:v]format=rgba,fps={fps},setsar=1[fg]",
         "[bg][fg]overlay=shortest=1:format=auto[v]",
     ]
+    extra, label = progress_chains("v", size, fps, progress)
+    chains += extra
     args += [
         "-filter_complex", ";".join(chains),
-        "-map", "[v]",
+        "-map", f"[{label}]",
         *(["-map", "2:a"] if audio_path is not None else []),
         "-c:v", "libx264",
         "-preset", "medium",
@@ -246,13 +271,21 @@ def encode_video(
     audio_path: Path | None,
     out_path: Path,
     fps: int = 30,
+    size: tuple[int, int] | None = None,
+    progress: tuple[float, int] | None = None,
 ) -> Path:
     """静止画リスト（+音声）を YouTube 向けの MP4 にエンコードする。"""
     args = ["-f", "concat", "-safe", "0", "-i", str(frame_list)]
     if audio_path is not None:
         args += ["-i", str(audio_path)]
+    video_map = ["-map", "0:v"]
+    if progress and size:
+        chains, label = progress_chains("0:v", size, fps, progress)
+        chains[0] = chains[0].replace("[0:v]", "[0:v]fps=" + str(fps) + ",")
+        args += ["-filter_complex", ";".join(chains)]
+        video_map = ["-map", f"[{label}]"]
     args += [
-        "-map", "0:v",
+        *video_map,
         *(["-map", "1:a"] if audio_path is not None else []),
         "-c:v", "libx264",
         "-preset", "medium",

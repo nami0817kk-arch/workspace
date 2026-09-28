@@ -38,6 +38,15 @@ TELOP_HEIGHT = 250
 TELOP_MAX_SHARE = 0.42   # 字が多いとき、テロップ枠が使ってよい画面の高さ
 TELOP_BOTTOM = 58
 
+# **見た目の作り直し**（2026-09-28 ユーザー「全体的に画面描画の質を上げたい／目でも楽しめるように」
+# →見本を2回見せて「よくなってきた」）。色はチャンネルの2色で通す
+BRAND_GREEN = (11, 61, 46)
+BRAND_GOLD = (255, 213, 74)
+MEDIA_FLOOR = 0.64       # 立ち絵なしのとき、表や写真が使ってよい下限（画面の高さの割合）
+PROGRESS_HEIGHT = 8      # 画面下端の進捗バー
+# 読み上げの数字は自動で黄色にする（「22点」「75.5%」「4試合」）。囲みで指定した強調があればそちらを優先
+AUTO_STRONG = re.compile(r"\d[\d,.]*(?:[点本人%回分秒位歳億万勝敗年]|試合|ゴール|アシスト|km|m)?")
+
 
 @dataclass
 class Layout:
@@ -64,8 +73,12 @@ class Layout:
 
     @property
     def media_slot(self) -> tuple[int, int]:
-        """画像やカードを置く縦の範囲。文字の上を使う。"""
-        floor = (self.headline_box if not self.with_characters else self.telop_box)[1]
+        """画像やカードを置く縦の範囲。文字の上を使う。
+
+        立ち絵なしのときの見出しは下寄せなので、2行なら画面の 0.69 より下にしか来ない。
+        表の下限を 0.58 → 0.64 に下げて、表を大きく出す（2026-09-28）。
+        """
+        floor = (int(self.height * MEDIA_FLOOR) if not self.with_characters else self.telop_box[1])
         return (int(self.height * 0.11), floor - 34)
 
     @property
@@ -109,6 +122,9 @@ class Renderer:
         self.opening_photo: str = ""
         self.opening_scene: str = ""
         self.opening_points: list[str] = []
+        # 節の番号（左上のピルに「02」と出す）と、右上の点（何節目か）
+        self.scene_order: dict[str, int] = {}
+        self.scene_total: int = 0
         self.frame_dir.mkdir(parents=True, exist_ok=True)
 
         font_path = str(config.video.font_path())
@@ -121,6 +137,7 @@ class Renderer:
         self.font_title_big = ImageFont.truetype(font_path, int(config.video.title_size * 1.4))
         self.font_label = ImageFont.truetype(font_path, 32)
         self.font_date = ImageFont.truetype(font_path, 30)
+        self.font_pill = ImageFont.truetype(font_path, 38)
 
         self.script_background: str | None = None  # 台本 frontmatter の bg
         self.script_cards: dict = {}
@@ -181,6 +198,7 @@ class Renderer:
                 f"{telop_t:.2f}/{hop_t if self.layout.with_characters else 1.0:.2f}",
                 f"{self.layout.width}x{self.layout.height}",
                 "|".join(stack),
+                f"s{self.scene_order.get(scene.title, 0)}/{self.scene_total}",
             ]
         )
         target = self.frame_dir / f"{hashlib.sha1(key.encode('utf-8')).hexdigest()[:16]}.png"
@@ -214,9 +232,15 @@ class Renderer:
         # **縦型は左半分に寄せない。**写真が画面いっぱいなので、寄せる相手がいない
         # （2026-09-09。1080の幅をさらに半分にすると図表が読めなくなる）
         if not board:
+            # 表は見出しの帯の上に収める（3行の見出しで表の最後の行が隠れた。2026-09-28）。
+            # 反応の積み上げのときは帯が無い
+            floor = self.headline_band_top(text) if (not stack and not self.layout.with_characters) else None
             self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
                              left_half=(stage is not None and not wide
-                                        and not self.layout.is_portrait))
+                                        and not self.layout.is_portrait),
+                             floor=floor,
+                             # 横長の写真の上では左に寄せる（真ん中に置くと人の顔にかかる）
+                             align_left=(stage is not None and wide and not self.layout.is_portrait))
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
@@ -347,9 +371,10 @@ class Renderer:
             bed = _cover(photo, width, height)
             shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
             shade_draw = ImageDraw.Draw(shade)
-            start = int(height * 0.56)
+            start = int(height * 0.40)
             for y in range(start, height):
-                alpha = int(150 * (y - start) / (height - start))
+                t = (y - start) / (height - start)
+                alpha = int(215 * t ** 1.3)
                 shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
             bed.alpha_composite(shade)
             self._stages[image_path] = bed
@@ -373,10 +398,10 @@ class Renderer:
         # 見出しの乗る下側を落とす
         shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
         shade_draw = ImageDraw.Draw(shade)
-        start = int(height * 0.56)
+        start = int(height * 0.40)
         for y in range(start, height):
-            alpha = int(150 * (y - start) / (height - start))
-            shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+            t = (y - start) / (height - start)
+            shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, int(215 * t ** 1.3)))
         bed.alpha_composite(shade)
         self._stages[image_path] = bed
         return bed
@@ -454,16 +479,21 @@ class Renderer:
         card_name: str | None,
         progress: float = 1.0,
         left_half: bool = False,
+        floor: int | None = None,
+        align_left: bool = False,
     ) -> None:
         """画像とカードを文字の上のスペースに置く。両方あれば左右に並べる。
 
         left_half は写真を右半分に敷いたときに、図表を左半分の中央に置く。
+        floor は見出しの帯の上端。align_left は横長の写真の上で左に寄せる（2026-09-28）。
 
         以前は縦に積んでいたが、カードが高いぶん写真が潰れた。実測
         （2026-09-04）で、顔が判別できない大きさ（横120px）になっていた。
         画面は横1920あるので、両方あるときは幅を使う。
         """
         slot_top, slot_bottom = self.layout.media_slot
+        if floor is not None:
+            slot_bottom = min(slot_bottom, floor - 24)
         slot_height = max(80, slot_bottom - slot_top)
         # **縦型は縦に積む。**横に並べると1つあたりの幅が半分になり、
         # ただでさえ狭い1080がさらに割れる。上下は余っている
@@ -480,7 +510,8 @@ class Renderer:
             # 左半分に置くカードは、大きく描いてから 0.63 倍に縮めていたので、
             # 34px で描いた字が**21px になっていた**。はじめからその幅で描く
             # 写真の左90pxはぼかして馴染ませてあるので、そこまで使ってよい
-            limit = (self.layout.width // 2 - 30) if left_half else None
+            # 表は幅の 58% まで（2026-09-28）。写真の左端はなじませてあるので少し重なってよい
+            limit = int(self.layout.width * 0.58) if left_half else None
             card = self._card(card_name, beside=side_by_side, limit=limit)
             if card is not None:
                 items.append(card)
@@ -514,7 +545,8 @@ class Renderer:
                 item.putalpha(
                     item.getchannel("A").point(lambda a: int(a * _ease_out(progress)))
                 )
-            canvas.alpha_composite(item, ((span - item.width) // 2, y))
+            x = 48 if align_left else (span - item.width) // 2
+            canvas.alpha_composite(item, (x, y))
             y += item.height + gap
 
     def _place_beside(
@@ -663,11 +695,23 @@ class Renderer:
         # 台本の構造の名前で、視聴者には何の情報でもない。しかも冒頭の
         # いちばん見られる位置に出ていた。日付は残す
         if title.strip() not in INTERNAL_SCENE_TITLES:
-            text_w = draw.textlength(title, font=self.font_scene)
+            # 緑のピルに番号つき（「02　22点の中身」）。左に黄色の縦帯（2026-09-28）
+            number = self.scene_order.get(title, 0)
+            label = f"{number:02d}　{title}" if number else title
+            text_w = draw.textlength(label, font=self.font_pill)
             draw.rounded_rectangle(
-                [48, 42, 48 + text_w + 56, 42 + 68], radius=34, fill=(0, 0, 0, 150)
+                [48, 42, 48 + text_w + 70, 42 + 68], radius=34, fill=BRAND_GREEN + (235,)
             )
-            draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
+            draw.rounded_rectangle([48, 42, 48 + 14, 42 + 68], radius=7, fill=BRAND_GOLD + (255,))
+            draw.text((82, 54), label, font=self.font_pill, fill=(255, 255, 255, 255))
+        # 右上に「何節目か」の点（節の数が2つ以上のとき）
+        if self.scene_total >= 2 and not self.layout.is_portrait:
+            number = self.scene_order.get(title, 0)
+            for index in range(self.scene_total):
+                cx = self.layout.width - 48 - (self.scene_total - 1 - index) * 26
+                lit = number and index < number
+                draw.ellipse([cx - 8, 68, cx + 8, 84],
+                             fill=BRAND_GOLD + (255,) if lit else (255, 255, 255, 110))
 
         # **日付は画面に出さない**（2026-09-14 指示「日付入れなくて良い」）。
         # 右上に「2026年9月14日」と出していたが、いつの話かは中身で言っている。
@@ -855,24 +899,14 @@ class Renderer:
             y += height + pad
         canvas.alpha_composite(layer)
 
-    def _draw_headline(
-        self,
-        canvas: Image.Image,
-        text: str,
-        telop_t: float = 1.0,
-        source: str | None = None,
-    ) -> None:
-        """立ち絵なしのときの見出し。左に縦のアクセント帯を置いたニュース風。"""
-        if not text:
-            return
-        layer, draw = _layer(canvas.size)
-        left, top, right, bottom = self.layout.headline_box
-        rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
+    def _headline_metrics(self, draw: ImageDraw.ImageDraw, text: str):
+        """見出しの字の大きさ・行・上端を決める。描く前に高さを知りたいとき（表の下限）にも使う。
 
-        # **読み上げる文はぜんぶ出す**（2026-09-14 指示）。3行で切っていたので、
-        # 長い一文は「…アンドレス・」で終わっていた。
-        # 4行を超えるようなら字を小さくして、全部を入れる
+        **読み上げる文はぜんぶ出す**（2026-09-14 指示）。3行で切っていたので、
+        長い一文は「…アンドレス・」で終わっていた。4行を超えるようなら字を小さくして、全部を入れる
+        """
         from PIL import ImageFont as _IF
+        left, top, right, bottom = self.layout.headline_box
         font_path = str(self.config.video.font_path())
         size = self.config.video.headline_size
         floor = max(22, int(size * 0.52))
@@ -887,64 +921,88 @@ class Renderer:
                 break
             size -= 4
             font = _IF.truetype(font_path, size)
-        self.font_headline_fit = font
         line_height = size + 26
-        text_top = bottom - line_height * len(lines) + rise
+        text_top = bottom - line_height * len(lines)
+        return font, size, plain, spans, lines, line_height, text_top
+
+    def headline_band_top(self, text: str) -> int | None:
+        """見出しの帯の上端（px）。表や写真はこれより上に収める（2026-09-28）。"""
+        if not text or self.layout.with_characters:
+            return None
+        draw = ImageDraw.Draw(Image.new("RGBA", (8, 8)))
+        _, _, _, _, _, _, text_top = self._headline_metrics(draw, text)
+        return text_top - 26
+
+    def _draw_headline(
+        self,
+        canvas: Image.Image,
+        text: str,
+        telop_t: float = 1.0,
+        source: str | None = None,
+    ) -> None:
+        """立ち絵なしのときの見出し。幅いっぱいの帯に、左は確度の色の縦帯（2026-09-28）。"""
+        if not text:
+            return
+        layer, draw = _layer(canvas.size)
+        left, top, right, bottom = self.layout.headline_box
+        rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
+        font, size, plain, spans, lines, line_height, text_top = self._headline_metrics(draw, text)
+        self.font_headline_fit = font
+        text_top += rise
 
         badge = SOURCE_BADGES.get(source or "")
         # 話者ではなく情報の確度で色を決める。会話が続くあいだ見出しを動かさないため
-        accent = badge[1] if badge else _hex(self.config.video.accent)
+        accent = badge[1] if badge else BRAND_GOLD
 
         # 文字の下に暗い帯を敷く。**縁取りだけでは背景に沈む**（2026-09-07 に
         # 参考チャンネルと並べて確認）。63万回のチャンネルは白文字＋黒帯で、
         # 実写の上でも見出しが読めていた。こちらは白文字＋細い縁だけだった。
-        band_right = left
-        for chunk in lines:
-            band_right = max(band_right, left + 34 + draw.textlength(chunk, font=font))
-        draw.rounded_rectangle(
-            [left - 8, text_top - 18,
-             min(right, int(band_right + 34)), text_top + line_height * len(lines) - 4],
-            radius=10, fill=(8, 10, 16, 170),
-        )
+        # **幅いっぱいの帯に、下へ向かって濃くなるグラデ**（2026-09-28）。
+        # 字の幅だけの黒い箱は、写真の上で「貼った紙」に見えた
+        band_top = text_top - 26
+        band_bottom = text_top + line_height * len(lines) + 2
+        band = Image.new("RGBA", (right - left + 16, band_bottom - band_top), (0, 0, 0, 0))
+        band_draw = ImageDraw.Draw(band)
+        for yy in range(band.height):
+            band_draw.line([(0, yy), (band.width, yy)],
+                           fill=(8, 12, 18, int(190 + 50 * yy / max(1, band.height))))
+        layer.alpha_composite(band, (left - 8, band_top))
 
-        # 縦のアクセント帯
-        draw.rounded_rectangle(
-            [left, text_top - 6, left + 11, text_top + line_height * len(lines) - 12],
-            radius=6, fill=accent + (255,),
-        )
+        # 左の太い縦帯。色は確度（報道＝橙、確定＝緑…）
+        draw.rounded_rectangle([left - 8, band_top, left + 8, band_bottom], radius=8, fill=accent + (255,))
 
         if badge:
+            # 確度の札は帯の左肩に（帯の上端にまたがせる）
             label, color = badge
             label_w = draw.textlength(label, font=self.font_name)
-            chip = [left + 34, text_top - 84, left + 34 + label_w + 46, text_top - 20]
-            draw.rounded_rectangle(chip, radius=22, fill=color + (255,))
-            draw.text((chip[0] + 23, chip[1] + 9), label, font=self.font_name,
+            chip = [left + 34, band_top - 26, left + 34 + label_w + 46, band_top + 26]
+            draw.rounded_rectangle(chip, radius=26, fill=color + (255,))
+            draw.text((chip[0] + 23, chip[1] + 6), label, font=self.font_name,
                       fill=(16, 16, 20, 255))
 
         y = text_top
-        strong_color = _hex(self.config.video.telop_accent) + (255,)
+        strong_color = BRAND_GOLD + (255,)
+        # 囲みで指定した強調が無ければ、数字を自動で強調する
+        if not spans:
+            spans = [(m.start(), m.end()) for m in AUTO_STRONG.finditer(plain)]
         offset = 0
         for chunk in lines:
             # 折り返しが空白を落とすことがあるので、位置は全文から探して合わせる
             found = plain.find(chunk, offset)
             offset = found if found >= 0 else offset
-            x = left + 34
+            x = left + 40
             for segment, strong in _emphasis_segments(
                 chunk, emphasis.spans_in(chunk, offset, spans)
             ):
                 # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
+                # 帯が濃くなったので縁取りは細く（太い縁は字を太らせて読みにくい）
                 draw.text(
                     (x, y), segment, font=font,
                     fill=strong_color if strong else (255, 255, 255, 255),
-                    stroke_width=8 if self.layout.is_portrait else 5,
-                    stroke_fill=(0, 0, 0, 235),
+                    stroke_width=5 if self.layout.is_portrait else 2,
+                    stroke_fill=(0, 0, 0, 200),
                 )
                 width = draw.textlength(segment, font=font)
-                if strong:
-                    # **下線も引く。**色だけだと明るい写真の上で差が薄れる
-                    bar = y + size + 8
-                    draw.rounded_rectangle([x, bar, x + width, bar + 7], radius=3,
-                                           fill=strong_color)
                 x += width
             offset += len(chunk)
             y += line_height
@@ -1067,6 +1125,8 @@ class Renderer:
         self.opening_photo = opening_photo(script.meta)
         self.opening_scene = script.scenes[0].title if script.scenes else ""
         self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
+        self.scene_order = {scene.title: index + 1 for index, scene in enumerate(script.scenes)}
+        self.scene_total = len(script.scenes)
 
         if inserts.intro > 0 and script.scenes:
             first_bg = script.scenes[0].background or script.background or self.config.video.background
@@ -1317,9 +1377,21 @@ class Renderer:
                 self.config.video.fps,
             )
             return ffmpeg.encode_video_over_clip(
-                list_path, track, audio_path, out_path, size, self.config.video.fps
+                list_path, track, audio_path, out_path, size, self.config.video.fps,
+                progress=self._progress_spec(entries),
             )
-        return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps)
+        return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps,
+                                   size=size, progress=self._progress_spec(entries))
+
+    def _progress_spec(self, entries: list[tuple[Path, float]]) -> tuple[float, int] | None:
+        """画面下端の進捗バー（2026-09-28）。ffmpeg が時間で動かすので、フレームは増えない。
+
+        縦型（ショート）には出さない。一覧の1コマ目に線が入る
+        """
+        if self.layout.is_portrait:
+            return None
+        total = sum(seconds for _, seconds in entries)
+        return (total, PROGRESS_HEIGHT) if total > 1.0 else None
 
 
 def _emphasis_segments(chunk: str, spans: list[tuple[int, int]]
