@@ -82,6 +82,7 @@
   | 21 選手紹介 | 人選は `python tools/player_pool.py build`（5大リーグの6位までとビッグクラブの選手を Transfermarkt から控える。10分）→ `list --count 31`（市場価値の順にリーグとクラブをばらして番号付きで出す。**○×はユーザー**）。雛形は `python tools/player_intro.py <番号> --date <日付>` | 基礎DATA（表）→ 歩んできた道（季ごとの所属と市場価値、U19 とトップは1行）→ 今季の数字（大会別、main）→ 見立て。日本語名は Wikidata（P2446）→ `research/kana/players.json` で上書き（ホランド → ハーランド）。**顔写真は人が取る**（`thumbnail.photos` は空で出る）。バロンドール候補は API に無いので手で書く | 雛形と draft まで通した（エムバペ 342229 で試した）。人選一覧はユーザーに見せる前 |
   | 22 比較 | `python tools/player_compare.py <番号> <番号> --date <金曜>` | 2人の基礎DATA（2列）→ 今季の数字（2列＋90分あたり、main）→ 市場価値の歩み（最高額とそのときの年齢）→ 見立て。**どちらが上かは言い切らない**。サムネは2枚並べて `face_link: VS` | 雛形と draft まで通した（エムバペ対ハーランドで試した） |
   | 4 解説 | `python -m src.cli plan --routine explain --write`（取材計画の雛形。数える道具は無い） | 問い → 仕組み → 数字（表）→ 今季の実例 → 見立て。**規定の原文（UEFA・リーグ・FIFA の公式）まで辿る**。記事の言い換えを根拠にしない | 雛形まで |
+  | 5・11 得点王レース | `python tools/scorers.py --date <木曜>` | 5リーグの得点ランキング（PKの内訳・試合数・出場時間つき）を控え、先週比と「今週の1つ」の候補（首位交代・独走・90分あたりの効率・PK頼み・急浮上・**日本人**）を雛形の頭に。板は先頭の候補のリーグの棒グラフ（姓だけ）。日本語名は辞書 → Wikidata（英語名で引いて `research/kana/wikidata_by_name.json` に控える） | 雛形と draft・板まで通した（初回の控え 9/28、10/1 から先週比） |
   | 3 順位表 | `python tools/standings_week.py --date <火曜>` | 5リーグの控え（`research/standings/<日付>.json`）・板5枚（`assets/stats/standings_<日付>_<リーグ>.png`）・雛形（`research/<日付>_standings.yaml`）。**先週比は前の控えと比べる**ので、初回（控え 9/28）は「―」。「今週の1つ」の候補（首位交代・独走・↑↓3以上・無敗・未勝利）を雛形の頭に並べる。**選ぶのは人** | 雛形と draft・サムネまで通した。首位の言い方は5リーグで変えてある（同じ文だと重複の点検で止まる） |
 
   - `config/clubs.yaml` は 2026-09-28 に 5大リーグの1部を全部入れた（69 → 114クラブ）。FotMob の英語名がそのまま出ることは無い。

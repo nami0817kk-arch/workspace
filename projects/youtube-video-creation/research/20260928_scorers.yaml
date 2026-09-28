@@ -1,0 +1,291 @@
+# 5大リーグの得点王レース（2026-09-28）。数字は FotMob。先週の控えが無いので先週比は「―」。
+# 「今週の1つ」の候補（点の高い順。1つ選んで pick の節を書く）:
+#   [独走] ラ・リーガ：ハフィーニャが2位に5点差
+#   [日本人] ブンデスリーガ：鈴木唯人が1位（4点、4試合）
+#   [PK頼み] リーグ・アン：ラシン・シナヨコは4点のうちPKが2本
+date: 2026年09月28日
+slot: other_1
+format: news
+series: 5大リーグの得点王レース
+people: []
+theme:
+  id: scorers_0928
+  league: spain
+  league_name: 欧州5大リーグ
+  kind: other
+  topic: 得点ランキング
+  title: ハフィーニャの独走。5大リーグの得点王レース（9月28日）、今週動いたのは
+  question: 5大リーグの得点王レースは今週どう動いて、その中の1つは何を示しているのか
+  takeaway: （5つのランキングを並べて分かったことを1文で）
+short_title: 5大リーグの得点王レース 9/28
+thumbnail:
+  line1: 5大リーグ得点王レース
+  line2: ハフィーニャが●●
+  tags:
+  - 得点王
+  board: assets/stats/scorers_20260928_spain.png
+sections:
+- id: england
+  heading: プレミアリーグの得点王レース
+  tier: 確定
+  official: true
+  telop: プレミアリーグ 得点ランキング
+  narrator: キャスター
+  card:
+    type: table
+    title: プレミアリーグ 得点ランキング
+    columns:
+    - 順位
+    - 選手
+    - クラブ
+    - 得点
+    - 先週比
+    rows:
+    - - '1'
+      - アーリング・ハーランド
+      - マンチェスター・シティ
+      - '5'
+      - ―
+    - - '2'
+      - アレクサンデル・イサク
+      - リバプール
+      - '4'
+      - ―
+    - - '3'
+      - ブライアン・ブロベイ
+      - サンダーランド
+      - '3'
+      - ―
+    - - '3'
+      - ドミニク・キャルヴァート＝ルーウィン
+      - リーズ
+      - '3'
+      - ―
+    - - '3'
+      - ジョアン・ペドロ
+      - チェルシー
+      - '3'
+      - ―
+    source: FotMob
+  say:
+  - プレミアリーグの得点ランキングです。
+  - 首位はアーリング・ハーランド、5試合で5得点。2位とは1点差です。
+  sources:
+  - https://www.premierleague.com/tables
+  - https://www.fotmob.com/leagues/47/stats
+- id: spain
+  heading: ラ・リーガの得点王レース
+  tier: 確定
+  official: true
+  telop: ラ・リーガ 得点ランキング
+  narrator: キャスター
+  card:
+    type: table
+    title: ラ・リーガ 得点ランキング
+    columns:
+    - 順位
+    - 選手
+    - クラブ
+    - 得点
+    - 先週比
+    rows:
+    - - '1'
+      - ハフィーニャ
+      - バルセロナ
+      - 12（PK3）
+      - ―
+    - - '2'
+      - セルヒオ・カメージョ
+      - ラージョ・バジェカーノ
+      - '7'
+      - ―
+    - - '3'
+      - キリアン・エムバペ
+      - レアル・マドリード
+      - 7（PK1）
+      - ―
+    - - '3'
+      - ラミン・ヤマル
+      - バルセロナ
+      - 7（PK1）
+      - ―
+    - - '5'
+      - ロベルト・フェルナンデス
+      - エスパニョール
+      - '6'
+      - ―
+    source: FotMob
+  say:
+  - 続いてラ・リーガ。
+  - ハフィーニャが12点でトップ。7試合での数字で、2位に5点差。
+  - 12点のうちPKが3本。PKを抜くと9点です。
+  sources:
+  - https://www.laliga.com/en-GB/laliga-easports/standing
+  - https://www.fotmob.com/leagues/87/stats
+- id: germany
+  heading: ブンデスリーガの得点王レース
+  tier: 確定
+  official: true
+  telop: ブンデスリーガ 得点ランキング
+  narrator: キャスター
+  card:
+    type: table
+    title: ブンデスリーガ 得点ランキング
+    columns:
+    - 順位
+    - 選手
+    - クラブ
+    - 得点
+    - 先週比
+    rows:
+    - - '1'
+      - ミカエル・オリーズ
+      - バイエルン
+      - '4'
+      - ―
+    - - '1'
+      - パトリック・シック
+      - レバークーゼン
+      - '4'
+      - ―
+    - - '1'
+      - フィリップ・ティーツ
+      - マインツ
+      - '4'
+      - ―
+    - - '1'
+      - ユネス・エブヌータリブ
+      - フランクフルト
+      - '4'
+      - ―
+    - - '1'
+      - 鈴木唯人
+      - フライブルク
+      - '4'
+      - ―
+    source: FotMob
+  say:
+  - ブンデスリーガはこちら。
+  - いちばん上はミカエル・オリーズの4点。2位も4点で並びます。
+  sources:
+  - https://www.bundesliga.com/en/bundesliga/table
+  - https://www.fotmob.com/leagues/54/stats
+- id: italy
+  heading: セリエAの得点王レース
+  tier: 確定
+  official: true
+  telop: セリエA 得点ランキング
+  narrator: キャスター
+  card:
+    type: table
+    title: セリエA 得点ランキング
+    columns:
+    - 順位
+    - 選手
+    - クラブ
+    - 得点
+    - 先週比
+    rows:
+    - - '1'
+      - ドニエル・マレン
+      - ローマ
+      - '6'
+      - ―
+    - - '2'
+      - アントニオ・ライモンド
+      - フロジノーネ
+      - '4'
+      - ―
+    - - '2'
+      - ラウタロ・マルティネス
+      - インテル
+      - '4'
+      - ―
+    - - '4'
+      - グスタボ・バレラ
+      - モンツァ
+      - 4（PK1）
+      - ―
+    - - '5'
+      - ダヴィデ・フラッテージ
+      - ラツィオ
+      - '3'
+      - ―
+    source: FotMob
+  say:
+  - セリエAに移ります。
+  - 6点でドニエル・マレンがトップに立っています。2位との差は2点。
+  sources:
+  - https://www.legaseriea.it/en/serie-a/classifica
+  - https://www.fotmob.com/leagues/55/stats
+- id: france
+  heading: リーグ・アンの得点王レース
+  tier: 確定
+  official: true
+  telop: リーグ・アン 得点ランキング
+  narrator: キャスター
+  card:
+    type: table
+    title: リーグ・アン 得点ランキング
+    columns:
+    - 順位
+    - 選手
+    - クラブ
+    - 得点
+    - 先週比
+    rows:
+    - - '1'
+      - フェラン・トーレス
+      - パリ・サンジェルマン
+      - '4'
+      - ―
+    - - '1'
+      - パリス・ブルナー
+      - モナコ
+      - '4'
+      - ―
+    - - '3'
+      - アミーヌ・グイリ
+      - マルセイユ
+      - 4（PK1）
+      - ―
+    - - '3'
+      - カモリー・ドゥンビア
+      - ブレスト
+      - 4（PK1）
+      - ―
+    - - '5'
+      - ラシン・シナヨコ
+      - パリFC
+      - 4（PK2）
+      - ―
+    source: FotMob
+  say:
+  - 最後はリーグ・アン。
+  - トップはフェラン・トーレスで4点。2番手も4点で並んでいます。
+  sources:
+  - https://ligue1.com/ranking
+  - https://www.fotmob.com/leagues/53/stats
+- id: pick
+  heading: 今週の1つ
+  tier: 確定
+  official: true
+  main: true
+  telop: 今週の1つ
+  narrator: 解説
+  say:
+  - text: （前置き1行：5大リーグの得点王レースから、今週は●●の話）
+    short_only: true
+  - （候補から1つ選んで、PK抜き・90分あたり・試合数で掘る。3〜6行。表かグラフを1枚）
+  sources:
+  - https://www.fotmob.com/leagues/87/stats
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 来週どこを見るか
+  say:
+  - （5つのランキングを並べて分かったこと・来週どこを見るか）
+  sources:
+  - https://www.fotmob.com/leagues/87/stats
