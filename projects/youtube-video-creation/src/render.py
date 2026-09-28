@@ -44,6 +44,7 @@ BRAND_GREEN = (11, 61, 46)
 BRAND_GOLD = (255, 213, 74)
 MEDIA_FLOOR = 0.64       # 立ち絵なしのとき、表や写真が使ってよい下限（画面の高さの割合）
 PROGRESS_HEIGHT = 8      # 画面下端の進捗バー
+PHOTO_MAX_ZOOM = 1.25    # 写真の寄りの上限（背景の 1.45 だと顔が荒れる）
 # 読み上げの数字は自動で黄色にする（「22点」「75.5%」「4試合」）。囲みで指定した強調があればそちらを優先
 AUTO_STRONG = re.compile(r"\d[\d,.]*(?:[点本人%回分秒位歳億万勝敗年]|試合|ゴール|アシスト|km|m)?")
 
@@ -174,6 +175,9 @@ class Renderer:
             (line.telop_text(), line.source, line.card) if panel is None else panel
         )
         background = scene.background or self.script_background or self.config.video.background
+        opening = scene.title == self.opening_scene and self.opening_photo
+        stage_path = line.image or (self.opening_photo if opening else None)
+        over_video = self.over_video
         key = "|".join(
             [
                 background,
@@ -185,6 +189,7 @@ class Renderer:
                 card or "",
                 line.image or "",
                 (self.opening_photo if scene.title == self.opening_scene else ""),
+                f"moving:{self.moving_photo(stage_path) and over_video}",
                 # チャンネル名が空なら絵は変わらないので、鍵にも入れない
                 ("card:" + self.config.video.channel_name
                  if self.config.video.channel_name.strip()
@@ -205,11 +210,8 @@ class Renderer:
         if target.exists():
             return target
 
-        over_video = self.over_video
         # **冒頭の節はサムネの写真を敷く**（2026-09-08）。ぼかした夜景に黒い板では、
         # 最初の3秒が止まって見えた。参考は0秒目からその人の実写が出ている
-        opening = scene.title == self.opening_scene and self.opening_photo
-        stage_path = line.image or (self.opening_photo if opening else None)
         stage = self._photo_stage(stage_path)
         # **板を出している間は、その上に何も重ねない**（2026-09-17 ユーザー指示
         # 「松木の顔ではなくて、サムネ画面をだしておいて」）。板は文字でできた絵なので、
@@ -221,7 +223,10 @@ class Renderer:
         # ふつうの写真は重ねてよい
         board = bool(stage is not None and stage_path
                      and str(stage_path) in self._board_stages)
-        if stage is not None:
+        if stage is not None and over_video and self.moving_photo(stage_path):
+            # 写真は背景側の動画がゆっくり寄っている。絵の側は透明にして、その上に文字と表だけ描く
+            canvas = self._transparent()
+        elif stage is not None:
             # 写真を主役にした下地。動画背景の上でも不透明に敷く
             canvas = stage.copy()
         else:
@@ -297,6 +302,30 @@ class Renderer:
             draw.line([(0, y), (self.layout.width, y)], fill=(4, 8, 14, int(215 * ratio**1.3)))
         canvas.alpha_composite(scrim)
         return canvas
+
+    def _stage_file(self, image_path: str) -> Path | None:
+        """写真の下地（_photo_stage の絵）を PNG にして返す。背景側の動画（ズーム）の元にする。"""
+        stage = self._photo_stage(image_path)
+        if stage is None:
+            return None
+        stage_dir = self.frame_dir.parent / "stages"
+        stage_dir.mkdir(parents=True, exist_ok=True)
+        key = hashlib.sha1(f"{image_path}|{self.layout.width}x{self.layout.height}|{self.layout.focus_x}".encode("utf-8")).hexdigest()[:16]
+        target = stage_dir / f"{key}.png"
+        if not target.exists():
+            stage.convert("RGB").save(target)
+        return target
+
+    def moving_photo(self, image_path: str | None) -> bool:
+        """この写真の下地を、絵に焼き込まず背景側の動画（ズーム）で出すか（2026-09-28）。
+
+        板（一覧板・数字の図）は寄せない（字が滲む）。縦型も寄せる。
+        """
+        if not image_path or self.config.motion.photo_zoom <= 1.0:
+            return False
+        if self._photo_stage(image_path) is None:
+            return False
+        return not _is_board(image_path)
 
     def _photo_stage(self, image_path: str | None) -> Image.Image | None:
         """写真を画面の主役にした下地（2026-09-08）。
@@ -1027,7 +1056,9 @@ class Renderer:
             return target
 
         stage = self._photo_stage(background) if kind == "intro" else None
-        if stage is not None:
+        if stage is not None and self.over_video and self.moving_photo(background):
+            base = self._transparent()
+        elif stage is not None:
             base = stage.copy()
         else:
             base = self._transparent() if self.over_video else self._background(background).copy()
@@ -1112,7 +1143,6 @@ class Renderer:
         self.script_background = script.background
         self.script_cards = script.cards
         self.script_date = script.date
-        self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script))
         motion = self.config.motion
         inserts = inserts or Inserts()
         entries: list[tuple[Path, float]] = []
@@ -1125,6 +1155,8 @@ class Renderer:
         self.opening_photo = opening_photo(script.meta)
         self.opening_scene = script.scenes[0].title if script.scenes else ""
         self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
+        # 写真の下地（focus_x を反映したもの）を背景側に並べてから、動画の上に描くかを決める
+        self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script, inserts))
         self.scene_order = {scene.title: index + 1 for index, scene in enumerate(script.scenes)}
         self.scene_total = len(script.scenes)
 
@@ -1296,7 +1328,12 @@ class Renderer:
         タイトルカードのぶんも、そのシーンの背景で埋める。
         """
         inserts = inserts or Inserts()
-        segments: list[tuple[Path, float]] = []
+        # **写真の下地は背景側に移して、ゆっくり寄せる**（2026-09-28）。行ごとに
+        # 「その行の写真の下地」か「節の背景」を並べ、同じものが続くあいだは1つにまとめる
+        # （まとめないとズームが行ごとに始まり直す）。タイトルカードのぶんは最初・最後の行に足す
+        raw: list[tuple[Path, float, bool]] = []   # (素材, 秒, 写真か)
+        opening_scene = script.scenes[0].title if script.scenes else ""
+        opening_photo = opening_photo_of(script.meta)
         for index, scene in enumerate(script.scenes):
             name = scene.background or script.background or self.config.video.background
             # 既に書いた台本は .png を指している。書き出しのたびに実写を探す
@@ -1306,8 +1343,36 @@ class Renderer:
                 extra += inserts.intro
             if index == len(script.scenes) - 1:
                 extra += inserts.outro
-            seconds = scene.duration + extra
-            segments += self._split_long(name, seconds, index)
+            if not scene.lines:
+                raw.append((_resolve(name), scene.duration + extra, False))
+                continue
+            for line_index, line in enumerate(scene.lines):
+                stage_path = line.image or (opening_photo if scene.title == opening_scene else None)
+                seconds = max(0.0, line.duration)
+                if line_index == 0 and index == 0:
+                    seconds += inserts.intro + inserts.before_scene(index)
+                elif line_index == 0:
+                    seconds += inserts.before_scene(index)
+                if line_index == len(scene.lines) - 1 and index == len(script.scenes) - 1:
+                    seconds += inserts.outro
+                if stage_path and self.moving_photo(stage_path):
+                    raw.append((self._stage_file(stage_path), seconds, True))
+                else:
+                    raw.append((_resolve(name), seconds, False))
+        merged: list[tuple[Path, float, bool]] = []
+        for path, seconds, is_photo in raw:
+            if merged and merged[-1][0] == path:
+                merged[-1] = (path, merged[-1][1] + seconds, is_photo)
+            else:
+                merged.append((path, seconds, is_photo))
+        segments: list[tuple[Path, float]] = []
+        for index, (path, seconds, is_photo) in enumerate(merged):
+            if seconds <= 0:
+                continue
+            if is_photo:
+                segments.append((self._moving(path, seconds, self.config.motion.photo_zoom), seconds))
+            else:
+                segments += self._split_long(str(path), seconds, index)
         return segments
 
     # 1枚の絵をこれ以上見せ続けない。実測で「まとめ」が24秒あり、
@@ -1329,13 +1394,15 @@ class Renderer:
         """
         return [(self._moving(_resolve(name), seconds), seconds)]
 
-    def _moving(self, path: Path, seconds: float) -> Path:
+    def _moving(self, path: Path, seconds: float, zoom: float | None = None) -> Path:
         """静止画の背景を、ゆっくり寄っていくクリップに置き換える。
 
         止まった絵が続くと動画に見えないので既定で有効。同じ画と長さの
-        組み合わせは作り直さない。
+        組み合わせは作り直さない。写真の下地は `photo_zoom`、それ以外は `background_zoom`。
         """
-        zoom = self.config.motion.background_zoom
+        # 写真は寄りすぎると顔が荒れるので上限を低く（1本を通して最大 1.25 倍）
+        max_zoom = ffmpeg.MAX_ZOOM if zoom is None else PHOTO_MAX_ZOOM
+        zoom = self.config.motion.background_zoom if zoom is None else zoom
         if zoom <= 1.0 or is_video(path) or not path.exists():
             return path
 
@@ -1346,12 +1413,13 @@ class Renderer:
         # 起きた。背景の模様を増やしたのに、動画は前のまま静止していた）。
         # 寄り方を変えたときも同じことが起きるので、版（r2）も残す。
         stamp = hashlib.sha1(path.read_bytes()).hexdigest()[:8]
-        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}r2_{stamp}.mp4"
+        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}r2_{int(max_zoom * 100)}_{stamp}.mp4"
         if not target.exists():
             cache.mkdir(parents=True, exist_ok=True)
             ffmpeg.still_to_clip(
                 path, target, length,
                 (self.layout.width, self.layout.height), zoom, self.config.video.fps,
+                max_zoom=max_zoom,
             )
         return target
 
@@ -1642,6 +1710,10 @@ def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
 
 # 制作の都合で付けている章の名前。視聴者に見せる意味が無い
 INTERNAL_LABELS = ("オープニング", "まとめ")
+
+
+def opening_photo_of(meta: dict) -> str:
+    return opening_photo(meta)
 
 
 def opening_photo(meta: dict) -> str:

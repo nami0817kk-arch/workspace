@@ -161,6 +161,7 @@ def still_to_clip(
     size: tuple[int, int] = (1920, 1080),
     zoom: float = 1.18,
     fps: int = 30,
+    max_zoom: float = MAX_ZOOM,
 ) -> Path:
     """静止画から、ゆっくり寄っていく背景クリップを作る。
 
@@ -176,7 +177,7 @@ def still_to_clip(
     width, height = size
     frames = max(1, int(seconds * fps))
     per_second = (zoom - 1.0) / REFERENCE_SECONDS
-    total = min(MAX_ZOOM, 1.0 + per_second * seconds)
+    total = min(max_zoom, 1.0 + per_second * seconds)
     step = (total - 1.0) / frames
     zoom = total
     run([

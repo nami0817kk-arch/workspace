@@ -147,6 +147,9 @@ class MotionConfig:
     scene_fade: float = 0.32   # シーン転換にかける秒数
     scene_transition: str = "dip"  # dip（暗転）/ crossfade（直接混ぜる）
     background_zoom: float = 1.0   # 静止画背景をゆっくり寄せる。1.0 で止めたまま
+    # **写真をゆっくり寄せる**（2026-09-28 ユーザー「目でも楽しめるように」→ 動きの段の1つめ）。
+    # 写真の下地を絵に焼き込まず背景側の動画に移し、ffmpeg が10秒あたりこの倍率で寄る。1.0 で止めたまま
+    photo_zoom: float = 1.08
 
 
 @dataclass
