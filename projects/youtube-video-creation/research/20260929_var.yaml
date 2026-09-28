@@ -1,184 +1,214 @@
-# 反応は上田の回の下請けが Yahoo!ニュースのコメント欄から取った2件をこちらへ移した（判定の話だったため）。Yahoo!ニュースのコメント欄は API が 403（要トークン）、reddit は検索・.json・ミラーとも
-# ボット判定で読めなかった（2026-09-29 に requests で試した）。記事が引く「こんなの初めて見た」等は
-# 断片で全文が確かめられないので載せない。反応の節は draft が空を通さない（say が空／出典0本で止まる）ので置いていない。
-# 主審はオーストラリアのダナスコス（スポーツ報知）。表記が媒体でぶれるので読み上げには出さない。
 date: 2026年9月29日
 slot: japan_2
 format: news
-people: [久保建英, 鈴木淳之介]
+people:
+- 久保建英
+- 鈴木淳之介
 theme:
   id: kubo_var_reversal
   league: spain
   league_name: キリンチャレンジカップ
   kind: other
   topic: レアル・ソシエダ
-  title: '久保建英が倒されて笛は鳴らず。直後の相手PKで、VARが見た場面'
+  title: 久保建英が倒されて笛は鳴らず。直後の相手PKで、VARが見た場面
   question: 久保建英が倒されて笛が鳴らなかったのに、なぜ最後は日本のPKになったのか
   takeaway: 判定を覆したのは、10人でもエリアの中まで入った久保の一歩。鈴木淳之介のファウルは、その陰に残った
   opening_image: assets/images/20260929_kubo_var/01.jpg
 short_title: 久保建英が倒され笛なし。相手PKの直後にVARが見たもの
 thumbnail:
-  photos: [assets/images/20260929_kubo_var/01.jpg, assets/images/20260929_biscarrondo/01.jpg]
+  photos:
+  - assets/images/20260929_kubo_var/01.jpg
+  - assets/images/20260929_biscarrondo/01.jpg
   line1: 久保建英、踏まれて笛なし
   line2: 相手のPKが●●●●に
 sections:
-  - id: report
-    heading: 10人で迎えた終盤
-    tier: 報道
-    telop: 日本 2-1 ベネズエラ。1-1のまま、10人で終盤へ
-    narrator: キャスター
+- id: report
+  heading: 10人で迎えた終盤
+  tier: 報道
+  telop: 日本 2-1 ベネズエラ。1-1のまま、10人で終盤へ
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本 2-1 ベネズエラ（9月28日・広島）
+    columns:
+    - ''
+    - ''
+    rows:
+    - &id001
+      - 46分
+      - ケルシー（ベネズエラ）
+    - &id002
+      - 49分
+      - 上田綺世
+  say:
+  - text: 広島の日本対ベネズエラ、日本が2対1で勝利。
+    image: assets/images/20260929_kubo_var/01.jpg
+  - 46分に先制され、49分に上田綺世が追いついて同点。
+  - text: 日本は3回の交代を終えたあと、渡辺剛が右足を痛めます。
     card:
       type: table
       title: 日本 2-1 ベネズエラ（9月28日・広島）
-      columns: ['', '']
+      columns:
+      - ''
+      - ''
       rows:
-        - [46分, ケルシー（ベネズエラ）]
-        - [49分, 上田綺世]
-        - [90+6分, 上田綺世（PK）]
-    say:
-      - text: 広島の日本対ベネズエラ、日本が2対1で勝利。
-        image: assets/images/20260929_kubo_var/01.jpg
-      - 46分に先制され、49分に上田綺世が追いついて同点。
-      - 日本は3回の交代を終えたあと、渡辺剛が右足を痛めます。
-      - 後半41分にピッチの外へ。交代の枠は無く、残りは10人でした。
-      - voice: 久保建英
-        text: 事故みたいな感じで1人少なくなって守り一辺倒だった
-    sources:
-      - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
-      - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
-      - https://news.yahoo.co.jp/articles/8bf6658a3d64af060fb2c5c2b99e0fd33ff0f4f5
-      - https://web.gekisaka.jp/news/japan/detail/?459906-459906-fl
-  - id: reversal
-    main: true
-    heading: 相手のPKが、日本のPKに
-    tier: 報道
-    telop: 久保が踏まれて笛なし→相手PK→VAR→日本のPK
-    narrator: キャスター
-    card:
-      type: table
-      title: 後半アディショナルタイムの判定
-      columns: ['', '']
-      rows:
-        - [45+1分, 久保がエリア内で倒れる。笛は鳴らず]
-        - [直後, カウンター。鈴木淳之介がラミレスを倒す]
-        - [主審, ベネズエラのPKを宣告]
-        - [VAR, 介入。主審がピッチ脇の画面で見直す]
-        - [判定, 久保への反則が先。日本のPKに]
-        - [45+6分, 上田がゴール左に決めて2-1]
-    say:
-      - text: 日本は10人。同点のまま迎えた終了間際に、判定が二転三転しました。
-        short_only: true
-      - text: 後半アディショナルタイム1分。久保建英が右からエリアの中へ入り、折り返します。
-        image: assets/images/20260929_kubo_var/01.jpg
-      - 相手のクリアをエリア内で拾ったところで、右足を踏まれて倒れました。
-      - 笛は鳴らず、プレーは続きます。
-      - ベネズエラはそのままカウンター。ラミレスがエリアの左へ切り込みます。
-      - 対応した鈴木淳之介がラミレスを倒し、主審はベネズエラのPKを宣告。
-      - ここでブイエーアールが介入します。映像で判定を見直す審判のことです。
-      - 主審はピッチ脇の画面で確かめる、オン・フィールド・レビューへ。
-      - 見直したのは、久保が踏まれた場面。反則が先にあったとして、判定は日本のPKに。
-      - アディショナルタイム6分、上田綺世がゴール左に決めて、日本が逆転で勝ちました。
-      - voice: 久保建英
-        text: なんとかチャンスがあればと思っていたので、
-      - voice: 久保建英
-        text: 結果勝てて良かった
-        cont: true
-    sources:
-      - https://www.football-zone.net/archives/676136
-      - https://web.gekisaka.jp/news/japan/detail/?459906-459906-fl
-      - https://www.nikkansports.com/soccer/japan/news/202609280001746.html
-      - https://news.yahoo.co.jp/articles/7fdf48afa3bb2a8b33f4fd9b838df267415e7db8
-  - id: rule
-    heading: なぜ前の場面まで戻れたのか
-    tier: 背景
-    telop: VARが口を出せるのは4つ。PKでは、直前の攻撃の局面まで見直せる
-    narrator: 解説
-    card:
-      type: table
-      title: VARが口を出せる場面
-      columns: ['', '']
-      rows:
-        - [ゴール, 入ったかどうか]
-        - [PK, PKかどうか]
-        - [退場, 一発退場かどうか]
-        - [人違い, 警告や退場の相手を間違えたとき]
-    say:
-      - text: ブイエーアールが口を出せるのは、4つの場面だけです。
-        image: assets/images/20260929_kubo_var/01.jpg
-      - 今回はPK。決まりでは、そこへ直接つながった攻撃の局面まで見直せます。
-      - だから、先に起きた久保への反則のほうが取られました。
-    sources:
-      - https://www.theifab.com/laws/latest/video-assistant-referee-var-protocol/
-  - id: venezuela
-    heading: 詰め寄る選手、会見の監督
-    tier: 報道
-    telop: ベネズエラは整列も握手もせず。ビスカロンド監督「リスペクトが欠けている」
-    narrator: 解説
-    say:
-      - text: 終了の笛が鳴ると、ベネズエラの選手たちは審判団に詰め寄りました。
-        image: assets/images/20260929_pair_biscarrondo_kubo/01.jpg
-      - ベンチの選手もピッチに入り、試合後の整列と握手は行われていません。
-      - 会見でベネズエラのビスカロンド監督は、久保の場面の判定と、追加時間の短さを挙げました。
-      - voice: ビスカロンド監督
-        text: 選手の交代が数多かったにも関わらず、
-      - voice: ビスカロンド監督
-        text: 与えられた時間が2分間と短かった
-        cont: true
-      - voice: ビスカロンド監督
-        text: 非常に驚いた
-      - voice: ビスカロンド監督
-        text: 審判のジャッジに関しては
-      - voice: ビスカロンド監督
-        text: 私たちに対するリスペクトが欠けていると感じた
-        cont: true
-      - voice: ビスカロンド監督
-        text: 不服に思う部分もあったが、
-      - voice: ビスカロンド監督
-        text: 素晴らしいサッカー文化を持つ日本で試合ができてうれしく思う
-        cont: true
-    sources:
-      - https://web.gekisaka.jp/news/japan/detail/?459907-459907-fl
-      - https://news.yahoo.co.jp/articles/d9b1db1b27bd230838abfb7f1635bb65f7f5f698
-      - https://www.football-zone.net/archives/676116
-  - id: view
-    heading: 見立て
-    tier: 背景
-    viewpoint: true
-    telop: 覆したのは、10人でもエリアの中まで入った久保の一歩
-    narrator: 解説
-    say:
-      - text: 10人で残り数分。その時間帯に、久保はボールを持ってペナルティエリアの内側まで運んでいました。
-        image: assets/images/20260929_kubo_var/01.jpg
-      - 判定を覆したのは運ではなく、その一歩です。
-      - 踏まれた場面が無ければ、鈴木淳之介の1本がそのまま決勝のPKになっていました。
-      - 次は中2日でエクアドル戦。この試合でけが人が2人出ています。
-      - 守備の人数がそろうか。そこがまず見るところです。
-    sources:
-      - https://web.gekisaka.jp/news/japan/detail/?459903-459903-fl
-      - https://www.nikkansports.com/soccer/japan/news/202609240001662.html
-      - https://news.yahoo.co.jp/articles/8bf6658a3d64af060fb2c5c2b99e0fd33ff0f4f5
-  - id: voices
-    heading: ネットの反応
-    tier: 未確認
-    telop: 「そこまで戻って良いのか」
-    narrator: キャスター
-    say:
-      - voice: ネット民
-        text: 確かに2人はすごいし、部活招集に比べ伊東のレベルは数段上。
-      - voice: ネット民
-        text: だけど主審のジャッジはそこまで戻って良いのか(あかん)
-        cont: true
-      - voice: ネット民
-        text: ベネズエラは気の毒だけど、日本が不正したわけじゃないし、
-        short_voice: true
-      - voice: ネット民
-        text: “ついてなかった”というしかないよね。
-        cont: true
-        short_voice: true
-      - voice: ネット民
-        text: 日本のチーム、サポーターもスッキリしないけど。
-        cont: true
-        short_voice: true
-    sources:
-      - https://news.yahoo.co.jp/articles/f37cc56fc39cbb60da7b834d8880ce40148674e2/comments
-      - https://news.yahoo.co.jp/articles/126ad97ec07705f43f72356267101842dfa9fc8f/comments
+      - *id001
+      - *id002
+      - - 後半41分
+        - 渡辺剛が負傷。交代枠なく10人に
+  - 後半41分にピッチの外へ。交代の枠は無く、残りは10人でした。
+  - voice: 久保建英
+    text: 事故みたいな感じで1人少なくなって守り一辺倒だった
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
+  - https://news.yahoo.co.jp/articles/8bf6658a3d64af060fb2c5c2b99e0fd33ff0f4f5
+  - https://web.gekisaka.jp/news/japan/detail/?459906-459906-fl
+- id: reversal
+  main: true
+  heading: 相手のPKが、日本のPKに
+  tier: 報道
+  telop: 久保が踏まれて笛なし→相手PK→VAR→日本のPK
+  narrator: キャスター
+  card:
+    type: table
+    title: 後半アディショナルタイムの判定
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 45+1分
+      - 久保がエリア内で倒れる。笛は鳴らず
+    - - 直後
+      - カウンター。鈴木淳之介がラミレスを倒す
+    - - 主審
+      - ベネズエラのPKを宣告
+    - - VAR
+      - 介入。主審がピッチ脇の画面で見直す
+    - - 判定
+      - 久保への反則が先。日本のPKに
+    - - 45+6分
+      - 上田がゴール左に決めて2-1
+  say:
+  - text: 日本は10人。同点のまま迎えた終了間際に、判定が二転三転しました。
+    short_only: true
+  - text: 後半アディショナルタイム1分。久保建英が右からエリアの中へ入り、折り返します。
+    image: assets/images/20260929_kubo_var/01.jpg
+  - 相手のクリアをエリア内で拾ったところで、右足を踏まれて倒れました。
+  - 笛は鳴らず、プレーは続きます。
+  - ベネズエラはそのままカウンター。ラミレスがエリアの左へ切り込みます。
+  - 対応した鈴木淳之介がラミレスを倒し、主審はベネズエラのPKを宣告。
+  - ここでブイエーアールが介入します。映像で判定を見直す審判のことです。
+  - 主審はピッチ脇の画面で確かめる、オン・フィールド・レビューへ。
+  - 見直したのは、久保が踏まれた場面。反則が先にあったとして、判定は日本のPKに。
+  - アディショナルタイム6分、上田綺世がゴール左に決めて、日本が逆転で勝ちました。
+  - voice: 久保建英
+    text: なんとかチャンスがあればと思っていたので、
+  - voice: 久保建英
+    text: 結果勝てて良かった
+    cont: true
+  sources:
+  - https://www.football-zone.net/archives/676136
+  - https://web.gekisaka.jp/news/japan/detail/?459906-459906-fl
+  - https://www.nikkansports.com/soccer/japan/news/202609280001746.html
+  - https://news.yahoo.co.jp/articles/7fdf48afa3bb2a8b33f4fd9b838df267415e7db8
+- id: rule
+  heading: なぜ前の場面まで戻れたのか
+  tier: 背景
+  telop: VARが口を出せるのは4つ。PKでは、直前の攻撃の局面まで見直せる
+  narrator: 解説
+  card:
+    type: table
+    title: VARが口を出せる場面
+    columns:
+    - ''
+    - ''
+    rows:
+    - - ゴール
+      - 入ったかどうか
+    - - PK
+      - PKかどうか
+    - - 退場
+      - 一発退場かどうか
+    - - 人違い
+      - 警告や退場の相手を間違えたとき
+  say:
+  - text: ブイエーアールが口を出せるのは、4つの場面だけです。
+    image: assets/images/20260929_kubo_var/01.jpg
+  - 今回はPK。決まりでは、そこへ直接つながった攻撃の局面まで見直せます。
+  - だから、先に起きた久保への反則のほうが取られました。
+  sources:
+  - https://www.theifab.com/laws/latest/video-assistant-referee-var-protocol/
+- id: venezuela
+  heading: 詰め寄る選手、会見の監督
+  tier: 報道
+  telop: ベネズエラは整列も握手もせず。ビスカロンド監督「リスペクトが欠けている」
+  narrator: 解説
+  say:
+  - text: 終了の笛が鳴ると、ベネズエラの選手たちは審判団に詰め寄りました。
+    image: assets/images/20260929_pair_biscarrondo_kubo/01.jpg
+  - ベンチの選手もピッチに入り、試合後の整列と握手は行われていません。
+  - 会見でベネズエラのビスカロンド監督は、久保の場面の判定と、追加時間の短さを挙げました。
+  - voice: ビスカロンド監督
+    text: 選手の交代が数多かったにも関わらず、
+  - voice: ビスカロンド監督
+    text: 与えられた時間が2分間と短かった
+    cont: true
+  - voice: ビスカロンド監督
+    text: 非常に驚いた
+  - voice: ビスカロンド監督
+    text: 審判のジャッジに関しては
+  - voice: ビスカロンド監督
+    text: 私たちに対するリスペクトが欠けていると感じた
+    cont: true
+  - voice: ビスカロンド監督
+    text: 不服に思う部分もあったが、
+  - voice: ビスカロンド監督
+    text: 素晴らしいサッカー文化を持つ日本で試合ができてうれしく思う
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459907-459907-fl
+  - https://news.yahoo.co.jp/articles/d9b1db1b27bd230838abfb7f1635bb65f7f5f698
+  - https://www.football-zone.net/archives/676116
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  telop: 覆したのは、10人でもエリアの中まで入った久保の一歩
+  narrator: 解説
+  say:
+  - text: 10人で残り数分。その時間帯に、久保はボールを持ってペナルティエリアの内側まで運んでいました。
+    image: assets/images/20260929_kubo_var/01.jpg
+  - 判定を覆したのは運ではなく、その一歩です。
+  - 踏まれた場面が無ければ、鈴木淳之介の1本がそのまま決勝のPKになっていました。
+  - 次は中2日でエクアドル戦。この試合でけが人が2人出ています。
+  - 守備の人数がそろうか。そこがまず見るところです。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459903-459903-fl
+  - https://www.nikkansports.com/soccer/japan/news/202609240001662.html
+  - https://news.yahoo.co.jp/articles/8bf6658a3d64af060fb2c5c2b99e0fd33ff0f4f5
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「そこまで戻って良いのか」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 確かに2人はすごいし、部活招集に比べ伊東のレベルは数段上。
+  - voice: ネット民
+    text: だけど主審のジャッジはそこまで戻って良いのか(あかん)
+    cont: true
+  - voice: ネット民
+    text: ベネズエラは気の毒だけど、日本が不正したわけじゃないし、
+    short_voice: true
+  - voice: ネット民
+    text: “ついてなかった”というしかないよね。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 日本のチーム、サポーターもスッキリしないけど。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/f37cc56fc39cbb60da7b834d8880ce40148674e2/comments
+  - https://news.yahoo.co.jp/articles/126ad97ec07705f43f72356267101842dfa9fc8f/comments

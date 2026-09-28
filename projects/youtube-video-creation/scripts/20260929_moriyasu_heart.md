@@ -13,7 +13,7 @@ thumbnail_reaction: そら相手チームもお怒りだわ
 thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main: []
-thumbnail_photo: assets/images/20260929_moriyasu/01.jpg
+thumbnail_photo: assets/images/20260929_moriyasu2/01.jpg
 bg: assets/backgrounds/stadium.png
 date: 2026年9月29日
 intro_title: 森保監督、劇的PK弾のあとスタンドへ作ったハート。試合後に明かした相手
@@ -85,7 +85,7 @@ cards:
   only: short
   telop: ベネズエラ戦の決勝PKの直後、森保監督がスタンドへハートを作りました
   card: none
-  image: assets/images/20260929_moriyasu/01.jpg
+  image: assets/images/20260929_moriyasu2/01.jpg
 キャスター: ベネズエラに2対1で勝った、9月28日の広島。
   telop: ベネズエラに2対1で勝った、9月28日の広島
   source: 報道

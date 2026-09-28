@@ -1,17 +1,18 @@
-# 上田綺世（リール）。9/28 キリンチャレンジカップ 日本 2-1 ベネズエラ（広島）。同点弾と、後半AT・VARで二転三転したPK弾。
-# 反応: Yahoo!ニュースのコメントから3件（日本語）。海外の声は無し（reddit は 403 で読めず、X は読めない）。
-# 写真: サッカーキングの記事と写真ギャラリー（金田慎平氏撮影）。ゲキサカの og:image は ©Getty の透かし入り＋ウルグアイ戦の写真だったので捨てた。
 date: 2026年9月29日
 slot: japan_1
 format: news
-people: [上田綺世, 久保建英, 森保一, オスワルド・ビスカロンド]
+people:
+- 上田綺世
+- 久保建英
+- 森保一
+- オスワルド・ビスカロンド
 theme:
   id: ueda_venezuela_pk
   league: france
   league_name: キリンチャレンジカップ
   kind: match
   topic: リール
-  title: '上田綺世、代表20点目の夜。10人になった日本を救った2発の中身'
+  title: 上田綺世、代表20点目の夜。10人になった日本を救った2発の中身
   question: 上田綺世が決めた逆転PKは、なぜ相手のPKから日本のPKに変わったのか
   takeaway: 途中から出て2試合続けて決める上田がいるかぎり、森保ジャパンの勝負どころは後半の途中からになる
   opening_image: assets/images/20260929_ueda/03_wave.jpg
@@ -22,129 +23,163 @@ thumbnail:
   line2: 代表通算●●点目、史上14人目
   reaction: もうあのまんま海外で戦い続けていってほしい
 sections:
-  - id: report
-    heading: 入れた直後に失点、3分で同点
-    tier: 報道
-    telop: 日本 2-1 ベネズエラ。後半の頭に5人を入れて、27秒で失点
-    narrator: キャスター
+- id: report
+  heading: 入れた直後に失点、3分で同点
+  tier: 報道
+  telop: 日本 2-1 ベネズエラ。後半の頭に5人を入れて、27秒で失点
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本 2-1 ベネズエラ（9月28日・広島）
+    columns:
+    - ''
+    - ''
+    rows:
+    - &id001
+      - 46分
+      - ケルシー（ベネズエラ）
+  say:
+  - text: 9月28日、広島。日本はベネズエラに2対1で勝ちました。
+    image: assets/images/20260929_ueda/03_wave.jpg
+  - 先発は大幅に入れ替え、前半はどちらも点が入りません。
+  - 後半の頭に、上田、伊東純也、久保建英、田中碧、鈴木彩艶の5人を入れます。
+  - ところが入れた直後、27秒でケルシーに先制されました。
+  - text: 3分後の49分、伊東のクロスに上田が滑り込んで同点。
     card:
       type: table
       title: 日本 2-1 ベネズエラ（9月28日・広島）
-      columns: ['', '']
+      columns:
+      - ''
+      - ''
       rows:
-        - [46分, ケルシー（ベネズエラ）]
-        - [49分, 上田綺世（日本）]
-        - [90分+6, 上田綺世 PK（日本）]
-    say:
-      - text: 9月28日、広島。日本はベネズエラに2対1で勝ちました。
-        image: assets/images/20260929_ueda/03_wave.jpg
-      - 先発は大幅に入れ替え、前半はどちらも点が入りません。
-      - 後半の頭に、上田、伊東純也、久保建英、田中碧、鈴木彩艶の5人を入れます。
-      - ところが入れた直後、27秒でケルシーに先制されました。
-      - 3分後の49分、伊東のクロスに上田が滑り込んで同点。
-      - voice: 上田
-        text: ちょっと難しい動き出しをしたんですけど、
-      - voice: 上田
-        text: 純也君がしっかり合わせてくれて、パスが良かっただけです
-    sources:
-      - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
-      - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
-      - https://www.soccer-king.jp/news/japan/national/20260928/2210431.html
-      - https://news.yahoo.co.jp/articles/f1a0659835ccc0d8099f6eb68db150e3a14532c7
-      - https://news.yahoo.co.jp/articles/c2bc665e30e67726e745ab8f67dca13d95dfecbe
-  - id: pk
-    heading: 二転三転のあとのPK
-    tier: 報道
-    telop: 90分+1、判定が覆って日本のPK。キッカーは上田
-    narrator: 解説
-    card:
-      type: table
-      title: 後半アディショナルタイム
-      columns: ['', '']
-      rows:
-        - [90分+1, 久保が倒される。笛は鳴らず]
-        - [直後, カウンターで鈴木淳之介が倒し、ベネズエラのPK]
-        - [映像で見直し, 久保が先に踏まれていた。日本のPK]
-        - [90分+6, 上田が左隅に決めて2対1]
-    say:
-      - text: 同点のまま後半アディショナルタイム。日本は10人でした。
-        image: assets/images/20260929_ueda/05_varscreen.jpg
-      - 交代枠を使い切ったあとに、渡辺剛がけがをしたためです。
-      - 90分プラス1分、久保が倒された場面はいったん流されました。
-      - 直後のカウンターで、今度はベネズエラのPK。
-      - 主審が映像で見直し、久保が先に踏まれていたとして、PKは日本のものになりました。
-      - text: キッカーは上田。90分プラス6分、ゴール左隅に蹴り込みました。
-        image: assets/images/20260929_ueda/04_pk.jpg
-    sources:
-      - https://www.football-zone.net/archives/676136
-      - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
-      - https://www.soccer-king.jp/news/japan/national/20260928/2210431.html
-  - id: words
-    main: true
-    heading: 勝ち切れたことに意味があった
-    tier: 報道
-    telop: 上田「アクシデントもあった中で追加点も取れて勝ち切れたことには意味があった」
-    narrator: キャスター
-    say:
-      - text: ベネズエラに2対1で勝ち。途中出場の上田綺世が、同点弾と判定が覆ったPKで決めました。
-        short_only: true
-      - text: 試合後、判定に納得しないベネズエラの選手は審判を囲みました。
-        image: assets/images/20260929_ueda/07_wave2.jpg
-      - 一方の上田の言葉です。
-      - voice: 上田
-        text: アクシデントもあった中で追加点も取れて
-      - voice: 上田
-        text: 勝ち切れたことには意味があった
-      - voice: 上田
-        text: 大会に近い状態を作れたと思います
-      - 大会とは、2027年のアジアカップのこと。
-      - 10人で守り切って勝つ形を、本番の前に経験できたという言葉です。
-    sources:
-      - https://web.gekisaka.jp/news/japan/detail/?459904-459904-fl
-      - https://news.yahoo.co.jp/articles/4a0db7c9b903404c3087340dd70f360d484b7756
-      - https://www.soccer-king.jp/news/japan/national/20260928/2210500.html
-  - id: view
-    heading: 20点目の重み
-    tier: 背景
-    viewpoint: true
-    telop: A代表通算20点目。45試合で、1試合あたり0.44点
-    narrator: 解説
-    card:
-      type: table
-      title: 日本代表のA代表通算得点（1試合あたり）
-      columns: ['', 得点, 試合, 1試合]
-      rows:
-        - [釜本邦茂, 75, 76, 0.99]
-        - [三浦知良, 55, 89, 0.62]
-        - [大迫勇也, 25, 57, 0.44]
-        - [上田綺世, 20, 45, 0.44]
-    say:
-      - text: 同点弾は、上田のA代表通算20点目。日本代表で20点以上は、史上14人目です。
-        image: assets/images/20260929_ueda/02.jpg
-      - 45試合での到達。1試合あたりにすると0.44点になります。
-      - その14人の中で、1試合あたりの得点が上田より高いのは5人だけ。
-      - 途中出場で決めるのは、ウルグアイ戦に続いて2試合連続。どちらも伊東のアシストでした。
-      - 森保監督のチームは、ベネズエラにこれまで1分け1敗。今回が初めての勝ちです。
-      - 先発を10人替えても、後半に上田と伊東を入れれば点が入る。
-      - 今の日本の勝ち方は、そこに寄っています。
-      - 次は10月1日、横浜でエクアドル戦。中2日です。
-    sources:
-      - https://news.yahoo.co.jp/articles/40a855758ad219a647079012521e8afb6888fb39
-      - https://news.yahoo.co.jp/articles/f1a0659835ccc0d8099f6eb68db150e3a14532c7
-      - https://www.soccer-king.jp/news/japan/national/20260928/2210620.html
-  - id: voices
-    heading: ネットの反応
-    tier: 未確認
-    telop: 「あのまんま海外で戦い続けていってほしい」
-    narrator: キャスター
-    say:
-      - voice: ネット民
-        text: 綺世はんは2年前に続いてゴール
-        short_voice: true
-      - voice: ネット民
-        text: もうあのまんま海外で戦い続けていってほしいよ
-        cont: true
-        short_voice: true
-    sources:
-      - https://news.yahoo.co.jp/articles/f37cc56fc39cbb60da7b834d8880ce40148674e2/comments
-      - https://news.yahoo.co.jp/articles/126ad97ec07705f43f72356267101842dfa9fc8f/comments
+      - *id001
+      - - 49分
+        - 上田綺世（日本）
+  - voice: 上田
+    text: ちょっと難しい動き出しをしたんですけど、
+  - voice: 上田
+    text: 純也君がしっかり合わせてくれて、パスが良かっただけです
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
+  - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210431.html
+  - https://news.yahoo.co.jp/articles/f1a0659835ccc0d8099f6eb68db150e3a14532c7
+  - https://news.yahoo.co.jp/articles/c2bc665e30e67726e745ab8f67dca13d95dfecbe
+- id: pk
+  heading: 二転三転のあとのPK
+  tier: 報道
+  telop: 90分+1、判定が覆って日本のPK。キッカーは上田
+  narrator: 解説
+  card:
+    type: table
+    title: 後半アディショナルタイム
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 90分+1
+      - 久保が倒される。笛は鳴らず
+    - - 直後
+      - カウンターで鈴木淳之介が倒し、ベネズエラのPK
+    - - 映像で見直し
+      - 久保が先に踏まれていた。日本のPK
+    - - 90分+6
+      - 上田が左隅に決めて2対1
+  say:
+  - text: 同点のまま後半アディショナルタイム。日本は10人でした。
+    image: assets/images/20260929_ueda/05_varscreen.jpg
+  - 交代枠を使い切ったあとに、渡辺剛がけがをしたためです。
+  - 90分プラス1分、久保が倒された場面はいったん流されました。
+  - 直後のカウンターで、今度はベネズエラのPK。
+  - 主審が映像で見直し、久保が先に踏まれていたとして、PKは日本のものになりました。
+  - text: キッカーは上田。90分プラス6分、ゴール左隅に蹴り込みました。
+    image: assets/images/20260929_ueda/04_pk.jpg
+  sources:
+  - https://www.football-zone.net/archives/676136
+  - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210431.html
+- id: words
+  main: true
+  heading: 勝ち切れたことに意味があった
+  tier: 報道
+  telop: 上田「アクシデントもあった中で追加点も取れて勝ち切れたことには意味があった」
+  narrator: キャスター
+  say:
+  - text: ベネズエラに2対1で勝ち。途中出場の上田綺世が、同点弾と判定が覆ったPKで決めました。
+    short_only: true
+  - text: 試合後、判定に納得しないベネズエラの選手は審判を囲みました。
+    image: assets/images/20260929_ueda/07_wave2.jpg
+  - 一方の上田の言葉です。
+  - voice: 上田
+    text: アクシデントもあった中で追加点も取れて
+  - voice: 上田
+    text: 勝ち切れたことには意味があった
+  - voice: 上田
+    text: 大会に近い状態を作れたと思います
+  - 大会とは、2027年のアジアカップのこと。
+  - 10人で守り切って勝つ形を、本番の前に経験できたという言葉です。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459904-459904-fl
+  - https://news.yahoo.co.jp/articles/4a0db7c9b903404c3087340dd70f360d484b7756
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210500.html
+- id: view
+  heading: 20点目の重み
+  tier: 背景
+  viewpoint: true
+  telop: A代表通算20点目。45試合で、1試合あたり0.44点
+  narrator: 解説
+  card:
+    type: table
+    title: 日本代表のA代表通算得点（1試合あたり）
+    columns:
+    - ''
+    - 得点
+    - 試合
+    - 1試合
+    rows:
+    - - 釜本邦茂
+      - 75
+      - 76
+      - 0.99
+    - - 三浦知良
+      - 55
+      - 89
+      - 0.62
+    - - 大迫勇也
+      - 25
+      - 57
+      - 0.44
+    - - 上田綺世
+      - 20
+      - 45
+      - 0.44
+  say:
+  - text: 同点弾は、上田のA代表通算20点目。日本代表で20点以上は、史上14人目です。
+    image: assets/images/20260929_ueda/02.jpg
+  - 45試合での到達。1試合あたりにすると0.44点になります。
+  - その14人の中で、1試合あたりの得点が上田より高いのは5人だけ。
+  - 途中出場で決めるのは、ウルグアイ戦に続いて2試合連続。どちらも伊東のアシストでした。
+  - 森保監督のチームは、ベネズエラにこれまで1分け1敗。今回が初めての勝ちです。
+  - 先発を10人替えても、後半に上田と伊東を入れれば点が入る。
+  - 今の日本の勝ち方は、そこに寄っています。
+  - 次は10月1日、横浜でエクアドル戦。中2日です。
+  sources:
+  - https://news.yahoo.co.jp/articles/40a855758ad219a647079012521e8afb6888fb39
+  - https://news.yahoo.co.jp/articles/f1a0659835ccc0d8099f6eb68db150e3a14532c7
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210620.html
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「あのまんま海外で戦い続けていってほしい」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 綺世はんは2年前に続いてゴール
+    short_voice: true
+  - voice: ネット民
+    text: もうあのまんま海外で戦い続けていってほしいよ
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/f37cc56fc39cbb60da7b834d8880ce40148674e2/comments
+  - https://news.yahoo.co.jp/articles/126ad97ec07705f43f72356267101842dfa9fc8f/comments

@@ -1,14 +1,15 @@
 date: 2026年9月29日
 slot: japan_4
 format: quote
-people: [鎌田大地]
+people:
+- 鎌田大地
 theme:
   id: kamada_captain_venezuela
   league: england
   league_name: キリンチャレンジカップ
   kind: other
   topic: クリスタル・パレス
-  title: '鎌田大地が腕章を巻いた夜。4人がデビューした若いチームに、試合後に贈った言葉'
+  title: 鎌田大地が腕章を巻いた夜。4人がデビューした若いチームに、試合後に贈った言葉
   opening_image: assets/images/20260929_kamada/01.jpg
   takeaway: 主力を休ませた前半を0で耐えた若手を、鎌田は腕章の側から見て評価した。10月の2試合で、その若手が何人残るか
 short_title: 鎌田大地、腕章の夜に若手へ贈った言葉
@@ -18,114 +19,142 @@ thumbnail:
   line2: 若手へ「●●していってほしい」
   reaction: 発言が一味も二味も深い
 sections:
-  - id: situation
-    heading: 10人を入れ替えた夜
-    tier: 報道
-    telop: 日本 2-1 ベネズエラ。鎌田は腕章を巻いて前半45分
-    narrator: キャスター
+- id: situation
+  heading: 10人を入れ替えた夜
+  tier: 報道
+  telop: 日本 2-1 ベネズエラ。鎌田は腕章を巻いて前半45分
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本 2-1 ベネズエラ（9月28日・広島）
+    columns:
+    - ''
+    - ''
+    rows:
+    - &id001
+      - 先発の入れ替え
+      - ウルグアイ戦から10人
+    - &id002
+      - 先発でA代表デビュー
+      - 4人
+  say:
+  - text: 9月28日の広島。ベネズエラ戦を2対1で勝った日本代表。
+    image: assets/images/20260929_kamada/01.jpg
+  - 先発は、4日前のウルグアイ戦から10人を入れ替え。
+  - 日本代表のトップチーム、A代表のデビューが4人。
+  - text: その先発11人で腕章を巻いたのが、クリスタル・パレスの鎌田大地。主将の印です。
     card:
       type: table
       title: 日本 2-1 ベネズエラ（9月28日・広島）
-      columns: ['', '']
+      columns:
+      - ''
+      - ''
       rows:
-        - [先発の入れ替え, ウルグアイ戦から10人]
-        - [先発でA代表デビュー, 4人]
-        - [鎌田大地, 腕章を巻いて前半45分]
-        - [得点, 上田綺世2（49分、90分+6）]
-    say:
-      - text: 9月28日の広島。ベネズエラ戦を2対1で勝った日本代表。
-        image: assets/images/20260929_kamada/01.jpg
-      - 先発は、4日前のウルグアイ戦から10人を入れ替え。
-      - 日本代表のトップチーム、A代表のデビューが4人。
-      - その先発11人で腕章を巻いたのが、クリスタル・パレスの鎌田大地。主将の印です。
-      - 出たのは前半の45分だけ。無失点で折り返し、後半は主力に託しました。
-      - 試合後、鎌田はその前半をこう振り返っています。
-      - voice: 鎌田大地
-        text: 難しい時間帯もあると思ってたんですけど、
-      - voice: 鎌田大地
-        text: 前半最後失点しそうなシーンでも耐えることができて、
-        cont: true
-      - voice: 鎌田大地
-        text: ゼロで終われたので良かったです
-        cont: true
-    sources:
-      - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
-      - https://web.gekisaka.jp/news/japan/detail/?459905-459905-fl
-      - https://www.sponichi.co.jp/soccer/news/2026/09/28/kiji/20260928s00002014371000c.html
-  - id: words
-    main: true
-    heading: 若手に向けた言葉
-    tier: 報道
-    telop: 「これから彼らが日本を背負っていく選手たちだと思うので」
-    narrator: キャスター
-    say:
-      - text: ベネズエラに2対1で勝った9月28日。前半だけ出て腕章を巻いた鎌田大地が、若手についてこう。
-        short_only: true
-      - text: 一緒に前半を戦った、経験の少ない選手たちについては。
-        image: assets/images/20260929_kamada/01.jpg
-      - voice: 鎌田大地
-        text: すごく勢いを持ってやってくれていましたし、
-      - voice: 鎌田大地
-        text: 良いプレーもたくさんありました。
-        cont: true
-      - voice: 鎌田大地
-        text: これから彼らが日本を背負っていく選手たちだと思うので、
-        cont: true
-      - voice: 鎌田大地
-        text: これからもどんどん成長していって欲しいです
-        cont: true
-    sources:
-      - https://www.soccer-king.jp/news/japan/national/20260928/2210565.html
-      - https://hochi.news/articles/20260928-OHT1T51366.html
-  - id: view
-    heading: 見立て
-    tier: 背景
-    viewpoint: true
-    telop: 腕章は、若手の側に立った人に渡された
-    narrator: 解説
-    say:
-      - text: 今回の代表活動の主将は堂安律。この試合だけ鎌田が腕章を巻き、前半の若手と一緒に戦いました。
-        image: assets/images/20260929_kamada/01.jpg
-      - 若手の前半を「良いプレーもたくさんあった」と言えるのは、共に戦った人だけ。
-      - 次は10月1日のエクアドル戦と、5日のこの活動4試合目。前半の11人から誰が残るかを見ます。
-    sources:
-      - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
-      - https://www.soccer-king.jp/news/japan/national/20260928/2210565.html
-      - https://news.yahoo.co.jp/articles/1b87b9aedfeaf9e025e5fe3ca14a78e387ad08ad
-  - id: voices
-    heading: ネットの反応
-    tier: 未確認
-    telop: 「発言が一味も二味も、深いです」
-    narrator: キャスター
-    say:
-      - voice: ネット民
-        text: 代表常連組は評価変わらないけど
-      - voice: ネット民
-        text: 前半メンバー、新戦力は
-        cont: true
-      - voice: ネット民
-        text: あれじゃ中々アピールも出来ないんじゃない？
-        cont: true
-      - voice: ネット民
-        text: 結局チグハグのままみんな交代されて
-        cont: true
-      - voice: ネット民
-        text: 代表ならそれでも違いを出せとか言う人もいるだろうけど
-        cont: true
-      - voice: ネット民
-        text: 中々前半はアピールすら難しかったと思うよ
-        cont: true
-      - voice: ネット民
-        text: 鎌田さんは、ジェントルマンですね、
-        short_voice: true
-      - voice: ネット民
-        text: さすがはプレミアでチームの中心選手。
-        cont: true
-        short_voice: true
-      - voice: ネット民
-        text: 発言が一味も二味も、深いです。
-        cont: true
-        short_voice: true
-    sources:
-      - https://news.yahoo.co.jp/articles/e2328011d3134aec1cea09398eac03c7f5330158/comments
-      - https://news.yahoo.co.jp/articles/1394b1a6e2c26627cfb57ed9475ca68eac14b8d3/comments
+      - *id001
+      - *id002
+      - &id003
+        - 鎌田大地
+        - 腕章を巻いて前半45分
+  - 出たのは前半の45分だけ。無失点で折り返し、後半は主力に託しました。
+  - text: 試合後、鎌田はその前半をこう振り返っています。
+    card:
+      type: table
+      title: 日本 2-1 ベネズエラ（9月28日・広島）
+      columns:
+      - ''
+      - ''
+      rows:
+      - *id001
+      - *id002
+      - *id003
+      - - 得点
+        - 上田綺世2（49分、90分+6）
+  - voice: 鎌田大地
+    text: 難しい時間帯もあると思ってたんですけど、
+  - voice: 鎌田大地
+    text: 前半最後失点しそうなシーンでも耐えることができて、
+    cont: true
+  - voice: 鎌田大地
+    text: ゼロで終われたので良かったです
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - https://web.gekisaka.jp/news/japan/detail/?459905-459905-fl
+  - https://www.sponichi.co.jp/soccer/news/2026/09/28/kiji/20260928s00002014371000c.html
+- id: words
+  main: true
+  heading: 若手に向けた言葉
+  tier: 報道
+  telop: 「これから彼らが日本を背負っていく選手たちだと思うので」
+  narrator: キャスター
+  say:
+  - text: ベネズエラに2対1で勝った9月28日。前半だけ出て腕章を巻いた鎌田大地が、若手についてこう。
+    short_only: true
+  - text: 一緒に前半を戦った、経験の少ない選手たちについては。
+    image: assets/images/20260929_kamada/01.jpg
+  - voice: 鎌田大地
+    text: すごく勢いを持ってやってくれていましたし、
+  - voice: 鎌田大地
+    text: 良いプレーもたくさんありました。
+    cont: true
+  - voice: 鎌田大地
+    text: これから彼らが日本を背負っていく選手たちだと思うので、
+    cont: true
+  - voice: 鎌田大地
+    text: これからもどんどん成長していって欲しいです
+    cont: true
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210565.html
+  - https://hochi.news/articles/20260928-OHT1T51366.html
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  telop: 腕章は、若手の側に立った人に渡された
+  narrator: 解説
+  say:
+  - text: 今回の代表活動の主将は堂安律。この試合だけ鎌田が腕章を巻き、前半の若手と一緒に戦いました。
+    image: assets/images/20260929_kamada/01.jpg
+  - 若手の前半を「良いプレーもたくさんあった」と言えるのは、共に戦った人だけ。
+  - 次は10月1日のエクアドル戦と、5日のこの活動4試合目。前半の11人から誰が残るかを見ます。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210565.html
+  - https://news.yahoo.co.jp/articles/1b87b9aedfeaf9e025e5fe3ca14a78e387ad08ad
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「発言が一味も二味も、深いです」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 代表常連組は評価変わらないけど
+  - voice: ネット民
+    text: 前半メンバー、新戦力は
+    cont: true
+  - voice: ネット民
+    text: あれじゃ中々アピールも出来ないんじゃない？
+    cont: true
+  - voice: ネット民
+    text: 結局チグハグのままみんな交代されて
+    cont: true
+  - voice: ネット民
+    text: 代表ならそれでも違いを出せとか言う人もいるだろうけど
+    cont: true
+  - voice: ネット民
+    text: 中々前半はアピールすら難しかったと思うよ
+    cont: true
+  - voice: ネット民
+    text: 鎌田さんは、ジェントルマンですね、
+    short_voice: true
+  - voice: ネット民
+    text: さすがはプレミアでチームの中心選手。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 発言が一味も二味も、深いです。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/e2328011d3134aec1cea09398eac03c7f5330158/comments
+  - https://news.yahoo.co.jp/articles/1394b1a6e2c26627cfb57ed9475ca68eac14b8d3/comments
