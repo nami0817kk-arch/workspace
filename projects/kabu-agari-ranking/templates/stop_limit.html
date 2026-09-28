@@ -48,6 +48,57 @@
 </figure>
 {% endif %}
 
+{% if followup.total %}
+<h2>翌営業日はどうだったか</h2>
+<p>
+  {{ spec.term }}になった銘柄が、<strong>次の営業日にどこにいたか</strong>を数えたものです。
+  前の日の記録を持っていないと数えられない数字なので、当日のランキングだけを
+  出している場所には作れません。
+  対象は記録がある{{ followup.total.days }}営業日ぶん、のべ{{ followup.total.count }}銘柄です。
+</p>
+<ul class="followup">
+  <li><span class="fu-value">{{ followup.total.same_side }}銘柄</span>
+      <span class="fu-label">翌営業日も{{ spec.source_rank }}ランキングに入った</span></li>
+  <li><span class="fu-value">{{ followup.total.other_side }}銘柄</span>
+      <span class="fu-label">翌営業日は{{ spec.opposite_rank }}ランキングに入った</span></li>
+  <li><span class="fu-value">{{ followup.total.absent }}銘柄</span>
+      <span class="fu-label">どちらの上位30銘柄にも入らなかった</span></li>
+</ul>
+<p class="note-scope">
+  <strong>「どちらにも入らなかった」は、動かなかったという意味ではありません。</strong>
+  当サイトが毎日取得しているのが上位30銘柄までなので、そこに届く値動きが
+  無かった、ということだけが分かります。
+  また、ここに書いてあるのは数えた事実だけで、<strong>次にどうなるかは分かりません</strong>。
+</p>
+{% if followup.per_day|length > 1 %}
+<div class="table-wrap">
+<table class="breakdown-table">
+  <caption>{{ spec.term }}の翌営業日（日ごと）</caption>
+  <thead>
+    <tr>
+      <th scope="col">{{ spec.term }}の日</th>
+      <th scope="col">銘柄数</th>
+      <th scope="col">翌日も{{ spec.source_rank }}</th>
+      <th scope="col">翌日は{{ spec.opposite_rank }}</th>
+      <th scope="col">上位30の外</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in followup.per_day %}
+    <tr>
+      <th scope="row"><a href="{{ base_url }}archive/{{ spec.archive }}/{{ d.rec_date }}.html">{{ d.rec_date }}</a></th>
+      <td>{{ d.count }}</td>
+      <td>{{ d.same_side }}</td>
+      <td>{{ d.other_side }}</td>
+      <td>{{ d.absent }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endif %}
+
 {% if by_market %}
 <h2>どの市場・どの業種で起きているか</h2>
 <p>

@@ -91,6 +91,30 @@
 </div>
 {% endif %}
 
+{% if same_industry %}
+<h2>同じ業種でランキングに載った銘柄</h2>
+<p>
+  {{ s.name }}と同じ<strong>{{ industry }}</strong>に分類されていて、
+  この期間にランキングへ入った銘柄です。
+  <strong>連動するという意味ではありません</strong>（同じ業種に分けられている、という事実だけです）。
+</p>
+<div class="table-wrap">
+<table class="breakdown-table">
+  <caption>{{ industry }}の銘柄（登場の多い順）</caption>
+  <thead><tr><th scope="col">銘柄名</th><th scope="col">コード</th><th scope="col">登場</th></tr></thead>
+  <tbody>
+    {% for e in same_industry %}
+    <tr>
+      <th scope="row"><a href="{{ base_url }}stock/{{ e.code }}/">{{ e.name }}</a></th>
+      <td>{{ e.code }}</td>
+      <td>{{ e.rows|length }}回</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
 <p>
   この銘柄が「なぜ動いたか」は、ランキングの数字には含まれません。
   当サイトのデータ取得元である

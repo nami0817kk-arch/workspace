@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import date
 
 import price_limit
 
@@ -464,3 +465,65 @@ def profile_breakdown(codes, profiles: dict[str, dict], key: str) -> list[dict]:
         {"label": label, "count": count, "share": round(count * 100 / total, 1)}
         for label, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
     ]
+
+
+# --- ストップ高／ストップ安の翌営業日 -----------------------------------------
+#
+# **このサイトでしか出せない数字。** 当日のランキングはどこにでもあるが、
+# 「上限まで買われた銘柄が、次の日どこにいたか」は前日の記録を持っていないと
+# 数えられない。
+#
+# 書くのは数えた事実だけで、**続くかどうかの見通しは書かない**。
+# 「翌日も値上がり上位30に残った」は「上がった」とも「上がり続ける」とも違う。
+
+def limit_followup(days: list[dict], kind: str, *, next_business_day=None) -> dict:
+    """記録がある日の銘柄が、翌営業日どこにいたか。
+
+    Args:
+        kind: "gainers"（ストップ高）か "losers"（ストップ安）。
+        next_business_day: 休場日を飛ばして次の営業日を返す関数。渡すと
+            **掲載が飛んでいる日を数えない**（間が抜けていると「翌営業日」と
+            言えないため）。渡さなければ掲載日の並びで次の日を使う。
+
+    Returns:
+        per_day … {rec_date, next_date, count, same_side, other_side, absent}
+        total   … 上と同じ形の合計（count が0なら None）
+    """
+    side = LIMIT_SIDES[kind]
+    other = "losers" if kind == "gainers" else "gainers"
+    order = sorted(days, key=lambda d: d["rec_date"])
+    per_day = []
+
+    for i, day in enumerate(order[:-1]):
+        if side["key"] not in day:      # 記録が無い日は数えない（推定と混ぜない）
+            continue
+        rows, source = limit_rows(day, kind)
+        if source != "recorded" or not rows:
+            continue
+        nxt = order[i + 1]
+        if next_business_day is not None:
+            try:
+                expected = next_business_day(date.fromisoformat(day["rec_date"])).isoformat()
+            except Exception:
+                continue
+            if nxt["rec_date"] != expected:
+                continue        # 掲載が飛んでいる。「翌営業日」とは言えない
+        codes = {r["code"] for r in rows}
+        same = codes & {r["code"] for r in nxt.get(kind) or []}
+        opposite = codes & {r["code"] for r in nxt.get(other) or []}
+        per_day.append({
+            "rec_date": day["rec_date"],
+            "next_date": nxt["rec_date"],
+            "count": len(codes),
+            "same_side": len(same),
+            "other_side": len(opposite),
+            "absent": len(codes - same - opposite),
+        })
+
+    per_day.sort(key=lambda d: d["rec_date"], reverse=True)
+    if not per_day:
+        return {"per_day": [], "total": None}
+    total = {k: sum(d[k] for d in per_day)
+             for k in ("count", "same_side", "other_side", "absent")}
+    total["days"] = len(per_day)
+    return {"per_day": per_day, "total": total}

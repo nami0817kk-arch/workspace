@@ -646,6 +646,26 @@ def stock_summary(stock: dict, day_count: int) -> str:
     return "".join(parts)
 
 
+def same_industry(code: str, stocks: list[dict], profiles: dict[str, dict],
+                  top_n: int = 8) -> list[dict]:
+    """同じ業種で、ページを持っている銘柄。登場の多い順。
+
+    **業種は貯めてあるのに、出すだけで使っていなかった**（2026-09-28 に足した）。
+    同じ業種の銘柄へ行き来できると、テーマで追える。
+
+    連動するとは書かない。**同じ業種に分類されている、という事実だけ**。
+    """
+    industry = (profiles.get(code) or {}).get("industry")
+    if not industry:
+        return []
+    out = [
+        s for s in stocks
+        if s["code"] != code and (profiles.get(s["code"]) or {}).get("industry") == industry
+    ]
+    out.sort(key=lambda s: (-len(s["rows"]), s["code"]))
+    return out[:top_n]
+
+
 def _build_stock_pages(days: list[dict], profiles: dict[str, dict] | None = None) -> list[dict]:
     """銘柄ごとのページ。登場が少ない銘柄は作らない（薄いページを量産しない）。"""
     stocks = aggregate.stock_histories(days)
@@ -665,6 +685,8 @@ def _build_stock_pages(days: list[dict], profiles: dict[str, dict] | None = None
                 profile=stock_profile.label((profiles or {}).get(stock["code"])),
                 profile_short=stock_profile.label(
                     (profiles or {}).get(stock["code"]), unit=False),
+                industry=((profiles or {}).get(stock["code"]) or {}).get("industry", ""),
+                same_industry=same_industry(stock["code"], stocks, profiles or {}),
                 summary=stock_summary(stock, len(days)),
                 # 一緒に載った銘柄にもページがあれば繋ぐ。**素のテキストで
                 # 並べると、行き先があるのに回遊が途切れる。**
@@ -827,6 +849,7 @@ LIMIT_PAGES = {
         "pct_label": "最大上昇率",
         "pct_class": "gain",
         "source_rank": "値上がり",
+        "opposite_rank": "値下がり",
         "archive": "gainers",
         "move_label": "10%以上の上昇",
     },
@@ -839,6 +862,7 @@ LIMIT_PAGES = {
         "pct_label": "最大下落率",
         "pct_class": "loss",
         "source_rank": "値下がり",
+        "opposite_rank": "値上がり",
         "archive": "losers",
         "move_label": "10%以上の下落",
     },
@@ -877,6 +901,10 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
         for day in history["per_day"] if day["source"] == "recorded"
         for row in day["rows"]
     ]
+    # 翌営業日の居場所。**前日の記録を持っていないと数えられない**ので、
+    # 当日のランキングを出しているだけの場所には作れない章になる。
+    followup = aggregate.limit_followup(days, kind, next_business_day=next_business_day)
+
     profiles = profiles or {}
     by_market = aggregate.profile_breakdown(recorded_codes, profiles, "market")
     by_industry = aggregate.profile_breakdown(recorded_codes, profiles, "industry")
@@ -910,6 +938,7 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
             market_total=market_total,
             industry_total=industry_total,
             recorded_count=len(recorded_codes),
+            followup=followup,
             trend_chart=charts.columns(
                 [{"label": format_date_short_ja(d["rec_date"])[:-3], "value": d["count"]}
                  for d in recent],
