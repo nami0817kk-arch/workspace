@@ -1260,3 +1260,36 @@ def test_尺を埋める語りは反応より前に入れる():
     said = [l.text for l in short.scenes[-1].lines]
     assert "足の骨を折りました" in said and "出るべきなのでは" in said
     assert said.index("足の骨を折りました") < said.index("出るべきなのでは"), said
+
+
+def test_長い反応が入らなくても次の反応を試す():
+    """2026-09-28、シャビの回。印付きの1件目が17秒で入らず、そこで止めて反応0件になった。"""
+    from src import shorts
+    from src.script_model import Line, Scene, Script
+
+    def talk(text, sec, speaker="キャスター", **kw):
+        line = Line(speaker=speaker, text=text)
+        line.duration = sec
+        for k, v in kw.items():
+            setattr(line, k, v)
+        return line
+
+    voices = Scene(title="ネットの反応", lines=[
+        talk("とても長い反応その1", 17.0, "ネット民", short_voice=True),
+        talk("短い反応", 3.0, "ネット民", short_voice=True),
+    ])
+    script = Script(title="t", scenes=[
+        Scene(title="オープニング", lines=[talk("題名です", 4.0)]),
+        Scene(title="山場", lines=[talk(f"山場{i}", 5.0) for i in range(7)]),
+        voices,
+    ])
+    script.scenes[1].main = True
+    short = Script(title="t", scenes=[
+        Scene(title="オープニング", lines=[talk("題名です", 4.0)]),
+        Scene(title="山場", lines=[talk(f"山場{i}", 6.0) for i in range(9)]),
+    ])
+    # 見積り 58秒。上限58×1.25=72.5 に対し、17秒の1件目は入らず、3秒の2件目は入る
+    shorts._add_voices_tail(short, script, 58.0)
+    texts = [l.text for l in short.scenes[-1].lines]
+    assert "短い反応" in texts
+    assert "とても長い反応その1" not in texts

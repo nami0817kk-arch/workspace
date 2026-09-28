@@ -591,7 +591,10 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
             break
         cost = sum(l.duration or l.estimated_duration() for l in group)
         if _estimate(short) + cost > target:
-            break
+            # **入らない1件は飛ばして、次を試す**（2026-09-28）。ここで止めていたので、
+            # 印付きの1件目が17秒あったシャビの回は反応が1件も入らず、
+            # 数字の語りで終わった（反応は3件までになり、1件が長い回が増える）
+            continue
         for part in group:
             short.scenes[-1].lines.append(copy.deepcopy(part))
         added += 1
