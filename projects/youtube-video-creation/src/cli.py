@@ -44,7 +44,7 @@ from .assets import ensure_assets
 from .config import ConfigError, load_config
 from .pipeline import build
 from .plan import PlanError
-from .research import ResearchError
+from .research import ResearchError, wants_reactions
 from .script_model import ScriptError, load_script
 from .thumbnail import build_thumbnail
 from .tts import TtsError
@@ -2991,7 +2991,7 @@ def _cmd_draft(args, config) -> int:
     # ヒントは真ん中に並ぶので、`grep 検証` のように絞って読むと**消える**。
     # 実際 9/15 に同じ日のうちに2度、自分で入れた重複検査の警告を捨てている
     serious = [n for n in hints if MUST_FIX.search(n)]
-    if not any("ネット民" in str(v) for sec in notes.sections for v in sec.voices):
+    if wants_reactions(notes.series) and not any("ネット民" in str(v) for sec in notes.sections for v in sec.voices):
         serious.append("ネットの反応が1件もありません。"
                        "`xread.py <検索語>` で実在の投稿を探して節を足してください")
     if serious:

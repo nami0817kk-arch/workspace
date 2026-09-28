@@ -1144,6 +1144,15 @@ def _advise_player_photos(notes: Notes) -> list[str]:
 PLACEHOLDER_MARK = "（"   # 雛形が「人が書く行」に置く印。行の頭がこれで始まり「）」で終わる
 
 
+def wants_reactions(series: str) -> bool:
+    """紹介もの（クラブ紹介・選手紹介）は他人の声が 0 の企画。「反応が1件もありません」を出さない（品質100回の75）。
+
+    2026-09-28 の収益化の整理で「声が1件も無い台本も通してよい」と決めた。ニュースの回は
+    反応が無いと題材を聞き直す決まり（09-27）なので、そちらは今までどおり知らせる。
+    """
+    return "紹介" not in (series or "")
+
+
 def _advise_placeholders(notes: Notes) -> list[str]:
     """**雛形の（…）を埋めずに見せない**（品質100回の61）。
 

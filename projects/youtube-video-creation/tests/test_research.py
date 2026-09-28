@@ -1930,3 +1930,11 @@ def test_選手紹介の写真の決まり_スタジアムと2枚並べと同じ
     hints = r._advise_player_photos(notes_with(["assets/images/20261001_haaland_pair_open/01.jpg"]))
     assert any("2枚並べ" in h for h in hints)
     assert r._advise_player_photos(notes_with(["a.jpg", "b.jpg", "a.jpg"], series="速報")) == []
+
+
+def test_紹介ものは反応が無くても知らせない():
+    """クラブ紹介・選手紹介は他人の声 0 の企画（2026-09-28）。ニュースの回だけ「反応が1件もありません」を出す。"""
+    from src.research import wants_reactions
+
+    assert wants_reactions("") and wants_reactions("速報")
+    assert not wants_reactions("有名選手の紹介") and not wants_reactions("プレミアリーグチーム紹介")
