@@ -57,6 +57,36 @@ LEAD_PROMO = re.compile(
     r")\s*[｜|/／・、,，！!♪★☆\s]*")
 
 
+# 名前の途中に残る宣伝。先頭だけを落としていたので、
+# 「SDカードリーダー 楽天ランキング1位 大容量対応…」のように
+# 途中に紛れた売り文句が題にも一覧にも出ていた（実測491件・3.7%）。
+# 落とすのは商品を見分けるのに使えないものだけ。
+# 「送料無料」「新品」「2個セット」「1年保証」は商品の情報なので残す。
+MID_PROMO = re.compile(
+    r"(?:楽天(?:市場)?(?:ランキング)?\s*\d+\s*位(?:獲得|受賞|入賞)?"
+    r"|ランキング\s*\d*\s*位(?:獲得)?"
+    r"|\d+冠(?:達成)?|殿堂入り|大人気|売れ筋"
+    r"|TIMESALE|タイムセール|スーパーSALE|楽天スーパーSALE"
+    r"|(?:楽天|業界)?最安値挑戦(?:中)?"
+    r"|クーポンで[\d,]+円|クーポン利用で[\d,]+円"
+    r"|累計[\d,]+\s*(?:万|億)?(?:枚|個|本|台|点|食|袋)?突破"
+    r"|高評価\s*\d+(?:\.[0-9]+)?"
+    r"|レビュー\s*[\d,]+\s*件"
+    r"|今だけ|本日限り|早い者勝ち|在庫処分)")
+
+# 中身が宣伝だけの囲みは、囲みごと落とす（【楽天1位】など）
+ANY_BRACKET = re.compile(r"[【\[［（(＜<『「]" + r"[^】\]］）)＞>』」]*" + r"[】\]］）)＞>』」]")
+
+
+def strip_mid_promo(text: str) -> str:
+    """名前の途中に残った売り文句を落とす。"""
+    t = ANY_BRACKET.sub(
+        lambda m: "" if MID_PROMO.search(m.group(0)) else m.group(0), text)
+    t = MID_PROMO.sub("", t)
+    t = re.sub(r"[\s]{2,}", " ", t)
+    return t.strip(" 　/／|｜-－・")
+
+
 def clean_name(name: str) -> str:
     """商品名の頭に積まれた宣伝文句を落とし、商品そのものの名前を先頭に出す。
 
@@ -92,7 +122,7 @@ def clean_name(name: str) -> str:
         text = LEAD_MARK.sub("", text)
         if text == before:
             break
-    text = text.strip()
+    text = strip_mid_promo(text.strip())
     return text if len(text) >= 3 else original
 
 
@@ -1174,10 +1204,48 @@ def cheaper_days(row: dict) -> str:
         # 一度も動いていない。「100%」と出しても何も伝わらない
         return f'記録{len(prices)}日のあいだ、価格は{yen(now)}のまま変わっていません。'
     n = sum(1 for p in prices if p <= now)
+    if n == len(prices):
+        # 全日が「この価格以下」= いまが記録上いちばん高い。
+        # 「100%」と出すと安い日が多いように読めるが、事実は逆。
+        return (f'記録{len(prices)}日のうち、これより安かった日はありません。'
+                f'いまが記録した中でいちばん高い価格です。')
     if n == 1:
         return f'記録{len(prices)}日のうち、この価格以下だったのは今日だけです。'
     return (f'記録{len(prices)}日のうち、この価格以下だったのは{n}日です'
             f'（{n / len(prices):.0%}）。')
+
+
+CAPTION_JUNK = re.compile(r"関連商品|＼|／|(?:[0-9,]+円.*?){2,}", re.S)
+
+# 楽天の掲載文に混ざる売り込み。当サイトが書いた文ではないが、
+# 商品ページに載せれば読み手には当サイトが勧めているように映る。
+CAPTION_APPEAL = re.compile(
+    r"ぜひ|是非|おすすめ|オススメ|お勧め|おススメ|お買い求め|ご購入ください|"
+    r"プレゼントに|贈り物に|ギフトに|最適です|いかがでしょう|お見逃しなく|"
+    r"この機会に|大人気|売れ筋|自信を持って|満足いただけ|お買い得|"
+    r"セール|特価|激安|クーポン|還元|エントリー|ランキング\d*位|楽天\d+位|高評価")
+
+CAPTION_SPLIT = re.compile(r"(?<=[。！？!?])|\n+")
+
+
+def clean_caption(text: str) -> str:
+    """商品の説明から、売り込みと羅列を落とす。
+
+    楽天の掲載文をそのまま載せていたため、12,750件のうち2,028件（15.9%）に
+    「ぜひ」「オススメ」「超お買い得です」といった買い煽りが入っていた。
+    さらに「関連商品＼楽天1位獲得／…1,000円1,000円…」のように、
+    別商品の名前と値段の羅列が説明として入っているものが1,360件あった。
+    どちらも商品の情報ではないので、羅列は説明ごと出さず、
+    煽りは文の単位で落とす。残りが短ければ出さない。
+    """
+    text = str(text or "").strip()
+    if not text:
+        return ""
+    if CAPTION_JUNK.search(text):
+        return ""
+    parts = [p for p in CAPTION_SPLIT.split(text) if p and p.strip()]
+    kept = "".join(p for p in parts if not CAPTION_APPEAL.search(p)).strip()
+    return kept if len(kept) >= 30 else ""
 
 
 def caption_block(row: dict) -> str:
@@ -1186,7 +1254,7 @@ def caption_block(row: dict) -> str:
     全文は中央値1,123文字あり、5,500件ぶん持つと数MBになるので冒頭だけ持つ。
     出典がリンク先であることは必ず書く。
     """
-    text = str(row.get("caption") or "").strip()
+    text = clean_caption(row.get("caption"))
     if not text:
         return ""
     return ('<h2>商品の説明</h2>'
@@ -1247,16 +1315,21 @@ def not_found(site: dict, updated: str) -> str:
     リンクも壊れるので、ルートからの絶対パスで書く。
     """
     root = root_prefix(site)
+    # canonical にトップを入れていたため、存在しないURLすべてが
+    # 「トップと同じページ」だと検索側に申告される形になっていた。
+    # 404 は索引に載せるページではないので noindex にし、canonical も
+    # 404 自身のURLにする。
     return (head(f"ページが見つかりません｜{site['name']}",
-                 "お探しのページは見つかりませんでした。", site["base_url"], site,
-                 prefix=root_prefix(site))
+                 "お探しのページは見つかりませんでした。",
+                 site["base_url"].rstrip("/") + "/404.html", site,
+                 prefix=root_prefix(site), indexable=False)
             + '<h1>ページが見つかりません</h1>'
             + '<p class="lead">記録から外れた商品のページは、時間がたつと無くなります。'
             + '商品名で探すか、一覧から辿ってください。</p>'
             + '<ul class="cards">'
             + f'<li class="card"><div class="body"><a class="name" href="{root}search/">商品を探す</a>'
             + '<p class="meta">記録している商品を名前で絞り込めます</p></div></li>'
-            + f'<li class="card"><div class="body"><a class="name" href="{root}">今日の値下がり</a>'
+            + f'<li class="card"><div class="body"><a class="name" href="{root}drops/">今日の値下がり</a>'
             + '<p class="meta">前回より安くなった商品</p></div></li>'
             + f'<li class="card"><div class="body"><a class="name" href="{root}lows/">最安値圏</a>'
             + '<p class="meta">記録した中で最も安い価格の商品</p></div></li>'
@@ -1519,6 +1592,18 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// 楽天のサムネイルは、商品が消えたり差し替えられたりすると読めなくなる。
+// そのままだと壊れた絵の記号と、40文字の代替文がカードの中で溢れる。
+// 読めなかった画像は枠だけに差し替える（画像の無い商品と同じ見た目）。
+// error は泡立たないので、捕捉の段階（第3引数 true）で受ける。
+document.addEventListener('error', function (ev) {
+  var el = ev.target;
+  if (!el || el.tagName !== 'IMG') { return; }
+  var box = document.createElement('span');
+  box.className = 'noimg' + (el.className ? ' ' + el.className : '');
+  if (el.parentNode) { el.parentNode.replaceChild(box, el); }
+}, true);
+
 // 追従する「先頭へ」。ひと目盛り分スクロールしたら出す。
 document.addEventListener('DOMContentLoaded', function () {
   var top = document.querySelector('.to-top');
@@ -1722,7 +1807,7 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     ld = safe_json({
         "@context": "https://schema.org", "@type": "Product",
         "name": clean_name(row["name"]), "image": row.get("image") or None,
-        "description": (row.get("caption") or "")[:200] or None,
+        "description": clean_caption(row.get("caption"))[:200] or None,
         "sku": row.get("item_code") or None,
         "offers": {"@type": "Offer", "price": row["price"], "priceCurrency": "JPY",
                    "url": row.get("url") or canonical,
