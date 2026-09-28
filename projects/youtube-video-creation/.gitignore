@@ -27,3 +27,5 @@ assets/backgrounds/.motion/
 
 # 扱った話題の記録（実運用で溜まっていくもの）
 research/covered.yaml
+# Transfermarkt の選手詳細の控え（1人1つ、1,000件超）。取り直せるので追わない
+research/player_pool/profiles/

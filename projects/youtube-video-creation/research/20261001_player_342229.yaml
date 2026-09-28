@@ -1,0 +1,140 @@
+# キリアン・エムバペ（レアル・マドリード）の紹介。数字は Transfermarkt（https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229）。
+# 顔写真は記事か Commons から取って thumbnail.photos に置く（tools/articlephoto.py → portrait）。
+date: 2026年10月01日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- キリアン・エムバペ
+theme:
+  id: player_342229
+  league: england
+  kind: other
+  topic: レアル・マドリード
+  title: キリアン・エムバペってどんな選手？数字で見る
+  question: キリアン・エムバペはどんな選手で、いま数字はどうなっているのか
+  takeaway: （数字で分かったことを1文で）
+short_title: キリアン・エムバペってどんな選手？
+thumbnail:
+  line1: キリアン・エムバペ
+  line2: ●●の数字
+  tags:
+  - レアル・マドリード
+  photos: []
+sections:
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: キリアン・エムバペの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: キリアン・エムバペ（レアル・マドリード）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - レアル・マドリード（10番）
+    - - ポジション
+      - センターフォワード
+    - - 生年月日
+      - 1998年12月20日（27歳）
+    - - 身長
+      - 1.8m
+    - - 利き足
+      - 右
+    - - 契約
+      - 2029年まで
+    - - 市場価値
+      - 2億ユーロ
+    source: Transfermarkt
+  say:
+  - キリアン・エムバペ、27歳。レアル・マドリードのセンターフォワードです。
+  - 身長1.8m、利き足は右。
+  - 市場価値は2億ユーロ。
+  - 市場価値は前回の1.8億ユーロから2億ユーロに上がりました。
+  sources:
+  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
+- id: career
+  heading: 歩んできた道
+  tier: 報道
+  telop: 季ごとの所属と市場価値
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - 季
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows:
+    - - 15/16〜16/17
+      - モナコ
+      - 16歳〜18歳
+      - 最高 3500万ユーロ
+    - - 17/18〜23/24
+      - パリ・サンジェルマン
+      - 18歳〜25歳
+      - 最高 2億ユーロ
+    - - 24/25〜26/27
+      - レアル・マドリード
+      - 26歳〜27歳
+      - 最高 2億ユーロ
+    source: Transfermarkt
+  say:
+  - （キリアン・エムバペが3クラブを渡ってきた道を、表の上から順に。どこで値が跳ねたか）
+  sources:
+  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
+- id: season
+  heading: 今季の数字
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: キリアン・エムバペ 今季の数字
+    columns:
+    - 大会
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows:
+    - - ラ・リーガ
+      - '7'
+      - '7'
+      - '2'
+      - 630分
+    - - チャンピオンズリーグ
+      - '1'
+      - '1'
+      - '0'
+      - 90分
+    - - ネーションズリーグA
+      - '1'
+      - '1'
+      - '0'
+      - 59分
+    source: Transfermarkt
+  say:
+  - text: （前置き1行：キリアン・エムバペはいまどういう選手か、を一言で）
+    short_only: true
+  - 今季はここまで9試合で9得点2アシスト、779分です。
+  - ラ・リーガは7試合で7得点2アシスト。
+  - チャンピオンズリーグは1試合で1得点0アシスト。
+  - ネーションズリーグAは1試合で1得点0アシスト。
+  sources:
+  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: この選手の見どころ
+  say:
+  - （キリアン・エムバペの数字から見えること・次に何を見るか。同じ位置の選手と比べる数字を1つ）
+  sources:
+  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
