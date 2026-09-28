@@ -390,3 +390,10 @@ def test_10月1日の前後で時制を書き分ける(tmp_path, monkeypatch):
         assert word in hero, day
         assert word in (tmp_path / "out" / "faq.html").read_text(encoding="utf-8"), day
     render._env.globals["oct_done"] = render.date.today() >= render.date(2026, 10, 1)
+
+
+def test_計算機に賞与の入力(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'id="bonus"' in html and 'id="bonus-times"' in html and "function bonusHtml(" in html
+    assert "['b', 'bonus']" in html
+    assert "標準賞与額" in (site / "keisan.html").read_text(encoding="utf-8")
