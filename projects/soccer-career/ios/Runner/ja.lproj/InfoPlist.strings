@@ -1,0 +1,8 @@
+/* 日本語に対応していることを実体として示すためのファイル。
+   Info.plist の CFBundleLocalizations だけでは App Store が言語として
+   認めず、掲載ページの「言語」が英語のままになる
+   (soccer-manager で実際にそうなり、1.1.1 で直した)。
+
+   このアプリは日本語だけなので en.lproj は置かない。 */
+"CFBundleDisplayName" = "選手キャリア";
+"CFBundleName" = "選手キャリア";
