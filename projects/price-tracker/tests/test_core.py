@@ -907,3 +907,23 @@ class 記録を全部残すTest(unittest.TestCase):
         out = self.theme.history_table({"tail": self.tail(30)})
 
         self.assertEqual(out.count("<table"), 1)
+
+
+class 説明と判定が食い違わないTest(unittest.TestCase):
+    """点の付け方の説明（`/about/`）と `score_breakdown` の中身を揃える。
+
+    動いていない商品を点から外したときに、説明のほうを直していなかった。
+    「最安値との差が0%なら40点」とだけ書いてあると、変動なしの商品が
+    0点なのは説明と食い違う。
+    """
+
+    def test_動いていない商品が0点であることを説明にも書く(self):
+        from src import analyze, pages
+
+        near = dict(analyze.score_breakdown({"moved": False, "vs_low_pct": 0.0}))
+        self.assertEqual(near["最安値への近さ"], 0)
+
+        body = pages.about_body({"name": "テスト", "owner": "つるはし社",
+                                 "contact_email": "a@example.com",
+                                 "base_url": "https://e.dev"})
+        self.assertIn("一度も価格が動いていない商品は0点", body)
