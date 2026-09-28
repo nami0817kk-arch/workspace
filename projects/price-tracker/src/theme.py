@@ -1182,8 +1182,13 @@ def views_map(counts: list, prefix: str = "") -> str:
 
 def archive_index(days: list, site: dict, canonical: str, updated: str) -> str:
     """日付別の入口。一覧が増えても、どの日を見られるかが分からないと辿れない。"""
-    title = "日付別の値下がり"
-    lead = "記録を始めてからの各日について、その日に安くなった商品を残しています。"
+    # 中身は「価格が下がったもの」と「ポイント倍率が上がって実質が下がったもの」の
+    # 両方なので、題を「値下がり」に限定しない（一覧の題は中身に合わせる）。
+    title = "日付別 安くなった商品"
+    lead = ("記録を始めてからの各日について、その日に安くなった商品を残しています。"
+            "価格が下がったものと、ポイント倍率が上がって実質価格が下がったものを"
+            "含みます（今日ぶんは「今日の値下がり」と「ポイント込みで安くなった商品」"
+            "に分けて出しています）。")
     body = "".join(
         f'<li class="hit"><a href="{esc(day)}/">{esc(day)}</a>'
         f'<span class="price">{n:,}件</span></li>' for day, n in days)

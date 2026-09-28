@@ -1148,3 +1148,19 @@ class 日付別も実質で見るTest(unittest.TestCase):
 
         self.assertEqual(analyze.new_lows([row], "2026-09-02"), [row])
         self.assertEqual(analyze.new_lows([row], "2026-09-01"), [])
+
+
+class 日付別の題Test(unittest.TestCase):
+    """中身は「価格が下がったもの」と「ポイント倍率が上がって実質が下がったもの」の
+    両方なのに、題が「値下がり」のままだった（一覧の題は中身に合わせる）。
+    """
+
+    def test_題に値下がりと限定しない(self):
+        from src import theme
+        html = theme.archive_index([("2026-09-26", 69)],
+                                   {"name": "テスト", "base_url": "https://e.dev"},
+                                   "https://e.dev/archive/", "2026-09-28")
+
+        self.assertIn("日付別 安くなった商品", html)
+        self.assertNotIn("日付別の値下がり", html)
+        self.assertIn("実質価格が下がったもの", html)
