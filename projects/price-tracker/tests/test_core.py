@@ -762,3 +762,148 @@ class ByGenreTest(unittest.TestCase):
         rows = [self.row(str(i), "g") for i in range(10)]
 
         self.assertEqual(len(analyze.by_genre(rows, "g", limit=3)), 3)
+
+
+class 記録を始めてからの変化Test(unittest.TestCase):
+    """価格.com の価格推移ページは冒頭に「初値 / 現在 / 差額・値下がり率」を置く。
+    同じ形を置くが、うちは**実質価格の変化も並べる**。
+    価格が1円も動いていないのに実質が19.2%下がる商品が実在する
+    （dentendo-10026508-15813ae1・2026-09-28 実測）。
+    価格.com の見せ方だけでは、この動きは丸ごと見落とす。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_価格が動かなくても倍率が動けば実質の行に出る(self):
+        row = {"tail": [["2026-09-08", 1408, 1], ["2026-09-28", 1408, 20]]}
+
+        out = self.theme.since_start(row)
+
+        self.assertIn("実質", out)
+        self.assertIn("変わらず", out)      # 価格の行
+        self.assertIn("−268円", out)        # 実質の行（1,394 → 1,126）
+
+    def test_倍率がずっと1倍なら実質の行は出さない(self):
+        # 実質は価格の1%引きを並べるだけになり、読み手に何も足さない
+        row = {"tail": [["2026-09-08", 2000, 1], ["2026-09-28", 1800, 1]]}
+
+        out = self.theme.since_start(row)
+
+        self.assertNotIn("実質", out)
+        self.assertIn("10.0%", out)
+
+    def test_記録が1日しかないときは出さない(self):
+        out = self.theme.since_start({"tail": [["2026-09-28", 1000, 1]]})
+
+        self.assertEqual(out, "")
+
+    def test_発売時の値段だとは書かない(self):
+        """うちが持っているのは記録を始めた日の値段。価格.com の「初値」とは違う。"""
+        row = {"tail": [["2026-09-08", 2000, 1], ["2026-09-28", 1800, 1]]}
+
+        out = self.theme.since_start(row)
+
+        self.assertNotIn("初値", out)
+        self.assertIn("発売時の値段ではありません", out)
+
+
+class 記録の表の前日差Test(unittest.TestCase):
+    """価格.com の「日別の価格変動」に倣った列。
+    どの日に動いたかを、金額を読み比べずに追えるようにする。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_前の日から下がった日は差を出す(self):
+        row = {"tail": [["2026-09-26", 2000, 1], ["2026-09-27", 1800, 1],
+                        ["2026-09-28", 1800, 1]]}
+
+        out = self.theme.history_table(row)
+
+        self.assertIn("前日差", out)
+        self.assertIn("−200", out)
+
+    def test_価格が同じでも倍率が動けば実質の差に出る(self):
+        row = {"tail": [["2026-09-27", 1408, 1], ["2026-09-28", 1408, 20]]}
+
+        out = self.theme.history_table(row)
+
+        self.assertIn("−268", out)
+
+    def test_倍率が付いた日は倍率も残す(self):
+        """実質価格だけだと、値引きが倍率で来たのか価格で来たのかが読めない。"""
+        row = {"tail": [["2026-09-27", 1408, 1], ["2026-09-28", 1408, 20]]}
+
+        out = self.theme.history_table(row)
+
+        self.assertIn("20倍", out)
+        self.assertNotIn("1倍", out)   # 通常ポイントは書かない
+
+
+
+class 一覧の道具Test(unittest.TestCase):
+    """`?free=1` 付きのURLを開くと、一覧の道具が丸ごと死んでいた
+    （2026-09-28 に発見）。
+
+    `var freeonly = ...` を使うより後に書いていたため、`var` の巻き上げで
+    宣言だけが上がり、値は `undefined` のまま `undefined.checked = true` に
+    なって例外が出ていた。チェックを入れると URL に `?free=1` が入るので、
+    再読み込みや共有のたびに並び替えも価格帯も効かなくなる。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_初期値を入れるより前に要素を取り出している(self):
+        js = self.theme.LIST_JS
+
+        # 巻き上げで宣言だけが上がるので、値を入れる行より前に取り出す
+        for name, use in (("freeonly", "freeonly.checked = true"),
+                          ("instock", "instock.checked = true"),
+                          ("reset", "reset.addEventListener")):
+            with self.subTest(name=name):
+                self.assertLess(js.index(f"var {name} = document.getElementById"),
+                                js.index(use), f"{name} を取り出す前に使っている")
+
+    def test_絞り込みの印はURLに残る(self):
+        js = self.theme.LIST_JS
+
+        self.assertIn("p.set('free', '1')", js)
+        self.assertIn("q.get('free')", js)
+
+
+class 記録を全部残すTest(unittest.TestCase):
+    """価格履歴の蓄積がこのPJTの価値なので、古い日を捨てない。
+    既定は直近14日で、それより前は畳んでおく（開く印を出す）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def tail(self, n):
+        return [[f"2026-09-{i + 1:02d}", 1000 + i, 1] for i in range(n)]
+
+    def test_14日を超えたら古い日も表に残す(self):
+        out = self.theme.history_table({"tail": self.tail(20)})
+
+        self.assertIn("09/01", out)          # いちばん古い日
+        self.assertIn("記録20日ぶんをすべて見る", out)
+        self.assertIn("limited", out)
+
+    def test_14日以下なら畳む印を出さない(self):
+        out = self.theme.history_table({"tail": self.tail(10)})
+
+        self.assertNotIn("すべて見る", out)
+        self.assertNotIn("limited", out)
+
+    def test_表を2枚出さない(self):
+        # 13,406ページあるので、同じ表を2枚書くと配信物がその分ふくらむ
+        out = self.theme.history_table({"tail": self.tail(30)})
+
+        self.assertEqual(out.count("<table"), 1)

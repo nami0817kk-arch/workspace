@@ -861,3 +861,68 @@ main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 
   /* 出典は紙にも残す（どこで見た価格か分からなくなる） */
   .ad-notice { font-size: 10px; color: #444; }
 }
+
+/* 56. 価格の記録の表を、価格.com の「日別の価格変動」に倣って
+   前日との差が読める形にする。うちは実質価格の差も並べる
+   （楽天の値引きは倍率で動くので、価格の列だけでは動きが見えない日がある）。 */
+.history .move { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.history .move .down { color: var(--down); font-weight: 600; }
+.history .move .up { color: var(--up, #a5462f); }
+.history .move .same { color: var(--muted); }
+.history { table-layout: fixed; }
+.history th, .history td { padding: 8px 4px; font-size: 13px; }
+.history thead th { font-size: 11px; white-space: nowrap; }
+/* 日付は5文字なので狭くてよい。金額の2列を広く取る */
+.history col.c-day { width: 15%; }
+.history col.c-price { width: 24%; }
+.history col.c-move { width: 18.5%; }
+.history tbody th { width: auto; background: none; color: var(--muted); }
+.history td { text-align: right; }
+.history thead th:not(:first-child) { text-align: right; }
+/* 倍率は実質価格の下に小さく添える（列を足すと幅320pxで表がはみ出す） */
+.history td small { display: block; font-size: 11px; color: var(--muted);
+  line-height: 1.3; }
+
+/* 58. 商品ページの頭。送料・在庫・ポイント倍率・実質価格は一覧のカードには
+   出していたのに、商品ページには無かった。価格の次に大きい数字なので、
+   価格のすぐ下に置く。 */
+.lede .point-line { margin: 6px 0 0; font-size: 14px; }
+.lede .headline .cond { vertical-align: middle; }
+
+/* 59. 価格の記録は、古い日を捨てずに畳んでおく。表を2枚出すと配信物が
+   ふくらむ（13,406ページある）ので、1枚の表の行を隠して印で開く。
+   JS は使わない（読み込む前でも開ける）。 */
+.allhist-toggle { position: absolute; width: 1px; height: 1px;
+  opacity: 0; pointer-events: none; }
+.history.limited tbody tr:nth-child(n+15) { display: none; }
+.allhist-toggle:checked ~ .history.limited tbody tr { display: table-row; }
+.allhist-toggle:checked ~ .allhist { display: none; }
+.allhist { display: inline-block; margin: 8px 0 0; padding: 8px 14px;
+  min-height: 36px; border: 1px solid var(--line); border-radius: 8px;
+  font-size: 13px; color: var(--ink); cursor: pointer; }
+.allhist:hover { background: var(--panel); }
+.allhist-toggle:focus-visible ~ .allhist { outline: 2px solid var(--accent);
+  outline-offset: 2px; }
+@media print {
+  /* 紙には全部出す（畳んだままだと記録が欠ける） */
+  .history.limited tbody tr { display: table-row; }
+  .allhist { display: none; }
+}
+
+/* 57. 「記録を始めてからの変化」。価格.com の価格推移ページにある
+   「初値 / 現在 / 差額・値下がり率」の3行表に倣う。
+   いくらから、いくらまで、いくら動いたかが一目で分かる。
+   うちは実質価格の行も並べる（楽天の値引きは倍率で動くため）。 */
+.change { table-layout: fixed; }
+.change th:first-child { width: 16%; white-space: nowrap; }
+.change th, .change td { padding: 8px 4px; }
+.change td { text-align: right; font-variant-numeric: tabular-nums; }
+.change thead th:not(:first-child) { text-align: right; font-size: 12px;
+  white-space: nowrap; }
+.change .move { white-space: nowrap; }
+.change .move .down { color: var(--down); font-weight: 700; }
+.change .move .up { color: var(--up, #a5462f); font-weight: 600; }
+.change .move .same { color: var(--muted); font-weight: 400; }
+.change .move small { display: block; font-weight: 400; color: var(--muted);
+  font-size: 11px; line-height: 1.3; }
+.change .move span { display: block; }

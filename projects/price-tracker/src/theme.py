@@ -5,7 +5,7 @@ import json
 import re
 from datetime import datetime, timedelta
 
-from .analyze import (MIN_DAYS_FOR_LOW, effective_change_count,
+from .analyze import (MIN_DAYS_FOR_LOW, effective, effective_change_count,
                       effective_series)
 from .store import entry as store_entry
 
@@ -898,13 +898,17 @@ document.addEventListener('DOMContentLoaded', function () {
     history.replaceState(null, '', s ? '?' + s : location.pathname);
   }
 
+  // 取り出しは、値を使うより前に置く。var は巻き上げで宣言だけが上がり、
+  // 値は undefined のままなので、?free=1 付きのURLを開くと
+  // 「undefined.checked = true」で例外になり、一覧の道具が丸ごと死んでいた
+  // （並び替えも価格帯も「条件を外す」も効かなくなる。2026-09-28 に発見）。
+  var freeonly = document.getElementById('freeonly');
+  var instock = document.getElementById('instock');
+  var reset = document.getElementById('reset');
   if (q.get('sort')) { sort.value = q.get('sort'); }
   if (q.get('range')) { range.value = q.get('range'); }
   if (q.get('free')) { freeonly.checked = true; }
   if (q.get('stock')) { instock.checked = true; }
-  var freeonly = document.getElementById('freeonly');
-  var instock = document.getElementById('instock');
-  var reset = document.getElementById('reset');
   reset.addEventListener('click', function () {
     sort.value = ''; range.value = '';
     freeonly.checked = false; instock.checked = false; apply();
@@ -1328,25 +1332,122 @@ def caption_block(row: dict) -> str:
             '<p class="note">楽天市場の掲載内容の冒頭です。全文はリンク先をご確認ください。</p>')
 
 
+def since_start(row: dict) -> str:
+    """記録を始めた日といまを並べる。
+
+    価格.com の価格推移ページは冒頭に「初値 / 現在 / 差額・値下がり率」を
+    3行で出す。いくらから、いくらまで、いくら動いたかが一目で分かる。
+    同じ形を置くが、うちは**実質価格の変化も並べる**。楽天の値引きは価格では
+    なく倍率で動くことが多く、価格の行だけでは動きが見えない商品がある。
+
+    「初値」とは書かない。うちが持っているのは記録を始めた日の値段であって、
+    発売時の値段ではない。
+    """
+    tail = [store_entry(e) for e in (row.get("tail") or [])]
+    if len(tail) < 2:
+        return ""
+    (first_day, first_price, first_rate) = tail[0]
+    (last_day, last_price, last_rate) = tail[-1]
+    first_eff = effective(first_price, first_rate)
+    last_eff = effective(last_price, last_rate)
+
+    def line(label, before, now):
+        d = now - before
+        if not d:
+            return (f'<tr><th>{esc(label)}</th><td>{yen(before)}</td>'
+                    f'<td>{yen(now)}</td><td class="move">'
+                    f'<span class="same">変わらず</span></td></tr>')
+        cls = "up" if d > 0 else "down"
+        sign = "+" if d > 0 else "−"
+        rate = abs(d) / before if before else 0
+        # 「−268円（19.2%）」を1セルに入れると、幅320pxで表が40px出る。
+        # 率は下の段へ落とす（横に伸ばさず、縦に積む）。
+        return (f'<tr><th>{esc(label)}</th><td>{yen(before)}</td>'
+                f'<td>{yen(now)}</td>'
+                f'<td class="move"><span class="{cls}">{sign}{abs(d):,}円</span>'
+                f'<small>{rate:.1%}</small></td></tr>')
+
+    body = line("価格", first_price, last_price)
+    # 倍率が一度も付いていない商品は、実質の行を出しても価格と同じ形になる
+    rates = {e[2] for e in tail}
+    note = ""
+    if rates != {1}:
+        # 「実質（ポイント込み）」は行見出しに入れると表がはみ出す
+        # （幅320pxで347pxになった）。ポイント込みであることは下の注記に書く。
+        body += line("実質", first_eff, last_eff)
+        note = "「実質」はポイント分を引いた目安です。"
+    return ('<h2>記録を始めてからの変化</h2>'
+            '<table class="facts change">'
+            f'<thead><tr><th scope="col"></th>'
+            f'<th scope="col">{esc(jp_date(first_day))}</th>'
+            f'<th scope="col">{esc(jp_date(last_day))}</th>'
+            f'<th scope="col">差</th></tr></thead>'
+            f'<tbody>{body}</tbody></table>'
+            f'<p class="note">{note}{len(tail)}日分の記録での比較で、'
+            f'発売時の値段ではありません。</p>')
+
+
 def history_table(row: dict) -> str:
     """直近の価格を日付つきで出す。
 
     折れ線は形しか分からない。「いつ・いくらだったか」を読めるようにする。
     倍率が付いている日はそれも出す（実質いくらだったかを後から確かめられる）。
     """
-    tail = [store_entry(e) for e in (row.get("tail") or [])][-14:]
+    tail = [store_entry(e) for e in (row.get("tail") or [])]
     if len(tail) < 2:
         return ""
-    # 見出し行が無く、3列目は名前も中身も無い空のセルだった。
-    # 表として読むと「何の列か」が分からず、読み上げでは「空白」としか言えない。
-    body = "".join(
-        f'<tr><th scope="row">{esc(day)}</th><td>{yen(price)}</td>'
-        f"<td>{('ポイント' + str(rate) + '倍') if rate > 1 else '—'}</td></tr>"
-        for day, price, rate in reversed(tail))
-    head_row = ('<thead><tr><th scope="col">日付</th><th scope="col">価格</th>'
-                '<th scope="col">ポイント倍率</th></tr></thead>')
+    # 記録が伸びるほど価値が出るものなので、古い日を捨てない。既定は直近14日で、
+    # それより前は畳んでおく。表を2枚出すと配信物がその分ふくらむので
+    # （13,406ページある）、1枚の表の行を CSS で隠し、印で開く。
+    limited = len(tail) > 14
+
+    def move(now, before):
+        """前の日からの差。価格.com の「変動額」に当たる列。
+        どの日に動いたかが、価格そのものを読み比べなくても分かる。"""
+        if before is None or now == before:
+            return '<span class="same">0</span>'
+        d = now - before
+        cls = "up" if d > 0 else "down"
+        return f'<span class="{cls}">{"+" if d > 0 else "−"}{abs(d):,}</span>'
+
+    def rate_note(rate):
+        """倍率そのものも残す。実質価格だけだと、値引きが倍率で来たのか
+        価格で来たのかが表から読めない。通常ポイント（1倍）は書かない。"""
+        return f'<small>{rate}倍</small>' if rate and rate > 1 else ""
+
+    # 実質価格の変動も同じ表に出す。楽天の値引きは価格ではなく倍率で動くので、
+    # 価格の列だけを見ると「動いていない」ように見える日がある。
+    # ここが価格.com の「日別の価格変動」に無いもの。
+    rows_ = list(reversed(tail))
+    body = []
+    for i, (day, price, rate) in enumerate(rows_):
+        prev = rows_[i + 1] if i + 1 < len(rows_) else None
+        eff = effective(price, rate)
+        eff_prev = effective(prev[1], prev[2]) if prev else None
+        body.append(
+            f'<tr><th scope="row">{esc(day[5:].replace("-", "/"))}</th>'
+            f'<td>{yen(price)}</td>'
+            f'<td class="move">{move(price, prev[1] if prev else None)}</td>'
+            f'<td>{yen(eff)}{rate_note(rate)}</td>'
+            f'<td class="move">{move(eff, eff_prev)}</td></tr>')
+    head_row = ('<thead><tr><th scope="col">日付</th>'
+                '<th scope="col">価格</th><th scope="col">前日差</th>'
+                '<th scope="col">実質</th><th scope="col">前日差</th></tr></thead>')
+    cols = ('<colgroup><col class="c-day"><col class="c-price">'
+            '<col class="c-move"><col class="c-price"><col class="c-move"></colgroup>')
+    more = ('<input type="checkbox" id="allhist" class="allhist-toggle">'
+            if limited else "")
+    opener = (f'<label for="allhist" class="allhist">記録{len(tail)}日ぶんを'
+              f'すべて見る</label>' if limited else "")
     return ('<h2>価格の記録</h2>'
-            f'<table class="facts history">{head_row}<tbody>{body}</tbody></table>')
+            + more
+            + f'<table class="facts history{" limited" if limited else ""}">'
+            f'{cols}{head_row}'
+            f'<tbody>{"".join(body)}</tbody></table>'
+            + opener
+            + '<p class="note">「実質」はポイント分を引いた目安です。'
+            '楽天の値引きは価格ではなく倍率で動くことが多いため、'
+            '価格が同じ日でも実質は動きます。</p>')
 
 
 def og_image(site: dict, stats: dict) -> str:
@@ -1891,23 +1992,27 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                     '<p class="note">倍率は購入額の何%が戻るかの目安で、'
                     '実際の付与はキャンペーンや会員ランクでも変わります。</p>')
 
-    rows_html = [("現在の価格", yen(row["price"])),
-                 ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
+    # 現在の価格・前回の価格・倍率・実質価格は、すぐ上の「記録を始めてからの変化」と
+    # 下の「価格の記録」に出ている。同じ数字を3か所に置くと、どれを見ればよいのかが
+    # 分からなくなる（2026-09-28 に9行のうち5行が重複していた）。
+    # ここに残すのは「記録した中でのいまの位置」だけにする。
+    rows_html = [("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
                  ("記録した中での最高値", yen(row["high"])),
                  ("最安値との差", pct(row["vs_low_pct"]) if row["vs_low_pct"] else "最安値と同じ"),
                  ("記録した中の値幅",
                   (f'{yen(row["low"])} 〜 {yen(row["high"])}'
                    f'（{pct((row["high"] - row["low"]) / row["high"])}）')
-                  if row.get("moved") else "動いていません"),
-                 ("記録日数", f'{row["days"]}日')]
-    if int(row.get("point_rate") or 1) > 1:
-        rows_html.insert(1, ("ポイント倍率", f'{row["point_rate"]}倍'))
-        # 図の凡例が「ポイント込みの実質価格」なので、表もその言い方に揃える。
-        # 同じ商品ページに2つの呼び方が出ていた。
-        rows_html.insert(2, ("ポイント込みの実質価格",
-                             f'{yen(row["eff_price"])}（目安）'))
-    if row.get("prev"):
-        rows_html.insert(1, ("前回の価格", yen(row["prev"])))
+                  if row.get("moved") else "動いていません")]
+    if len(row.get("tail") or []) < 2:
+        # 記録が1日しかないと上下の表がどちらも出ない。そのときだけ、
+        # 価格そのものをここに出す（どこにも出ないよりはよい）。
+        first = [("現在の価格", yen(row["price"]))]
+        if int(row.get("point_rate") or 1) > 1:
+            # 図の凡例が「ポイント込みの実質価格」なので、表もその言い方に揃える。
+            first += [("ポイント倍率", f'{row["point_rate"]}倍'),
+                      ("ポイント込みの実質価格", f'{yen(row["eff_price"])}（目安）')]
+        rows_html = first + rows_html
+    rows_html.append(("記録日数", f'{row["days"]}日'))
     table = "".join(f"<tr><th>{esc(k)}</th><td>{v}</td></tr>" for k, v in rows_html)
 
     # 商品情報の構造化データ。価格は当サイトの取得値であることを本文で明示している。
@@ -1966,7 +2071,13 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                f'alt="{esc(short_name(row["name"], 40))}" width="300" height="300" '
                f'loading="eager" fetchpriority="high" decoding="async"></p>'
                if row.get("image") else '')
-            + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
+            # 送料・在庫・ポイントは一覧のカードには出していたのに、商品ページの
+            # 頭には無かった。倍率が付いた商品では実質価格が19%も違うことがあり
+            # （dentendo-10026508-15813ae1）、いちばん大事な数字が頭に出ていない。
+            # 送料無料は構造化データにだけ書いていて、画面には出していなかった。
+            + f'<p class="headline"><strong>{yen(row["price"])}</strong> '
+            + f'{badge(row)}{conditions(row)}</p>'
+            + f'<p class="point-line">{point_note(row)}</p>'
             + '</div>'
             + AD_NOTICE
             + (f'<p class="verdict">{esc(verdict_note(row))}</p>'
@@ -1982,6 +2093,10 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                # 動いていないことは直前の注記が書いている。ここは入口だけ
                f'<details class="chart flat"><summary>記録{row["days"]}日分の図を見る'
                f'</summary>{chart(row.get("tail") or [], effective=eff)}</details>')
+            # 並びは価格.com の価格推移ページに倣う。
+            # 図 → 何がどれだけ動いたかの要約 → 詳しい表。
+            + since_start(row)
+            + '<h2>記録した中での位置</h2>'
             + f'<table class="facts">{table}</table>'
             + caption_block(row)
             + history_table(row)
