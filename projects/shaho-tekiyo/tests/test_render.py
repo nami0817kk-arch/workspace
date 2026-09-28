@@ -378,3 +378,15 @@ def test_計算機に年収の壁と1日の時間(site):
     for wall in ("1230000", "1300000", "1600000"):
         assert wall in html
     assert "【2026年版】" in html
+
+
+def test_10月1日の前後で時制を書き分ける(tmp_path, monkeypatch):
+    monkeypatch.setattr(render, "_OUTPUT_DIR", tmp_path / "out")
+    for day, word in (("2026-09-30", "無くなります"), ("2026-10-01", "無くなりました")):
+        monkeypatch.setattr(render, "BUILD_DATE", render.date.fromisoformat(day))
+        render._env.globals["oct_done"] = render.BUILD_DATE >= render.date(2026, 10, 1)
+        render.build_all()
+        hero = re.search(r'<p class="hero-news">(.*?)</p>', (tmp_path / "out" / "index.html").read_text(encoding="utf-8")).group(1)
+        assert word in hero, day
+        assert word in (tmp_path / "out" / "faq.html").read_text(encoding="utf-8"), day
+    render._env.globals["oct_done"] = render.date.today() >= render.date(2026, 10, 1)
