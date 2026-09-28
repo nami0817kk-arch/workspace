@@ -1,0 +1,208 @@
+# アーリング・ハーランド（マンチェスター・シティ）の紹介。数字は Transfermarkt（https://www.transfermarkt.com/erling-haaland/profil/spieler/418560）。
+# 顔写真は記事か Commons から取って thumbnail.photos に置く（tools/articlephoto.py → portrait）。
+date: 2026年10月01日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- アーリング・ハーランド
+theme:
+  id: player_418560
+  league: england
+  kind: other
+  topic: マンチェスター・シティ
+  title: アーリング・ハーランドってどんな選手？数字で見る
+  question: アーリング・ハーランドはどんな選手で、いま数字はどうなっているのか
+  takeaway: 市場価値は10年で1,000倍、今季は77分に1点。数字はどこも落ちていない
+short_title: アーリング・ハーランドってどんな選手？
+thumbnail:
+  line1: アーリング・ハーランド
+  line2: ●●分に1点
+  tags:
+  - マンチェスター・シティ
+  photos:
+  - assets/images/20261001_haaland_face/01.jpg
+  - assets/backgrounds/stadium_マンチェスターシティ_in.png
+  photo: assets/images/20261001_haaland_pair/01.jpg
+sections:
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: アーリング・ハーランドの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: アーリング・ハーランド（マンチェスター・シティ）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - マンチェスター・シティ（9番）
+    - - ポジション
+      - センターフォワード
+    - - 生年月日
+      - 2000年7月21日（26歳）
+    - - 身長
+      - 1.95m
+    - - 利き足
+      - 左
+    - - 契約
+      - 2034年まで
+    - - 市場価値
+      - 2.2億ユーロ
+    source: Transfermarkt
+  say:
+  - アーリング・ハーランド、26歳。マンチェスター・シティのセンターフォワードです。
+  - 身長は1メートル95、利き足は左。契約は2034年まで残っています。
+  - 市場価値は2.2億ユーロ。前回の2億ユーロから、この夏さらに上がりました。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+- id: career
+  heading: 歩んできた道
+  tier: 報道
+  telop: シーズンごとの所属と市場価値
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - シーズン
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows:
+    - - 15/16
+      - ブリーネ
+      - 16歳
+      - 最高 20万ユーロ
+    - - 16/17〜17/18
+      - モルデ
+      - 17歳〜18歳
+      - 最高 500万ユーロ
+    - - 18/19〜19/20
+      - ザルツブルク
+      - 18歳〜19歳
+      - 最高 4500万ユーロ
+    - - 19/20〜21/22
+      - ドルトムント
+      - 19歳〜21歳
+      - 最高 1.5億ユーロ
+    - - 22/23〜26/27
+      - マンチェスター・シティ
+      - 22歳〜26歳
+      - 最高 2.2億ユーロ
+    source: Transfermarkt
+  say:
+  - ハーランドの16歳、故郷ノルウェーのブリーネ。市場価値は20万ユーロでした。
+  - モルデで2年。18歳のとき500万ユーロ。
+  - ザルツブルクの1年半で4500万ユーロ。
+  - チャンピオンズリーグで一気に名前が知られた時期です。
+  - ドルトムントで1.5億ユーロ、そしてシティでいまの額に。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+- id: past
+  heading: 過去5シーズンの数字
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: アーリング・ハーランド 直近5シーズン（代表を含む全公式戦）
+    columns:
+    - 季
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows:
+    - - 21/22
+      - '32'
+      - '32'
+      - '9'
+      - 2514分
+    - - 22/23
+      - '64'
+      - '64'
+      - '10'
+      - 5059分
+    - - 23/24
+      - '50'
+      - '42'
+      - '7'
+      - 4107分
+    - - 24/25
+      - '62'
+      - '57'
+      - '8'
+      - 5283分
+    - - 25/26
+      - '60'
+      - '46'
+      - '10'
+      - 4789分
+    source: Transfermarkt
+  say:
+  - ハーランドの直近5シーズン、代表を含む全公式戦です。古い順に見ます。
+  - 2021年からのシーズンは32試合で32点。
+  - 2022年からは64試合で64点。1試合1点を最後まで続けました。
+  - 2023年からは50試合で42点、2024年からは62試合で57点。
+  - 2025年からは60試合で46点。どのシーズンも、試合の数と点の数がほぼ同じです。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+- id: season
+  heading: 今季の数字
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: アーリング・ハーランド 今季の数字
+    columns:
+    - 大会
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows:
+    - - プレミアリーグ
+      - '5'
+      - '5'
+      - '0'
+      - 450分
+    - - ネーションズリーグA
+      - '2'
+      - '3'
+      - '0'
+      - 180分
+    - - チャンピオンズリーグ
+      - '1'
+      - '2'
+      - '0'
+      - 90分
+    source: Transfermarkt
+  say:
+  - text: マンチェスター・シティのハーランド、26歳。今季もゴールが止まりません。
+    short_only: true
+  - 今季はここまで9試合で10得点、出場時間は773分。77分に1点のペースです。
+  - プレミアリーグは5試合で5点。今季のプレミアで5点以上は、ハーランドただ1人。
+  - チャンピオンズリーグは初戦で2点。
+  - ヨーロッパの代表チームの大会、ネーションズリーグの最上位リーグAでも2試合で3点。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+  - https://www.fotmob.com/leagues/47/stats/premier-league
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: この選手の見どころ
+  say:
+  - 比べる相手は、同じセンターフォワードで市場価値も並ぶエムバペ。今季9試合で9点、779分。
+  - ほぼ同じ時間で、ハーランドが1点多い。10年で市場価値は1,000倍、今季も数字は落ちていません。
+  - この数字がどこまで伸びるか。クラブの試合は代表ウィークが明けた10月9日に再開します。
+  - そこでもこのペースが続くかを見ます。
+  sources:
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
