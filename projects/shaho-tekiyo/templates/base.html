@@ -241,6 +241,7 @@
   nav.toc strong { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.2rem; }
   nav.toc ol { margin: 0; padding-left: 1.3rem; }
   nav.toc li { margin: 0.2rem 0; font-size: 0.92rem; }
+  nav.toc a { white-space: normal; color: var(--accent); }
   a.btn-link { display: inline-block; font-weight: bold; color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; padding: 0.45rem 0.9rem; text-decoration: none; }
   a.btn-link:hover { background: var(--ok-bg); }
   .per-day { margin-top: 0.3rem; }
@@ -264,7 +265,7 @@
   .hero-news strong { color: var(--text); }
   ul.badges { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
   ul.badges li { font-size: 0.78rem; background: var(--card-bg); border: 1px solid var(--ok-border); color: var(--ok-text); border-radius: 999px; padding: 0.15rem 0.6rem; }
-  .calc-layout { display: grid; gap: 1rem; align-items: start; }
+  .calc-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; align-items: start; }
   @media (min-width: 900px) {
     .calc-layout { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
     .calc-side { position: sticky; top: 1rem; }

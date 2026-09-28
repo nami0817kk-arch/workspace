@@ -397,3 +397,11 @@ def test_計算機に賞与の入力(site):
     assert 'id="bonus"' in html and 'id="bonus-times"' in html and "function bonusHtml(" in html
     assert "['b', 'bonus']" in html
     assert "標準賞与額" in (site / "keisan.html").read_text(encoding="utf-8")
+
+
+def test_スマホで横にはみ出さない指定(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    # 1列のときも grid の列を minmax(0, 1fr) にしないと、長い選択肢で入力欄が画面より広がる
+    assert ".calc-layout { display: grid; grid-template-columns: minmax(0, 1fr);" in html
+    # 目次は nav の中だが、長い質問は折り返す（nav a の nowrap を打ち消す）
+    assert "nav.toc a { white-space: normal;" in html
