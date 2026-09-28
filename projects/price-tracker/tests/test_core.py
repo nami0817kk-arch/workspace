@@ -762,3 +762,83 @@ class ByGenreTest(unittest.TestCase):
         rows = [self.row(str(i), "g") for i in range(10)]
 
         self.assertEqual(len(analyze.by_genre(rows, "g", limit=3)), 3)
+
+
+class 記録を始めてからの変化Test(unittest.TestCase):
+    """価格.com の価格推移ページは冒頭に「初値 / 現在 / 差額・値下がり率」を置く。
+    同じ形を置くが、うちは**実質価格の変化も並べる**。
+    価格が1円も動いていないのに実質が19.2%下がる商品が実在する
+    （dentendo-10026508-15813ae1・2026-09-28 実測）。
+    価格.com の見せ方だけでは、この動きは丸ごと見落とす。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_価格が動かなくても倍率が動けば実質の行に出る(self):
+        row = {"tail": [["2026-09-08", 1408, 1], ["2026-09-28", 1408, 20]]}
+
+        out = self.theme.since_start(row)
+
+        self.assertIn("実質", out)
+        self.assertIn("変わらず", out)      # 価格の行
+        self.assertIn("−268円", out)        # 実質の行（1,394 → 1,126）
+
+    def test_倍率がずっと1倍なら実質の行は出さない(self):
+        # 実質は価格の1%引きを並べるだけになり、読み手に何も足さない
+        row = {"tail": [["2026-09-08", 2000, 1], ["2026-09-28", 1800, 1]]}
+
+        out = self.theme.since_start(row)
+
+        self.assertNotIn("実質", out)
+        self.assertIn("10.0%", out)
+
+    def test_記録が1日しかないときは出さない(self):
+        out = self.theme.since_start({"tail": [["2026-09-28", 1000, 1]]})
+
+        self.assertEqual(out, "")
+
+    def test_発売時の値段だとは書かない(self):
+        """うちが持っているのは記録を始めた日の値段。価格.com の「初値」とは違う。"""
+        row = {"tail": [["2026-09-08", 2000, 1], ["2026-09-28", 1800, 1]]}
+
+        out = self.theme.since_start(row)
+
+        self.assertNotIn("初値", out)
+        self.assertIn("発売時の値段ではありません", out)
+
+
+class 記録の表の前日差Test(unittest.TestCase):
+    """価格.com の「日別の価格変動」に倣った列。
+    どの日に動いたかを、金額を読み比べずに追えるようにする。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_前の日から下がった日は差を出す(self):
+        row = {"tail": [["2026-09-26", 2000, 1], ["2026-09-27", 1800, 1],
+                        ["2026-09-28", 1800, 1]]}
+
+        out = self.theme.history_table(row)
+
+        self.assertIn("前日差", out)
+        self.assertIn("−200", out)
+
+    def test_価格が同じでも倍率が動けば実質の差に出る(self):
+        row = {"tail": [["2026-09-27", 1408, 1], ["2026-09-28", 1408, 20]]}
+
+        out = self.theme.history_table(row)
+
+        self.assertIn("−268", out)
+
+    def test_倍率が付いた日は倍率も残す(self):
+        """実質価格だけだと、値引きが倍率で来たのか価格で来たのかが読めない。"""
+        row = {"tail": [["2026-09-27", 1408, 1], ["2026-09-28", 1408, 20]]}
+
+        out = self.theme.history_table(row)
+
+        self.assertIn("20倍", out)
+        self.assertNotIn("1倍", out)   # 通常ポイントは書かない
