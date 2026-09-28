@@ -32,8 +32,11 @@ _spec.loader.exec_module(sw)
 
 # 日本人のいるリーグの FotMob 番号（5大＋エールディビジ・ベルギー・ポルトガル・スコットランド・チャンピオンシップ）
 LEAGUE_IDS = {**standings_mod.LEAGUE_IDS, "belgium": 40, "portugal": 61, "scotland": 64, "championship": 48}
+# 欧州カップ（前日の相手紹介、案18）。--all で日本人のいないクラブの試合も並ぶ
+CUP_IDS = {"cl": 42, "el": 73, "ecl": 10216}
 LEAGUE_JA = {**standings_mod.LEAGUE_NAMES_JA, "belgium": "ベルギー1部", "portugal": "ポルトガル1部",
-             "scotland": "スコットランド1部", "championship": "イングランド2部"}
+             "scotland": "スコットランド1部", "championship": "イングランド2部",
+             "cl": "チャンピオンズリーグ", "el": "ヨーロッパリーグ", "ecl": "カンファレンスリーグ"}
 ROSTER = ROOT / "config" / "japan_abroad.yaml"
 JST = datetime.timezone(datetime.timedelta(hours=9))
 
@@ -59,12 +62,13 @@ def same_club(fotmob_name: str, player: dict) -> bool:
     return bool(en) and (en in fm or fm in en)
 
 
-def fixtures(day: datetime.date, days: int = 3) -> list[dict]:
-    """翌日から days 日のあいだの、日本人のいるクラブの試合。"""
+def fixtures(day: datetime.date, days: int = 3, cups: bool = True, everyone: bool = False) -> list[dict]:
+    """翌日から days 日のあいだの、日本人のいるクラブの試合（everyone なら全部）。cups で欧州カップも見る。"""
     players = roster()
     start, end = day + datetime.timedelta(days=1), day + datetime.timedelta(days=days)
     out = []
-    for league, lid in LEAGUE_IDS.items():
+    pool = {**LEAGUE_IDS, **(CUP_IDS if cups else {})}
+    for league, lid in pool.items():
         payload = _get("leagues", {"id": lid})
         for m in ((payload.get("fixtures") or {}).get("allMatches") or []):
             when = str((m.get("status") or {}).get("utcTime") or "")[:10]
@@ -73,7 +77,7 @@ def fixtures(day: datetime.date, days: int = 3) -> list[dict]:
             home, away = (m.get("home") or {}).get("name", ""), (m.get("away") or {}).get("name", "")
             who = {"home": [p["name"] for p in players if same_club(home, p)],
                    "away": [p["name"] for p in players if same_club(away, p)]}
-            if who["home"] or who["away"]:
+            if who["home"] or who["away"] or everyone:
                 out.append(dict(id=str(m.get("id")), league=league, utc=str((m.get("status") or {}).get("utcTime") or ""),
                                 home=home, away=away, home_ja=standings_mod.japanese(home), away_ja=standings_mod.japanese(away),
                                 japanese=who))
@@ -154,11 +158,12 @@ def gather(match_id: str, league: str, day: datetime.date) -> dict:
 
 
 def write_note(m: dict, day: datetime.date, path: Path) -> None:
-    ours = "home" if m["japanese"]["home"] else "away"
+    ours = "home" if m["japanese"]["home"] or not m["japanese"]["away"] else "away"
     theirs = "away" if ours == "home" else "home"
     us, them = m[f"{ours}_ja"], m[f"{theirs}_ja"]
     jp = m["japanese"][ours]
-    lead = jp[0]
+    # 日本人がいない試合（欧州カップの相手紹介）は、クラブそのものを主役にする
+    lead = jp[0] if jp else dict(name=us, tm="", played=0, starts=0, minutes=0, goals=0, assists=0)
     st = m["standing"][theirs]
     st_us = m["standing"][ours]
     league_ja = LEAGUE_JA.get(m["league"], m["league"])
@@ -186,6 +191,13 @@ def write_note(m: dict, day: datetime.date, path: Path) -> None:
          "say": [f"{lead['name']}の{us}と{them}、過去の対戦は{our_wins}勝{ds}分{their_wins}敗です。", "（直近の1試合で何が起きたか）"],
          "sources": [url]},
         {"id": "japan", "heading": f"{lead['name']}の今季", "tier": "報道", "main": True, "telop": f"{lead['name']}（{us}）", "narrator": "解説",
+         } if jp else {
+         # 日本人のいない試合（欧州カップの相手紹介）：主役のクラブが勝つための数字の節
+         "id": "keys", "heading": f"{us}が{them}に勝つには", "tier": "報道", "main": True, "telop": f"{us}の勝ち筋", "narrator": "解説",
+         "say": [{"text": f"（前置き1行：{us}の次は{them}戦）", "short_only": True},
+                 "（相手の弱点と自分の強みを、数字で2〜3行。得点王の控え tools/scorers.py も使える）"],
+         "sources": [url]} if not jp else {
+         "id": "japan", "heading": f"{lead['name']}の今季", "tier": "報道", "main": True, "telop": f"{lead['name']}（{us}）", "narrator": "解説",
          "card": {"type": "table", "title": f"{us}の日本人 今季", "columns": ["選手", "試合（先発）", "出場時間", "得点"],
                   "rows": [[p["name"], f"{p.get('played', 0)}試合（先発{p.get('starts', 0)}）", f"{p.get('minutes', 0)}分",
                             f"{p.get('goals', 0)}G {p.get('assists', 0)}A"] for p in jp], "source": "Transfermarkt"},
@@ -202,7 +214,8 @@ def write_note(m: dict, day: datetime.date, path: Path) -> None:
         "people": [p["name"] for p in jp],
         "theme": {"id": f"next_{m['id']}", "league": m["league"] if m["league"] in standings_mod.LEAGUE_NAMES_JA else "england",
                   "league_name": league_ja, "kind": "preview", "topic": us,
-                  "title": f"{lead['name']}の{us}、次は{them}。相手はいまどんな状態か",
+                  "title": (f"{lead['name']}の{us}、次は{them}。相手はいまどんな状態か" if jp
+                      else f"{us}の次は{them}。数字で見ると、どんな相手か"),
                   "question": f"{us}が次に当たる{them}は、数字で見るとどんな相手か",
                   "takeaway": "（相手の数字から見えることを1文で）"},
         "short_title": f"{lead['name']}、次は{them}戦",
@@ -221,11 +234,12 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--days", type=int, default=3)
     ap.add_argument("--match")
     ap.add_argument("--league", help="--match のリーグ（一覧に出る鍵。省略すると5大リーグから探す）")
+    ap.add_argument("--all", action="store_true", help="日本人のいないクラブの試合も並べる（欧州カップの相手紹介用）")
     args = ap.parse_args(argv)
     day = datetime.date.fromisoformat(args.date)
     if not args.match:
-        found = fixtures(day, args.days)
-        print(f"{day} の翌日から{args.days}日、日本人のいるクラブの試合 {len(found)}（--match <id> --league <鍵> で雛形）")
+        found = fixtures(day, args.days, everyone=args.all)
+        print(f"{day} の翌日から{args.days}日、{'全部の' if args.all else '日本人のいるクラブの'}試合 {len(found)}（--match <id> --league <鍵> で雛形）")
         for f in found:
             who = "・".join(f["japanese"]["home"] + f["japanese"]["away"])
             print(f"  {f['id']}  {jst(f['utc'])}  {f['home_ja']} 対 {f['away_ja']}（{LEAGUE_JA.get(f['league'], f['league'])}）  {who}  [{f['league']}]")
@@ -237,8 +251,9 @@ def main(argv: list[str]) -> int:
                 league = f["league"]
                 break
     m = gather(args.match, league or "england", day)
-    if not (m["japanese"]["home"] or m["japanese"]["away"]):
-        print("この試合に日本人のいるクラブが見つかりません（名簿と FotMob のクラブ名を突き合わせてください）", file=sys.stderr)
+    m["league"] = league or m["league"]
+    if not (m["japanese"]["home"] or m["japanese"]["away"]) and not args.all:
+        print("この試合に日本人のいるクラブが見つかりません（--all なら相手紹介として書きます）", file=sys.stderr)
         return 1
     path = ROOT / "research" / f"{day.strftime('%Y%m%d')}_next_{args.match}.yaml"
     write_note(m, day, path)

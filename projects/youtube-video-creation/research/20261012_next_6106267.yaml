@@ -1,0 +1,130 @@
+# アトレティコ・マドリード 対 マンチェスター・ユナイテッド（10月14日 4:00 日本時間、チャンピオンズリーグ）。数字は FotMob、日本人の今季は Transfermarkt。
+# 顔写真は記事か Commons から（thumbnail.photos）。相手の得点王は tools/scorers.py の控えで足せる。
+date: 2026年10月12日
+slot: japanese_1
+format: news
+series: 日本人の次の相手
+people: []
+theme:
+  id: next_6106267
+  league: england
+  league_name: チャンピオンズリーグ
+  kind: preview
+  topic: アトレティコ・マドリード
+  title: アトレティコ・マドリードの次はマンチェスター・ユナイテッド。数字で見ると、どんな相手か
+  question: アトレティコ・マドリードが次に当たるマンチェスター・ユナイテッドは、数字で見るとどんな相手か
+  takeaway: （相手の数字から見えることを1文で）
+short_title: アトレティコ・マドリード、次はマンチェスター・ユナイテッド戦
+thumbnail:
+  line1: アトレティコ・マドリードの次の相手
+  line2: マンチェスター・ユナイテッドの●●
+  tags:
+  - アトレティコ・マドリード
+  - マンチェスター・ユナイテッド
+  photos: []
+sections:
+- id: opponent
+  heading: 相手のマンチェスター・ユナイテッドはいま
+  tier: 確定
+  official: true
+  telop: 次の相手 マンチェスター・ユナイテッド
+  narrator: キャスター
+  card:
+    type: table
+    title: マンチェスター・ユナイテッドの今
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - リーグ
+      - チャンピオンズリーグ
+    - - 直近5試合
+      - 0勝0分0敗
+    - - 会場
+      - Riyadh Air Metropolitano
+    source: FotMob
+  say:
+  - 10月14日 4:00、アトレティコ・マドリードのアトレティコ・マドリードはマンチェスター・ユナイテッドと対戦します。
+  - マンチェスター・ユナイテッドはチャンピオンズリーグのクラブです。
+  sources:
+  - https://www.fotmob.com/matches/x/6106267
+- id: form
+  heading: 直近5試合
+  tier: 確定
+  official: true
+  telop: マンチェスター・ユナイテッドの直近5試合
+  narrator: 解説
+  card:
+    type: table
+    title: マンチェスター・ユナイテッドの直近5試合
+    columns:
+    - 日付
+    - 相手
+    - スコア
+    - 結果
+    rows: []
+    source: FotMob
+  say:
+  - アトレティコ・マドリードが当たるマンチェスター・ユナイテッド、直近5試合は0勝。
+  - （表の上から、勝ち方と負け方を1つずつ）
+  sources:
+  - https://www.fotmob.com/matches/x/6106267
+- id: h2h
+  heading: 過去の対戦
+  tier: 確定
+  official: true
+  telop: アトレティコ・マドリード対マンチェスター・ユナイテッドの過去
+  narrator: 解説
+  card:
+    type: table
+    title: 過去の対戦
+    columns:
+    - 日付
+    - ホーム
+    - スコア
+    - アウェイ
+    rows:
+    - - 2026/8/1
+      - マンチェスター・ユナイテッド
+      - 2 - 1
+      - アトレティコ・マドリード
+    - - 2022/7/30
+      - マンチェスター・ユナイテッド
+      - 0 - 1
+      - アトレティコ・マドリード
+    - - 2022/3/15
+      - マンチェスター・ユナイテッド
+      - 0 - 1
+      - アトレティコ・マドリード
+    - - 2022/2/23
+      - アトレティコ・マドリード
+      - 1 - 1
+      - マンチェスター・ユナイテッド
+    source: FotMob
+  say:
+  - アトレティコ・マドリードのアトレティコ・マドリードとマンチェスター・ユナイテッド、過去の対戦は2勝1分1敗です。
+  - （直近の1試合で何が起きたか）
+  sources:
+  - https://www.fotmob.com/matches/x/6106267
+- id: keys
+  heading: アトレティコ・マドリードがマンチェスター・ユナイテッドに勝つには
+  tier: 報道
+  main: true
+  telop: アトレティコ・マドリードの勝ち筋
+  narrator: 解説
+  say:
+  - text: （前置き1行：アトレティコ・マドリードの次はマンチェスター・ユナイテッド戦）
+    short_only: true
+  - （相手の弱点と自分の強みを、数字で2〜3行。得点王の控え tools/scorers.py も使える）
+  sources:
+  - https://www.fotmob.com/matches/x/6106267
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: この試合で見るところ
+  say:
+  - （アトレティコ・マドリードがこの試合で何をすれば勝てるか。数字を1つ）
+  sources:
+  - https://www.fotmob.com/matches/x/6106267
