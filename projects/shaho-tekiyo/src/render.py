@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import date
+from datetime import date, datetime
+import os
+from zoneinfo import ZoneInfo
 from urllib.parse import urljoin
 import shutil
 import sys
@@ -45,6 +47,11 @@ _env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
 _env.globals["OWNER"] = site_config.OWNER
 _env.globals["CONTACT_EMAIL"] = site_config.CONTACT_EMAIL
 _env.globals["pref_full"] = extras.pref_full
+# ビルドした日（日本時間）。2026年10月1日の前後で「無くなります／無くなりました」を書き分ける。
+# 毎日 0時台に作り直す（.github/workflows/shaho-deploy.yml の schedule）ので、日付が変わっても古い時制が残らない。
+# テストでは SHAHO_BUILD_DATE=2026-10-02 のように上書きできる
+BUILD_DATE: date = date.fromisoformat(os.environ["SHAHO_BUILD_DATE"]) if os.environ.get("SHAHO_BUILD_DATE") else datetime.now(ZoneInfo("Asia/Tokyo")).date()
+_env.globals["oct_done"] = BUILD_DATE >= date(2026, 10, 1)
 _env.globals["era"] = f"令和{premium.TABLES[-1].fiscal_year - 2018}年度"
 
 
@@ -178,7 +185,9 @@ def schedule_json() -> str:
 # 読み物としての文章はここに分けて持つ。
 _MILESTONE_NOTES: dict[str, str] = {
     "2026-10": (
-        "これまで「月額8.8万円以上（年収106万円の壁）」だった賃金要件が無くなります。"
+        "これまで「月額8.8万円以上（年収106万円の壁）」だった賃金要件が"
+        + ("無くなりました。" if BUILD_DATE >= date(2026, 10, 1) else "無くなります。")
+        + ""
         "週20時間以上働いていて、勤務先が51人以上の会社であれば、"
         "月収が8.8万円に届いていなくても加入対象になりえます。"
         "一方で、企業規模の要件（51人以上）はこの段階ではまだ変わりません。"
@@ -205,7 +214,7 @@ _MILESTONE_NOTES: dict[str, str] = {
 def size_timeline(as_of: date | None = None, here: str = "いまの段階") -> str:
     """企業規模要件の段階の図。いま（as_of）がどの段階かを濃い色で示す。"""
     stages = []
-    today_size = eligibility.regime_for(as_of or date.today()).company_size_threshold
+    today_size = eligibility.regime_for(as_of or BUILD_DATE).company_size_threshold
     seen = set()
     for r in eligibility.SCHEDULE:
         size = r.company_size_threshold
@@ -530,6 +539,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-28", "毎日0時台に作り直し、2026年10月1日の前後で「無くなります／無くなりました」を書き分けるように。短かった説明文と運営者情報の文面を今の中身に合わせた"),
     ("2026-09-27", "人気の計算サイトを参考に: 計算結果に年収の壁チェック（106万・123万・130万・160万円）、1日の時間×週の日数での入力、会社負担の額、長いページに目次。タイトルに2026年版"),
     ("2026-09-27", "加入条件のページと標準報酬月額の等級表を追加。月収別の一覧に手取りからの逆算、年収別に40〜64歳の列。計算機に入力例と条件のリンクのコピー（入力を URL に残す）。よくある質問に目次、検索エンジン向けの FAQ・計算ツールの構造化データ"),
     ("2026-09-27", "何のサイトか分かるように: ロゴの印と説明の一行、トップに「分かること3つ」と10月の変更のお知らせ、ブラウザのタブ・検索結果に出るアイコン"),
