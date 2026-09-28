@@ -46,6 +46,7 @@ MEDIA_FLOOR = 0.64       # 立ち絵なしのとき、表や写真が使って�
 PROGRESS_HEIGHT = 8      # 画面下端の進捗バー
 PHOTO_MAX_ZOOM = 1.25    # 写真の寄りの上限（背景の 1.45 だと顔が荒れる）
 PILL_IN = 0.35           # 節の頭で左上のピルとテロップが滑り込む秒数（動きの段3）
+IMAGE_FADE = 0.35        # 写真が別の写真に替わる行は、前の絵から溶かして切り替える（品質100回の11）
 ROW_IN = 0.14            # 表・棒グラフの行が1本ずつ現れる間隔（動きの段2）
 # 読み上げの数字は自動で黄色にする（「22点」「75.5%」「4試合」）。囲みで指定した強調があればそちらを優先
 AUTO_STRONG = re.compile(r"\d[\d,.]*(?:[点本人%回分秒位歳億万勝敗年]|試合|ゴール|アシスト|km|m)?")
@@ -596,6 +597,7 @@ class Renderer:
                     item.getchannel("A").point(lambda a: int(a * _ease_out(progress)))
                 )
             x = 48 if align_left else (span - item.width) // 2
+            self._drop_shadow(canvas, item, (x, y))
             canvas.alpha_composite(item, (x, y))
             y += item.height + gap
 
@@ -742,6 +744,18 @@ class Renderer:
                                radius=24, fill=(204, 0, 0, 255))
         draw.text((bx + 20, top + 16), button, font=font, fill=(255, 255, 255, 255))
         canvas.alpha_composite(layer)
+
+    def _drop_shadow(self, canvas: Image.Image, item: Image.Image, at: tuple[int, int]) -> None:
+        """表や板の下に、ぼかした影を敷く（品質100回の12）。写真の上で板が浮いて見える。"""
+        from PIL import ImageFilter
+
+        x, y = at
+        pad = 40
+        shadow = Image.new("RGBA", (item.width + pad * 2, item.height + pad * 2), (0, 0, 0, 0))
+        alpha = item.getchannel("A").point(lambda a: int(a * 0.55))
+        shadow.paste((0, 0, 0, 255), (pad, pad + 10), alpha)
+        shadow = shadow.filter(ImageFilter.GaussianBlur(18))
+        canvas.alpha_composite(shadow, (x - pad, y - pad))
 
     def _draw_nameplate(self, canvas: Image.Image, text: str) -> None:
         """冒頭の2行に出す名前の板（2026-09-28 選手紹介）。「名前｜所属 位置」を左の中ほどに大きく。
@@ -1199,6 +1213,7 @@ class Renderer:
         inserts = inserts or Inserts()
         entries: list[tuple[Path, float]] = []
         previous: Path | None = None
+        prev_stage: str | None = None
         # **横のどこを残すか**（2026-09-18）。縦型は写真を画面いっぱいに敷くので、
         # 端に写っている人が落ちる。台本の `thumbnail_focus_x` で寄せる
         _fx = script.meta.get("thumbnail_focus_x")
@@ -1283,8 +1298,15 @@ class Renderer:
                 intro = 0.0
                 card_changed = bool(current and current[2] and current[2] != before[1]) if not self.layout.with_characters else False
                 rows = self.card_rows(current[2]) if card_changed else 0
+                stage_now = line.image or (self.opening_photo if scene.title == self.opening_scene else None)
+                image_changed = bool(previous is not None and stage_now and stage_now != prev_stage)
+                prev_stage = stage_now
                 if motion.enabled:
-                    if is_scene_head and previous is not None and motion.scene_fade > 0:
+                    if image_changed and IMAGE_FADE > 0:
+                        # **写真が替わる行は前の絵から溶かす**（品質100回の11）。ぶつ切りだと編集していないように見える
+                        intro = min(IMAGE_FADE, speaking * 0.4)
+                        entries += self._transition_crossfade(previous, closed, intro)
+                    elif is_scene_head and previous is not None and motion.scene_fade > 0:
                         # シーン転換。前の画面から新しい画面へ溶かす
                         intro = min(motion.scene_fade, speaking * 0.5)
                         entries += self._transition(previous, closed, intro)
@@ -1327,6 +1349,12 @@ class Renderer:
             )
 
         return entries
+
+    def _transition_crossfade(self, before: Path, after: Path, seconds: float) -> list[tuple[Path, float]]:
+        """写真の切り替え用。scene_transition の設定にかかわらず、前後を直接混ぜる。"""
+        steps = max(2, round(seconds * self.config.motion.fps))
+        step = seconds / steps
+        return [(self.blend(before, after, (i + 1) / steps), step) for i in range(steps)]
 
     def _transition(self, before: Path, after: Path, seconds: float) -> list[tuple[Path, float]]:
         """シーン転換。

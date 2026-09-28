@@ -442,6 +442,26 @@ def heat(data: dict) -> list[dict]:
     return list(((data.get("firstSeasonStats") or {}).get("heatmap") or {}).get("coordinates") or [])
 
 
+def portrait_variant(board: Path) -> Path:
+    """横の板（1280x720）から縦版（1080x1920、`<名前>_v.png`）を作る。ショートは `_drop_boards` がこれを拾う。
+
+    板そのものは 1080 幅に縮めて画面の上寄り（登録カードの下）に置く。下は暗い地のまま（字幕が乗る）。
+    """
+    from src import statboard
+
+    src = Image.open(board).convert("RGBA")
+    scale = 1040 / src.width
+    small = src.resize((1040, int(src.height * scale)), Image.LANCZOS)
+    canvas = Image.new("RGBA", (1080, 1920), (14, 20, 30, 255))
+    canvas.alpha_composite(small, (20, 300))
+    out = board.with_name(board.stem + "_v.png")
+    canvas.convert("RGB").save(out)
+    mark = board.with_name(board.name + ".statboard.txt")
+    if mark.exists():
+        out.with_name(out.name + ".statboard.txt").write_text(mark.read_text(encoding="utf-8"), encoding="utf-8")
+    return out
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -461,6 +481,8 @@ def main(argv: list[str]) -> int:
     sm = shotmap_board(shots(data), BOARD_DIR / f"player_{stamp}_{args.player_id}_shots.png", name)
     hm = heatmap_board(heat(data), BOARD_DIR / f"player_{stamp}_{args.player_id}_heat.png", name)
     print(f"板 → {radar}\n板 → {sm}\n板 → {hm}")
+    for b in (radar, sm, hm):
+        portrait_variant(b)
     if args.tm:
         import importlib.util as _iu
 
@@ -468,7 +490,8 @@ def main(argv: list[str]) -> int:
         pi = _iu.module_from_spec(spec); spec.loader.exec_module(pi)
         history = pi.ja_mod._get(f"/player/{args.tm}/market-value-history").get("history") or []
         vb = value_board(history, BOARD_DIR / f"player_{stamp}_{args.player_id}_value.png", name, club_of=pi.club_ja)
-        print(f"板 → {vb}")
+        portrait_variant(vb)
+        print(f"板 → {vb}（縦版も）")
     strong, weak = strengths(season_stats(data))
     print("武器:", [(s["ja"], s["value"], int(s["pct"])) for s in strong])
     print("弱点:", [(s["ja"], s["value"], int(s["pct"])) for s in weak])
