@@ -63,6 +63,18 @@ void main() {
           reason: '起動時に読むと、出す頃には期限切れになっている');
     });
 
+    test('読み込みの待ち合わせを自分で持っている', () {
+      // **`InterstitialAd.load` を `await` しても広告は待てない。** 返るのは
+      // 「ネイティブ側に頼み終えた」時点で、広告は `onAdLoaded` で後から届く。
+      // `await` しただけで在庫を見ると必ず空なので、「出す直前に読む」が
+      // 成り立たない（待ったつもりで、毎回「在庫なし」になる）。
+      expect(source.contains('await InterstitialAd.load('), isFalse,
+          reason: 'これを await しても広告は届かない。Completer で待ち合わせる');
+      expect(source.contains('Completer<void>? _pendingInterstitialLoad'),
+          isTrue,
+          reason: '読み込みの完了を待ち合わせる口が無い');
+    });
+
     test('出す直前に読む', () {
       final body = bodyOf('Future<void> showInterstitialAd()');
       expect(body.contains('_loadInterstitial('), isTrue,

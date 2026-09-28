@@ -83,8 +83,8 @@ class AdMobAdService implements AdService {
   bool _loading = false;
   DateTime? _adLoadedAt;
   InterstitialAd? _interstitial;
-  bool _loadingInterstitial = false;
   DateTime? _interstitialLoadedAt;
+  Completer<void>? _pendingInterstitialLoad;
 
   /// 読み込んだ広告が使える時間。
   ///
@@ -159,29 +159,50 @@ class AdMobAdService implements AdService {
     // 必ず期限切れになっている。出す直前に読む([showInterstitialAd])。
   }
 
-  Future<void> _loadInterstitial() async {
-    if (_loadingInterstitial || _interstitial != null) return;
-    _loadingInterstitial = true;
-    try {
-      await InterstitialAd.load(
-        adUnitId: _interstitialUnitId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (ad) {
-            _interstitial = ad;
-            _interstitialLoadedAt = DateTime.now();
-            _loadingInterstitial = false;
-          },
-          onAdFailedToLoad: (error) {
-            _interstitial = null;
-            _loadingInterstitial = false;
-          },
-        ),
-      );
-    } catch (_) {
-      _interstitial = null;
-      _loadingInterstitial = false;
+  /// 広告が届く（か、届かないと分かる）まで完了しない Future を返す。
+  ///
+  /// **`InterstitialAd.load` を `await` しても広告は待てない。** あれが返るのは
+  /// 「ネイティブ側に読み込みを頼み終えた」時点（中身は
+  /// `channel.invokeMethod('loadInterstitialAd')` ひとつ）で、広告そのものは
+  /// `onAdLoaded` で後から届く。`await` した直後に在庫を見ると必ず空なので、
+  /// [showInterstitialAd] で「出す直前に読む」作りが成り立たない——待った
+  /// つもりで毎回「在庫なし」になる。だから待ち合わせを自分で持つ。
+  Future<void> _loadInterstitial() {
+    if (_interstitial != null) return Future<void>.value();
+    // すでに読み込み中なら、その待ち合わせに相乗りする（二重に頼まない）。
+    final pending = _pendingInterstitialLoad;
+    if (pending != null) return pending.future;
+
+    final completer = Completer<void>();
+    _pendingInterstitialLoad = completer;
+    void done() {
+      if (_pendingInterstitialLoad == completer) {
+        _pendingInterstitialLoad = null;
+      }
+      if (!completer.isCompleted) completer.complete();
     }
+
+    InterstitialAd.load(
+      adUnitId: _interstitialUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          _interstitial = ad;
+          _interstitialLoadedAt = DateTime.now();
+          done();
+        },
+        onAdFailedToLoad: (error) {
+          _interstitial = null;
+          _interstitialLoadedAt = null;
+          done();
+        },
+      ),
+    ).catchError((Object _) {
+      _interstitial = null;
+      _interstitialLoadedAt = null;
+      done();
+    });
+    return completer.future;
   }
 
   Future<void> _load() async {
