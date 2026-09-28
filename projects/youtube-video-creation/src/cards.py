@@ -471,9 +471,11 @@ def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]
     同じ指標どうしの比較なので棒は1色で通し、注目させたい1本だけ明るくする。
     数値は棒の右端に直接置く（動画なのでホバーで見せられない）。
     """
-    title_font = ImageFont.truetype(font_path, 42)
-    label_font = ImageFont.truetype(font_path, 34)
-    value_font = ImageFont.truetype(font_path, 34)
+    # **図の質を上げる**（2026-09-28 ユーザー「図や表のクオリティを上げて」）。
+    # 棒は太く（44px）、注目の1本は黄、ほかは緑のグラデ。薄い目盛りと、値の右揃え
+    title_font = ImageFont.truetype(font_path, 44)
+    label_font = ImageFont.truetype(font_path, 36)
+    value_font = ImageFont.truetype(font_path, 40)
 
     items = [dict(item) for item in (spec.get("items") or [])]
     if not items:
@@ -503,28 +505,40 @@ def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]
             }
         )
 
-    bar_left = PAD + 12 + label_width + 24
-    bar_span = width - PAD - bar_left - value_width - 34
-    row_height = 54
+    bar_left = PAD + 12 + label_width + 28
+    value_col = width - PAD - 12
+    bar_span = value_col - bar_left - value_width - 36
+    row_height = 70
+
+    def draw_scale(draw, y):
+        # 薄い目盛り（最大値の 1/4 ごと）。値の見当が付く
+        for k in range(1, 5):
+            x = bar_left + int(bar_span * k / 4)
+            draw.line([(x, y), (x, y + row_height * min(6, len(items)) + 8)], fill=(255, 255, 255, 22), width=1)
+
+    blocks.append({"height": 8, "draw": draw_scale})
 
     for item in items[:6]:
         ratio = max(0.0, float(item["value"])) / top
-        color = BAR_HIGHLIGHT if item.get("highlight") else BAR_BASE
+        strong = bool(item.get("highlight"))
 
-        def draw_row(draw, y, item=item, ratio=ratio, color=color):
-            draw.text((PAD + 12, y + 6), str(item["label"]), font=label_font, fill=SUB)
-            length = max(6, int(bar_span * ratio))
-            # 端を少し丸めた細い棒。土台（左端）は角を立てて基準線に合わせる
-            draw.rounded_rectangle(
-                [bar_left, y + 8, bar_left + length, y + 42], radius=4, fill=color + (255,)
-            )
-            draw.rectangle([bar_left, y + 8, bar_left + 6, y + 42], fill=color + (255,))
-            draw.text(
-                (bar_left + length + 16, y + 6),
-                f"{_number(item['value'])}{unit}",
-                font=value_font,
-                fill=TEXT,
-            )
+        def draw_row(draw, y, item=item, ratio=ratio, strong=strong):
+            draw.text((PAD + 12, y + 12), str(item["label"]), font=label_font, fill=TEXT)
+            length = max(8, int(bar_span * ratio))
+            top_y, bottom_y = y + 10, y + 54
+            # 土台の溝（薄い帯）に、色の棒を重ねる。棒は左から右へ明るくなるグラデ
+            draw.rounded_rectangle([bar_left, top_y, bar_left + bar_span, bottom_y], radius=10, fill=(255, 255, 255, 16))
+            start, end = ((196, 150, 20), (255, 213, 74)) if strong else ((11, 61, 46), (46, 140, 96))
+            for i in range(length):
+                t = i / max(1, length - 1)
+                color = tuple(int(start[c] + (end[c] - start[c]) * t) for c in range(3))
+                draw.line([(bar_left + i, top_y), (bar_left + i, bottom_y)], fill=color + (255,))
+            # 右端を丸める（半円を重ねる）
+            r = (bottom_y - top_y) // 2
+            draw.pieslice([bar_left + length - r, top_y, bar_left + length + r, bottom_y], start=270, end=90, fill=end + (255,))
+            text = f"{_number(item['value'])}{unit}"
+            tw = draw.textlength(text, font=value_font)
+            draw.text((value_col - tw, y + 8), text, font=value_font, fill=BRAND_GOLD if strong else TEXT)
 
         blocks.append({"height": row_height, "draw": draw_row, "row": True})
 
@@ -534,6 +548,20 @@ def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]
         blocks.append({"height": 14, "draw": lambda draw, y: None})
         blocks.append(_text_block(note, note_font, width - PAD * 2 - 12, SUB, 6))
     return blocks
+
+
+import re as _re
+
+NUMERIC_CELL = _re.compile(r"^[+\-−]?[\d,.]+(?:[%点本人回分秒位歳億万勝敗分試合GAkm]|G \d+A|試合（先発\d+）)?$|^[\d,.]+G [\d,.]+A$|^―$|^→$|^[↑↓]\d+$|^new$")
+RATING_CELL = _re.compile(r"^\d\.\d$")
+
+
+def _looks_numeric(text: str) -> bool:
+    return bool(NUMERIC_CELL.match(str(text).strip()))
+
+
+def _looks_rating(text: str) -> bool:
+    return bool(RATING_CELL.match(str(text).strip()))
 
 
 def _fit_cell(draw, text: str, font, room: float) -> str:
@@ -611,12 +639,19 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
             }
         )
 
+    # 列の中身が数字（単位つきを含む）なら右揃えにする
+    numeric = [all(_looks_numeric(row[index]) for row in rows) for index in range(len(columns))]
+
     # 見出し行は緑の帯に黄色の字（罫線1本より目が行く）
     def draw_head(draw, y):
         draw.rectangle([PAD - 8, y - 6, width - PAD + 8, y + 44], fill=BRAND_GREEN)
         x = PAD + 12
         for index, name in enumerate(columns):
-            draw.text((x, y + 2), name, font=head_font, fill=BRAND_GOLD)
+            if numeric[index] and index > 0:
+                tw = draw.textlength(name, font=head_font)
+                draw.text((x + widths[index] - 16 - tw, y + 2), name, font=head_font, fill=BRAND_GOLD)
+            else:
+                draw.text((x, y + 2), name, font=head_font, fill=BRAND_GOLD)
             x += widths[index]
 
     blocks.append({"height": 58, "draw": draw_head})
@@ -636,9 +671,17 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
             for index, cell in enumerate(row):
                 last = index == len(row) - 1
                 color = BRAND_GOLD if (number == highlight and last) else (TEXT if index != 0 else SUB)
+                # 評点（7.9 のような小数1桁）は 8.0 以上を黄で目立たせる
+                if _looks_rating(cell) and float(cell) >= 8.0:
+                    color = BRAND_GOLD
                 # **列からはみ出させない。**はみ出すと隣の字に重なる
                 shown = _fit_cell(draw, cell, cell_font, widths[index] - 16)
-                draw.text((x, y + 10), shown, font=cell_font, fill=color)
+                # **数字の列は右揃え**（2026-09-28「図や表のクオリティ」）。左揃えだと桁が揃わない
+                if numeric[index] and index > 0:
+                    tw = draw.textlength(shown, font=cell_font)
+                    draw.text((x + widths[index] - 16 - tw, y + 10), shown, font=cell_font, fill=color)
+                else:
+                    draw.text((x, y + 10), shown, font=cell_font, fill=color)
                 x += widths[index]
 
         blocks.append({"height": row_h, "draw": draw_row, "row": True})

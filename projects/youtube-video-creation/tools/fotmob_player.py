@@ -178,28 +178,39 @@ def radar_board(group: str, items: list[tuple[str, float]], out: Path, name: str
     draw.text((px + 40, py + 26), f"{name}のプレースタイル", font=_font(40), fill=(255, 255, 255, 255))
     draw.text((px + 40, py + 78), f"{group}と比べた位置（100が最上位）", font=_font(26), fill=(168, 178, 194, 255))
     # 上の軸の文字が見出しと重ならないよう、中心を下げて半径を抑える（実物で重なった）
-    cx, cy, r = px + pw // 2 + 40, py + ph // 2 + 70, 180
+    cx, cy, r = px + pw // 2 + 40, py + ph // 2 + 34, 172
     n = max(3, len(items))
     angles = [-math.pi / 2 + 2 * math.pi * i / n for i in range(n)]
-    for level in (0.25, 0.5, 0.75, 1.0):
+    # 網目：5段。段ごとに薄い塗りを交互に入れて奥行きを出す（2026-09-28「図のクオリティを上げて」）
+    web = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    wd = ImageDraw.Draw(web)
+    for k in range(5, 0, -1):
+        level = k / 5
         pts = [(cx + r * level * math.cos(a), cy + r * level * math.sin(a)) for a in angles]
-        draw.polygon(pts, outline=(255, 255, 255, 60 if level < 1.0 else 120))
+        wd.polygon(pts, fill=(255, 255, 255, 14 if k % 2 else 4), outline=(255, 255, 255, 70 if k < 5 else 150), width=2 if k < 5 else 3)
     for a in angles:
-        draw.line([(cx, cy), (cx + r * math.cos(a), cy + r * math.sin(a))], fill=(255, 255, 255, 50), width=1)
+        wd.line([(cx, cy), (cx + r * math.cos(a), cy + r * math.sin(a))], fill=(255, 255, 255, 60), width=2)
+    canvas.alpha_composite(web)
     layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
     ld = ImageDraw.Draw(layer)
     pts = [(cx + r * max(0.04, v) * math.cos(a), cy + r * max(0.04, v) * math.sin(a)) for (_, v), a in zip(items, angles)]
-    ld.polygon(pts, fill=BRAND_GOLD + (90,), outline=BRAND_GOLD + (255,), width=4)
+    ld.polygon(pts, fill=BRAND_GOLD + (120,), outline=BRAND_GOLD + (255,), width=6)
     canvas.alpha_composite(layer)
     draw = ImageDraw.Draw(canvas)
-    f_label, f_val = _font(30), _font(26)
+    f_label, f_val = _font(30), _font(28)
     for (label, v), a, (x, y) in zip(items, angles, pts):
-        draw.ellipse([x - 7, y - 7, x + 7, y + 7], fill=BRAND_GOLD + (255,))
-        lx, ly = cx + (r + 56) * math.cos(a), cy + (r + 56) * math.sin(a)
-        text = f"{label} {int(round(v * 100))}"
-        tw = draw.textlength(text, font=f_label)
-        draw.text((lx - tw / 2, ly - 18), text, font=f_label, fill=(255, 255, 255, 255))
-    draw.text((px + 40, py + ph - 56), "FotMob", font=f_val, fill=(120, 130, 146, 255))
+        draw.ellipse([x - 9, y - 9, x + 9, y + 9], fill=BRAND_GOLD + (255,), outline=(20, 24, 32, 255), width=2)
+        lx, ly = cx + (r + 62) * math.cos(a), cy + (r + 62) * math.sin(a)
+        # 軸の名前（白）＋ 値の札（黄の丸い札に濃い字）
+        value = f"{int(round(v * 100))}"
+        tw, vw = draw.textlength(label, font=f_label), draw.textlength(value, font=f_val)
+        total = tw + 14 + vw + 28
+        x0 = lx - total / 2
+        draw.text((x0, ly - 18), label, font=f_label, fill=(255, 255, 255, 255))
+        chip = [x0 + tw + 14, ly - 20, x0 + tw + 14 + vw + 28, ly + 20]
+        draw.rounded_rectangle(chip, radius=20, fill=BRAND_GOLD + (255,))
+        draw.text((chip[0] + 14, ly - 17), value, font=f_val, fill=(16, 18, 24, 255))
+    draw.text((px + pw - 130, py + ph - 50), "FotMob", font=f_val, fill=(120, 130, 146, 255))
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)
     statboard._write_mark(out, f"{name}のプレースタイル", "percentile", [(l, round(v * 100)) for l, v in items], "FotMob")
@@ -218,10 +229,22 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
     goals = [s for s in shot_list if s.get("eventType") == "Goal"]
     xg = sum(float(s.get("expectedGoals") or 0) for s in shot_list)
     draw.text((px + 40, py + 26), f"{name}の{season_label}のシュート", font=_font(40), fill=(255, 255, 255, 255))
-    draw.text((px + 40, py + 78), f"シュート{len(shot_list)}本、得点{len(goals)}、xG合計{xg:.1f}", font=_font(26), fill=(168, 178, 194, 255))
-    # 敵陣の半面。ゴールが上。横=幅68m、縦=52.5m
+    draw.text((px + 40, py + 78), "丸の位置＝どこから蹴ったか、大きさ＝xG（決まりやすさ）", font=_font(26), fill=(168, 178, 194, 255))
+    # 左に大きな数字の札（シュート・得点・xG）
+    f_big, f_small = _font(56), _font(24)
+    ty = py + 130
+    for label, value in (("シュート", f"{len(shot_list)}"), ("得点", f"{len(goals)}"), ("xG合計", f"{xg:.1f}")):
+        draw.rounded_rectangle([px + 40, ty, px + 300, ty + 96], radius=16, fill=(30, 36, 48, 255))
+        draw.text((px + 60, ty + 10), label, font=f_small, fill=(168, 178, 194, 255))
+        vw = draw.textlength(value, font=f_big)
+        draw.text((px + 280 - vw, ty + 30), value, font=f_big, fill=BRAND_GOLD + (255,))
+        ty += 110
+    # 敵陣の半面。ゴールが上。横=幅68m、縦=52.5m。芝は縞にする
     gx, gy, gw, gh = px + 360, py + 130, 560, ph - 190
-    draw.rectangle([gx, gy, gx + gw, gy + gh], fill=(28, 96, 60, 255), outline=(230, 230, 230, 255), width=3)
+    stripe = gh // 8
+    for i in range(8):
+        draw.rectangle([gx, gy + i * stripe, gx + gw, gy + (i + 1) * stripe], fill=(30, 104, 64, 255) if i % 2 else (26, 92, 56, 255))
+    draw.rectangle([gx, gy, gx + gw, gy + gh], outline=(230, 230, 230, 255), width=3)
 
     def X(y_m):  # 幅方向（0〜68）→ 横
         return gx + gw * (y_m / PITCH_WID)
@@ -232,7 +255,10 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
     # ペナルティエリア・ゴールエリア・ゴール・センターサークル（半円）
     draw.rectangle([X(34 - 20.16), Y(105), X(34 + 20.16), Y(105 - 16.5)], outline=(230, 230, 230, 255), width=3)
     draw.rectangle([X(34 - 9.16), Y(105), X(34 + 9.16), Y(105 - 5.5)], outline=(230, 230, 230, 255), width=3)
-    draw.rectangle([X(34 - 3.66), gy - 12, X(34 + 3.66), gy], fill=(255, 255, 255, 255))
+    # ゴール枠（網の点も置く）
+    draw.rectangle([X(34 - 3.66), gy - 16, X(34 + 3.66), gy], fill=(245, 245, 245, 255))
+    for i in range(int(X(34 - 3.66)) + 6, int(X(34 + 3.66)) - 4, 8):
+        draw.line([(i, gy - 14), (i, gy - 2)], fill=(180, 180, 180, 255), width=1)
     draw.ellipse([X(34) - 3, Y(94) - 3, X(34) + 3, Y(94) + 3], fill=(230, 230, 230, 255))
     cr = gw * (9.15 / PITCH_WID)
     draw.arc([X(34) - cr, Y(52.5) - cr, X(34) + cr, Y(52.5) + cr], start=180, end=360, fill=(230, 230, 230, 255), width=3)
@@ -243,13 +269,19 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
         rad = 7 + 26 * float(s.get("expectedGoals") or 0) ** 0.5
         cx, cy = X(y), Y(x)
         if s.get("eventType") == "Goal":
+            # 得点はやわらかい光を敷いてから
+            glow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+            gd = ImageDraw.Draw(glow)
+            gd.ellipse([cx - rad * 1.9, cy - rad * 1.9, cx + rad * 1.9, cy + rad * 1.9], fill=BRAND_GOLD + (70,))
+            canvas.alpha_composite(glow)
+            draw = ImageDraw.Draw(canvas)
             draw.ellipse([cx - rad, cy - rad, cx + rad, cy + rad], fill=BRAND_GOLD + (255,), outline=(20, 20, 20, 255), width=2)
         elif s.get("isOnTarget"):
             draw.ellipse([cx - rad, cy - rad, cx + rad, cy + rad], fill=(255, 255, 255, 60), outline=(255, 255, 255, 255), width=3)
         else:
             draw.ellipse([cx - rad, cy - rad, cx + rad, cy + rad], fill=(90, 96, 108, 200), outline=(200, 200, 200, 160), width=2)
-    # 凡例
-    lx, ly = px + 40, py + 150
+    # 凡例（数字の札の下）
+    lx, ly = px + 40, py + 470
     f = _font(28)
     for label, style in (("得点", "goal"), ("枠内", "on"), ("外れ・ブロック", "off")):
         if style == "goal":
@@ -260,8 +292,7 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
             draw.ellipse([lx, ly, lx + 26, ly + 26], fill=(90, 96, 108, 200), outline=(200, 200, 200, 160), width=2)
         draw.text((lx + 40, ly - 4), label, font=f, fill=(255, 255, 255, 255))
         ly += 50
-    draw.text((lx, ly + 10), "丸の大きさ＝xG", font=f, fill=(168, 178, 194, 255))
-    draw.text((px + 40, py + ph - 56), "FotMob", font=_font(26), fill=(120, 130, 146, 255))
+    draw.text((px + pw - 130, py + ph - 50), "FotMob", font=_font(26), fill=(120, 130, 146, 255))
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)
     statboard._write_mark(out, f"{name}の{season_label}のシュート", "xG", [("shots", len(shot_list)), ("goals", len(goals)), ("xg", round(xg, 2))], "FotMob")
