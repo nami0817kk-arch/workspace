@@ -184,6 +184,7 @@ clubs:
   - {canonical: モルデ, league: "", big: false, aka: [Molde FK, Molde]}
   - {canonical: ボデ/グリムト, league: "", big: false, aka: [Bodø/Glimt, Bodo/Glimt, FK Bodø/Glimt]}
   - {canonical: レディング, league: "", big: false, aka: [Reading FC, Reading, Reading FC U18]}
+  - {canonical: スロヴァン・ブラチスラバ, league: "", big: false, aka: [Slovan Bratislava, ŠK Slovan Bratislava, SK Slovan Bratislava, スロヴァン]}
   - {canonical: ザルツブルク, league: "", big: false, aka: [Red Bull Salzburg, FC Salzburg, RB Salzburg, RBザルツブルク]}
 
   # ---- オランダ・ポルトガル
