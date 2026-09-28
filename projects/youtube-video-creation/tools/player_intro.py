@@ -94,6 +94,22 @@ def season_rows(performance: list[dict]) -> list[list[str]]:
     return rows
 
 
+def past_rows(player_id: str, seasons: int = 5) -> list[list[str]]:
+    """過去の季の数字（季・試合・得点・アシスト）。今季を含めず、直近から seasons 季ぶん。
+
+    尺を出すための節（1分半の紹介では薄い。2026-09-28 見本の1本目で分かった）。
+    """
+    rows = []
+    for season in range(ja_mod.SEASON - 1, ja_mod.SEASON - 1 - seasons, -1):
+        data = ja_mod._get(f"/player/{player_id}/performance-season?season={season}")
+        agg = data.get("aggregated") or {}
+        t = totals(agg)
+        if not t["apps"]:
+            continue
+        rows.append([f"{season % 100:02d}/{(season + 1) % 100:02d}", str(t["apps"]), str(t["goals"]), str(t["assists"]), f"{t['minutes']}分"])
+    return rows
+
+
 def totals(aggregated: dict) -> dict:
     goals, play = aggregated.get("goalStatistics") or {}, aggregated.get("playingTimeStatistics") or {}
     return dict(apps=int(play.get("appearancesCount") or 0), goals=int(goals.get("goalsSum") or 0),
@@ -119,6 +135,7 @@ def gather(player_id: str) -> dict:
         contract=attrs.get("contractUntil"), value=int(((data.get("marketValueDetails") or {}).get("current") or {}).get("value") or 0),
         value_prev=int(((data.get("marketValueDetails") or {}).get("previous") or {}).get("value") or 0),
         history=history, season=season.get("performance") or [], aggregated=season.get("aggregated") or {},
+        past=past_rows(player_id),
         url=str(data.get("relativeUrl") or ""),
     )
 
@@ -156,6 +173,11 @@ def write_note(p: dict, day: datetime.date, path: Path) -> list[str]:
          "card": {"type": "table", "title": "歩んできた道", "columns": ["季", "クラブ", "年齢", "市場価値"], "rows": career[-6:],
                   "source": "Transfermarkt"},
          "say": [f"（{name}が{len(career)}クラブを渡ってきた道を、表の上から順に。どこで値が跳ねたか）"],
+         "sources": [url]},
+        {"id": "past", "heading": "過去5季の数字", "tier": "報道", "telop": "直近5季の試合と得点", "narrator": "解説",
+         "card": {"type": "table", "title": f"{name} 直近5季（全公式戦）", "columns": ["季", "試合", "得点", "アシスト", "出場時間"],
+                  "rows": p.get("past") or [], "source": "Transfermarkt"},
+         "say": [f"（{name}の直近5季を、表の上から。いちばん多かった季と、少なかった季の理由）"],
          "sources": [url]},
         {"id": "season", "heading": "今季の数字", "tier": "報道", "main": True, "telop": "今季ここまで", "narrator": "解説",
          "card": {"type": "table", "title": f"{name} 今季の数字", "columns": ["大会", "試合", "得点", "アシスト", "出場時間"],

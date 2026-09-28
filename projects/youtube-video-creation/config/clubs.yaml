@@ -179,6 +179,11 @@ clubs:
   - {canonical: ゲンク, league: "", big: false, aka: [KRC Genk, Racing Genk, Genk, ヘンク]}
   - {canonical: シント＝トロイデン, league: "", big: false, aka: [Sint-Truidense VV, Sint-Truiden, STVV, シントトロイデン]}
 
+  # ---- 選手紹介の経歴に出るクラブ（2026-09-28。ノルウェー・オーストリア）
+  - {canonical: ブリーネ, league: "", big: false, aka: [Bryne FK, Bryne]}
+  - {canonical: モルデ, league: "", big: false, aka: [Molde FK, Molde]}
+  - {canonical: ザルツブルク, league: "", big: false, aka: [Red Bull Salzburg, FC Salzburg, RB Salzburg, RBザルツブルク]}
+
   # ---- オランダ・ポルトガル
   - {canonical: アヤックス, league: netherlands, big: false, aka: [Ajax, アヤックス・アムステルダム]}
   - {canonical: PSV, league: netherlands, big: false, aka: [PSV Eindhoven, PSVアイントホーフェン]}
