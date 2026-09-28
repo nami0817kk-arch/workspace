@@ -1216,3 +1216,42 @@ class ジャンルらしい語Test(unittest.TestCase):
             "b": ["まったく別の語"] * 100})
 
         self.assertEqual(len([w for w in got["a"] if "イヤホン" in w]), 1)
+
+
+class 語の絞り込みTest(unittest.TestCase):
+    """価格.com のカテゴリページは「注目スペック」を件数つきで並べていて、
+    1,500件の中から1手で奥へ入れる。うちはページ送りしか無かった。
+
+    行き先は相対パスなので、**組み立て済みの文字列で渡さない**。
+    ページ送りの2枚目からは階層が1つ深くなり、`../../` を外から渡すと
+    404 になる（2026-09-28 に実際に踏んだ）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://e.dev"}
+
+    def page(self, prefix, page):
+        return self.theme.listing(
+            "パソコン・周辺機器の価格記録", "説明", [], self.site,
+            "https://e.dev/genre/1/", "2026-09-28", prefix=prefix,
+            page=page, pages=3, terms=[("インク", 622), ("bci", 237)])
+
+    def test_1枚目と2枚目で行き先の深さが変わる(self):
+        first = self.page("../../", 1)
+        second = self.page("../../../", 2)
+
+        self.assertIn('href="../../search/?q=', first)
+        self.assertIn('href="../../../search/?q=', second)
+
+    def test_件数を添える(self):
+        # 価格.com の「ダイキン(747)」と同じで、押す前に手応えが分かる
+        self.assertIn("622", self.page("../../", 1))
+
+    def test_0件の語は出さない(self):
+        html = self.theme.listing(
+            "題", "説明", [], self.site, "https://e.dev/genre/1/", "2026-09-28",
+            prefix="../../", terms=[("インク", 0)])
+
+        self.assertNotIn("chips", html)

@@ -65,7 +65,8 @@ def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
                   rows: list, site: dict, base: str, updated: str, empty: str,
                   stats: dict, show_score: bool = False,
                   linked: set | None = None,
-                  parent: tuple | None = None) -> None:
+                  parent: tuple | None = None,
+                  terms: list | None = None) -> None:
     """一覧をページ送りで書き出す。
 
     最安値圏は4,000件を超える。1枚に詰めると読めないうえ、100件で打ち切ると
@@ -87,7 +88,7 @@ def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
                             empty=empty, stats=stats, page=i + 1, pages=pages,
                             parent=parent,
                             page_prefix=prefix + path, total=len(rows),
-                            show_score=show_score))
+                            show_score=show_score, terms=terms))
         urls.append("/" + rel)
 
 
@@ -260,13 +261,20 @@ def build(root: Path, out: Path) -> dict:
         # しか無いのに、題は「値下がり」と名乗っていた。
         # 中身を値下がりだけに絞ると13,000ページへの導線が消えて索引から
         # 落ちるので、絞るのではなく題のほうを直す。
+        # 価格.com のカテゴリページは「注目スペック」を件数つきで並べていて、
+        # 1,500件の中から1手で奥へ入れる。うちはページ送りしか無かった。
+        words = terms_by_genre.get(gid, [])
+        counted = [(w, sum(1 for r in hit
+                           if w in theme.clean_name(str(r.get("name") or "")).lower()))
+                   for w in words]
         write_listing(out, urls, f"genre/{gid}/", f'{g["name"]}の価格記録',
                       f'{g["name"]}の商品を毎日記録しています。'
                       f'値下がりの大きい順に並べていますが、'
                       f'値下がりしていない商品も含みます。',
                       hit, site, base, updated,
                       "このジャンルはまだ記録が始まったばかりです。", stats,
-                      linked=linked, parent=("ジャンル別で見る", "genre/"))
+                      linked=linked, parent=("ジャンル別で見る", "genre/"),
+                      terms=counted)
         listed.append({**g, "count": len(hit),
                        "terms": terms_by_genre.get(gid, [])})
 

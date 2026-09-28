@@ -1021,7 +1021,8 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
             stats: dict | None = None, page: int = 1, pages: int = 1,
             page_prefix: str = "", total: int | None = None,
-            show_score: bool = False, parent: tuple | None = None) -> str:
+            show_score: bool = False, parent: tuple | None = None,
+            terms: list | None = None) -> str:
     # 点で並べている一覧は順位を出す。並び順に意味があることが
     # 画面から読めないと、ただ並んでいるだけに見える（価格.com の「1位」に相当）
     start = (page - 1) * 50
@@ -1056,6 +1057,10 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + f'<h1>{heading}{count}</h1><p class="lead">{esc(lead)}</p>'
             + stats_bar(stats or {})
             + AD_NOTICE
+            # 語は組み立て済みの文字列で受けない。ページ送りの2枚目からは
+            # 階層が1つ深くなるので、../../ を外から渡すと 404 になる
+            # （2026-09-28 に踏んだ。breadcrumb2 でも同じ所で踏んでいる）。
+            + term_chips(terms or [], prefix)
             + nav_top
             + (f'<p class="thin">この一覧は前回の記録との比較なので、'
                f'動きが少ない日は少なくなります。'
@@ -1080,6 +1085,28 @@ def archive_nav(day: str, older: str | None, newer: str | None) -> str:
     if older:
         parts.append(f'<a href="../{esc(older)}/">{esc(older)} →</a>')
     return f'<nav class="pager">{"".join(parts)}</nav>'
+
+
+def term_chips(terms: list, prefix: str = "") -> str:
+    """一覧の頭に置く、語での絞り込み。
+
+    価格.com のカテゴリページは上のほうに「注目スペック」（おもに6畳用・
+    自動掃除機能付き・窓用エアコン…）とメーカーを件数つきで並べていて、
+    1,500件の中から自分の探しているものへ1手で入れる。うちのジャンルページは
+    31ページのページ送りしか無く、奥へ行く道が「次へ」しか無かった。
+
+    語は `relate.genre_terms` が出したもの。件数を添える（価格.com の
+    「ダイキン(747)」と同じで、押す前に手応えが分かる）。
+    """
+    if not terms:
+        return ""
+    body = "".join(
+        f'<a href="{prefix}search/?q={quote(str(w))}">{esc(str(w))}'
+        f'<span class="n">{n:,}</span></a>' for w, n in terms if n)
+    if not body:
+        return ""
+    return (f'<nav class="chips" aria-label="語で絞り込む">'
+            f'<span class="chips-label">よく出る語</span>{body}</nav>')
 
 
 def genre_terms_html(terms: list, prefix: str = "") -> str:
