@@ -53,8 +53,17 @@ def test_所得税は国税庁の計算例と一致する(after_social, dependen
     assert extras.income_tax_yen(_AS_OF, after_social, dependents) == expected
 
 
-def test_所得税は令和8年分だけ():
-    assert extras.income_tax_yen(date(2027, 1, 1), 200_000) is None
+@pytest.mark.parametrize("after_social, dependents, expected", [
+    (177_000, 2, 110),     # 国税庁「令和9年分以降 電算機計算の特例」の計算例（配偶者＋親族1人）
+    (446_000, 8, 770),     # 配偶者＋親族7人
+    (775_200, 3, 58_790),  # 配偶者＋親族2人
+])
+def test_所得税は令和9年分の計算例とも一致する(after_social, dependents, expected):
+    assert extras.income_tax_yen(date(2027, 1, 1), after_social, dependents) == expected
+
+
+def test_所得税は令和9年分まで():
+    assert extras.income_tax_yen(date(2028, 1, 1), 200_000) is None
 
 
 def test_年末調整後の所得税_令和8年分():

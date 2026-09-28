@@ -100,7 +100,8 @@ const out = {{
   sick: {json.dumps(standards)}.map(s => calc.sicknessDailyYen(s)),
   pref: {json.dumps(list(premium.PREFECTURES), ensure_ascii=False)}.map(calc.prefFull),
   tax: {json.dumps(TAX_CASES)}.map(c => calc.incomeTaxYen(ex, '2026-10-01', c[0], c[1])),
-  taxOut: calc.incomeTaxYen(ex, '2027-01-01', 200000, 0),
+  tax27: {json.dumps(TAX_CASES + [[169_444, 0], [169_445, 0], [177_000, 2], [775_200, 3]])}.map(c => calc.incomeTaxYen(ex, '2027-01-01', c[0], c[1])),
+  taxOut: calc.incomeTaxYen(ex, '2028-01-01', 200000, 0),
 }};
 process.stdout.write(JSON.stringify(out));
 """
@@ -113,6 +114,7 @@ process.stdout.write(JSON.stringify(out));
     assert got["sick"] == [extras.sickness_daily_yen(s) for s in standards]
     assert got["pref"] == [extras.pref_full(p) for p in premium.PREFECTURES]
     assert got["tax"] == [extras.income_tax_yen(date(2026, 10, 1), a, d) for a, d in TAX_CASES]
+    assert got["tax27"] == [extras.income_tax_yen(date(2027, 1, 1), a, d) for a, d in TAX_CASES + [[169_444, 0], [169_445, 0], [177_000, 2], [775_200, 3]]]
     assert got["taxOut"] is None
 
 
