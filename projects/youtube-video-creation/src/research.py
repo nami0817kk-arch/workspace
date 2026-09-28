@@ -2319,10 +2319,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 # 節が変わるたびに下地へ戻り、写真と下地が交互に出ていた
                 if photo_on and fallback_image and not own_image:
                     own_image = fallback_image
-                if own_image:
-                    lines.append(f"  image: {own_image}")
                 if number < len(section.line_pauses) and section.line_pauses[number] > 0:
                     lines.append(f"  pause: {section.line_pauses[number]:.2f}")
+                if own_image:
+                    lines.append(f"  image: {own_image}")
                     # **入れ替えた写真は、そのあとの行にも残す**（2026-09-25 指摘
                     # 「ジダン 背景がジダンだけとなっている」）。行に写真を指定しても、
                     # 次の行でサムネの写真へ戻っていたので、**2枚目が一度も出ないか、
@@ -2404,10 +2404,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 # image は行ごとの指定で次の行に残らないので、毎行に書く
                 if photo_on and fallback_image and not own_image:
                     own_image = fallback_image
-                if own_image:
-                    lines.append(f"  image: {own_image}")
                 if number < len(section.line_pauses) and section.line_pauses[number] > 0:
                     lines.append(f"  pause: {section.line_pauses[number]:.2f}")
+                if own_image:
+                    lines.append(f"  image: {own_image}")
                     fallback_image = own_image      # 上と同じ（2026-09-25）
         lines.append("")
 
