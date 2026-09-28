@@ -147,6 +147,40 @@ def estimate(*, as_of: date, prefecture: str, monthly_pay_yen: int, age_40_to_64
     )
 
 
+# 賞与（ボーナス）の保険料。標準賞与額 = 賞与の1,000円未満を切り捨てた額。
+# 上限: 健康保険（と子ども・子育て支援金）は年度の累計573万円、厚生年金は1か月150万円。
+# パートの賞与は上限に届かないことがほとんどなので、年度の累計は見ずに1回分の額に上限を当てる。
+BONUS_HEALTH_CAP_YEN = 5_730_000
+BONUS_PENSION_CAP_YEN = 1_500_000
+
+
+@dataclass(frozen=True)
+class BonusResult:
+    standard_yen: int  # 標準賞与額
+    health_yen: int
+    kodomo_yen: int
+    pension_yen: int
+
+    @property
+    def total_yen(self) -> int:
+        return self.health_yen + self.kodomo_yen + self.pension_yen
+
+
+def bonus_estimate(*, as_of: date, prefecture: str, bonus_yen: int, age_40_to_64: bool) -> BonusResult:
+    table = table_for(as_of)
+    rates = table.prefectures[prefecture]
+    standard = max(bonus_yen, 0) // 1000 * 1000
+    health_std = min(standard, BONUS_HEALTH_CAP_YEN)
+    pension_std = min(standard, BONUS_PENSION_CAP_YEN)
+    health_units = rates["health"] + (rates["care"] if age_40_to_64 else 0)
+    return BonusResult(
+        standard_yen=standard,
+        health_yen=_employee_share(health_std, health_units),
+        kodomo_yen=_employee_share(health_std, rates["kodomo"]),
+        pension_yen=_employee_share(pension_std, rates["pension"]),
+    )
+
+
 def tables_json() -> str:
     """計算機（ブラウザ側 JS）に渡す料率。data/ の JSON をそのまま並べるだけ。"""
     return json.dumps(

@@ -34,6 +34,9 @@ const cases = JSON.parse(require('fs').readFileSync(0, 'utf8'));
 const out = cases.map(c => c.kind === 'elig'
   ? (r => r && {{eligible: r.eligible, hours: r.hoursOk, wage: r.wageOk, student: r.notStudentOk, size: r.employerSizeOk}})(
       calc.evaluate(schedule, {eligibility.WEEKLY_HOURS_REQUIREMENT}, c.as_of, c.hours, c.wage, c.student, c.size))
+  : c.kind === 'bonus'
+  ? (r => r && [r.standard, r.health, r.kodomo, r.pension, r.total])(
+      calc.bonusEstimate(tables, c.as_of, c.pref, c.bonus, c.care))
   : (r => r && [r.health, r.kodomo, r.pension, r.total, r.takeHome])(
       calc.estimate(tables, c.as_of, c.pref, c.pay, c.care)));
 process.stdout.write(JSON.stringify(out));
@@ -132,3 +135,16 @@ process.stdout.write(JSON.stringify(cases.map(c => {{
     for (h, pref, age), g in zip(cases, got):
         k = kabe.analyze(date(2026, 10, 1), h, pref, age)
         assert g == [k.pay_19, k.net_19, k.pay_20, k.net_20, k.breakeven_hours_x10, k.breakeven_net], (h, pref, age)
+
+
+def test_賞与の保険料もpythonと一致する():
+    cases, expected = [], []
+    for pref in premium.PREFECTURES:
+        for bonus in (0, 999, 1_000, 50_500, 100_000, 123_456, 1_500_999, 1_600_000, 6_000_000):
+            for care in (False, True):
+                cases.append({"kind": "bonus", "as_of": "2026-12-10", "pref": pref, "bonus": bonus, "care": care})
+                r = premium.bonus_estimate(as_of=date(2026, 12, 10), prefecture=pref, bonus_yen=bonus, age_40_to_64=care)
+                expected.append([r.standard_yen, r.health_yen, r.kodomo_yen, r.pension_yen, r.total_yen])
+    got = _run_node(cases)
+    mismatches = [(c, g, e) for c, g, e in zip(cases, got, expected) if g != e]
+    assert not mismatches, mismatches[:5]

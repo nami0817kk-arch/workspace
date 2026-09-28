@@ -20,6 +20,7 @@
     <tr><th>健康保険料</th><td>標準報酬月額 × 勤務先の都道府県の料率 ÷ 2（40〜64歳は介護保険料率1.62%を足す）</td><td><a href="{{ rates.source.page }}" rel="nofollow noopener" target="_blank">{{ rates.source.name }}「{{ rates.source.title }}」</a></td></tr>
     <tr><th>子ども・子育て支援金</th><td>標準報酬月額 × 0.23% ÷ 2（2026年4月分から）</td><td>同上</td></tr>
     <tr><th>厚生年金保険料</th><td>標準報酬月額 × 18.3% ÷ 2</td><td>同上</td></tr>
+    <tr><th>賞与の保険料</th><td>標準賞与額（賞与の1,000円未満を切り捨て）× 上の各料率 ÷ 2。上限は健康保険・子ども・子育て支援金が年度の累計573万円、厚生年金が1か月150万円（計算機では1回分の額に当てる）</td><td><a href="https://www.nenkin.go.jp/section/faq/kounen/hokenryo/shoyokeisan.html" rel="nofollow noopener" target="_blank">日本年金機構「賞与にかかる保険料はどのように計算するのですか。」</a></td></tr>
     <tr><th>雇用保険料</th><td>総支給額（通勤手当を含む）× {{ koyo.worker_per_mille }}/1,000（{{ koyo.note }}）</td><td><a href="{{ koyo.source.page }}" rel="nofollow noopener" target="_blank">{{ koyo.source.name }}「{{ koyo.source.title }}」</a></td></tr>
     <tr><th>将来の年金の増え方</th><td>標準報酬月額 × 5.481/1,000 × 加入月数（老齢厚生年金の報酬比例部分。今の価値での目安）</td><td><a href="{{ other.pension_accrual.source.page }}" rel="nofollow noopener" target="_blank">{{ other.pension_accrual.source.name }}「{{ other.pension_accrual.source.title }}」</a></td></tr>
     <tr><th>傷病手当金（1日）</th><td>標準報酬月額 ÷ 30（10円未満四捨五入）× 2/3（1円未満四捨五入）</td><td><a href="{{ other.sickness_allowance.source.page }}" rel="nofollow noopener" target="_blank">{{ other.sickness_allowance.source.name }}「{{ other.sickness_allowance.source.title }}」</a></td></tr>
@@ -41,7 +42,7 @@
 <ul>
   <li>住民税（前の年の所得で決まるため）</li>
   <li>国民健康保険料（市区町村ごとに計算のしかたが違うため）</li>
-  <li>賞与にかかる保険料</li>
+  <li>賞与にかかる所得税（前の月の給与で税率が決まるため）</li>
 </ul>
 
 <h2>検査</h2>

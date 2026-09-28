@@ -82,6 +82,21 @@
     };
   }
 
+  // 賞与の保険料（premium.bonus_estimate の写し）。1回分の額に上限（健保573万・厚年150万）を当てる
+  function bonusEstimate(tables, asOfIso, prefecture, bonus, age40to64) {
+    var table = tableFor(tables, asOfIso);
+    if (!table) return null;
+    var rates = table.prefectures[prefecture];
+    if (!rates) return null;
+    var std = Math.floor(Math.max(bonus, 0) / 1000) * 1000;
+    var healthStd = Math.min(std, 5730000);
+    var pensionStd = Math.min(std, 1500000);
+    var health = employeeShare(healthStd, rates.health + (age40to64 ? rates.care : 0));
+    var kodomo = employeeShare(healthStd, rates.kodomo);
+    var pension = employeeShare(pensionStd, rates.pension);
+    return { standard: std, health: health, kodomo: kodomo, pension: pension, total: health + kodomo + pension };
+  }
+
   // ---- extras.py の写し（雇用保険料・国民年金保険料・将来の年金・都道府県名） ----
   function periodFor(entries, asOfIso) {
     for (var i = 0; i < entries.length; i++) {
@@ -193,7 +208,7 @@
   }
 
   var api = {
-    regimeFor: regimeFor, evaluate: evaluate, tableFor: tableFor, estimate: estimate,
+    regimeFor: regimeFor, evaluate: evaluate, tableFor: tableFor, estimate: estimate, bonusEstimate: bonusEstimate,
     employmentYen: employmentYen, kokuminNenkinYen: kokuminNenkinYen,
     pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, incomeTaxYen: incomeTaxYen, kabeAnalyze: kabeAnalyze, kabeRows: kabeRows, prefFull: prefFull
   };

@@ -71,7 +71,7 @@
   </div>
 
   <details class="more">
-    <summary>詳しく入力する（通勤手当・残業代・扶養・年齢・学生・時点）</summary>
+    <summary>詳しく入力する（通勤手当・残業代・賞与・扶養・年齢・学生・時点）</summary>
 
     <div class="row">
       <label for="commute">通勤手当（月）</label>
@@ -83,6 +83,13 @@
       <label for="extra">残業代など（月）</label>
       <div class="ctl"><input type="number" id="extra" min="0" step="1000" value="0" inputmode="numeric"><span class="unit">円</span></div>
       <p class="hint">加入の判定には含めず、保険料と所得税には含める</p>
+    </div>
+
+    <div class="row">
+      <label for="bonus">賞与（1回あたり）</label>
+      <div class="ctl"><input type="number" id="bonus" min="0" step="1000" value="0" inputmode="numeric"><span class="unit">円</span>
+        <select id="bonus-times" aria-label="賞与の回数"><option value="1">年1回</option><option value="2" selected>年2回</option><option value="3">年3回</option></select></div>
+      <p class="hint">賞与からも社会保険料が引かれる。年収の壁の判定にも足す</p>
     </div>
 
     <div class="row">
@@ -293,10 +300,32 @@
     }
   }
 
+  // 賞与から引かれる保険料（1回あたり）
+  function bonusHtml(asOf, bonus, times) {
+    var prefecture = document.getElementById('prefecture').value;
+    var age = document.getElementById('age-40-64').checked;
+    var b = calc.bonusEstimate(TABLES, asOf, prefecture, bonus, age);
+    if (!b) return '';
+    var koyo = calc.employmentYen(EXTRAS, asOf, bonus);
+    var cut = b.total + (koyo || 0);
+    var html = '<h2 id="bonus-result">賞与から引かれる保険料（1回あたり）</h2>';
+    html += '<div class="table-wrap"><table class="plain premium">';
+    html += '<tr><th>健康保険料' + (age ? '（介護保険料を含む）' : '') + '</th><td>' + yen(b.health) + '</td></tr>';
+    html += '<tr><th>子ども・子育て支援金</th><td>' + yen(b.kodomo) + '</td></tr>';
+    html += '<tr><th>厚生年金保険料</th><td>' + yen(b.pension) + '</td></tr>';
+    if (koyo !== null) html += '<tr><th>雇用保険料</th><td>' + yen(koyo) + '</td></tr>';
+    html += '<tr class="current"><th>合計（1回）</th><td><strong>' + yen(cut) + '</strong>（年' + times + '回で ' + yen(cut * times) + '）</td></tr>';
+    html += '<tr><th>賞与から保険料を引いた残り<span class="sub">所得税は含まない</span></th><td>' + yen(bonus - cut) + '</td></tr>';
+    html += '</table></div>';
+    html += '<p class="hint">標準賞与額 ' + yen(b.standard) + '（賞与の1,000円未満を切り捨てた額）に料率を掛けています。'
+      + '賞与にかかる所得税は前の月の給与で税率が決まるため、ここでは出していません。賞与の保険料も将来の年金に反映されます。</p>';
+    return html;
+  }
+
   // 年収の壁（106万・123万・130万・160万円）を、入力から見込む年収で並べて判定する
-  function wallsHtml(asOf, r, wage, extra, commute) {
-    var taxable = (wage + extra) * 12;   // 税の年収（通勤手当は非課税）
-    var depend = (wage + commute) * 12;  // 扶養の年収（通勤手当を含む。2026年4月から残業代は含めない）
+  function wallsHtml(asOf, r, wage, extra, commute, bonusYear) {
+    var taxable = (wage + extra) * 12 + bonusYear;   // 税の年収（通勤手当は非課税）
+    var depend = (wage + commute) * 12 + bonusYear;  // 扶養の年収（通勤手当を含む。2026年4月から残業代は含めない）
     function row(ok, wall, text) {
       return '<tr><th>' + wall + '</th><td><span class="wall ' + (ok ? 'in' : 'over') + '">' + (ok ? '内' : '超える') + '</span></td><td>' + text + '</td></tr>';
     }
@@ -318,7 +347,7 @@
       ? '本人の所得税はかかりません（毎月引かれた分は年末調整で戻ります）。配偶者特別控除も満額です。'
       : '本人に所得税がかかり、配偶者特別控除は年収が上がるにつれ減っていきます。');
     html += '</table></div>';
-    html += '<p class="hint">賞与なし・毎月同じ額で12か月働いた見込みです。住民税がかかり始める年収（市区町村で違う）は含めていません。'
+    html += '<p class="hint">毎月同じ額で12か月働き、賞与は入力の額×回数の見込みです。住民税がかかり始める年収（市区町村で違う）は含めていません。'
       + '税の扱いは国税庁「令和7年度税制改正による所得税の基礎控除の見直し等について」、扶養は日本年金機構の案内によります。'
       + '<a href="nenshu.html">年収別の手取り</a>・<a href="faq.html#q-130">130万円の壁との違い</a></p>';
     return html;
@@ -340,6 +369,9 @@
     var commute = parseInt(document.getElementById('commute').value, 10);
     if (isNaN(commute) || commute < 0) commute = 0;
     var dependents = parseInt(document.getElementById('dependents').value, 10) || 0;
+    var bonus = parseInt(document.getElementById('bonus').value, 10);
+    if (isNaN(bonus) || bonus < 0) bonus = 0;
+    var bonusTimes = parseInt(document.getElementById('bonus-times').value, 10) || 2;
 
     var out = document.getElementById('result');
     var summary = document.getElementById('summary');
@@ -377,7 +409,8 @@
     html += '<p class="hint">この判定は「継続して2か月を超える雇用が見込まれること」を満たしている前提です。'
       + '短期のアルバイトなど見込みが2か月以下の場合は対象外です。</p>';
     if (r.eligible) html += premiumHtml(asOf, wage, extra, commute, dependents);
-    html += wallsHtml(asOf, r, wage, extra, commute);
+    if (r.eligible && bonus > 0) html += bonusHtml(asOf, bonus, bonusTimes);
+    html += wallsHtml(asOf, r, wage, extra, commute, bonus * bonusTimes);
     if (!isNaN(hourly) && hourly > 0 && r.employerSizeOk && r.notStudentOk) html += kabeHtml(asOf < '2026-10-01' ? '2026-10-01' : asOf, Math.round(hourly));
     out.innerHTML = '<h2 class="result-head">くわしい結果</h2>' + html;
     summary.innerHTML = summaryHtml(r, wage + extra + commute);
@@ -394,7 +427,7 @@
   // 入力を URL（?h=20&w=90000…）に残す。ブックマークや共有で同じ結果を開ける
   var FIELDS = [
     ['h', 'hours'], ['hr', 'hourly'], ['w', 'wage'], ['n', 'employer-size'], ['p', 'prefecture'],
-    ['c', 'commute'], ['x', 'extra'], ['d', 'dependents'], ['a', 'age-40-64'], ['s', 'is-student'], ['as_of', 'as-of']
+    ['c', 'commute'], ['x', 'extra'], ['b', 'bonus'], ['bt', 'bonus-times'], ['d', 'dependents'], ['a', 'age-40-64'], ['s', 'is-student'], ['as_of', 'as-of']
   ];
   function applyParams(params, reset) {
     FIELDS.forEach(function (f) {
@@ -408,7 +441,7 @@
         el.value = '';
       }
     });
-    if (params.get('s') === '1' || params.get('a') === '1' || params.get('c') || params.get('x') || params.get('d')) {
+    if (params.get('s') === '1' || params.get('a') === '1' || params.get('c') || params.get('x') || params.get('d') || params.get('b')) {
       document.querySelector('details.more').open = true;
     }
   }
@@ -418,7 +451,8 @@
       var el = document.getElementById(f[1]);
       if (el.type === 'checkbox') { if (el.checked) q.push(f[0] + '=1'); return; }
       if (el.value === '' || (f[0] === 'as_of' && el.value === 'today')) return;
-      if ((f[0] === 'c' || f[0] === 'x' || f[0] === 'd') && el.value === '0') return;
+      if ((f[0] === 'c' || f[0] === 'x' || f[0] === 'd' || f[0] === 'b') && el.value === '0') return;
+      if (f[0] === 'bt' && (document.getElementById('bonus').value === '0' || el.value === '2')) return;
       if (f[0] === 'w' && document.getElementById('hourly').value !== '') return;  // 時給から計算した額は残さない
       q.push(f[0] + '=' + encodeURIComponent(el.value));
     });
@@ -465,7 +499,7 @@
     applyParams(params, false);
     if (wanted && select.value !== wanted) { select.value = 'today'; }
     if (select.selectedIndex < 0) { select.value = 'today'; }
-    ['prefecture', 'dependents'].forEach(function (id) {
+    ['prefecture', 'dependents', 'bonus-times'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el.selectedIndex < 0) { el.selectedIndex = id === 'prefecture' ? Array.prototype.map.call(el.options, function (o) { return o.value; }).indexOf('東京') : 0; }
     });
