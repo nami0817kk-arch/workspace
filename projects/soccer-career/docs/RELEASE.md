@@ -11,6 +11,37 @@
 
 ---
 
+## 0. 毎回の手順は soccer-manager の手順書が正
+
+版を上げる → タグ → **手動実行でアップロード** → 掲載欄を埋める → ビルドを選ぶ →
+提出 → 却下されたら「審査内容を更新」→ リリースボタン → 公開後に外から確かめる、
+までの①〜⑩は
+[`soccer-manager/docs/RELEASE_GUIDE.md` の「0-2. 毎回のリリース手順」](../../soccer-manager/docs/RELEASE_GUIDE.md)
+にある。**このアプリでも同じ**。名前だけ読み替える（タグ `soccer-career-v*`、
+ワークフロー `Build Soccer Career (iOS Release)`）。
+
+とくに**タグを押しただけでは TestFlight に上がらない**。`upload_to_testflight` は
+`workflow_dispatch` の入力で、タグからの実行では渡せないのでアップロードが
+skipped になる。サカマネで2回踏んでいる。
+
+## 0-2. 初回だけ要ること
+
+このアプリはまだ一度も出していないので、①の前に次が要る。**どれもコンソール側**で、
+CI からは手が出ない。
+
+| やること | 場所 | 使う値 |
+|---|---|---|
+| iOS アプリを1件追加し、**インタースティシャルを1つ**作る（リワードは無い） | AdMob | → `ADMOB_APP_ID_IOS_CAREER` / `ADMOB_INTERSTITIAL_IOS_CAREER` |
+| アプリレコードを作る | App Store Connect | `com.namiki.soccercareer` |
+| App内課金を2件登録して審査に出す | App Store Connect | `soccer_career_no_ads`（非消耗型） / `soccer_career_tip`（消耗型） |
+| App ID とプロビジョニングプロファイルを作る | Apple Developer | → `IOS_PROVISIONING_PROFILE_BASE64_CAREER` |
+
+証明書（`IOS_DIST_CERT_BASE64` ほか）と Team ID、App Store Connect API キーは
+**サカマネのものをそのまま使う**。同じ Apple アカウントなので作り直さない。
+
+> **課金は商品の審査が別にある。** 最初のバージョンと一緒に提出しないと
+> 「準備中」のまま実機で商品が出てこない。
+
 ## 1. このアプリの値
 
 | 項目 | 値 |
@@ -121,6 +152,20 @@ App Store Connect は**同じビルド番号を二度受け付けない**。上�
 - [ ] ノッチのある端末で、上下が切れていない
 - [ ] 明るいテーマと暗いテーマの両方で読める
 
+### 公開後（外から見える値を見る）
+
+「直したはず」で終わらせない。App ID はアプリレコードを作ると決まる。
+
+```bash
+curl "https://itunes.apple.com/lookup?id=<App ID>&country=jp"
+```
+
+- [ ] `languageCodesISO2A` が `['JA']` になっている
+      ——`CFBundleLocalizations` の申告だけでは英語のままになる。
+      `ios/Runner/ja.lproj/InfoPlist.strings` の実体が要る（サカマネで踏んだ）
+- [ ] `version` が出したバージョンになっている
+- [ ] 掲載画像の1枚目とサブタイトルをストアページで目で見る
+
 ## 6. よくある詰まりどころ
 
 `soccer-manager` の RELEASE_GUIDE にある表がそのまま当てはまる。
@@ -131,6 +176,7 @@ App Store Connect は**同じビルド番号を二度受け付けない**。上�
 | プロファイルの App ID が一致しないと言われる | `soccer-manager` のプロファイルを `IOS_PROVISIONING_PROFILE_BASE64_CAREER` に登録していないか |
 | 「Google のテスト用IDが登録されています」で止まる | `ADMOB_APP_ID_IOS_CAREER` にテスト用IDを入れている。AdMob で作った自分のIDに置き換える |
 | preflight が「アルファチャンネルが無い」で落ちる | `python tool/make_icons.py` を回し直す（iOS 用は `convert("RGB")` を通している） |
+| ストアの「言語」が英語になっている | `ja.lproj/InfoPlist.strings` がバンドルに入っていない。`preflight.py` の「言語」の節が見ている |
 | 審査で却下された | **返信だけでは審査は再開しない。**「審査内容を更新」まで押す（`soccer-manager` で踏んだ） |
 
 ## 7. 提出のときに埋めるもの

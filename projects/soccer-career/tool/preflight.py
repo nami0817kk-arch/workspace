@@ -14,6 +14,7 @@
 - 掲載する絵が App Store の寸法であること
 - 商品ID・バンドルID・法務ページのURLが1つに揃っていること
 - Info.plist に要るものがあり、要らない権限の説明文が無いこと
+- 対応語の申告と `<語>.lproj/InfoPlist.strings` の実体が一致していること
 - 雛形の文字列（"A new Flutter project"）が残っていないこと
 
 **直せるものは直さない**——ここは報告だけして、直すのは人（か、次の作業）が決める。
@@ -144,6 +145,51 @@ def main():
     check("ATT の説明文が無い", "NSUserTrackingUsageDescription" not in plist)
     perms = re.findall(r"<key>(NS\w*UsageDescription)</key>", plist)
     check("使っていない権限の説明文が無い", not perms, ", ".join(perms))
+
+    print("== 言語 ==")
+    # CFBundleLocalizations の申告だけでは App Store が言語として認めない。
+    # バンドルの中に <語>.lproj/InfoPlist.strings の実体が要る
+    # （soccer-manager はこれを欠いて、掲載ページの「言語」が英語だけになった）。
+    display = re.search(
+        r"<key>CFBundleDisplayName</key>\s*<string>([^<]*)</string>", plist
+    ).group(1)
+    declared = set(
+        re.findall(
+            r"<string>(\w+)</string>",
+            re.search(
+                r"<key>CFBundleLocalizations</key>\s*<array>(.*?)</array>",
+                plist,
+                re.S,
+            ).group(1),
+        )
+    )
+    regions = re.search(r"knownRegions = \((.*?)\);", pbx, re.S)
+    for lang in sorted(declared):
+        path = os.path.join(ROOT, "ios", "Runner", f"{lang}.lproj", "InfoPlist.strings")
+        check(f"{lang}.lproj/InfoPlist.strings がある", os.path.exists(path))
+        if os.path.exists(path):
+            body = read("ios", "Runner", f"{lang}.lproj", "InfoPlist.strings")
+            check(
+                f"{lang} の表示名が Info.plist と同じ",
+                f'"CFBundleDisplayName" = "{display}";' in body,
+                display,
+            )
+        check(
+            f"pbxproj が {lang}.lproj を指している",
+            f"{lang}.lproj/InfoPlist.strings" in pbx,
+        )
+        check(f"knownRegions に {lang} がある", regions and lang in regions.group(1))
+    check(
+        "InfoPlist.strings が Resources に入っている",
+        "InfoPlist.strings in Resources" in pbx,
+    )
+    # 申告に無い語の lproj を置くと、その語も対応していることになってしまう。
+    extra = sorted(
+        d[: -len(".lproj")]
+        for d in os.listdir(os.path.join(ROOT, "ios", "Runner"))
+        if d.endswith(".lproj") and d[: -len(".lproj")] not in declared | {"Base"}
+    )
+    check("申告していない語の lproj が無い", not extra, ", ".join(extra))
 
     print("== 雛形の残り ==")
     for path in ("pubspec.yaml", "web/index.html", "web/manifest.json"):
