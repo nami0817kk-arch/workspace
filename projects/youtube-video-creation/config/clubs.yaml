@@ -172,6 +172,13 @@ clubs:
   - {canonical: トロワ, league: france, big: false, aka: [Troyes, ES Troyes]}
   - {canonical: ル・アーヴル, league: france, big: false, aka: [Le Havre, Le Havre AC, ル・アーブル]}
 
+  # ---- イングランド2部（日本人のいるクラブ。2026-09-28 月間まとめで英語のまま出たので足した）
+  - {canonical: ブラックバーン, league: england, big: false, aka: [Blackburn Rovers, Blackburn]}
+  - {canonical: バーミンガム, league: england, big: false, aka: [Birmingham City]}
+  # ---- ベルギー
+  - {canonical: ゲンク, league: "", big: false, aka: [KRC Genk, Racing Genk, Genk, ヘンク]}
+  - {canonical: シント＝トロイデン, league: "", big: false, aka: [Sint-Truidense VV, Sint-Truiden, STVV, シントトロイデン]}
+
   # ---- オランダ・ポルトガル
   - {canonical: アヤックス, league: netherlands, big: false, aka: [Ajax, アヤックス・アムステルダム]}
   - {canonical: PSV, league: netherlands, big: false, aka: [PSV Eindhoven, PSVアイントホーフェン]}
