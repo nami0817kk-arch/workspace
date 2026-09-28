@@ -969,7 +969,7 @@ VOICEVOX の `audio_query` の kana で実測したら、日本人選手の名�
    Gemini の枠が切れていれば Claude の下請けに `python tools/flow.py --prompt` の問いで読ませて控えを書かせる）
 6. **書き出し**：`build` → `short`（存在確認は**出力ファイルの有無**で。コマンドの戻り値は当てにならない）
    → `review`（× を直す）→ 動画を SendUserFile で見せる（本編＋ショート）→ OK で `screen` → `upload --at HH:MM`
-   （9〜24時、1日ショート10本まで、間隔は15〜20分。予約時刻は承認が通ってから決める）
+   （9〜24時、1日ショート10本まで、間隔は30分（2026-09-24 指示。09-28 に20分で入れて再指摘）。予約時刻は承認が通ってから決める）
 7. **区切りごとに push**。master への取り込みは fetch → 検証 → merge を自分で。
 
 - 決まりは全部 CLAUDE.md（この PJT）と `~/.claude/projects/C--Users----dev/memory/` に書いてある。

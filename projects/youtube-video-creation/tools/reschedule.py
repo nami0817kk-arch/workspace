@@ -61,8 +61,7 @@ def _note(video_id: str, publish_at: str) -> None:
     for row in rows:
         if str(row.get("video_id")) == video_id:
             row["publish_at"] = publish_at
-    POSTED.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + "
-", encoding="utf-8")
+    POSTED.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def main() -> int:

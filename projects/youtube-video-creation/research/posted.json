@@ -2756,5 +2756,41 @@
     "video_id": "NzN2Zj3OFWU",
     "at": "2026-09-27T10:00:25+00:00",
     "publish_at": "2026-09-28T01:30:00Z"
+  },
+  {
+    "build": "20260928_moriyasu",
+    "video_id": "FmEidU0y9zI",
+    "at": "2026-09-28T00:01:38+00:00",
+    "publish_at": "2026-09-28T02:00:00Z"
+  },
+  {
+    "build": "20260928_moriyasu_short",
+    "video_id": "0uYkgVbbOWo",
+    "at": "2026-09-28T00:01:58+00:00",
+    "publish_at": "2026-09-28T02:30:00Z"
+  },
+  {
+    "build": "20260928_itohiroki",
+    "video_id": "_rrydfEMqa0",
+    "at": "2026-09-28T00:02:22+00:00",
+    "publish_at": "2026-09-28T03:00:00Z"
+  },
+  {
+    "build": "20260928_itohiroki_short",
+    "video_id": "Dbe6F-LjPpY",
+    "at": "2026-09-28T00:02:39+00:00",
+    "publish_at": "2026-09-28T03:30:00Z"
+  },
+  {
+    "build": "20260928_trent",
+    "video_id": "JXsZGMYN-Vk",
+    "at": "2026-09-28T00:03:02+00:00",
+    "publish_at": "2026-09-28T04:00:00Z"
+  },
+  {
+    "build": "20260928_trent_short",
+    "video_id": "6L7kGvdu24o",
+    "at": "2026-09-28T00:03:22+00:00",
+    "publish_at": "2026-09-28T04:30:00Z"
   }
 ]
