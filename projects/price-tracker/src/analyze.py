@@ -120,13 +120,16 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
     if prev and prev_rate is not None:
         eff_prev = effective(prev, int(prev_rate))
         eff_drop_pct = (eff_prev - eff) / eff_prev if eff_prev > eff else 0.0
+        # 倍率が下がる（期限切れを含む）と、価格が同じでも実質は上がる。
+        # 「もう得ではなくなった」は、待っていた人にいちばん要る知らせ。
+        eff_rise_pct = (eff - eff_prev) / eff_prev if eff > eff_prev else 0.0
     else:
-        eff_prev, eff_drop_pct = None, 0.0
+        eff_prev, eff_drop_pct, eff_rise_pct = None, 0.0, 0.0
 
     return {
         "changed_date": last_change(rec),
         "point_rate": rate, "eff_price": eff, "eff_prev": eff_prev,
-        "eff_drop_pct": eff_drop_pct,
+        "eff_drop_pct": eff_drop_pct, "eff_rise_pct": eff_rise_pct,
         "price": price, "low": low, "high": high, "days": days,
         "prev": prev, "drop_pct": drop_pct, "rise_pct": rise_pct,
         "vs_low_pct": vs_low_pct, "off_high_pct": off_high_pct,
@@ -158,7 +161,17 @@ def evaluate_all(summary: dict, items: dict, drop_threshold: float,
             continue
         until = str(meta.get("point_until") or "")[:10]
         if until and latest and until < latest:
-            rec = {**rec, "last_rate": 1}
+            # 履歴の最終日も直す。図・「記録を始めてからの変化」・「価格の記録」は
+            # すべて tail から作るので、last_rate だけ直すと画面の中で食い違う。
+            # 実測（2026-09-28）で、頭は「実質 27,225円 ▲16.5%」なのに表の
+            # 同じ日が 23,375円 になっている商品があった。
+            tail = [list(e) for e in (rec.get("tail") or [])]
+            if tail:
+                last = tail[-1]
+                while len(last) < 3:
+                    last.append(1)
+                last[2] = 1
+            rec = {**rec, "last_rate": 1, "tail": tail}
             meta = {**meta, "point_until": None, "point_rate_expired": True}
         verdict = evaluate(rec, drop_threshold, near_low_threshold)
         if not verdict:
@@ -192,9 +205,17 @@ def rises(rows: list[dict], threshold: float, limit: int | None = None) -> list[
 
     値下がりだけを並べると「安いから買え」としか言わないサイトになる。
     高くなったものを同じ基準で出すことが、価格を追う道具としての値打ちになる。
+
+    ポイント込みの実質価格で高くなったものも入れる。倍率が下がる（期限切れを
+    含む）と、価格が同じでも実質は上がる。実測（2026-09-28・しきい値5%）で、
+    価格が上がったのは45件だが実質では139件あり、**101件は価格では
+    上がっていなかった**。待っていた人には「もう得ではない」が要る。
     """
-    hit = [r for r in rows if r.get("rise_pct", 0) >= threshold]
-    hit.sort(key=lambda r: (-r["rise_pct"], r["price"]))
+    def up(r):
+        return max(r.get("rise_pct", 0), r.get("eff_rise_pct", 0))
+
+    hit = [r for r in rows if up(r) >= threshold]
+    hit.sort(key=lambda r: (-up(r), r["price"]))
     return hit[:limit] if limit else hit
 
 

@@ -436,6 +436,15 @@ def verdict_note(row: dict) -> str:
                     f'実質価格では記録した中でいちばん安くなっています。{tail}')
         return ('価格は記録のあいだ変わっていませんが、ポイント倍率が上がった'
                 f'ぶん、実質価格は記録した中でいちばん安くなっています。{tail}')
+    if row.get("eff_rise_pct") and not row.get("rise_pct"):
+        # 価格は前回と同じなのに、倍率が下がった（期限切れを含む）ぶん実質が
+        # 上がった。「もう得ではない」は、待っていた人にいちばん要る知らせで、
+        # 価格しか見ない作りでは出せない。moved の分岐より前に置く
+        # （価格が動いていない商品はそこで打ち切られる）。
+        return (f'価格は前回と同じですが、ポイント倍率が下がったぶん、'
+                f'実質価格は {yen(row["eff_prev"])} から '
+                f'{yen(row["eff_price"])} へ {pct(row["eff_rise_pct"])} '
+                f'高くなっています。')
     if row.get("moved") is False:
         # 価格が動いていないことは cheaper_days が言う（ポイントで実質だけが
         # 動いた場合もあちらが拾う）。ここで言うと同じ文が2行続く。
@@ -464,13 +473,25 @@ def point_note(row: dict) -> str:
     価格と併記し、「目安」と明示する。
     """
     rate = int(row.get("point_rate") or 1)
-    if rate <= 1 or not row.get("eff_price"):
+    rise = row.get("eff_rise_pct") or 0
+    if not row.get("eff_price") or (rate <= 1 and not rise):
         return ""
     until = str(row.get("point_until") or "")[:10]
     mark = (f'<span class="until">{esc(until[5:].replace("-", "/"))}まで</span>'
             if until else "")
-    return (f'<span class="point">ポイント{rate}倍</span>{mark}'
-            f'<span class="eff">実質 {yen(row["eff_price"])}<small>（目安）</small></span>')
+    # 実質が上がったなら、そう出す。倍率が下がる（期限切れを含む）と価格は
+    # 同じでも実質は上がるので、これを出さないと一覧では何も変わって見えない。
+    # 価格が上がった回は、同じ割合がカードの価格の行にも出る。
+    # 「▲458.8%」が1枚に2回並んでいた（2026-09-28）。
+    # ここで出すのは「価格は同じなのに実質だけ上がった」回だけにする。
+    move = (f'<span class="up">▲{pct(rise)}</span>'
+            if rise and not row.get("rise_pct") else "")
+    eff = (f'<span class="eff">実質 {yen(row["eff_price"])}'
+           f'<small>（目安）</small></span>')
+    if rate <= 1:
+        # 倍率が1に戻った。倍率の札は出さず、実質が上がったことだけを出す。
+        return f'{eff}{move}'
+    return f'<span class="point">ポイント{rate}倍</span>{mark}{eff}{move}'
 
 
 def conditions(row: dict) -> str:

@@ -104,6 +104,8 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 /* ポイント込みの実質価格。価格を置き換えず、併記する。 */
 .point-line { margin: 4px 0 0; font-size: 13px; }
 .point-line:empty { display: none; }
+/* 実質が上がったときの印。行の末尾に置くので、右の余白は要らない */
+.point-line .up, .lede .up { margin: 0 0 0 6px; }
 .point { display: inline-block; padding: 1px 8px; margin-right: 8px; border-radius: 999px;
   font-size: 12px; color: var(--near); border: 1px solid currentColor; }
 .eff { color: var(--ink); font-weight: 600; }
