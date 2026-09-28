@@ -969,7 +969,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
             stats: dict | None = None, page: int = 1, pages: int = 1,
             page_prefix: str = "", total: int | None = None,
-            show_score: bool = False) -> str:
+            show_score: bool = False, parent: tuple | None = None) -> str:
     # 点で並べている一覧は順位を出す。並び順に意味があることが
     # 画面から読めないと、ただ並んでいるだけに見える（価格.com の「1位」に相当）
     start = (page - 1) * 50
@@ -996,6 +996,11 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
                  extra=item_list_ld(rows, site, prefix))
             + (f'<script defer src="{prefix}{site.get("list_js", "list.js")}">'
                f'</script>' if rows else "")
+            # ジャンルと日付別は「トップ → ジャンル別 → パソコン・周辺機器」の
+            # 3階層なので、いまどこにいるかの道しるべを置く。
+            # 一覧そのもの（最安値圏など）は2階層で、上の並びの印で足りる。
+            + (breadcrumb2(site, parent[0], parent[1], title, prefix)
+               if parent else "")
             + f'<h1>{heading}{count}</h1><p class="lead">{esc(lead)}</p>'
             + stats_bar(stats or {})
             + AD_NOTICE
@@ -1436,6 +1441,26 @@ def feed(site: dict, rows: list, updated: str, title: str = "今日の値下が�
             f'<link>{base}/</link>'
             f'<description>{esc(site.get("description", ""))}</description>'
             f'<language>ja</language>{items}</channel></rss>')
+
+
+def breadcrumb2(site: dict, mid_name: str, mid_href: str, name: str,
+                prefix: str) -> str:
+    """3段のパンくず。ジャンルと日付別は間にもう1枚ある。"""
+    base = site["base_url"].rstrip("/")
+    ld = safe_json({
+        "@context": "https://schema.org", "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": site["name"], "item": base + "/"},
+            {"@type": "ListItem", "position": 2, "name": mid_name,
+             "item": base + "/" + mid_href},
+            {"@type": "ListItem", "position": 3, "name": name},
+        ],
+    })
+    return (f'<nav class="crumb"><a href="{prefix}">{esc(site["name"])}</a>'
+            f'<span class="sep">/</span>'
+            f'<a href="{prefix}{esc(mid_href)}">{esc(mid_name)}</a>'
+            f'<span class="sep">/</span>{esc(name)}</nav>'
+            f'<script type="application/ld+json">{ld}</script>')
 
 
 def breadcrumb(site: dict, name: str, prefix: str) -> str:

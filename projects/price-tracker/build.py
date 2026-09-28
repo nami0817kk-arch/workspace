@@ -64,7 +64,8 @@ PER_PAGE = 50
 def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
                   rows: list, site: dict, base: str, updated: str, empty: str,
                   stats: dict, show_score: bool = False,
-                  linked: set | None = None) -> None:
+                  linked: set | None = None,
+                  parent: tuple | None = None) -> None:
     """一覧をページ送りで書き出す。
 
     最安値圏は4,000件を超える。1枚に詰めると読めないうえ、100件で打ち切ると
@@ -84,6 +85,7 @@ def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
               theme.listing(title, lead, rows[i * PER_PAGE:(i + 1) * PER_PAGE],
                             site, base + "/" + rel, updated, prefix=prefix,
                             empty=empty, stats=stats, page=i + 1, pages=pages,
+                            parent=parent,
                             page_prefix=prefix + path, total=len(rows),
                             show_score=show_score))
         urls.append("/" + rel)
@@ -203,7 +205,8 @@ def build(root: Path, out: Path) -> dict:
         write_listing(out, urls, f"archive/{day}/", f"{day} の値下がり",
                       f"{day} に価格が下がった商品の記録です。",
                       hit, site, base, updated,
-                      "この日は記録できる値下がりがありませんでした。", stats, linked=linked)
+                      "この日は記録できる値下がりがありませんでした。", stats,
+                      linked=linked, parent=("日付別の値下がり", "archive/"))
         archive_counts.append((day, len(hit)))
         pos = archive_days.index(day)
         newer = archive_days[pos - 1] if pos > 0 else None
@@ -242,7 +245,8 @@ def build(root: Path, out: Path) -> dict:
                       f'値下がりの大きい順に並べていますが、'
                       f'値下がりしていない商品も含みます。',
                       hit, site, base, updated,
-                      "このジャンルはまだ記録が始まったばかりです。", stats, linked=linked)
+                      "このジャンルはまだ記録が始まったばかりです。", stats,
+                      linked=linked, parent=("ジャンル別で見る", "genre/"))
         listed.append({**g, "count": len(hit)})
 
     write(out / "genre" / "index.html",

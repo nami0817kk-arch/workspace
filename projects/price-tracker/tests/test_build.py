@@ -104,6 +104,27 @@ class BuildTest(unittest.TestCase):
                 self.assertNotIn("の値下がり", title)
                 self.assertIn("の価格記録", title)
 
+    def test_ジャンルと日付別に3段のパンくずを置く(self):
+        """トップ → ジャンル別 → パソコン・周辺機器 の3階層なのに
+        道しるべが無かった。ページ送りの奥でもリンク先が合っていること。"""
+        import re
+        seen = 0
+        for path, mid in (("genre", "genre/"), ("archive", "archive/")):
+            pages = sorted((self.out / path).glob("*/index.html"))
+            if not pages:
+                continue     # 見本のデータでは日付別が1枚も出ないことがある
+            seen += 1
+            h = pages[0].read_text(encoding="utf-8")
+            with self.subTest(path=path):
+                crumb = re.search(r'<nav class="crumb">(.*?)</nav>', h, re.S)
+                self.assertIsNotNone(crumb, path + " にパンくずが無い")
+                self.assertIn(mid, crumb.group(1))
+                # 構造化データも3段になっていること
+                ld = re.search(r'"@type": "BreadcrumbList".*?\]', h, re.S)
+                self.assertIsNotNone(ld)
+                self.assertIn('"position": 3', ld.group(0))
+        self.assertTrue(seen, "ジャンルも日付別も1枚も出ていない")
+
     def test_expected_pages_exist(self):
         for path in ("index.html", "lows/index.html", "about/index.html",
                      "privacy/index.html", "contact/index.html",
