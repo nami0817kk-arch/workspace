@@ -1,0 +1,227 @@
+# 2026-09-29 japan_3 ベネズエラ戦（9/28 広島、日本 2-1）で5人がA代表デビュー
+# 反応は Yahoo!ニュースのコメント欄から3件（日本語のみ）。海外の声なし：reddit・Bluesky・pullpush が
+# requests から全部 403/429 で読めなかった。X は読めない
+# 本人の試合後コメントは 9/28 22:20 時点でサッカーキング・ゲキサカ・Football ZONE・Yahoo!検索に無い。
+# 熊坂の言葉は 9/22 の合流初日のもの（1年3か月ぶりの復帰の節に、その日の言葉として置いた）
+# 群れ（5人）が主語の回。draft の「主役（小久保）の名前が出ない節」のヒントは、各節が別の1人を掘る作りなので残す
+date: 2026年9月29日
+slot: japan_3
+format: news
+people: [小久保玲央ブライアン, 中野就斗, 熊坂光希, 齋藤俊輔, 谷村海那]
+theme:
+  id: japan_five_debut
+  league: japan
+  league_name: キリンチャレンジカップ
+  kind: other
+  topic: 日本代表
+  title: '日本代表に新顔5人。ベネズエラ戦のデビューで、1人だけ違う結末'
+  question: 一度に5人をデビューさせた夜、それぞれに何が残ったのか
+  opening_image: assets/images/20260929_kokubo/01.jpg
+  takeaway: 一度に5人のデビューは、半年契約の森保体制がアジアカップまでに底上げを急いでいる印。10月1日のエクアドル戦で2度目の出番が来る人が、残る側
+short_title: 日本代表デビュー5人、1人だけ違う夜
+thumbnail:
+  photos: [assets/images/20260929_kokubo/01.jpg, assets/images/20260929_saito/01.jpg, assets/images/20260929_nakano/01.jpg]
+  line1: 日本代表、新顔5人が一度に
+  line2: 1年3か月待った1人は、●分で
+  reaction: 鈴木の次のGKは小久保だと思う
+sections:
+  - id: five
+    heading: 一度に5人
+    tier: 報道
+    telop: 日本 2-1 ベネズエラ。先発の4人と途中出場の1人がA代表デビュー
+    narrator: キャスター
+    card:
+      type: table
+      title: A代表デビューの5人（9月28日）
+      columns: [所属, 名前, 位置, 年齢]
+      rows:
+        - [シント・トロイデン, 小久保玲央ブライアン, GK, 25歳]
+        - [サンフレッチェ広島, 中野就斗, MF/FW, 26歳]
+        - [柏レイソル, 熊坂光希, MF/FW, 25歳]
+        - [ウェステルロー, 齋藤俊輔, MF/FW, 21歳]
+        - [横浜F・マリノス, 谷村海那, MF/FW, 28歳]
+    say:
+      - text: 9月28日の広島。ベネズエラに2対1で勝った試合で、日本代表に新しい顔が5人並びました。
+        image: assets/images/20260929_kokubo/01.jpg
+      - 先発は4日前のウルグアイ戦から10人を入れ替え、4人がA代表デビュー。
+      - text: ゴールに小久保玲央ブライアン、右に中野就斗、中盤に熊坂光希、左に齋藤俊輔。
+        card:
+          type: table
+          title: A代表デビューの5人（9月28日）
+          columns: [所属, 名前, 位置, 年齢]
+          rows:
+            - [シント・トロイデン, 小久保玲央ブライアン, GK, 25歳]
+            - [サンフレッチェ広島, 中野就斗, MF/FW, 26歳]
+            - [柏レイソル, 熊坂光希, MF/FW, 25歳]
+            - [ウェステルロー, 齋藤俊輔, MF/FW, 21歳]
+      - text: 終盤には谷村海那も入り、デビューは一度に5人になりました。
+        card:
+          type: table
+          title: A代表デビューの5人（9月28日）
+          columns: [所属, 名前, 位置, 年齢]
+          rows:
+            - [シント・トロイデン, 小久保玲央ブライアン, GK, 25歳]
+            - [サンフレッチェ広島, 中野就斗, MF/FW, 26歳]
+            - [柏レイソル, 熊坂光希, MF/FW, 25歳]
+            - [ウェステルロー, 齋藤俊輔, MF/FW, 21歳]
+            - [横浜F・マリノス, 谷村海那, MF/FW, 28歳]
+      - 前半だけ主将を務めた鎌田大地は、試合後にこう話しています。
+      - voice: 鎌田大地
+        text: すごく勢いを持ってやってくれていましたし、
+      - voice: 鎌田大地
+        text: 良いプレーもたくさんありました
+      - voice: 鎌田大地
+        text: これから彼らが日本を背負っていく選手たちだと思うので、
+      - voice: 鎌田大地
+        text: これからもどんどん成長していって欲しいです
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459892-459892-fl
+      - https://www.soccer-king.jp/news/japan/national/20260928/2210392.html
+      - https://www.soccer-king.jp/news/japan/national/20260928/2210431.html
+      - https://news.yahoo.co.jp/articles/1394b1a6e2c26627cfb57ed9475ca68eac14b8d3
+      - https://www.jfa.jp/samuraiblue/news/00036771/
+  - id: kokubo
+    heading: ゴールを守った45分
+    tier: 報道
+    telop: 小久保玲央ブライアンは前半を無失点。終了間際に横っ飛びのセーブ
+    narrator: 解説
+    card:
+      type: table
+      title: 小久保玲央ブライアンの前半
+      columns: ['', '']
+      rows:
+        - [前半45分, コーナーからマクンのシュートを横っ飛びで防ぐ]
+        - [直後のコーナー, 至近距離のシュートを体で防ぐ]
+        - [ハーフタイム, 鈴木彩艶と交代。失点は0]
+    say:
+      - text: 小久保玲央ブライアンは、前半をゴールに鍵をかけたまま終えました。
+        image: assets/images/20260929_kokubo/01.jpg
+      - 終了間際のコーナーキック。マクンのシュートを横っ飛びで止めます。
+      - 続くコーナーでも至近距離のシュートを体で防ぎ、無失点で折り返しました。
+      - ハーフタイムに鈴木彩艶と交代しました。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
+      - https://www.soccer-king.jp/news/japan/national/20260928/2210446.html
+      - https://news.yahoo.co.jp/articles/56f288fc7b648820f27d901167061694e18a9515
+      - https://news.yahoo.co.jp/articles/84e72f16719c1d3c875a65d0cbb1882948ac257c
+  - id: three
+    heading: フィールドの3人
+    tier: 報道
+    telop: 中野は右で連係、齋藤は2本のカットイン、谷村は10人の左サイドへ
+    narrator: 解説
+    card:
+      type: table
+      title: フィールドでデビューした3人
+      columns: [名前, 出場, 何をしたか]
+      rows:
+        - [中野就斗, 先発〜後半27分, 前半は右で連係、後半1分に振り切られる]
+        - [齋藤俊輔, 先発〜前半終了, 4分と32分にカットインからシュート]
+        - [谷村海那, 後半36分〜, 投入直後に10人となり左サイドハーフへ]
+    say:
+      - text: 右のウイングバックに入った中野就斗は、前半は佐藤龍之介と右で連係を作りました。
+        image: assets/images/20260929_nakano/01.jpg
+      - ただ後半1分、バルボに振り切られ、その折り返しから先制点を許します。
+      - text: 左のシャドーの齋藤俊輔は、開始4分にカットインからシュート。
+        image: assets/images/20260929_saito/01.jpg
+      - 32分にも同じ形で打ちましたが、GKの正面。前半だけで伊東純也と交代しました。
+      - text: 谷村海那は後半36分、田中聡に代わって前線へ。
+        image: assets/images/20260929_tanimura/01.jpg
+      - 直後に渡辺剛が負傷して10人になると、左サイドハーフに回って守りました。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
+      - https://www.soccer-king.jp/news/japan/national/20260928/2210431.html
+      - https://www.soccer-king.jp/news/japan/national/20260928/2210446.html
+      - https://news.yahoo.co.jp/articles/20abc24f67675b543ddadd36de52d83dcb01bcc4
+      - https://news.yahoo.co.jp/articles/8f18bc5d3710d414d3e0c54c71cf77b4f46231e4
+  - id: kumasaka
+    main: true
+    heading: 1年3か月待った先発
+    tier: 報道
+    telop: 熊坂光希は前半6分に座り込み、8分に担架で交代
+    narrator: キャスター
+    card:
+      type: table
+      title: 熊坂光希の1年3か月
+      columns: ['', '']
+      rows:
+        - [2025年6月, 初めて代表に呼ばれる]
+        - [その練習中, 右膝の前十字靭帯を断裂]
+        - [2026年5月, 試合に復帰]
+        - [9月22日, 1年3か月ぶりに代表へ]
+        - [9月28日 前半8分, 左膝を気にして交代]
+    say:
+      - text: 熊坂光希は1年3か月ぶりに戻った日本代表で、デビュー戦を8分で終えました。
+        short_only: true
+        image: assets/images/20260929_kumasaka/01.jpg
+      - 初めて呼ばれた2025年6月、デビューを前にした練習で右膝の前十字靭帯を断裂。
+      - 今年5月に試合へ戻り、今季はリーグ戦8試合に出ています。
+      - そして28日の先発。開始2分の接触のあと左膝を気にし、6分に座り込みました。
+      - 8分、担架で運ばれて田中聡と交代しました。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459896-459896-fl
+      - https://news.yahoo.co.jp/articles/3e3664c41e3500dce97e546da056fdf7013a75a9
+      - https://www.football-zone.net/archives/676060
+  - id: view
+    viewpoint: true
+    heading: なぜ一度に5人か
+    tier: 背景
+    telop: 3期目はアジアカップまでの半年契約。次は10月1日のエクアドル戦
+    narrator: 解説
+    card:
+      type: table
+      title: 5人を試した理由と、次
+      columns: ['', '']
+      rows:
+        - [森保監督の3期目, アジアカップまでの半年契約]
+        - [この試合, 前半0-0、主力5人が入った後半に2-1]
+        - [次の試合, 10月1日 エクアドル戦（横浜）]
+    say:
+      - 森保監督の3期目は、来年1月からのアジアカップまでの半年契約です。
+      - 前半は両チームとも無得点。点が動いたのは、主力の5人が入った後半でした。
+      - 宮本恒靖会長は、前半をこう見ました。
+      - voice: 宮本会長
+        text: 求められる強度やクオリティーは、
+      - voice: 宮本会長
+        text: 後半のメンバーとの差は見られた
+      - voice: 宮本会長
+        text: Ａ代表を目指していく上でもっとやらなければいけないと、
+      - voice: 宮本会長
+        text: 彼らも感じていると思う
+      - 次は10月1日、横浜でエクアドル戦。5人のうち誰に2度目の出番が来るかで、序列が見えます。
+    sources:
+      - https://news.yahoo.co.jp/articles/bbb40c670658e13dc70d16376acacfb5138def90
+      - https://www.soccer-king.jp/news/japan/national/20260928/2210392.html
+      - https://web.gekisaka.jp/news/japan/detail/?459892-459892-fl
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「鈴木の次のGKは小久保だと思う」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: マジでショックだわ
+      - voice: ネット民
+        text: せっかく代表に戻ってきたのに。。。
+        cont: true
+      - voice: ネット民
+        text: 本人は辛いよなぁ
+        cont: true
+      - voice: ネット民
+        text: 軽症を祈る
+        cont: true
+      - voice: ネット民
+        text: 中野はこの歳でデビューしたからにはもっとできないといけなかった。
+      - voice: ネット民
+        text: 代表では厳しいかな。
+        cont: true
+      - voice: ネット民
+        text: 少なくとも以前の代表入ってた時の毎熊を超えないと。
+        cont: true
+      - voice: ネット民
+        text: 鈴木の次のGKは小久保だと思う。
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/profile/news/comments/7dc036a4-c7e3-48f7-b098-b35138d060be
+      - https://news.yahoo.co.jp/profile/news/comments/bbac534d-18bd-45b2-b671-a828ce82b4af
+      - https://news.yahoo.co.jp/profile/news/comments/0a796d33-2533-4747-bd01-ebba2e6f932b

@@ -1,0 +1,160 @@
+# 反応は Yahoo!ニュースのコメント欄から1件（サーバー側に出ている2件のうち、題に関わる1件）。
+# reddit は .json が 403、X は読めない。まとめサイトの該当スレは無し（コロコロ加入とフォロワー数のスレだけ）。
+date: 2026年9月29日
+slot: other_1
+format: quote
+people: [ヴォズィーニャ]
+theme:
+  id: vozinha_fame
+  league: spain
+  league_name: 2026年W杯
+  kind: other
+  topic: カーボベルデ代表
+  title: 'ヴォズィーニャ、W杯で世界に知られた40歳GKが失ったもの'
+  takeaway: ひと夏の名声は取り消せない。40歳のGKが失ったのは、レストランに行く自由だった
+  opening_image: assets/images/20260929_capeverde_gk_w/01.jpg
+short_title: ヴォズィーニャ、名声の代わりに失ったもの
+thumbnail:
+  photo: assets/images/20260929_capeverde_gk_w/01.jpg
+  line1: ヴォズィーニャ、時の人に
+  line2: 「●●が失われた」
+  reaction: W杯前の5万から2800万超
+sections:
+  - id: rise
+    heading: ひと夏で変わった
+    tier: 報道
+    telop: ポルトガル2部の40歳が、W杯の4試合で世界に知られた
+    narrator: キャスター
+    card:
+      type: table
+      title: ヴォズィーニャの2026年W杯（4試合フル出場）
+      columns: [相手, 結果, セーブ]
+      rows:
+        - [6月15日 スペイン, 0-0, 7]
+        - [6月21日 ウルグアイ, 2-2, 0]
+        - [6月27日 サウジアラビア, 0-0, 3]
+        - [7月3日 アルゼンチン, 2-3 延長, 8]
+    say:
+      - text: ヴォズィーニャ、40歳。夏までは、ポルトガル2部のシャベスにいました。
+        image: assets/images/20260929_capeverde_gk_w/01.jpg
+      - text: 初戦のスペイン戦。27本のシュートを浴びて7本を止め、無失点で引き分けました。
+        card:
+          type: table
+          title: ヴォズィーニャの2026年W杯（4試合フル出場）
+          columns: [相手, 結果, セーブ]
+          rows:
+            - [6月15日 スペイン, 0-0, 7]
+            - [6月21日 ウルグアイ, 2-2, 0]
+            - [6月27日 サウジアラビア, 0-0, 3]
+            - [7月3日 アルゼンチン, 2-3 延長, 8]
+      - 4試合すべてにフル出場。ラウンド32では、アルゼンチンを延長戦まで追い詰めました。
+      - フォロワーは、大会前の5万6000人が、初戦が終わると100万人を超えました。
+      - いまは3000万人近く。8月には、チリの名門コロコロに移りました。
+      - ヤシン・トロフィーの候補、10人にも名を連ねています。
+    sources:
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760428&region=us&lang=en
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760450&region=us&lang=en
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760478&region=us&lang=en
+      - https://site.web.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event=760500&region=us&lang=en
+      - https://www.espn.com/football/story/_/id/49071783/spain-cape-verde-live-world-cup-2026-latest-updates-commentary-score-result
+      - https://observer.co.uk/news/sport/article/vozinha-i-preferred-my-life-before-fame
+      - https://www.cooperativa.cl/noticias/deportes/futbol/colo-colo/la-presentacion-de-vozinha-como-refuerzo-de-colo-colo-en-el-monumental/2026-08-04/125407.html
+      - https://www.soccer-king.jp/news/world/world_other/20260928/2210390.html
+  - id: words
+    main: true
+    heading: 「平穏が失われた」
+    tier: 報道
+    telop: 「今の生活か以前の生活か、選べと言われたら」
+    narrator: キャスター
+    say:
+      - text: W杯で時の人になったヴォズィーニャが、一変した日常を明かしました。
+        short_only: true
+      - text: 世界中に顔を知られた、いまの毎日。本人はこう話しています。
+        image: assets/images/20260929_capeverde_gk_w/01.jpg
+      - voice: ヴォズィーニャ
+        text: 平穏が失われた。もはやプライバシーなんてない。
+      - voice: ヴォズィーニャ
+        text: 少なくとも、以前よりずっと少なくなった。
+        cont: true
+      - voice: ヴォズィーニャ
+        text: 今ではレストランに行くと、
+        cont: true
+      - voice: ヴォズィーニャ
+        text: 必ず誰かが写真を撮ろうとしたり、サインを求めてくる。
+        cont: true
+      - voice: ヴォズィーニャ
+        text: さらに悪いことに、勝手に動画を撮られることだってあるんだ。
+        cont: true
+      - voice: ヴォズィーニャ
+        text: 私の人生で最も変わった点であり、どうすることもできない
+        cont: true
+      - voice: ヴォズィーニャ
+        text: 多くの人が有名になり、世間に顔が知れ渡ることを望んでいるが、
+      - voice: ヴォズィーニャ
+        text: 彼らは現実の明るい側面しか見ていない。
+        cont: true
+      - voice: ヴォズィーニャ
+        text: 正直なところ、今の生活か以前の生活か
+        cont: true
+      - voice: ヴォズィーニャ
+        text: どちらかを選べと言われたら、私は以前の生活を選ぶだろう
+        cont: true
+      - 国のことを聞かれると、言葉は変わりました。
+      - voice: ヴォズィーニャ
+        text: 私たちは歴史を築いた。
+      - voice: ヴォズィーニャ
+        text: この勢いを活かして国を発展させることができるのであれば、
+        cont: true
+      - voice: ヴォズィーニャ
+        text: それが何よりの朗報だよ
+        cont: true
+      - voice: ヴォズィーニャ
+        text: ある種の大使のような役割を担えることは嬉しいが、
+      - voice: ヴォズィーニャ
+        text: 私たちが成し遂げたことはチーム全員の努力の賜物であると
+        cont: true
+      - voice: ヴォズィーニャ
+        text: はっきりさせておきたい
+        cont: true
+    sources:
+      - https://www.soccer-king.jp/news/world/world_other/20260928/2210390.html
+      - https://www.marca.com/futbol/2026/09/28/vozinha-paga-precio-fama-mundial-preferia-mi-vida-he-perdido-mi-paz.html
+  - id: view
+    viewpoint: true
+    heading: 得たものと失ったもの
+    tier: 背景
+    telop: 得たのはコロコロと候補の座。失ったのは、レストランに行く自由
+    narrator: 解説
+    say:
+      - text: ヴォズィーニャは、ポルトガル2部から、ひと夏で世界の顔へ。
+        image: assets/images/20260929_capeverde_gk_w/01.jpg
+      - 得たのはコロコロと、GK版バロンドールの候補。失ったのは、レストランに行く自由。
+      - 有名になれば元には戻れない。本人がしたのは、インスタの通知を切ることでした。
+      - 次はチリで、コパ・リベルタドーレスを目指すと話しています。
+    sources:
+      - https://observer.co.uk/news/sport/article/vozinha-i-preferred-my-life-before-fame
+      - https://www.espn.com/soccer/story/_/id/50050816/vozinha-world-cup-fame-struggling-cape-verde
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「W杯前の5万から2800万超」
+    narrator: キャスター
+    card:
+      type: reactions
+      title: ネットの反応
+      items:
+        - {text: インスタフォロワー数がたった１日でW杯前の５万から1千万以上(大谷1千万)増えて現在2800万超。因みにハーランドもW杯前から3千万増えて7700万}
+    say:
+      - voice: ネット民
+        text: インスタフォロワー数がたった１日でW杯前の５万から
+        short_voice: true
+      - voice: ネット民
+        text: 1千万以上(大谷1千万)増えて現在2800万超。
+        cont: true
+        short_voice: true
+      - voice: ネット民
+        text: 因みにハーランドもW杯前から3千万増えて7700万
+        cont: true
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/5e6dfa20d5a5cd5503ce0382f0d66b55776db155/comments

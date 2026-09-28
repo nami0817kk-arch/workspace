@@ -69,7 +69,9 @@ domains:
              premierleague.com, laliga.com, bundesliga.com, legaseriea.it,
              mlssoccer.com, uefa.com,
              # 2026-09-28 に追加。オランダサッカー協会（KNVB）の代表の公式サイト
-             www.onsoranje.nl]
+             www.onsoranje.nl,
+             # 2026-09-29 に追加。競技規則（VAR の手順）の原文
+             www.theifab.com]
 
   # 日本の公式。Jリーグの話をここまで辿れば確定にできる
   official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,

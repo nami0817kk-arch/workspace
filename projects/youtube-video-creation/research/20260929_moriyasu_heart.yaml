@@ -1,0 +1,140 @@
+# 森保監督が、上田のPK弾のあとスタンドへ作ったハート。試合後に語った「送り先」（2026年9月29日）
+#
+# **本人の言葉が主役の回（quote）。**発言はサッカーキング（いちばん長く載せていた）に揃えた。
+# ゲキサカは「全てにリスペクトして、日本人の魂にハートを送った」、
+# フットボールゾーンは短い要約で、同じ発言の切り方違い。
+#
+# **昨日 9/28 に出した「会見の最後のお願い（堂安・塩貝）」の話は入れない。**
+#
+# **反応は3件、全部 Yahoo!ニュースのコメント欄（requests で読めた）。**
+# 海外の声は、r/soccer の得点スレと試合スレ（RSS で読めた36件）を見たが、
+# 中身は PK の判定（VAR で相手のPKが日本のPKに変わった）の話ばかりで、
+# ハートにも監督の言葉にも触れた投稿が無かった。**海外の声は0件**。X は読めない。
+# 見つかった反応はハートに対して冷ややかなものばかりで、好意的なものは
+# 読めた範囲（各記事の先頭10件）には無かった。
+format: quote
+date: 2026年9月29日
+slot: japan_5
+people: [森保一]
+theme:
+  id: moriyasu_heart
+  league: spain
+  league_name: キリンチャレンジカップ
+  kind: other
+  topic: 日本代表
+  title: '森保監督、劇的PK弾のあとスタンドへ作ったハート。試合後に明かした相手'
+  opening_image: assets/images/20260929_moriyasu/01.jpg
+  takeaway: 10人でも崩れなかった粘りと、先発組が点を取れなかった差が並んだ試合
+short_title: 森保監督のハート、送った先
+thumbnail:
+  photo: assets/images/20260929_moriyasu/01.jpg
+  line1: 森保監督が作ったハート
+  line2: 送った先は「●●●の魂」
+  reaction: そら相手チームもお怒りだわ
+sections:
+  - id: heart
+    main: true
+    heading: スタンドへのハート
+    tier: 報道
+    telop: 「日本人の皆さんの魂にハートを送りました」
+    narrator: キャスター
+    say:
+      - text: ベネズエラ戦の決勝PKの直後、森保監督がスタンドへハートを作りました。
+        short_only: true
+      - text: ベネズエラに2対1で勝った、9月28日の広島。
+        image: assets/images/20260929_moriyasu/01.jpg
+      - 後半アディショナルタイム6分、上田綺世のPK。
+      - その直後、森保監督はスタンドに向けてハートマークを見せました。
+      - 試合後、その意味をこう話しています。
+      - voice: 森保一
+        text: まさに日本人魂かなと思って。
+      - voice: 森保一
+        text: 苦しい時も粘り強く戦い、
+        cont: true
+      - voice: 森保一
+        text: 最後までチーム一丸となって戦い抜くというところ。
+        cont: true
+      - voice: 森保一
+        text: 勝利を諦めず戦った結果、PKを貰い勝てたということで。
+        cont: true
+      - voice: 森保一
+        text: 日本人の皆さんの魂にハートを送りました
+        cont: true
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260928/2210500.html
+      - https://web.gekisaka.jp/news/japan/detail/?459903-459903-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - id: ten
+    heading: 10人で得たPK
+    tier: 報道
+    telop: 「本当に粘り強くしっかり切り替えてくれて」
+    narrator: キャスター
+    card:
+      type: table
+      title: 日本 2-1 ベネズエラ（9月28日・広島）
+      columns: ['', '']
+      rows:
+        - [前半8分, 熊坂光希が負傷交代]
+        - [46分, ケルシー（ベネズエラ）]
+        - [49分, 上田綺世]
+        - [終盤, 渡辺剛が負傷。交代枠なく10人に]
+        - [90+6分, 上田綺世（PK）]
+    say:
+      - この試合、前半8分に代表デビューの熊坂光希が負傷交代。
+      - 後半開始26秒で失点し、その4分後に上田綺世が追いつきました。
+      - 終盤には渡辺剛もプレーを続けられず、交代枠は使い切っていました。
+      - 残りの10分ほどを10人で戦い、その中でPKを得ています。
+      - 監督は、選手たちのことをこう話しました。
+      - voice: 森保一
+        text: 予期せぬ退場で我々が数的不利になりましたが、
+      - voice: 森保一
+        text: 選手たちは本当に粘り強くしっかり切り替えてくれて、
+        cont: true
+      - voice: 森保一
+        text: 守備をしっかりしながら攻撃に移ることを忘れずに、
+        cont: true
+      - voice: 森保一
+        text: ホームで勝ちたいという気持ちを出してくれたと思います
+        cont: true
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260928/2210500.html
+      - https://www.football-zone.net/archives/676062
+      - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - id: view
+    viewpoint: true
+    heading: 見立て
+    tier: 背景
+    telop: 同点も決勝も、後半から入った選手の形
+    narrator: 解説
+    say:
+      - 森保一監督の言葉は選手全員へ。ただ、点に絡んだのは後半から入った選手でした。
+      - 同点弾は伊東純也のクロスに上田綺世。24日のウルグアイ戦に続く2試合連続の形です。
+      - 決勝PKも、途中出場の久保建英が倒されて得たものでした。
+      - 先発には代表デビューが4人。前半は無得点で折り返しています。
+      - 森保体制3期目は、これで2戦2勝。
+      - 粘りは本物でも、先発組が点を取れなかった差は残りました。
+    sources:
+      - https://www.football-zone.net/archives/676062
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「あのハートはないやろ」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ニヤケながらハートポーズ見せた瞬間ちょっと引いたw
+      - voice: ネット民
+        text: まだ時間は残っていたのに笑顔でハートマークのパフォーマンス
+      - voice: ネット民
+        text: あんな事をする監督は見た事がない
+        cont: true
+      - voice: ネット民
+        text: 思い出作りかなんかと思ってるのかな
+        cont: true
+      - voice: ネット民
+        text: あのハートはないやろ。そら相手チームもお怒りだわ
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/8de36c6cb98e116b6440296b8c687d4812b15248/comments
+      - https://news.yahoo.co.jp/articles/c16998f29cfe3b9712875b0844d0b669f5b90ec0/comments
+      - https://news.yahoo.co.jp/articles/9d54b2f89f5f89fbafc1cc849aec89faae37ab90/comments
