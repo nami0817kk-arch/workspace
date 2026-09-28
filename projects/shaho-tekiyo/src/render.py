@@ -224,7 +224,7 @@ def size_timeline(as_of: date | None = None, here: str = "いまの段階") -> s
         when = "いま" if r is eligibility.SCHEDULE[0] else f"{r.effective_from.year}年{r.effective_from.month}月"
         who = f"{size}人以上" if size else "すべて"
         stages.append((when, who, size == today_size))
-    return charts.stages_timeline(stages, f"社会保険に入る会社の規模（従業員数）は、2035年までに4段階で広がる。濃い色が{here}")
+    return charts.stages_timeline(stages, f"社会保険に入る会社の規模（従業員数）は、2035年までに4回広がる（2026年10月の賃金要件撤廃と合わせて5段階）。濃い色が{here}")
 
 
 def _quick_amounts() -> list[dict]:
@@ -338,12 +338,12 @@ def _build_amount_pages() -> None:
                 ("雇用保険料・所得税", koyo + tax, "s4"),
             ],
             pay,
-            f"月収{a['man']}万円の行き先（東京・39歳以下・扶養0人）",
+            f"月収{a['man']}万円の行き先（東京・39歳以下・扶養する家族0人）",
         )
         kokumin = extras.kokumin_nenkin_yen(as_of)
         pension_chart = charts.hbars(
             [("国民年金（自分で払う）", kokumin, "s2"), ("厚生年金（本人負担）", r.pension_yen, "s1")],
-            f"年金の保険料（1か月）。厚生年金は会社も同じ額を払い、将来の年金は国民年金に上乗せされる",
+            f"年金の保険料（1か月）。厚生年金は会社もほぼ同じ額を払い、将来の年金は国民年金に上乗せされる",
         )
         rel = f"getsushu/{a['slug']}.html"
         _write(
@@ -435,23 +435,24 @@ NENSHU_MAN: tuple[int, ...] = (90, 100, 106, 110, 120, 130, 140, 150, 160, 170, 
 
 def _nenshu_rows(as_of: date) -> list[dict]:
     """年収ごとに、勤務先の社保に入る場合と入らない場合（扶養内・週20時間未満）の手取り（年額）の目安。
-    賞与なし・毎月同じ額・東京・39歳以下・扶養0人。所得税は毎月の源泉徴収の目安×12（年末調整前）、住民税は含めない。"""
+    賞与なし・毎月同じ額・東京・39歳以下・扶養0人。所得税は年末調整後の年額（令和8年分）、住民税は含めない。"""
     rows = []
     for man in NENSHU_MAN:
         monthly = round(man * 10_000 / 12)
         r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=monthly, age_40_to_64=False)
         koyo = extras.employment_yen(as_of, monthly) or 0
-        tax_in = extras.income_tax_yen(as_of, monthly - r.total_yen - koyo, 0) or 0
-        tax_out = extras.income_tax_yen(as_of, monthly, 0) or 0
         annual = man * 10_000
-        net_in = annual - (r.total_yen + koyo + tax_in) * 12
+        # 所得税は年末調整後の年額（令和8年分）。毎月の天引き額×12 ではない
+        tax_in = extras.annual_income_tax_yen(annual, (r.total_yen + koyo) * 12) or 0
+        tax_out = extras.annual_income_tax_yen(annual, 0) or 0
+        net_in = annual - (r.total_yen + koyo) * 12 - tax_in
         rc = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=monthly, age_40_to_64=True)
-        tax_c = extras.income_tax_yen(as_of, monthly - rc.total_yen - koyo, 0) or 0
-        net_in_care = annual - (rc.total_yen + koyo + tax_c) * 12
+        tax_c = extras.annual_income_tax_yen(annual, (rc.total_yen + koyo) * 12) or 0
+        net_in_care = annual - (rc.total_yen + koyo) * 12 - tax_c
         # 130万円以上は配偶者などの扶養から外れるので「入らない＝扶養内」の手取りは出さない
-        net_out = annual - tax_out * 12 if man < 130 else None
+        net_out = annual - tax_out if man < 130 else None
         rows.append(dict(man=man, monthly=monthly, social=r.total_yen * 12, koyo=koyo * 12,
-                         tax_in=tax_in * 12, net_in=net_in, net_in_care=net_in_care, tax_out=tax_out * 12, net_out=net_out,
+                         tax_in=tax_in, net_in=net_in, net_in_care=net_in_care, tax_out=tax_out, net_out=net_out,
                          near=min(AMOUNTS_MAN, key=lambda m: abs(m * 10_000 - monthly))))
     return rows
 
@@ -539,6 +540,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-28", "年収の壁を令和8年度税制改正の数字（配偶者控除136万・配偶者特別控除の満額169万・本人の所得税178万円）に直した。年収別の手取りの所得税を年末調整後の年額に。実際の労働時間が2か月続けて20時間以上の場合、保険料調整制度の対象（12.6万円以下・会社が選ぶ）、雇用保険の週10時間化（2028年10月）を書き足し、言い回しの食い違いを揃えた"),
     ("2026-09-28", "スマホで「詳しく入力する」を開いたときと、よくある質問の目次で、画面の横にはみ出していたのを直した"),
     ("2026-09-28", "計算機に賞与（1回あたりの額と年の回数）を追加。賞与から引かれる保険料（標準賞与額・上限つき）を出し、年収の壁の判定にも足す"),
     ("2026-09-28", "毎日0時台に作り直し、2026年10月1日の前後で「無くなります／無くなりました」を書き分けるように。短かった説明文と運営者情報の文面を今の中身に合わせた"),
