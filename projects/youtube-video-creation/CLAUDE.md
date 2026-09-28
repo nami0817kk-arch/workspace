@@ -78,6 +78,7 @@
   | 案 | 道具 | 出るもの | 状態（9/28） |
   |---|---|---|---|
   | 1 週報 | `python tools/japan_abroad.py week --to <月曜> --note research/<日付>_weekly.yaml` | 48人の名簿（`config/japan_abroad.yaml`）から、その週の出場・得点の表と3人の掘り下げの雛形 | 雛形まで。初回は 10/5（9/22〜28 は代表ウィークでクラブの試合が無い） |
+  | 9 試合の数字 | `python tools/match_numbers.py --date <試合日>` で注目度の順に並べ、`--match <id>` で1試合の板（`assets/stats/match_<日付>_<id>.png`）と雛形（`research/<日付>_match_<id>.yaml`） | 得点の流れ（先制・追加点・1点返す・同点・逆転で読む）→ 両チームの数字（支配率・xG・シュート・枠内・決定機・パス・走行距離・デュエル）→ 採点の高い選手 → 見立て。**注目度は目安で、選ぶのは人**。スコアと得点者は公式の試合記録まで辿って 確定 に上げる。選手名は `research/kana/players.json` に足していく（英語のままの名前は雛形の頭に出る） | 雛形と draft・板まで通した（アトレティコ対レアル 9/20 で試した） |
   | 3 順位表 | `python tools/standings_week.py --date <火曜>` | 5リーグの控え（`research/standings/<日付>.json`）・板5枚（`assets/stats/standings_<日付>_<リーグ>.png`）・雛形（`research/<日付>_standings.yaml`）。**先週比は前の控えと比べる**ので、初回（控え 9/28）は「―」。「今週の1つ」の候補（首位交代・独走・↑↓3以上・無敗・未勝利）を雛形の頭に並べる。**選ぶのは人** | 雛形と draft・サムネまで通した。首位の言い方は5リーグで変えてある（同じ文だと重複の点検で止まる） |
 
   - `config/clubs.yaml` は 2026-09-28 に 5大リーグの1部を全部入れた（69 → 114クラブ）。FotMob の英語名がそのまま出ることは無い。
