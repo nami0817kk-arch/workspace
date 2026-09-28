@@ -184,6 +184,7 @@ def build(root: Path, out: Path) -> dict:
 
     write_listing(out, urls, "new-lows/", "今日 最安値を更新した商品",
                   "記録している期間の最安値を、この日に塗り替えた商品です。"
+                  "ポイントを含めた実質価格で塗り替えたものも含みます。"
                   "近い価格を含む最安値圏とは別に、更新した当日だけを出しています。",
                   analyze.new_lows(rows, latest_day), site, base, updated,
                   "この日に最安値を更新した商品はありませんでした。", stats, linked=linked)
@@ -207,7 +208,9 @@ def build(root: Path, out: Path) -> dict:
     for day in archive_days:
         hit = analyze.drops_on(rows, day, site.get("drop_threshold", 0.05))
         write_listing(out, urls, f"archive/{day}/", f"{day} の値下がり",
-                      f"{day} に価格が下がった商品の記録です。",
+                      f"{day} に安くなった商品の記録です。"
+                      f"価格が下がったものと、ポイント倍率が上がって"
+                      f"実質価格が下がったものを含みます。",
                       hit, site, base, updated,
                       "この日は記録できる値下がりがありませんでした。", stats,
                       linked=linked, parent=("日付別の値下がり", "archive/"))
