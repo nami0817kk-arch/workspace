@@ -314,7 +314,8 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
     unknown = [n for n in [p["name"] if not p["ja"] else ""] + [r[1] for r in career if r[1].isascii()] if n]
     head = [f"# {name}（{p['club']}）の紹介。8節の型。数字は Transfermarkt（{url}）と FotMob（{fm_url}）。",
             "# （…）の行は人が書く。材料は research/raw/<日付>_<選手>_material.md に下請けが出典つきで集める（docs/player_material_prompt.md）。",
-            "# 写真は時期ごとに image: を置く（同じ選手を横に並べない。表の無い節は横長に切る）。スタジアムの写真は使わない。"]
+            "# 写真は時期ごとに image: を置く（同じ選手を横に並べない。表の無い節は横長に切る）。スタジアムの写真は使わない。",
+            "# 身長・利き足は Transfermarkt の値。クラブ公式と食い違えば公式に直す（ヤマルは TM 1.83m／公式 178cm だった）。"]
     if strong:
         head.append("# 武器（同じポジション比のパーセンタイル）: " + "、".join(f"{s_['ja']} {int(s_['pct'])}" for s_ in strong)
                     + " ／ 弱点: " + "、".join(f"{w['ja']} {int(w['pct'])}" for w in weak))
