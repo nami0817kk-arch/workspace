@@ -63,6 +63,14 @@ CI と Dependabot の増殖）を、この1本で構造的に解消する。
 - 共通テストCIは `.github/workflows/python-tests.yml`（workflow_call、同一リポ参照）。
   actions のバージョン更新はこの1ファイルで済む。
 
+## アプリ（Flutter・広告・課金）を触るとき
+
+`projects/soccer-manager` `projects/soccer-career` `projects/goso-boat` のように
+広告と課金を入れてストアに出すアプリでは、**着手前に `docs/app-pitfalls.md` を読む。**
+実際に踏んで利用者に届いてしまった穴だけを、検査の形まで書いてある
+（払ったのに届かない／広告を見たのに入らない／広告の期限切れ／掲載画像が白紙／
+ストアの言語欄）。どれも例外を出さずに壊れるので、知らないと同じ所で踏む。
+
 ## 点検
 
 `platform/ai-lab` の growth ループが projects/* と libs/* を横断点検する（週次）。
