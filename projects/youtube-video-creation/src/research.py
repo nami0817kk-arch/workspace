@@ -1141,6 +1141,26 @@ def _advise_player_photos(notes: Notes) -> list[str]:
     return hints
 
 
+PLACEHOLDER_MARK = "（"   # 雛形が「人が書く行」に置く印。行の頭がこれで始まり「）」で終わる
+
+
+def _advise_placeholders(notes: Notes) -> list[str]:
+    """**雛形の（…）を埋めずに見せない**（品質100回の61）。
+
+    選手紹介の雛形は、数字と板を機械が埋め、話（プレースタイル・転機・マル秘話・見立て）は
+    人が書く。その行は「（6つの軸のうち最上位と最下位を言う）」のように**丸括弧だけの行**で置いてある。
+    埋め忘れると、そのまま読み上げられて画面にも出る。見せる前の決まりの表には
+    「雛形の（…）が全部埋まっているか」を手で見ると書いたが、**手に頼らず draft が知らせる**。
+    """
+    hints: list[str] = []
+    for section in notes.sections:
+        for text in section.say:
+            t = str(text).strip()
+            if t.startswith(PLACEHOLDER_MARK) and t.endswith("）") and len(t) >= 6:
+                hints.append(f"節「{section.heading}」に雛形の書き残しがあります：{t}。人が書く行です（材料は research/raw/ の material.md）")
+    return hints
+
+
 def _advise_wide_photo(notes: Notes) -> list[str]:
     """**本文に敷く写真は横に広いものを使う**（2026-09-25 指摘）。
 
@@ -1808,6 +1828,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_thumbnail_name(notes)
                         + _advise_wide_photo(notes)
                         + _advise_player_photos(notes)
+                        + _advise_placeholders(notes)
                         + _advise_offtopic_section(notes)
                         + _advise_card_telop_overlap(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)

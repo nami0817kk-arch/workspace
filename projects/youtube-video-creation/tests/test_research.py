@@ -1894,6 +1894,21 @@ def test_見立ての節は印で示し無ければ知らせる():
     assert any(scene.viewpoint for scene in script.scenes)
 
 
+def test_雛形の書き残しは_draft_が知らせる():
+    """雛形の「（…）」の行は人が書く。埋め忘れたまま読み上げられないように（品質100回の61）。"""
+    from src import research as r
+
+    def notes_with(say):
+        section = r.Section(id="s", heading="プレースタイル", tier="報道", telop="", say=say, line_images=[None] * len(say),
+                            line_telops=[""] * len(say), line_cards=[None] * len(say), line_onlys=[""] * len(say))
+        return r.Notes(date="2026年10月1日", slot="other_1", title="t", theme_id="t", question="q", sections=[section])
+
+    hints = r._advise_placeholders(notes_with(["数字で見ます。", "（6つの軸のうち最上位と最下位を言う）"]))
+    assert len(hints) == 1 and "書き残し" in hints[0] and "最上位と最下位" in hints[0]
+    # 括弧で始まる普通の文（補足の一言）は鳴らさない
+    assert r._advise_placeholders(notes_with(["（笑）", "（前置き）これは本文です。"])) == []
+
+
 def test_選手紹介の写真の決まり_スタジアムと2枚並べと同じ写真の連続():
     from src import research as r
 

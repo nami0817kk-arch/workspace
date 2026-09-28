@@ -904,3 +904,16 @@ def test_左半分のカードは縮めずにその幅で描く(tmp_path):
     assert beside_photo is not None and wide is not None
     assert beside_photo.width == config.video.width // 2 - 30
     assert beside_photo.width < wide.width
+
+
+def test_自動で黄色にする数字は単位ごと拾う():
+    """テロップの数字は黄色（2026-09-28 の見た目）。単位まで一緒に拾わないと「36」だけ黄色で「点」が白くなる。
+    品質100回の68 で 倍・キロ・センチ・ユーロ・パーセント・メートル を足した。"""
+    from src.render import AUTO_STRONG
+
+    def spans(text):
+        return [m.group(0) for m in AUTO_STRONG.finditer(text)]
+
+    assert spans("36点と2倍、時速36キロ") == ["36点", "2倍", "36キロ"]
+    assert spans("2億2000万ユーロで195センチ") == ["2億", "2000万ユーロ", "195センチ"]
+    assert spans("枠内率は58パーセント、11.6km") == ["58パーセント", "11.6km"]

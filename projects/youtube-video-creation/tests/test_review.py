@@ -1417,16 +1417,18 @@ def test_手元に無いエンブレムを主役にしたら止める(tmp_path):
     町田浩樹の回は `crest_main: [ホッフェンハイム]` と書いてあり検査は通ったが、
     `assets/crests/` にホッフェンハイムは無く、できあがったのは**夜景だけ**のサムネ。
     **名前を書けば通る検査は、通るだけ。**実物があるかを見る。
+    ホッフェンハイムのエンブレムは 2026-09-28 のブンデス下地で手に入ったので、
+    ここでは**どの日にも手元に無い架空のクラブ**で見る（実在のクラブ名だと、集めた日に落ちる）。
     """
     from src.review import _thumbnail_face
     from src.script_model import parse_script
 
     missing = parse_script(
-        "---\ntitle: T\nthumbnail_crest_main:\n- ホッフェンハイム\n---\n\n"
+        "---\ntitle: T\nthumbnail_crest_main:\n- 架空FC\n---\n\n"
         "## 何が起きたか\n\nキャスター: あ。\n")
     found = _thumbnail_face(missing)
     assert found.ok is False
-    assert "ホッフェンハイム" in found.detail
+    assert "架空FC" in found.detail
 
     有る = parse_script(
         "---\ntitle: T\nthumbnail_crest_main:\n- アーセナル\n---\n\n"

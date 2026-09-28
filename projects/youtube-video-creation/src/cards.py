@@ -86,7 +86,8 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     }[kind]
     blocks = builder(spec, width, font_path, latin_font_path or font_path)
 
-    height = PAD * 2 + sum(block["height"] for block in blocks)
+    source = str(spec.get("source") or "").strip()
+    height = PAD * 2 + sum(block["height"] for block in blocks) + (18 if source else 0)
     canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(canvas)
 
@@ -96,6 +97,11 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     # 左端のアクセント帯
     draw.rounded_rectangle([0, RADIUS, 8, height - RADIUS], radius=4, fill=accent + (255,))
 
+    if source:
+        # 出典を右下に小さく（品質100回の65）。自作の図だと分かり、数字の出どころが画面に残る
+        src_font = ImageFont.truetype(font_path, 22)
+        sw = draw.textlength(source, font=src_font)
+        draw.text((width - PAD - sw, height - PAD - 4), source, font=src_font, fill=(120, 130, 146, 255))
     y = PAD
     shown_rows = 0
     for block in blocks:

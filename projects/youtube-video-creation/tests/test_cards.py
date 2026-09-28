@@ -126,6 +126,19 @@ def test_table_card_renders(tmp_path, fonts):
     assert path.exists()
 
 
+def test_表の出典は右下に小さく出て_その分だけ背が伸びる(tmp_path, fonts):
+    """`source:` を書いた表は右下に出典の字が入る（品質100回の65）。自作の図だと分かり、数字の出どころが画面に残る。"""
+    from PIL import Image
+
+    font, latin = fonts
+    spec = {"type": "table", "title": "順位", "columns": ["順位", "クラブ", "勝点"], "rows": [["1", "A", "12"], ["2", "B", "10"]]}
+    plain = Image.open(render(dict(spec), WIDTH, font, tmp_path / "plain.png", latin))
+    marked = Image.open(render(dict(spec, source="FotMob"), WIDTH, font, tmp_path / "marked.png", latin))
+    assert marked.height == plain.height + 18
+    corner = marked.crop((marked.width - 200, marked.height - 40, marked.width - 10, marked.height - 4))
+    assert any(px[3] > 0 and 100 <= px[0] <= 140 for px in corner.getdata()), "右下に灰色の字が無い"
+
+
 def test_table_rejects_mismatched_row_length(tmp_path, fonts):
     font, latin = fonts
     with pytest.raises(CardError, match="columns と同じ数"):
