@@ -84,21 +84,29 @@ def ask(text: str, model: str | None = None) -> str:
     body = json.dumps({"contents": [{"parts": [{"text": text}]}]}).encode("utf-8")
     data = None
     last: Exception | None = None
-    for name in order:
-        for attempt in range(2):
-            try:
-                data = _call(name, body)
+    # **全モデルが 503 の夜がある**（2026-09-28 に3回）。1周で諦めず、90秒おいてもう2周する（品質100回の87）。
+    # 429（枠切れ）は待っても戻らないので、その周では次のモデルへ進むだけ
+    for round_ in range(3):
+        if round_:
+            print(f"  （全モデルが混雑。{90 * round_}秒待って {round_ + 1}周目）")
+            time.sleep(90 * round_)
+        for name in order:
+            for attempt in range(2):
+                try:
+                    data = _call(name, body)
+                    break
+                except urllib.error.HTTPError as err:
+                    last = err
+                    if err.code not in (429, 503):
+                        raise
+                    if err.code == 429:
+                        break          # 枠切れは待っても戻らない。次のモデルへ
+                    time.sleep(20)
+            if data is not None:
+                if name != first:
+                    print(f"  （{first} が混雑のため {name} で読みました）")
                 break
-            except urllib.error.HTTPError as err:
-                last = err
-                if err.code not in (429, 503):
-                    raise
-                if err.code == 429:
-                    break          # 枠切れは待っても戻らない。次のモデルへ
-                time.sleep(20)
         if data is not None:
-            if name != first:
-                print(f"  （{first} が混雑のため {name} で読みました）")
             break
     if data is None:
         raise last  # type: ignore[misc]
