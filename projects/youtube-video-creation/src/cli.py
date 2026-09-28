@@ -3141,6 +3141,39 @@ MAIN_PLAYLIST = "PLNEp9wyuYKJk"
 # 別の再生リストにして」）。`series:` の名前で振り分ける。
 # 20本が1つ並ぶので、ニュースの再生リストに混ぜると自動再生が紹介ものだけになる
 SERIES_PLAYLIST = {"プレミアリーグチーム紹介": "PLEG5zd5gf28Q"}
+# **知らないシリーズ名は、再生リストを作って控える**（2026-09-28 収益化の整理 2）。
+# シリーズは本編の視聴時間の柱で、続けて見てもらう道は再生リストの自動再生しかない。
+# 作った id は research/playlists.json に残す（playlists.insert は 50 ユニット）
+PLAYLISTS_FILE = Path("research/playlists.json")
+
+
+def _series_playlist(api, series: str) -> str:
+    """シリーズ名から再生リストの id。無ければ作る。シリーズ名が空なら本編の再生リスト。"""
+    import json as _json
+
+    if not series:
+        return MAIN_PLAYLIST
+    if series in SERIES_PLAYLIST:
+        return SERIES_PLAYLIST[series]
+    book = {}
+    if PLAYLISTS_FILE.exists():
+        try:
+            book = _json.loads(PLAYLISTS_FILE.read_text(encoding="utf-8"))
+        except ValueError:
+            book = {}
+    if series in book:
+        return str(book[series])
+    made = api.playlists().insert(
+        part="snippet,status",
+        body={"snippet": {"title": series,
+                          "description": f"{series}を1本ずつ。海外サッカーの理由"},
+              "status": {"privacyStatus": "public"}},
+    ).execute()
+    book[series] = made["id"]
+    PLAYLISTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PLAYLISTS_FILE.write_text(_json.dumps(book, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"  再生リストを作りました: {series} → {made['id']}")
+    return str(made["id"])
 
 
 def _cmd_upload(args, config) -> int:
@@ -3291,7 +3324,7 @@ def _cmd_upload(args, config) -> int:
             api = quota_mod.counted(upload_mod.get_service())
             # シリーズ名は**公開する題の後ろ書き**にある（「◯◯｜プレミアリーグチーム紹介」）
             series = draft.title.rsplit("｜", 1)[-1].strip() if "｜" in draft.title else ""
-            playlist = SERIES_PLAYLIST.get(series, MAIN_PLAYLIST)
+            playlist = _series_playlist(api, series)
             api.playlistItems().insert(
                 part="snippet",
                 body={"snippet": {"playlistId": playlist,

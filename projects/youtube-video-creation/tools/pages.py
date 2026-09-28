@@ -179,13 +179,17 @@ def parse(path: Path):
     sections, cur, line = [], None, None
     for raw in body.splitlines():
         if raw.startswith("## "):
-            cur = {"heading": raw[3:].strip(), "lines": [], "main": False}
+            cur = {"heading": raw[3:].strip(), "lines": [], "main": False, "viewpoint": False}
             sections.append(cur)
             line = None
             continue
         if raw.startswith("@main"):
             if cur:
                 cur["main"] = True
+            continue
+        if raw.startswith("@viewpoint"):
+            if cur:
+                cur["viewpoint"] = True
             continue
         if raw.startswith("@"):
             continue
@@ -252,6 +256,8 @@ def scripts(date: str, images: bool = False, skip: tuple[str, ...] = ()) -> Path
         body = []
         for sec in sections:
             tag = ' <span class="tag">ショートはこの節</span>' if sec["main"] else ""
+            if sec.get("viewpoint"):
+                tag += ' <span class="tag">見立て</span>'
             body.append(f'<section><h3 class="sec">{e(sec["heading"])}{tag}</h3>')
             used, items = set(), []
             for l in sec["lines"]:

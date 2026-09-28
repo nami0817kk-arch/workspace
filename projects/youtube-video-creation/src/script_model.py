@@ -49,7 +49,7 @@ SOURCE_TIERS = {
     "背景": "context",
     "解説": "context",
 }
-SCENE_DIRECTIVES = {"bg", "background", "main"}
+SCENE_DIRECTIVES = {"bg", "background", "main", "viewpoint"}
 
 # 読み上げ時間の概算（TTS を使わない --no-tts モード用）
 SECONDS_PER_CHAR = 0.16
@@ -163,6 +163,7 @@ class Scene:
     # それまでは読み上げの1行目に「ここからが本題です。」と書いて印にしていたが、
     # **聞く人には要らない言葉**だった。読み上げから外し、指定だけを残す
     main: bool = False
+    viewpoint: bool = False      # こちらの見立ての節（2026-09-28）
 
     @property
     def duration(self) -> float:
@@ -210,6 +211,7 @@ class Script:
                     "title": scene.title,
                     "background": scene.background,
                     "main": scene.main,
+                    "viewpoint": scene.viewpoint,
                     "lines": _scene_lines(scene),
                 }
                 for scene in self.scenes
@@ -282,6 +284,9 @@ def parse_script(text: str) -> Script:
             if key == "main":
                 value = directive["value"].strip().lower()
                 current.main = value not in ("false", "no", "0", "いいえ")
+            elif key == "viewpoint":
+                value = directive["value"].strip().lower()
+                current.viewpoint = value not in ("false", "no", "0", "いいえ")
             else:
                 current.background = directive["value"].strip() or None
             continue

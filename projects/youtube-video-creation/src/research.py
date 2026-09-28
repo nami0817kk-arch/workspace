@@ -150,6 +150,7 @@ class Section:
     # **聞く人には要らない言葉**だった。読み上げから外し、指定だけを残す。
     # ショートはこの印の付いた節を優先して選ぶ（`shorts.MAIN_BONUS`）
     main: bool = False
+    viewpoint: bool = False          # こちらの見立ての節（2026-09-28 収益化の整理）
 
 
 # まとめの答えの上限。**実測で決めた**（2026-09-08）。
@@ -317,6 +318,15 @@ def load_notes(path: str | Path) -> Notes:
     return build_notes(raw)
 
 
+def _viewpoint_card(raw: dict) -> dict | None:
+    """見立ての節に置く引用カード。`theme.takeaway` を画面にも出す（自作の絵を1枚増やす）。"""
+    theme = raw.get("theme") or {}
+    text = str(raw.get("takeaway") or theme.get("takeaway") or "").strip()
+    if not text:
+        return None
+    return {"type": "quote", "label": "この動画の見立て", "text": text}
+
+
 def build_notes(raw: dict) -> Notes:
     theme = dict(raw.get("theme") or {})
     if not theme:
@@ -393,6 +403,7 @@ def build_notes(raw: dict) -> Notes:
                 id=str(entry.get("id") or f"s{index}"),
                 heading=str(entry.get("heading", "")).strip(),
                 main=bool(entry.get("main", False)),
+                viewpoint=bool(entry.get("viewpoint", False)),
                 tier=str(entry.get("tier", "")).strip(),
                 telop=str(entry.get("telop", "")).strip(),
                 say=[s for s in lines if s],
@@ -406,7 +417,8 @@ def build_notes(raw: dict) -> Notes:
                 line_no_telops=[mutes[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
-                card=entry.get("card"),
+                # **見立ての節にカードが無ければ、見立てそのものを引用カードで出す**（2026-09-28）
+                card=entry.get("card") or (_viewpoint_card(raw) if entry.get("viewpoint") else None),
                 bg=str(entry.get("bg", "")).strip(),
                 narrator=str(entry.get("narrator", "")).strip(),
             )
@@ -797,6 +809,12 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
         notes_warnings.append(
             f"ネットの反応が{voices}件です（{REACTION_MAX}件まで、2026-09-28）。"
             "解説の材料になる2〜3件に絞ってください")
+
+    if notes.format == "news" and not any(sec.viewpoint for sec in notes.sections):
+        notes_warnings.append(
+            "見立ての節（viewpoint: true）がありません。数字で比べて分かったこと・次に何が起きるかを"
+            "語る節に viewpoint: true を付けてください（2026-09-28 収益化の整理。カードが無ければ"
+            "見立てを引用カードで出します）")
 
     if not notes.takeaway and notes.format == "news":
         notes_warnings.append(
@@ -2199,6 +2217,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
         lines += [f"## {section.heading}", f"@bg: {moving_background(background)}"]
         if section.main:
             lines.append("@main: true")
+        if section.viewpoint:
+            lines.append("@viewpoint: true")
         # **ここから写真に替える。**それより前は下地のまま
         if has_photo and index >= switch_at:
             photo_on = True

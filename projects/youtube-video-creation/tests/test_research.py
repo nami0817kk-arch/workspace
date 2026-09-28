@@ -221,7 +221,7 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
     # 2026-09-08: 中身の量（数字・出典）のヒントも同様にどのメモにも出る
     # 2026-09-25: サムネに名前を入れる決まりも、名前を書いていないメモには必ず出る
     # 2026-09-28: 見立て（takeaway）のヒントも、書いていないメモには必ず出る
-    volume = ("他人の声", "数字を含む行", "出典が", "クラブ名も人名も", "takeaway")
+    volume = ("他人の声", "数字を含む行", "出典が", "クラブ名も人名も", "takeaway", "viewpoint")
     assert [h for h in advise(build_notes(raw)) if not any(v in h for v in volume)] == []
 
 
@@ -1874,3 +1874,21 @@ def test_見立ては概要欄に1行出る():
     assert "この動画の見立て: 移籍金より出場時間の差が理由でした" in script.description
     assert not any("takeaway" in h for h in advise(build_notes(raw)))
     assert any("takeaway" in h for h in advise(build_notes(_raw())))
+
+
+def test_見立ての節は印で示し無ければ知らせる():
+    """2026-09-28 収益化の整理。見立ての節が無い news は助言。カードが無ければ見立てを引用で出す。"""
+    from src.research import advise
+    from src.script_model import parse_script
+
+    raw = _raw()
+    assert any("viewpoint" in h for h in advise(build_notes(raw)))
+    raw["theme"]["takeaway"] = "差は移籍金ではなく出場時間でした"
+    raw["sections"] = raw["sections"] + [_section(id="view", heading="見立て", tier="背景",
+                                                  viewpoint=True, say="ここがこちらの見立てです。")]
+    notes = build_notes(raw)
+    assert not any("viewpoint" in h for h in advise(notes))
+    view = next(s for s in notes.sections if s.id == "view")
+    assert view.card == {"type": "quote", "label": "この動画の見立て", "text": "差は移籍金ではなく出場時間でした"}
+    script = parse_script(to_script(notes, _plan()))
+    assert any(scene.viewpoint for scene in script.scenes)
