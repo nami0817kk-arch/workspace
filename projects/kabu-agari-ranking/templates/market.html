@@ -36,6 +36,17 @@
   <figcaption>1日あたりのストップ高の数</figcaption>
 </figure>
 
+<h2>ストップ安の数</h2>
+<p>
+  値幅制限の下限まで売られた銘柄の数です。
+  {% if has_recorded %}取得元の一覧をそのまま記録した日は全件、それ以前の日は値下がり上位30銘柄からの推定です。{% else %}値下がり上位30銘柄から数えたものです。{% endif %}
+  日ごとの顔ぶれは<a href="{{ base_url }}stop-low/index.html">ストップ安の記録</a>にあります。
+</p>
+<figure class="chart-figure">
+  {{ stop_low_chart|safe }}
+  <figcaption>1日あたりのストップ安の数</figcaption>
+</figure>
+
 <h2>首位の上昇率</h2>
 <p>その日いちばん上がった銘柄の上昇率です。上限まで買われて止まる日が続くと、この値も揃いやすくなります。</p>
 <figure class="chart-figure">

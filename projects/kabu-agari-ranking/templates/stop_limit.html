@@ -56,14 +56,20 @@
   出している場所には作れません。
   対象は記録がある{{ followup.total.days }}営業日ぶん、のべ{{ followup.total.count }}銘柄です。
 </p>
+{# 札の文字は短く。狭い画面では1行3枚に詰めるので、長い説明は
+   3行に折り返して読みにくい。意味はすぐ下の但し書きで書く。 #}
 <ul class="followup">
   <li><span class="fu-value">{{ followup.total.same_side }}銘柄</span>
-      <span class="fu-label">翌営業日も{{ spec.source_rank }}ランキングに入った</span></li>
+      <span class="fu-label">翌日も{{ spec.source_rank }}</span></li>
   <li><span class="fu-value">{{ followup.total.other_side }}銘柄</span>
-      <span class="fu-label">翌営業日は{{ spec.opposite_rank }}ランキングに入った</span></li>
+      <span class="fu-label">翌日は{{ spec.opposite_rank }}</span></li>
   <li><span class="fu-value">{{ followup.total.absent }}銘柄</span>
-      <span class="fu-label">どちらの上位30銘柄にも入らなかった</span></li>
+      <span class="fu-label">上位30の外</span></li>
 </ul>
+<p class="fu-note">
+  「翌日も{{ spec.source_rank }}」は翌営業日の{{ spec.source_rank }}ランキング上位30銘柄に入ったこと、
+  「翌日は{{ spec.opposite_rank }}」は{{ spec.opposite_rank }}ランキングに入ったことを指します。
+</p>
 <p class="note-scope">
   <strong>「どちらにも入らなかった」は、動かなかったという意味ではありません。</strong>
   当サイトが毎日取得しているのが上位30銘柄までなので、そこに届く値動きが

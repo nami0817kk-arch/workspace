@@ -415,6 +415,10 @@ def monthly_summaries(days: list[dict]) -> list[dict]:
             "stops_estimated": counts["has_estimated"],
             "top_movers": movers[:20],
             "frequent": frequent(group, "gainers", top_n=20),
+            # その月に**何が**上限まで動いたか。件数だけだと、
+            # 記録のページまで行かないと顔ぶれが分からない。
+            "stop_high_stocks": limit_history(group, "gainers")["stocks"][:10],
+            "stop_low_stocks": limit_history(group, "losers")["stocks"][:10],
         })
     out.sort(key=lambda m: m["slug"], reverse=True)
     return out

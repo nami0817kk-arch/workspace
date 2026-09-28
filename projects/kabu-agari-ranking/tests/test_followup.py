@@ -148,3 +148,36 @@ def test_出す数に上限がある():
     stocks = [{"code": f"{1000+i}", "name": f"銘柄{i}", "rows": [1]} for i in range(20)]
     profiles = {s["code"]: {"industry": "情報・通信業"} for s in stocks}
     assert len(render.same_industry("1000", stocks, profiles)) == 8
+
+
+# --- 期間のまとめ ---------------------------------------------------------------
+
+def test_月まとめに上限まで動いた銘柄の顔ぶれを出す():
+    """件数だけだと、記録のページまで行かないと何が動いたか分からない。"""
+    import aggregate
+    days = []
+    for d in ("2026-09-28", "2026-09-29"):
+        day = _day(d, high=["1001"], gainers=["1001"])
+        days.append(day)
+    month = aggregate.monthly_summaries(days)[0]
+    assert [s["code"] for s in month["stop_high_stocks"]] == ["1001"]
+    assert month["stop_high_stocks"][0]["count"] == 2
+    assert "stop_low_stocks" in month
+
+
+def test_相場の振り返りは上下ともグラフを出す(tmp_path, monkeypatch):
+    """表には両方あるのに、グラフは上向きだけだった（2026-09-28）。"""
+    import json
+    data = tmp_path / "data"
+    data.mkdir()
+    monkeypatch.setattr(render, "_DATA_DIR", data)
+    monkeypatch.setattr(render, "_OUTPUT_DIR", tmp_path / "output")
+    monkeypatch.setattr(render, "_ROOT", tmp_path)
+    for d in ("2026-09-25", "2026-09-28"):
+        day = _day(d, gainers=["1001"], losers=["2001"])
+        (data / f"{d}.json").write_text(json.dumps(day, ensure_ascii=False), encoding="utf-8")
+    render.build_all()
+    html = (tmp_path / "output" / "market.html").read_text(encoding="utf-8")
+    assert "<h2>ストップ高の数</h2>" in html
+    assert "<h2>ストップ安の数</h2>" in html
+    assert html.count("chart-figure") >= 4

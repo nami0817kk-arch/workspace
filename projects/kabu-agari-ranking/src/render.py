@@ -811,6 +811,8 @@ def _build_monthly_pages(days: list[dict], stock_pages: set[str] | None = None) 
     months = aggregate.monthly_summaries(days)
     for month in months:
         _mark_pages(month["frequent"], stock_pages)
+        _mark_pages(month["stop_high_stocks"], stock_pages)
+        _mark_pages(month["stop_low_stocks"], stock_pages)
     tmpl = _env.get_template("monthly.html")
     for i, month in enumerate(months):
         month["summary"] = month_summary(month)
@@ -974,6 +976,10 @@ def _build_market_page(days: list[dict]) -> None:
                 series("big"), aria_label="日ごとの、10%以上動いた銘柄数を示す棒グラフ", unit="銘柄"),
             stop_chart=charts.columns(
                 series("stop_high"), aria_label="日ごとのストップ高の数を示す棒グラフ", unit="銘柄"),
+            # **下向きも同じように見せる。** 表には両方あるのに、グラフは
+            # 上向きだけだった（2026-09-28）。荒れた日は両方が増える。
+            stop_low_chart=charts.columns(
+                series("stop_low"), aria_label="日ごとのストップ安の数を示す棒グラフ", unit="銘柄"),
             top_chart=charts.columns(
                 series("top_pct"), aria_label="日ごとの首位の上昇率を示す棒グラフ", unit="%"),
         ),
