@@ -842,3 +842,4 @@ class 記録の表の前日差Test(unittest.TestCase):
 
         self.assertIn("20倍", out)
         self.assertNotIn("1倍", out)   # 通常ポイントは書かない
+

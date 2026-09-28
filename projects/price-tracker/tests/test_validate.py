@@ -1951,3 +1951,47 @@ class ItemLedeTest(unittest.TestCase):
         self.assertIn('class="lede"', html)
         self.assertIn("14,850円", html)
         self.assertNotIn('class="hero"', html)
+
+
+class 同じ数字を繰り返さないTest(unittest.TestCase):
+    """商品ページの表は9行のうち5行が、図のすぐ上下の表と同じ数字だった
+    （2026-09-28 実測）。現在の価格・前回の価格・倍率・実質価格が
+    「記録を始めてからの変化」「価格の記録」にも出ていた。
+    同じ数字が3か所にあると、どれを見ればよいのかが分からなくなる。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://e.dev"}
+
+    def row(self, tail, **kw):
+        base = {"item_code": "a", "name": "テスト商品", "price": tail[-1][1],
+                "prev": tail[0][1] if len(tail) > 1 else None,
+                "low": min(e[1] for e in tail), "high": max(e[1] for e in tail),
+                "days": len(tail), "vs_low_pct": 0.0, "off_high_pct": 0.0,
+                "at_low": False, "near_low": False, "dropped": False,
+                "trustworthy": True, "label": "変動なし", "shop": "店",
+                "moved": len({e[1] for e in tail}) > 1,
+                "point_rate": tail[-1][2], "eff_price": 1126,
+                "image": "https://e.dev/a.jpg", "low_date": tail[0][0],
+                "tail": tail}
+        base.update(kw)
+        return base
+
+    def test_記録が2日以上あるなら現在の価格を表に繰り返さない(self):
+        tail = [["2026-09-27", 1408, 1], ["2026-09-28", 1408, 20]]
+
+        html = self.theme.item_page(self.row(tail), self.site, "2026-09-28")
+
+        self.assertNotIn("<th>現在の価格</th>", html)
+        self.assertNotIn("<th>前回の価格</th>", html)
+        self.assertIn("記録した中での最安値", html)
+
+    def test_記録が1日だけなら価格を表に出す(self):
+        """上下の表がどちらも出ないので、どこにも表の形では出なくなる。"""
+        html = self.theme.item_page(
+            self.row([["2026-09-28", 1408, 20]]), self.site, "2026-09-28")
+
+        self.assertIn("<th>現在の価格</th>", html)
+        self.assertIn("<th>ポイント倍率</th>", html)

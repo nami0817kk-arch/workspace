@@ -1977,23 +1977,27 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                     '<p class="note">倍率は購入額の何%が戻るかの目安で、'
                     '実際の付与はキャンペーンや会員ランクでも変わります。</p>')
 
-    rows_html = [("現在の価格", yen(row["price"])),
-                 ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
+    # 現在の価格・前回の価格・倍率・実質価格は、すぐ上の「記録を始めてからの変化」と
+    # 下の「価格の記録」に出ている。同じ数字を3か所に置くと、どれを見ればよいのかが
+    # 分からなくなる（2026-09-28 に9行のうち5行が重複していた）。
+    # ここに残すのは「記録した中でのいまの位置」だけにする。
+    rows_html = [("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
                  ("記録した中での最高値", yen(row["high"])),
                  ("最安値との差", pct(row["vs_low_pct"]) if row["vs_low_pct"] else "最安値と同じ"),
                  ("記録した中の値幅",
                   (f'{yen(row["low"])} 〜 {yen(row["high"])}'
                    f'（{pct((row["high"] - row["low"]) / row["high"])}）')
-                  if row.get("moved") else "動いていません"),
-                 ("記録日数", f'{row["days"]}日')]
-    if int(row.get("point_rate") or 1) > 1:
-        rows_html.insert(1, ("ポイント倍率", f'{row["point_rate"]}倍'))
-        # 図の凡例が「ポイント込みの実質価格」なので、表もその言い方に揃える。
-        # 同じ商品ページに2つの呼び方が出ていた。
-        rows_html.insert(2, ("ポイント込みの実質価格",
-                             f'{yen(row["eff_price"])}（目安）'))
-    if row.get("prev"):
-        rows_html.insert(1, ("前回の価格", yen(row["prev"])))
+                  if row.get("moved") else "動いていません")]
+    if len(row.get("tail") or []) < 2:
+        # 記録が1日しかないと上下の表がどちらも出ない。そのときだけ、
+        # 価格そのものをここに出す（どこにも出ないよりはよい）。
+        first = [("現在の価格", yen(row["price"]))]
+        if int(row.get("point_rate") or 1) > 1:
+            # 図の凡例が「ポイント込みの実質価格」なので、表もその言い方に揃える。
+            first += [("ポイント倍率", f'{row["point_rate"]}倍'),
+                      ("ポイント込みの実質価格", f'{yen(row["eff_price"])}（目安）')]
+        rows_html = first + rows_html
+    rows_html.append(("記録日数", f'{row["days"]}日'))
     table = "".join(f"<tr><th>{esc(k)}</th><td>{v}</td></tr>" for k, v in rows_html)
 
     # 商品情報の構造化データ。価格は当サイトの取得値であることを本文で明示している。
@@ -2071,6 +2075,7 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             # 並びは価格.com の価格推移ページに倣う。
             # 図 → 何がどれだけ動いたかの要約 → 詳しい表。
             + since_start(row)
+            + '<h2>記録した中での位置</h2>'
             + f'<table class="facts">{table}</table>'
             + caption_block(row)
             + history_table(row)
