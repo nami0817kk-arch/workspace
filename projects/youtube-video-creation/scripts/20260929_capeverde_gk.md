@@ -53,11 +53,11 @@ cards:
   rise_card:
     type: table
     title: ヴォズィーニャの2026年W杯（4試合フル出場）
-    columns:
+    columns: &id001
     - 相手
     - 結果
     - セーブ
-    rows:
+    rows: &id002
     - - 6月15日 スペイン
       - 0-0
       - 7
@@ -73,23 +73,21 @@ cards:
   rise_1_card:
     type: table
     title: ヴォズィーニャの2026年W杯（4試合フル出場）
-    columns:
-    - 相手
-    - 結果
-    - セーブ
-    rows:
-    - - 6月15日 スペイン
-      - 0-0
-      - 7
-    - - 6月21日 ウルグアイ
-      - 2-2
-      - 0
-    - - 6月27日 サウジアラビア
-      - 0-0
-      - 3
-    - - 7月3日 アルゼンチン
-      - 2-3 延長
-      - 8
+    columns: *id001
+    rows: *id002
+    highlight_row: 0
+  rise_2_card:
+    type: table
+    title: ヴォズィーニャの2026年W杯（4試合フル出場）
+    columns: *id001
+    rows: *id002
+    highlight_row: 3
+  rise_4_card:
+    type: table
+    title: ヴォズィーニャの2026年W杯（4試合フル出場）
+    columns: *id001
+    rows: *id002
+    highlight_row: 1
   view_card:
     type: quote
     label: この動画の見立て
@@ -122,13 +120,13 @@ cards:
   card: rise_1_card
 キャスター: 4試合すべてにフル出場。決勝トーナメント1回戦では、アルゼンチンを延長戦まで追い詰めました。
   telop: 4試合すべてにフル出場。決勝トーナメント1回戦では、アルゼンチンを延長戦まで追い詰めました
-  image: assets/images/20260929_capeverde_gk_w/01.jpg
+  card: rise_2_card
 キャスター: インスタのフォロワーは、大会前の5万6000人が、初戦が終わると100万人を超えました。
   telop: インスタのフォロワーは、大会前の5万6000人が、初戦が終わると100万人を超えました
   image: assets/images/20260929_capeverde_gk_w/01.jpg
 キャスター: いまは3000万人近く。8月には、チリの名門コロコロに移りました。
   telop: いまは3000万人近く。8月には、チリの名門コロコロに移りました
-  image: assets/images/20260929_capeverde_gk_w/01.jpg
+  card: rise_4_card
 
 ## 「平穏が失われた」
 @bg: assets/backgrounds/stock/stadium_night.mp4

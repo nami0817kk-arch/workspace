@@ -73,27 +73,45 @@ sections:
   card:
     type: table
     title: 後半アディショナルタイム
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
-    - - 90分+1
+    - &id003
+      - 90分+1
       - 久保が倒される。笛は鳴らず
-    - - 直後
+    - &id004
+      - 直後
       - カウンターで鈴木淳之介が倒し、ベネズエラのPK
-    - - 映像で見直し
-      - 久保が先に踏まれていた。日本のPK
-    - - 90分+6
-      - 上田が左隅に決めて2対1
   say:
   - text: 同点のまま後半アディショナルタイム。日本は10人でした。
     image: assets/images/20260929_ueda/05_varscreen.jpg
   - 交代枠を使い切ったあとに、渡辺剛がけがをしたためです。
   - 90分プラス1分、久保が倒された場面はいったん流されました。
   - 直後のカウンターで、今度はベネズエラのPK。
-  - 主審が映像で見直し、久保が先に踏まれていたとして、PKは日本のものになりました。
+  - text: 主審が映像で見直し、久保が先に踏まれていたとして、PKは日本のものになりました。
+    card:
+      type: table
+      title: 後半アディショナルタイム
+      columns: *id002
+      rows:
+      - *id003
+      - *id004
+      - &id005
+        - 映像で見直し
+        - 久保が先に踏まれていた。日本のPK
   - text: キッカーは上田。90分プラス6分、ゴール左隅に蹴り込みました。
     image: assets/images/20260929_ueda/04_pk.jpg
+    card:
+      type: table
+      title: 後半アディショナルタイム
+      columns: *id002
+      rows:
+      - *id003
+      - *id004
+      - *id005
+      - - 90分+6
+        - 上田が左隅に決めて2対1
   sources:
   - https://www.football-zone.net/archives/676136
   - https://web.gekisaka.jp/news/japan/detail/?459901-459901-fl
