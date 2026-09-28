@@ -1022,7 +1022,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             stats: dict | None = None, page: int = 1, pages: int = 1,
             page_prefix: str = "", total: int | None = None,
             show_score: bool = False, parent: tuple | None = None,
-            terms: list | None = None) -> str:
+            terms: list | None = None, subs: list | None = None) -> str:
     # 点で並べている一覧は順位を出す。並び順に意味があることが
     # 画面から読めないと、ただ並んでいるだけに見える（価格.com の「1位」に相当）
     start = (page - 1) * 50
@@ -1060,6 +1060,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             # 語は組み立て済みの文字列で受けない。ページ送りの2枚目からは
             # 階層が1つ深くなるので、../../ を外から渡すと 404 になる
             # （2026-09-28 に踏んだ。breadcrumb2 でも同じ所で踏んでいる）。
+            + chip_list(subs or [], "下位のジャンル", prefix, "ジャンルで絞り込む")
             + term_chips(terms or [], prefix)
             + nav_top
             + (f'<p class="thin">この一覧は前回の記録との比較なので、'
@@ -1098,15 +1099,25 @@ def term_chips(terms: list, prefix: str = "") -> str:
     語は `relate.genre_terms` が出したもの。件数を添える（価格.com の
     「ダイキン(747)」と同じで、押す前に手応えが分かる）。
     """
-    if not terms:
-        return ""
+    return chip_list([(str(w), n, f'search/?q={quote(str(w))}')
+                      for w, n in terms], "よく出る語", prefix, "語で絞り込む")
+
+
+def chip_list(rows: list, label: str, prefix: str = "",
+              aria: str = "") -> str:
+    """(名前, 件数, 行き先) を丸い印で並べる。
+
+    行き先は**サイトの根からの相対**で受ける。組み立て済みの相対パスを外から
+    渡すと、ページ送りの2枚目からは階層が1つ深くなって 404 になる
+    （2026-09-28 に踏んだ）。
+    """
     body = "".join(
-        f'<a href="{prefix}search/?q={quote(str(w))}">{esc(str(w))}'
-        f'<span class="n">{n:,}</span></a>' for w, n in terms if n)
+        f'<a href="{prefix}{href}">{esc(str(name))}'
+        f'<span class="n">{n:,}</span></a>' for name, n, href in rows if n)
     if not body:
         return ""
-    return (f'<nav class="chips" aria-label="語で絞り込む">'
-            f'<span class="chips-label">よく出る語</span>{body}</nav>')
+    return (f'<nav class="chips"{f" aria-label={aria!r}" if aria else ""}>'
+            f'<span class="chips-label">{esc(label)}</span>{body}</nav>')
 
 
 def genre_terms_html(terms: list, prefix: str = "") -> str:

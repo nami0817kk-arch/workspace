@@ -812,3 +812,36 @@ class SearchIndexCacheTest(unittest.TestCase):
             second = next((root / "dist").glob("search-index.*.json")).name
 
         self.assertNotEqual(first, second)
+
+
+class 下位のジャンルTest(unittest.TestCase):
+    """楽天は商品ごとに末端のジャンルID（1,054種類）を返すが、名前は返さない。
+    ジャンル検索APIで一度引いて data/genres.json に控えてある。
+
+    価格.com のカテゴリページは下位カテゴリを件数つきで並べていて、
+    2,973製品の中から1手で奥へ入れる。末端のままだと大ジャンル1つに
+    57〜202種類あって多すぎるので、level 2 でまとめる。
+    """
+
+    def test_中分類でまとめて件数つきで並べる(self):
+        from src import theme
+        html = theme.listing(
+            "家電の価格記録", "説明", [], {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/562637/", "2026-09-28", prefix="../../",
+            subs=[("季節・空調家電", 608, "genre/562637/208375/"),
+                  ("美容・健康家電", 479, "genre/562637/565105/")])
+
+        self.assertIn("下位のジャンル", html)
+        self.assertIn("季節・空調家電", html)
+        self.assertIn("608", html)
+        self.assertIn('href="../../genre/562637/208375/"', html)
+
+    def test_ページ送りの奥でも行き先が合う(self):
+        from src import theme
+        html = theme.listing(
+            "家電の価格記録", "説明", [], {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/562637/2/", "2026-09-28", prefix="../../../",
+            page=2, pages=3,
+            subs=[("季節・空調家電", 608, "genre/562637/208375/")])
+
+        self.assertIn('href="../../../genre/562637/208375/"', html)

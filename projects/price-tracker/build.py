@@ -59,6 +59,8 @@ def robots(site: dict) -> str:
 
 # 1ページ100件だと携帯で縦24,000px（約31画面分）になり、末尾まで届かない。
 PER_PAGE = 50
+# 中分類のページを作る下限。これ未満は面が散らかるだけで役に立たない
+MIN_SUB_GENRE = 10
 
 
 def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
@@ -66,7 +68,7 @@ def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
                   stats: dict, show_score: bool = False,
                   linked: set | None = None,
                   parent: tuple | None = None,
-                  terms: list | None = None) -> None:
+                  terms: list | None = None, subs: list | None = None) -> None:
     """一覧をページ送りで書き出す。
 
     最安値圏は4,000件を超える。1枚に詰めると読めないうえ、100件で打ち切ると
@@ -88,7 +90,7 @@ def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
                             empty=empty, stats=stats, page=i + 1, pages=pages,
                             parent=parent,
                             page_prefix=prefix + path, total=len(rows),
-                            show_score=show_score, terms=terms))
+                            show_score=show_score, terms=terms, subs=subs))
         urls.append("/" + rel)
 
 
@@ -249,6 +251,32 @@ def build(root: Path, out: Path) -> dict:
                 theme.clean_name(str(r.get("name") or "")))
     terms_by_genre = relate.genre_terms(names_by_genre)
 
+    # 楽天は商品ごとに末端のジャンルIDを返す（1,054種類）。名前と階層は
+    # ジャンル検索APIで一度引いて data/genres.json に控えてある
+    # （`python fetch_genres.py`。通信するのはここだけ）。
+    # 価格.com のカテゴリページは下位カテゴリを件数つきで並べていて、
+    # 2,973製品の中から1手で奥へ入れる。末端のままだと大ジャンル1つに
+    # 57〜202種類あって多すぎるので、**level 2 でまとめる**
+    # （家電 → 季節・空調家電608 / 美容・健康家電479 / キッチン家電427…）。
+    genre_names = store.load_json(data / "genres.json", {})
+
+    def mid_genre(row):
+        """その商品が属する中分類（level 2）。無ければ末端そのもの。"""
+        info = genre_names.get(str(row.get("genre_id") or ""))
+        if not info:
+            return None
+        for a in info.get("ancestors") or []:
+            if int(a.get("level") or 0) == 2:
+                return (str(a["id"]), str(a["name"]))
+        return (str(row.get("genre_id")), str(info.get("name") or ""))
+
+    subs_by_genre = {}
+    for r in rows:
+        src = str(r.get("source_genre") or "")
+        mid = mid_genre(r)
+        if src and mid:
+            subs_by_genre.setdefault(src, {}).setdefault(mid, []).append(r)
+
     listed = []
     for genre in site.get("genres") or []:
         g = genre if isinstance(genre, dict) else {"genre_id": str(genre)}
@@ -263,6 +291,19 @@ def build(root: Path, out: Path) -> dict:
         # 落ちるので、絞るのではなく題のほうを直す。
         # 価格.com のカテゴリページは「注目スペック」を件数つきで並べていて、
         # 1,500件の中から1手で奥へ入れる。うちはページ送りしか無かった。
+        # 中分類は件数の多い順。1件しか無いものまで並べると面が散らかる
+        # （家電は「電卓・デジタル文具1」「その他2」まで出ていた）。
+        # 10件に満たないものはページも作らない。そこにある商品は大ジャンルの
+        # 一覧に出ているので、辿れなくなるわけではない。
+        order = {r["item_code"]: i for i, r in enumerate(hit)}
+        sub_pairs = sorted(
+            ((key, sorted(members, key=lambda r: order.get(r["item_code"], 1 << 30)))
+             for key, members in (subs_by_genre.get(gid) or {}).items()
+             if len(members) >= MIN_SUB_GENRE),
+            key=lambda kv: -len(kv[1]))
+        sub_chips = [(name, len(members), f"genre/{gid}/{mid}/")
+                     for (mid, name), members in sub_pairs]
+
         words = terms_by_genre.get(gid, [])
         counted = [(w, sum(1 for r in hit
                            if w in theme.clean_name(str(r.get("name") or "")).lower()))
@@ -274,9 +315,21 @@ def build(root: Path, out: Path) -> dict:
                       hit, site, base, updated,
                       "このジャンルはまだ記録が始まったばかりです。", stats,
                       linked=linked, parent=("ジャンル別で見る", "genre/"),
-                      terms=counted)
+                      terms=counted, subs=sub_chips)
         listed.append({**g, "count": len(hit),
                        "terms": terms_by_genre.get(gid, [])})
+
+        # 中分類のページ。ここが価格.com の「カテゴリの下のカテゴリ」に当たる。
+        for (mid_id, mid_name), members in sub_pairs:
+            write_listing(out, urls, f"genre/{gid}/{mid_id}/",
+                          f"{mid_name}の価格記録",
+                          f'{g["name"]}のうち{mid_name}の商品を毎日記録しています。'
+                          f'値下がりの大きい順に並べていますが、'
+                          f'値下がりしていない商品も含みます。',
+                          members, site, base, updated,
+                          "このジャンルはまだ記録が始まったばかりです。", stats,
+                          linked=linked,
+                          parent=(g["name"], f"genre/{gid}/"))
 
     write(out / "genre" / "index.html",
           theme.genre_index(listed, site, base + "/genre/", updated, prefix="../"))
