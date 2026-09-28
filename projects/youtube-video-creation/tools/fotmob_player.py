@@ -20,6 +20,7 @@ import argparse
 import datetime
 import json
 import math
+import os
 import sys
 import time
 from pathlib import Path
@@ -63,6 +64,16 @@ SKIP_STATS = {"Yellow cards", "Red cards", "Goals conceded while on pitch", "Cle
               "Long ball accuracy", "Dribbled past", "Dispossessed", "xG excl. penalty", "Running", "Total Distance Covered"}
 BRAND_GREEN = (11, 61, 46)
 BRAND_GOLD = (255, 213, 74)
+# 代表の相手（FotMob は英語）。直近5試合の表に出る
+COUNTRY_JA = {"Portugal": "ポルトガル", "Denmark": "デンマーク", "Norway": "ノルウェー", "Italy": "イタリア", "Slovenia": "スロベニア",
+              "Spain": "スペイン", "France": "フランス", "Germany": "ドイツ", "England": "イングランド", "Netherlands": "オランダ",
+              "Belgium": "ベルギー", "Croatia": "クロアチア", "Brazil": "ブラジル", "Argentina": "アルゼンチン", "Austria": "オーストリア",
+              "Switzerland": "スイス", "Poland": "ポーランド", "Scotland": "スコットランド", "Wales": "ウェールズ", "Ireland": "アイルランド",
+              "Sweden": "スウェーデン", "Finland": "フィンランド", "Iceland": "アイスランド", "Turkey": "トルコ", "Greece": "ギリシャ",
+              "Serbia": "セルビア", "Ukraine": "ウクライナ", "Czech Republic": "チェコ", "Hungary": "ハンガリー", "Romania": "ルーマニア",
+              "Japan": "日本", "Morocco": "モロッコ", "Senegal": "セネガル", "USA": "アメリカ", "Mexico": "メキシコ", "Uruguay": "ウルグアイ",
+              "Colombia": "コロンビア", "Israel": "イスラエル", "Kosovo": "コソボ", "Albania": "アルバニア", "Georgia": "ジョージア",
+              "Slovakia": "スロバキア", "Bosnia-Herzegovina": "ボスニア・ヘルツェゴビナ", "Northern Ireland": "北アイルランド"}
 PITCH_LEN, PITCH_WID = 105.0, 68.0
 
 
@@ -94,8 +105,9 @@ def load(player_id: str, max_age_hours: float = 24.0) -> dict:
 def traits(data: dict) -> tuple[str, list[tuple[str, float]]]:
     """(比較の相手, [(軸の日本語, 0〜1)])。"""
     t = data.get("traits") or {}
-    group = {"stats_comparison_forwards": "同じFW", "stats_comparison_midfielders": "同じMF",
-             "stats_comparison_defenders": "同じDF", "stats_comparison_keepers": "同じGK"}.get(str(t.get("key")), "同じポジション")
+    group = {"stats_comparison_forwards": "同じFW", "stats_comparison_midfielders": "同じMF", "stats_comparison_att_mid_wingers": "同じ攻撃的MF・ウイング",
+             "stats_comparison_defenders": "同じDF", "stats_comparison_keepers": "同じGK", "stats_comparison_fullbacks": "同じサイドバック",
+             "stats_comparison_centre_backs": "同じセンターバック"}.get(str(t.get("key")), "同じポジション")
     items = [(TRAIT_JA.get(str(i.get("key")), str(i.get("title"))), float(i.get("value") or 0.0)) for i in t.get("items") or []]
     return group, items
 
@@ -135,7 +147,7 @@ def recent(data: dict, n: int = 5) -> list[list[str]]:
             continue
         date = str((m.get("matchDate") or {}).get("utcTime") or "")[:10]
         rating = str((m.get("ratingProps") or {}).get("rating") or "-")
-        opp = standings_mod.japanese(str(m.get("opponentTeamName") or ""))
+        opp = COUNTRY_JA.get(str(m.get("opponentTeamName") or ""), standings_mod.japanese(str(m.get("opponentTeamName") or "")))
         rows.append([f"{int(date[5:7])}/{int(date[8:10])}" if len(date) == 10 else date, opp,
                      f"{m.get('minutesPlayed') or 0}分", f"{m.get('goals') or 0}G {m.get('assists') or 0}A", rating])
         if len(rows) >= n:
@@ -372,7 +384,8 @@ def value_board(history: list[dict], out: Path, name: str, club_of=None, size: t
         x, y = line[-1]
         draw.ellipse([x - 10, y - 10, x + 10, y + 10], fill=BRAND_GOLD + (255,), outline=(20, 24, 32, 255), width=2)
         label = _compact(pts[-1][1])
-        draw.text((x - draw.textlength(label, font=_font(32)) - 14, y - 50), label, font=_font(32), fill=BRAND_GOLD + (255,))
+        lw = draw.textlength(label, font=_font(32))
+        draw.text((min(x - lw - 14, gx + gw - lw), max(gy - 44, y - 50)), label, font=_font(32), fill=BRAND_GOLD + (255,))
     draw.text((px + pw - 210, py + ph - 50), "Transfermarkt", font=_font(26), fill=(120, 130, 146, 255))
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)
@@ -422,15 +435,21 @@ def heatmap_board(coords: list[dict], out: Path, name: str, size: tuple[int, int
         draw.rectangle([min(x_edge, x_edge + sgn * bw), gy + (gh - bh) / 2, max(x_edge, x_edge + sgn * bw), gy + (gh + bh) / 2], outline=line, width=3)
         sw, sh = gw * 5.5 / PITCH_LEN, gh * 18.32 / PITCH_WID
         draw.rectangle([min(x_edge, x_edge + sgn * sw), gy + (gh - sh) / 2, max(x_edge, x_edge + sgn * sw), gy + (gh + sh) / 2], outline=line, width=3)
-    heat = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    hd = ImageDraw.Draw(heat)
-    for c in coords:
-        x, y = float(c.get("x") or 0), float(c.get("y") or 0)
-        cx, cy = gx + gw * x / PITCH_LEN, gy + gh * y / PITCH_WID
-        hd.ellipse([cx - 30, cy - 30, cx + 30, cy + 30], fill=(255, 213, 74, 70))
-    heat = heat.filter(ImageFilter.GaussianBlur(16))
-    canvas.alpha_composite(heat)
+    # 2段の色：広く薄い黄 ＋ 密度の高い所だけ橙（芝の緑と混ざって濁らないように）
+    for radius, color, blur in ((34, (255, 213, 74, 46), 18), (16, (255, 140, 40, 70), 10)):
+        heat = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+        hd = ImageDraw.Draw(heat)
+        for c in coords:
+            x, y = float(c.get("x") or 0), float(c.get("y") or 0)
+            cx, cy = gx + gw * x / PITCH_LEN, gy + gh * y / PITCH_WID
+            hd.ellipse([cx - radius, cy - radius, cx + radius, cy + radius], fill=color)
+        heat = heat.filter(ImageFilter.GaussianBlur(blur))
+        canvas.alpha_composite(heat)
     draw = ImageDraw.Draw(canvas)
+    if os.environ.get("HEAT_DEBUG"):
+        for (mx, my), col in (((PITCH_LEN, PITCH_WID / 2), (255, 0, 0, 255)), ((0, PITCH_WID / 2), (0, 120, 255, 255))):
+            cx, cy = gx + gw * mx / PITCH_LEN, gy + gh * my / PITCH_WID
+            draw.ellipse([cx - 14, cy - 14, cx + 14, cy + 14], fill=col)
     draw.text((px + pw - 130, py + ph - 50), "FotMob", font=_font(26), fill=(120, 130, 146, 255))
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)

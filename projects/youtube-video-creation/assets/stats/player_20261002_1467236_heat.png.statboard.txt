@@ -1,0 +1,4 @@
+title: ラミン・ヤマルの今季のヒートマップ
+unit: touches
+points=568
+source: FotMob

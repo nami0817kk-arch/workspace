@@ -34,31 +34,32 @@ def test_歩んできた道は1クラブ1行で季と最高額():
     assert rows[2][1] == "レアル・マドリード" and len(rows) == 3
 
 
-def test_雛形は基礎DATA_道_今季_見立て(tmp_path):
+def test_雛形は8節で_数字の行は埋まり_残りは人が書く(tmp_path):
     p = dict(id="342229", name="Kylian Mbappé", ja="キリアン・エムバペ", club="レアル・マドリード", club_id="418", shirt=10,
              captain=False, age=27, birth="1998-12-20", height=1.78, foot="右", position="センターフォワード",
              contract="2029-06-30", value=200000000, value_prev=180000000, history=HISTORY,
              season=[{"generalInformation": {"competitionId": "ES1"},
                       "statistics": {"goalStatistics": {"goalsSum": 7, "assistsSum": 2},
-                                     "playingTimeStatistics": {"appearancesCount": 7, "playedMinutesSum": 630}}},
-                     {"generalInformation": {"competitionId": "CL"},
-                      "statistics": {"goalStatistics": {"goalsSum": 2, "assistsSum": 0},
-                                     "playingTimeStatistics": {"appearancesCount": 1, "playedMinutesSum": 90}}}],
+                                     "playingTimeStatistics": {"appearancesCount": 7, "playedMinutesSum": 630}}}],
              aggregated={"goalStatistics": {"goalsSum": 9, "assistsSum": 2},
                          "playingTimeStatistics": {"appearancesCount": 8, "playedMinutesSum": 720}},
+             past=[["25/26", "50", "40", "8", "4000分"], ["24/25", "48", "38", "7", "3900分"]],
              url="/kylian-mbappe/profil/spieler/342229")
+    fb = dict(fotmob_id="1", group="同じFW", traits=[], boards={"radar": "assets/stats/r.png", "shots": "assets/stats/s.png", "heat": "assets/stats/h.png", "value": "assets/stats/v.png"},
+              strong=[dict(ja="得点", pct=99.0)], weak=[dict(ja="アシスト", pct=3.0)],
+              recent=[["9/27", "ポルトガル", "90分", "1G 0A", "7.9"]], next=dict(when="10月12日", home="リバプール", away="マンチェスター・シティ", league="Premier League"))
     path = tmp_path / "note.yaml"
-    unknown = mod.write_note(p, datetime.date(2026, 10, 1), path)
-    assert unknown == []
+    mod.write_note(p, datetime.date(2026, 10, 1), path, fb)
     note = yaml.safe_load(path.read_text(encoding="utf-8"))
-    assert note["series"] == "有名選手の紹介" and note["people"] == ["キリアン・エムバペ"]
-    ids = [s["id"] for s in note["sections"]]
-    assert ids == ["data", "career", "season", "view"]
-    assert ["生年月日", "1998年12月20日（27歳）"] in note["sections"][0]["card"]["rows"]
-    assert note["sections"][0]["say"][0] == "キリアン・エムバペ、27歳。レアル・マドリードのセンターフォワードです。"
-    assert "1.8億ユーロから2億ユーロに上がりました" in note["sections"][0]["say"][-1]
-    assert note["sections"][2]["main"] is True
-    assert note["sections"][2]["card"]["rows"][0] == ["ラ・リーガ", "7", "7", "2", "630分"]
-    assert note["sections"][2]["say"][1] == "今季はここまで8試合で9得点2アシスト、720分です。"
-    assert note["sections"][3]["viewpoint"] is True
-    assert note["theme"]["title"].startswith("キリアン・エムバペってどんな選手？")
+    assert [s["id"] for s in note["sections"]] == ["hook", "data", "career", "style", "past", "season", "story", "view"]
+    assert note["theme"]["nameplate"] == "キリアン・エムバペ｜レアル・マドリード FW"
+    assert note["theme"]["bgm"] == "assets/audio/bgm_calm.wav"
+    style = note["sections"][3]
+    assert style["card"]["type"] == "bars" and style["card"]["items"][0]["label"] == "得点"
+    assert style["say"][0]["image"] == "assets/stats/r.png" and style["say"][0]["no_telop"] is True
+    season = note["sections"][5]
+    assert season["main"] is True and season["say"][0]["short_only"] is True
+    assert "今季はここまで8試合で9得点2アシスト、出場時間は720分。80分に1点のペースです。" in season["say"][1]
+    assert note["sections"][4]["card"]["rows"][0][0] == "24/25"      # 古い順
+    assert note["sections"][7]["telop"] == "10月12日、リバプール対マンチェスター・シティ"
+    assert note["sections"][1]["say"][2].startswith("身長は1メートル78、利き足は右。契約は2029年まで")
