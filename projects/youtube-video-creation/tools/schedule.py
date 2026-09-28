@@ -96,6 +96,38 @@ def build(month: str) -> list[dict]:
     return days
 
 
+SERIES_LABEL = {
+    1: "欧州組の1週間（週報）", 2: "クラブ紹介", 3: "5大リーグの順位表と今週の1つ", 4: "仕組みの解説",
+    5: "数字で見るランキング／得点王レース", 6: "10年前の今日", 9: "数字で振り返る注目試合",
+    11: "得点王・アシスト王レース", 12: "クラブの財政", 13: "監督の経歴", 14: "日本人選手の次の相手",
+    15: "1年前の噂の検証", 16: "日本人選手の月間まとめ", 17: "若手の数字", 18: "欧州カップの対戦相手紹介",
+    19: "スタジアム紹介", 21: "有名選手の紹介・比較", 25: "代表チームの紹介", 26: "記録の解説",
+    28: "移籍の答え合わせ",
+}
+
+
+def totals(days: list[dict]) -> dict:
+    """月の内訳：シリーズごとの本数、ニュースの本数、本編とショートの合計。"""
+    import re as _re
+
+    series: dict[str, int] = {}
+    jp = other = 0
+    for x in days:
+        for it in x["items"]:
+            if it["kind"] == "シリーズ":
+                label = SERIES_LABEL.get(it["plan"], _re.sub(r"（.*?）", "", it["name"]))
+                series[label] = series.get(label, 0) + 1
+            else:
+                n = int(_re.search(r"×(\d+)", it["name"]).group(1))
+                if it["name"].startswith("日本人"):
+                    jp += n
+                else:
+                    other += n
+    mains = sum(x["total"] for x in days)
+    return dict(series=dict(sorted(series.items(), key=lambda kv: -kv[1])), japanese_news=jp, other_news=other,
+                mains=mains, shorts=mains, days=len(days))
+
+
 def page(month: str, days: list[dict]) -> str:
     """スマホで縦に読める形（2026-09-28 指示「スマホでも確認しやすいように」）。1日1枚のカード。"""
     cards = []
@@ -121,6 +153,17 @@ def page(month: str, days: list[dict]) -> str:
             f'<p class="ev">{html.escape(" ／ ".join(ev)) or "試合なし"}</p>'
             f'<ul class="s">{s_items}</ul><p class="n">{n_items}</p></section>')
     y, m = month[:4], int(month[5:7])
+    t = totals(days)
+    rows = "".join(f'<tr><td>{html.escape(k)}</td><td class="num">{v}本</td></tr>' for k, v in t["series"].items())
+    series_total = sum(t["series"].values())
+    summary = (f'<section class="sum"><h2>この月の本数</h2><table>'
+               f'<tr class="head"><td>本編の合計</td><td class="num">{t["mains"]}本</td></tr>'
+               f'<tr class="head"><td>ショート（本編ごとに1本）</td><td class="num">{t["shorts"]}本</td></tr>'
+               f'<tr class="head"><td>シリーズの合計</td><td class="num">{series_total}本</td></tr>'
+               f'{rows}'
+               f'<tr class="head"><td>日本人ニュース</td><td class="num">{t["japanese_news"]}本</td></tr>'
+               f'<tr class="head"><td>ほかのニュース</td><td class="num">{t["other_news"]}本</td></tr>'
+               f'</table></section>')
     return f'''<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{y}年{m}月の投稿カレンダー</title>
 <style>
@@ -138,12 +181,15 @@ h2.wk{{font-size:.8rem;color:var(--mut);margin:18px 0 6px;letter-spacing:.04em;p
 .ev{{margin:.2rem 0 .4rem;font-size:.82rem;color:var(--mut)}}
 ul.s{{margin:0;padding-left:1.1rem;color:var(--acc);font-size:.92rem}} ul.s li{{margin:.1rem 0}}
 .n{{margin:.4rem 0 0;font-size:.84rem;color:var(--mut);border-top:1px dashed var(--line);padding-top:.35rem}}
+.sum{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 14px}} .sum h2{{font-size:.95rem;margin:0 0 .4rem;color:var(--acc)}}
+.sum table{{width:100%;border-collapse:collapse;font-size:.9rem}} .sum td{{padding:3px 0;border-bottom:1px solid var(--line)}} .sum td.num{{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;width:5rem}}
+.sum tr.head td{{font-weight:700}}
 @media (min-width:700px){{.grid{{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}} h2.wk{{grid-column:1/-1}}}}
 </style></head><body><main>
 <h1>{y}年{m}月の投稿カレンダー</h1>
 <p class="lead">1日の本編の本数。ショートは本編ごとに1本（1日10本の上限内）。青がシリーズ、下の灰色がニュースの枠。</p>
 <div class="note">月＝欧州組の1週間／火＝5大リーグの順位表／水＝仕組みの解説／木＝ランキング・得点王／金＝選手紹介・比較。毎日クラブ紹介1本（ラ・リーガ→ブンデス）。試合の翌日は「数字で振り返る注目試合」。10/1〜9は代表ウィークの続きでリーグ戦が無い。CLは10/14・15と21・22、ELは10/16・23。</div>
-<div class="grid">{"".join(cards)}</div>
+{summary}<div class="grid">{"".join(cards)}</div>
 </main></body></html>'''
 
 
@@ -151,8 +197,12 @@ def main(argv: list[str]) -> int:
     month = argv[0] if argv else "2026-10"
     days = build(month)
     tag = month.replace("-", "")
+    t = totals(days)
     (ROOT / "research" / f"schedule_{tag}.yaml").write_text(
-        yaml.safe_dump({"month": month, "per_day": PER_DAY, "days": days}, allow_unicode=True, sort_keys=False), encoding="utf-8")
+        yaml.safe_dump({"month": month, "per_day": PER_DAY, "totals": t, "days": days}, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    print(f"本編 {t['mains']}本 / ショート {t['shorts']}本 / シリーズ {sum(t['series'].values())}本 / 日本人ニュース {t['japanese_news']}本 / ほか {t['other_news']}本")
+    for k, v in t["series"].items():
+        print(f"  {v:3}本  {k}")
     out = ROOT / "output" / "pages" / f"schedule_{tag}" / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page(month, days), encoding="utf-8")
