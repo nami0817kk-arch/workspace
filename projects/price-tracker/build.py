@@ -235,6 +235,19 @@ def build(root: Path, out: Path) -> dict:
 
     # ジャンル別の入口。単品ページで価格比較サイトと正面から競合するより、
     # ジャンル単位のページを持って内部リンクを集約するほうが取りに行ける。
+    # ジャンルの下に置く「そのジャンルらしい語」。価格.com のトップはカテゴリの
+    # 下にサブ項目を2行置いていて、それが「ここに何があるか」を伝えている。
+    # うちは楽天のジャンルを8つしか取っておらず下の階層を持たないので、
+    # 商品名から出す（0.3秒）。
+    names_by_genre = {}
+    for r in rows:
+        gid_ = str(r.get("source_genre") or "")
+        if gid_:
+            # 生の名前には先頭の宣伝が付く（日替わりで変わる）。落としてから数える。
+            names_by_genre.setdefault(gid_, []).append(
+                theme.clean_name(str(r.get("name") or "")))
+    terms_by_genre = relate.genre_terms(names_by_genre)
+
     listed = []
     for genre in site.get("genres") or []:
         g = genre if isinstance(genre, dict) else {"genre_id": str(genre)}
@@ -254,7 +267,8 @@ def build(root: Path, out: Path) -> dict:
                       hit, site, base, updated,
                       "このジャンルはまだ記録が始まったばかりです。", stats,
                       linked=linked, parent=("ジャンル別で見る", "genre/"))
-        listed.append({**g, "count": len(hit)})
+        listed.append({**g, "count": len(hit),
+                       "terms": terms_by_genre.get(gid, [])})
 
     write(out / "genre" / "index.html",
           theme.genre_index(listed, site, base + "/genre/", updated, prefix="../"))

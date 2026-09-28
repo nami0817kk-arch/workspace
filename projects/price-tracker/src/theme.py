@@ -4,6 +4,7 @@ import html
 import json
 import re
 from datetime import datetime, timedelta
+from urllib.parse import quote
 
 from .analyze import (MIN_DAYS_FOR_LOW, effective, effective_change_count,
                       effective_series)
@@ -1081,6 +1082,22 @@ def archive_nav(day: str, older: str | None, newer: str | None) -> str:
     return f'<nav class="pager">{"".join(parts)}</nav>'
 
 
+def genre_terms_html(terms: list, prefix: str = "") -> str:
+    """ジャンルの下に置く「そのジャンルらしい語」。
+
+    価格.com のトップはカテゴリの下にサブ項目を2行置いていて、それが
+    「ここに何があるか」を伝えている。うちは楽天のジャンルを8つしか
+    取っておらず下の階層を持たないので、商品名から出す（`relate.genre_terms`）。
+    語は検索への行き先にする（読むだけの飾りにしない）。
+    """
+    if not terms:
+        return ""
+    links = "".join(
+        f'<a href="{prefix}search/?q={quote(str(t))}">{esc(str(t))}</a>'
+        for t in terms)
+    return f'<span class="terms">{links}</span>'
+
+
 def home_search(prefix: str = "") -> str:
     """トップの先頭に置く検索窓。
 
@@ -1140,8 +1157,11 @@ def home_page(site: dict, canonical: str, updated: str, stats: dict,
     # 何をすればよいかを書く（検索の meta には site の description を使う）。
     lead = "商品名で探すか、下の一覧から選んでください。"
     genre_links = "".join(
-        f'<li><a href="genre/{esc(str(g["genre_id"]))}/">{esc(g["name"])}</a>'
-        f'<span class="count">{g["count"]:,}商品</span></li>' for g in genres)
+        f'<li class="genre"><a href="genre/{esc(str(g["genre_id"]))}/">'
+        f'{esc(g["name"])}</a>'
+        f'<span class="count">{g["count"]:,}商品</span>'
+        + genre_terms_html(g.get("terms") or [])
+        + '</li>' for g in genres)
     return (head(site["name"], site.get("description", ""), canonical, site, "",
                  extra=site_ld(site))
             + f'<h1>{esc(site["name"])}</h1><p class="lead">{esc(lead)}</p>'
@@ -1211,8 +1231,9 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
     lead = "記録している商品をジャンルごとに、値下がりの大きい順で並べています。"
     links = "".join(
         f'<li class="genre"><a href="{prefix}genre/{esc(str(g["genre_id"]))}/">'
-        f'{esc(g["name"])}</a><span class="count">{g["count"]:,}商品</span></li>'
-        for g in genres)
+        f'{esc(g["name"])}</a><span class="count">{g["count"]:,}商品</span>'
+        + genre_terms_html(g.get("terms") or [], prefix)
+        + '</li>' for g in genres)
     return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + f'<ul class="genres">{links}</ul>'
