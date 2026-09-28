@@ -61,7 +61,8 @@ STAT_JA = {
 }
 # 武器・弱点に使わない項目（数が少なすぎる／意味が薄い）
 SKIP_STATS = {"Yellow cards", "Red cards", "Goals conceded while on pitch", "Clean sheets", "Fouls committed",
-              "Long ball accuracy", "Dribbled past", "Dispossessed", "xG excl. penalty", "Running", "Total Distance Covered"}
+              "Long ball accuracy", "Dribbled past", "Dispossessed", "xG excl. penalty", "Running", "Total Distance Covered",
+              "Penalties awarded", "Penalties conceded"}   # 武器にならない項目（オリーズで「Penalties awarded 100」が武器に出た）
 BRAND_GREEN = (11, 61, 46)
 BRAND_GOLD = (255, 213, 74)
 # 代表の相手（FotMob は英語）。直近5試合の表に出る
@@ -69,7 +70,7 @@ COUNTRY_JA = {"Portugal": "ポルトガル", "Denmark": "デンマーク", "Norw
               "Spain": "スペイン", "France": "フランス", "Germany": "ドイツ", "England": "イングランド", "Netherlands": "オランダ",
               "Belgium": "ベルギー", "Croatia": "クロアチア", "Brazil": "ブラジル", "Argentina": "アルゼンチン", "Austria": "オーストリア",
               "Switzerland": "スイス", "Poland": "ポーランド", "Scotland": "スコットランド", "Wales": "ウェールズ", "Ireland": "アイルランド",
-              "Sweden": "スウェーデン", "Finland": "フィンランド", "Iceland": "アイスランド", "Turkey": "トルコ", "Greece": "ギリシャ",
+              "Sweden": "スウェーデン", "Finland": "フィンランド", "Iceland": "アイスランド", "Turkey": "トルコ", "Turkiye": "トルコ", "Türkiye": "トルコ", "Greece": "ギリシャ",
               "Serbia": "セルビア", "Ukraine": "ウクライナ", "Czech Republic": "チェコ", "Hungary": "ハンガリー", "Romania": "ルーマニア",
               "Japan": "日本", "Morocco": "モロッコ", "Senegal": "セネガル", "USA": "アメリカ", "Mexico": "メキシコ", "Uruguay": "ウルグアイ",
               "Colombia": "コロンビア", "Israel": "イスラエル", "Kosovo": "コソボ", "Albania": "アルバニア", "Georgia": "ジョージア",

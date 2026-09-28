@@ -182,6 +182,8 @@ clubs:
   # ---- 選手紹介の経歴に出るクラブ（2026-09-28。ノルウェー・オーストリア）
   - {canonical: ブリーネ, league: "", big: false, aka: [Bryne FK, Bryne]}
   - {canonical: モルデ, league: "", big: false, aka: [Molde FK, Molde]}
+  - {canonical: ボデ/グリムト, league: "", big: false, aka: [Bodø/Glimt, Bodo/Glimt, FK Bodø/Glimt]}
+  - {canonical: レディング, league: "", big: false, aka: [Reading FC, Reading, Reading FC U18]}
   - {canonical: ザルツブルク, league: "", big: false, aka: [Red Bull Salzburg, FC Salzburg, RB Salzburg, RBザルツブルク]}
 
   # ---- オランダ・ポルトガル
