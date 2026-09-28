@@ -580,7 +580,16 @@ SEARCH_JS = r"""
   var note = document.getElementById('note');
   var index = null, loading = false, LIMIT = 60, MAX_SCAN = 400;
 
-  function norm(s) { return s.normalize('NFKC').toLowerCase().replace(/\\s+/g, ''); }
+  // 「いやほん」と打っても「イヤホン」に当たるようにする。
+  // NFKC は半角カナを全角カナに直すが（ｲﾔﾎﾝ→イヤホン、実測476件に当たる）、
+  // ひらがなはカタカナにしない。日本語は仮名の並びが同じなので、
+  // ひらがなを機械的にカタカナへ寄せるだけで足りる（辞書は要らない）。
+  function norm(s) {
+    return s.normalize('NFKC').toLowerCase().replace(/\\s+/g, '')
+      .replace(/[\u3041-\u3096]/g, function (c) {
+        return String.fromCharCode(c.charCodeAt(0) + 0x60);
+      });
+  }
 
   function terms() {
     return input.value.trim().split(/\\s+/).map(norm).filter(Boolean);
