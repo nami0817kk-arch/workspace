@@ -79,6 +79,19 @@ clubs:
   - {canonical: レアル・ソシエダ, league: spain, big: false, aka: [Real Sociedad, ソシエダ]}
   - {canonical: バレンシア, league: spain, big: false, aka: [Valencia, ヴァレンシア]}
   - {canonical: ベティス, league: spain, big: false, aka: [Real Betis, Betis]}
+  # 2026-09-28 に追加。5大リーグの順位表（定型シリーズ）で FotMob の英語名を日本語にするため
+  - {canonical: ヘタフェ, league: spain, big: false, aka: [Getafe]}
+  - {canonical: オサスナ, league: spain, big: false, aka: [Osasuna, CA Osasuna]}
+  - {canonical: エスパニョール, league: spain, big: false, aka: [Espanyol, RCD Espanyol, エスパニョル]}
+  - {canonical: セルタ, league: spain, big: false, aka: [Celta Vigo, Celta de Vigo, セルタ・ビーゴ]}
+  - {canonical: ラージョ・バジェカーノ, league: spain, big: false, aka: [Rayo Vallecano, ラージョ, ラヨ・バジェカーノ]}
+  - {canonical: アラベス, league: spain, big: false, aka: [Deportivo Alavés, Deportivo Alaves, Alavés, Alaves, アラヴェス]}
+  - {canonical: デポルティーボ, league: spain, big: false,
+     aka: [Deportivo La Coruña, Deportivo de La Coruña, Deportivo A Coruña, デポルティボ, デポルティーボ・ラ・コルーニャ]}
+  - {canonical: ラシン・サンタンデール, league: spain, big: false, aka: [Racing Santander, Racing de Santander, ラシン]}
+  - {canonical: レバンテ, league: spain, big: false, aka: [Levante, Levante UD, レヴァンテ]}
+  - {canonical: エルチェ, league: spain, big: false, aka: [Elche, Elche CF]}
+  - {canonical: マラガ, league: spain, big: false, aka: [Málaga, Malaga, Málaga CF]}
 
   # ---- ドイツ
   - {canonical: バイエルン, league: germany, big: true,
@@ -95,6 +108,18 @@ clubs:
      aka: [Eintracht Frankfurt, Frankfurt, アイントラハト・フランクフルト]}
   - {canonical: ボルシアMG, league: germany, big: false,
      aka: [Borussia Mönchengladbach, Gladbach, メンヒェングラートバッハ]}
+  # 2026-09-28 に追加（順位表シリーズ）
+  - {canonical: フライブルク, league: germany, big: false, aka: [SC Freiburg, Freiburg]}
+  - {canonical: アウクスブルク, league: germany, big: false, aka: [FC Augsburg, Augsburg, アウグスブルク]}
+  - {canonical: マインツ, league: germany, big: false, aka: [Mainz 05, FSV Mainz, Mainz]}
+  - {canonical: エルフェルスベルク, league: germany, big: false, aka: [SV Elversberg, Elversberg]}
+  - {canonical: ブレーメン, league: germany, big: false, aka: [Werder Bremen, Bremen, ヴェルダー・ブレーメン]}
+  - {canonical: シャルケ, league: germany, big: false, aka: [Schalke 04, FC Schalke, Schalke]}
+  - {canonical: パーダーボルン, league: germany, big: false, aka: [SC Paderborn, Paderborn]}
+  - {canonical: ケルン, league: germany, big: false, aka: [1. FC Köln, FC Köln, FC Koln, Köln, Koeln, Cologne]}
+  - {canonical: ホッフェンハイム, league: germany, big: false, aka: [TSG Hoffenheim, Hoffenheim]}
+  - {canonical: ハンブルガーSV, league: germany, big: false, aka: [Hamburger SV, Hamburg SV, HSV, ハンブルク]}
+  - {canonical: ウニオン・ベルリン, league: germany, big: false, aka: [Union Berlin, 1. FC Union Berlin, ウニオン]}
 
   # ---- イタリア
   - {canonical: インテル, league: italy, big: true,
@@ -110,6 +135,18 @@ clubs:
   - {canonical: ラツィオ, league: italy, big: false, aka: [Lazio]}
   - {canonical: アタランタ, league: italy, big: false, aka: [Atalanta]}
   - {canonical: フィオレンティーナ, league: italy, big: false, aka: [Fiorentina]}
+  # 2026-09-28 に追加（順位表シリーズ）
+  - {canonical: カリアリ, league: italy, big: false, aka: [Cagliari]}
+  - {canonical: フロジノーネ, league: italy, big: false, aka: [Frosinone]}
+  - {canonical: サッスオーロ, league: italy, big: false, aka: [Sassuolo]}
+  - {canonical: レッチェ, league: italy, big: false, aka: [Lecce, US Lecce]}
+  - {canonical: ウディネーゼ, league: italy, big: false, aka: [Udinese]}
+  - {canonical: トリノ, league: italy, big: false, aka: [Torino, Torino FC]}
+  - {canonical: パルマ, league: italy, big: false, aka: [Parma, Parma Calcio]}
+  - {canonical: モンツァ, league: italy, big: false, aka: [Monza, AC Monza]}
+  - {canonical: ボローニャ, league: italy, big: false, aka: [Bologna]}
+  - {canonical: ジェノア, league: italy, big: false, aka: [Genoa, Genoa CFC]}
+  - {canonical: ヴェネツィア, league: italy, big: false, aka: [Venezia, Venezia FC, ベネチア]}
 
   # ---- フランス
   - {canonical: パリ・サンジェルマン, league: france, big: true,
@@ -119,6 +156,21 @@ clubs:
   - {canonical: リヨン, league: france, big: false, aka: [Olympique Lyonnais, Lyon]}
   - {canonical: モナコ, league: france, big: false, aka: [AS Monaco, Monaco]}
   - {canonical: リール, league: france, big: false, aka: [Lille, LOSC]}
+  # 2026-09-28 に追加（順位表シリーズ）。Nice / Lens / Brest / Angers は英語の普通の語と
+  # 同じ綴りなので、見出しの照合には長い形だけを置く（FotMob の短い名前は standings.py が長い形に直す）
+  - {canonical: パリFC, league: france, big: false, aka: [Paris FC]}
+  - {canonical: レンヌ, league: france, big: false, aka: [Stade Rennais, Rennes]}
+  - {canonical: アンジェ, league: france, big: false, aka: [Angers SCO, SCO Angers]}
+  - {canonical: ストラスブール, league: france, big: false, aka: [Strasbourg, RC Strasbourg]}
+  - {canonical: ル・マン, league: france, big: false, aka: [Le Mans FC, Le Mans]}
+  - {canonical: オセール, league: france, big: false, aka: [Auxerre, AJ Auxerre]}
+  - {canonical: ブレスト, league: france, big: false, aka: [Stade Brestois, Stade Brest]}
+  - {canonical: ロリアン, league: france, big: false, aka: [Lorient, FC Lorient]}
+  - {canonical: トゥールーズ, league: france, big: false, aka: [Toulouse, Toulouse FC]}
+  - {canonical: ニース, league: france, big: false, aka: [OGC Nice, OGCニース]}
+  - {canonical: ランス, league: france, big: false, aka: [RC Lens, RCランス]}
+  - {canonical: トロワ, league: france, big: false, aka: [Troyes, ES Troyes]}
+  - {canonical: ル・アーヴル, league: france, big: false, aka: [Le Havre, Le Havre AC, ル・アーブル]}
 
   # ---- オランダ・ポルトガル
   - {canonical: アヤックス, league: netherlands, big: false, aka: [Ajax, アヤックス・アムステルダム]}
