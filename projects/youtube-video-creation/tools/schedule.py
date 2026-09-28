@@ -97,7 +97,8 @@ def build(month: str) -> list[dict]:
 
 
 def page(month: str, days: list[dict]) -> str:
-    rows = []
+    """スマホで縦に読める形（2026-09-28 指示「スマホでも確認しやすいように」）。1日1枚のカード。"""
+    cards = []
     for x in days:
         d = datetime.date.fromisoformat(x["date"])
         ev = []
@@ -107,30 +108,42 @@ def page(month: str, days: list[dict]) -> str:
             ev.append("・".join(x["cups"]))
         if x["national"]:
             ev.append("代表ウィーク")
-        cls = ' class="we"' if d.weekday() >= 5 else ""
-        items = "".join(f'<li class="{"s" if it["kind"] == "シリーズ" else "n"}">{html.escape(it["name"])}</li>' for it in x["items"])
-        rows.append(f'<tr{cls}><td class="d">{d.month}/{d.day}<br><small>{x["weekday"]}</small></td>'
-                    f'<td class="e">{html.escape(" / ".join(ev)) or "―"}</td><td><ul>{items}</ul></td>'
-                    f'<td class="c">{x["total"]}本<br><small>シリーズ{x["series"]}</small></td></tr>')
+        series = [it for it in x["items"] if it["kind"] == "シリーズ"]
+        news = [it for it in x["items"] if it["kind"] != "シリーズ"]
+        s_items = "".join(f'<li>{html.escape(it["name"])}</li>' for it in series)
+        n_items = "・".join(html.escape(it["name"]) for it in news)
+        cls = "card we" if d.weekday() >= 5 else "card"
+        if d.weekday() == 0:
+            cards.append(f'<h2 class="wk">{d.month}/{d.day} の週</h2>')
+        cards.append(
+            f'<section class="{cls}"><header><span class="date">{d.month}/{d.day}<b>{x["weekday"]}</b></span>'
+            f'<span class="count">{x["total"]}本<small>シリーズ{x["series"]}</small></span></header>'
+            f'<p class="ev">{html.escape(" ／ ".join(ev)) or "試合なし"}</p>'
+            f'<ul class="s">{s_items}</ul><p class="n">{n_items}</p></section>')
     y, m = month[:4], int(month[5:7])
     return f'''<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{y}年{m}月の投稿カレンダー</title>
 <style>
-:root{{--bg:#f6f4ef;--fg:#1d1c1a;--mut:#6a6660;--line:#dedad2;--card:#fff;--acc:#1f5f8b;--s:#e8f1f7;--n:#f3f1ec;--we:#fbf6ea}}
-@media (prefers-color-scheme:dark){{:root:not([data-theme=light]){{--bg:#151412;--fg:#eeece6;--mut:#a29d94;--line:#3a3731;--card:#1f1d1a;--acc:#7fb3d9;--s:#1c2a35;--n:#26231f;--we:#2b261c}}}}
-:root[data-theme=dark]{{--bg:#151412;--fg:#eeece6;--mut:#a29d94;--line:#3a3731;--card:#1f1d1a;--acc:#7fb3d9;--s:#1c2a35;--n:#26231f;--we:#2b261c}}
-body{{margin:0;background:var(--bg);color:var(--fg);font:15px/1.7 "Hiragino Sans","Noto Sans JP",system-ui,sans-serif;padding-inline:16px;padding-block:20px 60px}}
-main{{max-width:900px;margin:0 auto}} h1{{font-size:1.35rem;margin:0 0 .3rem;color:var(--acc)}} p.lead{{color:var(--mut);margin:0 0 12px;font-size:.9rem}}
-.note{{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:.86rem;margin-bottom:14px}}
-.tbl{{overflow-x:auto}} table{{border-collapse:collapse;width:100%;font-size:.86rem}} th,td{{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}}
-th{{background:var(--card)}} td.d{{white-space:nowrap;font-weight:700;width:3.5rem}} td.e{{color:var(--mut);width:11rem}} td.c{{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}}
-tr.we td{{background:var(--we)}} ul{{margin:0;padding-left:1.1rem}} li.s{{color:var(--acc)}} li.n{{color:var(--mut)}}
+:root{{--bg:#f6f4ef;--fg:#1d1c1a;--mut:#6a6660;--line:#dedad2;--card:#fff;--acc:#1f5f8b;--we:#fbf6ea}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme=light]){{--bg:#151412;--fg:#eeece6;--mut:#a29d94;--line:#3a3731;--card:#1f1d1a;--acc:#7fb3d9;--we:#2b261c}}}}
+:root[data-theme=dark]{{--bg:#151412;--fg:#eeece6;--mut:#a29d94;--line:#3a3731;--card:#1f1d1a;--acc:#7fb3d9;--we:#2b261c}}
+body{{margin:0;background:var(--bg);color:var(--fg);font:15px/1.65 "Hiragino Sans","Noto Sans JP",system-ui,sans-serif;padding-inline:16px;padding-block:16px 60px}}
+main{{max-width:720px;margin:0 auto}} h1{{font-size:1.25rem;margin:0 0 .3rem;color:var(--acc)}} p.lead{{color:var(--mut);margin:0 0 10px;font-size:.86rem}}
+.note{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.84rem;margin-bottom:12px}}
+h2.wk{{font-size:.8rem;color:var(--mut);margin:18px 0 6px;letter-spacing:.04em;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:2}}
+.card{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0}} .card.we{{background:var(--we)}}
+.card header{{display:flex;justify-content:space-between;align-items:baseline;gap:8px}}
+.date{{font-size:1.15rem;font-weight:800;font-variant-numeric:tabular-nums}} .date b{{font-size:.8rem;font-weight:600;color:var(--mut);margin-left:6px}}
+.count{{font-size:.95rem;font-weight:700;white-space:nowrap}} .count small{{display:block;font-weight:400;color:var(--mut);font-size:.72rem;text-align:right}}
+.ev{{margin:.2rem 0 .4rem;font-size:.82rem;color:var(--mut)}}
+ul.s{{margin:0;padding-left:1.1rem;color:var(--acc);font-size:.92rem}} ul.s li{{margin:.1rem 0}}
+.n{{margin:.4rem 0 0;font-size:.84rem;color:var(--mut);border-top:1px dashed var(--line);padding-top:.35rem}}
+@media (min-width:700px){{.grid{{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}} h2.wk{{grid-column:1/-1}}}}
 </style></head><body><main>
 <h1>{y}年{m}月の投稿カレンダー</h1>
-<p class="lead">本編の本数。ショートは本編ごとに1本（1日10本の上限内）。青がシリーズ、灰色がニュース。</p>
-<div class="note">曜日の型：月＝欧州組の1週間／火＝5大リーグの順位表／水＝仕組みの解説／木＝ランキング・得点王／金＝選手紹介・比較。毎日クラブ紹介1本（ラ・リーガ→ブンデスリーガ）。試合の翌日は「数字で振り返る注目試合」。<br>
-10/1〜9は代表ウィークの続きでリーグ戦が無いので、その枠は代表紹介・監督の経歴・財政・スタジアム・記録・10年前で埋める。CLは10/14・15と21・22、ELは10/16・23。ニュースの枠（日本人3＋ほか）は当日の題材で埋める。</div>
-<div class="tbl"><table><thead><tr><th>日</th><th>試合</th><th>組み方</th><th>本数</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>
+<p class="lead">1日の本編の本数。ショートは本編ごとに1本（1日10本の上限内）。青がシリーズ、下の灰色がニュースの枠。</p>
+<div class="note">月＝欧州組の1週間／火＝5大リーグの順位表／水＝仕組みの解説／木＝ランキング・得点王／金＝選手紹介・比較。毎日クラブ紹介1本（ラ・リーガ→ブンデス）。試合の翌日は「数字で振り返る注目試合」。10/1〜9は代表ウィークの続きでリーグ戦が無い。CLは10/14・15と21・22、ELは10/16・23。</div>
+<div class="grid">{"".join(cards)}</div>
 </main></body></html>'''
 
 
