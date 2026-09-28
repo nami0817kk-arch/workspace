@@ -169,6 +169,7 @@ def write_note(m: dict, day: datetime.date, path: Path) -> None:
     league_ja = LEAGUE_JA.get(m["league"], m["league"])
     url = f"https://www.fotmob.com/matches/x/{m['id']}"
     wins = sum(1 for r in m["form"][theirs] if r[3] == "○")
+    who = f"{lead['name']}の{us}" if jp else us   # 日本人がいなければクラブ名だけ（同じ名前を二度言わない）
     opp_rows = [["リーグ", league_ja]] + ([["順位", f"{st['rank']}位（勝点{st['points']}）"]] if st else []) \
         + [["直近5試合", f"{wins}勝{sum(1 for r in m['form'][theirs] if r[3] == '△')}分{sum(1 for r in m['form'][theirs] if r[3] == '●')}敗"],
            ["会場", m["stadium"] or "（未取得）"]]
@@ -178,7 +179,7 @@ def write_note(m: dict, day: datetime.date, path: Path) -> None:
     sections = [
         {"id": "opponent", "heading": f"相手の{them}はいま", "tier": "確定", "official": True, "telop": f"次の相手 {them}", "narrator": "キャスター",
          "card": {"type": "table", "title": f"{them}の今", "columns": ["項目", "内容"], "rows": opp_rows, "source": "FotMob"},
-         "say": [f"{jst(m['utc'])}、{lead['name']}の{us}は{them}と対戦します。"]
+         "say": [f"{jst(m['utc'])}、{who}は{them}と対戦します。"]
                 + ([f"{them}はいま{league_ja}{st['rank']}位、勝点{st['points']}。"] if st else [f"{them}は{league_ja}のクラブです。"])
                 + ([f"こちらの{us}は{st_us['rank']}位、勝点{st_us['points']}です。"] if st_us else []),
          "sources": [url]},
@@ -186,17 +187,17 @@ def write_note(m: dict, day: datetime.date, path: Path) -> None:
          # 直近の記録が無い試合（欧州カップの初戦など）は表を出さない（空の表は draft が止める）
          **({"card": {"type": "table", "title": f"{them}の直近5試合", "columns": ["日付", "相手", "スコア", "結果"],
                       "rows": m["form"][theirs], "source": "FotMob"}} if m["form"][theirs] else {}),
-         "say": [f"{lead['name']}が当たる{them}、直近5試合は{wins}勝。", "（表の上から、勝ち方と負け方を1つずつ）"],
+         "say": [f"{who}が当たる{them}、直近5試合は{wins}勝。", "（表の上から、勝ち方と負け方を1つずつ）"],
          "sources": [url]},
         {"id": "h2h", "heading": "過去の対戦", "tier": "確定", "official": True, "telop": f"{us}対{them}の過去", "narrator": "解説",
          **({"card": {"type": "table", "title": "過去の対戦", "columns": ["日付", "ホーム", "スコア", "アウェイ"], "rows": m["h2h"],
                       "source": "FotMob"}} if m["h2h"] else {}),
-         "say": [f"{lead['name']}の{us}と{them}、過去の対戦は{our_wins}勝{ds}分{their_wins}敗です。", "（直近の1試合で何が起きたか）"],
+         "say": [f"{who}と{them}、過去の対戦は{our_wins}勝{ds}分{their_wins}敗です。", "（直近の1試合で何が起きたか）"],
          "sources": [url]},
         # 日本人のいない試合（欧州カップの相手紹介）は、主役のクラブが勝つための数字の節にする
         {"id": "keys", "heading": f"{us}が{them}に勝つには", "tier": "報道", "main": True, "telop": f"{us}の勝ち筋", "narrator": "解説",
          "say": [{"text": f"（前置き1行：{us}の次は{them}戦）", "short_only": True},
-                 "（相手の弱点と自分の強みを、数字で2〜3行。得点王の控え tools/scorers.py も使える）"],
+                 "（相手の弱点と自分の強みを、数字で2〜3行。得点王の控えも使える）"],
          "sources": [url]} if not jp else {
          "id": "japan", "heading": f"{lead['name']}の今季", "tier": "報道", "main": True, "telop": f"{lead['name']}（{us}）", "narrator": "解説",
          "card": {"type": "table", "title": f"{us}の日本人 今季", "columns": ["選手", "試合（先発）", "出場時間", "得点"],
