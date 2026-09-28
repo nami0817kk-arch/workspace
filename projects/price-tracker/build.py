@@ -169,7 +169,10 @@ def build(root: Path, out: Path) -> dict:
                   "今日の記録では、目立った値上がりはありませんでした。", stats, linked=linked)
 
     write_listing(out, urls, "lows/", "最安値圏の商品",
-                  "当サイトが記録している期間の最安値と同じか、それに近い価格の商品です。",
+                  "一度は値下がりしたうえで、当サイトが記録している期間の最安値と"
+                  "同じか、それに近い価格にある商品です。"
+                  "記録のあいだ一度も価格が動いていない商品は含みません"
+                  "（動いていなければ、その値段が自動的に最安値になるだけのため）。",
                   low, site, base, updated,
                   "価格の記録日数がまだ足りません。判定には最低7日分が必要です。", stats, linked=linked)
 
@@ -349,7 +352,7 @@ def build(root: Path, out: Path) -> dict:
             rows, site.get("drop_threshold", 0.05))), "ポイント分を引くと安いもの"),
         ("new-lows/", "最安値更新", len(analyze.new_lows(rows, latest_day)),
          "記録した最安値をこの日に塗り替えたもの"),
-        ("lows/", "最安値圏", len(low), "記録した最安値と同じか、それに近いもの"),
+        ("lows/", "最安値圏", len(low), "一度下がって、記録した最安値と同じか近いもの"),
         ("rises/", "値上がり", len(analyze.rises(
             rows, site.get("drop_threshold", 0.05))), "前回より高くなったもの"),
         ("active/", "よく動く", len(analyze.active(rows)),

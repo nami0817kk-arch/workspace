@@ -816,3 +816,10 @@ main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 
 .nav-more { position: static; }
 .nav-more-list { left: 0; right: auto; max-width: calc(100vw - 32px); }
 .nav-more-list a { white-space: normal; }
+
+/* 51. 楽天から来る文字列は、区切りの無い長い並びを含むことがある。
+   「HDMIケーブル 0.7m/1m/1.5m/2m/3m/4m/5m/7m/10m…」は幅375pxで
+   カードの中身が219px枠に312px入り、ページが64px横に伸びていた。
+   ブラウザは / で折り返さないので、必要なときだけどこでも折れるようにする。 */
+.card .name, .hits a, .caption, .fullname, h1,
+.views .what, .desc, .verdict, .note { overflow-wrap: anywhere; }

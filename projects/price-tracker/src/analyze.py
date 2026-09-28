@@ -56,9 +56,22 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
     high = rec.get("max") or price
     off_high_pct = (high - price) / high if high else 0.0
 
+    # 記録のあいだに価格が一度でも動いたか。
+    # これを見ないと「最安値」の意味が壊れる。実測（2026-09-28・記録23日）で、
+    # 「記録した中で最安」が付いていた3,925件のうち3,701件（94.3%）は
+    # 1円も動いていなかった。ずっと同じ値段なので自動的に最安になっていただけで、
+    # 読み手は「安くなった」と受け取る。動いて最安に来たのは224件しかない。
+    moved = high > low
+
+    # 値幅そのものがしきい値以下だと、その商品はどの日でも「最安値に近い」に
+    # なる。実測（2026-09-28）で87件中66件がこれで、うち50件は
+    # いまが記録上の最高値なのに「最安値に近い」の札が付いていた。
+    spread_pct = (high - low) / high if high else 0.0
+
     trustworthy = days >= MIN_DAYS_FOR_LOW
-    at_low = trustworthy and price <= low
-    near_low = trustworthy and 0 < vs_low_pct <= near_low_threshold
+    at_low = trustworthy and moved and price <= low
+    near_low = (trustworthy and moved and spread_pct > near_low_threshold
+                and 0 < vs_low_pct <= near_low_threshold)
     dropped = drop_pct >= drop_threshold
 
     if at_low:
@@ -69,8 +82,12 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
         label = "値下がり"
     elif not trustworthy:
         label = "記録中"
+    elif not moved:
+        label = "変動なし"
     else:
-        label = "横ばい"
+        # 「横ばい」だと、記録のあいだずっと動いていない「変動なし」と
+        # 見分けが付かない。ここが指しているのは前回との比較だけ。
+        label = "前回から変わらず"
 
     rate = int(rec.get("last_rate") or 1)
     eff = effective(price, rate)
@@ -92,6 +109,7 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
         "prev": prev, "drop_pct": drop_pct, "rise_pct": rise_pct,
         "vs_low_pct": vs_low_pct, "off_high_pct": off_high_pct,
         "at_low": at_low, "near_low": near_low, "dropped": dropped,
+        "moved": moved, "spread_pct": spread_pct,
         "trustworthy": trustworthy, "label": label,
         "low_date": rec.get("min_date"), "tail": rec.get("tail") or [],
     }
@@ -270,7 +288,12 @@ SCORE_PARTS = (
 
 def score_breakdown(row: dict) -> list[tuple[str, int]]:
     """条件ごとの点を返す。合計ではなく内訳で持つ（根拠を出せる形にする）。"""
-    near = max(0.0, 1 - min(row.get("vs_low_pct", 1.0), 0.3) / 0.3)
+    # 動いていない商品は、自分の値段と自分の最安値を比べているだけなので
+    # 「最安値に近い」は情報にならない。実測で600件中358件がこれだった。
+    if row.get("moved") is False:
+        near = 0.0
+    else:
+        near = max(0.0, 1 - min(row.get("vs_low_pct", 1.0), 0.3) / 0.3)
     eff = min(max(row.get("eff_drop_pct", 0.0), 0.0), 0.2) / 0.2
     drop = min(max(row.get("drop_pct", 0.0), 0.0), 0.2) / 0.2
     moves = min(change_count(row), 5) / 5
