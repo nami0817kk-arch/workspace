@@ -1771,9 +1771,16 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
     // 目標に達したものを先に。次が下げ幅の大きい順。
     hits.sort(function (a, b) { return (b.hit - a.hit) || (b.diff - a.diff); });
     var reached = hits.filter(function (h) { return h.hit; }).length;
-    note.textContent = reached
+    // 見守った商品が記録から外れる（販売終了・取得対象から外れる）ことがある。
+    // そのとき「0件」とだけ出すと、消えた理由が読み手に分からない。
+    var gone = codes.length - hits.length;
+    var lost = gone > 0
+      ? '（見守り中の' + codes.length + '件のうち' + gone
+        + '件は、いま記録にありません。販売終了などで取得できなくなった商品です）'
+      : '';
+    note.textContent = (reached
       ? hits.length + '件のうち ' + reached + '件が目標の値段に達しています'
-      : hits.length + '件';
+      : hits.length + '件') + lost;
     out.textContent = '';
     hits.forEach(function (h) {
       var li = document.createElement('li');
