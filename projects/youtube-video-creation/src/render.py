@@ -123,6 +123,7 @@ class Renderer:
         self._board_stages: set[str] = set()
         # 冒頭の節で敷く写真（frame_entries が台本から入れる）
         self.opening_photo: str = ""
+        self.nameplate: str = ""
         self.opening_scene: str = ""
         self.opening_points: list[str] = []
         # 節の番号（左上のピルに「02」と出す）と、右上の点（何節目か）
@@ -204,6 +205,9 @@ class Renderer:
                 ("hook:" + "/".join(self.opening_points)
                  if self.opening_points and scene.title == self.opening_scene
                  and scene.lines and line is scene.lines[0] else ""),
+                ("plate:" + self.nameplate
+                 if self.nameplate and scene.title == self.opening_scene
+                 and scene.lines and line in scene.lines[:2] else ""),
                 # 立ち絵を出さないなら口パクも跳ねも絵に影響しない
                 ("open" if mouth_open else "close") if self.layout.with_characters else "-",
                 f"{telop_t:.2f}/{hop_t if self.layout.with_characters else 1.0:.2f}",
@@ -265,6 +269,8 @@ class Renderer:
             self._draw_scene_title(canvas, scene.title, telop_t if head else 1.0)
         if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
             self._draw_channel_card(canvas)
+        if self.nameplate and scene.title == self.opening_scene and scene.lines and line in scene.lines[:2] and not board:
+            self._draw_nameplate(canvas, self.nameplate)
             self._draw_hook_points(canvas, self.opening_points)
         if self.layout.with_characters:
             self._draw_telop(canvas, member, text, telop_t, source)
@@ -365,6 +371,9 @@ class Renderer:
 
         width, height = self.layout.width, self.layout.height
         photo = Image.open(path).convert("RGBA")
+        # **写真をごく軽く補正**（2026-09-28「背景の画像をもっと向上」）。Commons の写真は眠いものが多い
+        photo = ImageEnhance.Contrast(photo).enhance(1.06)
+        photo = ImageEnhance.Sharpness(photo).enhance(1.15)
         bed = _cover(photo, width, height).filter(ImageFilter.GaussianBlur(30))
         bed = ImageEnhance.Brightness(bed).enhance(0.55)
         if self.layout.is_portrait and _is_board(image_path):
@@ -732,6 +741,28 @@ class Renderer:
         draw.rounded_rectangle([bx, top + 10, bx + button_w + 40, top + height - 10],
                                radius=24, fill=(204, 0, 0, 255))
         draw.text((bx + 20, top + 16), button, font=font, fill=(255, 255, 255, 255))
+        canvas.alpha_composite(layer)
+
+    def _draw_nameplate(self, canvas: Image.Image, text: str) -> None:
+        """冒頭の2行に出す名前の板（2026-09-28 選手紹介）。「名前｜所属 位置」を左の中ほどに大きく。
+
+        名前は白の大きな字、下に黄色の線、その下に所属を小さく。左上の登録カードと、下の見出しの帯のあいだに置く。
+        """
+        name, _, sub = text.partition("｜")
+        layer, draw = _layer(canvas.size)
+        font_path = str(self.config.video.font_path())
+        big = ImageFont.truetype(font_path, 96 if not self.layout.is_portrait else 72)
+        small = ImageFont.truetype(font_path, 38 if not self.layout.is_portrait else 34)
+        x, y = 48, int(self.layout.height * (0.16 if not self.layout.is_portrait else 0.14))
+        w = draw.textlength(name, font=big)
+        # 字の裏に暗い帯（写真の上でも読める）
+        draw.rounded_rectangle([x - 16, y - 16, x + w + 32, y + (big.size + 30) + (small.size + 22 if sub else 0)],
+                               radius=18, fill=(6, 10, 14, 150))
+        draw.text((x, y), name, font=big, fill=(255, 255, 255, 255), stroke_width=2, stroke_fill=(0, 0, 0, 160))
+        bar_y = y + big.size + 16
+        draw.rounded_rectangle([x, bar_y, x + w, bar_y + 8], radius=4, fill=BRAND_GOLD + (255,))
+        if sub:
+            draw.text((x, bar_y + 18), sub.strip(), font=small, fill=(230, 234, 240, 255))
         canvas.alpha_composite(layer)
 
     def _draw_scene_title(self, canvas: Image.Image, title: str, slide_t: float = 1.0) -> None:
@@ -1176,6 +1207,8 @@ class Renderer:
         self.opening_photo = opening_photo(script.meta)
         self.opening_scene = script.scenes[0].title if script.scenes else ""
         self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
+        # 名前の板（選手紹介の冒頭。「名前｜所属 位置」）
+        self.nameplate = str(script.meta.get("nameplate") or "").strip()
         # 写真の下地（focus_x を反映したもの）を背景側に並べてから、動画の上に描くかを決める
         self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script, inserts))
         self.scene_order = {scene.title: index + 1 for index, scene in enumerate(script.scenes)}

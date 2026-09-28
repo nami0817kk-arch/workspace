@@ -249,6 +249,8 @@ class Notes:
     # 一言を述べてから始める」）。プレミア20クラブ紹介のために足した。
     # 書いていなければ、その行は出さない（今までどおりタイトルから始まる）
     lead: str = ""
+    # 冒頭に出す名前の板（「アーリング・ハーランド｜マンチェスター・シティ FW」。選手紹介 2026-09-28）
+    nameplate: str = ""
     # **このあと話すことを、冒頭で見せる**（2026-09-23 指摘「最初の15秒で人が離れる
     # 可能性があるから、この後の流れを見せるのもあり」）。題を読む行に表を出す。
     # 取材メモの `theme.opening_card`（{type: table, ...}）に書く
@@ -446,6 +448,7 @@ def build_notes(raw: dict) -> Notes:
         prefix=str(theme.get("prefix") or "").strip().strip("【】"),
         hook=str(theme.get("hook") or "").strip(),
         lead=str(theme.get("lead") or "").strip(),
+        nameplate=str(theme.get("nameplate") or "").strip(),
         opening_card=(dict(theme["opening_card"]) if theme.get("opening_card") else None),
         opening_image=str(theme.get("opening_image") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
@@ -2051,6 +2054,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "date": notes.date,
         "intro_title": notes.title,
         "intro_label": shape["label"],
+        **({"nameplate": notes.nameplate} if notes.nameplate else {}),
         "outro_title": _telop(notes.watch, 20) or "続報は次回お伝えします",
         "outro_sub": "チャンネル登録でお待ちください",
         "description": (
