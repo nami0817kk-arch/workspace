@@ -1071,6 +1071,43 @@ routines:
           - {q: "順位表 反応", domains: rumour}
         check: 数えた件数と母数を書く。10〜20件を短く刻む
 
+  # ---------------------------------------------------------------- 仕組みの解説（水曜のシリーズ、10月の案4。2026-09-28）
+  explain:
+    name: 仕組みの解説（規定・制度）
+    when: 水曜
+    cover_hours: 168
+    target_minutes: 5
+    angle: |
+      規定や制度を1つ選んで、初めて聞く人に通じる形で説明する（ネーションズリーグの
+      「リーグB」、CLのリーグフェーズ、財政のルール、移籍の窓、VARの手順など）。
+      **公式の規定の原文まで辿る**（UEFA・リーグ・FIFA・連盟）。記事の言い換えを根拠にしない。
+      節は「問い → 仕組み → 数字（表） → 実例 → 見立て」。数字は表に、実例は今季の出来事から1つ。
+      他人の声は無くてよい。用語は初めて聞く人に通じる形で（流れの点検の問い⑤）。
+    structure:
+      - {id: what, heading: 何の仕組みか, tier: 確定}
+      - {id: how, heading: どう動くのか, tier: 確定}
+      - {id: numbers, heading: 数字で見ると, tier: 確定}
+      - {id: example, heading: 今季の実例, tier: 報道}
+      - {id: view, heading: 見立て, tier: 背景}
+    steps:
+      - id: rule
+        what: 規定の原文（公式サイトの規約・レギュレーション）
+        tier: 確定
+        queries:
+          - {q: "{en} regulations", domains: official}
+          - {q: "{title} 規定 公式", domains: japanese}
+        check: |
+          公式の規定の条文か。何年版か。**記事の説明を規定の代わりにしない。**
+          数字（枠・金額・期日）は条文からそのまま
+
+      - id: example
+        what: 今季その仕組みが効いた出来事
+        tier: 報道
+        queries:
+          - {q: "{en} this season", domains: english}
+          - {q: "{title} 今季", domains: japanese}
+        check: 出来事の日付とクラブ名を控える。仕組みの説明と実例を混ぜない
+
   deadline_day:
     name: 移籍期限日（特別編）
     when: 各国の移籍期限の当日と翌日
