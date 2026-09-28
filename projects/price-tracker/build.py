@@ -232,8 +232,15 @@ def build(root: Path, out: Path) -> dict:
         # 名前は config で付ける任意項目。無ければIDをそのまま見出しにする。
         g = {**g, "genre_id": gid, "name": str(g.get("name") or gid)}
         hit = analyze.by_genre(rows, gid)
-        write_listing(out, urls, f"genre/{gid}/", f'{g["name"]}の値下がり',
-                      f'{g["name"]}の商品を毎日記録し、値下がりの大きい順に並べています。',
+        # 題は中身に合わせる。「◯◯の値下がり」で全商品を出していたため、
+        # 実測（2026-09-28）ではパソコン・周辺機器1,528件のうち値下がりは3件
+        # しか無いのに、題は「値下がり」と名乗っていた。
+        # 中身を値下がりだけに絞ると13,000ページへの導線が消えて索引から
+        # 落ちるので、絞るのではなく題のほうを直す。
+        write_listing(out, urls, f"genre/{gid}/", f'{g["name"]}の価格記録',
+                      f'{g["name"]}の商品を毎日記録しています。'
+                      f'値下がりの大きい順に並べていますが、'
+                      f'値下がりしていない商品も含みます。',
                       hit, site, base, updated,
                       "このジャンルはまだ記録が始まったばかりです。", stats, linked=linked)
         listed.append({**g, "count": len(hit)})
@@ -365,7 +372,7 @@ def build(root: Path, out: Path) -> dict:
          "記録のあいだに価格が何度も変わったもの"),
         ("ending/", "期限が近い", len(analyze.ending_soon(rows, updated)),
          "ポイント倍率が3日以内に終わるもの"),
-        ("genre/", "ジャンル別", len(listed), "ジャンルごとに値下がりの大きい順"),
+        ("genre/", "ジャンル別", len(listed), "ジャンルごとの価格記録（値下がりの大きい順）"),
         ("archive/", "日付別", len(archive_counts), "過ぎた日の値下がりの記録"),
     ]
     # トップは商品を並べず、入口だけを置く（2026-09-26 ユーザー指示）。

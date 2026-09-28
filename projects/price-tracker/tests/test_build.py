@@ -89,6 +89,21 @@ class BuildTest(unittest.TestCase):
                                 path.read_text(encoding="utf-8")).group(1)
                 self.assertTrue(ref.endswith(css), ref)
 
+    def test_ジャンルの題に値下がりと書かない(self):
+        """「◯◯の値下がり」で全商品を出していた。実測（2026-09-28）では
+        パソコン・周辺機器1,528件のうち値下がりは3件しか無かった。
+        中身を絞ると13,000ページへの導線が消えて索引から落ちるので、
+        絞るのではなく題のほうを中身に合わせる。"""
+        import re
+        pages = list((self.out / "genre").glob("*/index.html"))
+        self.assertTrue(pages, "ジャンルのページが無い")
+        for p in pages:
+            h = p.read_text(encoding="utf-8")
+            title = re.search(r"<title>(.*?)</title>", h, re.S).group(1)
+            with self.subTest(page=p.parent.name):
+                self.assertNotIn("の値下がり", title)
+                self.assertIn("の価格記録", title)
+
     def test_expected_pages_exist(self):
         for path in ("index.html", "lows/index.html", "about/index.html",
                      "privacy/index.html", "contact/index.html",
