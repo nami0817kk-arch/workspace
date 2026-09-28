@@ -898,13 +898,17 @@ document.addEventListener('DOMContentLoaded', function () {
     history.replaceState(null, '', s ? '?' + s : location.pathname);
   }
 
+  // 取り出しは、値を使うより前に置く。var は巻き上げで宣言だけが上がり、
+  // 値は undefined のままなので、?free=1 付きのURLを開くと
+  // 「undefined.checked = true」で例外になり、一覧の道具が丸ごと死んでいた
+  // （並び替えも価格帯も「条件を外す」も効かなくなる。2026-09-28 に発見）。
+  var freeonly = document.getElementById('freeonly');
+  var instock = document.getElementById('instock');
+  var reset = document.getElementById('reset');
   if (q.get('sort')) { sort.value = q.get('sort'); }
   if (q.get('range')) { range.value = q.get('range'); }
   if (q.get('free')) { freeonly.checked = true; }
   if (q.get('stock')) { instock.checked = true; }
-  var freeonly = document.getElementById('freeonly');
-  var instock = document.getElementById('instock');
-  var reset = document.getElementById('reset');
   reset.addEventListener('click', function () {
     sort.value = ''; range.value = '';
     freeonly.checked = false; instock.checked = false; apply();

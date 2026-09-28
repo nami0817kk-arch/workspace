@@ -843,3 +843,35 @@ class 記録の表の前日差Test(unittest.TestCase):
         self.assertIn("20倍", out)
         self.assertNotIn("1倍", out)   # 通常ポイントは書かない
 
+
+
+class 一覧の道具Test(unittest.TestCase):
+    """`?free=1` 付きのURLを開くと、一覧の道具が丸ごと死んでいた
+    （2026-09-28 に発見）。
+
+    `var freeonly = ...` を使うより後に書いていたため、`var` の巻き上げで
+    宣言だけが上がり、値は `undefined` のまま `undefined.checked = true` に
+    なって例外が出ていた。チェックを入れると URL に `?free=1` が入るので、
+    再読み込みや共有のたびに並び替えも価格帯も効かなくなる。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_初期値を入れるより前に要素を取り出している(self):
+        js = self.theme.LIST_JS
+
+        # 巻き上げで宣言だけが上がるので、値を入れる行より前に取り出す
+        for name, use in (("freeonly", "freeonly.checked = true"),
+                          ("instock", "instock.checked = true"),
+                          ("reset", "reset.addEventListener")):
+            with self.subTest(name=name):
+                self.assertLess(js.index(f"var {name} = document.getElementById"),
+                                js.index(use), f"{name} を取り出す前に使っている")
+
+    def test_絞り込みの印はURLに残る(self):
+        js = self.theme.LIST_JS
+
+        self.assertIn("p.set('free', '1')", js)
+        self.assertIn("q.get('free')", js)
