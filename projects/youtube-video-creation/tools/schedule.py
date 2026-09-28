@@ -19,9 +19,17 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 PER_DAY = 10
+SERIES_TARGET = 6      # 1日のシリーズの本数（2026-09-28 ユーザー「シリーズの割合を上げたい」）。残りがニュース
+JP_NEWS = 3            # 日本人ニュースは減らさない（登録者の柱）
+# 毎日1本の型（クラブ紹介のほかに、選手紹介も毎日）
+DAILY = [("クラブ紹介", 2), ("有名選手の紹介", 21)]
+# 空いた枠を埋める随時のシリーズ（順に回す）
+POOL = [("有名選手の比較", 22), ("日本人選手と同僚の序列の理由", 27), ("日本人選手 今季の軌跡", 10),
+        ("監督の経歴", 13), ("クラブの財政", 12), ("記録の解説", 26), ("クラブ同士の比較（ダービーの数字）", 23),
+        ("スタジアム紹介", 19), ("同じ年齢での比較", 24), ("若手の数字", 17), ("10年前の今日", 6), ("1年前の噂の検証", 15)]
 WEEKDAY = {0: ("欧州組の1週間（週報）", 1), 1: ("5大リーグの順位表と今週の1つ", 3),
            2: ("仕組みの解説", 4), 3: ("数字で見るランキング／得点王レース", 5),
-           4: ("有名選手の紹介・比較", 21)}
+           4: ("有名選手の比較", 22)}
 # 代表ウィーク・試合の無い日の埋め草（順に回す）
 FILLERS = [("代表チームの紹介", 25), ("監督の経歴", 13), ("クラブの財政", 12), ("スタジアム紹介", 19),
            ("記録の解説", 26), ("10年前の今日", 6), ("若手の数字", 17), ("1年前の噂の検証", 15)]
@@ -40,6 +48,7 @@ def build(month: str) -> list[dict]:
     md = load_matchdays()
     club_i = 0
     filler_i = 0
+    pool_i = 0
     d = first
     while d.month == mon:
         key = d.strftime("%m/%d")
@@ -49,9 +58,10 @@ def build(month: str) -> list[dict]:
         cups = [n for n in leagues if n in ("CL", "EL")]
         league_games = [n for n in leagues if n not in ("CL", "EL")]
         items: list[dict] = []
-        # 1. クラブ紹介（毎日）
+        # 1. 毎日の型：クラブ紹介と選手紹介
         league, code = CLUB_SERIES[club_i % len(CLUB_SERIES)]; club_i += 1
         items.append(dict(kind="シリーズ", name=f"クラブ紹介（{league} {code}）", plan=2))
+        items.append(dict(kind="シリーズ", name="有名選手の紹介（1人）", plan=21))
         # 2. 曜日のシリーズ
         recent = [n for n, t in md.items() if n not in ("親善", "ネーションズ", "CL", "EL")
                   and any(t.get((d - datetime.timedelta(days=k)).strftime("%m/%d")) for k in range(1, 8))]
@@ -80,18 +90,23 @@ def build(month: str) -> list[dict]:
             items.append(dict(kind="シリーズ", name="移籍の答え合わせ（夏の移籍の3か月後）", plan=28))
         if (d + datetime.timedelta(days=2)).strftime("%m/%d") in md.get("プレミア", {}) and wd == 3:
             items.append(dict(kind="シリーズ", name="日本人選手の次の相手（土日の試合）", plan=14))
-        # シリーズは1日4本まで。埋め草から落とす
-        while len(items) > 4 and any(it["plan"] in {f[1] for f in FILLERS} for it in items):
-            items.remove(next(it for it in items if it["plan"] in {f[1] for f in FILLERS}))
-        # 5. ニュースで10本まで
+        # 5. 目安の本数まで、随時のシリーズで埋める（同じ日に同じものは置かない）
+        while len(items) < SERIES_TARGET:
+            name, plan = POOL[pool_i % len(POOL)]; pool_i += 1
+            if any(it["plan"] == plan for it in items):
+                continue
+            items.append(dict(kind="シリーズ", name=name, plan=plan))
+        # 多すぎる日は埋め草から落とす
+        while len(items) > SERIES_TARGET and any(it["plan"] in {f[1] for f in FILLERS + POOL} for it in items):
+            items.remove(next(it for it in reversed(items) if it["plan"] in {f[1] for f in FILLERS + POOL}))
+        # 6. ニュースで10本まで（日本人3は減らさない。残りが「ほか」で最低1本）
         series_n = len(items)
-        jp = 3
-        other = PER_DAY - series_n - jp
-        items.append(dict(kind="ニュース", name=f"日本人ニュース ×{jp}", plan=0))
-        items.append(dict(kind="ニュース", name=f"ほかのニュース ×{max(other, 2)}", plan=0))
+        other = max(1, PER_DAY - series_n - JP_NEWS)
+        items.append(dict(kind="ニュース", name=f"日本人ニュース ×{JP_NEWS}", plan=0))
+        items.append(dict(kind="ニュース", name=f"ほかのニュース ×{other}", plan=0))
         days.append(dict(date=d.isoformat(), weekday="月火水木金土日"[wd],
                          games=league_games, cups=cups, national=national,
-                         series=series_n, total=series_n + jp + max(other, 2), items=items))
+                         series=series_n, total=series_n + JP_NEWS + other, items=items))
         d += datetime.timedelta(days=1)
     return days
 
@@ -187,7 +202,7 @@ ul.s{{margin:0;padding-left:1.1rem;color:var(--acc);font-size:.92rem}} ul.s li{{
 @media (min-width:700px){{.grid{{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}} h2.wk{{grid-column:1/-1}}}}
 </style></head><body><main>
 <h1>{y}年{m}月の投稿カレンダー</h1>
-<p class="lead">1日の本編の本数。ショートは本編ごとに1本（1日10本の上限内）。青がシリーズ、下の灰色がニュースの枠。</p>
+<p class="lead">1日の本編の本数。ショートは本編ごとに1本（1日10本の上限内）。青がシリーズ（1日6本が目安）、下の灰色がニュースの枠（日本人3＋ほか）。</p>
 <div class="note">月＝欧州組の1週間／火＝5大リーグの順位表／水＝仕組みの解説／木＝ランキング・得点王／金＝選手紹介・比較。毎日クラブ紹介1本（ラ・リーガ→ブンデス）。試合の翌日は「数字で振り返る注目試合」。10/1〜9は代表ウィークの続きでリーグ戦が無い。CLは10/14・15と21・22、ELは10/16・23。</div>
 {summary}<div class="grid">{"".join(cards)}</div>
 </main></body></html>'''

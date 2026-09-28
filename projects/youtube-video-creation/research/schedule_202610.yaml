@@ -3,26 +3,32 @@ per_day: 10
 totals:
   series:
     クラブ紹介: 31
+    有名選手の紹介・比較: 31
     数字で振り返る注目試合: 21
+    有名選手の比較: 10
+    監督の経歴: 8
+    記録の解説: 7
+    日本人選手と同僚の序列の理由: 6
+    日本人選手 今季の軌跡: 6
+    クラブの財政: 6
+    若手の数字: 6
+    10年前の今日: 6
+    1年前の噂の検証: 6
     数字で見るランキング／得点王レース: 5
-    有名選手の紹介・比較: 5
+    クラブ同士の比較: 5
+    スタジアム紹介: 5
+    同じ年齢での比較: 5
     欧州組の1週間（週報）: 4
     仕組みの解説: 4
     日本人選手の次の相手: 4
     5大リーグの順位表と今週の1つ: 3
     代表チームの紹介: 2
-    監督の経歴: 2
     欧州カップの対戦相手紹介: 2
     日本人選手の月間まとめ: 1
-    クラブの財政: 1
-    スタジアム紹介: 1
-    記録の解説: 1
     得点王・アシスト王レース: 1
-    10年前の今日: 1
-    若手の数字: 1
     移籍の答え合わせ: 1
   japanese_news: 93
-  other_news: 126
+  other_news: 31
   mains: 310
   shorts: 310
   days: 31
@@ -33,12 +39,15 @@ days:
   cups: []
   national:
   - 親善
-  series: 4
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll01）
     plan: 2
+  - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
   - kind: シリーズ
     name: 数字で見るランキング／得点王レース
     plan: 5
@@ -48,11 +57,14 @@ days:
   - kind: シリーズ
     name: 日本人選手の月間まとめ（前月）
     plan: 16
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×3
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-02'
   weekday: 金
@@ -61,23 +73,32 @@ days:
   national:
   - 親善
   - ネーションズ
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll02）
     plan: 2
   - kind: シリーズ
-    name: 有名選手の紹介・比較
+    name: 有名選手の紹介（1人）
     plan: 21
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
   - kind: シリーズ
     name: 監督の経歴
     plan: 13
+  - kind: シリーズ
+    name: 日本人選手と同僚の序列の理由
+    plan: 27
+  - kind: シリーズ
+    name: 日本人選手 今季の軌跡
+    plan: 10
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-03'
   weekday: 土
@@ -86,20 +107,32 @@ days:
   national:
   - 親善
   - ネーションズ
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll03）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: クラブの財政
     plan: 12
+  - kind: シリーズ
+    name: 監督の経歴
+    plan: 13
+  - kind: シリーズ
+    name: 記録の解説
+    plan: 26
+  - kind: シリーズ
+    name: クラブ同士の比較（ダービーの数字）
+    plan: 23
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-04'
   weekday: 日
@@ -108,20 +141,32 @@ days:
   national:
   - 親善
   - ネーションズ
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll04）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: スタジアム紹介
     plan: 19
+  - kind: シリーズ
+    name: 同じ年齢での比較
+    plan: 24
+  - kind: シリーズ
+    name: 若手の数字
+    plan: 17
+  - kind: シリーズ
+    name: 10年前の今日
+    plan: 6
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-05'
   weekday: 月
@@ -130,23 +175,32 @@ days:
   national:
   - 親善
   - ネーションズ
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll05）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 欧州組の1週間（代表戦の数字）
     plan: 1
   - kind: シリーズ
     name: 記録の解説
     plan: 26
+  - kind: シリーズ
+    name: 1年前の噂の検証
+    plan: 15
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-06'
   weekday: 火
@@ -155,23 +209,32 @@ days:
   national:
   - 親善
   - ネーションズ
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll06）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 得点王・アシスト王レース（開幕からここまで）
     plan: 11
   - kind: シリーズ
     name: 10年前の今日
     plan: 6
+  - kind: シリーズ
+    name: 日本人選手と同僚の序列の理由
+    plan: 27
+  - kind: シリーズ
+    name: 日本人選手 今季の軌跡
+    plan: 10
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-07'
   weekday: 水
@@ -180,38 +243,53 @@ days:
   national:
   - 親善
   - ネーションズ
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll07）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 仕組みの解説
     plan: 4
   - kind: シリーズ
     name: 若手の数字
     plan: 17
+  - kind: シリーズ
+    name: 監督の経歴
+    plan: 13
+  - kind: シリーズ
+    name: クラブの財政
+    plan: 12
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-08'
   weekday: 木
   games: []
   cups: []
   national: []
-  series: 4
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll08）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 数字で見るランキング／得点王レース
     plan: 5
+  - kind: シリーズ
+    name: 1年前の噂の検証
+    plan: 15
   - kind: シリーズ
     name: 移籍の答え合わせ（夏の移籍の3か月後）
     plan: 28
@@ -222,30 +300,39 @@ days:
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×3
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-09'
   weekday: 金
   games: []
   cups: []
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll09）
     plan: 2
   - kind: シリーズ
-    name: 有名選手の紹介・比較
+    name: 有名選手の紹介（1人）
     plan: 21
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
   - kind: シリーズ
     name: 代表チームの紹介
     plan: 25
+  - kind: シリーズ
+    name: 記録の解説
+    plan: 26
+  - kind: シリーズ
+    name: クラブ同士の比較（ダービーの数字）
+    plan: 23
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-10'
   weekday: 土
@@ -259,20 +346,32 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll10）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 監督の経歴
     plan: 13
+  - kind: シリーズ
+    name: スタジアム紹介
+    plan: 19
+  - kind: シリーズ
+    name: 同じ年齢での比較
+    plan: 24
+  - kind: シリーズ
+    name: 若手の数字
+    plan: 17
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-11'
   weekday: 日
@@ -286,20 +385,32 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll11）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・ブンデス）
     plan: 9
+  - kind: シリーズ
+    name: 10年前の今日
+    plan: 6
+  - kind: シリーズ
+    name: 1年前の噂の検証
+    plan: 15
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-12'
   weekday: 月
@@ -312,23 +423,32 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll12）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 欧州組の1週間（週報）
     plan: 1
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・ブンデス）
     plan: 9
+  - kind: シリーズ
+    name: 日本人選手と同僚の序列の理由
+    plan: 27
+  - kind: シリーズ
+    name: 日本人選手 今季の軌跡
+    plan: 10
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-13'
   weekday: 火
@@ -339,12 +459,15 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 4
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll13）
     plan: 2
+  - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
   - kind: シリーズ
     name: 5大リーグの順位表と今週の1つ
     plan: 3
@@ -354,11 +477,14 @@ days:
   - kind: シリーズ
     name: 欧州カップの対戦相手紹介（明日のCL）
     plan: 18
+  - kind: シリーズ
+    name: 監督の経歴
+    plan: 13
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×3
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-14'
   weekday: 水
@@ -366,23 +492,32 @@ days:
   cups:
   - CL
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll14）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 仕組みの解説
     plan: 4
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・セリエA）
     plan: 9
+  - kind: シリーズ
+    name: クラブの財政
+    plan: 12
+  - kind: シリーズ
+    name: 記録の解説
+    plan: 26
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-15'
   weekday: 木
@@ -390,12 +525,15 @@ days:
   cups:
   - CL
   national: []
-  series: 4
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll15）
     plan: 2
+  - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
   - kind: シリーズ
     name: 数字で見るランキング／得点王レース
     plan: 5
@@ -405,11 +543,14 @@ days:
   - kind: シリーズ
     name: 日本人選手の次の相手（土日の試合）
     plan: 14
+  - kind: シリーズ
+    name: クラブ同士の比較（ダービーの数字）
+    plan: 23
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×3
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-16'
   weekday: 金
@@ -417,23 +558,32 @@ days:
   cups:
   - EL
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll16）
     plan: 2
   - kind: シリーズ
-    name: 有名選手の紹介・比較
+    name: 有名選手の紹介（1人）
     plan: 21
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のCL）
     plan: 9
+  - kind: シリーズ
+    name: スタジアム紹介
+    plan: 19
+  - kind: シリーズ
+    name: 同じ年齢での比較
+    plan: 24
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-17'
   weekday: 土
@@ -446,20 +596,32 @@ days:
   - エールディビジ
   cups: []
   national: []
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll17）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 数字で振り返る注目試合（前日のEL）
     plan: 9
+  - kind: シリーズ
+    name: 若手の数字
+    plan: 17
+  - kind: シリーズ
+    name: 10年前の今日
+    plan: 6
+  - kind: シリーズ
+    name: 1年前の噂の検証
+    plan: 15
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-18'
   weekday: 日
@@ -472,20 +634,32 @@ days:
   - エールディビジ
   cups: []
   national: []
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll18）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・ブンデス）
     plan: 9
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
+  - kind: シリーズ
+    name: 日本人選手と同僚の序列の理由
+    plan: 27
+  - kind: シリーズ
+    name: 日本人選手 今季の軌跡
+    plan: 10
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-19'
   weekday: 月
@@ -498,23 +672,32 @@ days:
   - エールディビジ
   cups: []
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll19）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 欧州組の1週間（週報）
     plan: 1
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・ブンデス）
     plan: 9
+  - kind: シリーズ
+    name: 監督の経歴
+    plan: 13
+  - kind: シリーズ
+    name: クラブの財政
+    plan: 12
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-20'
   weekday: 火
@@ -524,12 +707,15 @@ days:
   - セリエA
   cups: []
   national: []
-  series: 4
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ラ・リーガ ll20）
     plan: 2
+  - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
   - kind: シリーズ
     name: 5大リーグの順位表と今週の1つ
     plan: 3
@@ -539,11 +725,14 @@ days:
   - kind: シリーズ
     name: 欧州カップの対戦相手紹介（明日のCL）
     plan: 18
+  - kind: シリーズ
+    name: 記録の解説
+    plan: 26
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×3
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-21'
   weekday: 水
@@ -551,23 +740,32 @@ days:
   cups:
   - CL
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd01）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 仕組みの解説
     plan: 4
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・セリエA）
     plan: 9
+  - kind: シリーズ
+    name: クラブ同士の比較（ダービーの数字）
+    plan: 23
+  - kind: シリーズ
+    name: スタジアム紹介
+    plan: 19
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-22'
   weekday: 木
@@ -576,12 +774,15 @@ days:
   cups:
   - CL
   national: []
-  series: 4
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd02）
     plan: 2
+  - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
   - kind: シリーズ
     name: 数字で見るランキング／得点王レース
     plan: 5
@@ -591,11 +792,14 @@ days:
   - kind: シリーズ
     name: 日本人選手の次の相手（土日の試合）
     plan: 14
+  - kind: シリーズ
+    name: 同じ年齢での比較
+    plan: 24
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×3
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-23'
   weekday: 金
@@ -603,23 +807,32 @@ days:
   cups:
   - EL
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd03）
     plan: 2
   - kind: シリーズ
-    name: 有名選手の紹介・比較
+    name: 有名選手の紹介（1人）
     plan: 21
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のラ・リーガ・CL）
     plan: 9
+  - kind: シリーズ
+    name: 若手の数字
+    plan: 17
+  - kind: シリーズ
+    name: 10年前の今日
+    plan: 6
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-24'
   weekday: 土
@@ -633,20 +846,32 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd04）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 数字で振り返る注目試合（前日のEL）
     plan: 9
+  - kind: シリーズ
+    name: 1年前の噂の検証
+    plan: 15
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
+  - kind: シリーズ
+    name: 日本人選手と同僚の序列の理由
+    plan: 27
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-25'
   weekday: 日
@@ -660,20 +885,32 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd05）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・ブンデス）
     plan: 9
+  - kind: シリーズ
+    name: 日本人選手 今季の軌跡
+    plan: 10
+  - kind: シリーズ
+    name: 監督の経歴
+    plan: 13
+  - kind: シリーズ
+    name: クラブの財政
+    plan: 12
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-26'
   weekday: 月
@@ -687,23 +924,32 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd06）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 欧州組の1週間（週報）
     plan: 1
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・ブンデス）
     plan: 9
+  - kind: シリーズ
+    name: 記録の解説
+    plan: 26
+  - kind: シリーズ
+    name: クラブ同士の比較（ダービーの数字）
+    plan: 23
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-27'
   weekday: 火
@@ -712,23 +958,32 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd07）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 5大リーグの順位表と今週の1つ
     plan: 3
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のプレミア・ラ・リーガ・ブンデス）
     plan: 9
+  - kind: シリーズ
+    name: スタジアム紹介
+    plan: 19
+  - kind: シリーズ
+    name: 同じ年齢での比較
+    plan: 24
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-28'
   weekday: 水
@@ -736,23 +991,32 @@ days:
   - セリエA
   cups: []
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd08）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 仕組みの解説
     plan: 4
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のラ・リーガ・ポルトガル）
     plan: 9
+  - kind: シリーズ
+    name: 若手の数字
+    plan: 17
+  - kind: シリーズ
+    name: 10年前の今日
+    plan: 6
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-29'
   weekday: 木
@@ -760,12 +1024,15 @@ days:
   - セリエA
   cups: []
   national: []
-  series: 4
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd09）
     plan: 2
+  - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
   - kind: シリーズ
     name: 数字で見るランキング／得点王レース
     plan: 5
@@ -775,11 +1042,14 @@ days:
   - kind: シリーズ
     name: 日本人選手の次の相手（土日の試合）
     plan: 14
+  - kind: シリーズ
+    name: 1年前の噂の検証
+    plan: 15
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×3
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-30'
   weekday: 金
@@ -787,23 +1057,32 @@ days:
   - セリエA
   cups: []
   national: []
-  series: 3
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd10）
     plan: 2
   - kind: シリーズ
-    name: 有名選手の紹介・比較
+    name: 有名選手の紹介（1人）
     plan: 21
+  - kind: シリーズ
+    name: 有名選手の比較
+    plan: 22
   - kind: シリーズ
     name: 数字で振り返る注目試合（前日のセリエA）
     plan: 9
+  - kind: シリーズ
+    name: 日本人選手と同僚の序列の理由
+    plan: 27
+  - kind: シリーズ
+    name: 日本人選手 今季の軌跡
+    plan: 10
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×4
+    name: ほかのニュース ×1
     plan: 0
 - date: '2026-10-31'
   weekday: 土
@@ -815,18 +1094,30 @@ days:
   - ポルトガル
   cups: []
   national: []
-  series: 2
+  series: 6
   total: 10
   items:
   - kind: シリーズ
     name: クラブ紹介（ブンデスリーガ bd11）
     plan: 2
   - kind: シリーズ
+    name: 有名選手の紹介（1人）
+    plan: 21
+  - kind: シリーズ
     name: 数字で振り返る注目試合（前日のセリエA）
     plan: 9
+  - kind: シリーズ
+    name: 監督の経歴
+    plan: 13
+  - kind: シリーズ
+    name: クラブの財政
+    plan: 12
+  - kind: シリーズ
+    name: 記録の解説
+    plan: 26
   - kind: ニュース
     name: 日本人ニュース ×3
     plan: 0
   - kind: ニュース
-    name: ほかのニュース ×5
+    name: ほかのニュース ×1
     plan: 0
