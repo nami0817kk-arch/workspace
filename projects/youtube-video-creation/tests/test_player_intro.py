@@ -63,3 +63,14 @@ def test_雛形は8節で_数字の行は埋まり_残りは人が書く(tmp_pat
     assert note["sections"][4]["card"]["rows"][0][0] == "24/25"      # 古い順
     assert note["sections"][7]["telop"] == "10月12日、リバプール対マンチェスター・シティ"
     assert "1メートル78" in note["sections"][1]["say"][2] and "右" in note["sections"][1]["say"][2] and "2029年まで" in note["sections"][1]["say"][2]   # 言い回しは選手ごとに回る（品質100回の88）
+
+
+def test_定型文はどの言い回しも埋め込みが揃っている():
+    """雛形の定型文は選手の番号で4通りを回す（品質100回の88）。どれを引いても KeyError にならず、同じ種は同じ文になる。"""
+    kw = dict(short="ヤマル", group="同じ攻撃的MF・ウイング", m=84, before="2億ユーロ", h="1メートル78", foot="左", contract="契約は2031年まで。", y="2031")
+    for key, options in mod.TEMPLATES.items():
+        for seed in range(len(options)):
+            text = mod.phrase(key, seed, **kw)
+            assert text and "{" not in text, (key, seed, text)
+    assert mod.phrase("story", 5, **kw) == mod.phrase("story", 5, **kw)
+    assert mod.phrase("story", 0, **kw) != mod.phrase("story", 1, **kw)
