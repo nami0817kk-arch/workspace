@@ -45,6 +45,8 @@ BRAND_GOLD = (255, 213, 74)
 MEDIA_FLOOR = 0.64       # 立ち絵なしのとき、表や写真が使ってよい下限（画面の高さの割合）
 PROGRESS_HEIGHT = 8      # 画面下端の進捗バー
 PHOTO_MAX_ZOOM = 1.25    # 写真の寄りの上限（背景の 1.45 だと顔が荒れる）
+PILL_IN = 0.35           # 節の頭で左上のピルとテロップが滑り込む秒数（動きの段3）
+ROW_IN = 0.14            # 表・棒グラフの行が1本ずつ現れる間隔（動きの段2）
 # 読み上げの数字は自動で黄色にする（「22点」「75.5%」「4試合」）。囲みで指定した強調があればそちらを優先
 AUTO_STRONG = re.compile(r"\d[\d,.]*(?:[点本人%回分秒位歳億万勝敗年]|試合|ゴール|アシスト|km|m)?")
 
@@ -160,8 +162,12 @@ class Renderer:
         hop_t: float = 1.0,
         panel: tuple[str, str | None, str | None] | None = None,
         stack: tuple[str, ...] = (),
+        reveal: int | None = None,
     ) -> Path:
         """1枚の画面を描いて PNG のパスを返す。
+
+        reveal は表・棒グラフの行を何本まで出すか（出現アニメの1コマ）。
+        節の頭の行では telop_t で左上のピルも滑り込む（2026-09-28 動きの段3）。
 
         telop_t / hop_t は 0→1 のアニメーション進捗。同じ絵は使い回すので、
         アニメーションを入れてもフレーム数は必要なぶんしか増えない。
@@ -204,6 +210,9 @@ class Renderer:
                 f"{self.layout.width}x{self.layout.height}",
                 "|".join(stack),
                 f"s{self.scene_order.get(scene.title, 0)}/{self.scene_total}",
+                f"r{reveal if reveal is not None else '-'}",
+                # 節の頭かどうかは、滑り込みの途中（telop_t<1）でだけ絵に効く。それ以外は同じ絵を使い回す
+                f"head{bool(scene.lines and line is scene.lines[0]) and telop_t < 1.0}",
             ]
         )
         target = self.frame_dir / f"{hashlib.sha1(key.encode('utf-8')).hexdigest()[:16]}.png"
@@ -245,13 +254,15 @@ class Renderer:
                                         and not self.layout.is_portrait),
                              floor=floor,
                              # 横長の写真の上では左に寄せる（真ん中に置くと人の顔にかかる）
-                             align_left=(stage is not None and wide and not self.layout.is_portrait))
+                             align_left=(stage is not None and wide and not self.layout.is_portrait),
+                             reveal=reveal)
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
         # 中身のある節名（「監督は何と言ったか」など）は残す
         if not board and not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
-            self._draw_scene_title(canvas, scene.title)
+            head = bool(scene.lines and line is scene.lines[0])
+            self._draw_scene_title(canvas, scene.title, telop_t if head else 1.0)
         if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
             self._draw_channel_card(canvas)
             self._draw_hook_points(canvas, self.opening_points)
@@ -510,6 +521,7 @@ class Renderer:
         left_half: bool = False,
         floor: int | None = None,
         align_left: bool = False,
+        reveal: int | None = None,
     ) -> None:
         """画像とカードを文字の上のスペースに置く。両方あれば左右に並べる。
 
@@ -541,7 +553,7 @@ class Renderer:
             # 写真の左90pxはぼかして馴染ませてあるので、そこまで使ってよい
             # 表は幅の 58% まで（2026-09-28）。写真の左端はなじませてあるので少し重なってよい
             limit = int(self.layout.width * 0.58) if left_half else None
-            card = self._card(card_name, beside=side_by_side, limit=limit)
+            card = self._card(card_name, beside=side_by_side, limit=limit, reveal=reveal)
             if card is not None:
                 items.append(card)
         if not items:
@@ -637,7 +649,12 @@ class Renderer:
         framed.alpha_composite(picture, (8, 8))
         return framed
 
-    def _card(self, name: str, beside: bool = False, limit: int | None = None) -> Image.Image | None:
+    def card_rows(self, name: str | None) -> int:
+        spec = self.script_cards.get(name or "")
+        return cards.row_count(spec) if spec else 0
+
+    def _card(self, name: str, beside: bool = False, limit: int | None = None,
+              reveal: int | None = None) -> Image.Image | None:
         spec = self.script_cards.get(name)
         if not spec:
             return None
@@ -653,7 +670,7 @@ class Renderer:
             width = int(self.layout.width * (0.74 if not self.layout.with_characters else 0.46))
         if limit:
             width = min(width, limit)
-        target = self.card_dir / f"{cards.card_key(spec, width)}.png"
+        target = self.card_dir / f"{cards.card_key(spec, width, reveal)}.png"
         if not target.exists():
             cards.render(
                 spec,
@@ -661,6 +678,7 @@ class Renderer:
                 str(self.config.video.font_path()),
                 target,
                 str(self.config.video.latin_font_path()),
+                reveal=reveal,
             )
         return Image.open(target).convert("RGBA")
 
@@ -716,10 +734,12 @@ class Renderer:
         draw.text((bx + 20, top + 16), button, font=font, fill=(255, 255, 255, 255))
         canvas.alpha_composite(layer)
 
-    def _draw_scene_title(self, canvas: Image.Image, title: str) -> None:
+    def _draw_scene_title(self, canvas: Image.Image, title: str, slide_t: float = 1.0) -> None:
         # RGBA の canvas に直接半透明の図形を描くと下地を「置き換えて」しまうため、
         # 透明レイヤーに描いてから alpha_composite する。
         layer, draw = _layer(canvas.size)
+        # 節の頭では左から滑り込む（2026-09-28 動きの段3。章カードは 9/10 に外したので時間は足さない）
+        slide = int(-(1.0 - _ease_out(slide_t)) * 420)
         # **制作側の言葉は画面に出さない**（2026-09-07）。「オープニング」は
         # 台本の構造の名前で、視聴者には何の情報でもない。しかも冒頭の
         # いちばん見られる位置に出ていた。日付は残す
@@ -728,11 +748,12 @@ class Renderer:
             number = self.scene_order.get(title, 0)
             label = f"{number:02d}　{title}" if number else title
             text_w = draw.textlength(label, font=self.font_pill)
+            x0 = 48 + slide
             draw.rounded_rectangle(
-                [48, 42, 48 + text_w + 70, 42 + 68], radius=34, fill=BRAND_GREEN + (235,)
+                [x0, 42, x0 + text_w + 70, 42 + 68], radius=34, fill=BRAND_GREEN + (235,)
             )
-            draw.rounded_rectangle([48, 42, 48 + 14, 42 + 68], radius=7, fill=BRAND_GOLD + (255,))
-            draw.text((82, 54), label, font=self.font_pill, fill=(255, 255, 255, 255))
+            draw.rounded_rectangle([x0, 42, x0 + 14, 42 + 68], radius=7, fill=BRAND_GOLD + (255,))
+            draw.text((x0 + 34, 54), label, font=self.font_pill, fill=(255, 255, 255, 255))
         # 右上に「何節目か」の点（節の数が2つ以上のとき）
         if self.scene_total >= 2 and not self.layout.is_portrait:
             number = self.scene_order.get(title, 0)
@@ -1227,6 +1248,8 @@ class Renderer:
                 is_scene_head = index == 0
 
                 intro = 0.0
+                card_changed = bool(current and current[2] and current[2] != before[1]) if not self.layout.with_characters else False
+                rows = self.card_rows(current[2]) if card_changed else 0
                 if motion.enabled:
                     if is_scene_head and previous is not None and motion.scene_fade > 0:
                         # シーン転換。前の画面から新しい画面へ溶かす
@@ -1238,6 +1261,19 @@ class Renderer:
                         # 見出しやカードが変わったときだけ、出現のアニメを入れる
                         intro = min(motion.telop_in, speaking * 0.5)
                         entries += self._intro(line, scene, intro, current, shown)
+                    elif is_scene_head and not stack and PILL_IN > 0:
+                        # **節の頭ではピルとテロップが滑り込む**（2026-09-28 動きの段3）。時間は足さない
+                        intro = min(PILL_IN, speaking * 0.4)
+                        entries += self._intro(line, scene, intro, current, shown,
+                                               reveal=0 if rows else None)
+                    if rows and motion.enabled and not stack:
+                        # **表の行が1本ずつ現れる**（2026-09-28 動きの段2）。読み上げの内側から取る
+                        step = min(ROW_IN, max(0.0, speaking * 0.5 - intro) / rows)
+                        if step > 0.02:
+                            for k in range(1, rows + 1):
+                                entries.append((self.frame(line, scene, False, panel=current, stack=shown,
+                                                           reveal=k if k < rows else None), step))
+                            intro += step * rows
 
                 entries += self._mouth_loop(closed, opened, speaking - intro)
                 if pause > 0.01:
@@ -1288,6 +1324,7 @@ class Renderer:
         seconds: float,
         panel: tuple[str, str | None, str | None] | None = None,
         stack: tuple[str, ...] = (),
+        reveal: int | None = None,
     ) -> list[tuple[Path, float]]:
         steps = max(1, round(seconds * self.config.motion.fps))
         step = seconds / steps
@@ -1302,7 +1339,7 @@ class Renderer:
                     # 反応の行でも0.3秒だけ大テロップが描かれていた
                     self.frame(
                         line, scene, False, telop_t=progress, hop_t=progress,
-                        panel=panel, stack=stack
+                        panel=panel, stack=stack, reveal=reveal
                     ),
                     step,
                 )

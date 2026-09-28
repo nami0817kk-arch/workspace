@@ -46,14 +46,30 @@ class CardError(ValueError):
     pass
 
 
-def card_key(spec: dict, width: int) -> str:
+def card_key(spec: dict, width: int, reveal: int | None = None) -> str:
     parts = [str(width)] + [f"{k}={spec[k]}" for k in sorted(spec)]
+    if reveal is not None:
+        parts.append(f"reveal={reveal}")
     return hashlib.sha1("|".join(parts).encode("utf-8")).hexdigest()[:16]
 
 
+def row_count(spec: dict) -> int:
+    """表と棒グラフの行数（出現アニメの段数）。ほかの型は 0。"""
+    kind = str(spec.get("type", "quote")).lower()
+    if kind == "table":
+        return min(6, len(spec.get("rows") or []))
+    if kind == "bars":
+        return min(6, len(spec.get("items") or []))
+    return 0
+
+
 def render(spec: dict, width: int, font_path: str, out_path: Path,
-           latin_font_path: str | None = None) -> Path:
-    """カード1枚を透過PNGで書き出す。高さは中身に合わせて決まる。"""
+           latin_font_path: str | None = None, reveal: int | None = None) -> Path:
+    """カード1枚を透過PNGで書き出す。高さは中身に合わせて決まる。
+
+    reveal を渡すと、表・棒グラフの行を**その数だけ**描く（残りの行は空けておく）。
+    行が1本ずつ現れる出現アニメの1コマ（2026-09-28 動きの段2）。
+    """
     kind = str(spec.get("type", "quote")).lower()
     if kind not in CARD_TYPES:
         raise CardError(f"カードの type は {CARD_TYPES} のいずれか: {kind}")
@@ -81,7 +97,13 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     draw.rounded_rectangle([0, RADIUS, 8, height - RADIUS], radius=4, fill=accent + (255,))
 
     y = PAD
+    shown_rows = 0
     for block in blocks:
+        if block.get("row"):
+            shown_rows += 1
+            if reveal is not None and shown_rows > reveal:
+                y += block["height"]
+                continue
         block["draw"](draw, y)
         y += block["height"]
 
@@ -504,7 +526,7 @@ def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]
                 fill=TEXT,
             )
 
-        blocks.append({"height": row_height, "draw": draw_row})
+        blocks.append({"height": row_height, "draw": draw_row, "row": True})
 
     note = str(spec.get("note") or "").strip()
     if note:
@@ -619,7 +641,7 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
                 draw.text((x, y + 10), shown, font=cell_font, fill=color)
                 x += widths[index]
 
-        blocks.append({"height": row_h, "draw": draw_row})
+        blocks.append({"height": row_h, "draw": draw_row, "row": True})
     return blocks
 
 

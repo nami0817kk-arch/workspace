@@ -88,7 +88,7 @@ def test_news_layout_keeps_previous_headline(tmp_path):
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
     # 見出しが変わらないので、2行とも同じ絵を使い回す
-    assert len({path for path, _ in entries}) == 1
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 1
 
 
 def test_news_layout_clears_headline_on_no_telop(tmp_path):
@@ -103,7 +103,7 @@ def test_news_layout_clears_headline_on_no_telop(tmp_path):
 
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
-    assert len({path for path, _ in entries}) == 2
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 2
 
 
 def test_motion_adds_intro_frames(tmp_path):
@@ -191,7 +191,7 @@ def test_news_headline_keeps_its_source_badge(tmp_path):
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
     # 見出しも確度も変わらないので、2行とも同じ絵になる
-    assert len({path for path, _ in entries}) == 1
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 1
 
 
 def _card_script():
@@ -212,7 +212,7 @@ def test_card_persists_to_following_lines(tmp_path):
     config.video.channel_name = ""   # 冒頭の登録カードは1行目だけ変える。ここでは見ない
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(_card_script())
-    assert len({path for path, _ in entries}) == 1
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 1
     assert list((tmp_path / "cards").glob("*.png"))
 
 
@@ -229,7 +229,7 @@ def test_card_none_clears_it(tmp_path):
 
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
-    assert len({path for path, _ in entries}) == 2
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 2
 
 
 def test_balanced_wrap_evens_out_line_lengths():
@@ -551,11 +551,11 @@ def test_冒頭の1行目にだけ登録カードが乗る(tmp_path):
         line.duration, line.pause = 2.0, 0.4
     entries = Renderer(config, tmp_path).frame_entries(script)
     # 1行目（カード付き）と2行目（カード無し）で絵が分かれる
-    assert len({path for path, _ in entries}) == 2
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 2
 
     config.video.channel_name = ""
     entries = Renderer(config, tmp_path / "plain").frame_entries(script)
-    assert len({path for path, _ in entries}) == 1
+    assert len({path for path, seconds in entries if seconds >= 0.3}) == 1
 
 
 def test_縦型の冒頭は写真を画面いっぱいに敷く(tmp_path):
