@@ -105,6 +105,13 @@
         return '<dt>' + k.label + '（' + dates.length + '回）</dt><dd>' + links + '</dd>';
       }).join('');
       var facts = [];
+      // 業種は**探すための条件には使わない**。属性を取ってあるのは
+      // 銘柄ページを持つ銘柄とストップ高・安になった銘柄だけなので、
+      // 業種で絞れるようにすると「出てこない銘柄がある」状態になる。
+      // 見つけた銘柄について書き添えるだけにする。
+      if (s.i !== undefined && index.ind && index.ind[s.i]) {
+        facts.push(escape(index.ind[s.i]));
+      }
       if (s.b !== null && s.b !== undefined) {
         facts.push('この期間の最大騰落率 ' + (s.b > 0 ? '+' : '') + s.b.toFixed(2) + '%');
       }

@@ -516,3 +516,28 @@
   dl { margin: 0 0 1rem; }
   dt { margin-top: 0.75rem; }
   dd { margin: 0.25rem 0 0; color: var(--muted); }
+
+/* 翌営業日の内訳。3つの数字を並べるだけなので、表より読みやすい */
+.followup {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 0;
+}
+.followup li {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 0.7rem;
+}
+.fu-value { display: block; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+.fu-label { display: block; font-size: 0.8rem; color: var(--muted); }
+.fu-note { font-size: 0.8rem; color: var(--muted); margin: -0.5rem 0 1rem; }
+@media (max-width: 600px) {
+  .followup { grid-template-columns: repeat(3, 1fr); gap: 0.35rem; }
+  .followup li { padding: 0.45rem 0.4rem; text-align: center; }
+  .fu-value { font-size: 1.05rem; }
+  .fu-label { font-size: 0.7rem; }
+}

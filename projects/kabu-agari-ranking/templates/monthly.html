@@ -41,6 +41,39 @@
 
 {% if m.frequent %}
 <h2>この月に複数回ランクインした銘柄</h2>
+{% for side in [
+  {"rows": m.stop_high_stocks, "term": "ストップ高", "dir": "stop-high", "cls": "gain", "pct": "最大上昇率"},
+  {"rows": m.stop_low_stocks, "term": "ストップ安", "dir": "stop-low", "cls": "loss", "pct": "最大下落率"}
+] %}
+{% if side.rows %}
+<h2>この月に複数回{{ side.term }}になった銘柄</h2>
+<p>
+  月内に2回以上{{ side.term }}になった銘柄です。「連続」は当サイトの掲載日の並びで数えています。
+  日ごとの一覧は<a href="{{ base_url }}{{ side.dir }}/index.html">{{ side.term }}の記録</a>にあります。
+</p>
+<div class="table-wrap">
+<table class="breakdown-table">
+  <caption>{{ m.from }}〜{{ m.to }} に2回以上{{ side.term }}になった銘柄</caption>
+  <thead>
+    <tr><th scope="col">銘柄名</th><th scope="col">コード</th><th scope="col">回数</th>
+        <th scope="col">{{ side.pct }}</th><th scope="col">最長連続</th></tr>
+  </thead>
+  <tbody>
+    {% for e in side.rows %}
+    <tr>
+      <th scope="row">{% if e.has_page %}<a href="{{ base_url }}stock/{{ e.code }}/">{{ e.name }}</a>{% else %}{{ e.name }}{% endif %}</th>
+      <td>{{ e.code }}</td>
+      <td>{{ e.count }}回</td>
+      <td class="{{ side.cls }}">{{ "%+.2f"|format(e.best_pct) }}%</td>
+      <td>{{ e.streak }}日</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endfor %}
+
 {% set rows = m.frequent %}
 {% set caption = m.from ~ "〜" ~ m.to ~ " に値上がりランキングへ2回以上入った銘柄" %}
 {% set side = LIMIT_PAGES["gainers"] %}{% set show_latest = false %}

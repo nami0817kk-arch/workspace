@@ -321,6 +321,11 @@ BIG_MOVE_PCT = 10
 # 業種の内訳に出す行数。全33業種を並べても読み取れない。
 INDUSTRY_ROWS = 10
 
+# 「日ごとの記録」に並べる営業日の数。**放っておくと毎日1行ずつ伸びる。**
+# 1年で245行、5年で1,200行になり、下にある案内まで誰も辿り着かない。
+# それより前は月まとめから辿る。
+DAY_LIST_LIMIT = 60
+
 TREND_DAYS = 15
 
 
@@ -646,6 +651,26 @@ def stock_summary(stock: dict, day_count: int) -> str:
     return "".join(parts)
 
 
+def same_industry(code: str, stocks: list[dict], profiles: dict[str, dict],
+                  top_n: int = 8) -> list[dict]:
+    """同じ業種で、ページを持っている銘柄。登場の多い順。
+
+    **業種は貯めてあるのに、出すだけで使っていなかった**（2026-09-28 に足した）。
+    同じ業種の銘柄へ行き来できると、テーマで追える。
+
+    連動するとは書かない。**同じ業種に分類されている、という事実だけ**。
+    """
+    industry = (profiles.get(code) or {}).get("industry")
+    if not industry:
+        return []
+    out = [
+        s for s in stocks
+        if s["code"] != code and (profiles.get(s["code"]) or {}).get("industry") == industry
+    ]
+    out.sort(key=lambda s: (-len(s["rows"]), s["code"]))
+    return out[:top_n]
+
+
 def _build_stock_pages(days: list[dict], profiles: dict[str, dict] | None = None) -> list[dict]:
     """銘柄ごとのページ。登場が少ない銘柄は作らない（薄いページを量産しない）。"""
     stocks = aggregate.stock_histories(days)
@@ -665,6 +690,8 @@ def _build_stock_pages(days: list[dict], profiles: dict[str, dict] | None = None
                 profile=stock_profile.label((profiles or {}).get(stock["code"])),
                 profile_short=stock_profile.label(
                     (profiles or {}).get(stock["code"]), unit=False),
+                industry=((profiles or {}).get(stock["code"]) or {}).get("industry", ""),
+                same_industry=same_industry(stock["code"], stocks, profiles or {}),
                 summary=stock_summary(stock, len(days)),
                 # 一緒に載った銘柄にもページがあれば繋ぐ。**素のテキストで
                 # 並べると、行き先があるのに回遊が途切れる。**
@@ -789,6 +816,8 @@ def _build_monthly_pages(days: list[dict], stock_pages: set[str] | None = None) 
     months = aggregate.monthly_summaries(days)
     for month in months:
         _mark_pages(month["frequent"], stock_pages)
+        _mark_pages(month["stop_high_stocks"], stock_pages)
+        _mark_pages(month["stop_low_stocks"], stock_pages)
     tmpl = _env.get_template("monthly.html")
     for i, month in enumerate(months):
         month["summary"] = month_summary(month)
@@ -827,6 +856,7 @@ LIMIT_PAGES = {
         "pct_label": "最大上昇率",
         "pct_class": "gain",
         "source_rank": "値上がり",
+        "opposite_rank": "値下がり",
         "archive": "gainers",
         "move_label": "10%以上の上昇",
     },
@@ -839,6 +869,7 @@ LIMIT_PAGES = {
         "pct_label": "最大下落率",
         "pct_class": "loss",
         "source_rank": "値下がり",
+        "opposite_rank": "値上がり",
         "archive": "losers",
         "move_label": "10%以上の下落",
     },
@@ -869,6 +900,7 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
     ]
     stocks = [{**s, "has_page": s["code"] in stock_pages} for s in history["stocks"]]
     recent = list(reversed(history["per_day"][:TREND_DAYS]))
+    listed_days, omitted_days = per_day[:DAY_LIST_LIMIT], max(0, len(per_day) - DAY_LIST_LIMIT)
 
     # 市場別・業種別の内訳。**記録した日ぶんだけ**を数える。推定の日を混ぜると
     # 「上位30銘柄の中の数」と「その日の全件」が同じ数に見える。
@@ -877,6 +909,10 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
         for day in history["per_day"] if day["source"] == "recorded"
         for row in day["rows"]
     ]
+    # 翌営業日の居場所。**前日の記録を持っていないと数えられない**ので、
+    # 当日のランキングを出しているだけの場所には作れない章になる。
+    followup = aggregate.limit_followup(days, kind, next_business_day=next_business_day)
+
     profiles = profiles or {}
     by_market = aggregate.profile_breakdown(recorded_codes, profiles, "market")
     by_industry = aggregate.profile_breakdown(recorded_codes, profiles, "industry")
@@ -903,13 +939,15 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
                 default=days[0]["rec_date"],
             )),
             stocks=stocks,
-            per_day=per_day,
+            per_day=listed_days,
+            omitted_days=omitted_days,
             by_market=by_market,
             by_industry=by_industry[:INDUSTRY_ROWS],
             industry_count=len(by_industry),
             market_total=market_total,
             industry_total=industry_total,
             recorded_count=len(recorded_codes),
+            followup=followup,
             trend_chart=charts.columns(
                 [{"label": format_date_short_ja(d["rec_date"])[:-3], "value": d["count"]}
                  for d in recent],
@@ -945,6 +983,10 @@ def _build_market_page(days: list[dict]) -> None:
                 series("big"), aria_label="日ごとの、10%以上動いた銘柄数を示す棒グラフ", unit="銘柄"),
             stop_chart=charts.columns(
                 series("stop_high"), aria_label="日ごとのストップ高の数を示す棒グラフ", unit="銘柄"),
+            # **下向きも同じように見せる。** 表には両方あるのに、グラフは
+            # 上向きだけだった（2026-09-28）。荒れた日は両方が増える。
+            stop_low_chart=charts.columns(
+                series("stop_low"), aria_label="日ごとのストップ安の数を示す棒グラフ", unit="銘柄"),
             top_chart=charts.columns(
                 series("top_pct"), aria_label="日ごとの首位の上昇率を示す棒グラフ", unit="%"),
         ),
@@ -1022,6 +1064,15 @@ def day_stop_note(day: dict, json_key: str) -> dict | None:
         "count": len(rows),
         "outside": sum(1 for r in rows if r["code"] not in shown),
     }
+
+
+def month_href_for(rec_date: str) -> str:
+    """その日が属する月まとめの場所。
+
+    日別ページから週まとめへは行けるのに、月まとめへは行けなかった
+    （2026-09-28）。長い目で見たい人がそこで止まる。
+    """
+    return f"monthly/{rec_date[:7]}.html"
 
 
 def week_href_for(rec_date: str) -> str:
@@ -1118,6 +1169,7 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                     kind_dir=dirname,
                     stop_note=stop_notes.get(rec),
                     week_href=week_href_for(rec),
+                    month_href=month_href_for(rec),
                     siblings=[e for e in siblings[rec] if e["kind"] != json_key],
                     turnover=turnover_note(
                         day_rows, with_data[i + 1][1] if i + 1 < len(with_data) else None
@@ -1300,7 +1352,7 @@ def build_all() -> None:
     weeks = _build_weekly_pages(days, stock_pages)
     _build_market_page(days)
 
-    search_data = aggregate.search_index(days)
+    search_data = aggregate.search_index(days, profiles)
     (_OUTPUT_DIR / "search-index.json").write_text(
         json.dumps(search_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
     )

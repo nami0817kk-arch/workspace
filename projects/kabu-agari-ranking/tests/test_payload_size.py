@@ -55,3 +55,28 @@ def test_窓より古い日は索引に入れない():
     index = aggregate.search_index(days)
     dates = {d for s in index["stocks"] for d in (s.get("g") or [])}
     assert len(dates) <= aggregate.SEARCH_WINDOW_DAYS
+
+
+def test_索引の業種は番号で持つ():
+    """名前をそのまま入れると「情報・通信業」だけで数百回ぶん重くなる。"""
+    days = _days(n_days=5, per_day=10, pool=20)
+    profiles = {f"{1000 + i}": {"industry": "情報・通信業"} for i in range(20)}
+    index = aggregate.search_index(days, profiles)
+    assert index["ind"] == ["情報・通信業"]
+    assert all(s["i"] == 0 for s in index["stocks"])
+    raw = json.dumps(index, ensure_ascii=False, separators=(",", ":"))
+    assert raw.count("情報・通信業") == 1, "業種名を銘柄ごとに繰り返している"
+
+
+def test_属性が無い銘柄には業種を付けない():
+    days = _days(n_days=2, per_day=3, pool=3)
+    index = aggregate.search_index(days, {})
+    assert index["ind"] == []
+    assert all("i" not in s for s in index["stocks"])
+
+
+def test_日ごとの記録は伸び続けない():
+    """放っておくと毎日1行ずつ伸びる。5年で1,200行になり、
+    下にある案内まで誰も辿り着かない。"""
+    import render
+    assert render.DAY_LIST_LIMIT <= 60
