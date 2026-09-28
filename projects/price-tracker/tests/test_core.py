@@ -927,3 +927,87 @@ class 説明と判定が食い違わないTest(unittest.TestCase):
                                  "contact_email": "a@example.com",
                                  "base_url": "https://e.dev"})
         self.assertIn("一度も価格が動いていない商品は0点", body)
+
+
+class ポイント込みの最安Test(unittest.TestCase):
+    """楽天の値引きは価格ではなくポイント倍率で動くことが多い。
+    価格だけで最安を決めると、いちばん得な日を取り逃す。
+
+    実測（2026-09-28・記録が7日以上ある5,074件）で、価格が記録した中で最安
+    なのは224件だが、実質価格で見ると481件あり、269件は価格では最安でなかった。
+    """
+
+    def entries(self, last_price, last_rate):
+        """7日ぶんの 1,000円（倍率1）のあとに、最後の1日を足す。"""
+        days = [[f"2026-09-{i + 1:02d}", 1000, 1] for i in range(7)]
+        return days + [["2026-09-08", last_price, last_rate]]
+
+    def rec(self, entries):
+        prices = [e[1] for e in entries]
+        return {"last": entries[-1][1], "prev": entries[-2][1],
+                "min": min(prices), "max": max(prices),
+                "days": len(entries), "last_rate": entries[-1][2],
+                "prev_rate": entries[-2][2], "min_date": entries[0][0],
+                "tail": [list(e) for e in entries]}
+
+    def ev(self, entries):
+        return analyze.evaluate(self.rec(entries), 0.05, 0.02)
+
+    def test_価格は最安でなくても実質が最安なら札を出す(self):
+        # 価格は 1,000 → 1,100 と上がっているが、倍率20倍で実質は 990 → 880
+        out = self.ev(self.entries(1100, 20))
+
+        self.assertFalse(out["at_low"])
+        self.assertTrue(out["eff_at_low"])
+        self.assertEqual(out["label"], "ポイント込みで最安")
+
+    def test_価格が最安ならそちらの札を優先する(self):
+        out = self.ev(self.entries(900, 20))
+
+        self.assertTrue(out["at_low"])
+        self.assertEqual(out["label"], "記録した中で最安")
+
+    def test_実質が一度も動いていなければ札を出さない(self):
+        # 価格も倍率も動いていない。自分の値段と自分の最安値を比べているだけ
+        out = self.ev(self.entries(1000, 1))
+
+        self.assertFalse(out["eff_at_low"])
+        self.assertEqual(out["label"], "変動なし")
+
+    def test_記録が足りない商品には札を出さない(self):
+        rec = self.rec(self.entries(1100, 20))
+        rec["days"] = analyze.MIN_DAYS_FOR_LOW - 1
+
+        out = analyze.evaluate(rec, 0.05, 0.02)
+
+        self.assertFalse(out["eff_at_low"])
+        self.assertEqual(out["label"], "記録中")
+
+    def test_最安値圏の一覧に入れる(self):
+        row = {"at_low": False, "near_low": False, "eff_at_low": True,
+               "vs_low_pct": 0.1, "days": 20}
+
+        self.assertEqual(analyze.lows([row]), [row])
+
+    def test_実質がどれだけ下がったかを添える(self):
+        """「最安」と言うだけでは値幅2%の商品と30%の商品が同じ顔になる。
+        実測（2026-09-28）で、ポイント込みで最安の467件のうち71件は
+        実質の値幅が2%以下だった。"""
+        from src import theme
+        row = self.ev(self.entries(1100, 20))
+        row["eff_at_low"] = True
+
+        out = theme.verdict_note(row)
+
+        self.assertIn("記録8日の実質の最高", out)
+        self.assertIn("下がっています", out)
+
+    def test_価格が動いていなくても一文を出す(self):
+        """倍率だけが動いた商品は moved が偽。そこで打ち切ると、
+        いちばん言うべきことが消えていた。"""
+        from src import theme
+        row = self.ev(self.entries(1000, 20))
+
+        self.assertFalse(row["moved"])
+        self.assertTrue(row["eff_at_low"])
+        self.assertIn("ポイント倍率が上がった", theme.verdict_note(row))

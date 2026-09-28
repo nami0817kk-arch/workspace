@@ -74,8 +74,32 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
                 and 0 < vs_low_pct <= near_low_threshold)
     dropped = drop_pct >= drop_threshold
 
+    rate = int(rec.get("last_rate") or 1)
+    eff = effective(price, rate)
+
+    # 実質価格でも同じ判定をする。楽天の値引きは価格ではなくポイント倍率で
+    # 動くことが多いので、価格だけを見ると「いまがいちばん得」を取りこぼす。
+    # 実測（2026-09-28・記録が足りている5,074件）では、価格が記録した中で
+    # 最安なのは224件だが、実質で見ると481件あり、そのうち**269件は価格では
+    # 最安でなかった**。
+    effs = [v for _, v in effective_series(rec)]
+    if effs:
+        # 最後の日は、期限切れの倍率を直したあとの値に入れ替える
+        # （evaluate_all が last_rate を1に戻している場合がある）。
+        effs[-1] = eff
+        eff_low, eff_high = min(effs), max(effs)
+        eff_moved = eff_high > eff_low
+        eff_at_low = trustworthy and eff_moved and eff <= eff_low
+    else:
+        eff_low = eff_high = None
+        eff_moved = eff_at_low = False
+
     if at_low:
         label = "記録した中で最安"
+    elif eff_at_low:
+        # 価格は最安でないが、ポイントを含めると記録した中でいちばん安い。
+        # 「記録した中で最安」と同じ札にすると、価格の表と食い違って見える。
+        label = "ポイント込みで最安"
     elif near_low:
         label = "最安値に近い"
     elif dropped:
@@ -89,8 +113,6 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
         # 見分けが付かない。ここが指しているのは前回との比較だけ。
         label = "前回から変わらず"
 
-    rate = int(rec.get("last_rate") or 1)
-    eff = effective(price, rate)
     # 倍率を記録し始める前の日は prev_rate が無い。1倍と決めつけると、記録開始の
     # 翌日に「倍率が下がった/上がった」偽の変化が一斉に出る。分からない日は
     # 実質の比較そのものをしない。
@@ -110,6 +132,8 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
         "vs_low_pct": vs_low_pct, "off_high_pct": off_high_pct,
         "at_low": at_low, "near_low": near_low, "dropped": dropped,
         "moved": moved, "spread_pct": spread_pct,
+        "eff_low": eff_low, "eff_high": eff_high,
+        "eff_moved": eff_moved, "eff_at_low": eff_at_low,
         "trustworthy": trustworthy, "label": label,
         "low_date": rec.get("min_date"), "tail": rec.get("tail") or [],
     }
@@ -151,8 +175,14 @@ def drops(rows: list[dict], limit: int | None = None) -> list[dict]:
 
 
 def lows(rows: list[dict], limit: int | None = None) -> list[dict]:
-    """記録した中で最安、またはそれに近いもの。"""
-    hit = [r for r in rows if r["at_low"] or r["near_low"]]
+    """記録した中で最安、またはそれに近いもの。
+
+    ポイント込みの実質価格で最安のものも入れる。楽天の値引きは価格ではなく
+    倍率で動くことが多く、価格だけで切ると「いまがいちばん得」な269件
+    （2026-09-28 実測）が一覧に出てこない。
+    """
+    hit = [r for r in rows
+           if r["at_low"] or r["near_low"] or r.get("eff_at_low")]
     hit.sort(key=lambda r: (r["vs_low_pct"], -r["days"]))
     return hit[:limit] if limit else hit
 
