@@ -1,0 +1,78 @@
+title: 9月28日の題材（午後用）
+lead: 夜のうちに出た代表戦の結果と、そこから出た発言を中心に8件
+note: <b>○×を付けてください。</b>今夜の日本代表対ベネズエラ（広島）でデビューしそうな選手の話（小久保玲央ブライアン・中野就斗・田中聡など）は、<b>試合のあとに作る</b>決まりなので外しました。試合が終わったら集め直します。ロマーノの投稿は、手元のChromeにつながらず今回は読めていません。中身は記事の本文まで確かめてあります。
+items:
+- num: 1
+  slot: 日本人
+  head: 佐野海舟、ウルグアイのベンタンクール（トッテナム）に「とても気に入っている。彼のプレーが好きなんだ」と名指し。本人は「うれしい。でも、まだまだ全然です」
+  why: 'ウルグアイ戦のあと、相手の中盤の要が印象に残った選手として佐野を挙げた。佐野は「プレミアはよく見ている。相手のキーマンだった選手に言われるのはうれしい」としつつ、自分の出来には「確実にうまくいかなかった」と課題を口にしている。
+    '
+  src: サッカーキング（9/27）
+  url: https://www.soccer-king.jp/news/japan/national/20260927/2209984.html
+  fmt: quote
+- num: 2
+  slot: 試合結果
+  head: クロップのドイツ、ホームでギリシャに0対1。就任2試合で未勝利、初黒星。解説のシュヴァインシュタイガー「我々は凡庸だ」「クロップは魔法使いではない」
+  why: 'ボールを握り続けたが、74分にクルベリスのミドルで失点。ヴィルツは65分から出た。ギリシャの記事は「クロップよ、ひれ伏せ」。クロップは「ブーイングされても、私はそこに立つ」と話している。昨日のクロップとヴィルツの下書きは、この結果を待っていた題材。
+    '
+  src: サッカーキング・kicker・A Bola（9/27〜28）
+  url: https://www.soccer-king.jp/news/world/ger/20260928/2210072.html
+  fmt: voices
+- num: 3
+  slot: 試合結果
+  head: シャビのオランダ、敵地でセルビアに2対1。初めて先発した23歳ミールディンクが2得点で、新体制の初勝利
+  why: 'PKで代表初ゴール、69分に決勝点。ガクポは17分に足首を痛めて交代。フリンポンはメンバー外でスタンドから見ていた。
+    '
+  src: サッカーキング（9/28）
+  url: https://www.soccer-king.jp/news/world/world_other/20260928/2210070.html
+  fmt: news
+  weak: true
+- num: 4
+  slot: その他
+  head: ロナウド、2008年以来初めて、出られるのに公式戦で出番なし。試合後はファンへのあいさつに加わらず、ジョルジェ・ジェズス監督「彼と話をする」
+  why: 'ポルトガルは敵地でノルウェーに競り勝ってネーションズリーグ連勝。そのなかで、ベンチに座ったままだったロナウドの振る舞いが話題に。スペイン紙は「6678日ぶり」と数えている。
+    '
+  src: MARCA・A Bola（9/27）
+  url: https://www.abola.pt/noticias/jesus-reage-a-atitude-de-ronaldo-no-final-do-jogo-vou-falar-com-ele-2026092721490141633
+  fmt: news
+- num: 5
+  slot: プレミア
+  head: アーセナルのウーデゴール、ベルナルド・シウヴァの遅れたタックルに激怒「こんなことはサッカーにあってはならない」
+  why: '同じノルウェー戦で、ノルウェーの主将がポルトガルのベルナルド（マンC）に。チームメイトのシェルデルップも批判している。アーセナルの主将とマンCの選手、という組み合わせ。
+    '
+  src: A Bola（9/27）
+  url: https://www.abola.pt/noticias/odegaard-atira-se-a-bernardo-silva-isto-nao-tem-lugar-no-futebol-2026092722475793501
+  fmt: quote
+- num: 6
+  slot: プレミア
+  head: マンCの元会長バーンスタイン「プレミアリーグから落とされると思う。罰金だけでは罰にならない」
+  why: '1998〜2003年にマンCの会長、そのあとイングランドのサッカー協会の会長も務めた人の見立て。今朝の一覧の「控訴が長引くので今季の優勝は掲げられる見通し」とは逆の見方。
+    '
+  src: デイリー・メール（9/27）
+  url: https://www.dailymail.com/sport/football/article-16164465/Former-Man-City-chairman-David-Bernstein-expects-club-LOSE-Premier-League-status-guilty-vast-majority-115-charges.html
+  fmt: news
+- num: 7
+  slot: プレミア
+  head: ロイ・キーン、マンCをかばったロドリに「あのクラブは、わかっていて不正を選んだ」
+  why: '古巣のマンCを擁護したバルサのロドリの発言に、キーンが真っ向から反論。9/27のノエル・ギャラガーとキーンの回とは別の発言。
+    '
+  src: Voetbal International（9/28）
+  url: https://www.vi.nl/nieuws/keane-kraakt-uitspraken-rodri-bewust-gekozen-om-te-frauderen
+  fmt: quote
+- num: 8
+  slot: その他
+  head: パルマ、クエスタ監督と契約を解除。セリエAで今季3人目の監督交代
+  why: 'クラブは「スポーツの計画の進め方で、互いに合意した」と発表。
+    '
+  src: サッカーキング（9/27）
+  url: https://www.soccer-king.jp/news/world/ita/20260928/2210063.html
+  fmt: news
+  weak: true
+- num: 9
+  slot: プレミア
+  head: ハーランド、ネーションズリーグ通算22点目で歴代最多をさらに更新。2位のロナウドとミトロヴィッチに7点差。それでもノルウェーはホームでポルトガルに1対2
+  why: '51分に同点弾。ノルウェー代表の公式戦は直近17試合のうち16試合で得点していて、取れなかったのはW杯準々決勝のイングランド戦だけ。ロナウドは90分ベンチで、2人の対決は実現しなかった。マンCの違反認定のあと、ソルバッケン監督はハーランドへの質問を遮っている。
+    '
+  src: ESPN・MARCA・Goal（9/27〜28）
+  url: https://www.espn.com/soccer/report/_/gameId/401861073
+  fmt: news

@@ -663,24 +663,26 @@ def test_締めの挨拶を読み上げない():
     assert "次の焦点です" not in body
 
 
-def test_他人の声が足りないと助言する():
-    from src.research import advise
-
-    hints = advise(build_notes(_raw()))
-    assert any("他人の声" in h for h in hints)
-
-
-def test_反応を入れれば助言は出ない():
+def test_他人の声が多すぎると助言する():
+    """2026-09-28 に下限から上限へ反転（収益化の審査。こちらの解説を主役にする）。"""
     from src.research import advise
 
     raw = _raw()
-    voices = [{"voice": "ネット民", "text": f"これは強い{i}"} for i in range(12)]
+    voices = [{"voice": "ネット民", "text": f"これはとても強いチームだと思う{i}"} for i in range(12)]
     raw["sections"] = raw["sections"] + [{
         "id": "voices", "heading": "どう受け止められたか", "tier": "未確認",
         "telop": "ネットの反応", "say": voices,
         "sources": ["https://footballnet.example/1"],
     }]
-    assert not any("他人の声が" in h for h in advise(build_notes(raw)))
+    hints = advise(build_notes(raw))
+    assert any("他人の声（発言と反応）が" in h for h in hints)
+    assert any("ネットの反応が12件" in h for h in hints)
+
+
+def test_語りが主役なら他人の声の助言は出ない():
+    from src.research import advise
+
+    assert not any("他人の声（発言と反応）が" in h for h in advise(build_notes(_raw())))
 
 
 def test_過去形の答えが壊れない():
@@ -777,8 +779,10 @@ def _voices_raw():
     return raw
 
 
-def test_反応の型は問いと答えが無くても通る():
-    assert verify(build_notes(_voices_raw()), _plan()) == []
+def test_反応の型は新しく作らない():
+    """2026-09-28、収益化の審査に合わせて voices 型を止めた。"""
+    problems = verify(build_notes(_voices_raw()), _plan())
+    assert any("新しく作りません" in p for p in problems)
 
 
 def test_反応の型に反応の行が無ければ止める():
@@ -795,19 +799,6 @@ def test_知らない型は止める():
     raw["format"] = "podcast"
     with pytest.raises(ResearchError):
         build_notes(raw)
-
-
-def test_反応の型の台本にまとめは無い():
-    from src.script_model import parse_script
-
-    script = parse_script(to_script(build_notes(_voices_raw()), _plan()))
-    assert [s.title for s in script.scenes] == ["オープニング", "何があったか", "現地の声"]
-    assert "wrap" not in script.cards
-    assert script.meta.get("format") == "voices"
-    assert script.meta.get("intro_label") == "みんなの反応"
-    # 1行目はタイトルを読む。問いのテロップは出さない
-    assert "ハル戦の鈴木彩艶を見た現地サポの反応" in script.lines[0].text
-    assert not any("今回の問い" in line.telop_text() for line in script.lines)
 
 
 def test_ニュースの型は今まで通り問いが要る():
@@ -1333,7 +1324,7 @@ sections:
     assert "本編に残る最初の行" in holder
 
 
-def test_ネットの声が少ない回を知らせる(tmp_path):
+def test_ネットの反応が多い回を知らせる(tmp_path):
     """**件数を数えていなかった**（2026-09-18 に気づいた）。
 
     「読み上げる反応は10〜20件」と 2026-09-07 に決めてあるのに、
@@ -1382,12 +1373,12 @@ sections:
 """, encoding="utf-8")
         return advise(load_notes(path), load_plan())
 
-    few = [n for n in note(6) if "ネットの声が" in n]
-    assert few, "6件でも知らせていない"
-    assert "6件" in few[0]
+    many = [n for n in note(6) if "ネットの反応が" in n]
+    assert many, "6件でも知らせていない"
+    assert "6件" in many[0]
 
-    enough = [n for n in note(12) if "ネットの声が" in n]
-    assert not enough, "12件で鳴っている"
+    enough = [n for n in note(3) if "ネットの反応が" in n]
+    assert not enough, "3件で鳴っている"
 
 
 def test_1節目がショート専用の行で始まっても落ちない(tmp_path):

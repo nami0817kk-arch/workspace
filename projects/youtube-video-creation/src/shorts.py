@@ -465,7 +465,7 @@ def _has_outro(lines) -> bool:
 
 
 # ショートの最後に足すネットの声の本数（2026-09-13 ユーザー「ショートにもいくつか」）
-VOICES_TAIL_MAX = 12
+VOICES_TAIL_MAX = 3   # 2026-09-28 に 12 → 3（収益化の審査。反応を集めただけに見せない）
 
 
 def _is_voices_scene(scene: Scene) -> bool:

@@ -41,17 +41,14 @@ tags: [サッカー, アーセナル, 海外サッカー]
 ネット民: これは優勝を狙える。
   source: 未確認
 
-ネット民: 見ていて楽しい。
-  source: 未確認
+キャスター: ボールを奪った位置は、前の試合より10メートル前でした。
+  source: 報道
 
-ネット民: この調子で頼む。
-  source: 未確認
+解説: 奪う位置が上がったので、相手は前へボールを運べませんでした。
+  source: 背景
 
-ネット民: 来週も楽しみだ。
-  source: 未確認
-
-ネット民: 守備も良かった。
-  source: 未確認
+キャスター: シュートは18本、相手は4本でした。
+  source: 報道
 
 ## まとめ
 
@@ -331,8 +328,6 @@ def test_止まりすぎる画面を弾く(tmp_path):
     assert not _still_length(path).ok
 
 
-
-
 def _endo_credit(root):
     """**写真と控えをテストの中で作る**（2026-09-26）。`assets/images/` は git に入らないので、
     手元の写真に頼ったテストは CI で前提が無くなり、9/18 から落ち続けていた。"""
@@ -599,11 +594,20 @@ def test_ショートは同じ絵の上限が短い():
 # 他人の声が尺の58%・19.2件・1件3.1秒で、こちらは14%・2.2件・1件39字だった。
 # **✓ しか出ない点検は、壊れていても気づけない**ので、壊れた例を1つずつ食わせる。
 
-def test_語りだけの台本は他人の声で止まる(tmp_path):
-    body = GOOD_BODY.replace("ネット民:", "解説:")
+def test_他人の声が半分を超えると止まる(tmp_path):
+    """2026-09-28 に下限から上限へ反転（収益化の審査。こちらの解説を主役にする）。"""
+    body = GOOD_BODY.replace("キャスター: シュートは18本", "ネット民: シュートは18本").replace(
+        "解説: 奪う位置が上がった", "ネット民: 奪う位置が上がった").replace(
+        "キャスター: ボールを奪った位置", "ネット民: ボールを奪った位置")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["他人の声の量"].ok is False
-    assert "0%" in result["他人の声の量"].detail
+    assert "上限50%" in result["他人の声の量"].detail
+
+
+def test_語りだけの台本は他人の声で止まらない(tmp_path):
+    body = GOOD_BODY.replace("ネット民:", "解説:")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["他人の声の量"].ok is True
 
 
 def test_長い引用でも刻みで止めない(tmp_path):
@@ -915,20 +919,19 @@ def test_タグに人名が入っていれば通る():
     assert check_tag_names(script).ok
 
 
-def test_反応の型は他人の声7割が下限():
-    """型でしきい値が変わる（2026-09-08）。news の40%を通る台本でも voices では止まる。"""
+def test_ネットの反応は3件まで():
+    """2026-09-28。反応を集めただけに見せない（収益化の審査）。"""
     from src.review import check_voice_share
     from src.script_model import parse_script
 
     nl = chr(10)
-    script = parse_script(nl.join([
-        "---", "title: T", "format: voices", "---", "",
-        "## 本編", "",
-        "キャスター: 事実を三十字ほど読みます。事実を三十字ほど読みます。",
-        "現地サポ: 本物のGKを手に入れたぞ",
-        "現地サポ: 前にボールを出せるじゃん", ""]))
-    assert check_voice_share(script, 40.0).ok
-    assert not check_voice_share(script, 70.0).ok
+    base = ["---", "title: T", "---", "", "## 本編", ""]
+    base += ["キャスター: 事実を三十字ほど読みます。事実を三十字ほど読みます。"] * 6
+    three = base + ["ネット民: いい", "ネット民: すごい", "ネット民: 強い", ""]
+    four = base + ["ネット民: いい", "ネット民: すごい", "ネット民: 強い", "ネット民: 最高", ""]
+    assert check_voice_share(parse_script(nl.join(three))).ok
+    got = check_voice_share(parse_script(nl.join(four)))
+    assert not got.ok and "4件" in got.detail
 
 
 def test_反応の型ではまとめの長さを見ない():
@@ -948,27 +951,6 @@ def test_反応の型ではまとめの長さを見ない():
         "現地サポ: もう前線で使っちゃえよ", "現地サポ: 補強は大成功だ", ""]))
     labels = {f.label for f in inspect(script, Path("does-not-exist"))}
     assert "まとめの長さ" not in labels
-
-
-def test_台本ごとに他人の声の下限を下げられる():
-    """試合の経過を詳しく伝える回は地の文が増える（2026-09-09 ユーザー指示）。"""
-    from pathlib import Path
-
-    from src.review import inspect
-    from src.script_model import parse_script
-
-    nl = chr(10)
-    rows = ["---", "title: T", "format: news", "sources: [https://example.com/a]",
-            "tags: [サッカー]", "---", "", "## オープニング", "",
-            "キャスター: タイトルを読みます。", "", "## 試合はどう動いたか", ""]
-    rows += ["キャスター: 実況のような地の文がここに七行ならびます。"] * 7
-    rows += ["現地メディア: 壁を築いた", ""]
-    strict = _by_label(inspect(parse_script(nl.join(rows)), Path("no-such-dir")))
-    assert strict["他人の声の量"].ok is False            # news の下限40%では止まる
-
-    loose = rows[:3] + ["voice_min: 2"] + rows[3:]
-    got = _by_label(inspect(parse_script(nl.join(loose)), Path("no-such-dir")))
-    assert got["他人の声の量"].ok is True                # 台本が下げた下限では通る
 
 
 def test_漢字の名前で始まるタイトルも主語として通す():

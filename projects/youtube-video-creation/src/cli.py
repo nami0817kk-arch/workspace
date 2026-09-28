@@ -640,13 +640,8 @@ def _cmd_approve(args, config) -> int:
         spoken = parse_script(text)
         voices = [line for scene in spoken.scenes for line in scene.lines
                   if (line.speaker or "") in crowd]
-        if not voices and not args.no_voices:
-            print(f"■ {Path(script).name} には、ネットの声が1件もありません", file=sys.stderr)
-            print("■ 通していません。`reactions <スレURL> --say` で実在の書き込みを足してください",
-                  file=sys.stderr)
-            print("■ 紹介ものなど、声を入れない型だと分かっている回だけ "
-                  "`--no-voices <理由>` を付けてください", file=sys.stderr)
-            return 1
+        # **声が無くても止めない**（2026-09-28 に外した）。収益化の審査に合わせて、
+        # 反応は3件まで・こちらの解説を主役にする方針へ変えた。声の無い回は正しい形
         # **流れの点検の控えが無ければ通さない**（2026-09-22）。9/13 に作った手順を
         # 使わないまま、「何を言いたいか分からない」を同じ日に3本で言われた。
         # 台本を直したら点検もやり直す（控えが台本より古ければ止める）
@@ -659,7 +654,8 @@ def _cmd_approve(args, config) -> int:
                   "指摘を直してから掛け直してください", file=sys.stderr)
             return 1
         stamp = approval.approve(script)
-        note = f"　（声なし: {args.no_voices}）" if not voices else f"　声{len(voices)}件"
+        note = (f"　声{len(voices)}件" if voices
+                else "　（声なし" + (f": {args.no_voices}" if args.no_voices else "") + "）")
         if args.no_flow:
             note += f"　（流れ点検なし: {args.no_flow}）"
         print(f"確認済み: {approval.key_of(script)}　{stamp}{note}")

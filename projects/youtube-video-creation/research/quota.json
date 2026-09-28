@@ -184,12 +184,12 @@
     "playlistItems.insert": 9
   },
   "2026-09-27": {
-    "channels.list": 14,
-    "playlistItems.list": 32,
+    "channels.list": 17,
+    "playlistItems.list": 54,
     "videos.insert": 12,
     "thumbnails.set": 12,
     "playlistItems.insert": 6,
-    "videos.list": 26,
+    "videos.list": 48,
     "videos.update": 6
   }
 }

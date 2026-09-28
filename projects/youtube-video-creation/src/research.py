@@ -197,7 +197,7 @@ FORMATS = {
         "label": "海外サッカー ニュース",
         "needs_question": True, "needs_answer": False, "wrap": False,
         "min_sections": 3,
-        "voice_min": 40.0,
+        "voice_min": 0.0,
         "note": "※各社の報道をもとにしています。クラブが発表した「確定」、\n"
                 "報道機関が伝える「報道」、SNS段階の「未確認」、\n"
                 "経緯の説明である「背景」を画面上で分けています。\n",
@@ -206,7 +206,7 @@ FORMATS = {
         "label": "みんなの反応",
         "needs_question": False, "needs_answer": False, "wrap": False,
         "min_sections": 2,
-        "voice_min": 70.0,
+        "voice_min": 0.0,
         "note": "※反応は実在する投稿・記事から引いています。出典は下にあります。\n"
                 "個人が特定できる形では出していません。\n",
     },
@@ -214,7 +214,7 @@ FORMATS = {
         "label": "本人の言葉",
         "needs_question": False, "needs_answer": False, "wrap": False,
         "min_sections": 1,
-        "voice_min": 60.0,
+        "voice_min": 0.0,
         "note": "※発言は下の記事から引いています。\n",
     },
 }
@@ -492,6 +492,14 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     problems += _check_quote_timing(notes)
     problems += _check_thumbnail_resolution(notes)
     problems += _check_line_images_wide(notes)
+    # **voices 型は新しく作らない**（2026-09-28 ユーザー決定「収益化することが目的なので、
+    # そこに目線を合わせましょう」）。YouTube の収益化ポリシーは「他の資料の内容を
+    # 読み上げただけのコンテンツ」「他のソーシャル メディアのコンテンツを集めた短い動画」を
+    # 対象外にしている。事実30秒のあと反応を読み続けるこの型が、いちばん近い
+    if notes.format == "voices":
+        problems.append(
+            "型『voices』は新しく作りません（2026-09-28、収益化の審査に合わせる）。"
+            "news にして、こちらの解説（数字・経緯・なぜ）を主役にしてください")
     if notes.format == "voices" and not _has_crowd(notes):
         problems.append(
             "型『voices』なのに、反応の行（voice: ネット民 など）がありません。"
@@ -753,9 +761,24 @@ def _has_name(title: str, sections) -> bool:
     return bool(re.search(r"[一-鿿]{2,4}", title))
 
 
-# **読み上げる反応は10〜20件**（2026-09-07 ユーザー決定）。
-# 伸びている3チャンネルの実測は他人の声が尺の58%・19.2件で、こちらは14%・2.2件だった
-REACTION_MIN = 10
+# **ネットの反応は3件まで**（2026-09-28 ユーザー決定。それまでは10〜20件）。
+# 再生数を追って増やしてきたが、収益化の審査は「他のソーシャル メディアの
+# コンテンツを集めた」動画を対象外にする。反応は、こちらの解説の材料として2〜3件
+REACTION_MAX = 3
+
+
+def _crowd_count(notes: Notes) -> int:
+    """ネットの反応の件数。行に分けた続き（cont）は頭の行と合わせて1件に数える。"""
+    count = 0
+    for sec in notes.sections:
+        conts = list(getattr(sec, "line_conts", []) or [])
+        for number, voice in enumerate(sec.voices):
+            if str(voice or "").strip() not in ("ネット民", "現地サポ", "海外のファン"):
+                continue
+            if number < len(conts) and conts[number]:
+                continue
+            count += 1
+    return count
 
 
 def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
@@ -767,12 +790,11 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     # サンバの回は6件、ヴァツケの回は日本語0件のまま書き出せた。
     # **数が少ない回はある**（記事が1本しか出ていない題材など）ので**止めない**。
     # 気づかずに出ることだけを防ぐ
-    voices = sum(1 for sec in notes.sections for v in sec.voices
-                 if str(v or "").strip() in ("ネット民", "現地サポ", "海外のファン"))
-    if 0 < voices < REACTION_MIN:
+    voices = _crowd_count(notes)
+    if voices > REACTION_MAX:
         notes_warnings.append(
-            f"ネットの声が{voices}件です（決まりは10〜20件）。"
-            "少ないまま出すなら、それでよいか確かめてください")
+            f"ネットの反応が{voices}件です（{REACTION_MAX}件まで、2026-09-28）。"
+            "解説の材料になる2〜3件に絞ってください")
 
     if notes.prefix and notes.prefix not in PREFIXES:
         known = " / ".join(k for k in PREFIXES if k)
@@ -892,8 +914,11 @@ CROWD_WORDS = (
 
 # 他人の声の目安（2026-09-07、docs/video-quality.md の実測）。
 # 参考3チャンネルは尺の58%・19.2件・1件3.1秒。こちらは14%・2.2件・1件39字だった
-VOICE_SHARE_TARGET = 40      # %
-VOICE_COUNT_TARGET = 10      # 件
+VOICE_SHARE_TARGET = 40      # %（2026-09-28 から使っていない。下限はやめた）
+VOICE_COUNT_TARGET = 10      # 件（同上）
+# **他人の声は尺の半分まで**（2026-09-28 ユーザー決定）。収益化の審査は
+# 「独自の解説」が付いているかを見る。こちらの語りが主役であること
+VOICE_SHARE_MAX = 50         # %
 # 字。2026-09-07 に実測（1件3.1秒＝約16字）で20字に締めたが、2026-09-08 に
 # サッカーラボ（25.5万回）の文字起こしを取ると1件30〜45字だった。参考が割れて
 # いるので目安は30字、review の上限は45字にする
@@ -940,15 +965,10 @@ def _advise_volume(notes: Notes) -> list[str]:
 
     hints: list[str] = []
     share = sum(other) / total * 100
-    if share < VOICE_SHARE_TARGET:
+    if share > VOICE_SHARE_MAX:
         hints.append(
-            f"他人の声が{share:.0f}%（{len(other)}件）しかありません。"
-            f"伸びている3チャンネルは58%・19件です。"
-            "`reactions <スレURL> --say` で短い反応を取り出せます"
-        )
-    elif len(other) < VOICE_COUNT_TARGET:
-        hints.append(
-            f"他人の声は{len(other)}件です。参考は19件で、1件2〜4秒に刻んでいます"
+            f"他人の声（発言と反応）が{share:.0f}%あります（{VOICE_SHARE_MAX}%まで、2026-09-28）。"
+            "収益化の審査は独自の解説を見ます。数字・経緯・なぜの語りを主役にしてください"
         )
     long_lines = [n for n in other if n > VOICE_LINE_TARGET]
     if long_lines:
@@ -1664,9 +1684,7 @@ def _advise_material(notes: Notes) -> list[str]:
     sources = notes.sources
     outlets = {urlparse(u).netloc for u in sources}
     hints: list[str] = []
-    if voices < VOLUME_VOICES:
-        hints.append(f"他人の声が{voices}件です（目安{VOLUME_VOICES}件）。"
-                     "`reactions --find <題材>` でスレを探して足せます")
+    # 他人の声の件数の目安は 2026-09-28 にやめた（多いほど審査に弱い）
     if numbers < VOLUME_NUMBERS:
         hints.append(f"数字を含む行が{numbers}行です（目安{VOLUME_NUMBERS}行）。"
                      "`material` の数字の行から拾えます")

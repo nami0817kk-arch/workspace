@@ -90,7 +90,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         # 型になっていない。まとめの節があるのは news だけなので、他の型では
         # 「最後の節が長い」は見ない（最後の節が反応の本体になる）
         shape = _format_of(script)
-        findings.append(check_voice_share(script, _voice_floor(script, shape)))
+        findings.append(check_voice_share(script))
         # **どこで読んだかと埋め草は落とす**（2026-09-10 ユーザー指示）
         findings.append(check_board_mention(script))
         findings.append(check_outlet_talk(script))
@@ -900,7 +900,13 @@ NARRATORS = ("キャスター", "解説", "ナレーター", "")
 #   他人の声が尺の58%（38〜67%）／19.2件／1件3.1秒
 # こちらは 14%・2.2件・1件39字だった。**これが再生数の差の中身**なので、
 # 書式ではなく構成の点検として置く。
-VOICE_SHARE_MIN = 40.0     # 他人の声が占める字数の下限（%）
+VOICE_SHARE_MIN = 40.0     # 2026-09-28 から使っていない（下限をやめ、上限にした）
+# **他人の声は半分まで・ネットの反応は3件まで**（2026-09-28 ユーザー決定
+# 「収益化することが目的なので、そこに目線を合わせましょう」）。
+# YouTube の収益化ポリシーは「自分で作成していない他の資料の内容を読み上げただけ」
+# 「他のソーシャル メディアのコンテンツを集めた」動画を対象外にしている
+VOICE_SHARE_MAX = 50.0
+CROWD_MAX = 3
 # 1件の長さ。2026-09-07 の実測（1件3.1秒＝約16字）で20字にしたが、
 # 2026-09-08 にサッカーラボ（25.5万回）の文字起こしを取ると1件30〜45字だった。
 # 参考どうしで割れているので、上限は長いほうに合わせる
@@ -916,22 +922,6 @@ def _format_of(script: Script) -> dict:
     name = str((script.meta or {}).get("format") or "news").strip().lower()
     return FORMATS.get(name, FORMATS["news"])
 
-
-def _voice_floor(script: Script, shape: dict) -> float:
-    """他人の声の下限。台本が `voice_min` を書いていればそちらを使う（2026-09-09）。
-
-    ユーザー「スズキはネットの声はなしでOK。試合の評価を詳しく伝えましょう」。
-    試合の経過を詳しく伝える回は、実況のような地の文が増えて他人の声の割合が
-    下がる。**型の下限は目安であって、回ごとの判断を潰すものではない。**
-    下げるときは取材メモに理由を書く。
-    """
-    written = (script.meta or {}).get("voice_min")
-    if written is None:
-        return float(shape["voice_min"])
-    try:
-        return max(0.0, min(100.0, float(written)))
-    except (TypeError, ValueError):
-        return float(shape["voice_min"])
 
 
 def _voice_lines(script: Script) -> tuple[list[int], int]:
@@ -1086,24 +1076,38 @@ def check_filler(script: Script) -> Finding:
     return Finding(True, "埋め草", "見当たりません")
 
 
-def check_voice_share(script: Script, minimum: float | None = None) -> Finding:
-    """他人の声が足りているか。語りだけの動画は最後まで見てもらえない。
+def check_voice_share(script: Script, maximum: float | None = None) -> Finding:
+    """他人の声が多すぎないか（2026-09-28 に下限から上限へ反転）。
 
-    下限は型で変わる（2026-09-08）。news は40%、voices は70%、quote は60%。
-    サッカーラボ（25.5万回）は 0:36 以降がすべて反応で、他人の声が約83%だった。
+    それまでは「他人の声が4割以上」を求めていた（参考チャンネルは58〜83%）。
+    再生数には効いたが、収益化の審査では**読み上げただけ・集めただけ**に近づく。
+    9/28 の点検で、本編の視聴時間の66%が他人の声が半分以上の動画から来ていた。
     """
     other, total = _voice_lines(script)
     if not total:
         return Finding(False, "他人の声の量", "読み上げる文がありません")
-    floor = VOICE_SHARE_MIN if minimum is None else minimum
+    ceiling = VOICE_SHARE_MAX if maximum is None else maximum
     share = sum(other) / total * 100
-    if share < floor:
+    if share > ceiling:
         return Finding(
             False, "他人の声の量",
-            f"{share:.0f}%（{len(other)}件）しかありません（下限{floor:.0f}%）。"
-            f"伸びているチャンネルは58〜83%です。反応を増やしてください",
+            f"{share:.0f}%（{len(other)}件）あります（上限{ceiling:.0f}%）。"
+            "こちらの解説（数字・経緯・なぜ）を主役にしてください",
         )
-    return Finding(True, "他人の声の量", f"{share:.0f}%（{len(other)}件）")
+    crowd = _crowd_groups(script)
+    if crowd > CROWD_MAX:
+        return Finding(
+            False, "他人の声の量",
+            f"ネットの反応が{crowd}件あります（{CROWD_MAX}件まで）。解説の材料になる2〜3件に絞ってください",
+        )
+    return Finding(True, "他人の声の量", f"{share:.0f}%（{len(other)}件・ネット{crowd}件）")
+
+
+def _crowd_groups(script: Script) -> int:
+    """ネットの反応の件数。行に分けた続き（cont）は1件に数える。"""
+    crowd = ("ネット民", "現地サポ", "海外のファン")
+    return sum(1 for scene in script.scenes for line in scene.lines
+               if (line.speaker or "") in crowd and not getattr(line, "cont", False))
 
 
 def check_voice_length(script: Script) -> Finding:

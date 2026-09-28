@@ -755,7 +755,7 @@ def test_TikTok用は1分を超えるまで台本の中身を足す():
 
     script = Script(title="t", scenes=[
         Scene(title="オープニング", lines=[talk("題名です", 4.0)]),
-        Scene(title="何があったか", lines=[talk(f"事実{i}", 5.0) for i in range(4)]),
+        Scene(title="何があったか", lines=[talk(f"事実{i}", 5.0) for i in range(8)]),
         Scene(title="山場", lines=[talk(f"山場{i}", 5.0) for i in range(5)]),
         Scene(title="見ていた人", lines=[talk(f"反応{i}", 3.0, "ネット民") for i in range(8)]),
     ])

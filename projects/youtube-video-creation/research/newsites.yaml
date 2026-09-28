@@ -25,6 +25,20 @@ sites:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
+- host: forzaroma.info
+  seen: 19
+  days:
+  - '2026-09-02'
+  - '2026-09-05'
+  - '2026-09-09'
+  - '2026-09-12'
+  - '2026-09-24'
+  - '2026-09-27'
+  - '2026-09-28'
+  examples:
+  - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
+  - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
+  - https://www.forzaroma.info/news-as-roma/conti-omaggia-totti-ricordando-il-suo-primo-gol-sei-la-storia-della-roma-foto/?intcmp=gazzanet-forzaroma
 - host: dailymail.com
   seen: 18
   days:
@@ -37,19 +51,19 @@ sites:
   - https://www.dailymail.com/sport/football/article-16097269/Tottenham-sign-Chelsea-winger-Mykhailo-Mudryk-season-long-loan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
-- host: forzaroma.info
-  seen: 17
+- host: fcinter1908.it
+  seen: 15
   days:
-  - '2026-09-02'
   - '2026-09-05'
   - '2026-09-09'
-  - '2026-09-12'
-  - '2026-09-24'
-  - '2026-09-27'
+  - '2026-09-19'
+  - '2026-09-23'
+  - '2026-09-26'
+  - '2026-09-28'
   examples:
-  - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
-  - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
-  - https://www.forzaroma.info/news-as-roma/conti-omaggia-totti-ricordando-il-suo-primo-gol-sei-la-storia-della-roma-foto/?intcmp=gazzanet-forzaroma
+  - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
+  - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
+  - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
 - host: transfermarkt.co.uk
   seen: 14
   days:
@@ -106,19 +120,6 @@ sites:
   - https://blog.domesoccer.jp/archives/60253571.html
   - https://blog.domesoccer.jp/archives/60253934.html
   - https://blog.domesoccer.jp/archives/60253949.html
-- host: fcinter1908.it
-  seen: 13
-  days:
-  - '2026-09-05'
-  - '2026-09-09'
-  - '2026-09-19'
-  - '2026-09-23'
-  - '2026-09-26'
-  - '2026-09-28'
-  examples:
-  - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
-  - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
-  - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
 - host: tuttobolognaweb.it
   seen: 12
   days:

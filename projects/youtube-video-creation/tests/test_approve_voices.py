@@ -1,4 +1,7 @@
-"""声の無い台本は approve を通らない（2026-09-17 ユーザー指示「声は必ず」）。
+"""声の無い台本も approve を通る（2026-09-28 に反転）。
+
+2026-09-17 の「声は必ず」で止めていたが、9/28 に収益化の審査に合わせて
+「反応は3件まで・こちらの解説が主役」へ方針を変えた。声の無い回は正しい形。
 
 流れの点検（tools/flow.py）の控えが無くても通らない（2026-09-22）。
 """
@@ -34,17 +37,14 @@ def _flow_record(script: Path, older: bool = False):
         record.unlink(missing_ok=True)
 
 
-def test_声が無い台本は通らない(tmp_path):
-    """`draft` は知らせるだけで**止めていなかった**。
-
-    2026-09-17 に、反応の無い台本を3本作ってそのまま出しかけた。
-    まとめサイトが試合に追いついていない朝は、待つのが正しい。
-    """
+def test_声が無い台本も通る(tmp_path):
+    """2026-09-28、収益化の審査に合わせて「声は必ず」を外した。"""
     script = tmp_path / "koe_nashi.md"
     script.write_text(HEAD + "キャスター: 何かが起きました。\n", encoding="utf-8")
-    done = _run(script)
-    assert done.returncode == 1
-    assert "ネットの声が1件もありません" in done.stderr
+    with _flow_record(script):
+        done = _run(script)
+    assert done.returncode == 0, done.stderr
+    assert "声なし" in done.stdout
 
 
 def test_理由を書けば通る(tmp_path):
