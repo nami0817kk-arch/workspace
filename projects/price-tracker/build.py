@@ -334,7 +334,11 @@ def build(root: Path, out: Path) -> dict:
     urls.append("/stats/")
 
     # 共有時の画像・行き先を示す404・値下がりの購読（RSS）。
+    # 共有したときに出る絵。X も Facebook も LINE も og:image の SVG を
+    # 描かないので PNG も出す。og.svg は残す（中身は数字入りで、
+    # ページに埋め込んで見せるぶんには SVG のほうが軽い）。
     write(out / "og.svg", theme.og_image(site, stats))
+    (out / "og.png").write_bytes(icon.og_png())
     write(out / "404.html", theme.not_found(site, updated))
     write(out / "feed.xml", theme.feed(site, dropped, updated))
     write(out / "points" / "feed.xml", theme.feed(

@@ -333,7 +333,7 @@ def _here(canonical: str, site: dict) -> str:
 
 
 def head(title: str, description: str, canonical: str, site: dict, prefix: str = "",
-         extra: str = "", indexable: bool = True) -> str:
+         extra: str = "", indexable: bool = True, image: str = "") -> str:
     robots = ("index,follow,max-image-preview:large" if indexable
               else "noindex,follow")
     return f"""<!doctype html>
@@ -352,8 +352,8 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(canonical)}">
 <meta property="og:site_name" content="{esc(site['name'])}">
-<meta name="twitter:card" content="summary">
-<meta property="og:image" content="{esc(site["base_url"].rstrip("/"))}/og.svg">
+<meta name="twitter:card" content="{"summary_large_image" if image else "summary"}">
+<meta property="og:image" content="{esc(image or (site["base_url"].rstrip("/") + "/og.png"))}">
 <link rel="alternate" type="application/rss+xml" title="今日の値下がり" href="{prefix}feed.xml">
 <link rel="preconnect" href="https://thumbnail.image.rakuten.co.jp" crossorigin>
 <link rel="dns-prefetch" href="https://thumbnail.image.rakuten.co.jp">
@@ -1919,8 +1919,11 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     # indexable はどの一覧からも辿れるかで build が決める（実測で270件が該当なし）。
     # 辿れない商品は検索結果にだけ出る行き止まりになるので索引に載せない。
     # ページ自体は残す。見守りや外からのリンクの行き先になっている。
+    # 共有したときに出る絵。og.svg のままだと X も Facebook も LINE も
+    # SVG を描かないので、13,402件が持っている楽天の商品写真を使う。
+    # ページの中で既に出している同じ画像なので、新しく持つものは無い。
     return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra,
-                 indexable=indexable)
+                 indexable=indexable, image=str(row.get("image") or ""))
             + breadcrumb(site, "商品の価格推移", prefix)
             + f'<article class="item"><h1 title="{esc(row["name"])}">'
               f'{esc(short_name(row["name"], 70))}</h1>'

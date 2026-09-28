@@ -89,3 +89,33 @@ def ico(size: int = 48) -> bytes:
     entry = struct.pack("<BBBBHHII", size % 256, size % 256, 0, 0, 1, 32,
                         len(body), 22)
     return header + entry + body
+
+# 共有したときに出る絵。og.svg を渡していたが、X も Facebook も LINE も
+# og:image の SVG を描かない（商品ページは楽天の商品写真を使えるので、
+# 絵が出ないのはトップと一覧だけ）。文字はフォントが要るので入れない。
+# 背景と印だけでも「絵が出ない」状態よりは伝わる。
+OG_W, OG_H = 1200, 630
+BG = (251, 251, 250)      # style.css の --bg
+
+
+def og_png(width: int = OG_W, height: int = OG_H) -> bytes:
+    """OGP 用の横長 PNG。背景の上に、印を中央へ大きく置く。"""
+    mark = min(width, height) // 2
+    box = _rounded(mark, max(mark // 5, 1))
+    arrow = _arrow(mark)
+    ox, oy = (width - mark) // 2, (height - mark) // 2
+    bar_h = max(height // 45, 6)          # 上端の帯（og.svg と同じ見た目）
+    raw = bytearray()
+    for y in range(height):
+        raw.append(0)
+        for x in range(width):
+            if y < bar_h:
+                raw += bytes(ACCENT)
+            elif oy <= y < oy + mark and ox <= x < ox + mark and box[y - oy][x - ox]:
+                raw += bytes(WHITE if arrow[y - oy][x - ox] else ACCENT)
+            else:
+                raw += bytes(BG)
+    return (b"\x89PNG\r\n\x1a\n"
+            + _chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+            + _chunk(b"IDAT", zlib.compress(bytes(raw), 9))
+            + _chunk(b"IEND", b""))

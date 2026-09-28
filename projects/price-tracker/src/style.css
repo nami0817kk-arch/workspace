@@ -844,3 +844,20 @@ main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 
   padding: 0 14px; border: 1px solid var(--line); border-radius: 999px;
   text-decoration: none; }
 .go a:hover { border-color: var(--accent); }
+
+/* 55. 印刷したときの指定が無く、上下の並び・切り替えボタン・次の行き先まで
+   そのまま紙に出ていた。価格の記録を紙やPDFに残したい人が要るのは、
+   商品名・価格・図・表だけ。リンクは紙の上では押せないので下線も外す。 */
+@media print {
+  .site-nav, .site-foot, .theme-btn, .to-top, .onward, .quick,
+  .tools, .tools-box, .pager, .jump, .watch-btn, .watch-mini,
+  .buy, .skip, .crumb { display: none !important; }
+  .site-head { border: 0; padding: 0; }
+  .site-head .tagline { display: none; }
+  body { background: #fff; color: #000; }
+  .card, .views li, .hits li, .facts { break-inside: avoid; }
+  a { text-decoration: none; color: inherit; }
+  .chart-box, .card-spark { break-inside: avoid; }
+  /* 出典は紙にも残す（どこで見た価格か分からなくなる） */
+  .ad-notice { font-size: 10px; color: #444; }
+}

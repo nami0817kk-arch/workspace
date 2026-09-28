@@ -892,6 +892,42 @@ class PointDeadlineTest(unittest.TestCase):
             self.theme.caption_block({"caption": "ぜひどうぞ。オススメです。"}), "")
 
 
+class 共有したときの絵Test(unittest.TestCase):
+    """og:image に SVG を渡していた。X も Facebook も LINE も SVG を描かない。"""
+
+    def setUp(self):
+        from src import theme, icon
+        self.theme = theme
+        self.icon = icon
+
+    def site(self):
+        return {"name": "見本", "base_url": "https://example.com",
+                "description": "見本の説明", "owner": "見本"}
+
+    def test_既定はPNG(self):
+        out = self.theme.head("題", "説明", "https://example.com/", self.site())
+
+        self.assertIn('og:image" content="https://example.com/og.png"', out)
+        self.assertIn('twitter:card" content="summary"', out)
+
+    def test_商品ページは商品写真を渡せる(self):
+        out = self.theme.head("題", "説明", "https://example.com/x/", self.site(),
+                              image="https://thumbnail.image.rakuten.co.jp/a.jpg")
+
+        self.assertIn('og:image" content="https://thumbnail.image.rakuten.co.jp/a.jpg"', out)
+        # 写真があるときは大きく見せる
+        self.assertIn('twitter:card" content="summary_large_image"', out)
+
+    def test_OGPのPNGが作れる(self):
+        data = self.icon.og_png()
+
+        self.assertTrue(data.startswith(b"\x89PNG"))
+        # OGP は横長（1200x630）が求められる
+        import struct
+        w, h = struct.unpack(">II", data[16:24])
+        self.assertEqual((w, h), (1200, 630))
+
+
 class 検索の読み替えTest(unittest.TestCase):
     """「いやほん」と打っても「イヤホン」に当たるようにする。
 
