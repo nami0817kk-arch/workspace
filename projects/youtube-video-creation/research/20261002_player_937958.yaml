@@ -51,7 +51,7 @@ sections:
     cont: true
     pause: 0.5
   - 10代でユーロとワールドカップを両方獲った、史上ただ1人の選手。
-  - 同じ攻撃的MFとウイング100人の中で、シュートの数はいちばん多い側、空中戦はいちばん少ない側。
+  - 同じ攻撃的MFとウイング100人の中で、シュートの数は1位、空中戦は最下位。
   - その作りを、数字と話で見ます。
   sources:
   - https://www.fotmob.com/players/1467236
@@ -127,7 +127,7 @@ sections:
   say:
   - text: ヤマルの道は、7歳で入ったバルセロナの育成組織から、一度も外に出ていません。
     image: assets/images/20261002_yamal_semi_face/01.jpg
-  - text: 市場価値の線は、16歳のときから一度も下がっていません。
+  - text: そのあいだの市場価値の線は、16歳のときから一度も下がっていません。
     image: assets/stats/player_20261002_1467236_value.png
     no_telop: true
   - 転機は2023年4月29日、ベティス戦。
@@ -172,15 +172,15 @@ sections:
     no_telop: true
   - 6つの軸のうち、シュートの数と得点は最上位。空中戦と守備の関与は最下位です。
   - つまり、右サイドから中へ持ち込んで、左足で自分が打つ選手です。
-  - 弱点は守備。タックルやボール奪取といった守備の数は、同じ位置の中で下から9番目。
-  - 2025年4月のドルトムント戦では走る量がチームでいちばん少なく、味方から直接言われました。
-  - text: では、どこでボールを持つか。右サイドの高い位置から、中へ入る動きです。
+  - text: では、どこでボールを持つか。右サイドの高い位置から、中へ。
     image: assets/stats/player_20261002_1467236_heat.png
     no_telop: true
   - ドリブルは今季30回成功、成功率60%。作ったチャンスは27回で、上位3%です。
   - text: 今季のシュートは、ラ・リーガ7試合で38本。1試合に5本以上打って、7点を取っています。
     image: assets/stats/player_20261002_1467236_shots.png
     no_telop: true
+  - 弱点は守備。タックルやボール奪取といった守備の数は、同じ位置の中で下から9番目。
+  - 2025年4月のドルトムント戦では走る量がチームでいちばん少なく、味方から直接言われました。
   sources:
   - https://www.fotmob.com/players/1467236
   - https://learning.coachesvoice.com/cv/barcelona-extraordinary-talent-lamine-yamal-style-of-play/
@@ -280,13 +280,13 @@ sections:
       - '9.5'
     source: FotMob
   say:
-  - text: バルセロナのヤマル。右から中へ切り込む左足で、10代でユーロもワールドカップも獲りました。
+  - text: バルセロナのヤマル、19歳。10代でユーロもワールドカップも獲った左足は、今季も止まっていません。
     short_only: true
   - text: 今季はここまで9試合で9得点6アシスト、出場時間は761分。84分に1点のペースです。
     image: assets/images/20261002_yamal_final_wide/01.jpg
   - ラ・リーガは7試合で7点4アシスト、チャンピオンズリーグは1試合で1点2アシスト。
   - 直近5試合は5点6アシスト。10点満点の評点は、いちばん低い試合でも8.8です。
-  - 点も、作る数も落ちていない。右から中へ、左足で打つ形が毎試合出ています。
+  - 作る数も、決める数も、落ちていません。
   sources:
   - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
   - https://www.fotmob.com/players/1467236
