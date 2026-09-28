@@ -261,8 +261,10 @@
     html += '<p class="hint">標準報酬月額: 健康保険 ' + yen(p.healthStandard) + '・厚生年金 ' + yen(p.pensionStandard)
       + '。' + calc.prefFull(prefecture) + 'の料率（' + p.table.source.title + '）で、労使折半・端数は50銭以下切り捨てで計算しています。'
       + '健康保険組合に入っている会社では料率が違います。計算のしかたは<a href="keisan.html">計算方法と出典</a>に。</p>';
-    html += '<p class="hint">月収（標準報酬月額）およそ12.6万円以下の人は、会社が選べば本人負担が3年間軽くなる制度（保険料調整制度）があります。使うかは勤務先に聞いてみてください（<a href="faq.html#q-small">くわしく</a>）。'
-      + 'この目安は労使折半のままの額です。</p>';
+    // 保険料調整制度は、人数の条件が広がって新たに対象になった会社（2027年10月以降・50人以下）などだけ。51人以上の会社には出さない
+    if (parseInt(document.getElementById('employer-size').value, 10) <= 50) html += '<p class="hint">人数の条件が広がって新たに対象になった会社では、月収（標準報酬月額）およそ12.6万円以下の人は、会社が選べば本人負担が3年間軽くなる制度（保険料調整制度）があります。使うかは勤務先に聞いてみてください（<a href="faq.html#q-small">くわしく</a>）。'
+      + '';
+    html += '<p class="hint">この目安は労使折半のままの額です。</p>';
     return html;
   }
 
