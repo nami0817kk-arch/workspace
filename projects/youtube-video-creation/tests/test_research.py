@@ -220,7 +220,8 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
     # （参考3チャンネルは尺の58%が他人の声、こちらは14%だった）。札の点検とは別の話
     # 2026-09-08: 中身の量（数字・出典）のヒントも同様にどのメモにも出る
     # 2026-09-25: サムネに名前を入れる決まりも、名前を書いていないメモには必ず出る
-    volume = ("他人の声", "数字を含む行", "出典が", "クラブ名も人名も")
+    # 2026-09-28: 見立て（takeaway）のヒントも、書いていないメモには必ず出る
+    volume = ("他人の声", "数字を含む行", "出典が", "クラブ名も人名も", "takeaway")
     assert [h for h in advise(build_notes(raw)) if not any(v in h for v in volume)] == []
 
 
@@ -1860,3 +1861,16 @@ def test_報道アカウントの見出しを反応に入れない(tmp_path):
     notes = _reaction_notes(tmp_path, [{"voice": "ネット民", "text": "ラフィーニャがハットトリック！"}],
                             ["https://bsky.app/profile/espnfc-m.bsky.social/post/3mvv"])
     assert any("報道・まとめ" in w for w in _advise_reactions(notes))
+
+
+def test_見立ては概要欄に1行出る():
+    """2026-09-28 収益化の整理 7。審査はメタデータも見る。"""
+    from src.research import advise
+    from src.script_model import parse_script
+
+    raw = _raw()
+    raw["theme"]["takeaway"] = "移籍金より出場時間の差が理由でした"
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    assert "この動画の見立て: 移籍金より出場時間の差が理由でした" in script.description
+    assert not any("takeaway" in h for h in advise(build_notes(raw)))
+    assert any("takeaway" in h for h in advise(build_notes(_raw())))

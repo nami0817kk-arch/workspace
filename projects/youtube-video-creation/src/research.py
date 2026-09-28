@@ -257,6 +257,7 @@ class Notes:
     # 「この動画で分かること」は板に焼き込んである（板の上にカードは重ねない決まり）
     opening_image: str = ""
     answer: str = ""                 # まとめで返す答え
+    takeaway: str = ""               # この動画の見立て（概要欄に1行。2026-09-28 収益化の整理 7）
     watch: str = ""                  # 次に何を見るか
     follow_up: bool = False
     # **ショートに反応を入れない回**（2026-09-14 指示「この話題において、
@@ -437,6 +438,7 @@ def build_notes(raw: dict) -> Notes:
         opening_image=str(theme.get("opening_image") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer") or "").strip(),
+        takeaway=str(raw.get("takeaway") or theme.get("takeaway") or "").strip(),
         watch=str(raw.get("watch") or "").strip(),
         follow_up=bool(raw.get("follow_up", False)),
         short_voices=raw.get("short_voices", True) is not False,
@@ -795,6 +797,11 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
         notes_warnings.append(
             f"ネットの反応が{voices}件です（{REACTION_MAX}件まで、2026-09-28）。"
             "解説の材料になる2〜3件に絞ってください")
+
+    if not notes.takeaway and notes.format == "news":
+        notes_warnings.append(
+            "theme.takeaway（この動画の見立て）が空です。概要欄に1行出します。"
+            "数字で比べて分かったこと・次に何が起きるか、を1文で（2026-09-28）")
 
     if notes.prefix and notes.prefix not in PREFIXES:
         known = " / ".join(k for k in PREFIXES if k)
@@ -2031,6 +2038,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "description": (
             f"{notes.title}\n\n"
             + (f"この動画が答える問い: {notes.question}\n\n" if notes.question else "")
+            # **こちらの見立てを概要欄にも1行**（2026-09-28 収益化の整理 7）。審査はメタデータも見る
+            + (f"この動画の見立て: {notes.takeaway}\n\n" if notes.takeaway else "")
             + shape["note"]
         ),
         # タグは話の中身から作る。どの動画にも同じ4つでは検索に掛からない

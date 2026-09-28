@@ -2289,6 +2289,11 @@ def _cmd_xshot(args, config) -> int:
     誰が有名人かは、こちらの判断ではなく `accounts:` の一覧で決める。
     載っていない人は止める（人が足す）。
     """
+    # **X のスクショは使わない**（2026-09-28、収益化の整理 9。ユーザーが○）。
+    # 他人の著作物で @ハンドルも写る。反応は文字で3件だけになったので、画像で見せる必要も薄い
+    print("■ xshot は 2026-09-28 に止めました（収益化の整理 9：X の投稿の画像は使わない）。"
+          "反応は文字で載せてください", file=sys.stderr)
+    return 1
     from . import xshot as xshot_mod
     from .config import _resolve
     from .plan import load_plan
