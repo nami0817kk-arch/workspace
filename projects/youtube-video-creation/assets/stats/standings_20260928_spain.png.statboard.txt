@@ -1,0 +1,9 @@
+title: ラ・リーガ 第7節
+unit: 勝点
+Barcelona=21.0
+Atlético Madrid=16.0
+Real Betis=16.0
+Real Madrid=15.0
+Sevilla=13.0
+Deportivo Alavés=11.0
+source: FotMob

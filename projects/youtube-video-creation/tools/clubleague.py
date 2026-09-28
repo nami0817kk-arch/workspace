@@ -6,6 +6,7 @@
 **道具を複製せず、環境変数 `CLUB_LEAGUE` で切り替える。**既定はプレミア（今までどおり）。
 
     CLUB_LEAGUE=laliga python tools/plsquad.py realsociedad Real_Sociedad "2026–27_Real_Sociedad_season"
+    CLUB_LEAGUE=bundesliga python tools/plmap.py            # ブンデスリーガ版（2026-09-28、research/bd_data）
 """
 from __future__ import annotations
 
@@ -54,6 +55,24 @@ LEAGUES = {
         "note_prefix": "20260926_ll",
         "legends": "ll_legends.json",
     },
+    # ブンデスリーガ版（2026-09-28）。18クラブ。地図は Module:Location map/data/Germany の四隅
+    "bundesliga": {
+        "data": "bd_data",
+        "prefix": "bd_",
+        "series": "ブンデスリーガチーム紹介",
+        "league": "germany",
+        "league_name": "ブンデスリーガ",
+        "league_short": "ブンデス",
+        "best_label": "昨季の順位",
+        "slot": "other_1",
+        "page_title": "ブンデス18クラブの台本",
+        "map_module": "Germany",
+        "map_file": "Germany adm location map.svg",
+        "map_png": "germany.png",
+        "map_note": "ドイツの白地図に18クラブの紋章を置いたもの",
+        "note_prefix": "20260928_bd",
+        "legends": "bd_legends.json",
+    },
 }
 
 
@@ -63,6 +82,8 @@ def name() -> str:
         got = "premier"
     if got in ("ll", "liga", "spain"):
         got = "laliga"
+    if got in ("bd", "bl", "bundes", "germany"):
+        got = "bundesliga"
     if got not in LEAGUES:
         raise SystemExit(f"■ CLUB_LEAGUE={got} は知らないリーグです（{', '.join(LEAGUES)}）")
     return got

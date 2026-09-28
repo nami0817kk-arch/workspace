@@ -1,0 +1,9 @@
+title: プレミアリーグ 第5節
+unit: 勝点
+Manchester City=15.0
+Arsenal=12.0
+Brighton & Hove Albion=10.0
+Brentford=9.0
+Leeds United=9.0
+Liverpool=9.0
+source: FotMob

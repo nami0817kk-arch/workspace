@@ -2,6 +2,7 @@
 
     CLUB_LEAGUE=laliga python tools/llresults.py            # 開幕から昨日まで
     CLUB_LEAGUE=laliga python tools/llresults.py --since 2026-08-14
+    CLUB_LEAGUE=bundesliga python tools/llresults.py        # ブンデスリーガ版（ESPN は ger.1。2026-09-28）
 
 **なぜ要るか。**「今季のここまで」の節は、各クラブの英語版シーズン記事の試合の箱から
 組み立てている（`plsquad.results`）。ところがラ・リーガは**シーズン記事が無いクラブがある**
@@ -31,7 +32,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import clubleague  # noqa: E402
 
 DATA = clubleague.data_dir()
-URL = "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates={day}"
+# ESPN のリーグ記号（2026-09-28 ブンデスリーガ版で切り替えにした）
+ESPN_LEAGUE = {"laliga": "esp.1", "bundesliga": "ger.1", "premier": "eng.1"}[clubleague.name()]
+URL = "https://site.api.espn.com/apis/site/v2/sports/soccer/" + ESPN_LEAGUE + "/scoreboard?dates={day}"
 # ESPN の表記 → clubs.json の英語版記事名（名前の合わないものだけ）
 ESPN_TO_WIKI = {
     "Athletic Club": "Athletic Bilbao",
@@ -53,6 +56,15 @@ ESPN_TO_WIKI = {
     "Levante": "Levante UD",
     "Málaga": "Málaga CF",
     "Osasuna": "CA Osasuna",
+    # ブンデスリーガ（2026-09-28。ESPN の18クラブの表記を 8/14〜9/27 の36試合で確かめた）
+    "Bayern Munich": "FC Bayern Munich",
+    "FC Cologne": "1. FC Köln",
+    "Hamburg SV": "Hamburger SV",
+    "Mainz": "1. FSV Mainz 05",
+    "Schalke 04": "FC Schalke 04",
+    "TSG Hoffenheim": "TSG 1899 Hoffenheim",
+    "Werder Bremen": "SV Werder Bremen",
+    "Bayer Leverkusen": "Bayer 04 Leverkusen",
 }
 
 
@@ -140,6 +152,23 @@ def assign(games: list[dict], known: dict) -> None:
         if g["vote"]:
             by_round.setdefault(g["vote"], []).append(g["date"].toordinal())
     med = {r: sorted(v)[len(v) // 2] for r, v in by_round.items()}
+    if not med:
+        # **票が1つも無い**（取材メモの raw がまだ無いリーグ。2026-09-28 ブンデスリーガ版）。
+        # 日付順に並べ、前の試合から3日以上空いたら次の節。**同じ節に同じクラブが2回出たら止める**
+        # （延期の早期消化が混ざると崩れる。そのときは raw を先に作って票で決める）
+        r, last = 0, None
+        for g in sorted(games, key=lambda g: g["date"]):
+            if last is None or (g["date"] - last).days >= 3:
+                r += 1
+            last = g["date"]
+            g["vote"] = r
+            by_round.setdefault(r, []).append(g["date"].toordinal())
+        med = {r: sorted(v)[len(v) // 2] for r, v in by_round.items()}
+        seen: set = set()
+        for g in games:
+            if (g["vote"], g["home"]) in seen or (g["vote"], g["away"]) in seen:
+                raise SystemExit(f"■ 日付の塊だけでは節が決まりません（第{g['vote']}節に {g['home']} か {g['away']} が2回）。raw を先に作ってください")
+            seen.update({(g["vote"], g["home"]), (g["vote"], g["away"])})
     taken: set = set()
 
     def put(g, r):
@@ -170,7 +199,7 @@ def main() -> int:
     games = fetch(dt.date.fromisoformat(args.since), dt.date.fromisoformat(args.until), titles)
     assign(games, known_rounds(titles))
     rows = [[_label(g["day"]), str(g["round"]), g["home"], g["score"], g["away"]] for g in games]
-    (DATA / "results.json").write_text(json.dumps({"source": "ESPN scoreboard (esp.1)",
+    (DATA / "results.json").write_text(json.dumps({"source": f"ESPN scoreboard ({ESPN_LEAGUE})",
                                                    "fetched": dt.date.today().isoformat(),
                                                    "results": rows}, ensure_ascii=False, indent=1),
                                        encoding="utf-8")
