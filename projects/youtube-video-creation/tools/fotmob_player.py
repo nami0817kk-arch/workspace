@@ -190,6 +190,9 @@ def radar_board(group: str, items: list[tuple[str, float]], out: Path, name: str
         wd.polygon(pts, fill=(255, 255, 255, 14 if k % 2 else 4), outline=(255, 255, 255, 70 if k < 5 else 150), width=2 if k < 5 else 3)
     for a in angles:
         wd.line([(cx, cy), (cx + r * math.cos(a), cy + r * math.sin(a))], fill=(255, 255, 255, 60), width=2)
+    f_tick = _font(20)
+    for k in (2, 4):
+        wd.text((cx + 8, cy - r * k / 5 - 12), str(k * 20), font=f_tick, fill=(160, 170, 186, 200))
     canvas.alpha_composite(web)
     layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
     ld = ImageDraw.Draw(layer)
@@ -233,12 +236,13 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
     # 左に大きな数字の札（シュート・得点・xG）
     f_big, f_small = _font(56), _font(24)
     ty = py + 130
-    for label, value in (("シュート", f"{len(shot_list)}"), ("得点", f"{len(goals)}"), ("xG合計", f"{xg:.1f}")):
-        draw.rounded_rectangle([px + 40, ty, px + 300, ty + 96], radius=16, fill=(30, 36, 48, 255))
-        draw.text((px + 60, ty + 10), label, font=f_small, fill=(168, 178, 194, 255))
+    rate = f"{100 * len(goals) / len(shot_list):.0f}%" if shot_list else "-"
+    for label, value in (("シュート", f"{len(shot_list)}"), ("得点", f"{len(goals)}"), ("xG合計", f"{xg:.1f}"), ("決定率", rate)):
+        draw.rounded_rectangle([px + 40, ty, px + 300, ty + 84], radius=16, fill=(30, 36, 48, 255))
+        draw.text((px + 60, ty + 8), label, font=f_small, fill=(168, 178, 194, 255))
         vw = draw.textlength(value, font=f_big)
-        draw.text((px + 280 - vw, ty + 30), value, font=f_big, fill=BRAND_GOLD + (255,))
-        ty += 110
+        draw.text((px + 280 - vw, ty + 22), value, font=f_big, fill=BRAND_GOLD + (255,))
+        ty += 96
     # 敵陣の半面。ゴールが上。横=幅68m、縦=52.5m。芝は縞にする
     gx, gy, gw, gh = px + 360, py + 130, 560, ph - 190
     stripe = gh // 8
@@ -281,8 +285,9 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
         else:
             draw.ellipse([cx - rad, cy - rad, cx + rad, cy + rad], fill=(90, 96, 108, 200), outline=(200, 200, 200, 160), width=2)
     # 凡例（数字の札の下）
-    lx, ly = px + 40, py + 470
+    lx, ly = px + 40, py + 520
     f = _font(28)
+    f = _font(24)
     for label, style in (("得点", "goal"), ("枠内", "on"), ("外れ・ブロック", "off")):
         if style == "goal":
             draw.ellipse([lx, ly, lx + 26, ly + 26], fill=BRAND_GOLD + (255,))
@@ -290,8 +295,8 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
             draw.ellipse([lx, ly, lx + 26, ly + 26], fill=(255, 255, 255, 60), outline=(255, 255, 255, 255), width=3)
         else:
             draw.ellipse([lx, ly, lx + 26, ly + 26], fill=(90, 96, 108, 200), outline=(200, 200, 200, 160), width=2)
-        draw.text((lx + 40, ly - 4), label, font=f, fill=(255, 255, 255, 255))
-        ly += 50
+        draw.text((lx + 40, ly - 2), label, font=f, fill=(255, 255, 255, 255))
+        ly += 38
     draw.text((px + pw - 130, py + ph - 50), "FotMob", font=_font(26), fill=(120, 130, 146, 255))
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)
@@ -299,11 +304,150 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
     return out
 
 
+def _panel_at(size: tuple[int, int]):
+    """板の下地（横 1280x720 / 縦 1080x1920 どちらも）。縦はピッチの絵を敷かず暗い地にする。"""
+    if size[0] < size[1]:
+        canvas = Image.new("RGBA", size, (14, 20, 30, 255))
+        return canvas, ImageDraw.Draw(canvas)
+    return _panel(size)
+
+
+def value_board(history: list[dict], out: Path, name: str, club_of=None, size: tuple[int, int] = (1280, 720)) -> Path:
+    """市場価値の推移の折れ線（Transfermarkt の履歴から）。転機がどこかを目で追える。"""
+    from src import statboard
+
+    canvas, draw = _panel_at(size)
+    W, H = canvas.size
+    px, py, pw, ph = 80, 40, W - 160, H - 80
+    draw.rounded_rectangle([px, py, px + pw, py + ph], radius=24, fill=(12, 18, 28, 246), outline=(255, 255, 255, 50), width=2)
+    draw.rectangle([px, py + 24, px + 12, py + ph - 24], fill=BRAND_GOLD + (255,))
+    draw.text((px + 40, py + 26), f"{name}の市場価値の推移", font=_font(40), fill=(255, 255, 255, 255))
+    pts = sorted(((str((e.get("marketValue") or {}).get("determined") or ""), int((e.get("marketValue") or {}).get("value") or 0), str(e.get("clubId") or ""))
+                  for e in history if (e.get("marketValue") or {}).get("determined")), key=lambda x: x[0])
+    if len(pts) < 2:
+        draw.text((px + 40, py + 100), "推移の記録がありません", font=_font(30), fill=(168, 178, 194, 255))
+    else:
+        top = max(v for _, v, _ in pts) or 1
+        gx, gy, gw, gh = px + 150, py + 110, pw - 230, ph - 220
+        # 横軸は年、縦軸は最大値を4分割
+        years = sorted({d[:4] for d, _, _ in pts})
+        y0, y1 = int(years[0]), int(years[-1])
+        span = max(1, y1 - y0)
+        f_axis = _font(24)
+        for k in range(5):
+            yy = gy + gh - gh * k / 4
+            draw.line([(gx, yy), (gx + gw, yy)], fill=(255, 255, 255, 30), width=1)
+            label = _compact(top * k / 4)
+            draw.text((gx - 12 - draw.textlength(label, font=f_axis), yy - 14), label, font=f_axis, fill=(168, 178, 194, 255))
+        for year in range(y0, y1 + 1):
+            xx = gx + gw * (year - y0) / span
+            draw.line([(xx, gy), (xx, gy + gh)], fill=(255, 255, 255, 18), width=1)
+            if (year - y0) % max(1, span // 6) == 0 or year == y1:
+                draw.text((xx - 24, gy + gh + 10), str(year), font=f_axis, fill=(168, 178, 194, 255))
+
+        def P(d, v):
+            year = int(d[:4]) + (int(d[5:7]) - 1) / 12
+            return gx + gw * (year - y0) / span, gy + gh - gh * v / top
+
+        line = [P(d, v) for d, v, _ in pts]
+        # 塗り（折れ線の下）
+        fill_layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+        ImageDraw.Draw(fill_layer).polygon(line + [(line[-1][0], gy + gh), (line[0][0], gy + gh)], fill=BRAND_GOLD + (50,))
+        canvas.alpha_composite(fill_layer)
+        draw = ImageDraw.Draw(canvas)
+        draw.line(line, fill=BRAND_GOLD + (255,), width=6, joint="curve")
+        # クラブが替わったところに縦の点線と名前
+        last_club = None
+        last_label_x = -999
+        row = 0
+        for (d, v, club), (x, y) in zip(pts, line):
+            if club != last_club and last_club is not None and club_of:
+                for yy in range(int(gy), int(gy + gh), 14):
+                    draw.line([(x, yy), (x, yy + 7)], fill=(255, 255, 255, 120), width=2)
+                # 近い札は段をずらして重ねない
+                row = (row + 1) % 3 if x - last_label_x < 150 else 0
+                draw.text((x + 8, gy + 4 + row * 30), club_of(club), font=_font(24), fill=(230, 234, 240, 255))
+                last_label_x = x
+            last_club = club
+        x, y = line[-1]
+        draw.ellipse([x - 10, y - 10, x + 10, y + 10], fill=BRAND_GOLD + (255,), outline=(20, 24, 32, 255), width=2)
+        label = _compact(pts[-1][1])
+        draw.text((x - draw.textlength(label, font=_font(32)) - 14, y - 50), label, font=_font(32), fill=BRAND_GOLD + (255,))
+    draw.text((px + pw - 210, py + ph - 50), "Transfermarkt", font=_font(26), fill=(120, 130, 146, 255))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    canvas.convert("RGB").save(out)
+    statboard._write_mark(out, f"{name}の市場価値の推移", "EUR", [(d, v) for d, v, _ in pts[-6:]], "Transfermarkt")
+    return out
+
+
+def _compact(value: float) -> str:
+    if value >= 100_000_000:
+        return f"{value / 100_000_000:.1f}".rstrip("0").rstrip(".") + "億€"
+    if value >= 10_000:
+        return f"{int(value // 10_000)}万€"
+    return f"{int(value)}€"
+
+
+def heatmap_board(coords: list[dict], out: Path, name: str, size: tuple[int, int] = (1280, 720)) -> Path:
+    """今季のヒートマップ（どこにいたか）。全面のピッチに点を重ねて色を濃くする。"""
+    from PIL import ImageFilter
+    from src import statboard
+
+    canvas, draw = _panel_at(size)
+    W, H = canvas.size
+    px, py, pw, ph = 80, 40, W - 160, H - 80
+    draw.rounded_rectangle([px, py, px + pw, py + ph], radius=24, fill=(12, 18, 28, 246), outline=(255, 255, 255, 50), width=2)
+    draw.rectangle([px, py + 24, px + 12, py + ph - 24], fill=BRAND_GOLD + (255,))
+    draw.text((px + 40, py + 26), f"{name}の今季のヒートマップ", font=_font(40), fill=(255, 255, 255, 255))
+    draw.text((px + 40, py + 78), "ボールに触った場所。色が濃いほど多い（攻める向きは右）", font=_font(26), fill=(168, 178, 194, 255))
+    gx, gy = px + 60, py + 130
+    gw = pw - 120
+    gh = int(gw * PITCH_WID / PITCH_LEN)
+    if gy + gh > py + ph - 40:
+        gh = py + ph - 40 - gy
+        gw = int(gh * PITCH_LEN / PITCH_WID)
+        gx = px + (pw - gw) // 2
+    stripe = gw // 10
+    for i in range(10):
+        draw.rectangle([gx + i * stripe, gy, gx + (i + 1) * stripe, gy + gh], fill=(30, 104, 64, 255) if i % 2 else (26, 92, 56, 255))
+    line = (230, 230, 230, 255)
+    draw.rectangle([gx, gy, gx + gw, gy + gh], outline=line, width=3)
+    draw.line([(gx + gw / 2, gy), (gx + gw / 2, gy + gh)], fill=line, width=3)
+    r = gw * 9.15 / PITCH_LEN
+    draw.ellipse([gx + gw / 2 - r, gy + gh / 2 - r, gx + gw / 2 + r, gy + gh / 2 + r], outline=line, width=3)
+    for side in (0, 1):
+        x_edge = gx if side == 0 else gx + gw
+        sgn = 1 if side == 0 else -1
+        bw, bh = gw * 16.5 / PITCH_LEN, gh * 40.32 / PITCH_WID
+        draw.rectangle([min(x_edge, x_edge + sgn * bw), gy + (gh - bh) / 2, max(x_edge, x_edge + sgn * bw), gy + (gh + bh) / 2], outline=line, width=3)
+        sw, sh = gw * 5.5 / PITCH_LEN, gh * 18.32 / PITCH_WID
+        draw.rectangle([min(x_edge, x_edge + sgn * sw), gy + (gh - sh) / 2, max(x_edge, x_edge + sgn * sw), gy + (gh + sh) / 2], outline=line, width=3)
+    heat = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    hd = ImageDraw.Draw(heat)
+    for c in coords:
+        x, y = float(c.get("x") or 0), float(c.get("y") or 0)
+        cx, cy = gx + gw * x / PITCH_LEN, gy + gh * y / PITCH_WID
+        hd.ellipse([cx - 30, cy - 30, cx + 30, cy + 30], fill=(255, 213, 74, 70))
+    heat = heat.filter(ImageFilter.GaussianBlur(16))
+    canvas.alpha_composite(heat)
+    draw = ImageDraw.Draw(canvas)
+    draw.text((px + pw - 130, py + ph - 50), "FotMob", font=_font(26), fill=(120, 130, 146, 255))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    canvas.convert("RGB").save(out)
+    statboard._write_mark(out, f"{name}の今季のヒートマップ", "touches", [("points", len(coords))], "FotMob")
+    return out
+
+
+def heat(data: dict) -> list[dict]:
+    return list(((data.get("firstSeasonStats") or {}).get("heatmap") or {}).get("coordinates") or [])
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
     f = sub.add_parser("find"); f.add_argument("name")
     b = sub.add_parser("boards"); b.add_argument("player_id"); b.add_argument("--name", default=""); b.add_argument("--date", default=datetime.date.today().isoformat())
+    b.add_argument("--tm", default="", help="Transfermarkt の番号（市場価値の推移の板）")
     args = ap.parse_args(argv)
     if args.cmd == "find":
         for r in find(args.name):
@@ -315,7 +459,16 @@ def main(argv: list[str]) -> int:
     group, items = traits(data)
     radar = radar_board(group, items, BOARD_DIR / f"player_{stamp}_{args.player_id}_radar.png", name)
     sm = shotmap_board(shots(data), BOARD_DIR / f"player_{stamp}_{args.player_id}_shots.png", name)
-    print(f"板 → {radar}\n板 → {sm}")
+    hm = heatmap_board(heat(data), BOARD_DIR / f"player_{stamp}_{args.player_id}_heat.png", name)
+    print(f"板 → {radar}\n板 → {sm}\n板 → {hm}")
+    if args.tm:
+        import importlib.util as _iu
+
+        spec = _iu.spec_from_file_location("player_intro", ROOT / "tools" / "player_intro.py")
+        pi = _iu.module_from_spec(spec); spec.loader.exec_module(pi)
+        history = pi.ja_mod._get(f"/player/{args.tm}/market-value-history").get("history") or []
+        vb = value_board(history, BOARD_DIR / f"player_{stamp}_{args.player_id}_value.png", name, club_of=pi.club_ja)
+        print(f"板 → {vb}")
     strong, weak = strengths(season_stats(data))
     print("武器:", [(s["ja"], s["value"], int(s["pct"])) for s in strong])
     print("弱点:", [(s["ja"], s["value"], int(s["pct"])) for s in weak])
