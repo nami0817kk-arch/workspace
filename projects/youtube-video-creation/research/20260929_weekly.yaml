@@ -1,0 +1,66 @@
+date: 2026年09月28日
+slot: japanese_1
+format: news
+series: 欧州組の1週間
+people:
+- 山本天翔
+theme:
+  id: weekly_0928
+  league: england
+  league_name: 欧州各リーグ
+  kind: other
+  topic: 日本代表
+  title: 欧州組の1週間（9月22日〜9月28日）。いちばん出た日本人は
+  question: この1週間、欧州の日本人選手は誰がどれだけ出て、何が変わったのか
+  takeaway: （数字で比べて分かったことを1文で）
+short_title: 欧州組の1週間 9/22〜9/28
+thumbnail:
+  line1: 欧州組の1週間
+  line2: いちばん出たのは●●
+  photos: []
+sections:
+- id: table
+  heading: 今週の出場
+  tier: 報道
+  main: true
+  telop: この1週間の出場時間と得点
+  narrator: キャスター
+  card:
+    type: table
+    title: 欧州組の1週間（9/22〜9/28）
+    columns:
+    - 選手
+    - 所属
+    - 今週
+    - 出場時間
+    - 得点
+    rows:
+    - - 山本天翔
+      - ドルトムント
+      - 2試合（先発1）
+      - 97分
+      - 0G 0A
+  say:
+  - text: （ショート用の前置き1行）
+    short_only: true
+  - （表の上から順に、数字を読む。3〜5行）
+  sources:
+  - https://www.transfermarkt.jp/山本天翔/leistungsdaten/spieler/
+- id: deep1
+  heading: 山本天翔
+  tier: 報道
+  telop: 山本天翔（ドルトムント）
+  narrator: 解説
+  say:
+  - （山本天翔の今週：2試合 97分 0G0A。今季 529分。何が変わったかを数字で）
+  sources:
+  - https://www.transfermarkt.jp/
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  say:
+  - （数字で比べて分かったこと・次の1週間で何を見るか）
+  sources:
+  - https://www.transfermarkt.jp/

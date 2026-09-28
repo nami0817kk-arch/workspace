@@ -1,0 +1,1371 @@
+[
+ {
+  "name": "山本天翔",
+  "club": "ドルトムント",
+  "competition": "L1",
+  "week": {
+   "games": 2,
+   "played": 2,
+   "starts": 1,
+   "minutes": 97,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 8,
+   "starts": 5,
+   "minutes": 529,
+   "goals": 0,
+   "assists": 3,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": [
+   {
+    "date": "2026-09-26",
+    "competition": "RLW3",
+    "score": "4-2",
+    "venue": "home",
+    "state": "played",
+    "minutes": 30,
+    "starting": false,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   },
+   {
+    "date": "2026-09-21",
+    "competition": "RLW3",
+    "score": "1-1",
+    "venue": "away",
+    "state": "played",
+    "minutes": 67,
+    "starting": true,
+    "goals": 0,
+    "assists": 0,
+    "grade": null
+   }
+  ]
+ },
+ {
+  "name": "森下龍矢",
+  "club": "Blackburn Rovers",
+  "competition": "GB2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 10,
+   "starts": 10,
+   "minutes": 860,
+   "goals": 2,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "小久保玲央ブライアン",
+  "club": "Sint-Truidense VV",
+  "competition": "BE1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 9,
+   "starts": 9,
+   "minutes": 810,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "岩田智輝",
+  "club": "Birmingham City",
+  "competition": "GB2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 10,
+   "starts": 9,
+   "minutes": 809,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "松木玖生",
+  "club": "Southampton FC",
+  "competition": "GB2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 10,
+   "starts": 7,
+   "minutes": 669,
+   "goals": 1,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "木村誠二",
+  "club": "KVC Westerlo",
+  "competition": "BE1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 7,
+   "starts": 7,
+   "minutes": 630,
+   "goals": 0,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "三好康児",
+  "club": "VfL Bochum",
+  "competition": "L2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 7,
+   "starts": 7,
+   "minutes": 605,
+   "goals": 2,
+   "assists": 1,
+   "grade": 3.27,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "伊東純也",
+  "club": "KRC Genk",
+  "competition": "BE1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 7,
+   "starts": 7,
+   "minutes": 587,
+   "goals": 1,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "渡辺剛",
+  "club": "フェイエノールト",
+  "competition": "NL1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 8,
+   "played": 7,
+   "starts": 7,
+   "minutes": 581,
+   "goals": 0,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 1
+  },
+  "matches": []
+ },
+ {
+  "name": "上田綺世",
+  "club": "LOSC Lille",
+  "competition": "FR1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 8,
+   "played": 8,
+   "starts": 7,
+   "minutes": 579,
+   "goals": 6,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "佐野航大",
+  "club": "PSV",
+  "competition": "NL1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 7,
+   "starts": 6,
+   "minutes": 567,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "鎌田大地",
+  "club": "クリスタル・パレス",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 7,
+   "starts": 6,
+   "minutes": 548,
+   "goals": 1,
+   "assists": 3,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "鈴木唯人",
+  "club": "SC Freiburg",
+  "competition": "L1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 7,
+   "starts": 7,
+   "minutes": 530,
+   "goals": 4,
+   "assists": 0,
+   "grade": 2.35,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "鈴木彩艶",
+  "club": "アストン・ヴィラ",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 8,
+   "played": 6,
+   "starts": 5,
+   "minutes": 495,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "安藤智哉",
+  "club": "FC St. Pauli",
+  "competition": "L2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 6,
+   "starts": 6,
+   "minutes": 471,
+   "goals": 0,
+   "assists": 0,
+   "grade": 4.1,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "ハーフナーニッキ",
+  "club": "Union Saint-Gilloise",
+  "competition": "BE1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 8,
+   "starts": 4,
+   "minutes": 460,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "小杉啓太",
+  "club": "フランクフルト",
+  "competition": "L1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 5,
+   "played": 5,
+   "starts": 5,
+   "minutes": 450,
+   "goals": 0,
+   "assists": 3,
+   "grade": 3.77,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "瀬古歩夢",
+  "club": "Le Havre AC",
+  "competition": "FR1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 5,
+   "played": 5,
+   "starts": 5,
+   "minutes": 450,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "佐野海舟",
+  "club": "1.FSV Mainz 05",
+  "competition": "L1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 5,
+   "played": 5,
+   "starts": 5,
+   "minutes": 448,
+   "goals": 0,
+   "assists": 2,
+   "grade": 2.97,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "アペルカンプ真大",
+  "club": "SpVgg Greuther Fürth",
+  "competition": "L2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 5,
+   "starts": 5,
+   "minutes": 417,
+   "goals": 0,
+   "assists": 1,
+   "grade": 3.13,
+   "bench": 0,
+   "injured": 2
+  },
+  "matches": []
+ },
+ {
+  "name": "谷口彰悟",
+  "club": "Sint-Truidense VV",
+  "competition": "BE1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 6,
+   "starts": 5,
+   "minutes": 408,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 1
+  },
+  "matches": []
+ },
+ {
+  "name": "板倉滉",
+  "club": "Ajax Amsterdam",
+  "competition": "NL1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 5,
+   "starts": 4,
+   "minutes": 387,
+   "goals": 0,
+   "assists": 0,
+   "grade": 4.78,
+   "bench": 0,
+   "injured": 5
+  },
+  "matches": []
+ },
+ {
+  "name": "原大智",
+  "club": "FC St. Pauli",
+  "competition": "L2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 7,
+   "starts": 5,
+   "minutes": 378,
+   "goals": 2,
+   "assists": 1,
+   "grade": 3.32,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "藤田譲瑠チマ",
+  "club": "FC St. Pauli",
+  "competition": "L2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 5,
+   "starts": 5,
+   "minutes": 378,
+   "goals": 1,
+   "assists": 0,
+   "grade": 2.94,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "田中碧",
+  "club": "リーズ",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 6,
+   "starts": 4,
+   "minutes": 348,
+   "goals": 0,
+   "assists": 2,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "塩貝健人",
+  "club": "VfL Wolfsburg",
+  "competition": "L2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 6,
+   "starts": 3,
+   "minutes": 336,
+   "goals": 0,
+   "assists": 0,
+   "grade": 3.95,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "佐藤龍之介",
+  "club": "バレンシア",
+  "competition": "ES1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 5,
+   "starts": 4,
+   "minutes": 297,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "冨安健洋",
+  "club": "クリスタル・パレス",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 5,
+   "starts": 3,
+   "minutes": 280,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "前田大然",
+  "club": "イプスウィッチ",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 6,
+   "starts": 3,
+   "minutes": 271,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "堂安律",
+  "club": "フランクフルト",
+  "competition": "L1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 5,
+   "played": 3,
+   "starts": 3,
+   "minutes": 238,
+   "goals": 0,
+   "assists": 1,
+   "grade": 3.31,
+   "bench": 0,
+   "injured": 2
+  },
+  "matches": []
+ },
+ {
+  "name": "久保建英",
+  "club": "レアル・ソシエダ",
+  "competition": "ES1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 8,
+   "played": 6,
+   "starts": 3,
+   "minutes": 230,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "旗手怜央",
+  "club": "Celtic FC",
+  "competition": "SC1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 11,
+   "played": 6,
+   "starts": 2,
+   "minutes": 226,
+   "goals": 0,
+   "assists": 1,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "町田浩樹",
+  "club": "TSG 1899 Hoffenheim",
+  "competition": "L1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 4,
+   "starts": 2,
+   "minutes": 201,
+   "goals": 0,
+   "assists": 0,
+   "grade": 3.91,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "山田新",
+  "club": "Oud-Heverlee Leuven",
+  "competition": "BE1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 6,
+   "starts": 2,
+   "minutes": 192,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "橋岡大樹",
+  "club": "ボルシアMG",
+  "competition": "L1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 6,
+   "played": 3,
+   "starts": 2,
+   "minutes": 180,
+   "goals": 1,
+   "assists": 0,
+   "grade": 4.43,
+   "bench": 0,
+   "injured": 2
+  },
+  "matches": []
+ },
+ {
+  "name": "坂元達裕",
+  "club": "コヴェントリー",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 3,
+   "starts": 2,
+   "minutes": 178,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "中村敬斗",
+  "club": "Olympique Lyon",
+  "competition": "FR1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 8,
+   "played": 3,
+   "starts": 1,
+   "minutes": 116,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "大橋祐紀",
+  "club": "Blackburn Rovers",
+  "competition": "GB2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 4,
+   "starts": 2,
+   "minutes": 116,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "新川志音",
+  "club": "Sint-Truidense VV",
+  "competition": "BE1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 10,
+   "played": 5,
+   "starts": 1,
+   "minutes": 111,
+   "goals": 1,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "高橋仁胡",
+  "club": "Holstein Kiel",
+  "competition": "L2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 2,
+   "starts": 1,
+   "minutes": 78,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "守田英正",
+  "club": "ハル・シティ",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 2,
+   "starts": 1,
+   "minutes": 76,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "毎熊晟矢",
+  "club": "AZ Alkmaar",
+  "competition": "NL1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 6,
+   "starts": 0,
+   "minutes": 64,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "菅原由勢",
+  "club": "Southampton FC",
+  "competition": "GB2",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 9,
+   "played": 2,
+   "starts": 0,
+   "minutes": 53,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "伊藤洋輝",
+  "club": "バイエルン",
+  "competition": "L1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 1,
+   "starts": 0,
+   "minutes": 10,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "遠藤航",
+  "club": "リバプール",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ },
+ {
+  "name": "南野拓実",
+  "club": "モナコ",
+  "competition": "FR1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 6
+  },
+  "matches": []
+ },
+ {
+  "name": "三笘薫",
+  "club": "ブライトン",
+  "competition": "GB1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 8,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 8
+  },
+  "matches": []
+ },
+ {
+  "name": "高井幸大",
+  "club": "Sint-Truidense VV",
+  "competition": "BE1",
+  "week": {
+   "games": 0,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "season": {
+   "games": 7,
+   "played": 0,
+   "starts": 0,
+   "minutes": 0,
+   "goals": 0,
+   "assists": 0,
+   "grade": null,
+   "bench": 0,
+   "injured": 0
+  },
+  "matches": []
+ }
+]
