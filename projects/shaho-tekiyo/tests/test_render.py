@@ -174,7 +174,7 @@ def test_月収別のページが8万から25万まで(site):
 def test_月収10万円_東京の保険料が円単位で出る(site):
     # 令和8年度・東京: 標準報酬 98,000円 → 健保 4,826（4,826.5 の50銭は切り捨て）+ 支援金 113 + 厚年 8,967
     html = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
-    assert "東京なら月 13,906円 引かれて、残りは 86,094円" in html
+    assert "東京なら月 13,906円 引かれて、保険料だけ引いた残りは 86,094円" in html
     for pref in premium.PREFECTURES:
         assert f"<th>{extras.pref_full(pref)}</th>" in html, pref
     assert "<strong>85,594円" in html  # 雇用保険料 500円（5/1,000）も引いた手取りの目安
@@ -316,7 +316,7 @@ def test_年収別の手取り早見表(site):
     assert by[120]["net_in"] < by[120]["net_out"] <= 1_200_000
     assert by[130]["net_out"] is None and by[200]["net_out"] is None
     assert f'{by[120]["net_in"]:,}円' in html
-    assert "108,334円" in html  # 130万円の壁の月額
+    assert "108,333円" in html  # 130万円の壁の月額（130万÷12）
     assert f"<loc>{site_config.SITE_URL}/nenshu</loc>" in (site / "sitemap.xml").read_text(encoding="utf-8")
     assert 'href="nenshu.html"' in (site / "index.html").read_text(encoding="utf-8")
 
@@ -375,7 +375,7 @@ def test_長いページに目次が入りidが重ならない(site):
 def test_計算機に年収の壁と1日の時間(site):
     html = (site / "index.html").read_text(encoding="utf-8")
     assert "function wallsHtml(" in html and 'id="per-day"' in html and 'id="days"' in html
-    for wall in ("1230000", "1300000", "1600000"):
+    for wall in ("1360000", "1300000", "1690000", "1780000"):
         assert wall in html
     assert "【2026年版】" in html
 

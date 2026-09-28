@@ -15,7 +15,7 @@
 <p class="subtitle-plain">年収に直すと{{ man * 12 }}万円（賞与なし）</p>
 <p class="updated">{{ era }}の料率（{{ period }}）で計算</p>
 
-<div class="verdict ok">東京なら月 {{ "{:,}".format(tokyo.total_yen) }}円 引かれて、残りは {{ "{:,}".format(tokyo.take_home_yen) }}円</div>
+<div class="verdict ok">東京なら月 {{ "{:,}".format(tokyo.total_yen) }}円 引かれて、保険料だけ引いた残りは {{ "{:,}".format(tokyo.take_home_yen) }}円</div>
 {% set net = tokyo.take_home_yen - koyo - (tax or 0) %}
 
 <p>
@@ -35,11 +35,11 @@
   <tr><th>厚生年金保険料</th><td>{{ "{:,}".format(tokyo.pension_yen) }}円</td></tr>
   <tr class="current"><th>合計</th><td><strong>{{ "{:,}".format(tokyo.total_yen) }}円</strong></td></tr>
   <tr><th>雇用保険料<span class="sub">週20時間以上なら加入前から引かれている分</span></th><td>{{ "{:,}".format(koyo) }}円</td></tr>
-  {% if tax is not none %}<tr><th>所得税<span class="sub">扶養0人。給与から天引きされる額の目安</span></th><td>{{ "{:,}".format(tax) }}円</td></tr>{% endif %}
+  {% if tax is not none %}<tr><th>所得税<span class="sub">扶養する家族0人。給与から天引きされる額の目安</span></th><td>{{ "{:,}".format(tax) }}円</td></tr>{% endif %}
   <tr><th>手取りの目安<span class="sub">{% if tax is none %}所得税・{% endif %}住民税は含まない</span></th><td><strong>{{ "{:,}".format(net) }}円</strong></td></tr>
 </table>
 </div>
-<p class="hint">会社も同じ額の社会保険料を負担しています（労使折半）。</p>
+<p class="hint">会社もほぼ同じ額の社会保険料を負担しています（労使折半）。</p>
 
 <h2>加入する前と比べると</h2>
 {{ pension_chart|safe }}
@@ -107,8 +107,7 @@
   自分が当たるかは<a href="{{ base_url }}index.html">計算機</a>で確かめられます。
 </p>
 <p class="hint">
-  企業規模要件を満たさない会社で任意に加入する場合などには、勤務先が本人負担の一部を持つと国の支援を受けられる
-  3年間の制度（保険料調整制度）があります。このページの額は労使折半のままの額です。
+  2026年10月以降に新しく対象になった会社（人数の条件が広がった会社や、同意で加入した会社）では、月収（標準報酬月額）がおよそ12.6万円以下の人について、勤務先が本人負担の一部を肩代わりすると国がその分を支援する3年間の制度（保険料調整制度）があります。使うかどうかは勤務先が決め、本人が申し込むものではありません。このページの額は労使折半のままの額です。
 </p>
 
 <h2>ほかの月収</h2>

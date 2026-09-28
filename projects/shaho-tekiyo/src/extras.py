@@ -99,3 +99,22 @@ def income_tax_yen(as_of: date, after_social_yen: int, dependents: int = 0) -> i
     if num <= 0:
         return 0
     return (num + 500_000) // 1_000_000 * 10  # 10円未満四捨五入
+
+
+# 年末調整後の所得税（年額）。令和8年分（令和8年度税制改正、2026年12月の年末調整から）の
+# 給与所得控除（最低保障 74万円）と基礎控除（合計所得132万円以下で104万円）で計算する。
+# パートの年収の範囲だけを扱い、合計所得が132万円を超える（基礎控除の区分が変わる）ときは None を返す。
+# 出典: 国税庁 No.1199 基礎控除、令和8年度税制改正による所得税の基礎控除の見直し等について
+ANNUAL_TAX_YEAR = 2026
+
+
+def annual_income_tax_yen(gross_salary_yen: int, social_insurance_yen: int) -> int | None:
+    if gross_salary_yen > 3_600_000:
+        return None
+    salary_deduction = max(740_000, gross_salary_yen * 3 // 10 + 80_000)
+    total_income = max(gross_salary_yen - salary_deduction, 0)
+    if total_income > 1_320_000:
+        return None
+    taxable = max(total_income - social_insurance_yen - 1_040_000, 0) // 1000 * 1000
+    base = taxable * 5 // 100 if taxable <= 1_950_000 else taxable * 10 // 100 - 97_500
+    return base * 1021 // 1000 // 100 * 100  # 復興特別所得税（2.1%）込み、100円未満切り捨て

@@ -55,3 +55,11 @@ def test_所得税は国税庁の計算例と一致する(after_social, dependen
 
 def test_所得税は令和8年分だけ():
     assert extras.income_tax_yen(date(2027, 1, 1), 200_000) is None
+
+
+def test_年末調整後の所得税_令和8年分():
+    # 給与所得控除の最低74万円＋基礎控除104万円 = 178万円までは0円
+    assert extras.annual_income_tax_yen(1_780_000, 0) == 0
+    assert extras.annual_income_tax_yen(1_790_000, 0) == 500    # 課税1万円 × 5.105%（100円未満切り捨て）
+    assert extras.annual_income_tax_yen(2_000_000, 290_000) == 0  # 社会保険料を引けば0円
+    assert extras.annual_income_tax_yen(3_000_000, 0) is None    # 合計所得132万円超は扱わない
