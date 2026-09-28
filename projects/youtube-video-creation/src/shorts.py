@@ -696,6 +696,13 @@ def _add_subscribe(short: Script) -> None:
 STACK_DIR = Path("assets/images/_stack")
 
 
+def _tall_variant(tile: str) -> str:
+    """`01.jpg` の隣に `01_v.jpg` があればそれ。"""
+    path = Path(tile)
+    tall = path.with_name(path.stem + "_v" + path.suffix)
+    return tall.as_posix() if tall.exists() else tile
+
+
 def stacked_photo(meta: dict) -> str:
     """**サムネが2枚並びの回は、ショートでも同じ2枚を出す**
     （2026-09-17 指示「ショートも横割りで本編のサムネと同じようにして」）。
@@ -711,6 +718,10 @@ def stacked_photo(meta: dict) -> str:
     tiles = [x for x in tiles if x and Path(x).exists()]
     if len(tiles) < 2:
         return ""
+    # **主役中心の縦版（`_v.jpg`）があれば、そちらを使う**（2026-09-28）。縦長の写真を
+    # 上下の帯に切ると真ん中しか残らず、クロップの回は下の帯が挙げた手だけになった。
+    # 冒頭の1枚と同じ約束（`_add_face`）を、2枚並びにも当てる
+    tiles = [_tall_variant(t) for t in tiles]
     from PIL import Image
 
     from .render import _cover

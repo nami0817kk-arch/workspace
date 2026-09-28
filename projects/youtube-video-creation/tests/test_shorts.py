@@ -1293,3 +1293,22 @@ def test_長い反応が入らなくても次の反応を試す():
     texts = [l.text for l in short.scenes[-1].lines]
     assert "短い反応" in texts
     assert "とても長い反応その1" not in texts
+
+
+def test_上下に割る写真は縦版があればそちらを使う(tmp_path, monkeypatch):
+    """2026-09-28、クロップの回。縦長の写真の下の帯が挙げた手だけになった。"""
+    from PIL import Image
+
+    from src import shorts
+
+    a = tmp_path / "a" / "01.jpg"; a.parent.mkdir()
+    b = tmp_path / "b" / "01.jpg"; b.parent.mkdir()
+    Image.new("RGB", (400, 300), (200, 30, 30)).save(a)
+    Image.new("RGB", (300, 900), (30, 30, 200)).save(b)          # 縦長
+    Image.new("RGB", (300, 300), (30, 200, 30)).save(b.with_name("01_v.jpg"))
+    monkeypatch.setattr(shorts, "STACK_DIR", tmp_path / "stack")
+    out = shorts.stacked_photo({"thumbnail_photos": [a.as_posix(), b.as_posix()]})
+    with Image.open(out) as img:
+        w, h = img.size
+        r, g, b_ = img.getpixel((w // 2, h * 3 // 4))                 # 下の帯は縦版の色（JPEG の丸めは許す）
+        assert abs(r - 30) < 8 and abs(g - 200) < 8 and abs(b_ - 30) < 8
