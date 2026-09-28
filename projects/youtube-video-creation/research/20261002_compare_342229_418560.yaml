@@ -1,0 +1,140 @@
+# キリアン・エムバペ（レアル・マドリード）とアーリング・ハーランド（マンチェスター・シティ）の比較。数字は Transfermarkt。
+# 顔写真は2枚並べる（thumbnail.photos）。どちらが上かは言い切らない（10月のシリーズの決まり）。
+date: 2026年10月02日
+slot: other_1
+format: news
+series: 有名選手の比較
+people:
+- キリアン・エムバペ
+- アーリング・ハーランド
+theme:
+  id: compare_342229_418560
+  league: england
+  kind: other
+  topic: キリアン・エムバペとアーリング・ハーランド
+  title: キリアン・エムバペとアーリング・ハーランド、数字で並べると何が違うのか
+  question: キリアン・エムバペとアーリング・ハーランドは、数字で並べると何が違うのか
+  takeaway: （2人の数字の違いを1文で。どちらが上かは言わない）
+short_title: キリアン・エムバペとアーリング・ハーランドを数字で
+thumbnail:
+  line1: エムバペとハーランド
+  line2: 数字で並べると●●
+  tags:
+  - レアル・マドリード
+  - マンチェスター・シティ
+  photos: []
+  face_link: VS
+sections:
+- id: data
+  heading: 2人の基礎DATA
+  tier: 報道
+  telop: キリアン・エムバペとアーリング・ハーランド
+  narrator: キャスター
+  card:
+    type: table
+    title: キリアン・エムバペ と アーリング・ハーランド
+    columns:
+    - 項目
+    - キリアン・エムバペ
+    - アーリング・ハーランド
+    rows:
+    - - 所属
+      - レアル・マドリード
+      - マンチェスター・シティ
+    - - ポジション
+      - センターフォワード
+      - センターフォワード
+    - - 年齢
+      - 27歳
+      - 26歳
+    - - 身長
+      - 1.8m
+      - 1.95m
+    - - 利き足
+      - 右
+      - 左
+    - - 市場価値
+      - 2億ユーロ
+      - 2.2億ユーロ
+    source: Transfermarkt
+  say:
+  - キリアン・エムバペは27歳、レアル・マドリード。
+  - アーリング・ハーランドは26歳、マンチェスター・シティ。
+  - 2人ともセンターフォワードです。
+  - 市場価値は2億ユーロと2.2億ユーロ。
+  sources: &id001
+  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
+  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+- id: season
+  heading: 今季の数字
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 今季ここまで
+    columns:
+    - 項目
+    - キリアン・エムバペ
+    - アーリング・ハーランド
+    rows:
+    - - 試合
+      - '9'
+      - '9'
+    - - 得点
+      - '9'
+      - '10'
+    - - アシスト
+      - '2'
+      - '0'
+    - - 出場時間
+      - 779分
+      - 773分
+    - - 90分あたり得点
+      - '1.04'
+      - '1.16'
+    source: Transfermarkt
+  say:
+  - text: （前置き1行：キリアン・エムバペとアーリング・ハーランド、何を比べるのかを一言で）
+    short_only: true
+  - キリアン・エムバペは9試合で9得点2アシスト。
+  - アーリング・ハーランドは9試合で10得点0アシストです。
+  - （90分あたりの数字で、試合数の差をならして比べる1行）
+  sources: *id001
+- id: value
+  heading: 市場価値の歩み
+  tier: 報道
+  telop: 最高額と、いま
+  narrator: 解説
+  card:
+    type: table
+    title: 市場価値
+    columns:
+    - ''
+    - キリアン・エムバペ
+    - アーリング・ハーランド
+    rows:
+    - - 最高額
+      - 2億ユーロ
+      - 2.2億ユーロ
+    - - そのときの年齢
+      - 19歳
+      - 26歳
+    - - いま
+      - 2億ユーロ
+      - 2.2億ユーロ
+    source: Transfermarkt
+  say:
+  - キリアン・エムバペの最高額は19歳のとき。アーリング・ハーランドは26歳のときでした。
+  - （最高額と今の差を1行。金額は表に任せる）
+  sources: *id001
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 数字の違いが示すもの
+  say:
+  - （エムバペとハーランドで何が違うのか。上下は言わず、数字の差を見立てに）
+  sources: *id001
