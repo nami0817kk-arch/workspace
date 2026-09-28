@@ -16,8 +16,7 @@ MIN_CAPTION_SECONDS = 1.2
 
 
 def to_srt(script: Script) -> str:
-    blocks = []
-    index = 1
+    entries: list[list] = []      # [始まり, 終わり, 文]
     for line in script.lines:
         # 字幕は読み上げた内容そのもの。テロップは画面に焼き込んであるし、
         # 画面用に短く切ってあるので、そのまま字幕にすると途中で切れる。
@@ -47,11 +46,16 @@ def to_srt(script: Script) -> str:
             # 代弁は人の名前がそのまま話者になるので、長い名前だと本文が
             # 押し出されて上限を超える（2026-09-05 実測「ヒュルツェラー監督」）
             head = f"{line.speaker}: " if order == 0 else ""
-            blocks.append(
-                f"{index}\n{_timestamp(at)} --> {_timestamp(stop)}\n{head}{chunk}\n"
-            )
-            index += 1
+            entries.append([at, stop, f"{head}{chunk}"])
             at = stop
+    # **前の字幕の終わりが、次の字幕の始まりを越えない**（2026-09-28、review「字幕」が×）。
+    # 短い行を細かく割ると `MIN_CAPTION_SECONDS` の積み上げが行の尺を超え、
+    # 最後の1枚が次の行の頭に食い込んでいた（クロップの回で 50ms）
+    for here, following in zip(entries, entries[1:]):
+        if here[1] > following[0]:
+            here[1] = following[0]
+    blocks = [f"{n}\n{_timestamp(a)} --> {_timestamp(b)}\n{text}\n"
+              for n, (a, b, text) in enumerate(entries, start=1)]
     return "\n".join(blocks)
 
 

@@ -650,10 +650,13 @@ def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
             cost = line.duration or line.estimated_duration()
             if _estimate(short) + cost > target:
                 return
+            filler = copy.deepcopy(line)
+            # **埋めた語りだと分かる印**（2026-09-28）。尺に収めるとき、締めの反応より先に落とす
+            filler.filler = True
             if at is None:
-                lines.append(copy.deepcopy(line))
+                lines.append(filler)
             else:
-                lines.insert(at, copy.deepcopy(line))
+                lines.insert(at, filler)
                 at += 1
             seen.add(str(line.text))
 
@@ -1346,6 +1349,14 @@ def enforce_limit(script: Script, max_seconds: float, config) -> int:
         index = len(lines) - (keep + 1)
         if index < 1:
             return dropped          # これ以上は削れない。呼んだ側が止める
+        # **尺を埋めた語りを、締めの反応より先に落とす**（2026-09-28）。シャビの回で、
+        # 埋めた語りのあとに置いた反応（2行）が後ろから落とされ、ショートが
+        # 「支配率は67%…」の語りで終わった。埋めた行は `_add_more_body` の印で分かる
+        fillers = [i for i in range(1, index + 1) if getattr(lines[i], "filler", False)]
+        if fillers:
+            lines.pop(fillers[-1])
+            dropped += 1
+            continue
         # **見出しと発言は対で落とす**（2026-09-18 ユーザー指摘。ヴァツケの回で
         # 「一つ目は…」「二つ目は…」だけが消え、**発言が宙に浮いていた**）。
         # 1行ずつ後ろから抜くので、語りだけが先に消えて
