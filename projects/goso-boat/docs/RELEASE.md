@@ -84,7 +84,10 @@ Hints: each hint requires watching a rewarded video ad (no video after purchasin
 Interstitial ads: from World 2 on, once every 3 cleared levels when tapping "Next level". World 1 has no interstitial ads.
 The app does not use App Tracking Transparency and does not track users.
 Privacy policy and "Support / report an ad" are in Settings.
+Before release, AdMob may not fill ads for this new app, so the hint video may be unavailable ("The video isn't ready yet"). The hint flow can be checked by purchasing "Remove Ads" (sandbox), which enables hints without video.
 ```
+
+（最後の2文は 2026-09-28 に足した。TestFlight で広告が届かず「動画の準備ができていません」になった。アプリは正しく、公開前の AdMob の配信制限のため）
 
 **App のプライバシー（App Store Connect → App のプライバシー）**
 
