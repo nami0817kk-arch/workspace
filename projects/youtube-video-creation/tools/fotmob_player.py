@@ -435,16 +435,37 @@ def heatmap_board(coords: list[dict], out: Path, name: str, size: tuple[int, int
         draw.rectangle([min(x_edge, x_edge + sgn * bw), gy + (gh - bh) / 2, max(x_edge, x_edge + sgn * bw), gy + (gh + bh) / 2], outline=line, width=3)
         sw, sh = gw * 5.5 / PITCH_LEN, gh * 18.32 / PITCH_WID
         draw.rectangle([min(x_edge, x_edge + sgn * sw), gy + (gh - sh) / 2, max(x_edge, x_edge + sgn * sw), gy + (gh + sh) / 2], outline=line, width=3)
-    # 2段の色：広く薄い黄 ＋ 密度の高い所だけ橙（芝の緑と混ざって濁らないように）
-    for radius, color, blur in ((34, (255, 213, 74, 46), 18), (16, (255, 140, 40, 70), 10)):
-        heat = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-        hd = ImageDraw.Draw(heat)
-        for c in coords:
-            x, y = float(c.get("x") or 0), float(c.get("y") or 0)
-            cx, cy = gx + gw * x / PITCH_LEN, gy + gh * y / PITCH_WID
-            hd.ellipse([cx - radius, cy - radius, cx + radius, cy + radius], fill=color)
-        heat = heat.filter(ImageFilter.GaussianBlur(blur))
-        canvas.alpha_composite(heat)
+    # 密度で塗る（品質100回の41）。点を重ねるだけだと芝と混ざって濁った。
+    # 格子で数えて、ぼかして、最大値で正規化し、密度に応じて 黄 → 橙 → 赤。薄い所は透ける
+    cols, rows_ = 70, 45
+    grid = [[0.0] * cols for _ in range(rows_)]
+    for c in coords:
+        x, y = float(c.get("x") or 0), float(c.get("y") or 0)
+        i = min(cols - 1, max(0, int(x / PITCH_LEN * cols)))
+        j = min(rows_ - 1, max(0, int(y / PITCH_WID * rows_)))
+        grid[j][i] += 1.0
+    peak0 = max(v for row in grid for v in row) or 1.0
+    small = Image.new("L", (cols, rows_))
+    small.putdata([int(255 * v / peak0) for row in grid for v in row])
+    dens = small.resize((int(gw), int(gh)), Image.BICUBIC).filter(ImageFilter.GaussianBlur(22))
+    peak = max(dens.getdata()) or 1
+    heat = Image.new("RGBA", (int(gw), int(gh)), (0, 0, 0, 0))
+    px_data = []
+    for v in dens.getdata():
+        t = max(0.0, min(1.0, v / peak))
+        if t < 0.06:
+            px_data.append((0, 0, 0, 0))
+            continue
+        # 黄(255,213,74) → 橙(255,140,40) → 赤(220,50,40)
+        if t < 0.5:
+            k = t / 0.5
+            col = (255, int(213 + (140 - 213) * k), int(74 + (40 - 74) * k))
+        else:
+            k = (t - 0.5) / 0.5
+            col = (int(255 + (220 - 255) * k), int(140 + (50 - 140) * k), int(40 + (40 - 40) * k))
+        px_data.append(col + (int(40 + 175 * t ** 0.8),))
+    heat.putdata(px_data)
+    canvas.alpha_composite(heat, (int(gx), int(gy)))
     draw = ImageDraw.Draw(canvas)
     if os.environ.get("HEAT_DEBUG"):
         for (mx, my), col in (((PITCH_LEN, PITCH_WID / 2), (255, 0, 0, 255)), ((0, PITCH_WID / 2), (0, 120, 255, 255))):

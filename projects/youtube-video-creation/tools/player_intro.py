@@ -306,7 +306,8 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
         },
         **({"watch": watch} if watch else {}),
         "short_title": f"{short}ってどんな選手？",
-        "thumbnail": {"line1": short, "line2": "（いちばん強い事実を伏せる。例：ボールに触らないのに●●）", "tags": [p["club"]],
+        "thumbnail": {"line1": short, "line2": "（いちばん強い事実を伏せる。例：ボールに触らないのに●●）",
+                      "tags": [p["club"], "選手紹介", "プレースタイル"], "note_red": "有名選手の紹介",
                       "photo": "（横長の顔写真1枚。縦なら tools/widecrop.py）", "photos": []},
         "sections": sections,
     }
