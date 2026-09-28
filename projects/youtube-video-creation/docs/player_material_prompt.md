@@ -40,4 +40,6 @@
 1. 雛形の（…）の行を材料で埋める（1行40字まで。引用は30字で割って `cont: true`。最後の引用行に `pause: 0.6`）
 2. 写真を時期ごとに取る：`python -m src.cli portrait assets/images/<日付>_<キー>_<時期> "<日本語名>" "<英語名>" --file "<File名>"`。
    表の無い節（フック・マル秘話・見立て）に使う縦写真は `python tools/widecrop.py <写真> --dir <置き先>_w --top 0.05`
-3. `draft` → `tools/preshow.py` → `tools/flow.py`（指摘を反映してもう一度）→ `tools/pages.py scripts <日付> --images` → ページで見せる
+3. `draft` → `tools/preshow.py` → `tools/flow.py`（指摘を反映してもう一度。全モデルが 503 の夜は道具が90秒おいて2周する）→ `tools/pages.py scripts <日付> --images` → ページで見せる
+4. **型の定型文は本ごとに言い換える**（雛形は選手の番号で4通りを回すが、人が書く行も前の本と同じ文にしない）。3本以上できたら `python -m src.cli variety scripts/<日付>_player_*.md` で「本のあいだ」を見る（紹介ものは並びの同じさは見ない）
+5. サムネは `python tools/thumbsheet.py scripts/<台本…>` で作って1枚に並べ、台本ページと一緒に見せる
