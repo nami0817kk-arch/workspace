@@ -130,6 +130,8 @@ def ja_date(date: str) -> str:
 # ---------- 題材の一覧 ----------
 def topics(date: str, spec_path: Path) -> Path:
     spec = yaml.safe_load(spec_path.read_text(encoding="utf-8"))
+    # **方針の整理にも使う**（2026-09-28）。ボタンの文言と型の凡例を spec で差し替えられる
+    labels = [str(x) for x in (spec.get("labels") or ["○ 作る", "△ 保留", "✖ 却下"])]
     cards = []
     for it in spec.get("items") or []:
         tag = f'<span class="slot">{e(str(it.get("slot", "")))}</span>'
@@ -142,7 +144,7 @@ def topics(date: str, spec_path: Path) -> Path:
 <p class="meta">{tag}{fmt}{warn}<a href="{e(str(it.get("url", "")))}" target="_blank" rel="noopener">{e(str(it.get("src", "")))}</a></p>
 <p>{rich(it.get("why", ""))}</p>
 <div class="picks">
-  <button class="o" data-v="o">○ 作る</button><button class="t" data-v="t">△ 保留</button><button class="x" data-v="x">✖ 却下</button>
+  <button class="o" data-v="o">{e(labels[0])}</button><button class="t" data-v="t">{e(labels[1])}</button><button class="x" data-v="x">{e(labels[2])}</button>
   <input placeholder="ひとこと（任意）">
 </div></div>''')
     drops = "".join(f"<li><b>{e(str(a))}</b> … {rich(b)}</li>" for a, b in (spec.get("drops") or []))
@@ -151,9 +153,11 @@ def topics(date: str, spec_path: Path) -> Path:
             f"<script>window.PICK_KEY='{date}';</script>"
             f"<main><h1>{e(title)}</h1>"
             f'<p class="lead">{e(str(spec.get("lead", "")))} ／ ○△✖を押すと残ります</p>'
-            f'<div class="note">{spec.get("note", "")}<br>'
-            '<span class="fmt">news</span> <span class="fmt">voices</span> <span class="fmt">quote</span> は動画の型の提案です。'
-            '<span class="weak">弱い</span>は出典が1本だったり、同じ選手が続いたりするものです。</div>'
+            f'<div class="note">{spec.get("note", "")}'
+            + ("" if spec.get("legend") is False else
+               '<br><span class="fmt">news</span> <span class="fmt">voices</span> <span class="fmt">quote</span> は動画の型の提案です。'
+               '<span class="weak">弱い</span>は出典が1本だったり、同じ選手が続いたりするものです。')
+            + '</div>'
             '<div id="pickbar" class="pickbar"></div>' + "".join(cards)
             + (f'<div class="note"><b>落とした候補と、その理由</b><ul>{drops}</ul></div>' if drops else "")
             + "</main>" + PICK_JS)
