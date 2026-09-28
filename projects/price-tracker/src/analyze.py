@@ -279,6 +279,9 @@ def drops_on(rows: list[dict], day: str, threshold: float,
 
     「最後に価格が動いたのがその日」ではない。過ぎた日の一覧を作るには、
     履歴のその日と直前を突き合わせて、当日の下げ幅を出し直す必要がある。
+
+    ポイント込みの実質価格で下がった回も拾う。実測（2026-09-28）で、
+    9/26 は価格52件に対し実質69件、9/27 は17件に対し27件だった。
     """
     hit = []
     for row in rows:
@@ -287,11 +290,21 @@ def drops_on(rows: list[dict], day: str, threshold: float,
             if tail[i][0] != day:
                 continue
             before, now = tail[i - 1][1], tail[i][1]
-            if before and before > now and (before - now) / before >= threshold:
-                hit.append({**row, "drop_pct": (before - now) / before,
-                            "prev": before, "price": now, "dropped": True})
+            eff_before = effective(before, tail[i - 1][2])
+            eff_now = effective(now, tail[i][2])
+            drop = (before - now) / before if before and before > now else 0.0
+            eff_drop = ((eff_before - eff_now) / eff_before
+                        if eff_before and eff_before > eff_now else 0.0)
+            if max(drop, eff_drop) >= threshold:
+                # その日の値だけを差し替える。実質でしか下がっていない回も
+                # 拾う（実測2026-09-26 で価格52件に対し実質69件）。
+                hit.append({**row, "drop_pct": drop, "prev": before, "price": now,
+                            "dropped": drop >= threshold,
+                            "point_rate": tail[i][2],
+                            "eff_price": eff_now, "eff_prev": eff_before,
+                            "eff_drop_pct": eff_drop, "eff_rise_pct": 0.0})
             break
-    hit.sort(key=lambda r: (-r["drop_pct"], r["price"]))
+    hit.sort(key=lambda r: (-max(r["drop_pct"], r["eff_drop_pct"]), r["price"]))
     return hit[:limit] if limit else hit
 
 
@@ -300,9 +313,27 @@ def new_lows(rows: list[dict], day: str, limit: int | None = None) -> list[dict]
 
     「最安値圏」は近い価格も含むが、こちらは記録を塗り替えた当日だけ。
     履歴を持っていないと出せない一覧で、買い手にとっては一番強い合図になる。
+
+    ポイント込みの実質価格で塗り替えた回も入れる。価格が動かなくても、
+    倍率が上がれば実質の最安値は更新される。
     """
-    hit = [r for r in rows
-           if r.get("at_low") and r.get("trustworthy") and r.get("low_date") == day]
+    def eff_low_day(r):
+        """実質価格が記録した中でいちばん安かった日。"""
+        ser = effective_series(r)
+        if not ser:
+            return None
+        lo = min(v for _, v in ser)
+        return next(d for d, v in ser if v == lo)
+
+    hit = []
+    for r in rows:
+        if not r.get("trustworthy"):
+            continue
+        if r.get("at_low") and r.get("low_date") == day:
+            hit.append(r)
+        elif r.get("eff_at_low") and eff_low_day(r) == day:
+            # 価格が動かなくても、倍率が上がれば実質の最安値は塗り替わる。
+            hit.append(r)
     hit.sort(key=lambda r: (-r.get("off_high_pct", 0), r["price"]))
     return hit[:limit] if limit else hit
 

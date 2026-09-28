@@ -481,11 +481,18 @@ def point_note(row: dict) -> str:
             if until else "")
     # 実質が上がったなら、そう出す。倍率が下がる（期限切れを含む）と価格は
     # 同じでも実質は上がるので、これを出さないと一覧では何も変わって見えない。
-    # 価格が上がった回は、同じ割合がカードの価格の行にも出る。
+    # 価格が動いた回は、同じ割合がカードの価格の行にも出る。
     # 「▲458.8%」が1枚に2回並んでいた（2026-09-28）。
-    # ここで出すのは「価格は同じなのに実質だけ上がった」回だけにする。
-    move = (f'<span class="up">▲{pct(rise)}</span>'
-            if rise and not row.get("rise_pct") else "")
+    # ここで出すのは「価格は同じなのに実質だけ動いた」回だけにする。
+    # **「前回より」を必ず添える。** すぐ下の「記録を始めてからの変化」は
+    # 記録開始との比較なので、「変わらず」と「▲16.5%」が並ぶことがある。
+    drop = row.get("eff_drop_pct") or 0
+    if rise and not row.get("rise_pct"):
+        move = f'<span class="up">前回より ▲{pct(rise)}</span>'
+    elif drop and not row.get("dropped"):
+        move = f'<span class="down">前回より ▼{pct(drop)}</span>'
+    else:
+        move = ""
     eff = (f'<span class="eff">実質 {yen(row["eff_price"])}'
            f'<small>（目安）</small></span>')
     if rate <= 1:

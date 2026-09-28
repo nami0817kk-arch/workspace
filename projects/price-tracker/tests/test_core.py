@@ -1109,3 +1109,42 @@ class 期限切れの倍率を履歴にも反映するTest(unittest.TestCase):
 
         self.assertEqual(row["point_rate"], 15)
         self.assertEqual(row["tail"][-1][2], 15)
+
+
+class 日付別も実質で見るTest(unittest.TestCase):
+    """過ぎた日の一覧と最安値の更新も、価格しか見ていなかった。
+
+    実測（2026-09-28）で、9/26 は価格52件に対し実質69件、
+    9/27 は17件に対し27件が下がっていた。
+    """
+
+    def row(self, tail, **kw):
+        base = {"item_code": "a", "name": "テスト", "price": tail[-1][1],
+                "trustworthy": True, "at_low": False, "eff_at_low": False,
+                "low_date": tail[0][0], "off_high_pct": 0.0, "tail": tail}
+        base.update(kw)
+        return base
+
+    def test_価格が同じでも倍率が上がった日は値下がりに入れる(self):
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 20]]
+
+        hit = analyze.drops_on([self.row(tail)], "2026-09-02", 0.05)
+
+        self.assertEqual(len(hit), 1)
+        self.assertFalse(hit[0]["dropped"])        # 価格は下がっていない
+        self.assertGreater(hit[0]["eff_drop_pct"], 0.05)
+
+    def test_価格が下がった日はこれまでどおり(self):
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 800, 1]]
+
+        hit = analyze.drops_on([self.row(tail)], "2026-09-02", 0.05)
+
+        self.assertTrue(hit[0]["dropped"])
+        self.assertAlmostEqual(hit[0]["drop_pct"], 0.2)
+
+    def test_実質で最安を塗り替えた日も更新に入れる(self):
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 20]]
+        row = self.row(tail, eff_at_low=True)
+
+        self.assertEqual(analyze.new_lows([row], "2026-09-02"), [row])
+        self.assertEqual(analyze.new_lows([row], "2026-09-01"), [])
