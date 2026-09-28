@@ -31,3 +31,14 @@
 # なっていた。指紋付きなので、この名前のものは二度と変わらない。
 /search-index.*.json
   Cache-Control: public, max-age=31536000, immutable
+
+# 印と共有用の絵。中身は図形だけで、色や形を変えない限り同じものが出る。
+# 名前に指紋が入っていないので immutable にはせず、1日で見直させる。
+/icon.png
+  Cache-Control: public, max-age=86400
+/favicon.ico
+  Cache-Control: public, max-age=86400
+/og.png
+  Cache-Control: public, max-age=86400
+/og.svg
+  Cache-Control: public, max-age=86400
