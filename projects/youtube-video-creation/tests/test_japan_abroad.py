@@ -69,3 +69,13 @@ def test_名前とクラブ名の整え方():
     assert mod.clean_name("", "鈴木 唯人") == "鈴木唯人"
     assert mod.club_ja("Manchester City") == "マンチェスター・シティ"
     assert mod.club_ja("Real Sociedad") in ("レアル・ソシエダ", "Real Sociedad")
+
+
+def test_代表戦は既定で除き_代表ウィークだけ数える():
+    club = _game("2026-09-20")
+    national = _game("2026-09-25")
+    national["gameInformation"]["isNationalGame"] = True
+    national["gameInformation"]["competitionId"] = "WMQA"
+    assert mod.split_games([club, national]) == [club]
+    assert mod.split_games([club, national], national=True) == [club, national]
+    assert mod._match_line(national)["competition"] == "W杯予選（アジア）"

@@ -50,6 +50,9 @@ COMPETITIONS = {
     "SC1": "スコティッシュ・プレミアシップ",
     "CL": "チャンピオンズリーグ", "CLQ": "チャンピオンズリーグ予選", "EL": "ヨーロッパリーグ",
     "ELQ": "ヨーロッパリーグ予選", "UCOL": "カンファレンスリーグ", "ECLQ": "カンファレンスリーグ予選",
+    # 代表戦（代表ウィークに --national で数えるとき）
+    "UNLA": "ネーションズリーグA", "UNLB": "ネーションズリーグB", "WMQE": "W杯予選（欧州）",
+    "WMQA": "W杯予選（アジア）", "AM": "アジアカップ", "FS": "国際親善試合", "FSFS": "国際親善試合",
 }
 
 
@@ -65,15 +68,25 @@ def _get(path: str, tries: int = 3) -> dict:
     return {}
 
 
-def games_of(player_id: str, season: int = SEASON) -> list[dict]:
-    """その季の試合記録（代表戦は除く。記録の無い行は飛ばす）。"""
+def games_of(player_id: str, season: int = SEASON, national: bool = False) -> list[dict]:
+    """その季の試合記録（記録の無い行は飛ばす）。
+
+    代表戦は既定で除く。**代表ウィーク**（9/22〜28 のようにクラブの試合が無い週）は
+    `national=True` で代表戦も数える（2026-09-28）。季の合計はクラブの試合だけで数える。
+    """
     perf = _get(f"/player/{player_id}/performance-game?season={season}").get("performance") or []
+    return split_games(perf, season, national)
+
+
+def split_games(perf: list, season: int = SEASON, national: bool = False) -> list[dict]:
     out = []
     for p in perf:
         if not isinstance(p, dict):
             continue
         info = p.get("gameInformation") or {}
-        if (info.get("season") or {}).get("id") != season or info.get("isNationalGame"):
+        if (info.get("season") or {}).get("id") != season:
+            continue
+        if info.get("isNationalGame") and not national:
             continue
         out.append(p)
     return out
@@ -185,12 +198,13 @@ def build_roster() -> list[dict]:
     return rows
 
 
-def week_rows(roster: list[dict], end: datetime.date, days: int = 7) -> list[dict]:
+def week_rows(roster: list[dict], end: datetime.date, days: int = 7, national: bool = False) -> list[dict]:
     start = end - datetime.timedelta(days=days - 1)
     out = []
     for r in roster:
-        games = games_of(r["tm"])
-        week = in_window(games, start, end)
+        perf = _get(f"/player/{r['tm']}/performance-game?season={SEASON}").get("performance") or []
+        games = split_games(perf, SEASON, national=False)
+        week = in_window(split_games(perf, SEASON, national=national), start, end)
         item = dict(name=r["name"], club=r["club"], competition=r.get("competition", ""),
                     week=summarize(week), season=summarize(games),
                     matches=[_match_line(g) for g in week])
@@ -280,6 +294,7 @@ def main(argv: list[str]) -> int:
     w.add_argument("--to", required=True, help="週の最後の日（YYYY-MM-DD）")
     w.add_argument("--days", type=int, default=7)
     w.add_argument("--note", help="取材メモの雛形を書く先")
+    w.add_argument("--national", action="store_true", help="代表戦も数える（代表ウィーク用）")
     args = ap.parse_args(argv)
     if args.cmd == "roster":
         rows = build_roster()
@@ -292,7 +307,7 @@ def main(argv: list[str]) -> int:
         return 0
     roster = (yaml.safe_load(ROSTER.read_text(encoding="utf-8")) or {}).get("players") or []
     end = datetime.date.fromisoformat(args.to)
-    rows = week_rows(roster, end, args.days)
+    rows = week_rows(roster, end, args.days, national=args.national)
     WEEKLY_DIR.mkdir(parents=True, exist_ok=True)
     out = WEEKLY_DIR / f"{args.to}.json"
     out.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
