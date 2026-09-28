@@ -19,7 +19,7 @@ LEAD_SHOUT = re.compile(r"^\s*＼[^／\\/]{0,60}[／\\/]\s*")
 # 対を厳密に見ない（「［メール便OK]」のように全角と半角が混ざる名前が実在する）。
 # 中身は60文字までで、閉じ記号で止まる。落とすかどうかは PROMO_HINT が決める。
 LEAD_BRACKET = re.compile(
-    r"^\s*[【\[［『「（〔《≪]([^】\]］』」）〕》≫]{0,60})[】\]］』」）〕》≫]\s*")
+    r"^\s*[【\[［『「（〔《≪“〈]([^】\]］』」）〕》≫”〉]{0,60})[】\]］』」）〕》≫”〉]\s*")
 # 囲みの中が宣伝・配送のうたい文句なら落とす。それ以外は商品の情報として残す
 PROMO_HINT = re.compile(
     r"送料無料|送料込|クーポン|ポイント|\d+\s*倍|\d+\s*[%％]|OFF|オフ|還元|エントリー"
@@ -30,7 +30,10 @@ PROMO_HINT = re.compile(
     # 「新品」「中古」「公式」「2個セット」「1年保証」は商品を見分ける情報なので入れない
     r"|最強配送|即日出荷|RSL|在庫あり|キャンペーン|もらえる|\d+\s*P(?![A-Za-z])"
     r"|楽天\d+位|ランキング|レビュー|同梱|高評価|大人気|累計|\d{1,2}/\d{1,2}")
-LEAD_MARK = re.compile(r"^[\s★☆◆◇■□●○◎▼▲▽△※・!！?？＼\\／/｜|:：、,，\-ー－_＿~〜+＋*＊]+")
+# 飾りの記号。✨⇒♪ のような絵文字・矢印・音符が抜けていて、
+# 「✨【限定配布1,000円OFF】ポータブルDVDプレーヤー」のように
+# 記号で止まって、その後ろの宣伝の囲みまで残っていた（実測87件）。
+LEAD_MARK = re.compile(r"^[\s★☆◆◇■□●○◎▼▲▽△※・!！?？＼\\／/｜|:：、,，\-ー－_＿~〜+＋*＊✨✅❗❕⚡💥🔥🎁🎉➡→⇒⇨⇔♪♫♬〓☆★]+")
 LEAD_PROMO = re.compile(
     r"^\s*(?:"
     # 日時は細かい形を先に置く。Python の | は最長ではなく先に当たった方を採るので、
@@ -78,11 +81,15 @@ MID_PROMO = re.compile(
 ANY_BRACKET = re.compile(r"[【\[［（(＜<『「]" + r"[^】\]］）)＞>』」]*" + r"[】\]］）)＞>』」]")
 
 
+EMPTY_BRACKET = re.compile(r"[【\[［（(＜<『「《≪〈][\s]*[】\]］）)＞>』」》≫〉]")
+
+
 def strip_mid_promo(text: str) -> str:
     """名前の途中に残った売り文句を落とす。"""
     t = ANY_BRACKET.sub(
         lambda m: "" if MID_PROMO.search(m.group(0)) else m.group(0), text)
     t = MID_PROMO.sub("", t)
+    t = EMPTY_BRACKET.sub("", t)   # 宣伝だけが入っていた囲みの殻
     t = re.sub(r"[\s]{2,}", " ", t)
     return t.strip(" 　/／|｜-－・")
 
@@ -123,6 +130,16 @@ def clean_name(name: str) -> str:
         if text == before:
             break
     text = strip_mid_promo(text.strip())
+    # 途中の宣伝を落とすと記号や値段が先頭に来ることがある
+    # （「TIMESALE！1,730円～ ハンディファン」→「！1,730円～ ハンディファン」）。
+    # もう一度、頭の掃除だけ通す。
+    for _ in range(4):
+        before = text
+        text = LEAD_MARK.sub("", text)
+        text = LEAD_PROMO.sub("", text)
+        text = text.strip()
+        if text == before:
+            break
     return text if len(text) >= 3 else original
 
 

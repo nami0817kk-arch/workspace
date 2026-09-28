@@ -253,6 +253,46 @@ class 価格の位置の言い方Test(unittest.TestCase):
         self.assertIn("今日だけ", out)
 
 
+class 先頭の飾りTest(unittest.TestCase):
+    """記号で始まる名前が87件残っていた（2026-09-28 実測）。
+
+    絵文字・矢印・音符が落とす記号に入っておらず、そこで止まって
+    その後ろの宣伝の囲みまで残っていた。さらに、名前の途中の宣伝を
+    落とすと記号が先頭に来るのに、頭の掃除がもう一度走っていなかった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_絵文字で始まっても後ろの宣伝まで落とす(self):
+        out = self.theme.clean_name(
+            "✨【限定配布1,000円OFF】ポータブルDVDプレーヤー 17.9型 大画面")
+
+        self.assertTrue(out.startswith("ポータブルDVDプレーヤー"), out)
+
+    def test_矢印や音符も落とす(self):
+        for name, head in (("⇒2,999円*送料無料 パネルヒーター 足元", "2,999円"),
+                           ("♪抗菌クロス セット販売 ヤマハ ピアニカ", "抗菌クロス"),
+                           ("➡ モバイルバッテリー 大容量 軽量", "モバイルバッテリー")):
+            with self.subTest(name=name):
+                self.assertTrue(self.theme.clean_name(name).startswith(head))
+
+    def test_途中の宣伝を落とした残りの記号も落とす(self):
+        """「TIMESALE！1,730円～ …」は TIMESALE を落とすと「！」が先頭に来る。"""
+        out = self.theme.clean_name("TIMESALE！1,730円～ ハンディファン 冷却プレート")
+
+        self.assertFalse(out.startswith("！"), out)
+        self.assertIn("ハンディファン", out)
+
+    def test_商品情報の囲みは残す(self):
+        for name in ("【中古】ニンテンドースイッチ 本体",
+                     "【公式】掛け時計 おしゃれ 北欧",
+                     "《メーカー保証1年付き》YAMAHA ピアニカ"):
+            with self.subTest(name=name):
+                self.assertEqual(self.theme.clean_name(name), name)
+
+
 class 題の重複Test(unittest.TestCase):
     """64文字まで伸ばしても同じになる商品がある。
 
