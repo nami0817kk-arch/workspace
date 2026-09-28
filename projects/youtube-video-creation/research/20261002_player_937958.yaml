@@ -170,17 +170,18 @@ sections:
   - text: ヤマルのプレースタイルを、同じ攻撃的MF・ウイングと比べた数字で見ます。
     image: assets/stats/player_20261002_1467236_radar.png
     no_telop: true
-  - 6つの軸のうち、シュートの数と得点は最上位。空中戦と守備の関与は最下位です。
-  - つまり、右サイドから中へ持ち込んで、左足で自分が打つ選手です。
-  - text: では、どこでボールを持つか。右サイドの高い位置から、中へ。
+  - レーダーの6つの軸のうち、シュートの数と得点は最上位。空中戦と守備の関与は最下位です。
+  - text: ボールを持つ場所は、右サイドの高い位置。ヒートマップの赤いところです。
     image: assets/stats/player_20261002_1467236_heat.png
     no_telop: true
+  - そこから中へ持ち込んで、左足で自分が打つ選手。
   - ドリブルは今季30回成功、成功率60%。作ったチャンスは27回で、上位3%です。
   - text: 今季のシュートは、ラ・リーガ7試合で38本。1試合に5本以上打って、7点を取っています。
     image: assets/stats/player_20261002_1467236_shots.png
     no_telop: true
   - 弱点は守備。タックルやボール奪取といった守備の数は、同じ位置の中で下から9番目。
-  - 2025年4月のドルトムント戦では走る量がチームでいちばん少なく、味方から直接言われました。
+  - 2025年4月のドルトムント戦では走る量がチームでいちばん少なく、
+  - 努力なしでは最高の選手になれない、と味方から直接言われました。
   sources:
   - https://www.fotmob.com/players/1467236
   - https://learning.coachesvoice.com/cv/barcelona-extraordinary-talent-lamine-yamal-style-of-play/
@@ -286,7 +287,8 @@ sections:
     image: assets/images/20261002_yamal_final_wide/01.jpg
   - ラ・リーガは7試合で7点4アシスト、チャンピオンズリーグは1試合で1点2アシスト。
   - 直近5試合は5点6アシスト。10点満点の評点は、いちばん低い試合でも8.8です。
-  - 作る数も、決める数も、落ちていません。
+  - 同じ位置の中でシュートは1位、守備は下から9番目。
+  - その極端な形のまま、今季も点が出ています。
   sources:
   - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
   - https://www.fotmob.com/players/1467236
@@ -351,17 +353,18 @@ sections:
   say:
   - text: 話を数字に戻して、最後に見立てです。
     image: assets/images/20261002_yamal_semi_face_w/01.jpg
-  - 世界年間最優秀選手、バロンドールの発表は10月26日。本人は9月に、こう言いました。
+  - 世界年間最優秀選手、バロンドールの発表は10月26日。
+  - 本人は9月に、エムバペとの2人を挙げてこう言いました。
   - voice: ヤマル
     text: 世界最高の選手は僕たち2人だと思っていて、
   - voice: ヤマル
     text: 今年は勝ち取ったタイトルから僕が受賞に値するはずだ
     cont: true
     pause: 0.6
-  - その2人のもう1人、エムバペは今季9試合で9点、779分。
+  - そのエムバペは今季9試合で9点、779分。
   - ヤマルも9試合で9点、時間もほぼ同じ。点は同じで、そこに6アシストが乗ります。
   - いまは各国の代表戦のためリーグが中断中で、クラブの次の試合は10月11日、ヘタフェ戦。
-  - 1試合5本のシュートが続くか。そして、下から9番目の守備の数字が動くかを見ます。
+  - 発表までにこの差が動くか。1試合5本のシュートが続くかを見ます。
   sources:
   - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
   - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
