@@ -1108,6 +1108,39 @@ THUMB_STRETCH_MAX = 1.6
 THUMB_SIZE = (1280, 720)
 
 
+def _advise_player_photos(notes: Notes) -> list[str]:
+    """**選手紹介の写真の決まり**（2026-09-28 指摘）。
+
+    1. 選手の回にスタジアムの写真を出さない（「選手の話なのに、スタジアムがある」）
+    2. 同じ写真が3つ以上の節で続かない（「同じ画像が続くのは微妙」）。時期ごとに切り替える
+    3. 同じ選手を横に並べた写真（pairphoto の出力）を使わない（「同じ選手を横並びにするのはやめよう」）
+    """
+    if "選手" not in (notes.series or ""):
+        return []
+    hints: list[str] = []
+    thumb = notes.thumbnail or {}
+    photos = [str(thumb.get("photo") or "")] + [str(x) for x in (thumb.get("photos") or [])]
+    for section in notes.sections:
+        photos += [str(x) for x in (section.line_images or []) if x]
+    for photo in photos:
+        if "stadium" in photo.lower() or "スタジアム" in photo:
+            hints.append(f"選手紹介の回にスタジアムの写真（{photo}）があります。選手の写真に替えてください（2026-09-28 指摘）")
+        if "_pair" in photo.lower() and "pair_" in photo.lower():
+            hints.append(f"2枚並べの写真（{photo}）が選手紹介にあります。同じ選手を横に並べない決まりです（2026-09-28）")
+    # 節の最初の写真が3節つづけて同じなら知らせる
+    firsts = []
+    for section in notes.sections:
+        own = next((x for x in (section.line_images or []) if x), "")
+        firsts.append(own)
+    run = 1
+    for a, b in zip(firsts, firsts[1:]):
+        run = run + 1 if (a and a == b) else 1
+        if run == 3:
+            hints.append(f"同じ写真（{a}）が3つの節で続きます。時期ごとに別の写真に切り替えてください（2026-09-28「同じ画像が続くのは微妙」）")
+            break
+    return hints
+
+
 def _advise_wide_photo(notes: Notes) -> list[str]:
     """**本文に敷く写真は横に広いものを使う**（2026-09-25 指摘）。
 
@@ -1774,6 +1807,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_thumbnail_promise(notes)
                         + _advise_thumbnail_name(notes)
                         + _advise_wide_photo(notes)
+                        + _advise_player_photos(notes)
                         + _advise_offtopic_section(notes)
                         + _advise_card_telop_overlap(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)

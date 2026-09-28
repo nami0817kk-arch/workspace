@@ -1892,3 +1892,19 @@ def test_見立ての節は印で示し無ければ知らせる():
     assert view.card == {"type": "quote", "label": "この動画の見立て", "text": "差は移籍金ではなく出場時間でした"}
     script = parse_script(to_script(notes, _plan()))
     assert any(scene.viewpoint for scene in script.scenes)
+
+
+def test_選手紹介の写真の決まり_スタジアムと2枚並べと同じ写真の連続():
+    from src import research as r
+
+    def notes_with(images, series="有名選手の紹介", photo="assets/images/a/01.jpg"):
+        sections = [r.Section(id=f"s{i}", heading=f"節{i}", tier="報道", telop="", say=["x"], line_images=[img], line_telops=[""], line_cards=[None],
+                              line_onlys=[""]) for i, img in enumerate(images)]
+        return r.Notes(date="2026年10月1日", slot="other_1", title="t", theme_id="t", question="q", sections=sections,
+                       series=series, thumbnail={"photo": photo})
+
+    hints = r._advise_player_photos(notes_with(["assets/images/a/01.jpg"] * 3, photo="assets/backgrounds/stadium_x_in.png"))
+    assert any("スタジアム" in h for h in hints) and any("3つの節で続きます" in h for h in hints)
+    hints = r._advise_player_photos(notes_with(["assets/images/20261001_haaland_pair_open/01.jpg"]))
+    assert any("2枚並べ" in h for h in hints)
+    assert r._advise_player_photos(notes_with(["a.jpg", "b.jpg", "a.jpg"], series="速報")) == []

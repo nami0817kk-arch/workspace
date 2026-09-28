@@ -490,10 +490,13 @@ def portrait_variant(board: Path) -> Path:
     from src import statboard
 
     src = Image.open(board).convert("RGBA")
-    scale = 1040 / src.width
-    small = src.resize((1040, int(src.height * scale)), Image.LANCZOS)
+    # 芝の縁を落として板だけを取り出し（品質100回の51）、幅いっぱいに敷いて画面の中ほどに置く。下は字幕のぶん空ける
+    W, H = src.size
+    panel = src.crop((80, 40, W - 80, H - 40))
+    scale = 1060 / panel.width
+    small = panel.resize((1060, int(panel.height * scale)), Image.LANCZOS)
     canvas = Image.new("RGBA", (1080, 1920), (14, 20, 30, 255))
-    canvas.alpha_composite(small, (20, 300))
+    canvas.alpha_composite(small, (10, 400))
     out = board.with_name(board.stem + "_v.png")
     canvas.convert("RGB").save(out)
     mark = board.with_name(board.name + ".statboard.txt")
