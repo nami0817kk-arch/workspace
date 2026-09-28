@@ -53,3 +53,17 @@ def test_雛形は相手_直近_過去_日本人_見立て(tmp_path):
     assert note["sections"][3]["main"] is True
     assert note["sections"][3]["say"][1] == "久保建英は今季7試合で600分、2得点1アシスト。"
     assert note["theme"]["title"] == "久保建英のレアル・ソシエダ、次はデポルティーボ。相手はいまどんな状態か"
+
+
+def test_日本人のいない試合は欧州カップの相手紹介になる(tmp_path):
+    m = dict(id="2", league="cl", utc="2026-10-13T19:00:00Z", home="Atlético Madrid", away="Manchester United", home_id="1", away_id="2",
+             home_ja="アトレティコ・マドリード", away_ja="マンチェスター・ユナイテッド", stadium="Metropolitano",
+             japanese={"home": [], "away": []}, form={"home": [], "away": []}, h2h=[], h2h_summary=[0, 0, 0],
+             standing={"home": None, "away": None})
+    path = tmp_path / "note.yaml"
+    mod.write_note(m, datetime.date(2026, 10, 12), path)
+    note = yaml.safe_load(path.read_text(encoding="utf-8"))
+    assert note["series"] == "欧州カップの相手紹介" and note["people"] == []
+    assert [s["id"] for s in note["sections"]] == ["opponent", "form", "h2h", "keys", "view"]
+    assert "card" not in note["sections"][1] and "card" not in note["sections"][2]
+    assert note["theme"]["title"] == "アトレティコ・マドリードの次はマンチェスター・ユナイテッド。数字で見ると、どんな相手か"

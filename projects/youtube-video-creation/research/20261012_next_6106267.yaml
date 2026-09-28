@@ -1,9 +1,9 @@
 # アトレティコ・マドリード 対 マンチェスター・ユナイテッド（10月14日 4:00 日本時間、チャンピオンズリーグ）。数字は FotMob、日本人の今季は Transfermarkt。
 # 顔写真は記事か Commons から（thumbnail.photos）。相手の得点王は tools/scorers.py の控えで足せる。
 date: 2026年10月12日
-slot: japanese_1
+slot: other_1
 format: news
-series: 日本人の次の相手
+series: 欧州カップの相手紹介
 people: []
 theme:
   id: next_6106267
@@ -54,16 +54,6 @@ sections:
   official: true
   telop: マンチェスター・ユナイテッドの直近5試合
   narrator: 解説
-  card:
-    type: table
-    title: マンチェスター・ユナイテッドの直近5試合
-    columns:
-    - 日付
-    - 相手
-    - スコア
-    - 結果
-    rows: []
-    source: FotMob
   say:
   - アトレティコ・マドリードが当たるマンチェスター・ユナイテッド、直近5試合は0勝。
   - （表の上から、勝ち方と負け方を1つずつ）

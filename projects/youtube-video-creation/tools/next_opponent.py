@@ -183,17 +183,18 @@ def write_note(m: dict, day: datetime.date, path: Path) -> None:
                 + ([f"こちらの{us}は{st_us['rank']}位、勝点{st_us['points']}です。"] if st_us else []),
          "sources": [url]},
         {"id": "form", "heading": "直近5試合", "tier": "確定", "official": True, "telop": f"{them}の直近5試合", "narrator": "解説",
-         "card": {"type": "table", "title": f"{them}の直近5試合", "columns": ["日付", "相手", "スコア", "結果"], "rows": m["form"][theirs], "source": "FotMob"},
+         # 直近の記録が無い試合（欧州カップの初戦など）は表を出さない（空の表は draft が止める）
+         **({"card": {"type": "table", "title": f"{them}の直近5試合", "columns": ["日付", "相手", "スコア", "結果"],
+                      "rows": m["form"][theirs], "source": "FotMob"}} if m["form"][theirs] else {}),
          "say": [f"{lead['name']}が当たる{them}、直近5試合は{wins}勝。", "（表の上から、勝ち方と負け方を1つずつ）"],
          "sources": [url]},
         {"id": "h2h", "heading": "過去の対戦", "tier": "確定", "official": True, "telop": f"{us}対{them}の過去", "narrator": "解説",
-         "card": {"type": "table", "title": "過去の対戦", "columns": ["日付", "ホーム", "スコア", "アウェイ"], "rows": m["h2h"], "source": "FotMob"},
+         **({"card": {"type": "table", "title": "過去の対戦", "columns": ["日付", "ホーム", "スコア", "アウェイ"], "rows": m["h2h"],
+                      "source": "FotMob"}} if m["h2h"] else {}),
          "say": [f"{lead['name']}の{us}と{them}、過去の対戦は{our_wins}勝{ds}分{their_wins}敗です。", "（直近の1試合で何が起きたか）"],
          "sources": [url]},
-        {"id": "japan", "heading": f"{lead['name']}の今季", "tier": "報道", "main": True, "telop": f"{lead['name']}（{us}）", "narrator": "解説",
-         } if jp else {
-         # 日本人のいない試合（欧州カップの相手紹介）：主役のクラブが勝つための数字の節
-         "id": "keys", "heading": f"{us}が{them}に勝つには", "tier": "報道", "main": True, "telop": f"{us}の勝ち筋", "narrator": "解説",
+        # 日本人のいない試合（欧州カップの相手紹介）は、主役のクラブが勝つための数字の節にする
+        {"id": "keys", "heading": f"{us}が{them}に勝つには", "tier": "報道", "main": True, "telop": f"{us}の勝ち筋", "narrator": "解説",
          "say": [{"text": f"（前置き1行：{us}の次は{them}戦）", "short_only": True},
                  "（相手の弱点と自分の強みを、数字で2〜3行。得点王の控え tools/scorers.py も使える）"],
          "sources": [url]} if not jp else {
@@ -210,7 +211,8 @@ def write_note(m: dict, day: datetime.date, path: Path) -> None:
          "sources": [url]},
     ]
     note = {
-        "date": day.strftime("%Y年%m月%d日"), "slot": "japanese_1", "format": "news", "series": "日本人の次の相手",
+        "date": day.strftime("%Y年%m月%d日"), "slot": "japanese_1" if jp else "other_1", "format": "news",
+        "series": "日本人の次の相手" if jp else "欧州カップの相手紹介",
         "people": [p["name"] for p in jp],
         "theme": {"id": f"next_{m['id']}", "league": m["league"] if m["league"] in standings_mod.LEAGUE_NAMES_JA else "england",
                   "league_name": league_ja, "kind": "preview", "topic": us,
