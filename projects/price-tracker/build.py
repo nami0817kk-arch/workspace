@@ -64,7 +64,8 @@ PER_PAGE = 50
 def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
                   rows: list, site: dict, base: str, updated: str, empty: str,
                   stats: dict, show_score: bool = False,
-                  linked: set | None = None) -> None:
+                  linked: set | None = None,
+                  parent: tuple | None = None) -> None:
     """一覧をページ送りで書き出す。
 
     最安値圏は4,000件を超える。1枚に詰めると読めないうえ、100件で打ち切ると
@@ -84,6 +85,7 @@ def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
               theme.listing(title, lead, rows[i * PER_PAGE:(i + 1) * PER_PAGE],
                             site, base + "/" + rel, updated, prefix=prefix,
                             empty=empty, stats=stats, page=i + 1, pages=pages,
+                            parent=parent,
                             page_prefix=prefix + path, total=len(rows),
                             show_score=show_score))
         urls.append("/" + rel)
@@ -203,7 +205,8 @@ def build(root: Path, out: Path) -> dict:
         write_listing(out, urls, f"archive/{day}/", f"{day} の値下がり",
                       f"{day} に価格が下がった商品の記録です。",
                       hit, site, base, updated,
-                      "この日は記録できる値下がりがありませんでした。", stats, linked=linked)
+                      "この日は記録できる値下がりがありませんでした。", stats,
+                      linked=linked, parent=("日付別の値下がり", "archive/"))
         archive_counts.append((day, len(hit)))
         pos = archive_days.index(day)
         newer = archive_days[pos - 1] if pos > 0 else None
@@ -232,10 +235,18 @@ def build(root: Path, out: Path) -> dict:
         # 名前は config で付ける任意項目。無ければIDをそのまま見出しにする。
         g = {**g, "genre_id": gid, "name": str(g.get("name") or gid)}
         hit = analyze.by_genre(rows, gid)
-        write_listing(out, urls, f"genre/{gid}/", f'{g["name"]}の値下がり',
-                      f'{g["name"]}の商品を毎日記録し、値下がりの大きい順に並べています。',
+        # 題は中身に合わせる。「◯◯の値下がり」で全商品を出していたため、
+        # 実測（2026-09-28）ではパソコン・周辺機器1,528件のうち値下がりは3件
+        # しか無いのに、題は「値下がり」と名乗っていた。
+        # 中身を値下がりだけに絞ると13,000ページへの導線が消えて索引から
+        # 落ちるので、絞るのではなく題のほうを直す。
+        write_listing(out, urls, f"genre/{gid}/", f'{g["name"]}の価格記録',
+                      f'{g["name"]}の商品を毎日記録しています。'
+                      f'値下がりの大きい順に並べていますが、'
+                      f'値下がりしていない商品も含みます。',
                       hit, site, base, updated,
-                      "このジャンルはまだ記録が始まったばかりです。", stats, linked=linked)
+                      "このジャンルはまだ記録が始まったばかりです。", stats,
+                      linked=linked, parent=("ジャンル別で見る", "genre/"))
         listed.append({**g, "count": len(hit)})
 
     write(out / "genre" / "index.html",
@@ -365,7 +376,7 @@ def build(root: Path, out: Path) -> dict:
          "記録のあいだに価格が何度も変わったもの"),
         ("ending/", "期限が近い", len(analyze.ending_soon(rows, updated)),
          "ポイント倍率が3日以内に終わるもの"),
-        ("genre/", "ジャンル別", len(listed), "ジャンルごとに値下がりの大きい順"),
+        ("genre/", "ジャンル別", len(listed), "ジャンルごとの価格記録（値下がりの大きい順）"),
         ("archive/", "日付別", len(archive_counts), "過ぎた日の値下がりの記録"),
     ]
     # トップは商品を並べず、入口だけを置く（2026-09-26 ユーザー指示）。
