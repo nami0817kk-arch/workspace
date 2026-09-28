@@ -300,7 +300,9 @@ def build(root: Path, out: Path) -> dict:
     # その日の記録を CSV でも出す。表計算で開いて自分で調べられるようにする。
     csv_rows = ["item_code,name,price,point_rate,effective,low,high,days,shop"]
     for r in rows:
-        name = (r["name"] or "").replace('"', "'")
+        # サイトに出す名前と同じものを配る。生の名前は先頭の宣伝が日替わりで
+        # 書き換わるため、同じ商品なのに日によって別の文字列になる。
+        name = theme.clean_name(r["name"] or "").replace('"', "'")
         shop = (r.get("shop") or "").replace('"', "'")
         csv_rows.append(
             f'{r["item_code"]},"{name}",{r["price"]},{r.get("point_rate", 1)},'

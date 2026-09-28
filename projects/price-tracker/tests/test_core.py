@@ -160,6 +160,99 @@ class SummaryTest(unittest.TestCase):
         self.assertEqual(rec["days"], 90)
 
 
+class 掲載文の掃除Test(unittest.TestCase):
+    """楽天の掲載文をそのまま載せると、当サイトが勧めているように映る。
+
+    実測（2026-09-28）で、説明のある12,750件のうち2,028件（15.9%）に
+    「ぜひ」「オススメ」「超お買い得です」が入り、1,360件は
+    「関連商品＼楽天1位獲得／…1,000円1,000円…」という別商品の羅列だった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_別商品の羅列は説明として出さない(self):
+        text = "関連商品 ゴルフ クリーナー 1,000円 リストレスト 1,200円 " * 3
+
+        self.assertEqual(self.theme.clean_caption(text), "")
+
+    def test_飾りの入った掲載文は出さない(self):
+        self.assertEqual(self.theme.clean_caption("＼楽天1位／ すごい商品 " * 5), "")
+
+    def test_煽りの文だけ落として仕様は残す(self):
+        text = ("内容量は300mLです。素材はステンレスで、食洗機に対応しています。"
+                "是非ぴったりな一本を見つけてください。"
+                "保証は購入から1年間です。お問い合わせは店舗までどうぞ。")
+
+        out = self.theme.clean_caption(text)
+
+        self.assertIn("内容量は300mLです。", out)
+        self.assertIn("保証は購入から1年間です。", out)
+        self.assertNotIn("是非", out)
+
+    def test_落とした残りが短ければ出さない(self):
+        self.assertEqual(self.theme.clean_caption("ぜひどうぞ。オススメです。"), "")
+
+
+class 名前の途中の宣伝Test(unittest.TestCase):
+    """先頭だけ落としていたので、途中に紛れた売り文句が題にも一覧にも出ていた
+    （実測2026-09-28で491件・3.7%）。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_途中の順位や煽りを落とす(self):
+        cases = [
+            ("SDカードリーダー 楽天ランキング1位 大容量対応", "楽天ランキング1位"),
+            ("【楽天1位獲得】ケーブル 3m", "楽天1位"),
+            ("鍵盤カバー ＜クーポンで3980円＞ 日本製", "クーポンで3980円"),
+            ("加湿器 今だけ 静音 4.5L", "今だけ"),
+            ("ブランケット 累計20万枚突破 シングル", "累計20万枚突破"),
+            ("ホットカーラー 楽天最安値挑戦中 海外兼用", "最安値挑戦"),
+        ]
+        for name, gone in cases:
+            with self.subTest(name=name):
+                self.assertNotIn(gone, self.theme.clean_name(name))
+
+    def test_商品を見分ける言葉は残す(self):
+        keep = "ゴミ箱 45リットル 送料無料 2個セット 1年保証 新品 公式"
+
+        out = self.theme.clean_name(keep)
+
+        for word in ("送料無料", "2個セット", "1年保証", "新品", "公式"):
+            with self.subTest(word=word):
+                self.assertIn(word, out)
+
+    def test_削りすぎたら元に戻す(self):
+        self.assertEqual(self.theme.clean_name("楽天1位"), "楽天1位")
+
+
+class 価格の位置の言い方Test(unittest.TestCase):
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def row(self, prices):
+        return {"price": prices[-1],
+                "tail": [[f"2026-09-{i + 1:02d}", p, 1] for i, p in enumerate(prices)]}
+
+    def test_いまが記録上いちばん高いときはそう言う(self):
+        """「この価格以下だったのは10日（100%）」は、安い日が多いように読める。
+        事実は逆で、いまがいちばん高い。実測で1,035件がこの状態だった。"""
+        out = self.theme.cheaper_days(self.row([900] * 9 + [1000]))
+
+        self.assertIn("これより安かった日はありません", out)
+        self.assertIn("いちばん高い", out)
+        self.assertNotIn("100%", out)
+
+    def test_今日だけならそう言う(self):
+        out = self.theme.cheaper_days(self.row([1000] * 9 + [900]))
+
+        self.assertIn("今日だけ", out)
+
+
 class AnalyzeTest(unittest.TestCase):
     def rec(self, prices, start_day=1):
         summary = {}

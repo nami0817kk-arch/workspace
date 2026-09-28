@@ -877,11 +877,19 @@ class PointDeadlineTest(unittest.TestCase):
         self.assertNotIn("まで", self.theme.point_note(self.row("")))
 
     def test_商品説明は出典を添えて出す(self):
-        block = self.theme.caption_block({"caption": "説明の冒頭"})
+        # 見本は30字以上にする。短い説明は clean_caption が落とすため
+        # （煽りを抜いた残りかすを載せないための下限）。
+        text = ("内容量は300mLです。素材はステンレスで、食洗機に対応しています。"
+                "保証は購入から1年間です。")
+        block = self.theme.caption_block({"caption": text})
 
-        self.assertIn("説明の冒頭", block)
+        self.assertIn("内容量は300mLです。", block)
         self.assertIn("リンク先", block)
         self.assertEqual(self.theme.caption_block({"caption": ""}), "")
+
+    def test_売り込みだけの説明は出さない(self):
+        self.assertEqual(
+            self.theme.caption_block({"caption": "ぜひどうぞ。オススメです。"}), "")
 
 
 class SearchDisplayTest(unittest.TestCase):

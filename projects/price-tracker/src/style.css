@@ -823,3 +823,10 @@ main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 
    ブラウザは / で折り返さないので、必要なときだけどこでも折れるようにする。 */
 .card .name, .hits a, .caption, .fullname, h1,
 .views .what, .desc, .verdict, .note { overflow-wrap: anywhere; }
+
+/* 52. 楽天のサムネイルが読めなくなったとき（商品が消える・差し替わる）、
+   壊れた絵の記号と40文字の代替文がカードの中で溢れていた。
+   読めなかった画像は枠だけに差し替える（app.js）。その枠の見た目。 */
+.noimg { display: block; background: var(--bg);
+  border: 1px solid var(--line); border-radius: 6px; }
+.hero .noimg { width: 100%; max-width: 260px; aspect-ratio: 1 / 1; }
