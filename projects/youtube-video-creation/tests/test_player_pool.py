@@ -31,3 +31,13 @@ def test_詳細から一覧の行を作る():
     row = mod.row_of(data, "レアル・マドリード", "418", "spain")
     assert row["position"] == "センターフォワード" and row["value"] == 200000000 and row["age"] == 27
     assert mod.row_of({"id": "1"}, "x", "1", "spain") is None
+
+
+def test_マルバツのページの元は番号と数字の説明を持つ():
+    rows = [_row("A1", "レアル", "spain", 200000000, ja="エー")]
+    rows[0]["contract"] = "2029-06-30"
+    spec = mod.page_spec(rows, "players202610", "人選")
+    item = spec["items"][0]
+    assert item["num"] == 1 and item["head"] == "エー（レアル）" and item["slot"] == "ラ・リーガ"
+    assert item["why"] == "センターフォワード・25歳・市場価値 €200M・契約 2029年まで"
+    assert spec["legend"] is False and len(spec["labels"]) == 3

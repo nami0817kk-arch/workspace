@@ -163,6 +163,26 @@ def pick(rows: list[dict], count: int, per_club: int = 2, per_league_run: int = 
     return chosen
 
 
+LEAGUE_JA = {"england": "プレミア", "spain": "ラ・リーガ", "germany": "ブンデス", "italy": "セリエA", "france": "リーグ・アン"}
+
+
+def page_spec(rows: list[dict], key: str, title: str) -> dict:
+    """○×のページ（tools/pages.py topics）に渡す一覧。番号だけ振って出す（○×はユーザー）。"""
+    items = []
+    for i, r in enumerate(rows, 1):
+        why = f"{r['position']}・{r['age']}歳・市場価値 €{r['value'] / 1e6:.0f}M"
+        if r.get("contract"):
+            why += f"・契約 {str(r['contract'])[:4]}年まで"
+        if r.get("captain"):
+            why += "・主将"
+        items.append(dict(num=i, head=f"{r['ja'] or r['name']}（{r['club']}）", slot=LEAGUE_JA.get(r["league"], r["league"]),
+                          fmt="紹介", why=why, url=f"https://www.transfermarkt.com/-/profil/spieler/{r['id']}",
+                          src="Transfermarkt"))
+    return dict(title=title, lead="市場価値の順にリーグとクラブをばらして並べた。○を付けた人から毎日1人",
+                labels=["○ 作る", "△ 保留", "✖ 外す"], legend=False,
+                note="数字は Transfermarkt（市場価値・年齢・契約）。日本語名は Wikidata。呼び方が違えば直す", items=items)
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -170,11 +190,23 @@ def main(argv: list[str]) -> int:
     lp = sub.add_parser("list")
     lp.add_argument("--count", type=int, default=31)
     lp.add_argument("--per-club", type=int, default=2)
+    pg = sub.add_parser("page", help="○×のページの元（tools/pages.py topics に渡す yaml）を書く")
+    pg.add_argument("--count", type=int, default=31)
+    pg.add_argument("--per-club", type=int, default=2)
+    pg.add_argument("--key", default="players202610")
     args = ap.parse_args(argv)
     if args.cmd == "build":
         build()
         return 0
     rows = json.loads(POOL.read_text(encoding="utf-8"))
+    if args.cmd == "page":
+        import yaml
+
+        spec = page_spec(pick(rows, args.count, args.per_club), args.key, "有名選手の紹介・10月の人選")
+        out = ROOT / "research" / f"_{args.key}.yaml"
+        out.write_text(yaml.safe_dump(spec, allow_unicode=True, sort_keys=False), encoding="utf-8")
+        print(f"{out}"); print(f"次: python tools/pages.py topics {args.key} {out}")
+        return 0
     for i, r in enumerate(pick(rows, args.count, args.per_club), 1):
         print(f"{i:>2}. {r['ja'] or r['name']}（{r['club']}／{r['position']}／{r['age']}歳／€{r['value'] / 1e6:.0f}M）")
     return 0
