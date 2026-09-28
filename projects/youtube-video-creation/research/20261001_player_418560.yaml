@@ -15,6 +15,7 @@ theme:
   question: ハーランドはどういう作りの選手で、なぜ点だけ取れるのか
   takeaway: ボールタッチは下から1%、得点は上から1%。ゴール前にいて左足で決めるだけの形を、10年で1,000倍の市場価値まで育てた
   nameplate: アーリング・ハーランド｜マンチェスター・シティ FW／ノルウェー代表
+  bgm: assets/audio/bgm_calm.wav
 short_title: ハーランドってどんな選手？
 thumbnail:
   line1: ハーランド
@@ -37,6 +38,7 @@ sections:
   - 5歳のとき、立ち幅跳びで「世界記録」と言われる跳躍を残した少年。本人は生い立ちをこう言っています。
   - voice: ハーランド
     text: 僕は小さい頃から陸上競技に携わってきた
+    pause: 0.5
   - 母も祖母も陸上の選手。その体でどうやってここまで来たのか、数字と話で見ます。
   sources:
   - https://www.fotmob.com/players/737066/erling-haaland
@@ -301,6 +303,7 @@ sections:
   - voice: ハーランド
     text: 自分は（牛の）心臓と肝臓を食べる
     cont: true
+    pause: 0.6
   - 飲む水はろ過したものだけ。夜はブルーライトを切るメガネをかける。
   - そして鼻で呼吸するために、口にテープを貼って眠ります。
   - 2つ目はゴールのあとの座禅のポーズ。2020年、19歳のときに理由を聞かれて、こう答えています。
@@ -315,8 +318,10 @@ sections:
   - voice: ハーランド
     text: だから時々ゴールを決めたあと、あのポーズをするんだ
     cont: true
+    pause: 0.6
   - その年のチャンピオンズリーグで当たったパリ・サンジェルマンの選手たちは、
-  - 勝ったあとに、このポーズを真似して見せました。
+  - text: 勝ったあとに、このポーズを真似して見せました。
+    pause: 0.5
   sources:
   - https://news.livedoor.com/article/detail/23002168/
   - https://www.thestandard.com.hk/football/article/335314/Haalands-extreme-diet-beef-organs-filtered-water-and-mouth-taping-for-sleep

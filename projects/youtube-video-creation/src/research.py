@@ -128,6 +128,7 @@ class Section:
     # 行に差し込む写真。**本文に写真が1枚も入っていなかった**（実測 2026-09-06）。
     # 使えるライセンスが広がったので、顔を本文にも出す
     line_images: list = field(default_factory=list)
+    line_pauses: list = field(default_factory=list)   # 行のあとに置く間（秒）。引用のあとなど（品質100回の22）
     # 行ごとの "short"（ショート専用）。空なら本編にも出す
     line_onlys: list = field(default_factory=list)
     # **画面に出している板と字幕が同じなら、字幕は出さない**（2026-09-20 指示
@@ -259,6 +260,7 @@ class Notes:
     # オープニングの3行（一言・題・つかみ）にこの絵を当てる。板を指定したときは、
     # 「この動画で分かること」は板に焼き込んである（板の上にカードは重ねない決まり）
     opening_image: str = ""
+    bgm: str = ""    # BGM のファイル（theme.bgm。紹介ものは落ち着いた曲。品質100回の23）
     answer: str = ""                 # まとめで返す答え
     takeaway: str = ""               # この動画の見立て（概要欄に1行。2026-09-28 収益化の整理 7）
     watch: str = ""                  # 次に何を見るか
@@ -360,6 +362,7 @@ def build_notes(raw: dict) -> Notes:
         telops: list[str] = []
         cards: list = []
         images: list[str] = []
+        pauses: list[float] = []
         onlys: list[str] = []
         picks: list[bool] = []
         conts: list[bool] = []
@@ -380,6 +383,7 @@ def build_notes(raw: dict) -> Notes:
                 telops.append(str(item.get("telop", "")).strip())
                 cards.append(item.get("card"))
                 images.append(str(item.get("image", "")).strip())
+                pauses.append(float(item.get("pause") or 0.0))
                 # **ショートにだけ出す行**（2026-09-14 指示「ショートでも、
                 # 試合の概要を最初に説明して」）。ショートは節を切り出して
                 # 単体で出すので前置きが要るが、本編に残すと言い直しになる
@@ -395,6 +399,7 @@ def build_notes(raw: dict) -> Notes:
                 telops.append("")
                 cards.append(None)
                 images.append("")
+                pauses.append(0.0)
                 onlys.append("")
                 picks.append(False)
                 mutes.append(False)
@@ -413,6 +418,7 @@ def build_notes(raw: dict) -> Notes:
                 line_telops=[telops[i] for i in keep],
                 line_cards=[cards[i] for i in keep],
                 line_images=[images[i] for i in keep],
+                line_pauses=[pauses[i] for i in keep],
                 line_onlys=[onlys[i] for i in keep],
                 line_short_voices=[picks[i] for i in keep],
                 line_conts=[conts[i] for i in keep],
@@ -451,6 +457,7 @@ def build_notes(raw: dict) -> Notes:
         nameplate=str(theme.get("nameplate") or "").strip(),
         opening_card=(dict(theme["opening_card"]) if theme.get("opening_card") else None),
         opening_image=str(theme.get("opening_image") or "").strip(),
+        bgm=str(theme.get("bgm") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer") or "").strip(),
         takeaway=str(raw.get("takeaway") or theme.get("takeaway") or "").strip(),
@@ -641,7 +648,7 @@ def _check_voice_clash(notes: Notes) -> list[str]:
 
 
 # 1行ぶんの辞書に書いてよい鍵
-LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image",
+LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image", "pause",
                        "short_only", "short_voice", "no_telop", "cont"})
 
 
@@ -2057,6 +2064,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
         **({"nameplate": notes.nameplate} if notes.nameplate else {}),
         "outro_title": _telop(notes.watch, 20) or "続報は次回お伝えします",
         "outro_sub": "チャンネル登録でお待ちください",
+        **({"bgm": notes.bgm} if notes.bgm else {}),
         "description": (
             f"{notes.title}\n\n"
             + (f"この動画が答える問い: {notes.question}\n\n" if notes.question else "")
@@ -2313,6 +2321,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     own_image = fallback_image
                 if own_image:
                     lines.append(f"  image: {own_image}")
+                if number < len(section.line_pauses) and section.line_pauses[number] > 0:
+                    lines.append(f"  pause: {section.line_pauses[number]:.2f}")
                     # **入れ替えた写真は、そのあとの行にも残す**（2026-09-25 指摘
                     # 「ジダン 背景がジダンだけとなっている」）。行に写真を指定しても、
                     # 次の行でサムネの写真へ戻っていたので、**2枚目が一度も出ないか、
@@ -2396,6 +2406,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     own_image = fallback_image
                 if own_image:
                     lines.append(f"  image: {own_image}")
+                if number < len(section.line_pauses) and section.line_pauses[number] > 0:
+                    lines.append(f"  pause: {section.line_pauses[number]:.2f}")
                     fallback_image = own_image      # 上と同じ（2026-09-25）
         lines.append("")
 

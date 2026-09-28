@@ -253,7 +253,8 @@ class Renderer:
         if not board:
             # 表は見出しの帯の上に収める（3行の見出しで表の最後の行が隠れた。2026-09-28）。
             # 反応の積み上げのときは帯が無い
-            floor = self.headline_band_top(text) if (not stack and not self.layout.with_characters) else None
+            compact = bool(card) and not self.layout.is_portrait
+            floor = self.headline_band_top(text, compact) if (not stack and not self.layout.with_characters) else None
             self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
                              left_half=(stage is not None and not wide
                                         and not self.layout.is_portrait),
@@ -285,7 +286,8 @@ class Renderer:
             if stack:
                 self._draw_stack(canvas, stack)
             else:
-                self._draw_headline(canvas, text, telop_t, source)
+                self._draw_headline(canvas, text, telop_t, source,
+                                    compact=bool(card) and not board and not self.layout.is_portrait)
         # 動画背景のときは重ねる前提なのでアルファを残す
         canvas.save(target) if over_video else canvas.convert("RGB").save(target)
         return target
@@ -994,7 +996,7 @@ class Renderer:
             y += height + pad
         canvas.alpha_composite(layer)
 
-    def _headline_metrics(self, draw: ImageDraw.ImageDraw, text: str):
+    def _headline_metrics(self, draw: ImageDraw.ImageDraw, text: str, compact: bool = False):
         """見出しの字の大きさ・行・上端を決める。描く前に高さを知りたいとき（表の下限）にも使う。
 
         **読み上げる文はぜんぶ出す**（2026-09-14 指示）。3行で切っていたので、
@@ -1004,8 +1006,11 @@ class Renderer:
         left, top, right, bottom = self.layout.headline_box
         font_path = str(self.config.video.font_path())
         size = self.config.video.headline_size
+        if compact:
+            # **表や板が出ている行は見出しを一回り小さく**（品質100回の21）。3行に伸びると表が縮んで読めない
+            size = int(size * 0.84)
         floor = max(22, int(size * 0.52))
-        font = self.font_headline
+        font = _IF.truetype(font_path, size) if compact else self.font_headline
         # **強調の囲みを外してから折り返す**（2026-09-15）。囲みで割れ方が変わらない
         plain, spans = emphasis.split(text)
         while True:
@@ -1020,12 +1025,12 @@ class Renderer:
         text_top = bottom - line_height * len(lines)
         return font, size, plain, spans, lines, line_height, text_top
 
-    def headline_band_top(self, text: str) -> int | None:
+    def headline_band_top(self, text: str, compact: bool = False) -> int | None:
         """見出しの帯の上端（px）。表や写真はこれより上に収める（2026-09-28）。"""
         if not text or self.layout.with_characters:
             return None
         draw = ImageDraw.Draw(Image.new("RGBA", (8, 8)))
-        _, _, _, _, _, _, text_top = self._headline_metrics(draw, text)
+        _, _, _, _, _, _, text_top = self._headline_metrics(draw, text, compact)
         return text_top - 26
 
     def _draw_headline(
@@ -1034,6 +1039,7 @@ class Renderer:
         text: str,
         telop_t: float = 1.0,
         source: str | None = None,
+        compact: bool = False,
     ) -> None:
         """立ち絵なしのときの見出し。幅いっぱいの帯に、左は確度の色の縦帯（2026-09-28）。"""
         if not text:
@@ -1041,7 +1047,7 @@ class Renderer:
         layer, draw = _layer(canvas.size)
         left, top, right, bottom = self.layout.headline_box
         rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
-        font, size, plain, spans, lines, line_height, text_top = self._headline_metrics(draw, text)
+        font, size, plain, spans, lines, line_height, text_top = self._headline_metrics(draw, text, compact)
         self.font_headline_fit = font
         text_top += rise
 
