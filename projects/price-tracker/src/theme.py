@@ -421,6 +421,21 @@ def verdict_note(row: dict) -> str:
     if not row.get("trustworthy"):
         return (f"記録は{days}日分です。最安値かどうかを言うには"
                 f"{MIN_DAYS_FOR_LOW}日分必要なため、まだ判断できません。")
+    if row.get("eff_at_low"):
+        # 価格が動いていない商品でもここに来る（倍率だけが動いた場合）。
+        # moved の分岐より前に置かないと、いちばん言うべきことが消える。
+        # 「最安」と言うだけでは値幅2%の商品と30%の商品が同じ顔になるので、
+        # 実質の最高値からどれだけ下がったかを添える（at_low と同じ扱い）。
+        eff_high, eff = row.get("eff_high") or 0, row.get("eff_price") or 0
+        off = (eff_high - eff) / eff_high if eff_high else 0
+        tail = (f'記録{days}日の実質の最高 {yen(eff_high)} から '
+                f'{pct(off)} 下がっています。')
+        if row.get("moved"):
+            return (f'価格そのものは記録した中の最安値 {yen(row["low"])} より'
+                    f' {pct(row["vs_low_pct"])} 高いのですが、ポイントを含めた'
+                    f'実質価格では記録した中でいちばん安くなっています。{tail}')
+        return ('価格は記録のあいだ変わっていませんが、ポイント倍率が上がった'
+                f'ぶん、実質価格は記録した中でいちばん安くなっています。{tail}')
     if row.get("moved") is False:
         # 価格が動いていないことは cheaper_days が言う（ポイントで実質だけが
         # 動いた場合もあちらが拾う）。ここで言うと同じ文が2行続く。
@@ -473,6 +488,10 @@ def conditions(row: dict) -> str:
 def badge(row: dict) -> str:
     if row["at_low"]:
         cls = "low"
+    elif row.get("eff_at_low"):
+        # 価格は最安でないので、価格の最安と同じ色にはしない。
+        # ポイントで安くなっていることが色でも分かるようにする。
+        cls = "efflow"
     elif row["near_low"]:
         cls = "near"
     elif row["dropped"]:

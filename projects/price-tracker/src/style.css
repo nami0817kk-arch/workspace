@@ -119,6 +119,9 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   font-size: 12px; border: 1px solid currentColor; white-space: nowrap; }
 .badge.low { color: var(--low); } .badge.near { color: var(--near); }
 .badge.drop { color: var(--down); } .badge.flat { color: var(--flat); }
+/* ポイント込みで最安。価格の最安と同じ緑にするが、枠を破線にして分ける
+   （価格の図でも実質価格は破線で描いている。意味づけを揃える）。 */
+.badge.efflow { color: var(--low); border-style: dashed; }
 
 /* 送料と在庫。買うかどうかに直結するので、判定と並べて出す。 */
 .cond { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px;
@@ -448,6 +451,8 @@ h2 { padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 .card .body > .badge.low { background: var(--low); }
 .card .body > .badge.near { background: var(--near); }
 .card .body > .badge.drop { background: var(--down); }
+.card .body > .badge.efflow { background: var(--low);
+  border: 1px dashed rgba(255, 255, 255, .75); padding: 1px 8px; }
 .card .body > .badge.flat { display: none; }   /* 「横ばい」は貼る値打ちがない */
 
 /* 価格を主役にする。カードの中でいちばん大きい字にする。 */
