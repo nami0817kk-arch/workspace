@@ -288,6 +288,13 @@ sections:
   tier: 報道
   telop: 心臓と肝臓を食べ、口にテープを貼って寝る
   narrator: 解説
+  card:
+    type: points
+    title: ハーランドの習慣
+    items:
+    - 食事：牛の心臓と肝臓。水はろ過したものだけ
+    - 睡眠：ブルーライトを切るメガネ、口にテープ
+    - ゴール後の座禅：瞑想が好き（19歳のとき）
   say:
   - text: 数字の外側に、この選手らしい話が2つあります。
     image: assets/images/20261001_haaland_city2024_w/01.jpg

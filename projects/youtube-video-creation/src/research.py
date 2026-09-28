@@ -1158,6 +1158,13 @@ def _advise_placeholders(notes: Notes) -> list[str]:
             t = str(text).strip()
             if t.startswith(PLACEHOLDER_MARK) and t.endswith("）") and len(t) >= 6:
                 hints.append(f"節「{section.heading}」に雛形の書き残しがあります：{t}。人が書く行です（材料は research/raw/ の material.md）")
+    # 題・見立て・サムネの欄は「（答えを伏せた言い換えを足す。例：…）」の形で置いてある
+    thumb = notes.thumbnail or {}
+    for label, value in (("題", notes.title), ("見立て（takeaway）", notes.takeaway),
+                         ("サムネの2行目", thumb.get("line2")), ("サムネの写真", thumb.get("photo"))):
+        v = str(value or "").strip()
+        if "例：" in v or (v.startswith(PLACEHOLDER_MARK) and v.endswith("）")):
+            hints.append(f"{label}に雛形の書き残しがあります：{v}")
     return hints
 
 

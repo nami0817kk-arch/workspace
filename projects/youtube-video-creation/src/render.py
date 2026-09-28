@@ -770,6 +770,10 @@ class Renderer:
         big = ImageFont.truetype(font_path, 96 if not self.layout.is_portrait else 72)
         small = ImageFont.truetype(font_path, 38 if not self.layout.is_portrait else 34)
         x, y = 48, int(self.layout.height * (0.16 if not self.layout.is_portrait else 0.14))
+        # 長い名前（「アーリング・ブラウト・ハーランド」）は字を縮めて右端に収める（品質100回の65）。縦画面は 1080 幅しか無い
+        limit = self.layout.width - x - 64
+        while draw.textlength(name, font=big) > limit and big.size > 40:
+            big = ImageFont.truetype(font_path, big.size - 4)
         w = draw.textlength(name, font=big)
         # 字の裏に暗い帯（写真の上でも読める）
         draw.rounded_rectangle([x - 16, y - 16, x + w + 32, y + (big.size + 30) + (small.size + 22 if sub else 0)],

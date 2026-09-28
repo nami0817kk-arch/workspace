@@ -1907,6 +1907,13 @@ def test_雛形の書き残しは_draft_が知らせる():
     assert len(hints) == 1 and "書き残し" in hints[0] and "最上位と最下位" in hints[0]
     # 括弧で始まる普通の文（補足の一言）は鳴らさない
     assert r._advise_placeholders(notes_with(["（笑）", "（前置き）これは本文です。"])) == []
+    # 題・見立て・サムネの欄も見る（雛形は「例：」で置く）
+    n = notes_with(["本文。"])
+    n.title = "ハーランドってどんな選手？（答えを伏せた言い換えを足す。例：ボールに触らないのに点だけ取る理由）"
+    n.takeaway = "（数字で分かったことを1文で）"
+    n.thumbnail = {"line2": "（いちばん強い事実を伏せる。例：●●）", "photo": "（横長の顔写真1枚）"}
+    got = r._advise_placeholders(n)
+    assert [h.split("に雛形")[0] for h in got] == ["題", "見立て（takeaway）", "サムネの2行目", "サムネの写真"]
 
 
 def test_選手紹介の写真の決まり_スタジアムと2枚並べと同じ写真の連続():
