@@ -2912,5 +2912,53 @@
     "video_id": "o1kVKyUMkkk",
     "at": "2026-09-29T00:47:17+00:00",
     "publish_at": "2026-09-29T06:30:00Z"
+  },
+  {
+    "build": "20260929b_ito",
+    "video_id": "Su9Ofqcde10",
+    "at": "2026-09-29T07:18:26+00:00",
+    "publish_at": "2026-09-29T07:30:00Z"
+  },
+  {
+    "build": "20260929b_ito_short",
+    "video_id": "TL4yQ1XjNLU",
+    "at": "2026-09-29T07:18:43+00:00",
+    "publish_at": "2026-09-29T08:00:00Z"
+  },
+  {
+    "build": "20260929b_kokubo",
+    "video_id": "oRuuWs7LrFU",
+    "at": "2026-09-29T07:19:02+00:00",
+    "publish_at": "2026-09-29T08:30:00Z"
+  },
+  {
+    "build": "20260929b_kokubo_short",
+    "video_id": "q20NkbswJOk",
+    "at": "2026-09-29T07:19:17+00:00",
+    "publish_at": "2026-09-29T09:00:00Z"
+  },
+  {
+    "build": "20260929b_kubo_seko",
+    "video_id": "8iLqk9F-xAo",
+    "at": "2026-09-29T07:19:39+00:00",
+    "publish_at": "2026-09-29T09:30:00Z"
+  },
+  {
+    "build": "20260929b_kubo_seko_short",
+    "video_id": "l1NsAzHNtMo",
+    "at": "2026-09-29T07:19:54+00:00",
+    "publish_at": "2026-09-29T10:00:00Z"
+  },
+  {
+    "build": "20260929b_suzuki_gk",
+    "video_id": "4Mx423p5XS8",
+    "at": "2026-09-29T07:20:15+00:00",
+    "publish_at": "2026-09-29T10:30:00Z"
+  },
+  {
+    "build": "20260929b_suzuki_gk_short",
+    "video_id": "_XxnnLGN0g0",
+    "at": "2026-09-29T07:20:32+00:00",
+    "publish_at": "2026-09-29T11:00:00Z"
   }
 ]
