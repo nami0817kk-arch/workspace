@@ -191,6 +191,8 @@ def test_選手コメントの引用元だけを概要欄に出す():
         "## 本編", "キャスター: 何かが起きました。", "",
     ])
     body = description(parse_script(text))
-    assert "■ 選手コメントの引用元" in body
-    assert "ゲキサカ　https://web.gekisaka.jp/news/japan/detail/?1-1-fl" in body
+    # 記事から作ったように見せない（2026-09-30「記事から動画作ってると思われたくないの」）。
+    # アドレスは出さず、言葉を伝えた媒体の名前だけを1行で
+    assert "■ 選手コメント" + chr(10) + "発言は、ゲキサカが伝えた取材から引いています。" in body
+    assert "http" not in body
     assert "出典" not in body

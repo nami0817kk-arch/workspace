@@ -155,15 +155,9 @@ def caption(build_dir: Path) -> str:
     out += [""] + YOUTUBE_LINES
     out += ["", " ".join(hashtags[:HASHTAG_MAX])]
     tail: list[str] = []
-    # **「出典」はやめ、選手コメントの引用元だけ媒体名で出す**（2026-09-30 ユーザー
-    # 「選手コメントの引用先にしよう。出典だと、真似してるみたい」）。TikTok ではURLが押せない
-    quoted = []
-    for row in parts.get("選手コメントの引用元", []):
-        name = row.split("　")[0].strip()
-        if name and name not in quoted:
-            quoted.append(name)
-    if quoted:
-        tail.append("選手コメントの引用元: " + " / ".join(quoted))
+    # **選手コメントの出どころは、概要欄と同じ1行だけ**（2026-09-30 ユーザー「記事から動画作ってると
+    # 思われたくないの」）。記事のアドレスも「出典」の見出しも出さない
+    tail += parts.get("選手コメント", [])
     tail += parts.get("クレジット", [])
     tail += notes
     if tail:

@@ -223,20 +223,20 @@ def description(script: Script, credits: list[str] | None = None,
     # 連絡先を置いたので、問い合わせはそちらで受ける。
     # **台本の `sources` には残す。**確度の札（確定／報道／未確認）の根拠は
     # そちらにあり、こちらの手元では全部辿れる
-    # **選手・監督の言葉を引いた記事だけは出す**（2026-09-30 ユーザー「選手コメントの引用先にしよう。
-    # 出典だと、真似してるみたい」）。「出典」は動画ごと記事から作ったように読めるので、
-    # 見出しは「選手コメントの引用元」。引用には出どころの明示が要る（著作権法48条）
-    quoted = [str(u) for u in ((getattr(script, "meta", None) or {}).get("quote_sources") or [])]
-    if quoted:
-        rows = []
-        for item in quoted:
-            # 「媒体名 URL」と書けば、その名前で出す（Yahoo!ニュース経由の記事は元の媒体名にする）
-            name, _, url = item.rpartition(" ")
-            if name.strip() and url.startswith("http"):
-                rows.append(f"{name.strip()}　{url}")
-            else:
-                rows.append(f"{outlet_name(item)}　{item}")
-        parts.append("■ 選手コメントの引用元\n" + "\n".join(rows))
+    # **選手・監督の言葉の出どころだけ、媒体名で1行**（2026-09-30 ユーザー「選手コメントの引用先にしよう。
+    # 出典だと、真似してるみたい」「記事から動画作ってると思われたくないの」）。
+    # 記事のアドレスを並べると、動画ごと記事から作ったように見える。**言葉がどこで語られたか**だけを言う。
+    # 媒体名は残す（引用には出どころの明示が要る。著作権法48条）
+    names: list[str] = []
+    for item in ((getattr(script, "meta", None) or {}).get("quote_sources") or []):
+        item = str(item)
+        # 「媒体名 URL」と書いてあれば、その名前（Yahoo!ニュース経由の記事は元の媒体名）
+        label, _, url = item.rpartition(" ")
+        name = label.strip() if (label.strip() and url.startswith("http")) else outlet_name(item)
+        if name and name not in names:
+            names.append(name)
+    if names:
+        parts.append("■ 選手コメント\n発言は、" + "・".join(names) + "が伝えた取材から引いています。")
     if credits:
         parts.append("■ クレジット\n" + "\n".join(credits))
     # **連絡先を必ず置く**（2026-09-17。報道写真を使う方針とセット）。
