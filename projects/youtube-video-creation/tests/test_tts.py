@@ -173,8 +173,9 @@ def test_行に差し込んだ写真のクレジットも出す(tmp_path):
     # 概要欄の上には出どころの1行だけ。表示義務は末尾の詳細で果たす
     from src.tts import image_details
 
+    # 概要欄の上のサイト名の1行は出さない（2026-09-29「出さなければならないものを除いて出さなくて良い」）
     lines = image_credits(script, root=tmp_path)
-    assert lines == ["画像: Wikimedia Commons"]
+    assert lines == []
 
     details = image_details(script, root=tmp_path)
     assert len(details) == 1
@@ -297,7 +298,7 @@ def test_人物写真のクレジットも概要欄に出る(tmp_path):
     details = image_details(script, root=tmp_path)
     assert details, "人物写真のクレジットが出ていない"
     assert "CC BY-SA 4.0" in details[0]
-    assert image_credits(script, root=tmp_path) == ["画像: Wikimedia Commons"]
+    assert image_credits(script, root=tmp_path) == []
 
 
 def test_分けた反応の続きは頭の行と同じ声():

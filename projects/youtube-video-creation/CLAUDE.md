@@ -578,6 +578,9 @@
         [[api-adoption-decisions]] で Getty 契約は見送りにしている
     - **出典を必ず控える。**`tools/pressphoto.py` が記事URL・媒体名・写真の表記を
       credits.json に残し、概要欄に出す。**どこから来た写真かを隠さない**
+    - **概要欄には、出さなければならないものだけ出す**（2026-09-29 ユーザー「出さなければならないものを除いて出さなくて良い」）。
+      出すのは CC BY / BY-SA の写真の撮影者・ライセンス・元のページ（利用条件）と VOICEVOX の声の表記だけ。
+      「画像: サイト名」の1行はやめた（`tts.image_credits` は空を返す）。報道写真の媒体名・撮影者・記事URLは credits.json に控えるだけ
 
       ```bash
       python tools/pressphoto.py assets/images/<名前> <画像URL>           --article <記事URL> --outlet <媒体名> --credit "©撮影者/媒体"

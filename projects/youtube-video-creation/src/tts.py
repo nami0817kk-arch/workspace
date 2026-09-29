@@ -573,8 +573,10 @@ def image_credits(script, root=None) -> list[str]:
     概要欄の頭に長い行が並ぶと読むところが埋まる。YouTube は最初の3行しか
     初期表示しないので、**見える位置には1行、義務は末尾で果たす**。
     """
-    _, sites = _ledger_lines(script, root)
-    return [f"画像: {' / '.join(sites)}"] if sites else []
+    # **出さない**（2026-09-29 ユーザー「出さなければならないものを除いて出さなくて良い」）。
+    # サイト名の1行は、どの写真の条件でも求められていない。表示が条件の
+    # CC BY / BY-SA は `image_details` が末尾に出すので、それで義務は足りる
+    return []
 
 
 def image_details(script, root=None) -> list[str]:
