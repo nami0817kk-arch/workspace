@@ -72,3 +72,20 @@ def test_説明欄の中身はこれまでどおり(tmp_path):
     assert tags == ["#サッカー", "#アーセナル", "#マックス・ダウマン", "#海外サッカー"]
     assert "※この動画は報道をもとに構成しています" in text
     assert len(text) <= tiktok.CAPTION_MAX
+
+
+def test_ファイル名の頭はYouTubeのショートを予約した時刻(tmp_path, monkeypatch):
+    """PC の TikTok Studio でまとめて予約する（2026-09-29 ユーザー選択）。
+
+    名前を見ればそのまま予約の時刻を入れられるように、頭を時刻にする。
+    """
+    import json
+    from src import posted
+
+    ledger = tmp_path / "posted.json"
+    ledger.write_text(json.dumps([{"build": "20260929b_ito_short", "video_id": "x",
+                                   "publish_at": "2026-09-29T08:00:00Z"}]), encoding="utf-8")
+    monkeypatch.setattr(posted, "LEDGER", ledger)
+    assert tiktok.slot_of(Path("output/20260929b_ito_short")) == "17:00"
+    assert tiktok.slot_of(Path("output/20260929b_ito_tiktok")) == "17:00"
+    assert tiktok.slot_of(Path("output/20260929b_nothing_short")) == ""

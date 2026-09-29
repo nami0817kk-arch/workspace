@@ -12,9 +12,14 @@ you or your team manages）。審査前は非公開でしか上げられず、1�
 
 できるもの（`output/tiktok/<日付>/`）:
 
-    01_mitoma.mp4        そのまま上げる動画（ショートの書き出しをコピー）
-    01_mitoma.txt        説明欄に貼る文（題名・ハッシュタグ・クレジット）
-    一覧.txt             上げる順番と、各ファイルの名前
+    17-00_mitoma.mp4     そのまま上げる動画。**頭の時刻が予約する時刻**
+    17-00_mitoma.txt     説明欄に貼る文（題名・ハッシュタグ・クレジット）
+    説明文まとめ.txt     全部の説明文を時刻の順に1つに並べたもの（上から順にコピーする）
+    一覧.txt             上げる順番と時刻
+
+**PC の TikTok Studio でまとめて予約する形**（2026-09-29 ユーザー選択）。
+時刻は YouTube のショートを予約した時刻（`research/posted.json`）と同じにする。
+予約していないショートは時刻が無いので、番号（`01_`）で並べる。
 
 **動画を見せていないショートは入れない。**YouTube と同じ関門
 （`research/screened.json`）を通す。見せたあとに書き出し直したものも外す。
@@ -84,6 +89,25 @@ def targets(args: list[str]) -> list[Path]:
     return sorted(dirs, key=rank)
 
 
+def slot_when(build_dir: Path):
+    """YouTube のショートを予約した日時（UTC の aware datetime）。控えに無ければ None。"""
+    import datetime as dt
+    from src import posted
+    base = build_dir.name.removesuffix("_tiktok").removesuffix("_short") + "_short"
+    at = ""
+    for row in posted._load(posted.LEDGER):
+        if row.get("build") == base and row.get("publish_at"):
+            at = row["publish_at"]
+    return dt.datetime.fromisoformat(at.replace("Z", "+00:00")) if at else None
+
+
+def slot_of(build_dir: Path) -> str:
+    """その日本時間の HH:MM。控えに無ければ空。"""
+    import datetime as dt
+    when = slot_when(build_dir)
+    return (when + dt.timedelta(hours=9)).strftime("%H:%M") if when else ""
+
+
 def sections(text: str) -> tuple[str, dict[str, list[str]], list[str], list[str]]:
     """description.txt を 題名・■の節・ハッシュタグ・畳んだ注記 に割る。"""
     title, _, body = text.partition("\n")
@@ -141,6 +165,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("what", nargs="+", help="日付（20260916）か、ショートの出力先")
     ap.add_argument("--out", default="")
+    ap.add_argument("--open", action="store_true", help="できたフォルダをエクスプローラーで開く")
     args = ap.parse_args()
 
     dirs = targets(args.what)
@@ -152,32 +177,47 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
 
     listed, skipped = [], []
+    bundle: list[str] = []
     for index, build in enumerate(dirs, 1):
         if not screening.is_screened(build) or screening.changed_since_screening(build):
             skipped.append(build.name)
             continue
         name = re.sub(r"^\d{8}[a-z]?_", "", build.name).removesuffix("_short").removesuffix("_tiktok")
-        stem = f"{len(listed) + 1:02d}_{name}"
+        slot = slot_of(build)
+        # **ファイル名の頭を予約する時刻にする**（2026-09-29）。Studio で動画を選ぶとき、
+        # 名前を見ればそのまま時刻を入れられる
+        stem = f"{slot.replace(':', '-')}_{name}" if slot else f"{len(listed) + 1:02d}_{name}"
         shutil.copyfile(build / "video.mp4", out / f"{stem}.mp4")
         text = caption(build)
         (out / f"{stem}.txt").write_text(text, encoding="utf-8")
-        listed.append((stem, len(text), build.name.endswith("_tiktok")))
+        # **時刻を過ぎていたら印を付ける**。Studio の予約は先の時刻しか入らないので、その場で出す
+        import datetime as dt
+        when = slot_when(build)
+        if when and when < dt.datetime.now(dt.timezone.utc) + dt.timedelta(minutes=15):
+            slot = f"{slot}（過ぎている→すぐ投稿）"
+        listed.append((stem, len(text), build.name.endswith("_tiktok"), slot))
+        bundle += [f"━━━━━━ {slot or '時刻なし'}　{stem}.mp4 ━━━━━━", "", text.rstrip(), "", ""]
 
     lines = [f"TikTok に上げる一式（{len(listed)}本）", "",
-             "TikTok Studio で動画を選び、同じ名前の .txt を説明欄に貼って、時刻を予約する。", ""]
-    for stem, length, long_cut in listed:
+             "TikTok Studio（PC）の「アップロード」で動画を選び、説明文まとめ.txt の同じ時刻の段を貼って、",
+             "「予約」でファイル名の頭の時刻を入れる。予約は10日先まで入る。", ""]
+    for stem, length, long_cut, slot in listed:
         warn = f"　※説明欄が{length}字（{CAPTION_MAX}字を超えています）" if length > CAPTION_MAX else ""
         kind = "" if long_cut else "　※1分未満（報酬の対象外）"
-        lines.append(f"  {stem}.mp4　／　{stem}.txt{kind}{warn}")
+        lines.append(f"  {slot or '--:--'}　{stem}.mp4{kind}{warn}")
     (out / "一覧.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (out / "説明文まとめ.txt").write_text("\n".join(bundle), encoding="utf-8")
 
     print(f"作りました: {out}")
-    for stem, length, long_cut in listed:
-        print(f"  {stem}　説明欄 {length}字　{'1分超' if long_cut else 'ショート（1分未満）'}")
+    for stem, length, long_cut, slot in listed:
+        print(f"  {slot or '--:--'}　{stem}　説明欄 {length}字　{'1分超' if long_cut else 'ショート（1分未満）'}")
     # **入れなかったものを最後の行に残す**（upload と同じ理由）
     for name in skipped:
         print(f"  × {name}: 動画をまだ見せていない（または見せたあとに書き出し直した）")
     print(f"\n■ 入れた {len(listed)}本 / 入れなかった {len(skipped)}本", flush=True)
+    if args.open and listed:
+        import os
+        os.startfile(str(out.resolve()))  # Windows のエクスプローラーで開く
     return 0 if listed else 1
 
 
