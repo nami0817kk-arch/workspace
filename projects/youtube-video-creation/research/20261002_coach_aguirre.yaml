@@ -3,16 +3,19 @@
 #   14チーム＝のべ16回（メキシコ代表は3回）。Transfermarkt の就任日も一致（日本代表 2014-07-24〜）。
 # 日本代表の10試合は英語版Wikipediaの Japan national football team results (2010–2019)。6勝2分け2敗・19得点10失点は Wikipedia（Soccerway）の集計と一致。
 #   Transfermarkt は 10試合・勝点平均1.90（PK負けを負けに数える形）。台本は「PK戦の敗退は引き分けに数える」と断って6勝2分け2敗。
-#   JFA の公式の試合ページ（jfa.jp / samuraiblue.jp）は 2014〜15年分が 404 で読めなかった。
-# 退任：2014年12月にスペインの検察が告発、バレンシアの裁判所が受理、JFA が 2015-02-03 に契約解除を発表（英・西・日の Wikipedia と、その出典の WSJ・スポニチ・読売）。
-#   2019年12月の判決（選手36人は無罪、サラゴサの元会長ら2人は文書偽造で有罪。Las Provincias 2019-12-09）にアギーレの名は出てこない。本人の結末は確かめられないので書かない。
-# バレンシア：ESPN 2026-09-23（今季終了まで＋1季の選択肢、コルベランは開幕5試合未勝利で解任、7試合で勝ち点4）。順位は research/standings/2026-09-28.json（19位、1勝1分5敗、得失点 4-13）。
+#   JFA の公式ページ（jfa.jp / samuraiblue.jp）は 2014〜15年分が 404 で読めなかった。契約解除の発表（2015-02-03）は JFA の発表まで辿れず、
+#   報道（スポニチ 2015-02-03、WSJ 2015-02-03。どちらも各 Wikipedia の出典）と英・日・西の Wikipedia の記述で書いている。札は「報道」。
+# 疑いの経緯：2014年10月3日に反汚職検察がサラゴサと41人を訴え（アギーレを含む。es.wikipedia）、2015年1月にバレンシアの裁判所が受理と報道（読売、ja.wikipedia の出典）。
+#   対象は 2010-11 最終節のレバンテ対サラゴサ（1-2、サラゴサ残留）。2019年12月の判決（Las Provincias 2019-12-09）は選手36人を無罪、サラゴサの元会長ら2人を文書偽造で有罪。
+#   判決を伝える記事にアギーレの名は出てこない。本人の結末は確かめられなかった（台本もそう言う）。
+# バレンシア：ESPN 2026-09-23（今季終了まで＋1季の選択肢）。コルベランは開幕5試合未勝利で9/13に解任、6・7試合目（アラベス1-0勝、ソシエダ2-3負）は
+#   暫定のオスカル・サンチェス（英語版 Wikipedia 2026–27 Valencia CF season、クラブ公式発表 9/13 が出典）。順位は research/standings/2026-09-28.json（19位、1勝1分5敗、4-13）。
 #   次の試合は ESPN の日程（10/11 ラシン・サンタンデール敵地、10/17 アスレティック、10/24 ビジャレアル、11/1 エルチェ、11/8 レアル・マドリード）。
 #   佐藤龍之介は Transfermarkt（2026-07-07 加入、左ウイング）と config/japan_abroad.yaml（9/28 取得、7試合中5出場・先発4・297分・0得点）。
-# 途中就任の6回：メキシコ代表2001（予選5位から）・2009（予選途中）、サラゴサ2010（残留は es.wikipedia）、エスパニョール2012（20位で就任→2012-13 は13位）、
-#   レガネス2019（2019-20 は18位で降格）、マジョルカ2022（残り9試合で降格圏と勝ち点1差→2021-22 は16位で残留）。
-# 本人の言葉とネットの反応は置いていない（シリーズは声なしで通す）。写真は Commons の2013年のエスパニョール時代の1枚だけ（CC BY-SA 4.0 / Juancamartos）。
-#   記事の写真も当たった：サッカーキング 9/23 は Getty（取り込んで消した）、infobae は写真なし。9/24 の回の Excelsior の写真は使っていない。
+# 途中就任の6回：メキシコ代表2001（予選5位から）・2009（予選途中）、サラゴサ2010（残留は es.wikipedia。その最終節が疑いの対象と台本で断る）、
+#   エスパニョール2012（20位で就任→13位）、レガネス2019（18位で降格）、マジョルカ2022（残り9試合で降格圏と勝ち点1差→16位で残留）。
+# 本人の言葉とネットの反応は置いていない。写真は Commons の2013年のエスパニョール時代の1枚だけ（CC BY-SA 4.0 / Juancamartos）。
+#   サッカーキング 9/23 の写真は Getty（取り込んで消した）、infobae は写真なし。
 date: 2026年10月02日
 slot: other_1
 format: news
@@ -26,9 +29,9 @@ theme:
   league_name: ラ・リーガ
   kind: other
   topic: ハビエル・アギーレ
-  title: 元日本代表監督ハビエル・アギーレ、途中から引き受けた6回で残した結果
-  question: 元日本代表監督のアギーレは、どんな道を歩いてバレンシアに来たのか
-  takeaway: アギーレがシーズンや予選の途中から引き受けた6回のうち、5回は残留や本大会出場に届いた。19位のバレンシアは残り31試合と時間はあるが、最初の5試合にビジャレアルやレアル・マドリードとの試合が入る。19歳の佐藤龍之介が新しい監督の下で先発を保てるかも、そこで見えてくる
+  title: 元日本代表監督ハビエル・アギーレ、日本での10試合と途中就任で残した結果
+  question: 日本代表を10試合で去ったアギーレは、途中から引き受けたチームでどんな結果を残してきたのか
+  takeaway: アギーレがシーズンや予選の途中から引き受けた6回のうち、順位と出場で数えれば5回は目標に届いた（サラゴサの残留は八百長の疑いが持たれた季）。19位のバレンシアは残り31試合と時間はあるが、最初の5試合にビジャレアルやレアル・マドリードとの試合が入る。19歳の佐藤龍之介が新しい監督の下で先発に残れるかも、そこで見えてくる
   opening_image: assets/images/20261002_aguirre/01_w.jpg
 short_title: アギーレ時代の日本代表、10試合の中身
 thumbnail:
@@ -127,11 +130,11 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Javier_Aguirre
   - https://www.transfermarkt.com/javier-aguirre/profil/trainer/1548
-- id: career
-  heading: 歩んできたクラブと代表
+- id: before
+  heading: 日本代表の前
   tier: 報道
   official: true
-  telop: 30年で14チーム。スペインのクラブはバレンシアで7つ目
+  telop: メキシコとスペインで18年。W杯は2度ともベスト16
   narrator: 解説
   card:
     type: table
@@ -166,7 +169,7 @@ sections:
       - エスパニョール
       - 途中就任
   say:
-  - text: アギーレが監督として歩んだ30年を、日本代表の前とあとに分けて見ていきます。
+  - text: アギーレが監督として歩んだ30年を、年の順に見ていきます。
     card:
       type: table
       title: 日本代表の前（1996〜2014）
@@ -179,28 +182,21 @@ sections:
       columns: *id003
       rows: *id004
       highlight_row: 1
-  - text: 1999年の冬のリーグで、クラブに初めての優勝をもたらします。
+  - text: 1年を2つに分けるメキシコのリーグで、1999年の冬にクラブ初の優勝。
     card:
       type: table
       title: 日本代表の前（1996〜2014）
       columns: *id003
       rows: *id004
       highlight_row: 1
-  - text: 2001年には、W杯予選で苦しんでいたメキシコ代表を任されました。
+  - text: 2002年のW杯では、メキシコ代表をベスト16に導きます。
     card:
       type: table
       title: 日本代表の前（1996〜2014）
       columns: *id003
       rows: *id004
       highlight_row: 2
-  - text: 本大会まで導き、2002年のW杯はベスト16。
-    card:
-      type: table
-      title: 日本代表の前（1996〜2014）
-      columns: *id003
-      rows: *id004
-      highlight_row: 2
-  - text: スペインに渡ったオサスナでは国王杯の決勝に進み、リーグは4位。
+  - text: スペインに渡ったオサスナでは、カップ戦の国王杯で決勝へ。リーグは4位。
     card:
       type: table
       title: 日本代表の前（1996〜2014）
@@ -228,91 +224,24 @@ sections:
       columns: *id003
       rows: *id004
       highlight_row: 6
-  - text: アラブ首長国連邦のアルワフダでは、国内のカップ戦で優勝。
-    card:
-      type: table
-      title: 日本代表のあと（2015〜2026）
-      columns: *id003
-      rows: &id005
-      - - 2015〜17
-        - アルワフダ（UAE）
-        - 国内のカップ戦で優勝
-      - - 2018〜19
-        - エジプト代表
-        - 自国開催のアフリカ杯で16強
-      - - 2019〜20
-        - レガネス
-        - 途中就任
-      - - 2020〜22
-        - モンテレイ
-        - 北中米カリブ海のクラブ王者
-      - - 2022〜24
-        - マジョルカ
-        - 国王杯準優勝
-      - - 2024〜26
-        - メキシコ代表
-        - ゴールドカップ優勝・W杯16強
-      highlight_row: 0
-  - text: エジプト代表は、自国開催のアフリカの大陸大会で16強止まり。
-    card:
-      type: table
-      title: 日本代表のあと（2015〜2026）
-      columns: *id003
-      rows: *id005
-      highlight_row: 1
-  - text: メキシコのモンテレイでは、北中米カリブ海のクラブ王者になりました。
-    card:
-      type: table
-      title: 日本代表のあと（2015〜2026）
-      columns: *id003
-      rows: *id005
-      highlight_row: 3
-  - text: マジョルカでは、2024年に国王杯の決勝まで進んでいます。
-    card:
-      type: table
-      title: 日本代表のあと（2015〜2026）
-      columns: *id003
-      rows: *id005
-      highlight_row: 4
-  - text: 2024年からの3度目のメキシコ代表では、ゴールドカップなど2つの大会を制しました。
-    card:
-      type: table
-      title: 日本代表のあと（2015〜2026）
-      columns: *id003
-      rows: *id005
-      highlight_row: 5
-  - text: 自国で開いた今年のW杯は、グループを3連勝で抜け、16強でイングランドに敗れました。
-    card:
-      type: table
-      title: 日本代表のあと（2015〜2026）
-      columns: *id003
-      rows: *id005
-      highlight_row: 5
-  - text: バレンシアは、スペインで率いる7つ目のクラブになります。
-    card:
-      type: table
-      title: 日本代表のあと（2015〜2026）
-      columns: *id003
-      rows: *id005
   sources:
   - https://en.wikipedia.org/wiki/Javier_Aguirre
   - https://www.transfermarkt.com/javier-aguirre/profil/trainer/1548
-  - https://www.espn.com/soccer/story/_/id/50012135/former-mexico-coach-aguirre-takes-struggling-valencia
 - id: japan
   main: true
   heading: 日本代表の10試合
   tier: 報道
   official: true
-  telop: 2014〜15年、10試合で6勝2分け2敗。アジアカップはベスト8
+  telop: 2014〜15年、6勝2分け2敗。アジアカップはベスト8
   narrator: キャスター
   card:
     type: table
     title: アギーレ監督の日本代表 10試合
-    columns: &id006
+    columns: &id005
     - 日付
     - 相手
     - 結果
-    rows: &id007
+    rows: &id006
     - - 2014年9月5日
       - ウルグアイ
       - 0-2 負け
@@ -344,107 +273,211 @@ sections:
       - UAE（アジア杯 準々決勝）
       - 1-1 PK4-5
   say:
-  - text: 2014年から日本代表を率いた、メキシコ人のアギーレ監督。
+  - text: 日本代表を率いたアギーレが、9月23日にバレンシアの監督に就きました。
     image: assets/images/20261002_aguirre/01_w.jpg
     short_only: true
-  - text: 前任のザッケローニ監督がブラジルW杯のあとに退き、2014年の夏に就任しました。
+  - text: 日本代表には2014年の夏、ブラジルW杯のあとに就きました。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
   - text: 初めての試合は9月の札幌。ウルグアイに0-2で敗れます。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 0
   - text: 続くベネズエラ戦は2-2。初勝利は3試合目、ジャマイカに1-0でした。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 2
   - text: 10月にはシンガポールでブラジルと戦い、0-4。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 3
   - text: 11月はホンジュラスに6-0、オーストラリアに2-1と連勝しました。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 5
   - text: そして2015年1月、オーストラリアで開かれたアジアカップ。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 6
   - text: パレスチナ、イラク、ヨルダンに勝ち、グループは3連勝です。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 8
   - text: 3試合で7点を取り、1点も許しませんでした。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 8
   - text: ところが準々決勝、アラブ首長国連邦との試合は1-1。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 9
   - text: PK戦は4-5。ベスト8で敗退しました。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
       highlight_row: 9
-  - text: 日本での成績は6勝2分け2敗。PK戦の敗退は引き分けに数えます。
+  - text: 翌月の2月3日、日本サッカー協会はアギーレとの契約を解除します。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
-  - text: 取った点は19、許した点は10でした。
+      columns: *id005
+      rows: *id006
+  - text: 理由は、サラゴサ時代の試合をめぐる八百長の疑い。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
-  - text: 2015年2月3日、日本サッカー協会はアギーレとの契約の解除を発表します。
+      columns: *id005
+      rows: *id006
+  - text: スペインで告発が受理された段階での解除でした。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
-  - text: サラゴサ時代の試合をめぐる八百長の疑いで、スペインで告発が受理されたためでした。
+      columns: *id005
+      rows: *id006
+  - text: 2019年、スペインの裁判所はこの試合で訴えられた選手36人を無罪としました。
     card:
       type: table
       title: アギーレ監督の日本代表 10試合
-      columns: *id006
-      rows: *id007
+      columns: *id005
+      rows: *id006
+  - text: アギーレ本人のその後の結末は、確かめられていません。
+    card:
+      type: table
+      title: アギーレ監督の日本代表 10試合
+      columns: *id005
+      rows: *id006
+  - text: 日本での成績は、6勝2分け2敗。PK戦の敗退は引き分けに数えています。
+    card:
+      type: table
+      title: アギーレ監督の日本代表 10試合
+      columns: *id005
+      rows: *id006
   sources:
   - https://en.wikipedia.org/wiki/Japan_national_football_team_results_(2010%E2%80%932019)
+  - https://www.sponichi.co.jp/soccer/news/2015/02/03/kiji/K20150203009745240.html
+  - https://blogs.wsj.com/japanrealtime/2015/02/03/japan-fires-soccer-coach-javier-aguirre/
+  - https://www.lasprovincias.es/deportes/juez-absuelve-futbolistas-20191209112512-nt.html
   - https://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%93%E3%82%A8%E3%83%AB%E3%83%BB%E3%82%A2%E3%82%AE%E3%83%BC%E3%83%AC
   - https://en.wikipedia.org/wiki/Javier_Aguirre
   - https://www.transfermarkt.com/javier-aguirre/profil/trainer/1548
+- id: after
+  heading: 日本代表のあと
+  tier: 報道
+  official: true
+  telop: 中東・アフリカ・メキシコ、そしてスペインの7つ目のクラブへ
+  narrator: 解説
+  card:
+    type: table
+    title: 日本代表のあと（2015〜2026）
+    columns: *id003
+    rows: &id007
+    - - 2015〜17
+      - アルワフダ（UAE）
+      - 国内のカップ戦で優勝
+    - - 2018〜19
+      - エジプト代表
+      - 自国開催のアフリカ杯で16強
+    - - 2019〜20
+      - レガネス
+      - 途中就任
+    - - 2020〜22
+      - モンテレイ
+      - 北中米カリブ海のクラブ王者
+    - - 2022〜24
+      - マジョルカ
+      - 途中就任・国王杯準優勝
+    - - 2024〜26
+      - メキシコ代表
+      - ネーションズリーグ優勝・W杯16強
+  say:
+  - text: 日本を離れたアギーレは、アラブ首長国連邦のアルワフダへ。
+    card:
+      type: table
+      title: 日本代表のあと（2015〜2026）
+      columns: *id003
+      rows: *id007
+      highlight_row: 0
+  - text: エジプト代表では、自国開催のアフリカの大陸大会で16強止まり。
+    card:
+      type: table
+      title: 日本代表のあと（2015〜2026）
+      columns: *id003
+      rows: *id007
+      highlight_row: 1
+  - text: メキシコのモンテレイでは、北中米カリブ海のクラブの大陸大会で優勝。
+    card:
+      type: table
+      title: 日本代表のあと（2015〜2026）
+      columns: *id003
+      rows: *id007
+      highlight_row: 3
+  - text: マジョルカでは、2024年に国王杯の決勝まで進んでいます。
+    card:
+      type: table
+      title: 日本代表のあと（2015〜2026）
+      columns: *id003
+      rows: *id007
+      highlight_row: 4
+  - text: 3度目のメキシコ代表では、北中米カリブ海のネーションズリーグも制しました。
+    card:
+      type: table
+      title: 日本代表のあと（2015〜2026）
+      columns: *id003
+      rows: *id007
+      highlight_row: 5
+  - text: アメリカ・カナダと共に開いた今年のW杯は、グループを3連勝。
+    card:
+      type: table
+      title: 日本代表のあと（2015〜2026）
+      columns: *id003
+      rows: *id007
+      highlight_row: 5
+  - text: 16強で、イングランドに敗れました。
+    card:
+      type: table
+      title: 日本代表のあと（2015〜2026）
+      columns: *id003
+      rows: *id007
+      highlight_row: 5
+  - text: バレンシアは、スペインで率いる7つ目のクラブになります。
+    card:
+      type: table
+      title: 日本代表のあと（2015〜2026）
+      columns: *id003
+      rows: *id007
+  sources:
+  - https://en.wikipedia.org/wiki/Javier_Aguirre
+  - https://www.transfermarkt.com/javier-aguirre/profil/trainer/1548
+  - https://www.espn.com/soccer/story/_/id/50012135/former-mexico-coach-aguirre-takes-struggling-valencia
 - id: valencia
   heading: バレンシアでの今
   tier: 報道
@@ -471,28 +504,29 @@ sections:
     - - 佐藤龍之介
       - 7試合中5試合に出場、先発4
   say:
-  - text: そしていま率いているのが、スペインのバレンシアです。
+  - text: 契約は今シーズンの終わりまで。もう1シーズン延ばせる選択肢つきです。
     card:
       type: table
       title: バレンシアでのアギーレ
       columns: *id008
       rows: *id009
+      highlight_row: 1
     image: assets/images/20261002_aguirre/01_w.jpg
-  - text: 就任は9月23日。契約は今シーズンの終わりまでです。
-    card:
-      type: table
-      title: バレンシアでのアギーレ
-      columns: *id008
-      rows: *id009
-      highlight_row: 0
-  - text: 前の監督は、開幕から5試合勝てずに解任されていました。
+  - text: 前の監督は、開幕から5試合勝てずに解任されました。
     card:
       type: table
       title: バレンシアでのアギーレ
       columns: *id008
       rows: *id009
       highlight_row: 2
-  - text: 引き継いだ時点で7試合を終え、1勝1分け5敗。20チーム中19位です。
+  - text: 続く2試合は、暫定のオスカル・サンチェス監督のもとで1勝1敗。
+    card:
+      type: table
+      title: バレンシアでのアギーレ
+      columns: *id008
+      rows: *id009
+      highlight_row: 2
+  - text: アギーレが引き継いだ時点で1勝1分け5敗、20チーム中19位です。
     card:
       type: table
       title: バレンシアでのアギーレ
@@ -506,7 +540,7 @@ sections:
       columns: *id008
       rows: *id009
       highlight_row: 3
-  - text: 代表の試合で中断しているため、アギーレはまだ1試合も指揮していません。
+  - text: 代表の試合で中断しているため、まだ1試合も指揮していません。
     card:
       type: table
       title: バレンシアでのアギーレ
@@ -544,6 +578,7 @@ sections:
   sources:
   - https://www.espn.com/soccer/story/_/id/50012135/former-mexico-coach-aguirre-takes-struggling-valencia
   - https://www.espn.com/soccer/team/schedule/_/id/94
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Valencia_CF_season
   - https://www.transfermarkt.com/ryunosuke-sato/profil/spieler/948169
   - https://www.transfermarkt.com/javier-aguirre/profil/trainer/1548
 - id: view
@@ -576,7 +611,7 @@ sections:
       - シーズン途中
       - 18位で降格
     - - マジョルカ（2022年）
-      - 残り9試合、降格圏まで勝ち点1
+      - 残り9試合、2部に落ちる順位まで勝ち点1
       - 残留
     - - バレンシア（2026年）
       - 19位、残り31試合
@@ -595,7 +630,7 @@ sections:
       title: 途中から引き受けた6回と、今回
       columns: *id010
       rows: *id011
-  - text: 2001年のメキシコ代表は、予選のグループ5位から本大会へ。
+  - text: 2001年のメキシコ代表は、予選で5位。出場圏の外から本大会へ届けました。
     card:
       type: table
       title: 途中から引き受けた6回と、今回
@@ -609,7 +644,7 @@ sections:
       columns: *id010
       rows: *id011
       highlight_row: 1
-  - text: スペインでは、サラゴサが残留。
+  - text: サラゴサは残留。ただ、その最終節が八百長の疑いを持たれた試合でした。
     card:
       type: table
       title: 途中から引き受けた6回と、今回
@@ -630,7 +665,7 @@ sections:
       columns: *id010
       rows: *id011
       highlight_row: 4
-  - text: マジョルカは残り9試合、降格圏まで勝ち点1の位置で引き受けました。
+  - text: マジョルカは残り9試合、2部に落ちる順位まで勝ち点1の位置でした。
     card:
       type: table
       title: 途中から引き受けた6回と、今回
@@ -644,7 +679,7 @@ sections:
       columns: *id010
       rows: *id011
       highlight_row: 5
-  - text: 6回のうち5回は、目標まで届いたことになります。
+  - text: 順位と出場で数えれば、6回のうち5回は目標まで届いたことになります。
     card:
       type: table
       title: 途中から引き受けた6回と、今回
@@ -664,14 +699,14 @@ sections:
       columns: *id010
       rows: *id011
       highlight_row: 6
-  - text: 19歳の佐藤にとっては、先発の座を新しい監督にもう一度見せる時期です。
+  - text: 19歳の佐藤にとっては、新しい監督の下でも先発に残れるかを示す時期です。
     card:
       type: table
       title: 途中から引き受けた6回と、今回
       columns: *id010
       rows: *id011
       highlight_row: 6
-  - text: 敵地での初陣で誰を並べるか。そこに最初の答えが出ます。
+  - text: 敵地での初陣で、佐藤が先発に並ぶか。最初の答えはそこで出ます。
     card:
       type: table
       title: 途中から引き受けた6回と、今回
