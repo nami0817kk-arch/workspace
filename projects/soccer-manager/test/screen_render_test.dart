@@ -55,6 +55,8 @@ void main() {
   const sizes = <String, Size>{
     '360x780': Size(360, 780),
     '320x568': Size(320, 568),
+    // iPad。掲載画像も出しているのに、この幅では一度も確かめていなかった。
+    '1032x1376': Size(1032, 1376),
   };
 
   for (final lang in const [AppLanguage.japanese, AppLanguage.english]) {
