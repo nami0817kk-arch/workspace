@@ -47,18 +47,21 @@ Apple / Google のアカウントもあなた個人（または法人）に紐�
     git -C <workspace> tag soccer-manager-v1.1.1 origin/master
     git -C <workspace> push origin soccer-manager-v1.1.1
 
-### ③ 手動実行でアップロードする ← **忘れやすい**
+### ③ タグなら、そのまま TestFlight まで上がる
 
-**タグだけでは TestFlight に上がらない。** アップロードするかどうかは
-`upload_to_testflight` の入力で決まり、既定はオフ。タグからの実行では
-入力を渡せないので、`Upload to TestFlight` が skipped になる。
+**2026-09-30 に直した。** それまでは、アップロードするかどうかが
+`upload_to_testflight` の入力だけで決まり（既定オフ）、タグからは入力を
+渡せないので `Upload to TestFlight` が skipped になっていた。
+**タグを押した後に「もう一度、今度はチェックを入れて手動実行」が必要**で、
+2026-09-26・09-27・09-30 の3回ともここで止まった。
 
-Actions → Build Soccer Manager (iOS Release) → Run workflow
+いまはタグ（`soccer-manager-v*`）で走ったときは常に上げる。②で終わり。
+
+**手動実行で上げたいときだけ**（タグを作らずに試す場合など）、
+Actions → Build Soccer Manager (iOS Release) → Run workflow で
 
 - ビルド番号の欄は**空のまま**（`pubspec.yaml` の値が使われる）
 - **`upload_to_testflight` にチェック**
-
-この2段構えは2回踏んでいる（2026-09-26 と 09-27）。
 
 ### ④ 処理を待つ
 
