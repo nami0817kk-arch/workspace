@@ -2858,5 +2858,29 @@
     "video_id": "E_J0tFOZ1WI",
     "at": "2026-09-29T00:37:55+00:00",
     "publish_at": "2026-09-29T02:00:00Z"
+  },
+  {
+    "build": "20260929_var",
+    "video_id": "E_J0tFOZ1WI",
+    "at": "2026-09-29T00:37:40+00:00",
+    "publish_at": "2026-09-29T02:00:00Z"
+  },
+  {
+    "build": "20260929_var_short",
+    "video_id": "GJ0gpyOIOLo",
+    "at": "2026-09-29T00:41:50+00:00",
+    "publish_at": "2026-09-29T02:30:00Z"
+  },
+  {
+    "build": "20260929_debut",
+    "video_id": "dmZdWNzJ44E",
+    "at": "2026-09-29T00:42:07+00:00",
+    "publish_at": "2026-09-29T03:00:00Z"
+  },
+  {
+    "build": "20260929_debut_short",
+    "video_id": "zjXPsJ_2dBM",
+    "at": "2026-09-29T00:42:28+00:00",
+    "publish_at": "2026-09-29T03:30:00Z"
   }
 ]

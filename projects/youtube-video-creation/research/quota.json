@@ -194,12 +194,13 @@
     "channels.update": 1
   },
   "2026-09-28": {
-    "channels.list": 5,
-    "playlistItems.list": 5,
-    "videos.insert": 3,
-    "thumbnails.set": 3,
-    "playlistItems.insert": 2,
-    "videos.list": 3,
-    "videos.update": 2
+    "channels.list": 8,
+    "playlistItems.list": 8,
+    "videos.insert": 6,
+    "thumbnails.set": 7,
+    "playlistItems.insert": 3,
+    "videos.list": 6,
+    "videos.update": 4,
+    "commentThreads.insert": 1
   }
 }
