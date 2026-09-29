@@ -1,8 +1,16 @@
-# キリアン・エムバペ（レアル・マドリード）とアーリング・ハーランド（マンチェスター・シティ）の比較。数字は Transfermarkt。
-# 顔写真は2枚並べる（thumbnail.photos）。どちらが上かは言い切らない（10月のシリーズの決まり）。
+# キリアン・エムバペ（レアル・マドリード）とアーリング・ハーランド（マンチェスター・シティ）の比較（有名選手の比較・初回）。
+# 雛形は `python tools/player_compare.py 342229 418560 --date 2026-10-02`（9/30 に取り直し。基礎DATA・今季は雛形と同じ値）。
+# 数字はすべて Transfermarkt（試合ごとの記録 performance-game・季の集計 performance-season・市場価値の推移）。数え方と控えは
+#   research/raw/20261002_compare_342229_418560_numbers.md
+# 同じ週の紹介の回（10/1 ハーランド scripts/20261001_player_418560.md、10/4 エムバペ scripts/20261004_player_342229.md）で
+# 言ったこと（陸上・ヘンク・食事・瞑想・ベルナベウの模型・寄付・W杯22点・膝・プレースタイル）は繰り返さない。
+# ここでは「2人を並べて初めて見える数字」だけ：PK抜き・同じ年齢の通算・アシスト・出場時間・市場価値の線の形。
+# どちらが上かは言い切らない（10月のシリーズの決まり）。本人の言葉は使っていない。
 date: 2026年10月02日
 slot: other_1
 format: news
+# 9/28 の covered.yaml の compare_342229_418560 は道具を試した draft の控え（投稿も承認もしていない）。本番として作り直すので follow_up。
+follow_up: true
 series: 有名選手の比較
 people:
 - キリアン・エムバペ
@@ -12,129 +20,273 @@ theme:
   league: england
   kind: other
   topic: キリアン・エムバペとアーリング・ハーランド
-  title: キリアン・エムバペとアーリング・ハーランド、数字で並べると何が違うのか
-  question: キリアン・エムバペとアーリング・ハーランドは、数字で並べると何が違うのか
-  takeaway: （2人の数字の違いを1文で。どちらが上かは言わない）
-short_title: キリアン・エムバペとアーリング・ハーランドを数字で
+  title: エムバペとハーランドを同じ26歳で並べる。点の数より開いていた差
+  question: エムバペとハーランドを同じ年齢で並べると、どこに違いがあるのか
+  takeaway: 26歳の誕生日までの得点は344対359で、クラブだけなら1点差。開いていたのはアシスト（164対74）と、約3,900分の出場時間
+  opening_image: assets/images/20261002_cmp_pair/01.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: エムバペとハーランド、PKを抜いた今季の数字
 thumbnail:
   line1: エムバペとハーランド
-  line2: 数字で並べると●●
+  line2: 26歳までの得点差は●●点
   tags:
   - レアル・マドリード
   - マンチェスター・シティ
-  photos: []
+  - 選手比較
+  note_red: 有名選手の比較
+  photos:
+  - assets/images/20261002_cmp_mbappe_face/01.jpg
+  - assets/images/20261002_cmp_haaland_face/01.jpg
   face_link: VS
 sections:
 - id: data
   heading: 2人の基礎DATA
   tier: 報道
-  telop: キリアン・エムバペとアーリング・ハーランド
+  telop: エムバペとハーランドの基礎DATA
   narrator: キャスター
   card:
     type: table
-    title: キリアン・エムバペ と アーリング・ハーランド
-    columns:
-    - 項目
-    - キリアン・エムバペ
-    - アーリング・ハーランド
+    title: エムバペ と ハーランド
+    columns: [項目, エムバペ, ハーランド]
     rows:
-    - - 所属
-      - レアル・マドリード
-      - マンチェスター・シティ
-    - - ポジション
-      - センターフォワード
-      - センターフォワード
-    - - 年齢
-      - 27歳
-      - 26歳
-    - - 身長
-      - 1.8m
-      - 1.95m
-    - - 利き足
-      - 右
-      - 左
-    - - 市場価値
-      - 2億ユーロ
-      - 2.2億ユーロ
+    - &d0 [所属, レアル・マドリード, マンチェスター・シティ]
+    - &d1 [ポジション, センターフォワード, センターフォワード]
+    - &d2 [生年月日, 1998年12月20日, 2000年7月21日]
+    - &d3 [身長, 1.78m, 1.95m]
+    - &d4 [利き足, 右, 左]
+    - &d5 [市場価値, 2億ユーロ, 2.2億ユーロ]
     source: Transfermarkt
   say:
-  - キリアン・エムバペは27歳、レアル・マドリード。
-  - アーリング・ハーランドは26歳、マンチェスター・シティ。
-  - 2人ともセンターフォワードです。
-  - 市場価値は2億ユーロと2.2億ユーロ。
-  sources: &id001
+  - text: レアル・マドリードのエムバペと、マンチェスター・シティのハーランド。
+    image: assets/images/20261002_cmp_pair/01.jpg
+    card: {type: table, title: エムバペ と ハーランド, columns: [項目, エムバペ, ハーランド], rows: [*d0, *d1, *d2, *d3, *d4, *d5], highlight_row: 0, source: Transfermarkt}
+  - text: 立つ位置は同じ、ゴール前の真ん中です。
+    card: {type: table, title: エムバペ と ハーランド, columns: [項目, エムバペ, ハーランド], rows: [*d0, *d1, *d2, *d3, *d4, *d5], highlight_row: 1, source: Transfermarkt}
+  - text: 生まれはエムバペが1年7か月早く、いまは27歳と26歳。
+    card: {type: table, title: エムバペ と ハーランド, columns: [項目, エムバペ, ハーランド], rows: [*d0, *d1, *d2, *d3, *d4, *d5], highlight_row: 2, source: Transfermarkt}
+  - text: 背の高さは17センチ違い、利き足も右と左で逆です。
+    card: {type: table, title: エムバペ と ハーランド, columns: [項目, エムバペ, ハーランド], rows: [*d0, *d1, *d2, *d3, *d4, *d5], highlight_row: 4, source: Transfermarkt}
+  - text: 推定の市場価値は、ハーランドが2000万ユーロ高い。
+    card: {type: table, title: エムバペ と ハーランド, columns: [項目, エムバペ, ハーランド], rows: [*d0, *d1, *d2, *d3, *d4, *d5], highlight_row: 5, source: Transfermarkt}
+  - この2人を、同じ物差しで数え直します。
+  sources: &tm
   - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
   - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
+  - https://www.transfermarkt.com/kylian-mbappe/leistungsdatendetails/spieler/342229
+  - https://www.transfermarkt.com/erling-haaland/leistungsdatendetails/spieler/418560
 - id: season
-  heading: 今季の数字
+  heading: PKを抜いて並べる
   tier: 報道
   main: true
-  telop: 今季ここまで
+  telop: 今季と去季を、PK抜きで
   narrator: 解説
   card:
     type: table
-    title: 今季ここまで
-    columns:
-    - 項目
-    - キリアン・エムバペ
-    - アーリング・ハーランド
+    title: 今季ここまで（代表戦を含む公式戦）
+    columns: [項目, エムバペ, ハーランド]
     rows:
-    - - 試合
-      - '9'
-      - '9'
-    - - 得点
-      - '9'
-      - '10'
-    - - アシスト
-      - '2'
-      - '0'
-    - - 出場時間
-      - 779分
-      - 773分
-    - - 90分あたり得点
-      - '1.04'
-      - '1.16'
+    - &s0 [試合, '9', '9']
+    - &s1 [出場時間, 779分, 773分]
+    - &s2 [得点, '9', '10']
+    - &s3 [うちPK, '1', '0']
+    - &s4 [PK抜きの得点, '8', '10']
+    - &s5 [PK抜き 90分あたり, '0.92', '1.16']
     source: Transfermarkt
   say:
-  - text: （前置き1行：キリアン・エムバペとアーリング・ハーランド、何を比べるのかを一言で）
+  - text: レアルとシティの点取り屋2人。まず今季を、PK抜きで並べます。
     short_only: true
-  - キリアン・エムバペは9試合で9得点2アシスト。
-  - アーリング・ハーランドは9試合で10得点0アシストです。
-  - （90分あたりの数字で、試合数の差をならして比べる1行）
-  sources: *id001
-- id: value
-  heading: 市場価値の歩み
+  - text: 今季はどちらも9試合。出場時間の差は6分しかありません。
+    image: assets/images/20261002_cmp_mbappe_w/01.jpg
+    card: {type: table, title: 今季ここまで（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 1, source: Transfermarkt}
+  - text: 得点は9と10。エムバペの9点には、ペナルティーキック、PKの1点が入っています。
+    card: {type: table, title: 今季ここまで（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 3, source: Transfermarkt}
+  - text: エムバペはPKを2本蹴って1本成功。ハーランドは今季、まだ蹴っていません。
+    card: {type: table, title: 今季ここまで（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 3, source: Transfermarkt}
+  - text: PKを抜くと8点と10点。差は2点に開きます。
+    card: {type: table, title: 今季ここまで（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 4, source: Transfermarkt}
+  - text: 90分あたりで比べると、0.92点と1.16点です。
+    card: {type: table, title: 今季ここまで（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 5, source: Transfermarkt}
+  - text: 昨シーズンを同じやり方で数えると、見え方が変わります。
+    card: &lcard
+      type: table
+      title: 昨シーズン 25/26（代表戦を含む公式戦）
+      columns: [項目, エムバペ, ハーランド]
+      rows:
+      - &l0 [試合, '56', '60']
+      - &l1 [得点, '53', '46']
+      - &l2 [うちPK, '13', '6']
+      - &l3 [PK抜きの得点, '40', '40']
+      source: Transfermarkt
+  - text: 総得点はエムバペが53、ハーランドが46。7点の差でした。
+    card: {type: table, title: 昨シーズン 25/26（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*l0, *l1, *l2, *l3], highlight_row: 1, source: Transfermarkt}
+  - text: そのうちPKが、エムバペは13点、ハーランドは6点。
+    card: {type: table, title: 昨シーズン 25/26（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*l0, *l1, *l2, *l3], highlight_row: 2, source: Transfermarkt}
+  - text: PKを抜くと40点と40点。ぴったり同じです。
+  - text: 7点の差は、PKで取った点の差だったことになります。
+    card: {type: table, title: 昨シーズン 25/26（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*l0, *l1, *l2, *l3], highlight_row: 2, source: Transfermarkt}
+    card: {type: table, title: 昨シーズン 25/26（代表戦を含む公式戦）, columns: [項目, エムバペ, ハーランド], rows: [*l0, *l1, *l2, *l3], highlight_row: 3, source: Transfermarkt}
+  sources: *tm
+- id: age
+  heading: 同じ年齢で並べる
   tier: 報道
-  telop: 最高額と、いま
+  telop: 誕生日の前日までの通算得点
+  narrator: 解説
+  card: &bcard
+    type: bars
+    title: 誕生日の前日までの通算得点
+    unit: 点
+    items:
+    - {label: エムバペ 20歳, value: 73}
+    - {label: ハーランド 20歳, value: 65}
+    - {label: エムバペ 23歳, value: 198}
+    - {label: ハーランド 23歳, value: 211}
+    - {label: エムバペ 26歳, value: 344}
+    - {label: ハーランド 26歳, value: 359}
+    note: クラブのトップチームとA代表の公式戦（Transfermarkt）
+  say:
+  - text: 次は年齢をそろえます。数えるのは、クラブの一軍と、年齢制限の無いA代表の公式戦。
+    image: assets/images/20261002_cmp_haaland_wide/01.jpg
+    card: *bcard
+  - 20歳、23歳、26歳。それぞれの誕生日を迎えるまでに、何点取っていたかです。
+  - text: 20歳の誕生日までは、エムバペ73点、ハーランド65点。
+    card:
+      type: bars
+      title: 誕生日の前日までの通算得点
+      unit: 点
+      items:
+      - {label: エムバペ 20歳, value: 73, highlight: true}
+      - {label: ハーランド 20歳, value: 65, highlight: true}
+      - {label: エムバペ 23歳, value: 198}
+      - {label: ハーランド 23歳, value: 211}
+      - {label: エムバペ 26歳, value: 344}
+      - {label: ハーランド 26歳, value: 359}
+      note: クラブのトップチームとA代表の公式戦（Transfermarkt）
+  - 先に走り出したのは、エムバペのほうでした。
+  - text: 23歳の誕生日までに順番が入れ替わり、ハーランド211点、エムバペ198点。
+    card:
+      type: bars
+      title: 誕生日の前日までの通算得点
+      unit: 点
+      items:
+      - {label: エムバペ 20歳, value: 73}
+      - {label: ハーランド 20歳, value: 65}
+      - {label: エムバペ 23歳, value: 198, highlight: true}
+      - {label: ハーランド 23歳, value: 211, highlight: true}
+      - {label: エムバペ 26歳, value: 344}
+      - {label: ハーランド 26歳, value: 359}
+      note: クラブのトップチームとA代表の公式戦（Transfermarkt）
+  - text: そして26歳の誕生日まで。エムバペ344点、ハーランド359点。差は15点です。
+    card:
+      type: bars
+      title: 誕生日の前日までの通算得点
+      unit: 点
+      items:
+      - {label: エムバペ 20歳, value: 73}
+      - {label: ハーランド 20歳, value: 65}
+      - {label: エムバペ 23歳, value: 198}
+      - {label: ハーランド 23歳, value: 211}
+      - {label: エムバペ 26歳, value: 344, highlight: true}
+      - {label: ハーランド 26歳, value: 359, highlight: true}
+      note: クラブのトップチームとA代表の公式戦（Transfermarkt）
+  - text: この15点の差は、ほとんどが代表の点です。
+  - text: A代表では、エムバペが86試合で48点、ハーランドは55試合で62点。
+  - text: クラブだけにすると、エムバペ296点、ハーランド297点。1点しか違いません。
+  - text: 26歳の時点を、もう少し細かく分けます。
+    card: &tcard
+      type: table
+      title: 26歳の誕生日の前日まで
+      columns: [項目, エムバペ, ハーランド]
+      rows:
+      - &t0 [試合, '477', '435']
+      - &t1 [出場時間, 36400分, 32483分]
+      - &t2 [得点, '344', '359']
+      - &t3 [うちPK, '44', '53']
+      - &t4 [PK抜きの得点, '300', '306']
+      - &t5 [アシスト, '164', '74']
+      source: Transfermarkt
+  - text: ハーランドは42試合少なく、およそ3900分短い時間で359点に届きました。
+    card: {type: table, title: 26歳の誕生日の前日まで, columns: [項目, エムバペ, ハーランド], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 1, source: Transfermarkt}
+  - text: PKはハーランドのほうが9点多く、抜くとエムバペ300点、ハーランド306点。
+    card: {type: table, title: 26歳の誕生日の前日まで, columns: [項目, エムバペ, ハーランド], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 4, source: Transfermarkt}
+  - text: いちばん開いているのはアシストです。エムバペ164、ハーランド74。
+    card: {type: table, title: 26歳の誕生日の前日まで, columns: [項目, エムバペ, ハーランド], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 5, source: Transfermarkt}
+  - text: 味方の点を、エムバペは90本多くお膳立てしてきました。
+    card: {type: table, title: 26歳の誕生日の前日まで, columns: [項目, エムバペ, ハーランド], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 5, source: Transfermarkt}
+  sources: *tm
+- id: how
+  heading: 点の取り方の中身
+  tier: 報道
+  telop: 取る日の取り方
   narrator: 解説
   card:
     type: table
-    title: 市場価値
-    columns:
-    - ''
-    - キリアン・エムバペ
-    - アーリング・ハーランド
+    title: 26歳の誕生日の前日まで（中身）
+    columns: [項目, エムバペ, ハーランド]
     rows:
-    - - 最高額
-      - 2億ユーロ
-      - 2.2億ユーロ
-    - - そのときの年齢
-      - 19歳
-      - 26歳
-    - - いま
-      - 2億ユーロ
-      - 2.2億ユーロ
+    - &h0 [点を取った試合の割合, 50%, 52%]
+    - &h1 [2点以上の試合, '81', '98']
+    - &h2 [1試合3点以上, '19', '28']
+    - &h3 [チャンピオンズリーグ, 79試合50点, 58試合57点]
     source: Transfermarkt
   say:
-  - キリアン・エムバペの最高額は19歳のとき。アーリング・ハーランドは26歳のときでした。
-  - （最高額と今の差を1行。金額は表に任せる）
-  sources: *id001
+  - text: 点の取り方も見ます。点を取った試合は、2人ともほぼ半分。
+    card: {type: table, title: 26歳の誕生日の前日まで（中身）, columns: [項目, エムバペ, ハーランド], rows: [*h0, *h1, *h2, *h3], highlight_row: 0, source: Transfermarkt}
+  - text: 違うのは、取る日の取り方です。2点以上の試合は81と98。
+    card: {type: table, title: 26歳の誕生日の前日まで（中身）, columns: [項目, エムバペ, ハーランド], rows: [*h0, *h1, *h2, *h3], highlight_row: 1, source: Transfermarkt}
+  - text: 1試合3点以上は19回と28回。ハーランドは、取る日にまとめて取ります。
+    card: {type: table, title: 26歳の誕生日の前日まで（中身）, columns: [項目, エムバペ, ハーランド], rows: [*h0, *h1, *h2, *h3], highlight_row: 2, source: Transfermarkt}
+  - text: 欧州のクラブの頂点を争うチャンピオンズリーグでは、エムバペが79試合で50点。
+    card: {type: table, title: 26歳の誕生日の前日まで（中身）, columns: [項目, エムバペ, ハーランド], rows: [*h0, *h1, *h2, *h3], highlight_row: 3, source: Transfermarkt}
+  - text: ハーランドは58試合で57点です。
+    card: {type: table, title: 26歳の誕生日の前日まで（中身）, columns: [項目, エムバペ, ハーランド], rows: [*h0, *h1, *h2, *h3], highlight_row: 3, source: Transfermarkt}
+  sources: *tm
+- id: value
+  heading: 市場価値の線
+  tier: 報道
+  telop: 最高額と、そのときの年齢
+  narrator: 解説
+  card:
+    type: table
+    title: 市場価値の歩み
+    columns: ['', エムバペ, ハーランド]
+    rows:
+    - &v0 [1億ユーロに届いた年齢, 19歳, 20歳]
+    - &v1 [最高額, 2億ユーロ, 2.2億ユーロ]
+    - &v2 [最高額が初めて付いた年齢, 19歳, 26歳]
+    - &v3 [2億に届いたあとの底, 1.6億ユーロ, 1.8億ユーロ]
+    source: Transfermarkt
+  say:
+  - text: 推定の市場価値の線も重ねます。1億ユーロに届いたのは、19歳と20歳。
+    image: assets/images/20261002_cmp_haaland_face/01.jpg
+    card: {type: table, title: 市場価値の歩み, columns: ['', エムバペ, ハーランド], rows: [*v0, *v1, *v2, *v3], highlight_row: 0, source: Transfermarkt}
+  - ここまでは、ほぼ同じ速さでした。
+  - text: エムバペは19歳の冬に2億ユーロへ。いまも、そこが天井です。
+    card: {type: table, title: 市場価値の歩み, columns: ['', エムバペ, ハーランド], rows: [*v0, *v1, *v2, *v3], highlight_row: 2, source: Transfermarkt}
+  - text: ハーランドの最高額は、26歳のこの夏。いまが、いちばん高い値です。
+    card: {type: table, title: 市場価値の歩み, columns: ['', エムバペ, ハーランド], rows: [*v0, *v1, *v2, *v3], highlight_row: 1, source: Transfermarkt}
+  - text: エムバペは2億に届いたあと、1.6億まで、4000万ユーロ下げた時期が2度ありました。
+    card: {type: table, title: 市場価値の歩み, columns: ['', エムバペ, ハーランド], rows: [*v0, *v1, *v2, *v3], highlight_row: 3, source: Transfermarkt}
+  - text: ハーランドの下げ幅は、いちばん大きいときでもその半分まで。
+    card: {type: table, title: 市場価値の歩み, columns: ['', エムバペ, ハーランド], rows: [*v0, *v1, *v2, *v3], highlight_row: 3, source: Transfermarkt}
+  - 早く頂点に着いた線と、いま頂点にいる線。形がまるで違います。
+  sources:
+  - https://www.transfermarkt.com/kylian-mbappe/marktwertverlauf/spieler/342229
+  - https://www.transfermarkt.com/erling-haaland/marktwertverlauf/spieler/418560
 - id: view
   heading: 見立て
   tier: 背景
   viewpoint: true
   narrator: 解説
-  telop: 数字の違いが示すもの
+  telop: 並べて見える、点の取り方の違い
   say:
-  - （エムバペとハーランドで何が違うのか。上下は言わず、数字の差を見立てに）
-  sources: *id001
+  - text: 並べて開いていたのは、点の数ではなく、アシストと出場時間でした。
+    image: assets/images/20261002_cmp_pair/01.jpg
+  - ハーランドは、エムバペより少ない出場で、ほぼ同じ数の点に届いています。
+  - エムバペは19歳で値段の天井に届き、得点の半分近い数のアシストを添えてきました。
+  - どちらを重く見るかで、評価は入れ替わります。数字はその両方を示しています。
+  - 次の区切りは、ハーランドの27歳の誕生日、来年の7月21日。
+  - 比べる相手は、エムバペが27歳の誕生日までに積んだ410点。
+  - ハーランドは、26歳までの数に今季の10点を足して、いま369点。
+  - あと41点で並びます。ハーランドの昨年10月から今年7月までは43点。
+  - ただしそのうち7点はワールドカップの点で、来年の夏にワールドカップはありません。
+  sources: *tm

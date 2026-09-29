@@ -1,0 +1,282 @@
+# 5大リーグの得点王レース（2026-10-01）。数字は FotMob（research/scorers/2026-10-01.json）。
+# 先週比は 9/28 の控えと比べて全員「→」。代表の試合でリーグ戦が止まっていた（鈴木唯人の最後のリーグ戦は 9/19、そのあと 9/24・9/28 は代表）。
+# → 雛形の5リーグの表の代わりに「PKを抜き・90分あたり」で5リーグを1つに並べ直す回にした（今週の1つ＝日本人：鈴木唯人）。
+# 自分で数えたこと（控えの JSON から。得点ランキングに名前のある選手のうち、出場270分以上）:
+#   PK抜き90分あたり 1 マレン1.57 / 2 ラフィーニャ1.46 / 3 ザビリ1.40 / 4 カメージョ1.34 / 5 エブヌータリブ1.28 /
+#   6 オリーズ1.19 / 7 鈴木唯人1.11・ラウタロ1.11（どちらも323分4点）/ 9 ハーランド1.00・ティーツ1.00
+#   鈴木唯人 323分÷4点＝80.75分に1点（「81分に1点」と読む）
+# 鈴木唯人の試合ごと（FotMob 選手ページの recentMatches）: 8/30 ブレーメン(H)4-1 3点80分 / 9/5 パーダーボルン(A)1-0 0点82分 /
+#   9/12 ボルシアMG(H)5-0 0点78分 / 9/19 フランクフルト(A)2-2 1点83分。開幕戦を除くと243分で1点＝0.37。
+#   シーズンの数字（FotMob）: シュート8・枠内5・xG 2.61（PK抜きも2.61）。ポジションは主にトップ下。
+# マレン（ローマ）: 8/24 フィオレンティーナ 3点 / 8/31 レッチェ 2点 / 9/5 アタランタ 0 / 9/14 トリノ 1 / 9/19 インテル 0。
+# xG（PK抜き）とシュート（FotMob、リーグ戦）: マレン4.61・20本 / ラフィーニャ6.48・25本 / ハーランド4.43・20本 / ラウタロ4.72・22本。
+# 日本人: 鈴木唯人（ブンデス1位タイ）、上田綺世（リーグ・アン14位タイ、2点194分）、町野修斗（ブンデス、1点＝PK、51分）。
+# 同じ日の月間まとめ（20261001_monthly）が5リーグの得点首位の表を持つので、こちらは首位だけの表にしない（試合数の列で見せる）。
+date: 2026年10月01日
+slot: other_1
+format: news
+series: 5大リーグの得点王レース
+people:
+- 鈴木唯人
+theme:
+  id: scorers_1001
+  league: germany
+  league_name: 欧州5大リーグ
+  kind: other
+  topic: フライブルク
+  title: 鈴木唯人、PKを抜き90分あたりで並べ直すと5大リーグで何番目か
+  question: 鈴木唯人の4点は、PKを抜いて90分あたりに直すと、5大リーグの中でどこにいるのか
+  takeaway: PKを抜いて90分あたりで並べると、鈴木唯人は5大リーグで7位タイの1.11点で、ハーランドの1.00点より上にいる。ただし4点のうち3点は開幕戦の1試合で、シュートは4試合で8本・xGは2.61。リーグ戦が再開してからシュートの本数が増えるかが、この位置に残れるかの目安になる
+  opening_image: assets/images/20261001_scorers/02_w.jpg
+short_title: 鈴木唯人、PK抜き90分あたりで5大リーグ何番目
+thumbnail:
+  photo: assets/images/20261001_scorers/02_w.jpg
+  line1: 鈴木唯人 90分あたり
+  line2: PK抜きで5大リーグ●位タイ
+  crests:
+  - フライブルク
+  tags:
+  - 得点王
+sections:
+- id: pause
+  heading: 試合の数が違う5つの表
+  tier: 報道
+  telop: 得点ランキングは先週から動かず。リーグ戦が止まっていた
+  narrator: キャスター
+  card: &leaders
+    type: table
+    title: 5大リーグ 得点ランキングの首位（10月1日）
+    columns: [リーグ, 試合, 首位, 得点]
+    rows:
+    - &ld0 [プレミアリーグ, '5', ハーランド, '5']
+    - &ld1 [ラ・リーガ, '7', ラフィーニャ, '12']
+    - &ld2 [ブンデスリーガ, '4', 鈴木唯人ら5人, '4']
+    - &ld3 [セリエA, '5', マレン, '6']
+    - &ld4 [リーグ・アン, '5', フェラン・トーレスら2人, '4']
+    source: FotMob
+  say:
+  - 5大リーグの得点ランキングは、先週から1人も動いていません。
+  - 代表の試合が続き、リーグ戦が止まっていたためです。
+  - text: いちばん多い12点は、ラ・リーガのラフィーニャ。
+    card: {type: table, title: 5大リーグ 得点ランキングの首位（10月1日）, columns: [リーグ, 試合, 首位, 得点], rows: [*ld0, *ld1, *ld2, *ld3, *ld4], source: FotMob, highlight_row: 1}
+  - text: ただ、ラ・リーガは7試合、ブンデスリーガはまだ4試合です。
+    card: {type: table, title: 5大リーグ 得点ランキングの首位（10月1日）, columns: [リーグ, 試合, 首位, 得点], rows: [*ld0, *ld1, *ld2, *ld3, *ld4], source: FotMob, highlight_row: 2}
+  - text: そのブンデスリーガは4点で5人が並び、その1人が鈴木唯人。
+    card: {type: table, title: 5大リーグ 得点ランキングの首位（10月1日）, columns: [リーグ, 試合, 首位, 得点], rows: [*ld0, *ld1, *ld2, *ld3, *ld4], source: FotMob, highlight_row: 2}
+  - voice: ネット民
+    text: 鈴木選手の決定力すごいねー
+  - text: 試合の数も、出た時間も違う点数は、そのままでは比べられません。
+    card: {type: table, title: 5大リーグ 得点ランキングの首位（10月1日）, columns: [リーグ, 試合, 首位, 得点], rows: [*ld0, *ld1, *ld2, *ld3, *ld4], source: FotMob}
+  sources:
+  - https://www.fotmob.com/leagues/47/stats
+  - https://www.fotmob.com/leagues/87/stats
+  - https://www.fotmob.com/leagues/54/stats
+  - https://www.fotmob.com/leagues/55/stats
+  - https://www.fotmob.com/leagues/53/stats
+  - https://www.laliga.com/en-GB/stats/laliga-easports/scorers
+  - https://www.bundesliga.com/en/bundesliga/stats/players/goals
+  - https://footballnet.2chblog.jp/archives/60062179.html
+- id: rule
+  heading: 物差しを2つ足す
+  tier: 報道
+  telop: PKで決めた点を引き、出た時間で割る
+  narrator: 解説
+  card: &pk
+    type: table
+    title: PKを引くと
+    columns: [選手, クラブ, 得点, PK, PK抜き]
+    rows:
+    - &pk0 [ラフィーニャ, バルセロナ, '12', '3', '9']
+    - &pk2 [フロリアン・トヴァン, ランス, '3', '3', '0']
+    - &pk3 [町野修斗, ボルシアMG, '1', '1', '0']
+    source: FotMob
+  say:
+  - そこで、物差しを2つ足します。1つ目は、PKで決めた点を引くことです。
+  - PKは蹴る人がチームで決まっていて、流れの中で取る点とは別物です。
+  - text: ラフィーニャの12点のうち、3点はPK。引くと9点になります。
+    card: {type: table, title: PKを引くと, columns: [選手, クラブ, 得点, PK, PK抜き], rows: [*pk0, *pk2, *pk3], source: FotMob, highlight_row: 0}
+  - text: ランスのトヴァンは、3点すべてがPKでした。
+    card: {type: table, title: PKを引くと, columns: [選手, クラブ, 得点, PK, PK抜き], rows: [*pk0, *pk2, *pk3], source: FotMob, highlight_row: 1}
+  - text: ボルシアMGの町野修斗も、ここまでの1点はPKです。
+    card: {type: table, title: PKを引くと, columns: [選手, クラブ, 得点, PK, PK抜き], rows: [*pk0, *pk2, *pk3], source: FotMob, highlight_row: 2}
+  - 鈴木唯人の4点は、すべて流れの中から取った点。引くものはありません。
+  - 2つ目は、出た時間で割って、1試合まるごと出たら何点になるかに直すことです。
+  - text: ただし、出場が270分、3試合ぶんに届かない選手は外します。
+    card: &short_time {type: table, title: 出場が270分に届かない例, columns: [選手, クラブ, 出場, 得点, 90分あたり], rows: [[ディエゴ・モレイラ, ミラン, 127分, '3', '2.13'], [上田綺世, リール, 194分, '2', '0.93']], source: FotMob}
+  - text: ミランのディエゴ・モレイラは、127分で3点。90分あたりに直すと2.13点です。
+    card: {type: table, title: 出場が270分に届かない例, columns: [選手, クラブ, 出場, 得点, 90分あたり], rows: [[ディエゴ・モレイラ, ミラン, 127分, '3', '2.13'], [上田綺世, リール, 194分, '2', '0.93']], source: FotMob, highlight_row: 0}
+  - 短い時間の数字は、1点入るだけで大きく跳ねます。
+  - text: リールの上田綺世も、194分で2点。この線にはまだ届いていません。
+    card: {type: table, title: 出場が270分に届かない例, columns: [選手, クラブ, 出場, 得点, 90分あたり], rows: [[ディエゴ・モレイラ, ミラン, 127分, '3', '2.13'], [上田綺世, リール, 194分, '2', '0.93']], source: FotMob, highlight_row: 1}
+  sources:
+  - https://www.fotmob.com/leagues/87/stats
+  - https://www.fotmob.com/leagues/54/stats
+  - https://www.fotmob.com/leagues/55/stats
+  - https://www.fotmob.com/leagues/53/stats
+  - https://www.laliga.com/en-GB/stats/laliga-easports/scorers
+- id: bundes
+  heading: 4点で並ぶ5人
+  tier: 確定
+  official: true
+  telop: ブンデスリーガ 4点の5人を出場時間で並べる
+  narrator: キャスター
+  card: &bl
+    type: table
+    title: ブンデスリーガ 4点の5人
+    columns: [選手, クラブ, 出場, 90分あたり]
+    rows:
+    - &bl0 [パトリック・シック, レバークーゼン, 261分, '1.38']
+    - &bl1 [ユネス・エブヌータリブ, フランクフルト, 281分, '1.28']
+    - &bl2 [ミカエル・オリーズ, バイエルン, 303分, '1.19']
+    - &bl3 [鈴木唯人, フライブルク, 323分, '1.11']
+    - &bl4 [フィリップ・ティーツ, マインツ, 360分, '1.00']
+    source: FotMob
+  say:
+  - まず、4点で並ぶブンデスリーガの5人を、出た時間の短い順に並べます。
+  - text: いちばん早く4点に届いたのは、レバークーゼンのシック。261分です。
+    card: {type: table, title: ブンデスリーガ 4点の5人, columns: [選手, クラブ, 出場, 90分あたり], rows: [*bl0, *bl1, *bl2, *bl3, *bl4], source: FotMob, highlight_row: 0}
+  - text: ただ、3試合ぶんの線にわずかに足りず、このあとの表には入りません。
+    card: {type: table, title: ブンデスリーガ 4点の5人, columns: [選手, クラブ, 出場, 90分あたり], rows: [*bl0, *bl1, *bl2, *bl3, *bl4], source: FotMob, highlight_row: 0}
+  - text: 鈴木唯人は323分で、5人の中では4番目です。
+    card: {type: table, title: ブンデスリーガ 4点の5人, columns: [選手, クラブ, 出場, 90分あたり], rows: [*bl0, *bl1, *bl2, *bl3, *bl4], source: FotMob, highlight_row: 3}
+  - text: ほかの4人も、PKで決めた点はありません。
+    card: {type: table, title: ブンデスリーガ 4点の5人, columns: [選手, クラブ, 出場, 90分あたり], rows: [*bl0, *bl1, *bl2, *bl3, *bl4], source: FotMob}
+  sources:
+  - https://www.fotmob.com/leagues/54/stats
+  - https://www.bundesliga.com/en/bundesliga/stats/players/goals
+- id: cross
+  heading: 5リーグを1つの表に
+  tier: 報道
+  main: true
+  telop: PK抜き・90分あたり 5大リーグの上位（出場270分以上）
+  narrator: 解説
+  card: &cr
+    type: table
+    title: PK抜き 90分あたりの得点（5大リーグ）
+    columns: [順位, 選手, リーグ, 90分あたり]
+    rows:
+    - &cr0 ['1', ドニエル・マレン, セリエA, '1.57']
+    - &cr1 ['2', ラフィーニャ, ラ・リーガ, '1.46']
+    - &cr2 ['3', ヤシル・ザビリ, ラ・リーガ, '1.40']
+    - &cr3 ['4', セルヒオ・カメージョ, ラ・リーガ, '1.34']
+    - &cr4 ['5', ユネス・エブヌータリブ, ブンデスリーガ, '1.28']
+    - &cr5 ['6', ミカエル・オリーズ, ブンデスリーガ, '1.19']
+    - &cr6 ['7', 鈴木唯人, ブンデスリーガ, '1.11']
+    - &cr7 ['7', ラウタロ・マルティネス, セリエA, '1.11']
+    - &cr8 ['9', アーリング・ハーランド, プレミアリーグ, '1.00']
+    - &cr9 ['9', フィリップ・ティーツ, ブンデスリーガ, '1.00']
+    source: FotMob の数字から計算
+  say:
+  - text: フライブルクの鈴木唯人は4点。12点のラフィーニャの3分の1ですが、PKを除き90分あたりに直すと。
+    short_only: true
+  - では、5つのリーグを1つの表にまとめます。
+  - text: トップはローマのマレン。1.57点です。
+    card: {type: table, title: PK抜き 90分あたりの得点（5大リーグ）, columns: [順位, 選手, リーグ, 90分あたり], rows: [*cr0, *cr1, *cr2, *cr3, *cr4, *cr5, *cr6, *cr7, *cr8, *cr9], source: FotMob の数字から計算, highlight_row: 0}
+  - text: ラフィーニャは、PKを抜いても2番目。1.46点です。
+    card: {type: table, title: PK抜き 90分あたりの得点（5大リーグ）, columns: [順位, 選手, リーグ, 90分あたり], rows: [*cr0, *cr1, *cr2, *cr3, *cr4, *cr5, *cr6, *cr7, *cr8, *cr9], source: FotMob の数字から計算, highlight_row: 1}
+  - text: 3番目と4番目も、ラ・リーガのザビリとカメージョ。
+    card: {type: table, title: PK抜き 90分あたりの得点（5大リーグ）, columns: [順位, 選手, リーグ, 90分あたり], rows: [*cr0, *cr1, *cr2, *cr3, *cr4, *cr5, *cr6, *cr7, *cr8, *cr9], source: FotMob の数字から計算, highlight_row: 2}
+  - text: そして鈴木唯人は1.11点。5大リーグで7位タイに入りました。
+    card: {type: table, title: PK抜き 90分あたりの得点（5大リーグ）, columns: [順位, 選手, リーグ, 90分あたり], rows: [*cr0, *cr1, *cr2, *cr3, *cr4, *cr5, *cr6, *cr7, *cr8, *cr9], source: FotMob の数字から計算, highlight_row: 6}
+  - text: 出た時間を4点で割ると、81分に1点。鈴木唯人が点を取っているペースです。
+    card: {type: table, title: PK抜き 90分あたりの得点（5大リーグ）, columns: [順位, 選手, リーグ, 90分あたり], rows: [*cr0, *cr1, *cr2, *cr3, *cr4, *cr5, *cr6, *cr7, *cr8, *cr9], source: FotMob の数字から計算, highlight_row: 6}
+  - text: 同じ1.11点に、インテルのラウタロ・マルティネスが並びます。
+    card: {type: table, title: PK抜き 90分あたりの得点（5大リーグ）, columns: [順位, 選手, リーグ, 90分あたり], rows: [*cr0, *cr1, *cr2, *cr3, *cr4, *cr5, *cr6, *cr7, *cr8, *cr9], source: FotMob の数字から計算, highlight_row: 7}
+  - text: プレミアリーグのハーランドは1.00点。マインツのティーツと並ぶ9位タイです。
+    card: {type: table, title: PK抜き 90分あたりの得点（5大リーグ）, columns: [順位, 選手, リーグ, 90分あたり], rows: [*cr0, *cr1, *cr2, *cr3, *cr4, *cr5, *cr6, *cr7, *cr8, *cr9], source: FotMob の数字から計算, highlight_row: 8}
+  sources:
+  - https://www.fotmob.com/leagues/47/stats
+  - https://www.fotmob.com/leagues/87/stats
+  - https://www.fotmob.com/leagues/54/stats
+  - https://www.fotmob.com/leagues/55/stats
+  - https://www.fotmob.com/leagues/53/stats
+- id: inside
+  heading: 4点のうち3点は開幕戦
+  tier: 報道
+  telop: 鈴木唯人の4点を試合ごとに分ける
+  narrator: キャスター
+  card: &gm
+    type: table
+    title: 鈴木唯人 ブンデスリーガの4試合
+    columns: [日付, 相手, 結果, 得点, 出場]
+    rows:
+    - &gm0 [8月30日, ブレーメン, 4-1 勝ち, '3', 80分]
+    - &gm1 [9月5日, パーダーボルン, 1-0 勝ち, '0', 82分]
+    - &gm2 [9月12日, ボルシアMG, 5-0 勝ち, '0', 78分]
+    - &gm3 [9月19日, フランクフルト, 2-2 引き分け, '1', 83分]
+    source: FotMob
+  say:
+  - text: ただ、鈴木唯人の4点を試合ごとに分けると、偏りが見えてきます。
+    image: assets/images/20261001_scorers/01_w.jpg
+  - text: 8月30日、開幕戦のブレーメン戦で3点。ハットトリックでした。
+    card: {type: table, title: 鈴木唯人 ブンデスリーガの4試合, columns: [日付, 相手, 結果, 得点, 出場], rows: [*gm0, *gm1, *gm2, *gm3], source: FotMob, highlight_row: 0}
+  - text: 続く2試合は0点。4点目は、9月19日のフランクフルト戦。
+    card: {type: table, title: 鈴木唯人 ブンデスリーガの4試合, columns: [日付, 相手, 結果, 得点, 出場], rows: [*gm0, *gm1, *gm2, *gm3], source: FotMob, highlight_row: 3}
+  - text: 開幕戦を除くと、3試合243分で1点。90分あたりは0.37点です。
+    card: {type: table, title: 鈴木唯人 ブンデスリーガの4試合, columns: [日付, 相手, 結果, 得点, 出場], rows: [*gm0, *gm1, *gm2, *gm3], source: FotMob}
+  - text: 表のトップにいた、ローマのマレンも同じ形。
+    card: &ml {type: table, title: マレン セリエAの5試合, columns: [日付, 相手, 得点], rows: [[8月24日, フィオレンティーナ, '3'], [8月31日, レッチェ, '2'], [9月5日, アタランタ, '0'], [9月14日, トリノ, '1'], [9月19日, インテル, '0']], source: FotMob}
+  - text: 開幕戦で3点、2試合目で2点。6点のうち5点を、最初の2試合で取りました。
+    card: {type: table, title: マレン セリエAの5試合, columns: [日付, 相手, 得点], rows: [[8月24日, フィオレンティーナ, '3'], [8月31日, レッチェ, '2'], [9月5日, アタランタ, '0'], [9月14日, トリノ, '1'], [9月19日, インテル, '0']], source: FotMob, highlight_row: 1}
+  - シーズンの序盤は、1試合の大量点が、表の上のほうを作ります。
+  sources:
+  - https://www.fotmob.com/players/1134467/yuito-suzuki
+  - https://www.fotmob.com/players/660301/donyell-malen
+- id: view
+  heading: 残れるかはシュートの数
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: リーグ戦の再開後に見るのは、シュートの本数
+  card: &xg
+    type: table
+    title: PK抜きの得点とxG（リーグ戦）
+    columns: [選手, 得点, xG, 1試合のシュート]
+    rows:
+    - &xg0 [鈴木唯人, '4', '2.61', 2.0本]
+    - &xg1 [ドニエル・マレン, '6', '4.61', 4.0本]
+    - &xg2 [ラフィーニャ, '9', '6.48', 3.6本]
+    - &xg3 [アーリング・ハーランド, '5', '4.43', 4.0本]
+    - &xg4 [ラウタロ・マルティネス, '4', '4.72', 5.5本]
+    source: FotMob
+  say:
+  - では、鈴木唯人はこの位置に残れるのか。見るのはシュートです。
+  - xG、ゴール期待値は、シュート1本ごとの入る確率を足した数字です。
+  - 確率は、打った場所や体勢から出します。
+  - text: 鈴木唯人のxGは2.61。実際は4点なので、1.39点上回っています。
+    card: {type: table, title: PK抜きの得点とxG（リーグ戦）, columns: [選手, 得点, xG, 1試合のシュート], rows: [*xg0, *xg1, *xg2, *xg3, *xg4], source: FotMob, highlight_row: 0}
+  - text: シュートは4試合で8本。1試合2本のペースです。
+    card: {type: table, title: PK抜きの得点とxG（リーグ戦）, columns: [選手, 得点, xG, 1試合のシュート], rows: [*xg0, *xg1, *xg2, *xg3, *xg4], source: FotMob, highlight_row: 0}
+  - text: ハーランドとマレンは1試合4本、ラウタロは5本を超えています。
+    card: {type: table, title: PK抜きの得点とxG（リーグ戦）, columns: [選手, 得点, xG, 1試合のシュート], rows: [*xg0, *xg1, *xg2, *xg3, *xg4], source: FotMob, highlight_row: 3}
+  - text: 鈴木唯人と並んでいたラウタロは逆で、xGより点が少ない側にいます。
+    card: {type: table, title: PK抜きの得点とxG（リーグ戦）, columns: [選手, 得点, xG, 1試合のシュート], rows: [*xg0, *xg1, *xg2, *xg3, *xg4], source: FotMob, highlight_row: 4}
+  - text: 鈴木唯人は、8本のうち4本を決めて、この位置にいます。
+    card: {type: table, title: PK抜きの得点とxG（リーグ戦）, columns: [選手, 得点, xG, 1試合のシュート], rows: [*xg0, *xg1, *xg2, *xg3, *xg4], source: FotMob, highlight_row: 0}
+  - リーグ戦が再開してから見るのは、1試合2本のシュートが増えるかどうかです。
+  - 増えなければ、90分あたりの数字は少しずつ下がっていくはずです。
+  sources:
+  - https://www.fotmob.com/players/1134467/yuito-suzuki
+  - https://www.fotmob.com/players/737066/erling-haaland
+  - https://www.fotmob.com/players/690230/lautaro-martinez
+  - https://www.fotmob.com/players/696679/raphinha
+  - https://www.fotmob.com/players/660301/donyell-malen
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「周りとの関係の中で点は取れてるが」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 正直、得点以外は微妙
+  - voice: ネット民
+    text: 周りとの関係の中で点は取れてるが
+    cont: true
+  - voice: ネット民
+    text: 鈴木自身の仕掛けとかで攻撃にスイッチ入れられる訳じゃないから
+    cont: true
+  - voice: ネット民
+    text: 周りの怪我なり離脱がきっかけで通用しなくなるタイプ
+    cont: true
+  sources:
+  - https://footballnet.2chblog.jp/archives/60062179.html

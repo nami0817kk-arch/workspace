@@ -1,0 +1,249 @@
+# 遠藤航（リヴァプール）と、同じ中盤の底の5人。序列の理由を数字で（シリーズ「序列の理由」初回）。
+#
+# 数字はすべて Transfermarkt の試合記録（試合ごとの出場・先発・途中出場の分）と選手の記録（生年月日・契約・位置）。
+# 数え方と控えは research/raw/20261002_rank_endo_numbers.md。並び（4-2-3-1）は FotMob の直近の先発と TM の tactic が7試合同じ。
+#
+# 監督・本人の言葉は使っていない。今季のものは 9/13 のイラオラの言葉（Liverpool Echo）だけで、
+# 9/15・9/17b の回で2回引いている。同じ言葉を3回目に読まない。
+# 9/12・9/15・9/17・9/17b・9/21 の遠藤の回で言ったこと（CL登録外・マコネルが入った・カップ戦の10人入れ替え・
+# 左足のけがとW杯・「約束」の記事・移籍の報道・メンバー外の試合の中身）は繰り返さない。
+# 「放出」「移籍」は言わない。どちらが上かも言わない（数字の違いだけを並べる）。
+date: 2026年10月02日
+slot: other_1
+format: news
+series: 序列の理由
+people:
+- 遠藤航
+theme:
+  id: rank_endo
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リバプール
+  title: 遠藤航とリヴァプール中盤の5人。序列を分けた3つの数字とは
+  question: 遠藤航は、なぜリヴァプールの中盤で6人目になっているのか
+  takeaway: 中盤の底の6人で、今季まだ出場0分なのは遠藤だけ。ほかの5人の平均は23.4歳で遠藤は33歳、契約が今季で切れるのも1人だけ。昨季に遠藤が担った終盤の交代の枠は、今季は24歳と19歳に回っている
+  opening_image: assets/images/20261002_rank_endo/01.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: 遠藤航、終盤の出番はだれに回ったか
+thumbnail:
+  photo: assets/images/20261002_rank_endo/01.jpg
+  line1: 遠藤航とリヴァプールの中盤
+  line2: 6人で1人だけ ●●が今季まで
+  tags:
+  - リバプール
+  - 遠藤航
+  points: []
+sections:
+- id: six
+  heading: 中盤の底の6人
+  tier: 報道
+  telop: 今季の公式戦7試合の出場時間
+  narrator: キャスター
+  card:
+    type: table
+    title: リヴァプール 中盤の底の6人（今季7試合）
+    columns: [選手, 年齢, 先発, 出場時間]
+    rows:
+    - &s0 [ソボスライ, '25', '6', 559分]
+    - &s1 [マック・アリスター, '27', '5', 467分]
+    - &s2 [フラーフェンベルフ, '24', '2', 241分]
+    - &s3 [ニオニ, '19', '1', 100分]
+    - &s4 [マコネル, '22', '1', 62分]
+    - &s5 [遠藤航, '33', '0', 0分]
+    source: Transfermarkt
+  say:
+  - text: リヴァプールの今季は、ここまで公式戦7試合。
+    image: assets/images/20261002_rank_endo/01.jpg
+  - text: "守備ラインのすぐ前の、中盤の底。ここに入る6人で、出場が**0分**なのは遠藤航だけです。"
+    card: {type: table, title: リヴァプール 中盤の底の6人（今季7試合）, columns: [選手, 年齢, 先発, 出場時間], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 5, source: Transfermarkt}
+  - voice: ネット民
+    text: まずはカップ戦要員でしょうね。
+  - voice: ネット民
+    text: 後は稼働率が高い選手は怪我のリスクも高いので、
+    cont: true
+  - voice: ネット民
+    text: シーズン中盤から後半にかけてチャンスがあるかどうか…。
+    cont: true
+  - voice: ネット民
+    text: まずは自身のコンディションを上げていってほしいですね！
+    cont: true
+  - text: 6人の出場時間を、長い順に見ていきます。
+    card: {type: table, title: リヴァプール 中盤の底の6人（今季7試合）, columns: [選手, 年齢, 先発, 出場時間], rows: [*s0, *s1, *s2, *s3, *s4, *s5], source: Transfermarkt}
+  - text: 先頭はドミニク・ソボスライ。7試合すべてに出て559分です。
+    card: {type: table, title: リヴァプール 中盤の底の6人（今季7試合）, columns: [選手, 年齢, 先発, 出場時間], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 0, source: Transfermarkt}
+  - text: アレクシス・マック・アリスターが467分。先発は5試合です。
+    card: {type: table, title: リヴァプール 中盤の底の6人（今季7試合）, columns: [選手, 年齢, 先発, 出場時間], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 1, source: Transfermarkt}
+  - text: ライアン・フラーフェンベルフも7試合に出ていますが、先発は2つだけ。
+    card: {type: table, title: リヴァプール 中盤の底の6人（今季7試合）, columns: [選手, 年齢, 先発, 出場時間], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 2, source: Transfermarkt}
+  - text: 19歳のトレイ・ニオニは、4試合で100分。
+    card: {type: table, title: リヴァプール 中盤の底の6人（今季7試合）, columns: [選手, 年齢, 先発, 出場時間], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 3, source: Transfermarkt}
+  - text: 22歳のジェームズ・マコネルは、カップ戦で62分です。
+    card: {type: table, title: リヴァプール 中盤の底の6人（今季7試合）, columns: [選手, 年齢, 先発, 出場時間], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 4, source: Transfermarkt}
+  - text: 遠藤はベンチに5試合入りましたが、呼ばれる場面は来ていません。
+    card: {type: table, title: リヴァプール 中盤の底の6人（今季7試合）, columns: [選手, 年齢, 先発, 出場時間], rows: [*s0, *s1, *s2, *s3, *s4, *s5], highlight_row: 5, source: Transfermarkt}
+  official: false
+  sources:
+  - https://www.transfermarkt.jp/wataru-endo/leistungsdaten/spieler/146310
+  - https://www.transfermarkt.jp/fc-liverpool/kader/verein/31
+  - https://www.fotmob.com/teams/8650/overview/liverpool
+  - https://news.yahoo.co.jp/articles/d3f1b1a4cad4c36ec9dd35302f2b01ef56eb0bb6/comments
+
+- id: seasons
+  heading: 4季の歩み
+  tier: 報道
+  telop: 先発34試合から、0試合へ
+  narrator: 解説
+  card:
+    type: table
+    title: 遠藤航 リヴァプールでの季ごとの出場（公式戦）
+    columns: [季, 監督, 出場, 先発, 出場時間]
+    rows:
+    - &h0 [23-24, クロップ, '43', '34', '2,758分']
+    - &h1 [24-25, スロット, '32', '7', 865分]
+    - &h2 [25-26, スロット, '12', '3', 455分]
+    - &h3 [26-27, イラオラ, '0', '0', 0分]
+    source: Transfermarkt
+  say:
+  - text: 遠藤航がリヴァプールに来て、今季は4シーズン目です。
+    card: {type: table, title: 遠藤航 リヴァプールでの季ごとの出場（公式戦）, columns: [季, 監督, 出場, 先発, 出場時間], rows: [*h0, *h1, *h2, *h3], source: Transfermarkt}
+  - text: 最初の季は、クロップ監督のもとで43試合、先発が34試合。
+    card: {type: table, title: 遠藤航 リヴァプールでの季ごとの出場（公式戦）, columns: [季, 監督, 出場, 先発, 出場時間], rows: [*h0, *h1, *h2, *h3], highlight_row: 0, source: Transfermarkt}
+  - text: 監督がスロットに替わると、出場は32試合でも先発は7つに減りました。
+    card: {type: table, title: 遠藤航 リヴァプールでの季ごとの出場（公式戦）, columns: [季, 監督, 出場, 先発, 出場時間], rows: [*h0, *h1, *h2, *h3], highlight_row: 1, source: Transfermarkt}
+  - text: 出場時間は2,758分から865分へ。3分の1を下回っています。
+    card: {type: table, title: 遠藤航 リヴァプールでの季ごとの出場（公式戦）, columns: [季, 監督, 出場, 先発, 出場時間], rows: [*h0, *h1, *h2, *h3], highlight_row: 1, source: Transfermarkt}
+  - text: 昨季は455分。2月11日のサンダーランド戦が、いまのところ最後の出場です。
+    card: {type: table, title: 遠藤航 リヴァプールでの季ごとの出場（公式戦）, columns: [季, 監督, 出場, 先発, 出場時間], rows: [*h0, *h1, *h2, *h3], highlight_row: 2, source: Transfermarkt}
+  - text: 今季は監督がイラオラに替わり、数字はまだ全部0のままです。
+    card: {type: table, title: 遠藤航 リヴァプールでの季ごとの出場（公式戦）, columns: [季, 監督, 出場, 先発, 出場時間], rows: [*h0, *h1, *h2, *h3], highlight_row: 3, source: Transfermarkt}
+  official: false
+  sources:
+  - https://www.transfermarkt.jp/wataru-endo/leistungsdaten/spieler/146310
+
+- id: shape
+  heading: イラオラの並び
+  tier: 報道
+  telop: 7試合とも同じ並び。中盤の底は2人
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季のリヴァプールの並び（7試合とも同じ）
+    columns: [位置, 人数]
+    rows:
+    - &f0 [最前線, 1人]
+    - &f1 [その後ろ, 3人]
+    - &f2 [中盤の底, 2人]
+    - &f3 [最終ライン, 4人]
+    source: FotMob・Transfermarkt
+  say:
+  - text: イラオラは7試合すべてで、同じ並びを使っています。
+    card: {type: table, title: 今季のリヴァプールの並び（7試合とも同じ）, columns: [位置, 人数], rows: [*f0, *f1, *f2, *f3], source: FotMob・Transfermarkt}
+  - text: 最終ラインの4人の前に、中盤が2人。その前に3人、最前線に1人。
+    card: {type: table, title: 今季のリヴァプールの並び（7試合とも同じ）, columns: [位置, 人数], rows: [*f0, *f1, *f2, *f3], highlight_row: 3, source: FotMob・Transfermarkt}
+  - text: この2人が中盤の底。守備の前でボールを奪い、前へ配る役です。
+    card: {type: table, title: 今季のリヴァプールの並び（7試合とも同じ）, columns: [位置, 人数], rows: [*f0, *f1, *f2, *f3], highlight_row: 2, source: FotMob・Transfermarkt}
+  - text: 遠藤航がクラブに登録している位置も、この中盤の底です。
+    card: {type: table, title: 今季のリヴァプールの並び（7試合とも同じ）, columns: [位置, 人数], rows: [*f0, *f1, *f2, *f3], highlight_row: 2, source: FotMob・Transfermarkt}
+  - text: 枠が2つしかないので、先発の組み合わせで数えられます。
+    card: {type: table, title: 中盤の底の2人（先発した試合）, columns: [組み合わせ, 試合], rows: [[ソボスライ＋マック・アリスター, '4'], [ソボスライ＋フラーフェンベルフ, '2'], [マック・アリスター＋ニオニ, '1']], source: Transfermarkt}
+  - text: いちばん多いのは、ソボスライとマック・アリスターの4試合。
+    card: {type: table, title: 中盤の底の2人（先発した試合）, columns: [組み合わせ, 試合], rows: [[ソボスライ＋マック・アリスター, '4'], [ソボスライ＋フラーフェンベルフ, '2'], [マック・アリスター＋ニオニ, '1']], highlight_row: 0, source: Transfermarkt}
+  - text: 次がソボスライとフラーフェンベルフで、2試合です。
+    card: {type: table, title: 中盤の底の2人（先発した試合）, columns: [組み合わせ, 試合], rows: [[ソボスライ＋マック・アリスター, '4'], [ソボスライ＋フラーフェンベルフ, '2'], [マック・アリスター＋ニオニ, '1']], highlight_row: 1, source: Transfermarkt}
+  - text: 残る1つは、控えを多く使ったカップ戦で組んだマック・アリスターとニオニ。
+    card: {type: table, title: 中盤の底の2人（先発した試合）, columns: [組み合わせ, 試合], rows: [[ソボスライ＋マック・アリスター, '4'], [ソボスライ＋フラーフェンベルフ, '2'], [マック・アリスター＋ニオニ, '1']], highlight_row: 2, source: Transfermarkt}
+  - text: リーグ戦とヨーロッパの6試合は、ソボスライが毎回、先発で入っています。
+    card: {type: table, title: 中盤の底の2人（先発した試合）, columns: [組み合わせ, 試合], rows: [[ソボスライ＋マック・アリスター, '4'], [ソボスライ＋フラーフェンベルフ, '2'], [マック・アリスター＋ニオニ, '1']], source: Transfermarkt}
+  official: false
+  sources:
+  - https://www.fotmob.com/teams/8650/overview/liverpool
+  - https://www.transfermarkt.jp/fc-liverpool/kader/verein/31
+
+- id: role
+  heading: 終盤の出番のゆくえ
+  main: true
+  tier: 報道
+  telop: 途中出場の半分以上が80分以降
+  narrator: 解説
+  card:
+    type: table
+    title: 遠藤航 途中から入った試合（公式戦）
+    columns: [季, 途中から, うち80分以降]
+    rows:
+    - &r0 [24-25, 25試合, 13試合]
+    - &r1 [25-26, 9試合, 5試合]
+    - &r2 [26-27, '0', '0']
+    source: Transfermarkt
+  say:
+  - {short_only: true, text: リヴァプールの遠藤航は、今季の公式戦でまだ0分です。}
+  - text: 先発が減ってからの遠藤航には、はっきりした出方がありました。
+    image: assets/images/20261002_rank_endo/01.jpg
+  - text: スロットの1年目、途中からの出場は25試合。うち13試合は80分を過ぎてからです。
+    card: {type: table, title: 遠藤航 途中から入った試合（公式戦）, columns: [季, 途中から, うち80分以降], rows: [*r0, *r1, *r2], highlight_row: 0, source: Transfermarkt}
+  - text: 昨季も、途中から入った9試合のうち5試合が80分以降でした。
+    card: {type: table, title: 遠藤航 途中から入った試合（公式戦）, columns: [季, 途中から, うち80分以降], rows: [*r0, *r1, *r2], highlight_row: 1, source: Transfermarkt}
+  - text: 試合の最後の数分を任される、締めくくりの交代です。
+    card: {type: table, title: 遠藤航 途中から入った試合（公式戦）, columns: [季, 途中から, うち80分以降], rows: [*r0, *r1, *r2], highlight_row: 1, source: Transfermarkt}
+  - text: 守備ラインの真ん中や右の端で出た試合も、昨季だけで3つあります。
+    card: {type: table, title: 遠藤航 途中から入った試合（公式戦）, columns: [季, 途中から, うち80分以降], rows: [*r0, *r1, *r2], source: Transfermarkt}
+  - text: 今季は、この数字がまだ0のままです。
+    card: {type: table, title: 遠藤航 途中から入った試合（公式戦）, columns: [季, 途中から, うち80分以降], rows: [*r0, *r1, *r2], highlight_row: 2, source: Transfermarkt}
+  - text: では今季、中盤の途中出場はだれが受け持っているのか。
+    card: {type: table, title: 中盤の途中出場（今季7試合）, columns: [選手, 回数, 1回の時間], rows: [[フラーフェンベルフ, 5回, 9〜28分], [ニオニ, 3回, 6〜19分], [マック・アリスター, 2回, 27・30分], [ソボスライ, 1回, 28分], [遠藤航, 0回, ―]], source: Transfermarkt}
+  - text: 7試合で11回。そのうち5回がフラーフェンベルフです。
+    card: {type: table, title: 中盤の途中出場（今季7試合）, columns: [選手, 回数, 1回の時間], rows: [[フラーフェンベルフ, 5回, 9〜28分], [ニオニ, 3回, 6〜19分], [マック・アリスター, 2回, 27・30分], [ソボスライ, 1回, 28分], [遠藤航, 0回, ―]], highlight_row: 0, source: Transfermarkt}
+  - text: 次に多いのが、3回のニオニです。
+    card: {type: table, title: 中盤の途中出場（今季7試合）, columns: [選手, 回数, 1回の時間], rows: [[フラーフェンベルフ, 5回, 9〜28分], [ニオニ, 3回, 6〜19分], [マック・アリスター, 2回, 27・30分], [ソボスライ, 1回, 28分], [遠藤航, 0回, ―]], highlight_row: 1, source: Transfermarkt}
+  - text: "遠藤が受け持っていた終盤の交代は、**24歳と19歳**に移っています。"
+    card: {type: table, title: 中盤の途中出場（今季7試合）, columns: [選手, 回数, 1回の時間], rows: [[フラーフェンベルフ, 5回, 9〜28分], [ニオニ, 3回, 6〜19分], [マック・アリスター, 2回, 27・30分], [ソボスライ, 1回, 28分], [遠藤航, 0回, ―]], highlight_row: 4, source: Transfermarkt}
+  official: false
+  sources:
+  - https://www.transfermarkt.jp/wataru-endo/leistungsdaten/spieler/146310
+  - https://www.transfermarkt.jp/ryan-gravenberch/leistungsdaten/spieler/478573
+
+- id: view
+  heading: 数字で見た違い
+  viewpoint: true
+  tier: 報道
+  telop: 年齢は10歳上、契約は1人だけ今季まで
+  narrator: 解説
+  card:
+    type: table
+    title: 中盤の底の6人 年齢と契約
+    columns: [選手, 年齢, 契約の満了]
+    rows:
+    - &v0 [ソボスライ, '25', 2031年6月]
+    - &v1 [マック・アリスター, '27', 2028年6月]
+    - &v2 [フラーフェンベルフ, '24', 2032年6月]
+    - &v3 [ニオニ, '19', 2030年6月]
+    - &v4 [マコネル, '22', 2030年6月]
+    - &v5 [遠藤航, '33', 2027年6月]
+    source: Transfermarkt
+  say:
+  - text: 6人の違いを、年齢と契約の年で並べ直します。
+    card: {type: table, title: 中盤の底の6人 年齢と契約, columns: [選手, 年齢, 契約の満了], rows: [*v0, *v1, *v2, *v3, *v4, *v5], source: Transfermarkt}
+  - text: "遠藤を除く5人の平均は**23.4歳**。遠藤は33歳です。"
+    card: {type: table, title: 中盤の底の6人 年齢と契約, columns: [選手, 年齢, 契約の満了], rows: [*v0, *v1, *v2, *v3, *v4, *v5], highlight_row: 5, source: Transfermarkt}
+  - text: いちばん若いニオニとは、14歳の開きがあります。
+    card: {type: table, title: 中盤の底の6人 年齢と契約, columns: [選手, 年齢, 契約の満了], rows: [*v0, *v1, *v2, *v3, *v4, *v5], highlight_row: 3, source: Transfermarkt}
+  - text: 契約は、ほかの5人が2028年から2032年まで続きます。
+    card: {type: table, title: 中盤の底の6人 年齢と契約, columns: [選手, 年齢, 契約の満了], rows: [*v0, *v1, *v2, *v3, *v4, *v5], highlight_row: 2, source: Transfermarkt}
+  - text: 遠藤航だけは、今シーズンが終わる2027年の夏で切れます。
+    card: {type: table, title: 中盤の底の6人 年齢と契約, columns: [選手, 年齢, 契約の満了], rows: [*v0, *v1, *v2, *v3, *v4, *v5], highlight_row: 5, source: Transfermarkt}
+  - text: 役割は、先発の2枠も終盤の交代も、ほかの5人で回っています。
+    card: {type: table, title: 中盤の底の6人 年齢と契約, columns: [選手, 年齢, 契約の満了], rows: [*v0, *v1, *v2, *v3, *v4, *v5], highlight_row: 0, source: Transfermarkt}
+  - text: 年齢はいちばん上で、契約はいちばん短い。
+    card: {type: table, title: 中盤の底の6人 年齢と契約, columns: [選手, 年齢, 契約の満了], rows: [*v0, *v1, *v2, *v3, *v4, *v5], highlight_row: 5, source: Transfermarkt}
+  - text: 遠藤が6人目にいる理由を数字にすると、この3つになります。
+    card: {type: table, title: 中盤の底の6人 年齢と契約, columns: [選手, 年齢, 契約の満了], rows: [*v0, *v1, *v2, *v3, *v4, *v5], highlight_row: 5, source: Transfermarkt}
+  - text: 10月は6試合。ヨーロッパの2試合は、選手登録から外れていて出られません。
+    card: {type: table, title: 10月のリヴァプール, columns: [日, 相手, 大会], rows: [[11日, マンチェスター・シティ, リーグ戦], [14日, LASK, ヨーロッパ（登録外）], [17日, ブレントフォード, リーグ戦], [20日, ビジャレアル, ヨーロッパ（登録外）], [25日, ブライトン, リーグ戦], [28日, チェルシー, リーグカップ]], highlight_row: 1, source: FotMob}
+  - text: 11日のマンチェスター・シティ戦から、リーグ戦が戻ってきます。
+    card: {type: table, title: 10月のリヴァプール, columns: [日, 相手, 大会], rows: [[11日, マンチェスター・シティ, リーグ戦], [14日, LASK, ヨーロッパ（登録外）], [17日, ブレントフォード, リーグ戦], [20日, ビジャレアル, ヨーロッパ（登録外）], [25日, ブライトン, リーグ戦], [28日, チェルシー, リーグカップ]], highlight_row: 0, source: FotMob}
+  - text: 残る4試合で、6人の並びが動くかどうかです。
+    card: {type: table, title: 10月のリヴァプール, columns: [日, 相手, 大会], rows: [[11日, マンチェスター・シティ, リーグ戦], [14日, LASK, ヨーロッパ（登録外）], [17日, ブレントフォード, リーグ戦], [20日, ビジャレアル, ヨーロッパ（登録外）], [25日, ブライトン, リーグ戦], [28日, チェルシー, リーグカップ]], highlight_row: 5, source: FotMob}
+  official: false
+  sources:
+  - https://www.transfermarkt.jp/fc-liverpool/kader/verein/31
+  - https://www.fotmob.com/teams/8650/fixtures/liverpool
