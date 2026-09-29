@@ -3,6 +3,7 @@
 
     python tools/fix_old_descriptions.py --dry-run          # 何を直すかだけ見る（読むだけ・1本1ユニット未満）
     python tools/fix_old_descriptions.py --limit 40         # 40本まで直す（1本50ユニット）
+    python tools/fix_old_descriptions.py --limit 1000 --reserve 1000   # 毎日15:30、その日の枠の余りを使い切る
 
 直すこと（**記事から動画を作ったと読める言い方を消す**。2026-09-30「記事から動画作ってると思われたくないの」）:
 - 「■ 出典」の記事アドレスの一覧（9/17 より前の本）を節ごと消す
@@ -15,7 +16,8 @@
 **丸ごと差し替えない**（公開中と手元で尺が違い、目次の時刻がずれる）。いまの概要欄を取ってきて、行を消すだけ。
 
 - 済んだ本は research/desc_fix_done.json に控え、次の日は続きから（新しい本から順に）
-- API の枠は、投稿のぶんを残すため **残りが RESERVE を切ったら止める**
+- API の枠は、投稿のぶんを残すため **残りが --reserve を切ったら止める**
+- **毎日15:30（枠が16時に戻る前）に、その日の枠の余りで回す**（2026-09-30 ユーザー「16時前に」「apiのあまりで実施する」）
 """
 from __future__ import annotations
 
@@ -85,6 +87,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=40, help="この回に書き換える本数の上限")
     ap.add_argument("--dry-run", action="store_true", help="書き換えずに、直す内容だけ出す")
+    ap.add_argument("--reserve", type=int, default=RESERVE, help="この枠を残して止める")
     args = ap.parse_args()
 
     from src import posted, quota
@@ -143,8 +146,8 @@ def main() -> int:
                 print(f"  直す: {row.get('build')}　{vid}　{len(before)}字 → {len(after)}字")
                 changed += 1
                 continue
-            if quota.left() < RESERVE + 60:
-                print(f"  枠の残りが {quota.left()} なので止めます（投稿のぶん {RESERVE} を残す）")
+            if quota.left() < args.reserve + 60:
+                print(f"  枠の残りが {quota.left()} なので止めます（投稿のぶん {args.reserve} を残す）")
                 DONE.write_text(json.dumps(done, ensure_ascii=False, indent=1), encoding="utf-8")
                 return 0
             snippet["description"] = after[:5000]
