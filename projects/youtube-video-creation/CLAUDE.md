@@ -2033,8 +2033,16 @@ python -m src.cli short <台本> --section 何が起きたか   # 節を指定�
 ユーザーが TikTok Studio（Web）から手で行う。
 
 ```bash
-python tools/tiktok.py 20260916          # その日のぶんを一式そろえる
+python -m src.cli short scripts/<台本>.md --tiktok   # 1分を超える版（62〜90秒）を <名前>_tiktok に
+python tools/tiktok.py 20260930 --open              # その日のぶんを一式そろえてフォルダを開く
 ```
+
+- **毎日の流れ**（2026-09-29 ユーザー選択「PC の TikTok Studio でまとめて予約」）：
+  ショートを書き出すときに **TikTok 版（`--tiktok`）も作る** → 動画を見せて OK → `screen` → `tools/tiktok.py <日付> --open`。
+  ファイル名の頭が予約の時刻（YouTube のショートと同じ時刻）で、**文章は `説明文まとめ.txt` の1ファイルだけ**
+  （ユーザー「文章のファイルは一ファイルで良い」）。頭に手順と時刻の一覧、その下に説明文を時刻の順に並べる
+- **1分未満のショートをそのまま TikTok に出さない**（報酬の対象外。ユーザー「今は、1分以下なので」）
+- 投稿は API でも Chrome の自動操作でもしない（API はガイドラインで不可、自動操作は TikTok の規約で禁止）
 
 - **1分を超える切り出しを使う**（`_tiktok`）。Creator Rewards は
   **1分以上**が条件で、58秒のショートは対象にならない。
