@@ -457,10 +457,9 @@ class _YouthScreenState extends State<YouthScreen> {
                               DropdownButton<TrainingFocus?>(
                                 value: p.individualFocus,
                                 isDense: true,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black87,
-                                ),
+                                // 色は指定しない。**暗いテーマだと黒文字が
+                                // 背景に沈んで読めなくなる。** テーマに任せる。
+                                style: const TextStyle(fontSize: 12),
                                 hint: Text(
                                   Tr.pick(
                                       'ポジション別(既定)', 'By position (default)'),
@@ -691,7 +690,8 @@ class _MentorRow extends StatelessWidget {
             value: current?.id,
             isDense: true,
             isExpanded: true,
-            style: const TextStyle(fontSize: 12, color: Colors.black87),
+            // 色は指定しない(暗いテーマで読めなくなる)。
+            style: const TextStyle(fontSize: 12),
             hint: Text(Tr.pick('付けない', 'None'),
                 style: const TextStyle(fontSize: 12)),
             items: [
