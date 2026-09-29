@@ -112,17 +112,15 @@ sections:
   say:
   - text: ラフィーニャの状態は、まだ分かっていません。検査はこれからです。
     image: assets/images/20260930_raphinha/02_w.jpg
-  - text: 右の太ももは、この1年で3度痛めています。昨年9月は太ももの裏で58日。
+  - text: 右の太ももは、この1年で3度痛めています。
     card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 0}
   - text: 今年3月は代表のフランス戦で痛めて34日。
     card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 1}
   - text: 6月のW杯はハイチ戦で痛め、大会に戻れませんでした。
     card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 2}
-  - text: 今回も代表の試合で、同じ右足。4日前の1戦目は90分出ていました。
+  - text: 4日前の1戦目は90分出ていました。
     card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 3}
-  - text: ブラジルには、10月3日の土曜日に、インドとの親善試合がもう1つあります。
-    card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 3}
-  - text: 検査の結果しだいで、代表に残るか、早めにバルセロナへ戻るかが決まります。
+  - text: 検査の結果しだいで、10月3日のインドとの親善試合まで代表に残るか、早めにバルセロナへ戻るかが決まります。
     card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 3}
   sources:
   - https://www.lance.com.br/selecao-brasileira/selecao-por-que-raphinha-foi-substituido-no-intervalo-por-ancelotti.html
@@ -172,6 +170,14 @@ sections:
   narrator: キャスター
   say:
   - voice: ネット民
+    text: ラフィーニャの筋肉のけがが確定しないことを祈る。
+  - voice: ネット民
+    text: そうなればバルサには大きな問題だ。
+    cont: true
+  - voice: ネット民
+    text: たぶん今いちばん調子のいいフォワード、いや、いちばん調子のいい選手だ
+    cont: true
+  - voice: ネット民
     text: うーん、ラフィーニャはキャプテンやってたから
   - voice: ネット民
     text: 抜きどころなかったのは仕方ない気がする
@@ -197,7 +203,9 @@ sections:
     text: まあバルサはそれでも強いだろう
     cont: true
     short_voice: true
+  # 海外の反応: X の個人の投稿（@Albeeert0、2026-09-29 夜、スペイン語。「Esperemos que no se confirme la lesión muscular de Raphinha porque sería un grave problema para el #Barça . Seguramente, el delantero/jugador más en forma de la actualidad.」を全文訳。ハッシュタグの#だけ外した）
   sources:
+  - https://x.com/search?q=Raphinha%20lesi%C3%B3n%20Bar%C3%A7a%20lang%3Aes&f=live
   - https://x.com/Rosell9_KH9SY7/status/2104919551771279627
   - https://x.com/iikagenni_siro2/status/2104914130947952949
   - https://search.yahoo.co.jp/realtime/search?p=ハフィーニャ
