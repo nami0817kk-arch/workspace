@@ -4,7 +4,7 @@ format: quote
 short_title: 中村敬斗、初めてのサイドバックで何を考えていたか
 topic: リヨン
 thumbnail_line1: 中村敬斗、初の左サイドバック
-thumbnail_line2: リヨンのリーグ戦は今季●●分
+thumbnail_line2: ランスでは左ウイングで●●試合
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []
@@ -23,7 +23,7 @@ outro_sub: チャンネル登録でお待ちください
 description: '中村敬斗、10人の終盤に初めての左サイドバック。すぐ隣から届いていた声
 
 
-  この動画の見立て: ランスでは2季続けてリーグ戦2桁得点だった中村敬斗が、移ったリヨンではリーグ戦26分。クラブの出番が細るなか、代表で左の前と後ろの両方をこなしたことが、10月1日のエクアドル戦からの起用の幅を広げる
+  この動画の見立て: 中村敬斗はガンバ大阪からランスまで、クラブではほぼ左ウイングと前線で出てきた。代表では2024年6月から左ウイングバックに下がり、9月28日に初めてサイドバックへ。左の前から後ろまで埋められる幅は並びを組み替える選択肢を増やすが、攻めの位置に残るのがよいかは、まだ決まっていない
 
 
   ※発言は下の記事から引いています。
@@ -48,7 +48,6 @@ sources:
 - https://news.yahoo.co.jp/articles/07f65255e7d2fd4364eb43dc0abb99a0cfe3cba7
 - https://www.transfermarkt.jp/keito-nakamura/leistungsdaten/spieler/405397
 - https://en.wikipedia.org/wiki/Keito_Nakamura
-- https://news.yahoo.co.jp/articles/f02df787d87ecf932aeb961c15ce6a55a42181f3
 - https://news.yahoo.co.jp/articles/91f2809254c7ae414d2c1b3febc5fe7cee272b45/comments
 cards:
   scramble_card:
@@ -111,123 +110,156 @@ cards:
     highlight_row: 0
   view_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: &id002
-    - - 24-25
-      - ランス（1部）
-      - 32試合
-      - '11'
-    - - 25-26
-      - ランス（2部）
-      - 29試合
-      - '14'
-    - - 26-27
-      - リヨン（リーグ戦）
-      - 2試合・26分
-      - '0'
-    - - 26-27
-      - リヨン（ヨーロッパリーグ）
-      - 1試合・90分
-      - '1'
-  view_1_card:
+    - - 2018〜19
+      - ガンバ大阪
+      - 左の中盤
+      - '17'
+    - - 2019〜20
+      - トゥウェンテ
+      - 左ウイング
+      - '17'
+    - - 2021〜23
+      - LASK
+      - 左ウイング
+      - '54'
+    - - 2023〜26
+      - ランス
+      - 左ウイング
+      - '70'
+    - - 2023〜24
+      - 日本代表
+      - 左ウイング
+      - '8'
+    - - 2024〜26
+      - 日本代表
+      - 左ウイングバック
+      - '17'
+    - - 9月28日
+      - 日本代表
+      - 左サイドバック
+      - 初めて
+  view_0_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
     highlight_row: 0
+  view_1_card:
+    type: table
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
+    columns:
+    - 時期
+    - 所属
+    - 主な位置
+    - 試合数
+    rows: *id002
+    highlight_row: 1
   view_2_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
     highlight_row: 1
   view_3_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
     highlight_row: 2
   view_4_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
     highlight_row: 3
   view_5_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
+    highlight_row: 4
   view_6_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
+    highlight_row: 5
   view_7_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
-    highlight_row: 2
+    highlight_row: 6
   view_8_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
   view_9_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
     rows: *id002
   view_10_card:
     type: table
-    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
     columns:
-    - 季
+    - 時期
     - 所属
-    - 出場
-    - 得点
+    - 主な位置
+    - 試合数
+    rows: *id002
+  view_11_card:
+    type: table
+    title: 中村敬斗が出てきた位置（位置の記録がある試合）
+    columns:
+    - 時期
+    - 所属
+    - 主な位置
+    - 試合数
     rows: *id002
 ---
 
@@ -297,10 +329,6 @@ cards:
   telop: 中村敬斗「僕としては安心してやれてました」
   card: none
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-キャスター: 前にいた谷村海那とも、動きを話し合っていました。
-  telop: 前にいた谷村海那とも、動きを話し合っていました
-  card: none
-  image: assets/images/20260930_nakamura_sb/01_w.jpg
 キャスター: サイドで攻守に出るウイングバックでも、いつかこの役が来る。中村はそう見ていました。
   telop: サイドで攻守に出るウイングバックでも、いつかこの役が来る。中村はそう見ていました
   card: none
@@ -338,54 +366,58 @@ cards:
   card: none
   image: assets/images/20260930_nakamura_sb/01_w.jpg
 
-## リヨンの26分と、代表の左
+## 左ウイングから、一列ずつ後ろへ
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @viewpoint: true
 
-解説: まず、所属クラブでの中村の数字です。
-  telop: まず、所属クラブでの中村の数字です
+解説: 中村敬斗がプロになったガンバ大阪では、左の中盤で17試合。
+  telop: 中村敬斗がプロになったガンバ大阪では、左の中盤で17試合
   source: 背景
-  card: view_card
+  card: view_0_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: フランスのランスにいた2季前は、1部のリーグ戦で32試合11得点。
-  telop: フランスのランスにいた2季前は、1部のリーグ戦で32試合11得点
+解説: オランダのトゥウェンテでは、左ウイングで17試合。
+  telop: オランダのトゥウェンテでは、左ウイングで17試合
   card: view_1_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: チームが2部に落ちた昨季も、29試合で14得点。
-  telop: チームが2部に落ちた昨季も、29試合で14得点
+解説: 左の前線で相手を抜きにいく位置です。
+  telop: 左の前線で相手を抜きにいく位置です
   card: view_2_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: 今季移ったリヨンでは、リーグ戦2試合で合わせて26分。
-  telop: 今季移ったリヨンでは、リーグ戦2試合で合わせて26分
+解説: オーストリアのラスクでも、左ウイングで54試合。
+  telop: オーストリアのラスクでも、左ウイングで54試合
   card: view_3_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: 先発は、欧州のクラブが争うヨーロッパリーグの1試合だけで、そこで1点。
-  telop: 先発は、欧州のクラブが争うヨーロッパリーグの1試合だけで、そこで1点
+解説: フランスのランスでは左ウイングで70試合。前線の真ん中でも12試合。
+  telop: フランスのランスでは左ウイングで70試合。前線の真ん中でも12試合
   card: view_4_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: 代表では9月24日のウルグアイ戦に、左ウイングバックで先発してアシスト。
-  telop: 代表では9月24日のウルグアイ戦に、左ウイングバックで先発してアシスト
+解説: 代表に入った頃も、左ウイングで8試合。
+  telop: 代表に入った頃も、左ウイングで8試合
   card: view_5_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: 4日後には、その後ろのサイドバックも任されました。
-  telop: 4日後には、その後ろのサイドバックも任されました
+解説: 2024年6月からは、守りに戻る仕事も増える左ウイングバックで17試合。
+  telop: 2024年6月からは、守りに戻る仕事も増える左ウイングバックで17試合
   card: view_6_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: クラブで出番が細るなか、代表の左では使える場所が1つ増えました。
-  telop: クラブで出番が細るなか、代表の左では使える場所が1つ増えました
+解説: そして9月28日、さらに一列後ろのサイドバックへ。
+  telop: そして9月28日、さらに一列後ろのサイドバックへ
   card: view_7_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
 解説: ウイングバックの一列前、フォワードのすぐ後ろはシャドーと呼ばれる位置です。
   telop: ウイングバックの一列前、フォワードのすぐ後ろはシャドーと呼ばれる位置です
   card: view_8_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: 次に任されるのは、一列前のシャドーか、後ろのサイドバックか。
-  telop: 次に任されるのは、一列前のシャドーか、後ろのサイドバックか
+解説: 前へ出る位置ばかりを歩いてきた選手が、代表では後ろへ下がってきました。
+  telop: 前へ出る位置ばかりを歩いてきた選手が、代表では後ろへ下がってきました
   card: view_9_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
-解説: そこに、代表での中村の立ち位置が表れます。
-  telop: そこに、代表での中村の立ち位置が表れます
+解説: 左の前から後ろまで埋められれば、並びを組み替える時の選択肢が増えます。
+  telop: 左の前から後ろまで埋められれば、並びを組み替える時の選択肢が増えます
   card: view_10_card
+  image: assets/images/20260930_nakamura_sb/01_w.jpg
+解説: 攻めの位置に残るのか、後ろの幅を生かすのか。その答えは、まだ出ていません。
+  telop: 攻めの位置に残るのか、後ろの幅を生かすのか。その答えは、まだ出ていません
+  card: view_11_card
   image: assets/images/20260930_nakamura_sb/01_w.jpg
 
 ## ネットの反応
