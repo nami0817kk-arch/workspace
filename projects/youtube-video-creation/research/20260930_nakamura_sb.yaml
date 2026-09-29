@@ -1,0 +1,280 @@
+# 取材メモ（9/30 の題材 2）。ゲキサカの一夜明けの囲み取材（9/29）が起点。
+# 同じ取材の言葉は日刊スポーツ・サッカーキングでも当たった（言い回しが少しずつ違う。1つの行は1つの記事から引く）。
+# 10人になってからの並びはスポーツ報知の「超スクランブル布陣」（GK鈴木彩艶／DF伊東・鈴木淳・伊藤・中村／MF田中碧・堂安・久保・谷村／FW上田）。
+#   71分からの3バックは左から伊藤・渡辺・鈴木淳（ゲキサカの試合記事）。伊東の10人になる直前の位置は記事で確かめられないので「攻撃の位置」とだけ書く。
+# 9/29 の「VARの逆転PK」「伊東が主審に言い続けた夜」と重ねない：10人になった経緯は2行、PKは1行、判定の中身は書かない。
+# クラブの数字は Transfermarkt の試合記録（performance-game）と英語版 Wikipedia の Career statistics で一致を確かめた。
+#   24-25 ランス 1部 32試合11得点／25-26 ランス 2部 29試合14得点／26-27 リヨン リーグ戦2試合26分0得点・EL 1試合90分1得点（9/16）。
+#   代表の通算（試合数・得点）は Transfermarkt（31試合11得点）と Wikipedia（30試合12得点、9/24 まで）で食い違うので使わない。
+date: 2026年9月30日
+slot: japan_2
+format: quote
+people:
+- 中村敬斗
+- 伊藤洋輝
+theme:
+  id: nakamura_sb_venezuela
+  league: france
+  league_name: キリンチャレンジカップ
+  kind: other
+  topic: リヨン
+  title: 中村敬斗、10人の終盤に初めての左サイドバック。すぐ隣から届いていた声
+  opening_image: assets/images/20260930_nakamura_sb/01_w.jpg
+  takeaway: ランスでは2季続けてリーグ戦2桁得点だった中村敬斗が、移ったリヨンではリーグ戦26分。クラブの出番が細るなか、代表で左の前と後ろの両方をこなしたことが、10月1日のエクアドル戦からの起用の幅を広げる
+short_title: 中村敬斗、初めてのサイドバックで何を考えていたか
+thumbnail:
+  photo: assets/images/20260930_nakamura_sb/01_t.jpg
+  line1: 中村敬斗、初の左サイドバック
+  line2: リヨンのリーグ戦は今季●●分
+  reaction: 修正や強化もすごく早かった
+sections:
+- id: scramble
+  heading: 10人になった後半41分
+  tier: 報道
+  telop: 守りの選手は2人だけ。中村と伊東がサイドバックへ
+  narrator: キャスター
+  card:
+    type: table
+    title: 10人になってからの並び（後半41分〜）
+    columns:
+    - 名前
+    - 所属
+    - もとの位置
+    - この場面
+    rows: &sbrows
+    - - 中村敬斗
+      - リヨン
+      - 左ウイングバック
+      - 左サイドバック
+    - - 伊東純也
+      - ゲンク
+      - 攻撃の位置
+      - 右サイドバック
+    - - 伊藤洋輝
+      - バイエルン
+      - 3人の守りの左
+      - 守りの真ん中
+    - - 鈴木淳之介
+      - コペンハーゲン
+      - 3人の守りの右
+      - 守りの真ん中
+    - - 谷村海那
+      - 横浜F・マリノス
+      - フォワード
+      - 左の中盤
+  say:
+  - text: 9月28日のベネズエラ戦。中村敬斗は後半26分、左のウイングバックで入りました。
+    image: assets/images/20260930_nakamura_sb/01_w.jpg
+  - 同点の終盤、3人で組む守りの真ん中から、渡辺剛が足を痛めて退きます。
+  - 交代できる機会は3回までで、日本はそれを使い切っていました。
+  - text: 3人の守りで残ったのは、伊藤洋輝と鈴木淳之介の2人。
+    card:
+      type: table
+      title: 10人になってからの並び（後半41分〜）
+      columns: [名前, 所属, もとの位置, この場面]
+      rows: *sbrows
+      highlight_row: 2
+  - text: そこで後ろの守りを4人に、中盤も4人、前は1人に組み直します。
+    card:
+      type: table
+      title: 10人になってからの並び（後半41分〜）
+      columns: [名前, 所属, もとの位置, この場面]
+      rows: *sbrows
+  - text: その両端、サイドバックに回ったのが、中村とゲンクの伊東純也です。
+    card:
+      type: table
+      title: 10人になってからの並び（後半41分〜）
+      columns: [名前, 所属, もとの位置, この場面]
+      rows: *sbrows
+      highlight_row: 0
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459951-459951-fl
+  - https://news.yahoo.co.jp/articles/984859cfa6804755ebceeda7bacda6212f28aa2f
+  - https://hochi.news/articles/20260928-OHT1T51402.html
+  - https://www.nikkansports.com/soccer/japan/news/202609290000802.html
+  - https://www.jfa.jp/samuraiblue/20260928/member.html
+- id: words
+  main: true
+  heading: 声を掛けてくれた人
+  tier: 報道
+  telop: 中村「伊藤洋輝選手がセンターバックで積極的に声を掛けてくれた」
+  narrator: キャスター
+  say:
+  - text: ベネズエラ戦の終盤、交代を使い切ったあとのけがで10人に。中村敬斗は守りの端へ回りました。
+    short_only: true
+  - text: 試合の翌日、中村はこう振り返っています。
+    image: assets/images/20260930_nakamura_sb/01_w.jpg
+  - voice: 中村敬斗
+    text: 実際に試合でサイドバックをやったのは初めてだった
+  - 慣れない位置で支えになったのは、守りの真ん中のセンターバックでした。
+  - voice: 中村敬斗
+    text: 伊藤洋輝選手がセンターバックで
+  - voice: 中村敬斗
+    text: 積極的に声を掛けてくれたので、
+    cont: true
+  - voice: 中村敬斗
+    text: 僕としては安心してやれてました
+    cont: true
+  - 前にいた谷村海那とも、動きを話し合っていました。
+  - サイドで攻守に出るウイングバックでも、いつかこの役が来る。中村はそう見ていました。
+  - voice: 中村敬斗
+    text: ウイングバックをやっていても一人退場した場合は
+  - voice: 中村敬斗
+    text: 試合中にやる可能性があるので
+    cont: true
+  - voice: 中村敬斗
+    text: 想定としては良かったんじゃないかなと思う
+    cont: true
+  - 日本はそのまま、終了間際のPKで勝ち越しました。
+  - voice: 中村敬斗
+    text: 日本代表は久保選手だったり、他にもいい選手がいるけど、
+  - voice: 中村敬斗
+    text: 人数が少ない中でも一人、二人剥がせる選手がたくさんいるので、
+    cont: true
+  - voice: 中村敬斗
+    text: 一人足りない中でも点を取る力、勝ち切る力があると思う
+    cont: true
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20260929/2210844.html
+  - https://web.gekisaka.jp/news/japan/detail/?459951-459951-fl
+  - https://www.nikkansports.com/soccer/japan/news/202609290000802.html
+  - https://news.yahoo.co.jp/articles/07f65255e7d2fd4364eb43dc0abb99a0cfe3cba7
+- id: view
+  heading: リヨンの26分と、代表の左
+  tier: 背景
+  viewpoint: true
+  telop: ランスでは2季続けて2桁得点。リヨンのリーグ戦は今季26分
+  narrator: 解説
+  card:
+    type: table
+    title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+    columns:
+    - 季
+    - 所属
+    - 出場
+    - 得点
+    rows: &clubrows
+    - - 24-25
+      - ランス（1部）
+      - 32試合
+      - '11'
+    - - 25-26
+      - ランス（2部）
+      - 29試合
+      - '14'
+    - - 26-27
+      - リヨン（リーグ戦）
+      - 2試合・26分
+      - '0'
+    - - 26-27
+      - リヨン（ヨーロッパリーグ）
+      - 1試合・90分
+      - '1'
+  say:
+  - text: まず、所属クラブでの中村の数字です。
+    image: assets/images/20260930_nakamura_sb/01_w.jpg
+  - text: フランスのランスにいた2季前は、1部のリーグ戦で32試合11得点。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+      highlight_row: 0
+  - text: チームが2部に落ちた昨季も、29試合で14得点。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+      highlight_row: 1
+  - text: 今季移ったリヨンでは、リーグ戦2試合で合わせて26分。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+      highlight_row: 2
+  - text: 先発は、欧州のクラブが争うヨーロッパリーグの1試合だけで、そこで1点。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+      highlight_row: 3
+  - text: 代表では9月24日のウルグアイ戦に、左ウイングバックで先発してアシスト。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+  - text: 4日後には、その後ろのサイドバックも任されました。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+  - text: クラブで出番が細るなか、代表の左では使える場所が1つ増えました。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+      highlight_row: 2
+  - text: ウイングバックの一列前、フォワードのすぐ後ろはシャドーと呼ばれる位置です。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+  - text: 次に任されるのは、一列前のシャドーか、後ろのサイドバックか。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+  - text: そこに、代表での中村の立ち位置が表れます。
+    card:
+      type: table
+      title: 中村敬斗の所属クラブでの数字（リーグ戦と欧州の大会）
+      columns: [季, 所属, 出場, 得点]
+      rows: *clubrows
+  sources:
+  - https://www.transfermarkt.jp/keito-nakamura/leistungsdaten/spieler/405397
+  - https://en.wikipedia.org/wiki/Keito_Nakamura
+  - https://news.yahoo.co.jp/articles/f02df787d87ecf932aeb961c15ce6a55a42181f3
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「守備やフィジカルで課題が出たあとの修正や強化もすごく早かった」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 中村は守備を本気で取り組むか
+  - voice: ネット民
+    text: 一列前でやるかをしないとだと思います。
+    cont: true
+  - voice: ネット民
+    text: 個人的にはあの攻撃力を活かすならシャドーを基本にして欲しい。
+    cont: true
+  - voice: ネット民
+    text: W杯やウルグアイ戦みていてもどうしても守備が軽いですよね。
+    cont: true
+  - voice: ネット民
+    text: 堂安くらい腹を括ってやるのか。
+    cont: true
+  - voice: ネット民
+    text: 攻撃に比重おけるポジションにしてあげるかですね
+    cont: true
+  - voice: ネット民
+    text: 中村敬斗はゴールやドリブル成功率も素晴らしいけど、
+    short_voice: true
+  - voice: ネット民
+    text: 守備やフィジカルで課題が出たあとの
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 修正や強化もすごく早かったと思う
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/91f2809254c7ae414d2c1b3febc5fe7cee272b45/comments

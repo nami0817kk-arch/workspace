@@ -1,0 +1,272 @@
+# 取材メモ（9/30 題材3）。起点はゲキサカ 9/29 の囲み取材（堂安律、ベネズエラ戦の翌日・広島）。
+# 同じ取材の言葉を 報知・日刊・サンスポ・東スポ・CoCoKARAnext で突き合わせた（言い回しが少しずつ違う。台本はゲキサカの書き起こしに合わせた）。
+# 松木本人の言葉は報知 9/29（堂安の言葉を伝え聞いて）。9/26 の練習後の言葉（サッカーキング）は題の出来事より前なので使っていない。
+# 堂安の数字: 日本語版Wikipedia の代表個人成績（ベネズエラ戦まで71試合11得点。初出場 2018/9/11 コスタリカ戦、初得点 2018/10/16 ウルグアイ戦＝3試合目）。
+#   フローニンゲンへの期限付き移籍は 2017/6/23 発表（19歳）。
+# 松木の数字: 日本語版Wikipedia（青森山田高で第100回高校選手権優勝。2003/4/30 生まれ・室蘭。2024/7/30 サウサンプトンへ完全移籍しギョズテペへ期限付き＝21歳。FC東京で 2024 年に森重・小泉との3人体制でキャプテン＝20歳）。
+# 「同じ宿舎」は堂安の「一緒に生活していて」の場面の説明（代表の合宿）。
+# 松木の先制点が堂安のフリーランで空いた場所から生まれた話は、ゲキサカ 9/24 の試合後の記事（地の文）。
+# （使っていない）チームキャプテンとして通算4戦全勝（3月のスコットランド・イングランド、9月のウルグアイ・ベネズエラ）はゲキサカ 9/29 の板倉の記事の地の文。
+#   W杯（オランダ戦 2-2）は板倉がチームキャプテンの期間で、堂安はゲームキャプテン。数に入らない。
+# 板倉が主将に堂安を推した話は同じ日の別の本（板倉の回）なので、ここでは触れない。
+# 反応: Yahoo!ニュースのコメント欄（CoCoKARAnext・東スポの記事）から2件。全文。尺のためサンスポの1件（「どういうところがすごいのか…興味ある」）は外した。
+#   外したもの: 「捏造記事で伊東選手が離脱」を含む投稿（事実の主張が入る）／宮本・森岡の年齢を挙げる投稿（森岡の年齢が合わない）／
+#   フローニンゲンのウェイト話（裏が取れない逸話）／「上から目線」「偉そうに」（題の中身への声ではない）
+date: 2026年9月30日
+slot: japan_3
+format: quote
+people:
+- 堂安律
+- 松木玖生
+theme:
+  id: doan_matsuki_mentality
+  league: england
+  league_name: キリンチャレンジカップ
+  kind: other
+  topic: サウサンプトン
+  title: 堂安律が23歳の松木玖生に「僕も教わる」。主将が見ていたもの
+  opening_image: assets/images/20260930_doan_matsuki/01_w.jpg
+  takeaway: 堂安は20歳で代表に呼ばれて71試合、主将になるまで8年。松木は23歳で呼ばれて初戦で得点。どちらも左利きの右サイドで、代表初ゴールはウルグアイ戦。違うのは入ったときのチームで、中心の抜けた2018年と、主力のそろう今。堂安の言う「入ってくる難しさ」は、その差にある
+short_title: 堂安律が松木玖生に見た「メンタリティ」
+thumbnail:
+  photo: assets/images/20260930_pair_doan_matsuki/01.jpg
+  line1: 堂安律と松木玖生
+  line2: 代表初ゴールは2人とも●●●●戦
+  reaction: 堂安と松木のメンタルは似ている
+sections:
+- id: situation
+  heading: 一夜明けの広島で
+  tier: 報道
+  telop: 主将の堂安律、初めて呼ばれた若手のことを聞かれて
+  narrator: キャスター
+  say:
+  - text: 日本代表の主将、堂安律が、ベネズエラ戦の翌日の練習後に取材に応じました。
+    image: assets/images/20260930_doan_matsuki/01_w.jpg
+  - 話は、初めて呼ばれた若手のことに。
+  - voice: 堂安律
+    text: 今はある程度、中心選手がいる中で
+  - voice: 堂安律
+    text: 入ってくる難しさもあると思うし、
+    cont: true
+  - voice: 堂安律
+    text: そこで堂々とプレーしている彼らは
+    cont: true
+  - voice: 堂安律
+    text: すごいなと思いますね
+    cont: true
+  - text: 名前を挙げたのは、イングランド2部サウサンプトンの23歳、松木玖生。
+    image: assets/images/20260930_pair_doan_matsuki/01.jpg
+  - 24日のウルグアイ戦が代表デビュー。右のウイングバックに入りました。
+  - 守りでは最後尾まで戻り、攻めでは前へ出るサイドの持ち場です。
+  - 前半11分の先制点は、内側の堂安が走って相手を引きつけ、空いた所からでした。
+  - 2人はいま、代表の合宿で同じ宿舎に寝泊まりしています。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459954-459954-fl
+  - https://news.yahoo.co.jp/articles/c64314c27836ed38a11f92e04c4dd6cb993789ab
+  - https://news.yahoo.co.jp/articles/9ac8f7f463733c218442afe74d1d66ca756f7791
+- id: words
+  main: true
+  heading: 「メンタリティがすごい」
+  tier: 報道
+  telop: 「玖生とかは一緒に生活していてメンタリティがすごい」
+  narrator: キャスター
+  say:
+  - text: 初招集でいきなり初ゴールの23歳、松木玖生。代表の合宿で毎日顔を合わせる主将、堂安律の見方です。
+    short_only: true
+  - voice: 堂安律
+    text: 日本代表としてドンと構えていける選手が
+  - voice: 堂安律
+    text: 育っていってくれたらなと思っている。
+    cont: true
+  - voice: 堂安律
+    text: 玖生とかは一緒に生活していて
+    cont: true
+  - voice: 堂安律
+    text: メンタリティがすごいし、
+    cont: true
+  - voice: 堂安律
+    text: 僕も教わるところがあると思う。
+    cont: true
+  - voice: 堂安律
+    text: 非常に面白いし、興味がある
+    cont: true
+  - 同じ右サイドの左利き。でも堂安が見ていたのは、プレーより人柄でした。
+  - voice: 堂安律
+    text: 似てる選手が面白いなというのも
+  - voice: 堂安律
+    text: 人間としてあると思うので、
+    cont: true
+  - voice: 堂安律
+    text: 玖生とかは面白いですね
+    cont: true
+  - その言葉を伝え聞いた松木本人は。
+  - voice: 松木玖生
+    text: 先輩方が自分が入りやすいように
+  - voice: 松木玖生
+    text: コミュニケーション取ってくれたので、
+    cont: true
+  - voice: 松木玖生
+    text: 自分も馴染みやすく入れています。
+    cont: true
+  - voice: 松木玖生
+    text: 自分はサッカー以外のところは、
+    cont: true
+  - voice: 松木玖生
+    text: 落ち着いてるタイプだと思う
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459954-459954-fl
+  - https://news.yahoo.co.jp/articles/10db3abeffc30e193ce9d56b9eab3352c8b31b75
+  - https://news.yahoo.co.jp/articles/dcba1071e202709967e5c222969a9b9814d157d5
+  - https://news.yahoo.co.jp/articles/4337ef224b9a8afd3fb4a6824a44c73f1e49b47b
+- id: view
+  heading: 2人の歩みを並べる
+  tier: 背景
+  viewpoint: true
+  telop: 左利きの右サイド、初ゴールはどちらもウルグアイ戦
+  narrator: 解説
+  card:
+    type: table
+    title: 堂安律と松木玖生（ベネズエラ戦まで）
+    columns: &dmcols
+    - ''
+    - 堂安律
+    - 松木玖生
+    rows: &dmrows
+    - - 生まれ
+      - 1998年・兵庫
+      - 2003年・北海道
+    - - 欧州へ
+      - 19歳・オランダ
+      - 21歳・トルコへ貸し出し
+    - - A代表に初招集
+      - 20歳
+      - 23歳
+    - - 代表初ゴール
+      - 3試合目・ウルグアイ戦
+      - 初戦・ウルグアイ戦
+    - - 代表の出場
+      - 71試合11得点
+      - 1試合1得点
+  say:
+  - 堂安律と松木玖生、2人の歩みを並べます。
+  - text: 生まれは1998年と2003年。5つ違いの先輩と後輩です。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+      highlight_row: 0
+  - text: 欧州へは、堂安が19歳でオランダへ。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+      highlight_row: 1
+  - text: 松木は21歳でサウサンプトンに入り、まずトルコへ貸し出されました。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+      highlight_row: 1
+  - text: A代表に初めて呼ばれたのは、堂安が20歳、松木は23歳です。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+      highlight_row: 2
+  - text: 初ゴールは2人ともウルグアイ戦。堂安は3試合目、松木は初戦でした。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+      highlight_row: 3
+  - text: 違うのは入ったときのチーム。堂安の2018年は本田・香川が抜けた直後。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+      highlight_row: 4
+  - text: 松木が入ったのは、W杯を戦った主力がそろうチーム。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+      highlight_row: 4
+  - text: 堂安の言う「入ってくる難しさ」は、この違いのことです。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+  - text: 松木は青森山田高校で選手権を制し、FC東京では20歳で主将の1人に。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+  - text: 堂安は代表入りから主将まで8年。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+  - text: 松木は同じ道を、3歳遅れで歩き始めたところです。
+    card:
+      type: table
+      title: 堂安律と松木玖生（ベネズエラ戦まで）
+      columns: *dmcols
+      rows: *dmrows
+  sources:
+  - https://ja.wikipedia.org/wiki/%E5%A0%82%E5%AE%89%E5%BE%8B
+  - https://ja.wikipedia.org/wiki/%E6%9D%BE%E6%9C%A8%E7%8E%96%E7%94%9F
+  - https://news.yahoo.co.jp/articles/c64314c27836ed38a11f92e04c4dd6cb993789ab
+  - https://news.yahoo.co.jp/articles/9ac8f7f463733c218442afe74d1d66ca756f7791
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「堂安と松木のメンタルは似ている」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 堂安と松木のメンタルは似ている
+  - voice: ネット民
+    text: そう思いながら読み進んでいたら
+    cont: true
+  - voice: ネット民
+    text: 堂安自身が同じことを感じている
+    cont: true
+  - voice: ネット民
+    text: コメントが出てきて思わず笑った
+    cont: true
+  - voice: ネット民
+    text: 青森山田時代から只者ではないと
+    cont: true
+  - voice: ネット民
+    text: 思わせたのは技術よりその面構え
+    cont: true
+  - voice: ネット民
+    text: プロ向きのメンタルを持っていて
+    cont: true
+  - voice: ネット民
+    text: そこに技術が追いつくタイプかな
+    cont: true
+  - voice: ネット民
+    text: 代表の中心選手に成長してほしい
+    cont: true
+  - voice: ネット民
+    text: 松木は堂安から10番を奪うくらいの気持ちで
+    short_voice: true
+  - voice: ネット民
+    text: 挑戦して欲しいですね。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/9ac8f7f463733c218442afe74d1d66ca756f7791/comments
+  - https://news.yahoo.co.jp/articles/76c968fe9998db52052b7b575ec3f39881fbae45/comments

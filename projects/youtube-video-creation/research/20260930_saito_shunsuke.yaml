@@ -1,0 +1,320 @@
+# 取材メモ（9/30 題材 key=saito_shunsuke）。起点は Football Tribe Japan 9/29 の記事。
+# ■ 関心の元『Expected Birmingham』（xB）について
+#   英国のサポーター個人（Substack の著作表示 Ryan Murphy、自己紹介「Football data, Blues bias.」）が書くデータ分析のニュースレター。
+#   クラブの記者・公式ではない。記事一覧 142本（2025-11〜2026-09-27）と Notes を requests で全部読んだが、
+#   齋藤俊輔（Saito）に触れた記事は無かった。ベネズエラ戦（9/28）当日の発信は X の投稿と思われるが、X は読めなかった。
+#   → FT の「バーミンガムは…関心を示している」は、クラブの動きではなくブログ筆者の推しの可能性がある。確度は 未確認。
+#   同じサイトは Westerlo の坂本一彩（2026-03-04）、フェリ（2026-04-18）も「候補」として書いている（獲得には至っていない）。
+# ■ 本人の言葉の元『Het nieuwsblad』のインタビュー
+#   nieuwsblad.be / gva.be は 403 で読めなかった。PressReader にある Gazet van Antwerpen 9/19 の記事
+#   「Tegen Barcelona spelen, dat is een mooie challenge」（同じ Mediahuis 系）は、STVV 戦（9/20）の2日前に
+#   木村誠二・坂本一彩・齋藤の3人がそろって取材を受けた記事らしいが、本文は読めなかった（403）。
+#   検索の要約では「鎌田・伊東・遠藤の名を挙げたのは木村」とも読めた（未確認。AI要約なので根拠にしない）。
+#   FT は齋藤の言葉としている。台本は FT の日本語訳のまま、齋藤の言葉として置く（要確認として報告）。
+#   発言の時期は「代表デビュー（9/28）より前」までしか言えない（FT は「先日」、GvA は 9/19）。
+#   題の出来事（9/29 の関心の報道）より前の発言だが、題そのもの（移籍志向）に答えるので例外として置く。
+# ■ 数字
+#   齋藤：FotMob（1611437）今季リーグ7試合すべて先発、518分、3得点0アシスト、評点7.32。25-26（1月加入）17試合1得点1アシスト 評点6.59。
+#     得点は 8/30 ズルテ・ワレヘム戦（2-2、直接FK＝サッカーキング 8/31）と 9/5 メヘレン戦（0-4 勝、2得点）。契約は2029年6月まで。
+#     ベルギーの一部の記事は「6試合4得点」と書くが、FotMob の試合記録ではゲンク戦の1点はオウンゴール（スメッツ）。3得点で数える。
+#   バーミンガム：FotMob のチャンピオンシップ順位表（9/29 取得）8試合 2勝5分1敗 得失点+1 勝点11、24チーム中10位。
+#   ベルギー→英国の日本人：英語版 Wikipedia の各選手の所属歴。
+#     遠藤航 STVV 2018-20 → シュツットガルト 2019-23 → リヴァプール 2023
+#     鎌田大地 STVV（期限付き）2018-19 → フランクフルト → ラツィオ 2023-24 → クリスタル・パレス 2024
+#     三笘薫 ユニオン（ブライトンから期限付き）2021-22 → ブライトン
+#     橋岡大樹 STVV 2021-24 → ルートン 2024（1部）
+#     坂元達裕 オーステンデ 2022-23 → コヴェントリー 2023（当時2部）
+#     （冨安 STVV→ボローニャ→アーセナル、鈴木彩艶 STVV→パルマ→ヴィラ もイタリア経由。表には載せない）
+# ■ 9/29「新顔5人」の回では、齋藤のカットインのシュート2本と前半での交代に触れている。ここでは試合の中身は言わない。
+date: 2026年9月30日
+slot: japan_3
+format: news
+people:
+- 齋藤俊輔
+- 鎌田大地
+- 遠藤航
+- 三笘薫
+- 橋岡大樹
+- 坂元達裕
+theme:
+  id: saito_shunsuke_birmingham
+  league: england
+  league_name: イングランド2部
+  kind: transfer
+  topic: 齋藤俊輔
+  title: 齋藤俊輔、代表デビューの直後に英バーミンガムが関心か。本人は「鎌田大地、遠藤航のように」
+  hook: ''
+  question: 齋藤俊輔がイングランドへ渡るとしたら、手本の2人と同じ道になるのか
+  opening_image: assets/images/20260930_saito_shunsuke/01_w.jpg
+  takeaway: 齋藤が手本に挙げた鎌田と遠藤は、ベルギーからドイツを経て4〜5年でイングランド1部に届いた。ベルギーから英国へ直接渡った日本人は三笘・橋岡・坂元の3人で、坂元はバーミンガムと同じ2部だった。今季7試合3得点、173分に1点のペースが冬まで続くかで、近道を選べるかが決まる
+short_title: 齋藤俊輔に英2部が関心か。手本は鎌田大地と遠藤航
+thumbnail:
+  photo: assets/images/20260930_saito_shunsuke/01_w.jpg
+  line1: 齋藤俊輔、手本は鎌田と遠藤
+  line2: 2人が英国に着くまで●年
+  reaction: ベルギーとプレミア2部は良いところ
+sections:
+- id: interest
+  heading: 英国から届いた関心
+  tier: 未確認
+  telop: イングランド2部のバーミンガムが関心、と英国のデータ分析サイト。クラブの動きは確かめられていない
+  narrator: キャスター
+  say:
+  - text: ベネズエラ戦でA代表の初先発を終えた齋藤俊輔に、イングランドから名前が挙がりました。
+    image: assets/images/20260930_saito_shunsuke/01_w.jpg
+  - 2部のバーミンガム・シティが、関心を示しているというのです。
+  - 伝えたのは、バーミンガムを応援する個人のデータ分析サイト。クラブの記者ではありません。
+  - 左サイドの攻撃役、ウイングで、内側でもプレーできる。イングランドで通用する質がある、と紹介しました。
+  - クラブ自身の動きは、まだ確かめられていません。
+  sources:
+  - https://football-tribe.com/japan/2026/09/29/359817/
+- id: words
+  main: true
+  heading: 本人が挙げた2人
+  tier: 報道
+  telop: 齋藤「鎌田大地、遠藤航のように、僕も将来的にはそのステップを踏みたい」
+  narrator: キャスター
+  say:
+  - text: ベルギーのウェステルローでプレーする齋藤俊輔。英国のクラブが関心を寄せていると伝えられました。
+    short_only: true
+  - text: 本人は代表デビューの前、ベルギーの新聞の取材にこう答えていました。
+    image: assets/images/20260930_saito_shunsuke/03.jpg
+  - voice: 齋藤俊輔
+    text: ここ数年、ベルギーから欧州のトップリーグへ
+  - voice: 齋藤俊輔
+    text: ステップアップした日本人選手がたくさんいます。
+    cont: true
+  - voice: 齋藤俊輔
+    text: 鎌田大地、遠藤航のように、
+    cont: true
+  - voice: 齋藤俊輔
+    text: 僕も将来的にはそのステップを踏みたいです
+    cont: true
+  - 名前を挙げた2人は、どちらもベルギーのシント・トロイデンから世に出た選手です。
+  sources:
+  - https://football-tribe.com/japan/2026/09/29/359817/
+  - https://www.pressreader.com/belgium/gazet-van-antwerpen-stad-en-rand/20260919/283300349453306
+- id: view
+  viewpoint: true
+  heading: ベルギーから英国への道
+  tier: 背景
+  telop: 鎌田と遠藤はドイツを経て4〜5年。直接渡ったのは三笘・橋岡・坂元の3人
+  narrator: 解説
+  card:
+    type: table
+    title: ベルギーから英国へ渡った日本人
+    columns: &vc
+    - 名前
+    - ベルギー
+    - 英国の最初のクラブ
+    - 道のり
+    rows:
+    - &v1
+      - 遠藤航
+      - シント・トロイデン
+      - リヴァプール（2023）
+      - ドイツ経由・4年
+    - &v2
+      - 鎌田大地
+      - シント・トロイデン
+      - パレス（2024）
+      - ドイツ・イタリア経由・5年
+    - &v3
+      - 三笘薫
+      - ユニオン
+      - ブライトン（2022）
+      - 直接・1部
+    - &v4
+      - 橋岡大樹
+      - シント・トロイデン
+      - ルートン（2024）
+      - 直接・1部
+    - &v5
+      - 坂元達裕
+      - オーステンデ
+      - コヴェントリー（2023）
+      - 直接・2部
+  say:
+  - text: ベルギーからイングランドへ渡った日本人を並べます。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+  - text: 本人が挙げた遠藤航は、シント・トロイデンからドイツを経て、4年後にリヴァプールへ。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+      highlight_row: 0
+  - text: 鎌田大地はドイツとイタリアを経て、5年後にクリスタル・パレスへ移りました。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+      highlight_row: 1
+  - text: 一方で、ベルギーから直接渡った選手もいます。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+  - text: 三笘薫は、ユニオンでの1年を終えてブライトンへ。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+      highlight_row: 2
+  - text: 橋岡大樹は、シント・トロイデンから1部のルートンへ。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+      highlight_row: 3
+  - text: 坂元達裕は、オーステンデから2部のコヴェントリーへ移っています。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+      highlight_row: 4
+  - text: バーミンガムがいるのも、その2部のチャンピオンシップです。
+    card:
+      type: table
+      title: バーミンガムの今季（イングランド2部）
+      columns: ['', '']
+      rows:
+      - [順位, 24チーム中10位]
+      - [8試合, 2勝1敗5引き分け]
+      - [勝ち点, '11']
+  - text: 今季は8試合を終えて2勝1敗、引き分けが5つ。24チーム中10位です。
+    card:
+      type: table
+      title: バーミンガムの今季（イングランド2部）
+      columns: ['', '']
+      rows:
+      - [順位, 24チーム中10位]
+      - [8試合, 2勝1敗5引き分け]
+      - [勝ち点, '11']
+  - text: 齋藤が手本にした2人は、ドイツを経る遠回りでした。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+      highlight_row: 1
+  - text: 2部からの誘いが本物なら、坂元と同じ近道になります。
+    card:
+      type: table
+      title: ベルギーから英国へ渡った日本人
+      columns: *vc
+      rows: [*v1, *v2, *v3, *v4, *v5]
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Wataru_Endo
+  - https://en.wikipedia.org/wiki/Daichi_Kamada
+  - https://en.wikipedia.org/wiki/Kaoru_Mitoma
+  - https://en.wikipedia.org/wiki/Daiki_Hashioka
+  - https://en.wikipedia.org/wiki/Tatsuhiro_Sakamoto
+  - https://www.fotmob.com/leagues/48/table/championship
+  - https://www.fotmob.com/players/1611437/shunsuke-saito
+- id: numbers
+  heading: ベルギー2季目の伸び
+  tier: 報道
+  telop: 移って半季は17試合1得点。今季は7試合すべて先発で3得点
+  narrator: 解説
+  card:
+    type: table
+    title: 齋藤俊輔のリーグ戦（ウェステルロー）
+    columns: &nc
+    - 季
+    - 試合
+    - 得点
+    - 評点
+    rows:
+    - &n1
+      - 25-26（1月から）
+      - '17'
+      - '1'
+      - '6.59'
+    - &n2
+      - 26-27（ここまで）
+      - '7'
+      - '3'
+      - '7.32'
+  say:
+  - text: 齋藤は今年1月、水戸ホーリーホックからウェステルローへ移りました。
+    card:
+      type: table
+      title: 齋藤俊輔のリーグ戦（ウェステルロー）
+      columns: *nc
+      rows: [*n1]
+  - text: 移って最初の半季は、リーグ戦17試合で1得点でした。
+    card:
+      type: table
+      title: 齋藤俊輔のリーグ戦（ウェステルロー）
+      columns: *nc
+      rows: [*n1]
+      highlight_row: 0
+  - text: 2季目の今季は、7試合すべてに先発して3得点。
+    card:
+      type: table
+      title: 齋藤俊輔のリーグ戦（ウェステルロー）
+      columns: *nc
+      rows: [*n1, *n2]
+      highlight_row: 1
+  - text: 8月末に直接フリーキックで今季の1点目、9月5日のメヘレン戦では2点を決めました。
+    card:
+      type: table
+      title: 齋藤俊輔のリーグ戦（ウェステルロー）
+      columns: *nc
+      rows: [*n1, *n2]
+      highlight_row: 1
+  - text: 出場は518分なので、およそ173分に1点のペースです。
+    card:
+      type: table
+      title: 齋藤俊輔のリーグ戦（ウェステルロー）
+      columns: *nc
+      rows: [*n1, *n2]
+      highlight_row: 1
+  - text: データサイトが試合ごとに付ける10点満点の評点も、平均6.59から7.32に上がりました。
+    card:
+      type: table
+      title: 齋藤俊輔のリーグ戦（ウェステルロー）
+      columns: *nc
+      rows: [*n1, *n2]
+  - ウェステルローとの契約は2029年まで。まず見るのは、冬の移籍市場が開く1月です。
+  sources:
+  - https://www.fotmob.com/players/1611437/shunsuke-saito
+  - https://www.soccer-king.jp/news/world/world_other/20260831/2198770.html
+  - https://www.footballchannel.jp/2026/09/07/post1005696/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「ベルギーとプレミア2部は日本人にとって良いところだと思う」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: ペナルティーエリアでアランブルに吹っ飛ばされていた。
+  - voice: ネット民
+    text: 細過ぎでもっとフィジカルを鍛えないと欧州でやっていけない。
+    cont: true
+  - voice: ネット民
+    text: ベルギーはあくまでもステップアップで
+  - voice: ネット民
+    text: ドイツかイングランド2部に行ってからが勝負
+    cont: true
+  - voice: ネット民
+    text: ベルギーとプレミア2部は日本人にとって良いところだと思う。
+    short_voice: true
+  - voice: ネット民
+    text: 焦ってちょっと違うリーグ行ったりする位ならこっちの方が良い
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/46b71f7218a977fefdf75ee72b1f06778c252629/comments
+  - https://news.yahoo.co.jp/articles/0ad4eb2cef2afeced3cfc3e4c49144685a3f315b/comments

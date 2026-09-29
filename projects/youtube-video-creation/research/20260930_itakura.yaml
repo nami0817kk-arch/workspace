@@ -1,0 +1,274 @@
+# 取材メモ（9/30 の題材 1）。起点はゲキサカの囲み取材2本（9/29 広島の練習後）。
+#   459942: 練習復帰「自分が合流できたので大丈夫」 / 459943: 主将・堂安律への信頼「律で間違いないと思います」
+#   同じ取材の言葉を スポーツ報知・サンケイスポーツ・サッカーダイジェスト（いずれも Yahoo!ニュース配信）でも確かめた。
+#   言い回しは媒体ごとに少し違う（報知「悪くないです。昨日も別メニューで…」）。台本はゲキサカの書き起こしに揃えた。
+# 同じ日に別の回で「堂安律が語る松木玖生」を作る。堂安の主将ぶりそのもの・若手評はそちらに回し、
+#   ここは板倉の復帰と、腕章を渡した・推した板倉の側に絞る。
+#   「責任感が強い選手で…自然にみんな彼についていこうという雰囲気」（堂安評）は、あちらの回と重なるので使わない。
+# 最終ラインのけが人は1行だけ（冨安＝9/22 不参加、安藤＝9/28 離脱、渡辺剛＝9/29 離脱で望月ヘンリー海輝を追加、鈴木淳之介＝9/28 に病院で検査。離脱の発表は無し）。
+# 見立ての数字:
+#   代表の初めての腕章 = 2023年3月28日 コロンビア戦（JFA の試合ページ）。それまでの出場は 2019年3・2020年1・2021年1・2022年11＋2023年3月24日 ＝ 17試合なので18試合目（ja.wikipedia の出場一覧と年別の表）。
+#   W杯の主将 = 遠藤航の離脱で、初戦オランダ戦の3日前に森保監督から告げられた（ゲキサカ 2026-07-18 のトークショー記事）。
+#   堂安の主将 = 2026年3月のイギリス遠征で、主将の遠藤航がけがで選外のため指名（サッカーキング 2026-03-28）。9・10月の活動も主将（チームキャプテン）。
+#   **試合で腕章を巻いた人とは別。**9/28 ベネズエラ戦の腕章は前半が鎌田、後半が伊東（9/29 の鎌田・伊東の回）。表は「主将（チームキャプテン）」で作り、「4戦全勝」はゲキサカの数え方なので出さない。
+#   9・10月の活動は4試合（9/24 ウルグアイ・9/28 ベネズエラ・10/1 エクアドル・10/5 パナマかニュージーランド。JFA 00036771）。板倉の「この4試合」はこれを語りで数えてから置く。
+#   ボルシアMG は 9/28 時点でブンデスリーガ 4戦4敗・勝ち点0・18位（research/standings/2026-09-28.json）。
+#   アジアカップ（2027年1〜2月）は、クラブとの契約で板倉が参加を見送る可能性（ゲキサカ 459943、日刊スポーツ 9/25）。森保監督の 9/25 の会見の言葉は題より前なので引かない。
+# 反応は Yahoo!ニュースのコメント欄（報知・ダイジェストの記事）から、題の中身（復帰・主将を推したこと）への声だけ3件。堂安そのものへの評価の投稿は外した。
+date: 2026年9月30日
+slot: japan_1
+format: quote
+people:
+- 板倉滉
+- 堂安律
+theme:
+  id: itakura_return_captain
+  league: germany
+  league_name: 日本代表
+  kind: other
+  topic: 板倉滉
+  title: 板倉滉が練習に復帰。W杯で巻いた腕章の行き先について、森保監督に伝えていたこと
+  opening_image: assets/images/20260930_itakura/01_w.jpg
+  takeaway: 日本代表の主将は、遠藤航が欠けるたびに堂安（3月）と板倉（W杯）へ移ってきた。来年1〜2月のアジアカップは、所属のボルシアMGとの契約で板倉が出られない可能性がある。板倉は、自分がいないかもしれない大会の主将を、自分で推したことになる
+short_title: 板倉滉が明かした、新主将の推薦
+thumbnail:
+  photo: assets/images/20260930_itakura/02_t.jpg
+  line1: 板倉滉、練習に復帰
+  line2: 森保監督に「●で間違いない」
+  reaction: 板倉さんもう少しキャプテンしてほしい
+sections:
+- id: back
+  heading: 左足首から5日
+  tier: 報道
+  telop: 24日に左足首を痛め、28日はメンバー外。29日に全体練習へ合流
+  narrator: キャスター
+  card:
+    type: table
+    title: 板倉滉の足首
+    columns:
+    - ''
+    - ''
+    rows:
+    - &ik1
+      - 9月24日
+      - ウルグアイ戦で左足首を痛める
+    - &ik2
+      - 28日
+      - ベネズエラ戦はメンバー外
+    - &ik3
+      - 29日
+      - 広島で全体練習に合流
+  say:
+  - text: ドイツのボルシアMGでプレーする、日本代表のセンターバック、板倉滉。
+    image: assets/images/20260930_itakura/01_w.jpg
+  - text: 9月24日のウルグアイ戦で左の足首を痛め、途中で退きました。
+    card:
+      type: table
+      title: 板倉滉の足首
+      columns: ['', '']
+      rows: [*ik1]
+      highlight_row: 0
+  - text: 28日のベネズエラ戦は、メンバー外でした。
+    card:
+      type: table
+      title: 板倉滉の足首
+      columns: ['', '']
+      rows: [*ik1, *ik2]
+      highlight_row: 1
+  - text: 29日の広島での練習は、ベネズエラ戦に長く出た選手がホテルで休み、13人だけ。その中に板倉が戻りました。
+    card:
+      type: table
+      title: 板倉滉の足首
+      columns: ['', '']
+      rows: [*ik1, *ik2, *ik3]
+      highlight_row: 2
+  - 守りの真ん中を担うセンターバックは、今回、冨安健洋、安藤智哉、渡辺剛がけがで抜けています。
+  - 練習のあと、本人は。
+  - voice: 板倉滉
+    text: 悪くない。昨日も今日もトレーニングできているので、
+  - voice: 板倉滉
+    text: 明日からも確認しながらできるようにしたい
+    cont: true
+  - voice: 板倉滉
+    text: 昨日の試合もケガ人が出てしまって、
+  - voice: 板倉滉
+    text: 起きたことは仕方ないと思いつつ、
+    cont: true
+  - voice: 板倉滉
+    text: 自分含めてケガ人がいるので心配。
+    cont: true
+  - voice: 板倉滉
+    text: でも自分は今日合流できたので大丈夫かなと思う
+    cont: true
+  - 9月と10月の活動は、ウルグアイ戦、ベネズエラ戦、10月1日のエクアドル戦、5日の試合の4つです。
+  - voice: 板倉滉
+    text: 若い選手、新しい選手がいる中で
+  - voice: 板倉滉
+    text: コミュニケーションを取ってやるという意味で
+    cont: true
+  - voice: 板倉滉
+    text: この4試合はすごく大きい
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459942-459942-fl
+  - https://web.gekisaka.jp/news/japan/detail/?459943-459943-fl
+  - https://news.yahoo.co.jp/articles/ef9e74e9d800fe28c0bdc2bce5e5cb20b5855ab2
+  - https://news.yahoo.co.jp/articles/8805c73b57e12d3bafe40787738f45807ca6b9dc
+  - https://news.yahoo.co.jp/articles/11a24939b3caff1f6de57636b0035430f7eb8716
+  - https://www.jfa.jp/samuraiblue/news/00036771/
+- id: captain
+  main: true
+  heading: 「律で間違いない」
+  tier: 報道
+  telop: 板倉「森保さんとその話をした時も『律で間違いないと思います』と伝えた」
+  narrator: キャスター
+  say:
+  - text: 左足首から練習に戻った板倉滉。アジアカップに出られない可能性があり、主将は交代しました。
+    short_only: true
+  - text: 練習後の取材で、話は主将のことにも及びました。
+    image: assets/images/20260930_itakura/02_w.jpg
+  - W杯で主将だった板倉に代わり、この9月からは堂安律が主将を務めています。
+  - 板倉は堂安を律と呼び、森保監督のことは森保さんと呼びます。
+  - voice: 板倉滉
+    text: 僕がキャプテンをさせてもらった時も常に律が横にいた。
+  - voice: 板倉滉
+    text: 一緒にチームを見て、
+    cont: true
+  - voice: 板倉滉
+    text: チームに何が必要かをいつも話しているのは律なので、
+    cont: true
+  - voice: 板倉滉
+    text: 森保さんとその話をした時も
+    cont: true
+  - voice: 板倉滉
+    text: 『律で間違いないと思います』と伝えた
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459943-459943-fl
+  - https://news.yahoo.co.jp/articles/0f76865b589a5be8a35835f524fe89c0913d64d4
+  - https://news.yahoo.co.jp/articles/8f5cc9955847869949105adc8654f7c5af669aee
+- id: view
+  heading: 主将が移ってきた道
+  tier: 背景
+  viewpoint: true
+  telop: 遠藤航が欠けるたびに、主将は堂安と板倉へ。次のアジアカップに、板倉は出られない可能性
+  narrator: 解説
+  card:
+    type: table
+    title: 日本代表の主将
+    columns:
+    - 時期
+    - 主将
+    - いきさつ
+    rows: &caprows
+    - - 2026年3月
+      - 堂安律
+      - 遠藤航がけがで選外。イギリス遠征
+    - - 2026年6月
+      - 板倉滉
+      - W杯。遠藤航が離脱し、初戦の3日前に指名
+    - - 2026年9・10月
+      - 堂安律
+      - 4試合の活動
+    - - 2027年1〜2月
+      - ？
+      - アジアカップ。板倉は出られない可能性
+  say:
+  - text: 板倉滉と堂安律のあいだで、主将がどう移ってきたかを並べます。
+    image: assets/images/20260930_itakura/02_w.jpg
+  - text: それまでの主将は遠藤航でした。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+  - text: 今年3月のイギリス遠征は、その遠藤がけがで選ばれず、堂安が主将を任されました。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+      highlight_row: 0
+  - text: 6月のW杯では、遠藤が大会の直前に離脱。初戦の3日前に、板倉が指名されました。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+      highlight_row: 1
+  - text: そしてW杯のあと、9月からの主将は再び堂安です。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+      highlight_row: 2
+  - text: 次の大きな大会は、アジアの代表が争うアジアカップ。来年の1月から2月です。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+      highlight_row: 3
+  - text: ヨーロッパのリーグは、その間も休まず続きます。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+      highlight_row: 3
+  - text: 所属のボルシアMGは、ドイツ1部で開幕4連敗の最下位です。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+      highlight_row: 3
+  - text: そのクラブとの契約で、板倉は出られない可能性があります。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+      highlight_row: 3
+  - text: 遠藤が欠けた2度とも、腕章は堂安か板倉に回ってきました。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+  - text: 自分が出られないかもしれない大会の主将を、板倉は自分で推したことになります。
+    card:
+      type: table
+      title: 日本代表の主将
+      columns: [時期, 主将, いきさつ]
+      rows: *caprows
+      highlight_row: 3
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20260328/2142058.html
+  - https://news.yahoo.co.jp/articles/4c159920c3c78e2ba747eb95d3f02a9941eaa8fb
+  - https://news.yahoo.co.jp/articles/da61f0d698c01d1e870b9fb9c784e9c7d4a8aa7c
+  - https://www.jfa.jp/samuraiblue/news/00036771/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「板倉さんもう少しキャプテンしてほしい」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 大事な所属クラブが悲惨な状況
+  - voice: ネット民
+    text: 親善試合で板倉が無理をする必要は一つもないやろ。
+    cont: true
+  - voice: ネット民
+    text: むしろ寝ておけって
+    cont: true
+  - voice: ネット民
+    text: え！？板倉さんもう少しキャプテンしてほしい
+    short_voice: true
+  - voice: ネット民
+    text: 無理すんなコー。
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/ef9e74e9d800fe28c0bdc2bce5e5cb20b5855ab2/comments
+  - https://news.yahoo.co.jp/articles/0f76865b589a5be8a35835f524fe89c0913d64d4/comments

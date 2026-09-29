@@ -1,0 +1,203 @@
+# 取材メモ（9/30 題材 raphinha）。オーストラリア 2-4 ブラジル（9/29・ブリスベン、Suncorp Stadium）。
+# 事実の裏:
+#   主将と前線の真ん中（偽9番）: MARCA 9/29（Ancelotti copia a Flick）、SpaceMoney・NC News・EFE（Infobae）。マルキーニョスはベンチスタート。
+#   「初めて主将」は裏づけが無いので言わない（流れの点検の指摘）。
+#   アンチェロッティの主将の言葉: ロマーノの投稿（9/29「OFFICIAL」）の英語 "Raphinha is taking his game to the next level,
+#     and he can also help us with his leadership"。原文も日時（試合前の見込み）も確かめられず、題（交代の理由）にも答えないので**台本から落とした**。
+#   試合の流れ: Lance! の試合記録（Vanderson 2' / Circati 28' / Metcalfe 33' / Raphinha 45' PK / Bruno Guimarães 後半24' / Vini Jr 後半34' PK）。
+#     PKはダニーロが倒されVARで確認（EFE・SpaceMoney）。
+#   2本目のPK: 後半34分ヴィニシウス。アンチェロッティ（試合後の会見、Lance!）"O batedor de pênalti era o Raphinha, que bateu o primeiro.
+#     O segundo era Bruno, mas o Bruno já tinha marcado o gol. Então, acho que o Vini merecia marcar um gol."
+#   交代: ブラジル連盟（CBF）の発表として各紙が「右太ももに筋肉の違和感」。後半からエンドリッキ（Lance!・MARCA・EFE）。
+#   検査: 9/29 時点で結果は出ていない（Lance!「CBFからは重さも検査の要否も確認されていない」、MARCA「数時間のうちに検査」、
+#     SpaceMoney「評価はバルセロナで」）。**けがの程度は書かない。連盟の発表は「違和感」。「状態は分かっていない」と言う。**
+#   「代表に残るか、早めに戻るか」: MARCA 9/29（raphinha-sustituido）の原文 "En función de los resultados de las pruebas,
+#     el culé seguirá con su selección o adelantará su vuelta."
+#   ブラジルの次: 10/3（土）インドとの親善試合、コルカタ（SpaceMoney・NC News）。
+#   約1年半ぶり（558日）: SpaceMoney（前の代表の得点は 2025-03-20 コロンビア戦）。Crónica Global も「代表で1年ぶりの得点」。
+#   右太ももの履歴: Lance!（Transfermarkt の負傷歴を引いて 2025年9月 右大腿二頭筋 58日／2026年3月 フランス戦 右大腿二頭筋 34日／
+#     2026年6月19日 W杯ハイチ戦 右太もも裏、大会に戻れず）。1月の打撲・2月の13日は数えていない（「3度」は太もも裏の3回）。
+#   1戦目（9/25）フル出場: Crónica Global・beIN。
+#   今季の数字: 試合ごとの得点とアシストは ESPN の試合記録で数え直した。Lance! の「10試合15得点4アシスト、全試合で関与」と一致。
+#     MARCA のバルサ内 14得点3アシスト（リーガ12・CL2、アシストはリーガ3）とも一致。
+#     8/23 エルチェ 2G1A（PK1）／8/27 アスレティック 1G／8/31 ラージョ 2G／9/6 バレンシア 1G／9/9 フェイエノールト（CL）2G／
+#     9/13 レバンテ 0G2A／9/16 ラシン 3G（PK2）／9/19 セビージャ 3G／9/25 豪州 1A（CK）／9/29 豪州 1G（PK）
+#   バルサは開幕から8戦全勝（ESPN: 5-0, 2-0, 5-2, 5-0, 5-1, 4-2, 7-2, 3-1）。36点の内訳: ラフィーニャ14・ヤマル8・フェルミン4・
+#     アデイェミ3・ジェズス2・ペドリ1・エスパルト1・カンセロ1・オウンゴール2。
+#   前線の真ん中: ESPN の先発表でラフィーニャは8試合すべて先発の F（formationPlace 9）。ジェズスの先発は0、途中出場2試合
+#     （フェイエノールト・ラシン）で2点。superlider 9/25「ラフィーニャを休ませる選択肢としてジェズス」、Barca Universal「ヘタフェ戦で初先発の可能性」。
+#   バルサの10月（ESPN の日程、現地の日付）: 10/10 ヘタフェ（H）／10/13 ガラタサライ（A・CL）／10/17 ベティス（A）／
+#     10/20 PSG（A・CL）／10/25 レアル・マドリード（H）。
+# 本人の言葉: 試合後の取材・本人のSNSとも、requests と WebFetch で当たった範囲では見つからなかった（前半で退いたため）。
+#   得点のあとの眼鏡の仕草は、視力を失いつつある少年ジオンとの約束（Lance!）。題から外れるので台本には入れない。
+# 9/22・9/25 の回（2試合連続ハット／10番の初戦）と同じ文・同じ写真は使っていない。写真は今回の試合の CBF 撮影（Lance! 掲載）。
+date: 2026年9月30日
+slot: other_1
+format: news
+people:
+- ラフィーニャ
+- カルロ・アンチェロッティ
+theme:
+  id: raphinha_captain_thigh
+  league: spain
+  league_name: ブラジル代表
+  kind: other
+  topic: バルセロナ
+  title: ラフィーニャ、主将でPK弾。なぜ後半のピッチに戻らなかったのか
+  question: ラフィーニャが抜けたら、バルサの前線の真ん中は誰が務めるのか
+  takeaway: バルサは開幕8戦全勝の36点のうち、ラフィーニャが14点を決め、前線の真ん中で8試合すべて先発している。控えのジェズスは途中出場の2試合で2点だが、先発はまだ0。10月は15日で5試合で、この1年で3度痛めた右太ももの検査の結果が、そのまま真ん中を誰が務めるかを決める
+  opening_image: assets/images/20260930_raphinha/02_w.jpg
+short_title: ラフィーニャ、主将で得点した夜に前半で交代
+thumbnail:
+  photo: assets/images/20260930_raphinha/02_w.jpg
+  crests:
+  - バルセロナ
+  line1: ラフィーニャ、主将でPK弾
+  line2: 10戦続けて得点に関与、その夜●●
+  reaction: 上手くサボってもええんやで
+sections:
+- id: captain
+  heading: 腕章を巻いた夜
+  tier: 報道
+  telop: マルキーニョスがベンチで、腕章はラフィーニャ。立つ位置は前線の真ん中
+  narrator: キャスター
+  say:
+  - text: 9月29日、ブリスベン。ブラジル代表は、4日前に引き分けたオーストラリアともう一度戦いました。
+    image: assets/images/20260930_raphinha/02_w.jpg
+  - 主将のマルキーニョスはベンチから。腕章を巻き、前線の真ん中に立ったのはラフィーニャでした。
+  sources:
+  - https://www.marca.com/futbol/barcelona/2026/09/29/ancelotti-copia-flick-coloca-raphinha-delantero-brasil.html
+  - https://ncnews.com.br/2026/09/29/raphinha-preocupa-selecao-lesao-coxa-contra-australia/
+  - https://www.infobae.com/america/agencias/2026/09/29/raphinha-se-retira-con-molestias-en-el-muslo-en-el-amistoso-de-brasil-ante-australia/
+- id: match
+  main: true
+  heading: 558日ぶりの1点と、45分
+  tier: 報道
+  telop: 45分にPKで同点。後半はピッチに戻らず、代わりにエンドリッキ
+  narrator: キャスター
+  card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]]}
+  say:
+  - text: バルセロナで今季14点のラフィーニャ。ブラジル代表の主将を務めた試合で、得点したのに前半で退きました。
+    short_only: true
+  - text: 2分に先制したブラジルは、28分と33分の失点で逆転されます。
+    image: assets/images/20260930_raphinha/01_w.jpg
+    card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]], "highlight_row": 2}
+  - text: 45分、ダニーロが倒されてPK。ラフィーニャが左足で決めて同点にします。
+    card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]], "highlight_row": 3}
+  - text: 試合後、アンチェロッティ監督はキッカーの順番をこう明かしました。
+    image: assets/images/20260930_pair_ancelotti_raphinha/01.jpg
+  - voice: アンチェロッティ
+    text: PKを蹴るのはラフィーニャだった。1本目は彼が蹴った
+  - text: 代表でのゴールは、2025年3月以来、およそ1年半ぶりでした。
+    image: assets/images/20260930_raphinha/01_w.jpg
+    card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]], "highlight_row": 3}
+  - text: ところが後半、ピッチに戻りません。ブラジル連盟の発表では、右の太ももに違和感。
+    card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]], "highlight_row": 3}
+  - text: 代わりにエンドリッキが入り、ブラジルは4対2で勝ちました。
+    card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]], "highlight_row": 3}
+  - text: 後半34分の2本目のPKは、ヴィニシウスが決めています。
+    card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]], "highlight_row": 3}
+  sources:
+  - https://www.lance.com.br/selecao-brasileira/brasil-melhora-e-vence-bem-a-australia-em-segundo-amistoso.html
+  - https://www.lance.com.br/selecao-brasileira/selecao-por-que-raphinha-foi-substituido-no-intervalo-por-ancelotti.html
+  - https://www.lance.com.br/selecao-brasileira/ancelotti-explica-escolha-por-vini-jr-para-cobrar-penalti-merecia-gol.html
+  - https://www.spacemoney.com.br/esportes/raphinha-gol-selecao-desconforto-coxa
+  - https://www.marca.com/futbol/barcelona/2026/09/29/raphinha-sustituido-brasil-molestias-musculares.html
+- id: thigh
+  heading: また、右の太もも
+  tier: 報道
+  telop: 検査の結果はまだ。右の太ももは、この1年で3度痛めた場所
+  narrator: キャスター
+  card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]]}
+  say:
+  - text: ラフィーニャの状態は、まだ分かっていません。検査はこれからです。
+    image: assets/images/20260930_raphinha/02_w.jpg
+  - text: 右の太ももは、この1年で3度痛めています。昨年9月は太ももの裏で58日。
+    card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 0}
+  - text: 今年3月は代表のフランス戦で痛めて34日。
+    card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 1}
+  - text: 6月のW杯はハイチ戦で痛め、大会に戻れませんでした。
+    card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 2}
+  - text: 今回も代表の試合で、同じ右足。4日前の1戦目は90分出ていました。
+    card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 3}
+  - text: ブラジルには、10月3日の土曜日に、インドとの親善試合がもう1つあります。
+    card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 3}
+  - text: 検査の結果しだいで、代表に残るか、早めにバルセロナへ戻るかが決まります。
+    card: {"type": "table", "title": "ラフィーニャの右太もも（この1年）", "columns": ["", ""], "rows": [["2025年9月", "太もも裏を痛め 58日離脱"], ["2026年3月", "フランス戦で痛め 34日離脱"], ["2026年6月", "W杯ハイチ戦で痛め 大会に戻れず"], ["9月29日", "違和感で前半のみ 検査待ち"]], "highlight_row": 3}
+  sources:
+  - https://www.lance.com.br/selecao-brasileira/selecao-por-que-raphinha-foi-substituido-no-intervalo-por-ancelotti.html
+  - https://www.lance.com.br/fora-de-campo/lesao-de-raphinha-durante-jogo-do-brasil-preocupa-torcedores-do-barcelona.html
+  - https://www.marca.com/futbol/barcelona/2026/09/29/raphinha-sustituido-brasil-molestias-musculares.html
+  - https://www.spacemoney.com.br/esportes/raphinha-gol-selecao-desconforto-coxa
+  - https://cronicaglobal.elespanol.com/culemania/primer-equipo/20260929/raphinha-brasil-muscular-diagnostico-reservado-hansi-flick/1003742798204_0.html
+- id: view
+  heading: 抜けたら、真ん中に誰が
+  tier: 背景
+  viewpoint: true
+  telop: 真ん中の控えはジェズス。先発0、途中出場2試合で2点。10月は15日で5試合
+  narrator: 解説
+  card: {"type": "table", "title": "ラフィーニャの今季（10試合）", "columns": ["大会", "試合", "得点", "アシスト"], "rows": [["ラ・リーガ", "7", "12", "3"], ["チャンピオンズリーグ", "1", "2", "0"], ["ブラジル代表", "2", "1", "1"], ["合計", "10", "15", "4"]]}
+  say:
+  - text: ラフィーニャは代表の2試合も含め、10試合すべてで得点かアシストを記録。
+    image: assets/images/20260930_raphinha/01_w.jpg
+    card: {"type": "table", "title": "ラフィーニャの今季（10試合）", "columns": ["大会", "試合", "得点", "アシスト"], "rows": [["ラ・リーガ", "7", "12", "3"], ["チャンピオンズリーグ", "1", "2", "0"], ["ブラジル代表", "2", "1", "1"], ["合計", "10", "15", "4"]], "highlight_row": 3}
+  - text: バルセロナは開幕から8試合全勝で36点。そのうち14点がラフィーニャです。
+    card: {"type": "table", "title": "バルセロナの得点（8試合・36点）", "columns": ["選手", "得点"], "rows": [["ラフィーニャ", "14"], ["ヤマル", "8"], ["フェルミン・ロペス", "4"], ["アデイェミ", "3"], ["ガブリエル・ジェズス", "2"]], "highlight_row": 0}
+  - text: 次に多いのはヤマルの8点。点を取れる選手は、ほかにもいます。
+    card: {"type": "table", "title": "バルセロナの得点（8試合・36点）", "columns": ["選手", "得点"], "rows": [["ラフィーニャ", "14"], ["ヤマル", "8"], ["フェルミン・ロペス", "4"], ["アデイェミ", "3"], ["ガブリエル・ジェズス", "2"]], "highlight_row": 1}
+  - text: ただ、前線の真ん中は、この夏からラフィーニャが8試合すべて先発しています。
+    card: {"type": "table", "title": "前線の真ん中（バルセロナ 8試合）", "columns": ["", "先発", "途中出場", "得点"], "rows": [["ラフィーニャ", "8", "0", "14"], ["ガブリエル・ジェズス", "0", "2", "2"]], "highlight_row": 0}
+  - text: 真ん中のフォワードの控えは、ガブリエル・ジェズス。
+    card: {"type": "table", "title": "前線の真ん中（バルセロナ 8試合）", "columns": ["", "先発", "途中出場", "得点"], "rows": [["ラフィーニャ", "8", "0", "14"], ["ガブリエル・ジェズス", "0", "2", "2"]], "highlight_row": 1}
+  - text: 途中から出た2試合で2点ですが、先発した試合はまだありません。
+    card: {"type": "table", "title": "前線の真ん中（バルセロナ 8試合）", "columns": ["", "先発", "途中出場", "得点"], "rows": [["ラフィーニャ", "8", "0", "14"], ["ガブリエル・ジェズス", "0", "2", "2"]], "highlight_row": 1}
+  - text: そこへ、代表の期間が明ける10月10日から、15日で5試合が続きます。
+    card: {"type": "table", "title": "バルセロナの10月", "columns": ["", ""], "rows": [["10日", "ヘタフェ（ホーム）"], ["13日", "ガラタサライ（CL・敵地）"], ["17日", "ベティス（敵地）"], ["20日", "パリ・サンジェルマン（CL・敵地）"], ["25日", "レアル・マドリード（ホーム）"]], "highlight_row": 0}
+  - text: チャンピオンズリーグでは、敵地でガラタサライとパリ・サンジェルマン。
+    card: {"type": "table", "title": "バルセロナの10月", "columns": ["", ""], "rows": [["10日", "ヘタフェ（ホーム）"], ["13日", "ガラタサライ（CL・敵地）"], ["17日", "ベティス（敵地）"], ["20日", "パリ・サンジェルマン（CL・敵地）"], ["25日", "レアル・マドリード（ホーム）"]], "highlight_row": 3}
+  - text: 最後はレアル・マドリードとの一戦です。
+    card: {"type": "table", "title": "バルセロナの10月", "columns": ["", ""], "rows": [["10日", "ヘタフェ（ホーム）"], ["13日", "ガラタサライ（CL・敵地）"], ["17日", "ベティス（敵地）"], ["20日", "パリ・サンジェルマン（CL・敵地）"], ["25日", "レアル・マドリード（ホーム）"]], "highlight_row": 4}
+  - text: 先発のない控えで5試合を回すのか。右太ももの検査が、10月の真ん中を決めます。
+    card: {"type": "table", "title": "バルセロナの10月", "columns": ["", ""], "rows": [["10日", "ヘタフェ（ホーム）"], ["13日", "ガラタサライ（CL・敵地）"], ["17日", "ベティス（敵地）"], ["20日", "パリ・サンジェルマン（CL・敵地）"], ["25日", "レアル・マドリード（ホーム）"]]}
+  sources:
+  - https://www.espn.com/soccer/team/_/id/83/barcelona
+  - https://www.marca.com/futbol/barcelona/2026/09/29/ancelotti-copia-flick-coloca-raphinha-delantero-brasil.html
+  - https://www.lance.com.br/selecao-brasileira/gol-de-raphinha-pela-selecao-reflete-duas-marcas-importantes.html
+  - https://superlider.mx/2026/09/25/gabriel-jesus-gana-fuerza-en-barcelona-la-opcion-de-flick-para-cuidar-a-raphinha/
+  - https://barcauniversal.com/barcelona-summer-arrival-could-make-his-first-start-vs-getafe-report/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「上手くサボってもええんやでとは思う」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: うーん、ラフィーニャはキャプテンやってたから
+  - voice: ネット民
+    text: 抜きどころなかったのは仕方ない気がする
+    cont: true
+  - voice: ネット民
+    text: とはいえキャプテンというのを考慮しても
+    cont: true
+  - voice: ネット民
+    text: 1戦目でフル出場させる必要ってあったのかは疑問に思うけど
+    cont: true
+  - voice: ネット民
+    text: ハフィーニャの何事にも全力少年なとこ大好きだけど
+    short_voice: true
+  - voice: ネット民
+    text: 上手くサボってもええんやでとは思う
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: W杯後のクラブ練習に全力すぎる姿見てから嫌な予感はしてた
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: まあバルサはそれでも強いだろう
+    cont: true
+    short_voice: true
+  sources:
+  - https://x.com/Rosell9_KH9SY7/status/2104919551771279627
+  - https://x.com/iikagenni_siro2/status/2104914130947952949
+  - https://search.yahoo.co.jp/realtime/search?p=ハフィーニャ
