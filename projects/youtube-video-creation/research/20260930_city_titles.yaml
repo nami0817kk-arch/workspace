@@ -1,0 +1,468 @@
+# 取材メモ（9/30 プレミアの題材）。key = city_titles。型は news。
+# 9/26〜9/30 の状況: 正式発表・決定文の公開・処分の決定・上訴の提出は、どれも確かめられなかった（報道の段階のまま）。
+#   9/28 Sky: 手続きは上訴の段階へ進むと Sky が理解（understands）。リーグとマンCは報道を否定していない。
+#        ソリアーノCEO は欧州クラブ協会の会合で「決着には何年もかかる」（関係者の話）。
+#   9/29 Al Jazeera: 「罰はまだ承認されていない」。テバス（ラ・リーガ会長）「最も重い罰を」、ポチェッティーノ「欺かれていた時代」。
+#   9/26 BBC（Dan Roan, bbc.co.uk/sport/football/articles/cxyvzzj17682o）: リーグの運営・各クラブとも、過去の優勝の取り消しに乗り気でない。罰は同じ委員会の聞き取りのあと。
+#   → 大きな進展は無いので、切り口は「もし優勝が取り消されたら」。
+# 問われた期間: プレミアリーグの 2023-02-06 発表（premierleague.com/en/news/3045970）で、財務情報は 2009/10〜2017/18 の各季、
+#   監督報酬 2009/10〜2012/13、選手報酬 2010/11〜2015/16、UEFA規則 2013/14〜2017/18、収益ルール 2015/16〜2017/18、非協力は 2018年12月〜。
+#   この9季のプレミア優勝は 2011-12・2013-14・2017-18 の3回（Al Jazeera は「2009〜2018 に4回」と書いているが、季で数えると3回）。
+# 順位（リーグの公式データ footballapi.pulselive.com の standings（compSeasons 20/22/79）で確かめ、英語版Wikipedia の表とも一致）: 2011-12 マンC 89（得失点+64）/マンU 89（+56）。
+#   2013-14 マンC 86（+65）/リヴァプール 84（+51）。2017-18 マンC 100/マンU 81。
+# 規則の原文: Premier League Handbook 2026/27 の W.64（2025/26 版では W.55）。戒告・上限の無い罰金・リーグ戦の停止・
+#   「points scored or to be scored」の減点・再試合の勧告・除名の勧告・賠償（上限なし）・登録の取り消し・
+#   「such other penalty as it shall think fit」・「make such other order as it thinks fit」。
+#   「優勝の取り消し（strip/annul/title）」の語は無い。英語版Wikipedia の事件の記事は「annulment of previous titles」を罰に挙げているが、原文には見当たらない。
+#   W.105.5（2026/27 版。2023 の発表では W.82.2）: 委員会・上訴委員会の最終的な判断はリーグのサイトで公開される。
+# 前例: 1992-93 仏1部 マルセイユ（買収）→ LFP はパリSGに回そうとしたが、オーナーの Canal+ が拒み、空位。
+#   2004-05 セリエA ユヴェントス（カルチョーポリ）→ 空位（2位ミランも準優勝扱いにならない）。
+#   2005-06 → FIGC が 2006-07-26 にインテル（ピッチでは3位）を優勝と宣言。
+#   ユヴェントスは 2019年1月に 2005-06 の取り消しを求めたが、2019-05-06 に退けられた（英語版Wikipedia Calciopoli）。
+# 過去の回との重ね: 9/26 city（114件・声明・罰の並び）、9/27c citysue（訴える4クラブ・賠償額）、9/27c citystars（ノエル・キーン）、9/26 rodri。
+#   9/27c citysue で「ユナイテッドは2012年と2018年にさらわれ、リヴァプールは2014年に2位」と言っているので、ここでは勝ち点の差に寄せて言い換えた。
+# ルーニー（Daily Mail 9/29・ロイター 9/29）は使っていない（ユーザーが×）。
+# 反応: Yahoo!ニュース（theWORLD の記事のコメント欄）の nad********・iko********、Bluesky の seldom-seen-kid（英語、訳した）。
+#   seldom-seen-kid 原文: "Any title handed to us would have an asterisk next to it in the same way any trophy city won in
+#   that period does now. The runners up to Lance Armstrong didn't get awarded the titles, although I guess it happens in athletics."
+# 写真: Commons「Mancini Nasri Aguero.JPG」（Oldelpaso, CC BY-SA 3.0, 2012-05-14 の優勝パレード）。16:9 に切った 01_w.jpg を使う。
+#   記事の写真（サッカーキング 260927_city1112.jpg）は Kompany とマンチーニの 2012 年の写真だったが、EXIF に「2012 Getty Images」があり使わない。
+# ダン・ローアンの原文: "Not quite, as the decision will be made by an independent panel which is yet to hold a 'sanction hearing'. That means it cannot be ruled out, although a points deduction, huge fine or possibly even expulsion from the Premier League are thought to be more likely."
+date: 2026年9月30日
+slot: premier_1
+format: news
+people:
+- マンチェスター・シティ
+theme:
+  id: city_titles
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンCの優勝3回、取り消されたら2位に渡るのか。欧州の前例は
+  question: マンCの優勝が取り消されたら、2位に繰り上がるのか、空位になるのか
+  takeaway: 問われた9季のプレミア優勝は3回で、2位との差は得失点差・2点・19点。規則の罰の一覧に優勝の取り消しは無く、あるのは「すでに取った勝ち点も引ける」と「その他の罰」だけ。前例の3件は繰り上げ1・空位2に割れ、どれも試合に手を入れた事件だった。お金の届け出の違反で優勝を2位に回した例は、この中に無い
+  opening_image: assets/images/20260930_city_titles/01_w.jpg
+short_title: マンCの優勝、取り消されたら2位のものに？
+thumbnail:
+  photo: assets/images/20260930_city_titles/01_w.jpg
+  line1: マンCの優勝、取り消しなら
+  line2: 規則に「優勝取り消し」の文字は●●
+  reaction: 優勝パレードも当時のメンバー集めて
+sections:
+- id: status
+  heading: いま、どこまで決まったか
+  tier: 報道
+  telop: 違反の判断は報道の段階。判断の文書も罰も、まだ出ていない
+  narrator: キャスター
+  card:
+    type: table
+    title: 9月30日の時点
+    columns: &id001
+    - ''
+    - ''
+    rows: &id002
+    - - 違反の判断
+      - 報道だけ。公式の発表は無い
+    - - 判断の文書
+      - まだ公開されていない
+    - - 罰
+      - まだ決まっていない
+    - - マンCの不服申し立て
+      - その構えと報道
+  say:
+  - text: 財務規則違反の判断が出たと報じられて5日。リーグもシティも公式の発表はしていません。
+    image: assets/images/20260930_city_titles/01_w.jpg
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 判断の理由を書いた文書も、まだ出ていません。
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 判断したのは、リーグから独立した委員会です。
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: シティは不服を申し立てる構えと報じられています。
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 過去の優勝を消すことに、リーグもほかのクラブも乗り気ではないそうです。
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+  - voice: 記者のダン・ローアン
+    text: 委員会は、罰を決める審理をまだ開いていない
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - voice: 記者のダン・ローアン
+    text: だから取り消しも否定はできない
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+    cont: true
+  - voice: 記者のダン・ローアン
+    text: ただ、勝ち点の減点や巨額の罰金、
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+    cont: true
+  - voice: 記者のダン・ローアン
+    text: もしかするとプレミアからの除名さえ、
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+    cont: true
+  - voice: 記者のダン・ローアン
+    text: そのほうがありそうだとみられている
+    card:
+      type: table
+      title: 9月30日の時点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+    cont: true
+  quotes_from:
+  - BBC https://www.bbc.co.uk/sport/football/articles/cxyvzzj17682o
+  sources:
+  - https://www.skysports.com/football/news/11661/13593034/man-city-ceo-ferran-soriano-says-fight-against-premier-league-could-take-years-to-conclude-amid-reports-of-decision-in-115-charges-case
+  - https://www.skysports.com/football/news/13592544/man-city-charges-case-involving-alleged-breaches-of-premier-league-financial-rules-could-drag-on-for-years
+  - https://www.aljazeera.com/sports/2026/9/29/man-citys-premier-league-charges-whats-the-latest-and-what-comes-next
+  - https://www.bbc.co.uk/sport/football/articles/cxyvzzj17682o
+- id: titles
+  official: true
+  heading: 問われた9季と、3つの優勝
+  tier: 確定
+  telop: 2009-10年から2017-18年の9季。プレミアの優勝は3回
+  narrator: 解説
+  card:
+    type: table
+    title: 問われた9季に、マンCが取ったプレミアの優勝
+    columns: &id003
+    - 季
+    - 優勝
+    - 2位
+    - 差
+    rows: &id004
+    - - 2011-12
+      - マンC 89
+      - マンU 89
+      - 得失点差
+    - - 2013-14
+      - マンC 86
+      - リヴァプール 84
+      - '2'
+    - - 2017-18
+      - マンC 100
+      - マンU 81
+      - '19'
+  say:
+  - text: プレミアリーグは2023年、違反があるとしてシティを告発しました。
+    card:
+      type: table
+      title: 問われた9季に、マンCが取ったプレミアの優勝
+      columns: *id003
+      rows: *id004
+  - text: 対象は2009年から2018年までの9シーズン。この間のシティのプレミア優勝は3回。
+    card:
+      type: table
+      title: 問われた9季に、マンCが取ったプレミアの優勝
+      columns: *id003
+      rows: *id004
+  - text: 2012年はマンUと勝ち点89で並び、入れた点と取られた点の差、得失点差で上回りました。
+    card:
+      type: table
+      title: 問われた9季に、マンCが取ったプレミアの優勝
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 2014年は勝ち点86で、2位のリヴァプールと勝ち点2差。
+    card:
+      type: table
+      title: 問われた9季に、マンCが取ったプレミアの優勝
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 2018年は勝ち点100で、2位のマンUと勝ち点19差。
+    card:
+      type: table
+      title: 問われた9季に、マンCが取ったプレミアの優勝
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  sources:
+  - https://www.premierleague.com/en/news/3045970
+  - https://www.premierleague.com/tables?co=1&se=20
+  - https://www.premierleague.com/tables?co=1&se=22
+  - https://www.premierleague.com/tables?co=1&se=79
+  - https://en.wikipedia.org/wiki/2011%E2%80%9312_Premier_League
+  - https://en.wikipedia.org/wiki/2013%E2%80%9314_Premier_League
+  - https://en.wikipedia.org/wiki/2017%E2%80%9318_Premier_League
+- id: rule
+  official: true
+  heading: 規則に「優勝の取り消し」はあるか
+  tier: 確定
+  telop: 規則の罰の一覧に、優勝の取り消しという言葉は無い
+  narrator: キャスター
+  card:
+    type: table
+    title: 規則にある罰（委員会ができること）
+    columns: &id005
+    - 罰
+    - ''
+    rows: &id006
+    - - 戒告・罰金
+      - 罰金に上限は無い
+    - - 勝ち点を引く
+      - すでに取った勝ち点も
+    - - リーグからの除名
+      - 委員会は勧告まで
+    - - 他クラブへの賠償
+      - 上限は無い
+    - - その他
+      - 適当と考える罰
+  say:
+  - text: シティに科せる罰は、戒告、上限の無い罰金、他クラブへの賠償。
+    card:
+      type: table
+      title: 規則にある罰（委員会ができること）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 除名は、委員会がリーグに勧めるところまで。
+    card:
+      type: table
+      title: 規則にある罰（委員会ができること）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: 勝ち点を引く罰は、すでに取った勝ち点も対象。どの季の分かまでは書いていません。
+    card:
+      type: table
+      title: 規則にある罰（委員会ができること）
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 優勝の取り消しという言葉は、この一覧にありません。
+    card:
+      type: table
+      title: 規則にある罰（委員会ができること）
+      columns: *id005
+      rows: *id006
+  - text: あるのは最後の一文、「委員会が適当と考えるその他の罰」。
+    card:
+      type: table
+      title: 規則にある罰（委員会ができること）
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: 一覧に無い罰を科す余地で、取り消しが入るならここです。
+    card:
+      type: table
+      title: 規則にある罰（委員会ができること）
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.premierleague.com/en/news/3045970
+- id: precedents
+  main: true
+  heading: 前例は、繰り上げと空位
+  tier: 背景
+  telop: マルセイユとユヴェントス。優勝が下の順位に渡ったのは1度だけ
+  narrator: 解説
+  card:
+    type: table
+    title: リーグの優勝が取り消された例
+    columns: &id007
+    - 季
+    - 取り消し
+    - 優勝は
+    rows: &id008
+    - - 1992-93 フランス
+      - マルセイユ
+      - 空位（2位パリSGが受けず）
+    - - 2004-05 イタリア
+      - ユヴェントス
+      - 空位
+    - - 2005-06 イタリア
+      - ユヴェントス
+      - 3位だったインテルへ
+  say:
+  - text: シティは財務規則違反と判断されたと報じられ、罰は未定です。
+    short_only: true
+  - text: 規則の罰に優勝の取り消しは無く、試合への介入の件でもありません。
+    short_only: true
+  - text: 手がかりは、優勝が取り消された他国の例です。
+    card:
+      type: table
+      title: リーグの優勝が取り消された例
+      columns: *id007
+      rows: *id008
+  - text: 1993年のフランス。マルセイユが、相手選手への買収で優勝を取り消されました。
+    card:
+      type: table
+      title: リーグの優勝が取り消された例
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 2位のパリ・サンジェルマンが受けず、優勝は空いたまま。
+    card:
+      type: table
+      title: リーグの優勝が取り消された例
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: ユヴェントスは、審判の割り当てに働きかけた事件で優勝を2つ失いました。
+    card:
+      type: table
+      title: リーグの優勝が取り消された例
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 2005年は、2位のミランにも回らず該当なし。
+    card:
+      type: table
+      title: リーグの優勝が取り消された例
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 2006年は、ミランも罰で順位を下げ、3位だったインテルが優勝に。
+    card:
+      type: table
+      title: リーグの優勝が取り消された例
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: ユヴェントスは2019年に取り消しを求め、退けられました。
+    card:
+      type: table
+      title: リーグの優勝が取り消された例
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/1992%E2%80%9393_French_Division_1
+  - https://en.wikipedia.org/wiki/2004%E2%80%9305_Serie_A
+  - https://en.wikipedia.org/wiki/2005%E2%80%9306_Serie_A
+  - https://en.wikipedia.org/wiki/Calciopoli
+- id: view
+  viewpoint: true
+  heading: 繰り上げか、空位か
+  tier: 背景
+  telop: 前例はどれも試合に手を入れた事件。お金の届け出の違反で優勝を2位に回した例は無い
+  narrator: キャスター
+  card:
+    type: table
+    title: 前例とマンCの違い
+    columns: &id009
+    - ''
+    - 問われたこと
+    - 優勝は
+    rows: &id010
+    - - マルセイユ
+      - 相手選手の買収
+      - 空位
+    - - ユヴェントス
+      - 審判の割り当て
+      - 空位と繰り上げ
+    - - マンC
+      - お金の届け出
+      - まだ
+  say:
+  - text: 前例はどれも、試合そのものに手を入れた事件でした。
+    card:
+      type: table
+      title: 前例とマンCの違い
+      columns: *id009
+      rows: *id010
+  - text: シティが問われたのは、収入や選手・監督への支払いの届け出です。
+    card:
+      type: table
+      title: 前例とマンCの違い
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 試合への介入なら結果のゆがみと言えますが、届け出の違反が勝ち点をいくつ動かしたかは数えられません。
+    card:
+      type: table
+      title: 前例とマンCの違い
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: お金の届け出の違反で、優勝を2位に回した例は、この3件の中にありません。
+    card:
+      type: table
+      title: 前例とマンCの違い
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Calciopoli
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.%E2%80%94Premier_League_financial_breaches_case
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「タイトル剥奪、2位移行、賞金も満額はいる」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: タイトル剥奪、2位移行、賞金も満額はいる、
+  - voice: ネット民
+    text: 優勝パレードも当時のメンバー集めてしてくれよな？
+    cont: true
+  - voice: ネット民
+    text: 回ってきたタイトルには、
+    short_voice: true
+  - voice: ネット民
+    text: あの時期にシティが取ったトロフィーと同じように、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 但し書きが付くだろう。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: ランス・アームストロングのときも、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 2位の選手にタイトルは渡らなかった。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 陸上では渡すこともあるみたいだけど。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/0d3ccaf0b46830520305e415487fbda0c35a671c/comments
+  - https://bsky.app/profile/seldom-seen-kid.bsky.social/post/3mwfpc5dfy22h
