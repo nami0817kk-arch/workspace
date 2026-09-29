@@ -43,7 +43,9 @@ TELOP_BOTTOM = 58
 BRAND_GREEN = (11, 61, 46)
 BRAND_GOLD = (255, 213, 74)
 MEDIA_FLOOR = 0.64       # 立ち絵なしのとき、表や写真が使ってよい下限（画面の高さの割合）
-PROGRESS_HEIGHT = 8      # 画面下端の進捗バー
+# **進捗バーは出さない**（2026-09-29 ユーザー「これからは外して」）。9/28 に入れた画面下端の黄色い線。
+# 仕組み（ffmpeg の overlay で時間で伸ばす）は残してあり、8 に戻せばまた出る。蒸し返さない
+PROGRESS_HEIGHT = 0
 PHOTO_MAX_ZOOM = 1.25    # 写真の寄りの上限（背景の 1.45 だと顔が荒れる）
 PILL_IN = 0.35           # 節の頭で左上のピルとテロップが滑り込む秒数（動きの段3）
 IMAGE_FADE = 0.35        # 写真が別の写真に替わる行は、前の絵から溶かして切り替える（品質100回の11）
@@ -1567,7 +1569,7 @@ class Renderer:
         if self.layout.is_portrait:
             return None
         total = sum(seconds for _, seconds in entries)
-        return (total, PROGRESS_HEIGHT) if total > 1.0 else None
+        return (total, PROGRESS_HEIGHT) if total > 1.0 and PROGRESS_HEIGHT > 0 else None
 
 
 def _emphasis_segments(chunk: str, spans: list[tuple[int, int]]
