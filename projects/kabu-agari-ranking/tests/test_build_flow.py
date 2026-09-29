@@ -10,6 +10,29 @@ import pytest
 
 import build_site
 import fetcher
+import validate
+
+
+def _rec_date() -> str:
+    """`validate` が「この時点で出るはずの相場日」と認める日付。
+
+    見本を "2026-09-28" と固定で書いていたため、**書いた翌日から必ず落ちた**
+    （2026-09-29 に master が赤くなり、サイトの公開が1日止まった。
+    データの取得自体は成功していたのに、テストが落ちて公開まで進まなかった）。
+    日付を跨いで走るテストに、その日にしか通らない値を埋め込まない。
+    """
+    from datetime import datetime
+    expected = validate.expected_rec_dates(datetime.now(validate.JST))
+    if expected:
+        # 古いほうを採る。場中は {今日, 前営業日} が返るが、その時刻に
+        # 実際に出ているのは前営業日の終値。大引け後は {今日} だけなので
+        # どちらを採っても同じになる。
+        return sorted(expected)[0]
+    # 祝日表の範囲外では validate が日付を見ない（何を入れても通る）
+    return datetime.now(validate.JST).date().isoformat()
+
+
+REC_DATE = _rec_date()
 
 
 @pytest.fixture(autouse=True)
@@ -29,10 +52,11 @@ def clean(monkeypatch, tmp_path):
     fetcher.pages_fetched.clear()
 
 
-def _rows(n=30, rec_date="2026-09-28"):
+def _rows(n=30, rec_date=None):
     return pd.DataFrame([
         {"rank": i, "code": f"{1000 + i}", "name": f"銘柄{i}", "close": 100.0,
-         "change_pct": 5.0, "metric_value": 1, "rec_date": rec_date}
+         "change_pct": 5.0, "metric_value": 1,
+         "rec_date": rec_date or REC_DATE}
         for i in range(1, n + 1)
     ])
 
@@ -67,7 +91,7 @@ def test_解析が壊れていても当日分が保存できていれば止め�
     out = capsys.readouterr().out
     assert "[WARN]" in out
     assert "[ERROR]" not in out
-    assert (clean / "2026-09-28.json").exists()
+    assert (clean / f"{REC_DATE}.json").exists()
 
 
 def test_解析が壊れて当日分も無ければ落とす(monkeypatch, clean):
@@ -106,10 +130,10 @@ def test_属性の取得が失敗してもサイトは作る(monkeypatch, clean,
 def test_ストップ高が取れた日は記録が入る(monkeypatch, clean):
     _patch_fetch(monkeypatch, stop_high=pd.DataFrame([
         {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
-         "change_pct": 44.25, "at_limit": True, "rec_date": "2026-09-28"}]))
+         "change_pct": 44.25, "at_limit": True, "rec_date": REC_DATE}]))
     fetcher.pages_fetched[fetcher.STOP_HIGH_LABEL] = 3
     build_site.main()
-    saved = json.loads((clean / "2026-09-28.json").read_text(encoding="utf-8"))
+    saved = json.loads((clean / f"{REC_DATE}.json").read_text(encoding="utf-8"))
     assert saved["stop_high"][0]["code"] == "5131"
     assert "stop_low" not in saved, "取れなかった側をキーごと残している"
 
