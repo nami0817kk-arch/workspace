@@ -2960,5 +2960,53 @@
     "video_id": "_XxnnLGN0g0",
     "at": "2026-09-29T07:20:32+00:00",
     "publish_at": "2026-09-29T11:00:00Z"
+  },
+  {
+    "build": "20260930_itakura",
+    "video_id": "88INdo9mndY",
+    "at": "2026-09-29T22:53:17+00:00",
+    "publish_at": "2026-09-30T01:30:00Z"
+  },
+  {
+    "build": "20260930_itakura_short",
+    "video_id": "xX6v1dt_G1k",
+    "at": "2026-09-29T22:53:32+00:00",
+    "publish_at": "2026-09-30T02:00:00Z"
+  },
+  {
+    "build": "20260930_nakamura_sb",
+    "video_id": "9h-3oLivIow",
+    "at": "2026-09-29T22:53:49+00:00",
+    "publish_at": "2026-09-30T02:30:00Z"
+  },
+  {
+    "build": "20260930_nakamura_sb_short",
+    "video_id": "aHi7eKdG2jw",
+    "at": "2026-09-29T22:54:03+00:00",
+    "publish_at": "2026-09-30T03:00:00Z"
+  },
+  {
+    "build": "20260930_doan_matsuki",
+    "video_id": "PHDSEq1fiRk",
+    "at": "2026-09-29T22:54:27+00:00",
+    "publish_at": "2026-09-30T03:30:00Z"
+  },
+  {
+    "build": "20260930_doan_matsuki_short",
+    "video_id": "CZChxCqYBhY",
+    "at": "2026-09-29T22:54:42+00:00",
+    "publish_at": "2026-09-30T04:00:00Z"
+  },
+  {
+    "build": "20260930_raphinha",
+    "video_id": "t7OCSXD8MJY",
+    "at": "2026-09-29T22:55:06+00:00",
+    "publish_at": "2026-09-30T04:30:00Z"
+  },
+  {
+    "build": "20260930_raphinha_short",
+    "video_id": "TOmT1AYwYVk",
+    "at": "2026-09-29T22:55:23+00:00",
+    "publish_at": "2026-09-30T05:00:00Z"
   }
 ]
