@@ -184,12 +184,22 @@
     "playlistItems.insert": 9
   },
   "2026-09-27": {
-    "channels.list": 17,
-    "playlistItems.list": 54,
-    "videos.insert": 12,
-    "thumbnails.set": 12,
-    "playlistItems.insert": 6,
-    "videos.list": 48,
-    "videos.update": 6
+    "channels.list": 27,
+    "playlistItems.list": 62,
+    "videos.insert": 20,
+    "thumbnails.set": 20,
+    "playlistItems.insert": 10,
+    "videos.list": 52,
+    "videos.update": 6,
+    "channels.update": 1
+  },
+  "2026-09-28": {
+    "channels.list": 5,
+    "playlistItems.list": 5,
+    "videos.insert": 3,
+    "thumbnails.set": 3,
+    "playlistItems.insert": 2,
+    "videos.list": 3,
+    "videos.update": 2
   }
 }

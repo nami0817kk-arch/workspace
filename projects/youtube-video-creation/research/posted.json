@@ -2792,5 +2792,71 @@
     "video_id": "6L7kGvdu24o",
     "at": "2026-09-28T00:03:22+00:00",
     "publish_at": "2026-09-28T04:30:00Z"
+  },
+  {
+    "build": "20260928d_klopp",
+    "video_id": "SNUu4qvcCeY",
+    "at": "2026-09-28T03:49:08+00:00",
+    "publish_at": "2026-09-28T05:00:00Z"
+  },
+  {
+    "build": "20260928d_klopp_short",
+    "video_id": "KDWtkB8UvlA",
+    "at": "2026-09-28T03:49:24+00:00",
+    "publish_at": "2026-09-28T05:30:00Z"
+  },
+  {
+    "build": "20260928d_xavi",
+    "video_id": "rroQHaLH834",
+    "at": "2026-09-28T03:49:41+00:00",
+    "publish_at": "2026-09-28T06:00:00Z"
+  },
+  {
+    "build": "20260928d_xavi_short",
+    "video_id": "MmZUroPcZQY",
+    "at": "2026-09-28T03:49:59+00:00",
+    "publish_at": "2026-09-28T06:30:00Z"
+  },
+  {
+    "build": "20260928d_ronaldo",
+    "video_id": "T0cylxuosy8",
+    "at": "2026-09-28T03:50:23+00:00",
+    "publish_at": "2026-09-28T07:00:00Z"
+  },
+  {
+    "build": "20260928d_ronaldo_short",
+    "video_id": "oiJDO8SnYjY",
+    "at": "2026-09-28T03:50:42+00:00",
+    "publish_at": "2026-09-28T07:30:00Z"
+  },
+  {
+    "build": "20260928d_haaland",
+    "video_id": "jPsduRLUS-g",
+    "at": "2026-09-28T03:50:59+00:00",
+    "publish_at": "2026-09-28T08:00:00Z"
+  },
+  {
+    "build": "20260928d_haaland_short",
+    "video_id": "7cZmZDZbruc",
+    "at": "2026-09-28T03:51:15+00:00",
+    "publish_at": "2026-09-28T08:30:00Z"
+  },
+  {
+    "build": "20260929_ueda",
+    "video_id": "f3YLw97fhew",
+    "at": "2026-09-29T00:37:17+00:00",
+    "publish_at": "2026-09-29T01:00:00Z"
+  },
+  {
+    "build": "20260929_ueda_short",
+    "video_id": "-5SQ9lDwz3o",
+    "at": "2026-09-29T00:37:37+00:00",
+    "publish_at": "2026-09-29T01:30:00Z"
+  },
+  {
+    "build": "20260929_var",
+    "video_id": "E_J0tFOZ1WI",
+    "at": "2026-09-29T00:37:55+00:00",
+    "publish_at": "2026-09-29T02:00:00Z"
   }
 ]
