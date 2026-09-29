@@ -134,7 +134,11 @@ def caption(build_dir: Path) -> str:
             and not x.startswith("※")]
     hashtags = []
     for tag in tags + ["#海外サッカー"]:
-        if tag not in hashtags:
+        # **タグの中の「・」などの記号を抜く**（2026-09-29 ユーザー「tiktokのハッシュタグが
+        # コピペだとうまく反映されてなかった」）。ハッシュタグは記号のところで切れるので、
+        # 「#レアル・ソシエダ」は「#レアル」だけがタグになっていた
+        tag = "#" + re.sub(r"[・･.\-－‐―/／&＆'’!！?？()（）\s]", "", tag.lstrip("#＃"))
+        if len(tag) > 1 and tag not in hashtags:
             hashtags.append(tag)
     # **出典は媒体名だけ。**TikTok の説明欄ではリンクが押せず、長いURLは邪魔になる
     outlets = []

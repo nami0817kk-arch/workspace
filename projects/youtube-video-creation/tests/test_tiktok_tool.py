@@ -69,7 +69,8 @@ def test_説明欄の中身はこれまでどおり(tmp_path):
     assert "espn.com/soccer" not in text
     # ハッシュタグは「海外サッカー」を足して4つまで
     tags = next(x for x in text.splitlines() if x.startswith("#")).split()
-    assert tags == ["#サッカー", "#アーセナル", "#マックス・ダウマン", "#海外サッカー"]
+    # 「・」は抜く（ハッシュタグは記号で切れる。2026-09-29）
+    assert tags == ["#サッカー", "#アーセナル", "#マックスダウマン", "#海外サッカー"]
     assert "※この動画は報道をもとに構成しています" in text
     assert len(text) <= tiktok.CAPTION_MAX
 
@@ -89,3 +90,13 @@ def test_ファイル名の頭はYouTubeのショートを予約した時刻(tmp
     assert tiktok.slot_of(Path("output/20260929b_ito_short")) == "17:00"
     assert tiktok.slot_of(Path("output/20260929b_ito_tiktok")) == "17:00"
     assert tiktok.slot_of(Path("output/20260929b_nothing_short")) == ""
+
+
+def test_ハッシュタグの中の中黒を抜く(tmp_path):
+    """「#レアル・ソシエダ」は「・」で切れて「#レアル」だけがタグになる（2026-09-29）。"""
+    body = DESCRIPTION.replace("#マックス・ダウマン", "#レアル・ソシエダ")
+    io.open(tmp_path / "description.txt", "w", encoding="utf-8").write(body)
+    text = tiktok.caption(tmp_path)
+    tag_line = [line for line in text.splitlines() if line.startswith("#")][0]
+    assert "#レアルソシエダ" in tag_line.split()
+    assert "・" not in tag_line
