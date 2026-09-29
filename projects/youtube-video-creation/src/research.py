@@ -209,7 +209,7 @@ FORMATS = {
         "needs_question": False, "needs_answer": False, "wrap": False,
         "min_sections": 2,
         "voice_min": 0.0,
-        "note": "※反応は実在する投稿・記事から引いています。出典は下にあります。\n"
+        "note": "※反応は実在する投稿から引いています。\n"
                 "個人が特定できる形では出していません。\n",
     },
     "quote": {
@@ -217,7 +217,9 @@ FORMATS = {
         "needs_question": False, "needs_answer": False, "wrap": False,
         "min_sections": 1,
         "voice_min": 0.0,
-        "note": "※発言は下の記事から引いています。\n",
+        # **引用元の行は出さない**（2026-09-29 ユーザー「概要欄の引用元消したい」）。記事のURLは
+        # 9/17 から載せていないので、「下の記事」は何も指していなかった
+        "note": "",
     },
 }
 

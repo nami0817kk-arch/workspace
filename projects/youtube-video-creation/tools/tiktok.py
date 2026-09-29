@@ -155,8 +155,7 @@ def caption(build_dir: Path) -> str:
     out += [""] + YOUTUBE_LINES
     out += ["", " ".join(hashtags[:HASHTAG_MAX])]
     tail: list[str] = []
-    if outlets:
-        tail.append("出典: " + " / ".join(outlets))
+    # **引用元（媒体名）の行は出さない**（2026-09-29 ユーザー「概要欄の引用元消したい」）
     tail += parts.get("クレジット", [])
     tail += notes
     if tail:

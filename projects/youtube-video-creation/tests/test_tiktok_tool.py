@@ -64,9 +64,9 @@ def test_説明欄の中身はこれまでどおり(tmp_path):
 
     assert text.startswith("16歳が並んだ相手はルーニー\n")
     assert "16歳のダウマンが並んだのは、ルーニーの記録だった" in text
-    # 出典は媒体名だけ（TikTok の説明欄ではURLが押せないので、長いURLは邪魔）
-    assert "出典: espn.com" in text
-    assert "espn.com/soccer" not in text
+    # 引用元は出さない（2026-09-29 ユーザー「概要欄の引用元消したい」）
+    assert "出典" not in text
+    assert "espn.com" not in text
     # ハッシュタグは「海外サッカー」を足して4つまで
     tags = next(x for x in text.splitlines() if x.startswith("#")).split()
     # 「・」は抜く（ハッシュタグは記号で切れる。2026-09-29）
