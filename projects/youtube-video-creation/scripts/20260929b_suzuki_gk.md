@@ -13,7 +13,7 @@ thumbnail_reaction: 言い訳を作らず「技術的なミス」と言い切れ
 thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main: []
-thumbnail_photo: assets/images/20260929b_suzuki/01.jpg
+thumbnail_photo: assets/images/20260929b_suzuki/01_w.jpg
 bg: assets/backgrounds/stadium.png
 date: 2026年9月29日
 intro_title: 鈴木彩艶「攻守ともにひどかった」。雨でも脇腹でもないと言った理由
@@ -137,6 +137,53 @@ cards:
       - 全体練習に合流
     - - 28日
       - ベネズエラ戦に後半から
+  excuse_1_card:
+    type: table
+    title: 鈴木彩艶の脇腹
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 9月22日
+      - クラブで痛め、別メニュー
+    - - 24日
+      - ウルグアイ戦は出場メンバー外
+    - - 25日
+      - 全体練習に合流
+    - - 28日
+      - ベネズエラ戦に後半から
+    highlight_row: 1
+  excuse_3_card:
+    type: table
+    title: 鈴木彩艶の脇腹
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 9月22日
+      - クラブで痛め、別メニュー
+    - - 24日
+      - ウルグアイ戦は出場メンバー外
+    - - 25日
+      - 全体練習に合流
+    - - 28日
+      - ベネズエラ戦に後半から
+  excuse_6_card:
+    type: table
+    title: 鈴木彩艶の脇腹
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 9月22日
+      - クラブで痛め、別メニュー
+    - - 24日
+      - ウルグアイ戦は出場メンバー外
+    - - 25日
+      - 全体練習に合流
+    - - 28日
+      - ベネズエラ戦に後半から
+    highlight_row: 3
   cause_card:
     type: table
     title: 鈴木が挙げた原因
@@ -526,7 +573,7 @@ cards:
 キャスター: 鈴木彩艶「攻守ともにひどかった」。雨でも脇腹でもないと言った理由。
   telop: 鈴木彩艶「攻守ともにひどかった」。雨でも脇腹でもないと言った理由
   se: assets/audio/se_pon.wav
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 
 ## 入って27秒、そのあとも
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -535,7 +582,7 @@ cards:
   telop: 9月28日、広島。日本代表のベネズエラ戦は、激しい雨でした
   source: 報道
   card: report_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 キャスター: 鈴木彩艶は、後半の頭からゴールに立ちました。
   telop: 鈴木彩艶は、後半の頭からゴールに立ちました
 キャスター: 入って27秒。左を突破され、ゴール前に戻されたボールを決められました。
@@ -543,10 +590,10 @@ cards:
   card: report_2_card
 キャスター: 試合後の本人の言葉は。
   telop: 試合後の本人の言葉は
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: 今日のパフォーマンスは攻守ともにひどかった
   telop: 鈴木彩艶「今日のパフォーマンスは攻守ともにひどかった」
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 キャスター: 54分には、前線の上田綺世へ低く長いパスを通しています。
   telop: 54分には、前線の上田綺世へ低く長いパスを通しています
   card: report_5_card
@@ -564,32 +611,33 @@ cards:
   telop: 言い訳にできるものは2つありました。雨と、脇腹です
   source: 報道
   card: excuse_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: 脇腹はクラブで痛めたもので、24日のウルグアイ戦は出場メンバーから外れました。
   telop: 脇腹はクラブで痛めたもので、24日のウルグアイ戦は出場メンバーから外れました
+  card: excuse_1_card
 解説: 試合後の取材で、鈴木はどちらも理由にしませんでした。
   telop: 試合後の取材で、鈴木はどちらも理由にしませんでした
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: 雨が降っていた等々あるけど、この環境に適応することが大事。
   telop: 鈴木彩艶「雨が降っていた等々あるけど、この環境に適応することが大事」
-  image: assets/images/20260929b_suzuki/01.jpg
+  card: excuse_3_card
 鈴木彩艶: アジアの戦いだったらもっとピッチが悪いこともある。
   cont: true
   telop: 鈴木彩艶「アジアの戦いだったらもっとピッチが悪いこともある」
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: ピッチどうこうではなく、自分の技術的なミス
   cont: true
   telop: 鈴木彩艶「ピッチどうこうではなく、自分の技術的なミス」
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: 脇腹については。
   telop: 脇腹については
-  image: assets/images/20260929b_suzuki/01.jpg
+  card: excuse_6_card
 鈴木彩艶: 問題なくやれています
   telop: 鈴木彩艶「問題なくやれています」
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: 今日のようなパフォーマンスをしていては戦えない
   telop: 鈴木彩艶「今日のようなパフォーマンスをしていては戦えない」
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 
 ## 本人が挙げた原因は、味方との噛み合わせ
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -599,55 +647,55 @@ cards:
   only: short
   telop: 日本代表のゴールキーパー鈴木彩艶。ベネズエラ戦に後半から出て27秒で失点しました
   card: none
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 キャスター: 鈴木が原因に挙げたのは、自分の技術と、味方との噛み合わせでした。
   telop: 鈴木が原因に挙げたのは、自分の技術と、味方との噛み合わせでした
   source: 報道
   card: cause_1_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: 味方にサイドを切らせて自分がニア側のボールを取るとか、
   telop: 鈴木彩艶「味方にサイドを切らせて自分がニア側のボールを取るとか、」
   card: cause_2_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: そういう連携ができていたら防げる部分があった
   cont: true
   telop: 鈴木彩艶「そういう連携ができていたら防げる部分があった」
   card: cause_3_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 キャスター: 味方が外側のコースを消し、自分は近い側に来るボールを取る。その分担の話です。
   telop: 味方が外側のコースを消し、自分は近い側に来るボールを取る。その分担の話です
   card: cause_4_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 キャスター: 次に、持ち味のはずのビルドアップ、後ろからつなぐ組み立てです。
   telop: 次に、持ち味のはずのビルドアップ、後ろからつなぐ組み立てです
   card: cause_5_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: 味方とあまりイメージが合わなかった。
   telop: 鈴木彩艶「味方とあまりイメージが合わなかった」
   card: cause_6_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: もう少し自分のアイデアを共有しないといけない
   cont: true
   telop: 鈴木彩艶「もう少し自分のアイデアを共有しないといけない」
   card: cause_7_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: 自分が持つ時間がありながらも、探しどころを探す感じがあって、
   telop: 鈴木彩艶「自分が持つ時間がありながらも、探しどころを探す感じがあって、」
   card: cause_8_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 鈴木彩艶: 出しどころを何個か持つことができなかった
   cont: true
   telop: 鈴木彩艶「出しどころを何個か持つことができなかった」
   card: cause_9_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 キャスター: この日、日本は4日前のウルグアイ戦から先発を10人入れ替えていました。
   telop: この日、日本は4日前のウルグアイ戦から先発を10人入れ替えていました
   card: cause_10_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 キャスター: 鈴木が全体練習に合流できたのは、試合までの3日だけ。守備陣と合わせる時間はわずかでした。
   telop: 鈴木が全体練習に合流できたのは、試合までの3日だけ。守備陣と合わせる時間はわずかでした
   card: cause_11_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 
 ## セーブ率とミスの数
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -657,35 +705,35 @@ cards:
   telop: この45分を、鈴木彩艶のいつもの数字と比べます
   source: 背景
   card: view_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: 枠内に来たシュートを止めた割合、セーブ率。ベルギーでは68.8%でした。
   telop: 枠内に来たシュートを止めた割合、セーブ率。ベルギーでは68.8%でした
   card: view_1_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: パルマの最初の季は65.4%。今季のヴィラでは75%です。
   telop: パルマの最初の季は65.4%。今季のヴィラでは75%です
   card: view_2_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: 自分のミスが失点につながった数は、ベルギーの季が3回。
   telop: 自分のミスが失点につながった数は、ベルギーの季が3回
   card: view_3_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: パルマの2季で1回。W杯とヴィラでは、まだゼロです。
   telop: パルマの2季で1回。W杯とヴィラでは、まだゼロです
   card: view_4_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: 止める割合は上がり、ミスは減ってきました。
   telop: 止める割合は上がり、ミスは減ってきました
   card: view_5_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: ベネズエラ戦の45分は、その流れから外れていました。
   telop: ベネズエラ戦の45分は、その流れから外れていました
   card: view_6_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 解説: 次に先発したとき、この線に戻るかを見ます。
   telop: 次に先発したとき、この線に戻るかを見ます
   card: view_7_card
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 
 ## ネットの反応
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -693,35 +741,35 @@ cards:
 ネット民: 負傷の影響とかもあったのかなと思うが、
   telop: ネット民「負傷の影響とかもあったのかなと思うが、」
   source: 未確認
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 ネット民: 言い訳を作らず「技術的なミス」と
   cont: true
   telop: ネット民「言い訳を作らず「技術的なミス」と」
   card: none
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 ネット民: 言い切れるところに好感が持てる。
   cont: true
   telop: ネット民「言い切れるところに好感が持てる」
   card: none
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 ネット民: 本調子ではなかったとはいえ、
   cont: true
   telop: ネット民「本調子ではなかったとはいえ、」
   card: none
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 ネット民: 上田にズバッと付けた縦パスとかは流石だなと思った。
   cont: true
   telop: ネット民「上田にズバッと付けた縦パスとかは流石だなと思った」
   card: none
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 ネット民: 発言を聞いていると
   short_voice: true
   telop: ネット民「発言を聞いていると」
   card: none
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg
 ネット民: もっと大きく成長するのだろうなと思ってしまった。
   short_voice: true
   cont: true
   telop: ネット民「もっと大きく成長するのだろうなと思ってしまった」
   card: none
-  image: assets/images/20260929b_suzuki/01.jpg
+  image: assets/images/20260929b_suzuki/01_w.jpg

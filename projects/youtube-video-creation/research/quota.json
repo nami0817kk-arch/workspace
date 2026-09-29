@@ -209,7 +209,8 @@
     "videos.insert": 8,
     "thumbnails.set": 8,
     "playlistItems.insert": 4,
-    "videos.list": 1,
-    "commentThreads.list": 12
+    "videos.list": 42,
+    "commentThreads.list": 12,
+    "videos.update": 20
   }
 }
