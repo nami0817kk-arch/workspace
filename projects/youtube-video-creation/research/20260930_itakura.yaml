@@ -109,6 +109,8 @@ sections:
   - voice: 板倉滉
     text: この4試合はすごく大きい
     cont: true
+  quotes_from:
+  - https://web.gekisaka.jp/news/japan/detail/?459942-459942-fl
   sources:
   - https://web.gekisaka.jp/news/japan/detail/?459942-459942-fl
   - https://web.gekisaka.jp/news/japan/detail/?459943-459943-fl
@@ -143,6 +145,8 @@ sections:
   - voice: 板倉滉
     text: 『律で間違いないと思います』と伝えた
     cont: true
+  quotes_from:
+  - https://web.gekisaka.jp/news/japan/detail/?459943-459943-fl
   sources:
   - https://web.gekisaka.jp/news/japan/detail/?459943-459943-fl
   - https://news.yahoo.co.jp/articles/0f76865b589a5be8a35835f524fe89c0913d64d4

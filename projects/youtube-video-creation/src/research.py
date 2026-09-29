@@ -119,6 +119,9 @@ class Section:
     # **代弁は出典のある発言だけ**に使う（2026-09-05 の型）
     voices: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
+    # **言葉を実際に引いた記事**（2026-09-30）。書けば概要欄の「選手コメントの引用元」はこれだけになる。
+    # 書かなければ、名前のある人の発言がある節の sources から拾う（事実の確認に使った記事も混ざる）
+    quotes_from: list[str] = field(default_factory=list)
     official: bool = False
     card: dict | None = None
     # **行ごとのテロップとカード。**節に1枚だけだと、節の途中で画面が
@@ -298,6 +301,27 @@ class Notes:
                     seen.append(url)
         return seen
 
+    @property
+    def quote_sources(self) -> list[str]:
+        """**選手・監督の言葉を引いた記事**（2026-09-30 ユーザー「選手コメントの引用先にしよう。
+        出典だと、真似してるみたい」）。名前のある人の発言がある節の出典だけを拾う。
+        反応（ネット民など）の節、SNS の投稿、コメント欄、数字のサイトは入れない
+        """
+        skip_hosts = ("x.com", "twitter.com", "fotmob.com", "transfermarkt", "wikipedia.org",
+                      "site.api.espn.com", "wikidata.org")
+        seen: list[str] = []
+        for section in self.sections:
+            named = [v for v in section.voices if v and v not in CROWD_VOICES]
+            if not named:
+                continue
+            for url in (section.quotes_from or section.sources):
+                low = url.lower()
+                if any(host in low for host in skip_hosts) or low.rstrip("/").endswith("/comments"):
+                    continue
+                if url not in seen:
+                    seen.append(url)
+        return seen
+
 
 def load_notes(path: str | Path) -> Notes:
     path = Path(path)
@@ -426,6 +450,7 @@ def build_notes(raw: dict) -> Notes:
                 line_conts=[conts[i] for i in keep],
                 line_no_telops=[mutes[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
+                quotes_from=[str(u).strip() for u in (entry.get("quotes_from") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
                 # **見立ての節にカードが無ければ、見立てそのものを引用カードで出す**（2026-09-28）
                 card=entry.get("card") or (_viewpoint_card(raw) if entry.get("viewpoint") else None),
@@ -2174,6 +2199,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
             topic=notes.topic,
         ),
         "sources": notes.sources,
+        # 概要欄の「■ 選手コメントの引用元」（2026-09-30）
+        "quote_sources": notes.quote_sources,
         "cards": _cards(notes),
     }
 

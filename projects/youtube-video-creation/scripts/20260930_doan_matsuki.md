@@ -47,6 +47,9 @@ sources:
 - https://ja.wikipedia.org/wiki/%E6%9D%BE%E6%9C%A8%E7%8E%96%E7%94%9F
 - https://news.yahoo.co.jp/articles/9ac8f7f463733c218442afe74d1d66ca756f7791/comments
 - https://news.yahoo.co.jp/articles/76c968fe9998db52052b7b575ec3f39881fbae45/comments
+quote_sources:
+- https://web.gekisaka.jp/news/japan/detail/?459954-459954-fl
+- スポーツ報知 https://news.yahoo.co.jp/articles/10db3abeffc30e193ce9d56b9eab3352c8b31b75
 cards:
   view_card:
     type: table

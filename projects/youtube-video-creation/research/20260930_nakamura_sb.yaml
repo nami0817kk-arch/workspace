@@ -137,6 +137,9 @@ sections:
   - voice: 中村敬斗
     text: 一人足りない中でも点を取る力、勝ち切る力があると思う
     cont: true
+  quotes_from:
+  - https://web.gekisaka.jp/news/japan/detail/?459951-459951-fl
+  - https://www.soccer-king.jp/news/japan/national/20260929/2210844.html
   sources:
   - https://www.soccer-king.jp/news/japan/national/20260929/2210844.html
   - https://web.gekisaka.jp/news/japan/detail/?459951-459951-fl

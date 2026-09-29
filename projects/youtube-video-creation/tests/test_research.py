@@ -1938,3 +1938,29 @@ def test_紹介ものは反応が無くても知らせない():
 
     assert wants_reactions("") and wants_reactions("速報")
     assert not wants_reactions("有名選手の紹介") and not wants_reactions("プレミアリーグチーム紹介")
+
+
+def test_引用元は名前のある人の言葉がある節の記事だけ():
+    """反応の節・SNS・コメント欄・数字のサイトは入れない（2026-09-30）。"""
+    from src.research import Notes, Section
+
+    words = Section(id="w", heading="言葉", tier="報道", telop="t", say=["a", "b"],
+                    voices=["", "伊東純也"],
+                    sources=["https://web.gekisaka.jp/x", "https://www.fotmob.com/players/1"])
+    fans = Section(id="v", heading="反応", tier="未確認", telop="t", say=["c"],
+                   voices=["ネット民"], sources=["https://news.yahoo.co.jp/articles/abc/comments"])
+    facts = Section(id="f", heading="事実", tier="報道", telop="t", say=["d"],
+                    voices=[""], sources=["https://www.soccer-king.jp/y"])
+    notes = Notes(date="2026年9月30日", title="T", question="", sections=[words, fans, facts])
+    assert notes.quote_sources == ["https://web.gekisaka.jp/x"]
+
+
+def test_言葉を引いた記事を書けば引用元はそれだけ():
+    from src.research import Notes, Section
+
+    words = Section(id="w", heading="言葉", tier="報道", telop="t", say=["a", "b"],
+                    voices=["", "伊東純也"],
+                    sources=["https://web.gekisaka.jp/x", "https://www.spacemoney.com.br/y"],
+                    quotes_from=["https://web.gekisaka.jp/x"])
+    notes = Notes(date="2026年9月30日", title="T", question="", sections=[words])
+    assert notes.quote_sources == ["https://web.gekisaka.jp/x"]

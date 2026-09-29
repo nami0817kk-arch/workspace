@@ -60,6 +60,8 @@ sections:
   - 守りでは最後尾まで戻り、攻めでは前へ出るサイドの持ち場です。
   - 前半11分の先制点は、内側の堂安が走って相手を引きつけ、空いた所からでした。
   - 2人はいま、代表の合宿で同じ宿舎に寝泊まりしています。
+  quotes_from:
+  - https://web.gekisaka.jp/news/japan/detail/?459954-459954-fl
   sources:
   - https://web.gekisaka.jp/news/japan/detail/?459954-459954-fl
   - https://news.yahoo.co.jp/articles/c64314c27836ed38a11f92e04c4dd6cb993789ab
@@ -114,6 +116,9 @@ sections:
   - voice: 松木玖生
     text: 落ち着いてるタイプだと思う
     cont: true
+  quotes_from:
+  - https://web.gekisaka.jp/news/japan/detail/?459954-459954-fl
+  - スポーツ報知 https://news.yahoo.co.jp/articles/10db3abeffc30e193ce9d56b9eab3352c8b31b75
   sources:
   - https://web.gekisaka.jp/news/japan/detail/?459954-459954-fl
   - https://news.yahoo.co.jp/articles/10db3abeffc30e193ce9d56b9eab3352c8b31b75

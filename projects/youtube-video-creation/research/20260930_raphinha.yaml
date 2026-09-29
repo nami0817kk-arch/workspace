@@ -97,6 +97,8 @@ sections:
     card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]], "highlight_row": 3}
   - text: 後半34分の2本目のPKは、ヴィニシウスが決めています。
     card: {"type": "table", "title": "前半（オーストラリア 2-2 ブラジル）", "columns": ["", ""], "rows": [["2分", "ヴァンデルソンが先制"], ["28分", "同点にされる"], ["33分", "逆転される"], ["45分", "ラフィーニャがPKで同点"]], "highlight_row": 3}
+  quotes_from:
+  - https://www.lance.com.br/selecao-brasileira/ancelotti-explica-escolha-por-vini-jr-para-cobrar-penalti-merecia-gol.html
   sources:
   - https://www.lance.com.br/selecao-brasileira/brasil-melhora-e-vence-bem-a-australia-em-segundo-amistoso.html
   - https://www.lance.com.br/selecao-brasileira/selecao-por-que-raphinha-foi-substituido-no-intervalo-por-ancelotti.html

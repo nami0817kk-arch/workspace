@@ -179,3 +179,18 @@ def test_概要欄に連絡先を必ず置く():
     out = description(s)
     assert "お問い合わせ" in out
     assert "sakamane.support@gmail.com" in out
+
+
+def test_選手コメントの引用元だけを概要欄に出す():
+    """「出典」だと記事を真似したように読める（2026-09-30 ユーザー）。言葉を引いた記事だけを出す。"""
+    from src.script_model import parse_script
+    from src.subtitles import description
+
+    text = "\n".join([
+        "---", "title: T", "quote_sources:", "- https://web.gekisaka.jp/news/japan/detail/?1-1-fl", "---",
+        "## 本編", "キャスター: 何かが起きました。", "",
+    ])
+    body = description(parse_script(text))
+    assert "■ 選手コメントの引用元" in body
+    assert "ゲキサカ　https://web.gekisaka.jp/news/japan/detail/?1-1-fl" in body
+    assert "出典" not in body

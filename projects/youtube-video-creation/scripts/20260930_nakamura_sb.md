@@ -47,6 +47,9 @@ sources:
 - https://www.transfermarkt.jp/keito-nakamura/leistungsdaten/spieler/405397
 - https://en.wikipedia.org/wiki/Keito_Nakamura
 - https://news.yahoo.co.jp/articles/91f2809254c7ae414d2c1b3febc5fe7cee272b45/comments
+quote_sources:
+- https://web.gekisaka.jp/news/japan/detail/?459951-459951-fl
+- https://www.soccer-king.jp/news/japan/national/20260929/2210844.html
 cards:
   scramble_card:
     type: table

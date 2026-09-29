@@ -179,6 +179,29 @@ def _is_x(url: str) -> bool:
     return host.removeprefix("www.") in _X_HOSTS
 
 
+# 引用元の記事の媒体名（2026-09-30）。知らないサイトはホスト名のまま出す
+OUTLETS = {
+    "web.gekisaka.jp": "ゲキサカ", "gekisaka.jp": "ゲキサカ",
+    "soccer-king.jp": "サッカーキング", "www.soccer-king.jp": "サッカーキング",
+    "football-zone.net": "Football ZONE", "www.football-zone.net": "Football ZONE",
+    "news.yahoo.co.jp": "Yahoo!ニュース", "hochi.news": "スポーツ報知",
+    "www.nikkansports.com": "日刊スポーツ", "www.sponichi.co.jp": "スポニチ",
+    "www.sanspo.com": "サンスポ", "www.daily.co.jp": "デイリースポーツ",
+    "www.tokyo-sports.co.jp": "東スポ", "www.marca.com": "MARCA", "as.com": "AS",
+    "www.mundodeportivo.com": "Mundo Deportivo", "www.sport.es": "SPORT",
+    "www.skysports.com": "Sky Sports", "www.bbc.com": "BBC", "www.espn.com": "ESPN",
+    "www.theguardian.com": "The Guardian", "www.lance.com.br": "Lance!",
+    "ge.globo.com": "ge", "www.gazzetta.it": "La Gazzetta dello Sport",
+    "www.lequipe.fr": "L'Équipe", "www.kicker.de": "kicker",
+}
+
+
+def outlet_name(url: str) -> str:
+    from urllib.parse import urlparse
+    host = (urlparse(str(url)).hostname or "").lower()
+    return OUTLETS.get(host) or OUTLETS.get(host.removeprefix("www.")) or host.removeprefix("www.")
+
+
 # 概要欄に置く連絡先（2026-09-17 ユーザー決定）。アプリと同じ窓口
 CONTACT = "\n".join((
     "■ お問い合わせ",
@@ -200,6 +223,20 @@ def description(script: Script, credits: list[str] | None = None,
     # 連絡先を置いたので、問い合わせはそちらで受ける。
     # **台本の `sources` には残す。**確度の札（確定／報道／未確認）の根拠は
     # そちらにあり、こちらの手元では全部辿れる
+    # **選手・監督の言葉を引いた記事だけは出す**（2026-09-30 ユーザー「選手コメントの引用先にしよう。
+    # 出典だと、真似してるみたい」）。「出典」は動画ごと記事から作ったように読めるので、
+    # 見出しは「選手コメントの引用元」。引用には出どころの明示が要る（著作権法48条）
+    quoted = [str(u) for u in ((getattr(script, "meta", None) or {}).get("quote_sources") or [])]
+    if quoted:
+        rows = []
+        for item in quoted:
+            # 「媒体名 URL」と書けば、その名前で出す（Yahoo!ニュース経由の記事は元の媒体名にする）
+            name, _, url = item.rpartition(" ")
+            if name.strip() and url.startswith("http"):
+                rows.append(f"{name.strip()}　{url}")
+            else:
+                rows.append(f"{outlet_name(item)}　{item}")
+        parts.append("■ 選手コメントの引用元\n" + "\n".join(rows))
     if credits:
         parts.append("■ クレジット\n" + "\n".join(credits))
     # **連絡先を必ず置く**（2026-09-17。報道写真を使う方針とセット）。
