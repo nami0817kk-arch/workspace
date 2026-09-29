@@ -2900,5 +2900,17 @@
     "video_id": "CqjbJcmwu0I",
     "at": "2026-09-29T00:45:24+00:00",
     "publish_at": "2026-09-29T05:30:00Z"
+  },
+  {
+    "build": "20260929_capeverde_gk",
+    "video_id": "GVQCN7eqFbg",
+    "at": "2026-09-29T00:47:01+00:00",
+    "publish_at": "2026-09-29T06:00:00Z"
+  },
+  {
+    "build": "20260929_capeverde_gk_short",
+    "video_id": "o1kVKyUMkkk",
+    "at": "2026-09-29T00:47:17+00:00",
+    "publish_at": "2026-09-29T06:30:00Z"
   }
 ]
