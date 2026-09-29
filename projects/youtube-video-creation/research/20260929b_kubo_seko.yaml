@@ -1,0 +1,184 @@
+date: 2026年9月29日
+slot: japan_1
+format: quote
+people:
+- 久保建英
+- 瀬古歩夢
+theme:
+  id: kubo_praises_seko
+  league: spain
+  league_name: キリンチャレンジカップ
+  kind: other
+  topic: レアル・ソシエダ
+  title: 久保建英が試合後に語り出したら止まらなかった、10人入れ替えの夜に残った一人
+  opening_image: assets/images/20260929b_seko/03.jpg
+  takeaway: 冨安・板倉・安藤が抜けた守備陣で、9月の2試合とも先発したのは瀬古だけ。10月1日のエクアドル戦で3試合続けて先発するかが、久保の言う「信頼」の答え合わせ
+short_title: 久保建英が試合後に熱弁した、ただ一人の同僚
+thumbnail:
+  photos:
+  - assets/images/20260929b_kubo/01.jpg
+  - assets/images/20260929b_seko/03.jpg
+  line1: 久保建英、試合後に熱弁
+  line2: 「今の●●選手にケチつける人は」
+  reaction: 自分も同じ感想
+sections:
+- id: situation
+  heading: 10人入れ替えの夜に残った一人
+  tier: 報道
+  telop: 先発10人を入れ替えたベネズエラ戦。瀬古歩夢だけが2試合続けて先発
+  narrator: キャスター
+  card:
+    type: table
+    title: 瀬古歩夢の9月
+    columns:
+    - ''
+    - ''
+    rows:
+    - &id001
+      - ル・アーヴル 今季リーグ
+      - 5試合すべて先発フル出場
+    - &id002
+      - 24日 ウルグアイ戦
+      - 3バックの右で先発
+  say:
+  - text: 9月28日、広島でのベネズエラ戦。日本が2対1で勝ちました。
+    image: assets/images/20260929b_seko/03.jpg
+  - 先発の顔ぶれは、10人がウルグアイ戦と別。
+  - text: 残った一人が、ル・アーヴルの瀬古歩夢。久保建英とは15歳以下の代表からの仲です。
+    card:
+      type: table
+      title: 瀬古歩夢の9月
+      columns:
+      - ''
+      - ''
+      rows:
+      - *id001
+      - *id002
+  - 24日のウルグアイ戦では、守る3人を並べる3バックの右で先発。
+  - text: パスの成功率は93パーセント、クリアは両チームでいちばん多い7回でした。
+    card:
+      type: table
+      title: 瀬古歩夢の9月
+      columns:
+      - ''
+      - ''
+      rows:
+      - *id001
+      - - 24日 ウルグアイ戦
+        - 3バックの右。パス成功率93%、クリア7回
+      - - 28日 ベネズエラ戦
+        - 3バックの中央。パス68本すべて成功
+  - 28日のベネズエラ戦は3バックのまん中。パス68本を、すべて味方につなげました。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459925-459925-fl
+  - https://www.footballchannel.jp/2026/09/29/post1021809/
+  - https://www.footballchannel.jp/2026/09/25/post1019112/
+  - https://web.gekisaka.jp/oversea/schedule?player_id=39678&year=2026
+  - https://www.jfa.jp/samuraiblue/news/00036813/
+  - https://web.gekisaka.jp/news/japan/detail/?459859-459859-fl
+- id: words
+  main: true
+  heading: 久保建英の言葉
+  tier: 報道
+  telop: 「今の瀬古選手にケチつける人はサッカー分かってないんじゃないかと思いますよ」
+  narrator: キャスター
+  say:
+  - text: 先発10人を入れ替えた夜に、ただ一人残った瀬古歩夢。仲間の久保建英が、その瀬古について。
+    short_only: true
+  - text: 瀬古本人は口を開かずに引き上げ、代わりに久保が語りました。
+    image: assets/images/20260929b_pair_kubo_seko/01.jpg
+  - voice: 久保建英
+    text: なんでしょうね。今の瀬古選手にケチつける人は
+  - voice: 久保建英
+    text: サッカー分かってないんじゃないかと思いますよ。
+    cont: true
+  - voice: 久保建英
+    text: マジで、マジでいいと思います
+    cont: true
+  - 仲の良さは置いておいて、と前置きしてから続けました。
+  - voice: 久保建英
+    text: 今日はもうベテランのような風格
+  - voice: 久保建英
+    text: ボランチやっていたのもあって、
+  - voice: 久保建英
+    text: もともと上手い選手でしたけど、
+    cont: true
+  - voice: 久保建英
+    text: 上手さ、強さ、すごくいい選手だと思います。
+    cont: true
+  - voice: 久保建英
+    text: 過小評価なんじゃないですかね。
+    cont: true
+  - voice: 久保建英
+    text: そういうのもわかってくると
+    cont: true
+  - voice: 久保建英
+    text: サッカーが楽しくなるんじゃないかなと思います
+    cont: true
+  - ボランチは中盤の底で守りと配球を担う位置。瀬古が昨季まで多く出ていた場所です。
+  - なぜここまで伸びたのか。その問いには。
+  - voice: 久保建英
+    text: やっぱり信頼じゃないですかね。
+  - voice: 久保建英
+    text: いろいろと試合に出られるようになって
+    cont: true
+  - voice: 久保建英
+    text: 使ってもらえるということで
+    cont: true
+  - voice: 久保建英
+    text: メンタル面で大きく左右される選手でもあるので、
+    cont: true
+  - voice: 久保建英
+    text: メンタルの落ち着きがすごい成長したんじゃないかなと思います
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459925-459925-fl
+  - https://www.footballchannel.jp/2026/09/29/post1021785/
+- id: view
+  heading: 見立て
+  tier: 背景
+  viewpoint: true
+  telop: 久保の言う「信頼」は、先発に残った一人という形で先に出ていた
+  narrator: 解説
+  say:
+  - text: 今回の代表は、守備の人が次々に減っています。
+    image: assets/images/20260929b_pair_kubo_seko/01.jpg
+  - 冨安健洋は招集を辞退、安藤智哉と板倉滉が負傷。
+  - ベネズエラ戦でも渡辺剛と鈴木淳之介が途中で痛めました。
+  - その中で先発を続け、守備の線を高く保つハイラインを90分こなしたのが瀬古です。
+  - フランス1部のル・アーヴルは、開幕から勝ちがありません。
+  - それでも瀬古はリーグ戦5試合すべてに先発してフル出場。
+  - ル・アーヴルの監督は9月の会見で、瀬古はもっと上のクラブでやるべき選手だと話しました。
+  - 久保が「信頼」と言った中身は、クラブでも代表でも、監督の起用に先に表れています。
+  - 答え合わせは3日後、エクアドル戦の先発の顔ぶれで。3試合続けて残れば、その信頼の重さが分かります。
+  sources:
+  - https://www.footballchannel.jp/2026/09/29/post1021809/
+  - https://web.gekisaka.jp/news/japan/detail/?459859-459859-fl
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「自分も同じ感想」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 今回のハイラインをほぼミスなく90分こなせたのは、
+  - voice: ネット民
+    text: 瀬古だけだから自分も同じ感想。
+    cont: true
+  - voice: ネット民
+    text: ディフェンスは優劣が分かれて埋もれた逸材を探しやすくなった。
+    cont: true
+  - voice: ネット民
+    text: むしろ今の瀬古にけちをつける人はほとんどいない
+    short_voice: true
+  - voice: ネット民
+    text: 前のときはやらかしてたけど今は明らかに成長してるし
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: むしろ評価してた人ばかりだった
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/4f15b5d54c083e5aac443de5488cbadd23080ac1/comments
+  - https://news.yahoo.co.jp/articles/770408acf78f88054f20bb732eb1fde752931255/comments

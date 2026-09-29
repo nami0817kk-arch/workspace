@@ -1,0 +1,244 @@
+# 取材メモ（9/29 昼の題材 2）。ゲキサカの囲み取材が起点。
+# ヴィラの今季の数字は FotMob の選手ページと、Wikipedia のシーズン記事（各試合はプレミア公式の試合記録にリンク）で確かめた。
+#   リーグ戦 4試合 360分 5失点 無失点1 セーブ15本 セーブ率75%（FotMob）／CL 1試合2失点／リーグ杯 1試合（後半から45分、失点0）
+#   出場は第2節アーセナル戦から。第1節ブライトン戦（0-4）はビゾットが守った。
+# 脇腹：クラブで痛め、9/22 から別メニュー、24日ウルグアイ戦はベンチ外、25日に全体練習へ合流（Football ZONE）。
+# 今日の6本（上田の2発・逆転VAR・5人デビュー・鎌田・森保のハート・ヴォズィーニャ）と重ねない：27秒の失点は1行だけ、小久保は1行、判定・PKは書かない。
+date: 2026年9月29日
+slot: japan_2
+format: news
+people:
+- 鈴木彩艶
+theme:
+  id: suzuki_gk_venezuela
+  league: england
+  league_name: キリンチャレンジカップ
+  kind: match
+  topic: アストン・ヴィラ
+  title: 鈴木彩艶「攻守ともにひどかった」。雨でも脇腹でもないと言った理由
+  question: 鈴木彩艶らしくないミスが45分続いたのは、なぜか
+  takeaway: 鈴木彩艶のセーブ率はベルギーの68.8%からヴィラの75%へ上がり、ミスからの失点は3回から0回に減ってきた。ベネズエラ戦の45分はその流れから外れた例外で、原因は技術より、合わせる時間の無かった守備陣との連携にある
+  opening_image: assets/images/20260929b_suzuki/01.jpg
+short_title: 鈴木彩艶、45分で「ひどかった」と言った理由
+thumbnail:
+  photo: assets/images/20260929b_suzuki/01.jpg
+  line1: 鈴木彩艶「ひどかった」
+  line2: 原因は雨でも脇腹でもなく●●
+  reaction: 言い訳を作らず「技術的なミス」と言い切れる
+sections:
+- id: report
+  heading: 入って27秒、そのあとも
+  tier: 報道
+  telop: 後半の頭から出て27秒で失点。キャッチング、ハイボール、ビルドアップでミスが続いた
+  narrator: キャスター
+  card:
+    type: table
+    title: 鈴木彩艶の45分（日本 2-1 ベネズエラ）
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 後半開始
+      - 27秒で失点
+    - - 54分
+      - 低く長いパスで上田→伊東→久保の決定機
+    - - 77分
+      - キックミス。正面のシュートをこぼす
+    - - 82分
+      - パンチングを誤る
+  say:
+  - text: 9月28日、広島。日本代表のベネズエラ戦は、激しい雨でした。
+    image: assets/images/20260929b_suzuki/01.jpg
+  - 鈴木彩艶は、後半の頭からゴールに立ちました。
+  - 入って27秒。左を突破され、ゴール前に戻されたボールを決められました。
+  - 試合後の本人の言葉は。
+  - voice: 鈴木彩艶
+    text: 今日のパフォーマンスは攻守ともにひどかった
+  - 54分には、前線の上田綺世へ低く長いパスを通しています。
+  - 一方で77分にはキックがずれ、相手の正面のシュートをこぼしました。
+  - 82分には、手で弾くパンチングを誤っています。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459920-459920-fl
+  - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - https://news.yahoo.co.jp/articles/8f56914c9bdc12cc0f8abf38ab65fd08658a6ced
+  - https://news.yahoo.co.jp/articles/461e4bc4bd8f1aafd55642be1d495f30f5b2f056
+  - https://news.yahoo.co.jp/articles/e4a2bb30811508cb38d7b85d35695ffc56a9308f
+- id: excuse
+  heading: 雨と脇腹を、本人が消した
+  tier: 報道
+  telop: 鈴木「ピッチどうこうではなく、自分の技術的なミス」。脇腹は「問題なくやれています」
+  narrator: 解説
+  card:
+    type: table
+    title: 鈴木彩艶の脇腹
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 9月22日
+      - クラブで痛め、別メニュー
+    - - 24日
+      - ウルグアイ戦は出場メンバー外
+    - - 25日
+      - 全体練習に合流
+    - - 28日
+      - ベネズエラ戦に後半から
+  say:
+  - text: 言い訳にできるものは2つありました。雨と、脇腹です。
+    image: assets/images/20260929b_suzuki/01.jpg
+  - 脇腹はクラブで痛めたもので、24日のウルグアイ戦は出場メンバーから外れました。
+  - 試合後の取材で、鈴木はどちらも理由にしませんでした。
+  - voice: 鈴木彩艶
+    text: 雨が降っていた等々あるけど、この環境に適応することが大事。
+  - voice: 鈴木彩艶
+    text: アジアの戦いだったらもっとピッチが悪いこともある。
+    cont: true
+  - voice: 鈴木彩艶
+    text: ピッチどうこうではなく、自分の技術的なミス
+    cont: true
+  - 脇腹については。
+  - voice: 鈴木彩艶
+    text: 問題なくやれています
+  - voice: 鈴木彩艶
+    text: 今日のようなパフォーマンスをしていては戦えない
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459920-459920-fl
+  - https://news.yahoo.co.jp/articles/8f56914c9bdc12cc0f8abf38ba8a9401c9ef5
+  - https://news.yahoo.co.jp/articles/a7a6d9816f197ca8b4b76e722a75c45c188ddf2e
+  - https://www.football-zone.net/archives/674704
+- id: cause
+  main: true
+  heading: 本人が挙げた原因は、味方との噛み合わせ
+  tier: 報道
+  telop: 鈴木「そういう連携ができていたら防げる部分があった」「もう少し自分のアイデアを共有しないといけない」
+  narrator: キャスター
+  card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+  say:
+  - text: 日本代表のゴールキーパー鈴木彩艶。ベネズエラ戦に後半から出て27秒で失点しました。
+    short_only: true
+  - text: 鈴木が原因に挙げたのは、自分の技術と、味方との噛み合わせでした。
+    image: assets/images/20260929b_suzuki/01.jpg
+  - voice: 鈴木彩艶
+    text: 味方にサイドを切らせて自分がニア側のボールを取るとか、
+  - voice: 鈴木彩艶
+    text: そういう連携ができていたら防げる部分があった
+    cont: true
+  - 味方が外側のコースを消し、自分は近い側に来るボールを取る。その分担の話です。
+  - 次に、持ち味のはずのビルドアップ、後ろからつなぐ組み立てです。
+  - voice: 鈴木彩艶
+    text: 味方とあまりイメージが合わなかった。
+  - voice: 鈴木彩艶
+    text: もう少し自分のアイデアを共有しないといけない
+    cont: true
+  - voice: 鈴木彩艶
+    text: 自分が持つ時間がありながらも、探しどころを探す感じがあって、
+  - voice: 鈴木彩艶
+    text: 出しどころを何個か持つことができなかった
+    cont: true
+  - text: この日、日本は4日前のウルグアイ戦から先発を10人入れ替えていました。
+    card:
+      type: table
+      title: 後半の頭、鈴木の周り
+      columns:
+      - ''
+      - ''
+      rows:
+      - - 先発の入れ替え
+        - 10人
+      - - 後半の頭の交代
+        - 5人
+      - - 鈴木が全体練習に出た日数
+        - 試合まで3日
+  - 鈴木が全体練習に合流できたのは、試合までの3日だけ。守備陣と合わせる時間はわずかでした。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459920-459920-fl
+  - https://news.yahoo.co.jp/articles/461e4bc4bd8f1aafd55642be1d495f30f5b2f056
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210431.html
+- id: view
+  heading: セーブ率とミスの数
+  tier: 背景
+  viewpoint: true
+  telop: セーブ率は65%から75%へ。ミスからの失点は3回から0回へ
+  narrator: 解説
+  card:
+    type: table
+    title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
+    columns:
+    - 季
+    - 試合
+    - セーブ率
+    - ミスからの失点
+    rows:
+    - - 23-24 シント・トロイデン
+      - '32'
+      - 68.8%
+      - '3'
+    - - 24-25 パルマ
+      - '37'
+      - 65.4%
+      - '0'
+    - - 25-26 パルマ
+      - '20'
+      - 70.2%
+      - '1'
+    - - 2026 W杯
+      - '4'
+      - 70.6%
+      - '0'
+    - - 26-27 ヴィラ
+      - '4'
+      - 75.0%
+      - '0'
+  say:
+  - text: この45分を、鈴木彩艶のいつもの数字と比べます。
+    image: assets/images/20260929b_suzuki/01.jpg
+  - 枠内に来たシュートを止めた割合、セーブ率。ベルギーでは68.8%でした。
+  - パルマの最初の季は65.4%。今季のヴィラでは75%です。
+  - 自分のミスが失点につながった数は、ベルギーの季が3回。
+  - パルマの2季で1回。W杯とヴィラでは、まだゼロです。
+  - 止める割合は上がり、ミスは減ってきました。
+  - ベネズエラ戦の45分は、その流れから外れていました。
+  - 次に先発したとき、この線に戻るかを見ます。
+  sources:
+  - https://www.fotmob.com/players/1053679/zion-suzuki
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「言い訳を作らず「技術的なミス」と言い切れるところに好感が持てる」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 負傷の影響とかもあったのかなと思うが、
+  - voice: ネット民
+    text: 言い訳を作らず「技術的なミス」と
+    cont: true
+  - voice: ネット民
+    text: 言い切れるところに好感が持てる。
+    cont: true
+  - voice: ネット民
+    text: 本調子ではなかったとはいえ、
+    cont: true
+  - voice: ネット民
+    text: 上田にズバッと付けた縦パスとかは流石だなと思った。
+    cont: true
+  - voice: ネット民
+    text: 発言を聞いていると
+    short_voice: true
+  - voice: ネット民
+    text: もっと大きく成長するのだろうなと思ってしまった。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/a7a6d9816f197ca8b4b76e722a75c45c188ddf2e/comments
+  - https://news.yahoo.co.jp/articles/1ed9b9d06c55f434332c58b5f38ba8a9401c9ef5/comments
+  - https://news.yahoo.co.jp/articles/7247f9626bb2c065c669ee8a0345290aa08e04c5/comments

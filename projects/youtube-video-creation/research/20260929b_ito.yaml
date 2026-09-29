@@ -1,0 +1,203 @@
+date: 2026年9月29日
+slot: japan_3
+format: quote
+people:
+- 伊東純也
+theme:
+  id: ito_captain_prime_venezuela
+  league: netherlands
+  league_name: キリンチャレンジカップ
+  kind: other
+  topic: ゲンク
+  title: 伊東純也が主審に言い続けた夜。33歳の全盛期を聞かれて返した一言
+  opening_image: assets/images/20260929b_ito/01.jpg
+  takeaway: 代表75試合16得点。30歳を過ぎてからの33試合で7得点と、1試合あたりの得点は20代と変わらない。33歳の「今が一番」は、代表の記録が裏付けている
+short_title: 伊東純也、33歳の全盛期を聞かれて返した一言
+thumbnail:
+  photo: assets/images/20260929b_ito/01.jpg
+  line1: 伊東純也、33歳
+  line2: 全盛期を聞かれ「●●が一番」
+  reaction: もう33歳なのか。
+sections:
+- id: situation
+  heading: 腕章を引き継いだ後半
+  tier: 報道
+  telop: 後半から腕章。4分で同点のクロス、24日に続くアシスト
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本 2-1 ベネズエラ（9月28日・広島）
+    columns:
+    - ''
+    - ''
+    rows:
+    - &id001
+      - 伊東純也
+      - 後半から出場、腕章を引き継ぐ
+    - &id002
+      - 同点のアシスト
+      - 後半4分
+  say:
+  - text: 9月28日、広島でのベネズエラとの親善試合。日本の2対1の勝ちで、伊東純也は後半から入りました。
+    image: assets/images/20260929b_ito/01.jpg
+  - 今回の代表メンバーでいちばん年上の33歳。
+  - 前半の主将、鎌田大地から腕章を引き継ぎ、フォワードのすぐ後ろ、シャドーと呼ぶ左の位置へ。
+  - text: 後半1分に失点。その3分後、相馬勇紀のバックパスを受けた伊東が右足でクロス。上田綺世が合わせて同点です。
+    card:
+      type: table
+      title: 日本 2-1 ベネズエラ（9月28日・広島）
+      columns:
+      - ''
+      - ''
+      rows:
+      - *id001
+      - *id002
+  - text: その場面を、本人はこう。
+    card:
+      type: table
+      title: 日本 2-1 ベネズエラ（9月28日・広島）
+      columns:
+      - ''
+      - ''
+      rows:
+      - *id001
+      - *id002
+      - - 24日のウルグアイ戦
+        - 途中出場でアシスト
+  - voice: 伊東純也
+    text: 相馬からバックパスをもらったときにフリーだった。
+  - voice: 伊東純也
+    text: 綺世がいい動き出しをして、そこにいいボールを蹴れた
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459923-459923-fl
+  - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - https://news.yahoo.co.jp/articles/fff10ba3309b7c154d946459165ee2b473e15f2f
+- id: words
+  main: true
+  heading: 主審に言い続けた
+  tier: 報道
+  telop: 「タケに『絶対ファウルだから言って』と言われて」
+  narrator: キャスター
+  say:
+  - text: 後半から入り、主将の腕章と同点のアシスト。33歳の伊東純也が、終了間際のPKの裏側をこう。
+    short_only: true
+  - text: 後半アディショナルタイム。久保が倒されても主審は流し、その直後に相手のPKになります。
+    image: assets/images/20260929b_ito/02.jpg
+  - 鈴木淳之介のファウルでした。ところがビデオ判定で久保の場面が先だと分かり、日本のPKに。
+  - 伊東はそのあいだ、主審のそばで言い続けていました。久保のことは、タケと呼びます。
+  - voice: 伊東純也
+    text: 淳之介のやつもファウルだったと思うけど、
+  - voice: 伊東純也
+    text: その前にタケのところでファウルがあって、
+    cont: true
+  - voice: 伊東純也
+    text: タケに『絶対ファウルだから言って』と言われて。
+    cont: true
+  - voice: 伊東純也
+    text: 言っていたけど、『チェックしているから』と言っていたので、
+    cont: true
+  - voice: 伊東純也
+    text: チェックを待って、こっちのファウルが先になって良かった
+    cont: true
+  - 主将の役目を聞かれると。
+  - voice: 伊東純也
+    text: キャプテンという柄じゃないけど、
+  - voice: 伊東純也
+    text: 言えるところは言おうかなと思っていた
+    cont: true
+  - 全盛期は何歳なのか、と聞かれた答えは。
+  - voice: 伊東純也
+    text: 今が一番調子いいです
+  - voice: 伊東純也
+    text: 出たら結果を出せているので、結果がすべてかなと思う
+    cont: true
+  - voice: 伊東純也
+    text: 満足ではない。自分でも点を取れたらもっといいけど、
+    cont: true
+  - voice: 伊東純也
+    text: ゴールに絡めているのはいいこと
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459923-459923-fl
+  - https://news.yahoo.co.jp/articles/cdfb9879d978204adbe21c81f4075394f827ec1a
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210705.html
+  - https://www.football-zone.net/archives/676216
+- id: view
+  heading: 代表75試合の中の33歳
+  tier: 背景
+  viewpoint: true
+  telop: 代表75試合16得点。30歳を過ぎても、点に絡む割合は落ちていない
+  narrator: 解説
+  card:
+    type: table
+    title: 伊東純也の日本代表（ベネズエラ戦まで）
+    columns:
+    - 時期
+    - 出場
+    - 得点
+    rows:
+    - - 2017〜2022年（24〜29歳）
+      - 42試合
+      - '9'
+    - - 2023〜2026年（30〜33歳）
+      - 33試合
+      - '7'
+    - - W杯
+      - 2022年・2026年
+      - 2大会
+    - - 今年9月
+      - 途中出場2試合
+      - 2アシスト
+  say:
+  - text: 伊東純也の「今が一番」を、代表での積み上げに重ねてみます。
+    image: assets/images/20260929b_ito/02.jpg
+  - デビューは2017年12月、24歳。ベネズエラ戦が75試合目で、通算16得点です。
+  - 29歳までは42試合で9得点。
+  - 30歳を過ぎてからは33試合で7得点。
+  - どちらも、5試合に1点ほどの割合です。
+  - 2025年は6試合で得点なし。それでも今年は、W杯の4試合すべてに出ています。
+  - そして9月は、ウルグアイ戦とベネズエラ戦で、どちらも途中から入ってアシスト。
+  - 33歳になっても、衰えを示す数字は代表の記録に出ていません。
+  - 本人が欲しがった得点が次のエクアドル戦で付くかで、「今が一番」の中身が決まります。
+  sources:
+  - https://en.wikipedia.org/wiki/Junya_It%C5%8D
+  - https://ja.wikipedia.org/wiki/%E4%BC%8A%E6%9D%B1%E7%B4%94%E4%B9%9F
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「もう33歳なのか。」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: ここに来て円熟味が増している。
+  - voice: ネット民
+    text: 単純な足の速さは落ちていくだろうけど
+    cont: true
+  - voice: ネット民
+    text: 巧さはむしろ、伸びてきている。
+    cont: true
+  - voice: ネット民
+    text: 常に得点に絡む職人、
+  - voice: ネット民
+    text: 無口で出しゃばらないところも伊東さんのいいところ。
+    cont: true
+  - voice: ネット民
+    text: でも年長で主将だから「言うべき事は言う」、
+    cont: true
+  - voice: ネット民
+    text: そこは頑張ったと思う。
+    cont: true
+  - voice: ネット民
+    text: こういう人もチームには必要なのかも。
+    cont: true
+  - voice: ネット民
+    text: マジで後任が見当たらなくて困る。
+    short_voice: true
+  - voice: ネット民
+    text: もう33歳なのか。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/3b5c2440037919cc61677cb58d823e712b9bf99d/comments
+  - https://news.yahoo.co.jp/articles/c43f9a378a0ea5388485f18487cd10eb6ee68707/comments

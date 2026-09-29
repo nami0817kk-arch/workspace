@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 37
+  seen: 38
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -21,6 +21,7 @@ sites:
   - '2026-09-21'
   - '2026-09-22'
   - '2026-09-25'
+  - '2026-09-29'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -52,7 +53,7 @@ sites:
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: fcinter1908.it
-  seen: 15
+  seen: 17
   days:
   - '2026-09-05'
   - '2026-09-09'
@@ -133,7 +134,7 @@ sites:
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
 - host: violanews.com
-  seen: 11
+  seen: 12
   days:
   - '2026-09-09'
   - '2026-09-12'
@@ -143,6 +144,7 @@ sites:
   - '2026-09-22'
   - '2026-09-23'
   - '2026-09-26'
+  - '2026-09-29'
   examples:
   - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
@@ -299,6 +301,15 @@ sites:
   - https://www.barcablaugranes.com/barcelona-team-news/131554/gabriel-jesus-not-100-yet-but-ready-to-make-barcelona-debut-against-valencia
   - https://www.barcablaugranes.com/barcelona-team-news/132388/lamine-yamal-says-he-deserves-to-beat-kylian-mbappe-to-the-ballon-dor
   - https://www.barcablaugranes.com/fc-barcelona-transfer-rumors-news/133512/prioritizing-two-summer-2027-sales
+- host: juvenews.eu
+  seen: 5
+  days:
+  - '2026-09-16'
+  - '2026-09-17'
+  - '2026-09-28'
+  examples:
+  - https://www.juvenews.eu/news/bremer-voglio-lasciare-il-segno-nella-storia-della-juventus/?intcmp=gazzanet-juvenews
+  - https://www.juvenews.eu/news/buffon-esalta-spalletti-la-juventus-puo-fare-un-campionato-di-spessore/?intcmp=gazzanet-juvenews
 - host: thesun.my
   seen: 4
   days:
@@ -372,13 +383,6 @@ sites:
   examples:
   - https://www.mediagol.it/palermo/palermo-inzaghi-non-mi-e-piaciuto-assolutamente-quel-black-out-peda-vi-dico-come-sta/?intcmp=gazzanet-mediagol
   - https://www.mediagol.it/palermo/ex-palermo-brunori-subito-in-gol-ho-sentito-unenergia-che-mi-serviva-e-racconta-la-trattativa/?intcmp=gazzanet-mediagol
-- host: juvenews.eu
-  seen: 3
-  days:
-  - '2026-09-16'
-  - '2026-09-17'
-  examples:
-  - https://www.juvenews.eu/news/bremer-voglio-lasciare-il-segno-nella-storia-della-juventus/?intcmp=gazzanet-juvenews
 - host: liverpool.com
   seen: 3
   days:
@@ -523,6 +527,24 @@ sites:
   - https://footballleagueworld.co.uk/how-nottingham-forest-derby-county-home-attendances-compare-so-far/
   - https://footballleagueworld.co.uk/arsenal-and-juventus-once-wanted-sheffield-united-star-diego-di-girolamo-look-at-him-now/
   - https://footballleagueworld.co.uk/ex-leeds-utd-huddersfield-preston-ace-jermaine-beckford-rolls-back-years-goodison-park/
+- host: milanistichannel.com
+  seen: 3
+  days:
+  - '2026-09-16'
+  - '2026-09-29'
+  examples:
+  - https://www.milanistichannel.com/news-milan/riconoscimento-importante-per-franco-baresi-il-suo-nome-nel-famedio-di-milano/?intcmp=gazzanet-milanistichannel
+  - https://www.milanistichannel.com/news-milan/ex-milan-senti-rafa-leao-il-galatasaray-mi-voleva-davvero-sono-felice/?intcmp=gazzanet-milanistichannel
+- host: toronews.net
+  seen: 3
+  days:
+  - '2026-09-18'
+  - '2026-09-20'
+  - '2026-09-29'
+  examples:
+  - https://www.toronews.net/mondo-granata/ex-toro-tomas-rincon-appende-gli-scarpini-al-chiodo-il-calcio-fara-sempre-parte-di-me/?intcmp=gazzanet-toronews
+  - https://www.toronews.net/mondo-granata/susanna-egri-in-memoria-di-mazzola-ricordo-quel-bambino-che-correva-a-porta-nuova/?intcmp=gazzanet-toronews
+  - https://www.toronews.net/mondo-granata/ritorno-alle-origini-per-papa-junior-il-brasiliano-riabbraccia-il-torino/?intcmp=gazzanet-toronews
 - host: today.rtl.lu
   seen: 2
   days:
@@ -550,20 +572,6 @@ sites:
   examples:
   - https://www.aljazeera.com/sports/2026/9/5/coach-luis-enrique-unconcerned-by-psgs-poor-start-to-french-league-season
   - https://www.aljazeera.com/sports/2026/9/15/champions-league-final-venues-revealed-munich-2028-barcelona-2029
-- host: milanistichannel.com
-  seen: 2
-  days:
-  - '2026-09-16'
-  examples:
-  - https://www.milanistichannel.com/news-milan/riconoscimento-importante-per-franco-baresi-il-suo-nome-nel-famedio-di-milano/?intcmp=gazzanet-milanistichannel
-- host: toronews.net
-  seen: 2
-  days:
-  - '2026-09-18'
-  - '2026-09-20'
-  examples:
-  - https://www.toronews.net/mondo-granata/ex-toro-tomas-rincon-appende-gli-scarpini-al-chiodo-il-calcio-fara-sempre-parte-di-me/?intcmp=gazzanet-toronews
-  - https://www.toronews.net/mondo-granata/susanna-egri-in-memoria-di-mazzola-ricordo-quel-bambino-che-correva-a-porta-nuova/?intcmp=gazzanet-toronews
 - host: bavarianfootballworks.com
   seen: 2
   days:
@@ -903,3 +911,9 @@ sites:
   - '2026-09-28'
   examples:
   - https://www.balls.ie/football/ireland-list-defender-goalkeeper-for-israel-clash-after-bazunu-boycott-jimmy-dunne-663969
+- host: juveoggi.it
+  seen: 1
+  days:
+  - '2026-09-29'
+  examples:
+  - https://www.juveoggi.it/notizie/portogallo-jorge-jesus-esalta-conceicao-e-stato-il-giocatore-creativo-che-avevo-in-mente/?intcmp=juveoggi

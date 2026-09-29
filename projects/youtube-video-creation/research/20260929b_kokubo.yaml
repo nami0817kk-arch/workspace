@@ -1,0 +1,248 @@
+date: 2026年9月29日
+slot: japan_4
+format: news
+people:
+- 小久保玲央ブライアン
+theme:
+  id: kokubo_kokubo
+  league: netherlands
+  league_name: キリンチャレンジカップ
+  kind: other
+  topic: シント・トロイデン
+  title: 小久保玲央ブライアンの横っ飛びに、ファンが叫んだ二文字
+  question: A代表デビューの小久保玲央ブライアンに、ファンが返した2文字は何で、どこから来たのか
+  takeaway: 「国防」の中身はシュートを止める力で、その数字は昨季から変わっていない。鈴木彩艶との差は止める前のビルドアップにあり、そこが縮まるかで4年後の序列が決まる
+  opening_image: assets/images/20260929b_kokubo/01.jpg
+short_title: 小久保玲央ブライアン、ファンが叫んだ二文字
+thumbnail:
+  photo: assets/images/20260929b_kokubo/03_face.jpg
+  line1: 小久保玲央ブライアン
+  line2: 横っ飛びに叫ばれた二文字「●●」
+  reaction: ザイオンの2番手はコイツでは
+sections:
+- id: save
+  heading: 45分間で最初の1本
+  tier: 報道
+  telop: 前半AT1分。ベネズエラの最初のシュートを、横っ飛びでかき出した
+  narrator: キャスター
+  card:
+    type: table
+    title: 前半終了間際の2つのコーナーキック
+    columns: &cols_save
+    - ''
+    - ''
+    rows:
+    - &row_s1
+      - 前半45分
+      - 自陣でパスが詰まり、コーナーキックを与える
+  say:
+  - text: 9月28日の広島、ベネズエラとの親善試合。小久保玲央ブライアンが先発で日本代表デビューしました。
+    image: assets/images/20260929b_kokubo/01.jpg
+  - 五輪代表ではなく、年齢の枠のないA代表では初めての試合です。
+  - text: 前半45分、自陣でパスが詰まり、コーナーキックを与えます。
+    card:
+      type: table
+      title: 前半終了間際の2つのコーナーキック
+      columns: *cols_save
+      rows:
+      - *row_s1
+  - アディショナルタイム1分。ベネズエラのマクンのヘディングに、一瞬、逆を取られました。
+  - text: 体勢を崩しながら横っ飛び。右手でかき出しました。
+    card:
+      type: table
+      title: 前半終了間際の2つのコーナーキック
+      columns: *cols_save
+      rows:
+      - *row_s1
+      - &row_s2
+        - 45分+1
+        - マクンのヘディングを、横っ飛びで弾く
+  - text: 直後のコーナー、至近距離のヘディングは手をかすめ、味方の瀬古歩夢がゴールラインの上で蹴り出しました。
+    card:
+      type: table
+      title: 前半終了間際の2つのコーナーキック
+      columns: *cols_save
+      rows:
+      - *row_s1
+      - *row_s2
+      - - 直後
+        - カスティージョの至近距離。瀬古がライン上でクリア
+  - この場面について、試合のあと本人の口から出たのは。
+  - voice: 小久保
+    text: あそこがファーストシュートだった。
+  - voice: 小久保
+    text: そこに対しての準備は45分間ずっとしてきていたので、
+    cont: true
+  - voice: 小久保
+    text: ああいう形で良いセーブができたのかなと思う
+    cont: true
+  - 「相変わらず国防してんな」「国防ブライアン心強えええ」。
+  - こくぼ、と、こくぼう。苗字と、国を守る言葉を掛けた呼び名です。
+  sources:
+  - https://www.football-zone.net/archives/676278
+  - https://web.gekisaka.jp/news/japan/detail/?459902-459902-fl
+  - https://www.soccer-king.jp/news/japan/national/20260928/2210446.html
+- id: origin
+  heading: 呼び名が付いた夏
+  tier: 背景
+  telop: 2024年パリ五輪。4試合で14セーブ、グループリーグ3試合は無失点
+  narrator: 解説
+  card:
+    type: table
+    title: パリ五輪の小久保玲央ブライアン（2024年）
+    columns: &cols_paris
+    - ''
+    - 相手
+    - 結果
+    - ''
+    rows:
+    - &row_p1
+      - 7月24日
+      - パラグアイ
+      - 5-0
+      - 無失点
+    - &row_p2
+      - 7月27日
+      - マリ
+      - 1-0
+      - PKを止めて無失点
+    - &row_p3
+      - 7月30日
+      - イスラエル
+      - 1-0
+      - 無失点
+  say:
+  - text: この呼び名が広まったのは、2024年のパリ五輪です。
+    image: assets/images/20260929b_kokubo/01.jpg
+  - text: 小久保はグループリーグのパラグアイ、マリ、イスラエルを、すべて無失点で終えました。
+    card:
+      type: table
+      title: パリ五輪の小久保玲央ブライアン（2024年）
+      columns: *cols_paris
+      rows:
+      - *row_p1
+      - *row_p2
+      - *row_p3
+  - text: 4試合で14本を止め、止めた割合は82%。失点は準々決勝のスペイン戦の3つだけでした。
+    card:
+      type: table
+      title: パリ五輪の小久保玲央ブライアン（2024年）
+      columns: *cols_paris
+      rows:
+      - *row_p1
+      - *row_p2
+      - *row_p3
+      - - 8月2日
+        - スペイン
+        - 0-3
+        - 準々決勝で敗退
+  sources:
+  - https://www.football-zone.net/archives/676278
+  - https://ja.wikipedia.org/wiki/%E5%B0%8F%E4%B9%85%E4%BF%9D%E7%8E%B2%E5%A4%AE%E3%83%96%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3
+  - https://www.fotmob.com/players/1155621/leo-kokubo
+  - https://www.transfermarkt.jp/leo-kokubo/leistungsdaten/spieler/501737
+  - https://news.yahoo.co.jp/articles/53eba32448d9ab4c68e7d57bd4336fdb43d5acac
+- id: words
+  main: true
+  heading: 「パーフェクトと言いたい」
+  tier: 報道
+  telop: 小久保「あだ名を付けてくれた人にはパーフェクトと言いたい」
+  narrator: キャスター
+  say:
+  - text: デビュー戦のセーブにファンが返した「国防」の2文字。苗字と国を守るを掛けた呼び名です。
+    short_only: true
+    image: assets/images/20260929b_kokubo/03.jpg
+  - text: 試合後、その呼び名について聞かれた本人の答えです。
+    image: assets/images/20260929b_kokubo/03.jpg
+  - voice: 小久保
+    text: すごくうれしい。
+  - voice: 小久保
+    text: あだ名を付けてくれた人にはパーフェクトと言いたい。
+    cont: true
+  - voice: 小久保
+    text: しっかり『国防』という名前で頑張っていきたい
+    cont: true
+  - 一方で、自分から課題に挙げたのは、キーパーから味方へパスをつなぐビルドアップでした。
+  - voice: 小久保
+    text: ビルドアップで落ち着きを見せられたら良かった。
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?459917-459917-fl
+  - https://news.yahoo.co.jp/articles/3af9a620ae21c97c1061049e6ee84329244043c5
+  - https://news.yahoo.co.jp/articles/67740d0ff3b5f96c45373c67cb87e01d1e51a24f
+  - https://news.yahoo.co.jp/articles/2f92ea62434fe0009066800ce416f8d46ae041dc
+- id: view
+  viewpoint: true
+  heading: 止める力と、その手前
+  tier: 背景
+  telop: 今季のシント・トロイデンは7試合で12失点。それでもセーブは27本
+  narrator: 解説
+  card:
+    type: table
+    title: 小久保玲央ブライアンの数字
+    columns:
+    - ''
+    - 試合
+    - 失点
+    - 無失点
+    - セーブ
+    rows:
+    - - パリ五輪
+      - 4
+      - 3
+      - 3
+      - 14
+    - - 昨季 ベルギー1部
+      - 38
+      - 43
+      - 9
+      - 110
+    - - 今季 ベルギー1部
+      - 7
+      - 12
+      - 1
+      - 27
+  say:
+  - text: 小久保の呼び名の中身は、シュートを止める力です。
+    image: assets/images/20260929b_kokubo/03.jpg
+  - 昨季はベルギー1部のシント・トロイデンで、38試合すべてに先発。110本を止め、無失点は9試合。
+  - 今季はここまで7試合で12失点、無失点は1試合。それでもセーブは27本あります。
+  - 止めた割合は、昨季の72%に対して今季は69%。ほとんど変わっていません。
+  - 正ゴールキーパーの鈴木彩艶との差が出るのは、止める手前の場面。本人が挙げたビルドアップです。
+  - ザイオンと読むその鈴木彩艶は、W杯の全試合でゴールを守り、そこが強い。
+  - 10月1日のエクアドル戦。ゴールを守るのが誰かで、キーパーの序列が見えます。
+  sources:
+  - https://www.fotmob.com/players/1155621/leo-kokubo
+  - https://www.transfermarkt.jp/leo-kokubo/leistungsdaten/spieler/501737
+  - https://news.yahoo.co.jp/articles/2dcc0256eda40a8829591ce8b87e5dd394c9ea9c
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「ザイオンの壁は高いが、期待しているぞ国防」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 国防という愛称に本人も思い入れを感じているようなので、
+  - voice: ネット民
+    text: それを体現するようなキーパーになって欲しい。
+    cont: true
+  - voice: ネット民
+    text: もし第1GKを誰にするか迷うくらいの存在になれば、
+    cont: true
+  - voice: ネット民
+    text: 日本のGKは10年は安泰と言える。
+    cont: true
+  - voice: ネット民
+    text: 初めてまともに試合でてるの見たけど、
+  - voice: ネット民
+    text: 反射神経含め悪くなかった。
+    cont: true
+  - voice: ネット民
+    text: ザイオンの2番手はコイツでは。
+    cont: true
+  - voice: ネット民
+    text: ザイオンの壁は高いが、期待しているぞ国防。
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/67740d0ff3b5f96c45373c67cb87e01d1e51a24f/comments
+  - https://news.yahoo.co.jp/articles/d8a4f0f936f3d2d55056c2573a02c14a2bd9611d/comments
+  - https://news.yahoo.co.jp/articles/2f92ea62434fe0009066800ce416f8d46ae041dc/comments
