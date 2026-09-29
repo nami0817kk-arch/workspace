@@ -13,9 +13,8 @@ you or your team manages）。審査前は非公開でしか上げられず、1�
 できるもの（`output/tiktok/<日付>/`）:
 
     17-00_mitoma.mp4     そのまま上げる動画。**頭の時刻が予約する時刻**
-    17-00_mitoma.txt     説明欄に貼る文（題名・ハッシュタグ・クレジット）
-    説明文まとめ.txt     全部の説明文を時刻の順に1つに並べたもの（上から順にコピーする）
-    一覧.txt             上げる順番と時刻
+    説明文まとめ.txt     **文章はこの1つだけ**。頭に手順と時刻の一覧、その下に全部の
+                         説明文（題名・ハッシュタグ・クレジット）を時刻の順に並べる
 
 **PC の TikTok Studio でまとめて予約する形**（2026-09-29 ユーザー選択）。
 時刻は YouTube のショートを予約した時刻（`research/posted.json`）と同じにする。
@@ -175,6 +174,11 @@ def main() -> int:
     day = re.match(r"\d{8}", dirs[0].name)
     out = Path(args.out) if args.out else OUT / (day.group(0) if day else "misc")
     out.mkdir(parents=True, exist_ok=True)
+    # **作り直すときは前の一式を消す**。前の形（1本ごとの .txt・一覧.txt）や、
+    # 1分未満の版が残っていると、同じフォルダに2通りあって迷う
+    if not args.out:
+        for old in list(out.glob("*.txt")) + list(out.glob("*.mp4")):
+            old.unlink()
 
     listed, skipped = [], []
     bundle: list[str] = []
@@ -189,7 +193,8 @@ def main() -> int:
         stem = f"{slot.replace(':', '-')}_{name}" if slot else f"{len(listed) + 1:02d}_{name}"
         shutil.copyfile(build / "video.mp4", out / f"{stem}.mp4")
         text = caption(build)
-        (out / f"{stem}.txt").write_text(text, encoding="utf-8")
+        # **文章のファイルは1つだけ**（2026-09-29 ユーザー「文章のファイルは一ファイルで良い」）。
+        # 1本ごとの .txt は作らず、説明文まとめ.txt に並べる
         # **時刻を過ぎていたら印を付ける**。Studio の予約は先の時刻しか入らないので、その場で出す
         import datetime as dt
         when = slot_when(build)
@@ -199,14 +204,13 @@ def main() -> int:
         bundle += [f"━━━━━━ {slot or '時刻なし'}　{stem}.mp4 ━━━━━━", "", text.rstrip(), "", ""]
 
     lines = [f"TikTok に上げる一式（{len(listed)}本）", "",
-             "TikTok Studio（PC）の「アップロード」で動画を選び、説明文まとめ.txt の同じ時刻の段を貼って、",
+             "TikTok Studio（PC）の「アップロード」で動画を選び、下の同じ時刻の段を説明欄に貼って、",
              "「予約」でファイル名の頭の時刻を入れる。予約は10日先まで入る。", ""]
     for stem, length, long_cut, slot in listed:
         warn = f"　※説明欄が{length}字（{CAPTION_MAX}字を超えています）" if length > CAPTION_MAX else ""
         kind = "" if long_cut else "　※1分未満（報酬の対象外）"
         lines.append(f"  {slot or '--:--'}　{stem}.mp4{kind}{warn}")
-    (out / "一覧.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    (out / "説明文まとめ.txt").write_text("\n".join(bundle), encoding="utf-8")
+    (out / "説明文まとめ.txt").write_text("\n".join(lines + ["", ""] + bundle), encoding="utf-8")
 
     print(f"作りました: {out}")
     for stem, length, long_cut, slot in listed:
