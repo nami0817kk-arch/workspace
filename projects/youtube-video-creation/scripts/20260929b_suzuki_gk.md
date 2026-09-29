@@ -68,14 +68,60 @@ cards:
     - ''
     - ''
     rows:
-    - - 後半開始
+    - &id001
+      - 後半開始
       - 27秒で失点
-    - - 54分
+    - &id002
+      - 54分
       - 低く長いパスで上田→伊東→久保の決定機
-    - - 77分
+    - &id003
+      - 77分
       - キックミス。正面のシュートをこぼす
-    - - 82分
+    - &id004
+      - 82分
       - パンチングを誤る
+  report_2_card:
+    type: table
+    title: 鈴木彩艶の45分（日本 2-1 ベネズエラ）
+    columns:
+    - ''
+    - ''
+    rows:
+    - *id001
+    highlight_row: 0
+  report_5_card:
+    type: table
+    title: 鈴木彩艶の45分（日本 2-1 ベネズエラ）
+    columns:
+    - ''
+    - ''
+    rows:
+    - *id001
+    - *id002
+    highlight_row: 1
+  report_6_card:
+    type: table
+    title: 鈴木彩艶の45分（日本 2-1 ベネズエラ）
+    columns:
+    - ''
+    - ''
+    rows:
+    - *id001
+    - *id002
+    - *id003
+    highlight_row: 2
+  report_7_card:
+    type: table
+    title: 鈴木彩艶の45分（日本 2-1 ベネズエラ）
+    columns:
+    - ''
+    - ''
+    rows:
+    - *id001
+    - *id002
+    - *id003
+    - *id004
+    highlight_row: 3
   excuse_card:
     type: table
     title: 鈴木彩艶の脇腹
@@ -102,6 +148,113 @@ cards:
       - 味方との連携
     - - ビルドアップ
       - 出しどころの共有
+  cause_1_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+  cause_2_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+    highlight_row: 0
+  cause_3_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+    highlight_row: 0
+  cause_4_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+    highlight_row: 0
+  cause_5_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+    highlight_row: 1
+  cause_6_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+    highlight_row: 1
+  cause_7_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+    highlight_row: 1
+  cause_8_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+    highlight_row: 1
+  cause_9_card:
+    type: table
+    title: 鈴木が挙げた原因
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 失点の場面
+      - 味方との連携
+    - - ビルドアップ
+      - 出しどころの共有
+    highlight_row: 1
   cause_10_card:
     type: table
     title: 後半の頭、鈴木の周り
@@ -115,7 +268,228 @@ cards:
       - 5人
     - - 鈴木が全体練習に出た日数
       - 試合まで3日
+  cause_11_card:
+    type: table
+    title: 後半の頭、鈴木の周り
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 先発の入れ替え
+      - 10人
+    - - 後半の頭の交代
+      - 5人
+    - - 鈴木が全体練習に出た日数
+      - 試合まで3日
+    highlight_row: 2
   view_card:
+    type: table
+    title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
+    columns:
+    - 季
+    - 試合
+    - セーブ率
+    - ミスからの失点
+    rows:
+    - - 23-24 シント・トロイデン
+      - '32'
+      - 68.8%
+      - '3'
+    - - 24-25 パルマ
+      - '37'
+      - 65.4%
+      - '0'
+    - - 25-26 パルマ
+      - '20'
+      - 70.2%
+      - '1'
+    - - 2026 W杯
+      - '4'
+      - 70.6%
+      - '0'
+    - - 26-27 ヴィラ
+      - '4'
+      - 75.0%
+      - '0'
+  view_1_card:
+    type: table
+    title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
+    columns:
+    - 季
+    - 試合
+    - セーブ率
+    - ミスからの失点
+    rows:
+    - - 23-24 シント・トロイデン
+      - '32'
+      - 68.8%
+      - '3'
+    - - 24-25 パルマ
+      - '37'
+      - 65.4%
+      - '0'
+    - - 25-26 パルマ
+      - '20'
+      - 70.2%
+      - '1'
+    - - 2026 W杯
+      - '4'
+      - 70.6%
+      - '0'
+    - - 26-27 ヴィラ
+      - '4'
+      - 75.0%
+      - '0'
+    highlight_row: 0
+  view_2_card:
+    type: table
+    title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
+    columns:
+    - 季
+    - 試合
+    - セーブ率
+    - ミスからの失点
+    rows:
+    - - 23-24 シント・トロイデン
+      - '32'
+      - 68.8%
+      - '3'
+    - - 24-25 パルマ
+      - '37'
+      - 65.4%
+      - '0'
+    - - 25-26 パルマ
+      - '20'
+      - 70.2%
+      - '1'
+    - - 2026 W杯
+      - '4'
+      - 70.6%
+      - '0'
+    - - 26-27 ヴィラ
+      - '4'
+      - 75.0%
+      - '0'
+    highlight_row: 1
+  view_3_card:
+    type: table
+    title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
+    columns:
+    - 季
+    - 試合
+    - セーブ率
+    - ミスからの失点
+    rows:
+    - - 23-24 シント・トロイデン
+      - '32'
+      - 68.8%
+      - '3'
+    - - 24-25 パルマ
+      - '37'
+      - 65.4%
+      - '0'
+    - - 25-26 パルマ
+      - '20'
+      - 70.2%
+      - '1'
+    - - 2026 W杯
+      - '4'
+      - 70.6%
+      - '0'
+    - - 26-27 ヴィラ
+      - '4'
+      - 75.0%
+      - '0'
+    highlight_row: 0
+  view_4_card:
+    type: table
+    title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
+    columns:
+    - 季
+    - 試合
+    - セーブ率
+    - ミスからの失点
+    rows:
+    - - 23-24 シント・トロイデン
+      - '32'
+      - 68.8%
+      - '3'
+    - - 24-25 パルマ
+      - '37'
+      - 65.4%
+      - '0'
+    - - 25-26 パルマ
+      - '20'
+      - 70.2%
+      - '1'
+    - - 2026 W杯
+      - '4'
+      - 70.6%
+      - '0'
+    - - 26-27 ヴィラ
+      - '4'
+      - 75.0%
+      - '0'
+    highlight_row: 2
+  view_5_card:
+    type: table
+    title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
+    columns:
+    - 季
+    - 試合
+    - セーブ率
+    - ミスからの失点
+    rows:
+    - - 23-24 シント・トロイデン
+      - '32'
+      - 68.8%
+      - '3'
+    - - 24-25 パルマ
+      - '37'
+      - 65.4%
+      - '0'
+    - - 25-26 パルマ
+      - '20'
+      - 70.2%
+      - '1'
+    - - 2026 W杯
+      - '4'
+      - 70.6%
+      - '0'
+    - - 26-27 ヴィラ
+      - '4'
+      - 75.0%
+      - '0'
+  view_6_card:
+    type: table
+    title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
+    columns:
+    - 季
+    - 試合
+    - セーブ率
+    - ミスからの失点
+    rows:
+    - - 23-24 シント・トロイデン
+      - '32'
+      - 68.8%
+      - '3'
+    - - 24-25 パルマ
+      - '37'
+      - 65.4%
+      - '0'
+    - - 25-26 パルマ
+      - '20'
+      - 70.2%
+      - '1'
+    - - 2026 W杯
+      - '4'
+      - 70.6%
+      - '0'
+    - - 26-27 ヴィラ
+      - '4'
+      - 75.0%
+      - '0'
+  view_7_card:
     type: table
     title: 鈴木彩艶の季ごとの数字（リーグ戦とW杯）
     columns:
@@ -166,7 +540,7 @@ cards:
   telop: 鈴木彩艶は、後半の頭からゴールに立ちました
 キャスター: 入って27秒。左を突破され、ゴール前に戻されたボールを決められました。
   telop: 入って27秒。左を突破され、ゴール前に戻されたボールを決められました
-  image: assets/images/20260929b_suzuki/01.jpg
+  card: report_2_card
 キャスター: 試合後の本人の言葉は。
   telop: 試合後の本人の言葉は
   image: assets/images/20260929b_suzuki/01.jpg
@@ -175,13 +549,13 @@ cards:
   image: assets/images/20260929b_suzuki/01.jpg
 キャスター: 54分には、前線の上田綺世へ低く長いパスを通しています。
   telop: 54分には、前線の上田綺世へ低く長いパスを通しています
-  image: assets/images/20260929b_suzuki/01.jpg
+  card: report_5_card
 キャスター: 一方で77分にはキックがずれ、相手の正面のシュートをこぼしました。
   telop: 一方で77分にはキックがずれ、相手の正面のシュートをこぼしました
-  image: assets/images/20260929b_suzuki/01.jpg
+  card: report_6_card
 キャスター: 82分には、手で弾くパンチングを誤っています。
   telop: 82分には、手で弾くパンチングを誤っています
-  image: assets/images/20260929b_suzuki/01.jpg
+  card: report_7_card
 
 ## 雨と脇腹を、本人が消した
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -229,42 +603,42 @@ cards:
 キャスター: 鈴木が原因に挙げたのは、自分の技術と、味方との噛み合わせでした。
   telop: 鈴木が原因に挙げたのは、自分の技術と、味方との噛み合わせでした
   source: 報道
-  card: cause_card
+  card: cause_1_card
   image: assets/images/20260929b_suzuki/01.jpg
 鈴木彩艶: 味方にサイドを切らせて自分がニア側のボールを取るとか、
   telop: 鈴木彩艶「味方にサイドを切らせて自分がニア側のボールを取るとか、」
-  card: none
+  card: cause_2_card
   image: assets/images/20260929b_suzuki/01.jpg
 鈴木彩艶: そういう連携ができていたら防げる部分があった
   cont: true
   telop: 鈴木彩艶「そういう連携ができていたら防げる部分があった」
-  card: none
+  card: cause_3_card
   image: assets/images/20260929b_suzuki/01.jpg
 キャスター: 味方が外側のコースを消し、自分は近い側に来るボールを取る。その分担の話です。
   telop: 味方が外側のコースを消し、自分は近い側に来るボールを取る。その分担の話です
-  card: none
+  card: cause_4_card
   image: assets/images/20260929b_suzuki/01.jpg
 キャスター: 次に、持ち味のはずのビルドアップ、後ろからつなぐ組み立てです。
   telop: 次に、持ち味のはずのビルドアップ、後ろからつなぐ組み立てです
-  card: none
+  card: cause_5_card
   image: assets/images/20260929b_suzuki/01.jpg
 鈴木彩艶: 味方とあまりイメージが合わなかった。
   telop: 鈴木彩艶「味方とあまりイメージが合わなかった」
-  card: none
+  card: cause_6_card
   image: assets/images/20260929b_suzuki/01.jpg
 鈴木彩艶: もう少し自分のアイデアを共有しないといけない
   cont: true
   telop: 鈴木彩艶「もう少し自分のアイデアを共有しないといけない」
-  card: none
+  card: cause_7_card
   image: assets/images/20260929b_suzuki/01.jpg
 鈴木彩艶: 自分が持つ時間がありながらも、探しどころを探す感じがあって、
   telop: 鈴木彩艶「自分が持つ時間がありながらも、探しどころを探す感じがあって、」
-  card: none
+  card: cause_8_card
   image: assets/images/20260929b_suzuki/01.jpg
 鈴木彩艶: 出しどころを何個か持つことができなかった
   cont: true
   telop: 鈴木彩艶「出しどころを何個か持つことができなかった」
-  card: none
+  card: cause_9_card
   image: assets/images/20260929b_suzuki/01.jpg
 キャスター: この日、日本は4日前のウルグアイ戦から先発を10人入れ替えていました。
   telop: この日、日本は4日前のウルグアイ戦から先発を10人入れ替えていました
@@ -272,7 +646,7 @@ cards:
   image: assets/images/20260929b_suzuki/01.jpg
 キャスター: 鈴木が全体練習に合流できたのは、試合までの3日だけ。守備陣と合わせる時間はわずかでした。
   telop: 鈴木が全体練習に合流できたのは、試合までの3日だけ。守備陣と合わせる時間はわずかでした
-  card: none
+  card: cause_11_card
   image: assets/images/20260929b_suzuki/01.jpg
 
 ## セーブ率とミスの数
@@ -286,31 +660,31 @@ cards:
   image: assets/images/20260929b_suzuki/01.jpg
 解説: 枠内に来たシュートを止めた割合、セーブ率。ベルギーでは68.8%でした。
   telop: 枠内に来たシュートを止めた割合、セーブ率。ベルギーでは68.8%でした
-  card: none
+  card: view_1_card
   image: assets/images/20260929b_suzuki/01.jpg
 解説: パルマの最初の季は65.4%。今季のヴィラでは75%です。
   telop: パルマの最初の季は65.4%。今季のヴィラでは75%です
-  card: none
+  card: view_2_card
   image: assets/images/20260929b_suzuki/01.jpg
 解説: 自分のミスが失点につながった数は、ベルギーの季が3回。
   telop: 自分のミスが失点につながった数は、ベルギーの季が3回
-  card: none
+  card: view_3_card
   image: assets/images/20260929b_suzuki/01.jpg
 解説: パルマの2季で1回。W杯とヴィラでは、まだゼロです。
   telop: パルマの2季で1回。W杯とヴィラでは、まだゼロです
-  card: none
+  card: view_4_card
   image: assets/images/20260929b_suzuki/01.jpg
 解説: 止める割合は上がり、ミスは減ってきました。
   telop: 止める割合は上がり、ミスは減ってきました
-  card: none
+  card: view_5_card
   image: assets/images/20260929b_suzuki/01.jpg
 解説: ベネズエラ戦の45分は、その流れから外れていました。
   telop: ベネズエラ戦の45分は、その流れから外れていました
-  card: none
+  card: view_6_card
   image: assets/images/20260929b_suzuki/01.jpg
 解説: 次に先発したとき、この線に戻るかを見ます。
   telop: 次に先発したとき、この線に戻るかを見ます
-  card: none
+  card: view_7_card
   image: assets/images/20260929b_suzuki/01.jpg
 
 ## ネットの反応

@@ -97,7 +97,7 @@ cards:
 キャスター: 久保建英が試合後に語り出したら止まらなかった、10人入れ替えの夜に残った一人。
   telop: 久保建英が試合後に語り出したら止まらなかった、10人入れ替えの夜に残った一人
   se: assets/audio/se_pon.wav
-  image: assets/images/20260929b_seko/03.jpg
+  image: assets/images/20260929b_pair_kubo_seko/01.jpg
 
 ## 10人入れ替えの夜に残った一人
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -106,7 +106,7 @@ cards:
   telop: 9月28日、広島でのベネズエラ戦。日本が2対1で勝ちました
   source: 報道
   card: situation_card
-  image: assets/images/20260929b_seko/03.jpg
+  image: assets/images/20260929b_pair_kubo_seko/01.jpg
 キャスター: 先発の顔ぶれは、10人がウルグアイ戦と別。
   telop: 先発の顔ぶれは、10人がウルグアイ戦と別
 キャスター: 残った一人が、ル・アーヴルの瀬古歩夢。久保建英とは15歳以下の代表からの仲です。
@@ -114,13 +114,13 @@ cards:
   card: situation_2_card
 キャスター: 24日のウルグアイ戦では、守る3人を並べる3バックの右で先発。
   telop: 24日のウルグアイ戦では、守る3人を並べる3バックの右で先発
-  image: assets/images/20260929b_seko/03.jpg
+  image: assets/images/20260929b_pair_kubo_seko/01.jpg
 キャスター: パスの成功率は93パーセント、クリアは両チームでいちばん多い7回でした。
   telop: パスの成功率は93パーセント、クリアは両チームでいちばん多い7回でした
   card: situation_4_card
 キャスター: 28日のベネズエラ戦は3バックのまん中。パス68本を、すべて味方につなげました。
   telop: 28日のベネズエラ戦は3バックのまん中。パス68本を、すべて味方につなげました
-  image: assets/images/20260929b_seko/03.jpg
+  image: assets/images/20260929b_pair_kubo_seko/01.jpg
 
 ## 久保建英の言葉
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -130,7 +130,7 @@ cards:
   only: short
   telop: 先発10人を入れ替えた夜に、ただ一人残った瀬古歩夢。仲間の久保建英が、その瀬古について
   card: none
-  image: assets/images/20260929b_seko/03.jpg
+  image: assets/images/20260929b_pair_kubo_seko/01.jpg
 キャスター: 瀬古本人は口を開かずに引き上げ、代わりに久保が語りました。
   telop: 瀬古本人は口を開かずに引き上げ、代わりに久保が語りました
   source: 報道

@@ -157,7 +157,11 @@ def portrait(config: ProjectConfig) -> ProjectConfig:
     # 読み上げ37.2秒に対して動画は40.2秒。**最後の3秒は音が無い。**
     # 冒頭の静止カードを外した理由（「最初の2.6秒で誰も喋っていなかった」）と
     # まったく同じことが、終わりで起きていた。**ショートは最後の一言で終える**
-    titles = replace(config.titles, intro=0.0, chapter=0.0, outro=SHORT_OUTRO)
+    # **最後のカードは出さない**（2026-09-29 指摘「ショートに変な画面がはいる」）。
+    # 9/18 に締めの読み上げ枠（SHORT_OUTRO）を5秒へ広げたとき、ここも同じ数字を
+    # 使っていたので、**読み終えたあとに無音のカードが5秒**付いていた（9/13 に0秒にしたもの）。
+    # 続き物の回だけは「続きは本編で」のカードを残す（9/23 指示）。`_add_subscribe` が meta で頼む
+    titles = replace(config.titles, intro=0.0, chapter=0.0, outro=0.0)
     # **ショートは少し速く読む**（2026-09-08）。参考は反応1件3秒台で、
     # 9/7 に Gemini に聞いた答えでも「1件3〜4秒に詰める」が2番目だった。
     # 本編の話速（1.0〜1.05）は参考と同じなので触らず、ショートだけ上げる
@@ -429,6 +433,8 @@ def _pick(script: Script, section: str) -> Scene:
 # **ショートから本編へ渡す道が、これまで無かった。**本編の再生は登録者からが
 # 86%で、ショートを見た人が本編へ回る経路はどこにも作っていない
 SHORT_OUTRO = 5.0
+# 続き物の回の最後のカード（秒）。ニュースの回は出さない
+SERIES_END_CARD = 3.0
 
 # 最後に読み上げる一言（2026-09-15）。**短くする。**8秒使っていた頃の
 # 「続報はチャンネル登録してお待ちください」には戻さない
@@ -673,9 +679,11 @@ def _add_subscribe(short: Script) -> None:
     lines = short.scenes[-1].lines
     if not lines:
         return
+    series = str((short.meta or {}).get("series") or "").strip()
+    if series:
+        short.meta = dict(short.meta or {}, end_card=SERIES_END_CARD)
     if _has_outro(lines):
         return
-    series = str((short.meta or {}).get("series") or "").strip()
     if series:
         # **最後のカードも本編へ向ける**（2026-09-23 指示「本編に繋いで」）。
         # 続き物の回に「続報は次回お伝えします」は合わない（次回は別のクラブ）

@@ -1312,3 +1312,25 @@ def test_上下に割る写真は縦版があればそちらを使う(tmp_path, 
         w, h = img.size
         r, g, b_ = img.getpixel((w // 2, h * 3 // 4))                 # 下の帯は縦版の色（JPEG の丸めは許す）
         assert abs(r - 30) < 8 and abs(g - 200) < 8 and abs(b_ - 30) < 8
+
+
+def test_ニュースのショートは読み終えたら終わる():
+    """**読み終えたあとに無音のカードを付けない**（2026-09-29 指摘「ショートに変な画面がはいる」）。
+
+    9/18 に締めの読み上げ枠を5秒に広げたとき、最後のカードの長さにも同じ数字を
+    使っていた。伊東のショートは「チャンネル登録もお願いします」のあと、
+    スタジアムの実写に小さな字のカードが5秒、音も無く出ていた。
+    """
+    from src import inserts as inserts_mod
+    from src.config import load_config
+    from src.shorts import portrait, _add_subscribe
+
+    config = portrait(load_config())
+    short = trim(parse_script(BODY), "何が起きたか")
+    _add_subscribe(short)
+    assert inserts_mod.plan(short, config).outro == 0.0, "ニュースのショートに最後のカードが付いている"
+
+    series = trim(parse_script(BODY), "何が起きたか")
+    series.meta = dict(series.meta or {}, series="プレミアリーグチーム紹介")
+    _add_subscribe(series)
+    assert inserts_mod.plan(series, config).outro > 0, "続き物の回の「続きは本編で」が消えた"

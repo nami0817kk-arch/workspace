@@ -34,7 +34,9 @@ def plan(script: Script, config: ProjectConfig) -> Inserts:
     冒頭はタイトル、以降の章の頭には章タイトル。最初の章はタイトル直後なので入れない。
     """
     titles = config.titles
-    inserts = Inserts(intro=max(0.0, titles.intro), outro=max(0.0, titles.outro))
+    # 台本が最後のカードを頼んでいれば、その秒数（ショートの続き物の回。shorts.SERIES_END_CARD）
+    end_card = float((getattr(script, "meta", None) or {}).get("end_card") or 0.0)
+    inserts = Inserts(intro=max(0.0, titles.intro), outro=max(0.0, titles.outro, end_card))
     if titles.chapter > 0:
         # **最初の章にはカードを入れない。**冒頭タイトルの有無に関係なく入れない。
         # 以前は「冒頭タイトルがあるときだけ飛ばす」だったため、冒頭タイトルを 0 に
