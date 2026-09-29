@@ -87,6 +87,31 @@
 > **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
 > 記述が残っているのは、出すことになったときのため。当面は iOS だけを見る。
 
+## このバージョンの新機能（1.1.2）
+
+App Store Connect の「このバージョンの新機能」に貼る文面。**日本語と英語で別々に入れる。**
+
+中身は不具合の修正2件。掲載の文面・画像は 1.1.1 から変えないので、
+差し替えるのはこの欄とビルドだけ。
+
+### 日本語
+
+```
+・広告を見ようとしたときに出ないことがあったのを直しました。特典を
+　受け取れないまま回数だけ減ってしまう場合がありました
+・ダークモードで、ユースの「育成方針」「メンター」で選んだ内容が
+　読めなくなっていたのを直しました
+```
+
+### 英語
+
+```
+- Fixed ads sometimes failing to appear when you asked for one, which could
+  use up one of your daily rewards without paying it out.
+- In dark mode, the training focus and mentor you picked for a youth player
+  were unreadable. Fixed.
+```
+
 ## このバージョンの新機能（1.1.1）
 
 App Store Connect の「このバージョンの新機能」に貼る文面。**日本語と英語で別々に入れる。**
