@@ -1,0 +1,259 @@
+# 取材メモ（10/1 題材④ giroud_ueda、型は quote）。材料の控えは research/raw/20261001_giroud_ueda.md。
+# 事実の裏:
+#   引退の示唆: L'Équipe の大型インタビュー（web 9/29 18:32、紙面は誕生日の 9/30 付け）。原文は Foot Mercato・franceinfo で同じ
+#     "comme joueur, je pense que c'est très probablement ma dernière saison. C'est pour ça que je profite de chaque instant"。
+#   年齢: 1986年9月30日生まれで 9/30 に40歳（Qoly・サッカー批評の「39歳」は取材時点）。上田は1998年8月28日生まれの28歳。
+#   上田・梅崎の件は L'Équipe の有料部分。**原文は読めていない。**Le Petit Lillois がフランス語を部分引用
+#     （« Quand Ayase Ueda arrive, je lui demande s'il a trouvé une maison, on a parlé des Japonais avec qui je jouais à Grenoble »
+#      « Je ne vais rien lâcher et lui donner du fil à retordre le week-end » « pour accompagner les autres »
+#      « Il ne doit pas croire que je vais me satisfaire de ça »＝直近3試合のベンチスタートについて、笑いながら）。
+#     梅崎の件は AllFootball の英訳と Qoly の日本語を突き合わせた（Qoly の「偶然」は英訳に無いので入れない）。
+#   初ゴールの試合: 2007年2月26日 リーグ・ドゥ第26節 グルノーブル 2-1 ル・アーヴル（footballdatabase・grenoblefoot.info）。
+#     62分ジルー途中出場／82分梅崎途中出場／85分同点／90+2分ジルー決勝点。AllFootball の英訳は「2月22日」で食い違う。
+#     アシストは試合記録に欄が無く、ジルー本人の言葉が根拠。梅崎は大分から半年の期限付き（浦和ではない）。
+#   リールの今季（FotMob、全公式戦、9/20 まで）: ジルー6試合268分1得点2アシスト／上田4試合271分3得点。
+#     上田の加入後4試合は上田271分・ジルー115分。トゥールーズ・ベティス・トロワは2人の直接の交代。並んだのはニース戦の64分から。
+#   代表: 上田は 9/24 ウルグアイ戦（60分過ぎから）1点、9/28 ベネズエラ戦（後半から）2点（JFA の試合報告）。
+#     10/1 19:10 のエクアドル戦は台本を作った時点で試合前なので触れない。
+#   ジルーの代表 137試合57得点（franceinfo）。リール1季目は11得点。
+# 反応: Yahoo!ニュースのコメント欄から個人の投稿を頭から終わりまで3件。フランス語のファンの声は Bluesky で探して取れなかった。
+# 写真: Le Petit Lillois の2枚（撮影 Quentin Delcourt、代理店ではない）。冒頭はジルーの 16:9（_w）、語る行からジルー（左）＋上田（右）の1枚。
+date: 2026年10月1日
+slot: japan_4
+format: quote
+people:
+- オリヴィエ・ジルー
+- 上田綺世
+- 梅崎司
+theme:
+  id: giroud_ueda_umesaki
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: リール
+  title: ジルーが上田綺世に話した日本人。自分のプロ初ゴールをお膳立てした選手
+  opening_image: assets/images/20261001_giroud_ueda/01_w.jpg
+  takeaway: 上田が加わってからの4試合で、出場時間は上田271分、ジルー115分。最後のシーズンに出番を削られた40歳が、削った28歳の家探しを気にかけ、それでも譲らないと言う。2人が並んでプレーしたのは、まだニース戦の30分ほどだけ
+short_title: ジルーのプロ初ゴールをアシストした日本人。上田綺世に話したこと
+thumbnail:
+  photos:
+  - assets/images/20261001_giroud_ueda/01.jpg
+  - assets/images/20261001_ueda/01.jpg
+  line1: ジルーのプロ初ゴール
+  line2: アシストは日本人の●●
+  reaction: 上田よ、今シーズン盗めるもの盗むんだ！
+sections:
+- id: retire
+  heading: たぶん最後のシーズン
+  tier: 報道
+  telop: ジルー「選手としては、たぶん今季が最後」
+  narrator: キャスター
+  say:
+  - text: フランス1部リールのオリヴィエ・ジルーが、9月30日に40歳になりました。
+    image: assets/images/20261001_giroud_ueda/01_w.jpg
+  - フランス代表で137試合57得点、2018年のワールドカップを制したストライカーです。
+  - 誕生日を前に受けたインタビューで、引退をほのめかしました。
+  - voice: ジルー
+    text: 来年もインタビューなら、喜んで受けるよ。
+  - voice: ジルー
+    text: でも選手としては、たぶん今季が最後のシーズンになると思う。
+    cont: true
+  - voice: ジルー
+    text: だから、一瞬一瞬を楽しんでいるんだ
+    cont: true
+  quotes_from:
+  - Foot Mercato https://www.footmercato.net/a3294031172986582651-losc-giroud-annonce-sa-probable-retraite
+  sources:
+  - https://www.footmercato.net/a3294031172986582651-losc-giroud-annonce-sa-probable-retraite
+  - https://www.franceinfo.fr/sports/foot/olivier-giroud/c-est-tres-probablement-ma-derniere-saison-annonce-olivier-giroud-a-la-veille-de-ses-40-ans_8214746.html
+- id: ueda
+  main: true
+  heading: ライバルに聞いた家のこと
+  tier: 報道
+  telop: ジルー「彼は、僕のプロ初ゴールをアシストしてくれた選手なんだ」
+  narrator: キャスター
+  say:
+  - text: 40歳の誕生日を前に受けたインタビューで、リールのジルーが引退をほのめかしました。
+    short_only: true
+  - text: そのインタビューでジルーは、今季加わって出番を争う上田綺世のことも話しています。
+    image: assets/images/20261001_pair_giroud_ueda/01.jpg
+  - voice: ジルー
+    text: 綺世が来たとき、家は見つかったかと聞いたんだ。
+  - voice: ジルー
+    text: グルノーブルで一緒にプレーした日本人の話もした
+    cont: true
+  - text: グルノーブルは、ジルーがプロになったクラブ。そこにいた日本人の1人が、梅崎司です。
+  - voice: ジルー
+    text: アーセナルの日本ツアーで、梅崎にも会ったよ。
+  - voice: ジルー
+    text: 彼は、僕のプロ初ゴールをアシストしてくれた選手なんだ
+    cont: true
+  - text: その初ゴールは2007年2月、フランス2部のル・アーヴル戦です。
+    card:
+      type: table
+      title: グルノーブル 2-1 ル・アーヴル（2007年2月26日）
+      columns: [分, 出来事]
+      rows: &debut
+      - ['62分', 'ジルーが途中出場']
+      - ['82分', '梅崎司が途中出場']
+      - ['85分', 'グルノーブルが同点']
+      - ['90+2分', 'ジルーの決勝点']
+  - text: 1点を追う62分に、20歳のジルーが途中から入ります。
+    card:
+      type: table
+      title: グルノーブル 2-1 ル・アーヴル（2007年2月26日）
+      columns: [分, 出来事]
+      rows: *debut
+      highlight_row: 0
+  - text: 82分には、大分から期限付き移籍で来ていた梅崎も入りました。
+    card:
+      type: table
+      title: グルノーブル 2-1 ル・アーヴル（2007年2月26日）
+      columns: [分, 出来事]
+      rows: *debut
+      highlight_row: 1
+  - text: 85分に追いつき、試合終了の間際。ジルーの決勝点が、プロで最初のゴールでした。
+    card:
+      type: table
+      title: グルノーブル 2-1 ル・アーヴル（2007年2月26日）
+      columns: [分, 出来事]
+      rows: *debut
+      highlight_row: 3
+  - text: ただ、上田の世話を焼くだけではありません。
+  - voice: ジルー
+    text: ライバルだとしても、新しい環境に馴染むのは大事なことだ。
+  - voice: ジルー
+    text: 40歳だって、ほかの選手の付き添いでここにいるわけじゃない。
+    cont: true
+  - voice: ジルー
+    text: 何ひとつ譲らないし、週末は彼をとことん手こずらせるつもりだ
+    cont: true
+  - text: ジルー自身は、ここ3試合ベンチからのスタート。そのことにも笑いながらこう話しました。
+  - voice: ジルー
+    text: それで僕が満足すると、監督に思われちゃ困るね
+  quotes_from:
+  - Le Petit Lillois https://lepetitlillois.com/2026/09/30/losc-giroud-concurrence-ueda/
+  - AllFootball https://www.allfootballapp.com/articles/5482242-giroud-joining-arsenal-made-my-career
+  - Qoly https://qoly.jp/q1/17867243/p2
+  sources:
+  - https://lepetitlillois.com/2026/09/30/losc-giroud-concurrence-ueda/
+  - https://www.allfootballapp.com/articles/5482242-giroud-joining-arsenal-made-my-career
+  - https://qoly.jp/q1/17867243/p2
+  - https://www.footballdatabase.eu/fr/match/resume/47911-grenoble-le_havre
+  - https://www.grenoblefoot.info/les-10-ans-du-1er-but-pro-dolivier-giroud-temoignage-et-videos/
+- id: view
+  heading: 271分と115分
+  tier: 背景
+  viewpoint: true
+  telop: 上田が来てからの4試合、出場時間は上田271分、ジルー115分
+  narrator: 解説
+  say:
+  - text: ジルーがプロで初ゴールを決めたあの日、上田綺世はまだ8歳。いまは28歳です。
+    card:
+      type: table
+      title: リールでの今季（全公式戦、9月20日まで）
+      columns: ['', ジルー, 上田]
+      rows: &lille
+      - ['年齢', '40歳', '28歳']
+      - ['出場時間', '6試合 268分', '4試合 271分']
+      - ['上田の加入後', '4試合 115分', '4試合 271分']
+      - ['得点', '1点 2アシスト', '3点']
+      highlight_row: 0
+  - text: リールでの今季の出場時間は、ジルー268分、上田271分。ほぼ並んでいます。
+    card:
+      type: table
+      title: リールでの今季（全公式戦、9月20日まで）
+      columns: ['', ジルー, 上田]
+      rows: *lille
+      highlight_row: 1
+  - text: ただ、上田が来てからの4試合に限ると、ジルーは115分です。
+    card:
+      type: table
+      title: リールでの今季（全公式戦、9月20日まで）
+      columns: ['', ジルー, 上田]
+      rows: *lille
+      highlight_row: 2
+  - text: そのうち3試合は、2人がそのまま入れ替わる交代でした。
+    card:
+      type: table
+      title: リールでの今季（全公式戦、9月20日まで）
+      columns: ['', ジルー, 上田]
+      rows: *lille
+      highlight_row: 2
+  - text: 同じピッチに並んだのは、9月20日のニース戦の終盤、30分ほどだけです。
+    card:
+      type: table
+      title: リールでの今季（全公式戦、9月20日まで）
+      columns: ['', ジルー, 上田]
+      rows: *lille
+      highlight_row: 2
+  - text: 得点は上田が4試合で3点。ジルーは1点ですが、アシストも2つ記録しています。
+    card:
+      type: table
+      title: リールでの今季（全公式戦、9月20日まで）
+      columns: ['', ジルー, 上田]
+      rows: *lille
+      highlight_row: 3
+  - text: 上田はこの9月、日本代表でも途中出場の2試合で3点。勢いは増しています。
+    card:
+      type: table
+      title: リールでの今季（全公式戦、9月20日まで）
+      columns: ['', ジルー, 上田]
+      rows: *lille
+  - text: 出番を削られながら、40歳のジルーはその相手の家探しを気にかけていました。
+  - text: それでもポジションは譲らないと言い切る。競り合いは、まだ始まったばかりです。
+  sources:
+  - https://www.fotmob.com/players/46469/olivier-giroud
+  - https://www.fotmob.com/players/942393/ayase-ueda
+  - https://lepetitlillois.com/2026/09/30/losc-giroud-concurrence-ueda/
+  - https://www.jfa.jp/samuraiblue/news/00036813/
+  - https://www.jfa.jp/samuraiblue/news/00036832/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「上田よ、今シーズン盗めるもの盗むんだ！」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（サッカーキング 9/29「40歳を迎えるFWジルー、今季限りでの引退を示唆」）のコメント欄 rma********。全文
+  - voice: ネット民
+    text: ソシエダでシルバと出会った久保、
+  - voice: ネット民
+    text: リールでジルーと出会った上田。
+    cont: true
+  - voice: ネット民
+    text: どちらもお手本となる選手との貴重な出会いだけど
+    cont: true
+  - voice: ネット民
+    text: 如何せん一緒にプレー出来る時間が少なすぎる。
+    cont: true
+  # 同じ欄 tal********。原文「派手なプレーをする選手じゃなかったけど、いぶし銀ストライカーって印象が強い。／上田にも通じる部分があるし、相性も良さそうだったから今季限りで引退は寂しいね。」
+  - voice: ネット民
+    text: 派手なプレーをする選手じゃなかったけど、
+  - voice: ネット民
+    text: いぶし銀ストライカーって印象が強い。
+    cont: true
+  - voice: ネット民
+    text: 上田にも通じる部分があるし、相性も良さそうだったから
+    cont: true
+  - voice: ネット民
+    text: 今季限りで引退は寂しいね。
+    cont: true
+  # Yahoo!ニュース（DAZN News 9/30「40歳になった元フランス代表レジェンドが引退へ」）のコメント欄 jxf********。原文「すごく残念。年齢的にいつ引退してもおかしくないけど、もう少し続けてほしい。／ミランでの活躍ありがとう。／上田よ、今シーズン盗めるもの盗むんだ！」
+  - voice: ネット民
+    text: すごく残念。年齢的にいつ引退してもおかしくないけど、
+    short_voice: true
+  - voice: ネット民
+    text: もう少し続けてほしい。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: ミランでの活躍ありがとう。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 上田よ、今シーズン盗めるもの盗むんだ！
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/ca9ba5879f6c610f19ecb616e91a8db5de7db8d5/comments
+  - https://news.yahoo.co.jp/articles/fa20c3d77158f3f3188eaef040b15a03b488b1e7/comments

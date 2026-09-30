@@ -1,0 +1,249 @@
+# 取材メモ（10/1 の題材 1）。鈴木彩艶がアストン・ヴィラの9月の月間MVP（クラブ発表 9/29、ファン投票70%）＋代表でW杯後初の先発へ。
+# 材料の控えは research/raw/20261001_zion_mvp.md（出典URL・原文・数字の食い違い）。
+# **エクアドル戦（10/1 19:10）の前に公開する。試合の結果は書かない。**「先発」は前日会見での予定として書く。
+# 事実の裏:
+#   ヴィラ公式の発表ページは JavaScript で読み込むため読めなかった。発表文は日刊スポーツの訳で当てた（70%・9/29）。
+#   9月の5試合は英語版 Wikipedia のヴィラの季の記事の試合記録と LiveScore（5試合・6失点・ハルの0-0）で一致。杯は後半から（相手の得点は27分）。
+#   ベネズエラ戦はゲキサカ 460045 だけ「29日」。LiveScore の Monday・Yahoo!コメントの「月曜日」に合わせて 9月28日。
+#   移籍金: 固定3000万€＋最大500万€（Qoly）／約3000万ポンド（Sky・BBC）／2560万ポンド＋430万ポンド（Wikipedia）。「およそ3000万ポンド」「最大3500万ユーロ」と言う。
+#   マルティネスは 750万ポンドでチェルシーへ（Sky・Al Jazeera）。2022年W杯の優勝メンバー。4倍は 3000万÷750万。
+#   GKの移籍金の順位は Qoly の特集（8/27）。見出しは「8位タイ」で相手は書いていないので「8番目に並ぶ」。
+#   森保監督の言葉は原文から「(前日)」「(シーズン)」の補足だけ外した。1本目は頭の「デビュー戦から…序盤ではあるが」を省いて引く（補っていない）。
+#   英BBCのベスト11は入れない（9/22 に扱った・媒体名を読まない決まり）。トッテナム戦の2点目の起点のキックは、見立ての根拠として1行だけ（BBC の Yahoo 転載 "the architect of Villa's second goal"）。
+#   流れの点検（Claude が読んだ）の指摘で、見立ての節の頭に「話をヴィラに戻します」、クラブ名を略さない（ハル・シティ／ノッティンガム・フォレスト）、「ユーロでは」を通貨と分かる形に、を直した。
+# 写真: ゲキサカ 460045 の記事の写真（9/28 ベネズエラ戦、©Kaoru WATANABE/GEKISAKA）。ヴィラのユニフォームの写真はゲキサカ・サッカーキングとも Getty なので使わない。
+# 反応: 英語1件（X、9/19。footballinsider247 の記事に埋め込み。9/21・22 の回で使っていない1件）＋Yahoo!ニュースのコメント欄から2件、どれも全文。
+date: 2026年10月1日
+slot: japan_1
+format: news
+people:
+- 鈴木彩艶
+- 森保一
+theme:
+  id: zion_mvp
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: 鈴木彩艶、加入1か月でヴィラの月間MVP。W杯王者の後を継いだ9月の中身
+  question: 加入1か月の鈴木彩艶に、なぜヴィラのファンは7割の票を入れたのか
+  takeaway: ヴィラは2022年W杯王者のマルティネスを750万ポンドで出し、その3倍を超える、GKでは歴代8番目に並ぶ額で24歳の鈴木を取った。9月は5試合で6失点と止めた数は目立たないが、それでも7割の票を集めた。目立ったのは後ろから攻めを始める配球だ。同じ評価を代表でも示せるかは、W杯後初の先発になる予定のエクアドル戦から
+  opening_image: assets/images/20261001_zion_mvp/01_w.jpg
+short_title: 鈴木彩艶、ヴィラで月間MVP。森保監督が明かした今夜の起用
+thumbnail:
+  photo: assets/images/20261001_zion_mvp/01_w.jpg
+  line1: 鈴木彩艶、ヴィラの月間MVP
+  line2: ファン投票で●割を集めた
+  reaction: むしろ上位互換？
+sections:
+- id: report
+  heading: 9月の月間MVP
+  tier: 報道
+  telop: 9月29日、アストン・ヴィラが発表。ファン投票で70％
+  narrator: キャスター
+  say:
+  - text: 9月29日、アストン・ヴィラが9月の月間最優秀選手を発表しました。
+    image: assets/images/20261001_zion_mvp/01_w.jpg
+  - text: 選ばれたのは、8月にパルマから加わった鈴木彩艶。ファン投票で70％の票を集めています。
+  sources:
+  - https://www.nikkansports.com/soccer/world/news/202609300000273.html
+  - https://web.gekisaka.jp/news/world/detail/?460028-460028-fl
+  - https://www.livescore.com/en/news/football/premier-league/zion-suzuki-becoming-aston-villa-fan-favourite-named-player-of-the-month-claret-villans/
+- id: japan
+  main: true
+  heading: 代表では、W杯のあと初めての先発へ
+  tier: 報道
+  telop: 森保監督「彩艶をこの練習で何もなければ、先発で起用しようかなと思っている」
+  narrator: キャスター
+  say:
+  - text: 鈴木彩艶が、ファン投票の7割を集めてヴィラの9月の最優秀選手に選ばれました。
+    short_only: true
+  - text: その鈴木はいま、日本代表に呼ばれています。
+  - text: 9月28日のベネズエラ戦は後半から出て、キャッチや味方へのパスでミスが出ました。
+  - text: 試合のあと、本人はこう話しています。
+  - voice: 鈴木彩艶
+    text: 今日のパフォーマンスは攻守ともにひどかった
+  - text: それでも森保監督は、エクアドル戦の前日に、こう話しました。
+  - voice: 森保監督
+    text: 彩艶をこの練習で何もなければ、
+  - voice: 森保監督
+    text: 先発で起用しようかなと思っている
+    cont: true
+  - voice: 森保監督
+    text: 相手の攻撃を止める部分、攻撃の起点になる部分も
+  - voice: 森保監督
+    text: チームですでに絶大な信頼を得ていると感じる
+    cont: true
+  - text: 先発すれば、ワールドカップのあと代表では初めてです。鈴木は、こう話しています。
+  - voice: 鈴木彩艶
+    text: 前回のゲームは少しパフォーマンスが悪かったけれど、
+  - voice: 鈴木彩艶
+    text: 明日はまた違ったゲームになると思っている
+    cont: true
+  - voice: 鈴木彩艶
+    text: まずはGKとしてゼロで抑えるところを
+  - voice: 鈴木彩艶
+    text: 意識して取り組むべきかなと思う
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460045-460045-fl
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460062-460062-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460045-460045-fl
+  - https://web.gekisaka.jp/news/japan/detail/?460062-460062-fl
+- id: view
+  heading: 7割の票と、W杯王者の後釜
+  tier: 報道
+  viewpoint: true
+  telop: 5試合で6失点。それでも7割の票。目立ったのは後ろから攻めを始める配球
+  narrator: 解説
+  card:
+    type: table
+    title: 9月の鈴木彩艶（アストン・ヴィラ）
+    columns:
+    - 日付
+    - 相手
+    - 結果
+    - 失点
+    rows:
+    - &s1 ['9月5日', 'ハル（リーグ）', '0-0', '0']
+    - &s2 ['9月8日', 'ブルージュ（CL）', '3-2', '2']
+    - &s3 ['9月12日', 'フォレスト（リーグ）', '1-2', '2']
+    - &s4 ['9月16日', 'コヴェントリー（杯）', '3-1', '0']
+    - &s5 ['9月19日', 'トッテナム（リーグ）', '3-2', '2']
+  say:
+  - text: 話をヴィラに戻します。9月、鈴木はクラブで5試合に出ました。
+    card:
+      type: table
+      title: 9月の鈴木彩艶（アストン・ヴィラ）
+      columns: [日付, 相手, 結果, 失点]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+  - text: 5日のハル・シティ戦は、0対0の引き分け。
+    card:
+      type: table
+      title: 9月の鈴木彩艶（アストン・ヴィラ）
+      columns: [日付, 相手, 結果, 失点]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+      highlight_row: 0
+  - text: 8日、日本人のキーパーで初めて欧州チャンピオンズリーグに出場。
+    card:
+      type: table
+      title: 9月の鈴木彩艶（アストン・ヴィラ）
+      columns: [日付, 相手, 結果, 失点]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+      highlight_row: 1
+  - text: 12日のノッティンガム・フォレスト戦は、1対2で敗れます。
+    card:
+      type: table
+      title: 9月の鈴木彩艶（アストン・ヴィラ）
+      columns: [日付, 相手, 結果, 失点]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+      highlight_row: 2
+  - text: 16日のリーグカップは、後半から出て失点なし。
+    card:
+      type: table
+      title: 9月の鈴木彩艶（アストン・ヴィラ）
+      columns: [日付, 相手, 結果, 失点]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+      highlight_row: 3
+  - text: 19日のトッテナム戦で、ヴィラは今季リーグ初勝利。
+    card:
+      type: table
+      title: 9月の鈴木彩艶（アストン・ヴィラ）
+      columns: [日付, 相手, 結果, 失点]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+      highlight_row: 4
+  - text: 5試合で失点は6。止めた数だけなら、目立つ1か月ではありません。
+    card:
+      type: table
+      title: 9月の鈴木彩艶（アストン・ヴィラ）
+      columns: [日付, 相手, 結果, 失点]
+      rows: [*s1, *s2, *s3, *s4, *s5]
+  - text: ヴィラはこの夏、ゴールキーパーを入れ替えています。
+    card:
+      type: table
+      title: ヴィラのゴールキーパーの入れ替え（2026年夏）
+      columns: ['', 年齢, 移籍金]
+      rows: &sw [['マルティネス（→チェルシー）', '33', '750万ポンド'], ['鈴木彩艶（パルマ→）', '24', '約3000万ポンド']]
+  - text: 2022年のワールドカップ王者、マルティネスを750万ポンドでチェルシーへ。
+    card:
+      type: table
+      title: ヴィラのゴールキーパーの入れ替え（2026年夏）
+      columns: ['', 年齢, 移籍金]
+      rows: *sw
+      highlight_row: 0
+  - text: 代わりに24歳の鈴木を、およそ3000万ポンドで取りました。
+    card:
+      type: table
+      title: ヴィラのゴールキーパーの入れ替え（2026年夏）
+      columns: ['', 年齢, 移籍金]
+      rows: *sw
+      highlight_row: 1
+  - text: マルティネスを売った額の、3倍を超えます。
+    card:
+      type: table
+      title: ヴィラのゴールキーパーの入れ替え（2026年夏）
+      columns: ['', 年齢, 移籍金]
+      rows: *sw
+      highlight_row: 1
+  - text: 最大で3500万ユーロ。キーパーの移籍金では、歴代8番目に並ぶ額です。
+    card:
+      type: table
+      title: ゴールキーパーの移籍金（歴代）
+      columns: [順位, 名前, 移籍金]
+      rows: &gk [['1位', 'ケパ', '8000万ユーロ'], ['2位', 'アリソン', '7250万ユーロ'], ['7位', 'エデルソン', '4000万ユーロ'], ['8位', '鈴木彩艶', '最大3500万ユーロ']]
+      highlight_row: 3
+  - text: 1位はケパの8000万ユーロ。すぐ上の7位には、エデルソンが入ります。
+    card:
+      type: table
+      title: ゴールキーパーの移籍金（歴代）
+      columns: [順位, 名前, 移籍金]
+      rows: *gk
+      highlight_row: 2
+  - text: その持ち味が出たのが、トッテナム戦の2点目です。
+  - text: 鈴木が自分のゴール前から蹴り出したボールが、得点の始まりでした。
+  - text: 止めた数より目立ったのは、後ろから攻めを始める蹴り方です。
+  - text: ワールドカップ王者の後釜に座った24歳。
+  - text: 1か月目の答えは、7割の票でした。
+  sources:
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Aston_Villa_F.C._season
+  - https://www.livescore.com/en/news/football/premier-league/zion-suzuki-becoming-aston-villa-fan-favourite-named-player-of-the-month-claret-villans/
+  - https://news.yahoo.co.jp/articles/98ed5445a86f1e119ab4051b1ea28d128bc58179
+  - https://www.skysports.com/football/news/11677/13577794/emiliano-martinez-transfer-news-chelsea-agree-lb7-5m-deal-to-sign-aston-villas-world-cup-winning-goalkeeper
+  - https://www.aljazeera.com/sports/2026/8/30/chelsea-sign-argentina-goalkeeper-emiliano-martinez-from-aston-villa
+  - https://qoly.jp/q1/17860194
+  - https://qoly.jp/q1/17867245
+  - https://sports.yahoo.com/articles/suzuki-proves-worthy-replacement-martinez-165834657.html
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「ヴィラのザイオンは本当に凄い」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 今シーズン屈指の補強だな、ザイオン・スズキ。
+  - voice: ネット民
+    text: 配球もシュートストップも見事だ
+    cont: true
+  - voice: ネット民
+    text: マルティネスの後釜はしんどいかなあと思っていたが、
+    short_voice: true
+  - voice: ネット民
+    text: 全く杞憂でしたね。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: むしろ上位互換？と思わせる活躍ぶり。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: ヴィラのザイオンは本当に凄い
+    short_voice: true
+  - voice: ネット民
+    text: 代表のザイオンは本当に不安定・・・
+    cont: true
+    short_voice: true
+  sources:
+  - https://www.footballinsider247.com/aston-villa/zion-suzuki-is-not-staying-for-long-aston-villa-fans-explode-after-latest
+  - https://news.yahoo.co.jp/articles/98ed5445a86f1e119ab4051b1ea28d128bc58179/comments
+  - https://news.yahoo.co.jp/articles/62549d2898602b6307762bb7051f8d4d4b49bdb5/comments

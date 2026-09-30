@@ -1,0 +1,386 @@
+# 取材メモ（10/1 の題材 6）。起点は 9/30 の森保監督の会見（エクアドル戦の前日、日産スタジアム）。材料の控えは research/raw/20261001_coaches.md。
+# この動画はエクアドル戦（10/1 19:10）の前に公開する。試合の結果は書かない。
+# 事実の裏:
+#   持ち場: ゲキサカの会見要旨（460050）の森保監督の答えを原文のまま引く。日刊スポーツも同じ答え（齊藤・前田の「守備と攻撃」の順だけ逆）。
+#     どちらがどちらを支えるかは言い切らず「2人は支えに回る」まで。
+#   替えた時期: 9/17 のメンバー発表（スポニチ・中日）。W杯までは守備が齊藤俊秀、セットプレーの攻撃が前田遼一。
+#   就任: 名波 2023年（JFA 2023-01-17）／長谷部 2024年（最終予選から。JFA のスタッフ紹介）／中村 2026年4月16日（JFA）。
+#   年齢は JFA の生年月日から 2026-10-01 時点で計算（名波 1972-11-28＝53／長谷部 1984-01-18＝42／中村 1978-06-24＝48）。
+#   10人: ゲキサカのテキスト速報。後半36分に10人目の交代で枠を使い切り、後半41分に渡辺剛がアクシデントで退く（退場ではない）。
+#     2-1 は後半45分+6 の上田のPK。PKの中身（VAR）は 9/29 の別の回と重ねないので言わない。10人からの並び（中村敬斗のSB）も 9/30 の回で扱ったので言わない。
+#   「ボードを持って監督と話している場面」は会見の問いの言葉。10人の場面と結びつけたのは監督の答え（「確認ということで持ってきてくれた」）。
+#   現役時代: 名波 67試合9得点（JFA 00031440）、1998年W杯で10番・全試合先発、2000年アジア杯 MVP（ja.wikipedia）。
+#     中村 98試合24得点・W杯2006/2010（日経＝共同、フットボールチャンネル）、FKの名手（日経）。CLでマンチェスター・ユナイテッドからFK（en.wikipedia、2006年）。
+#     長谷部 114試合2得点（サッカーキング 2024-09-11）、W杯3大会とも主将（サッカーキング 2018-07-03）、
+#     2016年10月28日のボルシアMG戦から3バックの真ん中（Number Web）、ブンデス384試合はアジアの選手で最多（フットボールゾーン）。
+#   使わない: 主将81試合（ja.wikipedia だけ）、中村のJ1のFK最多（資料で数が揺れる）、W杯の試合数。
+# 鎌田大地は 9/30 に別の回で扱ったので、長谷部の守りの難しさを言う1か所だけ（ゲキサカ 460061）。
+# 写真: 記事の写真を先に当てた。代理店のものは無い（目で透かしを見た）。
+#   森保＝日刊スポーツ（9/30 会見、撮影・足立雅史）／長谷部＝サッカーキング（2026-05 のインタビュー）／名波＝サッカーキング（2026-05）／
+#   中村＝ゲキサカ（2026-03 ハムデン・パーク、©Koki NAGAHAMA/GEKISAKA。上半身を切り出した 02）／鎌田＝ゲキサカ（9/30 練習、©Kaoru WATANABE/GEKISAKA）。
+#   冒頭は長谷部の 01_w（頭が入る 16:9）。語る人の行は語る人（左）＋長谷部（右）の2枚並べ。3人の話は3枚並べ（trio）。
+# 反応: Yahoo!ニュースのコメント欄（日刊スポーツ・スポニチの記事）から、個人の投稿を頭から終わりまで。海外の反応は見つからなかった（0件）。
+date: 2026年10月1日
+slot: japan_6
+format: news
+people:
+- 長谷部誠
+- 中村俊輔
+- 名波浩
+- 森保一
+theme:
+  id: japan_coaches_roles
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: 森保ジャパンのコーチ3人に新しい持ち場。10人の夜、長谷部誠が監督に聞いたこと
+  question: 新しいコーチの持ち場は、3人の現役時代と噛み合っているのか
+  takeaway: コーチの持ち場は、3人が現役で立っていた場所とそのまま重なる。流れの中の攻めは代表67試合の司令塔だった名波浩、セットプレーの攻撃は98試合24得点の左足の名手・中村俊輔、守備はW杯3大会で主将を務め、フランクフルトで3人の守りの真ん中に立った長谷部誠。日本代表と同じ3人の守りを最後尾から知る人に、守りが任された
+  opening_image: assets/images/20261001_coaches_hasebe/01_w.jpg
+short_title: 長谷部誠コーチ、10人になった夜に監督へ聞いたこと
+thumbnail:
+  photos:
+  - assets/images/20261001_coaches_hasebe/01.jpg
+  - assets/images/20261001_coaches_nanami/02.jpg
+  - assets/images/20261001_coaches_nakamura/02.jpg
+  line1: 長谷部誠と中村俊輔の新担当
+  line2: 守備を任されたW杯●大会の主将
+  reaction: 長谷部に森保と名波が相談に乗る形でいい
+sections:
+- id: roles
+  heading: 攻撃は名波、守備は長谷部
+  tier: 報道
+  telop: 守備は長谷部誠、セットプレーの攻撃は中村俊輔。9月の活動から
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本代表コーチの持ち場（9月から）
+    columns:
+    - 名前
+    - 年齢
+    - 担当
+    - 現役時代の主な所属
+    - 代表の試合
+    rows: &roles
+    - - 名波浩
+      - '53'
+      - オープンプレーの攻撃
+      - ジュビロ磐田
+      - '67'
+    - - 長谷部誠
+      - '42'
+      - 守備
+      - フランクフルト
+      - '114'
+    - - 中村俊輔
+      - '48'
+      - セットプレーの攻撃
+      - セルティック
+      - '98'
+  say:
+  - text: 9月30日、エクアドル戦の前日の会見で、森保一監督がコーチの持ち場を明かしました。
+    image: assets/images/20261001_coaches_pair_moriyasu/01.jpg
+  - voice: 森保一
+    text: 大まかな役割としてはオープンプレーの攻撃が名波コーチ、
+  - voice: 森保一
+    text: 守備が長谷部コーチ、
+    cont: true
+  - voice: 森保一
+    text: セットプレーの攻撃が中村俊輔コーチ
+    cont: true
+  - text: オープンプレーは、フリーキックやコーナーキックではない、流れの中のプレーのことです。
+    image: assets/images/20261001_coaches_trio/01.jpg
+    card:
+      type: table
+      title: 日本代表コーチの持ち場（9月から）
+      columns: [名前, 年齢, 担当, 現役時代の主な所属, 代表の試合]
+      rows: *roles
+      highlight_row: 0
+  - text: ワールドカップまでは、守備を齊藤俊秀コーチ、セットプレーの攻撃を前田遼一コーチが見ていました。
+    card:
+      type: table
+      title: 日本代表コーチの持ち場（9月から）
+      columns: [名前, 年齢, 担当, 現役時代の主な所属, 代表の試合]
+      rows: *roles
+  - text: 9月の活動から、その2つを長谷部誠と中村俊輔が引き継ぎました。齊藤と前田の2人は、支えに回ります。
+    card:
+      type: table
+      title: 日本代表コーチの持ち場（9月から）
+      columns: [名前, 年齢, 担当, 現役時代の主な所属, 代表の試合]
+      rows: *roles
+      highlight_row: 1
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460050-460050-fl
+  - https://news.yahoo.co.jp/articles/ada4c50e93276dc0407da4b704971e2dd839e954
+  - https://news.yahoo.co.jp/articles/1c3e71d038d48fa726306071b56c691830f4d3a8
+  - https://www.chunichi.co.jp/article/1312522
+  - https://www.jfa.jp/samuraiblue/news/00036247/
+  - https://www.jfa.jp/national_team/staff/HASEBE_Makoto.html
+  - https://www.jfa.jp/national_team/staff/NANAMI_Hiroshi.html
+  - https://www.jfa.jp/samuraiblue/20260928/member.html
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460050-460050-fl
+- id: night
+  main: true
+  heading: 10人になった夜
+  tier: 報道
+  telop: 森保監督「長谷部コーチがどうしますかと尋ねてきた」
+  narrator: キャスター
+  card:
+    type: table
+    title: ベネズエラ戦の終盤（9月28日）
+    columns:
+    - 時間
+    - 出来事
+    rows: &night
+    - - 後半36分
+      - 10人目の交代で、交代を使い切る
+    - - 後半41分
+      - 渡辺剛が痛めて退き、10人に
+    - - 後半45分+6分
+      - 上田綺世のPKで2対1
+  say:
+  - text: 日本代表のコーチの持ち場が、この9月から変わりました。守備を見るのは長谷部誠コーチです。
+    short_only: true
+  - text: 9月28日のベネズエラ戦。交代を使い切ったあとの後半41分、渡辺剛が痛めて退き、10人に。
+    image: assets/images/20261001_coaches_pair_moriyasu/01.jpg
+    card:
+      type: table
+      title: ベネズエラ戦の終盤（9月28日）
+      columns: [時間, 出来事]
+      rows: *night
+      highlight_row: 1
+  - text: 試合中、長谷部コーチがボードを持って、監督と話す場面がありました。
+  - voice: 森保一
+    text: 直近の試合で10人になった時は
+  - voice: 森保一
+    text: 長谷部コーチがどうしますかと尋ねてきた。
+    cont: true
+  - voice: 森保一
+    text: 私の中ではすでにプランはあったが、
+    cont: true
+  - voice: 森保一
+    text: 確認ということで持ってきてくれた
+    cont: true
+  - text: 長谷部が案を出して監督が認めるのか、2人で見ながら相談して決めるのか。
+  - text: 会見でそう聞かれ、監督は「後者です」と答えています。
+  - text: ボードを持っていくのは、長谷部だけの仕事でもないと言います。
+  - voice: 森保一
+    text: 気付いた人が持ってきてくれて、
+  - voice: 森保一
+    text: より伝達しやすいように準備をしてくれたもの
+    cont: true
+  - text: 日本は後ろの守りを3人から4人に組み直し、10人のまま、終了間際のPKで2対1と勝ち越しました。
+    card:
+      type: table
+      title: ベネズエラ戦の終盤（9月28日）
+      columns: [時間, 出来事]
+      rows: *night
+      highlight_row: 2
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460050-460050-fl
+  - https://web.gekisaka.jp/live/detail/?4932-4932-lv=
+  - https://hochi.news/articles/20260928-OHT1T51402.html
+  - https://news.yahoo.co.jp/articles/ada4c50e93276dc0407da4b704971e2dd839e954
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460050-460050-fl
+- id: press
+  heading: 前から奪いにいく守り
+  tier: 報道
+  telop: 鎌田「10回ボールが来て8回上手く取れても、2回入れ替わられるとピンチ」
+  narrator: 解説
+  card:
+    type: table
+    title: 鎌田大地が挙げた数字
+    columns:
+    - 場面
+    - 回数
+    rows: &press
+    - [ボールが来る, 10回]
+    - [うまく奪える, 8回]
+    - [入れ替わられる, 2回]
+  say:
+  - text: 長谷部コーチのもとで、日本は相手に1人ずつ付くマンツーマンで、前から奪いにいく守りに取り組んでいます。
+    image: assets/images/20261001_coaches_pair_kamata/01.jpg
+  - text: 中盤の鎌田大地は、その難しさをこう話しました。
+    card:
+      type: table
+      title: 鎌田大地が挙げた数字
+      columns: [場面, 回数]
+      rows: *press
+  - voice: 鎌田大地
+    text: マンツーでやると10回ボールが来て8回上手く取れても、
+  - voice: 鎌田大地
+    text: 2回入れ替わられるとピンチになってしまうので、
+    cont: true
+  - voice: 鎌田大地
+    text: それを上手くやらないといけない
+    cont: true
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460061-460061-fl
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460061-460061-fl
+- id: view
+  heading: 3人が現役で立っていた場所
+  tier: 背景
+  viewpoint: true
+  telop: 流れの攻めは司令塔、セットプレーは左足の名手、守備は3人の守りの真ん中に立った人
+  narrator: 解説
+  card:
+    type: table
+    title: 3人の現役時代（日本代表）
+    columns:
+    - 名前
+    - 試合
+    - 得点
+    - ワールドカップ
+    rows: &career
+    - - 名波浩
+      - '67'
+      - '9'
+      - '1998'
+    - - 中村俊輔
+      - '98'
+      - '24'
+      - 2006・2010
+    - - 長谷部誠
+      - '114'
+      - '2'
+      - 2010・2014・2018
+  say:
+  - text: 名波浩は、代表67試合で9得点。日本が初めて出た1998年のワールドカップで、10番を付けました。
+    image: assets/images/20261001_coaches_trio/01.jpg
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 0
+  - text: 左足で長短のパスを配る司令塔で、2000年のアジアカップでは大会の最優秀選手に選ばれています。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 0
+  - text: 中村俊輔は、代表98試合で24得点。ワールドカップは2006年と2010年に出ています。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 1
+  - text: 左足のフリーキックの名手です。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 1
+  - text: チャンピオンズリーグでも、マンチェスター・ユナイテッドから直接決めています。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 1
+  - text: 長谷部誠は、代表114試合。ワールドカップは3大会とも、主将として出ました。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 2
+  - text: フランクフルトでは2016年から、中盤より一列後ろ、3人で組む守りの真ん中にも立ちました。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 2
+  - text: ドイツ1部での384試合は、アジアの選手でいちばん多い数字です。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 2
+  - text: 新しい持ち場は、3人が現役で立っていた場所とそのまま重なります。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+  - text: 流れの中の攻めは司令塔だった名波に。止まったボールから始まるセットプレーは、左足の名手の中村に。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+  - text: そして守備は、3人の中でただ一人、いちばん後ろの真ん中で守った長谷部に任されました。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 2
+  - text: いまの日本代表も、守りは3人で組みます。長谷部はその形を、いちばん後ろから知っています。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+      highlight_row: 2
+  - text: ただ、マンツーマンの守りは、1度入れ替わられると、そのまま危ない場面につながります。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+  - text: その賭けをどう整えるかが、長谷部の持ち場です。
+    card:
+      type: table
+      title: 3人の現役時代（日本代表）
+      columns: [名前, 試合, 得点, ワールドカップ]
+      rows: *career
+  sources:
+  - https://www.jfa.jp/news/00031440/
+  - https://ja.wikipedia.org/wiki/%E5%90%8D%E6%B3%A2%E6%B5%A9
+  - https://www.nikkei.com/article/DGXZQOKC169Q90W6A410C2000000/
+  - https://www.footballchannel.jp/2026/04/16/post881265/
+  - https://en.wikipedia.org/wiki/Shunsuke_Nakamura
+  - https://www.soccer-king.jp/news/japan/national/20240911/1933426.html
+  - https://www.soccer-king.jp/news/japan/national/20180703/788705.html
+  - https://number.bunshun.jp/articles/-/861680
+  - https://www.football-zone.net/archives/531631
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「長谷部に森保と名波が相談に乗る形でいい」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: 逆に斉藤コーチや前田コーチは何担当になるのだろうか?
+  - voice: ネット民
+    text: それはいいとして、最大の問題である采配は改善してないだろ。
+    short_voice: true
+  - voice: ネット民
+    text: 試合中に森保と名波コーチが
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 交代策を相談してるようだが違うだろ。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: そこに長谷部を加えろよ。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: つーか、長谷部に森保と名波が相談に乗る形でいい。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/35651c4111c7db93600f78649bbb661394eae3c9/comments
+  - https://news.yahoo.co.jp/articles/ada4c50e93276dc0407da4b704971e2dd839e954/comments
