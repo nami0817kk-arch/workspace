@@ -1,0 +1,678 @@
+{
+"m": [
+{
+"file": "m_s1r1c1.jpg",
+"group": "Ar1c1"
+},
+{
+"file": "m_s1r1c3.jpg",
+"group": "Ar1c3"
+},
+{
+"file": "m_s1r1c7.jpg",
+"group": "Ar1c7"
+},
+{
+"file": "m_s1r2c2.jpg",
+"group": "Ar2c2"
+},
+{
+"file": "m_s1r2c4.jpg",
+"group": "Ar2c4"
+},
+{
+"file": "m_s1r2c6.jpg",
+"group": "Ar2c6"
+},
+{
+"file": "m_s1r3c2.jpg",
+"group": "Ar3c2"
+},
+{
+"file": "m_s1r3c4.jpg",
+"group": "Ar3c4"
+},
+{
+"file": "m_s1r3c6.jpg",
+"group": "Ar3c6"
+},
+{
+"file": "m_s3r1c1.jpg",
+"group": "Cr1c1"
+},
+{
+"file": "m_s3r1c5.jpg",
+"group": "Cr1c5"
+},
+{
+"file": "m_s3r1c6.jpg",
+"group": "Cr1c6"
+},
+{
+"file": "m_s3r2c2.jpg",
+"group": "Cr2c2"
+},
+{
+"file": "m_s3r2c3.jpg",
+"group": "Cr2c3"
+},
+{
+"file": "m_s3r2c4.jpg",
+"group": "Cr2c4"
+},
+{
+"file": "m_s3r2c6.jpg",
+"group": "Cr2c6"
+},
+{
+"file": "m_s3r3c3.jpg",
+"group": "Cr3c3"
+},
+{
+"file": "m_s3r3c4.jpg",
+"group": "Cr3c4"
+},
+{
+"file": "m_s7r1c1.jpg",
+"group": "s7r1c1"
+},
+{
+"file": "m_s7r1c2.jpg",
+"group": "s7r1c2"
+},
+{
+"file": "m_s7r1c3.jpg",
+"group": "s7r1c3"
+},
+{
+"file": "m_s7r1c4.jpg",
+"group": "s7r1c4"
+},
+{
+"file": "m_s7r1c5.jpg",
+"group": "s7r1c5"
+},
+{
+"file": "m_s7r1c6.jpg",
+"group": "s7r1c6"
+},
+{
+"file": "m_s7r1c7.jpg",
+"group": "s7r1c7"
+},
+{
+"file": "m_s7r2c1.jpg",
+"group": "s7r2c1"
+},
+{
+"file": "m_s7r2c2.jpg",
+"group": "s7r2c2"
+},
+{
+"file": "m_s7r2c3.jpg",
+"group": "s7r2c3"
+},
+{
+"file": "m_s7r2c4.jpg",
+"group": "s7r2c4"
+},
+{
+"file": "m_s7r2c5.jpg",
+"group": "s7r2c5"
+},
+{
+"file": "m_s7r2c6.jpg",
+"group": "s7r2c6"
+},
+{
+"file": "m_s7r2c7.jpg",
+"group": "s7r2c7"
+},
+{
+"file": "m_s7r3c1.jpg",
+"group": "s7r3c1"
+},
+{
+"file": "m_s7r3c2.jpg",
+"group": "s7r3c2"
+},
+{
+"file": "m_s7r3c3.jpg",
+"group": "s7r3c3"
+},
+{
+"file": "m_s7r3c4.jpg",
+"group": "s7r3c4"
+},
+{
+"file": "m_s7r3c5.jpg",
+"group": "s7r3c5"
+},
+{
+"file": "m_s7r3c6.jpg",
+"group": "s7r3c6"
+},
+{
+"file": "m_s7r3c7.jpg",
+"group": "s7r3c7"
+},
+{
+"file": "m_s8r1c1.jpg",
+"group": "Cr1c1"
+},
+{
+"file": "m_s8r1c2.jpg",
+"group": "Cr1c2"
+},
+{
+"file": "m_s8r1c4.jpg",
+"group": "Cr1c4"
+},
+{
+"file": "m_s8r1c5.jpg",
+"group": "Cr1c5"
+},
+{
+"file": "m_s8r1c6.jpg",
+"group": "Cr1c6"
+},
+{
+"file": "m_s8r2c2.jpg",
+"group": "Cr2c2"
+},
+{
+"file": "m_s8r2c4.jpg",
+"group": "Cr2c4"
+},
+{
+"file": "m_s8r2c5.jpg",
+"group": "Cr2c5"
+},
+{
+"file": "m_s8r2c6.jpg",
+"group": "Cr2c6"
+},
+{
+"file": "m_s8r3c1.jpg",
+"group": "Cr3c1"
+},
+{
+"file": "m_s8r3c2.jpg",
+"group": "Cr3c2"
+},
+{
+"file": "m_s8r3c3.jpg",
+"group": "Cr3c3"
+},
+{
+"file": "m_s8r3c5.jpg",
+"group": "Cr3c5"
+},
+{
+"file": "m_s9r1c1.jpg",
+"group": "Cr1c1"
+},
+{
+"file": "m_s9r1c2.jpg",
+"group": "Cr1c2"
+},
+{
+"file": "m_s9r1c4.jpg",
+"group": "Cr1c4"
+},
+{
+"file": "m_s9r1c5.jpg",
+"group": "Cr1c5"
+},
+{
+"file": "m_s9r1c6.jpg",
+"group": "Cr1c6"
+},
+{
+"file": "m_s9r1c7.jpg",
+"group": "Cr1c7"
+},
+{
+"file": "m_s9r2c2.jpg",
+"group": "Cr2c2"
+},
+{
+"file": "m_s9r2c4.jpg",
+"group": "Cr2c4"
+},
+{
+"file": "m_s9r2c6.jpg",
+"group": "Cr2c6"
+},
+{
+"file": "m_s9r3c1.jpg",
+"group": "Cr3c1"
+},
+{
+"file": "m_s9r3c2.jpg",
+"group": "Cr3c2"
+},
+{
+"file": "m_s9r3c3.jpg",
+"group": "Cr3c3"
+},
+{
+"file": "m_s9r3c5.jpg",
+"group": "Cr3c5"
+}
+],
+"f": [
+{
+"file": "f_s1r1c2.jpg",
+"group": "Ar1c2"
+},
+{
+"file": "f_s1r1c4.jpg",
+"group": "Ar1c4"
+},
+{
+"file": "f_s1r1c6.jpg",
+"group": "Ar1c6"
+},
+{
+"file": "f_s1r2c1.jpg",
+"group": "Ar2c1"
+},
+{
+"file": "f_s1r2c3.jpg",
+"group": "Ar2c3"
+},
+{
+"file": "f_s1r2c5.jpg",
+"group": "Ar2c5"
+},
+{
+"file": "f_s1r2c7.jpg",
+"group": "Ar2c7"
+},
+{
+"file": "f_s1r3c1.jpg",
+"group": "Ar3c1"
+},
+{
+"file": "f_s1r3c3.jpg",
+"group": "Ar3c3"
+},
+{
+"file": "f_s1r3c5.jpg",
+"group": "Ar3c5"
+},
+{
+"file": "f_s1r3c7.jpg",
+"group": "Ar3c7"
+},
+{
+"file": "f_s2r1c1.jpg",
+"group": "s2r1c1"
+},
+{
+"file": "f_s2r1c2.jpg",
+"group": "s2r1c2"
+},
+{
+"file": "f_s2r1c3.jpg",
+"group": "s2r1c3"
+},
+{
+"file": "f_s2r1c4.jpg",
+"group": "s2r1c4"
+},
+{
+"file": "f_s2r1c5.jpg",
+"group": "s2r1c5"
+},
+{
+"file": "f_s2r1c6.jpg",
+"group": "s2r1c6"
+},
+{
+"file": "f_s2r1c7.jpg",
+"group": "s2r1c7"
+},
+{
+"file": "f_s2r2c1.jpg",
+"group": "s2r2c1"
+},
+{
+"file": "f_s2r2c2.jpg",
+"group": "s2r2c2"
+},
+{
+"file": "f_s2r2c3.jpg",
+"group": "s2r2c3"
+},
+{
+"file": "f_s2r2c4.jpg",
+"group": "s2r2c4"
+},
+{
+"file": "f_s2r2c5.jpg",
+"group": "s2r2c5"
+},
+{
+"file": "f_s2r2c6.jpg",
+"group": "s2r2c6"
+},
+{
+"file": "f_s2r2c7.jpg",
+"group": "s2r2c7"
+},
+{
+"file": "f_s2r3c1.jpg",
+"group": "s2r3c1"
+},
+{
+"file": "f_s2r3c2.jpg",
+"group": "s2r3c2"
+},
+{
+"file": "f_s2r3c3.jpg",
+"group": "s2r3c3"
+},
+{
+"file": "f_s2r3c4.jpg",
+"group": "s2r3c4"
+},
+{
+"file": "f_s2r3c5.jpg",
+"group": "s2r3c5"
+},
+{
+"file": "f_s2r3c6.jpg",
+"group": "s2r3c6"
+},
+{
+"file": "f_s2r3c7.jpg",
+"group": "s2r3c7"
+},
+{
+"file": "f_s3r1c2.jpg",
+"group": "Cr1c2"
+},
+{
+"file": "f_s3r1c4.jpg",
+"group": "Cr1c4"
+},
+{
+"file": "f_s3r1c7.jpg",
+"group": "Cr1c7"
+},
+{
+"file": "f_s3r2c1.jpg",
+"group": "Cr2c1"
+},
+{
+"file": "f_s3r2c5.jpg",
+"group": "Cr2c5"
+},
+{
+"file": "f_s3r3c1.jpg",
+"group": "Cr3c1"
+},
+{
+"file": "f_s3r3c2.jpg",
+"group": "Cr3c2"
+},
+{
+"file": "f_s3r3c5.jpg",
+"group": "Cr3c5"
+},
+{
+"file": "f_s4r1c1.jpg",
+"group": "s4r1c1"
+},
+{
+"file": "f_s4r1c2.jpg",
+"group": "s4r1c2"
+},
+{
+"file": "f_s4r1c3.jpg",
+"group": "s4r1c3"
+},
+{
+"file": "f_s4r1c4.jpg",
+"group": "s4r1c4"
+},
+{
+"file": "f_s4r1c5.jpg",
+"group": "s4r1c5"
+},
+{
+"file": "f_s4r1c6.jpg",
+"group": "s4r1c6"
+},
+{
+"file": "f_s4r1c7.jpg",
+"group": "s4r1c7"
+},
+{
+"file": "f_s4r2c1.jpg",
+"group": "s4r2c1"
+},
+{
+"file": "f_s4r2c2.jpg",
+"group": "s4r2c2"
+},
+{
+"file": "f_s4r2c3.jpg",
+"group": "s4r2c3"
+},
+{
+"file": "f_s4r2c4.jpg",
+"group": "s4r2c4"
+},
+{
+"file": "f_s4r2c5.jpg",
+"group": "s4r2c5"
+},
+{
+"file": "f_s4r2c6.jpg",
+"group": "s4r2c6"
+},
+{
+"file": "f_s4r2c7.jpg",
+"group": "s4r2c7"
+},
+{
+"file": "f_s4r3c1.jpg",
+"group": "s4r3c1"
+},
+{
+"file": "f_s4r3c2.jpg",
+"group": "s4r3c2"
+},
+{
+"file": "f_s4r3c3.jpg",
+"group": "s4r3c3"
+},
+{
+"file": "f_s4r3c4.jpg",
+"group": "s4r3c4"
+},
+{
+"file": "f_s4r3c5.jpg",
+"group": "s4r3c5"
+},
+{
+"file": "f_s4r3c6.jpg",
+"group": "s4r3c6"
+},
+{
+"file": "f_s4r3c7.jpg",
+"group": "s4r3c7"
+},
+{
+"file": "f_s5r1c1.jpg",
+"group": "Ar1c1"
+},
+{
+"file": "f_s5r1c2.jpg",
+"group": "Ar1c2"
+},
+{
+"file": "f_s5r1c3.jpg",
+"group": "Ar1c3"
+},
+{
+"file": "f_s5r1c4.jpg",
+"group": "Ar1c4"
+},
+{
+"file": "f_s5r1c5.jpg",
+"group": "Ar1c5"
+},
+{
+"file": "f_s5r1c6.jpg",
+"group": "Ar1c6"
+},
+{
+"file": "f_s5r1c7.jpg",
+"group": "Ar1c7"
+},
+{
+"file": "f_s5r2c1.jpg",
+"group": "Ar2c1"
+},
+{
+"file": "f_s5r2c2.jpg",
+"group": "Ar2c2"
+},
+{
+"file": "f_s5r2c3.jpg",
+"group": "Ar2c3"
+},
+{
+"file": "f_s5r2c4.jpg",
+"group": "Ar2c4"
+},
+{
+"file": "f_s5r2c5.jpg",
+"group": "Ar2c5"
+},
+{
+"file": "f_s5r2c6.jpg",
+"group": "Ar2c6"
+},
+{
+"file": "f_s5r2c7.jpg",
+"group": "Ar2c7"
+},
+{
+"file": "f_s5r3c1.jpg",
+"group": "Ar3c1"
+},
+{
+"file": "f_s5r3c2.jpg",
+"group": "Ar3c2"
+},
+{
+"file": "f_s5r3c3.jpg",
+"group": "Ar3c3"
+},
+{
+"file": "f_s5r3c4.jpg",
+"group": "Ar3c4"
+},
+{
+"file": "f_s5r3c5.jpg",
+"group": "Ar3c5"
+},
+{
+"file": "f_s5r3c6.jpg",
+"group": "Ar3c6"
+},
+{
+"file": "f_s5r3c7.jpg",
+"group": "Ar3c7"
+},
+{
+"file": "f_s6r1c1.jpg",
+"group": "Ar1c1"
+},
+{
+"file": "f_s6r1c2.jpg",
+"group": "Ar1c2"
+},
+{
+"file": "f_s6r1c3.jpg",
+"group": "Ar1c3"
+},
+{
+"file": "f_s6r1c4.jpg",
+"group": "Ar1c4"
+},
+{
+"file": "f_s6r1c5.jpg",
+"group": "Ar1c5"
+},
+{
+"file": "f_s6r1c6.jpg",
+"group": "Ar1c6"
+},
+{
+"file": "f_s6r1c7.jpg",
+"group": "Ar1c7"
+},
+{
+"file": "f_s6r2c1.jpg",
+"group": "Ar2c1"
+},
+{
+"file": "f_s6r2c2.jpg",
+"group": "Ar2c2"
+},
+{
+"file": "f_s6r2c3.jpg",
+"group": "Ar2c3"
+},
+{
+"file": "f_s6r2c4.jpg",
+"group": "Ar2c4"
+},
+{
+"file": "f_s6r2c5.jpg",
+"group": "Ar2c5"
+},
+{
+"file": "f_s6r2c6.jpg",
+"group": "Ar2c6"
+},
+{
+"file": "f_s6r2c7.jpg",
+"group": "Ar2c7"
+},
+{
+"file": "f_s6r3c1.jpg",
+"group": "Ar3c1"
+},
+{
+"file": "f_s6r3c2.jpg",
+"group": "Ar3c2"
+},
+{
+"file": "f_s6r3c3.jpg",
+"group": "Ar3c3"
+},
+{
+"file": "f_s6r3c4.jpg",
+"group": "Ar3c4"
+},
+{
+"file": "f_s6r3c5.jpg",
+"group": "Ar3c5"
+},
+{
+"file": "f_s6r3c6.jpg",
+"group": "Ar3c6"
+},
+{
+"file": "f_s6r3c7.jpg",
+"group": "Ar3c7"
+}
+]
+}
