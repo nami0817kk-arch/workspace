@@ -345,17 +345,19 @@ def value_board(history: list[dict], out: Path, name: str, club_of=None, size: t
         # 横軸は年、縦軸は最大値を4分割
         years = sorted({d[:4] for d, _, _ in pts})
         y0, y1 = int(years[0]), int(years[-1])
-        span = max(1, y1 - y0)
+        # 横軸は最後の年の終わり（翌年の頭）まで取る。y1 の1月で切ると、その年の7月の点が
+        # 枠の外へはみ出した（2026-09-30 ヤマルの板で 2026-07 の 2.2億が右の芝まで出ていた）
+        span = max(1, y1 + 1 - y0)
         f_axis = _font(24)
         for k in range(5):
             yy = gy + gh - gh * k / 4
             draw.line([(gx, yy), (gx + gw, yy)], fill=(255, 255, 255, 30), width=1)
             label = _compact(top * k / 4)
             draw.text((gx - 12 - draw.textlength(label, font=f_axis), yy - 14), label, font=f_axis, fill=(168, 178, 194, 255))
-        for year in range(y0, y1 + 1):
+        for year in range(y0, y1 + 2):
             xx = gx + gw * (year - y0) / span
             draw.line([(xx, gy), (xx, gy + gh)], fill=(255, 255, 255, 18), width=1)
-            if (year - y0) % max(1, span // 6) == 0 or year == y1:
+            if year <= y1 and ((year - y0) % max(1, span // 6) == 0 or year == y1):
                 draw.text((xx - 24, gy + gh + 10), str(year), font=f_axis, fill=(168, 178, 194, 255))
 
         def P(d, v):

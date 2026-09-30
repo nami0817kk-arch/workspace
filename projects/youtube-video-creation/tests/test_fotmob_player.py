@@ -84,3 +84,17 @@ def test_読み上げ用の言い換え():
     assert intro._season_ja("21/22") == "2021年からのシーズン"
     assert intro._pos_short("センターフォワード") == "FW" and intro._pos_short("守備的MF") == "MF"
     assert intro._circled(2) == "②"
+
+
+def test_市場価値の折れ線は枠の外へはみ出さない(tmp_path):
+    # 2026-09-30：横軸が最後の年の1月で終わっていて、7月の点が右の芝まで出ていた（ヤマルの板）
+    hist = [{"clubId": "1", "marketValue": {"value": 150000000, "determined": "2024-10-11"}},
+            {"clubId": "1", "marketValue": {"value": 200000000, "determined": "2025-06-09"}},
+            {"clubId": "1", "marketValue": {"value": 220000000, "determined": "2026-07-22"}}]
+    out = mod.value_board(hist, tmp_path / "v.png", "ヤマル")
+    im = Image.open(out).convert("RGB")
+    gold = mod.BRAND_GOLD
+    # 板の右の縁（x=1200）より外に金色の画素が無い
+    outside = [(x, y) for x in range(1205, 1280, 2) for y in range(0, 720, 3)
+               if all(abs(a - b) < 40 for a, b in zip(im.getpixel((x, y)), gold))]
+    assert outside == []
