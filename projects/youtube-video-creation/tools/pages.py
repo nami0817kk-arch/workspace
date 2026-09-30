@@ -2,7 +2,7 @@
 """ユーザーに見せるページを作る（2026-09-22、別セッションからも同じ形で出せるように）。
 
     python tools/pages.py topics <日付> <候補.yaml>     # ○△✖ を押せる題材の一覧
-    python tools/pages.py scripts <日付> [--images] [--skip 中止した鍵,…]  # その日の台本を1枚に
+    python tools/pages.py scripts <日付> [--images] [--skip 中止した鍵,…] [--stems 台本名,…]  # その日の台本を1枚に
 
 出力は output/pages/topics_<日付>/index.html と output/pages/scripts_<日付>/index.html。
 それを Artifact として出す（題材ページは `capabilities: {db: {}}` を付けると ○△✖ が保存される）。
@@ -234,13 +234,18 @@ def data_uri(path: Path, width: int = 420) -> str:
     return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
 
 
-def scripts(date: str, images: bool = False, skip: tuple[str, ...] = ()) -> Path:
+def scripts(date: str, images: bool = False, skip: tuple[str, ...] = (),
+            stems: tuple[str, ...] = ()) -> Path:
     # 中止した題材の台本は残っていても載せない（--skip rodri,foo）。9/26 のロドリが残っていた
-    paths = sorted(p for p in (ROOT / "scripts").glob(f"{date}_*.md")
-                   if p.stem[len(date) + 1:] not in skip)
+    # 日付の違う台本を1枚に並べるときは --stems（前の日に作った紹介ものを今日出す、など）
+    if stems:
+        paths = [ROOT / "scripts" / f"{s}.md" for s in stems]
+    else:
+        paths = sorted(p for p in (ROOT / "scripts").glob(f"{date}_*.md")
+                       if p.stem[len(date) + 1:] not in skip)
     chunks, toc, stats, est_all = [], [], [], []
     for path in paths:
-        key = path.stem[len(date) + 1:]
+        key = path.stem if stems else path.stem[len(date) + 1:]
         meta, sections = parse(path)
         cards = meta.get("cards") or {}
         nline = sum(len(s["lines"]) for s in sections)
@@ -314,7 +319,10 @@ def main(argv: list[str]) -> int:
         skip: tuple[str, ...] = ()
         if "--skip" in argv:
             skip = tuple(k for k in argv[argv.index("--skip") + 1].split(",") if k)
-        print(scripts(argv[1], images="--images" in argv, skip=skip))
+        stems: tuple[str, ...] = ()
+        if "--stems" in argv:
+            stems = tuple(k for k in argv[argv.index("--stems") + 1].split(",") if k)
+        print(scripts(argv[1], images="--images" in argv, skip=skip, stems=stems))
         return 0
     print(__doc__)
     return 2

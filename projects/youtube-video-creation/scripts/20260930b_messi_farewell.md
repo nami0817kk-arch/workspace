@@ -13,7 +13,7 @@ thumbnail_reaction: 心にポッカリ穴が空いてしまいそう
 thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main: []
-thumbnail_photo: assets/images/20260930b_pair_scaloni/01.jpg
+thumbnail_photo: assets/images/20260930b_messi_farewell/01.jpg
 bg: assets/backgrounds/stadium.png
 date: 2026年9月30日
 intro_title: メッシの10番をどうするか。お別れ試合を前に、スカローニ監督が口にした答え
