@@ -347,6 +347,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .btn-s.watch{margin-top:6px;border-color:var(--accent);color:var(--accent);font-weight:700}.btn-s.watch:disabled{opacity:.4}
 .seat{display:flex;gap:10px;align-items:center;background:var(--gold-bg);border:1px solid var(--gold);border-radius:12px;padding:8px 12px;margin:8px 0}.seat>div{flex:1;display:flex;flex-direction:column;gap:2px}.seat .btn-s:disabled{opacity:.45}
 .weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.wk{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px;text-align:center;min-height:54px;display:flex;flex-direction:column;gap:2px;font-size:12px}.wk small{color:var(--muted)}.wk.now{border:2px solid var(--gold)}.choice:disabled{opacity:.45}
+.achv{margin-top:8px}.achv summary{cursor:pointer;font-weight:800;font-size:13px;color:var(--accent)}.achv div{font-size:13px;padding:2px 0;color:var(--muted)}.achv div.got{color:var(--fg)}.achv div.got::first-letter{color:var(--gold)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1251,9 +1252,9 @@ var UNLOCK={camp:2,duo:4,live:7};
 function lockedFormats(p){var o={};for(var k in UNLOCK)if(p<UNLOCK[k])o[k]=UNLOCK[k];return o;}
 var GRADE_PT={S:5,A:3,B:2,C:1,D:0};
 function recordCareer(S,E){if(S.recorded)return null;S.recorded=true;var c=loadCareer(),before=c.points,rk0=rankOf(before)[1];
-  var got=GRADE_PT[E.grade]+E.missions.filter(function(m){return m.ok;}).length;c.seasons++;c.points+=got;
+  var got=GRADE_PT[E.grade]+E.missions.filter(function(m){return m.ok;}).length;c.seasons++;var ach=checkAchv(S,E,c);got+=ach.length;c.points+=got;
   c.hall.unshift({name:S.prep.names[S.prep.name],grade:E.grade,total:Math.round(E.total),g:S.g,n:E.n,members:E.D.map(function(t){return t.giv;}),season:c.seasons});c.hall=c.hall.slice(0,20);saveCareer(c);
-  var news=[];for(var k in UNLOCK)if(before<UNLOCK[k]&&c.points>=UNLOCK[k])news.push('審査「'+FORMATS[k].t+'」が使えるようになった');
+  var news=ach.map(function(a){return '実績「'+a.t+'」を取った（'+a.d+'）';});for(var k in UNLOCK)if(before<UNLOCK[k]&&c.points>=UNLOCK[k])news.push('審査「'+FORMATS[k].t+'」が使えるようになった');
   var rk1=rankOf(c.points)[1];if(rk1!==rk0)news.unshift('肩書きが「'+rk1+'」になった');
   S.careerNews={got:got,points:c.points,news:news};return S.careerNews;}
 /* レッスンのおまかせ：疲れた子は休ませ、課題のある子は課題を、ほかは今回見られる力のうち弱いところを1つずつ */
@@ -1326,6 +1327,26 @@ function weekDo(S,k){var M=S.month,a=WEEK_ACTS.filter(function(x){return x.k===k
   txt.unshift(pick(HL[k]));M.log.push({w:M.w+1,k:k,n:a.n,t:txt.join(' ')});M.w++;
   if(M.w>=4){S.phase='result';recordCareer(S,finalEval(S));}
 }
+
+
+/* 実績：シーズンをまたぐ目標。取るごとにプロデューサー歴＋1ポイント */
+var ACHV=[
+  {k:'first',t:'初めてのデビュー',d:'1つめのグループをデビューさせる',chk:function(S,E){return true;}},
+  {k:'gradeS',t:'伝説の番組',d:'S評価を取る',chk:function(S,E){return E.grade==='S';}},
+  {k:'big8',t:'大所帯',d:'8人組でA評価以上',chk:function(S,E){return E.n>=8&&'SA'.indexOf(E.grade)>=0;}},
+  {k:'five',t:'少数精鋭',d:'5人組でA評価以上',chk:function(S,E){return E.n===5&&'SA'.indexOf(E.grade)>=0;}},
+  {k:'mission3',t:'スポンサーの信頼',d:'依頼を3つともかなえる',chk:function(S,E){return E.missions.length===3&&E.missions.every(function(m){return m.ok;});}},
+  {k:'honne3',t:'聞き上手',d:'1シーズンで3人の本音を聞く',chk:function(S,E){return S.tr.filter(function(t){return t.honne;}).length>=3;}},
+  {k:'calm',t:'穏やかな番組',d:'一度も荒れずにシーズンを終える',chk:function(S,E){return S.history.every(function(h){return !h.angry;});}},
+  {k:'rating8',t:'お茶の間の話題',d:'平均視聴率8%以上',chk:function(S,E){return E.avgR>=8;}},
+  {k:'bloom3',t:'原石を見抜く目',d:'伸びしろ「大」の子を3人デビューさせる',chk:function(S,E){return E.D.filter(function(t){return t.pot>=1.3;}).length>=3;}},
+  {k:'story3',t:'物語の番組',d:'報われた物語を3人以上',chk:function(S,E){return E.goods>=3;}},
+  {k:'revive',t:'もう一度の舞台',d:'復活枠で戻した子をデビューさせる',chk:function(S,E){return S.revived!=null&&S.tr[S.revived].status==='debut';}},
+  {k:'talkLead',t:'しゃべれるリーダー',d:'トーク担当をリーダーにしてA評価以上',chk:function(S,E){return E.L&&E.L.spec==='t'&&'SA'.indexOf(E.grade)>=0;}},
+  {k:'hit3000',t:'大ヒット',d:'デビュー曲を3,000万回以上に',chk:function(S,E){return E.streams>=3000;}},
+  {k:'both',t:'どちらも手がける',d:'男性・女性の両方のグループをデビューさせる',chk:function(S,E,c){var gs={};gs[S.g]=1;(c.hall||[]).forEach(function(x){gs[x.g]=1;});return gs.m&&gs.f;}}
+];
+function checkAchv(S,E,c){if(!c.achv)c.achv={};var got=[];ACHV.forEach(function(a){if(c.achv[a.k])return;if(a.chk(S,E,c)){c.achv[a.k]=c.seasons;got.push(a);}});return got;}
 
 /*ENGINE-END*/
 
@@ -1664,6 +1685,7 @@ function missionBox(E){var ms=S.missions||[];if(!ms.length)return '';
 function careerBox(){var c=loadCareer(),rk=rankOf(c.points),nx=nextRank(c.points);
   var h='<div class="card career"><div class="mh">プロデューサー歴</div><div class="rk">'+esc(rk[1])+'</div><div class="small muted">'+c.seasons+'シーズン・'+c.points+'ポイント'+(nx?'（次の肩書きまで あと'+(nx[0]-c.points)+'）':'')+'</div>';
   var lk=lockedFormats(c.points),ks=Object.keys(lk);if(ks.length)h+='<div class="small" style="margin-top:6px">まだ使えない審査：'+ks.map(function(k){return esc(FORMATS[k].t)+'（'+lk[k]+'ポイント）';}).join('・')+'</div>';
+  var ac=c.achv||{},na=ACHV.filter(function(a){return ac[a.k];}).length;h+='<details class="achv"><summary>実績 '+na+' / '+ACHV.length+'</summary>'+ACHV.map(function(a){return '<div class="'+(ac[a.k]?'got':'')+'">'+(ac[a.k]?'★':'☆')+' <b>'+esc(a.t)+'</b> <span class="small muted">'+esc(a.d)+'</span></div>';}).join('')+'</details>';
   if(c.hall.length){h+='<div class="mh" style="margin-top:10px">殿堂</div>';c.hall.slice(0,5).forEach(function(x){h+='<div class="hall"><b class="gr g-'+x.grade+'">'+x.grade+'</b><span><b>'+esc(x.name)+'</b> <span class="small muted">第'+x.season+'シーズン・'+(x.g==='f'?'女性':'男性')+x.n+'人・'+x.total+'点</span><br><span class="small muted">'+x.members.map(esc).join('・')+'</span></span></div>';});}
   return h+'</div>';}
 
