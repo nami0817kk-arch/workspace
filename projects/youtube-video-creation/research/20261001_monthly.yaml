@@ -44,8 +44,12 @@ theme:
 short_title: 鎌田大地、9月に4点へ関与
 thumbnail:
   photo: assets/images/20261001_monthly/01_t.jpg
-  line1: 鎌田大地の9月
-  line2: パレスの5点のうち●点に鎌田
+  photos:
+  - assets/images/20261001_monthly/01_face.jpg
+  - assets/images/20261001_ueda/01.jpg
+  - assets/images/20260930_doan_matsuki/01_matsuki.jpg
+  line1: 欧州の日本人、9月の成績表
+  line2: 1位は鎌田大地、●点に関与
   tags:
   - 月間まとめ
 sections:
