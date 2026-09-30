@@ -421,7 +421,14 @@ class Renderer:
         if photo.width >= photo.height * 0.95:
             self._wide_stages.add(image_path)
             if _is_board(image_path):
+                # **横の板も下を暗くしない**（2026-09-30 ユーザー「下の方黒くなってない？」）。
+                # 縦の板は 09-23 に外していたのに、横の板だけ写真と同じ幕を掛けていた。
+                # ソシエダの回で、選手一覧の最後の段と順位表の17〜20位が黒く沈んでいた。
+                # 板の行は見出しを出さない（no_telop）ので、幕は要らない
                 self._board_stages.add(image_path)
+                stage = _cover(photo, width, height)
+                self._stages[image_path] = stage
+                return stage
             bed = _cover(photo, width, height)
             shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
             shade_draw = ImageDraw.Draw(shade)

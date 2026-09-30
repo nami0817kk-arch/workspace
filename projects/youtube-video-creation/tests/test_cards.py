@@ -370,3 +370,19 @@ def test_訳が無ければ原文がそのまま主役(fonts):
     )
     # 訳が無いときの原文は、訳があるときの原文より大きい（46 と 32）
     assert only[-1]["height"] > withtr[-1]["height"]
+
+
+def test_表は7行目から先も捨てない(tmp_path, fonts):
+    """2026-09-30：ソシエダの回で「7試合を終えて」と読みながら、表は6行で切れていた。
+    行が多いときは詰めて全部出し、背は6行の表とほぼ同じに収める。"""
+    from src.cards import _table
+
+    font, latin = fonts
+    rows6 = [[f"第{i}節", "相手", "1対0"] for i in range(1, 7)]
+    rows7 = rows6 + [["第7節", "バレンシア（アウェー）", "3対2"]]
+    spec = {"type": "table", "title": "ラ・リーガの結果", "columns": ["節", "相手", "結果"]}
+    blocks = _table(dict(spec, rows=rows7), WIDTH, font, latin)
+    assert sum(1 for b in blocks if b.get("row")) == 7
+    six = Image.open(render(dict(spec, rows=rows6), WIDTH, font, tmp_path / "six.png", latin))
+    seven = Image.open(render(dict(spec, rows=rows7), WIDTH, font, tmp_path / "seven.png", latin))
+    assert seven.height <= six.height + 12

@@ -581,6 +581,9 @@ def _fit_cell(draw, text: str, font, room: float) -> str:
     return (cut + "…") if cut else ""
 
 
+TABLE_ROWS_FULL = 6   # この行数までは行の高さ72・字40のまま。超えたら詰めて全部出す
+
+
 def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
     """順位表のような表。1行だけ強調できる。"""
     # 字を一回り大きく（2026-09-28「もう少し見やすく」）。34 → 40。入らなければ縮む
@@ -597,6 +600,13 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
 
     highlight = spec.get("highlight_row")
     inner = width - PAD * 2 - 12
+    # **行は全部出す**（2026-09-30）。7行目から先を黙って捨てていて、ソシエダの回で
+    # 「7試合を終えて」と読みながら表には6試合しか無かった。6行を超えたら、
+    # 表の高さが6行ぶんに収まるよう行と字を詰める
+    many = len(rows) > TABLE_ROWS_FULL
+    row_h = 72 if not many else max(44, int(72 * TABLE_ROWS_FULL / len(rows)))
+    if many:
+        cell_font = ImageFont.truetype(font_path, max(22, min(40, row_h - 22)))
     # **中身の長さで列幅を決める**（2026-09-14 指摘「サッカー部門CEOが被ってる」）。
     # 1列目を14%の決め打ちにしていたので、「ロン・ゴーレイ」のような長い名前が
     # はみ出して2列目の字に重なっていた。実際に測って、足りない列を広げる
@@ -612,7 +622,7 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
 
     # **入らなければ字を縮める。**切って「…」にすると中身が消える
     # （2026-09-14 に「ハーランドはオンサイドと…」で実際に消えた）
-    size = 40
+    size = cell_font.size
     natural = _natural(cell_font)
     while sum(natural) > inner and size > 22:
         size -= 2
@@ -662,8 +672,8 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
 
     blocks.append({"height": 58, "draw": draw_head})
 
-    row_h = 72
-    for number, row in enumerate(rows[:6]):
+    text_dy = 10 if not many else max(4, (row_h - 8 - cell_font.size) // 2 - 2)
+    for number, row in enumerate(rows):
         def draw_row(draw, y, row=row, number=number):
             if number == highlight:
                 # 話している行：明るい地＋左に黄色の印。数字も黄色
@@ -685,9 +695,9 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
                 # **数字の列は右揃え**（2026-09-28「図や表のクオリティ」）。左揃えだと桁が揃わない
                 if numeric[index] and index > 0:
                     tw = draw.textlength(shown, font=cell_font)
-                    draw.text((x + widths[index] - 16 - tw, y + 10), shown, font=cell_font, fill=color)
+                    draw.text((x + widths[index] - 16 - tw, y + text_dy), shown, font=cell_font, fill=color)
                 else:
-                    draw.text((x, y + 10), shown, font=cell_font, fill=color)
+                    draw.text((x, y + text_dy), shown, font=cell_font, fill=color)
                 x += widths[index]
 
         blocks.append({"height": row_h, "draw": draw_row, "row": True})

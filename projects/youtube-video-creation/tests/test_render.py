@@ -924,3 +924,27 @@ def test_進捗バーは出さない():
     from src import render
 
     assert render.PROGRESS_HEIGHT == 0, "進捗バーが戻っている"
+
+
+def test_横の板は下を暗くしない(tmp_path):
+    """2026-09-30「下の方黒くなってない？」。写真のための幕が板にも掛かり、一覧の最後の段が沈んでいた。"""
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    board = tmp_path / "assets" / "stats" / "squad.png"
+    board.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1280, 720), (40, 80, 160)).save(board)
+    photo = tmp_path / "assets" / "photos" / "p" / "01.jpg"
+    photo.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1280, 720), (40, 80, 160)).save(photo)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    b = renderer._photo_stage(str(board)).convert("RGB")
+    p = renderer._photo_stage(str(photo)).convert("RGB")
+    h = b.height
+    # 板は上と下で同じ明るさ
+    assert sum(b.getpixel((10, h - 5))) == sum(b.getpixel((10, 5)))
+    # 写真は今までどおり下を落とす（見出しを読ませるため）
+    assert sum(p.getpixel((10, h - 5))) < sum(p.getpixel((10, 5))) * 0.5
