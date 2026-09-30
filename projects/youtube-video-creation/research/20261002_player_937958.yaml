@@ -14,7 +14,7 @@ theme:
   topic: バルセロナ
   title: ヤマルってどんな選手？メッシに抱かれた赤ん坊が19年後にしたこと
   question: ラミン・ヤマルはどういう作りの選手で、なぜ19歳で数字が出るのか
-  takeaway: シュートの数は同じ位置の100人で最上位、守備は下から9番目。右から中へ左足で打つ形だけで、19歳でユーロとW杯を獲った
+  takeaway: シュートの数は同じ位置の100人で最上位、守備は下から9番目。右から中へ左足で打つ形だけで19歳でユーロとW杯を獲り、今季も9試合9点6アシスト。バロンドールを争うエムバペとは点で並び、アシストの分だけ前にいる
   nameplate: ラミン・ヤマル｜バルセロナ FW／スペイン代表
   bgm: assets/audio/bgm_calm.wav
 watch: 明日は③ミカエル・オリーズ
@@ -357,7 +357,7 @@ sections:
   - https://www.tokyo-sports.co.jp/articles/-/352354
   - https://www.sportbible.com/football/la-liga/fc-barcelona/lamine-yamal-lionel-messi-barcelona-257853-20241022
 - id: view
-  heading: 見立て
+  heading: バロンドールまでのエムバペとの差
   tier: 背景
   viewpoint: true
   narrator: 解説

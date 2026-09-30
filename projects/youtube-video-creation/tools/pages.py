@@ -234,6 +234,42 @@ def data_uri(path: Path, width: int = 420) -> str:
     return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
 
 
+VIEW_CSS = """
+.view{border:2px solid var(--pitch);border-radius:12px;padding:10px 14px;margin:12px 0;background:var(--card)}
+.view .k{display:inline-block;background:var(--pitch);color:var(--card);border-radius:99px;padding:0 10px;font-size:.8rem;font-weight:700;margin-right:6px}
+.view .about{font-weight:700}
+.view p{margin:.4rem 0 0;font-size:.95rem}
+.view.none{border-color:var(--acc)}
+.view.none .k{background:var(--acc)}
+summary .v{display:block;font-size:.8rem;color:var(--pitch);font-weight:600;margin-top:2px}
+section.vp{border-left:4px solid var(--pitch);padding-left:10px}
+"""
+
+
+def takeaway_of(meta: dict) -> str:
+    """概要欄の「この動画の見立て: …」の1文（取材メモの theme.takeaway）。無ければ空。"""
+    for line in str(meta.get("description") or "").splitlines():
+        line = line.strip()
+        if line.startswith("この動画の見立て:") or line.startswith("この動画の見立て："):
+            return line.split(":", 1)[-1].split("：", 1)[-1].strip()
+    return str(meta.get("takeaway") or "").strip()
+
+
+def view_box(meta: dict, sections: list[dict]) -> tuple[str, str]:
+    """台本を見る人が「この回の見立ては何についてか」を最初に読めるように（2026-10-01 ユーザー指示）。
+    返すのは（本文の頭に置く枠, 閉じた一覧に出す1行）。"""
+    heads = [s["heading"] for s in sections if s.get("viewpoint")]
+    text = takeaway_of(meta)
+    if not heads and not text:
+        return ('<div class="view none"><span class="k">見立て</span>'
+                '<span class="about">見立ての節がありません</span></div>',
+                '<span class="v">見立て：なし</span>')
+    about = "・".join(heads) if heads else "（見立ての節の印が無い）"
+    body = f"<p>{e(text)}</p>" if text else "<p>見立ての1文（takeaway）が書かれていません</p>"
+    return (f'<div class="view"><span class="k">見立て</span><span class="about">何について：{e(about)}</span>{body}</div>',
+            f'<span class="v">見立て：{e(about)}</span>')
+
+
 def scripts(date: str, images: bool = False, skip: tuple[str, ...] = (),
             stems: tuple[str, ...] = ()) -> Path:
     # 中止した題材の台本は残っていても載せない（--skip rodri,foo）。9/26 のロドリが残っていた
@@ -263,7 +299,8 @@ def scripts(date: str, images: bool = False, skip: tuple[str, ...] = (),
             tag = ' <span class="tag">ショートはこの節</span>' if sec["main"] else ""
             if sec.get("viewpoint"):
                 tag += ' <span class="tag">見立て</span>'
-            body.append(f'<section><h3 class="sec">{e(sec["heading"])}{tag}</h3>')
+            vp = ' class="vp"' if sec.get("viewpoint") else ""
+            body.append(f'<section{vp}><h3 class="sec">{e(sec["heading"])}{tag}</h3>')
             used, items = set(), []
             for l in sec["lines"]:
                 cname = l["attr"].get("card")
@@ -288,14 +325,15 @@ def scripts(date: str, images: bool = False, skip: tuple[str, ...] = (),
         thumb = ROOT / "output" / path.stem / "thumbnail.png"
         th = (f'<figure class="thumb"><img src="{data_uri(thumb, 640)}" alt=""><figcaption>サムネイル</figcaption></figure>'
               if thumb.exists() else "")
+        vbox, vline = view_box(meta, sections)
         chunks.append(f'<details id="{e(key)}"><summary><span class="t">{e(str(meta.get("title", key)))}</span>'
-                      f'<span class="d">{e(length)} ／ {len(sections)}節</span></summary>{th}'
+                      f'<span class="d">{e(length)} ／ {len(sections)}節</span>{vline}</summary>{vbox}{th}'
                       + "".join(body) + src + "</details>")
     total_est = sum(est_all)
     rows = "".join(f"<tr><td>{e(str(n))}</td><td>{e(ln)}</td><td>{s}</td><td>{l}</td><td>{c}</td></tr>"
                    for n, s, l, c, ln in stats)
     title = f"{ja_date(date)}の台本"
-    page = (f"<meta charset=\"utf-8\"><title>{e(title)}</title><style>{BASE_CSS}</style><main>"
+    page = (f"<meta charset=\"utf-8\"><title>{e(title)}</title><style>{BASE_CSS}{VIEW_CSS}</style><main>"
             f"<h1>{e(title)}（{len(paths)}本）</h1>"
             f'<p class="lead">{date[:4]}-{date[4:6]}-{date[6:]} ／ 読み上げの全文。太字は画面で強調する数字。<b>尺は本編の見込み</b>（ショートは別に58秒まで）</p>'
             '<div class="toc">' + " ".join(toc) + "</div>" + "".join(chunks)
