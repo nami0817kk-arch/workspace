@@ -74,10 +74,15 @@ def targets(args: list[str]) -> list[Path]:
         elif re.fullmatch(r"\d{8}[a-z]?", arg):
             # **1分を超える TikTok 用があれば、そちらを使う**（2026-09-16）。
             # ショート（58秒まで）は報酬の対象にならない
-            for short in sorted(Path("output").glob(f"{arg}_*_short")):
+            shorts = sorted(Path("output").glob(f"{arg}_*_short"))
+            # **その日に YouTube で公開するショートも拾う**（2026-09-30）。名前の頭の日付だけ見ていて、
+            # 20260930b_ や前の日に作った紹介もの（20260926_ll01_）が一式から漏れていた
+            if re.fullmatch(r"\d{8}", arg):
+                shorts += [Path("output") / name for name in _shorts_published_on(arg)]
+            for short in shorts:
                 longer = short.with_name(short.name.removesuffix("_short") + "_tiktok")
                 dirs.append(longer if (longer / "video.mp4").exists() else short)
-    dirs = [d for d in dirs if (d / "video.mp4").exists()]
+    dirs = list(dict.fromkeys(d for d in dirs if (d / "video.mp4").exists()))
     # **YouTube に予約した順に並べる。**台帳には予約した順で控えが残っている。
     # 名前の順だと、8時に出るイラオラより12時のキャラガーが先頭に来ていた
     from src import posted
@@ -86,6 +91,21 @@ def targets(args: list[str]) -> list[Path]:
         base = d.name.removesuffix("_tiktok").removesuffix("_short") + "_short"
         return order.get(base, len(order))
     return sorted(dirs, key=rank)
+
+
+def _shorts_published_on(day: str) -> list[str]:
+    """台帳から、日本時間でその日に公開するショートの名前を拾う（day は YYYYMMDD）。"""
+    import datetime as dt
+    from src import posted
+    out = []
+    for row in posted._load(posted.LEDGER):
+        name, at = str(row.get("build") or ""), str(row.get("publish_at") or "")
+        if not name.endswith("_short") or not at:
+            continue
+        jst = dt.datetime.fromisoformat(at.replace("Z", "+00:00")) + dt.timedelta(hours=9)
+        if jst.strftime("%Y%m%d") == day:
+            out.append(name)
+    return out
 
 
 def slot_when(build_dir: Path):

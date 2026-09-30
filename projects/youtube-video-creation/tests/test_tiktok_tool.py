@@ -100,3 +100,20 @@ def test_ハッシュタグの中の中黒を抜く(tmp_path):
     tag_line = [line for line in text.splitlines() if line.startswith("#")][0]
     assert "#レアルソシエダ" in tag_line.split()
     assert "・" not in tag_line
+
+
+def test_その日に公開するショートは名前の日付が違っても拾う(tmp_path, monkeypatch):
+    """2026-09-30：20260930b_ と、前の日に作った紹介もの（20260926_ll01_）が一式から漏れていた。"""
+    import json
+    from src import posted
+
+    ledger = tmp_path / "posted.json"
+    ledger.write_text(json.dumps([
+        {"build": "20260930b_messi_short", "publish_at": "2026-09-30T10:30:00Z"},
+        {"build": "20260926_ll01_soc_short", "publish_at": "2026-09-30T11:30:00Z"},
+        {"build": "20260926_ll01_soc", "publish_at": "2026-09-30T11:00:00Z"},        # 本編は入れない
+        {"build": "20260929_old_short", "publish_at": "2026-09-29T10:00:00Z"},        # 別の日
+        {"build": "20260930_late_short", "publish_at": "2026-09-30T15:30:00Z"},       # 日本時間では翌日0:30
+    ]), encoding="utf-8")
+    monkeypatch.setattr(posted, "LEDGER", ledger)
+    assert tiktok._shorts_published_on("20260930") == ["20260930b_messi_short", "20260926_ll01_soc_short"]
