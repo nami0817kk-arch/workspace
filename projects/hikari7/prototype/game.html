@@ -623,7 +623,9 @@ function revealFor(t,f,pos){
 }
 function runStage(S){
   var f=roundFmt(S), A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}), res={}, teams=[], win=-1, P=S.plan||{acts:{}};
+  S.hurt=[];
   A.forEach(function(t){
+    if(!t.rest&&!t.inj&&t.fat>=80&&R()<(t.fat-75)/60){t.inj=true;S.hurt.push(t.id);logT(S,t,'疲れがたまりきった状態で本番に出て、足を痛めた');S.notes.push([t.giv+hon(S)+'、明らかに無理してた。休ませてあげて',1]);S.showTrust=clamp(S.showTrust-2,0,100);}
     var pos=S.lesson.pos[t.id]||defaultPos(t);
     var r=t.rest?{p:(t.lastP>0?t.lastP*.85:45),br:[]}:perfOf(t,f,pos);
     if(P.acts.stage)r.p*=1.04; if(P.center===t.id&&!t.rest)r.p*=1.03; if(f.live&&!t.rest)r.p*=0.92+(t.conf-50)/300;
@@ -1006,10 +1008,11 @@ function initV5(S){
 }
 var TIERN=['距離がある','打ち解けてきた','信頼している','本音で話せる'];
 function tierOf(t){return t.trust>=80?3:t.trust>=60?2:t.trust>=40?1:0;}
-function moodOf(t){if(t.inj)return 'けが';if(t.fat>=65)return '疲れ';if(t.conf<30)return '不安';if(t.complacent)return '浮かれ';if(t.conf>=75)return '絶好調';if(t.temper==='makezu'&&t.lastP&&t.lastP<70)return '燃えている';return 'ふつう';}
-var MOODC={'けが':'warn','疲れ':'warn','不安':'warn','浮かれ':'lt','絶好調':'good','燃えている':'good','ふつう':'lt'};
+function moodOf(t){if(t.inj)return 'けが';if(t.fat>=80)return '限界';if(t.fat>=65)return '疲れ';if(t.conf<30)return '不安';if(t.complacent)return '浮かれ';if(t.conf>=75)return '絶好調';if(t.temper==='makezu'&&t.lastP&&t.lastP<70)return '燃えている';return 'ふつう';}
+var MOODC={'限界':'warn','けが':'warn','疲れ':'warn','不安':'warn','浮かれ':'lt','絶好調':'good','燃えている':'good','ふつう':'lt'};
 var MOODLINE={
   'けが':'テーピングを巻いた足を、何度も気にしている',
+  '限界':'立っているだけで、ふらついている。このまま本番に出すと危ない',
   '疲れ':{sunao:'「大丈夫です、まだいけます」と言うが、目が赤い',makezu:'「休んだら置いていかれる」と、ストレッチをやめない',sensai:'食堂で、ご飯を半分残していた'},
   '不安':{sunao:'「自分、ここにいていいんでしょうか」',makezu:'「次で取り返す。……取り返せるかな」',sensai:'練習室の隅で、ずっと膝を抱えている'},
   '浮かれ':{sunao:'「最近ちょっと調子いいんです」と笑う',makezu:'「もう余裕です」と言って、先生ににらまれた',sensai:'ほめられたのがうれしくて、少しぼんやりしている'},
@@ -1329,7 +1332,8 @@ function vSelect(){
     '<button class="btn" data-a="selok" '+(n>=S.caps.selMin&&n<=S.caps.sel?'':'disabled')+'>決定</button></div></div>';
   return h;
 }
-function tBars(t){var fc=t.fat<45?'f0':t.fat<65?'f1':'f2';
+function tBars(t){var fc=t.fat<45?'f0':t.fat<65?'f1':'f2';if(t.fat>=80)return tBars0(t).replace('注意','けがの危険');return tBars0(t);}
+function tBars0(t){var fc=t.fat<45?'f0':t.fat<65?'f1':'f2';
   return '<div class="bars"><div>世間の人気 '+Math.round(t.pop)+'<div class="bar"><i class="pop" style="width:'+t.pop+'%"></i></div></div><div>自信 '+Math.round(t.conf)+'<div class="bar"><i class="cf" style="width:'+t.conf+'%"></i></div></div><div>疲れ '+Math.round(t.fat)+(t.fat>=65?' <span style="color:var(--bad)">注意</span>':'')+'<div class="bar"><i class="'+fc+'" style="width:'+Math.min(100,t.fat)+'%"></i></div></div></div>';}
 function vLesson(){
   var f=ROUNDS[S.rnd],A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),used=usedSlots(S),sl=slotsOf(S);
@@ -1378,6 +1382,7 @@ function vStage(){
     if(f.kind==='pos'){var c=S.posCnt;h+='<p class="note">担当の人数：歌'+c.v+'・ダンス'+c.d+'・ラップ'+c.r+'</p>';}
     h+='<div class="card">';st.order.forEach(function(id){h+=resRow(id);});h+='</div>';
   }
+  if(S.hurt&&S.hurt.length)h+='<p class="note" style="color:var(--bad)">疲れの限界で本番に出た '+S.hurt.map(function(id){return esc(S.tr[id].giv);}).join('・')+' が足を痛めた。出来が下がり、番組への信頼も少し下がった。</p>';
   if(S.centerRes)h+='<p class="note">センターの'+esc(S.tr[S.plan.center].giv)+'は'+(S.centerRes>0?'堂々と務め、人気と自信が上がった。':'力を出しきれず、自信を落とした。')+'</p>';
   var nf=0;for(var k in S.feat)if(S.feat[k])nf++;
   h+='<h3>放送の編集</h3><p class="small muted">放送で大きく映す子を3人まで選べます。映ると人気が上がる。人気の子ばかり映すと「偏っている」と言われ、目立たない子を映すと本人の自信が上がる。</p><div class="card">';
