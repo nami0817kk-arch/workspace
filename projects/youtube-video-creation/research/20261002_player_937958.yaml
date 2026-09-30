@@ -27,7 +27,7 @@ thumbnail:
   - ラミネ・ヤマル
   - 選手紹介
   - プレースタイル
-  photo: assets/images/20261002_yamal_thumbmix/01.jpg
+  photo: assets/images/20261002_yamal_thumbfull/01.jpg
   photos: []
 sections:
 - id: hook
@@ -175,12 +175,14 @@ sections:
   - text: ボールを持つ場所は、右サイドの高い位置。ヒートマップで赤く光るところ。
     image: assets/stats/player_20261002_1467236_heat.png
     no_telop: true
-  - そこから中へ切れ込んで、左足で自分が打つ。攻めに振り切った、ヤマルの型です。
+  - text: そこから中へ切れ込んで、左足で自分が打つ。攻めに振り切った、ヤマルの型です。
+    image: assets/images/20261002_yamal_semi_face_w/01.jpg
   - ドリブルは今季30回成功、成功率は60%。作ったチャンスは27回で、上位3%に入ります。
   - text: シュートはラ・リーガ7試合で38本。1試合に5本以上打って、7点。打って打って、決めきっています。
     image: assets/stats/player_20261002_1467236_shots.png
     no_telop: true
-  - 一方で、弱点ははっきりしています。守備です。タックルやボール奪取の数は、同じ位置の中で下から9番目。
+  - text: 一方で、弱点ははっきりしています。守備です。タックルやボール奪取の数は、同じ位置の中で下から9番目。
+    image: assets/images/20261002_yamal_spain2025_w/01.jpg
   - 2025年4月のドルトムント戦では、走る量がチームでいちばん少なく、
   - 努力なしでは最高の選手になれない、と味方から面と向かって言われたこともあります。
   sources:
