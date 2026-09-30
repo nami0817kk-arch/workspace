@@ -2040,3 +2040,45 @@ class 商品ページの頭Test(unittest.TestCase):
         out = self.head(in_stock=False)
 
         self.assertIn("在庫切れ", out)
+
+
+class 買える場所への導線Test(unittest.TestCase):
+    """商品ページの「楽天市場で見る」は1つだけで、スマホでは 2,848px
+    （3.5画面ぶん）下にあった。実測（2026-09-26〜29）で検索から5人来たあいだ、
+    楽天へのクリックは27から1つも動いていない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://e.dev"}
+
+    def row(self, **kw):
+        base = {"item_code": "a", "name": "テスト商品", "price": 1000, "prev": 1000,
+                "low": 900, "high": 1100, "days": 20, "vs_low_pct": 0.1,
+                "off_high_pct": 0.0, "at_low": False, "near_low": False,
+                "dropped": False, "trustworthy": True, "label": "変動なし",
+                "shop": "店", "moved": True, "low_date": "2026-09-08",
+                "url": "https://example.com/buy",
+                "tail": [[f"2026-09-{i + 1:02d}", 1000, 1] for i in range(20)]}
+        base.update(kw)
+        return base
+
+    def test_価格のすぐ下にも買う口を置く(self):
+        html = self.theme.item_page(self.row(), self.site, "2026-09-28")
+
+        self.assertEqual(html.count("楽天市場で見る"), 2)   # 上と下
+        head = html.split('class="lede"', 1)[-1][:1200]
+        self.assertIn("楽天市場で見る", head)
+
+    def test_断りを買う口より先に出す(self):
+        """何で収益を得ているかを、押す前に読めるようにする。"""
+        html = self.theme.item_page(self.row(), self.site, "2026-09-28")
+
+        self.assertLess(html.index("楽天アフィリエイト"),
+                        html.index("楽天市場で見る"))
+
+    def test_行き先が無い商品には出さない(self):
+        html = self.theme.item_page(self.row(url=""), self.site, "2026-09-28")
+
+        self.assertNotIn("楽天市場で見る", html)

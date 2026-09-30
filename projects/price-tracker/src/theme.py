@@ -2191,6 +2191,12 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + f'<p class="point-line">{point_note(row)}</p>'
             + '</div>'
             + AD_NOTICE
+            # 買える場所へは、価格を見た所から行けるようにする。ここに置くまで
+            # 商品ページの「楽天市場で見る」は1つだけで、スマホでは 2,848px
+            # （3.5画面ぶん）下にあった。実測（2026-09-26〜29）で検索から5人
+            # 来たあいだ、楽天へのクリックは27から1つも動いていない。
+            # 断り（AD_NOTICE）より後ろに置く。何で収益を得ているかを先に言う。
+            + (f'<p class="cta top">{buy_link(row)}</p>' if row.get("url") else '')
             + (f'<p class="verdict">{esc(verdict_note(row))}</p>'
                if verdict_note(row) else '')
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')

@@ -256,6 +256,9 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .buy { display: inline-block; padding: 11px 22px; border-radius: var(--radius);
   background: var(--accent); color: var(--bg); font-weight: 700; text-decoration: none; }
 .shop { color: var(--muted); font-size: 14px; }
+/* 価格のすぐ下に置くほうの買う口。下にあるものと同じ見た目にする
+   （読み終えた人向けのものは残す） */
+.cta.top { margin: 0 0 18px; }
 
 .static p, .static li { max-width: 62em; }
 
