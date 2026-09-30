@@ -505,6 +505,11 @@ function genEvents(S){
     homesick:function(){var c=A.filter(function(t){return t.age<=16;});if(!c.length)return null;var t=pick(c);var olds=A.filter(function(x){return x.age>=19;});var o=olds.length?pick(olds):null;return {type:'homesick',ids:o?[t.id,o.id]:[t.id]};},
     teacher:function(){var mid=ord.slice(Math.floor(ord.length/3));var t=pick(mid.length?mid:A);return {type:'teacher',ids:[t.id]};},
     viral:function(){if(w<2)return null;var c=A.filter(function(t){return t.pop<35;});if(!c.length)return null;return {type:'viral',ids:[pick(c).id]};},
+    voice:function(){var c=A.filter(function(t){return t.st.v>=50&&t.fat>=35;});if(!c.length)return null;return {type:'voice',ids:[pick(c).id]};},
+    press:function(){if(w<2||A.length<4)return null;var top=A.slice().sort(function(a,b){return b.pop-a.pop;}),o=pick(A.filter(function(t){return t.id!==top[0].id;}));return {type:'press',ids:[top[0].id,o.id]};},
+    choreo:function(){var c=A.filter(function(t){return t.conf>=55;});if(!c.length)return null;return {type:'choreo',ids:[pick(c).id]};},
+    sns:function(){if(w<2)return null;var c=A.filter(function(t){return t.pop>=30;});if(!c.length)return null;return {type:'sns',ids:[pick(c).id]};},
+    visit:function(){if(w<2)return null;var c=A.filter(function(t){return t.age<=18;});if(!c.length)return null;return {type:'visit',ids:[pick(c).id]};},
     arc:function(){var c=A.filter(function(t){return t.arc&&t.arc.step<3&&S.talked.indexOf(t.id)<0;}).sort(function(a,b){return b.arc.step-a.arc.step||b.trust-a.trust;});if(!c.length)return null;return {type:'arc',ids:[pick(c.slice(0,4)).id]};},
     quit:function(){var c=A.filter(function(t){return t.conf<32;}).sort(function(a,b){return a.conf-b.conf;});if(!c.length||A.length<=MIN_PASS+1)return null;return {type:'quit',ids:[c[0].id]};}
   };
@@ -1180,7 +1185,7 @@ function showSeq(S,mode){var its=S.show.items,st=S.stage;if(mode==='all'||its.le
 var TONEN={s:'寄り添う',h:'厳しく',a:'放送で見せる',f:'任せる'};
 var ARC_TONE={late:['hss','sha','shh'],retry:['sfh','sfs','sha'],family:['ssh','sha','sfh'],child:['sha','fha','sha'],young:['sff','sfh','shs'],
   rival:['sfa','fsh','sah'],shy:['fsh','afh','sfs'],leader:['hfs','asf','sha'],lyric:['sfh','hfa','shs'],local:['ssa','shs','fsa']};
-var EV_TONE={surge:'has',injury:'sha',clash:'saf',effort:'as',center:'hhf',homesick:'ssf',teacher:'hsa',viral:'asf',quit:'sfs'};
+var EV_TONE={voice:'shf',press:'asf',choreo:'fhs',sns:'ahf',visit:'sha',surge:'has',injury:'sha',clash:'saf',effort:'as',center:'hhf',homesick:'ssf',teacher:'hsa',viral:'asf',quit:'sfs'};
 /* 気質ごとの受け止め方（本人への上乗せ）と、そのときの様子 */
 var TONE_MOD={
   s:{sunao:[{},''],makezu:[{trust:-3,cmp:1},'どこか物足りなそうだった。'],sensai:[{conf:4},'']},
@@ -1262,6 +1267,33 @@ function watchVideo(S,id){var t=S.tr[id];if(!S.watched)S.watched=[];if(S.watched
   if(hid.length){var k=hid.sort(function(a,b){return t.rev[a]-t.rev[b];})[0];t.rev[k]=2;}
   t.watchNote=t.pot>=1.3?'荒削りだが、映像の後半にかけて見違えるほど良くなる':t.pot>=.95?'安定していて、崩れるところがない':'よくまとまっているが、伸びる余地は少なそう';
   logT(S,t,'書類審査で応募動画をじっくり見た：'+t.watchNote);}
+
+
+EV.voice={title:'のどの不調',text:function(S,e,A){return A.name+'の声がかすれている。朝から、高い音がまったく出ない。';},
+  choices:function(){return [['休ませて声を守る','今回のステージは欠場。疲れが抜ける'],['小さな声でも出る','出来は下がる。本人の気持ちは守れる'],['ダンス中心の構成に切り替える','ダンスが伸びる。歌の見せ場はなくなる']];},
+  apply:function(S,e,i,A){if(i===0){A.rest=true;A.fat=Math.max(0,A.fat-20);A.trust+=4;return A.giv+'は悔しそうに、のど飴を握りしめた。';}
+    if(i===1){A.inj=true;A.conf+=4;S.notes.push([A.giv+hon(S)+'、声が出てなかったけど最後まで立ってた',0]);return A.giv+'は、かすれた声のまま舞台に立つと決めた。';}
+    A.st.d=Math.min(99,A.st.d+3*A.pot);A.st.v=Math.max(10,A.st.v-2);A.rev.d=2;return '振り付けを組み直した。'+A.giv+'は黙って鏡の前に立った。';}};
+EV.press={title:'雑誌の取材依頼',text:function(S,e,A,B){return '雑誌から、いま人気の'+A.name+'に取材の依頼が来た。練習時間は削られる。';},
+  choices:function(S,e,A,B){return [['受けさせる','人気が大きく上がる。疲れがたまり、ほかの子が少し気にする'],['断って練習に集中させる','得意が伸びる。人気は少し下がる'],[B.giv+'と2人で受けさせる（制作費10万）','ふたりの人気と信頼が上がる']];},
+  apply:function(S,e,i,A,B){if(i===0){A.pop+=8*A.charm;A.fat+=10;alive(S).forEach(function(t){if(t.id!==A.id)t.conf-=2;});S.wDrama+=.5;return '記事が出ると、'+A.giv+'の名前が一気に広まった。練習室の空気は少し重い。';}
+    if(i===1){var k=A.spec==='t'?'e':A.spec;A.st[k]=Math.min(99,A.st[k]+3*A.pot);A.pop=Math.max(0,A.pop-2);return A.giv+'は取材を断り、夜遅くまで練習した。';}
+    S.budget=Math.max(0,S.budget-10);A.pop+=4*A.charm;B.pop+=4*B.charm;A.trust+=4;B.trust+=4;return A.giv+'と'+B.giv+'の対談記事が載った。ふたりの距離が縮まった。';}};
+EV.choreo={title:'振付師との衝突',text:function(S,e,A){return A.name+'が、振付師の指示に「こうしたほうが伝わると思います」と食い下がった。';},
+  choices:function(){return [['本人の案を通す','自信と表現が上がる。振付師との関係はぎくしゃく'],['振付師の案に従わせる','ダンスが伸びる。自信は下がる'],['間に入って話し合う（制作費10万）','信頼が上がり、どちらの顔も立つ']];},
+  apply:function(S,e,i,A){if(i===0){A.conf+=8;A.st.e=Math.min(99,A.st.e+3*A.pot);A.fat+=5;S.showTrust=clamp(S.showTrust-1,0,100);return '振付師は黙って引き下がった。'+A.giv+'の目が輝いている。';}
+    if(i===1){A.st.d=Math.min(99,A.st.d+3*A.pot);A.conf-=6;A.rev.d=2;return A.giv+'は「……分かりました」と、言われたとおりに踊った。';}
+    S.budget=Math.max(0,S.budget-10);A.trust+=6;A.conf+=3;return '三人で話し合い、両方の案を合わせた振りになった。';}};
+EV.sns={title:'SNSで誤解が広まる',text:function(S,e,A){return A.name+'の切り抜きが「態度が悪い」と誤解されて広まっている。前後を見れば、仲間をかばった場面だった。';},
+  choices:function(){return [['番組で経緯を説明する','人気と自信が戻る。演出への批判も少し出る'],['本人に説明させる','信頼が厚ければ好感に変わる。繊細な子には重い'],['何もしない','騒ぎは収まるが、人気と自信が下がる']];},
+  apply:function(S,e,i,A){if(i===0){A.pop+=4*A.charm;A.conf+=4;S.showTrust=clamp(S.showTrust-1,0,100);S.notes.push(['誤解だったんだ。'+A.giv+hon(S)+'ごめん',0]);return '番組が前後の映像を流すと、謝る書き込みが並んだ。';}
+    if(i===1){if(A.trust>=60&&A.temper!=='sensai'){A.pop+=6*A.charm;A.conf+=6;return A.giv+'の言葉はまっすぐで、かえってファンが増えた。';}A.pop=Math.max(0,A.pop-4);A.conf-=8;return A.giv+'はうまく言葉にできず、騒ぎは少し大きくなった。';}
+    A.pop=Math.max(0,A.pop-6);A.conf-=4;return '騒ぎは数日で収まった。'+A.giv+'は少し元気がない。';}};
+EV.visit={title:'家族の面会日',text:function(S,e,A){return '今日は家族の面会日。けれど'+A.name+'は、次の課題でまだ振りが入っていない。';},
+  choices:function(){return [['面会に行かせる','自信が上がり、疲れが抜ける。練習は遅れる'],['練習を優先させる','得意が伸びる。信頼は下がる'],['面会の様子を撮って放送する','人気が上がる。繊細な子には負担']];},
+  apply:function(S,e,i,A){if(i===0){A.conf+=10;A.fat=Math.max(0,A.fat-15);return A.giv+'は家族と笑って過ごし、夜は少しだけ泣いた。';}
+    if(i===1){var k=A.spec==='t'?'e':A.spec;A.st[k]=Math.min(99,A.st[k]+4*A.pot);A.trust-=6;return A.giv+'は「今は練習します」と言った。声が少し震えていた。';}
+    A.pop+=6*A.charm;A.conf+=3;S.wDrama+=1;S.notes.push([A.giv+hon(S)+'の家族の場面、泣いた',0]);return '面会の場面が放送され、温かい声が集まった。';}};
 
 /*ENGINE-END*/
 
