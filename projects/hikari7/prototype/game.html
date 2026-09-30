@@ -329,6 +329,20 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .fpick{padding:4px 0 8px}
 .vsrow{align-items:center;gap:8px}
 .vs{font-family:"Dela Gothic One",sans-serif;color:#e9ba4b;font-size:22px}
+.mission .mh,.career .mh{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.06em}
+.mission .mi{font-size:14px;padding:3px 0;display:flex;gap:6px}
+.mission .ok{color:var(--ok);font-weight:800}.mission .ng{color:var(--bad);font-weight:800}.mission .dot{color:var(--muted)}
+.career .rk{font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;font-size:19px}
+.hall{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-top:1px dashed var(--line);font-size:13.5px}
+.gr{flex:none;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:"Dela Gothic One",sans-serif;font-weight:400}
+.g-S{background:#b98410}.g-A{background:#7445d6}.g-B{background:#2d6bd3}.g-C{background:#1a9468}.g-D{background:#6b6480}
+.newu{margin-top:6px;background:var(--gold-bg);border:1px solid var(--gold);border-radius:8px;padding:4px 10px;font-weight:700;font-size:13.5px}
+.tgt{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:8px 12px;margin:8px 0}
+.tgt span{font-size:12px;font-weight:800;color:var(--muted)}
+.tgt b{font-size:18px}
+.tgt small{flex-basis:100%;font-size:12px;color:var(--muted)}
+.tgt.hit{border-left-color:var(--ok)}.tgt.hit b{color:var(--ok)}
+.tgt.miss{border-left-color:var(--bad)}.tgt.miss b{color:var(--bad)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -429,7 +443,7 @@ function newGame(g){
   var nImg=imgs.length,nApp=Math.min(40,nImg||40);
   for(var i=0;i<nApp;i++){var t=genTrainee(i,used,g);t.img=nImg?imgs[i]:-1;tr.push(t);}
   var rels=assignArcs(tr);
-  var o={v:7,budget:80,plan:null,rels:rels,revived:null,talked:[],talk:null,prep:null,feat:{},income:0,g:g,nApp:nApp,caps:capsFor(nApp),phase:'select',rnd:0,tr:tr,sel:[],extra:0,adUsed:false,ratings:[],showTrust:60,wDrama:0,
+  var o={v:8,budget:80,plan:null,rels:rels,revived:null,talked:[],talk:null,prep:null,feat:{},income:0,g:g,nApp:nApp,caps:capsFor(nApp),phase:'select',rnd:0,tr:tr,sel:[],extra:0,adUsed:false,ratings:[],showTrust:60,wDrama:0,
     lesson:null,events:[],evIdx:0,evRes:null,stage:null,crit:{},critDone:false,pass:{},call:null,farewell:{},comments:[],notes:[],lastEvTypes:[],interview:{},history:[]};
   initV5(o);return o;
 }
@@ -697,7 +711,8 @@ function decide(S){
   var topPop=pops.reduce(function(a,b){return a+b;},0)/pops.length;
   var rating=3.4+(40-S.nApp)/40*.9+topPop*.04+S.wDrama*.22+Math.min(ang,3)*.25+S.rnd*.25+(f.fin?.8:0)+(f.hype||1)*.35-.35+flowBonus(S,S.rnd)+(S.showTrust-60)*.03+(R()-.5)*.4+(S.plan&&S.plan.acts.special?.9:0)+(S.plan&&S.plan.acts.stage?.4:0)+(S.centerRes?S.centerRes*.3:0);
   S.ratings.push(r1(clamp(rating,1.5,15)));
-  S.income=f.fin?0:Math.round(30+S.ratings[S.ratings.length-1]*6);S.budget+=S.income;
+  var rt=S.ratings[S.ratings.length-1],tg=roundTarget(S.rnd),hit=rt>=tg;S.lastTgt={tg:tg,hit:hit,r:rt};if(!hit)S.warns++;else S.warns=0;
+  S.income=f.fin?0:Math.max(0,Math.round(20+rt*5+(hit?15:-10)-(S.warns>=2?20:0)));S.budget+=S.income;
   var order=shuffle(passed.map(function(t){return t.id;}));
   S.call={order:order,failed:failed.map(function(t){return t.id;}),n:0,done:false,angry:ang};
   S.call.lines={};passed.forEach(function(t){S.call.lines[t.id]=pick(PASSLINE[t.temper]);});checkGoalsDecide(S);
@@ -743,6 +758,7 @@ function finalEval(S){
   bond=Math.min(8,bond);coh+=bond;
   var goods=D.filter(function(t){return t.arc&&t.arc.step>=3&&t.arc.score>=2;}).length;
   coh+=goods*1.5;fanScore=clamp(fanScore+goods*2,0,100);
+  var promo=Math.min(10,Math.max(0,S.budget)/25);fanScore=clamp(fanScore+promo,0,100);
   var Pp=S.prep||{dir:0,act:0,leader:null},L=Pp.leader!=null?S.tr[Pp.leader]:null,leadB=0;
   if(L){leadB=(L.trust-50)*.12+(L.arc&&L.arc.k==='leader'&&L.arc.step>=3&&L.arc.score>=2?6:0)+(L.temper==='sunao'?2:0);}else leadB=-4;
   coh+=leadB;
@@ -753,9 +769,12 @@ function finalEval(S){
   var avgR=S.ratings.reduce(function(a,b){return a+b;},0)/S.ratings.length;
   var show=clamp((avgR-3)*16,0,100);
   var total=song*.35+coh*.25+fanScore*.2+show*.2;
-  var g=total>=72?'S':total>=63?'A':total>=54?'B':total>=45?'C':'D';
+  var streams0=Math.round(song*song*song/1000*180)/10,E0={D:D,n:n,avgR:avgR,goods:goods,streams:streams0};
+  var missions=(S.missions||[]).map(function(k){var m=missionOf(k);return {k:k,t:m.t,ok:!!m.chk(S,E0)};});
+  total+=missions.filter(function(m){return m.ok;}).length*MISSION_PT;
+  var g=total>=77?'S':total>=66?'A':total>=56?'B':total>=46?'C':'D';
   var streams=Math.round(song*song*song/1000*180)/10; // 万回
-  return {D:D,n:n,sk:sk,q:q,fanScore:fanScore,coh:coh,song:song,show:show,total:total,grade:g,roles:roles,miss:miss,trustAvg:trustAvg,avgR:avgR,streams:streams,talk:talk,sd:sd,bond:bond,goods:goods,leadB:leadB,match:match,L:L};
+  return {D:D,n:n,sk:sk,q:q,fanScore:fanScore,coh:coh,song:song,show:show,total:total,grade:g,roles:roles,miss:miss,trustAvg:trustAvg,avgR:avgR,streams:streams,talk:talk,sd:sd,bond:bond,goods:goods,leadB:leadB,match:match,L:L,missions:missions,promo:promo};
 }
 
 /* ---------- 一人ひとりの深掘り（v4） ---------- */
@@ -981,7 +1000,7 @@ function initV5(S){
     var rs=relsOf(S,t.id).filter(function(r){return r.k==='old'||r.k==='senpai';});
     var gs=['center','top','pop','final','center','top','final'];if(rs.length)gs.push('together','together','together');
     t.goal=pick(gs);t.goalP=t.goal==='together'?rs[0].o:null;});
-  S.fmt=DEFAULT_FMT.slice();buildRounds(S);S.album=[];S.touch={};S.reqs=[];S.ap=0;S.centerReq=null;S.sub=null;S.show=null;
+  S.fmt=DEFAULT_FMT.slice();buildRounds(S);var cr=loadCareer();S.locked=lockedFormats(cr.points);S.missions=pickMissions();S.budget+=Math.min(50,cr.seasons*5);S.warns=0;S.album=[];S.touch={};S.reqs=[];S.ap=0;S.centerReq=null;S.sub=null;S.show=null;
 }
 var TIERN=['距離がある','打ち解けてきた','信頼している','本音で話せる'];
 function tierOf(t){return t.trust>=80?3:t.trust>=60?2:t.trust>=40?1:0;}
@@ -1184,13 +1203,58 @@ function hintOf(fx,tone){var p=[];
 function arcChoices(S,t){var sc=arcScene(S,t),tones=ARC_TONE[t.arc.k][Math.min(t.arc.step,2)];
   return sc.ch.map(function(c,i){return {label:arcText(S,t,c[0]),hint:hintOf(withCost(c[2]),tones.charAt(i))};});}
 
+
+/* ---------- v9：依頼・局の目標・プロデューサー歴 ---------- */
+var MISSIONS=[
+  {k:'rating',t:'平均視聴率 6.5%以上',chk:function(S,E){return E.avgR>=6.5;}},
+  {k:'talk',t:'トーク担当をデビューさせる',chk:function(S,E){return E.D.some(function(t){return t.spec==='t';});}},
+  {k:'young',t:'16歳以下の子をデビューさせる',chk:function(S,E){return E.D.some(function(t){return t.age<=16;});}},
+  {k:'big',t:'7人以上のグループにする',x:'small',chk:function(S,E){return E.n>=7;}},
+  {k:'small',t:'5人組でデビューさせる',x:'big',chk:function(S,E){return E.n===5;}},
+  {k:'calm',t:'荒れた回を1回以内に抑える',chk:function(S,E){return S.history.filter(function(h){return h.angry>0;}).length<=1;}},
+  {k:'honne',t:'誰か1人の本音を聞く',chk:function(S,E){return S.tr.some(function(t){return t.honne;});}},
+  {k:'story',t:'報われた物語を2人以上',chk:function(S,E){return E.goods>=2;}},
+  {k:'hit',t:'デビュー曲を1,500万回以上に',chk:function(S,E){return E.streams>=1500;}},
+  {k:'trust',t:'番組への信頼を70以上で終える',chk:function(S,E){return S.showTrust>=70;}},
+  {k:'bloom',t:'伸びしろ「大」の子を2人以上デビューさせる',chk:function(S,E){return E.D.filter(function(t){return t.pot>=1.3;}).length>=2;}},
+  {k:'pair',t:'幼なじみか同じ地元の2人を一緒にデビューさせる',chk:function(S,E){var ids=E.D.map(function(t){return t.id;});return S.rels.some(function(r){return (r.k==='old'||r.k==='town')&&ids.indexOf(r.a)>=0&&ids.indexOf(r.b)>=0;});}}
+];
+var MISSION_PT=3;
+function pickMissions(){var out=[],pool=shuffle(MISSIONS.slice());pool.forEach(function(m){if(out.length>=3)return;if(out.some(function(o){return o===m.x||m.k===o;}))return;if(out.some(function(o){return MISSIONS.filter(function(z){return z.k===o;})[0].x===m.k;}))return;out.push(m.k);});return out;}
+function missionOf(k){return MISSIONS.filter(function(m){return m.k===k;})[0];}
+function roundTarget(r){return 4.5+.5*r;}
+/* プロデューサー歴（端末に残る。シーズンをまたぐ） */
+var CKEY='hikari7_career';
+function loadCareer(){try{var c=JSON.parse(localStorage.getItem(CKEY));if(c&&c.hall)return c;}catch(e){}return {seasons:0,points:0,hall:[]};}
+function saveCareer(c){try{localStorage.setItem(CKEY,JSON.stringify(c));}catch(e){}}
+var RANKS=[[0,'新人プロデューサー'],[4,'若手プロデューサー'],[10,'中堅プロデューサー'],[20,'敏腕プロデューサー'],[35,'伝説のプロデューサー']];
+function rankOf(p){var r=RANKS[0];RANKS.forEach(function(x){if(p>=x[0])r=x;});return r;}
+function nextRank(p){for(var i=0;i<RANKS.length;i++)if(RANKS[i][0]>p)return RANKS[i];return null;}
+var UNLOCK={camp:2,duo:4,live:7};
+function lockedFormats(p){var o={};for(var k in UNLOCK)if(p<UNLOCK[k])o[k]=UNLOCK[k];return o;}
+var GRADE_PT={S:5,A:3,B:2,C:1,D:0};
+function recordCareer(S,E){if(S.recorded)return null;S.recorded=true;var c=loadCareer(),before=c.points,rk0=rankOf(before)[1];
+  var got=GRADE_PT[E.grade]+E.missions.filter(function(m){return m.ok;}).length;c.seasons++;c.points+=got;
+  c.hall.unshift({name:S.prep.names[S.prep.name],grade:E.grade,total:Math.round(E.total),g:S.g,n:E.n,members:E.D.map(function(t){return t.giv;}),season:c.seasons});c.hall=c.hall.slice(0,20);saveCareer(c);
+  var news=[];for(var k in UNLOCK)if(before<UNLOCK[k]&&c.points>=UNLOCK[k])news.push('審査「'+FORMATS[k].t+'」が使えるようになった');
+  var rk1=rankOf(c.points)[1];if(rk1!==rk0)news.unshift('肩書きが「'+rk1+'」になった');
+  S.careerNews={got:got,points:c.points,news:news};return S.careerNews;}
+/* レッスンのおまかせ：疲れた子は休ませ、課題のある子は課題を、ほかは今回見られる力のうち弱いところを1つずつ */
+function autoLesson(S){var f=roundFmt(S),sl=slotsOf(S),u=0;S.lesson.train={};
+  var keys=f.w==='spec'||f.w==='pos'||f.w==='all'?null:Object.keys(f.w).filter(function(k){return k!=='s';});
+  alive(S).sort(function(a,b){return b.fat-a.fat;}).forEach(function(t){if(u>=sl)return;var k;
+    if(t.fat>=60)k='rest';else if(t.focus)k=t.focus;
+    else if(keys)k=keys.slice().sort(function(a,b){return t.st[a]-t.st[b];})[0];
+    else if(f.w==='pos')k=S.lesson.pos[t.id]||defaultPos(t);else k=t.spec==='t'?'e':t.spec;
+    S.lesson.train[t.id]=[k];u++;});}
+
 /*ENGINE-END*/
 
 /* ================= 画面 ================= */
-var KEY='hikari7_proto_v7';
+var KEY='hikari7_proto_v8';
 var S=null, ui={filter:'all',g:'m',resetArm:false,prof:null}, timer=null;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-function load(){try{var s=localStorage.getItem(KEY);if(!s)return null;var o=JSON.parse(s);return o&&o.v===7?o:null;}catch(e){return null;}}
+function load(){try{var s=localStorage.getItem(KEY);if(!s)return null;var o=JSON.parse(s);return o&&o.v===8?o:null;}catch(e){return null;}}
 function clearSave(){try{localStorage.removeItem(KEY);}catch(e){}}
 function $(s){return document.querySelector(s);}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
@@ -1234,7 +1298,8 @@ function vTitle(){
     '<p class="small muted">どちらを選んでも、能力や課題の仕組みは同じです。</p></div>';
   h+='<button class="btn" data-a="new">新しいシーズンを始める</button>';
   if(sv)h+='<button class="btn sub" data-a="cont">つづきから（'+(sv.rnd>0?ROUNDS[sv.rnd].name:'書類・動画審査')+'・'+(sv.g==='f'?'女性':'男性')+'）</button>';
-  h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、9種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・1対1で見る・差し入れ・相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・活動を決めて、デビュー後の反響で評価される</li></ul><p class="muted">試作 v8。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
+  h+=careerBox();
+  h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、9種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がって、使える審査が増える</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・1対1で見る・差し入れ・相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・活動を決めて、デビュー後の反響で評価される</li></ul><p class="muted">試作 v9。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
   return h;
 }
 function vSelect(){
@@ -1253,7 +1318,7 @@ function tBars(t){var fc=t.fat<45?'f0':t.fat<65?'f1':'f2';
 function vLesson(){
   var f=ROUNDS[S.rnd],A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),used=usedSlots(S),sl=slotsOf(S);
   var h=telop('レッスン')+'<div class="card fmt"><p class="small muted" style="margin:0">見られる力：'+wText(roundFmt(S))+(roundFmt(S).concept?'（'+roundFmt(S).concept+'）':'')+(f.kind==='team'?'（'+f.size+'人組）':'')+(S.plan&&S.plan.center!=null?'・センター '+esc(S.tr[S.plan.center].giv):'')+'</p><p class="small muted">'+(f.fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
-  h+='<h3>レッスンの割り振り</h3><p class="small muted">練習枠を1つずつ使い、1人に2つまで。「休養」で疲れが抜けます。講評で「課題を伝えた」子は、その弱点のレッスンがよく効きます。</p>';
+  h+='<h3>レッスンの割り振り <button class="btn-s" data-a="autolesson">おまかせ</button></h3><p class="small muted">練習枠を1つずつ使い、1人に2つまで。「休養」で疲れが抜けます。講評で「課題を伝えた」子は、その弱点のレッスンがよく効きます。</p>';
   if(!S.adUsed)h+='<button class="btn ad" data-a="adslot">'+adIcon()+'<span>追加レッスンを1回<br><span class="small muted">本番は動画広告。1審査に1回（再審査と共通）</span></span></button>';
   A.forEach(function(t){
     var tr=S.lesson.train[t.id]||[];
@@ -1355,7 +1420,7 @@ function vCall(){
   h+='<div class="card"><div class="kv"><span>今回の視聴率</span><b>'+cur.toFixed(1)+'%'+(pv!==null?' <span style="color:'+(cur>=pv?'var(--ok)':'var(--bad)')+'">'+(cur>=pv?'▲':'▼')+Math.abs(cur-pv).toFixed(1)+'</span>':'')+'</b></div><div class="kv"><span>番組への信頼</span><b>'+Math.round(S.showTrust)+'</b></div>'+(c.angry?'<div class="kv"><span>荒れた書き込み</span><b style="color:var(--bad)">人気の子の不合格 '+c.angry+'人</b></div>':'')+'</div>';
   h+='<h3>世間の声</h3>';S.comments.forEach(function(x){h+='<div class="cmt '+(x.a?'angry':'')+'"><div class="h">'+esc(x.h)+'</div>'+esc(x.t)+'</div>';});
   h+='<p class="small muted">書き込みはすべて架空のものです。</p>';
-  h+=(!f.fin&&S.income?'<p class="note">視聴率に応じて、次の審査の制作費が <b>'+S.income+'万</b> 入りました（残り '+S.budget+'万）。</p>':'')+'<button class="btn" data-a="'+(f.fin?'toprep':'nextround')+'">'+(f.fin?'デビューの準備へ':'次の審査へ')+'</button>';
+  h+=(S.lastTgt?'<div class="tgt '+(S.lastTgt.hit?'hit':'miss')+'"><span>局の目標 '+S.lastTgt.tg.toFixed(1)+'%</span><b>'+(S.lastTgt.hit?'達成':'届かず')+'</b><small>'+(S.lastTgt.hit?'局の評価が上がり、制作費が上乗せされた':(S.warns>=2?'2回続けて届かず、局から厳しく言われた。制作費を大きく減らされた':'局から「数字が厳しい」と言われた'))+'</small></div>':'')+(!f.fin?'<p class="note">次の審査の制作費として <b>'+S.income+'万</b> 入りました（残り '+S.budget+'万）。</p>':'')+'<button class="btn" data-a="'+(f.fin?'toprep':'nextround')+'">'+(f.fin?'デビューの準備へ':'次の審査へ')+'</button>';
   return h;
 }
 function vResult(){
@@ -1365,7 +1430,7 @@ function vResult(){
   function bar(lbl,v,note){return '<div style="margin:10px 0"><div class="kv" style="border:none;padding:0"><span>'+lbl+'</span><b>'+Math.round(v)+'</b></div><div class="bar" style="height:10px"><i class="grow" style="width:'+Math.round(v)+'%;background:var(--accent)"></i></div><div class="small muted">'+note+'</div></div>';}
   h+='<div class="card">'+bar('デビュー曲の反響（35%）',E.song,'実力（平均'+Math.round(E.sk)+'）とファンの数のかけ算。どちらかが欠けると伸びない')+
     bar('グループのまとまり（25%）',E.coh,E.n+'人・担当 歌'+E.roles.v+'/ダンス'+E.roles.d+'/ラップ'+E.roles.r+(E.miss?'（足りない担当あり）':'')+'・信頼'+Math.round(E.trustAvg)+'・実力の差'+E.sd.toFixed(1)+(E.talk?'・トーク担当あり':'')+(E.bond?'・メンバーのつながり +'+E.bond:'')+'・リーダー '+(E.leadB>=0?'+':'')+E.leadB.toFixed(1)+(E.goods?'・報われた物語 '+E.goods+'人':''))+
-    bar('ファンの広がり（20%）',E.fanScore,'メンバーの世間の人気の合計×番組への信頼（'+Math.round(S.showTrust)+'）')+
+    bar('ファンの広がり（20%）',E.fanScore,'メンバーの世間の人気の合計×番組への信頼（'+Math.round(S.showTrust)+'）'+(E.promo>=1?'・残った制作費'+S.budget+'万を宣伝費に（＋'+E.promo.toFixed(1)+'）':''))+
     bar('番組の視聴率（20%）',E.show,'平均'+E.avgR.toFixed(1)+'%')+'</div>';
   var W=300,H=90,mx=Math.max.apply(null,S.ratings)+1,mn=Math.max(0,Math.min.apply(null,S.ratings)-1),k=S.ratings.length,pts=S.ratings.map(function(r,i){return (14+i*(W-28)/Math.max(1,k-1)).toFixed(1)+','+(H-10-(r-mn)/(mx-mn)*(H-26)).toFixed(1);});
   h+='<div class="card"><div class="small muted">審査ごとの視聴率</div><svg viewBox="0 0 '+W+' '+H+'" width="100%" style="max-width:420px;display:block"><polyline points="'+pts.join(' ')+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/>'+
@@ -1375,6 +1440,9 @@ function vResult(){
   h+='</div>';
   var others=S.tr.filter(function(t){return t.status!=='debut'&&t.status!=='cut0'&&t.status!=='cand'&&t.arc&&t.arc.step>=1;});
   if(others.length){h+='<h3>番組を去った子のその後</h3><div class="card">';others.forEach(function(t){h+='<div class="epi">'+face(t,'sm dim')+'<div><b>'+esc(t.giv)+'</b> '+esc(arcEnd(S,t))+'</div></div>';});h+='</div>';}
+  var cn=S.careerNews;
+  h+=missionBox(E);
+  if(cn)h+='<div class="card career"><div class="mh">プロデューサー歴</div><div>このシーズンで <b>＋'+cn.got+'ポイント</b>（合計 '+cn.points+'）・'+esc(rankOf(cn.points)[1])+'</div>'+cn.news.map(function(x){return '<div class="newu">'+esc(x)+'</div>';}).join('')+'</div>';
   var al=S.album.filter(function(x){return S.tr[x.id].status==='debut';});
   if(al.length){h+='<h3>思い出アルバム <span class="small muted">'+S.album.length+'枚</span></h3><div class="card">';al.slice(-10).forEach(function(x){var t=S.tr[x.id];h+='<div class="epi">'+face(t,'sm')+'<div><b>'+esc(x.title)+'</b> <span class="muted small">'+esc(t.giv)+(x.r?'・第'+x.r+'審査':'')+'</span><br>'+esc(x.t)+'</div></div>';});h+='</div>';}
   var hints=[];
@@ -1395,7 +1463,7 @@ function vResult(){
 function yen(n){return '<b>'+n+'</b><span class="small muted">万</span>';}
 function vPlan(){
   var f=roundFmt(S),P=S.plan,A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),cost=actCost(S);
-  var h=telop('制作会議')+'<div class="card fmt"><p class="small muted" style="margin:0">'+(ROUNDS[S.rnd].fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
+  var h=telop('制作会議')+'<div class="tgt"><span>局の目標</span><b>視聴率 '+roundTarget(S.rnd).toFixed(1)+'%</b><small>届けば次の制作費＋15万、届かなければ−10万。2回続けて届かないとさらに−20万</small></div>'+missionBox()+'<div class="card fmt"><p class="small muted" style="margin:0">'+(ROUNDS[S.rnd].fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
   h+='<div class="budget"><span>制作費</span><span>'+yen(S.budget)+(cost?' <span class="muted">→ 使うと残り '+(S.budget-cost)+'万</span>':'')+'</span></div>';
   var C=ROUNDS[S.rnd].concepts;
   if(C){h+='<h3>曲とコンセプト</h3><div class="filters">'+C.map(function(c,i){return '<button class="chip '+(P.concept===i?'on':'')+'" data-a="concept" data-v="'+i+'">'+c.n+'</button>';}).join('')+'</div><p class="small muted">見られる力：'+wText(f)+'</p>';}
@@ -1423,7 +1491,7 @@ function vPlan(){
 }
 function vPrep(){
   var P=S.prep,D=S.tr.filter(function(t){return t.status==='debut';});
-  var h='<h2>デビューの準備</h2><p class="small muted">ここで決めたことが、デビューから1か月の反響を左右します。</p>';
+  var h='<h2>デビューの準備</h2><p class="small muted">ここで決めたことが、デビューから1か月の反響を左右します。残った制作費 <b>'+S.budget+'万</b> は、デビュー後の宣伝費になります。</p>';
   h+='<h3>グループ名</h3><div class="filters">'+P.names.map(function(n,i){return '<button class="chip '+(P.name===i?'on':'')+'" data-a="gname" data-v="'+i+'">'+esc(n)+'</button>';}).join('')+'</div>';
   h+='<h3>リーダー</h3><p class="small muted">信頼が厚い子ほど、グループがまとまる。</p><div class="pickrow">';
   D.forEach(function(t){h+='<button class="pk '+(P.leader===t.id?'on':'')+'" data-a="leader" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span><em>信頼'+Math.round(t.trust)+'</em></button>';});h+='</div>';
@@ -1481,8 +1549,10 @@ function vFormat(){
       (f?'<div class="seg"><button data-a="fup" data-v="'+i+'" '+(i===0?'disabled':'')+' aria-label="上へ">↑</button><button data-a="fdn" data-v="'+i+'" '+(i===3?'disabled':'')+' aria-label="下へ">↓</button><button data-a="fdel" data-v="'+i+'" aria-label="外す">×</button></div>':'')+'</div>';});
   h+='<div class="fslot fin"><div class="fno">第5審査</div><div class="fbody"><b>最終審査</b> '+hypeStars(3)+'</div></div>';
   var free=F.indexOf(null);
+  h+=missionBox();
   h+='<h3>審査の種類</h3><div class="fpool">';
-  FMT_KEYS.forEach(function(k){var f=FORMATS[k],u=!!used[k];
+  FMT_KEYS.forEach(function(k){var f=FORMATS[k],u=!!used[k],lk=S.locked&&S.locked[k];
+    if(lk){h+='<div class="fcard used"><div class="fh"><b>🔒 '+esc(f.t)+'</b>'+hypeStars(f.hype)+'</div><div class="small muted">プロデューサー歴 '+lk+'ポイントで使えるようになる</div></div>';return;}
     h+='<div class="fcard'+(u?' used':'')+'"><div class="fh"><b>'+esc(f.t)+'</b>'+hypeStars(f.hype)+'</div><div class="small">'+esc(f.desc)+'</div><div class="fg"><span class="hp up">'+esc(f.good)+'</span><span class="hp dn">'+esc(f.bad)+'</span></div>'+
       (u?'<div class="small muted">組み込み済み</div>':'<button class="btn-s" data-a="fadd" data-v="'+k+'" '+(free<0?'disabled':'')+'>'+(free<0?'空きがない（×で外す）':'第'+(free+1)+'審査に入れる')+'</button>')+'</div>';});
   h+='</div>';
@@ -1494,10 +1564,21 @@ function planFmtBox(){
   for(var i=S.rnd-1;i<4;i++){var f=FORMATS[F[i]],w=fmtWarn(S,F[i],i+1);
     h+='<div class="fslot in"><div class="fno">第'+(i+1)+'審査'+(i===S.rnd-1?'<small>今回</small>':'')+'</div><div class="fbody"><b>'+esc(f.t)+'</b> '+hypeStars(f.hype)+(w?'<div class="small" style="color:var(--bad)">'+esc(w)+'</div>':'')+'</div><div class="seg">'+
       '<button data-a="pfup" data-v="'+i+'" '+(i<=S.rnd-1?'disabled':'')+' aria-label="上へ">↑</button><button data-a="pfdn" data-v="'+i+'" '+(i>=3?'disabled':'')+' aria-label="下へ">↓</button><button data-a="pfswap" data-v="'+i+'">差し替え</button></div></div>';
-    if(ui.fswap===i){var used={};F.forEach(function(k){used[k]=1;});h+='<div class="fpick">'+FMT_KEYS.filter(function(k){return !used[k];}).map(function(k){var g=FORMATS[k];return '<button class="choice" data-a="pfput" data-v="'+k+'"><b>'+esc(g.t)+' '+hypeStars(g.hype)+'</b><span class="hint"><span class="hp up">'+esc(g.good)+'</span><span class="hp dn">'+esc(g.bad)+'</span></span></button>';}).join('')+'</div>';}}
+    if(ui.fswap===i){var used={};F.forEach(function(k){used[k]=1;});h+='<div class="fpick">'+FMT_KEYS.filter(function(k){return !used[k]&&!(S.locked&&S.locked[k]);}).map(function(k){var g=FORMATS[k];return '<button class="choice" data-a="pfput" data-v="'+k+'"><b>'+esc(g.t)+' '+hypeStars(g.hype)+'</b><span class="hint"><span class="hp up">'+esc(g.good)+'</span><span class="hp dn">'+esc(g.bad)+'</span></span></button>';}).join('')+'</div>';}}
   h+='<div class="fslot in fin"><div class="fno">第5審査</div><div class="fbody"><b>最終審査</b></div></div></div>';
   return h;
 }
+
+
+function missionBox(E){var ms=S.missions||[];if(!ms.length)return '';
+  var h='<div class="card mission"><div class="mh">スポンサーの依頼 <span class="small muted">1つかなえるごとに最後の評価に＋'+MISSION_PT+'点</span></div>';
+  ms.forEach(function(k,i){var m=missionOf(k),ok=E?E.missions[i].ok:null;h+='<div class="mi">'+(ok===true?'<span class="ok">✓</span>':ok===false?'<span class="ng">✗</span>':'<span class="dot">・</span>')+esc(m.t)+'</div>';});
+  return h+'</div>';}
+function careerBox(){var c=loadCareer(),rk=rankOf(c.points),nx=nextRank(c.points);
+  var h='<div class="card career"><div class="mh">プロデューサー歴</div><div class="rk">'+esc(rk[1])+'</div><div class="small muted">'+c.seasons+'シーズン・'+c.points+'ポイント'+(nx?'（次の肩書きまで あと'+(nx[0]-c.points)+'）':'')+'</div>';
+  var lk=lockedFormats(c.points),ks=Object.keys(lk);if(ks.length)h+='<div class="small" style="margin-top:6px">まだ使えない審査：'+ks.map(function(k){return esc(FORMATS[k].t)+'（'+lk[k]+'ポイント）';}).join('・')+'</div>';
+  if(c.hall.length){h+='<div class="mh" style="margin-top:10px">殿堂</div>';c.hall.slice(0,5).forEach(function(x){h+='<div class="hall"><b class="gr g-'+x.grade+'">'+x.grade+'</b><span><b>'+esc(x.name)+'</b> <span class="small muted">第'+x.season+'シーズン・'+(x.g==='f'?'女性':'男性')+x.n+'人・'+x.total+'点</span><br><span class="small muted">'+x.members.map(esc).join('・')+'</span></span></div>';});}
+  return h+'</div>';}
 
 /* ---------- v5 の画面 ---------- */
 function toneTag(t){return t?'<span class="tone t-'+t+'">'+TONEN[t]+'</span>':'';}
@@ -1614,6 +1695,7 @@ document.addEventListener('click',function(ev){
     case 'pick':go(function(){var i=S.sel.indexOf(id);if(i>=0)S.sel.splice(i,1);else if(S.sel.length<S.caps.sel)S.sel.push(id);});break;
     case 'autofill':go(function(){var rest=shuffle(S.tr.filter(function(t){return S.sel.indexOf(t.id)<0;}));while(S.sel.length<S.caps.sel)S.sel.push(rest.shift().id);});break;
     case 'selok':go(function(){confirmSelect(S);});window.scrollTo(0,0);break;
+    case 'autolesson':go(function(){autoLesson(S);});break;
     case 'fadd':go(function(){var i=S.fmt.indexOf(null);if(i>=0)S.fmt[i]=v;});break;
     case 'fdel':go(function(){S.fmt[+v]=null;});break;
     case 'fup':go(function(){var i=+v,F=S.fmt,x=F[i-1];F[i-1]=F[i];F[i]=x;});break;
@@ -1656,7 +1738,7 @@ document.addEventListener('click',function(ev){
     case 'leader':go(function(){S.prep.leader=id;});break;
     case 'sdir':go(function(){S.prep.dir=+v;});break;
     case 'activ':go(function(){S.prep.act=+v;});break;
-    case 'prepok':go(function(){S.phase='result';});window.scrollTo(0,0);break;
+    case 'prepok':go(function(){S.phase='result';recordCareer(S,finalEval(S));});window.scrollTo(0,0);break;
     case 'tr':go(function(){var l=S.lesson.train[id]||(S.lesson.train[id]=[]),i=l.indexOf(v),full=usedSlots(S)>=slotsOf(S);
       if(i>=0){l.splice(i,1);return;}
       if(v==='rest'){if(full&&!l.length)return;l.length=0;l.push('rest');return;}

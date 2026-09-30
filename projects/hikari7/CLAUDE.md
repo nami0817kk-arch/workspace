@@ -7,9 +7,10 @@
 
 | 場所 | 中身 |
 |---|---|
-| `prototype/game.html` | 試作の本体（v8）。顔の絵は入っていない（`FACEDATA` の区間は仮の値） |
+| `prototype/game.html` | 試作の本体（v9）。顔の絵は入っていない（`FACEDATA` の区間は仮の値） |
 | `prototype/faces/` | 顔の絵（126×162）と `pool.json`（男女・同じ顔の組 `group`）。1シーズンに同じ組は1人まで |
 | `tool/build_web_test.py` | 本体と顔を1枚のページに組み立て、`build/web/` に出す |
+| `tool/sim.js` | エンジンを自動で通しプレイして、つり合いを測る（遊び方3通り×男女）。`--quick` は CI 用 |
 | `web-test/` | テスト用Web版に添える `_headers`・`robots.txt` |
 
 試作の経緯（v3〜v8 の各版・設計ページ）は、公開リポジトリの外の `C:\Users\なみ\dev\game-assets\hikari7\README.md` にある。
@@ -19,6 +20,16 @@
 護送ボートの goso-boat-test と同じ形。master に入ると `.github/workflows/hikari7-web-test.yml` が
 Cloudflare Pages の `hikari7-test` に出す。**検索に出さない**（meta robots・`_headers`・`robots.txt`）、
 画面に「テスト版」の札、どこからもリンクしない。Web版を宣伝・収益化の入口にしない。
+
+## つり合いの目安（2026-10-01、tool/sim.js）
+
+| 遊び方 | 平均 | 評価 |
+|---|---|---|
+| 何も考えない（naive） | 62点 | ほぼ B |
+| でたらめ（random） | 67点 | A と B が半々 |
+| よく考える（good） | 76点 | A と S |
+
+数字を動かしたら回し直し、この差が縮んでいないかを見る。
 
 ## 決まっていること（ユーザー決定）
 
