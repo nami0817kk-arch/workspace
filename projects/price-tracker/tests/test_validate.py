@@ -2082,3 +2082,63 @@ class 買える場所への導線Test(unittest.TestCase):
         html = self.theme.item_page(self.row(url=""), self.site, "2026-09-28")
 
         self.assertNotIn("楽天市場で見る", html)
+
+
+class 検索結果での見え方Test(unittest.TestCase):
+    """表示115に対しクリック5（4.3%）だった。検索結果に並んだときの題と説明が、
+    押す理由を伝えていなかった（2026-09-30 実測）。
+
+    題は中央50字あり、日本語の検索結果は30〜40字で切られるので
+    「の価格推移・最安値｜楽天 値下がりウォッチ」がまるごと見えていなかった。
+    説明は「6日分の記録では価格は横ばいです」で終わっていた。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "楽天 値下がりウォッチ", "base_url": "https://e.dev"}
+
+    def row(self, **kw):
+        base = {"item_code": "a", "name": "あ" * 60, "price": 1000, "prev": 1100,
+                "low": 1000, "high": 1200, "days": 20, "vs_low_pct": 0.0,
+                "off_high_pct": 0.167, "at_low": True, "near_low": False,
+                "dropped": True, "drop_pct": 0.09, "trustworthy": True,
+                "label": "記録した中で最安", "shop": "店", "moved": True,
+                "low_date": "2026-09-20",
+                "tail": [[f"2026-09-{i + 1:02d}", 1000, 1] for i in range(20)]}
+        base.update(kw)
+        return base
+
+    def html(self, **kw):
+        return self.theme.item_page(self.row(**kw), self.site, "2026-09-30")
+
+    def title(self, **kw):
+        import re
+        return re.search(r"<title>(.*?)</title>", self.html(**kw)).group(1)
+
+    def desc(self, **kw):
+        import re
+        return re.search(r'<meta name="description" content="(.*?)"',
+                         self.html(**kw), re.S).group(1)
+
+    def test_商品ページの題にサイト名を付けない(self):
+        """商品名28字＋「の価格推移」で33字あり、サイト名（11字）を足すと
+        何のページなのかを言う部分まで切れる。ドメインは検索結果に別に出る。"""
+        title = self.title()
+
+        self.assertNotIn("楽天 値下がりウォッチ", title)
+        self.assertTrue(title.endswith("の価格推移"))
+        self.assertLessEqual(len(title), 40)
+
+    def test_説明の頭に判定を出す(self):
+        # 「6日分の記録では価格は横ばいです」で始めると、押す理由が読めない
+        self.assertTrue(self.desc().startswith("記録した中でいちばん安い"))
+
+    def test_ポイント込みで最安ならそう書く(self):
+        d = self.desc(at_low=False, eff_at_low=True, eff_price=880)
+
+        self.assertTrue(d.startswith("ポイント込みの実質"))
+
+    def test_説明は切られない長さに収める(self):
+        # Google は120字前後で切る
+        self.assertLessEqual(len(self.desc()), 120)
