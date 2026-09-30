@@ -1,0 +1,2434 @@
+[
+ {
+  "no": 1,
+  "src_no": 1,
+  "jp": "猿も木から落ちる",
+  "en": {
+   "text": "Even Homer nods.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/even_Homer_nods",
+    "https://dictionary.cambridge.org/dictionary/english/even-homer-nods",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1075"
+   ],
+   "note": "直訳「ホメロスでさえ居眠りする」。名人も失敗する意。Cambridge は even Homer sometimes nods、オックスフォードことわざ辞典（ODP）は Homer sometimes nods の形。Preston『A dictionary of English proverbs』(1880) にも The great Homer himself sometimes nods。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Il n'y a si bon cheval qui ne bronche.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/il_n’y_a_si_bon_cheval_qui_ne_bronche",
+    "https://en.wiktionary.org/wiki/even_Homer_nods"
+   ],
+   "note": "直訳「つまずかないほど良い馬はいない」。どんなに有能な人でも時に誤る。",
+   "read": ""
+  },
+  "zh": {
+   "text": "智者千慮，必有一失",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%99%BA%E8%80%85%E5%8D%83%E6%85%AE%EF%BC%8C%E5%BF%85%E6%9C%89%E4%B8%80%E5%A4%B1",
+    "https://en.wiktionary.org/wiki/%E6%99%BA%E8%80%85%E5%8D%83%E6%85%AE%EF%BC%8C%E5%BF%85%E6%9C%89%E4%B8%80%E5%A4%B1",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=114472"
+   ],
+   "note": "直訳「知者も千回考えれば必ず一度は誤る」。どんな賢い人にも失敗はある。原典は《史記・淮陰侯列傳》（「智者千慮，必有一失；愚者千慮，必有一得」）。",
+   "read": "zhì zhě qiān lǜ, bì yǒu yī shī"
+  },
+  "ko": {
+   "text": "원숭이도 나무에서 떨어진다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/a00854e0cfc0442bb275f9bd5de99720",
+    "https://dic.daum.net/word/view.do?wordid=kkw000195387"
+   ],
+   "note": "直訳「猿も木から落ちる」。標準国語大辞典（Naver）・高麗大韓国語大辞典（Daum）に見出しあり。",
+   "read": "ウォンスンイド ナムエソ トロジンダ"
+  }
+ },
+ {
+  "no": 2,
+  "src_no": 5,
+  "jp": "塵も積もれば山となる",
+  "en": {
+   "text": "Many a little makes a mickle.",
+   "match": "同じ",
+   "sources": [
+    "https://www.phrases.org.uk/meanings/many-a-little-makes-a-mickle.html",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1388"
+   ],
+   "note": "直訳「小さなものも数多く集まれば大量になる」（mickle＝多量。古語・スコットランド語）。Many a mickle makes a muckle という形もある（ODP 別項目・Phrase Finder）。Hulme『Proverb Lore』(1902) にも引用あり。Wiktionary には項目なし。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Les petits ruisseaux font les grandes rivières.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/les_petits_ruisseaux_font_les_grandes_rivières",
+    "https://en.wiktionary.org/wiki/many_a_mickle_makes_a_muckle",
+    "https://www.expressio.fr/expressions/les-petits-ruisseaux-font-les-grandes-rivieres",
+    "https://www.linternaute.fr/proverbe/105/les-petits-ruisseaux-font-les-grandes-rivieres/"
+   ],
+   "note": "直訳「小さな小川が大きな川をつくる」。小さな積み重ねが大きくなる。",
+   "read": ""
+  },
+  "zh": {
+   "text": "積少成多",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E7%A9%8D%E5%B0%91%E6%88%90%E5%A4%9A",
+    "https://en.wiktionary.org/wiki/%E7%A9%8D%E5%B0%91%E6%88%90%E5%A4%9A",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=87627"
+   ],
+   "note": "直訳「少しを積んで多くを成す」。同じ意味の《荀子・勸學》「積土成山」も《重編國語辭典修訂本》・漢典にある。",
+   "read": "jī shǎo chéng duō"
+  },
+  "ko": {
+   "text": "티끌 모아 태산",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/bef4ed94d9b844b0a3e483adc2aa71d4",
+    "https://dic.daum.net/word/view.do?wordid=kkw000273276"
+   ],
+   "note": "直訳「塵を集めて泰山」。",
+   "read": "ティックル モア テサン"
+  }
+ },
+ {
+  "no": 3,
+  "src_no": 6,
+  "jp": "雨垂れ石を穿つ",
+  "en": {
+   "text": "Constant dropping wears away a stone.",
+   "match": "同じ",
+   "sources": [
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-419",
+    "https://idioms.thefreedictionary.com/Constant+dropping+wears+away+a+stone",
+    "https://www.gutenberg.org/ebooks/39281"
+   ],
+   "note": "直訳「絶え間ない滴りは石をすり減らす」。表記は ODP に合わせた（候補の the stone ではなく a stone）。Preston (1880) 308番・Kelly『Proverbs of All Nations』(1859) は Constant dropping wears the stone。TFD（Farlex・McGraw-Hill の2辞書）にも収録。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Goutte à goutte, l'eau creuse la pierre.",
+   "match": "同じ",
+   "sources": [
+    "https://www.linternaute.fr/proverbe/246/goutte-a-goutte-l-eau-creuse-la-pierre/",
+    "https://www.proverbes-francais.fr/proverbes-creuser/",
+    "https://citations.webescence.com/citations/proverbe-francais/Goutte-goutte-eau-creuse-pierre-3644"
+   ],
+   "note": "直訳「一滴ずつ、水が石をうがつ」。linternauteの説明は「わずかなことも繰り返せば効果を生む。根気はすべてに勝つ」。proverbes-francais.fr は16世紀の格言とする。wiktionary（仏・英）には項目なし。",
+   "read": ""
+  },
+  "zh": {
+   "text": "水滴石穿",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%B0%B4%E6%BB%B4%E7%9F%B3%E7%A9%BF",
+    "https://en.wiktionary.org/wiki/%E6%B0%B4%E6%BB%B4%E7%9F%B3%E7%A9%BF",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=134207",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=179"
+   ],
+   "note": "直訳「水の滴りが石をうがつ」。宋・羅大經《鶴林玉露》の「繩鋸木斷，水滴石穿」が出典。似た句は《漢書・枚乘傳》にもある。",
+   "read": "shuǐ dī shí chuān"
+  },
+  "ko": {
+   "text": "낙숫물이 댓돌을 뚫는다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/64beb51572a94002ace08959141ed375",
+    "https://dic.daum.net/word/view.do?wordid=kkw000045521"
+   ],
+   "note": "直訳「雨垂れが軒下の踏み石を穿つ」。",
+   "read": "ナクスンムリ テットルル トゥルルンダ"
+  }
+ },
+ {
+  "no": 4,
+  "src_no": 9,
+  "jp": "一石二鳥",
+  "en": {
+   "text": "Kill two birds with one stone.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/kill_two_birds_with_one_stone",
+    "https://dictionary.cambridge.org/dictionary/english/kill-two-birds-with-one-stone",
+    "https://www.ldoceonline.com/dictionary/kill-two-birds-with-one-stone"
+   ],
+   "note": "直訳「1つの石で2羽の鳥を殺す」。日本語の「一石二鳥」はこの英語句の訳語とされる。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Faire d'une pierre deux coups.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/faire_d’une_pierre_deux_coups",
+    "https://en.wiktionary.org/wiki/kill_two_birds_with_one_stone",
+    "https://www.larousse.fr/dictionnaires/francais/pierre",
+    "https://www.expressio.fr/expressions/faire-d-une-pierre-deux-coups"
+   ],
+   "note": "直訳「一つの石で二発当てる」。ことわざではなく成句（動詞句）。fr.wiktionaryの訳語欄に一石二鳥。",
+   "read": ""
+  },
+  "zh": {
+   "text": "一箭雙鵰",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%B8%80%E7%AE%AD%E9%9B%99%E9%B5%B0",
+    "https://en.wiktionary.org/wiki/%E4%B8%80%E7%AE%AD%E9%9B%99%E9%B5%B0",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=149422",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=1555"
+   ],
+   "note": "直訳「一本の矢で二羽の鷲」。原典は《北史・長孫晟傳》。同じ意味に「一舉兩得」。日本語と同じ字の「一石二鳥」も《重編國語辭典修訂本》にある（英語からの翻訳語）。",
+   "read": "yī jiàn shuāng diāo"
+  },
+  "ko": {
+   "text": "일석이조",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/cdeae7219f8e474bb5bf925ae3d89577",
+    "https://dic.daum.net/word/view.do?wordid=kkw000209331"
+   ],
+   "note": "一石二鳥。",
+   "read": "イルソギジョ"
+  }
+ },
+ {
+  "no": 5,
+  "src_no": 11,
+  "jp": "郷に入っては郷に従え",
+  "en": {
+   "text": "When in Rome, do as the Romans do.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/when_in_Rome,_do_as_the_Romans_do",
+    "https://dictionary.cambridge.org/dictionary/english/when-in-rome-do-as-the-romans-do",
+    "https://www.ldoceonline.com/dictionary/when-in-rome-do-as-the-romans-do",
+    "https://www.phrases.org.uk/meanings/when-in-rome-do-as-the-romans-do.html"
+   ],
+   "note": "直訳「ローマにいるときはローマ人のするようにせよ」。略して When in Rome とも。",
+   "read": ""
+  },
+  "fr": {
+   "text": "À Rome, fais comme les Romains.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/à_Rome,_fais_comme_les_Romains",
+    "https://en.wiktionary.org/wiki/when_in_Rome,_do_as_the_Romans_do"
+   ],
+   "note": "直訳「ローマではローマ人のようにせよ」。fr.wiktionaryの訳語欄に郷に入っては郷に従え。linternaute には別形 Il faut vivre à Rome selon les coutumes romaines.。",
+   "read": ""
+  },
+  "zh": {
+   "text": "入鄉隨俗",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%85%A5%E9%84%89%E9%9A%A8%E4%BF%97",
+    "https://en.wiktionary.org/wiki/%E5%85%A5%E9%84%89%E9%9A%A8%E4%BF%97",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=136639"
+   ],
+   "note": "直訳「その郷に入れば、その俗に従う」。",
+   "read": "rù xiāng suí sú"
+  },
+  "ko": {
+   "text": "입향순속",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/01b67db39e6a409884b4979973e5caa0",
+    "https://ko.dict.naver.com/#/entry/koko/8226a1b643e2473cba8183774a83d4ce"
+   ],
+   "note": "入郷循俗。直訳「郷に入ってはその土地の風俗に従う」。候補の「로마에 가면 로마법을 따르라」は利用者投稿のオープン辞典にしかなく（西洋由来の言い回し）、国語辞典に載っている成語に差し替えた。",
+   "read": "イピャンスンソク"
+  }
+ },
+ {
+  "no": 6,
+  "src_no": 14,
+  "jp": "鉄は熱いうちに打て",
+  "en": {
+   "text": "Strike while the iron is hot.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/strike_while_the_iron_is_hot",
+    "https://dictionary.cambridge.org/dictionary/english/strike-while-the-iron-is-hot",
+    "https://www.ldoceonline.com/dictionary/strike-while-the-iron-is-hot",
+    "https://www.phrases.org.uk/meanings/strike-while-the-iron-is-hot.html",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2149"
+   ],
+   "note": "直訳「鉄は熱いうちに打て」。英語は「好機を逃すな」の意。日本語は「若いうちに鍛えよ」の意でも使うが、英語にはその意味はない。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Il faut battre le fer pendant qu'il est chaud.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/il_faut_battre_le_fer_pendant_qu’il_est_chaud",
+    "https://en.wiktionary.org/wiki/strike_while_the_iron_is_hot",
+    "https://www.linternaute.fr/proverbe/529/il-faut-battre-le-fer-pendant-qu-il-est-chaud/"
+   ],
+   "note": "直訳「鉄は熱いうちに打たねばならない」。fr.wiktionaryの訳語欄に鉄は熱いうちに打て。",
+   "read": ""
+  },
+  "zh": {
+   "text": "趁熱打鐵",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E8%B6%81%E7%86%B1%E6%89%93%E9%90%B5",
+    "https://en.wiktionary.org/wiki/%E8%B6%81%E7%86%B1%E6%89%93%E9%90%B5",
+    "https://dict.revised.moe.edu.tw/search.jsp?md=1&word=%E6%89%93%E9%90%B5%E8%B6%81%E7%86%B1"
+   ],
+   "note": "直訳「熱いうちに鉄を打つ」。《重編國語辭典修訂本》は語順ちがいの「打鐵趁熱」で立項。",
+   "read": "chèn rè dǎ tiě"
+  },
+  "ko": {
+   "text": "쇠뿔도 단김에 빼라",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/f65a040cba4d40d6beb3f6048d99a7c7",
+    "https://ko.dict.naver.com/#/entry/koko/f7dfdf81d15b4f2a81d731d4c9904c1c"
+   ],
+   "note": "直訳「牛の角も熱いうちに抜け」。標準・高麗大とも見出しは「쇠뿔도 단김에 빼랬다[빼라]」で、「빼라」は併記の形。",
+   "read": "スェップルド タンギメ ッペラ"
+  }
+ },
+ {
+  "no": 7,
+  "src_no": 15,
+  "jp": "時は金なり",
+  "en": {
+   "text": "Time is money.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/time_is_money",
+    "https://dictionary.cambridge.org/dictionary/english/time-is-money",
+    "https://www.ldoceonline.com/dictionary/time-is-money"
+   ],
+   "note": "直訳「時は金なり」。日本語はこの英語の訳とされる。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Le temps, c'est de l'argent.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/le_temps,_c’est_de_l’argent",
+    "https://en.wiktionary.org/wiki/time_is_money",
+    "https://www.expressio.fr/expressions/le-temps-c-est-de-l-argent"
+   ],
+   "note": "直訳「時間はお金だ」。",
+   "read": ""
+  },
+  "zh": {
+   "text": "一寸光陰一寸金",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%B8%80%E5%AF%B8%E5%85%89%E9%99%B0%E4%B8%80%E5%AF%B8%E9%87%91",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=149824",
+    "https://www.zdic.net/hant/%E4%B8%80%E5%AF%B8%E5%85%89%E9%99%B0%E4%B8%80%E5%AF%B8%E9%87%91%EF%BC%8C%E5%AF%B8%E9%87%91%E9%9B%A3%E8%B2%B7%E5%AF%B8%E5%85%89%E9%99%B0",
+    "https://en.wiktionary.org/wiki/%E4%B8%80%E5%AF%B8%E5%85%89%E9%99%B0%E4%B8%80%E5%AF%B8%E9%87%91%EF%BC%8C%E5%AF%B8%E9%87%91%E9%9B%A3%E8%B2%B7%E5%AF%B8%E5%85%89%E9%99%B0"
+   ],
+   "note": "直訳「わずかな時間も一寸の金に等しい」。時間は貴重。唐・王貞白《白鹿洞》詩「讀書不覺已春深，一寸光陰一寸金」。Wiktionary は「一寸光陰一寸金，寸金難買寸光陰」の形で立項。",
+   "read": "yī cùn guāng yīn yī cùn jīn"
+  },
+  "ko": {
+   "text": "시간은 돈이다",
+   "match": "同じ",
+   "sources": [
+    "https://dic.daum.net/word/view.do?wordid=kkw000155702",
+    "https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0002226522"
+   ],
+   "note": "直訳「時間はお金だ」。高麗大韓国語大辞典（Daum）にことわざとして見出しあり。フランクリン由来。候補の「시간은 금이다」も一般に使われるが、国語辞典には見出しなし。",
+   "read": "シガヌン トニダ"
+  }
+ },
+ {
+  "no": 8,
+  "src_no": 16,
+  "jp": "類は友を呼ぶ",
+  "en": {
+   "text": "Birds of a feather flock together.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/birds_of_a_feather_flock_together",
+    "https://dictionary.cambridge.org/dictionary/english/birds-of-a-feather-flock-together",
+    "https://www.ldoceonline.com/dictionary/birds-of-a-feather-flock-together",
+    "https://www.phrases.org.uk/meanings/birds-of-a-feather-flock-together.html",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-180"
+   ],
+   "note": "直訳「同じ羽の鳥は群れ集まる」。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Qui se ressemble s'assemble.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/qui_se_ressemble_s’assemble",
+    "https://en.wiktionary.org/wiki/birds_of_a_feather_flock_together",
+    "https://www.expressio.fr/expressions/qui-se-ressemble-s-assemble",
+    "https://www.linternaute.fr/proverbe/20/qui-se-ressemble-s-assemble/"
+   ],
+   "note": "直訳「似た者どうしは集まる」。fr.wiktionaryの訳語欄に類は友を呼ぶ。",
+   "read": ""
+  },
+  "zh": {
+   "text": "物以類聚",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E7%89%A9%E4%BB%A5%E9%A1%9E%E8%81%9A",
+    "https://en.wiktionary.org/wiki/%E7%89%A9%E4%BB%A5%E9%A1%9E%E8%81%9A",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=159962",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=500",
+    "https://en.wiktionary.org/wiki/%E7%89%A9%E4%BB%A5%E9%A1%9E%E8%81%9A%EF%BC%8C%E4%BA%BA%E4%BB%A5%E7%BE%A4%E5%88%86"
+   ],
+   "note": "直訳「物は類をもって集まる」。「物以類聚，人以群分」の形でもよく使う。原典は《易經・繫辭上》「方以類聚，物以群分」。",
+   "read": "wù yǐ lèi jù"
+  },
+  "ko": {
+   "text": "유유상종",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/dcc68b744c1b410dae38939990808f7c",
+    "https://dic.daum.net/word/view.do?wordid=kkw000198949&supid=kku000252312"
+   ],
+   "note": "類類相從。直訳「同類どうしが付き従う」。",
+   "read": "ユユサンジョン"
+  }
+ },
+ {
+  "no": 9,
+  "src_no": 29,
+  "jp": "泣きっ面に蜂",
+  "en": {
+   "text": "It never rains but it pours.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/it_never_rains_but_it_pours",
+    "https://dictionary.cambridge.org/dictionary/english/it-never-rains-but-it-pours",
+    "https://www.ldoceonline.com/dictionary/it-never-rains-but-it-pours",
+    "https://www.phrases.org.uk/meanings/205100.html"
+   ],
+   "note": "直訳「降れば必ず土砂降り」。悪いことは重なる。Misfortunes never come singly（不幸は単独では来ない。ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1458・Wiktionary・TFD）も同義。米では When it rains, it pours とも。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Un malheur ne vient jamais seul.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/un_malheur_ne_vient_jamais_seul",
+    "https://en.wiktionary.org/wiki/it_never_rains_but_it_pours",
+    "https://www.expressio.fr/expressions/un-malheur-ne-vient-jamais-seul",
+    "https://www.linternaute.fr/proverbe/225/un-malheur-ne-vient-jamais-seul/"
+   ],
+   "note": "直訳「不幸は決して単独では来ない」。不運は重なるもの。別形 Un malheur n'arrive jamais seul.（en.wiktionary）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "禍不單行",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E7%A6%8D%E4%B8%8D%E5%96%AE%E8%A1%8C",
+    "https://en.wiktionary.org/wiki/%E7%A6%8D%E4%B8%8D%E5%96%AE%E8%A1%8C",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=1355"
+   ],
+   "note": "直訳「災いは単独では来ない」。「福無雙至，禍不單行」の形でも使う。似た言い方に「雪上加霜」。",
+   "read": "huò bù dān xíng"
+  },
+  "ko": {
+   "text": "설상가상",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/781fae28cda442028e78811c886efbd5",
+    "https://dic.daum.net/word/view.do?wordid=kkw000141443"
+   ],
+   "note": "雪上加霜。直訳「雪の上に霜が加わる」。候補の「엎친 데 덮친 격」は口語でよく使うが、辞書の見出しは高麗大の「엎친 데 덮친다〔덮치기〕」だけ。",
+   "read": "ソルサンガサン"
+  }
+ },
+ {
+  "no": 10,
+  "src_no": 30,
+  "jp": "虎穴に入らずんば虎子を得ず",
+  "en": {
+   "text": "Nothing ventured, nothing gained.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/nothing_ventured,_nothing_gained",
+    "https://dictionary.cambridge.org/dictionary/english/nothing-ventured-nothing-gained",
+    "https://www.ldoceonline.com/dictionary/nothing-ventured-nothing-gained",
+    "https://www.phrases.org.uk/meanings/nothing-ventured-nothing-gained.html"
+   ],
+   "note": "直訳「何も冒さなければ何も得られない」。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Qui ne risque rien n'a rien.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/qui_ne_risque_rien_n’a_rien",
+    "https://en.wiktionary.org/wiki/no_pain,_no_gain",
+    "https://www.expressio.fr/expressions/qui-ne-risque-rien-n-a-rien",
+    "https://www.linternaute.fr/proverbe/684/qui-ne-risque-rien-n-a-rien/"
+   ],
+   "note": "直訳「何も危険を冒さない者は何も得ない」。fr.wiktionaryの訳語欄に虎穴に入らずんば虎児を得ず。",
+   "read": ""
+  },
+  "zh": {
+   "text": "不入虎穴，焉得虎子",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%B8%8D%E5%85%A5%E8%99%8E%E7%A9%B4%EF%BC%8C%E7%84%89%E5%BE%97%E8%99%8E%E5%AD%90",
+    "https://en.wiktionary.org/wiki/%E4%B8%8D%E5%85%A5%E8%99%8E%E7%A9%B4%EF%BC%8C%E7%84%89%E5%BE%97%E8%99%8E%E5%AD%90",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=21638",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=389"
+   ],
+   "note": "直訳「虎の穴に入らなければ、どうして虎の子が得られようか」。日本語の出典そのもの。原典は《後漢書・班超傳》。台湾の読みは hǔ xuè。",
+   "read": "bù rù hǔ xué, yān dé hǔ zǐ"
+  },
+  "ko": {
+   "text": "호랑이 굴에 가야 호랑이 새끼를 잡는다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/2c1aa5d02d2e4f5d8ff15ab60313f85f",
+    "https://dic.daum.net/word/view.do?wordid=kkw000293118"
+   ],
+   "note": "直訳「虎の穴に行ってこそ虎の子を捕らえられる」。",
+   "read": "ホランイ クレ カヤ ホランイ セッキルル チャムヌンダ"
+  }
+ },
+ {
+  "no": 11,
+  "src_no": 34,
+  "jp": "壁に耳あり障子に目あり",
+  "en": {
+   "text": "Walls have ears.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/walls_have_ears",
+    "https://dictionary.cambridge.org/dictionary/english/walls-have-ears",
+    "https://www.ldoceonline.com/dictionary/walls-have-ears",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2394"
+   ],
+   "note": "直訳「壁に耳あり」。「障子に目」に当たる部分も含む形として Hedges have eyes, and walls have ears / Fields have eyes, and woods have ears が Preston (1880) 775番・576番にある。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Les murs ont des oreilles.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/les_murs_ont_des_oreilles",
+    "https://en.wiktionary.org/wiki/walls_have_ears",
+    "https://www.expressio.fr/expressions/les-murs-ont-des-oreilles"
+   ],
+   "note": "直訳「壁に耳がある」。fr.wiktionaryの訳語欄に壁に耳あり障子に目あり。",
+   "read": ""
+  },
+  "zh": {
+   "text": "隔牆有耳",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E9%9A%94%E7%89%86%E6%9C%89%E8%80%B3",
+    "https://en.wiktionary.org/wiki/%E9%9A%94%E7%89%86%E6%9C%89%E8%80%B3",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=68244"
+   ],
+   "note": "直訳「壁の向こうに耳がある」。《管子・君臣下》「牆有耳」に基づく。",
+   "read": "gé qiáng yǒu ěr"
+  },
+  "ko": {
+   "text": "낮말은 새가 듣고 밤말은 쥐가 듣는다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/5f90fa2ebcf349eca1c1b2aa5cadd70d",
+    "https://dic.daum.net/word/view.do?wordid=kkw000047847"
+   ],
+   "note": "直訳「昼の話は鳥が聞き、夜の話は鼠が聞く」。",
+   "read": "ナンマルン セガ トゥッコ パムマルン チュィガ トゥンヌンダ"
+  }
+ },
+ {
+  "no": 12,
+  "src_no": 36,
+  "jp": "捕らぬ狸の皮算用",
+  "en": {
+   "text": "Don't count your chickens before they are hatched.",
+   "match": "同じ",
+   "sources": [
+    "https://www.phrases.org.uk/meanings/count-your-chickens.html",
+    "https://en.wiktionary.org/wiki/don't_count_your_chickens_before_they're_hatched",
+    "https://dictionary.cambridge.org/dictionary/english/don't-count-your-chickens-before-they-are-hatched"
+   ],
+   "note": "直訳「ひなが孵る前に数を数えるな」。表記は Phrase Finder どおり。Wiktionary は they're hatched、Cambridge は before they hatch。Preston (1880) は Count not your chickens before they are hatched。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Il ne faut pas vendre la peau de l'ours avant de l'avoir tué.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/il_ne_faut_pas_vendre_la_peau_de_l’ours_avant_de_l’avoir_tué",
+    "https://en.wiktionary.org/wiki/don't_count_your_chickens_before_they're_hatched",
+    "https://www.expressio.fr/expressions/vendre-la-peau-de-l-ours-avant-de-l-avoir-tue"
+   ],
+   "note": "直訳「熊を仕留める前にその皮を売ってはならない」。fr.wiktionaryの訳語欄に捕らぬ狸の皮算用。expressio の見出しは動詞句 vendre la peau de l'ours avant de l'avoir tué。",
+   "read": ""
+  },
+  "zh": {
+   "text": "打如意算盤",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%89%93%E5%A6%82%E6%84%8F%E7%AE%97%E7%9B%A4",
+    "https://en.wiktionary.org/wiki/%E6%89%93%E5%A6%82%E6%84%8F%E7%AE%97%E7%9B%A4",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=40338"
+   ],
+   "note": "直訳「思いどおりのそろばんをはじく」。自分に都合のよい皮算用をする。Wiktionary の語義も don't count your chickens before they're hatched。",
+   "read": "dǎ rú yì suàn pán"
+  },
+  "ko": {
+   "text": "김칫국부터 마신다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/6be2453bf0b641ebaa87d537cba59864",
+    "https://ko.dict.naver.com/#/entry/koko/fc851c1d7997485b804c056e7c385337"
+   ],
+   "note": "直訳「（餅をもらう前に）キムチの汁から先に飲む」。長い形は「떡 줄 사람은 꿈도 안 꾸는데 김칫국부터 마신다」。高麗大は「김칫국부터 미리 마신다」の形。",
+   "read": "キムチックップト マシンダ"
+  }
+ },
+ {
+  "no": 13,
+  "src_no": 40,
+  "jp": "隣の芝生は青い",
+  "en": {
+   "text": "The grass is always greener on the other side of the fence.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/the_grass_is_always_greener_on_the_other_side_of_the_fence",
+    "https://dictionary.cambridge.org/dictionary/english/the-grass-is-always-greener-on-the-other-side-of-the-fence",
+    "https://www.phrases.org.uk/meanings/the-grass-is-always-greener-on-the-other-side-of-the-fence.html"
+   ],
+   "note": "直訳「柵の向こうの芝生はいつも青い」。of the fence を省く形も多い（Wiktionary の主見出しは省いた形）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "L'herbe est toujours plus verte ailleurs.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/l’herbe_est_toujours_plus_verte_ailleurs",
+    "https://en.wiktionary.org/wiki/the_grass_is_always_greener_on_the_other_side",
+    "https://www.expressio.fr/expressions/l-herbe-est-toujours-plus-verte-ailleurs"
+   ],
+   "note": "直訳「草はいつもよそのほうが青い」。別形 L'herbe est toujours plus verte dans le pré du voisin.（en.wiktionary）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "這山望著那山高",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/%E9%80%99%E5%B1%B1%E6%9C%9B%E8%91%97%E9%82%A3%E5%B1%B1%E9%AB%98",
+    "https://www.zdic.net/hant/%E9%80%99%E5%B1%B1%E6%9C%9B%E7%9D%80%E9%82%A3%E5%B1%B1%E9%AB%98"
+   ],
+   "note": "直訳「この山から見るとあの山のほうが高い」。今の境遇に不満で、よそが良く見える。漢典は異体字の「這山望着那山高」で立項。清・李光庭《鄉言解頤》。",
+   "read": "zhè shān wàng zhe nà shān gāo"
+  },
+  "ko": {
+   "text": "남의 손의 떡은 커 보인다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/61c6c9f63c804ab1a7bbd04f791c789c",
+    "https://dic.daum.net/word/view.do?wordid=kkw000046595"
+   ],
+   "note": "直訳「人の手にある餅は大きく見える」。候補の「남의 떡이 더 커 보인다」は国語辞典に見出しなし（우리말샘に北朝鮮のことわざ「제 떡보다 남의 떡이 더 커 보인다」があるだけ）。",
+   "read": "ナメ ソネ ットグン コ ボインダ"
+  }
+ },
+ {
+  "no": 14,
+  "src_no": 52,
+  "jp": "火のない所に煙は立たぬ",
+  "en": {
+   "text": "There's no smoke without fire.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/there's_no_smoke_without_fire",
+    "https://dictionary.cambridge.org/dictionary/english/there's-no-smoke-without-fire",
+    "https://www.ldoceonline.com/dictionary/there-s-no-smoke-without-fire"
+   ],
+   "note": "直訳「火のないところに煙はない」。うわさには何らかの根拠がある。Where there's smoke, there's fire という形もある（Wiktionary・Phrase Finder、Preston 1461番）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Il n'y a pas de fumée sans feu.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/il_n’y_a_pas_de_fumée_sans_feu",
+    "https://en.wiktionary.org/wiki/no_smoke_without_fire"
+   ],
+   "note": "直訳「火のないところに煙はない」。fr.wiktionaryの訳語欄に火のない所に煙は立たぬ。",
+   "read": ""
+  },
+  "zh": {
+   "text": "無風不起浪",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E7%84%A1%E9%A2%A8%E4%B8%8D%E8%B5%B7%E6%B5%AA",
+    "https://en.wiktionary.org/wiki/%E7%84%A1%E9%A2%A8%E4%B8%8D%E8%B5%B7%E6%B5%AA",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=158928"
+   ],
+   "note": "直訳「風がなければ波は立たない」。うわさには必ず何か原因がある。",
+   "read": "wú fēng bù qǐ làng"
+  },
+  "ko": {
+   "text": "아니 땐 굴뚝에 연기 날까",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/4339091625bd41c090c1d36a4d8d508d",
+    "https://dic.daum.net/word/view.do?wordid=kkw000165954"
+   ],
+   "note": "直訳「火を焚かない煙突から煙が出ようか」。",
+   "read": "アニ ッテン クルットゥゲ ヨンギ ナルッカ"
+  }
+ },
+ {
+  "no": 15,
+  "src_no": 75,
+  "jp": "犬猿の仲",
+  "en": {
+   "text": "Fight like cat and dog.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/fight_like_cat_and_dog",
+    "https://dictionary.cambridge.org/dictionary/english/fight-like-cat-and-dog",
+    "https://www.ldoceonline.com/dictionary/fight-like-cat-and-dog"
+   ],
+   "note": "直訳「猫と犬のようにけんかする」。英語では「犬と猿」ではなく「猫と犬」。米では fight like cats and dogs（Wiktionary・Cambridge）。慣用句。",
+   "read": ""
+  },
+  "fr": {
+   "text": "S'entendre comme chien et chat.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/s’entendre_comme_chien_et_chat",
+    "https://en.wiktionary.org/wiki/fight_like_cat_and_dog",
+    "https://www.larousse.fr/dictionnaires/francais/chat"
+   ],
+   "note": "直訳「犬と猫のように仲が悪い」。成句（動詞句）。Larousseは être comme chien et chat の形。",
+   "read": ""
+  },
+  "zh": {
+   "text": "水火不容",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%B0%B4%E7%81%AB%E4%B8%8D%E5%AE%B9",
+    "https://en.wiktionary.org/wiki/%E6%B0%B4%E7%81%AB%E4%B8%8D%E5%AE%B9",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=134344"
+   ],
+   "note": "直訳「水と火は相容れない」。互いに激しく対立して相容れない。",
+   "read": "shuǐ huǒ bù róng"
+  },
+  "ko": {
+   "text": "견원지간",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/79fb2b49e41d41c794aed7b9a390d252",
+    "https://dic.daum.net/word/view.do?wordid=kkw000012495"
+   ],
+   "note": "犬猿之間。",
+   "read": "キョヌォンジガン"
+  }
+ },
+ {
+  "no": 16,
+  "src_no": 76,
+  "jp": "氷山の一角",
+  "en": {
+   "text": "The tip of the iceberg.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/tip_of_the_iceberg",
+    "https://dictionary.cambridge.org/dictionary/english/the-tip-of-the-iceberg",
+    "https://www.ldoceonline.com/dictionary/the-tip-of-the-iceberg"
+   ],
+   "note": "直訳「氷山の一角」。日本語はこの英語句の訳語。Wiktionary の見出しは the なし。",
+   "read": ""
+  },
+  "fr": {
+   "text": "La partie émergée de l'iceberg.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/partie_émergée_de_l’iceberg",
+    "https://en.wiktionary.org/wiki/tip_of_the_iceberg",
+    "https://ja.wiktionary.org/wiki/氷山の一角"
+   ],
+   "note": "直訳「氷山の水面上に出た部分」。成句（名詞句）。fr.wiktionaryの訳語欄に氷山の一角。別形 la partie visible de l'iceberg。",
+   "read": ""
+  },
+  "zh": {
+   "text": "冰山一角",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%86%B0%E5%B1%B1%E4%B8%80%E8%A7%92",
+    "https://en.wiktionary.org/wiki/%E5%86%B0%E5%B1%B1%E4%B8%80%E8%A7%92",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=19441"
+   ],
+   "note": "直訳「氷山の一角」。表に出たのは問題のごく一部。",
+   "read": "bīng shān yī jiǎo"
+  },
+  "ko": {
+   "text": "빙산의 일각",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/0488241dd14646c59ff1b03d2abfddd4",
+    "https://dic.daum.net/word/view.do?wordid=kkw000123481"
+   ],
+   "note": "氷山の一角。",
+   "read": "ピンサネ イルガク"
+  }
+ },
+ {
+  "no": 17,
+  "src_no": 82,
+  "jp": "早い者勝ち",
+  "en": {
+   "text": "First come, first served.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/first_come,_first_served",
+    "https://dictionary.cambridge.org/dictionary/english/first-come-first-served",
+    "https://www.ldoceonline.com/dictionary/first-come-first-served"
+   ],
+   "note": "直訳「最初に来た者が最初にもてなされる」。Preston (1880) 579番にも収録。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Premier arrivé, premier servi.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/premier_arrivé,_premier_servi",
+    "https://en.wiktionary.org/wiki/first_come,_first_served",
+    "https://www.expressio.fr/expressions/premier-arrive-premier-servi"
+   ],
+   "note": "直訳「最初に来た者が最初に給仕される」。",
+   "read": ""
+  },
+  "zh": {
+   "text": "先到先得",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/%E5%85%88%E5%88%B0%E5%85%88%E5%BE%97",
+    "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=1&wdqb=%E5%85%88%E5%88%B0%E5%85%88%E5%BE%97"
+   ],
+   "note": "直訳「先に来た者が先に得る」。英語 first come, first served に当たる。同じ意味の成語「捷足先登」（足の速い者が先に登る。《史記・淮陰侯列傳》の「高材疾足者先得焉」に基づく）も漢典・Wiktionary・修訂本・成語典にある。",
+   "read": "xiān dào xiān dé"
+  },
+  "ko": {
+   "text": "먼저 먹는 놈이 임자",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/fd8e1bb067ef4a54ad940bb15f3ed006",
+    "https://dic.daum.net/word/view.do?wordid=kkw000514741"
+   ],
+   "note": "直訳「先に食べた者が持ち主」。候補の「먼저 온 사람이 임자」は国語辞典に見出しなし。",
+   "read": "モンジョ モンヌン ノミ イムジャ"
+  }
+ },
+ {
+  "no": 18,
+  "src_no": 3,
+  "jp": "猫に小判",
+  "en": {
+   "text": "Cast pearls before swine.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/cast_pearls_before_swine",
+    "https://dictionary.cambridge.org/dictionary/english/cast-pearls-before-swine",
+    "https://www.phrases.org.uk/meanings/pearls-before-swine.html"
+   ],
+   "note": "直訳「豚に真珠を投げ与える」。価値のわからない者に貴重な物を与えても無駄。聖書（マタイ7:6）由来。ODP は Do not throw pearls to swine の形。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Jeter des perles aux pourceaux.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/jeter_des_perles_aux_pourceaux",
+    "https://en.wiktionary.org/wiki/cast_pearls_before_swine",
+    "https://www.larousse.fr/dictionnaires/francais/perle"
+   ],
+   "note": "直訳「豚に真珠を投げる」。価値のわからない者に良い物を与えても無駄。fr.wiktionaryの訳語欄に猫に小判が載る。成句（動詞句）。別形 donner de la confiture aux cochons（fr.wiktionary）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "明珠暗投",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%98%8E%E7%8F%A0%E6%9A%97%E6%8A%95",
+    "https://en.wiktionary.org/wiki/%E6%98%8E%E7%8F%A0%E6%9A%97%E6%8A%95",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=32437",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=1610"
+   ],
+   "note": "直訳「明るい珠を暗がりに投げる」。辞書の語義は「才能ある人が認められない」と「貴重な物が価値の分からない人の手に渡る」の2つで、後者が猫に小判に近い。原典は《史記・魯仲連鄒陽列傳》。",
+   "read": "míng zhū àn tóu"
+  },
+  "ko": {
+   "text": "돼지에 진주",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/ccb4764cfcb644348e5555ad24bcc4fc",
+    "https://dic.daum.net/word/view.do?wordid=kkw000070179"
+   ],
+   "note": "直訳「豚に真珠」。標準は「돼지에 진주(목걸이)」、高麗大は「돼지에 진주〔진주 목걸이〕」で、「돼지에 진주 목걸이」も可。候補の「돼지 목에 진주 목걸이」は国語辞典に見出しなし（KNU日常表現辞典のみ）なので、辞書の形に差し替えた。",
+   "read": "トェジエ チンジュ"
+  }
+ },
+ {
+  "no": 19,
+  "src_no": 13,
+  "jp": "蛙の子は蛙",
+  "en": {
+   "text": "Like father, like son.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/like_father,_like_son",
+    "https://www.ldoceonline.com/dictionary/like-father-like-son",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-752"
+   ],
+   "note": "直訳「この父にしてこの子あり」。子は親に似る。LDOCE は悪い面が似る場合に使うことが多いとする。The apple doesn't fall far from the tree（リンゴは木から遠くに落ちない。Wiktionary）も同義。Preston (1880) 963番にも収録。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Tel père, tel fils.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/tel_père,_tel_fils",
+    "https://en.wiktionary.org/wiki/like_father,_like_son",
+    "https://www.expressio.fr/expressions/tel-pere-tel-fils"
+   ],
+   "note": "直訳「この父にしてこの子」。fr.wiktionaryの訳語欄に蛙の子は蛙。",
+   "read": ""
+  },
+  "zh": {
+   "text": "有其父必有其子",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%9C%89%E5%85%B6%E7%88%B6%E5%BF%85%E6%9C%89%E5%85%B6%E5%AD%90",
+    "https://en.wiktionary.org/wiki/%E6%9C%89%E5%85%B6%E7%88%B6%E5%BF%85%E6%9C%89%E5%85%B6%E5%AD%90",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=154393"
+   ],
+   "note": "直訳「その父あれば必ずその子あり」。子は親に似る。似た言い方に「龍生龍，鳳生鳳」（修訂本・Wiktionary にある）。",
+   "read": "yǒu qí fù bì yǒu qí zǐ"
+  },
+  "ko": {
+   "text": "부전자전",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/8f2fbd4666384716ae101e54a5166488",
+    "https://ko.dict.naver.com/#/entry/koko/fc9de9e3a10e460d91fabc0245fbfc74"
+   ],
+   "note": "父傳子傳。直訳「父から子へ伝わる」＝息子が父に似る。『蛙の子は蛙』の「凡人の子は凡人」という含みはない。",
+   "read": "プジョンジャジョン"
+  }
+ },
+ {
+  "no": 20,
+  "src_no": 22,
+  "jp": "転ばぬ先の杖",
+  "en": {
+   "text": "Look before you leap.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/look_before_one_leaps",
+    "https://dictionary.cambridge.org/dictionary/english/look-before-you-leap",
+    "https://www.ldoceonline.com/dictionary/look-before-you-leap",
+    "https://www.phrases.org.uk/meanings/look-before-you-leap.html"
+   ],
+   "note": "直訳「跳ぶ前に見よ」。行動の前によく考えよ。「失敗しないよう前もって備えよ」により近いのは Better safe than sorry（Wiktionary・Cambridge・Phrase Finder に収録。ODP は Better be safe than sorry https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-146）や Prevention is better than cure（Preston 1290番）。Wiktionary の見出しは look before one leaps。Preston (1880) 989番にも収録。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Prudence est mère de sûreté.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/prudence_est_mère_de_sûreté",
+    "https://www.expressio.fr/expressions/prudence-est-mere-de-surete",
+    "https://www.linternaute.fr/proverbe/604/prudence-est-mere-de-surete/"
+   ],
+   "note": "直訳「用心は安全の母」。用心しておけば安全でいられる。",
+   "read": ""
+  },
+  "zh": {
+   "text": "未雨綢繆",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%9C%AA%E9%9B%A8%E7%B6%A2%E7%B9%86",
+    "https://en.wiktionary.org/wiki/%E6%9C%AA%E9%9B%A8%E7%B6%A2%E7%B9%86",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=161274",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=97"
+   ],
+   "note": "直訳「雨の降らないうちに（巣の戸口を）繕う」。事前に備える。原典は《詩經・豳風・鴟鴞》。同じ意味に「有備無患」。",
+   "read": "wèi yǔ chóu móu"
+  },
+  "ko": {
+   "text": "유비무환",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/657440cd6f9d4bb7964b32cfff2b7d60",
+    "https://dic.daum.net/word/view.do?wordid=kkw000198411"
+   ],
+   "note": "有備無患。直訳「備えあれば憂いなし」。",
+   "read": "ユビムファン"
+  }
+ },
+ {
+  "no": 21,
+  "src_no": 38,
+  "jp": "寝耳に水",
+  "en": {
+   "text": "A bolt from the blue.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/bolt_from_the_blue",
+    "https://dictionary.cambridge.org/dictionary/english/a-bolt-from-the-blue",
+    "https://www.phrases.org.uk/meanings/70700.html"
+   ],
+   "note": "直訳「青空からの雷」。まったく予期しない出来事。ことわざではなく慣用句。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Un coup de tonnerre dans un ciel serein.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/coup_de_tonnerre_dans_un_ciel_serein",
+    "https://www.lalanguefrancaise.com/dictionnaire/definition/coup-de-tonnerre-dans-un-ciel-serein"
+   ],
+   "note": "直訳「晴れた空に雷鳴」。穏やかなところに突然起こる思いがけない出来事。ことわざではなく成句。fr.wiktionaryの見出しは冠詞なしの coup de tonnerre dans un ciel serein。",
+   "read": ""
+  },
+  "zh": {
+   "text": "晴天霹靂",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%99%B4%E5%A4%A9%E9%9C%B9%E9%9D%82",
+    "https://en.wiktionary.org/wiki/%E6%99%B4%E5%A4%A9%E9%9C%B9%E9%9D%82",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=102733"
+   ],
+   "note": "直訳「晴れた空に雷」。突然の衝撃的な出来事。宋・陸游の詩「青天飛霹靂」に基づく。",
+   "read": "qíng tiān pī lì"
+  },
+  "ko": {
+   "text": "마른하늘에 날벼락",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/e075c4ef826f44e08a990904aff6617b",
+    "https://dic.daum.net/word/view.do?wordid=kkw000080756"
+   ],
+   "note": "直訳「晴れた空に不意の落雷」。『寝耳に水』と同じく突然の出来事だが、韓国語のほうは「災難」の意味が強い。",
+   "read": "マルナヌレ ナルビョラク"
+  }
+ },
+ {
+  "no": 22,
+  "src_no": 60,
+  "jp": "馬子にも衣装",
+  "en": {
+   "text": "Clothes make the man.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/clothes_make_the_man",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-387",
+    "https://idioms.thefreedictionary.com/Clothes+make+the+man"
+   ],
+   "note": "直訳「服が人をつくる」。身なりが人の値打ちや地位を決める。「誰でも着飾れば立派に見える」とより一致するのは Fine feathers make fine birds（立派な羽が立派な鳥をつくる。ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-784・Wiktionary・Preston 563番・TFD）。Clothes maketh the man という古風な形もある（Wiktionary）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "La belle plume fait le bel oiseau.",
+   "match": "同じ",
+   "sources": [
+    "https://www.littre.org/definition/plume",
+    "https://www.dictionnaire-academie.fr/article/A1P0313"
+   ],
+   "note": "直訳「美しい羽が美しい鳥をつくる」。Littréの説明は「装いが人を引き立てる」、アカデミー・フランセーズ辞典（初版）は「装いや美しい服が見栄えを大きく良くする」。英語候補の仏訳 L'habit fait le moine.（fr.wiktionary・en.wiktionary）も実在するが、「人はまず見かけで判断される」という意味で近い止まり。",
+   "read": ""
+  },
+  "zh": {
+   "text": "佛要金裝，人要衣裝",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%BD%9B%E8%A6%81%E9%87%91%E8%A3%9D%EF%BC%8C%E4%BA%BA%E8%A6%81%E8%A1%A3%E8%A3%9D",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=33953"
+   ],
+   "note": "直訳「仏には金の飾り、人には衣装が要る」。身なりで人は立派に見える。候補の「人要衣裝，佛要金裝」の語順は辞書に無く、《重編國語辭典修訂本》と漢典の語順に直した。Wiktionary には類形「人靠衣裝，佛靠金裝」もある。",
+   "read": "fó yào jīn zhuāng, rén yào yī zhuāng"
+  },
+  "ko": {
+   "text": "옷이 날개라",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/ce134c5987684890be0f20003f6cfc0d",
+    "https://dic.daum.net/word/view.do?wordid=kkw000188239"
+   ],
+   "note": "直訳「服が翼だ」。候補の「옷이 날개」は口語の省略形で、辞書の見出しは「옷이 날개라」。",
+   "read": "オシ ナルゲラ"
+  }
+ },
+ {
+  "no": 23,
+  "src_no": 93,
+  "jp": "歳月人を待たず",
+  "en": {
+   "text": "Time and tide wait for no man.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/time_and_tide_wait_for_no_man",
+    "https://dictionary.cambridge.org/dictionary/english/time-and-tide-wait-for-no-man",
+    "https://www.phrases.org.uk/meanings/time-and-tide-wait-for-no-one.html"
+   ],
+   "note": "直訳「時と潮は人を待たない」。Time and tide wait for no one の形もある。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Le temps perdu ne se rattrape jamais.",
+   "match": "近い",
+   "sources": [
+    "https://www.expressio.fr/expressions/le-temps-perdu-ne-se-rattrape-jamais",
+    "https://www.lesexpressions.fr/expression/le-temps-perdu-ne-se-rattrape-jamais/origine"
+   ],
+   "note": "直訳「失った時間は決して取り戻せない」。時を無駄にするな、という点で近いが、「時は人を待たずに過ぎる」という描写とは少しずれる。linternaute には別形 Le temps perdu ne revient pas.。",
+   "read": ""
+  },
+  "zh": {
+   "text": "歲月不待人",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%AD%B2%E6%9C%88%E4%B8%8D%E5%BE%85%E4%BA%BA",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=145974"
+   ],
+   "note": "直訳「歳月は人を待たない」。日本語の出典そのもの。原典は晋・陶淵明《雜詩》其一（「及時當勉勵，歲月不待人」）。同じ意味に「時不我待」（漢典・Wiktionary・修訂本）。",
+   "read": "suì yuè bù dài rén"
+  },
+  "ko": {
+   "text": "세월은 사람을 기다려 주지 않는다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/d0fa8b982cb04009ab5a2321ab048b31",
+    "https://dic.daum.net/word/view.do?wordid=kkw000143875"
+   ],
+   "note": "直訳「歳月は人を待ってくれない」。辞書の見出しは「기다려 주지」の形（候補の「기다리지 않는다」は見出しなし）。成語なら「세월부대인（歲月不待人）」（高麗大）。",
+   "read": "セウォルン サラムル キダリョ ジュジ アンヌンダ"
+  }
+ },
+ {
+  "no": 24,
+  "src_no": 96,
+  "jp": "羹に懲りて膾を吹く",
+  "en": {
+   "text": "Once bitten, twice shy.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/once_bitten,_twice_shy",
+    "https://dictionary.cambridge.org/dictionary/english/once-bitten-twice-shy",
+    "https://www.ldoceonline.com/dictionary/once-bitten-twice-shy",
+    "https://www.phrases.org.uk/meanings/once-bitten-twice-shy.html"
+   ],
+   "note": "直訳「一度かまれると二度目は臆病になる」。A burnt child dreads the fire / A scalded cat fears cold water も近い（Preston 172番・1401番）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Chat échaudé craint l'eau froide.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/chat_échaudé_craint_l’eau_froide",
+    "https://en.wiktionary.org/wiki/once_bitten,_twice_shy",
+    "https://www.expressio.fr/expressions/chat-echaude-craint-l-eau-froide"
+   ],
+   "note": "直訳「熱湯を浴びた猫は冷たい水も怖がる」。fr.wiktionaryの訳語欄に羹に懲りて膾を吹く。",
+   "read": ""
+  },
+  "zh": {
+   "text": "懲羹吹齏",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%87%B2%E7%BE%B9%E5%90%B9%E9%BD%8F",
+    "https://en.wiktionary.org/wiki/%E6%87%B2%E7%BE%B9%E5%90%B9%E9%BD%8F",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=124655"
+   ],
+   "note": "直訳「熱い吸い物に懲りて、冷たい和え物（齏）まで吹く」。日本語の出典そのもの。原典は《楚辭・九章・惜誦》「懲於羹者而吹齏兮」。候補の「一朝被蛇咬，十年怕井繩」も同じ意味で Wiktionary にあるが、辞書での立項が多いのは「一朝被蛇咬，十年怕草繩」の形（漢典・Wiktionary・修訂本）。",
+   "read": "chéng gēng chuī jī"
+  },
+  "ko": {
+   "text": "자라 보고 놀란 가슴 솥뚜껑 보고 놀란다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/7e396d5c72394daeb9b800f0a229d15b",
+    "https://ko.dict.naver.com/#/entry/koko/2912dc5e5501474aa4bb24bcc8ca690f"
+   ],
+   "note": "直訳「スッポンを見て驚いた胸は、釜の蓋を見ても驚く」＝一度ひどく驚くと、似た物にも怯える。見出しは「…소댕[솥뚜껑] 보고 놀란다」。『羹に懲りて膾を吹く』の「懲りて用心しすぎる」とは近いが同じではない。",
+   "read": "チャラ ボゴ ノルラン カスム ソットゥッコン ボゴ ノルランダ"
+  }
+ },
+ {
+  "no": 25,
+  "src_no": 99,
+  "jp": "木を見て森を見ず",
+  "en": {
+   "text": "Can't see the forest for the trees.",
+   "match": "同じ",
+   "sources": [
+    "https://dictionary.cambridge.org/dictionary/english/can't-see-the-forest-for-the-trees",
+    "https://en.wiktionary.org/wiki/see_the_forest_for_the_trees",
+    "https://www.phrases.org.uk/meanings/you-cant-see-the-wood-for-the-trees.html"
+   ],
+   "note": "直訳「木のせいで森が見えない」。米式。英式は can't see the wood for the trees（Cambridge・Wiktionary。Phrase Finder は You can't see the wood for the trees）。Preston (1880) は You cannot see wood for trees。",
+   "read": ""
+  },
+  "fr": {
+   "text": "C'est l'arbre qui cache la forêt.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/c’est_l’arbre_qui_cache_la_forêt",
+    "https://en.wiktionary.org/wiki/see_the_forest_for_the_trees",
+    "https://www.expressio.fr/expressions/l-arbre-qui-cache-la-foret"
+   ],
+   "note": "直訳「それは森を隠している木だ」。細部が全体を見えなくする。fr.wiktionaryの名詞句 arbre qui cache la forêt の訳語欄に木を見て森を見ず。「人が細部にとらわれる」ではなく「細部が全体を隠す」という言い方なので、近い。",
+   "read": ""
+  },
+  "zh": {
+   "text": "只見樹木，不見森林",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%8F%AA%E8%A6%8B%E6%A8%B9%E6%9C%A8%EF%BC%8C%E4%B8%8D%E8%A6%8B%E6%A3%AE%E6%9E%97",
+    "https://en.wiktionary.org/wiki/%E5%8F%AA%E8%A6%8B%E6%A8%B9%E6%9C%A8%EF%BC%8C%E4%B8%8D%E8%A6%8B%E6%A3%AE%E6%9E%97",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=113843"
+   ],
+   "note": "直訳「木だけ見て森を見ない」。細部にとらわれ全体を見ない。",
+   "read": "zhǐ jiàn shù mù, bù jiàn sēn lín"
+  },
+  "ko": {
+   "text": "나무를 보고 숲을 보지 못한다",
+   "match": "同じ",
+   "sources": [
+    "https://dic.daum.net/word/view.do?wordid=kkw000044642",
+    "https://opendict.korean.go.kr/dictionary/view?word_no=525040&sense_no=608183"
+   ],
+   "note": "直訳「木を見て森を見られない」。高麗大（Daum）と우리말샘の見出しはこの形。候補の「나무만 보고 숲은 보지 못한다」は見出しなし。",
+   "read": "ナムルル ボゴ スプル ボジ モタンダ"
+  }
+ },
+ {
+  "no": 26,
+  "src_no": 84,
+  "jp": "必要は発明の母",
+  "en": {
+   "text": "Necessity is the mother of invention.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/necessity_is_the_mother_of_invention",
+    "https://dictionary.cambridge.org/dictionary/english/necessity-is-the-mother-of-invention",
+    "https://www.ldoceonline.com/dictionary/necessity-is-the-mother-of-invention",
+    "https://www.phrases.org.uk/meanings/necessity-is-the-mother-of-invention.html"
+   ],
+   "note": "直訳「必要は発明の母」。日本語はこの英語の訳。",
+   "read": ""
+  },
+  "fr": {
+   "text": "La nécessité est mère de l'invention.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/la_nécessité_est_mère_de_l’invention",
+    "https://www.linternaute.fr/proverbe/518/la-necessite-est-mere-de-l-invention/",
+    "https://en.wiktionary.org/wiki/necessity_is_the_mother_of_invention"
+   ],
+   "note": "直訳「必要は発明の母」。linternaute は起源を英語のことわざとする。en.wiktionaryは la nécessité est la mère de l'invention（la 付き）の形。",
+   "read": ""
+  },
+  "zh": {
+   "text": "需要是發明之母",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/%E9%9C%80%E8%A6%81%E6%98%AF%E7%99%BC%E6%98%8E%E4%B9%8B%E6%AF%8D",
+    "https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=1&wdqb=%E9%9C%80%E8%A6%81%E6%98%AF%E7%99%BC%E6%98%8E%E4%B9%8B%E6%AF%8D"
+   ],
+   "note": "直訳「必要は発明の母」。英語 necessity is the mother of invention の訳語（西洋のことわざ）。Cambridge 英中辞典は「需要乃發明之母」の形で載せる。",
+   "read": "xū yào shì fā míng zhī mǔ"
+  },
+  "ko": {
+   "text": "필요는 발명의 어머니",
+   "match": "同じ",
+   "sources": [
+    "https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0000126892",
+    "https://www.etoday.co.kr/news/view/884798"
+   ],
+   "note": "直訳「必要は発明の母」。英語 Necessity is the mother of invention から来た格言で、国語辞典には見出しなし。記事2件で使われているのを確認。",
+   "read": "ピリョヌン パルミョンエ オモニ"
+  }
+ },
+ {
+  "no": 27,
+  "src_no": 4,
+  "jp": "百聞は一見にしかず",
+  "en": {
+   "text": "Seeing is believing.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/seeing_is_believing",
+    "https://dictionary.cambridge.org/dictionary/english/seeing-is-believing",
+    "https://www.ldoceonline.com/dictionary/seeing-is-believing",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1936"
+   ],
+   "note": "直訳「見ることは信じること」。自分の目で見れば信じられる、の意で、「何度聞くより一度見るほうが確か」とは重心が少しちがう。A picture is worth a thousand words（一枚の絵は千語に値する。Wiktionary・Phrase Finder に項目あり）も近い。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Une image vaut mille mots.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/une_image_vaut_mille_mots",
+    "https://en.wiktionary.org/wiki/seeing_is_believing",
+    "https://fr.wiktionary.org/wiki/百聞は一見に如かず"
+   ],
+   "note": "直訳「一枚の絵は千の言葉に値する」。fr.wiktionaryの「百聞は一見に如かず」項に比喩的意味としてこの句が書かれている。「聞くより見よ」ではなく「言葉より絵」なので近い止まり。",
+   "read": ""
+  },
+  "zh": {
+   "text": "百聞不如一見",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E7%99%BE%E8%81%9E%E4%B8%8D%E5%A6%82%E4%B8%80%E8%A6%8B",
+    "https://en.wiktionary.org/wiki/%E7%99%BE%E8%81%9E%E4%B8%8D%E5%A6%82%E4%B8%80%E8%A6%8B",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=14455",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=1389"
+   ],
+   "note": "直訳「百回聞くのは一度見るのに及ばない」。日本語の出典そのもの。原典は《漢書・趙充國傳》。",
+   "read": "bǎi wén bù rú yī jiàn"
+  },
+  "ko": {
+   "text": "백문이 불여일견",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/60f783a8cbb945e990ec8382983ebd9b",
+    "https://dic.daum.net/word/view.do?wordid=kkw000106562"
+   ],
+   "note": "百聞이 不如一見。直訳「百聞は一見に如かず」。",
+   "read": "ペンムニ プリョイルギョン"
+  }
+ },
+ {
+  "no": 28,
+  "src_no": 8,
+  "jp": "二兎を追う者は一兎をも得ず",
+  "en": {
+   "text": "If you run after two hares you will catch neither.",
+   "match": "同じ",
+   "sources": [
+    "https://www.oxfordreference.com/display/10.1093/acref/9780199539536.001.0001/acref-9780199539536-e-1888",
+    "https://idioms.thefreedictionary.com/If+you+run+after+two+hares,+you+will+catch+neither"
+   ],
+   "note": "直訳「2匹の野ウサギを追えばどちらも捕まらない」。表記は ODP（第5版）どおりでカンマなし。TFD（Farlex・McGraw-Hill）はカンマあり。ODP はエラスムス『格言集』のラテン語 duos insequens lepores, neutrum capit を由来として挙げる。Wiktionary には英語の項目なし（日本語項目の直訳説明のみ）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Courir deux lièvres à la fois.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/courir_deux_lièvres_à_la_fois",
+    "https://www.larousse.fr/dictionnaires/francais/lièvre",
+    "https://www.expressio.fr/expressions/courir-deux-lievres-a-la-fois"
+   ],
+   "note": "直訳「二匹の野ウサギを同時に追う」。二つを同時に追うと両方とも仕損じる。辞書の見出しは動詞句（ことわざとして言うときの Il ne faut pas courir deux lièvres à la fois. の形は今回2出典では確認できていない）。候補の Qui trop embrasse mal étreint.（多くを抱えすぎると何もうまくいかない）も実在（fr.wiktionary・expressio・linternaute）で、意味は近い。",
+   "read": ""
+  },
+  "zh": {
+   "text": "貪多嚼不爛",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E8%B2%AA%E5%A4%9A%E5%9A%BC%E4%B8%8D%E7%88%9B",
+    "https://en.wiktionary.org/wiki/%E8%B2%AA%E5%A4%9A%E5%9A%BC%E4%B8%8D%E7%88%9B",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=50954"
+   ],
+   "note": "直訳「欲張って多くほおばると噛みこなせない」。欲張って手を広げると何も身につかない、の意。「二つを追う」形ではないので「近い」。明・凌濛初《二刻拍案驚奇》卷五。",
+   "read": "tān duō jiáo bù làn"
+  },
+  "ko": {
+   "text": "가는 토끼 잡으려다 잡은 토끼 놓친다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/8f3bab8bbb8642589ee541bf7aa7e9a2",
+    "https://dic.daum.net/word/view.do?wordid=kkw000000448"
+   ],
+   "note": "直訳「逃げる兎を捕まえようとして、捕まえた兎まで逃がす」＝欲張ると手にしていた物まで失う。『二兎を追う』の「二つを同時に追う」とは少しずれるので「近い」。候補の「두 마리 토끼를 쫓다가는 한 마리도 못 잡는다」は国語辞典に見出しなし。新聞では語形が一定せず、「英語のことわざ」として紹介する記事もある（kihoilbo.co.kr idxno=811511）。",
+   "read": "カヌン トッキ チャブリョダ チャブン トッキ ノッチンダ"
+  }
+ },
+ {
+  "no": 29,
+  "src_no": 10,
+  "jp": "覆水盆に返らず",
+  "en": {
+   "text": "It is no use crying over spilt milk.",
+   "match": "近い",
+   "sources": [
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-463",
+    "https://en.wiktionary.org/wiki/cry_over_spilt_milk",
+    "https://idioms.thefreedictionary.com/It+is+no+use+crying+over+spilt+milk"
+   ],
+   "note": "直訳「こぼれた牛乳を嘆いても無駄だ」。英語は「取り返しのつかないことを悔やんでも仕方ない」という忠告で、「一度したことは元に戻らない」という日本語とは重心がややちがう。意味がより一致するのは What's done cannot be undone（ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-587 は What's done cannot be undone、Wiktionary・TFD にも収録）。米では spilled milk とも。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Ce qui est fait est fait.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/ce_qui_est_fait_est_fait",
+    "https://en.wiktionary.org/wiki/there's_no_point_crying_over_spilt_milk",
+    "https://www.larousse.fr/dictionnaires/francais/faire",
+    "https://www.expressio.fr/expressions/ce-qui-est-fait-est-fait"
+   ],
+   "note": "直訳「なされたことはなされたこと」。済んだことは取り返しがつかない／蒸し返しても仕方がない。こぼれた水の比喩はない。",
+   "read": ""
+  },
+  "zh": {
+   "text": "覆水難收",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E8%A6%86%E6%B0%B4%E9%9B%A3%E6%94%B6",
+    "https://en.wiktionary.org/wiki/%E8%A6%86%E6%B0%B4%E9%9B%A3%E6%94%B6",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=39184",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=412"
+   ],
+   "note": "直訳「こぼれた水は収めがたい」。太公望（呂尚）と妻の故事に基づく。",
+   "read": "fù shuǐ nán shōu"
+  },
+  "ko": {
+   "text": "엎지른 물",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/bfdbab4713c54f3fa45012b1c00a998c",
+    "https://dic.daum.net/word/view.do?wordid=kkw000177745"
+   ],
+   "note": "直訳「こぼした水」。高麗大は「엎지른〔엎질러진〕 물」で、候補の「엎질러진 물」は異形として載っている。見出しの形は「엎지른 물」。",
+   "read": "オプチルン ムル"
+  }
+ },
+ {
+  "no": 30,
+  "src_no": 19,
+  "jp": "馬の耳に念仏",
+  "en": {
+   "text": "Like water off a duck's back.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/like_water_off_a_duck's_back",
+    "https://dictionary.cambridge.org/dictionary/english/like-water-off-a-duck's-back",
+    "https://www.ldoceonline.com/dictionary/like-water-off-a-duck-s-back",
+    "https://www.phrases.org.uk/meanings/like-water-off-a-ducks-back"
+   ],
+   "note": "直訳「アヒルの背中の水のように」（はじかれて染みこまない）。批判や忠告が相手に何の効き目もないこと。ことわざではなく慣用句。「ありがたい教えも、わからない者には無駄」という日本語とは近いが同じではない。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Prêcher dans le désert.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/prêcher_dans_le_désert",
+    "https://www.expressio.fr/expressions/precher-dans-le-desert"
+   ],
+   "note": "直訳「砂漠で説教する」。聞く気のない相手に話しても無駄。成句（動詞句）。馬の耳に念仏の「価値がわからない相手」という面は弱い。近い別の言い方に parler à un sourd（fr.wiktionary）、ことわざ Il n'est pire sourd que celui qui ne veut pas entendre.（linternaute・Littré「sourd」）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "對牛彈琴",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%B0%8D%E7%89%9B%E5%BD%88%E7%90%B4",
+    "https://en.wiktionary.org/wiki/%E5%B0%8D%E7%89%9B%E5%BD%88%E7%90%B4",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=48123",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=47"
+   ],
+   "note": "直訳「牛に向かって琴を弾く」。道理の分からない相手に説いても無駄。漢・牟融《理惑論》の公明儀の故事。",
+   "read": "duì niú tán qín"
+  },
+  "ko": {
+   "text": "쇠귀에 경 읽기",
+   "match": "同じ",
+   "sources": [
+    "https://dic.daum.net/word/view.do?wordid=kkw000148929",
+    "https://www.kidshankook.kr/news/articleView.html?idxno=701",
+    "https://ko.wiktionary.org/wiki/%EC%87%A0%EA%B7%80%EC%97%90_%EA%B2%BD_%EC%9D%BD%EA%B8%B0"
+   ],
+   "note": "直訳「牛の耳にお経を読む」。高麗大韓国語大辞典（Daum）、少年韓国日報「小学生の教科書のことわざ」、ko.wiktionary（ことわざの項）で確認。Naver経由では標準国語大辞典の見出しを確認できなかった。",
+   "read": "スェグィエ キョン イルギ"
+  }
+ },
+ {
+  "no": 31,
+  "src_no": 26,
+  "jp": "三人寄れば文殊の知恵",
+  "en": {
+   "text": "Two heads are better than one.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/two_heads_are_better_than_one",
+    "https://www.ldoceonline.com/dictionary/two-heads-are-better-than-one",
+    "https://www.phrases.org.uk/meanings/two-heads-are-better-than-one.html",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2344"
+   ],
+   "note": "直訳「頭2つは1つにまさる」。日本語は「3人」、英語は「2人」。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Deux avis valent mieux qu'un.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/deux_avis_valent_mieux_qu’un",
+    "https://en.wiktionary.org/wiki/two_heads_are_better_than_one",
+    "https://www.expressio.fr/expressions/deux-avis-valent-mieux-qu-un",
+    "https://www.linternaute.fr/proverbe/190/deux-avis-valent-mieux-qu-un/"
+   ],
+   "note": "直訳「二つの意見は一つにまさる」。何人かの意見を聞くとよい。凡人でも集まれば良い知恵が出る、という点は近い。",
+   "read": ""
+  },
+  "zh": {
+   "text": "三個臭皮匠，勝過諸葛亮",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%B8%89%E5%80%8B%E8%87%AD%E7%9A%AE%E5%8C%A0%EF%BC%8C%E5%8B%9D%E9%81%8E%E8%AB%B8%E8%91%9B%E4%BA%AE",
+    "https://en.wiktionary.org/wiki/%E4%B8%89%E5%80%8B%E8%87%AD%E7%9A%AE%E5%8C%A0%EF%BC%8C%E5%8B%9D%E9%81%8E%E8%AB%B8%E8%91%9B%E4%BA%AE",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=144488",
+    "https://www.zdic.net/hant/%E4%B8%89%E5%80%8B%E8%87%AD%E7%9A%AE%E5%8C%A0%EF%BC%8C%E8%B3%BD%E9%81%8E%E8%AB%B8%E8%91%9B%E4%BA%AE"
+   ],
+   "note": "直訳「三人の靴職人（凡人）が集まれば諸葛亮にまさる」。候補の「賽過」の形は漢典にあるが、辞書で広く立項されているのは「勝過」の形なので、こちらにした。",
+   "read": "sān ge chòu pí jiàng, shèng guò Zhūgě Liàng"
+  },
+  "ko": {
+   "text": "백지장도 맞들면 낫다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/10451235d5a844a4804fb4c31efdebc6",
+    "https://dic.daum.net/word/view.do?wordid=kkw000107105"
+   ],
+   "note": "直訳「白紙一枚でも二人で持てば楽だ」＝協力すれば楽になる。『文殊の知恵』の「良い知恵が出る」とは少しずれる。",
+   "read": "ペクチジャンド マットゥルミョン ナッタ"
+  }
+ },
+ {
+  "no": 32,
+  "src_no": 39,
+  "jp": "焼け石に水",
+  "en": {
+   "text": "A drop in the ocean.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/drop_in_the_ocean",
+    "https://dictionary.cambridge.org/dictionary/english/a-drop-in-the-ocean",
+    "https://idioms.thefreedictionary.com/A+drop+in+the+ocean"
+   ],
+   "note": "直訳「大海の一滴」。必要な量に比べてわずかで効き目がないこと。米では A drop in the bucket（Wiktionary・Cambridge・Phrase Finder）。慣用句。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Une goutte d'eau dans la mer.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/goutte_d’eau_dans_la_mer",
+    "https://www.expressio.fr/expressions/une-goutte-d-eau-dans-la-mer"
+   ],
+   "note": "直訳「海の中の一滴」。取るに足りない量。「努力や援助が少なすぎて効き目がない」という焼け石に水とは近い。fr.wiktionaryの訳語欄は大海の一滴・九牛の一毛。成句。「効かない手当て」の意味なら cautère sur une jambe de bois（木の義足にお灸）もある（fr.wiktionary・expressio）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "杯水車薪",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%9D%AF%E6%B0%B4%E8%BB%8A%E8%96%AA",
+    "https://en.wiktionary.org/wiki/%E6%9D%AF%E6%B0%B4%E8%BB%8A%E8%96%AA",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=14755",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=119"
+   ],
+   "note": "直訳「杯の水で車いっぱいの薪の火を消そうとする」。原典は《孟子・告子上》。",
+   "read": "bēi shuǐ chē xīn"
+  },
+  "ko": {
+   "text": "언 발에 오줌 누기",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/d43d854a8d2f4f1c99e0c2051f4ec433",
+    "https://dic.daum.net/word/view.do?wordid=kkw000176756"
+   ],
+   "note": "直訳「凍えた足に小便をかける」＝一時しのぎで、結局かえって悪くなる。『焼け石に水』の「効き目がない」と近い。",
+   "read": "オン パレ オジュム ヌギ"
+  }
+ },
+ {
+  "no": 33,
+  "src_no": 46,
+  "jp": "塞翁が馬",
+  "en": {
+   "text": "Every cloud has a silver lining.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/every_cloud_has_a_silver_lining",
+    "https://dictionary.cambridge.org/dictionary/english/every-cloud-has-a-silver-lining",
+    "https://www.ldoceonline.com/dictionary/every-cloud-has-a-silver-lining",
+    "https://www.phrases.org.uk/meanings/every-cloud-has-a-silver-lining.html"
+   ],
+   "note": "直訳「どの雲にも銀の裏地がある」。どんな悪い状況にもよい面がある。「幸不幸は予測できない」という塞翁が馬とは近いが同じではない。A blessing in disguise（姿を変えた恵み。Wiktionary・Cambridge・Phrase Finder）も近い。",
+   "read": ""
+  },
+  "fr": {
+   "text": "À quelque chose malheur est bon.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/à_quelque_chose_malheur_est_bon",
+    "https://en.wiktionary.org/wiki/every_cloud_has_a_silver_lining",
+    "https://www.expressio.fr/expressions/a-quelque-chose-malheur-est-bon"
+   ],
+   "note": "直訳「不幸も何かの役に立つ」。不運が思わぬ得をもたらすことがある。fr.wiktionaryの訳語欄に人間万事塞翁が馬。塞翁が馬の「幸運が不運に転じる」逆向きの面は含まない。",
+   "read": ""
+  },
+  "zh": {
+   "text": "塞翁失馬，焉知非福",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%A1%9E%E7%BF%81%E5%A4%B1%E9%A6%AC%EF%BC%8C%E7%84%89%E7%9F%A5%E9%9D%9E%E7%A6%8F",
+    "https://en.wiktionary.org/wiki/%E5%A1%9E%E7%BF%81%E5%A4%B1%E9%A6%AC%EF%BC%8C%E7%84%89%E7%9F%A5%E9%9D%9E%E7%A6%8F",
+    "https://dict.idioms.moe.edu.tw/idiomList.jsp?idiom=%E5%A1%9E%E7%BF%81%E5%A4%B1%E9%A6%AC"
+   ],
+   "note": "直訳「塞翁が馬を失った、それが福でないとどうして分かろう」。日本語の出典そのもの。原典は《淮南子・人間訓》。教育部《成語典》は「塞翁失馬」で立項。",
+   "read": "sài wēng shī mǎ, yān zhī fēi fú"
+  },
+  "ko": {
+   "text": "새옹지마",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/c07401f6c7ca4c1b884e62d29fdbe72e",
+    "https://dic.daum.net/word/view.do?wordid=kkw000136386"
+   ],
+   "note": "塞翁之馬。",
+   "read": "セオンジマ"
+  }
+ },
+ {
+  "no": 34,
+  "src_no": 47,
+  "jp": "五十歩百歩",
+  "en": {
+   "text": "Six of one, half a dozen of the other.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/six_of_one,_half_a_dozen_of_the_other",
+    "https://dictionary.cambridge.org/dictionary/english/six-of-one-half-a-dozen-of-the-other",
+    "https://idioms.thefreedictionary.com/Six+of+one,+half+a+dozen+of+the+other"
+   ],
+   "note": "直訳「一方が6個、もう一方が半ダース」。どちらも大差ない。Cambridge は six of one and half a dozen of the other。日本語の「（劣った点で）どちらも大差ない」という非難の含みは英語では必ずしもない（Wiktionary の第2義「二人とも同程度に責任がある」は近い）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Bonnet blanc, blanc bonnet.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/bonnet_blanc,_blanc_bonnet",
+    "https://en.wiktionary.org/wiki/six_of_one,_half_a_dozen_of_the_other",
+    "https://www.expressio.fr/expressions/c-est-bonnet-blanc-et-blanc-bonnet",
+    "https://ja.wiktionary.org/wiki/五十歩百歩"
+   ],
+   "note": "直訳「白い帽子、帽子の白」。違うように見えても実は同じ。「どちらも良くない」という含みはない。C'est bonnet blanc et blanc bonnet. の形でもよく使う（expressio の URL はこの形、fr.wiktionary は bonnet blanc et blanc bonnet から転送）。故事の「自分も同じなのに他人を笑う」面に当たる C'est la poêle qui se moque du chaudron.（鍋が大鍋をからかう）は fr.wiktionary の訳語欄に五十歩百歩が載るが、2つ目の出典は確かめていない。",
+   "read": ""
+  },
+  "zh": {
+   "text": "五十步笑百步",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%BA%94%E5%8D%81%E6%AD%A5%E7%AC%91%E7%99%BE%E6%AD%A5",
+    "https://en.wiktionary.org/wiki/%E4%BA%94%E5%8D%81%E6%AD%A5%E7%AC%91%E7%99%BE%E6%AD%A5",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=159617",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=383"
+   ],
+   "note": "直訳「五十歩逃げた者が百歩逃げた者を笑う」。日本語の出典そのもの。原典は《孟子・梁惠王上》。",
+   "read": "wǔ shí bù xiào bǎi bù"
+  },
+  "ko": {
+   "text": "오십보백보",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/ec1af63d774a4b239ff78193a992f93f",
+    "https://dic.daum.net/word/view.do?wordid=kkw000186277"
+   ],
+   "note": "五十步百步。",
+   "read": "オシプポペクポ"
+  }
+ },
+ {
+  "no": 35,
+  "src_no": 54,
+  "jp": "待てば海路の日和あり",
+  "en": {
+   "text": "All things come to those who wait.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/all_things_come_to_those_who_wait",
+    "https://www.phrases.org.uk/meanings/all-things-come-to-those-who-wait.html"
+   ],
+   "note": "直訳「待つ者にはすべてが来る」。候補の Everything comes to him who waits は TFD（Farlex）に収録され、Wiktionary では all things come to those who wait への転送になっている（異形）。Good things come to those who wait（Wiktionary）も同義。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Tout vient à point à qui sait attendre.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/tout_vient_à_point_à_qui_sait_attendre",
+    "https://en.wiktionary.org/wiki/good_things_come_to_those_who_wait",
+    "https://www.expressio.fr/expressions/tout-vient-a-point-a-qui-sait-attendre",
+    "https://www.linternaute.fr/proverbe/570/tout-vient-a-point-a-qui-sait-attendre/"
+   ],
+   "note": "直訳「待つことを知る者には何事もちょうどよい時にやってくる」。",
+   "read": ""
+  },
+  "zh": {
+   "text": "守得雲開見月明",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/%E5%AE%88%E5%BE%97%E9%9B%B2%E9%96%8B%E8%A6%8B%E6%9C%88%E6%98%8E",
+    "https://m.gushiwen.cn/mingju/juv_96f9e050a5c9.aspx"
+   ],
+   "note": "直訳「辛抱して待てば雲が晴れて月が見える」。耐えて待てば、やがて良い時が来る。耐え抜くことに力点があるので「近い」とした。古い原典は確かめられない（《水滸傳》出典説は誤伝とされる）。",
+   "read": "shǒu de yún kāi jiàn yuè míng"
+  },
+  "ko": {
+   "text": "쥐구멍에도 볕 들 날 있다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/b0957d05ad66420fad63801022605265",
+    "https://dic.daum.net/word/view.do?wordid=kkw000239564"
+   ],
+   "note": "直訳「鼠の穴にも日が差す日がある」＝苦労していても、いつか良い運が来る。高麗大（Daum）は「볕들 날」と表記。",
+   "read": "チュィグモンエド ピョットゥル ラル イッタ"
+  }
+ },
+ {
+  "no": 36,
+  "src_no": 55,
+  "jp": "人は見かけによらぬもの",
+  "en": {
+   "text": "Don't judge a book by its cover.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/don't_judge_a_book_by_its_cover",
+    "https://www.ldoceonline.com/dictionary/don-t-judge-a-book-by-its-cover",
+    "https://www.phrases.org.uk/meanings/dont-judge-a-book-by-its-cover.html"
+   ],
+   "note": "直訳「表紙で本を判断するな」。見かけで判断するなという戒め。「人は見かけと中身がちがう」という観察そのものに当たるのは Appearances are deceptive（ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-52・Wiktionary・TFD）。Wiktionary の主見出しは you can't judge a book by its cover。",
+   "read": ""
+  },
+  "fr": {
+   "text": "L'habit ne fait pas le moine.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/l’habit_ne_fait_pas_le_moine",
+    "https://en.wiktionary.org/wiki/you_can't_judge_a_book_by_its_cover",
+    "https://www.expressio.fr/expressions/l-habit-ne-fait-pas-le-moine",
+    "https://www.linternaute.fr/proverbe/71/l-habit-ne-fait-pas-le-moine/"
+   ],
+   "note": "直訳「僧衣が修道士をつくるのではない」。人を見かけで判断してはならない。※fr.wiktionaryはこの句の訳語欄に馬子にも衣装を載せているが、意味は逆（60番を参照）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "人不可貌相",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%BA%BA%E4%B8%8D%E5%8F%AF%E8%B2%8C%E7%9B%B8",
+    "https://en.wiktionary.org/wiki/%E4%BA%BA%E4%B8%8D%E5%8F%AF%E8%B2%8C%E7%9B%B8",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=135586"
+   ],
+   "note": "直訳「人は顔かたちで判断してはならない」。「人不可貌相，海水不可斗量」の前半。《重編國語辭典修訂本》はこの全体の形で立項。",
+   "read": "rén bù kě mào xiàng"
+  },
+  "ko": {
+   "text": "뚝배기보다 장맛이 좋다",
+   "match": "近い",
+   "sources": [
+    "https://dic.daum.net/word/view.do?wordid=kkw000076006",
+    "https://m.joongdo.co.kr/view.php?key=20190124001715383",
+    "https://www.kidshankook.kr/news/articleView.html?idxno=3307"
+   ],
+   "note": "直訳「土鍋（の見た目）より味噌の味が良い」＝見かけは粗末でも中身は立派。『人は見かけによらぬもの』とは、良い方向の意味でだけ重なる。高麗大（Daum）と新聞記事2件で確認。標準には同じ意味の「장독보다 장맛이 좋다」がある。",
+   "read": "トゥクペギボダ チャンマシ チョッタ"
+  }
+ },
+ {
+  "no": 37,
+  "src_no": 58,
+  "jp": "身から出た錆",
+  "en": {
+   "text": "You reap what you sow.",
+   "match": "近い",
+   "sources": [
+    "https://www.ldoceonline.com/dictionary/you-reap-what-you-sow",
+    "https://en.wiktionary.org/wiki/reap_what_one_sows",
+    "https://www.phrases.org.uk/meanings/48500.html",
+    "https://dictionary.cambridge.org/dictionary/english/you-reap-what-you-sow"
+   ],
+   "note": "直訳「まいた種は自分で刈り取る」。英語は良い結果にも悪い結果にも使うが、悪い報いに使うことが多い。日本語は悪い報いだけ。As you sow, so shall you reap（Wiktionary・TFD。ODP は As you sow, so you reap https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2064）という形もある。",
+   "read": ""
+  },
+  "fr": {
+   "text": "On récolte ce que l'on sème.",
+   "match": "近い",
+   "sources": [
+    "https://www.expressio.fr/expressions/on-recolte-ce-que-l-on-seme",
+    "https://fr.wiktionary.org/wiki/récolter_ce_que_l’on_a_semé",
+    "https://en.wiktionary.org/wiki/reap_what_one_sows"
+   ],
+   "note": "直訳「まいたものを刈り取る」。自分の行いの結果を受ける。良い結果にも使えるので、悪い報いに限る身から出た錆とは近い。fr.wiktionary・en.wiktionaryは動詞句 récolter ce que l'on a semé が見出し（fr.wiktionaryでは on récolte ce que l'on sème から転送）。ja.wiktionaryの仏訳は Qui sème le vent récolte la tempête.（風をまく者は嵐を刈り取る）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "自作自受",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E8%87%AA%E4%BD%9C%E8%87%AA%E5%8F%97",
+    "https://en.wiktionary.org/wiki/%E8%87%AA%E4%BD%9C%E8%87%AA%E5%8F%97",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=137958",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=250"
+   ],
+   "note": "直訳「自分でしたことを自分で受ける」。自業自得。",
+   "read": "zì zuò zì shòu"
+  },
+  "ko": {
+   "text": "자업자득",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/c028f8bcca0a4f5ab2a49390590dd833",
+    "https://dic.daum.net/word/view.do?wordid=kkw000215911&supid=kku000271653"
+   ],
+   "note": "自業自得。",
+   "read": "チャオプチャドゥク"
+  }
+ },
+ {
+  "no": 38,
+  "src_no": 65,
+  "jp": "朱に交われば赤くなる",
+  "en": {
+   "text": "He that touches pitch shall be defiled.",
+   "match": "同じ",
+   "sources": [
+    "https://www.oxfordreference.com/display/10.1093/acref/9780199539536.001.0001/acref-9780199539536-e-2298",
+    "https://www.gutenberg.org/ebooks/34176"
+   ],
+   "note": "直訳「ピッチ（瀝青）に触れる者は汚れる」。悪い仲間と交わると悪く染まる。表記は ODP どおり（候補の He who ではなく He that）。Hulme『Proverb Lore』(1902) は聖書（外典シラ書13:1）の古い形 He that toucheth pitch shall be defiled therewith で引用。ODP 第6版の同項目は https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2298。A man is known by the company he keeps（Wiktionary）も関連する。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Dis-moi qui tu hantes, je te dirai qui tu es.",
+   "match": "近い",
+   "sources": [
+    "https://www.littre.org/definition/hanter",
+    "https://www.expressio.fr/expressions/dis-moi-qui-tu-hantes-je-te-dirai-qui-tu-es",
+    "https://usito.usherbrooke.ca/d%C3%A9finitions/annexes/locutions_courantes/Dis-moi_qui_tu_hantes_je_te_dirai_qui_tu_es"
+   ],
+   "note": "直訳「誰とつきあっているか言ってごらん、君が何者か言ってあげよう」。Littréの説明は「人の品行はふだんの交友でたやすくわかる」。つきあう相手で人柄がわかる、なので「人は交わる相手に染まる」朱に交われば赤くなるとは近い。現代的な別形 Dis-moi qui tu fréquentes, je te dirai qui tu es.（linternaute は je te dirais と表記）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "近朱者赤，近墨者黑",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E8%BF%91%E6%9C%B1%E8%80%85%E8%B5%A4%EF%BC%8C%E8%BF%91%E5%A2%A8%E8%80%85%E9%BB%91",
+    "https://en.wiktionary.org/wiki/%E8%BF%91%E6%9C%B1%E8%80%85%E8%B5%A4%EF%BC%8C%E8%BF%91%E5%A2%A8%E8%80%85%E9%BB%91",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=94666",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=78395"
+   ],
+   "note": "直訳「朱に近づく者は赤くなり、墨に近づく者は黒くなる」。日本語の出典そのもの。原典は晋・傅玄《太子少傅箴》。",
+   "read": "jìn zhū zhě chì, jìn mò zhě hēi"
+  },
+  "ko": {
+   "text": "먹을 가까이하면 검어진다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/ad0ddbfe065f4238b2b613178537865f",
+    "https://dic.daum.net/word/view.do?wordid=kkw000085946"
+   ],
+   "note": "直訳「墨に近づくと黒くなる」。悪い方向だけを言う。『朱に交われば』は善悪どちらにも使う。",
+   "read": "モグル カッカイハミョン コモジンダ"
+  }
+ },
+ {
+  "no": 39,
+  "src_no": 2,
+  "jp": "急がば回れ",
+  "en": {
+   "text": "More haste, less speed.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/more_haste,_less_speed",
+    "https://dictionary.cambridge.org/dictionary/english/more-haste-less-speed",
+    "https://www.ldoceonline.com/dictionary/more-haste-less-speed",
+    "https://www.phrases.org.uk/meanings/more-haste-less-speed.html"
+   ],
+   "note": "直訳「急ぐほど速度は落ちる」。急いでやると結局遅くなる。米では Haste makes waste も同義でよく使う（Phrase Finder に項目あり）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Il ne faut pas confondre vitesse et précipitation.",
+   "match": "近い",
+   "sources": [
+    "https://www.expressio.fr/expressions/il-ne-faut-pas-confondre-vitesse-et-precipitation",
+    "https://www.linternaute.fr/proverbe/610/il-ne-faut-pas-confondre-vitesse-et-precipitation/",
+    "https://en.wiktionary.org/wiki/more_haste,_less_speed",
+    "https://ja.wiktionary.org/wiki/急がば回れ"
+   ],
+   "note": "直訳「速さと慌ただしさを混同してはならない」。急ぐなら慌てず確実に、という点で近い。「遠回り」の比喩はない。fr.wiktionaryには動詞形 confondre vitesse et précipitation のみ。",
+   "read": ""
+  },
+  "zh": {
+   "text": "欲速則不達",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E6%AC%B2%E9%80%9F%E5%89%87%E4%B8%8D%E9%81%94",
+    "https://en.wiktionary.org/wiki/%E6%AC%B2%E9%80%9F%E5%89%87%E4%B8%8D%E9%81%94",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=164149"
+   ],
+   "note": "直訳「速さを求めればかえって到達しない」。原典は《論語・子路》（「無欲速，無見小利。欲速則不達，見小利則大事不成」）。",
+   "read": "yù sù zé bù dá"
+  },
+  "ko": {
+   "text": "급할수록 돌아가라",
+   "match": "同じ",
+   "sources": [
+    "https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0001136362",
+    "http://www.jejunews.com/news/articleView.html?idxno=2028530"
+   ],
+   "note": "直訳「急ぐほど回って行け」。新聞2紙が「우리(나라) 속담」として引用。ただし標準国語大辞典・高麗大韓国語大辞典には見出しなし（Naver・Daumで確認）。",
+   "read": "クパルスロク トラガラ"
+  }
+ },
+ {
+  "no": 40,
+  "src_no": 33,
+  "jp": "船頭多くして船山に上る",
+  "en": {
+   "text": "Too many cooks spoil the broth.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/too_many_cooks_spoil_the_broth",
+    "https://dictionary.cambridge.org/dictionary/english/too-many-cooks-spoil-the-broth",
+    "https://www.ldoceonline.com/dictionary/too-many-cooks-spoil-the-broth",
+    "https://www.phrases.org.uk/meanings/too-many-cooks-spoil-the-broth.html",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2292"
+   ],
+   "note": "直訳「料理人が多すぎるとスープがだめになる」。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Trop de cuisiniers gâtent la sauce.",
+   "match": "同じ",
+   "sources": [
+    "https://www.linternaute.fr/proverbe/287/trop-de-cuisiniers-gatent-la-sauce/",
+    "https://en.wiktionary.org/wiki/too_many_cooks_spoil_the_broth"
+   ],
+   "note": "直訳「料理人が多すぎるとソースがだめになる」。linternaute の説明は「多すぎる人が一つのことに関わるとき、また指揮は一人がとるべきだと言うときに使う」。fr.wiktionaryには項目なし。",
+   "read": ""
+  },
+  "zh": {
+   "text": "人多手雜",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%BA%BA%E5%A4%9A%E6%89%8B%E9%9B%9C",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=135651"
+   ],
+   "note": "直訳「人が多く手が入り乱れる」。人手が多いと混乱し、物がなくなったり壊れたりする、の意（《紅樓夢》第37回）。指図する人が多すぎて見当ちがいの方へ行く、という日本語とは中身が少しちがう（やや遠め）。Wiktionary には too many cooks の意の「人多手腳亂」があるが、出典が1つしか取れなかったので採らなかった。",
+   "read": "rén duō shǒu zá"
+  },
+  "ko": {
+   "text": "사공이 많으면 배가 산으로 간다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/26510bab2ceb4d26b1ba69c962a6da8b",
+    "https://dic.daum.net/word/view.do?wordid=kkw000127497"
+   ],
+   "note": "直訳「船頭が多いと船が山へ行く」。標準の見出しは「사공이 많으면 배가 산으로 간다[올라간다]」。高麗大は「…산으로 올라간다」の形。",
+   "read": "サゴンイ マヌミョン ペガ サヌロ カンダ"
+  }
+ },
+ {
+  "no": 41,
+  "src_no": 67,
+  "jp": "千里の道も一歩から",
+  "en": {
+   "text": "A journey of a thousand miles begins with a single step.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/a_journey_of_a_thousand_miles_begins_with_a_single_step",
+    "https://www.phrases.org.uk/meanings/a-journey-of-a-thousand-miles-begins-with-a-single-step.html"
+   ],
+   "note": "直訳「千マイルの旅も一歩から始まる」。老子（『道徳経』）の英訳が定着したもの。The longest journey starts with a single step という形もある（Phrase Finder）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Il n'y a que le premier pas qui coûte.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/il_n’y_a_que_le_premier_pas_qui_coûte",
+    "https://www.expressio.fr/expressions/il-n-y-a-que-le-premier-pas-qui-coute",
+    "https://www.linternaute.fr/proverbe/235/il-n-y-a-que-le-premier-pas-qui-coute/"
+   ],
+   "note": "直訳「つらいのは最初の一歩だけ」。始めるのがいちばん難しく、始めればあとは楽になる。大事も手近な一歩から、という点は近いが、意味の中心がずれる。本に載せるなら要注意。en.wiktionary・ja.wiktionaryの仏訳 un voyage de mille lieues commence toujours par un premier pas は中国語の直訳で、フランス語のことわざとしての項目はない。",
+   "read": ""
+  },
+  "zh": {
+   "text": "千里之行，始於足下",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%8D%83%E9%87%8C%E4%B9%8B%E8%A1%8C%EF%BC%8C%E5%A7%8B%E6%96%BC%E8%B6%B3%E4%B8%8B",
+    "https://en.wiktionary.org/wiki/%E5%8D%83%E9%87%8C%E4%B9%8B%E8%A1%8C%EF%BC%8C%E5%A7%8B%E6%96%BC%E8%B6%B3%E4%B8%8B",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=100393"
+   ],
+   "note": "直訳「千里の道も足元の一歩から始まる」。原典は《老子》第六十四章。",
+   "read": "qiān lǐ zhī xíng, shǐ yú zú xià"
+  },
+  "ko": {
+   "text": "천 리 길도 한 걸음부터",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/1bc2a9460db74338bf6deae89ec35f7b",
+    "https://dic.daum.net/word/view.do?wordid=kkw000304085&supid=kku010011208"
+   ],
+   "note": "直訳「千里の道も一歩から」。高麗大（Daum）は「천리 길도」と表記。",
+   "read": "チョルリ ギルド ハン ゴルムブト"
+  }
+ },
+ {
+  "no": 42,
+  "src_no": 7,
+  "jp": "雨降って地固まる",
+  "en": {
+   "text": "After a storm comes a calm.",
+   "match": "近い",
+   "sources": [
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-23",
+    "https://idioms.thefreedictionary.com/After+a+storm+comes+a+calm",
+    "https://www.gutenberg.org/ebooks/39281"
+   ],
+   "note": "直訳「嵐のあとには凪が来る」。悪いことのあとには落ち着いた状態が来る、の意。「もめごとのあと、かえって前より基盤が固まる」という日本語の含みまでは言っていない。Preston (1880) 1540番、Kelly (1859) にも収録。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Après la pluie, le beau temps.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/après_la_pluie,_le_beau_temps",
+    "https://en.wiktionary.org/wiki/every_cloud_has_a_silver_lining",
+    "https://ja.wiktionary.org/wiki/雨降って地固まる",
+    "https://www.expressio.fr/expressions/apres-la-pluie-le-beau-temps"
+   ],
+   "note": "直訳「雨のあとは晴れ」。悪いことの後に良いことが来る。「もめごとの後にかえって前より固まる」という意味までは含まない。57番と同じ句。",
+   "read": ""
+  },
+  "zh": {
+   "text": "不打不相識",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%B8%8D%E6%89%93%E4%B8%8D%E7%9B%B8%E8%AD%98",
+    "https://en.wiktionary.org/wiki/%E4%B8%8D%E6%89%93%E4%B8%8D%E7%9B%B8%E8%AD%98",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=20259"
+   ],
+   "note": "直訳「殴り合わなければ知り合えない」。争いのあとでかえって親しくなる、の意。雨降って地固まるの「もめごとのあと関係が固まる」面に近い。《水滸傳》第38回「不打不成相識」。台湾の読みは xiāng shì。",
+   "read": "bù dǎ bù xiāng shí"
+  },
+  "ko": {
+   "text": "비 온 뒤에 땅이 굳어진다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/d4301ee950c24f0590ed9abd7aa7f23e",
+    "https://dic.daum.net/word/view.do?wordid=kkw000120991"
+   ],
+   "note": "直訳「雨が降った後に地が固まる」。",
+   "read": "ピ オン トィエ タンイ クドジンダ"
+  }
+ },
+ {
+  "no": 43,
+  "src_no": 74,
+  "jp": "習うより慣れよ",
+  "en": {
+   "text": "Practice makes perfect.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/practice_makes_perfect",
+    "https://dictionary.cambridge.org/dictionary/english/practice-makes-perfect",
+    "https://www.ldoceonline.com/dictionary/practice-makes-perfect",
+    "https://www.phrases.org.uk/meanings/practice-makes-perfect.html"
+   ],
+   "note": "直訳「練習が完璧をつくる」。繰り返せば上達する。「人に教わるより自分で慣れるほうが身につく」とは近いが同じではない。Preston (1880) 1280番にも収録。",
+   "read": ""
+  },
+  "fr": {
+   "text": "C'est en forgeant qu'on devient forgeron.",
+   "match": "同じ",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/c’est_en_forgeant_qu’on_devient_forgeron",
+    "https://en.wiktionary.org/wiki/practice_makes_perfect",
+    "https://www.expressio.fr/expressions/c-est-en-forgeant-qu-on-devient-forgeron",
+    "https://www.linternaute.fr/proverbe/329/c-est-en-forgeant-qu-on-devient-forgeron/"
+   ],
+   "note": "直訳「鍛えることで鍛冶屋になる」。上達は実践から。",
+   "read": ""
+  },
+  "zh": {
+   "text": "熟能生巧",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E7%86%9F%E8%83%BD%E7%94%9F%E5%B7%A7",
+    "https://en.wiktionary.org/wiki/%E7%86%9F%E8%83%BD%E7%94%9F%E5%B7%A7",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=133376",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=282"
+   ],
+   "note": "直訳「慣れれば巧みさが生まれる」。練習を重ねれば上達する。宋・歐陽脩《賣油翁》の故事に基づく。教わるより実地で慣れよ、という日本語とは力点が少しちがう。",
+   "read": "shú néng shēng qiǎo"
+  },
+  "ko": {
+   "text": "서당 개 삼 년에 풍월을 읊는다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/05a19f2f84774d9a86ce522b845cd447",
+    "https://ko.dict.naver.com/#/entry/koko/da2ecaf007f4441380c6637af6824386"
+   ],
+   "note": "直訳「書堂の犬も三年いれば詩を吟ずる」＝素人でも、その場に長くいれば自然に身につく。標準の見出しは「서당 개 삼 년에 풍월(을) 한다[읊는다/짓는다]」、高麗大は「서당개 삼 년에 풍월(을) 읊는다〔짓는다〕」。口語では「…삼 년이면…」とも言う。『習うより慣れよ』の「経験で身につく」と近い。候補は空欄だった。",
+   "read": "ソダン ケ サム ニョネ プンウォルル ウムヌンダ"
+  }
+ },
+ {
+  "no": 44,
+  "src_no": 97,
+  "jp": "絵に描いた餅",
+  "en": {
+   "text": "Pie in the sky.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/pie_in_the_sky",
+    "https://dictionary.cambridge.org/dictionary/english/pie-in-the-sky",
+    "https://www.ldoceonline.com/dictionary/pie-in-the-sky",
+    "https://www.phrases.org.uk/meanings/pie-in-the-sky.html"
+   ],
+   "note": "直訳「空のパイ」。実現しそうにない（約束された）よいこと。「実際の役に立たないもの」という日本語とは近いが同じではない。慣用句。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Des châteaux en Espagne.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/châteaux_en_Espagne",
+    "https://www.larousse.fr/dictionnaires/francais/château",
+    "https://en.wiktionary.org/wiki/castle_in_the_air",
+    "https://www.expressio.fr/expressions/batir-des-chateaux-en-espagne"
+   ],
+   "note": "直訳「スペインの城」。実現しそうにない夢や計画。成句。faire / bâtir des châteaux en Espagne の形で使う（expressio は bâtir）。役に立たない計画、という絵に描いた餅とは近い。",
+   "read": ""
+  },
+  "zh": {
+   "text": "畫餅充飢",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E7%95%AB%E9%A4%85%E5%85%85%E9%A3%A2",
+    "https://en.wiktionary.org/wiki/%E7%95%AB%E9%A4%85%E5%85%85%E9%A3%A2",
+    "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=955"
+   ],
+   "note": "直訳「餅（へい）を描いて飢えをしのぐ」。もとは「名ばかりで役に立たない」（《三國志・魏書・盧毓傳》「名如畫地作餅，不可啖也」）、のちに「空想で自分を慰める」意。役に立たない計画、という日本語に近い。",
+   "read": "huà bǐng chōng jī"
+  },
+  "ko": {
+   "text": "그림의 떡",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/128400a5ac564522acfc781c16134615",
+    "https://dic.daum.net/word/view.do?wordid=kkw000032557"
+   ],
+   "note": "直訳「絵の餅」。",
+   "read": "クリメ ットク"
+  }
+ },
+ {
+  "no": 45,
+  "src_no": 100,
+  "jp": "捨てる神あれば拾う神あり",
+  "en": {
+   "text": "When one door shuts, another opens.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/when_one_door_shuts,_another_opens",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1614",
+    "https://www.gutenberg.org/ebooks/39281"
+   ],
+   "note": "直訳「1つの扉が閉まれば、別の扉が開く」。ODP・Preston 445番・Kelly (1859) は When one door shuts another opens（カンマなし）。When one door closes, another opens の形も多い（Wiktionary の主見出しはこちら）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Une de perdue, dix de retrouvées.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/une_de_perdue,_dix_de_retrouvées",
+    "https://www.expressio.fr/expressions/une-de-perdue-dix-de-retrouvees"
+   ],
+   "note": "直訳「一人失えば十人見つかる」。失っても代わりはすぐ見つかる。主に失恋した人を慰めるときに使う。見捨てる者がいれば助ける者もいる、という点は近いが、恋愛の場面に偏る。男性形 Un de perdu, dix de retrouvés.（linternaute）。",
+   "read": ""
+  },
+  "zh": {
+   "text": "天無絕人之路",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%A4%A9%E7%84%A1%E7%B5%95%E4%BA%BA%E4%B9%8B%E8%B7%AF",
+    "https://en.wiktionary.org/wiki/%E5%A4%A9%E7%84%A1%E7%B5%95%E4%BA%BA%E4%B9%8B%E8%B7%AF",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=53396"
+   ],
+   "note": "直訳「天は人の道を断ち切らない」。行き詰まっても必ず活路がある。元・無名氏《貨郎擔》など。見捨てる人がいれば助ける人もいる、という日本語の「人」の対比は無いので「近い」。",
+   "read": "tiān wú jué rén zhī lù"
+  },
+  "ko": {
+   "text": "하늘이 무너져도 솟아날 구멍이 있다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/5f5134829a4442e997dbabac26d29c9d",
+    "https://dic.daum.net/word/view.do?wordid=kkw000283448"
+   ],
+   "note": "直訳「天が崩れても抜け出す穴はある」＝どんな窮地にも生きる道はある。『捨てる神あれば拾う神あり』の「見捨てる人もいれば助ける人もいる」とは少し違う。",
+   "read": "ハヌリ ムノジョド ソサナル クモンイ イッタ"
+  }
+ },
+ {
+  "no": 46,
+  "src_no": 85,
+  "jp": "知識は力なり",
+  "en": {
+   "text": "Knowledge is power.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/knowledge_is_power",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1203",
+    "https://www.gutenberg.org/ebooks/39281"
+   ],
+   "note": "直訳「知識は力なり」。フランシス・ベーコンのラテン語 scientia potentia est に由来。Preston (1880) 904番、TFD にも収録。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Savoir, c'est pouvoir.",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/knowledge_is_power",
+    "https://www.larousse.fr/dictionnaires/francais/savoir"
+   ],
+   "note": "直訳「知ることは力である」。民間のことわざではなく、ベーコンの格言の仏訳。Larousseにはルナンの文中の引用（« Savoir c'est pouvoir » est le plus beau mot qu'on ait dit）として載る。fr.wiktionaryには項目なし。",
+   "read": ""
+  },
+  "zh": {
+   "text": "知識就是力量",
+   "match": "同じ",
+   "sources": [
+    "https://en.wiktionary.org/wiki/%E7%9F%A5%E8%AD%98%E5%B0%B1%E6%98%AF%E5%8A%9B%E9%87%8F",
+    "https://baike.baidu.com/item/%E7%9F%A5%E8%AF%86%E5%B0%B1%E6%98%AF%E5%8A%9B%E9%87%8F/71151"
+   ],
+   "note": "直訳「知識こそ力である」。フランシス・ベーコンの語の訳。百度百科は検索結果で項目（知识就是力量（经典名言））の存在だけ確認（ページ本体は開けず）。台湾の読みは zhī shì。",
+   "read": "zhī shi jiù shì lì liàng"
+  },
+  "ko": {
+   "text": "아는 것이 힘이다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/e73a9243154a4bc2a52466eb63e27d4c",
+    "https://ko.wikipedia.org/wiki/%EC%95%84%EB%8A%94_%EA%B2%83%EC%9D%B4_%ED%9E%98%EC%9D%B4%EB%8B%A4"
+   ],
+   "note": "直訳「知っていることが力だ」。ベーコン由来の格言。KNU韓国語日常表現辞典（慶北大学、Naverオープン辞典）と韓国語版Wikipediaで確認。標準・高麗大には見出しなし。",
+   "read": "アヌン ゴシ ヒミダ"
+  }
+ },
+ {
+  "no": 47,
+  "src_no": 95,
+  "jp": "鶏口となるも牛後となるなかれ",
+  "en": {
+   "text": "Better be the head of a dog than the tail of a lion.",
+   "match": "同じ",
+   "sources": [
+    "https://idioms.thefreedictionary.com/better+be+the+head+of+a+dog+than+the+tail+of+a+lion",
+    "http://fofweb.infobase.com/wrc/Detail.aspx?iPin=DOP00148"
+   ],
+   "note": "直訳「ライオンの尾になるより犬の頭になれ」。TFD では Farlex と McGraw-Hill の2辞書がことわざとして収録。2つ目の URL（Facts On File の Dictionary of Proverbs）はログインが必要で本文は開けず、検索結果の見出しと要約（初出1599年、古い形は犬の代わりに狐・ネズミ・トカゲ）で確認しただけ。Wiktionary・ODP には項目がない。同じ意味で古い出典で確認できる形として Better be the head of an ass than the tail of a horse（ロバの頭になるほうが馬の尾になるよりよい）が Preston (1880) 765番と Hulme (1902) にある（https://www.gutenberg.org/ebooks/39281 , https://www.gutenberg.org/ebooks/34176）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "J'aimerais mieux être le premier dans ce village que le second à Rome.",
+   "match": "同じ",
+   "sources": [
+    "https://www.linternaute.fr/citation/3756/j-aimerais-mieux-etre-le-premier-dans-un-village--que-le--jules-cesar/",
+    "https://www.parismuseescollections.paris.fr/fr/musee-carnavalet/oeuvres/mieux-vaut-le-premier-dans-un-village-que-le-deuxieme-dans-rome-proverbes"
+   ],
+   "note": "直訳「ローマで二番になるより、この村で一番になりたい」。カエサルの言葉とされる（プルタルコス）。linternaute の表記は dans un village。カルナヴァレ美術館の石版画（1840年ごろ、題に「proverbes」）は Mieux vaut le premier dans un village que le deuxième dans Rome の形。候補の Mieux vaut être le premier au village que le second à Rome は出典どおりの形では見つからなかった。表記の揺れが大きいので、載せる形は要相談。",
+   "read": ""
+  },
+  "zh": {
+   "text": "寧為雞口，無為牛後",
+   "match": "同じ",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%AF%A7%E7%82%BA%E9%9B%9E%E5%8F%A3%EF%BC%8C%E7%84%A1%E7%82%BA%E7%89%9B%E5%BE%8C",
+    "https://en.wiktionary.org/wiki/%E5%AF%A7%E7%82%BA%E9%9B%9E%E5%8F%A3%EF%BC%8C%E7%84%A1%E7%82%BA%E7%89%9B%E5%BE%8C",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=58289"
+   ],
+   "note": "直訳「むしろ鶏の口となっても、牛の尻とはなるな」。日本語の出典そのもの。原典は《戰國策・韓策》・《史記・蘇秦列傳》。略して「雞口牛後」。修訂本の読みは níng（大陸の辞書は nìng とすることがある）。",
+   "read": "níng wéi jī kǒu, wú wéi niú hòu"
+  },
+  "ko": {
+   "text": "계구우후",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/b7d9e23e75894393af6926be22b93da8",
+    "https://dic.daum.net/word/view.do?wordid=kkw000015053"
+   ],
+   "note": "鷄口牛後。候補の「용의 꼬리보다 닭의 머리가 낫다」（竜の尾より鶏の頭がまし）は高麗大にしか見出しがない。標準・高麗大の両方にあることわざなら「닭의 볏이 될지언정 소의 꼬리는 되지 마라」。",
+   "read": "ケグウフ"
+  }
+ },
+ {
+  "no": 48,
+  "src_no": 35,
+  "jp": "三つ子の魂百まで",
+  "en": {
+   "text": "Old habits die hard.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/old_habits_die_hard",
+    "https://www.ldoceonline.com/dictionary/old-habits-die-hard",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1603"
+   ],
+   "note": "直訳「古い習慣はなかなか死なない」。身についた習慣は変えにくい。「幼いころの性格は一生変わらない」により近いのは The child is the father of the man（ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-350 の表記。Phrase Finder は The child is father to the man、TFD は the child is father of the man。ワーズワースの詩句がことわざになったもの）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Chassez le naturel, il revient au galop.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/chassez_le_naturel,_il_revient_au_galop",
+    "https://en.wiktionary.org/wiki/old_habits_die_hard",
+    "https://www.expressio.fr/expressions/chassez-le-naturel-il-revient-au-galop",
+    "https://www.linternaute.fr/proverbe/631/chassez-le-naturel-il-revient-au-galop/"
+   ],
+   "note": "直訳「生まれつきの性質を追い払っても、駆け足で戻ってくる」。持って生まれた性質は変わらない。「幼いころの性格は年をとっても変わらない」という点は近いが、幼少期への言及はない。",
+   "read": ""
+  },
+  "zh": {
+   "text": "從小看大，三歲看老",
+   "match": "同じ",
+   "sources": [
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=142929",
+    "https://baike.baidu.com/item/%E4%BB%8E%E5%B0%8F%E7%9C%8B%E5%A4%A7%EF%BC%8C%E4%B8%89%E5%B2%81%E7%9C%8B%E8%80%81/22945440"
+   ],
+   "note": "直訳「小さいうちを見れば大人の姿が分かる、三歳を見れば老年が分かる」。幼い頃の性格は一生変わらない。《重編國語辭典修訂本》はこの形で立項（「三歲看老」で引いてもこの項目に行く）。百度百科は検索結果で項目の存在だけ確認（ページ本体は403で開けず）。候補の「江山易改，本性難移」（生まれつきの性質は変わらない）も実在する（漢典・Wiktionary・修訂本）が、幼い頃の話ではないので「近い」止まり。",
+   "read": "cóng xiǎo kàn dà, sān suì kàn lǎo"
+  },
+  "ko": {
+   "text": "세 살 적 버릇이 여든까지 간다",
+   "match": "同じ",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/45d9a62dc30b425d964477a7bd156b2c",
+    "https://dic.daum.net/word/view.do?wordid=kkw000143074"
+   ],
+   "note": "直訳「三歳のころの癖が八十まで続く」。候補の「세 살 버릇 여든까지 간다」は口語で広く使うが、辞書の見出しは標準・高麗大とも「적」が入る形（標準は「버릇[마음]」を併記）。",
+   "read": "セ サル チョク ポルシ ヨドゥンッカジ カンダ"
+  }
+ },
+ {
+  "no": 49,
+  "src_no": 61,
+  "jp": "一寸の虫にも五分の魂",
+  "en": {
+   "text": "Even a worm will turn.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/even_a_worm_will_turn",
+    "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2509",
+    "https://www.phrases.org.uk/meanings/even-a-worm-will-turn.html",
+    "https://idioms.thefreedictionary.com/Even+a+worm+will+turn"
+   ],
+   "note": "直訳「虫けらでさえ（踏まれれば）身をよじって反撃する」。おとなしい者も追い詰められれば反抗する。「小さく弱い者にも意地がある、侮るな」とは近いが同じではない。The worm turns の形もある（Cambridge・LDOCE）。Preston (1880) に Tread on a worm and it will turn。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Il n'y a si petit buisson qui ne porte son ombre.",
+   "match": "近い",
+   "sources": [
+    "https://www.linternaute.fr/proverbe/1911/il-n-y-a-si-petit-buisson-qui-ne-porte-son/",
+    "https://www.littre.org/definition/buisson"
+   ],
+   "note": "直訳「影を落とさないほど小さな茂みはない」。linternaute の説明は「どんなに小さな相手でも害をなしうる」。小さな者も侮れない、という点で近い。「小さな者にも意地がある」という心の面は含まない。Littréには ne porte ombre（son なし）の形で載る。",
+   "read": ""
+  },
+  "zh": {
+   "text": "三軍可奪帥，匹夫不可奪志",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E4%B8%89%E8%BB%8D%E5%8F%AF%E5%A5%AA%E5%B8%A5%EF%BC%8C%E5%8C%B9%E5%A4%AB%E4%B8%8D%E5%8F%AF%E5%A5%AA%E5%BF%97",
+    "https://en.wiktionary.org/wiki/%E4%B8%89%E8%BB%8D%E5%8F%AF%E5%A5%AA%E5%B8%A5%EF%BC%8C%E5%8C%B9%E5%A4%AB%E4%B8%8D%E5%8F%AF%E5%A5%AA%E5%BF%97",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=144648",
+    "https://www.zdic.net/hant/%E5%8C%B9%E5%A4%AB%E4%B8%8D%E5%8F%AF%E5%A5%AA%E5%BF%97"
+   ],
+   "note": "直訳「大軍の総大将を奪うことはできても、一人の男の志は奪えない」。身分の低い者にも曲げられない志がある。原典は《論語・子罕》。後半の「匹夫不可奪志」だけでも漢典にある。小さく弱い者にも意地がある、という日本語に近い。",
+   "read": "sān jūn kě duó shuài, pǐ fū bù kě duó zhì"
+  },
+  "ko": {
+   "text": "지렁이도 밟으면 꿈틀한다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/cf321181417e41feb264cb2fa1976529",
+    "https://dic.daum.net/word/view.do?wordid=kkw000241029"
+   ],
+   "note": "直訳「ミミズも踏めばうごめく」＝おとなしい者も侮りすぎると反抗する。標準の見出しは「지렁이도 밟으면[다치면/디디면] 꿈틀한다」。",
+   "read": "チロンイド パルブミョン ックムトゥランダ"
+  }
+ },
+ {
+  "no": 50,
+  "src_no": 68,
+  "jp": "石の上にも三年",
+  "en": {
+   "text": "Rome wasn't built in a day.",
+   "match": "近い",
+   "sources": [
+    "https://en.wiktionary.org/wiki/Rome_wasn't_built_in_a_day",
+    "https://dictionary.cambridge.org/dictionary/english/rome-wasn't-built-in-a-day",
+    "https://www.ldoceonline.com/dictionary/rome-wasn-t-built-in-a-day",
+    "https://www.phrases.org.uk/meanings/rome-wasnt-built-in-a-day.html"
+   ],
+   "note": "直訳「ローマは一日にして成らず」。大きなことは短期間では成し遂げられない。「辛抱すれば報われる」とは近いが同じではない。Rome was not built in a day の形もある（Wiktionary の異形、Preston 1369番）。",
+   "read": ""
+  },
+  "fr": {
+   "text": "Petit à petit, l'oiseau fait son nid.",
+   "match": "近い",
+   "sources": [
+    "https://fr.wiktionary.org/wiki/petit_à_petit,_l’oiseau_fait_son_nid",
+    "https://en.wiktionary.org/wiki/many_a_mickle_makes_a_muckle",
+    "https://www.expressio.fr/expressions/petit-a-petit-l-oiseau-fait-son-nid",
+    "https://www.linternaute.fr/proverbe/242/petit-a-petit-l-oiseau-fait-son-nid/"
+   ],
+   "note": "直訳「少しずつ、鳥は巣をつくる」。fr.wiktionaryの定義は「根気よく少しずつ進めば目標に達する」。辛抱すれば報われる、という点で近い。Paris ne s'est pas fait en un jour.（パリは一日にして成らず、fr.wiktionary）も実在。",
+   "read": ""
+  },
+  "zh": {
+   "text": "只要功夫深，鐵杵磨成針",
+   "match": "近い",
+   "sources": [
+    "https://www.zdic.net/hant/%E5%8F%AA%E8%A6%81%E5%8A%9F%E5%A4%AB%E6%B7%B1%EF%BC%8C%E9%90%B5%E6%9D%B5%E7%A3%A8%E6%88%90%E9%87%9D",
+    "https://en.wiktionary.org/wiki/%E5%8F%AA%E8%A6%81%E5%8A%9F%E5%A4%AB%E6%B7%B1%EF%BC%8C%E9%90%B5%E6%9D%B5%E7%A3%A8%E6%88%90%E9%87%9D",
+    "https://dict.revised.moe.edu.tw/dictView.jsp?ID=113860",
+    "https://www.zdic.net/hant/%E9%90%B5%E6%9D%B5%E7%A3%A8%E6%88%90%E9%87%9D"
+   ],
+   "note": "直訳「努力さえ深ければ、鉄の杵も磨いて針にできる」。根気よく続ければ必ず成る。李白の少年時代の伝説に基づく。候補の「鐵杵磨成針」も漢典・修訂本にある。辛抱して続ければ報われる、という点で近い。",
+   "read": "zhǐ yào gōng fu shēn, tiě chǔ mó chéng zhēn"
+  },
+  "ko": {
+   "text": "참을 인 자 셋이면 살인도 피한다",
+   "match": "近い",
+   "sources": [
+    "https://ko.dict.naver.com/#/entry/koko/a5071e826a994e8dbdeeba319d6d665b",
+    "https://dic.daum.net/word/view.do?wordid=kkw000250404"
+   ],
+   "note": "直訳「『忍』の字が三つあれば殺人も避けられる」＝最後まで耐えれば成し遂げられないことはない。標準の見出しは「참을 인(忍) 자 셋이면…」。候補は空欄だった。",
+   "read": "チャムル イン ッチャ セシミョン サリンド ピハンダ"
+  }
+ }
+]
