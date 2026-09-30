@@ -46,6 +46,10 @@ jobs:
     # このリポジトリは public なので macOS ランナーも無料枠で動く。
     runs-on: macos-latest
     timeout-minutes: 60
+    env:
+      # 設定画面のリンク先。**`soccer-career.pages.dev` は他人のサイト**なので
+      # 短いほうに直してはいけない（`-49p` が正しい）。
+      LEGAL_BASE_URL: https://soccer-career-49p.pages.dev/legal
     defaults:
       run:
         working-directory: projects/soccer-career
@@ -74,13 +78,13 @@ jobs:
         env:
           CERT_BASE64: ${{ secrets.IOS_DIST_CERT_BASE64 }}
           CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
-          PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64_CAREER }}
+          PROFILE_BASE64: ${{ secrets.CAREER_IOS_PROVISIONING_PROFILE_BASE64 }}
           TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
         run: |
           missing=""
           [ -n "$CERT_BASE64" ]     || missing="$missing IOS_DIST_CERT_BASE64"
           [ -n "$CERT_PASSWORD" ]   || missing="$missing IOS_DIST_CERT_PASSWORD"
-          [ -n "$PROFILE_BASE64" ]  || missing="$missing IOS_PROVISIONING_PROFILE_BASE64_CAREER"
+          [ -n "$PROFILE_BASE64" ]  || missing="$missing CAREER_IOS_PROVISIONING_PROFILE_BASE64"
           [ -n "$TEAM_ID" ]         || missing="$missing IOS_TEAM_ID"
           if [ -n "$missing" ]; then
             echo "::error::次の GitHub Secrets が未設定です:$missing"
@@ -96,13 +100,13 @@ jobs:
       # 広告SDKが落ちる。ここで置換し、置換できたことを確かめる方が確実。
       - name: Verify AdMob production IDs and apply them
         env:
-          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID_IOS_CAREER }}
-          ADMOB_INTERSTITIAL: ${{ secrets.ADMOB_INTERSTITIAL_IOS_CAREER }}
+          ADMOB_APP_ID: ${{ secrets.CAREER_ADMOB_APP_ID_IOS }}
+          ADMOB_INTERSTITIAL: ${{ secrets.CAREER_ADMOB_INTERSTITIAL_IOS }}
         run: |
           set -euo pipefail
           missing=""
-          [ -n "$ADMOB_APP_ID" ] || missing="$missing ADMOB_APP_ID_IOS_CAREER"
-          [ -n "$ADMOB_INTERSTITIAL" ] || missing="$missing ADMOB_INTERSTITIAL_IOS_CAREER"
+          [ -n "$ADMOB_APP_ID" ] || missing="$missing CAREER_ADMOB_APP_ID_IOS"
+          [ -n "$ADMOB_INTERSTITIAL" ] || missing="$missing CAREER_ADMOB_INTERSTITIAL_IOS"
           if [ -n "$missing" ]; then
             echo "::error::次の GitHub Secrets が未設定です:$missing"
             echo "::error::未設定のままだと Google のテスト用IDで公開され、広告収益が発生しません。"
@@ -113,13 +117,37 @@ jobs:
               echo "::error::Google のテスト用IDが登録されています。自分の AdMob のIDに置き換えてください。"
               exit 1 ;;
           esac
+          # アプリIDは「~」、広告ユニットIDは「/」で区切る。取り違えると広告が1本も出ない。
+          echo "$ADMOB_APP_ID" | grep -Eq '^ca-app-pub-[0-9]{16}~[0-9]{10}$' \
+            || { echo "::error::CAREER_ADMOB_APP_ID_IOS がアプリIDの形（ca-app-pub-…~…）ではありません。"; exit 1; }
+          echo "$ADMOB_INTERSTITIAL" | grep -Eq '^ca-app-pub-[0-9]{16}/[0-9]{10}$' \
+            || { echo "::error::CAREER_ADMOB_INTERSTITIAL_IOS が広告ユニットIDの形（ca-app-pub-…/…）ではありません。"; exit 1; }
+          # 発行元の16桁が揃っているか。別アカウントのIDを混ぜると収益が別の場所に付く。
+          pub() { echo "$1" | sed -E 's/^ca-app-pub-([0-9]{16}).*/\1/'; }
+          [ "$(pub "$ADMOB_APP_ID")" = "$(pub "$ADMOB_INTERSTITIAL")" ] \
+            || { echo "::error::アプリIDと広告ユニットIDが別の AdMob アカウントのものです。"; exit 1; }
           plutil -replace GADApplicationIdentifier -string "$ADMOB_APP_ID" ios/Runner/Info.plist
           # 置換できたことを確かめる。見逃すとテスト用IDのまま出る。
           if grep -q "ca-app-pub-3940256099942544" ios/Runner/Info.plist; then
             echo "::error::Info.plist にテスト用IDが残っています。置換に失敗しました。"
             exit 1
           fi
+          [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ] \
+            || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
           echo "Info.plist の GADApplicationIdentifier を本番IDに置き換えました。"
+
+      # 設定画面から開くリンク先が、開けて、しかもこのアプリのページであること。
+      # 404 や別アプリのページのまま出すと審査で却下される（5.1.1 / 2.5.18）。
+      - name: Verify legal pages are live
+        run: |
+          set -euo pipefail
+          for page in privacy terms support; do
+            body=$(curl -fsSL "$LEGAL_BASE_URL/$page.html") \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
+            grep -q "選手キャリア" <<<"$body" \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身が選手キャリアのページではありません。"; exit 1; }
+          done
+          echo "法務3ページとも開けて、中身もこのアプリのものでした。"
 
       - name: Import signing certificate into a temporary keychain
         env:
@@ -154,7 +182,7 @@ jobs:
 
       - name: Install provisioning profile
         env:
-          PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64_CAREER }}
+          PROFILE_BASE64: ${{ secrets.CAREER_IOS_PROVISIONING_PROFILE_BASE64 }}
         run: |
           set -euo pipefail
           PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
@@ -181,7 +209,7 @@ jobs:
               echo "プロファイルの App ID (${APP_ID}) は ${BUNDLE_ID} と一致しています" ;;
             *)
               echo "::error::プロファイルの App ID (${APP_ID}) が、このアプリの Bundle ID (${BUNDLE_ID}) と一致しません。"
-              echo "::error::soccer-manager のプロファイルを登録していませんか（Secrets 名は IOS_PROVISIONING_PROFILE_BASE64_CAREER）。"
+              echo "::error::soccer-manager のプロファイルを登録していませんか（Secrets 名は CAREER_IOS_PROVISIONING_PROFILE_BASE64）。"
               exit 1 ;;
           esac
 
@@ -255,12 +283,15 @@ jobs:
       # 公開ビルドに入る（`kAdmin` は const なので、ビルド時にしか決まらない）。
       - name: Build IPA
         env:
-          ADMOB_INTERSTITIAL: ${{ secrets.ADMOB_INTERSTITIAL_IOS_CAREER }}
+          ADMOB_INTERSTITIAL: ${{ secrets.CAREER_ADMOB_INTERSTITIAL_IOS }}
+          BUILD_NUMBER: ${{ github.event.inputs.build_number }}
         run: |
           set -euo pipefail
           EXTRA=""
-          if [ -n "${{ github.event.inputs.build_number }}" ]; then
-            EXTRA="--build-number=${{ github.event.inputs.build_number }}"
+          if [ -n "$BUILD_NUMBER" ]; then
+            # 入力欄の値をそのままシェルに埋め込まない。数字だけ受け付ける。
+            [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::ビルド番号は数字だけで入れてください。"; exit 1; }
+            EXTRA="--build-number=$BUILD_NUMBER"
           fi
           flutter build ipa --release \
             --export-options-plist=ios/ExportOptions.plist $EXTRA \

@@ -15,7 +15,6 @@ class Monetization extends ChangeNotifier {
       _purchases = purchases ?? createPurchaseService();
 
   static const String _noAdsKey = 'monetize.noAds';
-  static const String _tipsKey = 'monetize.tips';
 
   /// **何シーズン終えたら広告を出し始めるか。**
   ///
@@ -43,9 +42,6 @@ class Monetization extends ChangeNotifier {
   /// 広告を消す買い切りを持っているか。
   bool noAds = false;
 
-  /// 応援を受け取った回数。**ゲームには何も効かない。**
-  int tips = 0;
-
   /// ストアが使えるか。使えない環境では購入の導線を出さない。
   bool storeAvailable = false;
 
@@ -60,14 +56,13 @@ class Monetization extends ChangeNotifier {
   Future<void> initialize() async {
     final prefs = await SharedPreferences.getInstance();
     noAds = prefs.getBool(_noAdsKey) ?? false;
-    tips = prefs.getInt(_tipsKey) ?? 0;
 
     if (!noAds) await _ads.initialize();
     // **受け取るのはここ1か所（`_grant`）。** 買った瞬間に `buy()` の側で
     // 渡していた頃、アプリを落としている間に決済が通った購入は誰も
     // 受け取らなかった。`initialize` の引数にしてあるので、渡し忘れると
     // コンパイルが通らない。
-    await _purchases.initialize(onDelivered: _grant);
+    await _purchases.initialize(onDelivered: _grant, onRevoked: _revoke);
     storeAvailable = await _purchases.isAvailable();
     if (storeAvailable) {
       for (final product in Product.values) {
@@ -125,18 +120,25 @@ class Monetization extends ChangeNotifier {
   /// 届いたものを受け取る。ストアから流れてきたぶんも、買った直後のぶんも、
   /// 復元したぶんも、全部ここを通る。
   Future<void> _grant(Product product) async {
+    if (product != Product.noAds) return;
+    if (noAds) return;
+    noAds = true;
+    // もう出さないので、読み込み済みの広告も手放す。
+    _ads.dispose();
     final prefs = await SharedPreferences.getInstance();
-    switch (product) {
-      case Product.noAds:
-        if (noAds) return;
-        noAds = true;
-        // もう出さないので、読み込み済みの広告も手放す。
-        _ads.dispose();
-        await prefs.setBool(_noAdsKey, true);
-      case Product.tip:
-        tips++;
-        await prefs.setInt(_tipsKey, tips);
-    }
+    await prefs.setBool(_noAdsKey, true);
+    notifyListeners();
+  }
+
+  /// 返金・取り消しで戻す。**買った状態のまま残さない。**
+  Future<void> _revoke(Product product) async {
+    if (product != Product.noAds) return;
+    if (!noAds) return;
+    noAds = false;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_noAdsKey, false);
+    // 買った時点で手放しているので、広告を出せるように初期化し直す。
+    await _ads.initialize();
     notifyListeners();
   }
 

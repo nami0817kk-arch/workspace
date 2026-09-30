@@ -11,7 +11,6 @@
 | 商品 | 商品ID | 種別 | 中身 |
 |---|---|---|---|
 | 広告を消す | `soccer_career_no_ads` | 非消費型（買い切り） | シーズンの切れ目の全画面広告が出なくなる |
-| 応援する | `soccer_career_tip` | 消費型 | **ゲームには何も起きない。** 回数が表示されるだけ |
 
 **強くなるものは売らない。** 伸びしろも金も出場機会も `balance_sim` で測って
 釣り合わせてきたもので、売った瞬間にその調整が意味を失う。
@@ -46,8 +45,8 @@
 
 - `lib/monetize/`（広告・課金・出す条件）。Web とテストでは**何もしない実装**に
   切り替わる（`createAdService` / `createPurchaseService`）。
-- `lib/ui/screens/support_screen.dart`（広告・応援の画面。**購入の復元**を含む）。
-  メニューの「広告・応援」から開く。
+- `lib/ui/screens/support_screen.dart`（広告の画面。**購入の復元**を含む）。
+  メニューの「広告について」から開く。
 - `ios/Runner/Info.plist` に `GADApplicationIdentifier`・`SKAdNetworkItems`（50件）・
   `ITSAppUsesNonExemptEncryption`・`CFBundleLocalizations`。
 - `legal/privacy.html` / `terms.html` / `support.html`。Pages のデプロイで
@@ -76,7 +75,7 @@ flutter build ipa --release \
   --dart-define=ADMOB_INTERSTITIAL_IOS=ca-app-pub-xxxx/zzzz
 ```
 
-> 渡し忘れると、アプリ内の「広告・応援」画面に
+> 渡し忘れると、アプリ内の「広告について」画面に
 > **「広告はテスト用のままです」** と赤字で出る（`usingTestAdUnit`）。
 
 ### 2. App Store Connect
@@ -87,10 +86,13 @@ App プライバシーの申告・申請チェックリスト）。ここは仕�
 
 1. 新しい App を作る。**Bundle ID は `com.namiki.soccercareer`**
    （`ios/Runner.xcodeproj` に既に入っている）。
-2. **App内課金を2つ**登録する。IDは上の表のとおりで、1文字でも違うと
+2. **App内課金を1つ**登録する。IDは上の表のとおりで、1文字でも違うと
    アプリ側から見つからない。
-   - `soccer_career_no_ads` — 非消耗型
-   - `soccer_career_tip` — 消耗型
+   - `soccer_career_no_ads` — 非消耗型（¥400）
+
+   > **「応援する」（消耗型）は 2026-10-01 に外した**（ユーザーの判断）。
+   > 消耗型は復元できないので取りこぼすと払った額がそのまま消え、しかも
+   > ゲームには何も起きないので割に合わない。商品が1つなら、登録も審査も1件で済む。
    価格はストア側で決める（アプリには持たせていない）。
    どちらもアプリ本体とは**別に審査**がある。
 3. URL を入れる:
@@ -119,4 +121,3 @@ soccer-career には iOS のリリース用ワークフローがまだ無い。
 - 続けてシーズンを飛ばしても、3分以内には二度出ない。
 - 「広告を消す」を買うと、以降のシーズン終了で出ない。
 - アプリを消して入れ直し、「購入を復元」で広告が消えたままになる。
-- 「応援する」は何度でも買えて、ゲームの中では何も変わらない。

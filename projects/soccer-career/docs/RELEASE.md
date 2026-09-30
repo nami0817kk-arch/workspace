@@ -31,10 +31,21 @@ CI からは手が出ない。
 
 | やること | 場所 | 使う値 |
 |---|---|---|
-| iOS アプリを1件追加し、**インタースティシャルを1つ**作る（リワードは無い） | AdMob | → `ADMOB_APP_ID_IOS_CAREER` / `ADMOB_INTERSTITIAL_IOS_CAREER` |
+| iOS アプリを1件追加し、**インタースティシャルを1つ**作る（リワードは無い） | AdMob | → `CAREER_ADMOB_APP_ID_IOS` / `CAREER_ADMOB_INTERSTITIAL_IOS` |
 | アプリレコードを作る | App Store Connect | `com.namiki.soccercareer` |
-| App内課金を2件登録して審査に出す | App Store Connect | `soccer_career_no_ads`（非消耗型） / `soccer_career_tip`（消耗型） |
-| App ID とプロビジョニングプロファイルを作る | Apple Developer | → `IOS_PROVISIONING_PROFILE_BASE64_CAREER` |
+| App内課金を1件登録して審査に出す | App Store Connect | `soccer_career_no_ads`（**非消耗型**・¥400） |
+| App ID とプロビジョニングプロファイルを作る | Apple Developer | → `CAREER_IOS_PROVISIONING_PROFILE_BASE64` |
+
+課金アイテムには**審査用のスクリーンショットが必須**（値段のボタンが写った画面）。
+手で撮らずに生成器で作る:
+
+```bash
+flutter test tool/screenshots/iap_review_test.dart \
+  --dart-define=ADMOB_INTERSTITIAL_ANDROID=ca-app-pub-0000000000000000/0000000000
+```
+
+`marketing/iap_review/remove_ads.png`（1290x2796）ができる。
+**上げ直しはできても消せない**ので、値段を変えたら撮り直してから上げる。
 
 証明書（`IOS_DIST_CERT_BASE64` ほか）と Team ID、App Store Connect API キーは
 **サカマネのものをそのまま使う**。同じ Apple アカウントなので作り直さない。
@@ -50,7 +61,7 @@ CI からは手が出ない。
 | タグ | `soccer-career-v*`（例: `soccer-career-v1.0.0`） |
 | ワークフロー | `.github/workflows/soccer-career-ios-release.yml` |
 | 広告 | **インタースティシャルだけ**（リワードは無い） |
-| App内課金 | `soccer_career_no_ads`（非消耗型） / `soccer_career_tip`（消耗型） |
+| App内課金 | `soccer_career_no_ads`（非消耗型・¥400）の1件だけ |
 
 ## 2. GitHub Secrets
 
@@ -63,14 +74,17 @@ CI からは手が出ない。
 | `IOS_TEAM_ID` | Apple Developer の Team ID |
 | `APPSTORE_API_KEY_ID` ほか2つ | TestFlight へ自動で上げるとき（任意） |
 
-**このアプリ専用**（`_CAREER` が付く）:
+**このアプリ専用**（頭に `CAREER_` が付く）:
 
 | 名前 | 中身 |
 |---|---|
-| `IOS_PROVISIONING_PROFILE_BASE64_CAREER` | `com.namiki.soccercareer` のプロファイル |
-| `ADMOB_APP_ID_IOS_CAREER` | AdMob のアプリID（`~` 区切り） |
-| `ADMOB_INTERSTITIAL_IOS_CAREER` | インタースティシャルの広告ユニットID（`/` 区切り） |
+| `CAREER_IOS_PROVISIONING_PROFILE_BASE64` | `com.namiki.soccercareer` のプロファイル |
+| `CAREER_ADMOB_APP_ID_IOS` | AdMob のアプリID（`~` 区切り） |
+| `CAREER_ADMOB_INTERSTITIAL_IOS` | インタースティシャルの広告ユニットID（`/` 区切り） |
 
+> **接頭辞は `CAREER_`。** `goso-boat`（`GOSO_`）とユーザーレベルスキル `ios-app-release` の
+> 流儀に合わせてある。後ろに付けると一覧で離れて並ぶ。
+>
 > **名前を分けてあるのは、取り違えると気付けないから。**
 > 同じ名前にすると `soccer-manager` のIDでこのアプリをビルドすることになる。
 > プロファイルは Bundle ID ごとに別なので署名の段で落ちるが、**AdMob のIDは
@@ -92,8 +106,13 @@ git push origin soccer-career-v1.0.0
 3. 署名の Secrets が揃っているか
 4. **AdMob が本番IDか**——Google のテスト用ID（`ca-app-pub-3940256099942544`）が
    登録されていたら止める。置換したあと、置換できたことも確かめる
-5. 証明書とプロファイル（**App ID と Bundle ID の突き合わせ**）
-6. IPA ビルド → TestFlight（`workflow_dispatch` で選んだときだけ）
+5. **AdMob のIDの形と発行元**——アプリIDは `~`、広告ユニットIDは `/`。
+   発行元の16桁が食い違っていたら止める（別アカウントのIDが混ざると
+   収益が別の場所に付く）
+6. **法務3ページが開けて、中身がこのアプリのものか**——404 や他人のページの
+   まま出すと審査で却下される
+7. 証明書とプロファイル（**App ID と Bundle ID の突き合わせ**）
+8. IPA ビルド → TestFlight（`workflow_dispatch` で選んだときだけ）
 
 **テスト用IDのまま公開すると、広告は出るのに収益がゼロになる。しかも審査は
 通ってしまうので、気づくのが遅れる。** だから署名と同じ扱いで止めている。
@@ -134,10 +153,13 @@ App Store Connect は**同じビルド番号を二度受け付けない**。上�
 
 ### 課金
 
-- [ ] メニュー →「広告・応援」が開き、売り物が**2つだけ**
+- [ ] メニュー →「広告について」が開き、売り物が**「広告を消す」1つだけ**
 - [ ] 「広告を消す」を買うと、以降**シーズン終了で広告が出ない**
-- [ ] 「応援する」を買うと**回数だけ増える**（ゲームには何も起きない）
-- [ ] **「購入を復元」が動く**（iOS の審査要件。復元で戻るのは「広告を消す」だけ）
+- [ ] **ボタンの値段が「広告を消す（¥400）」と読める**（□400 になっていない）
+      ——同梱フォントに半角の `¥`（U+00A5）が無い。ストアから来る文字なので
+      機械の検査では拾えず、**ここで目で見るしかない**（`docs/app-pitfalls.md` の6番）
+- [ ] **「購入を復元」が動く**（iOS の審査要件）
+- [ ] 「決まりごと」の3行を押すと、URLが控えに入る
 - [ ] アプリを消して入れ直し、「購入を復元」で広告が消えたままになる
 
 ### 評価
@@ -173,8 +195,8 @@ curl "https://itunes.apple.com/lookup?id=<App ID>&country=jp"
 
 | 症状 | 原因と対処 |
 |---|---|
-| プロファイルの App ID が一致しないと言われる | `soccer-manager` のプロファイルを `IOS_PROVISIONING_PROFILE_BASE64_CAREER` に登録していないか |
-| 「Google のテスト用IDが登録されています」で止まる | `ADMOB_APP_ID_IOS_CAREER` にテスト用IDを入れている。AdMob で作った自分のIDに置き換える |
+| プロファイルの App ID が一致しないと言われる | `soccer-manager` のプロファイルを `CAREER_IOS_PROVISIONING_PROFILE_BASE64` に登録していないか |
+| 「Google のテスト用IDが登録されています」で止まる | `CAREER_ADMOB_APP_ID_IOS` にテスト用IDを入れている。AdMob で作った自分のIDに置き換える |
 | preflight が「アルファチャンネルが無い」で落ちる | `python tool/make_icons.py` を回し直す（iOS 用は `convert("RGB")` を通している） |
 | ストアの「言語」が英語になっている | `ja.lproj/InfoPlist.strings` がバンドルに入っていない。`preflight.py` の「言語」の節が見ている |
 | 審査で却下された | **返信だけでは審査は再開しない。**「審査内容を更新」まで押す（`soccer-manager` で踏んだ） |

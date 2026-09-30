@@ -59,9 +59,10 @@ void main() {
         reason: 'STORE_LISTING.md に ${product.id} が無い',
       );
       // 消耗型と非消耗型を取り違えると、復元の挙動が変わる。
+      // （後ろに値段などが続くので、閉じ括弧までは見ない）
       final kind = product.consumable ? '消耗型' : '非消耗型';
       expect(
-        RegExp('`${product.id}`（\\*\\*$kind\\*\\*）').hasMatch(listing),
+        RegExp('`${product.id}`（\\*\\*$kind\\*\\*').hasMatch(listing),
         isTrue,
         reason: '${product.id} は $kind のはず',
       );
