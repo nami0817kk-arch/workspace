@@ -28,31 +28,28 @@ void main() {
       );
 
   test('メンターを付けた有望株のほうが速く伸びる', () {
-    // 同じ能力の2人を同じ施設で育て、片方にだけメンターを付ける。
-    final withMentor = youngster();
-    final without = youngster();
-    for (final p in [withMentor, without]) {
-      // 出発点を揃える(生成のばらつきを持ち込まない)。
-      p.attributes.addAll(Map<String, int>.from(withMentor.attributes));
-      p.potential = 90;
-    }
-    final mentor = veteran();
-    withMentor.mentorId = mentor.id;
+    // 成長は乱数なので、1組だけ比べると逆転する(CIで実際に落ちた)。
+    // 何組も育てて平均で比べる。
+    int total(Player p) => p.attributes.values.fold<int>(0, (s, v) => s + v);
 
-    for (var week = 0; week < 40; week++) {
-      TrainingEngine.applyYouthAcademyGrowth(
-        [withMentor],
-        3,
-        mentors: [mentor],
-      );
-      TrainingEngine.applyYouthAcademyGrowth([without], 3, mentors: [mentor]);
+    /// メンターの有無で、40週後の能力値合計の伸びの平均を返す。
+    double grown({required bool withMentor}) {
+      var sum = 0;
+      const pairs = 30;
+      for (var i = 0; i < pairs; i++) {
+        final p = youngster()..potential = 90;
+        final mentor = veteran();
+        if (withMentor) p.mentorId = mentor.id;
+        final start = total(p);
+        for (var week = 0; week < 40; week++) {
+          TrainingEngine.applyYouthAcademyGrowth([p], 3, mentors: [mentor]);
+        }
+        sum += total(p) - start;
+      }
+      return sum / pairs;
     }
 
-    // 総合力は丸めが入るため、40週では差が出ない週もある(CIで実際に
-    // 同値になった)。伸びそのものを見るため、能力値の合計で比べる。
-    int total(Player p) =>
-        p.attributes.values.fold<int>(0, (s, v) => s + v);
-    expect(total(withMentor), greaterThan(total(without)),
+    expect(grown(withMentor: true), greaterThan(grown(withMentor: false)),
         reason: 'メンターを付けても伸びが変わらない');
   });
 
