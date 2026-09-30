@@ -345,6 +345,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .tgt.miss{border-left-color:var(--bad)}.tgt.miss b{color:var(--bad)}
 .showctl{display:flex;gap:4px;flex-wrap:wrap}.showctl .btn-s{padding:4px 8px;min-height:32px}.btn-s.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 .btn-s.watch{margin-top:6px;border-color:var(--accent);color:var(--accent);font-weight:700}.btn-s.watch:disabled{opacity:.4}
+.seat{display:flex;gap:10px;align-items:center;background:var(--gold-bg);border:1px solid var(--gold);border-radius:12px;padding:8px 12px;margin:8px 0}.seat>div{flex:1;display:flex;flex-direction:column;gap:2px}.seat .btn-s:disabled{opacity:.45}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -455,7 +456,9 @@ function defaultPos(t){return t.spec==='t'?bestVDR(t)[0]:t.spec;}
 function memberSkill(t){var o=bestVDR(t);return t.st[o[0]]*.5+t.st[o[1]]*.25+t.st.e*.25;}
 function popRankMap(S){var a=alive(S).slice().sort(function(x,y){return y.pop-x.pop;});var m={};a.forEach(function(t,i){m[t.id]=i+1;});return m;}
 function roundCap(S){return ROUNDS[S.rnd].fin?S.caps.finMax:S.caps.r[S.rnd-1];}
-function capOf(S){return Math.min(roundCap(S),alive(S).length);}
+function capOf(S){return Math.min(roundCap(S)+(S.seatPlus||0),alive(S).length);}
+var SEAT_COST=30;
+function useSeat(S){if(S.seatUsed||S.budget<SEAT_COST||ROUNDS[S.rnd].fin)return;S.seatUsed=true;S.seatPlus=1;S.budget-=SEAT_COST;}
 
 function confirmSelect(S){
   S.tr.forEach(function(t){t.status=S.sel.indexOf(t.id)>=0?'alive':'cut0';});
@@ -464,6 +467,7 @@ function confirmSelect(S){
 function startSeason(S){buildRounds(S);S.rnd=1;startRound(S);}
 function changeFmt(S){var c=S.plan?S.plan.center:null,au=S.adUsed,ex=S.extra;buildRounds(S);startRound(S);S.adUsed=au;S.extra=ex;if(c!=null&&S.rnd>=2)S.plan.center=c;}
 function startRound(S){
+  S.seatPlus=0;
   S.lesson={train:{},pos:{}}; S.adUsed=false; S.extra=0; S.wDrama=0; S.notes=[]; S.crit={}; S.critDone=false; S.pass={}; S.call=null; S.farewell={}; S.interview={};
   alive(S).forEach(function(t){t.inj=false;t.rest=false; if(ROUNDS[S.rnd].kind==='pos') S.lesson.pos[t.id]=defaultPos(t);});
   S.phase='plan'; S.stage=null; S.events=[]; S.evIdx=0; S.evRes=null; S.feat={};
@@ -719,6 +723,7 @@ function decide(S){
   var pops=A.map(function(t){return t.pop;}).sort(function(a,b){return b-a;}).slice(0,3);
   var topPop=pops.reduce(function(a,b){return a+b;},0)/pops.length;
   var rating=3.4+(40-S.nApp)/40*.9+topPop*.04+S.wDrama*.22+Math.min(ang,3)*.25+S.rnd*.25+(f.fin?.8:0)+(f.hype||1)*.35-.35+flowBonus(S,S.rnd)+(S.showTrust-60)*.03+(R()-.5)*.4+(S.plan&&S.plan.acts.special?.9:0)+(S.plan&&S.plan.acts.stage?.4:0)+(S.centerRes?S.centerRes*.3:0);
+  if(S.seatPlus){S.showTrust=clamp(S.showTrust-2,0,100);cm.push(['合格の枠を後から増やすの、基準が甘くない？',1]);}
   S.ratings.push(r1(clamp(rating,1.5,15)));
   var rt=S.ratings[S.ratings.length-1],tg=roundTarget(S.rnd),hit=rt>=tg;S.lastTgt={tg:tg,hit:hit,r:rt};if(!hit)S.warns++;else S.warns=0;
   S.income=f.fin?0:Math.max(0,Math.round(20+rt*5+(hit?15:-10)-(S.warns>=2?20:0)));S.budget+=S.income;
@@ -1442,6 +1447,8 @@ function vJudge(){
   A.forEach(function(t){if(S.pass[t.id])n++;});
   var cap=capOf(S),mn=f.fin?5:Math.min(MIN_PASS,A.length);
   var h='<h2>'+(f.fin?'デビューメンバーを選ぶ':'合否を決める')+'</h2><p class="small muted">'+(f.fin?'5〜'+S.caps.finMax+'人を選びます。人数が多いほどファンは広がりますが、まとまりは難しくなります。':'合格にできるのは <b>'+cap+'人まで</b>。')+'世間の人気は決定には関係しませんが、人気の高い子を落とすと荒れます。</p>';
+  if(!f.fin&&!S.seatUsed)h+='<div class="seat"><div><b>最後の一枠</b><span class="small muted">制作費'+SEAT_COST+'万で合格枠を1つ増やせる（1シーズン1回）。「基準が甘い」と番組への信頼が下がり、次の審査は人数が多いぶん厳しくなる</span></div><button class="btn-s" data-a="seat" '+(S.budget>=SEAT_COST?'':'disabled')+'>使う（残り'+S.budget+'万）</button></div>';
+  else if(S.seatPlus)h+='<p class="note">最後の一枠を使った。今回は <b>'+capOf(S)+'人まで</b> 合格にできる。</p>';
   if(!S.adUsed&&!f.fin)h+='<p class="note">迷う子がいたら「もう一度だけ見る」（本番は動画広告）：その子にもう一度だけ歌って踊ってもらい、能力・伸びしろ・気質がすべて分かります。1審査に1回。</p>';
   h+='<div class="card">';
   A.forEach(function(t){var r=S.stage.res[t.id],on=S.pass[t.id],p=pr[t.id];
@@ -1750,6 +1757,7 @@ document.addEventListener('click',function(ev){
     case 'showauto':ui.showAuto=!ui.showAuto;try{localStorage.setItem('hikari7_showauto',ui.showAuto?'1':'');}catch(e){}render();break;
     case 'showfast':ui.showFast=!ui.showFast;ui.showKey=null;try{localStorage.setItem('hikari7_showfast',ui.showFast?'1':'');}catch(e){}render();break;
     case 'watch':go(function(){watchVideo(S,id);});break;
+    case 'seat':go(function(){useSeat(S);});break;
     case 'selok':go(function(){confirmSelect(S);});window.scrollTo(0,0);break;
     case 'autolesson':go(function(){autoLesson(S);});break;
     case 'fadd':go(function(){var i=S.fmt.indexOf(null);if(i>=0)S.fmt[i]=v;});break;
