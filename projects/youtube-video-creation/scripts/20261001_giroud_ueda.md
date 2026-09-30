@@ -3,8 +3,8 @@ title: ジルーが上田綺世に話した日本人。自分のプロ初ゴー�
 format: quote
 short_title: ジルーのプロ初ゴールをアシストした日本人。上田綺世に話したこと
 topic: リール
-thumbnail_line1: ジルーのプロ初ゴール
-thumbnail_line2: アシストは日本人の●●
+thumbnail_line1: 40歳ジルー、引退をほのめかす
+thumbnail_line2: 初ゴールのアシストは日本人の●●
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []
