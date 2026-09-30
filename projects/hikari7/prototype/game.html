@@ -349,6 +349,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.wk{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px;text-align:center;min-height:54px;display:flex;flex-direction:column;gap:2px;font-size:12px}.wk small{color:var(--muted)}.wk.now{border:2px solid var(--gold)}.choice:disabled{opacity:.45}
 .achv{margin-top:8px}.achv summary{cursor:pointer;font-weight:800;font-size:13px;color:var(--accent)}.achv div{font-size:13px;padding:2px 0;color:var(--muted)}.achv div.got{color:var(--fg)}.achv div.got::first-letter{color:var(--gold)}
 .gsel.g3{grid-template-columns:repeat(3,1fr)}
+.tip{display:flex;gap:8px;align-items:flex-start;background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:8px 10px;margin:8px 0;font-size:13px;line-height:1.55}.tip .tq{flex:none;background:var(--accent);color:var(--accent-fg);border-radius:6px;padding:0 6px;font-weight:800;font-size:11.5px;margin-top:2px}.tip>span:nth-child(2){flex:1}.tip .btn-s{flex:none}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1394,6 +1395,7 @@ function render(){
   var h;
   if(!S||S.phase==='title')h=vTitle();
   else h=header()+({select:vSelect,plan:vPlan,lesson:vLesson,talk:vTalk,show:vShow,format:vFormat,event:vEvent,interview:vInterview,stage:vStage,critique:vCritique,judge:vJudge,call:vCall,prep:vPrep,month:vMonth,result:vResult}[S.phase])();
+  if(S&&S.phase!=='title'){var hd=h.indexOf('<div class="dots">');if(hd>=0){var he=h.indexOf('</div>',hd)+6;h=h.slice(0,he)+tipBox()+h.slice(he);}}
   if(S&&ui.prof!=null&&S.tr[ui.prof])h+=vProfile(S.tr[ui.prof]);
   $('#app').innerHTML=h;
   document.body.style.overflow=ui.prof!=null?'hidden':'';
@@ -1411,6 +1413,7 @@ function vTitle(){
   h+='<button class="btn" data-a="new">新しいシーズンを始める</button>';
   if(sv)h+='<button class="btn sub" data-a="cont">つづきから（'+(sv.rnd>0?ROUNDS[sv.rnd].name:'書類・動画審査')+'・'+(sv.g==='f'?'女性':'男性')+'）</button>';
   h+=careerBox();
+  h+='<p class="small muted" style="text-align:right"><button class="btn-s" data-a="tipreset">コツをもう一度出す</button></p>';
   h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、9種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がって、使える審査が増える</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・1対1で見る・差し入れ・相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・活動を決めて、デビュー後の反響で評価される</li></ul><p class="muted">試作 v9。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
   return h;
 }
@@ -1799,6 +1802,24 @@ function vMonth(){var M=S.month,P=S.prep,D=S.tr.filter(function(t){return t.stat
     h+='<button class="choice" data-a="week" data-v="'+a.k+'" '+(dis?'disabled':'')+'><b>'+esc(a.n)+'</b><span class="hint">'+partsHtml(parts)+'<span class="small muted">'+esc(a.d)+'</span></span></button>';});
   return h;}
 
+
+var TIPS={
+  select:'まずは24人まで選びます。「▶ 動画をじっくり見る」は3人だけ。ひと言に「始めてまだ1年」のような手がかりがある子は、伸びしろが大きいかもしれません。',
+  format:'審査の順番で番組の流れが決まります。盛り上がり（★）が上がっていく並びほど視聴率が伸びます。迷ったら「おすすめに戻す」。',
+  plan:'制作会議では、制作費の使い道とセンターを決めます。局の目標視聴率に届かないと次の制作費が減ります。',
+  lesson:'練習枠を割り振ります。迷ったら見出しの横の「おまかせ」。疲れが80を超えた子は、本番でけがをすることがあります。',
+  talk:'3回まで練習生と関われます。同じ子に構いすぎると、ほかの子が気にします。★の付いた子は物語の続きがあります。',
+  event:'出来事の選択肢には、どれも代わりに失うものがあります。札（寄り添う・厳しく・放送で見せる・任せる）の効き方は気質で変わります。',
+  show:'ステージ本番。「オート」にすると、見終わるたびに次の出番へ進みます。気になる子は「大きく映す」で放送に乗せられます。',
+  critique:'講評は気質で受け止め方が変わります。気質が分かっている子には、合う講評が最初から入っています。',
+  judge:'合否はあなたが決めます。世間の人気は合否には関係しませんが、人気の高い子を落とすと荒れます。',
+  prep:'グループ名・リーダー・曲の方向を決めます。残った制作費はデビュー後の宣伝費になります。',
+  month:'デビュー後の4週間。忙しい週が3回続くと体調を崩すメンバーが出ます。休みも作戦のうちです。'
+};
+function tipSeen(){try{return JSON.parse(localStorage.getItem('hikari7_tips')||'{}');}catch(e){return {};}}
+function tipBox(){if(!S||ui.tipsOff)return '';var p=S.phase,t=TIPS[p];if(!t)return '';if(tipSeen()[p])return '';
+  return '<div class="tip"><span class="tq">コツ</span><span>'+esc(t)+'</span><button class="btn-s" data-a="tipok" data-v="'+p+'">わかった</button></div>';}
+
 /* ---------- 操作 ---------- */
 function stopTimer(){if(timer){clearTimeout(timer);timer=null;}}
 function callTick(){
@@ -1826,6 +1847,8 @@ document.addEventListener('click',function(ev){
     case 'watch':go(function(){watchVideo(S,id);});break;
     case 'seat':go(function(){useSeat(S);});break;
     case 'diff':ui.diff=v;try{localStorage.setItem('hikari7_diff',v);}catch(e){}render();break;
+    case 'tipok':var ts=tipSeen();ts[v]=1;try{localStorage.setItem('hikari7_tips',JSON.stringify(ts));}catch(e){ui.tipsOff=true;}render();break;
+    case 'tipreset':try{localStorage.removeItem('hikari7_tips');}catch(e){}ui.tipsOff=false;render();break;
     case 'selok':go(function(){confirmSelect(S);});window.scrollTo(0,0);break;
     case 'autolesson':go(function(){autoLesson(S);});break;
     case 'fadd':go(function(){var i=S.fmt.indexOf(null);if(i>=0)S.fmt[i]=v;});break;
