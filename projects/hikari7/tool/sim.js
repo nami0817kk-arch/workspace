@@ -12,7 +12,7 @@ function pickIdx(pol, n) { return pol === 'random' ? ri(0, n - 1) : 0; }
 function play(g, pol) {
   const S = newGame(g);
   let c = S.tr.slice();
-  if (pol === 'good') c.sort((a, b) => (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar);
+  if (pol === 'good') { c.sort((a, b) => (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar); if (typeof watchVideo === 'function') c.slice(0, 3).forEach(t => watchVideo(S, t.id)); c.sort((a, b) => ((b.potRev && b.pot >= 1.3) - (a.potRev && a.pot >= 1.3)) || (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar); }
   else shuffle(c);
   S.sel = c.slice(0, S.caps.sel).map(t => t.id); confirmSelect(S);
   if (pol === 'random') S.fmt = shuffle(FMT_KEYS.filter(k => !S.locked || !S.locked[k]).slice()).slice(0, 4);

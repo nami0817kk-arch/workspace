@@ -344,6 +344,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .tgt.hit{border-left-color:var(--ok)}.tgt.hit b{color:var(--ok)}
 .tgt.miss{border-left-color:var(--bad)}.tgt.miss b{color:var(--bad)}
 .showctl{display:flex;gap:4px;flex-wrap:wrap}.showctl .btn-s{padding:4px 8px;min-height:32px}.btn-s.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn-s.watch{margin-top:6px;border-color:var(--accent);color:var(--accent);font-weight:700}.btn-s.watch:disabled{opacity:.4}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1249,6 +1250,16 @@ function autoLesson(S){var f=roundFmt(S),sl=slotsOf(S),u=0;S.lesson.train={};
     else if(f.w==='pos')k=S.lesson.pos[t.id]||defaultPos(t);else k=t.spec==='t'?'e':t.spec;
     S.lesson.train[t.id]=[k];u++;});}
 
+
+/* 書類審査：応募動画をじっくり見る（1シーズン3人まで）。伸びしろと、まだ見えない能力が1つ分かる。
+   代わりに、見た子に時間を取られて、見なかった子の「ひと言」の手がかりは増えない（見る子を選ぶのが判断） */
+var WATCH_MAX=3;
+function watchVideo(S,id){var t=S.tr[id];if(!S.watched)S.watched=[];if(S.watched.indexOf(id)>=0||S.watched.length>=WATCH_MAX)return;
+  S.watched.push(id);t.potRev=true;var hid=['v','d','r','e','s'].filter(function(k){return t.rev[k]!==2;});
+  if(hid.length){var k=hid.sort(function(a,b){return t.rev[a]-t.rev[b];})[0];t.rev[k]=2;}
+  t.watchNote=t.pot>=1.3?'荒削りだが、映像の後半にかけて見違えるほど良くなる':t.pot>=.95?'安定していて、崩れるところがない':'よくまとまっているが、伸びる余地は少なそう';
+  logT(S,t,'書類審査で応募動画をじっくり見た：'+t.watchNote);}
+
 /*ENGINE-END*/
 
 /* ================= 画面 ================= */
@@ -1308,10 +1319,10 @@ function vTitle(){
   return h;
 }
 function vSelect(){
-  var h='<h2>書類・動画審査：'+S.nApp+'人から最大'+S.caps.sel+'人</h2><p class="small muted">見える能力は一部だけ。<b>B前後</b>はおおよその評価で、実際とずれていることもあります。「?」は審査が進むと分かります。ひと言にも手がかりが隠れています。</p>';
+  var h='<h2>書類・動画審査：'+S.nApp+'人から最大'+S.caps.sel+'人</h2><p class="small muted">見える能力は一部だけ。<b>B前後</b>はおおよその評価で、実際とずれていることもあります。「?」は審査が進むと分かります。ひと言にも手がかりが隠れています。</p><p class="note">応募動画をじっくり見られるのは <b>'+WATCH_MAX+'人まで</b>（のこり '+(WATCH_MAX-(S.watched||[]).length)+'人）。伸びしろと、まだ見えない能力が1つ分かります。</p>';
   h+='<div class="filters">';[['all','すべて'],['v','歌'],['d','ダンス'],['r','ラップ'],['t','トーク'],['sel','選んだ子']].forEach(function(f){h+='<button class="chip '+(ui.filter===f[0]?'on':'')+'" data-a="filter" data-v="'+f[0]+'">'+f[1]+'</button>';});h+='</div>';
   S.tr.filter(function(t){return ui.filter==='all'||(ui.filter==='sel'?S.sel.indexOf(t.id)>=0:t.spec===ui.filter);}).forEach(function(t){var on=S.sel.indexOf(t.id)>=0;
-    h+='<div class="card cand '+(on?'on':'')+'" data-a="pick" data-id="'+t.id+'">'+face(t,'md')+'<div class="body"><div class="eno">'+eno(t)+'</div><div class="nm">'+esc(t.name)+'</div><div class="small muted">'+t.age+'歳・'+t.home+'出身 '+tag(t.spec)+'</div><div class="line">「'+esc(t.line)+'」</div>'+statsLine(t)+'<div class="small">事前の話題 <span style="color:var(--gold)">'+stars(t.popStar)+'</span></div></div><div class="chk">'+(on?'✓':'')+'</div></div>';});
+    h+='<div class="card cand '+(on?'on':'')+'" data-a="pick" data-id="'+t.id+'">'+face(t,'md')+'<div class="body"><div class="eno">'+eno(t)+'</div><div class="nm">'+esc(t.name)+'</div><div class="small muted">'+t.age+'歳・'+t.home+'出身 '+tag(t.spec)+'</div><div class="line">「'+esc(t.line)+'」</div>'+statsLine(t)+((S.watched||[]).indexOf(t.id)>=0?'<div class="small"><span class="tag good">動画を見た</span> 伸びしろ <b>'+(t.pot>=1.3?'大':t.pot>=0.95?'中':'小')+'</b>・'+esc(t.watchNote)+'</div>':'<button class="btn-s watch" data-a="watch" data-id="'+t.id+'" '+((S.watched||[]).length>=WATCH_MAX?'disabled':'')+'>▶ 動画をじっくり見る</button>')+'<div class="small">事前の話題 <span style="color:var(--gold)">'+stars(t.popStar)+'</span></div></div><div class="chk">'+(on?'✓':'')+'</div></div>';});
   var n=S.sel.length,cv={v:0,d:0,r:0,t:0};S.sel.forEach(function(id){cv[S.tr[id].spec]++;});
   h+='<div class="foot"><div class="in"><div class="cnt"><b>'+n+'</b> / '+S.caps.sel+'人<span class="muted">（'+S.caps.selMin+'人以上）</span><br><span class="muted">歌'+cv.v+' ダ'+cv.d+' ラ'+cv.r+' ト'+cv.t+'</span></div>'+
     (n<S.caps.sel?'<button class="btn sub" data-a="autofill" style="font-size:13px">残りをおまかせ</button>':'')+
@@ -1701,6 +1712,7 @@ document.addEventListener('click',function(ev){
     case 'autofill':go(function(){var rest=shuffle(S.tr.filter(function(t){return S.sel.indexOf(t.id)<0;}));while(S.sel.length<S.caps.sel)S.sel.push(rest.shift().id);});break;
     case 'showauto':ui.showAuto=!ui.showAuto;try{localStorage.setItem('hikari7_showauto',ui.showAuto?'1':'');}catch(e){}render();break;
     case 'showfast':ui.showFast=!ui.showFast;ui.showKey=null;try{localStorage.setItem('hikari7_showfast',ui.showFast?'1':'');}catch(e){}render();break;
+    case 'watch':go(function(){watchVideo(S,id);});break;
     case 'selok':go(function(){confirmSelect(S);});window.scrollTo(0,0);break;
     case 'autolesson':go(function(){autoLesson(S);});break;
     case 'fadd':go(function(){var i=S.fmt.indexOf(null);if(i>=0)S.fmt[i]=v;});break;
