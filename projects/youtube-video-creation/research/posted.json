@@ -3008,5 +3008,29 @@
     "video_id": "TOmT1AYwYVk",
     "at": "2026-09-29T22:55:23+00:00",
     "publish_at": "2026-09-30T05:00:00Z"
+  },
+  {
+    "build": "20260930b_yamal_spain",
+    "video_id": "NyS2GLbFFoU",
+    "at": "2026-09-30T04:10:23+00:00",
+    "publish_at": "2026-09-30T09:00:00Z"
+  },
+  {
+    "build": "20260930b_yamal_spain_short",
+    "video_id": "rjJ4o7lbSvs",
+    "at": "2026-09-30T04:10:41+00:00",
+    "publish_at": "2026-09-30T09:30:00Z"
+  },
+  {
+    "build": "20260930b_messi_farewell",
+    "video_id": "LE2HFooAmKg",
+    "at": "2026-09-30T04:11:00+00:00",
+    "publish_at": "2026-09-30T10:00:00Z"
+  },
+  {
+    "build": "20260930b_messi_farewell_short",
+    "video_id": "xWhXAzZHgd0",
+    "at": "2026-09-30T04:11:17+00:00",
+    "publish_at": "2026-09-30T10:30:00Z"
   }
 ]

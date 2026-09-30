@@ -204,11 +204,11 @@
     "commentThreads.insert": 1
   },
   "2026-09-29": {
-    "channels.list": 17,
-    "playlistItems.list": 16,
-    "videos.insert": 16,
-    "thumbnails.set": 16,
-    "playlistItems.insert": 8,
+    "channels.list": 21,
+    "playlistItems.list": 20,
+    "videos.insert": 20,
+    "thumbnails.set": 20,
+    "playlistItems.insert": 10,
     "videos.list": 47,
     "commentThreads.list": 12,
     "videos.update": 60
