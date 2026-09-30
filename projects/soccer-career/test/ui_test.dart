@@ -1347,10 +1347,10 @@ void main() {
     await pumpHub(tester, controller);
     await tester.tap(find.byIcon(Icons.more_vert));
     await tester.pumpAndSettle();
-    expect(find.text('広告・応援'), findsNothing);
+    expect(find.text('広告について'), findsNothing);
   });
 
-  testWidgets('広告・応援の画面が開き、売り物は2つだけ', (tester) async {
+  testWidgets('広告の画面が開き、売り物は「広告を消す」だけ', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final money = Monetization(
       ads: NoAdService(),
@@ -1361,14 +1361,14 @@ void main() {
     await pumpHub(tester, controller, monetization: money);
     await tester.tap(find.byIcon(Icons.more_vert));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('広告・応援'));
+    await tester.tap(find.text('広告について'));
     await tester.pumpAndSettle();
 
     // 見出しとボタンで2つ出る。
     expect(find.text('広告を消す'), findsWidgets);
-    expect(find.text('応援する'), findsWidgets);
     expect(find.widgetWithText(FilledButton, '広告を消す'), findsOneWidget);
-    expect(find.widgetWithText(OutlinedButton, '応援する'), findsOneWidget);
+    // **応援（消耗型）は 2026-10-01 に外した。**
+    expect(find.textContaining('応援'), findsNothing);
     // iOS の審査要件。
     expect(find.text('購入を復元'), findsOneWidget);
     // 強くなるものを売っていないことを、最初に書く。
@@ -1529,7 +1529,8 @@ class _FakeStoreForUi implements PurchaseService {
 
   @override
   Future<void> initialize({
-    required void Function(Product product) onDelivered,
+    required Future<void> Function(Product product) onDelivered,
+    required Future<void> Function(Product product) onRevoked,
   }) async {}
 
   @override

@@ -227,7 +227,7 @@ class HubScreen extends StatelessWidget {
                 const PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
                 // 広告も課金もない環境（ブラウザ版・テスト）では出さない。
                 if (monetization != null)
-                  const PopupMenuItem(value: 'support', child: Text('広告・応援')),
+                  const PopupMenuItem(value: 'support', child: Text('広告について')),
                 // 管理画面は公開ビルドに入らない（kAdmin は const false）。
                 if (kAdmin)
                   const PopupMenuItem(value: 'admin', child: Text('管理')),

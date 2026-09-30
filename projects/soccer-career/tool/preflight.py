@@ -12,6 +12,7 @@
 
 - iOS アイコンが Contents.json のぶん揃っていて、アルファが無いこと
 - 掲載する絵が App Store の寸法であること
+- 課金アイテムの審査用スクリーンショットがあること
 - 商品ID・バンドルID・法務ページのURLが1つに揃っていること
 - Info.plist に要るものがあり、要らない権限の説明文が無いこと
 - 対応語の申告と `<語>.lproj/InfoPlist.strings` の実体が一致していること
@@ -93,6 +94,18 @@ def main():
             f"{folder} が {size[0]}x{size[1]}",
             bool(files) and not wrong,
             f"{len(files)}枚" + ("  ずれ: " + ", ".join(wrong) if wrong else ""),
+        )
+
+    # 課金アイテムには審査用のスクリーンショットが**必須**。掲載画像とは別物で、
+    # 値段のボタンが写った画面が要る。無いまま提出しようとするとそこで止まる。
+    review = os.path.join(ROOT, "marketing", "iap_review", "remove_ads.png")
+    check("課金の審査用スクリーンショットがある", os.path.exists(review))
+    if os.path.exists(review):
+        width, height, _ = png_info(review)
+        check(
+            "審査用スクリーンショットが 1290x2796",
+            (width, height) == (1290, 2796),
+            f"{width}x{height}",
         )
 
     print("== 識別子 ==")

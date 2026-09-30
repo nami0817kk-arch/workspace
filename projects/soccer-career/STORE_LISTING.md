@@ -20,7 +20,7 @@
 | 対応言語 | 日本語のみ（`CFBundleLocalizations` = `[ja]`） |
 | 対応端末 | iPhone と iPad（`TARGETED_DEVICE_FAMILY` = "1,2"） |
 | 対象年齢 | 4+ 想定。暴力表現・性的表現・ギャンブルなし。移籍金も年俸も架空のゲーム内通貨 |
-| 価格 | 無料（シーズンの切れ目の全画面広告 + 買い切り2件） |
+| 価格 | 無料（シーズンの切れ目の全画面広告 + 買い切り1件 ¥400） |
 | プライバシーポリシー | https://soccer-career-49p.pages.dev/legal/privacy.html |
 | 利用規約 | https://soccer-career-49p.pages.dev/legal/terms.html |
 | サポートURL | https://soccer-career-49p.pages.dev/legal/support.html |
@@ -86,7 +86,7 @@
 ■ 広告と課金について
 全画面広告はシーズンの切れ目にだけ出ます。試合中にもメニュー操作にも
 割り込みません。バナー広告はありません。
-「広告を消す」を買うと出なくなります。「応援する」はゲームの中では何も
+「広告を消す」を買うと出なくなります。買い切りはこの1つだけで、ゲームの中では何も
 起きず、回数が表示されるだけです。
 **強くなるものは1つも売っていません。** 伸びしろも金も出場機会も、
 釣り合いを測って決めたもので、売った瞬間にその調整が意味を失うからです。
@@ -217,9 +217,9 @@ iPad の絵を9枚用意している。
 ・ゲーム内の「年俸」「移籍金」「貯蓄」はすべて架空のゲーム内通貨で、
 　実際の金銭のやり取りはありません。賭博の要素はありません。
 ・アカウント登録・ログインはありません。進行状況は端末内にのみ保存されます。
-・App内課金は2件です。「広告を消す」(非消耗型) と「応援する」(消耗型)。
-　「応援する」はゲームの進行に一切影響しません。
-・購入の復元はメニューの「広告・応援」から行えます。
+・App内課金は1件です。「広告を消す」(非消耗型・400円)。
+　ゲームの進行に影響する課金はありません。
+・購入の復元はメニューの「広告について」から行えます。
 ```
 
 ## App プライバシー（データ収集の申告）
@@ -262,9 +262,11 @@ flutter build web --release && python tool/check_release.py
 - [ ] App Store Connect でアプリレコードを作成した
       （バンドルID `com.namiki.soccercareer`）
 - [ ] App 名「選手キャリア」が取れることを確認した（先に取られていたら変える）
-- [ ] アプリ内課金の商品を2件登録した（IDを1文字も違えないこと）
-      - `soccer_career_no_ads`（**非消耗型**）
-      - `soccer_career_tip`（**消耗型**）
+- [ ] アプリ内課金の商品を1件登録した（IDを1文字も違えないこと）
+      - `soccer_career_no_ads`（**非消耗型**・¥400）
+- [ ] その課金アイテムの**審査用スクリーンショット**を上げた
+      （`marketing/iap_review/remove_ads.png`。**必須**。
+      `flutter test tool/screenshots/iap_review_test.dart` で作る）
 - [ ] AdMob のアプリIDを `ios/Runner/Info.plist` の
       `GADApplicationIdentifier` に書いた（既定は Google のテスト用ID）
 - [ ] 広告ユニットIDを `--dart-define=ADMOB_INTERSTITIAL_IOS=...` で渡して
