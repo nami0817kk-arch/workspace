@@ -7,10 +7,10 @@ import 'package:soccer_manager/monetization/purchase_service.dart';
 class StubPurchaseService implements PurchaseService {
   /// 受け取り口。本物は待っているかどうかに関係なく呼ぶ。
   @override
-  set onDelivered(Future<void> Function(String productId)? callback) =>
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) =>
       onDeliveredCallback = callback;
 
-  Future<void> Function(String productId)? onDeliveredCallback;
+  Future<void> Function(String productId, String? purchaseId)? onDeliveredCallback;
 
   @override
   Future<void> initialize() async {}

@@ -45,7 +45,11 @@ abstract class PurchaseService {
   ///
   /// 受け取りが終わるまで完了通知は返さない。途中で失敗したら、次の起動で
   /// ストアがもう一度送ってくる。
-  set onDelivered(Future<void> Function(String productId)? callback);
+  /// [purchaseId] はストアが付ける取引の識別子。**同じ取引が二度届くことが
+  /// ある**ので、受け取る側はこれで重複を弾く。完了通知(`completePurchase`)は
+  /// 投げっぱなしで送るため、それが届かないと次の起動でまた同じものが来る。
+  set onDelivered(
+      Future<void> Function(String productId, String? purchaseId)? callback);
 
   Future<void> initialize();
 
@@ -73,7 +77,8 @@ abstract class PurchaseService {
 /// 課金を扱わない実装。Web版・テストで使う。
 class NoOpPurchaseService implements PurchaseService {
   @override
-  set onDelivered(Future<void> Function(String productId)? callback) {}
+  set onDelivered(
+      Future<void> Function(String productId, String? purchaseId)? callback) {}
 
   @override
   Future<void> initialize() async {}
@@ -105,10 +110,12 @@ class NoOpPurchaseService implements PurchaseService {
 /// ストアの課金基盤を使う実装。
 class StorePurchaseService implements PurchaseService {
   @override
-  set onDelivered(Future<void> Function(String productId)? callback) =>
+  set onDelivered(
+          Future<void> Function(String productId, String? purchaseId)?
+              callback) =>
       _onDelivered = callback;
 
-  Future<void> Function(String productId)? _onDelivered;
+  Future<void> Function(String productId, String? purchaseId)? _onDelivered;
 
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
@@ -146,7 +153,7 @@ class StorePurchaseService implements PurchaseService {
       if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
         try {
-          await _onDelivered?.call(purchase.productID);
+          await _onDelivered?.call(purchase.productID, purchase.purchaseID);
         } catch (_) {
           received = false;
         }

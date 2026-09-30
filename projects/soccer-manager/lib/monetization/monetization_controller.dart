@@ -40,6 +40,17 @@ class MonetizationController extends ChangeNotifier {
   /// セーブが開かれたときに移す。消費型なので「復元」では戻らない——
   /// ここで預かり損ねると、払った額がそのまま消える。
   static const _undeliveredFundsKey = 'monetization.undeliveredFunds';
+
+  /// 受け取り済みの取引の識別子。**同じ取引が二度届くことがある。**
+  ///
+  /// 完了通知(`completePurchase`)は投げっぱなしで送るため、それが届く前に
+  /// アプリが落ちると、次の起動でストアが同じ購入をもう一度送ってくる。
+  /// 消費型(資金パック)は渡すたびに預かりへ積むので、そのぶん二重に渡る。
+  /// 払ったのは1回なので、渡すのも1回にする。
+  static const _deliveredIdsKey = 'monetization.deliveredPurchaseIds';
+
+  /// 覚えておく取引の数。際限なく貯めない。
+  static const int _deliveredIdsKept = 200;
   static const _claimDayKey = 'monetization.claimDay';
   static const _claimCountKey = 'monetization.claimCount';
 
@@ -196,7 +207,22 @@ class MonetizationController extends ChangeNotifier {
   /// 決済が通ったぶんも、復元したぶんも、全部ここを通る。
   ///
   /// ここで失敗すると窓口は完了通知を返さないので、次の起動でまた届く。
-  Future<void> _grant(String productId) async {
+  Future<void> _grant(String productId, String? purchaseId) async {
+    // 同じ取引を二度渡さない。識別子が無いストアもあるので、その場合は
+    // 弾かずに渡す(渡しすぎより、渡し損ねのほうが害が大きい)。
+    if (purchaseId != null) {
+      final prefs = await SharedPreferences.getInstance();
+      final seen = prefs.getStringList(_deliveredIdsKey) ?? const [];
+      if (seen.contains(purchaseId)) return;
+      final kept = [...seen, purchaseId];
+      await prefs.setStringList(
+        _deliveredIdsKey,
+        kept.length <= _deliveredIdsKept
+            ? kept
+            : kept.sublist(kept.length - _deliveredIdsKept),
+      );
+    }
+
     if (productId == PurchaseService.supporterProductId) {
       if (isSupporter) return; // 既に渡してある
       await _markSupporter();
