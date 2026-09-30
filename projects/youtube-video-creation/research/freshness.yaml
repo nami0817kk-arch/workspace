@@ -1,8 +1,5 @@
 # 検索の索引がどこまで進んだかの記録。fresh のたびに追記される
 observed:
-- site: skysports.com
-  max: 13578971
-  at: 2026-08-30T13:26
 - site: premierleague.com
   max: 4698606
   at: 2026-08-30T15:41
@@ -662,6 +659,10 @@ observed:
   max: 5262761
   at: 2026-09-28T21:21
   exact: true
+- site: skysports.com
+  max: 13592852
+  at: 2026-09-28T21:28
+  exact: true
 - site: kicker.de
   max: 1256239
   at: 2026-09-28T21:44
@@ -674,7 +675,39 @@ observed:
   max: 13593034
   at: 2026-09-29T04:06
   exact: true
+- site: espn.com
+  max: 50051629
+  at: 2026-09-29T06:41
+  exact: true
 - site: kicker.de
-  max: 1256769
-  at: 2026-09-29T07:07
+  max: 1256612
+  at: 2026-09-29T21:01
+  exact: true
+- site: skysports.com
+  max: 13279295
+  at: 2026-09-29T21:05
+  exact: true
+- site: kicker.de
+  max: 1256863
+  at: 2026-09-29T21:15
+  exact: true
+- site: espn.com
+  max: 50006976
+  at: 2026-09-29T22:07
+  exact: true
+- site: espn.com
+  max: 49812807
+  at: 2026-09-29T22:07
+  exact: true
+- site: kicker.de
+  max: 1256949
+  at: 2026-09-29T23:33
+  exact: true
+- site: skysports.com
+  max: 13593363
+  at: 2026-09-30T06:56
+  exact: true
+- site: kicker.de
+  max: 1256975
+  at: 2026-09-30T07:02
   exact: true

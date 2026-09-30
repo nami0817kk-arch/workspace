@@ -27,7 +27,7 @@ sites:
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
 - host: forzaroma.info
-  seen: 19
+  seen: 21
   days:
   - '2026-09-02'
   - '2026-09-05'
@@ -36,6 +36,8 @@ sites:
   - '2026-09-24'
   - '2026-09-27'
   - '2026-09-28'
+  - '2026-09-29'
+  - '2026-09-30'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
@@ -53,7 +55,7 @@ sites:
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: fcinter1908.it
-  seen: 17
+  seen: 18
   days:
   - '2026-09-05'
   - '2026-09-09'
@@ -61,10 +63,40 @@ sites:
   - '2026-09-23'
   - '2026-09-26'
   - '2026-09-28'
+  - '2026-09-30'
   examples:
   - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
+- host: calcionapoli1926.it
+  seen: 15
+  days:
+  - '2026-09-02'
+  - '2026-09-03'
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-12'
+  - '2026-09-13'
+  - '2026-09-27'
+  - '2026-09-30'
+  examples:
+  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
+- host: tuttobolognaweb.it
+  seen: 15
+  days:
+  - '2026-09-05'
+  - '2026-09-08'
+  - '2026-09-12'
+  - '2026-09-14'
+  - '2026-09-23'
+  - '2026-09-29'
+  - '2026-09-30'
+  examples:
+  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
+  - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
+  - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
 - host: transfermarkt.co.uk
   seen: 14
   days:
@@ -76,20 +108,20 @@ sites:
   - https://www.transfermarkt.co.uk/folarin-balogun-transfer-to-everton-collapses-monaco-miss-out-on-euro-45m-fee-plus-add-ons/view/news/486066
   - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
   - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
-- host: calcionapoli1926.it
+- host: blog.domesoccer.jp
   seen: 14
   days:
-  - '2026-09-02'
-  - '2026-09-03'
   - '2026-09-04'
   - '2026-09-05'
-  - '2026-09-12'
-  - '2026-09-13'
+  - '2026-09-14'
+  - '2026-09-16'
+  - '2026-09-21'
   - '2026-09-27'
+  - '2026-09-30'
   examples:
-  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
+  - https://blog.domesoccer.jp/archives/60253571.html
+  - https://blog.domesoccer.jp/archives/60253934.html
+  - https://blog.domesoccer.jp/archives/60253949.html
 - host: mondoudinese.it
   seen: 13
   days:
@@ -108,31 +140,6 @@ sites:
   - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
-- host: blog.domesoccer.jp
-  seen: 13
-  days:
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-14'
-  - '2026-09-16'
-  - '2026-09-21'
-  - '2026-09-27'
-  examples:
-  - https://blog.domesoccer.jp/archives/60253571.html
-  - https://blog.domesoccer.jp/archives/60253934.html
-  - https://blog.domesoccer.jp/archives/60253949.html
-- host: tuttobolognaweb.it
-  seen: 12
-  days:
-  - '2026-09-05'
-  - '2026-09-08'
-  - '2026-09-12'
-  - '2026-09-14'
-  - '2026-09-23'
-  examples:
-  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
-  - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
-  - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
 - host: violanews.com
   seen: 12
   days:
@@ -149,6 +156,20 @@ sites:
   - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/si-presenta-gnonto-dalle-14-30-il-live-della-conferenza-stampa/?intcmp=gazzanet-violanews
+- host: pianetamilan.it
+  seen: 11
+  days:
+  - '2026-09-08'
+  - '2026-09-09'
+  - '2026-09-12'
+  - '2026-09-16'
+  - '2026-09-25'
+  - '2026-09-29'
+  - '2026-09-30'
+  examples:
+  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
+  - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
+  - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
 - host: samuraigoal.doorblog.jp
   seen: 10
   days:
@@ -180,18 +201,6 @@ sites:
   - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
   - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
   - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
-- host: pianetamilan.it
-  seen: 8
-  days:
-  - '2026-09-08'
-  - '2026-09-09'
-  - '2026-09-12'
-  - '2026-09-16'
-  - '2026-09-25'
-  examples:
-  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
-  - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
-  - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
 - host: ilmilanista.it
   seen: 8
   days:
@@ -369,6 +378,16 @@ sites:
   - https://www.teamtalk.com/manchester-united/fabrizio-romano-reveals-chances-jj-gabriel-uturn-united-exit
   - https://www.teamtalk.com/manchester-united/harry-kane-bayern-munich-man-utd-2027-transfer-decision-rule-change
   - https://www.teamtalk.com/manchester-city/man-city-ffp-latest-premier-league-reaches-decision-stripping-titles-guilty-verdict
+- host: milanistichannel.com
+  seen: 4
+  days:
+  - '2026-09-16'
+  - '2026-09-29'
+  - '2026-09-30'
+  examples:
+  - https://www.milanistichannel.com/news-milan/riconoscimento-importante-per-franco-baresi-il-suo-nome-nel-famedio-di-milano/?intcmp=gazzanet-milanistichannel
+  - https://www.milanistichannel.com/news-milan/ex-milan-senti-rafa-leao-il-galatasaray-mi-voleva-davvero-sono-felice/?intcmp=gazzanet-milanistichannel
+  - https://www.milanistichannel.com/casa-milan-societa-rossonera-news/esclusiva-mc-shevchenko-50-anni-da-campione-tassotti-uno-dei-primi-4-o-5-attaccanti-del-milan/?intcmp=gazzanet-milanistichannel
 - host: leedsunited.com
   seen: 3
   days:
@@ -527,14 +546,6 @@ sites:
   - https://footballleagueworld.co.uk/how-nottingham-forest-derby-county-home-attendances-compare-so-far/
   - https://footballleagueworld.co.uk/arsenal-and-juventus-once-wanted-sheffield-united-star-diego-di-girolamo-look-at-him-now/
   - https://footballleagueworld.co.uk/ex-leeds-utd-huddersfield-preston-ace-jermaine-beckford-rolls-back-years-goodison-park/
-- host: milanistichannel.com
-  seen: 3
-  days:
-  - '2026-09-16'
-  - '2026-09-29'
-  examples:
-  - https://www.milanistichannel.com/news-milan/riconoscimento-importante-per-franco-baresi-il-suo-nome-nel-famedio-di-milano/?intcmp=gazzanet-milanistichannel
-  - https://www.milanistichannel.com/news-milan/ex-milan-senti-rafa-leao-il-galatasaray-mi-voleva-davvero-sono-felice/?intcmp=gazzanet-milanistichannel
 - host: toronews.net
   seen: 3
   days:

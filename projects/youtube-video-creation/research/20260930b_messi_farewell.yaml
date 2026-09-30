@@ -1,0 +1,272 @@
+# 取材メモ（9/30 題材③ messi_farewell、型は quote）。
+# 事実の裏:
+#   お別れ試合: 10月6日（火）20時（現地）、ブエノスアイレスのモヌメンタル、相手はベナン。
+#     発表はアルゼンチンサッカー協会（AFA）のタピア会長の動画（SNS、9/15。La Nación 9/15）。
+#     原文 "invitar al mejor jugador del mundo, al emblema de nuestra selección, a nuestro capitán, Lionel Andrés Messi,
+#     para que pueda tener la despedida que realmente se merece el día 6 de octubre, acá, en la Argentina"。
+#     2022年W杯の優勝メンバーと家族を招く（La Nación・Expreso）。3試合の日程と時刻は AFA が 9/28 に発表（Expreso）:
+#     9/30 ボリビア（コルドバ、ケンペス）21時／10/3 ブルキナファソ（モヌメンタル）21時／10/6 ベナン（モヌメンタル）20時。
+#   代表引退の発表: 8月31日（英語版Wikipedia・La Nación）。メッシは最初の2試合には出ない（ESPN）。
+#   10番: **アルゼンチン協会の公式発表ではなく、スカローニ監督の会見での発言**（9/29、ボリビア戦の前日。Infobae・ESPN）。
+#     原文（Infobae）"En estos partidos no tenemos obligación de dar la 10 así que hasta que sea el partido de Leo
+#     no se la daremos a nadie y después veremos a quién se la daremos."
+#     "Por Eliminatorias no queda fija, pero la idea es que se la quede uno con todo lo lindo que es llevarla. Por ahora no hemos definido"
+#     ロマーノは "OFFICIAL: Argentina confirm" と書いたが、台本では「公式発表」と言わない。
+#     次の10番が誰かは推測で言わない（報道にはニコ・パス、マスタントゥオーノの名があるが入れない）。
+#   監督の契約は12月31日まで（ESPN。スカローニ「12月31日まではここにいる」）。延長は報道の段階なので言わない。
+#   ローマの声明（9/29、クラブ公式サイト。football-italia が全文を引用）:
+#     "will not attend the event being held in Argentina for the match between Argentina and Benin on 6 October"
+#     理由 "for sporting and logistical reasons, taking into account the length of the intercontinental journey and
+#     the proximity of the Club's upcoming competitive fixtures." 10/11 コモ戦、その後CLのレアル・マドリード戦。
+#     結び "AS Roma has the utmost respect for Lionel Messi and his extraordinary career and wishes him and the
+#     Argentine Football Association a very special evening."
+#     football-italia「2人とも試合そのものには関わらない（ディバラは招集外）」。
+#     **モリーナの「7試合の出場停止」は football-italia の1社だけで、確かめられなかったので使わない。**
+#   代表の数字（英語版Wikipedia、Lionel Messi／Argentina national football team records and statistics。2026-09-28 更新）:
+#     207試合125得点（どちらも歴代1位）。出場2位マスチェラーノ147試合。得点2位バティストゥータ（54 か 56、ページで違う
+#     ので数は言わず「2位の2倍超」とだけ言う。どちらでも2倍を超える）。W杯21得点（ESPN。2026年大会で8得点4アシスト）。
+#     主要タイトル: 2022年W杯・コパ・アメリカ2021/2024・フィナリッシマ2022（ほかに2008年五輪金・2005年U-20W杯）。
+#     2026年W杯は決勝でスペインに延長0-1。お別れ試合は208試合目。
+# 反応: 日本の個人の投稿3件（下の節に出どころ）。
+#   海外の個人の反応は、Bluesky の検索（スペイン語・英語、9/29 以降）・Yahoo!リアルタイム検索（X）・football-italia の
+#   コメント欄を当たったが、題に沿う個人の投稿が取れなかった（出てくるのは報道・転載アカウントだけ。返信は罵り言葉と一言）。
+#   ロマーノ・AlbicelesteTalk・SoccerKingJP・romunuki（ニュースの転載）は入れていない。
+# 写真: 記事の写真は ESPN が Getty（NurPhoto via Getty）、Infobae が AP だったので取り込まない。
+#   Commons（Bryan Berlin、CC BY-SA 4.0）の2枚: メッシ＝2026年W杯エジプト戦 7/7 の -226（背中の10番と横顔）、
+#   スカローニ＝同W杯決勝スペイン戦 7/19 の -239。どちらも前の日までに使っていない。監督が語る行は2人を並べた1枚（pair_scaloni）。
+date: 2026年9月30日
+slot: other_2
+format: quote
+people:
+- リオネル・メッシ
+- リオネル・スカローニ
+theme:
+  id: messi_farewell_no10
+  league: spain
+  league_name: アルゼンチン代表
+  kind: other
+  topic: アルゼンチン代表
+  title: メッシの10番をどうするか。お別れ試合を前に、スカローニ監督が口にした答え
+  opening_image: assets/images/20260930b_messi_farewell/01_w.jpg
+  takeaway: メッシの代表は207試合125得点。出場は2位より60試合多く、得点は2位の2倍を超える。10番が空くのはこの数字の持ち主が208試合目を終えてからで、次の持ち主は監督自身まだ決めていない
+short_title: メッシの10番、スカローニ監督が決めたお別れまでの扱い
+thumbnail:
+  photo: assets/images/20260930b_pair_scaloni/01.jpg
+  line1: メッシの代表125得点
+  line2: 歴代2位の「●倍」を超える
+  reaction: 心にポッカリ穴が空いてしまいそう
+sections:
+- id: farewell
+  heading: 最後の1試合
+  tier: 報道
+  telop: お別れ試合は10月6日、モヌメンタルでベナンと
+  narrator: キャスター
+  card:
+    type: table
+    title: メッシのお別れ試合
+    columns: ['', '']
+    rows:
+    - [日時, 10月6日 20時（現地）]
+    - [会場, ブエノスアイレスのモヌメンタル]
+    - [相手, ベナン]
+  say:
+  - text: メッシは8月31日に、アルゼンチン代表からの引退を発表しました。
+    image: assets/images/20260930b_messi_farewell/01_w.jpg
+  - 最後の1試合は10月6日。ブエノスアイレスのモヌメンタル競技場で、ベナンと戦います。
+  - アルゼンチンサッカー協会のタピア会長が、9月15日に動画で発表しました。
+  sources:
+  - https://www.lanacion.com.ar/deportes/futbol/lionel-messi-tendra-su-partido-de-despedida-con-la-seleccion-argentina-en-el-monumental-el-6-de-nid15092026/
+  - https://www.expreso.ec/deportes/afa-confirma-horarios-asi-seran-partidos-argentina-despedida-messi-297375.html
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+- id: words
+  main: true
+  heading: 10番は誰にも渡さない
+  tier: 報道
+  telop: 監督「レオの試合までは誰にも渡さない」
+  narrator: キャスター
+  card:
+    type: table
+    title: アルゼンチン代表の3試合（日付は現地）
+    columns: [日付, 相手, 10番]
+    rows: &games
+    - [9月30日, ボリビア, 空き番]
+    - [10月3日, ブルキナファソ, 空き番]
+    - [10月6日, ベナン, メッシ]
+  say:
+  - text: アルゼンチン代表を引退するメッシ。最後の試合は10月6日です。
+    short_only: true
+  - text: お別れ試合の前にも、アルゼンチンは2試合を戦います。その間の10番を9月29日の会見で聞かれた、スカローニ監督の答えです。
+    image: assets/images/20260930b_pair_scaloni/01.jpg
+  - voice: スカローニ監督
+    text: この期間の試合で、10番を誰かに渡す義務はない。
+  - voice: スカローニ監督
+    text: だからレオの試合までは、誰にも渡さない。
+    cont: true
+  - voice: スカローニ監督
+    text: 誰に渡すかは、そのあとで考える
+    cont: true
+  - text: お別れ試合のあと、W杯予選での10番については、こう続けました。
+    image: assets/images/20260930b_pair_scaloni/01.jpg
+    card:
+      type: table
+      title: アルゼンチン代表の3試合（日付は現地）
+      columns: [日付, 相手, 10番]
+      rows: *games
+      highlight_row: 2
+  - voice: スカローニ監督
+    text: 予選では、背番号は固定されない。
+  - voice: スカローニ監督
+    text: でも、あの番号を背負う素晴らしさを考えれば、
+    cont: true
+  - voice: スカローニ監督
+    text: 1人に持ってもらうつもりだ。
+    cont: true
+  - voice: スカローニ監督
+    text: 今のところ、まだ決めていない
+    cont: true
+  - text: 9月30日はボリビア戦、10月3日はブルキナファソ戦。どちらも10番は空き番のままです。
+    image: assets/images/20260930b_messi_farewell/01_w.jpg
+    card:
+      type: table
+      title: アルゼンチン代表の3試合（日付は現地）
+      columns: [日付, 相手, 10番]
+      rows: *games
+      highlight_row: 1
+  quotes_from:
+  - Infobae https://www.infobae.com/deportes/2026/09/29/la-decision-que-tomo-scaloni-con-la-camiseta-n-10-de-la-seleccion-y-que-dijo-sobre-los-rumores-que-lo-vincularon-a-river/
+  - ESPN https://www.espn.com/soccer/story/_/id/50061253/argentina-rush-reassign-lionel-messi-no-10
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50061253/argentina-rush-reassign-lionel-messi-no-10
+  - https://www.infobae.com/deportes/2026/09/29/la-decision-que-tomo-scaloni-con-la-camiseta-n-10-de-la-seleccion-y-que-dijo-sobre-los-rumores-que-lo-vincularon-a-river/
+  - https://www.lanacion.com.ar/deportes/futbol/lionel-messi-tendra-su-partido-de-despedida-con-la-seleccion-argentina-en-el-monumental-el-6-de-nid15092026/
+  - https://www.expreso.ec/deportes/afa-confirma-horarios-asi-seran-partidos-argentina-despedida-messi-297375.html
+- id: view
+  heading: 208試合目の前に
+  tier: 背景
+  viewpoint: true
+  telop: 出場は2位より60試合多く、得点は2位の2倍を超える
+  narrator: 解説
+  say:
+  - text: 10番が空くのは、メッシが208試合目を終えてから。その重さを数字で並べます。
+    image: assets/images/20260930b_messi_farewell/01_w.jpg
+  - text: 代表の出場は207試合。2番目に多い選手より60試合多い数字です。
+    card:
+      type: table
+      title: メッシのアルゼンチン代表（2005〜2026年）
+      columns: [項目, 数字, 比べると]
+      rows: &messirows
+      - [出場, 207試合, 2位より60試合多い]
+      - [得点, 125点, 2位の2倍超]
+      - [W杯の得点, 21点, 2026年大会で8点]
+      - [主な大会の優勝, 4回, W杯・南米選手権2回ほか]
+      highlight_row: 0
+  - text: 得点は125点。アルゼンチンで2番目に多い選手の、2倍を超えます。
+    card:
+      type: table
+      title: メッシのアルゼンチン代表（2005〜2026年）
+      columns: [項目, 数字, 比べると]
+      rows: *messirows
+      highlight_row: 1
+  - text: W杯では21点。今年の大会だけで8点を取り、決勝まで進みました。
+    card:
+      type: table
+      title: メッシのアルゼンチン代表（2005〜2026年）
+      columns: [項目, 数字, 比べると]
+      rows: *messirows
+      highlight_row: 2
+  - text: 優勝は、2022年のW杯と、南米の大会コパ・アメリカの2回。
+    card:
+      type: table
+      title: メッシのアルゼンチン代表（2005〜2026年）
+      columns: [項目, 数字, 比べると]
+      rows: *messirows
+      highlight_row: 3
+  - text: それに、南米王者と欧州王者の一騎打ち、フィナリッシマ。合わせて4つです。
+    card:
+      type: table
+      title: メッシのアルゼンチン代表（2005〜2026年）
+      columns: [項目, 数字, 比べると]
+      rows: *messirows
+      highlight_row: 3
+  - text: 出場の数字は、10月6日のベナン戦で208になり、そこで止まります。
+    card:
+      type: table
+      title: メッシのアルゼンチン代表（2005〜2026年）
+      columns: [項目, 数字, 比べると]
+      rows: *messirows
+  sources:
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+  - https://en.wikipedia.org/wiki/Argentina_national_football_team_records_and_statistics
+  - https://www.espn.com/soccer/story/_/id/50061253/argentina-rush-reassign-lionel-messi-no-10
+- id: roma
+  heading: 来られない2人
+  tier: 報道
+  telop: ローマ「メッシと彼の並外れた経歴に、最大の敬意を持っている」
+  narrator: キャスター
+  card:
+    type: table
+    title: ローマの声明（9月29日）
+    columns: ['', '']
+    rows:
+    - [行かせない, ディバラ・モリーナ]
+    - [理由, 長い移動と日程]
+    - [次の試合, 10月11日 コモ戦]
+  say:
+  - text: お別れの夜には、2022年のW杯の優勝メンバーが、家族と招かれています。
+    image: assets/images/20260930b_messi_farewell/01_w.jpg
+  - ところが9月29日、ローマがディバラとモリーナの2人を行かせないと発表しました。
+  - 2人とも試合に出る予定はなく、招かれていたのはお別れの場でした。
+  - 理由は、大陸をまたぐ長い移動と、すぐ後に控えるクラブの試合です。
+  - ローマは10月11日にリーグ戦でコモと、その後はチャンピオンズリーグでレアル・マドリードと戦います。声明はこう結ばれています。
+  - voice: ASローマ
+    text: ASローマは、メッシと彼の並外れた経歴に、
+  - voice: ASローマ
+    text: 最大の敬意を持っている。
+    cont: true
+  - voice: ASローマ
+    text: メッシとアルゼンチンサッカー協会にとって、
+    cont: true
+  - voice: ASローマ
+    text: 特別な夜になることを願っている
+    cont: true
+  quotes_from:
+  - football-italia https://football-italia.net/roma-utmost-respect-for-messi-dybala-molina/
+  sources:
+  - https://football-italia.net/roma-utmost-respect-for-messi-dybala-molina/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「心にポッカリ穴が空いてしまいそうです。」
+  narrator: キャスター
+  say:
+  # X の個人の投稿（@MarronASRoma、2026-09-24 0:28。ローマが渋っているという報道の段階で書かれたもの。
+  # 声明は 9/29 だが、中身は同じ「2人を行かせない」への声）。原文「メッシの代表引退なんだからディバラもモリーナも行かせてやってくれローマ 冠婚葬祭みたいなもんやぞ」
+  - voice: ネット民
+    text: メッシの代表引退なんだから、
+  - voice: ネット民
+    text: ディバラもモリーナも行かせてやってくれローマ
+    cont: true
+  - voice: ネット民
+    text: 冠婚葬祭みたいなもんやぞ
+    cont: true
+  # Yahoo!ニュース（DAZN の配信決定の記事 9/28）のコメント欄、dmd********。原文「でもなんでベナンなの？／ブラジルとかポルトガルとかドイツとかできなかったのかな？最後に…」
+  - voice: ネット民
+    text: でもなんでベナンなの？
+  - voice: ネット民
+    text: ブラジルとかポルトガルとかドイツとかできなかったのかな？
+    cont: true
+  - voice: ネット民
+    text: 最後に…
+    cont: true
+  # Yahoo!ニュース（最後の試合の特別ユニフォームの記事 9/23）のコメント欄の先頭の1件。原文「沢山素晴らしい選手はいるのだが、／メッシが引退したら心にポッカリ穴が空いてしまいそうです。」
+  - voice: ネット民
+    text: 沢山素晴らしい選手はいるのだが、
+    short_voice: true
+  - voice: ネット民
+    text: メッシが引退したら心にポッカリ穴が空いてしまいそうです。
+    cont: true
+    short_voice: true
+  sources:
+  - https://x.com/MarronASRoma/status/2102782227650359491
+  - https://news.yahoo.co.jp/articles/3e3e29d39550531a1fd13e7b3cc591015ba5ffc9/comments
+  - https://news.yahoo.co.jp/articles/4277e8490dda883479c768d5590eafa270b55a07/comments

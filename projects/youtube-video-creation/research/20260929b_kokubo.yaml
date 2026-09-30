@@ -161,9 +161,9 @@ sections:
   say:
   - text: デビュー戦のセーブにファンが返した「国防」の2文字。苗字と国を守るを掛けた呼び名です。
     short_only: true
-    image: assets/images/20260929b_kokubo/03.jpg
+    image: assets/images/20260929b_kokubo/03_k.jpg
   - text: 試合後、その呼び名について聞かれた本人の答えです。
-    image: assets/images/20260929b_kokubo/03.jpg
+    image: assets/images/20260929b_kokubo/03_k.jpg
   - voice: 小久保
     text: すごくうれしい。
   - voice: 小久保
@@ -213,7 +213,7 @@ sections:
       - 27
   say:
   - text: 小久保の呼び名の中身は、シュートを止める力です。
-    image: assets/images/20260929b_kokubo/03.jpg
+    image: assets/images/20260929b_kokubo/03_k.jpg
   - text: 昨季はベルギー1部のシント・トロイデンで、38試合すべてに先発。110本を止め、無失点は9試合。
     card: {"type": "table", "title": "小久保玲央ブライアンの数字", "columns": ["", "試合", "失点", "無失点", "セーブ"], "rows": [["パリ五輪", 4, 3, 3, 14], ["昨季 ベルギー1部", 38, 43, 9, 110], ["今季 ベルギー1部", 7, 12, 1, 27]], "highlight_row": 1}
   - text: 今季はここまで7試合で12失点、無失点は1試合。それでもセーブは27本あります。
