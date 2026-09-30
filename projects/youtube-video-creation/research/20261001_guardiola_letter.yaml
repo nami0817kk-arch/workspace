@@ -1,0 +1,314 @@
+# 取材メモ（10/1 題材⑪ guardiola_letter、型は quote）。材料の控え: research/raw/20261001_guardiola_letter.md
+# 主役はグアルディオラの手紙と、その言葉が何を意味するか。前日に「有罪の正式発表」の題材は×なので、判決の中身は1節（verdict）だけ。
+# 事実の裏:
+#   手紙: 9/30、本人が SNS に投稿（Guardian・Sky・beIN が全文を引用。Guardian と Sky は一字一句同じ）。
+#     "I want every single Manchester City fan across the world to know I am here; more than ever. I am, always have been,
+#     always will, be behind my club, my owner, my chairman, Ferran, the players, staff, Enzo [Maresca] and you, our unique
+#     supporters. Let me be clear: we will get through this together. I love you all."
+#     投稿先は Instagram／X と割れるので「SNS」とだけ言う。MARCA のスペイン語訳は「オーナー」が抜けている（使わない）。
+#   認定: プレミアリーグ公式（9/29）。対象 2009-10〜2017-18 の9季。財務規則の重大な違反の告発はすべて有罪。
+#     見せかけのスポンサー契約で、スポンサー料の残りをオーナー側（ADUG）が出していた。罰は別の審理。上訴は10月2日（金）まで。
+#     金額は PL「£900m 超」と Sky「£830m」で割れるので言わない。告発の件数も言わない。
+#   名前: オーナー＝シェイク・マンスール、会長＝ハルドゥーン・アル・ムバラク、フェラン＝ソリアーノ最高経営責任者
+#     （Guardian「グアルディオラをイングランドに招いた人。2人はバルセロナで一緒に働いていた」）、エンツォ＝マレスカ監督（今夏から）。
+#   バーンスタイン元会長（1998〜2003年）: Guardian の引用。
+#   20冠: 英語版Wikipedia の Honours（リーグ6・FA杯3・リーグ杯5・シールド3・CL1・スーパー杯1・クラブW杯1）。Guardian・beIN も20。
+#     監督は 2016-17〜2025-26 の10季。対象の9季と重なるのは 2016-17・2017-18 の2季（Guardian「最初の2季」）。
+#     その2季のタイトルは 2017-18 のリーグ優勝（勝ち点100、最初のリーグ優勝）とリーグ杯の2つ。
+#     対象の9季のシティのリーグ優勝は 2011-12（マンチーニ）・2013-14（ペジェグリーニ）・2017-18（グアルディオラ）の3回。
+#     退任後は City Football Group のグローバル・アンバサダー（Guardian）。
+#   2022年5月の発言: Sportskeeda（2022-05-08）・footballtransfers（2023-02-06、「5月7日」）・Sports Mole（2026-09-26）。
+#     "I said to them: 'If you lie to me, the day after I am not here. I will be out and I will not be your friend any more.'"
+#     題の出来事より前の発言だが、手紙の「ここにいる」が何を意味するかに答えるので入れる（見立ての節）。
+# 反応: 海外2件（Bluesky）・日本1件（X、Yahoo!リアルタイム検索）。出どころと外したものは raw に控えた。
+# 流れの点検（Claude が自分で読んだ。控え output/flow/20261001_guardiola_letter.md）で直したこと:
+#   元会長の話から20冠へ飛ぶ → 「手紙を書いた本人も、この9季と無関係ではありません」を前に置いた／「同じ日」がどの日か曖昧 → 「一方、」に
+#   「という中身」が分かりにくい → 「認定では、スポンサーが払うはずの額の一部を、オーナー側が出していました」／誰が認定したかを声で言う
+#   「9季に入る」→「9季のあいだに取った」／「グループの大使」→「シティの親会社のグループで、大使」／リーグ優勝3回の2行を1行に
+#   結びの「最初の優勝が認定の9季に入る人」は言い直しなので落とした。「2009-10季」「2017-18季」は読みが崩れる（kana で実測）ので声では年で言う
+# 写真: 記事の写真は Guardian が PA、MARCA・Sky・beIN はクレジットが無く確かめられないので取り込まない。
+#   Commons の 2023-10-04 ライプツィヒ対シティの会見の1枚（Steffen Prößdorf、CC BY-SA 4.0）。被写体の記載が無く portrait が
+#   弾いたので手で取り、目で本人と確かめた。_w は頭が入る位置で 16:9 に切ったもの。
+date: 2026年10月1日
+slot: プレミア
+format: quote
+people:
+- ペップ・グアルディオラ
+theme:
+  id: guardiola_letter
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: グアルディオラ、有罪となったシティへの手紙。1人ずつ名前を挙げた相手
+  opening_image: assets/images/20261001_guardiola/01_w.jpg
+  takeaway: グアルディオラのシティでの20冠のうち、違反が認定された9季に入るのは2017-18季の2つ（勝ち点100の最初のリーグ優勝とリーグ杯）。2022年に「嘘をつかれたら次の日にはいない」と話した人が、認定の翌日、元会長が退くよう求めた経営陣を1人ずつ名指しして「支え続ける」と書いた
+short_title: グアルディオラ、有罪のシティへ「今まで以上にここにいる」
+thumbnail:
+  photo: assets/images/20261001_guardiola/01_w.jpg
+  line1: グアルディオラの20冠
+  line2: ●つは違反と認定された9季の中
+  reaction: 余りにも心の支えになりすぎる
+sections:
+- id: letter
+  main: true
+  heading: 今まで以上に、ここにいる
+  tier: 報道
+  telop: グアルディオラ「私はここにいる。今まで以上に」
+  narrator: キャスター
+  say:
+  - text: マンチェスター・シティが9月29日、プレミアリーグの財務規則の違反で有罪と認定されました。
+    short_only: true
+  - text: 今夏にシティを去ったグアルディオラが、その翌日、ファンに向けて言葉を投稿しました。
+    image: assets/images/20261001_guardiola/01_w.jpg
+  - voice: グアルディオラ
+    text: 世界中のシティのファン一人ひとりに、知っておいてほしい。
+  - voice: グアルディオラ
+    text: 私はここにいる。今まで以上に。
+    cont: true
+  - voice: グアルディオラ
+    text: 私はいまも、これまでも、これからも支え続ける。
+    cont: true
+  - voice: グアルディオラ
+    text: 私のクラブを、オーナーを、会長を、フェランを、
+    cont: true
+  - voice: グアルディオラ
+    text: 選手とスタッフを、エンツォを、
+    cont: true
+  - voice: グアルディオラ
+    text: そして唯一無二のサポーターのみんなを。
+    cont: true
+  - voice: グアルディオラ
+    text: はっきり言っておく。私たちは、一緒にこれを乗り越える。
+    cont: true
+  - voice: グアルディオラ
+    text: みんなを愛している
+    cont: true
+  quotes_from:
+  - Guardian https://www.theguardian.com/football/2026/sep/30/guardiola-backs-manchester-city-owners-over-guilty-verdicts
+  - Sky Sports https://www.skysports.com/football/news/11661/13593634/man-city-premier-league-charges-pep-guardiola-sends-message-of-support-to-former-club
+  sources:
+  - https://www.theguardian.com/football/2026/sep/30/guardiola-backs-manchester-city-owners-over-guilty-verdicts
+  - https://www.skysports.com/football/news/11661/13593634/man-city-premier-league-charges-pep-guardiola-sends-message-of-support-to-former-club
+  - https://www.beinsports.com/en-us/soccer/premier-league/articles/we-will-get-through-this--guardiola-addresses-man-city-fans-after-premier-league-verdict-2026-09-30
+  - https://www.marca.com/futbol/premier-league/2026/09/30/guardiola-rompe-silencio-superaremos.html
+- id: verdict
+  heading: 認定された9季
+  tier: 確定
+  official: true   # プレミアリーグ公式の声明（9/29）まで辿った
+  telop: 対象は2009-10季から9季。罰はこれから、上訴の期限は10月2日
+  narrator: キャスター
+  card:
+    type: table
+    title: 独立委員会の認定（9月29日発表）
+    columns: ['', '']
+    rows: &verdict
+    - [対象, 2009-10季〜2017-18季の9季]
+    - [認定, 財務規則の重大な違反はすべて有罪]
+    - [罰, これから別の審理で決める]
+    - [上訴, 期限は10月2日]
+  say:
+  - text: プレミアリーグの独立委員会が認定した違反は、2009年からの9季。
+    card:
+      type: table
+      title: 独立委員会の認定（9月29日発表）
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 0
+  - text: その中には、グアルディオラが率いた最初の2季も入ります。
+    card:
+      type: table
+      title: 独立委員会の認定（9月29日発表）
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 0
+  - text: 認定では、スポンサーが払うはずの額の一部を、オーナー側が出していました。
+    card:
+      type: table
+      title: 独立委員会の認定（9月29日発表）
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 1
+  - text: 罰はこれから別の審理で決まります。クラブは無実を訴え、10月2日までに上訴する構え。
+    card:
+      type: table
+      title: 独立委員会の認定（9月29日発表）
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 3
+  sources:
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+  - https://www.mancity.com/news/club/manchester-city-club-statement-premier-league-63926128
+- id: names
+  heading: 手紙に出てくる名前
+  tier: 報道
+  telop: 手紙はオーナー・会長・最高経営責任者を名指し。元会長は「今の経営陣は続けられない」
+  narrator: キャスター
+  card:
+    type: table
+    title: 手紙に出てくる名前
+    columns: [手紙の呼び方, 誰か]
+    rows: &names
+    - [オーナー, シェイク・マンスール]
+    - [会長, ハルドゥーン・アル・ムバラク]
+    - [フェラン, ソリアーノ最高経営責任者]
+    - [エンツォ, マレスカ監督（今夏から）]
+  say:
+  - text: 手紙に出てくるオーナーは、アブダビのシェイク・マンスール。
+    card:
+      type: table
+      title: 手紙に出てくる名前
+      columns: [手紙の呼び方, 誰か]
+      rows: *names
+      highlight_row: 0
+  - text: 会長は、ハルドゥーン・アル・ムバラク。
+    card:
+      type: table
+      title: 手紙に出てくる名前
+      columns: [手紙の呼び方, 誰か]
+      rows: *names
+      highlight_row: 1
+  - text: フェランは、最高経営責任者のソリアーノ。
+    card:
+      type: table
+      title: 手紙に出てくる名前
+      columns: [手紙の呼び方, 誰か]
+      rows: *names
+      highlight_row: 2
+  - text: バルセロナ時代からの仲で、グアルディオラをイングランドに招いた人です。
+    card:
+      type: table
+      title: 手紙に出てくる名前
+      columns: [手紙の呼び方, 誰か]
+      rows: *names
+      highlight_row: 2
+  - text: エンツォは、今夏あとを継いだマレスカ監督。
+    card:
+      type: table
+      title: 手紙に出てくる名前
+      columns: [手紙の呼び方, 誰か]
+      rows: *names
+      highlight_row: 3
+  - text: 一方、元会長のバーンスタインは、今の役員についてこう話しています。
+  - voice: バーンスタイン元会長
+    text: 上場企業のような会社なら、上訴しようがしまいが、
+  - voice: バーンスタイン元会長
+    text: 結論が出るまで、役員は退くか、職務を止められているはずだ。
+    cont: true
+  - voice: バーンスタイン元会長
+    text: 今の経営陣が、このまま続けられるとは思えない
+    cont: true
+  quotes_from:
+  - Guardian https://www.theguardian.com/football/2026/sep/30/guardiola-backs-manchester-city-owners-over-guilty-verdicts
+  sources:
+  - https://www.theguardian.com/football/2026/sep/30/guardiola-backs-manchester-city-owners-over-guilty-verdicts
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+- id: view
+  heading: 20冠のうちの2つ
+  tier: 背景
+  viewpoint: true
+  telop: 10年で20冠。違反と認定された9季に入るのは、最初のリーグ優勝を含む2つ
+  narrator: 解説
+  card:
+    type: table
+    title: グアルディオラのシティでの20冠（2016〜2026年）
+    columns: [大会, 数, 認定された9季に入るもの]
+    rows: &titles
+    - [プレミアリーグ, '6', 2017-18季]
+    - [FAカップ, '3', ―]
+    - [リーグ杯, '5', 2017-18季]
+    - [欧州チャンピオンズリーグ, '1', ―]
+    - [そのほか, '5', ―]
+    - [合計, '20', '2']
+  say:
+  - text: 手紙を書いた本人も、この9季と無関係ではありません。シティでのタイトルは10年で20。
+    card:
+      type: table
+      title: グアルディオラのシティでの20冠（2016〜2026年）
+      columns: [大会, 数, 認定された9季に入るもの]
+      rows: *titles
+      highlight_row: 5
+  - text: そのうち、違反と認定された9季のあいだに取ったのは2つです。
+    card:
+      type: table
+      title: グアルディオラのシティでの20冠（2016〜2026年）
+      columns: [大会, 数, 認定された9季に入るもの]
+      rows: *titles
+      highlight_row: 5
+  - text: 1つは2018年、勝ち点100で制した、就任後はじめてのリーグ優勝。
+    card:
+      type: table
+      title: グアルディオラのシティでの20冠（2016〜2026年）
+      columns: [大会, 数, 認定された9季に入るもの]
+      rows: *titles
+      highlight_row: 0
+  - text: もう1つは、同じ年のリーグ杯です。
+    card:
+      type: table
+      title: グアルディオラのシティでの20冠（2016〜2026年）
+      columns: [大会, 数, 認定された9季に入るもの]
+      rows: *titles
+      highlight_row: 2
+  - text: 9季のあいだのシティのリーグ優勝は3回。最後の1回がグアルディオラでした。
+    card:
+      type: table
+      title: 認定された9季のシティのリーグ優勝
+      columns: [季, 監督]
+      rows:
+      - [2011-12季, マンチーニ]
+      - [2013-14季, ペジェグリーニ]
+      - [2017-18季, グアルディオラ]
+      highlight_row: 2
+  - text: 2022年5月には、クラブへの疑いを受けて、こう語っていました。
+    image: assets/images/20261001_guardiola/01_w.jpg
+  - voice: グアルディオラ
+    text: 彼らの説明を聞いて、私は信じる。
+  - voice: グアルディオラ
+    text: 彼らには言ってある。嘘をつかれたら、
+    cont: true
+  - voice: グアルディオラ
+    text: 次の日にはもうここにいない、と
+    cont: true
+  - text: グアルディオラは退任後も、シティの親会社のグループで、大使を務めています。
+  - text: 今回の手紙は、元会長が退くよう求めた経営陣を、1人ずつ名指しで支えるものでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Pep_Guardiola
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://www.theguardian.com/football/2026/sep/30/guardiola-backs-manchester-city-owners-over-guilty-verdicts
+  - https://www.beinsports.com/en-us/soccer/premier-league/articles/we-will-get-through-this--guardiola-addresses-man-city-fans-after-premier-league-verdict-2026-09-30
+  - https://www.sportskeeda.com/football/if-you-lie-to-me-i-am-not-here-pep-guardiola-explains-fiery-message-to-manchester-city-board-after-champions-league-elimination
+  - https://www.footballtransfers.com/en/transfer-news/uk-premier-league/2023/02/pep-guardiola-man-city-quit-threat
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「今のシティズンには余りにも心の支えになりすぎる」
+  narrator: キャスター
+  say:
+  # Bluesky @4jinxremoving（9/30 12:40 UTC）。原文 Pep is like, "I quit, but also we will get through this together."
+  - voice: ネット民
+    text: ペップの言ってること、
+  - voice: ネット民
+    text: 「辞めたけど、一緒に乗り越えよう」って感じ
+    cont: true
+  # Bluesky @oggy72（9/30 13:57 UTC）。原文 Oh Pep (絵文字) More bothered about his legacy than actually reading the report. (絵文字)（後ろは共有した記事の見出しとURL）
+  - voice: ネット民
+    text: ああ、ペップ。報告書をちゃんと読むより、
+  - voice: ネット民
+    text: 自分の功績のほうが気になるらしい
+    cont: true
+  # X @ddonwa（9/30 23:25 JST）。原文「他サポからしたら「ペップ何言うとんねん失望したわ」かもしれないけど、今のシティズンには余りにも心の支えになりすぎる、このメッセージは。」
+  - voice: ネット民
+    text: 他サポからしたら「ペップ何言うとんねん失望したわ」
+    short_voice: true
+  - voice: ネット民
+    text: かもしれないけど、今のシティズンには
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 余りにも心の支えになりすぎる、このメッセージは。
+    cont: true
+    short_voice: true
+  sources:
+  - https://bsky.app/profile/4jinxremoving.bsky.social/post/3mwqeh3xbq22r
+  - https://bsky.app/profile/oggy72.bsky.social/post/3mwqiqkegf22s
+  - https://x.com/ddonwa/status/2105302919654547842

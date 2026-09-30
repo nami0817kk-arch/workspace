@@ -43,7 +43,7 @@ thumbnail:
   photos:
   - assets/images/20261001_coaches_hasebe/01.jpg
   - assets/images/20261001_coaches_nanami/02.jpg
-  - assets/images/20261001_coaches_nakamura/02.jpg
+  - assets/images/20261001_coaches_nakamura/03.jpg
   line1: 長谷部誠と中村俊輔の新担当
   line2: 守備を任されたW杯●大会の主将
   reaction: 長谷部に森保と名波が相談に乗る形でいい
@@ -292,7 +292,7 @@ sections:
       columns: [名前, 試合, 得点, ワールドカップ]
       rows: *career
       highlight_row: 2
-  - text: フランクフルトでは2016年から、中盤より一列後ろ、3人で組む守りの真ん中にも立ちました。
+  - text: フランクフルトでは2016年から、中盤より一列後ろに下がり、後ろ3人の中央を任されました。
     card:
       type: table
       title: 3人の現役時代（日本代表）
