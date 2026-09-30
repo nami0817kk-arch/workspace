@@ -127,6 +127,43 @@ void main() {
         reason: 'セーブが無いあいだに預かりを捨てている');
   });
 
+  test('同じ取引が二度届いても、一度しか渡さない', () async {
+    // 完了通知は投げっぱなしで送るので、届く前に落ちると次の起動で
+    // ストアが同じ購入をもう一度送ってくる。消費型は渡すたびに預かりへ
+    // 積むので、そのぶん二重に渡ってしまう。払ったのは1回。
+    final (money, store) = await build();
+
+    await store.deliver(FundsPack.small.productId, purchaseId: 'tx-1');
+    await store.deliver(FundsPack.small.productId, purchaseId: 'tx-1');
+
+    expect(money.undeliveredFundsPacks.length, 1, reason: '同じ取引で二度渡している');
+  });
+
+  test('別の取引なら、二度とも渡す', () async {
+    // 同じ商品を2つ買うのは正当。取引が違えば両方渡す。
+    final (money, store) = await build();
+
+    await store.deliver(FundsPack.small.productId, purchaseId: 'tx-1');
+    await store.deliver(FundsPack.small.productId, purchaseId: 'tx-2');
+
+    expect(money.undeliveredFundsPacks.length, 2);
+  });
+
+  test('再起動しても、渡した取引を覚えている', () async {
+    final (_, store) = await build();
+    await store.deliver(FundsPack.small.productId, purchaseId: 'tx-1');
+
+    // 起動し直したところへ、ストアが同じ購入を送り直してくる場面。
+    final store2 = _SilentPurchaseService();
+    final money2 =
+        MonetizationController(adService: _NoAdService(), purchases: store2);
+    await money2.initialize();
+    await store2.deliver(FundsPack.small.productId, purchaseId: 'tx-1');
+
+    expect(money2.undeliveredFundsPacks.length, 1,
+        reason: '再起動で忘れて、二度目を渡している');
+  });
+
   test('知らない商品IDは預からない', () async {
     final (money, store) = await build();
     await store.deliver('not_a_real_product');
@@ -142,14 +179,17 @@ void main() {
 /// 戻り値に頼っていると、この形は再現できない。
 class _SilentPurchaseService implements PurchaseService {
   @override
-  set onDelivered(Future<void> Function(String productId)? callback) =>
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) =>
       _onDelivered = callback;
 
-  Future<void> Function(String productId)? _onDelivered;
+  Future<void> Function(String productId, String? purchaseId)? _onDelivered;
 
   /// ストアから通知が届いた状態にする。
-  Future<void> deliver(String productId) async =>
-      _onDelivered?.call(productId);
+  /// [purchaseId] を同じにすると「同じ取引がもう一度届いた」状態になる。
+  Future<void> deliver(String productId, {String? purchaseId}) async =>
+      _onDelivered?.call(productId, purchaseId ?? 'tx-${_seq++}');
+
+  int _seq = 0;
 
   @override
   Future<void> initialize() async {}

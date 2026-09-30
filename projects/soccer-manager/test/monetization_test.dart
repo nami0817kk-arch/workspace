@@ -46,10 +46,10 @@ class _FakeAdService implements AdService {
 class _FakePurchaseService implements PurchaseService {
   /// 受け取り口。本物は待っているかどうかに関係なく呼ぶ。
   @override
-  set onDelivered(Future<void> Function(String productId)? callback) =>
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) =>
       onDeliveredCallback = callback;
 
-  Future<void> Function(String productId)? onDeliveredCallback;
+  Future<void> Function(String productId, String? purchaseId)? onDeliveredCallback;
 
   _FakePurchaseService({this.outcome = PurchaseOutcome.purchased});
 
@@ -69,7 +69,8 @@ class _FakePurchaseService implements PurchaseService {
   @override
   Future<PurchaseOutcome> buySupporter() async {
     if (outcome == PurchaseOutcome.purchased) {
-      await onDeliveredCallback?.call(PurchaseService.supporterProductId);
+      await onDeliveredCallback?.call(
+          PurchaseService.supporterProductId, 'tx-${_seq++}');
     }
     return outcome;
   }
@@ -82,13 +83,16 @@ class _FakePurchaseService implements PurchaseService {
       PurchaseOutcome.unavailable;
 
   /// ストアから通知だけが届いた状態(待っている人が居ない)を作る。
+  int _seq = 0;
+
   Future<void> deliverFromStore(String productId) async =>
-      onDeliveredCallback?.call(productId);
+      onDeliveredCallback?.call(productId, 'tx-${_seq++}');
 
   @override
   Future<PurchaseOutcome> restorePurchases() async {
     if (outcome == PurchaseOutcome.purchased) {
-      await onDeliveredCallback?.call(PurchaseService.supporterProductId);
+      await onDeliveredCallback?.call(
+          PurchaseService.supporterProductId, 'tx-${_seq++}');
     }
     return outcome;
   }
