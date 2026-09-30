@@ -346,10 +346,11 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .showctl{display:flex;gap:4px;flex-wrap:wrap}.showctl .btn-s{padding:4px 8px;min-height:32px}.btn-s.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 .btn-s.watch{margin-top:6px;border-color:var(--accent);color:var(--accent);font-weight:700}.btn-s.watch:disabled{opacity:.4}
 .seat{display:flex;gap:10px;align-items:center;background:var(--gold-bg);border:1px solid var(--gold);border-radius:12px;padding:8px 12px;margin:8px 0}.seat>div{flex:1;display:flex;flex-direction:column;gap:2px}.seat .btn-s:disabled{opacity:.45}
-.weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.wk{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px;text-align:center;min-height:54px;display:flex;flex-direction:column;gap:2px;font-size:12px}.wk small{color:var(--muted)}.wk.now{border:2px solid var(--gold)}.choice:disabled{opacity:.45}
+.weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.wkc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px;text-align:center;min-height:54px;display:flex;flex-direction:column;gap:2px;font-size:12px}.wkc small{color:var(--muted)}.wkc.now{border:2px solid var(--gold)}.choice:disabled{opacity:.45}
 .achv{margin-top:8px}.achv summary{cursor:pointer;font-weight:800;font-size:13px;color:var(--accent)}.achv div{font-size:13px;padding:2px 0;color:var(--muted)}.achv div.got{color:var(--fg)}.achv div.got::first-letter{color:var(--gold)}
 .gsel.g3{grid-template-columns:repeat(3,1fr)}
 .tip{display:flex;gap:8px;align-items:flex-start;background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:8px 10px;margin:8px 0;font-size:13px;line-height:1.55}.tip .tq{flex:none;background:var(--accent);color:var(--accent-fg);border-radius:6px;padding:0 6px;font-weight:800;font-size:11.5px;margin-top:2px}.tip>span:nth-child(2){flex:1}.tip .btn-s{flex:none}
+.recap .mh{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.06em}.rr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 0;border-top:1px dashed var(--line);font-size:13px}.rr .rl{flex-basis:100%;font-size:11.5px;font-weight:800;color:var(--muted)}.rr .rl.up{color:var(--ok)}.rr .rl.dn{color:var(--bad)}.rr span{margin-right:6px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -472,6 +473,7 @@ function startSeason(S){buildRounds(S);S.rnd=1;startRound(S);}
 function changeFmt(S){var c=S.plan?S.plan.center:null,au=S.adUsed,ex=S.extra;buildRounds(S);startRound(S);S.adUsed=au;S.extra=ex;if(c!=null&&S.rnd>=2)S.plan.center=c;}
 function startRound(S){
   S.seatPlus=0;
+  alive(S).forEach(function(t){t.snap={sk:t.st.v+t.st.d+t.st.r+t.st.e,conf:t.conf};});
   S.lesson={train:{},pos:{}}; S.adUsed=false; S.extra=0; S.wDrama=0; S.notes=[]; S.crit={}; S.critDone=false; S.pass={}; S.call=null; S.farewell={}; S.interview={};
   alive(S).forEach(function(t){t.inj=false;t.rest=false; if(ROUNDS[S.rnd].kind==='pos') S.lesson.pos[t.id]=defaultPos(t);});
   S.phase='plan'; S.stage=null; S.events=[]; S.evIdx=0; S.evRes=null; S.feat={};
@@ -733,6 +735,7 @@ function decide(S){
   S.income=f.fin?0:Math.max(0,Math.round(20+rt*5+(hit?15:-10)-(S.warns>=2?20:0)));S.budget+=S.income;
   var order=shuffle(passed.map(function(t){return t.id;}));
   S.call={order:order,failed:failed.map(function(t){return t.id;}),n:0,done:false,angry:ang};
+  makeRecap(S);
   S.call.lines={};passed.forEach(function(t){S.call.lines[t.id]=pick(PASSLINE[t.temper]);});checkGoalsDecide(S);
   S.comments=makeComments(S,cm);
   S.comments.forEach(function(x){S.tr.forEach(function(t){if(x.t.indexOf(t.giv+hon(S))>=0){t.voices.push(x.t);if(t.voices.length>4)t.voices.shift();}});});
@@ -791,7 +794,7 @@ function finalEval(S){
   var streams0=Math.round(song*song*song/1000*180)/10,E0={D:D,n:n,avgR:avgR,goods:goods,streams:streams0};
   var missions=(S.missions||[]).map(function(k){var m=missionOf(k);return {k:k,t:m.t,ok:!!m.chk(S,E0)};});
   total+=missions.filter(function(m){return m.ok;}).length*MISSION_PT+diffOf(S).tot;
-  var g=total>=77?'S':total>=66?'A':total>=56?'B':total>=46?'C':'D';
+  var g=total>=79?'S':total>=67?'A':total>=56?'B':total>=46?'C':'D';
   var streams=Math.round(song*song*song/1000*180)/10; // 万回
   return {D:D,n:n,sk:sk,q:q,fanScore:fanScore,coh:coh,song:song,show:show,total:total,grade:g,roles:roles,miss:miss,trustAvg:trustAvg,avgR:avgR,streams:streams,talk:talk,sd:sd,bond:bond,goods:goods,leadB:leadB,match:match,L:L,missions:missions,promo:promo};
 }
@@ -1357,6 +1360,15 @@ var DIFF={easy:{n:'やさしい',d:'制作費が多く、局の目標が低い�
   hard:{n:'きびしい',d:'制作費が少なく、局の目標が高い。ポイントは1.5倍',bud:-20,tg:.5,tot:-4,pt:1.5}};
 function diffOf(S){return DIFF[(S&&S.diff)||'normal'];}
 
+
+function makeRecap(S){var A=S.tr.filter(function(t){return t.snap&&(t.status==='alive'||t.status==='debut');});
+  var grow=A.map(function(t){return {id:t.id,d:(t.st.v+t.st.d+t.st.r+t.st.e)-t.snap.sk};}).sort(function(a,b){return b.d-a.d;}).filter(function(x){return x.d>=2;}).slice(0,3);
+  var down=A.map(function(t){return {id:t.id,d:t.conf-t.snap.conf};}).sort(function(a,b){return a.d-b.d;}).filter(function(x){return x.d<=-8;}).slice(0,2);
+  var nx=ROUNDS[S.rnd+1],fit=[];
+  if(nx&&!ROUNDS[S.rnd].fin){var w=nx.w,al=S.tr.filter(function(t){return t.status==='alive';});
+    fit=al.map(function(t){var v;if(w==='spec'){var k=t.spec==='t'?bestVDR(t)[0]:t.spec;v=t.st[k]*.7+t.st.e*.3;}else if(w==='pos'||w==='all'){var o=bestVDR(t);v=t.st[o[0]]*.5+t.st[o[1]]*.25+t.st.e*.25;}else{v=0;for(var k2 in w)v+=t.st[k2]*w[k2];}return {id:t.id,v:v};}).sort(function(a,b){return b.v-a.v;}).slice(0,3);}
+  S.recap={grow:grow,down:down,fit:fit,next:nx&&!ROUNDS[S.rnd].fin?nx.name:null};}
+
 /*ENGINE-END*/
 
 /* ================= 画面 ================= */
@@ -1384,8 +1396,8 @@ function stars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'★':'☆';return s;}
 function adIcon(){return '<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="4" width="26" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 9.5v9l7.5-4.5z" fill="currentColor"/></svg>';}
 function wText(f){if(f.w==='spec')return '得意分野70%・表現30%';if(f.w==='pos')return '担当の能力75%・表現25%';if(f.w==='all')return '上位2つの能力65%・表現35%';var a=[];for(var k in f.w)a.push(STATN[k]+Math.round(f.w[k]*100)+'%');return a.join('・');}
 function header(){
-  var wk=S.rnd>0?(ROUNDS[S.rnd].name):'書類・動画審査';
-  var rt=(S.diff&&S.diff!=='normal'?'【'+DIFF[S.diff].n+'】':'')+(S.rnd>0?'制作費 '+S.budget+'万 ':'')+(S.ratings.length?'視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%':'');
+  var wk=(S.diff&&S.diff!=='normal'?DIFF[S.diff].n+'・':'')+(S.rnd>0?(ROUNDS[S.rnd].name):'書類・動画審査');
+  var rt=(S.rnd>0?'制作費 '+S.budget+'万 ':'')+(S.ratings.length?'視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%':'');
   var h='<div class="hdr"><div class="logo"><span>ひかりの</span>七席</div><div class="wk">'+esc(wk)+'</div><div class="rt">'+rt+'</div>';
   h+='<button class="btn-s '+(ui.resetArm?'warn':'')+'" data-a="reset">'+(ui.resetArm?'本当に最初から':'最初から')+'</button></div>';
   h+='<div class="dots">';for(var i=0;i<=NROUND;i++)h+='<i class="'+(i<S.rnd?'on':i===S.rnd?'now':'')+'" title="'+(i===0?'書類・動画審査':ROUNDS[i].name)+'"></i>';h+='</div>';
@@ -1537,6 +1549,11 @@ function vCall(){
   }
   var R_=S.ratings,cur=R_[R_.length-1],pv=R_.length>1?R_[R_.length-2]:null;
   h+='<div class="card"><div class="kv"><span>今回の視聴率</span><b>'+cur.toFixed(1)+'%'+(pv!==null?' <span style="color:'+(cur>=pv?'var(--ok)':'var(--bad)')+'">'+(cur>=pv?'▲':'▼')+Math.abs(cur-pv).toFixed(1)+'</span>':'')+'</b></div><div class="kv"><span>番組への信頼</span><b>'+Math.round(S.showTrust)+'</b></div>'+(c.angry?'<div class="kv"><span>荒れた書き込み</span><b style="color:var(--bad)">人気の子の不合格 '+c.angry+'人</b></div>':'')+'</div>';
+  var rc=S.recap;if(rc&&(rc.grow.length||rc.down.length||rc.fit.length)){h+='<div class="card recap"><div class="mh">この審査の振り返り</div>';
+    if(rc.grow.length)h+='<div class="rr"><span class="rl up">伸びた</span>'+rc.grow.map(function(x){return face(S.tr[x.id],'sm')+'<span>'+esc(S.tr[x.id].giv)+' <b>+'+Math.round(x.d)+'</b></span>';}).join('')+'</div>';
+    if(rc.down.length)h+='<div class="rr"><span class="rl dn">自信を落とした</span>'+rc.down.map(function(x){return face(S.tr[x.id],'sm')+'<span>'+esc(S.tr[x.id].giv)+' <b>'+Math.round(x.d)+'</b></span>';}).join('')+'</div>';
+    if(rc.fit.length)h+='<div class="rr"><span class="rl">次の'+esc(rc.next)+'に向いている</span>'+rc.fit.map(function(x){return face(S.tr[x.id],'sm')+'<span>'+esc(S.tr[x.id].giv)+'</span>';}).join('')+'</div>';
+    h+='</div>';}
   h+='<h3>世間の声</h3>';S.comments.forEach(function(x){h+='<div class="cmt '+(x.a?'angry':'')+'"><div class="h">'+esc(x.h)+'</div>'+esc(x.t)+'</div>';});
   h+='<p class="small muted">書き込みはすべて架空のものです。</p>';
   h+=(S.lastTgt?'<div class="tgt '+(S.lastTgt.hit?'hit':'miss')+'"><span>局の目標 '+S.lastTgt.tg.toFixed(1)+'%</span><b>'+(S.lastTgt.hit?'達成':'届かず')+'</b><small>'+(S.lastTgt.hit?'局の評価が上がり、制作費が上乗せされた':(S.warns>=2?'2回続けて届かず、局から厳しく言われた。制作費を大きく減らされた':'局から「数字が厳しい」と言われた'))+'</small></div>':'')+(!f.fin?'<p class="note">次の審査の制作費として <b>'+S.income+'万</b> 入りました（残り '+S.budget+'万）。</p>':'')+'<button class="btn" data-a="'+(f.fin?'toprep':'nextround')+'">'+(f.fin?'デビューの準備へ':'次の審査へ')+'</button>';
@@ -1795,7 +1812,7 @@ function vProfile(t){
 
 function vMonth(){var M=S.month,P=S.prep,D=S.tr.filter(function(t){return t.status==='debut';});
   var h='<div class="telop"><div class="ep">デビューから1か月</div><div class="tt">'+esc(P.names[P.name])+'</div><div class="ds">毎週1つ、グループの活動を選びます。忙しい週が3回続くと、体調を崩すメンバーが出ることがあります。</div><div class="meta">第'+Math.min(4,M.w+1)+'週 ／ 全4週　制作費 '+S.budget+'万</div></div>';
-  h+='<div class="weeks">';for(var i=0;i<4;i++){var l=M.log[i];h+='<div class="wk'+(i===M.w?' now':'')+'"><small>第'+(i+1)+'週</small><b>'+(l?esc(l.n.replace(/（.*）/,'')):i===M.w?'いま':'')+'</b></div>';}h+='</div>';
+  h+='<div class="weeks">';for(var i=0;i<4;i++){var l=M.log[i];h+='<div class="wkc'+(i===M.w?' now':'')+'"><small>第'+(i+1)+'週</small><b>'+(l?esc(l.n.replace(/（.*）/,'')):i===M.w?'いま':'')+'</b></div>';}h+='</div>';
   if(M.log.length){var l=M.log[M.log.length-1];h+='<div class="toast"><b>第'+l.w+'週</b> '+esc(l.t)+'</div>';}
   if(M.busy>=2)h+='<p class="note" style="color:var(--bad)">忙しい週が'+M.busy+'回続いている。そろそろ休ませないと危ない。</p>';
   WEEK_ACTS.forEach(function(a){var dis=a.cost&&S.budget<a.cost;var parts=[];for(var k in a.fx)parts.push([{fan:'ファン',song:'曲の評価',coh:'まとまり'}[k]+'↑',1]);if(a.busy>0)parts.push(['忙しい',0]);if(a.cost)parts.push(['制作費−'+a.cost+'万',0]);
