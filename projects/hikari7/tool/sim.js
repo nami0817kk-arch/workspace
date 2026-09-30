@@ -10,9 +10,9 @@ const N = process.argv.includes('--quick') ? 20 : 200;
 
 function pickIdx(pol, n) { return pol === 'random' ? ri(0, n - 1) : 0; }
 function play(g, pol) {
-  const S = newGame(g);
+  const S = newGame(g, process.env.DIFF || 'normal');
   let c = S.tr.slice();
-  if (pol === 'good') c.sort((a, b) => (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar);
+  if (pol === 'good') { c.sort((a, b) => (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar); if (typeof watchVideo === 'function') c.slice(0, 3).forEach(t => watchVideo(S, t.id)); c.sort((a, b) => ((b.potRev && b.pot >= 1.3) - (a.potRev && a.pot >= 1.3)) || (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar); }
   else shuffle(c);
   S.sel = c.slice(0, S.caps.sel).map(t => t.id); confirmSelect(S);
   if (pol === 'random') S.fmt = shuffle(FMT_KEYS.filter(k => !S.locked || !S.locked[k]).slice()).slice(0, 4);
@@ -65,6 +65,10 @@ function play(g, pol) {
   S.prep.leader = (pol === 'good' ? D.slice().sort((a, b) => b.trust - a.trust)[0] : D[0]).id;
   if (pol === 'good') { const cnt = { v: 0, d: 0, r: 0 }; D.forEach(t => cnt[bestVDR(t)[0]]++); S.prep.dir = ['v', 'd', 'r'].indexOf(Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0]); S.prep.act = 2; }
   if (pol === 'random') { S.prep.dir = ri(0, 2); S.prep.act = ri(0, 2); }
+  if (typeof startMonth === 'function') { startMonth(S);
+    const plan = pol === 'good' ? ['tv', S.budget >= 30 ? 'mv' : 'stream', 'rest', 'tv'] : pol === 'random' ? [0, 1, 2, 3].map(() => pick(WEEK_ACTS).k) : ['tv', 'tv', 'tv', 'tv'];
+    plan.forEach(k => { if (S.phase === 'month') { const b = S.budget; weekDo(S, k); if (S.month.w === 0 || (S.budget === b && k === 'mv' && S.phase === 'month' && S.month.log.length === 0)) weekDo(S, 'tv'); } });
+    while (S.phase === 'month') weekDo(S, 'rest'); }
   const E = finalEval(S);
   return { E, S };
 }
