@@ -348,6 +348,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .seat{display:flex;gap:10px;align-items:center;background:var(--gold-bg);border:1px solid var(--gold);border-radius:12px;padding:8px 12px;margin:8px 0}.seat>div{flex:1;display:flex;flex-direction:column;gap:2px}.seat .btn-s:disabled{opacity:.45}
 .weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.wk{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px;text-align:center;min-height:54px;display:flex;flex-direction:column;gap:2px;font-size:12px}.wk small{color:var(--muted)}.wk.now{border:2px solid var(--gold)}.choice:disabled{opacity:.45}
 .achv{margin-top:8px}.achv summary{cursor:pointer;font-weight:800;font-size:13px;color:var(--accent)}.achv div{font-size:13px;padding:2px 0;color:var(--muted)}.achv div.got{color:var(--fg)}.achv div.got::first-letter{color:var(--gold)}
+.gsel.g3{grid-template-columns:repeat(3,1fr)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -442,7 +443,7 @@ function genTrainee(id,used,g){
     fz:fz,rev:rev,popStar:popStar,potRev:false,trainN:0,status:'cand',inj:false,rest:false,lastP:0,outRound:0,retried:false,
     tier:tier,like:pick(LIKES),weak:pick(WEAKS),arc:null,hist:[],log:[],voices:[]};
 }
-function newGame(g){
+function newGame(g,diff){
   var used={},tr=[],all=shuffle(Array.from({length:(FACE_IMG[g]||[]).length},function(_,i){return i;})),seenG={},imgs=[];
   all.forEach(function(i){var gr=(typeof FACE_GRP!=='undefined'&&FACE_GRP[g])?FACE_GRP[g][i]:i;if(!seenG[gr]){seenG[gr]=1;imgs.push(i);}});
   var nImg=imgs.length,nApp=Math.min(40,nImg||40);
@@ -450,7 +451,7 @@ function newGame(g){
   var rels=assignArcs(tr);
   var o={v:8,budget:80,plan:null,rels:rels,revived:null,talked:[],talk:null,prep:null,feat:{},income:0,g:g,nApp:nApp,caps:capsFor(nApp),phase:'select',rnd:0,tr:tr,sel:[],extra:0,adUsed:false,ratings:[],showTrust:60,wDrama:0,
     lesson:null,events:[],evIdx:0,evRes:null,stage:null,crit:{},critDone:false,pass:{},call:null,farewell:{},comments:[],notes:[],lastEvTypes:[],interview:{},history:[]};
-  initV5(o);return o;
+  o.diff=diff;initV5(o);return o;
 }
 function alive(S){return S.tr.filter(function(t){return t.status==='alive';});}
 function bestVDR(t){return ['v','d','r'].sort(function(x,y){return t.st[y]-t.st[x];});}
@@ -727,7 +728,7 @@ function decide(S){
   var rating=3.4+(40-S.nApp)/40*.9+topPop*.04+S.wDrama*.22+Math.min(ang,3)*.25+S.rnd*.25+(f.fin?.8:0)+(f.hype||1)*.35-.35+flowBonus(S,S.rnd)+(S.showTrust-60)*.03+(R()-.5)*.4+(S.plan&&S.plan.acts.special?.9:0)+(S.plan&&S.plan.acts.stage?.4:0)+(S.centerRes?S.centerRes*.3:0);
   if(S.seatPlus){S.showTrust=clamp(S.showTrust-2,0,100);cm.push(['合格の枠を後から増やすの、基準が甘くない？',1]);}
   S.ratings.push(r1(clamp(rating,1.5,15)));
-  var rt=S.ratings[S.ratings.length-1],tg=roundTarget(S.rnd),hit=rt>=tg;S.lastTgt={tg:tg,hit:hit,r:rt};if(!hit)S.warns++;else S.warns=0;
+  var rt=S.ratings[S.ratings.length-1],tg=roundTarget(S.rnd,S),hit=rt>=tg;S.lastTgt={tg:tg,hit:hit,r:rt};if(!hit)S.warns++;else S.warns=0;
   S.income=f.fin?0:Math.max(0,Math.round(20+rt*5+(hit?15:-10)-(S.warns>=2?20:0)));S.budget+=S.income;
   var order=shuffle(passed.map(function(t){return t.id;}));
   S.call={order:order,failed:failed.map(function(t){return t.id;}),n:0,done:false,angry:ang};
@@ -788,7 +789,7 @@ function finalEval(S){
   var total=song*.35+coh*.25+fanScore*.2+show*.2;
   var streams0=Math.round(song*song*song/1000*180)/10,E0={D:D,n:n,avgR:avgR,goods:goods,streams:streams0};
   var missions=(S.missions||[]).map(function(k){var m=missionOf(k);return {k:k,t:m.t,ok:!!m.chk(S,E0)};});
-  total+=missions.filter(function(m){return m.ok;}).length*MISSION_PT;
+  total+=missions.filter(function(m){return m.ok;}).length*MISSION_PT+diffOf(S).tot;
   var g=total>=77?'S':total>=66?'A':total>=56?'B':total>=46?'C':'D';
   var streams=Math.round(song*song*song/1000*180)/10; // 万回
   return {D:D,n:n,sk:sk,q:q,fanScore:fanScore,coh:coh,song:song,show:show,total:total,grade:g,roles:roles,miss:miss,trustAvg:trustAvg,avgR:avgR,streams:streams,talk:talk,sd:sd,bond:bond,goods:goods,leadB:leadB,match:match,L:L,missions:missions,promo:promo};
@@ -1017,7 +1018,7 @@ function initV5(S){
     var rs=relsOf(S,t.id).filter(function(r){return r.k==='old'||r.k==='senpai';});
     var gs=['center','top','pop','final','center','top','final'];if(rs.length)gs.push('together','together','together');
     t.goal=pick(gs);t.goalP=t.goal==='together'?rs[0].o:null;});
-  S.fmt=DEFAULT_FMT.slice();buildRounds(S);var cr=loadCareer();S.locked=lockedFormats(cr.points);S.missions=pickMissions();S.budget+=Math.min(50,cr.seasons*5);S.warns=0;S.album=[];S.touch={};S.reqs=[];S.ap=0;S.centerReq=null;S.sub=null;S.show=null;
+  S.fmt=DEFAULT_FMT.slice();buildRounds(S);var cr=loadCareer();S.locked=lockedFormats(cr.points);S.missions=pickMissions();S.diff=DIFF[S.diff]?S.diff:'normal';S.budget+=Math.min(50,cr.seasons*5)+DIFF[S.diff].bud;S.warns=0;S.album=[];S.touch={};S.reqs=[];S.ap=0;S.centerReq=null;S.sub=null;S.show=null;
 }
 var TIERN=['距離がある','打ち解けてきた','信頼している','本音で話せる'];
 function tierOf(t){return t.trust>=80?3:t.trust>=60?2:t.trust>=40?1:0;}
@@ -1240,7 +1241,7 @@ var MISSIONS=[
 var MISSION_PT=3;
 function pickMissions(){var out=[],pool=shuffle(MISSIONS.slice());pool.forEach(function(m){if(out.length>=3)return;if(out.some(function(o){return o===m.x||m.k===o;}))return;if(out.some(function(o){return MISSIONS.filter(function(z){return z.k===o;})[0].x===m.k;}))return;out.push(m.k);});return out;}
 function missionOf(k){return MISSIONS.filter(function(m){return m.k===k;})[0];}
-function roundTarget(r){return 4.5+.5*r;}
+function roundTarget(r,S){return 4.5+.5*r+(S?diffOf(S).tg:0);}
 /* プロデューサー歴（端末に残る。シーズンをまたぐ） */
 var CKEY='hikari7_career';
 function loadCareer(){try{var c=JSON.parse(localStorage.getItem(CKEY));if(c&&c.hall)return c;}catch(e){}return {seasons:0,points:0,hall:[]};}
@@ -1252,7 +1253,7 @@ var UNLOCK={camp:2,duo:4,live:7};
 function lockedFormats(p){var o={};for(var k in UNLOCK)if(p<UNLOCK[k])o[k]=UNLOCK[k];return o;}
 var GRADE_PT={S:5,A:3,B:2,C:1,D:0};
 function recordCareer(S,E){if(S.recorded)return null;S.recorded=true;var c=loadCareer(),before=c.points,rk0=rankOf(before)[1];
-  var got=GRADE_PT[E.grade]+E.missions.filter(function(m){return m.ok;}).length;c.seasons++;var ach=checkAchv(S,E,c);got+=ach.length;c.points+=got;
+  var got=GRADE_PT[E.grade]+E.missions.filter(function(m){return m.ok;}).length;c.seasons++;got=Math.round(got*diffOf(S).pt);var ach=checkAchv(S,E,c);got+=ach.length;c.points+=got;
   c.hall.unshift({name:S.prep.names[S.prep.name],grade:E.grade,total:Math.round(E.total),g:S.g,n:E.n,members:E.D.map(function(t){return t.giv;}),season:c.seasons});c.hall=c.hall.slice(0,20);saveCareer(c);
   var news=ach.map(function(a){return '実績「'+a.t+'」を取った（'+a.d+'）';});for(var k in UNLOCK)if(before<UNLOCK[k]&&c.points>=UNLOCK[k])news.push('審査「'+FORMATS[k].t+'」が使えるようになった');
   var rk1=rankOf(c.points)[1];if(rk1!==rk0)news.unshift('肩書きが「'+rk1+'」になった');
@@ -1348,12 +1349,19 @@ var ACHV=[
 ];
 function checkAchv(S,E,c){if(!c.achv)c.achv={};var got=[];ACHV.forEach(function(a){if(c.achv[a.k])return;if(a.chk(S,E,c)){c.achv[a.k]=c.seasons;got.push(a);}});return got;}
 
+
+/* 難易度：制作費・局の目標・最後の評価・もらえるポイントが変わる */
+var DIFF={easy:{n:'やさしい',d:'制作費が多く、局の目標が低い。ポイントは半分',bud:40,tg:-.5,tot:4,pt:.5},
+  normal:{n:'ふつう',d:'標準',bud:0,tg:0,tot:0,pt:1},
+  hard:{n:'きびしい',d:'制作費が少なく、局の目標が高い。ポイントは1.5倍',bud:-20,tg:.5,tot:-4,pt:1.5}};
+function diffOf(S){return DIFF[(S&&S.diff)||'normal'];}
+
 /*ENGINE-END*/
 
 /* ================= 画面 ================= */
 var KEY='hikari7_proto_v8';
 var S=null, ui={filter:'all',g:'m',resetArm:false,prof:null,showAuto:false,showFast:false}, timer=null;
-try{ui.showAuto=!!localStorage.getItem('hikari7_showauto');ui.showFast=!!localStorage.getItem('hikari7_showfast');}catch(e){}
+try{ui.diff=localStorage.getItem('hikari7_diff')||'normal';ui.showAuto=!!localStorage.getItem('hikari7_showauto');ui.showFast=!!localStorage.getItem('hikari7_showfast');}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function load(){try{var s=localStorage.getItem(KEY);if(!s)return null;var o=JSON.parse(s);return o&&o.v===8?o:null;}catch(e){return null;}}
 function clearSave(){try{localStorage.removeItem(KEY);}catch(e){}}
@@ -1376,7 +1384,7 @@ function adIcon(){return '<svg width="28" height="28" viewBox="0 0 28 28" aria-h
 function wText(f){if(f.w==='spec')return '得意分野70%・表現30%';if(f.w==='pos')return '担当の能力75%・表現25%';if(f.w==='all')return '上位2つの能力65%・表現35%';var a=[];for(var k in f.w)a.push(STATN[k]+Math.round(f.w[k]*100)+'%');return a.join('・');}
 function header(){
   var wk=S.rnd>0?(ROUNDS[S.rnd].name):'書類・動画審査';
-  var rt=(S.rnd>0?'制作費 '+S.budget+'万 ':'')+(S.ratings.length?'視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%':'');
+  var rt=(S.diff&&S.diff!=='normal'?'【'+DIFF[S.diff].n+'】':'')+(S.rnd>0?'制作費 '+S.budget+'万 ':'')+(S.ratings.length?'視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%':'');
   var h='<div class="hdr"><div class="logo"><span>ひかりの</span>七席</div><div class="wk">'+esc(wk)+'</div><div class="rt">'+rt+'</div>';
   h+='<button class="btn-s '+(ui.resetArm?'warn':'')+'" data-a="reset">'+(ui.resetArm?'本当に最初から':'最初から')+'</button></div>';
   h+='<div class="dots">';for(var i=0;i<=NROUND;i++)h+='<i class="'+(i<S.rnd?'on':i===S.rnd?'now':'')+'" title="'+(i===0?'書類・動画審査':ROUNDS[i].name)+'"></i>';h+='</div>';
@@ -1399,7 +1407,7 @@ function vTitle(){
     '<div class="facerow tfaces">'+[0,3,6,9].map(function(i,j){return '<img class="face md b-'+sp[j]+'" src="'+faceURL(ui.g,i)+'" alt="">';}).join('')+'</div>';
   h+='<div class="card"><h3 style="margin-top:0">このシーズンのグループ</h3><div class="gsel">'+
     '<button class="'+(ui.g==='m'?'on':'')+'" data-a="g" data-v="m">男性グループ</button><button class="'+(ui.g==='f'?'on':'')+'" data-a="g" data-v="f">女性グループ</button></div>'+
-    '<p class="small muted">どちらを選んでも、能力や課題の仕組みは同じです。</p></div>';
+    '<p class="small muted">どちらを選んでも、能力や課題の仕組みは同じです。</p><h3>難しさ</h3><div class="gsel g3">'+['easy','normal','hard'].map(function(k){return '<button class="'+((ui.diff||'normal')===k?'on':'')+'" data-a="diff" data-v="'+k+'">'+DIFF[k].n+'</button>';}).join('')+'</div><p class="small muted">'+esc(DIFF[ui.diff||'normal'].d)+'</p></div>';
   h+='<button class="btn" data-a="new">新しいシーズンを始める</button>';
   if(sv)h+='<button class="btn sub" data-a="cont">つづきから（'+(sv.rnd>0?ROUNDS[sv.rnd].name:'書類・動画審査')+'・'+(sv.g==='f'?'女性':'男性')+'）</button>';
   h+=careerBox();
@@ -1571,7 +1579,7 @@ function vResult(){
 function yen(n){return '<b>'+n+'</b><span class="small muted">万</span>';}
 function vPlan(){
   var f=roundFmt(S),P=S.plan,A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),cost=actCost(S);
-  var h=telop('制作会議')+'<div class="tgt"><span>局の目標</span><b>視聴率 '+roundTarget(S.rnd).toFixed(1)+'%</b><small>届けば次の制作費＋15万、届かなければ−10万。2回続けて届かないとさらに−20万</small></div>'+missionBox()+'<div class="card fmt"><p class="small muted" style="margin:0">'+(ROUNDS[S.rnd].fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
+  var h=telop('制作会議')+'<div class="tgt"><span>局の目標</span><b>視聴率 '+roundTarget(S.rnd,S).toFixed(1)+'%</b><small>届けば次の制作費＋15万、届かなければ−10万。2回続けて届かないとさらに−20万</small></div>'+missionBox()+'<div class="card fmt"><p class="small muted" style="margin:0">'+(ROUNDS[S.rnd].fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
   h+='<div class="budget"><span>制作費</span><span>'+yen(S.budget)+(cost?' <span class="muted">→ 使うと残り '+(S.budget-cost)+'万</span>':'')+'</span></div>';
   var C=ROUNDS[S.rnd].concepts;
   if(C){h+='<h3>曲とコンセプト</h3><div class="filters">'+C.map(function(c,i){return '<button class="chip '+(P.concept===i?'on':'')+'" data-a="concept" data-v="'+i+'">'+c.n+'</button>';}).join('')+'</div><p class="small muted">見られる力：'+wText(f)+'</p>';}
@@ -1807,7 +1815,7 @@ document.addEventListener('click',function(ev){
   if(ui.prof!=null&&a!=='prof'&&a!=='profclose'&&a!=='noop'){ui.prof=null;}
   switch(a){
     case 'g':ui.g=v;render();break;
-    case 'new':stopTimer();ui.prof=null;S=newGame(ui.g);ui.filter='all';save();render();window.scrollTo(0,0);break;
+    case 'new':stopTimer();ui.prof=null;S=newGame(ui.g,ui.diff);ui.filter='all';save();render();window.scrollTo(0,0);break;
     case 'cont':S=load();if(S&&S.fmt)buildRounds(S);render();break;
     case 'reset':if(!ui.resetArm){ui.resetArm=true;render();setTimeout(function(){if(ui.resetArm){ui.resetArm=false;render();}},3000);}else{stopTimer();ui.resetArm=false;clearSave();S=null;render();window.scrollTo(0,0);}break;
     case 'filter':ui.filter=v;render();break;
@@ -1817,6 +1825,7 @@ document.addEventListener('click',function(ev){
     case 'showfast':ui.showFast=!ui.showFast;ui.showKey=null;try{localStorage.setItem('hikari7_showfast',ui.showFast?'1':'');}catch(e){}render();break;
     case 'watch':go(function(){watchVideo(S,id);});break;
     case 'seat':go(function(){useSeat(S);});break;
+    case 'diff':ui.diff=v;try{localStorage.setItem('hikari7_diff',v);}catch(e){}render();break;
     case 'selok':go(function(){confirmSelect(S);});window.scrollTo(0,0);break;
     case 'autolesson':go(function(){autoLesson(S);});break;
     case 'fadd':go(function(){var i=S.fmt.indexOf(null);if(i>=0)S.fmt[i]=v;});break;
