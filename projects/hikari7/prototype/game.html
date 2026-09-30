@@ -346,6 +346,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .showctl{display:flex;gap:4px;flex-wrap:wrap}.showctl .btn-s{padding:4px 8px;min-height:32px}.btn-s.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 .btn-s.watch{margin-top:6px;border-color:var(--accent);color:var(--accent);font-weight:700}.btn-s.watch:disabled{opacity:.4}
 .seat{display:flex;gap:10px;align-items:center;background:var(--gold-bg);border:1px solid var(--gold);border-radius:12px;padding:8px 12px;margin:8px 0}.seat>div{flex:1;display:flex;flex-direction:column;gap:2px}.seat .btn-s:disabled{opacity:.45}
+.weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.wk{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px;text-align:center;min-height:54px;display:flex;flex-direction:column;gap:2px;font-size:12px}.wk small{color:var(--muted)}.wk.now{border:2px solid var(--gold)}.choice:disabled{opacity:.45}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -780,6 +781,7 @@ function finalEval(S){
   coh=clamp(coh,0,100);
   var dirK=SONGDIR[Pp.dir].k,match=D.filter(function(t){return bestVDR(t)[0]===dirK;}).length/n;
   var song=clamp(100*Math.sqrt(q*fanScore/100)*(.75+coh/400)*(.9+match*.35)+(Pp.act===1?6:0),0,100);
+  var Mo=S.month||{fan:0,song:0,coh:0};fanScore=clamp(fanScore+Mo.fan,0,100);coh=clamp(coh+Mo.coh,0,100);song=clamp(song+Mo.song,0,100);
   var avgR=S.ratings.reduce(function(a,b){return a+b;},0)/S.ratings.length;
   var show=clamp((avgR-3)*16,0,100);
   var total=song*.35+coh*.25+fanScore*.2+show*.2;
@@ -1003,7 +1005,7 @@ var GNAME_B=['','7','・ライン','ボックス','・ステップ','・デイ�
 function genGroupNames(){var o=[];while(o.length<5){var n=pick(GNAME_A)+pick(GNAME_B);if(o.indexOf(n)<0)o.push(n);}return o;}
 var SONGDIR=[{k:'v',n:'歌で聴かせる'},{k:'d',n:'踊りで魅せる'},{k:'r',n:'ラップで攻める'}];
 var ACTIV=[{n:'テレビ中心',d:'ファンの広がりが伸びる。まとまりは少し下がる'},{n:'配信中心',d:'デビュー曲の再生数が伸びる'},{n:'ライブ中心',d:'まとまりが伸び、ファンも少し増える'}];
-function startPrep(S){S.prep={names:genGroupNames(),name:0,leader:null,dir:0,act:0};S.phase='prep';}
+function startPrep(S){S.prep={names:genGroupNames(),name:0,leader:null,dir:0,act:-1};S.phase='prep';}
 
 
 /* ---------- v5：人となり・関わり方 ---------- */
@@ -1300,6 +1302,31 @@ EV.visit={title:'家族の面会日',text:function(S,e,A){return '今日は家�
     if(i===1){var k=A.spec==='t'?'e':A.spec;A.st[k]=Math.min(99,A.st[k]+4*A.pot);A.trust-=6;return A.giv+'は「今は練習します」と言った。声が少し震えていた。';}
     A.pop+=6*A.charm;A.conf+=3;S.wDrama+=1;S.notes.push([A.giv+hon(S)+'の家族の場面、泣いた',0]);return '面会の場面が放送され、温かい声が集まった。';}};
 
+
+/* デビューから1か月：4週、毎週1つ活動を選ぶ。忙しい週が続くと体調を崩すメンバーが出る */
+var WEEK_ACTS=[
+  {k:'tv',n:'歌番組に出る',d:'ファンが大きく広がる',busy:1,fx:{fan:3}},
+  {k:'stream',n:'配信ライブ',d:'デビュー曲がよく聴かれる',busy:1,fx:{song:2,fan:1}},
+  {k:'meet',n:'ファンミーティング',d:'ファンとメンバーの距離が縮まる',busy:1,fx:{fan:2,coh:1}},
+  {k:'mv',n:'MVを撮り直す（制作費30万）',d:'曲の評価が大きく上がる',busy:1,cost:30,fx:{song:4}},
+  {k:'radio',n:'ラジオとSNS企画',d:'話せるメンバーがいると効く',busy:0,fx:{fan:1,coh:1}},
+  {k:'rest',n:'休みを取る',d:'まとまりが上がり、疲れが抜ける',busy:-9,fx:{coh:2}}
+];
+function startMonth(S){S.month={w:0,busy:0,fan:0,song:0,coh:0,log:[]};S.phase='month';}
+function weekDo(S,k){var M=S.month,a=WEEK_ACTS.filter(function(x){return x.k===k;})[0],D=S.tr.filter(function(t){return t.status==='debut';});
+  if(!a||M.w>=4)return;if(a.cost){if(S.budget<a.cost)return;S.budget-=a.cost;}
+  var fx=a.fx,txt=[],star=pick(D);
+  M.fan+=fx.fan||0;M.song+=fx.song||0;M.coh+=fx.coh||0;
+  if(k==='radio'&&D.some(function(t){return t.spec==='t';})){M.fan+=2;var tk=D.filter(function(t){return t.spec==='t';})[0];txt.push(tk.giv+'の話がラジオで評判になった。');}
+  if(a.busy>0){M.busy++;if(M.busy>=3&&R()<.7){M.coh-=5;M.fan-=2;var sick=pick(D);txt.push('忙しさが続き、'+sick.giv+'が体調を崩した。');logT(S,sick,'デビュー後の忙しさで体調を崩した');}}
+  else if(a.busy<0)M.busy=0;
+  var HL={tv:[star.giv+'の歌う姿がトレンドに入った。','初めての歌番組。緊張で手が震えていたが、最後は全員笑顔だった。'],stream:['配信の同時視聴者が予想の倍を超えた。',star.giv+'の弾き語りの時間が切り抜かれて広まった。'],
+    meet:['ファンの手紙を読んで、'+star.giv+'が泣いてしまった。','全員でファンの質問に答え、会場が笑いに包まれた。'],mv:['撮り直したMVの再生数が、1週間で前作を超えた。',star.giv+'の表情のアップが話題になった。'],
+    radio:['SNS企画で、メンバーの素顔が少しずつ知られてきた。'],rest:['久しぶりの休み。全員で鍋を囲んだらしい。',star.giv+'が全員分の弁当を作ってきた。']};
+  txt.unshift(pick(HL[k]));M.log.push({w:M.w+1,k:k,n:a.n,t:txt.join(' ')});M.w++;
+  if(M.w>=4){S.phase='result';recordCareer(S,finalEval(S));}
+}
+
 /*ENGINE-END*/
 
 /* ================= 画面 ================= */
@@ -1337,7 +1364,7 @@ function header(){
 function render(){
   var h;
   if(!S||S.phase==='title')h=vTitle();
-  else h=header()+({select:vSelect,plan:vPlan,lesson:vLesson,talk:vTalk,show:vShow,format:vFormat,event:vEvent,interview:vInterview,stage:vStage,critique:vCritique,judge:vJudge,call:vCall,prep:vPrep,result:vResult}[S.phase])();
+  else h=header()+({select:vSelect,plan:vPlan,lesson:vLesson,talk:vTalk,show:vShow,format:vFormat,event:vEvent,interview:vInterview,stage:vStage,critique:vCritique,judge:vJudge,call:vCall,prep:vPrep,month:vMonth,result:vResult}[S.phase])();
   if(S&&ui.prof!=null&&S.tr[ui.prof])h+=vProfile(S.tr[ui.prof]);
   $('#app').innerHTML=h;
   document.body.style.overflow=ui.prof!=null?'hidden':'';
@@ -1557,8 +1584,8 @@ function vPrep(){
   D.forEach(function(t){h+='<button class="pk '+(P.leader===t.id?'on':'')+'" data-a="leader" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span><em>信頼'+Math.round(t.trust)+'</em></button>';});h+='</div>';
   var cnt={v:0,d:0,r:0};D.forEach(function(t){cnt[bestVDR(t)[0]]++;});
   h+='<h3>デビュー曲の方向</h3><div class="filters">'+SONGDIR.map(function(d,i){return '<button class="chip '+(P.dir===i?'on':'')+'" data-a="sdir" data-v="'+i+'">'+d.n+'（得意'+cnt[d.k]+'人）</button>';}).join('')+'</div><p class="small muted">いちばん得意な子が多い方向ほど、曲の出来が良くなる。</p>';
-  h+='<h3>最初の1か月の活動</h3>'+ACTIV.map(function(a,i){return '<button class="choice '+(P.act===i?'sel':'')+'" data-a="activ" data-v="'+i+'"><b>'+a.n+'</b><span>'+a.d+'</span></button>';}).join('');
-  h+='<div class="foot"><div class="in"><div class="cnt">'+esc(P.names[P.name])+'</div><button class="btn" data-a="prepok" '+(P.leader!=null?'':'disabled')+'>'+(P.leader!=null?'デビュー後を見る':'リーダーを選ぶ')+'</button></div></div>';
+  h+=''+[].map(function(a,i){return '<button class="choice '+(P.act===i?'sel':'')+'" data-a="activ" data-v="'+i+'"><b>'+a.n+'</b><span>'+a.d+'</span></button>';}).join('');
+  h+='<div class="foot"><div class="in"><div class="cnt">'+esc(P.names[P.name])+'</div><button class="btn" data-a="prepok" '+(P.leader!=null?'':'disabled')+'>'+(P.leader!=null?'デビューする':'リーダーを選ぶ')+'</button></div></div>';
   return h;
 }
 var STATUSN={cand:'応募者',cut0:'書類で不合格',alive:'審査中',out:'不合格',left:'辞退',final:'最終で落選',debut:'デビュー'};
@@ -1593,7 +1620,7 @@ function confetti(){var c=['#f0709c','#6c9cf0','#f0a14a','#45c592','#e9ba4b','#a
   for(var i=0;i<36;i++)h+='<i style="left:'+(i*2.8%100).toFixed(1)+'%;background:'+c[i%c.length]+';animation-delay:'+((i*37%100)/60).toFixed(2)+'s;animation-duration:'+(2.4+(i*13%10)/10).toFixed(1)+'s"></i>';return h+'</div>';}
 function poster(E,P){var L=E.L,D=E.D.filter(function(t){return !L||t.id!==L.id;});
   function mem(t,lead){return '<div class="mem'+(lead?' lead':'')+'">'+face(t,lead?'lg':'md')+'<b>'+esc(t.giv)+'</b><small>'+(lead?'リーダー':SPEC[t.spec])+'</small></div>';}
-  return '<div class="poster">'+confetti()+'<div class="pk2">デビュー決定</div><div class="gname">'+esc(P.names[P.name])+'</div>'+(L?'<div class="lineup">'+mem(L,1)+'</div>':'')+'<div class="lineup">'+D.map(function(t){return mem(t,0);}).join('')+'</div><div class="pmeta">'+esc(SONGDIR[P.dir].n)+'　／　'+esc(ACTIV[P.act].n)+'</div></div>';}
+  return '<div class="poster">'+confetti()+'<div class="pk2">デビュー決定</div><div class="gname">'+esc(P.names[P.name])+'</div>'+(L?'<div class="lineup">'+mem(L,1)+'</div>':'')+'<div class="lineup">'+D.map(function(t){return mem(t,0);}).join('')+'</div><div class="pmeta">'+esc(SONGDIR[P.dir].n)+(ACTIV[P.act]?'　／　'+esc(ACTIV[P.act].n):'')+'</div></div>';}
 
 
 function hypeStars(h){return '<span class="hype">'+'★★★'.slice(0,h)+'<i>'+'★★★'.slice(h)+'</i></span>';}
@@ -1732,6 +1759,16 @@ function vProfile(t){
   return h+'</div></div>';
 }
 
+
+function vMonth(){var M=S.month,P=S.prep,D=S.tr.filter(function(t){return t.status==='debut';});
+  var h='<div class="telop"><div class="ep">デビューから1か月</div><div class="tt">'+esc(P.names[P.name])+'</div><div class="ds">毎週1つ、グループの活動を選びます。忙しい週が3回続くと、体調を崩すメンバーが出ることがあります。</div><div class="meta">第'+Math.min(4,M.w+1)+'週 ／ 全4週　制作費 '+S.budget+'万</div></div>';
+  h+='<div class="weeks">';for(var i=0;i<4;i++){var l=M.log[i];h+='<div class="wk'+(i===M.w?' now':'')+'"><small>第'+(i+1)+'週</small><b>'+(l?esc(l.n.replace(/（.*）/,'')):i===M.w?'いま':'')+'</b></div>';}h+='</div>';
+  if(M.log.length){var l=M.log[M.log.length-1];h+='<div class="toast"><b>第'+l.w+'週</b> '+esc(l.t)+'</div>';}
+  if(M.busy>=2)h+='<p class="note" style="color:var(--bad)">忙しい週が'+M.busy+'回続いている。そろそろ休ませないと危ない。</p>';
+  WEEK_ACTS.forEach(function(a){var dis=a.cost&&S.budget<a.cost;var parts=[];for(var k in a.fx)parts.push([{fan:'ファン',song:'曲の評価',coh:'まとまり'}[k]+'↑',1]);if(a.busy>0)parts.push(['忙しい',0]);if(a.cost)parts.push(['制作費−'+a.cost+'万',0]);
+    h+='<button class="choice" data-a="week" data-v="'+a.k+'" '+(dis?'disabled':'')+'><b>'+esc(a.n)+'</b><span class="hint">'+partsHtml(parts)+'<span class="small muted">'+esc(a.d)+'</span></span></button>';});
+  return h;}
+
 /* ---------- 操作 ---------- */
 function stopTimer(){if(timer){clearTimeout(timer);timer=null;}}
 function callTick(){
@@ -1802,7 +1839,8 @@ document.addEventListener('click',function(ev){
     case 'leader':go(function(){S.prep.leader=id;});break;
     case 'sdir':go(function(){S.prep.dir=+v;});break;
     case 'activ':go(function(){S.prep.act=+v;});break;
-    case 'prepok':go(function(){S.phase='result';recordCareer(S,finalEval(S));});window.scrollTo(0,0);break;
+    case 'prepok':go(function(){startMonth(S);});window.scrollTo(0,0);break;
+    case 'week':go(function(){weekDo(S,v);});window.scrollTo(0,0);break;
     case 'tr':go(function(){var l=S.lesson.train[id]||(S.lesson.train[id]=[]),i=l.indexOf(v),full=usedSlots(S)>=slotsOf(S);
       if(i>=0){l.splice(i,1);return;}
       if(v==='rest'){if(full&&!l.length)return;l.length=0;l.push('rest');return;}
