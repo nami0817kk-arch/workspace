@@ -16,6 +16,7 @@ theme:
   question: ラミン・ヤマルはどういう作りの選手で、なぜ19歳で数字が出るのか
   takeaway: シュートの数は同じ位置の100人で最上位、守備は下から9番目。右から中へ左足で打つ形だけで19歳でユーロとW杯を獲り、今季も9試合9点6アシスト。バロンドールを争うエムバペとは点で並び、アシストの分だけ前にいる
   nameplate: ラミン・ヤマル｜バルセロナ FW／スペイン代表
+  opening_image: assets/images/20261002_yamal_final_wide/01.jpg
   bgm: assets/audio/bgm_calm.wav
 watch: 明日は③ミカエル・オリーズ
 short_title: ヤマルってどんな選手？
@@ -171,12 +172,13 @@ sections:
   - text: では、ヤマルはどこが飛び抜けているのか。同じ攻撃的MF・ウイングと比べたレーダーで見てみます。
     image: assets/stats/player_20261002_1467236_radar.png
     no_telop: true
-  - 6つの軸のうち、シュートの数と得点は最上位。空中戦と守備の関与は、どちらも最下位。
+  - text: 6つの軸のうち、シュートの数と得点は最上位。空中戦と守備の関与は、どちらも最下位。
+    image: assets/images/20261002_yamal_final_face_w/01.jpg
   - text: ボールを持つ場所は、右サイドの高い位置。ヒートマップで赤く光るところ。
     image: assets/stats/player_20261002_1467236_heat.png
     no_telop: true
   - text: そこから中へ切れ込んで、左足で自分が打つ。攻めに振り切った、ヤマルの型です。
-    image: assets/images/20261002_yamal_semi_face_w/01.jpg
+    image: assets/images/20261002_yamal_medal_w/01.jpg
   - ドリブルは今季30回成功、成功率は60%。作ったチャンスは27回で、上位3%に入ります。
   - text: シュートはラ・リーガ7試合で38本。1試合に5本以上打って、7点。打って打って、決めきっています。
     image: assets/stats/player_20261002_1467236_shots.png
@@ -366,7 +368,7 @@ sections:
   telop: 10月11日、バルセロナ対ヘタフェ
   say:
   - text: 最後に、ここから先を数字で見通します。
-    image: assets/images/20261002_yamal_semi_face_w/01.jpg
+    image: assets/images/20261002_yamal_final_face_w/01.jpg
   - 世界年間最優秀選手、バロンドールの発表は10月26日。
   - 本人は9月、エムバペと自分の2人を挙げて、こう言い切りました。
   - voice: ヤマル

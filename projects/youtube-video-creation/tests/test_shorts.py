@@ -1334,3 +1334,12 @@ def test_ニュースのショートは読み終えたら終わる():
     series.meta = dict(series.meta or {}, series="プレミアリーグチーム紹介")
     _add_subscribe(series)
     assert inserts_mod.plan(series, config).outro > 0, "続き物の回の「続きは本編で」が消えた"
+
+
+def test_クラブ紹介でないシリーズは締めでクラブの歩みを言わない():
+    """2026-10-01：ヤマル紹介・得点王・月間まとめのショートが「クラブの歩みと今季の選手は、本編で」で終わっていた。"""
+    from src.shorts import _series_outro, SHORT_SUBSCRIBE_SERIES, SHORT_SUBSCRIBE_SERIES_OTHER
+    assert _series_outro("ラ・リーガチーム紹介") == SHORT_SUBSCRIBE_SERIES
+    assert _series_outro("プレミアリーグチーム紹介") == SHORT_SUBSCRIBE_SERIES
+    for s in ("有名選手の紹介", "代表チームの紹介", "得点王レース", "日本人選手の月間まとめ", "有名選手の比較"):
+        assert _series_outro(s) == SHORT_SUBSCRIBE_SERIES_OTHER, s

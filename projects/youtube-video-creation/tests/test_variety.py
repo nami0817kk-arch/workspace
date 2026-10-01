@@ -217,3 +217,14 @@ def test_紹介のシリーズは節の並びが同じでも止めない():
     labels = {f.label: f.ok for f in inspect_day(scripts)}
     assert labels["話の型"] is True and "入り方" not in labels and "締め方" not in labels
     assert "本のあいだ" in labels
+
+
+def test_見立てのカードは代弁の点検で数えない():
+    """2026-10-01：声の無い比較の回が、見立ての引用カードだけで「本人の声で読ませていない」と止まった。"""
+    from types import SimpleNamespace
+    from src.variety import _spoken_for
+    script = SimpleNamespace(cards={"view_card": {"type": "quote", "label": "この動画の見立て", "text": "…"}},
+                             scenes=[SimpleNamespace(lines=[SimpleNamespace(speaker="解説")])])
+    assert _spoken_for(script) == (0, 0)
+    script.cards["q"] = {"type": "quote", "text": "本人の言葉"}
+    assert _spoken_for(script)[0] == 1

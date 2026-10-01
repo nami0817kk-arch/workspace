@@ -448,11 +448,20 @@ SHORT_SUBSCRIBE_2 = "チャンネル登録もお願いします。"
 # 「本編はチャンネルから」だけだと、何が続くのか分からないまま終わっていた。
 # 使うのは `series:` のある回（いまはプレミア20クラブ紹介）
 SHORT_SUBSCRIBE_SERIES = "クラブの歩みと今季の選手は、本編で見られます。"
+# **クラブ紹介でないシリーズの締め**（2026-10-01）。選手紹介・代表・得点王・月間まとめ・比較にも
+# 上の「クラブの歩み」を読んでいた（ヤマルの回に「クラブの歩みと今季の選手」）
+SHORT_SUBSCRIBE_SERIES_OTHER = "くわしい数字と見立ては、本編で見られます。"
+
+
+def _series_outro(series: str) -> str:
+    """シリーズの回の締めの一言。クラブ紹介（「〜リーグチーム紹介」「ラ・リーガチーム紹介」）だけクラブの言い方。"""
+    club = "紹介" in series and ("リーグ" in series or "リーガ" in series)
+    return SHORT_SUBSCRIBE_SERIES if club else SHORT_SUBSCRIBE_SERIES_OTHER
 
 # 締めのかたまり（本編への誘い＋登録の依頼）。**2行ある**（2026-09-18 に1行から増やした）
 SHORT_OUTRO_LINES = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2)
 # 締めかどうかを見分けるときは、続き物の言い方も数える
-SHORT_OUTRO_ANY = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_SERIES, SHORT_SUBSCRIBE_2)
+SHORT_OUTRO_ANY = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_SERIES, SHORT_SUBSCRIBE_SERIES_OTHER, SHORT_SUBSCRIBE_2)
 
 
 def _outro_count(lines) -> int:
@@ -689,7 +698,7 @@ def _add_subscribe(short: Script) -> None:
         # 続き物の回に「続報は次回お伝えします」は合わない（次回は別のクラブ）
         short.meta = dict(short.meta or {}, outro_title="続きは本編で",
                           outro_sub="チャンネルから見られます")
-    first = SHORT_SUBSCRIBE_SERIES if series else SHORT_SUBSCRIBE
+    first = _series_outro(series) if series else SHORT_SUBSCRIBE
     for words in (first, SHORT_SUBSCRIBE_2):
         last = copy.deepcopy(lines[-1])
         last.text = words

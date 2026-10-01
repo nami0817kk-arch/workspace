@@ -186,9 +186,13 @@ def _spoken_for(script: Script) -> tuple[int, int]:
     キャスターが「〇〇はこう話しました」と地の文で読むだけでは、
     せっかくの代弁が効かない。
     """
+    # **見立ての引用カード（label「この動画の見立て」）は数えない**（2026-10-01）。
+    # こちらの見立てを画面に出すカードで、誰かの発言ではない。数えると、
+    # 声の無い紹介ものが「本人の声で読ませていない」で止まっていた
     quotes = sum(
         1 for spec in (script.cards or {}).values()
-        if str((spec or {}).get("type", "")).lower() == "quote")
+        if str((spec or {}).get("type", "")).lower() == "quote"
+        and "見立て" not in str((spec or {}).get("label", "")))
     voiced = len({
         (getattr(line, "speaker", "") or "").strip()
         for scene in script.scenes for line in scene.lines
