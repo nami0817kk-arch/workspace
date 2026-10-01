@@ -11,6 +11,10 @@
 /// - 読み込み中の丸や、文字の無い白紙を撮らない（サカマネで1枚目が白紙のまま出ていた）
 library;
 
+// test/ の外に置いた生成器なので、解析器からはテストに見えない。テストと同じ立場でアプリを組み立てるため、
+// テスト用の口（setMockInitialValues・prefsForTest）を使う（soccer-manager の生成器と同じ扱い）
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -30,11 +34,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// App Store が求める寸法。iPhone 6.9インチ = 1290x2796、iPad 13インチ = 2064x2752。
 /// iPad でも動く設定なので、iPad の画像が無いと提出できない。
-typedef _Device = ({String dir, Size logical, double ratio});
 const _phone = (dir: 'screenshots', logical: Size(430, 932), ratio: 3.0);
 const _tablet = (dir: 'screenshots_ipad', logical: Size(1032, 1376), ratio: 2.0);
 
-typedef _Lang = ({String code, String suffix});
 const _ja = (code: 'ja', suffix: '');
 const _en = (code: 'en', suffix: '_en');
 
