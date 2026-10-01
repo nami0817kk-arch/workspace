@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""アプリのアイコンを作る。
-
-Flutter の雛形のまま（水色の Flutter ロゴ）だったものを差し替えるために書いた。
-手で描いた PNG を置くと、サイズを足すたびに作り直すことになる。
+"""アプリのアイコンを、1枚の絵から全サイズ書き出す。
 
     python tool/make_icons.py
 
@@ -11,104 +8,101 @@ Flutter の雛形のまま（水色の Flutter ロゴ）だったものを差し
     android/app/src/main/res/mipmap-*/ic_launcher.png
     ios/Runner/Assets.xcassets/AppIcon.appiconset/*.png
 
-図案は幾何学的なものだけにしてある（実在クラブのエンブレムを想起させない）。
-背番号入りのユニフォームにしてあるのは、**一覧でサッカーゲームと見分ける**ため
-（緑地に白いボールは同じ棚に大量にあり、44px では区別が付かない）。
-番号の書体はアプリの同梱フォントなので、ストアの絵と中の書体が揃う。
+**元の絵は `tool/icon_source.png`（1024x1024）。** ここを差し替えれば
+全サイズが付いてくる。各サイズの PNG を手で置くと、サイズを足すたびに
+作り直すことになる。
+
+2026-10-01 に、コードで描いたユニフォームから**1枚の絵**へ替えた
+（ユーザーが用意したもの）。**「画像素材は持たない」という決まりは
+ここには掛からない**——あれはアプリの中の絵の話で、同梱しているのは
+フォントとランチャーアイコンだけ、と CLAUDE.md にある。
+元の絵は `tool/` に置いてあるので、アプリのバンドルには入らない。
+
+絵を差し替えるときに、**必ず拡大して確かめること**:
+
+- **実在のブランドのマーク。** 最初に受け取った絵は胸にスポーツ用品
+  メーカーのロゴが入っていた。そのまま出すと審査のガイドライン 5.2.1
+  （第三者の知的財産）で却下される。クラブ名もリーグ名も架空にしてきたのは
+  同じ線を踏まないため。
+- 実在のクラブのエンブレム、実在の選手に似た顔。
+- 文字・数字（ストアのアイコンに言葉を入れない）。
+- 角丸・透過・余白。**iOS が自分で角を丸める**ので、こちらで丸めると二重になる。
+- **44px に縮めて読めるか。** ホーム画面ではそこまで小さくなる。
 """
 
 import json
 import os
 
-from PIL import Image, ImageDraw, ImageFont
-
-# アプリのテーマ色。lib/main.dart の seedColor と揃える。
-GREEN = (27, 94, 63)
-DARK = (11, 45, 30)
-WHITE = (245, 246, 243)
+from PIL import Image, ImageDraw
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SOURCE = os.path.join(ROOT, "tool", "icon_source.png")
 
-# 実際の書き出しサイズの4倍で描いてから縮める。小さいサイズでも輪郭が荒れない。
+# 実際の書き出しサイズの4倍から縮める。小さいサイズでも輪郭が荒れない。
 SCALE = 4
 
-
-# 背番号。10 は「その選手」を指す番号として一番読みやすい2桁。
-NUMBER = "10"
-
-# ここより小さいと、2桁の数字が潰れて滲みにしか見えない。
-# 小さいほうは布の形だけで見せる（実測で 40px を下回ると読めない）。
-NUMBER_MIN = 40
+_art = None
 
 
-def _font(px):
-    """同梱フォントを使う。アプリの中と書体を揃えるため。"""
-    path = os.path.join(ROOT, "assets", "fonts", "NotoSansJP-Bold.ttf")
-    if not os.path.exists(path):
-        raise SystemExit(f"同梱フォントが見つからない: {path}")
-    return ImageFont.truetype(path, px)
+def art():
+    """元の絵。1024x1024 の正方形で、透過を持たないこと。"""
+    global _art
+    if _art is None:
+        if not os.path.exists(SOURCE):
+            raise SystemExit("元の絵が見つからない: " + SOURCE)
+        img = Image.open(SOURCE).convert("RGB")
+        if img.size != (1024, 1024):
+            raise SystemExit("元の絵は 1024x1024 で用意する（いまは %s）" % (img.size,))
+        _art = img
+    return _art
 
 
-def draw(size, *, padding=0.0, rounded=True, transparent=False):
-    """ユニフォームを1枚描く。
+def _vertical(size, top, bottom):
+    """上から下へのグラデーション。"""
+    grad = Image.new("RGB", (1, size))
+    px = grad.load()
+    for y in range(size):
+        t = y / max(size - 1, 1)
+        px[0, y] = tuple(round(a + (b - a) * t) for a, b in zip(top, bottom))
+    return grad.resize((size, size), Image.BILINEAR)
 
-    padding は安全域。maskable アイコンは端が切られるので内側に寄せる。
+
+def _edge(box):
+    """絵の端の平均色。安全域を埋めるときに、絵の調子と揃えるため。"""
+    return art().crop(box).resize((1, 1), Image.BOX).getpixel((0, 0))
+
+
+def draw(size, *, padding=0.0, rounded=True):
+    """アイコンを1枚書き出す。
+
+    padding は安全域。maskable アイコンは端が丸く切られるので、絵を縮めて
+    中身を内側へ寄せる。**周りを単色で埋めない**——この絵は上が暗く下が
+    緑なので、一色だと境目に帯が出る。端の色から作ったグラデーションで埋める。
     """
     s = size * SCALE
-    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
-    d = ImageDraw.Draw(img)
 
-    if not transparent:
-        if rounded:
-            d.rounded_rectangle([0, 0, s - 1, s - 1], radius=s * 0.22, fill=GREEN)
-        else:
-            d.rectangle([0, 0, s - 1, s - 1], fill=GREEN)
-
-    # 安全域のぶんだけ内側へ寄せる（中心から縮める）。
-    def at(x, y):
+    if padding > 0:
         k = 1.0 - padding * 2
-        return (s * (0.5 + (x - 0.5) * k), s * (0.5 + (y - 0.5) * k))
-
-    # 肩 → 右袖 → 裾 → 左袖 の順に一周する。
-    body = [
-        at(0.37, 0.24), at(0.63, 0.24),
-        at(0.75, 0.35), at(0.67, 0.41),
-        at(0.66, 0.82), at(0.34, 0.82),
-        at(0.33, 0.41), at(0.25, 0.35),
-    ]
-    d.polygon(body, fill=WHITE)
-
-    # 襟。地の色で V を抜く（透過のときは布に穴が空かないよう濃い色で描く）。
-    collar = [at(0.445, 0.24), at(0.555, 0.24), at(0.50, 0.325)]
-    d.polygon(collar, fill=DARK if transparent else GREEN)
-
-    if size >= NUMBER_MIN:
-        # **布の幅に収める。** 大きさを決め打ちにしていたら、2桁の番号が
-        # 布から横へはみ出して緑の上に乗っていた（1024 と maskable で出た）。
-        # 安全域で布が縮むぶんも、ここで自動的に付いてくる。
-        left, _ = at(0.34, 0.5)
-        right, _ = at(0.66, 0.5)
-        limit = (right - left) * 0.78
-        px = int(s * 0.32 * (1.0 - padding * 2))
-        while px > 4:
-            font = _font(px)
-            box = d.textbbox((0, 0), NUMBER, font=font)
-            if box[2] - box[0] <= limit:
-                break
-            px -= 1
-        # 縦は脇下から裾までの真ん中に置く（襟と裾のどちらにも触れない）。
-        _, top = at(0.5, 0.41)
-        _, bottom = at(0.5, 0.82)
-        x, _ = at(0.5, 0.5)
-        d.text(
-            (
-                x - (box[2] - box[0]) / 2 - box[0],
-                (top + bottom) / 2 - (box[3] - box[1]) / 2 - box[1],
-            ),
-            NUMBER,
-            font=font,
-            fill=DARK,
+        inner = round(s * k)
+        base = _vertical(
+            s,
+            _edge((0, 0, 1024, 40)),
+            _edge((0, 1024 - 40, 1024, 1024)),
         )
+        base.paste(
+            art().resize((inner, inner), Image.LANCZOS), ((s - inner) // 2,) * 2
+        )
+        img = base.convert("RGBA")
+    else:
+        img = art().resize((s, s), Image.LANCZOS).convert("RGBA")
+
+    if rounded:
+        # web と Android の従来アイコンだけ。**iOS では丸めない。**
+        mask = Image.new("L", (s, s), 0)
+        ImageDraw.Draw(mask).rounded_rectangle(
+            [0, 0, s - 1, s - 1], radius=s * 0.22, fill=255
+        )
+        img.putalpha(mask)
 
     return img.resize((size, size), Image.LANCZOS)
 
@@ -123,13 +117,13 @@ def save(img, *parts):
 def main():
     save(draw(16), "web", "favicon.png")
     for size in (192, 512):
-        save(draw(size), "web", "icons", f"Icon-{size}.png")
+        save(draw(size), "web", "icons", "Icon-%d.png" % size)
         # maskable は端が丸く切られる。中身を1割ぶん内側へ。
         save(
             draw(size, padding=0.10, rounded=False),
             "web",
             "icons",
-            f"Icon-maskable-{size}.png",
+            "Icon-maskable-%d.png" % size,
         )
 
     android = {
@@ -147,7 +141,7 @@ def main():
             "src",
             "main",
             "res",
-            f"mipmap-{bucket}",
+            "mipmap-" + bucket,
             "ic_launcher.png",
         )
 

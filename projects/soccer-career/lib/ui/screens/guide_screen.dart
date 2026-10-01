@@ -12,6 +12,7 @@ import '../../models/role.dart';
 import '../../models/support.dart';
 import '../../models/traits.dart';
 import '../../models/training.dart';
+import '../readable_width.dart';
 
 /// 遊び方のガイド。
 ///
@@ -24,26 +25,235 @@ class GuideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // 章ごとに並べ替える。**16枚が同じ顔で並んでいると、畳んだままの
+    // 一覧がただの壁になる**（どこから読めばいいのか分からない）。
+    final chapters = <String, List<_GuideSection>>{};
+    for (final section in _sections) {
+      chapters.putIfAbsent(section.chapter, () => []).add(section);
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('遊び方ガイド')),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+        child: ReadableWidth(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+            children: [
+              Card(
+                color: theme.colorScheme.secondaryContainer,
+                child: const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'このゲームは、1人の選手の現役生活をなぞるもの。'
+                    'やることは「今週どう過ごすか」と「試合の局面で何を選ぶか」の2つだけで、'
+                    'それを38節×十数シーズンくり返す。'
+                    '残りはすべて、その積み重ねの結果として動く。',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // **その2つを、文より先に絵で見せる。**
+              const _WeekLoop(),
+              const SizedBox(height: 8),
+              const _ChoiceShape(),
+              for (final entry in chapters.entries) ...[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 24, 4, 8),
+                  child: Text(
+                    entry.key,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                for (final section in entry.value)
+                  _GuideTile(section: section),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 1週間と1シーズンの回り方。**ガイドの本文はこれを言葉で説明しているが、
+/// 「くり返す」という形そのものは、絵でないと一目で入らない。**
+class _WeekLoop extends StatelessWidget {
+  const _WeekLoop();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    const steps = [
+      (Icons.fitness_center, '練習を', '決める'),
+      (Icons.sports_soccer, '試合で', '選ぶ'),
+      (Icons.assignment_turned_in, '評価点が', '付く'),
+      (Icons.event_repeat, '次の節', 'へ'),
+    ];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              color: theme.colorScheme.secondaryContainer,
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'このゲームは、1人の選手の現役生活をなぞるもの。'
-                  'やることは「今週どう過ごすか」と「試合の局面で何を選ぶか」の2つだけで、'
-                  'それを38節×十数シーズンくり返す。'
-                  '残りはすべて、その積み重ねの結果として動く。',
+            Padding(
+              padding: const EdgeInsets.only(left: 4, bottom: 10),
+              child: Text('1週間の回り方', style: theme.textTheme.titleSmall),
+            ),
+            Row(
+              children: [
+                for (var i = 0; i < steps.length; i++) ...[
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: theme.colorScheme.primaryContainer,
+                          ),
+                          child: Icon(
+                            steps[i].$1,
+                            size: 20,
+                            color: theme.colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          steps[i].$2,
+                          style: theme.textTheme.labelSmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          steps[i].$3,
+                          style: theme.textTheme.labelSmall,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (i < steps.length - 1)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 26),
+                      child: Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: theme.colorScheme.outline,
+                      ),
+                    ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(
+                  Icons.refresh,
+                  size: 14,
+                  color: theme.colorScheme.outline,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    '38節でシーズンが終わり、契約・移籍・オフの過ごし方を決めて'
+                    '次の季へ。それを引退まで。',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 3つの手の形。**「常に正解になる手は無い」は、文で読むより
+/// 2本の矢印が逆を向いている絵のほうが早い。**
+class _ChoiceShape extends StatelessWidget {
+  const _ChoiceShape();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    // 幅の比は見た目のためのもので、判定の数字ではない（だから％を書かない）。
+    const rows = [
+      ('安全な手', 0.85, 0.25),
+      ('ふつうの手', 0.60, 0.55),
+      ('勝負の手', 0.30, 0.95),
+    ];
+    Widget bar(double value, Color color) => Expanded(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: value,
+              child: Container(
+                height: 10,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(5),
                 ),
               ),
             ),
+          ),
+        );
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 4),
+              child: Text('1つの局面に、3つの手', style: theme.textTheme.titleSmall),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(left: 76),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text('通りやすさ', style: theme.textTheme.labelSmall),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text('見返り', style: theme.textTheme.labelSmall),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 4),
+            for (final (label, chance, reward) in rows)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 76,
+                      child: Text(label, style: theme.textTheme.bodySmall),
+                    ),
+                    bar(chance, theme.colorScheme.primary),
+                    const SizedBox(width: 8),
+                    bar(reward, theme.colorScheme.tertiary),
+                  ],
+                ),
+              ),
             const SizedBox(height: 8),
-            for (final section in _sections) _GuideTile(section: section),
+            Text(
+              '通りやすい手ほど見返りが小さい。常に正解になる手は無いので、'
+              'どちらを選ぶかがこのゲームそのもの。'
+              '通る確率は手ごとに％で出ていて、その内訳も画面に出る。',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),
@@ -53,10 +263,27 @@ class GuideScreen extends StatelessWidget {
 
 /// ガイドの1項目。
 class _GuideSection {
-  const _GuideSection(this.title, this.body, {this.extra});
+  const _GuideSection(
+    this.title,
+    this.body, {
+    required this.chapter,
+    required this.icon,
+    required this.lead,
+    this.extra,
+  });
 
   final String title;
   final List<String> body;
+
+  /// どの章に置くか。
+  final String chapter;
+
+  final IconData icon;
+
+  /// **畳んだままでも何の話か分かる1行。**
+  /// ここに数字を書かない——本文は実装から引いているので、
+  /// 写した数字だけが黙って古くなる。
+  final String lead;
 
   /// 一覧など、実装から作る部分。
   final Widget Function(BuildContext)? extra;
@@ -73,14 +300,47 @@ class _GuideTile extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ExpansionTile(
+        key: PageStorageKey<String>('guide-${section.title}'),
+        leading: Icon(section.icon, color: theme.colorScheme.primary),
         title: Text(section.title, style: theme.textTheme.titleSmall),
+        // **畳んだままの一覧が、それだけで目次になる。**
+        subtitle: Text(
+          section.lead,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final paragraph in section.body) ...[
-            Text(paragraph, style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 10),
-          ],
+          // 段落の頭に点を置く。**文の壁のまま流すと、どこが切れ目か
+          // 分からないので一息で読めない。**
+          for (final paragraph in section.body)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 7, right: 8),
+                    child: Container(
+                      width: 5,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      paragraph,
+                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           if (section.extra != null) section.extra!(context),
         ],
       ),
@@ -122,7 +382,12 @@ Widget _list(BuildContext context, List<(String, String)> rows) {
 /// 「特性は選べない」）。0.9% は数字を手で書き写していたせいで、
 /// 傾きを変えたときに黙って古くなった。**ここに数字を直接書かない。**
 final List<_GuideSection> _sections = [
-  _GuideSection('1週間の流れ', [
+  _GuideSection(
+    '1週間の流れ',
+    chapter: '試合に出る',
+    icon: Icons.calendar_today,
+    lead: '練習を決めて、試合に出る。それを38節くり返す',
+    [
     '「今週」タブで次の相手と今の状態を見て、そこから試合に入る。'
         '練習はそのカードから、あるいは「育成」タブで決める。'
         '終われば1週間が過ぎ、次の節が来る。',
@@ -143,7 +408,12 @@ final List<_GuideSection> _sections = [
         '身の丈のクラブからしか声がかからず、勝ちたいと言えば格上から来る'
         '（そのぶん序列は下から）。',
   ]),
-  _GuideSection('試合で選ぶ', [
+  _GuideSection(
+    '試合で選ぶ',
+    chapter: '試合に出る',
+    icon: Icons.sports_soccer,
+    lead: '局面ごとに3つの手。安全か、賭けるか',
+    [
     'ふつうの試合は${Formulas.scenariosPerStart}つ、順位や因縁が絡む'
         '「じっくりやる試合」は${Formulas.scenariosPerBigStart}つの局面が来る'
         '（途中出場ならもっと少ない）。各局面に3つの手がある。',
@@ -177,7 +447,12 @@ final List<_GuideSection> _sections = [
         'リードしているなら時間の使い方を問う局面が来る。',
     '1試合の1/4くらいは逆足で対応することになる。逆足の精度が低いとそこで落ちる。',
   ]),
-  _GuideSection('評価点と出場機会', [
+  _GuideSection(
+    '評価点と出場機会',
+    chapter: '試合に出る',
+    icon: Icons.trending_up,
+    lead: '選んだ手が評価点になり、評価点が次の出番を決める',
+    [
     '局面の成否で評価点が動く。基準は6.0で、良い試合は7点台、悪い試合は5点台。',
     '直近5試合の評価点で、次節の起用が決まる。'
         '${Formulas.benchThreshold}を下回ると途中出場、'
@@ -193,7 +468,12 @@ final List<_GuideSection> _sections = [
         '「止めるための反則」は、選べば必ず警告になる代わりに失点を1つ消す。',
     '次にどの立場で出られそうかは、「今週」タブの次節のところに出る。',
   ]),
-  _GuideSection('伸ばす', [
+  _GuideSection(
+    '伸ばす',
+    chapter: '選手を育てる',
+    icon: Icons.fitness_center,
+    lead: '伸ばす先は自分で選ぶ。練習と、試合で成功した手から',
+    [
     '能力は「練習」と「試合で成功した手」で伸びる。何を選ぶかがそのまま選手の形になる。',
     '「育成」タブの「育てる方向」で、伸ばしたい項目を3つまで選べる。'
         '練習ではその項目が優先して伸び、試合の成長もそこに寄る。伸びる量は変わらない。'
@@ -209,7 +489,12 @@ final List<_GuideSection> _sections = [
         '同じカテゴリの中で好きな項目に振る。上の値ほど高くつく。',
     '伸び続けると停滞期が来る。数試合は積み上がらない。',
   ], extra: _trainingMenus),
-  _GuideSection('自分の位置を知る', [
+  _GuideSection(
+    '自分の位置を知る',
+    chapter: 'クラブと世界',
+    icon: Icons.public,
+    lead: 'いま世界の何番目にいるのかが、常に見える',
+    [
     '「育成」タブの「練習の成果」に、開幕からの伸びが出る。'
         '能力が1上がると、その能力で判定する局面が'
         '約${(Formulas.attributeChanceSlope * 100).toStringAsFixed(1)}%通りやすくなる。'
@@ -220,7 +505,12 @@ final List<_GuideSection> _sections = [
     '「クラブ」タブの「リーグの格付け」で、所属リーグが世界で何位かを見られる。'
         '上のリーグほど相手が強く、同じ手が通らなくなる。',
   ]),
-  _GuideSection('選手を作る', [
+  _GuideSection(
+    '選手を作る',
+    chapter: '選手を育てる',
+    icon: Icons.person_add,
+    lead: '始める前に決めること。ポテンシャルだけは選べない',
+    [
     '名前・ポジション・年齢・身体・能力の割り振り・出身国・代理人を決めて始める。'
         'ポテンシャルは選べない——始めてから分かるのがキャリアもの。',
     '特性は作成画面で見えていて、引き直せる。'
@@ -234,7 +524,12 @@ final List<_GuideSection> _sections = [
         '総合力は変わらない。何を得意にするかだけを決める。',
     '出身国で、始めるリーグと代表と、外国人としての扱いが決まる。',
   ]),
-  _GuideSection('個人技', [
+  _GuideSection(
+    '個人技',
+    chapter: '選手を育てる',
+    icon: Icons.auto_awesome,
+    lead: '覚えた技は、構えて使うと効く',
+    [
     '元になる能力が${Signature.requirement}に届くと、その練習をしている週に'
         '個人技を覚えることがある。最大${Signature.maxOwned}つ。'
         'そのポジションで使う技しか覚えない。',
@@ -250,14 +545,24 @@ final List<_GuideSection> _sections = [
     '居残り練習でFK・PK・CKを磨ける。${SetPieceSkills.takerThreshold}に届くと'
         'クラブのキッカーを任される。',
   ]),
-  _GuideSection('生まれ持った特性とコツ', [
+  _GuideSection(
+    '生まれ持った特性とコツ',
+    chapter: '選手を育てる',
+    icon: Icons.psychology,
+    lead: '生まれつきのものと、やってきたことで身に付くもの',
+    [
     '特性はどれも一長一短で、上位互換は無い。伸ばせない——その選手の「向き・不向き」。',
     'コツ。キャリアで1つだけ、やってきたことが特性になる。'
         '試合経験${Knacks.experienceNeeded}・練習の大成功${Knacks.greatWeeksNeeded}回・'
         '同じ場面で${Knacks.momentsNeeded}回の勝負が条件で、候補は何度も勝負してきた'
         '場面からしか出ない。待っても引き直せない。',
   ], extra: _traitList),
-  _GuideSection('クラブと監督', [
+  _GuideSection(
+    'クラブと監督',
+    chapter: 'クラブと世界',
+    icon: Icons.groups,
+    lead: '監督は数字ではなく「何を選んだか」を見る',
+    [
     '監督には戦術がある。求める形に沿った手（試合中に「監督好み」と出る）を選ぶと信頼が上がり、'
         '逆らうと下がる。成績が期待を下回れば監督は飛び、代われば信頼は白紙に戻る。',
     '役割。監督の戦術によっては、ポジションの中の役割に就ける'
@@ -285,7 +590,12 @@ final List<_GuideSection> _sections = [
         ' +${Formulas.starLift}、最大 +${Formulas.starLiftCap.round()}。途中出場は半分）。'
         '弱いクラブに居ても、自分が主力なら順位を持ち上げられる。出ない試合には効かない。',
   ], extra: _directives),
-  _GuideSection('契約と移籍', [
+  _GuideSection(
+    '契約と移籍',
+    chapter: 'クラブと世界',
+    icon: Icons.swap_horiz,
+    lead: '話が来るかどうかは、出来と契約で決まる',
+    [
     '契約が残っている間は、残留しても条件は動かない（1年減るだけ）。'
         '残り1年になって初めて、他クラブからの話が届く。',
     '移籍の話の年俸は、今季の出来で決まる。今より強いクラブは、その差のぶん上乗せして払う'
@@ -306,14 +616,24 @@ final List<_GuideSection> _sections = [
     '代理人は交渉力・人脈・手数料が違う。上乗せ交渉は、移籍のオファーだと'
         '失敗して撤回されることがある。契約更改は撤回されない。',
   ]),
-  const _GuideSection('代表・カップ', [
+  const _GuideSection(
+    '代表・カップ',
+    chapter: 'クラブと世界',
+    icon: Icons.emoji_events,
+    lead: 'リーグの外の舞台。呼ばれる線は国で変わる',
+    [
     '代表は総合力と直近の出来で呼ばれる。点を取り続けていれば、評価点が届かなくても呼ばれる。'
         '複数の国籍を持っていれば、どの代表でやるかを選べる。',
     '世界大会は4年に1度。代表に呼ばれている選手だけが出られる。',
     '国内カップは一発勝負なので、格下でも勝ち上がることがある。'
         '優勝すれば翌季の大陸カップ出場権が付く。カップ戦の週は練習できない。',
   ]),
-  const _GuideSection('怪我・コンディション・気持ち', [
+  const _GuideSection(
+    '怪我・コンディション・気持ち',
+    chapter: '選手の人生',
+    icon: Icons.healing,
+    lead: '押すか休むか。重傷だけは戻らない',
+    [
     'コンディションは1週間で戻るが、累積疲労は戻らない。オフでだいたい抜ける。',
     '怪我をしたら復帰の進め方を選べる。強行すれば早く戻れる代わりに、'
         '復帰直後の再発が跳ね上がる。重傷は能力とポテンシャルを恒久的に削る。',
@@ -321,7 +641,12 @@ final List<_GuideSection> _sections = [
         '1回で人生が決まるほどの効きは無い。',
     '実力とは別に、数試合だけ続く波（ゾーン／スランプ）がある。',
   ]),
-  const _GuideSection('お金', [
+  const _GuideSection(
+    'お金',
+    chapter: '選手の人生',
+    icon: Icons.savings,
+    lead: '稼ぎの使い道。身体に投資するか、貯めるか',
+    [
     '年俸からは税・代理人手数料・生活費が引かれ、残りが貯蓄になる。',
     '今季いくら残るかは「育成」タブの「自分への投資」に出ている。'
         '雇う前に、シーズン末の貯蓄がいくらになるかまで書いてある。',
@@ -331,7 +656,12 @@ final List<_GuideSection> _sections = [
         '上げれば気持ちが少し上向く。効きは小さい。',
     '知名度が上がるとスパイクのスポンサーが付く。年俸とは別の収入になる。',
   ], extra: _staffKinds),
-  const _GuideSection('ピッチの外', [
+  const _GuideSection(
+    'ピッチの外',
+    chapter: '選手の人生',
+    icon: Icons.coffee,
+    lead: '物語であって罠ではない。1回で人生は決まらない',
+    [
     '数試合に一度、ピッチの外で何かが起きる。選択肢が出て、選んだことが'
         '気持ち・監督との関係・ロッカールームの空気・お金に残る。',
     '監督・競争相手・相方・メンター・同期・代理人は、名前を持った他人として'
@@ -341,12 +671,22 @@ final List<_GuideSection> _sections = [
     'どの選択肢も、1回でキャリアが決まる大きさにはしていない。'
         '10年ぶんの積み重ねが、同じ成績の選手を別の人生にする。',
   ]),
-  const _GuideSection('引退とその後', [
+  const _GuideSection(
+    '引退とその後',
+    chapter: '選手の人生',
+    icon: Icons.military_tech,
+    lead: 'やってきたことが、次の道の適性になる',
+    [
     '33歳から引退を選べる。37歳のシーズンを終えると引退になる。',
     '引退後は通算成績と称号が残り、次に進む道を選ぶ。'
         '現役でやってきたことが、そのまま次の職業の適性になる。',
   ]),
-  const _GuideSection('保存と持ち運び', [
+  const _GuideSection(
+    '保存と持ち運び',
+    chapter: '選手の人生',
+    icon: Icons.save,
+    lead: '記録は端末の中だけ。引き継ぎコードで運ぶ',
+    [
     'セーブは端末ごとに独立している。'
         'PCで進めた内容とスマホの内容は別物になる。',
     '右上のメニューから「引き継ぎコード」を出して別の端末に貼り付けると、'
@@ -427,4 +767,5 @@ Widget _staffKinds(BuildContext context) => _list(context, [
 /// 仕組みを足すたびにガイドを書き忘れ、9/10 からの2週間で
 /// 載っていない仕組みが10を超えていた。
 @visibleForTesting
-String guideText() => _sections.expand((s) => [s.title, ...s.body]).join('\n');
+String guideText() =>
+    _sections.expand((s) => [s.title, s.lead, ...s.body]).join('\n');
