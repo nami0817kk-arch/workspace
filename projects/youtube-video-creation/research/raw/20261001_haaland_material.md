@@ -62,6 +62,9 @@
 - UEFA 2019-12-29「Erling Braut Haaland: Dortmund's new signing by numbers」 https://www.uefa.com/uefachampionsleague/news/025a-0e9f8ba8ec7e-64c8a559c1e1-1000--erling-braut-haaland-dortmund-s-new-signing-by-numbers/ ：父はノッティンガム・フォレスト、リーズ、マンチェスター・シティでプレー。本人はブリーネ（父の最初のクラブ）→モルデ→ザルツブルク。
 - Football ZONE 2020-10-07（上記 286672）：「2016年に母国ノルウェーのブリンでプロデビューを飾ったハーランド。モルデを経てオーストリア1部ザルツブルクへ移籍」
 - 経歴の数字（FotMob 通算表、9/28 時点）：ブリーネ 2016-03〜2017-01 16試合0得点／モルデ 2017-02〜2018-12 48試合19得点／ザルツブルク 2019 27試合29得点／ドルトムント 2020-01〜2022-06 89試合86得点／マンC 2022-07〜 205試合169得点。
+  - **通算の表（2026-10-01 に動画の「キャリア全体の数字」の節とサムネに使った）**：上の FotMob の5クラブ＋ノルウェー代表 57試合65得点（FotMob の national team 欄も 57・65 で一致。VG・マンC公式・Goal とも一致）。合計は自分で足した：クラブ 16+48+27+89+205＝385試合、0+19+29+86+169＝303得点。代表を足して **442試合368得点**。控えは research/player_pool/fotmob_737066.json（9/30 取得）の careerHistory。
+  - **出どころの割れ（モルデだけ）**：Transfermarkt の試合記録（tmapi の performance-game、出場1分以上、2026-10-01 取得）で所属ごとに数えると、ブリーネ16・0／**モルデ50試合20得点**／ザルツブルク27・29／ドルトムント89・86／シティ205・169／ノルウェー代表57・65 で、合計 **444試合369得点**。違うのはモルデの2試合1得点だけ。どちらの試合が片方に無いのかは確かめていない。
+  - **公開済みの比較の回（20261002_compare_342229_418560、10/1 公開）は Transfermarkt の数え方で「いま369点」と言っている**。選手紹介は指示どおり FotMob の 368 を使ったので、同じチャンネルで1点ずれる。そろえるなら選手紹介のモルデを 50・20、合計を 444・369 にする。
 - U-20 W杯2019（UEFA 上記）：「scored nine goals in a tournament-record 12-0 defeat of Honduras, the most by any player in any FIFA football competition fixture at any level」。Sportiva 2026-05-12 も「ホンジュラス戦で『1試合9ゴール』」 https://sportiva.shueisha.co.jp/clm/football/wfootball/2026/05/12/worldcup2026_haaland/
 - footballista 2021-02-02（結城康平）「ホーランドは38人の少年と1人の少女と育った。選手をふるいにかけないノルウェーの『非エリート育成』」 https://www.footballista.jp/special/104894 ── **見出しのみ。本文は会員限定で読めず**。
 - **取れなかった**：母グリ・マリタ・ブラウトが「元七種競技選手」という話。検索結果（Britannica の要約）にはあるが、Britannica 本体は 403 で読めず、Football ZONE は「スプリントの選手」と書いている。動画で使うなら「陸上選手だった母」まで。

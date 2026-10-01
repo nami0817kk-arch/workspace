@@ -44,12 +44,16 @@ def draw_panel(src: Path, out: Path, title: str, head: list[str], rows: list[lis
     hy = y0 + 66
     d.rectangle((x0 + 12, hy, x0 + width - 12, hy + 42), fill=(15, 77, 53))
     fh = ImageFont.truetype(font, 25)
-    # 1列目は左揃え、2列目から右揃え（右端から 92px ずつ）
-    rights = [x0 + width - 26 - 92 * (len(head) - 2 - i) for i in range(len(head) - 1)]
+    fl, fv = ImageFont.truetype(font, 32), ImageFont.truetype(font, 46)
+    # 1列目は左揃え、2列目から右揃え（右端から 92px ずつ）。
+    # **3桁が2列並ぶと数字がくっつく**（2026-10-01 ハーランド「205169」）ので、
+    # いちばん広い数字＋28px より狭くしない
+    widest = max([d.textlength(c, font=fv) for r in body for c in r[1:]] + [0])
+    step = max(92, int(widest) + 28)
+    rights = [x0 + width - 26 - step * (len(head) - 2 - i) for i in range(len(head) - 1)]
     d.text((x0 + 22, hy + 7), head[0], font=fh, fill=(255, 213, 74))
     for name, xr in zip(head[1:], rights):
         d.text((xr - d.textlength(name, font=fh), hy + 7), name, font=fh, fill=(255, 213, 74))
-    fl, fv = ImageFont.truetype(font, 32), ImageFont.truetype(font, 46)
     y = hy + 58
     for row in body:
         hi = total is not None and row is total
