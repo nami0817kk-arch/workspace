@@ -158,7 +158,7 @@ sections:
     - label: シュート
       value: 100
       highlight: false
-    - label: アシスト
+    - label: アシスト（今季のリーグ）
       value: 0
     source: FotMob
   say:
@@ -168,7 +168,8 @@ sections:
   - text: 得点とシュート数は、文句なしの最上位。ボールタッチとチャンス創出は、最下位です。
     image: assets/images/20261001_haaland_train2024_w/01.jpg
   - つまり、ボールを持って何かをする選手ではない。ゴール前に現れて、蹴る。それだけです。
-  - 弱点を挙げるなら、アシストが0。作るのではなく決める選手だと、数字が言い切っています。
+  - 今季のリーグでは、アシストはまだ0。
+  - ただ昨季までは毎シーズン7から10のアシスト。作れない選手ではありません。
   - text: では、触らずに点が取れるのはなぜか。カギは、ボールが来る前の動きにあります。
     image: assets/stats/player_20261001_737066_heat.png
     no_telop: true

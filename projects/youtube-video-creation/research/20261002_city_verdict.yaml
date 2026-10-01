@@ -1,24 +1,34 @@
 # 取材メモ（10/2 公開、プレミアの題材）。key = city_verdict。型は news。材料の控え: research/raw/20261002_city_verdict.md
-# ユーザー指示「シティの有罪の件にしたい」。9/29 の正式な認定と、その後（9/30〜10/1）の動き。
+# ユーザー指示「シティの有罪の件にしたい」→ 10/1「シティに関してはもっと内容精査して正しい情報を詰めて」で全行を一次情報に当て直した（raw の「## 精査（10/1）」）。
 # 重ならないように: 10/1 公開の「グアルディオラの手紙」の中身は入れない（0行）。翌日のハーランド紹介があるのでハーランドの話も入れない。
-#   9/30 の city_titles（判決前の「優勝が取り消されたら」）は使わない。前例のユヴェントスだけ、正式発表後の比べ方で使い直した。
-# 事実の裏:
-#   認定: プレミアリーグ公式（9/29）。対象 2009-10〜2017-18 の9季。財務規則の重大な違反の告発はすべて有罪（非協力は4つのうち3つ）。
-#     罰は同じ独立委員会が別の非公開の審理で決める。上訴の期限は 10月2日（金）。告発の件数は報道で割れるので言わない。
-#   スポンサー料の内訳は Sky が報告書から（£949.94m／£119.25m／£830.69m）。優勝3季の £360m／£43m は BBC。PL の「£900m 超」は言わない。
-#   上訴: 9/29 にクラブが「上訴の道を進む」と表明。**10/1 15時（日本時間）の時点で提出は確かめられない**ので「表明」まで。
-#     新しい3人の委員会。今季からの規則で期限から12週＋30日 → 1月末ごろ（Guardian）。シティが規則の当てはめを争う余地があるので「見込み」。
-#   前例: エヴァートン £19.5m 超過で 10→6（PL 公式・Guardian）、フォレスト £34.5m 超過で 4（Guardian 2024）、
-#     ユヴェントス 2006 は Serie B 降格・優勝2つ（2004-05 取り消し、2005-06 は最下位扱い）（英語版Wikipedia Calciopoli）。
-#     「40倍を超える」は 830.69 ÷ 19.5 = 42.6。物差しが違うので、何と何を比べたかを声で言う。
-#   今季: 5戦全勝・勝ち点15で首位、2位アーセナル12、3位ブライトン10（research/standings/2026-09-28.json、BBC 9/30）。
-#   発言: マスターズ（PL 公式）、ソリアーノ（Guardian、職員向け動画）、ポチェッティーノ（The Athletic の取材を Football Today・City Xtra が引用）、
-#     バーンスタイン（BBC 9/29。10/1 の回で引いた「役員は退くべき」とは別の発言）。
-# 反応: 海外1件（Bluesky）・日本2件（X、Yahoo!リアルタイム検索）。全文。出どころと外したものは raw に控えた。
+#   9/30 の city_titles（判決前の「優勝が取り消されたら」）は使わない。
+# 事実の裏（10/1 精査後）:
+#   認定: プレミアリーグ公式（9/29）と、委員会の判断の黒塗り版（Core Decision、PL 公式が公開した PDF）。
+#     対象 2009-10〜2017-18 の9季。告発は「100を超える個々の違反」を4つの大きな告発（1〜4）にまとめたもの。
+#     財務の告発（1 正確な財務情報〈監督・選手の報酬の隠しを含む〉、2 UEFA の規則、3 PSR）はすべて有罪。
+#     4 調査への非協力は 4(A)〜(D) のうち 4(B) だけ不成立＝4つのうち3つ（PL 公式の文言 "three of the four alleged breaches were upheld"）。
+#     → 旧版の「すべての告発で有罪」は誤り（非協力の1つは不成立）。タイトル・サムネ1行目・節見出しを「財務の告発すべて有罪」に直した。
+#     罰は同じ独立委員会が別の非公開の審理で決める。上訴の期限は 10月2日（金）（PL 公式）。
+#   スポンサー料: 委員会の判断 72項 £949.94m／£119.25m／£830.69m（Sky の数字と一致）。優勝3季は判断の脚注8の季ごとの表から
+#     2011/12・2013/14・2017/18 の合計 £359.98m／£43.0m（BBC の £360m／£43m と一致）。PL の「£900m 超」は言わない。
+#   上訴: 9/29 にクラブが声明で "pursue the appeal avenues"、ソリアーノが職員向け動画で "Our lawyers will now file an appeal"。
+#     **10/1 16時半（日本時間）の時点で提出は確かめられない**ので「表明」まで。
+#     新しい3人の委員会（PL 公式）。今季からの規則で期限から12週＋30日 → 1月末まで（Guardian）。BBC は当てはまるか不明と書く → 声で「当てはまるかはまだはっきりしない」。
+#   前例: エヴァートン 2023-24 は £19.5m 超過で 10→上訴で6（PL 公式 2023-11-17・2024-02-26）、同じ季に £16.6m 超過で さらに2（PL 公式 2024-04-08、上訴取り下げ）＝季で計8。
+#     フォレスト 2023-24 に £34.5m 超過（上限 £61m）で 4（Guardian 2024、PL の上訴判断 PDF）。
+#     「40倍を超える」は 830.69 ÷ 19.5 = 42.6。エヴァートンの「最初の超過額」と、シティの「スポンサー料に見せかけた額」で物差しが違うので、何と何を比べたかを声で言う。
+#     シティ自身の PSR の超過額は判断に数字が無い（"by a very substantial amount" だけ）ので言わない。
+#     罰の決まった表は無い（Sky）、委員会に広い裁量（PL 公式 "broad discretion"）。旧版の「規則に罰の上限は無く」「比べられる前例はありません」は言い方を直した／外した。
+#     ユヴェントス 2006 は尺のため外した（財務の件でもない）。
+#   今季: 5戦全勝・勝ち点15で首位、2位アーセナル12、3位ブライトン10（BBC の順位表 10/1 に再取得、research/standings/2026-09-28.json と一致）。
+#     1月末までにシティのリーグ戦は 22〜23試合（BBC の日程）＝半分を過ぎる。
+#   発言: マスターズ（PL 公式）、ソリアーノ（Guardian、職員向け動画。尺のため語りでまとめた）。
+#     ポチェッティーノ（BBC 9/29。Yahoo 転載で原文を確認）とバーンスタイン（BBC 9/29）は、尺を3分半に収めるため節ごと外した（原文は raw に残した）。
+# 反応: 海外1件（Bluesky）・日本1件（X、Yahoo!リアルタイム検索）。全文。@ATM_jpn は尺のため外した（raw に控え）。
 # 写真: 記事の写真は BBC＝Getty、Guardian＝PA/Reuters/Getty/Alamy、Al Jazeera＝Reuters/AP、Sky＝クレジット無しで使わない。
-#   エティハド・スタジアムの空撮（Commons、Arne Müseler、CC BY-SA 3.0 de）を 16:9 に切った _w。ポチェッティーノは Commons（2025年、CC BY 4.0）を左、スタジアムを右に並べた1枚。
-#   ソリアーノは portrait が同名の彫刻家を取ってきたので捨てた（本人の自由な写真は無い）。バーンスタインも写真なし。
-# サムネ: 1人が主役の回ではないのでエンブレム主役（crest_main）。伏せるのは「スポンサー料の9割近くはオーナーの金」。
+#   エティハド・スタジアムの空撮（Commons、Arne Müseler、CC BY-SA 3.0 de）を 16:9 に切った _w。ポチェッティーノの並べ写真は節を外したので使わない。
+#   ソリアーノは portrait が同名の彫刻家を取ってきたので捨てた（本人の自由な写真は無い）。
+# サムネ: 1人が主役の回ではないのでエンブレム主役（crest_main）。伏せるのは「スポンサー料の9割近くはオーナーの金」（830.69÷949.94＝87.4%）。
 date: 2026年10月2日
 slot: プレミア
 format: news
@@ -30,22 +40,22 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: マンチェスター・シティ
-  title: マンC、すべての告発で有罪。スポンサー料を本当に出していたのは
+  title: マンC、財務の告発すべて有罪。スポンサー料を本当に出していたのは
   question: シティのスポンサー料は誰が払っていて、罰はどこまで重くなるのか
-  takeaway: これまでの勝ち点剥奪は、上限を1950万ポンド超えたエヴァートンの6、3450万ポンド超えたフォレストの4。シティがスポンサー料に見せかけた8億3000万ポンド余りはその40倍を超え、プレミアには比べられる前例が無い。他クラブは2部に1季落とすだけでは足りないと言うが、上訴の結論は1月末の見込みで、そのときシーズンは半分を過ぎている。5戦全勝で首位を走る今季のうちに罰が決まるかどうかが、罰の重さと同じくらい、ほかの19クラブの順位を左右する
+  takeaway: これまでの勝ち点剥奪は、2023-24季のエヴァートンが1950万ポンドの超過で10から上訴で6、別の超過で2の計8。3450万ポンド超えたフォレストが4。シティがスポンサー料に見せかけた8億3000万ポンド余りは、エヴァートンの最初の超過額の40倍を超え、罰の決まった表も無い。今季からの規則どおりなら上訴の結論は1月末までに出るが、そのときシーズンは半分を過ぎている。5戦全勝で首位を走る今季のうちに罰が決まるかどうかが、罰の重さと同じくらい、ほかの19クラブの順位を左右する
   opening_image: assets/images/20261002_city_verdict_w/01.jpg
 short_title: マンC有罪。スポンサー料を本当に払っていたのは
 thumbnail:
   crest_main: [マンチェスター・シティ]
-  line1: マンC、すべての告発で有罪
+  line1: マンC、財務の告発すべて有罪
   line2: スポンサー料の●割近くはオーナーの金
   reaction: 以前のようなPLには戻れない
 sections:
 - id: verdict
-  heading: すべての告発で有罪
+  heading: 財務の告発はすべて有罪
   tier: 確定
-  official: true   # プレミアリーグ公式の声明（9/29）まで辿った
-  telop: 対象は2009年からの9季。財務規則の重大な違反は、すべて有罪
+  official: true   # プレミアリーグ公式の声明（9/29）と委員会の判断の黒塗り版まで辿った
+  telop: 対象は2009-10季からの9季。財務規則の違反はすべて有罪、非協力は4つのうち3つ
   narrator: キャスター
   card:
     type: table
@@ -53,30 +63,58 @@ sections:
     columns: ['', '']
     rows: &verdict
     - [発表, 9月29日]
-    - [対象, 2009年からの9季]
-    - [認定, 重大な違反の告発はすべて有罪]
+    - [対象, 2009-10季から2017-18季の9季]
+    - [財務規則の違反, すべて有罪]
+    - [調査への非協力, 4つのうち3つで有罪]
   say:
-  - text: 9月29日、プレミアリーグから独立した委員会が、マンチェスター・シティの財務規則違反を認定しました。
+  - text: 9月29日、リーグから独立した委員会が、シティの財務規則違反を認定しました。
     image: assets/images/20261002_city_verdict_w/01.jpg
-  - text: 対象は2009年からの9季。収入と支出をめぐる重大な違反の告発は、すべて有罪です。
+  - text: 対象は2009-10季からの9季。財務規則をめぐる告発は、すべて有罪です。
     card:
       type: table
       title: 独立委員会の認定
       columns: ['', '']
       rows: *verdict
       highlight_row: 2
-  - text: リーグのマスターズ最高経営責任者は、こう述べています。
+  - text: リーグの調査に協力しなかったという告発も、4つのうち3つが認められました。
+    card:
+      type: table
+      title: 独立委員会の認定
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 3
+  - text: リーグのマスターズ最高経営責任者です。
+    card:
+      type: table
+      title: 独立委員会の認定
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 2
   - voice: マスターズ
     text: クラブが10年近く、
+    card:
+      type: table
+      title: 独立委員会の認定
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 2
   - voice: マスターズ
     text: 組織的にリーグの規則を破っていたことが示された
     cont: true
+    card:
+      type: table
+      title: 独立委員会の認定
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 2
   sources:
   - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
 - id: money
   main: true
   heading: スポンサー料の本当の出どころ
-  tier: 報道
+  tier: 確定
+  official: true   # 委員会の判断 72項と脚注8の表（PL 公式が公開した黒塗り版）
   telop: 帳簿のスポンサー料のうち、スポンサーが払ったのは1割余り
   narrator: キャスター
   card:
@@ -127,12 +165,14 @@ sections:
       - [スポンサーが払った額, 4300万ポンド]
       highlight_row: 1
   sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
   - https://www.skysports.com/football/news/11661/13593407/man-city-charges-verdict-key-findings-the-fordham-arrangement-effectively-a-front-for-abu-dhabi-united-group
   - https://www.bbc.com/sport/football/articles/c63reg93xwzro
 - id: club
   heading: シティは上訴へ。期限は10月2日
   tier: 報道
-  telop: シティは無実を主張。上訴の結論は1月末の見込み、罰は別の非公開の審理で
+  telop: シティは無実を主張して上訴へ。結論は規則どおりなら1月末まで、罰は別の非公開の審理で
   narrator: キャスター
   card:
     type: table
@@ -140,38 +180,46 @@ sections:
     columns: ['', '']
     rows: &next
     - [10月2日, 上訴の期限]
-    - [期限から12週以内, 新しい委員会が上訴を審理]
-    - [その後30日以内, 上訴の結論（1月末の見込み）]
+    - [期限から12週以内, 新しい3人の委員会が審理]
+    - [その後30日以内, 上訴の結論（1月末まで）]
     - [時期は未定, 罰を決める非公開の審理]
   say:
-  - text: シティは声明で無実を訴え、上訴すると表明しました。
-  - text: ソリアーノ最高経営責任者は、職員に向けた動画でこう話しています。
-  - voice: ソリアーノ最高経営責任者
-    text: リーグの訴えはすべて、たった1つの誤った告発に基づいている。
-  - voice: ソリアーノ最高経営責任者
-    text: オーナー個人の金が、アブダビのスポンサーを通して、
-    cont: true
-  - voice: ソリアーノ最高経営責任者
-    text: ひそかにクラブへ入れられたというものだ。
-    cont: true
-  - voice: ソリアーノ最高経営責任者
-    text: それは真実ではない
-    cont: true
-  - text: 上訴の期限は、10月2日。
+  - text: シティは声明で無実を訴え、上訴すると表明しました。期限は10月2日です。
     card:
       type: table
       title: このあとの流れ
       columns: ['', '']
       rows: *next
       highlight_row: 0
-  - text: 新しい3人の委員会が審理し、結論は来年1月末になる見込みです。
+  - text: ソリアーノ最高経営責任者は、職員向けの動画で反論しました。
+    card:
+      type: table
+      title: このあとの流れ
+      columns: ['', '']
+      rows: *next
+      highlight_row: 0
+  - text: オーナーの金がスポンサーを通して入った、という告発そのものが誤りだという主張です。
+    card:
+      type: table
+      title: このあとの流れ
+      columns: ['', '']
+      rows: *next
+      highlight_row: 0
+  - text: 上訴は、新しい3人の委員会が審理します。
+    card:
+      type: table
+      title: このあとの流れ
+      columns: ['', '']
+      rows: *next
+      highlight_row: 1
+  - text: 今季からの規則どおりなら結論は1月末まで。ただ、今回に当てはまるかは不明です。
     card:
       type: table
       title: このあとの流れ
       columns: ['', '']
       rows: *next
       highlight_row: 2
-  - text: 罰は同じ独立委員会が、別の非公開の審理で決めます。時期はまだ決まっていません。
+  - text: 罰は同じ独立委員会が、別の非公開の審理で決めます。時期は未定です。
     card:
       type: table
       title: このあとの流れ
@@ -179,47 +227,12 @@ sections:
       rows: *next
       highlight_row: 3
   sources:
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
   - https://www.mancity.com/news/club/manchester-city-club-statement-premier-league-63926128
   - https://www.theguardian.com/football/2026/sep/29/manchester-city-ceo-soriano-says-guilty-verdicts-are-a-premier-league-conspiracy-theory
-  - https://www.theguardian.com/football/2026/sep/30/etihad-airways-considering-legal-action-premier-league-manchester-city
   - https://www.theguardian.com/football/2026/sep/30/rival-clubs-feel-relegating-manchester-city-championship-not-enough-premier-league
+  - https://www.bbc.com/sport/football/articles/c6vgyg3zv3kwo
   - https://www.skysports.com/football/news/13593377/man-city-premier-league-charges-appeal-process-punishment-hearing-and-what-happens-now-after-guilty-verdict
-- id: rivals
-  heading: 争った側の声
-  tier: 報道
-  telop: ポチェッティーノ「どんな罰を選んでも、時間は巻き戻せない」
-  narrator: キャスター
-  say:
-  - text: 当時トッテナムを率いて、シティと上位を争ったポチェッティーノ監督の言葉です。
-    image: assets/images/20261002_pair_pochettino/01.jpg
-  - voice: ポチェッティーノ
-    text: どんな罰を選んでも、時間は巻き戻せない。
-  - voice: ポチェッティーノ
-    text: 多くのクラブはルールを守り、守らなかったクラブもあった。
-    cont: true
-  - voice: ポチェッティーノ
-    text: それが本当なら、私たちは欺瞞の時代を生きてきたことになる
-    cont: true
-  - text: シティの元会長、バーンスタインは、こう話しました。
-    image: assets/images/20261002_city_verdict_w/01.jpg
-  - voice: バーンスタイン元会長
-    text: これがすべて認められ、上訴も退けられたら、
-  - voice: バーンスタイン元会長
-    text: シティはプレミアリーグに残れない。
-    cont: true
-  - voice: バーンスタイン元会長
-    text: リーグから外れるほどの重い罰を受けるべきだ。
-    cont: true
-  - voice: バーンスタイン元会長
-    text: 70年応援してきたファンとして、そう言う
-    cont: true
-  quotes_from:
-  - The Athletic https://footballtoday.com/2026/09/29/former-spurs-boss-pochettino-on-man-city-guilty-verdict-we-lived-through-a-period-of-deception
-  - BBC https://www.bbc.com/sport/football/articles/c63reg93xwzro
-  sources:
-  - https://footballtoday.com/2026/09/29/former-spurs-boss-pochettino-on-man-city-guilty-verdict-we-lived-through-a-period-of-deception
-  - https://cityxtra.co.uk/news/mauricio-pochettino-launches-scathing-attack-on-manchester-city-after-premier-league-guilty-verdict
-  - https://www.bbc.com/sport/football/articles/c63reg93xwzro
 - id: view
   viewpoint: true
   heading: 罰の重さを前例と比べる
@@ -228,78 +241,71 @@ sections:
   narrator: 解説
   card:
     type: table
-    title: 財務や不正で処分されたクラブ
+    title: 財務の規則で勝ち点を引かれたクラブ
     columns: [クラブ, 違反, 罰]
     rows: &past
-    - [エヴァートン（2023年）, 上限を1950万ポンド超過, 勝ち点10→上訴で6]
-    - [フォレスト（2024年）, 上限を3450万ポンド超過, 勝ち点4]
-    - [ユヴェントス（2006年）, 審判への働きかけ, 2部降格・優勝2つ取り消し]
+    - [エヴァートン（2023-24季）, 上限を1950万ポンド超過, 勝ち点10→上訴で6]
+    - [エヴァートン（同じ季の別件）, 上限を1660万ポンド超過, 勝ち点2（季で計8）]
+    - [フォレスト（2023-24季）, 上限を3450万ポンド超過, 勝ち点4]
     - [シティ, 9季で8億3069万ポンドを偽装, これから]
   say:
-  - text: 罰はどこまで重くなるのか。これまでの例と並べます。
+  - text: 前例では、エヴァートンが3年間の赤字の上限を1950万ポンド超え、勝ち点10。
     card:
       type: table
-      title: 財務や不正で処分されたクラブ
-      columns: [クラブ, 違反, 罰]
-      rows: *past
-  - text: エヴァートンは、3年間の赤字の上限を1950万ポンド超え、勝ち点を10引かれました。
-    card:
-      type: table
-      title: 財務や不正で処分されたクラブ
+      title: 財務の規則で勝ち点を引かれたクラブ
       columns: [クラブ, 違反, 罰]
       rows: *past
       highlight_row: 0
-  - text: 上訴で6に減っています。
+  - text: 上訴で6に減りました。
     card:
       type: table
-      title: 財務や不正で処分されたクラブ
+      title: 財務の規則で勝ち点を引かれたクラブ
       columns: [クラブ, 違反, 罰]
       rows: *past
       highlight_row: 0
-  - text: ノッティンガム・フォレストは、3450万ポンドの超過で勝ち点4。
+  - text: 同じ季に別の超過でさらに2を引かれ、その季は計8です。
     card:
       type: table
-      title: 財務や不正で処分されたクラブ
+      title: 財務の規則で勝ち点を引かれたクラブ
       columns: [クラブ, 違反, 罰]
       rows: *past
       highlight_row: 1
+  - text: ノッティンガム・フォレストは、3450万ポンドの超過で勝ち点4。
+    card:
+      type: table
+      title: 財務の規則で勝ち点を引かれたクラブ
+      columns: [クラブ, 違反, 罰]
+      rows: *past
+      highlight_row: 2
   - text: シティがスポンサー料に見せかけた額は、8億3000万ポンド余り。
     card:
       type: table
-      title: 財務や不正で処分されたクラブ
+      title: 財務の規則で勝ち点を引かれたクラブ
       columns: [クラブ, 違反, 罰]
       rows: *past
       highlight_row: 3
-  - text: エヴァートンが上限を超えた額の、40倍を超えます。
+  - text: エヴァートンが最初に上限を超えた額の、40倍を超えます。
     card:
       type: table
-      title: 財務や不正で処分されたクラブ
+      title: 財務の規則で勝ち点を引かれたクラブ
       columns: [クラブ, 違反, 罰]
       rows: *past
       highlight_row: 3
-  - text: 規則に罰の上限は無く、比べられる前例はありません。
+  - text: 財務違反の罰に決まった表は無く、重さは委員会に任されています。
     card:
       type: table
-      title: 財務や不正で処分されたクラブ
+      title: 財務の規則で勝ち点を引かれたクラブ
       columns: [クラブ, 違反, 罰]
       rows: *past
       highlight_row: 3
-  - text: 海外では2006年、ユヴェントスが2部に落とされ、優勝2つを失いました。
-    card:
-      type: table
-      title: 財務や不正で処分されたクラブ
-      columns: [クラブ, 違反, 罰]
-      rows: *past
-      highlight_row: 2
-  - text: ただ、あれは審判に働きかけた事件。お金の届け出の違反ではありません。
-    card:
-      type: table
-      title: 財務や不正で処分されたクラブ
-      columns: [クラブ, 違反, 罰]
-      rows: *past
-      highlight_row: 2
   - text: 他クラブの幹部からは、2部に1季落とすだけでは足りない、という声が出ています。
-  - text: 重さと並んで大きいのが、いつ決まるかです。
+    card:
+      type: table
+      title: 財務の規則で勝ち点を引かれたクラブ
+      columns: [クラブ, 違反, 罰]
+      rows: *past
+      highlight_row: 3
+  - text: シティは今季、5戦全勝で首位に立っています。
     card:
       type: table
       title: 今季のプレミアリーグ（5節まで）
@@ -308,12 +314,6 @@ sections:
       - [1位, マンチェスター・シティ, '15']
       - [2位, アーセナル, '12']
       - [3位, ブライトン, '10']
-  - text: シティは今季、5戦全勝で首位に立っています。
-    card:
-      type: table
-      title: 今季のプレミアリーグ（5節まで）
-      columns: [順位, クラブ, 勝ち点]
-      rows: *table
       highlight_row: 0
   - text: 上訴の結論が1月末なら、そのときシーズンは半分を過ぎています。
     card:
@@ -323,14 +323,22 @@ sections:
       rows: *table
       highlight_row: 0
   - text: 勝ち点が今季のうちに引かれるかどうかで、ほかの19クラブの順位も変わります。
+    card:
+      type: table
+      title: 今季のプレミアリーグ（5節まで）
+      columns: [順位, クラブ, 勝ち点]
+      rows: *table
+      highlight_row: 0
   sources:
   - https://www.premierleague.com/news/3788486/
+  - https://www.premierleague.com/en/news/3912574
+  - https://www.premierleague.com/en/news/3960088
+  - https://www.premierleague.com/en/news/4001861
   - https://www.theguardian.com/football/2024/mar/18/nottingham-forest-docked-four-points-premier-league-financial-rules-breach-profitability-and-sustainability
   - https://www.theguardian.com/football/2026/sep/30/rival-clubs-feel-relegating-manchester-city-championship-not-enough-premier-league
-  - https://en.wikipedia.org/wiki/Calciopoli
   - https://www.skysports.com/football/news/13593377/man-city-premier-league-charges-appeal-process-punishment-hearing-and-what-happens-now-after-guilty-verdict
   - https://www.bbc.com/sport/football/articles/c9y7zr4l6de1o
-  - https://www.bbc.com/sport/football/articles/c6vgyg3zv3kwo
+  - https://www.bbc.com/sport/football/premier-league/table
 - id: voices
   heading: ネットの反応
   tier: 未確認
@@ -355,14 +363,6 @@ sections:
   - voice: ネット民
     text: 外れてほしいけど
     cont: true
-  # X @ATM_jpn（10/1 04:25 JST）。原文「有罪判決を受けたシティが今シーズン処罰されないと更に被害を被るし、無駄なシーズンになる。」
-  - voice: ネット民
-    text: 有罪判決を受けたシティが今シーズン処罰されないと、
-    short_voice: true
-  - voice: ネット民
-    text: 更に被害を被るし、無駄なシーズンになる。
-    cont: true
-    short_voice: true
   # X @haarpymuse（10/1 09:20 JST、返信の宛先は外した）。原文「裁判が長びく、シティ無罪、シティ有罪  もはやどう転んでも、以前のようにもっと単純でtheエンタメだったPLには戻れないですね 悲しい」
   - voice: ネット民
     text: 裁判が長びく、シティ無罪、シティ有罪
@@ -377,5 +377,4 @@ sections:
     short_voice: true
   sources:
   - https://bsky.app/profile/yellowyorkie.bsky.social/post/3mwoeplbapk2t
-  - https://x.com/ATM_jpn/status/2105378432628690978
   - https://x.com/haarpymuse/status/2105452870099415166
