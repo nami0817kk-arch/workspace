@@ -963,3 +963,17 @@ def test_溶かしの途中の絵も透過つきで保存する(tmp_path):
     Image.new("RGBA", (64, 36), (0, 0, 255, 255)).save(b)
     assert Image.open(r.blend(a, b, 0.5)).mode == "RGBA"
     assert Image.open(r._black()).mode == "RGBA"
+
+
+def test_光らせる行だけ違う表は同じ表とみなす(tmp_path):
+    """2026-10-01「表が毎回開き直しになっていて目に悪い」。行ごとのカードで表を組み直していた。"""
+    from src.config import load_config
+    from src.render import Renderer
+
+    r = Renderer(load_config(), tmp_path / "work")
+    base = {"type": "table", "title": "T", "columns": ["a", "b"], "rows": [["1", "2"], ["3", "4"]]}
+    r.script_cards = {"c0": dict(base, highlight_row=0), "c1": dict(base, highlight_row=1),
+                      "other": dict(base, title="U")}
+    assert r.same_table("c0", "c1")
+    assert not r.same_table("c0", "other")
+    assert not r.same_table(None, "c1")

@@ -678,6 +678,20 @@ class Renderer:
         spec = self.script_cards.get(name or "")
         return cards.row_count(spec) if spec else 0
 
+    def same_table(self, first: str | None, second: str | None) -> bool:
+        """光らせる行（highlight_row）だけが違う、同じ表か。
+
+        **同じ表なら行を1本ずつ出し直さない**（2026-10-01 ユーザー「表が毎回開き直しになっていて目に悪い」）。
+        話している行を光らせるために行ごとに別のカードを持たせているので、カードの名前は毎行変わる。
+        名前で比べると、行が替わるたびに表が空から組み直されていた
+        """
+        a = self.script_cards.get(first or "")
+        b = self.script_cards.get(second or "")
+        if not a or not b:
+            return False
+        strip = lambda spec: {k: v for k, v in spec.items() if k != "highlight_row"}
+        return strip(a) == strip(b)
+
     def _card(self, name: str, beside: bool = False, limit: int | None = None,
               reveal: int | None = None) -> Image.Image | None:
         spec = self.script_cards.get(name)
@@ -1319,7 +1333,8 @@ class Renderer:
 
                 intro = 0.0
                 card_changed = bool(current and current[2] and current[2] != before[1]) if not self.layout.with_characters else False
-                rows = self.card_rows(current[2]) if card_changed else 0
+                rows = (self.card_rows(current[2])
+                        if card_changed and not self.same_table(before[1], current[2]) else 0)
                 stage_now = line.image or (self.opening_photo if scene.title == self.opening_scene else None)
                 image_changed = bool(previous is not None and stage_now and stage_now != prev_stage)
                 prev_stage = stage_now
