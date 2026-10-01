@@ -3080,5 +3080,29 @@
     "video_id": "mTW1a0gk5bE",
     "at": "2026-10-01T01:32:55+00:00",
     "publish_at": "2026-10-01T03:40:00Z"
+  },
+  {
+    "build": "20261001_coaches",
+    "video_id": "vvSjf7T_4Fs",
+    "at": "2026-10-01T02:24:26+00:00",
+    "publish_at": "2026-10-01T02:40:00Z"
+  },
+  {
+    "build": "20261001_coaches_short",
+    "video_id": "gnmPHmzTujY",
+    "at": "2026-10-01T02:24:41+00:00",
+    "publish_at": "2026-10-01T03:00:00Z"
+  },
+  {
+    "build": "20261001_giroud_ueda",
+    "video_id": "GemwPyYYfns",
+    "at": "2026-10-01T02:25:14+00:00",
+    "publish_at": "2026-10-01T03:20:00Z"
+  },
+  {
+    "build": "20261001_giroud_ueda_short",
+    "video_id": "qISt3qRkH-w",
+    "at": "2026-10-01T02:25:30+00:00",
+    "publish_at": "2026-10-01T03:40:00Z"
   }
 ]
