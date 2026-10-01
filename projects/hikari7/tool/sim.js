@@ -32,6 +32,7 @@ function play(g, pol) {
     else if (pol !== 'naive') for (const t of A) { if (u >= slotsOf(S)) break; S.lesson.train[t.id] = [t.spec === 't' ? 'e' : t.spec]; u++; }
     applyLesson(S);
     S.reqs.forEach((q, qi) => answerReq(S, qi, pol === 'good' ? (q.type === 'tired' || q.type === 'anxious' || q.type === 'grief' ? (q.type === 'grief' ? 1 : 0) : 1) : pickIdx(pol, 2)));
+    if (pol === 'good' && typeof pairList === 'function') { const pr = pairList(S).filter(r => r.k === 'rival')[0]; if (pr && S.ap > 1) { doPair(S, pr.a, pr.b); S.talk = null; } }
     while (S.ap > 0 && pol !== 'naive') {
       const t = pol === 'good' ? alive(S).sort((a, b) => b.trust - a.trust)[0] : pick(alive(S));
       if (pol === 'good' && t.likeRev && S.ap === 1) { doGift(S, t.id, t.gift); S.talk = null; continue; }
@@ -47,6 +48,7 @@ function play(g, pol) {
     S.phase = 'stage';
     if (ROUNDS[r].crit) { if (pol === 'random') alive(S).forEach(t => S.crit[t.id] = ri(0, 2)); applyCritique(S); }
     applyFeature(S);
+    if (typeof toNight === 'function') { toNight(S); if (S.phase === 'night') { if (pol === 'naive') nightSkip(S); else answerReq(S, 0, pol === 'good' ? 1 : ri(0, 1)); S.phase = 'judge'; } }
     const B = alive(S), res = S.stage.res;
     let n = ROUNDS[r].fin ? Math.min(6, S.caps.finMax, B.length) : capOf(S);
     let order = B.slice().sort((a, b) => res[b.id].sc - res[a.id].sc);
