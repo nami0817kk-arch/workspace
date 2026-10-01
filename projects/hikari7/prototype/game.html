@@ -368,6 +368,8 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .pairb span{display:flex;flex-direction:column;margin-left:4px;font-size:13px;min-width:0}.pairb small{color:var(--muted);font-size:12px}.pairb:disabled{opacity:.45}
 .stagec.night p{font-size:15px;line-height:1.75}.stagec .choice{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#f4effd}.stagec .choice span{color:#d8cff0}
 .toast.nt{background:rgba(255,255,255,.1);color:#f4effd}
+.tag{width:fit-content;align-self:flex-start;max-width:100%}
+@media (max-width:400px){.hdr .wk{display:none}.hdr .rt{flex:1;text-align:right}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -498,7 +500,7 @@ function startRound(S){
   if(S.plan.teams)initTeams(S,'even');
   if(S.centerReq!=null&&S.rnd>=2&&S.tr[S.centerReq].status==='alive'){if(S.plan.teams){var cti=teamIdx(S,S.centerReq);if(cti>=0)S.plan.tcen[cti]=S.centerReq;}else S.plan.center=S.centerReq;}S.centerReq=null;
 }
-var LESSON_BASE=.4,SP_SLOTS=4;
+var LESSON_BASE=.3,SP_SLOTS=4;
 function slotsOf(S){return Math.max(0,SP_SLOTS+S.extra-(S.plan&&S.plan.acts.off?2:0));}
 function usedSlots(S){var n=0;for(var k in (S.lesson.sp||{}))if(S.lesson.sp[k])n++;return n;}
 function suggestLesson(S,t){var f=teamFmt(S,t,roundFmt(S));if(t.fat>=60)return 'rest';if(t.focus)return t.focus;
@@ -848,7 +850,7 @@ function finalEval(S){
   var streams0=Math.round(song*song*song/1000*180)/10,E0={D:D,n:n,avgR:avgR,goods:goods,streams:streams0};
   var missions=(S.missions||[]).map(function(k){var m=missionOf(k);return {k:k,t:m.t,ok:!!m.chk(S,E0)};});
   total+=missions.filter(function(m){return m.ok;}).length*MISSION_PT+diffOf(S).tot;
-  var g=total>=79?'S':total>=67?'A':total>=56?'B':total>=46?'C':'D';
+  var g=total>=80?'S':total>=68?'A':total>=56?'B':total>=46?'C':'D';
   var streams=Math.round(song*song*song/1000*180)/10; // 万回
   return {D:D,n:n,sk:sk,q:q,fanScore:fanScore,coh:coh,song:song,show:show,total:total,grade:g,roles:roles,miss:miss,trustAvg:trustAvg,avgR:avgR,streams:streams,talk:talk,sd:sd,bond:bond,goods:goods,leadB:leadB,match:match,L:L,missions:missions,promo:promo};
 }
