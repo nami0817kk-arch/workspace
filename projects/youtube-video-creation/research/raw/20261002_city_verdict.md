@@ -215,3 +215,18 @@ Kieran Maguire「Forest と Everton にゼロを1つ足す（40〜60点）」は
   - `portrait` の自動選択は 2016年の 303x468 の小さい写真だったので使わない
 - ソリアーノ: `portrait` が取ってきたのは**同名の彫刻家**（File:Escultor Ferran Soriano al seu estudi.jpg）。捨てた。本人の自由な写真は見つからず、ソリアーノの行はスタジアムのまま
 - バーンスタイン: 写真なし（スタジアムのまま）
+
+## 親の精査（10/1 夜、ユーザー「センシティブな内容なので、しっかりと読み込んで確認して」）
+判断の文書（Redacted Core Decision、40ページ）とリーグ・シティの声明、Sky・Guardian を自分で読んで突き合わせた。
+- 1項「well over 100 individual breaches … divided into … Charges 1(A)–(D), 2, 3, 4(A)–(D)」＝告発は10項目。7項「each of the Charges proven … bar Charge 4(B)」。157項「4(A) は majority of the respects」
+  → 「100を超える告発のうち退けられたのは1件」は数え方を混ぜていた。**「10項目のうち9つで有罪」**に直した（題・サムネ・見出し・表・読み上げ）
+- 20ページの脚注の表（Total recorded / Base Fees / Tagged Sums、2009/10〜2017/18）を目で読み、足し算した：949.94／119.25／830.69（87.4%）、優勝3季（11/12・13/14・17/18）359.98／43.0。台本の数字と一致
+- 本文「income … hugely overstated by over £830 million」と一致
+- 「オーナーの懐から」→「当時クラブの持ち主だったアブダビの投資会社が払っていました」（PL 声明「ADUG, which owned the club」）。サムネも「オーナー側の金」
+- 「本物は4300万」→「スポンサーが払ったのは4300万」
+- 40倍は「物差しは違いますが」を付けた（偽装の額とPSRの超過額は別の物差し）
+- 「他クラブの幹部から」→「ライバルクラブの関係者からは、名前を伏せて」（Guardian 9/30 は匿名の club source の言葉）
+- 上訴：Sky「Manchester City have confirmed they will appeal … until Friday October 2 … new three-person commission」「separate hearing with the independent commission to determine sanctions」と一致
+- シティの声明（9/29 17:00）「innocent of the accusations」「will now pursue the appeal avenues」と一致
+- ソリアーノ（Guardian 9/29）「video sent to City staff」「based on a single false accusation – that the owner's personal money was … put into the club via some sponsors」と一致
+- マスターズ「systematically broke Premier League Rules for nearly a decade」と一致

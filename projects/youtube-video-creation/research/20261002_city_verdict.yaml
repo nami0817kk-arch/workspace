@@ -40,22 +40,22 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: マンチェスター・シティ
-  title: マンC、告発は1件を除いて有罪。スポンサー料を本当に出していたのは
+  title: マンC、告発10項目のうち9つで有罪。スポンサー料を本当に出していたのは
   question: シティのスポンサー料は誰が払っていて、罰はどこまで重くなるのか
-  takeaway: これまでの勝ち点剥奪は、2023-24季のエヴァートンが1950万ポンドの超過で10から上訴で6、別の超過で2の計8。3450万ポンド超えたフォレストが4。シティがスポンサー料に見せかけた8億3000万ポンド余りは、エヴァートンの最初の超過額の40倍を超え、罰の決まった表も無い。今季からの規則どおりなら上訴の結論は1月末までに出るが、そのときシーズンは半分を過ぎている。5戦全勝で首位を走る今季のうちに罰が決まるかどうかが、罰の重さと同じくらい、ほかの19クラブの順位を左右する
+  takeaway: これまでの勝ち点剥奪は、2023-24季のエヴァートンが1950万ポンドの超過で10から上訴で6、別の超過で2の計8。3450万ポンド超えたフォレストが4。シティがスポンサー料に見せかけた8億3000万ポンド余りは、物差しは違うがエヴァートンの最初の超過額の40倍を超え、罰の決まった表も無い。今季からの規則どおりなら上訴の結論は1月末までに出るが、そのときシーズンは半分を過ぎている。5戦全勝で首位を走る今季のうちに罰が決まるかどうかが、罰の重さと同じくらい、ほかの19クラブの順位を左右する
   opening_image: assets/images/20261002_city_verdict_w/01.jpg
 short_title: マンC有罪。スポンサー料を本当に払っていたのは
 thumbnail:
   crest_main: [マンチェスター・シティ]
-  line1: マンC、1件を除いて有罪
-  line2: スポンサー料の●割近くはオーナーの金
+  line1: マンC、告発10項目中9つで有罪
+  line2: スポンサー料の●割近くはオーナー側の金
   reaction: 以前のようなPLには戻れない
 sections:
 - id: verdict
-  heading: 1件を除いて有罪
+  heading: 10項目のうち9つで有罪
   tier: 確定
   official: true   # プレミアリーグ公式の声明（9/29）と委員会の判断の黒塗り版まで辿った
-  telop: 対象は2009-10季からの9季。認められなかったのは調査への非協力の1件だけ
+  telop: 100を超える違反を10項目にまとめた告発。退けられたのは調査への非協力の1項目だけ
   narrator: キャスター
   card:
     type: table
@@ -64,32 +64,40 @@ sections:
     rows: &verdict
     - [発表, 9月29日]
     - [対象, 2009-10季から2017-18季の9季]
-    - [財務規則の違反, 有罪]
-    - [調査への非協力, 4つのうち3つで有罪（1つは不成立）]
+    - [告発, 10項目（100を超える違反）]
+    - [財務の規則の違反, 6項目すべて有罪]
+    - [調査への非協力, 4項目のうち3つで有罪]
   say:
   - text: 9月29日、リーグから独立した委員会が、シティの財務規則違反を認定しました。
     image: assets/images/20261002_city_verdict_w/01.jpg
-  - text: 対象は2009-10季からの9季。100を超える告発のうち、退けられたのは1件だけでした。
+  - text: 対象は2009-10季からの9季。100を超える違反は、10の項目にまとめて告発されました。
     card:
       type: table
       title: 独立委員会の認定
       columns: ['', '']
       rows: *verdict
       highlight_row: 2
-  - text: 外れた1件は、リーグの調査に協力しなかったという告発の1つ。4つのうち3つは認められています。
+  - text: 財務の規則をめぐる6項目は、すべて有罪です。
     card:
       type: table
       title: 独立委員会の認定
       columns: ['', '']
       rows: *verdict
       highlight_row: 3
+  - text: 退けられたのは、調査への非協力の1項目だけでした。
+    card:
+      type: table
+      title: 独立委員会の認定
+      columns: ['', '']
+      rows: *verdict
+      highlight_row: 4
   - text: リーグのマスターズ最高経営責任者です。
     card:
       type: table
       title: 独立委員会の認定
       columns: ['', '']
       rows: *verdict
-      highlight_row: 2
+      highlight_row: 3
   - voice: マスターズ
     text: クラブが10年近く、
     card:
@@ -97,7 +105,7 @@ sections:
       title: 独立委員会の認定
       columns: ['', '']
       rows: *verdict
-      highlight_row: 2
+      highlight_row: 3
   - voice: マスターズ
     text: 組織的にリーグの規則を破っていたことが示された
     cont: true
@@ -106,7 +114,7 @@ sections:
       title: 独立委員会の認定
       columns: ['', '']
       rows: *verdict
-      highlight_row: 2
+      highlight_row: 3
   sources:
   - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
   - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
@@ -128,7 +136,7 @@ sections:
   say:
   - text: マンチェスター・シティが財務規則の違反で有罪と認定されました。焦点はスポンサー料の出どころです。
     short_only: true
-  - text: シティはアブダビの企業と、見せかけのスポンサー契約を結んでいたと認定されました。
+  - text: アブダビの企業との、見せかけのスポンサー契約が認定されました。
     card:
       type: table
       title: アブダビの企業からのスポンサー料（9季の合計）
@@ -148,14 +156,14 @@ sections:
       columns: ['', 額]
       rows: *money
       highlight_row: 1
-  - text: 残りの9割近くは、クラブを持つアブダビの投資会社、つまりオーナーの懐から払われていました。
+  - text: 残りの9割近くは、当時クラブの持ち主だったアブダビの投資会社が払っていました。
     card:
       type: table
       title: アブダビの企業からのスポンサー料（9季の合計）
       columns: ['', 額]
       rows: *money
       highlight_row: 2
-  - text: リーグ優勝した3つの季に限っても、3億6000万ポンドのうち、本物は4300万ポンドです。
+  - text: 優勝した3つの季でも、3億6000万ポンドのうち、スポンサーが払ったのは4300万ポンドです。
     card:
       type: table
       title: リーグ優勝した3季（2012・2014・2018年）のスポンサー料
@@ -284,7 +292,7 @@ sections:
       columns: [クラブ, 違反, 罰]
       rows: *past
       highlight_row: 3
-  - text: エヴァートンが最初に上限を超えた額の、40倍を超えます。
+  - text: 物差しは違いますが、エヴァートンが最初に上限を超えた額の、40倍を超えます。
     card:
       type: table
       title: 財務の規則で勝ち点を引かれたクラブ
@@ -298,7 +306,7 @@ sections:
       columns: [クラブ, 違反, 罰]
       rows: *past
       highlight_row: 3
-  - text: 他クラブの幹部からは、2部に1季落とすだけでは足りない、という声が出ています。
+  - text: ライバルクラブの関係者からは、名前を伏せて、2部に1季落とすだけでは足りない、という声が出ています。
     card:
       type: table
       title: 財務の規則で勝ち点を引かれたクラブ
