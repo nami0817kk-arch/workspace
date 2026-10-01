@@ -1,0 +1,4 @@
+title: キリアン・エムバペの今季のヒートマップ
+unit: touches
+points=429
+source: FotMob

@@ -204,13 +204,24 @@
     "commentThreads.insert": 1
   },
   "2026-09-29": {
-    "channels.list": 21,
-    "playlistItems.list": 20,
-    "videos.insert": 20,
-    "thumbnails.set": 20,
-    "playlistItems.insert": 10,
-    "videos.list": 47,
+    "channels.list": 23,
+    "playlistItems.list": 22,
+    "videos.insert": 22,
+    "thumbnails.set": 22,
+    "playlistItems.insert": 11,
+    "videos.list": 49,
     "commentThreads.list": 12,
-    "videos.update": 60
+    "videos.update": 143,
+    "playlists.insert": 1
+  },
+  "2026-09-30": {
+    "channels.list": 20,
+    "playlistItems.list": 20,
+    "videos.insert": 24,
+    "thumbnails.set": 24,
+    "playlistItems.insert": 12,
+    "videos.list": 20,
+    "videos.update": 137,
+    "playlists.insert": 5
   }
 }
