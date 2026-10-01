@@ -1343,3 +1343,18 @@ def test_クラブ紹介でないシリーズは締めでクラブの歩みを�
     assert _series_outro("プレミアリーグチーム紹介") == SHORT_SUBSCRIBE_SERIES
     for s in ("有名選手の紹介", "代表チームの紹介", "得点王レース", "日本人選手の月間まとめ", "有名選手の比較"):
         assert _series_outro(s) == SHORT_SUBSCRIBE_SERIES_OTHER, s
+
+
+def test_尺に収めるとき2行に分けた発言を途中で切らない():
+    """2026-10-01：森保監督の発言が「気付いた人が持ってきてくれて、」で切れた（2行目だけ落ちた）。"""
+    from src.script_model import Line, Scene, Script
+    from src.shorts import _fit
+
+    lines = [Line(speaker="キャスター", text="あ" * 40),
+             Line(speaker="森保一", text="気付いた人が持ってきてくれて、"),
+             Line(speaker="森保一", text="より伝達しやすいように準備をしてくれたもの", cont=True)]
+    script = Script(title="t", scenes=[Scene(title="s", lines=lines)])
+    budget = (lines[0].estimated_duration() + lines[1].estimated_duration()) / 1.25 + 0.01
+    _fit(script, budget)
+    texts = [l.text for l in script.scenes[-1].lines]
+    assert texts == ["あ" * 40], texts

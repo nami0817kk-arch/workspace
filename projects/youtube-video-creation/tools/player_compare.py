@@ -106,7 +106,7 @@ def write_note(a: dict, b: dict, day: datetime.date, path: Path) -> None:
          "say": [f"{na}の最高額は{pa[1]}歳のとき。{nb}は{pb[1]}歳のときでした。",
                  "（最高額と今の差を1行。金額は表に任せる）"],
          "sources": urls},
-        {"id": "view", "heading": "見立て", "tier": "背景", "viewpoint": True, "narrator": "解説", "telop": "数字の違いが示すもの",
+        {"id": "view", "heading": "（何についての見立てか。例：エムバペとの今季の差）", "tier": "背景", "viewpoint": True, "narrator": "解説", "telop": "数字の違いが示すもの",
          "say": [f"（{surname(na)}と{surname(nb)}で何が違うのか。上下は言わず、数字の差を見立てに）"],
          "sources": urls},
     ]

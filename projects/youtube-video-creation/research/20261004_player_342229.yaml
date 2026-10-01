@@ -30,7 +30,6 @@ thumbnail:
   - キリアン・ムバッペ
   - 選手紹介
   - プレースタイル
-  note_red: 有名選手の紹介 ④
   photo: assets/images/20261004_mbappe_face_w/01.jpg
   photos: []
 sections:
@@ -330,7 +329,7 @@ sections:
   - https://www.soccerdigestweb.com/news/detail/id=65981
   - https://www.france24.com/en/20180629-first-bondy-now-messi-incredible-rise-kylian-mbappe
 - id: view
-  heading: 見立て
+  heading: ハーランドとの1点差と膝
   tier: 背景
   viewpoint: true
   narrator: 解説

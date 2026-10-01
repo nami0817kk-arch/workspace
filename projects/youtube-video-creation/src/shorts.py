@@ -1199,7 +1199,13 @@ def _fit(script: Script, max_seconds: float) -> None:
     if _estimate(script) > target:
         _drop_middle(script.scenes[-1], script, target)
     while _estimate(script) > target and len(script.scenes[-1].lines) > 1:
-        script.scenes[-1].lines.pop()
+        lines = script.scenes[-1].lines
+        last = lines.pop()
+        # **続き（cont）の行を落としたら、頭の行まで一緒に落とす**（2026-10-01）。
+        # コーチの回で森保監督の発言が「気付いた人が持ってきてくれて、」で切れていた。
+        # 2行に分けた発言の2行目だけが後ろから落ち、1行目が宙に浮いた
+        while getattr(last, "cont", False) and len(lines) > 1:
+            last = lines.pop()
 
 
 def _estimate(script: Script) -> float:

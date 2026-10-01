@@ -28,7 +28,6 @@ thumbnail:
   - ヴィトール・フェレイラ
   - 選手紹介
   - プレースタイル
-  note_red: 有名選手の紹介 ⑤
   photo: assets/images/20261005_vitinha_usa2026_w/01.jpg
   photos: []
 sections:
@@ -342,7 +341,7 @@ sections:
   - https://www.goal.com/jp/ニュース/psg-vitinha-luis/bltc8c45f96615df320
   - https://en.wikipedia.org/wiki/Vitinha
 - id: view
-  heading: 見立て
+  heading: 去年の自分と比べたパスの量
   tier: 背景
   viewpoint: true
   narrator: 解説

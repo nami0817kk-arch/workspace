@@ -200,7 +200,7 @@ def write_note(current: dict, previous: dict | None, day: datetime.date, path: P
         "sources": [standings_mod.OFFICIAL_TABLES.get(lead_league, "")],
     })
     sections.append({
-        "id": "view", "heading": "見立て", "tier": "背景", "viewpoint": True, "narrator": "解説",
+        "id": "view", "heading": "（何についての見立てか。例：エムバペとの今季の差）", "tier": "背景", "viewpoint": True, "narrator": "解説",
         "telop": "来週どこを見るか",
         "say": ["（5つの表を並べて分かったこと・来週どこを見るか）"],
         "sources": [standings_mod.FOTMOB_LEAGUE.format(id=standings_mod.LEAGUE_IDS[lead_league])],

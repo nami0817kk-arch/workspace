@@ -1884,7 +1884,7 @@ def test_見立ての節は印で示し無ければ知らせる():
     raw = _raw()
     assert any("viewpoint" in h for h in advise(build_notes(raw)))
     raw["theme"]["takeaway"] = "差は移籍金ではなく出場時間でした"
-    raw["sections"] = raw["sections"] + [_section(id="view", heading="見立て", tier="背景",
+    raw["sections"] = raw["sections"] + [_section(id="view", heading="差は出場時間", tier="背景",
                                                   viewpoint=True, say="ここがこちらの見立てです。")]
     notes = build_notes(raw)
     assert not any("viewpoint" in h for h in advise(notes))

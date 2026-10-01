@@ -545,6 +545,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     problems += _check_quote_timing(notes)
     problems += _check_thumbnail_resolution(notes)
     problems += _check_line_images_wide(notes)
+    problems += _check_20261001(notes)
     # **voices 型は新しく作らない**（2026-09-28 ユーザー決定「収益化することが目的なので、
     # そこに目線を合わせましょう」）。YouTube の収益化ポリシーは「他の資料の内容を
     # 読み上げただけのコンテンツ」「他のソーシャル メディアのコンテンツを集めた短い動画」を
@@ -617,6 +618,56 @@ def _voice_heavy(section: Section) -> bool:
         return False
     crowd = sum(1 for v in section.voices if v in CROWD_VOICES)
     return crowd * 2 >= len(section.say)
+
+
+THUMB_ONLY_MARK = ".thumbonly"   # tools/thumbpanel.py が「サムネ専用の絵」に置く印
+
+
+def _check_20261001(notes: Notes) -> list[str]:
+    """**2026-10-01 にまとめて言われたことを、見せる前に止める**（ユーザー「本日の指摘事項を再度指摘されないように」）。
+
+    1. シリーズの回のサムネに札（シリーズ名）を付けない ……「サムネの選手紹介は無くして」
+    2. 見立ての節の見出しを「見立て」だけにしない ……「見立ては何についてかを分かりやすく」
+    3. 選手紹介にはキャリア通算の表を入れる ……「キャリア全体の数値を出したい」
+    4. 欧州組の月間まとめは、題で欧州組の日本人の回だと分かる ……「ちゃんと欧州日本人の9月とわかる」「8のタイトルは変えてね」
+    5. サムネ専用に表を描き込んだ絵を、本編の冒頭に敷かない（ヤマル紹介で名前の札と表が重なった）
+    """
+    out: list[str] = []
+    series = (notes.series or "").strip()
+    thumb = notes.thumbnail or {}
+    badge = str(thumb.get("note_red") or "").strip()
+    if series and badge:
+        out.append(f"サムネに札「{badge}」があります。シリーズの回は札を付けません（2026-10-01「サムネの選手紹介は無くして」）。"
+                   "thumbnail.note_red を消してください")
+    for sec in notes.sections:
+        if sec.viewpoint and (sec.heading.strip() in ("見立て", "この動画の見立て", "最後に見立て")
+                              or sec.heading.strip().startswith("（")):
+            out.append(f"見立ての節の見出しが「{sec.heading}」だけです。何についての見立てかが分かる見出しにしてください"
+                       "（2026-10-01「見立ては何についてかを分かりやすく」。例：エムバペとの今季の差）")
+    if "選手の紹介" in series or series == "選手紹介":
+        def _has_total(sec) -> bool:
+            # **表の題に「通算」**があること。本文に「代表通算65点」と1度出るだけでは通さない（ハーランドが素通りした）
+            cards = [sec.card or {}] + [c or {} for c in (sec.line_cards or [])]
+            return any(isinstance(c, dict) and str(c.get("type", "")).lower() == "table"
+                       and "通算" in str(c.get("title") or "") for c in cards)
+        if not any(_has_total(sec) for sec in notes.sections):
+            out.append("選手紹介に、キャリア通算（クラブと代表の試合・得点の合計）の表がありません"
+                       "（2026-10-01「キャリア全体の数値を出したい」。ヤマル紹介の「キャリア全体の数字」の節が見本）")
+    if "月間まとめ" in series or "週報" in series or "欧州組" in series:
+        head = f"{notes.title}"
+        if not any(w in head for w in ("欧州組", "日本人", "海外組")):
+            out.append(f"題「{notes.title}」から、欧州組の日本人をまとめた回だと分かりません。"
+                       "題に「欧州組」か「日本人」を入れてください（2026-10-01「8のタイトルは変えてね」）")
+        lines = f"{thumb.get('line1') or ''}{thumb.get('line2') or ''}"
+        if not any(w in lines for w in ("欧州", "日本人", "海外組")):
+            out.append("サムネの文字から、欧州組の日本人の回だと分かりません（2026-10-01「ちゃんと欧州日本人の9月とわかるサムネに」）")
+    photo = str(thumb.get("photo") or "")
+    if photo and not notes.opening_image:
+        mark = Path(__file__).resolve().parents[1] / (photo + THUMB_ONLY_MARK)
+        if mark.exists():
+            out.append(f"サムネ専用の絵（{photo}）が、本編とショートの冒頭にも敷かれます。theme.opening_image に"
+                       "表を描き込んでいない写真を指定してください（2026-10-01 ヤマル紹介で名前の札と表が重なった）")
+    return out
 
 
 def _check_voices_last(notes: Notes) -> list[str]:

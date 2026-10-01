@@ -1399,7 +1399,7 @@ cards:
   card: none
   image: assets/stats/player_20261002_season_kubo_848289_heat.png
 
-## 見立て
+## 右の外でかわしたあとの一手
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @viewpoint: true
 

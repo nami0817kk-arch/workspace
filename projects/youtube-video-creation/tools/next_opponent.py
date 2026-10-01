@@ -207,7 +207,7 @@ def write_note(m: dict, day: datetime.date, path: Path) -> None:
                  f"{lead['name']}は今季{lead.get('played', 0)}試合で{lead.get('minutes', 0)}分、{lead.get('goals', 0)}得点{lead.get('assists', 0)}アシスト。",
                  "（この相手に対して何が鍵か。相手の弱点と本人の役割を数字で）"],
          "sources": [f"https://www.transfermarkt.jp/-/leistungsdaten/spieler/{lead.get('tm', '')}"]},
-        {"id": "view", "heading": "見立て", "tier": "背景", "viewpoint": True, "narrator": "解説", "telop": "この試合で見るところ",
+        {"id": "view", "heading": "（何についての見立てか。例：エムバペとの今季の差）", "tier": "背景", "viewpoint": True, "narrator": "解説", "telop": "この試合で見るところ",
          "say": [f"（{lead['name']}がこの試合で何をすれば勝てるか。数字を1つ）"],
          "sources": [url]},
     ]

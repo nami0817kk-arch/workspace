@@ -13,7 +13,7 @@ thumbnail_tags:
 - 監督の経歴
 thumbnail_alt: []
 thumbnail_points: []
-thumbnail_note_red: 監督の経歴
+thumbnail_note_red: ''
 thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main: []

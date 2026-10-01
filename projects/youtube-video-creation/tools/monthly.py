@@ -129,7 +129,7 @@ def write_note(month: str, day: datetime.date, standings: dict, scorers: dict, w
         {"id": "events", "heading": f"{first.month}月の出来事", "tier": "報道", "telop": f"{label}に起きたこと", "narrator": "解説",
          "say": ["（雛形の頭の一覧から3〜5本を選び、1本1〜2行で。日付とクラブ名を入れる）"],
          "sources": [str(t.get("sources", [""])[0]) for t in topics[:3] if t.get("sources")] or ["https://www.transfermarkt.jp/"]},
-        {"id": "view", "heading": "見立て", "tier": "背景", "viewpoint": True, "narrator": "解説", "telop": f"{first.month + 1 if first.month < 12 else 1}月に見るところ",
+        {"id": "view", "heading": "（何についての見立てか。例：エムバペとの今季の差）", "tier": "背景", "viewpoint": True, "narrator": "解説", "telop": f"{first.month + 1 if first.month < 12 else 1}月に見るところ",
          "say": [f"（{label}の数字を並べて分かったこと・来月どこを見るか）"],
          "sources": fotmob[:1]},
     ]

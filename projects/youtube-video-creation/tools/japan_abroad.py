@@ -278,7 +278,7 @@ def write_note(rows: list[dict], end: datetime.date, path: Path) -> None:
              "sources": ["https://www.transfermarkt.jp/"]}
             for i, r in enumerate(top)
         ] + [
-            {"id": "view", "heading": "見立て", "tier": "背景", "viewpoint": True, "narrator": "解説",
+            {"id": "view", "heading": "（何についての見立てか。例：エムバペとの今季の差）", "tier": "背景", "viewpoint": True, "narrator": "解説",
              "say": ["（数字で比べて分かったこと・次の1週間で何を見るか）"],
              "sources": ["https://www.transfermarkt.jp/"]},
         ],

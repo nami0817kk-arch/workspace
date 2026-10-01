@@ -314,7 +314,7 @@ def write_note(match: dict, day: datetime.date, path: Path, board_path: Path | N
                  f"相手側で高かったのは{kana(other.get('name', ''))}の{other.get('rating', '')}です。"
                  if other.get("name") else "（相手側の選手）"],
          "sources": [url]},
-        {"id": "view", "heading": "見立て", "tier": "背景", "viewpoint": True, "narrator": "解説",
+        {"id": "view", "heading": "（何についての見立てか。例：エムバペとの今季の差）", "tier": "背景", "viewpoint": True, "narrator": "解説",
          "telop": "数字が示していること",
          "say": [f"（{seed}。ここから何が言えるか）" if seed else "（数字と結果を並べて分かったこと・次の試合で見るところ）"],
          "sources": [url]},

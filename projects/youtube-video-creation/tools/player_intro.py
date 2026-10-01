@@ -315,7 +315,7 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
                  "（2つ目のエピソード）",
                  {"text": "（締めの1行）", "pause": 0.5}],
          "sources": ["（記事のURL）"]},
-        {"id": "view", "heading": "見立て", "tier": "背景", "viewpoint": True, "narrator": "解説",
+        {"id": "view", "heading": "（何についての見立てか。例：エムバペとの今季の差）", "tier": "背景", "viewpoint": True, "narrator": "解説",
          "telop": (f"{nxt['when']}、{nxt['home']}対{nxt['away']}" if nxt else "次の試合で見るところ"),
          "say": [phrase("view", seed, short=short),
                  "（同じポジションの選手1人と比べる数字を1つ）",
@@ -342,7 +342,7 @@ def write_note(p: dict, day: datetime.date, path: Path, fb: dict | None = None) 
         **({"watch": watch} if watch else {}),
         "short_title": f"{short}ってどんな選手？",
         "thumbnail": {"line1": short, "line2": "（いちばん強い事実を伏せる。例：ボールに触らないのに●●）",
-                      "tags": [p["club"], "選手紹介", "プレースタイル"], "note_red": "有名選手の紹介",
+                      "tags": [p["club"], "選手紹介", "プレースタイル"],  # 札（note_red）は付けない（2026-10-01 ユーザー「サムネの選手紹介は無くして」）
                       "photo": "（横長の顔写真1枚。縦なら tools/widecrop.py）", "photos": []},
         "sections": sections,
     }
