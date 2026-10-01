@@ -352,6 +352,16 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .tip{display:flex;gap:8px;align-items:flex-start;background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:8px 10px;margin:8px 0;font-size:13px;line-height:1.55}.tip .tq{flex:none;background:var(--accent);color:var(--accent-fg);border-radius:6px;padding:0 6px;font-weight:800;font-size:11.5px;margin-top:2px}.tip>span:nth-child(2){flex:1}.tip .btn-s{flex:none}
 .recap .mh{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.06em}.rr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 0;border-top:1px dashed var(--line);font-size:13px}.rr .rl{flex-basis:100%;font-size:11.5px;font-weight:800;color:var(--muted)}.rr .rl.up{color:var(--ok)}.rr .rl.dn{color:var(--bad)}.rr span{margin-right:6px}
 .lcard{padding:4px 12px}.lrow{padding:10px 0;border-bottom:1px solid var(--line)}.lrow:last-child{border-bottom:none}.lt{display:flex;gap:8px;align-items:flex-start}.lt .mid{flex:1;min-width:0}.lt .nm{font-size:14.5px}.lsel{display:flex;gap:6px;margin-top:6px;align-items:stretch}.lsel .seg{flex:1;display:grid;grid-template-columns:repeat(5,1fr)}.lsel .seg button{min-width:0;padding:0 2px}.spb{flex:none;border:1.5px solid var(--accent);background:var(--card);color:var(--accent);border-radius:8px;font-weight:800;font-size:13px;padding:0 10px;min-height:40px}.spb.on{background:var(--accent);color:var(--accent-fg)}.spb:disabled{opacity:.35}
+.tbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 4px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0;box-shadow:var(--shadow)}
+.tcard .th{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}
+.fitbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:4px 0 8px}.fitbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold))}
+.tcon{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}.tcon .chip{min-height:32px;padding:3px 10px;font-size:12.5px}.tcon .chip.taken{opacity:.6}.tcon .chip small{margin-left:3px;font-size:10.5px}
+.tmem{display:flex;gap:6px;align-items:center;border-radius:10px;margin:4px 0}.tmem.sel{outline:2.5px solid var(--accent);background:var(--card2)}
+.tmem .tm{flex:1;min-width:0;display:flex;gap:8px;align-items:center;background:none;border:none;text-align:left;padding:4px;min-height:44px}
+.tmem .nm2{display:flex;flex-direction:column;font-size:13.5px;font-weight:700;min-width:0}.tmem .nm2 small{font-weight:400;color:var(--muted);font-size:12px}
+.cbtn{flex:none;border:1px solid var(--line);background:var(--card2);border-radius:8px;font-size:12px;min-height:36px;padding:0 8px}.cbtn.on{background:var(--gold-bg);border-color:var(--gold);color:var(--fg);font-weight:800}
+.tmove{margin-top:6px;border-color:var(--accent);color:var(--accent);font-weight:700}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -479,7 +489,8 @@ function startRound(S){
   alive(S).forEach(function(t){t.inj=false;t.rest=false; if(ROUNDS[S.rnd].kind==='pos') S.lesson.pos[t.id]=defaultPos(t);});
   S.phase='plan'; S.stage=null; S.events=[]; S.evIdx=0; S.evRes=null; S.feat={};
   S.plan={concept:0,center:null,acts:{},coachK:'v',vlogId:null,teams:ROUNDS[S.rnd].kind==='team'?defaultTeams(S):null};
-  if(S.centerReq!=null&&S.rnd>=2&&S.tr[S.centerReq].status==='alive')S.plan.center=S.centerReq;S.centerReq=null;
+  if(S.plan.teams)initTeams(S,'even');
+  if(S.centerReq!=null&&S.rnd>=2&&S.tr[S.centerReq].status==='alive'){if(S.plan.teams){var cti=teamIdx(S,S.centerReq);if(cti>=0)S.plan.tcen[cti]=S.centerReq;}else S.plan.center=S.centerReq;}S.centerReq=null;
 }
 var LESSON_BASE=.4,SP_SLOTS=4;
 function slotsOf(S){return Math.max(0,SP_SLOTS+S.extra-(S.plan&&S.plan.acts.off?2:0));}
@@ -488,7 +499,32 @@ function suggestLesson(S,t){var f=teamFmt(S,t,roundFmt(S));if(t.fat>=60)return '
   if(f.w==='pos')return S.lesson.pos[t.id]||defaultPos(t);if(f.w==='spec'||f.w==='all')return t.spec==='t'?'e':t.spec;
   return Object.keys(f.w).filter(function(k){return k!=='s';}).sort(function(a,b){return t.st[a]-t.st[b];})[0];}
 function prefillLesson(S){S.lesson.sp={};alive(S).forEach(function(t){S.lesson.train[t.id]=[suggestLesson(S,t)];});}
-function teamFmt(S,t,f){return f;}
+var TEAM_CONCEPTS=[
+  {n:'爽やか',w:{v:.35,d:.35,e:.3},song:'まっすぐな風'},
+  {n:'かわいい',w:{v:.4,d:.25,e:.35},song:'真夏のプリズム'},
+  {n:'クール',w:{d:.45,r:.25,e:.3},song:'群青ランナー'},
+  {n:'バラード',w:{v:.5,e:.45,d:.05},song:'星を数えて'},
+  {n:'ヒップホップ',w:{r:.45,d:.3,e:.25},song:'ガラスの靴ひも'},
+  {n:'パワフル',w:{d:.4,s:.3,e:.3},song:'追い風メロディ'}];
+function teamIdx(S,id){var T=S.plan&&S.plan.teams;if(!T)return -1;for(var i=0;i<T.length;i++)if(T[i].indexOf(id)>=0)return i;return -1;}
+function teamFmt(S,t,f){if(!f||f.kind!=='team'||!S.plan||!S.plan.tc)return f;var ti=teamIdx(S,t.id);if(ti<0)return f;var c=TEAM_CONCEPTS[S.plan.tc[ti]],o={};for(var k in f)o[k]=f[k];o.w=c.w;o.concept=c.n;return o;}
+function fitOf(t,w){var v=0;for(var k in w)v+=t.st[k]*w[k];return v;}
+function teamFit(S,ti){var P=S.plan,ids=P.teams[ti].filter(function(id){return S.tr[id].status==='alive';});if(!ids.length)return 0;var w=TEAM_CONCEPTS[P.tc[ti]].w;
+  return ids.reduce(function(a,id){return a+fitOf(S.tr[id],w);},0)/ids.length+relsIn(S,ids).length*1.5;}
+function fixCenters(S){var P=S.plan;if(!P.teams)return;P.teams.forEach(function(ids,ti){var al=ids.filter(function(id){return S.tr[id].status==='alive';});
+  if(P.tcen[ti]==null||al.indexOf(P.tcen[ti])<0)P.tcen[ti]=al.slice().sort(function(a,b){return S.tr[b].lastP-S.tr[a].lastP;})[0];});}
+function autoConcepts(S){var P=S.plan,used={};P.tc=[];P.teams.forEach(function(ids,ti){var best=-1,bv=-1;TEAM_CONCEPTS.forEach(function(c,ci){if(used[ci])return;var v=ids.reduce(function(a,id){return a+fitOf(S.tr[id],c.w);},0);if(v>bv){bv=v;best=ci;}});used[best]=1;P.tc[ti]=best;});}
+function initTeams(S,mode){var P=S.plan,T=defaultTeams(S),sizes=T.map(function(x){return x.length;});
+  if(mode==='bond'){var A=alive(S).slice(),out=sizes.map(function(){return [];}),placed={};
+    var pairs=S.rels.filter(function(r){return r.k!=='town'&&S.tr[r.a].status==='alive'&&S.tr[r.b].status==='alive';});
+    pairs.forEach(function(r){if(placed[r.a]||placed[r.b])return;for(var i=0;i<out.length;i++)if(out[i].length+2<=sizes[i]){out[i].push(r.a,r.b);placed[r.a]=placed[r.b]=1;break;}});
+    A.sort(function(a,b){return b.lastP-a.lastP;}).forEach(function(t){if(placed[t.id])return;var i=out.map(function(x,j){return [x.length/sizes[j],j];}).sort(function(a,b){return a[0]-b[0];})[0][1];out[i].push(t.id);});T=out;}
+  P.teams=T;if(!P.tc||P.tc.length!==T.length)autoConcepts(S);
+  if(mode==='fit'){var A2=alive(S).slice().sort(function(a,b){return b.lastP-a.lastP;}),out2=sizes.map(function(){return [];});
+    A2.forEach(function(t){var o=P.tc.map(function(ci,i){return [fitOf(t,TEAM_CONCEPTS[ci].w),i];}).filter(function(x){return out2[x[1]].length<sizes[x[1]];}).sort(function(a,b){return b[0]-a[0];})[0];out2[o[1]].push(t.id);});P.teams=out2;}
+  P.tcen=P.teams.map(function(){return null;});fixCenters(S);}
+function centersOf(S){var P=S.plan||{};if(P.teams&&P.tcen)return P.tcen.filter(function(id){return id!=null&&S.tr[id].status==='alive';});return P.center!=null?[P.center]:[];}
+function isCenter(S,id){return centersOf(S).indexOf(id)>=0;}
 function applyLesson(S){
   alive(S).forEach(function(t){
     t.fat=Math.max(0,t.fat-12);
@@ -649,10 +685,10 @@ function runStage(S){
   A.forEach(function(t){
     if(!t.rest&&!t.inj&&t.fat>=80&&R()<(t.fat-75)/60){t.inj=true;S.hurt.push(t.id);logT(S,t,'疲れがたまりきった状態で本番に出て、足を痛めた');S.notes.push([t.giv+hon(S)+'、明らかに無理してた。休ませてあげて',1]);S.showTrust=clamp(S.showTrust-2,0,100);}
     var pos=S.lesson.pos[t.id]||defaultPos(t);
-    var r=t.rest?{p:(t.lastP>0?t.lastP*.85:45),br:[]}:perfOf(t,f,pos);
-    if(P.acts.stage)r.p*=1.04; if(P.center===t.id&&!t.rest)r.p*=1.03; if(f.live&&!t.rest)r.p*=0.92+(t.conf-50)/300;
+    var r=t.rest?{p:(t.lastP>0?t.lastP*.85:45),br:[]}:perfOf(t,teamFmt(S,t,f),pos);
+    if(P.acts.stage)r.p*=1.04; if(isCenter(S,t.id)&&!t.rest)r.p*=1.03; if(f.live&&!t.rest)r.p*=0.92+(t.conf-50)/300;
     res[t.id]={raw:r.p,br:r.br,pos:pos,rest:t.rest};
-    if(!t.rest){revealFor(t,f,pos);t.fat+=8*(1.3-t.st.s/100);}
+    if(!t.rest){revealFor(t,teamFmt(S,t,f),pos);t.fat+=8*(1.3-t.st.s/100);}
   });
   S.pairs=null;
   if(f.kind==='duo'){var ord=A.filter(function(t){return !res[t.id].rest;}).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),pairs=[];
@@ -668,7 +704,7 @@ function runStage(S){
   }
   if(f.kind==='team'){
     var aliveIds={};A.forEach(function(t){aliveIds[t.id]=1;});
-    (P.teams||defaultTeams(S)).forEach(function(ids){teams.push({ids:ids.filter(function(id){return aliveIds[id];}),score:0,bond:0});});
+    (P.teams||defaultTeams(S)).forEach(function(ids,ti){teams.push({ids:ids.filter(function(id){return aliveIds[id];}),score:0,bond:0,ti:ti,concept:P.tc?TEAM_CONCEPTS[P.tc[ti]]:null});});
     teams=teams.filter(function(tm){return tm.ids.length;});
     teams.forEach(function(tm){tm.score=tm.ids.reduce(function(a,id){return a+res[id].raw;},0)/tm.ids.length;
       relsIn(S,tm.ids).forEach(function(r){if(r.k==='rival'){tm.bond+=1;S.tr[r.a].conf+=3;S.tr[r.b].conf+=3;}else tm.bond+=1.5;});tm.score+=tm.bond;});
@@ -685,9 +721,14 @@ function runStage(S){
   A.forEach(function(t){res[t.id].pr0=pr0[t.id];res[t.id].pr1=pr1[t.id];});
   S.stage={res:res,teams:teams,win:win,order:byP.map(function(t){return t.id;})};
   S.centerRes=null;
-  if(P.center!=null&&res[P.center]&&!res[P.center].rest){var ct=S.tr[P.center],med=byP[Math.floor(byP.length/2)];
-    if(res[ct.id].sc>=res[med.id].sc){ct.pop=clamp(ct.pop+6*ct.charm,0,100);ct.conf+=6;S.centerRes=1;logT(S,ct,'センターを務め、大きな拍手を浴びた');S.notes.push([ct.giv+hon(S)+'のセンター、堂々としてた',0]);}
-    else {ct.pop=clamp(ct.pop-2,0,100);ct.conf-=8;S.centerRes=-1;logT(S,ct,'センターを務めたが、力を出しきれなかった');S.notes.push([ct.giv+hon(S)+'、センターが重荷だったのかも',1]);}normT(ct);}
+  S.centerOk=[];S.centerNg=[];
+  centersOf(S).forEach(function(cid){if(!res[cid]||res[cid].rest)return;var ct=S.tr[cid],grp=f.kind==='team'?(teams.filter(function(tm){return tm.ids.indexOf(cid)>=0;})[0]||{ids:byP.map(function(t){return t.id;})}).ids:byP.map(function(t){return t.id;});
+    var bar=grp.map(function(id){return res[id].sc;}).sort(function(a,b){return a-b;})[Math.floor(grp.length/2)];
+    if(res[cid].sc>=bar){ct.pop=clamp(ct.pop+6*ct.charm,0,100);ct.conf+=6;S.centerOk.push(cid);logT(S,ct,'センターを務め、大きな拍手を浴びた');}
+    else {ct.pop=clamp(ct.pop-2,0,100);ct.conf-=8;S.centerNg.push(cid);logT(S,ct,'センターを務めたが、力を出しきれなかった');}normT(ct);});
+  if(S.centerOk.length)S.notes.push([S.tr[S.centerOk[0]].giv+hon(S)+'のセンター、堂々としてた',0]);
+  if(S.centerNg.length)S.notes.push([S.tr[S.centerNg[0]].giv+hon(S)+'、センターが重荷だったのかも',1]);
+  S.centerRes=clamp(S.centerOk.length-S.centerNg.length,-1,1);if(!S.centerOk.length&&!S.centerNg.length)S.centerRes=null;
   checkGoalsStage(S);buildShow(S);S.phase='show';
 }
 /* ---------- 講評 ---------- */
@@ -1053,7 +1094,7 @@ function goalHit(S,t,why){if(t.goalDone)return;t.goalDone=true;t.goalRev=true;t.
 function checkGoalsStage(S){
   var st=S.stage,top=st.order[0];
   if(top!=null&&!st.res[top].rest){var t=S.tr[top];addAlbum(S,t,'今回の1位',ROUNDS[S.rnd].name+'でいちばんの出来（'+st.res[top].sc+'点）');if(t.goal==='top')goalHit(S,t,'ステージで1位になった');}
-  if(S.centerRes>0){var c=S.tr[S.plan.center];addAlbum(S,c,'センター',ROUNDS[S.rnd].name+'でセンターを務めた');if(c.goal==='center')goalHit(S,c,'センターで大きな拍手を浴びた');}
+  (S.centerOk||[]).forEach(function(cid){var c=S.tr[cid];addAlbum(S,c,'センター',ROUNDS[S.rnd].name+'でセンターを務めた');if(c.goal==='center')goalHit(S,c,'センターで大きな拍手を浴びた');});
   if(ROUNDS[S.rnd].fin)alive(S).forEach(function(t){if(t.goal==='final')goalHit(S,t,'最終審査のステージに立った');});
 }
 function checkGoalsDecide(S){
@@ -1161,7 +1202,7 @@ function buildShow(S){
   if(f.kind==='duo'&&S.pairs){var inPair={};S.pairs.forEach(function(pr){pr.forEach(function(id){inPair[id]=1;});items.push({duo:true,ids:pr.slice()});});
     alive(S).forEach(function(t){if(!inPair[t.id])items.push({ids:[t.id]});});
     items.sort(function(a,b){return Math.max.apply(null,a.ids.map(function(id){return st.res[id].sc;}))-Math.max.apply(null,b.ids.map(function(id){return st.res[id].sc;}));});}
-  else if(f.kind==='team'){st.teams.forEach(function(tm,i){items.push({team:i,ids:tm.ids.slice(),song:'「'+songs[i+1]+'」'});});
+  else if(f.kind==='team'){st.teams.forEach(function(tm,i){items.push({team:i,ids:tm.ids.slice(),song:'「'+(tm.concept?tm.concept.song:songs[i+1])+'」'+(tm.concept?'（'+tm.concept.n+'）':'')});});
     items.sort(function(a,b){return st.teams[a.team].score-st.teams[b.team].score;});}
   else{var prev=function(t){return t.hist.length>1?t.hist[t.hist.length-2].sc:0;};
     alive(S).slice().sort(function(a,b){return prev(a)-prev(b)||a.id-b.id;}).forEach(function(t){items.push({ids:[t.id]});});}
@@ -1497,7 +1538,8 @@ function vStage(){
     h+='<div class="card">';st.order.forEach(function(id){h+=resRow(id);});h+='</div>';
   }
   if(S.hurt&&S.hurt.length)h+='<p class="note" style="color:var(--bad)">疲れの限界で本番に出た '+S.hurt.map(function(id){return esc(S.tr[id].giv);}).join('・')+' が足を痛めた。出来が下がり、番組への信頼も少し下がった。</p>';
-  if(S.centerRes)h+='<p class="note">センターの'+esc(S.tr[S.plan.center].giv)+'は'+(S.centerRes>0?'堂々と務め、人気と自信が上がった。':'力を出しきれず、自信を落とした。')+'</p>';
+  if((S.centerOk||[]).length)h+='<p class="note">センターの '+S.centerOk.map(function(id){return esc(S.tr[id].giv);}).join('・')+' は堂々と務め、人気と自信が上がった。</p>';
+  if((S.centerNg||[]).length)h+='<p class="note" style="color:var(--bad)">センターの '+S.centerNg.map(function(id){return esc(S.tr[id].giv);}).join('・')+' は力を出しきれず、自信を落とした。</p>';
   var nf=0;for(var k in S.feat)if(S.feat[k])nf++;
   h+='<h3>放送の編集</h3><p class="small muted">放送で大きく映す子を3人まで選べます。映ると人気が上がる。人気の子ばかり映すと「偏っている」と言われ、目立たない子を映すと本人の自信が上がる。</p><div class="card">';
   st.order.forEach(function(id){var t=S.tr[id];h+='<div class="jrow">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+'</div><div class="small muted">出来 '+st.res[id].sc+'・人気 '+popRankMap(S)[id]+'位</div></div><button class="feat '+(S.feat[id]?'on':'')+'" data-a="feat" data-id="'+id+'" '+(!S.feat[id]&&nf>=3?'disabled':'')+'>'+(S.feat[id]?'大きく映す':'映す')+'</button></div>';});
@@ -1607,15 +1649,23 @@ function vPlan(){
   var f=roundFmt(S),P=S.plan,A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),cost=actCost(S);
   var h=telop('制作会議')+'<div class="tgt"><span>局の目標</span><b>視聴率 '+roundTarget(S.rnd,S).toFixed(1)+'%</b><small>届けば次の制作費＋15万、届かなければ−10万。2回続けて届かないとさらに−20万</small></div>'+missionBox()+'<div class="card fmt"><p class="small muted" style="margin:0">'+(ROUNDS[S.rnd].fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
   h+='<div class="budget"><span>制作費</span><span>'+yen(S.budget)+(cost?' <span class="muted">→ 使うと残り '+(S.budget-cost)+'万</span>':'')+'</span></div>';
-  var C=ROUNDS[S.rnd].concepts;
+  var C=P.teams?null:ROUNDS[S.rnd].concepts;
   if(C){h+='<h3>曲とコンセプト</h3><div class="filters">'+C.map(function(c,i){return '<button class="chip '+(P.concept===i?'on':'')+'" data-a="concept" data-v="'+i+'">'+c.n+'</button>';}).join('')+'</div><p class="small muted">見られる力：'+wText(f)+'</p>';}
-  if(S.rnd>=2){h+='<h3>センター</h3><p class="small muted">センターはステージが少し映える。中位より上の出来なら人気と自信が上がり、下回ると自信を失う。</p><div class="pickrow">';
+  if(S.rnd>=2&&!P.teams){h+='<h3>センター</h3><p class="small muted">センターはステージが少し映える。中位より上の出来なら人気と自信が上がり、下回ると自信を失う。</p><div class="pickrow">';
     A.forEach(function(t){h+='<button class="pk '+(P.center===t.id?'on':'')+'" data-a="center" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span></button>';});h+='</div>';}
-  if(P.teams){h+='<h3>チーム分け</h3><p class="small muted">名前の右の「→」で隣のチームへ移せます。幼なじみ・同室・憧れの先輩が同じチームだと息が合い、ライバル同士だと張り合って伸びる。</p>';
-    var fw=f.w;P.teams.forEach(function(ids,ti){var al=ids.filter(function(id){return S.tr[id].status==='alive';});
-      var avg=al.length?al.reduce(function(a,id){var t=S.tr[id],b=0;for(var k in fw)b+=t.st[k]*fw[k];return a+b;},0)/al.length:0,bond=relsIn(S,al).length;
-      h+='<div class="team"><div class="th"><span>チーム'+'ABCDEFG'.charAt(ti)+'（'+al.length+'人）</span><span class="small muted">力の目安 '+Math.round(avg)+(bond?'・つながり'+bond:'')+'</span></div>';
-      al.forEach(function(id){var t=S.tr[id];h+='<div class="trow">'+face(t,'sm')+'<span class="nm2">'+esc(t.name)+' '+tag(t.spec)+'</span><button class="mv" data-a="mvteam" data-id="'+id+'" aria-label="隣のチームへ">→</button></div>';});h+='</div>';});}
+  if(P.teams){h+='<h3>チーム編成</h3><p class="small muted">チームごとに曲（コンセプト）とセンターを決めます。メンバーを1人押してから、別のチームの子を押すと入れ替わります。「ここへ移す」で人数も変えられます（3〜5人）。仲の良い子が同じチームだと息が合い、ライバル同士だと張り合います。</p>';
+    h+='<div class="tbtns"><span class="small muted">おまかせで組む：</span><button class="btn-s" data-a="tauto" data-v="even">実力を均等に</button><button class="btn-s" data-a="tauto" data-v="bond">仲の良い子で</button><button class="btn-s" data-a="tauto" data-v="fit">曲に合う子で</button></div>';
+    var sel=ui.tsel!=null&&teamIdx(S,ui.tsel)>=0?ui.tsel:null,selTi=sel!=null?teamIdx(S,sel):-1;
+    if(sel!=null)h+='<div class="note">'+esc(S.tr[sel].giv)+' を選んでいます。入れ替える相手を押してください（もう一度押すと取り消し）。</div>';
+    P.teams.forEach(function(ids,ti){var al=ids.filter(function(id){return S.tr[id].status==='alive';}),c=TEAM_CONCEPTS[P.tc[ti]],fit=teamFit(S,ti),bond=relsIn(S,al).length;
+      h+='<div class="tcard"><div class="th"><b>チーム'+'ABCDEFG'.charAt(ti)+'</b><span class="small">'+al.length+'人・相性 <b>'+Math.round(fit)+'</b>'+(bond?'・つながり'+bond:'')+'</span></div>';
+      h+='<div class="fitbar"><i style="width:'+Math.min(100,Math.round(fit))+'%"></i></div>';
+      h+='<div class="tcon">'+TEAM_CONCEPTS.map(function(cc,ci){var other=P.tc.indexOf(ci);return '<button class="chip'+(P.tc[ti]===ci?' on':'')+(other>=0&&other!==ti?' taken':'')+'" data-a="tcon" data-id="'+ti+'" data-v="'+ci+'">'+cc.n+(other>=0&&other!==ti?'<small>'+'ABCDEFG'.charAt(other)+'</small>':'')+'</button>';}).join('')+'</div>';
+      h+='<div class="small muted">曲「'+esc(c.song)+'」・見られる力：'+wText({w:c.w})+'</div>';
+      al.slice().sort(function(a,b){return (P.tcen[ti]===b)-(P.tcen[ti]===a)||fitOf(S.tr[b],c.w)-fitOf(S.tr[a],c.w);}).forEach(function(id){var t=S.tr[id],isC=P.tcen[ti]===id;
+        h+='<div class="tmem'+(sel===id?' sel':'')+'"><button class="tm" data-a="tsel" data-id="'+id+'">'+faceImg(t,'sm')+'<span class="nm2">'+esc(t.name)+' '+tag(t.spec)+'<small>曲との相性 '+Math.round(fitOf(t,c.w))+'</small></span></button><button class="cbtn'+(isC?' on':'')+'" data-a="tcen" data-id="'+ti+'" data-v="'+id+'">'+(isC?'センター ★':'センターに')+'</button></div>';});
+      if(sel!=null&&selTi!==ti&&al.length<5&&P.teams[selTi].length>3)h+='<button class="btn-s tmove" data-a="tmove" data-id="'+ti+'">'+esc(S.tr[sel].giv)+' をここへ移す</button>';
+      h+='</div>';});}
   h+=planFmtBox();
   h+='<h3>制作費の使い道</h3><div class="actgrid">';
   ACTS.forEach(function(a){if(a.from&&(S.rnd<a.from||S.rnd>a.to))return;var on=!!P.acts[a.k],can=on||S.budget-cost>=a.cost;
@@ -1872,6 +1922,13 @@ document.addEventListener('click',function(ev){
     case 'diff':ui.diff=v;try{localStorage.setItem('hikari7_diff',v);}catch(e){}render();break;
     case 'tipok':var ts=tipSeen();ts[v]=1;try{localStorage.setItem('hikari7_tips',JSON.stringify(ts));}catch(e){ui.tipsOff=true;}render();break;
     case 'tipreset':try{localStorage.removeItem('hikari7_tips');}catch(e){}ui.tipsOff=false;render();break;
+    case 'tsel':go(function(){var P=S.plan;if(ui.tsel==null||ui.tsel===id){ui.tsel=ui.tsel===id?null:id;return;}
+      var a=teamIdx(S,ui.tsel),b=teamIdx(S,id);if(a<0||b<0||a===b){ui.tsel=id;return;}
+      var A=P.teams[a],B=P.teams[b];A[A.indexOf(ui.tsel)]=id;B[B.indexOf(id)]=ui.tsel;if(P.tcen[a]===ui.tsel)P.tcen[a]=null;if(P.tcen[b]===id)P.tcen[b]=null;ui.tsel=null;fixCenters(S);});break;
+    case 'tmove':go(function(){var P=S.plan,a=teamIdx(S,ui.tsel),b=+id;if(a<0||a===b||P.teams[a].length<=3||P.teams[b].length>=5)return;P.teams[a].splice(P.teams[a].indexOf(ui.tsel),1);P.teams[b].push(ui.tsel);if(P.tcen[a]===ui.tsel)P.tcen[a]=null;ui.tsel=null;fixCenters(S);});break;
+    case 'tcon':go(function(){var P=S.plan,ti=+id,ci=+v,o=P.tc.indexOf(ci);if(o>=0&&o!==ti)P.tc[o]=P.tc[ti];P.tc[ti]=ci;});break;
+    case 'tcen':go(function(){S.plan.tcen[+id]=+v;});break;
+    case 'tauto':go(function(){ui.tsel=null;initTeams(S,v);});break;
     case 'selok':go(function(){confirmSelect(S);});window.scrollTo(0,0);break;
     case 'autolesson':go(function(){autoLesson(S);});break;
     case 'fadd':go(function(){var i=S.fmt.indexOf(null);if(i>=0)S.fmt[i]=v;});break;
