@@ -454,16 +454,20 @@ def verdict_note(row: dict) -> str:
     if row.get("at_low"):
         # 「どれだけ下がって最安に来たか」を添える。最安値だと言うだけでは、
         # 値幅0.4%の商品と30%の商品が同じ顔になる。
+        # 値幅が分からない行では添えない（「0.0% 下がっています」は嘘になる）。
+        off = row.get("off_high_pct") or 0
+        if not off:
+            return "記録した中で最も安い価格です。"
         return (f'記録した中で最も安い価格です。'
-                f'記録{days}日の最高値 {yen(row["high"])} から '
-                f'{pct(row["off_high_pct"])} 下がっています。')
+                f'記録{days}日の最高値 {yen(row.get("high") or 0)} から '
+                f'{pct(off)} 下がっています。')
     if row.get("near_low"):
         return f'記録した中の最安値 {yen(row["low"])} に近い価格です。'
     if row.get("rise_pct"):
         return f'前回より {pct(row["rise_pct"])} 高くなっています。'
-    if row.get("dropped"):
+    if row.get("dropped") and row.get("drop_pct"):
         return (f'前回より {pct(row["drop_pct"])} 安くなりましたが、'
-                f'最安値 {yen(row["low"])} には届いていません。')
+                f'最安値 {yen(row.get("low") or 0)} には届いていません。')
     return f'記録した中の最安値は {yen(row["low"])}、最高値は {yen(row["high"])} です。'
 
 
@@ -2074,21 +2078,44 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     canonical = f'{site["base_url"].rstrip("/")}/item/{slug(row["item_code"])}/'
     # 検索結果でタイトルは30文字前後、説明は120文字前後で切られる。
     # 商品名をそのまま入れると204文字になり、要点が全部切り落とされる。
-    title = f'{title_name or short_name(row["name"], 28)}の価格推移・最安値'
-    # 説明には値と日付を入れる。商品名を繰り返しても、検索結果に並んだとき
-    # 他のページと見分けが付かない。
-    state = ("いまが記録上の最安値" if row.get("at_low") else
-             "最安値に近い" if row.get("near_low") else
-             "前回より値下がり" if row.get("dropped") else
-             f'最安値より{pct(row["vs_low_pct"])}高い' if row.get("vs_low_pct") else
-             "価格は横ばい")
-    desc = (f'{short_name(row["name"], 26)} の価格推移。'
-            f'{jp_date(updated)}時点 {yen(row["price"])}、'
-            f'記録した中での最安値は {yen(row["low"])}'
-            f'（{jp_date(row.get("low_date") or "")}）。'
-            + ('記録を始めたばかりで、まだ値動きを比べられません。'
-               if int(row.get("days") or 0) < 2
-               else f'{row["days"]}日分の記録では{state}です。'))
+    # 「・最安値」は検索結果では切れて見えない位置にあった（題は中央50字で、
+    # 日本語は30〜40字で切られる）。短くして、商品名と「価格推移」を残す。
+    title = f'{title_name or short_name(row["name"], 28)}の価格推移'
+    # 説明の頭は**いまの判定**にする。商品名は題にあるので繰り返さない。
+    # 「6日分の記録では価格は横ばいです」で始めていたときは、検索結果に並んでも
+    # 押す理由が読めなかった（表示115に対しクリック5＝4.3%）。
+    # 値は必ずあるとは限らない（組み替えた行や、古い記録から作った行では欠ける）。
+    # **無い値を0として文にしない。** 「0.0% 下がりました」「実質 0円」は嘘になる。
+    # その分岐を使わず、言えることだけを言う。
+    days = int(row.get("days") or 0)
+    price, low = row.get("price") or 0, row.get("low") or 0
+    off = row.get("off_high_pct") or 0
+    if days < 2:
+        lead_state = (f'{yen(price)}。記録を始めたばかりで、'
+                      f'まだ値動きを比べられません。')
+    elif row.get("at_low"):
+        lead_state = (f'記録した中でいちばん安い {yen(price)} です'
+                      + (f'（最高値から{pct(off)}下がりました）。' if off else '。'))
+    elif row.get("eff_at_low") and row.get("eff_price"):
+        lead_state = (f'ポイント込みの実質 {yen(row["eff_price"])} が'
+                      f'記録した中でいちばん安い状態です（価格は{yen(price)}）。')
+    elif row.get("dropped") and row.get("drop_pct"):
+        lead_state = (f'前回より {pct(row["drop_pct"])} 下がって '
+                      f'{yen(price)} です。')
+    elif row.get("near_low"):
+        lead_state = f'記録した中の最安値 {yen(low)} に近い {yen(price)} です。'
+    elif row.get("moved") is False:
+        lead_state = (f'{yen(price)}。記録{days}日のあいだ'
+                      f'価格は動いていません。')
+    elif row.get("vs_low_pct"):
+        lead_state = (f'{yen(price)}。記録した中の最安値 {yen(low)} より '
+                      f'{pct(row["vs_low_pct"])} 高い状態です。')
+    else:
+        lead_state = f'{yen(price)}。'
+    desc = (lead_state
+            + f'記録{days}日分・最安 {yen(low)}'
+            + f'／最高 {yen(row.get("high") or 0)}。'
+            + f'{short_name(row["name"], 16)} の価格の記録。')
 
     # ポイント分を引いた実質価格の推移。倍率が一度も動かない商品では
     # 価格の線と重なるだけなので、その時は重ねない。
@@ -2163,7 +2190,10 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     # 共有したときに出る絵。og.svg のままだと X も Facebook も LINE も
     # SVG を描かないので、13,402件が持っている楽天の商品写真を使う。
     # ページの中で既に出している同じ画像なので、新しく持つものは無い。
-    return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra,
+    # 商品ページだけサイト名を題に付けない。商品名28字＋「の価格推移」で33字あり、
+    # 日本語の検索結果は30〜40字で切られる。サイト名（11字）を足すと、何のページ
+    # なのかを言う「の価格推移」まで切れる。ドメインは検索結果に別に出る。
+    return (head(title, desc, canonical, site, prefix, extra,
                  indexable=indexable, image=str(row.get("image") or ""))
             + breadcrumb(site, "商品の価格推移", prefix)
             + f'<article class="item"><h1 title="{esc(row["name"])}">'
@@ -2191,6 +2221,12 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + f'<p class="point-line">{point_note(row)}</p>'
             + '</div>'
             + AD_NOTICE
+            # 買える場所へは、価格を見た所から行けるようにする。ここに置くまで
+            # 商品ページの「楽天市場で見る」は1つだけで、スマホでは 2,848px
+            # （3.5画面ぶん）下にあった。実測（2026-09-26〜29）で検索から5人
+            # 来たあいだ、楽天へのクリックは27から1つも動いていない。
+            # 断り（AD_NOTICE）より後ろに置く。何で収益を得ているかを先に言う。
+            + (f'<p class="cta top">{buy_link(row)}</p>' if row.get("url") else '')
             + (f'<p class="verdict">{esc(verdict_note(row))}</p>'
                if verdict_note(row) else '')
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
