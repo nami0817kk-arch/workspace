@@ -105,6 +105,25 @@ void main() {
     expect(blocks[2].trim().length, lessThanOrEqualTo(100), reason: 'キーワード');
   });
 
+  test('App Store Connect が弾く記号を、貼る文面に入れていない', () {
+    // **実地で弾かれている**（護送ボート、2026-09-28 の提出）。
+    // 「このフィールドには1つ以上の無効な文字が含まれています」としか
+    // 出ないので、どの字が悪いのか画面からは読めない。通ったのは
+    // 見出しが【】・箇条書きが「・」と「-」の形。
+    //
+    // **markdown の `*` も見張る。** 貼る文面の中では強調にならず、
+    // アスタリスクがそのまま App Store の説明に出る。
+    const rejected = ['■', '…', '―', '•', '—', '★', '☆', '*'];
+    for (final (i, label) in <(int, String)>[
+      (0, 'プロモーションテキスト'),
+      (1, '説明'),
+      (2, 'キーワード'),
+    ]) {
+      final found = rejected.where(_blocks[i].contains).toList();
+      expect(found, isEmpty, reason: '$label に ${found.join(" ")}');
+    }
+  });
+
   test('名前とサブタイトルの語を、キーワードに重ねていない', () {
     // App Store は「名前 + サブタイトル + キーワード」をまとめて索引し、
     // 語の組み合わせは自分で作る。**同じ語を二度書くと、その字数ぶんだけ
