@@ -295,19 +295,22 @@ class Renderer:
         return target
 
     def _black(self) -> Path:
-        target = self.frame_dir / "black.png"
+        target = self.frame_dir / "black_rgba.png"
         if not target.exists():
-            Image.new("RGB", (self.layout.width, self.layout.height), (0, 0, 0)).save(target)
+            Image.new("RGBA", (self.layout.width, self.layout.height), (0, 0, 0, 255)).save(target)
         return target
 
     def blend(self, first: Path, second: Path, ratio: float) -> Path:
         """2枚の画面を混ぜた中間フレーム。シーン転換のクロスフェードに使う。"""
-        key = f"{first.name}|{second.name}|{ratio:.3f}"
+        # **透過つき（RGBA）で保存する**（2026-10-01 ユーザー「エクアドルの本編でスタジアムの背景が入る」）。
+        # フレーム列は RGBA の PNG を concat して背景動画に重ねている。ここだけ RGB で保存していたため、
+        # 形式が切り替わるところで ffmpeg がコマを落とし、写真が替わる瞬間に下地（スタジアム）が見えていた
+        key = f"{first.name}|{second.name}|{ratio:.3f}|rgba"
         target = self.frame_dir / f"x{hashlib.sha1(key.encode('utf-8')).hexdigest()[:15]}.png"
         if target.exists():
             return target
-        a = Image.open(first).convert("RGB")
-        b = Image.open(second).convert("RGB")
+        a = Image.open(first).convert("RGBA")
+        b = Image.open(second).convert("RGBA")
         Image.blend(a, b, ratio).save(target)
         return target
 

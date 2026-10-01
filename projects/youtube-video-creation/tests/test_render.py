@@ -948,3 +948,18 @@ def test_横の板は下を暗くしない(tmp_path):
     assert sum(b.getpixel((10, h - 5))) == sum(b.getpixel((10, 5)))
     # 写真は今までどおり下を落とす（見出しを読ませるため）
     assert sum(p.getpixel((10, h - 5))) < sum(p.getpixel((10, 5))) * 0.5
+
+
+def test_溶かしの途中の絵も透過つきで保存する(tmp_path):
+    """2026-10-01：RGB の中間フレームを RGBA の列に混ぜると、ffmpeg がそのコマを落として下地が見えた。"""
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    r = Renderer(load_config(), tmp_path / "work")
+    a = tmp_path / "a.png"; b = tmp_path / "b.png"
+    Image.new("RGBA", (64, 36), (255, 0, 0, 255)).save(a)
+    Image.new("RGBA", (64, 36), (0, 0, 255, 255)).save(b)
+    assert Image.open(r.blend(a, b, 0.5)).mode == "RGBA"
+    assert Image.open(r._black()).mode == "RGBA"
