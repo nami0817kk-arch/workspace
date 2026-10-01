@@ -3,16 +3,23 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../game/formulas.dart';
+import '../../game/scenarios.dart';
+import '../../game/world.dart';
 import '../../game/knacks.dart';
 import '../../game/match_target.dart';
 import '../../game/promises.dart';
+import '../../models/attributes.dart';
+import '../../models/club.dart';
 import '../../models/development.dart';
 import '../../models/entourage.dart';
 import '../../models/role.dart';
 import '../../models/support.dart';
 import '../../models/traits.dart';
 import '../../models/training.dart';
+import '../fixture_banner.dart';
+import '../pitch_view.dart';
 import '../readable_width.dart';
+import '../stat_tile.dart';
 
 /// 遊び方のガイド。
 ///
@@ -269,6 +276,7 @@ class _GuideSection {
     required this.chapter,
     required this.icon,
     required this.lead,
+    this.peek,
     this.extra,
   });
 
@@ -284,6 +292,12 @@ class _GuideSection {
   /// ここに数字を書かない——本文は実装から引いているので、
   /// 写した数字だけが黙って古くなる。
   final String lead;
+
+  /// 本文の前に置く「実際の画面」。
+  ///
+  /// **絵ではなく本物のウィジェット。** 写真を貼ると、画面を直したときに
+  /// ガイドだけが古くなる（数字を手で書き写すのと同じ腐り方）。
+  final Widget Function(BuildContext)? peek;
 
   /// 一覧など、実装から作る部分。
   final Widget Function(BuildContext)? extra;
@@ -313,6 +327,10 @@ class _GuideTile extends StatelessWidget {
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (section.peek != null) ...[
+            section.peek!(context),
+            const SizedBox(height: 14),
+          ],
           // 段落の頭に点を置く。**文の壁のまま流すと、どこが切れ目か
           // 分からないので一息で読めない。**
           for (final paragraph in section.body)
@@ -374,6 +392,181 @@ Widget _list(BuildContext context, List<(String, String)> rows) {
   );
 }
 
+/// 「実際の画面」の枠。中身は本物のウィジェット。
+class _Peek extends StatelessWidget {
+  const _Peek({required this.child, required this.note});
+
+  final Widget child;
+  final String note;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.phone_iphone,
+                size: 13,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                '実際の画面',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          child,
+          const SizedBox(height: 8),
+          Text(
+            note,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 見本に使うクラブ。**実在のリーグから引く**ので、色もエンブレムも
+/// 遊んでいるときに出るものと同じ作りになる。
+List<Club> _sampleClubs() => World.buildLeague('yamato', 1);
+
+/// 次節のカード。
+Widget _fixturePeek(BuildContext context) {
+  final theme = Theme.of(context);
+  final clubs = _sampleClubs();
+  return _Peek(
+    note: '「今週」タブの先頭に出るカード。'
+        '自分のクラブと相手の色がそのまま帯になり、下端の細い線が'
+        'シーズンの進み。移籍すれば、ここの色ごと変わる。',
+    child: FixtureBanner(
+      club: clubs[5],
+      opponent: clubs[11],
+      home: true,
+      progress: 9 / 38,
+      caption: 'ホーム',
+      centre: Text('第9節', style: theme.textTheme.titleMedium),
+    ),
+  );
+}
+
+/// 局面と、そこに並ぶ3つの手。
+Widget _scenarioPeek(BuildContext context) {
+  final theme = Theme.of(context);
+  final clubs = _sampleClubs();
+  final scenario = ScenarioPool.forFamily(
+    ScenarioFamily.midfield,
+  ).firstWhere((s) => s.id == 'mf-build');
+
+  return _Peek(
+    note: '実際の画面では、この難しさと自分の能力・コンディション・特性から'
+        '出した「通る確率」が、手ごとに％で出る。'
+        'その％が何でできているかも、同じ画面に並ぶ。',
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: PitchView(
+            spot: scenario.spot,
+            club: clubs[5],
+            opponent: clubs[11],
+            style: ClubStyle.of(clubs[11]),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(scenario.situation, style: theme.textTheme.bodySmall),
+        const SizedBox(height: 8),
+        for (final option in scenario.options)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    option.label,
+                    style: theme.textTheme.bodySmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 68,
+                  child: GaugeBar(
+                    value: option.difficulty / 100,
+                    color: theme.colorScheme.tertiary,
+                    height: 7,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                SizedBox(
+                  width: 54,
+                  child: Text(
+                    '難しさ ${option.difficulty}',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
+/// 評価点と、監督の期待。
+Widget _ratingPeek(BuildContext context) {
+  final theme = Theme.of(context);
+  return _Peek(
+    note: '評価点の色は、起用の線（先発・ベンチ）から引いている——'
+        '表示のためだけの別の線は置いていない。'
+        '棒は監督の期待で、残りがひと目で分かる形にしてある。',
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            StatTile(
+              label: '平均評価',
+              value: '7.21',
+              accent: ratingColor(theme, 7.21),
+            ),
+            const SizedBox(width: 20),
+            const StatTile(label: '出場', value: '28'),
+            const SizedBox(width: 20),
+            const StatTile(label: 'ゴール', value: '9'),
+          ],
+        ),
+        const SizedBox(height: 12),
+        const StatBar(
+          label: '得点関与',
+          now: 11,
+          target: 14,
+          text: '11 / 14',
+        ),
+      ],
+    ),
+  );
+}
+
 /// ガイドの本文。**数字は実装から引く**。
 ///
 /// 2026-09-22 に見直したら、**9/10 以降に入れた仕組みの大半が載っておらず**、
@@ -387,6 +580,7 @@ final List<_GuideSection> _sections = [
     chapter: '試合に出る',
     icon: Icons.calendar_today,
     lead: '練習を決めて、試合に出る。それを38節くり返す',
+    peek: _fixturePeek,
     [
     '「今週」タブで次の相手と今の状態を見て、そこから試合に入る。'
         '練習はそのカードから、あるいは「育成」タブで決める。'
@@ -413,6 +607,7 @@ final List<_GuideSection> _sections = [
     chapter: '試合に出る',
     icon: Icons.sports_soccer,
     lead: '局面ごとに3つの手。安全か、賭けるか',
+    peek: _scenarioPeek,
     [
     'ふつうの試合は${Formulas.scenariosPerStart}つ、順位や因縁が絡む'
         '「じっくりやる試合」は${Formulas.scenariosPerBigStart}つの局面が来る'
@@ -452,6 +647,7 @@ final List<_GuideSection> _sections = [
     chapter: '試合に出る',
     icon: Icons.trending_up,
     lead: '選んだ手が評価点になり、評価点が次の出番を決める',
+    peek: _ratingPeek,
     [
     '局面の成否で評価点が動く。基準は6.0で、良い試合は7点台、悪い試合は5点台。',
     '直近5試合の評価点で、次節の起用が決まる。'

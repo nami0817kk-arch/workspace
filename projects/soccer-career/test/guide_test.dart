@@ -5,9 +5,13 @@
 /// ガイドを書き忘れても、ここで落ちるようにする。
 library;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/game/formulas.dart';
+import 'package:soccer_career/ui/fixture_banner.dart';
+import 'package:soccer_career/ui/pitch_view.dart';
 import 'package:soccer_career/ui/screens/guide_screen.dart';
+import 'package:soccer_career/ui/stat_tile.dart';
 
 void main() {
   final text = guideText();
@@ -52,6 +56,32 @@ void main() {
       expect(text, isNot(contains(stale)), reason: stale);
     }
   });
+
+  // 「実際の画面」は、**絵ではなく本物のウィジェット**でなければならない。
+  // 写真を貼ると、画面を直したときにガイドだけが黙って古くなる——
+  // 数字を手で書き写すのと同じ腐り方。ここが落ちたら、貼った絵を疑う。
+  for (final (section, widget) in <(String, Type)>[
+    ('1週間の流れ', FixtureBanner),
+    ('試合で選ぶ', PitchView),
+    ('評価点と出場機会', StatTile),
+  ]) {
+    testWidgets('$section の「実際の画面」は、本物の $widget が描いている', (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: GuideScreen()));
+      expect(find.byType(widget), findsNothing);
+
+      // 節は畳んであるので、見出しまでスクロールしてから開く。
+      await tester.scrollUntilVisible(find.text(section), 200);
+      // scrollUntilVisible は「組み立てられた」ところで止まるので、
+      // 画面の外に半分出たままのことがある（実際に 607.5px で落ちた）。
+      await tester.ensureVisible(find.text(section));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(section));
+      await tester.pumpAndSettle();
+
+      expect(find.text('実際の画面'), findsOneWidget);
+      expect(find.byType(widget), findsWidgets);
+    });
+  }
 
   test('能力1の効きは、判定と同じ定数から出ている', () {
     // 手で書き写していた頃は、傾きを 0.009 → 0.012 にしても 0.9% のままだった。
