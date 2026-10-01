@@ -454,16 +454,20 @@ def verdict_note(row: dict) -> str:
     if row.get("at_low"):
         # 「どれだけ下がって最安に来たか」を添える。最安値だと言うだけでは、
         # 値幅0.4%の商品と30%の商品が同じ顔になる。
+        # 値幅が分からない行では添えない（「0.0% 下がっています」は嘘になる）。
+        off = row.get("off_high_pct") or 0
+        if not off:
+            return "記録した中で最も安い価格です。"
         return (f'記録した中で最も安い価格です。'
-                f'記録{days}日の最高値 {yen(row["high"])} から '
-                f'{pct(row["off_high_pct"])} 下がっています。')
+                f'記録{days}日の最高値 {yen(row.get("high") or 0)} から '
+                f'{pct(off)} 下がっています。')
     if row.get("near_low"):
         return f'記録した中の最安値 {yen(row["low"])} に近い価格です。'
     if row.get("rise_pct"):
         return f'前回より {pct(row["rise_pct"])} 高くなっています。'
-    if row.get("dropped"):
+    if row.get("dropped") and row.get("drop_pct"):
         return (f'前回より {pct(row["drop_pct"])} 安くなりましたが、'
-                f'最安値 {yen(row["low"])} には届いていません。')
+                f'最安値 {yen(row.get("low") or 0)} には届いていません。')
     return f'記録した中の最安値は {yen(row["low"])}、最高値は {yen(row["high"])} です。'
 
 
@@ -2080,30 +2084,37 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     # 説明の頭は**いまの判定**にする。商品名は題にあるので繰り返さない。
     # 「6日分の記録では価格は横ばいです」で始めていたときは、検索結果に並んでも
     # 押す理由が読めなかった（表示115に対しクリック5＝4.3%）。
+    # 値は必ずあるとは限らない（組み替えた行や、古い記録から作った行では欠ける）。
+    # **無い値を0として文にしない。** 「0.0% 下がりました」「実質 0円」は嘘になる。
+    # その分岐を使わず、言えることだけを言う。
     days = int(row.get("days") or 0)
+    price, low = row.get("price") or 0, row.get("low") or 0
+    off = row.get("off_high_pct") or 0
     if days < 2:
-        lead_state = (f'{yen(row["price"])}。記録を始めたばかりで、'
+        lead_state = (f'{yen(price)}。記録を始めたばかりで、'
                       f'まだ値動きを比べられません。')
     elif row.get("at_low"):
-        lead_state = (f'記録した中でいちばん安い {yen(row["price"])} です'
-                      f'（最高値から{pct(row["off_high_pct"])}下がりました）。')
-    elif row.get("eff_at_low"):
-        lead_state = (f'ポイント込みの実質 {yen(row.get("eff_price") or 0)} が'
-                      f'記録した中でいちばん安い状態です（価格は{yen(row["price"])}）。')
-    elif row.get("dropped"):
+        lead_state = (f'記録した中でいちばん安い {yen(price)} です'
+                      + (f'（最高値から{pct(off)}下がりました）。' if off else '。'))
+    elif row.get("eff_at_low") and row.get("eff_price"):
+        lead_state = (f'ポイント込みの実質 {yen(row["eff_price"])} が'
+                      f'記録した中でいちばん安い状態です（価格は{yen(price)}）。')
+    elif row.get("dropped") and row.get("drop_pct"):
         lead_state = (f'前回より {pct(row["drop_pct"])} 下がって '
-                      f'{yen(row["price"])} です。')
+                      f'{yen(price)} です。')
     elif row.get("near_low"):
-        lead_state = (f'記録した中の最安値 {yen(row["low"])} に近い '
-                      f'{yen(row["price"])} です。')
+        lead_state = f'記録した中の最安値 {yen(low)} に近い {yen(price)} です。'
     elif row.get("moved") is False:
-        lead_state = (f'{yen(row["price"])}。記録{days}日のあいだ'
+        lead_state = (f'{yen(price)}。記録{days}日のあいだ'
                       f'価格は動いていません。')
+    elif row.get("vs_low_pct"):
+        lead_state = (f'{yen(price)}。記録した中の最安値 {yen(low)} より '
+                      f'{pct(row["vs_low_pct"])} 高い状態です。')
     else:
-        lead_state = (f'{yen(row["price"])}。記録した中の最安値 '
-                      f'{yen(row["low"])} より {pct(row["vs_low_pct"])} 高い状態です。')
+        lead_state = f'{yen(price)}。'
     desc = (lead_state
-            + f'記録{days}日分・最安 {yen(row["low"])}／最高 {yen(row["high"])}。'
+            + f'記録{days}日分・最安 {yen(low)}'
+            + f'／最高 {yen(row.get("high") or 0)}。'
             + f'{short_name(row["name"], 16)} の価格の記録。')
 
     # ポイント分を引いた実質価格の推移。倍率が一度も動かない商品では

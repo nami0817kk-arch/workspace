@@ -2142,3 +2142,26 @@ class 検索結果での見え方Test(unittest.TestCase):
     def test_説明は切られない長さに収める(self):
         # Google は120字前後で切る
         self.assertLessEqual(len(self.desc()), 120)
+
+    def test_持っていない値を0として文にしない(self):
+        """「0.0% 下がりました」「実質 0円」は嘘になる。
+        値が無い分岐は使わず、言えることだけを言う。
+        """
+        import re
+
+        def desc(row):
+            html = self.theme.item_page(row, self.site, "2026-09-30")
+            return re.search(r'name="description" content="([^"]*)"', html).group(1)
+
+        base = self.row(at_low=True)
+        del base["off_high_pct"]
+        out = desc(base)
+        self.assertIn("記録した中でいちばん安い", out)
+        self.assertNotIn("0.0%", out)
+
+        dropped = self.row(at_low=False, dropped=True)
+        del dropped["drop_pct"]
+        self.assertNotIn("下がって", desc(dropped))
+
+        eff = self.row(at_low=False, eff_at_low=True)
+        self.assertNotIn("実質 0円", desc(eff))

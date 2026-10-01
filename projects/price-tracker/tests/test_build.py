@@ -333,14 +333,21 @@ class SearchAppearanceTest(unittest.TestCase):
 
         self.assertTrue(title.startswith("ロイヤルカナン"), title)
 
-    def test_説明に値段と日付を入れる(self):
+    def test_説明は判定と値段から始める(self):
+        """検索結果に並んだとき、押す理由が読めるようにする。
+
+        「6日分の記録では価格は横ばいです」で終わっていたとき、表示115に対し
+        クリックは5（4.3%）だった（2026-09-30 実測）。商品名を繰り返すだけでも
+        見分けが付かない。日付は入れない（Google が別に出すし、題と説明の
+        字数を使い切ってしまう）。
+        """
         page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
             encoding="utf-8")
         desc = re.search(r'name="description" content="([^"]*)"', page).group(1)
 
-        # 商品名を繰り返すだけでは、検索結果に並んだとき見分けが付かない
         self.assertIn("4,000円", desc)
-        self.assertIn("月", desc)
+        self.assertIn("記録", desc)
+        self.assertFalse(desc.startswith("ロイヤルカナン"), desc)
 
     def test_検索の索引にも宣伝を積まない(self):
         # 名前には中身の指紋が入る（2026-09-27 から）
