@@ -70,15 +70,12 @@
 フォントは使う字だけに絞って同梱している（丸ゴシック＝M PLUS Rounded 1c ExtraBold、本文＝Noto Sans JP、どちらも OFL）。
 **ARB に字を足したら `python tool/subset_fonts.py` を回す。** 忘れると CI の --check が落ちる。
 
-## テスト用の Web版（2026-09-26 ユーザー指示）
+## テスト用の Web版は閉じた（2026-10-01）
 
-「誰でも開けるようにして、ただ、あくまでもテスト用」。master に入ると
-`.github/workflows/goso-boat-web-test.yml` が Cloudflare Pages の `goso-boat-test` に出す。
-検索に出さない（meta robots・_headers・robots.txt）、画面下に「テスト版」の札、どこからもリンクしない。
-本番の配信は iOS アプリだけ。Web版を宣伝・収益化の入口にしない。
-
-**2026-09-27 ユーザー指示「web版は一旦放置」。** Web版のための作業・見た目の確認・改善はしない。
-master に入れば今までどおり自動で更新される（止める指示は出ていない）。動作確認は iOS 側で行う。
+2026-09-26 に「誰でも開けるテスト用」として Cloudflare Pages の `goso-boat-test` に出していたが、
+iOS 版の公開を受けて **2026-10-01 ユーザー指示「web版は閉じて良いよ」でプロジェクトごと消した**。
+出していたワークフロー（goso-boat-web-test.yml）も消した。中身は git の履歴にある。
+Web で動く作り（広告・課金の NoOp、`kIsWeb` の分岐）はコードに残っているが、公開はしない。再開を提案しない。
 
 ## 公開まわり
 
