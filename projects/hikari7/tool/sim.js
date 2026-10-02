@@ -19,6 +19,7 @@ function play(g, pol) {
   startSeason(S);
   for (let r = 1; r <= NROUND; r++) {
     if (S.phase !== 'plan') throw new Error('plan? ' + S.phase);
+    if (r === 3 && typeof forecast === 'function') { const F = forecast(S); S._fc = F ? F.total : null; }
     if (pol !== 'naive') {
       const A = alive(S);
       if (r >= 2) S.plan.center = (pol === 'good' ? A.slice().sort((a, b) => b.lastP - a.lastP)[0] : pick(A)).id;
@@ -86,12 +87,15 @@ function bestArc(S, t) { // 気質が分かっていれば、合う語りかけ�
 }
 const out = {};
 for (const pol of ['naive', 'random', 'good']) for (const g of ['m', 'f']) {
-  let tot = 0, gr = {}, bud = 0, mis = 0, err = 0;
+  let tot = 0, gr = {}, bud = 0, mis = 0, err = 0, tg = 0, tb = 0, nd = 0, fe = 0, fn = 0;
   for (let i = 0; i < N; i++) {
     let o; try { o = play(g, pol); } catch (e) { err++; if (err === 1) console.error(pol, g, e.stack); continue; }
     tot += o.E.total; gr[o.E.grade] = (gr[o.E.grade] || 0) + 1; bud += o.S.budget; mis += (o.E.missions || []).filter(x => x.ok).length;
+    o.S.tr.filter(t => t.status === 'debut').forEach(t => { nd++; (t.traits || []).forEach(x => TRAITS[x].g ? tg++ : tb++); });
+    if (o.S._fc != null) { fe += (o.E.total - o.S._fc); fn++; }
   }
   if (err) { console.error('失敗 ' + err + '件'); process.exitCode = 1; }
   const k = N - err;
-  console.log(pol.padEnd(6), g, '平均', (tot / k).toFixed(1), '評価', JSON.stringify(gr), '残り制作費', Math.round(bud / k), '依頼達成', (mis / k).toFixed(2));
+  console.log(pol.padEnd(6), g, '平均', (tot / k).toFixed(1), '評価', JSON.stringify(gr), '残り制作費', Math.round(bud / k), '依頼達成', (mis / k).toFixed(2),
+    '特性(デビュー組1人あたり 良/悪)', (tg / nd).toFixed(2) + '/' + (tb / nd).toFixed(2), '第3審査時点の評価からの伸び', fn ? (fe / fn).toFixed(1) : '-');
 }
