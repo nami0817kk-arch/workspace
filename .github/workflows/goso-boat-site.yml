@@ -12,6 +12,7 @@ on:
     paths:
       - "projects/goso-boat/legal/**"
       - "projects/goso-boat/site/**"
+      - "scripts/check-app-site.sh"
       - ".github/workflows/goso-boat-site.yml"
   workflow_dispatch: {}
 
@@ -66,3 +67,8 @@ jobs:
           done
           grep -q "護送ボート" <(curl -fsSL https://goso-boat.pages.dev/privacy.html) || { echo "::error::goso-boat.pages.dev が護送ボートのページではありません"; exit 1; }
           curl -fsSL https://goso-boat.pages.dev/app-ads.txt
+
+      # AdMob が app-ads.txt を確かめられる状態か（robots.txt がテキスト・app-ads.txt の行・無いパスは 404）。
+      # 2026-10-02 に robots.txt が HTML を返していて「アプリを確認」が通らなかった。次のアプリでも同じ点検を写す
+      - name: Check the site for AdMob (robots.txt / app-ads.txt)
+        run: bash ../../scripts/check-app-site.sh goso-boat.pages.dev pub-6409014819339195
