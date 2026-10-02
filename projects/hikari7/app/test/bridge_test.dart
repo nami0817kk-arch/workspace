@@ -187,6 +187,33 @@ void main() {
     expect(opened.map((u) => u.toString()), ['https://hikari7.pages.dev/privacy.html']);
   });
 
+  test('レビューのお願いと画面の明るさは、決めた形のときだけ伝える', () async {
+    SharedPreferences.setMockInitialValues({});
+    final p = await SharedPreferences.getInstance();
+    var reviews = 0;
+    final themes = <bool>[];
+    final b = GameBridge(
+      money: Monetization(p, ads: FakeAds(), store: FakeStore()),
+      store: WebStore(p),
+      runJs: (_) async {},
+      openUrl: (_) async {},
+      showLicenses: () {},
+      review: () async => reviews++,
+      theme: themes.add,
+    );
+    await b.handle('{"type":"review"}');
+    await b.handle('{"type":"theme","dark":true}');
+    await b.handle('{"type":"theme","dark":"yes"}');
+    await b.handle('{"type":"theme","dark":false}');
+    expect(reviews, 1);
+    expect(themes, [true, false]);
+  });
+
+  test('アプリに入れるゲーム本体は、裏に回るときの保存の口を持っている', () {
+    final html = File('assets/web/index.html').readAsStringSync();
+    expect(html.contains('window.hikariPause='), isTrue);
+  });
+
   test('振動は決めた種類だけ伝える', () async {
     SharedPreferences.setMockInitialValues({});
     final p = await SharedPreferences.getInstance();

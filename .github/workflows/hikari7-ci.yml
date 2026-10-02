@@ -39,6 +39,10 @@ jobs:
       - name: 通しプレイの試算
         run: node tool/sim.js --quick
 
+      # 全画面をブラウザなしで描き、描くときのエラーが0件か（男女・難しさ・チャレンジを変えて5シーズン）
+      - name: 画面の点検
+        run: node tool/views.js
+
       - name: アプリに入れるゲーム本体を組み立てる
         run: |
           pip install --quiet fonttools
