@@ -15,6 +15,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'prototype', 'game.html')
 FACES = os.path.join(ROOT, 'prototype', 'faces')
 OUT = os.path.join(ROOT, 'build', 'web')
+AUDIO = os.path.join(ROOT, 'app', 'assets', 'audio')  # BGM と台詞の声（アプリと同じもの）
 
 HEAD = (
     '<!doctype html>\n<html lang="ja">\n<head>\n<meta charset="utf-8">\n'
@@ -62,6 +63,17 @@ def face_block():
             ';var FACE_GRP=' + json.dumps(grp, separators=(',', ':')) + ';/*FACEDATA-END*/'), len(img['m']), len(img['f'])
 
 
+def put_voice(s):
+    """声のある台詞の一覧（tool/make_voice.py が作る index.json）を埋め込む。無ければ null のまま。"""
+    p = os.path.join(AUDIO, 'voice', 'index.json')
+    if not os.path.exists(p):
+        return s
+    keys = json.load(io.open(p, encoding='utf-8'))['lines']
+    a = s.index('/*VOICEDATA-START*/')
+    b = s.index('/*VOICEDATA-END*/') + len('/*VOICEDATA-END*/')
+    return s[:a] + '/*VOICEDATA-START*/var VOICE_KEYS=' + json.dumps({k: 1 for k in keys}, separators=(',', ':')) + ';/*VOICEDATA-END*/' + s[b:]
+
+
 def main():
     s = io.open(SRC, encoding='utf-8').read()
     a = s.index('/*FACEDATA-START*/')
@@ -69,6 +81,7 @@ def main():
     block, nm, nf = face_block()
     s = s[:a] + block + s[b:]
     s = put_bg(s)
+    s = put_voice(s)
     title = '<title>ひかりの七席</title>'
     assert title in s, 'game.html の <title> が見つからない'
     s = s.replace(title, '<title>ひかりの七席（テスト版）</title>', 1)
@@ -79,6 +92,8 @@ def main():
         shutil.rmtree(OUT)
     os.makedirs(OUT)
     io.open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(html)
+    if os.path.isdir(AUDIO):
+        shutil.copytree(AUDIO, os.path.join(OUT, 'audio'))
     for f in ('_headers', 'robots.txt'):
         shutil.copy(os.path.join(ROOT, 'web-test', f), os.path.join(OUT, f))
     print('built index.html (%d bytes, faces m=%d f=%d)' % (len(html.encode('utf-8')), nm, nf))

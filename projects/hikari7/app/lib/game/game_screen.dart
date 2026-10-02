@@ -8,6 +8,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../monetization/monetization.dart';
 import 'bridge.dart';
+import 'game_audio.dart';
 
 /// ゲーム本体（試作をアプリ用に組み立てた1枚のページ）を、画面いっぱいの WebView で動かす。
 class GameScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class _GameScreenState extends State<GameScreen> {
   bool _loaded = false;
   bool? _dark;
   AppLifecycleListener? _life;
+  final GameAudio _audio = GameAudio();
 
   @override
   void initState() {
@@ -78,9 +80,18 @@ class _GameScreenState extends State<GameScreen> {
       theme: (d) {
         if (mounted) setState(() => _dark = d);
       },
+      bgm: (k, v) => unawaited(_audio.bgm(k, v)),
+      voice: (f) => unawaited(_audio.voice(f)),
     );
     // 裏に回る直前に、ゲームの進み具合をその場で保存させる
-    _life = AppLifecycleListener(onInactive: _pause, onHide: _pause);
+    _life = AppLifecycleListener(
+      onInactive: _pause,
+      onHide: () {
+        _pause();
+        unawaited(_audio.setHidden(true));
+      },
+      onShow: () => unawaited(_audio.setHidden(false)),
+    );
     // 購入が後から届いた（家族の承認・別の端末・返金）ときも、ゲーム本体に伝える
     widget.money.addListener(_onMoney);
     unawaited(_load());
@@ -102,6 +113,7 @@ class _GameScreenState extends State<GameScreen> {
   void dispose() {
     widget.money.removeListener(_onMoney);
     _life?.dispose();
+    _audio.dispose();
     super.dispose();
   }
 

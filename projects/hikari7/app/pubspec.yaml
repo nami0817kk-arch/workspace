@@ -14,6 +14,7 @@ dependencies:
   shared_preferences: ^2.5.5
   google_mobile_ads: ^9.1.0
   in_app_review: ^2.0.10
+  audioplayers: ^6.1.0
   in_app_purchase: ^3.3.1
   in_app_purchase_storekit: ^0.4.13
   url_launcher: ^6.3.2
@@ -30,3 +31,13 @@ flutter:
   assets:
     - assets/web/index.html
     - assets/licenses/
+    # BGM（tool/make_bgm.py）と台詞の声（tool/make_voice.py）。声は声ごとのフォルダ
+    - assets/audio/bgm/
+    - assets/audio/voice/f1/
+    - assets/audio/voice/f2/
+    - assets/audio/voice/f3/
+    - assets/audio/voice/f4/
+    - assets/audio/voice/m1/
+    - assets/audio/voice/m2/
+    - assets/audio/voice/m3/
+    - assets/audio/voice/m4/

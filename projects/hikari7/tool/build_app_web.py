@@ -15,7 +15,7 @@ from fontTools import subset
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'tool'))
-from build_web_test import face_block, put_bg  # noqa: E402
+from build_web_test import face_block, put_bg, put_voice  # noqa: E402
 
 SRC = os.path.join(ROOT, 'prototype', 'game.html')
 FONT = os.path.join(ROOT, 'fonts', 'DelaGothicOne-Regular.ttf')
@@ -44,6 +44,7 @@ def main():
     block, nm, nf = face_block()
     s = s[:a] + block + s[b:]
     s = put_bg(s)
+    s = put_voice(s)
     # 外のフォントを読みに行く行を外す
     s = re.sub(r'<link rel="preconnect"[^>]*>\s*', '', s)
     s = re.sub(r'<link href="https://fonts\.googleapis\.com[^>]*>\s*', '', s)

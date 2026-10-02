@@ -37,7 +37,7 @@ String injectBoot(String html, Map<String, Object?> boot) {
 
 /// ゲーム本体から届く頼みごとを受けて、広告・課金・保存・外部リンクにつなぐ。
 ///
-/// 届く形は JSON 1つ: `{"type": "reward"|"between"|"store"|"buy"|"restore"|"open"|"licenses"|"haptic"|"review"|"theme", ...}`。
+/// 届く形は JSON 1つ: `{"type": "reward"|"between"|"store"|"buy"|"restore"|"open"|"licenses"|"haptic"|"review"|"theme"|"bgm"|"voice", ...}`。
 /// 返事は JS の関数を呼んで返す（`hikariAdResult` / `hikariSetApp`）。
 class GameBridge {
   GameBridge({
@@ -49,6 +49,8 @@ class GameBridge {
     this.haptic,
     this.review,
     this.theme,
+    this.bgm,
+    this.voice,
   });
 
   final Monetization money;
@@ -65,6 +67,16 @@ class GameBridge {
 
   /// 画面の明るさ（上の帯の文字色を合わせる）
   final void Function(bool dark)? theme;
+
+  /// BGM（場面の曲の名前と音量 0〜1。名前が null なら止める）
+  final void Function(String? key, double vol)? bgm;
+
+  /// 台詞の声（`f1/0a1b2c3d` の形。声のキーとファイル名）
+  final void Function(String file)? voice;
+
+  /// 鳴らしてよい BGM（tool/make_bgm.py の TRACKS と同じ）
+  static const bgmKeys = {'title', 'practice', 'night', 'stage', 'judge', 'ending'};
+  static final _voiceFile = RegExp(r'^[fm][1-4]/[0-9a-f]{8}$');
 
   bool _rewardBusy = false;
 
@@ -103,6 +115,15 @@ class GameBridge {
       case 'theme':
         final d = m['dark'];
         if (d is bool) theme?.call(d);
+      case 'bgm':
+        final k = m['k'];
+        final v = m['vol'];
+        if (k == null || (k is String && bgmKeys.contains(k))) {
+          bgm?.call(k as String?, v is num ? v.toDouble().clamp(0.0, 1.0) : 0.33);
+        }
+      case 'voice':
+        final f = m['f'];
+        if (f is String && _voiceFile.hasMatch(f)) voice?.call(f);
     }
   }
 

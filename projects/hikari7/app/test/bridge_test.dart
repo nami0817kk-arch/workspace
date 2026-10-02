@@ -214,6 +214,39 @@ void main() {
     expect(html.contains('window.hikariPause='), isTrue);
   });
 
+  test('BGM と声は、決めた名前・形のものだけ鳴らす', () async {
+    SharedPreferences.setMockInitialValues({});
+    final p = await SharedPreferences.getInstance();
+    final bgms = <String>[];
+    final voices = <String>[];
+    final b = GameBridge(
+      money: Monetization(p, ads: FakeAds(), store: FakeStore()),
+      store: WebStore(p),
+      runJs: (_) async {},
+      openUrl: (_) async {},
+      showLicenses: () {},
+      bgm: (k, v) => bgms.add('$k@$v'),
+      voice: voices.add,
+    );
+    await b.handle('{"type":"bgm","k":"stage","vol":0.5}');
+    await b.handle('{"type":"bgm","k":null,"vol":0}');
+    await b.handle('{"type":"bgm","k":"../../etc","vol":0.5}');
+    await b.handle('{"type":"bgm","k":"title","vol":7}');
+    await b.handle('{"type":"voice","f":"f2/0a1b2c3d"}');
+    await b.handle('{"type":"voice","f":"x9/0a1b2c3d"}');
+    await b.handle('{"type":"voice","f":"m1/../../secret"}');
+    expect(bgms, ['stage@0.5', 'null@0.0', 'title@1.0']);
+    expect(voices, ['f2/0a1b2c3d']);
+  });
+
+  test('組み立てた本体に、声のある台詞の一覧と BGM の曲がそろっている', () {
+    final html = File('assets/web/index.html').readAsStringSync();
+    expect(html.contains('var VOICE_KEYS={'), isTrue, reason: 'tool/make_voice.py の index.json を埋め込めていない');
+    for (final k in GameBridge.bgmKeys) {
+      expect(File('assets/audio/bgm/$k.mp3').existsSync(), isTrue, reason: k);
+    }
+  });
+
   test('振動は決めた種類だけ伝える', () async {
     SharedPreferences.setMockInitialValues({});
     final p = await SharedPreferences.getInstance();
