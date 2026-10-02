@@ -65,6 +65,7 @@ function play(g, pol) {
       order = pick_;
     }
     order.slice(0, n).forEach(t => S.pass[t.id] = true);
+    S._mf = Math.max(S._mf || 0, ...alive(S).map(t => t.fat)); S._inj = (S._inj || 0) + alive(S).filter(t => t.inj).length;
     decide(S);
     if (!ROUNDS[r].fin) nextRound(S);
   }
@@ -90,11 +91,12 @@ function bestArc(S, t) { // 気質が分かっていれば、合う語りかけ�
 }
 const out = {};
 for (const pol of ['naive', 'random', 'good']) for (const g of ['m', 'f']) {
-  let tot = 0, gr = {}, bud = 0, mis = 0, err = 0, tg = 0, tb = 0, nd = 0, fe = 0, fn = 0, bev = 0, cmb = 0, cmbD = 0, awk = 0;
+  let tot = 0, gr = {}, bud = 0, mis = 0, err = 0, tg = 0, tb = 0, nd = 0, fe = 0, fn = 0, bev = 0, cmb = 0, cmbD = 0, awk = 0, mf = 0, inj = 0;
   for (let i = 0; i < N; i++) {
     let o; try { o = play(g, pol); } catch (e) { err++; if (err === 1) console.error(pol, g, e.stack); continue; }
     tot += o.E.total; gr[o.E.grade] = (gr[o.E.grade] || 0) + 1; bud += o.S.budget; mis += (o.E.missions || []).filter(x => x.ok).length;
     o.S.tr.filter(t => t.status === 'debut').forEach(t => { nd++; (t.traits || []).forEach(x => TRAITS[x].g ? tg++ : tb++); });
+    mf += o.S._mf || 0; inj += o.S._inj || 0;
     bev += o.S._bev || 0; for (const k in (o.S.bond || {})) if (o.S.bond[k].combo) cmb++; cmbD += (o.E.combos || []).length; awk += o.S.tr.filter(t => t.awoke).length;
     if (o.S._fc != null) { fe += (o.E.total - o.S._fc); fn++; }
   }
@@ -102,5 +104,5 @@ for (const pol of ['naive', 'random', 'good']) for (const g of ['m', 'f']) {
   const k = N - err;
   console.log(pol.padEnd(6), g, '平均', (tot / k).toFixed(1), '評価', JSON.stringify(gr), '残り制作費', Math.round(bud / k), '依頼達成', (mis / k).toFixed(2),
     '特性(デビュー組1人あたり 良/悪)', (tg / nd).toFixed(2) + '/' + (tb / nd).toFixed(2), '第3審査時点の評価からの伸び', fn ? (fe / fn).toFixed(1) : '-',
-    'ふたりの物語', (bev / k).toFixed(1), 'コンビ(結成/デビュー)', (cmb / k).toFixed(2) + '/' + (cmbD / k).toFixed(2), '覚醒', (awk / k).toFixed(2));
+    'ふたりの物語', (bev / k).toFixed(1), 'コンビ(結成/デビュー)', (cmb / k).toFixed(2) + '/' + (cmbD / k).toFixed(2), '覚醒', (awk / k).toFixed(2), '疲れの最大', (mf / k).toFixed(0), 'けが', (inj / k).toFixed(2));
 }

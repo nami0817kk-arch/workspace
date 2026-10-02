@@ -721,12 +721,12 @@ function nextEvent(S){S.evRes=null;S.evIdx++;if(S.evIdx>=S.events.length){runSta
 
 /* ---------- 面談 ---------- */
 var INTV_LINES={
-  sunao:['言われたことは全部やりたいです。何でも教えてください','最近、少しずつ自分の良さが分かってきました'],
-  makezu:['正直、今の順番には納得していません。もっと上に行けます','ライバルがいるから頑張れています'],
-  sensai:['みんなが上手で、自分がここにいていいのか不安です','夜になると、失敗した場面を思い出してしまいます']
+  sunao:['言われたことは全部やりたいです。何でも教えてください','最近、少しずつ自分の良さが分かってきました','先生に言われたことを、毎晩ノートにまとめています','ここに来てから、毎日が早く過ぎます','できないことが分かるのが、楽しくなってきました'],
+  makezu:['正直、今の順番には納得していません。もっと上に行けます','ライバルがいるから頑張れています','次の審査、センターを狙っています','負けた日は眠れません。でも、それでいいと思ってます','点数が出るたびに、上の子の映像を見返しています'],
+  sensai:['みんなが上手で、自分がここにいていいのか不安です','夜になると、失敗した場面を思い出してしまいます','本番の前は、ご飯がのどを通りません','うまくできた日も、次は駄目なんじゃないかって思ってしまいます','誰かにほめられると、少しだけ眠れるようになります']
 };
 var INTV_OPTS=[['期待している','自信が上がる'],['課題を正直に伝える','伸びるが、受け止め方は人それぞれ'],['無理しなくていい','疲れが抜ける']];
-function interviewLine(t){var L=INTV_LINES[t.temper];return L[t.id%2];}
+function interviewLine(t){var L=INTV_LINES[t.temper].slice();if(t.arc&&t.arc.step>=1&&ARCS[t.arc.k])L.push(ARCS[t.arc.k].reason+'。それだけは、忘れないようにしています');var r=typeof S!=='undefined'&&S?S.rnd:0;return L[(t.id*3+r)%L.length];}
 function applyInterview(S){
   alive(S).forEach(function(t){var c=S.interview[t.id]==null?0:S.interview[t.id];t.temperRev=true;
     if(c===0){t.conf+=t.temper==='sensai'?16:t.temper==='makezu'?6:10;t.trust+=6;}
@@ -813,9 +813,9 @@ function runStage(S){
 /* ---------- 講評 ---------- */
 var CRIT=[['ほめる','自信が上がる'],['課題を伝える','次のレッスンで弱点が伸びやすい'],['厳しく言う','伸びるか、折れるか']];
 var REACT={
-  sunao:['「ありがとうございます、もっと頑張ります！」','「はい、そこを直します」','しばらく黙って、「……はい」と答えた'],
-  makezu:['「まだまだです」とすぐ練習室に戻った','「次は絶対に見返します」','目の色が変わった。「見ていてください」'],
-  sensai:['ほっとした表情で、少し泣きそうになった','不安そうに何度もうなずいた','練習のあと、ひとりで泣いていた']
+  sunao:[['「ありがとうございます、もっと頑張ります！」','照れくさそうに笑って、何度も頭を下げた'],['「はい、そこを直します」','言われたことを、その場でメモに書き込んだ'],['しばらく黙って、「……はい」と答えた','「分かってはいたんです」と、小さく笑った']],
+  makezu:[['「まだまだです」とすぐ練習室に戻った','「ほめられると、かえって落ち着かないです」'],['「次は絶対に見返します」','「そこ、自分でも気になってました」と即答した'],['目の色が変わった。「見ていてください」','黙って一礼し、その夜は最後まで練習室にいた']],
+  sensai:[['ほっとした表情で、少し泣きそうになった','「……よかった」と、ようやく肩の力を抜いた'],['不安そうに何度もうなずいた','「直せるか分からないけど、やってみます」と小さく言った'],['練習のあと、ひとりで泣いていた','笑ってうなずいたが、食事にはほとんど手をつけなかった']]
 };
 function applyCritique(S){
   var out=[];
@@ -825,7 +825,7 @@ function applyCritique(S){
     else { var g=tp==='makezu'?3:tp==='sunao'?1.5:1;['v','d','r','e'].forEach(function(k){t.st[k]=Math.min(99,t.st[k]+g*pot);});
       if(tp==='makezu'){t.conf+=6;t.trust+=2;} else if(tp==='sunao'){t.conf-=6;t.trust-=3;} else {t.conf-=16;t.trust-=8;} }
     normT(t);
-    out.push({id:t.id,txt:REACT[tp][c],c:c});logT(S,t,'講評「'+CRIT[c][0]+'」→ '+REACT[tp][c]);
+    var rx=pick(REACT[tp][c]);out.push({id:t.id,txt:rx,c:c});logT(S,t,'講評「'+CRIT[c][0]+'」→ '+rx);
     t.temperRev=true;
   });
   S.critRes=out;S.critDone=true;
@@ -876,7 +876,7 @@ function makeComments(S,cm){
   var top=S.stage.order[0];if(top!=null){var f=S.tr[top];add(pick([f.giv+h+'の今回のステージ、鳥肌立った',f.giv+h+'がいちばん輝いてた','今回は'+f.giv+h+'の回だった']));}
   cm.slice(0,3).forEach(function(c){add(c[0],c[1]);});
   S.notes.forEach(function(n){add(n[0],n[1]);});
-  var any=pick(alive(S).concat(S.tr.filter(function(t){return t.status==='debut';})));if(any)add(any.giv+h+'の'+SPEC[any.spec]+'、もっと見たい');
+  var any=pick(alive(S).concat(S.tr.filter(function(t){return t.status==='debut';})));if(any)add(any.giv+h+'の'+(any.spec==='t'?'表情':SPEC[any.spec])+'、もっと見たい');
   return out.slice(0,6);
 }
 function applyFarewell(S){
@@ -1259,8 +1259,8 @@ function answerReq(S,qi,ci){var q=S.reqs[qi],t=S.tr[q.id],c=REQS[q.type].ch[ci],
   normT(t);q.done=true;q.ci=ci;q.res=(extra||REQREPLY[t.temper])+(sfx?' '+sfx:'');q.delta=deltaOf(b,t);logT(S,t,'相談に乗った：'+reqText(S,q,c[0]));}
 function endTalk(S){(S.reqs||[]).forEach(function(q){if(!q.done){var t=S.tr[q.id];t.trust-=4;normT(t);logT(S,t,'相談に来たが、話を聞いてもらえなかった');}});}
 /* 発表のひと言 */
-var PASSLINE={sunao:['「ありがとうございます！」と深く頭を下げた','泣きながら何度もうなずいた'],makezu:['「まだ通過点です」と言ったが、声が震えていた','小さく拳を握った'],sensai:['しばらく声が出ず、両手で顔をおおった','信じられないという顔で立ち尽くした']};
-function lastWords(t){if(t.trust>=60)return '「ここまで来られたのは、プロデューサーのおかげです」';return {sunao:'「悔しいけど、楽しかったです」',makezu:'「次に会うときは、もっと上にいます」',sensai:'「……ありがとうございました」と、最後まで笑顔でいようとした'}[t.temper];}
+var PASSLINE={sunao:['「ありがとうございます！」と深く頭を下げた','泣きながら何度もうなずいた','隣の子と抱き合って跳びはねた','「家族に早く伝えたいです」と笑った'],makezu:['「まだ通過点です」と言ったが、声が震えていた','小さく拳を握った','「当然です」と言いかけて、涙がこぼれた','落ちた子のほうを見て、黙って頭を下げた'],sensai:['しばらく声が出ず、両手で顔をおおった','信じられないという顔で立ち尽くした','名前を呼ばれても、しばらく動けなかった','「夢じゃないですよね」と何度も確かめた']};
+function lastWords(t){if(t.trust>=60)return {sunao:['「ここまで来られたのは、プロデューサーのおかげです」','「最後まで見てくれて、ありがとうございました」'],makezu:['「次は、もっと上で会いましょう」','「見ててくれたこと、忘れません」'],sensai:['「ここに来られて、本当によかったです」','「声をかけてもらえたから、最後まで立てました」']}[t.temper][t.id%2];return {sunao:'「悔しいけど、楽しかったです」',makezu:'「次に会うときは、もっと上にいます」',sensai:'「……ありがとうございました」と、最後まで笑顔でいようとした'}[t.temper];}
 var FWREPLY=[{sunao:'「はい。胸を張って帰ります」',makezu:'「誇れるように、ここからまた積みます」',sensai:'涙をこらえて、深く頭を下げた'},{sunao:'「忘れないように、書いておきます」',makezu:'「次までに全部直してきます」',sensai:'何度もうなずきながら、手帳に書き込んだ'},{sunao:'「約束ですよ」と笑った',makezu:'「そのときは、こっちから会いに行きます」',sensai:'「……また、会えますか」と小さく聞いた'}];
 
 /* ---------- ステージ本番（v5） ---------- */
@@ -1630,7 +1630,8 @@ var BG_NAME={start:'きっかけ',past:'学生時代',family:'家族',skill:'特
 function initBg(t){t.bg={start:pick(BG_START),past:pick(BG_PAST),family:pick(BG_FAMILY),skill:pick(BG_SKILL),habit:pick(BG_HABIT)};t.bgRev={};t.dream=pick(DREAMS);}
 var DREAMS=['地元の大きな会場でライブをする','家族を一番前の席に招待する','自分で作った曲を歌う','海外でステージに立つ','誰かの「元気の出る曲」を歌う','メンバー全員で旅行に行く','ドラマの主題歌を歌う','おばあちゃんの町でライブをする','ファンの名前を全部覚える','10年後もこのメンバーで歌う'];
 var CAMP_LINES=['「合宿のごはん、量が多くてびっくりしました」','「夜、同室の子と振りを確認するのが日課です」','「朝のストレッチ、まだ体が固くて」','「洗濯の順番待ちで、いつも誰かと話しちゃうんです」','「消灯のあと、こっそり歌詞を覚えてます」','「食堂のカレーの日が、いちばんの楽しみです」','「鏡の前に立つ時間が、ここに来て倍になりました」','「シャワーの時間が短くて、毎日戦いです」','「休みの日は、みんなで近くの公園に行きました」','「ここに来てから、早寝早起きになりました」','「合宿所の階段、毎日上るだけでいい運動です」','「売店のアイスを、先生に内緒で分け合いました」'];
-function stageTalk(t){var h=t.hist.length?t.hist[t.hist.length-1].sc:null;if(h==null)return null;
+function stageTalk(t){var lh=t.hist.length?t.hist[t.hist.length-1]:null,h=lh?lh.sc:null;if(h==null)return null;
+  if(lh.rest)return {sunao:'「この前は休んでしまって……次は必ず出ます」',makezu:'「客席から見てるだけなのが、いちばん悔しかったです」',sensai:'「休んでいるあいだ、置いていかれる気がして怖かったです」'}[t.temper];
   if(h>=85)return {sunao:'「この前のステージ、自分でも初めて手応えがありました」',makezu:'「この前の点数、まだ上があると思ってます」',sensai:'「この前のステージ……良かったって言ってもらえて、まだ信じられないです」'}[t.temper];
   if(h>=60)return {sunao:'「この前は悪くなかったけど、もっとできた気がします」',makezu:'「真ん中くらいじゃ満足できません」',sensai:'「この前のステージ、途中で一瞬、頭が真っ白になりました」'}[t.temper];
   return {sunao:'「この前のステージ、悔しくて眠れませんでした」',makezu:'「あの点数は、次で必ず取り返します」',sensai:'「この前のステージのこと、まだ思い出すと苦しいです」'}[t.temper];}
@@ -1788,7 +1789,7 @@ var EVX=[
  {id:'circle',title:'円陣の声出し',minR:2,t:'本番前の円陣で、声出しを誰がやるかで静かになった。{A}が手を挙げかけている。',ch:[
   ['{A}に任せる','f',pConf(.6),{conf:8,all:{conf:2}},'力強い声に、全員の顔つきが変わった。',{conf:-6},'声が裏返り、少し笑いが起きた。'],
   ['プロデューサーがやる','s',1,{all:{conf:1},conf:-1},'短い言葉に、みんなが大きくうなずいた。'],
-  ['いちばん人気の子に任せる','a',1,{pop:2,conf:-3},'{A}は少しだけ残念そうに手を下ろした。']]},
+  ['いちばん人気の子に任せる','a',1,{conf:-3,drama:1},'{A}は少しだけ残念そうに手を下ろした。']]},
  {id:'hometown',title:'地元からの動画',t:'{A}に、地元の友だちから応援の動画メッセージが届いた。',ch:[
   ['すぐ見せる','s',1,{conf:7,fat:-2},'画面の中の友だちに、何度も「ありがとう」と言っていた。'],
   ['本番のあとに見せる','h',1,{conf:3,spec:1},'本番を終えてから見て、泣き笑いになった。'],
@@ -2019,8 +2020,8 @@ function teamChem(S,tm){for(var i=0;i<tm.ids.length;i++)for(var j=i+1;j<tm.ids.l
   if(o.combo)tm.bond+=3;else if(o.c==='g'&&o.v>=40)tm.bond+=1;else if(o.c==='b'&&o.v<60)tm.bond-=1.5;}}
 function teamChemTxt(S,ids){var c=0,g=0,b=0;for(var i=0;i<ids.length;i++)for(var j=i+1;j<ids.length;j++){var o=S.bond&&S.bond[bkey(ids[i],ids[j])];if(!o)continue;if(o.combo)c++;else if(o.cr&&o.c==='g')g++;else if(o.cr&&o.c==='b')b++;}
   return (c?'・コンビ'+c:'')+(g?'・◎'+g:'')+(b?'・△'+b:'');}
-/* 合う声かけ：繊細な子がいれば寄り添う、負けず嫌い同士かライバルならぶつけ合う、ほかはふたりに任せる */
-function bondRight(S,A,B){if(A.temper==='sensai'||B.temper==='sensai')return 's';
+/* 合う声かけ：相性△で絆が浅いうちは寄り添う／相性◎で絆が深く繊細な子がいなければ任せる／繊細な子がいれば寄り添う／負けず嫌い同士かライバルならぶつけ合う／ほかは任せる */
+function bondRight(S,A,B){var o=bondOf(S,A.id,B.id);if(o.c==='b'&&o.v<50)return 's';if(o.c==='g'&&o.v>=60&&A.temper!=='sensai'&&B.temper!=='sensai')return 'f';if(A.temper==='sensai'||B.temper==='sensai')return 's';
   if((A.temper==='makezu'&&B.temper==='makezu')||S.rels.some(function(r){return r.k==='rival'&&((r.a===A.id&&r.b===B.id)||(r.a===B.id&&r.b===A.id));}))return 'h';return 'f';}
 var BOND_HINT={s:'ふたりの信頼が上がる',h:'ふたりの自信が上がる。疲れもたまる',f:'何も使わない。ふたりに任せる'};
 var BOND_SC=[
@@ -2040,7 +2041,7 @@ var BOND_SC=[
 var BOND_MISS=['ただ、ふたりの間には少し距離が残った。','ふたりは礼を言ったが、どこか噛み合わない顔をしていた。','ふたりの気持ちとは、少し違ったようだ。','ふたりは黙ってしまった。言葉がうまく届かなかったらしい。'];
 EV.bond={title:'ふたりの物語',
   text:function(S,e,A,B){var o=bondOf(S,A.id,B.id),sc=BOND_SC[e.st][e.v];return xText(sc.t,A,B);},
-  note:function(S,e,A,B){var o=bondOf(S,A.id,B.id);return 'ふたりの物語 '+(e.st+1)+'/3・絆'+Math.round(o.v)+'。合う声かけは、ふたりの気質しだい（'+A.giv+'＝'+(A.temperRev?TEMPER[A.temper]:'？')+'・'+B.giv+'＝'+(B.temperRev?TEMPER[B.temper]:'？')+'）。';},
+  note:function(S,e,A,B){var o=bondOf(S,A.id,B.id);return 'ふたりの物語 '+(e.st+1)+'/3・絆'+Math.round(o.v)+'。合う声かけは、ふたりの気質・相性・絆の深さしだい（'+A.giv+'＝'+(A.temperRev?TEMPER[A.temper]:'？')+'・'+B.giv+'＝'+(B.temperRev?TEMPER[B.temper]:'？')+'）。';},
   tones:function(S,e,A,B){var o=bondOf(S,A.id,B.id);return BOND_SC[e.st][e.v].ch.map(function(c){return c[1];}).join('');},
   choices:function(S,e,A,B){var o=bondOf(S,A.id,B.id);return BOND_SC[e.st][e.v].ch.map(function(c){return [xText(c[0],A,B),BOND_HINT[c[1]]];});},
   apply:function(S,e,i,A,B){var o=bondOf(S,A.id,B.id),c=BOND_SC[e.st][e.v].ch[i],ok=c[1]===bondRight(S,A,B);o.cr=1;
@@ -2291,6 +2292,7 @@ function vJudge(){
   var cap=capOf(S),mn=f.fin?5:Math.min(MIN_PASS,A.length);
   var h='<h2>'+(f.fin?'デビューメンバーを選ぶ':'合否を決める')+'</h2><p class="small muted">'+(f.fin?'5〜'+S.caps.finMax+'人を選びます。人数が多いほどファンは広がりますが、まとまりは難しくなります。':'合格にできるのは <b>'+cap+'人まで</b>。')+'世間の人気は決定には関係しませんが、人気の高い子を落とすと荒れます。</p>';
   if(!f.fin&&!S.seatUsed)h+='<div class="seat"><div><b>最後の一枠</b><span class="small muted">制作費'+SEAT_COST+'万で合格枠を1つ増やせる（1シーズン1回）。「基準が甘い」と番組への信頼が下がり、次の審査は人数が多いぶん厳しくなる</span></div><button class="btn-s" data-a="seat" '+(S.budget>=SEAT_COST?'':'disabled')+'>使う（残り'+S.budget+'万）</button></div>';
+  if(f.fin){var Dsel=A.filter(function(t){return S.pass[t.id];});h+=forecastBox(Dsel,'このメンバーでデビューしたら');}
   else if(S.seatPlus)h+='<p class="note">最後の一枠を使った。今回は <b>'+capOf(S)+'人まで</b> 合格にできる。</p>';
   if(!S.adUsed&&!f.fin)h+='<p class="note">迷う子がいたら「もう一度だけ見る」（'+adNote()+'）：その子にもう一度だけ歌って踊ってもらい、能力・伸びしろ・気質がすべて分かります。1審査に1回。</p>';
   h+='<div class="card">';
@@ -2604,7 +2606,8 @@ function vProfile(t){
   var rs=relsOf(S,t.id);if(rs.length)h+='<div class="prow"><span class="pl2">関係</span><span>'+rs.map(function(r){var o=S.tr[r.o];return '<button class="rel" data-a="prof" data-id="'+o.id+'">'+esc(o.giv)+'<small>'+r.n+'</small></button>';}).join('')+'</span></div>';
   var al=S.album.filter(function(x){return x.id===t.id;});
   if(al.length)h+='<div class="prow"><span class="pl2">思い出</span><span>'+al.map(function(x){return '<div class="memo"><b>'+esc(x.title)+'</b> <span class="muted small">'+(x.r?'第'+x.r+'審査':'')+'</span><br>'+esc(x.t)+'</div>';}).join('')+'</span></div>';
-  if(t.log&&t.log.length)h+='<div class="prow"><span class="pl2">やりとり</span><span><ul class="tight log">'+t.log.slice().reverse().slice(0,12).map(function(l){return '<li><span class="muted">'+(l.r?'第'+l.r+'審査':'書類')+'</span> '+esc(l.t)+'</li>';}).join('')+'</ul></span></div>';
+  if(t.log&&t.log.length){var LG=t.log.slice().reverse().slice(0,20),li=function(l){return '<li><span class="muted">'+(l.r?'第'+l.r+'審査':'書類')+'</span> '+esc(l.t)+'</li>';};
+    h+='<div class="prow"><span class="pl2">やりとり</span><span><ul class="tight log">'+LG.slice(0,4).map(li).join('')+'</ul>'+(LG.length>4?'<details><summary class="small">前のやりとり（'+(LG.length-4)+'件）</summary><ul class="tight log">'+LG.slice(4).map(li).join('')+'</ul></details>':'')+'</span></div>';}
   if(t.voices&&t.voices.length)h+='<div class="prow"><span class="pl2">世間の声</span><span>'+t.voices.slice().reverse().map(function(v){return '<div class="cmt">'+esc(v)+'</div>';}).join('')+'</span></div>';
   h+='<div class="prow"><span class="pl2">いまの値</span><span>世間の人気 '+Math.round(t.pop)+'・自信 '+Math.round(t.conf)+'・信頼 '+Math.round(t.trust)+'・疲れ '+Math.round(t.fat)+'</span></div>';
   return h+'</div></div>';
@@ -2657,10 +2660,10 @@ window.hikariAdResult=function(ok,msg){var f=pendingAd;pendingAd=null;ui.adWait=
 window.hikariSetApp=function(o){if(!APP)return;for(var k in o)if(k!=='msg')APP[k]=o[k];if(o.msg)toast(o.msg);render();};
 function toast(m){ui.toast=m;clearTimeout(ui.toastT);ui.toastT=setTimeout(function(){ui.toast=null;render();},3500);}
 
-function forecastBox(){var E=forecast(S);if(!E)return '';var ks=['song','coh','fanScore','show'],low=ks.slice().sort(function(a,b){return E[a]-E[b];})[0];
-  return '<div class="card fcst"><div class="fh"><span>いまデビューしたら</span><b class="gr g-'+E.grade+'">'+E.grade+'</b><small>'+Math.round(E.total)+'点</small></div>'+
+function forecastBox(D,ttl){var E=D?(D.length>=3?finalEval(S,D):null):forecast(S);if(!E)return '';var ks=['song','coh','fanScore','show'],low=ks.slice().sort(function(a,b){return E[a]-E[b];})[0];
+  return '<div class="card fcst"><div class="fh"><span>'+(ttl||'いまデビューしたら')+'</span><b class="gr g-'+E.grade+'">'+E.grade+'</b><small>'+Math.round(E.total)+'点</small></div>'+
     '<div class="fbars">'+ks.map(function(k){return '<div><span>'+EVAL_NAME[k]+'</span><i><b style="width:'+Math.round(E[k])+'%"'+(k===low?' class="low"':'')+'></b></i></div>';}).join('')+'</div>'+
-    '<div class="small muted">いまの実力上位6人で、今日デビューした場合の評価。残りの審査とデビュー後の活動で、ここから上げられる（残った制作費の宣伝分は入れていない）。いちばん足りないのは「'+EVAL_NAME[low]+'」。'+EVAL_TIP[low]+'。</div></div>';}
+    '<div class="small muted">'+(D?'いま選んでいる'+D.length+'人でデビューした場合の見込み（デビュー後1か月の活動の前）。':'いまの実力上位6人で、今日デビューした場合の評価。')+'残りの審査とデビュー後の活動で、ここから上げられる（残った制作費の宣伝分は入れていない）。いちばん足りないのは「'+EVAL_NAME[low]+'」。'+EVAL_TIP[low]+'。</div></div>';}
 
 
 function bondRow(t){var L=bondsOf(S,t.id).filter(function(x){var o=S.tr[x.o];return o.status==='alive'||o.status==='debut';}).filter(function(x){return x.b.v>0||x.b.combo;}).sort(function(a,b){return (b.b.combo-a.b.combo)||b.b.v-a.b.v;}).slice(0,6);
