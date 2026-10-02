@@ -693,6 +693,7 @@ def _build_stock_pages(days: list[dict], profiles: dict[str, dict] | None = None
                 industry=((profiles or {}).get(stock["code"]) or {}).get("industry", ""),
                 same_industry=same_industry(stock["code"], stocks, profiles or {}),
                 summary=stock_summary(stock, len(days)),
+                day_count=len(days),
                 # 一緒に載った銘柄にもページがあれば繋ぐ。**素のテキストで
                 # 並べると、行き先があるのに回遊が途切れる。**
                 together=[
@@ -947,6 +948,10 @@ def _build_limit_page(days: list[dict], stock_pages: set[str], kind: str,
             market_total=market_total,
             industry_total=industry_total,
             recorded_count=len(recorded_codes),
+            # 説明文で使う。**期間全体ののべ件数**（記録ぶんだけの
+            # recorded_count と取り違えると、21営業日の数のように見えてしまう）。
+            total_count=history["total"],
+            stock_count=len({row["code"] for d in history["per_day"] for row in d["rows"]}),
             followup=followup,
             trend_chart=charts.columns(
                 [{"label": format_date_short_ja(d["rec_date"])[:-3], "value": d["count"]}
@@ -1117,6 +1122,7 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                 canonical=canonical_url(out_name),
                 rec_date=latest["rec_date"],
                 rec_date_ja=format_date_ja(latest["rec_date"]),
+                rec_date_short_ja=format_date_short_ja(latest["rec_date"]),
                 updated_line=updated_line(latest["rec_date"]),
                 rows=rows,
                 notes=flag_notes(rows),
