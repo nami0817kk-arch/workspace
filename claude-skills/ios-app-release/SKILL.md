@@ -108,7 +108,11 @@ https://github.com/nami0817kk-arch/workspace/settings/secrets/actions → **New 
 - **robots.txt と 404.html は必ず実体として置く**。無いと Cloudflare Pages は無いパスにトップページの HTML を返し、`/robots.txt` が「200 で中身が HTML」になる。
   AdMob のクローラは robots.txt を読めず、**app-ads.txt の確認が止まる**（サカマネ・護送ボートの両方で踏んだ。docs/app-pitfalls.md 項目8）。
   robots.txt は `User-agent: *` / `Allow: /` に加え、AdMob のヘルプの指示どおり `User-agent: Google-adstxt` / `Disallow:` を入れる
-- 置いたら `curl -s -o /dev/null -w '%{content_type}' https://<host>/robots.txt` が text/plain か、無いパスが 404 かを確かめる（200 だけでは足りない）
+- **点検は仕組みで止める（手で確かめるだけにしない）**:
+  - 公開後は `scripts/check-app-site.sh <host> <pub-id>` が外から確かめる（robots.txt がテキストか・app-ads.txt の行・無いパスが 404 か）。外れたら exit 1
+  - goso-boat では `<app>-site.yml`（公開の直後）と `<app>-ios-release.yml`（ビルドの前）の両方から呼んでいる。**新しいアプリでもこの2か所に写す**
+  - 置き忘れは `test/site_files_test.dart`（goso-boat のものを写す）がテストで止める
+- 既存のアプリのサイトを確かめるときも `bash scripts/check-app-site.sh <host>` を回す（2026-10-02 に soccer-career で同じ穴を見つけた）
 - `.github/workflows/<app>-site.yml` で Cloudflare Pages `<app>` プロジェクトへ（goso-boat-site.yml を写す）。最後に curl で開けるか確かめる
 - **app-ads.txt はストアの「マーケティング URL」のホスト直下**に置く（`https://<ホスト>/app-ads.txt`）。AdMob はそこを読みに来る【公式】
 - privacy には: AdMob が集める情報（IP・端末ID・広告の表示と操作・性能とクラッシュ）、ATT を使わず IDFA を渡さない、

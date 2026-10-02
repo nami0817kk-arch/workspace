@@ -145,6 +145,8 @@ jobs:
             grep -q "護送ボート" <<<"$body" \
               || { echo "::error::$LEGAL_BASE_URL/$page.html の中身が護送ボートのページではありません。"; exit 1; }
           done
+          # AdMob が app-ads.txt を確かめられる状態か（robots.txt が HTML だと「アプリを確認」が通らない。2026-10-02）
+          bash ../../scripts/check-app-site.sh "${LEGAL_BASE_URL#https://}" pub-6409014819339195
 
       - name: Import signing certificate into a temporary keychain
         env:
