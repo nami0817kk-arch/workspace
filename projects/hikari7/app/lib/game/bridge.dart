@@ -37,7 +37,7 @@ String injectBoot(String html, Map<String, Object?> boot) {
 
 /// ゲーム本体から届く頼みごとを受けて、広告・課金・保存・外部リンクにつなぐ。
 ///
-/// 届く形は JSON 1つ: `{"type": "reward"|"between"|"store"|"buy"|"restore"|"open"|"licenses"|"haptic", ...}`。
+/// 届く形は JSON 1つ: `{"type": "reward"|"between"|"store"|"buy"|"restore"|"open"|"licenses"|"haptic"|"review"|"theme", ...}`。
 /// 返事は JS の関数を呼んで返す（`hikariAdResult` / `hikariSetApp`）。
 class GameBridge {
   GameBridge({
@@ -47,6 +47,8 @@ class GameBridge {
     required this.openUrl,
     required this.showLicenses,
     this.haptic,
+    this.review,
+    this.theme,
   });
 
   final Monetization money;
@@ -57,6 +59,12 @@ class GameBridge {
 
   /// 振動（`light` / `success` / `warn`）。ゲームの設定で切ってあれば、そもそも届かない
   final void Function(String kind)? haptic;
+
+  /// レビューのお願い（出すかどうか・回数は iOS が決める）
+  final Future<void> Function()? review;
+
+  /// 画面の明るさ（上の帯の文字色を合わせる）
+  final void Function(bool dark)? theme;
 
   bool _rewardBusy = false;
 
@@ -90,6 +98,11 @@ class GameBridge {
       case 'haptic':
         final k = m['k'];
         if (k is String && const {'light', 'success', 'warn'}.contains(k)) haptic?.call(k);
+      case 'review':
+        await review?.call();
+      case 'theme':
+        final d = m['dark'];
+        if (d is bool) theme?.call(d);
     }
   }
 

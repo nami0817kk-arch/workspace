@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -22,6 +23,8 @@ class _GameScreenState extends State<GameScreen> {
   late final WebViewController _web;
   late final GameBridge _bridge;
   bool _loaded = false;
+  bool? _dark;
+  AppLifecycleListener? _life;
 
   @override
   void initState() {
@@ -66,13 +69,28 @@ class _GameScreenState extends State<GameScreen> {
         'warn' => HapticFeedback.heavyImpact(),
         _ => HapticFeedback.selectionClick(),
       },
+      review: () async {
+        try {
+          final r = InAppReview.instance;
+          if (await r.isAvailable()) await r.requestReview();
+        } catch (_) {}
+      },
+      theme: (d) {
+        if (mounted) setState(() => _dark = d);
+      },
     );
+    // 裏に回る直前に、ゲームの進み具合をその場で保存させる
+    _life = AppLifecycleListener(onInactive: _pause, onHide: _pause);
     // 購入が後から届いた（家族の承認・別の端末・返金）ときも、ゲーム本体に伝える
     widget.money.addListener(_onMoney);
     unawaited(_load());
   }
 
   void _onMoney() => unawaited(_bridge.pushApp());
+
+  void _pause() {
+    if (_loaded) unawaited(_web.runJavaScript('window.hikariPause&&hikariPause()').catchError((_) {}));
+  }
 
   Future<void> _load() async {
     final html = await rootBundle.loadString('assets/web/index.html');
@@ -83,24 +101,43 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void dispose() {
     widget.money.removeListener(_onMoney);
+    _life?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final dark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
+    final dark = _dark ?? MediaQuery.platformBrightnessOf(context) == Brightness.dark;
     final bg = dark ? const Color(0xFF14111C) : const Color(0xFFF6F3FA);
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      child: Scaffold(
       backgroundColor: bg,
       body: SafeArea(
         bottom: false,
         child: Stack(
           children: [
             WebViewWidget(controller: _web),
-            if (!_loaded) const Center(child: CircularProgressIndicator()),
+            // 起動画面：ページが出るまでの間、題字を見せる
+            if (!_loaded)
+              Container(
+                color: const Color(0xFF171030),
+                alignment: Alignment.center,
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('ひかりの', style: TextStyle(color: Color(0xFFE9BA4B), fontSize: 16, fontWeight: FontWeight.w800, letterSpacing: 4)),
+                    SizedBox(height: 4),
+                    Text('七席', style: TextStyle(color: Colors.white, fontSize: 44, fontWeight: FontWeight.w900, letterSpacing: 6)),
+                    SizedBox(height: 28),
+                    SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: Color(0xFFE9BA4B))),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
+    ),
     );
   }
 }
