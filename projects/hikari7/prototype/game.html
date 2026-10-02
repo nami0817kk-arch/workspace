@@ -762,7 +762,7 @@ function runStage(S){
     if(!t.rest&&!t.inj&&t.fat>=(hasT(t,'fragile')?70:80)&&R()<(t.fat-75+(hasT(t,'fragile')?15:0))/60){t.inj=true;S.hurt.push(t.id);logT(S,t,'疲れがたまりきった状態で本番に出て、足を痛めた');S.notes.push([t.giv+hon(S)+'、明らかに無理してた。休ませてあげて',1]);S.showTrust=clamp(S.showTrust-2,0,100);}
     var pos=S.lesson.pos[t.id]||defaultPos(t);
     var r=t.rest?{p:(t.lastP>0?t.lastP*.85:45),br:[]}:perfOf(t,teamFmt(S,t,f),pos);
-    if(P.acts.stage)r.p*=1.04; if(isCenter(S,t.id)&&!t.rest)r.p*=1.03; if(!t.rest)r.p*=traitPerf(S,t,f)*comboMul(S,t); if(f.live&&!t.rest)r.p*=0.92+(t.conf-50)/300;
+    if(isCenter(S,t.id)&&!t.rest)r.p*=1.03; if(!t.rest)r.p*=traitPerf(S,t,f)*comboMul(S,t); if(f.live&&!t.rest)r.p*=0.92+(t.conf-50)/300;
     res[t.id]={raw:r.p,br:r.br,pos:pos,rest:t.rest};
     if(!t.rest){revealFor(t,teamFmt(S,t,f),pos);t.fat+=8*(1.3-t.st.s/100)*(hasT(t,'stamina')?.7:1);}
   });
@@ -793,7 +793,7 @@ function runStage(S){
   A.forEach(function(t){var r=res[t.id];r.sc=Math.round(clamp(100-(mx-r.raw)*1.6,5,100));t.lastP=r.sc;t.hist.push({r:S.rnd,sc:r.sc,rest:!!r.rest});});
   var byP=A.slice().sort(function(a,b){return res[b.id].sc-res[a.id].sc;});
   var pr0=popRankMap(S);
-  byP.forEach(function(t,i){var d=i<3?5*t.charm:i<A.length/3?3*t.charm:i>=A.length*2/3?-1.5:0;if(res[t.id].rest)d=0;if(f.live)d*=1.8;if(d>0&&hasT(t,'camera'))d*=1.3;if(hasT(t,'grit')&&i>=A.length/2&&!res[t.id].rest){t.conf+=5;}res[t.id].dPop=d;t.pop=clamp(t.pop+d,0,100);});
+  byP.forEach(function(t,i){var d=i<3?5*t.charm:i<A.length/3?3*t.charm:i>=A.length*2/3?-1.5:0;if(res[t.id].rest)d=0;if(f.live)d*=1.8;if(P.acts&&P.acts.stage&&d>0)d*=1.25;if(d>0&&hasT(t,'camera'))d*=1.3;if(hasT(t,'grit')&&i>=A.length/2&&!res[t.id].rest){t.conf+=5;}res[t.id].dPop=d;t.pop=clamp(t.pop+d,0,100);});
   if(f.fat)A.forEach(function(t){if(t.rest)return;t.fat+=f.fat;t.st.s=Math.min(99,t.st.s+3*t.pot);t.rev.s=2;});
   var pr1=popRankMap(S);
   A.forEach(function(t){res[t.id].pr0=pr0[t.id];res[t.id].pr1=pr1[t.id];});
@@ -1057,7 +1057,7 @@ function arcText(S,t,s){var p=t.arc&&t.arc.p!=null?S.tr[t.arc.p]:null;
 function applyFx(S,t,fx){
   var key=t.spec==='t'?'e':t.spec;
   if(fx.conf)t.conf+=fx.conf; if(fx.trust)t.trust+=fx.trust*(fx.trust>0&&hasT(t,'charmer')?1.3:1); if(fx.fat)t.fat=Math.max(0,t.fat+fx.fat);
-  if(fx.pop)t.pop+=fx.pop*t.charm; if(fx.drama)S.wDrama+=fx.drama;
+  if(fx.pop)t.pop+=fx.pop*t.charm; if(fx.drama)S.wDrama+=fx.drama; if(fx.showTrust)S.showTrust=clamp(S.showTrust+fx.showTrust,0,100); if(fx.cmp&&R()<.4)t.complacent=true;
   if(fx.spec){t.st[key]=Math.min(99,t.st[key]+fx.spec*t.pot);t.rev[key]=2;}
   if(fx.up){t.st[fx.up[0]]=Math.min(99,t.st[fx.up[0]]+fx.up[1]*t.pot);t.rev[fx.up[0]]=2;}
   var p=t.arc&&t.arc.p!=null?S.tr[t.arc.p]:null;
@@ -1096,7 +1096,7 @@ var ACTS=[
   {k:'coach',n:'特別講師を呼ぶ',cost:40,d:'選んだ能力を全員ぶん底上げする'},
   {k:'meal',n:'差し入れと食事会',cost:15,d:'全員の自信が上がり、疲れが少し抜ける'},
   {k:'vlog',n:'企画動画を撮る',cost:25,d:'選んだ1人の人気が上がる'},
-  {k:'stage',n:'衣装と演出にこだわる',cost:30,d:'全員のステージが少し良くなり、視聴率が上がる'},
+  {k:'stage',n:'衣装と演出にこだわる',cost:30,d:'全員の自信が上がり、ステージで人気が伸びやすくなる。視聴率も上がる'},
   {k:'special',n:'特番を組む',cost:50,d:'視聴率が大きく上がる。全員に少し人気、少し疲れ',from:2,to:4},
   {k:'off',n:'休みの日を作る',cost:0,d:'全員の疲れが大きく抜ける。練習枠が2つ減る'}
 ];
@@ -1107,6 +1107,7 @@ function applyPlan(S){
   S.budget-=actCost(S);
   if(P.acts.coach)A.forEach(function(t){t.st[P.coachK]=Math.min(99,t.st[P.coachK]+2.5*t.pot);});
   if(P.acts.meal)A.forEach(function(t){t.conf+=5;t.fat=Math.max(0,t.fat-8);});
+  if(P.acts.stage)A.forEach(function(t){t.conf+=4;normT(t);});
   if(P.acts.vlog&&P.vlogId!=null){var v=S.tr[P.vlogId];v.pop+=8*v.charm;v.conf+=3;S.wDrama+=.5;logT(S,v,'企画動画の主役になった');S.notes.push([v.giv+hon(S)+'の企画動画、何回も見てる',0]);}
   if(P.acts.special)A.forEach(function(t){t.pop+=2;t.fat+=6;});
   if(P.acts.off)A.forEach(function(t){t.fat=Math.max(0,t.fat-25);});
@@ -1348,11 +1349,11 @@ function hintOf(fx,tone){var p=[];
   if(fx.conf)p.push(['自信'+(fx.conf>0?'↑':'↓'),fx.conf>0]);if(fx.trust)p.push(['信頼'+(fx.trust>0?'↑':'↓'),fx.trust>0]);
   if(fx.pop)p.push(['人気'+(fx.pop>0?'↑':'↓'),fx.pop>0]);if(fx.fat)p.push([fx.fat>0?'疲れる':'疲れが抜ける',fx.fat<0]);
   if(fx.dull)p.push(['勘が鈍る',0]);if(fx.drama)p.push(['話題になる',1]);if(fx.ppop)p.push(['相手の人気↑',1]);if(fx.ptrust)p.push(['相手の信頼↑',1]);
-  if(fx.jeal)p.push(['ほかの子が気にする',0]);if(fx.risk)p.push(['けがの恐れ',0]);
+  if(fx.jeal)p.push(['ほかの子が気にする',0]);if(fx.risk)p.push(['けがの恐れ',0]);if(fx.cmp)p.push(['油断するかも',0]);if(fx.showTrust)p.push(['番組への信頼'+(fx.showTrust>0?'↑':'↓'),fx.showTrust>0]);
   return {tone:tone,parts:p};}
 /* 選択肢の一覧を、語りかけの種類と「上がるもの・下がるもの」で出す */
 function arcChoices(S,t){var sc=arcScene(S,t),tones=ARC_TONE[t.arc.k][Math.min(t.arc.step,2)];
-  return sc.ch.map(function(c,i){return {label:arcText(S,t,c[0]),hint:hintOf(withCost(c[2]),tones.charAt(i))};});}
+  return sc.ch.map(function(c,i){var hn=hintOf(withCost(c[2]),tones.charAt(i));hn.parts=hn.parts.concat(toneParts(t,tones.charAt(i)));return {label:arcText(S,t,c[0]),hint:hn};});}
 
 
 /* ---------- v9：依頼・局の目標・プロデューサー歴 ---------- */
@@ -1901,7 +1902,7 @@ function xApply(S,t,fx,B){if(!fx)return;var b={};for(var k in fx)if(['all','pb',
   applyFx(S,t,b);
   if(fx.budget)S.budget=Math.max(0,S.budget+fx.budget);
   if(fx.showTrust)S.showTrust=clamp(S.showTrust+fx.showTrust,0,100);
-  if(fx.inj)t.inj=true;if(fx.cmp&&t.temper==='makezu')t.complacent=true;
+  if(fx.inj)t.inj=true;if(fx.cmp&&(t.temper==='makezu'||R()<.4))t.complacent=true;
   if(fx.all)alive(S).forEach(function(o){if(o.id===t.id||(B&&o.id===B.id))return;if(fx.all.conf)o.conf+=fx.all.conf;if(fx.all.trust)o.trust+=fx.all.trust;if(fx.all.fat)o.fat=Math.max(0,o.fat+fx.all.fat);normT(o);});
   if(fx.pb&&B)xApply(S,B,fx.pb);
   normT(t);}
@@ -1912,7 +1913,8 @@ function xChoose(S,c,A,B){var p=xP(c,A,B,S),ok=p>=1||R()<p,fx=ok?c[3]:(c[5]||c[3
   return (p<1?(ok?'【成功】':'【失敗】'):'')+xText(txt,A,B)+(sfx?' '+sfx:'')+tm2;}
 function xHint(c,A,B,S){var fx=c[3],p=xP(c,A,B,S),f2={};for(var k in fx)f2[k]=fx[k];var down=f2.spec<0;if(down)delete f2.spec;var parts=hintOf(f2,c[1]).parts.slice();if(down)parts.push(['得意↓',0]);
   if(fx.budget)parts.push(['制作費'+fx.budget+'万',0]);if(fx.all)parts.push([fx.all.conf<0||fx.all.trust<0?'ほかの子が気にする':'ほかの子にも効く',!(fx.all.conf<0||fx.all.trust<0)]);
-  if(fx.showTrust)parts.push(['番組への信頼'+(fx.showTrust>0?'↑':'↓'),fx.showTrust>0]);if(fx.pb)parts.push(['相手にも効く',1]);
+  if(fx.pb)parts.push(['相手にも効く',1]);
+  parts=parts.concat(toneParts(A,c[1]));
   if(p<1){parts.unshift(['成功率 約'+Math.round(p*20)*5+'%','rate']);var ff=c[5];if(ff){var fp=hintOf(ff,'').parts.filter(function(x){return !x[1];}).map(function(x){return x[0];});if(ff.inj)fp.push('けが');if(ff.budget)fp.push('制作費'+ff.budget+'万');if(ff.showTrust<0)fp.push('番組への信頼↓');if(fp.length)parts.push(['失敗すると '+fp.join('・'),0]);}}return parts;}
 /* 出来事の山から1つ引く（1シーズンに同じものは1回まで） */
 function genX(S,A0,w,usedIds){if(!S.seenX)S.seenX=[];
@@ -2124,6 +2126,29 @@ function makeFuture(S,E){var used=[],P=S.prep||{names:['（名前なし）'],nam
   return {g:P.names[P.name],songs:[s1,s2,s3],years:Y,members:M,grade:E.grade};}
 function startEnding(S){S.future=makeFuture(S,finalEval(S));S.ending=true;}
 
+
+/* ---------- 代償のない選択肢に、語りかけの種類ごとの代償を付ける（2026-10-02） ----------
+   決まり「選択肢には必ず代償か、裏目に出る可能性を持たせる」。成功率が100%で、下がるものも費用も無い選択肢に、
+   寄り添う＝油断することがある／厳しく＝疲れる／任せる＝少し寂しがる（信頼が上がる選択なら疲れる）／放送で見せる＝番組への信頼↓ を足す */
+function fxHasCost(fx){if(!fx)return false;for(var k in fx){var v=fx[k];
+  if(k==='fat'){if(v>0)return true;continue;}
+  if(k==='budget'||k==='inj'||k==='cmp'||k==='dull'||k==='jeal'||k==='risk'){if(k!=='budget'||v<0)return true;continue;}
+  if(k==='all'||k==='pb'){if(fxHasCost(v))return true;for(var q in v)if(q!=='fat'&&v[q]<0)return true;continue;}
+  if(k==='up')continue;if(typeof v==='number'&&v<0)return true;}return false;}
+function toneCost(fx,tone){if(fxHasCost(fx))return;
+  if(tone==='s')fx.cmp=1;else if(tone==='h')fx.fat=(fx.fat||0)+4;else if(tone==='a'){if(fx.showTrust>0)fx.budget=(fx.budget||0)-5;else fx.showTrust=(fx.showTrust||0)-1;}
+  else if(tone==='f'){if(fx.trust>0)fx.fat=(fx.fat||0)+3;else fx.trust=(fx.trust||0)-2;}}
+(function(){
+  EVX.forEach(function(x){x.ch.forEach(function(c){if(c[2]===1)toneCost(c[3],c[1]);});});
+  OUTS.forEach(function(o){o.sc.forEach(function(sc){sc.ch.forEach(function(c){if(c[2]===1)toneCost(c[3],c[1]);});});});
+  for(var k in ARCS)ARCS[k].sc.forEach(function(sc,si){sc.ch.forEach(function(c,i){if(!fxHasCost(withCost(c[2])))toneCost(c[2],ARC_TONE[k][si].charAt(i));});});
+  for(var q in REQS)REQS[q].ch.forEach(function(c,i){if(!c[3]&&!fxHasCost(withCost(c[2])))toneCost(c[2],REQ_TONE[q].charAt(i));});
+})();
+/* 気質が分かっている子には、語りかけの種類による効き方も札に出す */
+function toneParts(t,tone){if(!t||!t.temperRev||!TONE_MOD[tone])return [];var fx=TONE_MOD[tone][t.temper][0],p=[];
+  if(fx.conf)p.push(['気質で 自信'+(fx.conf>0?'↑':'↓'),fx.conf>0]);if(fx.trust)p.push(['気質で 信頼'+(fx.trust>0?'↑':'↓'),fx.trust>0]);
+  if(fx.spec)p.push(['気質で 得意↑',1]);if(fx.cmp)p.push(['気質で 油断しやすい',0]);return p;}
+
 /*ENGINE-END*/
 
 /* ================= 画面 ================= */
@@ -2235,7 +2260,7 @@ function vEvent(){
   if(S.evRes){h+='<div class="toast">'+esc(S.evRes)+(S.evDelta||[]).map(function(x){return '<div class="small" style="margin-top:6px;font-weight:700">'+esc(x[0])+'</div>'+deltaHtml(x[1]);}).join('')+'</div></div><button class="btn" data-a="evnext">'+(S.evIdx+1<S.events.length?'次の出来事へ':'ステージへ')+'</button>';}
   else{if(e.type==='arc')arcChoices(S,A).forEach(function(c,i){h+=choiceBtn('ev',i,c.label,c.hint.tone,partsHtml(c.hint.parts));});
     else if(e.type==='x')EVX_BY[e.xid].ch.forEach(function(c,i){h+=choiceBtn('ev',i,xText(c[0],A,B),c[1],partsHtml(xHint(c,A,B,S)),c[3]&&c[3].budget&&S.budget<-c[3].budget?' disabled':'');});
-    else d.choices(S,e,A,B).forEach(function(c,i){h+=choiceBtn('ev',i,c[0],(d.tones?d.tones(S,e,A,B):EV_TONE[e.type]||'').charAt(i),esc(c[1]),costDis(c[0]+c[1]));});h+='</div>'+(A.temperRev?'':TONE_NOTE);}
+    else d.choices(S,e,A,B).forEach(function(c,i){var tn=(d.tones?d.tones(S,e,A,B):EV_TONE[e.type]||'').charAt(i);h+=choiceBtn('ev',i,c[0],tn,esc(c[1])+(e.type==='bond'?'':partsHtml(toneParts(A,tn))),costDis(c[0]+c[1]));});h+='</div>'+(A.temperRev?'':TONE_NOTE);}
   return h;
 }
 function vInterview(){
@@ -2544,7 +2569,7 @@ function vTalk(){
   if(S.reqs.length){h+='<h3>相談に来た子 <span class="small muted">'+(open?'答えないと信頼が下がる・時間は使わない':'')+'</span></h3>';
     S.reqs.forEach(function(q,qi){var t=S.tr[q.id];h+='<div class="card req"><div class="top">'+face(t,'md')+'<div class="who"><div class="nm">'+esc(t.name)+' '+moodTag(t)+'</div><div>'+esc(reqText(S,q,REQS[q.type].t))+'</div></div></div>';
       if(q.done)h+='<div class="toast">'+esc(reqText(S,q,REQS[q.type].ch[q.ci][0]))+' → '+esc(q.res)+deltaHtml(q.delta)+'</div>';
-      else REQS[q.type].ch.forEach(function(c,ci){var hn=hintOf(withCost(c[2]),REQ_TONE[q.type].charAt(ci));h+=choiceBtn('req',ci,reqText(S,q,c[0]),hn.tone,partsHtml(hn.parts)+(c[3]==='center'?'<span class="hp up">次のセンター</span>':''),' data-id="'+qi+'"');});
+      else REQS[q.type].ch.forEach(function(c,ci){var hn=hintOf(withCost(c[2]),REQ_TONE[q.type].charAt(ci));hn.parts=hn.parts.concat(toneParts(t,hn.tone));h+=choiceBtn('req',ci,reqText(S,q,c[0]),hn.tone,partsHtml(hn.parts)+(c[3]==='center'?'<span class="hp up">次のセンター</span>':''),' data-id="'+qi+'"');});
       h+='</div>';});}
   var TF=[['all','すべて'],['story','★ 物語あり'],['new','まだ関わっていない']],tf=ui.tfilter||'all';
   h+='<h3>練習生</h3><div class="chips">'+TF.map(function(x){return '<button class="chip'+(tf===x[0]?' on':'')+'" data-a="tfilter" data-v="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div>';
@@ -2646,7 +2671,7 @@ function vNight(){var q=S.reqs[0],t=S.tr[q.id],N=S.night;
   var h='<div class="stagec night"><div class="ttl">本番の夜</div><div class="who">'+face(t,'xl')+'<div class="pname2">'+esc(t.name)+'</div><div class="song">'+moodTag(t)+' '+TIERN[tierOf(t)]+'</div></div>';
   h+='<p>練習室の明かりを消そうとしたとき、'+esc(t.giv)+'が訪ねてきた。</p><p>'+esc(reqText(S,q,REQS[q.type].t))+'</p>';
   if(N.done){h+='<div class="toast nt">'+(N.skip?'「……分かりました。おやすみなさい」と、少しさみしそうに帰っていった。':esc(reqText(S,q,REQS[q.type].ch[q.ci][0]))+' → '+esc(q.res)+deltaHtml(q.delta))+'</div></div><button class="btn" data-a="nightok">合否を決める</button>';return h;}
-  REQS[q.type].ch.forEach(function(c,ci){var hn=hintOf(withCost(c[2]),REQ_TONE[q.type].charAt(ci));h+=choiceBtn('nightch',ci,reqText(S,q,c[0]),hn.tone,partsHtml(hn.parts));});
+  REQS[q.type].ch.forEach(function(c,ci){var hn=hintOf(withCost(c[2]),REQ_TONE[q.type].charAt(ci));hn.parts=hn.parts.concat(toneParts(S.tr[q.id],hn.tone));h+=choiceBtn('nightch',ci,reqText(S,q,c[0]),hn.tone,partsHtml(hn.parts));});
   h+='<button class="choice" data-a="nightskip"><b>今夜は早く休ませる</b><span class="hint"><span class="hp dn">信頼↓</span></span></button></div>';
   return h;}
 
