@@ -37,7 +37,7 @@ String injectBoot(String html, Map<String, Object?> boot) {
 
 /// ゲーム本体から届く頼みごとを受けて、広告・課金・保存・外部リンクにつなぐ。
 ///
-/// 届く形は JSON 1つ: `{"type": "reward"|"between"|"store"|"buy"|"restore"|"open"|"licenses", ...}`。
+/// 届く形は JSON 1つ: `{"type": "reward"|"between"|"store"|"buy"|"restore"|"open"|"licenses"|"haptic", ...}`。
 /// 返事は JS の関数を呼んで返す（`hikariAdResult` / `hikariSetApp`）。
 class GameBridge {
   GameBridge({
@@ -46,6 +46,7 @@ class GameBridge {
     required this.runJs,
     required this.openUrl,
     required this.showLicenses,
+    this.haptic,
   });
 
   final Monetization money;
@@ -53,6 +54,9 @@ class GameBridge {
   final Future<void> Function(String js) runJs;
   final Future<void> Function(Uri url) openUrl;
   final void Function() showLicenses;
+
+  /// 振動（`light` / `success` / `warn`）。ゲームの設定で切ってあれば、そもそも届かない
+  final void Function(String kind)? haptic;
 
   bool _rewardBusy = false;
 
@@ -83,6 +87,9 @@ class GameBridge {
         if (u != null && u.scheme == 'https' && allowedHosts.contains(u.host)) await openUrl(u);
       case 'licenses':
         showLicenses();
+      case 'haptic':
+        final k = m['k'];
+        if (k is String && const {'light', 'success', 'warn'}.contains(k)) haptic?.call(k);
     }
   }
 

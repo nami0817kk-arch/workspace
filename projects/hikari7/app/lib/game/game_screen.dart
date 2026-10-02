@@ -61,6 +61,11 @@ class _GameScreenState extends State<GameScreen> {
         await launchUrl(u, mode: LaunchMode.externalApplication);
       },
       showLicenses: () => showLicensePage(context: context, applicationName: 'ひかりの七席', applicationLegalese: '© つるはし社'),
+      haptic: (k) => switch (k) {
+        'success' => HapticFeedback.mediumImpact(),
+        'warn' => HapticFeedback.heavyImpact(),
+        _ => HapticFeedback.selectionClick(),
+      },
     );
     // 購入が後から届いた（家族の承認・別の端末・返金）ときも、ゲーム本体に伝える
     widget.money.addListener(_onMoney);

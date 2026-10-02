@@ -187,6 +187,25 @@ void main() {
     expect(opened.map((u) => u.toString()), ['https://hikari7.pages.dev/privacy.html']);
   });
 
+  test('振動は決めた種類だけ伝える', () async {
+    SharedPreferences.setMockInitialValues({});
+    final p = await SharedPreferences.getInstance();
+    final got = <String>[];
+    final b = GameBridge(
+      money: Monetization(p, ads: FakeAds(), store: FakeStore()),
+      store: WebStore(p),
+      runJs: (_) async {},
+      openUrl: (_) async {},
+      showLicenses: () {},
+      haptic: got.add,
+    );
+    await b.handle('{"type":"haptic","k":"success"}');
+    await b.handle('{"type":"haptic","k":"light"}');
+    await b.handle('{"type":"haptic","k":"explode"}');
+    await b.handle('{"type":"haptic"}');
+    expect(got, ['success', 'light']);
+  });
+
   test('アプリに入れるゲーム本体は、外へ何も読みに行かず、つなぎの関数を持っている', () {
     final f = File('assets/web/index.html');
     expect(f.existsSync(), isTrue, reason: 'python tool/build_app_web.py を先に回す');
