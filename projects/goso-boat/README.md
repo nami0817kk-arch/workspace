@@ -10,7 +10,7 @@ App Store「脱獄させるな！護送ボート：川渡りパズル」（App I
 Windows ではホームのパスに日本語が入っていると flutter analyze が通らないので、ASCII のドライブを当ててから実行する。
 
 ```powershell
-subst G: "C:\Users\なみ\dev\workspace"
+subst G: "<workspace を置いた場所>"
 cd G:\projects\goso-boat
 flutter pub get
 flutter analyze
