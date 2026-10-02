@@ -373,6 +373,13 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .appbox{display:flex;flex-direction:column;gap:6px}.applinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .apptoast{position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:70;background:var(--fg);color:var(--bg);border-radius:12px;padding:10px 14px;font-size:14px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .adwait{position:fixed;inset:0;z-index:80;background:rgba(20,12,35,.55);display:flex;align-items:center;justify-content:center}.adwait div{background:var(--card);color:var(--fg);border-radius:14px;padding:14px 20px;font-weight:700}
+/* 背景の絵（Gemini で作ったもの。組み立てのときに埋め込む）。上に文字を重ねるので暗く重ねる */
+.telop{background-image:linear-gradient(120deg,rgba(42,27,82,.84),rgba(18,12,38,.92) 70%),var(--bgi-practice,linear-gradient(#2a1b52,#171030));background-size:cover;background-position:center 62%}
+.stagec{background-image:radial-gradient(ellipse 70% 50% at 50% -8%,rgba(255,236,190,.32),transparent 70%),linear-gradient(180deg,rgba(30,18,58,.62),rgba(11,7,22,.9) 70%),var(--bgi-stage,linear-gradient(#261745,#0d0919));background-size:cover;background-position:center top}
+.stagec.fin{background-image:radial-gradient(ellipse 70% 50% at 50% -8%,rgba(255,236,190,.3),transparent 70%),linear-gradient(180deg,rgba(30,18,58,.55),rgba(11,7,22,.9) 70%),var(--bgi-hall,linear-gradient(#261745,#0d0919))}
+.stagec.night{background-image:linear-gradient(180deg,rgba(14,9,28,.6),rgba(8,5,16,.9) 75%),var(--bgi-night,linear-gradient(#1b1230,#0a0714))}
+.lastseat{background-image:radial-gradient(ellipse 60% 80% at 50% 0,rgba(255,236,190,.3),transparent 70%),linear-gradient(180deg,rgba(38,23,69,.6),rgba(13,9,25,.9)),var(--bgi-stage2,linear-gradient(#261745,#0d0919));background-size:cover;background-position:center}
+.poster{background-image:radial-gradient(ellipse 70% 50% at 50% 0,rgba(255,236,190,.38),transparent 70%),linear-gradient(180deg,rgba(52,32,95,.62),rgba(18,11,36,.92) 75%),var(--bgi-hall,linear-gradient(#34205f,#120b24));background-size:cover;background-position:center top}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -382,6 +389,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 
 <script>
 /*FACEDATA-START*/var FACE_IMG={"m":["DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI"],"f":["DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI","DATAURI"]};var FACE_GRP={"m":["Ar1c1","Ar1c3","Ar1c7","Ar2c2","Ar2c4","Ar2c6","Ar3c2","Ar3c4","Ar3c6","Cr1c1","Cr1c5","Cr1c6","Cr2c2","Cr2c3","Cr2c4","Cr2c6","Cr3c3","Cr3c4","s7r1c1","s7r1c2","s7r1c3","s7r1c4","s7r1c5","s7r1c6","s7r1c7","s7r2c1","s7r2c2","s7r2c3","s7r2c4","s7r2c5","s7r2c6","s7r2c7","s7r3c1","s7r3c2","s7r3c3","s7r3c4","s7r3c5","s7r3c6","s7r3c7","Cr1c2","Cr1c4","Cr2c5","Cr3c1","Cr3c2","Cr3c5","Cr1c7"],"f":["Ar1c2","Ar1c4","Ar1c6","Ar2c1","Ar2c3","Ar2c5","Ar2c7","Ar3c1","Ar3c3","Ar3c5","Ar3c7","s2r1c1","s2r1c2","s2r1c3","s2r1c4","s2r1c5","s2r1c6","s2r1c7","s2r2c1","s2r2c2","s2r2c3","s2r2c4","s2r2c5","s2r2c6","s2r2c7","s2r3c1","s2r3c2","s2r3c3","s2r3c4","s2r3c5","s2r3c6","s2r3c7","Cr1c2","Cr1c4","Cr1c7","Cr2c1","Cr2c5","Cr3c1","Cr3c2","Cr3c5","s4r1c1","s4r1c2","s4r1c3","s4r1c4","s4r1c5","s4r1c6","s4r1c7","s4r2c1","s4r2c2","s4r2c3","s4r2c4","s4r2c5","s4r2c6","s4r2c7","s4r3c1","s4r3c2","s4r3c3","s4r3c4","s4r3c5","s4r3c6","s4r3c7","Ar1c1","Ar1c3","Ar1c5","Ar1c7","Ar2c2","Ar2c4","Ar2c6","Ar3c2","Ar3c4","Ar3c6"]};/*FACEDATA-END*/
+/*BGDATA-START*/var BG_IMG={};/*BGDATA-END*/
 
 /*ENGINE-START*/
 /* ---------- アプリとのつなぎ（Web版では何もしない） ---------- */
@@ -1458,6 +1466,7 @@ function nightSkip(S){var q=S.reqs[0],t=S.tr[q.id];t.trust-=2;normT(t);logT(S,t,
 
 /* ================= 画面 ================= */
 var KEY='hikari7_proto_v8';
+(function(){if(typeof document==='undefined')return;var r=document.documentElement;for(var k in BG_IMG)r.style.setProperty('--bgi-'+k,'url("'+BG_IMG[k]+'")');})();
 var S=null, ui={filter:'all',g:'m',resetArm:false,prof:null,showAuto:false,showFast:false}, timer=null;
 try{ui.diff=HStore.get('hikari7_diff')||'normal';ui.showAuto=!!HStore.get('hikari7_showauto');ui.showFast=!!HStore.get('hikari7_showfast');}catch(e){}
 function save(){try{HStore.set(KEY,JSON.stringify(S));}catch(e){}}
@@ -1864,7 +1873,7 @@ function vShow(){
   var sh=S.show,f=roundFmt(S),st=S.stage,n=sh.items.length;
   if(!sh.seq){
     var hl=showSeq(S,'hl').length;
-    var h='<div class="stagec"><div class="ttl">ステージ本番</div><h2 style="margin:6px 0 2px">'+esc(ROUNDS[S.rnd].name)+'</h2><p class="song">'+esc(VENUE[S.rnd])+'</p><p>'+esc(S.showSong)+(f.concept?'・コンセプト「'+esc(f.concept)+'」':'')+'</p>'+
+    var h='<div class="stagec'+(ROUNDS[S.rnd].fin?' fin':'')+'"><div class="ttl">ステージ本番</div><h2 style="margin:6px 0 2px">'+esc(ROUNDS[S.rnd].name)+'</h2><p class="song">'+esc(VENUE[S.rnd])+'</p><p>'+esc(S.showSong)+(f.concept?'・コンセプト「'+esc(f.concept)+'」':'')+'</p>'+
       '<p class="song">出演 '+n+(f.kind==='team'?'チーム':'人')+'。出番は前回の出来が低い順。見ながら「大きく映す」を押すと、放送で大きく扱われます（3人まで）。</p>'+
       '<div class="pen">'+penl(alive(S))+'</div></div>';
     h+='<button class="btn" data-a="showmode" data-v="all">開演（全'+n+'組を見る）</button>';
@@ -1873,7 +1882,7 @@ function vShow(){
   var idx=sh.seq[sh.pos],it=sh.items[idx],key=S.rnd+'-'+idx,anim=ui.showKey!==key;ui.showKey=key;
   var nf=0;for(var k in S.feat)if(S.feat[k])nf++;
   var spd=ui.showFast?.5:1,L=it.lines,D=.25*spd,step=.95*spd,gD=D+L.length*step,sD=gD+1.1*spd;ui.showMs=Math.round((sD+1.6*spd)*1000);
-  var h2='<div class="stagec '+(anim?'':'noanim')+'"><div class="ttl">ステージ本番 '+(sh.pos+1)+' / '+sh.seq.length+'</div>';
+  var h2='<div class="stagec '+(anim?'':'noanim')+(ROUNDS[S.rnd].fin?' fin':'')+'"><div class="ttl">ステージ本番 '+(sh.pos+1)+' / '+sh.seq.length+'</div>';
   if(it.duo){h2+='<div class="who"><div class="facerow vsrow">'+face(S.tr[it.ids[0]],'lg')+'<span class="vs">VS</span>'+face(S.tr[it.ids[1]],'lg')+'</div><div class="pname2">'+esc(S.tr[it.ids[0]].giv)+' × '+esc(S.tr[it.ids[1]].giv)+'</div><div class="song">ペア対決・'+esc(S.showSong)+'</div></div>';}
   else if(it.team!=null){h2+='<div class="who"><div class="facerow">'+it.ids.map(function(id){return face(S.tr[id],'md');}).join('')+'</div><div class="pname2">チーム'+'ABCDEFG'.charAt(it.team)+'</div><div class="song">'+esc(it.song)+'</div></div>';}
   else{var t=S.tr[it.ids[0]];h2+='<div class="who">'+face(t,'xl')+'<div class="eno" style="color:#e9ba4b;margin-top:6px">'+eno(t)+'</div><div class="pname2" style="margin-top:0">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="song">'+(S.plan&&S.plan.center===t.id?'センター・':'')+esc(S.showSong)+'</div></div>';}
