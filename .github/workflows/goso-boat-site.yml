@@ -57,6 +57,35 @@ jobs:
           workingDirectory: projects/goso-boat
           command: pages deploy dist --project-name=goso-boat --branch=master
 
+      # 自分のドメイン goso.dailyquarry.com を付ける（2026-10-02）。ストアのマーケティング URL が *.pages.dev だと、
+      # AdMob は pages.dev/app-ads.txt を読みに行って「アプリを確認」が通らない。何度回しても同じ結果になる（冪等）
+      - name: Ensure custom domain goso.dailyquarry.com
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          API=https://api.cloudflare.com/client/v4
+          H="Authorization: Bearer $CF_TOKEN"
+          echo "Pages にドメインを足す:"
+          curl -s -X POST "$API/accounts/$CF_ACCOUNT/pages/projects/goso-boat/domains" -H "$H" -H "Content-Type: application/json" \
+            --data '{"name":"goso.dailyquarry.com"}' | python3 -c "import sys,json;d=json.load(sys.stdin);print(' success' if d.get('success') else ' '+str(d.get('errors')))"
+          zone=$(curl -s "$API/zones?name=dailyquarry.com" -H "$H" | python3 -c "import sys,json;r=json.load(sys.stdin).get('result') or [];print(r[0]['id'] if r else '')")
+          if [ -z "$zone" ]; then
+            echo "::warning::dailyquarry.com のゾーンが読めません（トークンに DNS の権限が無い）。DNS は Cloudflare のダッシュボードで Pages の Custom domains から足す"
+          else
+            n=$(curl -s "$API/zones/$zone/dns_records?name=goso.dailyquarry.com" -H "$H" | python3 -c "import sys,json;print(len(json.load(sys.stdin).get('result') or []))")
+            if [ "$n" = "0" ]; then
+              echo "DNS に CNAME を足す:"
+              curl -s -X POST "$API/zones/$zone/dns_records" -H "$H" -H "Content-Type: application/json" \
+                --data '{"type":"CNAME","name":"goso","content":"goso-boat.pages.dev","proxied":true}' \
+                | python3 -c "import sys,json;d=json.load(sys.stdin);print(' success' if d.get('success') else ' '+str(d.get('errors')))"
+            else
+              echo "DNS の CNAME は既にある"
+            fi
+          fi
+          echo "ドメインの状態:"
+          curl -s "$API/accounts/$CF_ACCOUNT/pages/projects/goso-boat/domains/goso.dailyquarry.com" -H "$H" | python3 -c "import sys,json;r=json.load(sys.stdin).get('result') or {};print(' status=',r.get('status'),' validation=',(r.get('validation_data') or {}).get('status'))"
+
       # アプリが開く URL で本当に見えるか（プロジェクト名が取られていて別の URL になった場合もここで分かる）
       - name: Check the public URLs
         run: |

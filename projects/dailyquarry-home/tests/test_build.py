@@ -86,3 +86,11 @@ def test_内部リンクとsitemapはhtmlを付けない(out):
         assert not re.search(r'href="/[a-z]+\.html"', html), name
         assert not re.search(r'rel="canonical" href="[^"]+\.html"', html), name
     assert ".html" not in (out / "sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_app_ads_txt_is_published_for_admob(tmp_path):
+    # *.pages.dev では AdMob の「アプリを確認」が通らないので、ルートにも app-ads.txt を置く（2026-10-02）
+    build.build(tmp_path)
+    assert (tmp_path / "app-ads.txt").read_text(encoding="utf-8") == (
+        "google.com, pub-6409014819339195, DIRECT, f08c47fec0942fa0\n"
+    )
