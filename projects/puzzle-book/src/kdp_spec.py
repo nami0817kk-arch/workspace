@@ -22,7 +22,16 @@ class Trim:
 TRIMS: dict[str, Trim] = {
     "a4": Trim(8.27, 11.69),  # 21.0 x 29.7 cm。白黒・白い紙で 24〜780 ページ
     "b5": Trim(7.17, 10.12),  # 18.2 x 25.7 cm。24〜828 ページ
+    "a5": Trim(5.83, 8.27),  # 14.8 x 21.0 cm。標準判型（2026-09-30 に同じ表で確認）
 }
+
+# 標準判型は幅 6.12 in・高さ 9 in 以下（topic/G201834340）。これを超えると大判
+STANDARD_MAX_IN = (6.12, 9.0)
+
+
+def is_large(trim: str) -> bool:
+    t = TRIMS[trim]
+    return t.width_in > STANDARD_MAX_IN[0] or t.height_in > STANDARD_MAX_IN[1]
 
 MIN_PAGES = 24  # topic/G201857950
 
@@ -81,8 +90,23 @@ def inside_margin_in(page_count: int) -> float:
     raise ValueError(f"KDP のペーパーバックの上限を超えている: {page_count}ページ")
 
 
-def print_cost_jpy(page_count: int, ink: str = "black") -> int:
-    """amazon.co.jp の印刷コスト（大判）。ink は "black" か "premium"（プレミアムカラー）。"""
+# 標準判型の印刷コスト（topic/G201834340、2026-09-30 確認）。黒は 110 ページまで一律 422 円、
+# それを超えると 206 円 + 1ページ 2 円。プレミアムカラーは 40 ページまで 475 円、42 ページ以上は 206 円 + 1ページ 4 円
+STANDARD_FLAT_COST_JPY = 422
+STANDARD_PER_PAGE_JPY = 2
+PREMIUM_STANDARD_PER_PAGE_JPY = 4
+
+
+def print_cost_jpy(page_count: int, ink: str = "black", trim: str = "a4") -> int:
+    """amazon.co.jp の印刷コスト。ink は "black" か "premium"（プレミアムカラー）。"""
+    if not is_large(trim):
+        if ink == "premium":
+            if page_count <= PREMIUM_LARGE_FLAT_MAX_PAGES:
+                return PREMIUM_LARGE_FLAT_COST_JPY
+            return PREMIUM_LARGE_FIXED_JPY + PREMIUM_STANDARD_PER_PAGE_JPY * page_count
+        if page_count <= LARGE_FLAT_MAX_PAGES:
+            return STANDARD_FLAT_COST_JPY
+        return LARGE_FIXED_JPY + STANDARD_PER_PAGE_JPY * page_count
     if ink == "premium":
         if page_count <= PREMIUM_LARGE_FLAT_MAX_PAGES:
             return PREMIUM_LARGE_FLAT_COST_JPY
@@ -92,13 +116,13 @@ def print_cost_jpy(page_count: int, ink: str = "black") -> int:
     return LARGE_FIXED_JPY + LARGE_PER_PAGE_JPY * page_count
 
 
-def royalty_jpy(list_price_ex_tax: int, page_count: int, ink: str = "black") -> float:
+def royalty_jpy(list_price_ex_tax: int, page_count: int, ink: str = "black", trim: str = "a4") -> float:
     """1冊あたりの印税。価格は税抜で入力する（消費税は Amazon が足す）。topic/G201834330
 
     999円以下は 50%、1,000円以上は 60%。
     """
     rate = 0.6 if list_price_ex_tax >= 1000 else 0.5
-    return rate * list_price_ex_tax - print_cost_jpy(page_count, ink)
+    return rate * list_price_ex_tax - print_cost_jpy(page_count, ink, trim)
 
 
 def spine_width_in(page_count: int, paper: str = "white", ink: str = "black") -> float:

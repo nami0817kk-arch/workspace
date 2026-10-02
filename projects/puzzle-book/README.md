@@ -1,5 +1,21 @@
 # puzzle-book
 
+## 日本のことわざ、世界ではこう言う 1冊目（`books/sekai-kotowaza-vol1.json`）
+
+```
+python src/build_sekai.py books/sekai-kotowaza-vol1.json   # 本文と表紙 -> output/
+```
+
+| 項目 | 値 |
+|---|---|
+| 題名 | 日本のことわざ、世界ではこう言う（副題: 英語・フランス語・中国語・韓国語で読む50のことわざ） |
+| 中身 | 5章×10句。1ページ1句に、4言語の原文・読み・直訳・ひとくち話。見方、さくいん、参考にした資料 |
+| 判型 | A5・裁ち落としあり・プレミアムカラー・64ページ（印刷代462円） |
+| 外国語の確かめ | 200の言い方すべてに2つ以上の出典（`books/sekai-kotowaza-verified.json`）。同じ意味が無いものは「近い言い方」と書く |
+| 商標 | 「世界ではこう言う」「こう言う」「世界のことわざ」「世界ことわざ」は0件。「ことわざ」を含む3件に第16類は無し（2026-10-03） |
+| 書体 | 欧文 Noto Sans、繁体字 Noto Sans TC、ハングル Nanum Gothic（どれも OFL）。Noto Sans JP に無い字を言語ごとに振り分ける |
+| KDP の入力内容 | `books/sekai-kotowaza-vol1-listing.md` |
+
 ## 思い出ばなし 1冊目（`books/kaiso-vol1.json`）
 
 ```
@@ -98,6 +114,7 @@ python src/build_cover.py books/vol1.json   # 表紙 -> output/vol1-cover.pdf
 python tools/qa_kotoba.py      # 50項目。入稿の直前に必ず回し、50/50 を確かめる
 python tools/qa_notore.py      # あたまの体操の50項目。計算・時計の針・迷路・絵さがしの丸を紙面から読み直す
 python tools/qa_kaiso.py       # 思い出ばなしの50項目。問いかけ・話のたねが決まったページに載ったかを紙面から読み直す
+python tools/qa_sekai.py       # 世界のことわざの50項目。200の言い方が出典どおり紙面に載ったか、裁ち落としの安全域を読み直す
 python tools/solve_from_pdf.py # 紙面だけを読んで全問を解き、答えの帯と照合する（60/60）
 ```
 
