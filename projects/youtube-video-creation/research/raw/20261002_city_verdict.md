@@ -320,3 +320,8 @@ Kieran Maguire「Forest と Everton にゼロを1つ足す（40〜60点）」は
 - シティの声明（9/29 17:00）「innocent of the accusations」「will now pursue the appeal avenues」と一致
 - ソリアーノ（Guardian 9/29）「video sent to City staff」「based on a single false accusation – that the owner's personal money was … put into the club via some sponsors」と一致
 - マスターズ「systematically broke Premier League Rules for nearly a decade」と一致
+
+## 件数（10/2、ユーザー「シティは115件中114件有罪でしょ」）
+- 判断の文書は件数を書かない（1項「well over 100 individual breaches」を 10 の Charges にまとめた）。
+- BBC 9/29「the 115 financial rules they were accused of breaching」、ESPN「Manchester City's guilty verdict on 114 charges」。
+- 退けられたのは 4(B)（7項）。115件の数え方では 114 件が有罪。題・サムネ・見出しは「115件中114件」、10項目の説明は中身の節に残した。

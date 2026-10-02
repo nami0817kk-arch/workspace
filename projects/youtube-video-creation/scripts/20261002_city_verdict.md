@@ -1,9 +1,9 @@
 ---
-title: マンC、告発10項目のうち9つで有罪。スポンサー料を本当に出していたのは
+title: マンC、115件の告発のうち114件で有罪。スポンサー料を本当に出していたのは
 format: news
 short_title: マンC有罪。スポンサー料を本当に払っていたのは
 topic: マンチェスター・シティ
-thumbnail_line1: マンC、告発10項目中9つで有罪
+thumbnail_line1: マンC、115件中114件で有罪
 thumbnail_line2: スポンサー料の●割近くはオーナー側の金
 thumbnail_tags: []
 thumbnail_alt: []
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - マンチェスター・シティ
 bg: assets/backgrounds/stadium.png
 date: 2026年10月2日
-intro_title: マンC、告発10項目のうち9つで有罪。スポンサー料を本当に出していたのは
+intro_title: マンC、115件の告発のうち114件で有罪。スポンサー料を本当に出していたのは
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: 'マンC、告発10項目のうち9つで有罪。スポンサー料を本当に出していたのは
+description: 'マンC、115件の告発のうち114件で有罪。スポンサー料を本当に出していたのは
 
 
   この動画が答える問い: シティのスポンサー料は誰が払っていて、罰はどこまで重くなるのか
@@ -47,10 +47,11 @@ tags:
 sources:
 - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
 - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+- https://www.espn.com/soccer/story/_/id/50077292/manchester-city-guilty-charges-explained-premier-league-options-appeal
+- https://www.bbc.com/sport/football/articles/c63reg93xwzro
 - https://www.bbc.com/sport/football/articles/c65y51l3gzq4o
 - https://www.theguardian.com/football/2023/feb/06/manchester-city-charged-by-premier-league-over-alleged-financial-rule-breaches
 - https://www.skysports.com/football/news/11661/13593407/man-city-charges-verdict-key-findings-the-fordham-arrangement-effectively-a-front-for-abu-dhabi-united-group
-- https://www.bbc.com/sport/football/articles/c63reg93xwzro
 - https://www.mancity.com/news/club/manchester-city-club-statement-premier-league-63926128
 - https://www.theguardian.com/football/2026/sep/29/manchester-city-ceo-soriano-says-guilty-verdicts-are-a-premier-league-conspiracy-theory
 - https://www.theguardian.com/football/2026/sep/30/rival-clubs-feel-relegating-manchester-city-championship-not-enough-premier-league
@@ -68,6 +69,8 @@ sources:
 quote_sources:
 - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
 - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+- https://www.espn.com/soccer/story/_/id/50077292/manchester-city-guilty-charges-explained-premier-league-options-appeal
+- https://www.bbc.com/sport/football/articles/c63reg93xwzro
 cards:
   verdict_card:
     type: table
@@ -81,7 +84,7 @@ cards:
     - - 対象
       - 2009-10季から2017-18季の9季
     - - 告発
-      - 10項目（100を超える違反）
+      - 115件（10項目にまとめて審理）
     - - 財務の規則の違反
       - 6項目すべて有罪
     - - 調査への非協力
@@ -760,12 +763,12 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/studio.png
 
-キャスター: マンC、告発10項目のうち9つで有罪。スポンサー料を本当に出していたのは。
-  telop: マンC、告発10項目のうち9つで有罪。スポンサー料を本当に出していたのは
+キャスター: マンC、115件の告発のうち114件で有罪。スポンサー料を本当に出していたのは。
+  telop: マンC、115件の告発のうち114件で有罪。スポンサー料を本当に出していたのは
   se: assets/audio/se_pon.wav
   image: assets/images/20261002_city_verdict_w/01.jpg
 
-## 10項目のうち9つで有罪
+## 115件のうち114件で有罪
 @bg: assets/backgrounds/studio.png
 
 キャスター: 9月29日、リーグから独立した委員会が、シティの財務規則違反を認定しました。
@@ -773,14 +776,14 @@ cards:
   source: 確定
   card: verdict_card
   image: assets/images/20261002_city_verdict_w/01.jpg
-キャスター: 対象は2009-10季からの9季。100を超える違反は、10の項目にまとめて告発されました。
-  telop: 対象は2009-10季からの9季。100を超える違反は、10の項目にまとめて告発されました
+キャスター: 対象は2009-10季からの9季。告発は115件で、委員会は10の項目にまとめて審理しました。
+  telop: 対象は2009-10季からの9季。告発は115件で、委員会は10の項目にまとめて審理しました
   card: verdict_1_card
-キャスター: 財務の規則をめぐる6項目は、すべて有罪です。
-  telop: 財務の規則をめぐる6項目は、すべて有罪です
+キャスター: 財務の規則をめぐる6項目は、すべて有罪。
+  telop: 財務の規則をめぐる6項目は、すべて有罪
   card: verdict_2_card
-キャスター: 退けられたのは、調査への非協力の1項目だけでした。
-  telop: 退けられたのは、調査への非協力の1項目だけでした
+キャスター: 退けられたのは、調査への非協力の1件だけ。115件のうち114件が有罪です。
+  telop: 退けられたのは、調査への非協力の1件だけ。115件のうち114件が有罪です
   card: verdict_3_card
 キャスター: リーグのマスターズ最高経営責任者です。
   telop: リーグのマスターズ最高経営責任者です
