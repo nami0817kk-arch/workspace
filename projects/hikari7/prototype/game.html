@@ -399,6 +399,20 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .bt{font-size:20px;font-weight:900;margin:6px 0 2px}.brow{display:flex;gap:10px;align-items:center;margin:10px 0}.bups{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .bup{font-size:12px;font-weight:800;color:var(--ok);border:1px solid var(--ok);border-radius:999px;padding:0 7px}
 .dex{display:flex;flex-wrap:wrap;gap:4px}.dex span{font-size:12px;border:1px solid var(--line);border-radius:8px;padding:2px 7px;color:var(--muted)}.dex span.got{color:var(--fg);border-color:#b8860b;background:var(--gold-bg);font-weight:700}
+.ending{position:fixed;inset:0;z-index:55;background:radial-gradient(ellipse 80% 40% at 50% 0,rgba(255,215,106,.18),transparent 70%),#0d0a1f;color:#f4f1ff;overflow:hidden}
+.ending .roll{position:absolute;left:0;right:0;top:0;padding:0 24px 40px;max-width:520px;margin:0 auto;text-align:center;will-change:transform}
+.ending .roll.static{position:static;height:100%;overflow:auto;padding-top:24px;padding-bottom:90px}
+.ecard{padding:40px 0}.ecard.last{padding:60px 0 30px}.esub{font-size:13px;letter-spacing:.2em;color:#ffd76a;font-weight:800}
+.etitle{font-family:'Dela Gothic One',sans-serif;font-size:34px;line-height:1.25;margin-top:8px;color:#fff}
+.eyear{margin:26px 0}.ey{display:inline-block;font-weight:900;color:#1a1200;background:#ffd76a;border-radius:999px;padding:2px 14px;font-size:13px}
+.eyear p{margin:10px 0 0;line-height:1.85;font-size:15px}
+.esec{margin:46px 0 16px;font-weight:900;color:#ffd76a;letter-spacing:.15em}
+.emem{display:flex;gap:12px;align-items:flex-start;text-align:left;margin:14px 0}.emem b{font-size:15px}.emem small{margin-left:6px;color:#cfc8ea}.emem p{margin:4px 0 0;font-size:13.5px;line-height:1.7;color:#e9e4ff}
+.ecred div{margin:18px 0;line-height:1.9}.ecred small{display:block;font-size:11.5px;color:#cfc8ea;letter-spacing:.12em}
+.ebar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:10px;justify-content:center;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(13,10,31,.95) 40%)}
+.ebar .btn-s{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.35);min-height:44px;padding:0 18px}
+.fut .fy{display:grid;grid-template-columns:4.5em 1fr;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13.5px;line-height:1.7}.fut .fy b{color:var(--accent)}
+.fut .btn{margin-top:10px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1431,7 +1445,7 @@ function weekDo(S,k){var M=S.month,a=WEEK_ACTS.filter(function(x){return x.k===k
     meet:['ファンの手紙を読んで、'+star.giv+'が泣いてしまった。','全員でファンの質問に答え、会場が笑いに包まれた。'],mv:['撮り直したMVの再生数が、1週間で前作を超えた。',star.giv+'の表情のアップが話題になった。'],
     radio:['雑誌の撮影とSNS企画で、メンバーの素顔が少しずつ知られてきた。'],rest:['久しぶりの休み。全員で鍋を囲んだらしい。',star.giv+'が全員分の弁当を作ってきた。']};
   txt.unshift(pick(HL[k]));M.log.push({w:M.w+1,k:k,n:a.n,t:txt.join(' ')});M.w++;
-  if(M.w>=4){S.phase='result';recordCareer(S,finalEval(S));}
+  if(M.w>=4){S.phase='result';recordCareer(S,finalEval(S));startEnding(S);}
 }
 
 
@@ -2056,6 +2070,44 @@ ACHV.push(
   {k:'dexCombo',t:'コンビ図鑑',d:'10種類のコンビをすべて結成する（図鑑）',chk:function(S,E,c){return Object.keys((c.dex||{}).combo||{}).length>=COMBO_KEYS.length;}}
 );
 
+
+/* ---------- その後の物語（エンドロール。2026-10-02） ----------
+   最後の評価・まとまり・コンビ・覚醒・物語の結末から、デビュー後10年の年表とメンバーのその後を作る。
+   作るのは1回だけ（S.future に残す） */
+var SONG_W1=['はじまりの','夜明けの','七色の','まっすぐな','真夏の','銀色の','約束の','ひかりの','風になる','明日への','透明な','はじめての'];
+var SONG_W2=['合図','ハイタッチ','足音','手紙','地図','ステップ','声','滑走路','花火','行進曲','窓','羽'];
+function songTitle(used){var t,n=0;do{t=pick(SONG_W1)+pick(SONG_W2);}while(used.indexOf(t)>=0&&n++<30);used.push(t);return t;}
+var FUT_SPEC={v:['ソロ曲を出し、ドラマの主題歌に選ばれた','歌番組でカバー曲を歌い、「声だけで泣ける」と話題になった','ミュージカルの主役に抜てきされた'],
+  d:['ほかの歌手の振付を任されるようになった','ダンス番組の審査員として呼ばれるようになった','初めて自分で作った振付が、グループの代表曲になった'],
+  r:['グループの曲の作詞を手がけるようになった','ラップの大会に飛び入りで出て、会場を沸かせた','書いた詞をまとめた本を出した'],
+  t:['雑誌の表紙を何度も飾った','ドラマに出演し、役者としても注目を集めた','グループの映像の演出にも関わるようになった']};
+var FUT_PLAIN={v:['ライブのたびに、歌の安定感が増していった','グループのハーモニーを支える声になった'],d:['ライブの最後の振りを、毎回少しずつ変えてファンを驚かせた','後輩グループの練習を見に行くようになった'],
+  r:['ライブのラップ部分を、毎回その日の言葉で作り替えている','ラジオ番組の聞き役として親しまれている'],t:['グループの「顔」として、どの番組にも呼ばれるようになった','写真展を開き、メンバーの素顔を撮りためた1冊を出した']};
+function makeFuture(S,E){var used=[],P=S.prep||{names:['（名前なし）'],name:0},tier='SABCD'.indexOf(E.grade),D=E.D,L=E.L,n=D.length,Y=[];
+  var s1=songTitle(used),s2=songTitle(used),s3=songTitle(used);
+  var awoke=D.filter(function(t){return t.awoke;}),combos=E.combos||[],top=D.slice().sort(function(a,b){return b.pop-a.pop;})[0];
+  Y.push({y:'デビュー',t:'デビュー曲「'+s1+'」は、1か月で'+Math.round(E.streams).toLocaleString()+'万回再生された。'});
+  var fc=Math.max(.3,Math.round(E.fanScore*E.fanScore/100*(tier<=1?14:6))/10);
+  Y.push({y:'1年目',t:[(L?L.giv+'が':'メンバーが')+'年末の音楽賞で新人賞を受け取った。壇上で「この'+n+'人で来られてよかった」と声を詰まらせた。','初めてのワンマンライブは2日間とも満員。アンコールで、全員が泣いていた。','ライブハウスを回る初めてのツアー。最終日だけ、当日券が出なかった。','小さな会場で、一人ひとりのファンと握手を重ねた1年だった。','思うように数字が伸びず、メンバーで何度も話し合った1年だった。'][tier]+' ファンクラブの会員は'+fc+'万人になった。'});
+  var y2=E.song>=70?'2枚目のシングル「'+s2+'」が、デビュー曲の記録を塗り替えた。':'2枚目のシングル「'+s2+'」で、デビュー曲とは違う表情を見せた。';
+  if(combos.length){var c=combos[0];y2+=' '+S.tr[c.a].giv+'と'+S.tr[c.b].giv+'は、ユニット「'+c.n+'」としてふたりで配信曲を出した。';}
+  Y.push({y:'2年目',t:y2});
+  Y.push({y:'3年目',t:E.coh>=70?'構成も振付も、メンバーだけで作ったアルバム「'+s3+'」を出した。「番組のころから、ずっとこうしたかった」と'+(L?L.giv:top.giv)+'は話した。':
+    E.coh>=50?'初めての全国ツアー。移動のバスで、毎晩ミーティングを開いた。':'目指す方向がずれ、活動を3か月休んだ。戻ってきた日、全員でファンに頭を下げた。そのあとのライブは、前よりずっと息が合っていた。'});
+  Y.push({y:'5年目',t:['デビュー5年目、ドームのステージに立った。客席の光が、'+n+'つの席を照らした。','全国のアリーナを回るツアーを成功させた。最終日、'+top.giv+'が「次はもっと大きな場所で」と約束した。','毎年のホールツアーが恒例になった。「生で見ると全然違う」と、少しずつ評判が広がっている。','大きな会場には届かないが、毎月のライブを1度も休まず続けている。','一度活動を見直し、新しい曲で再出発した。最初のステージには、番組のころからのファンが集まった。'][tier]});
+  var gone=S.tr.filter(function(t){return t.status==='out'||t.status==='left';});
+  Y.push({y:'10年目',t:(tier<=1?'10年目の記念ライブで、番組の最初の日の映像が流れた。':'10年目、全員で番組の合宿所をもう一度訪ねた。')+(gone.length?' 客席には、あの合宿をともに過ごした'+pick(gone).giv+'の姿もあった。':'')});
+  var M=D.map(function(t){var line;
+    if(t.awoke)line=pick(FUT_SPEC[t.spec]);
+    else if(t.arc&&t.arc.step>=3&&t.arc.score>=2)line=arcEnd(S,t);
+    else line=pick(FUT_PLAIN[t.spec]);
+    var cb=combos.filter(function(c){return c.a===t.id||c.b===t.id;})[0];
+    if(cb)line+='。'+S.tr[cb.a===t.id?cb.b:cb.a].giv+'とのコンビ「'+cb.n+'」は、ファンの間で定番になった';
+    if(L&&t.id===L.id)line='リーダーとしてグループの舵を取り続けた。'+line;
+    return {id:t.id,t:line.replace(/。?$/,'。')};});
+  return {g:P.names[P.name],songs:[s1,s2,s3],years:Y,members:M,grade:E.grade};}
+function startEnding(S){S.future=makeFuture(S,finalEval(S));S.ending=true;}
+
 /*ENGINE-END*/
 
 /* ================= 画面 ================= */
@@ -2063,6 +2115,7 @@ var KEY='hikari7_proto_v8';
 (function(){if(typeof document==='undefined')return;var r=document.documentElement;for(var k in BG_IMG)r.style.setProperty('--bgi-'+k,'url("'+BG_IMG[k]+'")');})();
 var S=null, ui={filter:'all',g:'m',resetArm:false,prof:null,showAuto:false,showFast:false}, timer=null;
 try{ui.diff=HStore.get('hikari7_diff')||'normal';ui.showAuto=!!HStore.get('hikari7_showauto');ui.showFast=!!HStore.get('hikari7_showfast');ui.quick=!!HStore.get('hikari7_quick');}catch(e){}
+try{ui.endStatic=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
 function save(){try{HStore.set(KEY,JSON.stringify(S));}catch(e){}}
 function load(){try{var s=HStore.get(KEY);if(!s)return null;var o=JSON.parse(s);return o&&o.v===8?o:null;}catch(e){return null;}}
 function clearSave(){try{HStore.del(KEY);}catch(e){}}
@@ -2101,7 +2154,8 @@ function render(){
   if(ui.toast)h+='<div class="apptoast" role="status">'+esc(ui.toast)+'</div>';
   if(ui.adWait)h+='<div class="adwait"><div>動画を読み込んでいます…</div></div>';
   $('#app').innerHTML=h;
-  document.body.style.overflow=ui.prof!=null?'hidden':'';
+  var endOn=!!(S&&S.phase==='result'&&S.ending&&ui.prof==null);document.body.style.overflow=(ui.prof!=null||endOn)?'hidden':'';
+  if(endOn){var rl=document.querySelector('.ending .roll');if(rl&&!rl.classList.contains('static')){if(ui.endY!=null)rl.style.transform='translateY('+ui.endY+'px)';startRoll();}}
   if(showTimer){clearTimeout(showTimer);showTimer=null;}
   if(S&&S.phase==='show'&&S.show&&S.show.seq&&ui.showAuto&&ui.prof==null){showTimer=setTimeout(function(){showTimer=null;if(!S||S.phase!=='show'||!ui.showAuto)return;if(S.show.pos>=S.show.seq.length-1)S.phase='stage';else S.show.pos++;save();render();window.scrollTo(0,0);},ui.showMs||6000);}
 }
@@ -2258,6 +2312,8 @@ function vCall(){
   return h;
 }
 function vResult(){
+  if(!S.future)S.future=makeFuture(S,finalEval(S));
+  if(S.ending)return vEnding();
   var E=finalEval(S),P=S.prep||{names:['（名前なし）'],name:0},h='<h2>デビューから1か月</h2>'+poster(E,P);
   h+='<div class="card"><div class="small muted" style="text-align:center">デビュー曲の再生数（1か月）</div><div class="big-num">'+Math.round(E.streams).toLocaleString()+'万回</div></div>';
   h+='<div class="card"><div class="small muted" style="text-align:center">プロデューサー評価</div><div class="grade">'+E.grade+'</div><div style="text-align:center;font-weight:800">'+E.total.toFixed(1)+'点</div></div>';
@@ -2273,6 +2329,7 @@ function vResult(){
   E.D.forEach(function(t){var e=arcEnd(S,t)||('「'+SPEC[t.spec]+'担当」として、少しずつ名前を覚えられてきた');h+='<div class="epi">'+face(t,'sm')+'<div><b>'+esc(t.giv)+'</b> '+(t.arc.step>=3&&t.arc.score>=2?'<span class="tag good">'+ARCS[t.arc.k].name+'</span> ':'')+esc(e)+'</div></div>';});
   h+='</div>';
   if(E.combos&&E.combos.length){h+='<h3>グループの中のコンビ</h3><div class="card">'+E.combos.map(function(c){var a=S.tr[c.a],b=S.tr[c.b];return '<div class="epi">'+face(a,'sm')+face(b,'sm')+'<div><b>'+esc(c.n)+'</b>　'+esc(a.giv)+'と'+esc(b.giv)+(c.perfect?'<span class="small muted">（3場面すべてで息が合った）</span>':'')+'</div></div>';}).join('')+'<div class="small muted">コンビ1組ごとに、まとまり＋4（3組まで）とファン＋2。</div></div>';}
+  h+=futureBox();
   var others=S.tr.filter(function(t){return t.status!=='debut'&&t.status!=='cut0'&&t.status!=='cand'&&t.arc&&t.arc.step>=1;});
   if(others.length){h+='<h3>番組を去った子のその後</h3><div class="card">';others.forEach(function(t){h+='<div class="epi">'+face(t,'sm dim')+'<div><b>'+esc(t.giv)+'</b> '+esc(arcEnd(S,t))+'</div></div>';});h+='</div>';}
   var cn=S.careerNews;
@@ -2599,6 +2656,33 @@ function dexBox(c){var d=c.dex||{arc:{},combo:{}},na=Object.keys(d.arc).length,n
     '<div class="small muted" style="margin:4px 0">覚醒した物語</div><div class="dex">'+ARC_KEYS.map(function(k){return '<span class="'+(d.arc[k]?'got':'')+'">'+(d.arc[k]?esc(ARCS[k].name):'？？？')+'</span>';}).join('')+'</div>'+
     '<div class="small muted" style="margin:8px 0 4px">結成したコンビ</div><div class="dex">'+COMBO_KEYS.map(function(k){return '<span class="'+(d.combo[k]?'got':'')+'">'+(d.combo[k]?esc(COMBO[k]):'？？？')+'</span>';}).join('')+'</div></details>';}
 
+
+function vEnding(){var F=S.future,E=finalEval(S),others=S.tr.filter(function(t){return t.status!=='cand'&&t.status!=='cut0'&&t.status!=='debut';});
+  var h='<div class="ending"><div class="roll'+(ui.endStatic?' static':'')+'">';
+  h+='<div class="ecard"><div class="esub">その後の物語</div><div class="etitle">'+esc(F.g)+'</div></div>';
+  F.years.forEach(function(y){h+='<div class="eyear"><div class="ey">'+esc(y.y)+'</div><p>'+esc(y.t)+'</p></div>';});
+  h+='<div class="esec">メンバーのその後</div>';
+  F.members.forEach(function(m){var t=S.tr[m.id];h+='<div class="emem">'+faceImg(t,'md')+'<div><b>'+esc(t.name)+'</b><small>'+SPEC[t.spec]+'</small><p>'+esc(m.t)+'</p></div></div>';});
+  h+='<div class="esec">スタッフ</div><div class="ecred"><div><small>主題歌</small>「'+esc(F.songs[0])+'」</div><div><small>歌</small>'+esc(F.g)+'</div>'+
+    '<div><small>出演</small>'+E.D.map(function(t){return esc(t.name);}).join('<br>')+'</div>'+
+    (others.length?'<div><small>ともに戦った練習生</small>'+others.map(function(t){return esc(t.name);}).join('<br>')+'</div>':'')+
+    ((E.combos||[]).length?'<div><small>コンビ</small>'+E.combos.map(function(c){return esc(c.n)+'（'+esc(S.tr[c.a].giv)+'・'+esc(S.tr[c.b].giv)+'）';}).join('<br>')+'</div>':'')+
+    '<div><small>番組の平均視聴率</small>'+E.avgR.toFixed(1)+'%</div><div><small>プロデューサー</small>あなた</div></div>';
+  h+='<div class="ecard last"><div class="esub">ひかりの七席</div><div class="etitle">おしまい</div><div class="small">見守ってくれて、ありがとう。</div></div>';
+  h+='</div><div class="ebar"><button class="btn-s" data-a="endfast">'+(ui.endFast?'ふつうの速さ':'早送り')+'</button><button class="btn-s" data-a="endok">結果を見る</button></div></div>';
+  return h;}
+function futureBox(){var F=S.future;if(!F)return '';
+  return '<h3>グループのその後</h3><div class="card fut">'+F.years.map(function(y){return '<div class="fy"><b>'+esc(y.y)+'</b><span>'+esc(y.t)+'</span></div>';}).join('')+
+    '<button class="btn sub" data-a="endagain">エンドロールをもう一度見る</button></div>';}
+var endRaf=null,endLast=0;
+function endTick(ts){endRaf=null;var el=document.querySelector('.ending .roll');if(!el||el.classList.contains('static'))return;
+  var dt=endLast?Math.min(.1,(ts-endLast)/1000):0;endLast=ts;var vh=window.innerHeight;
+  if(ui.endY==null)ui.endY=vh*.5;var stop=-(el.offsetHeight-vh*.55);
+  if(ui.endY>stop)ui.endY=Math.max(stop,ui.endY-dt*(ui.endFast?260:50));
+  el.style.transform='translateY('+ui.endY.toFixed(1)+'px)';
+  if(ui.endY>stop)endRaf=requestAnimationFrame(endTick);}
+function startRoll(){if(endRaf)cancelAnimationFrame(endRaf);endLast=0;endRaf=requestAnimationFrame(endTick);}
+
 /* ---------- 操作 ---------- */
 function stopTimer(){if(timer){clearTimeout(timer);timer=null;}}
 function callTick(){
@@ -2608,7 +2692,7 @@ function callTick(){
   else{render();}
 }
 function go(fn){fn();quickSkip();save();render();}
-function quickSkip(){if(!ui.quick||!S)return;if(S.phase==='show')S.phase='stage';if(S.phase==='call'&&S.call&&!S.call.done){S.call.n=S.call.order.length;S.call.done=true;}}
+function quickSkip(){if(!ui.quick||!S)return;if(S.phase==='result'&&S.ending&&!ui.endForce)S.ending=false;if(S.phase==='show')S.phase='stage';if(S.phase==='call'&&S.call&&!S.call.done){S.call.n=S.call.order.length;S.call.done=true;}}
 document.addEventListener('click',function(ev){
   var el=ev.target.closest('[data-a]');if(!el)return;
   var a=el.getAttribute('data-a'),id=el.hasAttribute('data-id')?+el.getAttribute('data-id'):null,v=el.getAttribute('data-v');
@@ -2627,6 +2711,9 @@ document.addEventListener('click',function(ev){
     case 'watch':go(function(){watchVideo(S,id);});break;
     case 'seat':go(function(){useSeat(S);});break;
     case 'burstok':go(function(){S.bursts.shift();});break;
+    case 'endfast':ui.endFast=!ui.endFast;render();break;
+    case 'endok':ui.endY=null;ui.endFast=false;ui.endForce=false;go(function(){S.ending=false;});window.scrollTo(0,0);break;
+    case 'endagain':ui.endY=null;ui.endForce=true;go(function(){S.ending=true;});break;
     case 'quick':ui.quick=!!v;try{HStore.set('hikari7_quick',v);}catch(e){}render();break;
     case 'diff':ui.diff=v;try{HStore.set('hikari7_diff',v);}catch(e){}render();break;
     case 'tipok':var ts=tipSeen();ts[v]=1;try{HStore.set('hikari7_tips',JSON.stringify(ts));}catch(e){ui.tipsOff=true;}render();break;
@@ -2715,7 +2802,7 @@ document.addEventListener('click',function(ev){
     case 'callskip':stopTimer();go(function(){S.call.n=S.call.order.length;S.call.done=true;});break;
     case 'fw':go(function(){S.farewell[id]=+v;});break;
     case 'nextround':stopTimer();var fin0=S.rnd;go(function(){nextRound(S);});window.scrollTo(0,0);if(APP)appPost({type:'between',rnd:fin0});break;
-    case 'toresult':go(function(){applyFarewell(S);S.phase='result';});window.scrollTo(0,0);break;
+    case 'toresult':go(function(){applyFarewell(S);S.phase='result';startEnding(S);});window.scrollTo(0,0);break;
     case 'restart':stopTimer();clearSave();S=null;render();window.scrollTo(0,0);break;
   }
 });
