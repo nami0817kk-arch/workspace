@@ -40,6 +40,13 @@ def ads_txt() -> str | None:
     return f"google.com, {pub_id}, DIRECT, f08c47fec0942fa0\n"
 
 
+def app_ads_txt() -> str | None:
+    """ルートの app-ads.txt（AdMob。護送ボート・サカマネなどアプリの広告の持ち主を示す）。"""
+    if not site_config.ADMOB_PUBLISHER:
+        return None
+    return f"google.com, {site_config.ADMOB_PUBLISHER}, DIRECT, f08c47fec0942fa0\n"
+
+
 def _sitemap() -> str:
     # Cloudflare Pages は /x.html を /x へ 308 で送るので、転送されない形で載せる。
     urls = [site_config.SITE_URL + "/"] + [
@@ -69,6 +76,9 @@ def build(output_dir: Path = _OUTPUT_DIR) -> None:
     ads = ads_txt()
     if ads:
         (output_dir / "ads.txt").write_text(ads, encoding="utf-8")
+    app_ads = app_ads_txt()
+    if app_ads:
+        (output_dir / "app-ads.txt").write_text(app_ads, encoding="utf-8")
     print(f"  {output_dir} を生成しました")
 
 
