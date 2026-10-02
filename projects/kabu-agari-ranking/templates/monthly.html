@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{{ m.year }}年{{ m.month }}月のまとめ｜値上がり株ランキング{% endblock %}
-{% block description %}{{ m.year }}年{{ m.month }}月（{{ m.day_count }}営業日）の値上がりランキングを通して集計。最も上昇した銘柄、何度もランクインした銘柄、ストップ高の件数をまとめています。{% endblock %}
+{% block title %}{{ m.year }}年{{ m.month }}月の値上がりランキングとストップ高｜{{ m.day_count }}営業日のまとめ{% endblock %}
+{% block description %}{{ m.year }}年{{ m.month }}月の{{ m.day_count }}営業日で、ストップ高はのべ{{ m.stop_highs }}銘柄、ストップ安はのべ{{ m.stop_lows }}銘柄。最も上昇した20銘柄、2回以上ランクインした銘柄、複数回ストップ高になった銘柄をまとめています。{% endblock %}
 {% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "月まとめ", "url": SITE_URL ~ "/monthly/"}, {"label": m.year ~ "年" ~ m.month ~ "月", "url": canonical}] %}{% include "_breadcrumb_data.html" %}{% endblock %}
 {% block breadcrumb %}{% set crumbs = [
   {"label": "ホーム", "href": "index.html"},

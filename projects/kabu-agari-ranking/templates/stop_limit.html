@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {# ストップ高とストップ安で共用する。向きが逆なだけで数え方も見せ方も同じなので、
    spec（語彙）だけを差し替える。片方だけ直して食い違うのを防ぐため1枚にしてある。 #}
-{% block title %}{{ spec.term }}の銘柄一覧と記録｜{{ period_to_ja }}まで{% endblock %}
-{% block description %}{{ period_to_ja }}までの{{ day_count }}営業日に、制限値幅の{{ spec.bound }}まで{{ spec.verb }}（{{ spec.term }}）銘柄の一覧。日別の件数、何度も{{ spec.term }}になった銘柄、最長の連続記録。{% endblock %}
+{# **中にある章を名乗る。** 「一覧」だけだと、同じことを出している所と区別が付かない。
+   連続・翌営業日・業種別は、毎日ためていないと出せない。 #}
+{% block title %}{{ spec.term }}の記録 {{ period_to_ja }}まで｜日別・連続・翌営業日・業種別{% endblock %}
+{% block description %}{{ period_to_ja }}までの{{ day_count }}営業日で、{{ spec.term }}はのべ{{ total_count }}銘柄（{{ stock_count }}銘柄）{% if followup.total %}。翌営業日も{{ spec.source_rank }}ランキングに残ったのは、記録した{{ followup.total.count }}銘柄のうち{{ followup.total.same_side }}銘柄{% endif %}。日ごとの一覧、何度も{{ spec.term }}になった銘柄、最長の連続、市場区分と業種の内訳を載せています。{% endblock %}
 {% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": spec.term ~ "の記録", "url": canonical}] %}{% include "_breadcrumb_data.html" %}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ItemList","name":{{ ("複数回" ~ spec.term ~ "になった銘柄")|tojson }},"numberOfItems":{{ stocks|length }},"itemListElement":[{% for s in stocks %}{"@type":"ListItem","position":{{ loop.index }},"name":{{ (s.name ~ "（" ~ s.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}

@@ -1,6 +1,10 @@
 {% extends "base.html" %}
-{% block title %}{{ s.name }}（{{ s.code }}）の値上がり・ストップ高の記録{% endblock %}
-{% block description %}{{ s.name }}（{{ s.code }}{% if profile_short %}／{{ profile_short }}{% endif %}）が値上がり・値下がり・活況ランキングに載った日の一覧。{{ summary }}{% endblock %}
+{# 検索結果で並ぶのは「◯◯の株価・チャート」ばかり。**同じことを名乗っても勝てない**ので、
+   このサイトが答えられる問い（いつ動いたか）と、その場で分かる数字を出す。 #}
+{% block title %}{{ s.name }}（{{ s.code }}）はいつ動いたか｜{{ day_count }}営業日で{{ s.rows|length }}回ランクイン{% endblock %}
+{# **結論を先に。** 検索結果に出るのは2行ぶんなので、冒頭に数字が無いと
+   「何が分かるページか」が伝わらないまま切れる。 #}
+{% block description %}直近{{ day_count }}営業日のうち{{ s.rows|length }}回ランクイン{% if s.best_pct is not none %}、最大の変動{{ "%+.2f"|format(s.best_pct) }}%{% endif %}{% if s.stop_highs %}、ストップ高{{ s.stop_highs }}回{% endif %}{% if s.stop_lows %}、ストップ安{{ s.stop_lows }}回{% endif %}。{{ s.name }}（{{ s.code }}{% if profile_short %}／{{ profile_short }}{% endif %}）が値上がり・値下がり・活況ランキングに載った日を、順位と終値つきで一覧にしています。{% endblock %}
 {% block structured_data %}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
