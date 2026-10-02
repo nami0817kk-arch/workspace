@@ -5,7 +5,7 @@ description: workspace の Flutter アプリを App Store に初めて出す（�
 
 # iOS アプリの初回リリース（新しいアプリを App Store に出す）
 
-- **最終確認日: 2026-10-02**（護送ボートの実地の提出＋公式ヘルプとの照合＋2.1 の情報依頼への返信）
+- **最終確認日: 2026-10-02**（robots.txt の件を反映）（護送ボートの実地の提出＋公式ヘルプとの照合＋2.1 の情報依頼への返信）
 - 手本の実装は **projects/goso-boat**。ワークフロー・掲載画像の生成器・法務ページは、そこから写して名前を替える
 - 印の意味: **【実地】**＝実際の画面で確かめた、**【公式】**＝公式ヘルプに書いてある、**【公式に記載なし】**＝画面で出たときだけ従う
 
@@ -104,7 +104,11 @@ https://github.com/nami0817kk-arch/workspace/settings/secrets/actions → **New 
 
 ## B. 法務ページと app-ads.txt（私。公開の OK が要る）
 
-- `projects/<app>/legal/{privacy,terms,support}.html`（日英1ページ）、`site/index.html`、`site/app-ads.txt`
+- `projects/<app>/legal/{privacy,terms,support}.html`（日英1ページ）、`site/index.html`、`site/app-ads.txt`、**`site/robots.txt`、`site/404.html`**
+- **robots.txt と 404.html は必ず実体として置く**。無いと Cloudflare Pages は無いパスにトップページの HTML を返し、`/robots.txt` が「200 で中身が HTML」になる。
+  AdMob のクローラは robots.txt を読めず、**app-ads.txt の確認が止まる**（サカマネ・護送ボートの両方で踏んだ。docs/app-pitfalls.md 項目8）。
+  robots.txt は `User-agent: *` / `Allow: /` に加え、AdMob のヘルプの指示どおり `User-agent: Google-adstxt` / `Disallow:` を入れる
+- 置いたら `curl -s -o /dev/null -w '%{content_type}' https://<host>/robots.txt` が text/plain か、無いパスが 404 かを確かめる（200 だけでは足りない）
 - `.github/workflows/<app>-site.yml` で Cloudflare Pages `<app>` プロジェクトへ（goso-boat-site.yml を写す）。最後に curl で開けるか確かめる
 - **app-ads.txt はストアの「マーケティング URL」のホスト直下**に置く（`https://<ホスト>/app-ads.txt`）。AdMob はそこを読みに来る【公式】
 - privacy には: AdMob が集める情報（IP・端末ID・広告の表示と操作・性能とクラッシュ）、ATT を使わず IDFA を渡さない、
@@ -221,7 +225,9 @@ App Store Connect → TestFlight → 内部テストの **＋** → グループ
    （またはアプリの設定 →「アプリストア」→「ストアを追加」）→ アプリを検索 → **追加** → **続行**
    - **名前で出なくても、ストアの URL（`https://apps.apple.com/jp/app/id<AppID>`）を検索欄に貼ると出る**【公式・実地 2026-10-02】。護送ボートは公開2日目に名前では出ず、URL で出た
 2. **アプリを確認（Verify app）**: アプリの設定 →「アプリを確認」→「更新を確認」。app-ads.txt で本人のアプリかを確かめる
-   - **紐づけの直後に押すと「app-ads.txt ファイルが設定されている可能性がありますが、お客様の詳細情報が AdMob アカウントの情報と一致しません」と出た**（2026-10-02 実地）。ファイルとストアのデベロッパ Web サイトが正しければ、AdMob が読み直すまで最大24時間かかるだけ【公式】。翌日に「アップデートを確認」を押し直す
+   - **「app-ads.txt ファイルが設定されている可能性がありますが、お客様の詳細情報が AdMob アカウントの情報と一致しません」と出たら、まず `/robots.txt` が HTML を返していないかを見る**（2026-10-02 実地。原因はこれだった）。
+     私は「*.pages.dev だから pages.dev を読みに行く」と見立てたが**外れ**（サカマネも同じ見立てで外していた）。*.pages.dev でも robots.txt を直せば通る。
+     直したあと、AdMob が読み直すまで最大24時間【公式】。翌日に「アップデートを確認」を押し直す
    - 確かめ方: `curl -s https://<ホスト>/app-ads.txt | od -c`（余計な文字が無いか）と、iTunes lookup の `sellerUrl` がそのホストか
    （**2025年1月から新しいアプリは必須**。確認が済むまで広告は十分に出ない）
 3. 確認が通ると「アプリの準備状況」の審査が自動で始まる（たいてい2〜3日）。状態は「準備中」→「審査が必要」→「**準備完了**」。準備完了で配信の制限が外れる
