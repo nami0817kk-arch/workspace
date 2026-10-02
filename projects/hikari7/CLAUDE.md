@@ -11,7 +11,7 @@
 
 | 場所 | 中身 |
 |---|---|
-| `prototype/game.html` | 試作の本体（v16）。顔の絵は入っていない（`FACEDATA` の区間は仮の値） |
+| `prototype/game.html` | 試作の本体（v17）。顔の絵は入っていない（`FACEDATA` の区間は仮の値） |
 | `prototype/faces/` | 顔の絵（280×280、2026-10-02 にユーザーが Gemini で作った3×3の一覧19枚から切り出し）と `pool.json`（男女・同じ顔の組 `group`）。男性78人74通り・女性82人74通り。1シーズンに同じ組は1人まで |
 | `prototype/bg/` | 背景の絵（Gemini・縦長）。stage=本番、hall=最終審査とデビューのポスター、practice=番組のテロップ、night=本番の夜、stage2=最後のひとりの発表。組み立てのときに埋め込む |
 | `tool/build_web_test.py` | 本体と顔を1枚のページに組み立て、`build/web/` に出す |
@@ -21,6 +21,8 @@
 | `app/` | iOS アプリの外側（Flutter）。広告・課金は護送ボートの `lib/monetization` を写したもの。商品ID `hikari7_remove_ads`、Bundle ID `com.namiki.hikari7` |
 | `legal/` `site/` | プライバシーポリシー・サポート・利用規約と、公開ページの入口・app-ads.txt。`hikari7-site.yml` が https://hikari7.pages.dev/ に出す（アプリのリンクと App Store の URL 欄はここを指す） |
 | `docs/RELEASE.md` | TestFlight と App Store への出し方（護送ボートの手順を写したもの）。リリースは `hikari7-ios-release.yml` |
+| `tool/make_bgm.py` | BGM 6曲を作る（`platform/ai-lab` の audiogen で合成。生成AIではない）。`app/assets/audio/bgm/` に MP3 |
+| `tool/make_voice.py` | 台詞の声を作る（手元の VOICEVOX ENGINE で合成）。`app/assets/audio/voice/<声>/<FNV>.mp3` と `index.json`。足りない分だけ作る |
 | `tool/make_icon.py` | アプリアイコンを描く（7つの椅子・真ん中が金色） |
 | `fonts/` | 見出し書体 Dela Gothic One（OFL）。使う字だけに絞って埋め込む |
 | `web-test/` | テスト用Web版に添える `_headers`・`robots.txt` |
@@ -85,6 +87,32 @@ sim の good は、ふたりと話すとき絆のいちばん深いふたりを�
 - **設定**（`hikari7_set`）：文字の大きさ（body の zoom）・進み方・ステージの見方・効果音（WebAudio で合成）・振動（アプリは HapticFeedback）・明るさ・動きを減らす・記録の消去
 - **落ちない作り**：描画は `render()` が `render0()` を包み、失敗したら復帰の画面。場面が変わるたびに一つ前の保存を `hikari7_bak` に残し、壊れたセーブは予備から戻せる。1シーズン1回「この審査を最初からやり直す」（`hikari7_snap`）
 - **アプリ側**：起動画面（題字）、上の帯の色をゲームの明るさに合わせる（`theme`）、裏に回る直前に保存（`hikariPause`）、A以上を2シーズン取った人に1度だけレビューのお願い（`in_app_review`、出すかどうかは iOS が決める）
+
+## BGM と台詞の声（2026-10-03 ユーザー選択「BGMは audiogen で作って同梱・セリフは事前に録って同梱」）
+
+- **BGM**：title（タイトル・準備・デビュー後）／practice（会議・レッスン・会話）／night（出来事・夜）／stage（本番）／judge（合否・発表）／ending（エンドロール）。
+  場面との対応は game.html の `BGM_OF`。音量は設定の「BGM」（切る・小・中・大）
+- **声**：「」の中が固定の台詞だけ（名前が入る台詞は録れない）。台詞のキーは FNV-1a（`voiceKey` と `make_voice.key_of` が同じ値を出す）。
+  練習生ごとに、同じ男女の4つの声から1つ（`t.vo`）。会話の結果・話を聞いた一言・出来事の結果・合格のひと言は自動で読み、面談・講評・別れ・応募のひと言は🔊を押すと読む。
+  **台詞を足したり変えたりしたら `python tool/make_voice.py` を回す**（無い声は鳴らないだけで、壊れはしない）
+- **使っている声と規約**（2026-10-03 に各規約を確認。どれも申請不要、クレジットが必須）
+
+  | キー | 話者 | 気をつけること |
+  |---|---|---|
+  | f1 | 春日部つむぎ | ゲーム・別キャラの声での利用は FAQ で明記して可 |
+  | f2 | 冥鳴ひまり | 別キャラの声も可 |
+  | f3 | 雨晴はう | 別キャラの声も可。再生時に高さ・速さを変えない（合成のときに決める） |
+  | f4 | 九州そら | クレジットを書かないと商用は有料契約。必ず書く |
+  | m1 | 白上虎太郎 | VirVox 規約。クレジットを外さない |
+  | m2 | 玄野武宏 | 同上 |
+  | m3 | 剣崎雌雄 | 「VOICEVOX」と「剣崎雌雄」の両方を書く |
+  | m4 | 黒沢冴白 | VirVox 規約 |
+
+  青山龍星は「企業が関わる場合は事前確認」があるので使わない。
+  クレジットは「VOICEVOX:話者名」の形で、設定画面・エンドロール・App Store の説明に書く（架空の練習生の名前では書かない）
+- **アプリ**：Flutter の audioplayers で鳴らす（`lib/game/game_audio.dart`）。消音スイッチに従う。裏に回ったら止める。
+  ゲームからは `{"type":"bgm","k","vol"}` `{"type":"voice","f":"f1/0a1b2c3d"}`。決めた曲名・形以外は鳴らさない（bridge で検査）
+- **Web 版**：組み立てのときに `app/assets/audio/` を `build/web/audio/` に写す。ブラウザは最初に押すまで音を出せないので、最初のクリックで鳴り始める
 
 ## 決まっていること（ユーザー決定）
 
