@@ -29,6 +29,22 @@ HEAD = (
 BADGE = '<div id="test-badge">テスト版</div>\n'
 
 
+def bg_block():
+    """背景の絵（prototype/bg/*.jpg）を data URI にして BGDATA の区間に入れる。"""
+    d = os.path.join(ROOT, 'prototype', 'bg')
+    img = {}
+    for f in sorted(os.listdir(d)):
+        if f.endswith('.jpg'):
+            img[f[:-4]] = 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(d, f), 'rb').read()).decode('ascii')
+    return '/*BGDATA-START*/var BG_IMG=' + json.dumps(img, separators=(',', ':')) + ';/*BGDATA-END*/'
+
+
+def put_bg(s):
+    a = s.index('/*BGDATA-START*/')
+    b = s.index('/*BGDATA-END*/') + len('/*BGDATA-END*/')
+    return s[:a] + bg_block() + s[b:]
+
+
 def face_block():
     pool = json.load(io.open(os.path.join(FACES, 'pool.json'), encoding='utf-8'))
     img, grp = {}, {}
@@ -52,6 +68,7 @@ def main():
     b = s.index('/*FACEDATA-END*/') + len('/*FACEDATA-END*/')
     block, nm, nf = face_block()
     s = s[:a] + block + s[b:]
+    s = put_bg(s)
     title = '<title>ひかりの七席</title>'
     assert title in s, 'game.html の <title> が見つからない'
     s = s.replace(title, '<title>ひかりの七席（テスト版）</title>', 1)
