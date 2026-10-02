@@ -881,6 +881,28 @@ def test_ショートが題名に答えていなければ知らせる():
     assert subject_problems(trim(script), script) == []
 
 
+def test_長い反応しか印が無ければ入る短い1件のぶんを空ける():
+    """2026-10-03（③）。8行に分けた1件に印を付け、行で数えて3行ぶんしか空けず、反応0件になった。"""
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    for i in range(8):
+        body += [f"解説: 語り{i}です。" + "あ" * 40, ""]
+    body += ["## 見立て", "", "解説: 見立ての1行目です。" + "い" * 30, "", "解説: 見立ての答えです。" + "い" * 30, ""]
+    body += ["## ネットの反応", ""]
+    body += ["ネット民: 長い反応の頭です。" + "う" * 30, "  short_voice: true", ""]
+    for i in range(7):
+        body += [f"ネット民: 長い反応の続き{i}。" + "う" * 30, "  short_voice: true", "  cont: true", ""]
+    body += ["ネット民: 短い反応です。", ""]
+    script = parse_script(nl.join(body))
+    got = [line.text for line in trim(script, "本編").scenes[-1].lines]
+    assert any(t.startswith("短い反応") for t in got), got
+    # 見立ての節を途中まで足して、答えを言わずに終わらない
+    assert not any(t.startswith("見立ての1行目") for t in got), got
+
+
 def test_締めに反応が入らなければ知らせる():
     """2026-10-02 久保の結婚の回。印を付けた反応が長くて入らず、見立ての語りで途中終わりになった。"""
     from src.script_model import Line, Scene, Script

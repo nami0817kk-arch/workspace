@@ -8,3 +8,7 @@ imageio-ffmpeg==0.6.0    # ffmpeg バイナリを同梱（別途インストー�
 requests==2.34.2         # VOICEVOX ENGINE の HTTP API と X の埋め込み取得用
 PyYAML==6.0.3
 pytest==9.1.1
+# 写真の顔の位置を見る（src/faces.py・tools/facecrop.py・tools/facecheck.py。2026-10-03 追加）。
+# 4.x に固定する。5.0 は Haar cascade の xml を同梱しなくなり、顔の検出器が読めない。
+# 入っていなくても src/faces.py は import で落ちない（「検出できない」を返す）
+opencv-python-headless==4.14.0.94

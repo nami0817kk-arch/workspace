@@ -512,13 +512,26 @@ def _reserved(script: Script, short: Script, max_seconds: float) -> float:
     source = _voices_source(short, script)
     if source is None:
         return 0.0
-    picked = [l for l in source.lines if getattr(l, "short_voice", False)]
-    if not picked:
+    if not any(getattr(l, "short_voice", False) for l in source.lines):
         return 0.0
-    need = sum(l.duration or l.estimated_duration()
-               for l in picked[:VOICES_TAIL_MAX])
+    # **反応はかたまり（頭の行＋続きの cont）で数える**（2026-10-03「動画の質を上げる仕組み ③」）。
+    # 行で数えていたので、8行に分けた1件は頭の3行ぶんしか空けず、締めに入らなかった（久保の結婚の回）
+    def cost(group):
+        return sum(l.duration or l.estimated_duration() for l in group)
+    groups = [g for g in _voice_groups(source.lines)
+              if str(getattr(g[0], "only", "") or "").strip() != "short"]
     # 語りを削りすぎない。**半分までしか空けない**
-    return min(need, max_seconds * 0.5)
+    cap = max_seconds * 0.5
+    need = 0.0
+    for group in [g for g in groups if any(getattr(l, "short_voice", False) for l in g)][:VOICES_TAIL_MAX]:
+        if need + cost(group) <= cap:
+            need += cost(group)
+    if need == 0.0:
+        # **印の付いた反応がどれも半分を超えるなら、入るいちばん短い1件のぶんを空ける**。
+        # 空けずに進むと反応0件のまま、次の節の語りで途中終わりになった（同じ回で2回作り直した）
+        fits = [cost(g) for g in groups if cost(g) <= cap]
+        need = min(fits) if fits else 0.0
+    return need
 
 
 def _voices_source(short: Script, script: Script) -> Scene | None:
@@ -639,6 +652,11 @@ def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
     target = max_seconds * ESTIMATE_SLACK
     if _estimate(short) > target - 4:
         return
+    # **反応の節がある回は、節を丸ごと入るときだけ足す**（2026-10-03「動画の質を上げる仕組み ③」）。
+    # 久保の結婚の回で、反応が入らなかったぶんを見立ての節の頭3行で埋め、
+    # 「何度も相手探しが起きてきました」で答えを言わずに終わった。紹介もの（反応が無い回）は今までどおり
+    whole_only = (_voices_source(short, script) is not None
+                  and str((script.meta or {}).get("short_voices", "")).lower() not in ("false", "no", "0"))
     body_title = short.scenes[-1].title
     seen = {str(l.text) for l in short.scenes[-1].lines}
     after = []
@@ -657,6 +675,11 @@ def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
     lines = short.scenes[-1].lines
     at = next((i for i, l in enumerate(lines) if (l.text or "").strip() in voiced), None)
     for scene in after:
+        if whole_only:
+            rest = [l for l in scene.lines
+                    if str(getattr(l, "only", "") or "").strip() != "short" and str(l.text) not in seen]
+            if _estimate(short) + sum(l.duration or l.estimated_duration() for l in rest) > target:
+                return
         for line in scene.lines:
             if str(getattr(line, "only", "") or "").strip() == "short":
                 continue

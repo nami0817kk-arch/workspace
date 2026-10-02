@@ -3049,6 +3049,18 @@ def _cmd_draft(args, config) -> int:
             _found = _fn(_script)
             if getattr(_found, "ok", True) is False:
                 late.append(f"{_found.label}: {_found.detail}")
+        # **ショートの組み立てを、書き出す前に見積もる**（2026-10-03「動画の質を上げる仕組み ③」）。
+        # 締めの反応が入るか・題名に答えているかは、書き出してからでないと分からなかった
+        # （久保の結婚の回でショートを3回作り直した）。見積もりの尺で一度組んでみて知らせる
+        from . import shorts as _shorts
+        try:
+            _short = _shorts.trim(_script)
+        except _shorts.ShortError as err:
+            late.append(f"ショート: {err}")
+        else:
+            for _p in (_shorts.voice_tail_problems(_short, _script)
+                       + _shorts.subject_problems(_short, _script)):
+                late.append(f"ショート（見積もり）: {_p}")
     except Exception as err:      # 検査で書き出しを落とさない
         # **黙って飲み込まない。**2026-09-16 に `Finding.name` を書き間違えて、
         # この except が全部を吸っていた。**「✓ しか出ない点検」そのもの**だった

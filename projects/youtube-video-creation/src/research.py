@@ -144,6 +144,8 @@ class Section:
     # **長い反応を行に分けたときの「続き」の印**（2026-09-26）。ショートが反応を
     # 行ごとに拾って前半だけで切れた（久保の回）。続きの行は前の行とひとかたまり
     line_conts: list = field(default_factory=list)
+    # **山を作る行**（2026-10-03 ④）。台本に `emph: true` を書き、声の抑揚を強める
+    line_emphs: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
     # **その節の地の文を誰が読むか**（2026-09-09 ユーザー指示）。
     # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
@@ -394,6 +396,7 @@ def build_notes(raw: dict) -> Notes:
         onlys: list[str] = []
         picks: list[bool] = []
         conts: list[bool] = []
+        emphs: list[bool] = []
         mutes: list[bool] = []
         for item in raw_lines:
             if isinstance(item, dict):
@@ -421,6 +424,7 @@ def build_notes(raw: dict) -> Notes:
                 picks.append(bool(item.get("short_voice")))
                 mutes.append(bool(item.get("no_telop")))
                 conts.append(bool(item.get("cont")))
+                emphs.append(bool(item.get("emph")))
             else:
                 lines.append(str(item).strip())
                 voices.append("")
@@ -432,6 +436,7 @@ def build_notes(raw: dict) -> Notes:
                 picks.append(False)
                 mutes.append(False)
                 conts.append(False)
+                emphs.append(False)
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
@@ -450,6 +455,7 @@ def build_notes(raw: dict) -> Notes:
                 line_onlys=[onlys[i] for i in keep],
                 line_short_voices=[picks[i] for i in keep],
                 line_conts=[conts[i] for i in keep],
+                line_emphs=[emphs[i] for i in keep],
                 line_no_telops=[mutes[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 quotes_from=[str(u).strip() for u in (entry.get("quotes_from") or []) if str(u).strip()],
@@ -546,6 +552,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     problems += _check_thumbnail_resolution(notes)
     problems += _check_line_images_wide(notes)
     problems += _check_20261001(notes)
+    problems += _check_viewpoint_substance(notes)
     # **voices 型は新しく作らない**（2026-09-28 ユーザー決定「収益化することが目的なので、
     # そこに目線を合わせましょう」）。YouTube の収益化ポリシーは「他の資料の内容を
     # 読み上げただけのコンテンツ」「他のソーシャル メディアのコンテンツを集めた短い動画」を
@@ -621,6 +628,38 @@ def _voice_heavy(section: Section) -> bool:
 
 
 THUMB_ONLY_MARK = ".thumbonly"   # tools/thumbpanel.py が「サムネ専用の絵」に置く印
+
+
+# **見立ての中身の型**（2026-10-03 ユーザー選択「動画の質を上げる仕組み ⑥」）。
+# 収益化の審査が対象外にする「読み上げただけ」から離れるのは、こちらが比べて言えること。
+# 見出しの言葉（_check_20261001）は見ていたが、中身が感想だけでも通っていた
+VIEW_COMPARE = re.compile(r"より|上回|下回|倍|差|比べ|並ぶ|以来|前回|昨季|去年|年前|これまで|過去|初めて|史上|一度も|最多|最少|上位|下位")
+VIEW_NEXT = re.compile(r"(?:\d+月)?\d+日|次の|次は|次に|目指|次戦|来週|来月|このあと|この先|これから|待って|控え")
+VIEW_NUMBER = re.compile(r"\d[\d,.]*")
+
+
+def _check_viewpoint_substance(notes: Notes) -> list[str]:
+    """**見立ての節に「比べ」か「次に起きること」が1つは入っているか**（2026-10-03）。
+
+    通すのは、語りの行（代弁・反応を除く）に次のどれかがあるとき。
+    1. 数字の比べ：1行に数字が2つ以上
+    2. 過去・ほかとの比べ：「以来」「前回」「昨季」「これまで」「史上」「より」など
+    3. 次に起きること：日付（5日・10月11日）や「次の」「これから」「待って」など
+    どれも無い見立ては感想で終わっている。止めて、比べか次の予定を足してもらう。
+    """
+    out: list[str] = []
+    for sec in notes.sections:
+        if not sec.viewpoint:
+            continue
+        lines = [t for i, t in enumerate(sec.say)
+                 if not (sec.voices[i] if i < len(sec.voices) else "")]
+        ok = any(len(VIEW_NUMBER.findall(t)) >= 2 or VIEW_COMPARE.search(t) or VIEW_NEXT.search(t)
+                 for t in lines)
+        if not ok:
+            out.append(f"見立ての節『{sec.heading}』に、比べ（数字2つ・過去やほかとの比べ）も、"
+                       "次に起きること（日付・次の試合）もありません。感想だけで終わっています"
+                       "（2026-10-03「動画の質を上げる仕組み ⑥」）。数字で比べた1行か、次の予定の1行を足してください")
+    return out
 
 
 def _check_20261001(notes: Notes) -> list[str]:
@@ -729,7 +768,7 @@ def _check_voice_clash(notes: Notes) -> list[str]:
 
 # 1行ぶんの辞書に書いてよい鍵
 LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image", "pause",
-                       "short_only", "short_voice", "no_telop", "cont"})
+                       "short_only", "short_voice", "no_telop", "cont", "emph"})
 
 
 def _check_card(section: Section) -> list[str]:
@@ -2430,6 +2469,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
             if (number < len(section.line_conts)
                     and section.line_conts[number]):
                 lines.append("  cont: true")
+            if (number < len(section.line_emphs)
+                    and section.line_emphs[number]):
+                lines.append("  emph: true")
             # **`only: short` の行に節のカードを付けない**（2026-09-18 に踏んだ）。
             # その行は本編では落ちるので、**カードごと消える**。
             # クロップの回で、選手の表が画面に一度も出なかった。

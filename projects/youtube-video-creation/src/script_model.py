@@ -32,7 +32,7 @@ ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
 LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source",
-              "card", "only", "short_voice", "cont"}
+              "card", "only", "short_voice", "cont", "emph"}
 
 # 情報の確度。ニュース系では、これを画面に出さないと視聴者が判断できない
 SOURCE_TIERS = {
@@ -123,6 +123,9 @@ class Line:
     # **前の行の続き**（2026-09-26）。長い反応を行に分けたとき、2行目以降に付く。
     # ショートは反応を丸ごと入れるか丸ごと落とす（途中で切らない決まり）
     cont: bool = False
+    # **山を作る行**（2026-10-03「動画の質を上げる仕組み ④」。ユーザー「もう少し、盛り上げて説明する感じで」）。
+    # 抑揚を強め、少しだけゆっくり・高めに読む（`tts.voice_params`）。言葉の選び方だけでは山が作れなかった
+    emph: bool = False
     source_line: int = 0
 
     # ビルド中に埋まる
@@ -347,7 +350,7 @@ def _apply_attr(line: Line, key: str, value: str, number: int) -> None:
             setattr(line, key, float(value))
         except ValueError as exc:
             raise ScriptError(f"{number}行目: {key} には数値を指定してください") from exc
-    elif key in ("no_telop", "short_voice", "cont"):
+    elif key in ("no_telop", "short_voice", "cont", "emph"):
         setattr(line, key, value.lower() not in ("false", "no", "0", ""))
     elif key == "only":
         if value.strip() not in ("short",):

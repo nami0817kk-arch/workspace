@@ -115,9 +115,10 @@ class EngineBackend:
             )
             query.raise_for_status()
             params = query.json()
-            params["speedScale"] = line.speed if line.speed is not None else member.speed
-            params["pitchScale"] = member.pitch
-            params["intonationScale"] = member.intonation
+            speed, pitch, intonation = voice_params(line, member)
+            params["speedScale"] = speed
+            params["pitchScale"] = pitch
+            params["intonationScale"] = intonation
 
             audio = requests.post(
                 f"{self.url}/synthesis",
@@ -243,9 +244,7 @@ class CoreBackend:
         self._ensure_style(member.style_id)
         synth = self._synth()
         query = synth.create_audio_query(line.text, member.style_id)
-        query.speed_scale = line.speed if line.speed is not None else member.speed
-        query.pitch_scale = member.pitch
-        query.intonation_scale = member.intonation
+        query.speed_scale, query.pitch_scale, query.intonation_scale = voice_params(line, member)
         return synth.synthesis(query, member.style_id)
 
 
@@ -420,11 +419,33 @@ def _zenkaku(text: str) -> str:
     return unicodedata.normalize("NFKC", text or "")
 
 
+# **山を作る行の読み方**（2026-10-03「動画の質を上げる仕組み ④」）。
+# 抑揚を強め、ほんの少しゆっくり・高めに読む。VOICEVOX の pitchScale は足し算（±0.15 の範囲）
+EMPH_INTONATION = 1.35
+EMPH_SPEED = 0.94
+EMPH_PITCH = 0.03
+
+
+def voice_params(line: Line, member: CastMember) -> tuple[float, float, float]:
+    """その行を読む速さ・高さ・抑揚。`emph` の行だけ山を作る。"""
+    speed = line.speed if line.speed is not None else member.speed
+    pitch = member.pitch
+    intonation = member.intonation
+    if getattr(line, "emph", False):
+        speed = round(speed * EMPH_SPEED, 3)
+        pitch = round(pitch + EMPH_PITCH, 3)
+        intonation = round(intonation * EMPH_INTONATION, 3)
+    return speed, pitch, intonation
+
+
 def _digest(line: Line, member: CastMember, pause: float, backend: str) -> str:
     """同じ条件なら再合成しないためのキャッシュキー。"""
+    speed, pitch, intonation = voice_params(line, member)
+    # 山の無い行は今までと同じ鍵（作り直しを起こさない）
+    tail = f"|{intonation}|{pause}" + ("|emph" if getattr(line, "emph", False) else "")
     seed = (
         f"{backend}|{line.text}|{member.style_id}|{line.speed or member.speed}"
-        f"|{member.pitch}|{member.intonation}|{pause}"
+        f"|{member.pitch}{tail}"
     )
     return hashlib.sha1(seed.encode("utf-8")).hexdigest()[:8]
 
