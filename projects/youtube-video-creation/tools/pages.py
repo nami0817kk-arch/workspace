@@ -138,7 +138,8 @@ def topics(date: str, spec_path: Path) -> Path:
         fmt = f'<span class="fmt">{e(str(it.get("fmt", "news")))}</span>'
         warn = '<span class="weak">弱い</span>' if it.get("weak") else ""
         if it.get("new"):
-            warn = '<span class="fresh">差し替え候補</span>' + warn
+            label = it["new"] if isinstance(it["new"], str) else "差し替え候補"
+            warn = f'<span class="fresh">{e(label)}</span>' + warn
         cards.append(f'''<div class="card" data-num="{int(it["num"])}">
 <h3><span class="num">{int(it["num"])}</span>{e(str(it["head"]))}</h3>
 <p class="meta">{tag}{fmt}{warn}<a href="{e(str(it.get("url", "")))}" target="_blank" rel="noopener">{e(str(it.get("src", "")))}</a></p>

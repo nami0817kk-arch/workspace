@@ -881,6 +881,25 @@ def test_ショートが題名に答えていなければ知らせる():
     assert subject_problems(trim(script), script) == []
 
 
+def test_締めに反応が入らなければ知らせる():
+    """2026-10-02 久保の結婚の回。印を付けた反応が長くて入らず、見立ての語りで途中終わりになった。"""
+    from src.script_model import Line, Scene, Script
+    from src.shorts import voice_tail_problems
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題")])
+    story = Scene(title="山場", main=True, lines=[Line(speaker="キャスター", text="本題です")])
+    voices = Scene(title="ネットの反応", lines=[Line(speaker="ネット民", text="おめでとう")])
+    script = Script(title="題", scenes=[opening, story, voices])
+    short = Script(title="題", scenes=[Scene(title="山場", lines=list(story.lines))])
+    assert voice_tail_problems(short, script)
+
+    short.scenes[-1].lines.append(Line(speaker="ネット民", text="おめでとう"))
+    assert voice_tail_problems(short, script) == []
+
+    script.meta = {"short_voices": False}
+    assert voice_tail_problems(Script(title="題", scenes=[Scene(title="山場", lines=list(story.lines))]), script) == []
+
+
 def test_ショートの締めで本編へ渡す():
     """**ショートから本編へ渡す道が無かった**（2026-09-18 ユーザー指示
     「ショートの最後に本編はチャンネルから見て下さい的な感じを入れたい。5秒くらいの枠で」）。

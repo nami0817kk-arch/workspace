@@ -865,6 +865,28 @@ def photo_problems(script: Script) -> list[str]:
             f"{name.stem}_v{name.suffix} として隣に置いてください（2026-09-25「子供が主役になってる」）"]
 
 
+def voice_tail_problems(short: Script, script: Script) -> list[str]:
+    """**締めにネットの反応が1件も入っていないなら知らせる**（2026-10-02）。
+
+    久保の結婚の回で、`short_voice` の印を付けた反応が長すぎて尺に入らず、
+    反応0件のまま、次の節（見立て）の語りで埋めて「何度も相手探しが起きてきました」と
+    途中で終わった。印を付け替えても2件目も入らず、**2回作り直した**。
+    書き出した結果だけでは気づきにくいので、反応の節がある回で締めに1件も無ければ知らせる。
+    直し方は、短い投稿に `short_voice` を付け直すこと（反応は全文で載せる決まりなので切らない）。
+    """
+    if str((script.meta or {}).get("short_voices", "")).lower() in ("false", "no", "0"):
+        return []
+    voiced = {(l.text or "").strip()
+              for scene in script.scenes if _is_voices_scene(scene)
+              for l in scene.lines if (l.text or "").strip()}
+    if not voiced:
+        return []
+    if any((l.text or "").strip() in voiced for l in short.lines):
+        return []
+    return ["締めにネットの反応が1件も入っていません（印の付いた反応が長くて尺に入らない。"
+            "短い投稿に short_voice を付け直す）"]
+
+
 def subject_problems(short: Script, script: Script) -> list[str]:
     """**ショートが、自分の題名に答えているか**（2026-09-17）。
 

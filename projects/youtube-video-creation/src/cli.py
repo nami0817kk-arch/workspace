@@ -761,6 +761,9 @@ def _cmd_short(args, config) -> int:
     # **題名に答えているか**（2026-09-17。同じ日に2回やった）
     for problem in shorts.subject_problems(short, script):
         print(f"  ! {problem}", file=sys.stderr)
+    # **締めに反応が入ったか**（2026-10-02 久保の結婚。長い反応が入らず途中で終わった）
+    for problem in shorts.voice_tail_problems(short, script):
+        print(f"  ! {problem}", file=sys.stderr)
     # **冒頭の写真が横長で縦版が無いか**（2026-09-25「子供が主役になってる」）
     for problem in shorts.photo_problems(script):
         print(f"  ! {problem}", file=sys.stderr)
