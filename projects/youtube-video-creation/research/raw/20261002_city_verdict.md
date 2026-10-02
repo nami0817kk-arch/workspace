@@ -1,5 +1,95 @@
 # 材料の控え: マンチェスター・シティ、財務規則違反で「すべての告発で有罪」（2026-10-01 取材、公開 10/2）
 
+## 10の告発（10/2）
+
+ユーザー指示「マンCは違反の数と内容とかも詳細に触れてください。動画時間は気にしないで」。認定の節のあとに節「告発10項目、ひとつずつ」（33行、表2枚：お金の扱いの6項目／調査への協力義務の4項目）を足した。想定尺は 3分26秒 → 約6分53秒（この節だけで約3分20秒）。
+根拠は委員会の判断（Redacted Core Decision、40ページ）の本文。画像だけのページ（12〜14・19〜21・24〜25）は目で読んだ。項の番号は PDF の段落番号。
+既にある節（スポンサー料・上訴・前例）は事実も言い回しも変えていない（「見せかけ」は新しい節では表の字だけにして、読み上げはスポンサー料の節の1か所に残した）。
+
+### 数
+- 1項: "The Club was charged with well over 100 individual breaches of the PL Rules across the course of many seasons. The breaches alleged to have been committed by the Club were divided by the PL into 4 broad categories – Charges 1, 2, 3 and 4. Charge 1 was divided into four sub-charges – Charges 1(A), 1(B), 1(C) and 1(D). Charge 4 was also divided into four sub-charges – Charges 4(A), 4(B), 4(C), 4(D)."
+  → 1(A)〜(D)・2・3・4(A)〜(D) の10項目
+- 7項: "we found each of the Charges proven against the Club bar Charge 4(B)."
+- 1の全体（38〜39項）: 毎季、真実かつ公正な姿を示す決算書をリーグに出す義務（Accounts Submission Requirement）。違反は "PL Rule C.71/Rule E3"。あわせて最大限の誠実さ（utmost good faith、45項）の義務違反
+- 109項: 1(A)・1(B)・1(C) は "intentional conduct"。1(A)〜1(D) の各項の終わりに "By its conduct the Club clearly intended to circumvent the PL Rules."（114・121・128・134・140・146項）→「規則をすり抜けようとしたのは明らか」
+
+### 項目ごと（台本の表と同じ並び）
+
+| 項目 | 中身（台本の表） | 対象の季 | 結果 | 項 |
+|---|---|---|---|---|
+| 1(A) | 見せかけのスポンサー契約 | 2009-10〜2017-18（9季） | 有罪 | 110〜115 |
+| 1(B) | 報酬の支払いを隠す（3件） | 4季・6季・1季（どの季かは伏せ字） | 有罪 | 116〜135 |
+| 1(C) | 肖像権の循環の仕組み（フォーダム） | 伏せ字 | 有罪 | 136〜141 |
+| 1(D) | 関係の深い相手との取引を決算書に書かず | 9季 | 有罪 | 142〜147 |
+| 2 | ウエファの規則（収支を釣り合わせる基準） | 2013-14〜2017-18 | 有罪 | 148〜151 |
+| 3 | リーグの収益と持続可能性の規則（PSR） | 2015-16〜2017-18 | 有罪 | 152〜155 |
+| 4(A) | 調査への協力義務 | 2018年からの調査 | 大半の点で有罪 | 157 |
+| 4(B) | 同上 | 同上 | 不成立 | 157 |
+| 4(C) | 同上 | 同上 | 有罪（すべての点） | 157 |
+| 4(D) | 同上 | 同上 | 有罪 | 157 |
+
+- **1(A)**
+  - 110項 "Each of the AD Sponsorship Agreements [伏せ字] was a sham: Appendix 20."
+  - 112項 "the Club's financial statements in each of the seasons to which Charge 1(A) relates a) Very substantially overstated the Club's revenue, and b) Did not provide a true and fair view of the Club's financial position"
+  - 113項 "The Club thus breached PL Rule C.71/Rule E3 in each of the nine seasons to which Charge 1(A) relates."
+  - 114項 "The Club knew that the annual accounts ... did not provide a true and fair view ..., alternatively the Club was reckless as to whether ..."
+  - 81項(a) "In its financial statements for each season between 2009/10 and 2017/18"
+  - 金額（72項 £949.94m／£119.25m／£830.69m、101項 "hugely overstated by over £830 million"）はスポンサー料の節で読む。新しい節では読まない
+- **1(B)**（3件。名前・役職・季はすべて伏せ字）
+  - 91項 "the Club also utilised devices to disguise the true extent of certain Club liabilities and so to record its operating expenses in its financial statements as being smaller than was in fact the case. In each case what was in reality a liability of the Club that ought to have been met by the Club was met by ADUG."
+  - 1件目: 92項 "a significant part of the remuneration that we find was payable by the Club to [伏せ字] ... Was not recorded in [伏せ字] employment contract ... Was instead recorded in a Consultancy Agreement"、93項 "The monies used to fund the [伏せ字] – which totalled £8.866million - were ADUG monies."、118項 "each of the four seasons to which this limb of Charge 1(B) relates"、120項 "the Club breached PL Rule Q.7 & 8/P.7 & 8"
+  - 2件目: 94項 "ADUG paying significant sums to [伏せ字] ... Which were not recorded in [伏せ字] contract with the Club"、95項 "which totalled £7.4million - were ADUG monies"、125項 "each of the six seasons to which this limb of Charge 1(B) relates"、127項 "the Club breached PL Rule K.12 & 20/T.12/13 & 19/20 ... The terms of [伏せ字] remuneration and image rights payments ought to have been set out in his contract with the Club"
+  - 3件目: 96項 "ADUG paying a significant sum to [伏せ字] in respect of a liability of the Club to [伏せ字] that a) Was not recorded as a liability of the Club ... b) Was instead recorded in a Consultancy Agreement"、97項 "which totalled £500,000 - were ADUG monies"、132項 "the season to which this limb of Charge 1(B) relates"（1季）。こちらは契約の規則の違反は挙がっていない（C.71/E3 だけ）
+  - 116・123・130項 いずれも "a sham"
+  - 合計 8.866＋7.4＋0.5＝16.766 →「およそ1680万ポンド」（Sky 9/29 も "worth nearly £17m"）
+  - **1件目＝監督、2件目＝選手は判断の文書には書いていない（伏せ字）**。補ったもの:
+    - BBC 9/29「The intricate web…」 https://www.bbc.com/sport/football/articles/c65y51l3gzq4o : "Another way the club attempted to pass the financial rules was to move expensive contracts for players and managers off the books." "There are three separate cases attributed to this, with all names redacted from the document." "City used this method for payments of £8.866m, £7.4m and £0.5m."
+    - Guardian 2023-02-06（告発の時） https://www.theguardian.com/football/2023/feb/06/manchester-city-charged-by-premier-league-over-alleged-financial-rule-breaches : 告発の中身に "failing to “include full details” of player and manager remuneration"
+    - 文書の側の手がかり: 2件目は "his contract" と "image rights payments" と規則 K/T。1件目は "employment contract" と規則 Q/P。文書の言葉だけで言い切れるのは2件目（選手）まで。1件目を「監督」と言うのは上の BBC・Guardian と合わせた読み（規則の節の名前は手元で確かめていない）
+    - 名前（報道で出ている人名）は台本で言わない。文書が伏せているため
+- **1(C) フォーダム**
+  - 83〜84項 "In Q3 2012 the Club launched what it termed Project Longbow ... Many of the strands of Project Longbow were genuine, legitimate attempts to achieve those aims. One was not. That was the Fordham Arrangement."
+  - 85項 "the Fordham Arrangement was a closed-circle arrangement entered into by the Club with a third party (Fordham) – which was in reality little more than a front for ADUG – whereby a) ADUG funds would be used (and were used) to enable Fordham to acquire from the Club (at a sizeable, artificially-inflated price) the Club's entitlement to benefit financially from its players' image rights, and b) ADUG funds would be used to enable Fordham to take on and meet liabilities (of the Club) to make payments to Club players who had licensed the ability to use their image rights to the Club."
+  - 86項 "A further device by which ADUG funds could be paid into the Club in a manner that concealed their true origin"
+  - 101項(e) "wrongly recorded as operating income the sum of £24.5 million ... wrongly excluded sums totalling £49.414 million from the Club's operating expenses"（どの季の決算書かは伏せ字）
+  - 136項 "The agreements underlying the Fordham Arrangement were a sham"
+  - 脚注12 に 2014/15・2017/18 の名前は出るが、対象の季の全体ではないので台本では言わない（「伏せられている」）
+- **1(D)**
+  - 142項 "AD Sponsorship Agreements were related party transactions"
+  - 143〜144項 "the Club's financial statements for each of the nine seasons to which Charge 1(D) relates ought to have a) Disclosed the AD Sponsorship Agreements as transactions with a related party ... The Club's financial statements did not make any such (or any such sufficient) disclosures."
+  - 145項 "The absence of such disclosures did not of itself mean that the Club's financial statements did not provide a true and fair view ... However, it did mean that ... had not been prepared and audited in accordance with applicable legal and regulatory principles"
+  - related party は「クラブと関係の深い相手」と訳した。なぜ関係が深いか（付属文書26）は公開されていないので言わない
+- **2 ウエファの規則**
+  - 40項 "CLFFPRs are the UEFA Regulations that have since 2013/14 been in place"、42項 "PL Rule B.14.6 has obliged PL member clubs to comply with UEFA Statutes and Regulations"
+  - 81項(b) "In its annual submission to UEFA under the CLFFPRs in each of the seasons between 2013/14 and 2017/18"
+  - 149項(b) "When so restated the Club did not (by a very substantial amount) meet the break-even requirement set out in the CLFFPRs ... in any of the seasons to which Charge 2 relates"
+  - break-even を「収入と支出を釣り合わせる基準」と訳した（41項の説明どおり）
+- **3 PSR**
+  - 43項 "The PSRs are the PL Rules that since 2015/16 have governed FFP ... a loss of not more than £105million) when assessed over a rolling three-year period"
+  - 81項(a)(ii) "Were used to assess whether the Club had complied with the PL PSRs in 2015/16, 2016/17 and 2017/18"
+  - 153項(b) "When so restated the Club did not (by a very substantial amount) meet the PSR requirements in any of the seasons to which Charge 3 relates"
+  - **超えた額は公開部分に無い**（付属文書30は未公開）→「数字は公開された判断には出てきません」
+- **4 調査への協力義務**
+  - 44項 "The PL Rules contain provisions that require PL member clubs to comply with certain requests made of them by the PL during the course of investigations."
+  - 103〜104項 2018年11月の Der Spiegel の記事が "An investigation by the PL into the Club's financial arrangements" を招いた →「2018年に始まった調査」
+  - 157項 "The Club made concerted efforts to stop and frustrate the PL investigation. The Club breached duties of co-operation that it owed to the PL a) In the majority of the respects set out in Charge 4(A) ... b) In each of the respects set out in Charge 4(C) ... c) In the respect set out in Charge 4(D) ... We find that the Club did not breach duties of co-operation that it owed to the PL in the respects alleged in Charge 4(B)"
+  - PL 声明 "three of the four alleged breaches were upheld"
+  - **4(A)〜(D) それぞれが何を指すかは、判断の本文に書かれていない**（付属文書2・33・34は未公開）。台本では「中身は公開された文書には書かれていません」
+  - 158〜159項: 不正直な回答を別の非協力として足す余地をリーグは残したが、告発には入らなかった（台本では言わない）
+
+### 言葉の扱い
+- sham＝見せかけ、concealed＝隠した、circumvent＝すり抜けようとした、front＝隠れみの同然（"little more than a front"）、closed-circle＝循環、concerted efforts to stop and frustrate＝止め、妨げようと組織的に努めた
+- 「詐欺」「不正」は文書に無いので使っていない
+- 数字は文書のまま: £8.866m＝886万6000ポンド、£7.4m＝740万ポンド、£0.5m＝50万ポンド、£24.5m＝2450万ポンド、£49.414m＝4941万4000ポンド、£105m＝1億500万ポンド。合計だけ「およそ1680万ポンド」
+- 読み: UEFA は過去回と同じ「ウエファ」、項目は「1のA」のように読む（表の字は 1(A)）
+
+### 黒塗り・未公開で言えなかったこと
+- 1(B) の3件の相手の名前と、どの季か（4季・6季・1季という数だけ出ている）。3件目は誰への支払いかも分からない
+- 1(C) の対象の季
+- 2・3 で基準をいくら外れたか（「非常に大きく」だけ）
+- 4(A)〜(D) の中身
+- 1(D) で「関係の深い相手」とされた理由
+
 ## 精査（10/1）
 
 ユーザー指示「シティに関してはもっと内容精査して正しい情報を詰めて」。取材メモの読み上げ・表・サムネ・takeaway を1行ずつ一次情報に当て直した（10/1 16時台、日本時間）。

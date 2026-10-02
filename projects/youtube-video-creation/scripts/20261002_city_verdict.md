@@ -47,6 +47,8 @@ tags:
 sources:
 - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
 - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+- https://www.bbc.com/sport/football/articles/c65y51l3gzq4o
+- https://www.theguardian.com/football/2023/feb/06/manchester-city-charged-by-premier-league-over-alleged-financial-rule-breaches
 - https://www.skysports.com/football/news/11661/13593407/man-city-charges-verdict-key-findings-the-fordham-arrangement-effectively-a-front-for-abu-dhabi-united-group
 - https://www.bbc.com/sport/football/articles/c63reg93xwzro
 - https://www.mancity.com/news/club/manchester-city-club-statement-premier-league-63926128
@@ -132,13 +134,387 @@ cards:
     - ''
     rows: *id001
     highlight_row: 3
+  charges_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: &id002
+    - - 1(A)
+      - 見せかけのスポンサー契約
+      - 09-10〜17-18
+      - 有罪
+    - - 1(B)
+      - 報酬の支払いを隠す
+      - 4季・6季・1季
+      - 有罪
+    - - 1(C)
+      - 肖像権の循環の仕組み
+      - 伏せられている
+      - 有罪
+    - - 1(D)
+      - 関係の深い取引を不記載
+      - 09-10〜17-18
+      - 有罪
+    - - '2'
+      - ウエファの収支の規則
+      - 13-14〜17-18
+      - 有罪
+    - - '3'
+      - リーグの収支の規則
+      - 15-16〜17-18
+      - 有罪
+  charges_0_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+  charges_1_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+  charges_2_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 0
+  charges_3_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 0
+  charges_4_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 1
+  charges_5_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 1
+  charges_6_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 1
+  charges_7_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 1
+  charges_8_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 1
+  charges_9_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 1
+  charges_10_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 2
+  charges_11_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 2
+  charges_12_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 2
+  charges_13_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 2
+  charges_14_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 2
+  charges_15_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 2
+  charges_16_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 3
+  charges_17_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 3
+  charges_18_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 3
+  charges_19_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 4
+  charges_20_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 4
+  charges_21_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 4
+  charges_22_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 5
+  charges_23_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 5
+  charges_24_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 5
+  charges_25_card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象の季
+    - 結果
+    rows: *id002
+    highlight_row: 5
+  charges_26_card:
+    type: table
+    title: 調査への協力義務をめぐる告発（4項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象
+    - 結果
+    rows: &id003
+    - - 4(A)
+      - 調査への協力義務
+      - 2018年からの調査
+      - 大半の点で有罪
+    - - 4(B)
+      - 調査への協力義務
+      - 2018年からの調査
+      - 不成立
+    - - 4(C)
+      - 調査への協力義務
+      - 2018年からの調査
+      - 有罪
+    - - 4(D)
+      - 調査への協力義務
+      - 2018年からの調査
+      - 有罪
+  charges_27_card:
+    type: table
+    title: 調査への協力義務をめぐる告発（4項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象
+    - 結果
+    rows: *id003
+  charges_28_card:
+    type: table
+    title: 調査への協力義務をめぐる告発（4項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象
+    - 結果
+    rows: *id003
+    highlight_row: 0
+  charges_29_card:
+    type: table
+    title: 調査への協力義務をめぐる告発（4項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象
+    - 結果
+    rows: *id003
+    highlight_row: 1
+  charges_30_card:
+    type: table
+    title: 調査への協力義務をめぐる告発（4項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象
+    - 結果
+    rows: *id003
+    highlight_row: 2
+  charges_31_card:
+    type: table
+    title: 調査への協力義務をめぐる告発（4項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象
+    - 結果
+    rows: *id003
+    highlight_row: 3
+  charges_32_card:
+    type: table
+    title: 調査への協力義務をめぐる告発（4項目）
+    columns:
+    - 項目
+    - 中身
+    - 対象
+    - 結果
+    rows: *id003
   money_card:
     type: table
     title: アブダビの企業からのスポンサー料（9季の合計）
     columns:
     - ''
     - 額
-    rows: &id002
+    rows: &id004
     - - 帳簿に載せた額
       - 9億4994万ポンド
     - - スポンサーが払った額
@@ -151,14 +527,14 @@ cards:
     columns:
     - ''
     - 額
-    rows: *id002
+    rows: *id004
   money_2_card:
     type: table
     title: アブダビの企業からのスポンサー料（9季の合計）
     columns:
     - ''
     - 額
-    rows: *id002
+    rows: *id004
     highlight_row: 0
   money_3_card:
     type: table
@@ -166,7 +542,7 @@ cards:
     columns:
     - ''
     - 額
-    rows: *id002
+    rows: *id004
     highlight_row: 1
   money_4_card:
     type: table
@@ -174,7 +550,7 @@ cards:
     columns:
     - ''
     - 額
-    rows: *id002
+    rows: *id004
     highlight_row: 2
   money_5_card:
     type: table
@@ -194,7 +570,7 @@ cards:
     columns:
     - ''
     - ''
-    rows: &id003
+    rows: &id005
     - - 10月2日
       - 上訴の期限
     - - 期限から12週以内
@@ -209,7 +585,7 @@ cards:
     columns:
     - ''
     - ''
-    rows: *id003
+    rows: *id005
     highlight_row: 0
   club_1_card:
     type: table
@@ -217,7 +593,7 @@ cards:
     columns:
     - ''
     - ''
-    rows: *id003
+    rows: *id005
     highlight_row: 0
   club_2_card:
     type: table
@@ -225,7 +601,7 @@ cards:
     columns:
     - ''
     - ''
-    rows: *id003
+    rows: *id005
     highlight_row: 0
   club_3_card:
     type: table
@@ -233,7 +609,7 @@ cards:
     columns:
     - ''
     - ''
-    rows: *id003
+    rows: *id005
     highlight_row: 1
   club_4_card:
     type: table
@@ -241,7 +617,7 @@ cards:
     columns:
     - ''
     - ''
-    rows: *id003
+    rows: *id005
     highlight_row: 2
   club_5_card:
     type: table
@@ -249,7 +625,7 @@ cards:
     columns:
     - ''
     - ''
-    rows: *id003
+    rows: *id005
     highlight_row: 3
   view_card:
     type: table
@@ -258,7 +634,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: &id004
+    rows: &id006
     - - エヴァートン（2023-24季）
       - 上限を1950万ポンド超過
       - 勝ち点10→上訴で6
@@ -278,7 +654,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: *id004
+    rows: *id006
     highlight_row: 0
   view_1_card:
     type: table
@@ -287,7 +663,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: *id004
+    rows: *id006
     highlight_row: 0
   view_2_card:
     type: table
@@ -296,7 +672,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: *id004
+    rows: *id006
     highlight_row: 1
   view_3_card:
     type: table
@@ -305,7 +681,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: *id004
+    rows: *id006
     highlight_row: 2
   view_4_card:
     type: table
@@ -314,7 +690,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: *id004
+    rows: *id006
     highlight_row: 3
   view_5_card:
     type: table
@@ -323,7 +699,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: *id004
+    rows: *id006
     highlight_row: 3
   view_6_card:
     type: table
@@ -332,7 +708,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: *id004
+    rows: *id006
     highlight_row: 3
   view_7_card:
     type: table
@@ -341,7 +717,7 @@ cards:
     - クラブ
     - 違反
     - 罰
-    rows: *id004
+    rows: *id006
     highlight_row: 3
   view_8_card:
     type: table
@@ -350,7 +726,7 @@ cards:
     - 順位
     - クラブ
     - 勝ち点
-    rows: &id005
+    rows: &id007
     - - 1位
       - マンチェスター・シティ
       - '15'
@@ -368,7 +744,7 @@ cards:
     - 順位
     - クラブ
     - 勝ち点
-    rows: *id005
+    rows: *id007
     highlight_row: 0
   view_10_card:
     type: table
@@ -377,7 +753,7 @@ cards:
     - 順位
     - クラブ
     - 勝ち点
-    rows: *id005
+    rows: *id007
     highlight_row: 0
 ---
 
@@ -416,6 +792,110 @@ cards:
   cont: true
   telop: マスターズ「組織的にリーグの規則を破っていたことが示された」
   card: verdict_6_card
+
+## 告発10項目、ひとつずつ
+@bg: assets/backgrounds/studio.png
+
+キャスター: シティへの告発10項目を、ひとつずつ見ます。最初の6つは、お金の扱いです。
+  telop: シティへの告発10項目を、ひとつずつ見ます。最初の6つは、お金の扱いです
+  source: 確定
+  card: charges_0_card
+キャスター: 1のAからDは、毎季リーグに出す決算書が正しかったか、をめぐる告発です。
+  telop: 1のAからDは、毎季リーグに出す決算書が正しかったか、をめぐる告発です
+  card: charges_1_card
+キャスター: 1のAは、アブダビのスポンサーから入ったお金。対象は9季すべて。
+  telop: 1のAは、アブダビのスポンサーから入ったお金。対象は9季すべて
+  card: charges_2_card
+キャスター: 決算書は9季とも実態を示しておらず、収入を大きく多く載せていたと認定されました。
+  telop: 決算書は9季とも実態を示しておらず、収入を大きく多く載せていたと認定されました
+  card: charges_3_card
+キャスター: 1のBは報酬。クラブが払うべきお金を、オーナー側の会社が代わりに払っていました。
+  telop: 1のBは報酬。クラブが払うべきお金を、オーナー側の会社が代わりに払っていました
+  card: charges_4_card
+キャスター: 監督の報酬が886万6000ポンド、選手の報酬と肖像権の支払いが740万ポンド。
+  telop: 監督の報酬が886万6000ポンド、選手の報酬と肖像権の支払いが740万ポンド
+  card: charges_5_card
+キャスター: もう1件は50万ポンドで、誰への支払いかは黒塗りで分かりません。
+  telop: もう1件は50万ポンドで、誰への支払いかは黒塗りで分かりません
+  card: charges_6_card
+キャスター: 3件で、計およそ1680万ポンド。対象は4季、6季、1季です。
+  telop: 3件で、計およそ1680万ポンド。対象は4季、6季、1季です
+  card: charges_7_card
+キャスター: 監督と選手の名前や、どの季の話かは、公開された文書では伏せられています。
+  telop: 監督と選手の名前や、どの季の話かは、公開された文書では伏せられています
+  card: charges_8_card
+キャスター: 契約書に書くべき支払いが書かれず、監督や選手の契約の規則にも反しました。
+  telop: 契約書に書くべき支払いが書かれず、監督や選手の契約の規則にも反しました
+  card: charges_9_card
+キャスター: 1のCは、選手の肖像権で稼ぐ権利を、フォーダムという会社に売った件です。
+  telop: 1のCは、選手の肖像権で稼ぐ権利を、フォーダムという会社に売った件です
+  card: charges_10_card
+キャスター: 2012年に始めた、収入を増やす計画のうち、委員会が本物でないとした1つです。
+  telop: 2012年に始めた、収入を増やす計画のうち、委員会が本物でないとした1つです
+  card: charges_11_card
+キャスター: 委員会は、フォーダムをオーナー側の会社の隠れみの同然と見ました。
+  telop: 委員会は、フォーダムをオーナー側の会社の隠れみの同然と見ました
+  card: charges_12_card
+キャスター: オーナー側の金で、膨らませた値段で権利を買わせる、お金が循環する仕組みです。
+  telop: オーナー側の金で、膨らませた値段で権利を買わせる、お金が循環する仕組みです
+  card: charges_13_card
+キャスター: 収入は2450万ポンド多く、費用は4941万4000ポンド少なく載りました。
+  telop: 収入は2450万ポンド多く、費用は4941万4000ポンド少なく載りました
+  card: charges_14_card
+キャスター: どの季の決算書の話かは、ここも伏せられています。
+  telop: どの季の決算書の話かは、ここも伏せられています
+  card: charges_15_card
+キャスター: 1のDは、スポンサー契約が、クラブと関係の深い相手との取引だった点です。
+  telop: 1のDは、スポンサー契約が、クラブと関係の深い相手との取引だった点です
+  card: charges_16_card
+キャスター: それを決算書に書かなかったことが、9季すべてで規則違反とされました。
+  telop: それを決算書に書かなかったことが、9季すべてで規則違反とされました
+  card: charges_17_card
+キャスター: 1のAからDのどれにも、規則をすり抜けようとしたのは明らか、と書かれています。
+  telop: 1のAからDのどれにも、規則をすり抜けようとしたのは明らか、と書かれています
+  card: charges_18_card
+キャスター: 2は、ウエファの規則です。それを守ることも、リーグの規則で決められています。
+  telop: 2は、ウエファの規則です。それを守ることも、リーグの規則で決められています
+  card: charges_19_card
+キャスター: 対象は2013-14季からの5季。収入と支出を釣り合わせる基準が問われました。
+  telop: 対象は2013-14季からの5季。収入と支出を釣り合わせる基準が問われました
+  card: charges_20_card
+キャスター: 帳簿を正しく直すと、どの季もその基準に非常に大きく届いていませんでした。
+  telop: 帳簿を正しく直すと、どの季もその基準に非常に大きく届いていませんでした
+  card: charges_21_card
+キャスター: 3は、リーグの収益と持続可能性の規則です。対象は2015-16季からの3季。
+  telop: 3は、リーグの収益と持続可能性の規則です。対象は2015-16季からの3季
+  card: charges_22_card
+キャスター: 赤字は3年で1億500万ポンドまで、という決まりです。
+  telop: 赤字は3年で1億500万ポンドまで、という決まりです
+  card: charges_23_card
+キャスター: 直した帳簿では、どの季もそれを非常に大きく超えていました。
+  telop: 直した帳簿では、どの季もそれを非常に大きく超えていました
+  card: charges_24_card
+キャスター: どれだけ超えたかの数字は、公開された判断には出てきません。
+  telop: どれだけ超えたかの数字は、公開された判断には出てきません
+  card: charges_25_card
+キャスター: 残る4つは、2018年に始まったリーグの調査に、協力する義務です。
+  telop: 残る4つは、2018年に始まったリーグの調査に、協力する義務です
+  card: charges_26_card
+キャスター: 委員会は、クラブが調査を止め、妨げようと、組織的に努めたと認定しました。
+  telop: 委員会は、クラブが調査を止め、妨げようと、組織的に努めたと認定しました
+  card: charges_27_card
+キャスター: 4のAは、大半の点で違反と認定。
+  telop: 4のAは、大半の点で違反と認定
+  card: charges_28_card
+キャスター: 4のBだけは、違反が無かったとされ、不成立です。
+  telop: 4のBだけは、違反が無かったとされ、不成立です
+  card: charges_29_card
+キャスター: 4のCは、挙げられたすべての点で違反でした。
+  telop: 4のCは、挙げられたすべての点で違反でした
+  card: charges_30_card
+キャスター: 4のDも、違反が認められています。
+  telop: 4のDも、違反が認められています
+  card: charges_31_card
+キャスター: 4つそれぞれの中身は、公開された文書には書かれていません。
+  telop: 4つそれぞれの中身は、公開された文書には書かれていません
+  card: charges_32_card
 
 ## スポンサー料の本当の出どころ
 @bg: assets/backgrounds/studio.png

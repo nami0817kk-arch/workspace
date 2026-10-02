@@ -1,0 +1,362 @@
+# 取材メモ（10/2 公開、題材はユーザーが○）。key = ronaldo_walkout。型は news。材料の控え: research/raw/20261002_ronaldo_walkout.md（頭に「## 精査」、文ごとの根拠と原文）
+# センシティブな題材なので、言い切るのは本人（X/Instagram の投稿）・連盟（声明）・監督（会見の書き起こし）で確かめた範囲だけ。
+#   処分・引退・不仲の中身は「報道」と分かる言い方にする。処分の条文は FPF の原本を開けず（403・タイムアウト）、ポルトガル紙3社が同じ文言で引いたもの。
+# 事実の裏:
+#   本人の投稿: X @Cristiano 2026-09-30 19:04 UTC（api.fxtwitter で本文を取得）。Instagram は A Bola・Maisfutebol の埋め込みと引用で同じ文面。
+#   監督の会見（9/30 午後、コペンハーゲン）: CNN Portugal の書き起こし（20の発言）と Renascença。誤りを認めたのは「アップに行かせた時間」だけ
+#     （"Aqui é que eu fiz mal. Eu devia tê-lo mandado aquecer 15 ou 20 minutos mais tarde"）。依頼文の「扱いの誤り」より狭いので、その範囲で言う。
+#   連盟の声明（9/30）: A Bola・O Jogo が全文を引用。処分には触れていない。10/2 朝（日本時間）まで、処分の発表は見つからない。
+#   試合: ESPN の試合記録（ウェールズ 1-0 9/24、ノルウェー 1-2 9/27、デンマーク 2-4 10/1）。ヴィティーニャの代表初ゴールは本人（Record、Sport TV）と O Jogo。
+#   146得点・234試合: Sky・Maisfutebol・英語版Wikipedia。ESPN の要約に出た「243」は WebFetch の読み違いとみて使わない。
+#   W杯2026: 英語版Wikipedia（Ronaldo の代表の表「W杯で5試合3得点」、Group K の試合票）・Sky（ベスト16でスペインに0-1）。ESPN 7/6 の「4試合」は記事の時点の数とみて使わない。
+#   会長がノルウェー戦のあとに話す: Renascença「segundo apurou a Renascença」（報道）。監督「Depois do Dragão, vamos ver」（Maisfutebol、RTP のフラッシュ）。
+# 外したもの: 首相の介入（Record→Daily Mail。題に答えない）、姉エルマの投稿、Edu Aguirre「裏切られた」（本人に近い記者の話で推測が混じる）、
+#   O Jogo「もう代表に戻らない」（報道。本人は何も言っていない。引退は言わない）、7番がレオンへ（背番号は埋め草）、ホイルンドの喜び方。
+# 反応: 日本1件（X、Yahoo!リアルタイム検索、ポルトガル在住の人）。@pqd9v は尺（4分36秒）のため外した。ポルトガル語の個人の投稿は、Bluesky の検索が403、ポルトガル紙の「ネットの反応」記事の埋め込みは
+#   画像に頼るミームか、監督への当てこすり（事実でない含み）だったので入れていない。経緯は raw に。
+# 流れの点検（Claude が自分で読んだ。控え output/flow/20261002_ronaldo_walkout.md）で直したこと:
+#   ショートの前置きに「次の試合も先発しないと監督が会見で話した直後」を入れた／「誤りを1つ認めました」→「アップのさせ方については誤りを認めました」（『そこ』が何か分かるように）
+#   「4試合」→「今回の代表活動の4試合」／ヴィティーニャの前置きを「ここ数日について」にし、訳を「距離を置こうとした」に（「そこ」が宙に浮く）
+# 写真: 記事の写真は Maisfutebol（NurPhoto via Getty）・A Bola（IMAGO）で代理店のため使わない。Sky・ESPN も代理店の配信。
+#   Commons「Cristiano Ronaldo Croatia v Portugal 2 July 2026-087.jpg」（Bryan Berlin、CC BY-SA 4.0、W杯のクロアチア戦、ポルトガル代表のユニフォーム）。
+#   冒頭とサムネは頭が入る位置で 16:9 に切った _w。監督の行はジェズス（Commons 2020、CC BY 2.0）と並べた1枚。
+date: 2026年10月2日
+slot: other_1
+format: news
+people: [クリスティアーノ・ロナウド, ジョルジェ・ジェズス]
+theme:
+  id: ronaldo_walkout
+  league: spain
+  league_name: UEFAネーションズリーグ
+  kind: other
+  topic: ポルトガル代表
+  title: 'ロナウド、ポルトガル代表の合宿を去る。「時が来たら真実を話す」'
+  question: ロナウドはなぜ合宿を離れ、この先の代表はどうなるのか
+  opening_image: assets/images/20261002_ronaldo_w/01.jpg
+  takeaway: ロナウドは代表234試合146得点で男子の最多記録を持ち、今夏のW杯でも5試合3得点。だがジェズス監督の3試合で出たのはウェールズ戦の67分だけで無得点、ポルトガルは3連勝の7点のうち6点を、ロナウドがピッチにいない2試合で取った。離れた理由を本人はまだ話しておらず、処分も決まっていない。146点の続きがあるかは、本人の言う「真実」と、会長と監督が話すとしている10月4日のノルウェー戦のあとにかかっている
+short_title: ロナウド、代表の合宿を去る。翌日の試合は
+thumbnail:
+  photo: assets/images/20261002_ronaldo_w/01.jpg
+  line1: ロナウド、代表合宿を離脱
+  line2: 抜けた翌日、代表は●得点
+  reaction: こんな形で残念過ぎる
+sections:
+- id: walkout
+  main: true
+  heading: 本人の言葉
+  tier: 報道
+  telop: ロナウド「時が来たら、すべてのポルトガルの人に真実を話す」
+  narrator: キャスター
+  say:
+  - text: 次の試合も先発しないと監督が会見で話した直後、ポルトガル代表のキャプテンが動きました。
+    short_only: true
+  - text: 9月30日、41歳のクリスティアーノ・ロナウドが、コペンハーゲンでの代表合宿を出ました。
+    image: assets/images/20261002_ronaldo_w/01.jpg
+  - text: 本人がインスタグラムに出した言葉です。
+  - voice: ロナウド
+    text: 代表監督の会見のあと、連盟の会長と話をして、
+  - voice: ロナウド
+    text: 代表の合宿を離れることに決めた。
+    cont: true
+  - voice: ロナウド
+    text: 時が来たら、ずっと身を捧げてきた代表を去った理由について、
+    cont: true
+  - voice: ロナウド
+    text: すべてのポルトガルの人に真実を話す。
+    cont: true
+  - voice: ロナウド
+    text: 今は、ポルトガルと、仲間たち全員の幸運を祈るときだ。
+    cont: true
+  - voice: ロナウド
+    text: 一人の例外もなく
+    cont: true
+  - text: 連盟は同じ夜、残る24人で準備を続けると発表しました。
+  quotes_from:
+  - A Bola https://www.abola.pt/noticias/ronaldo-confirma-decidi-deixar-o-estagio-da-selecao-nacional-2026093018390304719
+  - Maisfutebol https://maisfutebol.iol.pt/portugal/cristiano-ronaldo/cristiano-ronaldo-tomei-a-decisao-de-deixar-o-estagio-da-selecao-nacional
+  sources:
+  - https://x.com/Cristiano/status/2105373136581546480
+  - https://www.abola.pt/noticias/ronaldo-confirma-decidi-deixar-o-estagio-da-selecao-nacional-2026093018390304719
+  - https://maisfutebol.iol.pt/portugal/cristiano-ronaldo/cristiano-ronaldo-tomei-a-decisao-de-deixar-o-estagio-da-selecao-nacional
+  - https://www.abola.pt/noticias/fpf-reage-a-saida-de-ronaldo-do-estagio-da-selecao-2026093019171882159
+  - https://www.skysports.com/football/news/13593759/cristiano-ronaldo-portugal-captain-leaves-squad-amid-reported-rift-with-head-coach-jorge-jesus
+- id: press
+  heading: ノルウェー戦から会見まで
+  tier: 報道
+  telop: ジェズス監督「何も問題は無い」。認めた誤りは、アップに行かせた時間
+  narrator: キャスター
+  card:
+    type: table
+    title: 合宿を離れるまで
+    columns: ['', '']
+    rows: &days
+    - [9月27日, ノルウェー戦 2-1。後半にアップを続けて出番なし]
+    - [9月29日, 全体の練習に加わらず]
+    - [9月30日, 監督の会見のあと、合宿を離れる]
+  say:
+  - text: さかのぼると、9月27日のノルウェー戦。
+    card:
+      type: table
+      title: 合宿を離れるまで
+      columns: ['', '']
+      rows: *days
+      highlight_row: 0
+  - text: ロナウドは後半にアップを続けましたが、最後まで出番がありませんでした。
+    card:
+      type: table
+      title: 合宿を離れるまで
+      columns: ['', '']
+      rows: *days
+      highlight_row: 0
+  - text: 2日後の練習も、仲間とは別でした。
+    card:
+      type: table
+      title: 合宿を離れるまで
+      columns: ['', '']
+      rows: *days
+      highlight_row: 1
+  - text: 30日の会見で、ジェズス監督はこう話しています。
+    image: assets/images/20261002_pair_jesus_ronaldo/01.jpg
+  - voice: ジェズス監督
+    text: 私と彼のあいだに何か問題があるように見えているが、
+  - voice: ジェズス監督
+    text: 問題なんて何も無い
+    cont: true
+  - text: 監督は前もって、ノルウェー戦とデンマーク戦には出さないと、本人に伝えていたと言います。
+  - text: そのうえで、アップのさせ方については誤りを認めました。
+  - voice: ジェズス監督
+    text: そこは私の誤りだ。アップに行かせるのは、
+  - voice: ジェズス監督
+    text: 15分か20分、遅くするべきだった
+    cont: true
+  - text: そして、こうも言いました。
+  - voice: ジェズス監督
+    text: クラブでは会長が決める。チームでは私が決める
+  - text: 会見で監督は、デンマーク戦の先発はゴンサロ・ラモスだとも話しました。
+    image: assets/images/20261002_ronaldo_w/01.jpg
+  - text: そのあと、ロナウドは練習場に姿を見せないまま、チームを後にしました。
+    card:
+      type: table
+      title: 合宿を離れるまで
+      columns: ['', '']
+      rows: *days
+      highlight_row: 2
+  quotes_from:
+  - CNN Portugal https://cnnportugal.iol.pt/jorge-jesus/cristiano-ronaldo/nao-ha-caso-nenhum-ninguem-se-recusa-a-treinar-aqui-e-que-eu-fiz-mal-ou-se-precisar-dele-entra-jesus-responde-a-polemica-com-ronaldo-em-20-frases/20260930/6abd494bd34e9a786e75a5a8
+  - Renascença https://rr.pt/bola-branca/noticia/clube-portugal/2026/09/30/nao-ha-caso-nenhum-jesus-afasta-ideia-de-problema-com-ronaldo-e-aponta-goncalo-ramos-ao-onze/487393/
+  sources:
+  - https://cnnportugal.iol.pt/jorge-jesus/cristiano-ronaldo/nao-ha-caso-nenhum-ninguem-se-recusa-a-treinar-aqui-e-que-eu-fiz-mal-ou-se-precisar-dele-entra-jesus-responde-a-polemica-com-ronaldo-em-20-frases/20260930/6abd494bd34e9a786e75a5a8
+  - https://rr.pt/bola-branca/noticia/clube-portugal/2026/09/30/nao-ha-caso-nenhum-jesus-afasta-ideia-de-problema-com-ronaldo-e-aponta-goncalo-ramos-ao-onze/487393/
+  - https://maisfutebol.iol.pt/portugal/cristiano-ronaldo/cristiano-ronaldo-tomei-a-decisao-de-deixar-o-estagio-da-selecao-nacional
+  - https://www.espn.com/soccer/report/_/gameId/401861073
+  - https://www.espn.com/soccer/story/_/id/50069045/cristiano-ronaldo-portugal-coach-leave-camp-jorge-jesus-bench-denmark
+- id: denmark
+  heading: ロナウドのいない翌日
+  tier: 報道
+  telop: デンマーク 2-4 ポルトガル。勝ち越しはヴィティーニャの代表初ゴール
+  narrator: キャスター
+  card:
+    type: table
+    title: デンマーク 2-4 ポルトガル（10月1日）
+    columns: [分, 得点, スコア]
+    rows: &goals
+    - ['13分', カンセロ（ポルトガル）, 0-1]
+    - ['23分', ダムスゴー（デンマーク）, 1-1]
+    - ['25分', ゴンサロ・ラモス（ポルトガル）, 1-2]
+    - ['53分', ホイルンド（デンマーク）, 2-2]
+    - ['67分', ヴィティーニャ（ポルトガル）, 2-3]
+    - ['87分', ジョアン・フェリックス（ポルトガル）, 2-4]
+  say:
+  - text: 翌10月1日、ロナウドのいないポルトガルは、デンマークに4対2で勝ちました。
+    card:
+      type: table
+      title: デンマーク 2-4 ポルトガル（10月1日）
+      columns: [分, 得点, スコア]
+      rows: *goals
+      highlight_row: 5
+  - text: 2度追いつかれ、3度目のリードを奪ったのは67分。ヴィティーニャの頭でした。
+    card:
+      type: table
+      title: デンマーク 2-4 ポルトガル（10月1日）
+      columns: [分, 得点, スコア]
+      rows: *goals
+      highlight_row: 4
+  - text: これが代表での初ゴール。試合のあと、ここ数日について、こう話しました。
+    card:
+      type: table
+      title: デンマーク 2-4 ポルトガル（10月1日）
+      columns: [分, 得点, スコア]
+      rows: *goals
+      highlight_row: 4
+  - voice: ヴィティーニャ
+    text: ええ、僕たちは距離を置こうとした。
+  - voice: ヴィティーニャ
+    text: 試合に集中して、それができた
+    cont: true
+  quotes_from:
+  - Record https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/vitinha-feliz-com-por-se-estredo-a-marcar-na-selecao-foi-um-jogo-muito-capaz-da-nossa-equipa
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401861096
+  - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/vitinha-feliz-com-por-se-estredo-a-marcar-na-selecao-foi-um-jogo-muito-capaz-da-nossa-equipa
+  - https://www.ojogo.pt/internacional/artigo/dinamarca-portugal-vitinha-marca-o-seu-primeiro-golo-de-cabeca-ora-veja/18132671
+- id: rule
+  heading: 処分はまだ決まっていない
+  tier: 報道
+  telop: 報道が引く連盟の規定は「1か月から6か月の出場停止」。当てはまるかは未定
+  narrator: キャスター
+  card:
+    type: table
+    title: ポルトガルの報道が引いた、連盟の懲戒規定
+    columns: ['', '']
+    rows: &rule
+    - [対象, 正当な理由なく、代表の練習・試合・活動を離れた選手]
+    - [処分, 1か月から6か月の出場停止]
+    - [連盟の発表, 合宿を離れたことを伝えた声明だけ]
+  say:
+  - text: ロナウドの処分はどうなるのか。ポルトガルの報道は、連盟の懲戒規定を引いています。
+    card:
+      type: table
+      title: ポルトガルの報道が引いた、連盟の懲戒規定
+      columns: ['', '']
+      rows: *rule
+      highlight_row: 0
+  - text: 正当な理由なく代表の活動を離れた選手は、1か月から6か月の出場停止。
+    card:
+      type: table
+      title: ポルトガルの報道が引いた、連盟の懲戒規定
+      columns: ['', '']
+      rows: *rule
+      highlight_row: 1
+  - text: この条文が今回使われるかは、決まっていません。連盟が出したのは、合宿を離れたことを伝える声明だけです。
+    card:
+      type: table
+      title: ポルトガルの報道が引いた、連盟の懲戒規定
+      columns: ['', '']
+      rows: *rule
+      highlight_row: 2
+  - text: 監督は、次のノルウェー戦が終わってから話すとしていて、会長もその試合のあとに話すと報じられています。
+    card:
+      type: table
+      title: ポルトガルの報道が引いた、連盟の懲戒規定
+      columns: ['', '']
+      rows: *rule
+      highlight_row: 2
+  sources:
+  - https://maisfutebol.iol.pt/portugal/cristiano-ronaldo/ronaldo-arrisca-suspensao-ate-seis-meses-por-abandonar-estagio-da-selecao
+  - https://selfie.iol.pt/famosos/cristiano-ronaldo/cristiano-ronaldo-saiba-qual-e-a-pena-prevista-para-o-abandono-da-selecao-nacional/20261001/6abe24cb0cf23b0ed4fda2e4
+  - https://www.dailymail.com/sport/football/article-16176633/
+  - https://www.abola.pt/noticias/fpf-reage-a-saida-de-ronaldo-do-estagio-da-selecao-2026093019171882159
+  - https://www.abola.pt/noticias/jorge-jesus-as-coisas-que-aconteceram-nao-separaram-o-grupo-nem-vao-separar-2026100121164886745
+  - https://maisfutebol.iol.pt/liga-das-nacoes/portugal/jorge-jesus-tenho-um-grupo-que-vai-de-mao-dada-comigo
+  - https://rr.pt/bola-branca/noticia/clube-portugal/2026/10/01/pedro-proenca-devera-falar-sobre-caso-ronaldo-depois-do-jogo-com-a-noruega/487543/
+- id: view
+  heading: 146得点とロナウドのいない2試合
+  tier: 背景
+  viewpoint: true
+  telop: 代表146得点は男子の最多。ジェズス監督の3連勝の7点のうち6点は、ロナウドがピッチにいない2試合
+  narrator: 解説
+  card:
+    type: table
+    title: 代表のロナウド
+    columns: ['', '']
+    rows: &career
+    - [代表通算, 234試合146得点（男子の最多）]
+    - [2026年W杯, 5試合3得点。ベスト16で敗退]
+    - [ジェズス監督の3試合, 1試合67分、0得点]
+  say:
+  - text: ロナウドの代表の記録は、234試合で146得点。146は男子の最多です。
+    card:
+      type: table
+      title: 代表のロナウド
+      columns: ['', '']
+      rows: *career
+      highlight_row: 0
+  - text: 今年の夏のワールドカップも5試合で3点。ポルトガルはベスト16で敗れました。
+    card:
+      type: table
+      title: 代表のロナウド
+      columns: ['', '']
+      rows: *career
+      highlight_row: 1
+  - text: ジェズス監督になってからの3試合で、ピッチに立ったのはウェールズ戦の67分だけ。点は取っていません。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, 結果, ロナウド]
+      rows: &games
+      - [9月24日 ウェールズ, 1-0 勝ち, 先発。67分で交代]
+      - [9月27日 ノルウェー, 2-1 勝ち, ベンチで出番なし]
+      - [10月1日 デンマーク, 4-2 勝ち, 合宿を離れて不在]
+      highlight_row: 0
+  - text: ポルトガルは3連勝で、取った7点のうち6点は、ロナウドがピッチにいない2試合でした。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, 結果, ロナウド]
+      rows: *games
+      highlight_row: 2
+  - text: 報道では、今回の代表活動の4試合のうち、最初と最後に出す計画でした。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, 結果, ロナウド]
+      rows: *games
+      highlight_row: 1
+  - text: 最後の1試合は、次の10月4日のノルウェー戦です。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, 結果, ロナウド]
+      rows: *games
+      highlight_row: 1
+  - text: 離れた理由を、本人はまだ話していません。
+  - text: 146点の続きがあるかは、本人の言う真実と、ノルウェー戦のあとに出てくる言葉にかかっています。
+  sources:
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_K
+  - https://www.skysports.com/football/news/13560182/world-cup-2026-portugal-0-1-spain-mikel-merino-sends-spain-to-quarter-finals-as-cristiano-ronaldo-fails-to-deliver
+  - https://www.espn.com/soccer/report/_/gameId/401861044
+  - https://www.espn.com/soccer/report/_/gameId/401861073
+  - https://www.espn.com/soccer/report/_/gameId/401861096
+  - https://www.espn.com/soccer/story/_/id/50069045/cristiano-ronaldo-portugal-coach-leave-camp-jorge-jesus-bench-denmark
+  - https://rr.pt/bola-branca/noticia/clube-portugal/2026/09/30/nao-ha-caso-nenhum-jesus-afasta-ideia-de-problema-com-ronaldo-e-aponta-goncalo-ramos-ao-onze/487393/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「こんな形で残念過ぎる」
+  narrator: キャスター
+  say:
+  # X @mimi_mylisbon（ポルトガル在住、2026-10-01 13:22 UTC）。原文は raw に。国旗の絵文字（🇵🇹）は「ポルトガル」と読んだ（外すと文が欠ける）
+  - voice: ネット民
+    text: ポルトガルではあちこちでロナウドの話題。
+    short_voice: true
+  - voice: ネット民
+    text: 朝のニュースではどの話題より
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: ロナウドの話題が最初に紹介される。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 先日のノルウェー戦で出場なしだったのよね。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 何か荒波が立つだろうと思ってたけど、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: ポルトガル代表から自ら離脱とは。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: もっときれいに去れる時機はとっくに来ていたと思う。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: こんな形で残念過ぎる。
+    cont: true
+    short_voice: true
+  sources:
+  - https://x.com/mimi_mylisbon/status/2105649577088987141

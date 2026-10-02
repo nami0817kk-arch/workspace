@@ -118,6 +118,259 @@ sections:
   sources:
   - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
   - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+- id: charges
+  heading: 告発10項目、ひとつずつ
+  tier: 確定
+  official: true   # 委員会の判断（黒塗り版）1・38〜45・81・83〜101・109〜157項。監督・選手の区別は BBC 9/29（players and managers）と Guardian 2023-02-06（player and manager remuneration）で補った。raw の「## 10の告発（10/2）」
+  telop: 財務の6項目はすべて有罪。調査への協力義務の4項目は4のBだけ不成立
+  narrator: キャスター
+  card:
+    type: table
+    title: お金の扱いをめぐる告発（6項目）
+    columns: [項目, 中身, 対象の季, 結果]
+    rows: &fin
+    - ['1(A)', 見せかけのスポンサー契約, 09-10〜17-18, 有罪]
+    - ['1(B)', 報酬の支払いを隠す, 4季・6季・1季, 有罪]
+    - ['1(C)', 肖像権の循環の仕組み, 伏せられている, 有罪]
+    - ['1(D)', 関係の深い取引を不記載, 09-10〜17-18, 有罪]
+    - ['2', ウエファの収支の規則, 13-14〜17-18, 有罪]
+    - ['3', リーグの収支の規則, 15-16〜17-18, 有罪]
+  say:
+  - text: シティへの告発10項目を、ひとつずつ見ます。最初の6つは、お金の扱いです。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+  - text: 1のAからDは、毎季リーグに出す決算書が正しかったか、をめぐる告発です。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+  - text: 1のAは、アブダビのスポンサーから入ったお金。対象は9季すべて。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 0
+  - text: 決算書は9季とも実態を示しておらず、収入を大きく多く載せていたと認定されました。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 0
+  - text: 1のBは報酬。クラブが払うべきお金を、オーナー側の会社が代わりに払っていました。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 1
+  - text: 監督の報酬が886万6000ポンド、選手の報酬と肖像権の支払いが740万ポンド。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 1
+  - text: もう1件は50万ポンドで、誰への支払いかは黒塗りで分かりません。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 1
+  - text: 3件で、計およそ1680万ポンド。対象は4季、6季、1季です。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 1
+  - text: 監督と選手の名前や、どの季の話かは、公開された文書では伏せられています。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 1
+  - text: 契約書に書くべき支払いが書かれず、監督や選手の契約の規則にも反しました。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 1
+  - text: 1のCは、選手の肖像権で稼ぐ権利を、フォーダムという会社に売った件です。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 2
+  - text: 2012年に始めた、収入を増やす計画のうち、委員会が本物でないとした1つです。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 2
+  - text: 委員会は、フォーダムをオーナー側の会社の隠れみの同然と見ました。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 2
+  - text: オーナー側の金で、膨らませた値段で権利を買わせる、お金が循環する仕組みです。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 2
+  - text: 収入は2450万ポンド多く、費用は4941万4000ポンド少なく載りました。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 2
+  - text: どの季の決算書の話かは、ここも伏せられています。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 2
+  - text: 1のDは、スポンサー契約が、クラブと関係の深い相手との取引だった点です。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 3
+  - text: それを決算書に書かなかったことが、9季すべてで規則違反とされました。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 3
+  - text: 1のAからDのどれにも、規則をすり抜けようとしたのは明らか、と書かれています。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 3
+  - text: 2は、ウエファの規則です。それを守ることも、リーグの規則で決められています。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 4
+  - text: 対象は2013-14季からの5季。収入と支出を釣り合わせる基準が問われました。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 4
+  - text: 帳簿を正しく直すと、どの季もその基準に非常に大きく届いていませんでした。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 4
+  - text: 3は、リーグの収益と持続可能性の規則です。対象は2015-16季からの3季。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 5
+  - text: 赤字は3年で1億500万ポンドまで、という決まりです。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 5
+  - text: 直した帳簿では、どの季もそれを非常に大きく超えていました。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 5
+  - text: どれだけ超えたかの数字は、公開された判断には出てきません。
+    card:
+      type: table
+      title: お金の扱いをめぐる告発（6項目）
+      columns: [項目, 中身, 対象の季, 結果]
+      rows: *fin
+      highlight_row: 5
+  - text: 残る4つは、2018年に始まったリーグの調査に、協力する義務です。
+    card:
+      type: table
+      title: 調査への協力義務をめぐる告発（4項目）
+      columns: [項目, 中身, 対象, 結果]
+      rows: &coop
+      - ['4(A)', 調査への協力義務, 2018年からの調査, 大半の点で有罪]
+      - ['4(B)', 調査への協力義務, 2018年からの調査, 不成立]
+      - ['4(C)', 調査への協力義務, 2018年からの調査, 有罪]
+      - ['4(D)', 調査への協力義務, 2018年からの調査, 有罪]
+  - text: 委員会は、クラブが調査を止め、妨げようと、組織的に努めたと認定しました。
+    card:
+      type: table
+      title: 調査への協力義務をめぐる告発（4項目）
+      columns: [項目, 中身, 対象, 結果]
+      rows: *coop
+  - text: 4のAは、大半の点で違反と認定。
+    card:
+      type: table
+      title: 調査への協力義務をめぐる告発（4項目）
+      columns: [項目, 中身, 対象, 結果]
+      rows: *coop
+      highlight_row: 0
+  - text: 4のBだけは、違反が無かったとされ、不成立です。
+    card:
+      type: table
+      title: 調査への協力義務をめぐる告発（4項目）
+      columns: [項目, 中身, 対象, 結果]
+      rows: *coop
+      highlight_row: 1
+  - text: 4のCは、挙げられたすべての点で違反でした。
+    card:
+      type: table
+      title: 調査への協力義務をめぐる告発（4項目）
+      columns: [項目, 中身, 対象, 結果]
+      rows: *coop
+      highlight_row: 2
+  - text: 4のDも、違反が認められています。
+    card:
+      type: table
+      title: 調査への協力義務をめぐる告発（4項目）
+      columns: [項目, 中身, 対象, 結果]
+      rows: *coop
+      highlight_row: 3
+  - text: 4つそれぞれの中身は、公開された文書には書かれていません。
+    card:
+      type: table
+      title: 調査への協力義務をめぐる告発（4項目）
+      columns: [項目, 中身, 対象, 結果]
+      rows: *coop
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+  - https://www.bbc.com/sport/football/articles/c65y51l3gzq4o
+  - https://www.theguardian.com/football/2023/feb/06/manchester-city-charged-by-premier-league-over-alleged-financial-rule-breaches
 - id: money
   main: true
   heading: スポンサー料の本当の出どころ

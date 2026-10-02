@@ -1,0 +1,375 @@
+# 取材メモ（10/2 題材 japan_ecuador、型は news）。材料の控え: research/raw/20261002_japan_ecuador.md
+# 試合全体の回: 日本 0-0（PK5-4）エクアドル（10/1 キリン杯準決勝・日産スタジアム・65,012人）。
+# 同じ日の別の回と分ける: 堂安が鈴木彩艶を「世界一のGKになる」と評した話（doan_zion）と久保の代表先発（season_kubo）。
+#   **堂安の評・久保の言葉は使わない。**鈴木の「先に動く」「手渡し」、川島の2本、採点も doan_zion 側なので入れない。前日の月間MVPも入れない。
+#   PK戦の歴史は doan_zion が「キーパーが止めた数」で見ているので、こちらは「キッカーが決めた数」と「途中から入った選手」で見る。
+# 事実の裏:
+#   スコア・PKの順と成否・シュート・支配率・CK・観客数・交代の分は JFA の試合記録（m02.pdf）で当てた。決勝の日時は JFA の日程。
+#   交代の分はゲキサカ本文（後半23分）と JFA（67分）で1分ずれる。JFA に合わせる。
+#   キック順の決め方は森保監督の会見（スポニチ）とゲキサカ 460143。7人目の塩貝もゲキサカ 460143（本人の話）。
+#   エクアドルがW杯でドイツに勝った（2-1）のは英語版 Wikipedia の E 組と France 24。
+#   PK戦5回の成否は英語版 Wikipedia の大会の試合の箱。「2010年からの5回」と言い、「史上初」とは言わない（親善試合まで一覧で確かめていない）。
+#   2022 クロアチア戦の3本は止められたのか外れたのか資料で分けられないので「決めたのは1人」と言う。
+# 写真: 記事の写真（代理店なし、全部開いて見た）。冒頭とサムネはサッカーキングの鈴木（金田慎平）を 16:9 に切った 01。
+#   PK戦の行は鈴木がゴールへ向かう 02、勝った行から輪になる日本の選手 03（ゲキサカ）。森保監督が語る行は森保、会見の行は森保（左）＋中村俊輔（右）。
+# 流れの点検（Claude が自分で読んだ。控え output/flow/20261002_japan_ecuador.md）で直したこと:
+#   エクアドルのW杯の行を数字の前へ／PK戦の1人目でエクアドルの1人目が決めたことを言う／塩貝の行と W杯の準備の発言のあいだにつなぎ／
+#   「セットプレー」をコーナーキックやフリーキックで説明／過去のPK戦は年と大会名で言う／言い直し（上田の後半から・途中出場4人のまとめ）を落とす／
+#   ショートが題に答えるよう、山場の節の終わりに short_only で「提案したのは中村俊輔コーチ」
+# 反応: Yahoo!ニュースのコメント欄から個人の投稿を3件、全文。海外の反応は0件（X が読めない。記事の断片は全文でないので使わない）。
+date: 2026年10月2日
+slot: japan
+format: news
+people:
+- 日本代表
+- 鈴木彩艶
+- 森保一
+- 中村俊輔
+- 上田綺世
+- 鎌田大地
+- 伊藤洋輝
+- 相馬勇紀
+- 前田大然
+- 谷村海那
+- 塩貝健人
+theme:
+  id: japan_ecuador
+  league: japan
+  league_name: キリンカップ
+  kind: match
+  topic: 日本代表
+  title: 日本代表、エクアドルとのPK戦で5人全員成功。蹴る順を決めていた人
+  question: 15年ぶりにPK戦で勝った日本は、これまでと何が違ったのか
+  takeaway: 2010年からのワールドカップとアジアカップのPK戦4回で、日本のキッカーは18人中7人が外していた。エクアドル戦は5人全員が決め、そのうち4人は途中から入った選手だった。蹴る順はセットプレー担当の中村俊輔コーチが案を出し、森保監督が決めた。ワールドカップで出番の無かったPKの準備が、15年ぶりの勝ちになった
+  opening_image: assets/images/20261002_japan_ecuador_w/01.jpg
+short_title: 日本代表、PK戦で5人全員成功。蹴る順を決めていた人
+thumbnail:
+  photo: assets/images/20261002_japan_ecuador_w/01.jpg   # 本文の既定。サムネは photos の2枚を並べる
+  photos:
+  - assets/images/20261002_japan_ecuador/01.jpg
+  - assets/images/20261002_japan_ecuador/03.jpg
+  line1: 日本代表、5人全員成功
+  line2: PK戦の勝ちは●●年ぶり
+  reaction: 過去の苦い経験、教訓が活かされましたね。
+sections:
+- id: match
+  heading: 0対0の90分
+  tier: 報道
+  telop: 10月1日 キリンカップ準決勝。日本 0-0 エクアドル、PK戦5-4
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本対エクアドル（10月1日・日産スタジアム）
+    columns:
+    - ''
+    - 日本
+    - エクアドル
+    rows: &m
+    - [シュート, '6', '5']
+    - [ボール支配率, 49.5％, 50.5％]
+    - [コーナーキック, '2', '4']
+  say:
+  - text: 10月1日、キリンカップの準決勝。日産スタジアムには6万5012人が入りました。
+    image: assets/images/20261002_japan_ecuador_w/01.jpg
+  - text: 日本代表とエクアドルは、90分を0対0の引き分けで終えました。
+  - text: 相手のエクアドルは、この夏のワールドカップでドイツに勝ったチームです。
+  - text: シュートは日本が6本、エクアドルが5本。
+    card:
+      type: table
+      title: 日本対エクアドル（10月1日・日産スタジアム）
+      columns: ['', 日本, エクアドル]
+      rows: *m
+      highlight_row: 0
+  - text: ボールを持った時間も、日本が49.5％と、ほぼ半分ずつでした。
+    card:
+      type: table
+      title: 日本対エクアドル（10月1日・日産スタジアム）
+      columns: ['', 日本, エクアドル]
+      rows: *m
+      highlight_row: 1
+  - text: 前線には、代表で初めて先発した谷村海那が立ちました。
+    card:
+      type: table
+      title: 日本対エクアドル（10月1日・日産スタジアム）
+      columns: ['', 日本, エクアドル]
+      rows: *m
+  - text: 森保一監督は、試合のあとこう話しました。
+    image: assets/images/20261002_japan_ecuador_moriyasu/01.jpg
+  - voice: 森保一
+    text: 内容的には本当に良い相手で
+  - voice: 森保一
+    text: W杯基準で今日の試合をできたということが
+    cont: true
+  - voice: 森保一
+    text: チームの成長、選手の成長につながると思う
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460122-460122-fl=
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/match/schedule.json
+  - https://web.gekisaka.jp/news/japan/detail/?460122-460122-fl=
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_E
+  - https://www.france24.com/en/sport/20260625-world-cup-2026-ecuador-beat-germany-round-of-32-curacao-eliminated
+- id: shootout
+  main: true
+  heading: PK戦の5人
+  tier: 確定
+  official: true
+  telop: エクアドルの3人目を鈴木彩艶が止め、日本は5人全員が成功
+  narrator: キャスター
+  card:
+    type: table
+    title: PK戦（エクアドルが先攻）
+    columns:
+    - ''
+    - エクアドル
+    - 日本
+    rows: &pk
+    - ['1人目', 'J.カイセド ○', '上田綺世 ○']
+    - ['2人目', 'ミンダ ○', '鎌田大地 ○']
+    - ['3人目', 'カスティジョ ×', '伊藤洋輝 ○']
+    - ['4人目', 'サルミエント ○', '相馬勇紀 ○']
+    - ['5人目', 'バレンシア ○', '前田大然 ○']
+  say:
+  - text: キリンカップ準決勝の日本対エクアドルは、0対0のままPK戦にもつれました。
+    short_only: true
+    image: assets/images/20261002_japan_ecuador/02.jpg
+  - text: 先に蹴ったエクアドルの1人目が決め、日本の1人目は上田綺世。左に決めます。
+    image: assets/images/20261002_japan_ecuador/02.jpg
+    card:
+      type: table
+      title: PK戦（エクアドルが先攻）
+      columns: ['', エクアドル, 日本]
+      rows: *pk
+      highlight_row: 0
+  - text: 2人目の鎌田大地も、右に決めます。
+    card:
+      type: table
+      title: PK戦（エクアドルが先攻）
+      columns: ['', エクアドル, 日本]
+      rows: *pk
+      highlight_row: 1
+  - text: エクアドルの3人目、カスティジョのキックを、鈴木彩艶が横っ跳びで止めました。
+    image: assets/images/20261002_japan_ecuador/01.jpg
+    card:
+      type: table
+      title: PK戦（エクアドルが先攻）
+      columns: ['', エクアドル, 日本]
+      rows: *pk
+      highlight_row: 2
+  - text: 日本の3人目は伊藤洋輝。ポストに当たって、ゴールへ。
+    card:
+      type: table
+      title: PK戦（エクアドルが先攻）
+      columns: ['', エクアドル, 日本]
+      rows: *pk
+      highlight_row: 2
+  - text: 4人目の相馬勇紀も決めて、あと1本。
+    card:
+      type: table
+      title: PK戦（エクアドルが先攻）
+      columns: ['', エクアドル, 日本]
+      rows: *pk
+      highlight_row: 3
+  - text: 最後は5人目の前田大然。これも決めて5対4、日本が決勝へ進みました。
+    image: assets/images/20261002_japan_ecuador/03.jpg
+    card:
+      type: table
+      title: PK戦（エクアドルが先攻）
+      columns: ['', エクアドル, 日本]
+      rows: *pk
+      highlight_row: 4
+  - text: この5人と蹴る順を森保監督に提案したのは、セットプレー担当の中村俊輔コーチでした。
+    short_only: true
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+  - https://web.gekisaka.jp/news/japan/detail/?460119-460119-fl=
+- id: order
+  heading: 蹴る順を決めた人
+  tier: 報道
+  telop: 森保監督「PKは中村俊輔コーチが私にキッカーを提案してくれました」
+  narrator: キャスター
+  say:
+  - text: 日本の蹴る順は、どう決まったのか。森保監督が会見で明かしました。
+    image: assets/images/20261002_japan_ecuador_pair/01.jpg
+  - voice: 森保一
+    text: PKは中村俊輔コーチが私にキッカーを提案してくれました。
+  - voice: 森保一
+    text: 私が最終的に確認し、
+    cont: true
+  - voice: 森保一
+    text: 変更するところは変更して選手に伝えました
+    cont: true
+  - text: 中村俊輔コーチの持ち場は、コーナーキックやフリーキックなど、セットプレーの攻撃です。
+  - text: 順番は7人目まで決めてあり、終了間際に入った塩貝健人が7人目でした。
+  - text: 準備は、それより前から続いていました。
+  - voice: 森保一
+    text: W杯ではPK戦にならなかったが、
+  - voice: 森保一
+    text: 俊輔コーチ、前田コーチ、テクニカルの渡辺コーチが
+    cont: true
+  - voice: 森保一
+    text: データを取りながら準備してくれていた
+    cont: true
+  quotes_from:
+  - スポーツニッポン https://news.yahoo.co.jp/articles/6d8d2bf90e8277fe234507bf66a5e8cb121926b6
+  sources:
+  - https://news.yahoo.co.jp/articles/6d8d2bf90e8277fe234507bf66a5e8cb121926b6
+  - https://web.gekisaka.jp/news/japan/detail/?460143-460143-fl=
+  - https://www.soccerdigestweb.com/news/detail/id=197928
+- id: view
+  heading: 日本のキッカー、PK戦5回で決めた数
+  tier: 背景
+  viewpoint: true
+  telop: 2010年からの4回は18人中7人が失敗。今回は5人全員、うち4人は途中から入った選手
+  narrator: 解説
+  card:
+    type: table
+    title: 日本代表のPK戦（2010年から）
+    columns:
+    - 年
+    - 相手
+    - 結果
+    - 日本の成功
+    rows: &h
+    - ['2010', 'パラグアイ（W杯）', '●3-5', '4人中3人']
+    - ['2011', '韓国（アジア杯）', '○3-0', '4人中3人']
+    - ['2015', 'UAE（アジア杯）', '●4-5', '6人中4人']
+    - ['2022', 'クロアチア（W杯）', '●1-3', '4人中1人']
+    - ['2026', 'エクアドル', '○5-4', '5人中5人']
+  say:
+  - text: 日本のPK戦を、蹴った側から数えてみます。2010年からは、これが5回目です。
+    image: assets/images/20261002_japan_ecuador/03.jpg
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 相手, 結果, 日本の成功]
+      rows: *h
+  - text: 2010年、南アフリカでのワールドカップ。パラグアイ戦は4人中1人が外して敗退。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 相手, 結果, 日本の成功]
+      rows: *h
+      highlight_row: 0
+  - text: 2011年のアジアカップ、韓国戦も1人外しましたが、3対0で勝ちました。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 相手, 結果, 日本の成功]
+      rows: *h
+      highlight_row: 1
+  - text: 2015年のアジアカップは、アラブ首長国連邦に4対5で敗戦。2人が外しました。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 相手, 結果, 日本の成功]
+      rows: *h
+      highlight_row: 2
+  - text: 2022年、カタールでのワールドカップ。クロアチア戦は、決めたのが4人中1人だけ。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 相手, 結果, 日本の成功]
+      rows: *h
+      highlight_row: 3
+  - text: この4回で、日本のキッカーは18人。決めたのは11人で、7人が外しています。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 相手, 結果, 日本の成功]
+      rows: *h
+  - text: エクアドル戦は5人とも成功。この5回で、日本が全員決めたのは初めてです。
+    card:
+      type: table
+      title: 日本代表のPK戦（2010年から）
+      columns: [年, 相手, 結果, 日本の成功]
+      rows: *h
+      highlight_row: 4
+  - text: しかも5人のうち4人は、試合の途中から入った選手でした。
+    card:
+      type: table
+      title: エクアドル戦の日本のキッカー
+      columns: [順, 名前, ピッチに入った時間]
+      rows: &k
+      - ['1', '上田綺世', '後半の頭から']
+      - ['2', '鎌田大地', '67分から']
+      - ['3', '伊藤洋輝', '先発']
+      - ['4', '相馬勇紀', '79分から']
+      - ['5', '前田大然', '79分から']
+  - text: 1人目の上田は後半の頭から、2人目の鎌田は67分から。
+    card:
+      type: table
+      title: エクアドル戦の日本のキッカー
+      columns: [順, 名前, ピッチに入った時間]
+      rows: *k
+      highlight_row: 1
+  - text: 4人目の相馬と5人目の前田は、79分に入ったばかりでした。
+    card:
+      type: table
+      title: エクアドル戦の日本のキッカー
+      columns: [順, 名前, ピッチに入った時間]
+      rows: *k
+      highlight_row: 4
+  - text: 90分を通して出ていたのは、3人目の伊藤洋輝だけです。
+    card:
+      type: table
+      title: エクアドル戦の日本のキッカー
+      columns: [順, 名前, ピッチに入った時間]
+      rows: *k
+      highlight_row: 2
+  - text: コーチの案で組んだその順番が、今回は5本そろって決まりました。
+  - text: ワールドカップで出番の無かったPKの準備が、15年ぶりの勝ちにつながっています。
+  sources:
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/2011_AFC_Asian_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/2015_AFC_Asian_Cup_knockout_stage
+  - https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_knockout_stage
+  - https://web.gekisaka.jp/news/japan/detail/?460119-460119-fl=
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「過去の苦い経験、教訓が活かされましたね。」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: PK戦は森保ジャパンでは久しぶり。
+  - voice: ネット民
+    text: 過去の苦い経験、教訓が活かされましたね。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 序盤はエクアドルのプレスと
+  - voice: ネット民
+    text: WBの裏を狙う攻撃に苦しんでいたが、
+    cont: true
+  - voice: ネット民
+    text: しっかり修正して戦えるあたりはさすが主力組だね。
+    cont: true
+  - voice: ネット民
+    text: 荒れたピッチのせいかミスもあって
+    cont: true
+  - voice: ネット民
+    text: 決定的な場面こそ少なかったものの、
+    cont: true
+  - voice: ネット民
+    text: 強化試合としては十分な内容。
+    cont: true
+  - voice: ネット民
+    text: PK戦の苦手意識克服にもなったのでは。
+    cont: true
+  - voice: ネット民
+    text: ただ上田の控え問題の解決には時間が掛かりそうなのが残念。
+    cont: true
+  - voice: ネット民
+    text: ＰＫ勝利１５年振りかぁ～。
+    short_voice: true
+  - voice: ネット民
+    text: 次は直接ＦＫも久々に決めてくれ。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/a97631b5699340c9e9d877d1dbf0fbfb64ea2141/comments
+  - https://news.yahoo.co.jp/articles/9bf7cd534271d11be31c7c38e1fe90834760abf3/comments
+  - https://news.yahoo.co.jp/articles/6d8d2bf90e8277fe234507bf66a5e8cb121926b6/comments
