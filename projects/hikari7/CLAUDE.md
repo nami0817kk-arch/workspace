@@ -1,7 +1,11 @@
 # ひかりの七席（hikari7）
 
 オーディション番組のプロデューサーになり、練習生の中からデビューメンバーを自分で選ぶ1人用ゲーム（仮題）。
-本番は **iOS アプリ**（Flutter・無料＋広告＋広告を消す買い切り、護送ボートと同じ形）。いまはブラウザの試作で仕組みを固めている段階。
+本番は **iOS アプリ**（無料＋広告＋広告を消す買い切り、護送ボートと同じ形）。
+
+**作り（2026-10-02 ユーザー選択「試作を中に組み込む」）**: アプリの外側（広告・課金・保存・ストア対応）は Flutter、
+ゲーム本体は `prototype/game.html` をそのまま WebView で動かす。Web のテスト版とアプリは同じ1つのゲーム本体を使うので、
+**ゲームの直しは game.html だけ**で両方に効く。アプリとゲームのやりとりは `app/lib/game/bridge.dart`（JS 側は `HStore`・`withAd`・`appPost`）。
 
 ## 置き場所
 
@@ -11,6 +15,9 @@
 | `prototype/faces/` | 顔の絵（126×162）と `pool.json`（男女・同じ顔の組 `group`）。1シーズンに同じ組は1人まで |
 | `tool/build_web_test.py` | 本体と顔を1枚のページに組み立て、`build/web/` に出す |
 | `tool/sim.js` | エンジンを自動で通しプレイして、つり合いを測る（遊び方3通り×男女）。`--quick` は CI 用 |
+| `tool/build_app_web.py` | アプリに入れるゲーム本体を組み立てる（`app/assets/web/index.html`。顔の絵と見出し書体を埋め込み、外へ何も読みに行かない） |
+| `app/` | iOS アプリの外側（Flutter）。広告・課金は護送ボートの `lib/monetization` を写したもの。商品ID `hikari7_remove_ads`、Bundle ID `com.namiki.hikari7` |
+| `fonts/` | 見出し書体 Dela Gothic One（OFL）。使う字だけに絞って埋め込む |
 | `web-test/` | テスト用Web版に添える `_headers`・`robots.txt` |
 
 試作の経緯（v3〜v8 の各版・設計ページ）は、公開リポジトリの外の `C:\Users\なみ\dev\game-assets\hikari7\README.md` にある。
