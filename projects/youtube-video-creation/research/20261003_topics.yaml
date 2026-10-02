@@ -1,0 +1,101 @@
+title: 10月3日の題材（ニュース4枠）
+lead: 代表戦のあとの日本人と、ロナウド抜きのポルトガル・マンCのその後など10件
+note: '<b>○×を付けてください。</b>明日のニュースは日本人3本・ほか1本（本編＋ショート）。中身は記事の本文まで確かめてあります。まとめ系サイト（football-tribe）の移籍の話は元の記事までたどり、元に無い書き足しは外しました。昨日×が付いた題材（堂安の主将・佐野・メッシのクラブ・ハーランドの提訴・クロップ など）は載せていません。'
+items:
+- num: 1
+  slot: 日本人
+  head: U-21日本代表、アジア大会の決勝は今夜19:30に韓国戦。勝てば16年ぶりの優勝、韓国には2大会続けて1-2で負けている
+  why: '準決勝（9/30）はウズベキスタンと1-1、PK戦は10人目まで行って9-8。先発11人を全員入れ替え、9分に先制され88分に石橋瀬凪が頭で同点。決勝は10/3（土）19:30、豊田スタジアム。韓国は大会4連覇がかかる。大岩監督「PKまで行きましたけど、プランニングをしていたので想定内」「悔しい思いをしっかりとぶつけたい」。試合の前に出す予告の回
+    '
+  src: ゲキサカ・サッカーキング・Goal（9/30〜10/2）
+  url: https://web.gekisaka.jp/news/japan/detail/?460072-460072-fl
+  fmt: news
+- num: 2
+  slot: 日本人
+  head: 鈴木唯人、フライブルクで開幕4戦4発、代表では新しい背番号8。鎌田「ドイツで確実にトップタレントの一人。時間の問題」
+  why: 'エクアドル戦は左のシャドーで先発、A代表5回目の先発。日本のシュート6本のうち2本。後半1分、久保の差し込みに合わせたがトラップが流れた。本人「ああいうシーンにいられるのが間違いなく良いこと」「ドイツで充実しているんで、自信を持って積み重ねていければ、何の問題もない」
+    '
+  src: サッカーキング・ゲキサカ（10/1〜2）
+  url: https://www.soccer-king.jp/news/japan/national/20261002/2212061.html
+  fmt: quote
+- num: 3
+  slot: 日本人
+  head: 三笘薫、ケガからの復帰へ。ヒュルツェラー監督「すぐに選択肢になる。医療班を信頼している」
+  why: '監督の発言は地元紙 Sussex World の取材（theScore が引用）。10月中旬まで戻らない見込み。契約は2027年6月まで、延長の話が止まっていて早ければ1月に退団という報道もあるが、元は移籍の噂サイト（TEAMtalk、9/9）だけ。退団の話は噂と分けて扱う
+    '
+  src: theScore（Sussex World 経由）・TEAMtalk（9/9〜10/1）
+  url: https://www.thescore.com/news/3612800/brighton-hove-albions-kaoru-mitoma-comeback-managed-carefully
+  fmt: news
+  weak: true
+- num: 4
+  slot: 日本人
+  head: 遠藤航、今季のプレミアは出場0分、CLの登録からも外れた。冬の移籍が取り沙汰される
+  why: 'プレミアは0試合（Rotowire 9/24）。ホームグロウン枠の都合でキエーザとともにCLの登録外（Anfield Watch）。「冬に動くなら一番すっきりした取引」というファンサイトの意見記事はあるが、出典のある移籍報道は無い。「モートンに置き換える」「Jリーグ復帰」は football-tribe の書き足しで、元の記事に無い。遠藤のランキングの回（後日）と重なる
+    '
+  src: Anfield Watch・Anfield Agenda・Rotowire（9/22〜10/1）
+  url: https://www.anfieldwatch.co.uk/liverpool-fc/news/liverpool-want-to-make-move-for-special-sensation-soon/
+  fmt: news
+  weak: true
+- num: 5
+  slot: 日本人
+  head: 山本理仁、700万ユーロでフライブルクに来て4か月、まだトップの出場がない
+  why: '出たのは4部（セカンドチーム）の3試合だけ。シュスター監督は準備期間に「強度に体が反応した」「とても期待できる場面がある」。地元の baden24 は「700万の移籍金なら、どこかで我慢が限界に来るかもしれない」。「約14億円」「1月に放出」は football-tribe の誤りと書き足し。同じフライブルクの鈴木唯人（2）と対になる
+    '
+  src: baden24・kicker（10/1）
+  url: https://www.baden24.de/sport/sc-freiburg/er-kam-fuer-viel-geld-freiburg-neuzugang-noch-immer-ohne-einsatz-rihito-yamamoto-94519496.html
+  fmt: news
+  weak: true
+- num: 6
+  slot: 日本人
+  head: 守田英正、ハルでデビュー戦のハーフタイムに交代して1か月。金髪の写真で「すぐに現地で会いしましょう」
+  why: '今夏スポルティングからハル・シティへ。8/29のコベントリー戦で先発デビュー、内転筋で離脱。9/5に監督が「2週間以上」。10/1にインスタグラムを更新、「少しずつ、MKMが近付いています」。復帰の日はまだ出ていない
+    '
+  src: ゲキサカ（10/2）
+  url: https://web.gekisaka.jp/news/world/detail/?460151-460151-fl
+  fmt: news
+  weak: true
+- num: 7
+  slot: 日本人
+  head: 田中碧、南米3連戦は2勝1分。「正直負けてもおかしくないくらいクオリティの高い3連戦だった」
+  why: 'エクアドルはW杯ベスト32。前半14分にクロスを体で止め、後半2分にインターセプト。本人「チームとしての地力がすごくついてきているのかなと思う」「正直今日もすごくキツかった」。同じ試合で鈴木淳之介は代表で初めて右WB（「何不自由なくできた」）
+    '
+  src: ゲキサカ（10/1〜2）
+  url: https://web.gekisaka.jp/news/japan/detail/?460134-460134-fl
+  fmt: quote
+  weak: true
+- num: 8
+  slot: その他
+  head: ロナウド抜きのポルトガル、デンマークに4-2で3連勝。7番はレオン、代表のインスタは110万人減
+  why: 'カンセロ、ゴンサロ・ラモス、ヴィティーニャ、ジョアン・フェリックスが得点、ブルーノが2アシストで主将。レオン「クリスティアーノは子どもの頃からの憧れ」。ジェズス監督「まずこの試合、次にドラゴンでの試合、そのあとでこの件は逃げずに話す」。公式インスタは2,490万→2,380万（ザ・サン、ゲキサカ経由）。次は10/4のノルウェー戦。今日のロナウドの回の続き
+    '
+  src: ESPN・Observador・RTP・ロマーノ（X）・ゲキサカ（10/1〜2）
+  url: https://www.espn.com/soccer/story/_/id/50079904/cristiano-ronaldo-portugal-coach-jorge-jesus-denmark
+  fmt: news
+- num: 9
+  slot: その他
+  head: 有罪のマンC、次は何が起きるか。選手は契約を破れる？ 下院は税務当局に照会、処分の聴聞は日程未定
+  why: '不服申し立ての期限は10/2。弁護士 Gilroy KC が「雇用主への信頼を保つ義務」を根拠に、有罪が確定すれば選手が契約を解ける可能性を指摘（The Overlap、Daily Mirror）。下院財務委員会のヒリアー委員長が HMRC に、違反の9季の税を調べているか照会（回答期限10/15）。処分の聴聞は別で、日程は未定。過去の勝ち点剥奪はエバートン6＋2、ダービー21。今日のマンCの回の続き
+    '
+  src: Sky Sports・Goal（10/1〜2）
+  url: https://www.skysports.com/football/news/11661/13594084/man-city-charges-treasury-committee-writes-to-hmrc-to-ask-about-tax-implications-of-premier-league-investigation
+  fmt: news
+- num: 10
+  slot: その他
+  head: デンベレ、ムバッペとの「選ばれし者」論争に「SNSでのちょっとした小競り合い」。バロンドールには「自分を売り込まない」
+  why: 'ムバッペが「自分は常に選ばれし者と見られてきた」と語り、デンベレが9/14に「選ばれし者だったことはない」と返していた。今回「何もなかった」「食事の席も隣だ」。フランス・フットボールに投票者を説得する材料を求められ「決めるのは向こうだ」。バロンドールの発表は10/26
+    '
+  src: franceinfo・Maxifoot・ロマーノ（X）（10/1）
+  url: https://www.franceinfo.fr/sports/foot/ousmane-dembele/ce-sont-des-petites-gueguerres-sur-les-reseaux-sociaux-ousmane-dembele-evacue-une-eventuelle-tension-avec-kylian-mbappe-en-vue-du-ballon-d-or_8218540.html
+  fmt: quote
+  weak: true
+drops:
+- - 瀬古歩夢の移籍報道
+  - 「伊藤・板倉より信頼できる」の元は X の個人アカウントで、投稿も見つからない。関心を持つクラブの名前も無い
+- - 佐藤龍之介とアギーレ「容赦なく外す」
+  - 元の記事に佐藤の名前は無い。早い帰国は本人の希望（EFE）。アギーレの回（今日）と重なる
+- - 中村俊輔コーチのPKの順番
+  - 今日のエクアドル戦の回で扱った
+- - スペイン4-1クロアチア（ヤマル2点、40戦無敗）
+  - 9/29の試合で、9/30の候補に載せた
+- - 長友佑都「森保監督を胴上げしたい」
+  - 元は1か月前の取材（GOETHE）

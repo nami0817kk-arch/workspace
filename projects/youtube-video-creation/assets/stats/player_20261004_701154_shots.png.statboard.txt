@@ -1,0 +1,6 @@
+title: キリアン・エムバペの今季のシュート
+unit: xG
+shots=41
+goals=7
+xg=8.05
+source: FotMob
