@@ -1,8 +1,7 @@
-# クローラーへの指示。全部許可する（2026-10-02）。
-# 実体が無いと /robots.txt にトップページの HTML が返り、AdMob が app-ads.txt の確認で止まる（サカマネで踏んだ。docs/app-pitfalls.md 項目8）
+# Allow all crawlers.
 User-agent: *
 Allow: /
 
-# app-ads.txt を読みにくる Google のクローラー（AdMob のヘルプ https://support.google.com/admob/answer/9776740 の指示）
+# Google crawler for app-ads.txt (AdMob help: support.google.com/admob/answer/9776740)
 User-agent: Google-adstxt
 Disallow:
