@@ -33,6 +33,7 @@ function play(g, pol) {
     applyLesson(S);
     S.reqs.forEach((q, qi) => answerReq(S, qi, pol === 'good' ? (q.type === 'tired' || q.type === 'anxious' || q.type === 'grief' ? (q.type === 'grief' ? 1 : 0) : 1) : pickIdx(pol, 2)));
     if (pol === 'good' && typeof pairList === 'function') { const pr = pairList(S).filter(r => r.k === 'rival')[0]; if (pr && S.ap > 1) { doPair(S, pr.a, pr.b); S.talk = null; } }
+    if (pol !== 'naive' && typeof doOut === 'function' && S.ap > 1 && R() < .5) { const ot = pick(alive(S)); doOut(S, ot.id, ri(0, OUTS.length - 1)); if (S.talk) { outChoose(S, ri(0, 2)); S.talk = null; } }
     while (S.ap > 0 && pol !== 'naive') {
       const t = pol === 'good' ? alive(S).sort((a, b) => b.trust - a.trust)[0] : pick(alive(S));
       if (pol === 'good' && t.likeRev && S.ap === 1) { doGift(S, t.id, t.gift); S.talk = null; continue; }

@@ -382,6 +382,8 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .poster{background-image:radial-gradient(ellipse 70% 50% at 50% 0,rgba(255,236,190,.38),transparent 70%),linear-gradient(180deg,rgba(52,32,95,.62),rgba(18,11,36,.92) 75%),var(--bgi-hall,linear-gradient(#34205f,#120b24));background-size:cover;background-position:center top}
 /* 選択肢の中の札と上がる下がるの印は、.choice span の灰色に負けないように */
 .choice .tone{color:#fff}.choice .hp.up{color:var(--ok)}.choice .hp.dn{color:var(--bad)}
+.hp.rate,.choice .hp.rate{color:var(--accent);border-color:var(--accent);background:var(--card2);font-weight:800}
+.trow2 .seg{display:grid;grid-template-columns:repeat(4,1fr)}.trow2 .seg button{min-width:0;padding:0 2px;font-size:12px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -601,10 +603,12 @@ function genEvents(S){
   shuffle(keys);
   ['quit','injury'].forEach(function(p){if(keys.indexOf(p)>=0&&gens[p]()){keys.splice(keys.indexOf(p),1);keys.unshift(p);}});
   if(keys.indexOf('arc')>=0&&R()<.7){keys.splice(keys.indexOf('arc'),1);keys.splice(Math.min(1,keys.length),0,'arc');}
-  var n=w===1?1:(R()<.6?2:1), out=[], usedIds={};
+  var n=w===1?1:(R()<.35?2:1), out=[], usedIds={};
   for(var i=0;i<keys.length&&out.length<n;i++){var e=gens[keys[i]]();if(!e)continue;
     if(e.ids.some(function(id){return usedIds[id];}))continue;e.ids.forEach(function(id){usedIds[id]=1;});out.push(e);}
-  S.lastEvTypes=out.map(function(e){return e.type;});
+  var tot=w===1?2:(R()<.5?3:2),gx=0;while(out.length<tot&&gx++<6){var xe=genX(S,A,w,usedIds);if(!xe)break;xe.ids.forEach(function(id){usedIds[id]=1;});out.push(xe);}
+  out=shuffle(out);
+  S.lastEvTypes=out.filter(function(e){return e.type!=='x';}).map(function(e){return e.type;});
   return out;
 }
 var EV={
@@ -665,9 +669,9 @@ function resolveEvent(S,i){
   var e=S.events[S.evIdx],A=S.tr[e.ids[0]],B=e.ids[1]!=null?S.tr[e.ids[1]]:null;
   var bA=snapT(A),bB=B?snapT(B):null;
   var txt=EV[e.type].apply(S,e,i,A,B);
-  if(e.type!=='arc'){var sfx=applyTone(S,A,(EV_TONE[e.type]||'').charAt(i));if(sfx)txt+=' '+sfx;}
+  if(e.type!=='arc'&&e.type!=='x'){var sfx=applyTone(S,A,(EV_TONE[e.type]||'').charAt(i));if(sfx)txt+=' '+sfx;}
   S.evDelta=[[A.giv,deltaOf(bA,A)]].concat(B?[[B.giv,deltaOf(bB,B)]]:[]);
-  if(e.type!=='arc'){logT(S,A,EV[e.type].title+'：'+txt);if(B)logT(S,B,EV[e.type].title+'：'+txt);}
+  if(e.type!=='arc'){var ettl=e.type==='x'?EVX_BY[e.xid].title:EV[e.type].title;logT(S,A,ettl+'：'+txt);if(B)logT(S,B,ettl+'：'+txt);}
   S.tr.forEach(normT);
   S.evRes=txt; return txt;
 }
@@ -1652,6 +1656,248 @@ function moreReqs(S,out,used){var A=alive(S);function add(type,t){if(!t||used[t.
   for(var pk in PX)PAIR_LINES[pk]=PAIR_LINES[pk].concat(PX[pk]);
 })();
 
+
+/* ---------- 出来事とお出かけを大きく増やす（2026-10-02 指示「パワプロのサクセスのように選択肢をもっと」） ----------
+   選択肢は [文, 語りかけ(s/h/a/f), 成功率(数か関数), 成功の効き目, 成功の文, 失敗の効き目, 失敗の文]。
+   成功率が1なら必ず成功。効き目は applyFx の書き方に加えて、budget（制作費）・showTrust（番組への信頼）・
+   all（ほかの練習生みんな）・pb（2人目）・inj（けが）を使える。{A}{B} は名前に置き換わる。 */
+function pConf(base){return function(A){return clamp(base+(A.conf-50)/150,.2,.9);};}
+function pStat(k,base){return function(A){var v=k==='spec'?A.st[A.spec==='t'?'e':A.spec]:A.st[k];return clamp(base+(v-55)/120,.2,.9);};}
+function pTemper(mk,sn,se){return function(A){return A.temper==='makezu'?mk:A.temper==='sensai'?se:sn;};}
+function pFat(lo,hi){return function(A){return A.fat<50?hi:lo;};}
+var EVX=[
+ {id:'cold',title:'風邪気味',cond:function(S,A){return A.fat>=35;},t:'{A}が朝から咳をしている。熱はないが、声がかすれ気味だ。',ch:[
+  ['今日は休ませる','s',1,{fat:-25,conf:-2},'温かいスープを飲んで、早めに眠った。'],
+  ['のど飴を渡して練習させる','f',.6,{spec:2,fat:6},'のどの調子は持ち直し、練習もこなせた。',{fat:14,conf:-4},'夕方には声がほとんど出なくなってしまった。'],
+  ['病院へ連れていく（制作費5万）','s',1,{fat:-15,trust:5,budget:-5},'薬が効いて、翌日にはすっかり元気になった。']]},
+ {id:'late',title:'寝坊',t:'{A}が朝のレッスンに15分遅れてきた。目が真っ赤だ。',ch:[
+  ['みんなの前で注意する','h',pTemper(.8,.55,.3),{conf:2,trust:-2,all:{conf:1}},'「すみませんでした！」と頭を下げ、その日は誰より声を出した。',{conf:-8,trust:-5},'小さくなって、その日はほとんどしゃべらなかった。'],
+  ['理由を聞く','s',1,{trust:6},'「夜中まで振りを確認してて……」と打ち明けた。'],
+  ['笑って流す','f',1,{conf:3,all:{conf:-1}},'場は和んだが、ほかの練習生は少し不満そうだ。']]},
+ {id:'mirror',title:'消灯後の鏡',cond:function(S,A){return A.conf<65;},t:'消灯の時間を過ぎても、{A}が鏡の前で同じ振りを繰り返している。',ch:[
+  ['付き合って見てあげる','s',1,{spec:3,trust:5,fat:8},'2人で確認するうちに、引っかかっていた所が分かった。'],
+  ['寝るよう言う','h',1,{fat:-15,conf:-3},'「……はい」と、しぶしぶ部屋に戻った。'],
+  ['あと10分だけ許す','f',.6,{spec:3,conf:4},'最後の1回で、ついに振りが決まった。',{fat:10,conf:-3},'結局決まらないまま、時間切れになった。']]},
+ {id:'lyric',title:'歌詞が飛ぶ',t:'通し練習で、{A}の歌詞が2回続けて飛んだ。本人は青い顔をしている。',ch:[
+  ['歌詞を書き写させる','h',1,{up:['e',3],fat:6},'ノート3ページ分書き写して、ようやく体に入った。'],
+  ['仲間と掛け合いで覚えさせる','s',.7,{up:['e',2],trust:4,all:{trust:1}},'掛け合いのおかげで、楽しく覚えられた。',{conf:-3},'掛け合いでもまた飛んでしまい、余計に焦った。'],
+  ['本番までに何とかしろと言う','h',pTemper(.75,.5,.3),{conf:6,spec:2},'意地で覚えきり、本番では一度も飛ばなかった。',{conf:-8},'焦りばかりが募ってしまった。']]},
+ {id:'letters',title:'ファンレターの山',minR:2,cond:function(S,A){return A.pop>=30;},t:'{A}あてのファンレターが、段ボール1箱分届いた。',ch:[
+  ['全部読む時間をあげる','s',1,{conf:8,fat:-5,spec:-1},'1通ずつ読んで、何度も目元をぬぐった。'],
+  ['数通だけ渡す','f',1,{conf:4},'「全部読みたいです」と言いながらも、うれしそうだった。'],
+  ['番組で紹介する','a',1,{pop:6,drama:1,all:{conf:-1}},'放送のあと、さらに手紙が増えた。ほかの子は少し複雑そうだ。']]},
+ {id:'hater',title:'心ない書き込み',cond:function(S,A){return A.pop>=25;},t:'{A}についての心ない書き込みを、本人が見てしまった。',ch:[
+  ['スマホを預かる','s',1,{conf:3,trust:4},'スマホを預けて、その日は練習に集中した。'],
+  ['気にするなと励ます','f',pTemper(.75,.6,.35),{conf:5},'「気にしません」と笑えるようになった。',{conf:-6},'笑ってはいたが、目が赤かった。'],
+  ['番組として抗議の声明を出す','a',1,{conf:6,showTrust:2,drama:1},'番組が守ってくれたことに、{A}は深く頭を下げた。']]},
+ {id:'homework',title:'学校の課題',cond:function(S,A){return A.age<=18;},t:'{A}は高校の課題がたまっていて、夜遅くまで机に向かっている。',ch:[
+  ['課題の時間を確保する','s',1,{trust:6,conf:3,fat:3},'課題を終えて、すっきりした顔で練習に戻った。'],
+  ['年上の子に教えてもらう','f',.7,{trust:4,all:{trust:1}},'教えてもらううちに、ふたりの距離も縮まった。',{fat:6},'教える方も教わる方も、ぐったりしてしまった。'],
+  ['練習を優先させる','h',1,{spec:3,conf:-4},'練習はこなしたが、課題のことが頭から離れないようだ。']]},
+ {id:'bday',title:'内緒の誕生日',cond:function(S,A){return A.arc.k!=='transfer';},t:'今日は{A}の誕生日。本人は誰にも言っていないらしい。',ch:[
+  ['みんなでサプライズ（制作費10万）','s',1,{conf:10,budget:-10,all:{trust:1}},'ケーキが運ばれてくると、{A}は顔を覆って泣き笑いした。'],
+  ['プロデューサーからひと言だけ','s',1,{trust:8},'「覚えててくれたんですか」と、驚いた顔をした。'],
+  ['放送で祝う','a',1,{pop:6,drama:1,conf:-2},'お祝いの書き込みが届いたが、本人は少し恥ずかしそうだ。']]},
+ {id:'shake',title:'本番前の震え',minR:2,cond:function(S,A){return A.conf<50;},t:'本番を前に、{A}の手の震えが止まらない。',ch:[
+  ['手を握って深呼吸させる','s',1,{conf:8},'少しずつ、呼吸が落ち着いていった。'],
+  ['いつも通りやれと言う','h',pTemper(.75,.5,.25),{conf:6,spec:2},'言葉で吹っ切れて、堂々と舞台に向かった。',{conf:-6},'言葉が届かず、表情は硬いままだ。'],
+  ['出番を後ろに回す','f',1,{conf:3,fat:-5,all:{conf:-1}},'時間ができて落ち着いたが、順番を変えられた子は少し不満そうだ。']]},
+ {id:'newmove',title:'新しい技',cond:function(S,A){return A.lastP>=60;},t:'{A}が、誰もやっていない新しい技に挑戦したいと言い出した。',ch:[
+  ['挑戦させる','h',pStat('spec',.55),{spec:5,pop:4,conf:6},'見事に決まり、練習室がどよめいた。',{fat:12,conf:-6},'何度やっても決まらず、疲れだけが残った。'],
+  ['基礎が固まってからにさせる','s',1,{up:['e',2],conf:-2},'少し残念そうに「次の課題で必ず」と言った。'],
+  ['先生に相談させる','f',1,{trust:3,spec:2,fat:3},'先生と相談し、少し易しい形から始めることになった。']]},
+ {id:'appetite',title:'食欲がない',cond:function(S,A){return A.fat>=50;},t:'{A}が食堂で、ご飯にほとんど手をつけていない。疲れがたまっているようだ。',ch:[
+  ['好物を用意してもらう','s',1,{fat:-10,conf:4,trust:2},'好物を見て、少しずつ箸が進んだ。'],
+  ['一緒に食べる','s',1,{trust:6,fat:-4},'話しながら食べるうちに、ちゃんと完食した。'],
+  ['気にせず練習させる','h',.5,{spec:2},'練習を始めると、不思議と元気が出てきた。',{fat:12,conf:-6},'午後の練習で、ふらついてしまった。']]},
+ {id:'rain',title:'雨で撮影中止',t:'予定していた野外での撮影が、大雨で中止になった。{A}が残念そうにしている。',ch:[
+  ['室内で代わりの企画をする','f',.6,{pop:4,conf:4},'即席の室内企画が、意外にも好評だった。',{conf:-2},'企画はいまひとつ盛り上がらなかった。'],
+  ['その時間を休みにする','s',1,{fat:-15,all:{fat:-5},spec:-1},'みんなでゆっくり過ごした。'],
+  ['自主練習の時間にする','h',1,{spec:3,fat:8},'{A}は誰よりも長く練習室にいた。']]},
+ {id:'praise',title:'先生の絶賛',cond:function(S,A){return A.lastP>=75;},t:'先生が、{A}の表現を「教科書に載せたい」とほめた。',ch:[
+  ['本人にそのまま伝える','s',1,{conf:10,cmp:1},'照れながらも、うれしそうに笑った。'],
+  ['浮かれないよう釘を刺す','h',1,{spec:2,conf:-2},'「はい、まだまだです」と気を引き締めた。'],
+  ['みんなの前で紹介する','a',1,{pop:3,conf:6,all:{conf:-1}},'拍手が起きたが、悔しそうな顔の子もいた。']]},
+ {id:'costume',title:'衣装のトラブル',minR:2,t:'リハーサル中、{A}の衣装の留め具が外れた。本番は明日だ。',ch:[
+  ['自分で直させる','f',.6,{conf:5,up:['e',1]},'器用に直して、むしろ動きやすくなった。',{conf:-4},'うまく直せず、不安を抱えたまま明日を迎える。'],
+  ['衣装さんに頼む（制作費5万）','s',1,{conf:3,budget:-5},'衣装さんが一晩で直してくれた。'],
+  ['外れても続ける練習をさせる','h',1,{up:['e',3],fat:6},'どんな状態でも踊れる自信がついた。']]},
+ {id:'trend',title:'ひと言が流行',minR:2,cond:function(S,A){return A.pop<40;},t:'{A}の何気ないひと言が、SNSでちょっとした流行になっている。',ch:[
+  ['本人に伝える','s',1,{conf:6,pop:3,cmp:1},'「えっ、本当ですか！」と目を丸くした。'],
+  ['番組の企画にする','a',.7,{pop:10,drama:1},'企画は大当たりで、{A}の名前が一気に広まった。',{pop:2,conf:-3},'企画は空回りして、少し気まずい空気になった。'],
+  ['何も言わずにおく','f',1,{pop:2},'流行は数日で落ち着いた。']]},
+ {id:'charm',title:'なくしたお守り',t:'{A}が、お守りにしていたキーホルダーをなくしてしまった。',ch:[
+  ['みんなで探す','s',.6,{trust:6,all:{trust:1}},'練習室の隅で見つかり、{A}は何度もお礼を言った。',{conf:-3,all:{fat:2}},'見つからなかったが、みんなの気持ちはうれしかったようだ。'],
+  ['代わりのお守りを渡す','s',1,{conf:5,trust:4},'「大事にします」と、ぎゅっと握りしめた。'],
+  ['練習に集中させる','h',1,{spec:2,conf:-4},'練習はしたが、ずっと上の空だった。']]},
+ {id:'circle',title:'円陣の声出し',minR:2,t:'本番前の円陣で、声出しを誰がやるかで静かになった。{A}が手を挙げかけている。',ch:[
+  ['{A}に任せる','f',pConf(.6),{conf:8,all:{conf:2}},'力強い声に、全員の顔つきが変わった。',{conf:-6},'声が裏返り、少し笑いが起きた。'],
+  ['プロデューサーがやる','s',1,{all:{conf:1},conf:-1},'短い言葉に、みんなが大きくうなずいた。'],
+  ['いちばん人気の子に任せる','a',1,{pop:2,conf:-3},'{A}は少しだけ残念そうに手を下ろした。']]},
+ {id:'hometown',title:'地元からの動画',t:'{A}に、地元の友だちから応援の動画メッセージが届いた。',ch:[
+  ['すぐ見せる','s',1,{conf:7,fat:-2},'画面の中の友だちに、何度も「ありがとう」と言っていた。'],
+  ['本番のあとに見せる','h',1,{conf:3,spec:1},'本番を終えてから見て、泣き笑いになった。'],
+  ['番組で流す','a',1,{pop:5,drama:1,conf:-1},'地元の応援が番組でも話題になったが、本人は照れていた。']]},
+ {id:'highnote',title:'高音が出ない',cond:function(S,A){return A.spec==='v';},t:'{A}がここ数日、得意だった高音を出しにくそうにしている。',ch:[
+  ['キーを下げる','s',1,{conf:3,up:['v',1]},'無理のない高さで、声に厚みが出た。'],
+  ['発声を基礎から見直す','h',.7,{up:['v',4],fat:6},'喉の使い方を変えて、高音が戻った。',{conf:-5,fat:6},'思うように戻らず、焦りが増した。'],
+  ['しばらく歌を休ませる','f',1,{fat:-10,up:['d',2],conf:-2},'その間、ダンスを集中的に磨いた。']]},
+ {id:'offbeat',title:'半拍のずれ',cond:function(S,A){return A.spec==='d'||A.st.d>=50;},t:'ダンスの一部で、{A}だけが半拍ずれている。本人は気づいていない。',ch:[
+  ['映像を見せて気づかせる','h',pTemper(.85,.7,.4),{up:['d',4]},'自分の映像を見て、すぐに直した。',{conf:-5},'映像を見て、すっかり自信をなくしてしまった。'],
+  ['横で手拍子を打つ','s',1,{up:['d',2],trust:4,fat:3},'手拍子に合わせるうちに、ずれが消えた。'],
+  ['本番までに直ると信じる','f',.5,{conf:3},'本番では見事にそろった。',{conf:-2,pop:-1},'本番でも、やはり少しずれてしまった。']]},
+ {id:'freestyle',title:'即興ラップ',cond:function(S,A){return A.spec==='r'||A.st.r>=55;},t:'休憩中、{A}が即興ラップを始め、周りが集まってきた。',ch:[
+  ['そのまま盛り上げさせる','f',1,{conf:5,all:{conf:1},fat:3},'練習室が、ちょっとしたライブ会場になった。'],
+  ['休憩は休むよう言う','h',1,{fat:-6,conf:-2},'少し不満そうに座った。'],
+  ['番組の企画にする','a',pConf(.6),{pop:8,drama:1},'即興バトル企画が話題になった。',{conf:-4},'カメラの前では言葉が出てこなかった。']]},
+ {id:'shoot',title:'雑誌の撮影',cond:function(S,A){return A.spec==='t'||A.pop>=35;},t:'{A}に、雑誌の小さな撮影の話が来た。',ch:[
+  ['受けさせる','a',pConf(.65),{pop:8,conf:4,fat:6},'1枚の写真が、編集部でも評判になった。',{fat:8,conf:-3},'緊張で表情が硬く、思うような写真にならなかった。'],
+  ['練習を優先して断る','h',1,{up:['e',3],pop:-1},'「次の機会に」と、練習に戻った。'],
+  ['表情の練習を兼ねて受けさせる','s',1,{up:['e',2],pop:3,fat:4},'教わった表情を、ステージでも試すようになった。']]},
+ {id:'sleeptalk',title:'寝言',t:'同室の子によると、{A}は寝言で歌詞を歌っているらしい。',ch:[
+  ['笑い話にする','f',1,{conf:2,all:{trust:1}},'食堂が笑いに包まれた。'],
+  ['疲れのしるしかもと休ませる','s',1,{fat:-12,spec:-1},'早めに休むと、寝言はおさまった。'],
+  ['放送で紹介する','a',1,{pop:5,conf:-3,drama:1},'「かわいい」と話題になったが、本人は恥ずかしそうだ。']]},
+ {id:'cleaning',title:'大掃除',t:'合宿所の大掃除。{A}が自分から、いちばん大変な場所を引き受けた。',ch:[
+  ['ほめる','s',1,{conf:5,trust:3},'「当然のことです」と照れた。'],
+  ['ほかの子にも手伝わせる','f',1,{all:{trust:1,fat:2}},'みんなで分担して、あっという間に片付いた。'],
+  ['練習時間を削らないよう言う','h',1,{spec:2,fat:6},'掃除のあと、急いで練習室に向かった。']]},
+ {id:'photoend',title:'写真の端',minR:2,t:'番組の公式写真で、{A}だけ端に写っていたと、ファンの間で話題になっている。',ch:[
+  ['気にするなと伝える','s',1,{conf:4},'「次は真ん中に写れるように頑張ります」と笑った。'],
+  ['次の撮影で真ん中に立たせる','a',1,{pop:6,conf:4,showTrust:-1},'次の写真では真ん中に。「ひいきでは」という声も少し出た。'],
+  ['何もしない','f',1,{conf:-3},'本人は気にしていないふりをしている。']]},
+ {id:'twist',title:'着地で足をひねりかける',cond:function(S,A){return A.fat>=55;},t:'リハーサル中、{A}が着地で足をひねりかけた。本人は「大丈夫」と言っている。',ch:[
+  ['すぐに冷やして休ませる','s',1,{fat:-15,conf:-2},'大事には至らなかった。'],
+  ['本人の言葉を信じて続けさせる','h',pFat(.4,.7),{spec:2},'本当に大丈夫だったようで、最後まで踊りきった。',{inj:1,conf:-4},'夜になって足が腫れてきた。次のステージに響きそうだ。'],
+  ['病院で診てもらう（制作費8万）','s',1,{fat:-10,trust:6,budget:-8},'軽い打撲で済んだ。「ありがとうございます」と頭を下げた。']]},
+ {id:'idol',title:'憧れの人の本',t:'{A}が、昔から憧れている歌手の自伝を読んで目を輝かせている。',ch:[
+  ['どこに惹かれたか聞く','s',1,{trust:5,up:['e',1]},'話すうちに、自分の目指す姿がはっきりしてきたようだ。'],
+  ['真似より自分らしさをと言う','h',1,{up:['e',3],conf:-2},'少し考え込んでから、「自分の歌を探します」と言った。'],
+  ['好きな一節を壁に貼らせる','f',1,{conf:4,cmp:1},'毎朝その言葉を読んでから、練習を始めるようになった。']]},
+ {id:'dialect',title:'出てしまう方言',t:'{A}が、緊張すると地元の言葉が出ることを気にしている。',ch:[
+  ['それも魅力だと伝える','s',1,{conf:6},'「直さなくていいんですか？」と、ほっとした顔をした。'],
+  ['話し方の練習で直させる','h',1,{up:['e',2],conf:-3},'気をつけるあまり、話すのが少しぎこちなくなった。'],
+  ['番組で方言講座をさせる','a',pConf(.6),{pop:8,conf:4},'方言講座が大好評だった。',{conf:-5},'うまく話せず、恥ずかしそうにうつむいた。']]},
+ {id:'yashoku',title:'夜食',t:'夜、{A}が台所でこっそり夜食を作っていた。いい匂いがする。',ch:[
+  ['見逃す','f',1,{conf:3,trust:2,all:{conf:-1}},'翌朝、{A}は少し照れくさそうに目をそらした。'],
+  ['ルールだと注意する','h',1,{trust:-3,all:{conf:1}},'「すみません」と片付けた。合宿の空気は引き締まった。'],
+  ['ご相伴にあずかる','s',1,{trust:6,fat:2},'ふたりで夜食を食べながら、いろいろな話をした。']]},
+ {id:'senpaiG',title:'先輩グループの訪問',minR:2,t:'昔この番組からデビューした先輩グループが、差し入れを持って訪ねてきた。{A}はすっかり固まっている。',ch:[
+  ['話しかけるよう背中を押す','h',pConf(.6),{conf:8,up:['e',2]},'思い切って話しかけ、アドバイスまでもらえた。',{conf:-4},'結局ひと言も話せず、あとで悔しがっていた。'],
+  ['一緒に話しに行く','s',1,{conf:4,trust:4},'プロデューサーと一緒なら、少しだけ話せた。'],
+  ['遠くから見るだけにさせる','f',1,{conf:2},'「いつか同じ場所に立ちます」と小さくつぶやいた。']]},
+ /* ふたりの出来事 */
+ {id:'duet',title:'デュエットの提案',pair:1,t:'{A}と{B}が、ふたりで歌う曲をやってみたいと言ってきた。',ch:[
+  ['やらせてみる','f',.65,{conf:5,trust:4,pb:{conf:5,trust:4}},'息の合ったハーモニーに、先生も拍手した。',{conf:-3,pb:{conf:-3}},'声がぶつかって、まとまらなかった。'],
+  ['今の課題に集中させる','h',1,{spec:2,conf:-2,pb:{spec:2,conf:-2}},'ふたりとも少し残念そうに練習に戻った。'],
+  ['動画にして配信する','a',.8,{pop:6,drama:1,pb:{pop:6}},'配信は大きな反響を呼んだ。',{pop:1,pb:{pop:1}},'配信はあまり見られなかった。']]},
+ {id:'volume',title:'小さな言い合い',pair:1,t:'{A}と{B}が、練習室の音楽の音量で言い合っている。',ch:[
+  ['ふたりで話し合わせる','s',.7,{trust:4,pb:{trust:4}},'話し合ううちに、ふたりとも笑い出した。',{trust:-3,pb:{trust:-3}},'話し合いは平行線のままだった。'],
+  ['ルールを決める','h',1,{all:{conf:-1}},'音量のルールが決まった。少し窮屈になった。'],
+  ['冗談で和ませる','f',.6,{conf:2,pb:{conf:2}},'場の空気が一気に軽くなった。',{trust:-2,pb:{trust:-2}},'冗談がすべって、余計に気まずくなった。']]},
+ {id:'teachme',title:'コツを教わりたい',pair:1,t:'{A}が{B}に、振り付けのコツを教わりたがっている。',ch:[
+  ['教わる時間を作る','s',1,{spec:3,pb:{trust:4,fat:4}},'{B}の教え方が上手で、{A}はすぐに上達した。'],
+  ['自分で考えさせる','h',.5,{spec:4,conf:4},'自力でコツをつかんだ。',{conf:-4},'ひとりでは答えが見つからなかった。'],
+  ['ふたりで映像を研究させる','f',1,{up:['e',2],fat:3,pb:{up:['e',2],fat:3}},'研究ノートが1冊できあがった。']]},
+ {id:'secret',title:'内緒の特訓',pair:1,t:'{A}と{B}が、夜にこっそりふたりで特訓していることが分かった。',ch:[
+  ['見なかったことにする','f',1,{spec:3,fat:8,pb:{spec:3,fat:8}},'ふたりの動きが、日に日にそろっていった。'],
+  ['正式な時間を作る','s',1,{spec:2,trust:3,pb:{spec:2},all:{conf:-1}},'「ばれてましたか」とふたりで笑った。ほかの子は少しうらやましそうだ。'],
+  ['休むよう注意する','h',1,{fat:-10,conf:-2,pb:{fat:-10,conf:-2}},'ふたりとも、しぶしぶ部屋に戻った。']]},
+ {id:'jealous',title:'ほめられる隣で',pair:1,cond:function(S,A,B){return A.lastP<B.lastP;},t:'{B}ばかりほめられることに、{A}が複雑な顔をしている。',ch:[
+  ['{A}の良い所を具体的に伝える','s',1,{conf:8,pb:{conf:-1}},'「ちゃんと見てくれてたんですね」と、表情がやわらいだ。'],
+  ['悔しさを力に変えろと言う','h',pTemper(.85,.5,.3),{spec:3,conf:4},'次の練習で、{A}は誰よりも声を出していた。',{conf:-6},'言葉が重く響き、さらに落ち込んでしまった。'],
+  ['ふたりを組ませる','f',.6,{trust:4,pb:{trust:4}},'組んでみると、意外なほど息が合った。',{conf:-3,pb:{conf:-2}},'組んだことで、かえって差が目立ってしまった。']]},
+ {id:'combo',title:'名コンビ',pair:1,t:'{A}と{B}の練習中の掛け合いが面白いと、スタッフの間で評判になっている。',ch:[
+  ['放送で使う','a',1,{pop:5,drama:1,pb:{pop:5},all:{conf:-1}},'「このコンビ好き」という声が届いた。'],
+  ['ふたりに伝えて励みにさせる','s',1,{conf:4,pb:{conf:4},cmp:1},'ふたりとも照れくさそうに笑った。'],
+  ['練習中のおしゃべりは控えさせる','h',1,{spec:2,trust:-2,pb:{spec:2,trust:-2}},'練習は締まったが、少し寂しそうだ。']]},
+ {id:'swap',title:'パート交換',pair:1,minR:2,t:'{A}が「{B}のパートの方が合う気がする」と言い出した。',ch:[
+  ['交換を試す','f',.55,{conf:6,pb:{conf:3}},'交換したパートが、ふたりともぴたりとはまった。',{conf:-4,pb:{conf:-4}},'試したが、元に戻すことになった。'],
+  ['今のパートを極めさせる','h',1,{spec:3,conf:-2},'「やっぱりこっちで頑張ります」'],
+  ['ふたりで話し合わせる','s',1,{trust:4,fat:2,pb:{trust:4}},'話し合って、サビの一部だけ交換することにした。']]},
+ {id:'nurse',title:'看病',pair:1,cond:function(S,A,B){return B.fat>=40;},t:'{B}が熱を出し、{A}が付きっきりで看病している。',ch:[
+  ['{A}を休ませて交代する','s',1,{fat:-6,pb:{fat:-15}},'{B}は翌朝には元気になった。'],
+  ['{A}に任せる','f',1,{trust:4,fat:6,pb:{trust:6,fat:-10}},'{B}は「ありがとう」と何度も言っていた。'],
+  ['その様子を放送する','a',1,{pop:5,drama:1,showTrust:-1,pb:{pop:3}},'温かい場面として話題になったが、「病人を映すな」という声も。']]},
+ {id:'promise2',title:'ふたりの約束',pair:1,minR:3,t:'{A}と{B}が、「ふたりでデビューしよう」と約束していたことが分かった。',ch:[
+  ['約束を応援する','s',1,{conf:6,pb:{conf:6}},'ふたりは顔を見合わせて笑った。'],
+  ['約束より自分を見ろと言う','h',1,{spec:2,conf:-3,pb:{spec:2,conf:-3}},'ふたりとも、少し表情が引き締まった。'],
+  ['放送で紹介する','a',1,{pop:6,drama:1,pb:{pop:6}},'「ふたりでデビューして」という声が集まった。']]},
+ {id:'room',title:'練習室の取り合い',pair:1,t:'練習室の予約が重なり、{A}と{B}がどちらも譲らない。',ch:[
+  ['半分ずつ使わせる','s',1,{trust:2,spec:1,pb:{trust:2,spec:1}},'ふたりとも少しずつ不満だが、納得した。'],
+  ['先に予約した方を優先','h',1,{conf:3,pb:{conf:-3}},'ルールどおりに決まった。'],
+  ['一緒に使わせる','f',.6,{spec:2,trust:3,pb:{spec:2}},'一緒に練習するうちに、互いの良い所を盗み合った。',{fat:6,pb:{fat:6}},'狭い部屋で、どちらも練習にならなかった。']]},
+ {id:'snacks',title:'お菓子の分け合い',pair:1,t:'{A}が、家から届いたお菓子を{B}と分けていた。',ch:[
+  ['ほほえましく見守る','f',1,{trust:2,pb:{trust:2},all:{conf:-1}},'ふたりの距離が少し縮まった。'],
+  ['みんなにも分けるよう言う','s',1,{all:{conf:1},conf:2},'お菓子は練習生全員に行き渡った。'],
+  ['食事の時間以外は控えさせる','h',1,{trust:-3,fat:-2},'「はい」と、少し寂しそうにお菓子をしまった。']]},
+ {id:'mimic',title:'ものまね',pair:1,t:'{A}が{B}の歌い方をものまねして、練習室が大笑いしている。',ch:[
+  ['一緒に笑う','f',.7,{conf:3,all:{conf:1},pb:{conf:2}},'{B}も笑って、ものまね返しをした。',{pb:{conf:-4}},'{B}は笑っていたが、少し傷ついたようだ。'],
+  ['本人のいない所ではしないよう言う','h',1,{trust:-2,pb:{trust:3}},'{A}は素直に謝った。'],
+  ['ものまね企画を番組でやる','a',.7,{pop:6,drama:1,pb:{pop:4}},'ものまね企画が大受けした。',{pb:{conf:-4}},'企画はすべり、{B}が気まずそうだった。']]}
+];
+var EVX_BY={};EVX.forEach(function(x){EVX_BY[x.id]=x;});
+function xText(s,A,B){return s.replace(/\{A\}/g,A.giv).replace(/\{B\}/g,B?B.giv:'');}
+function xP(c,A,B,S){var p=c[2];return typeof p==='function'?p(A,B,S):p;}
+/* 効き目を当てる */
+function xApply(S,t,fx,B){if(!fx)return;var b={};for(var k in fx)if(['all','pb','budget','showTrust','inj','cmp'].indexOf(k)<0)b[k]=fx[k];
+  if(b.spec<0){var sk=t.spec==='t'?'e':t.spec;t.st[sk]=Math.max(10,t.st[sk]+b.spec);delete b.spec;}
+  applyFx(S,t,b);
+  if(fx.budget)S.budget=Math.max(0,S.budget+fx.budget);
+  if(fx.showTrust)S.showTrust=clamp(S.showTrust+fx.showTrust,0,100);
+  if(fx.inj)t.inj=true;if(fx.cmp&&t.temper==='makezu')t.complacent=true;
+  if(fx.all)alive(S).forEach(function(o){if(o.id===t.id||(B&&o.id===B.id))return;if(fx.all.conf)o.conf+=fx.all.conf;if(fx.all.trust)o.trust+=fx.all.trust;if(fx.all.fat)o.fat=Math.max(0,o.fat+fx.all.fat);normT(o);});
+  if(fx.pb&&B)xApply(S,B,fx.pb);
+  normT(t);}
+/* 1つ選んだ結果。成功率があれば振って、成功・失敗の文を返す */
+function xChoose(S,c,A,B){var p=xP(c,A,B,S),ok=p>=1||R()<p,fx=ok?c[3]:(c[5]||c[3]),txt=ok?c[4]:(c[6]||c[4]);
+  xApply(S,A,fx,B);var sfx=applyTone(S,A,c[1]);
+  return (p<1?(ok?'【成功】':'【失敗】'):'')+xText(txt,A,B)+(sfx?' '+sfx:'');}
+function xHint(c,A,B,S){var fx=c[3],p=xP(c,A,B,S),f2={};for(var k in fx)f2[k]=fx[k];var down=f2.spec<0;if(down)delete f2.spec;var parts=hintOf(f2,c[1]).parts.slice();if(down)parts.push(['得意↓',0]);
+  if(fx.budget)parts.push(['制作費'+fx.budget+'万',0]);if(fx.all)parts.push([fx.all.conf<0||fx.all.trust<0?'ほかの子が気にする':'ほかの子にも効く',!(fx.all.conf<0||fx.all.trust<0)]);
+  if(fx.showTrust)parts.push(['番組への信頼'+(fx.showTrust>0?'↑':'↓'),fx.showTrust>0]);if(fx.pb)parts.push(['相手にも効く',1]);
+  if(p<1)parts.unshift(['成功率 約'+Math.round(p*20)*5+'%','rate']);return parts;}
+/* 出来事の山から1つ引く（1シーズンに同じものは1回まで） */
+function genX(S,A0,w,usedIds){if(!S.seenX)S.seenX=[];
+  var cand=shuffle(EVX.filter(function(x){return S.seenX.indexOf(x.id)<0&&(x.minR||1)<=w;}));
+  var A=A0.filter(function(t){return !usedIds[t.id];});
+  for(var i=0;i<cand.length;i++){var x=cand[i],as=shuffle(A.slice());
+    for(var j=0;j<as.length;j++){var a=as[j];
+      if(x.pair){var bs=as.filter(function(o){return o.id!==a.id;});for(var k=0;k<bs.length;k++){if(!x.cond||x.cond(S,a,bs[k])){S.seenX.push(x.id);return {type:'x',xid:x.id,ids:[a.id,bs[k].id]};}}}
+      else if(!x.cond||x.cond(S,a)){S.seenX.push(x.id);return {type:'x',xid:x.id,ids:[a.id]};}}}
+  return null;}
+EV.x={title:'出来事',
+  text:function(S,e,A,B){return xText(EVX_BY[e.xid].t,A,B);},
+  choices:function(S,e,A,B){return EVX_BY[e.xid].ch.map(function(c){return [xText(c[0],A,B),''];});},
+  apply:function(S,e,i,A,B){return xChoose(S,EVX_BY[e.xid].ch[i],A,B);}};
+
+/* お出かけ：関わる時間を1回使い、練習生を1人連れて出かける */
+var OUTS=[
+ {n:'カフェ',cost:5,sc:[
+  {t:'駅前のカフェ。{A}はメニューを見て、なかなか決められない。',ch:[['同じものを頼む','s',1,{trust:5},'「同じのにしてくれたんですね」と笑った。'],['いちばん豪華なのを勧める','f',1,{conf:5,budget:-3,cmp:1},'「いいんですか！？」と目を輝かせた。'],['決まるまで待つ','s',1,{trust:3,fat:-5},'ゆっくり選んだケーキを、幸せそうに食べた。']]},
+  {t:'カフェで、{A}がほかのお客さんに気づかれた。「番組に出てる子ですよね？」',ch:[['ファンサービスを任せる','a',pConf(.6),{pop:5,conf:5},'ていねいに対応して、お客さんを笑顔にした。',{conf:-4},'緊張して、うまく話せなかった。'],['静かに店を出る','s',1,{trust:3},'「ちょっとびっくりしました」と、外で笑った。'],['一緒に写真に応じる','f',1,{pop:3,fat:3},'写真がSNSに上がり、少し話題になった。']]}]},
+ {n:'公園',cost:0,sc:[
+  {t:'公園のベンチ。{A}が、遊んでいる子どもたちをじっと見ている。',ch:[['何を考えているか聞く','s',1,{trust:6},'「昔の自分を思い出してました」と、少し話してくれた。'],['一緒にキャッチボールをする','f',1,{conf:4,fat:-8},'思いきり体を動かして、すっきりした顔になった。'],['ここで歌ってみるよう言う','h',pConf(.55),{up:['e',3],conf:5},'小さな拍手が起きた。',{conf:-4},'人目が気になって、声が出なかった。']]},
+  {t:'公園で、{A}が野良猫に囲まれている。',ch:[['写真を撮ってあげる','f',1,{conf:4},'その写真を、待ち受けにしたらしい。'],['一緒にしゃがんで眺める','s',1,{trust:5,fat:-5},'しばらくふたりで、のんびり過ごした。'],['練習の話をする','h',1,{spec:2,trust:-1},'真面目な話になって、猫はどこかへ行ってしまった。']]}]},
+ {n:'商店街',cost:0,sc:[
+  {t:'商店街の福引き。{A}が「1回だけ」と目を輝かせている。',ch:[['引かせてみる','f',.3,{conf:8,all:{conf:1}},'なんと特賞！ 練習生全員分の焼き菓子をもらった。',{conf:1},'ティッシュだった。それでも楽しそうに笑った。'],['お金は大事にと止める','h',1,{trust:-2},'「ですよね」と、少し残念そうだった。'],['一緒に並ぶ','s',1,{trust:4},'当たりはなかったが、ふたりで大笑いした。']]},
+  {t:'商店街の八百屋さんが「テレビで見たよ」と、{A}にりんごをくれた。',ch:[['お礼に1曲歌わせる','a',pConf(.6),{pop:5,conf:5},'人が集まり、ちょっとしたミニライブになった。',{conf:-3},'声が小さくて、少し気まずくなった。'],['ていねいにお礼を言わせる','s',1,{trust:3,conf:3},'「また来てね」と見送ってもらった。'],['合宿所のみんなに持ち帰る','f',1,{all:{conf:1}},'りんごは、みんなで分けて食べた。']]}]},
+ {n:'カラオケ',cost:5,sc:[
+  {t:'カラオケで、{A}が得意曲で高得点をねらっている。',ch:[['本気で勝負する','h',pStat('spec',.5),{conf:8,spec:2},'自己ベストを更新して、大はしゃぎした。',{conf:-3},'あと1点届かず、悔しそうにマイクを置いた。'],['苦手な曲に挑戦させる','h',.5,{up:['v',3],conf:4},'意外にも、新しい一面が見えた。',{conf:-3},'途中で笑ってしまって歌えなかった。'],['ひたすら盛り上げ役に回る','f',1,{conf:5,fat:-5},'声が枯れるまで笑って歌った。']]},
+  {t:'カラオケで、{A}が昔好きだった曲を入れて、少し黙り込んだ。',ch:[['思い出を聞く','s',1,{trust:7},'「この曲で、歌手になりたいって思ったんです」'],['一緒に歌う','f',1,{conf:5,trust:3},'ふたりで歌ううちに、また笑顔が戻った。'],['別の曲に変える','h',1,{fat:-3,trust:-1},'何事もなかったように、次の曲を選んだ。']]}]},
+ {n:'神社',cost:0,sc:[
+  {t:'神社でおみくじを引いた。{A}は「凶」を引いて固まっている。',ch:[['もう一度引かせる','f',.5,{conf:6},'2回目は「大吉」。満面の笑みになった。',{conf:-3},'2回目も「凶」。もう笑うしかなかった。'],['凶はあとは上がるだけだと励ます','s',1,{conf:5},'「じゃあ、あとは上がるだけですね」'],['木に結んで忘れさせる','s',1,{conf:3,trust:2},'おみくじを結んで、すっきりした顔をした。']]},
+  {t:'神社で、{A}が長いあいだ手を合わせていた。',ch:[['何を願ったか聞く','h',1,{trust:-1,conf:2},'「秘密です」と笑ってはぐらかされた。'],['黙って待つ','s',1,{trust:6},'帰り道、「みんなでデビューできますように、です」と教えてくれた。'],['お守りを買ってあげる（制作費2万）','s',1,{conf:5,trust:3,budget:-2},'お守りを、カバンにしっかり付けていた。']]}]},
+ {n:'河川敷',cost:0,sc:[
+  {t:'夕暮れの河川敷。{A}が、川に向かって大きな声で発声練習を始めた。',ch:[['一緒に声を出す','f',1,{conf:5,trust:4},'ふたりの声が、川向こうまで響いた。'],['正しい発声を教える','h',1,{up:['v',3],fat:4},'声の通りが、目に見えてよくなった。'],['静かに夕日を見る','s',1,{fat:-10,trust:3},'しばらく黙って、夕日が沈むのを見ていた。']]},
+  {t:'河川敷を走るランナーを見て、{A}が「一緒に走りたい」と言い出した。',ch:[['走らせる','f',pFat(.4,.8),{conf:4,up:['d',2]},'気持ちよさそうに走って、汗をぬぐった。',{fat:10},'途中でへとへとになって、歩いて帰った。'],['体力づくりのメニューにする','h',1,{fat:6,spec:2},'翌日から、朝のランニングが日課になった。'],['見守りながら話す','s',1,{trust:5},'走り終えた{A}と、いろいろな話をした。']]}]}
+];
+function doOut(S,id,pi){var t=S.tr[id],o=OUTS[pi];if(!o||S.ap<=0||S.budget<o.cost)return;S.ap--;S.budget-=o.cost;var tm=touchT(S,id);t.trust+=2;normT(t);
+  S.talk={id:id,kind:'out',pi:pi,si:ri(0,o.sc.length-1),res:null,tm:tm};}
+function outChoose(S,i){var t=S.tr[S.talk.id],o=OUTS[S.talk.pi],c=o.sc[S.talk.si].ch[i],b=snapT(t);
+  S.talk.res=xChoose(S,c,t,null)+(S.talk.tm||'');S.talk.delta=deltaOf(b,t);logT(S,t,o.n+'へ出かけた：'+c[0]);
+  if(!t.outN)t.outN=0;t.outN++;if(t.outN===1)addAlbum(S,t,'お出かけ',o.n+'へ一緒に出かけた');}
+
 /*ENGINE-END*/
 
 /* ================= 画面 ================= */
@@ -1752,9 +1998,10 @@ function vLesson(){
 function vEvent(){
   var e=S.events[S.evIdx],d=EV[e.type],A=S.tr[e.ids[0]],B=e.ids[1]!=null?S.tr[e.ids[1]]:null;
   var h='<h2>合宿の出来事 <span class="small muted">'+(S.evIdx+1)+' / '+S.events.length+'</span></h2>';
-  h+='<div class="card ev"><div class="ttl">'+d.title+(e.type==='arc'?'「'+ARCS[A.arc.k].name+'」':'')+'</div><div class="evfaces"><div>'+face(A,B?'lg':'xl')+esc(A.giv)+'</div>'+(B?'<div>'+face(B,'lg')+esc(B.giv)+'</div>':'')+'</div><p>'+esc(d.text(S,e,A,B))+'</p>';
+  h+='<div class="card ev"><div class="ttl">'+(e.type==='x'?EVX_BY[e.xid].title:d.title)+(e.type==='arc'?'「'+ARCS[A.arc.k].name+'」':'')+'</div><div class="evfaces"><div>'+face(A,B?'lg':'xl')+esc(A.giv)+'</div>'+(B?'<div>'+face(B,'lg')+esc(B.giv)+'</div>':'')+'</div><p>'+esc(d.text(S,e,A,B))+'</p>';
   if(S.evRes){h+='<div class="toast">'+esc(S.evRes)+(S.evDelta||[]).map(function(x){return '<div class="small" style="margin-top:6px;font-weight:700">'+esc(x[0])+'</div>'+deltaHtml(x[1]);}).join('')+'</div></div><button class="btn" data-a="evnext">'+(S.evIdx+1<S.events.length?'次の出来事へ':'ステージへ')+'</button>';}
   else{if(e.type==='arc')arcChoices(S,A).forEach(function(c,i){h+=choiceBtn('ev',i,c.label,c.hint.tone,partsHtml(c.hint.parts));});
+    else if(e.type==='x')EVX_BY[e.xid].ch.forEach(function(c,i){h+=choiceBtn('ev',i,xText(c[0],A,B),c[1],partsHtml(xHint(c,A,B,S)));});
     else d.choices(S,e,A,B).forEach(function(c,i){h+=choiceBtn('ev',i,c[0],(EV_TONE[e.type]||'').charAt(i),esc(c[1]));});h+='</div>'+(A.temperRev?'':TONE_NOTE);}
   return h;
 }
@@ -2018,7 +2265,7 @@ function careerBox(){var c=loadCareer(),rk=rankOf(c.points),nx=nextRank(c.points
 
 /* ---------- v5 の画面 ---------- */
 function toneTag(t){return t?'<span class="tone t-'+t+'">'+TONEN[t]+'</span>':'';}
-function partsHtml(p){return p.map(function(x){return '<span class="hp '+(x[1]?'up':'dn')+'">'+x[0]+'</span>';}).join('');}
+function partsHtml(p){return p.map(function(x){return '<span class="hp '+(x[1]==='rate'?'rate':x[1]?'up':'dn')+'">'+x[0]+'</span>';}).join('');}
 function choiceBtn(a,v,label,tone,inner,extra){return '<button class="choice" data-a="'+a+'" data-v="'+v+'"'+(extra||'')+'><b>'+esc(label)+'</b><span class="hint">'+toneTag(tone)+inner+'</span></button>';}
 function deltaHtml(list){if(!list||!list.length)return '<div class="dl"><span class="small" style="opacity:.7">目に見える変化はなかった</span></div>';
   return '<div class="dl">'+list.map(function(x){return '<span class="'+(x[2]?'up':'dn')+'">'+x[0]+' '+(x[1]>0?'+':'')+x[1]+'</span>';}).join('')+'</div>';}
@@ -2028,12 +2275,17 @@ function moodTag(t){var m=moodOf(t);return '<span class="tag '+MOODC[m]+'">'+m+'
 function apDots(){var h='';for(var i=0;i<AP_MAX;i++)h+='<i class="'+(i<S.ap?'on':'')+'"></i>';return '<span class="ap">'+h+'</span>';}
 function vTalk(){
   var h='<h2>関わる時間 '+apDots()+'</h2>';
+  if(S.sub&&S.sub.kind==='out'){var to=S.tr[S.sub.id];h+='<div class="card ev"><div class="ttl">お出かけ</div><div class="evfaces"><div>'+face(to,'lg')+esc(to.name)+'</div></div><p class="small muted">どこへ行きますか？ 行き先ごとに起きることが違います。</p>'+OUTS.map(function(o,i){return '<button class="choice" data-a="outplace" data-v="'+i+'" '+(S.budget<o.cost?'disabled':'')+'><b>'+o.n+'</b><span class="hint">'+(o.cost?'<span class="hp dn">制作費'+o.cost+'万</span>':'<span class="small muted">お金はかからない</span>')+'</span></button>';}).join('')+'<button class="btn sub" data-a="subcancel">やめる</button></div>';return h;}
   if(S.sub){var t=S.tr[S.sub.id];
     h+='<div class="card ev"><div class="ttl">'+(S.sub.kind==='coach'?'1対1で見る':'差し入れを渡す')+'</div><div class="evfaces"><div>'+face(t,'lg')+esc(t.name)+'</div></div>';
     if(S.sub.kind==='coach'){h+='<p class="small muted">どこを見るか選んでください。その能力が伸び、はっきり分かるようになります。疲れがたまり、繊細な子は緊張で自信を落とします。</p>'+['v','d','r','e'].map(function(k){return '<button class="choice" data-a="coachk2" data-v="'+k+'"><b>'+STATN[k]+'</b><span>いま '+(t.rev[k]===2?Math.round(t.st[k]):t.rev[k]===1?t.fz[k]+'前後':'?')+'</span></button>';}).join('');}
     else{h+='<p class="small muted">好きなものなら信頼が大きく上がり、苦手なものだと下がります。'+(t.likeRev?'この子は「'+esc(t.gift)+'」が好きで、「'+esc(t.ng)+'」が苦手。':'好みは、話を聞くと分かります。')+'</p>'+S.sub.opts.map(function(g,i){return '<button class="choice" data-a="giftpick" data-v="'+i+'"><b>'+esc(g)+'</b></button>';}).join('');}
     h+='<button class="btn sub" data-a="subcancel">やめる</button></div>';return h;}
   if(S.talk){var t2=S.tr[S.talk.id],k=S.talk.kind;
+    if(k==='out'){var o=OUTS[S.talk.pi],sc=o.sc[S.talk.si];h+='<div class="card ev"><div class="ttl">お出かけ：'+o.n+'</div><div class="evfaces"><div>'+face(t2,'xl')+esc(t2.name)+'</div></div><p>'+esc(xText(sc.t,t2,null))+'</p>';
+      if(S.talk.res){h+='<div class="toast">'+esc(S.talk.res)+deltaHtml(S.talk.delta)+'</div></div><button class="btn" data-a="talkback">戻る</button>';}
+      else{sc.ch.forEach(function(c,i){h+=choiceBtn('talkch',i,xText(c[0],t2,null),c[1],partsHtml(xHint(c,t2,null,S)));});h+='</div>';}
+      return h;}
     if(k==='pair'){var pb=S.tr[S.talk.pb];h+='<div class="card ev"><div class="ttl">ふたりと話す</div><div class="evfaces"><div>'+face(t2,'lg')+esc(t2.giv)+'</div><div>'+face(pb,'lg')+esc(pb.giv)+'</div></div><div class="toast">'+esc(S.talk.res)+'<div class="small" style="margin-top:6px;font-weight:700">'+esc(t2.giv)+'</div>'+deltaHtml(S.talk.delta)+'<div class="small" style="margin-top:6px;font-weight:700">'+esc(pb.giv)+'</div>'+deltaHtml(S.talk.delta2)+'</div></div><button class="btn" data-a="talkback">戻る</button>';return h;}
     var ttl=k==='arc'?'ひとりの物語「'+ARCS[t2.arc.k].name+'」 '+Math.min(3,t2.arc.step+(S.talk.res?0:1))+'/3':k==='honne'?'本音':k==='coach'?'1対1で見る':k==='gift'?'差し入れ':'話を聞く';
     h+='<div class="card ev"><div class="ttl">'+ttl+'</div><div class="evfaces"><div>'+face(t2,'xl')+esc(t2.name)+'<span class="small muted" style="font-weight:400">'+TIERN[tierOf(t2)]+'</span></div></div>';
@@ -2042,7 +2294,7 @@ function vTalk(){
     else if(k==='honne'){h+='<p>'+esc(arcText(S,t2,HONNE[t2.arc.k]))+'</p>'+[['最後まで黙って聞く','自信が上がり、すべての能力が少し伸びる'],['「話してくれてありがとう」と伝える','信頼が上がり、すべての能力が少し伸びる']].map(function(c,i){return '<button class="choice" data-a="talkch" data-v="'+i+'"><b>'+c[0]+'</b><span>'+c[1]+'</span></button>';}).join('')+'</div>';}
     else{var sc=arcScene(S,t2);h+='<p>'+esc(arcText(S,t2,sc.t))+'</p>';arcChoices(S,t2).forEach(function(c,i){h+=choiceBtn('talkch',i,c.label,c.hint.tone,partsHtml(c.hint.parts));});h+='</div>'+(t2.temperRev?'':TONE_NOTE);}
     return h;}
-  h+='<p class="small muted">レッスンのあと、'+AP_MAX+'回まで練習生と関われます。<b>話す</b>＝物語が進む・好みや目標が分かる／<b>1対1で見る</b>＝能力が伸びるが疲れる（繊細な子は緊張する）／<b>差し入れ</b>＝好きなものなら信頼が大きく上がり、苦手なものだと下がる。同じ子に2回以上構うと、ほかの子の信頼が少し下がる。信頼が「本音で話せる」まで上がり、物語を見終えた子は本音を打ち明けてくれます。</p>';
+  h+='<p class="small muted">レッスンのあと、'+AP_MAX+'回まで練習生と関われます。<b>話す</b>＝物語が進む・好みや目標が分かる／<b>お出かけ</b>＝連れ出すと何かが起きる（成功するかは運と調子しだい）／<b>1対1で見る</b>＝能力が伸びるが疲れる（繊細な子は緊張する）／<b>差し入れ</b>＝好きなものなら信頼が大きく上がり、苦手なものだと下がる。同じ子に2回以上構うと、ほかの子の信頼が少し下がる。信頼が「本音で話せる」まで上がり、物語を見終えた子は本音を打ち明けてくれます。</p>';
   var open=S.reqs.filter(function(q){return !q.done;}).length;
   var PL=pairList(S).slice(0,6);if(PL.length){h+='<h3>ふたりと話す <span class="small muted">1回ぶん。ふたりとも信頼が上がる。ライバルは戦友になることがある</span></h3><div class="pairs">';
     PL.forEach(function(r){var A=S.tr[r.a],B=S.tr[r.b];h+='<button class="pairb" data-a="pair" data-id="'+r.a+'" data-v="'+r.b+'" '+(S.ap<=0?'disabled':'')+'>'+faceImg(A,'sm')+faceImg(B,'sm')+'<span><b>'+esc(A.giv)+'と'+esc(B.giv)+'</b><small>'+RELN[r.k]+'</small></span></button>';});h+='</div>';}
@@ -2056,7 +2308,7 @@ function vTalk(){
   A.forEach(function(t){var st=t.arc.step,hn=st>=3&&t.trust>=80&&!t.honne,dis=S.ap<=0?'disabled':'';
     h+='<div class="trow2">'+face(t,'md')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+moodTag(t)+(hn?' <span class="tag good">★ 本音</span>':st>0&&st<3?' <span class="tag good">★ '+ARCS[t.arc.k].name+' '+st+'/3</span>':'')+'</div>'+
       '<div class="small muted">'+TIERN[tierOf(t)]+'（信頼'+Math.round(t.trust)+'）・'+esc(moodLine(t))+'</div>'+
-      '<div class="seg" style="margin-top:6px"><button data-a="talk" data-id="'+t.id+'" '+dis+'>話す</button><button data-a="coach" data-id="'+t.id+'" '+dis+'>1対1で見る</button><button data-a="gift" data-id="'+t.id+'" '+dis+'>差し入れ</button></div></div></div>';});
+      '<div class="seg" style="margin-top:6px"><button data-a="talk" data-id="'+t.id+'" '+dis+'>話す</button><button data-a="coach" data-id="'+t.id+'" '+dis+'>1対1で見る</button><button data-a="gift" data-id="'+t.id+'" '+dis+'>差し入れ</button><button data-a="out" data-id="'+t.id+'" '+dis+'>お出かけ</button></div></div></div>';});
   h+='<div class="foot"><div class="in"><div class="cnt">残り <b>'+S.ap+'</b> 回'+(open?'<br><span style="color:var(--bad)">相談 '+open+'件が未回答</span>':'')+'</div><button class="btn" data-a="talkok">'+(ROUNDS[S.rnd].interview?'個別面談へ':'出来事へ')+'</button></div></div>';
   return h;
 }
@@ -2229,7 +2481,9 @@ document.addEventListener('click',function(ev){
     case 'revive':go(function(){revive(S,id);});break;
     case 'planok':go(function(){applyPlan(S);});window.scrollTo(0,0);break;
     case 'talk':go(function(){doTalk(S,id);});window.scrollTo(0,0);break;
-    case 'talkch':go(function(){if(S.talk.kind==='honne')honneChoose(S,+v);else if(S.talk.kind==='free')freeChoose(S,+v);else talkChoose(S,+v);});break;
+    case 'talkch':go(function(){if(S.talk.kind==='honne')honneChoose(S,+v);else if(S.talk.kind==='free')freeChoose(S,+v);else if(S.talk.kind==='out')outChoose(S,+v);else talkChoose(S,+v);});break;
+    case 'out':go(function(){S.sub={id:id,kind:'out'};});window.scrollTo(0,0);break;
+    case 'outplace':go(function(){var i=S.sub.id;S.sub=null;doOut(S,i,+v);});window.scrollTo(0,0);break;
     case 'talkback':go(function(){S.talk=null;});window.scrollTo(0,0);break;
     case 'coach':go(function(){S.sub={id:id,kind:'coach'};});window.scrollTo(0,0);break;
     case 'gift':go(function(){S.sub={id:id,kind:'gift',opts:giftOpts(S.tr[id])};});window.scrollTo(0,0);break;
