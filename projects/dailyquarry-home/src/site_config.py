@@ -19,9 +19,9 @@ SEARCH_CONSOLE_TOKEN = os.environ.get(
 ADSENSE_CLIENT = os.environ.get("DQ_ADSENSE_CLIENT", "ca-pub-6409014819339195")
 
 # AdMob（アプリの広告）の発行元。AdSense と同じ Google アカウントなので番号も同じ。
-# アプリのストアのマーケティング URL が <名前>.dailyquarry.com のとき、AdMob はサブドメインを削った
-# ここ（dailyquarry.com/app-ads.txt）も読みに来る。2026-10-02 に *.pages.dev では AdMob の「アプリを確認」が
-# 通らなかった（pages.dev/app-ads.txt を見に行き、Cloudflare の紹介ページに当たる）ので、自分のドメインに寄せた
+# アプリのストアのマーケティング URL を <名前>.dailyquarry.com にしたとき、AdMob がサブドメインを削った
+# ここ（dailyquarry.com/app-ads.txt）を読みに来ても通るように置いておく。
+# （2026-10-02 に AdMob の確認が通らなかった原因は *.pages.dev ではなく robots.txt だった。docs/app-pitfalls.md 項目8）
 ADMOB_PUBLISHER = os.environ.get("DQ_ADMOB_PUBLISHER", "pub-6409014819339195")
 
 # 公開名義と連絡先。個人名は出さない。転送先はここに書かない（リポジトリは public）。
