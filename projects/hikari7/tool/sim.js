@@ -39,6 +39,7 @@ function play(g, pol) {
       doTalk(S, t.id);
       if (S.talk.kind === 'arc') talkChoose(S, pol === 'good' ? bestArc(S, t) : ri(0, 2));
       else if (S.talk.kind === 'honne') honneChoose(S, 0);
+      else if (S.talk.kind === 'free') freeChoose(S, pol === 'good' ? (t.temper === 'sensai' ? 0 : 1) : ri(0, 2));
       S.talk = null;
     }
     afterTalk(S);

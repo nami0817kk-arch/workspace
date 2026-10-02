@@ -380,6 +380,8 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .stagec.night{background-image:linear-gradient(180deg,rgba(14,9,28,.6),rgba(8,5,16,.9) 75%),var(--bgi-night,linear-gradient(#1b1230,#0a0714))}
 .lastseat{background-image:radial-gradient(ellipse 60% 80% at 50% 0,rgba(255,236,190,.3),transparent 70%),linear-gradient(180deg,rgba(38,23,69,.6),rgba(13,9,25,.9)),var(--bgi-stage2,linear-gradient(#261745,#0d0919));background-size:cover;background-position:center}
 .poster{background-image:radial-gradient(ellipse 70% 50% at 50% 0,rgba(255,236,190,.38),transparent 70%),linear-gradient(180deg,rgba(52,32,95,.62),rgba(18,11,36,.92) 75%),var(--bgi-hall,linear-gradient(#34205f,#120b24));background-size:cover;background-position:center top}
+/* 選択肢の中の札と上がる下がるの印は、.choice span の灰色に負けないように */
+.choice .tone{color:#fff}.choice .hp.up{color:var(--ok)}.choice .hp.dn{color:var(--bad)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -972,7 +974,7 @@ function assignArcs(tr){
     if(t.tier<.15&&R()<.65)k='late';
     else if(t.age<=16&&R()<.35)k='young';
     else if(t.spec==='v'&&R()<.3)k='shy';
-    else k=pick(['retry','family','child','leader','lyric','local','rival','retry','family','leader','lyric','local']);
+    else k=pick(['retry','family','child','leader','lyric','local','rival','sports','street','elder','transfer','former','studio','quiet','abroad','promise','perfect']);
     if(k==='young')t.age=Math.min(t.age,16);
     if(k==='late'&&R()<.8)t.line=pick(HINT_LINES);
     t.arc={k:k,step:0,score:0,p:null};
@@ -1096,7 +1098,7 @@ function startPrep(S){S.prep={names:genGroupNames(),name:0,leader:null,dir:0,act
 var GIFTS=['はちみつレモン','のど飴','プリン','おにぎり','チョコレート','フルーツの盛り合わせ','温かいスープ','湿布とテーピング','新しいノート','家族からの手紙'];
 var GOALS={center:'センターに立ちたい',top:'ステージで1位を取りたい',pop:'たくさんの人に知ってもらいたい',final:'最終審査のステージに立ちたい',together:'{P}と一緒にデビューしたい'};
 function initV5(S){
-  S.tr.forEach(function(t){t.gift=pick(GIFTS);t.ng=pick(GIFTS.filter(function(x){return x!==t.gift;}));t.likeRev=false;t.goalRev=false;t.goalDone=false;t.honne=false;t.griefFor=null;
+  S.tr.forEach(function(t){t.gift=pick(GIFTS);initBg(t);t.ng=pick(GIFTS.filter(function(x){return x!==t.gift;}));t.likeRev=false;t.goalRev=false;t.goalDone=false;t.honne=false;t.griefFor=null;
     var rs=relsOf(S,t.id).filter(function(r){return r.k==='old'||r.k==='senpai';});
     var gs=['center','top','pop','final','center','top','final'];if(rs.length)gs.push('together','together','together');
     t.goal=pick(gs);t.goalP=t.goal==='together'?rs[0].o:null;});
@@ -1116,7 +1118,7 @@ var MOODLINE={
   '燃えている':'「あの点数は忘れません」と、鏡から目を離さない',
   'ふつう':{sunao:'「今日のレッスン、楽しかったです」',makezu:'「もう一回だけ通していいですか」',sensai:'「……がんばります」と、小さな声で言った'}
 };
-function moodLine(t){var L=MOODLINE[moodOf(t)];return typeof L==='string'?L:L[t.temper];}
+function moodLine(t){var L=MOODLINE[moodOf(t)];if(typeof L!=='string')L=L[t.temper];if(Array.isArray(L))L=L[(t.id*7+(typeof S!=='undefined'&&S?S.rnd:0))%L.length];return L;}
 function addAlbum(S,t,title,txt){S.album.push({id:t.id,r:S.rnd,title:title,t:txt});}
 function goalText(S,t){return GOALS[t.goal].replace('{P}',t.goalP!=null?S.tr[t.goalP].giv:'仲間');}
 function goalHit(S,t,why){if(t.goalDone)return;t.goalDone=true;t.goalRev=true;t.conf+=10;t.trust+=6;normT(t);logT(S,t,'目標「'+goalText(S,t)+'」をかなえた');addAlbum(S,t,'目標達成',why);}
@@ -1149,12 +1151,8 @@ function doTalk(S,id){
   var t=S.tr[id];S.ap--;t.likeRev=true;t.goalRev=true;S.talked.push(id);var tm=touchT(S,id);
   if(t.arc.step<3){t.trust+=2;normT(t);S.talk={id:id,res:null,kind:'arc',tm:tm};return;}
   if(t.trust>=80&&!t.honne){S.talk={id:id,res:null,kind:'honne',tm:tm};return;}
-  var b=snapT(t);t.trust+=3;
-  var L=['「好きなのは'+t.like+'です。ここに来てからは、ほとんどできてないですけど」','「差し入れなら、'+t.gift+'がいちばんうれしいです。'+t.ng+'は……ちょっと苦手で」','「目標は、'+goalText(S,t)+'。まだ誰にも言ってないです」','「苦手なのは'+t.weak+'です。……内緒ですよ」'];
-  var r=pick(L);
-  if(moodOf(t)==='不安'&&t.temper==='sensai'&&R()<.5){t.conf-=4;r+=' 話しているうちに、不安なことを思い出してしまったようだ。';}
-  if(t.temper==='makezu'&&R()<.35){t.fat+=4;r+=' 「話すより練習したいです」と、そわそわしていた。';}
-  normT(t);S.talk={id:id,kind:'free',res:r+tm,delta:deltaOf(b,t)};logT(S,t,'話を聞いた');
+  t.trust+=2;normT(t);var tp=freeTopic(S,t);if(tp.bg)t.bgRev[tp.bg]=1;if(tp.dream)t.dreamRev=1;
+  S.talk={id:id,kind:'free',line:tp.line,res:null,tm:tm};
 }
 function honneChoose(S,i){var t=S.tr[S.talk.id],b=snapT(t);
   ['v','d','r','e'].forEach(function(k){t.st[k]=Math.min(99,t.st[k]+2*t.pot);});
@@ -1193,6 +1191,7 @@ function genReqs(S){var A=alive(S),out=[],used={};
   if(S.rnd<=3)A.filter(function(t){return t.goal==='center'&&!t.goalDone&&t.lastP>=75;}).slice(0,1).forEach(function(t){add('center',t);});
   A.filter(function(t){return t.arc.k==='rival'&&t.arc.p!=null&&S.tr[t.arc.p].status==='alive';}).slice(0,1).forEach(function(t){if(R()<.5)add('rival',t,t.arc.p);});
   if(out.length<2){var c=A.filter(function(t){return t.trust>=55;});if(c.length&&R()<.6)add('skill',pick(c));}
+  moreReqs(S,out,used);
   if(!out.length)add('skill',pick(A));
   A.forEach(function(t){t.griefFor=null;});
   return out;}
@@ -1461,6 +1460,197 @@ function doPair(S,a,b){var A=S.tr[a],B=S.tr[b],r=S.rels.filter(function(x){retur
 /* 本番の夜：講評のあと、練習生が1人訪ねてくる（関わる時間を使わない） */
 function toNight(S){var qs=genReqs(S);if(!qs.length||alive(S).length<2){S.phase='judge';return;}S.reqs=[qs[0]];S.night={done:false};S.phase='night';}
 function nightSkip(S){var q=S.reqs[0],t=S.tr[q.id];t.trust-=2;normT(t);logT(S,t,'夜に訪ねてきたが、早く休むよう帰された');S.night.done=true;S.night.skip=true;}
+
+
+/* ---------- 会話と過去のパターンを増やす（2026-10-02） ---------- */
+/* 物語の筋を10種追加（合計20種）。形は ARCS と同じ: 場面3つ×選択肢3つ、良い結末・惜しい結末・去ったあと */
+(function(){
+var A2={
+  sports:{name:'元運動部',reason:'けがで陸上をやめた。もう一度、全力で走れる場所がほしい',
+    sc:[
+      {t:'{N}は誰よりも体力があるのに、ダンスの細かい動きで何度もつまずいている。「体を動かすのは得意なはずなのに」',ch:[['基礎の動きから組み直す','ダンスが伸びる',{up:['d',4]},1,'「部活の基礎練みたいですね」と、少し笑った。'],['体力を活かした振りを任せる','自信が上がる',{conf:8},1,'大きく跳ぶ振りで、{N}の顔がぱっと明るくなった。'],['焦らなくていいと言う','疲れが抜ける',{fat:-15},0,'「焦りますよ」と言いつつ、肩の力が少し抜けた。']]},
+      {t:'雨の日、{N}が古いけがをした足首をさすっていた。「天気が悪いと、ちょっと痛むんです」',ch:[['今日は無理をさせない','疲れが抜け、信頼が上がる',{fat:-20,trust:6},1,'「ありがとうございます。……ちゃんと治します」'],['テーピングを巻いて続けさせる','得意が伸びるが疲れる',{spec:3,fat:12},0,'黙ってテーピングを巻き、練習に戻った。'],['けがのことを放送で話す','人気が上がる',{pop:6,drama:1},0,'放送のあと「応援してる」という声が届いた。']]},
+      {t:'「陸上をやめたとき、もう何かに本気になることはないと思ってました」',ch:[['今は本気だと伝える','自信が上がる',{conf:10},1,'「はい。今は、本気です」と言い切った。'],['陸上で学んだことを聞く','信頼が上がる',{trust:8},1,'「最後の1歩で諦めないこと、です」'],['過去は忘れて前を見るよう言う','得意が伸びる',{spec:3},0,'「……そうですね」と、少しだけ遠くを見た。']]}],
+    good:'ライブの最後まで息を切らさないメンバーとして知られ、「体力おばけ」と呼ばれている',
+    bad:'まだ古いけがをかばう癖が抜けず、激しい曲では少し不安が残る',
+    out:'地元の陸上部の後輩たちに、ダンスを教えに行っているらしい'},
+  street:{name:'路上ライブ出身',reason:'駅前で歌っていた。足を止めてくれる人を、もっと増やしたい',
+    sc:[
+      {t:'{N}は誰も聴いていない場所で歌うのに慣れている。でも、審査員の視線の前では声が固くなる。',ch:[['駅前の気持ちで歌えと言う','自信が上がる',{conf:8},1,'目を閉じて歌い出すと、声がいつもの温度に戻った。'],['審査員の前で場数を踏ませる','表現が伸びる',{up:['e',4]},1,'何度も立たされて、最後は真っすぐ前を見た。'],['好きにやらせる','変化なし',{},0,'「……はい」と言ったきり、ひとりで考え込んでいた。']]},
+      {t:'駅前で{N}を応援していた常連さんから手紙が届いた。「いつもの場所で待ってます」',ch:[['手紙を本人に渡す','自信と表現が上がる',{conf:8,up:['e',2]},1,'手紙を読んで、何度も鼻をすすった。'],['番組で紹介する','人気が上がる',{pop:8,drama:1},1,'「路上から来た子」として、名前が知られ始めた。'],['審査が終わるまで預かる','信頼が少し下がる',{trust:-2},0,'あとで渡すと、「早く読みたかったです」と言われた。']]},
+      {t:'「路上では、1人でも足を止めてくれたら勝ちでした。ここでは、それじゃ足りないんですよね」',ch:[['1人に届く歌を忘れるなと言う','信頼が上がる',{trust:8},1,'「……はい。忘れません」'],['もっと大きな場所を目指せと言う','得意が伸びる',{spec:3},0,'「大きな場所……」と、天井を見上げた。'],['路上の歌をここで歌わせる','人気と自信が上がる',{pop:5,conf:5},1,'練習室で弾き語りをすると、みんなが手拍子をくれた。']]}],
+    good:'デビュー後、あの駅前で小さなゲリラライブを開き、人だかりができた',
+    bad:'大きな会場ではまだ緊張が抜けず、路上のころの声が出せないときがある',
+    out:'今も駅前で歌っている。足を止める人が、前より増えたらしい'},
+  elder:{name:'きょうだいの世話役',reason:'弟と妹の面倒を見てきた。今度は自分の夢のために頑張りたい',
+    sc:[
+      {t:'{N}は休憩中も、年下の練習生の髪を結んだり、水を配ったりしている。自分の練習は後回しだ。',ch:[['自分の練習を優先させる','得意が伸びる',{spec:4},0,'「つい、体が動いちゃって」と照れた。'],['その面倒見の良さをほめる','信頼が上がる',{trust:8},1,'「家では当たり前だったので」と、少しうれしそうだった。'],['休憩は休むよう言う','疲れが抜ける',{fat:-15},1,'ベンチに座ると、すぐにうとうとし始めた。']]},
+      {t:'家族から電話があった。弟と妹が、{N}がいなくて寂しがっているらしい。',ch:[['電話の時間を作ってあげる','自信が上がる',{conf:8,fat:-5},1,'電話口で、弟と妹にステージの話をして聞かせていた。'],['今は夢に集中させる','得意が伸びるが自信が下がる',{spec:3,conf:-5},0,'「……そうですよね」と、電話を切った。'],['弟と妹への手紙を書かせる','表現が伸びる',{up:['e',3]},1,'手紙には、絵と大きな字が並んでいた。']]},
+      {t:'「ずっと誰かのために頑張ってきたけど、自分のために頑張るのって、少し怖いです」',ch:[['怖くていいと伝える','自信と信頼が上がる',{conf:6,trust:6},1,'「……怖くても、やってみます」'],['家族も応援していると伝える','自信が上がる',{conf:10},1,'少し泣いて、それから笑った。'],['自分の気持ちを言葉にさせる','表現が伸びる',{up:['e',3]},0,'ゆっくり言葉を探して、「楽しい、です」と言った。']]}],
+    good:'デビュー後の初めての休みに家へ帰り、弟と妹にサインを書いてあげたらしい',
+    bad:'まだ自分のことは後回しにしがちで、メンバーが気づいて休ませている',
+    out:'家に戻り、弟と妹の前で歌うのが今の楽しみだという'},
+  transfer:{name:'転校続き',reason:'転校ばかりで友だちが続かなかった。今度こそ仲間がほしい',
+    sc:[
+      {t:'{N}は誰とでも明るく話すのに、どこか一歩引いている。夜はひとりで過ごすことが多い。',ch:[['同室の子と話す時間を作る','信頼が上がる',{trust:6,conf:3},1,'消灯のあと、部屋から笑い声が聞こえた。'],['ひとりの時間も大事だと言う','疲れが抜ける',{fat:-12},0,'「ありがとうございます」と、少しほっとした顔をした。'],['チームを引っぱる役を任せる','表現が伸びる',{up:['e',3],fat:8},1,'最初は戸惑っていたが、だんだん声が大きくなった。']]},
+      {t:'「どうせまたお別れになるから、仲良くなりすぎないようにしてるんです」',ch:[['ここは違うと伝える','信頼が上がる',{trust:8},1,'「……違うといいな」と、小さくつぶやいた。'],['お別れがあっても続く縁はあると言う','自信が上がる',{conf:6},1,'「続く縁、か」と、何度か口の中で繰り返した。'],['その考えはもったいないと言う','表現が伸びるが自信が下がる',{conf:-4,up:['e',3]},0,'黙ってうなずいたが、目は少し揺れていた。']]},
+      {t:'{N}の誕生日。練習生たちがこっそりお祝いの準備をしていた。',ch:[['みんなで祝う場を作る','自信と信頼が上がる',{conf:8,trust:6},1,'ケーキを前に、{N}は言葉が出なくなった。'],['その場面を放送する','人気が上がる',{pop:8,drama:1},1,'「いいチーム」という声がたくさん届いた。'],['練習を優先させる','得意が伸びる',{spec:3},0,'お祝いは、練習のあとの短い時間になった。']]}],
+    good:'メンバー全員の誕生日を覚えていて、毎回いちばんに祝っている',
+    bad:'今もときどき、ひとりで過ごしたがる日がある',
+    out:'番組で出会った仲間と、今も連絡を取り合っているらしい'},
+  former:{name:'元事務所の練習生',reason:'前の事務所を離れて、もう一度ゼロから挑戦しに来た',
+    sc:[
+      {t:'{N}は振り覚えが早く、動きも洗練されている。けれど、周りとの間に見えない壁がある。',ch:[['経験を周りに分けるよう頼む','信頼が上がるが疲れる',{trust:6,fat:8},1,'教えているうちに、壁が少しずつ消えていった。'],['ゼロのつもりで基礎をやらせる','表現が伸びる',{up:['e',4]},0,'「基礎からですか」と、少し不満そうだった。'],['経験があることを認める','自信が上がる',{conf:8},1,'「ここでは、それを言っていいんですね」']]},
+      {t:'前の事務所の話題が出た瞬間、{N}の表情が固まった。',ch:[['話したくなるまで待つ','信頼が上がる',{trust:8},1,'数日後、自分から少しだけ話してくれた。'],['何があったか聞く','信頼は上がるが自信が下がる',{conf:-4,trust:4},0,'「……いつか話します」と、それだけ言った。'],['経歴を放送で取り上げる','人気は上がるが自信が下がる',{pop:8,conf:-6,drama:1},-1,'放送のあと、しばらく誰とも目を合わせなかった。']]},
+      {t:'「前は、言われたとおりに動く練習生でした。ここでは自分で選んでいいって言われて、戸惑ってます」',ch:[['自分で選んでいいと伝える','自信が上がる',{conf:10},1,'「……選んでみます」と、真剣な顔で言った。'],['迷ったら相談しろと言う','信頼が上がる',{trust:8},1,'「はい。迷ったら、来ます」'],['次の構成を本人に決めさせる','表現が伸びるが疲れる',{up:['e',3],fat:8},1,'考え抜いた構成で、ステージが見違えた。']]}],
+    good:'振付の一部を自分で考えるようになり、クレジットに名前が載った',
+    bad:'まだ「正解」を探してしまう癖が残り、自分の色を出しきれていない',
+    out:'ダンスの先生として、子どもたちに教えているらしい'},
+  studio:{name:'ダンス教室の子',reason:'親がダンス教室をしている。教室の名前じゃなく、自分の名前で立ちたい',
+    sc:[
+      {t:'「あそこの教室の子でしょ」と言われるたびに、{N}は小さく笑ってやり過ごしている。',ch:[['教室の看板は気にするなと言う','自信が上がる',{conf:8},1,'「……はい。気にしないようにします」'],['教室で身につけた力を見せろと言う','得意が伸びるが自信が下がる',{spec:4,conf:-3},0,'黙って、誰よりも正確に踊ってみせた。'],['教室のことを放送で紹介する','人気は上がるが本人は複雑',{pop:8,conf:-5,drama:1},-1,'放送のあと、「親の七光り」という声も出た。']]},
+      {t:'親から差し入れが届いた。「教室のみんなも見てるよ」と手紙が添えられている。',ch:[['素直に喜ばせる','自信と信頼が上がる',{conf:6,trust:4},1,'手紙を読んで、少しだけ照れくさそうにした。'],['重荷なら預かると言う','疲れが抜ける',{fat:-12},1,'「見てるって言われると、緊張しますね」と苦笑いした。'],['教室の期待に応えろと言う','得意が伸びるが疲れる',{spec:3,fat:10},0,'その夜は、遅くまで練習室にいた。']]},
+      {t:'「教室のダンスじゃない、自分の踊りが少しだけ分かってきました」',ch:[['その踊りを見せてと頼む','表現が伸びる',{up:['e',4]},1,'型にはまらない動きに、練習室が静かになった。'],['よく見つけたとほめる','自信が上がる',{conf:10},1,'「見つけたっていうより、やっと許せた感じです」'],['基礎も忘れるなと言う','得意が伸びる',{spec:3},0,'「はい。どっちも大事にします」']]}],
+    good:'デビュー後に教室を訪れると、子どもたちが{N}の振りを真似していたらしい',
+    bad:'まだ「教室の子」と言われることがあり、少し気にしている',
+    out:'教室を継ぐか、自分の道を探すか、ゆっくり考えているらしい'},
+  quiet:{name:'端の席',reason:'クラスではいつも端の席だった。一度でいいから、真ん中に立ってみたい',
+    sc:[
+      {t:'並び位置を決めるとき、{N}は何も言わずに端へ移った。',ch:[['真ん中に立たせてみる','表現は伸びるが自信が揺れる',{up:['e',3],conf:-3},1,'真ん中に立つと、足が少し震えていた。'],['端でも輝けると伝える','自信が上がる',{conf:6},0,'「端でも……」と、少しほっとした顔をした。'],['自分で場所を選ばせる','信頼が上がる',{trust:6},1,'悩んだ末に、真ん中から1つ横の場所を選んだ。']]},
+      {t:'練習を見ていた先生が、{N}の表情をほめた。本人は聞こえないふりをしている。',ch:[['ほめ言葉をそのまま伝える','自信が上がる',{conf:10},1,'「……本当ですか」と、耳まで赤くなった。'],['表情の練習を増やす','表現が伸びるが疲れる',{up:['e',4],fat:8},1,'鏡の前で、少しずつ笑顔が自然になっていった。'],['放送で取り上げる','人気が上がる',{pop:8},0,'「この子、表情がいい」という声が増えた。']]},
+      {t:'「端の席から見てた景色も、悪くなかったんです。でも今は、真ん中も見てみたい」',ch:[['次はセンターを任せたいと言う','自信が上がる',{conf:10},1,'驚いた顔のあと、ゆっくりうなずいた。'],['端から見た景色を歌にしろと言う','表現が伸びる',{up:['e',4]},1,'その日の歌は、いつもより少し優しかった。'],['真ん中は自分で取りにいけと言う','得意が伸びる',{spec:3},0,'「……取りにいきます」と、小さく拳を握った。']]}],
+    good:'デビュー曲のサビで真ん中に立ち、そのときの笑顔が「奇跡の1秒」と呼ばれている',
+    bad:'まだ真ん中に立つと、少しうつむいてしまう',
+    out:'番組の経験をきっかけに、学校の文化祭で初めて舞台に立ったらしい'},
+  abroad:{name:'海外育ち',reason:'海外で育った。日本の歌で、日本の人に届きたい',
+    sc:[
+      {t:'{N}は発音がきれいなのに、日本語の歌詞になると言葉が少しぎこちない。',ch:[['歌詞の読み合わせを一緒にする','表現が伸び、信頼が上がる',{up:['e',3],trust:4},1,'一語ずつ意味を確かめるうちに、歌が柔らかくなった。'],['英語の多い曲を任せる','得意が伸びる',{spec:4},0,'水を得た魚のように歌い上げた。'],['毎日、日本語の歌を1曲覚えさせる','表現が伸びるが疲れる',{up:['e',4],fat:10},1,'ノートが、ふりがなでいっぱいになった。']]},
+      {t:'「日本の学校の思い出がないから、みんなの話に入れないときがあるんです」',ch:[['向こうの学校の話を聞く','信頼が上がる',{trust:8},1,'話し出すと止まらず、みんなが周りに集まってきた。'],['みんなに話す場を作る','自信が上がる',{conf:8},1,'「給食がないの！？」と、練習生たちが驚いていた。'],['違いを番組の話題にする','人気が上がる',{pop:8,drama:1},0,'「この子の話、もっと聞きたい」という声が届いた。']]},
+      {t:'「どっちの国にも、自分の場所がない気がしてたんです」',ch:[['ここが場所になると伝える','自信と信頼が上がる',{conf:6,trust:6},1,'「……ここが、いいです」と笑った。'],['両方を持っているのは強みだと言う','自信が上がる',{conf:10},1,'「強み、ですか」と少し考えてから、うなずいた。'],['その気持ちを歌詞にさせる','表現が伸びる',{up:['e',4]},1,'書いた詞には、2つの言葉が混ざっていた。']]}],
+    good:'海外のファンに向けた発信を任され、グループの名前が海の向こうにも届き始めた',
+    bad:'まだ日本語の早口の歌詞では、ときどき言葉がもつれる',
+    out:'向こうに戻り、日本の歌を歌う配信を続けているらしい'},
+  promise:{name:'祖母との約束',reason:'大好きなおばあちゃんに、テレビに出るところを見せると約束した',
+    sc:[
+      {t:'休憩中、{N}がスマホの写真を見て笑っていた。小さいころの{N}と、おばあちゃんが並んで写っている。',ch:[['写真の話を聞く','信頼が上がる',{trust:8},1,'「民謡を習ってたんです。おばあちゃんが先生で」'],['練習に戻らせる','得意が伸びる',{spec:3},0,'名残惜しそうに、スマホをしまった。'],['おばあちゃんへの動画を撮る','人気と自信が上がる',{pop:4,conf:4},1,'「ばあちゃん、見てる？」と手を振った。']]},
+      {t:'{N}の歌に、民謡のような節回しが混ざる。先生は「くせ」と言い、{N}は迷っている。',ch:[['個性として残させる','表現が伸び、自信が上がる',{up:['e',3],conf:4},1,'節回しが、かえって耳に残る歌になった。'],['基本に合わせさせる','歌が伸びるが自信が下がる',{up:['v',4],conf:-4},0,'「……分かりました」と、少しさみしそうに言った。'],['先生と話し合わせる','信頼が上がる',{trust:6},1,'話し合いの末、サビの1か所だけ残すことになった。']]},
+      {t:'「おばあちゃん、毎週番組を見てくれてるんです。電話で、点数まで覚えてて」',ch:[['次も見てもらおうと言う','自信が上がる',{conf:10},1,'「はい。もっと見せたいです」'],['おばあちゃんを客席に招く','自信と人気が上がる',{conf:6,pop:4},1,'客席の一番前で、おばあちゃんが手を振っていた。'],['点数は気にするなと言う','疲れが抜ける',{fat:-12},0,'「おばあちゃんの方が気にしてるんですよ」と笑った。']]}],
+    good:'カップリング曲に、おばあちゃんに習った節回しを入れた歌が話題になった',
+    bad:'テレビに出るたび、おばあちゃんから細かい感想が届くらしい',
+    out:'おばあちゃんの民謡教室を手伝いながら、歌を続けているらしい'},
+  perfect:{name:'完璧主義',reason:'中途半端が嫌い。やるなら一番がいい',
+    sc:[
+      {t:'{N}は1回のミスで、通し練習を最初からやり直そうとする。周りが少し疲れている。',ch:[['ミスしても続ける練習をさせる','表現が伸びるが自信が下がる',{up:['e',3],conf:-3},1,'止まりそうになるたびに、歯を食いしばって続けた。'],['その真剣さをほめる','自信が上がる',{conf:6},0,'「当然です」と言いながら、少しうれしそうだった。'],['周りに合わせるよう言う','信頼が上がる',{trust:6},1,'「……みんなの時間も大事ですよね」と、少し反省した顔をした。']]},
+      {t:'{N}が夜中まで同じ8小節を繰り返している。手首に湿布が貼ってある。',ch:[['今夜はもう休ませる','疲れが抜け、信頼が上がる',{fat:-20,trust:4},1,'「……明日、もう一回だけやります」'],['納得するまでやらせる','得意が伸びるが疲れる',{spec:5,fat:15},0,'朝方、ようやく納得した顔で寝床に入った。'],['完璧じゃない良さもあると言う','表現が伸びるが自信が揺れる',{conf:-3,up:['e',3]},1,'「完璧じゃない良さ……」と、何度もつぶやいた。']]},
+      {t:'「本当は、失敗するのが怖いだけなのかもしれません」',ch:[['怖くて当然だと伝える','自信と信頼が上がる',{conf:6,trust:6},1,'肩の力が、ふっと抜けた。'],['失敗しても見ていると約束する','信頼が上がる',{trust:10},1,'「……見ててください。失敗しても」'],['それでも一番を目指せと言う','得意が伸びる',{spec:3},0,'「はい。目指します」と、真っすぐ言った。']]}],
+    good:'ステージで小さなミスをしても笑って続けた場面が、「むしろ好きになった」と話題になった',
+    bad:'まだミスのあとは、しばらく自分を責めてしまう',
+    out:'今は振付の勉強をしながら、別の道でも一番を目指しているらしい'}
+};
+for(var k in A2)ARCS[k]=A2[k];
+ARC_KEYS=Object.keys(ARCS);
+var T2={sports:['hfs','sha','ssh'],street:['shf','sah','shf'],elder:['hss','shs','ssh'],transfer:['sfh','ssh','sah'],former:['fhs','sha','ssf'],
+  studio:['sha','ssh','fsh'],quiet:['hsf','sha','sfh'],abroad:['sfh','sfa','ssh'],promise:['sha','fhs','sas'],perfect:['hsf','sfh','ssh']};
+for(var k2 in T2)ARC_TONE[k2]=T2[k2];
+var H2={sports:'「走れなくなったとき、自分には何もないって思ったんです。今は、ここがあります」',
+  street:'「路上で誰も止まってくれなかった日は、帰り道で泣いてました。だから、ここにいるのが夢みたいで」',
+  elder:'「本当は、ずっと誰かに頼ってみたかったんです。……ちょっとだけ、頼ってもいいですか」',
+  transfer:'「最後の学校では、卒業式の日まで誰とも本気で話せませんでした。ここで初めて、帰りたくない場所ができました」',
+  former:'「前の事務所では、いつか出られると言われ続けて3年たちました。ここが最後のつもりで来たんです」',
+  studio:'「親の教室で踊るのが、ずっと苦しかったんです。ここで初めて、踊るのが好きだって言えました」',
+  quiet:'「クラスで名前を呼ばれないのに慣れてたんです。ここで名前を呼ばれるたびに、ここにいていいんだって思えます」',
+  abroad:'「向こうでは日本人、日本では帰国子女。ここに来て初めて、名前で呼ばれた気がします」',
+  promise:'「おばあちゃん、最近ちょっと耳が遠くなってきて。聞こえるうちに、ちゃんと届けたいんです」',
+  perfect:'「完璧でいないと、ここにいちゃいけない気がしてたんです。そうじゃないって、やっと分かりました」'};
+for(var k3 in H2)HONNE[k3]=H2[k3];
+})();
+
+/* 経歴：一人ずつに、きっかけ・学生時代・家族・特技・口癖を持たせる。話すたびに1つずつ分かる */
+var BG_START=['小学生のとき、テレビの音楽番組を見て','友だちに誘われて受けたオーディションで','文化祭のステージで拍手をもらって','きょうだいの影響で','SNSに上げた動画が少しだけ話題になって','親に連れていかれたコンサートで','合唱コンクールでほめられて','ダンス動画を真似しているうちに','落ち込んでいたときに聴いた1曲に救われて','地元の夏祭りで歌って','部活をやめて、何かを始めたくて','ミュージカルを観て','学校の放送部で','先生に勧められて','カラオケで店員さんに声をかけられて','家族を笑顔にしたくて'];
+var BG_PAST=['バスケ部の補欠','吹奏楽部でトランペット担当','図書委員','生徒会の書記','美術部','サッカー部のマネージャー','帰宅部でアルバイト','軽音部のボーカル','茶道部','陸上部','演劇部','科学部','料理研究会','放送部','書道部','ダンス同好会'];
+var BG_FAMILY=['両親と弟の4人家族','祖父母と暮らす大家族','三人きょうだいの真ん中','一人っ子','双子の片割れ','姉が2人いる末っ子','犬2匹と猫1匹がいるにぎやかな家','実家は定食屋','実家は花屋','実家は農家','兄がいる2人きょうだい','母と2人暮らし'];
+var BG_SKILL=['けん玉','早口言葉','ルービックキューブ','似顔絵','卵焼き','口笛','一輪車','書道','ものまね','バク転','あやとり','ピアノ','手品','縄跳びの二重跳び','方言の使い分け','折り紙'];
+var BG_HABIT=['「なんとかなります！」','「たぶん大丈夫です」','「もう一回いいですか」','「いける気がします」','「ちょっと待ってください」','「最高です」','「すみません」','「よし」','「なるほど」','「がんばります」','「えへへ」','「了解です」'];
+var BG_KEYS=['start','past','family','skill','habit'];
+var BG_NAME={start:'きっかけ',past:'学生時代',family:'家族',skill:'特技',habit:'口癖'};
+function initBg(t){t.bg={start:pick(BG_START),past:pick(BG_PAST),family:pick(BG_FAMILY),skill:pick(BG_SKILL),habit:pick(BG_HABIT)};t.bgRev={};t.dream=pick(DREAMS);}
+var DREAMS=['地元の大きな会場でライブをする','家族を一番前の席に招待する','自分で作った曲を歌う','海外でステージに立つ','誰かの「元気の出る曲」を歌う','メンバー全員で旅行に行く','ドラマの主題歌を歌う','おばあちゃんの町でライブをする','ファンの名前を全部覚える','10年後もこのメンバーで歌う'];
+var CAMP_LINES=['「合宿のごはん、量が多くてびっくりしました」','「夜、同室の子と振りを確認するのが日課です」','「朝のストレッチ、まだ体が固くて」','「洗濯の順番待ちで、いつも誰かと話しちゃうんです」','「消灯のあと、こっそり歌詞を覚えてます」','「食堂のカレーの日が、いちばんの楽しみです」','「鏡の前に立つ時間が、ここに来て倍になりました」','「シャワーの時間が短くて、毎日戦いです」','「休みの日は、みんなで近くの公園に行きました」','「ここに来てから、早寝早起きになりました」','「合宿所の階段、毎日上るだけでいい運動です」','「売店のアイスを、先生に内緒で分け合いました」'];
+function stageTalk(t){var h=t.hist.length?t.hist[t.hist.length-1].sc:null;if(h==null)return null;
+  if(h>=85)return {sunao:'「この前のステージ、自分でも初めて手応えがありました」',makezu:'「この前の点数、まだ上があると思ってます」',sensai:'「この前のステージ……良かったって言ってもらえて、まだ信じられないです」'}[t.temper];
+  if(h>=60)return {sunao:'「この前は悪くなかったけど、もっとできた気がします」',makezu:'「真ん中くらいじゃ満足できません」',sensai:'「この前のステージ、途中で一瞬、頭が真っ白になりました」'}[t.temper];
+  return {sunao:'「この前のステージ、悔しくて眠れませんでした」',makezu:'「あの点数は、次で必ず取り返します」',sensai:'「この前のステージのこと、まだ思い出すと苦しいです」'}[t.temper];}
+function producerTalk(t){return ['「……プロデューサーさんと話すの、まだちょっと緊張します」','「最近、話しかけてもらえるのがうれしいです」','「プロデューサーさんには、何でも話せる気がします」','「ここに来て、いちばん話してる大人はプロデューサーさんかもしれません」'][tierOf(t)];}
+function relTalk(S,t){var rs=relsOf(S,t.id).filter(function(r){return S.tr[r.o].status==='alive';});if(!rs.length)return null;var r=pick(rs),o=S.tr[r.o];
+  var L={old:['「'+o.giv+'とは小さいころからずっと一緒なんです。ケンカもたくさんしました」','「'+o.giv+'がいると、つい地元の言葉が出ちゃいます」'],
+    town:['「'+o.giv+'と同じ地元なんです。帰ったら一緒に行きたいお店があって」'],
+    room:['「同室の'+o.giv+'、寝言で歌ってるんですよ」','「'+o.giv+'とは、消灯のあとに次の課題の話をしてます」'],
+    senpai:['「'+o.giv+'さんみたいになりたくて、こっそり振りを真似してます」','「'+o.giv+'さんに、この前アドバイスをもらいました」'],
+    rival:['「'+o.giv+'には、正直、負けたくないです」','「'+o.giv+'の練習量、すごいんですよ。負けてられないです」'],
+    friend:['「'+o.giv+'がいるから、最近は練習が楽しいです」','「'+o.giv+'とは、ライバルっていうより相棒です」']}[r.k]||['「'+o.giv+'とは、最近よく話します」'];
+  return pick(L);}
+/* 話を聞く（物語のない会話）：話題を選び、返し方（共感・助言・冗談）で受け止め方が変わる */
+function freeTopic(S,t){
+  var ks=BG_KEYS.filter(function(k){return !t.bgRev[k];});
+  var pool=[];
+  if(ks.length){var k=pick(ks);pool.push({w:7,bg:k,line:{start:'「この道に入ったのは、'+t.bg.start+'なんです」',past:'「学校では'+t.bg.past+'でした。……意外ですか？」',family:'「家は'+t.bg.family+'です。ときどき、すごく会いたくなります」',skill:'「特技は'+t.bg.skill+'です。今度見せますね」',habit:'「口癖ですか？ よく'+t.bg.habit+'って言ってるらしいです」'}[k]});}
+  var st=stageTalk(t);if(st)pool.push({w:2,line:st});
+  var rt=relTalk(S,t);if(rt)pool.push({w:2,line:rt});
+  pool.push({w:1,line:pick(CAMP_LINES)});
+  pool.push({w:1,line:'「デビューしたら、'+t.dream+'のが夢なんです」',dream:1});
+  pool.push({w:1,line:producerTalk(t)});
+  pool.push({w:1,line:'「好きなのは'+t.like+'です。ここに来てからは、ほとんどできてないですけど」',like:1});
+  pool.push({w:1,line:'「差し入れなら、'+t.gift+'がいちばんうれしいです。'+t.ng+'は……ちょっと苦手で」',like:1});
+  pool.push({w:1,line:'「苦手なのは'+t.weak+'です。……内緒ですよ」',like:1});
+  pool.push({w:1,line:'「目標は、'+goalText(S,t)+'。まだ誰にも言ってないです」',goal:1});
+  var sum=pool.reduce(function(a,x){return a+x.w;},0),r=R()*sum;for(var i=0;i<pool.length;i++){r-=pool[i].w;if(r<=0)return pool[i];}return pool[pool.length-1];}
+var FREE_CH=[['うなずいて共感する','s'],['ひとつ助言する','h'],['冗談で返して笑わせる','f']];
+var FREE_REPLY={
+  s:{sunao:['うれしそうに、もう少し話を続けてくれた。','「聞いてもらえると、すっきりします」'],makezu:['「……まあ、そういうことです」と、少し照れた。','話し終えると、すぐに練習の話に戻った。'],sensai:['ほっとしたように、表情がゆるんだ。','「話してよかったです」と、小さく笑った。']},
+  h:{sunao:['「なるほど！ やってみます」と、メモを取り出した。','真剣な顔で、何度もうなずいた。'],makezu:['「それ、いいですね。さっそく試します」と目が光った。','「次の課題で見せます」と言い切った。'],sensai:['「……はい」と答えたが、少し考え込んでしまった。','助言を受け止めようとして、少し肩に力が入った。']},
+  f:{sunao:['声を出して笑った。場の空気が明るくなった。','「プロデューサーさん、面白いですね」と笑った。'],makezu:['「ふざけないでくださいよ」と言いつつ、口元が笑っている。','笑ったあと、「で、真面目な話ですけど」と続けた。'],sensai:['少し間があってから、くすっと笑った。','「……笑っていいんですか」と言って、それから笑った。']}};
+function freeChoose(S,i){var t=S.tr[S.talk.id],b=snapT(t),tone=FREE_CH[i][1],tp=t.temper;
+  if(tone==='s'){t.trust+=3;if(tp==='sensai')t.conf+=3;if(tp==='makezu')t.fat+=2;}
+  else if(tone==='h'){var k=weakest(t);t.st[k]=Math.min(99,t.st[k]+1.5*t.pot);t.focus=t.focus||k;if(tp==='sensai'){t.conf-=4;}else if(tp==='makezu'){t.conf+=4;}else t.trust+=2;}
+  else{t.conf+=2;t.fat=Math.max(0,t.fat-4);if(tp==='makezu')t.trust-=2;else t.trust+=2;}
+  normT(t);S.talk.res=pick(FREE_REPLY[tone][tp])+(S.talk.tm||'');S.talk.delta=deltaOf(b,t);logT(S,t,'話を聞いた：'+FREE_CH[i][0]);}
+
+/* 相談を4種追加（合計10種） */
+REQS.sleep={t:'「最近、夜になると眠れなくて」',ch:[['眠れるまで話を聞く','信頼が上がり、疲れが少し抜ける',{trust:8,fat:-6}],['今夜は早く寝るよう言う','疲れが抜けるが、本人は物足りない',{fat:-12,trust:-2}]]};
+REQS.part={t:'「次の課題、もっと自分のパートがほしいです」',ch:[['考えておくと約束する','自信が上がる。ほかの子が少し気にする',{conf:6,jeal:1}],['今のパートを磨けと言う','得意が伸びる',{spec:3,conf:-2}]]};
+REQS.call={t:'「少しだけ、家に電話してもいいですか」',ch:[['ゆっくり話させる','自信が上がり、疲れが抜ける',{conf:6,fat:-8}],['練習のあとにさせる','得意が伸びるが、少し寂しそう',{spec:2,trust:-2}]]};
+REQS.teach={t:'「年下の子に、振りを教えてあげたいんです」',ch:[['任せてみる','信頼が上がるが疲れる',{trust:8,fat:8}],['まずは自分の練習を優先させる','得意が伸びる',{spec:3,trust:-2}]]};
+REQ_TONE.sleep='sh';REQ_TONE.part='sh';REQ_TONE.call='sh';REQ_TONE.teach='fh';
+function moreReqs(S,out,used){var A=alive(S);function add(type,t){if(!t||used[t.id]||out.length>=2)return;used[t.id]=1;out.push({type:type,id:t.id,p:null,done:false,res:null});}
+  if(R()<.35){var c=A.filter(function(t){return t.conf<55&&t.fat>=35;});if(c.length)add('sleep',pick(c));}
+  if(R()<.35){var c2=A.filter(function(t){return t.temper==='makezu'&&t.lastP>=70;});if(c2.length)add('part',pick(c2));}
+  if(R()<.3){var c3=A.filter(function(t){return t.age<=18;});if(c3.length)add('call',pick(c3));}
+  if(R()<.3){var c4=A.filter(function(t){return t.age>=19&&t.trust>=50;});if(c4.length)add('teach',pick(c4));}}
+
+/* 気分のひと言・応募のひと言・ふたりの会話の言い回しを増やす */
+(function(){
+  var MX={
+    '疲れ':{sunao:['「ちょっとだけ、座ってもいいですか」','階段の途中で、少し立ち止まっていた'],makezu:['「疲れてないです」と言いながら、あくびをかみ殺した','汗をふきながら、まだ鏡の前から動かない'],sensai:['休憩のたびに、目を閉じてじっとしている','「……大丈夫です」と答える声が小さい']},
+    '不安':{sunao:['「みんな上手すぎて、焦ります」','台本を何度も読み返している'],makezu:['「負けるのが怖いんじゃなくて、何もできないのが怖いんです」','点数表の前で、しばらく動かなかった'],sensai:['食事のとき、ほとんど話さなかった','「次で落ちたらどうしよう」と、ノートの端に書いていた']},
+    '浮かれ':{sunao:['鼻歌を歌いながら廊下を歩いていた','「ファンの方から手紙が来たんです！」と見せてくれた'],makezu:['「次も1位いただきます」と宣言していた','少し練習が雑になっている'],sensai:['届いた応援の書き込みを、何度も読み返している','うれしさを隠しきれず、ずっと口元がゆるんでいる']},
+    '絶好調':{sunao:['「体が軽いです！」と、朝からよく動いている','誰よりも早く練習室に来ていた'],makezu:['「今の自分なら、誰にも負けません」','振りを一度で覚えて、周りを驚かせた'],sensai:['表情がやわらかくなり、よく笑うようになった','「今日はうまくいく気がします」と、小さくガッツポーズをした']},
+    'ふつう':{sunao:['「次の課題、楽しみです」','先生の話を、いちばん前で聞いていた'],makezu:['「次は何の課題ですか？」と、何度も聞いてくる','誰かの練習をじっと見て、研究している'],sensai:['ノートに、今日できたことを書き出していた','「昨日より、少しだけうまくなった気がします」']}
+  };
+  for(var m in MX)for(var tp in MX[m]){var cur=MOODLINE[m][tp];MOODLINE[m][tp]=[cur].concat(MX[m][tp]);}
+  var LX={v:['カラオケで100点を取ったことがあります','ささやくような声が得意です','歌っていると、時間を忘れます','声だけで泣かせられる人になりたい','好きな歌手の真似から始めました'],
+    d:['鏡の前で何時間でも踊れます','振りを考えるのも好きです','ジャンプの高さには自信があります','ダンスでなら、言葉より伝えられます','動画で独学してきました'],
+    r:['日常のことを全部、韻に変えたくなります','リズムに乗ると、言いたいことが言えます','言葉で人の背中を押したい','毎晩、16小節書いてから寝ます','早口言葉が特技です'],
+    t:['写真の中の自分が、いちばん自分らしいです','笑顔だけは誰にも負けません','人の目を見て話すのが得意です','ステージに立つと、背筋が伸びます','カメラに映るのが楽しいです']};
+  for(var sp in LX)LINES[sp]=LINES[sp].concat(LX[sp]);
+  GEN_LINES=GEN_LINES.concat(['夢を夢で終わらせたくない','人を笑顔にできる人になりたい','誰かの「明日も頑張ろう」になりたい','ここで、自分を好きになりたい','見ている人に、何かを残したい','ずっと憧れていた場所です']);
+  HINT_LINES=HINT_LINES.concat(['まだ何もできませんが、練習なら誰よりもします','初めての習い事が、ここに来るきっかけでした','上手な人を見ると、すぐに真似したくなります','去年から歌を始めました。毎日が新しいです']);
+  var PX={old:['「こいつ、昔は泣き虫だったんですよ」「それ言う？」と言い合っていた。','ふたりで、地元の駄菓子屋の話で盛り上がった。'],
+    room:['「消灯のあとに、ふたりで振りを確認してます」と打ち明けた。','部屋の片付け当番で、ちょっと揉めたらしい。'],
+    senpai:['後輩が、先輩の口癖を真似して怒られていた。','先輩が「最初のころの自分に似てる」と笑った。'],
+    rival:['「次は勝つ」「こっちのセリフ」と、目を合わせて笑った。','ふたりで同じ課題の映像を見て、互いのいい所を探した。'],
+    friend:['ふたりで新しい振りを考えていた。','「デビューしたら一緒にご飯行こう」と約束していた。']};
+  for(var pk in PX)PAIR_LINES[pk]=PAIR_LINES[pk].concat(PX[pk]);
+})();
 
 /*ENGINE-END*/
 
@@ -1848,6 +2038,7 @@ function vTalk(){
     var ttl=k==='arc'?'ひとりの物語「'+ARCS[t2.arc.k].name+'」 '+Math.min(3,t2.arc.step+(S.talk.res?0:1))+'/3':k==='honne'?'本音':k==='coach'?'1対1で見る':k==='gift'?'差し入れ':'話を聞く';
     h+='<div class="card ev"><div class="ttl">'+ttl+'</div><div class="evfaces"><div>'+face(t2,'xl')+esc(t2.name)+'<span class="small muted" style="font-weight:400">'+TIERN[tierOf(t2)]+'</span></div></div>';
     if(S.talk.res){h+='<div class="toast">'+esc(S.talk.res)+deltaHtml(S.talk.delta)+'</div></div><button class="btn" data-a="talkback">戻る</button>';}
+    else if(k==='free'){h+='<p>'+esc(S.talk.line)+'</p><p class="small muted">'+esc(moodLine(t2))+'</p>'+FREE_CH.map(function(c,i){return choiceBtn('talkch',i,c[0],c[1],'<span class="small muted">'+['信頼が上がる','弱いところが少し伸びる','気持ちがほぐれる'][i]+'</span>');}).join('')+'</div>'+(t2.temperRev?'':TONE_NOTE);}
     else if(k==='honne'){h+='<p>'+esc(arcText(S,t2,HONNE[t2.arc.k]))+'</p>'+[['最後まで黙って聞く','自信が上がり、すべての能力が少し伸びる'],['「話してくれてありがとう」と伝える','信頼が上がり、すべての能力が少し伸びる']].map(function(c,i){return '<button class="choice" data-a="talkch" data-v="'+i+'"><b>'+c[0]+'</b><span>'+c[1]+'</span></button>';}).join('')+'</div>';}
     else{var sc=arcScene(S,t2);h+='<p>'+esc(arcText(S,t2,sc.t))+'</p>';arcChoices(S,t2).forEach(function(c,i){h+=choiceBtn('talkch',i,c.label,c.hint.tone,partsHtml(c.hint.parts));});h+='</div>'+(t2.temperRev?'':TONE_NOTE);}
     return h;}
@@ -1908,6 +2099,8 @@ function vProfile(t){
     '<div class="small">気質 '+(t.temperRev?'<b>'+TEMPER[t.temper]+'</b>':'<span class="q">?</span>')+'・伸びしろ '+(t.potRev?'<b>'+(t.pot>=1.3?'大':t.pot>=0.95?'中':'小')+'</b>':'<span class="q">?</span>')+'</div></div></div>';
   h+='<div class="prow"><span class="pl2">来た理由</span><span>「'+esc(arcText(S,t,an.reason))+'」<br><span class="muted small">書類のひと言「'+esc(t.line)+'」</span></span></div>';
   h+='<div class="prow"><span class="pl2">目標</span><span>'+(t.goalRev?esc(goalText(S,t))+(t.goalDone?' <span class="tag good">かなえた</span>':''):'<span class="muted">話を聞くと分かる</span>')+'</span></div>';
+  var bgk=BG_KEYS.filter(function(k){return t.bgRev&&t.bgRev[k];});
+  h+='<div class="prow"><span class="pl2">経歴</span><span>'+(bgk.length?bgk.map(function(k){return '<div><span class="muted small">'+BG_NAME[k]+'</span>　'+esc(t.bg[k])+'</div>';}).join(''):'')+'<span class="muted small">分かっていること '+bgk.length+'/'+BG_KEYS.length+(bgk.length<BG_KEYS.length?'（話すと分かる）':'')+'</span>'+(t.dreamRev?'<div><span class="muted small">夢</span>　'+esc(t.dream)+'</div>':'')+'</span></div>';
   h+='<div class="prow"><span class="pl2">好み</span><span>'+(t.likeRev?'好きなもの：'+esc(t.like)+'／苦手：'+esc(t.weak)+'<br>うれしい差し入れ：<b>'+esc(t.gift)+'</b>／苦手：'+esc(t.ng):'<span class="muted">話を聞くと分かる</span>')+'</span></div>';
   h+='<div class="prow"><span class="pl2">能力</span><span>'+radar(t)+'</span></div>';
   h+='<div class="prow"><span class="pl2">物語</span><span>'+(a.step>0?'<b>'+an.name+'</b> '+a.step+'/3'+(t.honne?'・本音を聞いた':a.step>=3?(t.trust>=80?'・本音を聞ける':'・信頼80で本音を聞ける'):''):'<span class="muted">まだ分からない（話すと進む）</span>')+'</span></div>';
@@ -2036,7 +2229,7 @@ document.addEventListener('click',function(ev){
     case 'revive':go(function(){revive(S,id);});break;
     case 'planok':go(function(){applyPlan(S);});window.scrollTo(0,0);break;
     case 'talk':go(function(){doTalk(S,id);});window.scrollTo(0,0);break;
-    case 'talkch':go(function(){if(S.talk.kind==='honne')honneChoose(S,+v);else talkChoose(S,+v);});break;
+    case 'talkch':go(function(){if(S.talk.kind==='honne')honneChoose(S,+v);else if(S.talk.kind==='free')freeChoose(S,+v);else talkChoose(S,+v);});break;
     case 'talkback':go(function(){S.talk=null;});window.scrollTo(0,0);break;
     case 'coach':go(function(){S.sub={id:id,kind:'coach'};});window.scrollTo(0,0);break;
     case 'gift':go(function(){S.sub={id:id,kind:'gift',opts:giftOpts(S.tr[id])};});window.scrollTo(0,0);break;
