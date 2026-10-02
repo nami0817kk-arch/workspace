@@ -181,10 +181,10 @@ void main() {
       openUrl: (u) async => opened.add(u),
       showLicenses: () {},
     );
-    await b.handle('{"type":"open","url":"https://hikari7.dailyquarry.com/privacy.html"}');
+    await b.handle('{"type":"open","url":"https://hikari7.pages.dev/privacy.html"}');
     await b.handle('{"type":"open","url":"https://example.com/"}');
-    await b.handle('{"type":"open","url":"http://hikari7.dailyquarry.com/"}');
-    expect(opened.map((u) => u.toString()), ['https://hikari7.dailyquarry.com/privacy.html']);
+    await b.handle('{"type":"open","url":"http://hikari7.pages.dev/"}');
+    expect(opened.map((u) => u.toString()), ['https://hikari7.pages.dev/privacy.html']);
   });
 
   test('アプリに入れるゲーム本体は、外へ何も読みに行かず、つなぎの関数を持っている', () {

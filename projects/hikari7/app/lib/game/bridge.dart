@@ -57,7 +57,7 @@ class GameBridge {
   bool _rewardBusy = false;
 
   /// 開いてよい外部ページ（プライバシーポリシーと問い合わせ先）。それ以外は開かない。
-  static const allowedHosts = {'hikari7.dailyquarry.com'};
+  static const allowedHosts = {'hikari7.pages.dev'};
 
   Future<void> handle(String raw) async {
     Map<String, Object?> m;

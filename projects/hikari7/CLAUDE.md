@@ -17,6 +17,9 @@
 | `tool/sim.js` | エンジンを自動で通しプレイして、つり合いを測る（遊び方3通り×男女）。`--quick` は CI 用 |
 | `tool/build_app_web.py` | アプリに入れるゲーム本体を組み立てる（`app/assets/web/index.html`。顔の絵と見出し書体を埋め込み、外へ何も読みに行かない） |
 | `app/` | iOS アプリの外側（Flutter）。広告・課金は護送ボートの `lib/monetization` を写したもの。商品ID `hikari7_remove_ads`、Bundle ID `com.namiki.hikari7` |
+| `legal/` `site/` | プライバシーポリシー・サポート・利用規約と、公開ページの入口・app-ads.txt。`hikari7-site.yml` が https://hikari7.pages.dev/ に出す（アプリのリンクと App Store の URL 欄はここを指す） |
+| `docs/RELEASE.md` | TestFlight と App Store への出し方（護送ボートの手順を写したもの）。リリースは `hikari7-ios-release.yml` |
+| `tool/make_icon.py` | アプリアイコンを描く（7つの椅子・真ん中が金色） |
 | `fonts/` | 見出し書体 Dela Gothic One（OFL）。使う字だけに絞って埋め込む |
 | `web-test/` | テスト用Web版に添える `_headers`・`robots.txt` |
 
