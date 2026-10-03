@@ -22,3 +22,7 @@ flutter test tool/art/face_preview_test.dart --update-goldens
 組むと頭文字が豆腐（□）になり、`Material` の外に文字を置くと黄色い二重下線が
 引かれる（どちらも実際に起きた）。アイコンを含む見本は Flutter SDK の
 `materialicons-regular.otf` も読む。
+
+`moment_preview_test.dart` はタイトル画面と、昇格・優勝の演出を書き出す
+（`_title.png` / `_moments.png`）。**絵を差し替えたら必ず出して見る。**
+`Image.asset` のパスを間違えても画面に赤い枠が出るだけで、テストは落ちない。
