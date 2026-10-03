@@ -1,0 +1,459 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>取調室</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap');
+:root{
+  --desk:#cdb898; --desk-line:#bfa883;
+  --paper:#fbf7ec; --paper-2:#f3ecdb; --rule:#d8ccb1;
+  --ink:#2a251e; --ink-soft:#6b6152;
+  --stamp:#b3322a; --stamp-soft:rgba(179,50,42,.12);
+  --pick:#2f5d8a; --pick-soft:rgba(47,93,138,.12);
+  --hint:#d69a1c; --shadow:rgba(60,40,10,.18);
+  --bar:#3a3128; --bar-ink:#f6efdf; --btn:#2a251e; --btn-ink:#fbf7ec;
+  --overlay:rgba(30,24,16,.55);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --desk:#1d1a16; --desk-line:#25211c;
+    --paper:#2d2923; --paper-2:#26221d; --rule:#474036;
+    --ink:#ece4d2; --ink-soft:#a99e8a;
+    --stamp:#e0645a; --stamp-soft:rgba(224,100,90,.16);
+    --pick:#79a9d8; --pick-soft:rgba(121,169,216,.16);
+    --hint:#f0b94a; --shadow:rgba(0,0,0,.45);
+    --bar:#12100d; --bar-ink:#ece4d2; --btn:#ece4d2; --btn-ink:#1d1a16;
+    --overlay:rgba(0,0,0,.65);
+  }
+}
+:root[data-theme="dark"]{
+  --desk:#1d1a16; --desk-line:#25211c;
+  --paper:#2d2923; --paper-2:#26221d; --rule:#474036;
+  --ink:#ece4d2; --ink-soft:#a99e8a;
+  --stamp:#e0645a; --stamp-soft:rgba(224,100,90,.16);
+  --pick:#79a9d8; --pick-soft:rgba(121,169,216,.16);
+  --hint:#f0b94a; --shadow:rgba(0,0,0,.45);
+  --bar:#12100d; --bar-ink:#ece4d2; --btn:#ece4d2; --btn-ink:#1d1a16;
+  --overlay:rgba(0,0,0,.65);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; color:var(--ink); background-color:var(--desk);
+  background-image:repeating-linear-gradient(90deg,transparent 0 46px,var(--desk-line) 46px 48px);
+  font-family:'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif;
+  line-height:1.7; overflow-x:hidden;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 140px}
+.paper{background:var(--paper);border-radius:3px;box-shadow:0 2px 6px var(--shadow);position:relative}
+h1{font-size:34px;letter-spacing:.3em;margin:8px 0 0;text-align:center}
+.sub{text-align:center;color:var(--ink-soft);font-size:13px;margin:0 0 18px}
+.intro{padding:16px 18px;font-size:14px;margin-bottom:18px}
+.intro b{color:var(--stamp)}
+.case-btn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;padding:16px 16px;margin-bottom:12px;min-height:72px;background:var(--paper);box-shadow:0 2px 6px var(--shadow);border-left:6px solid var(--stamp)}
+.case-btn .no{font-size:12px;color:var(--ink-soft);display:block}
+.case-btn .t{font-weight:700;font-size:17px;display:block}
+.case-btn .stars{margin-left:auto;font-size:20px;letter-spacing:2px;color:var(--hint);white-space:nowrap}
+.case-btn .stars .off{color:var(--rule)}
+.note{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:14px}
+
+/* 事件画面 */
+.topbar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.back{border:0;background:transparent;font-size:14px;min-height:44px;padding:0 6px;color:var(--ink)}
+.miss{margin-left:auto;font-size:13px;background:var(--paper);padding:4px 10px;border-radius:2px;box-shadow:0 1px 3px var(--shadow)}
+.miss b{color:var(--stamp)}
+.summary{padding:16px 18px 14px;margin-bottom:18px}
+.summary .lv{font-size:12px;color:var(--ink-soft)}
+.summary h2{margin:0 0 6px;font-size:20px}
+.summary p{margin:0;font-size:14px;line-height:28px;background:repeating-linear-gradient(180deg,transparent 0 27px,var(--rule) 27px 28px)}
+.summary .goal{margin-top:8px;font-size:13px;color:var(--stamp);font-weight:700}
+.sec{font-size:13px;letter-spacing:.2em;color:var(--ink-soft);margin:18px 2px 8px;display:flex;align-items:center;gap:8px}
+.sec::after{content:"";flex:1;height:1px;background:var(--ink-soft);opacity:.4}
+.card{display:block;width:100%;text-align:left;border:2px solid transparent;background:var(--paper);padding:12px 14px 12px;margin-bottom:10px;border-radius:3px;box-shadow:0 2px 5px var(--shadow);position:relative;transition:transform .12s,border-color .12s}
+.card:active{transform:scale(.99)}
+.card .head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.hanko{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid var(--stamp);color:var(--stamp);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;transform:rotate(-8deg)}
+.card .who{font-weight:700;font-size:16px}
+.card .role{font-size:12px;color:var(--ink-soft)}
+.card ol{margin:0;padding:0 0 0 1.6em;font-size:14.5px}
+.card ol li{padding:2px 0;border-bottom:1px dashed var(--rule)}
+.card ol li:last-child{border-bottom:0}
+.card.clue{background:var(--paper-2)}
+.tag{flex:none;font-size:11px;border:1px solid var(--ink-soft);color:var(--ink-soft);padding:0 6px;border-radius:2px}
+.card .ct{font-weight:700;font-size:15px}
+.card .cx{font-size:14.5px;margin:0}
+.card.sel{border-color:var(--pick);background-image:linear-gradient(var(--pick-soft),var(--pick-soft))}
+.card.sel::after{content:"選択中";position:absolute;top:8px;right:10px;font-size:11px;color:var(--pick);font-weight:700}
+.card.hint{animation:glow 1.1s ease-in-out 4;border-color:var(--hint)}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 var(--hint)}50%{box-shadow:0 0 0 6px var(--hint)}}
+
+/* 下のバー */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--bar);color:var(--bar-ink);padding:10px 16px calc(10px + env(safe-area-inset-bottom));z-index:5}
+.bar .in{max-width:560px;margin:0 auto}
+.slots{display:flex;gap:6px;font-size:12px;margin-bottom:8px;align-items:center}
+.slot{flex:1;min-width:0;border:1px dashed rgba(255,255,255,.35);padding:3px 8px;border-radius:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot.on{border-style:solid;border-color:var(--bar-ink)}
+.btns{display:flex;gap:8px}
+.go{flex:1.4;min-height:48px;border:0;background:var(--stamp);color:#fff;font-weight:700;border-radius:3px;font-size:15px}
+.go:disabled{opacity:.4;cursor:default}
+.hintbtn{flex:1;min-height:48px;border:1px solid var(--bar-ink);background:transparent;color:var(--bar-ink);border-radius:3px;font-size:12px;line-height:1.3}
+
+/* モーダル */
+.ov{position:fixed;inset:0;background:var(--overlay);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.ov.show{display:flex}
+.modal{width:100%;max-width:420px;max-height:calc(100vh - 32px);overflow:auto;background:var(--paper);padding:22px 18px 18px;border-radius:3px;box-shadow:0 8px 30px var(--shadow);position:relative;text-align:center}
+.modal h3{margin:0 0 6px;font-size:18px}
+.modal p{font-size:14px;margin:6px 0;text-align:left}
+.modal .pair{font-size:13px;background:var(--paper-2);padding:8px 10px;text-align:left;border-left:3px solid var(--pick);margin:8px 0}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 4px}
+.choices button{min-height:52px;border:1px solid var(--ink-soft);background:var(--paper-2);border-radius:3px;font-weight:700}
+.choices button small{display:block;font-weight:400;font-size:11px;color:var(--ink-soft)}
+.mbtns{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.mbtns button{min-height:48px;border:0;border-radius:3px;background:var(--btn);color:var(--btn-ink);font-weight:700}
+.mbtns button.sub2{background:transparent;color:var(--ink);border:1px solid var(--ink-soft);font-weight:400}
+.bigstamp{display:inline-block;border:4px double var(--stamp);color:var(--stamp);font-size:30px;font-weight:700;letter-spacing:.2em;padding:2px 14px 2px 20px;transform:rotate(-7deg);margin:4px 0 10px;animation:stamp .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes stamp{from{transform:rotate(-7deg) scale(2.2);opacity:0}to{transform:rotate(-7deg) scale(1);opacity:1}}
+.rstars{font-size:32px;letter-spacing:6px;color:var(--hint)}
+.rstars .off{color:var(--rule)}
+.ad{border:1px dashed var(--ink-soft);padding:26px 10px;font-size:13px;color:var(--ink-soft);margin:10px 0}
+.toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:var(--bar);color:var(--bar-ink);font-size:13px;padding:8px 14px;border-radius:3px;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.show{opacity:1}
+[hidden]{display:none!important}
+</style>
+
+<div class="wrap" id="app">
+  <section id="v-select">
+    <h1>取調室</h1>
+    <p class="sub">護送ボート　その後　／　つるはし社</p>
+    <div class="paper intro">
+      川の島へ囚人を渡し終えた夜から、わたし――<b>警部補</b>の仕事は取調室に移った。<br>
+      証言と手がかりを見比べ、<b>食い違う2枚</b>を突きつけて、嘘をついた者を当てる。<br>
+      見立てを外せば調書は白紙に戻る。事件の最初からやり直しだ。
+    </div>
+    <div id="caseList"></div>
+    <p class="note">★3＝一度も外さず解決　★2＝1回やり直し　★1＝2回以上</p>
+  </section>
+
+  <section id="v-case" hidden>
+    <div class="topbar">
+      <button class="back" id="backBtn">← 事件選び</button>
+      <div class="miss">やり直し <b id="missN">0</b> 回</div>
+    </div>
+    <div class="paper summary" id="summary"></div>
+    <div class="sec">証言</div>
+    <div id="tList"></div>
+    <div class="sec">手がかり</div>
+    <div id="cList"></div>
+  </section>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <div class="in">
+    <div class="slots"><div class="slot" id="slotT">証言：未選択</div><span>×</span><div class="slot" id="slotC">手がかり：未選択</div></div>
+    <div class="btns">
+      <button class="hintbtn" id="hintBtn">ヒント<br>（本番は動画広告）</button>
+      <button class="go" id="goBtn" disabled>食い違いを突きつける</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* 事件データ。事実表(facts)から証言と手がかりを書く。
+   証言の各行・手がかりの各主張は {key, value} を持ち、key は facts の見出し。
+   word は本文に必ず含まれる語（省略時は value）。via は「人物を名前でなく特徴で示す」手がかりの結び付け。 */
+const CASES = /*DATA-START*/[
+{
+  id:"c1", level:"易しい", title:"渡し場の切符箱",
+  summary:"夕方、渡し場の切符小屋から、一日の売上が入った切符箱が消えた。昼の護送騒ぎのあと、渡し場に残っていたのは三人だけ。",
+  persons:[
+    {id:"genzo", name:"源三", role:"船頭"},
+    {id:"koharu", name:"小春", role:"売店の娘"},
+    {id:"tamura", name:"田村", role:"見習い巡査"}
+  ],
+  facts:{
+    "源三|役目":"船頭", "源三|五時半の居場所":"桟橋", "源三|手にしていた物":"櫂",
+    "小春|役目":"売店", "小春|五時半の居場所":"売店", "小春|店を閉めた時刻":"六時",
+    "田村|役目":"巡査", "田村|五時半の居場所":"切符小屋", "田村|持ち物":"呼び子"
+  },
+  testimonies:[
+    {id:"t1", person:"genzo", lines:[
+      {text:"五時半は桟橋で客を待っとった。", key:"源三|五時半の居場所", value:"桟橋"},
+      {text:"手にあったのは櫂だけだ。", key:"源三|手にしていた物", value:"櫂"}]},
+    {id:"t2", person:"koharu", lines:[
+      {text:"五時半はずっと売店で店番をしてました。", key:"小春|五時半の居場所", value:"売店"},
+      {text:"店を閉めたのは六時です。", key:"小春|店を閉めた時刻", value:"六時"}]},
+    {id:"t3", person:"tamura", lines:[
+      {text:"五時半は土手を見回っていました。", key:"田村|五時半の居場所", value:"土手"},
+      {text:"持ち物は呼び子ひとつです。", key:"田村|持ち物", value:"呼び子"}]}
+  ],
+  clues:[
+    {id:"k1", title:"渡し船の日誌", text:"「五時半　源三、桟橋にて客待ち」",
+      claims:[{key:"源三|五時半の居場所", value:"桟橋"}]},
+    {id:"k2", title:"売店の帳面", text:"「本日、六時に店じまい　小春」",
+      claims:[{key:"小春|店を閉めた時刻", value:"六時"}]},
+    {id:"k3", title:"渡し船の客の話", text:"「五時半ごろ、切符小屋から若い巡査さんが出てくるのを見たよ」",
+      claims:[{key:"田村|五時半の居場所", value:"切符小屋", via:{attr:"役目", value:"巡査"}}]}
+  ],
+  culprit:"tamura", answer:{testimony:"t3", clue:"k3"},
+  solution:"田村は「五時半は土手にいた」と言った。だが客は、五時半に切符小屋から出てくる若い巡査を見ていた。渡し場にいた巡査は田村ひとりだ。"
+},
+{
+  id:"c2", level:"普通", title:"港倉庫の荷札",
+  summary:"夜の港倉庫で、漆の器を詰めた木箱と干物の箱の荷札がすり替えられた。器の箱は見知らぬ船に積まれかけていた。八時から九時のあいだに倉庫のそばにいた四人を呼んだ。",
+  persons:[
+    {id:"omori", name:"大森", role:"倉庫番"},
+    {id:"tsune", name:"ツネ", role:"荷運び"},
+    {id:"shimizu", name:"清水", role:"帳場の書役"},
+    {id:"sugiura", name:"杉浦", role:"荷主"}
+  ],
+  facts:{
+    "大森|八時の居場所":"倉庫の入口", "大森|八時半の居場所":"倉庫の中",
+    "ツネ|八時の居場所":"荷車置き場", "ツネ|八時半の居場所":"倉庫の中",
+    "清水|八時半の居場所":"帳場", "清水|使う墨":"黒",
+    "杉浦|港に着いた時刻":"九時", "杉浦|八時半の居場所":"渡し船の上",
+    "荷札|墨":"黒", "帳場の行灯|八時半":"点いていた"
+  },
+  testimonies:[
+    {id:"t1", person:"omori", lines:[
+      {text:"八時は倉庫の入口で番をしとりました。", key:"大森|八時の居場所", value:"倉庫の入口"},
+      {text:"八時半に倉庫の中をひと回りしました。", key:"大森|八時半の居場所", value:"倉庫の中"}]},
+    {id:"t2", person:"tsune", lines:[
+      {text:"八時は荷車置き場で一服してた。", key:"ツネ|八時の居場所", value:"荷車置き場"},
+      {text:"八時半も荷車置き場だよ。車輪が外れて直してたんだ。", key:"ツネ|八時半の居場所", value:"荷車置き場"}]},
+    {id:"t3", person:"shimizu", lines:[
+      {text:"八時半は帳場で帳面をつけていました。", key:"清水|八時半の居場所", value:"帳場"},
+      {text:"わたしが使うのは黒の墨だけです。", key:"清水|使う墨", value:"黒"}]},
+    {id:"t4", person:"sugiura", lines:[
+      {text:"港に着いたのは九時の船ですよ。", key:"杉浦|港に着いた時刻", value:"九時"},
+      {text:"八時半はまだ渡し船の上でした。", key:"杉浦|八時半の居場所", value:"渡し船の上"}]}
+  ],
+  clues:[
+    {id:"k1", title:"夜番の札", text:"「八時　荷車置き場　ツネ」",
+      claims:[{key:"ツネ|八時の居場所", value:"荷車置き場"}]},
+    {id:"k2", title:"すり替えられた荷札", text:"二枚とも黒い墨で書かれている。",
+      claims:[{key:"荷札|墨", value:"黒"}]},
+    {id:"k3", title:"大森の見回り帳", text:"「八時半　倉庫の中を見回る。荷を数えるツネあり」",
+      claims:[{key:"大森|八時半の居場所", value:"倉庫の中"}, {key:"ツネ|八時半の居場所", value:"倉庫の中"}]},
+    {id:"k4", title:"向かいの宿の女将の話", text:"「帳場の行灯なら、八時半にも点いていましたよ」",
+      claims:[{key:"帳場の行灯|八時半", value:"点いていた", word:"点いて"}]},
+    {id:"k5", title:"渡し船の乗客名簿", text:"「九時着の便　杉浦」",
+      claims:[{key:"杉浦|港に着いた時刻", value:"九時"}]}
+  ],
+  culprit:"tsune", answer:{testimony:"t2", clue:"k3"},
+  solution:"ツネは「八時半も荷車置き場にいた」と言った。だが大森の見回り帳には、八時半に倉庫の中で荷を数えるツネが書かれている。夜番の札は八時の話で、嘘とは食い違わない。"
+},
+{
+  id:"c3", level:"難しい", title:"七番の脱走",
+  summary:"護送ボートで島の留置場へ渡した囚人「七番」が、夜のうちに牢から消えた。錠に傷はなく、誰かが合鍵を差し入れたらしい。十時の鐘の前後に牢の近くにいた五人を呼んだ。",
+  persons:[
+    {id:"iwai", name:"岩井", role:"看守"},
+    {id:"maki", name:"牧", role:"看守"},
+    {id:"okichi", name:"お吉", role:"炊事係"},
+    {id:"kume", name:"久米", role:"医者"},
+    {id:"yohei", name:"与平", role:"渡し守"}
+  ],
+  facts:{
+    "岩井|十時の居場所":"正門の詰所", "岩井|持っていた鍵":"正門の鍵",
+    "牧|十時の居場所":"見張り台", "牧|持っていた鍵":"牢の鍵",
+    "お吉|夜食を運んだ時刻":"九時半", "お吉|十時の居場所":"牢の廊下", "お吉|前掛けの色":"紺",
+    "久米|七番を診た時刻":"九時", "久米|十時の居場所":"医務室",
+    "与平|舟を出した時刻":"十一時", "与平|十時の居場所":"桟橋",
+    "かまど|火を落とした時刻":"九時四十五分", "七番の牢の錠|開いているのが見つかった時刻":"十時十分"
+  },
+  testimonies:[
+    {id:"t1", person:"iwai", lines:[
+      {text:"十時は正門の詰所で帳面番をしていた。", key:"岩井|十時の居場所", value:"正門の詰所"},
+      {text:"わしの鍵束は正門の鍵だけだ。", key:"岩井|持っていた鍵", value:"正門の鍵"}]},
+    {id:"t2", person:"maki", lines:[
+      {text:"十時は見張り台に立っていました。", key:"牧|十時の居場所", value:"見張り台"},
+      {text:"牢の鍵は一晩じゅう腰に下げていました。", key:"牧|持っていた鍵", value:"牢の鍵"}]},
+    {id:"t3", person:"okichi", lines:[
+      {text:"夜食は九時半に運びましたよ。", key:"お吉|夜食を運んだ時刻", value:"九時半"},
+      {text:"十時の鐘のころは、炊事場で鍋を洗ってました。", key:"お吉|十時の居場所", value:"炊事場"},
+      {text:"前掛け？ いつもの紺のですよ。", key:"お吉|前掛けの色", value:"紺"}]},
+    {id:"t4", person:"kume", lines:[
+      {text:"七番を診たのは九時だ。腹痛でね。", key:"久米|七番を診た時刻", value:"九時"},
+      {text:"十時は医務室で薬を片づけていた。", key:"久米|十時の居場所", value:"医務室"}]},
+    {id:"t5", person:"yohei", lines:[
+      {text:"舟を出したのは十一時だ。", key:"与平|舟を出した時刻", value:"十一時"},
+      {text:"十時は桟橋で網を繕ってた。", key:"与平|十時の居場所", value:"桟橋"}]}
+  ],
+  clues:[
+    {id:"k1", title:"見張り台の当番表", text:"「十時　見張り台　牧」",
+      claims:[{key:"牧|十時の居場所", value:"見張り台"}]},
+    {id:"k2", title:"医務室の診察帳", text:"「九時　七番、腹痛。薬を渡す　久米」",
+      claims:[{key:"久米|七番を診た時刻", value:"九時"}]},
+    {id:"k3", title:"炊事場のかまど", text:"火は九時四十五分に落としてあった。灰はもう冷たい。",
+      claims:[{key:"かまど|火を落とした時刻", value:"九時四十五分"}]},
+    {id:"k4", title:"七番の夜食の盆", text:"盆の札に「九時半　受け取り」の書き付け。",
+      claims:[{key:"お吉|夜食を運んだ時刻", value:"九時半"}]},
+    {id:"k5", title:"向かいの牢の囚人の話", text:"「十時の鐘が鳴ったとき、紺の前掛けの女が廊下を通っていったぜ」",
+      claims:[{key:"お吉|十時の居場所", value:"牢の廊下", word:"廊下", via:{attr:"前掛けの色", value:"紺"}}]},
+    {id:"k6", title:"桟橋の番小屋の帳面", text:"「十一時　与平の舟、出る」",
+      claims:[{key:"与平|舟を出した時刻", value:"十一時"}]},
+    {id:"k7", title:"七番の牢の錠", text:"十時十分、開いているのが見つかった。傷はない。",
+      claims:[{key:"七番の牢の錠|開いているのが見つかった時刻", value:"十時十分"}]}
+  ],
+  culprit:"okichi", answer:{testimony:"t3", clue:"k5"},
+  solution:"お吉は「十時の鐘のころは炊事場にいた」と言った。だが向かいの牢の囚人は、十時の鐘のときに紺の前掛けの女が廊下を通るのを見ていた。紺の前掛けはお吉自身が認めたものだ。かまどの火が落ちていても、鍋は洗える。"
+}
+]/*DATA-END*/;
+
+const STORE_KEY = "torishirabe-stars-v1";
+function loadStars(){ try{ const s = localStorage.getItem(STORE_KEY); return s ? (JSON.parse(s) || {}) : {}; }catch(e){ return {}; } }
+function saveStar(id, n){
+  const all = loadStars(); memStars[id] = Math.max(memStars[id]||0, all[id]||0, n);
+  try{ all[id] = memStars[id]; localStorage.setItem(STORE_KEY, JSON.stringify(all)); }catch(e){}
+}
+const memStars = {};
+function starsOf(id){ return Math.max(loadStars()[id]||0, memStars[id]||0); }
+
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; };
+let cs = null;
+const st = {misses:0, selT:null, selC:null};
+
+function starHTML(n, box){
+  box.textContent = "";
+  for(let i=1;i<=3;i++){ const s = el("span", i<=n ? "" : "off", "★"); box.appendChild(s); }
+}
+
+function renderSelect(){
+  const list = $("caseList"); list.textContent = "";
+  CASES.forEach((c, i) => {
+    const b = el("button", "case-btn");
+    const txt = el("span");
+    txt.appendChild(el("span", "no", `第${"一二三"[i]}の事件　${c.level}`));
+    txt.appendChild(el("span", "t", c.title));
+    b.appendChild(txt);
+    const s = el("span", "stars"); starHTML(starsOf(c.id), s); b.appendChild(s);
+    b.onclick = () => openCase(i);
+    list.appendChild(b);
+  });
+  $("v-select").hidden = false; $("v-case").hidden = true; $("bar").hidden = true;
+  window.scrollTo(0,0);
+}
+
+function personOf(pid){ return cs.persons.find(p => p.id === pid); }
+
+function openCase(i){
+  cs = CASES[i]; st.misses = 0;
+  $("v-select").hidden = true; $("v-case").hidden = false; $("bar").hidden = false;
+  restart();
+}
+
+function restart(){
+  st.selT = null; st.selC = null;
+  $("missN").textContent = st.misses;
+  const sm = $("summary"); sm.textContent = "";
+  sm.appendChild(el("div", "lv", `事件調書　難しさ：${cs.level}`));
+  sm.appendChild(el("h2", null, cs.title));
+  sm.appendChild(el("p", null, cs.summary));
+  sm.appendChild(el("div", "goal", "証言1枚と手がかり1枚、食い違う組を突きつけよ。"));
+
+  const tl = $("tList"); tl.textContent = "";
+  cs.testimonies.forEach(t => {
+    const p = personOf(t.person);
+    const b = el("button", "card"); b.dataset.id = t.id;
+    const h = el("div", "head");
+    h.appendChild(el("div", "hanko", p.name[0]));
+    const nm = el("div"); nm.appendChild(el("div", "who", p.name)); nm.appendChild(el("div", "role", p.role));
+    h.appendChild(nm); b.appendChild(h);
+    const ol = el("ol"); t.lines.forEach(l => ol.appendChild(el("li", null, l.text))); b.appendChild(ol);
+    b.onclick = () => { st.selT = st.selT === t.id ? null : t.id; refresh(); };
+    tl.appendChild(b);
+  });
+  const cl = $("cList"); cl.textContent = "";
+  cs.clues.forEach(c => {
+    const b = el("button", "card clue"); b.dataset.id = c.id;
+    const h = el("div", "head"); h.appendChild(el("span", "tag", "証拠")); h.appendChild(el("span", "ct", c.title)); b.appendChild(h);
+    b.appendChild(el("p", "cx", c.text));
+    b.onclick = () => { st.selC = st.selC === c.id ? null : c.id; refresh(); };
+    cl.appendChild(b);
+  });
+  refresh(); window.scrollTo(0,0);
+}
+
+function refresh(){
+  document.querySelectorAll("#tList .card").forEach(b => b.classList.toggle("sel", b.dataset.id === st.selT));
+  document.querySelectorAll("#cList .card").forEach(b => b.classList.toggle("sel", b.dataset.id === st.selC));
+  const t = cs.testimonies.find(x => x.id === st.selT), c = cs.clues.find(x => x.id === st.selC);
+  $("slotT").textContent = t ? `証言：${personOf(t.person).name}` : "証言：未選択";
+  $("slotC").textContent = c ? `手がかり：${c.title}` : "手がかり：未選択";
+  $("slotT").classList.toggle("on", !!t); $("slotC").classList.toggle("on", !!c);
+  $("goBtn").disabled = !(t && c);
+}
+
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 1800); }
+function modal(build){ const m = $("modal"); m.textContent = ""; build(m); $("ov").classList.add("show"); }
+function closeModal(){ $("ov").classList.remove("show"); }
+function mbtns(m, list){ const w = el("div", "mbtns"); list.forEach(([label, fn, cls]) => { const b = el("button", cls||"", label); b.onclick = fn; w.appendChild(b); }); m.appendChild(w); }
+
+// 1) 2枚を突きつける → 2) 嘘をついた者を選ぶ → 判定
+$("goBtn").onclick = () => {
+  const t = cs.testimonies.find(x => x.id === st.selT), c = cs.clues.find(x => x.id === st.selC);
+  modal(m => {
+    m.appendChild(el("h3", null, "この2枚が食い違う"));
+    m.appendChild(el("div", "pair", `証言：${personOf(t.person).name}　×　手がかり：${c.title}`));
+    m.appendChild(el("p", null, "では、嘘をついているのは誰か。"));
+    const ch = el("div", "choices");
+    cs.persons.forEach(p => {
+      const b = el("button"); b.appendChild(document.createTextNode(p.name)); b.appendChild(el("small", null, p.role));
+      b.onclick = () => judge(p.id); ch.appendChild(b);
+    });
+    m.appendChild(ch);
+    mbtns(m, [["選び直す", closeModal, "sub2"]]);
+  });
+};
+
+function judge(pid){
+  const okPair = st.selT === cs.answer.testimony && st.selC === cs.answer.clue;
+  const okWho = pid === cs.culprit;
+  if(okPair && okWho){
+    const n = st.misses === 0 ? 3 : st.misses === 1 ? 2 : 1;
+    saveStar(cs.id, n);
+    modal(m => {
+      m.appendChild(el("div", "bigstamp", "解決"));
+      const s = el("div", "rstars"); starHTML(n, s); m.appendChild(s);
+      m.appendChild(el("p", null, `犯人：${personOf(cs.culprit).name}（${personOf(cs.culprit).role}）　やり直し ${st.misses} 回`));
+      m.appendChild(el("p", null, "決め手：" + cs.solution));
+      mbtns(m, [["事件選びへ", () => { closeModal(); renderSelect(); }], ["この事件をもう一度", () => { closeModal(); st.misses = 0; restart(); }, "sub2"]]);
+    });
+  } else {
+    st.misses++;
+    const why = !okPair ? "その2枚は食い違っていない。" : "食い違いは見つけた。だが、嘘をついた者を取り違えた。";
+    modal(m => {
+      m.appendChild(el("div", "bigstamp", "不一致"));
+      m.appendChild(el("p", null, why));
+      m.appendChild(el("p", null, `調書は白紙に戻った。やり直し ${st.misses} 回目。`));
+      mbtns(m, [["事件の最初から", () => { closeModal(); restart(); }]]);
+    });
+  }
+}
+
+// ヒント：次に見るべきカードを1枚だけ光らせる（本番は動画広告のあと）
+$("hintBtn").onclick = () => {
+  modal(m => {
+    m.appendChild(el("h3", null, "ヒント"));
+    m.appendChild(el("div", "ad", "（本番ではここで動画広告が流れます）"));
+    mbtns(m, [["見終わった", () => { closeModal(); showHint(); }], ["やめる", closeModal, "sub2"]]);
+  });
+};
+function showHint(){
+  const a = cs.answer;
+  const target = st.selT === a.testimony ? a.clue : a.testimony;
+  document.querySelectorAll(".card.hint").forEach(b => b.classList.remove("hint"));
+  const b = document.querySelector(`.card[data-id="${target}"]`);
+  void b.offsetWidth; b.classList.add("hint");
+  b.scrollIntoView({behavior:"smooth", block:"center"});
+  toast("光ったカードをよく読め。");
+  setTimeout(() => b.classList.remove("hint"), 4600);
+}
+
+$("backBtn").onclick = renderSelect;
+renderSelect();
+</script>
+
+</body></html>
