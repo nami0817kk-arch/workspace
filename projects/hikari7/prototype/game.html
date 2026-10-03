@@ -369,7 +369,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .stagec.night p{font-size:15px;line-height:1.75}.stagec .choice{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#f4effd}.stagec .choice span{color:#d8cff0}
 .toast.nt{background:rgba(255,255,255,.1);color:#f4effd}
 .tag{width:fit-content;align-self:flex-start;max-width:100%}
-@media (max-width:400px){.hdr .wk{display:none}.hdr .rt{flex:1;text-align:right}.hdr .wk2{display:block}}
+@media (max-width:400px){.hdr .wk{display:none}.hdr .rt{flex:1;min-width:0;text-align:right;white-space:normal;font-size:11px;line-height:1.3}.hdr .rt .wk2{display:block}.hdr{gap:5px}.hdr .btn-s{padding:4px 8px;font-size:11.5px}.hdr .gear{min-width:34px;padding:0 6px}}
 .hdr .wk2{display:none;font-size:11px;color:var(--muted);font-weight:700}
 .appbox{display:flex;flex-direction:column;gap:6px}.applinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .apptoast{position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:70;background:var(--fg);color:var(--bg);border-radius:12px;padding:10px 14px;font-size:14px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
@@ -439,9 +439,9 @@ body.reduce .confetti{display:none}
 /* フェーズ34：押しやすさ（小さなボタンも高さ40px以上） */
 .btn-s{min-height:40px}.chip{min-height:40px}.tcon .chip{min-height:36px}.showctl .btn-s{min-height:38px}
 /* フェーズ35：iPad・横向き（広い画面では余白を取り、一覧を2列に） */
-@media (min-width:820px){#app{max-width:760px}.foot .in,.sheet{max-width:760px}.meikan{grid-template-columns:1fr 1fr}.hl{columns:2;column-gap:18px}.hlr{break-inside:avoid}}
+@media (min-width:820px){#app{max-width:760px}.foot .in,.sheet{max-width:760px}.meikan{grid-template-columns:1fr 1fr}.hilite{columns:2;column-gap:18px}.hlr{break-inside:avoid}}
 @media (orientation:landscape) and (max-height:500px){.thero{min-height:0}.ov .sheet{max-height:100%;border-radius:12px}.foot{padding-top:6px;padding-bottom:6px}}
-.flow ol{margin:6px 0 4px;padding-left:20px;font-size:13.5px;line-height:1.8}
+.firstflow ol{margin:6px 0 4px;padding-left:20px;font-size:13.5px;line-height:1.8}
 .gloss dt{font-weight:800;margin-top:10px}.gloss dd{margin:2px 0 0;font-size:13.5px;line-height:1.7;color:var(--fg)}
 .rcard{border:2px solid;border-radius:16px;padding:12px 14px;margin:10px 0;text-align:center;background:var(--card)}
 .rcard .rg{display:flex;justify-content:center;align-items:center;gap:10px}.rcard .rg .gr{font-size:22px;padding:2px 12px}.rcard .rg span{font-size:22px;font-weight:900}
@@ -450,6 +450,7 @@ body.reduce .confetti{display:none}
 .sset.c4{grid-template-columns:repeat(4,1fr)}
 .sayi{font-size:12px;opacity:.65;margin-left:4px}[data-a=say]{cursor:pointer}
 .sayb{border:none;background:none;font-size:15px;padding:0 4px;min-height:0;vertical-align:middle;cursor:pointer}
+.chipsel{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -954,7 +955,7 @@ function finalEval(S,Dopt){
   if(dirK==='v')coh+=3;else if(dirK==='d')fanScore=clamp(fanScore+4,0,100);else{var rp=D.filter(function(t){return t.st.r>=60;}).length;song=clamp(song+(rp?5:-6),0,100);}
   coh=clamp(coh,0,100);
   var Mo=S.month||{fan:0,song:0,coh:0};fanScore=clamp(fanScore+Mo.fan,0,100);coh=clamp(coh+Mo.coh,0,100);song=clamp(song+Mo.song,0,100);
-  var avgR=S.ratings.reduce(function(a,b){return a+b;},0)/S.ratings.length;
+  var avgR=S.ratings.length?S.ratings.reduce(function(a,b){return a+b;},0)/S.ratings.length:roundTarget(1,S);
   var show=clamp((avgR-3)*16,0,100);
   var total=song*.35+coh*.25+fanScore*.2+show*.2;
   var streams0=Math.round(song*song*song/1000*180)/10,E0={D:D,n:n,avgR:avgR,goods:goods,streams:streams0};
@@ -2022,7 +2023,7 @@ function traitPerf(S,t,f){var m=1;if(hasT(t,'clutch')&&S.rnd>=3)m*=1.04;if(hasT(
 function traitTags(t,small){return (t.traits||[]).map(function(k){var x=TRAITS[k];return '<span class="trt '+(x.g===2?'tgold':x.g?'tg':'tb')+'" title="'+x.d+'">'+x.n+'</span>';}).join('');}
 
 /* いまデビューしたら：いまの顔ぶれから実力の上位6人で今日デビューしたら、何評価になるか（残りの成長は入れない） */
-function forecast(S){var A=alive(S);if(A.length<5)return null;var D=A.slice().sort(function(a,b){return memberSkill(b)-memberSkill(a);}).slice(0,Math.min(6,A.length));return finalEval(S,D);}
+function forecast(S){var A=alive(S);if(A.length<5||!S.ratings.length)return null;var D=A.slice().sort(function(a,b){return memberSkill(b)-memberSkill(a);}).slice(0,Math.min(6,A.length));return finalEval(S,D);}
 var EVAL_NAME={song:'曲の反響',coh:'まとまり',fanScore:'ファン',show:'視聴率'};
 var EVAL_TIP={song:'実力のある子とファンの多い子を両方そろえる',coh:'歌・ダンス・ラップの担当をそろえ、信頼を深める',fanScore:'人気の子を残し、番組への信頼を守る',show:'局の目標視聴率に届くよう、盛り上がる審査を組む'};
 
@@ -2333,7 +2334,7 @@ function wText(f){if(f.w==='spec')return '得意分野70%・表現30%';if(f.w===
 function header(){
   var wk=(S.daily?'今日のオーディション・':'')+(S.chal&&chalOf(S.chal)?'挑戦「'+chalOf(S.chal).n+'」・':'')+(S.diff&&S.diff!=='normal'?DIFF[S.diff].n+'・':'')+(S.rnd>0?(ROUNDS[S.rnd].name):'書類・動画審査');
   var rt=(S.rnd>0?'制作費 '+S.budget+'万 ':'')+(S.ratings.length?'視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%':'');
-  var wk2=S.rnd>0?'第'+S.rnd+'審査'+(ROUNDS[S.rnd]&&ROUNDS[S.rnd].fin?'（最終）':''):'書類審査';
+  var wk2=S.phase==='prep'?'デビュー準備':(S.phase==='month'||S.phase==='result')?'デビュー後':S.rnd>0?'第'+S.rnd+'審査'+(ROUNDS[S.rnd]&&ROUNDS[S.rnd].fin?'（最終）':''):'書類審査';
   var h='<div class="hdr"><div class="logo"><span>ひかりの</span>七席</div><div class="wk">'+esc(wk)+'</div><div class="rt"><span class="wk2">'+esc(wk2)+'</span>'+rt+'</div>';
   h+='<button class="btn-s gear" data-a="settings" aria-label="設定">⚙</button><button class="btn-s '+(ui.resetArm?'warn':'')+'" data-a="reset">'+(ui.resetArm?'本当に最初から':'最初から')+'</button></div>';
   h+='<div class="dots">';for(var i=0;i<=NROUND;i++)h+='<i class="'+(i<S.rnd?'on':i===S.rnd?'now':'')+'" title="'+(i===0?'書類・動画審査':ROUNDS[i].name)+'"></i>';h+='</div>';
@@ -2376,7 +2377,7 @@ function vTitle(){
   if(APP)h+='<div class="card appbox">'+(APP.adFree?'<div class="small"><b>広告を消しています。</b>ありがとうございます。</div>':'<button class="btn sub" data-a="buy" '+(APP.canBuy?'':'disabled')+'>広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'</button><div class="small muted">全画面広告が出なくなり、動画の特典も動画なしで使えます。</div>')+'<div class="applinks"><button class="btn-s" data-a="restore">購入を復元</button><button class="btn-s" data-a="privacy">プライバシーポリシー</button><button class="btn-s" data-a="licenses">ライセンス</button></div></div>';
   if(!sv&&ui.loadBroken){var bk=loadBak();h+='<div class="note"><b>前回の続きが読み込めませんでした。</b>'+(bk?'ひとつ前の場面の保存から戻せます。<br><button class="btn-s" data-a="frombak">ひとつ前の保存から続ける</button>':'保存の予備もありません。新しいシーズンを始めてください。')+'</div>';}
   if(sv)h+='<button class="btn sub" data-a="cont">つづきから（'+(sv.rnd>0?ROUNDS[sv.rnd].name:'書類・動画審査')+'・'+(sv.g==='f'?'女性':'男性')+'）</button>';
-  if(loadCareer().seasons===0)h+='<div class="card flow"><div class="mh">はじめての方へ：1シーズンの流れ</div><ol class="tight"><li><b>書類・動画審査</b>　40人から最大24人を選ぶ</li><li><b>構成会議</b>　4つの審査の順番を決める</li><li><b>審査ごとに</b>　制作会議 → レッスン → 関わる時間 → 出来事 → ステージ → 講評 → <b>合否はあなたが決める</b></li><li><b>最終審査</b>　デビューメンバーを5〜8人選ぶ</li><li><b>デビュー後1か月</b>　活動を選び、評価とグループのその後を見る</li></ol><p class="small muted">1シーズンは30〜40分。迷ったら「おまかせ」や、画面の上に出るコツを見てください。</p></div>';
+  if(loadCareer().seasons===0)h+='<div class="card firstflow"><div class="mh">はじめての方へ：1シーズンの流れ</div><ol class="tight"><li><b>書類・動画審査</b>　40人から最大24人を選ぶ</li><li><b>構成会議</b>　4つの審査の順番を決める</li><li><b>審査ごとに</b>　制作会議 → レッスン → 関わる時間 → 出来事 → ステージ → 講評 → <b>合否はあなたが決める</b></li><li><b>最終審査</b>　デビューメンバーを5〜8人選ぶ</li><li><b>デビュー後1か月</b>　活動を選び、評価とグループのその後を見る</li></ol><p class="small muted">1シーズンは30〜40分。迷ったら「おまかせ」や、画面の上に出るコツを見てください。</p></div>';
   h+=dailyBox();
   h+=perkBox();
   h+=careerBox();
@@ -2748,7 +2749,7 @@ function vTalk(){
       h+='</div>';});}
   var TF=[['all','すべて'],['story','★ 物語あり'],['new','まだ関わっていない']],tf=ui.tfilter||'all';
   var TS=[['story','物語の順'],['sk','実力'],['pop','人気'],['trust','信頼']],ts=ui.tsort||'story';
-  h+='<h3>練習生</h3><div class="chips">'+TF.map(function(x){return '<button class="chip'+(tf===x[0]?' on':'')+'" data-a="tfilter" data-v="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div><div class="chips"><span class="small muted" style="align-self:center">並べ替え</span>'+TS.map(function(x){return '<button class="chip'+(ts===x[0]?' on':'')+'" data-a="tsort" data-v="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div>';
+  h+='<h3>練習生</h3><div class="chipsel">'+TF.map(function(x){return '<button class="chip'+(tf===x[0]?' on':'')+'" data-a="tfilter" data-v="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div><div class="chipsel"><span class="small muted" style="align-self:center">並べ替え</span>'+TS.map(function(x){return '<button class="chip'+(ts===x[0]?' on':'')+'" data-a="tsort" data-v="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div>';
   var A=alive(S).filter(function(t){if(tf==='story')return (t.arc.step>0&&t.arc.step<3)||(t.arc.step>=3&&t.trust>=80&&!t.honne);if(tf==='new')return !(S.touch&&S.touch[t.id]);return true;}).sort(function(a,b){var sa=(a.arc.step>0&&a.arc.step<3)||(a.arc.step>=3&&a.trust>=80&&!a.honne),sb=(b.arc.step>0&&b.arc.step<3)||(b.arc.step>=3&&b.trust>=80&&!b.honne);if(ts==='sk')return (!!b.fav-!!a.fav)||memberSkill(b)-memberSkill(a);if(ts==='pop')return (!!b.fav-!!a.fav)||b.pop-a.pop;if(ts==='trust')return (!!b.fav-!!a.fav)||b.trust-a.trust;return (!!b.fav-!!a.fav)||sb-sa||b.trust-a.trust;});
   A.forEach(function(t){var st=t.arc.step,hn=st>=3&&t.trust>=80&&!t.honne,dis=S.ap<=0?'disabled':'';
     h+='<div class="trow2">'+face(t,'md')+'<div class="mid"><div class="nm">'+(t.fav?'<span style="color:var(--gold)">★</span>':'')+esc(t.name)+' '+moodTag(t)+(hn?' <span class="tag good">★ 本音</span>':st>0&&st<3?' <span class="tag good">★ '+ARCS[t.arc.k].name+' '+st+'/3</span>':'')+'</div>'+
@@ -2835,7 +2836,7 @@ var TIPS={
   talk:'4回まで練習生と関われます。同じ子に構いすぎると、ほかの子が気にします。★の付いた子は物語の続きがあります。',
   event:'選択肢の下の札が効き目です。赤い札は下がるもの、成功率の付いたものは失敗することもあります。札（寄り添う・厳しく・放送で見せる・任せる）の効き方は気質で変わります。',
   show:'ステージ本番。「オート」にすると、見終わるたびに次の出番へ進みます。気になる子は「大きく映す」で放送に乗せられます。',
-  critique:'講評は気質で受け止め方が変わります。気質が分かっている子には、合う講評が最初から入っています。',
+  critique:'講評は気質で受け止め方が変わります。気質が分かっている子には、合う講評に ★ が付きます。',
   judge:'合否はあなたが決めます。世間の人気は合否には関係しませんが、人気の高い子を落とすと荒れます。',
   prep:'グループ名・リーダー・曲の方向を決めます。残った制作費はデビュー後の宣伝費になります。',
   month:'デビュー後の4週間。忙しい週が3回続くと体調を崩すメンバーが出ます。休みも作戦のうちです。'
@@ -2866,7 +2867,7 @@ function toast(m){ui.toast=m;clearTimeout(ui.toastT);ui.toastT=setTimeout(functi
 function forecastBox(D,ttl){var E=D?(D.length>=3?finalEval(S,D):null):forecast(S);if(!E)return '';var ks=['song','coh','fanScore','show'],low=ks.slice().sort(function(a,b){return E[a]-E[b];})[0];
   return '<div class="card fcst"><div class="fh"><span>'+(ttl||'いまデビューしたら')+'</span><b class="gr g-'+E.grade+'">'+E.grade+'</b><small>'+Math.round(E.total)+'点</small></div>'+
     '<div class="fbars">'+ks.map(function(k){return '<div><span>'+EVAL_NAME[k]+'</span><i><b style="width:'+Math.round(E[k])+'%"'+(k===low?' class="low"':'')+'></b></i></div>';}).join('')+'</div>'+
-    '<div class="small muted">'+(D?'いま選んでいる'+D.length+'人でデビューした場合の見込み（デビュー後1か月の活動の前）。':'いまの実力上位6人で、今日デビューした場合の評価。')+'残りの審査とデビュー後の活動で、ここから上げられる（残った制作費の宣伝分は入れていない）。いちばん足りないのは「'+EVAL_NAME[low]+'」。'+EVAL_TIP[low]+'。</div></div>';}
+    '<div class="small muted">'+(D?'いま選んでいる'+D.length+'人でデビューした場合の見込み（デビュー後1か月の活動の前）。':'いまの実力上位6人で、今日デビューした場合の評価。')+''+(D?'残った制作費の宣伝分とデビュー後の活動で、ここから上がる。':'残りの審査とデビュー後の活動で、ここから上げられる（残った制作費の宣伝分は入れていない）。')+'いちばん足りないのは「'+EVAL_NAME[low]+'」。'+EVAL_TIP[low]+'。</div></div>';}
 
 
 function growRow(t){var H=t.sh||[];if(H.length<2)return '';var W=260,Hh=80,ks=[['v',1],['d',2],['r',3],['e',4]],cols={v:'var(--c-v)',d:'var(--c-d)',r:'var(--c-r)',e:'var(--c-t)'},n=H.length;
@@ -2926,7 +2927,7 @@ function perkBox(){var c=loadCareer(),pp=perkPoints(c),pk=c.perk||{};
   if(c.spent)h+='<p style="text-align:right"><button class="btn-s" data-a="perkreset">振り直す（ポイントを戻す）</button></p>';
   return h+'</details>';}
 function chalBox(){var c=loadCareer(),done=c.chal||{};
-  return '<h3>チャレンジ <span class="small muted">A評価以上で達成。初めての達成で＋'+CHAL_PT+'ポイント</span></h3><div class="chips">'+
+  return '<h3>チャレンジ <span class="small muted">A評価以上で達成。初めての達成で＋'+CHAL_PT+'ポイント</span></h3><div class="chipsel">'+
     '<button class="chip'+(!ui.chal?' on':'')+'" data-a="chal" data-v="">なし</button>'+CHALS.map(function(x){return '<button class="chip'+(ui.chal===x.k?' on':'')+'" data-a="chal" data-v="'+x.k+'">'+(done[x.k]?'<b class="gr g-'+done[x.k]+'" style="font-size:10px;padding:0 4px;margin-right:3px">'+done[x.k]+'</b>':'')+esc(x.n)+'</button>';}).join('')+'</div>'+
     (ui.chal?'<p class="small" style="margin:4px 0 0">'+esc(chalOf(ui.chal).d)+'</p>':'');}
 
@@ -2947,7 +2948,7 @@ function statsBox(c){var st=c.stats;if(!st)return '';var g=st.grade||{};
     ['覚醒させた人数',st.awoke+'人'],['結成したコンビ',st.combo+'組'],['本音を聞いた回数',st.honne+'回'],['難しさごとの最高',['easy','normal','hard','legend'].filter(function(k){return st.diff&&st.diff[k];}).map(function(k){return DIFF[k].n+' '+st.diff[k];}).join('・')||'—']];
   return '<details class="achv"><summary>通算の記録</summary><div class="stats">'+rows.map(function(r){return '<div class="kv"><span>'+r[0]+'</span><b>'+esc(String(r[1]))+'</b></div>';}).join('')+'</div></details>';}
 function highlightBox(){var H=seasonHighlights(S);if(!H.length)return '';
-  return '<h3>このシーズンのふりかえり</h3><div class="card hl">'+H.map(function(x){var t=S.tr[x.id];return '<div class="hlr">'+(t?face(t,'sm'):'')+'<div><span class="tag good">'+esc(x.title)+'</span> <span class="small muted">'+(x.r?'第'+x.r+'審査':'')+'</span><div class="small">'+(t?esc(t.giv)+'：':'')+esc(x.t)+'</div></div></div>';}).join('')+'</div>';}
+  return '<h3>このシーズンのふりかえり</h3><div class="card hilite">'+H.map(function(x){var t=S.tr[x.id];return '<div class="hlr">'+(t?face(t,'sm'):'')+'<div><span class="tag good">'+esc(x.title)+'</span> <span class="small muted">'+(x.r?'第'+x.r+'審査':'')+'</span><div class="small">'+(t?esc(t.giv)+'：':'')+esc(x.t)+'</div></div></div>';}).join('')+'</div>';}
 
 
 /* ---------- フェーズ18〜27：並べ替え・設定・効果音・振動・明暗・動きを減らす ---------- */
