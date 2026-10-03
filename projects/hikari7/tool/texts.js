@@ -42,16 +42,17 @@ const run = (js) => vm.runInContext(js, ctx);
 
 // 物語の文だけを拾う（ボタンや見出しの決まり文句は数えない）
 const NARR = ['event', 'talk', 'show', 'night', 'interview', 'month', 'result'];
-const LEAK = /\{[A-Z]\}|undefined|NaN|\bnull\b|\[object|function ?\(/;
+const LEAK = /\{[A-Z]\}|undefined|NaN|\bnull\b|\[object|function ?\(|「「|」」|。。|、、/;
 const strip = (h) => h.replace(/<(script|style)[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, '\n').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
 let season = 0;
 const per = new Map(), leaks = [], all = [];
 ctx.__shot = () => {
   try { run('render()'); } catch (e) { return; }
   const ph = run('S?S.phase:"title"');
-  if (NARR.indexOf(ph) < 0) return;
+  // 漏れはどの画面でも見る。繰り返しを数えるのは物語の文だけ
   const txt = strip(app.innerHTML);
   if (LEAK.test(txt)) { const h = app.innerHTML, m = h.search(LEAK); leaks.push(ph + ': ' + h.slice(Math.max(0, m - 160), m + 60).replace(/\s+/g, ' ')); }
+  if (NARR.indexOf(ph) < 0) return;
   // 名前は人ごとに違うので、文を比べるときは名前を伏せる
   const names = run('S?S.tr.map(function(t){return [t.name,t.giv];}):[]').flat().filter(Boolean).sort((a, b) => b.length - a.length);
   txt.split(/\n+|(?<=[。！？」])/).map((x) => x.trim()).filter((x) => x.length >= 12 && /[。！？」]$/.test(x)).forEach((x) => {
@@ -66,7 +67,7 @@ ctx.__shot = () => {
 function play(g, diff) {
   run(`S=newGame('${g}','${diff}',null);__shot();
   var c=S.tr.slice();S.sel=c.slice(0,S.caps.sel).map(function(t){return t.id;});confirmSelect(S);startSeason(S);
-  for(var r=1;r<=NROUND;r++){applyPlan(S);__shot();applyLesson(S);S.phase='talk';__shot();
+  for(var r=1;r<=NROUND;r++){__shot();applyPlan(S);__shot();applyLesson(S);S.phase='talk';__shot();
     for(var k=0;k<4&&S.ap>0;k++){var A=alive(S),t=A[ri(0,A.length-1)];
       if(k===1){doOut(S,t.id,ri(0,OUTS.length-1));__shot();if(S.talk&&!S.talk.res){outChoose(S,ri(0,2));__shot();}S.talk=null;continue;}
       doTalk(S,t.id);__shot();if(S.talk&&!S.talk.res){if(S.talk.kind==='arc')talkChoose(S,ri(0,2));else if(S.talk.kind==='honne')honneChoose(S,ri(0,2));else if(S.talk.kind==='free')freeChoose(S,ri(0,2));__shot();}S.talk=null;}
