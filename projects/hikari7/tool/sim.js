@@ -79,7 +79,7 @@ function play(g, pol) {
   if (typeof startMonth === 'function') { startMonth(S);
     const plan = pol === 'good' ? ['tv', S.budget >= 30 ? 'mv' : 'stream', 'rest', 'tv'] : pol === 'random' ? [0, 1, 2, 3].map(() => pick(WEEK_ACTS).k) : ['tv', 'tv', 'tv', 'tv'];
     plan.forEach(k => { if (S.phase === 'month') { const b = S.budget; weekDo(S, k); if (S.month.w === 0 || (S.budget === b && k === 'mv' && S.phase === 'month' && S.month.log.length === 0)) weekDo(S, 'tv'); } });
-    while (S.phase === 'month') weekDo(S, 'rest'); }
+    while (S.phase === 'month' && S.month.w < 4) weekDo(S, 'rest'); finishMonth(S); }
   const E = finalEval(S);
   return { E, S };
 }

@@ -68,7 +68,7 @@ function season(g, diff, chal) {
     B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,n).forEach(function(t){S.pass[t.id]=true;});__shot();
     decide(S);__shot();S.call.n=S.call.order.length;S.call.done=true;__shot();if(!ROUNDS[r].fin)nextRound(S);}
   applyFarewell(S);startPrep(S);__shot();S.prep.color=2;S.prep.song=1;var D=S.tr.filter(function(t){return t.status==='debut';});S.prep.leader=D[0].id;
-  startMonth(S);__shot();['tv','mv','rest','tv'].forEach(function(k){weekDo(S,k);});__shot();
+  startMonth(S);__shot();['tv','mv','rest','tv'].forEach(function(k){weekDo(S,k);});__shot();finishMonth(S);__shot();
   S.ending=false;__shot();ui.prof=D[0].id;__shot();ui.prof=null;S.bursts=[];__shot();`);
 }
 const cases = [['m', 'normal', null], ['f', 'hard', 'poor'], ['m', 'easy', 'small'], ['f', 'normal', 'busy'], ['m', 'normal', null]];
