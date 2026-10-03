@@ -6,152 +6,194 @@
 <title>つるはし採掘</title>
 <style>
 :root{
-  --bg:#f4efe6; --panel:#fffaf2; --panel2:#f1e7d6; --ink:#2b2118; --muted:#7a6a58; --line:#e0d3bf;
-  --accent:#d9861c; --accent-ink:#fff; --accent-soft:#fbe6c4; --good:#2f8f5b; --bad:#b8452e;
-  --ad:#5b4bc4; --ad-ink:#fff; --ad-soft:#e7e3fb; --sky1:#8fd0f5; --sky2:#e3f4ff; --grass:#5fae4a; --shadow:0 2px 0 rgba(60,40,20,.12);
+  --bg:#efe6d6; --panel:#fffaf1; --panel2:#f3e8d5; --ink:#2b2118; --muted:#6f604f; --line:#e1d2ba;
+  --accent:#c8740f; --accent2:#e8932a; --accent-ink:#fff; --accent-soft:#fbe6c4; --good:#2a7d4f; --bad:#b03d26;
+  --ad:#5646c2; --ad2:#7a66e8; --ad-ink:#fff; --ad-soft:#e8e4fb; --sky1:#8fd0f5; --sky2:#e3f4ff; --grass:#5fae4a;
+  --hud:#2b2118; --hud-ink:#fff4dc; --shadow:0 2px 0 rgba(60,40,20,.14); --lift:0 6px 18px rgba(60,40,20,.16);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#15120f; --panel:#221d18; --panel2:#2c251e; --ink:#f3e9dc; --muted:#b2a08b; --line:#3a3128;
-    --accent:#f0a33a; --accent-ink:#1d140a; --accent-soft:#3b2a14; --good:#5cc98c; --bad:#f07a5f;
-    --ad:#a79bff; --ad-ink:#16122e; --ad-soft:#2a2545; --sky1:#0c1430; --sky2:#27335c; --grass:#3f7a33; --shadow:0 2px 0 rgba(0,0,0,.35);
+    --bg:#15120f; --panel:#221d18; --panel2:#2c251e; --ink:#f3e9dc; --muted:#b9a892; --line:#3a3128;
+    --accent:#f0a33a; --accent2:#f6b85c; --accent-ink:#1d140a; --accent-soft:#3b2a14; --good:#5cc98c; --bad:#f07a5f;
+    --ad:#a79bff; --ad2:#c2b8ff; --ad-ink:#16122e; --ad-soft:#2a2545; --sky1:#0c1430; --sky2:#27335c; --grass:#3f7a33;
+    --hud:#0d0b09; --hud-ink:#fff4dc; --shadow:0 2px 0 rgba(0,0,0,.35); --lift:0 6px 18px rgba(0,0,0,.4);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#15120f; --panel:#221d18; --panel2:#2c251e; --ink:#f3e9dc; --muted:#b2a08b; --line:#3a3128;
-  --accent:#f0a33a; --accent-ink:#1d140a; --accent-soft:#3b2a14; --good:#5cc98c; --bad:#f07a5f;
-  --ad:#a79bff; --ad-ink:#16122e; --ad-soft:#2a2545; --sky1:#0c1430; --sky2:#27335c; --grass:#3f7a33; --shadow:0 2px 0 rgba(0,0,0,.35);
+  --bg:#15120f; --panel:#221d18; --panel2:#2c251e; --ink:#f3e9dc; --muted:#b9a892; --line:#3a3128;
+  --accent:#f0a33a; --accent2:#f6b85c; --accent-ink:#1d140a; --accent-soft:#3b2a14; --good:#5cc98c; --bad:#f07a5f;
+  --ad:#a79bff; --ad2:#c2b8ff; --ad-ink:#16122e; --ad-soft:#2a2545; --sky1:#0c1430; --sky2:#27335c; --grass:#3f7a33;
+  --hud:#0d0b09; --hud-ink:#fff4dc; --shadow:0 2px 0 rgba(0,0,0,.35); --lift:0 6px 18px rgba(0,0,0,.4);
   color-scheme: dark;
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
+html,body{margin:0;padding:0;height:100%}
 body{background:var(--bg);color:var(--ink);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic UI",system-ui,sans-serif;
-  -webkit-tap-highlight-color:transparent;overflow-x:hidden;line-height:1.5}
-button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
-.app{max-width:480px;margin:0 auto;padding:10px 16px 40px}
-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;min-height:40px}
-.brand{font-size:11px;color:var(--muted);letter-spacing:.08em}
-.brand b{color:var(--accent);font-weight:800}
-h1{margin:0;font-size:20px;font-weight:800;letter-spacing:.02em}
-.dev{position:fixed;top:10px;right:10px;z-index:30;font-size:11px;padding:6px 9px;border-radius:999px;border:1px dashed var(--muted);
-  background:var(--panel);color:var(--muted);box-shadow:var(--shadow)}
-.dev:active{transform:translateY(1px)}
-.stats{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:6px;margin:8px 0}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 10px;min-width:0}
-.stat .k{font-size:10px;color:var(--muted)}
-.stat .v{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stat.ore .v{font-size:20px;color:var(--accent)}
-.stage{position:relative;border-radius:16px;overflow:hidden;height:340px;background:#000;touch-action:manipulation;user-select:none;-webkit-user-select:none;
-  box-shadow:0 0 0 1px var(--line), var(--shadow)}
+  -webkit-tap-highlight-color:transparent;overflow:hidden;line-height:1.5;font-size:14px;-webkit-user-select:none;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* ---- 1画面の骨組み（上の帯・採掘の絵・操作の欄・タブ） ---- */
+.app{max-width:520px;margin:0 auto;height:100vh;height:100dvh;display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px)}
+.hud{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:8px 12px 6px;background:var(--hud);color:var(--hud-ink)}
+.hud .who{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.hud .brand{font-size:12px;font-weight:800;color:#f6b85c;letter-spacing:.06em}
+.hud .gen{font-size:12px;color:#d9c8ad;white-space:nowrap}
+.hud .ore{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-width:0}
+.hud .ore b{font-size:24px;font-weight:800;color:#ffd166;white-space:nowrap;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.hud .ore small{font-size:12px;color:#d9c8ad}
+.iconbtn{flex:0 0 auto;width:40px;height:40px;border:0;border-radius:12px;background:rgba(255,255,255,.1);color:var(--hud-ink);display:grid;place-items:center}
+.iconbtn:active{background:rgba(255,255,255,.2)}
+.substats{flex:0 0 auto;display:flex;justify-content:space-between;gap:8px;padding:0 12px 8px;background:var(--hud);color:#d9c8ad;font-size:12px}
+.substats b{color:var(--hud-ink);font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+
+.stage{flex:0 0 auto;position:relative;height:clamp(280px,46dvh,440px);overflow:hidden;background:#000;touch-action:manipulation}
 .stage canvas{display:block;width:100%;height:100%}
-.chip{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);color:#fff;border-radius:10px;padding:4px 8px;font-size:11px;pointer-events:none;max-width:60%}
-.chip b{font-size:12px}
+.chip{position:absolute;top:8px;left:8px;background:rgba(15,10,6,.72);color:#fff;border-radius:12px;padding:5px 10px;font-size:12px;pointer-events:none;max-width:62%;backdrop-filter:blur(2px)}
+.chip b{font-size:14px}
 .hpbar{height:5px;background:rgba(255,255,255,.22);border-radius:3px;margin-top:4px;overflow:hidden}
 .hpbar i{display:block;height:100%;width:100%;background:#ffd166;border-radius:3px}
-.boostchip{position:absolute;top:8px;right:22px;background:var(--ad);color:var(--ad-ink);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:800;pointer-events:none;display:none}
-.lockmsg{position:absolute;left:8px;right:22px;bottom:8px;background:rgba(20,16,12,.78);color:#ffe3b0;border-radius:10px;padding:6px 10px;font-size:12px;pointer-events:none;display:none;line-height:1.4}
-.hint{position:absolute;left:0;right:14px;bottom:44%;text-align:center;color:#fff;font-weight:800;font-size:15px;text-shadow:0 2px 6px rgba(0,0,0,.6);pointer-events:none;transition:opacity .6s}
-.adrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
-.adbtn{border:0;border-radius:12px;padding:8px 10px;background:var(--ad-soft);color:var(--ad);font-weight:800;font-size:13px;text-align:left;line-height:1.3;box-shadow:var(--shadow)}
-.adbtn small{display:block;font-weight:500;font-size:10px;opacity:.85}
-.adbtn:disabled{opacity:.55;cursor:default}
-.adbtn .tri{display:inline-block;width:0;height:0;border-left:8px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-right:5px;vertical-align:1px}
-.zukanbtn{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--panel);font-size:13px;font-weight:800;text-align:left;line-height:1.3}
-.zukanbtn small{display:block;font-weight:500;font-size:10px;color:var(--muted)}
-.tabs{display:flex;gap:4px;background:var(--panel2);padding:4px;border-radius:12px}
-.tabs button{flex:1;border:0;background:transparent;border-radius:9px;padding:7px 0;font-weight:800;font-size:13px;color:var(--muted);position:relative}
-.tabs button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
-.tabs .dot{position:absolute;top:5px;right:12px;width:7px;height:7px;border-radius:50%;background:var(--bad);display:none}
-.panel{margin-top:8px}
-.card{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:8px}
-.card .ic{flex:0 0 44px;height:44px;border-radius:10px;background:var(--panel2);display:grid;place-items:center}
-.card .body{flex:1;min-width:0}
-.card .nm{font-weight:800;font-size:14px}
-.card .nm span{font-weight:500;color:var(--muted);font-size:12px;margin-left:4px}
-.card .ds{font-size:11px;color:var(--muted)}
-.buy{flex:0 0 auto;border:0;border-radius:11px;background:var(--accent);color:var(--accent-ink);font-weight:800;padding:7px 10px;min-width:84px;font-size:12px;line-height:1.25;box-shadow:var(--shadow)}
-.buy small{display:block;font-size:10px;font-weight:500}
-.buy:disabled{background:var(--panel2);color:var(--muted);box-shadow:none;cursor:default}
-.buy.flash{animation:flash .25s}
-@keyframes flash{50%{transform:scale(1.06)}}
-.note{font-size:11px;color:var(--muted);margin:2px 2px 8px}
-.need{color:var(--bad);font-weight:800}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-.cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 4px;text-align:center;min-width:0;position:relative}
-.cell .nm{font-size:10px;font-weight:800;line-height:1.25;margin-top:2px;word-break:break-all}
-.cell .cnt{font-size:9px;color:var(--muted)}
-.cell.unk .nm{color:var(--muted);font-weight:500}
-.cell .rar{position:absolute;top:3px;right:5px;font-size:9px;color:var(--accent);font-weight:800}
-.cell.new{box-shadow:0 0 0 2px var(--accent)}
-.layerhead{font-size:12px;font-weight:800;margin:10px 2px 5px;display:flex;align-items:center;gap:6px}
-.layerhead i{width:12px;height:12px;border-radius:3px;display:inline-block}
-.foot{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted)}
-.foot button{border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:5px 9px;font-size:11px;color:var(--muted)}
-.toastwrap{position:fixed;left:0;right:0;top:52px;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:25;pointer-events:none;padding:0 16px}
-.toast{background:var(--panel);border:2px solid var(--accent);border-radius:14px;padding:8px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,.2);max-width:360px;width:100%;
-  animation:tin .35s ease-out both}
-.toast .t1{font-size:10px;color:var(--accent);font-weight:800}
-.toast .t2{font-size:14px;font-weight:800}
-.toast .t3{font-size:10px;color:var(--muted)}
+.boostchip{position:absolute;top:8px;right:22px;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff;border-radius:12px;padding:5px 10px;font-size:14px;font-weight:800;pointer-events:none;display:none;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+.goal{position:absolute;left:8px;right:22px;bottom:8px;background:rgba(15,10,6,.78);color:#ffe9c2;border-radius:12px;padding:6px 10px;font-size:12px;pointer-events:none;line-height:1.35}
+.goal b{color:#fff}
+.goal .need{color:#ff9b80}
+.goal .bar{height:6px;background:rgba(255,255,255,.18);border-radius:3px;margin-top:5px;overflow:hidden}
+.goal .bar i{display:block;height:100%;background:linear-gradient(90deg,#f6b85c,#ffd166);border-radius:3px;transition:width .3s}
+.goal.lock{background:rgba(70,20,12,.85)}
+.goal.lock .bar i{background:linear-gradient(90deg,#ff7b54,#ffb347)}
+.hint{position:absolute;left:0;right:14px;top:42%;text-align:center;color:#fff;font-weight:800;font-size:16px;text-shadow:0 2px 6px rgba(0,0,0,.7);pointer-events:none;transition:opacity .8s}
+.vein{position:absolute;width:72px;height:72px;margin:-36px 0 0 -36px;border:0;border-radius:50%;background:radial-gradient(circle,#fff6c4 0,#ffd166 35%,rgba(255,209,102,0) 70%);
+  color:#4a2f00;font-weight:800;font-size:12px;display:none;z-index:5;animation:veinp 1s ease-in-out infinite}
+@keyframes veinp{50%{transform:scale(1.12)}}
+.toastwrap{position:absolute;left:0;right:14px;top:50px;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:6;pointer-events:none;padding:0 10px}
+.toast{background:rgba(255,250,241,.96);color:#2b2118;border:2px solid var(--accent2);border-radius:14px;padding:5px 12px 5px 8px;display:flex;align-items:center;gap:8px;box-shadow:var(--lift);max-width:300px;animation:tin .35s ease-out both}
+.toast svg{width:32px;height:32px;flex:0 0 32px}
+.toast .t1{font-size:12px;color:#a35d08;font-weight:800;line-height:1.3}
+.toast .t2{font-size:14px;font-weight:800;line-height:1.3}
+.toast .t3{font-size:12px;color:#6f604f;line-height:1.3}
 .toast.out{animation:tout .4s ease-in both}
 @keyframes tin{from{transform:translateY(-14px) scale(.96);opacity:0}}
 @keyframes tout{to{transform:translateY(-10px);opacity:0}}
-.modal{position:fixed;inset:0;background:rgba(10,8,5,.55);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
-.modal.on{display:flex}
-.sheet{background:var(--panel);border-radius:18px;padding:18px 16px;max-width:360px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.35);animation:tin .3s ease-out both}
-.sheet h2{margin:0 0 4px;font-size:17px}
-.sheet .big{font-size:26px;font-weight:800;color:var(--accent);margin:6px 0}
-.sheet p{margin:4px 0;font-size:13px}
-.sheet .sub{font-size:11px;color:var(--muted)}
-.sheet .row{display:grid;gap:8px;margin-top:14px}
-.sheet .ok{border:0;border-radius:12px;padding:11px;font-weight:800;background:var(--panel2)}
-.sheet .x2{border:0;border-radius:12px;padding:11px;font-weight:800;background:var(--ad);color:var(--ad-ink)}
-.sheet .x2 small{display:block;font-weight:500;font-size:10px;opacity:.85}
-.finds{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.finds span{font-size:11px;background:var(--accent-soft);border-radius:8px;padding:2px 7px}
-@media (prefers-reduced-motion: reduce){
-  .toast,.sheet,.buy.flash{animation:none}
-  .hint{transition:none}
-}
-/* ---- v2 で足した部品 ---- */
-.sheet .x2:disabled{opacity:.45;cursor:default}
-html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-.genbadge{flex:0 0 auto;font-size:12px;font-weight:800;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:4px 10px;margin-top:6px}
-.tabs button{font-size:12px}
-.vein{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border:0;border-radius:50%;background:radial-gradient(circle,#fff6c4 0,#ffd166 35%,rgba(255,209,102,0) 70%);
-  color:#4a2f00;font-weight:800;font-size:12px;display:none;z-index:5;animation:veinp 1s ease-in-out infinite}
-@keyframes veinp{50%{transform:scale(1.12)}}
-.frag{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 2px 2px;font-size:12px}
-.frag b{font-size:13px}
-.mini{border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:5px 9px;font-size:12px;font-weight:800;color:var(--ink)}
+
+.adbar{flex:0 0 auto;padding:8px 12px 0}
+.adbtn{width:100%;border:0;border-radius:14px;padding:9px 12px;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;gap:10px;text-align:left;line-height:1.25;box-shadow:0 3px 0 rgba(40,30,110,.35)}
+.adbtn small{display:block;font-weight:500;font-size:12px;opacity:.92}
+.adbtn .play{flex:0 0 32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center}
+.adbtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(40,30,110,.35)}
+.adbtn:disabled{opacity:.6;cursor:default}
+
+.panelwrap{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 12px 12px;overscroll-behavior:contain}
+.tabs{flex:0 0 auto;display:flex;background:var(--panel);border-top:1px solid var(--line);padding:4px 6px calc(4px + env(safe-area-inset-bottom,0px))}
+.tabs button{flex:1;border:0;background:transparent;border-radius:12px;padding:5px 0 3px;font-weight:800;font-size:12px;color:var(--muted);position:relative;display:flex;flex-direction:column;align-items:center;gap:1px}
+.tabs button svg{width:24px;height:24px}
+.tabs button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+.tabs .dot{position:absolute;top:3px;right:calc(50% - 22px);min-width:9px;height:9px;border-radius:5px;background:var(--bad);display:none;box-shadow:0 0 0 2px var(--panel)}
+
+/* ---- 操作の欄 ---- */
+.phead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 2px 8px}
+.phead h2{margin:0;font-size:15px}
+.seg{display:inline-flex;background:var(--panel2);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:800;color:var(--muted);min-width:44px}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+.card{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:8px;box-shadow:var(--shadow)}
+.card .ic{flex:0 0 48px;height:48px;border-radius:12px;background:var(--panel2);display:grid;place-items:center}
+.card .body{flex:1;min-width:0}
+.card .nm{font-weight:800;font-size:15px}
+.card .nm span{font-weight:500;color:var(--muted);font-size:13px;margin-left:4px}
+.card .ds{font-size:12px;color:var(--muted);line-height:1.4}
+.card .ds b{color:var(--ink)}
+.card.pick{border:2px solid var(--accent2);background:linear-gradient(180deg,var(--panel),var(--accent-soft))}
+.card.pick .ic{flex-basis:56px;height:56px}
+.buy{flex:0 0 auto;border:0;border-radius:12px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:var(--accent-ink);font-weight:800;padding:7px 10px;min-width:92px;font-size:14px;line-height:1.25;box-shadow:0 3px 0 rgba(120,60,0,.35)}
+.buy small{display:block;font-size:12px;font-weight:500}
+.buy:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(120,60,0,.35)}
+.buy:disabled{background:var(--panel2);color:var(--muted);box-shadow:none;cursor:default;transform:none}
+.buy.flash{animation:flash .25s}
+@keyframes flash{50%{transform:scale(1.07)}}
+.mile{height:5px;background:var(--panel2);border-radius:3px;margin-top:5px;overflow:hidden}
+.mile i{display:block;height:100%;background:var(--accent2)}
+.note{font-size:12px;color:var(--muted);margin:2px 2px 8px}
+.need{color:var(--bad);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 2px;text-align:center;min-width:0;position:relative}
+.cell .nm{font-size:12px;font-weight:800;line-height:1.25;margin-top:2px;word-break:break-all}
+.cell .cnt{font-size:12px;color:var(--muted)}
+.cell.unk .nm{color:var(--muted);font-weight:500}
+.cell .rar{position:absolute;top:2px;right:4px;font-size:12px;color:var(--accent);font-weight:800}
+.cell.new{box-shadow:0 0 0 2px var(--accent2)}
+.cell.btn{cursor:pointer}
+.lsec{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px;box-shadow:var(--shadow)}
+.lsec.locked{opacity:.75}
+.layerhead{font-size:14px;font-weight:800;margin:0 2px 8px;display:flex;align-items:center;gap:6px}
+.layerhead i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.layerhead .pct{margin-left:auto;font-size:12px;color:var(--muted);font-weight:500}
+.frag{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 2px 2px;font-size:13px}
+.frag b{font-size:15px}
+.mini{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:800;color:var(--ink)}
 .mini:disabled{opacity:.5;cursor:default}
 .mini.acc{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.setl{font-size:11px;color:var(--muted);margin:4px 2px 0}
+.setl{font-size:12px;color:var(--muted);margin:6px 2px 0}
 .setl.on{color:var(--good);font-weight:800}
-.hintl{font-size:11px;color:var(--accent);margin:2px 2px 0}
-.sec{font-size:13px;font-weight:800;margin:14px 2px 6px}
-.hist{width:100%;border-collapse:collapse;font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.hintl{font-size:12px;color:var(--accent);margin:4px 2px 0}
+.sec{font-size:15px;font-weight:800;margin:16px 2px 8px}
+.hist{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .hist th,.hist td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
-.hist th{font-size:11px;color:var(--muted);font-weight:500}
+.hist th{font-size:12px;color:var(--muted);font-weight:500}
 .achs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-.ach{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-size:12px}
+.ach{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 9px;font-size:13px}
 .ach.done{border-color:var(--good);color:var(--good);font-weight:800}
 .ach.no{color:var(--muted)}
 .setrow{display:flex;flex-wrap:wrap;gap:6px}
 .creed{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
 .copt{border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px;text-align:left;font-size:12px;line-height:1.4}
-.copt b{display:block;font-size:14px}
+.copt b{display:block;font-size:15px}
 .copt .g{color:var(--good)} .copt .x{color:var(--bad)}
 .copt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
-.sheet.wide{max-width:420px;max-height:88vh;overflow:auto}
-.cardnote{font-size:12px;color:var(--muted);margin:2px 0}
-.big2{font-size:20px;font-weight:800;color:var(--accent)}
-.prog{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin-top:4px}
-.prog i{display:block;height:100%;background:var(--accent)}
-.cell .nm{font-size:11px}
-@media (prefers-reduced-motion: reduce){ .vein{animation:none} }
+.cardnote{font-size:13px;color:var(--muted);margin:2px 0}
+.big2{font-size:22px;font-weight:800;color:var(--accent)}
+.prog{height:7px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:6px}
+.prog i{display:block;height:100%;background:var(--accent2)}
+.finds{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.finds span{font-size:12px;background:var(--accent-soft);border-radius:8px;padding:2px 7px}
+
+/* ---- シート（おかえり・代替わり・設定・図鑑の1種） ---- */
+.modal{position:fixed;inset:0;background:rgba(10,8,5,.6);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+.modal.on{display:flex}
+.sheet{background:var(--panel);border-radius:20px;padding:18px 16px;max-width:380px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.35);animation:tin .3s ease-out both;max-height:88vh;overflow:auto}
+.sheet h2{margin:0 0 4px;font-size:18px}
+.sheet .big{font-size:28px;font-weight:800;color:var(--accent);margin:6px 0}
+.sheet p{margin:4px 0;font-size:14px}
+.sheet .sub{font-size:12px;color:var(--muted)}
+.sheet .row{display:grid;gap:8px;margin-top:14px}
+.sheet .ok{border:0;border-radius:12px;padding:12px;font-weight:800;background:var(--panel2)}
+.sheet .x2{border:0;border-radius:12px;padding:11px;font-weight:800;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff}
+.sheet .x2 small{display:block;font-weight:500;font-size:12px;opacity:.9}
+.sheet .x2:disabled{opacity:.45;cursor:default}
+.sheet.wide{max-width:420px}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:14px}
+.srow:last-child{border-bottom:0}
+.itembig{display:flex;gap:12px;align-items:center;margin:6px 0 4px}
+.itembig .ic{flex:0 0 72px;height:72px;border-radius:16px;background:var(--panel2);display:grid;place-items:center}
+
+/* ---- 起動画面 ---- */
+.title{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  background:radial-gradient(ellipse at 50% 35%,#4a3420 0,#1c140d 60%,#0d0906 100%);color:#fff4dc;text-align:center;padding:24px;transition:opacity .5s}
+.title.hide{opacity:0;pointer-events:none}
+.title .logo{width:132px;height:132px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5))}
+.title .co{font-size:14px;letter-spacing:.3em;color:#f6b85c;font-weight:800}
+.title h1{margin:0;font-size:36px;font-weight:800;letter-spacing:.06em;text-shadow:0 3px 0 #000}
+.title .go{margin-top:10px;border:0;border-radius:999px;padding:13px 42px;font-size:18px;font-weight:800;background:linear-gradient(180deg,#f6b85c,#c8740f);color:#2b1700;box-shadow:0 4px 0 #6b3d08}
+.title .go:active{transform:translateY(3px);box-shadow:0 1px 0 #6b3d08}
+.title .tip{font-size:13px;color:#d9c8ad;max-width:300px}
+@media (prefers-reduced-motion: reduce){
+  .toast,.sheet,.buy.flash,.vein{animation:none}
+  .hint,.title{transition:none}
+  .goal .bar i{transition:none}
+}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -159,52 +201,44 @@ html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset
 </head>
 <body>
 <div class="app">
-  <header>
-    <div>
-      <div class="brand"><b>つるはし社</b> の放置採掘</div>
-      <h1>つるはし採掘</h1>
+  <header class="hud">
+    <div class="who"><span class="brand">つるはし社</span><span class="gen" id="genBadge">初代</span></div>
+    <div class="ore" aria-label="鉱石">
+      <svg width="22" height="22" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 24 Q10 12 20 12 Q32 10 32 22 Q30 32 18 30 Q8 32 8 24Z" fill="#ffd166" stroke="#7a4d10" stroke-width="2"/><path d="M14 18 l4 -3 l3 3" stroke="#fff6c4" stroke-width="2" fill="none"/></svg>
+      <b id="sOre">0</b><small>鉱石</small>
     </div>
-    <div class="genbadge" id="genBadge">初代</div>
+    <button class="iconbtn" id="setBtn" type="button" aria-label="設定">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.4 7.4 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7.4 7.4 0 0 0 1.7-1l2.4 1 2-3.4zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+    </button>
   </header>
-
-  <div class="stats">
-    <div class="stat ore"><div class="k">鉱石</div><div class="v" id="sOre">0</div></div>
-    <div class="stat"><div class="k">深さ</div><div class="v" id="sDepth">0m</div></div>
-    <div class="stat"><div class="k">仲間の力／秒</div><div class="v" id="sDps">0</div></div>
-  </div>
+  <div class="substats"><span>深さ <b id="sDepth">0m</b>（最深 <span id="sBest">0m</span>）</span><span>仲間の力 <b id="sDps">0</b>／秒</span></div>
 
   <div class="stage" id="stage">
     <canvas id="cv" aria-label="地層の断面。仲間が掘り進める"></canvas>
     <div class="chip"><b id="cLayer">第1層 表土</b> <span id="cDepth"></span><div class="hpbar"><i id="cHp"></i></div></div>
     <div class="boostchip" id="boostChip">採掘×2 5:00</div>
-    <div class="lockmsg" id="lockMsg"></div>
-    <div class="hint" id="hint">仲間が掘ります。鉱石で強くしよう</div>
+    <div class="hint" id="hint">仲間が自動で掘ります</div>
+    <div class="goal" id="goal"><div id="goalTxt"></div><div class="bar"><i id="goalBar"></i></div></div>
+    <div class="toastwrap" id="toasts"></div>
     <button class="vein" id="vein" type="button" aria-label="鉱脈をたたく">鉱脈！</button>
   </div>
 
-  <div class="adrow">
-    <button class="adbtn" id="adBoost" type="button"></button>
-    <button class="zukanbtn" id="zukanJump" type="button">図鑑 <span id="zCount">0</span>/50<small id="zBonus">1種ごとに鉱石+5%</small></button>
-  </div>
+  <div class="adbar"><button class="adbtn" id="adBoost" type="button"></button></div>
 
-  <div class="tabs" role="tablist">
-    <button role="tab" aria-selected="true" data-tab="tool">道具<span class="dot" id="dotTool"></span></button>
-    <button role="tab" aria-selected="false" data-tab="crew">仲間<span class="dot" id="dotCrew"></span></button>
-    <button role="tab" aria-selected="false" data-tab="book">図鑑<span class="dot" id="dotBook"></span></button>
-    <button role="tab" aria-selected="false" data-tab="co">社<span class="dot" id="dotCo"></span></button>
-  </div>
-  <div class="panel" id="pTool"></div>
-  <div class="panel" id="pCrew" hidden></div>
-  <div class="panel" id="pBook" hidden></div>
-  <div class="panel" id="pCo" hidden></div>
+  <main class="panelwrap" id="panelwrap">
+    <div class="panel" id="pTool"></div>
+    <div class="panel" id="pCrew" hidden></div>
+    <div class="panel" id="pBook" hidden></div>
+    <div class="panel" id="pCo" hidden></div>
+  </main>
 
-  <div class="foot">
-    <span id="footName">試作品 ／ つるはし社</span>
-    <button type="button" id="devSkip" hidden>+1時間進める（試作用）</button>
-  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="tool"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M4 13 Q20 1 36 13 L34 16 Q20 7 6 16Z" fill="currentColor"/><path d="M18.5 9h3.5v29h-3.5z" fill="currentColor" opacity=".7"/></svg>道具<span class="dot" id="dotTool"></span></button>
+    <button role="tab" aria-selected="false" data-tab="crew"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="14" cy="13" r="6" fill="currentColor"/><circle cx="27" cy="15" r="5" fill="currentColor" opacity=".7"/><path d="M4 34q0-12 10-12t10 12z" fill="currentColor"/><path d="M20 34q1-10 7-10t9 10z" fill="currentColor" opacity=".7"/></svg>仲間<span class="dot" id="dotCrew"></span></button>
+    <button role="tab" aria-selected="false" data-tab="book"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 7h12q1 0 1 2v25q0-2-2-2H7z M33 7H21q-1 0-1 2v25q0-2 2-2h11z" fill="currentColor"/></svg>図鑑 <span id="zCount" style="font-weight:500">0</span><span class="dot" id="dotBook"></span></button>
+    <button role="tab" aria-selected="false" data-tab="co"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 34V16l14-9 14 9v18z" fill="currentColor"/><path d="M16 34v-9h8v9z" fill="var(--panel)"/></svg>社<span class="dot" id="dotCo"></span></button>
+  </nav>
 </div>
-
-<div class="toastwrap" id="toasts"></div>
 
 <div class="modal" id="offModal" role="dialog" aria-modal="true" aria-labelledby="offTitle">
   <div class="sheet">
@@ -229,6 +263,35 @@ html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset
       <button class="ok" id="rbCancel" type="button">やめておく</button>
     </div>
   </div>
+</div>
+
+<div class="modal" id="setModal" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+  <div class="sheet">
+    <h2 id="setTitle">設定</h2>
+    <div id="setBody"></div>
+    <div class="row"><button class="ok" id="setClose" type="button">閉じる</button></div>
+  </div>
+</div>
+
+<div class="modal" id="itemModal" role="dialog" aria-modal="true" aria-labelledby="itemTitle">
+  <div class="sheet">
+    <div id="itemBody"></div>
+    <div class="row"><button class="ok" id="itemClose" type="button">閉じる</button></div>
+  </div>
+</div>
+
+<div class="title" id="title">
+  <svg class="logo" viewBox="0 0 120 120" aria-hidden="true">
+    <circle cx="60" cy="60" r="56" fill="#2b1d10" stroke="#f6b85c" stroke-width="4"/>
+    <circle cx="60" cy="60" r="47" fill="none" stroke="#f6b85c" stroke-width="1.5" opacity=".5"/>
+    <path d="M22 50 Q60 16 98 50 L93 57 Q60 31 27 57Z" fill="#e4ebf2" stroke="#1c140d" stroke-width="2"/>
+    <rect x="55" y="38" width="10" height="62" rx="3" fill="#a56a32" stroke="#1c140d" stroke-width="2"/>
+    <path d="M40 92h40" stroke="#f6b85c" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div class="co">つるはし社</div>
+  <h1>つるはし採掘</h1>
+  <button class="go" id="titleGo" type="button">はじめる</button>
+  <div class="tip" id="titleTip">仲間を雇って、地の底まで掘り進めよう</div>
 </div>
 
 <script>
@@ -413,7 +476,7 @@ const fresh = () => ({
   boostUntil:0, boostLv:0, last:NOW(),
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0 },
-  sound:true, haptic:true, theme:'auto', notifAsked:false,
+  sound:true, haptic:true, theme:'auto', notifAsked:false, buyN:1,
 });
 function normalize(o){
   const S = Object.assign(fresh(), o || {});
@@ -627,6 +690,24 @@ function buyWorker(st, i){
   st.ore -= c; st.w[i]++;
   return true;
 }
+// まとめ買い：n 個ぶんの値段（等比の和）。want='max' は買えるだけ（買えないときは1個ぶんの値段）
+function bulk(c0, g, ore, want){
+  let n = want;
+  if (want === 'max') n = Math.max(1, Math.floor(Math.log(1 + ore * (g - 1) / c0) / Math.log(g)));
+  let cost = Math.ceil(c0 * (Math.pow(g, n) - 1) / (g - 1));
+  if (want === 'max' && n > 1 && cost > ore) { n--; cost = Math.ceil(c0 * (Math.pow(g, n) - 1) / (g - 1)); }
+  return { n, cost };
+}
+const pickBulk = (st, want) => bulk(pickCost(st, st.pick), 1.15, st.ore, want);
+const wkBulk = (st, i, want, M) => { M = M || mods(st); return bulk(wkCost(st, i, st.w[i], M), M.wkGrow, st.ore, want); };
+function buyPickN(st, want){ const b = pickBulk(st, want); if (st.ore < b.cost) return 0; st.ore -= b.cost; st.pick += b.n; return b.n; }
+function buyWorkerN(st, i, want){ const b = wkBulk(st, i, want); if (st.ore < b.cost) return 0; st.ore -= b.cost; st.w[i] += b.n; return b.n; }
+// 開いている間の鉱石の入り（毎秒）。「あと何秒で買えるか」に使う
+function oreRate(st){
+  const M = mods(st), lk = locked(st), d = lk ? st.depth - 1 : st.depth;
+  const r = crewDps(st, true, M) * boostMul(st) / hpOf(st, d, M) * oreOf(st, d, M);
+  return lk ? r * M.side : r * (1 + M.critP * (M.critX - 1));
+}
 function startBoost(st){
   const now = NOW();
   st.boostLv = boostOn(st) ? Math.min(BOOST_LV_MAX, (st.boostLv || 1) + 1) : 1;
@@ -790,7 +871,8 @@ window.tsuruAdResult = (ok, msg) => {
 window.tsuruSetApp = o => { if (!APP) return; for (const k in o) if (k !== 'msg') APP[k] = o[k]; if (o.msg) toast('お知らせ', o.msg); updateUI(true); if (tab === 'co') buildCo(); };
 window.tsuruPause = () => { try { save(); TStore.flush(); } catch (e) {} };
 window.tsuruResume = () => { checkAway(); };
-const adLabel = (main, sub) => adFree() ? `${main}<small>広告なしで受け取れます</small>` : APP ? `<span class="tri"></span>${main}<small>${sub}</small>` : `<span class="tri"></span>${main}<small>${sub}（試作は即効果）</small>`;
+const PLAY_IC = '<span class="play"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="#fff"/></svg></span>';
+const adLabel = (main, sub) => `${PLAY_IC}<span>${main}<small>${adFree() ? '広告なしで受け取れます' : sub}</small></span>`;
 
 // ================= 画面：数字 =================
 const $ = id => document.getElementById(id);
@@ -814,9 +896,10 @@ function fmtDur(sec){
 const genName = g => g === 1 ? '初代' : g + '代目';
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' })[c]);
 
-function pickIcon(l){
+function pickIcon(l, size){
   const c = PICK_TIER[tierOf(l)][1];
-  return `<svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><path d="M19 9h3.5v29H19z" fill="#8a5a2b"/><path d="${SHAPES.pick.split(' M')[0]}" fill="${c}" stroke="rgba(0,0,0,.35)" stroke-width="1.2"/></svg>`;
+  size = size || 34;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true"><path d="M19 9h3.5v29H19z" fill="#8a5a2b"/><path d="${SHAPES.pick.split(' M')[0]}" fill="${c}" stroke="rgba(0,0,0,.35)" stroke-width="1.2"/></svg>`;
 }
 const HAT = ['#f4f4f4', '#f08a24', '#d8344a', '#6f7b8a', '#58b7c9', '#c98a3a', '#e0b23a'];
 function crewIcon(i){
@@ -829,54 +912,77 @@ function crewIcon(i){
 }
 
 // 道具・仲間のパネル
+const segHtml = () => `<div class="seg" role="group" aria-label="まとめて買う数">${[[1, '×1'], [10, '×10'], ['max', '最大']].map(([v, l]) => `<button type="button" data-bn="${v}" aria-pressed="${S.buyN === v}">${l}</button>`).join('')}</div>`;
+function bindSeg(root){
+  root.querySelectorAll('[data-bn]').forEach(b => b.addEventListener('click', () => {
+    S.buyN = b.dataset.bn === 'max' ? 'max' : +b.dataset.bn; sfx('ui');
+    document.querySelectorAll('[data-bn]').forEach(x => x.setAttribute('aria-pressed', String((x.dataset.bn === 'max' ? 'max' : +x.dataset.bn) === S.buyN)));
+    updateUI(true); save();
+  }));
+}
 function buildPanels(){
   $('pTool').innerHTML = `
-    <div class="card">
+    <div class="phead"><h2>つるはし</h2>${segHtml()}</div>
+    <div class="card pick">
       <div class="ic" id="pickIc"></div>
-      <div class="body"><div class="nm" id="pickNm"></div><div class="ds" id="pickDs"></div></div>
+      <div class="body"><div class="nm" id="pickNm"></div><div class="ds" id="pickDs"></div><div class="mile"><i id="pickMile"></i></div></div>
       <button class="buy" id="pickBuy" type="button"></button>
     </div>
     <div class="note" id="pickNote"></div>`;
   $('pickBuy').addEventListener('click', onBuyPick);
-  $('pCrew').innerHTML = WK.map((w, i) => `
+  bindSeg($('pTool'));
+  $('pCrew').innerHTML = `<div class="phead"><h2>仲間</h2>${segHtml()}</div>` + WK.map((w, i) => `
     <div class="card" id="wC${i}">
       <div class="ic">${crewIcon(i)}</div>
-      <div class="body"><div class="nm">${w.name}<span id="wN${i}"></span></div><div class="ds">${w.desc}／1人 毎秒${fmt(w.dps)}</div></div>
+      <div class="body"><div class="nm">${w.name}<span id="wN${i}"></span></div><div class="ds" id="wD${i}"></div></div>
       <button class="buy" id="wB${i}" type="button"></button>
     </div>`).join('') + `<div class="note" id="crewNote"></div>`;
   WK.forEach((w, i) => $('wB' + i).addEventListener('click', () => onBuyWorker(i)));
+  bindSeg($('pCrew'));
+}
+// 足りないとき「あと何秒」
+function waitText(cost){
+  const r = oreRate(S);
+  if (r <= 0) return '仲間を雇うと貯まる';
+  const sec = (cost - S.ore) / r;
+  return sec > 86400 * 2 ? 'まだ遠い' : 'あと' + fmtDur(Math.max(1, sec));
+}
+function buyLabel(word, b){
+  const n = b.n > 1 ? ` +${b.n}` : '';
+  return S.ore >= b.cost ? `${word}${n}<small>${fmt(b.cost)} 鉱石</small>` : `${word}${n}<small>${fmt(b.cost)}</small><small>${waitText(b.cost)}</small>`;
 }
 
 // 図鑑
 function buildBook(){
   const M = mods(S);
-  let h = `<div class="note">1種そろうごとに鉱石が${Math.round(M.book * 100)}%ずつ増えます。同じ物はその層の「かけら」になり、売るか、鑑定でまだ見ていない物と換えられます。図鑑は代替わりしても残ります。</div>`;
+  let h = `<div class="phead"><h2>図鑑 ${speciesCountOf(S)}/${ITEMS.length}</h2><span class="note" style="margin:0">鉱石 +${Math.round(speciesCountOf(S) * M.book * 100)}%</span></div>
+    <div class="note">1種ごとに鉱石が${Math.round(M.book * 100)}%増えます。同じ物はその層の「かけら」になり、売るか、鑑定でまだ見ていない物と換えられます。図鑑は代替わりしても残ります。</div>`;
   const done = setsDone(S);
   for (let L = 0; L < NLAYER; L++) {
     const reached = S.best >= L * LAYER_LEN;
-    const its = itemsOf(L);
-    h += `<div class="layerhead"><i style="background:${LAYERS[L].block}"></i>第${L + 1}層 ${reached ? LAYERS[L].name : '？？？'}<span style="color:var(--muted);font-weight:500">（${L * LAYER_LEN}m〜）</span></div><div class="grid" style="grid-template-columns:repeat(5,minmax(0,1fr))">`;
+    const its = itemsOf(L), got = its.filter(it => S.found[it.id]).length;
+    if (!reached) { h += `<div class="lsec locked"><div class="layerhead" style="margin:0"><i style="background:#555"></i>第${L + 1}層 ？？？<span class="pct">${L * LAYER_LEN}m に着くと分かる</span></div></div>`; continue; }
+    h += `<div class="lsec"><div class="layerhead"><i style="background:${LAYERS[L].block}"></i>第${L + 1}層 ${LAYERS[L].name}<span class="pct">${got}/5${done.includes(L) ? ' ✓' : ''}</span></div><div class="grid">`;
     for (const it of its) {
       const n = S.found[it.id] || 0;
       const isNew = n && !S.seen[it.id];
       h += n
-        ? `<div class="cell${isNew ? ' new' : ''}" title="${esc(it.desc)}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 30)}<div class="nm">${it.name}</div><div class="cnt">${n}個</div></div>`
-        : `<div class="cell unk"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 30, true)}<div class="nm">？？？</div><div class="cnt">&nbsp;</div></div>`;
+        ? `<button type="button" class="cell btn${isNew ? ' new' : ''}" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 32)}<div class="nm">${it.name}</div><div class="cnt">${n}個</div></button>`
+        : `<button type="button" class="cell unk btn" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 32, true)}<div class="nm">？？？</div><div class="cnt">&nbsp;</div></button>`;
     }
     h += `</div>`;
-    if (reached) {
-      const ac = appraiseCost(S, L), f = S.frag[L];
-      h += `<div class="frag">かけら <b>${f}</b>
-        <button class="mini" type="button" data-sell="${L}" ${f ? '' : 'disabled'}>1つ売る +${fmt(fragPrice(S, L))}</button>
-        ${ac != null ? `<button class="mini acc" type="button" data-appr="${L}" ${f >= ac ? '' : 'disabled'}>鑑定する（かけら${ac}）</button>` : ''}</div>`;
-      const lit = its.find(it => it.r === 'l');
-      if (!S.found[lit.id]) h += hintShown(S, L)
-        ? `<div class="hintl">手がかり：★★は ${L * LAYER_LEN + LAYER_LEN - 8}〜${(L + 1) * LAYER_LEN}m（層の終わり近く）でだけ出る</div>`
-        : `<div class="hintl" style="color:var(--muted)">この層の★を2つそろえると、★★の手がかりが分かる</div>`;
-    }
-    h += `<div class="setl${done.includes(L) ? ' on' : ''}">${done.includes(L) ? '✓ ' : ''}5種そろうと：${SETS[L].label}</div>`;
+    const ac = appraiseCost(S, L), f = S.frag[L];
+    h += `<div class="frag">かけら <b>${f}</b>
+      <button class="mini" type="button" data-sell="${L}" ${f ? '' : 'disabled'}>1つ売る +${fmt(fragPrice(S, L))}</button>
+      ${ac != null ? `<button class="mini acc" type="button" data-appr="${L}" ${f >= ac ? '' : 'disabled'}>鑑定（かけら${ac}）</button>` : ''}</div>`;
+    const lit = its.find(it => it.r === 'l');
+    if (!S.found[lit.id]) h += hintShown(S, L)
+      ? `<div class="hintl">手がかり：★★は ${L * LAYER_LEN + LAYER_LEN - 8}〜${(L + 1) * LAYER_LEN}m（層の終わり近く）でだけ出る</div>`
+      : `<div class="hintl" style="color:var(--muted)">この層の★を2つそろえると、★★の手がかりが分かる</div>`;
+    h += `<div class="setl${done.includes(L) ? ' on' : ''}">${done.includes(L) ? '✓ そろった：' : '5種そろうと：'}${SETS[L].label}</div></div>`;
   }
   $('pBook').innerHTML = h;
+  $('pBook').querySelectorAll('[data-item]').forEach(b => b.addEventListener('click', () => openItem(b.dataset.item)));
   $('pBook').querySelectorAll('[data-sell]').forEach(b => b.addEventListener('click', () => {
     const L = +b.dataset.sell, g = sellFrag(S, L);
     if (g) { sfx('buy'); floatText(cx(), rowY(S.depth) - 30, '+' + fmt(g), '#ffd166', 18); buildBook(); updateUI(); save(); }
@@ -887,8 +993,21 @@ function buildBook(){
     if (it) { afterFind(before); buildBook(); updateUI(); save(); }
   }));
 }
+// 図鑑の1種を大きく見る
+function openItem(id){
+  const it = ITEM_BY_ID[id], n = S.found[id] || 0, L = it.L;
+  const where = it.r === 'l' ? `第${L + 1}層の終わり近く（${L * LAYER_LEN + LAYER_LEN - 8}〜${(L + 1) * LAYER_LEN}m）でだけ出る` : `第${L + 1}層（${L * LAYER_LEN}〜${(L + 1) * LAYER_LEN}m）で出る。宝の部屋や鑑定でも`;
+  $('itemBody').innerHTML = `<div class="itembig"><div class="ic">${iconSvg(it, 60, !n)}</div><div>
+      <div class="sub">第${L + 1}層 ${LAYERS[L].name}　${RAR[it.r].label || '普通'}</div>
+      <h2 id="itemTitle">${n ? it.name : '？？？'}</h2>
+      <div class="sub">${n ? `${n}個 見つけた` : 'まだ見つけていない'}</div></div></div>
+    <p>${n ? esc(it.desc) : (it.r === 'l' && !hintShown(S, L) ? 'この層の★を2つそろえると手がかりが分かる。' : where)}</p>
+    ${n ? `<p class="sub">${where}</p>` : ''}`;
+  $('itemModal').classList.add('on'); sfx('ui');
+}
+$('itemClose').addEventListener('click', () => $('itemModal').classList.remove('on'));
 
-// 社（代替わり・社訓・社史・実績・設定）
+// 社（代替わり・社訓・社史・実績）
 let resetArm = 0;
 function buildCo(){
   const g = fameGain(S), can = canRebirth(S);
@@ -918,35 +1037,42 @@ function buildCo(){
   const na = Object.keys(S.ach).length;
   h += `<div class="sec">実績 ${na}/${ACH.length}</div><div class="achs">` +
     ACH.map(a => `<div class="ach ${S.ach[a.id] ? 'done' : 'no'}">${S.ach[a.id] ? '✓ ' : ''}${a.n}</div>`).join('') + `</div>`;
-  // 設定
-  h += `<div class="sec">設定</div><div class="setrow">
-    <button class="mini" type="button" id="soundBtn">音：${S.sound ? 'あり' : 'なし'}</button>
-    <button class="mini" type="button" id="hapBtn">振動：${S.haptic ? 'あり' : 'なし'}</button>
-    <button class="mini" type="button" id="themeBtn">表示：${({ auto:'自動', light:'明るい', dark:'暗い' })[S.theme]}</button>
-  </div>`;
-  if (APP) h += `<div class="sec">広告</div><div class="setrow">
-    ${APP.adFree ? '<span class="note">広告を消しています。動画を見ずに効果を受け取れます。</span>' : `<button class="mini acc" type="button" id="buyBtn">広告を消す${APP.price ? '（' + esc(APP.price) + '）' : ''}</button>`}
-    <button class="mini" type="button" id="restoreBtn">購入を復元</button></div>`;
-  h += `<div class="sec">記録</div><div class="setrow"><button class="mini" type="button" id="resetBtn">記録をすべて消す</button></div>`;
-  if (APP && APP.credits) h += `<div class="note" style="margin-top:10px">${esc(APP.credits)}</div>`;
   $('pCo').innerHTML = h;
   if ($('rbOpen')) $('rbOpen').addEventListener('click', openRebirth);
-  $('soundBtn').addEventListener('click', () => { S.sound = !S.sound; save(); sfx('ui'); buildCo(); });
-  $('hapBtn').addEventListener('click', () => { S.haptic = !S.haptic; save(); haptic('light'); buildCo(); });
-  $('themeBtn').addEventListener('click', () => { S.theme = ({ auto:'light', light:'dark', dark:'auto' })[S.theme]; applyTheme(); save(); buildCo(); });
+}
+
+// 設定（右上の歯車）
+function buildSettings(){
+  const onoff = v => v ? 'あり' : 'なし';
+  let h = `<div class="srow"><span>効果音</span><button class="mini" type="button" id="soundBtn">${onoff(S.sound)}</button></div>
+    <div class="srow"><span>振動</span><button class="mini" type="button" id="hapBtn">${onoff(S.haptic)}</button></div>
+    <div class="srow"><span>表示</span><button class="mini" type="button" id="themeBtn">${({ auto:'端末に合わせる', light:'明るい', dark:'暗い' })[S.theme]}</button></div>`;
+  if (APP) h += `<div class="srow"><span>広告</span>${APP.adFree ? '<span class="note" style="margin:0">消しています</span>' : `<button class="mini acc" type="button" id="buyBtn">広告を消す${APP.price ? '（' + esc(APP.price) + '）' : ''}</button>`}</div>
+    <div class="srow"><span>購入</span><button class="mini" type="button" id="restoreBtn">購入を復元</button></div>`;
+  else h += `<div class="srow"><span>試作用</span><button class="mini" type="button" id="devSkip">1時間進める</button></div>`;
+  h += `<div class="srow"><span>記録</span><button class="mini" type="button" id="resetBtn">すべて消す</button></div>`;
+  h += `<p class="sub" style="margin-top:10px">つるはし社${APP && APP.credits ? '<br>' + esc(APP.credits) : '　試作 v2'}</p>`;
+  $('setBody').innerHTML = h;
+  $('soundBtn').addEventListener('click', () => { S.sound = !S.sound; save(); sfx('ui'); buildSettings(); });
+  $('hapBtn').addEventListener('click', () => { S.haptic = !S.haptic; save(); haptic('light'); buildSettings(); });
+  $('themeBtn').addEventListener('click', () => { S.theme = ({ auto:'light', light:'dark', dark:'auto' })[S.theme]; applyTheme(); save(); buildSettings(); });
   if ($('buyBtn')) $('buyBtn').addEventListener('click', () => appPost({ type:'buy' }));
   if ($('restoreBtn')) $('restoreBtn').addEventListener('click', () => appPost({ type:'restore' }));
+  if ($('devSkip')) $('devSkip').addEventListener('click', () => { if (pendingAway) return; $('setModal').classList.remove('on'); S.last = NOW() - 3600e3; showAway(3600, false, true); });
   $('resetBtn').addEventListener('click', e => {
     if (Date.now() - resetArm < 3000) {
       TStore.set(BAK, JSON.stringify(S));
       const keep = { sound:S.sound, haptic:S.haptic, theme:S.theme };
       S = Object.assign(fresh(), keep); camY = -4; parts.length = 0; floats.length = 0; resetArm = 0;
+      $('setModal').classList.remove('on');
       buildPanels(); setTab('tool'); save(); setTimeout(() => banner(0), 300); return;
     }
-    resetArm = Date.now(); e.target.textContent = 'もう一度押すと、代替わりも図鑑も消えます';
-    setTimeout(() => { if (Date.now() - resetArm >= 3000 && $('resetBtn')) $('resetBtn').textContent = '記録をすべて消す'; }, 3100);
+    resetArm = Date.now(); e.target.textContent = 'もう一度押すと消えます';
+    setTimeout(() => { if (Date.now() - resetArm >= 3000 && $('resetBtn')) $('resetBtn').textContent = 'すべて消す'; }, 3100);
   });
 }
+$('setBtn').addEventListener('click', () => { buildSettings(); $('setModal').classList.add('on'); sfx('ui'); });
+$('setClose').addEventListener('click', () => $('setModal').classList.remove('on'));
 
 let tab = 'tool';
 function setTab(t){
@@ -955,10 +1081,10 @@ function setTab(t){
   $('pTool').hidden = t !== 'tool'; $('pCrew').hidden = t !== 'crew'; $('pBook').hidden = t !== 'book'; $('pCo').hidden = t !== 'co';
   if (t === 'book') { buildBook(); ITEMS.forEach(it => { if (S.found[it.id]) S.seen[it.id] = 1; }); }
   if (t === 'co') { buildCo(); coSeen = Object.keys(S.ach).length; }
+  $('panelwrap').scrollTop = 0;
   updateUI(true);
 }
 document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => { setTab(b.dataset.tab); sfx('ui'); }));
-$('zukanJump').addEventListener('click', () => { setTab('book'); $('pBook').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); });
 
 function nextReq(){
   const nextBed = (Math.floor(S.depth / LAYER_LEN) + (isBed(S.depth) ? 0 : 1)) * LAYER_LEN;
@@ -971,78 +1097,99 @@ function updateUI(force){
   const M = mods(S);
   $('sOre').textContent = fmt(S.ore);
   $('sDepth').textContent = S.depth + 'm';
+  $('sBest').textContent = S.best + 'm';
   $('sDps').textContent = fmt(crewDps(S, true, M) * boostMul(S));
-  $('genBadge').textContent = genName(S.gen) + (S.fame ? `・名声${fmt(S.fame)}` : '');
+  $('genBadge').textContent = genName(S.gen) + '社長' + (S.fame ? `・名声${fmt(S.fame)}` : '');
   const li = layerIdxForDepth(S.depth);
   $('cLayer').textContent = isBed(S.depth) ? '岩盤' : isRoom(S.depth) && !S.room[S.depth] ? '宝の部屋' : `第${li + 1}層 ${LAYERS[li].name}`;
   $('cDepth').textContent = S.depth + 'm';
   $('cHp').style.width = Math.max(0, 100 - S.dmg / hpOf(S, S.depth, M) * 100).toFixed(1) + '%';
+  updateGoal();
   // つるはし
-  const l = S.pick, c = pickCost(S, l), tier = PICK_TIER[tierOf(l)];
-  $('pickIc').innerHTML = pickIcon(l);
+  const l = S.pick, tier = PICK_TIER[tierOf(l)], pb = pickBulk(S, S.buyN);
+  $('pickIc').innerHTML = pickIcon(l, 46);
   $('pickNm').innerHTML = `${tier[0]}<span>Lv${l}</span>`;
   const nextMile = (Math.floor(l / 10) + 1) * 10;
-  $('pickDs').textContent = `仲間の力 ×${pickBoost(S, M).toFixed(2)}（Lv${nextMile}でさらに×${PK_B}）`;
-  $('pickBuy').innerHTML = `強くする<small>${fmt(c)} 鉱石</small>`;
-  $('pickBuy').disabled = S.ore < c;
-  const nr = nextReq();
-  $('pickNote').innerHTML = nr
-    ? `次の岩盤（${nr.at}m）を割るには <b class="${S.pick < nr.lv ? 'need' : ''}">Lv${nr.lv}</b> が必要${S.pick >= nr.lv ? '（足りています）' : ''}`
-    : '岩盤はもうありません。どこまでも掘り進めます。';
-  $('dotTool').style.display = S.ore >= c ? 'block' : 'none';
+  $('pickDs').innerHTML = `仲間の力 <b>×${pickBoost(S, M).toFixed(2)}</b>　Lv${nextMile}で さらに×${PK_B}`;
+  $('pickMile').style.width = (l % 10 * 10) + '%';
+  $('pickBuy').innerHTML = buyLabel('強くする', pb);
+  $('pickBuy').disabled = S.ore < pb.cost;
+  $('pickNote').innerHTML = nextMile / 10 < PICK_TIER.length && tierOf(nextMile) !== tierOf(l) ? `Lv${nextMile}で「${PICK_TIER[tierOf(nextMile)][0]}」に進化して、頭の色が変わります。` : `Lv${nextMile}で力がさらに×${PK_B}。`;
+  $('dotTool').style.display = S.ore >= pickCost(S, l) ? 'block' : 'none';
   let anyCrew = false;
+  const pbM = pickBoost(S, M) * M.crew * M.crewOn * CREW_K, all = crewDps(S, true, M) || 1;
   WK.forEach((w, i) => {
-    const cc = wkCost(S, i, S.w[i], M);
+    const b = wkBulk(S, i, S.buyN, M);
     // まだ手の届かない仲間は、一つ前を雇うまで伏せる
     $('wC' + i).style.display = i === 0 || S.w[i] || S.w[i - 1] ? '' : 'none';
     $('wN' + i).textContent = S.w[i] ? `${S.w[i]}人` : '';
-    const b = $('wB' + i); b.innerHTML = `雇う<small>${fmt(cc)} 鉱石</small>`; b.disabled = S.ore < cc;
-    if (S.ore >= cc) anyCrew = true;
+    const per = w.dps * (i < HUMAN ? M.human : M.machine) * pbM;
+    $('wD' + i).innerHTML = `${w.desc}<br>1人 毎秒 <b>${fmt(per)}</b>${S.w[i] ? `　全体の${Math.round(per * S.w[i] / all * 100)}%` : ''}`;
+    const bt = $('wB' + i); bt.innerHTML = buyLabel('雇う', b); bt.disabled = S.ore < b.cost;
+    if (S.ore >= wkCost(S, i, S.w[i], M) && $('wC' + i).style.display !== 'none') anyCrew = true;
   });
   $('crewNote').textContent = `仲間は画面を閉じている間も掘り続けます（最大${M.off}時間）。`;
   $('dotCrew').style.display = anyCrew ? 'block' : 'none';
   const sc = speciesCountOf(S);
-  $('zCount').textContent = sc;
-  $('zBonus').textContent = `鉱石 +${Math.round(sc * M.book * 100)}%（1種ごとに+${Math.round(M.book * 100)}%）`;
+  $('zCount').textContent = `${sc}/${ITEMS.length}`;
   $('dotBook').style.display = ITEMS.some(it => S.found[it.id] && !S.seen[it.id]) || LAYERS.some((x, L) => { const a = appraiseCost(S, L); return a != null && S.frag[L] >= a; }) ? 'block' : 'none';
   const fk = S.frag.join(',');
   if (tab === 'book' && (force || lastBook !== sc || lastFrag !== fk)) buildBook();
   lastBook = sc; lastFrag = fk;
   $('dotCo').style.display = canRebirth(S) && fameGain(S) >= Math.max(1, S.fame * 0.5) || Object.keys(S.ach).length > coSeen ? 'block' : 'none';
-  // 岩盤
-  const lm = $('lockMsg');
-  if (locked(S)) {
-    lm.style.display = 'block';
-    lm.innerHTML = `<b>岩盤！</b> つるはし <b>Lv${reqAt(S.depth)}</b> で割れる（今 Lv${S.pick}）<br>それまで仲間は横掘りで鉱石を集めています`;
-  } else lm.style.display = 'none';
   // 広告
   const bc = $('boostChip'), ab = $('adBoost');
   if (boostOn(S)) {
     const r = Math.ceil((S.boostUntil - NOW()) / 1000);
-    bc.style.display = 'block'; bc.textContent = `採掘×${boostMul(S)} ${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`;
+    bc.style.display = 'block'; bc.textContent = `採掘×${boostMul(S)}　${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`;
   } else bc.style.display = 'none';
   const cur = boostMul(S), nx = boostNext(S);
   ab.disabled = !!pendingAd;
-  ab.innerHTML = pendingAd ? '<span class="tri"></span>動画を読み込んでいます…<small>しばらくお待ちください</small>'
-    : !boostOn(S) ? adLabel('採掘×2を5分', '続けて見るほど倍率が上がる（×5まで）')
-    : nx > cur ? adLabel(`採掘×${nx}に上げる`, `いま×${cur}。見ると残りが5分に戻る`)
+  ab.innerHTML = pendingAd ? `${PLAY_IC}<span>動画を読み込んでいます…<small>しばらくお待ちください</small></span>`
+    : !boostOn(S) ? adLabel('採掘×2を5分', '動画を見るたびに倍率アップ（×5まで）')
+    : nx > cur ? adLabel(`採掘×${nx}に上げる`, `いま×${cur}・残りも5分に戻る`)
     : adLabel(`採掘×${cur}を5分に戻す`, '最大の×5です');
+}
+// 採掘の絵の下の帯：次の目標
+function updateGoal(){
+  const g = $('goal'), nr = nextReq(), lk = locked(S);
+  g.classList.toggle('lock', lk);
+  let txt, p;
+  if (lk) {
+    const req = reqAt(S.depth);
+    txt = `<b>岩盤！</b> つるはし <span class="need">Lv${req}</span> で割れる（あと${req - S.pick}Lv）・横掘り中`;
+    p = S.pick / req;
+  } else if (nr) {
+    const start = (nr.k - 1) * LAYER_LEN;
+    txt = `次の岩盤 <b>${nr.at}m</b> まで${nr.at - S.depth}m・必要 <b class="${S.pick < nr.lv ? 'need' : ''}">Lv${nr.lv}</b>${S.pick >= nr.lv ? ' ✓' : `（いま${S.pick}）`}`;
+    p = (S.depth - start) / LAYER_LEN;
+  } else {
+    txt = canRebirth(S) ? `岩盤はもうありません。深く掘るほど代替わりの名声が増えます（いま +${fmt(fameGain(S))}）` : '岩盤はもうありません。どこまでも掘り進めます';
+    p = (S.depth % LAYER_LEN) / LAYER_LEN;
+  }
+  if (txt !== g._t) { $('goalTxt').innerHTML = txt; g._t = txt; }
+  $('goalBar').style.width = (Math.max(0, Math.min(1, p)) * 100).toFixed(1) + '%';
 }
 
 function onBuyPick(){
-  if (!buyPick(S)) return;
-  const tierUp = S.pick % 10 === 0;
+  const before = S.pick, n = buyPickN(S, S.buyN);
+  if (!n) return;
+  const tierUp = Math.floor(S.pick / 10) > Math.floor(before / 10);
   sfx(tierUp ? 'tier' : 'buy'); haptic(tierUp ? 'success' : 'light');
-  flash($('pickBuy'));
-  if (tierUp && tierOf(S.pick) === S.pick / 10) { toast('つるはしが進化', PICK_TIER[tierOf(S.pick)][0], `仲間の力 ×${PK_B}（合わせて ×${pickBoost(S).toFixed(2)}）`, pickIcon(S.pick)); fxRing(); }
-  else if (tierUp) { toast('つるはしの節目', `Lv${S.pick}`, `仲間の力 ×${PK_B}（合わせて ×${pickBoost(S).toFixed(2)}）`, pickIcon(S.pick)); fxRing(); }
-  if (isBed(S.depth) && S.pick === reqAt(S.depth)) floatText(cx(), rowY(S.depth) + 16, '割れる！', '#ffd166', 22);
+  flash($('pickBuy')); bossGlow = 0;
+  if (tierUp) {
+    const m = Math.floor(S.pick / 10) * 10, evo = tierOf(m) !== tierOf(before);
+    toast(evo ? 'つるはしが進化' : 'つるはしの節目', evo ? PICK_TIER[tierOf(S.pick)][0] : `Lv${m}`, `仲間の力 ×${pickBoost(S).toFixed(2)}`, pickIcon(S.pick, 40));
+    fxRing(); if (evo) { evoT = 0; sparks(cx(), rowY(S.depth) - 30, reduced ? 6 : 24); }
+  }
+  if (isBed(S.depth) && before < reqAt(S.depth) && S.pick >= reqAt(S.depth)) floatText(cx(), rowY(S.depth) + 16, '割れる！', '#ffd166', 24);
   updateUI(); save();
 }
 function onBuyWorker(i){
-  if (!buyWorker(S, i)) return;
+  const before = S.w[i], n = buyWorkerN(S, i, S.buyN);
+  if (!n) return;
   sfx('buy'); haptic('light'); flash($('wB' + i));
-  if (S.w[i] === 1) toast('仲間が来た', WK[i].name, WK[i].desc, crewIcon(i));
+  if (!before) toast('仲間が来た', WK[i].name, WK[i].desc, crewIcon(i));
   updateUI(); save();
 }
 function flash(el){ if (reduced) return; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
@@ -1078,9 +1225,9 @@ function afterFind(setsBefore){
 }
 
 // ================= おかえり =================
-let pendingAway = null;
+let pendingAway = null, titleOpen = true;
 function checkAway(){
-  if (pendingAway || rbOpen) return;
+  if (pendingAway || rbOpen || titleOpen) return;
   const a = awaySeconds(S, NOW());
   if (a.raw < 0) { S.last = NOW(); return; }      // 時計が戻っていた
   if (a.raw > 60) showAway(a.sec, a.capped, false);
@@ -1135,7 +1282,6 @@ $('offX2').addEventListener('click', () => {
   // 動画を見ている間に閉じられても、留守の分は失わない（受け取りは見終えたときに2倍で）
   withAd('away', () => { if (pendingAway === r) claimAway(2); });
 });
-$('devSkip').addEventListener('click', () => { if (pendingAway) return; S.last = NOW() - 3600e3; showAway(3600, false, true); });
 $('adBoost').addEventListener('click', () => {
   if (pendingAd) return;
   withAd('boost', () => {
@@ -1249,7 +1395,7 @@ const MAP_W = 14;
 const baseSW = () => Math.min(W - MAP_W - 56, 270);
 const shaftW = () => layoutCrew().sw;
 const cx = () => (VW - MAP_W / Z) / 2;
-const baseY = () => VH * (0.6 + 0.1 * (1 - Z) / (1 - ZMIN));   // 引いたぶん床を下げて、空の竪坑を見せすぎない
+const baseY = () => VH * 0.66;   // 床は少し下め。上に掘ってきた竪坑、下にこれから掘る地層が見える
 const rowY = m => baseY() + (m - camY) * R;
 function hash(n){ n = (n ^ 61) ^ (n >>> 16); n = n + (n << 3); n = n ^ (n >>> 4); n = Math.imul(n, 0x27d4eb2d); n = n ^ (n >>> 15); return n >>> 0; }
 function shade(hex, k){
@@ -1260,7 +1406,9 @@ function shade(hex, k){
 
 // 演出の状態
 const parts = [], floats = [], pops = [];
-let swingT = 9, shakeT = 0, blockHitT = 9, bannerT = 9, bannerL = 0, ringT = 9, clankT = 9;
+let swingT = 9, shakeT = 0, blockHitT = 9, bannerT = 9, bannerL = 0, ringT = 9, clankT = 9, flashT = 9, bossGlow = 9, evoT = 9, lastBreakSfx = 0;
+// 竪坑に舞うほこり（画面に対する位置で持つ）
+const motes = Array.from({ length: 22 }, (_, i) => ({ x: (hash(i * 13 + 1) % 1000) / 1000, y: (hash(i * 29 + 7) % 1000) / 1000, s: 0.6 + (hash(i * 7) % 10) / 10, v: 0.004 + (hash(i * 3 + 2) % 10) / 1500 }));
 // 仲間は雇った人数だけ描く（2026-10-03 ユーザー指示「×でやるのではなく人をちゃんと増やす」）。
 // 増えたら竪坑に足場を段々に組んで上の段へ並べる。一度に描くのは CREW_CAP 人まで（種類ごとの割合は保つ）
 const CREW_PER = [0.95, 0.75, 1.3, 0.12, 0.5, 0.9, 0.2];
@@ -1303,10 +1451,13 @@ function layoutCrew(){
       if (!fits(side)) { side = -side; if (!fits(side)) break; }
       const x = side > 0 ? rc + w / 2 : lc - w / 2;
       if (side > 0) rc += w; else lc -= w;
-      figs.push({ i: f.i, dx: x, row, sc: big ? sc * 1.1 : sc, face: x < 0 ? 1 : -1, ph: (hash(f.i * 31 + f.k * 977) % 1000) / 1000 * (CREW_PER[f.i] + 0.25), lt: 0 });
+      figs.push({ i: f.i, key: f.i + '-' + f.k, dx: x, row, sc: big ? sc * 1.1 : sc, face: x < 0 ? 1 : -1, ph: (hash(f.i * 31 + f.k * 977) % 1000) / 1000 * (CREW_PER[f.i] + 0.25), lt: 0 });
       side = -side; q++;
     }
   }
+  // 新しく来た人は上から降りてくる（前の並びに居なかった人。最初の表示と代替わり直後は降らせない）
+  const prev = crewLay ? Object.fromEntries(crewLay.figs.map(f => [f.key, f.born])) : null;
+  figs.forEach(f => { f.born = prev ? (f.key in prev ? prev[f.key] : tAll) : -9; f.landed = !prev || f.key in prev; });
   crewLay = { figs, sw, z: b0 / sw, rows: figs.reduce((a, f) => Math.max(a, f.row), 0) };
   return crewLay;
 }
@@ -1316,12 +1467,16 @@ function drawCrew(dt, fy){
   for (let row = L.rows; row >= 0; row--) {
     const y = fy - row * ROW_GAP;
     if (row > 0) {
-      ctx.fillStyle = '#6b4a2a'; ctx.fillRect(sx + 4, y, sw - 8, 4);
-      ctx.fillStyle = '#5a3d22'; for (let x = sx + 10; x < sx + sw - 10; x += 60) ctx.fillRect(x, y + 4, 3, ROW_GAP - 4);
+      ctx.fillStyle = '#5a3d22'; for (let x = sx + 10; x < sx + sw - 10; x += 60) ctx.fillRect(x, y + 4, 4, ROW_GAP - 4);
+      ctx.fillStyle = '#9a6b3a'; ctx.fillRect(sx + 4, y, sw - 8, 5); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(sx + 4, y + 5, sw - 8, 2);
     }
     for (const f of L.figs) {
       if (f.row !== row) continue;
-      const fx = cx() + f.dx;
+      const fx = cx() + f.dx, age = tAll - f.born;
+      let dropY = 0;
+      if (age < 0.45 && !reduced) { const k = age / 0.45; dropY = -(1 - k * k) * 90; }
+      else if (!f.landed) { f.landed = true; burst(fx, y, 6, '#a08a70', 0.5); }
+      const y0 = y; { const y = y0 + dropY;
       const per = CREW_PER[f.i], t = (tAll + f.ph) % (per + 0.25);
       if (row === 0 && t < f.lt && f.i !== 3 && f.i !== 6 && Math.random() < 0.5) crewHit(f.i, fx, f.face);
       f.lt = t;
@@ -1331,6 +1486,7 @@ function drawCrew(dt, fy){
       else if (f.i === 5) drawCart(fx, y, f.face, tAll + f.ph, f.sc);
       else if (f.i === 6) { drawShield(fx, y, f.face, tAll + f.ph, f.sc); if (row === 0 && Math.random() < dt * 5) burst(fx + f.face * 22, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.6); }
       else drawPerson(fx, y, f.sc, HAT[f.i], f.face, ang, '#b9c2cc', false);
+      }
     }
   }
 }
@@ -1367,7 +1523,8 @@ const FX = {
     floatText(cx() + 30, rowY(d) - 10, '+' + fmt(g), '#ffd166', isBed(d) || jack ? 24 : 17);
     if (jack) { floatText(cx() - 30, rowY(d) - 24, '大当たり！', '#ff9f43', 20); sfx('crit'); burst(cx(), y, 16, '#ffd166', 1.3); }
     if (!reduced) shakeT = isBed(d) ? 0.45 : 0.12;
-    sfx(isBed(d) ? 'bed' : 'break');
+    if (isBed(d)) { sfx('bed'); flashT = 0; floatText(cx(), rowY(d) - 40, 'ドーン！', '#ffffff', 34); }
+    else if (tAll - lastBreakSfx > 0.14) { lastBreakSfx = tAll; sfx('break'); }
     if (isBed(d)) { banner(layerIdxForDepth(d + 1)); haptic('heavy'); }
   },
   side(g){ sideAcc += g; },
@@ -1437,11 +1594,12 @@ function drawPerson(x, y, sc, hat, face, ang, pickColor, lamp){
   ctx.save(); ctx.translate(x, y); ctx.scale(face * sc, sc);
   ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0, 0, 11, 3, 0, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#2f3b52'; ctx.fillRect(-6, -12, 5, 12); ctx.fillRect(1, -12, 5, 12);
-  ctx.fillStyle = '#3b6ea8'; roundRect(-8, -30, 16, 20, 5); ctx.fill();
+  ctx.strokeStyle = 'rgba(20,12,6,.55)'; ctx.lineWidth = 1.4;
+  ctx.fillStyle = '#3b6ea8'; roundRect(-8, -30, 16, 20, 5); ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#e8b44a'; ctx.fillRect(-8, -24, 16, 3);
-  ctx.fillStyle = '#f1c9a0'; ctx.beginPath(); ctx.arc(1, -37, 7.5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#f1c9a0'; ctx.beginPath(); ctx.arc(1, -37, 7.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#2b2118'; ctx.beginPath(); ctx.arc(4, -37, 1.2, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = hat; ctx.beginPath(); ctx.arc(1, -39, 8.5, Math.PI, 0); ctx.fill(); ctx.fillRect(-8, -40, 18, 2.5);
+  ctx.fillStyle = hat; ctx.beginPath(); ctx.arc(1, -39, 8.5, Math.PI, 0); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillRect(-8, -40, 18, 2.5);
   if (lamp) { ctx.fillStyle = '#fff6c4'; ctx.beginPath(); ctx.arc(8, -43, 2.4, 0, Math.PI * 2); ctx.fill(); }
   drawPick(2, -27, ang, 22, pickColor, 1);
   ctx.fillStyle = '#f1c9a0'; ctx.beginPath(); ctx.arc(2 + Math.cos(ang) * 8, -27 + Math.sin(ang) * 8, 3, 0, Math.PI * 2); ctx.fill();
@@ -1520,7 +1678,7 @@ function draw(dt){
   ctx.fillStyle = g; ctx.fillRect(-10, -10, VW + 20, VH + 20);
   const top = Math.floor(camY - baseY() / R) - 1, bot = Math.ceil(camY + (VH - baseY()) / R) + 1;
   if (top < 0) drawSurface();
-  const sw = shaftW(), sx = cx() - sw / 2;
+  const sw = shaftW(), sx = cx() - sw / 2, lamps = [];
   for (let m = Math.max(0, top); m <= bot; m++) {
     const y = rowY(m), li = layerIdxForDepth(m), L = LAYERS[li], bed = isBed(m);
     const room = isRoom(m) && !S.room[m];
@@ -1541,10 +1699,18 @@ function draw(dt){
     }
     if (m < S.depth) {
       ctx.fillStyle = L.hollow; ctx.fillRect(sx, y - 0.3, sw, R + 0.9);
-      ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(sx, y - 0.3, 6, R + 0.9); ctx.fillRect(sx + sw - 6, y - 0.3, 6, R + 0.9);
+      // 奥の壁の岩はだ（掘り跡のでこぼこ）
+      for (let c = 0; c < sw / 22; c++) {
+        const h = hash(m * 4111 + c * 97);
+        ctx.fillStyle = h % 3 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.22)';
+        roundRect(sx + c * 22 + (h >>> 4) % 10 - 5, y + (h >>> 9) % (R - 10), 12 + (h >>> 13) % 14, 6 + (h >>> 17) % 6, 3); ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(sx, y - 0.3, 8, R + 0.9); ctx.fillRect(sx + sw - 8, y - 0.3, 8, R + 0.9);
       if (m % 5 === 0) {
-        ctx.fillStyle = '#6b4a2a'; ctx.fillRect(sx + 2, y, 5, R); ctx.fillRect(sx + sw - 7, y, 5, R);
-        ctx.fillStyle = '#7d5a35'; ctx.fillRect(sx, y, sw, 4);
+        ctx.fillStyle = '#5a3d22'; ctx.fillRect(sx + 2, y, 6, R); ctx.fillRect(sx + sw - 8, y, 6, R);
+        ctx.fillStyle = '#7d5a35'; ctx.fillRect(sx, y, sw, 5);
+        ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(sx, y + 5, sw, 2);
+        lamps.push([sx + 14, y + 12], [sx + sw - 14, y + 12]);
       }
     } else if (m === S.depth) {
       const hitOff = blockHitT < 0.08 && !reduced ? (Math.random() - 0.5) * 3 : 0;
@@ -1587,11 +1753,37 @@ function draw(dt){
     rg.addColorStop(0, 'rgba(0,0,0,0)'); rg.addColorStop(1, `rgba(0,0,0,${Math.min(0.55, 0.15 + S.depth / 400)})`);
     ctx.fillStyle = rg; ctx.fillRect(-10, -10, VW + 20, VH + 20);
   }
+  // 梁のランタン（暖かい明かりの輪）
+  for (const [lx, ly] of lamps) {
+    const fl = reduced ? 1 : 0.9 + 0.1 * Math.sin(tAll * 7 + lx);
+    const lg = ctx.createRadialGradient(lx, ly, 2, lx, ly, 70);
+    lg.addColorStop(0, `rgba(255,196,110,${0.32 * fl})`); lg.addColorStop(1, 'rgba(255,196,110,0)');
+    ctx.fillStyle = lg; ctx.fillRect(lx - 70, ly - 70, 140, 140);
+    ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(lx, ly - 7); ctx.lineTo(lx, ly - 3); ctx.stroke();
+    ctx.fillStyle = '#2b2118'; roundRect(lx - 4, ly - 3, 8, 10, 2); ctx.fill();
+    ctx.fillStyle = `rgba(255,214,140,${fl})`; roundRect(lx - 2.5, ly - 1, 5, 6, 1.5); ctx.fill();
+  }
+  // ほこり
+  if (!reduced && S.depth > 0) {
+    ctx.fillStyle = 'rgba(255,230,190,.22)';
+    for (const d of motes) {
+      d.y -= d.v * dt * 10; if (d.y < 0) d.y += 1;
+      const mx = sx + 10 + d.x * (sw - 20) + Math.sin(tAll * 0.6 + d.x * 9) * 6, my = rowY(S.depth) - d.y * (baseY() + 40);
+      ctx.beginPath(); ctx.arc(mx, my, 1.4 * d.s, 0, 7); ctx.fill();
+    }
+  }
   // 仲間
   const fy = rowY(S.depth);
   drawCrew(dt, fy);
   swingT += dt;
   const pang = swingT < 0.4 ? swingAngle(swingT, 1) : -2.3 + Math.sin(tAll * 2.2) * 0.06;
+  bossGlow += dt; evoT += dt;
+  if (bossGlow < 0.5 || evoT < 1.4) {
+    const k = evoT < 1.4 ? 1 - evoT / 1.4 : 1 - bossGlow / 0.5, rr = evoT < 1.4 ? 80 : 40;
+    const bg = ctx.createRadialGradient(cx(), fy - 26, 4, cx(), fy - 26, rr);
+    bg.addColorStop(0, `rgba(255,230,150,${0.7 * k})`); bg.addColorStop(1, 'rgba(255,230,150,0)');
+    ctx.fillStyle = bg; ctx.fillRect(cx() - rr, fy - 26 - rr, rr * 2, rr * 2);
+  }
   drawPerson(cx(), fy, 1, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true);
   for (let i = parts.length - 1; i >= 0; i--) {
     const p = parts[i]; p.life -= dt;
@@ -1637,6 +1829,10 @@ function draw(dt){
     ctx.beginPath(); ctx.arc(cx() * Z, (fy - 25) * Z, 20 + k * 90, 0, 7); ctx.stroke();
   }
   if (boostOn(S)) { ctx.strokeStyle = `rgba(167,155,255,${0.45 + 0.25 * Math.sin(tAll * 5)})`; ctx.lineWidth = 2 + 2 * boostMul(S) / 2; ctx.strokeRect(2, 2, W - 4, H - 4); }
+  if (flashT < 0.4) {
+    flashT += dt;
+    ctx.fillStyle = `rgba(255,248,230,${(reduced ? 0.35 : 0.8) * (1 - flashT / 0.4)})`; ctx.fillRect(0, 0, W, H);
+  }
   if (bannerT < 2.6) {
     bannerT += dt;
     const a = bannerT < 0.3 ? bannerT / 0.3 : bannerT > 2 ? (2.6 - bannerT) / 0.6 : 1;
@@ -1749,15 +1945,19 @@ if (window.matchMedia) { try { window.matchMedia('(prefers-color-scheme: dark)')
 // 起動
 const had = load();
 applyTheme();
-if (!APP) { $('devSkip').hidden = false; } else { $('footName').textContent = 'つるはし社'; }
 camY = S.depth > 0 ? S.depth : -4;
 if (S.depth > 0) $('hint').style.opacity = '0'; else setTimeout(() => { $('hint').style.opacity = '0'; }, 5000);
 resize(); buildPanels(); updateUI(true);
 hintKnown = LAYERS.map((x, L) => hintShown(S, L) && !S.found[itemsOf(L).find(it => it.r === 'l').id]);
 coSeen = Object.keys(S.ach).length;
 if (loadBroken) toast('お知らせ', '保存が壊れていたので、少し前の記録から戻しました', '');
-if (had) checkAway();
-if (!had) setTimeout(() => banner(0), 400);
+$('titleGo').textContent = had ? 'つづきから' : 'はじめる';
+if (had) $('titleTip').textContent = `${genName(S.gen)}社長・最深 ${S.best}m`;
+$('titleGo').addEventListener('click', () => {
+  titleOpen = false; ac(); sfx('tier');
+  $('title').classList.add('hide'); setTimeout(() => { $('title').hidden = true; }, 520);
+  if (had) checkAway(); else setTimeout(() => banner(0), 300);
+});
 requestAnimationFrame(frame);
 })();
 </script>
