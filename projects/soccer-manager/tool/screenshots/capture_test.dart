@@ -22,6 +22,7 @@ library;
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -70,6 +71,48 @@ const _ja = (language: AppLanguage.japanese, code: 'ja', suffix: '');
 const _en = (language: AppLanguage.english, code: 'en', suffix: '_en');
 
 const _locales = <_Locale>[_ja, _en];
+
+/// 掲載画像に乗せる言葉。
+///
+/// 画面をそのまま撮っただけでは、スクロールしている人に何のゲームか伝わら
+/// ない。同じ分野の上位(カルチョビットA・サッカークラブ物語)は全カットに
+/// 帯を入れている。露出5,730に対してページ閲覧557(9.7%)で詰まっていたので、
+/// ここを上げにいく。
+///
+/// **検索結果に出るのは先頭3枚**なので、00〜02に力を入れている。
+const _captions = <String, (String ja, String en)>{
+  '00_lineup': ('5部から、頂点へ', 'Fifth tier to the top'),
+  '01_live_match': ('采配が、試合を動かす', 'Your calls decide it'),
+  '02_home': ('勝てなければ、クビ', 'Lose, and you are sacked'),
+  '03_transfer': ('値切って、引き抜く', 'Haggle, then sign him'),
+  '04_standings': ('昇格争いに食い込む', 'Fight for promotion'),
+  '05_squad': ('無名を、主力に育てる', 'Turn nobodies into stars'),
+  '06_halftime': ('ハーフタイムで流れを変える', 'Change it at half time'),
+  '07_scorers': ('得点王が、生まれる', 'Grow a top scorer'),
+  '08_club': ('クラブごと、大きくする', 'Grow the whole club'),
+};
+
+/// 専用の絵を敷く1枚。検索結果でいちばん見られる枠なので、ここだけは
+/// 画面を撮っただけにしない。
+///
+/// **iPhone だけ。** 下絵は縦長(9:16)で、端末を置く場所が中央に空けてある。
+/// iPad は横に広いぶん上下を切ることになり、どこで切ってもその空き枠が
+/// 端末からはみ出して白く残る。iPad は検索結果に出ないので、帯のままにする。
+const _heroShot = '00_lineup';
+
+/// ① 画像ごとの地の色。同じ緑が9枚続くと、並べたときに単調になる。
+/// 緑〜藍の近い色で振って、まとまりは崩さずにリズムだけ作る。
+const _shades = <String, (int top, int bottom)>{
+  '00_lineup': (0xFF0F3D22, 0xFF1C6B3A),
+  '01_live_match': (0xFF0B3B33, 0xFF156B55),
+  '02_home': (0xFF12324D, 0xFF1D5B7A),
+  '03_transfer': (0xFF1A3A2A, 0xFF2E6E46),
+  '04_standings': (0xFF0F3D22, 0xFF1C6B3A),
+  '05_squad': (0xFF0B3B33, 0xFF156B55),
+  '06_halftime': (0xFF12324D, 0xFF1D5B7A),
+  '07_scorers': (0xFF1A3A2A, 0xFF2E6E46),
+  '08_club': (0xFF0F3D22, 0xFF1C6B3A),
+};
 
 /// 同梱フォントと、Flutter SDK が持つアイコンフォントを読み込む。
 ///
@@ -132,7 +175,13 @@ void main() {
       late final SettingsController settings;
       late final MonetizationController monetization;
       late final GameState gameState;
+      late final ui.Image hero;
       await tester.runAsync(() async {
+        final heroFile = File('marketing/hero/hero_bg.png');
+        if (!heroFile.existsSync()) {
+          fail('1枚目の下絵が見つからない: ${heroFile.path}');
+        }
+        hero = await decodeImageFromList(heroFile.readAsBytesSync());
         settings = SettingsController();
         await settings.init();
         // **シミュレーションより先に言語を決める。** 記者会見やニュースの文面は
@@ -175,6 +224,173 @@ void main() {
           locale.language == AppLanguage.japanese,
           reason: '選手名が${locale.code}になっていない: $aPlayer');
 
+      /// 画面の上に言葉の帯を乗せる。
+      ///
+      /// 縮めても読めるよう、太く大きく、濃い緑に白で置く。アプリの画面と
+      /// 同じ色にすると境目が曖昧になるので、はっきり分ける。
+      // Material で包む。ColoredBox のままだと「Material の外のテキスト」
+      // と見なされ、黄色い二重下線が引かれる(実際に引かれた)。
+      //
+      // 画面をそのまま全面に敷くと「撮っただけ」に見える。背景の上に少し
+      // 浮かせて、角を丸めて影を落とすと、作った絵として見える。
+      Widget captioned(String text, Widget screen, (int, int) shade) {
+        final tablet = device == _tablet;
+        return Material(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(shade.$1), Color(shade.$2)],
+              ),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      28, tablet ? 52 : 38, 28, tablet ? 30 : 22),
+                  // **1行に収める。** 字を大きくしたら「11人をどう並べる／か」
+                  // のように語の途中で折り返した。入らないぶんは縮める。
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(
+                      // **フォントを指定する。** 省くと日本語が豆腐(□)に
+                      // なる。アプリの画面は theme が指定しているので出るが、
+                      // この帯は theme の外にあるため当たらない。
+                      fontFamily: 'NotoSansJP',
+                      color: Colors.white,
+                      fontSize: tablet ? 54 : 42,
+                      fontWeight: FontWeight.w800,
+                      height: 1.2,
+                      letterSpacing: -0.5,
+                    ),
+                    ),
+                  ),
+                ),
+                // ③ 端末の枠に入れる。黒い縁を回すと、画面が「アプリの中」
+                // だと一目で分かる。枠の内側だけ角を丸める。
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        tablet ? 60 : 34, 0, tablet ? 60 : 34, 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF111111),
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(tablet ? 40 : 34)),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x55000000),
+                            blurRadius: 24,
+                            offset: Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      padding: EdgeInsets.fromLTRB(
+                          tablet ? 12 : 9, tablet ? 12 : 9, tablet ? 12 : 9, 0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(tablet ? 30 : 26)),
+                        child: screen,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      /// 1枚目だけは、画面の上に帯を乗せるのではなく、専用の絵を敷く。
+      ///
+      /// 検索結果でいちばん見られる枠なので、ここだけは「撮っただけ」から
+      /// 離す。石段を昇った先にトロフィーがある絵の中へ、実機の画面を置く。
+      ///
+      /// **絵だけにはできない。** App Review 2.3.3 が「掲載画像はアプリが
+      /// 動いている様子を見せること。タイトル絵・ログイン画面・起動画面
+      /// だけのものは不可」としている。必ず画面を重ねる。
+      Widget heroFramed(String text, Widget screen) {
+        return Material(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              RawImage(image: hero, fit: BoxFit.cover),
+              Positioned(
+                left: 28,
+                right: 28,
+                top: 38,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(
+                      fontFamily: 'NotoSansJP',
+                      color: Colors.white,
+                      fontSize: 46,
+                      fontWeight: FontWeight.w800,
+                      height: 1.2,
+                      letterSpacing: -0.5,
+                      shadows: const [
+                        // 絵の上に直に置くので、影がないと沈む。
+                        Shadow(color: Color(0xAA000000), blurRadius: 12),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // 下絵の中央に空けてある場所へ端末を置く。トロフィーと階段の
+              // 上の方は隠さない(隠すと何の絵か分からなくなる)。
+              Positioned(
+                left: 83,
+                right: 83,
+                top: 300,
+                bottom: 60,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF111111),
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x88000000),
+                        blurRadius: 30,
+                        offset: Offset(0, 12),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(21),
+                      // **端末の幅で組み直させない。** 枠は画面より細いので、
+                      // そのまま入れると実機と違う割付になり、選手名が
+                      // 「Ashwo…」のように切れる。実機の寸法で組ませてから
+                      // 縮める。中身は小さくなるが、割付は実機と同じ。
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: SizedBox(
+                          width: device.logical.width,
+                          height: device.logical.height,
+                          child: screen,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+
       Widget wrap(Widget child) => MultiProvider(
             providers: [
               ChangeNotifierProvider<GameState>.value(value: gameState),
@@ -199,7 +415,19 @@ void main() {
       /// 開いた直後だと 0-0 の1分で、画面の下半分が空のまま写る。
       Future<void> shoot(String name, Widget screen,
           {int warmUpFrames = 0}) async {
-        await tester.pumpWidget(wrap(screen));
+        final caption = _captions[name];
+        final text = caption == null
+            ? null
+            : locale.language == AppLanguage.japanese
+                ? caption.$1
+                : caption.$2;
+        final body = text == null
+            ? screen
+            : name == _heroShot && device == _phone
+                ? heroFramed(text, screen)
+                : captioned(
+                    text, screen, _shades[name] ?? (0xFF0F3D22, 0xFF1C6B3A));
+        await tester.pumpWidget(wrap(body));
         // **裏で読み込みを待つ画面は、疑似時間の pump では終わらない。**
         // 開始画面はセーブ一覧(SharedPreferences)を待つ FutureBuilder を
         // 持っており、読み込み中の丸だけが写った白紙をストアの1枚目として
