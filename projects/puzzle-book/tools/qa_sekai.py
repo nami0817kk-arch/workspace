@@ -13,7 +13,7 @@ import pymupdf  # noqa: E402
 from pypdf import PdfReader  # noqa: E402
 
 import kdp_spec  # noqa: E402
-from build_sekai import (LANGS, NATIVE, SekaiSpec, art_path, chapter_page, has_art, item_page,  # noqa: E402
+from build_sekai import (LANGS, NATIVE, SekaiSpec, art_path, chapter_page, chapter_quiz, has_art, item_page,  # noqa: E402
                          load_items, page_count)
 
 INT, COV = "output/sekai-kotowaza-vol1-interior.pdf", "output/sekai-kotowaza-vol1-cover.pdf"
@@ -216,17 +216,21 @@ check("どのページも 英語→フランス語→中国語→韓国語 の�
 ch_bad = []
 for ci, ch in enumerate(spec.chapters):
     t = flat(ptext(chapter_page(spec, ci)))
-    for k, it in enumerate(items):
-        if it["chapter"] == ci and (flat(it["jp"])[:6] not in t or f"{item_page(spec, k)}ページ" not in t):
-            ch_bad.append((ci + 1, it["jp"]))
-check("章の扉に、その章の10句とページ番号が正しく載っている", not ch_bad, str(ch_bad[:4]))
-monkey = next(it for it in items if it["jp"] == "猿も木から落ちる")
+    if flat(ch.get("intro", "-"))[:20] not in t:
+        ch_bad.append((ci + 1, "導入文"))
+    for k, lang, lit in chapter_quiz(items, ci):  # クイズの問い（直訳）と、こたえの句・ページ
+        if flat(lit) not in t or flat(items[k]["jp"]) not in t or f"{item_page(spec, k)}ページ" not in t:
+            ch_bad.append((ci + 1, items[k]["jp"]))
+check("章の扉に導入文があり、クイズの問いとこたえ（句とページ）が本文と合っている", not ch_bad, str(ch_bad[:4]))
+monkey = next(it for it in items if it["jp"] == "犬猿の仲")
 intro = flat(ptext(2))
-check("「はじめに」の4つの例文が、本文の「猿も木から落ちる」のページと同じ",
+check("「はじめに」の4つの例文が、本文の「犬猿の仲」のページと同じ",
       all(flat(monkey[lang]["text"]) in intro for lang, _ in LANGS))
 toc = ptext(5)
 toc_bad = [ci + 1 for ci, ch in enumerate(spec.chapters) if ch["title"] not in toc or str(chapter_page(spec, ci)) not in toc]
-check("もくじの5章の名前とページ番号が、章の扉と一致", not toc_bad, str(toc_bad))
+toc_bad += [it["jp"] for k, it in enumerate(items)
+            if not re.search(re.escape(it["jp"]) + r"\s*\n\s*" + str(item_page(spec, k)) + r"\b", toc)]
+check("もくじに5章と50句がそろい、ページ番号が本文と一致", not toc_bad, str(toc_bad[:4]))
 idx = ptext(len(di) - 2)
 idx_bad = [it["jp"] for k, it in enumerate(items)
            if not re.search(re.escape(it["jp"]) + r"\s*\n\s*" + str(item_page(spec, k)) + r"\b", idx)]
