@@ -1,0 +1,31 @@
+# 取調室（projects/torishirabe）の事件データ検査。
+# game.html の事件が「嘘はちょうど1つ・食い違う組はちょうど1組」などの決まりを守っているかを見る。
+name: torishirabe check
+
+on:
+  push:
+    paths:
+      - "projects/torishirabe/**"
+      - ".github/workflows/torishirabe-check.yml"
+  pull_request:
+    paths:
+      - "projects/torishirabe/**"
+      - ".github/workflows/torishirabe-check.yml"
+  workflow_dispatch:
+
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check-cases:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - name: 事件データを検査する
+        run: node projects/torishirabe/tool/check_cases.js --list
