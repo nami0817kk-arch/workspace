@@ -10849,7 +10849,12 @@ void main() {
     // ことを固定する。
     double growthOver(String mode, {int facilityLevel = 3}) {
       // 1人あたりの成長は乱数のブレが大きいので、多めの人数で平均する。
-      const cohort = 60;
+      //
+      // **60人では足りなかった。** 下の「放置した控えより良い」の判定だけ
+      // 余裕が薄く、60人だと余裕が -0.13〜+1.35 まで振れて CI で落ちた
+      // (2026-10-03)。300人にすると +0.80〜+1.04 に収まる。
+      // 1回あたり 0.25 秒ほどで、テスト全体では 1秒強しか増えない。
+      const cohort = 300;
       const seasons = 4;
       final team = Team(id: 'ca8$mode$facilityLevel', name: 'CA8', players: []);
       for (var i = 0; i < cohort; i++) {
