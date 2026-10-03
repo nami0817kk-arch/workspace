@@ -78,7 +78,7 @@ function season(g, diff, chal) {
 }
 const cases = [['m', 'normal', null], ['f', 'hard', 'poor'], ['m', 'easy', 'small'], ['f', 'normal', 'busy'], ['m', 'normal', null]];
 for (const [g, d, c] of cases) season(g, d, c);
-run(`S=null;ui.settings=true;__shot();ui.settings=false;ui.gloss=true;__shot();ui.gloss=false;ui.hallAll=true;ui.meikanAll=true;__shot();`);
+run(`S=null;ui.tsub='new';__shot();ui.tsub='rec';__shot();ui.tsub=null;ui.settings=true;__shot();ui.settings=false;ui.gloss=true;__shot();ui.gloss=false;ui.hallAll=true;ui.meikanAll=true;__shot();`);
 run(`S=newGame('m','normal',null,todayKey());__shot();S=null;`);
 
 const need = ['title', 'select', 'format', 'plan', 'lesson', 'lres', 'talk', 'interview', 'event', 'stage', 'critique', 'judge', 'call', 'prep', 'month', 'result'];
