@@ -17,6 +17,7 @@
 | `tool/build_web_test.py` | 本体と顔を1枚のページに組み立て、`build/web/` に出す |
 | `tool/sim.js` | エンジンを自動で通しプレイして、つり合いを測る（遊び方3通り×男女）。`--quick` は CI 用。`PERKS=all`・`CHAL=poor` などでも回せる |
 | `tool/views.js` | 全画面をブラウザなしで描き、描くときのエラーが0件かを確かめる（CI で毎回回る）。見た目は確かめないので、見た目はブラウザで見る |
+| `tool/texts.js` | 文章の点検。ばらばらに遊ばせて画面の文を集め、差し込みの漏れ（{A}・undefined・NaN）があれば失敗、1シーズンに3回以上出る文を並べる（CI で毎回回る）。`--dump 出力先` で全文を書き出す |
 | `tool/build_app_web.py` | アプリに入れるゲーム本体を組み立てる（`app/assets/web/index.html`。顔の絵と見出し書体を埋め込み、外へ何も読みに行かない） |
 | `app/` | iOS アプリの外側（Flutter）。広告・課金は護送ボートの `lib/monetization` を写したもの。商品ID `hikari7_remove_ads`、Bundle ID `com.namiki.hikari7` |
 | `legal/` `site/` | プライバシーポリシー・サポート・利用規約と、公開ページの入口・app-ads.txt。`hikari7-site.yml` が https://hikari7.pages.dev/ に出す（アプリのリンクと App Store の URL 欄はここを指す） |
@@ -113,6 +114,12 @@ sim の good は、ふたりと話すとき絆のいちばん深いふたりを�
 - **アプリ**：Flutter の audioplayers で鳴らす（`lib/game/game_audio.dart`）。消音スイッチに従う。裏に回ったら止める。
   ゲームからは `{"type":"bgm","k","vol"}` `{"type":"voice","f":"f1/0a1b2c3d"}`。決めた曲名・形以外は鳴らさない（bridge で検査）
 - **Web 版**：組み立てのときに `app/assets/audio/` を `build/web/audio/` に写す。ブラウザは最初に押すまで音を出せないので、最初のクリックで鳴り始める
+
+## 文章の決まり（2026-10-03 指示「中身の品質を優良レベルに」）
+
+- **つながり**：出来事・お出かけで起きたことは、その審査の本番の描写で1行拾う（`EV_CB`・`OUT_CB`・`cbLine`）。点と食い違う言い方は出さない（良い話のあとに低い点、など）。見どころには、つながりのある子を2人まで入れる。**出来事を足したら `EV_CB` にも足す**
+- 気分のひと言・相談の切り出し・雑談への返しは、同じ子でも審査ごとに回る（配列。`moodLine`・`reqText`）。文字列でも配列でも読めるようにしてある
+- 文を足したら `node tool/texts.js` を回す。2026-10-03 に配列の入れ子で「undefined」が画面に出たのを、これで見つけた
 
 ## ユーザビリティの決まり（2026-10-03 指示「ユーザビリティの向上を本格的に」）
 

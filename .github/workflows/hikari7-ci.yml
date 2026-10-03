@@ -43,6 +43,10 @@ jobs:
       - name: 画面の点検
         run: node tool/views.js
 
+      # 文章の点検：ばらばらに遊ばせて、画面の文に {A}・undefined などの差し込み漏れがないか
+      - name: 文章の点検
+        run: node tool/texts.js 6
+
       - name: アプリに入れるゲーム本体を組み立てる
         run: |
           pip install --quiet fonttools
