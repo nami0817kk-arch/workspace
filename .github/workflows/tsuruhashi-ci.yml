@@ -1,0 +1,41 @@
+# つるはし採掘の検証（ゲーム本体のエンジン）。アプリの外側を作ったら Flutter の検査を足す。
+name: tsuruhashi CI
+
+on:
+  push:
+    paths:
+      - "projects/tsuruhashi/**"
+      - ".github/workflows/tsuruhashi-ci.yml"
+  pull_request:
+    paths:
+      - "projects/tsuruhashi/**"
+      - ".github/workflows/tsuruhashi-ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/tsuruhashi
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      # 決まりごと：留守の上限・代替わりで残す物・鑑定で必ずそろう・★★の出る場所・公開文面に個人名がない
+      - name: エンジンの検査
+        run: node tool/check.js
+
+      # 7日ぶん自動で遊ばせて、止まらない・数値が壊れないこと（遊び方3通り）
+      - name: 通しプレイの試算
+        run: |
+          node tool/sim.js --quick
+          PLAY=noads node tool/sim.js --quick
+          CREED=aaaaaa node tool/sim.js --quick
