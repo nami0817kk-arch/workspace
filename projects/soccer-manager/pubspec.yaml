@@ -100,6 +100,9 @@ flutter:
 
   assets:
     - assets/icon/
+    # 節目の演出に出す絵。枚数が決まっている場所にだけ画像を持つ
+    # (選手とクラブは自動生成で点数が無限なので、絵は同梱できない)。
+    - assets/art/
 
   # しっぽり明朝は同梱する。google_fonts 経由だと初回起動時に
   # fonts.gstatic.com へ取りに行き、利用者のIPアドレスが Google に渡るため

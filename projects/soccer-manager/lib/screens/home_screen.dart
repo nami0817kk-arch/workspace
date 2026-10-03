@@ -1307,6 +1307,16 @@ class HomeScreen extends StatelessWidget {
   ) async {
     final messages = <(String text, bool isHighlight)>[];
 
+    // 節目の絵。昇格と優勝のときだけ出す。毎シーズン出すと、節目が
+    // 節目でなくなる。
+    final finale = gameState.lastSeasonFinale;
+    gameState.lastSeasonFinale = SeasonFinale.none;
+    final art = switch (finale) {
+      SeasonFinale.champion => 'assets/art/championship.jpg',
+      SeasonFinale.promoted => 'assets/art/promotion.jpg',
+      SeasonFinale.none => null,
+    };
+
     final message = gameState.lastDivisionChangeMessage;
     if (message != null) {
       messages.add((message, true));
@@ -1368,8 +1378,9 @@ class HomeScreen extends StatelessWidget {
       gameState.lastEmergencySignings = [];
     }
 
-    if (messages.isEmpty) return;
-    if (messages.length == 1) {
+    if (messages.isEmpty && art == null) return;
+    // 絵があるときは必ずダイアログで出す。スナックバーには絵が入らない。
+    if (messages.length == 1 && art == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(messages.first.$1),
@@ -1381,12 +1392,27 @@ class HomeScreen extends StatelessWidget {
     await showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(Tr.pick('シーズン開始レポート', 'Pre-season report')),
+        title: Text(switch (finale) {
+          SeasonFinale.champion => Tr.pick('優勝！', 'Champions!'),
+          SeasonFinale.promoted => Tr.pick('昇格！', 'Promoted!'),
+          SeasonFinale.none => Tr.pick('シーズン開始レポート', 'Pre-season report'),
+        }),
         content: SizedBox(
           width: double.maxFinite,
           child: ListView(
             shrinkWrap: true,
             children: [
+              if (art != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 14),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: AspectRatio(
+                      aspectRatio: 4 / 3,
+                      child: Image.asset(art, fit: BoxFit.cover),
+                    ),
+                  ),
+                ),
               for (final (text, isHighlight) in messages)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),

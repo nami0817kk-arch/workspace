@@ -102,6 +102,9 @@ part 'game_state_finance.dart';
 part 'game_state_match.dart';
 part 'game_state_season.dart';
 
+/// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
+enum SeasonFinale { none, promoted, champion }
+
 const int maxSquadSize = 26;
 
 /// スカッドの最低人数。放出・ローン放出はこの人数を割り込む操作を拒否し、
@@ -1172,6 +1175,11 @@ class GameState extends ChangeNotifier {
 
   /// 直近のstartNextSeasonでの昇格・降格結果メッセージ(なければnull)。
   String? lastDivisionChangeMessage;
+
+  /// 直近に終えたシーズンの締めくくり。シーズン開始レポートに出す絵を
+  /// 決めるために持つ。優勝は昇格より上に置く(優勝すればたいてい昇格も
+  /// しているが、見せたいのは優勝のほう)。
+  SeasonFinale lastSeasonFinale = SeasonFinale.none;
 
   /// 直近のstartNextSeasonで昇格プレーオフが行われた場合の各試合結果
   /// (準決勝2試合+決勝の順、表示用に整形済み)。行われなかった場合は空。
