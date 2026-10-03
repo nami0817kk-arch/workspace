@@ -36,7 +36,8 @@ _ROOT = Path(__file__).resolve().parent.parent
 _F = _ROOT / "assets" / "fonts"
 for _name, _file in (("KR", "NanumGothic-Regular"), ("KR-B", "NanumGothic-Bold"),
                      ("LAT", "NotoSans-Regular"), ("LAT-B", "NotoSans-Bold"),
-                     ("TC", "NotoSansTC-Regular"), ("TC-B", "NotoSansTC-Bold")):
+                     ("TC", "NotoSansTC-Regular"), ("TC-B", "NotoSansTC-Bold"),
+                     ("SC", "NotoSansSC-Regular"), ("SC-B", "NotoSansSC-Bold")):  # SC は本の簡体字だけに絞った書体（tools/subset_sc.py）
     pdfmetrics.registerFont(TTFont(_name, str(_F / f"{_file}.ttf")))
 
 BLEED = kdp_spec.COVER_BLEED_IN * inch  # 本文の裁ち落としも 0.125 in
@@ -129,7 +130,7 @@ LANG_COLOR: dict[str, CMYK] = {
     "ko": (0.85, 0.05, 0.45, 0.10),
 }
 LANG_TINT: dict[str, CMYK] = {k: tuple(round(v * 0.1, 3) for v in c) for k, c in LANG_COLOR.items()}
-FONT = {"en": ("LAT-B", "LAT"), "fr": ("LAT-B", "LAT"), "zh": ("TC-B", "TC"), "ko": ("KR-B", "KR")}
+FONT = {"en": ("LAT-B", "LAT"), "fr": ("LAT-B", "LAT"), "zh": ("SC-B", "SC"), "ko": ("KR-B", "KR")}
 READ_FONT = {"en": FONT_REGULAR, "fr": FONT_REGULAR, "zh": "LAT", "ko": FONT_REGULAR}
 COLORS: dict[str, tuple[CMYK, CMYK]] = {
     "orange": ((0.0, 0.62, 1.0, 0.08), (0.0, 0.07, 0.16, 0.0)),
@@ -155,7 +156,7 @@ REGIONS = {
 READ_NOTE = {
     "en": "原文に、カタカナのおよその読みと、直訳をつけています。",
     "fr": "原文に、カタカナのおよその読みと、直訳をつけています。",
-    "zh": "日本の漢字に近い繁体字（台湾などで使う字）で書き、中国大陸の標準の読みのピンイン（ローマ字の読み）と、カタカナのおよその読みをつけています。",
+    "zh": "簡体字で書き、繁体字（台湾などの字）を右上に添えています。ピンインとカタカナの読みつき。",
     "ko": "ハングルに、カタカナのおよその読みをつけています。語頭の「ッ」は、詰まった強い音（濃音）の印です。漢字語は、漢字での書き方を添えています。",
 }
 REFERENCES = [  # 紙・公的な辞典を先に、Web の資料を後に
@@ -199,7 +200,9 @@ def load_items(spec: SekaiSpec) -> list[dict]:
             item = dict(it, jp=v["jp"], chapter=ci, color=ch["color"], chapter_title=ch["title"])
             for k, _ in LANGS:
                 x = v[k]
-                item[k] = {"text": x["text"], "read": x["read"], "kana": x.get("kana", ""), "near": x["match"] != "同じ",
+                # 中国語は簡体字を大きく載せ、繁体字（確かめた記録の形）を小さく添える
+                item[k] = {"text": x.get("simp") or x["text"], "trad": x["text"] if x.get("simp") else "",
+                           "read": x["read"], "kana": x.get("kana", ""), "near": x["match"] != "同じ",
                            "lit": _drop_same_gloss(literal(x["note"], k), v["jp"]), "sources": x["sources"]}
             out.append(item)
     return out
@@ -607,6 +610,13 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
         c.drawString(tx + nw + 5, yy, dict(LANGS)[k])
         lab_end = tx + nw + 5 + c.stringWidth(dict(LANGS)[k], FONT_BOLD, 7.5)
         anchors.setdefault("badge", (tx + nw / 2, yy + 3))
+        if x.get("trad"):
+            c.setFillColorCMYK(*SUB)
+            c.setFont("TC", 8)
+            tw_ = c.stringWidth(x["trad"], "TC", 8)
+            c.drawRightString(R - 10, yy, x["trad"])
+            c.setFont(FONT_BOLD, 7)
+            c.drawRightString(R - 14 - tw_, yy, "繁体字")
         if x["near"]:
             nx = lab_end + 8
             c.setFillColorCMYK(*LANG_TINT[k])
@@ -1244,7 +1254,7 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
          "たとえがちがっても、意味が日本のことわざと同じものには札をつけていません（「猫に小判」と「豚に真珠」など）。"
          "意味の範囲や使う場面が少しずれるものに、「近い言い方」の札をつけました。"),
         ("読み方について",
-         "中国語は台湾などで使う繁体字で書き、ピンイン（ローマ字の読み）をつけました。"
+         "中国語は中国大陸の簡体字で書き、繁体字を添えて、ピンイン（ローマ字の読み）をつけました。"
          "英語・フランス語・韓国語のカタカナは、およその音です。韓国語の語頭の「ッ」は、詰まった強い音（濃音）の印です。"),
     ]:
         c.setFillColorCMYK(*NAVY)
