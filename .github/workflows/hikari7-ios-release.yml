@@ -290,7 +290,7 @@ jobs:
           if [ "${TEST_ADS:-false}" = "true" ]; then ADS=(); fi
           flutter build ipa --release \
             --export-options-plist=ios/ExportOptions.plist $EXTRA \
-            "${ADS[@]}" \
+            ${ADS[@]+"${ADS[@]}"} \
             --dart-define=LEGAL_BASE_URL="$LEGAL_BASE_URL"
           ls -la build/ios/ipa/
 
