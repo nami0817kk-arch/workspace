@@ -86,17 +86,40 @@ def helmet(w=700, ss=4):
     return im.resize((w, int(w * 0.62)), Image.LANCZOS)
 
 
-def put(base_fn, out_fn, cx, cy, w, angle):
-    """base_fn の立ち絵（余白を切った状態）の (cx, cy) を中心に、幅 w・angle 度傾けて重ねる。"""
+def put(base_fn, out_fn, cx, rim_y, w, angle, keep=None, pad=200):
+    """立ち絵にヘルメットをかぶせる。
+
+    座標は余白を切った立ち絵の上で測る。(cx, rim_y) はヘルメットの縁（ドームの下端）の中央が来る点で、
+    そこを中心に angle 度傾ける（正の値で反時計回り＝画面の右が上がる。頭の傾きは目の高さの差で測る）。
+    keep=((x0, y0, x1, y1), しきい値) を渡すと、その範囲の暗い画素（リボンなど）を
+    ヘルメットの上に戻す。ヘルメットが頭の上にはみ出すので、上に pad の余白を足してから重ねる。
+    """
+    from PIL import ImageChops, ImageFilter  # noqa: F401
     b = Image.open(base_fn).convert("RGBA")
     b = b.crop(b.getbbox())
-    h = helmet(w).rotate(angle, expand=True, resample=Image.BICUBIC)
-    b.alpha_composite(h, (int(cx - h.width / 2), int(cy - h.height / 2)))
-    b.save(out_fn)
+    canvas = Image.new("RGBA", (b.width, b.height + pad), (0, 0, 0, 0))
+    canvas.alpha_composite(b, (0, pad))
+    h = helmet(w)
+    hh = h.height
+    pivot_y = int(hh * 0.70)                      # 縁の高さ（helmet() の base_y と同じ）
+    big = Image.new("RGBA", (w * 2, hh * 2), (0, 0, 0, 0))
+    big.alpha_composite(h, (w // 2, hh - pivot_y))
+    big = big.rotate(angle, resample=Image.BICUBIC, center=(w, hh))
+    canvas.alpha_composite(big, (int(cx - w), int(rim_y + pad - hh)))
+    if keep:
+        (x0, y0, x1, y1), threshold = keep
+        src = b.crop((x0, y0, x1, y1))
+        mask = Image.eval(src.convert("L"), lambda v: 255 if v < threshold else 0)
+        mask = ImageChops.multiply(mask, src.split()[3])
+        canvas.paste(src, (x0, y0 + pad), mask)
+    canvas.crop(canvas.getbbox()).save(out_fn)
 
 
-# 公式の立ち絵（余白を切った状態）でのヘルメットの位置。絵を差し替えたら測り直す。
+# 公式の立ち絵（余白を切った状態）でのヘルメットの位置（cx, 縁の高さ, 幅, 傾き, 上に戻す部分）。
+# 絵を差し替えたら測り直す。目の高さの差から傾きを測り、つばが眉の上に来る高さにする。
 PLACEMENTS = {
-    "tsumugi": (1135, 270, 640, -10),   # 春日部つむぎ公式立ち絵 v2.0
-    "kenzaki": (322, 90, 230, -14),     # 剣崎雌雄 公式イラスト（VOICEVOX 掲載の全身図）
+    # 春日部つむぎ公式立ち絵 v2.0。頭は右が上がる向きに約6度。右側のリボンはヘルメットの外に戻す
+    "tsumugi": (1115, 300, 760, 6, ((1335, 95, 1470, 310), 60)),
+    # 剣崎雌雄 公式イラスト（VOICEVOX 掲載の全身図）。とがった頭の先がヘルメットを突き抜ける
+    "kenzaki": (322, 118, 230, -14, None),
 }

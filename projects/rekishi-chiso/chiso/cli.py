@@ -255,8 +255,9 @@ def cmd_prepare_characters(args) -> int:
     config = load_config()
     out = assets_dir(config) / "characters"
     out.mkdir(parents=True, exist_ok=True)
-    put(args.tsumugi, str(out / "tsumugi_helmet.png"), *PLACEMENTS["tsumugi"])
-    put(args.kenzaki, str(out / "kenzaki_helmet.png"), *PLACEMENTS["kenzaki"])
+    for key, src in (("tsumugi", args.tsumugi), ("kenzaki", args.kenzaki)):
+        cx, rim_y, w, angle, keep = PLACEMENTS[key]
+        put(src, str(out / f"{key}_helmet.png"), cx, rim_y, w, angle, keep=keep)
     print(f"立ち絵を作りました: {out}")
     return 0
 
