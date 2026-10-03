@@ -17,7 +17,7 @@ function smart(s) {
   return { ang: best.ang, x: C.W / 2 + Math.max(-60, Math.min(60, want)) - ox };
 }
 for (var run = 0; run < N; run++) {
-  var s = C.create(run + 1), r = mulberry(run + 7);
+  var s = C.create(run + 1, process.env.PLAT || 'seesaw'), r = mulberry(run + 7);
   while (!s.failed && s.score < 60 && s.t < 60 * 60 * 10) {
     if (C.canDrop(s) && !s.pendingScore) {
       var ang, x;

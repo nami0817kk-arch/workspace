@@ -35,6 +35,12 @@ var TenbinCore = (function () {
     });
     parts.forEach(function (pt) { pt.collisionFilter = filter; pt.friction = FR; pt.frictionStatic = FRS; });
     var body = M.Body.create(Object.assign({ parts: parts }, opt));
+    // matter は部品をまとめた体の慣性を「部品ごとの慣性の和」で済ませ、重心からの距離の分を足さない。
+    // そのままだと字が回りやすすぎて、動かない台に当たると勢いよく回って飛ぶ。平行軸の分を足して直す
+    var I = 0;
+    parts.forEach(function (pt) { var dx = pt.position.x - body.position.x, dy = pt.position.y - body.position.y;
+      I += pt.inertia + M.Body._inertiaScale * pt.mass * (dx * dx + dy * dy); });
+    M.Body.setInertia(body, I);
     M.Body.rotate(body, ang, { x: 0, y: 0 });
     M.Body.translate(body, { x: x, y: y });
     body.kind = kind;
@@ -53,23 +59,40 @@ var TenbinCore = (function () {
     return EXT[key];
   }
 
-  function create(seed) {
+  // 台の種類。てんびんはその1つ。boards は板（中心x・幅・傾き）。どれも同じ高さに置く
+  var PLATFORMS = {
+    flat:   { name: 'ふつう',   boards: [{ x: 200, w: 280 }] },
+    seesaw: { name: 'てんびん', boards: [{ x: 200, w: 320 }], seesaw: true },
+    sway:   { name: 'ゆらゆら', boards: [{ x: 200, w: 240 }], sway: { amp: 55, period: 480 } },
+    slope:  { name: 'さか',     boards: [{ x: 200, w: 280, a: -0.12 }] },
+    narrow: { name: 'せまい',   boards: [{ x: 200, w: 170 }] },
+    twin:   { name: 'ふたつ',   boards: [{ x: 118, w: 130 }, { x: 282, w: 130 }] }
+  };
+  var PLATFORM_KEYS = Object.keys(PLATFORMS);
+
+  function create(seed, platform) {
+    var def = PLATFORMS[platform] || PLATFORMS.flat;
     var engine = M.Engine.create({ positionIterations: 12, velocityIterations: 10, constraintIterations: 6 });
     var world = engine.world;
     var ground = M.Bodies.rectangle(W / 2, GROUND + 40, W * 4, 80, { isStatic: true, label: 'ground',
       collisionFilter: { category: CAT_STATIC, mask: CAT_CARGO } });
     var py = PIVOT_Y - PLANK_T / 2;
-    var plank = M.Bodies.rectangle(W / 2, py, PLANK_L, PLANK_T, { density: 0.0005, label: 'plank', friction: 0.9, frictionStatic: 1.2,
-      collisionFilter: { category: CAT_PLANK, mask: CAT_CARGO } });
-    var pin = M.Constraint.create({ pointA: { x: W / 2, y: py }, bodyB: plank, pointB: { x: 0, y: 0 }, stiffness: 1, length: 0 });
-    M.Composite.add(world, [ground, plank, pin]);
-    var s = { engine: engine, plank: plank, cargo: [], t: 0, failed: null, failedBody: null,
-      lastDropT: -999, score: 0, pendingScore: false, rng: rng(seed == null ? (Math.random() * 1e9) | 0 : seed), queue: [] };
+    var boards = def.boards.map(function (bd) {
+      var b = M.Bodies.rectangle(bd.x, py, bd.w, PLANK_T, { density: 0.0005, label: 'plank', friction: 0.9, frictionStatic: 1.2,
+        isStatic: !def.seesaw, collisionFilter: { category: CAT_PLANK, mask: CAT_CARGO } });
+      if (bd.a) M.Body.setAngle(b, bd.a);
+      b.baseX = bd.x; b.boardW = bd.w;
+      return b;
+    });
+    M.Composite.add(world, [ground].concat(boards));
+    if (def.seesaw) M.Composite.add(world, M.Constraint.create({ pointA: { x: W / 2, y: py }, bodyB: boards[0], pointB: { x: 0, y: 0 }, stiffness: 1, length: 0 }));
+    var s = { engine: engine, def: def, platform: PLATFORMS[platform] ? platform : 'flat', boards: boards, plank: boards[0], cargo: [], t: 0, sub: 0,
+      failed: null, failedBody: null, lastDropT: -999, score: 0, pendingScore: false, rng: rng(seed == null ? (Math.random() * 1e9) | 0 : seed), queue: [] };
     fillQueue(s); fillQueue(s);
     return s;
   }
 
-  // 同じ動物が続きすぎないよう、全種類を混ぜた袋から順に出す
+  // 同じ字が続きすぎないよう、全部の字を混ぜた袋から順に出す
   function rng(seed) { var x = seed >>> 0 || 1; return function () { x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; }
   function fillQueue(s) {
     var bag = KINDS.slice();
@@ -82,7 +105,8 @@ var TenbinCore = (function () {
 
   // いちばん高い所（y が小さいほど高い）
   function topY(s) {
-    var top = s.plank.bounds.min.y;
+    var top = Infinity;
+    s.boards.forEach(function (b) { top = Math.min(top, b.bounds.min.y); });
     s.cargo.forEach(function (b) { top = Math.min(top, b.bounds.min.y); });
     return top;
   }
@@ -104,12 +128,20 @@ var TenbinCore = (function () {
 
   // 物理だけ1コマ進める（失敗のあとの落ちていく様子にも使う）
   function physics(s) {
-    var p = s.plank, g = s.engine.gravity.y * s.engine.gravity.scale;
+    var p = s.plank, g = s.engine.gravity.y * s.engine.gravity.scale, def = s.def;
     for (var k = 0; k < SUB; k++) {
-      var w = (p.angle - p.anglePrev) / SDT;
-      p.force.y -= p.mass * g;
-      p.torque = (-K_SPRING * p.angle - C_DAMP * w) * p.inertia;
-      // ころがりにくく（実物の毛や手足の引っかかりの代わり）
+      if (def.seesaw) {
+        var w = (p.angle - p.anglePrev) / SDT;
+        p.force.y -= p.mass * g;
+        p.torque = (-K_SPRING * p.angle - C_DAMP * w) * p.inertia;
+      }
+      if (def.sway) {
+        // 左右にゆっくり往復。速さも渡して、上の字が板と一緒に運ばれるようにする
+        s.sub++;
+        var x = p.baseX + def.sway.amp * Math.sin(2 * Math.PI * s.sub / (def.sway.period * SUB));
+        M.Body.setPosition(p, { x: x, y: p.position.y }, true);
+      }
+      // ころがりにくく（字の角の引っかかりの代わり）
       for (var c = 0; c < s.cargo.length; c++) { var cb = s.cargo[c]; M.Body.setAngularVelocity(cb, cb.angularVelocity * ADAMP); }
       M.Engine.update(s.engine, SDT);
     }
@@ -119,25 +151,29 @@ var TenbinCore = (function () {
   function step(s) {
     if (s.failed) return;
     physics(s);
-    var p = s.plank, vs = p.vertices;
-    for (var i = 0; i < vs.length; i++) if (vs[i].y >= GROUND - 0.5) { s.failed = 'ground'; return; }
+    if (s.def.seesaw) { var vs = s.plank.vertices;
+      for (var i = 0; i < vs.length; i++) if (vs[i].y >= GROUND - 0.5) { s.failed = 'ground'; return; } }
     for (var j = 0; j < s.cargo.length; j++) {
       var b = s.cargo[j];
       if (b.bounds.max.y >= GROUND - 1 || b.position.x < -60 || b.position.x > W + 60) { s.failed = 'fall'; s.failedBody = b; return; }
     }
-    // 落とした動物が落ち着いたら1匹ぶん数える
+    // 落とした字が落ち着いたら1字ぶん数える
     if (s.pendingScore && canDrop(s)) { s.pendingScore = false; s.score++; }
   }
 
   function settled(s) {
-    if (Math.abs(s.plank.angularVelocity) > 0.0008) return false;
-    for (var j = 0; j < s.cargo.length; j++) if (s.cargo[j].speed > 0.08 || Math.abs(s.cargo[j].angularVelocity) > 0.005) return false;
+    if (s.def.seesaw && Math.abs(s.plank.angularVelocity) > 0.0008) return false;
+    // ゆらゆらの台では、板と一緒に動いている分は数えない
+    var vx = s.def.sway ? s.plank.velocity.x : 0;
+    for (var j = 0; j < s.cargo.length; j++) { var c = s.cargo[j];
+      if (Math.hypot(c.velocity.x - vx, c.velocity.y) > 0.08 || Math.abs(c.angularVelocity) > 0.005) return false; }
     return true;
   }
   function canDrop(s) { var d = s.t - s.lastDropT; return !s.failed && d >= 30 && (settled(s) || d >= 300); }
 
   // 板の傾き。-1..1（端が地面に着くと ±1）
   function tilt(s) {
+    if (!s.def.seesaw) return 0;
     var low = s.plank.vertices.reduce(function (m, v) { return v.y > m.y ? v : m; }, { y: -1e9 });
     var r = (low.y - PIVOT_Y) / (GROUND - PIVOT_Y);
     return Math.max(0, Math.min(1, r)) * (low.x < W / 2 ? -1 : 1);
@@ -145,6 +181,6 @@ var TenbinCore = (function () {
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
-    settled: settled, canDrop: canDrop, current: current, next: next, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
+    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;
