@@ -201,34 +201,64 @@ void main() {
       /// 同じ色にすると境目が曖昧になるので、はっきり分ける。
       // Material で包む。ColoredBox のままだと「Material の外のテキスト」
       // と見なされ、黄色い二重下線が引かれる(実際に引かれた)。
-      Widget captioned(String text, Widget screen) => Material(
-            color: const Color(0xFF14532D),
+      //
+      // 画面をそのまま全面に敷くと「撮っただけ」に見える。背景の上に少し
+      // 浮かせて、角を丸めて影を落とすと、作った絵として見える。
+      Widget captioned(String text, Widget screen) {
+        final tablet = device == _tablet;
+        return Material(
+          child: DecoratedBox(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF0F3D22), Color(0xFF1C6B3A)],
+              ),
+            ),
             child: Column(
               children: [
                 Padding(
                   padding: EdgeInsets.fromLTRB(
-                      24, device == _tablet ? 44 : 30, 24,
-                      device == _tablet ? 40 : 26),
-                  child: Text(
+                      28, tablet ? 52 : 38, 28, tablet ? 30 : 22),
+                  // **1行に収める。** 字を大きくしたら「11人をどう並べる／か」
+                  // のように語の途中で折り返した。入らないぶんは縮める。
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
                     text,
                     textAlign: TextAlign.center,
-                    maxLines: 2,
+                    maxLines: 1,
+                    softWrap: false,
                     style: TextStyle(
                       // **フォントを指定する。** 省くと日本語が豆腐(□)に
                       // なる。アプリの画面は theme が指定しているので出るが、
                       // この帯は theme の外にあるため当たらない。
                       fontFamily: 'NotoSansJP',
                       color: Colors.white,
-                      fontSize: device == _tablet ? 46 : 36,
-                      fontWeight: FontWeight.w700,
-                      height: 1.25,
+                      fontSize: tablet ? 54 : 42,
+                      fontWeight: FontWeight.w800,
+                      height: 1.2,
+                      letterSpacing: -0.5,
+                    ),
                     ),
                   ),
                 ),
-                Expanded(child: screen),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        tablet ? 56 : 30, 0, tablet ? 56 : 30, 0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(tablet ? 28 : 22)),
+                      child: screen,
+                    ),
+                  ),
+                ),
               ],
             ),
-          );
+          ),
+        );
+      }
 
       Widget wrap(Widget child) => MultiProvider(
             providers: [
