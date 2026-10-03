@@ -882,3 +882,19 @@ class ジャンル索引の深さTest(unittest.TestCase):
 
         self.assertIn("新しいジャンル", html)
         self.assertNotIn("terms subs", html)
+
+
+class 同じ値段は同じ順位Test(unittest.TestCase):
+    """並べ替えの偶然で「9番目」「10番目」「11番目」と散ると、順位が何も
+    意味しなくなる（実測で、同じ2,980円の商品3件に別々の順位が付いていた）。
+    """
+
+    def test_同じ値段の商品は同じ順位になる(self):
+        prices = [1000, 2000, 2000, 2000, 3000]
+        rank_of = {}
+        for i, p in enumerate(sorted(prices), 1):
+            rank_of.setdefault(p, i)
+
+        self.assertEqual(rank_of[1000], 1)
+        self.assertEqual(rank_of[2000], 2)   # 2,3,4 ではなく 2
+        self.assertEqual(rank_of[3000], 5)   # 飛ばした分は戻さない

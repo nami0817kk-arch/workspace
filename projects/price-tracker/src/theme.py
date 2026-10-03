@@ -2155,6 +2155,16 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                       f'{yen(price)} です。')
     elif row.get("near_low"):
         lead_state = f'記録した中の最安値 {yen(low)} に近い {yen(price)} です。'
+    elif row.get("moved") is False and int(row.get("sub_count") or 0) >= 10:
+        # 動いていない商品（実測で71.6%）は「ずっと同じ値段」としか書けず、
+        # 検索結果に並んでも押す理由が無かった。同じ分類の中での位置なら
+        # 言える（13,544商品ぶんの価格を毎日持っているから出せる）。
+        n, rank = int(row["sub_count"]), int(row["sub_rank"])
+        side = (f'高い方から{n - rank + 1:,}番目'
+                if rank * 2 > n else f'安い方から{rank:,}番目')
+        lead_state = (f'{esc(str(row.get("sub_name") or ""))} {n:,}件のうち'
+                      f'{side}の {yen(price)}。'
+                      f'記録{days}日のあいだ動いていません。')
     elif row.get("moved") is False:
         lead_state = (f'{yen(price)}。記録{days}日のあいだ'
                       f'価格は動いていません。')
@@ -2163,10 +2173,12 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                       f'{pct(row["vs_low_pct"])} 高い状態です。')
     else:
         lead_state = f'{yen(price)}。'
-    desc = (lead_state
-            + f'記録{days}日分・最安 {yen(low)}'
-            + f'／最高 {yen(row.get("high") or 0)}。'
-            + f'{short_name(row["name"], 16)} の価格の記録。')
+    # 動いていない商品では最安と最高が同じ値になる。頭で「動いていません」と
+    # 言ったうえで「最安 650円／最高 650円」を続けると、同じことを2回読ませる。
+    high = row.get("high") or 0
+    span = (f'記録{days}日分・最安 {yen(low)}／最高 {yen(high)}。'
+            if low != high else '')
+    desc = lead_state + span + f'{short_name(row["name"], 16)} の価格の記録。'
 
     # ポイント分を引いた実質価格の推移。倍率が一度も動かない商品では
     # 価格の線と重なるだけなので、その時は重ねない。

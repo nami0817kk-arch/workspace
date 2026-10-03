@@ -355,9 +355,17 @@ def build(root: Path, out: Path) -> dict:
             prices = sorted(int(r.get("price") or 0) for r in members)
             lo, hi = prices[0], prices[-1]
             middle = prices[len(prices) // 2]
-            for i, r in enumerate(sorted(members, key=lambda x: int(x.get("price") or 0)), 1):
+            # 同じ値段は同じ順位にする。並べ替えの偶然で「9番目」「10番目」
+            # 「11番目」と散ると、順位が何も意味しなくなる（実測で、同じ
+            # 2,980円の商品3件に別々の順位が付いていた）。
+            rank_of = {}
+            for i, pz in enumerate(prices, 1):
+                rank_of.setdefault(pz, i)
+            for r in members:
                 sub_stats[r["item_code"]] = {
-                    "sub_name": name, "sub_rank": i, "sub_count": len(members),
+                    "sub_name": name,
+                    "sub_rank": rank_of[int(r.get("price") or 0)],
+                    "sub_count": len(members),
                     "sub_low": lo, "sub_mid": middle, "sub_high": hi,
                     "sub_path": f"genre/{src}/{mid}/"}
 
