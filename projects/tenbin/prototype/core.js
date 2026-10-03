@@ -15,6 +15,8 @@ var TenbinCore = (function () {
   // 写真の動物（tool/trace.js が作る photos.js）があれば、同じ種類のシルエットを置き換える
   var PHOTOS = (typeof TenbinPhotos !== 'undefined') ? TenbinPhotos : (function () { try { return require('./photos.js'); } catch (e) { return {}; } })();
   Object.keys(PHOTOS).forEach(function (k) { ANIMALS[k] = PHOTOS[k]; });
+  // 写真が1枚でもあれば、写真の動物だけで遊ぶ（仮の絵と混ぜない）
+  if (Object.keys(PHOTOS).length) Object.keys(ANIMALS).forEach(function (k) { if (!PHOTOS[k]) delete ANIMALS[k]; });
   var decomp = (typeof window !== 'undefined' && window.decomp) || (typeof require !== 'undefined' ? require('poly-decomp') : null);
   M.Common.setDecomp(decomp);
   var KINDS = Object.keys(ANIMALS);

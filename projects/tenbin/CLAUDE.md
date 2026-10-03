@@ -27,7 +27,12 @@
 手本はどうぶつタワーの画面: **写真の切り抜きの動物**、青い空に絵の太陽と雲、緑のギザギザの台。
 - 空・太陽・雲・海・緑のギザギザの台は描いた
 - 動物は **写真に差し替える前提**。いまの `animals.js` は横向きシルエットの仮の絵
-- 写真は **フリー素材（Pixabay）**（ユーザー決定 2026-10-03）。`tool/photos.py` で
+- 写真は **ユーザーが Gemini で作る**（2026-10-03。Pixabay 案から変更）。条件は「本物の写真風・真横・右向き・
+  体全体・無地の灰色背景・影なし・1:1」。チャットに貼ってもらい `work/candidates/<種類>/00.jpg` に置いて、
+  `node tool/cutout.js <入力> prototype/photos/<種類>.png [--flip]` → `node tool/trace.js <種類> prototype/photos/<種類>.png <名前> <幅>`。
+  cutout.js は外周の色から背景の面を求め、模様の無い所を外側から消す（rembg は不要）
+- 写真が1枚でもあれば、写真の動物だけで遊ぶ（仮のシルエットと混ぜない）
+- 以下は Pixabay を使う場合の手順（いまは使っていない）。`tool/photos.py` で
   集める → 背景を消す（rembg）→ 一覧から選ぶ → 右向きにそろえて取り込む。手順は photos.py の先頭。
   **クラウドの環境からは Pixabay にも rembg のモデルにも届かない**ので、このPCで流す。
   道具は `npm install`（projects/tenbin）と `pip install requests rembg pillow onnxruntime`
