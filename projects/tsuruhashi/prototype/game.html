@@ -179,6 +179,24 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .itembig{display:flex;gap:12px;align-items:center;margin:6px 0 4px}
 .itembig .ic{flex:0 0 72px;height:72px;border-radius:16px;background:var(--panel2);display:grid;place-items:center}
 
+/* ---- 案内の吹き出し・代替わりの演出・数字の跳ね ---- */
+.coach{position:fixed;z-index:30;bottom:calc(74px + env(safe-area-inset-bottom,0px));left:12px;max-width:260px;background:#2b2118;color:#fff4dc;border:2px solid #f6b85c;border-radius:14px;padding:8px 12px;font-size:13px;font-weight:800;line-height:1.4;box-shadow:var(--lift);pointer-events:none;animation:coachb 1.6s ease-in-out infinite}
+.coach small{display:block;font-weight:500;color:#d9c8ad;font-size:12px}
+.coach::after{content:"";position:absolute;bottom:-9px;left:var(--ax,30px);border:8px solid transparent;border-bottom:0;border-top-color:#f6b85c}
+@keyframes coachb{50%{transform:translateY(-4px)}}
+.cere{position:fixed;inset:0;z-index:55;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse at 50% 40%,rgba(74,52,32,.96),rgba(13,9,6,.98));color:#fff4dc;text-align:center;animation:cerein .5s ease-out both}
+.cere .logo{width:110px;height:110px;animation:cerelogo 1.2s ease-out both}
+.cere .g1{font-size:14px;letter-spacing:.3em;color:#f6b85c;font-weight:800}
+.cere .g2{font-size:32px;font-weight:800;text-shadow:0 3px 0 #000}
+.cere .g3{font-size:18px;font-weight:800;color:#ffd166}
+.cere .g4{font-size:12px;color:#d9c8ad}
+.cere.out{animation:cereout .5s ease-in both}
+@keyframes cerein{from{opacity:0}}
+@keyframes cereout{to{opacity:0}}
+@keyframes cerelogo{0%{transform:scale(.4) rotate(-40deg);opacity:0}60%{transform:scale(1.1) rotate(6deg);opacity:1}100%{transform:none}}
+.hud .ore b.pop{animation:orepop .35s ease-out}
+@keyframes orepop{40%{transform:scale(1.15)}}
+@media (prefers-reduced-motion: reduce){ .coach,.cere,.cere .logo,.hud .ore b.pop{animation:none} }
 /* ---- 起動画面 ---- */
 .title{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
   background:radial-gradient(ellipse at 50% 35%,#4a3420 0,#1c140d 60%,#0d0906 100%);color:#fff4dc;text-align:center;padding:24px;transition:opacity .5s}
@@ -280,6 +298,8 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
   </div>
 </div>
 
+<div class="coach" id="coach" hidden></div>
+
 <div class="title" id="title">
   <svg class="logo" viewBox="0 0 120 120" aria-hidden="true">
     <circle cx="60" cy="60" r="56" fill="#2b1d10" stroke="#f6b85c" stroke-width="4"/>
@@ -359,16 +379,16 @@ const WK = [
 ];
 
 const LAYERS = [
-  { name:'表土',     block:'#a4733f', wall:'#7b5330', hollow:'#35241a', speck:'#c99c63', glow:false },
-  { name:'岩石層',   block:'#8e939a', wall:'#6a6e75', hollow:'#26282c', speck:'#b8bcc2', glow:false },
-  { name:'鉄鉱脈',   block:'#7d5b4b', wall:'#583f33', hollow:'#221716', speck:'#d0693a', glow:false },
-  { name:'水晶洞',   block:'#433f78', wall:'#2d2a55', hollow:'#15132b', speck:'#c3a8ff', glow:true },
-  { name:'溶岩層',   block:'#5e2619', wall:'#3f1810', hollow:'#190a06', speck:'#ff7b2a', glow:true },
-  { name:'古代層',   block:'#44503f', wall:'#2d372a', hollow:'#111710', speck:'#e6c96a', glow:true },
-  { name:'地底湖',   block:'#1f4d5c', wall:'#163845', hollow:'#08171d', speck:'#6fe3f0', glow:true },
-  { name:'菌糸の森', block:'#3d4a2a', wall:'#2b351d', hollow:'#10140a', speck:'#b6f06a', glow:true },
-  { name:'巨人の骨', block:'#6b6152', wall:'#4d463b', hollow:'#1a1713', speck:'#f1e6c8', glow:false },
-  { name:'星の核',   block:'#2a1e45', wall:'#1c1430', hollow:'#0a0612', speck:'#ff9ee8', glow:true },
+  { name:'表土',     block:'#a4733f', wall:'#7b5330', hollow:'#35241a', speck:'#c99c63', glow:false , desc:'草の根と小石。まずは足ならし' },
+  { name:'岩石層',   block:'#8e939a', wall:'#6a6e75', hollow:'#26282c', speck:'#b8bcc2', glow:false , desc:'かたい岩が重なる。ひびに沿って掘れ' },
+  { name:'鉄鉱脈',   block:'#7d5b4b', wall:'#583f33', hollow:'#221716', speck:'#d0693a', glow:false , desc:'赤い筋が走る、昔の坑夫たちの道' },
+  { name:'水晶洞',   block:'#433f78', wall:'#2d2a55', hollow:'#15132b', speck:'#c3a8ff', glow:true , desc:'紫の結晶が、ランタンの光を返す' },
+  { name:'溶岩層',   block:'#5e2619', wall:'#3f1810', hollow:'#190a06', speck:'#ff7b2a', glow:true , desc:'足もとが熱い。割れ目の奥で赤く光る' },
+  { name:'古代層',   block:'#44503f', wall:'#2d372a', hollow:'#111710', speck:'#e6c96a', glow:true , desc:'刻まれた石。誰かが先に来ていた' },
+  { name:'地底湖',   block:'#1f4d5c', wall:'#163845', hollow:'#08171d', speck:'#6fe3f0', glow:true , desc:'しずくの音だけが響く、光のない湖' },
+  { name:'菌糸の森', block:'#3d4a2a', wall:'#2b351d', hollow:'#10140a', speck:'#b6f06a', glow:true , desc:'光るきのこが、森のように群れる' },
+  { name:'巨人の骨', block:'#6b6152', wall:'#4d463b', hollow:'#1a1713', speck:'#f1e6c8', glow:false , desc:'壁から突き出た、山ほどの骨' },
+  { name:'星の核',   block:'#2a1e45', wall:'#1c1430', hollow:'#0a0612', speck:'#ff9ee8', glow:true , desc:'地の底なのに、星が瞬いている' },
 ];
 // 層の組の効果（その層の5種がそろうと付く）
 const SETS = [
@@ -477,7 +497,7 @@ const fresh = () => ({
   boostUntil:0, boostLv:0, boostAt:0, last:NOW(),
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0 },
-  sound:true, haptic:true, theme:'auto', notifAsked:false, buyN:1,
+  sound:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0,
 });
 function normalize(o){
   const S = Object.assign(fresh(), o || {});
@@ -1103,7 +1123,6 @@ function nextReq(){
 let lastBook = -1, coSeen = 0, lastFrag = '';
 function updateUI(force){
   const M = mods(S);
-  $('sOre').textContent = fmt(S.ore);
   $('sDepth').textContent = S.depth + 'm';
   $('sBest').textContent = S.best + 'm';
   $('sDps').textContent = fmt(crewDps(S, true, M) * boostMul(S));
@@ -1338,10 +1357,44 @@ $('rbGo').addEventListener('click', () => {
   if (!g) return;
   camY = -4; parts.length = 0; floats.length = 0; veinLeft = 0; veinEl.style.display = 'none';
   buildPanels(); setTab('tool');
-  toast('代替わり', `${genName(S.gen)}社長が就任`, `名声 +${fmt(g)}（力 ×${fameMul(S.fame).toFixed(1)}）`, pickIcon(1));
+  ceremony(g);
   sfx('tier'); haptic('success'); setTimeout(() => banner(0), 300);
   save();
 });
+
+// 代替わりの演出（押すか2.6秒で閉じる）
+function ceremony(g){
+  const el = document.createElement('div');
+  el.className = 'cere';
+  el.innerHTML = `${document.querySelector('#title .logo').outerHTML}<div class="g1">つるはし社</div><div class="g2">${genName(S.gen)}社長 就任</div>
+    <div class="g3">名声 +${fmt(g)}</div><div class="g4">仲間の力 ×${fameMul(S.fame).toFixed(1)}　・　図鑑と社史は引き継がれる</div>`;
+  document.body.appendChild(el);
+  let done = false;
+  const close = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); banner(0); }, 480); };
+  el.addEventListener('click', close); setTimeout(close, 2600);
+}
+
+// 最初の数分の案内（吹き出し）。済んだら S.tut を進め、二度と出さない
+const COACH = [
+  { done: st => st.w.reduce((a, b) => a + b, 0) > 2, tab: 'crew', t: '仲間を雇おう', s: '「仲間」から見習い坑夫を。人数ぶん速く掘れる' },
+  { done: st => st.pick >= 3, tab: 'tool', t: 'つるはしを強くしよう', s: '「道具」から。仲間みんなの力が上がる' },
+  { done: st => st.best > LAYER_LEN, tab: 'tool', when: st => locked(st), t: '岩盤！ つるはしの Lv で割れる', s: '帯に出ている Lv まで、つるはしを強くしよう' },
+  { done: st => speciesCountOf(st) >= 1 && st.seen && Object.keys(st.seen).length >= 1, tab: 'book', when: st => speciesCountOf(st) >= 1, t: '何か見つけた！', s: '「図鑑」で確かめよう。1種ごとに鉱石が増える' },
+  { done: st => st.gen > 1, tab: 'co', when: st => canRebirth(st), t: '代替わりができる', s: '「社」から。名声で次の代の仲間が強くなる' },
+];
+function updateCoach(){
+  const el = $('coach');
+  if (S.tut == null) S.tut = 0;
+  while (S.tut < COACH.length && COACH[S.tut].done(S)) S.tut++;
+  const c = COACH[S.tut];
+  const busy = titleOpen || pendingAway || rbOpen || document.querySelector('.modal.on');
+  if (!c || busy || (c.when && !c.when(S)) || tab === c.tab) { el.hidden = true; return; }
+  el.innerHTML = `${c.t}<small>${c.s}</small>`;
+  el.hidden = false;
+  const tb = document.querySelector(`.tabs [data-tab="${c.tab}"]`).getBoundingClientRect();
+  const w = el.offsetWidth, left = Math.max(8, Math.min(window.innerWidth - w - 8, tb.left + tb.width / 2 - w / 2));
+  el.style.left = left + 'px'; el.style.setProperty('--ax', (tb.left + tb.width / 2 - left - 8) + 'px');
+}
 
 // ================= 音（WebAudio で合成） =================
 let AC = null;
@@ -1377,6 +1430,8 @@ function sfx(kind){
   else if (kind === 'buy') { tone(520, 780, 0.09, 0.1, 'triangle'); }
   else if (kind === 'tier') { tone(392, 784, 0.25, 0.12, 'triangle'); tone(588, 1176, 0.3, 0.08, 'sine', 0.06); }
   else if (kind === 'ui') { tone(700, 700, 0.03, 0.05, 'sine'); }
+  else if (kind === 'clink') { const f = 900 + layerIdxForDepth(S.depth) * 60 + Math.random() * 300; tone(f, f * 0.8, 0.05, 0.025, 'triangle'); noise(0.03, 2400, 2, 0.06); }
+  else if (kind === 'clinkHard') { const f = 1700 + Math.random() * 300; tone(f, f * 0.97, 0.09, 0.03, 'square'); }
 }
 
 // ================= 描画 =================
@@ -1496,7 +1551,7 @@ function drawCrew(dt, fy){
       else if (f.i === 4) drawRobot(fx, y, f.face, ang, f.sc);
       else if (f.i === 5) drawCart(fx, y, f.face, tAll + f.ph, f.sc);
       else if (f.i === 6) { drawShield(fx, y, f.face, tAll + f.ph, f.sc); if (row === 0 && Math.random() < dt * 5) burst(fx + f.face * 22, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.6); }
-      else drawPerson(fx, y, f.sc, HAT[f.i], f.face, ang, '#b9c2cc', false);
+      else drawPerson(fx, y, f.sc, HAT[f.i], f.face, ang, '#b9c2cc', false, f.i);
       }
     }
   }
@@ -1600,20 +1655,34 @@ function drawPick(x, y, ang, len, headColor, sc){
   ctx.fill(); ctx.stroke();
   ctx.restore();
 }
-function drawPerson(x, y, sc, hat, face, ang, pickColor, lamp){
+// 服装：0 見習い（青いつなぎ）／1 ベテラン（茶のベスト・ひげ）／2 発破係（赤い上着・背中にダイナマイト）／9 社長（黄色いヘルメット・ライト）
+const OUTFIT = {
+  0: { body:'#3b6ea8', belt:'#e8b44a', leg:'#2f3b52' },
+  1: { body:'#7a5230', belt:'#3a2a1a', leg:'#3b3b46', beard:true },
+  2: { body:'#b8402e', belt:'#2b2118', leg:'#2f3b52', tnt:true },
+  9: { body:'#3b6ea8', belt:'#e8b44a', leg:'#2f3b52', boss:true },
+};
+function drawPerson(x, y, sc, hat, face, ang, pickColor, lamp, kind){
   // y = 足元。face=1 右向き
+  const O = OUTFIT[kind == null ? 0 : kind] || OUTFIT[0];
   ctx.save(); ctx.translate(x, y); ctx.scale(face * sc, sc);
-  ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0, 0, 11, 3, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = '#2f3b52'; ctx.fillRect(-6, -12, 5, 12); ctx.fillRect(1, -12, 5, 12);
+  ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(0, 0, 11, 3, 0, 0, Math.PI * 2); ctx.fill();
   ctx.strokeStyle = 'rgba(20,12,6,.55)'; ctx.lineWidth = 1.4;
-  ctx.fillStyle = '#3b6ea8'; roundRect(-8, -30, 16, 20, 5); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#e8b44a'; ctx.fillRect(-8, -24, 16, 3);
+  if (O.tnt) { ctx.fillStyle = '#d8344a'; ctx.fillRect(-12, -30, 4, 12); ctx.fillRect(-15, -29, 4, 12); ctx.strokeRect(-15, -30, 7, 13); ctx.strokeStyle = '#e8d070'; ctx.beginPath(); ctx.moveTo(-12, -30); ctx.quadraticCurveTo(-14, -35, -10, -36); ctx.stroke(); ctx.strokeStyle = 'rgba(20,12,6,.55)'; }
+  ctx.fillStyle = O.leg; roundRect(-6, -13, 5, 12, 2); ctx.fill(); roundRect(1, -13, 5, 12, 2); ctx.fill();
+  ctx.fillStyle = '#2b2118'; roundRect(-7, -3, 7, 3.5, 1.5); ctx.fill(); roundRect(1, -3, 7, 3.5, 1.5); ctx.fill();
+  ctx.fillStyle = O.body; roundRect(-8, -30, 16, 20, 5); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = O.belt; ctx.fillRect(-8, -16, 16, 3);
+  if (O.boss) { ctx.fillStyle = '#f2c230'; ctx.fillRect(-2, -29, 4, 12); }
   ctx.fillStyle = '#f1c9a0'; ctx.beginPath(); ctx.arc(1, -37, 7.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#2b2118'; ctx.beginPath(); ctx.arc(4, -37, 1.2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(230,120,100,.45)'; ctx.beginPath(); ctx.arc(5, -34.5, 1.6, 0, 7); ctx.fill();
+  if (O.beard) { ctx.fillStyle = '#d9d4c8'; ctx.beginPath(); ctx.ellipse(4, -32.5, 4, 1.8, 0, 0, 7); ctx.fill(); }
   ctx.fillStyle = hat; ctx.beginPath(); ctx.arc(1, -39, 8.5, Math.PI, 0); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillRect(-8, -40, 18, 2.5);
+  ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.arc(-1, -43, 3, Math.PI * 1.1, Math.PI * 1.7); ctx.lineTo(-1, -43); ctx.fill();
   if (lamp) { ctx.fillStyle = '#fff6c4'; ctx.beginPath(); ctx.arc(8, -43, 2.4, 0, Math.PI * 2); ctx.fill(); }
   drawPick(2, -27, ang, 22, pickColor, 1);
-  ctx.fillStyle = '#f1c9a0'; ctx.beginPath(); ctx.arc(2 + Math.cos(ang) * 8, -27 + Math.sin(ang) * 8, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#f1c9a0'; ctx.beginPath(); ctx.arc(2 + Math.cos(ang) * 8, -27 + Math.sin(ang) * 8, 3, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   ctx.restore();
 }
 function roundRect(x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
@@ -1707,7 +1776,7 @@ function draw(dt){
     if (bed) {
       ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.lineWidth = 3;
       for (let x = -R; x < VW + R; x += 12) { ctx.beginPath(); ctx.moveTo(x, y + R); ctx.lineTo(x + R, y); ctx.stroke(); }
-    }
+    } else drawDeco(li, m, y, sx, sw, false);
     if (m < S.depth) {
       ctx.fillStyle = L.hollow; ctx.fillRect(sx, y - 0.3, sw, R + 0.9);
       // 奥の壁の岩はだ（掘り跡のでこぼこ）
@@ -1751,6 +1820,7 @@ function draw(dt){
       ctx.fillStyle = bed ? '#34343c' : shade(L.block, -0.12); ctx.fillRect(sx, y, sw, R);
       ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(sx, y, sw, 1);
       for (let c = 0; c < 6; c++) { const h = hash(m * 313 + c * 71); if (h % 3) continue; ctx.fillStyle = bed ? '#4a4a55' : L.speck; ctx.globalAlpha = 0.8; ctx.fillRect(sx + 8 + (h >>> 4) % (sw - 16), y + 4 + (h >>> 9) % (R - 10), 3, 3); ctx.globalAlpha = 1; }
+      if (!bed) drawDeco(li, m, y, sx, sw, true);
       if (room) drawRoomGlow(sx, y, sw);
     }
     if (m % 5 === 0 && m > 0) {
@@ -1783,8 +1853,13 @@ function draw(dt){
       ctx.beginPath(); ctx.arc(mx, my, 1.4 * d.s, 0, 7); ctx.fill();
     }
   }
-  // 仲間
+  // 仲間（社長のヘルメットのライトは仲間の後ろに、暗い深さでだけ淡く）
   const fy = rowY(S.depth);
+  if (S.depth > 8) {
+    const lx = cx() + 8, ly = fy - 43, beam = ctx.createRadialGradient(lx, ly, 4, lx + 26, ly + 34, 64);
+    beam.addColorStop(0, 'rgba(255,246,196,.2)'); beam.addColorStop(1, 'rgba(255,246,196,0)');
+    ctx.fillStyle = beam; ctx.beginPath(); ctx.arc(lx + 26, ly + 34, 64, 0, 7); ctx.fill();
+  }
   drawCrew(dt, fy);
   swingT += dt;
   const pang = swingT < 0.4 ? swingAngle(swingT, 1) : -2.3 + Math.sin(tAll * 2.2) * 0.06;
@@ -1795,7 +1870,7 @@ function draw(dt){
     bg.addColorStop(0, `rgba(255,230,150,${0.7 * k})`); bg.addColorStop(1, 'rgba(255,230,150,0)');
     ctx.fillStyle = bg; ctx.fillRect(cx() - rr, fy - 26 - rr, rr * 2, rr * 2);
   }
-  drawPerson(cx(), fy, 1, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true);
+  drawPerson(cx(), fy, 1, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true, 9);
   for (let i = parts.length - 1; i >= 0; i--) {
     const p = parts[i]; p.life -= dt;
     if (p.life <= 0) { parts.splice(i, 1); continue; }
@@ -1844,21 +1919,87 @@ function draw(dt){
     flashT += dt;
     ctx.fillStyle = `rgba(255,248,230,${(reduced ? 0.35 : 0.8) * (1 - flashT / 0.4)})`; ctx.fillRect(0, 0, W, H);
   }
-  if (bannerT < 2.6) {
+  if (bannerT < 3.2) {
+    // 層の見出し：帯が横から伸び、名前と紹介文
     bannerT += dt;
-    const a = bannerT < 0.3 ? bannerT / 0.3 : bannerT > 2 ? (2.6 - bannerT) / 0.6 : 1;
+    const a = bannerT < 0.3 ? bannerT / 0.3 : bannerT > 2.6 ? (3.2 - bannerT) / 0.6 : 1;
+    const L = LAYERS[bannerL], bw = W - MAP_W, by = H * 0.22, open = reduced ? 1 : Math.min(1, bannerT / 0.35);
     ctx.globalAlpha = Math.max(0, a);
-    ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(0, H * 0.2, W - MAP_W, 58);
-    ctx.textAlign = 'center'; ctx.fillStyle = LAYERS[bannerL].speck; ctx.font = '800 12px "M PLUS Rounded 1c", sans-serif';
-    ctx.fillText(bannerL === 0 ? `つるはし社 ${genName(S.gen)} 採掘はじめ` : `${bannerL * LAYER_LEN}m 到達`, (W - MAP_W) / 2, H * 0.2 + 20);
-    ctx.fillStyle = '#fff'; ctx.font = '800 22px "M PLUS Rounded 1c", sans-serif';
-    ctx.fillText(`第${bannerL + 1}層 ${LAYERS[bannerL].name}`, (W - MAP_W) / 2, H * 0.2 + 46);
+    const bg = ctx.createLinearGradient(0, by, 0, by + 82);
+    bg.addColorStop(0, 'rgba(10,6,3,.82)'); bg.addColorStop(1, 'rgba(10,6,3,.6)');
+    ctx.fillStyle = bg; ctx.fillRect(bw / 2 * (1 - open), by, bw * open, 82);
+    ctx.fillStyle = L.speck; ctx.fillRect(bw / 2 * (1 - open), by, bw * open, 2); ctx.fillRect(bw / 2 * (1 - open), by + 80, bw * open, 2);
+    ctx.textAlign = 'center'; ctx.fillStyle = L.speck; ctx.font = '800 12px "M PLUS Rounded 1c", sans-serif';
+    ctx.fillText(bannerL === 0 ? `つるはし社 ${genName(S.gen)} 採掘はじめ` : `${bannerL * LAYER_LEN}m 到達`, bw / 2, by + 20);
+    ctx.fillStyle = '#fff'; ctx.font = '800 24px "M PLUS Rounded 1c", sans-serif';
+    ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.strokeText(`第${bannerL + 1}層 ${L.name}`, bw / 2, by + 48); ctx.fillText(`第${bannerL + 1}層 ${L.name}`, bw / 2, by + 48);
+    ctx.fillStyle = '#e9dcc4'; ctx.font = '500 12px "M PLUS Rounded 1c", sans-serif';
+    ctx.fillText(L.desc, bw / 2, by + 70);
     ctx.globalAlpha = 1;
   }
   drawMap();
   if (shakeT > 0) shakeT = Math.max(0, shakeT - dt);
   blockHitT += dt; clankT += dt;
 }
+// 層ごとの壁の模様（左右の壁と、掘る前のブロックの中）。位置は hash で決まり、毎回同じ所に同じ物が出る
+function drawDeco(li, m, y, sx, sw, inside){
+  const n = inside ? 1 : 3;
+  for (let k = 0; k < n; k++) {
+    const h = hash(m * 92821 + k * 6151 + li * 31);
+    if (h % (inside ? 3 : 2)) continue;
+    let x;
+    if (inside) x = sx + 14 + (h >>> 5) % Math.max(1, sw - 28);
+    else { const left = (h >>> 3) & 1, wl = Math.max(0, sx - 14); if (left) { if (wl < 10) continue; x = 6 + (h >>> 5) % wl; } else { const wr = VW - MAP_W / Z - (sx + sw) - 14; if (wr < 10) continue; x = sx + sw + 8 + (h >>> 5) % wr; } }
+    const yy = y + 4 + (h >>> 11) % (R - 8), r1 = (h >>> 15) % 1000 / 1000, sz = 0.7 + r1 * 0.7;
+    ctx.save(); ctx.translate(x, yy); ctx.scale(sz, sz);
+    DECO[li](h, r1);
+    ctx.restore();
+  }
+}
+const DECO = [
+  // 表土：小石と木の根
+  (h, r) => { if (h & 64) { ctx.fillStyle = '#9b8466'; ctx.beginPath(); ctx.ellipse(0, 0, 5, 3.5, r, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.beginPath(); ctx.ellipse(-1.5, -1.2, 2, 1, r, 0, 7); ctx.fill(); }
+    else { ctx.strokeStyle = '#5a3a1e'; ctx.lineWidth = 1.6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-8, -6); ctx.quadraticCurveTo(-2, 0, 2, 6); ctx.moveTo(-2, 0); ctx.quadraticCurveTo(4, -1, 8, 3); ctx.stroke(); } },
+  // 岩石層：角ばった石とひび
+  (h, r) => { ctx.fillStyle = '#a3a8ae'; ctx.beginPath(); ctx.moveTo(-6, 3); ctx.lineTo(-3, -5); ctx.lineTo(5, -4); ctx.lineTo(7, 3); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.3)'; ctx.beginPath(); ctx.moveTo(-3, -5); ctx.lineTo(5, -4); ctx.lineTo(2, -1); ctx.closePath(); ctx.fill();
+    if (h & 128) { ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(8, -8); ctx.lineTo(11, -2); ctx.lineTo(9, 4); ctx.lineTo(13, 9); ctx.stroke(); } },
+  // 鉄鉱脈：赤い鉱脈の筋と金属の粒
+  (h, r) => { ctx.strokeStyle = '#c4572c'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-12, 5); ctx.quadraticCurveTo(-2, -2, 12, -5); ctx.stroke();
+    ctx.strokeStyle = '#e88a52'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#d9dde3'; ctx.fillRect(-4, -1, 2, 2); ctx.fillRect(5, -4, 2, 2); },
+  // 水晶洞：光る結晶の群れ
+  (h, r) => { const g = reduced ? 0.8 : 0.65 + 0.35 * Math.sin(tAll * 2 + r * 9);
+    ctx.fillStyle = `rgba(195,168,255,${0.25 * g})`; ctx.beginPath(); ctx.arc(0, 0, 11, 0, 7); ctx.fill();
+    [[-4, 0, 0.3], [0, -2, 0], [4, 0, -0.35]].forEach(([dx, dy, a]) => { ctx.save(); ctx.translate(dx, 4); ctx.rotate(a);
+      ctx.fillStyle = '#9b6bd6'; ctx.beginPath(); ctx.moveTo(-2.5, 0); ctx.lineTo(-2.5, -8 + dy); ctx.lineTo(0, -12 + dy); ctx.lineTo(2.5, -8 + dy); ctx.lineTo(2.5, 0); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = `rgba(230,215,255,${0.7 * g})`; ctx.fillRect(-1.5, -9 + dy, 1.2, 7); ctx.restore(); }); },
+  // 溶岩層：脈打つ割れ目
+  (h, r) => { const g = reduced ? 0.8 : 0.55 + 0.45 * Math.sin(tAll * 3 + r * 11);
+    ctx.strokeStyle = `rgba(255,120,40,${g})`; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-10, -4); ctx.lineTo(-3, 1); ctx.lineTo(2, -3); ctx.lineTo(10, 4); ctx.stroke();
+    ctx.strokeStyle = `rgba(255,220,120,${g})`; ctx.lineWidth = 0.8; ctx.stroke();
+    ctx.fillStyle = `rgba(255,140,60,${0.18 * g})`; ctx.beginPath(); ctx.arc(0, 0, 12, 0, 7); ctx.fill(); },
+  // 古代層：刻まれた石と歯車の化石
+  (h, r) => { if (h & 256) { ctx.strokeStyle = 'rgba(230,201,106,.55)'; ctx.lineWidth = 1.4; ctx.strokeRect(-7, -6, 14, 12); ctx.beginPath(); ctx.moveTo(-4, -2); ctx.lineTo(4, -2); ctx.moveTo(-4, 2); ctx.lineTo(1, 2); ctx.stroke(); }
+    else { ctx.fillStyle = 'rgba(168,137,78,.8)'; ctx.save(); ctx.scale(0.35, 0.35); ctx.translate(-20, -20); ctx.fill(pathOf('gear'), 'evenodd'); ctx.restore(); } },
+  // 地底湖：波打つ水の筋と、落ちるしずく
+  (h, r) => { ctx.strokeStyle = 'rgba(111,227,240,.45)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-12, 0); ctx.quadraticCurveTo(-6, -3, 0, 0); ctx.quadraticCurveTo(6, 3, 12, 0); ctx.stroke();
+    if (!reduced && h & 32) { const t = (tAll * 0.6 + r * 7) % 1; ctx.fillStyle = `rgba(160,240,250,${1 - t})`; ctx.beginPath(); ctx.ellipse(0, -2 + t * 26, 1.4, 2.2, 0, 0, 7); ctx.fill(); } },
+  // 菌糸の森：光るきのこと菌糸
+  (h, r) => { const g = reduced ? 0.8 : 0.6 + 0.4 * Math.sin(tAll * 1.5 + r * 13);
+    ctx.strokeStyle = 'rgba(182,240,106,.35)'; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(-10, 6); ctx.quadraticCurveTo(-4, 2, 0, 6); ctx.quadraticCurveTo(5, 9, 10, 4); ctx.stroke();
+    ctx.fillStyle = `rgba(182,240,106,${0.25 * g})`; ctx.beginPath(); ctx.arc(0, -2, 9, 0, 7); ctx.fill();
+    ctx.fillStyle = '#e9e0c8'; ctx.fillRect(-1, -2, 2, 7);
+    ctx.fillStyle = `rgba(150,230,90,${0.6 + 0.4 * g})`; ctx.beginPath(); ctx.arc(0, -2, 5, Math.PI, 0); ctx.closePath(); ctx.fill(); },
+  // 巨人の骨：壁から突き出る骨
+  (h, r) => { ctx.fillStyle = '#e9dfc6'; ctx.strokeStyle = 'rgba(0,0,0,.3)'; ctx.lineWidth = 1;
+    ctx.save(); ctx.rotate(r * 2 - 1); roundRect(-10, -2.5, 20, 5, 2.5); ctx.fill(); ctx.stroke();
+    [-10, 10].forEach(e => { ctx.beginPath(); ctx.arc(e, -2.5, 3, 0, 7); ctx.arc(e, 2.5, 3, 0, 7); ctx.fill(); }); ctx.restore(); },
+  // 星の核：瞬く星
+  (h, r) => { const g = reduced ? 0.8 : 0.4 + 0.6 * Math.abs(Math.sin(tAll * 2 + r * 17));
+    ctx.fillStyle = `rgba(255,158,232,${0.18 * g})`; ctx.beginPath(); ctx.arc(0, 0, 10, 0, 7); ctx.fill();
+    ctx.fillStyle = `rgba(255,240,200,${g})`; ctx.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? 1.4 : 5; ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); },
+];
 function drawRoomGlow(sx, y, sw){
   const a = reduced ? 0.7 : 0.55 + 0.35 * Math.sin(tAll * 3);
   ctx.strokeStyle = `rgba(255,209,102,${a})`; ctx.lineWidth = 3; ctx.strokeRect(sx + 2, y + 2, sw - 4, R - 4);
@@ -1867,7 +2008,9 @@ function drawRoomGlow(sx, y, sw){
   ctx.beginPath(); ctx.moveTo(bx - 12, y + R - 8); ctx.lineTo(bx - 12, y + 14); ctx.quadraticCurveTo(bx, y + 4, bx + 12, y + 14); ctx.lineTo(bx + 12, y + R - 8); ctx.closePath(); ctx.fill();
   ctx.fillStyle = 'rgba(80,50,0,.6)'; ctx.fillRect(bx - 12, y + 16, 24, 2); ctx.fillRect(bx - 2, y + 16, 4, 7);
 }
+let lastClink = 0;
 function crewHit(i, fx0, face){
+  if (tAll - lastClink > 0.22) { lastClink = tAll; sfx(locked(S) ? 'clinkHard' : 'clink'); }
   const x = fx0 + face * 14, y = rowY(S.depth);
   if (locked(S)) sparks(x, y, reduced ? 1 : 3);
   else burst(x, y, i === 2 ? 8 : 3, LAYERS[layerIdxForDepth(S.depth)].block, i === 2 ? 1 : 0.6);
@@ -1916,6 +2059,7 @@ function drawMap(){
 }
 
 // ================= ループ =================
+let dispOre = 0, lastOreTxt = '', popBase = 0, coachT = 0;
 let lastFrame = performance.now(), uiT = 0, saveT = 0, achT = 0, lastLayer = -1;
 function frame(now){
   // どこかでエラーが出ても、採掘と描画のくり返しは止めない
@@ -1937,6 +2081,12 @@ function frame0(now){
     else if ((veinNext -= dt) <= 0) { veinNext = 90 + Math.random() * 60; if (S.depth > 0) showVein(); }
   }
   draw(dt);
+  // 鉱石の数字は数え上がる（使ったときはすぐ下げる）。大きく増えたら跳ねる
+  if (S.ore < dispOre || reduced) dispOre = S.ore; else dispOre += (S.ore - dispOre) * Math.min(1, dt * 6);
+  const os = fmt(dispOre); if (os !== lastOreTxt) { const el = $('sOre'); el.textContent = os; lastOreTxt = os; }
+  if (S.ore > popBase * 1.25 && S.ore - popBase > 20) { popBase = S.ore; const el = $('sOre'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  else if (S.ore < popBase) popBase = S.ore;
+  coachT += dt; if (coachT > 0.5) { coachT = 0; updateCoach(); }
   uiT += dt; saveT += dt; achT += dt;
   if (uiT > 0.2) { uiT = 0; updateUI(); }
   if (achT > 2) {
