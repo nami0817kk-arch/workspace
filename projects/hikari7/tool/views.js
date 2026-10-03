@@ -38,6 +38,11 @@ ctx.document = {
 vm.createContext(ctx);
 vm.runInContext(code, ctx);
 const run = (js) => vm.runInContext(js, ctx);
+// 札の色分けに使う名前（class="tag ○○"）が、ほかの部品の見た目の指定に単独で使われていないか
+// （2026-10-03：レッスンの行の .lt に付けた格子の指定が、札の .tag.lt にも当たって崩れた）
+const css = src.slice(src.indexOf('<style'), src.indexOf('</style>'));
+const tagMods = [...new Set([...src.matchAll(/class=\\?"tag ([a-z][\w-]*)/g)].map((m) => m[1]))];
+const clash = tagMods.filter((k) => new RegExp('(^|[}\\s,])\\.' + k + '(?=[\\s{>:])').test(css));
 const setOk = run('ui.set.fs==="l"&&ui.set.bgm===0&&ui.set.voice===0&&ui.set.theme==="dark"');
 
 const errs = [], seen = {}, times = [];
@@ -80,6 +85,7 @@ const need = ['title', 'select', 'format', 'plan', 'lesson', 'talk', 'interview'
 const miss = need.filter((p) => !seen[p]);
 const avg = times.reduce((a, b) => a + b, 0) / times.length, max = Math.max(...times);
 console.log('描いた回数', times.length, '・平均', avg.toFixed(1) + 'ms', '・最大', max + 'ms', '・描いた画面', Object.keys(seen).length + '種');
+if (clash.length) { console.error('札の名前が、ほかの部品の見た目にも使われている: ' + clash.join(' ')); process.exitCode = 1; }
 if (!setOk) { console.error('保存した設定が、開き直すと初期値に戻っている'); process.exitCode = 1; }
 if (miss.length) { console.error('描けていない画面:', miss.join(' ')); process.exitCode = 1; }
 if (errs.length) { console.error('エラー', errs.length + '件'); errs.slice(0, 10).forEach((e) => console.error('  ' + e)); process.exitCode = 1; }
