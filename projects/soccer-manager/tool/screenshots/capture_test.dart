@@ -80,15 +80,29 @@ const _locales = <_Locale>[_ja, _en];
 ///
 /// **検索結果に出るのは先頭3枚**なので、00〜02に力を入れている。
 const _captions = <String, (String ja, String en)>{
-  '00_lineup': ('11人をどう並べるか', 'Pick your eleven'),
+  '00_lineup': ('11人を、自分で決める', 'You pick the eleven'),
   '01_live_match': ('采配が、試合を動かす', 'Your calls decide it'),
   '02_home': ('5部からの成り上がり', 'Rise from the fifth tier'),
-  '03_transfer': ('移籍で、戦力を変える', 'Reshape the squad'),
-  '04_standings': ('勝ち上がって、昇格する', 'Climb and win promotion'),
-  '05_squad': ('選手を育てて、一流に', 'Train players into stars'),
-  '06_halftime': ('ハーフタイムで立て直す', 'Turn it around at half time'),
+  '03_transfer': ('値切って、引き抜く', 'Haggle, then sign him'),
+  '04_standings': ('昇格争いに食い込む', 'Fight for promotion'),
+  '05_squad': ('無名を、主力に育てる', 'Turn nobodies into stars'),
+  '06_halftime': ('ハーフタイムで流れを変える', 'Change it at half time'),
   '07_scorers': ('得点王が、生まれる', 'Grow a top scorer'),
-  '08_club': ('スタッフと施設に投資する', 'Invest in staff and facilities'),
+  '08_club': ('クラブごと、大きくする', 'Grow the whole club'),
+};
+
+/// ① 画像ごとの地の色。同じ緑が9枚続くと、並べたときに単調になる。
+/// 緑〜藍の近い色で振って、まとまりは崩さずにリズムだけ作る。
+const _shades = <String, (int top, int bottom)>{
+  '00_lineup': (0xFF0F3D22, 0xFF1C6B3A),
+  '01_live_match': (0xFF0B3B33, 0xFF156B55),
+  '02_home': (0xFF12324D, 0xFF1D5B7A),
+  '03_transfer': (0xFF1A3A2A, 0xFF2E6E46),
+  '04_standings': (0xFF0F3D22, 0xFF1C6B3A),
+  '05_squad': (0xFF0B3B33, 0xFF156B55),
+  '06_halftime': (0xFF12324D, 0xFF1D5B7A),
+  '07_scorers': (0xFF1A3A2A, 0xFF2E6E46),
+  '08_club': (0xFF0F3D22, 0xFF1C6B3A),
 };
 
 /// 同梱フォントと、Flutter SDK が持つアイコンフォントを読み込む。
@@ -204,15 +218,15 @@ void main() {
       //
       // 画面をそのまま全面に敷くと「撮っただけ」に見える。背景の上に少し
       // 浮かせて、角を丸めて影を落とすと、作った絵として見える。
-      Widget captioned(String text, Widget screen) {
+      Widget captioned(String text, Widget screen, (int, int) shade) {
         final tablet = device == _tablet;
         return Material(
           child: DecoratedBox(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF0F3D22), Color(0xFF1C6B3A)],
+                colors: [Color(shade.$1), Color(shade.$2)],
               ),
             ),
             child: Column(
@@ -243,14 +257,32 @@ void main() {
                     ),
                   ),
                 ),
+                // ③ 端末の枠に入れる。黒い縁を回すと、画面が「アプリの中」
+                // だと一目で分かる。枠の内側だけ角を丸める。
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(
-                        tablet ? 56 : 30, 0, tablet ? 56 : 30, 0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(tablet ? 28 : 22)),
-                      child: screen,
+                        tablet ? 60 : 34, 0, tablet ? 60 : 34, 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF111111),
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(tablet ? 40 : 34)),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x55000000),
+                            blurRadius: 24,
+                            offset: Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      padding: EdgeInsets.fromLTRB(
+                          tablet ? 12 : 9, tablet ? 12 : 9, tablet ? 12 : 9, 0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(tablet ? 30 : 26)),
+                        child: screen,
+                      ),
                     ),
                   ),
                 ),
@@ -291,7 +323,8 @@ void main() {
                 locale.language == AppLanguage.japanese
                     ? caption.$1
                     : caption.$2,
-                screen);
+                screen,
+                _shades[name] ?? (0xFF0F3D22, 0xFF1C6B3A));
         await tester.pumpWidget(wrap(body));
         // **裏で読み込みを待つ画面は、疑似時間の pump では終わらない。**
         // 開始画面はセーブ一覧(SharedPreferences)を待つ FutureBuilder を
