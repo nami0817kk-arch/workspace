@@ -641,6 +641,69 @@ body.reduce .crev::before,body.reduce .crev .face,body.reduce .crnm,body.reduce 
 .cseat i,.cseat .face{width:38px;height:38px;border-radius:10px}
 .cseat span{max-width:46px}
 .crev{min-height:250px}
+
+/* ===== レッスン結果（ゲージで見せる） ===== */
+.lrsum{display:flex;gap:8px;margin:0 0 10px}.lrsum span{flex:1;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 4px;font-size:12.5px;color:var(--muted)}
+.lrsum b{display:block;font-size:22px;color:var(--fg);font-variant-numeric:tabular-nums}.lrsum .g{border-color:var(--gold);background:var(--gold-bg)}
+.lrcard{padding:6px 12px}
+.lritem{padding:10px 0;border-bottom:1px solid var(--line);animation:fadeup .35s ease-out both}.lritem:last-child{border-bottom:none}
+.lrhd{display:flex;align-items:center;gap:8px}.lrnm{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px}.lrnm b{font-size:15px}.lrk{font-size:12.5px;color:var(--muted)}
+.lrbadge{font-weight:900;font-size:12.5px;padding:2px 10px;border-radius:999px;background:var(--card2);border:1px solid var(--line);animation:bpop .4s cubic-bezier(.2,1.5,.4,1) both}
+.lrbadge.great{background:linear-gradient(160deg,#ffe08a,#d9a420);color:#3a2600;border-color:#c9951a;box-shadow:0 2px 10px rgba(217,164,32,.45)}
+.lrrow{display:grid;grid-template-columns:40px 1fr 62px;align-items:center;gap:8px;margin-top:6px}
+.lrl{font-size:12.5px;font-weight:700;color:var(--muted)}
+.lrbar{position:relative;height:12px;border-radius:6px;background:var(--card2);overflow:hidden;border:1px solid var(--line)}
+.lrbar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
+.lrbar i.old{background:rgba(124,77,232,.35)}
+.lrbar i.new{width:var(--b);background:linear-gradient(90deg,#8a5ff0,#c7a8ff);box-shadow:0 0 10px rgba(124,77,232,.5);animation:lgrow .9s cubic-bezier(.2,.8,.2,1) both}
+.lrbar i.fz{width:var(--b);animation:lgrow .9s ease-out both}.lrbar i.fz.ok{background:#4cb38a}.lrbar i.fz.warn{background:#e0a92e}.lrbar i.fz.bad{background:#e0606f}
+.lrrow.fat .lrbar{height:8px}
+@keyframes lgrow{from{width:var(--a)}to{width:var(--b)}}
+.lrv{font-weight:800;font-size:15px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lrv em{font-style:normal;font-size:12px;font-weight:900;color:var(--ok);margin-left:3px;display:inline-block;animation:bpop .4s cubic-bezier(.2,1.5,.4,1) both}
+.lrrow.fat .lrv{font-size:13px;color:var(--muted)}.lrrow.fat .lrv em.up{color:var(--bad)}.lrrow.fat .lrv em.dn{color:var(--ok)}
+.dl span{animation:bpop .4s cubic-bezier(.2,1.5,.4,1) both}
+body.reduce .lritem,body.reduce .lrbadge,body.reduce .lrbar i,body.reduce .lrv em,body.reduce .dl span{animation:none}
+@media (prefers-reduced-motion:reduce){.lritem,.lrbadge,.lrbar i,.lrv em,.dl span{animation:none}}
+
+/* レッスン結果を詰める：1人2行、伸びた分は金色 */
+.lritem{display:flex;gap:10px;align-items:center;padding:8px 0}
+.lrmain{flex:1;min-width:0}
+.lrhd{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}.lrhd b{font-size:15px;white-space:nowrap}.lrhd .lrk{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrbadge{padding:1px 8px;font-size:12px;flex:none}
+.lrfat{margin-left:auto;flex:none;font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap}.lrfat em{font-style:normal;margin-left:2px;color:var(--bad)}.lrfat em.dn{color:var(--ok)}.lrfat.warn{color:#b07800}.lrfat.bad{color:var(--bad)}
+.lrrow{grid-template-columns:1fr 58px;margin-top:5px}
+.lrbar i.old{background:linear-gradient(90deg,#8a5ff0,#a985f5)}
+.lrbar i.gain{width:var(--g);background:linear-gradient(90deg,#f6d77e,#e9ba4b);box-shadow:0 0 8px rgba(233,186,75,.7);animation:ggrow .8s cubic-bezier(.2,.8,.2,1) both}
+.lrbar.rest i.old{background:#4cb38a;opacity:.7}
+.lrv.rest{font-size:12.5px;color:var(--ok)}
+@keyframes ggrow{from{width:0}to{width:var(--g)}}
+body.reduce .lrbar i.gain{animation:none}@media (prefers-reduced-motion:reduce){.lrbar i.gain{animation:none}}
+
+/* 上の帯：制作費と視聴率を札に、審査の中の段階を並べる */
+.hdr .rt{display:flex;align-items:center;gap:6px}
+.hudc{display:inline-flex;align-items:center;gap:3px;padding:2px 8px 2px 5px;border-radius:999px;background:var(--gold-bg);border:1px solid var(--gold);color:var(--fg);font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
+.hudc small{font-size:12px;font-weight:700;color:var(--muted)}
+.hudc svg{width:16px;height:16px;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hudc.tv{background:var(--card2);border-color:var(--line)}.hudc.tv svg{stroke:var(--accent)}
+.steps{display:flex;gap:3px;margin:6px 0 2px}
+.steps span{flex:1;text-align:center;font-size:12px;font-weight:700;color:var(--muted);padding:3px 0;border-radius:6px;background:var(--card2);white-space:nowrap}
+.steps span.done{opacity:1;color:var(--accent)}
+.steps span.now{opacity:1;background:var(--accent);color:var(--accent-fg);box-shadow:0 2px 8px rgba(124,77,232,.35)}
+
+.hdr .wk2{white-space:nowrap}
+.steps .stw{flex:none;font-size:12px;font-weight:800;color:var(--fg);padding:3px 4px 3px 0;white-space:nowrap}
+
+/* 信頼・自信・疲れのゲージ */
+.gg{margin-top:8px;display:grid;gap:5px}
+.ggr{display:grid;grid-template-columns:34px 1fr 64px;align-items:center;gap:8px}
+.ggl{font-size:12px;font-weight:700;opacity:.85}
+.ggb{height:8px;border-radius:5px;background:rgba(127,127,127,.22);overflow:hidden}
+.ggb i{display:block;height:100%;width:var(--b);border-radius:5px;animation:lgrow .8s cubic-bezier(.2,.8,.2,1) both}
+.ggb.tr i{background:linear-gradient(90deg,#5aa9ff,#8fc6ff)}.ggb.cf i{background:linear-gradient(90deg,#f0a43c,#ffd27a)}.ggb.ft i{background:linear-gradient(90deg,#4cb38a,#e0606f)}
+.ggv{font-size:13px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ggv em{font-style:normal;font-size:12px;margin-left:3px}.ggv em.up{color:var(--ok)}.ggv em.dn{color:var(--bad)}
+body.reduce .ggb i{animation:none}@media (prefers-reduced-motion:reduce){.ggb i{animation:none}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -820,20 +883,21 @@ function initTeams(S,mode){var P=S.plan,T=defaultTeams(S),sizes=T.map(function(x
 function setCenter(S,id){var P=S.plan;if(!P)return;if(P.teams&&P.tcen){var ti=teamIdx(S,id);if(ti>=0)P.tcen[ti]=id;}else P.center=id;}
 function centersOf(S){var P=S.plan||{};if(P.teams&&P.tcen)return P.tcen.filter(function(id){return id!=null&&S.tr[id].status==='alive';});return P.center!=null?[P.center]:[];}
 function isCenter(S,id){return centersOf(S).indexOf(id)>=0;}
-function applyLesson(S){
-  alive(S).forEach(function(t){
+function applyLesson(S){var LR=[];
+  alive(S).forEach(function(t){var b0={v:t.st.v,d:t.st.d,r:t.st.r,e:t.st.e,s:t.st.s,fat:t.fat},great=false;
     t.fat=Math.max(0,t.fat-9);
     var k=(S.lesson.train[t.id]||[])[0],sp=!!(S.lesson.sp&&S.lesson.sp[t.id]);
     if(k==='rest'){t.fat=Math.max(0,t.fat-45);t.conf=Math.min(100,t.conf+3);}
     else if(k){[LESSON_BASE].concat(sp?[1]:[]).forEach(function(mul,i){
-      var gain=(5+R()*4)*t.pot*(1-t.fat/220)*(t.focus===k?1.6:1)*(t.complacent?.75:1)*mul*(hasT(t,'bloom')?1.15:1);
+      var roll=R();if(i===0&&roll>.72)great=true;var gain=(5+roll*4)*t.pot*(1-t.fat/220)*(t.focus===k?1.6:1)*(t.complacent?.75:1)*mul*(hasT(t,'bloom')?1.15:1);
       t.st[k]=Math.min(99,t.st[k]+gain); t.fat+=(i?20:9)*(1.3-t.st.s/100)*(hasT(t,'stamina')?.7:1); t.rev[k]=2; t.trainN++;
       t.st.s=Math.min(99,t.st.s+.6);});
       if(t.trainN>=2){t.potRev=true;t.rev.s=2;}}
     ['v','d','r','e'].forEach(function(k){t.st[k]=Math.min(99,t.st[k]+Math.max(.2,2.2*(t.pot-.75)));});
     t.complacent=false; t.focus=null;
+    LR.push({id:t.id,k:k||null,sp:!!(S.lesson.sp&&S.lesson.sp[t.id]),great:great,b:b0,a:{v:t.st.v,d:t.st.d,r:t.st.r,e:t.st.e,s:t.st.s,fat:t.fat}});
   });
-  S.talked=[];S.talk=null;S.sub=null;S.ap=apMax(S);S.touch={};S.reqs=genReqs(S);S.phase='talk';
+  S.lres=LR;S.talked=[];S.talk=null;S.sub=null;S.ap=apMax(S);S.touch={};S.reqs=genReqs(S);S.phase='talk';
 }
 function afterTalk(S){
   endTalk(S);S.talk=null;S.sub=null;
@@ -2718,11 +2782,14 @@ function adIcon(){return '<svg width="28" height="28" viewBox="0 0 28 28" aria-h
 function wText(f){if(f.w==='spec')return '得意分野70%・表現30%';if(f.w==='pos')return '担当の能力75%・表現25%';if(f.w==='all')return '上位2つの能力65%・表現35%';var a=[];for(var k in f.w)a.push(STATN[k]+Math.round(f.w[k]*100)+'%');return a.join('・');}
 function header(){
   var wk=(S.daily?'今日のオーディション・':'')+(S.chal&&chalOf(S.chal)?'挑戦「'+chalOf(S.chal).n+'」・':'')+(S.diff&&S.diff!=='normal'?DIFF[S.diff].n+'・':'')+(S.rnd>0?(ROUNDS[S.rnd].name):'書類・動画審査');
-  var rt=(S.rnd>0?'制作費 '+S.budget+'万 ':'')+(S.ratings.length?'視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%':'');
+  var rt=(S.rnd>0?'<span class="hudc" title="制作費" aria-label="制作費 '+S.budget+'万"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9 9.5h6M9 13h6M12 9.5v7"/></svg>'+S.budget+'<small>万</small></span>':'')+(S.ratings.length?'<span class="hudc tv" title="視聴率" aria-label="視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6.5" width="17" height="12" rx="2.5"/><path d="M9 3.5l3 3 3-3"/></svg>'+S.ratings[S.ratings.length-1].toFixed(1)+'<small>%</small></span>':'');
   var wk2=S.phase==='prep'?'デビュー準備':(S.phase==='month'||S.phase==='result')?'デビュー後':S.rnd>0?'第'+S.rnd+'審査'+(ROUNDS[S.rnd]&&ROUNDS[S.rnd].fin?'（最終）':''):'書類審査';
-  var h='<div class="hdr"><div class="logo"><span>ひかりの</span>七席</div><div class="wk">'+esc(wk)+'</div><div class="rt"><span class="wk2">'+esc(wk2)+'</span>'+rt+'</div>';
+  var STP=[['会議',['plan']],['レッスン',['lesson','lres']],['交流',['talk','interview']],['出来事',['event']],['本番',['show','stage','critique','night']],['合否',['judge','call']]],si=-1;
+  STP.forEach(function(x,i){if(x[1].indexOf(S.phase)>=0)si=i;});
+  var stp=S.rnd>0&&si>=0?'<div class="steps" aria-label="この審査の流れ"><b class="stw">'+esc(wk2)+'</b>'+STP.map(function(x,i){return '<span class="'+(i<si?'done':i===si?'now':'')+'">'+x[0]+'</span>';}).join('')+'</div>':'';
+  var h='<div class="hdr"><div class="logo"><span>ひかりの</span>七席</div><div class="wk">'+esc(wk)+'</div><div class="rt">'+(S.rnd>0&&si>=0?'':'<span class="wk2">'+esc(wk2)+'</span>')+rt+'</div>';
   h+=bgmBtn()+'<button class="btn-s gear" data-a="settings" aria-label="設定">'+ICO.gear+'</button></div>';
-  h+='<div class="dots">';for(var i=0;i<=NROUND;i++)h+='<i class="'+(i<S.rnd?'on':i===S.rnd?'now':'')+'" title="'+(i===0?'書類・動画審査':ROUNDS[i].name)+'"></i>';h+='</div>';
+  h+='<div class="dots">';for(var i=0;i<=NROUND;i++)h+='<i class="'+(i<S.rnd?'on':i===S.rnd?'now':'')+'" title="'+(i===0?'書類・動画審査':ROUNDS[i].name)+'"></i>';h+='</div>';h+=stp;
   return h;
 }
 function render(){try{render0();}catch(err){renderErr(err);}}
@@ -2733,7 +2800,7 @@ function renderErr(err){try{console.error(err);}catch(e){}var bk=loadBak();
 function render0(){
   var h;
   if(!S||S.phase==='title')h=vTitle();
-  else h=header()+({select:vSelect,plan:vPlan,lesson:vLesson,talk:vTalk,show:vShow,format:vFormat,event:vEvent,interview:vInterview,stage:vStage,critique:vCritique,judge:vJudge,call:vCall,prep:vPrep,month:vMonth,night:vNight,result:vResult}[S.phase])();
+  else h=header()+({select:vSelect,plan:vPlan,lesson:vLesson,lres:vLres,talk:vTalk,show:vShow,format:vFormat,event:vEvent,interview:vInterview,stage:vStage,critique:vCritique,judge:vJudge,call:vCall,prep:vPrep,month:vMonth,night:vNight,result:vResult}[S.phase])();
   if(S&&S.phase!=='title'){var hd=h.indexOf('<div class="dots">');if(hd>=0){var he=h.indexOf('</div>',hd)+6;h=h.slice(0,he)+tipBox()+h.slice(he);}}
   if(ui.gloss)h+=vGloss();
   else if(ui.settings)h+=vSettings();
@@ -2791,6 +2858,20 @@ function vSelect(){
 function tBars(t){var fc=t.fat<45?'f0':t.fat<65?'f1':'f2';if(t.fat>=80)return tBars0(t).replace('注意','けがの危険');return tBars0(t);}
 function tBars0(t){var fc=t.fat<45?'f0':t.fat<65?'f1':'f2';
   return '<div class="bars"><div>世間の人気 '+Math.round(t.pop)+'<div class="bar"><i class="pop" style="width:'+t.pop+'%"></i></div></div><div>自信 '+Math.round(t.conf)+'<div class="bar"><i class="cf" style="width:'+t.conf+'%"></i></div></div><div>疲れ '+Math.round(t.fat)+(t.fat>=65?' <span style="color:var(--bad)">注意</span>':'')+'<div class="bar"><i class="'+fc+'" style="width:'+Math.min(100,t.fat)+'%"></i></div></div></div>';}
+/* レッスン結果（2026-10-03「ただのノベルゲームに見える」）：伸びた能力をゲージで見せる */
+function vLres(){var L=(S.lres||[]).slice().map(function(x){var y={};for(var k in x)y[k]=x[k];y.great=x.great&&x.k&&x.k!=='rest'&&x.a[x.k]-x.b[x.k]>=5;return y;}),ng=0,nr=0;L.forEach(function(x){if(x.great)ng++;if(x.k==='rest')nr++;});
+  var gn=function(x){return x.k&&x.k!=='rest'?x.a[x.k]-x.b[x.k]:-1;};L.sort(function(a,b){return (b.great-a.great)||(gn(b)-gn(a));});
+  var h='<h2>レッスン結果</h2><div class="lrsum"><span class="g">大成功 <b>'+ng+'</b></span><span>成功 <b>'+(L.length-ng-nr)+'</b></span><span>休養 <b>'+nr+'</b></span></div><div class="card lrcard">';
+  L.forEach(function(x,i){var t=S.tr[x.id];if(!t)return;var d=(Math.min(i,12)*.06).toFixed(2),d2=(+d+.55).toFixed(2);
+    var f0=Math.round(x.b.fat),f1=Math.round(x.a.fat),fc=f1>=80?'bad':f1>=60?'warn':'';
+    h+='<div class="lritem" style="animation-delay:'+d+'s">'+face(t,'sm')+'<div class="lrmain"><div class="lrhd"><b>'+esc(t.giv)+'</b><span class="lrk">'+(x.k==='rest'?'休養':(STATN[x.k]||'')+(x.sp?'＋特訓':''))+'</span>'+
+      (x.k&&x.k!=='rest'?'<span class="lrbadge'+(x.great?' great':'')+'" style="animation-delay:'+d2+'s">'+(x.great?'大成功！':'成功')+'</span>':'')+'<span class="lrfat '+fc+'">疲れ '+f1+'<em class="'+(f1>f0?'up':'dn')+'">'+(f1>=f0?'+':'')+(f1-f0)+'</em></span></div>';
+    if(x.k&&x.k!=='rest'){var a0=x.b[x.k],a1=x.a[x.k],g=Math.round(a1)-Math.round(a0);
+      h+='<div class="lrrow"><div class="lrbar"><i class="old" style="width:'+a0.toFixed(1)+'%"></i><i class="gain" style="left:'+a0.toFixed(1)+'%;--g:'+(a1-a0).toFixed(1)+'%;animation-delay:'+d+'s"></i></div><span class="lrv">'+Math.round(a1)+'<em style="animation-delay:'+d2+'s">+'+g+'</em></span></div>';}
+    else h+='<div class="lrrow"><div class="lrbar rest"><i class="old" style="width:'+Math.min(100,f1)+'%"></i></div><span class="lrv rest">回復</span></div>';
+    h+='</div></div>';});
+  h+='</div><div class="foot"><div class="in"><div class="cnt"><small>次は</small><b>練習生と過ごす</b></div><button class="btn" data-a="lresok">次へ</button></div></div>';
+  return h;}
 function vLesson(){
   var f=ROUNDS[S.rnd],A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),used=usedSlots(S),sl=slotsOf(S);
   var h=telop('レッスン')+'<div class="card fmt"><p class="small muted" style="margin:0">見られる力：'+wText(roundFmt(S))+(roundFmt(S).concept?'（'+roundFmt(S).concept+'）':'')+(f.kind==='team'?'（'+f.size+'人組）':'')+(S.plan&&S.plan.center!=null?'・センター '+esc(S.tr[S.plan.center].giv):'')+'</p><p class="small muted">'+(f.fin?'この審査でデビューメンバーを <b>5〜'+S.caps.finMax+'人</b> 選ぶ':'合格にできるのは <b>'+capOf(S)+'人まで</b>（いま'+A.length+'人）')+'</p></div>';
@@ -2814,7 +2895,7 @@ function vEvent(){
   var e=S.events[S.evIdx],d=EV[e.type],A=S.tr[e.ids[0]],B=e.ids[1]!=null?S.tr[e.ids[1]]:null;
   var h='<h2>合宿の出来事 <span class="small muted">'+(S.evIdx+1)+' / '+S.events.length+'</span></h2>';
   h+='<div class="card ev"'+scn(e.type==='x'?SCENE_X[e.xid]:SCENE_EV[e.type])+'><div class="ttl">'+(e.type==='x'?EVX_BY[e.xid].title:d.title)+(e.type==='arc'?'「'+ARCS[A.arc.k].name+'」':'')+'</div><div class="evfaces">'+(e.type==='alumni'&&S.alumni?'<div><img loading="lazy" decoding="async" class="face lg b-'+S.alumni.sp+'" src="'+faceURL(S.alumni.g,S.alumni.img)+'" alt="">'+esc(S.alumni.n)+'<small class="muted">先輩</small></div>':'')+'<div>'+face(A,B?'lg':'xl')+esc(A.giv)+'</div>'+(B?'<div>'+face(B,'lg')+esc(B.giv)+'</div>':'')+'</div><p>'+esc(d.text(S,e,A,B))+'</p>'+(d.note?'<p class="small muted">'+esc(d.note(S,e,A,B))+'</p>':'');
-  if(S.evRes){h+='<div class="toast" data-say="'+S.events[S.evIdx].ids[0]+'">'+esc(S.evRes)+(S.evDelta||[]).map(function(x){return '<div class="small" style="margin-top:6px;font-weight:700">'+esc(x[0])+'</div>'+deltaHtml(x[1]);}).join('')+'</div></div><button class="btn" data-a="evnext">'+(S.evIdx+1<S.events.length?'次の出来事へ':'ステージへ')+'</button>';}
+  if(S.evRes){h+='<div class="toast" data-say="'+S.events[S.evIdx].ids[0]+'">'+esc(S.evRes)+(S.evDelta||[]).map(function(x,i){return '<div class="small" style="margin-top:6px;font-weight:700">'+esc(x[0])+'</div>'+deltaHtml(x[1])+gauges(S.tr[S.events[S.evIdx].ids[i]],x[1]);}).join('')+'</div></div><button class="btn" data-a="evnext">'+(S.evIdx+1<S.events.length?'次の出来事へ':'ステージへ')+'</button>';}
   else{if(e.type==='arc')arcChoices(S,A).forEach(function(c,i){h+=choiceBtn('ev',i,c.label,c.hint.tone,partsHtml(c.hint.parts));});
     else if(e.type==='x')EVX_BY[e.xid].ch.forEach(function(c,i){h+=choiceBtn('ev',i,xText(c[0],A,B),c[1],partsHtml(xHint(c,A,B,S)),c[3]&&c[3].budget&&S.budget<-c[3].budget?' disabled':'');});
     else d.choices(S,e,A,B).forEach(function(c,i){var tn=(d.tones?d.tones(S,e,A,B):EV_TONE[e.type]||'').charAt(i);h+=choiceBtn('ev',i,c[0],tn,esc(c[1])+(e.type==='bond'?'':partsHtml(toneParts(A,tn))),costDis(c[0]+c[1]));});h+='</div>'+(A.temperRev?'':TONE_NOTE);}
@@ -3111,8 +3192,13 @@ function partsHtml(p){return p.map(function(x){return '<span class="hp '+(x[1]==
 function costOf(txt){var m=/制作費(\d+)万/.exec(txt||'');return m?+m[1]:0;}
 function costDis(txt){var c=costOf(txt);return c&&S.budget<c?' disabled title="制作費が足りない"':'';}
 function choiceBtn(a,v,label,tone,inner,extra){return '<button class="choice" data-a="'+a+'" data-v="'+v+'"'+(extra||'')+'><b>'+esc(label)+'</b><span class="hint">'+toneTag(tone)+inner+'</span></button>';}
+/* 信頼・自信・疲れのゲージ。変化があれば、前の値から今の値へ伸び縮みして見せる */
+function gauges(t,list){if(!t)return '';var G=[['trust','信頼','tr'],['conf','自信','cf'],['fat','疲れ','ft']];
+  return '<div class="gg">'+G.map(function(g,i){var cur=Math.round(clamp(t[g[0]],0,100)),d=0;(list||[]).forEach(function(x){if(x[0]===g[1])d=x[1];});var prev=Math.round(clamp(cur-d,0,100));
+    var good=g[0]==='fat'?d<0:d>0;
+    return '<div class="ggr"><span class="ggl">'+g[1]+'</span><div class="ggb '+g[2]+'"><i style="--a:'+prev+'%;--b:'+cur+'%;animation-delay:'+(.2+i*.12).toFixed(2)+'s"></i></div><span class="ggv">'+cur+(d?'<em class="'+(good?'up':'dn')+'">'+(d>0?'+':'')+d+'</em>':'')+'</span></div>';}).join('')+'</div>';}
 function deltaHtml(list){if(!list||!list.length)return '<div class="dl"><span class="small" style="opacity:.7">目に見える変化はなかった</span></div>';
-  return '<div class="dl">'+list.map(function(x){return '<span class="'+(x[2]?'up':'dn')+'">'+x[0]+' '+(x[1]>0?'+':'')+x[1]+'</span>';}).join('')+'</div>';}
+  return '<div class="dl">'+list.map(function(x,i){return '<span class="'+(x[2]?'up':'dn')+'" style="animation-delay:'+(.15+i*.09).toFixed(2)+'s">'+(x[2]?'▲ ':'▼ ')+x[0]+' '+(x[1]>0?'+':'')+x[1]+'</span>';}).join('')+'</div>';}
 var TONE_NOTE='<p class="note">「寄り添う」「厳しく」「放送で見せる」「任せる」は、同じ言葉でも気質で受け止め方が変わります。繊細な子に厳しくすると折れ、負けず嫌いな子は甘やかすと物足りなく感じます。</p>';
 
 function moodTag(t){var m=moodOf(t);return '<span class="tag '+MOODC[m]+'">'+m+'</span>';}
@@ -3127,13 +3213,13 @@ function vTalk(){
     h+='<button class="btn sub" data-a="subcancel">やめる</button></div>';return h;}
   if(S.talk){var t2=S.tr[S.talk.id],k=S.talk.kind;
     if(k==='out'){var o=OUTS[S.talk.pi],sc=o.sc[S.talk.si];h+='<div class="card ev"'+scn(SCENE_OUT[S.talk.pi])+'><div class="ttl">お出かけ：'+o.n+'</div><div class="evfaces"><div>'+face(t2,'xl')+esc(t2.name)+'</div></div><p>'+esc(xText(sc.t,t2,null))+'</p>';
-      if(S.talk.res){h+='<div class="toast" data-say="'+S.talk.id+'">'+esc(S.talk.res)+deltaHtml(S.talk.delta)+'</div></div><button class="btn" data-a="talkback">戻る</button>';}
+      if(S.talk.res){h+='<div class="toast" data-say="'+S.talk.id+'">'+esc(S.talk.res)+deltaHtml(S.talk.delta)+gauges(S.tr[S.talk.id],S.talk.delta)+'</div></div><button class="btn" data-a="talkback">戻る</button>';}
       else{sc.ch.forEach(function(c,i){h+=choiceBtn('talkch',i,xText(c[0],t2,null),c[1],partsHtml(xHint(c,t2,null,S)),c[3]&&c[3].budget&&S.budget<-c[3].budget?' disabled':'');});h+='</div>';}
       return h;}
     if(k==='pair'){var pb=S.tr[S.talk.pb];h+='<div class="card ev"'+scn(SCENE_TALK.pair)+'><div class="ttl">ふたりと話す</div><div class="evfaces"><div>'+face(t2,'lg')+esc(t2.giv)+'</div><div>'+face(pb,'lg')+esc(pb.giv)+'</div></div><div class="toast" data-say="'+S.talk.id+'">'+esc(S.talk.res)+'<div class="small" style="margin-top:6px;font-weight:700">'+esc(t2.giv)+'</div>'+deltaHtml(S.talk.delta)+'<div class="small" style="margin-top:6px;font-weight:700">'+esc(pb.giv)+'</div>'+deltaHtml(S.talk.delta2)+'</div></div><button class="btn" data-a="talkback">戻る</button>';return h;}
     var ttl=k==='arc'?'ひとりの物語「'+ARCS[t2.arc.k].name+'」 '+Math.min(3,t2.arc.step+(S.talk.res?0:1))+'/3':k==='honne'?'本音':k==='coach'?'個別指導':k==='gift'?'差し入れ':'話を聞く';
     h+='<div class="card ev"'+scn(SCENE_TALK[k])+'><div class="ttl">'+ttl+'</div><div class="evfaces"><div>'+face(t2,'xl')+esc(t2.name)+'<span class="small muted" style="font-weight:400">'+TIERN[tierOf(t2)]+'</span></div></div>';
-    if(S.talk.res){h+='<div class="toast" data-say="'+S.talk.id+'">'+esc(S.talk.res)+deltaHtml(S.talk.delta)+'</div></div><button class="btn" data-a="talkback">戻る</button>';}
+    if(S.talk.res){h+='<div class="toast" data-say="'+S.talk.id+'">'+esc(S.talk.res)+deltaHtml(S.talk.delta)+gauges(S.tr[S.talk.id],S.talk.delta)+'</div></div><button class="btn" data-a="talkback">戻る</button>';}
     else if(k==='free'){h+='<p data-say="'+S.talk.id+'">'+esc(S.talk.line)+'</p><p class="small muted">'+esc(moodLine(t2))+'</p>'+FREE_CH.map(function(c,i){return choiceBtn('talkch',i,c[0],c[1],freeHint(t2,c[1]));}).join('')+'</div>'+(t2.temperRev?'':TONE_NOTE);}
     else if(k==='honne'){h+='<p>'+esc(arcText(S,t2,HONNE[t2.arc.k]))+'</p>'+[['最後まで黙って聞く','自信が上がり、すべての能力が少し伸びる'],['「話してくれてありがとう」と伝える','信頼が上がり、すべての能力が少し伸びる']].map(function(c,i){return '<button class="choice" data-a="talkch" data-v="'+i+'"><b>'+c[0]+'</b><span>'+c[1]+'</span></button>';}).join('')+'</div>';}
     else{var sc=arcScene(S,t2);h+='<p>'+esc(arcText(S,t2,sc.t))+'</p>';arcChoices(S,t2).forEach(function(c,i){h+=choiceBtn('talkch',i,c.label,c.hint.tone,partsHtml(c.hint.parts));});h+='</div>'+(t2.temperRev?'':TONE_NOTE);}
@@ -3429,7 +3515,7 @@ window.hikariPause=function(){try{if(S)HStore.set(KEY,JSON.stringify(S));if(HSto
    声は「」の中が固定の台詞だけ。名前が入る台詞は録れないので読まない */
 var VOICE_NAMES=['春日部つむぎ','冥鳴ひまり','雨晴はう','九州そら','白上虎太郎','玄野武宏','剣崎雌雄','黒沢冴白'];
 var AUD={cur:undefined,el:null,vo:null,unlocked:false};
-var BGM_OF={select:'practice',format:'practice',plan:'practice',lesson:'practice',talk:'practice',interview:'practice',critique:'practice',event:'night',night:'night',show:'stage',stage:'stage',judge:'judge',call:'judge',prep:'title',month:'title',result:'ending'};
+var BGM_OF={lres:'practice',select:'practice',format:'practice',plan:'practice',lesson:'practice',talk:'practice',interview:'practice',critique:'practice',event:'night',night:'night',show:'stage',stage:'stage',judge:'judge',call:'judge',prep:'title',month:'title',result:'ending'};
 /* BGM をすぐ止める・流すボタン（上の帯とタイトル）。止める前の音量を覚えておき、戻すときに使う */
 function bgmBtn(long){var on=(ui.set&&ui.set.bgm)>0;return '<button class="btn-s gear bgmb'+(on?'':' off')+'" data-a="bgmtoggle" aria-label="'+(on?'BGMを止める':'BGMを流す')+'" aria-pressed="'+(on?'false':'true')+'">'+(on?ICO.note:ICO.noteOff)+(long?(on?' BGM あり':' BGM なし'):'')+'</button>';}
 function bgmFor(){if(!S)return 'title';if(S.phase==='result'&&!S.ending)return 'title';return BGM_OF[S.phase]||'practice';}
@@ -3625,7 +3711,8 @@ document.addEventListener('click',function(ev){
     case 'sp':go(function(){if(!S.lesson.sp)S.lesson.sp={};if(S.lesson.sp[id]){delete S.lesson.sp[id];return;}if((S.lesson.train[id]||[])[0]==='rest'||usedSlots(S)>=slotsOf(S))return;S.lesson.sp[id]=true;});break;
     case 'pos':go(function(){S.lesson.pos[id]=v;});break;
     case 'adslot':if(S.adUsed)break;withAd(function(){go(function(){S.extra=1;S.adUsed=true;});});break;
-    case 'lessonok':go(function(){applyLesson(S);});window.scrollTo(0,0);break;
+    case 'lessonok':go(function(){applyLesson(S);if(S.lres&&S.lres.length&&!ui.quick)S.phase='lres';});window.scrollTo(0,0);break;
+    case 'lresok':go(function(){S.phase='talk';});window.scrollTo(0,0);break;
     case 'ev':go(function(){resolveEvent(S,+v);});var er=S.evRes||'';if(/^【(成功|息が合った)/.test(er)){sfx('ok');haptic('light');}else if(/^【(失敗|すれ違った)/.test(er)){sfx('ng');haptic('warn');}break;
     case 'evnext':go(function(){nextEvent(S);});window.scrollTo(0,0);break;
     case 'iv':go(function(){S.interview[id]=+v;});break;

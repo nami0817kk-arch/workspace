@@ -59,7 +59,7 @@ function season(g, diff, chal) {
   run(`S=newGame('${g}','${diff}',${chal ? `'${chal}'` : 'null'});__shot();
   var c=S.tr.slice();watchVideo(S,c[0].id);S.sel=c.slice(0,S.caps.sel).map(function(t){return t.id;});confirmSelect(S);__shot();startSeason(S);
   alive(S).forEach(function(t,i){if(i%2)t.temperRev=true;});
-  for(var r=1;r<=NROUND;r++){__shot();S.plan.acts.stage=S.budget>=60;applyPlan(S);__shot();applyLesson(S);S.phase='talk';__shot();
+  for(var r=1;r<=NROUND;r++){__shot();S.plan.acts.stage=S.budget>=60;applyPlan(S);__shot();applyLesson(S);S.phase='lres';__shot();S.phase='talk';__shot();
     ui.tfilter='story';__shot();ui.tsort='pop';__shot();ui.tfilter='all';ui.tsort='story';
     S.reqs.forEach(function(q,qi){answerReq(S,qi,qi%2);});__shot();
     var t=alive(S)[0];doTalk(S,t.id);__shot();if(S.talk){if(S.talk.kind==='arc')talkChoose(S,0);else if(S.talk.kind==='honne')honneChoose(S,0);else if(S.talk.kind==='free')freeChoose(S,1);__shot();S.talk=null;}
@@ -81,7 +81,7 @@ for (const [g, d, c] of cases) season(g, d, c);
 run(`S=null;ui.settings=true;__shot();ui.settings=false;ui.gloss=true;__shot();ui.gloss=false;ui.hallAll=true;ui.meikanAll=true;__shot();`);
 run(`S=newGame('m','normal',null,todayKey());__shot();S=null;`);
 
-const need = ['title', 'select', 'format', 'plan', 'lesson', 'talk', 'interview', 'event', 'stage', 'critique', 'judge', 'call', 'prep', 'month', 'result'];
+const need = ['title', 'select', 'format', 'plan', 'lesson', 'lres', 'talk', 'interview', 'event', 'stage', 'critique', 'judge', 'call', 'prep', 'month', 'result'];
 const miss = need.filter((p) => !seen[p]);
 const avg = times.reduce((a, b) => a + b, 0) / times.length, max = Math.max(...times);
 console.log('描いた回数', times.length, '・平均', avg.toFixed(1) + 'ms', '・最大', max + 'ms', '・描いた画面', Object.keys(seen).length + '種');
