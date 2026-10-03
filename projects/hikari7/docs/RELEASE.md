@@ -97,3 +97,11 @@ Before release, AdMob may not fill ads for this new app, so the video may be una
 
 **アプリの作り（審査 4.2 への備え）**: ゲーム本体は WebView で動くが、中身はすべてアプリに同梱していて通信なしで遊べる。
 外部のページは、プライバシーポリシーなど決めた所だけを端末のブラウザで開く（`app/lib/game/bridge.dart` の `allowedHosts`）。
+
+
+## AdMob より先に TestFlight で試す（2026-10-04 追加）
+
+Actions → **Build ひかりの指名 (iOS Release)** → Run workflow で `upload_to_testflight` と **`test_ads`** に印を付ける。
+AdMob の Secrets が無くても、Google のテスト広告のまま作って TestFlight に上げる。
+- **このビルド番号は審査に出さない**。本番は AdMob の Secrets を入れてから、`pubspec.yaml` の `+N` を上げて作り直す
+- タグからのビルドでは選べない。TestFlight に上げないときは止まる
