@@ -6,6 +6,7 @@
     "sim": "node tool/sim.js 30 smart"
   },
   "devDependencies": {
+    "@fontsource/m-plus-rounded-1c": "^5.3.0",
     "jpeg-js": "^0.4.4",
     "matter-js": "0.19.0",
     "pngjs": "^7.0.0",

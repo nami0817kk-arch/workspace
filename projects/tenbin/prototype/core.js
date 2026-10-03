@@ -1,6 +1,6 @@
-// てんびんタワー 物理コア。ブラウザと node で共用
-// どうぶつタワーの積み方を、ばね付きのてんびんの上でやる。
-// 動物は横向きのシルエット（animals.js）。重さは面積に比例（大きいほど重い）。
+// ひらがなてんびん 物理コア。ブラウザと node で共用
+// ばね付きのてんびんの上に、ひらがなを1字ずつ積んでいく。
+// 字の形がそのまま当たり判定。重さは面積に比例（画の多い字ほど重い）。
 var TenbinCore = (function () {
   var M = (typeof Matter !== 'undefined') ? Matter : require('matter-js');
   var env = (typeof process !== 'undefined' && process.env) || {};
@@ -9,81 +9,41 @@ var TenbinCore = (function () {
   var CAT_STATIC = 1, CAT_PLANK = 2, CAT_CARGO = 4;
   var DENSITY = 0.0015, ROT_STEP = Math.PI / 4;
   var FR = +(env.FR || 1.0), FRS = +(env.FRS || 2.0), ADAMP = +(env.AD || 0.97), GAP = +(env.GAP || 40);
-  var K_SPRING = +(env.K || 2.2e-4), C_DAMP = +(env.CD || 0.007);
+  var K_SPRING = +(env.K || 1.4e-4), C_DAMP = +(env.CD || 0.007);
 
-  var ANIMALS = (typeof TenbinAnimals !== 'undefined') ? TenbinAnimals : require('./animals.js');
-  // 写真の動物（tool/trace.js が作る photos.js）があれば、同じ種類のシルエットを置き換える
-  var PHOTOS = (typeof TenbinPhotos !== 'undefined') ? TenbinPhotos : (function () { try { return require('./photos.js'); } catch (e) { return {}; } })();
-  Object.keys(PHOTOS).forEach(function (k) { ANIMALS[k] = PHOTOS[k]; });
-  // 写真が1枚でもあれば、写真の動物だけで遊ぶ（仮の絵と混ぜない）
-  if (Object.keys(PHOTOS).length) Object.keys(ANIMALS).forEach(function (k) { if (!PHOTOS[k]) delete ANIMALS[k]; });
+  // 積むもの = ひらがな1字。輪郭は tool/glyphs.js が字形から取ったもの（字の中心が原点）
+  var GLYPHS = (typeof TenbinGlyphs !== 'undefined') ? TenbinGlyphs : require('./glyphs.js');
   var decomp = (typeof window !== 'undefined' && window.decomp) || (typeof require !== 'undefined' ? require('poly-decomp') : null);
   M.Common.setDecomp(decomp);
-  var KINDS = Object.keys(ANIMALS);
+  var KINDS = Object.keys(GLYPHS.chars);
 
-  // 輪郭の点列。写真から取った poly があればそれ、無ければ path（M L C Q Z）をなぞって点にする
-  function outline(kind) {
-    var A = ANIMALS[kind];
-    if (A._pts) return A._pts;
-    var pts = A.poly ? A.poly.map(function (q) { return { x: q[0], y: q[1] }; }) : samplePath(A.path);
-    A._pts = simplify(pts, 0.6);
-    return A._pts;
-  }
-  function samplePath(d) {
-    var tk = d.match(/[MLCQZ]|-?[\d.]+/g), i = 0, pts = [], cx = 0, cy = 0, cmd = null;
-    function num() { return +tk[i++]; }
-    while (i < tk.length) {
-      if (/[MLCQZ]/.test(tk[i])) cmd = tk[i++];
-      if (cmd === 'Z') continue;
-      if (cmd === 'M' || cmd === 'L') { cx = num(); cy = num(); pts.push({ x: cx, y: cy }); }
-      else if (cmd === 'Q') {
-        var qx = num(), qy = num(), ex = num(), ey = num();
-        for (var t = 1; t <= 8; t++) { var u = t / 8, v = 1 - u; pts.push({ x: v * v * cx + 2 * v * u * qx + u * u * ex, y: v * v * cy + 2 * v * u * qy + u * u * ey }); }
-        cx = ex; cy = ey;
-      } else if (cmd === 'C') {
-        var x1 = num(), y1 = num(), x2 = num(), y2 = num(), x3 = num(), y3 = num();
-        for (var t2 = 1; t2 <= 10; t2++) { var u2 = t2 / 10, v2 = 1 - u2;
-          pts.push({ x: v2 * v2 * v2 * cx + 3 * v2 * v2 * u2 * x1 + 3 * v2 * u2 * u2 * x2 + u2 * u2 * u2 * x3,
-                     y: v2 * v2 * v2 * cy + 3 * v2 * v2 * u2 * y1 + 3 * v2 * u2 * u2 * y2 + u2 * u2 * u2 * y3 }); }
-        cx = x3; cy = y3;
-      }
-    }
-    var f = pts[0], l = pts[pts.length - 1];
-    if (Math.hypot(f.x - l.x, f.y - l.y) < 0.01) pts.pop();
-    return pts;
-  }
-  // 細かすぎる点を間引く（ダグラス・ポーカー）
-  function simplify(pts, tol) {
-    if (pts.length < 8) return pts;
-    var keep = new Array(pts.length).fill(false); keep[0] = keep[pts.length - 1] = true;
-    (function rdp(a, b) {
-      var A = pts[a], B = pts[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy) || 1, md = 0, mi = -1;
-      for (var k = a + 1; k < b; k++) { var d = Math.abs((pts[k].x - A.x) * dy - (pts[k].y - A.y) * dx) / L; if (d > md) { md = d; mi = k; } }
-      if (md > tol) { keep[mi] = true; rdp(a, mi); rdp(mi, b); }
-    })(0, pts.length - 1);
-    return pts.filter(function (_, k) { return keep[k]; });
+  // 字ごとの部品（離れた画は別の輪郭）。点の少ない輪郭は捨てない
+  function outlines(kind) { return GLYPHS.chars[kind].map(function (poly) { return poly.map(function (q) { return { x: q[0], y: q[1] }; }); }); }
+
+  // 字の中心を (x,y) に置き、ang だけ回した体を作る。離れた画も1つの硬い体にまとめる
+  function build(kind, x, y, ang) {
+    var filter = { category: CAT_CARGO, mask: CAT_CARGO | CAT_PLANK | CAT_STATIC, group: 0 };
+    var opt = { density: DENSITY, friction: FR, frictionStatic: FRS, restitution: 0.02, collisionFilter: filter };
+    var parts = [];
+    outlines(kind).forEach(function (pts) {
+      var minX = Infinity, minY = Infinity;
+      pts.forEach(function (q) { minX = Math.min(minX, q.x); minY = Math.min(minY, q.y); });
+      var b = M.Bodies.fromVertices(0, 0, [pts], opt, true, 0.01, 1);
+      // fromVertices は重心を (0,0) に置くので、字の座標に合うよう外枠でそろえる
+      M.Body.translate(b, { x: minX - b.bounds.min.x, y: minY - b.bounds.min.y });
+      (b.parts.length > 1 ? b.parts.slice(1) : [b]).forEach(function (pt) { pt.parent = pt; parts.push(pt); });
+    });
+    parts.forEach(function (pt) { pt.collisionFilter = filter; pt.friction = FR; pt.frictionStatic = FRS; });
+    var body = M.Body.create(Object.assign({ parts: parts }, opt));
+    M.Body.rotate(body, ang, { x: 0, y: 0 });
+    M.Body.translate(body, { x: x, y: y });
+    body.kind = kind;
+    return body;
   }
 
-  // 絵の原点から重心までのずれ（角度0のとき）。描くときに使う
+  // 字の中心から重心までのずれ（角度0のとき）。描くときに使う
   var OFFSET = {};
   KINDS.forEach(function (k) { var b = build(k, 0, 0, 0); OFFSET[k] = { x: b.position.x, y: b.position.y }; });
-
-  // 絵の原点を (x,y) に置き、ang だけ回した体を作る
-  function build(kind, x, y, ang) {
-    var pts = outline(kind);
-    var filter = { category: CAT_CARGO, mask: CAT_CARGO | CAT_PLANK | CAT_STATIC, group: 0 };
-    var b = M.Bodies.fromVertices(0, 0, [pts.map(function (q) { return { x: q.x, y: q.y }; })],
-      { density: DENSITY, friction: FR, frictionStatic: FRS, restitution: 0.02, collisionFilter: filter }, true, 0.01, 2);
-    b.parts.forEach(function (pt) { pt.collisionFilter = filter; pt.friction = FR; pt.frictionStatic = FRS; });
-    // fromVertices は重心を (0,0) に置くので、絵の座標に合うよう外枠でそろえる
-    var minX = Infinity, minY = Infinity;
-    pts.forEach(function (q) { minX = Math.min(minX, q.x); minY = Math.min(minY, q.y); });
-    M.Body.translate(b, { x: minX - b.bounds.min.x, y: minY - b.bounds.min.y });
-    M.Body.rotate(b, ang, { x: 0, y: 0 });
-    M.Body.translate(b, { x: x, y: y });
-    b.kind = kind;
-    return b;
-  }
 
   // 回したときの絵の原点からの上下左右のはみ出し
   var EXT = {};
@@ -184,7 +144,7 @@ var TenbinCore = (function () {
   }
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
-    ANIMALS: ANIMALS, KINDS: KINDS, OFFSET: OFFSET, outline: outline, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
+    GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
     settled: settled, canDrop: canDrop, current: current, next: next, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;
