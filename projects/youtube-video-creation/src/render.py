@@ -1183,6 +1183,9 @@ class Renderer:
         line_height = font.size + 26
         block = line_height * len(lines)
         top = (base.height - block) // 2 - (34 if sub else 0)
+        if kind == "outro" and base.width > base.height:
+            # **本編の最後は終了画面の置き場**（2026-10-03）。文字を上に寄せ、真ん中から下を空ける
+            top = int(base.height * 0.08)
 
         left = int(base.width * 0.11)
         if label:

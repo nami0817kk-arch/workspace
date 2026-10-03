@@ -1858,7 +1858,7 @@ def check_opening_background(script: Script) -> Finding:
 TAIL_SILENCE_MAX = 1.5
 # **本編は最後のカードを3秒出す決まり**（締めの挨拶を読み上げない代わり）。
 # そこは意図した無音なので、少しだけ余裕を見る
-TAIL_SILENCE_MAX_MAIN = 3.6
+TAIL_SILENCE_MAX_MAIN = 15.6   # 2026-10-03 に最後のカードを15秒にした（終了画面の置き場）
 
 
 def check_tail_silence(script: Script, out_dir) -> Finding:
