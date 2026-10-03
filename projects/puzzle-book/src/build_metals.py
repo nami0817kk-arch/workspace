@@ -185,7 +185,7 @@ def element_tile(c: canvas.Canvas, x: float, y: float, s: float, m: dict, col: C
     c.setFillColorCMYK(*WHITE)
     c.roundRect(x, y, s, s, s * 0.08, stroke=0, fill=1)
     c.setFillColorCMYK(*col)
-    c.setFont(FONT_BOLD, s * 0.15)
+    c.setFont(FONT_BOLD, max(7, s * 0.15))
     c.drawString(x + s * 0.09, y + s * 0.78, str(m["z"]) if m["z"] else "")
     sym = m["symbol"] or "REE"
     fs = s * 0.46
@@ -195,9 +195,11 @@ def element_tile(c: canvas.Canvas, x: float, y: float, s: float, m: dict, col: C
     c.drawCentredString(x + s / 2, y + s * 0.34, sym)
     c.setFont(FONT_BOLD, s * 0.13)
     nm = m["name"]
-    nfs = s * 0.13
-    while c.stringWidth(nm, FONT_BOLD, nfs) > s * 0.9:
+    nfs = max(7, s * 0.13)
+    while c.stringWidth(nm, FONT_BOLD, nfs) > s * 0.94 and nfs > 7:
         nfs -= 0.25
+    if c.stringWidth(nm, FONT_BOLD, nfs) > s * 0.94:  # 7pt でも入らない長い名前は（ ）を外す
+        nm = re.sub(r"（.*?）", "", nm)
     c.setFont(FONT_BOLD, nfs)
     c.drawCentredString(x + s / 2, y + s * 0.1, nm)
 
@@ -479,8 +481,6 @@ def build_pdf(spec: MetalsSpec, output_path: str) -> int:
         c.setFillColorCMYK(*(WHITE if z in inbook else (0, 0, 0, 0.45)))
         c.setFont("LAT-B", cell * 0.38)
         c.drawCentredString(x + cell / 2, yy - cell * 0.62, sym)
-        c.setFont("LAT", cell * 0.2)
-        c.drawString(x + 1.6, yy - cell * 0.24, str(z))
     ly = gy - 9 * cell - 22
     lx = f.left
     for g, desc, gc, _t in GROUPS:
@@ -556,20 +556,24 @@ def build_pdf(spec: MetalsSpec, output_path: str) -> int:
         gc, gt = GROUP_COLOR[g]
         fill_page(c, f, gt)
         c.setFillColorCMYK(*gc)
-        c.rect(0, f.y1 - 210, f.pw, 210 + BLEED, stroke=0, fill=1)
+        TOP = 180
+        c.rect(0, f.y1 - TOP, f.pw, TOP + BLEED, stroke=0, fill=1)
         c.setFillColorCMYK(*WHITE)
-        c.setFont(FONT_ROUNDED, 44)
-        c.drawString(f.left, f.y1 - 112, f"第{ci + 1}章")
-        c.setFont(FONT_ROUNDED, 28)
-        c.drawString(f.left, f.y1 - 165, g)
+        c.setFont(FONT_ROUNDED, 42)
+        c.drawString(f.left, f.y1 - 96, f"第{ci + 1}章")
+        c.setFont(FONT_ROUNDED, 26)
+        c.drawString(f.left, f.y1 - 140, g)
         desc = next(d for gg, d, *_r in GROUPS if gg == g)
         c.setFont(FONT_BOLD, 10)
-        c.drawString(f.left, f.y1 - 190, desc)
+        c.drawString(f.left, f.y1 - 162, desc)
         # この章の金属のタイル
-        ts = (f.width - 4 * 8) / 5
+        per_row = 5 if len(idx) <= 15 else 6
+        ts = (f.width - (per_row - 1) * 6) / per_row
+        rows_ = (len(idx) + per_row - 1) // per_row
+        ts = min(ts, (f.y1 - TOP - 20 - f.bottom) / rows_ - 16)
         for j, k in enumerate(idx):
-            x = f.left + (j % 5) * (ts + 8)
-            yy = f.y1 - 210 - 22 - ts - (j // 5) * (ts + 22)
+            x = f.left + (j % per_row) * (ts + 6)
+            yy = f.y1 - TOP - 20 - ts - (j // per_row) * (ts + 16)
             element_tile(c, x, yy, ts, ms[k], gc)
             c.setFillColorCMYK(*SUB)
             c.setFont(FONT_REGULAR, 7)
@@ -670,6 +674,42 @@ def build_pdf(spec: MetalsSpec, output_path: str) -> int:
     return n - 1
 
 
+COVER_PICKS = ["Au", "Cu", "Li", "Nd", "Fe", "Pt", "Co", "Ga", "Ti", "Ag", "In", "W"]
+
+
+def build_cover(spec: MetalsSpec, output_path: str) -> tuple[float, float]:
+    from simple_cover import build_cover as _bc
+
+    ms, _ = load_metals(spec)
+    by = {m["symbol"]: m for m in ms if m["symbol"]}
+
+    def visual(c, x, y, w, h):
+        cols, rows = 4, 3
+        gap = 7
+        s_ = min((w - gap * (cols - 1)) / cols, (h - gap * (rows - 1)) / rows)
+        x0 = x + (w - (s_ * cols + gap * (cols - 1))) / 2
+        y0 = y + (h - (s_ * rows + gap * (rows - 1))) / 2
+        for i, sym in enumerate(COVER_PICKS[: cols * rows]):
+            m = by[sym]
+            gc, _t = GROUP_COLOR[m["group"]]
+            xx = x0 + (i % cols) * (s_ + gap)
+            yy = y0 + (rows - 1 - i // cols) * (s_ + gap)
+            c.setFillColorCMYK(*WHITE)
+            c.roundRect(xx - 2, yy - 2, s_ + 4, s_ + 4, 7, stroke=0, fill=1)
+            draw_photo(c, m, xx, yy + s_ * 0.26, s_, s_ * 0.74, radius=5)
+            c.setFillColorCMYK(*gc)
+            c.roundRect(xx, yy, s_, s_ * 0.26, 4, stroke=0, fill=1)
+            c.setFillColorCMYK(*WHITE)
+            c.setFont("LAT-B", s_ * 0.14)
+            c.drawString(xx + 6, yy + s_ * 0.075, sym)
+            c.setFont(FONT_BOLD, s_ * 0.1)
+            c.drawRightString(xx + s_ - 6, yy + s_ * 0.085, re.sub(r"（.*?）", "", m["name"]))
+
+    ex = spec.extra.get("cover", {})
+    return _bc(spec, page_count(ms), output_path, visual, ex.get("tagline", ""), ex.get("blurb", []),
+               [tuple(e) for e in ex.get("examples", [])], ex.get("for_whom", []), ex.get("contents", []))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="金属・レアメタルの図鑑の本文PDFを作る")
     parser.add_argument("spec")
@@ -680,6 +720,8 @@ def main() -> None:
     total = build_pdf(spec, f"output/{stem}-interior.pdf")
     cost = kdp_spec.print_cost_jpy(total, spec.ink, spec.trim)
     print(f"{total}ページ（印刷代 {cost}円）-> output/{stem}-interior.pdf")
+    w, h = build_cover(spec, f"output/{stem}-cover.pdf")
+    print(f"表紙 {w:.4f} x {h:.4f} in -> output/{stem}-cover.pdf")
 
 
 if __name__ == "__main__":

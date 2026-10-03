@@ -12,7 +12,7 @@
       ]
     },
     "notes": [
-      "producers は原則 USGS Mineral Commodity Summaries 2025 の2024年推定値から計算した割合（%、小数1桁）です。basis に鉱山生産か精錬生産かを書きました。",
+      "producers は原則 USGS Mineral Commodity Summaries 2026 の2025年推定値から計算した割合（%、小数1桁、四捨五入）です。basis に鉱山生産か精錬生産かを書きました。ウランは World Nuclear Association の2024年の値です。",
       "密度・融点は Los Alamos 国立研究所と Jefferson Lab（PubChem 経由）の値を照らし合わせ、差があるものは「約」で丸めました。",
       "group が「その他」のものは、指定の4区分に当てはまらない追加分（カドミウム・ウラン）です。ニッケルと白金族は経産省のレアメタル31鉱種にも含まれます。"
     ]
@@ -36,32 +36,28 @@
       ],
       "producers": {
         "basis": "鉱山生産（鉄鉱石・鉄量）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "オーストラリア",
-            "share_percent": 36.2
+            "share_percent": 37.5
           },
           {
             "country": "ブラジル",
-            "share_percent": 17.5
-          },
-          {
-            "country": "中国",
-            "share_percent": 10.6
+            "share_percent": 16.3
           },
           {
             "country": "インド",
-            "share_percent": 10.6
+            "share_percent": 11.9
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "中国とインドは同じ値で3位に並びます。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": null
       },
       "japan": "日本は鉄鉱石のほぼすべてを輸入し、主にオーストラリアとブラジルから買っています。粗鋼の生産量は世界有数です。",
       "trivia": "鉄は血液の赤血球にあるヘモグロビンの成分で、体じゅうに酸素を運ぶ役目をしています。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-iron-ore.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-iron-ore.pdf",
         "https://periodic.lanl.gov/26.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/26",
         "https://mric.jogmec.go.jp/wp-content/uploads/2019/03/material_flow2018_Fe.pdf",
@@ -87,7 +83,7 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "チリ",
@@ -95,20 +91,20 @@
           },
           {
             "country": "コンゴ民主共和国",
-            "share_percent": 14.3
+            "share_percent": 13.9
           },
           {
             "country": "ペルー",
-            "share_percent": 11.3
+            "share_percent": 11.7
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本は銅鉱石を輸入して製錬しています。精錬銅の生産は世界有数で、2024年は世界4位です。",
       "trivia": "英語のcopperは、古代ローマが銅を採った地中海のキプロス島の名に由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-copper.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-copper.pdf",
         "https://periodic.lanl.gov/29.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/29",
         "https://www.mint.go.jp/operations/production/operations_coin_presently-minted.html",
@@ -134,28 +130,28 @@
       ],
       "producers": {
         "basis": "精錬生産（地金）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 59.7
+            "share_percent": 60.8
           },
           {
             "country": "インド",
-            "share_percent": 5.8
+            "share_percent": 5.7
           },
           {
             "country": "ロシア",
             "share_percent": 5.3
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本は地金のほぼすべてを輸入しています。使い終わった缶を溶かして再利用するリサイクルが盛んです。",
       "trivia": "1886年に安い製法ができるまで取り出すのが難しく、金より高価な時代がありました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-aluminum.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-aluminum.pdf",
         "https://periodic.lanl.gov/13.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/13",
         "https://www.aluminum.or.jp/basic/japanindustry/",
@@ -181,32 +177,34 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 33.3
+            "share_percent": 31.5
           },
           {
             "country": "ペルー",
-            "share_percent": 10.8
+            "share_percent": 11.5
           },
           {
             "country": "オーストラリア",
-            "share_percent": 9.2
+            "share_percent": 8.5
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "岐阜県の神岡鉱山は日本有数の亜鉛・鉛の鉱山でした。その坑道跡にニュートリノ観測装置カミオカンデがあります。",
-      "trivia": "インドでは13世紀ごろ、すでに亜鉛の金属が取り出されていました。",
+      "trivia": "インドでは遅くとも14世紀には、亜鉛の金属が取り出されていました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-zinc.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-zinc.pdf",
         "https://periodic.lanl.gov/30.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/30",
         "https://kotobank.jp/word/%E7%A5%9E%E5%B2%A1%E9%89%B1%E5%B1%B1-46623",
-        "https://umdb.um.u-tokyo.ac.jp/DKankoub/Publish_db/2003neutrino/04/040100.html"
+        "https://umdb.um.u-tokyo.ac.jp/DKankoub/Publish_db/2003neutrino/04/040100.html",
+        "https://periodic-table.rsc.org/element/30/zinc",
+        "https://insa.nic.in/writereaddata/UpLoadedFiles/IJHS/Vol54_3_2019__Art12.pdf"
       ]
     },
     {
@@ -227,28 +225,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 44.2
+            "share_percent": 42.2
           },
           {
             "country": "オーストラリア",
-            "share_percent": 10.0
+            "share_percent": 10.7
           },
           {
-            "country": "アメリカ",
-            "share_percent": 7.0
+            "country": "ペルー",
+            "share_percent": 6.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本でつくる鉛の半分以上は、使い終わった自動車用バッテリーなどからのリサイクルです。",
       "trivia": "古代ローマでは鉛で水道管をつくりました。元素記号Pbはラテン語の名plumbumに由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-lead.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-lead.pdf",
         "https://periodic.lanl.gov/82.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/82",
         "https://journal.jogmec.go.jp/content/300597227.pdf",
@@ -273,28 +271,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 23.0
+            "share_percent": 24.5
           },
           {
             "country": "インドネシア",
-            "share_percent": 16.7
+            "share_percent": 21.0
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 11.3
+            "country": "ペルー",
+            "share_percent": 11.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本はスズのほぼすべてを輸入しています。電子機器のはんだ向けの需要が大きい金属です。",
       "trivia": "寒い場所でスズの製品がぼろぼろになる現象は「スズペスト」と呼ばれます。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-tin.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-tin.pdf",
         "https://periodic.lanl.gov/50.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/50",
         "https://journal.jogmec.go.jp/content/300600729.pdf",
@@ -319,28 +317,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "インドネシア",
-            "share_percent": 59.5
+            "share_percent": 66.7
           },
           {
             "country": "フィリピン",
-            "share_percent": 8.9
+            "share_percent": 6.9
           },
           {
             "country": "ロシア",
-            "share_percent": 5.7
+            "share_percent": 5.1
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本は鉱石を輸入して製錬しています。ニッケルは国がレアメタルに位置づける鉱種の1つです。",
       "trivia": "名前は、銅に似ているのに銅が取れない鉱石を鉱夫が「悪魔（ニッケル）の銅」と呼んだことに由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-nickel.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-nickel.pdf",
         "https://periodic.lanl.gov/28.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/28",
         "https://www.mint.go.jp/operations/production/operations_coin_presently-minted.html",
@@ -367,32 +365,32 @@
       ],
       "producers": {
         "basis": "精錬生産（金属マグネシウム）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 95.0
+            "share_percent": 86.4
           },
           {
-            "country": "カザフスタン",
-            "share_percent": 2.0
+            "country": "ロシア",
+            "share_percent": 5.5
           },
           {
             "country": "ブラジル",
-            "share_percent": 2.0
+            "share_percent": 1.8
           },
           {
             "country": "イスラエル",
-            "share_percent": 2.0
+            "share_percent": 1.8
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "2位はカザフスタン・ブラジル・イスラエルが同じ値（各2.0%）で並びます。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "ブラジルとイスラエルは同じ値（各1.8%）で3位に並びます。"
       },
       "japan": "日本は金属マグネシウムのほぼすべてを輸入しており、世界の生産の大部分を中国が占めています。",
       "trivia": "豆腐を固める「にがり」の主成分は、塩化マグネシウムです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-magnesium-metal.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-magnesium-metal.pdf",
         "https://periodic.lanl.gov/12.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/12",
         "https://mric.jogmec.go.jp/wp-content/uploads/2019/03/material_flow2018_Mg.pdf"
@@ -416,28 +414,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 83.3
+            "share_percent": 95.2
+          },
+          {
+            "country": "キルギス",
+            "share_percent": 2.4
           },
           {
             "country": "タジキスタン",
-            "share_percent": 8.3
-          },
-          {
-            "country": "ペルー",
-            "share_percent": 2.5
+            "share_percent": 1.9
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "工場排水の水銀による水俣病の経験から、水銀の使用を世界で減らす「水銀に関する水俣条約」が2013年に結ばれました。",
       "trivia": "元素記号Hgは、ギリシャ語の「水の銀」から生まれたラテン語名hydrargyrumに由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-mercury.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-mercury.pdf",
         "https://periodic.lanl.gov/80.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/80",
         "https://www.env.go.jp/chemi/tmms/index.html",
@@ -463,7 +461,7 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -475,16 +473,16 @@
           },
           {
             "country": "オーストラリア",
-            "share_percent": 8.8
+            "share_percent": 8.5
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "鹿児島県の菱刈鉱山は国内で唯一の商業規模の金山です。東京2020大会のメダルは、使用済み家電から回収した金属でつくられました。",
       "trivia": "これまでに掘り出された金をすべて集めても、一辺約22mの立方体ほどにしかならないといわれます。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-gold.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-gold.pdf",
         "https://periodic.lanl.gov/79.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/79",
         "https://www.gov-online.go.jp/eng/publicity/book/hlj/html/202303/202303_06_jp.html",
@@ -510,28 +508,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "メキシコ",
-            "share_percent": 25.2
-          },
-          {
-            "country": "中国",
-            "share_percent": 13.2
+            "share_percent": 24.2
           },
           {
             "country": "ペルー",
-            "share_percent": 12.4
+            "share_percent": 13.8
+          },
+          {
+            "country": "中国",
+            "share_percent": 13.1
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "島根県の石見銀山は2007年に世界遺産になりました。16〜17世紀には日本の銀が大量に海外へ運ばれました。",
       "trivia": "元素記号Agは、ラテン語で銀を意味するargentumに由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-silver.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-silver.pdf",
         "https://periodic.lanl.gov/47.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/47",
         "https://www.mlit.go.jp/tagengo-db/R2-00246.html",
@@ -557,28 +555,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "南アフリカ",
             "share_percent": 70.6
           },
           {
-            "country": "ジンバブエ",
-            "share_percent": 11.2
+            "country": "ロシア",
+            "share_percent": 11.8
           },
           {
-            "country": "ロシア",
+            "country": "ジンバブエ",
             "share_percent": 10.6
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本は白金の多くを南アフリカから輸入しています。自動車の触媒や宝飾品の需要が大きい国です。",
       "trivia": "1960年まで長さの基準だった「メートル原器」は、白金とイリジウムの合金でつくられていました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-platinum-group.pdf",
         "https://periodic.lanl.gov/78.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/78",
         "https://mric.jogmec.go.jp/wp-content/uploads/2022/08/material_flow2021_PGM.pdf",
@@ -603,32 +601,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "ロシア",
-            "share_percent": 39.5
+            "share_percent": 44.2
           },
           {
             "country": "南アフリカ",
-            "share_percent": 37.9
+            "share_percent": 36.8
           },
           {
             "country": "カナダ",
-            "share_percent": 7.9
-          },
-          {
-            "country": "ジンバブエ",
-            "share_percent": 7.9
+            "share_percent": 8.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "カナダとジンバブエは同じ値で3位に並びます。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": null
       },
       "japan": "日本では、保険診療の歯の詰め物に金銀パラジウム合金が広く使われてきました。",
       "trivia": "名前は、発見の少し前に見つかった小惑星パラスにちなみます。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-platinum-group.pdf",
         "https://periodic.lanl.gov/46.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/46",
         "https://www.ishifuku-kinzoku.co.jp/products/dental/palladium.html",
@@ -654,28 +648,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "オーストラリア",
-            "share_percent": 36.7
-          },
-          {
-            "country": "チリ",
-            "share_percent": 20.4
+            "share_percent": 31.7
           },
           {
             "country": "中国",
-            "share_percent": 17.1
+            "share_percent": 21.4
+          },
+          {
+            "country": "チリ",
+            "share_percent": 19.3
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本は炭酸リチウムなどを輸入しています。リチウムイオン電池は日本の吉野彰さんらが開発し、2019年にノーベル化学賞を受けました。",
       "trivia": "名前はギリシャ語で「石」を意味するlithosに由来します。鉱物から見つかったためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-lithium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-lithium.pdf",
         "https://periodic.lanl.gov/3.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/3",
         "https://mric.jogmec.go.jp/wp-content/uploads/2024/03/material_flow2022_Li.pdf",
@@ -700,33 +694,37 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "アメリカ",
-            "share_percent": 50.0
-          },
-          {
-            "country": "中国",
-            "share_percent": 21.4
+            "share_percent": 53.5
           },
           {
             "country": "ブラジル",
-            "share_percent": 22.2
+            "share_percent": 18.6
+          },
+          {
+            "country": "中国",
+            "share_percent": 17.9
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
-      "japan": "日本は水酸化ベリリウムなどを輸入しています。日本ガイシは1958年に国内で初めてベリリウム銅の工業化に成功しました。",
+      "japan": "日本は水酸化ベリリウムなどを輸入しています。日本ガイシは1958年にベリリウム銅母合金の製造販売を始めました。",
       "trivia": "化合物が甘い味をもつため「グルシニウム（甘い）」と呼ばれた時代があります。ただし毒性があります。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-beryllium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-beryllium.pdf",
         "https://periodic.lanl.gov/4.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/4",
         "https://mric.jogmec.go.jp/public/report/2007-06/Be.pdf",
         "https://www.ngk.co.jp/product/becu.html",
-        "https://science.nasa.gov/mission/webb/webbs-mirrors/"
+        "https://science.nasa.gov/mission/webb/webbs-mirrors/",
+        "https://web.archive.org/web/20240728072247id_/https://mric.jogmec.go.jp/public/report/2011-07/Be.pdf",
+        "https://www.mhlw.go.jp/content/11201000/2r9852000002b7aw.pdf",
+        "https://www.jsnm.or.jp/group/beryllium.html",
+        "https://www.ngk.co.jp/info/history/"
       ]
     },
     {
@@ -748,28 +746,28 @@
       ],
       "producers": {
         "basis": "精錬生産（スポンジチタン）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 68.8
+            "share_percent": 70.3
           },
           {
             "country": "日本",
-            "share_percent": 17.2
+            "share_percent": 14.3
           },
           {
             "country": "ロシア",
-            "share_percent": 6.2
+            "share_percent": 6.8
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "チタン金属の原料のスポンジチタンの生産です。"
       },
       "japan": "日本は金属チタンの原料となるスポンジチタンの生産が世界2位です。航空機向けなど高品質な製品をつくっています。",
       "trivia": "名前は、ギリシャ神話の巨人族タイタンにちなみます。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-titanium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-titanium.pdf",
         "https://periodic.lanl.gov/22.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/22",
         "https://mric.jogmec.go.jp/wp-content/uploads/2019/03/material_flow2018_Ti.pdf"
@@ -793,28 +791,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 70.0
+            "share_percent": 74.5
           },
           {
             "country": "ロシア",
-            "share_percent": 21.0
+            "share_percent": 19.1
           },
           {
-            "country": "南アフリカ",
-            "share_percent": 8.0
+            "country": "ブラジル",
+            "share_percent": 4.8
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本はバナジウムを全量輸入しています。五酸化バナジウムやフェロバナジウムの形で入り、主に鉄鋼に加えて使われます。",
       "trivia": "化合物がさまざまな美しい色を示すことから、北欧の美の女神バナディースにちなんで名づけられました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-vanadium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-vanadium.pdf",
         "https://periodic.lanl.gov/23.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/23",
         "https://mric.jogmec.go.jp/wp-content/uploads/2020/05/material_flow2019_V.pdf",
@@ -839,28 +837,28 @@
       ],
       "producers": {
         "basis": "鉱山生産（クロム鉱石）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "南アフリカ",
-            "share_percent": 44.7
+            "share_percent": 45.1
           },
           {
             "country": "トルコ",
-            "share_percent": 17.0
+            "share_percent": 17.6
           },
           {
             "country": "カザフスタン",
-            "share_percent": 13.8
+            "share_percent": 13.7
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "クロム鉱石（総重量）の生産です。"
       },
       "japan": "日本はクロムを全量輸入しています。かつては鳥取県や岡山県にクロム鉱山がありましたが、今は南アフリカなどから輸入しています。",
       "trivia": "名前はギリシャ語で「色」を意味するchromaに由来します。化合物がいろいろな色をもつためです。ルビーの赤もクロムの色です。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-chromium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-chromium.pdf",
         "https://periodic.lanl.gov/24.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/24",
         "https://mric.jogmec.go.jp/wp-content/uploads/2019/03/material_flow2018_Cr.pdf",
@@ -886,28 +884,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "南アフリカ",
-            "share_percent": 37.0
+            "share_percent": 38.0
           },
           {
             "country": "ガボン",
-            "share_percent": 23.0
+            "share_percent": 25.0
           },
           {
-            "country": "オーストラリア",
-            "share_percent": 14.0
+            "country": "ガーナ",
+            "share_percent": 10.0
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本はマンガン鉱石を主に南アフリカやオーストラリアから輸入しています。かつては国内にも多くのマンガン鉱山がありました。",
       "trivia": "海の底には、マンガンを多く含む「マンガン団塊」という黒い塊が転がっている場所があります。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-manganese.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-manganese.pdf",
         "https://periodic.lanl.gov/25.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/25",
         "https://mric.jogmec.go.jp/wp-content/uploads/2020/05/material_flow2019_Mn.pdf",
@@ -933,28 +931,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "コンゴ民主共和国",
-            "share_percent": 75.9
+            "share_percent": 74.2
           },
           {
             "country": "インドネシア",
-            "share_percent": 9.7
+            "share_percent": 14.2
           },
           {
             "country": "ロシア",
-            "share_percent": 3.0
+            "share_percent": 2.5
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "愛媛県新居浜市にある住友金属鉱山の工場は、輸入した原料から電気コバルトをつくる国内唯一の工場です。",
       "trivia": "名前はドイツ語の「コーボルト（鉱山の小鬼）」に由来します。鉱夫を悩ませた鉱石だったためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-cobalt.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-cobalt.pdf",
         "https://periodic.lanl.gov/27.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/27",
         "https://www.sumitomo.gr.jp/act/visits/01/",
@@ -979,32 +977,28 @@
       ],
       "producers": {
         "basis": "精錬生産（一次・低純度）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 98.7
+            "share_percent": 99.0
           },
           {
             "country": "ロシア",
-            "share_percent": 0.8
+            "share_percent": 0.7
           },
           {
             "country": "日本",
-            "share_percent": 0.4
-          },
-          {
-            "country": "韓国",
-            "share_percent": 0.4
+            "share_percent": 0.3
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "低純度の一次ガリウム。日本と韓国は同じ値で3位に並びます。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "低純度の一次ガリウム。世界合計は丸めた値のため、3か国の合計を分母にしました。"
       },
       "japan": "窒化ガリウムを使った青色LEDの開発で、赤﨑勇さん・天野浩さん・中村修二さんが2014年にノーベル物理学賞を受けました。",
       "trivia": "メンデレーエフが周期表の空欄から存在を予言し、4年後に発見されました。名前はフランスの古い呼び名ガリアに由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-gallium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-gallium.pdf",
         "https://periodic.lanl.gov/31.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/31",
         "https://www.nobelprize.org/prizes/physics/2014/popular-information/",
@@ -1029,19 +1023,22 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "国別の生産量は公表されていません。USGS は中国が最大の生産国としています（精錬生産）。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "国別の生産量は公表されていません。USGS は2025年も中国が最大の生産国としています（精錬生産）。"
       },
       "japan": "日本はゲルマニウムを輸入に頼っています。中国は2023年8月から、ゲルマニウムとガリウムの輸出を許可制にしました。",
       "trivia": "初期のトランジスタはゲルマニウムでつくられていました。名前はドイツの古い呼び名ゲルマニアに由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-germanium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-germanium.pdf",
         "https://periodic.lanl.gov/32.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/32",
         "https://www.jetro.go.jp/biznews/2023/07/74e08dd9a1764e80.html",
-        "https://pubs.usgs.gov/myb/vol1/2023/myb1-2023-germanium.pdf"
+        "https://pubs.usgs.gov/myb/vol1/2023/myb1-2023-germanium.pdf",
+        "https://journal.jogmec.go.jp/content/300600668.pdf",
+        "https://www.meti.go.jp/shingikai/sankoshin/seizo_sangyo/mining/pdf/001_03_00.pdf",
+        "https://www.jetro.go.jp/biznews/2023/10/4bd6b4e86473c0f1.html"
       ]
     },
     {
@@ -1062,28 +1059,28 @@
       ],
       "producers": {
         "basis": "精錬生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 48.6
+            "share_percent": 52.6
           },
           {
             "country": "日本",
-            "share_percent": 19.2
+            "share_percent": 16.8
           },
           {
             "country": "ロシア",
-            "share_percent": 9.2
+            "share_percent": 8.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本はセレンの精錬生産が世界2位です。銅を製錬するときの副産物として回収しています。",
       "trivia": "名前はギリシャ語で「月」を意味するselene に由来します。先に見つかったテルル（地球）と対になる名前です。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-selenium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-selenium.pdf",
         "https://periodic.lanl.gov/34.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/34",
         "https://pubs.usgs.gov/myb/vol1/2022/myb1-2022-selenium-tellurium.pdf",
@@ -1108,15 +1105,15 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "2024年の生産量の公式な資料はありません（USGS）。リチウムやセシウムの鉱石の副産物として得られます。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "2025年の生産量の公式な資料はありません（USGS）。リチウムやセシウムの鉱石の副産物として得られます。"
       },
       "japan": "日本の準天頂衛星「みちびき」は、正確な位置を測る信号をつくるためにルビジウム原子時計を積んでいます。",
       "trivia": "名前はラテン語で「深い赤」を意味するrubidusに由来します。分光器で赤い光の線から見つかったためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rubidium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rubidium.pdf",
         "https://periodic.lanl.gov/37.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/37",
         "https://www.jaxa.jp/press/2012/12/20121220_michibiki_j.html",
@@ -1141,32 +1138,35 @@
       ],
       "producers": {
         "basis": "鉱山生産（天青石）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "イラン",
-            "share_percent": 39.2
+            "share_percent": 55.6
           },
           {
             "country": "スペイン",
-            "share_percent": 39.2
+            "share_percent": 22.2
           },
           {
             "country": "中国",
-            "share_percent": 15.7
+            "share_percent": 17.8
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "イランとスペインは同じ推定値です。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": null
       },
       "japan": "夏の花火の赤色は、主に炭酸ストロンチウムなどが燃えるときの炎色反応によるものです。",
       "trivia": "名前は、鉱石が見つかったスコットランドの村ストロンティアンにちなみます。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-strontium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-strontium.pdf",
         "https://periodic.lanl.gov/38.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/38",
         "https://kdc.csj.jp/learning/item_2523.html",
-        "https://kids.gakken.co.jp/en/kagaku/nandemo/hanabi20230802/"
+        "https://kids.gakken.co.jp/en/kagaku/nandemo/hanabi20230802/",
+        "https://www.sensodyne.in/about-sensodyne/science-of-sensodyne/rapid-relief.html",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9376650/",
+        "https://www.jstage.jst.go.jp/article/perio1968/22/3/22_3_486/_article/-char/ja/"
       ]
     },
     {
@@ -1187,7 +1187,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（ジルコン精鉱）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "オーストラリア",
@@ -1195,23 +1195,25 @@
           },
           {
             "country": "南アフリカ",
-            "share_percent": 20.0
+            "share_percent": 22.5
           },
           {
             "country": "モザンビーク",
-            "share_percent": 10.7
+            "share_percent": 13.3
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "ジルコニウムの原料のジルコン精鉱（総重量）の生産です。"
       },
       "japan": "日本の東ソーはジルコニア粉末の大手メーカーで、その粉末は歯の被せ物などに使われています。",
       "trivia": "名前はペルシャ語で「金色」を意味するzargunに由来するといわれます。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-zirconium-hafnium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-zirconium-hafnium.pdf",
         "https://periodic.lanl.gov/40.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/40",
-        "https://www.tosoh.co.jp/product/functionality/zirconia_powder_dental.html"
+        "https://www.tosoh.co.jp/product/functionality/zirconia_powder_dental.html",
+        "https://www.logi-today.com/177883",
+        "https://www.nikkei.com/article/DGXZQOCC192VZ0Z10C26A5000000/"
       ]
     },
     {
@@ -1232,30 +1234,32 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "ブラジル",
-            "share_percent": 90.9
+            "share_percent": 92.9
           },
           {
             "country": "カナダ",
-            "share_percent": 6.5
+            "share_percent": 5.4
           },
           {
             "country": "コンゴ民主共和国",
-            "share_percent": 0.6
+            "share_percent": 0.9
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "世界の生産の約9割をブラジルが占めます。日本はニオブを輸入し、主に鋼を強くするために使っています。",
       "trivia": "名前は、ギリシャ神話でタンタロスの娘ニオベにちなみます。よく似たタンタルと一緒に見つかるためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-niobium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-niobium.pdf",
         "https://periodic.lanl.gov/41.shtml",
-        "https://pubchem.ncbi.nlm.nih.gov/element/41"
+        "https://pubchem.ncbi.nlm.nih.gov/element/41",
+        "https://web.archive.org/web/20240115124218id_/https://mric.jogmec.go.jp/wp-content/uploads/2022/11/material_flow2021_Nb.pdf",
+        "https://www.japanmetaldaily.com/articles/-/114679"
       ]
     },
     {
@@ -1276,30 +1280,32 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 42.3
-          },
-          {
-            "country": "ペルー",
-            "share_percent": 15.8
+            "share_percent": 37.3
           },
           {
             "country": "チリ",
-            "share_percent": 14.6
+            "share_percent": 16.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 15.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本はモリブデンを主に輸入しています。特殊鋼やステンレスの生産で多く使われています。",
       "trivia": "名前はギリシャ語で「鉛」を意味するmolybdosに由来します。昔は鉛の鉱石と取り違えられていたためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-molybdenum.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-molybdenum.pdf",
         "https://periodic.lanl.gov/42.shtml",
-        "https://pubchem.ncbi.nlm.nih.gov/element/42"
+        "https://pubchem.ncbi.nlm.nih.gov/element/42",
+        "https://web.archive.org/web/20230201161751id_/https://mric.jogmec.go.jp/wp-content/uploads/2022/12/material_flow2021_Mo.pdf",
+        "https://ds.cc.yamaguchi-u.ac.jp/~msoc/collection/element_19.html"
       ]
     },
     {
@@ -1320,28 +1326,28 @@
       ],
       "producers": {
         "basis": "精錬生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 70.4
+            "share_percent": 69.1
           },
           {
             "country": "韓国",
-            "share_percent": 16.7
+            "share_percent": 16.4
           },
           {
             "country": "日本",
-            "share_percent": 5.6
+            "share_percent": 5.9
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "北海道の豊羽鉱山は世界有数のインジウム産地でしたが、2006年に閉山しました。今は透明電極のくずからの回収が進んでいます。",
       "trivia": "分光器で見た光の線があざやかな藍色（インディゴ）だったことから名づけられました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-indium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-indium.pdf",
         "https://periodic.lanl.gov/49.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/49",
         "https://www.eng.hokudai.ac.jp/engineering/archive/2013-07/feature1307-05.html",
@@ -1366,28 +1372,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 60.0
-          },
-          {
-            "country": "タジキスタン",
-            "share_percent": 17.0
+            "share_percent": 36.4
           },
           {
             "country": "ロシア",
-            "share_percent": 13.0
+            "share_percent": 29.1
+          },
+          {
+            "country": "タジキスタン",
+            "share_percent": 20.0
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "愛媛県の市之川鉱山でとれた輝安鉱（アンチモンの鉱石）の大きな結晶は世界的に有名で、海外の博物館にも並んでいます。",
       "trivia": "古代から、輝安鉱（アンチモンの鉱物）の粉は、目のまわりを黒くふちどる化粧に使われてきました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-antimony.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-antimony.pdf",
         "https://periodic.lanl.gov/51.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/51",
         "https://www.city.saijo.ehime.jp/soshiki/syakaikyoiku/itinokawakozan-kianko1.html",
@@ -1413,28 +1419,28 @@
       ],
       "producers": {
         "basis": "精錬生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 76.5
+            "share_percent": 80.0
           },
           {
             "country": "ロシア",
-            "share_percent": 7.1
+            "share_percent": 6.7
           },
           {
             "country": "日本",
-            "share_percent": 7.1
+            "share_percent": 6.1
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本はテルルの精錬生産が世界有数です。銅を製錬するときの副産物として回収しています。",
       "trivia": "名前はラテン語で「地球」を意味するtellusに由来します。のちに見つかったセレン（月）と対になる名前です。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-tellurium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-tellurium.pdf",
         "https://periodic.lanl.gov/52.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/52",
         "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-japan.pdf",
@@ -1459,15 +1465,15 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "2024年の生産量の公式な資料はありません（USGS）。主な鉱物ポルックス石の埋蔵はオーストラリア・カナダ・中国・ナミビアにあると推定されています。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "生産量の公式な資料はありません（USGS）。主な鉱物ポルックス石の埋蔵はオーストラリア・カナダ・中国・ナミビアにあると推定されています。"
       },
       "japan": "2011年の東京電力福島第一原子力発電所の事故では、放射性のセシウム137が広く飛び散りました。",
       "trivia": "名前はラテン語で「空色」を意味するcaesiusに由来します。光の線が青かったためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-cesium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-cesium.pdf",
         "https://periodic.lanl.gov/55.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/55",
         "https://www.env.go.jp/chemi/rhm/kisoshiryo/attach/20140707mat3-02.pdf",
@@ -1492,28 +1498,28 @@
       ],
       "producers": {
         "basis": "鉱山生産（重晶石）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "インド",
-            "share_percent": 31.7
+            "share_percent": 34.5
           },
           {
             "country": "中国",
-            "share_percent": 25.6
+            "share_percent": 25.3
           },
           {
             "country": "モロッコ",
-            "share_percent": 12.2
+            "share_percent": 11.5
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "バリウムの原料の重晶石（バライト）の生産です。"
       },
       "japan": "健康診断の胃のX線検査で飲む白い液体は、硫酸バリウムです。",
       "trivia": "名前はギリシャ語で「重い」を意味するbarysに由来します。重晶石という重い鉱物から見つかったためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-barite.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-barite.pdf",
         "https://periodic.lanl.gov/56.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/56"
       ]
@@ -1536,18 +1542,20 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "USGS は世界の一次生産量を公表していません。ジルコニウムの精製の副産物として得られます。"
       },
       "japan": "ハフニウムは原子力用のジルコニウムをつくる過程で取り出されます。主な生産国はフランスとアメリカです。",
       "trivia": "名前は、発見されたデンマークの首都コペンハーゲンのラテン語名ハフニアにちなみます。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-zirconium-hafnium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-zirconium-hafnium.pdf",
         "https://periodic.lanl.gov/72.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/72",
-        "https://scrreen.eu/wp-content/uploads/2023/01/HAFNIUM_CRM_2020_Factsheets_critical_Final.pdf"
+        "https://scrreen.eu/wp-content/uploads/2023/01/HAFNIUM_CRM_2020_Factsheets_critical_Final.pdf",
+        "https://www.intel.com/pressroom/kits/advancedtech/doodle/ref_HiK-MG/high-k.htm",
+        "https://physicstoday.aip.org/news/semiconductor-industry-switches-to-hafnium-based-transistors"
       ]
     },
     {
@@ -1568,28 +1576,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "コンゴ民主共和国",
-            "share_percent": 41.9
-          },
-          {
-            "country": "ナイジェリア",
-            "share_percent": 18.6
+            "share_percent": 52.0
           },
           {
             "country": "ルワンダ",
-            "share_percent": 16.7
+            "share_percent": 16.0
+          },
+          {
+            "country": "ナイジェリア",
+            "share_percent": 15.6
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本はタンタルを輸入に頼っています。国内で使う量の多くは、スマホなどの電子部品のコンデンサー向けです。",
       "trivia": "名前は、ギリシャ神話で水を飲もうとしても飲めない罰を受けたタンタロスにちなみます。酸を吸わない性質から名づけられました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-tantalum.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-tantalum.pdf",
         "https://periodic.lanl.gov/73.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/73",
         "https://mric.jogmec.go.jp/wp-content/uploads/2021/06/material_flow2020_Ta.pdf",
@@ -1614,28 +1622,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 82.7
+            "share_percent": 78.8
           },
           {
             "country": "ベトナム",
-            "share_percent": 4.2
+            "share_percent": 3.5
           },
           {
-            "country": "ロシア",
-            "share_percent": 2.5
+            "country": "カザフスタン",
+            "share_percent": 2.8
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "日本はタングステンの原料の多くを中国から輸入しています。超硬工具は、日本の企業も多くつくっています。",
       "trivia": "名前はスウェーデン語で「重い石」を意味します。元素記号Wは鉱石ウォルフラマイトに由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-tungsten.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-tungsten.pdf",
         "https://periodic.lanl.gov/74.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/74",
         "https://mric.jogmec.go.jp/wp-content/uploads/2022/08/material_flow2021_W.pdf",
@@ -1660,28 +1668,28 @@
       ],
       "producers": {
         "basis": "鉱山生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "チリ",
-            "share_percent": 46.8
+            "share_percent": 37.0
           },
           {
-            "country": "アメリカ",
-            "share_percent": 15.3
+            "country": "中国",
+            "share_percent": 24.7
           },
           {
             "country": "ポーランド",
-            "share_percent": 15.2
+            "share_percent": 12.3
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": null
       },
       "japan": "1908年に小川正孝さんが新元素「ニッポニウム」を発表しましたが、後の研究でこれはレニウムだった可能性が高いとされています。",
       "trivia": "1928年、660kgのモリブデン鉱石からわずか1gのレニウムが取り出されました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rhenium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rhenium.pdf",
         "https://periodic.lanl.gov/75.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/75",
         "https://www.jstage.jst.go.jp/article/kakyoshi/66/1/66_4/_article/-char/ja/",
@@ -1706,15 +1714,15 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "国別の生産量は公表されていません。USGS は中国・カザフスタン・ロシアを主な生産国と推定しています（2023年の世界の生産は約10トン）。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "国別の生産量は公表されていません。USGS は中国・カザフスタン・ロシアを主な生産国と推定しています（データのある最新の2023年の世界の生産は約10トン）。"
       },
       "japan": "硫酸タリウムなどタリウムの化合物は、毒性が強いため、毒物及び劇物取締法で劇物に指定されています。",
       "trivia": "名前はギリシャ語で「緑の若枝」を意味するthallosに由来します。分光器で鮮やかな緑の線が見えたためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-thallium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-thallium.pdf",
         "https://periodic.lanl.gov/81.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/81",
         "https://www.mhlw.go.jp/web/t_doc?dataId=00tc8235&dataType=1&pageNo=1",
@@ -1739,28 +1747,32 @@
       ],
       "producers": {
         "basis": "精錬生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 81.2
-          },
-          {
-            "country": "ラオス",
-            "share_percent": 6.9
+            "share_percent": 87.5
           },
           {
             "country": "韓国",
-            "share_percent": 6.2
+            "share_percent": 6.3
+          },
+          {
+            "country": "日本",
+            "share_percent": 3.1
+          },
+          {
+            "country": "ラオス",
+            "share_percent": 3.1
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": null
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "日本とラオスは同じ値（各3.1%）で3位に並びます。"
       },
       "japan": "日本はビスマスの精錬で世界有数の生産国です。鉛や亜鉛を製錬するときの副産物として回収しています。",
       "trivia": "ビスマスはわずかに放射線を出しますが、半減期が宇宙の年齢よりはるかに長いため、最近まで安定な元素と思われていました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-bismuth.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-bismuth.pdf",
         "https://periodic.lanl.gov/83.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/83",
         "https://pubs.usgs.gov/myb/vol1/2022/myb1-2022-bismuth.pdf"
@@ -1784,18 +1796,21 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "USGS は白金とパラジウム以外の白金族の国別生産を公表していません。白金族の資源と埋蔵量が最も大きいのは南アフリカのブッシュフェルト複合岩体です。"
       },
       "japan": "日本はロジウムの多くを南アフリカから輸入しています。主な使い道は自動車の排ガス浄化触媒です。",
       "trivia": "名前はギリシャ語で「バラ」を意味するrhodonに由来します。化合物がバラ色をしていたためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-platinum-group.pdf",
         "https://periodic.lanl.gov/45.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/45",
-        "https://mric.jogmec.go.jp/wp-content/uploads/2022/08/material_flow2021_PGM.pdf"
+        "https://mric.jogmec.go.jp/wp-content/uploads/2022/08/material_flow2021_PGM.pdf",
+        "https://journal.jogmec.go.jp/content/300600748.pdf",
+        "https://www.jetro.go.jp/biznews/2026/02/1963e21719ed7c58.html",
+        "https://periodic-table.rsc.org/element/45/rhodium"
       ]
     },
     {
@@ -1816,15 +1831,15 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "USGS は白金とパラジウム以外の白金族の国別生産を公表していません。白金族の資源と埋蔵量が最も大きいのは南アフリカのブッシュフェルト複合岩体です。"
       },
       "japan": "日本の企業は、電極にイリジウムを使った自動車の点火プラグを製品化しています。",
       "trivia": "恐竜が絶滅した時代の地層にはイリジウムが多く、巨大な隕石が落ちた証拠とされています。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-platinum-group.pdf",
         "https://periodic.lanl.gov/77.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/77",
         "https://www.denso.com/jp/ja/products-and-services/automotive-service-parts-and-accessories/plug/iridiumpower/lineup.html",
@@ -1850,7 +1865,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（レアアース全体）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -1858,20 +1873,20 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 11.5
+            "share_percent": 13.1
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 7.9
+            "country": "オーストラリア",
+            "share_percent": 7.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "酸化物換算。中国の値は生産枠で、記録されない生産を含みません。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "酸化物換算。中国は2025年の生産枠を公表しておらず、中国の値は USGS の推定です。"
       },
       "japan": "2010年に中国からの輸出が滞ったことをきっかけに、日本は調達先を広げました。南鳥島周辺の海底には、レアアースを含む泥が見つかっています。",
       "trivia": "17元素のうち4つ（イットリウム、テルビウム、エルビウム、イッテルビウム）は、スウェーデンのイッテルビー村にちなんで名づけられました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths_ver.1.2.pdf",
         "https://www.rieti.go.jp/jp/columns/s24_0012.html",
         "https://www.u-tokyo.ac.jp/focus/ja/articles/a_00144.html"
       ]
@@ -1894,7 +1909,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（レアアース全体）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -1902,20 +1917,20 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 11.5
+            "share_percent": 13.1
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 7.9
+            "country": "オーストラリア",
+            "share_percent": 7.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国は2025年の生産枠を公表しておらず、中国の値は USGS の推定です。"
       },
       "japan": "ネオジム磁石は1982年に住友特殊金属の佐川眞人さんが発明し、1983年に発表されました。",
       "trivia": "名前はギリシャ語で「新しい双子」を意味します。ジジムという物質を2つに分けて見つかったためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths_ver.1.2.pdf",
         "https://periodic.lanl.gov/60.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/60",
         "https://scienceportal.jst.go.jp/explore/highlight/20120605_01/",
@@ -1940,7 +1955,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（レアアース全体）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -1948,20 +1963,20 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 11.5
+            "share_percent": 13.1
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 7.9
+            "country": "オーストラリア",
+            "share_percent": 7.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国は2025年の生産枠を公表しておらず、中国の値は USGS の推定です。"
       },
       "japan": "2016年、ホンダと大同特殊鋼はジスプロシウムなどを使わないネオジム磁石を、ハイブリッド車のモーターに初めて採用しました。",
       "trivia": "名前はギリシャ語で「近づきがたい」を意味するdysprositosに由来します。分離がとても難しかったためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths_ver.1.2.pdf",
         "https://periodic.lanl.gov/66.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/66",
         "https://www.daido.co.jp/about/release/2010/200713_shr.html",
@@ -1986,7 +2001,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（レアアース全体）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -1994,20 +2009,20 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 11.5
+            "share_percent": 13.1
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 7.9
+            "country": "オーストラリア",
+            "share_percent": 7.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国は2025年の生産枠を公表しておらず、中国の値は USGS の推定です。"
       },
       "japan": "日本はセリウムを輸入しており、ガラスの研磨剤として多く使われてきました。研磨剤のリサイクルや使用量の削減も進められています。",
       "trivia": "名前は、発見の2年前に見つかった小惑星（今は準惑星）ケレスにちなみます。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths_ver.1.2.pdf",
         "https://periodic.lanl.gov/58.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/58",
         "https://www.dowa-ecoj.jp/catalog/2012/20121201.html",
@@ -2032,7 +2047,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（レアアース全体）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -2040,20 +2055,20 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 11.5
+            "share_percent": 13.1
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 7.9
+            "country": "オーストラリア",
+            "share_percent": 7.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国は2025年の生産枠を公表しておらず、中国の値は USGS の推定です。"
       },
       "japan": "ハイブリッド車に使われてきたニッケル水素電池には、ランタンを含む合金が使われています。",
       "trivia": "名前はギリシャ語で「隠れる」を意味するlanthaneinに由来します。セリウムの中に隠れていたためです。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths_ver.1.2.pdf",
         "https://periodic.lanl.gov/57.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/57",
         "https://www.nippondenko.co.jp/ourbusiness/functionalmaterials/hydrogen/",
@@ -2078,15 +2093,15 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "国別の値は公表されていません。USGS は世界の鉱山生産を酸化イットリウム換算で1万5,000〜2万トンと推定し、その多くが中国とミャンマーとしています。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "国別の値は公表されていません。USGS は2025年の世界の鉱山生産を酸化イットリウム換算で1万〜1万5,000トンと推定し、その多くが中国、次いでミャンマーとしています。"
       },
       "japan": "1996年、日本の日亜化学工業が青色LEDと黄色いYAG蛍光体を組み合わせた白色LEDを製品化しました。",
       "trivia": "名前は、スウェーデンのイッテルビー村にちなみます。この村の名前からは4つの元素名が生まれました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-yttrium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-yttrium.pdf",
         "https://periodic.lanl.gov/39.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/39",
         "https://led-ld.nichia.co.jp/jp/blog/m000012.html",
@@ -2111,7 +2126,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（レアアース全体）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -2119,24 +2134,26 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 11.5
+            "share_percent": 13.1
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 7.9
+            "country": "オーストラリア",
+            "share_percent": 7.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国は2025年の生産枠を公表しておらず、中国の値は USGS の推定です。"
       },
       "japan": "経済産業省は、テルビウムなどの使用量を減らしたネオジム磁石の開発を支援しています。",
       "trivia": "名前はイッテルビー村にちなみます。最初はエルビウムと名前が入れかわってしまったことがあります。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths_ver.1.2.pdf",
         "https://periodic.lanl.gov/65.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/65",
         "https://newswitch.jp/p/45723",
-        "https://www.wordorigins.org/big-list-entries/erbium"
+        "https://www.wordorigins.org/big-list-entries/erbium",
+        "https://public-comment.e-gov.go.jp/pcm/download?seqNo=0000306594",
+        "https://www8.cao.go.jp/cstp/anzen_anshin/02-10_20231020_meti_8.pdf"
       ]
     },
     {
@@ -2157,7 +2174,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（レアアース全体）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -2165,24 +2182,25 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 11.5
+            "share_percent": 13.1
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 7.9
+            "country": "オーストラリア",
+            "share_percent": 7.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国は2025年の生産枠を公表しておらず、中国の値は USGS の推定です。"
       },
       "japan": "1993年、日本の根本特殊化学がユウロピウムを使った、長く光る蓄光材料「ルミノーバ」を開発しました。",
       "trivia": "名前はヨーロッパにちなみます。1901年にフランスのドマルセが、ほぼ純粋なものを取り出しました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths_ver.1.2.pdf",
         "https://periodic.lanl.gov/63.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/63",
-        "https://watchnavi.getnavi.jp/serialization/41619",
-        "https://hodinkee.jp/articles/luminous-dials-what-makes-them-glow-and-how-to-spot-their-differences"
+        "https://www.nemoto.co.jp/luminouspigment/",
+        "https://www.tokyo-cci.or.jp/sansei/chizai100/nemoto.pdf",
+        "https://iopscience.iop.org/article/10.1149/1.1837067"
       ]
     },
     {
@@ -2203,7 +2221,7 @@
       ],
       "producers": {
         "basis": "鉱山生産（レアアース全体）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -2211,24 +2229,25 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 11.5
+            "share_percent": 13.1
           },
           {
-            "country": "ミャンマー",
-            "share_percent": 7.9
+            "country": "オーストラリア",
+            "share_percent": 7.4
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国は2025年の生産枠を公表しておらず、中国の値は USGS の推定です。"
       },
-      "japan": "日本の信越化学工業は1970年からサマリウムコバルト磁石の研究開発に取り組み、今も主なメーカーの1つです。",
+      "japan": "日本の信越化学工業は1970年に希土類磁石の研究を始め、1976年にサマリウムコバルト磁石の量産を始めました。",
       "trivia": "人名に間接的にちなむ初めての元素名です。ロシアの鉱山の役人サマルスキーの名の鉱物サマルスキー石に由来します。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths_ver.1.2.pdf",
         "https://periodic.lanl.gov/62.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/62",
         "https://www.nikkakyo.org/sites/default/files/rare-earth-magnet_thefirstpart_0.pdf",
-        "https://uwaterloo.ca/chemistry/community-outreach/periodic-table-project/samarium"
+        "https://uwaterloo.ca/chemistry/community-outreach/periodic-table-project/samarium",
+        "https://www.shinetsu-rare-earth-magnet.jp/profile/history.html"
       ]
     },
     {
@@ -2249,15 +2268,15 @@
       ],
       "producers": {
         "basis": null,
-        "year": 2024,
+        "year": 2025,
         "top3": [],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "2023〜2024年の国別生産量は公表されていません（USGS）。これまで中国・カザフスタン・フィリピン・ロシア・ウクライナで副産物として生産されてきました。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "国別の生産量は公表されていません（USGS）。2025年の世界の生産は酸化スカンジウム換算で約80トンと推定され、中国が最大の生産国です。"
       },
       "japan": "日本の住友金属鉱山は、フィリピンのニッケル製錬所でスカンジウムを回収し、酸化スカンジウムをつくっています。",
       "trivia": "メンデレーエフが予言した「エカホウ素」が、のちにスカンジウムであると確かめられました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-scandium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-scandium.pdf",
         "https://periodic.lanl.gov/21.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/21",
         "https://www.smm.co.jp/business/refining/products/scandium/",
@@ -2282,28 +2301,28 @@
       ],
       "producers": {
         "basis": "塩の生産（原料）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 19.6
+            "share_percent": 20.7
           },
           {
             "country": "アメリカ",
-            "share_percent": 14.3
+            "share_percent": 14.8
           },
           {
             "country": "インド",
-            "share_percent": 10.0
+            "share_percent": 11.1
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "金属ナトリウムではなく、原料の塩の生産です。"
       },
       "japan": "日本は工業用の塩の多くをオーストラリアやメキシコから輸入しています。塩は苛性ソーダなどの原料になります。",
       "trivia": "元素記号Naは、ラテン語名natriumに由来します。英語名sodiumはソーダ（炭酸ナトリウム）から来ています。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-salt.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-salt.pdf",
         "https://periodic.lanl.gov/11.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/11",
         "https://www.saltscience.or.jp/images/2023/07/3-takasu.pdf",
@@ -2328,7 +2347,7 @@
       ],
       "producers": {
         "basis": "石灰の生産（原料）",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
@@ -2340,19 +2359,25 @@
           },
           {
             "country": "アメリカ",
-            "share_percent": 3.8
+            "share_percent": 3.6
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
+        "source": "USGS Mineral Commodity Summaries 2026",
         "note": "金属カルシウムではなく、原料の石灰（生石灰など）の生産です。"
       },
       "japan": "日本には全国に200以上の石灰石鉱山があり、石灰石は国内でまかなえる数少ない鉱物資源です。",
-      "trivia": "人の体には約1kgのカルシウムが含まれ、その99%は骨にあります。",
+      "trivia": "大人の体には約1kgのカルシウムが含まれ、その99%は骨と歯にあります。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-lime.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-lime.pdf",
         "https://periodic.lanl.gov/20.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/20",
-        "https://www.limestone.gr.jp/about/"
+        "https://www.limestone.gr.jp/about/",
+        "https://www.meti.go.jp/policy/mono_info_service/mineral_resources/saiseki/index.html",
+        "https://www.jstage.jst.go.jp/article/jila/79/5/79_545/_pdf/-char/ja",
+        "https://www.jstage.jst.go.jp/article/shigentosozai/117/6/117_6_520/_pdf",
+        "https://www.mhlw.go.jp/content/10904750/000586565.pdf",
+        "https://kennet.mhlw.go.jp/information/information/dictionary/food/ye-042.html",
+        "https://www.tyojyu.or.jp/net/kenkou-tyoju/eiyouso/mineral-ca.html"
       ]
     },
     {
@@ -2373,32 +2398,32 @@
       ],
       "producers": {
         "basis": "精錬生産",
-        "year": 2024,
+        "year": 2025,
         "top3": [
           {
             "country": "中国",
-            "share_percent": 38.8
+            "share_percent": 41.3
           },
           {
             "country": "韓国",
-            "share_percent": 18.8
+            "share_percent": 18.7
           },
           {
             "country": "カナダ",
-            "share_percent": 7.1
+            "share_percent": 5.7
           },
           {
             "country": "日本",
-            "share_percent": 7.1
+            "share_percent": 5.7
           }
         ],
-        "source": "USGS Mineral Commodity Summaries 2025",
-        "note": "カナダと日本は同じ値で3位に並びます。"
+        "source": "USGS Mineral Commodity Summaries 2026",
+        "note": "カナダと日本は同じ値（各5.7%）で3位に並びます。"
       },
       "japan": "富山県の神通川流域のイタイイタイ病は、1968年に国が神岡鉱山からのカドミウムが原因と認めた公害病です。",
       "trivia": "1927年から1960年まで、長さの1mはカドミウムが出す赤い光の波長でも表されていました。",
       "sources": [
-        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-cadmium.pdf",
+        "https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-cadmium.pdf",
         "https://periodic.lanl.gov/48.shtml",
         "https://pubchem.ncbi.nlm.nih.gov/element/48",
         "https://www.pref.toyama.jp/1291/kurashi/kenkou/iryou/1291/100025/100026.html",
@@ -2428,19 +2453,19 @@
         "top3": [
           {
             "country": "カザフスタン",
-            "share_percent": 39
+            "share_percent": 38.6
           },
           {
             "country": "カナダ",
-            "share_percent": 24
+            "share_percent": 23.8
           },
           {
             "country": "ナミビア",
-            "share_percent": 12
+            "share_percent": 12.2
           }
         ],
         "source": "World Nuclear Association「World Uranium Mining Production」（USGS MCS はウランを扱っていないため）",
-        "note": null
+        "note": "World Nuclear Association の最新の表（2026年9月21日更新）は2024年までのため、2024年の値です。"
       },
       "japan": "岡山県と鳥取県の境にある人形峠で、1955年にウランの鉱床が見つかりました。",
       "trivia": "名前は、発見の少し前に見つかった天王星（ウラヌス）にちなみます。",
