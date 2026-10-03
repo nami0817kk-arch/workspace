@@ -1,0 +1,12 @@
+# クローラーへの指示。全部許可する（2026-10-02）。
+# **実体が無いと /robots.txt にトップページの HTML が返る**（Cloudflare Pages が
+# 見つからない経路に index.html を返すため）。AdMob はそこで止まり、
+# app-ads.txt の確認まで進まない（サカマネ・護送ボートで踏んだ。
+# docs/app-pitfalls.md の「AdMob が app-ads.txt を見つけられない」）。
+User-agent: *
+Allow: /
+
+# app-ads.txt を読みにくる Google のクローラー
+# （AdMob のヘルプ https://support.google.com/admob/answer/9776740 の指示）
+User-agent: Google-adstxt
+Disallow:
