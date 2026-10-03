@@ -1220,7 +1220,7 @@ function sfx(kind){
 // ================= 描画 =================
 const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv = $('cv'), ctx = cv.getContext('2d'), stage = $('stage');
-let W = 340, H = 340, DPR = 1, R = 34, camY = -4, sky1 = '#8fd0f5', sky2 = '#e3f4ff', grass = '#5fae4a', dark = false;
+let W = 340, H = 340, VW = 340, VH = 340, Z = 1, DPR = 1, R = 34, camY = -4, sky1 = '#8fd0f5', sky2 = '#e3f4ff', grass = '#5fae4a', dark = false;
 function readSky(){
   const cs = getComputedStyle(document.documentElement);
   sky1 = cs.getPropertyValue('--sky1').trim() || sky1; sky2 = cs.getPropertyValue('--sky2').trim() || sky2;
@@ -1240,9 +1240,11 @@ function resize(){
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
 }
 const MAP_W = 14;
-const shaftW = () => Math.min(W - MAP_W - 56, 270);
-const cx = () => (W - MAP_W) / 2;
-const baseY = () => H * 0.6;
+// 竪坑の横幅は仲間の人数で広がり、広がった分だけ画面を引く（Z が縮尺。VW・VH は引いたあとの見える広さ）
+const baseSW = () => Math.min(W - MAP_W - 56, 270);
+const shaftW = () => layoutCrew().sw;
+const cx = () => (VW - MAP_W / Z) / 2;
+const baseY = () => VH * (0.6 + 0.1 * (1 - Z) / (1 - ZMIN));   // 引いたぶん床を下げて、空の竪坑を見せすぎない
 const rowY = m => baseY() + (m - camY) * R;
 function hash(n){ n = (n ^ 61) ^ (n >>> 16); n = n + (n << 3); n = n ^ (n >>> 4); n = Math.imul(n, 0x27d4eb2d); n = n ^ (n >>> 15); return n >>> 0; }
 function shade(hex, k){
@@ -1257,7 +1259,7 @@ let swingT = 9, shakeT = 0, blockHitT = 9, bannerT = 9, bannerL = 0, ringT = 9, 
 // 仲間は雇った人数だけ描く（2026-10-03 ユーザー指示「×でやるのではなく人をちゃんと増やす」）。
 // 増えたら竪坑に足場を段々に組んで上の段へ並べる。一度に描くのは CREW_CAP 人まで（種類ごとの割合は保つ）
 const CREW_PER = [0.95, 0.75, 1.3, 0.12, 0.5, 0.9, 0.2];
-const CREW_CAP = 100, ROW_GAP = 26, ROWS_MAX = 6;
+const CREW_CAP = 100, ROW_GAP = 26, ROWS_MAX = 6, ZMIN = 0.6, GAP_H = 14, GAP_M = 30;   // 横幅は最大 1/ZMIN 倍。超えたら足場の段を足す。人は少し重なって並ぶ
 let crewLay = null, crewKey = '';
 function crewAlloc(){
   const tot = S.w.reduce((a, b) => a + b, 0);
@@ -1279,24 +1281,28 @@ function layoutCrew(){
   alloc.forEach((n, i) => { for (let k = 0; k < n; k++) (i >= HUMAN ? machines : humans).push({ i, k }); });
   const mix = a => a.map(f => ({ f, h: hash(f.i * 7919 + f.k * 104729) })).sort((a, b) => a.h - b.h).map(o => o.f);
   const queue = mix(machines).concat(mix(humans));
-  const sw = shaftW(), sx = cx() - sw / 2, figs = [];
+  // まず床1段に並べきれる幅まで竪坑を広げる
+  const wOf = f => f.i >= HUMAN ? GAP_M : GAP_H;
+  const need = queue.reduce((a, f) => a + wOf(f), 0) + 32 + 52;
+  const b0 = baseSW(), sw = Math.max(b0, Math.min(b0 / ZMIN, need)), figs = [];
   let q = 0;
+  // 真ん中（社長）から左右へ交互に並べる。並びきらなければ上の段へ
   for (let row = 0; row < ROWS_MAX && q < queue.length; row++) {
-    const sc = 0.72 * Math.pow(0.88, row);
-    const xs = [];
-    for (let x = sx + 16; x <= sx + sw - 16; x += 21 * sc / 0.72) {
-      if (row === 0 && Math.abs(x - cx()) < 26) continue;   // 床の真ん中は社長の場所
-      xs.push(x);
-    }
-    for (let j = 0; j < xs.length && q < queue.length; ) {
+    const sc = 0.72 * Math.pow(0.88, row), g = sc / 0.72, edge = sw / 2 - 12;
+    let rc = row === 0 ? 24 : 0, lc = -rc, side = 1;
+    while (q < queue.length) {
       const f = queue[q], big = f.i >= HUMAN;
       if (big && row > 1) { q++; continue; }                  // 機械は上の足場に載せない
-      const x = big && j + 1 < xs.length ? (xs[j] + xs[j + 1]) / 2 : xs[j];
-      figs.push({ i: f.i, x, row, sc: big ? sc * 1.1 : sc, face: x < cx() ? 1 : -1, ph: (hash(f.i * 31 + f.k * 977) % 1000) / 1000 * (CREW_PER[f.i] + 0.25), lt: 0 });
-      j += big ? 2 : 1; q++;
+      const w = (big ? GAP_M : GAP_H) * g;
+      const fits = sd => sd > 0 ? rc + w <= edge : lc - w >= -edge;
+      if (!fits(side)) { side = -side; if (!fits(side)) break; }
+      const x = side > 0 ? rc + w / 2 : lc - w / 2;
+      if (side > 0) rc += w; else lc -= w;
+      figs.push({ i: f.i, dx: x, row, sc: big ? sc * 1.1 : sc, face: x < 0 ? 1 : -1, ph: (hash(f.i * 31 + f.k * 977) % 1000) / 1000 * (CREW_PER[f.i] + 0.25), lt: 0 });
+      side = -side; q++;
     }
   }
-  crewLay = { figs, rows: figs.reduce((a, f) => Math.max(a, f.row), 0) };
+  crewLay = { figs, sw, z: b0 / sw, rows: figs.reduce((a, f) => Math.max(a, f.row), 0) };
   return crewLay;
 }
 function drawCrew(dt, fy){
@@ -1310,15 +1316,16 @@ function drawCrew(dt, fy){
     }
     for (const f of L.figs) {
       if (f.row !== row) continue;
+      const fx = cx() + f.dx;
       const per = CREW_PER[f.i], t = (tAll + f.ph) % (per + 0.25);
-      if (row === 0 && t < f.lt && f.i !== 3 && f.i !== 6 && Math.random() < 0.5) crewHit(f.i, f.x, f.face);
+      if (row === 0 && t < f.lt && f.i !== 3 && f.i !== 6 && Math.random() < 0.5) crewHit(f.i, fx, f.face);
       f.lt = t;
       const ang = swingAngle(t, per > 0.6 ? 1 : 0.8);
-      if (f.i === 3) { drawDrill(f.x, y, f.face, tAll + f.ph, '#6f7b8a', f.sc); if (row === 0 && Math.random() < dt * 4) burst(f.x + f.face * 20, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.5); }
-      else if (f.i === 4) drawRobot(f.x, y, f.face, ang, f.sc);
-      else if (f.i === 5) drawCart(f.x, y, f.face, tAll + f.ph, f.sc);
-      else if (f.i === 6) { drawShield(f.x, y, f.face, tAll + f.ph, f.sc); if (row === 0 && Math.random() < dt * 5) burst(f.x + f.face * 22, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.6); }
-      else drawPerson(f.x, y, f.sc, HAT[f.i], f.face, ang, '#b9c2cc', false);
+      if (f.i === 3) { drawDrill(fx, y, f.face, tAll + f.ph, '#6f7b8a', f.sc); if (row === 0 && Math.random() < dt * 4) burst(fx + f.face * 20, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.5); }
+      else if (f.i === 4) drawRobot(fx, y, f.face, ang, f.sc);
+      else if (f.i === 5) drawCart(fx, y, f.face, tAll + f.ph, f.sc);
+      else if (f.i === 6) { drawShield(fx, y, f.face, tAll + f.ph, f.sc); if (row === 0 && Math.random() < dt * 5) burst(fx + f.face * 22, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.6); }
+      else drawPerson(fx, y, f.sc, HAT[f.i], f.face, ang, '#b9c2cc', false);
     }
   }
 }
@@ -1391,9 +1398,9 @@ const veinEl = $('vein');
 function showVein(){
   veinLeft = 8;
   const side = Math.random() < 0.5 ? -1 : 1;
-  const vx = cx() + side * (shaftW() / 2 + 4 + Math.random() * 10);
+  const vx = (cx() + side * (shaftW() / 2 + 4 + Math.random() * 10)) * Z;
   veinEl.style.left = Math.max(34, Math.min(W - MAP_W - 34, vx)) + 'px';
-  veinEl.style.top = (rowY(S.depth) - 20 - Math.random() * 60) + 'px';
+  veinEl.style.top = ((rowY(S.depth) - 20 - Math.random() * 60) * Z) + 'px';
   veinEl.style.display = 'block';
 }
 veinEl.addEventListener('pointerdown', e => {
@@ -1401,7 +1408,7 @@ veinEl.addEventListener('pointerdown', e => {
   if (veinLeft <= 0) return;
   veinLeft = 0; veinEl.style.display = 'none';
   const g = claimVein(S);
-  const x = parseFloat(veinEl.style.left), y = parseFloat(veinEl.style.top);
+  const x = parseFloat(veinEl.style.left) / Z, y = parseFloat(veinEl.style.top) / Z;   // 画面の座標から絵の座標へ
   burst(x, y, 20, '#ffd166', 1.2); floatText(x, y - 20, '鉱脈 +' + fmt(g), '#ffd166', 20);
   sfx('vein'); haptic('success');
   updateUI(); save();
@@ -1494,7 +1501,10 @@ function drawShield(x, y, face, t, sc){
 let tAll = 0;
 function draw(dt){
   tAll += dt;
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const tz = layoutCrew().z;
+  Z = reduced ? tz : Z + (tz - Z) * Math.min(1, dt * 3);
+  VW = W / Z; VH = H / Z;
+  ctx.setTransform(DPR * Z, 0, 0, DPR * Z, 0, 0);
   const target = S.depth;
   camY = reduced ? target : camY + (target - camY) * Math.min(1, dt * 7);
   let ox = 0, oy = 0;
@@ -1502,15 +1512,15 @@ function draw(dt){
   ctx.save(); ctx.translate(ox, oy);
   const g = ctx.createLinearGradient(0, rowY(-8), 0, rowY(0));
   g.addColorStop(0, sky1); g.addColorStop(1, sky2);
-  ctx.fillStyle = g; ctx.fillRect(-10, -10, W + 20, H + 20);
-  const top = Math.floor(camY - baseY() / R) - 1, bot = Math.ceil(camY + (H - baseY()) / R) + 1;
+  ctx.fillStyle = g; ctx.fillRect(-10, -10, VW + 20, VH + 20);
+  const top = Math.floor(camY - baseY() / R) - 1, bot = Math.ceil(camY + (VH - baseY()) / R) + 1;
   if (top < 0) drawSurface();
   const sw = shaftW(), sx = cx() - sw / 2;
   for (let m = Math.max(0, top); m <= bot; m++) {
     const y = rowY(m), li = layerIdxForDepth(m), L = LAYERS[li], bed = isBed(m);
     const room = isRoom(m) && !S.room[m];
-    ctx.fillStyle = bed ? '#2c2c33' : L.wall; ctx.fillRect(-10, y, W + 20, R + 0.6);
-    for (let c = 0; c < Math.ceil((W + 20) / 16); c++) {
+    ctx.fillStyle = bed ? '#2c2c33' : L.wall; ctx.fillRect(-10, y, VW + 20, R + 0.6);
+    for (let c = 0; c < Math.ceil((VW + 20) / 16); c++) {
       const h = hash(m * 7919 + c * 131);
       if (h % 4 !== 0) continue;
       const px = c * 16 + (h >>> 3) % 12 - 6, py = y + ((h >>> 8) % (R - 6)) + 2, s = 2 + (h >>> 12) % 3;
@@ -1522,7 +1532,7 @@ function draw(dt){
     }
     if (bed) {
       ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.lineWidth = 3;
-      for (let x = -R; x < W + R; x += 12) { ctx.beginPath(); ctx.moveTo(x, y + R); ctx.lineTo(x + R, y); ctx.stroke(); }
+      for (let x = -R; x < VW + R; x += 12) { ctx.beginPath(); ctx.moveTo(x, y + R); ctx.lineTo(x + R, y); ctx.stroke(); }
     }
     if (m < S.depth) {
       ctx.fillStyle = L.hollow; ctx.fillRect(sx, y - 0.3, sw, R + 0.9);
@@ -1562,15 +1572,15 @@ function draw(dt){
       if (room) drawRoomGlow(sx, y, sw);
     }
     if (m % 5 === 0 && m > 0) {
-      ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.font = '700 10px "M PLUS Rounded 1c", sans-serif'; ctx.textAlign = 'left';
-      ctx.fillText(m + 'm', 5, y + 12);
+      ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.font = `700 ${(10 / Z).toFixed(1)}px "M PLUS Rounded 1c", sans-serif`; ctx.textAlign = 'left';
+      ctx.fillText(m + 'm', 5 / Z, y + 12 / Z);
     }
   }
   if (S.depth > 8) {
     const lx = cx(), ly = rowY(S.depth) - 30;
-    const rg = ctx.createRadialGradient(lx, ly, 20, lx, ly, Math.max(W, H) * 0.75);
+    const rg = ctx.createRadialGradient(lx, ly, 20, lx, ly, Math.max(VW, VH) * 0.75);
     rg.addColorStop(0, 'rgba(0,0,0,0)'); rg.addColorStop(1, `rgba(0,0,0,${Math.min(0.55, 0.15 + S.depth / 400)})`);
-    ctx.fillStyle = rg; ctx.fillRect(-10, -10, W + 20, H + 20);
+    ctx.fillStyle = rg; ctx.fillRect(-10, -10, VW + 20, VH + 20);
   }
   // 仲間
   const fy = rowY(S.depth);
@@ -1606,19 +1616,20 @@ function draw(dt){
     if (f.life <= 0) { floats.splice(i, 1); continue; }
     f.y -= 38 * dt;
     ctx.globalAlpha = Math.min(1, f.life / 0.4);
-    ctx.font = `800 ${f.size}px "M PLUS Rounded 1c", sans-serif`; ctx.textAlign = 'center';
-    ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.strokeText(f.text, f.x, f.y);
+    ctx.font = `800 ${(f.size / Math.sqrt(Z)).toFixed(1)}px "M PLUS Rounded 1c", sans-serif`; ctx.textAlign = 'center';
+    ctx.lineWidth = 3.5 / Math.sqrt(Z); ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.strokeText(f.text, f.x, f.y);
     ctx.fillStyle = f.color; ctx.fillText(f.text, f.x, f.y);
   }
   ctx.globalAlpha = 1;
   ctx.restore();
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   sideShowT += dt;
   if (sideShowT > 1 && sideAcc > 0) { floatText(cx() - 60, rowY(S.depth) - 30, '横掘り +' + fmt(sideAcc), '#ffe3a3', 13); sideAcc = 0; sideShowT = 0; }
   if (ringT < 0.8) {
     ringT += dt;
     const k = ringT / 0.8;
     ctx.strokeStyle = `rgba(255,209,102,${1 - k})`; ctx.lineWidth = 4 * (1 - k) + 1;
-    ctx.beginPath(); ctx.arc(cx(), fy - 25, 20 + k * 90, 0, 7); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx() * Z, (fy - 25) * Z, 20 + k * 90, 0, 7); ctx.stroke();
   }
   if (boostOn(S)) { ctx.strokeStyle = `rgba(167,155,255,${0.45 + 0.25 * Math.sin(tAll * 5)})`; ctx.lineWidth = 4; ctx.strokeRect(2, 2, W - 4, H - 4); }
   if (bannerT < 2.6) {
@@ -1654,19 +1665,19 @@ function drawSurface(){
   const y0 = rowY(0);
   if (dark) {
     ctx.fillStyle = 'rgba(255,255,255,.8)';
-    for (let i = 0; i < 26; i++) { const h = hash(i * 97 + 5); ctx.fillRect(h % Math.floor(W), y0 - 20 - (h >>> 8) % 240, 1.5, 1.5); }
-    ctx.fillStyle = '#f3ecc8'; ctx.beginPath(); ctx.arc(W - 60, y0 - 150, 14, 0, 7); ctx.fill();
+    for (let i = 0; i < 26; i++) { const h = hash(i * 97 + 5); ctx.fillRect(h % Math.floor(VW), y0 - 20 - (h >>> 8) % 240, 1.5, 1.5); }
+    ctx.fillStyle = '#f3ecc8'; ctx.beginPath(); ctx.arc(VW - 60, y0 - 150, 14, 0, 7); ctx.fill();
   } else {
-    ctx.fillStyle = 'rgba(255,236,150,.9)'; ctx.beginPath(); ctx.arc(W - 62, y0 - 150, 18, 0, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(255,236,150,.9)'; ctx.beginPath(); ctx.arc(VW - 62, y0 - 150, 18, 0, 7); ctx.fill();
     ctx.fillStyle = 'rgba(255,255,255,.85)';
-    const cxl = ((tAll * 6) % (W + 120)) - 60;
+    const cxl = ((tAll * 6) % (VW + 120)) - 60;
     ctx.beginPath(); ctx.arc(cxl, y0 - 120, 12, 0, 7); ctx.arc(cxl + 14, y0 - 124, 15, 0, 7); ctx.arc(cxl + 30, y0 - 118, 11, 0, 7); ctx.fill();
   }
   ctx.fillStyle = dark ? '#1c2748' : '#b8dcc0';
   ctx.beginPath(); ctx.moveTo(-10, y0);
-  for (let x = -10; x <= W + 10; x += 20) ctx.lineTo(x, y0 - 30 - 18 * Math.sin(x * 0.02) - 10 * Math.sin(x * 0.05));
-  ctx.lineTo(W + 10, y0); ctx.fill();
-  ctx.fillStyle = grass; ctx.fillRect(-10, y0 - 7, W + 20, 8);
+  for (let x = -10; x <= VW + 10; x += 20) ctx.lineTo(x, y0 - 30 - 18 * Math.sin(x * 0.02) - 10 * Math.sin(x * 0.05));
+  ctx.lineTo(VW + 10, y0); ctx.fill();
+  ctx.fillStyle = grass; ctx.fillRect(-10, y0 - 7, VW + 20, 8);
   const bx = 18, by = y0 - 7;
   ctx.fillStyle = '#6b4a2a'; ctx.fillRect(bx + 8, by - 32, 4, 32); ctx.fillRect(bx + 58, by - 32, 4, 32);
   ctx.fillStyle = '#f5e6c8'; roundRect(bx, by - 50, 70, 24, 4); ctx.fill();
