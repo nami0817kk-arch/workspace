@@ -18,6 +18,8 @@ function el() {
 }
 const app = el();
 const store = new Map();
+// 前に保存した設定が、開き直したあとも効いているか（読む順番の取り違えで初期値に戻ったことがある）
+store.set('hikari7_set', JSON.stringify({ fs: 'l', bgm: 0, voice: 0, theme: 'dark' }));
 const ctx = {
   console, Math, Date, JSON, Object, Array, String, Number, Boolean, RegExp, Error, Map, Set, Uint8Array, Promise,
   setTimeout: () => 0, clearTimeout() {}, setInterval: () => 0, clearInterval() {},
@@ -36,6 +38,7 @@ ctx.document = {
 vm.createContext(ctx);
 vm.runInContext(code, ctx);
 const run = (js) => vm.runInContext(js, ctx);
+const setOk = run('ui.set.fs==="l"&&ui.set.bgm===0&&ui.set.voice===0&&ui.set.theme==="dark"');
 
 const errs = [], seen = {}, times = [];
 ctx.__shot = () => {
@@ -77,6 +80,7 @@ const need = ['title', 'select', 'format', 'plan', 'lesson', 'talk', 'interview'
 const miss = need.filter((p) => !seen[p]);
 const avg = times.reduce((a, b) => a + b, 0) / times.length, max = Math.max(...times);
 console.log('描いた回数', times.length, '・平均', avg.toFixed(1) + 'ms', '・最大', max + 'ms', '・描いた画面', Object.keys(seen).length + '種');
+if (!setOk) { console.error('保存した設定が、開き直すと初期値に戻っている'); process.exitCode = 1; }
 if (miss.length) { console.error('描けていない画面:', miss.join(' ')); process.exitCode = 1; }
 if (errs.length) { console.error('エラー', errs.length + '件'); errs.slice(0, 10).forEach((e) => console.error('  ' + e)); process.exitCode = 1; }
 else console.log('エラー 0件');
