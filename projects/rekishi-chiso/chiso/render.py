@@ -1,25 +1,35 @@
-"""画面を描く。絵画（背景）・肖像・年号の札・地層の年表・2人の立ち絵。
+"""画面を描く。絵画（背景）・肖像・掘り出したメモ・地層の年表・字幕・2人の立ち絵。
 
-画面は「状態」（背景・肖像・札・年号・話している人）が変わったときだけ描き、
-同じ状態が続くあいだは同じ1枚を流す。話者が替わる瞬間だけ、話す側が少し跳ねる。
+画面は「状態」（背景・肖像・札・年号・メモ・話している人・字幕）が変わったときだけ描き、
+同じ状態が続くあいだは同じ1枚を流す。動きは次の4つだけ：
+話し始めに話す側が跳ねる／絵が替わるときの溶け合い／年表の印の移動／新しいメモの滑り込み。
 """
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 from dataclasses import dataclass
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageEnhance, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+
+from .subs import chunks as subtitle_chunks, emphasis_mask, wrap, wrap_balanced
 
 INK = (244, 236, 220)
 GOLD = (214, 178, 110)
 DIM = (176, 164, 140)
+EMPH = (196, 72, 24)            # 字幕の強調語（明るい箱の上で読める濃い朱）
 STRATA = [(70, 58, 44), (92, 74, 52), (120, 96, 62), (150, 118, 74), (110, 52, 44)]
+SPEAKER_COLORS = {"left": (96, 112, 150), "right": (214, 140, 40)}
 
 HOP_PX = 22          # 話し始めに跳ねる高さ
-HOP_FRAMES = 6       # 跳ねる長さ（フレーム数）
+HOP_FRAMES = 8       # 跳ねる長さ（フレーム数）
+TRANS_FRAMES = 8     # 絵・札・年号が替わるときの移り変わり（フレーム数）
 LISTENER_DIM = 0.72  # 聞いている側の明るさ
+SUB_ROWS = 2         # 本編の字幕は2行まで
+END_SECONDS = 12.0   # 最後の次回予告の画面の長さ（YouTube の終了画面を置ける長さ）
+OPENING_CUES = 2     # 冒頭で題名の問いを大きく出す行数
 
 
 @dataclass(frozen=True)
@@ -30,6 +40,11 @@ class State:
     card: object
     year: int | None
     speaker: str
+    memo: tuple = ()
+
+
+def _ease(t: float) -> float:
+    return 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, t)))
 
 
 class Painter:
@@ -73,7 +88,20 @@ class Painter:
             self._images[key] = im.crop((0, 0, im.width, int(h * cast.get("bust", 0.4))))
         return self._images[key]
 
-    # --- 背景と情報 -------------------------------------------------------
+    def listener(self, speaker: str) -> Image.Image:
+        """聞いている側の立ち絵：少し暗く、少し色を落とす。"""
+        key = ("listen", speaker)
+        if key not in self._images:
+            ch = self.character(speaker)
+            a = ch.split()[3]
+            rgb = ImageEnhance.Brightness(ch.convert("RGB")).enhance(LISTENER_DIM)
+            rgb = ImageEnhance.Color(rgb).enhance(0.75)
+            out = rgb.convert("RGBA")
+            out.putalpha(a)
+            self._images[key] = out
+        return self._images[key]
+
+    # --- 背景 -------------------------------------------------------------
     def _cover(self, im: Image.Image) -> Image.Image:
         s = max(self.W / im.width, self.H / im.height)
         im = im.resize((math.ceil(im.width * s), math.ceil(im.height * s)), Image.LANCZOS)
@@ -81,6 +109,9 @@ class Painter:
         return im.crop((x, y, x + self.W, y + self.H))
 
     def _background(self, pic) -> Image.Image:
+        key = ("bg", pic, self.W, self.H)
+        if key in self._images:
+            return self._images[key].copy()
         W, H = self.W, self.H
         if pic is None:
             bg = Image.new("RGB", (W, H), (24, 19, 14))
@@ -88,11 +119,24 @@ class Painter:
             bg = self._cover(self.image(pic.image).convert("RGB"))
             bg = ImageEnhance.Brightness(bg).enhance(0.55)
             bg = ImageEnhance.Color(bg).enhance(0.8)
-        shade = Image.linear_gradient("L").resize((W, H))
-        shade = shade.point(lambda v: int(max(0, (v - 140) / 115) * 200))
-        return Image.composite(Image.new("RGB", (W, H), (12, 10, 8)), bg, shade).convert("RGBA")
+        dark = Image.new("RGB", (W, H), (12, 10, 8))
+        # 下を暗く（年表と字幕を読みやすく）・上を暗く（題名を読みやすく）
+        lin = Image.linear_gradient("L").resize((W, H))
+        bottom = lin.point(lambda v: int(max(0, (v - 140) / 115) * 200))
+        top = lin.transpose(Image.FLIP_TOP_BOTTOM).point(lambda v: int(max(0, (v - 190) / 65) * 150))
+        bg = Image.composite(dark, bg, bottom)
+        bg = Image.composite(dark, bg, top)
+        # 四隅を少し落として、真ん中に目を集める
+        vig = Image.new("L", (W, H), 0)
+        ImageDraw.Draw(vig).ellipse([-W * 0.15, -H * 0.25, W * 1.15, H * 1.25], fill=255)
+        vig = vig.filter(ImageFilter.GaussianBlur(W / 12))
+        bg = Image.composite(bg, ImageEnhance.Brightness(bg).enhance(0.7), vig)
+        out = bg.convert("RGBA")
+        self._images[key] = out
+        return out.copy()
 
-    def _timeline(self, dr: ImageDraw.ImageDraw, x0: float, x1: float, yb: float, year: int | None):
+    # --- 年表 -------------------------------------------------------------
+    def _timeline(self, dr: ImageDraw.ImageDraw, x0: float, x1: float, yb: float, year):
         sc = self.script
         if sc.timeline_start is None or sc.timeline_end is None:
             return
@@ -101,123 +145,348 @@ class Painter:
         marks = sorted({y for y, _ in sc.events} | {y0, y1})
         for i, (a, b) in enumerate(zip(marks, marks[1:])):
             color = STRATA[min(i, len(STRATA) - 2)] if b != y1 or len(marks) < 3 else STRATA[-1]
+            if year is not None and a >= year:              # これから先の地層は暗く
+                color = tuple(int(c * 0.45) for c in color)
             dr.rectangle([X(a), yb - 14, X(b), yb + 14], fill=color + (255,))
         u = self.H / 1080
+        placed: list[tuple[float, float]] = []           # ラベルの重なりを避ける
         for y, label in sc.events:
-            on = (year == y)
+            on = (year is not None and round(year) == y)
             dr.line([X(y), yb - 26, X(y), yb + 26], fill=(GOLD if on else DIM) + (255,), width=4 if on else 2)
             dr.text((X(y), yb - 40 * u), str(y), font=self.font("gothic", int((30 if on else 26) * u)),
                     fill=GOLD if on else DIM, anchor="ms")
-            dr.text((X(y), yb + 44 * u), label, font=self.font("serif", int((30 if on else 24) * u)),
-                    fill=INK if on else DIM, anchor="mt")
+            lf = self.font("serif", int((30 if on else 24) * u))
+            lw = lf.getlength(label)
+            ly = yb + 44 * u
+            for (px0, px1) in placed:
+                if X(y) - lw / 2 < px1 + 8 and X(y) + lw / 2 > px0 - 8:
+                    ly += 34 * u
+            placed.append((X(y) - lw / 2, X(y) + lw / 2))
+            dr.text((X(y), ly), label, font=lf, fill=INK if on else DIM, anchor="mt",
+                    stroke_width=3, stroke_fill=(12, 10, 8))
         if year is not None and y0 <= year <= y1:
             cx = X(year)
             dr.polygon([(cx - 14, yb - 108 * u), (cx + 14, yb - 108 * u), (cx, yb - 88 * u)], fill=GOLD)
+            pf = self.font("gothic", int(26 * u))
+            txt = f"{round(year)}年"
+            pw = pf.getlength(txt) + 24
+            dr.rounded_rectangle([cx - pw / 2, yb - 150 * u, cx + pw / 2, yb - 114 * u], radius=8,
+                                 fill=(20, 16, 10, 220), outline=GOLD, width=2)
+            dr.text((cx, yb - 132 * u), txt, font=pf, fill=GOLD, anchor="mm")
 
-    def base(self, state: State) -> Image.Image:
-        """立ち絵以外の部分（横長の本編用）。"""
+    # --- 本編の画面（立ち絵と字幕より下の層） ------------------------------
+    def base(self, state: State, year=None, slide: float = 1.0) -> Image.Image:
+        """year：年表の印の位置（移動の途中を描くとき）／slide：新しいメモの滑り込み（0〜1）。"""
         W, H = self.W, self.H
         img = self._background(state.background)
         dr = ImageDraw.Draw(img, "RGBA")
+        n_sec = len(self.script.sections)
         title = self.script.sections[state.section].title
-        dr.text((120, 120), f"第{state.section + 1}節", font=self.font("gothic", 30), fill=GOLD)
-        # 題名が長いと右の肖像画に重なるので、収まるまで字を小さくする
+        dr.text((120, 100), f"第{state.section + 1}節", font=self.font("gothic", 30), fill=GOLD)
+        for k in range(n_sec):                             # 節の進み具合
+            cx = 250 + k * 30
+            r = 9 if k == state.section else 6
+            fill = GOLD if k <= state.section else (90, 80, 66)
+            dr.ellipse([cx - r, 117 - r, cx + r, 117 + r], fill=fill)
+        dr.text((250 + n_sec * 30 + 6, 117), f"全{n_sec}節", font=self.font("gothic", 22), fill=DIM, anchor="lm")
         limit = (W - 330 - 400 - 40 - 120) if state.portrait is not None else (W - 240)
         size = 64
         while size > 36 and self.font("serif", size, bold=True).getlength(title) > limit:
             size -= 2
-        dr.text((120, 165 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK)
-        if state.card is not None:
-            body_w = self.font("serif", 40).getlength(state.card.body or "")
-            w = max(520, int(body_w) + 70)
-            dr.rounded_rectangle([120, 290, 120 + w, 420], radius=10, fill=(20, 16, 10, 190), outline=GOLD, width=2)
-            dr.text((150, 305), state.card.head, font=self.font("gothic", 34), fill=GOLD)
-            if state.card.body:
-                dr.text((150, 355), state.card.body, font=self.font("serif", 40), fill=INK)
+        dr.text((120, 145 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK,
+                stroke_width=2, stroke_fill=(12, 10, 8))
+
+        self._memo(img, state, slide)
+        dr = ImageDraw.Draw(img, "RGBA")
         if state.portrait is not None:
-            p = self.image(state.portrait.image).convert("RGB")
-            ph = 540
-            p = p.resize((int(p.width * ph / p.height), ph), Image.LANCZOS)
-            px, py = W - p.width - 330, 90
-            dr.rectangle([px - 14, py - 14, px + p.width + 14, py + ph + 14], fill=(30, 24, 16, 255),
-                         outline=GOLD, width=3)
-            img.paste(p, (px, py))
+            self._portrait(img, state.portrait)
             dr = ImageDraw.Draw(img, "RGBA")
-            if state.portrait.caption:
-                dr.text((px + p.width / 2, py + ph + 34), state.portrait.caption, font=self.font("serif", 26),
-                        fill=DIM, anchor="mt")
-        self._timeline(dr, 470, W - 470, 920, state.year)
+        self._timeline(dr, 470, W - 470, 770, state.year if year is None else year)
         if state.background is not None and state.background.credit:
-            dr.text((W / 2, H - 18), f"背景：{state.background.credit}", font=self.font("serif", 20),
-                    fill=DIM, anchor="ms")
+            dr.text((W / 2, H - 14), f"背景：{state.background.credit}", font=self.font("serif", 18),
+                    fill=DIM, anchor="ms", stroke_width=2, stroke_fill=(12, 10, 8))
         names = "　".join(f"VOICEVOX:{c['name']}" for c in self.config["cast"].values())
-        dr.text((W - 40, 34), names, font=self.font("serif", 20), fill=DIM, anchor="rs")
+        dr.text((W - 40, 34), names, font=self.font("serif", 20), fill=DIM, anchor="rs",
+                stroke_width=2, stroke_fill=(12, 10, 8))
         return img
 
-    def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0) -> Image.Image:
-        """立ち絵を重ねる。話している側は明るく、hop（0〜1）のぶん跳ねる。"""
+    def _memo(self, img: Image.Image, state: State, slide: float) -> None:
+        """掘り出したメモ：その節で出た札が新しい順に3枚まで。いまの札は明るく、前の札は暗く。"""
+        if not state.memo:
+            return
+        dr = ImageDraw.Draw(img, "RGBA")
+        dr.text((124, 240), "▼ 掘り出したメモ", font=self.font("gothic", 22), fill=DIM)
+        y = 272
+        for k, card in enumerate(state.memo):
+            current = (k == 0 and card == state.card)
+            hf = self.font("gothic", 30 if current else 26)
+            size = 38 if current else 30
+            bf = self.font("serif", size)
+            while size > 24 and bf.getlength(card.body or "") > 760:
+                size -= 2
+                bf = self.font("serif", size)
+            w = max(440, int(max(hf.getlength(card.head), bf.getlength(card.body or ""))) + 64)
+            h = 118 if current else 96
+            dx = -int((1 - _ease(slide)) * (w + 140)) if k == 0 else 0
+            dr.rounded_rectangle([120 + dx, y, 120 + dx + w, y + h], radius=10,
+                                 fill=(20, 16, 10, 205 if current else 150),
+                                 outline=GOLD if current else (120, 100, 70), width=3 if current else 1)
+            dr.text((146 + dx, y + 12), card.head, font=hf, fill=GOLD if current else DIM)
+            if card.body:
+                dr.text((146 + dx, y + (54 if current else 46)), card.body, font=bf, fill=INK if current else DIM)
+            y += h + 16
+
+    def _portrait(self, img: Image.Image, pic) -> None:
+        W = self.W
+        dr = ImageDraw.Draw(img, "RGBA")
+        p = self.image(pic.image).convert("RGB")
+        ph = 490
+        p = p.resize((int(p.width * ph / p.height), ph), Image.LANCZOS)
+        px, py = W - p.width - 330, 70
+        dr.rectangle([px - 20, py - 20, px + p.width + 20, py + ph + 20], fill=(30, 24, 16, 255),
+                     outline=GOLD, width=2)                     # 額は二重の金の線
+        dr.rectangle([px - 8, py - 8, px + p.width + 8, py + ph + 8], outline=GOLD, width=3)
+        img.paste(p, (px, py))
+        if not pic.caption:
+            return
+        dr = ImageDraw.Draw(img, "RGBA")
+        name, _, detail = pic.caption.partition("（")
+        detail = detail.rstrip("）")
+        box_w = max(p.width + 40, 300)
+        cx = px + p.width / 2
+        size = 32
+        while size > 22 and self.font("serif", size, bold=True).getlength(name) > box_w - 24:
+            size -= 2
+        top = py + ph + 28
+        bottom = top + (78 if detail else 48)
+        dr.rounded_rectangle([cx - box_w / 2, top, cx + box_w / 2, bottom], radius=8, fill=(20, 16, 10, 215))
+        dr.text((cx, top + 24), name, font=self.font("serif", size, bold=True), fill=INK, anchor="mm")
+        if detail:
+            df = self.font("serif", 20)
+            while df.size > 14 and df.getlength(detail) > box_w - 20:
+                df = self.font("serif", df.size - 1)
+            dr.text((cx, top + 58), detail, font=df, fill=DIM, anchor="mm")
+
+    # --- 立ち絵と字幕 -----------------------------------------------------
+    def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "") -> Image.Image:
+        """立ち絵を重ねる。話している側は明るく、足もとに光、hop（0〜1）のぶん跳ねる。text は字幕。"""
         img = base.copy()
         for who, cast in self.config["cast"].items():
-            ch = self.character(who)
-            if who != speaker:
-                a = ch.split()[3]
-                ch = ImageEnhance.Brightness(ch.convert("RGB")).enhance(LISTENER_DIM).convert("RGBA")
-                ch.putalpha(a)
-                lift = 0
-            else:
-                lift = int(HOP_PX * math.sin(math.pi * hop))
+            talking = who == speaker
+            ch = self.character(who) if talking else self.listener(who)
+            lift = int(HOP_PX * math.sin(math.pi * hop)) if talking else 0
             x = 20 if cast.get("side", "left") == "left" else self.W - ch.width - 10
+            if talking:                                     # 話している側の足もとに柔らかい光
+                img.alpha_composite(self._glow(who, x, ch.width))
             img.alpha_composite(ch, (x, self.H - ch.height + 10 - lift))
+        if text:
+            self._subtitle(img, speaker, text)
         return img.convert("RGB")
+
+    def _glow(self, who: str, x: int, width: int) -> Image.Image:
+        key = ("glow", who, x, width, self.W, self.H)
+        if key not in self._images:
+            glow = Image.new("RGBA", (self.W, self.H), (0, 0, 0, 0))
+            gx = x + width / 2
+            ImageDraw.Draw(glow).ellipse([gx - width * 0.6, self.H - 140, gx + width * 0.6, self.H + 120],
+                                         fill=(255, 220, 150, 70))
+            self._images[key] = glow.filter(ImageFilter.GaussianBlur(40))
+        return self._images[key]
+
+    def draw_rich(self, dr, cx: float, y: float, row: str, mask: list[bool], font, color, emph=EMPH) -> None:
+        """1行を、強調の字だけ色を変えて中央ぞろえで描く。"""
+        x = cx - font.getlength(row) / 2
+        for ch, on in zip(row, mask):
+            dr.text((x, y), ch, font=font, fill=emph if on else color)
+            x += font.getlength(ch)
+
+    def _subtitle(self, img: Image.Image, speaker: str, text: str) -> None:
+        """2人のあいだの下に字幕。高さは2行ぶんで固定。話している人の名前をその人の側に寄せて出す。"""
+        x0, x1, y1 = 440, self.W - 440, self.H - 34
+        h = 34 + 60 * SUB_ROWS
+        y0 = y1 - h
+        shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, y0 + 10, x1 + 6, y1 + 10], radius=14, fill=(0, 0, 0, 140))
+        img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
+        dr = ImageDraw.Draw(img, "RGBA")
+        cast = self.config["cast"][speaker]
+        side = cast.get("side", "left")
+        color = SPEAKER_COLORS.get(side, GOLD)
+        dr.rounded_rectangle([x0, y0, x1, y1], radius=14, fill=(250, 246, 236, 240), outline=color, width=4)
+        stripe = [x0 + 4, y0 + 14, x0 + 12, y1 - 14] if side == "left" else [x1 - 12, y0 + 14, x1 - 4, y1 - 14]
+        dr.rounded_rectangle(stripe, radius=4, fill=color)
+        nf = self.font("gothic", 28)
+        nw = nf.getlength(cast["name"]) + 28
+        nx = x0 + 20 if side == "left" else x1 - 20 - nw
+        dr.rounded_rectangle([nx, y0 - 20, nx + nw, y0 + 18], radius=8, fill=color)
+        dr.text((nx + nw / 2, y0 - 1), cast["name"], font=nf, fill=(255, 255, 255), anchor="mm")
+        body, mask = emphasis_mask(text)
+        f = self.font("serif", 44, bold=True)
+        rows = wrap_balanced(body, f, x1 - x0 - 70)[:SUB_ROWS]
+        top = y0 + 22 + (60 * (SUB_ROWS - len(rows))) // 2   # 1行のときは上下の真ん中に
+        pos = 0
+        for k, row in enumerate(rows):
+            start = body.find(row, pos)
+            self.draw_rich(dr, (x0 + x1) / 2, top + 60 * k, row, mask[start:start + len(row)], f, (40, 30, 20))
+            pos = start + len(row)
+
+    # --- 特別な画面 -------------------------------------------------------
+    def overlay_title(self, img: Image.Image, head: str, body: str, strength: float = 1.0) -> Image.Image:
+        """画面の真ん中に大きな題（冒頭の問い・節の頭）。strength は暗くする強さ。"""
+        img = img.convert("RGBA")
+        dim = Image.new("RGBA", img.size, (8, 6, 4, int(150 * strength)))
+        img.alpha_composite(dim)
+        dr = ImageDraw.Draw(img, "RGBA")
+        cy = self.H * 0.40
+        if head:
+            dr.text((self.W / 2, cy - 70), head, font=self.font("gothic", 40), fill=GOLD, anchor="mm")
+        size = 76
+        while size > 40 and self.font("serif", size, bold=True).getlength(body) > self.W - 240:
+            size -= 2
+        dr.text((self.W / 2, cy + 10), body, font=self.font("serif", size, bold=True), fill=INK, anchor="mm",
+                stroke_width=4, stroke_fill=(12, 10, 8))
+        y = cy + 70
+        for i, c in enumerate(STRATA):                      # 下に地層の線
+            dr.rectangle([self.W / 2 - 300, y + i * 6, self.W / 2 + 300, y + i * 6 + 5], fill=c)
+        return img.convert("RGB")
+
+    def end_card(self, background) -> Image.Image:
+        """次回予告とお礼。右側は YouTube の終了画面（動画・登録ボタン）を置く場所として空ける。"""
+        nxt = getattr(self.script, "next", {}) or {}
+        img = self._background(background)
+        img.alpha_composite(Image.new("RGBA", img.size, (8, 6, 4, 150)))
+        dr = ImageDraw.Draw(img, "RGBA")
+        x = 120
+        dr.text((x, 150), "ご視聴ありがとうございました", font=self.font("gothic", 34), fill=DIM)
+        if nxt:
+            dr.rounded_rectangle([x, 230, x + 190, 290], radius=10, fill=(176, 40, 40))
+            dr.text((x + 95, 260), "次回予告", font=self.font("gothic", 34), fill=(255, 255, 255), anchor="mm")
+            if self.script.series:
+                dr.text((x, 330), self.script.series, font=self.font("gothic", 30), fill=GOLD)
+            dr.text((x, 380), nxt.get("title", ""), font=self.font("serif", 76, bold=True), fill=INK,
+                    stroke_width=3, stroke_fill=(12, 10, 8))
+            teaser = nxt.get("teaser", "")
+            for k, row in enumerate(wrap(teaser, self.font("serif", 40), 760)[:3]):
+                dr.text((x, 500 + 56 * k), row, font=self.font("serif", 40), fill=INK)
+        # 右側（x 1080〜1800, y 200〜605）は、YouTube の終了画面（次の動画・登録ボタン）を置くために空けておく
+        return img
 
 
 def state_of(line) -> State:
-    return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker)
+    return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
+                 getattr(line, "memo", ()))
 
 
-def _name(state, hop_i: int) -> str:
-    h = hashlib.sha1(repr((state, hop_i)).encode("utf-8")).hexdigest()[:12]
+def _salt(painter) -> str:
+    """描き方（このファイル・字幕の切り方・設定）が変わったら、控えの画像を使い回さない。"""
+    src = Path(__file__).read_bytes() + (Path(__file__).parent / "subs.py").read_bytes()
+    try:
+        src += Path(type(painter).__module__.replace(".", "/") + ".py").read_bytes()
+    except OSError:
+        pass
+    src += json.dumps(painter.config, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    src += type(painter).__name__.encode()
+    return hashlib.sha1(src).hexdigest()[:8]
+
+
+def _name(salt: str, *parts) -> str:
+    h = hashlib.sha1(repr((salt,) + parts).encode("utf-8")).hexdigest()[:14]
     return f"{h}.png"
 
 
 def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int,
-           with_text: bool = False) -> list[tuple[Path, float]]:
+           with_text: bool = False, end_card: bool = False) -> list[tuple[Path, float]]:
     """(画像, 表示する秒数) の並びを作る。同じ状態の画像は使い回す。
 
-    with_text=True（ショート）は、せりふを画面に焼き込むので行ごとに画像が変わる。
+    with_text=True（ショート）は、せりふ全体を画面に焼き込む。本編で config の subtitles が true なら、
+    せりふを字幕のかたまりに分け、字数の割合で時間を配る。end_card=True なら最後に次回予告を足す。
     """
+    subtitles = (not with_text) and bool(painter.config.get("subtitles"))
+    special = not with_text                                      # 冒頭・節の頭・移り変わりは本編だけ
     frame_dir.mkdir(parents=True, exist_ok=True)
-    bases: dict = {}
+    salt = _salt(painter)
     out: list[tuple[Path, float]] = []
+    prev_state: State | None = None
     prev_speaker = None
+    plain_len = lambda s: len(emphasis_mask(s)[0])
+
+    def emit(path: Path, make, dur: float):
+        if not path.exists():
+            make().save(path)
+        out.append((path, dur))
+
     for i, cue in enumerate(cues):
         state = state_of(cue.line)
         start = 0.0 if i == 0 else cue.start
-        end = cues[i + 1].start if i + 1 < len(cues) else total
-        key = (state.section, state.background, state.portrait, state.card, state.year)
-        hop = cue.line.speaker != prev_speaker
-        n_hop = HOP_FRAMES if hop else 0
-        # 跳ねるのは話し始めの瞬間。行の前の間（無音）は静止画で埋める
+        end = cues[i + 1].start if i + 1 < len(cues) else (total - (END_SECONDS if end_card else 0.0))
+        n_hop = HOP_FRAMES if cue.line.speaker != prev_speaker else 0
+
+        if with_text:
+            pieces = [(cue.line.text, end - cue.start)]
+        elif subtitles:
+            cs = subtitle_chunks(cue.line.text)
+            talk = max(cue.end - cue.start, 1 / fps)
+            n_chars = sum(plain_len(c) for c in cs) or 1
+            pieces = [(c, talk * plain_len(c) / n_chars) for c in cs]
+            pieces[-1] = (pieces[-1][0], pieces[-1][1] + max(0.0, end - cue.end))
+        else:
+            pieces = [("", end - cue.start)]
+
         lead = max(0.0, cue.start - start) if i > 0 else cue.start
-        steps: list[tuple[int, float]] = []
+        # 節の頭：行の前の間に、節の番号と題名を大きく出す
         if lead > 0:
-            steps.append((0, lead))
-        for k in range(1, n_hop + 1):
-            steps.append((k, 1 / fps))
-        rest = end - start - sum(d for _, d in steps)
-        steps.append((0, max(1 / fps, rest)))
-        text = cue.line.text if with_text else ""
-        for k, dur in steps:
-            path = frame_dir / _name((state, text), k)
-            if not path.exists():
-                if key not in bases:
-                    bases[key] = painter.base(state)
+            if special and prev_state is not None and prev_state.section != state.section:
+                title = painter.script.sections[state.section].title
+                emit(frame_dir / _name(salt, "sec", state, title),
+                     lambda s=state, t=title: painter.overlay_title(
+                         painter.with_cast(painter.base(s), s.speaker, 0, ""),
+                         f"第{s.section + 1}節", t), lead)
+            else:
+                emit(frame_dir / _name(salt, "lead", state),
+                     lambda s=state: painter.with_cast(painter.base(s), s.speaker, 0, ""), lead)
+
+        # 移り変わり：絵が替わるなら溶け合い、札・年号だけなら印の移動とメモの滑り込み
+        steps: list[tuple[int, float, float, str]] = []      # (跳ねる番号, 移り変わりの進み, 秒, 字幕)
+        changed = special and prev_state is not None and prev_state.section == state.section and (
+            (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year)
+            != (state.background, state.portrait, state.memo, state.year))
+        n_tr = TRANS_FRAMES if changed else 0
+        first_text, first_dur = pieces[0]
+        n_head = max(n_hop, n_tr)
+        for k in range(1, n_head + 1):
+            steps.append((k if k <= n_hop else 0, k / (n_tr + 1) if k <= n_tr else 1.0, 1 / fps, first_text))
+        steps.append((0, 1.0, max(1 / fps, first_dur - n_head / fps), first_text))
+        for text, dur in pieces[1:]:
+            steps.append((0, 1.0, max(1 / fps, dur), text))
+
+        opening = special and i < OPENING_CUES and painter.script.question
+        for k, tr, dur, text in steps:
+            def make(k=k, tr=tr, text=text, s=state, ps=prev_state, n_hop=n_hop):
                 hop_t = k / (n_hop + 1) if k else 0.0
-                im = (painter.with_cast(bases[key], state.speaker, hop_t, text) if with_text
-                      else painter.with_cast(bases[key], state.speaker, hop_t))
-                im.save(path)
-            out.append((path, dur))
+                if tr < 1.0 and ps is not None:
+                    year = s.year
+                    if ps.year is not None and s.year is not None:
+                        year = ps.year + (s.year - ps.year) * _ease(tr)
+                    slide = tr if (s.memo and s.memo != ps.memo) else 1.0
+                    im = painter.with_cast(painter.base(s, year=year, slide=slide), s.speaker, hop_t, text)
+                    if (ps.background, ps.portrait) != (s.background, s.portrait):
+                        old = painter.with_cast(painter.base(ps), s.speaker, hop_t, text)
+                        im = Image.blend(old, im, _ease(tr))
+                else:
+                    im = painter.with_cast(painter.base(s), s.speaker, hop_t, text)
+                if opening:
+                    im = painter.overlay_title(im, painter.script.series, painter.script.question, 0.8)
+                return im
+            key = ("f", state, prev_state if tr < 1.0 else None, round(tr, 3), k, n_hop, text, bool(opening))
+            emit(frame_dir / _name(salt, *key), make, dur)
+        prev_state = state
         prev_speaker = cue.line.speaker
+
+    if end_card and cues:
+        bg = cues[-1].line.background
+        last = cues[-1].line.speaker
+        emit(frame_dir / _name(salt, "end", bg, last),
+             lambda: painter.with_cast(painter.end_card(bg), last, 0, ""), END_SECONDS)
     return out
 
 

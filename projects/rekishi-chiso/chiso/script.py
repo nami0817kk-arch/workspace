@@ -63,6 +63,10 @@ class Line:
     portrait: Picture | None = None
     card: Card | None = None
     year: int | None = None
+    memo: tuple = ()                  # その節で出た札（新しい順に最大3枚）。画面左の「掘り出したメモ」
+
+
+MEMO_SIZE = 3
 
 
 @dataclass
@@ -82,6 +86,13 @@ class Script:
     lines: list[Line]
     shorts: dict[str, dict] = field(default_factory=dict)
     path: Path | None = None
+    next: dict = field(default_factory=dict)        # 次回予告 {title, teaser}
+    thumbnail: dict = field(default_factory=dict)   # サムネイルの文字と絵（thumb.py）
+
+    @property
+    def question(self) -> str:
+        """題名の問いの部分（「｜」より前）。冒頭で大きく出す。"""
+        return self.title.split("｜")[0]
 
     def short_lines(self, short_id: str) -> list[Line]:
         return [line for line in self.lines if short_id in line.shorts]
@@ -150,6 +161,7 @@ def parse(data: dict, path: Path | None = None) -> Script:
         card = _card(raw_section.get("card"), where_s)
         if raw_section.get("year") is not None:
             year = int(raw_section["year"])
+        memo: list[Card] = [card] if card is not None else []
         raw_lines = raw_section.get("lines") or []
         if not raw_lines:
             raise ScriptError(f"{where_s}: lines がありません")
@@ -162,6 +174,8 @@ def parse(data: dict, path: Path | None = None) -> Script:
                 portrait = _picture(raw["portrait"], where)
             if "card" in raw:
                 card = _card(raw["card"], where)
+                if card is not None and (not memo or memo[-1] != card):
+                    memo.append(card)
             if raw.get("year") is not None:
                 year = int(raw["year"])
             tone = str(raw.get("tone", "普通"))
@@ -175,6 +189,7 @@ def parse(data: dict, path: Path | None = None) -> Script:
                 index=len(lines), section=s_index, speaker=speaker, text=text, tone=tone,
                 pause=float(pause) if pause is not None else None, shorts=tuple(shorts),
                 background=background, portrait=portrait, card=card, year=year,
+                memo=tuple(reversed(memo[-MEMO_SIZE:])),
             ))
     if not lines:
         raise ScriptError("せりふが1行もありません")
@@ -187,6 +202,7 @@ def parse(data: dict, path: Path | None = None) -> Script:
         title=str(data.get("title", "")), series=str(data.get("series", "")),
         timeline_start=timeline.get("start"), timeline_end=timeline.get("end"), events=events,
         sections=sections, lines=lines, shorts=shorts_meta, path=path,
+        next=dict(data.get("next") or {}), thumbnail=dict(data.get("thumbnail") or {}),
     )
 
 

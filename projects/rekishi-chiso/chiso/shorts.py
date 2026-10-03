@@ -10,7 +10,7 @@ import math
 from PIL import Image, ImageDraw
 
 from .render import DIM, GOLD, INK, LISTENER_DIM, Painter, State
-from .voice import display_text
+from .subs import emphasis_mask
 
 
 NO_HEAD = "、。，．・！？!?」』）)ーっゃゅょッャュョ…"   # 行の頭に来てはいけない文字
@@ -88,9 +88,10 @@ class ShortPainter(Painter):
         img = super().with_cast(base, speaker, hop).convert("RGBA")
         if text:
             dr = ImageDraw.Draw(img, "RGBA")
+            body, mask = emphasis_mask(text)
             for size in TEXT_SIZES:
                 f = self.font("serif", size, bold=True)
-                rows = _wrap(display_text(text), f, self.W - 160)
+                rows = _wrap(body, f, self.W - 160)
                 if len(rows) <= TEXT_MAX_ROWS:
                     break
             step = int(size * 1.33)
@@ -100,8 +101,12 @@ class ShortPainter(Painter):
                                  outline=GOLD, width=4)
             name = self.config["cast"][speaker]["name"]
             dr.text((90, top - 14), name, font=self.font("gothic", 34), fill=GOLD, anchor="ls")
+            pos = 0
             for i, row in enumerate(rows):
-                dr.text((self.W / 2, top + 30 + step * i), row, font=f, fill=(40, 30, 20), anchor="mt")
+                start = body.find(row, pos)
+                self.draw_rich(dr, self.W / 2, top + 30 + step * i, row, mask[start:start + len(row)], f,
+                               (40, 30, 20))
+                pos = start + len(row)
         return img.convert("RGB")
 
 

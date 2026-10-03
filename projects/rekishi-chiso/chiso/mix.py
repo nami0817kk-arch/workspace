@@ -70,10 +70,20 @@ def _srt_time(t: float) -> str:
 
 def srt(cues: list[Cue], names: dict[str, str]) -> str:
     """YouTube に渡す字幕。話者名を頭に付ける（掛け合いなので誰の言葉か分かるように）。"""
+    # 画面の字幕と同じかたまりで切り、時間は字数の割合で配る
+    from .subs import chunks, plain
     out = []
-    for i, cue in enumerate(cues, 1):
+    n = 0
+    for cue in cues:
         name = names.get(cue.line.speaker, cue.line.speaker)
-        out.append(f"{i}\n{_srt_time(cue.start)} --> {_srt_time(cue.end)}\n{name}：{display_text(cue.line.text)}\n")
+        cs = [plain(c) for c in chunks(cue.line.text)]
+        total = sum(len(c) for c in cs) or 1
+        t = cue.start
+        for c in cs:
+            d = (cue.end - cue.start) * len(c) / total
+            n += 1
+            out.append(f"{n}\n{_srt_time(t)} --> {_srt_time(t + d)}\n{name}：{c}\n")
+            t += d
     return "\n".join(out)
 
 
