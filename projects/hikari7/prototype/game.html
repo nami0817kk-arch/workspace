@@ -824,6 +824,34 @@ body.reduce .face.f-tired,body.reduce .cmt.sns,body.reduce .apptoast,body.reduce
 #eyec.big{animation-duration:1.7s}#eyec.big .ein{animation-duration:1.7s;padding:22px 30px}
 #eyec.big b{font-size:34px}#eyec.big i{display:block;font-style:normal;color:#e9ba4b;letter-spacing:.3em;font-size:16px;margin-top:4px}
 body.reduce .pd,body.reduce .hudc{animation:none}@media (prefers-reduced-motion:reduce){.pd,.hudc.hup,.hudc.hdn{animation:none}}
+
+/* ===== 30回ループ 11〜15 ===== */
+/* 11. 使い道の札 */
+.actb{position:relative;padding-left:52px}
+.aico{position:absolute;left:10px;top:12px;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--card2);border:1px solid var(--line)}
+.aico svg{width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.act.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,77,232,.22)}.act.on .aico{background:var(--accent)}.act.on .aico svg{stroke:#fff}
+.aon{position:absolute;right:8px;top:8px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:grid;place-items:center;animation:bpop .35s cubic-bezier(.2,1.5,.4,1) both}
+.actb .cost{margin-right:24px}
+/* 12. 講評の色 */
+.seg button.cr0.on{background:#2e9e6a;border-color:#2e9e6a;color:#fff}
+.seg button.cr1.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.seg button.cr2.on{background:#c23848;border-color:#c23848;color:#fff}
+.seg button.best:not(.on){border-color:var(--gold);color:var(--gold)}
+/* 13. 合格人数のゲージ */
+.jbar{position:relative;display:block;width:96px;height:6px;border-radius:3px;background:rgba(127,127,127,.25);margin-top:4px;overflow:visible}
+.jbar i{display:block;height:100%;border-radius:3px;background:var(--muted);transition:width .3s}
+.jbar.ok i{background:var(--ok)}.jbar.over i{background:var(--bad)}
+.jbar u{position:absolute;top:-3px;width:2px;height:12px;background:var(--gold);border-radius:1px}
+/* 14. デビュー後の看板の顔 */
+.mfaces{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}.mfaces .face{width:36px;height:36px;border-radius:10px;border:2px solid rgba(255,255,255,.7)}
+.weeks{position:relative}
+/* 15. お出かけ先の写真の札 */
+.otiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.otile{position:relative;height:92px;border-radius:14px;border:1px solid rgba(255,255,255,.2);overflow:hidden;text-align:left;padding:10px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;
+  background:linear-gradient(180deg,rgba(10,6,22,.05),rgba(10,6,22,.78)),var(--ob);background-size:cover;background-position:center 40%;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.otile b{font-size:16px;text-shadow:0 1px 6px rgba(0,0,0,.7)}.otile span{font-size:12px;font-weight:700;color:#f6e7c1}
+.otile:disabled{opacity:.45}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1502,6 +1530,14 @@ EV.arc={title:'ひとりの物語',
 function roundFmt(S){var f=ROUNDS[S.rnd],c=f&&f.concepts;if(!c||!S.plan||S.plan.teams)return f;var o={};for(var k in f)o[k]=f[k];o.w=c[S.plan.concept||0].w;o.concept=c[S.plan.concept||0].n;return o;}
 function defaultTeams(S){var f=ROUNDS[S.rnd],A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),nT=Math.ceil(A.length/(f.size||4)),T=[];
   for(var i=0;i<nT;i++)T.push([]);A.forEach(function(t,i){var r=Math.floor(i/nT),c=i%nT;T[r%2===0?c:nT-1-c].push(t.id);});return T;}
+var ACT_ICO=(function(){var w=function(p){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>';};return {
+  coach:w('<circle cx="12" cy="7.5" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/><path d="M17 4l3-1-1 3"/>'),
+  meal:w('<path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M8 7c0-2 2-2 2-4M12 7c0-2 2-2 2-4"/>'),
+  vlog:w('<rect x="3" y="6.5" width="13" height="11" rx="2"/><path d="M16 10.5l5-3v9l-5-3"/>'),
+  stage:w('<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z"/>'),
+  special:w('<rect x="3" y="5.5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17.5V21"/><path d="M10 9.5l5 2.5-5 2.5z"/>'),
+  off:w('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'),
+  def:w('<circle cx="12" cy="12" r="8"/>')};})();
 var ACTS=[
   {k:'coach',n:'特別講師を呼ぶ',cost:40,d:'選んだ能力を全員ぶん底上げする'},
   {k:'meal',n:'差し入れと食事会',cost:15,d:'全員の自信が上がり、疲れが少し抜ける'},
@@ -3086,7 +3122,7 @@ function vCritique(){
   }
   h+='<p class="small muted">最初は全員「課題を伝える」です。気質が分かっている子には、合う講評に ★ を付けています。顔を押すと詳しく見られます。</p><div class="card">';
   A.forEach(function(t){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id];
-    h+='<div class="jrow">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+'</div><div class="small muted">出来 '+S.stage.res[t.id].sc+'・気質 '+(t.temperRev?TEMPER[t.temper]:'?')+'</div></div><div class="seg">'+CRIT.map(function(o,i){return '<button class="'+(c===i?'on':'')+'" data-a="crit" data-id="'+t.id+'" data-v="'+i+'">'+(critBest(t)===i?'★':'')+['ほめる','課題','厳しく'][i]+'</button>';}).join('')+'</div></div>';});
+    h+='<div class="jrow">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+'</div><div class="small muted">出来 '+S.stage.res[t.id].sc+'・気質 '+(t.temperRev?TEMPER[t.temper]:'?')+'</div></div><div class="seg">'+CRIT.map(function(o,i){return '<button class="cr'+i+(c===i?' on':'')+(critBest(t)===i?' best':'')+'" data-a="crit" data-id="'+t.id+'" data-v="'+i+'">'+(critBest(t)===i?'★':'')+['ほめる','課題','厳しく'][i]+'</button>';}).join('')+'</div></div>';});
   h+='</div>';
   h+='<p class="note">ほめる＝自信が上がる（負けず嫌いな子は油断する）／課題を伝える＝次のレッスンで弱点がよく伸びる／厳しく言う＝負けず嫌いな子は大きく伸び、繊細な子は自信を失う</p>';
   h+='<div class="foot"><div class="in"><div class="cnt">講評 <b>'+A.length+'</b>人</div><button class="btn" data-a="critok">講評を伝える</button></div></div>';
@@ -3113,7 +3149,7 @@ function vJudge(){
   h+='</div>'+hx;
   var ok=n>=mn&&n<=cap;
   h+=undoBox();
-  h+='<div class="foot"><div class="in"><div class="cnt">'+(f.fin?'デビュー':'合格')+' <b>'+n+'</b>人<br><span class="muted">'+mn+'〜'+(f.fin?S.caps.finMax:cap)+'人</span></div><button class="btn" data-a="judgeok" '+(ok?'':'disabled')+'>'+(n<mn?'あと'+(mn-n)+'人選ぶ':(f.fin?'この'+n+'人で決める':'発表へ'))+'</button></div></div>';
+  var mx=f.fin?S.caps.finMax:cap;h+='<div class="foot"><div class="in"><div class="cnt">'+(f.fin?'デビュー':'合格')+' <b>'+n+'</b>人<br><span class="muted">'+mn+'〜'+mx+'人</span><span class="jbar'+(n>mx?' over':n>=mn?' ok':'')+'"><i style="width:'+Math.min(100,Math.round(n/mx*100))+'%"></i><u style="left:'+Math.round(mn/mx*100)+'%"></u></span></div><button class="btn" data-a="judgeok" '+(ok?'':'disabled')+'>'+(n<mn?'あと'+(mn-n)+'人選ぶ':(f.fin?'この'+n+'人で決める':'発表へ'))+'</button></div></div>';
   return h;
 }
 function vCall(){
@@ -3219,7 +3255,7 @@ function vPlan(){
   h+=planFmtBox();
   h+='<h3>制作費の使い道</h3><div class="actgrid">';
   ACTS.forEach(function(a){if(a.from&&(S.rnd<a.from||S.rnd>a.to))return;var on=!!P.acts[a.k],can=on||S.budget-cost>=a.cost;
-    h+='<div class="act '+(on?'on':'')+'"><button class="actb" data-a="act" data-v="'+a.k+'" '+(can?'':'disabled')+'><b>'+a.n+'</b><span class="cost">'+(a.cost?a.cost+'万':'0')+'</span><span class="small muted">'+a.d+'</span></button>';
+    h+='<div class="act '+(on?'on':'')+'"><button class="actb" data-a="act" data-v="'+a.k+'" '+(can?'':'disabled')+'><span class="aico">'+(ACT_ICO[a.k]||ACT_ICO.def)+'</span>'+(on?'<span class="aon">✓</span>':'')+'<b>'+a.n+'</b><span class="cost">'+(a.cost?a.cost+'万':'0')+'</span><span class="small muted">'+a.d+'</span></button>';
     if(a.k==='coach'&&on)h+='<div class="acts">'+['v','d','r','e'].map(function(k){return '<button class="'+(P.coachK===k?'on':'')+'" data-a="coachk" data-v="'+k+'">'+STATN[k]+'</button>';}).join('')+'</div>';
     if(a.k==='vlog'&&on){h+='<div class="pickrow sm">';A.forEach(function(t){h+='<button class="pk '+(P.vlogId===t.id?'on':'')+'" data-a="vlogid" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span></button>';});h+='</div>';}
     h+='</div>';});
@@ -3349,7 +3385,7 @@ function moodTag(t){var m=moodOf(t);return '<span class="tag '+MOODC[m]+'">'+m+'
 function apDots(){var h='';for(var i=0;i<apMax(S);i++)h+='<i class="'+(i<S.ap?'on':'')+'"></i>';return '<span class="ap">'+h+'</span>';}
 function vTalk(){
   var h='<h2>関わる時間 '+apDots()+'</h2>';
-  if(S.sub&&S.sub.kind==='out'){var to=S.tr[S.sub.id];h+='<div class="card ev"'+scn('morning')+'><div class="ttl">お出かけ</div><div class="evfaces"><div>'+face(to,'lg')+esc(to.name)+'</div></div><p class="small muted">どこへ行きますか？ 行き先ごとに起きることが違います。</p>'+OUTS.map(function(o,i){return '<button class="choice" data-a="outplace" data-v="'+i+'" '+(S.budget<o.cost?'disabled':'')+'><b>'+o.n+'</b><span class="hint">'+(o.cost?'<span class="hp dn">制作費'+o.cost+'万</span>':'<span class="small muted">お金はかからない</span>')+'</span></button>';}).join('')+'<button class="btn sub" data-a="subcancel">やめる</button></div>';return h;}
+  if(S.sub&&S.sub.kind==='out'){var to=S.tr[S.sub.id];h+='<div class="card ev"'+scn('morning')+'><div class="ttl">お出かけ</div><div class="evfaces"><div>'+face(to,'lg')+esc(to.name)+'</div></div><p class="small muted">どこへ行きますか？ 行き先ごとに起きることが違います。</p>'+'<div class="otiles">'+OUTS.map(function(o,i){return '<button class="otile" style="--ob:var(--bgi-'+SCENE_OUT[i]+',none)" data-a="outplace" data-v="'+i+'" '+(S.budget<o.cost?'disabled':'')+'><b>'+o.n+'</b><span>'+(o.cost?'制作費'+o.cost+'万':'無料')+'</span></button>';}).join('')+'</div>'+'<button class="btn sub" data-a="subcancel">やめる</button></div>';return h;}
   if(S.sub){var t=S.tr[S.sub.id];
     h+='<div class="card ev"'+scn(SCENE_TALK[S.sub.kind])+'><div class="ttl">'+(S.sub.kind==='coach'?'個別指導':'差し入れを渡す')+'</div><div class="evfaces"><div>'+face(t,'lg')+esc(t.name)+'</div></div>';
     if(S.sub.kind==='coach'){h+='<p class="small muted">どこを見るか選んでください。その能力が伸び、はっきり分かるようになります。疲れがたまり、繊細な子は緊張で自信を落とします。</p>'+['v','d','r','e'].map(function(k){return '<button class="choice" data-a="coachk2" data-v="'+k+'"><b>'+STATN[k]+'</b><span>いま '+(t.rev[k]===2?Math.round(t.st[k]):t.rev[k]===1?t.fz[k]+'前後':'?')+'</span></button>';}).join('');}
@@ -3450,7 +3486,7 @@ function vProfile(t){
 
 function vMonth(){var M=S.month,P=S.prep,D=S.tr.filter(function(t){return t.status==='debut';});
   if(M.w>=4)return '<h2>デビューから1か月</h2><p class="small muted">4週間の活動が終わりました。</p><div class="card">'+M.log.map(function(l){return '<div class="fy" style="display:grid;grid-template-columns:4em 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px;line-height:1.7"><b>第'+l.w+'週</b><span><b>'+esc(l.n)+'</b><br>'+esc(l.t)+'</span></div>';}).join('')+'</div><div class="foot"><div class="in"><button class="btn" data-a="monthdone" style="flex:1">結果を見る</button></div></div>';
-  var h='<div class="telop"><div class="ep">デビューから1か月</div><div class="tt">'+esc(P.names[P.name])+'</div><div class="ds">毎週1つ、グループの活動を選びます。忙しい週が3回続くと、体調を崩すメンバーが出ることがあります。</div><div class="meta">第'+Math.min(4,M.w+1)+'週 ／ 全4週　制作費 '+S.budget+'万</div></div>';
+  var h='<div class="telop"><div class="ep">デビューから1か月</div><div class="tt">'+esc(P.names[P.name])+'</div><div class="ds">毎週1つ、グループの活動を選びます。忙しい週が3回続くと、体調を崩すメンバーが出ることがあります。</div><div class="meta">第'+Math.min(4,M.w+1)+'週 ／ 全4週　制作費 '+S.budget+'万</div><div class="mfaces">'+D.map(function(t){return faceImg(t,'sm');}).join('')+'</div></div>';
   h+='<div class="weeks">';for(var i=0;i<4;i++){var l=M.log[i];h+='<div class="wkc'+(i===M.w?' now':'')+'"><small>第'+(i+1)+'週</small><b>'+(l?esc(l.n.replace(/（.*）/,'')):i===M.w?'いま':'')+'</b></div>';}h+='</div>';
   if(M.log.length){var l=M.log[M.log.length-1];h+='<div class="toast"><b>第'+l.w+'週</b> '+esc(l.t)+'</div>';}
   if(M.busy>=2)h+='<p class="note" style="color:var(--bad)">忙しい週が'+M.busy+'回続いている。そろそろ休ませないと危ない。</p>';
