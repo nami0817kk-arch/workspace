@@ -309,7 +309,7 @@
     "https://dictionary.cambridge.org/dictionary/english/time-is-money",
     "https://www.ldoceonline.com/dictionary/time-is-money"
    ],
-   "note": "直訳「時は金なり」。日本語はこの英語の訳とされる。",
+   "note": "直訳「時間はお金だ」。日本語はこの英語の訳とされる。",
    "read": "タイム イズ マニー"
   },
   "fr": {
@@ -517,7 +517,7 @@
     "https://www.ldoceonline.com/dictionary/walls-have-ears",
     "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2394"
    ],
-   "note": "直訳「壁に耳あり」。「障子に目」に当たる部分も含む形として Hedges have eyes, and walls have ears / Fields have eyes, and woods have ears が Preston (1880) 775番・576番にある。",
+   "note": "直訳「壁には耳がある」。「障子に目」に当たる部分も含む形として Hedges have eyes, and walls have ears / Fields have eyes, and woods have ears が Preston (1880) 775番・576番にある。",
    "read": "ウォールズ ハヴ イアズ"
   },
   "fr": {
@@ -722,7 +722,7 @@
     "https://en.wiktionary.org/wiki/fight_like_cat_and_dog",
     "https://www.larousse.fr/dictionnaires/francais/chat"
    ],
-   "note": "直訳「犬と猫のように付き合う（仲が悪い）」。成句（動詞句）。Larousseは être comme chien et chat の形。",
+   "note": "直訳「犬と猫のような仲だ」。成句（動詞句）。Larousseは être comme chien et chat の形。",
    "read": "サンタンドル コム シヤン エ シャ"
   },
   "zh": {
@@ -809,7 +809,7 @@
     "https://dictionary.cambridge.org/dictionary/english/first-come-first-served",
     "https://www.ldoceonline.com/dictionary/first-come-first-served"
    ],
-   "note": "直訳「最初に来た者が最初にもてなされる」。Preston (1880) 579番にも収録。",
+   "note": "直訳「最初に来た者が最初に給仕される」。Preston (1880) 579番にも収録。",
    "read": "ファースト カム ファースト サーヴド"
   },
   "fr": {
@@ -857,7 +857,7 @@
     "https://dictionary.cambridge.org/dictionary/english/cast-pearls-before-swine",
     "https://www.phrases.org.uk/meanings/pearls-before-swine.html"
    ],
-   "note": "直訳「豚に真珠を投げ与える」。価値のわからない者に貴重な物を与えても無駄。聖書（マタイ7:6）由来。ODP は Do not throw pearls to swine の形。",
+   "note": "直訳「豚に真珠を投げる」。価値のわからない者に貴重な物を与えても無駄。聖書（マタイ7:6）由来。ODP は Do not throw pearls to swine の形。",
    "read": "キャスト パールズ ビフォー スワイン"
   },
   "fr": {
@@ -1034,12 +1034,12 @@
   },
   "ko": {
    "text": "마른하늘에 날벼락",
-   "match": "近い",
+   "match": "同じ",
    "sources": [
     "https://ko.dict.naver.com/#/entry/koko/e075c4ef826f44e08a990904aff6617b",
     "https://dic.daum.net/word/view.do?wordid=kkw000080756"
    ],
-   "note": "直訳「晴れた空に不意の落雷」。『寝耳に水』と同じく突然の出来事だが、韓国語のほうは「災難」の意味が強い。",
+   "note": "直訳「晴れた空に不意の落雷」。『寝耳に水』と同じく突然の出来事だが、韓国語のほうは「災難」の意味が強い。（2026-10-03: 札の基準を「たとえがちがっても意味が同じなら同じ」にそろえ、「同じ」にした）",
    "read": "マルナヌレ ナルビョラク"
   }
  },
@@ -1049,23 +1049,23 @@
   "jp": "馬子にも衣装",
   "en": {
    "text": "Clothes make the man.",
-   "match": "近い",
+   "match": "同じ",
    "sources": [
     "https://en.wiktionary.org/wiki/clothes_make_the_man",
     "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-387",
     "https://idioms.thefreedictionary.com/Clothes+make+the+man"
    ],
-   "note": "直訳「服が人をつくる」。身なりが人の値打ちや地位を決める。「誰でも着飾れば立派に見える」とより一致するのは Fine feathers make fine birds（立派な羽が立派な鳥をつくる。ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-784・Wiktionary・Preston 563番・TFD）。Clothes maketh the man という古風な形もある（Wiktionary）。",
+   "note": "直訳「服が人をつくる」。身なりが人の値打ちや地位を決める。「誰でも着飾れば立派に見える」とより一致するのは Fine feathers make fine birds（立派な羽が立派な鳥をつくる。ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-784・Wiktionary・Preston 563番・TFD）。Clothes maketh the man という古風な形もある（Wiktionary）。（2026-10-03: 札の基準を「たとえがちがっても意味が同じなら同じ」にそろえ、「同じ」にした）",
    "read": "クロウズ メイク ザ マン"
   },
   "fr": {
    "text": "La belle plume fait le bel oiseau.",
-   "match": "近い",
+   "match": "同じ",
    "sources": [
     "https://www.littre.org/definition/plume",
     "https://www.dictionnaire-academie.fr/article/A1P0313"
    ],
-   "note": "直訳「美しい羽が美しい鳥をつくる」。Littréの説明は「装いが人を引き立てる」、アカデミー・フランセーズ辞典（初版）は「装いや美しい服が見栄えを大きく良くする」。英語候補の仏訳 L'habit fait le moine.（fr.wiktionary・en.wiktionary）も実在するが、「人はまず見かけで判断される」という意味で近い止まり。（2026-10-03: 英語の Clothes make the man と同じく、日本語の「身分の低い人でも」という含みがないので「近い」にそろえた）",
+   "note": "直訳「美しい羽が美しい鳥をつくる」。Littréの説明は「装いが人を引き立てる」、アカデミー・フランセーズ辞典（初版）は「装いや美しい服が見栄えを大きく良くする」。英語候補の仏訳 L'habit fait le moine.（fr.wiktionary・en.wiktionary）も実在するが、「人はまず見かけで判断される」という意味で近い止まり。（2026-10-03: 英語の Clothes make the man と同じく、日本語の「身分の低い人でも」という含みがないので「近い」にそろえた）（2026-10-03: 札の基準を「たとえがちがっても意味が同じなら同じ」にそろえ、「同じ」にした）",
    "read": "ラ ベル プリュム フェ ル ベロワゾー"
   },
   "zh": {
@@ -1172,18 +1172,18 @@
     "https://en.wiktionary.org/wiki/%E6%87%B2%E7%BE%B9%E5%90%B9%E9%BD%8F",
     "https://dict.revised.moe.edu.tw/dictView.jsp?ID=124655"
    ],
-   "note": "直訳「熱い吸い物に懲りて、冷たい和え物（齏）まで吹く」。日本語の出典そのもの。原典は《楚辭・九章・惜誦》「懲於羹者而吹齏兮」。候補の「一朝被蛇咬，十年怕井繩」も同じ意味で Wiktionary にあるが、辞書での立項が多いのは「一朝被蛇咬，十年怕草繩」の形（漢典・Wiktionary・修訂本）。",
+   "note": "直訳「熱い吸い物に懲りて、冷たい和え物まで吹く」。日本語の出典そのもの。原典は《楚辭・九章・惜誦》「懲於羹者而吹齏兮」。候補の「一朝被蛇咬，十年怕井繩」も同じ意味で Wiktionary にあるが、辞書での立項が多いのは「一朝被蛇咬，十年怕草繩」の形（漢典・Wiktionary・修訂本）。",
    "read": "chéng gēng chuī jī",
    "kana": "チョン ゲン チュイ ジー"
   },
   "ko": {
    "text": "자라 보고 놀란 가슴 솥뚜껑 보고 놀란다",
-   "match": "近い",
+   "match": "同じ",
    "sources": [
     "https://ko.dict.naver.com/#/entry/koko/7e396d5c72394daeb9b800f0a229d15b",
     "https://ko.dict.naver.com/#/entry/koko/2912dc5e5501474aa4bb24bcc8ca690f"
    ],
-   "note": "直訳「スッポンを見て驚いた胸は、釜の蓋を見ても驚く」＝一度ひどく驚くと、似た物にも怯える。見出しは「…소댕[솥뚜껑] 보고 놀란다」。『羹に懲りて膾を吹く』の「懲りて用心しすぎる」とは近いが同じではない。",
+   "note": "直訳「スッポンを見て驚いた胸は、釜の蓋を見ても驚く」＝一度ひどく驚くと、似た物にも怯える。見出しは「…소댕[솥뚜껑] 보고 놀란다」。『羹に懲りて膾を吹く』の「懲りて用心しすぎる」とは近いが同じではない。（2026-10-03: 札の基準を「たとえがちがっても意味が同じなら同じ」にそろえ、「同じ」にした）",
    "read": "チャラ ボゴ ノルラン カスム ソットゥッコン ボゴ ノルランダ"
   }
  },
@@ -1382,7 +1382,7 @@
     "https://ko.dict.naver.com/#/entry/koko/8f3bab8bbb8642589ee541bf7aa7e9a2",
     "https://dic.daum.net/word/view.do?wordid=kkw000000448"
    ],
-   "note": "直訳「逃げる兎を捕まえようとして、捕まえた兎まで逃がす」＝欲張ると手にしていた物まで失う。『二兎を追う』の「二つを同時に追う」とは少しずれるので「近い」。候補の「두 마리 토끼를 쫓다가는 한 마리도 못 잡는다」は国語辞典に見出しなし。新聞では語形が一定せず、「英語のことわざ」として紹介する記事もある（kihoilbo.co.kr idxno=811511）。",
+   "note": "直訳「逃げるウサギを捕まえようとして、捕まえたウサギまで逃がす」＝欲張ると手にしていた物まで失う。『二兎を追う』の「二つを同時に追う」とは少しずれるので「近い」。候補の「두 마리 토끼를 쫓다가는 한 마리도 못 잡는다」は国語辞典に見出しなし。新聞では語形が一定せず、「英語のことわざ」として紹介する記事もある（kihoilbo.co.kr idxno=811511）。",
    "read": "カヌン トッキ チャブリョダ チャブン トッキ ノッチンダ"
   }
  },
@@ -1506,14 +1506,14 @@
   },
   "fr": {
    "text": "Deux avis valent mieux qu'un.",
-   "match": "近い",
+   "match": "同じ",
    "sources": [
     "https://fr.wiktionary.org/wiki/deux_avis_valent_mieux_qu’un",
     "https://en.wiktionary.org/wiki/two_heads_are_better_than_one",
     "https://www.expressio.fr/expressions/deux-avis-valent-mieux-qu-un",
     "https://www.linternaute.fr/proverbe/190/deux-avis-valent-mieux-qu-un/"
    ],
-   "note": "直訳「二つの意見は一つにまさる」。何人かの意見を聞くとよい。凡人でも集まれば良い知恵が出る、という点は近い。",
+   "note": "直訳「二つの意見は一つにまさる」。何人かの意見を聞くとよい。凡人でも集まれば良い知恵が出る、という点は近い。（2026-10-03: 札の基準を「たとえがちがっても意味が同じなら同じ」にそろえ、「同じ」にした）",
    "read": "ドゥ ザヴィ ヴァル ミュー カン"
   },
   "zh": {
@@ -1525,7 +1525,7 @@
     "https://dict.revised.moe.edu.tw/dictView.jsp?ID=144488",
     "https://www.zdic.net/hant/%E4%B8%89%E5%80%8B%E8%87%AD%E7%9A%AE%E5%8C%A0%EF%BC%8C%E8%B3%BD%E9%81%8E%E8%AB%B8%E8%91%9B%E4%BA%AE"
    ],
-   "note": "直訳「三人の靴職人（凡人）が集まれば諸葛亮にまさる」。候補の「賽過」の形は漢典にあるが、辞書で広く立項されているのは「勝過」の形なので、こちらにした。",
+   "note": "直訳「三人の靴職人が集まれば諸葛亮にまさる」。候補の「賽過」の形は漢典にあるが、辞書で広く立項されているのは「勝過」の形なので、こちらにした。",
    "read": "sān gè chòu pí jiàng, shèng guò zhū gě liàng",
    "kana": "サン ガー チョウ ピー ジアン ション グオ ジュー ガー リアン"
   },
@@ -1848,12 +1848,12 @@
   "jp": "朱に交われば赤くなる",
   "en": {
    "text": "He that touches pitch shall be defiled.",
-   "match": "同じ",
+   "match": "近い",
    "sources": [
     "https://www.oxfordreference.com/display/10.1093/acref/9780199539536.001.0001/acref-9780199539536-e-2298",
     "https://www.gutenberg.org/ebooks/34176"
    ],
-   "note": "直訳「ピッチ（黒いやに）に触れる者は汚れる」。悪い仲間と交わると悪く染まる。表記は ODP どおり（候補の He who ではなく He that）。Hulme『Proverb Lore』(1902) は聖書（外典シラ書13:1）の古い形 He that toucheth pitch shall be defiled therewith で引用。ODP 第6版の同項目は https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2298。A man is known by the company he keeps（Wiktionary）も関連する。",
+   "note": "直訳「ピッチ（黒いやに）に触れる者は汚れる」。悪い仲間と交わると悪く染まる。表記は ODP どおり（候補の He who ではなく He that）。Hulme『Proverb Lore』(1902) は聖書（外典シラ書13:1）の古い形 He that toucheth pitch shall be defiled therewith で引用。ODP 第6版の同項目は https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-2298。A man is known by the company he keeps（Wiktionary）も関連する。（2026-10-03: 札の基準を「たとえがちがっても意味が同じなら同じ」にそろえ、「近い」にした）",
    "read": "ヒー ザット タッチズ ピッチ シャル ビー ディファイルド"
   },
   "fr": {
@@ -2107,14 +2107,14 @@
   },
   "fr": {
    "text": "C'est en forgeant qu'on devient forgeron.",
-   "match": "同じ",
+   "match": "近い",
    "sources": [
     "https://fr.wiktionary.org/wiki/c’est_en_forgeant_qu’on_devient_forgeron",
     "https://en.wiktionary.org/wiki/practice_makes_perfect",
     "https://www.expressio.fr/expressions/c-est-en-forgeant-qu-on-devient-forgeron",
     "https://www.linternaute.fr/proverbe/329/c-est-en-forgeant-qu-on-devient-forgeron/"
    ],
-   "note": "直訳「鍛えることで鍛冶屋になる」。上達は実践から。",
+   "note": "直訳「鍛えることで鍛冶屋になる」。上達は実践から。（2026-10-03: 札の基準を「たとえがちがっても意味が同じなら同じ」にそろえ、「近い」にした）",
    "read": "セ タン フォルジャン コン ドゥヴィヤン フォルジュロン"
   },
   "zh": {
@@ -2178,7 +2178,7 @@
     "https://en.wiktionary.org/wiki/%E7%95%AB%E9%A4%85%E5%85%85%E9%A3%A2",
     "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=955"
    ],
-   "note": "直訳「餅（へい）を描いて飢えをしのぐ」。もとは「名ばかりで役に立たない」（《三國志・魏書・盧毓傳》「名如畫地作餅，不可啖也」）、のちに「空想で自分を慰める」意。役に立たない計画、という日本語に近い。",
+   "note": "直訳「描いた餅で飢えをしのぐ」。もとは「名ばかりで役に立たない」（《三國志・魏書・盧毓傳》「名如畫地作餅，不可啖也」）、のちに「空想で自分を慰める」意。役に立たない計画、という日本語に近い。",
    "read": "huà bǐng chōng jī",
    "kana": "ホア ビン チョン ジー"
   },
@@ -2254,7 +2254,7 @@
     "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1203",
     "https://www.gutenberg.org/ebooks/39281"
    ],
-   "note": "直訳「知識は力なり」。フランシス・ベーコンのラテン語 scientia potentia est に由来。Preston (1880) 904番、TFD にも収録。",
+   "note": "直訳「知識は力だ」。フランシス・ベーコンのラテン語 scientia potentia est に由来。Preston (1880) 904番、TFD にも収録。",
    "read": "ナリッジ イズ パワー"
   },
   "fr": {
@@ -2264,7 +2264,7 @@
     "https://en.wiktionary.org/wiki/knowledge_is_power",
     "https://www.larousse.fr/dictionnaires/francais/savoir"
    ],
-   "note": "直訳「知ることは力である」。民間のことわざではなく、ベーコンの格言の仏訳。Larousseにはルナンの文中の引用（« Savoir c'est pouvoir » est le plus beau mot qu'on ait dit）として載る。fr.wiktionaryには項目なし。",
+   "note": "直訳「知ることは力だ」。民間のことわざではなく、ベーコンの格言の仏訳。Larousseにはルナンの文中の引用（« Savoir c'est pouvoir » est le plus beau mot qu'on ait dit）として載る。fr.wiktionaryには項目なし。",
    "read": "サヴォワール セ プヴォワール"
   },
   "zh": {
@@ -2274,7 +2274,7 @@
     "https://en.wiktionary.org/wiki/%E7%9F%A5%E8%AD%98%E5%B0%B1%E6%98%AF%E5%8A%9B%E9%87%8F",
     "https://zh.wikipedia.org/zh-tw/%E7%9F%A5%E8%AD%98%E5%B0%B1%E6%98%AF%E5%8A%9B%E9%87%8F"
    ],
-   "note": "直訳「知識こそ力である」。西洋の格言 scientia potentia est の訳（中国古来のことわざではない）。Wiktionary（諺として立項）と中国語版 Wikipedia（記事名・本文ともこの形）で確認（2026-10-03）。",
+   "note": "直訳「知識こそ力だ」。西洋の格言 scientia potentia est の訳（中国古来のことわざではない）。Wiktionary（諺として立項）と中国語版 Wikipedia（記事名・本文ともこの形）で確認（2026-10-03）。",
    "read": "zhī shí jiù shì lì liàng",
    "kana": "ジー シー ジウ シー リー リアン"
   },
