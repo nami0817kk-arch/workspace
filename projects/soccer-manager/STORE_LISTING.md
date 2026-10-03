@@ -87,6 +87,41 @@
 > **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
 > 記述が残っているのは、出すことになったときのため。当面は iOS だけを見る。
 
+## このバージョンの新機能（1.1.6）
+
+1.1.5 と同じ掲載画像で出せる（タイトル画面と演出は掲載画像に写らない）。
+**1.1.5 をまだ提出していなければ、この版に差し替えて1回で出す。**
+
+### 日本語
+
+```
+・タイトル画面に絵を入れました
+・リーグ優勝・昇格を決めたときに、その絵が出るようになりました
+・選手の似顔絵を描き直しました。首から上だけの平たい絵をやめ、
+　ユニフォームと陰影を入れています
+・ピッチの芝とラインを描き直しました。スタメン画面にゴールエリアや
+　ペナルティアークが入り、試合画面と見た目が揃いました
+・クラブのエンブレムに縁取りと立体感を入れました
+・実績に1件ずつの記章を付けました。これまでは33件すべて同じ絵でした
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- The title screen now has artwork.
+- Winning the league or going up now has artwork of its own.
+- Player portraits have been redrawn, with a shirt and proper shading
+  instead of a flat floating head.
+- The pitch has been redrawn. The lineup screen now has the goal areas and
+  penalty arcs, and matches the look of the match screen.
+- Club crests now have a border and some depth.
+- Every achievement has its own badge. They all used to share one icon.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
 ## このバージョンの新機能（1.1.5）
 
 1.1.4 はビルドを作っただけで提出していない。掲載画像を差し替える版だったが、
