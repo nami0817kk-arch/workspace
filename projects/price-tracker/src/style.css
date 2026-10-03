@@ -259,6 +259,9 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 /* 価格のすぐ下に置くほうの買う口。下にあるものと同じ見た目にする
    （読み終えた人向けのものは残す） */
 .cta.top { margin: 0 0 18px; }
+/* 同じ分類の中での位置。動いていない商品（71.6%）にも言えることを出す */
+.rankin { margin: 8px 0 0; }
+.rankin strong { font-size: 17px; }
 
 .static p, .static li { max-width: 62em; }
 

@@ -342,6 +342,25 @@ def build(root: Path, out: Path) -> dict:
         by_gid.setdefault(str(r.get("source_genre") or ""), []).append(r)
         by_shop.setdefault(r.get("shop") or "", []).append(r)
 
+    # 同じ中分類の中で、その値段がどのあたりか。
+    # 実測（2026-10-03）で、記録している13,544商品のうち**9,700件（71.6%）は
+    # 価格も実質価格も一度も動いていない**。その商品ページには「ずっと同じ値段」
+    # という情報しか無かった。同じ分類の中での位置は、13,544商品ぶんの価格を
+    # 毎日持っているからこそ出せる。
+    sub_stats = {}
+    for src, groups in subs_by_genre.items():
+        for (mid, name), members in groups.items():
+            if len(members) < MIN_SUB_GENRE:
+                continue
+            prices = sorted(int(r.get("price") or 0) for r in members)
+            lo, hi = prices[0], prices[-1]
+            middle = prices[len(prices) // 2]
+            for i, r in enumerate(sorted(members, key=lambda x: int(x.get("price") or 0)), 1):
+                sub_stats[r["item_code"]] = {
+                    "sub_name": name, "sub_rank": i, "sub_count": len(members),
+                    "sub_low": lo, "sub_mid": middle, "sub_high": hi,
+                    "sub_path": f"genre/{src}/{mid}/"}
+
     # 題は全商品をまとめて決める。同じ題が並ばないようにするため（page_titles）
     titles = theme.page_titles(rows)
 
@@ -360,7 +379,8 @@ def build(root: Path, out: Path) -> dict:
                  if r["item_code"] not in seen][:6]
         in_list = row["item_code"] in linked
         write(out / "item" / s / "index.html",
-              theme.item_page(row, site, updated, kin, mates,
+              theme.item_page({**row, **sub_stats.get(row["item_code"], {})},
+                              site, updated, kin, mates,
                               titles.get(row["item_code"], ""), indexable=in_list))
         # 一覧に載らない商品は noindex なので、サイトマップにも載せない
         if in_list:

@@ -1523,6 +1523,36 @@ def since_start(row: dict) -> str:
             f'発売時の値段ではありません。</p>')
 
 
+def sub_position(row: dict, prefix: str = "") -> str:
+    """同じ分類の中で、その値段がどのあたりか。
+
+    実測（2026-10-03）で、記録している13,544商品のうち**9,700件（71.6%）は
+    価格も実質価格も一度も動いていない**。その商品ページには「ずっと同じ値段」
+    という情報しか無く、価格を追うサイトとして出せるものが何も無かった。
+
+    同じ分類の中での位置なら、動いていない商品にも言える。13,544商品ぶんの
+    価格を毎日持っているからこそ出せるもので、1商品だけを見ていても分からない。
+    """
+    n = int(row.get("sub_count") or 0)
+    rank = int(row.get("sub_rank") or 0)
+    if n < 10 or not rank:
+        return ""
+    name, path = row.get("sub_name") or "", row.get("sub_path") or ""
+    where = (f'<a href="{prefix}{path}">{esc(str(name))}</a>' if path
+             else esc(str(name)))
+    # 「安い方から◯番目」は、高いほうに居るときは分かりにくい。
+    # 真ん中より高ければ「高い方から」で数える。
+    if rank * 2 > n:
+        side = f'高い方から <strong>{n - rank + 1:,}番目</strong>'
+    else:
+        side = f'安い方から <strong>{rank:,}番目</strong>'
+    return ('<h2>同じ分類の中での位置</h2>'
+            f'<p class="rankin">{where} の {n:,}件のうち、{side} です。'
+            f'この分類の価格は {yen(row.get("sub_low") or 0)} 〜 '
+            f'{yen(row.get("sub_high") or 0)}'
+            f'（真ん中は {yen(row.get("sub_mid") or 0)}）。</p>')
+
+
 def history_table(row: dict) -> str:
     """直近の価格を日付つきで出す。
 
@@ -2266,6 +2296,7 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + since_start(row)
             + '<h2>記録した中での位置</h2>'
             + f'<table class="facts">{table}</table>'
+            + sub_position(row, prefix)
             + caption_block(row)
             + history_table(row)
             + (WATCH_BUTTON.replace("{code}", esc(row["item_code"]))
