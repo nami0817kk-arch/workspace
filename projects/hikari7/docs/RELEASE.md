@@ -1,4 +1,4 @@
-# ひかりの七席 — TestFlight と App Store への出し方
+# ひかりの指名 — TestFlight と App Store への出し方
 
 2026-10-02 作成。護送ボート（`projects/goso-boat/docs/RELEASE.md`）を写した。サカマネ・護送ボートと同じ Apple のチームで出す。
 
@@ -11,7 +11,7 @@
 | App Store Connect API キー | `APPSTORE_API_KEY_ID` / `APPSTORE_API_ISSUER_ID` / `APPSTORE_API_KEY_BASE64` | TestFlight へのアップロードに使う |
 | 有料App契約・銀行口座 | — | サカマネで有効化済み。課金アイテムをすぐ作れる |
 
-## 新しく要るもの（ひかりの七席だけ）
+## 新しく要るもの（ひかりの指名だけ）
 
 | もの | GitHub Secrets |
 |---|---|
@@ -41,7 +41,7 @@
 API では作れないので、画面で作る。
 
 1. https://appstoreconnect.apple.com/apps → **＋** → **新規App**
-2. プラットフォーム **iOS**、名前 **ひかりの七席**（正式名はユーザーが決める）、主言語 **日本語**
+2. プラットフォーム **iOS**、名前 **ひかりの指名**（正式名はユーザーが決める）、主言語 **日本語**
 3. バンドルID **com.namiki.hikari7**、SKU は `hikari7`、ユーザアクセスは「フルアクセス」
 
 ### 4. 課金アイテム「広告を消す」を作る
@@ -54,13 +54,13 @@ API では作れないので、画面で作る。
 
 ### 5. AdMob にアプリと広告ユニットを作る
 
-1. https://apps.admob.com → アプリ → **アプリを追加** → iOS →「まだストアに公開されていない」を選ぶ → 名前 `ひかりの七席`
+1. https://apps.admob.com → アプリ → **アプリを追加** → iOS →「まだストアに公開されていない」を選ぶ → 名前 `ひかりの指名`
 2. 広告ユニットを2つ: **リワード**（特訓の枠・制作費・再審査）と **インタースティシャル**（審査と審査の間）
 3. アプリID（`ca-app-pub-…~…`）と、2つの広告ユニットID（`ca-app-pub-…/…`）を控えて Secrets に入れる
 
 ### 6. ビルドして TestFlight へ上げる
 
-GitHub の Actions → **Build ひかりの七席 (iOS Release)** → Run workflow → `upload_to_testflight` に印。
+GitHub の Actions → **Build ひかりの指名 (iOS Release)** → Run workflow → `upload_to_testflight` に印。
 （手で回さなくても、`hikari7-v*` のタグで走る）
 
 - ビルド番号は `pubspec.yaml` の `version: 1.0.0+N` の N。同じ番号は二度上げられないので、上げ直すときは N を増やすか、入力欄 `build_number` で上書きする

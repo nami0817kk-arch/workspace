@@ -21,7 +21,7 @@ HEAD = (
     '<!doctype html>\n<html lang="ja">\n<head>\n<meta charset="utf-8">\n'
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
     '<meta name="robots" content="noindex,nofollow">\n'
-    '<meta name="description" content="ひかりの七席（テスト版）">\n'
+    '<meta name="description" content="ひかりの指名（テスト版）">\n'
     '<style>html,body{margin:0}'
     ' #test-badge{position:fixed;left:6px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:60;'
     'font:700 10.5px/1.6 sans-serif;color:#fff;background:rgba(194,56,72,.85);border-radius:6px;padding:0 7px;'
@@ -82,9 +82,9 @@ def main():
     s = s[:a] + block + s[b:]
     s = put_bg(s)
     s = put_voice(s)
-    title = '<title>ひかりの七席</title>'
+    title = '<title>ひかりの指名</title>'
     assert title in s, 'game.html の <title> が見つからない'
-    s = s.replace(title, '<title>ひかりの七席（テスト版）</title>', 1)
+    s = s.replace(title, '<title>ひかりの指名（テスト版）</title>', 1)
     # 本体は <title> と <style> から始まる断片なので、head の中に続けて置き、札は本文の頭に入れる
     i = s.index('<div id="app">')
     html = HEAD + s[:i] + '</head>\n<body>\n' + BADGE + s[i:] + '\n</body>\n</html>\n'
