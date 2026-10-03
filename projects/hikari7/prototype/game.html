@@ -537,6 +537,35 @@ details.status summary::before{content:'▸';color:var(--accent);font-weight:800
 details.status summary span{font-size:12.5px;color:var(--muted)}details.status summary .gr{display:inline-flex;width:20px;height:20px;border-radius:5px;font-size:12px;vertical-align:-4px;margin-left:2px}details.status>.tgt,details.status>.card{margin-top:8px}
 .ivc{padding:10px 12px}.ivc .react{margin-top:4px;font-size:13.5px}.ivc .acts{margin-top:6px}
 .newu{background:none!important;border:none!important;padding:3px 0 3px 18px!important;position:relative;font-size:13px}.newu::before{content:'★';position:absolute;left:0;color:var(--gold)}
+
+/* ===== 有料アプリの見た目に（2026-10-03 2回目） ===== */
+/* 能力の札：S=金・A=紫・B=ふつう・C/D=控えめ・?=点線 */
+.smini{gap:3px;margin-top:4px}.smini i{font-style:normal;font-size:10px;color:var(--muted);margin-left:1px}
+.smini>span{display:inline-flex;align-items:baseline;gap:1px;padding:0 4px;border-radius:6px;background:var(--card2);border:1px solid var(--line);font-size:11.5px;line-height:1.7}
+.smini>span.gS{background:var(--gold-bg);border-color:var(--gold)}.smini>span.gS b{font-weight:900}
+.smini>span.gA{background:var(--accent-bg,rgba(124,77,232,.1));border-color:rgba(124,77,232,.45)}
+.smini>span.gC,.smini>span.gD{opacity:.82}
+.smini>span.gq{border-style:dashed;background:transparent}
+.smini>span.fwarn{border-color:var(--gold);background:var(--gold-bg)}.smini>span.fbad{border-color:var(--bad);background:var(--bad-bg)}
+/* 結果の順位 */
+.rkb{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:13px;background:var(--card2);color:var(--muted);border:1px solid var(--line);font-variant-numeric:tabular-nums}
+.rkb.rk1{background:linear-gradient(160deg,#ffe08a,#d9a420);color:#3a2600;border-color:#c9951a;box-shadow:0 2px 8px rgba(217,164,32,.45)}
+.rkb.rk2{background:linear-gradient(160deg,#f1f3f8,#aab2c3);color:#262b36;border-color:#9aa3b5}
+.rkb.rk3{background:linear-gradient(160deg,#f3c79a,#b8763c);color:#2f1a08;border-color:#a8692f}
+.res-row.top1{background:var(--gold-bg);border-radius:12px;padding:8px;margin:0 -8px;border-bottom:none}
+.res-row.top1 .sc{font-size:19px}
+.res-row .sc{font-variant-numeric:tabular-nums}
+/* タイトル：写真の舞台 */
+.thero{background:#120c22 var(--bgi-stage2,none) center 30%/cover}
+.thero .hsvg{height:250px}
+.thero .tin{padding-top:34px}
+.logo7{font-size:50px}
+/* レッスンの選ぶ欄：端末の見た目をやめて、ボタンと同じ形に */
+.lsel select{-webkit-appearance:none;appearance:none;padding:0 22px 0 10px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%237c4de8' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;cursor:pointer}
+/* 審査の並び：名前を折り返さない */
+.fslot.in .fno{flex:none;width:58px;font-size:12px}
+.fslot.in .fbody{flex:1;min-width:0;font-size:13.5px;line-height:1.4}
+.fslot.in .seg button{min-width:34px;padding:0 6px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2431,8 +2460,9 @@ function statsLine(t,extra){
 }
 /* 能力を1行で：歌・ダ・ラ・表・体（見えていない値は ? / おおよそは「B前後」）。疲れも出せる */
 var ST1={v:'歌',d:'ダ',r:'ラ',e:'表',s:'体'};
-function statMini(t,fat){var h='<div class="smini">'+['v','d','r','e','s'].map(function(k){return '<span>'+ST1[k]+statTxt(t,k)+'</span>';}).join('');
-  if(fat)h+='<span class="'+(t.fat>=80?'fbad':t.fat>=60?'fwarn':'')+'">疲れ'+Math.round(t.fat)+'</span>';return h+'</div>';}
+function statG(t,k){var r=t.rev[k];return r===2?grade(t.st[k]):r===1?t.fz[k]:'q';}
+function statMini(t,fat){var h='<div class="smini">'+['v','d','r','e','s'].map(function(k){var r=t.rev[k];return '<span class="g'+statG(t,k)+(r===1?' fz':'')+'"'+(r===1?' title="おおよそ"':'')+'>'+ST1[k]+(r===2?'<b>'+Math.round(t.st[k])+'</b>':r===1?'<i>≈</i><b>'+t.fz[k]+'</b>':'<span class="q">?</span>')+'</span>';}).join('');
+  if(fat)h+='<span class="ft '+(t.fat>=80?'fbad':t.fat>=60?'fwarn':'')+'">疲れ'+Math.round(t.fat)+'</span>';return h+'</div>';}
 /* 顔の下に置く小さな能力（得意な2つ） */
 function pkStat(t){var sv=function(k){return t.rev[k]===2?t.st[k]:50;};var ks=['v','d','r','e'].filter(function(k){return t.rev[k];}).sort(function(a,b){return sv(b)-sv(a);}).slice(0,2);return ks.length?'<em>'+ks.map(function(k){return ST1[k]+(t.rev[k]===2?Math.round(t.st[k]):t.fz[k]);}).join(' ')+'</em>':'';}
 function stars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'★':'☆';return s;}
@@ -2552,9 +2582,9 @@ function vInterview(){
   h+='<div class="foot"><div class="in"><div class="cnt">面談 <b>'+A.length+'</b>人</div><button class="btn" data-a="ivok">面談を終えてステージへ</button></div></div>';
   return h;
 }
-function resRow(id){var t=S.tr[id],r=S.stage.res[id],br=r.br.map(function(b){return STATN[b[0]]+Math.round(b[1]);}).join('・');
+function resRow(id,rk){var t=S.tr[id],r=S.stage.res[id],br=r.br.map(function(b){return STATN[b[0]]+Math.round(b[1]);}).join('・');
   var dp=r.dPop>0.5?'<span style="color:var(--ok)">人気▲</span>':r.dPop<0?'<span style="color:var(--bad)">人気▼</span>':'';
-  return '<div class="res-row">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+(r.rest?' <span class="small muted">欠場</span>':'')+'</div><div class="small muted">'+(br||'前回の出来から')+' '+dp+'</div><div class="bar"><i class="grow" style="width:'+r.sc+'%;background:var(--c-'+t.spec+')"></i></div></div><div class="sc">'+r.sc+'</div></div>';}
+  return '<div class="res-row'+(rk===1?' top1':'')+'">'+(rk?'<span class="rkb'+(rk<=3?' rk'+rk:'')+'">'+rk+'</span>':'')+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+(r.rest?' <span class="small muted">欠場</span>':'')+'</div><div class="small muted">'+(br||'前回の出来から')+' '+dp+'</div><div class="bar"><i class="grow" style="width:'+r.sc+'%;background:var(--c-'+t.spec+')"></i></div></div><div class="sc">'+r.sc+'</div></div>';}
 function vStage(){
   var f=ROUNDS[S.rnd],st=S.stage;
   var h='<h2>結果：'+f.name+'</h2><p class="small muted">数字はステージの出来（いちばん良かった子を100とした値）。下の小さい数字は、その出来を支えた能力です。</p>';
@@ -2562,7 +2592,7 @@ function vStage(){
     st.teams.forEach(function(tm,i){h+='<div class="team '+(i===st.win?'win':'')+'"><div class="th"><span>チーム'+'ABCDEFG'.charAt(i)+(i===st.win?'　いちばん良かったチーム':'')+'</span><span>'+tm.score.toFixed(1)+'</span></div>';tm.ids.slice().sort(function(a,b){return st.res[b].sc-st.res[a].sc;}).forEach(function(id){h+=resRow(id);});h+='</div>';});
   } else {
     if(f.kind==='pos'){var c=S.posCnt;h+='<p class="note">担当の人数：歌'+c.v+'・ダンス'+c.d+'・ラップ'+c.r+'</p>';}
-    h+='<div class="card">';st.order.forEach(function(id){h+=resRow(id);});h+='</div>';
+    h+='<div class="card">';st.order.forEach(function(id,i){h+=resRow(id,i+1);});h+='</div>';
   }
   if(S.hurt&&S.hurt.length)h+='<p class="note" style="color:var(--bad)">疲れの限界で本番に出た '+S.hurt.map(function(id){return esc(S.tr[id].giv);}).join('・')+' が足を痛めた。出来が下がり、番組への信頼も少し下がった。</p>';
   if(S.traitNews&&S.traitNews.length)h+='<p class="note">'+S.traitNews.map(esc).join(' ')+'</p>';
@@ -2596,10 +2626,11 @@ function vJudge(){
   A.forEach(function(t){if(S.pass[t.id])n++;});
   var cap=capOf(S),mn=f.fin?5:Math.min(MIN_PASS,A.length);
   var h='<h2>'+(f.fin?'デビューメンバーを選ぶ':'合否を決める')+'</h2><p class="small muted">'+(f.fin?'5〜'+S.caps.finMax+'人を選びます。人数が多いほどファンは広がりますが、まとまりは難しくなります。':'合格にできるのは <b>'+cap+'人まで</b>。')+'世間の人気は決定には関係しませんが、人気の高い子を落とすと荒れます。</p>';
-  if(!f.fin&&!S.seatUsed)h+='<div class="seat"><div><b>最後の一枠</b><span class="small muted">制作費'+seatCost(S)+'万で合格枠を1つ増やせる（1シーズン1回）。「基準が甘い」と番組への信頼が下がり、次の審査は人数が多いぶん厳しくなる</span></div><button class="btn-s" data-a="seat" '+(S.budget>=seatCost(S)?'':'disabled')+'>'+(ui.seatArm?'もう一度押すと使う':'使う（残り'+S.budget+'万）')+'</button></div>';
+  var hx='';
+  if(!f.fin&&!S.seatUsed)hx+='<div class="seat"><div><b>最後の一枠</b><span class="small muted">制作費'+seatCost(S)+'万で合格枠を1つ増やせる（1シーズン1回）。「基準が甘い」と番組への信頼が下がり、次の審査は人数が多いぶん厳しくなる</span></div><button class="btn-s" data-a="seat" '+(S.budget>=seatCost(S)?'':'disabled')+'>'+(ui.seatArm?'もう一度押すと使う':'使う（残り'+S.budget+'万）')+'</button></div>';
   if(f.fin){var Dsel=A.filter(function(t){return S.pass[t.id];});h+=forecastBox(Dsel,'このメンバーでデビューしたら');}
-  else if(S.seatPlus)h+='<p class="note">最後の一枠を使った。今回は <b>'+capOf(S)+'人まで</b> 合格にできる。</p>';
-  if(!S.adUsed&&!f.fin)h+='<p class="note">迷う子がいたら「もう一度だけ見る」（'+adNote()+'）：その子にもう一度だけ歌って踊ってもらい、能力・伸びしろ・気質がすべて分かります。1審査に1回。</p>';
+  else if(S.seatPlus)hx+='<p class="note">最後の一枠を使った。今回は <b>'+capOf(S)+'人まで</b> 合格にできる。</p>';
+  if(!S.adUsed&&!f.fin)hx+='<p class="note">迷う子がいたら「もう一度だけ見る」（'+adNote()+'）：その子にもう一度だけ歌って踊ってもらい、能力・伸びしろ・気質がすべて分かります。1審査に1回。</p>';
   h+='<div class="jauto"><button class="btn-s" data-a="judgeauto">出来の上位から'+(f.fin?'6':cap)+'人を選ぶ</button><button class="btn-s" data-a="judgeclear">すべて外す</button><span class="small muted">選んだあとで1人ずつ入れ替えられます</span></div>';
   h+='<div class="card">';
   A.forEach(function(t){var r=S.stage.res[t.id],on=S.pass[t.id],p=pr[t.id];
@@ -2607,7 +2638,7 @@ function vJudge(){
     h+='<div class="jrow">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+'・人気 '+p+'位'+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+'</div><div class="seg">'+
       (!S.adUsed&&!f.fin&&!t.retried&&S.chal!=='noad'?'<button data-a="retry" data-id="'+t.id+'" class="'+(ui.retryArm===t.id?'warnb':'')+'" title="もう一度見る（動画）">'+(ui.retryArm===t.id?'▶ 見る':'再審査')+'</button>':'')+
       '<button class="ptog'+(on?' on':'')+'" data-a="pass" data-id="'+t.id+'" data-v="'+(on?'0':'1')+'" aria-pressed="'+(on?'true':'false')+'">'+(on?(f.fin?'選んだ ✓':'合格 ✓'):(f.fin?'選ぶ':'不合格'))+'</button></div></div>';});
-  h+='</div>';
+  h+='</div>'+hx;
   var ok=n>=mn&&n<=cap;
   h+=undoBox();
   h+='<div class="foot"><div class="in"><div class="cnt">'+(f.fin?'デビュー':'合格')+' <b>'+n+'</b>人<br><span class="muted">'+mn+'〜'+(f.fin?S.caps.finMax:cap)+'人</span></div><button class="btn" data-a="judgeok" '+(ok?'':'disabled')+'>'+(n<mn?'あと'+(mn-n)+'人選ぶ':(f.fin?'この'+n+'人で決める':'発表へ'))+'</button></div></div>';
@@ -2762,7 +2793,7 @@ function telop(sub){var f=ROUNDS[S.rnd];return '<div class="telop"><div class="e
 function stageHero(){var ch='';for(var i=0;i<7;i++){var x=110+i*30,gold=i===3;
     ch+='<g transform="translate('+x+',124) scale(.85)"><rect x="-11" y="-24" width="22" height="20" rx="4" fill="'+(gold?'#e9ba4b':'#4d3c80')+'"/><rect x="-13" y="-6" width="26" height="6" rx="2" fill="'+(gold?'#f6d77e':'#5e4d93')+'"/><rect x="-11" y="0" width="3" height="12" fill="#2c2150"/><rect x="8" y="0" width="3" height="12" fill="#2c2150"/></g>';}
   return '<svg class="hsvg" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="spg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c8" stop-opacity=".7"/><stop offset="1" stop-color="#fff3c8" stop-opacity="0"/></linearGradient><linearGradient id="flg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1d52"/><stop offset="1" stop-color="#110b22"/></linearGradient></defs>'+
-    '<rect width="400" height="150" fill="url(#flg)"/><polygon class="beam b1" points="182,0 218,0 262,146 138,146" fill="url(#spg)"/><polygon class="beam b2" points="40,0 60,0 120,146 20,146" fill="url(#spg)" opacity=".4"/><polygon class="beam b3" points="340,0 360,0 380,146 280,146" fill="url(#spg)" opacity=".4"/>'+
+    '<rect width="400" height="150" fill="url(#flg)" opacity=".45"/><polygon class="beam b1" points="182,0 218,0 262,146 138,146" fill="url(#spg)"/><polygon class="beam b2" points="40,0 60,0 120,146 20,146" fill="url(#spg)" opacity=".4"/><polygon class="beam b3" points="340,0 360,0 380,146 280,146" fill="url(#spg)" opacity=".4"/>'+
     '<ellipse cx="200" cy="138" rx="150" ry="9" fill="#e9ba4b" opacity=".2"/>'+ch+'</svg>';}
 function confetti(){var c=['#f0709c','#6c9cf0','#f0a14a','#45c592','#e9ba4b','#a47cf2'],h='<div class="confetti" aria-hidden="true">';
   for(var i=0;i<36;i++)h+='<i style="left:'+(i*2.8%100).toFixed(1)+'%;background:'+c[i%c.length]+';animation-delay:'+((i*37%100)/60).toFixed(2)+'s;animation-duration:'+(2.4+(i*13%10)/10).toFixed(1)+'s"></i>';return h+'</div>';}
@@ -3103,6 +3134,7 @@ function vSettings(){var st=ui.set;
 
 /* ---------- フェーズ38：用語集 ---------- */
 var GLOSSARY=[
+  ['能力の札','歌・ダ（ダンス）・ラ（ラップ）・表（表現）・体（体力）。数字は見えている値、≈ の付いた字（S〜D）はおおよその評価、? はまだ見えていない。金の札はS、紫の札はA'],
   ['歌・ダンス・ラップ・表現・体力','能力。レッスンや出来事で伸びる。体力が高いと疲れがたまりにくい'],
   ['担当','歌・ダンス・ラップ・ビジュアル（カメラの前での魅せ方・表情）。審査によって見られる力が変わる'],
   ['伸びしろ','能力の伸びやすさ。応募動画をじっくり見ると分かる'],
