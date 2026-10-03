@@ -6,11 +6,29 @@ from chiso.voice import Voice
 
 def test_tone_params_combines_base_and_tone():
     v = Voice(style_id=8, speed=1.1, pitch=0.01, intonation=1.2, volume=1.0)
-    p = voice.tone_params(v, "驚き")
-    assert p["speedScale"] == round(1.1 * 1.08, 4)
-    assert p["pitchScale"] == round(0.01 + 0.06, 4)
-    assert p["intonationScale"] == round(1.2 * 1.45, 4)
+    t = voice.TONES["疑問"]
+    p = voice.tone_params(v, "疑問")
+    assert p["speedScale"] == round(1.1 * t["speed"], 4)
+    assert p["pitchScale"] == round(0.01 + t["pitch"], 4)
+    assert p["intonationScale"] == round(1.2 * t["intonation"], 4)
+    assert "end_rise" not in p                            # VOICEVOX には渡さない
     assert voice.tone_params(v, "普通")["intonationScale"] == 1.2
+
+
+def test_tone_params_clamped_to_voicevox_range():
+    p = voice.tone_params(Voice(style_id=8, intonation=1.9, pitch=0.12), "驚き")
+    assert p["intonationScale"] == 2.0 and p["pitchScale"] == 0.15
+
+
+def test_end_rise_lifts_last_word_only():
+    mk = lambda t, p: {"text": t, "pitch": p, "vowel_length": 0.1}
+    q = {"accent_phrases": [{"moras": [mk("エ", 5.5)]}, {"moras": [mk("ホ", 5.6), mk("ン", 5.5), mk("ト", 5.4)]}]}
+    out = voice.end_rise(q, 0.3)
+    last = out["accent_phrases"][-1]["moras"]
+    assert last[0]["pitch"] == 5.6                       # 最後の2モーラだけ
+    assert last[1]["pitch"] == round(5.5 + 0.15, 4) and last[2]["pitch"] == round(5.4 + 0.3, 4)
+    assert out["accent_phrases"][0]["moras"][0]["pitch"] == 5.5
+    assert voice.end_rise(q, 0) is q
 
 
 def test_split_emphasis_and_display():

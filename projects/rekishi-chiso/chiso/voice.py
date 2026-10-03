@@ -20,22 +20,23 @@ import yaml
 # 調子ごとの補正。pitch は足し算（VOICEVOX の pitchScale、±0.15 が上限の目安）、
 # それ以外は話者の基本値への掛け算。
 TONES: dict[str, dict[str, float]] = {
+    # 2026-10-03「もう少しリアクションや抑揚強め」で全体に強めた
     "普通": {},
-    "驚き": {"pitch": 0.06, "intonation": 1.45, "speed": 1.08, "volume": 1.12},
-    "疑問": {"pitch": 0.02, "intonation": 1.3, "speed": 1.0},
-    "強調": {"intonation": 1.3, "speed": 0.92, "volume": 1.1},
-    "しみじみ": {"pitch": -0.02, "intonation": 0.85, "speed": 0.9, "volume": 0.95},
-    "明るい": {"pitch": 0.03, "intonation": 1.25, "speed": 1.05},
-    "笑い": {"pitch": 0.04, "intonation": 1.35, "speed": 1.06},
-    "重い": {"pitch": -0.04, "intonation": 0.9, "speed": 0.88},
-    "ひそひそ": {"intonation": 0.8, "speed": 0.95, "volume": 0.75},
-    "納得": {"pitch": -0.01, "intonation": 1.1, "speed": 0.96},
+    "驚き": {"pitch": 0.09, "intonation": 1.65, "speed": 1.12, "volume": 1.2, "end_rise": 0.35},
+    "疑問": {"pitch": 0.04, "intonation": 1.45, "speed": 1.02, "end_rise": 0.25},
+    "強調": {"intonation": 1.45, "speed": 0.88, "volume": 1.15},
+    "しみじみ": {"pitch": -0.03, "intonation": 0.85, "speed": 0.86, "volume": 0.92},
+    "明るい": {"pitch": 0.05, "intonation": 1.4, "speed": 1.07, "volume": 1.05},
+    "笑い": {"pitch": 0.06, "intonation": 1.5, "speed": 1.1, "volume": 1.08},
+    "重い": {"pitch": -0.06, "intonation": 0.88, "speed": 0.84, "volume": 0.95},
+    "ひそひそ": {"intonation": 0.8, "speed": 0.95, "volume": 0.72},
+    "納得": {"pitch": -0.01, "intonation": 1.25, "speed": 0.95},
 }
 
 # 《》で囲んだ語の強調の強さ
-EMPHASIS_PITCH = 0.25        # 音の高さ（VOICEVOX の pitch は 5〜6 前後の対数値）に足す量
-EMPHASIS_LENGTH = 1.18       # 母音を伸ばす倍率
-EMPHASIS_VOLUME = 1.08
+EMPHASIS_PITCH = 0.35        # 音の高さ（VOICEVOX の pitch は 5〜6 前後の対数値）に足す量
+EMPHASIS_LENGTH = 1.25       # 母音を伸ばす倍率
+EMPHASIS_VOLUME = 1.12
 
 _EMPH = re.compile(r"《(.+?)》")
 
@@ -57,8 +58,9 @@ def tone_params(voice: Voice, tone: str) -> dict[str, float]:
     t = TONES[tone]
     return {
         "speedScale": round(voice.speed * t.get("speed", 1.0), 4),
-        "pitchScale": round(voice.pitch + t.get("pitch", 0.0), 4),
-        "intonationScale": round(voice.intonation * t.get("intonation", 1.0), 4),
+        "pitchScale": round(max(-0.15, min(0.15, voice.pitch + t.get("pitch", 0.0))), 4),
+        # VOICEVOX の抑揚は 0〜2 まで。強い話者×強い調子でもはみ出さないように止める
+        "intonationScale": round(min(2.0, voice.intonation * t.get("intonation", 1.0)), 4),
         "volumeScale": round(voice.volume * t.get("volume", 1.0), 4),
         "prePhonemeLength": 0.05,
         "postPhonemeLength": 0.08,
@@ -136,6 +138,17 @@ def emphasize(query: dict, word_kanas: list[str]) -> tuple[dict, list[str]]:
     return query, missing
 
 
+def end_rise(query: dict, amount: float) -> dict:
+    """文の最後の言葉（最後のアクセント句）の終わり2モーラを持ち上げて、驚き・問いの尻上がりを強くする。"""
+    if amount <= 0 or not query.get("accent_phrases"):
+        return query
+    query = copy.deepcopy(query)
+    moras = [m for m in query["accent_phrases"][-1].get("moras", []) if m.get("pitch", 0) > 0]
+    for k, m in enumerate(moras[-2:]):
+        m["pitch"] = round(m["pitch"] + amount * (0.5 if k == 0 and len(moras) > 1 else 1.0), 4)
+    return query
+
+
 def kana_of(query: dict) -> str:
     return _kana(_moras(query))
 
@@ -144,8 +157,8 @@ def kana_of(query: dict) -> str:
 
 GAP_SAME_SPEAKER = 0.38      # 同じ人が続けて話す
 GAP_TURN = 0.24              # 話者が替わる
-GAP_ANSWER = 0.18            # 問い（？で終わる）にすぐ答える
-GAP_REACTION = 0.10          # 驚きの反応は、ほぼ間を置かずにかぶせる
+GAP_ANSWER = 0.14            # 問い（？で終わる）にすぐ答える
+GAP_REACTION = 0.06          # 驚きの反応は、ほぼ間を置かずにかぶせる
 GAP_AFTER_HEAVY = 0.7        # 重い・しみじみの後は、余韻を残す
 GAP_SECTION = 1.2            # 節の切れ目
 
