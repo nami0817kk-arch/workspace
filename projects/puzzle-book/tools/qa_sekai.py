@@ -169,7 +169,9 @@ for k, it in enumerate(items):
     for lang, _ in LANGS:
         if flat(it[lang]["text"]) not in page:
             miss.append((k + 1, lang))
-check("200の言い方が、確かめた記録と一字ずつ同じ形で紙面に載っている", not miss, str(miss[:4]))
+        if it[lang].get("trad") and flat(it[lang]["trad"]) not in page:  # 中国語は繁体字（確かめた記録の形）も添える
+            miss.append((k + 1, lang + "-繁体字"))
+check("200の言い方が、確かめた記録と一字ずつ同じ形で紙面に載っている（中国語は簡体字と繁体字）", not miss, str(miss[:4]))
 near_bad = []
 for k, it in enumerate(items):
     want = sum(1 for lang, _ in LANGS if it[lang]["near"])
