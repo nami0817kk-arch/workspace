@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}パートが社会保険に入ると損？メリット・デメリットを金額で比較【2026年度】{% endblock %}
+{% block description %}パートが社会保険に入ると損か得か。月収10万円なら保険料は月{{ "{:,}".format(rows[1].total) }}円、将来の年金は1年加入で年{{ "{:,}".format(rows[1].pension_inc) }}円増え、病気で休むと1日{{ "{:,}".format(rows[1].sick) }}円の手当。月収8万〜20万円の損得と、損しない働き方を円単位で。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">入ると損？</span>
+</nav>
+{% endblock %}
+{% block content %}
+{% set r10 = rows[1] %}
+<h1>パートが社会保険に入ると損？ メリット・デメリットを金額で比べる</h1>
+<p class="updated">{{ era }}の料率で計算（東京・39歳以下）</p>
+
+<div class="verdict ok">目先の手取りは減る。その代わり、将来の年金と、休んだときの手当が増える</div>
+<p>
+  配偶者の扶養に入っていて保険料0円だった人が、勤務先の社会保険に入ると、月収10万円なら毎月{{ "{:,}".format(r10.total) }}円が給与から引かれます。
+  その代わり、1年加入するごとに65歳からの年金が年{{ "{:,}".format(r10.pension_inc) }}円増え、病気やけがで休んだときは1日{{ "{:,}".format(r10.sick) }}円の手当（傷病手当金）が出ます。
+  損か得かは「いまの手取り」と「将来・もしもの備え」のどちらを重く見るかで変わります。下の表で、自分の月収の額を見比べてください。
+</p>
+
+<h2 id="table">月収ごとの損得</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>月収</th><th>引かれる保険料<span class="sub">月（年）</span></th><th>増える年金<span class="sub">1年加入で年額</span></th><th>傷病手当金<span class="sub">1日</span></th><th>出産手当金<span class="sub">98日分</span></th></tr></thead>
+  <tbody>
+    {% for r in rows %}
+    <tr><th><a href="{{ base_url }}getsushu/{{ r.man }}man.html">{{ r.man }}万円</a></th>
+      <td>{{ "{:,}".format(r.total) }}円<span class="sub">{{ "{:,}".format(r.year) }}円</span></td>
+      <td>{{ "{:,}".format(r.pension_inc) }}円</td><td>{{ "{:,}".format(r.sick) }}円</td><td>{{ "{:,}".format(r.maternity) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">
+  保険料は健康保険・子ども・子育て支援金・厚生年金の本人負担の合計。増える年金は、標準報酬月額 × 5.481/1,000 × 12か月で出した今の価値での目安（実際は物価などで見直されます）。
+  傷病手当金・出産手当金は標準報酬月額 ÷ 30 × 2/3 の日額（加入から1年たつ前は額が低くなることがあります）。出産手当金は産前42日・産後56日の98日分で計算しています。
+</p>
+
+<h2 id="demerit">デメリット: 手取りが減る</h2>
+<ul>
+  <li><strong>毎月の保険料</strong>: 月収10万円なら月{{ "{:,}".format(r10.total) }}円、年{{ "{:,}".format(r10.year) }}円。配偶者の扶養（国民年金の第3号）のあいだは0円だった分です。</li>
+  <li><strong>配偶者の会社の家族手当が止まることがある</strong>: 「扶養に入っていること」を条件にしている会社では、手当が止まることがあります（会社ごとに違います）。</li>
+  <li><strong>週20時間ちょうどだと手取りが一番減る</strong>: 週19時間から20時間に増やした直後が一番の損で、時給1,100円なら週22.5時間まで増やすと元に戻ります（<a href="{{ base_url }}kabe/index.html">週20時間の壁</a>）。</li>
+</ul>
+
+<h2 id="merit">メリット: 将来の年金と、もしものときの手当</h2>
+<ul>
+  <li><strong>将来の年金が増える</strong>: 月収10万円なら、1年加入するごとに65歳からの年金が年{{ "{:,}".format(r10.pension_inc) }}円増え、一生受け取れます。10年加入すれば年約{{ "{:,}".format(r10.pension_inc * 10) }}円です。</li>
+  <li><strong>病気やけがで休んだとき</strong>: 仕事を休んで給与が出ないとき、4日目から1日約{{ "{:,}".format(r10.sick) }}円（最長で通算1年6か月）。扶養に入っているだけでは出ません。</li>
+  <li><strong>出産のとき</strong>: 産休中に出産手当金が出ます（月収10万円で約{{ "{:,}".format(r10.maternity) }}円）。</li>
+  <li><strong>障害・死亡のとき</strong>: 国民年金に加えて、障害厚生年金・遺族厚生年金の対象になります。</li>
+  <li><strong>保険料の半分は会社が払う</strong>: 会社もほぼ同じ額を払っていて、その分も年金に反映されます。</li>
+</ul>
+
+<h2 id="payback">払った年金保険料は何年で取り戻せる？</h2>
+<p>
+  厚生年金の保険料（本人負担）1年分を、増える年金で取り戻すには、月収にかかわらず<strong>約{{ rows[1].payback }}年</strong>受け取る計算です
+  （保険料率 9.15% ÷ 年金の増え方 0.5481%）。65歳から受け取り始めるので、おおむね82歳より長生きすれば元が取れる目安です。
+  月収10万円なら、1年分の保険料{{ "{:,}".format(rows[1].pension_year) }}円に対して、年金が年{{ "{:,}".format(rows[1].pension_inc) }}円増えます。
+</p>
+<p class="hint">本人負担の保険料だけで比べた目安です（会社が払う同じ額の分は含めていません）。年金額は物価や賃金で見直され、受け取る年数は人によって違うため、将来の損得を約束するものではありません。</p>
+
+<h2 id="how">損しない働き方</h2>
+<ul>
+  <li><strong>扶養のままでいたい</strong>: 週の所定労働時間を20時間未満にします。ただし実際の時間が2か月続けて20時間以上になると、3か月目から加入します（<a href="{{ base_url }}faq.html#q-20h">くわしく</a>）。</li>
+  <li><strong>入るなら時間を増やす</strong>: 週20時間ちょうどより、時給1,100円なら週22.5時間以上にすると、扶養のときより手取りが多くなります（<a href="{{ base_url }}kabe/index.html">時給別の時間</a>）。</li>
+  <li><strong>月収およそ12.6万円以下</strong>: 新しく対象になった会社では、本人負担が3年間軽くなる制度があります。使うかは勤務先に聞いてみてください（<a href="{{ base_url }}faq.html#q-small">くわしく</a>）。</li>
+  <li><strong>親の扶養に入っている20歳以上の人</strong>: もともと国民年金（月{{ "{:,}".format(kokumin) }}円）を自分で払っているので、加入すると国民年金がなくなり、手取りが増えることもあります。</li>
+</ul>
+<p>自分の時給・時間・都道府県で比べるなら<a href="{{ base_url }}index.html">計算機</a>へ。</p>
+
+<p class="hint">
+  増える年金の計算式は日本年金機構の老齢厚生年金の計算方法（報酬比例部分）、傷病手当金・出産手当金は協会けんぽの案内によります。計算のしかたは<a href="{{ base_url }}keisan.html">計算方法と出典</a>に。
+</p>
+
+{% include "_cards.html" %}
+{% endblock %}

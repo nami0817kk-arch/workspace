@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ regime.effective_from.year }}年{{ regime.effective_from.month }}月〜：{{ headline }}｜パートの社会保険 計算機{% endblock %}
+{% block title %}{% if slug == '2026-10' %}106万円の壁は2026年10月1日に撤廃｜10月からパートの社会保険はどう{{ '変わった' if oct_done else '変わる' }}？{% else %}{{ regime.effective_from.year }}年{{ regime.effective_from.month }}月〜：{{ headline }}｜パートの社会保険 計算機{% endif %}{% endblock %}
 {% block description %}{{ regime.label }}。{{ note.split('。')[0] }}。自分が対象になるかは計算機で確かめられます。{% endblock %}
 {% block breadcrumb %}
 <nav class="crumbs" aria-label="パンくずリスト">
@@ -11,7 +11,7 @@
 </nav>
 {% endblock %}
 {% block content %}
-<h1>{{ regime.effective_from.year }}年{{ regime.effective_from.month }}月〜：{{ headline }}</h1>
+<h1>{% if slug == '2026-10' %}2026年10月から、パートの社会保険はどう{{ '変わった' if oct_done else '変わる' }}？{% else %}{{ regime.effective_from.year }}年{{ regime.effective_from.month }}月〜：{{ headline }}{% endif %}</h1>
 
 <p>{{ note }}</p>
 
