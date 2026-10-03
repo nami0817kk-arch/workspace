@@ -704,6 +704,43 @@ body.reduce .lrbar i.gain{animation:none}@media (prefers-reduced-motion:reduce){
 .ggv{font-size:13px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .ggv em{font-style:normal;font-size:12px;margin-left:3px}.ggv em.up{color:var(--ok)}.ggv em.dn{color:var(--bad)}
 body.reduce .ggb i{animation:none}@media (prefers-reduced-motion:reduce){.ggb i{animation:none}}
+
+/* ===== タイトル：全面の写真・題字・七つの席・メニュー ===== */
+.tscr{position:relative;min-height:calc(100vh - 20px);min-height:calc(100dvh - 20px);display:flex;flex-direction:column;align-items:center;color:#fff;padding:0 4px 18px;text-align:center}
+body.ttl{background-attachment:fixed;background-color:#0c071c}body.ttl{background:radial-gradient(ellipse 70% 45% at 50% 30%,rgba(255,226,150,.28),transparent 70%),linear-gradient(180deg,rgba(18,10,40,.55) 0,rgba(12,7,28,.35) 35%,rgba(12,7,28,.9) 75%,#0c071c),var(--bgi-cg_penlight,var(--bgi-stage2,linear-gradient(#2a1b52,#0c071c)));background-size:cover;background-position:center 30%;background-attachment:fixed}
+body.ttl::before{content:'';position:fixed;inset:0;z-index:0;background:conic-gradient(from 180deg at 50% -5%,transparent 0 150deg,rgba(255,240,200,.18) 165deg 195deg,transparent 210deg);animation:tbeam 6s ease-in-out infinite alternate;pointer-events:none}
+@keyframes tbeam{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+.tscr .tbgm{align-self:stretch;margin:8px 0 0}
+.tlogo{margin-top:6vh}
+.tkick{font-size:12px;letter-spacing:.35em;color:#e9ba4b;font-weight:800;animation:fadeup .6s ease-out .1s both}
+.logo7.tbig{font-size:62px;line-height:1.05;margin-top:6px;animation:tlogoIn .9s cubic-bezier(.2,.9,.25,1) .2s both,glow 3.6s ease-in-out 1.2s infinite}
+.logo7.tbig span{display:block;font-size:.42em;letter-spacing:.3em;color:#f6e7c1;margin-bottom:2px}
+.ttag{margin:10px 0 0;font-size:14px;color:#efe8ff;text-shadow:0 1px 8px rgba(0,0,0,.7);animation:fadeup .6s ease-out .6s both}
+@keyframes tlogoIn{from{opacity:0;transform:scale(1.15);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.tseats{display:flex;justify-content:center;align-items:flex-end;gap:6px;margin:5vh 0 0;width:100%}
+.tseat{position:relative;display:flex;flex-direction:column;align-items:center;animation:seatIn .6s cubic-bezier(.2,1.4,.4,1) both}
+.tseat .face{width:42px;height:42px;border-radius:12px;border:2px solid rgba(255,255,255,.75);box-shadow:0 6px 16px rgba(0,0,0,.45);object-fit:cover}
+.tseat i{display:block;width:34px;height:10px;margin-top:4px;border-radius:3px;background:#4d3c80;box-shadow:0 3px 0 #2c2150}
+.tseat.mid .face{width:58px;height:58px;border-color:#e9ba4b;box-shadow:0 0 0 3px rgba(233,186,75,.35),0 0 30px rgba(255,220,140,.6)}
+.tseat.mid i{width:44px;background:#e9ba4b;box-shadow:0 3px 0 #a97f1e}
+.tmenu{display:flex;flex-direction:column;gap:10px;width:100%;max-width:420px;margin-top:auto;padding-top:5vh;animation:fadeup .6s ease-out .9s both}
+.tbtn{min-height:56px;font-size:18px}.tbtn small{display:block;font-size:12px;font-weight:600;opacity:.9;margin-top:1px}
+.tmenu .btn.sub{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(4px)}
+.tmrow{display:flex;gap:10px}.tmrow .btn{flex:1;min-height:46px;font-size:14px}
+.trank{display:flex;gap:8px;justify-content:center;margin-top:14px;font-size:12px;color:#e8def9}.trank span{padding:2px 10px;border-radius:999px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18)}
+.tnote{color:var(--fg);text-align:left;width:100%;max-width:420px}
+.tapp{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}.tapp .btn-s{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.28)}.tapp .small{color:#e8def9}
+.tcopy{margin-top:14px;font-size:12px;color:rgba(255,255,255,.7)}
+.tsubhd{display:flex;align-items:center;gap:10px;margin:10px 0 8px}.tsubhd b{font-size:18px}
+body.reduce.ttl::before,body.reduce .logo7.tbig,body.reduce .tseat,body.reduce .tmenu,body.reduce .tkick,body.reduce .ttag{animation:none}
+@media (prefers-reduced-motion:reduce){body.ttl::before,.logo7.tbig,.tseat,.tmenu,.tkick,.ttag{animation:none}}
+@media (min-height:760px){.tseat .face{width:46px;height:46px}.tseat.mid .face{width:64px;height:64px}}
+
+.tscr{z-index:1}
+.tscr .bgmb{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3)}
+.tseats{gap:4px}.tseat .face{width:38px;height:38px}.tseat i{width:30px}.tseat.mid .face{width:56px;height:56px}
+@media (min-height:760px){.tseat .face{width:40px;height:40px}.tseat.mid .face{width:60px;height:60px}}
+body.ttl .hdr{display:none}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2780,7 +2817,7 @@ function pkStat(t){var sv=function(k){return t.rev[k]===2?t.st[k]:50;};var ks=['
 function stars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'★':'☆';return s;}
 function adIcon(){return '<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="4" width="26" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 9.5v9l7.5-4.5z" fill="currentColor"/></svg>';}
 function wText(f){if(f.w==='spec')return '得意分野70%・表現30%';if(f.w==='pos')return '担当の能力75%・表現25%';if(f.w==='all')return '上位2つの能力65%・表現35%';var a=[];for(var k in f.w)a.push(STATN[k]+Math.round(f.w[k]*100)+'%');return a.join('・');}
-function header(){
+function header(){ui.tsub=null;
   var wk=(S.daily?'今日のオーディション・':'')+(S.chal&&chalOf(S.chal)?'挑戦「'+chalOf(S.chal).n+'」・':'')+(S.diff&&S.diff!=='normal'?DIFF[S.diff].n+'・':'')+(S.rnd>0?(ROUNDS[S.rnd].name):'書類・動画審査');
   var rt=(S.rnd>0?'<span class="hudc" title="制作費" aria-label="制作費 '+S.budget+'万"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9 9.5h6M9 13h6M12 9.5v7"/></svg>'+S.budget+'<small>万</small></span>':'')+(S.ratings.length?'<span class="hudc tv" title="視聴率" aria-label="視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6.5" width="17" height="12" rx="2.5"/><path d="M9 3.5l3 3 3-3"/></svg>'+S.ratings[S.ratings.length-1].toFixed(1)+'<small>%</small></span>':'');
   var wk2=S.phase==='prep'?'デビュー準備':(S.phase==='month'||S.phase==='result')?'デビュー後':S.rnd>0?'第'+S.rnd+'審査'+(ROUNDS[S.rnd]&&ROUNDS[S.rnd].fin?'（最終）':''):'書類審査';
@@ -2821,26 +2858,48 @@ function render0(){
   if(S&&S.phase==='show'&&S.show&&S.show.seq&&ui.showAuto&&ui.prof==null){showTimer=setTimeout(function(){showTimer=null;if(!S||S.phase!=='show'||!ui.showAuto)return;if(S.show.pos>=S.show.seq.length-1)S.phase='stage';else S.show.pos++;save();render();window.scrollTo(0,0);},ui.showMs||6000);}
 }
 var showTimer=null;
+/* タイトル（2026-10-03 指摘「TOP画面がしょぼい」）：全面の写真・大きな題字・七つの席・メニューだけ。
+   シーズンの設定は「新しいシーズン」、記録と今日のオーディションは「記録」の画面へ分けた */
 function vTitle(){
+  if(ui.tsub==='new')return vTitleNew();
+  if(ui.tsub==='rec')return vTitleRec();
+  var sv=load(),c=loadCareer(),rk=rankOf(c.points);
+  var seats='';for(var i=0;i<7;i++){var mid=i===3;seats+='<div class="tseat'+(mid?' mid':'')+'" style="animation-delay:'+(.5+Math.abs(i-3)*.12).toFixed(2)+'s"><img decoding="async" class="face" src="'+faceURL(ui.g,i*2+(mid?1:0))+'" alt=""><i></i></div>';}
+  var h='<div class="tscr"><div class="tbgm">'+bgmBtn(true)+'</div>'+
+    '<div class="tlogo"><div class="tkick">オーディション番組プロデュース</div><div class="logo7 tbig"><span>ひかりの</span>七席</div><p class="ttag">デビューの席を決めるのは、あなた。</p></div>'+
+    '<div class="tseats">'+seats+'</div><div class="tmenu">';
+  if(sv)h+='<button class="btn tbtn" data-a="cont">つづきから<small>'+(sv.rnd>0?esc(ROUNDS[sv.rnd]?ROUNDS[sv.rnd].name:'')+'・':'書類・動画審査・')+(sv.g==='f'?'女性':'男性')+'グループ</small></button>';
+  h+='<button class="btn tbtn'+(sv?' sub':'')+'" data-a="tsub" data-v="new">新しいシーズン</button>'+
+    '<div class="tmrow"><button class="btn sub" data-a="tsub" data-v="rec">記録と今日の挑戦</button><button class="btn sub" data-a="settings">'+ICO.gear+' 設定</button></div></div>'+
+    '<div class="trank"><span>'+esc(rk[1])+'</span>'+(c.seasons?'<span>'+c.seasons+'シーズン</span>':'<span>はじめてのシーズン</span>')+'</div>';
+  var qf=null;try{qf=HStore.get('hikari7_quit');}catch(e){}if(!sv&&qf&&!ui.loadBroken){var qb=loadBak();if(qb)h+='<div class="note tnote">前にやめたシーズン（'+(qb.rnd>0&&qb.fmt?'第'+qb.rnd+'審査':'書類審査')+'・'+(qb.g==='f'?'女性':'男性')+'）に戻れます（1回だけ）。<br><button class="btn-s" data-a="frombak">やめたシーズンに戻る</button></div>';}
+  if(!sv&&ui.loadBroken){var bk=loadBak();h+='<div class="note tnote"><b>前回の続きが読み込めませんでした。</b>'+(bk?'ひとつ前の場面の保存から戻せます。<br><button class="btn-s" data-a="frombak">ひとつ前の保存から続ける</button>':'保存の予備もありません。新しいシーズンを始めてください。')+'</div>';}
+  if(APP)h+='<div class="tapp">'+(APP.adFree?'<span class="small">広告を消しています。ありがとうございます。</span>':'<button class="btn-s" data-a="buy" '+(APP.canBuy?'':'disabled')+'>広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'</button>')+'<button class="btn-s" data-a="restore">購入を復元</button><button class="btn-s" data-a="privacy">プライバシー</button><button class="btn-s" data-a="licenses">ライセンス</button></div>';
+  h+='<div class="tcopy">© つるはし社</div></div>';
+  return h;
+}
+function vTitleRec(){
+  var h='<div class="tsubhd"><button class="btn-s" data-a="tsub" data-v="">‹ タイトルへ</button><b>記録と今日の挑戦</b></div>';
+  h+=dailyBox()+perkBox()+careerBox();
+  h+='<p class="small muted" style="text-align:right"><button class="btn-s" data-a="gloss">用語集</button> <button class="btn-s" data-a="tipreset">コツをもう一度出す</button></p>';
+  return h;
+}
+function vTitleNew(){
   var sv=load();
-  var sp=['v','d','r','t','v'],h='<div class="tbgm">'+bgmBtn(true)+'</div><div class="thero">'+stageHero()+'<div class="tin"><div class="logo7"><span>ひかりの</span>七席</div><p>オーディション番組のプロデューサーになって、<br>デビューするメンバーを自分の目で選ぼう。</p></div></div>'+
-    '<div class="facerow tfaces">'+[0,3,6,9].map(function(i,j){return '<img loading="lazy" decoding="async" class="face md b-'+sp[j]+'" src="'+faceURL(ui.g,i)+'" alt="">';}).join('')+'</div>';
+  var h='<div class="tsubhd"><button class="btn-s" data-a="tsub" data-v="">‹ タイトルへ</button><b>新しいシーズン</b></div>';
   h+='<div class="card"><h3 style="margin-top:0">このシーズンのグループ</h3><div class="gsel">'+
     '<button class="'+(ui.g==='m'?'on':'')+'" data-a="g" data-v="m">男性グループ</button><button class="'+(ui.g==='f'?'on':'')+'" data-a="g" data-v="f">女性グループ</button></div>'+
     '<p class="small muted">どちらを選んでも、能力や課題の仕組みは同じです。</p><h3>難しさ</h3><div class="gsel '+(legendOpen()?'g4':'g3')+'">'+['easy','normal','hard'].concat(legendOpen()?['legend']:[]).map(function(k){return '<button class="'+((ui.diff||'normal')===k?'on':'')+'" data-a="diff" data-v="'+k+'">'+DIFF[k].n+'</button>';}).join('')+'</div><p class="small muted">'+esc(DIFF[ui.diff||'normal'].d)+'</p><h3>進み方</h3><div class="gsel"><button class="'+(ui.quick?'':'on')+'" data-a="quick" data-v="">じっくり</button><button class="'+(ui.quick?'on':'')+'" data-a="quick" data-v="1">さくさく</button></div><p class="small muted">'+(ui.quick?'ステージの演出と、合格者を一人ずつ呼ぶ発表を飛ばして、結果から見ます。選ぶところはそのまま。':'ステージの演出と、合格者の発表を一人ずつ見ます。')+'</p></div>';
   h=h.replace(/<\/div>$/,'')+chalBox()+'</div>';
   /* 始めるボタンは下の固定の帯（タイトルは縦に長く、ここに置くと画面の外になる） */
   var newLbl='新しいシーズンを始める'+(ui.chal?'（'+esc(chalOf(ui.chal).n)+'）':'');
-  h+='<div class="foot"><div class="in">'+(sv?'<button class="btn sub'+(ui.newArm==='new'?' warnb':'')+'" data-a="new" style="flex:1">'+(ui.newArm==='new'?'つづきは消えます。もう一度押す':(ui.chal?newLbl:'新しく始める'))+'</button><button class="btn" data-a="cont" style="flex:1.3">つづきから<small style="display:block;font-size:11px;font-weight:600;opacity:.85">'+(sv.rnd>0?ROUNDS[sv.rnd].name:'書類・動画審査')+'・'+(sv.g==='f'?'女性':'男性')+'</small></button>':'<button class="btn" data-a="new" style="flex:1">'+newLbl+'</button>')+'</div></div>';
-  if(APP)h+='<div class="card appbox">'+(APP.adFree?'<div class="small"><b>広告を消しています。</b>ありがとうございます。</div>':'<button class="btn sub" data-a="buy" '+(APP.canBuy?'':'disabled')+'>広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'</button><div class="small muted">全画面広告が出なくなり、動画の特典も動画なしで使えます。</div>')+'<div class="applinks"><button class="btn-s" data-a="restore">購入を復元</button><button class="btn-s" data-a="privacy">プライバシーポリシー</button><button class="btn-s" data-a="licenses">ライセンス</button></div></div>';
-  var qf=null;try{qf=HStore.get('hikari7_quit');}catch(e){}if(!sv&&qf&&!ui.loadBroken){var qb=loadBak();if(qb)h+='<div class="note">前にやめたシーズン（'+(qb.rnd>0&&qb.fmt?'第'+qb.rnd+'審査':'書類審査')+'・'+(qb.g==='f'?'女性':'男性')+'）に戻れます（1回だけ）。<br><button class="btn-s" data-a="frombak">やめたシーズンに戻る</button></div>';}
-  if(!sv&&ui.loadBroken){var bk=loadBak();h+='<div class="note"><b>前回の続きが読み込めませんでした。</b>'+(bk?'ひとつ前の場面の保存から戻せます。<br><button class="btn-s" data-a="frombak">ひとつ前の保存から続ける</button>':'保存の予備もありません。新しいシーズンを始めてください。')+'</div>';}
+  h+='<div class="foot"><div class="in"><button class="btn'+(ui.newArm==='new'?' warnb':'')+'" data-a="new" style="flex:1">'+(ui.newArm==='new'?'いまのつづきは消えます。もう一度押す':'このシーズンを始める'+(ui.chal?'（'+esc(chalOf(ui.chal).n)+'）':''))+'</button></div></div>';
+  if(false)h+='<div class="card appbox">'+(APP.adFree?'<div class="small"><b>広告を消しています。</b>ありがとうございます。</div>':'<button class="btn sub" data-a="buy" '+(APP.canBuy?'':'disabled')+'>広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'</button><div class="small muted">全画面広告が出なくなり、動画の特典も動画なしで使えます。</div>')+'<div class="applinks"><button class="btn-s" data-a="restore">購入を復元</button><button class="btn-s" data-a="privacy">プライバシーポリシー</button><button class="btn-s" data-a="licenses">ライセンス</button></div></div>';
+  var qf=null;if(false&&!sv&&qf&&!ui.loadBroken){var qb=loadBak();if(qb)h+='<div class="note">前にやめたシーズン（'+(qb.rnd>0&&qb.fmt?'第'+qb.rnd+'審査':'書類審査')+'・'+(qb.g==='f'?'女性':'男性')+'）に戻れます（1回だけ）。<br><button class="btn-s" data-a="frombak">やめたシーズンに戻る</button></div>';}
+  if(false){var bk=loadBak();h+='<div class="note"><b>前回の続きが読み込めませんでした。</b>'+(bk?'ひとつ前の場面の保存から戻せます。<br><button class="btn-s" data-a="frombak">ひとつ前の保存から続ける</button>':'保存の予備もありません。新しいシーズンを始めてください。')+'</div>';}
 
   if(loadCareer().seasons===0)h+='<div class="card firstflow"><div class="mh">はじめての方へ：1シーズンの流れ</div><ol class="tight"><li><b>書類・動画審査</b>　40人から最大24人を選ぶ</li><li><b>構成会議</b>　4つの審査の順番を決める</li><li><b>審査ごとに</b>　制作会議 → レッスン → 関わる時間 → 出来事 → ステージ → 講評 → <b>合否はあなたが決める</b></li><li><b>最終審査</b>　デビューメンバーを5〜8人選ぶ</li><li><b>デビュー後1か月</b>　活動を選び、評価とグループのその後を見る</li></ol><p class="small muted">1シーズンは30〜40分。迷ったら「おまかせ」や、画面の上に出るコツを見てください。</p></div>';
-  h+=dailyBox();
-  h+=perkBox();
-  h+=careerBox();
-  h+='<p class="small muted" style="text-align:right"><button class="btn-s" data-a="settings">'+ICO.gear+' 設定</button> <button class="btn-s" data-a="gloss">用語集</button> <button class="btn-s" data-a="tipreset">コツをもう一度出す</button></p>';
+
   h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、9種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がって、使える審査が増える</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・個別指導・差し入れ・お出かけ・ふたりと話す・相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>練習生には特性がある。ふたりごとの相性と絆が深まると「ふたりの物語」が進み、息が合えばコンビになる。ひとりの物語を正しく支えきると覚醒する</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・曲の方向を決めて、デビュー後1か月の反響で評価される。最後にグループのその後がエンドロールで流れる</li></ul><p class="muted">試作 v18。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
   return h;
 }
@@ -3562,7 +3621,7 @@ function eyecatch(){try{var ph=S?S.phase:null,prev=ui.eyePh;ui.eyePh=ph;if(!ph||
   if(document.body.classList.contains('reduce')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))return;
   var old=document.getElementById('eyec');if(old)old.remove();var d=document.createElement('div');d.id='eyec';d.setAttribute('aria-hidden','true');
   d.innerHTML='<div class="ein">'+(ROUNDS[S.rnd]&&ph!=='prep'&&ph!=='month'?'<small>第'+S.rnd+'審査</small>':'')+'<b>'+EYE[ph]+'</b></div>';document.body.appendChild(d);setTimeout(function(){if(d.parentNode)d.remove();},1000);}catch(e){}}
-function enterAnim(){eyecatch();if(ui.endStatic)return;var k=(S?S.phase+':'+S.rnd+':'+(S.talk?'t':'')+(S.sub?'s':'')+(S.evIdx||0):'title')+(ui.settings?'S':'')+(ui.prof!=null?'P':'');if(k===ui.lastScene)return;ui.lastScene=k;
+function enterAnim(){try{document.body.classList.toggle('ttl',!S&&!ui.tsub&&!ui.settings);}catch(e){}eyecatch();if(ui.endStatic)return;var k=(S?S.phase+':'+S.rnd+':'+(S.talk?'t':'')+(S.sub?'s':'')+(S.evIdx||0):'title')+(ui.settings?'S':'')+(ui.prof!=null?'P':'');if(k===ui.lastScene)return;ui.lastScene=k;
   var a=document.querySelector('#app');a.classList.remove('enter');void a.offsetWidth;a.classList.add('enter');}
 
 /* ---------- 操作 ---------- */
@@ -3588,6 +3647,7 @@ document.addEventListener('click',function(ev){
   if(!AUD.unlocked&&!APP){AUD.unlocked=true;AUD.cur=undefined;}
   switch(a){
     case 'g':ui.g=v;render();break;
+    case 'tsub':ui.tsub=v||null;ui.newArm=null;render();window.scrollTo(0,0);break;
     case 'new':if(load()&&ui.newArm!=='new'){ui.newArm='new';render();break;}ui.newArm=null;keepBak();stopTimer();ui.prof=null;S=newGame(ui.g,ui.diff,ui.chal);ui.filter='all';save();render();window.scrollTo(0,0);break;
     case 'cont':S=load();if(S&&S.fmt)buildRounds(S);render();break;
     case 'reset':if(!ui.resetArm){ui.resetArm=true;render();setTimeout(function(){if(ui.resetArm){ui.resetArm=false;render();}},3000);}else{stopTimer();ui.resetArm=false;clearSave();S=null;render();window.scrollTo(0,0);}break;
