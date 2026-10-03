@@ -14,6 +14,7 @@ cast:
     speed: 1.08
     pitch: 0.0
     intonation: 1.3           # 語り手も抑揚を強めて、平板な読み上げにしない（10-03 に 1.15→1.3）
+    max_intonation: 1.7       # 強い調子を掛けても 2.0 に張りつかないように（10-04）
     volume: 1.0
     image: characters/kenzaki_helmet.png
     side: left
@@ -22,9 +23,14 @@ cast:
   聞き:
     name: 春日部つむぎ
     style_id: 8
-    speed: 1.12
+    speed: 1.0
     pitch: 0.0
-    intonation: 1.45          # 聞き手は反応役なので、語り手より抑揚を大きく（10-03 に 1.25→1.45）
+    # 10-04「女の子の声がおかしい」「かなり抑えて」：抑揚が上限に張りつき早口でキンキンしていた。
+    # 基本を素の値に戻し、調子の効きを4割に、抑揚と速さに上限を置く
+    intonation: 1.0
+    tone_strength: 0.4
+    max_intonation: 1.3
+    max_speed: 1.08
     volume: 1.0
     image: characters/tsumugi_helmet.png
     side: right

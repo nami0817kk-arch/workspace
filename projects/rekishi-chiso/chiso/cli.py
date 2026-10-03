@@ -40,7 +40,9 @@ def assets_dir(config: dict) -> Path:
 
 def voices(config: dict) -> dict[str, Voice]:
     return {k: Voice(style_id=c["style_id"], speed=c.get("speed", 1.0), pitch=c.get("pitch", 0.0),
-                     intonation=c.get("intonation", 1.0), volume=c.get("volume", 1.0))
+                     intonation=c.get("intonation", 1.0), volume=c.get("volume", 1.0),
+                     tone_strength=c.get("tone_strength", 1.0), max_intonation=c.get("max_intonation", 2.0),
+                     max_speed=c.get("max_speed", 2.0))
             for k, c in config["cast"].items()}
 
 
