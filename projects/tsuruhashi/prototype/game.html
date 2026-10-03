@@ -1254,8 +1254,74 @@ function shade(hex, k){
 // 演出の状態
 const parts = [], floats = [], pops = [];
 let swingT = 9, shakeT = 0, blockHitT = 9, bannerT = 9, bannerL = 0, ringT = 9, clankT = 9;
-const SLOTS = [-0.3, 0.33, -0.44, 0.45, -0.16, 0.18, -0.05];
-const crew = WK.map((w, i) => ({ t: Math.random(), per: [0.95, 0.75, 1.3, 0.12, 0.5, 0.9, 0.2][i] }));
+// 仲間は雇った人数だけ描く（2026-10-03 ユーザー指示「×でやるのではなく人をちゃんと増やす」）。
+// 増えたら竪坑に足場を段々に組んで上の段へ並べる。一度に描くのは CREW_CAP 人まで（種類ごとの割合は保つ）
+const CREW_PER = [0.95, 0.75, 1.3, 0.12, 0.5, 0.9, 0.2];
+const CREW_CAP = 100, ROW_GAP = 26, ROWS_MAX = 6;
+let crewLay = null, crewKey = '';
+function crewAlloc(){
+  const tot = S.w.reduce((a, b) => a + b, 0);
+  if (tot <= CREW_CAP) return S.w.slice();
+  // 雇っている種類は必ず1人は描き、残りを人数の割合で配る
+  const out = S.w.map(n => n ? 1 : 0);
+  let room = CREW_CAP - out.reduce((a, b) => a + b, 0);
+  const rest = S.w.map((n, i) => Math.max(0, n - out[i])), rt = rest.reduce((a, b) => a + b, 0);
+  rest.forEach((n, i) => { const k = Math.min(n, Math.floor(room * n / rt)); out[i] += k; });
+  return out;
+}
+function layoutCrew(){
+  const key = S.w.join(',') + '|' + W;
+  if (key === crewKey && crewLay) return crewLay;
+  crewKey = key;
+  const alloc = crewAlloc();
+  // 機械は床に、人は床の残りと足場に。並びは種類が混ざるように hash で散らす
+  const machines = [], humans = [];
+  alloc.forEach((n, i) => { for (let k = 0; k < n; k++) (i >= HUMAN ? machines : humans).push({ i, k }); });
+  const mix = a => a.map(f => ({ f, h: hash(f.i * 7919 + f.k * 104729) })).sort((a, b) => a.h - b.h).map(o => o.f);
+  const queue = mix(machines).concat(mix(humans));
+  const sw = shaftW(), sx = cx() - sw / 2, figs = [];
+  let q = 0;
+  for (let row = 0; row < ROWS_MAX && q < queue.length; row++) {
+    const sc = 0.72 * Math.pow(0.88, row);
+    const xs = [];
+    for (let x = sx + 16; x <= sx + sw - 16; x += 21 * sc / 0.72) {
+      if (row === 0 && Math.abs(x - cx()) < 26) continue;   // 床の真ん中は社長の場所
+      xs.push(x);
+    }
+    for (let j = 0; j < xs.length && q < queue.length; ) {
+      const f = queue[q], big = f.i >= HUMAN;
+      if (big && row > 1) { q++; continue; }                  // 機械は上の足場に載せない
+      const x = big && j + 1 < xs.length ? (xs[j] + xs[j + 1]) / 2 : xs[j];
+      figs.push({ i: f.i, x, row, sc: big ? sc * 1.1 : sc, face: x < cx() ? 1 : -1, ph: (hash(f.i * 31 + f.k * 977) % 1000) / 1000 * (CREW_PER[f.i] + 0.25), lt: 0 });
+      j += big ? 2 : 1; q++;
+    }
+  }
+  crewLay = { figs, rows: figs.reduce((a, f) => Math.max(a, f.row), 0) };
+  return crewLay;
+}
+function drawCrew(dt, fy){
+  const L = layoutCrew(), sw = shaftW(), sx = cx() - sw / 2;
+  // 奥（上の段）から描く。段ごとに足場の板と柱
+  for (let row = L.rows; row >= 0; row--) {
+    const y = fy - row * ROW_GAP;
+    if (row > 0) {
+      ctx.fillStyle = '#6b4a2a'; ctx.fillRect(sx + 4, y, sw - 8, 4);
+      ctx.fillStyle = '#5a3d22'; for (let x = sx + 10; x < sx + sw - 10; x += 60) ctx.fillRect(x, y + 4, 3, ROW_GAP - 4);
+    }
+    for (const f of L.figs) {
+      if (f.row !== row) continue;
+      const per = CREW_PER[f.i], t = (tAll + f.ph) % (per + 0.25);
+      if (row === 0 && t < f.lt && f.i !== 3 && f.i !== 6 && Math.random() < 0.5) crewHit(f.i, f.x, f.face);
+      f.lt = t;
+      const ang = swingAngle(t, per > 0.6 ? 1 : 0.8);
+      if (f.i === 3) { drawDrill(f.x, y, f.face, tAll + f.ph, '#6f7b8a', f.sc); if (row === 0 && Math.random() < dt * 4) burst(f.x + f.face * 20, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.5); }
+      else if (f.i === 4) drawRobot(f.x, y, f.face, ang, f.sc);
+      else if (f.i === 5) drawCart(f.x, y, f.face, tAll + f.ph, f.sc);
+      else if (f.i === 6) { drawShield(f.x, y, f.face, tAll + f.ph, f.sc); if (row === 0 && Math.random() < dt * 5) burst(f.x + f.face * 22, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.6); }
+      else drawPerson(f.x, y, f.sc, HAT[f.i], f.face, ang, '#b9c2cc', false);
+    }
+  }
+}
 function burst(x, y, n, color, power){
   if (reduced) n = Math.ceil(n / 3);
   for (let i = 0; i < n; i++) {
@@ -1391,8 +1457,8 @@ function drawDrill(x, y, face, t, body, sc){
   for (let k = 0; k < 3; k++) { const px = ((t * 60 + k * 7) % 21); ctx.beginPath(); ctx.moveTo(px, -7 * (1 - px / 22)); ctx.lineTo(px + 3, 7 * (1 - (px + 3) / 22)); ctx.stroke(); }
   ctx.restore(); ctx.restore();
 }
-function drawRobot(x, y, face, ang){
-  ctx.save(); ctx.translate(x, y); ctx.scale(face * 0.8, 0.8);
+function drawRobot(x, y, face, ang, sc){
+  ctx.save(); ctx.translate(x, y); ctx.scale(face * sc, sc);
   ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0, 0, 13, 3, 0, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#555'; ctx.fillRect(-8, -10, 6, 10); ctx.fillRect(2, -10, 6, 10);
   ctx.fillStyle = '#58b7c9'; roundRect(-12, -36, 24, 26, 6); ctx.fill();
@@ -1403,8 +1469,8 @@ function drawRobot(x, y, face, ang){
   drawPick(4, -22, ang, 20, '#7ff0ff', 0.9);
   ctx.restore();
 }
-function drawCart(x, y, face, t){
-  ctx.save(); ctx.translate(x, y); ctx.scale(face * 0.8, 0.8);
+function drawCart(x, y, face, t, sc){
+  ctx.save(); ctx.translate(x, y); ctx.scale(face * sc, sc);
   const bob = Math.sin(t * 6) * 1.2;
   ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0, 0, 17, 3, 0, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#c98a3a'; ctx.beginPath(); ctx.moveTo(-16, -22 + bob); ctx.lineTo(16, -22 + bob); ctx.lineTo(12, -6); ctx.lineTo(-12, -6); ctx.closePath(); ctx.fill();
@@ -1412,8 +1478,8 @@ function drawCart(x, y, face, t){
   ctx.fillStyle = '#333'; ctx.beginPath(); ctx.arc(-8, -4, 4, 0, 7); ctx.arc(8, -4, 4, 0, 7); ctx.fill();
   ctx.restore();
 }
-function drawShield(x, y, face, t){
-  ctx.save(); ctx.translate(x, y); ctx.scale(face * 0.85, 0.85);
+function drawShield(x, y, face, t, sc){
+  ctx.save(); ctx.translate(x, y); ctx.scale(face * sc, sc);
   ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0, 0, 22, 3, 0, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#6f7b8a'; roundRect(-22, -26, 28, 24, 5); ctx.fill();
   ctx.fillStyle = '#e0b23a'; ctx.fillRect(-22, -10, 28, 3);
@@ -1508,22 +1574,7 @@ function draw(dt){
   }
   // 仲間
   const fy = rowY(S.depth);
-  WK.forEach((w, i) => {
-    if (!S.w[i]) return;
-    const c = crew[i]; c.t += dt; if (c.t > c.per + 0.25) { c.t = 0; if (i !== 3 && i !== 6) crewHit(i); }
-    const x = cx() + SLOTS[i] * sw, face = SLOTS[i] < 0 ? 1 : -1;
-    const ang = swingAngle(c.t, c.per > 0.6 ? 1 : 0.8);
-    if (i === 3) { drawDrill(x, fy, face, tAll, '#6f7b8a', 0.8); if (Math.random() < dt * 8) burst(x + face * 22, fy, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.5); }
-    else if (i === 4) drawRobot(x, fy, face, ang);
-    else if (i === 5) drawCart(x, fy, face, tAll);
-    else if (i === 6) { drawShield(x, fy, face, tAll); if (Math.random() < dt * 10) burst(x + face * 24, fy, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.6); }
-    else drawPerson(x, fy, 0.72, HAT[i], face, ang, '#b9c2cc', false);
-    if (S.w[i] > 1) {
-      ctx.font = '800 10px "M PLUS Rounded 1c", sans-serif'; ctx.textAlign = 'center';
-      ctx.fillStyle = 'rgba(0,0,0,.5)'; roundRect(x - 13, fy - 52, 26, 13, 6); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.fillText('×' + S.w[i], x, fy - 42);
-    }
-  });
+  drawCrew(dt, fy);
   swingT += dt;
   const pang = swingT < 0.4 ? swingAngle(swingT, 1) : -2.3 + Math.sin(tAll * 2.2) * 0.06;
   drawPerson(cx(), fy, 1, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true);
@@ -1593,10 +1644,8 @@ function drawRoomGlow(sx, y, sw){
   ctx.beginPath(); ctx.moveTo(bx - 12, y + R - 8); ctx.lineTo(bx - 12, y + 14); ctx.quadraticCurveTo(bx, y + 4, bx + 12, y + 14); ctx.lineTo(bx + 12, y + R - 8); ctx.closePath(); ctx.fill();
   ctx.fillStyle = 'rgba(80,50,0,.6)'; ctx.fillRect(bx - 12, y + 16, 24, 2); ctx.fillRect(bx - 2, y + 16, 4, 7);
 }
-function crewHit(i){
-  const sw = shaftW();
-  const face = SLOTS[i] < 0 ? 1 : -1;
-  const x = cx() + SLOTS[i] * sw + face * 16, y = rowY(S.depth);
+function crewHit(i, fx0, face){
+  const x = fx0 + face * 14, y = rowY(S.depth);
   if (locked(S)) sparks(x, y, reduced ? 1 : 3);
   else burst(x, y, i === 2 ? 8 : 3, LAYERS[layerIdxForDepth(S.depth)].block, i === 2 ? 1 : 0.6);
   if (i === 2 && !reduced && !locked(S)) { shakeT = Math.max(shakeT, 0.06); burst(x, y, 4, '#ffb347', 1); }
