@@ -54,6 +54,12 @@ h1{font-size:34px;letter-spacing:.3em;margin:8px 0 0;text-align:center}
 .case-btn .t{font-weight:700;font-size:17px;display:block}
 .case-btn .stars{margin-left:auto;font-size:20px;letter-spacing:2px;color:var(--hint);white-space:nowrap}
 .case-btn .stars .off{color:var(--rule)}
+.case-btn.lv-0{border-left-color:var(--pick)}
+.case-btn.lv-1{border-left-color:var(--hint)}
+.lvhead{display:flex;align-items:baseline;gap:10px;margin:22px 2px 10px;font-size:13px;letter-spacing:.2em;color:var(--ink-soft)}
+.lvhead::after{content:"";flex:1;height:1px;background:var(--ink-soft);opacity:.4;align-self:center}
+.lvhead .lvname{font-weight:700;font-size:15px;color:var(--ink)}
+.lvhead .lvcount{font-size:12px;letter-spacing:0;order:2}
 .note{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:14px}
 
 /* 事件画面 */
@@ -1535,17 +1541,38 @@ function starHTML(n, box){
   for(let i=1;i<=3;i++){ const s = el("span", i<=n ? "" : "off", "★"); box.appendChild(s); }
 }
 
+// 1〜99 を漢数字に（十一、二十、三十 など）
+function kanjiNum(n){
+  const d = "〇一二三四五六七八九";
+  if(n < 10) return d[n];
+  const t = Math.floor(n / 10), o = n % 10;
+  return (t > 1 ? d[t] : "") + "十" + (o ? d[o] : "");
+}
+
+const LEVELS = ["易しい", "普通", "難しい"];
 function renderSelect(){
   const list = $("caseList"); list.textContent = "";
-  CASES.forEach((c, i) => {
-    const b = el("button", "case-btn");
-    const txt = el("span");
-    txt.appendChild(el("span", "no", `第${"一二三"[i]}の事件　${c.level}`));
-    txt.appendChild(el("span", "t", c.title));
-    b.appendChild(txt);
-    const s = el("span", "stars"); starHTML(starsOf(c.id), s); b.appendChild(s);
-    b.onclick = () => openCase(i);
-    list.appendChild(b);
+  let no = 0;
+  // 難しさごとにまとめる。データの並び順が混ざっていても、ここで揃える
+  LEVELS.concat([...new Set(CASES.map(c => c.level))].filter(l => !LEVELS.includes(l))).forEach(lv => {
+    const group = CASES.map((c, i) => ({c, i})).filter(x => x.c.level === lv);
+    if(!group.length) return;
+    const solved = group.filter(x => starsOf(x.c.id) > 0).length;
+    const h = el("div", "lvhead");
+    h.appendChild(el("span", "lvname", lv));
+    h.appendChild(el("span", "lvcount", `解決 ${solved}／${group.length}`));
+    list.appendChild(h);
+    group.forEach(({c, i}) => {
+      no++;
+      const b = el("button", "case-btn lv-" + LEVELS.indexOf(lv));
+      const txt = el("span");
+      txt.appendChild(el("span", "no", `第${kanjiNum(no)}の事件`));
+      txt.appendChild(el("span", "t", c.title));
+      b.appendChild(txt);
+      const s = el("span", "stars"); starHTML(starsOf(c.id), s); b.appendChild(s);
+      b.onclick = () => openCase(i);
+      list.appendChild(b);
+    });
   });
   $("v-select").hidden = false; $("v-case").hidden = true; $("bar").hidden = true;
   window.scrollTo(0,0);
