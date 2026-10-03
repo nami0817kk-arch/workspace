@@ -17,3 +17,25 @@ assert.ok(words(s).indexOf('ねこ:yoko') < 0, '右から左に読んで ねこ 
 s = C.create(1, 'flat'); place(s, 'ね', 110, 505); place(s, 'こ', 290, 505);
 assert.deepStrictEqual(words(s), [], '離れた字で ことば ができてしまう');
 console.log('findWords ok');
+
+// 点: 字10点、ことばは (字数-1)^2×100
+assert.deepStrictEqual(['ねこ', 'さくら', 'ひまわり', 'かたつむり'].map(C.wordPoints), [100, 400, 900, 1600]);
+// 実際に積んで「ねこ」ができたら、字2つ(20)＋ことば(100)＝120点
+s = C.create(1, 'flat'); s.queue[0] = 'こ'; s.queue[1] = 'ね';
+C.drop(s, 200, 0); for (var i = 0; i < 400; i++) C.step(s);
+C.drop(s, 200, 0); for (i = 0; i < 400; i++) C.step(s);
+assert.ok(s.made.indexOf('ねこ') >= 0, '積んだ ねこ ができない: ' + s.made);
+assert.strictEqual(s.points, 120);
+console.log('points ok');
+
+// 長いことばの一部は数えない: 縦に あ・さ・ひ と積むと「あさひ」だけ（「あさ」は数えない）
+s = C.create(1, 'flat'); s.queue.splice(0, 3, 'ひ', 'さ', 'あ');
+for (var n = 0; n < 3; n++) { C.drop(s, 200, 0); for (i = 0; i < 400; i++) C.step(s); }
+assert.ok(s.made.indexOf('あさひ') >= 0, 'あさひ ができない: ' + s.made);
+assert.ok(s.made.indexOf('あさ') < 0, 'あさひ の一部の あさ まで数えている: ' + s.made);
+assert.strictEqual(s.points, 30 + 400);
+console.log('subword ok');
+// そのあと、離れた所に字を置いても「あさ」を数え直さない
+s.queue[0] = 'ろ'; C.drop(s, 90, 0); for (i = 0; i < 400; i++) C.step(s);
+assert.ok(s.made.indexOf('あさ') < 0, 'あとから あさ を数え直している: ' + s.made);
+console.log('subword later ok');

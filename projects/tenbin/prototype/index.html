@@ -63,6 +63,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .w{font-family:TenbinKana,"M PLUS Rounded 1c",sans-serif;font-weight:900;font-size:16px;border-radius:10px;padding:5px 9px;background:var(--bg);border:1px solid var(--line)}
 .w.new{border-color:var(--accent2);box-shadow:0 0 0 2px var(--accent2) inset}
 .w.new::after{content:"あたらしい";display:block;font:700 9px "M PLUS Rounded 1c",sans-serif;color:var(--accent)}
+.w .pt{display:block;font:700 10px "M PLUS Rounded 1c",sans-serif;color:var(--ok)}
 .w.lock{color:var(--sub);font-family:"M PLUS Rounded 1c",sans-serif;font-weight:400;letter-spacing:2px}
 .badge{display:inline-block;background:var(--accent2);color:#3b2f24;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;margin-top:6px}
 .dict .words{max-height:none}
@@ -103,7 +104,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // --- 保存（端末の中だけ。読めなくても遊べる） ---
   var store = { get: function (k, d) { try { var v = localStorage.getItem('tenbin-kana-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
     set: function (k, v) { try { localStorage.setItem('tenbin-kana-' + k, JSON.stringify(v)); } catch (e) {} } };
-  var bests = store.get('bests', {}), dict = store.get('dict', {}), plat = store.get('plat', 'flat'), muted = store.get('muted', false);
+  var bests = store.get('bests2', {}), dict = store.get('dict', {}), plat = store.get('plat', 'flat'), muted = store.get('muted', false);
   if (!C.PLATFORMS[plat]) plat = 'flat';
   var ALL_WORDS = C.WORDS.short.concat(C.WORDS.middle, C.WORDS.long);
   function dictCount() { return Object.keys(dict).length; }
@@ -148,12 +149,12 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // --- 状態 ---
   var s, phase = 'menu', ang = 0, visAng = 0, pointer = { x: W / 2, active: false }, dragFrom = null, camTop = BASE_TOP, endTimer = 0, frameN = 0;
-  var parts = [], popups = [], links = [], shake = 0, newWords = [], recordBroken = false, best = { n: 0, h: 0 };
+  var parts = [], popups = [], links = [], shake = 0, newWords = [], recordBroken = false, best = { p: 0, n: 0, h: 0 }, hudPts = 0, wordPts = {};
   window.__state = function () { return s; };
 
   function start() {
     s = C.create(null, plat); phase = 'play'; ang = visAng = 0; pointer.x = W / 2; camTop = BASE_TOP; endTimer = 0;
-    parts = []; popups = []; links = []; shake = 0; newWords = []; recordBroken = false; best = bests[plat] || { n: 0, h: 0 };
+    parts = []; popups = []; links = []; shake = 0; newWords = []; recordBroken = false; best = bests[plat] || { p: 0, n: 0, h: 0 }; hudPts = 0; wordPts = {};
     hideSheet(); drawNext(); setHint();
   }
   function setHint() { hint.textContent = s && s.def.seesaw ? 'かたよると板が傾く' : s && s.def.sway ? '台が左右に動く' : 'なぞって位置、はなすと落ちる'; }
@@ -194,11 +195,16 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
         var isNew = !dict[e.text];
         if (isNew) { dict[e.text] = 1; store.set('dict', dict); newWords.push(e.text); document.getElementById('dictN').textContent = dictCount(); }
         popup(e.text, Math.max(70, Math.min(W - 70, sx)), minY - 26, true, '#d9472f');
-        if (isNew) popup('あたらしいことば！', Math.max(70, Math.min(W - 70, sx)), minY - 62, false, '#b5552a');
+        var px = Math.max(70, Math.min(W - 70, sx));
+        wordPts[e.text] = e.pts;
+        popup('+' + e.pts + (e.mult > 1 ? '（×' + e.mult + '）' : ''), px, minY + 8, false, '#2f9a5c');
+        if (isNew) popup('あたらしいことば！', px, minY - 62, false, '#b5552a');
         sparkle(sx, minY, 26); SND.word();
       } else if (e.type === 'score') {
-        var h = s.height * M_PER_PX;
-        if (!recordBroken && best.n > 0 && s.score > best.n) { recordBroken = true; popup('さいこう記録こえ！', W / 2, camTop + 140, false, '#2f9a5c'); SND.record(); }
+        var lb = s.last; popup('+' + e.pts, (lb.bounds.min.x + lb.bounds.max.x) / 2, lb.bounds.min.y - 8, false, 'rgba(138,118,99,.9)');
+      }
+      if (e.type === 'score' || e.type === 'word') {
+        if (!recordBroken && best.p > 0 && s.points > best.p) { recordBroken = true; popup('さいこう記録こえ！', W / 2, camTop + 140, false, '#2f9a5c'); SND.record(); }
       }
     });
     s.events.length = 0;
@@ -318,9 +324,12 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (phase === 'menu') return;
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#3b2f24'; ctx.textAlign = 'left'; ctx.font = '800 30px "M PLUS Rounded 1c",sans-serif';
-    ctx.fillText(s.score, 14, 40); var nw = ctx.measureText(String(s.score)).width;
-    ctx.font = '700 13px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.fillText('字', 18 + nw, 40);
-    ctx.fillText((s.height * M_PER_PX).toFixed(1) + 'm', 14, 58);
+    // 点は数え上げるように増やす
+    hudPts += (s.points - hudPts) * 0.18; if (Math.abs(s.points - hudPts) < 0.5) hudPts = s.points;
+    var shown = Math.round(hudPts), grow = s.points - hudPts > 1 ? 1.12 : 1;
+    ctx.save(); ctx.translate(14, 40); ctx.scale(grow, grow); ctx.fillText(shown, 0, 0); var nw = ctx.measureText(String(shown)).width * grow; ctx.restore();
+    ctx.font = '700 13px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.fillText('点', 18 + nw, 40);
+    ctx.fillText(s.score + '字・' + (s.height * M_PER_PX).toFixed(1) + 'm', 14, 58);
     ctx.fillText('ことば ' + s.made.length, 14, 74);
     // さいきんできたことば（右上）
     if (phase === 'play') {
@@ -351,28 +360,30 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function showSheet(html) { card.innerHTML = html; sheet.className = 'sheet show'; }
   function platButtons() {
     return '<div class="plats">' + C.PLATFORM_KEYS.map(function (k) { var b = bests[k];
-      return '<button data-plat="' + k + '" class="' + (k === plat ? 'cur' : '') + '">' + C.PLATFORMS[k].name + '<small>' + (b && b.n ? b.n + '字・' + (b.h * M_PER_PX).toFixed(1) + 'm' : 'まだ') + '</small></button>'; }).join('') + '</div>';
+      return '<button data-plat="' + k + '" class="' + (k === plat ? 'cur' : '') + '">' + C.PLATFORMS[k].name + '<small>' + (b && b.p ? b.p + '点' : 'まだ') + '</small></button>'; }).join('') + '</div>';
   }
   function wirePlats(onPick) {
     card.querySelectorAll('[data-plat]').forEach(function (el) { el.onclick = function () { plat = el.getAttribute('data-plat'); store.set('plat', plat); SND.rot(); onPick(); }; });
   }
   function showMenu() {
     phase = 'menu';
-    showSheet('<h2>ひらがなてんびん</h2><p>ひらがなを1字ずつ積もう。<br>字と字を<b>たて（上から下）</b>か<b>よこ（左から右）</b>に<br>くっつけて<b>ことば</b>ができたら、ことば帳に入る。<br>「まわす」で向きを変えられる。</p>' +
+    showSheet('<h2>ひらがなてんびん</h2><p>ひらがなを1字ずつ積もう。<br>字と字を<b>たて（上から下）</b>か<b>よこ（左から右）</b>に<br>くっつけて<b>ことば</b>にすると点がふえる。<br>2字100点・3字400点・4字900点（字は1つ10点）<br>「まわす」で向きを変えられる。</p>' +
       '<p style="margin-top:10px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
       '<div class="row"><button class="btn" id="go">はじめる</button></div>');
     wirePlats(function () { s = C.create(null, plat); drawNext(); showMenu(); });
     document.getElementById('go').onclick = function () { audio(); start(); };
   }
   function showResult() {
-    var b = bests[plat] || { n: 0, h: 0 }, rec = s.score > b.n;
-    if (rec) { bests[plat] = { n: s.score, h: Math.max(b.h, s.height) }; store.set('bests', bests); }
-    else if (s.height > b.h) { b.h = s.height; bests[plat] = b; store.set('bests', bests); }
+    var b = bests[plat] || { p: 0, n: 0, h: 0 }, rec = s.points > b.p;
+    if (rec) { bests[plat] = { p: s.points, n: s.score, h: Math.max(b.h, s.height) }; store.set('bests2', bests); }
+    else if (s.height > b.h) { b.h = s.height; bests[plat] = b; store.set('bests2', bests); }
     var why = s.failed === 'ground' ? 'てんびんが床に着いた' : '「' + s.failedBody.kind + '」が落ちた';
-    var made = s.made.length ? '<div class="words">' + s.made.map(function (w) { return '<span class="w' + (newWords.indexOf(w) >= 0 ? ' new' : '') + '">' + w + '</span>'; }).join('') + '</div>' : '<p>ことばは できなかった。たてか よこに くっつけてみよう</p>';
-    showSheet('<p>' + why + '</p><div class="big">' + s.score + '<small> 字</small></div>' +
-      '<p>' + C.PLATFORMS[plat].name + 'の台・高さ ' + (s.height * M_PER_PX).toFixed(1) + 'm・ことば ' + s.made.length + 'こ</p>' +
-      (rec ? '<span class="badge">さいこう記録！</span>' : '<p>さいこう ' + b.n + '字</p>') + made +
+    var made = s.made.length ? '<div class="words">' + s.made.map(function (w) { return '<span class="w' + (newWords.indexOf(w) >= 0 ? ' new' : '') + '">' + w + '<small class="pt">+' + (wordPts[w] || C.wordPoints(w)) + '</small></span>'; }).join('') + '</div>' : '<p>ことばは できなかった。たてか よこに くっつけてみよう</p>';
+    var wsum = s.made.reduce(function (t, w) { return t + (wordPts[w] || C.wordPoints(w)); }, 0);
+    showSheet('<p>' + why + '</p><div class="big">' + s.points + '<small> 点</small></div>' +
+      '<p>字 ' + s.score + '×10＝' + (s.score * C.LETTER_PTS) + '点 ＋ ことば ' + s.made.length + 'こ＝' + wsum + '点</p>' +
+      '<p>' + C.PLATFORMS[plat].name + 'の台・高さ ' + (s.height * M_PER_PX).toFixed(1) + 'm</p>' +
+      (rec ? '<span class="badge">さいこう記録！</span>' : '<p>さいこう ' + b.p + '点</p>') + made +
       '<div class="row"><button class="btn sec" id="menu">台をかえる</button><button class="btn" id="again">もう一度</button></div>');
     document.getElementById('again').onclick = start;
     document.getElementById('menu').onclick = showMenu;

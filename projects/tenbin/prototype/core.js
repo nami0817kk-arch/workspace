@@ -89,7 +89,7 @@ var TenbinCore = (function () {
     if (def.seesaw) M.Composite.add(world, M.Constraint.create({ pointA: { x: W / 2, y: py }, bodyB: boards[0], pointB: { x: 0, y: 0 }, stiffness: 1, length: 0 }));
     var s = { engine: engine, def: def, platform: PLATFORMS[platform] ? platform : 'flat', boards: boards, plank: boards[0], cargo: [], t: 0, sub: 0,
       failed: null, failedBody: null, lastDropT: -999, score: 0, pendingScore: false, rng: rng(seed == null ? (Math.random() * 1e9) | 0 : seed),
-      queue: [], made: [], height: 0, events: [], last: null };
+      queue: [], made: [], madeBodies: [], points: 0, height: 0, events: [], last: null };
     fillQueue(s); fillQueue(s);
     // 落とした字が最初に何かへ当たった瞬間を「着地」として知らせる（音・粒・弾みに使う）
     M.Events.on(engine, 'collisionStart', function (e) {
@@ -171,6 +171,9 @@ var TenbinCore = (function () {
       if (near(cs[i], cs[j])) { nb.get(cs[i]).push(cs[j]); nb.get(cs[j]).push(cs[i]); }
     return nb;
   }
+  // 点: 字を1つ積むと10点。ことばは (字数-1)の2乗×100点（2字100・3字400・4字900・5字1600）
+  var LETTER_PTS = 10;
+  function wordPoints(w) { return 100 * (w.length - 1) * (w.length - 1); }
   function findWords(s) {
     var nb = touching(s), found = [];
     s.cargo.forEach(function (start) {
@@ -245,12 +248,23 @@ var TenbinCore = (function () {
       s.pendingScore = false; s.score++;
       var top = Infinity; s.cargo.forEach(function (c) { top = Math.min(top, c.bounds.min.y); });
       s.height = Math.max(s.height, PIVOT_Y - PLANK_T - top);
-      s.events.push({ type: 'score', kind: s.last.kind });
+      s.points += LETTER_PTS;
+      s.events.push({ type: 'score', kind: s.last.kind, pts: LETTER_PTS });
       // くっついてできたことば（1回の中で同じことばは1度だけ）。長いことばから知らせる
+      // 1字で同時にいくつもできたら、その数だけ倍（2つなら2倍）
+      var fresh = [];
       findWords(s).sort(function (a, b) { return b.text.length - a.text.length; }).forEach(function (f) {
-        if (s.made.indexOf(f.text) >= 0) return;
-        s.made.push(f.text);
-        s.events.push({ type: 'word', text: f.text, bodies: f.bodies, dir: f.dir });
+        if (s.made.indexOf(f.text) >= 0 || fresh.some(function (x) { return x.text === f.text; })) return;
+        // 長いことばの一部（あさひ の中の あさ）は数えない。字を分け合う別のことば（十字に交わる）は数える
+        // 前にできたことばの一部も同じ（あとから別の字を置いたときに あさ を数え直さない）
+        var inside = function (bs) { return f.bodies.every(function (b) { return bs.indexOf(b) >= 0; }); };
+        if (fresh.some(function (x) { return inside(x.bodies); }) || s.madeBodies.some(inside)) return;
+        fresh.push(f);
+      });
+      fresh.forEach(function (f) {
+        var pts = wordPoints(f.text) * fresh.length;
+        s.made.push(f.text); s.madeBodies.push(f.bodies); s.points += pts;
+        s.events.push({ type: 'word', text: f.text, bodies: f.bodies, dir: f.dir, pts: pts, mult: fresh.length });
       });
     }
   }
@@ -275,6 +289,6 @@ var TenbinCore = (function () {
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
-    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
+    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;
