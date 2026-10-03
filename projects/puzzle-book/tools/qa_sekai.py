@@ -246,8 +246,8 @@ pii = [w for w in ("nami", "0817") if w in fixed.lower()]
 check("個人を特定できる文字（nami・0817 など）が出ていない", not pii, str(pii))
 tofu = [(i, n + 1) for i, d in enumerate((di, dc)) for n, p in enumerate(d) if "\x00" in p.get_text() or "�" in p.get_text()]
 check("化けた字（書体に無い字）が本文・表紙のどこにもない", not tofu, str(tofu[:4]))
-check("奥付に書体（OFL）と図版（Noto Emoji・挿絵の生成AI）の出典がある", "Noto Emoji" in colophon and "Open Font License" in colophon
-      and "Nanum Gothic" in colophon and "Noto Sans TC" in colophon and (not has_art() or "FLUX.1" in colophon))
+check("奥付に書体（OFL）と図版（挿絵があれば生成AI、なければ Noto Emoji）の出典がある", "Open Font License" in colophon
+      and "Nanum Gothic" in colophon and "Noto Sans TC" in colophon and ("FLUX.1" in colophon if has_art() else "Noto Emoji" in colophon))
 refs = ptext(len(di) - 1)
 check("参考にした資料のページに5つの言語の資料がそろっている", all(x in refs for x in ("英語", "フランス語", "中国語", "韓国語", "日本語")))
 check("入力内容の案：タイトル・サブタイトル・A5・裁ち落としあり・ページ数・価格の案が本体と一致",

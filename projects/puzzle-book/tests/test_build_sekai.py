@@ -120,7 +120,7 @@ def test_cover_size_and_barcode(built):
 def test_colophon_credits(built):
     spec, interior, _, _ = built
     last = pymupdf.open(str(interior))[-1].get_text()
-    assert spec.title in last and "Noto Emoji" in last and "Nanum Gothic" in last and "Noto Sans TC" in last
+    assert spec.title in last and "Nanum Gothic" in last and "Noto Sans TC" in last
     assert "FLUX.1" in last  # 挿絵の生成AI
 
 
