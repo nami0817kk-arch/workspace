@@ -22,6 +22,7 @@ library;
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -80,9 +81,9 @@ const _locales = <_Locale>[_ja, _en];
 ///
 /// **検索結果に出るのは先頭3枚**なので、00〜02に力を入れている。
 const _captions = <String, (String ja, String en)>{
-  '00_lineup': ('11人を、自分で決める', 'You pick the eleven'),
+  '00_lineup': ('5部から、頂点へ', 'Fifth tier to the top'),
   '01_live_match': ('采配が、試合を動かす', 'Your calls decide it'),
-  '02_home': ('5部からの成り上がり', 'Rise from the fifth tier'),
+  '02_home': ('勝てなければ、クビ', 'Lose, and you are sacked'),
   '03_transfer': ('値切って、引き抜く', 'Haggle, then sign him'),
   '04_standings': ('昇格争いに食い込む', 'Fight for promotion'),
   '05_squad': ('無名を、主力に育てる', 'Turn nobodies into stars'),
@@ -90,6 +91,14 @@ const _captions = <String, (String ja, String en)>{
   '07_scorers': ('得点王が、生まれる', 'Grow a top scorer'),
   '08_club': ('クラブごと、大きくする', 'Grow the whole club'),
 };
+
+/// 専用の絵を敷く1枚。検索結果でいちばん見られる枠なので、ここだけは
+/// 画面を撮っただけにしない。
+///
+/// **iPhone だけ。** 下絵は縦長(9:16)で、端末を置く場所が中央に空けてある。
+/// iPad は横に広いぶん上下を切ることになり、どこで切ってもその空き枠が
+/// 端末からはみ出して白く残る。iPad は検索結果に出ないので、帯のままにする。
+const _heroShot = '00_lineup';
 
 /// ① 画像ごとの地の色。同じ緑が9枚続くと、並べたときに単調になる。
 /// 緑〜藍の近い色で振って、まとまりは崩さずにリズムだけ作る。
@@ -166,7 +175,13 @@ void main() {
       late final SettingsController settings;
       late final MonetizationController monetization;
       late final GameState gameState;
+      late final ui.Image hero;
       await tester.runAsync(() async {
+        final heroFile = File('marketing/hero/hero_bg.png');
+        if (!heroFile.existsSync()) {
+          fail('1枚目の下絵が見つからない: ${heroFile.path}');
+        }
+        hero = await decodeImageFromList(heroFile.readAsBytesSync());
         settings = SettingsController();
         await settings.init();
         // **シミュレーションより先に言語を決める。** 記者会見やニュースの文面は
@@ -292,6 +307,90 @@ void main() {
         );
       }
 
+      /// 1枚目だけは、画面の上に帯を乗せるのではなく、専用の絵を敷く。
+      ///
+      /// 検索結果でいちばん見られる枠なので、ここだけは「撮っただけ」から
+      /// 離す。石段を昇った先にトロフィーがある絵の中へ、実機の画面を置く。
+      ///
+      /// **絵だけにはできない。** App Review 2.3.3 が「掲載画像はアプリが
+      /// 動いている様子を見せること。タイトル絵・ログイン画面・起動画面
+      /// だけのものは不可」としている。必ず画面を重ねる。
+      Widget heroFramed(String text, Widget screen) {
+        return Material(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              RawImage(image: hero, fit: BoxFit.cover),
+              Positioned(
+                left: 28,
+                right: 28,
+                top: 38,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(
+                      fontFamily: 'NotoSansJP',
+                      color: Colors.white,
+                      fontSize: 46,
+                      fontWeight: FontWeight.w800,
+                      height: 1.2,
+                      letterSpacing: -0.5,
+                      shadows: const [
+                        // 絵の上に直に置くので、影がないと沈む。
+                        Shadow(color: Color(0xAA000000), blurRadius: 12),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // 下絵の中央に空けてある場所へ端末を置く。トロフィーと階段の
+              // 上の方は隠さない(隠すと何の絵か分からなくなる)。
+              Positioned(
+                left: 83,
+                right: 83,
+                top: 300,
+                bottom: 60,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF111111),
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x88000000),
+                        blurRadius: 30,
+                        offset: Offset(0, 12),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(21),
+                      // **端末の幅で組み直させない。** 枠は画面より細いので、
+                      // そのまま入れると実機と違う割付になり、選手名が
+                      // 「Ashwo…」のように切れる。実機の寸法で組ませてから
+                      // 縮める。中身は小さくなるが、割付は実機と同じ。
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: SizedBox(
+                          width: device.logical.width,
+                          height: device.logical.height,
+                          child: screen,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+
       Widget wrap(Widget child) => MultiProvider(
             providers: [
               ChangeNotifierProvider<GameState>.value(value: gameState),
@@ -317,14 +416,17 @@ void main() {
       Future<void> shoot(String name, Widget screen,
           {int warmUpFrames = 0}) async {
         final caption = _captions[name];
-        final body = caption == null
+        final text = caption == null
+            ? null
+            : locale.language == AppLanguage.japanese
+                ? caption.$1
+                : caption.$2;
+        final body = text == null
             ? screen
-            : captioned(
-                locale.language == AppLanguage.japanese
-                    ? caption.$1
-                    : caption.$2,
-                screen,
-                _shades[name] ?? (0xFF0F3D22, 0xFF1C6B3A));
+            : name == _heroShot && device == _phone
+                ? heroFramed(text, screen)
+                : captioned(
+                    text, screen, _shades[name] ?? (0xFF0F3D22, 0xFF1C6B3A));
         await tester.pumpWidget(wrap(body));
         // **裏で読み込みを待つ画面は、疑似時間の pump では終わらない。**
         // 開始画面はセーブ一覧(SharedPreferences)を待つ FutureBuilder を
