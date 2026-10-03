@@ -451,6 +451,8 @@ body.reduce .confetti{display:none}
 .sayi{font-size:12px;opacity:.65;margin-left:4px}[data-a=say]{cursor:pointer}
 .sayb{border:none;background:none;font-size:15px;padding:0 4px;min-height:0;vertical-align:middle;cursor:pointer}
 .chipsel{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.bgmb{font-weight:800}.bgmb.off{color:var(--muted)}.bgmb s{text-decoration-thickness:2px}
+.tbgm{display:flex;justify-content:flex-end;margin:8px 0 -4px}.tbgm .bgmb{min-width:0;padding:0 12px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2336,7 +2338,7 @@ function header(){
   var rt=(S.rnd>0?'制作費 '+S.budget+'万 ':'')+(S.ratings.length?'視聴率 '+S.ratings[S.ratings.length-1].toFixed(1)+'%':'');
   var wk2=S.phase==='prep'?'デビュー準備':(S.phase==='month'||S.phase==='result')?'デビュー後':S.rnd>0?'第'+S.rnd+'審査'+(ROUNDS[S.rnd]&&ROUNDS[S.rnd].fin?'（最終）':''):'書類審査';
   var h='<div class="hdr"><div class="logo"><span>ひかりの</span>七席</div><div class="wk">'+esc(wk)+'</div><div class="rt"><span class="wk2">'+esc(wk2)+'</span>'+rt+'</div>';
-  h+='<button class="btn-s gear" data-a="settings" aria-label="設定">⚙</button><button class="btn-s '+(ui.resetArm?'warn':'')+'" data-a="reset">'+(ui.resetArm?'本当に最初から':'最初から')+'</button></div>';
+  h+=bgmBtn()+'<button class="btn-s gear" data-a="settings" aria-label="設定">⚙</button><button class="btn-s '+(ui.resetArm?'warn':'')+'" data-a="reset">'+(ui.resetArm?'本当に最初から':'最初から')+'</button></div>';
   h+='<div class="dots">';for(var i=0;i<=NROUND;i++)h+='<i class="'+(i<S.rnd?'on':i===S.rnd?'now':'')+'" title="'+(i===0?'書類・動画審査':ROUNDS[i].name)+'"></i>';h+='</div>';
   return h;
 }
@@ -2367,7 +2369,7 @@ function render0(){
 var showTimer=null;
 function vTitle(){
   var sv=load();
-  var sp=['v','d','r','t','v'],h='<div class="thero">'+stageHero()+'<div class="tin"><div class="logo7"><span>ひかりの</span>七席</div><p>オーディション番組のプロデューサーになって、<br>デビューするメンバーを自分の目で選ぼう。</p></div></div>'+
+  var sp=['v','d','r','t','v'],h='<div class="tbgm">'+bgmBtn(true)+'</div><div class="thero">'+stageHero()+'<div class="tin"><div class="logo7"><span>ひかりの</span>七席</div><p>オーディション番組のプロデューサーになって、<br>デビューするメンバーを自分の目で選ぼう。</p></div></div>'+
     '<div class="facerow tfaces">'+[0,3,6,9].map(function(i,j){return '<img loading="lazy" decoding="async" class="face md b-'+sp[j]+'" src="'+faceURL(ui.g,i)+'" alt="">';}).join('')+'</div>';
   h+='<div class="card"><h3 style="margin-top:0">このシーズンのグループ</h3><div class="gsel">'+
     '<button class="'+(ui.g==='m'?'on':'')+'" data-a="g" data-v="m">男性グループ</button><button class="'+(ui.g==='f'?'on':'')+'" data-a="g" data-v="f">女性グループ</button></div>'+
@@ -3019,6 +3021,8 @@ window.hikariPause=function(){try{if(S)HStore.set(KEY,JSON.stringify(S));if(HSto
 var VOICE_NAMES=['春日部つむぎ','冥鳴ひまり','雨晴はう','九州そら','白上虎太郎','玄野武宏','剣崎雌雄','黒沢冴白'];
 var AUD={cur:undefined,el:null,vo:null,unlocked:false};
 var BGM_OF={select:'practice',format:'practice',plan:'practice',lesson:'practice',talk:'practice',interview:'practice',critique:'practice',event:'night',night:'night',show:'stage',stage:'stage',judge:'judge',call:'judge',prep:'title',month:'title',result:'ending'};
+/* BGM をすぐ止める・流すボタン（上の帯とタイトル）。止める前の音量を覚えておき、戻すときに使う */
+function bgmBtn(long){var on=(ui.set&&ui.set.bgm)>0;return '<button class="btn-s gear bgmb'+(on?'':' off')+'" data-a="bgmtoggle" aria-label="'+(on?'BGMを止める':'BGMを流す')+'" aria-pressed="'+(on?'false':'true')+'">'+(on?'♪':'<s>♪</s>')+(long?(on?' BGM あり':' BGM なし'):'')+'</button>';}
 function bgmFor(){if(!S)return 'title';if(S.phase==='result'&&!S.ending)return 'title';return BGM_OF[S.phase]||'practice';}
 function bgmVol(){return Math.max(0,Math.min(1,(ui.set&&ui.set.bgm!=null?ui.set.bgm:60)/100))*.55;}
 function syncBgm(force){var k=bgmVol()>0?bgmFor():null;if(k===AUD.cur&&!force)return;
@@ -3090,6 +3094,7 @@ document.addEventListener('click',function(ev){
     case 'settings':ui.settings=true;render();break;
     case 'setclose':ui.settings=false;render();break;
     case 'setfs':ui.set.fs=v;saveSet();render();break;
+    case 'bgmtoggle':if(ui.set.bgm>0){ui.set.bgmPrev=ui.set.bgm;ui.set.bgm=0;}else ui.set.bgm=ui.set.bgmPrev||60;saveSet();render();syncBgm(true);toast(ui.set.bgm>0?'BGM を流します':'BGM を止めました');break;
     case 'setbgm':ui.set.bgm=+v;saveSet();render();syncBgm(true);break;
     case 'setvoice':ui.set.voice=v==='1'?1:0;saveSet();render();break;
     case 'setsfx':ui.set.sfx=v==='1'?1:0;saveSet();render();if(ui.set.sfx)sfx('ok');break;
@@ -3198,5 +3203,5 @@ document.addEventListener('click',function(ev){
     case 'restart':stopTimer();clearSave();S=null;render();window.scrollTo(0,0);break;
   }
 });
-(function(){try{applySet();}catch(e){}var sv=load();if(sv){ui.g=sv.g||'m';if(sv.fmt)buildRounds(sv);}render();})();
+(function(){try{ui.set=loadSet();applySet();}catch(e){}var sv=load();if(sv){ui.g=sv.g||'m';if(sv.fmt)buildRounds(sv);}render();})();
 </script>
