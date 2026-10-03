@@ -160,6 +160,46 @@ curl "https://itunes.apple.com/lookup?id=<App ID>&country=jp"
 スクリーンショットも審査も1件で済む。**消耗型を入れるなら、1番の手当てを
 非消耗型より厳しくしてからにする。**
 
+## 8. AdMob が app-ads.txt を見つけられない（2026-09-25 / soccer-manager）
+
+**症状**: AdMob に「app-ads.txt が見つかりません」と出続ける。ファイルは置いてあり、
+`https://<サイト>/app-ads.txt` を開けば中身も見える。
+
+**原因**: **`/robots.txt` が HTML を返していた。** 配信側が「知らないパスには
+index.html を返す」設定（SPA フォールバック）になっていると、`/robots.txt` にも
+HTML が返る。クローラーから見ると「robots.txt が**ある**（200）のに中身が読めない」
+状態で、app-ads.txt の取得まで止まりうる。
+
+最初この症状を「`pages.dev` が公開サフィックスだからでは」と疑ったが**外れ**だった。
+AdMob のヘルプに robots.txt の話が書いてあり、そこから実際に叩いて分かった。
+
+**直し方**: `robots.txt` を**実体として置く**（フォールバックに食われないように）。
+AdMob のヘルプが指示する2行も入れる。
+
+```
+User-agent: *
+Allow: /
+
+# app-ads.txt を読みにくる Google のクローラー
+User-agent: Google-adstxt
+Disallow:
+```
+
+https://support.google.com/admob/answer/9776740
+
+**確かめ方**: 置いたと思ったら**外から実際に叩く**。200 が返るだけでは足りない。
+**中身がテキストか**を見る。
+
+```bash
+curl -s https://<サイト>/robots.txt | head -c 60
+```
+
+`<!DOCTYPE html>` が返っていたら直っていない。
+
+**2026-10-02 時点で `goso-boat.pages.dev/robots.txt` は HTML を返している**
+（`site/` に robots.txt の実体が無い）。app-ads.txt 自体はテキストで返るので
+通るかもしれないが、サカマネで止まったのと同じ条件ではある。
+
 ## 通して言えること
 
 **「直したはず」で終わらせない。** 4も5も、コードの上では直っていた。
