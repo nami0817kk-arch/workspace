@@ -901,6 +901,25 @@ body.reduce .ending::before,body.reduce .stagec.night::after,body.reduce .dots i
 @media (prefers-reduced-motion:reduce){.ending::before,.stagec.night::after,.dots i.now{animation:none}}
 
 .seg button.ptog.on{background:var(--ok);border-color:var(--ok);color:#0e2a1c}
+
+/* ===== 30回ループ 26〜30 ===== */
+/* 26. 構成会議：盛り上がりの棒を光らせ、決めた審査の札に色の縁 */
+.fstep i{background:linear-gradient(180deg,#f6d77e,#8a5ff0);border-radius:6px 6px 2px 2px;box-shadow:0 0 10px rgba(233,186,75,.35);animation:barUp .6s cubic-bezier(.2,.8,.2,1) both}
+.fstep i.empty{background:none;border:1.5px dashed var(--line);box-shadow:none;animation:none}
+.fstep:nth-child(2) i{animation-delay:.08s}.fstep:nth-child(3) i{animation-delay:.16s}.fstep:nth-child(4) i{animation-delay:.24s}.fstep:nth-child(5) i{animation-delay:.32s}
+@keyframes barUp{from{transform:scaleY(.1);transform-origin:bottom}to{transform:none}}
+.fslot:not(.empty):not(.in){border-left:4px solid var(--accent)}
+.fslot.empty{background:transparent}
+/* 27. 用語集を札に */
+.gloss{display:grid;gap:8px;margin:0}
+.gloss dt{font-weight:800;color:var(--accent);margin:0;padding:10px 12px 0;background:var(--card2);border-radius:12px 12px 0 0}
+.gloss dd{margin:0 0 4px;padding:4px 12px 10px;background:var(--card2);border-radius:0 0 12px 12px;font-size:13.5px;line-height:1.7}
+/* 28. コツを吹き出しに */
+.tip{position:relative;border-color:rgba(164,124,242,.6);box-shadow:0 6px 16px rgba(0,0,0,.18);animation:fadeup .4s ease-out both}
+.tip .tq{border-radius:999px!important;padding:2px 10px!important;background:linear-gradient(135deg,#a47cf2,#7445d6)!important;color:#fff!important;font-weight:800}
+/* 29. キーボードで動かすときの縁 */
+button:focus-visible,select:focus-visible,summary:focus-visible,[data-a]:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+body.reduce .fstep i,body.reduce .tip{animation:none}@media (prefers-reduced-motion:reduce){.fstep i,.tip{animation:none}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
