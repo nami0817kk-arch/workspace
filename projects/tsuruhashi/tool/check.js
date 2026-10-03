@@ -82,5 +82,29 @@ sw.boostLv = 3; sw.boostUntil = clock + 300e3; ok(simulateAway(sw, 600).ore > aw
 S = normalize({ v: 2, w: [1, 2], frag: null, st: null });
 ok(S.w.length === WK.length && S.frag.length === NLAYER && S.st.blocks === 0, '欠けた保存を補って読む');
 
+// まとめ買い：×10 の値段は1つずつ買った合計とほぼ同じ（端数の切り上げぶんだけずれる）、最大は買える数だけ
+S = fresh(); S.ore = 1e9;
+const b10 = wkBulk(S, 0, 10); let one = 0; for (let k = 0; k < 10; k++) one += wkCost(S, 0, S.w[0] + k);
+ok(b10.n === 10 && Math.abs(b10.cost - one) <= 10, '×10 の値段は1つずつの合計と合う');
+const bm = wkBulk(S, 0, 'max'); ok(bm.cost <= S.ore && wkBulk(Object.assign(fresh(), { ore: S.ore }), 0, bm.n + 1).cost > S.ore, '最大は買える数ちょうど');
+ok(buyWorkerN(S, 0, 10) === 10 && S.w[0] === 12, 'まとめて雇える');
+S = fresh(); S.ore = 1e6; const pl = S.pick; ok(buyPickN(S, 'max') > 0 && S.pick > pl && S.ore >= 0, 'つるはしも最大まで強くできる');
+// 社訓「突貫」で岩盤に必要な Lv が下がる
+S = fresh(); const r0 = reqAt(40, S); S.creed = [null, 'b']; ok(reqAt(40, S) < r0, '社訓「突貫」で必要な Lv が下がる');
+// 岩盤は Lv が届けば普通のブロックと同じ固さ
+ok(hpOf(fresh(), 40) === baseHp(40), '岩盤の固さは普通のブロックと同じ');
+// 毎秒の鉱石は、仲間がいれば正の数
+S = fresh(); ok(oreRate(S) > 0, '毎秒の鉱石が出る');
+// 代替わりの後も見習い坑夫が2人いる
+S = fresh(); S.genDepth = 250; S.depth = 250; S.best = 250; rebirth(S, ['a']); ok(S.w[0] === 2, '代替わりの後も見習い坑夫が2人');
+// 壊れた保存（NaN・負の数・文字）を読んでも安全な値に戻る
+S = normalize({ v: 2, ore: NaN, depth: -3, pick: 'x', w: [3, -1, 'a'], gen: 0 });
+ok(S.ore === 0 && S.depth === 0 && S.pick === 1 && S.gen === 1 && S.w[1] === 0 && S.w[2] === 0 && S.w[0] === 3, '壊れた数は安全な値に戻す');
+// 長い時間の自動プレイでも数が壊れない（深さ 600m・名声が大きい状態で採掘と留守を回す）
+S = fresh(); S.fame = 1e6; S.pick = 400; S.w = WK.map(() => 300); S.depth = 600; S.best = 600;
+for (let k = 0; k < 200; k++) tick(S, 1, null);
+const rr = simulateAway(S, 8 * 3600); S = claimAwayState(S, rr, 2);
+ok(isFinite(S.ore) && isFinite(S.dmg) && S.depth >= 600, '深い所でも数が壊れない');
+
 if (fails) { console.log(`\n${fails}件 NG`); process.exit(1); }
 console.log('\nすべて ok');

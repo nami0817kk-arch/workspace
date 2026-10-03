@@ -252,7 +252,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
     <div class="boostchip" id="boostChip">採掘×2 5:00</div>
     <div class="hint" id="hint">仲間が自動で掘ります</div>
     <div class="goal" id="goal"><div id="goalTxt"></div><div class="bar"><i id="goalBar"></i></div></div>
-    <div class="toastwrap" id="toasts"></div>
+    <div class="toastwrap" id="toasts" role="status" aria-live="polite"></div>
     <button class="vein" id="vein" type="button" aria-label="鉱脈をたたく"><svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><path d="M6 30 L12 16 L22 10 L33 14 L39 28 L30 37 L14 37Z" fill="#6b4a2a" stroke="#3a2412" stroke-width="2"/><path d="M14 22 L19 16 L24 21 L19 26Z M24 26 L29 20 L33 27 L28 31Z M15 31 L19 28 L22 32Z" fill="#ffd166" stroke="#a36a00" stroke-width="1.2"/><path d="M16 19 l2 -1" stroke="#fff6c4" stroke-width="1.5"/></svg><span>鉱脈！</span></button>
   </div>
 
@@ -384,13 +384,13 @@ const PICK_TIER = [
 const tierOf = l => Math.min(PICK_TIER.length - 1, Math.floor(l / 10));
 
 const WK = [
-  { id:'minarai', name:'見習い坑夫',   dps:1,     cost:15,    desc:'まずはこの子から。休まず掘る' },
-  { id:'veteran', name:'ベテラン坑夫', dps:9,     cost:160,   desc:'つるはし一筋三十年' },
-  { id:'happa',   name:'発破係',       dps:70,    cost:2000,  desc:'ときどき派手に崩す' },
-  { id:'drill',   name:'掘削機',       dps:550,   cost:3e4,   desc:'つるはし社の自社製' },
-  { id:'robot',   name:'地底ロボ',     dps:4500,  cost:5e5,   desc:'熱にも闇にも強い' },
-  { id:'torokko', name:'トロッコ隊',   dps:4e4,   cost:1e7,   desc:'掘った端から運び出す' },
-  { id:'shield',  name:'掘進シールド', dps:3.6e5, cost:2.4e8, desc:'丸ごと削って進む大機械' },
+  { id:'minarai', name:'見習い坑夫',   dps:1,     cost:15,    desc:'まずはこの子から。文句ひとつ言わず掘る' },
+  { id:'veteran', name:'ベテラン坑夫', dps:9,     cost:160,   desc:'つるはし一筋三十年。岩の目を読む' },
+  { id:'happa',   name:'発破係',       dps:70,    cost:2000,  desc:'火薬の扱いはお手のもの。派手に崩す' },
+  { id:'drill',   name:'掘削機',       dps:550,   cost:3e4,   desc:'つるはし社の自社製。休まず回る' },
+  { id:'robot',   name:'地底ロボ',     dps:4500,  cost:5e5,   desc:'熱にも闇にも強い。目が光る' },
+  { id:'torokko', name:'トロッコ隊',   dps:4e4,   cost:1e7,   desc:'掘った端から運び出す。足もとが広い' },
+  { id:'shield',  name:'掘進シールド', dps:3.6e5, cost:2.4e8, desc:'丸ごと削って進む、つるはし社の切り札' },
 ];
 
 const LAYERS = [
@@ -514,9 +514,20 @@ const fresh = () => ({
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0, play:0, best1:0 },
   sound:true, vol:2, amb:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false,
 });
+// 保存の形が変わったときはここで古い形を直す（v は保存の版）
+function migrate(o){
+  if (!o || typeof o !== 'object') return o;
+  if (o.v === 2 && o.boostLv == null) o.boostLv = 0;
+  return o;
+}
 function normalize(o){
-  const S = Object.assign(fresh(), o || {});
+  const S = Object.assign(fresh(), migrate(o) || {});
+  // 数が壊れていたら（NaN・無限）安全な値に戻す
+  for (const k of ['ore', 'total', 'dmg', 'side', 'fame']) if (typeof S[k] !== 'number' || !isFinite(S[k]) || S[k] < 0) S[k] = 0;
+  for (const k of ['depth', 'genDepth', 'best', 'gen', 'pick']) if (!Number.isInteger(S[k]) || S[k] < 0) S[k] = k === 'gen' || k === 'pick' ? 1 : 0;
+  if (S.gen < 1) S.gen = 1; if (S.pick < 1) S.pick = 1;
   if (!Array.isArray(S.w)) S.w = [];
+  S.w = S.w.map(n => Number.isInteger(n) && n >= 0 ? n : 0);
   while (S.w.length < WK.length) S.w.push(0);
   if (!S.w.some(n => n > 0)) S.w[0] = 1;
   if (!Array.isArray(S.frag)) S.frag = [];
@@ -883,6 +894,7 @@ function load(){
 function save(){
   if (!pendingAway) S.last = NOW();   // おかえりの受け取り前は、留守の起点を動かさない
   try {
+    if (!isFinite(S.ore) || !isFinite(S.dmg) || !isFinite(S.total)) { S = normalize(S); }   // 壊れた数は保存の前に直す
     const raw = JSON.stringify(S);
     if (++saveN % 12 === 0) TStore.set(BAK, raw);
     TStore.set(KEY, raw);
@@ -1045,6 +1057,7 @@ function buildBook(){
   }));
 }
 // 図鑑の1種を大きく見る
+function focusFirst(id){ setTimeout(() => { const b = document.querySelector(`#${id} button:not([disabled])`); if (b) try { b.focus({ preventScroll: true }); } catch (e) {} }, 50); }
 function openItem(id){
   const it = ITEM_BY_ID[id], n = S.found[id] || 0, L = it.L;
   const where = it.r === 'l' ? `第${L + 1}層の終わり近く（${L * LAYER_LEN + LAYER_LEN - 8}〜${(L + 1) * LAYER_LEN}m）でだけ出る` : `第${L + 1}層（${L * LAYER_LEN}〜${(L + 1) * LAYER_LEN}m）で出る。宝の部屋や鑑定でも`;
@@ -1054,7 +1067,7 @@ function openItem(id){
       <div class="sub">${n ? `${n}個 見つけた` : 'まだ見つけていない'}</div></div></div>
     <p>${n ? esc(it.desc) : (it.r === 'l' && !hintShown(S, L) ? 'この層の★を2つそろえると手がかりが分かる。' : where)}</p>
     ${n ? `<p class="sub">${where}</p>` : ''}`;
-  $('itemModal').classList.add('on'); sfx('ui');
+  $('itemModal').classList.add('on'); sfx('ui'); focusFirst('itemModal');
 }
 $('itemClose').addEventListener('click', () => $('itemModal').classList.remove('on'));
 
@@ -1133,7 +1146,7 @@ function buildSettings(){
     setTimeout(() => { if (Date.now() - resetArm >= 3000 && $('resetBtn')) $('resetBtn').textContent = 'すべて消す'; }, 3100);
   });
 }
-$('setBtn').addEventListener('click', () => { buildSettings(); $('setModal').classList.add('on'); sfx('ui'); });
+$('setBtn').addEventListener('click', () => { buildSettings(); $('setModal').classList.add('on'); sfx('ui'); focusFirst('setModal'); });
 $('setClose').addEventListener('click', () => $('setModal').classList.remove('on'));
 
 let tab = 'tool';
@@ -1157,7 +1170,7 @@ function nextReq(){
 let lastBook = -1, coSeen = 0, lastFrag = '';
 function updateUI(force){
   const M = mods(S);
-  $('sRate').textContent = '+' + fmt(oreRate(S)) + '／秒';
+  { const r = oreRate(S); $('sRate').textContent = '+' + (r < 10 ? r.toFixed(1) : fmt(r)) + '／秒'; }
   $('sDepth').textContent = S.depth + 'm';
   $('sBest').textContent = S.best + 'm';
   $('sDps').textContent = fmt(crewDps(S, true, M) * boostMul(S));
@@ -1339,7 +1352,7 @@ function showAway(sec, capped, isDev){
     $('offX2').style.display = r.ore > 0 ? 'block' : 'none';
     $('offX2').innerHTML = adFree() ? '2倍で受け取る<small>広告なしで受け取れます</small>' : APP ? '2倍で受け取る<small>動画広告を見る</small>' : '2倍で受け取る<small>本番は動画広告（試作は即効果）</small>';
   }
-  $('offModal').classList.add('on');
+  $('offModal').classList.add('on'); focusFirst('offModal');
 }
 // 数字を数え上げて見せる（動きを減らす設定ではすぐ出す）
 function countUp(el, to, suffix){
@@ -1387,7 +1400,7 @@ function openRebirth(){
   const slots = creedSlots(S.gen);
   rbChoice = []; for (let i = 0; i < slots; i++) rbChoice[i] = S.creed[i] || null;
   renderRebirth();
-  $('rbModal').classList.add('on');
+  $('rbModal').classList.add('on'); focusFirst('rbModal');
 }
 function renderRebirth(){
   const g = fameGain(S);
@@ -1681,7 +1694,7 @@ function coins(x, y, n){
 const bubbles = [];
 function say(x, y, text, big){ bubbles.push({ x, y, text, t: 0, big }); if (bubbles.length > 3) bubbles.shift(); }
 function burst(x, y, n, color, power){
-  if (reduced) n = Math.ceil(n / 3);
+  if (reduced || lowFx) n = Math.ceil(n / 3);
   for (let i = 0; i < n; i++) {
     const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.3;
     const v = (90 + Math.random() * 220) * (power || 1);
@@ -1989,7 +2002,7 @@ function draw(dt){
   const tn = TINT[layerIdxForDepth(S.depth)];
   if (tn && S.depth > 4) { ctx.fillStyle = tn; ctx.fillRect(-10, -10, VW + 20, VH + 20); }
   // ほこり
-  if (!reduced && S.depth > 0) {
+  if (!reduced && !lowFx && S.depth > 0) {
     ctx.fillStyle = 'rgba(255,230,190,.22)';
     for (const d of motes) {
       d.y -= d.v * dt * 10; if (d.y < 0) d.y += 1;
@@ -2317,7 +2330,7 @@ function drawMap(){
 }
 
 // ================= ループ =================
-let dripT = 4, dispOre = 0, lastOreTxt = '', popBase = 0, coachT = 0;
+let fpsAvg = 60, lowFx = false, dripT = 4, dispOre = 0, lastOreTxt = '', popBase = 0, coachT = 0;
 let lastFrame = performance.now(), uiT = 0, saveT = 0, achT = 0, lastLayer = -1;
 function frame(now){
   // どこかでエラーが出ても、採掘と描画のくり返しは止めない
@@ -2338,6 +2351,9 @@ function frame0(now){
     if (veinLeft > 0) { veinLeft -= dt; if (veinLeft <= 0) veinEl.style.display = 'none'; }
     else if ((veinNext -= dt) <= 0) { veinNext = 90 + Math.random() * 60; if (S.depth > 0) showVein(); }
   }
+  // 重い端末（毎秒40コマを下回る）では、ほこり・星のまたたき・破片を減らす
+  fpsAvg = fpsAvg * 0.97 + (dt > 0 ? 1 / dt : 60) * 0.03;
+  if (!lowFx && fpsAvg < 40 && tAll > 5) lowFx = true; else if (lowFx && fpsAvg > 55) lowFx = false;
   draw(dt);
   if (!titleOpen) S.st.play = (S.st.play || 0) + dt;
   // 鉱石の数字は数え上がる（使ったときはすぐ下げる）。大きく増えたら跳ねる

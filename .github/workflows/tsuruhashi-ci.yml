@@ -39,3 +39,13 @@ jobs:
           node tool/sim.js --quick
           PLAY=noads node tool/sim.js --quick
           CREED=aaaaaa node tool/sim.js --quick
+
+      # 画面の通し確認：ブラウザで5つの状態を開き、タブ・シート・買い物を押してエラーが0件か
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 画面の通し確認
+        run: |
+          npm install --no-save --silent playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node tool/smoke.js
