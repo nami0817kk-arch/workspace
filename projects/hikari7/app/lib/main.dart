@@ -34,7 +34,7 @@ class HikariApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'ひかりの七席',
+    title: 'ひかりの指名',
     debugShowCheckedModeBanner: false,
     theme: ThemeData(colorSchemeSeed: const Color(0xFF7445D6), useMaterial3: true),
     darkTheme: ThemeData(colorSchemeSeed: const Color(0xFF7445D6), brightness: Brightness.dark, useMaterial3: true),

@@ -1,4 +1,4 @@
-<title>ひかりの七席</title>
+<title>ひかりの指名</title>
 <style>
 :root{
   --bg:#f6f3fa;--fg:#231d33;--muted:#5a5370;--card:#ffffff;--card2:#f0ebf7;--line:#e0d8ec;
@@ -2922,7 +2922,7 @@ function addStats(S,E,c){var st=c.stats||(c.stats={debut:0,awoke:0,combo:0,honne
   st.honne+=S.tr.filter(function(t){return t.honne;}).length;st.grade[E.grade]=(st.grade[E.grade]||0)+1;st.best=Math.max(st.best,Math.round(E.total*10)/10);
   st.bestStreams=Math.max(st.bestStreams,Math.round(E.streams));var dk=(S.diff||'normal');if(!st.diff[dk]||'SABCD'.indexOf(E.grade)<'SABCD'.indexOf(st.diff[dk]))st.diff[dk]=E.grade;if(S.alumniDone)st.alumni++;}
 /* ---------- フェーズ10：肩書きを増やす ---------- */
-RANKS.push([55,'時代をつくるプロデューサー'],[80,'名誉プロデューサー'],[120,'ひかりの七席の顔']);
+RANKS.push([55,'時代をつくるプロデューサー'],[80,'名誉プロデューサー'],[120,'番組の顔']);
 /* ---------- フェーズ11：難易度「伝説」（きびしいでS評価を取ると解放） ---------- */
 DIFF.legend={n:'伝説',d:'制作費がとても少なく、局の目標がとても高い。ポイントは2倍',bud:-35,tg:1,tot:-8,pt:2};
 function legendOpen(){var c=loadCareer();return !!(c.achv&&c.achv.hardS);}
@@ -3011,7 +3011,7 @@ function header(){ui.tsub=null;
   var STP=[['会議',['plan']],['レッスン',['lesson','lres']],['交流',['talk','interview']],['出来事',['event']],['本番',['show','stage','critique','night']],['合否',['judge','call']]],si=-1;
   STP.forEach(function(x,i){if(x[1].indexOf(S.phase)>=0)si=i;});
   var stp=S.rnd>0&&si>=0?'<div class="steps" aria-label="この審査の流れ"><b class="stw">'+esc(wk2)+'</b>'+STP.map(function(x,i){return '<span class="'+(i<si?'done':i===si?'now':'')+'">'+x[0]+'</span>';}).join('')+'</div>':'';
-  var h='<div class="hdr"><div class="logo"><span>ひかりの</span>七席</div><div class="wk">'+esc(wk)+'</div><div class="rt">'+(S.rnd>0&&si>=0?'':'<span class="wk2">'+esc(wk2)+'</span>')+rt+'</div>';
+  var h='<div class="hdr"><div class="logo"><span>ひかりの</span>指名</div><div class="wk">'+esc(wk)+'</div><div class="rt">'+(S.rnd>0&&si>=0?'':'<span class="wk2">'+esc(wk2)+'</span>')+rt+'</div>';
   h+=bgmBtn()+'<button class="btn-s gear" data-a="settings" aria-label="設定">'+ICO.gear+'</button></div>';
   h+='<div class="dots">';for(var i=0;i<=NROUND;i++)h+='<i class="'+(i<S.rnd?'on':i===S.rnd?'now':'')+'" title="'+(i===0?'書類・動画審査':ROUNDS[i].name)+'"></i>';h+='</div>';h+=stp;
   return h;
@@ -3053,7 +3053,7 @@ function vTitle(){
   var sv=load(),c=loadCareer(),rk=rankOf(c.points);
   var seats='';for(var i=0;i<7;i++){var mid=i===3;seats+='<div class="tseat'+(mid?' mid':'')+'" style="animation-delay:'+(.5+Math.abs(i-3)*.12).toFixed(2)+'s"><img decoding="async" class="face" src="'+faceURL(ui.g,i*2+(mid?1:0))+'" alt=""><i></i></div>';}
   var h='<div class="tscr"><div class="tbgm">'+bgmBtn(true)+'</div>'+
-    '<div class="tlogo"><div class="tkick">オーディション番組プロデュース</div><div class="logo7 tbig"><span>ひかりの</span>七席</div><p class="ttag">デビューの席を決めるのは、あなた。</p></div>'+
+    '<div class="tlogo"><div class="tkick">オーディション番組プロデュース</div><div class="logo7 tbig"><span>ひかりの</span>指名</div><p class="ttag">名前を呼ぶのは、あなた。</p></div>'+
     '<div class="tseats">'+seats+'</div><div class="tmenu">';
   if(sv)h+='<button class="btn tbtn" data-a="cont">つづきから<small>'+(sv.rnd>0?esc(ROUNDS[sv.rnd]?ROUNDS[sv.rnd].name:'')+'・':'書類・動画審査・')+(sv.g==='f'?'女性':'男性')+'グループ</small></button>';
   h+='<button class="btn tbtn'+(sv?' sub':'')+'" data-a="tsub" data-v="new">新しいシーズン</button>'+
@@ -3255,7 +3255,7 @@ function vCall(){
 function resultCard(E,P){var col=P.color!=null?GCOLORS[P.color][1]:'#e9ba4b',d=new Date(),dt=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
   return '<div class="rcard" style="border-color:'+col+'"><div class="rg"><b class="gr g-'+E.grade+'">'+E.grade+'</b><span>'+E.total.toFixed(1)+'点</span></div><div class="rn" style="color:'+col+'">'+esc(P.names[P.name])+'</div>'+
     (P.songs?'<div class="small">デビュー曲「'+esc(P.songs[P.song||0])+'」・'+Math.round(E.streams).toLocaleString()+'万回</div>':'')+
-    '<div class="rf">'+E.D.map(function(t){return faceImg(t,'sm');}).join('')+'</div><div class="small muted">'+(S.daily?'今日のオーディション（'+esc(S.daily)+'）・':'')+DIFF[S.diff||'normal'].n+(S.chal&&chalOf(S.chal)?'・チャレンジ「'+esc(chalOf(S.chal).n)+'」':'')+'・'+dt+'・ひかりの七席</div></div>';}
+    '<div class="rf">'+E.D.map(function(t){return faceImg(t,'sm');}).join('')+'</div><div class="small muted">'+(S.daily?'今日のオーディション（'+esc(S.daily)+'）・':'')+DIFF[S.diff||'normal'].n+(S.chal&&chalOf(S.chal)?'・チャレンジ「'+esc(chalOf(S.chal).n)+'」':'')+'・'+dt+'・ひかりの指名</div></div>';}
 function vResult(){
   if(!S.future)S.future=makeFuture(S,finalEval(S));
   if(S.ending)return vEnding();
@@ -3637,7 +3637,7 @@ function vEnding(){var F=S.future,E=finalEval(S),others=S.tr.filter(function(t){
     (others.length?'<div><small>ともに戦った練習生</small>'+others.map(function(t){return esc(t.name);}).join('<br>')+'</div>':'')+
     ((E.combos||[]).length?'<div><small>コンビ</small>'+E.combos.map(function(c){return esc(c.n)+'（'+esc(S.tr[c.a].giv)+'・'+esc(S.tr[c.b].giv)+'）';}).join('<br>')+'</div>':'')+
     '<div><small>声</small>'+VOICE_NAMES.map(function(n){return 'VOICEVOX:'+esc(n);}).join('<br>')+'</div><div><small>音楽</small>つるはし社</div>'+'<div><small>番組の平均視聴率</small>'+E.avgR.toFixed(1)+'%</div><div><small>プロデューサー</small>あなた</div></div>';
-  h+='<div class="ecard last"><div class="esub">ひかりの七席</div><div class="etitle">おしまい</div><div class="small">見守ってくれて、ありがとう。</div></div>';
+  h+='<div class="ecard last"><div class="esub">ひかりの指名</div><div class="etitle">おしまい</div><div class="small">見守ってくれて、ありがとう。</div></div>';
   h+='</div><div class="ebar"><button class="btn-s" data-a="endpause">'+(ui.endPause?'再生':'止める')+'</button><button class="btn-s" data-a="endfast">'+(ui.endFast?'ふつうの速さ':'早送り')+'</button><button class="btn-s" data-a="endok">結果を見る</button></div></div>';
   return h;}
 function futureBox(){var F=S.future;if(!F)return '';
@@ -3717,7 +3717,7 @@ function vSettings(){var st=ui.set;
   h+='<h3>わからないとき</h3><button class="btn sub" data-a="gloss">用語集を開く</button>';
   h+='<h3>データ</h3><p class="small muted">プロデューサー歴・実績・図鑑・名鑑・心得・進行中のシーズンをすべて消します。元に戻せません。</p><button class="btn sub'+(ui.wipeArm?' warnb':'')+'" data-a="wipe">'+(ui.wipeArm?'本当にすべて消す（もう一度押す）':'記録をすべて消す')+'</button>';
   h+='<h3>クレジット</h3><p class="small">BGM：つるはし社（自作の合成ツールで作曲）<br>声：'+VOICE_NAMES.map(function(n){return 'VOICEVOX:'+n;}).join('、')+'</p>';
-  h+='<p class="small muted" style="margin-top:14px">ひかりの七席　試作 v17'+(APP?'（アプリ）':'（テスト版）')+'</p></div></div>';
+  h+='<p class="small muted" style="margin-top:14px">ひかりの指名　試作 v17'+(APP?'（アプリ）':'（テスト版）')+'</p></div></div>';
   return h;}
 
 

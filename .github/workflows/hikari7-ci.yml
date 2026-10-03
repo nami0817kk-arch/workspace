@@ -1,4 +1,4 @@
-# ひかりの七席の検証（アプリの外側 Flutter と、中に入れるゲーム本体）。
+# ひかりの指名の検証（アプリの外側 Flutter と、中に入れるゲーム本体）。
 # 公開系（テスト用Web版・iOSリリース）とは分けてある。
 name: hikari7 CI
 
@@ -92,5 +92,5 @@ jobs:
         working-directory: projects/hikari7/app
         run: |
           app=build/ios/iphoneos/Runner.app
-          plutil -p "$app/ja.lproj/InfoPlist.strings" | grep 'ひかりの七席'
+          plutil -p "$app/ja.lproj/InfoPlist.strings" | grep 'ひかりの指名'
           ls -la "$app/Frameworks/App.framework/flutter_assets/assets/web/index.html"

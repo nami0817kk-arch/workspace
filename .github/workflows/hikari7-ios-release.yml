@@ -1,10 +1,10 @@
-# ひかりの七席の App Store 提出用 iOS リリースビルド（goso-boat-ios-release.yml を写したもの）。
+# ひかりの指名の App Store 提出用 iOS リリースビルド（goso-boat-ios-release.yml を写したもの）。
 #
 # サカマネ・護送ボートと同じチームなので、配信用証明書（IOS_DIST_CERT_*）・チームID・App Store Connect API キーは共用。
 # アプリごとに違うのは、プロビジョニングプロファイルと AdMob のIDだけ（HIKARI7_ で始まる Secrets）。
 # ゲーム本体（prototype/game.html）は、ビルドの前に tool/build_app_web.py でアプリ用に組み立てる。
 # 鍵の作り方と Secrets の一覧は projects/hikari7/docs/RELEASE.md を参照。
-name: Build ひかりの七席 (iOS Release)
+name: Build ひかりの指名 (iOS Release)
 
 on:
   push:
@@ -138,8 +138,8 @@ jobs:
           for page in privacy support; do
             body=$(curl -fsSL "$LEGAL_BASE_URL/$page.html") \
               || { echo "::error::$LEGAL_BASE_URL/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
-            grep -q "ひかりの七席" <<<"$body" \
-              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身がひかりの七席のページではありません。"; exit 1; }
+            grep -q "ひかりの指名" <<<"$body" \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身がひかりの指名のページではありません。"; exit 1; }
           done
 
       - name: Import signing certificate into a temporary keychain
