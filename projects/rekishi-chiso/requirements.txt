@@ -1,0 +1,6 @@
+# 台本・設定の読み込み
+PyYAML>=6.0
+# 画面の描画
+Pillow>=10.0
+# ffmpeg のバイナリ（システムに無いとき用）
+imageio-ffmpeg>=0.5

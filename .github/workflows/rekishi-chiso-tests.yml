@@ -1,0 +1,26 @@
+name: rekishi-chiso tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["projects/rekishi-chiso/**", ".github/workflows/rekishi-chiso-tests.yml"]
+  pull_request:
+    paths: ["projects/rekishi-chiso/**", ".github/workflows/rekishi-chiso-tests.yml"]
+  workflow_dispatch: {}
+
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    # VOICEVOX・日本語フォント・素材を使う部分はテストしない（CI に無いため）。
+    # 台本の読み込み・抑揚の計算・間・音声のつなぎ・字幕・章・折り返しを見る。
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/rekishi-chiso"
+      cache-dependency-path: "projects/rekishi-chiso/requirements.txt"
