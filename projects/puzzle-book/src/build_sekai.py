@@ -45,6 +45,48 @@ MARGIN_TOP = 0.45 * inch
 MARGIN_BOTTOM = 0.62 * inch  # ページ番号の分を空ける
 SAFE = 0.375 * inch  # 文字は仕上がり線からこれ以上内側（裁ち落としありの最小）
 
+# 挿絵（Gemini で描いたもの）。置いてあれば絵文字の代わりに丸く切り抜いて使う。
+# 名前: item01〜item50（各句）、chapter1〜5（章扉）、cover（表紙）、title（表題・おわりに）
+ART_DIR = _ROOT / "assets" / "sekai-art"
+ART_CREDIT = "挿絵: Google Gemini で生成"
+
+
+def art_path(key: str) -> Path | None:
+    for ext in (".png", ".jpg", ".jpeg", ".webp"):
+        path = ART_DIR / f"{key}{ext}"
+        if path.exists():
+            return path
+    return None
+
+
+def has_art() -> bool:
+    return ART_DIR.exists() and any(ART_DIR.iterdir())
+
+
+def draw_art(c: canvas.Canvas, key: str, cx: float, cy: float, r: float) -> bool:
+    """挿絵を中心 (cx, cy)・半径 r の丸に切り抜いて置く。四隅（Gemini の透かしが入る所）は丸の外に落ちる。"""
+    path = art_path(key)
+    if path is None:
+        return False
+    from PIL import Image
+
+    img = Image.open(path).convert("RGB")
+    side = min(img.size)
+    img = img.crop(((img.width - side) // 2, (img.height - side) // 2,
+                    (img.width + side) // 2, (img.height + side) // 2))
+    need = int(2 * r / 72 * 300) + 1
+    assert side >= need, f"{path.name} は {side}px。この大きさ（{2 * r / 72:.2f}in）には {need}px 以上が要る"
+    out = io.BytesIO()
+    img.convert("CMYK").save(out, "JPEG", quality=94)
+    out.seek(0)
+    c.saveState()
+    clip = c.beginPath()
+    clip.circle(cx, cy, r)
+    c.clipPath(clip, stroke=0, fill=0)
+    c.drawImage(ImageReader(out), cx - r, cy - r, 2 * r, 2 * r)
+    c.restoreState()
+    return True
+
 # 言語ごとの色と、その言語の文字での名前（本全体で同じ）
 LANGS = [("en", "英語"), ("fr", "フランス語"), ("zh", "中国語"), ("ko", "韓国語")]
 NATIVE = {"en": ("English", "LAT-B"), "fr": ("Français", "LAT-B"), "zh": ("中文", "TC-B"), "ko": ("한국어", "KR-B")}
@@ -359,9 +401,10 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     c.circle(cx, cy, ic_r + 3, stroke=0, fill=1)
     c.setFillColorCMYK(*WHITE)
     c.circle(cx, cy, ic_r, stroke=0, fill=1)
-    draw_icon(c, it["icon"], cx - ic_r * 0.72, cy - ic_r * 0.72, ic_r * 1.44)
-    if it.get("icon2"):
-        draw_icon(c, it["icon2"], cx + ic_r * 0.25, cy - ic_r * 0.95, ic_r * 0.62)
+    if not draw_art(c, f"item{no:02d}", cx, cy, ic_r):
+        draw_icon(c, it["icon"], cx - ic_r * 0.72, cy - ic_r * 0.72, ic_r * 1.44)
+        if it.get("icon2"):
+            draw_icon(c, it["icon2"], cx + ic_r * 0.25, cy - ic_r * 0.95, ic_r * 0.62)
     anchors["icon"] = (cx, cy)
     # 見出し
     y = band_bottom - 26
@@ -456,6 +499,12 @@ def draw_chapter(c: canvas.Canvas, f: Frame, spec: SekaiSpec, items: list[dict],
     c.drawString(L + c.stringWidth(f"{ci + 1:02d}", FONT_ROUNDED, 70) + 10, f.y1 - 70, f"第{ci + 1}章")
     c.setFont(FONT_ROUNDED, 30)
     c.drawString(L, f.y1 - 168, ch["title"])
+    if art_path(f"chapter{ci + 1}"):
+        ar = 74
+        acx, acy = R - ar, f.y1 - top_h + 18
+        c.setFillColorCMYK(*WHITE)
+        c.circle(acx, acy, ar + 4, stroke=0, fill=1)
+        draw_art(c, f"chapter{ci + 1}", acx, acy, ar)
     mine = [(k, it) for k, it in enumerate(items) if it["chapter"] == ci]
     # 10句のカード（2列×5段）
     cw = (w - 10) / 2
@@ -564,7 +613,12 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
                   fill=CMYKColor(*WHITE), outline=CMYKColor(*NAVY), outline_width=1)
     outlined_text(c, "世界ではこう言う", mid, f.top - 172, font=FONT_ROUNDED, size=34,
                   fill=CMYKColor(*GOLD), outline=CMYKColor(*NAVY), outline_width=1)
-    draw_icon(c, "1f30f", mid - 42, f.y0 + (f.y1 - f.y0) * 0.42 - 42, 84)
+    if art_path("title"):
+        c.setFillColorCMYK(*GOLD)
+        c.circle(mid, f.y0 + (f.y1 - f.y0) * 0.42, 66, stroke=0, fill=1)
+        draw_art(c, "title", mid, f.y0 + (f.y1 - f.y0) * 0.42, 62)
+    else:
+        draw_icon(c, "1f30f", mid - 42, f.y0 + (f.y1 - f.y0) * 0.42 - 42, 84)
     bx = f.left
     bw = (f.width - 18) / 4
     for j, (k, _) in enumerate(LANGS):
@@ -762,10 +816,11 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     ]:
         y = _para(c, f, text, y) - 12
     mid = (f.left + f.right) / 2
-    draw_icon(c, "1f30f", mid - 45, f.bottom + 90, 90)
-    icons = [it["icon"] for it in items[::5]]
-    for j, code in enumerate(icons):
-        draw_icon(c, code, f.left + j * (f.width - 30) / (len(icons) - 1), f.bottom + 30, 30)
+    if not draw_art(c, "title", mid, f.bottom + 95, 85):
+        draw_icon(c, "1f30f", mid - 45, f.bottom + 90, 90)
+        icons = [it["icon"] for it in items[::5]]
+        for j, code in enumerate(icons):
+            draw_icon(c, code, f.left + j * (f.width - 30) / (len(icons) - 1), f.bottom + 30, 30)
     folio(c, f)
     turn()
 
@@ -839,7 +894,7 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     c.drawString(f.left, y, " ".join(t for t in ("Copyright", year, spec.publisher) if t))
     y -= 20
     c.setFont(FONT_REGULAR, 7.5)
-    for line in FONT_CREDIT:
+    for line in FONT_CREDIT + ([ART_CREDIT] if has_art() else []):
         for part in wrap(c, line, FONT_REGULAR, 7.5, f.width, "list"):
             c.drawString(f.left, y, part)
             y -= 11
@@ -874,7 +929,9 @@ def build_cover(spec: SekaiSpec, output_path: str, *, paper: str = "white") -> t
     spine_x0, fx = b + tw, b + tw + sp
     cx, top = fx + tw / 2, b + th
     # 紺の上半分（背から表まで）
-    band = top - 2.6 * inch
+    cover_art = art_path("cover") is not None
+    art_r = 0.95 * inch if cover_art else 0.62 * inch
+    band = top - (3.0 if cover_art else 2.6) * inch
     c.setFillColorCMYK(*NAVY)
     c.rect(0, band, W, H - band, stroke=0, fill=1)
     c.rect(spine_x0, 0, sp, H, stroke=0, fill=1)
@@ -888,14 +945,15 @@ def build_cover(spec: SekaiSpec, output_path: str, *, paper: str = "white") -> t
                   fill=CMYKColor(*GOLD), outline=CMYKColor(*NAVY), outline_width=1)
     # 猿の絵（紺と生成りの境目）
     c.setFillColorCMYK(*GOLD)
-    c.circle(cx, band, 0.62 * inch + 3, stroke=0, fill=1)
+    c.circle(cx, band, art_r + 3, stroke=0, fill=1)
     c.setFillColorCMYK(*WHITE)
-    c.circle(cx, band, 0.62 * inch, stroke=0, fill=1)
-    draw_icon(c, "1f412", cx - 0.45 * inch, band - 0.45 * inch, 0.9 * inch)
+    c.circle(cx, band, art_r, stroke=0, fill=1)
+    if not draw_art(c, "cover", cx, band, art_r):
+        draw_icon(c, "1f412", cx - 0.45 * inch, band - 0.45 * inch, 0.9 * inch)
     c.setFillColorCMYK(*COLORS["green"][0])
     c.setFont(FONT_ROUNDED, 18)
-    c.drawCentredString(cx, band - 0.98 * inch, sample["jp"])
-    y = band - 1.18 * inch
+    c.drawCentredString(cx, band - art_r - 0.36 * inch, sample["jp"])
+    y = band - art_r - 0.56 * inch
     card_w = tw - 2 * safe - 16
     for k, _ in LANGS:
         c.setFillColorCMYK(*WHITE)
@@ -935,9 +993,13 @@ def build_cover(spec: SekaiSpec, output_path: str, *, paper: str = "white") -> t
                  "そのちがいを見くらべる、50のことわざの本です。"]:
         c.drawString(bx0, yy, line)
         yy -= 15
-    mini_w = tw * 0.41
+    bw, bh = (v * inch for v in kdp_spec.BARCODE_BOX_IN)
+    sf = frame(spec, 1)
+    ratio = (sf.y1 - sf.y0) / (sf.x1 - sf.x0)
+    # 見本は紺の帯とバーコード欄の間に収まる大きさまで
+    mini_w = min(tw * 0.41, (band - 0.12 * inch - (b + safe + bh + 31)) / ratio)
     img, _, sf = _item_image(spec, items[30], 31, mini_w)
-    mini_h = mini_w * (sf.y1 - sf.y0) / (sf.x1 - sf.x0)
+    mini_h = mini_w * ratio
     mx = b + (tw - mini_w) / 2
     my = band - 0.12 * inch - mini_h
     c.setFillColorCMYK(0.0, 0.10, 0.25, 0.15)
@@ -947,7 +1009,6 @@ def build_cover(spec: SekaiSpec, output_path: str, *, paper: str = "white") -> t
     c.setFont(FONT_REGULAR, 8.5)
     note = "外国語の言い方は、どれも2つ以上の辞書や資料で確かめました。"
     c.drawString(bx0, my - 20, note)
-    bw, bh = (v * inch for v in kdp_spec.BARCODE_BOX_IN)
     assert my - 24 >= b + safe + bh + 6, my
     c.setFillColorCMYK(*WHITE)
     c.rect(spine_x0 - safe - bw, b + safe, bw, bh, stroke=0, fill=1)
