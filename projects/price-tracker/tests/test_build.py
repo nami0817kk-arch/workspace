@@ -852,3 +852,33 @@ class 下位のジャンルTest(unittest.TestCase):
             subs=[("季節・空調家電", 608, "genre/562637/208375/")])
 
         self.assertIn('href="../../../genre/562637/208375/"', html)
+
+
+class ジャンル索引の深さTest(unittest.TestCase):
+    """中分類（126枚）への入口がジャンルページの中にしか無く、トップからは
+    2クリック先にあった。`/genre/` に集めると1段縮み、その奥の商品ページまでの
+    深さも全部1段縮む。読み手が着けない場所にはクロールも届かない。
+    """
+
+    def test_ジャンル索引に中分類を出す(self):
+        from src import theme
+        html = theme.genre_index(
+            [{"genre_id": "562637", "name": "家電", "count": 2051,
+              "subs": [("季節・空調家電", 614, "genre/562637/502823/"),
+                       ("美容・健康家電", 488, "genre/562637/565105/")]}],
+            {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/", "2026-10-03", prefix="../")
+
+        self.assertIn("季節・空調家電", html)
+        self.assertIn("614", html)
+        self.assertIn('href="../genre/562637/502823/"', html)
+
+    def test_中分類が無いジャンルでも壊れない(self):
+        from src import theme
+        html = theme.genre_index(
+            [{"genre_id": "1", "name": "新しいジャンル", "count": 3}],
+            {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/", "2026-10-03", prefix="../")
+
+        self.assertIn("新しいジャンル", html)
+        self.assertNotIn("terms subs", html)

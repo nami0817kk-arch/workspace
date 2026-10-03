@@ -317,7 +317,8 @@ def build(root: Path, out: Path) -> dict:
                       linked=linked, parent=("ジャンル別で見る", "genre/"),
                       terms=counted, subs=sub_chips)
         listed.append({**g, "count": len(hit),
-                       "terms": terms_by_genre.get(gid, [])})
+                       "terms": terms_by_genre.get(gid, []),
+                       "subs": sub_chips})
 
         # 中分類のページ。ここが価格.com の「カテゴリの下のカテゴリ」に当たる。
         for (mid_id, mid_name), members in sub_pairs:

@@ -1124,6 +1124,20 @@ def chip_list(rows: list, label: str, prefix: str = "",
             f'<span class="chips-label">{esc(label)}</span>{body}</nav>')
 
 
+def sub_genre_html(subs: list, prefix: str = "") -> str:
+    """ジャンルの下に置く中分類。`(名前, 件数, 行き先)` を受ける。
+
+    行き先はサイトの根からの相対で受け、`prefix` はここで付ける
+    （組み立て済みの相対パスを外から渡すと、階層の違うページで 404 になる）。
+    """
+    if not subs:
+        return ""
+    links = "".join(
+        f'<a href="{prefix}{href}">{esc(str(name))}'
+        f'<span class="n">{n:,}</span></a>' for name, n, href in subs if n)
+    return f'<span class="terms subs">{links}</span>' if links else ""
+
+
 def genre_terms_html(terms: list, prefix: str = "") -> str:
     """ジャンルの下に置く「そのジャンルらしい語」。
 
@@ -1271,10 +1285,13 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
     """
     title = "ジャンル別で見る"
     lead = "記録している商品をジャンルごとに、値下がりの大きい順で並べています。"
+    # 中分類（126枚）への入口をここに集める。ジャンルページの中にしか
+    # 置いていなかったとき、トップからは2クリック先にあった。1段縮めると、
+    # 奥の商品ページまでの深さも全部1段縮む。
     links = "".join(
         f'<li class="genre"><a href="{prefix}genre/{esc(str(g["genre_id"]))}/">'
         f'{esc(g["name"])}</a><span class="count">{g["count"]:,}商品</span>'
-        + genre_terms_html(g.get("terms") or [], prefix)
+        + sub_genre_html(g.get("subs") or [], prefix)
         + '</li>' for g in genres)
     return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
