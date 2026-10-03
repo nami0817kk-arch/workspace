@@ -28,7 +28,7 @@ for (var run = 0; run < N; run++) {
       }
       C.drop(s, x, ang);
     }
-    C.step(s); steps++;
+    C.step(s); s.events.length = 0; steps++;
     s.cargo.forEach(function (b) { if (b.speed > maxSpeed) maxSpeed = b.speed; });
   }
   var wk = (s.failed || 'none') + (s.failedBody ? ':' + s.failedBody.kind : ''); why[wk] = (why[wk] || 0) + 1;
