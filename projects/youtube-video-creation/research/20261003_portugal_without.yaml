@@ -1,0 +1,288 @@
+# 取材メモ（10/3 題材 portugal_without、型は news）。材料の控えは research/raw/20261003_portugal_without.md。
+# 10/2 に「ロナウドの代表離脱」の回（ronaldo_walkout）を出している。離脱の経緯・懲戒規定・代表通算の数字・会見の発言は繰り返さない。経緯は1行だけ。
+# この回は「ロナウドのいないポルトガルはどうだったか」と「その後の騒ぎ」に絞る。前回の「7点のうち6点は…」は言い直さず、誰が点を取ったか（得点者の分散）で見る。
+# 事実の裏:
+#   試合: 連盟（FPF）公式の試合記事 news/58075 と ESPN の試合 summary（得点・アシスト・シュート数・順位）。主将ブルーノは DN、7番レオンは DN・RTP。
+#   レオンの言葉: FPF 公式 news/58078 の原文から訳した。監督の言葉: FPF 公式 news/58077（試合後）。
+#   空港の騒ぎ・フォロワー・連盟の動き: A Bola 10/2 の3本（報道）。連盟は何も認めていないので「報じられています」。
+#   ノルウェー戦: 10/4（日）19:45 ポルト時間＝日本時間 10/5 3:45、ドラゴン（FPF の試合記事）。
+# 反応: X 2件（日本語1・英語1）と Yahoo!ニュースのコメント1件。いない方が強いという声だけにせず、ロナウドの側に立つ声を1件入れた。
+# 写真: FPF 公式サイトの試合記事の写真（Diogo Pinto / FPF）。代理店ではない。冒頭は 01_w.jpg（facecrop）。
+date: 2026年10月3日
+slot: other_1
+format: news
+people:
+- クリスティアーノ・ロナウド
+- ジョルジェ・ジェズス
+- ラファエル・レオン
+- ブルーノ・フェルナンデス
+- ジョアン・フェリックス
+- ゴンサロ・ラモス
+theme:
+  id: portugal_without
+  league: ''
+  league_name: UEFAネーションズリーグ
+  kind: other
+  topic: ポルトガル代表
+  title: ポルトガル代表、ロナウド不在で4得点。勝った翌日に空港で起きたこと
+  question: ロナウドがいなくなったポルトガルは、ピッチの中と外でどうなっているのか
+  takeaway: ジェズス監督の3試合でポルトガルは7点を取り、決めたのはフェリックス、ラモス、カンセロ、ヴィティーニャの4人。ロナウドが先発したウェールズ戦はシュート23本のうち7本がロナウドで1点だったが、デンマーク戦は枠内シュート10本で4人が1点ずつ取り、アシストも5人に散った。一方ピッチの外では、勝った翌日に空港でファンが言い争い、代表の公式アカウントは200万人近くフォロワーを減らした。点の取り方が本物かは、10月4日にハーランドのいるノルウェーとドラゴンで戦う試合が答えになる
+  opening_image: assets/images/20261003_portugal_without/01_w.jpg
+short_title: ポルトガル代表、ロナウド不在の3連勝。7点を決めたのは
+thumbnail:
+  photos:
+  - assets/images/20261003_portugal_without/01.jpg
+  - assets/images/20261003_portugal_without/03.jpg
+  line1: ロナウド不在のポルトガル
+  line2: 4発快勝の裏で●●万人が離れた
+  reaction: 個としてではなくチームとして強い
+sections:
+- id: night
+  heading: 7番を着けたレオン
+  tier: 報道
+  telop: 主将のいない夜、7番を着けたのはレオン「クリスは子どもの頃からの憧れ」
+  narrator: キャスター
+  card:
+    type: table
+    title: 10月1日 デンマーク戦のポルトガル
+    columns: [項目, 中身]
+    rows: &night
+    - ['主将', 'ブルーノ・フェルナンデス']
+    - ['7番', 'ラファエル・レオン']
+    - ['結果', '4-2で勝利。3戦3勝で首位']
+  say:
+  - text: ロナウドが合宿を去った翌日の10月1日、ポルトガルは敵地でデンマークと戦いました。
+    image: assets/images/20261003_portugal_without/01_w.jpg
+    card:
+      type: table
+      title: 10月1日 デンマーク戦のポルトガル
+      columns: [項目, 中身]
+      rows: *night
+  - text: 主将の腕章を巻いたのは、ブルーノ・フェルナンデス。
+    card:
+      type: table
+      title: 10月1日 デンマーク戦のポルトガル
+      columns: [項目, 中身]
+      rows: *night
+      highlight_row: 0
+  - text: そして、いつもロナウドが着ける7番は、ラファエル・レオンの背中にありました。
+    card:
+      type: table
+      title: 10月1日 デンマーク戦のポルトガル
+      columns: [項目, 中身]
+      rows: *night
+      highlight_row: 1
+  - text: 試合のあと、レオンは7番について、こう話しています。
+  - voice: ラファエル・レオン
+    text: クリスは僕にとって、子どもの頃からの憧れなんだ。
+  - voice: ラファエル・レオン
+    text: 7番には特別な意味がある。
+    cont: true
+  - voice: ラファエル・レオン
+    text: 子どもたちが生まれたのが、7日だったから。
+    cont: true
+  - voice: ラファエル・レオン
+    text: ただ、このユニホームに恥じないように、楽しもうとした。
+    cont: true
+  - text: 試合は、同点にされること2回。それでも最後は4対2で勝ち切りました。
+    image: assets/images/20261003_portugal_without/02.jpg
+    card:
+      type: table
+      title: 10月1日 デンマーク戦のポルトガル
+      columns: [項目, 中身]
+      rows: *night
+      highlight_row: 2
+  quotes_from:
+  - ポルトガルサッカー連盟 https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58078
+  sources:
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58075
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58078
+  - https://www.dn.pt/desporto/uma-seleo-com-cabea-e-um-p-e-meio-na-final-four-da-liga-das-naes
+  - https://www.espn.com/soccer/report/_/gameId/401861096
+- id: airport
+  heading: 勝った翌日の空港
+  tier: 報道
+  telop: ポルトの空港でファンが言い争い、警察が割って入る。代表の公式アカウントは200万人近くフォロワー減
+  narrator: キャスター
+  say:
+  - text: ところが、勝った翌日の2日。代表が戻った北部の街ポルトの空港で、騒ぎが起きます。
+    image: assets/images/20261003_portugal_without/03.jpg
+  - text: バスへ向かう一行のなかで、1人のファンがジェズス監督に罵声を浴びせました。
+  - text: エゴはエッフェル塔ほどの大きさだ。そんな叫びが、動画に残っています。
+  - text: 同じ場所で、別のファンはロナウドへの不満を口にします。
+  - text: 言い争いになった2人のあいだに、警察が割って入りました。
+  - text: 代表の公式アカウントは、騒動が始まってから、合わせて200万人近くフォロワーを減らしました。
+    card:
+      type: table
+      title: 騒動のあとのフォロワー（報道）
+      columns: [アカウント, 増減]
+      rows: &follow
+      - ['代表の公式アカウント（合計）', '200万人近く減']
+      - ['ジェズス監督', '10万人近く減']
+      - ['ロナウド', '増えた']
+      highlight_row: 0
+  - text: デンマーク戦の当日だけで、およそ100万人です。
+    card:
+      type: table
+      title: 騒動のあとのフォロワー（報道）
+      columns: [アカウント, 増減]
+      rows: *follow
+      highlight_row: 0
+  - text: ジェズス監督本人も、10万人近く減らしました。
+    card:
+      type: table
+      title: 騒動のあとのフォロワー（報道）
+      columns: [アカウント, 増減]
+      rows: *follow
+      highlight_row: 1
+  - text: 反対に、ロナウドのフォロワーは増えています。
+    card:
+      type: table
+      title: 騒動のあとのフォロワー（報道）
+      columns: [アカウント, 増減]
+      rows: *follow
+      highlight_row: 2
+  - text: 連盟は、監督とロナウドが歩み寄れる場を探っていると報じられています。
+  - text: ここ数日のことを聞かれた監督は、次の試合を戦うスタジアム、ドラゴンの名を挙げました。
+    image: assets/images/20261003_portugal_without/03.jpg
+  - voice: ジェズス監督
+    text: この試合、そして次はドラゴンでの試合。
+  - voice: ジェズス監督
+    text: ドラゴンの試合が終わったら、そこで考える。
+    cont: true
+  quotes_from:
+  - ポルトガルサッカー連盟 https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58077
+  sources:
+  - https://www.abola.pt/noticias/selecao-chega-ao-porto-e-adeptos-discutem-por-causa-de-ronaldo-e-jesus-policia-teve-de-intervir-2026100212362216436
+  - https://www.abola.pt/noticias/selecao-perde-quase-dois-milhoes-de-seguidores-e-jorge-jesus-tambem-soma-baixas-2026100211430858247
+  - https://www.abola.pt/noticias/fpf-tenta-consenso-entre-jesus-e-ronaldo-para-que-a-historia-do-capitao-na-selecao-nao-acabe-assim-2026100212101701560
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58077
+- id: scorers
+  viewpoint: true
+  main: true
+  heading: ロナウドのいない試合で、点を取った顔ぶれ
+  tier: 背景
+  telop: ジェズス監督の3試合で7点。決めたのは4人、アシストは5人
+  narrator: 解説
+  card:
+    type: table
+    title: ジェズス監督のポルトガル（ネーションズリーグ）
+    columns: [試合, ロナウド, シュート（枠内）, 得点]
+    rows: &games
+    - ['9/24 ウェールズ 1-0', '先発', '23本（5）', 'フェリックス']
+    - ['9/27 ノルウェー 2-1', 'ベンチ', '12本（4）', 'フェリックス、ラモス']
+    - ['10/1 デンマーク 4-2', '不在', '19本（10）', 'カンセロ、ラモス、ヴィティーニャ、フェリックス']
+  say:
+  - text: 主将のロナウドが合宿を離れても、ポルトガル代表は勝ち続けています。
+    short_only: true
+  - text: ワールドカップのあとに就いたジェズス監督の3試合で、得点は合わせて7点。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+  - text: 決めた選手を並べると、4人に分かれます。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+  - text: ロナウドが先発したウェールズ戦は、シュート23本。そのうち7本がロナウドでした。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+      highlight_row: 0
+  - text: 決まったのは、前半22分のフェリックスの1点です。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+      highlight_row: 0
+  - text: ロナウドがベンチだったノルウェー戦は、フェリックスとゴンサロ・ラモス。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+      highlight_row: 1
+  - text: そしてロナウドのいないデンマーク戦は、4人が1点ずつ。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+      highlight_row: 2
+  - text: 枠に飛んだシュートは10本で、3試合でいちばん多い数でした。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+      highlight_row: 2
+  - text: フェリックスは3試合続けてゴール。ロナウドに代わって先発したラモスは、2試合で2点と1アシストです。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+      highlight_row: 2
+  - text: アシストも、主将を務めたブルーノの2本を含め、5人に散らばりました。
+    card:
+      type: table
+      title: ジェズス監督のポルトガル（ネーションズリーグ）
+      columns: [試合, ロナウド, シュート（枠内）, 得点]
+      rows: *games
+      highlight_row: 2
+  - text: 1人の点取り屋に頼らず、誰からでも点が生まれる形が、いまのポルトガルです。
+    image: assets/images/20261003_portugal_without/01.jpg
+  - text: その形が本物かは、4日にノルウェーと戦う試合で試されます。
+  - text: オスロでの前回の対戦で、ノルウェーの1点を決めたのはハーランドでした。
+  - text: 試合は日本時間の5日、午前3時45分にドラゴンで始まります。
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401861044
+  - https://www.espn.com/soccer/report/_/gameId/401861073
+  - https://www.espn.com/soccer/report/_/gameId/401861096
+  - https://www.espn.com/soccer/story/_/id/50079904/cristiano-ronaldo-portugal-coach-jorge-jesus-denmark
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58075
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「個としてではなくチームとして強い」
+  narrator: キャスター
+  say:
+  # X @rikoriko_j468 2026-10-02 03:20 UTC。全文
+  - voice: ネット民
+    text: ポルトガルの強さ見てるとやっぱりロナウドいない方が強いのな
+    short_voice: true
+  - voice: ネット民
+    text: 個としてではなくチームとして強い
+    cont: true
+    short_voice: true
+  # X @Breezy09800 2026-10-02 07:06 UTC。英語の全文を訳した（絵文字・国旗は外した）
+  - voice: ネット民
+    text: ロナウド抜きのポルトガルは、急に第2のスペインになった。
+  - voice: ネット民
+    text: 純粋なサッカーで、雑音が無い。
+    cont: true
+  # Yahoo!ニュース（フットボールチャンネルの記事）のコメント欄 1ページ目 kinoko。全文
+  - voice: ネット民
+    text: まあ使う気がないなら
+  - voice: ネット民
+    text: 最初から話し合いして呼ばなければ良かったね
+    cont: true
+  - voice: ネット民
+    text: 大ベテランだしロナウドも
+    cont: true
+  - voice: ネット民
+    text: それ相応に扱われたいと思うのも当然だと思う
+    cont: true
+  - voice: ネット民
+    text: 人間だからね
+    cont: true
+  sources:
+  - https://x.com/rikoriko_j468/status/2105860446955970864
+  - https://x.com/Breezy09800/status/2105917360813351397
+  - https://news.yahoo.co.jp/profile/news/comments/b97aed00-5696-4280-b8cb-eb05bca8c83b

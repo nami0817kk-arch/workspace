@@ -1,0 +1,298 @@
+# 取材メモ（10/3 題材 mitoma_free、型は news）。材料の控えは research/raw/20261003_mitoma_free.md。
+# 9/12「三笘薫がブライトンと契約を結びたがらない。1月に何が起きるのか」で、契約の残り・週給・1月の意味・3つの選択肢は出している。
+# この回は 10/2 の新しい報道（トッテナム／デ・ゼルビ・リヴァプール）と、ブライトンの売り方の実数、2025年1月の申し出と今の比べに絞る。週給・「半年で国外と話せる」は言わない。
+# 報道の元は移籍の噂を独自に流すサイトなので、確度は未確認。言い切らない（「〜と伝えられています」「〜と言われています」）。まとめサイトの「6クラブ」「フリー移籍へ！」は使わない。
+# 写真: ゲキサカのイングランド戦（2026-03-31、©Koki NAGAHAMA/GEKISAKA）。冒頭は 02_w.jpg、見立ての節から 01_w.jpg に1回だけ替える。
+date: 2026年10月3日
+slot: japan_mitoma
+format: news
+people:
+- 三笘薫
+- ファビアン・ヒュルツェラー
+- ロベルト・デ・ゼルビ
+theme:
+  id: mitoma_free
+  league: england
+  league_name: プレミアリーグ
+  kind: transfer
+  topic: ブライトン
+  title: 三笘薫、来夏フリーの可能性も。主力を売ってきたブライトンが迫られる選択
+  question: 契約が残り9か月を切った三笘薫を、ブライトンはどうするのか
+  takeaway: ブライトンはカイセドやマカリステルを高く売ってきたクラブで、契約が残り1年のビスマも、延長に応じなかったトロサールも、契約が切れる前に売っている。2025年1月には5400万ポンドの申し出を断った三笘だが、いまは契約が9か月を切り、今季はまだ出場が無い。1月に値段を付けて送り出すには、まず試合に戻る姿が要る。戻るのが遅れるほど、来夏に移籍金ゼロで出ていく道が近づく
+  opening_image: assets/images/20261003_mitoma_free/02_w.jpg
+short_title: 三笘薫の契約は残り9か月。かつて断った申し出と今
+thumbnail:
+  photo: assets/images/20261003_mitoma_free/02.jpg
+  line1: 三笘薫 契約は残り9か月
+  line2: 断った申し出は●●●●万ポンド
+  reaction: ブライトンでレジェンドになって欲しい
+sections:
+- id: report
+  heading: トッテナムとリヴァプールが様子見
+  tier: 未確認
+  telop: 延長の話し合いは停滞。トッテナムとリヴァプールが様子を見ていると伝えられる
+  narrator: キャスター
+  say:
+  - text: ブライトンの三笘薫と、クラブとの契約延長の話し合いが止まっていると伝えられています。
+  - text: そこへ、トッテナムが冬の移籍市場で狙うかもしれない、という話が出ました。
+  - text: 監督は、ブライトン時代に三笘を起用したデ・ゼルビです。
+  - text: 川崎時代から三笘を評価していたリヴァプールや、バイエルンの名前も挙がっています。
+  - text: ただ、どれも本人やクラブが認めた話ではありません。
+  sources:
+  - https://www.teamtalk.com/news/de-zerbi-seeking-kaoru-mitoma-tottenham-reunion-brighton-contract-talks-stall
+  - https://news.yahoo.co.jp/articles/7c78277d3822d727852195257cda4497a61c12ca
+- id: injury
+  heading: 5月から戻れていない
+  tier: 報道
+  telop: 5月に左ハムストリングを負傷。今季はまだ出場なし
+  narrator: キャスター
+  say:
+  - text: 話を難しくしているのが、5月に痛めた太ももの裏のけがです。
+  - text: ヒュルツェラー監督は9月下旬、復帰の見通しをこう語りました。
+  - voice: ヒュルツェラー監督
+    text: こういうけがのあとは、
+  - voice: ヒュルツェラー監督
+    text: もう不安が残っていないことが、とても大事だ。
+    cont: true
+  - voice: ヒュルツェラー監督
+    text: いちばんの支えは、自分の体を信じられることだ。
+    cont: true
+  - voice: ヒュルツェラー監督
+    text: だから時間をあげないといけない。
+    cont: true
+  - voice: ヒュルツェラー監督
+    text: 『もう何も起きない』と本人が分かれば、全力でいける。
+    cont: true
+  - voice: ヒュルツェラー監督
+    text: そうなれば、すぐに選択肢になる。
+    cont: true
+  - voice: ヒュルツェラー監督
+    text: 医療班を本当に信頼している。
+    cont: true
+  - text: 三笘薫は5月9日のウルヴァーハンプトン戦で、左のハムストリングを痛めて58分に退き、手術を受けました。
+    card:
+      type: table
+      title: 三笘の公式戦の数字
+      columns: [シーズン, 試合, ゴール, アシスト]
+      rows: &stats
+      - ['2024-25', '41', '11', '4']
+      - ['2025-26', '27', '3', '1']
+      - ['2026-27（今季）', '0', '0', '0']
+  - text: 負傷で終わった昨季は、公式戦27試合で3ゴール1アシスト。
+    card:
+      type: table
+      title: 三笘の公式戦の数字
+      columns: [シーズン, 試合, ゴール, アシスト]
+      rows: *stats
+      highlight_row: 1
+  - text: その前の季は41試合で11ゴール。プレミアリーグでは自身最多の10ゴールでした。
+    card:
+      type: table
+      title: 三笘の公式戦の数字
+      columns: [シーズン, 試合, ゴール, アシスト]
+      rows: *stats
+      highlight_row: 0
+  - text: 今季は、ここまで1試合も出ていません。代表戦明けのサンダーランド戦にも間に合わない見込みです。
+    card:
+      type: table
+      title: 三笘の公式戦の数字
+      columns: [シーズン, 試合, ゴール, アシスト]
+      rows: *stats
+      highlight_row: 2
+  quotes_from:
+  - Yahoo Sports UK https://uk.sports.yahoo.com/news/hurzeler-says-mitoma-must-no-040000019.html
+  sources:
+  - https://uk.sports.yahoo.com/news/hurzeler-says-mitoma-must-no-040000019.html
+  - https://www.thescore.com/news/3612800/
+  - https://www.soccer-king.jp/news/world/eng/20260510/2157599.html
+  - https://www.soccer-king.jp/news/world/eng/20260526/2163672.html
+  - https://www.fotmob.com/players/862608/kaoru-mitoma
+- id: model
+  heading: 1億ポンドで売ったカイセド、ブライトンの売り方
+  tier: 報道
+  telop: カイセドは1億ポンド。ブライトンは育てた選手を高値で手放してきた
+  narrator: 解説
+  card:
+    type: table
+    title: ブライトンが送り出した主力
+    columns: [選手, 時期, 移籍先, 移籍金]
+    rows: &sales
+    - ['ククレジャ', '2022年夏', 'チェルシー', '5500万ポンド']
+    - ['ビスマ', '2022年夏', 'トッテナム', '3000万ポンド']
+    - ['トロサール', '2023年1月', 'アーセナル', '2100万ポンド']
+    - ['マカリステル', '2023年夏', 'リヴァプール', '3500万ポンド']
+    - ['カイセド', '2023年夏', 'チェルシー', '1億ポンド']
+  say:
+  - text: ブライトンは、育てた選手を高値で手放してきたクラブです。
+    card:
+      type: table
+      title: ブライトンが送り出した主力
+      columns: [選手, 時期, 移籍先, 移籍金]
+      rows: *sales
+  - text: 2023年夏、カイセドをチェルシーへ1億ポンドで。
+    card:
+      type: table
+      title: ブライトンが送り出した主力
+      columns: [選手, 時期, 移籍先, 移籍金]
+      rows: *sales
+      highlight_row: 4
+  - text: 2年半前に、およそ450万ポンドで獲った選手です。
+    emph: true
+    card:
+      type: table
+      title: ブライトンが送り出した主力
+      columns: [選手, 時期, 移籍先, 移籍金]
+      rows: *sales
+      highlight_row: 4
+  - text: 同じ夏、マカリステルはリヴァプールへ3500万ポンド。
+    card:
+      type: table
+      title: ブライトンが送り出した主力
+      columns: [選手, 時期, 移籍先, 移籍金]
+      rows: *sales
+      highlight_row: 3
+  - text: 三笘薫の今と重なるのは、残る2人です。
+    card:
+      type: table
+      title: ブライトンが送り出した主力
+      columns: [選手, 時期, 移籍先, 移籍金]
+      rows: *sales
+  - text: ビスマは契約が残り1年のところで、トッテナムへ。
+    card:
+      type: table
+      title: ブライトンが送り出した主力
+      columns: [選手, 時期, 移籍先, 移籍金]
+      rows: *sales
+      highlight_row: 1
+  - text: トロサールは契約延長に応じないまま、1月にアーセナルへ。
+    card:
+      type: table
+      title: ブライトンが送り出した主力
+      columns: [選手, 時期, 移籍先, 移籍金]
+      rows: *sales
+      highlight_row: 2
+  - text: どちらも、契約が切れる前に値段を付けて送り出しています。
+    card:
+      type: table
+      title: ブライトンが送り出した主力
+      columns: [選手, 時期, 移籍先, 移籍金]
+      rows: *sales
+  sources:
+  - https://www.theguardian.com/football/2023/aug/14/chelsea-sign-moises-caicedo-british-record-115m-deal-brighton
+  - https://www.bbc.co.uk/sport/football/65842033
+  - https://www.bbc.co.uk/sport/football/61795211
+  - https://www.bbc.co.uk/sport/football/64342770
+- id: view
+  viewpoint: true
+  main: true
+  heading: 三笘の契約、5400万ポンドを断ったときと今
+  tier: 背景
+  telop: 2025年1月は5400万ポンドを断った。今、契約は残り9か月
+  narrator: 解説
+  card:
+    type: table
+    title: 申し出を断ったときと今の三笘
+    columns: ['', '2025年1月', '今']
+    rows: &then
+    - ['契約の残り', '2年5か月', '9か月足らず']
+    - ['その季のリーグ戦', '23試合5ゴール', '出場なし']
+    - ['年齢', '27歳', '29歳']
+    - ['申し出', '5400万ポンド（断った）', '―']
+  say:
+  - text: 三笘薫とブライトンの契約は来年6月まで。トッテナムなどが様子を見ていると伝えられています。
+    short_only: true
+  - text: 2025年1月、サウジアラビアのクラブが三笘薫に5400万ポンドを提示しました。
+    image: assets/images/20261003_mitoma_free/01_w.jpg
+    card:
+      type: table
+      title: 申し出を断ったときと今の三笘
+      columns: ['', '2025年1月', '今']
+      rows: *then
+      highlight_row: 3
+  - text: ブライトンは、売る気は無いとしてこれを断りました。
+    emph: true
+    card:
+      type: table
+      title: 申し出を断ったときと今の三笘
+      columns: ['', '2025年1月', '今']
+      rows: *then
+      highlight_row: 3
+  - text: そのとき契約は2年5か月残り、リーグ戦は23試合すべてに出ていました。
+    card:
+      type: table
+      title: 申し出を断ったときと今の三笘
+      columns: ['', '2025年1月', '今']
+      rows: *then
+      highlight_row: 0
+  - text: いまは残り9か月足らずで、復帰を待つ立場です。
+    card:
+      type: table
+      title: 申し出を断ったときと今の三笘
+      columns: ['', '2025年1月', '今']
+      rows: *then
+      highlight_row: 1
+  - text: 年齢は29歳。契約が切れる前の5月20日に、30歳になります。
+    card:
+      type: table
+      title: 申し出を断ったときと今の三笘
+      columns: ['', '2025年1月', '今']
+      rows: *then
+      highlight_row: 2
+  - text: 延長でまとまれば話は別ですが、その話し合いは止まったままです。
+  - text: 移籍金を得て送り出すなら、1月の移籍市場で値段を付けることになります。
+    card:
+      type: table
+      title: 申し出を断ったときと今の三笘
+      columns: ['', '2025年1月', '今']
+      rows: *then
+  - text: ただ、それには年が明ける前に試合に戻り、動ける姿を見せる必要があります。
+  - text: 戻るのが遅れるほど、来夏に移籍金ゼロで送り出す道が近づきます。
+  - text: これまでの売り方とは、正反対の別れ方です。
+  sources:
+  - https://www.skysports.com/football/news/11095/13299685/kaoru-mitoma-brighton-reject-lb54m-bid-for-winger-from-saudi-arabian-club-al-nassr
+  - https://www.fotmob.com/players/862608/kaoru-mitoma
+  - https://www.teamtalk.com/news/de-zerbi-seeking-kaoru-mitoma-tottenham-reunion-brighton-contract-talks-stall
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「ここまできたならブライトンでレジェンドになって欲しい」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（ゲキサカ 9/10 の三笘の契約の記事）のコメント欄 1ページ目 psy********。全文
+  - voice: ネット民
+    text: どこかのクラブがあえて冬に獲るかは微妙だろう、
+  - voice: ネット民
+    text: 半年待てばフリーだし
+    cont: true
+  - voice: ネット民
+    text: 今夏もブライトンは売りたかったのに
+    cont: true
+  - voice: ネット民
+    text: ケガを繰り返しているから売れない、それをずっと繰り返してる
+    cont: true
+  - voice: ネット民
+    text: 冬移籍がかなうとすれば、
+    cont: true
+  - voice: ネット民
+    text: ビッグクラブの左WGが絶不調で
+    cont: true
+  - voice: ネット民
+    text: 緊急補強が必要な場合のみだろう
+    cont: true
+  # Reddit r/Tottenham（7/3、トッテナムのファン）。全文を訳した
+  - voice: ネット民
+    text: 三笘を獲りにいくべきだ。
+  - voice: ネット民
+    text: ブライトンでデ・ゼルビの下にいたときは
+    cont: true
+  - voice: ネット民
+    text: 手がつけられなかったし、契約も残り1年だ。
+    cont: true
+  # Yahoo!ニュース（サッカーキング 10/3）のコメント欄 2ページ目 kkp********。全文
+  - voice: ネット民
+    text: ここまできたならブライトンでレジェンドになって欲しい。
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/757df9098917d0558eff6f8566fd2eb36340e3b7/comments
+  - https://www.reddit.com/r/Tottenham/comments/1umb3hq/savinho_concerns/ovb74im/
+  - https://news.yahoo.co.jp/articles/7c78277d3822d727852195257cda4497a61c12ca/comments

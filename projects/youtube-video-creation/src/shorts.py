@@ -1436,6 +1436,23 @@ def enforce_limit(script: Script, max_seconds: float, config) -> int:
             lines.pop(fillers[-1])
             dropped += 1
             continue
+        # **締めの反応は最後の1件まで残す**（2026-10-03 ジダンの回）。反応が1件だけ残っているときに
+        # それを落とすと、ショートに誰の声も無いまま終わる（「声は必ず」2026-09-17）。
+        # そのときは反応のすぐ手前の語りから落とす（冒頭の2行は残す）
+        start = index
+        while start > 1 and (getattr(lines[start - 1], "speaker", "") or "").strip() not in NARRATORS:
+            start -= 1
+        if (getattr(lines[index], "speaker", "") or "").strip() not in NARRATORS:
+            groups = [l for l in lines[start:index + 1] if not getattr(l, "cont", False)]
+            if len(groups) == 1 and start - 1 >= 3:
+                at = start - 1
+                take = [at]
+                if _introduces(lines, at):
+                    take.insert(0, at - 1)
+                for x in reversed(take):
+                    lines.pop(x)
+                    dropped += 1
+                continue
         # **見出しと発言は対で落とす**（2026-09-18 ユーザー指摘。ヴァツケの回で
         # 「一つ目は…」「二つ目は…」だけが消え、**発言が宙に浮いていた**）。
         # 1行ずつ後ろから抜くので、語りだけが先に消えて

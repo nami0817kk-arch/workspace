@@ -1,0 +1,263 @@
+# 取材メモ（10/3 題材 france_italy、型は news）。材料の控えは research/raw/20261003_france_italy.md。
+# 主役はオリーセ。同じ日に「オリーセ紹介」（research/20261003_player_566723.yaml）が出るので、経歴・クラブの数字・W杯のアシスト記録は入れない。
+# この回は、この試合のFKと、ジダン体制3試合の得点の流れ（アシスト→決勝点→FK）に絞る。
+# 事実の裏:
+#   55分のFK: AP「シェルキの短いFKから20メートル」、ESPN レポート「25ヤード」、FotMob の位置で約23メートル。距離は言わず「エリアの手前、右寄り」「シェルキが横へ」まで。
+#   xG 0.098（FotMob）→「10本に1本」。スタッド・ドゥ・フランスで2本目のFK（2025-03-23 クロアチア戦以来）は Foot Mercato。
+#   68分の同点はダ・クーニャのボールロスト（ESPN「ゴールキックからつなぐ途中」）。バストーニは前節トルコ戦（9分）に続く2戦連発（FotMob）。
+#   ウパメカノの退場は85分（FotMob・ESPN・franceinfo ライブ。franceinfo の記事だけ87分）。2枚目はキーンを引っ張った（franceinfo ライブ）。
+#   3試合の数字は FotMob（シュート 12/18/18、xG 1.17/1.22/1.26、相手 1.21/0.69/1.54）。ベルギー戦のオリーセは77分から出場、88分に自陣から独走。
+#   頭突きの話は 10/2 の題材ページで×が付いたので1行だけ。
+# 本人（オリーセ）の試合後の言葉は見つからなかった。
+# 反応: Yahoo!ニュースのコメント欄から個人の投稿3件（全文）。海外の声は取れなかった（Reddit 403）。
+# 写真: レキップの記事の写真（F. Faugère/L'Équipe、A. Réau/L'Équipe。代理店ではない）。冒頭は 01_w、ショートは 01_v。
+date: 2026年10月3日
+slot: world_1
+format: news
+people:
+- マイケル・オリーセ
+theme:
+  id: france_italy
+  league: france
+  league_name: フランス代表
+  kind: match
+  topic: フランス代表
+  title: オリーセ、FKから2戦連発。勝ちきれなかったジダンのフランス、3試合3得点の中身
+  question: オリーセの一撃でも勝ちきれなかったジダンのフランス。3試合の点はどこから生まれているのか
+  takeaway: ジダン体制の3試合でフランスが挙げた3点は、すべてオリーセが絡んだもの。トルコ戦はムバッペへのアシスト、ムバッペが離れたあとのベルギー戦とイタリア戦は自分で決めた。シュート48本で3点は見込みの3.7点とほぼ同じで、相手の見込み3.4点を1失点に抑えて勝ち点7を積んだ。次は5日、勝ち点6のベルギーとの首位争い
+  opening_image: assets/images/20261003_france_italy/01_w.jpg
+short_title: オリーセのFKがバーを叩いて先制。それでもフランスは3連勝ならず
+thumbnail:
+  photo: assets/images/20261003_france_italy/01.jpg
+  line1: オリーセ 2戦連発のFK弾
+  line2: ジダン体制の3得点 関与は●点
+  reaction: フランスはバペ不在でも普通に強いわ
+sections:
+- id: draw
+  heading: ジダン監督、ホームで初めての引き分け
+  tier: 報道
+  telop: ジダン監督「選手たちのために残念だ。もっといい結果に値した」
+  narrator: キャスター
+  say:
+  - text: 2日、ヨーロッパの代表チームが争うネーションズリーグで、フランスとイタリアが対戦。
+  - text: フランスはオリーセの先制点を守れず、1対1で引き分けました。
+  - text: ジダン監督はトルコとベルギーに1対0で連勝していて、3連勝はなりませんでした。
+  - text: 2006年ワールドカップ決勝の頭突き以来となる、ジダンとイタリアの対戦でした。
+  - text: ジダン監督は、こう振り返ります。
+    image: assets/images/20261003_france_italy/03.jpg
+  - voice: ジネディーヌ・ジダン
+    text: 選手たちのために残念だ。もっといい結果に値した。
+  - voice: ジネディーヌ・ジダン
+    text: 試合を決めるチャンスはあったが、決めきれなかった。
+    cont: true
+  - voice: ジネディーヌ・ジダン
+    text: サッカーには、そういうこともある。
+    cont: true
+  - voice: ジネディーヌ・ジダン
+    text: それでも手応えはあった。
+    cont: true
+  - voice: ジネディーヌ・ジダン
+    text: 正直に言って、今日の戦いぶりを誇りに思う。
+    cont: true
+  quotes_from:
+  - ESPN https://www.espn.com/soccer/story/_/id/50086165/
+  - AP https://www.cp24.com/news/sports/2026/10/02/zidanes-first-home-game-in-charge-of-france-ends-in-1-1-draw-with-italy/
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50086165/
+  - https://www.cp24.com/news/sports/2026/10/02/zidanes-first-home-game-in-charge-of-france-ends-in-1-1-draw-with-italy/
+  - https://news.yahoo.co.jp/articles/4fb039276252dbe4b06ed5f547e4872f7b6beecb
+- id: freekick
+  main: true
+  heading: クロスバーを叩いたフリーキック
+  tier: 報道
+  telop: 55分、オリーセのフリーキックがクロスバーの下を叩いて先制
+  narrator: キャスター
+  say:
+  - text: ジダン監督のフランスがイタリアと1対1の引き分け。先制点は、またもオリーセでした。
+    short_only: true
+  - text: 点が動かないまま迎えた55分。ペナルティエリアの手前、右寄りでフリーキック。
+    image: assets/images/20261003_france_italy/02.jpg
+  - text: シェルキが横へ短く転がし、オリーセが左足で振り抜きました。
+  - text: ボールはクロスバーの下を叩いて、ゴールへ。
+  - text: シュートの位置と形から見ると、10本に1本しか入らない一撃です。
+  - text: 前の試合に続く、2試合連続のゴールです。
+  - text: この競技場でフリーキックを2本決めたフランス代表は、オリーセが初めて。
+    emph: true
+  - text: 1本目は、2025年3月のクロアチア戦でした。
+  sources:
+  - https://www.cp24.com/news/sports/2026/10/02/zidanes-first-home-game-in-charge-of-france-ends-in-1-1-draw-with-italy/
+  - https://www.espn.com/soccer/report/_/gameId/401861103
+  - https://www.franceinfo.fr/sports/foot/equipe-de-france/l-equipe-de-france-concede-le-match-nul-contre-l-italie-pour-la-premiere-de-zinedine-zidane-au-stade-de-france-comme-selectionneur_8220424.html
+  - https://www.footmercato.net/a1002642063356452690-equipe-de-france-le-coup-franc-sensationnel-de-michael-olise
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181793
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181790
+- id: equalizer
+  heading: 13分後の同点、そして10人に
+  tier: 報道
+  telop: 68分にバストーニが同点。85分にウパメカノが2枚目の警告で退場
+  narrator: キャスター
+  say:
+  - text: オリーセの先制から13分後。ダ・クーニャが自陣でボールを奪われます。
+    image: assets/images/20261003_france_italy/01_w.jpg
+  - text: 拾ったバストーニが持ち込み、左足で右隅へ。こちらも2戦連続のゴール。
+  - text: 85分、ウパメカノがキーンを引っ張って2枚目の警告。フランスは10人に。
+  - text: ボールを持った時間は、フランスが65%。
+    card:
+      type: table
+      title: イタリア戦の数字
+      columns: ['', フランス, イタリア]
+      rows: &stats
+      - ['ボールを持った時間', '65%', '35%']
+      - ['シュート', '18本', '14本']
+      - ['枠内のシュート', '8本', '2本']
+      - ['キーパーのセーブ', '1本', '7本']
+      highlight_row: 0
+  - text: シュートは18本対14本。枠内に飛んだのは8本対2本です。
+    card:
+      type: table
+      title: イタリア戦の数字
+      columns: ['', フランス, イタリア]
+      rows: *stats
+      highlight_row: 2
+  - text: その8本のうち7本を、ドンナルンマが止めました。
+    card:
+      type: table
+      title: イタリア戦の数字
+      columns: ['', フランス, イタリア]
+      rows: *stats
+      highlight_row: 3
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50086165/
+  - https://www.espn.com/soccer/matchstats/_/gameId/401861103
+  - https://www.cp24.com/news/sports/2026/10/02/zidanes-first-home-game-in-charge-of-france-ends-in-1-1-draw-with-italy/
+  - https://www.franceinfo.fr/sports/foot/ligue-des-nations/direct-france-italie-soir-de-premiere-au-stade-de-france-pour-zinedine-zidane-suivez-et-commentez-le-match-avec-nous_8218459.html
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181793
+- id: view
+  viewpoint: true
+  heading: ジダン体制3試合の得点と失点
+  tier: 背景
+  telop: 3試合で3得点1失点。3点すべてにオリーセが絡む
+  narrator: 解説
+  card:
+    type: table
+    title: ジダン体制の3試合
+    columns: [試合, 結果, シュート, 得点]
+    rows: &three
+    - ['9月25日 トルコ', '1-0', '12本', 'ムバッペ（オリーセのパス）']
+    - ['9月28日 ベルギー', '1-0', '18本', 'オリーセ']
+    - ['10月2日 イタリア', '1-1', '18本', 'オリーセ']
+    - ['合計', '3得点 1失点', '48本', '3点すべてにオリーセ']
+  say:
+  - text: ジダン監督の初戦、トルコ戦はムバッペの決勝点。パスを出したのはオリーセでした。
+    image: assets/images/20261003_france_italy/03.jpg
+    card:
+      type: table
+      title: ジダン体制の3試合
+      columns: [試合, 結果, シュート, 得点]
+      rows: *three
+      highlight_row: 0
+  - text: ムバッペはこの試合で膝を痛めて交代し、そのあとの2試合にはいません。
+    card:
+      type: table
+      title: ジダン体制の3試合
+      columns: [試合, 結果, シュート, 得点]
+      rows: *three
+      highlight_row: 0
+  - text: ベルギー戦は、77分から入ったオリーセが、88分に自陣から独走して決勝点。
+    card:
+      type: table
+      title: ジダン体制の3試合
+      columns: [試合, 結果, シュート, 得点]
+      rows: *three
+      highlight_row: 1
+  - text: そしてイタリア戦のフリーキック。3点すべてに、オリーセが絡んでいます。
+    emph: true
+    card:
+      type: table
+      title: ジダン体制の3試合
+      columns: [試合, 結果, シュート, 得点]
+      rows: *three
+      highlight_row: 2
+  - text: 3試合でシュートは48本。見込まれる点はおよそ3.7点で、実際の3点とほぼ同じ。
+    card:
+      type: table
+      title: ジダン体制の3試合
+      columns: [試合, 結果, シュート, 得点]
+      rows: *three
+      highlight_row: 3
+  - text: 一方、相手に許したシュートから見込まれる失点は、およそ3.4点。
+    card:
+      type: table
+      title: ジダン体制の3試合
+      columns: [試合, 結果, シュート, 得点]
+      rows: *three
+      highlight_row: 3
+  - text: それを1点に抑えたことが、勝ち点7につながりました。
+    card:
+      type: table
+      title: ジダン体制の3試合
+      columns: [試合, 結果, シュート, 得点]
+      rows: *three
+      highlight_row: 3
+  - text: 少ない点を守る形の中で、その点を作り続けているのが、オリーセです。
+  - text: 次は5日、同じスタッド・ドゥ・フランスでベルギーと戦います。
+  - text: 4チームのグループで、勝ち点7のフランスと6のベルギー。首位を争う一戦です。
+  - text: オリーセには、3試合連続のゴールがかかります。
+  sources:
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181789
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181790
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181793
+  - https://www.fotmob.com/api/data/teams?id=6723
+  - https://www.lefigaro.fr/sports/football/ligue-des-nations/turquie-france-ca-ne-va-pas-bien-zinedine-zidane-s-exprime-sur-l-etat-d-un-kylian-mbappe-appele-a-rentrer-a-madrid-20260925
+  - https://www.cp24.com/news/sports/2026/10/02/zidanes-first-home-game-in-charge-of-france-ends-in-1-1-draw-with-italy/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「フランスはバペ不在でも普通に強いわ」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（サッカーキングの記事「オリーセ＆バストーニが2戦連発」）のコメント欄 pkg********。全文（「目地す」は原文のまま）
+  - voice: ネット民
+    text: 早起きした甲斐があり…
+  - voice: ネット民
+    text: 面白い試合だった。
+    cont: true
+  - voice: ネット民
+    text: アズーリは上手く守れていたしチャンスはものにした感じ
+    cont: true
+  - voice: ネット民
+    text: レ・ブルーは完全に押し込み、
+    cont: true
+  - voice: ネット民
+    text: オリーセの芸術的な先制弾は見事で、
+    cont: true
+  - voice: ネット民
+    text: あと4つくらいはドンナルンマで無ければ…
+    cont: true
+  - voice: ネット民
+    text: 入っていた惜しいシーン有った
+    cont: true
+  - voice: ネット民
+    text: 次戦ベルギー相手も注目だ。
+    cont: true
+  - voice: ネット民
+    text: ジダンの目地すかたちは出来つつ有る。
+    cont: true
+  - voice: ネット民
+    text: とても良いと感じます
+    cont: true
+  # theWORLD の記事「オリーセのゴラッソでフランス先制も」のコメント欄 nag********。全文
+  - voice: ネット民
+    text: キーンがどれか決めてればねぇ
+    short_voice: true
+  - voice: ネット民
+    text: ドンちゃんはさすが
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: フランスはバペ不在でも普通に強いわ
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/9e1ea767c20736709a9835f3afa0dcb4cc4b74d1/comments
+  - https://news.yahoo.co.jp/articles/7221bdcacb3959b403b475bbe4ec3c3adda1bc5f/comments

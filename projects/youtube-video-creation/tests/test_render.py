@@ -652,6 +652,22 @@ def test_件数が多い節では古いほうから落として字を保つ():
         assert canvas.getbbox() is not None
 
 
+def test_縦型では反応の箱を下に寄せて顔を避ける(tmp_path):
+    """2026-10-03。ショートの最後で、反応の白い箱が上の3分の1にある顔へ重なっていた。"""
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+    from src.shorts import portrait
+
+    config = portrait(load_config())
+    r = Renderer(config, tmp_path)
+    canvas = Image.new("RGBA", (config.video.width, config.video.height))
+    r._draw_stack(canvas, ("ネット民「短い反応です」", "ネット民「もう1件の反応です」"))
+    top = canvas.getbbox()[1]
+    assert top > config.video.height * 0.45, top
+
+
 def test_横長の一覧板は画面いっぱいに敷く(tmp_path):
     """**左半分がぼかしだけになっていた**（2026-09-17 ユーザー指摘
     「動画の画面の左側がぼやけている」）。

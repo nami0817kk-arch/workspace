@@ -2502,7 +2502,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 else:
                     lines.append(f"  telop: {head}")
                 lines.append(f"  source: {section.tier}")
-                if own_card:
+                if _card_off(own_card):
+                    lines.append("  card: none")
+                elif own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
                 elif section.card:
                     lines.append(f"  card: {section.id}_card")
@@ -2564,7 +2566,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     # 数えないと、次の行に同じ写真がもう一度出て12.6秒になった
                     showed_photo = True
                     last_image = own_image
-                if own_card:
+                if _card_off(own_card):
+                    # **行で表を下ろす**（2026-10-03）。反応の白い箱が表に重なった（クラシコの回）
+                    lines.append("  card: none")
+                    shown_for = 0
+                elif own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
                     shown_for = 0
                 elif shown_for >= CARD_LINES_MAX:
@@ -2637,6 +2643,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
     return "\n".join(lines)
 
 
+def _card_off(card) -> bool:
+    """行の `card: none`（表を下ろす指定）か。"""
+    return isinstance(card, str) and card.strip() in ("none", "なし")
+
+
 def _cards(notes: Notes) -> dict:
     cards: dict = {}
     if notes.opening_card:
@@ -2645,7 +2656,7 @@ def _cards(notes: Notes) -> dict:
         if section.card:
             cards[f"{section.id}_card"] = section.card
         for number, one in enumerate(section.line_cards):
-            if one:
+            if one and not _card_off(one):
                 cards[f"{section.id}_{number}_card"] = one
         # **代弁の行ぶんの引用カード**（2026-09-12）。台本と同じ番号で作る
         for number, sentence in enumerate(section.say):

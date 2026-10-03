@@ -1,0 +1,346 @@
+# 取材メモ（10/3 題材 lewandowski_hat、型は news）。材料の控えは research/raw/20261003_lewandowski_hat.md。
+# 題材メモは「バルセロナ」だったが、今夏（6/29）にシカゴ・ファイアーへ移っている（クラブ発表・mlssoccer・Polsat・transfery.info）。台本はシカゴ・ファイアーで書く。
+# 退場とPKの時刻：倒されて退場が22分、PKを決めたのが24分（PZPN公式・サッカーキング・Meczyki）。
+# ロナウドの代表通算は146（Polsat・UEFA・Wikipedia）。World Soccer Talk の147は誤り。
+# 本人の言葉は試合後の TVP Sport のインタビュー。transfery.info と goal.pl の2つの書き起こしで照合し、両方にある部分だけ訳した。
+# 監督の試合後の言葉に、レヴァンドフスキ個人についてのものは無かった。前日会見の言葉は題の出来事より前なので入れていない。
+# 写真：サムネと冒頭は Commons（2018年W杯の日本戦、CC BY-SA 3.0。左にレヴァンドフスキ、奥にグロシツキ。牧野が写らない位置で切った）。試合の節は PZPN の記事の1枚（連盟の掲載、背中の9番）。本人の言葉の節から冒頭の写真に戻す。
+#   記事で本人の顔が大きく写る写真は 400mm.pl・PressFocus・Getty・Alamy の配信なので使わない。
+# league の鍵にポーランドは無いので spain（前の所属のリーグ。集計用）。タグは league_name のネーションズリーグで出る。
+date: 2026年10月3日
+slot: world_1
+format: news
+people:
+- ロベルト・レヴァンドフスキ
+theme:
+  id: lewandowski_hat
+  league: spain
+  league_name: ネーションズリーグ
+  kind: match
+  topic: ポーランド代表
+  title: レヴァンドフスキ、38歳でハットトリック。88分だけの出番から4日で変わったもの
+  question: 4日前の試合を88分まで外から見ていた38歳は、なぜ3点を取れたのか
+  takeaway: 代表で90点を超えたのは歴史上6人で、レヴァンドフスキは92点の6番目。ヨーロッパではロナウドの146点、ルカクの94点に次ぐ3番目だ。2点差のルカクは同じ夜に1点を足し、差は縮まらなかった。10月5日のボスニア戦は警告の累積で出られず、次の出番は11月14日のルーマニア戦。4試合で8点を奪ってきた、どの国よりも多く決めてきた相手で、差を詰める場面が来る
+  opening_image: assets/images/20261003_lewandowski_hat/01_w.jpg
+short_title: レヴァンドフスキ、ベンチの4日後に3得点。本人が語った脚の重さ
+thumbnail:
+  photo: assets/images/20261003_lewandowski_hat/01.jpg
+  line1: 38歳レヴァンドフスキ
+  line2: 最年長ハット、抜いた相手は●●●
+  reaction: このおっちゃんも、まだまだ頑張るね
+sections:
+- id: match
+  heading: ルーマニアに6対0
+  tier: 報道
+  telop: ポーランド6対0ルーマニア。レヴァンドフスキは24分、47分、86分
+  narrator: キャスター
+  card:
+    type: table
+    title: ポーランド 6-0 ルーマニア（10月2日）
+    columns: [分, 得点]
+    rows: &goals
+    - ['24分', 'レヴァンドフスキ（ペナルティーキック）']
+    - ['47分', 'レヴァンドフスキ']
+    - ['49分', 'オウンゴール']
+    - ['62分', 'ジエリンスキ']
+    - ['66分', 'ベドナレク']
+    - ['86分', 'レヴァンドフスキ']
+  say:
+  - text: 2日、ヨーロッパの代表どうしのリーグ戦、ネーションズリーグ。
+    image: assets/images/20261003_lewandowski_hat/02.jpg
+    card:
+      type: table
+      title: ポーランド 6-0 ルーマニア（10月2日）
+      columns: [分, 得点]
+      rows: *goals
+  - text: ワルシャワの国立競技場で、ポーランドがルーマニアに6対0で大勝しました。
+    card:
+      type: table
+      title: ポーランド 6-0 ルーマニア（10月2日）
+      columns: [分, 得点]
+      rows: *goals
+  - text: 22分、抜け出したレヴァンドフスキを、ルーマニアのドラグシンが倒して一発退場。
+    card:
+      type: table
+      title: ポーランド 6-0 ルーマニア（10月2日）
+      columns: [分, 得点]
+      rows: *goals
+      highlight_row: 0
+  - text: 24分、そのペナルティーキックを自分で決めます。
+    card:
+      type: table
+      title: ポーランド 6-0 ルーマニア（10月2日）
+      columns: [分, 得点]
+      rows: *goals
+      highlight_row: 0
+  - text: 後半開始すぐの47分、ザレフスキの折り返しを押し込んで2点目。
+    card:
+      type: table
+      title: ポーランド 6-0 ルーマニア（10月2日）
+      columns: [分, 得点]
+      rows: *goals
+      highlight_row: 1
+  - text: 86分には、ペナルティエリアでボールを持ち、守備をかわして右足。
+    card:
+      type: table
+      title: ポーランド 6-0 ルーマニア（10月2日）
+      columns: [分, 得点]
+      rows: *goals
+      highlight_row: 5
+  - text: 38歳の主将が、ハットトリックで締めくくりました。
+    card:
+      type: table
+      title: ポーランド 6-0 ルーマニア（10月2日）
+      columns: [分, 得点]
+      rows: *goals
+      highlight_row: 5
+  - voice: レヴァンドフスキ
+    text: いまもまだ、点を取り続けている。
+  - voice: レヴァンドフスキ
+    text: だから、それもうれしいんです。
+    cont: true
+  quotes_from:
+  - transfery.info https://transfery.info/aktualnosci/robert-lewandowski-po-starciu-z-rumunia/283464
+  - Goal.pl https://www.goal.pl/kadra/lewandowski-po-meczu-z-rumunia-nie-lubie-takich-sztucznosci/
+  sources:
+  - https://www.pzpn.pl/reprezentacje/reprezentacja-a/aktualnosci/2026-10-02/polacy-pokazali-moc-lewandowski-z-hat-trickiem
+  - https://news.yahoo.co.jp/articles/aa537c2cc9a9a207398fe6856a3ee587bc9a0b48
+  - https://www.meczyki.pl/newsy/pilka-nozna/brawo-lewandowski-tak-strzelil-gola-rumunii-wideo/314501
+  - https://transfery.info/aktualnosci/robert-lewandowski-po-starciu-z-rumunia/283464
+  - https://www.goal.pl/kadra/lewandowski-po-meczu-z-rumunia-nie-lubie-takich-sztucznosci/
+- id: bench
+  main: true
+  heading: 4日前は88分から
+  tier: 報道
+  telop: 4日前のスウェーデン戦は先発を外れ、出番は88分から
+  narrator: キャスター
+  card:
+    type: table
+    title: ネーションズリーグ3試合とレヴァンドフスキ
+    columns: [日付, 相手, 結果, 出場]
+    rows: &three
+    - ['9月25日', 'ボスニア', '0-0', '先発']
+    - ['9月28日', 'スウェーデン', '1-3', '88分から']
+    - ['10月2日', 'ルーマニア', '6-0', '先発 3得点']
+  say:
+  - text: 38歳のポーランド代表の主将が、ルーマニアから3点。2日の夜、6対0の大勝でした。
+    short_only: true
+  - text: 実は4日前のスウェーデン戦、レヴァンドフスキは先発を外れていました。
+    image: assets/images/20261003_lewandowski_hat/01_w.jpg
+    card:
+      type: table
+      title: ネーションズリーグ3試合とレヴァンドフスキ
+      columns: [日付, 相手, 結果, 出場]
+      rows: *three
+      highlight_row: 1
+  - text: ピッチに入ったのは88分。チームは1対3で敗れました。
+    card:
+      type: table
+      title: ネーションズリーグ3試合とレヴァンドフスキ
+      columns: [日付, 相手, 結果, 出場]
+      rows: *three
+      highlight_row: 1
+  - text: その前のボスニア戦は先発しましたが、0対0の引き分けでした。
+    card:
+      type: table
+      title: ネーションズリーグ3試合とレヴァンドフスキ
+      columns: [日付, 相手, 結果, 出場]
+      rows: *three
+      highlight_row: 0
+  - text: この夏、バルセロナからアメリカのシカゴ・ファイアーへ移籍。今回が移籍後、初めての代表です。
+    card:
+      type: table
+      title: ネーションズリーグ3試合とレヴァンドフスキ
+      columns: [日付, 相手, 結果, 出場]
+      rows: *three
+      highlight_row: 0
+  - text: 試合のあと、本人はこう話しています。
+    card:
+      type: table
+      title: ネーションズリーグ3試合とレヴァンドフスキ
+      columns: [日付, 相手, 結果, 出場]
+      rows: *three
+      highlight_row: 2
+  - voice: レヴァンドフスキ
+    text: 最初の試合は、脚に力が入りませんでした。
+  - voice: レヴァンドフスキ
+    text: アメリカからの初めての移動でした。
+  - voice: レヴァンドフスキ
+    text: この年齢だと、整えるのは簡単じゃない。
+    cont: true
+    cont: true
+  - voice: レヴァンドフスキ
+    text: 不調が来るのは分かっていると、前から言っていました。
+    cont: true
+  - voice: レヴァンドフスキ
+    text: 来たのは、4、5日たってからです。
+    cont: true
+  - voice: レヴァンドフスキ
+    text: 今日の試合は、最初から本来の形でした。
+    cont: true
+  quotes_from:
+  - transfery.info https://transfery.info/aktualnosci/robert-lewandowski-po-starciu-z-rumunia/283464
+  - Goal.pl https://www.goal.pl/kadra/lewandowski-po-meczu-z-rumunia-nie-lubie-takich-sztucznosci/
+  sources:
+  - https://www.goal.pl/artykuly/urban-dostal-pytanie-o-lewandowskiego-tak-ocenil-jego-forme/
+  - https://sport.dziennik.pl/pilka-nozna/artykuly/11320923,lewandowski-z-lawki-rezerwowych-ogladal-porazke-ze-szwecja-polacy-dobrze-grali-tylko-do-przerwy.html
+  - https://www.polsatsport.pl/robert-lewandowski/2026-10-02/liczby-lewandowskiego-w-reprezentacji-polski-imponujace-statystyki/
+  - https://www.mlssoccer.com/news/robert-lewandowski-effect-felt-beyond-goals-for-chicago-fire-fc
+  - https://transfery.info/aktualnosci/robert-lewandowski-po-starciu-z-rumunia/283464
+  - https://www.goal.pl/kadra/lewandowski-po-meczu-z-rumunia-nie-lubie-takich-sztucznosci/
+- id: record
+  heading: 38歳42日、ロナウドを抜いた
+  tier: 報道
+  telop: ネーションズリーグ最年長のハットトリック。38歳42日
+  narrator: キャスター
+  card:
+    type: table
+    title: レヴァンドフスキの代表でのハットトリック
+    columns: [日付, 相手, 年齢]
+    rows: &hats
+    - ['2014年9月', 'ジブラルタル', '26歳']
+    - ['2015年6月', 'ジョージア', '26歳']
+    - ['2016年10月', 'デンマーク', '28歳']
+    - ['2017年6月', 'ルーマニア', '28歳']
+    - ['2017年10月', 'アルメニア', '29歳']
+    - ['2019年10月', 'ラトビア', '31歳']
+    - ['2026年10月', 'ルーマニア', '38歳']
+  say:
+  - text: 38歳42日のレヴァンドフスキのハットトリックは、ネーションズリーグで最年長。
+    card:
+      type: table
+      title: レヴァンドフスキの代表でのハットトリック
+      columns: [日付, 相手, 年齢]
+      rows: *hats
+      highlight_row: 6
+  - text: それまでは、2019年の準決勝でロナウドが決めた、34歳120日でした。
+    card:
+      type: table
+      title: レヴァンドフスキの代表でのハットトリック
+      columns: [日付, 相手, 年齢]
+      rows: *hats
+      highlight_row: 6
+  - text: 代表でのハットトリックは、これが7回目です。
+    card:
+      type: table
+      title: レヴァンドフスキの代表でのハットトリック
+      columns: [日付, 相手, 年齢]
+      rows: *hats
+  - text: 最初は2014年、26歳のジブラルタル戦。
+    card:
+      type: table
+      title: レヴァンドフスキの代表でのハットトリック
+      columns: [日付, 相手, 年齢]
+      rows: *hats
+      highlight_row: 0
+  - text: 前回は2019年、31歳のラトビア戦です。
+    card:
+      type: table
+      title: レヴァンドフスキの代表でのハットトリック
+      columns: [日付, 相手, 年齢]
+      rows: *hats
+      highlight_row: 5
+  - text: そこから7年。38歳で、またルーマニアから3点を奪いました。
+    card:
+      type: table
+      title: レヴァンドフスキの代表でのハットトリック
+      columns: [日付, 相手, 年齢]
+      rows: *hats
+      highlight_row: 6
+  - text: この試合が代表で170試合目。ポーランドの歴代最多を、さらに伸ばしました。
+  sources:
+  - https://worldsoccertalk.com/news/robert-lewandowski-breaks-cristiano-ronaldos-record-for-oldest-hat-trick-in-nations-league-history/
+  - https://en.wikipedia.org/wiki/List_of_international_goals_scored_by_Robert_Lewandowski
+  - https://web.ultra-soccer.jp/news/all/38612/
+- id: view
+  viewpoint: true
+  heading: 代表通算92点、90点を超えた6人の中の位置
+  tier: 報道
+  telop: 代表で90点を超えたのは6人。レヴァンドフスキは92点
+  narrator: 解説
+  card:
+    type: table
+    title: 代表で90点を超えた選手（10月2日まで）
+    columns: [選手, 国, 得点]
+    rows: &top
+    - ['ロナウド', 'ポルトガル', '146']
+    - ['メッシ', 'アルゼンチン', '125']
+    - ['アリ・ダエイ', 'イラン', '108']
+    - ['チェトリ', 'インド', '95']
+    - ['ルカク', 'ベルギー', '94']
+    - ['レヴァンドフスキ', 'ポーランド', '92']
+  say:
+  - text: 3点を足して、代表通算は92点になりました。
+    card:
+      type: table
+      title: 代表で90点を超えた選手（10月2日まで）
+      columns: [選手, 国, 得点]
+      rows: *top
+      highlight_row: 5
+  - text: 代表で90点を超えたのは、歴史上6人しかいません。
+    card:
+      type: table
+      title: 代表で90点を超えた選手（10月2日まで）
+      columns: [選手, 国, 得点]
+      rows: *top
+  - text: ヨーロッパの選手では、ロナウドの146点に次ぐのが、ルカクの94点。
+    card:
+      type: table
+      title: 代表で90点を超えた選手（10月2日まで）
+      columns: [選手, 国, 得点]
+      rows: *top
+      highlight_row: 4
+  - text: レヴァンドフスキは、その2点後ろの3番目です。
+    card:
+      type: table
+      title: 代表で90点を超えた選手（10月2日まで）
+      columns: [選手, 国, 得点]
+      rows: *top
+      highlight_row: 5
+  - text: 33歳のルカクも同じ夜、トルコ戦で1点を加えていて、差は縮まりませんでした。
+    card:
+      type: table
+      title: 代表で90点を超えた選手（10月2日まで）
+      columns: [選手, 国, 得点]
+      rows: *top
+      highlight_row: 4
+  - text: ただ、42分のイエローカードがこの大会2枚目で、5日のボスニア戦には出られません。
+  - text: 次の出番は、11月14日のアウェーのルーマニア戦です。
+  - text: ルーマニアからは、4試合で8点。どの国よりも多く決めてきた相手です。
+  - text: ルカクとの差を詰める舞台が、そこで待っています。
+  sources:
+  - https://www.polsatsport.pl/robert-lewandowski/2026-10-02/liczby-lewandowskiego-w-reprezentacji-polski-imponujace-statystyki/
+  - https://en.wikipedia.org/wiki/List_of_men%27s_footballers_with_50_or_more_international_goals
+  - https://news.yahoo.co.jp/articles/9ac48e61acd72e32d272b7109657fc00c036c84a
+  - https://sport.dziennik.pl/pilka-nozna/artykuly/11323524,lewandowski-zrobil-robote-w-meczu-z-rumunia-w-kolejnym-spotkaniu-juz-nie-zagra.html
+  - https://www.polsatsport.pl/wiadomosc/2026-09-18/terminarz-meczow-pilkarskiej-reprezentacji-polski-w-lidze-narodow/
+  - https://weszlo.com/robert-lewandowski-postrachem-rumunow-to-jego-ulubiony-rywal/
+  - https://www.goal.pl/kadra/lewandowski-zachwyca-liczbami-tego-dokonal-na-narodowym/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「このおっちゃんも、まだまだ頑張るね」
+  narrator: キャスター
+  say:
+  # Bluesky @bjlueeyes.bsky.social（スウェーデン語、試合中の2-0の時点）。全文を訳した
+  - voice: ネット民
+    text: ポーランドがうちとの試合で、レヴァンドフスキを
+  - voice: ネット民
+    text: ベンチに置いてくれたのは、運が良かったと思う。
+    cont: true
+  - voice: ネット民
+    text: ルーマニア相手に、もう2点。1点はペナルティーキック。
+    cont: true
+  - voice: ネット民
+    text: いま2対0。
+    cont: true
+  # Yahoo!ニュース（サッカーキングの記事）のコメント欄 nxw********。全文
+  - voice: ネット民
+    text: 38歳か、ひとまずユーロを視野に入れてるんだろうな
+  # 同じ欄（名前の表示なし）。全文
+  - voice: ネット民
+    text: このおっちゃんも、まだまだ頑張るね
+    short_voice: true
+  sources:
+  - https://bsky.app/profile/bjlueeyes.bsky.social/post/3mww5ob6op22c
+  - https://news.yahoo.co.jp/articles/aa537c2cc9a9a207398fe6856a3ee587bc9a0b48/comments

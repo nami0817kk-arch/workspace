@@ -164,6 +164,19 @@ sites:
   - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/si-presenta-gnonto-dalle-14-30-il-live-della-conferenza-stampa/?intcmp=gazzanet-violanews
+- host: sportsmole.co.uk
+  seen: 12
+  days:
+  - '2026-09-05'
+  - '2026-09-16'
+  - '2026-09-21'
+  - '2026-09-27'
+  - '2026-10-02'
+  - '2026-10-03'
+  examples:
+  - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
+  - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
+  - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
 - host: pianetamilan.it
   seen: 11
   days:
@@ -178,18 +191,6 @@ sites:
   - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
   - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
   - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
-- host: sportsmole.co.uk
-  seen: 11
-  days:
-  - '2026-09-05'
-  - '2026-09-16'
-  - '2026-09-21'
-  - '2026-09-27'
-  - '2026-10-02'
-  examples:
-  - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
-  - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
-  - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
 - host: samuraigoal.doorblog.jp
   seen: 10
   days:
@@ -354,6 +355,18 @@ sites:
   - https://www.teamtalk.com/manchester-united/fabrizio-romano-reveals-chances-jj-gabriel-uturn-united-exit
   - https://www.teamtalk.com/manchester-united/harry-kane-bayern-munich-man-utd-2027-transfer-decision-rule-change
   - https://www.teamtalk.com/manchester-city/man-city-ffp-latest-premier-league-reaches-decision-stripping-titles-guilty-verdict
+- host: dailystar.co.uk
+  seen: 5
+  days:
+  - '2026-09-05'
+  - '2026-09-14'
+  - '2026-09-21'
+  - '2026-10-02'
+  - '2026-10-03'
+  examples:
+  - https://www.dailystar.co.uk/sport/football/breaking-liverpool-richard-hughes-quits-37630544
+  - https://www.dailystar.co.uk/sport/football/man-utd-city-goal-var-37659172
+  - https://www.dailystar.co.uk/sport/football/fulham-man-utd-premier-league-37683165
 - host: thesun.my
   seen: 4
   days:
@@ -413,17 +426,6 @@ sites:
   - https://football360.com.au/man-utd-jj-gabriel-details-premier-league/
   - https://football360.com.au/england-spain-highlights-result-reaction-uefa-nations-league/
   - https://football360.com.au/ireland-austria-palestine-protest-israel-boycott-nations-league/
-- host: dailystar.co.uk
-  seen: 4
-  days:
-  - '2026-09-05'
-  - '2026-09-14'
-  - '2026-09-21'
-  - '2026-10-02'
-  examples:
-  - https://www.dailystar.co.uk/sport/football/breaking-liverpool-richard-hughes-quits-37630544
-  - https://www.dailystar.co.uk/sport/football/man-utd-city-goal-var-37659172
-  - https://www.dailystar.co.uk/sport/football/fulham-man-utd-premier-league-37683165
 - host: yorkshireeveningpost.co.uk
   seen: 4
   days:
@@ -435,6 +437,27 @@ sites:
   - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-8962041
   - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-9191281
   - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-9194259
+- host: rte.ie
+  seen: 4
+  days:
+  - '2026-09-21'
+  - '2026-09-27'
+  - '2026-10-03'
+  examples:
+  - https://www.rte.ie/sport/soccer/2026/0920/1592284-euro-round-up-atletico-take-derby-betis-bench-parrott/
+  - https://www.rte.ie/sport/soccer/2026/0926/1593075-wsl-round-up-city-remain-unbeaten-and-lionesses-roar-on/
+  - https://www.rte.ie/sport/soccer/2026/1002/1593752-browns-brace-helps-northern-ireland-shock-ukraine/
+- host: france24.com
+  seen: 4
+  days:
+  - '2026-09-05'
+  - '2026-09-21'
+  - '2026-09-28'
+  - '2026-10-03'
+  examples:
+  - https://www.france24.com/en/live-news/20260904-winner-fernandez-fundamental-to-maresca-s-man-city-rebuild
+  - https://www.france24.com/en/sport/20260920-torres-strikes-again-as-psg-beat-bitter-rivals-marseille-2-1
+  - https://www.france24.com/en/live-news/20260927-england-closing-the-gap-on-spain-says-kane
 - host: leedsunited.com
   seen: 3
   days:
@@ -466,14 +489,6 @@ sites:
   examples:
   - https://www.atalantaoggi.it/notizie/atalanta-sarri-cagliari-partita-sarri/?intcmp=gazzanet-atalantaoggi
   - https://www.atalantaoggi.it/notizie/de-ketelaere-conferma-il-psg-si-e-mosso-per-me-ma-non-si-e-fatto-nulla/?intcmp=gazzanet-atalantaoggi
-- host: rte.ie
-  seen: 3
-  days:
-  - '2026-09-21'
-  - '2026-09-27'
-  examples:
-  - https://www.rte.ie/sport/soccer/2026/0920/1592284-euro-round-up-atletico-take-derby-betis-bench-parrott/
-  - https://www.rte.ie/sport/soccer/2026/0926/1593075-wsl-round-up-city-remain-unbeaten-and-lionesses-roar-on/
 - host: rangersreview.co.uk
   seen: 3
   days:
@@ -536,16 +551,6 @@ sites:
   - https://www.shieldsgazette.com/sport/football/newcastle-united/-8962131
   - https://www.shieldsgazette.com/sport/football/newcastle-united/-9023229
   - https://www.shieldsgazette.com/sport/football/newcastle-united/-9194390
-- host: france24.com
-  seen: 3
-  days:
-  - '2026-09-05'
-  - '2026-09-21'
-  - '2026-09-28'
-  examples:
-  - https://www.france24.com/en/live-news/20260904-winner-fernandez-fundamental-to-maresca-s-man-city-rebuild
-  - https://www.france24.com/en/sport/20260920-torres-strikes-again-as-psg-beat-bitter-rivals-marseille-2-1
-  - https://www.france24.com/en/live-news/20260927-england-closing-the-gap-on-spain-says-kane
 - host: footballinsider247.com
   seen: 3
   days:
@@ -713,6 +718,14 @@ sites:
   examples:
   - https://www.irishexaminer.com/sport/soccer/arid-41915995.html
   - https://www.irishexaminer.com/sport/soccer/arid-41918596.html
+- host: irishfa.com
+  seen: 2
+  days:
+  - '2026-10-02'
+  - '2026-10-03'
+  examples:
+  - https://www.irishfa.com/news/2026/october/northern-ireland-in-good-shape-ahead-of-ukraine-game
+  - https://www.irishfa.com/news/valiant-display-by-u19s-against-belgium
 - host: guardian.ng
   seen: 1
   days:
@@ -995,9 +1008,15 @@ sites:
   - '2026-10-02'
   examples:
   - https://lastwordonsports.com/football/2026/10/02/northern-ireland-vs-ukraine-predicted-lineups-b2/
-- host: irishfa.com
+- host: bournemouthecho.co.uk
   seen: 1
   days:
-  - '2026-10-02'
+  - '2026-10-03'
   examples:
-  - https://www.irishfa.com/news/2026/october/northern-ireland-in-good-shape-ahead-of-ukraine-game
+  - https://www.bournemouthecho.co.uk/news/26603459.tommy-heffernan-stroke-fundraiser-passes-2-000-milestone/
+- host: rfi.fr
+  seen: 1
+  days:
+  - '2026-10-03'
+  examples:
+  - https://www.rfi.fr/en/sports/20261002-nations-league-italy-reel-in-france-to-spoil-zidane-s-homecoming-party

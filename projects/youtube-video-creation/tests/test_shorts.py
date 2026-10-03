@@ -802,6 +802,29 @@ def test_実尺で上限に収める(tmp_path):
     assert any(l.text.startswith("語り") for l in script.lines)
 
 
+def test_実尺で収めるとき最後の反応1件は残す():
+    """2026-10-03 ジダンの回。締めの反応（1件）を実尺で落とし、ショートに誰の声も無くなった。"""
+    from src.config import load_config
+    from src.script_model import Line, Scene, Script
+    from src.shorts import SHORT_SUBSCRIBE, enforce_limit
+
+    def talk(text, sec, who="キャスター"):
+        line = Line(speaker=who, text=text)
+        line.duration = sec
+        return line
+
+    lines = [talk(f"語り{i}", 8.0) for i in range(6)]
+    lines += [talk("反応の頭", 3.0, "ネット民"), talk("反応の続き", 3.0, "ネット民")]
+    lines[-1].cont = True
+    lines += [talk(SHORT_SUBSCRIBE, 2.0)]
+    script = Script(title="t", scenes=[Scene(title="オープニング", lines=[talk("題", 4.0)]),
+                                       Scene(title="本編", lines=lines)])
+    enforce_limit(script, 58.0, load_config())
+    texts = [l.text for l in script.lines]
+    assert "反応の頭" in texts and "反応の続き" in texts, texts
+    assert sum(l.duration for l in script.lines) <= 58.0
+
+
 def test_状況説明の1行があってもネットの声は締めに足す():
     """**反応の節の頭にある `only: short` の語りを、語りとして数えない**
     （2026-09-17 にユーザー指摘「ショートの内容が薄い」から発見）。

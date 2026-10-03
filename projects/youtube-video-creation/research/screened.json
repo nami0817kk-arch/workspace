@@ -1646,5 +1646,85 @@
  "20261003_kubo_marriage_short": {
   "at": "2026-10-03T00:40:28+09:00",
   "digest": "508bfa2b8b49df24"
+ },
+ "20261003_city_appeal": {
+  "at": "2026-10-03T14:05:22+09:00",
+  "digest": "9cda3c4ebfea26eb"
+ },
+ "20261003_city_appeal_short": {
+  "at": "2026-10-03T14:05:22+09:00",
+  "digest": "27a53ff9cc475326"
+ },
+ "20260926_ll04_atletico": {
+  "at": "2026-10-03T14:05:22+09:00",
+  "digest": "96081b9257109a73"
+ },
+ "20260926_ll04_atletico_short": {
+  "at": "2026-10-03T14:05:22+09:00",
+  "digest": "3464d2fbe6995a4d"
+ },
+ "20261003_france_italy": {
+  "at": "2026-10-03T14:05:54+09:00",
+  "digest": "cf885295922d99ae"
+ },
+ "20261003_france_italy_short": {
+  "at": "2026-10-03T14:05:54+09:00",
+  "digest": "decb43d565a456f7"
+ },
+ "20261003_mitoma_free": {
+  "at": "2026-10-03T14:14:03+09:00",
+  "digest": "9ffb7911591c5c4e"
+ },
+ "20261003_mitoma_free_short": {
+  "at": "2026-10-03T14:14:03+09:00",
+  "digest": "11e7ce0ab957ea84"
+ },
+ "20261003_lewandowski_hat": {
+  "at": "2026-10-03T14:14:03+09:00",
+  "digest": "28bbc986fec898b0"
+ },
+ "20261003_lewandowski_hat_short": {
+  "at": "2026-10-03T14:14:03+09:00",
+  "digest": "f96be757ac4a4e2f"
+ },
+ "20261003_portugal_without": {
+  "at": "2026-10-03T14:14:03+09:00",
+  "digest": "e9446138b22f6524"
+ },
+ "20261003_portugal_without_short": {
+  "at": "2026-10-03T14:14:03+09:00",
+  "digest": "4333d5a3efe780eb"
+ },
+ "20261003_player_566723": {
+  "at": "2026-10-03T17:30:12+09:00",
+  "digest": "0d627570ac4d59cf"
+ },
+ "20261003_player_566723_short": {
+  "at": "2026-10-03T17:30:12+09:00",
+  "digest": "73c16af040c1e3a9"
+ },
+ "20261003_coach_zidane": {
+  "at": "2026-10-03T17:30:12+09:00",
+  "digest": "1c8951e96151f5ab"
+ },
+ "20261003_coach_zidane_short": {
+  "at": "2026-10-03T17:30:12+09:00",
+  "digest": "45e870cccf699567"
+ },
+ "20261003_finance_barcelona": {
+  "at": "2026-10-03T17:30:12+09:00",
+  "digest": "1e68ee3147f4079f"
+ },
+ "20261003_finance_barcelona_short": {
+  "at": "2026-10-03T17:30:12+09:00",
+  "digest": "9991c561c42e0b7c"
+ },
+ "20261003_compare_clasico": {
+  "at": "2026-10-03T17:30:12+09:00",
+  "digest": "a72485edb3964736"
+ },
+ "20261003_compare_clasico_short": {
+  "at": "2026-10-03T17:30:12+09:00",
+  "digest": "19cbfbf5e3b00487"
  }
 }

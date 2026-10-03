@@ -1,77 +1,81 @@
-# ミカエル・オリーズ（バイエルン）の紹介。8節の型（2026-09-28）。材料と出典は research/raw/20261003_olise_material.md。
-# 数字は Transfermarkt・FotMob・bundesliga.com（DFL）・クリスタル・パレス公式。本人の言葉は theWORLD／サッカーキング／footballista の訳をそのまま。
-# 身長は媒体で3通り（176〜184）でクラブ公式が読めなかったので出さない。五輪決勝の2点目は「オリーズのFKから」まで。3位決定戦のスコアは言わない。
+# マイケル・オリーセ（バイエルン）の紹介。8節の型（2026-09-28）を、ヤマル紹介（research/20261002_player_937958.yaml）の形にそろえた（2026-10-03）。
+# 材料は research/raw/20261003_olise_material.md（9/28）、10/3 に取り直した数字は research/raw/20261003_player_566723.md。
+# 通算は Transfermarkt・FotMob・フランスサッカー連盟の公式で突き合わせ、試合と得点は一致（305試合82点）。アシストは食い違うので通算の表に出さない。
+# 「ペレを抜く」は W杯1大会のアシスト数（記録が残る1966年以降で最多。bundesliga.com・Opta・FFF）。
+# 同じ日のニュース（scripts/20261003_france_italy.md）がイタリア戦のFKとジダン体制3試合を扱うので、代表の直近は通算の節の1行だけ。
+# 身長は媒体で4通り（176〜184）なので出さない。五輪決勝の2点目は「オリーセのFKから」まで。3位決定戦のスコアは言わない。
 date: 2026年10月03日
 slot: other_1
 format: news
 series: 有名選手の紹介
 people:
-- ミカエル・オリーズ
+- マイケル・オリーセ
 theme:
   id: player_566723
   league: germany
   kind: other
   topic: バイエルン
-  title: オリーズってどんな選手？3つの名門を追われた少年がペレを抜くまで
-  question: ミカエル・オリーズはどういう作りの選手で、なぜ作る数と決める数の両方が出るのか
-  takeaway: アーセナル・チェルシー・シティの育成組織を追われた左足が、W杯1大会7アシストでペレの記録を56年ぶりに更新。作る数はリーグ1位、空中戦は下から23番目
-  nameplate: ミカエル・オリーズ｜バイエルン FW／フランス代表
+  title: オリーセってどんな選手？3つの名門を追われた少年がペレを抜くまで
+  question: マイケル・オリーセはどういう作りの選手で、なぜ作る数と決める数の両方が出るのか
+  takeaway: アーセナル・チェルシー・シティの育成組織を離れた左足が、ワールドカップ1大会7アシストでペレの記録を56年ぶりに更新。プロ通算は305試合82点（10月2日まで）。今季はクラブで7試合8点と、1試合少なくヤマルと同じ得点に並ぶ
+  nameplate: マイケル・オリーセ｜バイエルン FW／フランス代表
+  opening_image: assets/images/20261003_olise_paraguay_wide/01_w.jpg
   bgm: assets/audio/bgm_calm.wav
 watch: 明日は④キリアン・エムバペ
-short_title: オリーズってどんな選手？
+short_title: オリーセってどんな選手？
 thumbnail:
-  line1: オリーズ
-  line2: 3つの名門を追われた●●
+  line1: オリーセ通算305試合82点
+  line2: W杯1大会●アシストは新記録
   tags:
   - バイエルン
   - オリーセ
   - マイケル・オリーセ
   - 選手紹介
   - プレースタイル
-  photo: assets/images/20261003_olise_face_w/01.jpg
+  photo: assets/images/20261003_olise_thumbfull/01.jpg
   photos: []
 sections:
 - id: hook
   heading: どんな選手か
   tier: 報道
-  telop: 3つの名門を追われ、ワールドカップでペレの記録を抜いた
+  telop: 3つの名門を離れた左足が、ワールドカップでペレを超えた
   narrator: キャスター
   say:
-  - text: ミカエル・オリーズ。育成組織を3度追い出された少年が、ワールドカップでペレの記録を破りました。
-    image: assets/images/20261003_olise_face_w/01.jpg
-  - 2026年の大会で1大会7アシスト。1970年のペレの6を、56年ぶりに更新した数字です。
-  - ロンドン生まれで、代表の資格はイングランド、フランス、ナイジェリア、アルジェリアの4つ。
-  - 選んだのはフランス。理由を、本人はこう言っています。
-  - voice: オリーズ
+  - text: マイケル・オリーセ。育成組織を3度去った少年が、いま世界の記録を持っています。
+    image: assets/images/20261003_olise_paraguay_wide/01_w.jpg
+  - 2026年のワールドカップで、1大会7アシスト。
+  - text: 記録が残る1966年以降で最多。1970年のペレの6を、56年ぶりに超えました。
+    emph: true
+  - ロンドン生まれで、選べた代表はイングランドなど4つ。選んだのはフランスでした。
+  - voice: オリーセ
     text: 子どもの頃に見ていた選手はみんなフランス人だった。
-  - voice: オリーズ
+  - voice: オリーセ
     text: ジネディーヌ・ジダン、ティエリ・アンリ、
     cont: true
-  - voice: オリーズ
+  - voice: オリーセ
     text: フランク・リベリーだ。
     cont: true
-  - voice: オリーズ
+  - voice: オリーセ
     text: それに幼い頃から何度もフランスへ行っていたし、
     cont: true
-  - voice: オリーズ
+  - voice: オリーセ
     text: 自分にとってはそちらの方が自然だった
     cont: true
     pause: 0.5
-  - そのフランスの右ウイングは、左利き。いまの数字はこうです。
-  - 同じ位置の選手100人と比べると、作ったチャンスは1位、空中戦は下から23番目。
-  - その左足がどう育ったか、数字と話で追います。
+  - 右から中へ入り、左足で決めて、作る。それがオリーセの形です。
+  - その左足が、どんな挫折を越えて世界に届いたのか。順番にたどっていきます。
   sources:
-  - https://www.fotmob.com/players/1029063
   - https://www.bundesliga.com/en/bundesliga/news/michael-olise-france-fifa-world-cup-assist-record-pele-38193
+  - https://theanalyst.com/articles/most-assists-at-a-world-cup-tournament
   - https://news.yahoo.co.jp/articles/689536b52579a6eb86b0e88700371ef0d0b3b555
 - id: data
   heading: 基礎DATA
   tier: 報道
-  telop: ミカエル・オリーズの基礎DATA
+  telop: マイケル・オリーセの基礎DATA
   narrator: キャスター
   card:
     type: table
-    title: ミカエル・オリーズ（バイエルン）
+    title: マイケル・オリーセ（バイエルン）
     columns:
     - 項目
     - 内容
@@ -92,12 +96,12 @@ sections:
       - 1.7億ユーロ
     source: Transfermarkt・クリスタル・パレス公式
   say:
-  - text: ミカエル・オリーズ、24歳。バイエルンの右ウイングです。
-    image: assets/images/20261003_olise_bayern2026/01.jpg
+  - text: マイケル・オリーセ、24歳。ドイツの王者バイエルンで、右ウイングを担います。
+    image: assets/images/20261003_olise_bayern2026_w/01.jpg
   - 生まれはロンドン西部のハマースミス。
   - 父はナイジェリア人、母はアルジェリア系のフランス人です。
-  - 左利き。契約は2029年6月まで。
-  - 市場価値は1.7億ユーロ。1.5億から、また上がりました。
+  - 武器の左足と、2029年6月までの契約。
+  - そして市場価値は1.7億ユーロ。この7月、1.5億からさらに上がりました。
   sources:
   - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
   - https://www.cpfc.co.uk/news/club/otd-olise-joins-crystal-palace-from-reading-2021-2025/
@@ -105,7 +109,7 @@ sections:
 - id: career
   heading: 歩んできた道と転機
   tier: 報道
-  telop: 800万ポンドで買われ、6,000万ユーロで売られた
+  telop: 名門3つを離れ、2部から5年でドイツの頂点へ
   narrator: 解説
   card:
     type: table
@@ -134,20 +138,238 @@ sections:
       - 最高 1.7億ユーロ
     source: Transfermarkt
   say:
-  - text: オリーズの育成組織はアーセナルから始まり、7歳でチェルシーへ。14歳で離れました。
+  - text: オリーセの物語は、つまずきから始まります。最初の育成組織はアーセナル。
     image: assets/images/20261003_olise_palace2022/01.jpg
-  - アーセナルはなじめず、チェルシーは授業に出なかったから。
-  - マンチェスター・シティでは腕が細く、腕立て伏せで笑われて去った、
-  - と、レディング時代の監督が話しています。
-  - 拾ったのがイングランド2部のレディング。17歳の市場価値は20万ユーロでした。
-  - text: 19歳で1500万ユーロ。2部で7点12アシストを挙げた年です。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - - 19/20
+        - レディング U18
+        - 17歳
+        - 最高 20万ユーロ
+      - - 19/20〜20/21
+        - レディング
+        - 18歳〜19歳
+        - 最高 1500万ユーロ
+      - - 21/22〜23/24
+        - クリスタル・パレス
+        - 20歳〜22歳
+        - 最高 5500万ユーロ
+      - - 24/25〜26/27
+        - バイエルン
+        - 22歳〜24歳
+        - 最高 1.7億ユーロ
+      source: Transfermarkt
+  - 7歳でチェルシーへ。14歳で離れ、次に向かったのはマンチェスターの名門シティ。
+  - アーセナルではなじめず、チェルシーでは授業に出なかったから。
+  - シティでは腕が細く、腕立て伏せで仲間に笑われて去った。
+  - そう明かしているのは、レディング時代の監督です。
+  - text: 拾ったのはイングランド2部のレディング。17歳の価値は20万ユーロ。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - - 19/20
+        - レディング U18
+        - 17歳
+        - 最高 20万ユーロ
+      - - 19/20〜20/21
+        - レディング
+        - 18歳〜19歳
+        - 最高 1500万ユーロ
+      - - 21/22〜23/24
+        - クリスタル・パレス
+        - 20歳〜22歳
+        - 最高 5500万ユーロ
+      - - 24/25〜26/27
+        - バイエルン
+        - 22歳〜24歳
+        - 最高 1.7億ユーロ
+      source: Transfermarkt
+      highlight_row: 0
+  - text: それが19歳で1500万ユーロへ。2部で7点12アシストの季です。
     image: assets/stats/player_20261003_1029063_value.png
     no_telop: true
-  - 2部リーグの年間最優秀若手賞も、この年です。
-  - 2021年7月8日、契約解除金の800万ポンドと報じられた額で、クリスタル・パレスへ。
-  - 転機は2024年7月7日。ボーナス込み6,000万ユーロで、バイエルンが獲得しました。
-  - 1年目で新人王、2年目でリーグの最優秀選手。
-  - 市場価値は5500万から、いまの額に。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - - 19/20
+        - レディング U18
+        - 17歳
+        - 最高 20万ユーロ
+      - - 19/20〜20/21
+        - レディング
+        - 18歳〜19歳
+        - 最高 1500万ユーロ
+      - - 21/22〜23/24
+        - クリスタル・パレス
+        - 20歳〜22歳
+        - 最高 5500万ユーロ
+      - - 24/25〜26/27
+        - バイエルン
+        - 22歳〜24歳
+        - 最高 1.7億ユーロ
+      source: Transfermarkt
+      highlight_row: 1
+  - text: その年、2部の年間最優秀若手に輝いています。
+    image: assets/images/20261003_olise_palace2022/01.jpg
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - - 19/20
+        - レディング U18
+        - 17歳
+        - 最高 20万ユーロ
+      - - 19/20〜20/21
+        - レディング
+        - 18歳〜19歳
+        - 最高 1500万ユーロ
+      - - 21/22〜23/24
+        - クリスタル・パレス
+        - 20歳〜22歳
+        - 最高 5500万ユーロ
+      - - 24/25〜26/27
+        - バイエルン
+        - 22歳〜24歳
+        - 最高 1.7億ユーロ
+      source: Transfermarkt
+      highlight_row: 1
+  - text: 2021年7月、800万ポンドと報じられた額でクリスタル・パレスへ。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - - 19/20
+        - レディング U18
+        - 17歳
+        - 最高 20万ユーロ
+      - - 19/20〜20/21
+        - レディング
+        - 18歳〜19歳
+        - 最高 1500万ユーロ
+      - - 21/22〜23/24
+        - クリスタル・パレス
+        - 20歳〜22歳
+        - 最高 5500万ユーロ
+      - - 24/25〜26/27
+        - バイエルン
+        - 22歳〜24歳
+        - 最高 1.7億ユーロ
+      source: Transfermarkt
+      highlight_row: 2
+  - text: 3季を過ごし、2024年7月にボーナス込み6,000万ユーロでバイエルンへ。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - - 19/20
+        - レディング U18
+        - 17歳
+        - 最高 20万ユーロ
+      - - 19/20〜20/21
+        - レディング
+        - 18歳〜19歳
+        - 最高 1500万ユーロ
+      - - 21/22〜23/24
+        - クリスタル・パレス
+        - 20歳〜22歳
+        - 最高 5500万ユーロ
+      - - 24/25〜26/27
+        - バイエルン
+        - 22歳〜24歳
+        - 最高 1.7億ユーロ
+      source: Transfermarkt
+      highlight_row: 3
+  - text: 1年目はリーグの新人王、2年目はリーグの最優秀選手。
+    emph: true
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - - 19/20
+        - レディング U18
+        - 17歳
+        - 最高 20万ユーロ
+      - - 19/20〜20/21
+        - レディング
+        - 18歳〜19歳
+        - 最高 1500万ユーロ
+      - - 21/22〜23/24
+        - クリスタル・パレス
+        - 20歳〜22歳
+        - 最高 5500万ユーロ
+      - - 24/25〜26/27
+        - バイエルン
+        - 22歳〜24歳
+        - 最高 1.7億ユーロ
+      source: Transfermarkt
+      highlight_row: 3
+  - text: 名門に見切られた少年が、5年でドイツの頂点に立ったんです。
+    card:
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - - 19/20
+        - レディング U18
+        - 17歳
+        - 最高 20万ユーロ
+      - - 19/20〜20/21
+        - レディング
+        - 18歳〜19歳
+        - 最高 1500万ユーロ
+      - - 21/22〜23/24
+        - クリスタル・パレス
+        - 20歳〜22歳
+        - 最高 5500万ユーロ
+      - - 24/25〜26/27
+        - バイエルン
+        - 22歳〜24歳
+        - 最高 1.7億ユーロ
+      source: Transfermarkt
+      highlight_row: 3
   sources:
   - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
   - https://www.cpfc.co.uk/news/club/otd-olise-joins-crystal-palace-from-reading-2021-2025/
@@ -177,129 +399,272 @@ sections:
       value: 35
     source: FotMob
   say:
-  - text: オリーズのプレースタイルは、同じ攻撃的MF・ウイングとの比較で見ると分かりやすい。レーダーです。
+  - text: では、オリーセはどんな形で点に絡むのか。同じ位置の選手と比べてみます。
     image: assets/stats/player_20261003_1029063_radar.png
     no_telop: true
-  - レーダーの6つの軸で頂点にあるのはチャンス創出とボールタッチ。いちばん低いのは空中戦と守備です。
-  - つまり、右サイドで受けて中へ切れ込み、左足で決めるか作るかの選手。
-  - text: では、どこでボールを持つか。右サイドの高い位置と、その内側。そこから作ります。
+  - text: 6つの軸で突き抜けているのは、シュートにつながるパスと、ボールタッチの多さ。
+    image: assets/stats/player_20261003_1029063_radar.png
+    no_telop: true
+  - text: 空中戦と守備は少ない側。その分、持てば必ず何かを起こします。
+    image: assets/images/20261003_olise_spain_w/01.jpg
+  - text: 主な持ち場は、右サイドの敵陣深く、そしてその内側。
     image: assets/stats/player_20261003_1029063_heat.png
     no_telop: true
-  - 作る数はリーグ1位。2024年からのシーズンはチャンス創出83回、アシスト15でどちらも最多でした。
-  - text: 今季のシュートは17本、うち左足が15本。ペナルティエリアの外から2点を決めています。
+    card: none
+  - text: そこから中へ切れ込み、左足で自分が打つか、味方に通すか。
+    image: assets/images/20261003_olise_spain_w/01.jpg
+  - 作る力はリーグ随一です。
+  - 2024年からの季は、15アシストでリーグ最多。
+  - シュートにつながるパスも83本で、リーグでいちばん多かったんです。
+  - text: 今季はリーグで17本のシュート。15本が左足で、ペナルティエリアの外から2点。
     image: assets/stats/player_20261003_1029063_shots.png
     no_telop: true
-  - 弱点を挙げるなら、負傷歴。
-  - 2023年からのシーズンは太もも裏を痛め、リーグ戦19試合しか出ていません。
+  - text: 気がかりを挙げるなら、けがです。
+    image: assets/images/20261003_olise_bayern2026_w/01.jpg
+  - 2023年からの季は太もも裏を痛め、リーグ戦の出場は19試合でした。
+  - それでもバイエルンでは2季で107試合。けがの心配を、出場で打ち消しています。
   sources:
   - https://www.fotmob.com/players/1029063
   - https://www.bundesliga.com/en/bundesliga/news/michael-olise-hitting-new-heights-bayern-munich-kane-kompany-39317
   - https://www.bundesliga.com/en/bundesliga/news/olise-wirtz-top-5-assist-providers-2024-25-grifo-brandt-gross-32460
   - https://www.football-zone.net/archives/659653
 - id: past
-  heading: 過去5シーズンの数字
+  heading: キャリア全体の数字
   tier: 報道
-  telop: 直近5シーズンの試合と得点
+  telop: 季ごとの数字と、10月2日までの通算
   narrator: 解説
-  card:
-    type: table
-    title: ミカエル・オリーズ 直近5シーズン（代表を含む全公式戦）
-    columns:
-    - 季
-    - 試合
-    - 得点
-    - アシスト
-    - 出場時間
-    rows:
-    - - 21/22
-      - '33'
-      - '4'
-      - '9'
-      - 1591分
-    - - 22/23
-      - '46'
-      - '3'
-      - '12'
-      - 3371分
-    - - 23/24
-      - '28'
-      - '15'
-      - '12'
-      - 1983分
-    - - 24/25
-      - '68'
-      - '24'
-      - '25'
-      - 4674分
-    - - 25/26
-      - '64'
-      - '25'
-      - '39'
-      - 4894分
-    source: Transfermarkt
+  rows_seasons:
+  - &id001
+    - 20/21
+    - レディング
+    - '46'
+    - '7'
+  - &id002
+    - 21/22
+    - パレス
+    - '31'
+    - '4'
+  - &id003
+    - 22/23
+    - パレス
+    - '40'
+    - '2'
+  - &id004
+    - 23/24
+    - パレス
+    - '19'
+    - '10'
+  - &id005
+    - 24/25
+    - バイエルン
+    - '50'
+    - '17'
+  - &id006
+    - 25/26
+    - バイエルン
+    - '57'
+    - '25'
+  rows_total:
+  - &id009
+    - レディング
+    - '73'
+    - '7'
+  - &id010
+    - クリスタル・パレス
+    - '90'
+    - '16'
+  - &id011
+    - バイエルン
+    - '114'
+    - '50'
+  - &id012
+    - フランス代表
+    - '28'
+    - '9'
+  - &id013
+    - 合計
+    - '305'
+    - '82'
   say:
-  - text: 次に、オリーズの5シーズンの推移。代表を含む全公式戦を、古いほうから追います。
-    image: assets/images/20261003_olise_norway/01.jpg
-  - パレス1年目の2021年は、33試合で4点。
-  - 2022年からは46試合で12アシスト。
-  - パレス史上初の、プレミア1季で2桁アシストでした。
-  - 翌シーズンは28試合で15点12アシスト。けがで試合は減っても、点は増えました。
-  - 跳ねたのはバイエルンに来てから。2024年からは68試合で24点25アシスト。
-  - 2025年からは64試合で25点39アシスト。
+  - text: ここからは、オリーセの歩みを数字で丸ごと見ていきます。
+    image: assets/images/20261003_olise_norway_w/01.jpg
+    card:
+      type: table
+      title: マイケル・オリーセ 季ごとの数字（クラブの公式戦）
+      columns: &id007
+      - 季
+      - 所属
+      - 試合
+      - 得点
+      rows: &id008
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      source: FotMob
+  - text: 主力になったのは、レディングでの2020年からの季。46試合で7点。
+    card:
+      type: table
+      title: マイケル・オリーセ 季ごとの数字（クラブの公式戦）
+      columns: *id007
+      rows: *id008
+      source: FotMob
+      highlight_row: 0
+  - text: パレス2年目は2点。それでも、パレスの選手で初めてプレミアで2桁アシスト。
+    card:
+      type: table
+      title: マイケル・オリーセ 季ごとの数字（クラブの公式戦）
+      columns: *id007
+      rows: *id008
+      source: FotMob
+      highlight_row: 2
+  - text: 翌年は一気に10点。出番が減っても、点は5倍に増えました。
+    card:
+      type: table
+      title: マイケル・オリーセ 季ごとの数字（クラブの公式戦）
+      columns: *id007
+      rows: *id008
+      source: FotMob
+      highlight_row: 3
+  - text: バイエルンでは2季とも50試合に出て、2025年からの季は25点。
+    card:
+      type: table
+      title: マイケル・オリーセ 季ごとの数字（クラブの公式戦）
+      columns: *id007
+      rows: *id008
+      source: FotMob
+      highlight_row: 5
+  - text: そして通算。いちばん積み上げたのは、バイエルンの114試合50点。
+    card:
+      type: table
+      title: マイケル・オリーセ 通算（2026年10月2日まで）
+      columns: &id014
+      - 所属
+      - 試合
+      - 得点
+      rows: &id015
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      - *id013
+      highlight_row: 2
+      source: Transfermarkt・FotMob・フランスサッカー連盟
+  - text: フランス代表では28試合9点。直近、代表で2戦連発です。
+    card:
+      type: table
+      title: マイケル・オリーセ 通算（2026年10月2日まで）
+      columns: *id014
+      rows: *id015
+      highlight_row: 3
+      source: Transfermarkt・FotMob・フランスサッカー連盟
+  - text: 合わせて305試合82点。17歳のデビューから、7年半の積み重ねです。
+    emph: true
+    card:
+      type: table
+      title: マイケル・オリーセ 通算（2026年10月2日まで）
+      columns: *id014
+      rows: *id015
+      highlight_row: 4
+      source: Transfermarkt・FotMob・フランスサッカー連盟
   sources:
-  - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
+  - https://www.transfermarkt.com/michael-olise/leistungsdatenverein/spieler/566723
+  - https://www.fotmob.com/players/1029063
+  - https://www.fff.fr/equipe-nationale/joueur/9498-olise-michael/fiche.html
   - https://www.cpfc.co.uk/news/club/otd-olise-joins-crystal-palace-from-reading-2021-2025/
-  - https://www.bundesliga.com/en/bundesliga/news/player-of-the-month-2025-26-vote-winners-ea-sports-olise-34233
 - id: season
-  heading: 今季の数字と直近5試合
+  heading: 今季の8点と直近5試合
   tier: 報道
   main: true
-  telop: 今季ここまで
+  telop: 今季のバイエルンで、7試合8点
   narrator: 解説
-  card:
-    type: table
-    title: 直近5試合（代表を含む）
-    columns:
-    - 日付
-    - 相手
-    - 出場
-    - 得点
-    - 評点
-    rows:
-    - - 9/25
-      - トルコ
-      - 78分
-      - 0G 1A
-      - '8.4'
-    - - 9/18
-      - ウニオン・ベルリン
-      - 90分
-      - 3G 1A
-      - '9.9'
-    - - 9/13
-      - エルフェルスベルク
-      - 90分
-      - 0G 0A
-      - '8.4'
-    - - 9/10
-      - ボデ/グリムト
-      - 90分
-      - 2G 1A
-      - '9.7'
-    - - 9/5
-      - シャルケ
-      - 33分
-      - 0G 0A
-      - '7.2'
-    source: FotMob
+  rows_recent:
+  - &id016
+    - 9/18
+    - ウニオン・ベルリン
+    - 90分
+    - 3G 1A
+    - '9.9'
+  - &id017
+    - 9/13
+    - エルフェルスベルク
+    - 90分
+    - 0G 0A
+    - '8.4'
+  - &id018
+    - 9/10
+    - ボデ/グリムト
+    - 90分
+    - 2G 1A
+    - '9.7'
+  - &id019
+    - 9/5
+    - シャルケ
+    - 33分
+    - 0G 0A
+    - '7.2'
+  - &id020
+    - 9/2
+    - オスナブリュック
+    - 87分
+    - 1G 0A
+    - '9.2'
   say:
-  - text: バイエルンのオリーズ、24歳。ワールドカップで7アシストの新記録を作った左足は、今季も止まりません。
+  - text: バイエルンのオリーセ。ワールドカップで記録を作った左足が、今季も止まりません。
     short_only: true
-  - text: 今季はここまで8試合で8得点5アシスト。648分に出て、81分ごとに1点のペース。
-    image: assets/images/20261003_olise_spain_wide/01.jpg
-  - ブンデスリーガは4試合で4点2アシスト、スーパーカップは1試合で1点1アシスト。
-  - 直近5試合は5点3アシスト。10点満点の評点は、ウニオン・ベルリン戦で9.9。
-  - ブンデスリーガの得点ランキングは首位タイ。ドリブルとシュートの数はリーグ最多です。
+  - text: 今季はクラブで7試合8点。570分の出場で、71分に1点の計算です。
+    image: assets/images/20261003_olise_bayern2026_w/01.jpg
+    card:
+      type: table
+      title: 直近5試合（バイエルン）
+      columns: &id021
+      - 日付
+      - 相手
+      - 出場
+      - 得点
+      - 評点
+      rows: &id022
+      - *id016
+      - *id017
+      - *id018
+      - *id019
+      - *id020
+      source: FotMob
+  - text: リーグで4点、国内のカップ戦と、王者どうしのスーパーカップで1点ずつ。
+    card:
+      type: table
+      title: 直近5試合（バイエルン）
+      columns: *id021
+      rows: *id022
+      source: FotMob
+      highlight_row: 4
+  - text: 直近5試合で6点。ハットトリックのウニオン戦は、10点満点で9.9。
+    emph: true
+    card:
+      type: table
+      title: 直近5試合（バイエルン）
+      columns: *id021
+      rows: *id022
+      source: FotMob
+      highlight_row: 0
+  - text: 欧州の頂点を争うチャンピオンズリーグでも、ボデ・グリムト戦で2点。
+    card:
+      type: table
+      title: 直近5試合（バイエルン）
+      columns: *id021
+      rows: *id022
+      source: FotMob
+      highlight_row: 2
+  - text: リーグの得点ランキングは首位タイ。ドリブルとシュートもリーグ最多です。
+    card:
+      type: table
+      title: 直近5試合（バイエルン）
+      columns: *id021
+      rows: *id022
+      source: FotMob
+      highlight_row: 0
   sources:
   - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
   - https://www.fotmob.com/players/1029063
@@ -311,50 +676,49 @@ sections:
   narrator: 解説
   card:
     type: points
-    title: オリーズの人となり
+    title: オリーセの人となり
     items:
     - インタビューが短い。「振り返るって何？ ゴール？」（2022年）
     - 右脚に漢字の「改善」のタトゥー。パレスのコーチの言葉から
   say:
-  - text: 数字を置いて、人となりの話を2つ。
-    image: assets/images/20261003_olise_paraguay_wide/01.jpg
-  - 1つ目は、インタビューが極端に短いこと。
-  - 2022年、味方ザハのパスから決勝点を決めたあと、「振り返ってみて」と聞かれてこう答えました。
-  - voice: オリーズ
+  - text: 数字を離れて、人となりが伝わる話を2つ。
+    image: assets/images/20261003_olise_spain_wide/01.jpg
+  - 1つ目は、とにかくインタビューが短いこと。
+  - 2022年、ザハのパスから決勝点。「振り返ってみて」と聞かれた答えがこれです。
+  - voice: オリーセ
     text: 振り返るって何？ ゴール？
-  - voice: オリーズ
+  - voice: オリーセ
     text: ザハがパスをくれ、シュート、ゴール
     cont: true
     pause: 0.6
-  - 今年9月にも、25メートルのゴールを聞かれて「わからない」と答えて話題になりました。
-  - 批判も出ましたが、監督のコンパニは本人をかばう側に回りました。
+  - 今年9月にも、25メートルのゴールの感想を聞かれ、「わからない」と答えています。
+  - そっけなさが話題になると、監督のコンパニは逆に、質問した記者へ問い返しました。
   - 2つ目は右脚のタトゥー。漢字で「改善」と彫ってあります。
-  - クリスタル・パレスのコーチが練習場で話していた言葉で、毎日少しずつ良くなる、という考え方です。
-  - text: 感情を表に出さない選手が、その言葉だけは体に残しています。
+  - パレスの練習場でコーチが話していた言葉で、毎日少しずつ良くなる、という考え方です。
+  - text: 多くを語らない選手が、その一語は体に刻んでいるんです。
     pause: 0.5
   sources:
   - https://www.footballista.jp/news/173918
   - https://www.goal.com/en/news/should-not-mix-too-much-vincent-kompany-and-max-eberl-react-to-bayern-star-michael-olise-s-no-desire-interview/blt3e4a9b6838561e77
   - https://www.highsnobiety.com/p/michael-olise-france-fifa-world-cup-interview/
-  - https://www.goal.com/en-us/lists/what-could-have-been-chelsea-jamal-musiala-long-standing-connection-michael-olise-bayern-munich/bltdc0c00f947321b40
 - id: view
-  heading: ヤマルと並ぶ1試合1点のペース
+  heading: ヤマルと同じ8点、1試合少ない今季のペース
   tier: 背景
   viewpoint: true
   narrator: 解説
-  telop: 10月10日、アウクスブルク戦
+  telop: 10月10日、アウクスブルク戦でリーグ再開
   say:
-  - text: 締めは、この先の見立てです。
-    image: assets/images/20261003_olise_norway_w/01.jpg
-  - 比べる相手は、バルセロナの同じ右ウイング、ヤマル。今季9試合で9点6アシスト。
-  - オリーズも1試合1点のペース。ほぼ同じ形で並んでいます。
-  - 世界最優秀選手を選ぶバロンドール。候補30人に今年は2人とも入り、発表は10月26日です。
-  - 代表戦の中断が明けて、バイエルンは10月10日、アウクスブルク戦で再開します。
-  - リーグ最多のドリブルとシュートが続くか。
-  - そして、ワールドカップのパラグアイ戦のように相手が2人で挟んできても、作れるかを見ます。
+  - text: 締めくくりに、同じ左利きの右ウイングと並べてみます。
+    image: assets/images/20261003_olise_face_w/01.jpg
+  - text: バルセロナのヤマルは、クラブで8試合8点。オリーセは7試合で、同じ8点です。
+    emph: true
+  - 代表も入れると、ヤマルは10試合11点、オリーセは10試合10点。ほぼ横並び。
+  - 2人はそろって、世界最優秀選手を決めるバロンドールの30人の候補です。
+  - 発表は10月26日。その前の10日、バイエルンはアウクスブルク戦でリーグを再開します。
+  - 育成組織を転々とした左足が、世界一の個人賞にどこまで迫るのか。
+  - 再開後も、この得点の速さを保てるか。そこに注目です。
   sources:
-  - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
-  - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
   - https://www.fotmob.com/players/1029063
+  - https://www.fotmob.com/players/1467236
+  - https://www.transfermarkt.com/michael-olise/profil/spieler/566723
   - https://www.uefa.com/uefachampionsleague/news/02a9-218b019cbca5-cb4b9be51c4b-1000--2026-ballon-d-or-awards-nominees-revealed/
-  - https://www.footballista.jp/special/227532

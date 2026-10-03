@@ -1,0 +1,660 @@
+# 取材メモ（10/3 シリーズ「記録の解説」、key: record_spain40、型は news）。材料の控えは research/raw/20261003_record_spain40.md。
+# チェコ戦（日本時間 10/4 3:45）の前に出す回。チェコ戦の結果は書かない。
+# 記録の一覧・勝ち分けは FIFA の記事（2026-09-29）が正。RFEF の公式の記述には辿り着けなかった（一覧が JS 描画）。
+# 40試合・イタリア37試合のスコアは英語版Wikipedia の試合枠で数え、40試合は Flashscore の一覧と1試合ずつ一致を確かめた。
+#   得点102は自分で数えた値（Flashscore の本文の「109」は同じ記事のスコアを足すと合わない）。失点31・勝ち分けは FIFA と一致。
+# PK戦の扱いは FIFA の記事に文では無い。スペインの40（31勝9分）にポルトガルとの決勝（PK負け）、イタリアの37（28勝9分）にユーロ2020の
+#   準決勝・決勝（PK勝ち）が入っていることから「勝っても負けても引き分け」と言っている。
+# 9連勝が監督の最長に並ぶのは Goal（Opta）。自分の一覧でも 2024年6〜7月とサウジアラビア戦〜クロアチア戦がどちらも9。
+# 反応は Yahoo!ニュース（フットボールチャンネルの記事）のコメント欄から個人の投稿3件、頭から終わりまで。海外の反応は取れていない（Reddit 403）。
+# 写真は Commons（Bryan Berlin＝CC BY-SA 4.0、Biso＝CC BY 4.0）。記事の写真は Getty・AFP なので使っていない。
+date: 2026年10月3日
+slot: other_1
+format: news
+series: 記録の解説
+people: []
+theme:
+  id: record_spain40
+  league: spain
+  league_name: スペイン代表
+  kind: other
+  topic: スペイン代表
+  title: スペイン代表、史上初の40試合無敗。イタリアの37試合とまるで違った中身
+  question: スペイン代表の40試合無敗は、これまで最長だったイタリアの37試合と何が違うのか
+  takeaway: スペインの40試合は得点102・失点31、イタリアの37試合は得点93・失点12。1試合の得点はほぼ同じで、失点は2倍を超える。2点以上取られた試合がイタリアは0、スペインは8あり、その8試合で一度も負けていない。守り切ったイタリアに対し、取り返して積んだ記録だ。ただW杯の8試合だけは失点1で、大一番では守りも締めていた。41試合目は日本時間10月4日3時45分からのチェコ戦
+  opening_image: assets/images/20261003_record_spain40/01_trophy_w.jpg
+short_title: スペイン代表、40試合無敗で歴代1位に
+thumbnail:
+  photo: assets/images/20261003_record_spain40/01_trophy.jpg
+  line1: スペイン代表 40試合無敗
+  line2: 2点取られても負けない試合が●つ
+  tags:
+  - スペイン代表
+  - ラミン・ヤマル
+  - イタリア代表
+  - 記録の解説
+sections:
+- id: record
+  heading: 40試合、一度も負けなし
+  tier: 確定
+  official: true
+  telop: 9月29日のクロアチア戦で40試合連続の無敗。代表チームで史上初
+  narrator: キャスター
+  card:
+    type: table
+    title: 40試合無敗の基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 期間
+      - 2024年3月26日〜2026年9月29日
+    - - 成績
+      - 31勝9分け
+    - - 得点・失点
+      - 102点・31点
+    - - 取ったタイトル
+      - ユーロ2024・W杯2026
+    - - 監督
+      - ルイス・デ・ラ・フエンテ
+    - - それまでの最長
+      - イタリアの37試合（2018〜21年）
+  say:
+  - text: 9月29日、スペインのセビージャ。スペイン代表がクロアチアを4-1で下しました。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+    image: assets/images/20261003_record_spain40/01_trophy_w.jpg
+  - text: 19歳のラミン・ヤマルが2点。負けなしの記録を、また1つ伸ばしました。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 試合の前には、主将のロドリがW杯のトロフィーを観客に披露しました。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+  - text: トロフィーをここに持ってこられて、すごくうれしかった。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+    voice: ラミン・ヤマル
+  - text: 試合に勝って、それを地元に持ち帰れたのは最高だ。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+    voice: ラミン・ヤマル
+    cont: true
+  - text: 負けなしは、これで40。ここまで続けた代表チームは、歴史上ありません。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+    emph: true
+  - text: 最後に負けたのは2024年3月、コロンビアとの親善試合でした。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 4日後のブラジル戦、3-3の引き分けから記録は始まります。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: そこから31勝9分け。積み上げた得点は102、失点は31です。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: その間に、ユーロ2024とW杯2026、2つの大きな大会を制しました。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 率いるのは、2022年W杯のあとに就いたデ・ラ・フエンテ監督です。
+    card:
+      type: table
+      title: 40試合無敗の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  quotes_from:
+  - AFP https://sports.yahoo.com/articles/yamal-inspires-spain-croatia-romp-205253118.html
+  sources:
+  - https://www.uefa.com/uefanationsleague/match/2047999/
+  - https://sports.yahoo.com/articles/yamal-inspires-spain-croatia-romp-205253118.html
+  - https://www.goal.com/en/lists/unstoppable-spain-4-0-against-croatia-with-a-brace-from-yamal/blt0362aef75d6bdc86
+  - https://striver.football/the-game/spain-40-game-unbeaten-run-croatia
+- id: count
+  heading: 「無敗」の数え方
+  tier: 確定
+  official: true
+  telop: 親善試合も数える。PK戦は勝っても負けても引き分けの扱い
+  narrator: 解説
+  card:
+    type: table
+    title: 「無敗」の数え方
+    columns: &id003
+    - 項目
+    - この記録での扱い
+    rows: &id004
+    - - 親善試合
+      - 数える（40試合のうち7試合）
+    - - 延長戦での勝ち
+      - 勝ち（ユーロのドイツ戦、W杯決勝）
+    - - PK戦
+      - 勝っても負けても引き分け
+    - - PK戦で敗れた試合
+      - 2025年ネーションズリーグ決勝
+    - - 公式戦だけなら
+      - 最後の負けは2023年3月
+  say:
+  - text: 「無敗」と言っても、数え方には決まりがあります。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+  - text: 数えるのは正式な代表戦で、親善試合も入ります。記録の中に7つありました。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 延長戦で決着した試合は、そのまま勝ちに数えます。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 分かれ目はPK戦。PK戦は、勝っても負けても引き分けの扱いです。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 2025年6月、欧州の代表どうしの大会、ネーションズリーグの決勝。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: スペインはポルトガルと2-2のあと、PK戦でトロフィーを逃しました。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: それでも記録の上では引き分け。無敗は途切れていません。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: イタリアの記録にも、PK戦で勝ったユーロの2試合が引き分けで入っています。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 公式戦だけで見ると、最後の負けはさらに前、2023年3月のスコットランド戦です。
+    card:
+      type: table
+      title: 「無敗」の数え方
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  sources:
+  - https://nuevecuatrouno.com/2026/09/29/cuarenta-partidos-sin-perder-de-la-fuente-estira-el-record-mundial-de-espana/
+  - https://www.fifa.com/en/tournaments/mens/worldcup/articles/unbeaten-undefeated-runs-international-football-history
+  - https://striver.football/the-game/spain-40-game-unbeaten-run-croatia
+- id: ranking
+  main: true
+  heading: 歴代の長い無敗
+  tier: 確定
+  official: true
+  telop: 2位イタリア37、3位アルゼンチン36。その上に立ったスペインの40
+  narrator: キャスター
+  card:
+    type: table
+    title: 代表チームの連続無敗 歴代
+    columns: &id005
+    - 国
+    - 試合
+    - 期間
+    - 止めた相手
+    rows: &id006
+    - - スペイン
+      - '40'
+      - 2024〜
+      - 続いている
+    - - イタリア
+      - '37'
+      - 2018〜21
+      - スペイン
+    - - アルゼンチン
+      - '36'
+      - 2019〜22
+      - サウジアラビア
+    - - ブラジル
+      - '35'
+      - 1993〜96
+      - メキシコ
+    - - スペイン
+      - '35'
+      - 2007〜09
+      - アメリカ
+    - - セネガル／モロッコ
+      - '33'
+      - 2023〜25／2025〜26
+      - ブラジル／フランス
+  say:
+  - text: スペイン代表が9月29日、40試合続けて負けなしの記録に届きました。
+    image: assets/images/20261003_record_spain40/01_trophy_w.jpg
+    short_only: true
+  - text: 国の代表チームの連続無敗、これまでの長い記録を並べます。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+    image: assets/images/20261003_record_spain40/03_team2025.jpg
+  - text: 2位はイタリアの37。2018年から3年、マンチーニ監督の時代です。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: その記録を止めたのは、2021年10月のスペインでした。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 3位はアルゼンチンの36試合。メッシたちが南米王者になった時期です。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: 止めたのは2022年W杯の初戦、サウジアラビアでした。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: 4位には、1990年代のブラジルと、2007年からのスペインが35で並びます。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: パスをつなぐ「ティキタカ」で、ユーロ2008を制した時代のスペインです。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: そして1位が、いまのスペイン。2位との差は、もう3つです。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+    emph: true
+  - text: イタリアの37を越えた38試合目は、W杯の決勝でした。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 2021年に自分たちが止めた記録を、自分たちの手で塗り替えたんです。
+    card:
+      type: table
+      title: 代表チームの連続無敗 歴代
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  sources:
+  - https://www.fifa.com/en/tournaments/mens/worldcup/articles/unbeaten-undefeated-runs-international-football-history
+  - https://nuevecuatrouno.com/2026/09/29/cuarenta-partidos-sin-perder-de-la-fuente-estira-el-record-mundial-de-espana/
+- id: inside
+  heading: 40試合の中身
+  tier: 報道
+  official: true
+  telop: ユーロは7戦全勝、W杯は8試合で失点1。苦しんだのはネーションズリーグ
+  narrator: 解説
+  card:
+    type: table
+    title: 40試合の大会ごとの成績
+    columns: &id007
+    - 大会
+    - 試合
+    - 勝ち
+    - 分け
+    - 得点
+    - 失点
+    rows: &id008
+    - - 親善試合
+      - '7'
+      - '4'
+      - '3'
+      - '20'
+      - '6'
+    - - ユーロ2024
+      - '7'
+      - '7'
+      - '0'
+      - '15'
+      - '4'
+    - - ネーションズリーグ（24-25）
+      - '10'
+      - '6'
+      - '4'
+      - '25'
+      - '15'
+    - - W杯予選
+      - '6'
+      - '5'
+      - '1'
+      - '21'
+      - '2'
+    - - W杯2026
+      - '8'
+      - '7'
+      - '1'
+      - '14'
+      - '1'
+    - - ネーションズリーグ（26-27）
+      - '2'
+      - '2'
+      - '0'
+      - '7'
+      - '3'
+  say:
+  - text: この記録を大会ごとに分けると、その形が見えてきます。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+  - text: 2024年夏のユーロでは、7試合すべてに勝って優勝。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 準々決勝の開催国ドイツ戦は、延長の末の2-1でした。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: いちばん苦しんだのは、その後のネーションズリーグです。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 10試合で引き分けが4つ、失点は15。フランスとは5-4の打ち合いでした。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: そして今年の夏のW杯。初戦はカーボベルデと0-0でした。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+    image: assets/images/20261003_record_spain40/04_winners.jpg
+  - text: ところがそこから7連勝。決勝はアルゼンチンに1-0。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: 決勝点は延長に入ってから、フェラン・トーレスが決めました。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: スペインにとって、2010年以来2度目のW杯の優勝です。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: 8試合で許した点は、わずか1つでした。
+    card:
+      type: table
+      title: 40試合の大会ごとの成績
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Spain_national_football_team_results_(2020%E2%80%93present)
+  - https://www.flashscore.com.ar/noticias/futbol-uefa-nations-league-los-40-partidos-seguidos-que-espana-lleva-invicta/t6l0oep1/
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final
+- id: view
+  viewpoint: true
+  heading: イタリアの37試合との違い
+  tier: 背景
+  telop: 得点はほぼ同じ、失点は2倍以上。2点取られても負けない試合が8つ
+  narrator: 解説
+  card:
+    type: table
+    title: スペインの40試合とイタリアの37試合
+    columns: &id009
+    - 項目
+    - スペイン（40試合）
+    - イタリア（37試合）
+    rows: &id010
+    - - 勝ち・分け
+      - 31勝9分け
+      - 28勝9分け
+    - - 得点（1試合あたり）
+      - 102（2.55）
+      - 93（2.51）
+    - - 失点（1試合あたり）
+      - 31（0.78）
+      - 12（0.32）
+    - - 無失点の試合
+      - '21'
+      - '25'
+    - - 2点以上取られた試合
+      - '8'
+      - '0'
+    - - 取ったタイトル
+      - ユーロ・W杯
+      - ユーロ
+  say:
+  - text: では、抜かれたイタリアの記録と、何が違うのか。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+    image: assets/images/20261003_record_spain40/02_xi_france.jpg
+  - text: 両国の試合の結果を1つずつ並べ、得点と失点を数え直しました。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+  - text: 1試合あたりの得点は、スペインが2.55、イタリアが2.51。ほぼ同じです。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: 大きく違うのは失点。イタリアが許したのは、わずか12点です。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: スペインは31点。1試合あたりで、2倍を超えます。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: イタリアには、2点以上取られた試合が1つもありませんでした。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: スペインは8試合。それでも、その8試合で一度も負けていないんです。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+    emph: true
+  - text: 守り切って積んだイタリアと、取られても取り返して積んだスペイン。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: ただ、W杯の守りは別でした。大一番では、きっちり締めています。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: 次のチェコ戦は、日本時間10月4日の午前3時45分キックオフ。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+  - text: 会場はスペイン北部のオビエド。勝つか引き分ければ、無敗は41試合です。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: いまは9連勝中。勝てば10連勝で、デ・ラ・フエンテ監督のもとで最長です。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+  - text: チェコはこの大会、2試合を終えてまだ勝ち点がありません。
+    card:
+      type: table
+      title: スペインの40試合とイタリアの37試合
+      columns: *id009
+      rows: *id010
+  sources:
+  - https://en.wikipedia.org/wiki/Italy_national_football_team_results_(2010%E2%80%93present)
+  - https://en.wikipedia.org/wiki/Spain_national_football_team_results_(2020%E2%80%93present)
+  - https://www.uefa.com/uefanationsleague/match/2047971/
+  - https://www.goal.com/en/news/spain-enter-the-history-books-with-a-record-run-of-40-matches/blta05b90aa1f07e369
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「代表では最強クラスと思う」
+  narrator: キャスター
+  say:
+  - voice: ネット民
+    text: ティキタカスペインと比べるひと多いけど、
+  - voice: ネット民
+    text: もう越えてると思う。
+    cont: true
+  - voice: ネット民
+    text: ポゼッションや守備のところは、昔のが隙がなかった。
+    cont: true
+  - voice: ネット民
+    text: でも、今の代表は攻撃力が異常。
+    cont: true
+  - voice: ネット民
+    text: 持ちながら崩せるし、速い攻めでも複数点を取れるに対して、
+    cont: true
+  - voice: ネット民
+    text: ティキタカ時代はロースコアが勝ち筋。
+    cont: true
+  - voice: ネット民
+    text: 組織も個も暴力レベル。
+    cont: true
+  - voice: ネット民
+    text: 過去振り返っても、代表では最強クラスと思う。
+    cont: true
+  - voice: ネット民
+    text: 前回のワールドカップ前、スペイン代表は、
+    short_voice: true
+  - voice: ネット民
+    text: 完成度がクラブチームレベルで強豪国の中でも
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 一段上と有識者が話されていました。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: ネーションズリーグ、ワールドカップで証明されて
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 今も継続している。すごいな。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/5c6c9aa3ae058f7dc7944928683957c07d43be13/comments

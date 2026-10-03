@@ -1,0 +1,388 @@
+# 取材メモ（10/3 題材 city_appeal、型は news）。材料の控えは research/raw/20261003_city_appeal.md。
+# 10/2 に「マンC、115件の告発のうち114件で有罪」を出している（scripts/20261002_city_verdict.md）。
+# 件数・金額・前例・「上訴の期限」「新しい3人の委員会」「1月末まで」「罰は別の審理で時期未定」はそこで言った。この回は言い直さない。
+# この回は、申し立てと声明・規則の日付（7日・84日・5日・30日）・告発の発端のピント・控訴で何が変わりうるか（争った点の比べ）に絞る。
+# 事実の裏: 規則は PL ハンドブック 2026/27 の W.76・W.85・W.86・W.88・W.92・W.95。12週の決まりは 2025/26 の規則集に無い（新しい）。
+#   「政府の資金」の説明を委員会が退けたのは判断の 76・77項（21ページ、画像）。2018年11月の記事・前年のサーバーへの侵入は 103・104項。
+#   ピントの有罪判決（2023年9月、4年の執行猶予つき、不正なデータアクセス・恐喝未遂・通信の秘密の侵害）は RTÉ 2023-09-11。
+# 写真: エティハド・スタジアム（Commons、Ank kumar、CC BY-SA 4.0）。前の回の空撮とは別。ピント本人の自由な写真は無いので使わない。
+date: 2026年10月3日
+slot: プレミア
+format: news
+people:
+- マンチェスター・シティ
+- ルイ・ピント
+theme:
+  id: city_appeal
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンC、有罪の判定に控訴。告発の発端をつくった男にも迫る期限
+  question: 控訴したシティと、告発の発端をつくった男に、これから何がいつ決まるのか
+  takeaway: プレミアリーグの控訴で結果が動いた前例は、違反を認めたうえで罰の重さを争ったエヴァートン（勝ち点10から6）で、同じく罰の重さを争ったフォレストの4点は1点も戻らなかった。違反そのものを覆したのは2020年のシティ自身で、ウエファの出場停止を時効と立証不足で取り消させた。今回の控訴は最初の審理の証拠を見直す場で、新しい証拠は当時出せなかったものに限られ、シティが持ち出すとみられる「政府の資金」という説明は、最初の審理で後からこしらえた説明として退けられている。最初の分かれ目は、今季から入った12週の決まりを使うかを示す10月8日まで。使われれば答えは1月23日までに出る。10月8日の2日後には、告発の発端となったピントの保護が切れる
+  opening_image: assets/images/20261003_city_appeal/01_w.jpg
+short_title: マンCが控訴。答えが出るのはいつか
+thumbnail:
+  photo: assets/images/20261003_city_appeal/01.jpg
+  line1: マンC 有罪の判定に控訴
+  line2: 告発の発端の男、保護は●●日で終わる
+  reaction: 覚悟の上での告発だっただろう
+sections:
+- id: lodged
+  heading: 夜7時の申し立て
+  tier: 確定
+  official: true   # シティの声明（10/2）と PL の声明（10/2）まで辿った
+  telop: シティ「判断には、法と原則と事実の、明らかで重大な誤りがある」
+  narrator: キャスター
+  say:
+  - text: 判定から2日後、イングランドの時間で10月1日の夜7時。
+    image: assets/images/20261003_city_appeal/01_w.jpg
+  - text: マンチェスター・シティは、控訴を申し立てました。翌日に出した声明です。
+  - voice: マンチェスター・シティ
+    text: 判断には、いくつもの点で、法と原則と事実の、
+  - voice: マンチェスター・シティ
+    text: 明らかで重大な誤りがある。
+    cont: true
+  - voice: マンチェスター・シティ
+    text: クラブは無実で、すべての主張を支える、
+    cont: true
+  - voice: マンチェスター・シティ
+    text: 覆しようのない証拠がそろっている。
+    cont: true
+  - text: リーグも受け付けを発表。控訴の審理は、結果が出るまで非公開です。
+  - text: 報道では、スポンサー料はオーナー側でなくアブダビの政府から出ていた、と訴える見込みです。
+  quotes_from:
+  - マンチェスター・シティ（Sky Sports の全文引用） https://www.skysports.com/football/news/11661/13593606/man-city-lodge-appeal-premier-league-club-contest-guilty-verdict-of-independent-commission
+  sources:
+  - https://www.skysports.com/football/news/11661/13593606/man-city-lodge-appeal-premier-league-club-contest-guilty-verdict-of-independent-commission
+  - https://www.premierleague.com/en/news/4729207/premier-league-statement-manchester-city-fc-appeal-decision-of-independent-commission-02-october-2026
+  - https://www.espn.com/soccer/story/_/id/50083711/
+- id: pinto
+  heading: 発端の資料を渡した男
+  tier: 報道
+  telop: 告発の発端となったルイ・ピント。ポルトガルの証人保護は10月10日で打ち切り
+  narrator: キャスター
+  card:
+    type: table
+    title: ルイ・ピントと、この件
+    columns: [時期, 出来事]
+    rows: &pinto
+    - ['2018年11月', '資料をもとにした記事が出る']
+    - ['2020年', 'ポルトガルの証人保護へ']
+    - ['2023年9月', '執行猶予つきの有罪判決']
+    - ['9月30日', '保護の打ち切りを伝えられる']
+  say:
+  - text: マンチェスター・シティへの裁きは、2018年11月の雑誌の記事から始まりました。
+    image: assets/images/20261003_city_appeal/02_w.jpg
+    card:
+      type: table
+      title: ルイ・ピントと、この件
+      columns: [時期, 出来事]
+      rows: *pinto
+      highlight_row: 0
+  - text: もとになった資料をドイツの雑誌に渡したのは、ポルトガル人のルイ・ピントです。
+    card:
+      type: table
+      title: ルイ・ピントと、この件
+      columns: [時期, 出来事]
+      rows: *pinto
+      highlight_row: 0
+  - text: ポルトガルの捜査当局に協力し、2020年から証人保護を受けてきました。
+    card:
+      type: table
+      title: ルイ・ピントと、この件
+      columns: [時期, 出来事]
+      rows: *pinto
+      highlight_row: 1
+  - text: 一方で2023年、不正なデータへのアクセスや恐喝未遂などで、
+    card:
+      type: table
+      title: ルイ・ピントと、この件
+      columns: [時期, 出来事]
+      rows: *pinto
+      highlight_row: 2
+  - text: 執行猶予つきの有罪判決を受けた人物でもあります。
+    card:
+      type: table
+      title: ルイ・ピントと、この件
+      columns: [時期, 出来事]
+      rows: *pinto
+      highlight_row: 2
+  - text: その保護を10月10日で打ち切ると伝えられたのは、有罪の判定の翌日でした。
+    card:
+      type: table
+      title: ルイ・ピントと、この件
+      columns: [時期, 出来事]
+      rows: *pinto
+      highlight_row: 3
+  - text: ピントは2日、居場所を明かさない所へ移ると表明しました。
+    card:
+      type: table
+      title: ルイ・ピントと、この件
+      columns: [時期, 出来事]
+      rows: *pinto
+      highlight_row: 3
+  - text: 弁護士は、4月にリスボンで暴行を受けたことを挙げて訴えています。
+  - voice: ピントの弁護士
+    text: 保護された住まいを突然奪われ、
+  - voice: ピントの弁護士
+    text: ピントは、2020年以来、いちばん危うい立場に置かれる
+    cont: true
+  quotes_from:
+  - ガーディアン（AOL 転載） https://www.aol.co.uk/articles/manchester-city-whistleblower-rui-pinto-194359000.html
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+  - https://www.aol.co.uk/articles/manchester-city-whistleblower-rui-pinto-194359000.html
+  - https://sports.yahoo.com/articles/rui-pinto-whistleblower-abandoned-portuguese-153346816.html
+  - https://sports.yahoo.com/articles/man-city-whistleblower-rui-pinto-042341408.html
+  - https://www.rte.ie/sport/soccer/2023/0911/1404704-football-leaks-founder-pinto-avoids-jail-in-portugal/
+  - https://www.tokyo-sports.co.jp/articles/-/405330
+- id: schedule
+  main: true
+  heading: 84日と30日の決まり
+  tier: 確定
+  official: true   # PL ハンドブック 2026/27 の W.85・W.86・W.95 と、2025/26 の規則集との比べ
+  telop: 控訴の審理は12月24日まで、判断は1月23日まで。この決まりは今季から
+  narrator: キャスター
+  card:
+    type: table
+    title: これからの日付
+    columns: [日付, 決まること]
+    rows: &dates
+    - ['10月1日', '控訴の申し立て']
+    - ['10月8日まで', '控訴の進め方を示す']
+    - ['10月10日', 'ピントの保護が終わる']
+    - ['12月24日まで', '控訴の審理を終える']
+    - ['1月23日まで', '控訴の判断']
+    - ['未定', '罰を決める審理']
+  say:
+  - text: 財務の規則をめぐって有罪の判定を受けたマンチェスター・シティが、控訴に踏み切りました。
+    short_only: true
+  - text: 控訴の進め方は、リーグの規則集に細かく決まっています。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 0
+  - text: 申し立てから7日以内、10月8日までに、控訴の委員会が進め方を示します。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 1
+  - text: その2日後の10日には、告発の発端となったルイ・ピントの保護が切れます。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 2
+  - text: 審理は、申し立てから12週、84日以内に終える決まりです。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 3
+  - text: 今回なら12月24日。審理は最長5日で、一度にまとめて開きます。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 3
+  - text: 判断は、審理の最後の日から30日以内。遅くとも1月23日です。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 4
+  - text: ただ、この決まりは去年の規則集にはありませんでした。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 4
+  - text: 告発は2023年。シティは、古い事件には当てはまらないと争う可能性があります。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 1
+  - text: 12週の決まりを使うかも、10月8日までに示す進め方で決めます。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 1
+  - text: 罰の重さを決める審理は、まだ日程が出ていません。
+    card:
+      type: table
+      title: これからの日付
+      columns: [日付, 決まること]
+      rows: *dates
+      highlight_row: 5
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.sec.gov/Archives/edgar/data/1549107/000110465925091251/manu-20250630xex4d24.htm
+  - https://www.premierleague.com/en/news/4729207/premier-league-statement-manchester-city-fc-appeal-decision-of-independent-commission-02-october-2026
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+  - https://www.skysports.com/football/news/11661/13593606/man-city-lodge-appeal-premier-league-club-contest-guilty-verdict-of-independent-commission
+  - https://sports.yahoo.com/articles/rui-pinto-whistleblower-abandoned-portuguese-153346816.html
+- id: view
+  viewpoint: true
+  heading: 控訴で結論はどこまで変わるか、3つの前例
+  tier: 背景
+  telop: 前例で動いたのは罰の重さ。違反そのものを覆したのは2020年のシティ自身
+  narrator: 解説
+  card:
+    type: table
+    title: 控訴で争った点と結果
+    columns: [例, 争った点, 結果]
+    rows: &appeals
+    - ['エヴァートン（2024年）', '罰の重さ', '勝ち点10→6']
+    - ['フォレスト（2024年）', '罰の重さ', '勝ち点4のまま']
+    - ['シティ対ウエファ（2020年）', '違反そのもの', '出場停止を取り消し']
+    - ['シティ（今回）', '違反そのもの', 'これから']
+  say:
+  - text: 控訴で、判定はどこまで変わりうるのか。前例を見ます。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+  - text: エヴァートンは2024年、勝ち点10の剥奪を、控訴で6まで縮めました。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 0
+  - text: ただ争ったのは罰の重さで、違反そのものは認めていました。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 0
+  - text: フォレストも罰の重さを争い、勝ち点4は1点も戻りませんでした。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 1
+  - text: 違反そのものを覆した例は、シティ自身にあります。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 2
+  - text: 2020年、ヨーロッパの連盟ウエファから受けた、欧州の大会の出場停止を、
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 2
+  - text: スポーツ仲裁裁判所が、時効や立証の足りなさを理由に取り消しました。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 2
+  - text: 今回の控訴は、最初の審理で出た証拠を見直す場です。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 3
+  - text: 新しい証拠は、当時は出せなかったものしか認められません。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 3
+  - text: 政府のお金だったという説明も、最初の審理ですでに出ていました。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 3
+  - text: 委員会はそれを、後になってこしらえた説明として退けています。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 3
+  - text: 最初の分かれ目は、10月8日までに示される控訴の進め方です。
+    card:
+      type: table
+      title: 控訴で争った点と結果
+      columns: [例, 争った点, 結果]
+      rows: *appeals
+      highlight_row: 3
+  sources:
+  - https://www.premierleague.com/en/news/3912574
+  - https://www.premierleague.com/news/3788486
+  - https://www.premierleague.com/en/news/3999776
+  - https://www.aljazeera.com/sports/2020/7/13/manchester-citys-two-year-european-football-ban-lifted
+  - https://www.skysports.com/football/news/11679/12038109/manchester-city-court-of-arbitration-for-sport-releases-reasons-for-lifting-clubs-european-ban
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「覚悟の上での告発だっただろう」
+  narrator: キャスター
+  say:
+  # Bluesky @jasethevillain（10/2 18:44 UTC）。12週の期限を伝える投稿への引用。全文（ハッシュタグだけ外した）
+  - voice: ネット民
+    text: このあと、プレミアリーグが罰を決めるのを待たなきゃいけない。
+  - voice: ネット民
+    text: 次は、シティがそれに控訴するのを待つ。
+    cont: true
+  - voice: ネット民
+    text: そこでやっと、何かが本当に動くかもしれない。
+    cont: true
+  - voice: ネット民
+    text: 気の毒なのはファンだけ。
+    cont: true
+  - voice: ネット民
+    text: 成功する前からいた、本物のファンたち。それでもね。
+    cont: true
+  # Yahoo!ニュース（サッカーキング 10/2 の控訴の記事）のコメント欄 2ページ目 sar*****。全文
+  - voice: ネット民
+    text: 反論の余地のない証拠があるなら
+    short_voice: true
+  - voice: ネット民
+    text: もうとっくに提出してるだろうし
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: こういう状況になっていないと思うけどね。
+    cont: true
+    short_voice: true
+  # Yahoo!ニュース（東スポWEB 10/3 の告発者の記事）のコメント欄 1ページ目 ex1********。全文
+  - voice: ネット民
+    text: 覚悟の上での告発だっただろう。
+  - voice: ネット民
+    text: 安全に過ごせるよう祈っております。
+    cont: true
+  sources:
+  - https://bsky.app/profile/jasethevillain.bsky.social/post/3mwvzqmuyns2f
+  - https://news.yahoo.co.jp/articles/3195ebc122f9cf1d9010740bcfc0c74966683683/comments
+  - https://news.yahoo.co.jp/articles/cbcc73f374f9f71c23d02235f00bc4218b3b5ccc/comments

@@ -1012,6 +1012,12 @@ class Renderer:
             total += height + pad
         # 上から積む。**下に余白が残っても、字の大きさを優先する**
         y = int(self.layout.height * STACK_TOP)
+        # **縦型（ショート）は下に寄せる**（2026-10-03「動画の質を上げる仕組み ②」の facecheck で発見）。
+        # 縦の写真は顔が上の3分の1に来るので、上から積むと白い箱がちょうど顔に重なっていた
+        # （三笘・フランス対イタリア・レヴァンドフスキ・ポルトガルのショートの最後、顔の枠の100%）。
+        # 反応の最中はテロップを出さないので、下端（92%）まで使ってよい
+        if self.layout.height > self.layout.width:
+            y = max(y, int(self.layout.height * 0.92) - total)
 
         for indent, width, lines, ink in boxes:
             height = font.size * len(lines) + int(font.size * 0.42) * (len(lines) - 1) + pad * 2

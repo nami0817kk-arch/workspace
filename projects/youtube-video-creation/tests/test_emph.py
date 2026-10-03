@@ -36,3 +36,18 @@ def test_取材メモのemphが台本に出る():
     assert text.count("  emph: true") == 1
     script = parse_script(text)
     assert sum(1 for line in script.lines if line.emph) == 1
+
+
+def test_行のcard_noneで表を下ろす():
+    """2026-10-03 クラシコの回。反応の白い箱が表に重なった。行に card: none で下ろす。"""
+    import yaml
+    from pathlib import Path
+    from src.plan import load_plan
+    from src.research import build_notes
+
+    raw = yaml.safe_load(Path("research/20261003_kubo_marriage.yaml").read_text(encoding="utf-8"))
+    sec = raw["sections"][1]                  # 表のある節（代表の仲間の祝福）
+    sec["say"][3] = {"text": sec["say"][3]["text"], "card": "none"}
+    text = to_script(build_notes(raw), load_plan())
+    assert "  card: none" in text
+    assert f"{sec['id']}_3_card:" not in text   # 「none」を表の定義として書かない
