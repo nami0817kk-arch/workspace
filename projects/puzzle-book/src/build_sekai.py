@@ -45,10 +45,10 @@ MARGIN_TOP = 0.45 * inch
 MARGIN_BOTTOM = 0.62 * inch  # ページ番号の分を空ける
 SAFE = 0.375 * inch  # 文字は仕上がり線からこれ以上内側（裁ち落としありの最小）
 
-# 挿絵（Gemini で描いたもの）。置いてあれば絵文字の代わりに丸く切り抜いて使う。
+# 挿絵（画像生成AI の FLUX.1 [schnell] で描き、1枚ずつ目で選んだもの）。置いてあれば絵文字の代わりに丸く切り抜いて使う。
 # 名前: item01〜item50（各句）、chapter1〜5（章扉）、cover（表紙）、title（表題・おわりに）
 ART_DIR = _ROOT / "assets" / "sekai-art"
-ART_CREDIT = "挿絵: Google Gemini で生成"
+ART_CREDIT = "挿絵: FLUX.1 [schnell]（Black Forest Labs、Apache License 2.0）で生成"
 
 
 def art_path(key: str) -> Path | None:
@@ -64,7 +64,7 @@ def has_art() -> bool:
 
 
 def draw_art(c: canvas.Canvas, key: str, cx: float, cy: float, r: float) -> bool:
-    """挿絵を中心 (cx, cy)・半径 r の丸に切り抜いて置く。四隅（Gemini の透かしが入る所）は丸の外に落ちる。"""
+    """挿絵を中心 (cx, cy)・半径 r の丸に切り抜いて置く。四隅は丸の外に落ちる。"""
     path = art_path(key)
     if path is None:
         return False
@@ -515,7 +515,8 @@ def draw_chapter(c: canvas.Canvas, f: Frame, spec: SekaiSpec, items: list[dict],
         c.setFillColorCMYK(*WHITE)
         c.roundRect(x, y - chh, cw, chh, 9, stroke=0, fill=1)
         ic = min(34, chh - 14)
-        draw_icon(c, it["icon"], x + 8, y - chh / 2 - ic / 2, ic)
+        if not draw_art(c, f"item{k + 1:02d}", x + 8 + ic / 2, y - chh / 2, ic / 2):
+            draw_icon(c, it["icon"], x + 8, y - chh / 2 - ic / 2, ic)
         c.setFillColorCMYK(*col)
         c.setFont(FONT_ROUNDED, 10)
         c.drawString(x + ic + 16, y - 17, f"{k + 1:02d}")
@@ -640,7 +641,8 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
         y = _para(c, f, text, y) - 10
     # 絵: 猿と4つのふきだし
     y -= 6
-    draw_icon(c, "1f412", f.left, y - 70, 66)
+    if not draw_art(c, "item11", f.left + 33, y - 37, 33):
+        draw_icon(c, "1f412", f.left, y - 70, 66)
     by = y - 4
     for k, _ in LANGS:
         bw = f.width - 84
