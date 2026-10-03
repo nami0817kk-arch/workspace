@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../models/match_result.dart';
 import '../theme/club_palette.dart';
+import '../widgets/pitch_art.dart';
 
 /// ピッチ上でのミニアニメーションと、[events]の分単位での実況出しを行う。
 /// [startMinute]〜[endMinute]の区間を[durationSeconds]かけて進行させるため、
@@ -193,23 +194,16 @@ class PitchGame extends FlameGame {
 /// ライン1本ずつをコンポーネントにすると数十個になり、毎フレームの
 /// 走査が無駄に増える。
 class _PitchSurface extends PositionComponent {
-  static const _turfDark = Color(0xFF20642A);
-  static const _turfLight = Color(0xFF2C7C36);
-  static const _line = Color(0xCCFFFFFF);
+  static const _line = PitchArt.line;
 
   @override
   void render(Canvas canvas) {
     final w = size.x;
     final h = size.y;
 
-    // 芝刈りの縞。実際のピッチと同じで、これが無いと平らな板に見える。
-    const stripes = 8;
-    for (var i = 0; i < stripes; i++) {
-      canvas.drawRect(
-        Rect.fromLTWH(w / stripes * i, 0, w / stripes + 1, h),
-        Paint()..color = i.isEven ? _turfDark : _turfLight,
-      );
-    }
+    // 芝刈りの縞と地の色。スタメン画面と同じ描き方を使う(PitchArt)。
+    // 別々に書いていた頃は、同じゲームの中で緑が2種類あった。
+    PitchArt.paintTurf(canvas, Size(w, h), horizontalStripes: false);
 
     final linePaint = Paint()
       ..color = _line

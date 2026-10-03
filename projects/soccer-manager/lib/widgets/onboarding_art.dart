@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'pitch_art.dart';
+
 /// 初回チュートリアルの各ページに置く挿絵。
 ///
 /// アイコン1つでは画面の大半が余白になっていた。かといって画像を持たせると
@@ -61,9 +63,7 @@ class OnboardingArtPainter extends CustomPainter {
     required this.accent,
   });
 
-  static const _turf = Color(0xFF2C7C36);
-  static const _turfDark = Color(0xFF20642A);
-  static const _line = Color(0xCCFFFFFF);
+  static const _line = PitchArt.line;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -308,14 +308,12 @@ class OnboardingArtPainter extends CustomPainter {
     canvas.save();
     canvas.clipRRect(
         RRect.fromRectAndRadius(rect, const Radius.circular(8)));
-    const stripes = 6;
-    for (var i = 0; i < stripes; i++) {
-      canvas.drawRect(
-        Rect.fromLTWH(rect.left + rect.width / stripes * i, rect.top,
-            rect.width / stripes + 1, rect.height),
-        Paint()..color = i.isEven ? _turfDark : _turf,
-      );
-    }
+    // 芝は実際のピッチと同じ描き方を使う(PitchArt)。別々に塗っていた
+    // 頃は、挿絵の緑と本編の緑が違っていた。
+    canvas.save();
+    canvas.translate(rect.left, rect.top);
+    PitchArt.paintTurf(canvas, rect.size, horizontalStripes: false, stripes: 6);
+    canvas.restore();
     final linePaint = Paint()
       ..color = _line
       ..style = PaintingStyle.stroke
