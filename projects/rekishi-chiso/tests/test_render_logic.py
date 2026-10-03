@@ -12,7 +12,7 @@ def test_segments_merge_and_cover_length():
 
 def test_blinks_are_stable():
     assert lipsync.blinks(3, 20.0) == lipsync.blinks(3, 20.0)
-    assert all(b - a == lipsync.BLINK_LENGTH for a, b in lipsync.blinks(3, 20.0))
+    assert all(abs((b - a) - lipsync.BLINK_LENGTH) < 1e-9 for a, b in lipsync.blinks(3, 20.0))
 
 
 def test_runs_switch_background_in_section_gap():
