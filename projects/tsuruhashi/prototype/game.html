@@ -323,8 +323,9 @@ const SIDE = 0.8;
 const OFFLINE_CAP_H = 8;
 const CRIT_P = 0.08, CRIT_X = 5;
 const DROP_P = 0.12;
-// 採掘の倍率：広告を見るたびに ×2→×3→×4→×5。見るたびに残りは5分に戻り、切れたら ×1（2026-10-03 ユーザー指示「広告はさらに×」）
-const BOOST_SEC = 300, BOOST_LV_MAX = 4;
+// 採掘の倍率：広告を見るたびに ×2→×3→×4…と上がり、上限はない（2026-10-03 ユーザー指示「広告はさらに×」「上限なし」）。
+// 見るたびに残りは5分に戻り、切れたら ×1。動画なしで押せる人（広告を消した人）は、次に押せるまで BOOST_GAP 秒あける
+const BOOST_SEC = 300, BOOST_GAP = 30;
 const REBIRTH_DEPTH = 240;            // 6層の底で代替わりできる
 const ENV = (globalThis.process && process.env) || {};   // tool/sim.js で数値を試すときだけ使う
 const HP_G = +(ENV.HP_G || 1.094), ORE_G = +(ENV.ORE_G || 1.072);
@@ -473,7 +474,7 @@ const startCrew = () => WK.map((w, i) => i === 0 ? 2 : 0);
 const fresh = () => ({
   v:2, ore:0, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
-  boostUntil:0, boostLv:0, last:NOW(),
+  boostUntil:0, boostLv:0, boostAt:0, last:NOW(),
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0 },
   sound:true, haptic:true, theme:'auto', notifAsked:false, buyN:1,
@@ -710,12 +711,15 @@ function oreRate(st){
 }
 function startBoost(st){
   const now = NOW();
-  st.boostLv = boostOn(st) ? Math.min(BOOST_LV_MAX, (st.boostLv || 1) + 1) : 1;
+  st.boostLv = boostOn(st) ? (st.boostLv || 1) + 1 : 1;
+  st.boostAt = now;
   st.boostUntil = now + BOOST_SEC * 1000;
   st.st.ads++;
 }
 // 次に見たときの倍率（上限なら今のまま、時間だけ5分に戻る）
-const boostNext = st => 1 + (boostOn(st) ? Math.min(BOOST_LV_MAX, (st.boostLv || 1) + 1) : 1);
+const boostNext = st => 1 + (boostOn(st) ? (st.boostLv || 1) + 1 : 1);
+// 動画なしで押したとき、次に押せるまでの秒数
+const boostWait = st => Math.max(0, Math.ceil(((st.boostAt || 0) + BOOST_GAP * 1000 - NOW()) / 1000));
 
 // ================= 代替わり =================
 const canRebirth = st => st.genDepth >= REBIRTH_DEPTH;
@@ -852,6 +856,8 @@ function save(){
 // ================= 広告 =================
 let pendingAd = null, adTimer = 0;
 const adFree = () => !!(APP && APP.adFree);
+// 動画を見ずに効果が入る（広告を消した人・ブラウザの試作）
+const noVideo = () => !APP || APP.adFree;
 // 報酬型動画。見終えたら fn を呼ぶ。広告を消した人とブラウザの試作では、すぐ呼ぶ
 function withAd(kind, fn){
   if (!APP || APP.adFree) { fn(); save(); return; }
@@ -1143,12 +1149,12 @@ function updateUI(force){
     const r = Math.ceil((S.boostUntil - NOW()) / 1000);
     bc.style.display = 'block'; bc.textContent = `採掘×${boostMul(S)}　${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`;
   } else bc.style.display = 'none';
-  const cur = boostMul(S), nx = boostNext(S);
-  ab.disabled = !!pendingAd;
+  const cur = boostMul(S), nx = boostNext(S), wait = noVideo() ? boostWait(S) : 0;
+  ab.disabled = !!pendingAd || wait > 0;
   ab.innerHTML = pendingAd ? `${PLAY_IC}<span>動画を読み込んでいます…<small>しばらくお待ちください</small></span>`
-    : !boostOn(S) ? adLabel('採掘×2を5分', '動画を見るたびに倍率アップ（×5まで）')
-    : nx > cur ? adLabel(`採掘×${nx}に上げる`, `いま×${cur}・残りも5分に戻る`)
-    : adLabel(`採掘×${cur}を5分に戻す`, '最大の×5です');
+    : wait > 0 ? `${PLAY_IC}<span>採掘×${cur}<small>あと${wait}秒で ×${nx} に上げられる</small></span>`
+    : !boostOn(S) ? adLabel('採掘×2を5分', '動画を見るたびに倍率アップ（上限なし）')
+    : adLabel(`採掘×${nx}に上げる`, `いま×${cur}・残りも5分に戻る`);
 }
 // 採掘の絵の下の帯：次の目標
 function updateGoal(){
@@ -1283,10 +1289,10 @@ $('offX2').addEventListener('click', () => {
   withAd('away', () => { if (pendingAway === r) claimAway(2); });
 });
 $('adBoost').addEventListener('click', () => {
-  if (pendingAd) return;
+  if (pendingAd || (noVideo() && boostWait(S) > 0)) return;
   withAd('boost', () => {
     startBoost(S);
-    sfx('tier'); toast(`採掘×${boostMul(S)}`, `5分間 すべての採掘が${boostMul(S)}倍`, boostMul(S) < 1 + BOOST_LV_MAX ? '5分のうちにもう一度見ると、さらに上がる' : '最大の×5'); fxRing();
+    sfx('tier'); toast(`採掘×${boostMul(S)}`, `5分間 すべての採掘が${boostMul(S)}倍`, '5分のうちにもう一度見ると、さらに上がる'); fxRing();
     updateUI();
   });
 });

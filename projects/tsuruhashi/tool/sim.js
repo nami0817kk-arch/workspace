@@ -70,7 +70,7 @@ for (let day = 1; day <= DAYS; day++) {
         rebirth(S, cr); stall = 0; lastProg = 0;
       }
     }
-    // 広告を見る人は毎回の最初に1本（×2）。よく遊ぶ人は4本続けて ×5、5分ごとに見直す
+    // 広告を見る人は毎回の最初に1本（×2）。よく遊ぶ人は最初に4本（×5）、そのあとも5分ごとに1本ずつ上げる
     if (ADS) for (let k = 0; k < (PLAY === 'heavy' ? 4 : 1); k++) startBoost(S);
     let veinT = 0;
     for (let s = 0; s < len * 60; s++) {

@@ -71,7 +71,8 @@ const p1 = crewDps(S, true); S.pick = 10; ok(crewDps(S, true) > p1, 'つるは�
 // 広告の採掘倍率：見るたびに ×2→×3→×4→×5、見るたびに残り5分、切れたら ×1
 S = fresh(); startBoost(S); ok(boostMul(S) === 2 && S.boostUntil - clock === 300e3, '1回目は ×2 を5分');
 clock += 200e3; startBoost(S); ok(boostMul(S) === 3 && S.boostUntil - clock === 300e3, '5分のうちに見ると ×3、残りは5分に戻る');
-for (let k = 0; k < 5; k++) startBoost(S); ok(boostMul(S) === 5, '倍率は ×5 まで');
+for (let k = 0; k < 8; k++) startBoost(S); ok(boostMul(S) === 11, '倍率に上限はない（10回で ×11）');
+ok(boostWait(S) === BOOST_GAP, '動画なしで押した直後は30秒あける');
 clock += 301e3; ok(boostMul(S) === 1, '切れたら ×1');
 startBoost(S); ok(boostMul(S) === 2, '切れた後はまた ×2 から');
 const sw = fresh(); sw.w[0] = 10; const away1 = simulateAway(sw, 600).ore;
