@@ -231,7 +231,7 @@ toc_bad = [ci + 1 for ci, ch in enumerate(spec.chapters) if ch["title"] not in t
 toc_bad += [it["jp"] for k, it in enumerate(items)
             if not re.search(re.escape(it["jp"]) + r"\s*\n\s*" + str(item_page(spec, k)) + r"\b", toc)]
 check("もくじに5章と50句がそろい、ページ番号が本文と一致", not toc_bad, str(toc_bad[:4]))
-idx = ptext(len(di) - 2)
+idx = ptext(len(di) - 4)
 idx_bad = [it["jp"] for k, it in enumerate(items)
            if not re.search(re.escape(it["jp"]) + r"\s*\n\s*" + str(item_page(spec, k)) + r"\b", idx)]
 check("さくいんに50句がすべて載り、ページ番号が本文と一致", not idx_bad, str(idx_bad[:3]))
