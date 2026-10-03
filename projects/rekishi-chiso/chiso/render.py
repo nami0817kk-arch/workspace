@@ -288,7 +288,7 @@ class Painter:
         W = self.W
         dr = ImageDraw.Draw(img, "RGBA")
         p = self.image(pic.image).convert("RGB")
-        ph = 490
+        ph = 440
         p = p.resize((int(p.width * ph / p.height), ph), Image.LANCZOS)
         px, py = W - p.width - 330, 70
         dr.rectangle([px - 20, py - 20, px + p.width + 20, py + ph + 20], fill=(30, 24, 16, 255),
@@ -404,10 +404,10 @@ class Painter:
         if t < 1:
             scale = 0.6 + 0.55 * math.sin(math.pi / 2 * e) - 0.05 * e    # 少し行き過ぎて戻る
         size = int(150 * scale)
-        while size > 40 and self.font("gothic", size).getlength(word) > self.W - 700:
+        while size > 40 and self.font("gothic", size).getlength(word) > 920:
             size -= 4
         f = self.font("gothic", size)
-        cx, cy = self.W / 2, self.H * 0.43
+        cx, cy = 740, self.H * 0.43                       # 右上の肖像（x 1270〜）にかからない
         layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
         dr = ImageDraw.Draw(layer)
         side = self.config["cast"][speaker].get("side", "left")
