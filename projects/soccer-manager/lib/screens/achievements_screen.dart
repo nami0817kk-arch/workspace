@@ -8,6 +8,7 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/achievement_badge.dart';
 
 /// 実績(アチーブメント)一覧画面。カテゴリごとに達成済み・未達成の実績を
 /// まとめて表示し、長期的なやり込み目標を可視化する。
@@ -227,14 +228,9 @@ class _AchievementTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       color: unlocked ? null : Theme.of(context).colorScheme.surfaceContainer,
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor:
-              unlocked ? Colors.amber.shade700 : Colors.grey.shade400,
-          child: Icon(
-            unlocked ? Icons.emoji_events : Icons.lock,
-            color: Colors.white,
-            size: 20,
-          ),
+        leading: AchievementBadge(
+          achievement: achievement,
+          unlocked: unlocked,
         ),
         title: Text(
           achievement.name,
