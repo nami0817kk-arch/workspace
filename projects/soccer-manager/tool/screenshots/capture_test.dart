@@ -196,7 +196,13 @@ void main() {
         );
         await monetization.initialize();
         gameState = GameState();
-        await gameState.startNewGame('青嵐フットボールクラブ');
+        // **クラブ名も撮る言語に合わせる。** 英語の画面に日本語のクラブ名が
+        // 出ていると、英語圏には「訳し切れていないアプリ」に見える。
+        // ヘッダーに常時出るので、1枚だけの問題ではない。
+        await gameState.startNewGame(
+            locale.language == AppLanguage.japanese
+                ? '青嵐フットボールクラブ'
+                : 'Blue Storm FC');
         // 空の順位表や無得点の名簿を写しても、何ができるゲームか伝わらない。
         // 数節進めて、実際に遊んだ状態にしてから撮る。
         for (var i = 0; i < 6; i++) {
@@ -219,6 +225,12 @@ void main() {
       // 選手名も撮る言語に合っているか見る。英語の画面に日本人名が並ぶと、
       // 英語圏の人には「翻訳し切れていないアプリ」に見える。名前のプールは
       // Tr.isEnglish で切り替わるので、言語を決める順を間違えると混ざる。
+      // クラブ名も見る。ヘッダーに常時出るので、1枚だけの問題ではない。
+      final clubName = gameState.userTeam.name;
+      expect(RegExp(r'[ぁ-んァ-ヴ一-龠]').hasMatch(clubName),
+          locale.language == AppLanguage.japanese,
+          reason: 'クラブ名が${locale.code}になっていない: $clubName');
+
       final aPlayer = gameState.userTeam.players.first.name;
       expect(RegExp(r'[ぁ-んァ-ヴ一-龠]').hasMatch(aPlayer),
           locale.language == AppLanguage.japanese,
