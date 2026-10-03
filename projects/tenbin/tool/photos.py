@@ -1,5 +1,7 @@
 """動物の写真を Pixabay から集めて切り抜き、ゲームに入れる。
 
+Gemini で作った画像は work/candidates/<種類>/00.png, 01.png … と置けば fetch は要らない。
+
 このPCで順に流す（クラウドの環境からは Pixabay と rembg のモデルに届かない）:
 
     pip install requests rembg pillow onnxruntime
@@ -68,7 +70,7 @@ def cutout() -> None:
     from rembg import new_session, remove
 
     session = new_session("isnet-general-use")
-    for src in sorted((WORK / "candidates").glob("*/*.jpg")):
+    for src in sorted(p for p in (WORK / "candidates").glob("*/*") if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp")):
         dst = WORK / "cutout" / src.parent.name / (src.stem + ".png")
         if dst.exists():
             continue
@@ -109,8 +111,9 @@ def pick(kind: str, idx: int, flip: bool, width: int | None) -> None:
     subprocess.run(["node", str(ROOT / "tool" / "trace.js"), kind, str(out), name, str(width or default_w)], check=True, cwd=ROOT)
     credits_path = PHOTOS / "CREDITS.json"
     credits = json.loads(credits_path.read_text(encoding="utf-8")) if credits_path.exists() else {}
-    all_credits = json.loads((WORK / "credits.json").read_text(encoding="utf-8"))
-    credits[kind] = all_credits.get(f"{kind}/{idx:02d}", {})
+    cj = WORK / "credits.json"
+    all_credits = json.loads(cj.read_text(encoding="utf-8")) if cj.exists() else {}
+    credits[kind] = all_credits.get(f"{kind}/{idx:02d}", {"source": "Gemini で生成"})
     credits_path.write_text(json.dumps(credits, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
 
