@@ -1212,11 +1212,15 @@ def home_page(site: dict, canonical: str, updated: str, stats: dict,
     # 説明文はヘッダの一行が同じことを言っている。ここでは繰り返さず、
     # 何をすればよいかを書く（検索の meta には site の description を使う）。
     lead = "商品名で探すか、下の一覧から選んでください。"
+    # 件数の多い中分類はトップから直に出す。トップ → 中分類 → 商品 で
+    # 深さ2になる（ジャンルページを挟むと3）。実測（2026-10-03）で商品
+    # 13,465枚のうち5,631枚（42%）が深さ4以上にあった。
+    # 語（`terms`）はジャンルページの頭に出してあるので、ここでは出さない。
     genre_links = "".join(
         f'<li class="genre"><a href="genre/{esc(str(g["genre_id"]))}/">'
         f'{esc(g["name"])}</a>'
         f'<span class="count">{g["count"]:,}商品</span>'
-        + genre_terms_html(g.get("terms") or [])
+        + sub_genre_html((g.get("subs") or [])[:3])
         + '</li>' for g in genres)
     return (head(site["name"], site.get("description", ""), canonical, site, "",
                  extra=site_ld(site))
