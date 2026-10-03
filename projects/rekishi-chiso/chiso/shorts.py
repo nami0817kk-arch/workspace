@@ -84,8 +84,9 @@ class ShortPainter(Painter):
             self._images[key] = im.crop((0, 0, im.width, int(h * cast.get("bust", 0.4))))
         return self._images[key]
 
-    def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "") -> Image.Image:
-        img = super().with_cast(base, speaker, hop).convert("RGBA")
+    def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "",
+                  tone: str = "普通", mouth: bool = False, blink: bool = False) -> Image.Image:
+        img = super().with_cast(base, speaker, hop, "", tone, mouth, blink).convert("RGBA")
         if text:
             dr = ImageDraw.Draw(img, "RGBA")
             body, mask = emphasis_mask(text)

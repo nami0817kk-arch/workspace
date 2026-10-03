@@ -30,6 +30,11 @@ LISTENER_DIM = 0.72  # 聞いている側の明るさ
 SUB_ROWS = 2         # 本編の字幕は2行まで
 END_SECONDS = 12.0   # 最後の次回予告の画面の長さ（YouTube の終了画面を置ける長さ）
 OPENING_CUES = 2     # 冒頭で題名の問いを大きく出す行数
+POP_SECONDS = 1.6    # 強調語が画面の真ん中に飛び出している長さ
+POP_FRAMES = 6       # 飛び出すときの大きくなる動き（フレーム数）
+SHAKE_FRAMES = 6     # 驚きで画面が揺れる長さ（フレーム数）
+SHAKE_PX = 10        # 揺れの大きさ
+WIPE_FRAMES = 14     # 節の頭の地層のワイプ（フレーム数）
 
 
 @dataclass(frozen=True)
@@ -55,6 +60,8 @@ class Painter:
         self.W, self.H = size
         self._fonts: dict = {}
         self._images: dict = {}
+        # layered=True（本編）：背景は video.py が動かすので、ここでは透明な前景だけを描く
+        self.layered = False
 
     # --- 素材 -------------------------------------------------------------
     def font(self, kind: str, size: int, bold: bool = False):
@@ -82,6 +89,26 @@ class Painter:
         if key not in self._images:
             cast = self.config["cast"][speaker]
             im = self.image(cast["image"])
+            im = im.crop(im.getbbox())
+            h = int(cast.get("height", 1150) * self.H / 1080)
+            im = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
+            self._images[key] = im.crop((0, 0, im.width, int(h * cast.get("bust", 0.4))))
+        return self._images[key]
+
+    def face(self, speaker: str, tone: str, mouth_open: bool, blink: bool) -> Image.Image:
+        """表情のある立ち絵（cast に faces があるとき）。無ければ1枚の立ち絵。"""
+        cast = self.config["cast"][speaker]
+        folder = cast.get("faces")
+        if not folder:
+            return self.character(speaker)
+        from .faces import EXPRESSIONS, face_key
+        tone = tone if tone in EXPRESSIONS else "普通"
+        key = ("face", speaker, tone, mouth_open, blink)
+        if key not in self._images:
+            path = self.assets / folder / f"{face_key(tone, mouth_open, blink)}.png"
+            if not path.exists():
+                return self.character(speaker)
+            im = Image.open(path).convert("RGBA")
             im = im.crop(im.getbbox())
             h = int(cast.get("height", 1150) * self.H / 1080)
             im = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
@@ -135,6 +162,27 @@ class Painter:
         self._images[key] = out
         return out.copy()
 
+    def _shade(self) -> Image.Image:
+        """前景の下敷き：上と下を暗く（題名・年表・字幕を読みやすく）、四隅を少し落とす。透明な層。"""
+        key = ("shade", self.W, self.H)
+        if key not in self._images:
+            W, H = self.W, self.H
+            lin = Image.linear_gradient("L").resize((W, H))
+            bottom = lin.point(lambda v: int(max(0, (v - 140) / 115) * 200))
+            top = lin.transpose(Image.FLIP_TOP_BOTTOM).point(lambda v: int(max(0, (v - 190) / 65) * 150))
+            vig = Image.new("L", (W, H), 0)
+            ImageDraw.Draw(vig).ellipse([-W * 0.15, -H * 0.25, W * 1.15, H * 1.25], fill=255)
+            vig = vig.filter(ImageFilter.GaussianBlur(W / 12)).point(lambda v: int((255 - v) * 0.3))
+            from PIL import ImageChops
+            alpha = ImageChops.lighter(ImageChops.lighter(bottom, top), vig)
+            layer = Image.new("RGBA", (W, H), (12, 10, 8, 0))
+            layer.putalpha(alpha)
+            self._images[key] = layer
+        return self._images[key].copy()
+
+    def _canvas(self, background) -> Image.Image:
+        return self._shade() if self.layered else self._background(background)
+
     # --- 年表 -------------------------------------------------------------
     def _timeline(self, dr: ImageDraw.ImageDraw, x0: float, x1: float, yb: float, year):
         sc = self.script
@@ -178,7 +226,7 @@ class Painter:
     def base(self, state: State, year=None, slide: float = 1.0) -> Image.Image:
         """year：年表の印の位置（移動の途中を描くとき）／slide：新しいメモの滑り込み（0〜1）。"""
         W, H = self.W, self.H
-        img = self._background(state.background)
+        img = self._canvas(state.background)
         dr = ImageDraw.Draw(img, "RGBA")
         n_sec = len(self.script.sections)
         title = self.script.sections[state.section].title
@@ -268,12 +316,19 @@ class Painter:
             dr.text((cx, top + 58), detail, font=df, fill=DIM, anchor="mm")
 
     # --- 立ち絵と字幕 -----------------------------------------------------
-    def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "") -> Image.Image:
-        """立ち絵を重ねる。話している側は明るく、足もとに光、hop（0〜1）のぶん跳ねる。text は字幕。"""
+    def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "",
+                  tone: str = "普通", mouth: bool = False, blink: bool = False) -> Image.Image:
+        """立ち絵を重ねる。話している側は明るく、足もとに光、hop（0〜1）のぶん跳ねる。text は字幕。
+        表情のある話者は、話しているあいだ tone の顔で mouth のとき口を開け、blink のとき目を閉じる。"""
         img = base.copy()
         for who, cast in self.config["cast"].items():
             talking = who == speaker
-            ch = self.character(who) if talking else self.listener(who)
+            if cast.get("faces"):
+                ch = self.face(who, tone if talking else "聞く", mouth and talking, blink)
+                if not talking:
+                    ch = self._dim(ch, ("listen-face", who, blink))
+            else:
+                ch = self.character(who) if talking else self.listener(who)
             lift = int(HOP_PX * math.sin(math.pi * hop)) if talking else 0
             x = 20 if cast.get("side", "left") == "left" else self.W - ch.width - 10
             if talking:                                     # 話している側の足もとに柔らかい光
@@ -281,7 +336,17 @@ class Painter:
             img.alpha_composite(ch, (x, self.H - ch.height + 10 - lift))
         if text:
             self._subtitle(img, speaker, text)
-        return img.convert("RGB")
+        return img if self.layered else img.convert("RGB")
+
+    def _dim(self, ch: Image.Image, key) -> Image.Image:
+        if key not in self._images:
+            a = ch.split()[3]
+            rgb = ImageEnhance.Brightness(ch.convert("RGB")).enhance(LISTENER_DIM)
+            rgb = ImageEnhance.Color(rgb).enhance(0.75)
+            out = rgb.convert("RGBA")
+            out.putalpha(a)
+            self._images[key] = out
+        return self._images[key]
 
     def _glow(self, who: str, x: int, width: int) -> Image.Image:
         key = ("glow", who, x, width, self.W, self.H)
@@ -330,12 +395,79 @@ class Painter:
             self.draw_rich(dr, (x0 + x1) / 2, top + 60 * k, row, mask[start:start + len(row)], f, (40, 30, 20))
             pos = start + len(row)
 
+    # --- 編集の効果 -------------------------------------------------------
+    def pop(self, img: Image.Image, word: str, t: float, speaker: str) -> Image.Image:
+        """強調語を画面の真ん中に大きく飛び出させる。t は 0→1 で大きくなる（1 で止まる）。"""
+        img = img.copy()
+        e = _ease(t)
+        scale = 0.6 + 0.5 * e if t < 1 else 1.0
+        if t < 1:
+            scale = 0.6 + 0.55 * math.sin(math.pi / 2 * e) - 0.05 * e    # 少し行き過ぎて戻る
+        size = int(150 * scale)
+        while size > 40 and self.font("gothic", size).getlength(word) > self.W - 700:
+            size -= 4
+        f = self.font("gothic", size)
+        cx, cy = self.W / 2, self.H * 0.43
+        layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        dr = ImageDraw.Draw(layer)
+        side = self.config["cast"][speaker].get("side", "left")
+        color = (255, 214, 40) if side == "left" else (255, 170, 60)
+        dr.text((cx + 8, cy + 10), word, font=f, fill=(0, 0, 0, int(160 * e)), anchor="mm")
+        dr.text((cx, cy), word, font=f, fill=color + (int(255 * min(1, e * 1.5)),), anchor="mm",
+                stroke_width=max(4, size // 14), stroke_fill=(20, 14, 8, int(255 * min(1, e * 1.5))))
+        img.alpha_composite(layer)
+        return img
+
+    def burst(self, img: Image.Image, side: str, t: float) -> Image.Image:
+        """驚きの集中線（話している人のまわりから外へ）。t は 0→1 で消えていく。"""
+        img = img.copy()
+        layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        dr = ImageDraw.Draw(layer)
+        cx = 230 if side == "left" else self.W - 230
+        cy = self.H - 260
+        import random
+        rnd = random.Random(7)
+        alpha = int(200 * (1 - t))
+        for _ in range(26):
+            a = rnd.uniform(0, 2 * math.pi)
+            r0 = rnd.uniform(170, 210)
+            r1 = r0 + rnd.uniform(60, 120)
+            w = rnd.uniform(3, 7)
+            x0, y0 = cx + r0 * math.cos(a), cy + r0 * math.sin(a)
+            x1, y1 = cx + r1 * math.cos(a), cy + r1 * math.sin(a)
+            dr.line([(x0, y0), (x1, y1)], fill=(255, 240, 200, alpha), width=int(w))
+        img.alpha_composite(layer)
+        return img
+
+    def shake(self, img: Image.Image, k: int) -> Image.Image:
+        """画面を少し揺らす（前景だけ。背景は動いているので気にならない）。"""
+        dx = int(SHAKE_PX * math.sin(k * 2.3) * (1 - k / (SHAKE_FRAMES + 1)))
+        dy = int(SHAKE_PX * 0.6 * math.cos(k * 3.1) * (1 - k / (SHAKE_FRAMES + 1)))
+        out = Image.new(img.mode, img.size, (0, 0, 0, 0) if img.mode == "RGBA" else (0, 0, 0))
+        out.paste(img, (dx, dy))
+        return out
+
+    def wipe(self, img: Image.Image, t: float) -> Image.Image:
+        """節の頭：地層の帯が下から上へ通り過ぎる。t は 0→1。"""
+        img = img.copy()
+        layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        dr = ImageDraw.Draw(layer)
+        band = self.H * 0.9
+        top = self.H - (self.H + band) * _ease(t)
+        bands = STRATA + STRATA[::-1]
+        bh = band / len(bands)
+        for i, c in enumerate(bands):
+            y = top + i * bh
+            dr.rectangle([0, y, self.W, y + bh + 1], fill=c + (255,))
+        img.alpha_composite(layer)
+        return img
+
     # --- 特別な画面 -------------------------------------------------------
     def overlay_title(self, img: Image.Image, head: str, body: str, strength: float = 1.0) -> Image.Image:
         """画面の真ん中に大きな題（冒頭の問い・節の頭）。strength は暗くする強さ。"""
         img = img.convert("RGBA")
         dim = Image.new("RGBA", img.size, (8, 6, 4, int(150 * strength)))
-        img.alpha_composite(dim)
+        img = Image.alpha_composite(img, dim)        # 透明な前景でも、暗幕のぶん下の背景が暗くなる
         dr = ImageDraw.Draw(img, "RGBA")
         cy = self.H * 0.40
         if head:
@@ -348,12 +480,12 @@ class Painter:
         y = cy + 70
         for i, c in enumerate(STRATA):                      # 下に地層の線
             dr.rectangle([self.W / 2 - 300, y + i * 6, self.W / 2 + 300, y + i * 6 + 5], fill=c)
-        return img.convert("RGB")
+        return img if self.layered else img.convert("RGB")
 
     def end_card(self, background) -> Image.Image:
         """次回予告とお礼。右側は YouTube の終了画面（動画・登録ボタン）を置く場所として空ける。"""
         nxt = getattr(self.script, "next", {}) or {}
-        img = self._background(background)
+        img = self._canvas(background)
         img.alpha_composite(Image.new("RGBA", img.size, (8, 6, 4, 150)))
         dr = ImageDraw.Draw(img, "RGBA")
         x = 120
@@ -395,98 +527,181 @@ def _name(salt: str, *parts) -> str:
 
 
 def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int,
-           with_text: bool = False, end_card: bool = False) -> list[tuple[Path, float]]:
-    """(画像, 表示する秒数) の並びを作る。同じ状態の画像は使い回す。
+           with_text: bool = False, end_card: bool = False, workers: int = 10) -> list[tuple[Path, float]]:
+    """(画像, 表示する秒数) の並びを作る。同じ状態の画像は使い回す。画像は同時に描く（CPU を並べる）。
 
-    with_text=True（ショート）は、せりふ全体を画面に焼き込む。本編で config の subtitles が true なら、
-    せりふを字幕のかたまりに分け、字数の割合で時間を配る。end_card=True なら最後に次回予告を足す。
+    1行のあいだに起きること（本編）：
+      話し始めに跳ねる／絵・札・年号の移り変わり／驚きの集中線と揺れ／
+      口パクとまばたき（表情のある話者）／字幕のかたまりの切り替え／《》の強調語の飛び出し。
+    節の頭の間には地層のワイプと「第N節 題名」。最後に次回予告。
+    with_text=True（ショート）は、せりふ全体を画面に焼き込み、効果は跳ねるだけ。
     """
+    from concurrent.futures import ThreadPoolExecutor
+
+    from . import lipsync
+    from .subs import plain
+
     subtitles = (not with_text) and bool(painter.config.get("subtitles"))
-    special = not with_text                                      # 冒頭・節の頭・移り変わりは本編だけ
+    special = not with_text
     frame_dir.mkdir(parents=True, exist_ok=True)
     salt = _salt(painter)
     out: list[tuple[Path, float]] = []
+    todo: dict[Path, object] = {}
     prev_state: State | None = None
     prev_speaker = None
-    plain_len = lambda s: len(emphasis_mask(s)[0])
+    plain_len = lambda x: len(emphasis_mask(x)[0])
+    has_faces = lambda who: bool(painter.config["cast"][who].get("faces"))
 
     def emit(path: Path, make, dur: float):
-        if not path.exists():
-            make().save(path)
+        if dur <= 0:
+            return
+        if not path.exists() and path not in todo:
+            todo[path] = make
         out.append((path, dur))
 
     for i, cue in enumerate(cues):
-        state = state_of(cue.line)
-        start = 0.0 if i == 0 else cue.start
-        end = cues[i + 1].start if i + 1 < len(cues) else (total - (END_SECONDS if end_card else 0.0))
-        n_hop = HOP_FRAMES if cue.line.speaker != prev_speaker else 0
+        line = cue.line
+        state = state_of(line)
+        # 節が替わる行は、前の行の話し終わりから始める（その間に節の頭の画面を出す）。
+        # 同じ節の中は、次の行の話し始めまでをこの行の時間にする（間も字幕を出したまま）
+        new_sec = i > 0 and cues[i - 1].line.section != line.section
+        start = 0.0 if i == 0 else (cues[i - 1].end if new_sec else cue.start)
+        if i + 1 < len(cues):
+            nxt = cues[i + 1]
+            end = cue.end if (special and nxt.line.section != line.section) else nxt.start
+        else:
+            end = total - (END_SECONDS if end_card else 0.0)
+        side = painter.config["cast"][line.speaker].get("side", "left")
+        n_hop = HOP_FRAMES if line.speaker != prev_speaker else 0
 
+        # 字幕のかたまり（行の中の時刻と長さ）
         if with_text:
-            pieces = [(cue.line.text, end - cue.start)]
+            subs_ = [(line.text, 0.0, end - cue.start)]
         elif subtitles:
-            cs = subtitle_chunks(cue.line.text)
+            cs = subtitle_chunks(line.text)
             talk = max(cue.end - cue.start, 1 / fps)
             n_chars = sum(plain_len(c) for c in cs) or 1
-            pieces = [(c, talk * plain_len(c) / n_chars) for c in cs]
-            pieces[-1] = (pieces[-1][0], pieces[-1][1] + max(0.0, end - cue.end))
+            subs_, t = [], 0.0
+            for c in cs:
+                d = talk * plain_len(c) / n_chars
+                subs_.append((c, t, d))
+                t += d
+            last = subs_[-1]
+            subs_[-1] = (last[0], last[1], last[2] + max(0.0, end - cue.end))
         else:
-            pieces = [("", end - cue.start)]
+            subs_ = [("", 0.0, end - cue.start)]
 
+        # 節の頭：行の前の間に、地層のワイプと題
         lead = max(0.0, cue.start - start) if i > 0 else cue.start
-        # 節の頭：行の前の間に、節の番号と題名を大きく出す
         if lead > 0:
-            if special and prev_state is not None and prev_state.section != state.section:
-                title = painter.script.sections[state.section].title
+            new_section = special and prev_state is not None and prev_state.section != state.section
+            title = painter.script.sections[state.section].title
+            def base_lead(s=state):
+                return painter.with_cast(painter.base(s), s.speaker, 0, "", "聞く")
+            if new_section:
+                n_w = min(WIPE_FRAMES, int(lead * fps) - 1)
+                for k in range(1, n_w + 1):
+                    emit(frame_dir / _name(salt, "wipe", state, k, n_w),
+                         lambda s=state, k=k, n=n_w, t=title: painter.wipe(
+                             painter.overlay_title(base_lead(s), f"第{s.section + 1}節", t), k / (n + 1)), 1 / fps)
                 emit(frame_dir / _name(salt, "sec", state, title),
-                     lambda s=state, t=title: painter.overlay_title(
-                         painter.with_cast(painter.base(s), s.speaker, 0, ""),
-                         f"第{s.section + 1}節", t), lead)
+                     lambda s=state, t=title: painter.overlay_title(base_lead(s), f"第{s.section + 1}節", t),
+                     lead - n_w / fps)
             else:
-                emit(frame_dir / _name(salt, "lead", state),
-                     lambda s=state: painter.with_cast(painter.base(s), s.speaker, 0, ""), lead)
+                emit(frame_dir / _name(salt, "lead", state), base_lead, lead)
 
-        # 移り変わり：絵が替わるなら溶け合い、札・年号だけなら印の移動とメモの滑り込み
-        steps: list[tuple[int, float, float, str]] = []      # (跳ねる番号, 移り変わりの進み, 秒, 字幕)
+        # 口パクとまばたき（表情のある話者だけ）。無ければ「閉じたまま」1区間
+        talk_len = end - cue.start
+        if special and has_faces(line.speaker) and getattr(cue, "wav", None) is not None and Path(cue.wav).exists():
+            mouth = lipsync.mouth_track(Path(cue.wav))
+            face_segs = lipsync.segments(mouth, lipsync.blinks(line.index, talk_len), talk_len)
+        else:
+            face_segs = [(talk_len, False, False)]
+
+        # 区切りの時刻：字幕の切り替え・口と目・効果の頭
+        cuts = {0.0, talk_len}
+        for _, t0, _d in subs_:
+            cuts.add(t0)
+        t = 0.0
+        for d, _m, _b in face_segs:
+            t += d
+            cuts.add(min(talk_len, t))
         changed = special and prev_state is not None and prev_state.section == state.section and (
             (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year)
             != (state.background, state.portrait, state.memo, state.year))
-        n_tr = TRANS_FRAMES if changed else 0
-        first_text, first_dur = pieces[0]
-        n_head = max(n_hop, n_tr)
-        for k in range(1, n_head + 1):
-            steps.append((k if k <= n_hop else 0, k / (n_tr + 1) if k <= n_tr else 1.0, 1 / fps, first_text))
-        steps.append((0, 1.0, max(1 / fps, first_dur - n_head / fps), first_text))
-        for text, dur in pieces[1:]:
-            steps.append((0, 1.0, max(1 / fps, dur), text))
+        surprised = special and line.tone == "驚き"
+        words = [w for w in (plain(x) for x in __import__("re").findall(r"《(.+?)》", line.text))] if special else []
+        n_fx = max(n_hop, TRANS_FRAMES if changed else 0, SHAKE_FRAMES if surprised else 0,
+                   POP_FRAMES if words else 0)
+        for k in range(1, n_fx + 1):
+            cuts.add(min(talk_len, k / fps))
+        pop_len = POP_SECONDS if words else 0.0
+        if words:
+            cuts.add(min(talk_len, pop_len))
+        times = sorted(x for x in cuts if 0 <= x <= talk_len)
 
         opening = special and i < OPENING_CUES and painter.script.question
-        for k, tr, dur, text in steps:
-            def make(k=k, tr=tr, text=text, s=state, ps=prev_state, n_hop=n_hop):
-                hop_t = k / (n_hop + 1) if k else 0.0
+        for a, b in zip(times, times[1:]):
+            if b - a < 1e-6:
+                continue
+            mid = (a + b) / 2
+            text = next((c for c, t0, d in subs_ if t0 <= mid < t0 + d), subs_[-1][0])
+            acc, mouth_open, blink = 0.0, False, False
+            for d, m, e in face_segs:
+                if acc <= mid < acc + d:
+                    mouth_open, blink = m, e
+                    break
+                acc += d
+            k = int(round(a * fps)) + 1 if a < n_fx / fps else 0       # 効果の何コマ目か（0 は効果なし）
+            hop_k = k if (n_hop and k and k <= n_hop) else 0
+            tr = (k / (TRANS_FRAMES + 1)) if (changed and k and k <= TRANS_FRAMES) else 1.0
+            shake_k = k if (surprised and k and k <= SHAKE_FRAMES) else 0
+            pop_t = (min(1.0, k / (POP_FRAMES + 1)) if k else 1.0) if (words and a < pop_len) else None
+
+            def make(s=state, ps=prev_state, text=text, hop_k=hop_k, n_hop=n_hop, tr=tr, shake_k=shake_k,
+                     pop_t=pop_t, mouth_open=mouth_open, blink=blink, tone=line.tone, opening=opening,
+                     words=tuple(words), side=side):
+                hop_t = hop_k / (n_hop + 1) if hop_k else 0.0
                 if tr < 1.0 and ps is not None:
                     year = s.year
                     if ps.year is not None and s.year is not None:
                         year = ps.year + (s.year - ps.year) * _ease(tr)
                     slide = tr if (s.memo and s.memo != ps.memo) else 1.0
-                    im = painter.with_cast(painter.base(s, year=year, slide=slide), s.speaker, hop_t, text)
-                    if (ps.background, ps.portrait) != (s.background, s.portrait):
-                        old = painter.with_cast(painter.base(ps), s.speaker, hop_t, text)
-                        im = Image.blend(old, im, _ease(tr))
+                    base = painter.base(s, year=year, slide=slide)
+                    changed_pic = ((ps.portrait != s.portrait) if painter.layered
+                                   else (ps.background, ps.portrait) != (s.background, s.portrait))
+                    if changed_pic:
+                        base = Image.blend(painter.base(ps), base, _ease(tr))
                 else:
-                    im = painter.with_cast(painter.base(s), s.speaker, hop_t, text)
+                    base = painter.base(s)
+                if pop_t is not None:
+                    base = painter.pop(base, words[0], pop_t, s.speaker)
+                im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink)
+                if shake_k:
+                    im = painter.burst(im, side, shake_k / (SHAKE_FRAMES + 1))
+                    im = painter.shake(im, shake_k)
                 if opening:
                     im = painter.overlay_title(im, painter.script.series, painter.script.question, 0.8)
                 return im
-            key = ("f", state, prev_state if tr < 1.0 else None, round(tr, 3), k, n_hop, text, bool(opening))
-            emit(frame_dir / _name(salt, *key), make, dur)
+
+            key = ("f2", state, prev_state if tr < 1.0 else None, round(tr, 3), hop_k, n_hop, text, shake_k,
+                   None if pop_t is None else (words[0], round(pop_t, 3)), mouth_open, blink, line.tone,
+                   bool(opening))
+            emit(frame_dir / _name(salt, *key), make, b - a)
         prev_state = state
-        prev_speaker = cue.line.speaker
+        prev_speaker = line.speaker
 
     if end_card and cues:
         bg = cues[-1].line.background
-        last = cues[-1].line.speaker
-        emit(frame_dir / _name(salt, "end", bg, last),
-             lambda: painter.with_cast(painter.end_card(bg), last, 0, ""), END_SECONDS)
+        emit(frame_dir / _name(salt, "end", bg),
+             lambda: painter.with_cast(painter.end_card(bg), "語り", 0, "", "明るい"), END_SECONDS)
+
+    # まとめて描く（同じ画像は1回だけ）。Pillow の描画は GIL を外すので、スレッドを並べると速くなる
+    def run(item):
+        path, make = item
+        make().save(path, compress_level=1)
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        list(ex.map(run, todo.items()))
     return out
 
 

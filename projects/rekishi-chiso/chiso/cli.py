@@ -25,7 +25,7 @@ from pathlib import Path
 
 import yaml
 
-from . import check as check_mod, mix, render, script as script_mod, shorts as shorts_mod, tts
+from . import check as check_mod, mix, render, script as script_mod, shorts as shorts_mod, tts, video
 from .voice import Voice, load_readings
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -155,8 +155,8 @@ def encode(items, audio: Path, target: Path, fps: int) -> None:
 def _stamp(painter_cls):
     """確認用の動画の右上に「確認用」と出す。"""
     class Stamped(painter_cls):
-        def base(self, state):
-            img = super().base(state)
+        def base(self, state, **kw):
+            img = super().base(state, **kw)
             from PIL import ImageDraw
             dr = ImageDraw.Draw(img, "RGBA")
             dr.rounded_rectangle([self.W - 170, 48, self.W - 40, 88], radius=6, fill=(180, 40, 40, 170))
@@ -169,6 +169,12 @@ def make_video(args, draft: bool) -> int:
     config = load_config()
     path = Path(args.script)
     sc = script_mod.load(path)
+    limit = getattr(args, "lines", None)
+    if limit:                                             # 冒頭だけの確認用（見た目の確認を速く）
+        if not draft:
+            print("--lines は確認用（draft）だけで使えます")
+            return 2
+        sc.lines = sc.lines[:limit]
     if not draft and not is_approved(path):
         print("この台本は承認されていません（または承認後に変わっています）。"
               "ユーザーの OK をもらってから approve してください。確認用は draft で作れます。")
@@ -183,12 +189,23 @@ def make_video(args, draft: bool) -> int:
     audio = wd / "voice.wav"
     mix.write_audio(cues, total, audio)
     v = config["video"]
+    size = (v["width"], v["height"])
     cls = _stamp(render.Painter) if draft else render.Painter
-    painter = cls(config, sc, assets_dir(config), (v["width"], v["height"]))
+    painter = cls(config, sc, assets_dir(config), size)
+    painter.layered = True                                # 背景は動かす（video.py）、前景は透明に描く
+    print("前景を描いています…")
     items = render.frames(painter, cues, total, wd / ("frames-draft" if draft else "frames"), v["fps"],
                           end_card=end_card)
-    target = out_dir() / f"{path.stem}{'_draft' if draft else ''}.mp4"
-    encode(items, audio, target, v["fps"])
+    print("背景を動かしています…")
+    bg = video.background_track(ffmpeg(), painter, video.runs_of(cues, total), wd / "bg", v["fps"], size,
+                                wd / "background.mp4")
+    suffix = ("_draft" if draft else "") + (f"_{limit}lines" if limit else "")
+    target = out_dir() / f"{path.stem}{suffix}.mp4"
+    lst = wd / "overlay.txt"
+    lst.write_text(render.concat_list(items), encoding="utf-8")
+    print("重ねています…")
+    video.compose(ffmpeg(), bg, lst, audio, target, v["fps"], preset="veryfast" if draft else "medium")
+    bg.unlink()
     names = {k: c["name"] for k, c in config["cast"].items()}
     (out_dir() / f"{path.stem}.srt").write_text(mix.srt(cues, names), encoding="utf-8")
     print(f"{target}（{total / 60:.1f}分）")
@@ -390,6 +407,8 @@ def main(argv=None) -> int:
     for name, fn in [("voice", cmd_voice), ("draft", cmd_draft), ("approve", cmd_approve), ("build", cmd_build)]:
         s = sub.add_parser(name)
         s.add_argument("script")
+        if name == "draft":
+            s.add_argument("--lines", type=int, help="冒頭の何行だけで作る（見た目の確認用）")
         s.set_defaults(fn=fn)
     s = sub.add_parser("shorts")
     s.add_argument("script")

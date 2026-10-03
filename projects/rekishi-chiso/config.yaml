@@ -36,6 +36,7 @@ cast:
     max_speed: 1.08
     volume: 1.0
     image: characters/tsumugi_helmet.png
+    faces: characters/tsumugi_faces   # 表情・口パク・まばたき（chiso/faces.py で作る）
     side: right
     bust: 0.40
     height: 1150
