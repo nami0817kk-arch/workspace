@@ -200,9 +200,19 @@ def load_items(spec: SekaiSpec) -> list[dict]:
             for k, _ in LANGS:
                 x = v[k]
                 item[k] = {"text": x["text"], "read": x["read"], "kana": x.get("kana", ""), "near": x["match"] != "同じ",
-                           "lit": literal(x["note"], k), "sources": x["sources"]}
+                           "lit": _drop_same_gloss(literal(x["note"], k), v["jp"]), "sources": x["sources"]}
             out.append(item)
     return out
+
+
+def _drop_same_gloss(lit: str, jp: str) -> str:
+    """「漢字で書くと「…」（意味）」の（意味）が日本語の題とほぼ同じなら、くり返さない。"""
+    m = re.match(r"(漢字で書くと「[^」]+」)（(.+)）$", lit)
+    if not m:
+        return lit
+    gloss = m.group(2)
+    same = sum(ch in jp for ch in gloss) / max(1, len(gloss))
+    return m.group(1) if same >= 0.6 else lit
 
 
 def literal(note: str, lang: str = "") -> str:
@@ -320,7 +330,7 @@ def _phrases(text: str) -> list[str]:
             ph = ph[1:]
         if ph:
             out.append(ph)
-    keep = [(m.start(), m.end()) for m in re.finditer(r"「[^「」]{1,10}」|\S（[^（）]{1,6}）", text)]
+    keep = [(m.start(), m.end()) for m in re.finditer(r"「[^「」]{1,10}」|\S（[^（）]{1,9}）", text)]
     if not keep:
         return out
     merged, pos = [], 0
@@ -462,7 +472,7 @@ DENSITY = [
     {"ofs": 14.0, "lit": 9.5, "litg": 13.5, "story": 9.5, "storyg": 14.5, "gap": 4, "band": 122, "mean": 9.5, "read": 8.5, "readg": 13},
     {"ofs": 13.0, "lit": 9.0, "litg": 12.5, "story": 9.0, "storyg": 13.5, "gap": 3, "band": 122, "mean": 9.0, "read": 8.5, "readg": 12},
     {"ofs": 12.0, "lit": 8.5, "litg": 11.5, "story": 8.5, "storyg": 12.5, "gap": 2, "band": 122, "mean": 8.5, "read": 7.5, "readg": 10},
-    {"ofs": 12.0, "lit": 8.5, "litg": 11.5, "story": 8.5, "storyg": 12.5, "gap": 2, "band": 0, "mean": 8.5, "read": 7.5, "readg": 10},
+    {"ofs": 12.0, "lit": 8.5, "litg": 11.0, "story": 8.5, "storyg": 12.0, "gap": 1, "band": 122, "mean": 8.5, "read": 7.5, "readg": 9.5},
 ]
 
 
