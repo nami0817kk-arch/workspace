@@ -592,6 +592,55 @@ details.status summary span{font-size:12.5px;color:var(--muted)}details.status s
 .prevst .mh{font-size:12px;letter-spacing:.14em;color:#e9ba4b;font-weight:800;margin-bottom:4px}
 .prevst p{margin:4px 0;font-size:14px;line-height:1.7}
 .prevst p.nx{color:#cfc5ee;font-size:13px;margin-top:6px}
+
+/* ===== 画面の動きと構成（2026-10-03「有料アプリレベル」） ===== */
+/* 合格発表の舞台 */
+.cstage{position:relative;overflow:hidden;border-radius:20px;margin:8px 0 12px;padding:14px 12px 16px;color:#f4effd;text-align:center;
+  background:radial-gradient(ellipse 55% 60% at 50% 18%,rgba(255,236,190,.28),transparent 70%),linear-gradient(180deg,rgba(30,18,58,.55),rgba(11,7,22,.92) 70%),var(--bgi-stage2,linear-gradient(#261745,#0d0919));background-size:cover;background-position:center top;box-shadow:0 12px 30px rgba(20,10,50,.3)}
+.cstage.fin{background:radial-gradient(ellipse 55% 60% at 50% 18%,rgba(255,215,106,.34),transparent 70%),linear-gradient(180deg,rgba(30,18,58,.5),rgba(11,7,22,.92) 70%),var(--bgi-hall,linear-gradient(#261745,#0d0919));background-size:cover}
+.cshd{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;letter-spacing:.14em;color:#e9ba4b;font-weight:800}
+.cshd b{font-size:22px;letter-spacing:0;color:#fff;font-variant-numeric:tabular-nums}.cshd b small{font-size:13px;color:#cfc5ee}
+.crev{position:relative;padding:8px 0 4px;min-height:270px}
+.crev::before{content:'';position:absolute;left:50%;top:-40px;width:240px;height:330px;transform:translateX(-50%);pointer-events:none;
+  background:conic-gradient(from 160deg at 50% 0,transparent 0 6deg,rgba(255,240,200,.32) 14deg 26deg,transparent 34deg 360deg);animation:spotIn .6s ease-out both}
+.crev>*{position:relative}
+.crno{font-size:13px;font-weight:800;color:#e9ba4b;letter-spacing:.2em;animation:fadeup .35s ease-out both}
+.crev .face{margin:6px auto 0;border-color:#e9ba4b;box-shadow:0 0 0 4px rgba(233,186,75,.25),0 0 40px rgba(255,220,140,.45);animation:revealPop .55s cubic-bezier(.2,1.4,.4,1) .15s both}
+.crnm{font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;font-size:26px;margin-top:8px;text-shadow:0 2px 14px rgba(0,0,0,.6);animation:nameIn .6s ease-out .35s both}
+.crtg{margin-top:4px;animation:fadeup .4s ease-out .55s both}
+.crln{font-size:14px;color:#efe8ff;margin-top:8px;min-height:1.6em;animation:fadeup .4s ease-out .75s both}
+.cseats{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px 6px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.14)}
+.cseat{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:#efe8ff;min-height:66px}
+.cseat i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;border:1.5px dashed rgba(255,255,255,.3);font-style:normal;font-size:12px;color:rgba(255,255,255,.55)}
+.cseat .face{width:44px;height:44px;border-radius:12px;border-width:2px;border-color:#e9ba4b}
+.cseat span{max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cseat.nw{animation:seatIn .5s cubic-bezier(.2,1.4,.4,1) .5s both}
+@keyframes spotIn{from{opacity:0;transform:translateX(-50%) scaleY(.6)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes revealPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+@keyframes nameIn{from{opacity:0;letter-spacing:.5em;filter:blur(4px)}to{opacity:1;letter-spacing:.02em;filter:none}}
+@keyframes seatIn{from{opacity:0;transform:translateY(-14px) scale(.8)}to{opacity:1;transform:none}}
+/* アイキャッチ */
+#eyec{position:fixed;inset:0;z-index:70;pointer-events:none;display:grid;place-items:center;animation:eyeBg 1s ease both}
+#eyec .ein{position:relative;padding:16px 34px;text-align:center;color:#fff;background:linear-gradient(90deg,transparent,rgba(26,16,52,.94) 18%,rgba(26,16,52,.94) 82%,transparent);width:100%;animation:eyeBar 1s cubic-bezier(.2,.8,.2,1) both}
+#eyec .ein::after{content:'';position:absolute;left:18%;right:18%;bottom:8px;height:2px;background:linear-gradient(90deg,transparent,#e9ba4b,transparent)}
+#eyec small{display:block;font-size:12px;letter-spacing:.3em;color:#e9ba4b;font-weight:800}
+#eyec b{display:block;font-family:"Dela Gothic One","M PLUS Rounded 1c",sans-serif;font-weight:400;font-size:30px;letter-spacing:.06em;margin-top:2px}
+@keyframes eyeBg{0%{background:rgba(10,6,22,0)}20%,70%{background:rgba(10,6,22,.25)}100%{background:rgba(10,6,22,0)}}
+@keyframes eyeBar{0%{opacity:0;transform:translateX(-30px)}22%{opacity:1;transform:none}75%{opacity:1;transform:none}100%{opacity:0;transform:translateX(30px)}}
+/* 画面に入るとき、上から順に少しずつ */
+#app.enter>*:nth-child(2){animation-delay:.04s}#app.enter>*:nth-child(3){animation-delay:.08s}#app.enter>*:nth-child(4){animation-delay:.12s}
+#app.enter>*:nth-child(5){animation-delay:.16s}#app.enter>*:nth-child(6){animation-delay:.2s}#app.enter>*:nth-child(n+7){animation-delay:.24s}
+/* 下から出てくるシート */
+#app.enter .ov{animation:ovIn .2s ease-out both}#app.enter .ov .sheet{animation:sheetUp .32s cubic-bezier(.2,.9,.25,1) both}
+@keyframes ovIn{from{opacity:0}to{opacity:1}}@keyframes sheetUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+body.reduce .crev::before,body.reduce .crev .face,body.reduce .crnm,body.reduce .crtg,body.reduce .crln,body.reduce .crno,body.reduce .cseat.nw,body.reduce #app.enter .ov,body.reduce #app.enter .ov .sheet{animation:none}
+@media (prefers-reduced-motion:reduce){.crev::before,.crev .face,.crnm,.crtg,.crln,.crno,.cseat.nw,#app.enter .ov,#app.enter .ov .sheet{animation:none}}
+
+.cseats{grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px 4px}
+.cseat{min-height:0;font-size:12px}
+.cseat i,.cseat .face{width:38px;height:38px;border-radius:10px}
+.cseat span{max-width:46px}
+.crev{min-height:250px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2846,11 +2895,15 @@ function vJudge(){
 function vCall(){
   var f=ROUNDS[S.rnd],c=S.call,o=c.order,n=c.n,h=(f.fin&&c.done?confetti():'')+'<h2>'+(f.fin?'デビューメンバー発表':'合格者発表')+'</h2>';
   if(n===0&&!c.done){h+='<div class="card hero callhero"><p>'+(o.length+c.failed.length)+'人のうち、'+(f.fin?'デビューするのは':'次に進むのは')+' <b>'+o.length+'人</b>。</p><p class="small muted">ひとりずつ名前を呼びます。</p></div><button class="btn" data-a="callstart">発表を始める</button><button class="btn sub" data-a="callskip">まとめて見る</button>';return h;}
-  for(var i=0;i<Math.min(n,o.length);i++){var t=S.tr[o[i]];h+='<div class="call '+(f.fin?'debut ':'')+(i===n-1&&!c.done?'new':'')+'"><div class="no"><small>'+(i+1)+'人目</small>'+(f.fin?'★':'✓')+'</div>'+face(t,'md')+'<div class="who"><div class="nm">'+esc(t.name)+'</div><div class="small muted">'+tag(t.spec)+' '+(f.fin?'デビュー':'合格')+'</div><div class="small"'+(i===n-1&&!c.done?' data-say="'+t.id+'"':'')+'>'+esc((c.lines||{})[t.id]||'')+'</div></div></div>';}
+  if(!c.done){var tot=o.length,cur=n>0&&n<=tot?S.tr[o[n-1]]:null;
+    h+='<div class="cstage'+(f.fin?' fin':'')+'"><div class="cshd"><span>'+(f.fin?'デビューメンバー':'合格者')+'</span><b>'+Math.min(n,tot)+'<small> / '+tot+'</small></b></div>';
+    if(cur)h+='<div class="crev" data-k="'+n+'"><div class="crno">'+n+'人目</div>'+face(cur,'lg')+'<div class="crnm">'+esc(cur.name)+'</div><div class="crtg">'+tag(cur.spec)+'</div><div class="crln" data-say="'+cur.id+'">'+esc((c.lines||{})[cur.id]||'')+'</div></div>';
+    h+='<div class="cseats">'+o.map(function(id,i){if(i<n){var t=S.tr[id];return '<div class="cseat on'+(i===n-1?' nw':'')+'">'+face(t,'sm')+'<span>'+esc(t.giv)+'</span></div>';}return '<div class="cseat"><i>'+(i+1)+'</i></div>';}).join('')+'</div></div>';}
+  else for(var i=0;i<Math.min(n,o.length);i++){var t=S.tr[o[i]];h+='<div class="call '+(f.fin?'debut ':'')+(i===n-1&&!c.done?'new':'')+'"><div class="no"><small>'+(i+1)+'人目</small>'+(f.fin?'★':'✓')+'</div>'+face(t,'md')+'<div class="who"><div class="nm">'+esc(t.name)+'</div><div class="small muted">'+tag(t.spec)+' '+(f.fin?'デビュー':'合格')+'</div><div class="small"'+(i===n-1&&!c.done?' data-say="'+t.id+'"':'')+'>'+esc((c.lines||{})[t.id]||'')+'</div></div></div>';}
   if(!c.done){
     if(n>=o.length-1){var rest=[o[o.length-1]].concat(c.failed).sort(function(a,b){return a-b;});
       h+='<div class="card lastseat"><div class="small" style="font-weight:800;color:#e9ba4b">'+(f.fin?'最後のひとりは……':'最後の合格者は……')+'</div><div class="vs">'+rest.map(function(id){return face(S.tr[id],'md pulse');}).join('')+'</div><button class="btn" data-a="calllast">名前を呼ぶ</button></div>';}
-    else h+='<p class="small muted" style="text-align:center">発表中…</p><button class="btn sub" data-a="callskip">まとめて見る</button>';
+    else h+='<button class="btn sub" data-a="callskip">まとめて見る</button>';
     return h;
   }
   if(c.failed.length){
@@ -3417,14 +3470,20 @@ function typeLine(){if(typeT){clearInterval(typeT);typeT=null;}if(ui.endStatic)r
 function countUp(){if(ui.endStatic)return;document.querySelectorAll('#app .scorepop[data-n]').forEach(function(el){if(el.dataset.done)return;el.dataset.done=1;var n=+el.dataset.n,d=parseFloat(el.style.animationDelay)||0,sm=el.querySelector('.num');if(!sm)return;
   setTimeout(function(){try{var rb=el.getBoundingClientRect();if(rb.bottom>innerHeight-96)el.scrollIntoView({block:'center',behavior:ui.endStatic||document.body.classList.contains('reduce')?'auto':'smooth'});}catch(e){}var t0=Date.now();var iv=setInterval(function(){var p=Math.min(1,(Date.now()-t0)/650);sm.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p>=1)clearInterval(iv);},30);},Math.max(0,d-.15)*1000);});}
 /* 画面が替わったら、ふわっと入る */
-function enterAnim(){if(ui.endStatic)return;var k=(S?S.phase+':'+S.rnd+':'+(S.talk?'t':'')+(S.sub?'s':'')+(S.evIdx||0):'title')+(ui.settings?'S':'')+(ui.prof!=null?'P':'');if(k===ui.lastScene)return;ui.lastScene=k;
+/* アイキャッチ：審査の中で場面が替わったとき、0.9秒だけ場面の名前を大きく出す。押す操作は邪魔しない */
+var EYE={plan:'制作会議',lesson:'レッスン',talk:'練習生と過ごす',event:'合宿の出来事',show:'ステージ本番',judge:'合否を決める',call:'発表',prep:'デビューの準備',month:'デビューから1か月'};
+function eyecatch(){try{var ph=S?S.phase:null,prev=ui.eyePh;ui.eyePh=ph;if(!ph||prev===undefined||prev===ph||!EYE[ph]||ui.quick)return;
+  if(document.body.classList.contains('reduce')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))return;
+  var old=document.getElementById('eyec');if(old)old.remove();var d=document.createElement('div');d.id='eyec';d.setAttribute('aria-hidden','true');
+  d.innerHTML='<div class="ein">'+(ROUNDS[S.rnd]&&ph!=='prep'&&ph!=='month'?'<small>第'+S.rnd+'審査</small>':'')+'<b>'+EYE[ph]+'</b></div>';document.body.appendChild(d);setTimeout(function(){if(d.parentNode)d.remove();},1000);}catch(e){}}
+function enterAnim(){eyecatch();if(ui.endStatic)return;var k=(S?S.phase+':'+S.rnd+':'+(S.talk?'t':'')+(S.sub?'s':'')+(S.evIdx||0):'title')+(ui.settings?'S':'')+(ui.prof!=null?'P':'');if(k===ui.lastScene)return;ui.lastScene=k;
   var a=document.querySelector('#app');a.classList.remove('enter');void a.offsetWidth;a.classList.add('enter');}
 
 /* ---------- 操作 ---------- */
 function stopTimer(){if(timer){clearTimeout(timer);timer=null;}}
 function callTick(){
   var c=S.call,lim=Math.max(0,c.order.length-1);
-  if(c.n<lim){c.n++;render();sfx('call');var nw=document.querySelector('.call.new');if(nw&&nw.scrollIntoView)nw.scrollIntoView({block:'nearest',behavior:'smooth'});
+  if(c.n<lim){c.n++;render();sfx('call');var nw=document.querySelector('.cstage');if(nw&&nw.scrollIntoView)nw.scrollIntoView({block:'start',behavior:'smooth'});
     if(c.n<lim)timer=setTimeout(callTick,ui.showFast?800:1500);else{save();render();}}
   else{render();}
 }
