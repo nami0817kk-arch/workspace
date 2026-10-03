@@ -1124,6 +1124,20 @@ def chip_list(rows: list, label: str, prefix: str = "",
             f'<span class="chips-label">{esc(label)}</span>{body}</nav>')
 
 
+def sub_genre_html(subs: list, prefix: str = "") -> str:
+    """ジャンルの下に置く中分類。`(名前, 件数, 行き先)` を受ける。
+
+    行き先はサイトの根からの相対で受け、`prefix` はここで付ける
+    （組み立て済みの相対パスを外から渡すと、階層の違うページで 404 になる）。
+    """
+    if not subs:
+        return ""
+    links = "".join(
+        f'<a href="{prefix}{href}">{esc(str(name))}'
+        f'<span class="n">{n:,}</span></a>' for name, n, href in subs if n)
+    return f'<span class="terms subs">{links}</span>' if links else ""
+
+
 def genre_terms_html(terms: list, prefix: str = "") -> str:
     """ジャンルの下に置く「そのジャンルらしい語」。
 
@@ -1198,11 +1212,15 @@ def home_page(site: dict, canonical: str, updated: str, stats: dict,
     # 説明文はヘッダの一行が同じことを言っている。ここでは繰り返さず、
     # 何をすればよいかを書く（検索の meta には site の description を使う）。
     lead = "商品名で探すか、下の一覧から選んでください。"
+    # 件数の多い中分類はトップから直に出す。トップ → 中分類 → 商品 で
+    # 深さ2になる（ジャンルページを挟むと3）。実測（2026-10-03）で商品
+    # 13,465枚のうち5,631枚（42%）が深さ4以上にあった。
+    # 語（`terms`）はジャンルページの頭に出してあるので、ここでは出さない。
     genre_links = "".join(
         f'<li class="genre"><a href="genre/{esc(str(g["genre_id"]))}/">'
         f'{esc(g["name"])}</a>'
         f'<span class="count">{g["count"]:,}商品</span>'
-        + genre_terms_html(g.get("terms") or [])
+        + sub_genre_html((g.get("subs") or [])[:3])
         + '</li>' for g in genres)
     return (head(site["name"], site.get("description", ""), canonical, site, "",
                  extra=site_ld(site))
@@ -1271,10 +1289,13 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
     """
     title = "ジャンル別で見る"
     lead = "記録している商品をジャンルごとに、値下がりの大きい順で並べています。"
+    # 中分類（126枚）への入口をここに集める。ジャンルページの中にしか
+    # 置いていなかったとき、トップからは2クリック先にあった。1段縮めると、
+    # 奥の商品ページまでの深さも全部1段縮む。
     links = "".join(
         f'<li class="genre"><a href="{prefix}genre/{esc(str(g["genre_id"]))}/">'
         f'{esc(g["name"])}</a><span class="count">{g["count"]:,}商品</span>'
-        + genre_terms_html(g.get("terms") or [], prefix)
+        + sub_genre_html(g.get("subs") or [], prefix)
         + '</li>' for g in genres)
     return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
@@ -1500,6 +1521,36 @@ def since_start(row: dict) -> str:
             f'<tbody>{body}</tbody></table>'
             f'<p class="note">{note}{len(tail)}日分の記録での比較で、'
             f'発売時の値段ではありません。</p>')
+
+
+def sub_position(row: dict, prefix: str = "") -> str:
+    """同じ分類の中で、その値段がどのあたりか。
+
+    実測（2026-10-03）で、記録している13,544商品のうち**9,700件（71.6%）は
+    価格も実質価格も一度も動いていない**。その商品ページには「ずっと同じ値段」
+    という情報しか無く、価格を追うサイトとして出せるものが何も無かった。
+
+    同じ分類の中での位置なら、動いていない商品にも言える。13,544商品ぶんの
+    価格を毎日持っているからこそ出せるもので、1商品だけを見ていても分からない。
+    """
+    n = int(row.get("sub_count") or 0)
+    rank = int(row.get("sub_rank") or 0)
+    if n < 10 or not rank:
+        return ""
+    name, path = row.get("sub_name") or "", row.get("sub_path") or ""
+    where = (f'<a href="{prefix}{path}">{esc(str(name))}</a>' if path
+             else esc(str(name)))
+    # 「安い方から◯番目」は、高いほうに居るときは分かりにくい。
+    # 真ん中より高ければ「高い方から」で数える。
+    if rank * 2 > n:
+        side = f'高い方から <strong>{n - rank + 1:,}番目</strong>'
+    else:
+        side = f'安い方から <strong>{rank:,}番目</strong>'
+    return ('<h2>同じ分類の中での位置</h2>'
+            f'<p class="rankin">{where} の {n:,}件のうち、{side} です。'
+            f'この分類の価格は {yen(row.get("sub_low") or 0)} 〜 '
+            f'{yen(row.get("sub_high") or 0)}'
+            f'（真ん中は {yen(row.get("sub_mid") or 0)}）。</p>')
 
 
 def history_table(row: dict) -> str:
@@ -2104,6 +2155,16 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                       f'{yen(price)} です。')
     elif row.get("near_low"):
         lead_state = f'記録した中の最安値 {yen(low)} に近い {yen(price)} です。'
+    elif row.get("moved") is False and int(row.get("sub_count") or 0) >= 10:
+        # 動いていない商品（実測で71.6%）は「ずっと同じ値段」としか書けず、
+        # 検索結果に並んでも押す理由が無かった。同じ分類の中での位置なら
+        # 言える（13,544商品ぶんの価格を毎日持っているから出せる）。
+        n, rank = int(row["sub_count"]), int(row["sub_rank"])
+        side = (f'高い方から{n - rank + 1:,}番目'
+                if rank * 2 > n else f'安い方から{rank:,}番目')
+        lead_state = (f'{esc(str(row.get("sub_name") or ""))} {n:,}件のうち'
+                      f'{side}の {yen(price)}。'
+                      f'記録{days}日のあいだ動いていません。')
     elif row.get("moved") is False:
         lead_state = (f'{yen(price)}。記録{days}日のあいだ'
                       f'価格は動いていません。')
@@ -2112,10 +2173,12 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                       f'{pct(row["vs_low_pct"])} 高い状態です。')
     else:
         lead_state = f'{yen(price)}。'
-    desc = (lead_state
-            + f'記録{days}日分・最安 {yen(low)}'
-            + f'／最高 {yen(row.get("high") or 0)}。'
-            + f'{short_name(row["name"], 16)} の価格の記録。')
+    # 動いていない商品では最安と最高が同じ値になる。頭で「動いていません」と
+    # 言ったうえで「最安 650円／最高 650円」を続けると、同じことを2回読ませる。
+    high = row.get("high") or 0
+    span = (f'記録{days}日分・最安 {yen(low)}／最高 {yen(high)}。'
+            if low != high else '')
+    desc = lead_state + span + f'{short_name(row["name"], 16)} の価格の記録。'
 
     # ポイント分を引いた実質価格の推移。倍率が一度も動かない商品では
     # 価格の線と重なるだけなので、その時は重ねない。
@@ -2245,6 +2308,7 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + since_start(row)
             + '<h2>記録した中での位置</h2>'
             + f'<table class="facts">{table}</table>'
+            + sub_position(row, prefix)
             + caption_block(row)
             + history_table(row)
             + (WATCH_BUTTON.replace("{code}", esc(row["item_code"]))
