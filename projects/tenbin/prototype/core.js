@@ -1,56 +1,65 @@
 // てんびんタワー 物理コア。ブラウザと node で共用
 // どうぶつタワーの積み方を、ばね付きのてんびんの上でやる。
-// 動物は凸の部品を組んだでこぼこの形。重さは面積に比例（大きいほど重い）。
+// 動物は横向きのシルエット（animals.js）。重さは面積に比例（大きいほど重い）。
 var TenbinCore = (function () {
   var M = (typeof Matter !== 'undefined') ? Matter : require('matter-js');
   var env = (typeof process !== 'undefined' && process.env) || {};
-  var W = 400, GROUND = 600, PIVOT_Y = 556, PLANK_T = 14, PLANK_L = 300;
+  var W = 400, GROUND = 600, PIVOT_Y = 556, PLANK_T = 14, PLANK_L = 320;
   var DT = 1000 / 60, SUB = 4, SDT = DT / SUB;
   var CAT_STATIC = 1, CAT_PLANK = 2, CAT_CARGO = 4;
   var DENSITY = 0.0015, ROT_STEP = Math.PI / 4;
   var FR = +(env.FR || 1.0), FRS = +(env.FRS || 2.0), ADAMP = +(env.AD || 0.97), GAP = +(env.GAP || 40);
-  var K_SPRING = +(env.K || 1.5e-4), C_DAMP = +(env.CD || 0.007);
+  var K_SPRING = +(env.K || 2.2e-4), C_DAMP = +(env.CD || 0.007);
 
-  // 部品: c=[x,y,r] 円 / r=[x,y,w,h,角度(度)] 角丸の四角 / p=[[x,y],...] 凸多角形（時計回りでも反時計回りでも可）
-  // 座標は絵を描くときの原点から。y は下向き
-  var ANIMALS = {
-    bear: { name: 'くま', col: ['#a87449', '#e8c9a0'], parts: [
-      { c: [0, 10, 22] }, { c: [0, -22, 16] }, { c: [-12, -34, 6] }, { c: [12, -34, 6] }] },
-    giraffe: { name: 'きりん', col: ['#f2c14e', '#b9772f'], parts: [
-      { r: [-6, 0, 52, 20] }, { r: [16, -28, 10, 40, 12] }, { r: [24, -50, 24, 12] },
-      { r: [-26, 20, 6, 24] }, { r: [-14, 20, 6, 24] }, { r: [6, 20, 6, 24] }, { r: [16, 20, 6, 24] }] },
-    elephant: { name: 'ぞう', col: ['#a9b3c2', '#c8d0db'], parts: [
-      { r: [8, 0, 70, 42] }, { c: [-30, -10, 20] }, { r: [-44, 14, 9, 28, 10] },
-      { r: [-14, 26, 14, 14] }, { r: [30, 26, 14, 14] }] },
-    penguin: { name: 'ペンギン', col: ['#3a4250', '#f5f1ea'], parts: [
-      { c: [0, -18, 14] }, { r: [0, 6, 30, 38] }, { p: [[-15, 0], [-22, 16], [-15, 18]] }, { p: [[15, 0], [22, 16], [15, 18]] }] },
-    croc: { name: 'わに', col: ['#6aa36f', '#3e7a48'], parts: [
-      { r: [0, 0, 84, 16] }, { p: [[42, -8], [66, -2], [66, 6], [42, 8]] }, { p: [[-42, -6], [-62, 4], [-42, 8]] },
-      { r: [-26, 11, 8, 8] }, { r: [24, 11, 8, 8] }] },
-    rabbit: { name: 'うさぎ', col: ['#f3eee8', '#f2b6c0'], parts: [
-      { c: [0, 6, 17] }, { r: [-7, -20, 8, 28, -8] }, { r: [7, -20, 8, 28, 8] }] },
-    cat: { name: 'ねこ', col: ['#f0a54a', '#fbe3c2'], parts: [
-      { r: [0, -6, 56, 14] }, { r: [-24, 8, 8, 18] }, { r: [24, 8, 8, 18] }, { c: [30, -16, 11] }, { r: [-32, -16, 5, 18, -20] }] },
-    pig: { name: 'ぶた', col: ['#f4b7b5', '#e48f8f'], parts: [
-      { c: [0, 0, 22] }, { r: [-12, 22, 7, 8] }, { r: [12, 22, 7, 8] }] },
-    sheep: { name: 'ひつじ', col: ['#f6f1e6', '#5a4a40'], parts: [
-      { c: [-14, 0, 13] }, { c: [6, -6, 13] }, { c: [16, 6, 12] }, { c: [-2, 10, 12] }, { c: [-26, -8, 10] }] },
-    turtle: { name: 'かめ', col: ['#7fae6a', '#4d7a3c'], parts: [
-      { p: [[-28, 6], [-22, -8], [-10, -16], [10, -16], [22, -8], [28, 6]] }, { c: [34, 0, 7] }, { r: [-18, 10, 9, 8] }, { r: [18, 10, 9, 8] }] }
-  };
+  var ANIMALS = (typeof TenbinAnimals !== 'undefined') ? TenbinAnimals : require('./animals.js');
+  // 写真の動物（tool/trace.js が作る photos.js）があれば、同じ種類のシルエットを置き換える
+  var PHOTOS = (typeof TenbinPhotos !== 'undefined') ? TenbinPhotos : (function () { try { return require('./photos.js'); } catch (e) { return {}; } })();
+  Object.keys(PHOTOS).forEach(function (k) { ANIMALS[k] = PHOTOS[k]; });
+  var decomp = (typeof window !== 'undefined' && window.decomp) || (typeof require !== 'undefined' ? require('poly-decomp') : null);
+  M.Common.setDecomp(decomp);
   var KINDS = Object.keys(ANIMALS);
 
-  function partBody(pt, x, y, opt) {
-    if (pt.c) return M.Bodies.circle(x + pt.c[0], y + pt.c[1], pt.c[2], opt);
-    if (pt.r) {
-      var o = Object.assign({ chamfer: { radius: Math.min(5, Math.min(pt.r[2], pt.r[3]) * 0.3) } }, opt);
-      var b = M.Bodies.rectangle(x + pt.r[0], y + pt.r[1], pt.r[2], pt.r[3], o);
-      if (pt.r[4]) M.Body.rotate(b, pt.r[4] * Math.PI / 180);
-      return b;
+  // 輪郭の点列。写真から取った poly があればそれ、無ければ path（M L C Q Z）をなぞって点にする
+  function outline(kind) {
+    var A = ANIMALS[kind];
+    if (A._pts) return A._pts;
+    var pts = A.poly ? A.poly.map(function (q) { return { x: q[0], y: q[1] }; }) : samplePath(A.path);
+    A._pts = simplify(pts, 0.6);
+    return A._pts;
+  }
+  function samplePath(d) {
+    var tk = d.match(/[MLCQZ]|-?[\d.]+/g), i = 0, pts = [], cx = 0, cy = 0, cmd = null;
+    function num() { return +tk[i++]; }
+    while (i < tk.length) {
+      if (/[MLCQZ]/.test(tk[i])) cmd = tk[i++];
+      if (cmd === 'Z') continue;
+      if (cmd === 'M' || cmd === 'L') { cx = num(); cy = num(); pts.push({ x: cx, y: cy }); }
+      else if (cmd === 'Q') {
+        var qx = num(), qy = num(), ex = num(), ey = num();
+        for (var t = 1; t <= 8; t++) { var u = t / 8, v = 1 - u; pts.push({ x: v * v * cx + 2 * v * u * qx + u * u * ex, y: v * v * cy + 2 * v * u * qy + u * u * ey }); }
+        cx = ex; cy = ey;
+      } else if (cmd === 'C') {
+        var x1 = num(), y1 = num(), x2 = num(), y2 = num(), x3 = num(), y3 = num();
+        for (var t2 = 1; t2 <= 10; t2++) { var u2 = t2 / 10, v2 = 1 - u2;
+          pts.push({ x: v2 * v2 * v2 * cx + 3 * v2 * v2 * u2 * x1 + 3 * v2 * u2 * u2 * x2 + u2 * u2 * u2 * x3,
+                     y: v2 * v2 * v2 * cy + 3 * v2 * v2 * u2 * y1 + 3 * v2 * u2 * u2 * y2 + u2 * u2 * u2 * y3 }); }
+        cx = x3; cy = y3;
+      }
     }
-    var vs = pt.p.map(function (q) { return { x: q[0], y: q[1] }; });
-    var c = M.Vertices.centre(M.Vertices.clockwiseSort(vs.slice()));
-    return M.Bodies.fromVertices(x + c.x, y + c.y, [vs], opt);
+    var f = pts[0], l = pts[pts.length - 1];
+    if (Math.hypot(f.x - l.x, f.y - l.y) < 0.01) pts.pop();
+    return pts;
+  }
+  // 細かすぎる点を間引く（ダグラス・ポーカー）
+  function simplify(pts, tol) {
+    if (pts.length < 8) return pts;
+    var keep = new Array(pts.length).fill(false); keep[0] = keep[pts.length - 1] = true;
+    (function rdp(a, b) {
+      var A = pts[a], B = pts[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy) || 1, md = 0, mi = -1;
+      for (var k = a + 1; k < b; k++) { var d = Math.abs((pts[k].x - A.x) * dy - (pts[k].y - A.y) * dx) / L; if (d > md) { md = d; mi = k; } }
+      if (md > tol) { keep[mi] = true; rdp(a, mi); rdp(mi, b); }
+    })(0, pts.length - 1);
+    return pts.filter(function (_, k) { return keep[k]; });
   }
 
   // 絵の原点から重心までのずれ（角度0のとき）。描くときに使う
@@ -59,10 +68,15 @@ var TenbinCore = (function () {
 
   // 絵の原点を (x,y) に置き、ang だけ回した体を作る
   function build(kind, x, y, ang) {
-    var A = ANIMALS[kind];
+    var pts = outline(kind);
     var filter = { category: CAT_CARGO, mask: CAT_CARGO | CAT_PLANK | CAT_STATIC, group: 0 };
-    var parts = A.parts.map(function (pt) { return partBody(pt, 0, 0, { density: DENSITY, collisionFilter: filter }); });
-    var b = M.Body.create({ parts: parts, friction: FR, frictionStatic: FRS, restitution: 0.02, collisionFilter: filter });
+    var b = M.Bodies.fromVertices(0, 0, [pts.map(function (q) { return { x: q.x, y: q.y }; })],
+      { density: DENSITY, friction: FR, frictionStatic: FRS, restitution: 0.02, collisionFilter: filter }, true, 0.01, 2);
+    b.parts.forEach(function (pt) { pt.collisionFilter = filter; pt.friction = FR; pt.frictionStatic = FRS; });
+    // fromVertices は重心を (0,0) に置くので、絵の座標に合うよう外枠でそろえる
+    var minX = Infinity, minY = Infinity;
+    pts.forEach(function (q) { minX = Math.min(minX, q.x); minY = Math.min(minY, q.y); });
+    M.Body.translate(b, { x: minX - b.bounds.min.x, y: minY - b.bounds.min.y });
     M.Body.rotate(b, ang, { x: 0, y: 0 });
     M.Body.translate(b, { x: x, y: y });
     b.kind = kind;
@@ -168,7 +182,7 @@ var TenbinCore = (function () {
   }
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
-    ANIMALS: ANIMALS, KINDS: KINDS, OFFSET: OFFSET, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
+    ANIMALS: ANIMALS, KINDS: KINDS, OFFSET: OFFSET, outline: outline, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
     settled: settled, canDrop: canDrop, current: current, next: next, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;
