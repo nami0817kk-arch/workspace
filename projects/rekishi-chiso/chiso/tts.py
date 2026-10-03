@@ -10,7 +10,7 @@ import wave
 from dataclasses import dataclass
 from pathlib import Path
 
-from .voice import Voice, apply_readings, emphasize, kana_of, split_emphasis, tone_params
+from .voice import TONES, Voice, apply_readings, emphasize, end_rise, kana_of, split_emphasis, tone_params
 
 
 class VoicevoxError(RuntimeError):
@@ -48,7 +48,7 @@ class Spoken:
 
 
 def line_key(text: str, voice: Voice, tone: str, readings: dict[str, str]) -> str:
-    payload = json.dumps([text, voice.__dict__, tone, sorted(readings.items()), "v1"], ensure_ascii=False)
+    payload = json.dumps([text, voice.__dict__, tone, sorted(readings.items()), "v2"], ensure_ascii=False)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
@@ -75,6 +75,7 @@ def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[s
     if words:
         kanas = [kana_of(engine.query(apply_readings(w, readings), voice.style_id)) for w in words]
         query, missing = emphasize(query, kanas)
+    query = end_rise(query, TONES[tone].get("end_rise", 0.0))
     data = engine.synthesize(query, voice.style_id)
     target.write_bytes(data)
     seconds = wav_seconds(data)
