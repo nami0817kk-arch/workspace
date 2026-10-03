@@ -14,6 +14,7 @@ python src/build_sekai.py books/sekai-kotowaza-vol1.json   # 本文と表紙 -> 
 | 外国語の確かめ | 200の言い方すべてに2つ以上の出典（`books/sekai-kotowaza-verified.json`）。同じ意味が無いものは「近い言い方」と書く |
 | 商標 | 「世界ではこう言う」「こう言う」「世界のことわざ」「世界ことわざ」は0件。「ことわざ」を含む3件に第16類は無し（2026-10-03） |
 | 書体 | 欧文 Noto Sans、繁体字 Noto Sans TC、ハングル Nanum Gothic（どれも OFL）。Noto Sans JP に無い字を言語ごとに振り分ける |
+| 挿絵 | `assets/sekai-art/` の57枚（各句50・章扉5・表紙・表題）。Cloudflare Workers AI の FLUX.1 [schnell]（無料枠、Apache 2.0）で1題2枚作り、目で選んだ。サイン風の落書きは消した。AI 申告の画像は「あり」 |
 | KDP の入力内容 | `books/sekai-kotowaza-vol1-listing.md` |
 
 ## 思い出ばなし 1冊目（`books/kaiso-vol1.json`）

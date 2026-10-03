@@ -13,7 +13,8 @@ import pymupdf  # noqa: E402
 from pypdf import PdfReader  # noqa: E402
 
 import kdp_spec  # noqa: E402
-from build_sekai import LANGS, NATIVE, SekaiSpec, chapter_page, item_page, load_items, page_count  # noqa: E402
+from build_sekai import (LANGS, NATIVE, SekaiSpec, art_path, chapter_page, has_art, item_page,  # noqa: E402
+                         load_items, page_count)
 
 INT, COV = "output/sekai-kotowaza-vol1-interior.pdf", "output/sekai-kotowaza-vol1-cover.pdf"
 LISTING = pathlib.Path("books/sekai-kotowaza-vol1-listing.md").read_text(encoding="utf-8")
@@ -108,8 +109,13 @@ def image_report(doc):
 
 ci_rep, ii_rep = image_report(dc), image_report(di)
 check("表紙の画像はすべて CMYK・300dpi 以上", all("CMYK" in c.upper() and d >= 299 for _, c, d in ci_rep), str(ci_rep))
-check("本文の画像（見方のページの見本）はすべて CMYK・300dpi 以上",
-      ii_rep and all("CMYK" in c.upper() and d >= 299 for _, c, d in ii_rep), str(ii_rep))
+ART_KEYS = [f"item{k:02d}" for k in range(1, 51)] + [f"chapter{k}" for k in range(1, 6)] + ["cover", "title"]
+missing_art = [k for k in ART_KEYS if art_path(k) is None] if has_art() else []
+pages_with_img = {n for n, _, _ in ii_rep}
+no_img = [k + 1 for k in range(50) if has_art() and item_page(spec, k) not in pages_with_img]
+check("本文の画像（挿絵・見方の見本）はすべて CMYK・300dpi 以上。挿絵57枚がそろい、50句すべてのページに載っている",
+      ii_rep and all("CMYK" in c.upper() and d >= 299 for _, c, d in ii_rep) and not missing_art and not no_img,
+      f"足りない挿絵 {missing_art} / 絵の無い句 {no_img}")
 check("本文の文字は 7pt 以上", min(s["size"] for _, s in spans(di)) >= 6.99)
 check("表紙の文字は 7pt 以上", min(s["size"] for _, s in spans(dc)) >= 6.99)
 thin = [(p.number + 1, round(d["width"], 2)) for p in di for d in p.get_drawings()
@@ -236,15 +242,16 @@ pii = [w for w in ("nami", "0817") if w in fixed.lower()]
 check("個人を特定できる文字（nami・0817 など）が出ていない", not pii, str(pii))
 tofu = [(i, n + 1) for i, d in enumerate((di, dc)) for n, p in enumerate(d) if "\x00" in p.get_text() or "�" in p.get_text()]
 check("化けた字（書体に無い字）が本文・表紙のどこにもない", not tofu, str(tofu[:4]))
-check("奥付に書体（OFL）と図版（Noto Emoji）の出典がある", "Noto Emoji" in colophon and "Open Font License" in colophon
-      and "Nanum Gothic" in colophon and "Noto Sans TC" in colophon)
+check("奥付に書体（OFL）と図版（Noto Emoji・挿絵の生成AI）の出典がある", "Noto Emoji" in colophon and "Open Font License" in colophon
+      and "Nanum Gothic" in colophon and "Noto Sans TC" in colophon and (not has_art() or "FLUX.1" in colophon))
 refs = ptext(len(di) - 1)
 check("参考にした資料のページに5つの言語の資料がそろっている", all(x in refs for x in ("英語", "フランス語", "中国語", "韓国語", "日本語")))
 check("入力内容の案：タイトル・サブタイトル・A5・裁ち落としあり・ページ数・価格の案が本体と一致",
       f"タイトル: {spec.title}" in LISTING and f"サブタイトル: {spec.subtitle}" in LISTING and "A5" in LISTING
       and "裁ち落としあり" in LISTING and f"{len(di)}ページ" in LISTING and "1,480" in LISTING)
-check("入力内容に AI 申告（テキスト・作品全体・Claude）と商標確認（J-PlatPat）の記録がある",
-      "作品全体" in LISTING and "Claude" in LISTING and "J-PlatPat" in LISTING)
+check("入力内容に AI 申告（テキストは Claude、挿絵があれば画像は FLUX.1）と商標確認（J-PlatPat）の記録がある",
+      "作品全体" in LISTING and "Claude" in LISTING and "J-PlatPat" in LISTING
+      and (not has_art() or "画像「作品全体" in LISTING and "FLUX.1" in LISTING))
 paste = LISTING[LISTING.index("## 内容紹介"):LISTING.index("## キーワード")]
 quotes = re.findall(r"「([^」]+)」", paste)
 qbad = [q for q in quotes if flat(q) not in flat(all_int) and q not in ("近い言い方",)]

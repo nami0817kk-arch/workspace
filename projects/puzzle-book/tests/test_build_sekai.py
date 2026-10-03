@@ -6,7 +6,7 @@ import pymupdf
 import pytest
 
 import kdp_spec
-from build_sekai import LANGS, SekaiSpec, build_cover, build_pdf, item_page, load_items, page_count
+from build_sekai import LANGS, SekaiSpec, art_path, build_cover, build_pdf, item_page, load_items, page_count
 
 _ROOT = Path(__file__).resolve().parent.parent
 _SPEC = _ROOT / "books" / "sekai-kotowaza-vol1.json"
@@ -121,6 +121,16 @@ def test_colophon_credits(built):
     spec, interior, _, _ = built
     last = pymupdf.open(str(interior))[-1].get_text()
     assert spec.title in last and "Noto Emoji" in last and "Nanum Gothic" in last and "Noto Sans TC" in last
+    assert "FLUX.1" in last  # 挿絵の生成AI
+
+
+def test_every_item_page_has_its_illustration(built):
+    spec, interior, cover, _ = built
+    doc = pymupdf.open(str(interior))
+    keys = [f"item{k:02d}" for k in range(1, 51)] + [f"chapter{k}" for k in range(1, 6)] + ["cover", "title"]
+    assert not [k for k in keys if art_path(k) is None]
+    assert not [k + 1 for k in range(50) if not doc[item_page(spec, k) - 1].get_images()]
+    assert pymupdf.open(str(cover))[0].get_images()
 
 
 def test_a5_print_cost():
