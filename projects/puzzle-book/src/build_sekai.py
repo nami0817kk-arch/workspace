@@ -69,13 +69,37 @@ def _art_cmyk(path: str) -> tuple[int, bytes]:
     """挿絵を正方形に切り、CMYK の JPEG にする（1枚1回だけ）。"""
     from PIL import Image
 
-    img = Image.open(path).convert("RGB")
+    img = Image.open(path)
     side = min(img.size)
     img = img.crop(((img.width - side) // 2, (img.height - side) // 2,
                     (img.width + side) // 2, (img.height + side) // 2))
     out = io.BytesIO()
-    img.convert("CMYK").save(out, "JPEG", quality=94)
+    to_cmyk(img).save(out, "JPEG", quality=94)
     return side, out.getvalue()
+
+
+_SWOP = Path(r"C:\Windows\System32\spool\drivers\color\RSWOP.icm")
+
+
+@functools.lru_cache(maxsize=1)
+def _swop_transform():
+    from PIL import ImageCms
+
+    if not _SWOP.exists():
+        return None
+    return ImageCms.buildTransform(ImageCms.createProfile("sRGB"), ImageCms.getOpenProfile(str(_SWOP)),
+                                   "RGB", "CMYK", renderingIntent=ImageCms.Intent.PERCEPTUAL)
+
+
+def to_cmyk(img):
+    """RGB を印刷用の CMYK にする。Windows の SWOP（RSWOP.icm）があればそれで（黒版を使い、総インク量を抑える）。
+    挿絵（assets/sekai-art）は変換済みの CMYK で置いてあるので、そのまま通す。"""
+    from PIL import ImageCms
+
+    if img.mode == "CMYK":
+        return img
+    t = _swop_transform()
+    return ImageCms.applyTransform(img.convert("RGB"), t) if t else img.convert("CMYK")
 
 
 def draw_art(c: canvas.Canvas, key: str, cx: float, cy: float, r: float) -> bool:
@@ -106,7 +130,7 @@ LANG_COLOR: dict[str, CMYK] = {
 }
 LANG_TINT: dict[str, CMYK] = {k: tuple(round(v * 0.1, 3) for v in c) for k, c in LANG_COLOR.items()}
 FONT = {"en": ("LAT-B", "LAT"), "fr": ("LAT-B", "LAT"), "zh": ("TC-B", "TC"), "ko": ("KR-B", "KR")}
-READ_FONT = {"zh": "LAT", "ko": FONT_REGULAR}
+READ_FONT = {"en": FONT_REGULAR, "fr": FONT_REGULAR, "zh": "LAT", "ko": FONT_REGULAR}
 COLORS: dict[str, tuple[CMYK, CMYK]] = {
     "orange": ((0.0, 0.58, 0.95, 0.0), (0.0, 0.07, 0.16, 0.0)),
     "green": ((0.72, 0.0, 0.85, 0.12), (0.09, 0.0, 0.12, 0.0)),
@@ -114,8 +138,8 @@ COLORS: dict[str, tuple[CMYK, CMYK]] = {
     "pink": ((0.0, 0.72, 0.25, 0.0), (0.0, 0.09, 0.03, 0.0)),
     "purple": ((0.58, 0.78, 0.0, 0.05), (0.07, 0.09, 0.0, 0.0)),
 }
-INK: CMYK = (0.72, 0.55, 0.35, 0.70)
-SUB: CMYK = (0.35, 0.25, 0.20, 0.35)
+INK: CMYK = (0.0, 0.0, 0.0, 0.88)  # 本文の文字は黒1色（4色重ねは小さい字がにじむ）
+SUB: CMYK = (0.0, 0.0, 0.0, 0.66)
 PAPER: CMYK = (0.0, 0.015, 0.05, 0.0)
 WHITE: CMYK = (0, 0, 0, 0)
 NAVY: CMYK = (0.95, 0.75, 0.10, 0.45)
@@ -129,20 +153,20 @@ REGIONS = {
     "ko": "韓国・北朝鮮",
 }
 READ_NOTE = {
-    "en": "原文のあとに、直訳をつけています。",
-    "fr": "原文のあとに、直訳をつけています。",
+    "en": "原文に、カタカナのおよその読みと、直訳をつけています。",
+    "fr": "原文に、カタカナのおよその読みと、直訳をつけています。",
     "zh": "日本の漢字に近い繁体字（台湾などで使う字）で書き、中国大陸の標準の読みでピンイン（ローマ字の読み）をつけています。",
     "ko": "ハングルに、カタカナのおよその読みをつけています。漢字語は、漢字での書き方を添えたものもあります。",
 }
-REFERENCES = [
-    ("英語", "Wiktionary（英語版）、Cambridge Dictionary、Longman Dictionary of Contemporary English、"
-             "The Phrase Finder、Oxford Dictionary of Proverbs、The Free Dictionary（Farlex・McGraw-Hill）、"
-             "W. Preston『A Dictionary of English Proverbs』（1880）ほか"),
-    ("フランス語", "Wiktionnaire（フランス語版）、Wiktionary（英語版）、Expressio、Linternaute、Larousse、"
-                  "リトレ辞典、アカデミー・フランセーズ辞典ほか"),
-    ("中国語", "漢典（zdic.net）、教育部《重編國語辭典修訂本》、教育部《成語典》（台湾）、Wiktionary（英語版）、"
-              "Wikisource の原典（論語・史記・孟子など）ほか"),
-    ("韓国語", "国立国語院『標準国語大辞典』、高麗大学校『韓国語大辞典』、国立国語院『ウリマルセム』、Wiktionary、新聞記事ほか"),
+REFERENCES = [  # 紙・公的な辞典を先に、Web の資料を後に
+    ("英語", "Oxford Dictionary of Proverbs、Longman Dictionary of Contemporary English、Cambridge Dictionary、"
+             "W. Preston『A Dictionary of English Proverbs』（1880）、The Free Dictionary（Farlex・McGraw-Hill）、"
+             "The Phrase Finder、Wiktionary（英語版）ほか"),
+    ("フランス語", "Larousse、アカデミー・フランセーズ辞典、リトレ辞典、Wiktionnaire（フランス語版）、"
+                  "Expressio、Linternaute、Wiktionary（英語版）ほか"),
+    ("中国語", "教育部《重編國語辭典修訂本》、教育部《成語典》（台湾）、漢典（zdic.net）、"
+              "Wikisource の原典（論語・史記・孟子など）、新聞記事、Wiktionary（英語版）ほか"),
+    ("韓国語", "国立国語院『標準国語大辞典』、高麗大学校『韓国語大辞典』、国立国語院『ウリマルセム』、新聞記事、Wiktionaryほか"),
     ("日本語", "コトバンク（デジタル大辞泉ほか）、国立国会図書館レファレンス協同データベースほか"),
 ]
 FONT_CREDIT = ["書体: Noto Sans JP、Noto Sans、Noto Sans TC、Nanum Gothic、M PLUS Rounded 1c（SIL Open Font License 1.1）",
@@ -229,15 +253,27 @@ _KINSOKU_TAIL = "「（『"  # 行末に置かない（次の行へ送る）
 
 def wrap(c: canvas.Canvas, text: str, font: str, size: float, width: float, by_word=False) -> list[str]:
     """by_word=True は欧文（空白で折る）、"list" は「、」の区切りで折る、False は1字ずつ（行頭禁則つき）。"""
+    return list(_wrap(text, font, size, round(width, 2), by_word))
+
+
+@functools.lru_cache(maxsize=None)
+def _wrap(text: str, font: str, size: float, width: float, by_word) -> tuple[str, ...]:
+    c = pdfmetrics  # 幅は書体だけで決まる（キャンバスに依らない）ので、結果を使い回す
     if c.stringWidth(text, font, size) <= width:
-        return [text]
+        return (text,)
     lines, cur = [], ""
     if by_word is True:
         tokens = re.split(r"(\s+)", text)
     elif by_word == "list":
         tokens = re.split(r"(?<=、)", text)
     else:
-        tokens = re.findall(r"[0-9]+[つ人個匹章]?|.", text)  # 「2つ」「50」を行の途中で割らない
+        # 日本語は文節（BudouX）の切れ目で折る。1文節が1行に収まらないときだけ1字ずつ
+        tokens = []
+        for ph in _phrases(text):
+            if pdfmetrics.stringWidth(ph, font, size) > width:
+                tokens += re.findall(r"[0-9]+[つ人個匹章]?|.", ph)
+            else:
+                tokens.append(ph)
     for tok in tokens:
         if c.stringWidth((cur + tok).rstrip(), font, size) > width and cur.strip():
             if by_word is False and tok in _KINSOKU_HEAD:
@@ -250,7 +286,26 @@ def wrap(c: canvas.Canvas, text: str, font: str, size: float, width: float, by_w
             cur += tok
     if cur.strip():
         lines.append(cur.strip())
-    return lines
+    return tuple(lines)
+
+
+@functools.lru_cache(maxsize=1)
+def _budoux():
+    import budoux
+
+    return budoux.load_default_japanese_parser()
+
+
+def _phrases(text: str) -> list[str]:
+    """文節に区切る。行頭に来てはいけない字（、。」など）は前の文節につける。"""
+    out: list[str] = []
+    for ph in _budoux().parse(text):
+        while ph and out and ph[0] in _KINSOKU_HEAD:
+            out[-1] += ph[0]
+            ph = ph[1:]
+        if ph:
+            out.append(ph)
+    return out
 
 
 def wrap_even(c: canvas.Canvas, text: str, font: str, size: float, width: float, by_word=False,
@@ -376,22 +431,25 @@ def lang_badge(c: canvas.Canvas, k: str, x: float, y: float, w: float, h: float)
 
 # 1ページに収まらないときに、字を一段ずつ小さくする段階
 DENSITY = [
-    {"ofs": 14.0, "lit": 10.0, "litg": 14.0, "story": 10.0, "storyg": 15.5, "gap": 6, "band": 128, "mean": 10.0, "read": 9.0, "readg": 14},
-    {"ofs": 13.0, "lit": 9.5, "litg": 13.5, "story": 9.5, "storyg": 14.5, "gap": 4, "band": 122, "mean": 9.5, "read": 8.5, "readg": 13},
-    {"ofs": 12.5, "lit": 9.0, "litg": 12.5, "story": 9.0, "storyg": 13.5, "gap": 3, "band": 118, "mean": 9.0, "read": 8.5, "readg": 12},
+    {"ofs": 15.0, "lit": 10.0, "litg": 14.0, "story": 10.0, "storyg": 15.5, "gap": 6, "band": 128, "mean": 10.0, "read": 9.0, "readg": 14},
+    {"ofs": 14.0, "lit": 9.5, "litg": 13.5, "story": 9.5, "storyg": 14.5, "gap": 4, "band": 122, "mean": 9.5, "read": 8.5, "readg": 13},
+    {"ofs": 13.0, "lit": 9.0, "litg": 12.5, "story": 9.0, "storyg": 13.5, "gap": 3, "band": 118, "mean": 9.0, "read": 8.5, "readg": 12},
+    {"ofs": 12.0, "lit": 8.5, "litg": 11.5, "story": 8.5, "storyg": 12.5, "gap": 2, "band": 112, "mean": 8.5, "read": 7.5, "readg": 10},
+    {"ofs": 12.0, "lit": 8.5, "litg": 11.5, "story": 8.5, "storyg": 12.5, "gap": 2, "band": 0, "mean": 8.5, "read": 7.5, "readg": 10},
 ]
 
 
-def _card_layout(c: canvas.Canvas, x: dict, k: str, avail: float, P: dict) -> tuple[list[str], float, list[str]]:
+def _card_layout(c: canvas.Canvas, x: dict, k: str, avail: float, P: dict) -> tuple[list[str], float, list[str], list[str]]:
     bf, _ = FONT[k]
     ofs = P["ofs"]
-    room = avail - (56 if x["near"] else 0)
+    room = avail
     lines = wrap(c, x["text"], bf, ofs, room, k in ("en", "fr", "ko"))
     while len(lines) > 2 and ofs > 10:
         ofs -= 0.5
         lines = wrap(c, x["text"], bf, ofs, room, k in ("en", "fr", "ko"))
     lit = wrap_even(c, x["lit"], FONT_REGULAR, P["lit"], avail, False, always=True)
-    return lines, ofs, lit
+    rd = wrap_even(c, x["read"], READ_FONT[k], P["read"], avail, True, always=True) if x["read"] else []
+    return lines, ofs, lit, rd
 
 
 def draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int) -> dict:
@@ -399,10 +457,11 @@ def draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int) -> dict:
     for dense in range(len(DENSITY)):
         try:
             _draw_item(canvas.Canvas(io.BytesIO(), pagesize=(f.pw, f.ph)), f, it, no, DENSITY[dense])
-        except AssertionError:
+        except AssertionError as e:
+            last = e
             continue
         return _draw_item(c, f, it, no, DENSITY[dense])
-    raise AssertionError(f"1ページに収まらない: {it['jp']}")
+    raise AssertionError(f"1ページに収まらない: {it['jp']} {last}")
 
 
 def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
@@ -412,7 +471,14 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     anchors: dict[str, tuple[float, float]] = {}
     fill_page(c, f, PAPER)
     # 上の色帯（紙の端まで）
-    band_bottom = f.top - P["band"]
+    band_h = P["band"]
+    if not band_h:  # 0 は「題と意味がちょうど収まる高さ」（いちばん詰めた段階だけ）
+        fs0 = 29
+        while c.stringWidth(it["jp"], FONT_ROUNDED, fs0) > w - 2 * 48 - 14 and fs0 > 17:
+            fs0 -= 0.5
+        n_mean = len(wrap_even(c, it["mean"], FONT_BOLD, P["mean"], w - 2 * 48 - 14, False, always=True))
+        band_h = 44 + fs0 + 17 + 14 * (n_mean - 1) + 12
+    band_bottom = f.top - band_h
     c.setFillColorCMYK(*col)
     c.rect(0, band_bottom, f.pw, f.ph - band_bottom, stroke=0, fill=1)
     # 番号と章
@@ -428,7 +494,7 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     # ことわざ（白抜き）
     ic_r = 48
     tw = w - 2 * ic_r - 14
-    c.setFont(FONT_REGULAR, 9.5)
+    c.setFont(FONT_BOLD, 9.5)
     c.drawString(L + 1, f.top - 40, it["kana"])
     anchors["kana"] = (L + 40, f.top - 37)
     fs = 29
@@ -438,8 +504,8 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     c.drawString(L, f.top - 44 - fs, it["jp"])
     anchors["jp"] = (L + min(tw, c.stringWidth(it["jp"], FONT_ROUNDED, fs)) * 0.5, f.top - 44 - fs * 0.6)
     y = f.top - 44 - fs - 17
-    c.setFont(FONT_REGULAR, P["mean"])
-    mean = wrap_even(c, it["mean"], FONT_REGULAR, P["mean"], tw, False, always=True)
+    c.setFont(FONT_BOLD, P["mean"])
+    mean = wrap_even(c, it["mean"], FONT_BOLD, P["mean"], tw, False, always=True)
     assert y - 14 * (len(mean) - 1) >= band_bottom + 8, it["jp"]
     for line in mean:
         c.drawString(L, y, line)
@@ -465,13 +531,13 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     c.setLineWidth(1.2)
     c.line(L + c.stringWidth("世界では、こう言う", FONT_ROUNDED, 12.5) + 8, y + 4, R - 2 * ic_r - 6, y + 4)
     y -= 12
-    # 4言語の枠（余った高さはふり分ける）
-    badge_w = 70
-    tx = L + badge_w + 12
-    avail = R - tx - 8
+    # 4言語の枠（左端に言語の色の帯。余った高さはふり分ける）
+    LABEL = 12  # 言語名の行
+    tx = L + 16
+    avail = R - tx - 10
     lays = [_card_layout(c, it[k], k, avail, P) for k, _ in LANGS]
-    base = [18 + (lo[1] + 3.5) * len(lo[0]) + (P["readg"] if it[k]["read"] else 0) + P["litg"] * len(lo[2]) + 4
-            for (k, _), lo in zip(LANGS, lays)]
+    base = [14 + LABEL + (lo[1] + 3.5) * len(lo[0]) + (P["readg"] - 1.5) * len(lo[3]) + 1.5 * bool(lo[3])
+            + P["litg"] * len(lo[2]) + 4 for (k, _), lo in zip(LANGS, lays)]
     story = wrap_even(c, it["story"], FONT_REGULAR, P["story"], w - 30, False)
     story_h = 34 + P["storyg"] * len(story)
     gap = P["gap"]
@@ -479,42 +545,55 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     assert free >= 0, (it["jp"], free)
     pad = min(free / 5, 20)
     gap += (free - 5 * pad) / 4  # 残りは枠の間へ（ひとくち話の下端が本文の枠の下にそろう）
-    for (k, _), (lines, ofs, lit), h in zip(LANGS, lays, base):
+    for (k, _), (lines, ofs, lit, rd), h in zip(LANGS, lays, base):
         h += pad
         x = it[k]
-        c.setFillColorCMYK(*WHITE)
+        c.setFillColorCMYK(*LANG_COLOR[k])
         c.roundRect(L, y - h, w, h, 8, stroke=0, fill=1)
-        lang_badge(c, k, L + 4, y - h + 4, badge_w, h - 8)
-        yy = y - pad / 2 - 20
+        c.setFillColorCMYK(*WHITE)
+        c.roundRect(L + 5, y - h, w - 5, h, 8, stroke=0, fill=1)
+        c.rect(L + 5, y - h, 8, h, stroke=0, fill=1)
+        yy = y - pad / 2 - 15
+        # 言語名（その言語の文字 ＋ 日本語）
+        name, nfont = NATIVE[k]
+        c.setFillColorCMYK(*LANG_COLOR[k])
+        c.setFont(nfont, 9.5)
+        c.drawString(tx, yy, name)
+        nw = c.stringWidth(name, nfont, 9.5)
+        c.setFont(FONT_BOLD, 7.5)
+        c.drawString(tx + nw + 5, yy, dict(LANGS)[k])
+        lab_end = tx + nw + 5 + c.stringWidth(dict(LANGS)[k], FONT_BOLD, 7.5)
+        anchors.setdefault("badge", (tx + nw / 2, yy + 3))
+        if x["near"]:
+            nx = lab_end + 8
+            c.setFillColorCMYK(*LANG_TINT[k])
+            c.roundRect(nx, yy - 2.5, 50, 12, 6, stroke=0, fill=1)
+            c.setFillColorCMYK(*LANG_COLOR[k])
+            c.setFont(FONT_BOLD, 7.5)
+            c.drawCentredString(nx + 25, yy + 0.5, "近い言い方")
+            anchors.setdefault("near", (nx + 25, yy + 3))
+        yy -= LABEL + ofs * 0.45
         bf = FONT[k][0]
         c.setFillColorCMYK(*INK)
-        for li, line in enumerate(lines):
+        anchors.setdefault("orig", (tx + 50, yy + 4))
+        for line in lines:
             c.setFont(bf, ofs)
             c.drawString(tx, yy, line)
-            if li == 0 and x["near"]:
-                nx = tx + c.stringWidth(line, bf, ofs) + 6
-                c.setFillColorCMYK(*LANG_TINT[k])
-                c.roundRect(nx, yy - 2.5, 50, 13, 6.5, stroke=0, fill=1)
-                c.setFillColorCMYK(*LANG_COLOR[k])
-                c.setFont(FONT_BOLD, 7.5)
-                c.drawCentredString(nx + 25, yy + 1, "近い言い方")
-                c.setFillColorCMYK(*INK)
-                anchors.setdefault("near", (nx + 25, yy + 4))
             yy -= ofs + 3.5
-        if x["read"]:
+        if rd:
             c.setFillColorCMYK(*SUB)
             c.setFont(READ_FONT[k], P["read"])
-            c.drawString(tx, yy + 1, x["read"])
             anchors.setdefault("read", (tx + 40, yy + 4))
-            yy -= P["readg"]
+            for line in rd:
+                c.drawString(tx, yy + 1, line)
+                yy -= P["readg"] - 1.5
+            yy -= 1.5
         c.setFillColorCMYK(*INK)
         c.setFont(FONT_REGULAR, P["lit"])
         for line in lit:
             c.drawString(tx, yy, line)
             yy -= P["litg"]
-        anchors.setdefault("badge", (L + 4 + badge_w / 2, y - h / 2))
-        anchors.setdefault("orig", (tx + 50, y - pad / 2 - 16))
-        anchors.setdefault("lit", (tx + 40, yy + 18))
+        anchors.setdefault("lit", (tx + 40, yy + P["litg"] + 4))
         y -= h + gap
     # ひとくち話
     y -= 8 - gap
@@ -557,35 +636,80 @@ def draw_chapter(c: canvas.Canvas, f: Frame, spec: SekaiSpec, items: list[dict],
         c.setFillColorCMYK(*WHITE)
         c.circle(acx, acy, ar + 4, stroke=0, fill=1)
         draw_art(c, f"chapter{ci + 1}", acx, acy, ar)
-    mine = [(k, it) for k, it in enumerate(items) if it["chapter"] == ci]
-    # 10句のカード（2列×5段）
-    cw = (w - 10) / 2
-    chh = (f.y1 - top_h - 22 - f.bottom) / 5 - 8
-    for j, (k, it) in enumerate(mine):
-        x = L + (j % 2) * (cw + 10)
-        y = f.y1 - top_h - 22 - (j // 2) * (chh + 8)
+    # 章の導入
+    y = f.y1 - top_h - 24
+    intro = wrap_even(c, ch.get("intro", ""), FONT_REGULAR, 10.5, w - 32, False)
+    bh = 26 + 17 * len(intro)
+    c.setFillColorCMYK(*WHITE)
+    c.roundRect(L, y - bh, w, bh, 10, stroke=0, fill=1)
+    c.setFillColorCMYK(*INK)
+    c.setFont(FONT_REGULAR, 10.5)
+    for li, line in enumerate(intro):
+        c.drawString(L + 16, y - 22 - li * 17, line)
+    y -= bh + 22
+    # どこの国の言い方？（3問）
+    c.setFillColorCMYK(*col)
+    c.setFont(FONT_ROUNDED, 14)
+    c.drawString(L, y, "どこの国の言い方？")
+    c.setFillColorCMYK(*SUB)
+    c.setFont(FONT_REGULAR, 8.5)
+    c.drawString(L + c.stringWidth("どこの国の言い方？", FONT_ROUNDED, 14) + 10, y + 1, "日本のことわざでいうと、どれでしょう。")
+    y -= 14
+    qs = chapter_quiz(items, ci)
+    qh = (y - f.bottom - 34) / len(qs) - 8
+    for j, (k, lang, lit) in enumerate(qs):
         c.setFillColorCMYK(*WHITE)
-        c.roundRect(x, y - chh, cw, chh, 9, stroke=0, fill=1)
-        ic = min(34, chh - 14)
-        if not draw_art(c, f"item{k + 1:02d}", x + 8 + ic / 2, y - chh / 2, ic / 2):
-            draw_icon(c, it["icon"], x + 8, y - chh / 2 - ic / 2, ic)
+        c.roundRect(L, y - qh, w, qh, 9, stroke=0, fill=1)
         c.setFillColorCMYK(*col)
-        c.setFont(FONT_ROUNDED, 10)
-        c.drawString(x + ic + 16, y - 17, f"{k + 1:02d}")
-        c.setFillColorCMYK(*SUB)
-        c.setFont(FONT_REGULAR, 8)
-        c.drawRightString(x + cw - 8, y - 17, f"{item_page(spec, k)}ページ")
+        c.circle(L + 20, y - qh / 2, 11, stroke=0, fill=1)
+        c.setFillColorCMYK(*WHITE)
+        c.setFont(FONT_ROUNDED, 12)
+        c.drawCentredString(L + 20, y - qh / 2 - 4.2, str(j + 1))
+        c.setFillColorCMYK(*LANG_COLOR[lang])
+        c.setFont(FONT_BOLD, 8.5)
+        c.drawString(L + 42, y - qh / 2 + 9, f"{dict(LANGS)[lang]}では")
         c.setFillColorCMYK(*INK)
-        name = it["jp"]
-        room = cw - ic - 24
-        nfs = 10.5
-        lines = wrap(c, name, FONT_BOLD, nfs, room, False)
-        while len(lines) > 1 and len(lines[-1]) <= 2 and nfs > 8.5:
-            nfs -= 0.25
-            lines = wrap(c, name, FONT_BOLD, nfs, room, False)
-        for li, line in enumerate(lines[:2]):
-            c.setFont(FONT_BOLD, nfs)
-            c.drawString(x + ic + 16, y - 33 - li * 13, line)
+        fs = 12.5
+        text = f"「{lit}」"
+        while c.stringWidth(text, FONT_BOLD, fs) > w - 56 and fs > 9:
+            fs -= 0.25
+        c.setFont(FONT_BOLD, fs)
+        c.drawString(L + 42, y - qh / 2 - 9, text)
+        y -= qh + 8
+    # こたえ
+    c.setFillColorCMYK(*SUB)
+    c.setFont(FONT_REGULAR, 8)
+    ans = "こたえ　" + "　".join(f"{j + 1}.{items[k]['jp']}（{item_page(spec, k)}ページ）" for j, (k, _, _) in enumerate(qs))
+    for li, line in enumerate(wrap_even(c, ans, FONT_REGULAR, 8, w, True)):
+        c.drawString(L, f.bottom + 14 - li * 11, line)
+
+
+def chapter_quiz(items: list[dict], ci: int, n: int = 3) -> list[tuple[int, str, str]]:
+    """章扉のクイズ。日本語のことわざと字がいちばん重ならない外国語の直訳を、言語が偏らないように選ぶ。"""
+    cands = []
+    for k, it in enumerate(items):
+        if it["chapter"] != ci:
+            continue
+        for lang, _ in LANGS:
+            lit = it[lang]["lit"]
+            m = re.fullmatch(r"直訳「(.+)」", lit)
+            if not m or it[lang]["near"] or not 5 <= len(m.group(1)) <= 22:
+                continue
+            body = m.group(1)
+            overlap = sum(ch in it["jp"] for ch in set(body) if re.match(r"[一-龥ぁ-んァ-ン]", ch))
+            cands.append((overlap, k, lang, body))
+    cands.sort()
+    out, used_k, used_lang = [], set(), {}
+    for overlap, k, lang, body in cands:
+        if k in used_k or used_lang.get(lang, 0) >= 1 and len(used_lang) < 3:
+            continue
+        out.append((k, lang, body))
+        used_k.add(k)
+        used_lang[lang] = used_lang.get(lang, 0) + 1
+        if len(out) == n:
+            break
+    assert len(out) == n, ci
+    return sorted(out)
 
 
 # --- 前付け・後付け ---------------------------------------------------------------
@@ -618,7 +742,7 @@ def _item_image(spec: SekaiSpec, it: dict, no: int, width_pt: float, dpi: int = 
     """1句のページを画像にする（「この本の見方」と裏表紙の見本）。仕上がりの範囲だけを切り出す。"""
     import pypdfium2
 
-    f = frame(spec, 1)
+    f = frame(spec, item_page(spec, no - 1))
     buf = io.BytesIO()
     pc = canvas.Canvas(buf, pagesize=(f.pw, f.ph), initialFontName=FONT_REGULAR)
     anchors = draw_item(pc, f, it, no)
@@ -626,7 +750,7 @@ def _item_image(spec: SekaiSpec, it: dict, no: int, width_pt: float, dpi: int = 
     scale = dpi / 72 * (width_pt / (f.x1 - f.x0))
     img = pypdfium2.PdfDocument(buf.getvalue())[0].render(scale=scale).to_pil()
     k = img.width / f.pw
-    img = img.crop((int(f.x0 * k), int((f.ph - f.y1) * k), int(f.x1 * k), int((f.ph - f.y0) * k))).convert("CMYK")
+    img = to_cmyk(img.crop((int(f.x0 * k), int((f.ph - f.y1) * k), int(f.x1 * k), int((f.ph - f.y0) * k))))
     out = io.BytesIO()
     img.save(out, "JPEG", quality=95)
     out.seek(0)
@@ -685,15 +809,17 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     f = page()
     fill_page(c, f, PAPER)
     y = _heading(c, f, "はじめに")
+    intro_i = next(k for k, it in enumerate(items) if it["jp"] == "犬猿の仲")
+    intro_s = items[intro_i]
     for text in [
-        "「猿も木から落ちる」は、英語では「ホメロスでさえ居眠りする」、フランス語では「つまずかないほど良い馬はいない」。"
-        "韓国語では、日本と同じ「猿も木から落ちる」です。",
+        "「犬猿の仲」は、英語とフランス語では「犬と猫」のように仲が悪い、と言います。中国語では「水と火」。"
+        "韓国語は、日本語と同じ「犬と猿」です。",
         "同じ気持ちを、国によってちがうものにたとえている。そのちがいを見くらべるのが、この本の楽しみ方です。",
     ]:
         y = _para(c, f, text, y, gap=17) - 7
     # 絵: 猿と4つのふきだし
     y -= 6
-    if not draw_art(c, "item11", f.left + 33, y - 37, 33):
+    if not draw_art(c, f"item{intro_i + 1:02d}", f.left + 33, y - 37, 33):
         draw_icon(c, "1f412", f.left, y - 70, 66)
     by = y - 4
     for k, _ in LANGS:
@@ -709,10 +835,10 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
         c.setFillColorCMYK(*INK)
         bf = FONT[k][0]
         fs = 10
-        while c.stringWidth(sample[k]["text"], bf, fs) > bw - 70:
+        while c.stringWidth(intro_s[k]["text"], bf, fs) > bw - 70:
             fs -= 0.5
         c.setFont(bf, fs)
-        c.drawString(f.left + 146, by - 16, sample[k]["text"])
+        c.drawString(f.left + 146, by - 16, intro_s[k]["text"])
         by -= 28
     y = by - 12
     for text in [
@@ -786,14 +912,13 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     for j, (key, head, sub) in enumerate(notes):
         ax, ay = anc[key]
         px, py = mx + (ax - sf.x0) * s, my + (ay - sf.y0) * s
-        c.setFillColorCMYK(*GOLD)
-        c.setStrokeColorCMYK(*NAVY)
-        c.setLineWidth(0.9)
-        c.circle(px, py, 6.5, stroke=1, fill=1)
-        c.setFillColorCMYK(*NAVY)
-        c.setFont(FONT_BOLD, 8)
-        c.drawCentredString(px, py - 2.8, str(j + 1))
         yy = ny - j * step
+        c.setStrokeColorCMYK(*NAVY)
+        c.setLineWidth(0.8)
+        c.line(px, py, mx + mini_w + 4, py)
+        c.line(mx + mini_w + 4, py, tx, yy + 3)
+        c.setFillColorCMYK(*GOLD)
+        c.circle(px, py, 3.2, stroke=1, fill=1)
         c.setFillColorCMYK(*NAVY)
         c.circle(tx + 7, yy + 3, 7, stroke=0, fill=1)
         c.setFillColorCMYK(*WHITE)
@@ -862,42 +987,58 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     folio(c, f)
     turn()
 
-    # 5. もくじ
+    # 5. もくじ（1行に1つ、2段組み）
     f = page()
     fill_page(c, f, PAPER)
-    y = _heading(c, f, "もくじ")
+    y0 = _heading(c, f, "もくじ") + 6
+    col_w = (f.width - 16) / 2
+    rows = []
     for ci, ch in enumerate(spec.chapters):
-        col, tint = COLORS[ch["color"]]
-        names = "・".join(it["jp"] for it in items if it["chapter"] == ci)
-        lines = wrap(c, names, FONT_REGULAR, 8.5, f.width - 48, False)
-        bh = 30 + 12 * len(lines)
-        c.setFillColorCMYK(*WHITE)
-        c.roundRect(f.left, y - bh, f.width, bh, 8, stroke=0, fill=1)
-        c.setFillColorCMYK(*col)
-        c.roundRect(f.left, y - bh, 36, bh, 8, stroke=0, fill=1)
-        c.setFillColorCMYK(*WHITE)
-        c.setFont(FONT_ROUNDED, 16)
-        c.drawCentredString(f.left + 18, y - bh / 2 - 6, f"{ci + 1}")
-        c.setFillColorCMYK(*col)
-        c.setFont(FONT_ROUNDED, 12.5)
-        c.drawString(f.left + 46, y - 18, ch["title"])
-        c.setFillColorCMYK(*SUB)
-        c.setFont(FONT_BOLD, 9.5)
-        c.drawRightString(f.right - 10, y - 18, str(chapter_page(spec, ci)))
-        c.setFillColorCMYK(*INK)
-        c.setFont(FONT_REGULAR, 8.5)
-        for li, line in enumerate(lines):
-            c.drawString(f.left + 46, y - 33 - li * 12, line)
-        y -= bh + 8
-    for label, pno in (("おわりに", total - 3), ("さくいん", total - 2), ("参考にした資料", total - 1)):
-        c.setFillColorCMYK(*NAVY)
-        c.setFont(FONT_ROUNDED, 11)
-        c.drawString(f.left + 4, y - 12, label)
-        c.setFillColorCMYK(*SUB)
-        c.setFont(FONT_BOLD, 9.5)
-        c.drawRightString(f.right - 10, y - 12, str(pno))
-        y -= 20
-    assert y >= f.bottom
+        rows.append(("ch", ci, ch["title"], chapter_page(spec, ci)))
+        rows += [("it", k + 1, it["jp"], item_page(spec, k)) for k, it in enumerate(items) if it["chapter"] == ci]
+    rows += [("end", -1, label, pno) for label, pno in
+             (("おわりに", total - 3), ("さくいん", total - 2), ("参考にした資料", total - 1))]
+    split = next(i for i, r in enumerate(rows) if r[0] == "ch" and r[1] == 3)  # 第4章から右の段
+    LH = 12.2
+    for half, part in enumerate((rows[:split], rows[split:])):
+        x = f.left + half * (col_w + 16)
+        y = y0
+        for kind, ci, label, pno in part:
+            if kind == "ch":
+                col = COLORS[spec.chapters[ci]["color"]][0]
+                y -= 6
+                c.setFillColorCMYK(*col)
+                c.roundRect(x, y - 6, col_w, 20, 6, stroke=0, fill=1)
+                c.setFillColorCMYK(*WHITE)
+                c.setFont(FONT_ROUNDED, 11)
+                c.drawString(x + 8, y, f"第{ci + 1}章　{label}")
+                c.setFont(FONT_BOLD, 9)
+                c.drawRightString(x + col_w - 8, y, str(pno))
+                y -= 22
+            elif kind == "it":
+                c.setFillColorCMYK(*COLORS[items[ci - 1]["color"]][0])
+                c.setFont(FONT_ROUNDED, 8)
+                c.drawString(x + 6, y, f"{ci:02d}")
+                c.setFillColorCMYK(*INK)
+                fs = 9
+                while c.stringWidth(label, FONT_REGULAR, fs) > col_w - 56:
+                    fs -= 0.25
+                c.setFont(FONT_REGULAR, fs)
+                c.drawString(x + 24, y, label)
+                c.setFillColorCMYK(*SUB)
+                c.setFont(FONT_REGULAR, 8.5)
+                c.drawRightString(x + col_w - 8, y, str(pno))
+                y -= LH
+            else:
+                y -= 6
+                c.setFillColorCMYK(*NAVY)
+                c.setFont(FONT_ROUNDED, 10.5)
+                c.drawString(x + 4, y, label)
+                c.setFillColorCMYK(*SUB)
+                c.setFont(FONT_BOLD, 9)
+                c.drawRightString(x + col_w - 8, y, str(pno))
+                y -= 16
+        assert y >= f.bottom - 4, (half, y - f.bottom)
     folio(c, f)
     turn()
 
@@ -972,11 +1113,11 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
         c.drawString(f.left, y, lang)
         c.setFillColorCMYK(*INK)
         c.setFont(FONT_REGULAR, 9)
-        y -= 16
+        y -= 15
         for line in wrap(c, text, FONT_REGULAR, 9, f.width, "list"):
             c.drawString(f.left, y, line)
-            y -= 14
-        y -= 8
+            y -= 13.5
+        y -= 5
     y -= 4
     for head, body in [
         ("「近い言い方」の札について",
@@ -1015,7 +1156,11 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     c.drawString(f.left, y, f"発行　{spec.publisher}")
     y -= 15
     year = spec.edition_date[:4] if spec.edition_date[:4].isdigit() else ""
-    c.drawString(f.left, y, " ".join(t for t in ("Copyright", year, spec.publisher) if t))
+    # © は Noto Sans JP に無いので、欧文の書体で描く
+    c.setFont("LAT", 9)
+    c.drawString(f.left, y, "©")
+    c.setFont(FONT_REGULAR, 9)
+    c.drawString(f.left + c.stringWidth("© ", "LAT", 9), y, " ".join(t for t in (year, spec.publisher) if t))
     y -= 20
     c.setFont(FONT_REGULAR, 7.5)
     for line in FONT_CREDIT + ([ART_CREDIT] if has_art() else []):
@@ -1055,17 +1200,20 @@ def build_cover(spec: SekaiSpec, output_path: str, *, paper: str = "white") -> t
     # 紺の上半分（背から表まで）
     cover_art = art_path("cover") is not None
     art_r = 0.95 * inch if cover_art else 0.62 * inch
-    band = top - (3.0 if cover_art else 2.6) * inch
+    band = top - (3.2 if cover_art else 2.8) * inch
     c.setFillColorCMYK(*NAVY)
     c.rect(0, band, W, H - band, stroke=0, fill=1)
     c.rect(spine_x0, 0, sp, H, stroke=0, fill=1)
-    # 表表紙
+    # 表表紙（小さなサムネイルでも読めるよう、題名を大きく）
     c.setFillColorCMYK(*GOLD)
-    c.setFont(FONT_BOLD, 11)
-    c.drawCentredString(cx, top - 0.62 * inch, "英語・フランス語・中国語・韓国語で読む")
-    outlined_text(c, "日本のことわざ、", cx, top - 1.12 * inch, font=FONT_ROUNDED, size=26,
+    c.setFont(FONT_BOLD, 12.5)
+    c.drawCentredString(cx, top - 0.6 * inch, "英語・フランス語・中国語・韓国語で読む")
+    outlined_text(c, "日本のことわざ、", cx, top - 1.2 * inch, font=FONT_ROUNDED, size=31,
                   fill=CMYKColor(*WHITE), outline=CMYKColor(*NAVY), outline_width=1)
-    outlined_text(c, "世界ではこう言う", cx, top - 1.78 * inch, font=FONT_ROUNDED, size=35,
+    t2 = 42
+    while c.stringWidth("世界ではこう言う", FONT_ROUNDED, t2) > tw - 2 * safe - 10:
+        t2 -= 1
+    outlined_text(c, "世界ではこう言う", cx, top - 1.98 * inch, font=FONT_ROUNDED, size=t2,
                   fill=CMYKColor(*GOLD), outline=CMYKColor(*NAVY), outline_width=1)
     # 猿の絵（紺と生成りの境目）
     c.setFillColorCMYK(*GOLD)
@@ -1075,28 +1223,41 @@ def build_cover(spec: SekaiSpec, output_path: str, *, paper: str = "white") -> t
     if not draw_art(c, "cover", cx, band, art_r):
         draw_icon(c, "1f412", cx - 0.45 * inch, band - 0.45 * inch, 0.9 * inch)
     c.setFillColorCMYK(*COLORS["green"][0])
-    c.setFont(FONT_ROUNDED, 18)
-    c.drawCentredString(cx, band - art_r - 0.36 * inch, sample["jp"])
-    y = band - art_r - 0.56 * inch
+    c.setFont(FONT_ROUNDED, 20)
+    c.drawCentredString(cx, band - art_r - 0.38 * inch, sample["jp"])
+    # 英語とフランス語では、どう言う？（直訳を大きく、原文を小さく）
+    y = band - art_r - 0.6 * inch
     card_w = tw - 2 * safe - 16
-    for k, _ in LANGS:
+    for k in ("en", "fr", "ko"):
+        ch_h = 0.6 * inch
+        c.setFillColorCMYK(*LANG_COLOR[k])
+        c.roundRect(cx - card_w / 2, y - ch_h, card_w, ch_h, 9, stroke=0, fill=1)
         c.setFillColorCMYK(*WHITE)
-        c.roundRect(cx - card_w / 2, y - 29, card_w, 29, 8, stroke=0, fill=1)
-        lang_badge(c, k, cx - card_w / 2 + 3, y - 26, 64, 23)
-        c.setFillColorCMYK(*INK)
-        bf = FONT[k][0]
-        fs = 11.5
-        while c.stringWidth(sample[k]["text"], bf, fs) > card_w - 82:
+        c.roundRect(cx - card_w / 2 + 6, y - ch_h, card_w - 6, ch_h, 9, stroke=0, fill=1)
+        c.rect(cx - card_w / 2 + 6, y - ch_h, 10, ch_h, stroke=0, fill=1)
+        lx = cx - card_w / 2 + 18
+        c.setFillColorCMYK(*LANG_COLOR[k])
+        c.setFont(FONT_BOLD, 10)
+        c.drawString(lx, y - 15, f"{dict(LANGS)[k]}では")
+        lit = "「" + re.sub(r"^直訳「(.*)」$", lambda m: m.group(1), sample[k]["lit"]) + "」"
+        fs = 17
+        while c.stringWidth(lit, FONT_BOLD, fs) > card_w - 34:
             fs -= 0.5
-        c.setFont(bf, fs)
-        c.drawString(cx - card_w / 2 + 76, y - 18.5, sample[k]["text"])
-        y -= 34
-    seals = [((0.0, 0.80, 0.70, 0.05), ["50の", "ことわざ"]), (COLORS["green"][0], ["4つの", "ことば"]),
-             (COLORS["blue"][0], ["出典を", "確かめた"]), (COLORS["pink"][0], ["オール", "カラー"])]
-    r = 0.36 * inch
-    gap = (tw - 2 * safe - 2 * r * len(seals)) / (len(seals) + 1)
-    for k, (col, lines) in enumerate(seals):
-        _seal(c, fx + safe + gap * (k + 1) + r * (2 * k + 1), b + safe + 0.62 * inch, r, col, lines)
+        c.setFillColorCMYK(*INK)
+        c.setFont(FONT_BOLD, fs)
+        c.drawString(lx - 4, y - 34, lit)
+        c.setFillColorCMYK(*SUB)
+        c.setFont(FONT[k][1], 8.5)
+        c.drawRightString(cx + card_w / 2 - 10, y - 15, sample[k]["text"])
+        y -= ch_h + 8
+    # 下の帯（ひとことで何の本か）
+    c.setFillColorCMYK(*NAVY)
+    bb = b + safe + 0.32 * inch
+    c.roundRect(cx - card_w / 2, bb, card_w, 0.46 * inch, 0.23 * inch, stroke=0, fill=1)
+    c.setFillColorCMYK(*WHITE)
+    c.setFont(FONT_ROUNDED, 15)
+    c.drawCentredString(cx, bb + 0.16 * inch, "4つのことばで見くらべる、50のことわざ")
+    assert y > bb + 0.46 * inch + 6, (y, bb)
     c.setFillColorCMYK(*NAVY)
     c.setFont(FONT_BOLD, 11)
     c.drawCentredString(cx, b + safe + 4, spec.publisher)
@@ -1108,32 +1269,63 @@ def build_cover(spec: SekaiSpec, output_path: str, *, paper: str = "white") -> t
     c.setFillColorCMYK(*GOLD)
     c.setFont(FONT_BOLD, 9)
     c.drawString(bx0, top - safe - 44, spec.subtitle)
+    yy = top - safe - 74
+    for jp, lang, said in [("猫に小判", "英語", "豚に真珠"), ("犬猿の仲", "フランス語", "犬と猫"),
+                           ("泣きっ面に蜂", "韓国語", "雪の上に霜")]:
+        c.setFillColorCMYK(*WHITE)
+        c.setFont(FONT_BOLD, 11)
+        c.drawString(bx0, yy, f"「{jp}」")
+        w1 = c.stringWidth(f"「{jp}」", FONT_BOLD, 11)
+        c.setFont(FONT_REGULAR, 9.5)
+        c.drawString(bx0 + w1 + 4, yy, f"は、{lang}では")
+        w2 = c.stringWidth(f"は、{lang}では", FONT_REGULAR, 9.5)
+        c.setFillColorCMYK(*GOLD)
+        c.setFont(FONT_BOLD, 11)
+        c.drawString(bx0 + w1 + w2 + 8, yy, f"「{said}」")
+        yy -= 19
     c.setFillColorCMYK(*WHITE)
     c.setFont(FONT_REGULAR, 9.5)
-    yy = top - safe - 70
-    for line in ["「猫に小判」は、英語では「豚に真珠」。",
-                 "「犬猿の仲」は、フランス語では「犬と猫」。",
-                 "同じ気持ちを、国ごとにちがうものにたとえる。",
-                 "そのちがいを見くらべる、50のことわざの本です。"]:
+    yy -= 4
+    for line in ["同じ気持ちを、国ごとにちがうものにたとえる。", "そのちがいを見くらべる、50のことわざの本です。"]:
         c.drawString(bx0, yy, line)
         yy -= 15
+    assert yy > band + 4, yy - band
     bw, bh = (v * inch for v in kdp_spec.BARCODE_BOX_IN)
     sf = frame(spec, 1)
     ratio = (sf.y1 - sf.y0) / (sf.x1 - sf.x0)
-    # 見本は紺の帯とバーコード欄の間に収まる大きさまで
-    mini_w = min(tw * 0.41, (band - 0.12 * inch - (b + safe + bh + 31)) / ratio)
+    # 見本ページ（右）。紺の帯とバーコード欄の間に収める
+    mini_w = min(tw * 0.38, (band - 0.16 * inch - (b + safe + bh + 14)) / ratio)
     img, _, sf = _item_image(spec, items[30], 31, mini_w)
     mini_h = mini_w * ratio
-    mx = b + (tw - mini_w) / 2
-    my = band - 0.12 * inch - mini_h
+    mx = spine_x0 - safe - 8 - mini_w
+    my = band - 0.16 * inch - mini_h
+    assert my >= b + safe + bh + 12, my
     c.setFillColorCMYK(0.0, 0.10, 0.25, 0.15)
     c.rect(mx + 4, my - 4, mini_w, mini_h, stroke=0, fill=1)
     c.drawImage(img, mx, my, mini_w, mini_h)
-    c.setFillColorCMYK(*INK)
-    c.setFont(FONT_REGULAR, 8.5)
-    note = "外国語の言い方は、どれも2つ以上の辞書や資料で確かめました。"
-    c.drawString(bx0, my - 20, note)
-    assert my - 24 >= b + safe + bh + 6, my
+    # 左の段: こんな人に・この本の中身
+    colw = mx - 18 - bx0
+    ly = band - 0.3 * inch
+    for head, rows in [("こんな人に", ["英語・フランス語・中国語・韓国語を学んでいる人", "ことわざや、ことばの雑学が好きな人",
+                                      "国ごとのものの見方のちがいを楽しみたい人"]),
+                       ("この本の中身", ["1ページに1つ、オールカラーの挿絵つき", "4つのことばの原文・読み方・直訳",
+                                         "外国語の言い方は、すべて出典を確かめています"])]:
+        c.setFillColorCMYK(*NAVY)
+        c.setFont(FONT_ROUNDED, 12)
+        c.drawString(bx0, ly, head)
+        ly -= 17
+        for row in rows:
+            parts = wrap_even(c, row, FONT_REGULAR, 9, colw - 12, False)
+            c.setFillColorCMYK(*GOLD)
+            c.circle(bx0 + 3, ly + 3, 2.6, stroke=0, fill=1)
+            c.setFillColorCMYK(*INK)
+            c.setFont(FONT_REGULAR, 9)
+            for part in parts:
+                c.drawString(bx0 + 11, ly, part)
+                ly -= 13
+            ly -= 4
+        ly -= 10
+    assert ly > b + safe, ly
     c.setFillColorCMYK(*WHITE)
     c.rect(spine_x0 - safe - bw, b + safe, bw, bh, stroke=0, fill=1)
     c.save()
