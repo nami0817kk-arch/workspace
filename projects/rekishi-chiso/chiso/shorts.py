@@ -13,7 +13,7 @@ from .render import DIM, GOLD, INK, LISTENER_DIM, Painter, State
 from .voice import display_text
 
 
-NO_HEAD = "、。，．・！？!?」』）)ーっゃゅょッャュョ"   # 行の頭に来てはいけない文字
+NO_HEAD = "、。，．・！？!?」』）)ーっゃゅょッャュョ…"   # 行の頭に来てはいけない文字
 
 
 def _wrap(text: str, font, width: int) -> list[str]:

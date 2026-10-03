@@ -121,7 +121,12 @@ class Painter:
         dr = ImageDraw.Draw(img, "RGBA")
         title = self.script.sections[state.section].title
         dr.text((120, 120), f"第{state.section + 1}節", font=self.font("gothic", 30), fill=GOLD)
-        dr.text((120, 165), title, font=self.font("serif", 64, bold=True), fill=INK)
+        # 題名が長いと右の肖像画に重なるので、収まるまで字を小さくする
+        limit = (W - 330 - 400 - 40 - 120) if state.portrait is not None else (W - 240)
+        size = 64
+        while size > 36 and self.font("serif", size, bold=True).getlength(title) > limit:
+            size -= 2
+        dr.text((120, 165 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK)
         if state.card is not None:
             body_w = self.font("serif", 40).getlength(state.card.body or "")
             w = max(520, int(body_w) + 70)
