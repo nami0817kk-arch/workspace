@@ -11,6 +11,7 @@ import '../models/match_result.dart';
 import '../models/player.dart';
 import '../models/team.dart';
 import '../monetization/monetization_controller.dart';
+import '../services/review_prompt.dart';
 import '../state/game_state.dart';
 import '../services/feedback_service.dart';
 import '../theme/semantic_colors.dart';
@@ -1432,6 +1433,16 @@ class HomeScreen extends StatelessWidget {
     }
     if (context.mounted) {
       await _showSeasonStartReport(context, gameState);
+    }
+    // ストアの評価を頼むのはここだけ。シーズンを終えて、理事会の目標を
+    // 達成した直後。区切りがついていて、かつ結果が良かった瞬間に限る。
+    // 遊んでいる最中に割り込むと、むしろ悪い評価を呼ぶ。
+    final save = gameState.save;
+    if (save != null) {
+      await ReviewPrompt().maybeAsk(
+        season: save.league.season,
+        metBoardTarget: (save.lastSeasonRank ?? 99) <= save.boardTargetRank,
+      );
     }
     if (context.mounted &&
         gameState.userInvolvedInLastPromotionPlayoff &&
