@@ -30,6 +30,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
+@media (min-width:560px){ body{background:repeating-linear-gradient(135deg,rgba(0,0,0,.035) 0 12px,transparent 12px 24px),var(--bg)} .app{box-shadow:0 0 40px rgba(0,0,0,.18)} }
 body{background:var(--bg);color:var(--ink);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic UI",system-ui,sans-serif;
   -webkit-tap-highlight-color:transparent;overflow:hidden;line-height:1.5;font-size:14px;-webkit-user-select:none;user-select:none}
 button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
@@ -77,6 +78,13 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .toast .t2{font-size:14px;font-weight:800;line-height:1.3}
 .toast .t3{font-size:12px;color:#6f604f;line-height:1.3}
 .toast.out{animation:tout .4s ease-in both}
+.toast.k-book{border-color:#e3b23c;background:linear-gradient(180deg,#fffaf1,#fff1cf)}
+.toast.k-ach{border-color:#2a7d4f}
+.toast.k-ach .t1{color:#1f6a40}
+.toast.k-set{border-color:#a77bff}
+.toast.k-set .t1{color:#6a45c8}
+.toast.k-ad{border-color:#5646c2}
+.toast.k-ad .t1{color:#4a3cb0}
 @keyframes tin{from{transform:translateY(-14px) scale(.96);opacity:0}}
 @keyframes tout{to{transform:translateY(-10px);opacity:0}}
 
@@ -114,6 +122,8 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .buy:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(120,60,0,.35)}
 .buy:disabled{background:var(--panel2);color:var(--muted);box-shadow:none;cursor:default;transform:none}
 .buy.flash{animation:flash .25s}
+.buy{position:relative}
+.buy.rec::before{content:"おすすめ";position:absolute;top:-9px;right:-4px;background:#2a7d4f;color:#fff;font-size:12px;font-weight:800;line-height:1;padding:3px 6px;border-radius:999px;box-shadow:0 1px 0 rgba(0,0,0,.25)}
 @keyframes flash{50%{transform:scale(1.07)}}
 .mile{height:5px;background:var(--panel2);border-radius:3px;margin-top:5px;overflow:hidden}
 .mile i{display:block;height:100%;background:var(--accent2)}
@@ -126,6 +136,8 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .cell.unk .nm{color:var(--muted);font-weight:500}
 .cell .rar{position:absolute;top:2px;right:4px;font-size:12px;color:var(--accent);font-weight:800}
 .cell.new{box-shadow:0 0 0 2px var(--accent2)}
+.cell.r-r:not(.unk){border-color:#e3b23c;background:linear-gradient(180deg,var(--panel),rgba(242,196,61,.12))}
+.cell.r-l:not(.unk){border-color:#a77bff;background:linear-gradient(180deg,var(--panel),rgba(167,123,255,.14))}
 .cell.btn{cursor:pointer}
 .lsec{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px;box-shadow:var(--shadow)}
 .lsec.locked{opacity:.75}
@@ -224,7 +236,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
     <div class="who"><span class="brand">つるはし社</span><span class="gen" id="genBadge">初代</span></div>
     <div class="ore" aria-label="鉱石">
       <svg width="22" height="22" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 24 Q10 12 20 12 Q32 10 32 22 Q30 32 18 30 Q8 32 8 24Z" fill="#ffd166" stroke="#7a4d10" stroke-width="2"/><path d="M14 18 l4 -3 l3 3" stroke="#fff6c4" stroke-width="2" fill="none"/></svg>
-      <b id="sOre">0</b><small>鉱石</small>
+      <span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.05"><b id="sOre">0</b><small id="sRate">+0／秒</small></span>
     </div>
     <button class="iconbtn" id="setBtn" type="button" aria-label="設定">
       <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.4 7.4 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7.4 7.4 0 0 0 1.7-1l2.4 1 2-3.4zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
@@ -497,8 +509,8 @@ const fresh = () => ({
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
   boostUntil:0, boostLv:0, boostAt:0, last:NOW(),
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
-  ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0 },
-  sound:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0,
+  ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0, play:0, best1:0 },
+  sound:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false,
 });
 function normalize(o){
   const S = Object.assign(fresh(), o || {});
@@ -764,10 +776,10 @@ function rebirth(st, creed){
 
 // ================= 実績（30） =================
 const ACH = [
-  ...[40, 80, 120, 160, 200, 240, 280, 320, 360, 400].map((d, i) => ({ id:'d' + d, n:`${d}m に到達`, t:st => st.best >= d, g:i })),
-  ...[10, 20, 30, 40, 50].map(n => ({ id:'z' + n, n:`図鑑 ${n}種`, t:st => speciesCountOf(st) >= n })),
-  ...[2, 3, 5, 10].map(n => ({ id:'g' + n, n:`${n}代目の社長`, t:st => st.gen >= n })),
-  ...[20, 50, 100].map(n => ({ id:'p' + n, n:`つるはし Lv${n}`, t:st => st.pick >= n })),
+  ...[40, 80, 120, 160, 200, 240, 280, 320, 360, 400].map((d, i) => ({ id:'d' + d, n:`${d}m に到達`, t:st => st.best >= d, g:i, p:st => [st.best, d] })),
+  ...[10, 20, 30, 40, 50].map(n => ({ id:'z' + n, n:`図鑑 ${n}種`, t:st => speciesCountOf(st) >= n, p:st => [speciesCountOf(st), n] })),
+  ...[2, 3, 5, 10].map(n => ({ id:'g' + n, n:`${n}代目の社長`, t:st => st.gen >= n, p:st => [st.gen, n] })),
+  ...[20, 50, 100].map(n => ({ id:'p' + n, n:`つるはし Lv${n}`, t:st => st.pick >= n, p:st => [st.pick, n] })),
   { id:'w100', n:'仲間が100人', t:st => st.w.reduce((a, b) => a + b, 0) >= 100 },
   { id:'c100', n:'大当たりを100回', t:st => st.st.crits >= 100 },
   { id:'v10',  n:'鉱脈を10回', t:st => st.st.veins >= 10 },
@@ -984,6 +996,7 @@ function buyLabel(word, b){
 function buildBook(){
   const M = mods(S);
   let h = `<div class="phead"><h2>図鑑 ${speciesCountOf(S)}/${ITEMS.length}</h2><span class="note" style="margin:0">鉱石 +${Math.round(speciesCountOf(S) * M.book * 100)}%</span></div>
+    <div class="prog" style="margin:0 2px 8px"><i style="width:${(speciesCountOf(S) / ITEMS.length * 100).toFixed(1)}%"></i></div>
     <div class="note">1種ごとに鉱石が${Math.round(M.book * 100)}%増えます。同じ物はその層の「かけら」になり、売るか、鑑定でまだ見ていない物と換えられます。図鑑は代替わりしても残ります。</div>`;
   const done = setsDone(S);
   for (let L = 0; L < NLAYER; L++) {
@@ -995,7 +1008,7 @@ function buildBook(){
       const n = S.found[it.id] || 0;
       const isNew = n && !S.seen[it.id];
       h += n
-        ? `<button type="button" class="cell btn${isNew ? ' new' : ''}" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 32)}<div class="nm">${it.name}</div><div class="cnt">${n}個</div></button>`
+        ? `<button type="button" class="cell btn r-${it.r}${isNew ? ' new' : ''}" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 32)}<div class="nm">${it.name}</div><div class="cnt">${n}個</div></button>`
         : `<button type="button" class="cell unk btn" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 32, true)}<div class="nm">？？？</div><div class="cnt">&nbsp;</div></button>`;
     }
     h += `</div>`;
@@ -1061,10 +1074,15 @@ function buildCo(){
   if (!S.history.length) h += `<div class="note">代替わりすると、その代の記録がここに残ります。</div>`;
   else h += `<table class="hist"><tr><th>代</th><th>最深</th><th>図鑑</th><th>名声</th><th>期間</th></tr>` +
     S.history.map(r => `<tr><td>${genName(r.gen)}</td><td>${r.depth}m</td><td>${r.species}</td><td>+${fmt(r.fame)}</td><td>${fmtDur((r.end - r.start) / 1000)}</td></tr>`).join('') + `</table>`;
+  // 通算の記録
+  const play = S.st.play || 0;
+  h += `<div class="sec">通算の記録</div><div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px">
+    ${[['掘った鉱石', fmt(S.total)], ['割ったブロック', fmt(S.st.blocks) + '個'], ['割った岩盤', fmt(S.st.beds) + '枚'], ['大当たり', fmt(S.st.crits) + '回'], ['たたいた鉱脈', fmt(S.st.veins) + '回'], ['鑑定', fmt(S.st.appraise) + '回'], ['遊んだ時間', fmtDur(play)], ['社長の代', genName(S.gen)]]
+      .map(([k, v]) => `<div><div class="cardnote" style="margin:0">${k}</div><b>${v}</b></div>`).join('')}</div>`;
   // 実績
   const na = Object.keys(S.ach).length;
   h += `<div class="sec">実績 ${na}/${ACH.length}</div><div class="achs">` +
-    ACH.map(a => `<div class="ach ${S.ach[a.id] ? 'done' : 'no'}">${S.ach[a.id] ? '✓ ' : ''}${a.n}</div>`).join('') + `</div>`;
+    ACH.map(a => { const pr = !S.ach[a.id] && a.p ? a.p(S) : null; return `<div class="ach ${S.ach[a.id] ? 'done' : 'no'}">${S.ach[a.id] ? '✓ ' : ''}${a.n}${pr ? `<div class="prog" style="height:4px;margin-top:4px"><i style="width:${Math.min(100, pr[0] / pr[1] * 100).toFixed(0)}%"></i></div>` : ''}</div>`; }).join('') + `</div>`;
   $('pCo').innerHTML = h;
   if ($('rbOpen')) $('rbOpen').addEventListener('click', openRebirth);
 }
@@ -1074,6 +1092,7 @@ function buildSettings(){
   const onoff = v => v ? 'あり' : 'なし';
   let h = `<div class="srow"><span>効果音</span><button class="mini" type="button" id="soundBtn">${onoff(S.sound)}</button></div>
     <div class="srow"><span>振動</span><button class="mini" type="button" id="hapBtn">${onoff(S.haptic)}</button></div>
+    <div class="srow"><span>動きを減らす</span><button class="mini" type="button" id="redBtn">${reducedOS ? '端末で設定ずみ' : onoff(!!S.reduce)}</button></div>
     <div class="srow"><span>表示</span><button class="mini" type="button" id="themeBtn">${({ auto:'端末に合わせる', light:'明るい', dark:'暗い' })[S.theme]}</button></div>`;
   if (APP) h += `<div class="srow"><span>広告</span>${APP.adFree ? '<span class="note" style="margin:0">消しています</span>' : `<button class="mini acc" type="button" id="buyBtn">広告を消す${APP.price ? '（' + esc(APP.price) + '）' : ''}</button>`}</div>
     <div class="srow"><span>購入</span><button class="mini" type="button" id="restoreBtn">購入を復元</button></div>`;
@@ -1084,6 +1103,7 @@ function buildSettings(){
   $('soundBtn').addEventListener('click', () => { S.sound = !S.sound; save(); sfx('ui'); buildSettings(); });
   $('hapBtn').addEventListener('click', () => { S.haptic = !S.haptic; save(); haptic('light'); buildSettings(); });
   $('themeBtn').addEventListener('click', () => { S.theme = ({ auto:'light', light:'dark', dark:'auto' })[S.theme]; applyTheme(); save(); buildSettings(); });
+  $('redBtn').addEventListener('click', () => { if (reducedOS) return; S.reduce = !S.reduce; reduced = !!S.reduce; save(); buildSettings(); });
   if ($('buyBtn')) $('buyBtn').addEventListener('click', () => appPost({ type:'buy' }));
   if ($('restoreBtn')) $('restoreBtn').addEventListener('click', () => appPost({ type:'restore' }));
   if ($('devSkip')) $('devSkip').addEventListener('click', () => { if (pendingAway) return; $('setModal').classList.remove('on'); S.last = NOW() - 3600e3; showAway(3600, false, true); });
@@ -1124,6 +1144,7 @@ function nextReq(){
 let lastBook = -1, coSeen = 0, lastFrag = '';
 function updateUI(force){
   const M = mods(S);
+  $('sRate').textContent = '+' + fmt(oreRate(S)) + '／秒';
   $('sDepth').textContent = S.depth + 'm';
   $('sBest').textContent = S.best + 'm';
   $('sDps').textContent = fmt(crewDps(S, true, M) * boostMul(S));
@@ -1138,12 +1159,20 @@ function updateUI(force){
   $('pickIc').innerHTML = pickIcon(l, 46);
   $('pickNm').innerHTML = `${tier[0]}<span>Lv${l}</span>`;
   const nextMile = (Math.floor(l / 10) + 1) * 10;
+  const nt = tierOf(nextMile), showNext = nt !== tierOf(l);
   $('pickDs').innerHTML = `仲間の力 <b>×${pickBoost(S, M).toFixed(2)}</b>　Lv${nextMile}で さらに×${PK_B}`;
   $('pickMile').style.width = (l % 10 * 10) + '%';
   $('pickBuy').innerHTML = buyLabel('強くする', pb);
   $('pickBuy').disabled = S.ore < pb.cost;
-  $('pickNote').innerHTML = nextMile / 10 < PICK_TIER.length && tierOf(nextMile) !== tierOf(l) ? `Lv${nextMile}で「${PICK_TIER[tierOf(nextMile)][0]}」に進化して、頭の色が変わります。` : `Lv${nextMile}で力がさらに×${PK_B}。`;
+  $('pickNote').innerHTML = showNext ? `<span style="display:inline-flex;align-items:center;gap:6px">次の進化 ${pickIcon(nextMile, 26)} <b>${PICK_TIER[nt][0]}</b>（Lv${nextMile}）</span>` : `Lv${nextMile}で力がさらに×${PK_B}。`;
   $('dotTool').style.display = S.ore >= pickCost(S, l) ? 'block' : 'none';
+  // おすすめ：同じ鉱石で仲間の力がいちばん上がるもの（つるはしは岩盤の Lv が足りないときは最優先）
+  let bestK = 'pick', bestV = -1;
+  { const base = crewBase(S, M), pbv = pickBoost(S, M);
+    bestV = base * pbv * (pickMul(S.pick + 1) / pickMul(S.pick) - 1) / pickCost(S, S.pick);
+    if (locked(S)) bestV = Infinity;
+    WK.forEach((w, i) => { if (i && !S.w[i] && !S.w[i - 1]) return; const v = w.dps * (i < HUMAN ? M.human : M.machine) * CREW_K * pbv / wkCost(S, i, S.w[i], M); if (v > bestV) { bestV = v; bestK = 'w' + i; } }); }
+  $('pickBuy').classList.toggle('rec', bestK === 'pick');
   let anyCrew = false;
   const pbM = pickBoost(S, M) * M.crew * M.crewOn * CREW_K, all = crewDps(S, true, M) || 1;
   WK.forEach((w, i) => {
@@ -1153,7 +1182,7 @@ function updateUI(force){
     $('wN' + i).textContent = S.w[i] ? `${S.w[i]}人` : '';
     const per = w.dps * (i < HUMAN ? M.human : M.machine) * pbM;
     $('wD' + i).innerHTML = `${w.desc}<br>1人 毎秒 <b>${fmt(per)}</b>${S.w[i] ? `　全体の${Math.round(per * S.w[i] / all * 100)}%` : ''}`;
-    const bt = $('wB' + i); bt.innerHTML = buyLabel('雇う', b); bt.disabled = S.ore < b.cost;
+    const bt = $('wB' + i); bt.innerHTML = buyLabel('雇う', b); bt.disabled = S.ore < b.cost; bt.classList.toggle('rec', bestK === 'w' + i);
     if (S.ore >= wkCost(S, i, S.w[i], M) && $('wC' + i).style.display !== 'none') anyCrew = true;
   });
   $('crewNote').textContent = `仲間は画面を閉じている間も掘り続けます（最大${M.off}時間）。`;
@@ -1242,7 +1271,7 @@ function nextToast(){
   if (!q) { toastBusy = false; return; }
   toastBusy = true;
   const el = document.createElement('div');
-  el.className = 'toast';
+  el.className = 'toast' + (/図鑑|発見|鑑定|宝の部屋/.test(q.t1) ? ' k-book' : /実績/.test(q.t1) ? ' k-ach' : /層の組|手がかり/.test(q.t1) ? ' k-set' : /採掘×/.test(q.t1) ? ' k-ad' : '');
   el.innerHTML = `${q.icon || ''}<div><div class="t1">${q.t1}</div><div class="t2">${q.t2}</div><div class="t3">${q.t3 || ''}</div></div>`;
   $('toasts').appendChild(el);
   const stay = toastQ.length ? 1300 : 2300;
@@ -1278,8 +1307,11 @@ function showAway(sec, capped, isDev){
     extra.innerHTML = '<p class="sub">「仲間」で見習い坑夫を雇うと、閉じている間も掘り進めます。</p>';
     $('offX2').style.display = 'none';
   } else {
-    $('offText').innerHTML = r.meters > 0 ? `仲間が <b>${r.meters}m</b> 掘り進んで、鉱石を掘りました` : `仲間は岩盤の前で横掘りを続けて、鉱石を集めました`;
-    $('offOre').textContent = `${fmt(r.ore)} 個`;
+    $('offText').innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:8px 0 2px;text-align:center">
+      <div class="card" style="display:block;margin:0;padding:8px 4px"><div class="cardnote" style="margin:0">掘り進んだ</div><b style="font-size:18px">${r.meters}m</b></div>
+      <div class="card" style="display:block;margin:0;padding:8px 4px"><div class="cardnote" style="margin:0">見つけた物</div><b style="font-size:18px">${r.finds.length}個</b></div>
+      <div class="card" style="display:block;margin:0;padding:8px 4px"><div class="cardnote" style="margin:0">いまの深さ</div><b style="font-size:18px">${r.state.depth}m</b></div></div>`;
+    countUp($('offOre'), r.ore, ' 個');
     const uniq = [...new Set(r.finds)];
     let h = '';
     if (r.stuck) h += `<p class="sub">岩盤で止まり、途中から横掘りしていました（つるはし Lv${reqAt(r.state.depth, r.state)} が必要）</p>`;
@@ -1293,6 +1325,13 @@ function showAway(sec, capped, isDev){
     $('offX2').innerHTML = adFree() ? '2倍で受け取る<small>広告なしで受け取れます</small>' : APP ? '2倍で受け取る<small>動画広告を見る</small>' : '2倍で受け取る<small>本番は動画広告（試作は即効果）</small>';
   }
   $('offModal').classList.add('on');
+}
+// 数字を数え上げて見せる（動きを減らす設定ではすぐ出す）
+function countUp(el, to, suffix){
+  if (reduced) { el.textContent = fmt(to) + suffix; return; }
+  const t0 = performance.now(), dur = 700;
+  const stepF = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = fmt(to * e) + suffix; if (k < 1) requestAnimationFrame(stepF); };
+  requestAnimationFrame(stepF);
 }
 function claimAway(mult){
   const r = pendingAway; pendingAway = null;
@@ -1339,10 +1378,15 @@ function renderRebirth(){
   const g = fameGain(S);
   let h = `<p>${genName(S.gen)}は ${S.genDepth}m まで掘りました。${genName(S.gen + 1)}に会社を譲ると、</p>
     <div class="big">名声 +${fmt(g)}</div>
-    <p class="sub">仲間の力が ×${fameMul(S.fame).toFixed(1)} → ×${fameMul(S.fame + g).toFixed(1)} になります。深さ・つるはし・仲間・鉱石は最初に戻ります。図鑑・かけら・社史・実績は残ります。</p>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;margin:6px 0;text-align:center">
+      <div class="card" style="display:block;margin:0"><div class="cardnote" style="margin:0">いまの仲間の力</div><b style="font-size:20px">×${fameMul(S.fame).toFixed(1)}</b></div>
+      <b style="font-size:20px;color:var(--accent)">→</b>
+      <div class="card pick" style="display:block;margin:0"><div class="cardnote" style="margin:0">${genName(S.gen + 1)}</div><b style="font-size:20px;color:var(--good)">×${fameMul(S.fame + g).toFixed(1)}</b></div></div>
+    <p class="sub">戻るもの：深さ・つるはし・仲間・鉱石　／　残るもの：図鑑・かけら・名声・社史・実績</p>
     <div class="sec">${genName(S.gen + 1)}の社訓（組ごとにどちらか1つ）</div>`;
   rbChoice.forEach((c, i) => {
     const P = CREEDS[i];
+    if (!S.creed[i]) h += `<div class="cardnote" style="margin:4px 2px;color:var(--accent);font-weight:800">新しい社訓の組</div>`;
     h += `<div class="creed">` + ['a', 'b'].map(k => `<button class="copt" type="button" data-ci="${i}" data-ck="${k}" aria-pressed="${c === k}"><b>${P[k].n}</b><span class="g">＋${P[k].g}</span><br><span class="x">－${P[k].b}</span></button>`).join('') + `</div>`;
   });
   if (rbChoice.length < CREEDS.length) h += `<p class="sub">代替わりするたびに、社訓の組が1つずつ増えます（全${CREEDS.length}組）。</p>`;
@@ -1441,7 +1485,8 @@ function sfx(kind){
 }
 
 // ================= 描画 =================
-const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reducedOS = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+let reduced = reducedOS;
 const cv = $('cv'), ctx = cv.getContext('2d'), stage = $('stage');
 let W = 340, H = 340, VW = 340, VH = 340, Z = 1, DPR = 1, R = 34, camY = -4, sky1 = '#8fd0f5', sky2 = '#e3f4ff', grass = '#5fae4a', dark = false;
 function readSky(){
@@ -2258,6 +2303,7 @@ function frame0(now){
     else if ((veinNext -= dt) <= 0) { veinNext = 90 + Math.random() * 60; if (S.depth > 0) showVein(); }
   }
   draw(dt);
+  if (!titleOpen) S.st.play = (S.st.play || 0) + dt;
   // 鉱石の数字は数え上がる（使ったときはすぐ下げる）。大きく増えたら跳ねる
   if (S.ore < dispOre || reduced) dispOre = S.ore; else dispOre += (S.ore - dispOre) * Math.min(1, dt * 6);
   const os = fmt(dispOre); if (os !== lastOreTxt) { const el = $('sOre'); el.textContent = os; lastOreTxt = os; }
@@ -2286,6 +2332,7 @@ if (window.matchMedia) { try { window.matchMedia('(prefers-color-scheme: dark)')
 
 // 起動
 const had = load();
+reduced = reducedOS || !!S.reduce;
 applyTheme();
 camY = S.depth > 0 ? S.depth : -4;
 if (S.depth > 0) $('hint').style.opacity = '0'; else setTimeout(() => { $('hint').style.opacity = '0'; }, 5000);
