@@ -852,6 +852,30 @@ body.reduce .pd,body.reduce .hudc{animation:none}@media (prefers-reduced-motion:
   background:linear-gradient(180deg,rgba(10,6,22,.05),rgba(10,6,22,.78)),var(--ob);background-size:cover;background-position:center 40%;box-shadow:0 6px 16px rgba(0,0,0,.3)}
 .otile b{font-size:16px;text-shadow:0 1px 6px rgba(0,0,0,.7)}.otile span{font-size:12px;font-weight:700;color:#f6e7c1}
 .otile:disabled{opacity:.45}
+
+/* ===== 30回ループ 16〜20 ===== */
+/* 16. 書類審査：選んだ子に金の縁と札 */
+.cand{transition:border-color .2s,box-shadow .2s}
+.cand.on{border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,186,75,.25),0 8px 20px rgba(0,0,0,.2)}
+.cand.on .chk{background:var(--gold);border-color:var(--gold);color:#2a1a00;animation:bpop .35s cubic-bezier(.2,1.5,.4,1) both}
+/* 17. レッスンの色 */
+.lrow{border-left:3px solid transparent;padding-left:8px;margin-left:-8px;transition:border-color .2s}
+.lrow.lk-v{border-left-color:var(--c-v)}.lrow.lk-d{border-left-color:var(--c-d)}.lrow.lk-r{border-left-color:var(--c-r)}.lrow.lk-e{border-left-color:var(--c-t)}.lrow.lk-rest{border-left-color:#4cb38a}
+/* 18. 出演者の顔が流れる */
+.castrow{overflow:hidden;margin:10px -16px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.castin{display:flex;gap:6px;width:max-content;animation:castScroll 40s linear infinite}
+.castin .face{width:40px;height:40px;border-radius:10px;border:2px solid rgba(255,255,255,.6);flex:none}
+@keyframes castScroll{to{transform:translateX(-50%)}}
+/* 19. 設定の区切り */
+.setsheet h3{display:flex;align-items:center;gap:8px;margin:18px 0 8px;padding-top:14px;border-top:1px solid var(--line);font-size:15px}
+.setsheet h3::before{content:'';width:4px;height:16px;border-radius:2px;background:var(--accent)}
+.setsheet h2+h3{border-top:none;padding-top:0}
+/* 20. 新しく得たもの：トロフィーの丸 */
+.newu{padding:6px 0 6px 32px!important;animation:fadeup .45s ease-out both}
+.newu::before{content:'★'!important;left:0!important;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:linear-gradient(160deg,#ffe08a,#d9a420);color:#3a2600!important;font-size:12px;display:grid;place-items:center;box-shadow:0 2px 8px rgba(217,164,32,.45)}
+.newu:nth-child(3){animation-delay:.1s}.newu:nth-child(4){animation-delay:.2s}.newu:nth-child(5){animation-delay:.3s}
+body.reduce .castin,body.reduce .newu,body.reduce .cand.on .chk{animation:none}
+@media (prefers-reduced-motion:reduce){.castin,.newu,.cand.on .chk{animation:none}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3058,7 +3082,7 @@ function vLesson(){
   h+='<div class="card lcard">';
   A.forEach(function(t){
     var k=(S.lesson.train[t.id]||[])[0],sp=!!(S.lesson.sp&&S.lesson.sp[t.id]),fc=t.fat>=80?'var(--bad)':t.fat>=60?'var(--gold)':'var(--muted)';
-    h+='<div class="lrow"><div class="lt">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+(t.focus?' <span class="tag lt">課題：'+STATN[t.focus]+'</span>':'')+traitTags(t)+'</div>'+statMini(t,true)+'</div>';
+    h+='<div class="lrow lk-'+(k||'none')+'"><div class="lt">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+(t.focus?' <span class="tag lt">課題：'+STATN[t.focus]+'</span>':'')+traitTags(t)+'</div>'+statMini(t,true)+'</div>';
     h+='<div class="lsel"><select data-a="trsel" data-id="'+t.id+'" aria-label="'+esc(t.giv)+'のレッスン">'+[['v','歌'],['d','ダンス'],['r','ラップ'],['e','表現'],['rest','休養']].map(function(a){return '<option value="'+a[0]+'"'+(k===a[0]?' selected':'')+'>'+a[1]+'</option>';}).join('')+'</select>'+
       '<button class="spb'+(sp?' on':'')+'" data-a="sp" data-id="'+t.id+'" '+(k==='rest'||(!sp&&used>=sl)?'disabled':'')+'>特訓'+(sp?' ✓':'')+'</button></div></div>';
     if(f.kind==='pos'){var p=S.lesson.pos[t.id];h+='<div class="posr"><span class="muted">担当</span>';[['v','歌','pv'],['d','ダンス','pd'],['r','ラップ','pr']].forEach(function(a){h+='<button class="'+a[2]+' '+(p===a[0]?'on':'')+'" data-a="pos" data-id="'+t.id+'" data-v="'+a[0]+'">'+a[1]+'</button>';});h+='</div>';}
@@ -3430,7 +3454,7 @@ function vShow(){
     var hl=showSeq(S,'hl').length;
     var h='<div class="stagec'+(ROUNDS[S.rnd].fin?' fin':'')+'"><div class="ttl">ステージ本番</div><h2 style="margin:6px 0 2px">'+esc(ROUNDS[S.rnd].name)+'</h2><p class="song">'+esc(VENUE[S.rnd])+'</p><p>'+esc(S.showSong)+(f.concept?'・コンセプト「'+esc(f.concept)+'」':'')+'</p>'+
       '<p class="song">出演 '+n+(f.kind==='team'?'チーム':'人')+'。出番は前回の出来が低い順。見ながら「大きく映す」を押すと、放送で大きく扱われます（3人まで）。</p>'+
-      '<div class="pen">'+penl(alive(S))+'</div></div>';
+      '<div class="castrow"><div class="castin">'+alive(S).concat(alive(S)).map(function(t){return faceImg(t,'sm');}).join('')+'</div></div></div>';
     if(hl<n)h+='<button class="btn" data-a="showmode" data-v="hl">見どころを見る（'+hl+'組）</button>';
     h+='<button class="btn'+(hl<n?' sub':'')+'" data-a="showmode" data-v="all">全部見る（全'+n+'組）</button>';
     h+='<button class="btn sub" data-a="showend">見ずに結果へ</button>';return h;}
@@ -3637,7 +3661,7 @@ function sfx(k){if(!ui.set||!ui.set.sfx)return;try{if(!actx){var C=window.AudioC
 function haptic(k){if(!ui.set||!ui.set.hap)return;if(APP){appPost({type:'haptic',k:k});return;}try{if(navigator.vibrate)navigator.vibrate(k==='success'?[18,40,18]:k==='warn'?[30]:8);}catch(e){}}
 function seg2(a,cur,opts){return '<div class="seg sset'+(opts.length===2?' c2':opts.length===4?' c4':'')+'">'+opts.map(function(o){return '<button class="'+(cur===o[0]?'on':'')+'" data-a="'+a+'" data-v="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div>';}
 function vSettings(){var st=ui.set;
-  var h='<div class="ov" data-a="setclose"><div class="sheet" data-a="noop"><button class="btn-s close" data-a="setclose">閉じる</button><h2 style="margin-top:0">設定</h2>';
+  var h='<div class="ov" data-a="setclose"><div class="sheet setsheet" data-a="noop"><button class="btn-s close" data-a="setclose">閉じる</button><h2 style="margin-top:0">設定</h2>';
   h+='<h3>文字の大きさ</h3>'+seg2('setfs',st.fs,[['n','標準'],['l','大きい'],['xl','とても大きい']]);
   h+='<h3>進み方</h3>'+seg2('setquick',ui.quick?'1':'0',[['0','じっくり'],['1','さくさく']])+'<p class="small muted">さくさくは、ステージの演出・一人ずつの発表・エンドロールを飛ばします。</p>';
   h+='<h3>ステージの見方</h3>'+seg2('setauto',ui.showAuto?'1':'0',[['0','自分で送る'],['1','自動で送る']])+seg2('setfast',ui.showFast?'1':'0',[['0','ふつうの速さ'],['1','速い']]);
