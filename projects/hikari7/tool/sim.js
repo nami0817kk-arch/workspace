@@ -43,7 +43,7 @@ function play(g, pol) {
       doTalk(S, t.id);
       if (S.talk.kind === 'arc') talkChoose(S, pol === 'good' ? bestArc(S, t) : ri(0, 2));
       else if (S.talk.kind === 'honne') honneChoose(S, 0);
-      else if (S.talk.kind === 'free') freeChoose(S, pol === 'good' ? (t.temper === 'sensai' ? 0 : 1) : ri(0, 2));
+      else if (S.talk.kind === 'free') freeChoose(S, pol === 'good' ? (t.temper === 'sensai' ? 0 : t.temper === 'mypace' || t.temper === 'ochoshi' ? 2 : 1) : ri(0, 2));
       S.talk = null;
     }
     afterTalk(S);
@@ -87,7 +87,7 @@ function bestArc(S, t) { // 気質が分かっていれば、合う語りかけ�
   const tones = ARC_TONE[t.arc.k][t.arc.step], sc = ARCS[t.arc.k].sc[t.arc.step];
   let best = 0, bv = -1e9;
   sc.ch.forEach((c, i) => { const tone = tones.charAt(i); let v = c[3] * 3;
-    if (t.temperRev) { if (t.temper === 'sensai' && tone === 'h') v -= 5; if (t.temper === 'makezu' && (tone === 'h' || tone === 'f')) v += 1; if (t.temper === 'sensai' && tone === 's') v += 1; }
+    if (t.temperRev) { if (t.temper === 'sensai' && tone === 'h') v -= 5; if (t.temper === 'makezu' && (tone === 'h' || tone === 'f')) v += 1; if (t.temper === 'sensai' && tone === 's') v += 1; if (t.temper === 'mypace') { if (tone === 'f') v += 1; if (tone === 'h' || tone === 'a') v -= 3; } if (t.temper === 'ochoshi') { if (tone === 'a') v += 1; if (tone === 'h') v -= 3; } }
     if (v > bv) { bv = v; best = i; } });
   return best;
 }
