@@ -27,7 +27,7 @@ const ADS = PLAY !== 'noads';   // 広告を見る人：毎回の最初に採掘
 function buy(S){
   for (let g = 0; g < 2000; g++) {
     const M = mods(S);
-    const req = isBed(S.depth) ? reqAt(S.depth) : 0;
+    const req = isBed(S.depth) ? reqAt(S.depth, S) : 0;
     const opts = [];
     const pc = pickCost(S, S.pick), base = crewBase(S, M), pb = pickBoost(S, M);
     let pv = base * pb * (pickMul(S.pick + 1) / pickMul(S.pick) - 1);

@@ -457,7 +457,7 @@ const CREEDS = [
   { a:{ n:'人を育てる', g:'人の坑夫（見習い・ベテラン・発破）×30', b:'機械 ×0.9', f:{ human:30, machine:0.9 } },
     b:{ n:'機械化',     g:'機械（掘削機から先）×1.3', b:'大当たりが出ない', f:{ machine:1.3, critOff:1 } } },
   { a:{ n:'目利き',     g:'物が出る確率 12→18%', b:'鉱石 ×0.85', f:{ dropAdd:0.06, ore:0.85 } },
-    b:{ n:'突貫',       g:'岩盤の固さ ×0.7', b:'横掘りの効率 0.8→0.4', f:{ bedHp:0.7, sideMul:0.5 } } },
+    b:{ n:'突貫',       g:'岩盤に必要な Lv −15%', b:'横掘りの効率 0.8→0.4', f:{ reqMul:0.85, sideMul:0.5 } } },
   { a:{ n:'一攫千金',   g:'大当たりが15倍', b:'大当たりの出やすさが半分', f:{ critX:15, critP:0.5 } },
     b:{ n:'堅実',       g:'仲間の力 ×1.2', b:'大当たりが出ない', f:{ crew:1.2, critOff:1 } } },
   { a:{ n:'留守番上手', g:'留守の上限 +4時間', b:'開いている間の仲間 ×0.8', f:{ offAdd:4, crewOn:0.8 } },
@@ -511,7 +511,7 @@ function mods(st){
   return m;
 }
 function calcMods(st){
-  const m = { human:1, machine:1, pick:1, hire:1, crew:1, crewOn:1, ore:1, critP:CRIT_P, critX:CRIT_X, drop:DROP_P, side:SIDE, bedHp:1,
+  const m = { human:1, machine:1, pick:1, hire:1, crew:1, crewOn:1, ore:1, critP:CRIT_P, critX:CRIT_X, drop:DROP_P, side:SIDE, reqMul:1,
     off:OFFLINE_CAP_H, wkGrow:1.15, pickCost:1, room2:false, fame:1, book:0.05 };
   st.creed.forEach((c, i) => {
     if (!c || !CREEDS[i]) return;
@@ -519,7 +519,7 @@ function calcMods(st){
     if (f.human) m.human *= f.human; if (f.machine) m.machine *= f.machine; if (f.crew) m.crew *= f.crew; if (f.crewOn) m.crewOn *= f.crewOn;
     if (f.ore) m.ore *= f.ore; if (f.critX) m.critX = f.critX; if (f.critP) m.critP *= f.critP;
     if (f.critOff) m.critP = 0;
-    if (f.dropAdd) m.drop += f.dropAdd; if (f.bedHp) m.bedHp *= f.bedHp; if (f.sideMul) m.side *= f.sideMul;
+    if (f.dropAdd) m.drop += f.dropAdd; if (f.reqMul) m.reqMul *= f.reqMul; if (f.sideMul) m.side *= f.sideMul;
     if (f.offAdd) m.off += f.offAdd; if (f.wkGrow) m.wkGrow = f.wkGrow; if (f.pickCost) m.pickCost *= f.pickCost;
     if (f.room2) m.room2 = true; if (f.fame) m.fame *= f.fame; if (f.bookHalf) m.book /= 2;
   });
@@ -535,7 +535,8 @@ function calcMods(st){
   return m;
 }
 const fameMul = f => 1 + 0.1 * f;
-const hpOf = (st, d, M) => isBed(d) ? baseHp(d) * 12 * (M || mods(st)).bedHp : baseHp(d);
+// 岩盤は Lv が届けばすぐ割れる（固さは普通のブロックと同じ）。待ちは Lv の関門だけ（2026-10-03「掘れなくなる時がある」）
+const hpOf = (st, d, M) => baseHp(d);
 const oreOf = (st, d, M) => Math.ceil(oreRaw(d)) * (isBed(d) ? 5 : 1) * (M || mods(st)).ore;
 const pickCost = (st, l) => Math.ceil(12 * Math.pow(1.15, l - 1) * mods(st).pickCost);
 const wkCost = (st, i, n, M) => { M = M || mods(st); return Math.ceil(WK[i].cost * Math.pow(M.wkGrow, n) * M.hire); };
@@ -545,8 +546,8 @@ const pickBoost = (st, M) => pickMul(st.pick) * (M || mods(st)).pick;
 const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn : 1); };
 const boostOn = st => NOW() < st.boostUntil;
 const boostMul = st => boostOn(st) ? 1 + (st.boostLv || 1) : 1;
-const locked = st => isBed(st.depth) && st.pick < REQ[st.depth / LAYER_LEN];
-const reqAt = d => REQ[d / LAYER_LEN];
+const reqAt = (d, st) => Math.ceil(REQ[d / LAYER_LEN] * mods(st).reqMul);
+const locked = st => isBed(st.depth) && st.pick < reqAt(st.depth, st);
 
 // ================= 採掘 =================
 function pickItem(st, d, M){
@@ -1070,6 +1071,7 @@ function buildSettings(){
       TStore.set(BAK, JSON.stringify(S));
       const keep = { sound:S.sound, haptic:S.haptic, theme:S.theme };
       S = Object.assign(fresh(), keep); camY = -4; parts.length = 0; floats.length = 0; resetArm = 0;
+      pendingAway = null; $('offModal').classList.remove('on');   // 消す前の留守の分は受け取らせない
       $('setModal').classList.remove('on');
       buildPanels(); setTab('tool'); save(); setTimeout(() => banner(0), 300); return;
     }
@@ -1096,7 +1098,7 @@ function nextReq(){
   const nextBed = (Math.floor(S.depth / LAYER_LEN) + (isBed(S.depth) ? 0 : 1)) * LAYER_LEN;
   const k = nextBed / LAYER_LEN;
   if (k < 1 || k >= NLAYER) return null;
-  return { at: nextBed, lv: REQ[k], k };
+  return { at: nextBed, lv: reqAt(nextBed, S), k };
 }
 let lastBook = -1, coSeen = 0, lastFrag = '';
 function updateUI(force){
@@ -1162,8 +1164,11 @@ function updateGoal(){
   g.classList.toggle('lock', lk);
   let txt, p;
   if (lk) {
-    const req = reqAt(S.depth);
-    txt = `<b>岩盤！</b> つるはし <span class="need">Lv${req}</span> で割れる（あと${req - S.pick}Lv）・横掘り中`;
+    const req = reqAt(S.depth, S);
+    // Lv が届くまでの鉱石と、今の入りから「約何分」
+    const need = bulk(pickCost(S, S.pick), 1.15, 0, req - S.pick).cost, r = oreRate(S);
+    const eta = S.ore >= need ? '今すぐ強くできる' : r > 0 ? `約${fmtDur(Math.max(1, (need - S.ore) / r))}` : '';
+    txt = `<b>岩盤！</b> <span class="need">Lv${req}</span> で割れる（あと${req - S.pick}Lv・${eta}）`;
     p = S.pick / req;
   } else if (nr) {
     const start = (nr.k - 1) * LAYER_LEN;
@@ -1188,7 +1193,7 @@ function onBuyPick(){
     toast(evo ? 'つるはしが進化' : 'つるはしの節目', evo ? PICK_TIER[tierOf(S.pick)][0] : `Lv${m}`, `仲間の力 ×${pickBoost(S).toFixed(2)}`, pickIcon(S.pick, 40));
     fxRing(); if (evo) { evoT = 0; sparks(cx(), rowY(S.depth) - 30, reduced ? 6 : 24); }
   }
-  if (isBed(S.depth) && before < reqAt(S.depth) && S.pick >= reqAt(S.depth)) floatText(cx(), rowY(S.depth) + 16, '割れる！', '#ffd166', 24);
+  if (isBed(S.depth) && before < reqAt(S.depth, S) && S.pick >= reqAt(S.depth, S)) floatText(cx(), rowY(S.depth) + 16, '割れる！', '#ffd166', 24);
   updateUI(); save();
 }
 function onBuyWorker(i){
@@ -1254,7 +1259,7 @@ function showAway(sec, capped, isDev){
     $('offOre').textContent = `${fmt(r.ore)} 個`;
     const uniq = [...new Set(r.finds)];
     let h = '';
-    if (r.stuck) h += `<p class="sub">岩盤で止まり、途中から横掘りしていました（つるはし Lv${reqAt(r.state.depth)} が必要）</p>`;
+    if (r.stuck) h += `<p class="sub">岩盤で止まり、途中から横掘りしていました（つるはし Lv${reqAt(r.state.depth, r.state)} が必要）</p>`;
     if (uniq.length) {
       const news = uniq.filter(id => !S.found[id]);
       h += `<p class="sub">見つけた物 ${r.finds.length}個${news.length ? `（図鑑に新しく ${news.length}種）` : ''}</p><div class="finds">` +
@@ -1913,6 +1918,11 @@ function drawMap(){
 // ================= ループ =================
 let lastFrame = performance.now(), uiT = 0, saveT = 0, achT = 0, lastLayer = -1;
 function frame(now){
+  // どこかでエラーが出ても、採掘と描画のくり返しは止めない
+  try { frame0(now); } catch (e) { try { console.error(e); } catch (e2) {} }
+  requestAnimationFrame(frame);
+}
+function frame0(now){
   let dt = (now - lastFrame) / 1000; lastFrame = now;
   // 止まっていた（裏に回っていた）なら留守として数える
   if (dt > 60 && !pendingAway) { checkAway(); dt = 0; }
@@ -1935,7 +1945,6 @@ function frame(now){
     if (tab === 'co' && !rbOpen) buildCoLight();
   }
   if (saveT > 5) { saveT = 0; save(); }
-  requestAnimationFrame(frame);
 }
 // 社の画面は、代替わりの数字だけ追いかける（ボタンを作り直すと押しにくい）
 let coKey = '';
