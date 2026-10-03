@@ -741,6 +741,36 @@ body.reduce.ttl::before,body.reduce .logo7.tbig,body.reduce .tseat,body.reduce .
 .tseats{gap:4px}.tseat .face{width:38px;height:38px}.tseat i{width:30px}.tseat.mid .face{width:56px;height:56px}
 @media (min-height:760px){.tseat .face{width:40px;height:40px}.tseat.mid .face{width:60px;height:60px}}
 body.ttl .hdr{display:none}
+
+/* ===== ステージの見た目（2026-10-03 指摘「他の画面もしょぼい」）：場面ごとの写真を暗く敷き、札は半透明の暗い板に ===== */
+body.stg:not(.ttl){background:#0d0a18}
+body.stg::before{content:'';position:fixed;inset:-24px;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 80% 40% at 50% 0,rgba(199,168,255,.16),transparent 70%),linear-gradient(180deg,rgba(13,9,26,.62),rgba(13,9,26,.86) 45%,rgba(13,9,26,.96)),var(--phbg,var(--bgi-practice,none));
+  background-size:cover;background-position:center 30%;filter:saturate(1.05)}
+body.stg[data-ph=select],body.stg[data-ph=prep],body.stg[data-ph=interview]{--phbg:var(--bgi-studio,var(--bgi-practice))}
+body.stg[data-ph=format],body.stg[data-ph=plan]{--phbg:var(--bgi-meeting,var(--bgi-practice))}
+body.stg[data-ph=lesson],body.stg[data-ph=lres]{--phbg:var(--bgi-practice)}
+body.stg[data-ph=talk]{--phbg:var(--bgi-dining,var(--bgi-practice))}
+body.stg[data-ph=event],body.stg[data-ph=night]{--phbg:var(--bgi-night,var(--bgi-hallway))}
+body.stg[data-ph=show],body.stg[data-ph=stage],body.stg[data-ph=critique]{--phbg:var(--bgi-stage)}
+body.stg[data-ph=judge],body.stg[data-ph=result]{--phbg:var(--bgi-hall)}
+body.stg[data-ph=call],body.stg[data-ph=month]{--phbg:var(--bgi-stage2,var(--bgi-stage))}
+body.stg[data-ph=new],body.stg[data-ph=rec],body.stg[data-ph=menu]{--phbg:var(--bgi-cg_penlight,var(--bgi-stage))}
+body.stg.ttl::before{display:none}
+body.stg:not(.ttl){--card:rgba(30,24,46,.86);--card2:rgba(52,42,74,.72);--line:rgba(255,255,255,.12);--bg:rgba(13,10,24,.9)}
+body.stg .card,body.stg .cand,body.stg .call,body.stg .seat,body.stg details.status,body.stg .lrsum span{box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.06)}
+body.stg .hdr{background:rgba(13,10,24,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom-color:rgba(255,255,255,.1)}
+body.stg .foot{background:rgba(13,10,24,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top-color:rgba(255,255,255,.1)}
+body.stg h2{position:relative;padding-left:12px;letter-spacing:.02em}
+body.stg h2::before{content:'';position:absolute;left:0;top:.25em;bottom:.25em;width:4px;border-radius:2px;background:linear-gradient(#f6d77e,#e9ba4b)}
+body.stg h3{color:#efe8ff}
+body.stg .btn:not(.sub):not(.ad){box-shadow:0 8px 22px rgba(124,77,232,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+body.stg .btn.sub{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2)}
+body.stg .telop{box-shadow:0 10px 28px rgba(0,0,0,.35)}
+body.stg .dots i:not(.on):not(.now){background:rgba(255,255,255,.14)}
+body.stg .ov{background:rgba(5,3,12,.6)}body.stg .sheet{background:#17121f}
+
+body.stg .btn:not(.sub):not(.ad):not(.warnb){color:#fff;text-shadow:0 1px 2px rgba(40,10,90,.45)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2779,7 +2809,7 @@ function rareOf(t){return t&&t.rare?RARES.filter(function(r){return r.k===t.rare
 var KEY='hikari7_proto_v8';
 (function(){if(typeof document==='undefined')return;var r=document.documentElement;for(var k in BG_IMG)r.style.setProperty('--bgi-'+k,'url("'+BG_IMG[k]+'")');})();
 var S=null, ui={filter:'all',g:'m',resetArm:false,prof:null,showAuto:false,showFast:false}, timer=null;
-try{ui.set=loadSet();}catch(e){ui.set={fs:'n',sfx:1,hap:1,theme:'auto',reduce:0};}
+try{ui.set=loadSet();}catch(e){ui.set={fs:'n',sfx:1,hap:1,theme:'stage',reduce:0};}
 try{ui.diff=HStore.get('hikari7_diff')||'normal';if(ui.diff==='legend'&&!legendOpen())ui.diff='hard';ui.showAuto=!!HStore.get('hikari7_showauto');ui.showFast=!!HStore.get('hikari7_showfast');ui.quick=!!HStore.get('hikari7_quick');ui.chal=HStore.get('hikari7_chal')||null;if(ui.chal&&!chalOf(ui.chal))ui.chal=null;}catch(e){}
 try{ui.endStatic=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
 var BAKKEY='hikari7_bak',lastSavedPhase=null;
@@ -3499,11 +3529,12 @@ function highlightBox(){var H=seasonHighlights(S);if(!H.length)return '';
 
 /* ---------- フェーズ18〜27：並べ替え・設定・効果音・振動・明暗・動きを減らす ---------- */
 var SETKEY='hikari7_set';
-function loadSet(){var d={fs:'n',sfx:1,hap:1,theme:'auto',reduce:0,bgm:60,voice:1};try{var o=JSON.parse(HStore.get(SETKEY)||'{}');for(var k in o)d[k]=o[k];}catch(e){}return d;}
+function loadSet(){var d={fs:'n',sfx:1,hap:1,theme:'stage',reduce:0,bgm:60,voice:1};try{var o=JSON.parse(HStore.get(SETKEY)||'{}');for(var k in o)d[k]=o[k];}catch(e){}if(!d.thv){if(d.theme==='auto')d.theme='stage';d.thv=2;}return d;}
 function saveSet(){try{HStore.set(SETKEY,JSON.stringify(ui.set));}catch(e){}applySet();}
 var FS={n:['標準',1],l:['大きい',1.1],xl:['とても大きい',1.2]};
 function applySet(){var st=ui.set,de=document.documentElement;
-  if(st.theme==='auto')de.removeAttribute('data-theme');else de.setAttribute('data-theme',st.theme);
+  if(st.theme==='auto')de.removeAttribute('data-theme');else de.setAttribute('data-theme',st.theme==='stage'?'dark':st.theme);
+  try{document.body.classList.toggle('stg',st.theme==='stage');}catch(e){}
   document.body.style.zoom=(FS[st.fs]||FS.n)[1]===1?'':String((FS[st.fs]||FS.n)[1]);
   document.body.classList.toggle('reduce',!!st.reduce);
   pushTheme();
@@ -3521,7 +3552,7 @@ function vSettings(){var st=ui.set;
   h+='<h3>ステージの見方</h3>'+seg2('setauto',ui.showAuto?'1':'0',[['0','自分で送る'],['1','自動で送る']])+seg2('setfast',ui.showFast?'1':'0',[['0','ふつうの速さ'],['1','速い']]);
   h+='<h3>BGM</h3>'+seg2('setbgm',String(st.bgm),[['0','切る'],['30','小'],['60','中'],['100','大']])+'<h3>台詞の声</h3>'+seg2('setvoice',st.voice?'1':'0',[['1','声あり'],['0','声なし']])+'<p class="small muted">名前が入らない台詞だけ声が付きます。🔊 の付いた台詞は押すと聞けます。</p>';
   h+='<h3>音と振動</h3>'+seg2('setsfx',st.sfx?'1':'0',[['1','効果音あり'],['0','効果音なし']])+seg2('sethap',st.hap?'1':'0',[['1','振動あり'],['0','振動なし']])+'<p class="small muted">振動はアプリ（iPhone）で使えます。</p>';
-  h+='<h3>画面の明るさ</h3>'+seg2('settheme',st.theme,[['auto','端末に合わせる'],['light','明るい'],['dark','暗い']]);
+  h+='<h3>画面の見た目</h3>'+seg2('settheme',st.theme,[['stage','ステージ'],['light','明るい'],['dark','暗い'],['auto','端末に合わせる']])+'<p class="small muted">ステージは、場面ごとの写真を背景に敷く暗い見た目です。</p>';
   h+='<h3>動き</h3>'+seg2('setreduce',st.reduce?'1':'0',[['0','ふつう'],['1','動きを減らす']])+'<p class="small muted">動きを減らすと、紙吹雪やエンドロールのスクロールを止めます。</p>';
   if(S&&S.phase!=='title')h+='<h3>このシーズン</h3><button class="btn sub'+(ui.quitArm?' warnb':'')+'" data-a="quit">'+(ui.quitArm?'もう一度押すとタイトルに戻る':'このシーズンをやめてタイトルに戻る')+'</button><p class="small muted">やめたシーズンは、タイトルから1回だけ戻せます。</p>';
   h+='<h3>わからないとき</h3><button class="btn sub" data-a="gloss">用語集を開く</button>';
@@ -3562,7 +3593,7 @@ var GLOSSARY=[
 function vGloss(){return '<div class="ov" data-a="glclose"><div class="sheet" data-a="noop"><button class="btn-s close" data-a="glclose">閉じる</button><h2 style="margin-top:0">用語集</h2><dl class="gloss">'+
   GLOSSARY.map(function(g){return '<dt>'+esc(g[0])+'</dt><dd>'+esc(g[1])+'</dd>';}).join('')+'</dl></div></div>';}
 /* フェーズ42：アプリの上の帯（時刻や電池の表示）の色を、画面の明るさに合わせる */
-function isDarkNow(){var t=ui.set&&ui.set.theme;if(t==='dark')return true;if(t==='light')return false;try{return window.matchMedia('(prefers-color-scheme: dark)').matches;}catch(e){return false;}}
+function isDarkNow(){var t=ui.set&&ui.set.theme;if(t==='dark'||t==='stage')return true;if(t==='light')return false;try{return window.matchMedia('(prefers-color-scheme: dark)').matches;}catch(e){return false;}}
 function pushTheme(){if(APP)appPost({type:'theme',dark:isDarkNow()});}
 /* フェーズ43：アプリが裏に回る直前に、アプリ側から呼ばれる */
 window.hikariPause=function(){try{if(S)HStore.set(KEY,JSON.stringify(S));if(HStore.flush)HStore.flush();}catch(e){}};
@@ -3621,7 +3652,7 @@ function eyecatch(){try{var ph=S?S.phase:null,prev=ui.eyePh;ui.eyePh=ph;if(!ph||
   if(document.body.classList.contains('reduce')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))return;
   var old=document.getElementById('eyec');if(old)old.remove();var d=document.createElement('div');d.id='eyec';d.setAttribute('aria-hidden','true');
   d.innerHTML='<div class="ein">'+(ROUNDS[S.rnd]&&ph!=='prep'&&ph!=='month'?'<small>第'+S.rnd+'審査</small>':'')+'<b>'+EYE[ph]+'</b></div>';document.body.appendChild(d);setTimeout(function(){if(d.parentNode)d.remove();},1000);}catch(e){}}
-function enterAnim(){try{document.body.classList.toggle('ttl',!S&&!ui.tsub&&!ui.settings);}catch(e){}eyecatch();if(ui.endStatic)return;var k=(S?S.phase+':'+S.rnd+':'+(S.talk?'t':'')+(S.sub?'s':'')+(S.evIdx||0):'title')+(ui.settings?'S':'')+(ui.prof!=null?'P':'');if(k===ui.lastScene)return;ui.lastScene=k;
+function enterAnim(){try{document.body.classList.toggle('ttl',!S&&!ui.tsub&&!ui.settings);document.body.setAttribute('data-ph',S?S.phase:(ui.tsub||'menu'));document.body.classList.toggle('stg',!!ui.set&&ui.set.theme==='stage');}catch(e){}eyecatch();if(ui.endStatic)return;var k=(S?S.phase+':'+S.rnd+':'+(S.talk?'t':'')+(S.sub?'s':'')+(S.evIdx||0):'title')+(ui.settings?'S':'')+(ui.prof!=null?'P':'');if(k===ui.lastScene)return;ui.lastScene=k;
   var a=document.querySelector('#app');a.classList.remove('enter');void a.offsetWidth;a.classList.add('enter');}
 
 /* ---------- 操作 ---------- */
