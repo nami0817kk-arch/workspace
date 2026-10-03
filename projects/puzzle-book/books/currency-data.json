@@ -1,0 +1,3520 @@
+{
+ "meta": {
+  "title": "世界の通貨辞典（仮題）データ",
+  "compiled": "2026-10-04",
+  "count": 60,
+  "rate_now_policy": "日付はすべて2026年9月30日。三菱UFJ銀行の公示相場（仲値TTM）がある31通貨はそれを使い、無い通貨は三菱UFJ銀行の現地参考相場（台湾ドル・リンギット）、各国中央銀行の公表値、固定レート×三菱UFJ銀行TTMの順で埋めた。derived=true は出典の数字から逆数・平均・掛け算をした換算値（raw に出典の数字をそのまま残してある）。yen は unit 単位あたりの円、小数2桁に丸め。",
+  "rate_10y_policy": "2016年9月30日（休日の国は直前の営業日）。同じ出典の同じ種類の値を優先。",
+  "regime_policy": "IMF『Annual Report 2025』付表II.9（AREAERデータベースに基づく2025年4月30日時点の事実上の分類）。単独のAREAERの最新版は『AREAER 2023』（2023年4月30日時点、2024年12月刊）で、2024年版以降は2026年10月4日時点で公開を確認できなかった。",
+  "regime_sources": [
+   "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+   "IMF『AREAER 2023』概要編 表4（2023年4月30日時点） https://www.elibrary.imf.org/fileasset/downloads/AEIEA2023001-S001.pdf"
+  ],
+  "cross_check": "米ドルの三菱UFJ銀行TTM（157.35円）は日本銀行の東京市場ドル・円スポット17時（2026-09-30は156.91円、2016-09-30は100.90円）と整合。 https://www.stat-search.boj.or.jp/ (FM08 FXERD04)",
+  "images": "お札・硬貨の画像は集めていない（方針どおり）"
+ },
+ "currencies": [
+  {
+   "name": "日本円",
+   "code": "JPY",
+   "symbol": "¥",
+   "subunit": {
+    "name": "銭（せん）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "日本"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "日本銀行（お札）。硬貨は政府（財務省）が発行し、造幣局が製造",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 1.0,
+    "date": "2026-09-30",
+    "source": "基準通貨（円）",
+    "url": "",
+    "raw": "",
+    "method": "円そのもの",
+    "derived": false
+   },
+   "rate_10y": {
+    "value": null,
+    "reason": "基準通貨のため対象外です。"
+   },
+   "origin": "1871年の新貨条例で生まれた名です。硬貨を丸い形にそろえたからなど、由来には諸説あります。",
+   "trivia": "2024年7月3日発行の新しいお札には、肖像が回転して見える3Dホログラムが付いています。銀行券では世界初です。",
+   "sources": [
+    "https://ja.wikipedia.org/wiki/円_(通貨)",
+    "https://www.imes.boj.or.jp/cm/history/historyfaq/answer.html",
+    "https://www.boj.or.jp/note_tfjgs/note/n_note/index.htm",
+    "https://www.npb.go.jp/ja/n_banknote/design10/",
+    "https://www.watch.impress.co.jp/docs/topic/1605299.html",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "補助単位の銭（1/100円）・厘（1/1000円）は1953年末に小額通貨整理法で通用停止となり、今は使われない。現地表記は「円」。名前の由来は日銀金融研究所も「諸説あり」としている（形状説・中国の銀円説・香港銀貨説）。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "米ドル",
+   "code": "USD",
+   "symbol": "$",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "アメリカ合衆国",
+     "プエルトリコ（米領）",
+     "グアム（米領）",
+     "米領ヴァージン諸島",
+     "米領サモア",
+     "北マリアナ諸島（米領）",
+     "合衆国領有小離島",
+     "エクアドル",
+     "エルサルバドル",
+     "パナマ",
+     "東ティモール",
+     "パラオ",
+     "マーシャル諸島",
+     "ミクロネシア連邦",
+     "英領ヴァージン諸島",
+     "タークス・カイコス諸島（英領）",
+     "英領インド洋地域",
+     "ボネール・シントユースタティウス・サバ（カリブ海のオランダ領）",
+     "ジンバブエ（自国通貨ZiGと併用）"
+    ],
+    "unofficial": [
+     "カンボジア",
+     "レバノン",
+     "ソマリア"
+    ]
+   },
+   "central_bank": "連邦準備制度（FRB）。お札は連邦準備銀行券で、印刷は財務省印刷局（BEP）。硬貨は合衆国造幣局",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 157.35,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 158.35 / TTB 156.35（1USDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 101.12,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 102.12 / TTB 100.12（1USDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "ボヘミア（今のチェコ）のヨアヒムスタールで作られた銀貨「ターラー」が名前のもとです。",
+   "trivia": "ドル札は木材パルプの紙ではなく、綿75%と麻（リネン）25%でできた、布に近い素材です。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/United_States_dollar",
+    "https://ja.wikipedia.org/wiki/アメリカ合衆国ドル",
+    "https://en.wikipedia.org/wiki/Dollarization",
+    "https://en.wikipedia.org/wiki/Zimbabwe_Gold",
+    "https://en.wikipedia.org/wiki/Cambodian_riel",
+    "https://en.wikipedia.org/wiki/Bitcoin_in_El_Salvador",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "エクアドルは2000年、エルサルバドルは2001年に自国通貨をやめて米ドルを採用。エルサルバドルのビットコインの法定通貨扱いは2025年2月に廃止。パナマは1904年から米ドルを使い、自国のバルボア硬貨（ISOコードPAB）も併用。東ティモールは自国のセンタボ硬貨も発行。パラオ・マーシャル・ミクロネシアは自由連合盟約国。ジンバブエは自国通貨ZiGと並んで外貨も法定通貨（外貨決済の有効期限は2030年12月31日まで）とされるが、ISO 4217一覧ではZWGのみの掲載で、根拠もWikipediaの2記事のみのため、「正式」に入れるかは判断が要る。ハイチはISO一覧でHTGと並んでUSDも載っているが、普段の通貨はグールドなので外した。リベリアも米ドルが自国ドルと並んで広く使われるが、法的な位置づけを2資料で確かめられず外した。カンボジアは自国通貨リエルが正式で、米ドルは事実上広く使われる。「木材パルプではない」はtriviaの言い回しで、資料の記述は「綿75%・リネン25%」。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "ユーロ",
+   "code": "EUR",
+   "symbol": "€",
+   "subunit": {
+    "name": "セント（cent。ユーロ・セント）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "オーストリア",
+     "ベルギー",
+     "ブルガリア",
+     "クロアチア",
+     "キプロス",
+     "エストニア",
+     "フィンランド",
+     "フランス",
+     "ドイツ",
+     "ギリシャ",
+     "アイルランド",
+     "イタリア",
+     "ラトビア",
+     "リトアニア",
+     "ルクセンブルク",
+     "マルタ",
+     "オランダ",
+     "ポルトガル",
+     "スロバキア",
+     "スロベニア",
+     "スペイン",
+     "アンドラ（EUとの協定）",
+     "モナコ（協定）",
+     "サンマリノ（協定）",
+     "バチカン（協定）",
+     "オーランド諸島（フィンランド）",
+     "フランス領ギアナ",
+     "グアドループ",
+     "マルティニーク",
+     "マヨット",
+     "レユニオン",
+     "サン・バルテルミー",
+     "サン・マルタン（フランス領）",
+     "サンピエール島・ミクロン島",
+     "フランス領南方・南極地域"
+    ],
+    "unofficial": [
+     "モンテネグロ",
+     "コソボ"
+    ]
+   },
+   "central_bank": "欧州中央銀行（ECB）とユーロ圏各国の中央銀行（まとめてユーロシステム）。硬貨は各国が発行",
+   "regime": {
+    "classification": "自由変動相場制（ユーロ圏として）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 178.34,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 179.84 / TTB 176.84（1EURあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 113.36,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 114.86 / TTB 111.86（1EURあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "1995年12月、マドリードで開かれた欧州理事会で「ユーロ」という名前に決まりました。",
+   "trivia": "硬貨の片面は全部の国で共通の図柄、もう片面は発行した国ごとに違う図柄です。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.ecb.europa.eu/euro/intro/html/index.en.html",
+    "https://www.ecb.europa.eu/euro/coins/html/index.en.html",
+    "https://en.wikipedia.org/wiki/Euro",
+    "https://ja.wikipedia.org/wiki/ユーロ",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ブルガリアが2026年1月1日に導入し、EU加盟27か国のうち21か国がユーロ圏（ECB・日本語版Wikipediaとも21か国）。アンドラ・モナコ・サンマリノ・バチカンはEUとの正式な協定に基づく使用で、自国デザインの硬貨も発行できる。モンテネグロとコソボは協定なしの一方的な使用（コソボはISO 4217の国一覧に載っていない）。英領のアクロティリ・デケリア（キプロスの英軍基地）もユーロを使うが、ISO一覧に無く1資料のみのため一覧から外した。€記号はギリシャ文字のε（エプシロン）と、安定を表す2本線を組み合わせたもの（日本語版Wikipedia）。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "英ポンド",
+   "code": "GBP",
+   "symbol": "£",
+   "subunit": {
+    "name": "ペニー（penny。複数形ペンス）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "イギリス",
+     "ジャージー（王室属領）",
+     "ガーンジー（王室属領）",
+     "マン島（王室属領）"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "イングランド銀行。スコットランドと北アイルランドでは民間銀行も独自のお札を発行",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 208.11,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 212.11 / TTB 204.11（1GBPあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 131.0,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 135.00 / TTB 127.00（1GBPあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "銀1ポンド（重さの単位）が元です。記号£は重さの単位リブラ（libra）の頭文字Lからきています。",
+   "trivia": "1971年まで1ポンドは240ペンスでした。この年に十進法へ切り替え、100ペンスになりました。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Pound_sterling",
+    "https://ja.wikipedia.org/wiki/スターリング・ポンド",
+    "https://www.royalmint.com/collect/decimalisation/the-story-of-decimalisation/",
+    "https://en.wikipedia.org/wiki/Decimal_Day",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "正式名は「スターリング・ポンド（pound sterling）」。王室属領のジャージー・ガーンジー・マン島は英ポンドと同じ価値の独自のお札・硬貨も発行。フォークランド諸島・ジブラルタル・セントヘレナは英ポンドと等価の独自ポンドを使う（ISOでは別コード）。十進法化の日付は英語資料（ロイヤルミント関連・英語版Wikipedia）が1971年2月15日、日本語版Wikipediaは2月13日と食い違うため、豆知識は年だけにした。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "スイスフラン",
+   "code": "CHF",
+   "symbol": "",
+   "subunit": {
+    "name": "ラッペン（独Rappen／仏centime／伊centesimo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "スイス",
+     "リヒテンシュタイン"
+    ],
+    "unofficial": [
+     "ビュージンゲン（スイスに囲まれたドイツの飛び地）",
+     "カンピオーネ・ディターリア（スイスに囲まれたイタリアの飛び地）"
+    ]
+   },
+   "central_bank": "スイス国立銀行（お札）。硬貨は連邦造幣局スイスミント",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 188.56,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 189.46 / TTB 187.66（1CHFあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 104.62,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 105.52 / TTB 103.72（1CHFあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "1360年にフランスで作られた金貨「フラン」が始まりです。刻まれた「フランク人の王」の文字が由来とされます。",
+   "trivia": "10ラッペン硬貨は1879年から同じ図柄のまま作られています。今も使える硬貨では世界最古です。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Swiss_franc",
+    "https://www.guinnessworldrecords.com/world-records/647046-oldest-coin-still-in-circulation",
+    "https://www.newsd.admin.ch/newsd/message/attachments/66065.pdf",
+    "https://en.wikipedia.org/wiki/French_franc",
+    "https://www.britannica.com/money/franc",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "固有の記号は無く「CHF」や「Fr.」と書く。コードのCHは、4つの公用語に偏らないようラテン語の国名Confoederatio Helveticaから。フランの語源は「フランク人の王（Francorum rex）」説のほか、フランス語franc（自由な）説もある。飛び地での非公式な流通は英語版Wikipediaの1資料のみで確かめた。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "人民元",
+   "code": "CNY",
+   "symbol": "¥",
+   "subunit": {
+    "name": "角（ジャオ）",
+    "per_unit": 10
+   },
+   "countries": {
+    "official": [
+     "中国（本土）"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "中国人民銀行",
+   "regime": {
+    "classification": "クロール類似制度（少しずつ動かす管理。通貨バスケットを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 23.45,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 23.75 / TTB 23.15（1CNYあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 15.14,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 15.44 / TTB 14.84（1CNYあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「人民の通貨（人民幣）」という意味です。単位の「元」は丸い銀貨を表した「圓」の字に由来します。",
+   "trivia": "1999年から出ている今のお札（第5シリーズ）は、すべての額面に毛沢東の肖像が描かれています。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Renminbi",
+    "https://ja.wikipedia.org/wiki/人民元",
+    "https://zh.wikipedia.org/zh-hans/%E7%AC%AC%E4%BA%94%E5%A5%97%E4%BA%BA%E6%B0%91%E5%B8%81",
+    "https://en.wikipedia.org/wiki/South_Korean_won",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "補助単位は2段階で、1元＝10角＝100分。現地のお札の表記は「圆」、ふだんは「元」と書く。記号は日本円と同じ¥（「元」とも書く）。香港・マカオは独自の通貨（香港ドル・パタカ）で、人民元は法定通貨ではない。第5シリーズは2019年版などで改版されている。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "韓国ウォン",
+   "code": "KRW",
+   "symbol": "₩",
+   "subunit": {
+    "name": "チョン（전／錢）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "韓国"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "韓国銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 11.58,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 11.78 / TTB 11.38（100KRWあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 9.17,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 9.37 / TTB 8.97（100KRWあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「ウォン」は漢字「圓」の韓国語読みです。日本の円や中国の元と同じく「丸い」に由来します。",
+   "trivia": "2009年の5万ウォン札は、初めて女性が描かれたお札です。描かれた申師任堂は、5千ウォン札の李珥の母です。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/South_Korean_won",
+    "https://ja.wikipedia.org/wiki/大韓民国ウォン",
+    "https://namu.wiki/w/%EC%98%A4%EB%A7%8C%EC%9B%90%EA%B6%8C",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "補助単位チョンは日常では使われず、為替相場の表示などに残るだけ。今のウォンは1962年の通貨改革で生まれ、10ファン＝1ウォンで交換した。現地表記は「원」。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "台湾ドル（新台湾ドル）",
+   "code": "TWD",
+   "symbol": "NT$",
+   "subunit": {
+    "name": "角（ジャオ）",
+    "per_unit": 10
+   },
+   "countries": {
+    "official": [
+     "台湾"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "中央銀行（中華民国中央銀行）。2000年7月までは台湾銀行が発行していた",
+   "regime": {
+    "classification": "（IMFの分類なし）",
+    "as_of": null,
+    "source": "中華民国中央銀行（IMF非加盟のため）",
+    "note": "台湾はIMF非加盟のため分類がありません。台湾の中央銀行は1989年4月から「管理変動相場制」をとると説明しています（中華民国中央銀行 https://www.cbc.gov.tw/tw/dl-33557-896d3e069a7c4d5d8d0e4857ae662cb7.html）。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 4.93,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 台北支店の台湾ドル参考相場（三菱UFJリサーチ&コンサルティング「現地参考為替相場」）",
+    "url": "https://www.murc-kawasesouba.jp/fx/ref_rate/a_2026.xls",
+    "raw": "1円あたり TTS 0.2047 / TTB 0.2007 台湾ドル",
+    "method": "仲値（TTSとTTBの平均）を出し、その逆数で1台湾ドルあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 3.23,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 台北支店の台湾ドル参考相場（三菱UFJリサーチ&コンサルティング「現地参考為替相場」）",
+    "url": "https://www.murc-kawasesouba.jp/fx/ref_rate/a_2016.xls",
+    "raw": "1円あたり TTS 0.3118 / TTB 0.3078 台湾ドル",
+    "method": "仲値（TTSとTTBの平均）を出し、その逆数で1台湾ドルあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "1949年に、それまでの旧台湾ドル（旧台幣）に代わって生まれたので「新」台湾ドルと呼ばれます。",
+   "trivia": "1949年の切り替えでは、激しいインフレのため、旧台幣4万元が新台幣1元と交換されました。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/New_Taiwan_dollar",
+    "https://www.archives.gov.tw/tw/arctw/69-1989.html",
+    "https://museum.mof.gov.tw/ct.asp?ctNode=42&mp=1&xItem=3773",
+    "https://www.murc-kawasesouba.jp/fx/ref_rate/a_2026.xls",
+    "https://www.murc-kawasesouba.jp/fx/ref_rate/a_2016.xls",
+    "https://www.cbc.gov.tw/tw/dl-33557-896d3e069a7c4d5d8d0e4857ae662cb7.html"
+   ],
+   "note": "現地表記は「元」「圓」。補助単位の角（1/10）・分（1/100）は実際には使われていない。ISO 4217一覧では国名が「TAIWAN (PROVINCE OF CHINA)」と書かれている（本では表記に配慮が要る）。",
+   "rate_note": "CBC は新台湾ドル建ての円レートを出していない（BP01D01 にあるのは 日圓JPY/USD で、2026-09-30 が 156.89、2016-09-30 が 100.90。TWD 対 JPY ではないので per_jpy は null）。2026-09-30 は収盤レートの一覧（31.852）と BP01D01（31.852）が一致。2016年は BP01D01 しか確認していない。BP01D01 の注記では16:00 の即時レートなので、収盤レートとは種類が違う可能性がある。",
+   "confidence": "high"
+  },
+  {
+   "name": "香港ドル",
+   "code": "HKD",
+   "symbol": "HK$",
+   "subunit": {
+    "name": "セント（仙）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "香港"
+    ],
+    "unofficial": [
+     "マカオ"
+    ]
+   },
+   "central_bank": "香港金融管理局（HKMA。通貨当局）。お札は民間の発券銀行3行が発行",
+   "regime": {
+    "classification": "カレンシーボード制（米ドルに固定）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1米ドル＝7.75〜7.85香港ドルの範囲に保つ仕組みです。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 20.05,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 20.48 / TTB 19.62（1HKDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 13.04,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 13.47 / TTB 12.61（1HKDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "ドルの名はドイツの銀貨ターラーに由来します。19世紀の香港で外国の銀貨が使われた流れをくみます。",
+   "trivia": "お札の多くは香港上海銀行など民間の銀行3行が発行しています。10ドル札と硬貨だけは政府が発行します。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Hong_Kong_dollar",
+    "https://ja.wikipedia.org/wiki/香港ドル",
+    "https://www.hkma.gov.hk/eng/key-functions/money/hong-kong-currency/notes/",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "発券銀行は香港上海銀行（HSBC）・スタンダードチャータード銀行（香港）・中国銀行（香港）の3行で、20〜1000ドル札を発行。10ドル札は2002年から政府が発行。マカオでは香港ドルが広く使われ（日本語版Wikipediaは「通貨代替が著しい」）、深圳など中国本土の一部でも流通するとされる。origin後半の「外国の銀貨の流れ」は英語版Wikipediaの1資料のみ。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "シンガポールドル",
+   "code": "SGD",
+   "symbol": "S$",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "シンガポール"
+    ],
+    "unofficial": [
+     "ブルネイ（通貨交換協定により等価で通用）"
+    ]
+   },
+   "central_bank": "シンガポール金融管理局（MAS）",
+   "regime": {
+    "classification": "クロール類似制度（その他の目安。通貨バスケットに対する許容幅で管理）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "シンガポールは金利ではなく為替の水準で金融政策を行う珍しい国です。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 123.07,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 123.90 / TTB 122.24（1SGDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 74.01,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 74.84 / TTB 73.18（1SGDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "ドルの名はドイツの銀貨ターラーに由来します。シンガポールドルは1967年に独自の発行が始まりました。",
+   "trivia": "1万ドル札はかつて世界有数の高額紙幣でした。2014年に発行をやめましたが、今もお金として使えます。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Singapore_dollar",
+    "https://ja.wikipedia.org/wiki/シンガポールドル",
+    "https://www.cnbc.com/2014/07/02/singapore-to-stop-issuing-10000-notes.html",
+    "https://www.mas.gov.sg/currency/circulation-currency/circulation-currency-notes",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "1967年からのブルネイとの通貨交換協定（Currency Interchangeability Agreement）で、シンガポールドルとブルネイドルは互いの国で等価の「慣習上の法定通貨」として通用する。1万ドル札の発行停止は2014年10月1日（マネーロンダリング対策）、1000ドル札も2021年1月1日に発行停止。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "タイバーツ",
+   "code": "THB",
+   "symbol": "฿",
+   "subunit": {
+    "name": "サタン（สตางค์）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "タイ"
+    ],
+    "unofficial": [
+     "ラオス（国境地帯など）",
+     "カンボジア（国境地帯など）",
+     "ミャンマー（国境地帯など）"
+    ]
+   },
+   "central_bank": "タイ銀行（お札）。硬貨は王立タイ造幣局（財務省）",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 4.69,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 4.77 / TTB 4.61（1THBあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 2.91,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 2.99 / TTB 2.83（1THBあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "バーツはもともと重さの単位で、銀約15グラムの重さに当たる価値を表していました。",
+   "trivia": "今のお札は、すべての額面の表にラーマ10世（ワチラロンコン国王）の肖像があります。2018年から発行されています。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Thai_baht",
+    "https://ja.wikipedia.org/wiki/タイ・バーツ",
+    "https://www.xinhuanet.com/english/2018-03/08/c_137025012.htm",
+    "https://en.wikipedia.org/wiki/Tical_(unit)",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "現地表記は「บาท」。1904年に1バーツ＝100サタンの十進法になった。origin（重さの単位・約15g）は英語版Wikipediaと関連記事でしか確かめられず、日本語版や公式資料では未確認。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "ベトナムドン",
+   "code": "VND",
+   "symbol": "₫",
+   "subunit": {
+    "name": "ハオ（hào）",
+    "per_unit": 10
+   },
+   "countries": {
+    "official": [
+     "ベトナム"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ベトナム国家銀行",
+   "regime": {
+    "classification": "クロール類似制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "2024年10月に分類が変わっています。"
+   },
+   "rate_now": {
+    "unit": 1000,
+    "yen": 6.13,
+    "date": "2026-09-30",
+    "source": "ベトナム国家銀行（外国為替管理局の参考レート）",
+    "url": "https://sbv.gov.vn/bieu-do-ty-gia-trung-tam ; API: https://sbv.gov.vn/o/headless-delivery/v1.0/content-structures/137473/structured-contents （中心レート）, https://sbv.gov.vn/o/headless-delivery/v1.0/content-structures/3450514/structured-contents （参考レート）",
+    "raw": "1円＝買155 / 売171 ドン（同日の対米ドル中心レート 1米ドル＝25,627ドン）",
+    "method": "買売の平均の逆数×1000 で出した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1000,
+    "yen": 4.61,
+    "date": "2016-09-30",
+    "source": "ベトナム国家銀行の中心レート（対米ドル）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://sbv.gov.vn/o/headless-delivery/v1.0/content-structures/137473/structured-contents?filter=datePublished%20ge%202016-09-27T00:00:00.000Z%20and%20datePublished%20le%202016-10-04T00:00:00.000Z",
+    "raw": "1米ドル＝21949 ドン、三菱UFJ銀行TTM（2016-09-30）米ドル101.12円",
+    "method": "米ドルTTM÷中心レート×1000 で出した換算値（2016年は対円の参考レートが公開されていない）",
+    "derived": true
+   },
+   "origin": "「ドン」はベトナム語で「銅」の意味です。昔、銅のお金が使われていたことに由来します。",
+   "trivia": "2003年からポリマー（プラスチック）のお札を取り入れ、今は1万ドン以上のお札がポリマー製です。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Vietnamese_%C4%91%E1%BB%93ng",
+    "https://ja.wikipedia.org/wiki/ドン_(通貨)",
+    "https://vi.wikipedia.org/wiki/Ti%E1%BB%81n_polymer_t%E1%BA%A1i_Vi%E1%BB%87t_Nam",
+    "https://baovanhoa.vn/kinh-te/tien-polymer-18-nam-dau-an-80060.html",
+    "https://sbv.gov.vn/bieu-do-ty-gia-trung-tam ; API: https://sbv.gov.vn/o/headless-delivery/v1.0/content-structures/137473/structured-contents （中心レート）, https://sbv.gov.vn/o/headless-delivery/v1.0/content-structures/3450514/structured-contents （参考レート）",
+    "https://sbv.gov.vn/o/headless-delivery/v1.0/content-structures/137473/structured-contents?filter=datePublished%20ge%202016-09-27T00:00:00.000Z%20and%20datePublished%20le%202016-10-04T00:00:00.000Z",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "補助単位はハオ（1/10）とスー（xu、1/100）だが、インフレで何十年も使われていない。現地表記は「đồng」。硬貨は2011年4月に供給が止まった（英語版Wikipedia）。全紙幣にホー・チ・ミンの肖像。最初のポリマー紙幣は2003年12月17日の5万・50万ドン。",
+   "rate_note": "2026年の中心レートは SBV のページ（30/09/2026 の『Xem』）と同じサイトの API の両方で 25.627 を確認した。JPY の参考レートは API に 2022-01-04 以降しか無いので、2016年の対円は無い。2016年分は API で確認した（ページの表示とは突き合わせていない）。参考レートの VND は整数。",
+   "confidence": "high"
+  },
+  {
+   "name": "インドネシアルピア",
+   "code": "IDR",
+   "symbol": "Rp",
+   "subunit": {
+    "name": "セン（sen）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "インドネシア"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "インドネシア銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 0.88,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 1.00 / TTB 0.76（100IDRあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 0.78,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 0.90 / TTB 0.66（100IDRあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "サンスクリット語で「加工した銀」を意味する「ルーピャ」が由来です。インドのルピーと同じ語源です。",
+   "trivia": "1965年12月に、旧1000ルピアを新1ルピアに切り替えるデノミ（通貨の単位の変更）を行いました。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Indonesian_rupiah",
+    "https://en.wikipedia.org/wiki/Indian_rupee",
+    "https://www.tempo.co/ekonomi/indonesia-pernah-redenominasi-rp-1-000-jadi-rp-1-begini-alasan-keputusan-58-tahun-lalu-109037",
+    "https://id.wikipedia.org/wiki/Sanering_(ekonomi)",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "補助単位センは法律上あるが、通貨はルピア単位でしか発行されていない。1965年のデノミは12月13日。今も0を3つ減らすデノミ法案が2025〜2029年の立法計画に入り、財務省は2027年までの成立を見込むとされるが、実施は未定（2026年10月時点で書くなら「計画がある」まで）。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "フィリピンペソ",
+   "code": "PHP",
+   "symbol": "₱",
+   "subunit": {
+    "name": "センティモ（sentimo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "フィリピン"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "フィリピン中央銀行（Bangko Sentral ng Pilipinas）",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 2.5,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 2.64 / TTB 2.36（1PHPあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 2.09,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 2.23 / TTB 1.95（1PHPあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "スペイン語で「重さ」を意味する「ペソ」からきています。スペイン時代の銀貨の名残です。",
+   "trivia": "2022年4月、国鳥フィリピンワシを描いた1000ペソ札が、国で初めてのポリマー紙幣として出ました。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Philippine_peso",
+    "https://www.bsp.gov.ph/SitePages/CoinsAndNotes/PolymerBanknote.aspx",
+    "https://en.wikipedia.org/wiki/Mexican_peso",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "フィリピン語（フィリピノ語）では「ピソ（piso）」。その後500・100・50ペソのポリマー紙幣も出た（英語版Wikipedia）。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "マレーシアリンギット",
+   "code": "MYR",
+   "symbol": "RM",
+   "subunit": {
+    "name": "セン（sen）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "マレーシア"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "マレーシア中央銀行（バンク・ネガラ・マレーシア）",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 38.54,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行（マレーシア）のリンギット参考相場（三菱UFJリサーチ&コンサルティング「現地参考為替相場」）。東京の公示相場は同日『unquoted』",
+    "url": "https://www.murc-kawasesouba.jp/fx/ref_rate/a_2026.xls",
+    "raw": "100円あたり TTS 2.655 / TTB 2.535 リンギット",
+    "method": "仲値（TTSとTTBの平均）を出し、1リンギットあたりの円に直した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 24.41,
+    "date": "2016-09-30",
+    "source": "東京三菱UFJ銀行（マレーシア）のリンギット参考相場（三菱UFJリサーチ&コンサルティング「現地参考為替相場」）。東京の公示相場は同日『unquoted』",
+    "url": "https://www.murc-kawasesouba.jp/fx/ref_rate/a_2016.xls",
+    "raw": "100円あたり TTS 4.146 / TTB 4.046 リンギット",
+    "method": "仲値（TTSとTTBの平均）を出し、1リンギットあたりの円に直した換算値",
+    "derived": true
+   },
+   "origin": "マレー語で「ぎざぎざ」の意味です。昔使われたスペイン銀貨の縁のぎざぎざに由来します。",
+   "trivia": "1セン硬貨は使われなくなり、2008年4月から店の会計の合計額は5セン単位に丸めて払います。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Malaysian_ringgit",
+    "https://www.malaysia.gov.my/en/government/kenali-malaysia/currency",
+    "https://www.bnm.gov.my/misc/-/asset_publisher/2BOPbOBfILtL/content/about-the-rounding-mechanism",
+    "https://www.murc-kawasesouba.jp/fx/ref_rate/a_2026.xls",
+    "https://www.murc-kawasesouba.jp/fx/ref_rate/a_2016.xls",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号は1993年に$からRMに変わった。リンギットの名が正式になったのは1975年8月（マレーシア政府ポータル）。1セン硬貨は今も法定通貨のまま。丸めは合計額だけに適用（1・2・6・7センは切り下げ、3・4・8・9センは切り上げ）。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "インドルピー",
+   "code": "INR",
+   "symbol": "₹",
+   "subunit": {
+    "name": "パイサ（paisa）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "インド",
+     "ブータン（自国通貨ニュルタムと併用）"
+    ],
+    "unofficial": [
+     "ネパール（高額紙幣は制限あり）"
+    ]
+   },
+   "central_bank": "インド準備銀行（お札）。硬貨と1ルピー札はインド政府が発行",
+   "regime": {
+    "classification": "安定化制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "2024年8月に安定化制度へ分類変更。その後、2025年11月公表のIMF対インド4条協議でクロール類似制度に再分類されたと報じられています（https://www.business-standard.com/economy/news/imf-reclassifies-india-s-fx-regime-as-floating-after-yr-of-stability-tag-125112601518_1.html）。年次報告の次版で要確認。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 1.65,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 1.80 / TTB 1.50（1INRあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 1.52,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 1.67 / TTB 1.37（1INRあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "サンスクリット語で「加工した銀」を意味する「ルーピャ」が由来です。16世紀の銀貨ルピヤが直接の元です。",
+   "trivia": "2016年11月8日、500ルピー札と1000ルピー札が、その日の夜中から突然お金として使えなくなりました。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Indian_rupee",
+    "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=38643",
+    "https://en.wikipedia.org/wiki/2016_Indian_banknote_demonetisation",
+    "https://en.wikipedia.org/wiki/Bhutanese_ngultrum",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号₹は2010年7月15日に採用（デザインはD・ウダヤ・クマール、デーヴァナーガリー文字の「र」とRを組み合わせたもの）。ブータンのニュルタムはルピーと等価で、ルピーもブータン国内で法定通貨として通用（ただし200・500ルピー札などは受け取られにくい）。ネパールは自国のネパール・ルピーが正式通貨で、インドルピーは広く受け取られるが、法的な位置づけは資料により書き方が異なるため「非公式」に置いた。2000ルピー札は2023年に回収が始まった（1資料のみ）。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "オーストラリアドル",
+   "code": "AUD",
+   "symbol": "$",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "オーストラリア",
+     "キリバス",
+     "ナウル",
+     "ツバル",
+     "クリスマス島（豪領）",
+     "ココス（キーリング）諸島（豪領）",
+     "ノーフォーク島（豪領）",
+     "ハード島・マクドナルド諸島（豪領）"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "オーストラリア準備銀行（お札）。硬貨は王立オーストラリア造幣局",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 109.96,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 111.96 / TTB 107.96（1AUDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 77.04,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 79.04 / TTB 75.04（1AUDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "1966年にポンドから切り替えました。首相が推した名前「ロイヤル」は不評で、ドルに決まりました。",
+   "trivia": "1988年、入植200年記念の10ドル札が、世界で初めてのポリマー（プラスチック）のお札として出ました。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Australian_dollar",
+    "https://ja.wikipedia.org/wiki/オーストラリア・ドル",
+    "https://www.migrationheritage.nsw.gov.au/exhibition/objectsthroughtime/commemorative-banknote/index.html",
+    "https://australianfoodtimeline.com.au/decimal-currency-introduced/",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ほかと区別するときはA$と書く。導入日は1966年2月14日（2ドル＝1ポンド）。記念10ドル札は1988年1月26日（オーストラリア・デー）発行。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "ニュージーランドドル",
+   "code": "NZD",
+   "symbol": "$",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ニュージーランド",
+     "クック諸島",
+     "ニウエ",
+     "トケラウ",
+     "ピトケアン諸島（英領）"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ニュージーランド準備銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 88.71,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 90.71 / TTB 86.71（1NZDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 73.1,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 75.10 / TTB 71.10（1NZDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "1967年7月10日、ポンドから十進法のドルに切り替えました。2ドルが1ポンドに当たりました。",
+   "trivia": "1ドル硬貨に国の鳥キーウィが描かれていることから、「キウイ」の愛称で呼ばれます。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/New_Zealand_dollar",
+    "https://ja.wikipedia.org/wiki/ニュージーランド・ドル",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ほかと区別するときはNZ$と書く。お札は1999年からポリマー製。origin・triviaとも英語版・日本語版Wikipediaの2資料で確認したが、公式（ニュージーランド準備銀行）のページは取得できなかった（403）。「2ドル＝1ポンド」は英語版のみ。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "カナダドル",
+   "code": "CAD",
+   "symbol": "$",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "カナダ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "カナダ銀行（お札）。硬貨は王立カナダ造幣局",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 110.86,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 112.46 / TTB 109.26（1CADあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 76.81,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 78.41 / TTB 75.21（1CADあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "ドルの名はドイツの銀貨ターラーに由来します。フランス語でも「ドル（dollar）」と呼びます。",
+   "trivia": "1ドル硬貨は水鳥のアビ（ルーン）が描かれ「ルーニー」、2ドル硬貨は「トゥーニー」と呼ばれます。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Canadian_dollar",
+    "https://ja.wikipedia.org/wiki/カナダドル",
+    "https://en.wikipedia.org/wiki/Loonie",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ほかと区別するときはC$と書く。ルーニーは1987年6月30日に1ドル札に代わって登場、トゥーニーは1996年。1セント硬貨は2013年2月4日に配布終了。お札は2011年からポリマー製。公式（カナダ銀行・造幣局）のページは取得できず、Wikipedia（英・日）での確認。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "メキシコペソ",
+   "code": "MXN",
+   "symbol": "$",
+   "subunit": {
+    "name": "センターボ（centavo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "メキシコ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "メキシコ銀行（Banco de México）",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 8.71,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 9.71 / TTB 7.71（1MXNあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 5.17,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 6.17 / TTB 4.17（1MXNあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "スペイン語で「重さ」の意味です。重さで価値を量った金や銀に由来します。",
+   "trivia": "1993年1月1日、1000ペソを1新ペソにするデノミを行いました。「新」の字は1996年に外れました。",
+   "sources": [
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://en.wikipedia.org/wiki/Mexican_peso",
+    "https://ja.wikipedia.org/wiki/メキシコ・ペソ",
+    "https://en.wikipedia.org/wiki/Philippine_peso",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号はドルと同じ$（区別するときはMex$）。デノミの後もISOコードは「新ペソ」時代のMXNのまま。メキシコ銀行の公式ページは取得できず（403）、Wikipedia（英・日）での確認。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "ブラジルレアル",
+   "code": "BRL",
+   "symbol": "R$",
+   "subunit": {
+    "name": "センターボ（centavo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ブラジル"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ブラジル中央銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 30.36,
+    "date": "2026-09-30",
+    "source": "ブラジル中央銀行 PTAX（Olinda API）",
+    "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='JPY'&@dataCotacao='09-30-2026'&$format=json",
+    "raw": "1 JPY = 0.03294 BRL（買値 cotacaoCompra）/ 0.03294 BRL（売値 cotacaoVenda）。Fechamento PTAX",
+    "method": "出典の買値と売値の平均の逆数で1BRLあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 31.19,
+    "date": "2016-09-30",
+    "source": "ブラジル中央銀行 PTAX（Olinda API）",
+    "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='JPY'&@dataCotacao='09-30-2016'&$format=json",
+    "raw": "1 JPY = 0.03206 BRL（買値）/ 0.03207 BRL（売値）。Fechamento PTAX",
+    "method": "出典の買値と売値の平均の逆数で1BRLあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「レアル」はポルトガル語で「王の」という意味です。ポルトガルや昔のブラジルで使われた通貨の名前を受け継いでいます。",
+   "trivia": "1994年、1レアル＝2750クルゼイロ・レアルで誕生しました。2020年には、タテガミオオカミを描いた200レアル札が出ました。",
+   "sources": [
+    "https://www.bcb.gov.br/en/monetarypolicy/realplan",
+    "https://en.wikipedia.org/wiki/Brazilian_real",
+    "https://en.wikipedia.org/wiki/Plano_Real",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='JPY'&@dataCotacao='09-30-2026'&$format=json",
+    "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='JPY'&@dataCotacao='09-30-2016'&$format=json",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "1994年の切り替えは、正確には前日にCR$2,750＝1URV（価値の単位）と定め、7月1日に1URV＝1レアルとした。",
+   "rate_note": "API は1日に5回分（Abertura・Intermediário×3・Fechamento PTAX）を返す。ここでは終値（Fechamento PTAX）を採った。同じ応答の paridade（1 USD あたりの JPY）は 2026年が 157.26000/157.27000、2016年が 101.21000/101.22000。二次資料（RBZ の 2026-09-30 の表で 1 USD = 5.2033/5.2043 BRL）とは、時刻の違いの範囲で合っている。",
+   "confidence": "high"
+  },
+  {
+   "name": "アルゼンチンペソ",
+   "code": "ARS",
+   "symbol": "$",
+   "subunit": {
+    "name": "センターボ（centavo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "アルゼンチン"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "アルゼンチン中央銀行（アルゼンチン共和国中央銀行）",
+   "regime": {
+    "classification": "クローリング・ペッグ（米ドルに対し少しずつ切り下げ）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "2023年12月に分類変更。分類の基準日の後、2025年4月14日に変動幅（バンド）の中で動かす方式へ移っています。最新の分類は次版で要確認。"
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 10.37,
+    "date": "2026-09-30",
+    "source": "アルゼンチン中央銀行（BCRA）API",
+    "url": "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones?fecha=2026-09-30 ; https://api.bcra.gob.ar/estadisticas/v4.0/monetarias/5?desde=2026-09-28&hasta=2026-10-02",
+    "raw": "YENS: tipoCotizacion 9.642153（1 JPY あたりの ARS）、tipoPase 0.006356（1 JPY あたりの USD）",
+    "method": "出典の値の逆数で100ARSあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 662.57,
+    "date": "2016-09-30",
+    "source": "アルゼンチン中央銀行（BCRA）API",
+    "url": "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones?fecha=2016-09-30 ; https://api.bcra.gob.ar/estadisticas/v4.0/monetarias/5?desde=2016-09-28&hasta=2016-10-03",
+    "raw": "YENS: tipoCotizacion 0.150927（1 JPY あたりの ARS）、tipoPase 0.009858",
+    "method": "出典の値の逆数で100ARSあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「ペソ」はスペイン語で「重さ」の意味です。スペイン植民地時代の8レアル銀貨が「ペソ」と呼ばれたことに由来します。",
+   "trivia": "1970年から1992年までの4回の通貨切り替えで、合わせて13個のゼロを消しました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Argentine_peso",
+    "https://planetbanknote.com/banknote-blog/argentina-hyperinflation-austral-banknotes/",
+    "https://www.bcra.gob.ar/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones?fecha=2026-09-30 ; https://api.bcra.gob.ar/estadisticas/v4.0/monetarias/5?desde=2026-09-28&hasta=2026-10-02",
+    "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones?fecha=2016-09-30 ; https://api.bcra.gob.ar/estadisticas/v4.0/monetarias/5?desde=2016-09-28&hasta=2016-10-03",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号は米ドルと同じ「$」のため、区別するとき「AR$」「Arg$」と書く。センターボの硬貨は価値が小さく事実上使われていない。1992年の切り替えの桁数を「5桁」とする記事もあったが、各回の比率（1:100、1:10,000、1:1,000、1:10,000）の合計は13桁で、Wikipedia の記述と一致。最高額面は2024年発行の20,000ペソ札（2026年時点で5万ペソ札は確認できず）。",
+   "rate_note": "A3500 は2つの API で一致した（Cotizaciones の REF 行と、主要変数 idVariable=5。2026年は 1517.5209 と 1517.52090000000、2016年は 15.2633 と 15.26330000000）。tipoCotizacion を『1 JPY あたりの ARS』と読んだのは API の項目名からで、tipoPase × A3500 と合うことで確かめた。",
+   "confidence": "high"
+  },
+  {
+   "name": "ロシアルーブル",
+   "code": "RUB",
+   "symbol": "₽",
+   "subunit": {
+    "name": "コペイカ（kopeyka）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ロシア"
+    ],
+    "unofficial": [
+     "アブハジア（ジョージアからの独立を主張）",
+     "南オセチア（同）"
+    ]
+   },
+   "central_bank": "ロシア中央銀行（ロシア銀行）",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 1.88,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 2.13 / TTB 1.63（1RUBあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 1.6,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 1.85 / TTB 1.35（1RUBあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "ロシア語の「切る」に由来するとされます。銀の延べ棒を切り取った塊を指したといわれます。",
+   "trivia": "1704年、ピョートル大帝の改革で1ルーブル＝100コペイカとなり、世界で初めての十進法の通貨になりました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Russian_ruble",
+    "https://en.wikipedia.org/wiki/Decimalisation",
+    "https://www.cbr.ru/eng/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号₽は2013年12月11日に正式採用。ほかに、カザフスタン内でロシアが借りているバイコヌール、ロシアが併合を宣言したクリミアやウクライナ東部・南部の占領地域でも使われている（国際的には承認されていない）。語源は「とされる」程度の通説。1998年に1,000旧ルーブル＝1新ルーブルのデノミ。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "トルコリラ",
+   "code": "TRY",
+   "symbol": "₺",
+   "subunit": {
+    "name": "クルシュ（kuruş）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "トルコ"
+    ],
+    "unofficial": [
+     "北キプロス（トルコのみが国家承認）"
+    ]
+   },
+   "central_bank": "トルコ共和国中央銀行",
+   "regime": {
+    "classification": "クロール類似制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 3.21,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 3.81 / TTB 2.61（1TRYあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 33.63,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 36.13 / TTB 31.13（1TRYあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "古代ローマの重さの単位「リブラ」に由来します。",
+   "trivia": "2005年に100万リラを1新リラにするデノミを行い、ゼロを6個消しました。₺の記号は2012年に公募で決まりました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Turkish_lira",
+    "https://en.wikipedia.org/wiki/Turkish_lira_sign",
+    "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Duyurular/Baskanin+Konusmalari/2012/Sunum+42",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ISO 4217 の国名表記は「TÜRKİYE」。₺の公募は応募8,362件、デザインはトゥライ・ラレ。2005〜2008年の名称は「新トルコリラ（YTL）」で、2009年から再び「トルコリラ」。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "南アフリカランド",
+   "code": "ZAR",
+   "symbol": "R",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "南アフリカ",
+     "レソト",
+     "ナミビア",
+     "エスワティニ"
+    ],
+    "unofficial": [
+     "ジンバブエ（複数通貨制度の一つとして受け取られる）"
+    ]
+   },
+   "central_bank": "南アフリカ準備銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 9.59,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 11.09 / TTB 8.09（1ZARあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 7.24,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 8.74 / TTB 5.74（1ZARあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "ヨハネスブルグがある金鉱の丘「ウィットウォーターズランド」の名前から来ています。",
+   "trivia": "2023年の新しい紙幣では、表にマンデラ元大統領、裏にライオンやゾウなど「ビッグファイブ」の親子が描かれています。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/South_African_rand",
+    "https://www.resbank.co.za/en/home/what-we-do/banknotes-and-coin",
+    "https://www.dailymaverick.co.za/article/2023-05-03-south-africas-upgraded-banknotes-and-coins-showcase-big-five-family-bonds-and-deep-ecology/",
+    "https://en.wikipedia.org/wiki/Swazi_lilangeni",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "共通通貨圏（CMA）。ISO 4217 一覧ではランドの使用国は南アフリカ・レソト・ナミビアの3つで、エスワティニは含まれない。エスワティニではランドの法定通貨の地位が1986年に外れ2003年に戻ったとされ、紙幣のみ受け取られ硬貨は不可という記述もある（資料により扱いが異なる）。レソト・ナミビア・エスワティニは自国通貨も持ち、ランドと等価。1961年導入。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "サウジアラビアリヤル",
+   "code": "SAR",
+   "symbol": "⃁",
+   "subunit": {
+    "name": "ハララ（halala）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "サウジアラビア"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "サウジアラビア中央銀行（旧サウジアラビア通貨庁＝SAMA、2020年改称）",
+   "regime": {
+    "classification": "ペッグ制（米ドルに固定）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1米ドル＝3.75リヤルです。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 41.83,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 42.63 / TTB 41.03（1SARあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 26.97,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 27.77 / TTB 26.17（1SARあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "スペインの銀貨「レアル」（「王の」という意味）が名前の由来です。",
+   "trivia": "2025年2月、アラビア書道をもとにした新しいリヤルの記号が決まり、同年9月に世界共通の文字コードに登録されました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Saudi_riyal",
+    "https://en.wikipedia.org/wiki/Saudi_riyal_sign",
+    "https://www.bloomberg.com/news/articles/2025-02-20/saudi-arabia-unveils-currency-symbol-to-promote-financial-status",
+    "https://www.merriam-webster.com/wordplay/9-words-for-transnational-currencies-dollar-rupee/rial-riyal",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号は2025年2月20日に国王が承認した新記号（Unicode 17.0〈2025年9月〉で U+20C1 SAUDI RIYAL SIGN）。新しい文字なので印刷用フォントに無い可能性が高く、組版で要確認。従来は「ر.س」「SR」と書かれ、「﷼」（U+FDFC）はリヤル一般の合字で公式記号ではない。中央銀行の公式ページ（sama.gov.sa）は直接開いて確認しておらず、報道と百科事典で確認。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "UAEディルハム",
+   "code": "AED",
+   "symbol": "⃃",
+   "subunit": {
+    "name": "フィルス（fils）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "アラブ首長国連邦"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "アラブ首長国連邦中央銀行",
+   "regime": {
+    "classification": "ペッグ制（米ドルに固定）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1米ドル＝3.6725ディルハムです。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 42.77,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 43.45 / TTB 42.09（1AEDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 27.58,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 28.26 / TTB 26.90（1AEDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "古代ギリシャの銀貨「ドラクマ」が名前の由来です。",
+   "trivia": "1973年に生まれる前は、首長国ごとにバーレーン・ディナールやカタール・ドバイ・リヤルを使っていました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/United_Arab_Emirates_dirham",
+    "https://en.wikipedia.org/wiki/Emirati_dirham_sign",
+    "https://www.thenationalnews.com/future/technology/2026/09/22/uae-dirham-symbol-keyboard-unicode/",
+    "https://en.wikipedia.org/wiki/Dirham",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号は2025年3月27日に中央銀行が発表した「Dに横線2本」の新記号（Unicode 18.0〈2026年9月〉で U+20C3）。印刷用フォントにまだ無い可能性が高く、組版で要確認。現地では「د.إ」「Dh」「Dhs」も使う。1973年以前はアブダビがバーレーン・ディナール、他の首長国がカタール・ドバイ・リヤル。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "エジプトポンド",
+   "code": "EGP",
+   "symbol": "E£",
+   "subunit": {
+    "name": "ピアストル（アラビア語でキルシュ）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "エジプト"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "エジプト中央銀行",
+   "regime": {
+    "classification": "クロール類似制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 3.02,
+    "date": "2026-09-30",
+    "source": "エジプト中央銀行（CBE）Exchange Rates Historical Data",
+    "url": "https://www.cbe.org.eg/en/economic-research/statistics/cbe-exchange-rates/historical-data",
+    "raw": "Japanese Yen 100: Buy 33.0525 / Sell 33.1478（100 JPY あたりの EGP）",
+    "method": "出典の買値と売値の平均の逆数で1EGPあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 11.56,
+    "date": "2016-09-29",
+    "source": "エジプト中央銀行（CBE）Exchange Rates Historical Data",
+    "url": "https://www.cbe.org.eg/en/economic-research/statistics/cbe-exchange-rates/historical-data",
+    "raw": "Japanese Yen 100: Buy 8.6421 / Sell 8.6627",
+    "method": "出典の買値と売値の平均の逆数で1EGPあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "アラビア語で「ギネー」と呼ばれ、イギリスの金貨「ギニー」に由来します。",
+   "trivia": "2022年から2023年にかけて、10ポンドと20ポンドがプラスチック（ポリマー）製の紙幣に変わりました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Egyptian_pound",
+    "https://en.wiktionary.org/wiki/%D8%AC%D9%86%D9%8A%D9%87",
+    "https://www.cbe.org.eg/en",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.cbe.org.eg/en/economic-research/statistics/cbe-exchange-rates/historical-data",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号は「E£」のほか「LE」「L.E.」、アラビア語で「ج.م」。昔は1ポンド＝1,000ミリーム（現在は使わない）。1834年導入。現地の呼び名（جنيه）のカナ表記は資料により「ギネー」「ゲネイ」など揺れがある。ポリマー紙幣の発行年は Wikipedia で確認、中央銀行のページでは未確認。",
+   "rate_note": "このページは日付を選んで表示する形式で、URL を開くだけでは値が出ない（From/To と通貨を選んで Show Data を押す）。2016-09-30 は金曜（エジプトの休日）でデータが無いので、直前の 2016-09-29（木）を採った。翌営業日の 2016-10-03 は USD 8.7700/8.7900、JPY100 8.6506/8.6712。2016年の値は、11月3日に変動相場制へ移る前のもの。RBZ の 2026-09-30 の表（1 USD = 52.0000/52.1000 EGP）と合っている。",
+   "confidence": "high"
+  },
+  {
+   "name": "CFAフラン（西アフリカ）",
+   "code": "XOF",
+   "symbol": "",
+   "subunit": {
+    "name": "サンチーム（centime）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ベナン",
+     "ブルキナファソ",
+     "コートジボワール",
+     "ギニアビサウ",
+     "マリ",
+     "ニジェール",
+     "セネガル",
+     "トーゴ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "西アフリカ諸国中央銀行（BCEAO）",
+   "regime": {
+    "classification": "ペッグ制（ユーロに固定。西アフリカ経済通貨同盟）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1ユーロ＝655.957 CFAフランです。"
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 27.19,
+    "date": "2026-09-30",
+    "source": "固定レート（1ユーロ＝655.957 CFAフラン）と三菱UFJ銀行のユーロTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "三菱UFJ銀行TTM（2026-09-30）ユーロ178.34円、1ユーロ＝655.957 CFAフラン",
+    "method": "ユーロTTM÷655.957×100 で出した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 17.28,
+    "date": "2016-09-30",
+    "source": "固定レート（1ユーロ＝655.957 CFAフラン）と三菱UFJ銀行のユーロTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "三菱UFJ銀行TTM（2016-09-30）ユーロ113.36円、1ユーロ＝655.957 CFAフラン",
+    "method": "ユーロTTM÷655.957×100 で出した換算値",
+    "derived": true
+   },
+   "origin": "CFAは「アフリカ金融共同体」の頭文字です。もとは「フランス領アフリカ植民地」の意味でした。",
+   "trivia": "2019年の合意で、外貨準備の半分をフランスに預ける決まりがなくなりました。名前を「エコ」に変える計画はまだ実現していません。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/West_African_CFA_franc",
+    "https://www.tresor.economie.gouv.fr/Articles/2019/12/23/reforme-des-relations-de-cooperation-monetaire-entre-l-union-economique-et-monetaire-ouest-africaine-uemoa-et-la-france",
+    "https://www.citinewsroom.com/2026/07/ecowas-reaffirms-plans-to-launch-single-currency-in-2027/",
+    "https://www.bceao.int/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号は固有のものが無く「F CFA」「FCFA」と書く。サンチームは事実上使われず、ISO 4217 の小数桁は0。2019年12月21日の新協定（2020年に仏議会承認）でBCEAOの外貨準備の仏国庫への集中義務とフランスの役員派遣は廃止されたが、ユーロとの固定比率とフランスによる交換性の保証は残った。ECOWAS（西アフリカ諸国経済共同体）は2026年7月の首脳会議で共通通貨「エコ」を2027年に始める方針を改めて確認したが、条件を満たす国から先に入る方式で、CFAフラン圏（UEMOA）がいつ加わるかは未定。マリ・ブルキナファソ・ニジェールは2025年1月にECOWASを脱退したがUEMOAには残っており、CFAフランを使い続けている（3か国は独自の金裏付けデジタル通貨「シラ」の構想も報じられている）。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "CFAフラン（中部アフリカ）",
+   "code": "XAF",
+   "symbol": "",
+   "subunit": {
+    "name": "サンチーム（centime）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "カメルーン",
+     "中央アフリカ",
+     "チャド",
+     "コンゴ共和国",
+     "赤道ギニア",
+     "ガボン"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "中部アフリカ諸国銀行（BEAC）",
+   "regime": {
+    "classification": "ペッグ制（ユーロに固定。中部アフリカ経済通貨共同体）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1ユーロ＝655.957 CFAフランです。"
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 27.19,
+    "date": "2026-09-30",
+    "source": "固定レート（1ユーロ＝655.957 CFAフラン）と三菱UFJ銀行のユーロTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "三菱UFJ銀行TTM（2026-09-30）ユーロ178.34円、1ユーロ＝655.957 CFAフラン",
+    "method": "ユーロTTM÷655.957×100 で出した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 17.28,
+    "date": "2016-09-30",
+    "source": "固定レート（1ユーロ＝655.957 CFAフラン）と三菱UFJ銀行のユーロTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "三菱UFJ銀行TTM（2016-09-30）ユーロ113.36円、1ユーロ＝655.957 CFAフラン",
+    "method": "ユーロTTM÷655.957×100 で出した換算値",
+    "derived": true
+   },
+   "origin": "中部アフリカではCFAを「中部アフリカ金融協力」の頭文字としています。もとは「フランス領アフリカ植民地」の意味でした。",
+   "trivia": "西アフリカのCFAフランと価値は同じですが、互いの地域ではお金として使えません。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Central_African_CFA_franc",
+    "https://www.beac.int/billets-pieces/histoire-franc-cfa/",
+    "https://faisalkhan.com/solutions/payments/cfa-franc-payments",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号は固有のものが無く「FCFA」と書く。サンチームは事実上使われず、ISO 4217 の小数桁は0。旧スペイン領の赤道ギニアは1985年に加盟。中部アフリカでは西アフリカのような2019年型の改革はまだ行われておらず、フランスの保証と外貨準備の預託の仕組みが続いているとみられる（2023年4月に見直しの協議あり。最新の状況は一次資料で未確認）。Wikipedia の要約に「両地域で流通する」と読める記述があったが、他の資料は互いに法定通貨ではないとしており、こちらを採った。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "東カリブドル",
+   "code": "XCD",
+   "symbol": "EC$",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "アンティグア・バーブーダ",
+     "ドミニカ国",
+     "グレナダ",
+     "セントクリストファー・ネービス",
+     "セントルシア",
+     "セントビンセント及びグレナディーン諸島",
+     "アンギラ（英領）",
+     "モントセラト（英領）"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "東カリブ中央銀行",
+   "regime": {
+    "classification": "カレンシーボード制（米ドルに固定。東カリブ通貨同盟）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1米ドル＝2.70東カリブドルです。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 58.28,
+    "date": "2026-09-30",
+    "source": "固定レート（1米ドル＝2.7 XCD）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "三菱UFJ銀行TTM（2026-09-30）米ドル157.35円、1米ドル＝2.7 XCD",
+    "method": "米ドルTTM÷2.7 で出した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 37.45,
+    "date": "2016-09-30",
+    "source": "固定レート（1米ドル＝2.7 XCD）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "三菱UFJ銀行TTM（2016-09-30）米ドル101.12円、1米ドル＝2.7 XCD",
+    "method": "米ドルTTM÷2.7 で出した換算値",
+    "derived": true
+   },
+   "origin": "「ドル」はドイツの銀貨「ターラー」に由来し、東カリブの国々が共同で使うのでこう呼ばれます。",
+   "trivia": "2019年から、縦向きデザインのプラスチック製紙幣に切り替わりました。東カリブ中央銀行で初めての縦型紙幣です。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Eastern_Caribbean_dollar",
+    "https://cdn.eccb-centralbank.org/documents/2022-04-11-08-09-41-GovernorsSpeech-LaunchofECPolymerNotesGrenada29May20192.pdf",
+    "https://www.centralbanking.com/central-banks/currency/banknotes/4232926/eccb-launches-new-polymer-banknotes",
+    "https://en.wikipedia.org/wiki/Dollar",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "8つ（独立国6・英領2）。東カリブ中央銀行はセントクリストファー・ネービスのバセテールにあり1983年設立。1・2セント硬貨は2015年に回収。紙幣のエリザベス女王の肖像を差し替える計画がある（Wikipedia、時期は要確認）。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "クウェートディナール",
+   "code": "KWD",
+   "symbol": "",
+   "subunit": {
+    "name": "フィルス（fils）",
+    "per_unit": 1000
+   },
+   "countries": {
+    "official": [
+     "クウェート"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "クウェート中央銀行",
+   "regime": {
+    "classification": "その他の管理制度（通貨バスケットを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 511.21,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 519.21 / TTB 503.21（1KWDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 336.28,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 344.28 / TTB 328.28（1KWDあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "古代ローマの銀貨「デナリウス」が名前の由来です。",
+   "trivia": "1ディナールは約511円（2026年9月30日）。1単位あたりの価値が世界で最も高い通貨です。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Kuwaiti_dinar",
+    "http://www.pjsymes.com.au/articles/kuwait(article).htm",
+    "https://www.pmgnotes.com/news/article/6160/The-Stolen-Dinars-of-Kuwait/",
+    "https://en.wikipedia.org/wiki/Dinar",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "固有の記号は無く「KD」、アラビア語で「د.ك」と書く。1ディナール＝1,000フィルス（ISO 4217 の小数桁も3）。1961年にガルフ・ルピーに代わって導入。無効になったのは第3次の紙幣で、1991年3月24日に第4次を発行。1単位あたりの価値が世界で最も高い通貨としても知られる。 別の豆知識の候補: 1990年のイラク侵攻で紙幣が大量に奪われたため、1991年に新しい紙幣を出し、奪われた紙幣を使えなくしました。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "イランリアル",
+   "code": "IRR",
+   "symbol": "﷼",
+   "subunit": {
+    "name": "ディナール（dinar）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "イラン"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "イラン中央銀行",
+   "regime": {
+    "classification": "その他の管理制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100000,
+    "yen": 9.04,
+    "date": "2026-09-30",
+    "source": "イラン中央銀行（CBI）Foreign Exchange Rates",
+    "url": "https://www.cbi.ir/exrates/rates_en.aspx",
+    "raw": "JPY100 Japanese 100 Yens 1,105,730（100 JPY あたりの IRR）",
+    "method": "出典の値の逆数で100000IRRあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100000,
+    "yen": 322.31,
+    "date": "2016-09-30",
+    "source": "イラン中央銀行（CBI）Foreign Exchange Rates",
+    "url": "https://www.cbi.ir/exrates/rates_en.aspx",
+    "raw": "JPY100 Japanese 100 Yens 31,026",
+    "method": "出典の値の逆数で100000IRRあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "スペインの銀貨「レアル」から来た名前で、1798年に初めて硬貨として登場しました。",
+   "trivia": "2025年に、1万リアルを新しい1リアルにする法律ができました。古いお金と新しいお金は最長3年間いっしょに使われます。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Iranian_rial",
+    "https://caspianpost.com/iran/iran-launches-nationwide-currency-denomination",
+    "https://www.intellinews.com/iran-revives-currency-redenomination-bill-but-keeps-rial-as-official-unit-394273/",
+    "https://www.tehrantimes.com/news/518711/Parliament-approves-plan-to-remove-4-zeros-from-national-currency",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.cbi.ir/exrates/rates_en.aspx",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "記号「﷼」は公式だがあまり使われない。1リアル＝100ディナールだが、ディナールは価値が小さく使われていない。日常の値段は10リアル＝1トマンの「トマン」で言うのがふつう。デノミ法：新1リアル＝旧1万リアル＝100ギラン（qeran）。政府は単位名を「トマン」に変える案だったが議会は「リアル」を残した。議会可決の日付は資料で食い違う（Wikipedia は2025年10月5日、Caspian Post は11月2日可決・11月5日に監督者評議会承認・11月22日に大統領が署名）。実施はイラン暦1405年（2026年3月21日〜）から始まる予定とされるが、2026年10月時点で新紙幣が出たことは確認できなかった。",
+   "rate_note": "ページは日付をドロップダウンで選ぶ形式で、URL に日付は入らない。2016-09-30 は金曜でイランの休日。ページの注記（休日は前日のレートを適用する）のとおりなら、表示は前日の値。注意: 今の値は加重平均（WT）の参考値で、2016年の値と同じ種類かどうかはページでは確かめられなかった（当時の公式レートかどうかは未確認）。CBI は自由市場のレートを載せていないので、市場レートは取っていない。2つ目の資料との突き合わせはしていない（同じページの 2026-10-03 の表示は USD 1,752,285・JPY100 1,110,341）。USD と JPY100 の比はおよそ1ドル157円で合っている。 2026年の値はイラン中央銀行の加重平均レート（参考値）で、2016年の値と同じ種類か確かめられていない。市場レートは載せていない。",
+   "confidence": "medium"
+  },
+  {
+   "name": "ベネズエラ・ボリバル（ボリバル・デジタル）",
+   "code": "VES",
+   "symbol": "Bs.",
+   "subunit": {
+    "name": "センティモ（céntimo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ベネズエラ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ベネズエラ中央銀行",
+   "regime": {
+    "classification": "その他の管理制度",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "ベネズエラの分類は2021年4月30日時点のまま更新されていません。"
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 18.38,
+    "date": "2026-09-30",
+    "source": "ベネズエラ中央銀行（BCV）",
+    "url": "https://www.bcv.org.ve/sites/default/files/EstadisticasGeneral/2_1_2c26_smc.xls （シート 29092026）; https://www.bcv.org.ve/sites/default/files/indicadores_sector_externo/2_1_1_tdc.xlsx （シート 2026）",
+    "raw": "JPY Japon: Bs./M.E. Compra (BID) 5.43445188 / Venta (ASK) 5.44807206（1 JPY あたりの Bs.）",
+    "method": "出典の買値と売値の平均の逆数で100VESあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "value": null,
+    "reason": "2016年は旧通貨ボリバル・フエルテ（VEF）の時代で、その後2018年に10万分の1、2021年に100万分の1のデノミがあり、単位が違うため比べられません（参考: 2016年9月30日のBCV保護レートは1米ドル＝9.975/10 VEF）。"
+   },
+   "origin": "南米独立の英雄シモン・ボリバルにちなんで名付けられました。",
+   "trivia": "2008年、2018年、2021年の3回のデノミで、合わせて14個のゼロが消されました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Venezuelan_bol%C3%ADvar",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/amendments/dl_currency_iso_amendment_170.pdf",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.bcv.org.ve/",
+    "https://www.bcv.org.ve/sites/default/files/EstadisticasGeneral/2_1_2c26_smc.xls （シート 29092026）; https://www.bcv.org.ve/sites/default/files/indicadores_sector_externo/2_1_1_tdc.xlsx （シート 2026）",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "現行の「ボリバル・デジタル」は2021年10月1日に100万ボリバル・ソベラノ＝1ボリバル・デジタルで導入（電子決済専用ではなく紙幣・硬貨もある）。ISO 4217 では同日に VED（926）が追加されたが、VES（928）が引き続き有効なコードとされ、中央銀行も VES を使っている。2026年9月時点の ISO 一覧には VES と VED の両方が載っている。記号は「Bs.」、ボリバル・デジタルを区別するとき「Bs.D」。法定通貨はボリバルだけだが、実際の取引の多くは米ドル（とユーロ）で行われ、値札がドル建てでその日の公定レートでボリバル払いもできる形が広がっている。",
+   "rate_note": "2026-09-30 に公表された表（Fecha Operación 30/09/2026、Fecha Valor 01/10/2026、16:22 公表、シート 30092026）は USD 858.02486175/860.1753、JPY 5.45918052/5.47286267。tdc.xlsx は Fecha Valor の日付で並んでいて、2026-09-30 の行（856.91524275/859.0629）は xls と一致する。BCV の2016年分は USD だけで JPY は無い（通貨別の SMC の xls は2020年から）。比べられない事情: 2016年は旧ボリバル（VEF）。2018-08-20 に10万分の1、2021-10-01 に100万分の1のデノミがあり（tdc.xlsx の注記にも書かれている）、合わせると 1 VES = 1000億 VEF。さらに2016年の値は実勢と大きく離れた固定の保護レートで（当時は変動制の DICOM レートもあった）、そのままでは比べられない。xls の数字は Excel のセルに保存された値（表示の桁ではない）。",
+   "confidence": "high"
+  },
+  {
+   "name": "ジンバブエ・ゴールド（ZiG）",
+   "code": "ZWG",
+   "symbol": "ZiG",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ジンバブエ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ジンバブエ準備銀行",
+   "regime": {
+    "classification": "その他の管理制度",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "分類はジンバブエの通貨制度についてのもので、ZiG（ZWG）導入は2024年4月です。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 5.86,
+    "date": "2026-09-30",
+    "source": "ジンバブエ準備銀行（RBZ）日次為替表 PDF",
+    "url": "https://www.rbz.co.zw/documents/Exchange_Rates/2026/September/RATES_30_SEPTEMBER_2026.pdf",
+    "raw": "JPY 行の ZWG 欄: BID RATE 5.7142 / ASK RATE 6.0084 / MID RATE 5.8613（見出しは『ZWG』だけ。USD 行と計算が合うので、1 ZWG あたりの JPY と読める）",
+    "method": "出典の仲値（1 ZiGあたりの円と読める列）をそのまま使用",
+    "derived": true
+   },
+   "rate_10y": {
+    "value": null,
+    "reason": "ZiG（ZWG）は2024年4月に生まれた通貨です。2016年のジンバブエは自国通貨が無く、米ドルなどを使う複数通貨制だったため、比べる値がありません。"
+   },
+   "origin": "「ZiG」は「ジンバブエ・ゴールド」の略で、金などの資産を裏付けにしていることを表します。",
+   "trivia": "前の通貨ジンバブエドルは物価が急上昇し、2009年1月には100兆ドル札まで発行されました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Zimbabwe_Gold",
+    "https://en.wikipedia.org/wiki/Zimbabwean_one_hundred_trillion_dollar_note",
+    "https://www.riotimesonline.com/zimbabwe-zig-gold-economy-2026/",
+    "https://www.rbz.co.zw/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.rbz.co.zw/documents/Exchange_Rates/2026/September/RATES_30_SEPTEMBER_2026.pdf",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "2024年4月5日に準備銀行が発表し、4月8日から公式通貨（Wikipedia）。補助単位のセントは名目上あるが、硬貨・紙幣とも1ZiG以上しかなく使われていない。2024年9月27日に約43%切り下げ。2026年2月27日に「ビッグファイブ」を描いた新紙幣を発表し、10・20・50ZiG札が2026年4月7日から流通（Wikipedia と収集家向けサイトで確認、一次資料は未確認）。米ドルなどの外貨は2030年12月31日まで法定通貨として使える複数通貨制度で、取引の大半は今も米ドル。準備銀行は単一通貨化の準備度を2026年8月時点で50.1%としている（報道）。ジンバブエドルは2006・2008・2009年にデノミを繰り返し、2009年4月に事実上使われなくなり、2015年に正式に廃止。その後2019年に再導入され、2024年にZiGへ置き換え。",
+   "rate_note": "同じ表の JPY の対USD は BID 156.9500 / ASK 156.9800 / MID 156.96500。JPY の ZWG 欄は 156.965÷26.7965≒5.858 と合うので『1 ZWG あたりの円』と読んだ（* 印の付いた通貨＝GBP・EUR などは 1 外貨あたりの ZWG）。この読み方は表には書かれていない。2016年は取れない: ZWG（ジンバブエ・ゴールド）は2024年4月に導入された通貨で、2016年は自国通貨が無く、USD などを使う複数通貨制だった（ボンドノートは2016年11月から）。比べる相手になる公式レートが無い。RBZ のサイトは手元からは CAPTCHA で止められたので、PDF は WebFetch で取った。2つ目の資料との突き合わせはしていない。",
+   "confidence": "medium"
+  },
+  {
+   "name": "スウェーデンクローナ",
+   "code": "SEK",
+   "symbol": "kr",
+   "subunit": {
+    "name": "エーレ（öre）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "スウェーデン"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "スウェーデン国立銀行（リクスバンク）",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "2024年1月に分類変更。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 15.74,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 16.14 / TTB 15.34（1SEKあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 11.78,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 12.18 / TTB 11.38（1SEKあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「クローナ」はスウェーデン語で「王冠」という意味です。",
+   "trivia": "発行元のリクスバンクは1668年にできた、世界で最も古い中央銀行です。",
+   "sources": [
+    "https://www.riksbank.se/en-gb/about-the-riksbank/history/historical-timeline/1600-1699/sveriges-riksbank-is-founded/",
+    "https://en.wikipedia.org/wiki/Swedish_krona",
+    "https://www.riksbank.se/en-gb/about-the-riksbank/history/historical-timeline/2000-2018/ore-abolished-as-unit-of-coinage/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "エーレの硬貨は2010年9月30日で最後の50エーレが無効になり、今は計算上の単位だけ（現金払いは1クローナ単位に丸める）。1873年導入。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "ノルウェークローネ",
+   "code": "NOK",
+   "symbol": "kr",
+   "subunit": {
+    "name": "エーレ（øre）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ノルウェー",
+     "スヴァールバル諸島",
+     "ヤンマイエン島",
+     "ブーベ島"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ノルウェー銀行（ノルゲス・バンク）",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 16.38,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 16.68 / TTB 16.08（1NOKあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 12.54,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 12.84 / TTB 12.24（1NOKあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「クローネ」はノルウェー語で「王冠」という意味です。",
+   "trivia": "2017年からの紙幣は海がテーマです。裏の海岸線はモザイク模様で、金額が上がるほど強い風を表しています。",
+   "sources": [
+    "https://www.norges-bank.no/en/topics/notes-and-coins/banknote-series-VIII/About-the-new-notes/",
+    "https://en.wikipedia.org/wiki/Norwegian_krone",
+    "https://www.archdaily.com/802023/snohetta-designed-norwegian-banknotes-to-go-into-circulation-in-2017",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "エーレの硬貨は2012年までに廃止され、今は計算上の単位だけ。新紙幣は2017〜2019年に順に発行。1875年導入。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "デンマーククローネ",
+   "code": "DKK",
+   "symbol": "kr.",
+   "subunit": {
+    "name": "エーレ（øre）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "デンマーク",
+     "グリーンランド",
+     "フェロー諸島"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "デンマーク国立銀行",
+   "regime": {
+    "classification": "ペッグ制（ユーロに固定。欧州為替相場メカニズムERM IIに参加）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1ユーロ＝7.46038クローネを中心に保っています。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 23.86,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 24.16 / TTB 23.56（1DKKあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 15.21,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 15.51 / TTB 14.91（1DKKあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「クローネ」はデンマーク語で「王冠」という意味です。",
+   "trivia": "1・2・5クローネ硬貨は真ん中に穴が開いています。穴あき硬貨は1924年から続く伝統です。",
+   "sources": [
+    "https://www.nationalbanken.dk/en/what-we-do/notes-and-coins/danish-coins-today/design-of-new-coins",
+    "https://en.wikipedia.org/wiki/Danish_krone",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "エーレの硬貨は50エーレだけが残っている。フェロー諸島はデンマーククローネと等価の独自紙幣（フェロー・クローナ）も使う（ISO 上の独自コードは無い）。1,000クローネ札は2025年5月31日で法定通貨でなくなり、新しい紙幣は2028年発行予定。1875年導入。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "アイスランドクローナ",
+   "code": "ISK",
+   "symbol": "kr",
+   "subunit": {
+    "name": "エイリル（eyrir）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "アイスランド"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "アイスランド中央銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 1.3,
+    "date": "2026-09-30",
+    "source": "アイスランド中央銀行（Seðlabanki Íslands）XML 時系列",
+    "url": "https://sedlabanki.is/xmltimeseries/Default.aspx?DagsFra=2026-09-29&DagsTil=2026-10-01&GroupID=9&Type=xml",
+    "raw": "Japanskt jen, skráð miðgengi: 0.768500（1 JPY あたりの ISK）",
+    "method": "出典の値の逆数で1ISKあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 0.88,
+    "date": "2016-09-30",
+    "source": "アイスランド中央銀行 XML 時系列",
+    "url": "https://sedlabanki.is/xmltimeseries/Default.aspx?DagsFra=2016-09-29&DagsTil=2016-10-03&GroupID=9&Type=xml",
+    "raw": "Japanskt jen, skráð miðgengi: 1.131700",
+    "method": "出典の値の逆数で1ISKあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「クローナ」はアイスランド語で「王冠」で、ラテン語の「コロナ」が語源です。",
+   "trivia": "硬貨にはタラ、イルカ、カラフトシシャモ、カニ、ダンゴウオと、海の生き物が描かれています。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Icelandic_kr%C3%B3na",
+    "https://exclusivecoins.blogspot.com/2015/09/214-currency-and-coinage-of-iceland.html",
+    "https://www.dema-coins.com/2021/06/eyrir-coin-Iceland.html",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://sedlabanki.is/xmltimeseries/Default.aspx?DagsFra=2026-09-29&DagsTil=2026-10-01&GroupID=9&Type=xml",
+    "https://sedlabanki.is/xmltimeseries/Default.aspx?DagsFra=2016-09-29&DagsTil=2016-10-03&GroupID=9&Type=xml",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "エイリル（複数形アウラル）は2003年に廃止され、取引は1クローナ単位。ISO 4217 の小数桁も0。硬貨の動物は1クローナ＝タラ、5＝イルカ、10＝カラフトシシャモ、50＝ミドリガニ（shore crab）、100＝ダンゴウオ（lumpfish）。中央銀行の硬貨ページは開けず（404）、二次資料2つで確認。1981年に100旧クローナ＝1新クローナのデノミ。",
+   "rate_note": "系列 ID は USD=4055、JPY=4085（GroupID=9）。中央銀行の新しいサイト cb.is のレートのページは画面の作りの都合でデータを直接読めなかったので、同じ銀行の XML サービスから取った。二次資料の Frankfurter（provider sbi、同行のデータを中継している）では 2026-09-30 の ISK→JPY が 1.3012（=1/0.7685）、2016-09-30 が 0.88363（=1/1.1317）で合っている。",
+   "confidence": "medium"
+  },
+  {
+   "name": "ポーランドズウォティ",
+   "code": "PLN",
+   "symbol": "zł",
+   "subunit": {
+    "name": "グロシュ（grosz）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ポーランド"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ポーランド国立銀行",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 40.86,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 42.06 / TTB 39.66（1PLNあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 26.35,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 27.55 / TTB 25.15（1PLNあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「ズウォティ」はポーランド語で「金の」という意味で、中世の金貨に由来します。",
+   "trivia": "1995年、1万旧ズウォティを1新ズウォティにするデノミを行い、ゼロを4つ消しました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Polish_z%C5%82oty",
+    "https://pl.wikipedia.org/wiki/Denominacja_z%C5%82otego_w_1995_roku",
+    "https://muzhp.pl/kalendarium/denominacja-zlotego",
+    "https://nbp.pl/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "デノミは1995年1月1日。旧通貨（PLZ）と新通貨は1996年末まで併用。EU加盟国としてユーロ導入の義務はあるが時期は決まっていない。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "チェココルナ",
+   "code": "CZK",
+   "symbol": "Kč",
+   "subunit": {
+    "name": "ハレーシュ（haléř）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "チェコ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "チェコ国立銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 7.3,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 7.42 / TTB 7.18（1CZKあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 4.2,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 4.32 / TTB 4.08（1CZKあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「コルナ」はチェコ語で「王冠」の意味です。オーストリア＝ハンガリーの通貨クローネを受け継いだ名前です。",
+   "trivia": "1993年にチェコスロバキアが分かれたとき、旧紙幣に小さな証紙を貼り、チェコの紙幣として使いました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Czech_koruna",
+    "https://ja.wikipedia.org/wiki/チェコ・コルナ",
+    "https://www.historie.cnb.cz/cs/emisni_cinnost/menova_odluka/",
+    "https://ct24.ceskatelevize.cz/clanek/ekonomika/rozdeleni-ceskoslovenska-zavrsila-pred-25-lety-menova-odluka-na-bankovky-se-lepily-kolky-84291",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ハレーシュ硬貨は10・20ハレーシュが2003年、50ハレーシュが2008年に廃止され、今は計算上の単位だけ。証紙を貼ったのは100・500・1000コルナ札のみ（1993年2月）。Kčは略号。「コルナ＝王冠」の語義は一般的な説明で、確認した資料ではクローネ由来の記述のみ。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "ハンガリーフォリント",
+   "code": "HUF",
+   "symbol": "Ft",
+   "subunit": {
+    "name": "フィレール（fillér）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ハンガリー"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ハンガリー国立銀行（中央銀行）",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 0.49,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 0.51 / TTB 0.47（1HUFあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 0.37,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 0.39 / TTB 0.35（1HUFあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "13世紀にイタリアのフィレンツェで造られた金貨「フィオリーノ」が名前の由来です。",
+   "trivia": "1946年の導入時、1フォリントは旧通貨ペンゲーの4×10の29乗と交換されました。史上最悪のインフレです。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Hungarian_forint",
+    "https://sites.krieger.jhu.edu/iae/files/2017/04/Vinitha_Kumar_Hungary.pdf",
+    "https://learn.planetbanknote.com/pengo-to-forint-1946/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "フィレール硬貨は1999年に流通を終え、補助単位は事実上使われない。Ftは略号。導入日は1946年8月1日。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "イスラエル新シェケル",
+   "code": "ILS",
+   "symbol": "₪",
+   "subunit": {
+    "name": "アゴラ（agora、複数形アゴロット）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "イスラエル"
+    ],
+    "unofficial": [
+     "パレスチナ（ヨルダン川西岸地区・ガザ地区）"
+    ]
+   },
+   "central_bank": "イスラエル銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 51.26,
+    "date": "2026-09-30",
+    "source": "イスラエル銀行 SDMX API（BOI.STATISTICS/EXR）",
+    "url": "https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI.STATISTICS/EXR/1.0/RER_JPY_ILS,RER_USD_ILS?startperiod=2026-09-28&endperiod=2026-10-02&format=csv",
+    "raw": "RER_JPY_ILS 1.951（UNIT_MULT=2、つまり 100 JPY = 1.951 ILS）",
+    "method": "出典の値の逆数で1ILSあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 26.88,
+    "date": "2016-09-30",
+    "source": "イスラエル銀行 SDMX API",
+    "url": "https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI.STATISTICS/EXR/1.0/RER_JPY_ILS,RER_USD_ILS?startperiod=2016-09-28&endperiod=2016-10-03&format=csv",
+    "raw": "RER_JPY_ILS 3.7198（100 JPY あたりの ILS）",
+    "method": "出典の値の逆数で1ILSあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「シェケル」は古代ヘブライ語の「量る」に由来し、もとは約11グラムの重さの単位でした。",
+   "trivia": "1985年、インフレ対策で旧シェケル1000を新シェケル1にしました。記号₪は「シェケル」と「新しい」の頭文字の組み合わせです。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Israeli_new_shekel",
+    "https://boi.org.il/en/economic-roles/banknotes-and-coins/first-series-of-the-new-sheqel/",
+    "https://israeled.org/new-shekel-is-introduced/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI.STATISTICS/EXR/1.0/RER_JPY_ILS,RER_USD_ILS?startperiod=2026-09-28&endperiod=2026-10-02&format=csv",
+    "https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI.STATISTICS/EXR/1.0/RER_JPY_ILS,RER_USD_ILS?startperiod=2016-09-28&endperiod=2016-10-03&format=csv",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "導入は1985年9月4日、旧シェケルからの切り替え完了は1986年1月1日（英語版ウィキペディアの要約では1986年1月1日を導入日としており、表現が分かれる）。1アゴラ硬貨は1991年、5アゴロット硬貨は2008年に廃止され、今は10アゴロット硬貨が最小。パレスチナでは事実上の通貨として広く使われるが、ISO 4217はパレスチナに通貨を割り当てていない。",
+   "rate_note": "JPY は CSV の UNIT_MULT=2（10の2乗、つまり100円単位）。3.063÷1.951×100≒157 で合っている。2つ目の資料との突き合わせはしていない。",
+   "confidence": "high"
+  },
+  {
+   "name": "パキスタンルピー",
+   "code": "PKR",
+   "symbol": "Rs",
+   "subunit": {
+    "name": "パイサ（paisa）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "パキスタン"
+    ],
+    "unofficial": [
+     "アフガニスタン"
+    ]
+   },
+   "central_bank": "パキスタン国家銀行（State Bank of Pakistan）",
+   "regime": {
+    "classification": "安定化制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "2024年4月に分類変更。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 0.57,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 0.65 / TTB 0.49（1PKRあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 0.97,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 1.12 / TTB 0.82（1PKRあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「ルピー」はサンスクリット語の「ルーピヤ（打ち出した銀・銀貨）」に由来します。",
+   "trivia": "1950〜1978年、メッカ巡礼者だけが使える「ハッジ紙幣」があり、お金の不正な国外持ち出しを防いでいました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Pakistani_rupee",
+    "https://ja.wikipedia.org/wiki/パキスタン・ルピー",
+    "http://www.pjsymes.com.au/articles/hajnotes.htm",
+    "https://propakistani.pk/2026/01/15/govt-approves-printing-of-4-notes-with-new-designs/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "パイサ硬貨は2013年に法定通貨でなくなり、補助単位は事実上使われない。Rsは略号（₨とも書く）。新デザイン紙幣（100・500・1000・5000ルピー）は2026年1月14日に連邦内閣が印刷を承認したが、2026年前半の報道では発行日は未発表。2026年10月時点で発行済みかは確認できなかった。アフガニスタンでの流通は日本語版ウィキペディアのみで、裏付けが1資料。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "バングラデシュタカ",
+   "code": "BDT",
+   "symbol": "৳",
+   "subunit": {
+    "name": "ポイシャ（poisha）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "バングラデシュ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "バングラデシュ銀行（中央銀行）",
+   "regime": {
+    "classification": "クロール類似制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "2024年5月に分類変更。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 1.28,
+    "date": "2026-09-30",
+    "source": "バングラデシュ銀行 Exchange Rate of Taka（月別検索）",
+    "url": "https://www.bb.org.bd/en/index.php/econdata/exchangerate （Select Currency=All Currency、Select Date=September, 2026 で検索）",
+    "raw": "JPY: Bid Rate 0.7813 / Ask Rate 0.7830（1 JPY あたりの BDT、クロスレート）",
+    "method": "出典の買値と売値の平均の逆数で1BDTあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 1.29,
+    "date": "2016-09-29",
+    "source": "バングラデシュ銀行 Exchange Rate of Taka",
+    "url": "https://www.bb.org.bd/en/index.php/econdata/exchangerate （September, 2016 で検索）",
+    "raw": "JPY: Bid Rate 0.7735 / Ask Rate 0.7737",
+    "method": "出典の買値と売値の平均の逆数で1BDTあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「タカ」はサンスクリット語の「タンカ（銀貨）」に由来します。ベンガル語ではお金全般も指します。",
+   "trivia": "2025年からの新紙幣では、建国の父ムジブル・ラフマンの肖像が外され、歴史的な建物や遺跡の絵になりました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Bangladeshi_taka",
+    "https://platform.keesingtechnologies.com/bangladesh-releases-the-first-three-banknotes-in-new-series/",
+    "https://en.prothomalo.com/business/local/y8vs6yzm42",
+    "https://www.dhakatribune.com/bangladesh/government-affairs/382557/new-banknotes-of-tk1-000-tk50-and-tk20-to-hit",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.bb.org.bd/en/index.php/econdata/exchangerate （Select Currency=All Currency、Select Date=September, 2026 で検索）",
+    "https://www.bb.org.bd/en/index.php/econdata/exchangerate （September, 2016 で検索）",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ポイシャ硬貨はインフレで流通していない。10タカ以上の紙幣はバングラデシュ銀行、それより小さい政府紙幣・硬貨は財務省の発行。新シリーズは2025年6月1日に20・50・1000タカ、2025年12月4日に500タカが流通開始し、旧紙幣と併用。",
+   "rate_note": "同行の説明では、ある日付の表の USD 買値・売値は『前営業日のダッカ終値の最高値・最安値』で、クロスレートはニューヨークとダッカの終値から作る。つまり 2026-09-30 の表は 9/29 の取引を反映している。2016-09-30 は金曜（休日）で表に無いので、直前の 2016-09-29（木）を採った（10月の表の 02/10/16 も 29/09/16 と同じ値）。サイトにボット対策があって curl では読めず、ブラウザで取った。2つ目の資料との突き合わせはしていない（USD÷JPY≒157 で合っている）。",
+   "confidence": "high"
+  },
+  {
+   "name": "ネパールルピー",
+   "code": "NPR",
+   "symbol": "रू",
+   "subunit": {
+    "name": "パイサ（paisa）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ネパール"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ネパール中央銀行（ネパール・ラストラ銀行）",
+   "regime": {
+    "classification": "ペッグ制（インドルピーに固定）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1インドルピー＝1.6ネパールルピーです。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 1.03,
+    "date": "2026-09-30",
+    "source": "ネパール・ラストラ銀行（NRB）Forex API",
+    "url": "https://www.nrb.org.np/api/forex/v1/rates?from=2026-09-30&to=2026-09-30&per_page=100&page=1",
+    "raw": "Japanese Yen unit 10: buy 9.72 / sell 9.76（10 JPY あたりの NPR）",
+    "method": "出典の買値と売値の平均の逆数で1NPRあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 0.95,
+    "date": "2016-09-30",
+    "source": "ネパール・ラストラ銀行（NRB）Forex API",
+    "url": "https://www.nrb.org.np/api/forex/v1/rates?from=2016-09-30&to=2016-09-30&per_page=100&page=1",
+    "raw": "Japanese Yen unit 10: buy 10.52 / sell 10.58",
+    "method": "出典の買値と売値の平均の逆数で1NPRあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「ルピー」はサンスクリット語の「ルーピヤ（銀貨）」に由来します。1932年に銀貨モハルに代わって導入されました。",
+   "trivia": "ネパールの紙幣は5ルピーから1000ルピーまで、どの額面にもエベレストが描かれています。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Nepalese_rupee",
+    "https://en.wikipedia.org/wiki/Nepalese_hundred-rupee_note",
+    "https://thehimalayantimes.com/business/nrb-introduces-new-rs1000-banknote-featuring-elephants-everest",
+    "https://www.nationalheraldindia.com/international/nepal-central-bank-bans-indian-notes-above-indian-rupee100-denomination",
+    "https://www.aninews.in/news/world/asia/nepal-issues-new-npr-100-banknote-featuring-updated-map-including-disputed-territories20251127204912/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.nrb.org.np/api/forex/v1/rates?from=2026-09-30&to=2026-09-30&per_page=100&page=1",
+    "https://www.nrb.org.np/api/forex/v1/rates?from=2016-09-30&to=2016-09-30&per_page=100&page=1",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "インドルピーはネパールの法定通貨ではない（1966年に法定通貨でなくなったとされる）が、国境地帯を中心に広く使われる。高額のインドルピー札は持ち込み・使用が制限されてきたが、近年200・500ルピー札について緩和された。パイサはほぼ使われない。2025年11月、領有を争う地域を含む地図を描いた新100ルピー札（2081年銘＝ネパール暦）が発行された。記号はरूまたはRs。",
+   "rate_note": "API が値を文字列で返すので、文字列のまま写した。2026-09-30 分の published_on は 2026-09-30 00:00:17。2016年分は modified_on が 2020-01-03（後から登録されたデータ）。INR は2016年も2026年も 100 INR = 160.00/160.15 の固定（ペッグ）。2つ目の資料との突き合わせはしていない（USD÷JPY が 2026年≒157、2016年≒101 で合っている）。",
+   "confidence": "high"
+  },
+  {
+   "name": "モンゴルトゥグルグ",
+   "code": "MNT",
+   "symbol": "₮",
+   "subunit": {
+    "name": "ムング（möngö）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "モンゴル"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "モンゴル銀行（中央銀行）",
+   "regime": {
+    "classification": "クロール類似制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 4.36,
+    "date": "2026-09-30",
+    "source": "モンゴル銀行（Mongolbank）",
+    "url": "https://www.mongolbank.mn/en/currency-rates/data?startDate=2026-09-28&endDate=2026-10-02 (POST。画面は https://www.mongolbank.mn/en/currency-rates)",
+    "raw": "1 JPY = 22.92 MNT（出典表記 JPY \"22.92\"）",
+    "method": "出典の値の逆数で100MNTあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 4.41,
+    "date": "2016-09-30",
+    "source": "モンゴル銀行（Mongolbank）",
+    "url": "https://www.mongolbank.mn/en/currency-rates/data?startDate=2016-09-28&endDate=2016-10-03 (POST)",
+    "raw": "1 JPY = 22.67 MNT",
+    "method": "出典の値の逆数で100MNTあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「トゥグルグ」はモンゴル語で「丸い」という意味で、丸い硬貨を表します。日本の「円（圓）」と同じ発想です。",
+   "trivia": "トゥグルグは1925年に生まれました。2025年12月には、通貨100年を記念する10万トゥグルグ紙幣が出ました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Mongolian_t%C3%B6gr%C3%B6g",
+    "https://ja.wikipedia.org/wiki/トゥグルグ",
+    "https://www.banknoteworld.com/blog/mongolia-100000-tugrik-banknote-2025-commemorating-the-100th-anniversary-of-the-introduction-of-the-national-currency-the-mongolian-revolution/",
+    "https://mriguide.com/mongolia-new-banknote-commemorates-centennial-of-the-tugruk/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.mongolbank.mn/en/currency-rates/data?startDate=2026-09-28&endDate=2026-10-02 (POST。画面は https://www.mongolbank.mn/en/currency-rates)",
+    "https://www.mongolbank.mn/en/currency-rates/data?startDate=2016-09-28&endDate=2016-10-03 (POST)",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ムングは実際にはほとんど使われない。流通開始は1925年12月9日。100年記念の10万トゥグルグ紙幣は2021年銘の紙幣に2025年12月9日の日付を加刷したもの（収集家向け資料2つによる。モンゴル銀行の原文は未確認）。",
+   "rate_note": "API の値は文字列（桁区切りのカンマ付き）。2016-10-01/02（週末）にも 09-30 と同じ値が入っている。2つ目の資料は無し。値から出る USD/JPY（約156.9 / 100.9）は他の中央銀行の値と整合する。",
+   "confidence": "medium"
+  },
+  {
+   "name": "カザフスタンテンゲ",
+   "code": "KZT",
+   "symbol": "₸",
+   "subunit": {
+    "name": "ティイン（tiyn）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "カザフスタン"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "カザフスタン国立銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 35.84,
+    "date": "2026-09-30",
+    "source": "カザフスタン国立銀行",
+    "url": "https://nationalbank.kz/rss/get_rates.cfm?fdate=30.09.2026",
+    "raw": "1 JPY = 2.79 KZT（quant=1）",
+    "method": "出典の値の逆数で100KZTあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 30.3,
+    "date": "2016-09-30",
+    "source": "カザフスタン国立銀行",
+    "url": "https://nationalbank.kz/rss/get_rates.cfm?fdate=30.09.2016",
+    "raw": "1 JPY = 3.3 KZT（出典表記 \"3.3\"、quant=1）",
+    "method": "出典の値の逆数で100KZTあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「テンゲ」はカザフ語などテュルク系の言葉で「はかり」「釣り合い」を意味します。",
+   "trivia": "テンゲが登場した11月15日は「国の通貨の日」です。1993年の導入時、旧ソ連ルーブル500と1テンゲを交換しました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Kazakhstani_tenge",
+    "https://nationalbank.kz/en/page/currency-history",
+    "https://nationalbank.kz/en/page/money-guide",
+    "https://astanatimes.com/2021/11/the-national-currency-of-independent-kazakhstan-a-historical-overview-of-the-tenge/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://nationalbank.kz/rss/get_rates.cfm?fdate=30.09.2026",
+    "https://nationalbank.kz/rss/get_rates.cfm?fdate=30.09.2016",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "ティイン硬貨は2001年に回収され、2012年末に法定通貨でなくなった。2023年12月から新シリーズ「サカ様式」紙幣を順に発行中（5000・10000・2000・1000・500テンゲは発行済み、20000テンゲは2026年末〜2027年初めの予定）。語源（はかり）は英語版ウィキペディアによる。",
+   "rate_note": "JPY は1円あたりで小数2桁まで（2016年は 3.3 と表記）なので精度は粗い。2つ目の資料は無し。 対円の公表値は小数2桁（2016年は3.3）までなので換算値の精度は粗い（対米ドルと三菱UFJ銀行の米ドルTTMから出すと2026年35.81円、2016年30.19円）。",
+   "confidence": "high"
+  },
+  {
+   "name": "ナイジェリアナイラ",
+   "code": "NGN",
+   "symbol": "₦",
+   "subunit": {
+    "name": "コボ（kobo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ナイジェリア"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ナイジェリア中央銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 11.81,
+    "date": "2026-09-30",
+    "source": "ナイジェリア中央銀行（CBN）",
+    "url": "https://www.cbn.gov.ng/api/GetAllExchangeRates （画面: https://www.cbn.gov.ng/rates/ExchRateByCurrency.html）",
+    "raw": "1 YEN = 8.4650 NGN（centralrate。buying 8.4618 / selling 8.4681）",
+    "method": "出典の値の逆数で100NGNあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 33.26,
+    "date": "2016-09-30",
+    "source": "ナイジェリア中央銀行（CBN）",
+    "url": "https://www.cbn.gov.ng/api/GetAllExchangeRates",
+    "raw": "1 YEN = 3.0069 NGN（centralrate。buying 3.0020 / selling 3.0118）",
+    "method": "出典の値の逆数で100NGNあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "国名「ナイジェリア（Nigeria）」から作られた名前です。1973年にナイジェリア・ポンドに代わって登場しました。",
+   "trivia": "2023年、紙幣の切り替えがうまくいかず街から現金が消え、各地で抗議が起きました。最高裁が旧札の使用を認めました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Nigerian_naira",
+    "https://ja.wikipedia.org/wiki/ナイラ",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.cbn.gov.ng/api/GetAllExchangeRates （画面: https://www.cbn.gov.ng/rates/ExchRateByCurrency.html）",
+    "https://www.cbn.gov.ng/api/GetAllExchangeRates",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "名前の由来（国名から）と名付け親を政治家オバフェミ・アウォロウォとする説明は英語版ウィキペディアのみで、別資料で確かめられなかった（origin では名付け親に触れていない）。中央銀行の原文も未確認。1973年1月1日に1ポンド＝2ナイラで切り替え。紙幣刷新は2022年10月発表（200・500・1000ナイラ）、旧札は最高裁判断で2023年末まで有効とされた。",
+   "rate_note": "2026-10-01（独立記念日）はデータ無し。2つ目の資料は無し。",
+   "confidence": "medium"
+  },
+  {
+   "name": "ケニアシリング",
+   "code": "KES",
+   "symbol": "KSh",
+   "subunit": {
+    "name": "セント（cent）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ケニア"
+    ],
+    "unofficial": [
+     "ソマリア",
+     "南スーダン"
+    ]
+   },
+   "central_bank": "ケニア中央銀行",
+   "regime": {
+    "classification": "安定化制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "2024年8月に分類変更。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 1.21,
+    "date": "2026-09-30",
+    "source": "ケニア中央銀行（CBK）",
+    "url": "https://www.centralbank.go.ke/forex/ （表のデータは https://www.centralbank.go.ke/wp-admin/admin-ajax.php?action=get_wdtable&table_id=193 に POST）",
+    "raw": "JPY (100) = 82.4600 KES（100円あたり）",
+    "method": "出典の値の逆数で1KESあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 1.0,
+    "date": "2016-09-30",
+    "source": "ケニア中央銀行（CBK）",
+    "url": "https://www.centralbank.go.ke/rates/forex-exchange-rates/ （データは admin-ajax.php?action=get_wdtable&table_id=32。この表は 2024-01-04 で止まっている）",
+    "raw": "JPY (100) = 99.7406 KES（Mean。Buy 99.6372 / Sell 99.8440）",
+    "method": "出典の値の逆数で1KESあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "英国の通貨単位「シリング」に由来します。1966年に東アフリカ・シリングから等価で切り替わりました。",
+   "trivia": "2019年の新紙幣では憲法に従って人物の肖像をやめました。古い1000シリング札は同年10月に使えなくなりました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Kenyan_shilling",
+    "https://ja.wikipedia.org/wiki/ケニア・シリング",
+    "https://allafrica.com/stories/202408070390.html",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.centralbank.go.ke/forex/ （表のデータは https://www.centralbank.go.ke/wp-admin/admin-ajax.php?action=get_wdtable&table_id=193 に POST）",
+    "https://www.centralbank.go.ke/rates/forex-exchange-rates/ （データは admin-ajax.php?action=get_wdtable&table_id=32。この表は 2024-01-04 で止まっている）",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "セントはほとんど使われていない（2018年の新硬貨はシリング単位のみ）が、明記した一次資料は未確認。ソマリア・南スーダンでの流通は日本語版ウィキペディアのみで裏付けが1資料。2024年版紙幣は署名と偽造防止を更新したもので、2019年版と併用。",
+   "rate_note": "/rates/forex-exchange-rates/ の表（table 32）は 2024-01-04 まで、historical_data.csv は 2016-10 までで止まっている。2026年分は /forex/ ページの表（table 193）にしか無い。2016年分は CSV に該当日が無く、2つ目の資料で突き合わせられていない。",
+   "confidence": "medium"
+  },
+  {
+   "name": "モロッコディルハム",
+   "code": "MAD",
+   "symbol": "DH",
+   "subunit": {
+    "name": "サンチーム（santim、仏語でcentime）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "モロッコ"
+    ],
+    "unofficial": [
+     "西サハラ"
+    ]
+   },
+   "central_bank": "バンク・アル・マグリブ（モロッコ中央銀行）",
+   "regime": {
+    "classification": "一定の幅の中でのペッグ制（ユーロと米ドルのバスケットに固定）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "バスケットはユーロ60％・米ドル40％、変動幅は上下5％です（モロッコ中央銀行）。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 16.21,
+    "date": "2026-09-30",
+    "source": "モロッコ中央銀行（Bank Al-Maghrib）",
+    "url": "https://www.bkam.ma/Marches/Principaux-indicateurs/Marche-des-changes/Cours-de-change/Cours-de-reference?date=30%2F09%2F2026&block=cc51b5ce6878a3dc655dae26c47fddf8",
+    "raw": "100 YENS JAPONAIS = 6,1674 MAD",
+    "method": "出典の値の逆数で1MADあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 10.38,
+    "date": "2016-09-30",
+    "source": "モロッコ中央銀行（Bank Al-Maghrib）の参照レート",
+    "url": "https://www.bkam.ma/Marches/Principaux-indicateurs/Marche-des-changes/Cours-de-change/Cours-de-reference?date=30%2F09%2F2016&block=cc51b5ce6878a3dc655dae26c47fddf8",
+    "raw": "100円＝買9.6071 / 売9.6649 ディルハム（当時は中値の公表なし）",
+    "method": "買売の平均を出し、1ディルハムあたりの円に直した換算値",
+    "derived": true
+   },
+   "origin": "古代ギリシャの銀貨で重さの単位でもあった「ドラクマ」が、アラビア語を通じて名前の由来になりました。",
+   "trivia": "2024年の新紙幣には、目の不自由な人が指で額面を確かめられる凸凹の模様が入っています。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Moroccan_dirham",
+    "https://fr.wikipedia.org/wiki/Dirham_marocain",
+    "https://www.financialafrik.com/2024/01/12/maroc-bank-al-maghrib-met-en-circulation-un-nouveau-billet-de-200-dirhams/",
+    "https://ledesk.ma/encontinu/bank-al-maghrib-met-en-circulation-un-nouveau-billet-de-20-dirhams/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.bkam.ma/Marches/Principaux-indicateurs/Marche-des-changes/Cours-de-change/Cours-de-reference?date=30%2F09%2F2026&block=cc51b5ce6878a3dc655dae26c47fddf8",
+    "https://www.bkam.ma/Marches/Principaux-indicateurs/Marche-des-changes/Cours-de-change/Cours-de-reference?date=30%2F09%2F2016&block=cc51b5ce6878a3dc655dae26c47fddf8",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "DHは略号、アラビア語表記は د.م.。ISO 4217は西サハラもMADの使用地域に挙げるが、西サハラは帰属が争われている地域のため unofficial に入れた。新紙幣は200ディルハムが2024年1月12日、20ディルハムが2024年8月21日に流通開始。1960年10月16日にモロッコ・フランに代わって導入。",
+   "rate_note": "出典は小数点にカンマを使う（6,1674）。2016-09-30 の参照レートは買値（cours d'achat）と売値（cours de vente）の2本だけで、Moyen が無いため y2016 は null にした（中値は計算していない）。出典の値は 100 YENS JAPONAIS 買 9,6071 / 売 9,6649 MAD、1 DOLLAR U.S.A. 買 9,7191 / 売 9,7775 MAD。URL は 2026 年の URL の date を 30%2F09%2F2016 に変えたもの。2つ目の資料は無し。",
+   "confidence": "high"
+  },
+  {
+   "name": "ペルー・ソル",
+   "code": "PEN",
+   "symbol": "S/",
+   "subunit": {
+    "name": "センティモ（céntimo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ペルー"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ペルー中央準備銀行",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 45.88,
+    "date": "2026-09-30",
+    "source": "ペルー中央準備銀行（BCRP）の銀行間レート（ソル/ドル）と同行の円/ドル（PD04698XD）",
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04637PD-PD04638PD/json/2026-09-28/2026-10-02",
+    "raw": "1米ドル＝買3.43 / 売3.432 ソル、1米ドル＝157.41円",
+    "method": "ソル/ドルの買売の平均で円/ドルを割った換算値（同じ出典の数字だけで計算）",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 29.83,
+    "date": "2016-09-30",
+    "source": "ペルー中央準備銀行（BCRP）の銀行間レート（ソル/ドル）と同行の円/ドル（PD04698XD）",
+    "url": "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04637PD-PD04638PD/json/2016-09-28/2016-10-03",
+    "raw": "1米ドル＝買3.395 / 売3.398 ソル、1米ドル＝101.33円",
+    "method": "ソル/ドルの買売の平均で円/ドルを割った換算値（同じ出典の数字だけで計算）",
+    "derived": true
+   },
+   "origin": "「ソル」はスペイン語で「太陽」の意味です。ラテン語の金貨名「ソリドゥス」にも由来します。",
+   "trivia": "1991年の切り替えでは、旧通貨インティ100万が新しい1ソルになりました。2015年に「ヌエボ（新）」が取れました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Peruvian_sol",
+    "https://es.wikipedia.org/wiki/Sol_(moneda_de_Per%C3%BA)",
+    "https://ja.wikipedia.org/wiki/ソル_(通貨)",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04637PD-PD04638PD/json/2026-09-28/2026-10-02",
+    "https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04637PD-PD04638PD/json/2016-09-28/2016-10-03",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "1991年7月1日に「ヌエボ・ソル」として導入、2015年11月に議会が名称を「ソル」に変更（施行は2015年12月）。1・5センティモ硬貨は流通から外れたが法定通貨のまま。中央準備銀行の原文は未確認。",
+   "rate_note": "BCRP の日次系列にソル建ての円レートは無い（日次は S/ por US$ と S/ por Euro だけ。円は月次 PN01236PM だけ）。日次で円が出てくるのは『Yen por Dólar』（PD04698XD。2026-09-30 は 157.41、2016-09-30 は 101.33）だけで、これは PEN 対 JPY ではないので per_jpy は null。API の生の値は 3.43014285714286 のように長く、系列の小数桁指定は 3。SBS の系列（PD04639PD/PD04640PD）は 2026-09-30 が Compra 3.429 / Venta 3.437、2016-09-30 が Compra 3.397 / Venta 3.403。",
+   "confidence": "high"
+  },
+  {
+   "name": "チリペソ",
+   "code": "CLP",
+   "symbol": "$",
+   "subunit": {
+    "name": "センターボ（centavo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "チリ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "チリ中央銀行",
+   "regime": {
+    "classification": "自由変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 16.23,
+    "date": "2026-09-30",
+    "source": "チリ中央銀行（BCCh）",
+    "url": "https://si3.bcentral.cl/Siete/ES/Siete/Cuadro/CAP_TIPO_CAMBIO/MN_TIPO_CAMBIO4/TCB_520_TIPO_CAMBIO_NOMINAL/TCB_520?cbFechaDiaria=2026&cbFrecuencia=DAILY&cbCalculo=NONE （ドル: .../MN_TIPO_CAMBIO4/DOLAR_OBS_ADO/TCB_505）",
+    "raw": "Japón: Yen = 6,16（1円あたりのペソ）",
+    "method": "出典の値の逆数で100CLPあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 15.34,
+    "date": "2016-09-30",
+    "source": "チリ中央銀行（BCCh）",
+    "url": "https://si3.bcentral.cl/Siete/ES/Siete/Cuadro/CAP_TIPO_CAMBIO/MN_TIPO_CAMBIO4/TCB_520_TIPO_CAMBIO_NOMINAL/TCB_520?cbFechaDiaria=2016&cbFrecuencia=DAILY&cbCalculo=NONE",
+    "raw": "Japón: Yen = 6,52（1円あたりのペソ）",
+    "method": "出典の値の逆数で100CLPあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "「ペソ」はスペイン語で「重さ」の意味です。金や銀を量って支払った時代の名残です。",
+   "trivia": "2008年製の50ペソ硬貨の一部で国名CHILEがCHIIEと誤って刻まれ、造幣局長が職を失いました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Chilean_peso",
+    "https://www.biobiochile.cl/noticias/2010/02/12/polemica-en-casa-de-moneda-ejemplar-de-50-pesos-en-circulacion-nombra-a-nuestro-pais-como-chiie.shtml",
+    "https://www.ngccoin.com/news/article/2739/Chile-2008-50-Peso/",
+    "https://es.wikipedia.org/wiki/Peso_(moneda)",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://si3.bcentral.cl/Siete/ES/Siete/Cuadro/CAP_TIPO_CAMBIO/MN_TIPO_CAMBIO4/TCB_520_TIPO_CAMBIO_NOMINAL/TCB_520?cbFechaDiaria=2026&cbFrecuencia=DAILY&cbCalculo=NONE （ドル: .../MN_TIPO_CAMBIO4/DOLAR_OBS_ADO/TCB_505）",
+    "https://si3.bcentral.cl/Siete/ES/Siete/Cuadro/CAP_TIPO_CAMBIO/MN_TIPO_CAMBIO4/TCB_520_TIPO_CAMBIO_NOMINAL/TCB_520?cbFechaDiaria=2016&cbFrecuencia=DAILY&cbCalculo=NONE",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "センターボは法律で1984年1月1日に廃止され、補助単位は無い（ISO 4217でも小数桁0）。1975年にエスクード1000＝1ペソで導入。誤刻の発覚は2010年2月（2009年とする資料もある）。",
+   "rate_note": "日付は BCCh の表の列の日付。dólar observado はその日に適用される値で、前の営業日の取引から算出する慣行なので、取引日とは1日ずれる。円は小数2桁まで。ドルは mindicador.cl（BCCh の値の非公式ミラー）でも 2026-09-30 が 970.46、2016-09-30 が 659.08 で一致。円の2つ目の資料は無し。",
+   "confidence": "high"
+  },
+  {
+   "name": "コロンビアペソ",
+   "code": "COP",
+   "symbol": "$",
+   "subunit": {
+    "name": "センターボ（centavo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "コロンビア"
+    ],
+    "unofficial": [
+     "ベネズエラ（国境地帯）"
+    ]
+   },
+   "central_bank": "コロンビア共和国銀行（Banco de la República）",
+   "regime": {
+    "classification": "変動相場制",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 4.71,
+    "date": "2026-09-30",
+    "source": "コロンビアの代表市場レートTRM（金融監督庁が認証、政府オープンデータ）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.datos.gov.co/resource/32sa-8pi3.json?$where=vigenciadesde<='2026-09-30T00:00:00.000'&$order=vigenciadesde DESC&$limit=3",
+    "raw": "TRM 1米ドル＝3341.23 ペソ、三菱UFJ銀行TTM（2026-09-30）米ドル157.35円",
+    "method": "米ドルTTM÷TRM×100 で出した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 3.51,
+    "date": "2016-09-30",
+    "source": "コロンビアの代表市場レートTRM（金融監督庁が認証、政府オープンデータ）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.datos.gov.co/resource/32sa-8pi3.json?$where=vigenciadesde<='2016-09-30T00:00:00.000'&$order=vigenciadesde DESC&$limit=2",
+    "raw": "TRM 1米ドル＝2879.95 ペソ、三菱UFJ銀行TTM（2016-09-30）米ドル101.12円",
+    "method": "米ドルTTM÷TRM×100 で出した換算値",
+    "derived": true
+   },
+   "origin": "「ペソ」はスペイン語で「重さ」の意味です。金や銀を量って支払った時代の名残です。",
+   "trivia": "2016年からの5万ペソ札には、ノーベル文学賞作家ガブリエル・ガルシア＝マルケスが描かれています。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Colombian_peso",
+    "https://es.wikipedia.org/wiki/Peso_colombiano",
+    "https://www.banrep.gov.co/es/billetes-y-monedas/nueva-familia-billetes-colombianos",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.datos.gov.co/resource/32sa-8pi3.json?$where=vigenciadesde<='2026-09-30T00:00:00.000'&$order=vigenciadesde DESC&$limit=3",
+    "https://www.datos.gov.co/resource/32sa-8pi3.json?$where=vigenciadesde<='2016-09-30T00:00:00.000'&$order=vigenciadesde DESC&$limit=2",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "センターボは1984年から流通していない。ゼロを3つ取るデノミ案は2018年に下院を通ったが、次の政権で進まなかった。5万ペソ札は2016年8月19日発行。ベネズエラ国境地帯（タチラ州など）での流通は英語版ウィキペディアのみで裏付けが1資料。COL$とも書く。",
+   "rate_note": "TRM は対米ドルだけで、公式の対円レートは無いので per_jpy は null。2026-09-30 の TRM の有効期間は 09-30〜09-30。出典は datos.gov.co の TRM データセットで、共和国銀行（Banco de la República）のサイトそのものとは突き合わせていない。",
+   "confidence": "high"
+  },
+  {
+   "name": "カタールリヤル",
+   "code": "QAR",
+   "symbol": "QR",
+   "subunit": {
+    "name": "ディルハム（dirham）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "カタール"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "カタール中央銀行",
+   "regime": {
+    "classification": "ペッグ制（米ドルに固定）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1米ドル＝3.64リヤルです。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 43.25,
+    "date": "2026-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "TTS 43.93 / TTB 42.57（1QARあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 27.83,
+    "date": "2016-09-30",
+    "source": "三菱UFJ銀行 公示相場（仲値TTM。三菱UFJリサーチ&コンサルティング「外国為替相場」掲載の最終公表相場。TTMはTTSとTTBの平均＝同行の定義）",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "TTS 28.51 / TTB 27.15（1QARあたりの円）",
+    "method": "出典の仲値（TTM＝(TTS+TTB)/2）",
+    "derived": false
+   },
+   "origin": "「リヤル」はスペイン・ポルトガルの銀貨「レアル（王の）」に由来します。",
+   "trivia": "1966〜1973年、カタールとドバイは「カタール・ドバイ・リヤル」という共通の通貨を使っていました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Qatari_riyal",
+    "https://ja.wikipedia.org/wiki/カタール・リヤル",
+    "https://thepeninsulaqatar.com/article/13/12/2020/All-you-want-to-know-about-new-Qatari-Riyal-banknotes",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "QRは略号、アラビア語表記は ر.ق。2020年12月18日から第5次紙幣（初の200リヤル札を含む）が流通。語源（レアル）はリエルなど同系の通貨名の資料による説明で、カタール・リヤル単独の資料では未確認。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "バーレーンディナール",
+   "code": "BHD",
+   "symbol": "BD",
+   "subunit": {
+    "name": "フィルス（fils）",
+    "per_unit": 1000
+   },
+   "countries": {
+    "official": [
+     "バーレーン"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "バーレーン中央銀行",
+   "regime": {
+    "classification": "ペッグ制（米ドルに固定）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1米ドル＝0.376ディナールです。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 418.48,
+    "date": "2026-09-30",
+    "source": "固定レート（1米ドル＝0.376 BHD）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "三菱UFJ銀行TTM（2026-09-30）米ドル157.35円、1米ドル＝0.376 BHD",
+    "method": "米ドルTTM÷0.376 で出した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 268.94,
+    "date": "2016-09-30",
+    "source": "固定レート（1米ドル＝0.376 BHD）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "三菱UFJ銀行TTM（2016-09-30）米ドル101.12円、1米ドル＝0.376 BHD",
+    "method": "米ドルTTM÷0.376 で出した換算値",
+    "derived": true
+   },
+   "origin": "古代ローマの銀貨「デナリウス」が名前の由来です。",
+   "trivia": "1ディナールは約2.66米ドルで、クウェート・ディナールに次ぎ世界で2番目に価値の高い通貨単位です。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Bahraini_dinar",
+    "https://ja.wikipedia.org/wiki/バーレーン・ディナール",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "補助単位は1000分の1（1ディナール＝1000フィルス、ISO 4217でも小数桁3）。BDは略号、アラビア語表記は د.ب。1965年に湾岸ルピー10＝1ディナールで導入。サウジ・リヤルも国内で使われるとの記述が英語版にあるが、1資料のため countries には入れていない。「2番目に価値が高い」は英語版（2021年時点）の記述で、米ドル固定（1米ドル＝0.376ディナール）は日本語版でも確認。",
+   "rate_note": "",
+   "confidence": "high"
+  },
+  {
+   "name": "オマーンリアル",
+   "code": "OMR",
+   "symbol": "ر.ع.",
+   "subunit": {
+    "name": "バイサ（baisa）",
+    "per_unit": 1000
+   },
+   "countries": {
+    "official": [
+     "オマーン"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "オマーン中央銀行",
+   "regime": {
+    "classification": "ペッグ制（米ドルに固定）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "1米ドル＝0.3845リアルです。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 409.23,
+    "date": "2026-09-30",
+    "source": "固定レート（1米ドル＝0.3845 OMR）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "三菱UFJ銀行TTM（2026-09-30）米ドル157.35円、1米ドル＝0.3845 OMR",
+    "method": "米ドルTTM÷0.3845 で出した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 262.99,
+    "date": "2016-09-30",
+    "source": "固定レート（1米ドル＝0.3845 OMR）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "三菱UFJ銀行TTM（2016-09-30）米ドル101.12円、1米ドル＝0.3845 OMR",
+    "method": "米ドルTTM÷0.3845 で出した換算値",
+    "derived": true
+   },
+   "origin": "「リアル」はスペイン・ポルトガルの銀貨「レアル（王の）」に由来します。1970年にサイード・リアルとして生まれました。",
+   "trivia": "1リアルより小さい100・200バイサや半リアルの紙幣があります。2025年11月には専用の通貨記号も作られました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Omani_rial",
+    "https://ja.wikipedia.org/wiki/オマーン・リアル",
+    "https://timesofoman.com/article/165239-cbo-launches-official-symbol-for-omani-rial",
+    "https://www.muscatdaily.com/2025/11/19/cbo-launches-official-symbol-for-omani-rial/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "補助単位は1000分の1（1リアル＝1000バイサ、ISO 4217でも小数桁3）。オマーン中央銀行が2025年11月19日に公式の通貨記号を発表し、Unicode 18.0（2026年9月）でU+20C4として登録されたとされる（Unicode の原文は未確認）。印刷用フォントで出ない恐れがあるため symbol には従来のアラビア語略号 ر.ع. を入れた。1972年11月に「オマーン・リアル」へ改称（日本語版は1973年）。語源は他のリヤル系通貨と同じとする一般的説明で、単独の資料は未確認。",
+   "rate_note": "",
+   "confidence": "medium"
+  },
+  {
+   "name": "ウクライナ・フリヴニャ",
+   "code": "UAH",
+   "symbol": "₴",
+   "subunit": {
+    "name": "コピーカ（kopiyka）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "ウクライナ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "ウクライナ国立銀行",
+   "regime": {
+    "classification": "クロール類似制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "2024年4月に分類変更。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 3.5,
+    "date": "2026-09-30",
+    "source": "ウクライナ国立銀行（NBU）",
+    "url": "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=JPY&date=20260930&json",
+    "raw": "1 JPY = 0.28542 UAH（Єна の rate）",
+    "method": "出典の値の逆数で1UAHあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 3.92,
+    "date": "2016-09-30",
+    "source": "ウクライナ国立銀行（NBU）",
+    "url": "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=JPY&date=20160930&json",
+    "raw": "1 JPY = 0.2553189 UAH",
+    "method": "出典の値の逆数で1UAHあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "キーウ・ルーシ時代に首飾りや銀の延べ棒を指した「グリヴナ」に由来します。もとは「首」を表す言葉です。",
+   "trivia": "2026年9月4日、詩人ワシーリ・ストゥスを描いた2000フリヴニャ札が登場し、最高額の紙幣になりました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Ukrainian_hryvnia",
+    "https://ja.wikipedia.org/wiki/フリヴニャ",
+    "https://en.interfax.com.ua/news/general/1183922.html",
+    "https://unn.ua/en/news/ukraine-puts-into-circulation-a-2000-hryvnia-banknote-with-a-portrait-of-stus-from-september-4",
+    "https://finance.liga.net/en/bank/novosti/the-national-bank-will-start-withdrawing-10-kopeck-coins-from-circulation-on-october-1",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=JPY&date=20260930&json",
+    "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=JPY&date=20160930&json",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "1996年9月2日に10万カルボヴァネツ＝1フリヴニャで導入。1・2・5コピーカ硬貨は法定通貨でなくなり、10コピーカ硬貨も2025年10月1日から回収中（法定通貨のまま、現金払いは端数を丸める）。日本語版は語源を「たてがみ」とも説明しており、資料で説明がやや異なる。表記は「フリヴニャ」「グリブナ」などゆれがある。ウクライナ国立銀行の発表ページは取得できず（403）、報道2件で確認。",
+   "rate_note": "API は1単位あたりで出している。USD は同じ API で valcode=USD。2つ目の資料は無し。",
+   "confidence": "high"
+  },
+  {
+   "name": "カンボジア・リエル",
+   "code": "KHR",
+   "symbol": "៛",
+   "subunit": {
+    "name": "セン（sen）。1/10のカク（kak）もある",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "カンボジア"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "カンボジア国立銀行",
+   "regime": {
+    "classification": "クロール類似制度（米ドルを目安）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": ""
+   },
+   "rate_now": {
+    "unit": 100,
+    "yen": 3.86,
+    "date": "2026-09-30",
+    "source": "カンボジア国立銀行（NBC）",
+    "url": "https://www.nbc.gov.kh/english/economic_research/exchange_rate.php （日付を選んで POST。exdate=YYYY-MM-DD）",
+    "raw": "JPY/KHR Unit 100: Bid 2576 / Ask 2602 / Average 2589.00（100円あたり）",
+    "method": "出典の値の逆数で100KHRあたりの円にした換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 100,
+    "yen": 2.46,
+    "date": "2016-09-29",
+    "source": "カンボジア国立銀行（NBC）",
+    "url": "https://www.nbc.gov.kh/english/economic_research/exchange_rate.php （日付を選んで POST。exdate=YYYY-MM-DD）",
+    "raw": "JPY/KHR Unit 100: Bid 4040 / Ask 4080 / Average 4060.00",
+    "method": "出典の値の逆数で100KHRあたりの円にした換算値",
+    "derived": true
+   },
+   "origin": "スペイン・ポルトガルの銀貨「レアル」と同じ語源とされます。メコン川の魚の名前という俗説もあります。",
+   "trivia": "ポル・ポト政権の時代にはお金そのものが廃止されました。1980年にリエルが復活しました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Cambodian_riel",
+    "https://ja.wikipedia.org/wiki/リエル",
+    "https://www.khmertimeskh.com/501575223/govt-introduces-new-200000-riel-currency-notes/",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.nbc.gov.kh/english/economic_research/exchange_rate.php （日付を選んで POST。exdate=YYYY-MM-DD）",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "カク・センはインフレで現金の単位としては使われない。カンボジアでは米ドルが都市部を中心に事実上の通貨として広く使われ、リエルと併用されている（地方ではリエルが中心）。通貨が無かった期間を英語版は1975〜1980年、日本語版は廃止を1978年としており、年が食い違うため trivia では年を書いていない。2024年10月16日に過去最高額の20万リエル記念紙幣が発行された。語源は英語版のみ。",
+   "rate_note": "2016-09-30 はデータ無し（0000 KHR / USD と表示）。休日（Pchum Ben）の可能性があるが未確認。前の営業日 2016-09-29 の値を入れた（翌営業日 10-03 の OER も 4080）。ページは POST でしか日付を切り替えられないので、URL だけでは該当日を開けない。2つ目の資料は無し。",
+   "confidence": "medium"
+  },
+  {
+   "name": "パナマ・バルボア",
+   "code": "PAB",
+   "symbol": "B/.",
+   "subunit": {
+    "name": "センテシモ（centésimo）",
+    "per_unit": 100
+   },
+   "countries": {
+    "official": [
+     "パナマ"
+    ],
+    "unofficial": []
+   },
+   "central_bank": "中央銀行は無い。バルボア硬貨はパナマ政府（経済財務省）が発行",
+   "regime": {
+    "classification": "独自の法定通貨を持たない制度（米ドルを使用）",
+    "as_of": "2025-04-30",
+    "source": "IMF『Annual Report 2025』付表 II.9「為替制度の事実上の分類（2025年4月30日時点）」（出典はAREAERデータベース） https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf",
+    "note": "バルボアは硬貨だけで、紙幣は米ドルを使います。"
+   },
+   "rate_now": {
+    "unit": 1,
+    "yen": 157.35,
+    "date": "2026-09-30",
+    "source": "固定レート（1米ドル＝1.0 PAB）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "raw": "三菱UFJ銀行TTM（2026-09-30）米ドル157.35円、1米ドル＝1.0 PAB",
+    "method": "米ドルTTM÷1.0 で出した換算値",
+    "derived": true
+   },
+   "rate_10y": {
+    "unit": 1,
+    "yen": 101.12,
+    "date": "2016-09-30",
+    "source": "固定レート（1米ドル＝1.0 PAB）と三菱UFJ銀行の米ドルTTM",
+    "url": "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "raw": "三菱UFJ銀行TTM（2016-09-30）米ドル101.12円、1米ドル＝1.0 PAB",
+    "method": "米ドルTTM÷1.0 で出した換算値",
+    "derived": true
+   },
+   "origin": "スペインの探検家バスコ・ヌニェス・デ・バルボアにちなんで名付けられました。",
+   "trivia": "パナマ独自の紙幣は1941年に一度だけ出ましたが、政変ですぐ回収され、翌年ほとんどが焼却されました。",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Panamanian_balboa",
+    "https://es.wikipedia.org/wiki/Balboa_(moneda_de_Panam%C3%A1)",
+    "https://ja.wikipedia.org/wiki/バルボア_(通貨)",
+    "https://www.prensa.com/impresa/economia/MEF-acunara-monedas-balboa_0_4267073286.html",
+    "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=260930",
+    "https://www.murc-kawasesouba.jp/fx/past/index.php?id=160930",
+    "https://www.imf.org/external/pubs/ft/ar/2025/pdfs/imf-annual-report-2025-appendices.pdf"
+   ],
+   "note": "パナマは米ドルも法定通貨として併用しており（ISO 4217もパナマにPABとUSDの両方を載せる）、紙幣は米ドル札だけが使われる。バルボアは1904年の導入以来1米ドル＝1バルボア。硬貨は米国硬貨と同じ大きさ・材質で混ざって使われる。硬貨の発行は経済財務省（MEF）が担うことを報道とスペイン語版で確認したが、法令の原文は未確認。1941年の紙幣は10月2日発行、1942年6〜7月に焼却（約30万枚中、残存は約7000枚）。",
+   "rate_note": "",
+   "confidence": "medium"
+  }
+ ]
+}
