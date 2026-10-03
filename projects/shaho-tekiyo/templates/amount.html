@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}月収{{ man }}万円（年収{{ man * 12 }}万円）のパートの社会保険料はいくら？｜{{ era }}で月{{ "{:,}".format(tokyo.total_yen) }}円{% endblock %}
-{% block description %}月収{{ man }}万円で社会保険に入ると、引かれるのは東京で月{{ "{:,}".format(tokyo.total_yen) }}円（健康保険・子ども・子育て支援金・厚生年金、{{ era }}の料率）。47都道府県の額と、40〜64歳の額、残る額を円単位で。{% endblock %}
+{% block title %}パート月収{{ man }}万円、社会保険はいくら引かれる？手取りは月{{ "{:,}".format(tokyo.take_home_yen - koyo - (tax or 0)) }}円【2026年度】{% endblock %}
+{% block description %}パート月収{{ man }}万円（年収{{ man * 12 }}万円）で社会保険に入ると、引かれる保険料は月{{ "{:,}".format(tokyo.total_yen) }}円、手取りは月{{ "{:,}".format(tokyo.take_home_yen - koyo - (tax or 0)) }}円（東京・39歳以下・{{ era }}の料率）。47都道府県の額、40〜64歳の額、入る前との比べ方も円単位で。{% endblock %}
 {% block breadcrumb %}
 <nav class="crumbs" aria-label="パンくずリスト">
   <a href="{{ base_url }}index.html">計算機</a>
@@ -11,7 +11,7 @@
 </nav>
 {% endblock %}
 {% block content %}
-<h1>月収{{ man }}万円のパートの社会保険料はいくら？</h1>
+<h1>パート月収{{ man }}万円、社会保険はいくら引かれる？</h1>
 <p class="subtitle-plain">年収に直すと{{ man * 12 }}万円（賞与なし）</p>
 <p class="updated">{{ era }}の料率（{{ period }}）で計算</p>
 

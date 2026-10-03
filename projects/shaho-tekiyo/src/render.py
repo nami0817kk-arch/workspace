@@ -430,6 +430,39 @@ def _grade_rows(as_of: date) -> list[dict]:
     return rows
 
 
+# 損得のページ（/sontoku.html）。「パート 社会保険 加入 メリット デメリット」「損しない」で探す人向け。
+SONTOKU_MAN: tuple[int, ...] = (8, 10, 12, 15, 20)
+
+
+def _sontoku_rows(as_of: date) -> list[dict]:
+    """月収ごとに、配偶者の扶養（保険料0円）から加入したときの負担と、受けられるものの額。東京・39歳以下。"""
+    rows = []
+    for man in SONTOKU_MAN:
+        pay = man * 10_000
+        r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=False)
+        inc = extras.pension_increase_per_year(r.pension_standard)
+        daily = extras.sickness_daily_yen(r.health_standard)
+        rows.append(dict(
+            man=man, total=r.total_yen, year=r.total_yen * 12, pension_year=r.pension_yen * 12, pension_inc=inc,
+            # 厚生年金の保険料1年分を、増える年金で取り戻すのに何年受け取るか（今の価値での目安）
+            payback=round(r.pension_yen * 12 / inc, 1) if inc else None,
+            sick=daily, maternity=daily * 98,  # 出産手当金は産前42日・産後56日
+        ))
+    return rows
+
+
+def _build_sontoku_page() -> None:
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    _write(
+        _OUTPUT_DIR / "sontoku.html",
+        _env.get_template("sontoku.html").render(
+            base_url="", canonical=canonical_url("sontoku.html"), rows=_sontoku_rows(as_of),
+            era=_era(table.fiscal_year), kokumin=extras.kokumin_nenkin_yen(as_of),
+        ),
+    )
+
+
 # 年収別の手取り早見表（/nenshu.html）。「パート 年収 手取り 表」で探す人向け。
 NENSHU_MAN: tuple[int, ...] = (90, 100, 106, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)
 
@@ -541,6 +574,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-10-03", "検索される言い方に合わせて、月収別のページの見出しを「いくら引かれる？手取りは月◯円」に。社会保険に入ると損かを金額で比べるページ（メリット・デメリット）を追加。10月の変更のページを「いつから・どう変わった」の形に"),
     ("2026-09-28", "保険料調整制度の案内を、使える会社（人数の条件が広がって新たに対象になった会社など）の場合だけに"),
     ("2026-09-28", "所得税の計算に令和9年分以降の源泉徴収（国税庁の電算機計算の特例。給与所得控除の最低57,500円・基礎控除51,667円）を追加。2027年1月以降も毎月の所得税が出る"),
     ("2026-09-28", "週20時間の壁の手取りを年末調整後の所得税で比べるように。保険料0円で比べるのは配偶者の扶養（国民年金の第3号）の人だけと明記し、親の扶養の人の比べ方を案内。保険料調整制度の説明を短く、随時改定・2035年の書き方を正確に"),
@@ -636,6 +670,7 @@ def _write_sitemap() -> None:
         (canonical_url("keisan.html"), None),
         (canonical_url("hyoujun.html"), None),
         (canonical_url("nenshu.html"), None),
+        (canonical_url("sontoku.html"), None),
     ]
     urls += [(canonical_url(p), None) for p in amount_page_paths() + kabe_page_paths()]
     for regime in eligibility.MILESTONES:
@@ -669,6 +704,7 @@ def build_all() -> None:
     _build_amount_pages()
     _build_kabe_pages()
     _build_nenshu_page()
+    _build_sontoku_page()
     _build_keisan_page()
     _build_static_pages()
     _write_robots()

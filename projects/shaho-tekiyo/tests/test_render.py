@@ -254,7 +254,7 @@ def test_図の色はライトとダークの両方で決めてある(site):
 
 def test_トップに早見表と週20時間の壁とよくある質問(site):
     html = (site / "index.html").read_text(encoding="utf-8")
-    assert "<title>パートの社会保険 計算" in html
+    assert "<title>パートの社会保険はいくら引かれる？計算" in html
     assert 'href="getsushu/10man.html">10万円</a><span class="sub">年収120万円</span>' in html
     assert "月9,617円減り" in html and "週22.5時間" in html
     faq = (site / "faq.html").read_text(encoding="utf-8")
@@ -405,3 +405,15 @@ def test_スマホで横にはみ出さない指定(site):
     assert ".calc-layout { display: grid; grid-template-columns: minmax(0, 1fr);" in html
     # 目次は nav の中だが、長い質問は折り返す（nav a の nowrap を打ち消す）
     assert "nav.toc a { white-space: normal;" in html
+
+
+def test_損得のページと検索向けの見出し(site):
+    html = (site / "sontoku.html").read_text(encoding="utf-8")
+    assert "<title>パートが社会保険に入ると損？" in html
+    assert "約16.7年" in html and "2,180円" in html  # 月収10万円: 傷病手当金の日額
+    assert f"<loc>{site_config.SITE_URL}/sontoku</loc>" in (site / "sitemap.xml").read_text(encoding="utf-8")
+    g = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert "<title>パート月収10万円、社会保険はいくら引かれる？手取りは月85,594円【2026年度】</title>" in g
+    assert "いくら引かれる" in re.search(r"<title>(.*?)</title>", (site / "index.html").read_text(encoding="utf-8")).group(1)
+    y = (site / "year" / "2026-10.html").read_text(encoding="utf-8")
+    assert "<title>106万円の壁は2026年10月1日に撤廃" in y
