@@ -105,24 +105,86 @@ var TenbinCore = (function () {
     return s;
   }
 
-  // 字は「ことば」の順に来る。積んだ字数が増えるほど長いことばが混ざる
+  // 字はばらばらに来る。ただし完全なでたらめだと言葉がほとんどできないので、
+  // いくつかのことばの字を混ぜた袋から出す（ことばに使う字が多めに来る）
   function rng(seed) { var x = seed >>> 0 || 1; return function () { x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; }
   function pick(s, list) { return list[(s.rng() * list.length) | 0]; }
   function fillQueue(s) {
-    var n = s.score + s.queue.length, tier;
-    var r = s.rng();
-    if (n < 8) tier = r < 0.75 ? WORDS.short : WORDS.middle;
-    else if (n < 24) tier = r < 0.35 ? WORDS.short : r < 0.85 ? WORDS.middle : WORDS.long;
-    else tier = r < 0.2 ? WORDS.short : r < 0.6 ? WORDS.middle : WORDS.long;
-    var w = pick(s, tier), prev = s.queue.length ? s.queue[s.queue.length - 1].word : null;
-    if (prev && prev.text === w) w = pick(s, tier);
-    var word = { text: w, got: 0 };
-    for (var i = 0; i < w.length; i++) s.queue.push({ ch: w[i], word: word, pos: i });
+    var bag = [];
+    for (var n = 0; n < 3; n++) {
+      var r = s.rng(), tier = r < 0.6 ? WORDS.short : r < 0.9 ? WORDS.middle : WORDS.long;
+      bag = bag.concat(pick(s, tier).split(''));
+    }
+    bag.push(pick(s, KINDS));
+    for (var i = bag.length - 1; i > 0; i--) { var j = (s.rng() * (i + 1)) | 0; var t = bag[i]; bag[i] = bag[j]; bag[j] = t; }
+    // 同じ字が続かないように
+    for (var k = 1; k < bag.length; k++) if (bag[k] === bag[k - 1]) { var m = (k + 2) % bag.length; t = bag[k]; bag[k] = bag[m]; bag[m] = t; }
+    if (s.queue.length && s.queue[s.queue.length - 1] === bag[0]) bag.push(bag.shift());
+    s.queue = s.queue.concat(bag);
   }
-  function current(s) { return s.queue[0].ch; }
-  function next(s) { return s.queue[1].ch; }
-  // いま積んでいることばと、何字目か
-  function currentWord(s) { var q = s.queue[0]; return { text: q.word.text, pos: q.pos, got: q.word.got }; }
+  function current(s) { return s.queue[0]; }
+  function next(s) { return s.queue[1]; }
+
+  // --- くっついている字で、ことばができているか ---
+  // 縦（上から下へ）か横（左から右へ）に、触れ合っている字をたどって読めればことば
+  var TRIE = {};
+  WORDS.short.concat(WORDS.middle, WORDS.long).forEach(function (w) {
+    var n = TRIE; for (var i = 0; i < w.length; i++) n = n[w[i]] = n[w[i]] || {}; n.$ = w;
+  });
+  // 字の中心（重心ではなく、字の外枠の中心）
+  function centre(b) { return { x: (b.bounds.min.x + b.bounds.max.x) / 2, y: (b.bounds.min.y + b.bounds.max.y) / 2 }; }
+  function step2(a, b, dir) {
+    var A = centre(a), B = centre(b), dx = B.x - A.x, dy = B.y - A.y;
+    return dir === 'tate' ? dy >= 12 && Math.abs(dx) <= Math.max(34, dy) : dx >= 12 && Math.abs(dy) <= Math.max(34, dx);
+  }
+  // 触れ合い = 物理で当たっている、または輪郭どうしが NEAR px 以内。
+  // 重力は下向きなので、横に並べた字はほんの少しすき間が空く。それも「くっついた」とみなす
+  var NEAR = 4;
+  function segDist(px, py, ax, ay, bx, by) {
+    var dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy, t = L ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / L)) : 0;
+    return Math.hypot(px - ax - t * dx, py - ay - t * dy);
+  }
+  function partsOf(b) { return b.parts.length > 1 ? b.parts.slice(1) : [b]; }
+  function near(a, b) {
+    if (a.bounds.min.x - NEAR > b.bounds.max.x || b.bounds.min.x - NEAR > a.bounds.max.x ||
+        a.bounds.min.y - NEAR > b.bounds.max.y || b.bounds.min.y - NEAR > a.bounds.max.y) return false;
+    var pa = partsOf(a), pb = partsOf(b);
+    for (var i = 0; i < pa.length; i++) for (var j = 0; j < pb.length; j++) {
+      var P = pa[i], Q = pb[j];
+      if (P.bounds.min.x - NEAR > Q.bounds.max.x || Q.bounds.min.x - NEAR > P.bounds.max.x ||
+          P.bounds.min.y - NEAR > Q.bounds.max.y || Q.bounds.min.y - NEAR > P.bounds.max.y) continue;
+      if (M.Collision.collides(P, Q)) return true;
+      for (var pass = 0; pass < 2; pass++) {
+        var U = pass ? Q : P, V = pass ? P : Q;
+        for (var u = 0; u < U.vertices.length; u++) for (var v = 0; v < V.vertices.length; v++) {
+          var v1 = V.vertices[v], v2 = V.vertices[(v + 1) % V.vertices.length];
+          if (segDist(U.vertices[u].x, U.vertices[u].y, v1.x, v1.y, v2.x, v2.y) <= NEAR) return true;
+        }
+      }
+    }
+    return false;
+  }
+  function touching(s) {
+    var nb = new Map(), cs = s.cargo;
+    cs.forEach(function (c) { nb.set(c, []); });
+    for (var i = 0; i < cs.length; i++) for (var j = i + 1; j < cs.length; j++)
+      if (near(cs[i], cs[j])) { nb.get(cs[i]).push(cs[j]); nb.get(cs[j]).push(cs[i]); }
+    return nb;
+  }
+  function findWords(s) {
+    var nb = touching(s), found = [];
+    s.cargo.forEach(function (start) {
+      ['tate', 'yoko'].forEach(function (dir) {
+        (function walk(b, node, path) {
+          node = node[b.kind]; if (!node) return;
+          path = path.concat([b]);
+          if (node.$ && path.length >= 2) found.push({ text: node.$, bodies: path, dir: dir });
+          nb.get(b).forEach(function (o) { if (path.indexOf(o) < 0 && step2(b, o, dir)) walk(o, node, path); });
+        })(start, TRIE, []);
+      });
+    });
+    return found;
+  }
 
   // いちばん高い所（y が小さいほど高い）
   function topY(s) {
@@ -138,9 +200,8 @@ var TenbinCore = (function () {
 
   function drop(s, x, ang) {
     if (s.failed || !canDrop(s)) return null;
-    var q = s.queue[0], kind = q.ch;
+    var kind = s.queue[0];
     var b = build(kind, clampX(kind, ang, x), holdY(s, kind, ang), ang);
-    b.word = q.word;
     s.cargo.push(b); s.last = b;
     s.queue.shift(); while (s.queue.length < 8) fillQueue(s);
     s.lastDropT = s.t; s.pendingScore = true;
@@ -185,11 +246,12 @@ var TenbinCore = (function () {
       var top = Infinity; s.cargo.forEach(function (c) { top = Math.min(top, c.bounds.min.y); });
       s.height = Math.max(s.height, PIVOT_Y - PLANK_T - top);
       s.events.push({ type: 'score', kind: s.last.kind });
-      var w = s.last.word; w.got++;
-      if (w.got === w.text.length) {
-        s.made.push(w.text);
-        s.events.push({ type: 'word', text: w.text, bodies: s.cargo.filter(function (c) { return c.word === w; }) });
-      }
+      // くっついてできたことば（1回の中で同じことばは1度だけ）。長いことばから知らせる
+      findWords(s).sort(function (a, b) { return b.text.length - a.text.length; }).forEach(function (f) {
+        if (s.made.indexOf(f.text) >= 0) return;
+        s.made.push(f.text);
+        s.events.push({ type: 'word', text: f.text, bodies: f.bodies, dir: f.dir });
+      });
     }
   }
 
@@ -213,6 +275,6 @@ var TenbinCore = (function () {
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
-    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, currentWord: currentWord, WORDS: WORDS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
+    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;

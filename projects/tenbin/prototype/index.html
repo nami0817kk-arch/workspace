@@ -35,8 +35,8 @@ h1 span{color:var(--accent)}
   box-shadow:0 1px 0 rgba(0,0,0,.04),0 8px 24px rgba(80,50,20,.08)}
 canvas{display:block;width:100%;height:auto;touch-action:none}
 .bar{display:flex;align-items:center;gap:10px;margin-top:10px}
-.next{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--sub);border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:4px 10px 4px 4px}
-.next canvas{width:52px;height:44px}
+.next{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--sub);border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:4px 6px 4px 10px;writing-mode:horizontal-tb}
+.next canvas{width:108px;height:40px}
 .hint{flex:1;font-size:12px;color:var(--sub);line-height:1.5}
 .rot{font-size:17px;font-weight:800;border:0;border-radius:16px;padding:14px 18px;background:var(--accent);color:#fff;min-width:100px;
   box-shadow:0 3px 0 rgba(0,0,0,.18)}
@@ -81,8 +81,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     <div class="sheet" id="sheet"><div class="card" id="card"></div></div>
   </div>
   <div class="bar">
-    <div class="next"><canvas id="nextCv" width="104" height="88"></canvas><span>つぎ</span></div>
-    <div class="hint" id="hint">左右になぞって位置をきめ、はなすと落ちる</div>
+    <div class="next"><span>つぎ</span><canvas id="nextCv" width="216" height="80"></canvas></div>
+    <div class="hint" id="hint">なぞって位置、はなすと落ちる</div>
     <button class="rot" id="rot">まわす</button>
   </div>
 </div>
@@ -148,21 +148,24 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // --- 状態 ---
   var s, phase = 'menu', ang = 0, visAng = 0, pointer = { x: W / 2, active: false }, dragFrom = null, camTop = BASE_TOP, endTimer = 0, frameN = 0;
-  var parts = [], popups = [], shake = 0, newWords = [], recordBroken = false, best = { n: 0, h: 0 };
+  var parts = [], popups = [], links = [], shake = 0, newWords = [], recordBroken = false, best = { n: 0, h: 0 };
   window.__state = function () { return s; };
 
   function start() {
     s = C.create(null, plat); phase = 'play'; ang = visAng = 0; pointer.x = W / 2; camTop = BASE_TOP; endTimer = 0;
-    parts = []; popups = []; shake = 0; newWords = []; recordBroken = false; best = bests[plat] || { n: 0, h: 0 };
+    parts = []; popups = []; links = []; shake = 0; newWords = []; recordBroken = false; best = bests[plat] || { n: 0, h: 0 };
     hideSheet(); drawNext(); setHint();
   }
-  function setHint() { hint.textContent = s && s.def.seesaw ? 'かたよると板が傾く。左右に散らして積もう' : s && s.def.sway ? '台が左右に動く。タイミングを見て落とそう' : '左右になぞって位置をきめ、はなすと落ちる'; }
+  function setHint() { hint.textContent = s && s.def.seesaw ? 'かたよると板が傾く' : s && s.def.sway ? '台が左右に動く' : 'なぞって位置、はなすと落ちる'; }
+  // つぎの3字。先が見えると、どの字でことばを作るか考えられる
   function drawNext() {
     var g = nextCv.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, nextCv.width, nextCv.height);
     if (!s) return;
-    var k = C.next(s), e = C.extent(k, 0), w = e.maxX - e.minX, h = e.maxY - e.minY, sc = Math.min(86 / w, 70 / h);
-    g.setTransform(sc, 0, 0, sc, nextCv.width / 2 - (e.minX + w / 2) * sc, nextCv.height / 2 - (e.minY + h / 2) * sc);
-    drawGlyph(g, k, 0, 0, 0, 1);
+    for (var i = 0; i < 3; i++) {
+      var k = s.queue[1 + i], e = C.extent(k, 0), w = e.maxX - e.minX, h = e.maxY - e.minY, box = 72, sc = Math.min(62 / w, 62 / h) * (i ? 0.82 : 1);
+      g.setTransform(sc, 0, 0, sc, box * i + box / 2 - (e.minX + w / 2) * sc, nextCv.height / 2 - (e.minY + h / 2) * sc);
+      drawGlyph(g, k, 0, 0, 0, i ? 0.55 : 1);
+    }
   }
   function holdPos() { var k = C.current(s); return { kind: k, x: C.clampX(k, ang, pointer.x), y: C.holdY(s, k, ang) }; }
 
@@ -186,6 +189,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       } else if (e.type === 'word') {
         var minY = Infinity, sx = 0;
         e.bodies.forEach(function (b) { b.glow = 1; minY = Math.min(minY, b.bounds.min.y); sx += b.position.x; });
+        links.push({ bodies: e.bodies, life: 1 });
         sx /= e.bodies.length;
         var isNew = !dict[e.text];
         if (isNew) { dict[e.text] = 1; store.set('dict', dict); newWords.push(e.text); document.getElementById('dictN').textContent = dictCount(); }
@@ -274,6 +278,14 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       var fb = s.failedBody; ctx.save(); ctx.strokeStyle = '#d9472f'; ctx.lineWidth = 3; ctx.setLineDash([5, 4]);
       ctx.beginPath(); ctx.arc(fb.position.x, fb.position.y, 46, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
     }
+    // できたことばの字どうしを線でつなぐ
+    links = links.filter(function (l) { l.life -= 0.006; return l.life > 0; });
+    links.forEach(function (l) {
+      ctx.save(); ctx.globalAlpha = Math.min(1, l.life * 2); ctx.strokeStyle = '#f2b24f'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); l.bodies.forEach(function (b, i) { var x = (b.bounds.min.x + b.bounds.max.x) / 2, y = (b.bounds.min.y + b.bounds.max.y) / 2; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.stroke();
+      l.bodies.forEach(function (b) { ctx.fillStyle = '#f2b24f'; ctx.beginPath(); ctx.arc((b.bounds.min.x + b.bounds.max.x) / 2, (b.bounds.min.y + b.bounds.max.y) / 2, 6, 0, Math.PI * 2); ctx.fill(); });
+      ctx.restore();
+    });
     // 持っている字
     if (phase === 'play') {
       var hp2 = holdPos(), ready = C.canDrop(s), e2 = C.extent(hp2.kind, ang), bob = Math.sin(frameN / 14) * 2;
@@ -309,24 +321,23 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     ctx.fillText(s.score, 14, 40); var nw = ctx.measureText(String(s.score)).width;
     ctx.font = '700 13px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.fillText('字', 18 + nw, 40);
     ctx.fillText((s.height * M_PER_PX).toFixed(1) + 'm', 14, 58);
-    // いまのことば
+    ctx.fillText('ことば ' + s.made.length, 14, 74);
+    // さいきんできたことば（右上）
     if (phase === 'play') {
-      var cw = C.currentWord(s), n = cw.text.length, bw = 34, gap = 4, tot = n * bw + (n - 1) * gap, x0 = W - 12 - tot, y0 = 14;
-      ctx.fillStyle = 'rgba(255,250,241,.85)'; roundRect(ctx, x0 - 8, y0 - 6, tot + 16, bw + 22, 10); ctx.fill();
-      ctx.font = '700 9px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.textAlign = 'left'; ctx.fillText('いまのことば', x0, y0 + bw + 12);
-      for (var i = 0; i < n; i++) {
-        var x = x0 + i * (bw + gap), ch = cw.text[i], done = i < cw.pos, cur = i === cw.pos;
-        ctx.fillStyle = cur ? '#fff' : done ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.5)'; roundRect(ctx, x, y0, bw, bw, 8); ctx.fill();
-        ctx.lineWidth = cur ? 2.5 : 1; ctx.strokeStyle = cur ? '#d9472f' : 'rgba(120,90,50,.25)'; roundRect(ctx, x, y0, bw, bw, 8); ctx.stroke();
-        ctx.font = '900 22px ' + G.font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillStyle = done ? inkOf(ch) : cur ? inkOf(ch) : 'rgba(120,90,50,.3)'; ctx.fillText(ch, x + bw / 2, y0 + bw / 2 + 1);
-        if (done) { ctx.fillStyle = '#2f9a5c'; ctx.beginPath(); ctx.arc(x + bw - 4, y0 + 4, 4, 0, Math.PI * 2); ctx.fill(); }
-        ctx.textBaseline = 'alphabetic';
-      }
+      var recent = s.made.slice(-3).reverse(), y0 = 14;
+      ctx.textAlign = 'right';
+      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText('たてか よこに くっつけて', W - 14, 26); ctx.fillText('ことばを つくろう', W - 14, 40); }
+      recent.forEach(function (w, i) {
+        ctx.font = '900 ' + (i ? 15 : 19) + 'px ' + G.font; var tw = ctx.measureText(w).width, x1 = W - 12, bh = i ? 24 : 30;
+        ctx.globalAlpha = i ? 0.7 : 1; ctx.fillStyle = 'rgba(255,250,241,.9)'; roundRect(ctx, x1 - tw - 16, y0, tw + 16, bh, 9); ctx.fill();
+        ctx.strokeStyle = i ? 'rgba(120,90,50,.2)' : '#f2b24f'; ctx.lineWidth = i ? 1 : 2; roundRect(ctx, x1 - tw - 16, y0, tw + 16, bh, 9); ctx.stroke();
+        ctx.fillStyle = '#3b2f24'; ctx.textBaseline = 'middle'; ctx.fillText(w, x1 - 8, y0 + bh / 2 + 1); ctx.textBaseline = 'alphabetic';
+        ctx.globalAlpha = 1; y0 += bh + 5;
+      });
       if (!C.canDrop(s)) { ctx.fillStyle = 'rgba(138,118,99,.8)'; ctx.font = '700 11px "M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ゆれがおさまるまで まって', W / 2, VIEW_H - 14); }
     }
     if (s.def.seesaw && phase === 'play') {
-      var r = C.tilt(s), mx = 14, my = 70, mw = 96, mh = 8;
+      var r = C.tilt(s), mx = 14, my = 88, mw = 96, mh = 8;
       ctx.fillStyle = 'rgba(255,250,241,.85)'; roundRect(ctx, mx - 6, my - 6, mw + 12, mh + 20, 8); ctx.fill();
       var gr = ctx.createLinearGradient(mx, 0, mx + mw, 0); gr.addColorStop(0, '#d9472f'); gr.addColorStop(.3, '#e7dccb'); gr.addColorStop(.7, '#e7dccb'); gr.addColorStop(1, '#d9472f');
       ctx.fillStyle = gr; roundRect(ctx, mx, my, mw, mh, 4); ctx.fill();
@@ -347,7 +358,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   function showMenu() {
     phase = 'menu';
-    showSheet('<h2>ひらがなてんびん</h2><p>ひらがなを1字ずつ積もう。<br>字は<b>ことば</b>の順に来る。積み切るとことば帳に入る。<br>「まわす」で向きを変えられる。</p>' +
+    showSheet('<h2>ひらがなてんびん</h2><p>ひらがなを1字ずつ積もう。<br>字と字を<b>たて（上から下）</b>か<b>よこ（左から右）</b>に<br>くっつけて<b>ことば</b>ができたら、ことば帳に入る。<br>「まわす」で向きを変えられる。</p>' +
       '<p style="margin-top:10px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
       '<div class="row"><button class="btn" id="go">はじめる</button></div>');
     wirePlats(function () { s = C.create(null, plat); drawNext(); showMenu(); });
@@ -358,7 +369,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (rec) { bests[plat] = { n: s.score, h: Math.max(b.h, s.height) }; store.set('bests', bests); }
     else if (s.height > b.h) { b.h = s.height; bests[plat] = b; store.set('bests', bests); }
     var why = s.failed === 'ground' ? 'てんびんが床に着いた' : '「' + s.failedBody.kind + '」が落ちた';
-    var made = s.made.length ? '<div class="words">' + s.made.map(function (w) { return '<span class="w' + (newWords.indexOf(w) >= 0 ? ' new' : '') + '">' + w + '</span>'; }).join('') + '</div>' : '<p>ことばは まだできなかった</p>';
+    var made = s.made.length ? '<div class="words">' + s.made.map(function (w) { return '<span class="w' + (newWords.indexOf(w) >= 0 ? ' new' : '') + '">' + w + '</span>'; }).join('') + '</div>' : '<p>ことばは できなかった。たてか よこに くっつけてみよう</p>';
     showSheet('<p>' + why + '</p><div class="big">' + s.score + '<small> 字</small></div>' +
       '<p>' + C.PLATFORMS[plat].name + 'の台・高さ ' + (s.height * M_PER_PX).toFixed(1) + 'm・ことば ' + s.made.length + 'こ</p>' +
       (rec ? '<span class="badge">さいこう記録！</span>' : '<p>さいこう ' + b.n + '字</p>') + made +
@@ -370,7 +381,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     var wasPlay = phase === 'play'; if (wasPlay) phase = 'pause';
     function list(title, arr) { return '<h3>' + title + '（' + arr.filter(function (w) { return dict[w]; }).length + '/' + arr.length + '）</h3><div class="words">' +
       arr.map(function (w) { return dict[w] ? '<span class="w">' + w + '</span>' : '<span class="w lock">' + '・'.repeat(w.length) + '</span>'; }).join('') + '</div>'; }
-    showSheet('<div class="dict"><h2>ことば帳</h2><p>積み切ったことばが ここに入る。' + dictCount() + ' / ' + ALL_WORDS.length + '</p>' +
+    showSheet('<div class="dict"><h2>ことば帳</h2><p>くっつけてできたことばが ここに入る。' + dictCount() + ' / ' + ALL_WORDS.length + '</p>' +
       list('2字', C.WORDS.short) + list('3字', C.WORDS.middle) + list('4字より長い', C.WORDS.long) +
       '<div class="row"><button class="btn" id="close">とじる</button></div></div>');
     document.getElementById('close').onclick = function () { if (wasPlay) { phase = 'play'; hideSheet(); } else if (phase === 'end') showResult(); else showMenu(); };
