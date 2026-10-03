@@ -176,7 +176,7 @@ html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset
   <div class="stage" id="stage">
     <canvas id="cv" aria-label="地層の断面。仲間が掘り進める"></canvas>
     <div class="chip"><b id="cLayer">第1層 表土</b> <span id="cDepth"></span><div class="hpbar"><i id="cHp"></i></div></div>
-    <div class="boostchip" id="boostChip">採掘2倍 5:00</div>
+    <div class="boostchip" id="boostChip">採掘×2 5:00</div>
     <div class="lockmsg" id="lockMsg"></div>
     <div class="hint" id="hint">仲間が掘ります。鉱石で強くしよう</div>
     <button class="vein" id="vein" type="button" aria-label="鉱脈をたたく">鉱脈！</button>
@@ -260,7 +260,8 @@ const SIDE = 0.8;
 const OFFLINE_CAP_H = 8;
 const CRIT_P = 0.08, CRIT_X = 5;
 const DROP_P = 0.12;
-const BOOST_SEC = 300, BOOST_MAX = 1800;
+// 採掘の倍率：広告を見るたびに ×2→×3→×4→×5。見るたびに残りは5分に戻り、切れたら ×1（2026-10-03 ユーザー指示「広告はさらに×」）
+const BOOST_SEC = 300, BOOST_LV_MAX = 4;
 const REBIRTH_DEPTH = 240;            // 6層の底で代替わりできる
 const ENV = (globalThis.process && process.env) || {};   // tool/sim.js で数値を試すときだけ使う
 const HP_G = +(ENV.HP_G || 1.094), ORE_G = +(ENV.ORE_G || 1.072);
@@ -409,7 +410,7 @@ const startCrew = () => WK.map((w, i) => i === 0 ? 2 : 0);
 const fresh = () => ({
   v:2, ore:0, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
-  boostUntil:0, last:NOW(),
+  boostUntil:0, boostLv:0, last:NOW(),
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0 },
   sound:true, haptic:true, theme:'auto', notifAsked:false,
@@ -479,6 +480,7 @@ const crewBase = (st, M) => st.w.reduce((a, n, i) => a + n * WK[i].dps * (i < HU
 const pickBoost = (st, M) => pickMul(st.pick) * (M || mods(st)).pick;
 const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn : 1); };
 const boostOn = st => NOW() < st.boostUntil;
+const boostMul = st => boostOn(st) ? 1 + (st.boostLv || 1) : 1;
 const locked = st => isBed(st.depth) && st.pick < REQ[st.depth / LAYER_LEN];
 const reqAt = d => REQ[d / LAYER_LEN];
 
@@ -553,7 +555,7 @@ function applyDamage(st, dmg, out, fx){
 }
 // 開いている間の1フレーム
 function tick(st, dt, fx){
-  const d = crewDps(st, true) * (boostOn(st) ? 2 : 1) * dt;
+  const d = crewDps(st, true) * boostMul(st) * dt;
   if (d > 0) applyDamage(st, d, null, fx);
 }
 // 留守の計算（st は書き換えない。結果の state を返す）
@@ -562,7 +564,7 @@ function simulateAway(st, sec){
   const out = { ore:0, meters:0, finds:[], sec, stuck:false };
   const dps = crewDps(s2, false);
   const boostLeft = Math.max(0, Math.min(sec, (st.boostUntil - (NOW() - sec * 1000)) / 1000));
-  const total = dps * (sec + boostLeft);
+  const total = dps * (sec + boostLeft * (boostMul(st) - 1));
   const steps = 60;
   for (let i = 0; i < steps; i++) applyDamage(s2, total / steps, out, null);
   out.stuck = locked(s2);
@@ -577,7 +579,7 @@ function awaySeconds(st, now){
 }
 // 留守の結果を受け取る（mult=2 は広告）
 function claimAwayState(st, r, mult){
-  const keep = { pick:st.pick, w:st.w, boostUntil:st.boostUntil, sound:st.sound, haptic:st.haptic, theme:st.theme, seen:st.seen,
+  const keep = { pick:st.pick, w:st.w, boostUntil:st.boostUntil, boostLv:st.boostLv, sound:st.sound, haptic:st.haptic, theme:st.theme, seen:st.seen,
     creed:st.creed, fame:st.fame, gen:st.gen, history:st.history, ach:st.ach, notifAsked:st.notifAsked };
   const ns = Object.assign(r.state, keep);
   if (mult > 1) { ns.ore += r.ore * (mult - 1); ns.total += r.ore * (mult - 1); }
@@ -627,10 +629,12 @@ function buyWorker(st, i){
 }
 function startBoost(st){
   const now = NOW();
-  st.boostUntil = Math.min(Math.max(st.boostUntil, now) + BOOST_SEC * 1000, now + BOOST_MAX * 1000);
+  st.boostLv = boostOn(st) ? Math.min(BOOST_LV_MAX, (st.boostLv || 1) + 1) : 1;
+  st.boostUntil = now + BOOST_SEC * 1000;
   st.st.ads++;
 }
-const boostRoom = st => (Math.max(st.boostUntil, NOW()) + BOOST_SEC * 1000) <= NOW() + BOOST_MAX * 1000;
+// 次に見たときの倍率（上限なら今のまま、時間だけ5分に戻る）
+const boostNext = st => 1 + (boostOn(st) ? Math.min(BOOST_LV_MAX, (st.boostLv || 1) + 1) : 1);
 
 // ================= 代替わり =================
 const canRebirth = st => st.genDepth >= REBIRTH_DEPTH;
@@ -786,7 +790,7 @@ window.tsuruAdResult = (ok, msg) => {
 window.tsuruSetApp = o => { if (!APP) return; for (const k in o) if (k !== 'msg') APP[k] = o[k]; if (o.msg) toast('お知らせ', o.msg); updateUI(true); if (tab === 'co') buildCo(); };
 window.tsuruPause = () => { try { save(); TStore.flush(); } catch (e) {} };
 window.tsuruResume = () => { checkAway(); };
-const adLabel = (main, sub) => adFree() ? `${main}<small>広告なしで受け取れます</small>` : APP ? `<span class="tri"></span>${main}<small>${sub}</small>` : `<span class="tri"></span>${main}<small>本番は動画広告（試作は即効果）</small>`;
+const adLabel = (main, sub) => adFree() ? `${main}<small>広告なしで受け取れます</small>` : APP ? `<span class="tri"></span>${main}<small>${sub}</small>` : `<span class="tri"></span>${main}<small>${sub}（試作は即効果）</small>`;
 
 // ================= 画面：数字 =================
 const $ = id => document.getElementById(id);
@@ -967,7 +971,7 @@ function updateUI(force){
   const M = mods(S);
   $('sOre').textContent = fmt(S.ore);
   $('sDepth').textContent = S.depth + 'm';
-  $('sDps').textContent = fmt(crewDps(S, true, M) * (boostOn(S) ? 2 : 1));
+  $('sDps').textContent = fmt(crewDps(S, true, M) * boostMul(S));
   $('genBadge').textContent = genName(S.gen) + (S.fame ? `・名声${fmt(S.fame)}` : '');
   const li = layerIdxForDepth(S.depth);
   $('cLayer').textContent = isBed(S.depth) ? '岩盤' : isRoom(S.depth) && !S.room[S.depth] ? '宝の部屋' : `第${li + 1}層 ${LAYERS[li].name}`;
@@ -1015,13 +1019,14 @@ function updateUI(force){
   const bc = $('boostChip'), ab = $('adBoost');
   if (boostOn(S)) {
     const r = Math.ceil((S.boostUntil - NOW()) / 1000);
-    bc.style.display = 'block'; bc.textContent = `採掘2倍 ${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`;
+    bc.style.display = 'block'; bc.textContent = `採掘×${boostMul(S)} ${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`;
   } else bc.style.display = 'none';
-  const room = boostRoom(S);
-  ab.disabled = !room || !!pendingAd;
+  const cur = boostMul(S), nx = boostNext(S);
+  ab.disabled = !!pendingAd;
   ab.innerHTML = pendingAd ? '<span class="tri"></span>動画を読み込んでいます…<small>しばらくお待ちください</small>'
-    : room ? adLabel(boostOn(S) ? '採掘2倍を5分のばす' : '採掘2倍を5分', boostOn(S) ? '重ねて最大30分' : '動画広告を見る')
-    : '<span class="tri"></span>採掘2倍 発動中<small>最大の30分まで重ねています</small>';
+    : !boostOn(S) ? adLabel('採掘×2を5分', '続けて見るほど倍率が上がる（×5まで）')
+    : nx > cur ? adLabel(`採掘×${nx}に上げる`, `いま×${cur}。見ると残りが5分に戻る`)
+    : adLabel(`採掘×${cur}を5分に戻す`, '最大の×5です');
 }
 
 function onBuyPick(){
@@ -1132,10 +1137,10 @@ $('offX2').addEventListener('click', () => {
 });
 $('devSkip').addEventListener('click', () => { if (pendingAway) return; S.last = NOW() - 3600e3; showAway(3600, false, true); });
 $('adBoost').addEventListener('click', () => {
-  if (!boostRoom(S) || pendingAd) return;
+  if (pendingAd) return;
   withAd('boost', () => {
     startBoost(S);
-    sfx('tier'); toast('採掘2倍', '5分間 すべての採掘が2倍', '重ねて最大30分まで'); fxRing();
+    sfx('tier'); toast(`採掘×${boostMul(S)}`, `5分間 すべての採掘が${boostMul(S)}倍`, boostMul(S) < 1 + BOOST_LV_MAX ? '5分のうちにもう一度見ると、さらに上がる' : '最大の×5'); fxRing();
     updateUI();
   });
 });
@@ -1631,7 +1636,7 @@ function draw(dt){
     ctx.strokeStyle = `rgba(255,209,102,${1 - k})`; ctx.lineWidth = 4 * (1 - k) + 1;
     ctx.beginPath(); ctx.arc(cx() * Z, (fy - 25) * Z, 20 + k * 90, 0, 7); ctx.stroke();
   }
-  if (boostOn(S)) { ctx.strokeStyle = `rgba(167,155,255,${0.45 + 0.25 * Math.sin(tAll * 5)})`; ctx.lineWidth = 4; ctx.strokeRect(2, 2, W - 4, H - 4); }
+  if (boostOn(S)) { ctx.strokeStyle = `rgba(167,155,255,${0.45 + 0.25 * Math.sin(tAll * 5)})`; ctx.lineWidth = 2 + 2 * boostMul(S) / 2; ctx.strokeRect(2, 2, W - 4, H - 4); }
   if (bannerT < 2.6) {
     bannerT += dt;
     const a = bannerT < 0.3 ? bannerT / 0.3 : bannerT > 2 ? (2.6 - bannerT) / 0.6 : 1;

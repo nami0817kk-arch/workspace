@@ -68,9 +68,14 @@ ok(typeof tapOnce === 'undefined', 'たたく操作はエンジンにない');
 // つるはしは仲間の力を上げる
 const p1 = crewDps(S, true); S.pick = 10; ok(crewDps(S, true) > p1, 'つるはしを強くすると仲間の力が上がる');
 
-// 採掘2倍は重ねて30分まで
-S = fresh(); for (let k = 0; k < 10; k++) if (boostRoom(S)) startBoost(S);
-ok(S.boostUntil - clock === 1800e3, '採掘2倍は30分まで重なる');
+// 広告の採掘倍率：見るたびに ×2→×3→×4→×5、見るたびに残り5分、切れたら ×1
+S = fresh(); startBoost(S); ok(boostMul(S) === 2 && S.boostUntil - clock === 300e3, '1回目は ×2 を5分');
+clock += 200e3; startBoost(S); ok(boostMul(S) === 3 && S.boostUntil - clock === 300e3, '5分のうちに見ると ×3、残りは5分に戻る');
+for (let k = 0; k < 5; k++) startBoost(S); ok(boostMul(S) === 5, '倍率は ×5 まで');
+clock += 301e3; ok(boostMul(S) === 1, '切れたら ×1');
+startBoost(S); ok(boostMul(S) === 2, '切れた後はまた ×2 から');
+const sw = fresh(); sw.w[0] = 10; const away1 = simulateAway(sw, 600).ore;
+sw.boostLv = 3; sw.boostUntil = clock + 300e3; ok(simulateAway(sw, 600).ore > away1, '留守の間も残っていた倍率が効く');
 
 // 古い保存や壊れた保存を読んでも落ちない
 S = normalize({ v: 2, w: [1, 2], frag: null, st: null });

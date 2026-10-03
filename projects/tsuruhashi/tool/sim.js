@@ -22,7 +22,7 @@ __setClock(() => clock);
 
 // [時, 分の長さ]
 const SES = PLAY === 'heavy' ? [[7, 20], [12, 15], [18, 15], [21, 20], [23, 10]] : [[8, 5], [12, 5], [17, 5], [20, 5], [23, 5]];
-const ADS = PLAY !== 'noads';   // 広告を見る人：毎回の最初に2倍を1回、留守は2倍で受け取る
+const ADS = PLAY !== 'noads';   // 広告を見る人：毎回の最初に採掘の倍率、留守は2倍で受け取る
 
 function buy(S){
   for (let g = 0; g < 2000; g++) {
@@ -70,11 +70,13 @@ for (let day = 1; day <= DAYS; day++) {
         rebirth(S, cr); stall = 0; lastProg = 0;
       }
     }
-    if (ADS) startBoost(S);
+    // 広告を見る人は毎回の最初に1本（×2）。よく遊ぶ人は4本続けて ×5、5分ごとに見直す
+    if (ADS) for (let k = 0; k < (PLAY === 'heavy' ? 4 : 1); k++) startBoost(S);
     let veinT = 0;
     for (let s = 0; s < len * 60; s++) {
       clock += 1000;
       tick(S, 1, null);
+      if (PLAY === 'heavy' && s % 300 === 299) startBoost(S);
       if (++veinT >= 120) { veinT = 0; if (RNG() < 0.7) claimVein(S); }
       if (s % 5 === 0) buy(S);
       if (s % 60 === 0) useFrags(S);
