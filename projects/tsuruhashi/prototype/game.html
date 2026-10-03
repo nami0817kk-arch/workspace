@@ -66,8 +66,9 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .goal.lock{background:rgba(70,20,12,.85)}
 .goal.lock .bar i{background:linear-gradient(90deg,#ff7b54,#ffb347)}
 .hint{position:absolute;left:0;right:14px;top:42%;text-align:center;color:#fff;font-weight:800;font-size:16px;text-shadow:0 2px 6px rgba(0,0,0,.7);pointer-events:none;transition:opacity .8s}
-.vein{position:absolute;width:72px;height:72px;margin:-36px 0 0 -36px;border:0;border-radius:50%;background:radial-gradient(circle,#fff6c4 0,#ffd166 35%,rgba(255,209,102,0) 70%);
-  color:#4a2f00;font-weight:800;font-size:12px;display:none;z-index:5;animation:veinp 1s ease-in-out infinite}
+.vein{position:absolute;width:76px;height:76px;margin:-38px 0 0 -38px;border:0;border-radius:50%;background:radial-gradient(circle,rgba(255,246,196,.95) 0,rgba(255,209,102,.6) 38%,rgba(255,209,102,0) 70%);
+  color:#3a2400;font-weight:800;font-size:12px;display:none;z-index:5;animation:veinp 1s ease-in-out infinite;padding:0;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.vein span{margin-top:-4px;text-shadow:0 0 4px #fff6c4}
 @keyframes veinp{50%{transform:scale(1.12)}}
 .toastwrap{position:absolute;left:0;right:14px;top:50px;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:6;pointer-events:none;padding:0 10px}
 .toast{background:rgba(255,250,241,.96);color:#2b2118;border:2px solid var(--accent2);border-radius:14px;padding:5px 12px 5px 8px;display:flex;align-items:center;gap:8px;box-shadow:var(--lift);max-width:300px;animation:tin .35s ease-out both}
@@ -238,7 +239,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
     <div class="hint" id="hint">仲間が自動で掘ります</div>
     <div class="goal" id="goal"><div id="goalTxt"></div><div class="bar"><i id="goalBar"></i></div></div>
     <div class="toastwrap" id="toasts"></div>
-    <button class="vein" id="vein" type="button" aria-label="鉱脈をたたく">鉱脈！</button>
+    <button class="vein" id="vein" type="button" aria-label="鉱脈をたたく"><svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><path d="M6 30 L12 16 L22 10 L33 14 L39 28 L30 37 L14 37Z" fill="#6b4a2a" stroke="#3a2412" stroke-width="2"/><path d="M14 22 L19 16 L24 21 L19 26Z M24 26 L29 20 L33 27 L28 31Z M15 31 L19 28 L22 32Z" fill="#ffd166" stroke="#a36a00" stroke-width="1.2"/><path d="M16 19 l2 -1" stroke="#fff6c4" stroke-width="1.5"/></svg><span>鉱脈！</span></button>
   </div>
 
   <div class="adbar"><button class="adbtn" id="adBoost" type="button"></button></div>
@@ -1629,7 +1630,7 @@ function showVein(){
   const vx = (cx() + side * (shaftW() / 2 + 4 + Math.random() * 10)) * Z;
   veinEl.style.left = Math.max(34, Math.min(W - MAP_W - 34, vx)) + 'px';
   veinEl.style.top = ((rowY(S.depth) - 20 - Math.random() * 60) * Z) + 'px';
-  veinEl.style.display = 'block';
+  veinEl.style.display = 'flex';
 }
 veinEl.addEventListener('pointerdown', e => {
   e.preventDefault(); e.stopPropagation();
@@ -1754,7 +1755,7 @@ function draw(dt){
   if (shakeT > 0) { ox = (Math.random() - 0.5) * 7 * shakeT / 0.3; oy = (Math.random() - 0.5) * 7 * shakeT / 0.3; }
   ctx.save(); ctx.translate(ox, oy);
   const g = ctx.createLinearGradient(0, rowY(-8), 0, rowY(0));
-  g.addColorStop(0, sky1); g.addColorStop(1, sky2);
+  const sk0 = skyNow(); g.addColorStop(0, sk0.t); g.addColorStop(1, sk0.b);
   ctx.fillStyle = g; ctx.fillRect(-10, -10, VW + 20, VH + 20);
   const top = Math.floor(camY - baseY() / R) - 1, bot = Math.ceil(camY + (VH - baseY()) / R) + 1;
   if (top < 0) drawSurface();
@@ -1795,32 +1796,36 @@ function draw(dt){
     } else if (m === S.depth) {
       const hitOff = blockHitT < 0.08 && !reduced ? (Math.random() - 0.5) * 3 : 0;
       ctx.save(); ctx.translate(hitOff, 0);
-      ctx.fillStyle = bed ? '#3a3a44' : L.block; ctx.fillRect(sx, y, sw, R);
-      ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(sx, y, sw, 3);
-      if (bed) {
-        ctx.strokeStyle = 'rgba(255,255,255,.1)'; ctx.lineWidth = 4;
-        for (let x = sx; x < sx + sw; x += 14) { ctx.beginPath(); ctx.moveTo(x, y + R); ctx.lineTo(x + 14, y + 3); ctx.stroke(); }
-        ctx.fillStyle = '#8a8a99'; for (let x = sx + 10; x < sx + sw; x += 40) { ctx.beginPath(); ctx.arc(x, y + R / 2, 2.5, 0, 7); ctx.fill(); }
-      }
+      drawBlock(m, y, sx, sw, li, bed, true);
       if (room) drawRoomGlow(sx, y, sw);
       const r = S.dmg / hpOf(S, m);
       if (r > 0.02) {
-        ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = 1.6; ctx.lineJoin = 'round';
-        const n = Math.min(9, Math.ceil(r * 9));
+        // ひびは削れるほど太く多く。上の縁が欠けていく
+        ctx.strokeStyle = 'rgba(0,0,0,.6)'; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+        const n = Math.min(10, Math.ceil(r * 10));
         for (let k = 0; k < n; k++) {
           const h = hash(m * 31 + k * 977);
           let px = sx + 16 + (h % Math.max(1, (sw - 32))), py = y + 2;
+          ctx.lineWidth = 1.2 + r * 1.6;
           ctx.beginPath(); ctx.moveTo(px, py);
-          for (let s = 0; s < 4; s++) { const hh = hash(h + s * 17); px += ((hh % 17) - 8); py += (R - 4) / 4; ctx.lineTo(px, py); }
+          for (let s = 0; s < 4; s++) { const hh = hash(h + s * 17); px += ((hh % 17) - 8); py += (R - 4) / 4 * Math.min(1, r * 1.6); ctx.lineTo(px, py); }
           ctx.stroke();
         }
+        ctx.fillStyle = L.hollow;
+        const chips = Math.floor(r * 6);
+        for (let k = 0; k < chips; k++) { const h = hash(m * 57 + k * 131); const cx0 = sx + 12 + h % Math.max(1, sw - 24), cw = 6 + (h >>> 8) % 10; ctx.beginPath(); ctx.moveTo(cx0 - cw / 2, y); ctx.lineTo(cx0, y + 3 + (h >>> 12) % 4); ctx.lineTo(cx0 + cw / 2, y); ctx.fill(); }
       }
       ctx.restore();
     } else {
-      ctx.fillStyle = bed ? '#34343c' : shade(L.block, -0.12); ctx.fillRect(sx, y, sw, R);
-      ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(sx, y, sw, 1);
-      for (let c = 0; c < 6; c++) { const h = hash(m * 313 + c * 71); if (h % 3) continue; ctx.fillStyle = bed ? '#4a4a55' : L.speck; ctx.globalAlpha = 0.8; ctx.fillRect(sx + 8 + (h >>> 4) % (sw - 16), y + 4 + (h >>> 9) % (R - 10), 3, 3); ctx.globalAlpha = 1; }
+      drawBlock(m, y, sx, sw, li, bed, false);
       if (!bed) drawDeco(li, m, y, sx, sw, true);
+      // ★★の手がかりが分かっている層の終わり近くは、ブロックがきらめく
+      if (!bed && bandOf(m) && layerIdxForDepth(m) === li && hintShown(S, li) && !S.found[itemsOf(li).find(it => it.r === 'l').id]) {
+        for (let k = 0; k < 3; k++) { const h = hash(m * 733 + k * 37), t = (tAll * 1.3 + k * 0.33 + (h % 100) / 100) % 1;
+          ctx.fillStyle = `hsla(${(h % 360 + tAll * 60) % 360},90%,75%,${Math.sin(t * Math.PI)})`;
+          const px = sx + 10 + (h >>> 5) % Math.max(1, sw - 20), py = y + 6 + (h >>> 13) % (R - 12);
+          ctx.beginPath(); ctx.moveTo(px, py - 4); ctx.lineTo(px + 1.2, py - 1.2); ctx.lineTo(px + 4, py); ctx.lineTo(px + 1.2, py + 1.2); ctx.lineTo(px, py + 4); ctx.lineTo(px - 1.2, py + 1.2); ctx.lineTo(px - 4, py); ctx.lineTo(px - 1.2, py - 1.2); ctx.fill(); }
+      }
       if (room) drawRoomGlow(sx, y, sw);
     }
     if (m % 5 === 0 && m > 0) {
@@ -1844,6 +1849,10 @@ function draw(dt){
     ctx.fillStyle = '#2b2118'; roundRect(lx - 4, ly - 3, 8, 10, 2); ctx.fill();
     ctx.fillStyle = `rgba(255,214,140,${fl})`; roundRect(lx - 2.5, ly - 1, 5, 6, 1.5); ctx.fill();
   }
+  // 層ごとの空気の色
+  const TINT = [null, null, 'rgba(200,80,40,.05)', 'rgba(150,110,255,.07)', 'rgba(255,90,30,.08)', 'rgba(220,200,110,.05)', 'rgba(60,200,230,.07)', 'rgba(140,230,90,.06)', 'rgba(240,230,200,.04)', 'rgba(255,120,220,.07)'];
+  const tn = TINT[layerIdxForDepth(S.depth)];
+  if (tn && S.depth > 4) { ctx.fillStyle = tn; ctx.fillRect(-10, -10, VW + 20, VH + 20); }
   // ほこり
   if (!reduced && S.depth > 0) {
     ctx.fillStyle = 'rgba(255,230,190,.22)';
@@ -2000,13 +2009,44 @@ const DECO = [
     ctx.fillStyle = `rgba(255,158,232,${0.18 * g})`; ctx.beginPath(); ctx.arc(0, 0, 10, 0, 7); ctx.fill();
     ctx.fillStyle = `rgba(255,240,200,${g})`; ctx.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? 1.4 : 5; ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } ctx.closePath(); ctx.fill(); },
 ];
+// ブロック：面取り（上に光・下に影）と地層の筋。岩盤は鈍い鉄色に鋲
+function drawBlock(m, y, sx, sw, li, bed, cur){
+  const L = LAYERS[li];
+  if (bed) {
+    const g = ctx.createLinearGradient(0, y, 0, y + R);
+    g.addColorStop(0, cur ? '#5a5d6b' : '#4a4d58'); g.addColorStop(1, cur ? '#34363f' : '#2a2b33');
+    ctx.fillStyle = g; ctx.fillRect(sx, y, sw, R);
+    ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.lineWidth = 4;
+    for (let x = sx; x < sx + sw; x += 16) { ctx.beginPath(); ctx.moveTo(x, y + R); ctx.lineTo(x + 16, y + 2); ctx.stroke(); }
+    for (let x = sx + 12; x < sx + sw - 6; x += 36) { ctx.fillStyle = '#7d8090'; ctx.beginPath(); ctx.arc(x, y + R / 2, 3, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.beginPath(); ctx.arc(x - 1, y + R / 2 - 1, 1, 0, 7); ctx.fill(); }
+    if (!reduced) { const sh = (tAll * 60) % (sw + 80) - 40; const sg = ctx.createLinearGradient(sx + sh - 20, 0, sx + sh + 20, 0); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(255,255,255,.08)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sg; ctx.fillRect(sx, y, sw, R); }
+    ctx.fillStyle = 'rgba(255,255,255,.2)'; ctx.fillRect(sx, y, sw, 2);
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(sx, y + R - 3, sw, 3);
+    return;
+  }
+  ctx.fillStyle = cur ? L.block : shade(L.block, -0.1); ctx.fillRect(sx, y, sw, R);
+  const h = hash(m * 1913 + 7);
+  ctx.fillStyle = 'rgba(0,0,0,.08)';
+  ctx.fillRect(sx, y + 8 + h % 6, sw, 2); ctx.fillRect(sx, y + 20 + (h >>> 4) % 8, sw, 1.5);
+  ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fillRect(sx, y + 12 + (h >>> 8) % 6, sw, 1.5);
+  for (let c = 0; c < 7; c++) { const hh = hash(m * 313 + c * 71); if (hh % 3) continue; ctx.fillStyle = L.speck; ctx.globalAlpha = 0.85; ctx.fillRect(sx + 8 + (hh >>> 4) % (sw - 16), y + 4 + (hh >>> 9) % (R - 10), 3, 3); ctx.globalAlpha = 1; }
+  ctx.fillStyle = cur ? 'rgba(255,255,255,.22)' : 'rgba(255,255,255,.1)'; ctx.fillRect(sx, y, sw, 2.5);
+  ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(sx, y + R - 2.5, sw, 2.5);
+  ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(sx, y, 3, R); ctx.fillRect(sx + sw - 3, y, 3, R);
+}
 function drawRoomGlow(sx, y, sw){
-  const a = reduced ? 0.7 : 0.55 + 0.35 * Math.sin(tAll * 3);
-  ctx.strokeStyle = `rgba(255,209,102,${a})`; ctx.lineWidth = 3; ctx.strokeRect(sx + 2, y + 2, sw - 4, R - 4);
-  ctx.fillStyle = `rgba(255,209,102,${a * 0.9})`;
-  const bx = sx + sw / 2;
-  ctx.beginPath(); ctx.moveTo(bx - 12, y + R - 8); ctx.lineTo(bx - 12, y + 14); ctx.quadraticCurveTo(bx, y + 4, bx + 12, y + 14); ctx.lineTo(bx + 12, y + R - 8); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = 'rgba(80,50,0,.6)'; ctx.fillRect(bx - 12, y + 16, 24, 2); ctx.fillRect(bx - 2, y + 16, 4, 7);
+  // 宝の部屋：金の帯の宝箱と、まわりのきらめき
+  const a = reduced ? 0.75 : 0.55 + 0.35 * Math.sin(tAll * 3), bx = sx + sw / 2, by = y + R - 6;
+  const gl = ctx.createRadialGradient(bx, by - 8, 4, bx, by - 8, 46);
+  gl.addColorStop(0, `rgba(255,209,102,${0.45 * a})`); gl.addColorStop(1, 'rgba(255,209,102,0)');
+  ctx.fillStyle = gl; ctx.fillRect(bx - 46, by - 54, 92, 92);
+  ctx.strokeStyle = `rgba(255,209,102,${a})`; ctx.lineWidth = 2; ctx.strokeRect(sx + 2, y + 2, sw - 4, R - 4);
+  ctx.fillStyle = '#7a4a22'; roundRect(bx - 14, by - 14, 28, 14, 2); ctx.fill();
+  ctx.fillStyle = '#9a6232'; ctx.beginPath(); ctx.moveTo(bx - 14, by - 13); ctx.quadraticCurveTo(bx, by - 26, bx + 14, by - 13); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#f2c43d'; ctx.fillRect(bx - 14, by - 15, 28, 2.5); ctx.fillRect(bx - 9, by - 22, 3, 22); ctx.fillRect(bx + 6, by - 22, 3, 22);
+  ctx.fillStyle = '#ffe9a0'; roundRect(bx - 3, by - 13, 6, 6, 1.5); ctx.fill();
+  if (!reduced) for (let k = 0; k < 3; k++) { const t = (tAll * 0.8 + k / 3) % 1, px = bx + Math.sin(k * 2.1 + tAll) * 18, py = by - 18 - t * 16;
+    ctx.fillStyle = `rgba(255,240,180,${1 - t})`; ctx.beginPath(); ctx.arc(px, py, 1.6, 0, 7); ctx.fill(); }
 }
 let lastClink = 0;
 function crewHit(i, fx0, face){
@@ -2016,33 +2056,78 @@ function crewHit(i, fx0, face){
   else burst(x, y, i === 2 ? 8 : 3, LAYERS[layerIdxForDepth(S.depth)].block, i === 2 ? 1 : 0.6);
   if (i === 2 && !reduced && !locked(S)) { shakeT = Math.max(shakeT, 0.06); burst(x, y, 4, '#ffb347', 1); }
 }
+// 地上の空は端末の時刻で変わる（朝焼け・昼・夕焼け・夜）。暗い表示のときはいつも夜
+function skyNow(){
+  if (dark) return { t:'#0c1430', b:'#27335c', night:true };
+  const h = new Date().getHours() + new Date().getMinutes() / 60;
+  if (h < 5 || h >= 19.5) return { t:'#101a3c', b:'#34407a', night:true };
+  if (h < 7.5) return { t:'#f2a77a', b:'#fde3c2', night:false };
+  if (h >= 17) return { t:'#e7836a', b:'#fbd1a0', night:false };
+  return { t:'#7cc4f0', b:'#e3f4ff', night:false };
+}
 function drawSurface(){
-  const y0 = rowY(0);
-  if (dark) {
-    ctx.fillStyle = 'rgba(255,255,255,.8)';
-    for (let i = 0; i < 26; i++) { const h = hash(i * 97 + 5); ctx.fillRect(h % Math.floor(VW), y0 - 20 - (h >>> 8) % 240, 1.5, 1.5); }
-    ctx.fillStyle = '#f3ecc8'; ctx.beginPath(); ctx.arc(VW - 60, y0 - 150, 14, 0, 7); ctx.fill();
+  const y0 = rowY(0), sk = skyNow();
+  const g = ctx.createLinearGradient(0, y0 - 260, 0, y0);
+  g.addColorStop(0, sk.t); g.addColorStop(1, sk.b);
+  ctx.fillStyle = g; ctx.fillRect(-10, -10, VW + 20, y0 + 10);
+  if (sk.night) {
+    for (let i = 0; i < 34; i++) { const h = hash(i * 97 + 5); ctx.fillStyle = `rgba(255,255,255,${reduced ? 0.8 : 0.4 + 0.5 * Math.abs(Math.sin(tAll + i))})`; ctx.fillRect(h % Math.floor(VW), y0 - 30 - (h >>> 8) % 240, 1.6, 1.6); }
+    ctx.fillStyle = '#f3ecc8'; ctx.beginPath(); ctx.arc(VW - 60, y0 - 160, 14, 0, 7); ctx.fill();
+    ctx.fillStyle = sk.t; ctx.beginPath(); ctx.arc(VW - 54, y0 - 164, 12, 0, 7); ctx.fill();
   } else {
-    ctx.fillStyle = 'rgba(255,236,150,.9)'; ctx.beginPath(); ctx.arc(VW - 62, y0 - 150, 18, 0, 7); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.85)';
-    const cxl = ((tAll * 6) % (VW + 120)) - 60;
-    ctx.beginPath(); ctx.arc(cxl, y0 - 120, 12, 0, 7); ctx.arc(cxl + 14, y0 - 124, 15, 0, 7); ctx.arc(cxl + 30, y0 - 118, 11, 0, 7); ctx.fill();
+    const sun = ctx.createRadialGradient(VW - 62, y0 - 160, 4, VW - 62, y0 - 160, 46);
+    sun.addColorStop(0, 'rgba(255,240,170,1)'); sun.addColorStop(0.4, 'rgba(255,236,150,.9)'); sun.addColorStop(1, 'rgba(255,236,150,0)');
+    ctx.fillStyle = sun; ctx.fillRect(VW - 110, y0 - 210, 100, 100);
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    for (let k = 0; k < 3; k++) { const sp = 4 + k * 2.5, cxl = ((tAll * sp + k * 160) % (VW + 140)) - 70, cy = y0 - 120 - k * 34;
+      ctx.beginPath(); ctx.arc(cxl, cy, 11, 0, 7); ctx.arc(cxl + 14, cy - 5, 15, 0, 7); ctx.arc(cxl + 30, cy, 11, 0, 7); ctx.rect(cxl, cy, 30, 9); ctx.fill(); }
+    if (!reduced) { ctx.strokeStyle = 'rgba(40,40,60,.6)'; ctx.lineWidth = 1.4; for (let k = 0; k < 3; k++) { const bx0 = ((tAll * 18 + k * 22) % (VW + 80)) - 40, byy = y0 - 150 + k * 9 + Math.sin(tAll * 2 + k) * 3, fl = Math.sin(tAll * 9 + k) * 2;
+      ctx.beginPath(); ctx.moveTo(bx0 - 5, byy - fl); ctx.lineTo(bx0, byy); ctx.lineTo(bx0 + 5, byy - fl); ctx.stroke(); } }
   }
-  ctx.fillStyle = dark ? '#1c2748' : '#b8dcc0';
+  // 遠い山と近い丘
+  ctx.fillStyle = sk.night ? '#1a2546' : '#a9cdb7';
   ctx.beginPath(); ctx.moveTo(-10, y0);
-  for (let x = -10; x <= VW + 10; x += 20) ctx.lineTo(x, y0 - 30 - 18 * Math.sin(x * 0.02) - 10 * Math.sin(x * 0.05));
+  for (let x = -10; x <= VW + 10; x += 20) ctx.lineTo(x, y0 - 44 - 22 * Math.sin(x * 0.015 + 1) - 12 * Math.sin(x * 0.04));
   ctx.lineTo(VW + 10, y0); ctx.fill();
+  ctx.fillStyle = sk.night ? '#22304f' : '#8fc19a';
+  ctx.beginPath(); ctx.moveTo(-10, y0);
+  for (let x = -10; x <= VW + 10; x += 20) ctx.lineTo(x, y0 - 22 - 10 * Math.sin(x * 0.03 + 2));
+  ctx.lineTo(VW + 10, y0); ctx.fill();
+  // 針葉樹
+  for (let k = 0; k < 7; k++) { const h = hash(k * 71 + 3), tx = (h % 1000) / 1000 * VW, th = 20 + (h >>> 10) % 16;
+    if (Math.abs(tx - cx()) < shaftW() / 2 + 30) continue;
+    ctx.fillStyle = sk.night ? '#14233a' : '#4f8f5c';
+    ctx.beginPath(); ctx.moveTo(tx, y0 - 7 - th); ctx.lineTo(tx + th * 0.35, y0 - 7); ctx.lineTo(tx - th * 0.35, y0 - 7); ctx.fill();
+    ctx.fillStyle = sk.night ? '#2b1d10' : '#6b4a2a'; ctx.fillRect(tx - 1.5, y0 - 8, 3, 4); }
   ctx.fillStyle = grass; ctx.fillRect(-10, y0 - 7, VW + 20, 8);
-  const bx = 18, by = y0 - 7;
-  ctx.fillStyle = '#6b4a2a'; ctx.fillRect(bx + 8, by - 32, 4, 32); ctx.fillRect(bx + 58, by - 32, 4, 32);
-  ctx.fillStyle = '#f5e6c8'; roundRect(bx, by - 50, 70, 24, 4); ctx.fill();
-  ctx.strokeStyle = '#6b4a2a'; ctx.lineWidth = 2; ctx.stroke();
-  ctx.fillStyle = '#6b3d14'; ctx.font = '800 12px "M PLUS Rounded 1c", sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('つるはし社', bx + 35, by - 33);
-  const sw = shaftW(), sx = cx() - sw / 2;
-  ctx.strokeStyle = '#6b4a2a'; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.moveTo(sx + sw - 10, y0 - 7); ctx.lineTo(sx + sw - 30, y0 - 56); ctx.lineTo(sx + sw + 10, y0 - 56); ctx.lineTo(sx + sw - 10, y0 - 7); ctx.stroke();
-  ctx.strokeStyle = 'rgba(40,30,20,.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx + sw - 10, y0 - 56); ctx.lineTo(sx + sw - 10, rowY(S.depth) - 60); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(-10, y0 - 7, VW + 20, 2);
+  // 社屋（夜は窓に灯り）
+  const sw = shaftW(), sx = cx() - sw / 2, hx = Math.max(8, sx - 86), hy = y0 - 7;
+  if (sx - hx > 60) {
+    ctx.fillStyle = '#8a5a30'; ctx.fillRect(hx, hy - 34, 70, 34);
+    ctx.fillStyle = '#6b4424'; for (let k = 0; k < 7; k++) ctx.fillRect(hx, hy - 34 + k * 5, 70, 1);
+    ctx.fillStyle = '#4a2f18'; ctx.beginPath(); ctx.moveTo(hx - 6, hy - 34); ctx.lineTo(hx + 35, hy - 54); ctx.lineTo(hx + 76, hy - 34); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = sk.night ? '#ffd27a' : '#cfe7f5'; ctx.fillRect(hx + 10, hy - 26, 14, 11); ctx.fillRect(hx + 46, hy - 26, 14, 11);
+    if (sk.night) { const wg = ctx.createRadialGradient(hx + 35, hy - 20, 4, hx + 35, hy - 20, 60); wg.addColorStop(0, 'rgba(255,210,120,.25)'); wg.addColorStop(1, 'rgba(255,210,120,0)'); ctx.fillStyle = wg; ctx.fillRect(hx - 25, hy - 80, 120, 80); }
+    ctx.fillStyle = '#3a2412'; ctx.fillRect(hx + 30, hy - 18, 10, 18);
+    ctx.fillStyle = '#f5e6c8'; roundRect(hx + 6, hy - 50, 58, 13, 3); ctx.fill(); ctx.strokeStyle = '#4a2f18'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#6b3d14'; ctx.font = '800 9px "M PLUS Rounded 1c", sans-serif'; ctx.textAlign = 'center'; ctx.fillText('つるはし社', hx + 35, hy - 40.5);
+  } else {
+    const bx = 18, by = y0 - 7;
+    ctx.fillStyle = '#6b4a2a'; ctx.fillRect(bx + 8, by - 32, 4, 32); ctx.fillRect(bx + 58, by - 32, 4, 32);
+    ctx.fillStyle = '#f5e6c8'; roundRect(bx, by - 50, 70, 24, 4); ctx.fill();
+    ctx.strokeStyle = '#6b4a2a'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#6b3d14'; ctx.font = '800 12px "M PLUS Rounded 1c", sans-serif'; ctx.textAlign = 'center'; ctx.fillText('つるはし社', bx + 35, by - 33);
+  }
+  // やぐら（竪坑の上の櫓）と回る滑車
+  const fx0 = sx + sw - 18, fy0 = y0 - 7;
+  ctx.strokeStyle = '#5a3a1e'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(fx0 - 22, fy0); ctx.lineTo(fx0, fy0 - 62); ctx.lineTo(fx0 + 22, fy0); ctx.moveTo(fx0 - 14, fy0 - 24); ctx.lineTo(fx0 + 14, fy0 - 24); ctx.stroke();
+  ctx.save(); ctx.translate(fx0, fy0 - 62); ctx.rotate(reduced ? 0 : tAll * 2);
+  ctx.strokeStyle = '#3a2412'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, 0, 9, 0, 7); ctx.stroke();
+  for (let k = 0; k < 4; k++) { ctx.rotate(Math.PI / 4); ctx.beginPath(); ctx.moveTo(-9, 0); ctx.lineTo(9, 0); ctx.stroke(); }
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(40,30,20,.7)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(fx0 + 9, y0 - 62); ctx.lineTo(fx0 + 9, rowY(S.depth) - 60); ctx.stroke();
 }
 function drawMap(){
   const x = W - MAP_W, total = MAX_DEPTH_LAYERED, h = H - 16;
@@ -2051,6 +2136,8 @@ function drawMap(){
     ctx.fillStyle = S.best >= l * LAYER_LEN ? LAYERS[l].block : '#333';
     ctx.fillRect(x + 4, 8 + h * l * LAYER_LEN / total, MAP_W - 8, h * LAYER_LEN / total - 1);
   }
+  for (let l = 1; l < NLAYER; l++) { const yy = 8 + h * l * LAYER_LEN / total; ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(x + 3, yy - 1, MAP_W - 6, 2); }
+  for (let l = 0; l < NLAYER; l++) { const d = l * LAYER_LEN + LAYER_LEN / 2; if (S.best < l * LAYER_LEN) continue; const yy = 8 + h * d / total; ctx.fillStyle = S.room[d] ? 'rgba(255,209,102,.35)' : '#ffd166'; ctx.beginPath(); ctx.arc(x + MAP_W / 2, yy, 1.6, 0, 7); ctx.fill(); }
   const mark = (d, col) => { const my = 8 + h * Math.min(total, d) / total; ctx.fillStyle = col; ctx.fillRect(x + 2, my - 1, MAP_W - 4, 2); return my; };
   if (S.best > S.depth) mark(S.best, 'rgba(255,255,255,.5)');
   const my = mark(S.depth, '#ffd166');
