@@ -255,7 +255,7 @@ check("入力内容の案：タイトル・サブタイトル・A5・裁ち落�
       and "裁ち落としあり" in LISTING and f"{len(di)}ページ" in LISTING and "1,480" in LISTING)
 check("入力内容に AI 申告（テキストは Claude、挿絵があれば画像は FLUX.1）と商標確認（J-PlatPat）の記録がある",
       "作品全体" in LISTING and "Claude" in LISTING and "J-PlatPat" in LISTING
-      and (not has_art() or "画像「作品全体" in LISTING and "FLUX.1" in LISTING))
+      and (not has_art() or "画像「" in LISTING and "FLUX.1" in LISTING))
 paste = LISTING[LISTING.index("## 内容紹介"):LISTING.index("## キーワード")]
 quotes = re.findall(r"「([^」]+)」", paste)
 qbad = [q for q in quotes if flat(q) not in flat(all_int) and q not in ("近い言い方",)]

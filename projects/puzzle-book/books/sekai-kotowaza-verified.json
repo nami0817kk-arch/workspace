@@ -21,7 +21,7 @@
     "https://fr.wiktionary.org/wiki/il_n’y_a_si_bon_cheval_qui_ne_bronche",
     "https://en.wiktionary.org/wiki/even_Homer_nods"
    ],
-   "note": "直訳「つまずかないほど良い馬はいない」。どんなに有能な人でも時に誤る。",
+   "note": "直訳「つまずかないほどよい馬はいない」。どんなに有能な人でも時に誤る。",
    "read": "イル ニヤ スィ ボン シュヴァル キ ヌ ブロンシュ"
   },
   "zh": {
@@ -661,7 +661,7 @@
     "https://en.wiktionary.org/wiki/no_smoke_without_fire"
    ],
    "note": "直訳「火のないところに煙はない」。fr.wiktionaryの訳語欄に火のない所に煙は立たぬ。",
-   "read": "イル ニヤ パ ドゥ フュメ サン フ"
+   "read": "イル ニヤ パ ドゥ フュメ サン フー"
   },
   "zh": {
    "text": "無風不起浪",
@@ -824,7 +824,7 @@
     "https://ko.dict.naver.com/#/entry/koko/fd8e1bb067ef4a54ad940bb15f3ed006",
     "https://dic.daum.net/word/view.do?wordid=kkw000514741"
    ],
-   "note": "直訳「先に食べた者が持ち主」。候補の「먼저 온 사람이 임자」は国語辞典に見出しなし。",
+   "note": "直訳「先に食べる者が持ち主」。候補の「먼저 온 사람이 임자」は国語辞典に見出しなし。",
    "read": "モンジョ モンヌン ノミ イムジャ"
   }
  },
@@ -921,7 +921,7 @@
     "https://ko.dict.naver.com/#/entry/koko/8f2fbd4666384716ae101e54a5166488",
     "https://ko.dict.naver.com/#/entry/koko/fc9de9e3a10e460d91fabc0245fbfc74"
    ],
-   "note": "父傳子傳。直訳「父から子へ伝わる」＝息子が父に似る。『蛙の子は蛙』の「凡人の子は凡人」という含みはない。",
+   "note": "父傳子傳。直訳「父から子へ伝わる」＝息子が父に似る。",
    "read": "プジョンジャジョン"
   }
  },
@@ -1168,15 +1168,15 @@
   "src_no": 99,
   "jp": "木を見て森を見ず",
   "en": {
-   "text": "Can't see the forest for the trees.",
+   "text": "You can't see the forest for the trees.",
    "match": "同じ",
    "sources": [
     "https://dictionary.cambridge.org/dictionary/english/can't-see-the-forest-for-the-trees",
     "https://en.wiktionary.org/wiki/see_the_forest_for_the_trees",
     "https://www.phrases.org.uk/meanings/you-cant-see-the-wood-for-the-trees.html"
    ],
-   "note": "直訳「木のせいで森が見えない」。米式。英式は can't see the wood for the trees（Cambridge・Wiktionary。Phrase Finder は You can't see the wood for the trees）。Preston (1880) は You cannot see wood for trees。",
-   "read": "キャント スィー ザ フォレスト フォー ザ トゥリーズ"
+   "note": "直訳「木のせいで森が見えない」。米式。英式は can't see the wood for the trees（Cambridge・Wiktionary。Phrase Finder は You can't see the wood for the trees）。Preston (1880) は You cannot see wood for trees。（2026-10-03: 辞書の見出しは動詞句なので、文として主語 You を補った）",
+   "read": "ユー キャント スィー ザ フォレスト フォー ザ トゥリーズ"
   },
   "fr": {
    "text": "C'est l'arbre qui cache la forêt.",
@@ -1283,7 +1283,7 @@
     "https://en.wiktionary.org/wiki/seeing_is_believing",
     "https://fr.wiktionary.org/wiki/百聞は一見に如かず"
    ],
-   "note": "直訳「一枚の絵は千の言葉に値する」。fr.wiktionaryの「百聞は一見に如かず」項に比喩的意味としてこの句が書かれている。「聞くより見よ」ではなく「言葉より絵」なので近い止まり。",
+   "note": "直訳「一枚の絵は千のことばに値する」。fr.wiktionaryの「百聞は一見に如かず」項に比喩的意味としてこの句が書かれている。「聞くより見よ」ではなく「言葉より絵」なので近い止まり。",
    "read": "ユニマージュ ヴォ ミル モ"
   },
   "zh": {
@@ -1324,15 +1324,17 @@
    "read": "イフ ユー ラン アフター トゥー ヘアーズ ユー ウィル キャッチ ニーザー"
   },
   "fr": {
-   "text": "Courir deux lièvres à la fois.",
+   "text": "Qui court deux lièvres n'en prend aucun.",
    "match": "同じ",
    "sources": [
+    "https://www.dictionnaire-academie.fr/article/A8L0542",
+    "https://fr.wikisource.org/wiki/Dictionnaire_des_proverbes_(Quitard)/li%C3%A8vre",
     "https://fr.wiktionary.org/wiki/courir_deux_lièvres_à_la_fois",
     "https://www.larousse.fr/dictionnaires/francais/lièvre",
     "https://www.expressio.fr/expressions/courir-deux-lievres-a-la-fois"
    ],
-   "note": "直訳「二匹の野ウサギを同時に追う」。二つを同時に追うと両方とも仕損じる。辞書の見出しは動詞句（ことわざとして言うときの Il ne faut pas courir deux lièvres à la fois. の形は今回2出典では確認できていない）。候補の Qui trop embrasse mal étreint.（多くを抱えすぎると何もうまくいかない）も実在（fr.wiktionary・expressio・linternaute）で、意味は近い。",
-   "read": "クリール ドゥ リエーヴラ ラ フォワ"
+   "note": "直訳「二匹の野ウサギを追う者は一匹も捕らえない」。二つを同時に追うと両方とも仕損じる。辞書の見出しは動詞句（ことわざとして言うときの Il ne faut pas courir deux lièvres à la fois. の形は今回2出典では確認できていない）。候補の Qui trop embrasse mal étreint.（多くを抱えすぎると何もうまくいかない）も実在（fr.wiktionary・expressio・linternaute）で、意味は近い。（2026-10-03: アカデミー・フランセーズ辞典「lièvre」と Quitard『ことわざ辞典』にある、結果まで言う形に替えた）",
+   "read": "キ クール ドゥ リエーヴル ナン プラン トカン"
   },
   "zh": {
    "text": "貪多嚼不爛",
@@ -1494,7 +1496,7 @@
     "https://www.zdic.net/hant/%E4%B8%89%E5%80%8B%E8%87%AD%E7%9A%AE%E5%8C%A0%EF%BC%8C%E8%B3%BD%E9%81%8E%E8%AB%B8%E8%91%9B%E4%BA%AE"
    ],
    "note": "直訳「三人の靴職人（凡人）が集まれば諸葛亮にまさる」。候補の「賽過」の形は漢典にあるが、辞書で広く立項されているのは「勝過」の形なので、こちらにした。",
-   "read": "sān ge chòu pí jiàng, shèng guò Zhūgě Liàng"
+   "read": "sān gè chòu pí jiàng, shèng guò zhū gě liàng"
   },
   "ko": {
    "text": "백지장도 맞들면 낫다",
@@ -1620,16 +1622,18 @@
    "read": "スィックス オヴ ワン ハーフ ア ダズン オヴ ズィ アザー"
   },
   "fr": {
-   "text": "Bonnet blanc, blanc bonnet.",
+   "text": "C'est bonnet blanc et blanc bonnet.",
    "match": "近い",
    "sources": [
+    "https://www.larousse.fr/dictionnaires/francais/bonnet/10159",
+    "https://www.expressio.fr/expressions/c-est-bonnet-blanc-et-blanc-bonnet",
     "https://fr.wiktionary.org/wiki/bonnet_blanc,_blanc_bonnet",
     "https://en.wiktionary.org/wiki/six_of_one,_half_a_dozen_of_the_other",
     "https://www.expressio.fr/expressions/c-est-bonnet-blanc-et-blanc-bonnet",
     "https://ja.wiktionary.org/wiki/五十歩百歩"
    ],
-   "note": "直訳「白い帽子、帽子白い」。違うように見えても実は同じ。「どちらも良くない」という含みはない。C'est bonnet blanc et blanc bonnet. の形でもよく使う（expressio の URL はこの形、fr.wiktionary は bonnet blanc et blanc bonnet から転送）。故事の「自分も同じなのに他人を笑う」面に当たる C'est la poêle qui se moque du chaudron.（鍋が大鍋をからかう）は fr.wiktionary の訳語欄に五十歩百歩が載るが、2つ目の出典は確かめていない。",
-   "read": "ボネ ブラン ブラン ボネ"
+   "note": "直訳「白い帽子も、帽子の白いのも同じ」。違うように見えても実は同じ。「どちらも良くない」という含みはない。C'est bonnet blanc et blanc bonnet. の形でもよく使う（expressio の URL はこの形、fr.wiktionary は bonnet blanc et blanc bonnet から転送）。故事の「自分も同じなのに他人を笑う」面に当たる C'est la poêle qui se moque du chaudron.（鍋が大鍋をからかう）は fr.wiktionary の訳語欄に五十歩百歩が載るが、2つ目の出典は確かめていない。",
+   "read": "セ ボネ ブラン エ ブラン ボネ"
   },
   "zh": {
    "text": "五十步笑百步",
@@ -1706,15 +1710,15 @@
   "src_no": 55,
   "jp": "人は見かけによらぬもの",
   "en": {
-   "text": "Don't judge a book by its cover.",
+   "text": "You can't judge a book by its cover.",
    "match": "同じ",
    "sources": [
-    "https://en.wiktionary.org/wiki/don't_judge_a_book_by_its_cover",
+    "https://en.wiktionary.org/wiki/you_can%27t_judge_a_book_by_its_cover",
     "https://www.ldoceonline.com/dictionary/don-t-judge-a-book-by-its-cover",
     "https://www.phrases.org.uk/meanings/dont-judge-a-book-by-its-cover.html"
    ],
-   "note": "直訳「表紙で本を判断するな」。見かけで判断するなという戒め。「人は見かけと中身がちがう」という観察そのものに当たるのは Appearances are deceptive（ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-52・Wiktionary・TFD）。Wiktionary の主見出しは you can't judge a book by its cover。",
-   "read": "ドウント ジャッジ ア ブック バイ イッツ カヴァー"
+   "note": "直訳「表紙で本の中身は判断できない」。見かけで判断するなという戒め。「人は見かけと中身がちがう」という観察そのものに当たるのは Appearances are deceptive（ODP https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-52・Wiktionary・TFD）。Wiktionary の主見出しは you can't judge a book by its cover。（2026-10-03: 戒めの Don't 形から、観察の形の主見出しに替えた）",
+   "read": "ユー キャント ジャッジ ア ブック バイ イッツ カヴァー"
   },
   "fr": {
    "text": "L'habit ne fait pas le moine.",
@@ -1725,7 +1729,7 @@
     "https://www.expressio.fr/expressions/l-habit-ne-fait-pas-le-moine",
     "https://www.linternaute.fr/proverbe/71/l-habit-ne-fait-pas-le-moine/"
    ],
-   "note": "直訳「僧衣が修道士をつくるのではない」。人を見かけで判断してはならない。※fr.wiktionaryはこの句の訳語欄に馬子にも衣装を載せているが、意味は逆（60番を参照）。",
+   "note": "直訳「僧衣が修道士をつくるのではない」。人を見かけで判断してはならない。※fr.wiktionaryはこの句の訳語欄に馬子にも衣装を載せているが、意味は逆（「馬子にも衣装」を参照）。",
    "read": "ラビ ヌ フェ パ ル モワーヌ"
   },
   "zh": {
@@ -1747,7 +1751,7 @@
     "https://m.joongdo.co.kr/view.php?key=20190124001715383",
     "https://www.kidshankook.kr/news/articleView.html?idxno=3307"
    ],
-   "note": "直訳「土鍋（の見た目）より味噌の味が良い」＝見かけは粗末でも中身は立派。『人は見かけによらぬもの』とは、良い方向の意味でだけ重なる。高麗大（Daum）と新聞記事2件で確認。標準には同じ意味の「장독보다 장맛이 좋다」がある。",
+   "note": "直訳「土鍋（の見た目）より味噌の味がよい」＝見かけは粗末でも中身は立派。『人は見かけによらぬもの』とは、良い方向の意味でだけ重なる。高麗大（Daum）と新聞記事2件で確認。標準には同じ意味の「장독보다 장맛이 좋다」がある。",
    "read": "ットゥクペギボダ チャンマシ チョタ"
   }
  },
@@ -2018,7 +2022,7 @@
     "https://ja.wiktionary.org/wiki/雨降って地固まる",
     "https://www.expressio.fr/expressions/apres-la-pluie-le-beau-temps"
    ],
-   "note": "直訳「雨のあとは晴れ」。悪いことの後に良いことが来る。「もめごとの後にかえって前より固まる」という意味までは含まない。57番と同じ句。",
+   "note": "直訳「雨のあとは晴れ」。悪いことの後に良いことが来る。「もめごとの後にかえって前より固まる」という意味までは含まない。別の句と同じ句。",
    "read": "アプレ ラ プリュイ ル ボー タン"
   },
   "zh": {
@@ -2111,16 +2115,17 @@
    "read": "パイ イン ザ スカイ"
   },
   "fr": {
-   "text": "Des châteaux en Espagne.",
+   "text": "Bâtir des châteaux en Espagne.",
    "match": "近い",
    "sources": [
+    "https://www.expressio.fr/expressions/batir-des-chateaux-en-espagne",
     "https://fr.wiktionary.org/wiki/châteaux_en_Espagne",
     "https://www.larousse.fr/dictionnaires/francais/château",
     "https://en.wiktionary.org/wiki/castle_in_the_air",
     "https://www.expressio.fr/expressions/batir-des-chateaux-en-espagne"
    ],
-   "note": "直訳「スペインの城」。実現しそうにない夢や計画。成句。faire / bâtir des châteaux en Espagne の形で使う（expressio は bâtir）。役に立たない計画、という絵に描いた餅とは近い。",
-   "read": "デ シャトー ザン ネスパーニュ"
+   "note": "直訳「スペインに城を建てる」。実現しそうにない夢や計画。成句。faire / bâtir des châteaux en Espagne の形で使う（expressio は bâtir）。役に立たない計画、という絵に描いた餅とは近い。",
+   "read": "バティール デ シャトー ザン ネスパーニュ"
   },
   "zh": {
    "text": "畫餅充飢",
@@ -2149,15 +2154,16 @@
   "src_no": 100,
   "jp": "捨てる神あれば拾う神あり",
   "en": {
-   "text": "When one door shuts, another opens.",
+   "text": "When one door closes, another opens.",
    "match": "同じ",
    "sources": [
+    "https://en.wiktionary.org/wiki/when_one_door_closes,_another_opens",
     "https://en.wiktionary.org/wiki/when_one_door_shuts,_another_opens",
     "https://www.oxfordreference.com/display/10.1093/acref/9780198734901.001.0001/acref-9780198734901-e-1614",
     "https://www.gutenberg.org/ebooks/39281"
    ],
-   "note": "直訳「一つの扉が閉まれば、別の扉が開く」。ODP・Preston 445番・Kelly (1859) は When one door shuts another opens（カンマなし）。When one door closes, another opens の形も多い（Wiktionary の主見出しはこちら）。",
-   "read": "ウェン ワン ドア シャッツ アナザー オウプンズ"
+   "note": "直訳「一つの扉が閉まれば、別の扉が開く」。ODP・Preston 445番・Kelly (1859) は When one door shuts another opens（カンマなし）。When one door closes, another opens の形も多い（Wiktionary の主見出しはこちら）。（2026-10-03: 今の書籍では closes が約15倍多い（Google Ngram）ので、Wiktionary の主見出しの形に替えた）",
+   "read": "ウェン ワン ドア クロウズィズ アナザー オウプンズ"
   },
   "fr": {
    "text": "Une de perdue, dix de retrouvées.",
@@ -2224,7 +2230,7 @@
     "https://zh.wikipedia.org/zh-tw/%E7%9F%A5%E8%AD%98%E5%B0%B1%E6%98%AF%E5%8A%9B%E9%87%8F"
    ],
    "note": "直訳「知識こそ力である」。西洋の格言 scientia potentia est の訳（中国古来のことわざではない）。Wiktionary（諺として立項）と中国語版 Wikipedia（記事名・本文ともこの形）で確認（2026-10-03）。",
-   "read": "zhī shi jiù shì lì liàng"
+   "read": "zhī shí jiù shì lì liàng"
   },
   "ko": {
    "text": "아는 것이 힘이다",
@@ -2420,7 +2426,7 @@
     "https://www.zdic.net/hant/%E9%90%B5%E6%9D%B5%E7%A3%A8%E6%88%90%E9%87%9D"
    ],
    "note": "直訳「努力さえ深ければ、鉄の杵も磨いて針にできる」。根気よく続ければ必ず成る。李白の少年時代の伝説に基づく。候補の「鐵杵磨成針」も漢典・修訂本にある。辛抱して続ければ報われる、という点で近い。",
-   "read": "zhǐ yào gōng fu shēn, tiě chǔ mó chéng zhēn"
+   "read": "zhǐ yào gōng fū shēn, tiě chǔ mó chéng zhēn"
   },
   "ko": {
    "text": "참을 인 자 셋이면 살인도 피한다",

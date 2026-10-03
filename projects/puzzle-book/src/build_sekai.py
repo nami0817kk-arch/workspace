@@ -132,10 +132,10 @@ LANG_TINT: dict[str, CMYK] = {k: tuple(round(v * 0.1, 3) for v in c) for k, c in
 FONT = {"en": ("LAT-B", "LAT"), "fr": ("LAT-B", "LAT"), "zh": ("TC-B", "TC"), "ko": ("KR-B", "KR")}
 READ_FONT = {"en": FONT_REGULAR, "fr": FONT_REGULAR, "zh": "LAT", "ko": FONT_REGULAR}
 COLORS: dict[str, tuple[CMYK, CMYK]] = {
-    "orange": ((0.0, 0.58, 0.95, 0.0), (0.0, 0.07, 0.16, 0.0)),
+    "orange": ((0.0, 0.62, 1.0, 0.08), (0.0, 0.07, 0.16, 0.0)),
     "green": ((0.72, 0.0, 0.85, 0.12), (0.09, 0.0, 0.12, 0.0)),
     "blue": ((0.88, 0.45, 0.0, 0.12), (0.11, 0.04, 0.0, 0.0)),
-    "pink": ((0.0, 0.72, 0.25, 0.0), (0.0, 0.09, 0.03, 0.0)),
+    "pink": ((0.0, 0.80, 0.30, 0.08), (0.0, 0.09, 0.03, 0.0)),
     "purple": ((0.58, 0.78, 0.0, 0.05), (0.07, 0.09, 0.0, 0.0)),
 }
 INK: CMYK = (0.0, 0.0, 0.0, 0.88)  # 本文の文字は黒1色（4色重ねは小さい字がにじむ）
@@ -164,7 +164,7 @@ REFERENCES = [  # 紙・公的な辞典を先に、Web の資料を後に
              "The Phrase Finder、Wiktionary（英語版）ほか"),
     ("フランス語", "Larousse、アカデミー・フランセーズ辞典、リトレ辞典、Wiktionnaire（フランス語版）、"
                   "Expressio、Linternaute、Wiktionary（英語版）ほか"),
-    ("中国語", "教育部《重編國語辭典修訂本》、教育部《成語典》（台湾）、漢典（zdic.net）、"
+    ("中国語", "教育部『重編國語辭典修訂本』、教育部『成語典』（台湾）、漢典（zdic.net）、"
               "Wikisource の原典（論語・史記・孟子など）、新聞記事、Wiktionary（英語版）ほか"),
     ("韓国語", "国立国語院『標準国語大辞典』、高麗大学校『韓国語大辞典』、国立国語院『ウリマルセム』、新聞記事、Wiktionary ほか"),
     ("日本語", "コトバンク（デジタル大辞泉ほか）、国立国会図書館レファレンス協同データベースほか"),
@@ -519,7 +519,7 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     c.drawCentredString(L + 13, f.top - 15.5, f"{no:02d}")
     c.setFillColorCMYK(*WHITE)
     c.setFont(FONT_BOLD, 8.5)
-    c.drawString(L + 32, f.top - 14, f"第{it['chapter'] + 1}章　{it['chapter_title']}")
+    pass  # 章名はページ下の柱に出す（色帯では繰り返さない）
     anchors["no"] = (L + 13, f.top - 11)
     # ことわざ（白抜き）
     ic_r = 48
@@ -554,10 +554,10 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     anchors["icon"] = (cx, cy)
     # 見出し
     y = band_bottom - 26
-    c.setFillColorCMYK(*col)
+    c.setFillColorCMYK(*NAVY)
     c.setFont(FONT_ROUNDED, 12.5)
     c.drawString(L, y, "世界では、こう言う")
-    c.setStrokeColorCMYK(*col)
+    c.setStrokeColorCMYK(*NAVY)
     c.setLineWidth(1.2)
     c.line(L + c.stringWidth("世界では、こう言う", FONT_ROUNDED, 12.5) + 8, y + 4, R - 2 * ic_r - 6, y + 4)
     y -= 12
@@ -566,7 +566,7 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     tx = L + 16
     avail = R - tx - 10
     lays = [_card_layout(c, it[k], k, avail, P) for k, _ in LANGS]
-    base = [14 + LABEL + (lo[1] + 3.5) * len(lo[0]) + (P["readg"] - 1.5) * len(lo[3]) + 1.5 * bool(lo[3])
+    base = [14 + LABEL + (lo[1] + 3.5) * len(lo[0]) + (P["readg"] - 1.5) * len(lo[3]) + 2 * bool(lo[3])
             + P["litg"] * len(lo[2]) + 4 for (k, _), lo in zip(LANGS, lays)]
     story = wrap_even(c, it["story"], FONT_REGULAR, P["story"], w - 30, False)
     story_h = 34 + P["storyg"] * len(story)
@@ -578,11 +578,10 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     for (k, _), (lines, ofs, lit, rd), h in zip(LANGS, lays, base):
         h += pad
         x = it[k]
-        c.setFillColorCMYK(*LANG_COLOR[k])
-        c.roundRect(L, y - h, w, h, 8, stroke=0, fill=1)
         c.setFillColorCMYK(*WHITE)
-        c.roundRect(L + 5, y - h, w - 5, h, 8, stroke=0, fill=1)
-        c.rect(L + 5, y - h, 8, h, stroke=0, fill=1)
+        c.rect(L, y - h, w, h, stroke=0, fill=1)
+        c.setFillColorCMYK(*LANG_COLOR[k])
+        c.rect(L, y - h, 3, h, stroke=0, fill=1)
         yy = y - pad / 2 - 15
         # 言語名（その言語の文字 ＋ 日本語）
         name, nfont = NATIVE[k]
@@ -617,7 +616,7 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
             for line in rd:
                 c.drawString(tx, yy + 1, line)
                 yy -= P["readg"] - 1.5
-            yy -= 1.5
+            yy -= 2
         c.setFillColorCMYK(*INK)
         c.setFont(FONT_REGULAR, P["lit"])
         for line in lit:
@@ -629,11 +628,12 @@ def _draw_item(c: canvas.Canvas, f: Frame, it: dict, no: int, P: dict) -> dict:
     y -= 8 - gap
     sh = story_h + pad
     c.setFillColorCMYK(*tint)
-    c.roundRect(L, y - sh, w, sh, 10, stroke=0, fill=1)
-    draw_icon(c, "1f4ac", L + 10, y - 26, 17)
+    c.roundRect(L, y - sh, w, sh, 3, stroke=0, fill=1)
     c.setFillColorCMYK(*col)
+    c.rect(L + 14, y - 21, 7, 7, stroke=0, fill=1)
+    c.setFillColorCMYK(*NAVY)
     c.setFont(FONT_ROUNDED, 11)
-    c.drawString(L + 32, y - 20, "ひとくち話")
+    c.drawString(L + 27, y - 20, "ひとくち話")
     c.setFillColorCMYK(*INK)
     c.setFont(FONT_REGULAR, P["story"])
     for k, line in enumerate(story):
@@ -754,7 +754,7 @@ def chapter_quiz(items: list[dict], ci: int, n: int = 3) -> list[tuple[int, str,
 def _heading(c: canvas.Canvas, f: Frame, text: str, color: CMYK = NAVY) -> float:
     """ページの見出し（紙の端までの細い帯つき）。本文を書き始める y を返す。"""
     c.setFillColorCMYK(*color)
-    c.rect(0, f.y1 - 0.22 * inch, f.pw, 0.22 * inch + BLEED, stroke=0, fill=1)
+    c.rect(0, f.y1 - 0.07 * inch, f.pw, 0.07 * inch + BLEED, stroke=0, fill=1)
     c.setFont(FONT_ROUNDED, 20)
     c.drawString(f.left, f.top - 32, text)
     c.setStrokeColorCMYK(*GOLD)
@@ -848,7 +848,7 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     intro_i = next(k for k, it in enumerate(items) if it["jp"] == "犬猿の仲")
     intro_s = items[intro_i]
     for text in [
-        "「犬猿の仲」は、英語とフランス語では「犬と猫」のように仲が悪い、と言います。中国語では「水と火」。"
+        "「犬猿の仲」を、英語とフランス語では「犬と猫のように仲が悪い」と言います。中国語では「水と火」。"
         "韓国語は、日本語と同じ「犬と猿」です。",
         "同じ気持ちを、国によってちがうものにたとえている。そのちがいを見くらべるのが、この本の楽しみ方です。",
     ]:
@@ -878,7 +878,7 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
         by -= 28
     y = by - 12
     for text in [
-        "日本でよく知られたことわざを50選び（慣用句や、西洋から入った言い方も含みます）、英語・フランス語・中国語・韓国語で同じ意味の言い方を並べました。"
+        "日本でよく知られたことわざを50選び（慣用句や四字熟語、西洋から入った言い方も含みます）、英語・フランス語・中国語・韓国語で同じ意味の言い方を並べました。"
         "外国語の言い方は、どれも2つ以上の辞書や資料で、実際に使われていることと意味を確かめたものです。",
         "ぴったり同じ意味の言い方がない言語は、意味の近い言い方に「近い言い方」の札をつけて載せています。",
     ]:
@@ -1097,7 +1097,7 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     y = _heading(c, f, "おわりに")
     for text in [
         "50のことわざを、4つのことばで見くらべてきました。",
-        "「氷山の一角」のように、どの国でもほとんど同じ言い方をするものがあれば、"
+        "「氷山の一角」のように、どの国でもほとんど同じ言い方をするものもあれば、"
         "「犬猿の仲」が「犬と猫」になるように、たとえがすっかり変わるものもありました。",
         "ことわざは、その土地の暮らしや、身近な生きもの、食べもの、昔の書物から生まれます。"
         "ちがうたとえの向こうに、よく似た気持ちが見えてくる。それが、世界のことわざを並べる楽しさです。",
@@ -1144,6 +1144,9 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
         f = page()
         fill_page(c, f, PAPER)
         y = _heading(c, f, title)
+        c.setFillColorCMYK(*SUB)
+        c.setFont(FONT_REGULAR, 7.5)
+        c.drawRightString(f.right, f.top - 32, "点の色は章を表します")
         order = sorted(range(len(items)), key=lambda k: foreign_key(items[k][lang]["text"]))
         row = (y - f.bottom + 4) / len(order)
         for m, k in enumerate(order):
@@ -1266,7 +1269,7 @@ def build_cover(spec: SekaiSpec, output_path: str, *, paper: str = "white") -> t
     c = canvas.Canvas(output_path, pagesize=(W, H), initialFontName=FONT_REGULAR)
     c.setTitle(f"{spec.title}（表紙）")
     c.setAuthor(spec.publisher)
-    c.setFillColorCMYK(*PAPER)
+    c.setFillColorCMYK(0.0, 0.04, 0.13, 0.0)  # 本文の生成りより少し濃く（Amazon の白い背景に溶けないように）
     c.rect(0, 0, W, H, stroke=0, fill=1)
     spine_x0, fx = b + tw, b + tw + sp
     cx, top = fx + tw / 2, b + th
