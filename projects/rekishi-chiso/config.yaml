@@ -1,0 +1,53 @@
+# 歴史の地層 — 制作の設定
+#
+# 素材（立ち絵・絵画）はリポジトリに入れない。立ち絵は規約で再配布が禁止されていて、
+# workspace は public なので。置き場は assets_dir（環境変数 CHISO_ASSETS で上書きできる）。
+assets_dir: ../../../output/rekishi-chiso/assets
+
+voicevox_url: http://127.0.0.1:50021
+
+# 掛け合いの2人。key は台本の話者名。
+cast:
+  語り:
+    name: 剣崎雌雄            # クレジットに出す名前（VOICEVOX:剣崎雌雄）
+    style_id: 21
+    speed: 1.08
+    pitch: 0.0
+    intonation: 1.15          # 語り手は少しだけ抑揚を強めて、平板な読み上げにしない
+    volume: 1.0
+    image: characters/kenzaki_helmet.png
+    side: left
+    bust: 0.40                # 立ち絵の上から何割を見せるか
+    height: 1250              # 立ち絵全体を何pxに縮めてから切るか
+  聞き:
+    name: 春日部つむぎ
+    style_id: 8
+    speed: 1.12
+    pitch: 0.0
+    intonation: 1.25          # 聞き手は反応役なので、語り手より抑揚を大きく
+    volume: 1.0
+    image: characters/tsumugi_helmet.png
+    side: right
+    bust: 0.40
+    height: 1150
+
+# 立ち絵のクレジット（概要欄に出す）
+character_credits:
+  - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"
+  - "立ち絵：剣崎雌雄 公式イラスト（銃口會）"
+
+fonts:
+  serif: C:/Windows/Fonts/NotoSerifJP-VF.ttf
+  gothic: C:/Windows/Fonts/YuGothB.ttc
+
+video:
+  width: 1920
+  height: 1080
+  fps: 30
+
+short:
+  width: 1080
+  height: 1920
+  max_seconds: 60
+
+operator: つるはし社
