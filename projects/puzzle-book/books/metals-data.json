@@ -1,0 +1,2455 @@
+{
+  "meta": {
+    "title": "金属・レアメタルの図鑑（仮題）データ",
+    "created": "2026-10-04",
+    "count": 55,
+    "rare_metal_definition": {
+      "text": "日本では、経済産業省の鉱業審議会（1987年のレアメタル総合対策特別小委員会）が、地球上の存在量が少ないか、技術的・経済的な理由で取り出しにくい金属のうち、工業需要があり安定供給の確保が重要なものを「レアメタル」とし、31鉱種（47元素）を定めました。レアアース（17元素）はまとめて1鉱種と数えます。",
+      "sources": [
+        "https://www.env.go.jp/policy/hakusyo/h25/html/hj13040139.html",
+        "https://www.cjc.or.jp/raremetal/overview/about",
+        "https://unit.aist.go.jp/env-mri/sure/kinzokushigen.html"
+      ]
+    },
+    "notes": [
+      "producers は原則 USGS Mineral Commodity Summaries 2025 の2024年推定値から計算した割合（%、小数1桁）です。basis に鉱山生産か精錬生産かを書きました。",
+      "密度・融点は Los Alamos 国立研究所と Jefferson Lab（PubChem 経由）の値を照らし合わせ、差があるものは「約」で丸めました。",
+      "group が「その他」のものは、指定の4区分に当てはまらない追加分（カドミウム・ウラン）です。ニッケルと白金族は経産省のレアメタル31鉱種にも含まれます。"
+    ]
+  },
+  "metals": [
+    {
+      "name": "鉄",
+      "symbol": "Fe",
+      "z": 26,
+      "group": "身近な金属",
+      "features": [
+        "銀白色の金属で、密度は7.87 g/cm³です。",
+        "融点は1538℃です。",
+        "磁石にくっつく代表的な金属です。"
+      ],
+      "uses": [
+        "ビルや橋の骨組み：炭素を混ぜた鋼にして強くします。",
+        "自動車の車体：加工しやすく丈夫な鋼板を使います。",
+        "ステンレスの台所用品：クロムなどを混ぜてさびにくくします。",
+        "モーターや変圧器の鉄心：磁気を通しやすい電磁鋼板です。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（鉄鉱石・鉄量）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "オーストラリア",
+            "share_percent": 36.2
+          },
+          {
+            "country": "ブラジル",
+            "share_percent": 17.5
+          },
+          {
+            "country": "中国",
+            "share_percent": 10.6
+          },
+          {
+            "country": "インド",
+            "share_percent": 10.6
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "中国とインドは同じ値で3位に並びます。"
+      },
+      "japan": "日本は鉄鉱石のほぼすべてを輸入し、主にオーストラリアとブラジルから買っています。粗鋼の生産量は世界有数です。",
+      "trivia": "鉄は血液の赤血球にあるヘモグロビンの成分で、体じゅうに酸素を運ぶ役目をしています。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-iron-ore.pdf",
+        "https://periodic.lanl.gov/26.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/26",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2019/03/material_flow2018_Fe.pdf",
+        "https://www.nipponsteel.com/factbook/11-06.html"
+      ]
+    },
+    {
+      "name": "銅",
+      "symbol": "Cu",
+      "z": 29,
+      "group": "身近な金属",
+      "features": [
+        "赤みのある金属で、密度は8.93 g/cm³です。",
+        "融点は1084.62℃です。",
+        "電気の通しやすさは銀に次いで2番目です。"
+      ],
+      "uses": [
+        "電線やケーブル：電気をよく通すので送電や配線に使います。",
+        "スマホや家電の基板の配線：細かい回路を銅でつくります。",
+        "電気自動車のモーター：巻き線に大量の銅を使います。",
+        "10円硬貨：銅に亜鉛とスズを混ぜた青銅です。",
+        "水道管や熱交換器：熱をよく伝え、さびにくい性質を生かします。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "チリ",
+            "share_percent": 23.0
+          },
+          {
+            "country": "コンゴ民主共和国",
+            "share_percent": 14.3
+          },
+          {
+            "country": "ペルー",
+            "share_percent": 11.3
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本は銅鉱石を輸入して製錬しています。精錬銅の生産は世界有数で、2024年は世界4位です。",
+      "trivia": "英語のcopperは、古代ローマが銅を採った地中海のキプロス島の名に由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-copper.pdf",
+        "https://periodic.lanl.gov/29.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/29",
+        "https://www.mint.go.jp/operations/production/operations_coin_presently-minted.html",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2024/03/material_flow2022_Cu.pdf"
+      ]
+    },
+    {
+      "name": "アルミニウム",
+      "symbol": "Al",
+      "z": 13,
+      "group": "身近な金属",
+      "features": [
+        "銀白色で軽く、密度は2.70 g/cm³と鉄の約3分の1です。",
+        "融点は660.32℃です。",
+        "表面にできる酸化膜のおかげでさびにくい金属です。"
+      ],
+      "uses": [
+        "飲料缶やアルミホイル：軽くて薄くのばしやすい性質です。",
+        "飛行機の機体：銅などを混ぜた軽くて強い合金を使います。",
+        "自動車の部品：車体を軽くして燃費をよくします。",
+        "1円硬貨：アルミニウム100%でできています。",
+        "窓のサッシ：さびにくく、形をつくりやすい性質です。"
+      ],
+      "producers": {
+        "basis": "精錬生産（地金）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 59.7
+          },
+          {
+            "country": "インド",
+            "share_percent": 5.8
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 5.3
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本は地金のほぼすべてを輸入しています。使い終わった缶を溶かして再利用するリサイクルが盛んです。",
+      "trivia": "1886年に安い製法ができるまで取り出すのが難しく、金より高価な時代がありました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-aluminum.pdf",
+        "https://periodic.lanl.gov/13.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/13",
+        "https://www.aluminum.or.jp/basic/japanindustry/",
+        "https://www.alumi-can.or.jp/pages/98/",
+        "https://www.npr.org/2019/12/05/785099705/aluminums-strange-journey-from-precious-metal-to-beer-can"
+      ]
+    },
+    {
+      "name": "亜鉛",
+      "symbol": "Zn",
+      "z": 30,
+      "group": "身近な金属",
+      "features": [
+        "青みがかった銀白色で、密度は約7.1 g/cm³です。",
+        "融点は419.53℃と比較的低めです。",
+        "鉄より先にさびて鉄を守る働きがあります。"
+      ],
+      "uses": [
+        "トタンやガードレール：鉄に亜鉛をめっきしてさびを防ぎます。",
+        "黄銅（真ちゅう）：銅に亜鉛を混ぜ、5円硬貨にも使います。",
+        "乾電池：負極の材料に使います。",
+        "日焼け止めや塗料：酸化亜鉛が白い顔料や紫外線よけになります。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 33.3
+          },
+          {
+            "country": "ペルー",
+            "share_percent": 10.8
+          },
+          {
+            "country": "オーストラリア",
+            "share_percent": 9.2
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "岐阜県の神岡鉱山は日本有数の亜鉛・鉛の鉱山でした。その坑道跡にニュートリノ観測装置カミオカンデがあります。",
+      "trivia": "インドでは13世紀ごろ、すでに亜鉛の金属が取り出されていました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-zinc.pdf",
+        "https://periodic.lanl.gov/30.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/30",
+        "https://kotobank.jp/word/%E7%A5%9E%E5%B2%A1%E9%89%B1%E5%B1%B1-46623",
+        "https://umdb.um.u-tokyo.ac.jp/DKankoub/Publish_db/2003neutrino/04/040100.html"
+      ]
+    },
+    {
+      "name": "鉛",
+      "symbol": "Pb",
+      "z": 82,
+      "group": "身近な金属",
+      "features": [
+        "青みのある灰色で、密度は11.34 g/cm³と重い金属です。",
+        "融点は327.46℃です。",
+        "ナイフで切れるほどやわらかい金属です。"
+      ],
+      "uses": [
+        "自動車のバッテリー：鉛蓄電池の電極に使います。",
+        "放射線をさえぎる板：重くて密度が高い性質を生かします。",
+        "釣りのおもり：重くて形を変えやすい性質です。",
+        "昔のはんだ：スズとの合金でしたが、今は鉛なしが主流です。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 44.2
+          },
+          {
+            "country": "オーストラリア",
+            "share_percent": 10.0
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 7.0
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本でつくる鉛の半分以上は、使い終わった自動車用バッテリーなどからのリサイクルです。",
+      "trivia": "古代ローマでは鉛で水道管をつくりました。元素記号Pbはラテン語の名plumbumに由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-lead.pdf",
+        "https://periodic.lanl.gov/82.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/82",
+        "https://journal.jogmec.go.jp/content/300597227.pdf",
+        "https://www.toho-zinc.co.jp/business/metallurgy/lead/recycle.html"
+      ]
+    },
+    {
+      "name": "スズ",
+      "symbol": "Sn",
+      "z": 50,
+      "group": "身近な金属",
+      "features": [
+        "銀白色の金属で、密度は7.29 g/cm³です。",
+        "融点は231.93℃と低く、溶かしやすい金属です。",
+        "13.2℃より低い温度に長く置くと、もろい灰色スズに変わります。"
+      ],
+      "uses": [
+        "電子機器のはんだ：部品を基板につなぐ合金の主成分です。",
+        "ブリキ缶：鉄板にスズをめっきしてさびを防ぎます。",
+        "青銅：銅とスズの合金で、銅像や鐘に使います。",
+        "窓ガラスの製造：溶けたスズの上にガラスを浮かべて平らにします。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 23.0
+          },
+          {
+            "country": "インドネシア",
+            "share_percent": 16.7
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 11.3
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はスズのほぼすべてを輸入しています。電子機器のはんだ向けの需要が大きい金属です。",
+      "trivia": "寒い場所でスズの製品がぼろぼろになる現象は「スズペスト」と呼ばれます。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-tin.pdf",
+        "https://periodic.lanl.gov/50.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/50",
+        "https://journal.jogmec.go.jp/content/300600729.pdf",
+        "https://calce.umd.edu/tin-pests"
+      ]
+    },
+    {
+      "name": "ニッケル",
+      "symbol": "Ni",
+      "z": 28,
+      "group": "身近な金属",
+      "features": [
+        "銀白色の金属で、密度は8.91 g/cm³です。",
+        "融点は1455℃です。",
+        "鉄と同じく磁石にくっつく性質があります。"
+      ],
+      "uses": [
+        "ステンレス鋼：鉄にクロムとともに混ぜ、さびにくくします。",
+        "電気自動車の電池：リチウムイオン電池の正極材料です。",
+        "50円・100円硬貨：銅75%、ニッケル25%の白銅です。",
+        "ジェットエンジン：高温に強いニッケル合金をタービンに使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "インドネシア",
+            "share_percent": 59.5
+          },
+          {
+            "country": "フィリピン",
+            "share_percent": 8.9
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 5.7
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本は鉱石を輸入して製錬しています。ニッケルは国がレアメタルに位置づける鉱種の1つです。",
+      "trivia": "名前は、銅に似ているのに銅が取れない鉱石を鉱夫が「悪魔（ニッケル）の銅」と呼んだことに由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-nickel.pdf",
+        "https://periodic.lanl.gov/28.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/28",
+        "https://www.mint.go.jp/operations/production/operations_coin_presently-minted.html",
+        "https://www.cjc.or.jp/raremetal/overview/about",
+        "https://nickelinstitute.org/en/nickel-applications/history-of-nickel"
+      ]
+    },
+    {
+      "name": "マグネシウム",
+      "symbol": "Mg",
+      "z": 12,
+      "group": "身近な金属",
+      "features": [
+        "銀白色で、密度は1.74 g/cm³と実用金属でいちばん軽い部類です。",
+        "融点は650℃です。",
+        "燃やすとまぶしい白い光を出します。"
+      ],
+      "uses": [
+        "ノートパソコンやカメラの外装：軽くて丈夫な合金です。",
+        "自動車の部品：車体を軽くするために使います。",
+        "アルミニウム合金の添加材：強度を上げるために加えます。",
+        "花火や照明弾：燃えると強い白い光を出します。",
+        "胃腸薬：酸化マグネシウムが便秘薬や胃薬になります。"
+      ],
+      "producers": {
+        "basis": "精錬生産（金属マグネシウム）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 95.0
+          },
+          {
+            "country": "カザフスタン",
+            "share_percent": 2.0
+          },
+          {
+            "country": "ブラジル",
+            "share_percent": 2.0
+          },
+          {
+            "country": "イスラエル",
+            "share_percent": 2.0
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "2位はカザフスタン・ブラジル・イスラエルが同じ値（各2.0%）で並びます。"
+      },
+      "japan": "日本は金属マグネシウムのほぼすべてを輸入しており、世界の生産の大部分を中国が占めています。",
+      "trivia": "豆腐を固める「にがり」の主成分は、塩化マグネシウムです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-magnesium-metal.pdf",
+        "https://periodic.lanl.gov/12.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/12",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2019/03/material_flow2018_Mg.pdf"
+      ]
+    },
+    {
+      "name": "水銀",
+      "symbol": "Hg",
+      "z": 80,
+      "group": "身近な金属",
+      "features": [
+        "銀白色の液体の金属で、密度は13.53 g/cm³です。",
+        "融点は−38.83℃で、ふつうの温度で液体の唯一の金属です。",
+        "金や銀を溶かして合金（アマルガム）をつくります。"
+      ],
+      "uses": [
+        "昔の体温計や血圧計：温度で一定にふくらむ性質を使いました。",
+        "蛍光灯：管の中の水銀蒸気が紫外線を出します。",
+        "歯の詰め物：かつて銀と水銀のアマルガムを使いました。",
+        "化学工業：かつて食塩の電気分解の電極に使いました。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 83.3
+          },
+          {
+            "country": "タジキスタン",
+            "share_percent": 8.3
+          },
+          {
+            "country": "ペルー",
+            "share_percent": 2.5
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "工場排水の水銀による水俣病の経験から、水銀の使用を世界で減らす「水銀に関する水俣条約」が2013年に結ばれました。",
+      "trivia": "元素記号Hgは、ギリシャ語の「水の銀」から生まれたラテン語名hydrargyrumに由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-mercury.pdf",
+        "https://periodic.lanl.gov/80.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/80",
+        "https://www.env.go.jp/chemi/tmms/index.html",
+        "https://www.meti.go.jp/policy/chemical_management/int/minamata.html"
+      ]
+    },
+    {
+      "name": "金",
+      "symbol": "Au",
+      "z": 79,
+      "group": "貴金属",
+      "features": [
+        "黄金色に輝き、密度は19.28 g/cm³と重い金属です。",
+        "融点は1064.18℃です。",
+        "いちばんよくのび広がる金属で、ごく薄い金箔にできます。"
+      ],
+      "uses": [
+        "スマホやパソコンの端子：さびず、電気をよく通します。",
+        "宝飾品や記念硬貨：変色しない美しさを生かします。",
+        "金箔：建物や工芸品の装飾に使います。",
+        "歯の治療：さびにくい合金を詰め物や冠に使います。",
+        "宇宙服のバイザー：赤外線をはね返す薄い膜にします。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 9.4
+          },
+          {
+            "country": "オーストラリア",
+            "share_percent": 8.8
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "鹿児島県の菱刈鉱山は国内で唯一の商業規模の金山です。東京2020大会のメダルは、使用済み家電から回収した金属でつくられました。",
+      "trivia": "これまでに掘り出された金をすべて集めても、一辺約22mの立方体ほどにしかならないといわれます。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-gold.pdf",
+        "https://periodic.lanl.gov/79.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/79",
+        "https://www.gov-online.go.jp/eng/publicity/book/hlj/html/202303/202303_06_jp.html",
+        "https://www.env.go.jp/content/900510574.pdf"
+      ]
+    },
+    {
+      "name": "銀",
+      "symbol": "Ag",
+      "z": 47,
+      "group": "貴金属",
+      "features": [
+        "白く輝く金属で、密度は10.50 g/cm³です。",
+        "融点は961.78℃です。",
+        "電気と熱をいちばんよく通す金属です。"
+      ],
+      "uses": [
+        "太陽電池：電気を集める電極に銀のペーストを使います。",
+        "電子部品の接点：電気をよく通す性質を生かします。",
+        "食器やアクセサリー：白い輝きを生かします。",
+        "鏡：光をよくはね返す性質を使います。",
+        "抗菌加工：銀イオンが菌の増殖をおさえます。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "メキシコ",
+            "share_percent": 25.2
+          },
+          {
+            "country": "中国",
+            "share_percent": 13.2
+          },
+          {
+            "country": "ペルー",
+            "share_percent": 12.4
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "島根県の石見銀山は2007年に世界遺産になりました。16〜17世紀には日本の銀が大量に海外へ運ばれました。",
+      "trivia": "元素記号Agは、ラテン語で銀を意味するargentumに由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-silver.pdf",
+        "https://periodic.lanl.gov/47.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/47",
+        "https://www.mlit.go.jp/tagengo-db/R2-00246.html",
+        "https://www.kankou-shimane.com/mag/4736.html"
+      ]
+    },
+    {
+      "name": "白金（プラチナ）",
+      "symbol": "Pt",
+      "z": 78,
+      "group": "貴金属",
+      "features": [
+        "銀白色で、密度は21.46 g/cm³と非常に重い金属です。",
+        "融点は約1768℃です。",
+        "酸にもさびにも強く、化学的に安定です。"
+      ],
+      "uses": [
+        "自動車の排ガス浄化触媒：有害なガスを無害な物質に変えます。",
+        "燃料電池車：水素と酸素を反応させる電極の触媒です。",
+        "宝飾品：変色しない白い輝きを生かします。",
+        "実験器具やセンサー：高温や薬品に強い性質です。",
+        "化学工業や石油精製：触媒として薬品や燃料づくりを助けます。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "南アフリカ",
+            "share_percent": 70.6
+          },
+          {
+            "country": "ジンバブエ",
+            "share_percent": 11.2
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 10.6
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本は白金の多くを南アフリカから輸入しています。自動車の触媒や宝飾品の需要が大きい国です。",
+      "trivia": "1960年まで長さの基準だった「メートル原器」は、白金とイリジウムの合金でつくられていました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf",
+        "https://periodic.lanl.gov/78.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/78",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2022/08/material_flow2021_PGM.pdf",
+        "https://unit.aist.go.jp/nmij/library/nmij_icp/introduction.html"
+      ]
+    },
+    {
+      "name": "パラジウム",
+      "symbol": "Pd",
+      "z": 46,
+      "group": "貴金属",
+      "features": [
+        "銀白色の金属で、密度は12.0 g/cm³です。",
+        "融点は1554.9℃です。",
+        "自分の体積の数百倍もの水素を吸い込みます。"
+      ],
+      "uses": [
+        "ガソリン車の排ガス浄化触媒：最大の用途です。",
+        "歯の詰め物：金銀パラジウム合金を使います。",
+        "電子部品：電気の接点や一部のコンデンサーに使います。",
+        "水素の精製：水素だけを通す膜に使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "ロシア",
+            "share_percent": 39.5
+          },
+          {
+            "country": "南アフリカ",
+            "share_percent": 37.9
+          },
+          {
+            "country": "カナダ",
+            "share_percent": 7.9
+          },
+          {
+            "country": "ジンバブエ",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "カナダとジンバブエは同じ値で3位に並びます。"
+      },
+      "japan": "日本では、保険診療の歯の詰め物に金銀パラジウム合金が広く使われてきました。",
+      "trivia": "名前は、発見の少し前に見つかった小惑星パラスにちなみます。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf",
+        "https://periodic.lanl.gov/46.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/46",
+        "https://www.ishifuku-kinzoku.co.jp/products/dental/palladium.html",
+        "https://www.ciaaw.org/palladium.htm"
+      ]
+    },
+    {
+      "name": "リチウム",
+      "symbol": "Li",
+      "z": 3,
+      "group": "レアメタル",
+      "features": [
+        "銀白色で、密度は約0.53 g/cm³といちばん軽い金属です。",
+        "融点は180.5℃です。",
+        "水に浮くほど軽く、水と反応します。"
+      ],
+      "uses": [
+        "スマホやパソコンの電池：リチウムイオン電池の材料です。",
+        "電気自動車の電池：軽くて多くの電気をためられます。",
+        "耐熱ガラスや陶器：熱による膨張をおさえます。",
+        "潤滑グリース：機械の軸受けに塗る油に使います。",
+        "医薬品：そううつ病の治療薬になります。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "オーストラリア",
+            "share_percent": 36.7
+          },
+          {
+            "country": "チリ",
+            "share_percent": 20.4
+          },
+          {
+            "country": "中国",
+            "share_percent": 17.1
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本は炭酸リチウムなどを輸入しています。リチウムイオン電池は日本の吉野彰さんらが開発し、2019年にノーベル化学賞を受けました。",
+      "trivia": "名前はギリシャ語で「石」を意味するlithosに由来します。鉱物から見つかったためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-lithium.pdf",
+        "https://periodic.lanl.gov/3.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/3",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2024/03/material_flow2022_Li.pdf",
+        "https://scienceportal.jst.go.jp/newsflash/20191009_01/"
+      ]
+    },
+    {
+      "name": "ベリリウム",
+      "symbol": "Be",
+      "z": 4,
+      "group": "レアメタル",
+      "features": [
+        "灰白色で、密度は1.85 g/cm³と軽い金属です。",
+        "融点は1287℃です。",
+        "X線をよく通します。"
+      ],
+      "uses": [
+        "ベリリウム銅：バネや電子機器のコネクターに使う丈夫な合金です。",
+        "X線装置の窓：X線を通しやすい性質を生かします。",
+        "宇宙望遠鏡の鏡：軽くて形が変わりにくい性質です。",
+        "航空宇宙の部品：軽くて硬い性質を使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "アメリカ",
+            "share_percent": 50.0
+          },
+          {
+            "country": "中国",
+            "share_percent": 21.4
+          },
+          {
+            "country": "ブラジル",
+            "share_percent": 22.2
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本は水酸化ベリリウムなどを輸入しています。日本ガイシは1958年に国内で初めてベリリウム銅の工業化に成功しました。",
+      "trivia": "化合物が甘い味をもつため「グルシニウム（甘い）」と呼ばれた時代があります。ただし毒性があります。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-beryllium.pdf",
+        "https://periodic.lanl.gov/4.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/4",
+        "https://mric.jogmec.go.jp/public/report/2007-06/Be.pdf",
+        "https://www.ngk.co.jp/product/becu.html",
+        "https://science.nasa.gov/mission/webb/webbs-mirrors/"
+      ]
+    },
+    {
+      "name": "チタン",
+      "symbol": "Ti",
+      "z": 22,
+      "group": "レアメタル",
+      "features": [
+        "銀灰色で、密度は4.5 g/cm³と鉄より約4割軽い金属です。",
+        "融点は1668℃です。",
+        "海水にもほとんどさびない金属です。"
+      ],
+      "uses": [
+        "飛行機の機体やジェットエンジン：軽くて強く、熱に強い性質です。",
+        "人工関節や歯のインプラント：体になじみやすい性質です。",
+        "メガネのフレームやゴルフクラブ：軽くて丈夫です。",
+        "白い絵の具や日焼け止め：酸化チタンが白い顔料になります。",
+        "化学工場の装置：さびにくい性質を生かします。"
+      ],
+      "producers": {
+        "basis": "精錬生産（スポンジチタン）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 68.8
+          },
+          {
+            "country": "日本",
+            "share_percent": 17.2
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 6.2
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "チタン金属の原料のスポンジチタンの生産です。"
+      },
+      "japan": "日本は金属チタンの原料となるスポンジチタンの生産が世界2位です。航空機向けなど高品質な製品をつくっています。",
+      "trivia": "名前は、ギリシャ神話の巨人族タイタンにちなみます。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-titanium.pdf",
+        "https://periodic.lanl.gov/22.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/22",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2019/03/material_flow2018_Ti.pdf"
+      ]
+    },
+    {
+      "name": "バナジウム",
+      "symbol": "V",
+      "z": 23,
+      "group": "レアメタル",
+      "features": [
+        "銀灰色の金属で、密度は約6.0〜6.1 g/cm³です。",
+        "融点は1910℃です。",
+        "鉄に少し加えると、鋼がとても強くなります。"
+      ],
+      "uses": [
+        "高張力鋼：橋や建物、パイプラインの鋼を強くします。",
+        "工具の鋼：硬く、すり減りにくくします。",
+        "チタン合金：飛行機の部品に使う合金に加えます。",
+        "硫酸の製造：酸化バナジウムを触媒に使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 70.0
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 21.0
+          },
+          {
+            "country": "南アフリカ",
+            "share_percent": 8.0
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はバナジウムを全量輸入しています。五酸化バナジウムやフェロバナジウムの形で入り、主に鉄鋼に加えて使われます。",
+      "trivia": "化合物がさまざまな美しい色を示すことから、北欧の美の女神バナディースにちなんで名づけられました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-vanadium.pdf",
+        "https://periodic.lanl.gov/23.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/23",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2020/05/material_flow2019_V.pdf",
+        "https://www.britannica.com/biography/Nils-Gabriel-Sefstrom"
+      ]
+    },
+    {
+      "name": "クロム",
+      "symbol": "Cr",
+      "z": 24,
+      "group": "レアメタル",
+      "features": [
+        "青みがかった銀白色で、密度は約7.2 g/cm³です。",
+        "融点は1907℃です。",
+        "硬くて、みがくと強く光ります。"
+      ],
+      "uses": [
+        "ステンレス鋼：鉄に約18%混ぜてさびにくくします。",
+        "クロムめっき：蛇口や車の部品を光らせ、さびを防ぎます。",
+        "耐熱合金：ジェットエンジンなど高温の部品に使います。",
+        "顔料：黄色や緑の絵の具の成分になります。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（クロム鉱石）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "南アフリカ",
+            "share_percent": 44.7
+          },
+          {
+            "country": "トルコ",
+            "share_percent": 17.0
+          },
+          {
+            "country": "カザフスタン",
+            "share_percent": 13.8
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "クロム鉱石（総重量）の生産です。"
+      },
+      "japan": "日本はクロムを全量輸入しています。かつては鳥取県や岡山県にクロム鉱山がありましたが、今は南アフリカなどから輸入しています。",
+      "trivia": "名前はギリシャ語で「色」を意味するchromaに由来します。化合物がいろいろな色をもつためです。ルビーの赤もクロムの色です。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-chromium.pdf",
+        "https://periodic.lanl.gov/24.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/24",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2019/03/material_flow2018_Cr.pdf",
+        "https://www.gsj.jp/data/chishitsunews/09_12_09.pdf",
+        "https://www.gia.edu/ruby-description"
+      ]
+    },
+    {
+      "name": "マンガン",
+      "symbol": "Mn",
+      "z": 25,
+      "group": "レアメタル",
+      "features": [
+        "灰白色で、硬くてもろい金属です。",
+        "融点は1246℃です。",
+        "生産量の大部分が鉄鋼に使われます。"
+      ],
+      "uses": [
+        "鉄鋼：硫黄や酸素を取り除き、鋼を強くします。",
+        "乾電池：二酸化マンガンを正極に使います。",
+        "リチウムイオン電池：正極の材料の一つです。",
+        "ガラス：鉄による緑色を消して透明にします。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "南アフリカ",
+            "share_percent": 37.0
+          },
+          {
+            "country": "ガボン",
+            "share_percent": 23.0
+          },
+          {
+            "country": "オーストラリア",
+            "share_percent": 14.0
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はマンガン鉱石を主に南アフリカやオーストラリアから輸入しています。かつては国内にも多くのマンガン鉱山がありました。",
+      "trivia": "海の底には、マンガンを多く含む「マンガン団塊」という黒い塊が転がっている場所があります。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-manganese.pdf",
+        "https://periodic.lanl.gov/25.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/25",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2020/05/material_flow2019_Mn.pdf",
+        "https://www.jogmec.go.jp/activities/metal/technology-development/marine-resources/overview/manganese-nodulum.html"
+      ]
+    },
+    {
+      "name": "コバルト",
+      "symbol": "Co",
+      "z": 27,
+      "group": "レアメタル",
+      "features": [
+        "銀白色の金属で、鉄より少し重い金属です。",
+        "融点は1495℃です。",
+        "鉄やニッケルと同じく磁石につく金属です。"
+      ],
+      "uses": [
+        "スマホやEVの電池：リチウムイオン電池の正極材料です。",
+        "ジェットエンジン：高温に強い合金に使います。",
+        "強い磁石：コバルトを含む合金の永久磁石です。",
+        "超硬工具：炭化タングステンを固める材料です。",
+        "青い顔料：陶磁器やガラスの「コバルトブルー」です。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "コンゴ民主共和国",
+            "share_percent": 75.9
+          },
+          {
+            "country": "インドネシア",
+            "share_percent": 9.7
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 3.0
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "愛媛県新居浜市にある住友金属鉱山の工場は、輸入した原料から電気コバルトをつくる国内唯一の工場です。",
+      "trivia": "名前はドイツ語の「コーボルト（鉱山の小鬼）」に由来します。鉱夫を悩ませた鉱石だったためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-cobalt.pdf",
+        "https://periodic.lanl.gov/27.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/27",
+        "https://www.sumitomo.gr.jp/act/visits/01/",
+        "https://www.jstage.jst.go.jp/article/journalofmmij/123/12/123_12_678/_pdf"
+      ]
+    },
+    {
+      "name": "ガリウム",
+      "symbol": "Ga",
+      "z": 31,
+      "group": "レアメタル",
+      "features": [
+        "銀白色の金属で、密度は5.91 g/cm³です。",
+        "融点は29.76℃で、手のひらの上で溶けます。",
+        "液体でいられる温度の幅が、金属の中で特に広い金属です。"
+      ],
+      "uses": [
+        "青色LED：窒化ガリウムで青い光を出します。",
+        "スマホの通信部品：ヒ化ガリウムの半導体を使います。",
+        "パワー半導体：電気を効率よく変換する素子に使います。",
+        "太陽電池：人工衛星用の高性能な電池に使います。"
+      ],
+      "producers": {
+        "basis": "精錬生産（一次・低純度）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 98.7
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 0.8
+          },
+          {
+            "country": "日本",
+            "share_percent": 0.4
+          },
+          {
+            "country": "韓国",
+            "share_percent": 0.4
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "低純度の一次ガリウム。日本と韓国は同じ値で3位に並びます。"
+      },
+      "japan": "窒化ガリウムを使った青色LEDの開発で、赤﨑勇さん・天野浩さん・中村修二さんが2014年にノーベル物理学賞を受けました。",
+      "trivia": "メンデレーエフが周期表の空欄から存在を予言し、4年後に発見されました。名前はフランスの古い呼び名ガリアに由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-gallium.pdf",
+        "https://periodic.lanl.gov/31.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/31",
+        "https://www.nobelprize.org/prizes/physics/2014/popular-information/",
+        "https://www.britannica.com/biography/Paul-Emile-Lecoq-de-Boisbaudran"
+      ]
+    },
+    {
+      "name": "ゲルマニウム",
+      "symbol": "Ge",
+      "z": 32,
+      "group": "レアメタル",
+      "features": [
+        "灰白色でつやがあり、密度は約5.3 g/cm³です。",
+        "融点は938.25℃です。",
+        "金属と非金属の中間の性質をもつ半導体です。"
+      ],
+      "uses": [
+        "光ファイバー：ガラスに加えて光の通り方を調整します。",
+        "赤外線カメラのレンズ：赤外線を通す性質です。",
+        "人工衛星の太陽電池：電池の基板に使います。",
+        "ペットボトル樹脂の製造：触媒に使います。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "国別の生産量は公表されていません。USGS は中国が最大の生産国としています（精錬生産）。"
+      },
+      "japan": "日本はゲルマニウムを輸入に頼っています。中国は2023年8月から、ゲルマニウムとガリウムの輸出を許可制にしました。",
+      "trivia": "初期のトランジスタはゲルマニウムでつくられていました。名前はドイツの古い呼び名ゲルマニアに由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-germanium.pdf",
+        "https://periodic.lanl.gov/32.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/32",
+        "https://www.jetro.go.jp/biznews/2023/07/74e08dd9a1764e80.html",
+        "https://pubs.usgs.gov/myb/vol1/2023/myb1-2023-germanium.pdf"
+      ]
+    },
+    {
+      "name": "セレン",
+      "symbol": "Se",
+      "z": 34,
+      "group": "レアメタル",
+      "features": [
+        "灰色の金属に似た形があり、密度は4.81 g/cm³です。",
+        "融点は約221℃です。",
+        "光が当たると電気を通しやすくなります。"
+      ],
+      "uses": [
+        "ガラスの色調整：鉄による緑色を消したり、赤くしたりします。",
+        "電解マンガンの製造：生産の効率を上げます。",
+        "太陽電池：CIGS太陽電池の材料です。",
+        "健康食品・飼料：人や家畜に必要な微量の栄養素です。"
+      ],
+      "producers": {
+        "basis": "精錬生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 48.6
+          },
+          {
+            "country": "日本",
+            "share_percent": 19.2
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 9.2
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はセレンの精錬生産が世界2位です。銅を製錬するときの副産物として回収しています。",
+      "trivia": "名前はギリシャ語で「月」を意味するselene に由来します。先に見つかったテルル（地球）と対になる名前です。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-selenium.pdf",
+        "https://periodic.lanl.gov/34.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/34",
+        "https://pubs.usgs.gov/myb/vol1/2022/myb1-2022-selenium-tellurium.pdf",
+        "https://mric.jogmec.go.jp/public/report/2007-06/Se.pdf"
+      ]
+    },
+    {
+      "name": "ルビジウム",
+      "symbol": "Rb",
+      "z": 37,
+      "group": "レアメタル",
+      "features": [
+        "銀白色のやわらかい金属で、密度は1.53 g/cm³です。",
+        "融点は39.3℃です。",
+        "空気中で自然に燃えることがあるほど反応しやすい金属です。"
+      ],
+      "uses": [
+        "原子時計：GPS衛星や通信網の時計に使います。",
+        "特殊なガラス：光ファイバーなどに加えます。",
+        "研究用：原子を極低温に冷やす実験に使います。",
+        "光電管：光を電気に変える部品に使います。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "2024年の生産量の公式な資料はありません（USGS）。リチウムやセシウムの鉱石の副産物として得られます。"
+      },
+      "japan": "日本の準天頂衛星「みちびき」は、正確な位置を測る信号をつくるためにルビジウム原子時計を積んでいます。",
+      "trivia": "名前はラテン語で「深い赤」を意味するrubidusに由来します。分光器で赤い光の線から見つかったためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rubidium.pdf",
+        "https://periodic.lanl.gov/37.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/37",
+        "https://www.jaxa.jp/press/2012/12/20121220_michibiki_j.html",
+        "http://www.satnavi.jaxa.jp/qz-vision_read/read/qz-navi04.html"
+      ]
+    },
+    {
+      "name": "ストロンチウム",
+      "symbol": "Sr",
+      "z": 38,
+      "group": "レアメタル",
+      "features": [
+        "銀白色のやわらかい金属で、密度は約2.6 g/cm³です。",
+        "融点は777℃です。",
+        "燃やすと鮮やかな赤い炎の色になります。"
+      ],
+      "uses": [
+        "花火や発炎筒：赤い炎の色を出します。",
+        "フェライト磁石：スピーカーやモーターの磁石の原料です。",
+        "アルミ合金：鋳物の性質をよくするために加えます。",
+        "歯みがき粉：知覚過敏をやわらげる成分に使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（天青石）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "イラン",
+            "share_percent": 39.2
+          },
+          {
+            "country": "スペイン",
+            "share_percent": 39.2
+          },
+          {
+            "country": "中国",
+            "share_percent": 15.7
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "イランとスペインは同じ推定値です。"
+      },
+      "japan": "夏の花火の赤色は、主に炭酸ストロンチウムなどが燃えるときの炎色反応によるものです。",
+      "trivia": "名前は、鉱石が見つかったスコットランドの村ストロンティアンにちなみます。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-strontium.pdf",
+        "https://periodic.lanl.gov/38.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/38",
+        "https://kdc.csj.jp/learning/item_2523.html",
+        "https://kids.gakken.co.jp/en/kagaku/nandemo/hanabi20230802/"
+      ]
+    },
+    {
+      "name": "ジルコニウム",
+      "symbol": "Zr",
+      "z": 40,
+      "group": "レアメタル",
+      "features": [
+        "銀白色の金属で、密度は約6.5 g/cm³です。",
+        "融点は1855℃です。",
+        "中性子をほとんど吸収しない性質があります。"
+      ],
+      "uses": [
+        "原子炉の燃料棒の被覆管：中性子を吸収しにくい性質です。",
+        "セラミック包丁：酸化ジルコニウムでつくります。",
+        "歯の被せ物：白くて丈夫なジルコニアを使います。",
+        "人工宝石：キュービックジルコニアです。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（ジルコン精鉱）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "オーストラリア",
+            "share_percent": 33.3
+          },
+          {
+            "country": "南アフリカ",
+            "share_percent": 20.0
+          },
+          {
+            "country": "モザンビーク",
+            "share_percent": 10.7
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "ジルコニウムの原料のジルコン精鉱（総重量）の生産です。"
+      },
+      "japan": "日本の東ソーはジルコニア粉末の大手メーカーで、その粉末は歯の被せ物などに使われています。",
+      "trivia": "名前はペルシャ語で「金色」を意味するzargunに由来するといわれます。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-zirconium-hafnium.pdf",
+        "https://periodic.lanl.gov/40.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/40",
+        "https://www.tosoh.co.jp/product/functionality/zirconia_powder_dental.html"
+      ]
+    },
+    {
+      "name": "ニオブ",
+      "symbol": "Nb",
+      "z": 41,
+      "group": "レアメタル",
+      "features": [
+        "灰色の金属で、密度は約8.6 g/cm³です。",
+        "融点は2477℃です。",
+        "マイナス264℃ほどで電気抵抗がゼロになる超伝導を示します。"
+      ],
+      "uses": [
+        "高張力鋼：自動車や橋、パイプラインの鋼を強くします。",
+        "超伝導磁石：粒子加速器などの強力な磁石の線材です。",
+        "ジェットエンジン：耐熱合金に加えます。",
+        "電子部品：コンデンサーなどに使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "ブラジル",
+            "share_percent": 90.9
+          },
+          {
+            "country": "カナダ",
+            "share_percent": 6.5
+          },
+          {
+            "country": "コンゴ民主共和国",
+            "share_percent": 0.6
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "世界の生産の約9割をブラジルが占めます。日本はニオブを輸入し、主に鋼を強くするために使っています。",
+      "trivia": "名前は、ギリシャ神話でタンタロスの娘ニオベにちなみます。よく似たタンタルと一緒に見つかるためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-niobium.pdf",
+        "https://periodic.lanl.gov/41.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/41"
+      ]
+    },
+    {
+      "name": "モリブデン",
+      "symbol": "Mo",
+      "z": 42,
+      "group": "レアメタル",
+      "features": [
+        "銀白色の金属で、密度は10.2 g/cm³です。",
+        "融点は2623℃と高い金属です。",
+        "熱で形が変わりにくい性質があります。"
+      ],
+      "uses": [
+        "ステンレス鋼や特殊鋼：さびにくく強くします。",
+        "石油の精製：硫黄を取り除く触媒に使います。",
+        "潤滑剤：二硫化モリブデンが高温でも滑りをよくします。",
+        "電気炉やフィラメント：高い融点を生かします。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 42.3
+          },
+          {
+            "country": "ペルー",
+            "share_percent": 15.8
+          },
+          {
+            "country": "チリ",
+            "share_percent": 14.6
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はモリブデンを主に輸入しています。特殊鋼やステンレスの生産で多く使われています。",
+      "trivia": "名前はギリシャ語で「鉛」を意味するmolybdosに由来します。昔は鉛の鉱石と取り違えられていたためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-molybdenum.pdf",
+        "https://periodic.lanl.gov/42.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/42"
+      ]
+    },
+    {
+      "name": "インジウム",
+      "symbol": "In",
+      "z": 49,
+      "group": "レアメタル",
+      "features": [
+        "銀白色のやわらかい金属で、密度は約7.3 g/cm³です。",
+        "融点は156.6℃です。",
+        "つめで傷がつくほどやわらかい金属です。"
+      ],
+      "uses": [
+        "液晶や有機ELの画面：透明な電極（ITO）の材料です。",
+        "タッチパネル：透明で電気を通す膜に使います。",
+        "低い温度で溶けるはんだ：熱に弱い部品の接合に使います。",
+        "化合物半導体：光通信の部品に使います。"
+      ],
+      "producers": {
+        "basis": "精錬生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 70.4
+          },
+          {
+            "country": "韓国",
+            "share_percent": 16.7
+          },
+          {
+            "country": "日本",
+            "share_percent": 5.6
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "北海道の豊羽鉱山は世界有数のインジウム産地でしたが、2006年に閉山しました。今は透明電極のくずからの回収が進んでいます。",
+      "trivia": "分光器で見た光の線があざやかな藍色（インディゴ）だったことから名づけられました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-indium.pdf",
+        "https://periodic.lanl.gov/49.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/49",
+        "https://www.eng.hokudai.ac.jp/engineering/archive/2013-07/feature1307-05.html",
+        "https://www.japanfs.org/sp/ja/news/archives/news_id024097.html"
+      ]
+    },
+    {
+      "name": "アンチモン",
+      "symbol": "Sb",
+      "z": 51,
+      "group": "レアメタル",
+      "features": [
+        "銀白色でもろい金属で、密度は6.69 g/cm³です。",
+        "融点は630.63℃です。",
+        "熱や電気をあまり通しません。"
+      ],
+      "uses": [
+        "難燃剤：プラスチックや繊維を燃えにくくします。",
+        "鉛蓄電池：鉛に混ぜて電極を硬くします。",
+        "ペットボトル樹脂の製造：触媒に使います。",
+        "半導体：赤外線センサーなどの材料です。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 60.0
+          },
+          {
+            "country": "タジキスタン",
+            "share_percent": 17.0
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 13.0
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "愛媛県の市之川鉱山でとれた輝安鉱（アンチモンの鉱石）の大きな結晶は世界的に有名で、海外の博物館にも並んでいます。",
+      "trivia": "古代から、輝安鉱（アンチモンの鉱物）の粉は、目のまわりを黒くふちどる化粧に使われてきました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-antimony.pdf",
+        "https://periodic.lanl.gov/51.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/51",
+        "https://www.city.saijo.ehime.jp/soshiki/syakaikyoiku/itinokawakozan-kianko1.html",
+        "https://www.um.u-tokyo.ac.jp/UMUTopenlab/library/a_1.html",
+        "https://www.britannica.com/topic/kohl"
+      ]
+    },
+    {
+      "name": "テルル",
+      "symbol": "Te",
+      "z": 52,
+      "group": "レアメタル",
+      "features": [
+        "銀白色でもろい半金属で、密度は約6.2 g/cm³です。",
+        "融点は449.51℃です。",
+        "金属と非金属の中間の性質をもちます。"
+      ],
+      "uses": [
+        "太陽電池：テルル化カドミウム型の材料です。",
+        "熱電素子：温度差で発電したり冷やしたりします。",
+        "書き換え型の光ディスク：記録する膜の材料です。",
+        "鉄鋼や銅の合金：削りやすくするために加えます。"
+      ],
+      "producers": {
+        "basis": "精錬生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 76.5
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 7.1
+          },
+          {
+            "country": "日本",
+            "share_percent": 7.1
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はテルルの精錬生産が世界有数です。銅を製錬するときの副産物として回収しています。",
+      "trivia": "名前はラテン語で「地球」を意味するtellusに由来します。のちに見つかったセレン（月）と対になる名前です。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-tellurium.pdf",
+        "https://periodic.lanl.gov/52.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/52",
+        "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-japan.pdf",
+        "https://www.etymonline.com/word/selenium"
+      ]
+    },
+    {
+      "name": "セシウム",
+      "symbol": "Cs",
+      "z": 55,
+      "group": "レアメタル",
+      "features": [
+        "金色がかった銀白色で、密度は約1.9 g/cm³です。",
+        "融点は約28.5℃と低く、真夏の室温で溶けます。",
+        "水と激しく反応する金属です。"
+      ],
+      "uses": [
+        "原子時計：1秒の長さはセシウム原子をもとに決められています。",
+        "石油や天然ガスの掘削：重い液体（ギ酸セシウム）に使います。",
+        "光電管：光を電気に変える部品に使います。",
+        "X線撮影：ヨウ化セシウムの結晶でX線を光に変えます。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "2024年の生産量の公式な資料はありません（USGS）。主な鉱物ポルックス石の埋蔵はオーストラリア・カナダ・中国・ナミビアにあると推定されています。"
+      },
+      "japan": "2011年の東京電力福島第一原子力発電所の事故では、放射性のセシウム137が広く飛び散りました。",
+      "trivia": "名前はラテン語で「空色」を意味するcaesiusに由来します。光の線が青かったためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-cesium.pdf",
+        "https://periodic.lanl.gov/55.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/55",
+        "https://www.env.go.jp/chemi/rhm/kisoshiryo/attach/20140707mat3-02.pdf",
+        "https://www.jstage.jst.go.jp/article/isj/52/3/52_225/_pdf"
+      ]
+    },
+    {
+      "name": "バリウム",
+      "symbol": "Ba",
+      "z": 56,
+      "group": "レアメタル",
+      "features": [
+        "銀白色のやわらかい金属で、密度は約3.6 g/cm³です。",
+        "融点は727℃です。",
+        "燃やすと黄緑色の炎の色になります。"
+      ],
+      "uses": [
+        "胃のX線検査：硫酸バリウムがX線を通さない性質を使います。",
+        "石油の掘削：重い重晶石の粉を泥水に混ぜます。",
+        "花火：緑色の炎の色を出します。",
+        "電子部品：チタン酸バリウムをコンデンサーに使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（重晶石）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "インド",
+            "share_percent": 31.7
+          },
+          {
+            "country": "中国",
+            "share_percent": 25.6
+          },
+          {
+            "country": "モロッコ",
+            "share_percent": 12.2
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "バリウムの原料の重晶石（バライト）の生産です。"
+      },
+      "japan": "健康診断の胃のX線検査で飲む白い液体は、硫酸バリウムです。",
+      "trivia": "名前はギリシャ語で「重い」を意味するbarysに由来します。重晶石という重い鉱物から見つかったためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-barite.pdf",
+        "https://periodic.lanl.gov/56.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/56"
+      ]
+    },
+    {
+      "name": "ハフニウム",
+      "symbol": "Hf",
+      "z": 72,
+      "group": "レアメタル",
+      "features": [
+        "銀灰色の金属で、密度は13.3 g/cm³です。",
+        "融点は2233℃です。",
+        "中性子をよく吸収する性質があります。"
+      ],
+      "uses": [
+        "原子炉の制御棒：中性子を吸収して反応を調整します。",
+        "半導体：最先端のトランジスタの絶縁膜に使います。",
+        "耐熱合金：ジェットエンジンなど高温の部品に加えます。",
+        "電球や真空管：中に残った酸素などを吸い取る材料です。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "USGS は世界の一次生産量を公表していません。ジルコニウムの精製の副産物として得られます。"
+      },
+      "japan": "ハフニウムは原子力用のジルコニウムをつくる過程で取り出されます。主な生産国はフランスとアメリカです。",
+      "trivia": "名前は、発見されたデンマークの首都コペンハーゲンのラテン語名ハフニアにちなみます。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-zirconium-hafnium.pdf",
+        "https://periodic.lanl.gov/72.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/72",
+        "https://scrreen.eu/wp-content/uploads/2023/01/HAFNIUM_CRM_2020_Factsheets_critical_Final.pdf"
+      ]
+    },
+    {
+      "name": "タンタル",
+      "symbol": "Ta",
+      "z": 73,
+      "group": "レアメタル",
+      "features": [
+        "灰色の金属で、密度は約16〜17 g/cm³と重い金属です。",
+        "融点は3017℃です。",
+        "薬品にとても強い金属です。"
+      ],
+      "uses": [
+        "スマホのコンデンサー：小さくても電気を多くためられます。",
+        "人工骨やインプラント：体になじみやすい性質です。",
+        "ジェットエンジン：耐熱合金に加えます。",
+        "化学工場の装置：酸に強い性質を生かします。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "コンゴ民主共和国",
+            "share_percent": 41.9
+          },
+          {
+            "country": "ナイジェリア",
+            "share_percent": 18.6
+          },
+          {
+            "country": "ルワンダ",
+            "share_percent": 16.7
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はタンタルを輸入に頼っています。国内で使う量の多くは、スマホなどの電子部品のコンデンサー向けです。",
+      "trivia": "名前は、ギリシャ神話で水を飲もうとしても飲めない罰を受けたタンタロスにちなみます。酸を吸わない性質から名づけられました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-tantalum.pdf",
+        "https://periodic.lanl.gov/73.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/73",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2021/06/material_flow2020_Ta.pdf",
+        "https://www.chemistryviews.org/details/ezine/4313181/200th_Anniversary_Anders_Ekebergs_Death/"
+      ]
+    },
+    {
+      "name": "タングステン",
+      "symbol": "W",
+      "z": 74,
+      "group": "レアメタル",
+      "features": [
+        "灰白色の金属で、密度は19.3 g/cm³と金に近い重さです。",
+        "融点は3422℃と金属でいちばん高い温度です。",
+        "炭化タングステンはとても硬い材料です。"
+      ],
+      "uses": [
+        "超硬工具：ドリルや切削工具の刃に使います。",
+        "電球のフィラメント：高温でも溶けない性質です。",
+        "X線装置：X線を出すターゲットの材料に使います。",
+        "高速度工具鋼：鋼に加えて、高温でも硬さを保ちます。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 82.7
+          },
+          {
+            "country": "ベトナム",
+            "share_percent": 4.2
+          },
+          {
+            "country": "ロシア",
+            "share_percent": 2.5
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はタングステンの原料の多くを中国から輸入しています。超硬工具は、日本の企業も多くつくっています。",
+      "trivia": "名前はスウェーデン語で「重い石」を意味します。元素記号Wは鉱石ウォルフラマイトに由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-tungsten.pdf",
+        "https://periodic.lanl.gov/74.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/74",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2022/08/material_flow2021_W.pdf",
+        "https://sei.co.jp/technology/tr/bn189/pdf/sei10897.pdf"
+      ]
+    },
+    {
+      "name": "レニウム",
+      "symbol": "Re",
+      "z": 75,
+      "group": "レアメタル",
+      "features": [
+        "銀白色の金属で、密度は約21 g/cm³です。",
+        "融点は3186℃と非常に高い金属です。",
+        "地殻の中にとても少ない元素の一つです。"
+      ],
+      "uses": [
+        "ジェットエンジン：ニッケル合金に加えてタービン翼を熱に強くします。",
+        "石油の精製：ガソリンをつくる触媒に使います。",
+        "温度センサー：高温を測る熱電対に使います。",
+        "電子機器：フィラメントや電気の接点に使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "チリ",
+            "share_percent": 46.8
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 15.3
+          },
+          {
+            "country": "ポーランド",
+            "share_percent": 15.2
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "1908年に小川正孝さんが新元素「ニッポニウム」を発表しましたが、後の研究でこれはレニウムだった可能性が高いとされています。",
+      "trivia": "1928年、660kgのモリブデン鉱石からわずか1gのレニウムが取り出されました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rhenium.pdf",
+        "https://periodic.lanl.gov/75.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/75",
+        "https://www.jstage.jst.go.jp/article/kakyoshi/66/1/66_4/_article/-char/ja/",
+        "https://www.nishina.riken.jp/113/history.html"
+      ]
+    },
+    {
+      "name": "タリウム",
+      "symbol": "Tl",
+      "z": 81,
+      "group": "レアメタル",
+      "features": [
+        "青みのある灰色のやわらかい金属で、密度は約11.8 g/cm³です。",
+        "融点は304℃です。",
+        "強い毒性があります。"
+      ],
+      "uses": [
+        "赤外線センサー：硫化タリウムなどで赤外線を感じとります。",
+        "低い温度で溶けるガラス：硫黄やヒ素と組み合わせます。",
+        "赤外線用の光学材料：臭化ヨウ化タリウムの結晶です。",
+        "かつての殺鼠剤：硫酸タリウムが使われました。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "国別の生産量は公表されていません。USGS は中国・カザフスタン・ロシアを主な生産国と推定しています（2023年の世界の生産は約10トン）。"
+      },
+      "japan": "硫酸タリウムなどタリウムの化合物は、毒性が強いため、毒物及び劇物取締法で劇物に指定されています。",
+      "trivia": "名前はギリシャ語で「緑の若枝」を意味するthallosに由来します。分光器で鮮やかな緑の線が見えたためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-thallium.pdf",
+        "https://periodic.lanl.gov/81.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/81",
+        "https://www.mhlw.go.jp/web/t_doc?dataId=00tc8235&dataType=1&pageNo=1",
+        "https://anzeninfo.mhlw.go.jp/anzen/gmsds_label/lab7446-18-6.html"
+      ]
+    },
+    {
+      "name": "ビスマス",
+      "symbol": "Bi",
+      "z": 83,
+      "group": "レアメタル",
+      "features": [
+        "ほんのりピンクがかった銀白色で、密度は約9.8 g/cm³です。",
+        "融点は約271℃です。",
+        "固まるときに体積がふえる性質があります。"
+      ],
+      "uses": [
+        "鉛を使わないはんだ：鉛の代わりに使います。",
+        "胃腸薬：下痢止めや胃薬の成分です。",
+        "スプリンクラー：低い温度で溶ける合金で水を出します。",
+        "化粧品：真珠のような光沢を出す顔料です。"
+      ],
+      "producers": {
+        "basis": "精錬生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 81.2
+          },
+          {
+            "country": "ラオス",
+            "share_percent": 6.9
+          },
+          {
+            "country": "韓国",
+            "share_percent": 6.2
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": null
+      },
+      "japan": "日本はビスマスの精錬で世界有数の生産国です。鉛や亜鉛を製錬するときの副産物として回収しています。",
+      "trivia": "ビスマスはわずかに放射線を出しますが、半減期が宇宙の年齢よりはるかに長いため、最近まで安定な元素と思われていました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-bismuth.pdf",
+        "https://periodic.lanl.gov/83.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/83",
+        "https://pubs.usgs.gov/myb/vol1/2022/myb1-2022-bismuth.pdf"
+      ]
+    },
+    {
+      "name": "ロジウム",
+      "symbol": "Rh",
+      "z": 45,
+      "group": "レアメタル",
+      "features": [
+        "銀白色の金属で、密度は12.4 g/cm³です。",
+        "融点は1964℃です。",
+        "白金族の中でも特に光をよくはね返します。"
+      ],
+      "uses": [
+        "自動車の排ガス浄化触媒：窒素酸化物を分解します。",
+        "めっき：アクセサリーや鏡を白く輝かせます。",
+        "ガラス繊維の製造：白金との合金の器具に使います。",
+        "化学工業：薬品をつくる触媒に使います。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "USGS は白金とパラジウム以外の白金族の国別生産を公表していません。白金族の資源と埋蔵量が最も大きいのは南アフリカのブッシュフェルト複合岩体です。"
+      },
+      "japan": "日本はロジウムの多くを南アフリカから輸入しています。主な使い道は自動車の排ガス浄化触媒です。",
+      "trivia": "名前はギリシャ語で「バラ」を意味するrhodonに由来します。化合物がバラ色をしていたためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf",
+        "https://periodic.lanl.gov/45.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/45",
+        "https://mric.jogmec.go.jp/wp-content/uploads/2022/08/material_flow2021_PGM.pdf"
+      ]
+    },
+    {
+      "name": "イリジウム",
+      "symbol": "Ir",
+      "z": 77,
+      "group": "レアメタル",
+      "features": [
+        "銀白色の金属で、密度は約22 g/cm³とオスミウムに次いで重い元素です。",
+        "融点は2446℃です。",
+        "最もさびにくい金属といわれます。"
+      ],
+      "uses": [
+        "自動車の点火プラグ：電極を長持ちさせます。",
+        "単結晶づくり：高温に耐えるるつぼの材料です。",
+        "有機EL：光る材料にイリジウムの化合物を使います。",
+        "白金の合金：白金を硬くするために加えます。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "USGS は白金とパラジウム以外の白金族の国別生産を公表していません。白金族の資源と埋蔵量が最も大きいのは南アフリカのブッシュフェルト複合岩体です。"
+      },
+      "japan": "日本の企業は、電極にイリジウムを使った自動車の点火プラグを製品化しています。",
+      "trivia": "恐竜が絶滅した時代の地層にはイリジウムが多く、巨大な隕石が落ちた証拠とされています。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf",
+        "https://periodic.lanl.gov/77.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/77",
+        "https://www.denso.com/jp/ja/products-and-services/automotive-service-parts-and-accessories/plug/iridiumpower/lineup.html",
+        "https://www.jstage.jst.go.jp/article/shikizai/85/12/85_489/_article/-char/ja/",
+        "https://undsci.berkeley.edu/lessons/pdfs/alvarez_woflow.pdf"
+      ]
+    },
+    {
+      "name": "レアアース（希土類）全体",
+      "symbol": null,
+      "z": null,
+      "group": "レアアース",
+      "features": [
+        "スカンジウム、イットリウムと、ランタノイド15元素の計17元素の総称です。",
+        "性質がよく似ていて、互いに分けるのが難しい元素です。",
+        "名前とちがい、地殻中の量が特に少ないとは限りません。"
+      ],
+      "uses": [
+        "電気自動車や風力発電のモーター：強い磁石の材料です。",
+        "ガラスの研磨：セリウムで画面やレンズをみがきます。",
+        "自動車の排ガス浄化触媒：セリウムなどを使います。",
+        "LEDや蛍光体：イットリウムやユウロピウムが光の色をつくります。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（レアアース全体）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 69.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "酸化物換算。中国の値は生産枠で、記録されない生産を含みません。"
+      },
+      "japan": "2010年に中国からの輸出が滞ったことをきっかけに、日本は調達先を広げました。南鳥島周辺の海底には、レアアースを含む泥が見つかっています。",
+      "trivia": "17元素のうち4つ（イットリウム、テルビウム、エルビウム、イッテルビウム）は、スウェーデンのイッテルビー村にちなんで名づけられました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://www.rieti.go.jp/jp/columns/s24_0012.html",
+        "https://www.u-tokyo.ac.jp/focus/ja/articles/a_00144.html"
+      ]
+    },
+    {
+      "name": "ネオジム",
+      "symbol": "Nd",
+      "z": 60,
+      "group": "レアアース",
+      "features": [
+        "銀白色の金属で、密度は7.01 g/cm³です。",
+        "融点は約1020℃です。",
+        "鉄、ホウ素と合わせると最強クラスの磁石になります。"
+      ],
+      "uses": [
+        "電気自動車のモーター：ネオジム磁石で小さく強力にします。",
+        "風力発電機：発電機の磁石に使います。",
+        "スマホのスピーカーやバイブ：小さくて強い磁石です。",
+        "ハードディスク：読み書きの部品を動かす磁石です。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（レアアース全体）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 69.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+      },
+      "japan": "ネオジム磁石は1982年に住友特殊金属の佐川眞人さんが発明し、1983年に発表されました。",
+      "trivia": "名前はギリシャ語で「新しい双子」を意味します。ジジムという物質を2つに分けて見つかったためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://periodic.lanl.gov/60.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/60",
+        "https://scienceportal.jst.go.jp/explore/highlight/20120605_01/",
+        "https://koueki.jiii.or.jp/innovation100/innovation_detail.php?eid=00072&age=stable-growth&page=keii"
+      ]
+    },
+    {
+      "name": "ジスプロシウム",
+      "symbol": "Dy",
+      "z": 66,
+      "group": "レアアース",
+      "features": [
+        "銀白色の金属で、密度は8.55 g/cm³です。",
+        "融点は約1410℃です。",
+        "熱で磁力が弱まるのを防ぐ働きがあります。"
+      ],
+      "uses": [
+        "電気自動車のモーター：ネオジム磁石に加えて熱に強くします。",
+        "風力発電機：磁石の性能を保ちます。",
+        "原子炉：中性子を吸収する材料に使われることがあります。",
+        "レーザー：バナジウムなどと組み合わせた材料に使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（レアアース全体）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 69.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+      },
+      "japan": "2016年、ホンダと大同特殊鋼はジスプロシウムなどを使わないネオジム磁石を、ハイブリッド車のモーターに初めて採用しました。",
+      "trivia": "名前はギリシャ語で「近づきがたい」を意味するdysprositosに由来します。分離がとても難しかったためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://periodic.lanl.gov/66.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/66",
+        "https://www.daido.co.jp/about/release/2010/200713_shr.html",
+        "https://www.itmedia.co.jp/news/articles/1607/12/news145.html"
+      ]
+    },
+    {
+      "name": "セリウム",
+      "symbol": "Ce",
+      "z": 58,
+      "group": "レアアース",
+      "features": [
+        "灰色がかった銀白色の金属で、密度は6.77 g/cm³です。",
+        "融点は約800℃です。",
+        "レアアースの中で地殻にいちばん多い元素です。"
+      ],
+      "uses": [
+        "ガラスの研磨剤：スマホの画面やレンズをみがきます。",
+        "自動車の排ガス浄化触媒：酸素をためて放す働きをします。",
+        "ライターの石：鉄との合金をこすると火花が出ます。",
+        "紫外線カットガラス：自動車の窓などに使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（レアアース全体）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 69.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+      },
+      "japan": "日本はセリウムを輸入しており、ガラスの研磨剤として多く使われてきました。研磨剤のリサイクルや使用量の削減も進められています。",
+      "trivia": "名前は、発見の2年前に見つかった小惑星（今は準惑星）ケレスにちなみます。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://periodic.lanl.gov/58.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/58",
+        "https://www.dowa-ecoj.jp/catalog/2012/20121201.html",
+        "https://webmagazine.nedo.go.jp/practical-realization/articles/201303rits/"
+      ]
+    },
+    {
+      "name": "ランタン",
+      "symbol": "La",
+      "z": 57,
+      "group": "レアアース",
+      "features": [
+        "銀白色のやわらかい金属で、密度は約6.1 g/cm³です。",
+        "融点は約920℃です。",
+        "空気中で酸化しやすい金属です。"
+      ],
+      "uses": [
+        "ニッケル水素電池：電極の水素をためる合金に使います。",
+        "カメラのレンズ：光をよく曲げる高級ガラスです。",
+        "石油の精製：ガソリンをつくる触媒に使います。",
+        "ライターの石：セリウムなどとの合金です。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（レアアース全体）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 69.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+      },
+      "japan": "ハイブリッド車に使われてきたニッケル水素電池には、ランタンを含む合金が使われています。",
+      "trivia": "名前はギリシャ語で「隠れる」を意味するlanthaneinに由来します。セリウムの中に隠れていたためです。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://periodic.lanl.gov/57.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/57",
+        "https://www.nippondenko.co.jp/ourbusiness/functionalmaterials/hydrogen/",
+        "https://mric.jogmec.go.jp/reports/current/20110721/1149/"
+      ]
+    },
+    {
+      "name": "イットリウム",
+      "symbol": "Y",
+      "z": 39,
+      "group": "レアアース",
+      "features": [
+        "銀白色の金属で、密度は4.47 g/cm³です。",
+        "融点は約1520℃です。",
+        "ランタノイドではありませんが、レアアースの仲間です。"
+      ],
+      "uses": [
+        "白色LED：黄色く光る蛍光体（YAG）の材料です。",
+        "レーザー：YAGレーザーの結晶に使います。",
+        "耐熱コーティング：ジェットエンジンの部品を熱から守ります。",
+        "ジルコニアの安定化：セラミックスを割れにくくします。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "国別の値は公表されていません。USGS は世界の鉱山生産を酸化イットリウム換算で1万5,000〜2万トンと推定し、その多くが中国とミャンマーとしています。"
+      },
+      "japan": "1996年、日本の日亜化学工業が青色LEDと黄色いYAG蛍光体を組み合わせた白色LEDを製品化しました。",
+      "trivia": "名前は、スウェーデンのイッテルビー村にちなみます。この村の名前からは4つの元素名が生まれました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-yttrium.pdf",
+        "https://periodic.lanl.gov/39.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/39",
+        "https://led-ld.nichia.co.jp/jp/blog/m000012.html",
+        "http://www.shmj.or.jp/museum2010/exhibi315.html"
+      ]
+    },
+    {
+      "name": "テルビウム",
+      "symbol": "Tb",
+      "z": 65,
+      "group": "レアアース",
+      "features": [
+        "銀白色のやわらかい金属で、密度は8.23 g/cm³です。",
+        "融点は1356℃です。",
+        "緑色に光る蛍光体の材料になります。"
+      ],
+      "uses": [
+        "電気自動車のモーター：ネオジム磁石を熱に強くします。",
+        "緑色の蛍光体：蛍光灯や画面の緑の光です。",
+        "磁気でのび縮みする合金：ソナーやアクチュエーターに使います。",
+        "燃料電池：高温で働く燃料電池の結晶を安定させます。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（レアアース全体）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 69.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+      },
+      "japan": "経済産業省は、テルビウムなどの使用量を減らしたネオジム磁石の開発を支援しています。",
+      "trivia": "名前はイッテルビー村にちなみます。最初はエルビウムと名前が入れかわってしまったことがあります。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://periodic.lanl.gov/65.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/65",
+        "https://newswitch.jp/p/45723",
+        "https://www.wordorigins.org/big-list-entries/erbium"
+      ]
+    },
+    {
+      "name": "ユウロピウム",
+      "symbol": "Eu",
+      "z": 63,
+      "group": "レアアース",
+      "features": [
+        "銀白色で、密度は約5.2〜5.3 g/cm³とランタノイドで最も軽い金属です。",
+        "融点は約820℃です。",
+        "レアアースの中で最も反応しやすい元素です。"
+      ],
+      "uses": [
+        "赤色の蛍光体：テレビや蛍光灯の赤い光です。",
+        "紙幣の偽造防止：紫外線で光るインクに使います。",
+        "夜光塗料：暗い所で長く光る材料に使います。",
+        "LED：光の色を調整する蛍光体に使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（レアアース全体）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 69.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+      },
+      "japan": "1993年、日本の根本特殊化学がユウロピウムを使った、長く光る蓄光材料「ルミノーバ」を開発しました。",
+      "trivia": "名前はヨーロッパにちなみます。1901年にフランスのドマルセが、ほぼ純粋なものを取り出しました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://periodic.lanl.gov/63.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/63",
+        "https://watchnavi.getnavi.jp/serialization/41619",
+        "https://hodinkee.jp/articles/luminous-dials-what-makes-them-glow-and-how-to-spot-their-differences"
+      ]
+    },
+    {
+      "name": "サマリウム",
+      "symbol": "Sm",
+      "z": 62,
+      "group": "レアアース",
+      "features": [
+        "銀白色の金属で、密度は7.52 g/cm³です。",
+        "融点は約1070℃です。",
+        "コバルトと合わせると熱に強い磁石になります。"
+      ],
+      "uses": [
+        "サマリウムコバルト磁石：高温でも磁力が落ちにくい磁石です。",
+        "航空宇宙や軍事の機器：熱に強い磁石が必要な部品です。",
+        "医療：放射性サマリウムを骨の痛みの治療に使います。",
+        "赤外線を吸収するガラスに使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産（レアアース全体）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 69.2
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 11.5
+          },
+          {
+            "country": "ミャンマー",
+            "share_percent": 7.9
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "元素ごとの国別生産量は公表されていないため、レアアース全体（酸化物換算）の鉱山生産を示します。中国の値は生産枠で、記録されない生産を含みません。"
+      },
+      "japan": "日本の信越化学工業は1970年からサマリウムコバルト磁石の研究開発に取り組み、今も主なメーカーの1つです。",
+      "trivia": "人名に間接的にちなむ初めての元素名です。ロシアの鉱山の役人サマルスキーの名の鉱物サマルスキー石に由来します。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-rare-earths.pdf",
+        "https://periodic.lanl.gov/62.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/62",
+        "https://www.nikkakyo.org/sites/default/files/rare-earth-magnet_thefirstpart_0.pdf",
+        "https://uwaterloo.ca/chemistry/community-outreach/periodic-table-project/samarium"
+      ]
+    },
+    {
+      "name": "スカンジウム",
+      "symbol": "Sc",
+      "z": 21,
+      "group": "レアアース",
+      "features": [
+        "銀白色で軽い金属で、密度は2.99 g/cm³です。",
+        "融点は1541℃です。",
+        "ランタノイドではありませんが、レアアースの仲間です。"
+      ],
+      "uses": [
+        "アルミ合金：少し加えると強くなり、自転車や野球のバットに使います。",
+        "燃料電池：固体酸化物形の電解質に使います。",
+        "照明：スタジアムなどの明るいランプに使います。",
+        "航空宇宙：軽くて強い合金の研究に使われます。"
+      ],
+      "producers": {
+        "basis": null,
+        "year": 2024,
+        "top3": [],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "2023〜2024年の国別生産量は公表されていません（USGS）。これまで中国・カザフスタン・フィリピン・ロシア・ウクライナで副産物として生産されてきました。"
+      },
+      "japan": "日本の住友金属鉱山は、フィリピンのニッケル製錬所でスカンジウムを回収し、酸化スカンジウムをつくっています。",
+      "trivia": "メンデレーエフが予言した「エカホウ素」が、のちにスカンジウムであると確かめられました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-scandium.pdf",
+        "https://periodic.lanl.gov/21.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/21",
+        "https://www.smm.co.jp/business/refining/products/scandium/",
+        "https://www.lindahall.org/about/news/scientist-of-the-day/lars-fredrik-nilson/"
+      ]
+    },
+    {
+      "name": "ナトリウム",
+      "symbol": "Na",
+      "z": 11,
+      "group": "身近な金属",
+      "features": [
+        "銀白色のやわらかい金属で、密度は0.97 g/cm³です。",
+        "融点は97.8℃です。",
+        "ナイフで切れ、水に入れると激しく反応します。"
+      ],
+      "uses": [
+        "食塩：塩化ナトリウムとして毎日の食事に使います。",
+        "街灯：ナトリウムランプが黄色っぽい光を出します。",
+        "高速増殖炉：液体ナトリウムで熱を運びます。",
+        "重曹：炭酸水素ナトリウムを料理や掃除に使います。"
+      ],
+      "producers": {
+        "basis": "塩の生産（原料）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 19.6
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 14.3
+          },
+          {
+            "country": "インド",
+            "share_percent": 10.0
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "金属ナトリウムではなく、原料の塩の生産です。"
+      },
+      "japan": "日本は工業用の塩の多くをオーストラリアやメキシコから輸入しています。塩は苛性ソーダなどの原料になります。",
+      "trivia": "元素記号Naは、ラテン語名natriumに由来します。英語名sodiumはソーダ（炭酸ナトリウム）から来ています。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-salt.pdf",
+        "https://periodic.lanl.gov/11.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/11",
+        "https://www.saltscience.or.jp/images/2023/07/3-takasu.pdf",
+        "https://www.tabashio.jp/collection/salt/s16/index.html"
+      ]
+    },
+    {
+      "name": "カルシウム",
+      "symbol": "Ca",
+      "z": 20,
+      "group": "身近な金属",
+      "features": [
+        "銀白色の金属で、密度は約1.5 g/cm³です。",
+        "融点は842℃です。",
+        "金属のままでは水と反応するため、自然界では化合物で存在します。"
+      ],
+      "uses": [
+        "セメントやコンクリート：石灰石からつくります。",
+        "製鉄：不純物を取り除く石灰として使います。",
+        "食品やサプリメント：骨や歯をつくる栄養素です。",
+        "チョーク：炭酸カルシウムや石こうでつくります。"
+      ],
+      "producers": {
+        "basis": "石灰の生産（原料）",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 73.8
+          },
+          {
+            "country": "インド",
+            "share_percent": 4.0
+          },
+          {
+            "country": "アメリカ",
+            "share_percent": 3.8
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "金属カルシウムではなく、原料の石灰（生石灰など）の生産です。"
+      },
+      "japan": "日本には全国に200以上の石灰石鉱山があり、石灰石は国内でまかなえる数少ない鉱物資源です。",
+      "trivia": "人の体には約1kgのカルシウムが含まれ、その99%は骨にあります。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-lime.pdf",
+        "https://periodic.lanl.gov/20.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/20",
+        "https://www.limestone.gr.jp/about/"
+      ]
+    },
+    {
+      "name": "カドミウム",
+      "symbol": "Cd",
+      "z": 48,
+      "group": "その他",
+      "features": [
+        "青みがかった銀白色の金属です。",
+        "融点は321.07℃です。",
+        "ナイフで切れるほどやわらかく、毒性があります。"
+      ],
+      "uses": [
+        "ニッカド電池：充電できる電池の電極に使われました。",
+        "太陽電池：テルル化カドミウム型の材料です。",
+        "原子炉の制御棒：中性子を吸収する性質です。",
+        "黄色の顔料：硫化カドミウムの鮮やかな黄色です。"
+      ],
+      "producers": {
+        "basis": "精錬生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "中国",
+            "share_percent": 38.8
+          },
+          {
+            "country": "韓国",
+            "share_percent": 18.8
+          },
+          {
+            "country": "カナダ",
+            "share_percent": 7.1
+          },
+          {
+            "country": "日本",
+            "share_percent": 7.1
+          }
+        ],
+        "source": "USGS Mineral Commodity Summaries 2025",
+        "note": "カナダと日本は同じ値で3位に並びます。"
+      },
+      "japan": "富山県の神通川流域のイタイイタイ病は、1968年に国が神岡鉱山からのカドミウムが原因と認めた公害病です。",
+      "trivia": "1927年から1960年まで、長さの1mはカドミウムが出す赤い光の波長でも表されていました。",
+      "sources": [
+        "https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-cadmium.pdf",
+        "https://periodic.lanl.gov/48.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/48",
+        "https://www.pref.toyama.jp/1291/kurashi/kenkou/iryou/1291/100025/100026.html",
+        "https://www.env.go.jp/policy/hakusyo/s44/11288.html",
+        "https://www.nist.gov/si-redefinition/meter"
+      ]
+    },
+    {
+      "name": "ウラン",
+      "symbol": "U",
+      "z": 92,
+      "group": "その他",
+      "features": [
+        "銀白色の重い金属で、密度は約19 g/cm³です。",
+        "融点は約1130℃です。",
+        "自然に放射線を出す放射性元素です。"
+      ],
+      "uses": [
+        "原子力発電：ウラン235の核分裂で熱を出します。",
+        "原子力潜水艦や原子力空母の燃料にも使われます。",
+        "昔のガラスや陶器：黄色や緑の色づけに使われました。",
+        "放射線の遮へい：密度が高い性質を使います。"
+      ],
+      "producers": {
+        "basis": "鉱山生産",
+        "year": 2024,
+        "top3": [
+          {
+            "country": "カザフスタン",
+            "share_percent": 39
+          },
+          {
+            "country": "カナダ",
+            "share_percent": 24
+          },
+          {
+            "country": "ナミビア",
+            "share_percent": 12
+          }
+        ],
+        "source": "World Nuclear Association「World Uranium Mining Production」（USGS MCS はウランを扱っていないため）",
+        "note": null
+      },
+      "japan": "岡山県と鳥取県の境にある人形峠で、1955年にウランの鉱床が見つかりました。",
+      "trivia": "名前は、発見の少し前に見つかった天王星（ウラヌス）にちなみます。",
+      "sources": [
+        "https://periodic.lanl.gov/92.shtml",
+        "https://pubchem.ncbi.nlm.nih.gov/element/92",
+        "https://world-nuclear.org/information-library/nuclear-fuel-cycle/mining-of-uranium/world-uranium-mining-production",
+        "https://www.jaea.go.jp/04/zningyo/profile1008.html"
+      ]
+    }
+  ]
+}
