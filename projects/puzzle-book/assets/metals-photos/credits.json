@@ -1,0 +1,552 @@
+[
+ {
+  "file": "Fe.jpg",
+  "element": "鉄",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Iron_electrolytic_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 996
+ },
+ {
+  "file": "Cu.jpg",
+  "element": "銅",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:NatCopper.jpg",
+  "author": "Jonathan Zander（Digon3）",
+  "license": "CC BY-SA 3.0",
+  "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+  "width": 1534,
+  "height": 1452
+ },
+ {
+  "file": "Al.jpg",
+  "element": "アルミニウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Aluminium_bar_surface_etched.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1066
+ },
+ {
+  "file": "Zn.jpg",
+  "element": "亜鉛",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Zinc_fragment_sublimed_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 977
+ },
+ {
+  "file": "Pb.jpg",
+  "element": "鉛",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Lead_electrolytic_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1016
+ },
+ {
+  "file": "Sn.jpg",
+  "element": "スズ",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Sn-Alpha-Beta.jpg",
+  "author": "Alchemist-hp",
+  "license": "CC BY-SA 3.0 de",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+  "width": 1600,
+  "height": 986
+ },
+ {
+  "file": "Ni.jpg",
+  "element": "ニッケル",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Nickel_electrolytic_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1066
+ },
+ {
+  "file": "Mg.jpg",
+  "element": "マグネシウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_2893_Crystalised_magnesium.jpg",
+  "author": "Mark Fergus（CSIRO）",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1600,
+  "height": 1204
+ },
+ {
+  "file": "Hg.jpg",
+  "element": "水銀",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Pouring_liquid_mercury_bionerd.jpg",
+  "author": "Bionerd",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1209,
+  "height": 1311
+ },
+ {
+  "file": "Au.jpg",
+  "element": "金",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Gold-crystals.jpg",
+  "author": "Alchemist-hp（www.pse-mendelejew.de）",
+  "license": "CC BY-SA 3.0 de",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+  "width": 1600,
+  "height": 1036
+ },
+ {
+  "file": "Ag.jpg",
+  "element": "銀",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Silver_crystal.jpg",
+  "author": "Alchemist-hp",
+  "license": "CC BY-SA 3.0 de",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+  "width": 1600,
+  "height": 1254
+ },
+ {
+  "file": "Pt.jpg",
+  "element": "白金（プラチナ）",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Platinum_crystals.jpg",
+  "author": "Periodictableru",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1600,
+  "height": 1120
+ },
+ {
+  "file": "Pd.jpg",
+  "element": "パラジウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Palladium_(46_Pd).jpg",
+  "author": "Hi-Res Images of Chemical Elements",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 730,
+  "height": 730
+ },
+ {
+  "file": "Li.jpg",
+  "element": "リチウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Purified_lithium_in_an_ampoule_under_argon,_dark_background.png",
+  "author": "AdvancedTinkering",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "width": 1600,
+  "height": 899
+ },
+ {
+  "file": "Be.jpg",
+  "element": "ベリリウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Be-140g.jpg",
+  "author": "Alchemist-hp",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "width": 750,
+  "height": 900
+ },
+ {
+  "file": "Ti.jpg",
+  "element": "チタン",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Titan-crystal_bar.JPG",
+  "author": "Alchemist-hp",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "width": 1600,
+  "height": 1005
+ },
+ {
+  "file": "V.jpg",
+  "element": "バナジウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Vanadium_crystal_bar_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1221
+ },
+ {
+  "file": "Cr.jpg",
+  "element": "クロム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Chromium_crystals_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 955
+ },
+ {
+  "file": "Mn.jpg",
+  "element": "マンガン",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Manganese_electrolytic_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 993
+ },
+ {
+  "file": "Co.jpg",
+  "element": "コバルト",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Kobalt_electrolytic_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1066
+ },
+ {
+  "file": "Ga.jpg",
+  "element": "ガリウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Gallium_bar_cracked_open_to_show_crystal_structure_with_scale_1.png",
+  "author": "Arònel123",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0",
+  "width": 1600,
+  "height": 900
+ },
+ {
+  "file": "Ge.jpg",
+  "element": "ゲルマニウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Polycrystalline-germanium.jpg",
+  "author": "Jurii",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1056,
+  "height": 1056
+ },
+ {
+  "file": "Se.jpg",
+  "element": "セレン",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Selenium-2.jpg",
+  "author": "作者不明（images-of-elements.com）",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1152,
+  "height": 1152
+ },
+ {
+  "file": "Rb.jpg",
+  "element": "ルビジウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Rb5.JPG",
+  "author": "Dnn87",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1600,
+  "height": 1200
+ },
+ {
+  "file": "Sr.jpg",
+  "element": "ストロンチウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Strontium_destilled_crystals.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1025
+ },
+ {
+  "file": "Zr.jpg",
+  "element": "ジルコニウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Zirconium_crystal_bar_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1176
+ },
+ {
+  "file": "Nb.jpg",
+  "element": "ニオブ",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Niobium_crystals_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 964
+ },
+ {
+  "file": "Mo.jpg",
+  "element": "モリブデン",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Molybdenum_crystaline_fragment_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1014
+ },
+ {
+  "file": "In.jpg",
+  "element": "インジウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Indium.jpg",
+  "author": "Nerdtalker",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "width": 1600,
+  "height": 1184
+ },
+ {
+  "file": "Sb.jpg",
+  "element": "アンチモン",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Antimony-2.jpg",
+  "author": "Jurii",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1228,
+  "height": 1228
+ },
+ {
+  "file": "Te.jpg",
+  "element": "テルル",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Tellurium2.jpg",
+  "author": "作者不明（images-of-elements.com）",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1170,
+  "height": 1170
+ },
+ {
+  "file": "Cs.jpg",
+  "element": "セシウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Cesium.jpg",
+  "author": "Dnn87",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "width": 1600,
+  "height": 1200
+ },
+ {
+  "file": "Ba.jpg",
+  "element": "バリウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Barium_crystals.jpg",
+  "author": "范皓程",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0",
+  "width": 1599,
+  "height": 1140
+ },
+ {
+  "file": "Hf.jpg",
+  "element": "ハフニウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Hf-crystal_bar.jpg",
+  "author": "Alchemist-hp",
+  "license": "CC BY-SA 3.0 de",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+  "width": 1600,
+  "height": 455
+ },
+ {
+  "file": "Ta.jpg",
+  "element": "タンタル",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Tantalum_single_crystal_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 969
+ },
+ {
+  "file": "W.jpg",
+  "element": "タングステン",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Wolfram_evaporated_crystals_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 873
+ },
+ {
+  "file": "Re.jpg",
+  "element": "レニウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Rhenium_single_crystal_bar_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1007
+ },
+ {
+  "file": "Tl.jpg",
+  "element": "タリウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Thallium_pieces_in_ampoule.jpg",
+  "author": "W. Oelen",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "width": 700,
+  "height": 320
+ },
+ {
+  "file": "Bi.jpg",
+  "element": "ビスマス",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Bismuth_crystals_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1079
+ },
+ {
+  "file": "Rh.jpg",
+  "element": "ロジウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Rhodium_powder_pressed_melted.jpg",
+  "author": "Alchemist-hp",
+  "license": "CC BY-SA 3.0 de",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+  "width": 1600,
+  "height": 819
+ },
+ {
+  "file": "Ir.jpg",
+  "element": "イリジウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Iridium_(77_Ir).jpg",
+  "author": "Hi-Res Images of Chemical Elements",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 816,
+  "height": 816
+ },
+ {
+  "file": "REE.jpg",
+  "element": "レアアース（希土類）全体",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Rareearthoxides.jpg",
+  "author": "Peggy Greb（米国農務省）",
+  "license": "Public domain",
+  "license_url": "",
+  "width": 1200,
+  "height": 780
+ },
+ {
+  "file": "Nd.jpg",
+  "element": "ネオジム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Elementares_Neodym.jpg",
+  "author": "Tobias Meints",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "width": 1600,
+  "height": 1390
+ },
+ {
+  "file": "Dy.jpg",
+  "element": "ジスプロシウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Dysprosium_(66_Dy).jpg",
+  "author": "Hi-Res Images of Chemical Elements",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 1208,
+  "height": 1208
+ },
+ {
+  "file": "Ce.jpg",
+  "element": "セリウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Cerium2.jpg",
+  "author": "Jurii",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 782,
+  "height": 560
+ },
+ {
+  "file": "La.jpg",
+  "element": "ランタン",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Lanthanum-2.jpg",
+  "author": "Jurii",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 708,
+  "height": 708
+ },
+ {
+  "file": "Y.jpg",
+  "element": "イットリウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Yttrium_sublimed_dendritic_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 1088
+ },
+ {
+  "file": "Tb.jpg",
+  "element": "テルビウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Terbium-2.jpg",
+  "author": "作者不明（images-of-elements.com）",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 626,
+  "height": 493
+ },
+ {
+  "file": "Eu.jpg",
+  "element": "ユウロピウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Europium.jpg",
+  "author": "Jurii",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 804,
+  "height": 804
+ },
+ {
+  "file": "Sm.jpg",
+  "element": "サマリウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Samarium-2.jpg",
+  "author": "作者不明（images-of-elements.com）",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "width": 768,
+  "height": 640
+ },
+ {
+  "file": "Sc.jpg",
+  "element": "スカンジウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Scandium_sublimed_dendritic_and_1cm3_cube.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1600,
+  "height": 980
+ },
+ {
+  "file": "Na.jpg",
+  "element": "ナトリウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Na_(Sodium).jpg",
+  "author": "Dnn87",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "width": 1600,
+  "height": 1200
+ },
+ {
+  "file": "Ca.jpg",
+  "element": "カルシウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Calcium_crystals_in_ampoule_cropped.jpg",
+  "author": "范皓程",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0",
+  "width": 1600,
+  "height": 1048
+ },
+ {
+  "file": "Cd.jpg",
+  "element": "カドミウム",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:Cadmium-crystal_bar.jpg",
+  "author": "Alchemist-hp",
+  "license": "FAL",
+  "license_url": "http://artlibre.org/licence/lal/en",
+  "width": 1599,
+  "height": 1035
+ },
+ {
+  "file": "U.jpg",
+  "element": "ウラン",
+  "commons_page": "https://commons.wikimedia.org/wiki/File:HEUraniumC.jpg",
+  "author": "米国エネルギー省",
+  "license": "Public domain",
+  "license_url": "",
+  "width": 1600,
+  "height": 1280
+ }
+]

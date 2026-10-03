@@ -1,5 +1,37 @@
 # puzzle-book
 
+## 金属とレアメタルの図鑑 1冊目（`books/metals-vol1.json`）
+
+```
+python src/build_metals.py books/metals-vol1.json   # 本文と表紙 -> output/
+python tools/qa_refbook.py metals                    # 納品前の点検（30項目）
+```
+
+| 項目 | 値 |
+|---|---|
+| 中身 | 55種（身近な金属・貴金属・レアメタル・レアアース・その他）。1ページに元素のタイル・写真・特徴・用途・産出国の棒・日本・豆知識。周期表のページ・レアメタルとは |
+| 判型 | A5・裁ち落としあり・プレミアムカラー・70ページ（印刷代486円） |
+| データ | `books/metals-data.json`。産出国は USGS Mineral Commodity Summaries 2026（2025年の推定値）。各記述は2出典以上 |
+| 写真 | `assets/metals-photos/`（Wikimedia Commons。FAL・CC BY・CC BY-SA・PD。作者とライセンスは credits.json と「写真の出典」のページ） |
+| 商標 | 「レアメタル」「金属の図鑑」「金属図鑑」「金属とレアメタル」は0件（2026-10-04） |
+| KDP の入力内容 | `books/metals-vol1-listing.md` |
+
+## 世界の通貨じてん 1冊目（`books/currency-vol1.json`）
+
+```
+python src/build_currency.py books/currency-vol1.json   # 本文と表紙 -> output/
+python tools/qa_refbook.py currency                      # 納品前の点検（30項目）
+```
+
+| 項目 | 値 |
+|---|---|
+| 中身 | 60通貨を地域で5章。1ページに国旗・コード・記号・使う国・円との為替（2026/09/30）と10年の動き・1万円で何か・為替制度・由来・豆知識。為替のしくみ・価値くらべ |
+| 判型 | A5・裁ち落としあり・プレミアムカラー・74ページ（印刷代502円） |
+| データ | `books/currency-data.json`。為替は三菱UFJ銀行の公示相場（仲値）と各国中央銀行の公表値、制度は IMF Annual Report 2025 |
+| 国旗 | `assets/flags/`（flag-icons、MIT）。CMYK に直して描く。お札・硬貨の図柄は載せない |
+| 商標 | 「通貨じてん」「通貨辞典」「世界の通貨」「通貨図鑑」は0件（2026-10-04） |
+| KDP の入力内容 | `books/currency-vol1-listing.md` |
+
 ## 日本のことわざ、世界ではこう言う 1冊目（`books/sekai-kotowaza-vol1.json`）
 
 ```

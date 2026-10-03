@@ -153,7 +153,7 @@ def draw_photo(c: canvas.Canvas, m: dict, x: float, y: float, w: float, h: float
         return False
     from PIL import Image
 
-    key = str(p)
+    key = f"{p}|{w:.1f}x{h:.1f}"
     img = Image.open(p)
     iw, ih = img.size
     # 枠の縦横比に合わせて中央を切り出す
@@ -166,9 +166,11 @@ def draw_photo(c: canvas.Canvas, m: dict, x: float, y: float, w: float, h: float
         box = (0, (ih - nh) // 2, iw, (ih + nh) // 2)
     if key not in _PHOTO_CACHE:
         crop = img.crop(box)
-        need_w = int(w / 72 * 300)
+        need_w = int(w / 72 * 300) + 2
         if crop.width > need_w * 1.5:  # 300dpi の1.5倍より大きければ縮める（PDF を重くしない）
-            crop = crop.resize((int(need_w * 1.5), int(need_w * 1.5 * crop.height / crop.width)))
+            crop = crop.resize((int(need_w * 1.5), int(need_w * 1.5 * crop.height / crop.width)), Image.LANCZOS)
+        elif crop.width < need_w:  # 元の写真が小さいものは、300dpi になるまで拡大する
+            crop = crop.resize((need_w, int(need_w * crop.height / crop.width)), Image.LANCZOS)
         out = io.BytesIO()
         to_cmyk(crop.convert("RGB")).save(out, "JPEG", quality=92)
         _PHOTO_CACHE[key] = out.getvalue()
@@ -217,6 +219,7 @@ METAL_DENSITY = [
     {"feat": 9.0, "featg": 12.5, "use": 8.5, "useg": 11.5, "box": 8.5, "boxg": 12.0, "bar": 13, "gap": 3},
     {"feat": 8.5, "featg": 11.5, "use": 8.0, "useg": 10.5, "box": 8.0, "boxg": 11.0, "bar": 12, "gap": 2},
     {"feat": 8.0, "featg": 10.5, "use": 7.5, "useg": 9.8, "box": 7.5, "boxg": 10.0, "bar": 11, "gap": 1.5},
+    {"feat": 7.5, "featg": 9.8, "use": 7.2, "useg": 9.0, "box": 7.2, "boxg": 9.4, "bar": 10, "gap": 1},
 ]
 
 
@@ -291,17 +294,17 @@ def _draw_metal(c: canvas.Canvas, f: Frame, m: dict, no: int, chapter_label: str
     for u in m["uses"]:
         head, body = _split_use(u)
         lines = wrap_even(c, body, FONT_REGULAR, P["use"], w - 110, False) if body else []
-        h = max(P["useg"] + 8, 8 + P["useg"] * max(1, len(lines)))
+        hlines = [head] if c.stringWidth(head, FONT_BOLD, 9) <= 86 else wrap_even(c, head, FONT_BOLD, 8, 86, False, always=True)
+        h = max(P["useg"] + 8, 8 + P["useg"] * max(1, len(lines), len(hlines)))
         c.setFillColorCMYK(*WHITE)
         c.rect(L, y - h, w, h, stroke=0, fill=1)
         c.setFillColorCMYK(*col)
         c.rect(L, y - h, 3, h, stroke=0, fill=1)
         c.setFillColorCMYK(*INK)
-        hfs = 9
-        while c.stringWidth(head, FONT_BOLD, hfs) > 88 and hfs > 7:
-            hfs -= 0.25
+        hfs = 9 if len(hlines) == 1 else 8
         c.setFont(FONT_BOLD, hfs)
-        c.drawString(L + 9, y - 13, head)
+        for hi_, hl in enumerate(hlines):
+            c.drawString(L + 9, y - 13 - hi_ * P["useg"], hl)
         c.setFont(FONT_REGULAR, P["use"])
         for li, ln in enumerate(lines):
             draw_mix(c, L + 100, y - 13 - li * P["useg"], ln, FONT_REGULAR, P["use"])
@@ -625,18 +628,15 @@ def build_pdf(spec: MetalsSpec, output_path: str) -> int:
     cfile = PHOTO_DIR / "credits.json"
     if cfile.exists():
         credits = json.loads(cfile.read_text(encoding="utf-8"))
-    y = _para(c, f, "写真はすべて Wikimedia Commons のものです（作者・ライセンスの順）。", y, fs=8.5, gap=13) - 4
-    c.setFont(FONT_REGULAR, 6.8)
-    col_w = (f.width - 10) / 2
-    per = (len(credits) + 1) // 2 or 1
+    y = _para(c, f, "写真はすべて Wikimedia Commons のものです（金属名: 作者 / ライセンス）。FAL は Free Art License、"
+              "CC は Creative Commons（creativecommons.org/licenses/）。写真は枠に合わせて切り抜いています。", y, fs=8, gap=12) - 4
+    lh = (y - f.bottom) / max(1, len(credits))
     for i, cr in enumerate(credits):
-        x = f.left + (i // per) * (col_w + 10)
-        yy = y - (i % per) * 9.2
+        yy = y - i * lh
         c.setFillColorCMYK(*INK)
         text = f"{cr.get('element', '')}: {cr.get('author', '')} / {cr.get('license', '')}"
-        while c.stringWidth(text, FONT_REGULAR, 6.8) > col_w and len(text) > 10:
-            text = text[:-2] + "…"
-        c.drawString(x, yy, text)
+        draw_mix(c, f.left, yy, text, FONT_REGULAR, 7)
+        assert c.stringWidth(text, FONT_REGULAR, 7) < f.width, text
     folio(c, f)
     turn()
 

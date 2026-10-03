@@ -128,7 +128,7 @@ check(f"{len(items)}項目すべてが、決まったページに載っている
 weak = [label(x) for x in items if len(set(x.get("sources") or [])) < 2]
 check("どの項目にも出典の URL が2つ以上ある", not weak, str(weak[:4]))
 toc = di[bm.FRONT_PAGES - 1].get_text()
-toc_bad = [label(x) for k, x in enumerate(items) if re.sub(r"（.*?）", "", label(x)) not in toc]
+toc_bad = [label(x) for k, x in enumerate(items) if label(x) not in toc and re.sub(r"（.*?）", "", label(x)) not in toc]
 check("もくじに全項目がある", not toc_bad, str(toc_bad[:4]))
 idx_text = "".join(di[i].get_text() for i in range(n - bm.BACK_PAGES, n))
 idx_bad = [label(x) for k, x in enumerate(items) if str(item_page(items, k)) not in idx_text]
@@ -142,7 +142,7 @@ if BOOK == "metals":
     credits = json.loads(cred.read_text(encoding="utf-8")) if cred.exists() else []
     no_photo = [x["name"] for x in items if bm.photo_path(x) is None]
     check("55種すべてに写真がある", not no_photo, f"写真なし {len(no_photo)}件 {no_photo[:4]}")
-    bad_lic = [c["file"] for c in credits if not re.search(r"CC BY|CC0|Public domain|PD|Free Art|GFDL", c.get("license", ""), re.I)
+    bad_lic = [c["file"] for c in credits if not re.search(r"CC BY|CC0|Public domain|PD|Free Art|FAL|GFDL", c.get("license", ""), re.I)
                or re.search(r"NC|ND", c.get("license", ""))]
     check("写真のライセンスが商用・改変不要で使えるもの（NC・ND なし）", credits and not bad_lic, str(bad_lic[:4]))
     cpage = di[n - 2].get_text()
