@@ -71,6 +71,26 @@ const _en = (language: AppLanguage.english, code: 'en', suffix: '_en');
 
 const _locales = <_Locale>[_ja, _en];
 
+/// 掲載画像に乗せる言葉。
+///
+/// 画面をそのまま撮っただけでは、スクロールしている人に何のゲームか伝わら
+/// ない。同じ分野の上位(カルチョビットA・サッカークラブ物語)は全カットに
+/// 帯を入れている。露出5,730に対してページ閲覧557(9.7%)で詰まっていたので、
+/// ここを上げにいく。
+///
+/// **検索結果に出るのは先頭3枚**なので、00〜02に力を入れている。
+const _captions = <String, (String ja, String en)>{
+  '00_lineup': ('11人をどう並べるか', 'Pick your eleven'),
+  '01_live_match': ('采配が、試合を動かす', 'Your calls decide it'),
+  '02_home': ('5部からの成り上がり', 'Rise from the fifth tier'),
+  '03_transfer': ('移籍で、戦力を変える', 'Reshape the squad'),
+  '04_standings': ('勝ち上がって、昇格する', 'Climb and win promotion'),
+  '05_squad': ('選手を育てて、一流に', 'Train players into stars'),
+  '06_halftime': ('ハーフタイムで立て直す', 'Turn it around at half time'),
+  '07_scorers': ('得点王が、生まれる', 'Grow a top scorer'),
+  '08_club': ('スタッフと施設に投資する', 'Invest in staff and facilities'),
+};
+
 /// 同梱フォントと、Flutter SDK が持つアイコンフォントを読み込む。
 ///
 /// アイコンフォントを読まないと、天気やナビゲーションのアイコンが
@@ -175,6 +195,41 @@ void main() {
           locale.language == AppLanguage.japanese,
           reason: '選手名が${locale.code}になっていない: $aPlayer');
 
+      /// 画面の上に言葉の帯を乗せる。
+      ///
+      /// 縮めても読めるよう、太く大きく、濃い緑に白で置く。アプリの画面と
+      /// 同じ色にすると境目が曖昧になるので、はっきり分ける。
+      // Material で包む。ColoredBox のままだと「Material の外のテキスト」
+      // と見なされ、黄色い二重下線が引かれる(実際に引かれた)。
+      Widget captioned(String text, Widget screen) => Material(
+            color: const Color(0xFF14532D),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      24, device == _tablet ? 44 : 30, 24,
+                      device == _tablet ? 40 : 26),
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: TextStyle(
+                      // **フォントを指定する。** 省くと日本語が豆腐(□)に
+                      // なる。アプリの画面は theme が指定しているので出るが、
+                      // この帯は theme の外にあるため当たらない。
+                      fontFamily: 'NotoSansJP',
+                      color: Colors.white,
+                      fontSize: device == _tablet ? 46 : 36,
+                      fontWeight: FontWeight.w700,
+                      height: 1.25,
+                    ),
+                  ),
+                ),
+                Expanded(child: screen),
+              ],
+            ),
+          );
+
       Widget wrap(Widget child) => MultiProvider(
             providers: [
               ChangeNotifierProvider<GameState>.value(value: gameState),
@@ -199,7 +254,15 @@ void main() {
       /// 開いた直後だと 0-0 の1分で、画面の下半分が空のまま写る。
       Future<void> shoot(String name, Widget screen,
           {int warmUpFrames = 0}) async {
-        await tester.pumpWidget(wrap(screen));
+        final caption = _captions[name];
+        final body = caption == null
+            ? screen
+            : captioned(
+                locale.language == AppLanguage.japanese
+                    ? caption.$1
+                    : caption.$2,
+                screen);
+        await tester.pumpWidget(wrap(body));
         // **裏で読み込みを待つ画面は、疑似時間の pump では終わらない。**
         // 開始画面はセーブ一覧(SharedPreferences)を待つ FutureBuilder を
         // 持っており、読み込み中の丸だけが写った白紙をストアの1枚目として
