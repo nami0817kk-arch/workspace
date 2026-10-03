@@ -771,6 +771,35 @@ body.stg .dots i:not(.on):not(.now){background:rgba(255,255,255,.14)}
 body.stg .ov{background:rgba(5,3,12,.6)}body.stg .sheet{background:#17121f}
 
 body.stg .btn:not(.sub):not(.ad):not(.warnb){color:#fff;text-shadow:0 1px 2px rgba(40,10,90,.45)}
+
+/* ===== 30回ループ 1〜5 ===== */
+/* 1. 疲れの限界・けが */
+.face.f-tired{box-shadow:0 0 0 3px rgba(239,107,121,.55);animation:tiredRing 1.6s ease-in-out infinite}
+.face.f-inj{box-shadow:0 0 0 3px #ef6b79,0 0 12px rgba(239,107,121,.6)}
+@keyframes tiredRing{50%{box-shadow:0 0 0 5px rgba(239,107,121,.25)}}
+/* 2. 選択肢の帯 */
+.choice{position:relative;overflow:hidden}
+.choice[class*=" tn-"]::before,.choice:has(.tone)::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.choice.tn-s::before,.choice:has(.t-s)::before{background:#3fb37d}.choice.tn-h::before,.choice:has(.t-h)::before{background:#8a5ff0}.choice.tn-a::before,.choice:has(.t-a)::before{background:#4a8df0}.choice.tn-f::before,.choice:has(.t-f)::before{background:#e39a3b}
+/* 3. 世間の声 */
+.cmt.sns{display:flex;gap:10px;align-items:flex-start;border-left:none;border:1px solid var(--line);border-radius:14px;padding:10px 12px;animation:fadeup .4s ease-out both}
+.cmt.sns.angry{border-color:rgba(239,107,121,.55);background:var(--bad-bg)}
+.cav{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff;background:hsl(var(--hue),55%,45%)}
+.cbody{flex:1;min-width:0}.clk{margin-top:4px;font-size:12px;color:var(--muted);font-weight:700}.cmt.angry .clk{color:var(--bad)}
+/* 4. 知らせの札：下から弾んで出る */
+.apptoast{animation:toastIn .35s cubic-bezier(.2,1.4,.4,1) both;box-shadow:0 10px 30px rgba(0,0,0,.35);padding-left:40px}
+.apptoast::before{content:'!';position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-weight:900;font-size:13px;display:grid;place-items:center}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+/* 5. 最後の評価を判子のように押す */
+.rcard{position:relative;overflow:hidden}
+.rcard .rg .gr{font-size:40px;padding:4px 16px;border-radius:14px;animation:stampIn .7s cubic-bezier(.2,1.5,.35,1) .3s both;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.rcard .rg span{animation:fadeup .5s ease-out .8s both}
+@keyframes stampIn{0%{opacity:0;transform:scale(2.4) rotate(-14deg)}60%{opacity:1;transform:scale(.92) rotate(3deg)}100%{transform:none}}
+body.reduce .face.f-tired,body.reduce .cmt.sns,body.reduce .apptoast,body.reduce .rcard .rg .gr,body.reduce .rcard .rg span{animation:none}
+@media (prefers-reduced-motion:reduce){.face.f-tired,.cmt.sns,.apptoast,.rcard .rg .gr,.rcard .rg span{animation:none}}
+
+.card.ev .evfaces .face.f-tired,.stagec .face.f-tired{box-shadow:0 0 0 4px rgba(239,107,121,.7),0 8px 22px rgba(0,0,0,.45)}
+.card.ev .evfaces .face.f-inj,.stagec .face.f-inj{box-shadow:0 0 0 4px #ef6b79,0 8px 22px rgba(0,0,0,.45)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2828,7 +2857,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp
 var FACE_URL={m:[],f:[]};
 function faceURL(g,i){if(i==null||i<0||!FACE_IMG[g]||!FACE_IMG[g][i])return '';if(!FACE_URL[g][i]){try{var d=FACE_IMG[g][i],b=atob(d.split(',')[1]),u=new Uint8Array(b.length);for(var k=0;k<b.length;k++)u[k]=b.charCodeAt(k);FACE_URL[g][i]=URL.createObjectURL(new Blob([u],{type:'image/jpeg'}));}catch(e){FACE_URL[g][i]=FACE_IMG[g][i];}}return FACE_URL[g][i];}
 function faceImg(t,cls){return '<img loading="lazy" decoding="async" class="face b-'+t.spec+' '+(cls||'')+'" src="'+faceURL(S.g,t.img)+'" alt="'+esc(t.name)+'の絵">';}
-function face(t,cls){return '<img loading="lazy" decoding="async" class="face b-'+t.spec+' '+(cls||'')+'" src="'+faceURL(S.g,t.img)+'" alt="'+esc(t.name)+'の絵" data-a="prof" data-id="'+t.id+'">';}
+function face(t,cls){return '<img loading="lazy" decoding="async" class="face b-'+t.spec+' '+(cls||'')+(t.inj?' f-inj':t.fat>=80?' f-tired':'')+'" src="'+faceURL(S.g,t.img)+'" alt="'+esc(t.name)+'の絵" data-a="prof" data-id="'+t.id+'">';}
 function tag(sp){return '<span class="tag sp-'+sp+'">'+(typeof ICON!=='undefined'?ICON[sp]:'')+SPEC[sp]+'</span>';}
 function statTxt(t,k){var r=t.rev[k];if(r===2)return '<b>'+Math.round(t.st[k])+'</b>';if(r===1)return '<b>'+t.fz[k]+'</b><span class="q">前後</span>';return '<span class="q">?</span>';}
 function statsLine(t,extra){
@@ -3088,7 +3117,8 @@ function vCall(){
     if(rc.down.length)h+='<div class="rr"><span class="rl dn">自信を落とした</span>'+rc.down.map(function(x){return face(S.tr[x.id],'sm')+'<span>'+esc(S.tr[x.id].giv)+' <b>'+Math.round(x.d)+'</b></span>';}).join('')+'</div>';
     if(rc.fit.length)h+='<div class="rr"><span class="rl">次の'+esc(rc.next)+'に向いている</span>'+rc.fit.map(function(x){return face(S.tr[x.id],'sm')+'<span>'+esc(S.tr[x.id].giv)+'</span>';}).join('')+'</div>';
     h+='</div>';}
-  h+='<h3>世間の声</h3>';S.comments.forEach(function(x){h+='<div class="cmt '+(x.a?'angry':'')+'"><div class="h">'+esc(x.h)+'</div>'+esc(x.t)+'</div>';});
+  h+='<h3>世間の声</h3>';S.comments.forEach(function(x,i){var hn=String(x.h||'').replace(/^@/,''),lk=0;for(var j=0;j<x.t.length;j++)lk=(lk*31+x.t.charCodeAt(j))%997;
+    h+='<div class="cmt sns '+(x.a?'angry':'')+'" style="animation-delay:'+(i*.08).toFixed(2)+'s"><span class="cav" style="--hue:'+(lk*7%360)+'">'+esc(hn.charAt(0)||'?')+'</span><div class="cbody"><div class="h">'+esc(x.h)+'</div>'+esc(x.t)+'<div class="clk">'+(x.a?'⚡':'♥')+' '+(x.a?40+lk%160:20+lk*3%480)+'</div></div></div>';});
   h+='<p class="small muted">書き込みはすべて架空のものです。</p>';
   h+=(S.lastTgt?'<div class="tgt '+(S.lastTgt.hit?'hit':'miss')+'"><span>局の目標 '+S.lastTgt.tg.toFixed(1)+'%</span><b>'+(S.lastTgt.hit?'達成':'届かず')+'</b><small>'+(S.lastTgt.hit?'局の評価が上がり、制作費が上乗せされた':(S.warns>=2?'2回続けて届かず、局から厳しく言われた。制作費を大きく減らされた':'局から「数字が厳しい」と言われた'))+'</small></div>':'')+(!f.fin?'<p class="note">次の審査の制作費として <b>'+S.income+'万</b> 入りました（残り '+S.budget+'万）。</p>':'')+'<button class="btn" data-a="'+(f.fin?'toprep':'nextround')+'">'+(f.fin?'デビューの準備へ':'次の審査へ')+'</button>';
   return h;
@@ -3280,7 +3310,7 @@ function toneTag(t){return t?'<span class="tone t-'+t+'">'+TONEN[t]+'</span>':''
 function partsHtml(p){return p.map(function(x){return '<span class="hp '+(x[1]==='rate'?'rate':x[1]?'up':'dn')+'">'+x[0]+'</span>';}).join('');}
 function costOf(txt){var m=/制作費(\d+)万/.exec(txt||'');return m?+m[1]:0;}
 function costDis(txt){var c=costOf(txt);return c&&S.budget<c?' disabled title="制作費が足りない"':'';}
-function choiceBtn(a,v,label,tone,inner,extra){return '<button class="choice" data-a="'+a+'" data-v="'+v+'"'+(extra||'')+'><b>'+esc(label)+'</b><span class="hint">'+toneTag(tone)+inner+'</span></button>';}
+function choiceBtn(a,v,label,tone,inner,extra){return '<button class="choice'+(tone?' tn-'+tone:'')+'" data-a="'+a+'" data-v="'+v+'"'+(extra||'')+'><b>'+esc(label)+'</b><span class="hint">'+toneTag(tone)+inner+'</span></button>';}
 /* 信頼・自信・疲れのゲージ。変化があれば、前の値から今の値へ伸び縮みして見せる */
 function gauges(t,list){if(!t)return '';var G=[['trust','信頼','tr'],['conf','自信','cf'],['fat','疲れ','ft']];
   return '<div class="gg">'+G.map(function(g,i){var cur=Math.round(clamp(t[g[0]],0,100)),d=0;(list||[]).forEach(function(x){if(x[0]===g[1])d=x[1];});var prev=Math.round(clamp(cur-d,0,100));
