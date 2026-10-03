@@ -920,6 +920,25 @@ body.reduce .ending::before,body.reduce .stagec.night::after,body.reduce .dots i
 /* 29. キーボードで動かすときの縁 */
 button:focus-visible,select:focus-visible,summary:focus-visible,[data-a]:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 body.reduce .fstep i,body.reduce .tip{animation:none}@media (prefers-reduced-motion:reduce){.fstep i,.tip{animation:none}}
+
+/* レッスンを選ぶボタンの列（2026-10-04 指摘「プルダウンがダサい」） */
+.lrow>.lt .smini{grid-column:2/4}
+.lrow>.lt .lpick{grid-column:1/4;grid-row:3;display:flex;gap:4px;margin-top:6px}
+.lpick button{flex:1;min-width:0;min-height:36px;padding:0 2px;border-radius:9px;border:1px solid var(--line);background:var(--card2);color:var(--fg);font-size:12.5px;font-weight:700;white-space:nowrap}
+.lpick .lp.on{color:#fff;border-color:transparent;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.lpick .lp-v.on{background:var(--c-v)}.lpick .lp-d.on{background:var(--c-d)}.lpick .lp-r.on{background:var(--c-r)}.lpick .lp-e.on{background:var(--c-t)}.lpick .lp-rest.on{background:#3f9e78}
+.lpick .spb{flex:1.1;border-color:var(--gold);color:var(--gold);background:transparent}
+.lpick .spb.on{background:linear-gradient(160deg,#ffe08a,#d9a420);color:#3a2600;border-color:#c9951a}
+.lpick .spb:disabled{opacity:.4}
+
+/* 明るく（2026-10-04 指摘「全体的に暗い」）：背景の写真を見せ、板と文字を一段明るく */
+body.stg:not(.ttl){background:#231a3d}
+body.stg::before{background:radial-gradient(ellipse 90% 50% at 50% 0,rgba(214,190,255,.28),transparent 70%),linear-gradient(180deg,rgba(40,28,74,.30),rgba(34,24,62,.55) 45%,rgba(28,20,52,.74)),var(--phbg,var(--bgi-practice,none));background-size:cover;background-position:center 30%;filter:saturate(1.15) brightness(1.08)}
+body.stg:not(.ttl){--card:rgba(62,50,96,.80);--card2:rgba(92,78,132,.62);--line:rgba(255,255,255,.16);--muted:#cdc4e6;--fg:#f7f3ff}
+body.stg .hdr{background:rgba(44,32,82,.78)}
+body.stg .foot{background:rgba(44,32,82,.84)}
+body.stg .sheet{background:#2a2046}
+body.stg .telop{filter:brightness(1.12)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -957,7 +976,21 @@ var GEN_LINES=['最後まで諦めません','家族に恩返しがしたい','�
 var HINT_LINES=['始めてまだ1年です。毎日うまくなっている実感があります','独学でここまで来ました。ちゃんと習ってみたい','先生に「伸びしろしかない」と言われました','去年まで部活一筋でした。体力なら誰にも負けません'];
 var SPEC={v:'歌',d:'ダンス',r:'ラップ',t:'ビジュアル'};
 var STATN={v:'歌',d:'ダンス',r:'ラップ',e:'表現',s:'体力'};
-var TEMPER={sunao:'素直',makezu:'負けず嫌い',sensai:'繊細'};
+var TEMPER={sunao:'素直',makezu:'負けず嫌い',sensai:'繊細',mypace:'マイペース',ochoshi:'お調子者'};
+/* 新しい気質の台詞が無い表は、近い気質の台詞を使う（マイペース→素直、お調子者→負けず嫌い） */
+var TBASE={mypace:'sunao',ochoshi:'makezu'};
+function addTemperX(){for(var k in REACT_X)REACT[k]=REACT_X[k];for(var k2 in PASSLINE_X)PASSLINE[k2]=PASSLINE_X[k2];for(var k3 in INTV_LINES_X)INTV_LINES[k3]=INTV_LINES_X[k3];
+  var M={'疲れ':{mypace:['「少し休んでから、またやります」と、さっさと横になった','自分の荷物を枕にして、昼寝をしていた'],ochoshi:['「疲れてないっす！」と言うが、あくびが止まらない','いつもの冗談に、キレがない']},
+    '不安':{mypace:['「……今日は、ちょっと考えたいです」と、ひとりで外に出た','いつもより口数が少ない'],ochoshi:['笑ってはいるが、目が笑っていない','「大丈夫っす」の声が、少し小さい']},
+    '浮かれ':{mypace:['いつも以上に、のんびり構えている','「なんとかなりますよ」と、練習を早めに切り上げた'],ochoshi:['「次も余裕っす！」と、みんなの前で宣言した','ふざけて踊って、先生ににらまれた']},
+    '絶好調':{mypace:['「最近、自分のペースがつかめてきました」','誰にも言わず、新しい振りを完成させていた'],ochoshi:['朝から歌いっぱなしで、ずっと楽しそうだ','練習室の空気を、ひとりで明るくしている']},
+    'ふつう':{mypace:['窓の外を見ながら、鼻歌を歌っている','「今日のレッスン、ちょうどよかったです」'],ochoshi:['「今日もいっちょやりますか！」','休憩中に、ものまねでみんなを笑わせている']}};
+  for(var m in M)for(var tp in M[m])if(MOODLINE[m]&&typeof MOODLINE[m]==='object'&&!Array.isArray(MOODLINE[m]))MOODLINE[m][tp]=M[m][tp];
+  FREE_REPLY.s.mypace=['「聞いてくれて、ありがとうございます」と、ゆっくり笑った','自分の好きなものの話を、楽しそうに続けた'];FREE_REPLY.s.ochoshi=['「でしょー！」と、話がどんどん広がった','気づけば、ほかの子まで集まってきていた'];
+  FREE_REPLY.h.mypace=['「なるほど。自分のやり方に足してみます」','少し考えてから、静かにうなずいた'];FREE_REPLY.h.ochoshi=['「えー、真面目な話ですか」と言いつつ、ちゃんと聞いていた','「やってみます！ ……たぶん」と笑った'];
+  FREE_REPLY.f.mypace=['くすっと笑って、しばらく黙って空を見ていた','「そういうの、好きです」'];FREE_REPLY.f.ochoshi=['倍の冗談で返してきて、ふたりで大笑いした','笑いすぎて、むせていた'];
+  REQREPLY.mypace='「話せてよかったです。あとは自分でやってみます」と、穏やかに笑った。';REQREPLY.ochoshi='「よし、元気出ました！」と、すぐにいつもの調子に戻った。';}
+function tpick(o,t){var k=typeof t==='string'?t:t&&t.temper;return o[k]!==undefined?o[k]:o[TBASE[k]];}
 /* 審査の型。書類審査のあと、4つを選んで並べる（最終審査は必ず最後）。g=飽きられやすさの系統、hype=盛り上がり */
 var FORMATS={
   spec:{t:'得意を披露',g:'solo',kind:'solo',w:'spec',crit:true,hype:1,song:'自由曲（得意を披露）',desc:'ひとりずつ得意分野を披露する。実力がそのまま出る。',good:'得意と表現がはっきり分かる',bad:'地味で、視聴率は伸びにくい'},
@@ -1021,7 +1054,7 @@ function genTrainee(id,used,g){
   var fz={}; for(k in st) fz[k]=grade(st[k]+(R()-.5)*18);
   var rev={v:0,d:0,r:0,e:0,s:0}; rev[key]=1; rev[vis2]=1;
   var popStar=clamp(Math.round((pop+(R()-.5)*12)/10)+1,1,5);
-  var tu=R(),temper=tu<.4?'sunao':tu<.7?'makezu':'sensai';
+  var tu=R(),temper=tu<.3?'sunao':tu<.52?'makezu':tu<.74?'sensai':tu<.87?'mypace':'ochoshi';
   return {id:id,fam:fam,giv:giv,name:fam+' '+giv,age:age,home:pick(PREF),spec:spec,
     line:(tier<.15&&R()<.7)?pick(HINT_LINES):R()<.8?pick(LINES[spec]):pick(GEN_LINES),st:st,pot:pot,charm:charm,pop:pop,fat:ri(0,12),
     conf:50,trust:40,temper:temper,temperRev:false,complacent:false,focus:null,
@@ -1226,13 +1259,14 @@ function normT(t){t.trust=clamp(t.trust,0,100);t.conf=clamp(t.conf,0,100);t.pop=
 function nextEvent(S){S.evRes=null;S.evIdx++;if(S.evIdx>=S.events.length){runStage(S);}}
 
 /* ---------- 面談 ---------- */
+var INTV_LINES_X={mypace:['周りが急いでいても、自分のペースでやりたいんです','焦ると、かえってうまくいかないので','ひとりで練習する時間が、いちばん伸びる気がします'],ochoshi:['盛り上げるのは得意です！ 本番はもっとやれます','カメラが回ると、なぜか調子が上がるんです','怒られると落ち込むので、ほめて伸ばしてください（笑）']};
 var INTV_LINES={
   sunao:['言われたことは全部やりたいです。何でも教えてください','最近、少しずつ自分の良さが分かってきました','先生に言われたことを、毎晩ノートにまとめています','ここに来てから、毎日が早く過ぎます','できないことが分かるのが、楽しくなってきました'],
   makezu:['正直、今の順番には納得していません。もっと上に行けます','ライバルがいるから頑張れています','次の審査、センターを狙っています','負けた日は眠れません。でも、それでいいと思ってます','点数が出るたびに、上の子の映像を見返しています'],
   sensai:['みんなが上手で、自分がここにいていいのか不安です','夜になると、失敗した場面を思い出してしまいます','本番の前は、ご飯がのどを通りません','うまくできた日も、次は駄目なんじゃないかって思ってしまいます','誰かにほめられると、少しだけ眠れるようになります']
 };
 var INTV_OPTS=[['期待している','自信が上がる'],['課題を正直に伝える','伸びるが、受け止め方は人それぞれ'],['無理しなくていい','疲れが抜ける']];
-function interviewLine(t){var L=INTV_LINES[t.temper].slice();if(t.arc&&t.arc.step>=1&&ARCS[t.arc.k])L.push(ARCS[t.arc.k].reason+'。それだけは、忘れないようにしています');var r=typeof S!=='undefined'&&S?S.rnd:0;return L[(t.id*3+r)%L.length];}
+function interviewLine(t){var L=tpick(INTV_LINES,t).slice();if(t.arc&&t.arc.step>=1&&ARCS[t.arc.k])L.push(ARCS[t.arc.k].reason+'。それだけは、忘れないようにしています');var r=typeof S!=='undefined'&&S?S.rnd:0;return L[(t.id*3+r)%L.length];}
 function applyInterview(S){
   alive(S).forEach(function(t){var c=S.interview[t.id]==null?0:S.interview[t.id];t.temperRev=true;
     if(c===0){t.conf+=t.temper==='sensai'?16:t.temper==='makezu'?6:10;t.trust+=6;}
@@ -1318,6 +1352,9 @@ function runStage(S){
 }
 /* ---------- 講評 ---------- */
 var CRIT=[['ほめる','自信が上がる'],['課題を伝える','次のレッスンで弱点が伸びやすい'],['厳しく言う','伸びるか、折れるか']];
+var REACT_X={
+  mypace:[['「そうですか」と、うれしそうに少しだけ笑った','「じゃあ、このままのやり方で行きます」'],['「なるほど。自分のペースで直してみます」','うなずいて、言われたところだけ何度か確かめた'],['「……急に言われても」と、少し困った顔をした','黙って聞いていたが、目が合わなかった']],
+  ochoshi:[['「でしょ！？ 自分でもそう思ってました！」','ガッツポーズをして、周りを笑わせた'],['「えー、そこですか？ ……分かりました、直します」','照れ笑いしながら、メモを取るふりをした'],['いつもの冗談が出ず、静かにうつむいた','「……はい」と言ったきり、すねたように黙った']]};
 var REACT={
   sunao:[['「ありがとうございます、もっと頑張ります！」','照れくさそうに笑って、何度も頭を下げた'],['「はい、そこを直します」','言われたことを、その場でメモに書き込んだ'],['しばらく黙って、「……はい」と答えた','「分かってはいたんです」と、小さく笑った']],
   makezu:[['「まだまだです」とすぐ練習室に戻った','「ほめられると、かえって落ち着かないです」'],['「次は絶対に見返します」','「そこ、自分でも気になってました」と即答した'],['目の色が変わった。「見ていてください」','黙って一礼し、その夜は最後まで練習室にいた']],
@@ -1326,12 +1363,12 @@ var REACT={
 function applyCritique(S){
   var out=[];
   alive(S).forEach(function(t){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id],tp=t.temper,pot=t.pot;
-    if(c===0){ if(tp==='makezu'){t.conf+=6;t.trust+=2;t.complacent=true;} else if(tp==='sensai'){t.conf+=15;t.trust+=6;} else {t.conf+=10;t.trust+=3;} }
+    if(c===0){ if(tp==='makezu'){t.conf+=6;t.trust+=2;t.complacent=true;} else if(tp==='ochoshi'){t.conf+=12;t.trust+=4;if(R()<.5)t.complacent=true;} else if(tp==='sensai'){t.conf+=15;t.trust+=6;} else {t.conf+=10;t.trust+=3;} }
     else if(c===1){ var k=weakest(t);t.focus=k;t.st[k]=Math.min(99,t.st[k]+2*pot);t.conf+=tp==='makezu'?3:tp==='sensai'?-5:-1;t.trust+=tp==='sensai'?2:5; }
     else { var g=tp==='makezu'?3:tp==='sunao'?1.5:1;['v','d','r','e'].forEach(function(k){t.st[k]=Math.min(99,t.st[k]+g*pot);});
-      if(tp==='makezu'){t.conf+=6;t.trust+=2;} else if(tp==='sunao'){t.conf-=6;t.trust-=3;} else {t.conf-=16;t.trust-=8;} }
+      if(tp==='makezu'){t.conf+=6;t.trust+=2;} else if(tp==='sunao'){t.conf-=6;t.trust-=3;} else if(tp==='mypace'){t.conf-=8;t.trust-=8;} else if(tp==='ochoshi'){t.conf-=10;t.trust-=4;} else {t.conf-=16;t.trust-=8;} }
     normT(t);
-    var rx=pick(REACT[tp][c]);out.push({id:t.id,txt:rx,c:c});logT(S,t,'講評「'+CRIT[c][0]+'」→ '+rx);
+    var rx=pick(tpick(REACT,tp)[c]);out.push({id:t.id,txt:rx,c:c});logT(S,t,'講評「'+CRIT[c][0]+'」→ '+rx);
     t.temperRev=true;
   });
   S.critRes=out;S.critDone=true;
@@ -1369,7 +1406,7 @@ function decide(S){
   var order=shuffle(passed.map(function(t){return t.id;}));
   S.call={order:order,failed:failed.map(function(t){return t.id;}),n:0,done:false,angry:ang};
   makeRecap(S);makeStory(S,passed,failed,pr);
-  S.call.lines={};passed.forEach(function(t){S.call.lines[t.id]=t.bg&&t.bg.habit&&R()<.25?t.bg.habit+'——いつもの口癖が、震える声でこぼれた':pick(PASSLINE[t.temper]);});checkGoalsDecide(S);
+  S.call.lines={};passed.forEach(function(t){S.call.lines[t.id]=t.bg&&t.bg.habit&&R()<.25?t.bg.habit+'——いつもの口癖が、震える声でこぼれた':pick(tpick(PASSLINE,t));});checkGoalsDecide(S);
   S.comments=makeComments(S,cm);
   S.comments.forEach(function(x){S.tr.forEach(function(t){if(x.t.indexOf(t.giv+hon(S))>=0){t.voices.push(x.t);if(t.voices.length>4)t.voices.shift();}});});
   S.history.push({rnd:S.rnd,passed:passed.length,failed:failed.length,angry:ang});
@@ -1557,7 +1594,7 @@ function roomUp(S){ /* 合宿に入るときの部屋割り（2人部屋） */
 }
 function logT(S,t,txt){if(!t.log)t.log=[];t.log.push({r:S.rnd,t:txt});if(t.log.length>30)t.log.shift();}
 function critDefault(t){return 1;}
-function critBest(t){if(!t.temperRev)return -1;return t.temper==='sensai'?0:t.temper==='makezu'?2:1;}
+function critBest(t){if(!t.temperRev)return -1;return t.temper==='sensai'||t.temper==='ochoshi'?0:t.temper==='makezu'?2:1;}
 function arcText(S,t,s){var p=t.arc&&t.arc.p!=null?S.tr[t.arc.p]:null;
   return s.replace(/\{N\}/g,t.giv).replace(/\{P\}/g,p?p.giv:'あの子').replace(/\{H\}/g,t.home);}
 function applyFx(S,t,fx){
@@ -1615,7 +1652,7 @@ var ACTS=[
   {k:'off',n:'休みの日を作る',cost:0,d:'全員の疲れが大きく抜ける。練習枠が2つ減る'}
 ];
 function actCost(S){var c=0;ACTS.forEach(function(a){if(S.plan.acts[a.k])c+=a.cost;});return c;}
-function applyPlan(S){
+function applyPlan(S){if(S.plan&&!S.plan.teams&&roundFmt(S).g==='solo')S.plan.center=null;
   var P=S.plan,A=alive(S);
   if(S.centerPromise!=null){var cp=S.tr[S.centerPromise];if(cp.status==='alive'&&!isCenter(S,cp.id)){cp.trust-=12;cp.conf-=6;normT(cp);logT(S,cp,'約束していたセンターを任されなかった');S.notes.push([cp.giv+hon(S)+'、センターの約束はどうなったの？',1]);}S.centerPromise=null;}
   S.budget-=actCost(S);
@@ -1695,7 +1732,7 @@ var MOODLINE={
            makezu:['「もう一回だけ通していいですか」','ほかの子の点数を、さりげなく気にしている','「次の課題、早く知りたいです」'],
            sensai:['「……がんばります」と、小さな声で言った','練習ノートに、細かい字で何か書きこんでいる','ほかの子が帰ったあと、静かに振りを確かめていた']}
 };
-function moodLine(t){var L=MOODLINE[moodOf(t)];if(typeof L!=='string'&&!Array.isArray(L))L=L[t.temper];if(Array.isArray(L))L=L[(t.id*7+(typeof S!=='undefined'&&S?S.rnd:0))%L.length];return L;}
+function moodLine(t){var L=MOODLINE[moodOf(t)];if(typeof L!=='string'&&!Array.isArray(L))L=tpick(L,t);if(Array.isArray(L))L=L[(t.id*7+(typeof S!=='undefined'&&S?S.rnd:0))%L.length];return L;}
 function addAlbum(S,t,title,txt){S.album.push({id:t.id,r:S.rnd,title:title,t:txt});}
 function goalText(S,t){return GOALS[t.goal].replace('{P}',t.goalP!=null?S.tr[t.goalP].giv:'仲間');}
 function goalHit(S,t,why){if(t.goalDone)return;if(R()<.5)gainTrait(S,t,'目標をかなえた');t.goalDone=true;t.goalRev=true;t.conf+=10;t.trust+=6;normT(t);logT(S,t,'目標「'+goalText(S,t)+'」をかなえた');addAlbum(S,t,'目標達成',why);}
@@ -1782,11 +1819,12 @@ function answerReq(S,qi,ci){var q=S.reqs[qi],t=S.tr[q.id],c=REQS[q.type].ch[ci],
   if(c[3]==='center'){S.centerReq=t.id;extra='次の審査のセンターは'+t.giv+'に決まった。'+extra;}
   if(c[3]==='earn'){if(t.temper==='makezu'){t.conf+=6;var k=t.spec==='t'?'e':t.spec;t.st[k]=Math.min(99,t.st[k]+2*t.pot);extra='「分かりました。奪い取ります」と目が燃えた。';}else{t.conf-=4;extra='「……はい」と、少し肩を落とした。';}}
   if(c[3]==='ptrust'&&q.p!=null){var p=S.tr[q.p];p.trust+=6;normT(p);extra='ふたりは廊下で長いこと話していた。';}
-  normT(t);q.done=true;q.ci=ci;q.res=(extra||REQREPLY[t.temper])+(sfx?' '+sfx:'');q.delta=deltaOf(b,t);logT(S,t,'相談に乗った：'+reqText(S,q,c[0]));}
+  normT(t);q.done=true;q.ci=ci;q.res=(extra||tpick(REQREPLY,t))+(sfx?' '+sfx:'');q.delta=deltaOf(b,t);logT(S,t,'相談に乗った：'+reqText(S,q,c[0]));}
 function endTalk(S){(S.reqs||[]).forEach(function(q){if(!q.done){var t=S.tr[q.id];t.trust-=4;normT(t);logT(S,t,'相談に来たが、話を聞いてもらえなかった');}});}
 /* 発表のひと言 */
+var PASSLINE_X={mypace:['「あ、呼ばれた」と、少し遅れて立ち上がった','深呼吸をひとつしてから、ゆっくりおじぎをした'],ochoshi:['「よっしゃー！」と叫んで、先生に笑われた','両手を振って、客席に投げキスをした']};
 var PASSLINE={sunao:['「ありがとうございます！」と深く頭を下げた','泣きながら何度もうなずいた','隣の子と抱き合って跳びはねた','「家族に早く伝えたいです」と笑った'],makezu:['「まだ通過点です」と言ったが、声が震えていた','小さく拳を握った','「当然です」と言いかけて、涙がこぼれた','落ちた子のほうを見て、黙って頭を下げた'],sensai:['しばらく声が出ず、両手で顔をおおった','信じられないという顔で立ち尽くした','名前を呼ばれても、しばらく動けなかった','「夢じゃないですよね」と何度も確かめた']};
-function lastWords(t){if(t.trust>=60)return {sunao:['「ここまで来られたのは、プロデューサーのおかげです」','「最後まで見てくれて、ありがとうございました」'],makezu:['「次は、もっと上で会いましょう」','「見ててくれたこと、忘れません」'],sensai:['「ここに来られて、本当によかったです」','「声をかけてもらえたから、最後まで立てました」']}[t.temper][t.id%2];return {sunao:'「悔しいけど、楽しかったです」',makezu:'「次に会うときは、もっと上にいます」',sensai:'「……ありがとうございました」と、最後まで笑顔でいようとした'}[t.temper];}
+function lastWords(t){if(t.trust>=60)return tpick({sunao:['「ここまで来られたのは、プロデューサーのおかげです」','「最後まで見てくれて、ありがとうございました」'],makezu:['「次は、もっと上で会いましょう」','「見ててくれたこと、忘れません」'],sensai:['「ここに来られて、本当によかったです」','「声をかけてもらえたから、最後まで立てました」']},t)[t.id%2];return tpick({sunao:'「悔しいけど、楽しかったです」',makezu:'「次に会うときは、もっと上にいます」',sensai:'「……ありがとうございました」と、最後まで笑顔でいようとした'},t);}
 var FWREPLY=[{sunao:'「はい。胸を張って帰ります」',makezu:'「誇れるように、ここからまた積みます」',sensai:'涙をこらえて、深く頭を下げた'},{sunao:'「忘れないように、書いておきます」',makezu:'「次までに全部直してきます」',sensai:'何度もうなずきながら、手帳に書き込んだ'},{sunao:'「約束ですよ」と笑った',makezu:'「そのときは、こっちから会いに行きます」',sensai:'「……また、会えますか」と小さく聞いた'}];
 
 /* ---------- ステージ本番（v5） ---------- */
@@ -1944,8 +1982,10 @@ var TONE_MOD={
   a:{sunao:[{conf:-2},''],makezu:[{conf:3},''],sensai:[{conf:-7},'放送のあと、しばらく元気がなかった。']},
   f:{sunao:[{conf:-2},''],makezu:[{conf:4},'任されたのがうれしそうだった。'],sensai:[{trust:-5},'「放っておかれた」と感じたようだ。']}
 };
+TONE_MOD.s.mypace=[{trust:2},''];TONE_MOD.h.mypace=[{trust:-5},'急かされて、少しむっとしていた。'];TONE_MOD.a.mypace=[{conf:-4},'カメラを向けられて、居心地が悪そうだった。'];TONE_MOD.f.mypace=[{conf:5,trust:3},'自分のペースで進められて、生き生きしていた。'];
+TONE_MOD.s.ochoshi=[{conf:3,cmp:1},'調子に乗って、少し気がゆるんだ。'];TONE_MOD.h.ochoshi=[{conf:-5,trust:-3},'すねて、しばらく口をきかなかった。'];TONE_MOD.a.ochoshi=[{conf:6},'カメラの前で、いつも以上にはしゃいだ。'];TONE_MOD.f.ochoshi=[{conf:2,cmp:1},'「任せてください！」と胸を張ったが、少し浮かれている。'];
 function withCost(fx){var o={};for(var k in fx)o[k]=fx[k];if((o.spec||o.up)&&!o.fat)o.fat=6;return o;}
-function applyTone(S,t,tone){if(!tone||!TONE_MOD[tone])return '';var m=TONE_MOD[tone][t.temper],fx=m[0];
+function applyTone(S,t,tone){if(!tone||!TONE_MOD[tone])return '';var m=tpick(TONE_MOD[tone],t),fx=m[0];
   if(fx.conf)t.conf+=fx.conf;if(fx.trust)t.trust+=fx.trust;if(fx.cmp&&R()<.5)t.complacent=true;
   if(fx.spec){var k=t.spec==='t'?'e':t.spec;t.st[k]=Math.min(99,t.st[k]+fx.spec*t.pot);}
   if(tone==='a'){S.showTrust=clamp(S.showTrust-.5,0,100);}
@@ -2118,7 +2158,7 @@ function makeRecap(S){var A=S.tr.filter(function(t){return t.snap&&(t.status==='
   S.recap={grow:grow,down:down,fit:fit,next:nx&&!ROUNDS[S.rnd].fin?nx.name:null};}
 
 
-var AP_MAX=4;
+var AP_MAX=6;
 /* ふたりと話す：関係のある2人を呼んで話す（1回ぶん）。ライバルは「戦友」に変わることがある */
 var PAIR_LINES={old:['昔の話で、ふたりとも笑いが止まらなかった。','「小さいころから、ずっとこうなんです」と顔を見合わせた。'],
   room:['夜の部屋での話をこっそり教えてくれた。','「寝る前に、毎晩振りを確認し合ってるんです」'],
@@ -2256,10 +2296,10 @@ function initBg(t){t.bg={start:pick(BG_START),past:pick(BG_PAST),family:pick(BG_
 var DREAMS=['地元の大きな会場でライブをする','家族を一番前の席に招待する','自分で作った曲を歌う','海外でステージに立つ','誰かの「元気の出る曲」を歌う','メンバー全員で旅行に行く','ドラマの主題歌を歌う','おばあちゃんの町でライブをする','ファンの名前を全部覚える','10年後もこのメンバーで歌う'];
 var CAMP_LINES=['「合宿のごはん、量が多くてびっくりしました」','「夜、同室の子と振りを確認するのが日課です」','「朝のストレッチ、まだ体が固くて」','「洗濯の順番待ちで、いつも誰かと話しちゃうんです」','「消灯のあと、こっそり歌詞を覚えてます」','「食堂のカレーの日が、いちばんの楽しみです」','「鏡の前に立つ時間が、ここに来て倍になりました」','「シャワーの時間が短くて、毎日戦いです」','「休みの日は、みんなで近くの公園に行きました」','「ここに来てから、早寝早起きになりました」','「合宿所の階段、毎日上るだけでいい運動です」','「売店のアイスを、先生に内緒で分け合いました」'];
 function stageTalk(t){var lh=t.hist.length?t.hist[t.hist.length-1]:null,h=lh?lh.sc:null;if(h==null)return null;
-  if(lh.rest)return {sunao:'「この前は休んでしまって……次は必ず出ます」',makezu:'「客席から見てるだけなのが、いちばん悔しかったです」',sensai:'「休んでいるあいだ、置いていかれる気がして怖かったです」'}[t.temper];
-  if(h>=85)return {sunao:'「この前のステージ、自分でも初めて手応えがありました」',makezu:'「この前の点数、まだ上があると思ってます」',sensai:'「この前のステージ……良かったって言ってもらえて、まだ信じられないです」'}[t.temper];
-  if(h>=60)return {sunao:'「この前は悪くなかったけど、もっとできた気がします」',makezu:'「真ん中くらいじゃ満足できません」',sensai:'「この前のステージ、途中で一瞬、頭が真っ白になりました」'}[t.temper];
-  return {sunao:'「この前のステージ、悔しくて眠れませんでした」',makezu:'「あの点数は、次で必ず取り返します」',sensai:'「この前のステージのこと、まだ思い出すと苦しいです」'}[t.temper];}
+  if(lh.rest)return tpick({sunao:'「この前は休んでしまって……次は必ず出ます」',makezu:'「客席から見てるだけなのが、いちばん悔しかったです」',sensai:'「休んでいるあいだ、置いていかれる気がして怖かったです」'},t);
+  if(h>=85)return tpick({sunao:'「この前のステージ、自分でも初めて手応えがありました」',makezu:'「この前の点数、まだ上があると思ってます」',sensai:'「この前のステージ……良かったって言ってもらえて、まだ信じられないです」'},t);
+  if(h>=60)return tpick({sunao:'「この前は悪くなかったけど、もっとできた気がします」',makezu:'「真ん中くらいじゃ満足できません」',sensai:'「この前のステージ、途中で一瞬、頭が真っ白になりました」'},t);
+  return tpick({sunao:'「この前のステージ、悔しくて眠れませんでした」',makezu:'「あの点数は、次で必ず取り返します」',sensai:'「この前のステージのこと、まだ思い出すと苦しいです」'},t);}
 function producerTalk(t){return ['「……プロデューサーさんと話すの、まだちょっと緊張します」','「最近、話しかけてもらえるのがうれしいです」','「プロデューサーさんには、何でも話せる気がします」','「ここに来て、いちばん話してる大人はプロデューサーさんかもしれません」'][tierOf(t)];}
 function relTalk(S,t){var rs=relsOf(S,t.id).filter(function(r){return S.tr[r.o].status==='alive';});if(!rs.length)return null;var r=pick(rs),o=S.tr[r.o],rk=r.k==='senpai'&&r.n==='慕ってくれる後輩'?'kohai':r.k;
   var L={kohai:['「'+o.giv+'が、こっそり私の振りを真似してるんです。気づいてないふりをしてます」','「'+o.giv+'にひとこと言ったら、次の日にはもう直してきました」'],old:['「'+o.giv+'とは小さいころからずっと一緒なんです。ケンカもたくさんしました」','「'+o.giv+'がいると、つい地元の言葉が出ちゃいます」'],
@@ -2300,11 +2340,12 @@ var FREE_REPLY={
   f:{sunao:['声を出して笑った。場の空気が明るくなった。','「プロデューサーさん、面白いですね」と笑った。','笑いすぎて、涙をふいていた。','「その話、みんなにもしていいですか」と目を輝かせた。'],
      makezu:['「ふざけないでくださいよ」と言いつつ、口元が笑っている。','笑ったあと、「で、真面目な話ですけど」と続けた。','「……今の、ちょっと面白かったです」と認めた。','負けじと冗談を返してきて、ふたりで笑った。'],
      sensai:['少し間があってから、くすっと笑った。','「……笑っていいんですか」と言って、それから笑った。','緊張がほどけたように、声を出して笑った。','「そういう話し方、助かります」と小さく言った。']}};
+addTemperX();
 function freeChoose(S,i){var t=S.tr[S.talk.id],b=snapT(t),tone=FREE_CH[i][1],tp=t.temper;
   if(tone==='s'){t.trust+=3;if(tp==='sensai')t.conf+=3;if(tp==='makezu')t.fat+=2;}
   else if(tone==='h'){var k=weakest(t);t.st[k]=Math.min(99,t.st[k]+1.5*t.pot);t.focus=t.focus||k;if(tp==='sensai'){t.conf-=4;}else if(tp==='makezu'){t.conf+=4;}else t.trust+=2;}
   else{t.conf+=2;t.fat=Math.max(0,t.fat-4);if(tp==='makezu')t.trust-=2;else t.trust+=2;}
-  normT(t);S.talk.res=pick(FREE_REPLY[tone][tp])+(S.talk.tm||'');S.talk.delta=deltaOf(b,t);logT(S,t,'話を聞いた：'+FREE_CH[i][0]);}
+  normT(t);S.talk.res=pick(tpick(FREE_REPLY[tone],tp))+(S.talk.tm||'');S.talk.delta=deltaOf(b,t);logT(S,t,'話を聞いた：'+FREE_CH[i][0]);}
 
 /* 相談を4種追加（合計10種） */
 REQS.sleep={t:['「最近、夜になると眠れなくて」','「目を閉じると、本番の場面が浮かぶんです」','「夜中に何度も目が覚めてしまって」'],ch:[['眠れるまで話を聞く','信頼が上がり、疲れが少し抜ける',{trust:8,fat:-6}],['今夜は早く寝るよう言う','疲れが抜けるが、本人は物足りない',{fat:-12,trust:-2}]]};
@@ -2846,7 +2887,7 @@ function toneCost(fx,tone){if(fxHasCost(fx))return;
   for(var q in REQS)REQS[q].ch.forEach(function(c,i){if(!c[3]&&!fxHasCost(withCost(c[2])))toneCost(c[2],REQ_TONE[q].charAt(i));});
 })();
 /* 気質が分かっている子には、語りかけの種類による効き方も札に出す */
-function toneParts(t,tone){if(!t||!t.temperRev||!TONE_MOD[tone])return [];var fx=TONE_MOD[tone][t.temper][0],p=[];
+function toneParts(t,tone){if(!t||!t.temperRev||!TONE_MOD[tone])return [];var fx=tpick(TONE_MOD[tone],t)[0],p=[];
   if(fx.conf)p.push(['気質で 自信'+(fx.conf>0?'↑':'↓'),fx.conf>0]);if(fx.trust)p.push(['気質で 信頼'+(fx.trust>0?'↑':'↓'),fx.trust>0]);
   if(fx.spec)p.push(['気質で 得意↑',1]);if(fx.cmp)p.push(['気質で 油断しやすい',0]);return p;}
 
@@ -3032,10 +3073,14 @@ function render0(){
   else if(S&&S.bursts&&S.bursts.length){h+=burstBox();if(ui.lastBurst!==S.bursts.length+':'+S.bursts[0].title){ui.lastBurst=S.bursts.length+':'+S.bursts[0].title;setTimeout(function(){sfx('fan');haptic('success');},60);}}
   if(ui.toast)h+='<div class="apptoast" role="status">'+esc(ui.toast)+'</div>';
   if(ui.adWait)h+='<div class="adwait"><div>動画を読み込んでいます…<br><button class="btn-s" data-a="adcancel" style="margin-top:12px">やめる</button></div></div>';
-  $('#app').innerHTML=h;
+  var tmp=document.createElement('div');tmp.innerHTML=h;
   /* 進むボタンは、どの画面でも下の固定の帯に置く（スクロールしなくても押せる） */
-  try{if(!document.querySelector('#app .foot')){var mv=document.querySelector('#app .btn[data-a=evnext],#app .btn[data-a=tocrit],#app .btn[data-a=tojudge],#app .btn[data-a=nightok],#app .btn[data-a=nextround],#app .btn[data-a=toprep],#app .btn[data-a=talkback]');
-    if(mv&&!mv.closest('.ov,.sheet,.burst,.ending')){var ft=document.createElement('div');ft.className='foot';ft.innerHTML='<div class="in"></div>';mv.style.flex='1';ft.firstChild.appendChild(mv);document.querySelector('#app').appendChild(ft);}}}catch(e){}
+  try{if(!tmp.querySelector('.foot')){var mv=tmp.querySelector('.btn[data-a=evnext],.btn[data-a=tocrit],.btn[data-a=tojudge],.btn[data-a=nightok],.btn[data-a=nextround],.btn[data-a=toprep],.btn[data-a=talkback]');
+    if(mv&&!mv.closest('.ov,.sheet,.burst,.ending')){var ft=document.createElement('div');ft.className='foot';ft.innerHTML='<div class="in"></div>';mv.style.flex='1';ft.firstChild.appendChild(mv);tmp.appendChild(ft);}}}catch(e){}
+  /* 2026-10-04 指摘「操作するたびに画面の読み込み直しがある」：場面が替わったときだけ作り直し、同じ場面では差分だけ直す */
+  var app=$('#app'),sk=sceneKey();
+  if(sk!==ui.sceneK||!app.firstChild||!app.morph){app.innerHTML=tmp.innerHTML;ui.sceneK=sk;app.morph=true;}
+  else{try{morphKids(app,tmp);}catch(e){app.innerHTML=tmp.innerHTML;}}
   try{syncBgm();setTimeout(autoSay,120);}catch(e){}
   try{enterAnim();typeLine();countUp();hudAnim();}catch(e){}
   try{document.querySelectorAll('#app button.on,#app .chip.on').forEach(function(b){b.setAttribute('aria-pressed','true');});document.querySelectorAll('#app .ov,#app .burst,#app .ending').forEach(function(d){d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');});}catch(e){}
@@ -3045,6 +3090,23 @@ function render0(){
   if(S&&S.phase==='show'&&S.show&&S.show.seq&&ui.showAuto&&ui.prof==null){showTimer=setTimeout(function(){showTimer=null;if(!S||S.phase!=='show'||!ui.showAuto)return;if(S.show.pos>=S.show.seq.length-1)S.phase='stage';else S.show.pos++;save();render();window.scrollTo(0,0);},ui.showMs||6000);}
 }
 var showTimer=null;
+function sceneKey(){if(!S)return 'title:'+(ui.tsub||'')+(ui.settings?'S':'')+(ui.gloss?'G':'');
+  return [S.phase,S.rnd,S.talk?S.talk.id+':'+(S.talk.kind||'')+(S.talk.res?'r':''):'',S.sub?S.sub.kind+S.sub.id:'',S.evIdx||0,S.evRes?'r':'',S.show&&S.show.seq?S.show.pos:'',S.call?S.call.n+(S.call.done?'d':''):'',S.month?S.month.w:'',S.ending?'e':'',ui.prof!=null?'P'+ui.prof:'',ui.settings?'S':'',ui.gloss?'G':'',S.critDone?'c':'',S.bursts&&S.bursts.length?'b'+S.bursts.length:''].join('|');}
+/* 差分で直す：同じ形の要素は残して、属性・文字だけ合わせる。画像は src が同じなら触らない */
+var MORPH_KEEP={'data-done':1,'data-full':1};
+function morphKids(a,b){var bn=b.childNodes,i=0;
+  for(;i<bn.length;i++){var x=a.childNodes[i],y=bn[i];if(!x){a.appendChild(y.cloneNode(true));continue;}morphNode(a,x,y);}
+  while(a.childNodes.length>bn.length)a.removeChild(a.lastChild);}
+function morphNode(p,x,y){
+  if(x.nodeType!==y.nodeType||x.nodeName!==y.nodeName||(x.nodeType===1&&x.getAttribute('data-k')!==y.getAttribute('data-k'))){p.replaceChild(y.cloneNode(true),x);return;}
+  if(x.nodeType===3||x.nodeType===8){if(x.nodeValue!==y.nodeValue)x.nodeValue=y.nodeValue;return;}
+  if(x.nodeType!==1)return;
+  var ya=y.attributes,i;for(i=0;i<ya.length;i++){var n=ya[i].name,v=ya[i].value;if(x.getAttribute(n)!==v)x.setAttribute(n,v);}
+  var xa=x.attributes;for(i=xa.length-1;i>=0;i--){var nm=xa[i].name;if(!y.hasAttribute(nm)&&!MORPH_KEEP[nm]&&!(nm==='class'&&x.classList.contains('typing')))x.removeAttribute(nm);}
+  if(x.nodeName==='IMG')return;
+  morphKids(x,y);
+  if(x.nodeName==='SELECT'||x.nodeName==='INPUT'||x.nodeName==='TEXTAREA'){if(x.value!==y.value)x.value=y.value;}
+  if(x.nodeName==='DETAILS'){x.open=y.hasAttribute('open');}}
 /* タイトル（2026-10-03 指摘「TOP画面がしょぼい」）：全面の写真・大きな題字・七つの席・メニューだけ。
    シーズンの設定は「新しいシーズン」、記録と今日のオーディションは「記録」の画面へ分けた */
 function vTitle(){
@@ -3127,8 +3189,8 @@ function vLesson(){
   A.forEach(function(t){
     var k=(S.lesson.train[t.id]||[])[0],sp=!!(S.lesson.sp&&S.lesson.sp[t.id]),fc=t.fat>=80?'var(--bad)':t.fat>=60?'var(--gold)':'var(--muted)';
     h+='<div class="lrow lk-'+(k||'none')+'"><div class="lt">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+(t.focus?' <span class="tag lt">課題：'+STATN[t.focus]+'</span>':'')+traitTags(t)+'</div>'+statMini(t,true)+'</div>';
-    h+='<div class="lsel"><select data-a="trsel" data-id="'+t.id+'" aria-label="'+esc(t.giv)+'のレッスン">'+[['v','歌'],['d','ダンス'],['r','ラップ'],['e','表現'],['rest','休養']].map(function(a){return '<option value="'+a[0]+'"'+(k===a[0]?' selected':'')+'>'+a[1]+'</option>';}).join('')+'</select>'+
-      '<button class="spb'+(sp?' on':'')+'" data-a="sp" data-id="'+t.id+'" '+(k==='rest'||(!sp&&used>=sl)?'disabled':'')+'>特訓'+(sp?' ✓':'')+'</button></div></div>';
+    h+='<div class="lpick" role="group" aria-label="'+esc(t.giv)+'のレッスン">'+[['v','歌'],['d','ダンス'],['r','ラップ'],['e','表現'],['rest','休養']].map(function(a){return '<button class="lp lp-'+a[0]+(k===a[0]?' on':'')+'" data-a="trpick" data-id="'+t.id+'" data-v="'+a[0]+'" aria-pressed="'+(k===a[0])+'">'+a[1]+'</button>';}).join('')+
+      '<button class="spb'+(sp?' on':'')+'" data-a="sp" data-id="'+t.id+'" '+(k==='rest'||(!sp&&used>=sl)?'disabled':'')+'>特訓'+(sp?' ✓':'')+'</button></div></div></div>';
     if(f.kind==='pos'){var p=S.lesson.pos[t.id];h+='<div class="posr"><span class="muted">担当</span>';[['v','歌','pv'],['d','ダンス','pd'],['r','ラップ','pr']].forEach(function(a){h+='<button class="'+a[2]+' '+(p===a[0]?'on':'')+'" data-a="pos" data-id="'+t.id+'" data-v="'+a[0]+'">'+a[1]+'</button>';});h+='</div>';}
     h+='</div>';
   });
@@ -3237,7 +3299,7 @@ function vCall(){
   if(c.failed.length){
     h+='<h3>'+(f.fin?'今回はデビューしない子へ':'不合格の子へ')+'ひと言</h3>';
     c.failed.forEach(function(id){var t=S.tr[id],v=S.farewell[id]==null?0:S.farewell[id];
-      h+='<div class="call out">'+face(t,'md dim')+'<div class="who"><div class="nm">'+esc(t.name)+'</div><div class="small" data-a="say" data-id="'+t.id+'">'+sayIcon(lastWords(t))+esc(lastWords(t))+'</div><div class="acts c3" style="margin-top:4px">'+FAREWELL.map(function(o2,i2){return '<button class="'+(v===i2?'on':'')+'" data-a="fw" data-id="'+id+'" data-v="'+i2+'">'+o2[0]+'</button>';}).join('')+'</div>'+(S.farewell[id]!=null?'<div class="react">'+esc(FWREPLY[S.farewell[id]][t.temper])+'</div>':'')+'</div></div>';});
+      h+='<div class="call out">'+face(t,'md dim')+'<div class="who"><div class="nm">'+esc(t.name)+'</div><div class="small" data-a="say" data-id="'+t.id+'">'+sayIcon(lastWords(t))+esc(lastWords(t))+'</div><div class="acts c3" style="margin-top:4px">'+FAREWELL.map(function(o2,i2){return '<button class="'+(v===i2?'on':'')+'" data-a="fw" data-id="'+id+'" data-v="'+i2+'">'+o2[0]+'</button>';}).join('')+'</div>'+(S.farewell[id]!=null?'<div class="react">'+esc(tpick(FWREPLY[S.farewell[id]],t))+'</div>':'')+'</div></div>';});
   }
   var R_=S.ratings,cur=R_[R_.length-1],pv=R_.length>1?R_[R_.length-2]:null;
   h+='<div class="card"><div class="kv"><span>今回の視聴率</span><b>'+cur.toFixed(1)+'%'+(pv!==null?' <span style="color:'+(cur>=pv?'var(--ok)':'var(--bad)')+'">'+(cur>=pv?'▲':'▼')+Math.abs(cur-pv).toFixed(1)+'</span>':'')+'</b></div><div class="kv"><span>番組への信頼</span><b>'+Math.round(S.showTrust)+'</b></div>'+(c.angry?'<div class="kv"><span>荒れた書き込み</span><b style="color:var(--bad)">人気の子の不合格 '+c.angry+'人</b></div>':'')+'</div>';
@@ -3305,7 +3367,7 @@ function vPlan(){
   h+='<div class="budget"><span>制作費</span><span>'+yen(S.budget)+(cost?' <span class="muted">→ 使うと残り '+(S.budget-cost)+'万</span>':'')+'</span></div>';
   var C=P.teams?null:ROUNDS[S.rnd].concepts;
   if(C){h+='<h3>曲とコンセプト</h3><div class="filters">'+C.map(function(c,i){return '<button class="chip '+(P.concept===i?'on':'')+'" data-a="concept" data-v="'+i+'">'+c.n+'</button>';}).join('')+'</div><p class="small muted">見られる力：'+wText(f)+'</p>';}
-  if(S.rnd>=2&&!P.teams){h+='<h3>センター</h3><p class="small muted">センターはステージが少し映える。中位より上の出来なら人気と自信が上がり、下回ると自信を失う。</p><div class="pickrow">';
+  if(S.rnd>=2&&!P.teams&&roundFmt(S).g!=='solo'){h+='<h3>センター</h3><p class="small muted">センターはステージが少し映える。中位より上の出来なら人気と自信が上がり、下回ると自信を失う。</p><div class="pickrow">';
     A.forEach(function(t){h+='<button class="pk '+(P.center===t.id?'on':'')+'" data-a="center" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span>'+pkStat(t)+'<em>前回'+(t.lastP||'-')+'</em></button>';});h+='</div>';}
   if(P.teams){h+='<h3>チーム編成</h3><p class="small muted">チームごとに曲（コンセプト）とセンターを決めます。メンバーを1人押してから、別のチームの子を押すと入れ替わります。「ここへ移す」で人数も変えられます（3〜5人）。仲の良い子が同じチームだと息が合い、ライバル同士だと張り合います。</p>';
     h+='<div class="tbtns"><span class="small muted">おまかせで組む：</span><button class="btn-s" data-a="tauto" data-v="even">実力を均等に</button><button class="btn-s" data-a="tauto" data-v="bond">仲の良い子で</button><button class="btn-s" data-a="tauto" data-v="fit">曲に合う子で</button></div>';
@@ -3731,7 +3793,7 @@ var GLOSSARY=[
   ['信頼','あなたへの信頼。80で本音を聞ける。高い子が多いとグループがまとまる'],
   ['人気','世間の人気。合否には使わないが、人気の子を落とすと番組が荒れる'],
   ['疲れ','たまるとステージの出来が落ち、80を超えるとけがをすることがある。休養で抜ける'],
-  ['気質','素直・負けず嫌い・繊細。語りかけ（寄り添う・厳しく・任せる・放送で見せる）の効き方が変わる'],
+  ['気質','素直・負けず嫌い・繊細・マイペース・お調子者。語りかけ（寄り添う・厳しく・任せる・放送で見せる）の効き方が変わる。マイペースは任せると伸び、急かされるのが苦手。お調子者は放送で見せると乗り、ほめると油断し、厳しくするとすねる'],
   ['特性','その子だけの強みと弱み。出来事・本音・目標で身につき、悪いものは克服できる。金色は覚醒の証'],
   ['ひとりの物語','その子が番組に来た理由をめぐる3つの場面。正しく支えきると覚醒する'],
   ['相性と絆','ふたりごとの相性（◎○△）と絆（0〜100）。絆が深まると「ふたりの物語」が進み、息が合えばコンビになる'],
@@ -3962,6 +4024,7 @@ document.addEventListener('click',function(ev){
     case 'monthdone':go(function(){finishMonth(S);});window.scrollTo(0,0);break;
     case 'week':go(function(){weekDo(S,v);});window.scrollTo(0,0);break;
     case 'tr':go(function(){S.lesson.train[id]=[v];if(v==='rest'&&S.lesson.sp)delete S.lesson.sp[id];});break;
+    case 'trpick':go(function(){S.lesson.train[id]=[v];if(v==='rest'&&S.lesson.sp)delete S.lesson.sp[id];});break;
     case 'sp':go(function(){if(!S.lesson.sp)S.lesson.sp={};if(S.lesson.sp[id]){delete S.lesson.sp[id];return;}if((S.lesson.train[id]||[])[0]==='rest'||usedSlots(S)>=slotsOf(S))return;S.lesson.sp[id]=true;});break;
     case 'pos':go(function(){S.lesson.pos[id]=v;});break;
     case 'adslot':if(S.adUsed)break;withAd(function(){go(function(){S.extra=1;S.adUsed=true;});});break;
