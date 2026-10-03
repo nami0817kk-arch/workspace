@@ -876,6 +876,31 @@ body.reduce .pd,body.reduce .hudc{animation:none}@media (prefers-reduced-motion:
 .newu:nth-child(3){animation-delay:.1s}.newu:nth-child(4){animation-delay:.2s}.newu:nth-child(5){animation-delay:.3s}
 body.reduce .castin,body.reduce .newu,body.reduce .cand.on .chk{animation:none}
 @media (prefers-reduced-motion:reduce){.castin,.newu,.cand.on .chk{animation:none}}
+
+/* ===== 30回ループ 21〜25 ===== */
+/* 21. エンドロールの写真がゆっくり寄る */
+.ending::before{content:'';position:absolute;inset:-6%;background:var(--bgi-cg_debut,none) center/cover;opacity:.22;animation:kenburns 40s ease-in-out infinite alternate;pointer-events:none}
+.ending>*{position:relative}
+@keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.12) translateY(-2%)}}
+/* 22. 合格にした行 */
+.jrow{transition:background .25s;border-radius:10px}
+.jrow.jon{background:linear-gradient(90deg,rgba(76,195,138,.16),transparent 70%);box-shadow:inset 3px 0 0 var(--ok)}
+/* 23. 夜の画面に星 */
+.stagec.night::after{content:'';position:absolute;inset:0 0 50% 0;pointer-events:none;opacity:.8;
+  background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 30% 8%,#fff,transparent),radial-gradient(1.5px 1.5px at 58% 22%,#fff,transparent),radial-gradient(1px 1px at 76% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 90% 30%,#fff,transparent),radial-gradient(1px 1px at 44% 34%,#fff,transparent);
+  animation:twinkle 3.2s ease-in-out infinite alternate;transform:none;clip-path:none;width:auto;height:auto;top:0;left:0;right:0}
+@keyframes twinkle{from{opacity:.35}to{opacity:.9}}
+/* 24. 押した瞬間に光る */
+.btn,.choice,.otile,.actb,.tacts button,.seg button{position:relative;overflow:hidden}
+.btn::after,.choice::after,.otile::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(255,255,255,.35),transparent 60%);opacity:0;transition:opacity .35s;pointer-events:none}
+.btn:active::after,.choice:active::after,.otile:active::after{opacity:1;transition:none}
+/* 25. いまの審査の印が脈打つ */
+.dots i.now{animation:nowPulse 2s ease-in-out infinite}
+@keyframes nowPulse{50%{box-shadow:0 0 14px rgba(233,186,75,.9)}}
+body.reduce .ending::before,body.reduce .stagec.night::after,body.reduce .dots i.now{animation:none}
+@media (prefers-reduced-motion:reduce){.ending::before,.stagec.night::after,.dots i.now{animation:none}}
+
+.seg button.ptog.on{background:var(--ok);border-color:var(--ok);color:#0e2a1c}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3167,7 +3192,7 @@ function vJudge(){
   h+='<div class="card">';
   A.forEach(function(t){var r=S.stage.res[t.id],on=S.pass[t.id],p=pr[t.id];
     var warn=!on&&p<=3?' <span class="tag warn">荒れそう</span>':'';
-    h+='<div class="jrow">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+'・人気 '+p+'位'+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+'</div><div class="seg">'+
+    h+='<div class="jrow'+(on?' jon':'')+'">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+'・人気 '+p+'位'+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+'</div><div class="seg">'+
       (!S.adUsed&&!f.fin&&!t.retried&&S.chal!=='noad'?'<button data-a="retry" data-id="'+t.id+'" class="'+(ui.retryArm===t.id?'warnb':'')+'" title="もう一度見る（動画）">'+(ui.retryArm===t.id?'▶ 見る':'再審査')+'</button>':'')+
       '<button class="ptog'+(on?' on':'')+'" data-a="pass" data-id="'+t.id+'" data-v="'+(on?'0':'1')+'" aria-pressed="'+(on?'true':'false')+'">'+(on?(f.fin?'選んだ ✓':'合格 ✓'):(f.fin?'選ぶ':'不合格'))+'</button></div></div>';});
   h+='</div>'+hx;
