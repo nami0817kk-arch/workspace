@@ -24,16 +24,16 @@ __setClock(() => clock);
 const SES = PLAY === 'heavy' ? [[7, 20], [12, 15], [18, 15], [21, 20], [23, 10]] : [[8, 5], [12, 5], [17, 5], [20, 5], [23, 5]];
 const ADS = PLAY !== 'noads';   // 広告を見る人：毎回の最初に2倍を1回、留守は2倍で受け取る
 
-function buy(S, active){
+function buy(S){
   for (let g = 0; g < 2000; g++) {
     const M = mods(S);
     const req = isBed(S.depth) ? reqAt(S.depth) : 0;
     const opts = [];
-    const pc = pickCost(S, S.pick);
-    let pv = (pickPow(S.pick + 1) - pickPow(S.pick)) * M.tap * 3 * active * (1 + M.critP * (M.critX - 1));
+    const pc = pickCost(S, S.pick), base = crewBase(S, M), pb = pickBoost(S, M);
+    let pv = base * pb * (pickMul(S.pick + 1) / pickMul(S.pick) - 1);
     if (S.pick < req) pv = 1e300;
     opts.push({ c: pc, v: pv / pc, f: () => buyPick(S) });
-    WK.forEach((w, i) => { const c = wkCost(S, i, S.w[i], M); opts.push({ c, v: w.dps * M.crew / c, f: () => buyWorker(S, i) }); });
+    WK.forEach((w, i) => { const c = wkCost(S, i, S.w[i], M); opts.push({ c, v: w.dps * (i < HUMAN ? M.human : M.machine) * CREW_K * pb / c, f: () => buyWorker(S, i) }); });
     opts.sort((a, b) => b.v - a.v);
     const o = opts[0];
     if (S.ore < o.c) return;
@@ -74,14 +74,12 @@ for (let day = 1; day <= DAYS; day++) {
     let veinT = 0;
     for (let s = 0; s < len * 60; s++) {
       clock += 1000;
-      const M = mods(S);
-      for (let k = 0; k < 3; k++) tapOnce(S, null, M);
       tick(S, 1, null);
       if (++veinT >= 120) { veinT = 0; if (RNG() < 0.7) claimVein(S); }
-      if (s % 5 === 0) buy(S, 1);
+      if (s % 5 === 0) buy(S);
       if (s % 60 === 0) useFrags(S);
     }
-    buy(S, 0.2); useFrags(S); checkAch(S);
+    buy(S); useFrags(S); checkAch(S);
     S.last = clock;
     note();
     if (S.genDepth <= lastProg + 1) stall++; else stall = 0;

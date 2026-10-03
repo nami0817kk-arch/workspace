@@ -60,13 +60,21 @@ ok(speciesCountOf(S) >= 1, '宝の部屋で未発見の物が出る');
 S.room = {}; const f0 = S.frag[0]; const sp = speciesCountOf(S); S.depth = 20; S.dmg = 0; applyDamage(S, hpOf(S, 20), null, null);
 ok(S.frag[0] >= f0 + 3 || speciesCountOf(S) > sp, '2回目の宝の部屋はかけら');
 
+// プレイヤーはたたかない：最初から見習い坑夫が2人いて、放っておくだけで掘れる。代替わりの後も同じ
+S = fresh(); ok(S.w[0] === 2 && crewDps(S, true) > 0, '最初から見習い坑夫が2人いる');
+for (let k = 0; k < 600; k++) tick(S, 1, null);
+ok(S.depth > 0 && S.ore > 0, '放っておくだけで掘り進む');
+ok(typeof tapOnce === 'undefined', 'たたく操作はエンジンにない');
+// つるはしは仲間の力を上げる
+const p1 = crewDps(S, true); S.pick = 10; ok(crewDps(S, true) > p1, 'つるはしを強くすると仲間の力が上がる');
+
 // 採掘2倍は重ねて30分まで
 S = fresh(); for (let k = 0; k < 10; k++) if (boostRoom(S)) startBoost(S);
 ok(S.boostUntil - clock === 1800e3, '採掘2倍は30分まで重なる');
 
 // 古い保存や壊れた保存を読んでも落ちない
 S = normalize({ v: 2, w: [1, 2], frag: null, st: null });
-ok(S.w.length === WK.length && S.frag.length === NLAYER && S.st.taps === 0, '欠けた保存を補って読む');
+ok(S.w.length === WK.length && S.frag.length === NLAYER && S.st.blocks === 0, '欠けた保存を補って読む');
 
 if (fails) { console.log(`\n${fails}件 NG`); process.exit(1); }
 console.log('\nすべて ok');

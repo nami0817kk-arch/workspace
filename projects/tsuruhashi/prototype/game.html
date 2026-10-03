@@ -174,11 +174,11 @@ html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset
   </div>
 
   <div class="stage" id="stage">
-    <canvas id="cv" aria-label="地層の断面。タップすると掘る"></canvas>
+    <canvas id="cv" aria-label="地層の断面。仲間が掘り進める"></canvas>
     <div class="chip"><b id="cLayer">第1層 表土</b> <span id="cDepth"></span><div class="hpbar"><i id="cHp"></i></div></div>
     <div class="boostchip" id="boostChip">採掘2倍 5:00</div>
     <div class="lockmsg" id="lockMsg"></div>
-    <div class="hint" id="hint">タップして掘る</div>
+    <div class="hint" id="hint">仲間が掘ります。鉱石で強くしよう</div>
     <button class="vein" id="vein" type="button" aria-label="鉱脈をたたく">鉱脈！</button>
   </div>
 
@@ -263,14 +263,17 @@ const DROP_P = 0.12;
 const BOOST_SEC = 300, BOOST_MAX = 1800;
 const REBIRTH_DEPTH = 240;            // 6層の底で代替わりできる
 const ENV = (globalThis.process && process.env) || {};   // tool/sim.js で数値を試すときだけ使う
-const HP_G = +(ENV.HP_G || 1.078), ORE_G = +(ENV.ORE_G || 1.072);
+const HP_G = +(ENV.HP_G || 1.094), ORE_G = +(ENV.ORE_G || 1.072);
 const isBed = d => d > 0 && d % LAYER_LEN === 0 && d / LAYER_LEN < NLAYER;
 const isRoom = d => d % LAYER_LEN === LAYER_LEN / 2 && d < MAX_DEPTH_LAYERED;
 const bandOf = d => d % LAYER_LEN >= LAYER_LEN - 8;   // ★★が出る、層の終わり近く
-const baseHp = d => 30 * Math.pow(HP_G, d);
+const HP0 = +(ENV.HP0 || 10);
+const baseHp = d => HP0 * Math.pow(HP_G, d);
 const oreRaw = d => 1.5 * Math.pow(ORE_G, d);
 const layerIdxForDepth = d => Math.min(NLAYER - 1, Math.floor(d / LAYER_LEN) - (isBed(d) ? 1 : 0));
-const pickPow = l => l * Math.pow(2, Math.floor(l / 10));
+// つるはしは仲間の力の倍率（1Lv ごとに+2%、10Lv ごとに1.15倍）。プレイヤーはたたかない（2026-10-03 ユーザー指示「クリックは不要」）
+const PK_A = +(ENV.PK_A || 0.02), PK_B = +(ENV.PK_B || 1.15), CREW_K = +(ENV.CREW_K || 2);
+const pickMul = l => (1 + PK_A * (l - 1)) * Math.pow(PK_B, Math.floor(l / 10));
 const PICK_TIER = [
   ['石頭のつるはし', '#9a958c'], ['鉄のつるはし', '#b9c2cc'], ['鋼のつるはし', '#e4ebf2'], ['黒鉄のつるはし', '#4d525e'],
   ['水晶のつるはし', '#b89cff'], ['紅蓮のつるはし', '#ff6a2a'], ['古代のつるはし', '#f2c43d'], ['湖底のつるはし', '#3fc1c9'],
@@ -304,15 +307,15 @@ const LAYERS = [
 ];
 // 層の組の効果（その層の5種がそろうと付く）
 const SETS = [
-  { k:'tap',   v:0.10, label:'タップの力 +10%' },
+  { k:'hire',  v:0.05, label:'仲間の値段 −5%' },
   { k:'crew',  v:0.10, label:'仲間の力 +10%' },
   { k:'ore',   v:0.10, label:'鉱石 +10%' },
-  { k:'crit',  v:0.02, label:'会心の出やすさ +2%' },
+  { k:'crit',  v:0.02, label:'大当たりの出やすさ +2%' },
   { k:'side',  v:0.15, label:'横掘りの効率 +0.15' },
   { k:'drop',  v:0.02, label:'物が出る確率 +2%' },
   { k:'off',   v:2,    label:'留守の上限 +2時間' },
   { k:'crew',  v:0.20, label:'仲間の力 +20%' },
-  { k:'tap',   v:0.25, label:'タップの力 +25%' },
+  { k:'pick',  v:0.25, label:'つるはしの効き +25%' },
   { k:'fame',  v:0.15, label:'名声の受け取り +15%' },
 ];
 
@@ -386,12 +389,12 @@ const APPRAISE_COST = 10, APPRAISE_COST_L = 25;
 
 // 社訓（代替わりのたびに1組ずつ増え、組ごとにどちらか1つを選ぶ。選び直しは次の代替わりのとき）
 const CREEDS = [
-  { a:{ n:'手掘り一筋', g:'タップの力 ×3', b:'仲間の力 ×0.7', f:{ tap:3, crew:0.7 } },
-    b:{ n:'機械化',     g:'仲間の力 ×2',   b:'会心が出ない',  f:{ crew:2, critOff:1 } } },
+  { a:{ n:'人を育てる', g:'人の坑夫（見習い・ベテラン・発破）×30', b:'機械 ×0.9', f:{ human:30, machine:0.9 } },
+    b:{ n:'機械化',     g:'機械（掘削機から先）×1.3', b:'大当たりが出ない', f:{ machine:1.3, critOff:1 } } },
   { a:{ n:'目利き',     g:'物が出る確率 12→18%', b:'鉱石 ×0.85', f:{ dropAdd:0.06, ore:0.85 } },
     b:{ n:'突貫',       g:'岩盤の固さ ×0.7', b:'横掘りの効率 0.8→0.4', f:{ bedHp:0.7, sideMul:0.5 } } },
-  { a:{ n:'一攫千金',   g:'会心が15倍', b:'会心の出やすさが半分', f:{ critX:15, critP:0.5 } },
-    b:{ n:'堅実',       g:'すべての力 ×1.2', b:'会心が出ない', f:{ tap:1.2, crew:1.2, critOff:1 } } },
+  { a:{ n:'一攫千金',   g:'大当たりが15倍', b:'大当たりの出やすさが半分', f:{ critX:15, critP:0.5 } },
+    b:{ n:'堅実',       g:'仲間の力 ×1.2', b:'大当たりが出ない', f:{ crew:1.2, critOff:1 } } },
   { a:{ n:'留守番上手', g:'留守の上限 +4時間', b:'開いている間の仲間 ×0.8', f:{ offAdd:4, crewOn:0.8 } },
     b:{ n:'現場主義',   g:'開いている間の仲間 ×1.5', b:'留守の上限 −4時間', f:{ offAdd:-4, crewOn:1.5 } } },
   { a:{ n:'大所帯',     g:'仲間の値上がりがゆるい', b:'つるはしの強化 ×1.3の値段', f:{ wkGrow:1.12, pickCost:1.3 } },
@@ -401,18 +404,21 @@ const CREEDS = [
 ];
 
 // ================= 状態 =================
+// 最初から見習い坑夫が2人いる（代替わりの後も）
+const startCrew = () => WK.map((w, i) => i === 0 ? 2 : 0);
 const fresh = () => ({
-  v:2, ore:0, total:0, depth:0, dmg:0, side:0, pick:1, w:WK.map(() => 0),
+  v:2, ore:0, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
   boostUntil:0, last:NOW(),
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
-  ach:{}, st:{ taps:0, blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0 },
+  ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0 },
   sound:true, haptic:true, theme:'auto', notifAsked:false,
 });
 function normalize(o){
   const S = Object.assign(fresh(), o || {});
   if (!Array.isArray(S.w)) S.w = [];
   while (S.w.length < WK.length) S.w.push(0);
+  if (!S.w.some(n => n > 0)) S.w[0] = 1;
   if (!Array.isArray(S.frag)) S.frag = [];
   while (S.frag.length < LAYERS.length) S.frag.push(0);
   S.st = Object.assign(fresh().st, S.st || {});
@@ -440,12 +446,12 @@ function mods(st){
   return m;
 }
 function calcMods(st){
-  const m = { tap:1, crew:1, crewOn:1, ore:1, critP:CRIT_P, critX:CRIT_X, drop:DROP_P, side:SIDE, bedHp:1,
+  const m = { human:1, machine:1, pick:1, hire:1, crew:1, crewOn:1, ore:1, critP:CRIT_P, critX:CRIT_X, drop:DROP_P, side:SIDE, bedHp:1,
     off:OFFLINE_CAP_H, wkGrow:1.15, pickCost:1, room2:false, fame:1, book:0.05 };
   st.creed.forEach((c, i) => {
     if (!c || !CREEDS[i]) return;
     const f = CREEDS[i][c].f;
-    if (f.tap) m.tap *= f.tap; if (f.crew) m.crew *= f.crew; if (f.crewOn) m.crewOn *= f.crewOn;
+    if (f.human) m.human *= f.human; if (f.machine) m.machine *= f.machine; if (f.crew) m.crew *= f.crew; if (f.crewOn) m.crewOn *= f.crewOn;
     if (f.ore) m.ore *= f.ore; if (f.critX) m.critX = f.critX; if (f.critP) m.critP *= f.critP;
     if (f.critOff) m.critP = 0;
     if (f.dropAdd) m.drop += f.dropAdd; if (f.bedHp) m.bedHp *= f.bedHp; if (f.sideMul) m.side *= f.sideMul;
@@ -455,21 +461,23 @@ function calcMods(st){
   const crit0 = m.critP;
   setsDone(st).forEach(L => {
     const s = SETS[L];
-    if (s.k === 'tap') m.tap *= 1 + s.v; else if (s.k === 'crew') m.crew *= 1 + s.v; else if (s.k === 'ore') m.ore *= 1 + s.v;
+    if (s.k === 'hire') m.hire *= 1 - s.v; else if (s.k === 'pick') m.pick *= 1 + s.v; else if (s.k === 'crew') m.crew *= 1 + s.v; else if (s.k === 'ore') m.ore *= 1 + s.v;
     else if (s.k === 'crit') { if (crit0 > 0) m.critP += s.v; } else if (s.k === 'side') m.side += s.v; else if (s.k === 'drop') m.drop += s.v;
     else if (s.k === 'off') m.off += s.v; else if (s.k === 'fame') m.fame *= 1 + s.v;
   });
   const fm = fameMul(st.fame);
-  m.tap *= fm; m.crew *= fm; m.ore *= (1 + m.book * speciesCountOf(st));
+  m.crew *= fm; m.ore *= (1 + m.book * speciesCountOf(st));
   return m;
 }
 const fameMul = f => 1 + 0.1 * f;
 const hpOf = (st, d, M) => isBed(d) ? baseHp(d) * 12 * (M || mods(st)).bedHp : baseHp(d);
 const oreOf = (st, d, M) => Math.ceil(oreRaw(d)) * (isBed(d) ? 5 : 1) * (M || mods(st)).ore;
 const pickCost = (st, l) => Math.ceil(12 * Math.pow(1.15, l - 1) * mods(st).pickCost);
-const wkCost = (st, i, n, M) => Math.ceil(WK[i].cost * Math.pow((M || mods(st)).wkGrow, n));
-const tapPow = (st, M) => pickPow(st.pick) * (M || mods(st)).tap;
-const crewDps = (st, on, M) => { M = M || mods(st); return st.w.reduce((a, n, i) => a + n * WK[i].dps, 0) * M.crew * (on ? M.crewOn : 1); };
+const wkCost = (st, i, n, M) => { M = M || mods(st); return Math.ceil(WK[i].cost * Math.pow(M.wkGrow, n) * M.hire); };
+const HUMAN = 3;   // 0〜2 が人の坑夫、3 から先が機械
+const crewBase = (st, M) => st.w.reduce((a, n, i) => a + n * WK[i].dps * (i < HUMAN ? M.human : M.machine), 0) * CREW_K;
+const pickBoost = (st, M) => pickMul(st.pick) * (M || mods(st)).pick;
+const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn : 1); };
 const boostOn = st => NOW() < st.boostUntil;
 const locked = st => isBed(st.depth) && st.pick < REQ[st.depth / LAYER_LEN];
 const reqAt = d => REQ[d / LAYER_LEN];
@@ -528,28 +536,20 @@ function applyDamage(st, dmg, out, fx){
     const need = hpOf(st, st.depth, M) - st.dmg;
     if (dmg >= need) {
       dmg -= need; st.dmg = 0;
-      const d = st.depth, g = oreOf(st, d, M);
+      const d = st.depth, jack = RNG() < M.critP, g = oreOf(st, d, M) * (jack ? M.critX : 1);
+      if (jack) st.st.crits++;
       st.ore += g; st.total += g; if (out) { out.ore += g; out.meters++; }
       st.depth++; st.st.blocks++;
       if (isBed(d)) st.st.beds++;
       if (st.depth > st.genDepth) st.genDepth = st.depth;
       if (st.depth > st.best) st.best = st.depth;
-      if (fx) fx.brk(d, g);
+      if (fx) fx.brk(d, g, jack);
       const before = speciesCountOf(st);
       if (isRoom(d) && !st.room[d]) { st.room[d] = 1; openRoom(st, d, out, fx, M); }
       rollDrop(st, d, isBed(d), out, fx, M);
       if (speciesCountOf(st) !== before) M = mods(st);
     } else { st.dmg += dmg; dmg = 0; }
   }
-}
-// 1回たたく。返り値は会心かどうか
-function tapOnce(st, fx, M){
-  M = M || mods(st);
-  const crit = !locked(st) && RNG() < M.critP;
-  const dmg = tapPow(st, M) * (crit ? M.critX : 1) * (boostOn(st) ? 2 : 1);
-  st.st.taps++; if (crit) st.st.crits++;
-  applyDamage(st, dmg, null, fx);
-  return crit;
 }
 // 開いている間の1フレーム
 function tick(st, dt, fx){
@@ -587,7 +587,7 @@ function claimAwayState(st, r, mult){
 function veinReward(st){
   const M = mods(st);
   const d = locked(st) ? st.depth - 1 : st.depth;
-  const rate = (crewDps(st, true, M) + tapPow(st, M) * 3) / hpOf(st, d) * oreOf(st, d, M);
+  const rate = crewDps(st, true, M) / hpOf(st, d, M) * oreOf(st, d, M);
   return Math.max(10, rate * 45);
 }
 function claimVein(st){ const g = veinReward(st); st.ore += g; st.total += g; st.st.veins++; return g; }
@@ -646,7 +646,7 @@ function rebirth(st, creed){
   if (!g) return false;
   st.history.push({ gen:st.gen, depth:st.genDepth, fame:g, species:speciesCountOf(st), start:st.genStart, end:NOW(), creed:st.creed.slice() });
   st.fame += g; st.gen++;
-  Object.assign(st, { ore:0, depth:0, dmg:0, side:0, pick:1, w:WK.map(() => 0), room:{}, genDepth:0, genStart:NOW() });
+  Object.assign(st, { ore:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(), room:{}, genDepth:0, genStart:NOW() });
   st.creed = (creed || st.creed).slice(0, creedSlots(st.gen - 1));
   return g;
 }
@@ -658,7 +658,7 @@ const ACH = [
   ...[2, 3, 5, 10].map(n => ({ id:'g' + n, n:`${n}代目の社長`, t:st => st.gen >= n })),
   ...[20, 50, 100].map(n => ({ id:'p' + n, n:`つるはし Lv${n}`, t:st => st.pick >= n })),
   { id:'w100', n:'仲間が100人', t:st => st.w.reduce((a, b) => a + b, 0) >= 100 },
-  { id:'c100', n:'会心を100回', t:st => st.st.crits >= 100 },
+  { id:'c100', n:'大当たりを100回', t:st => st.st.crits >= 100 },
   { id:'v10',  n:'鉱脈を10回', t:st => st.st.veins >= 10 },
   { id:'a1',   n:'はじめての鑑定', t:st => st.st.appraise >= 1 },
   { id:'s1',   n:'層の組をそろえる', t:st => setsDone(st).length >= 1 },
@@ -892,7 +892,7 @@ function buildCo(){
   let h = `<div class="card" style="display:block">
     <div class="nm">${genName(S.gen)}社長</div>
     <div class="cardnote">この代の最深 ${S.genDepth}m ／ これまでの最深 ${S.best}m</div>
-    <div class="cardnote">名声 <b>${fmt(S.fame)}</b>（タップと仲間の力 ×${fm.toFixed(1)}）</div>`;
+    <div class="cardnote">名声 <b>${fmt(S.fame)}</b>（仲間の力 ×${fm.toFixed(1)}）</div>`;
   if (can) {
     h += `<div style="margin-top:8px">代替わりすると <span class="big2">名声 +${fmt(g)}</span><div class="cardnote">力は ×${fm.toFixed(1)} → ×${fm2.toFixed(1)}。深さ・つるはし・仲間・鉱石は最初に戻り、図鑑・かけら・名声・社史は残ります。深く掘ってから譲るほど、名声は多くなります。</div></div>
       <button class="buy" id="rbOpen" type="button" style="margin-top:8px;width:100%">代替わりを考える</button>`;
@@ -978,7 +978,7 @@ function updateUI(force){
   $('pickIc').innerHTML = pickIcon(l);
   $('pickNm').innerHTML = `${tier[0]}<span>Lv${l}</span>`;
   const nextMile = (Math.floor(l / 10) + 1) * 10;
-  $('pickDs').textContent = `1打 ${fmt(tapPow(S, M))}（Lv${nextMile}で力が2倍）`;
+  $('pickDs').textContent = `仲間の力 ×${pickBoost(S, M).toFixed(2)}（Lv${nextMile}でさらに×${PK_B}）`;
   $('pickBuy').innerHTML = `強くする<small>${fmt(c)} 鉱石</small>`;
   $('pickBuy').disabled = S.ore < c;
   const nr = nextReq();
@@ -1029,8 +1029,8 @@ function onBuyPick(){
   const tierUp = S.pick % 10 === 0;
   sfx(tierUp ? 'tier' : 'buy'); haptic(tierUp ? 'success' : 'light');
   flash($('pickBuy'));
-  if (tierUp && tierOf(S.pick) === S.pick / 10) { toast('つるはしが進化', PICK_TIER[tierOf(S.pick)][0], `1打の力が2倍（${fmt(tapPow(S))}）`, pickIcon(S.pick)); fxRing(); }
-  else if (tierUp) { toast('つるはしの節目', `Lv${S.pick}`, `1打の力が2倍（${fmt(tapPow(S))}）`, pickIcon(S.pick)); fxRing(); }
+  if (tierUp && tierOf(S.pick) === S.pick / 10) { toast('つるはしが進化', PICK_TIER[tierOf(S.pick)][0], `仲間の力 ×${PK_B}（合わせて ×${pickBoost(S).toFixed(2)}）`, pickIcon(S.pick)); fxRing(); }
+  else if (tierUp) { toast('つるはしの節目', `Lv${S.pick}`, `仲間の力 ×${PK_B}（合わせて ×${pickBoost(S).toFixed(2)}）`, pickIcon(S.pick)); fxRing(); }
   if (isBed(S.depth) && S.pick === reqAt(S.depth)) floatText(cx(), rowY(S.depth) + 16, '割れる！', '#ffd166', 22);
   updateUI(); save();
 }
@@ -1154,7 +1154,7 @@ function renderRebirth(){
   const g = fameGain(S);
   let h = `<p>${genName(S.gen)}は ${S.genDepth}m まで掘りました。${genName(S.gen + 1)}に会社を譲ると、</p>
     <div class="big">名声 +${fmt(g)}</div>
-    <p class="sub">タップと仲間の力が ×${fameMul(S.fame).toFixed(1)} → ×${fameMul(S.fame + g).toFixed(1)} になります。深さ・つるはし・仲間・鉱石は最初に戻ります。図鑑・かけら・社史・実績は残ります。</p>
+    <p class="sub">仲間の力が ×${fameMul(S.fame).toFixed(1)} → ×${fameMul(S.fame + g).toFixed(1)} になります。深さ・つるはし・仲間・鉱石は最初に戻ります。図鑑・かけら・社史・実績は残ります。</p>
     <div class="sec">${genName(S.gen + 1)}の社訓（組ごとにどちらか1つ）</div>`;
   rbChoice.forEach((c, i) => {
     const P = CREEDS[i];
@@ -1280,13 +1280,14 @@ function fxRing(){ ringT = 0; }
 
 let findSets = 0;
 const FX = {
-  brk(d, g){
+  brk(d, g, jack){
     const L = LAYERS[layerIdxForDepth(d)];
     const y = rowY(d) + R / 2, sw = shaftW();
     for (let k = 0; k < 5; k++) burst(cx() - sw / 2 + sw * (k + 0.5) / 5, y, isBed(d) ? 12 : 6, isBed(d) ? '#55555f' : L.block, isBed(d) ? 1.5 : 1.1);
     burst(cx(), y, isBed(d) ? 14 : 5, L.speck, 1.2);
     if (isRoom(d)) burst(cx(), y, 24, '#ffd166', 1.4);
-    floatText(cx() + 30, rowY(d) - 10, '+' + fmt(g), '#ffd166', isBed(d) ? 24 : 17);
+    floatText(cx() + 30, rowY(d) - 10, '+' + fmt(g), '#ffd166', isBed(d) || jack ? 24 : 17);
+    if (jack) { floatText(cx() - 30, rowY(d) - 24, '大当たり！', '#ff9f43', 20); sfx('crit'); burst(cx(), y, 16, '#ffd166', 1.3); }
     if (!reduced) shakeT = isBed(d) ? 0.45 : 0.12;
     sfx(isBed(d) ? 'bed' : 'break');
     if (isBed(d)) { banner(layerIdxForDepth(d + 1)); haptic('heavy'); }
@@ -1307,31 +1308,15 @@ const FX = {
 };
 let sideAcc = 0, sideShowT = 0;
 
-function tap(ev){
-  if (ev.target && ev.target.id === 'vein') return;
-  ev.preventDefault();
-  $('hint').style.opacity = '0';
-  ac();
-  swingT = 0;
+// プレイヤーはたたかない（2026-10-03 ユーザー指示「クリックは不要」）。社長も見た目として振り、岩盤では「カキン！」
+let bossT = 0;
+function bossSwing(dt){
+  if ((bossT += dt) < 1.1) return;
+  bossT = 0; swingT = 0;
   const x = cx() + 18, y = rowY(S.depth);
-  const setsB = setsDone(S).length, spB = speciesCountOf(S);
-  if (locked(S)) {
-    // 岩盤：はじかれるが、横掘りで少しだけ鉱石
-    clankT = 0; sparks(x, y + 2, reduced ? 4 : 12); sfx('clank');
-    if (Math.random() < 0.35) floatText(x, y - 20, 'カキン！', '#ffe08a', 15);
-    tapOnce(S, FX);
-    updateUI(); return;
-  }
-  blockHitT = 0;
-  const L = LAYERS[layerIdxForDepth(S.depth)];
-  const crit = tapOnce(S, FX);
-  burst(x, y + 2, crit ? 14 : 6, isBed(S.depth) ? '#55555f' : L.block, crit ? 1.2 : 0.8);
-  if (crit) { floatText(x, y - 26, '会心！', '#ff9f43', 20); sfx('crit'); if (!reduced) shakeT = Math.max(shakeT, 0.15); }
-  else sfx('hit');
-  if (speciesCountOf(S) !== spB) afterFind(setsB);
-  updateUI();
+  if (locked(S)) { clankT = 0; sparks(x, y + 2, reduced ? 4 : 10); if (Math.random() < 0.3) { floatText(x, y - 20, 'カキン！', '#ffe08a', 15); sfx('clank'); } }
+  else { blockHitT = 0; burst(x, y + 2, 5, isBed(S.depth) ? '#55555f' : LAYERS[layerIdxForDepth(S.depth)].block, 0.8); }
 }
-stage.addEventListener('pointerdown', tap);
 stage.addEventListener('contextmenu', e => e.preventDefault());
 
 // ---- 鉱脈（開いている間だけ、ときどき光る） ----
@@ -1340,7 +1325,8 @@ const veinEl = $('vein');
 function showVein(){
   veinLeft = 8;
   const side = Math.random() < 0.5 ? -1 : 1;
-  veinEl.style.left = (cx() + side * (shaftW() / 2 + 18 + Math.random() * 6)) + 'px';
+  const vx = cx() + side * (shaftW() / 2 + 4 + Math.random() * 10);
+  veinEl.style.left = Math.max(34, Math.min(W - MAP_W - 34, vx)) + 'px';
   veinEl.style.top = (rowY(S.depth) - 20 - Math.random() * 60) + 'px';
   veinEl.style.display = 'block';
 }
@@ -1667,6 +1653,7 @@ function frame(now){
   if (!pendingAway && !rbOpen) {
     const setsB = setsDone(S).length, spB = speciesCountOf(S);
     tick(S, dt, FX);
+    bossSwing(dt);
     if (speciesCountOf(S) !== spB) afterFind(setsB);
     // 鉱脈
     if (veinLeft > 0) { veinLeft -= dt; if (veinLeft <= 0) veinEl.style.display = 'none'; }
@@ -1699,7 +1686,7 @@ const had = load();
 applyTheme();
 if (!APP) { $('devSkip').hidden = false; } else { $('footName').textContent = 'つるはし社'; }
 camY = S.depth > 0 ? S.depth : -4;
-if (S.depth > 0) $('hint').style.opacity = '0';
+if (S.depth > 0) $('hint').style.opacity = '0'; else setTimeout(() => { $('hint').style.opacity = '0'; }, 5000);
 resize(); buildPanels(); updateUI(true);
 hintKnown = LAYERS.map((x, L) => hintShown(S, L) && !S.found[itemsOf(L).find(it => it.r === 'l').id]);
 coSeen = Object.keys(S.ach).length;
