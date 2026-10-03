@@ -18,7 +18,7 @@
 - `prototype/core.js` が物理（matter.js）。ブラウザと node で共用
 - `prototype/index.html` が画面
 - `node tool/sim.js [回数] [center|rand|smart]` で自動で積ませ、何匹で崩れるかと物理の破綻を見る
-  （matter-js は `npm i matter-js@0.19.0` を `projects/tenbin/node_modules` に）
+  （先に projects/tenbin で `npm install`）
 - 失敗: 動物が地面に着く／画面外へ落ちる、または板の端が地面に着く
 - 重さは面積に比例。ばねの強さ `K_SPRING`、ころがりにくさ `ADAMP` が難しさの主なつまみ
 
@@ -27,7 +27,11 @@
 手本はどうぶつタワーの画面: **写真の切り抜きの動物**、青い空に絵の太陽と雲、緑のギザギザの台。
 - 空・太陽・雲・海・緑のギザギザの台は描いた
 - 動物は **写真に差し替える前提**。いまの `animals.js` は横向きシルエットの仮の絵
-- 写真の入れ方: 背景を透明にした右向きの PNG を `prototype/photos/` に置き、
-  `node tool/trace.js <種類> photos/<file>.png <名前> <幅px>` で輪郭（当たり判定）を取る。
-  `photos.json` / `photos.js` ができ、同じ種類のシルエットを置き換える
-- 写真の出どころ（フリー素材か生成か）は未定。商用で使えるライセンスか必ず確かめる
+- 写真は **フリー素材（Pixabay）**（ユーザー決定 2026-10-03）。`tool/photos.py` で
+  集める → 背景を消す（rembg）→ 一覧から選ぶ → 右向きにそろえて取り込む。手順は photos.py の先頭。
+  **クラウドの環境からは Pixabay にも rembg のモデルにも届かない**ので、このPCで流す。
+  道具は `npm install`（projects/tenbin）と `pip install requests rembg pillow onnxruntime`
+- 取り込むと `prototype/photos/<種類>.png` と、輪郭（当たり判定）の `photos.json` / `photos.js`
+  ができ、同じ種類のシルエットを置き換える。出典は `prototype/photos/CREDITS.json`
+- 集めた元の写真（`work/`）は git に入れない。このリポジトリは public で、
+  Pixabay の規約は素材を単体で配ることを禁じている。入れるのはゲーム用に切り抜いて縮めたものだけ

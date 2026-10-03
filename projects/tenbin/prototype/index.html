@@ -100,6 +100,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none;user-select:none;-
     g.save(); g.translate(ox, oy); g.rotate(ang); g.globalAlpha = alpha == null ? 1 : alpha;
     if (IMG[kind]) { var r = a.imgRect; g.drawImage(IMG[kind], r[0], r[1], r[2], r[3]); g.restore(); return; }
     var body = PATH[kind];
+    if (!body) { g.restore(); return; } // 写真の読み込み待ち
     g.fillStyle = a.col; g.fill(body);
     g.save(); g.clip(body);
     (a.spots || []).forEach(function (sp) {
