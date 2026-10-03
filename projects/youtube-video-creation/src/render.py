@@ -1174,8 +1174,9 @@ class Renderer:
 
         # 背景を落として文字を主役にする。落としすぎると背景が死ぬので控えめに。
         # 写真を舞台にしたときは人物が見えるよう、落とし方を弱める
-        draw.rectangle([0, 0, base.width, base.height],
-                       fill=(6, 10, 18, 70 if stage is not None else 178))
+        # **本編の最後（終了画面の置き場）は明るめ**（2026-10-03 ユーザー「もう少し明るく」）
+        shade = 70 if stage is not None else (0 if kind == "outro" else 178)
+        draw.rectangle([0, 0, base.width, base.height], fill=(6, 10, 18, shade))
 
         accent = _hex(self.config.video.accent)
         font = self.font_title_big if kind == "intro" else self.font_title
