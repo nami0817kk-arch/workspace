@@ -51,3 +51,37 @@ def test_undefined_short_rejected():
     d = _data(shorts={})
     with pytest.raises(script.ScriptError):
         script.parse(d)
+
+
+def test_memo_stacks_newest_first_and_resets_per_section():
+    d = _data()
+    d["sections"][0]["lines"].append({"語り": "x", "card": {"head": "B"}})
+    d["sections"][0]["lines"].append({"語り": "y", "card": {"head": "C"}})
+    d["sections"][0]["lines"].append({"語り": "z", "card": {"head": "D"}})
+    sc = script.parse(d)
+    sec0 = [l for l in sc.lines if l.section == 0]
+    assert [c.head for c in sec0[-1].memo] == ["D", "C", "B"]        # 新しい順に3枚まで
+    assert sc.lines[-1].memo == ()                                   # 節が変わると空になる
+
+
+def test_next_and_thumbnail_and_question():
+    d = _data(title="王妃は本当に悪女だったのか｜副題", next={"title": "西太后", "teaser": "t"},
+              thumbnail={"main": "悪女？"})
+    sc = script.parse(d)
+    assert sc.next["title"] == "西太后" and sc.thumbnail["main"] == "悪女？"
+    assert sc.question == "王妃は本当に悪女だったのか"
+
+
+def test_figure_sticky_and_cleared():
+    d = _data()
+    d["sections"][0]["lines"][0]["figure"] = {"type": "pie", "title": "x", "parts": [["a", 1]]}
+    d["sections"][0]["lines"][1]["figure"] = None
+    sc = script.parse(d)
+    assert sc.lines[0].figure and sc.lines[1].figure is None
+
+
+def test_figure_type_checked():
+    d = _data()
+    d["sections"][0]["lines"][0]["figure"] = {"type": "video"}
+    with pytest.raises(script.ScriptError):
+        script.parse(d)

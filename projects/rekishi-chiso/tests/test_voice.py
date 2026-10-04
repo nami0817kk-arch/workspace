@@ -78,3 +78,22 @@ def test_gaps_follow_the_conversation():
     assert voice.gap_before(L("語り", section=0), L("聞き", section=1)) == voice.GAP_SECTION
     assert voice.gap_before(L("語り", tone="重い"), L("聞き")) == voice.GAP_AFTER_HEAVY
     assert voice.gap_before(L("語り"), L("聞き", pause=2.0)) == 2.0
+
+
+def test_join_n_phrases():
+    mk = lambda t: {"text": t, "pitch": 5.5, "vowel_length": 0.1}
+    ph = [{"moras": [mk("エ")], "accent": 1, "pause_mora": {"text": "、"}},
+          {"moras": [mk("イ"), mk("ッ"), mk("テ"), mk("ナ"), mk("イ")], "accent": 5},
+          {"moras": [mk("ン"), mk("デ"), mk("ス"), mk("カ")], "accent": 1, "is_interrogative": True}]
+    out, changed = voice.join_n_phrases(ph)
+    assert changed and len(out) == 2
+    assert "".join(m["text"] for m in out[1]["moras"]) == "イッテナインデスカ"
+    assert out[1]["is_interrogative"] is True and out[1]["accent"] == 5
+    assert len(ph) == 3                                   # 元は変えない
+
+
+def test_join_n_phrases_keeps_pause():
+    mk = lambda t: {"text": t, "pitch": 5.5}
+    ph = [{"moras": [mk("ア")], "accent": 1, "pause_mora": {"text": "、"}}, {"moras": [mk("ン")], "accent": 1}]
+    out, changed = voice.join_n_phrases(ph)
+    assert not changed and len(out) == 2

@@ -43,25 +43,34 @@ _EMPH = re.compile(r"《(.+?)》")
 
 @dataclass(frozen=True)
 class Voice:
-    """1人の話者の基本値。"""
+    """1人の話者の基本値。
+
+    tone_strength: 調子（驚き・疑問など）の効き方。1.0 で TONES のとおり、0.4 なら変化の幅を4割にする。
+    max_intonation / max_speed: 調子を掛けたあとの上限。高すぎる抑揚と早口はキンキンして聞こえる。
+    """
     style_id: int
     speed: float = 1.0
     pitch: float = 0.0
     intonation: float = 1.0
     volume: float = 1.0
+    tone_strength: float = 1.0
+    max_intonation: float = 2.0
+    max_speed: float = 2.0
 
 
 def tone_params(voice: Voice, tone: str) -> dict[str, float]:
     """話者の基本値に調子の補正を掛けた、VOICEVOX の audio_query に入れる値。"""
     if tone not in TONES:
         raise KeyError(f"調子「{tone}」は定義されていません")
+    k = voice.tone_strength
     t = TONES[tone]
+    mul = lambda key: 1.0 + (t.get(key, 1.0) - 1.0) * k   # 掛け算の補正を k 倍に縮める
     return {
-        "speedScale": round(voice.speed * t.get("speed", 1.0), 4),
-        "pitchScale": round(max(-0.15, min(0.15, voice.pitch + t.get("pitch", 0.0))), 4),
-        # VOICEVOX の抑揚は 0〜2 まで。強い話者×強い調子でもはみ出さないように止める
-        "intonationScale": round(min(2.0, voice.intonation * t.get("intonation", 1.0)), 4),
-        "volumeScale": round(voice.volume * t.get("volume", 1.0), 4),
+        "speedScale": round(min(voice.max_speed, voice.speed * mul("speed")), 4),
+        "pitchScale": round(max(-0.15, min(0.15, voice.pitch + t.get("pitch", 0.0) * k)), 4),
+        # VOICEVOX の抑揚は 0〜2 まで。話者ごとの上限でも止める
+        "intonationScale": round(min(2.0, voice.max_intonation, voice.intonation * mul("intonation")), 4),
+        "volumeScale": round(voice.volume * mul("volume"), 4),
         "prePhonemeLength": 0.05,
         "postPhonemeLength": 0.08,
     }
@@ -136,6 +145,28 @@ def emphasize(query: dict, word_kanas: list[str]) -> tuple[dict, list[str]]:
     if word_kanas and len(missing) < len(word_kanas):
         query["volumeScale"] = round(query.get("volumeScale", 1.0) * EMPHASIS_VOLUME, 4)
     return query, missing
+
+
+def join_n_phrases(accent_phrases: list) -> tuple[list, bool]:
+    """「ン」で始まる区切りを、前の言葉につなげる。
+
+    VOICEVOX は「言ってないんですか」を「イッテナイ／ンデスカ」と切り、頭の「ン」をいちばん高く読む。
+    「言ってない。ンですか？」と2つに切れて聞こえるので、前の言葉の続きにする（2026-10-04 指摘）。
+    間（読点）をはさむ場合はつなげない。つないだら高さは mora_data で計算し直す。
+    """
+    out: list = []
+    changed = False
+    for p in accent_phrases:
+        moras = p.get("moras") or []
+        if out and moras and moras[0].get("text") == "ン" and not out[-1].get("pause_mora"):
+            prev = out[-1]
+            prev["moras"] = prev["moras"] + copy.deepcopy(moras)
+            prev["is_interrogative"] = p.get("is_interrogative", False)
+            prev["pause_mora"] = p.get("pause_mora")
+            changed = True
+        else:
+            out.append(copy.deepcopy(p))
+    return out, changed
 
 
 def end_rise(query: dict, amount: float) -> dict:

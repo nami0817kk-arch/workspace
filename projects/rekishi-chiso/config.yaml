@@ -13,20 +13,31 @@ cast:
     style_id: 21
     speed: 1.08
     pitch: 0.0
-    intonation: 1.3           # 語り手も抑揚を強めて、平板な読み上げにしない（10-03 に 1.15→1.3）
+    # 10-04「男性側は、抑揚はかなり控えめ」：素の抑揚に戻し、調子の効きを3割、上限1.15に
+    intonation: 1.0
+    tone_strength: 0.3
+    max_intonation: 1.15
+    max_speed: 1.1
     volume: 1.0
     image: characters/kenzaki_helmet.png
+    faces: characters/kenzaki_faces   # 口パク（chiso/jaw.py で口を開けた絵を描き足す）
     side: left
     bust: 0.40                # 立ち絵の上から何割を見せるか
     height: 1250              # 立ち絵全体を何pxに縮めてから切るか
   聞き:
     name: 春日部つむぎ
     style_id: 8
-    speed: 1.12
+    speed: 1.0
     pitch: 0.0
-    intonation: 1.45          # 聞き手は反応役なので、語り手より抑揚を大きく（10-03 に 1.25→1.45）
+    # 10-04「女の子の声がおかしい」「かなり抑えて」：抑揚が上限に張りつき早口でキンキンしていた。
+    # 基本を素の値に戻し、調子の効きを4割に、抑揚と速さに上限を置く
+    intonation: 1.0
+    tone_strength: 0.4
+    max_intonation: 1.3
+    max_speed: 1.08
     volume: 1.0
     image: characters/tsumugi_helmet.png
+    faces: characters/tsumugi_faces   # 表情・口パク・まばたき（chiso/faces.py で作る）
     side: right
     bust: 0.40
     height: 1150
@@ -51,3 +62,6 @@ short:
   max_seconds: 60
 
 operator: つるはし社
+
+# 本編の画面に字幕を出す（10-04 ユーザー指示「字幕もだしたい」）
+subtitles: true

@@ -10,7 +10,8 @@ import wave
 from dataclasses import dataclass
 from pathlib import Path
 
-from .voice import TONES, Voice, apply_readings, emphasize, end_rise, kana_of, split_emphasis, tone_params
+from .voice import (TONES, Voice, apply_readings, emphasize, end_rise, join_n_phrases, kana_of, split_emphasis,
+                    tone_params)
 
 
 class VoicevoxError(RuntimeError):
@@ -36,6 +37,11 @@ class Voicevox:
     def query(self, text: str, style_id: int) -> dict:
         return json.loads(self._post("/audio_query", {"text": text, "speaker": style_id}))
 
+    def mora_data(self, accent_phrases: list, style_id: int) -> list:
+        """区切りを変えたあとの高さと長さを、VOICEVOX に計算し直させる。"""
+        return json.loads(self._post("/mora_data", {"speaker": style_id},
+                                     json.dumps(accent_phrases).encode("utf-8")))
+
     def synthesize(self, query: dict, style_id: int) -> bytes:
         return self._post("/synthesis", {"speaker": style_id}, json.dumps(query).encode("utf-8"))
 
@@ -48,7 +54,7 @@ class Spoken:
 
 
 def line_key(text: str, voice: Voice, tone: str, readings: dict[str, str]) -> str:
-    payload = json.dumps([text, voice.__dict__, tone, sorted(readings.items()), "v2"], ensure_ascii=False)
+    payload = json.dumps([text, voice.__dict__, tone, sorted(readings.items()), "v4"], ensure_ascii=False)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
@@ -70,12 +76,15 @@ def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[s
     plain, words = split_emphasis(text)
     spoken_text = apply_readings(plain, readings)
     query = engine.query(spoken_text, voice.style_id)
+    phrases, changed = join_n_phrases(query["accent_phrases"])
+    if changed:
+        query["accent_phrases"] = engine.mora_data(phrases, voice.style_id)
     query.update(tone_params(voice, tone))
     missing: list[str] = []
     if words:
         kanas = [kana_of(engine.query(apply_readings(w, readings), voice.style_id)) for w in words]
         query, missing = emphasize(query, kanas)
-    query = end_rise(query, TONES[tone].get("end_rise", 0.0))
+    query = end_rise(query, TONES[tone].get("end_rise", 0.0) * voice.tone_strength)
     data = engine.synthesize(query, voice.style_id)
     target.write_bytes(data)
     seconds = wav_seconds(data)
