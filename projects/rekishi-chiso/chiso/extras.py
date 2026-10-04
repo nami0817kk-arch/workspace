@@ -56,8 +56,8 @@ def draw_icon(painter, img: Image.Image, name: str, t: float = 1.0) -> Image.Ima
     """真ん中の丸い板に挿絵。t は出てくる途中（0→1 で大きくなる）。"""
     img = img.copy()
     e = 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, t)))
-    r = int(175 * (0.7 + 0.3 * e))
-    cx, cy = 1070, 410                                     # メモ（左）と肖像（右）のあいだ
+    r = int(160 * (0.7 + 0.3 * e))
+    cx, cy = 1030, 420                                     # メモ（左）と肖像（右）のあいだ
     layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(layer)
     d.ellipse([cx - r + 8, cy - r + 12, cx + r + 8, cy + r + 12], fill=(0, 0, 0, int(140 * e)))
