@@ -38,7 +38,7 @@ from pathlib import Path
 
 import yaml
 
-SPEAKERS = ("語り", "聞き", "人物")
+SPEAKERS = ("語り", "聞き", "人物", "二人")   # 二人＝語りと聞きが声を合わせる（締めの一言）
 CAST = ("語り", "聞き")      # 画面に立ち絵がいる2人。「人物」の行は who の名前が話者になる
 _UNSET = object()
 
@@ -137,6 +137,7 @@ class Script:
     next: dict = field(default_factory=dict)        # 次回予告 {title, teaser}
     thumbnail: dict = field(default_factory=dict)   # サムネイルの文字と絵（thumb.py）
     people: dict = field(default_factory=dict)      # 人物の生没（肖像に「この時○歳」を出す）
+    host: str = ""                                  # 進行役（語り / 聞き）。題材ごとに決める（10-04）
 
     @property
     def question(self) -> str:
@@ -148,7 +149,7 @@ class Script:
         """人物の言葉を話す人（出てくる順）。"""
         out: list[str] = []
         for line in self.lines:
-            if line.speaker not in CAST and line.speaker not in out:
+            if line.speaker not in CAST + ("二人",) and line.speaker not in out:
                 out.append(line.speaker)
         return out
 
@@ -311,7 +312,7 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         title=str(data.get("title", "")), series=str(data.get("series", "")),
         timeline_start=timeline.get("start"), timeline_end=timeline.get("end"), events=events,
         sections=sections, lines=lines, shorts=shorts_meta, path=path,
-        next=dict(data.get("next") or {}), people=people, thumbnail=dict(data.get("thumbnail") or {}),
+        next=dict(data.get("next") or {}), people=people, host=str(data.get("host") or ""), thumbnail=dict(data.get("thumbnail") or {}),
     )
 
 

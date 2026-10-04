@@ -89,6 +89,9 @@ def episode(script) -> tuple[list[str], list[str]]:
         tail = [l for l in script.lines if l.section == sec.index][-HOOK_WINDOW:]
         if not any(l.hook for l in tail):
             errors.append(f"{sec.index + 1}節「{sec.title}」の終わり{HOOK_WINDOW}行に引き（hook: true）がありません")
+    e2, w2 = cast_rules(script)
+    errors += e2
+    warns += w2
     figs = {l.figure for l in script.lines if l.figure}
     if len(figs) < MIN_FIGURES:
         warns.append(f"図（地図・グラフ・相関図）が{len(figs)}つ（{MIN_FIGURES}つ以上を推奨）")
@@ -113,4 +116,54 @@ def episode(script) -> tuple[list[str], list[str]]:
         warns.append("ショート（shorts:）がありません")
     if not getattr(script, "question", ""):
         warns.append("題名に問いがありません")
+    return errors, warns
+
+
+# --- 2人のキャラと会話の流れ（2026-10-04 にユーザーと決めた） ---------------------------
+# つむぎ：ふだん軽い話し言葉、驚くと素が出る。一人称「あーし」は節に1回くらい。剣崎を「剣崎さん」と呼ぶ。
+# 剣崎：落ち着いた丁寧語。つむぎを「つむぎさん」と呼ぶ。素性（付喪神・3600歳）は語らない。
+# 進行役は題材ごとに host で決める。締めは host「今日の地層は、ここまでです」→ 次回の通説 → 二人「また一緒に、掘りましょう！」
+CLOSING = "また一緒に、掘りましょう"
+HOST_CLOSE = "今日の地層は、ここまでです"
+PARROT_MAX = 2          # 1節の中で、驚くだけの短い返し（おうむ返し）の上限
+SIGH_RUN_MAX = 2        # 「……」で終わるつむぎの感想が続いてよい数
+ASHI_MAX = 2            # 1節の「あーし」の上限（目安は1回）
+POLITE = ("ですか", "ですね", "ですよね", "ました", "ます。", "ません", "でしょうか")
+
+
+def cast_rules(script) -> tuple[list[str], list[str]]:
+    import re
+    errors, warns = [], []
+    host = getattr(script, "host", "")
+    if host not in ("語り", "聞き"):
+        errors.append("進行役（host: 語り か 聞き）がありません。題材ごとに決める")
+    lines = script.lines
+    if lines and host in ("語り", "聞き") and lines[0].speaker != host:
+        errors.append(f"最初の行は進行役（{host}）が話す")
+    if not lines or lines[-1].speaker != "二人" or CLOSING not in lines[-1].text:
+        errors.append(f"最後の行は二人で「{CLOSING}！」")
+    if not any(HOST_CLOSE in l.text and l.speaker == host for l in lines):
+        errors.append(f"締めに進行役の「{HOST_CLOSE}」がありません")
+    for l in lines:
+        if re.search(r"めすお|べっつー", l.text):
+            errors.append(f"{l.index + 1}行目：呼び方は「剣崎さん」「つむぎさん」（公式のあだ名は使わない）")
+        if re.search(r"付喪神|3600歳|メスの", l.text):
+            warns.append(f"{l.index + 1}行目：剣崎の素性は語らない決まり")
+    for sec in script.sections:
+        mine = [l for l in lines if l.section == sec.index and l.speaker == "聞き"]
+        parrot = [l for l in mine if l.tone == "驚き" and len(re.sub(r"[《》！？!?…、。]", "", l.text)) <= 8]
+        if len(parrot) > PARROT_MAX:
+            warns.append(f"{sec.index + 1}節：つむぎの驚くだけの返しが{len(parrot)}回（{PARROT_MAX}回まで。予想・疑い・置き換えに変える）"
+                         f" {[l.index + 1 for l in parrot]}")
+        ashi = sum(l.text.count("あーし") for l in mine)
+        if ashi > ASHI_MAX:
+            warns.append(f"{sec.index + 1}節：「あーし」が{ashi}回（節に1回くらい）")
+        run = 0
+        for l in mine:
+            run = run + 1 if re.search(r"…+[。！？]?$", l.text) else 0
+            if run == SIGH_RUN_MAX + 1:
+                warns.append(f"{l.index + 1}行目：「……」で終わるつむぎの感想が{run}回続いています")
+        polite = [l.index + 1 for l in mine if any(p in l.text for p in POLITE)]
+        if polite:
+            warns.append(f"{sec.index + 1}節：つむぎが丁寧語 {polite}（ふだんは軽い話し言葉）")
     return errors, warns

@@ -132,7 +132,7 @@ def synthesize(sc, config) -> tuple[list[mix.Cue], float]:
     cache = work_dir(sc) / "voice"
     spoken = {}
     for i, line in enumerate(sc.lines, 1):
-        s = tts.speak(engine, line.text, vs[line.speaker], line.tone, readings, cache)
+        s = tts.speak_line(engine, line, vs, readings, cache)
         if s.missing_emphasis:
             print(f"  ! {i}行目: 強調《》の語が読みの中に見つかりませんでした: {s.missing_emphasis}")
         spoken[line.index] = s
@@ -256,7 +256,7 @@ def cmd_shorts(args) -> int:
     sz = config["short"]
     for sid, meta in sc.shorts.items():
         lines = sc.short_lines(sid)
-        spoken = {line.index: tts.speak(engine, line.text, vs[line.speaker], line.tone, readings, cache)
+        spoken = {line.index: tts.speak_line(engine, line, vs, readings, cache)
                   for line in lines}
         # ショートの中では節の切れ目の長い間を入れない
         flat = [_same_section(line) for line in lines]
@@ -354,7 +354,7 @@ def cmd_kana(args) -> int:
     readings = load_readings(ROOT / "readings.yaml")
     vs = voices(config)
     for line in sc.lines:
-        q = engine.query(apply_readings(split_emphasis(line.text)[0], readings), vs[line.speaker].style_id)
+        q = engine.query(apply_readings(split_emphasis(line.text)[0], readings), vs.get(line.speaker, vs["語り"]).style_id)
         phrases, _ = __import__("chiso.voice", fromlist=["join_n_phrases"]).join_n_phrases(q["accent_phrases"])
         kana = "／".join("".join(m["text"] for m in p["moras"]) for p in phrases)
         print(f"{line.index + 1:3} {people.label(config, line.speaker)[:2]} {kana}")
