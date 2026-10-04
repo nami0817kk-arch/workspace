@@ -91,3 +91,41 @@ def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[s
     meta.write_text(json.dumps({"text": text, "tone": tone, "seconds": seconds, "missing": missing},
                                ensure_ascii=False), encoding="utf-8")
     return Spoken(target, seconds, missing)
+
+
+TOGETHER = "二人"       # 2人で声を合わせる行（10-04「しめは二人で声を合わせる」）
+
+
+def speak_together(engine: Voicevox, text: str, voices: list[Voice], tone: str, readings: dict[str, str],
+                   cache_dir: Path) -> Spoken:
+    """同じせりふを2人の声で読み、重ねて1本にする。長い方に合わせ、短い方は頭をそろえる。"""
+    import array
+    parts = [speak(engine, text, v, tone, readings, cache_dir) for v in voices]
+    key = hashlib.sha256("|".join(p.wav.stem for p in parts).encode()).hexdigest()[:16]
+    target = cache_dir / f"together-{key}.wav"
+    if not target.exists():
+        samples, params = [], None
+        for p in parts:
+            with wave.open(str(p.wav)) as w:
+                params = params or w.getparams()
+                a = array.array("h")
+                a.frombytes(w.readframes(w.getnframes()))
+                samples.append(a)
+        n = max(len(a) for a in samples)
+        out = array.array("h", [0] * n)
+        for a in samples:
+            for i, v in enumerate(a):
+                out[i] = max(-32768, min(32767, out[i] + int(v * 0.65)))   # 重ねても割れない大きさ
+        with wave.open(str(target), "wb") as w:
+            w.setparams(params)
+            w.writeframes(out.tobytes())
+    with wave.open(str(target)) as w:
+        seconds = w.getnframes() / w.getframerate()
+    return Spoken(target, seconds, sorted({m for p in parts for m in p.missing_emphasis}))
+
+
+def speak_line(engine: Voicevox, line, voices: dict[str, Voice], readings: dict[str, str], cache_dir: Path) -> Spoken:
+    """1行を、その行の話者の声で。二人の行は語りと聞きの声を重ねる。"""
+    if line.speaker == TOGETHER:
+        return speak_together(engine, line.text, [voices["語り"], voices["聞き"]], line.tone, readings, cache_dir)
+    return speak(engine, line.text, voices[line.speaker], line.tone, readings, cache_dir)

@@ -370,7 +370,7 @@ class Painter:
         表情のある話者は、話しているあいだ tone の顔で mouth のとき口を開け、blink のとき目を閉じる。"""
         img = base.copy()
         for who, cast in self.config["cast"].items():
-            talking = who == speaker
+            talking = who == speaker or speaker == "二人"
             if cast.get("faces"):
                 ch = self.face(who, tone if talking else "聞く", mouth and talking, blink)
                 if not talking:
@@ -423,7 +423,7 @@ class Painter:
         img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
         dr = ImageDraw.Draw(img, "RGBA")
         side = self.config["cast"].get(speaker, {}).get("side", "center")
-        color = SPEAKER_COLORS.get(side, ROLE_COLOR)
+        color = SPEAKER_COLORS.get(side, GOLD if speaker == "二人" else ROLE_COLOR)
         name = people.label(self.config, speaker)
         dr.rounded_rectangle([x0, y0, x1, y1], radius=14, fill=(250, 246, 236, 240), outline=color, width=4)
         if side != "center":
@@ -600,7 +600,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
     prev_state: State | None = None
     prev_speaker = None
     plain_len = lambda x: len(emphasis_mask(x)[0])
-    has_faces = lambda who: bool(painter.config["cast"].get(who, {}).get("faces"))   # 人物の行は誰も口を動かさない
+    has_faces = lambda who: (who == "二人" or bool(painter.config["cast"].get(who, {}).get("faces")))   # 人物の行は誰も口を動かさない
 
     def emit(path: Path, make, dur: float):
         if dur <= 0:

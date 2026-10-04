@@ -43,7 +43,9 @@ def test_episode_rules():
         "shorts": {"s1": {"title": "x"}},
         "sections": [{"title": "地表", "lines": [{"語り": "《a》", "short": "s1",
                                                   "figure": {"type": "map", "route": ["パリ", "ヴェルサイユ"]}}]},
-                     {"title": "見立て：なぜ", "lines": [{"語り": "b"}]}],
+                     {"title": "見立て：なぜ", "lines": [{"語り": "b"}, {"語り": "今日の地層は、ここまでです。"},
+                                                       {"二人": "また一緒に、掘りましょう！"}]}],
+        "host": "語り",
     }
     errors, warns = check.episode(script.parse(base))
     assert errors == [] and any("図" in w for w in warns)
@@ -75,3 +77,23 @@ def test_section_end_needs_hook():
     base["sections"][1]["lines"][1]["hook"] = True                                       # 終わりから2行目まではよい
     errors, _ = check.episode(script.parse(base))
     assert not [e for e in errors if "引き" in e]
+
+
+def test_cast_rules():
+    from chiso import script
+    def ep(lines, host="聞き"):
+        return script.parse({"title": "t", "host": host, "sections": [
+            {"title": "地表", "lines": lines},
+            {"title": "見立て：なぜ", "lines": [{"聞き": "今日の地層は、ここまでです。"}, {"二人": "また一緒に、掘りましょう！"}]}]})
+    ok = [{"聞き": "はじめるよー"}, {"語り": "a"}]
+    errors, warns = check.cast_rules(ep(ok))
+    assert errors == [] and warns == []
+    errors, _ = check.cast_rules(ep([{"語り": "a"}]))                                    # 最初は進行役
+    assert any("最初の行" in e for e in errors)
+    bad = ok + [{"聞き": "え！？", "tone": "驚き"}] * 3 + [{"聞き": "そうなんですか？"}, {"聞き": "めすおちゃん"}]
+    errors, warns = check.cast_rules(ep(bad))
+    assert any("あだ名" in e for e in errors)
+    assert any("驚くだけ" in w for w in warns) and any("丁寧語" in w for w in warns)
+    sighs = ok + [{"聞き": "そっか……"}, {"聞き": "うん……"}, {"聞き": "ひどい……。"}]
+    _, warns = check.cast_rules(ep(sighs))
+    assert any("続いて" in w for w in warns)

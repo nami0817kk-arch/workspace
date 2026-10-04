@@ -21,6 +21,8 @@ def label(config: dict, speaker: str) -> str:
     """字幕に出す名前。cast は声の名前（剣崎雌雄）、人物は人物の名前（マリー・アントワネット）。"""
     if speaker in config["cast"]:
         return config["cast"][speaker]["name"]
+    if speaker == "二人":
+        return "剣崎・つむぎ"
     r = roles(config).get(speaker, {})
     return r.get("label", speaker)
 
