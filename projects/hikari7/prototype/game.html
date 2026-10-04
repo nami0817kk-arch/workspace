@@ -410,6 +410,7 @@ body{background:radial-gradient(ellipse 120% 40% at 50% -10%,var(--card2),transp
 .esec{margin:46px 0 16px;font-weight:900;color:#ffd76a;letter-spacing:.15em}
 .emem{display:flex;gap:12px;align-items:flex-start;text-align:left;margin:14px 0}.emem b{font-size:15px}.emem small{margin-left:6px;color:#cfc8ea}.emem p{margin:4px 0 0;font-size:13.5px;line-height:1.7;color:#e9e4ff}
 .ecred div{margin:18px 0;line-height:1.9}.ecred small{display:block;font-size:12px;color:#cfc8ea;letter-spacing:.12em}
+.eyear.ev .ey{background:#cfc8ea}.emem .etag{display:inline-block;margin-left:6px;font-size:11px;font-weight:800;color:#1a1200;background:#cfc8ea;border-radius:999px;padding:0 8px}.emem.gone img,.emem.gone .face{opacity:.75}
 .ebar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:10px;justify-content:center;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(13,10,31,.95) 40%)}
 .ebar .btn-s{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.35);min-height:44px;padding:0 18px}
 .fut .fy{display:grid;grid-template-columns:4.5em 1fr;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13.5px;line-height:1.7}.fut .fy b{color:var(--accent)}
@@ -3025,8 +3026,13 @@ ACHV.push(
 );
 
 
-/* ---------- その後の物語（エンドロール。2026-10-02） ----------
-   最後の評価・まとまり・コンビ・覚醒・物語の結末から、デビュー後10年の年表とメンバーのその後を作る。
+/* ---------- その後の物語（エンドロール。2026-10-02、10-04 に年表・卒業・その後を濃くした） ----------
+   最後の評価・まとまり・コンビ・リーダー・曲の方向・活動の中心・担当の偏り・相性と絆・覚醒・物語の結末・家族・夢から、
+   デビュー後10年の年表（11の節）とメンバーのその後を作る。
+   相性△で絆の浅い組がいると、途中で卒業（方向性の違い・ソロの夢・学業）が起きることがある。まとまりが高い・コンビがいると起きにくい。
+   けがの治療での活動休止は、1〜2年で戻ってくる。卒業した子が後で戻る・記念ライブに来る筋もある。
+   卒業・休止中の子は、その年より後の年表に出さない（戻ってきたら、また出る）。
+   リーダーがいない（L=null）ときは、それに合った文にする。グループ名は自由入力（S.prep.custom）を先に読む。
    作るのは1回だけ（S.future に残す） */
 var SONG_W1=['はじまりの','夜明けの','七色の','まっすぐな','真夏の','銀色の','約束の','ひかりの','風になる','明日への','透明な','はじめての'];
 var SONG_W2=['合図','ハイタッチ','足音','手紙','地図','ステップ','声','滑走路','花火','行進曲','窓','羽'];
@@ -3035,37 +3041,221 @@ var FUT_SPEC={v:['ソロ曲を出し、ドラマの主題歌に選ばれた','�
   d:['ほかの歌手の振付を任されるようになった','ダンス番組の審査員として呼ばれるようになった','初めて自分で作った振付が、グループの代表曲になった'],
   r:['グループの曲の作詞を手がけるようになった','ラップの大会に飛び入りで出て、会場を沸かせた','書いた詞をまとめた本を出した'],
   t:['雑誌の表紙を何度も飾った','ドラマに出演し、役者としても注目を集めた','グループの映像の演出にも関わるようになった']};
-var FUT_PLAIN={v:['ライブのたびに、歌の安定感が増していった','グループのハーモニーを支える声になった'],d:['ライブの最後の振りを、毎回少しずつ変えてファンを驚かせた','後輩グループの練習を見に行くようになった'],
-  r:['ライブのラップ部分を、毎回その日の言葉で作り替えている','ラジオ番組の聞き役として親しまれている'],t:['グループの「顔」として、どの番組にも呼ばれるようになった','写真展を開き、メンバーの素顔を撮りためた1冊を出した']};
+var FUT_PLAIN={v:['ライブのたびに、歌の安定感が増していった','グループのハーモニーを支える声になった','どんな会場でも、最初の一声で客席を落ち着かせる歌い手になった'],d:['ライブの最後の振りを、毎回少しずつ変えてファンを驚かせた','後輩グループの練習を見に行くようになった','メンバーの立ち位置を、誰よりも先に覚える踊り手になった'],
+  r:['ライブのラップ部分を、毎回その日の言葉で作り替えている','ラジオ番組の聞き役として親しまれている','曲と曲のあいだのつなぎを任され、ライブの流れを作る人になった'],t:['グループの「顔」として、どの番組にも呼ばれるようになった','写真展を開き、メンバーの素顔を撮りためた1冊を出した','ライブの演出の相談を、真っ先に受ける人になった']};
 var FAM_FUT={'実家は定食屋':'実家の定食屋には、今もサインと番組の写真が飾られている。','実家は花屋':'記念日のステージの花は、毎回実家の花屋から届く。','実家は農家':'実家の畑でとれた野菜が、楽屋の差し入れの定番になった。',
   '双子の片割れ':'双子のきょうだいは、今もライブの最前列にいる。','母と2人暮らし':'初めてのボーナスで、母を温泉に連れていった。','祖父母と暮らす大家族':'祖父母の家のテレビの前には、今も家族全員が集まる。',
-  '犬2匹と猫1匹がいるにぎやかな家':'ライブ配信には、ときどき実家の犬が映りこむ。','姉が2人いる末っ子':'ふたりの姉は、今もいちばん厳しいファンだ。'};
-function makeFuture(S,E){var used=[],P=S.prep||{names:['（名前なし）'],name:0},tier='SABCD'.indexOf(E.grade),D=E.D,L=E.L,n=D.length,Y=[];
-  var s1=P.songs?P.songs[P.song||0]:songTitle(used);used.push(s1);var s2=songTitle(used),s3=songTitle(used);
-  var awoke=D.filter(function(t){return t.awoke;}),combos=E.combos||[],top=D.slice().sort(function(a,b){return b.pop-a.pop;})[0];
-  Y.push({y:'デビュー',t:'デビュー曲「'+s1+'」は、1か月で'+Math.round(E.streams).toLocaleString()+'万回再生された。'});
+  '犬2匹と猫1匹がいるにぎやかな家':'ライブ配信には、ときどき実家の犬が映りこむ。','姉が2人いる末っ子':'ふたりの姉は、今もいちばん厳しいファンだ。',
+  '両親と弟の4人家族':'弟は、友だちを連れてライブに来るのが恒例になった。','三人きょうだいの真ん中':'きょうだい3人のグループトークには、ライブのたびに感想が届く。',
+  '一人っ子':'両親は、出演した番組を全部録画して、居間の棚に並べている。','兄がいる2人きょうだい':'兄は、職場でこっそりグループの曲を広めているらしい。'};
+/* 年表の文。{G}グループ名 {N}その年の人数 {A}{B}その年にいるメンバー {L}リーダー {S1}〜{S5}曲名 {X}{Y}出来事の当事者 {D}夢 */
+var FT={
+  act:[['デビューの週から歌番組に続けて呼ばれた。初めての生放送では、{A}の第一声で空気が変わった。','朝の情報番組で、{A}が司会者にデビュー曲の振りを教える場面が話題になった。','テレビに出るたび、{A}のあいさつの言い回しが少しずつ真似されるようになった。'],
+    ['ミュージックビデオは、公開から3日で番組の最終回の再生数を超えた。','配信のコメント欄には、番組のころの思い出を書きこむ人が絶えなかった。','{A}が練習室で撮った短い動画が、デビュー曲を広げるきっかけになった。'],
+    ['デビューの夜、小さなライブハウスで初めての単独公演を開いた。開演前、{A}は何度も客席をのぞいていた。','デビューからの1か月、週末ごとにどこかの街でステージに立った。','初めてのライブの最後、{A}は「今日の景色を一生忘れません」と言った。']],
+  act0:['デビューの日、メンバーは番組の合宿所に寄ってから会場に向かった。','発売日の朝、{A}は駅前の広告の前で、こっそり写真を撮った。','デビューの前の晩、{N}人で同じ部屋に集まり、明け方まで話していた。'],
+  dir:{v:['「歌で聴かせる」グループとして、ハーモニーの評判が先に広がった。','重ねた声の厚みに、「番組のころとは別のグループみたい」という声が上がった。'],
+    d:['揃った振りの映像が、真似して踊る人たちのあいだで広がった。','「踊りで魅せる」と決めた通り、どの番組でもまず振りが話題になった。'],
+    r:['攻めた歌詞が賛否を呼び、そのぶん名前も早く知られた。','ラップの掛け合いを、ファンが一緒に口ずさむようになった。']},
+  y1:[['{WHO}年末の音楽賞で新人賞を受け取った。壇上で「この{N}人で来られてよかった」と声を詰まらせた。','デビューの年に、早くも大きな音楽祭の舞台に立った。袖で待つあいだ、全員で手を重ねた。','出す曲がすべて上位に入り、「新人の年」と呼ばれた1年だった。'],
+    ['初めてのワンマンライブは2日間とも満員。アンコールで、全員が泣いていた。','初めてのツアーは追加公演まで決まった。最終日、{A}が客席に深く頭を下げた。','新人賞の候補に名前が挙がった。受賞は逃したが、「来年はここに立つ」と全員で決めた。'],
+    ['ライブハウスを回る初めてのツアー。最終日だけ、当日券が出なかった。','少しずつ会場が大きくなっていった1年だった。','音楽番組の出演はまだ少ないが、ライブの評判が口コミで広がった。'],
+    ['小さな会場で、一人ひとりのファンと握手を重ねた1年だった。','路上での小さなライブから始めた。足を止める人が、少しずつ増えていった。','ショッピングモールの広場で歌う日が続いた。{A}は、来てくれた人の顔を全部覚えようとした。'],
+    ['思うように数字が伸びず、メンバーで何度も話し合った1年だった。','予定していた公演が、席が埋まらず小さな会場に移った。帰りの車で、誰も口をきかなかった。','「番組のほうが良かった」という声が届いた。{A}はそれを読んで、翌朝いちばんに練習室に来た。']],
+  lead:['{L}はどの取材でも、まずメンバーの名前から話した。','リハーサルの最後に{L}がひと言まとめるのが、いつの間にか決まりになった。','{L}の手帳には、メンバーの調子が毎日書きこまれていた。','迷ったときは{L}が最初に手を挙げ、最後に意見を言うのも{L}だった。'],
+  nolead:['リーダーを置かなかったぶん、話し合いは長くなった。それでも、決めたことには全員が責任を持った。','リーダーはいない。その日に調子のいい人が前に出る、というのがこのグループのやり方になった。','司会者に「リーダーは誰？」と聞かれるたび、全員で同時に手を挙げるのがお決まりになった。','まとめ役は月ごとの持ち回りにした。手帳の当番表は、ファンのあいだでも有名になった。'],
+  spot:{v:['{A}の高音が、ライブのいちばんの聴きどころになった。','{A}が歌番組でひとりで歌った1曲が、グループを知るきっかけになった人も多い。'],
+    d:['{A}の踊る後ろ姿を撮った写真が、ツアーの宣伝に使われた。','{A}がダンス番組で見せた30秒の踊りが、何度も見返された。'],
+    r:['{A}が書いたラップの一節が、ファンの合言葉になった。','{A}はライブのたびに、その街の名前をラップに入れた。'],
+    t:['{A}の表情の作り方が、映像を見た人のあいだで話題になった。','{A}のトークで、初めてグループを知った人が多かった。']},
+  y2hit:['2枚目のシングル「{S2}」が、デビュー曲の記録を塗り替えた。','2枚目のシングル「{S2}」は、発売の週にいちばん売れた曲になった。'],
+  y2:['2枚目のシングル「{S2}」で、デビュー曲とは違う表情を見せた。','2枚目のシングル「{S2}」は、メンバーが歌詞の一部を書いた初めての曲になった。','2枚目のシングル「{S2}」の撮影は、番組の合宿所の近くで行われた。'],
+  y2combo:['{CA}と{CB}は、ユニット「{CN}」としてふたりで配信曲を出した。','{CA}と{CB}のユニット「{CN}」が、ラジオで毎週の掛け合いを始めた。'],
+  y2big:['{N}人の大所帯を生かし、曲ごとに組み合わせを変える公演を始めた。','{N}人それぞれのソロの場面を入れたライブは、毎回4時間近くになった。'],
+  y2small:['{N}人だから、と全員がひとり何役もこなした。照明の合図まで覚えたのは{A}だった。','少人数のぶん、ひとりひとりの声がはっきり届くと評判になった。'],
+  y2miss:{v:['歌える人が足りないと言われ、全員で歌のレッスンに通い直した。'],d:['踊りの層が薄いと言われ、全員で毎朝の基礎練習を始めた。'],r:['ラップの担当が足りず、{A}が初めてラップのパートを引き受けた。']},
+  y2ev:['初めての冠番組が始まった。深夜の30分だったが、毎週の収録を全員が楽しみにした。','ファンとの交流会で、{A}はファンの名前を一人ひとり呼んだ。','初めての海外公演。慣れない言葉のあいさつを、{A}が一生懸命に読み上げた。','{A}の誕生日に、メンバーがこっそり練習した歌を贈った映像が広がった。'],
+  y3hi:['構成も振付も、メンバーだけで作ったアルバム「{S3}」を出した。「番組のころから、ずっとこうしたかった」と{WHO2}は話した。','アルバム「{S3}」の制作中、{N}人は毎晩スタジオに残った。完成した日、全員で朝日を見に行った。'],
+  y3mid:['初めての全国ツアー。移動のバスで、毎晩ミーティングを開いた。アルバム「{S3}」の曲順も、そのバスの中で決めた。','アルバム「{S3}」を出した。曲順をめぐって意見が割れたが、最後は{A}の案で落ち着いた。'],
+  y3lo:['目指す方向がずれ、活動を3か月休んだ。戻ってきた日、全員でファンに頭を下げた。そのあとのライブは、前よりずっと息が合っていた。','アルバム「{S3}」の制作は難航した。録音のやり直しは何十回にもなったが、仕上がった曲には全員の声が入っていた。'],
+  y4:[['海外の音楽祭に招かれた。言葉の通じない客席が、サビで一斉に歌い出した。','グループの冠番組が、夜の早い時間帯で始まった。'],
+    ['アジアの3つの都市を回る公演を開いた。どの街でも、番組を見ていたという人に会った。','グループの名前を冠した特番が組まれた。'],
+    ['念願だった大きなホールでの公演が決まった。発表の瞬間を、{A}は配信で泣きながら伝えた。','ファンクラブの集いを初めて開いた。'],
+    ['地方の小さな会場を、1年かけて全部回った。','{A}が地元のラジオで歌った曲が、少しずつ聴かれ始めた。'],
+    ['事務所の小さな練習室で、新しい曲を一から作り直した。','ファンと一緒に作る企画を始め、歌詞の募集に何百通も届いた。']],
+  y4ind:{v:['{A}がひとりで、ドラマの主題歌を歌った。','{A}がほかの歌手の曲に、声で参加した。'],d:['{A}が、ほかのグループの振付を初めて任された。','{A}がダンスの大会の審査員に呼ばれた。'],
+    r:['{A}が、初めてほかの歌手に詞を書いた。','{A}のラップを集めた配信の作品が出た。'],t:['{A}がドラマに出演した。撮影の合間も、メンバーに台本の読み合わせを頼んでいた。','{A}が雑誌で連載を始めた。']},
+  y5:[['デビュー5年目、ドームのステージに立った。客席の光が、{N}つの席を照らした。','5年目、ふたつのドームを回る公演を成功させた。'],
+    ['全国のアリーナを回るツアーを成功させた。最終日、{T}が「次はもっと大きな場所で」と約束した。','5年目、アリーナの公演で、初めて客席が2階の奥まで埋まった。'],
+    ['毎年のホールツアーが恒例になった。「生で見ると全然違う」と、少しずつ評判が広がっている。','5年目、初めてのホールツアーで全公演を満員にした。'],
+    ['大きな会場には届かないが、毎月のライブを1度も休まず続けている。','5年目、初めてのホール公演。満員ではなかったが、全員が「最高の景色」と言った。'],
+    ['一度活動を見直し、新しい曲で再出発した。最初のステージには、番組のころからのファンが集まった。','5年目、ライブハウスからもう一度やり直すことにした。初日は、ちょうど番組の最終回と同じ日だった。']],
+  y5ann:['5周年の記念日、{G}はファンに向けて手紙を読んだ。書いたのは{A}だった。','5周年の記念に、番組の最初の課題曲をもう一度歌った。','5周年の配信で、{A}が番組の最初の日の写真を持ってきて、全員で笑った。'],
+  y6:{v:['6年目のシングル「{S4}」は、全員の声を一本ずつ重ねて録った。','6年目、楽器だけの小さな編成で歌う公演を始めた。'],
+    d:['6年目のシングル「{S4}」の振りは、真似する動画が数えきれないほど上がった。','6年目、踊りだけで見せる公演を開いた。'],
+    r:['6年目のシングル「{S4}」は、メンバー全員がラップを書いた。','6年目、言葉だけで勝負する朗読と音の公演を開いた。']},
+  y6ind:['{A}がソロの作品を出し、{B}はその曲のコーラスに参加した。','{A}と{B}が、ふたりで旅をする番組に出た。','{A}の個人の仕事が増え、グループの練習はそのぶん朝早くになった。','{A}が後輩グループの曲に参加し、{B}は客席から見守った。'],
+  y7hi:['7年目、全員がそろって次の契約にサインした。「あと何年でも」と{A}が笑った。','7年目、全員で事務所と話し合い、グループで続けることを決めた。決めるのに5分もかからなかった。'],
+  y7mid:['7年目、一人ひとりが自分の道を考えた。話し合いは何日も続いたが、全員がグループに残った。','7年目、それぞれの個人の仕事とグループの活動の配分を決め直した。'],
+  y7lo:['7年目、グループを続けるかどうかで、初めて本気で話し合った。最後に「もう少しだけ」と言ったのは{A}だった。','7年目、活動の形を見直し、年に1度のツアーを軸にすることにした。'],
+  y8:[['8年目、後輩グループのデビュー曲を、{A}が作った。','8年目、自分たちの名前を冠した音楽祭を初めて開いた。'],
+    ['8年目、後輩たちの練習を見るようになった。{A}は「番組のころの自分たちを見ているみたい」と話した。','8年目、ファンの投票で選んだ曲だけの公演を開いた。'],
+    ['8年目、地方の街を回るツアーで、番組のころの合宿所の近くにも寄った。','8年目、ファンが作った応援の歌を、メンバーが本当に歌った。']],
+  y9:['9年目、これまでの曲を集めたアルバムを出した。最後の曲は、デビュー曲「{S1}」を今の声で録り直したものだった。','9年目、10年の歩みをまとめた記録映画が作られた。試写会では、{A}がいちばん先に泣いた。','9年目、新しいアルバム「{S5}」を出した。全曲、メンバーが作った曲だった。','9年目、番組の合宿所が閉じると聞き、全員で最後の掃除に行った。'],
+  y10top:['10年目の記念ライブで、番組の最初の日の映像が流れた。','10年目、デビューの地に戻って記念公演を開いた。チケットは発売から数分でなくなった。'],
+  y10:['10年目、全員で番組の合宿所をもう一度訪ねた。','10年目、デビューのときと同じライブハウスで記念公演を開いた。'],
+  y10end:['最後の曲は「{S1}」。10年前と同じ振りで、10年前より少しだけゆっくり踊った。','終演後、{A}は「また10年後も、ここで」と言った。','アンコールで、{N}人は客席に向かって深くお辞儀をした。長い拍手がやまなかった。','記念ライブの帰り道、メンバーは久しぶりに全員で同じ店に寄った。'],
+  after:{hi:['残った{N}人は、振付を一から組み直した。','{N}人になった最初のライブで、{A}がMCで「ここからもう一度」と言った。','{N}人になっても、ライブの最後の円陣の掛け声は変えなかった。'],
+    lo:['{N}人になって最初のライブは、空いた立ち位置が目立った。それでも{A}は最後まで笑顔を崩さなかった。','しばらくは、{N}人でのステージに慣れなかった。','歌割りを全部書き直すのに、半年かかった。']},
+  leave:{dir:['{X}が{G}を卒業した。{Y}とは、曲の方向をめぐって何度もぶつかってきた。最後のステージで、ふたりは短く握手をした。','{X}が「やりたい音楽が違ってきた」と話し、{G}を離れた。{Y}は最後まで引き止めたが、見送るときは笑っていた。','方向性の違いから、{X}が{G}を卒業することになった。発表の配信で、{X}と{Y}は目を合わせなかったが、最後に一度だけうなずき合った。'],
+    dirn:['{X}が「やりたい音楽が違ってきた」と話し、{G}を卒業した。','方向性の違いから、{X}が{G}を離れることになった。最後のステージでは、いつもより長く客席を見ていた。'],
+    soloD:['{X}が、ソロで歌う道を選んで{G}を卒業した。「{D}」——番組のころから口にしていた夢だった。','{X}が「{D}」という夢のために、{G}を卒業した。最後のステージでは、メンバーが{X}の背中を押すように並んだ。'],
+    solo:['{X}がソロの活動に専念するため、{G}を卒業した。最後のステージの最後の一節は、メンバーが{X}ひとりに歌わせた。','{X}が、ひとりで歌う道を選んで{G}を卒業した。発表の日、メンバーは全員で{X}の新しい門出を祝った。'],
+    study:['{X}が学業に専念するため、{G}を卒業した。海外の学校で、音楽を一から学び直すという。','{X}が大学で作曲を学ぶため、{G}を卒業した。「必ず何かを持って戻ります」と言い残した。']},
+  rest:['{X}が足首のけがの治療のため、しばらく活動を休むことになった。ステージの{X}の立ち位置は、空けたままにした。','{X}が腰のけがを治すため、活動を休んだ。休んでいるあいだも、{X}は毎回のライブの感想をメンバーに送っていた。'],
+  back:['{X}が戻ってきた。復帰のステージ、最初のひと言は「ただいま」だった。','{X}が復帰した。休んでいたあいだにできた新しい振りを、メンバーが1曲ずつ教えた。'],
+  rejoin:['{X}が{G}に戻ってきた。発表の日、{Y}は「おかえり」とだけ言った。','卒業した{X}が、{G}に戻ってきた。外で学んだことが、グループの曲を少し変えた。'],
+  mom:['{A}と{B}が、ツアー先の朝市で同じお土産を買って笑い合った。','{A}が楽屋に置いた日めくりの言葉が、毎朝の楽しみになった。','{A}の発案で、ライブの前に全員で円陣を組む掛け声が新しくなった。','{A}と{B}が、移動の新幹線でずっと新曲の歌割りを相談していた。','{A}が初めて、ライブの曲順を一人で考えた。','{A}が、番組のころの練習着を今も着てリハーサルに出ている。','{A}と{B}が、ライブの合間の短い劇で客席を沸かせた。','{A}が、メンバー全員の似顔絵を描いたTシャツを作った。','{A}が楽屋で始めた朝のストレッチに、いつの間にか全員が加わった。','ツアーの打ち上げで、{A}が番組の最初の日の自己紹介を再現して、全員が笑い転げた。','{A}は新曲の振り入れの日、いちばんに覚えて{B}に教えて回った。','{A}と{B}が、休みの日にふたりで後輩のライブを見に行った。','台風で公演が延期になった夜、{A}の提案で宿から急きょ配信をした。','{A}が書いた手書きの曲順表が、ファンのあいだで話題になった。'],
+  fore:['{X}と{Y}が、新曲の方向をめぐって初めて言い合いになった。その日のリハーサルは、途中で終わった。','楽屋で、{X}と{Y}が並んで座らない日が増えた。','{X}が「やりたい音楽が少し違ってきた」と、初めて口にした。{Y}は黙ってうなずいただけだった。'],
+  mend:['番組のころから噛み合わないと言われた{X}と{Y}が、初めてふたりで1曲を歌った。客席から、長い拍手が起きた。','{X}と{Y}は、意見がぶつかるたびに朝まで話した。いつしか、ふたりの言い合いはリハーサルの名物になった。','相性が悪いと言われ続けた{X}と{Y}が、ライブのMCで「今はいちばん頼れる相手」と言い合った。'],
+  guest:['客席の後ろには、卒業した{X}の姿もあった。アンコールで呼ばれ、{X}は1曲だけ一緒に歌った。','卒業した{X}から、楽屋に大きな花が届いた。札には「次の10年も」とだけ書いてあった。']
+};
+/* その後の型。w はその子に合う重み */
+var CAREER={
+  solo:{w:function(t){return (t.spec==='v'?3:t.spec==='t'?1:0)+(t.awoke&&t.spec==='v'?3:0)+(/自分で作った曲|主題歌/.test(t.dream)?2:0);},s:['グループと並行して、ソロでも歌い始めた。初めてのソロ公演は、メンバー全員が客席から見守った。','ソロのアルバムを2枚出した。1曲目はどちらも、番組のころに書きためた歌だった。','ソロで歌う夜も、最後には必ずグループの曲を1曲入れている。']},
+  writer:{w:function(t){return (t.spec==='r'?3:t.spec==='v'?1:0)+(/自分で作った曲/.test(t.dream)?3:0);},s:['グループの曲の半分以上を手がけるようになった。歌詞のノートは、もう20冊を超えた。','ほかの歌手にも曲を書くようになり、作家としての名前も知られ始めた。','作った曲がグループの代表曲になり、ライブは必ずその曲で締めくくる。']},
+  choreo:{w:function(t){return t.spec==='d'?4:0;},s:['グループの振付を、ほとんど一人で作るようになった。','振付師として、ほかのグループにも呼ばれるようになった。「踊る人がいちばん楽しい振りを」が口癖だ。','自分の名前のついたダンス教室を開いた。週末は子どもたちでいっぱいになる。']},
+  teach:{w:function(t){return (t.trust>=70?2:0)+(t.temper==='sunao'?2:0)+(t.spec==='d'||t.spec==='v'?1:0);},s:['事務所の後輩たちのレッスンを見るようになった。厳しいが、最後に必ずほめる先生として慕われている。','番組の次のシーズンに、先輩として教えに行った。練習生たちの前で、自分の最初の動画を流して笑わせた。','後輩から相談の電話がかかってくると、どんなに遅くても出る。']},
+  actor:{w:function(t){return (t.spec==='t'?3:0)+(t.awoke&&t.spec==='t'?2:0)+(/主題歌/.test(t.dream)?1:0);},s:['ドラマに出るようになり、役者としての評価も高まった。','舞台の主演を務めた。千秋楽には、メンバー全員から花が届いた。','映画の脇役で出た作品が、思わぬ評判を呼んだ。']},
+  radio:{w:function(t){return (t.spec==='r'||t.spec==='t'?1:0)+(t.temper==='ochoshi'?3:t.temper==='mypace'?1:0);},s:['深夜のラジオ番組を任され、聞き上手として長く親しまれている。','ラジオでは、メンバーの近況をうっかり話してしまうのがお決まりだ。']},
+  variety:{w:function(t){return (t.temper==='ochoshi'?2:0)+(t.spec==='t'?1:0);},s:['バラエティ番組の常連になった。どんな企画でも、最後は必ずグループの宣伝を忘れない。','料理番組のアシスタントを長く務め、包丁さばきがすっかり板についた。']},
+  musical:{w:function(t){return (t.spec==='v'?2:0)+(t.spec==='t'?1:0);},s:['ミュージカルの舞台に立つようになり、歌と芝居の両方で拍手を集めた。','ミュージカルで長く続く役をもらい、地方の公演も回った。']},
+  home:{w:function(t){return .6+(/地元|おばあちゃん/.test(t.dream)?3:0);},s:['地元の{H}で、音楽の催しを毎年開いている。メンバー全員が出演した年もあった。','地元の{H}の観光大使に選ばれ、帰るたびに商店街で声をかけられる。']},
+  book:{w:function(t){return (t.temper==='mypace'?2:0)+(t.temper==='sensai'?1:0);},s:['撮りためたメンバーの写真を、1冊の本にまとめた。','エッセイを書くようになり、番組のころの日記をもとにした本がよく読まれた。']},
+  produce:{w:function(t){return (t.trust>=65?1:0)+(t.temper==='makezu'?1:0)+(t.spec==='r'||t.spec==='v'?1:0);},s:['グループのライブの演出を任されるようになった。客席からの見え方を、誰よりも気にかけている。','後輩グループの曲のプロデュースを手がけた。']},
+  abroad:{w:function(t){return /海外/.test(t.dream)?4:.3;},s:['海外の音楽祭にひとりで招かれ、その国の言葉で歌った。','海外の振付師やつくり手と、一緒に作品を作るようになった。']}
+};
+var LEFT_FUT={solo:['ソロの歌い手として、小さなホールを毎年満員にしている。','ソロで出したアルバムには、{G}の曲を1曲だけ歌い直して入れた。'],
+  dir:{v:['自分の歌いたい歌を追いかけ、新しいバンドを組んだ。'],d:['振付師として、裏方からいくつものステージを支えている。'],r:['作家として、ほかの歌手に詞を書いている。'],t:['舞台の役者に転じ、小さな劇場で主演を続けている。']},
+  study:['学校を出たあと、子どもたちに歌とダンスを教えている。','学んだ照明の仕事に就いた。{G}のライブの照明を任されたこともある。','学び直した作曲で、ほかの歌手に曲を書くようになった。']};
+var DREAM_OK={'地元の大きな会場でライブをする':'{K}年目、地元の{H}の大きな会場でライブをした。客席には、通っていた学校の先生もいた。','家族を一番前の席に招待する':'{K}年目のツアーで、家族を一番前の席に招いた。','自分で作った曲を歌う':'{K}年目、自分で作った曲をステージで歌った。','海外でステージに立つ':'{K}年目、海外のステージに立った。',
+  '誰かの「元気の出る曲」を歌う':'「この曲で元気が出た」という手紙を、今も楽屋の鏡に貼っている。','メンバー全員で旅行に行く':'{K}年目の休みに、念願だったメンバー全員での旅行に行った。','ドラマの主題歌を歌う':'{K}年目、ドラマの主題歌を歌った。','おばあちゃんの町でライブをする':'{K}年目、おばあちゃんの町でライブをした。最前列で、おばあちゃんが手を振っていた。',
+  'ファンの名前を全部覚える':'握手会では、通ってくれるファンの名前を今も一人ずつ呼ぶ。','10年後もこのメンバーで歌う':'10年目の記念ライブで、その夢はかなった。'};
+var SOLO_DREAM=/自分で作った曲|海外|主題歌/;
+function ftFill(s,m){return s.replace(/\{([A-Z0-9]+)\}/g,function(x,k){return m[k]!=null?m[k]:x;});}
+function wpick(o,keys){var tot=0,ws=keys.map(function(k){var w=Math.max(0,o[k]);tot+=w;return w;});if(tot<=0)return keys[0];var x=R()*tot;for(var i=0;i<keys.length;i++){x-=ws[i];if(x<0)return keys[i];}return keys[keys.length-1];}
+function makeFuture(S,E){var used=[],P=S.prep||{names:['（名前なし）'],name:0},G=P.custom||P.names[P.name]||'（名前なし）',tier='SABCD'.indexOf(E.grade),D=E.D,L=E.L,n=D.length,Y=[];
+  if(tier<0)tier=2;
+  var s1=P.songs?P.songs[P.song||0]:songTitle(used);used.push(s1);var s2=songTitle(used),s3=songTitle(used),s4=songTitle(used),s5=songTitle(used);
+  var combos=E.combos||[],coh=E.coh,dirK=(SONGDIR[P.dir||0]||SONGDIR[0]).k,act=P.act!=null?P.act:-1;
+  var inCombo=function(t){return combos.some(function(c){return c.a===t.id||c.b===t.id;});};
+  /* 卒業・休止を先に決める：相性△で絆の浅い組ほど起きやすい。まとまりが高い・コンビがいると起きにくい */
+  var ev={},leaves=[],busy={};if(L)busy[L.id]=1;
+  var cohM=coh>=75?.35:coh>=60?.6:coh>=45?1:1.4,pairs=[];
+  for(var i=0;i<n;i++)for(var j=i+1;j<n;j++){var a=D[i],b=D[j],o=S.bond&&S.bond[bkey(a.id,b.id)];if(!o||o.c!=='b'||o.combo)continue;
+    var p=o.v<25?.34:o.v<50?.22:o.v<75?.1:0;if(!p)continue;
+    p*=cohM*(combos.length?.75:1)*(inCombo(a)||inCombo(b)?.5:1)*(L?1:1.2)*(tier>=3?1.2:1);pairs.push({a:a,b:b,p:p});}
+  pairs.sort(function(x,y){return y.p-x.p;});
+  var lyears=[3,4,5,6,7].sort(function(){return R()-.5;});
+  pairs.forEach(function(pr){if(leaves.length>=2||busy[pr.a.id]&&busy[pr.b.id])return;if(R()>=pr.p)return;
+    var c=[pr.a,pr.b].filter(function(t){return !busy[t.id];});if(!c.length)return;
+    c.sort(function(x,y){return x.trust-y.trust;});var X=c[0],Yp=X===pr.a?pr.b:pr.a;
+    var r=wpick({dir:3,solo:SOLO_DREAM.test(X.dream)||X.awoke?2.5:.5,study:X.age<=17?1.5:.6},['dir','solo','study']);
+    busy[X.id]=1;leaves.push({id:X.id,p:Yp.id,r:r,y:lyears.shift()});});
+  D.forEach(function(t){if(leaves.length>=2||busy[t.id]||!SOLO_DREAM.test(t.dream)||!(t.awoke||t.pop>=60))return;if(R()<(coh<60?.08:.03)){busy[t.id]=1;leaves.push({id:t.id,p:null,r:'solo',y:lyears.shift()});}});
+  leaves.forEach(function(lv){var X=S.tr[lv.id];if(lv.r==='solo')return;
+    if(lv.y<=6&&R()<(coh>=60?.35:.15)){lv.rj=ri(Math.max(lv.y+2,8),9);}else if(R()<.6)lv.gs=1;
+    if(lv.r!=='solo'&&lv.rj==null&&!lv.gs&&R()<.3)lv.gs=1;});
+  leaves.forEach(function(lv){if(lv.r==='solo'&&R()<.6)lv.gs=1;});
+  var restL=D.filter(function(t){return !busy[t.id];});if(restL.length&&R()<.15){var rt=pick(restL),ry=ri(2,6);busy[rt.id]=1;leaves.push({id:rt.id,r:'rest',y:ry,back:ry+ri(1,2)});}
+  leaves.forEach(function(lv){(ev[lv.y]=ev[lv.y]||[]).push({k:'leave',lv:lv});if(lv.r==='rest')(ev[lv.back]=ev[lv.back]||[]).push({k:'back',lv:lv});if(lv.rj)(ev[lv.rj]=ev[lv.rj]||[]).push({k:'rejoin',lv:lv});});
+  /* 前ぶれ（卒業の前の年）と、相性の悪い組が乗り越える筋 */
+  var xtra={};function addX(y,o){(xtra[y]=xtra[y]||[]).push(o);}
+  leaves.forEach(function(lv){if(lv.r==='dir'&&lv.p!=null&&lv.y-1>=2)addX(lv.y-1,{s:pick(FT.fore),m:{X:S.tr[lv.id].giv,Y:S.tr[lv.p].giv},ids:[lv.id,lv.p]});});
+  var mendP=pairs.filter(function(pr){return !leaves.some(function(lv){return lv.r!=='rest'&&(lv.id===pr.a.id||lv.id===pr.b.id);});})[0];
+  if(mendP&&R()<.75){var my=pick([4,6,8]);addX(my,{s:pick(FT.mend),m:{X:mendP.a.giv,Y:mendP.b.giv},ids:[mendP.a.id,mendP.b.id]});}
+  var momU=[];[3,7,8,9].forEach(function(y){var f=FT.mom.filter(function(x){return momU.indexOf(x)<0;}),x=pick(f);momU.push(x);addX(y,x);});
+  var usedY=[];function pickY(a){var f=a.filter(function(x){return usedY.indexOf(x)<0;}),x=pick(f.length?f:a);usedY.push(x);return x;}
+  var out={};/* いま外にいる子 */
+  function cur(){return D.filter(function(t){return !out[t.id];});}
+  /* 1年ぶんの文を組む。{A}{B}はその年にいる子から、同じ年に同じ子を2度選ばない */
+  function year(lab,parts,yr){var es=ev[yr]||[],skip={};es.forEach(function(e){skip[e.lv.id]=1;});
+    var C=cur().filter(function(t){return !skip[t.id];});if(!C.length)C=cur();var taken={};
+    function pa(){var f=C.filter(function(t){return !taken[t.giv];});if(!f.length)f=C;var t=pick(f);taken[t.giv]=1;return t.giv;}
+    var top=C.slice().sort(function(a,b){return b.pop-a.pop;})[0];
+    var m={G:G,N:cur().length,L:L?L.giv:'',S1:s1,S2:s2,S3:s3,S4:s4,S5:s5,T:top.giv,WHO:L?L.giv+'が':'メンバーが',WHO2:L?L.giv:top.giv};
+    var txt=parts.concat(xtra[yr]||[]).filter(function(s){return s&&(typeof s==='string'||!s.ids.some(function(id){return out[id]||skip[id];}));}).map(function(s){if(typeof s==='object')return ftFill(s.s,s.m);var mm={};for(var k in m)mm[k]=m[k];if(/\{A\}/.test(s))mm.A=pa();if(/\{B\}/.test(s))mm.B=pa();return ftFill(s,mm);});
+    es.forEach(function(e){var lv=e.lv,X=S.tr[lv.id],Yp=lv.p!=null?S.tr[lv.p]:null,mm={G:G,X:X.giv,Y:Yp&&!out[Yp.id]?Yp.giv:'',D:X.dream};
+      if(e.k==='leave'){var pool=lv.r==='rest'?FT.rest:lv.r==='dir'&&!mm.Y?FT.leave.dirn:lv.r==='solo'&&SOLO_DREAM.test(X.dream)?FT.leave.soloD:FT.leave[lv.r];txt.push(ftFill(pickY(pool),mm));out[X.id]=1;
+        if(lv.r!=='rest'){var C2=cur();mm.N=C2.length;mm.A=pick(C2).giv;txt.push(ftFill(pickY(coh>=55?FT.after.hi:FT.after.lo),mm));}}
+      else if(e.k==='back'){txt.push(ftFill(pickY(FT.back),mm));out[X.id]=0;}
+      else{if(!mm.Y)mm.Y=L&&L.id!==X.id?L.giv:pick(cur()).giv;txt.push(ftFill(pickY(FT.rejoin),mm));out[X.id]=0;}});
+    Y.push({y:lab,t:txt.join(' '),ev:es.length?1:0});}
   var fc=Math.max(.3,Math.round(E.fanScore*E.fanScore/100*(tier<=1?14:6))/10);
-  Y.push({y:'1年目',t:[(L?L.giv+'が':'メンバーが')+'年末の音楽賞で新人賞を受け取った。壇上で「この'+n+'人で来られてよかった」と声を詰まらせた。','初めてのワンマンライブは2日間とも満員。アンコールで、全員が泣いていた。','ライブハウスを回る初めてのツアー。最終日だけ、当日券が出なかった。','小さな会場で、一人ひとりのファンと握手を重ねた1年だった。','思うように数字が伸びず、メンバーで何度も話し合った1年だった。'][tier]+' ファンクラブの会員は'+fc+'万人になった。'});
-  var y2=E.song>=70?'2枚目のシングル「'+s2+'」が、デビュー曲の記録を塗り替えた。':'2枚目のシングル「'+s2+'」で、デビュー曲とは違う表情を見せた。';
-  if(combos.length){var c=combos[0];y2+=' '+S.tr[c.a].giv+'と'+S.tr[c.b].giv+'は、ユニット「'+c.n+'」としてふたりで配信曲を出した。';}
-  Y.push({y:'2年目',t:y2});
-  Y.push({y:'3年目',t:E.coh>=70?'構成も振付も、メンバーだけで作ったアルバム「'+s3+'」を出した。「番組のころから、ずっとこうしたかった」と'+(L?L.giv:top.giv)+'は話した。':
-    E.coh>=50?'初めての全国ツアー。移動のバスで、毎晩ミーティングを開いた。':'目指す方向がずれ、活動を3か月休んだ。戻ってきた日、全員でファンに頭を下げた。そのあとのライブは、前よりずっと息が合っていた。'});
-  Y.push({y:'5年目',t:['デビュー5年目、ドームのステージに立った。客席の光が、'+n+'つの席を照らした。','全国のアリーナを回るツアーを成功させた。最終日、'+top.giv+'が「次はもっと大きな場所で」と約束した。','毎年のホールツアーが恒例になった。「生で見ると全然違う」と、少しずつ評判が広がっている。','大きな会場には届かないが、毎月のライブを1度も休まず続けている。','一度活動を見直し、新しい曲で再出発した。最初のステージには、番組のころからのファンが集まった。'][tier]});
+  year('デビュー',['デビュー曲「'+s1+'」は、1か月で'+Math.round(E.streams).toLocaleString()+'万回再生された。',pick(act>=0&&FT.act[act]?FT.act[act]:FT.act0),pick(FT.dir[dirK])],0);
+  var spotT=pick(D);
+  year('1年目',[pick(FT.y1[tier])+' ファンクラブの会員は'+fc+'万人になった。',pick(L?FT.lead:FT.nolead),ftFill(pick(FT.spot[spotT.spec]),{A:spotT.giv})],1);
+  var missK=['v','d','r'].filter(function(k){return E.roles&&E.roles[k]===0;})[0],y2x=[];
+  if(combos.length){var c0=combos[0];y2x.push(ftFill(pick(FT.y2combo),{CA:S.tr[c0.a].giv,CB:S.tr[c0.b].giv,CN:c0.n}));}
+  else if(missK)y2x.push(pick(FT.y2miss[missK]));
+  else if(n>=7)y2x.push(pick(FT.y2big));else if(n<=5)y2x.push(pick(FT.y2small));
+  year('2年目',[pick(E.song>=70?FT.y2hit:FT.y2)].concat(y2x,[pick(FT.y2ev)]),2);
+  year('3年目',[pick(coh>=70?FT.y3hi:coh>=50?FT.y3mid:FT.y3lo)],3);
+  var C4=cur().filter(function(t){return !(ev[4]||[]).some(function(e){return e.lv.id===t.id;});}),indT=C4.filter(function(t){return t.awoke;})[0]||pick(C4);
+  var did={},y4i=indT?pick(FT.y4ind[indT.spec]):'';if(indT&&/主題歌/.test(y4i))did[indT.id]='主題歌';
+  year('4年目',[pick(FT.y4[tier]),indT?ftFill(y4i,{A:indT.giv}):''],4);
+  year('5年目',[pick(FT.y5[tier]),pick(FT.y5ann)],5);
+  year('6年目',[pick(FT.y6[dirK]),pick(FT.y6ind)],6);
+  year('7年目',[pick(coh>=70?FT.y7hi:coh>=50?FT.y7mid:FT.y7lo)],7);
+  year('8年目',[pick(FT.y8[tier<=1?0:tier<=2?1:2])],8);
+  var y9=pick(FT.y9);year('9年目',[y9],9);
   var gone=S.tr.filter(function(t){return t.status==='out'||t.status==='left'||t.status==='final';}),again=gone.filter(function(t){return t.fwd==='again';});if(again.length)gone=again;
-  Y.push({y:'10年目',t:(tier<=1?'10年目の記念ライブで、番組の最初の日の映像が流れた。':'10年目、全員で番組の合宿所をもう一度訪ねた。')+(gone.length?' 客席には、あの合宿をともに過ごした'+pick(gone).giv+'の姿もあった。':'')});
-  var M=D.map(function(t){var line;
-    if(t.awoke)line=pick(FUT_SPEC[t.spec]);
-    else if(t.arc&&t.arc.step>=3&&t.arc.score>=2)line=arcEnd(S,t);
-    else line=pick(FUT_PLAIN[t.spec]);
-    var cb=combos.filter(function(c){return c.a===t.id||c.b===t.id;})[0];
-    if(cb)line+='。'+S.tr[cb.a===t.id?cb.b:cb.a].giv+'とのコンビ「'+cb.n+'」は、ファンの間で定番になった';
-    if(L&&t.id===L.id)line='リーダーとしてグループの舵を取り続けた。'+line;
-    line=line.replace(/。?$/,'。');
-    if(t.dream)line+=tier<=2?'「'+t.dream+'」という夢も、'+(5+t.id%5)+'年目にかなえた。':'「'+t.dream+'」という夢は、まだ途中にある。';
-    var fam=t.bg&&FAM_FUT[t.bg.family];if(fam&&R()<.6)line+=fam;
-    return {id:t.id,t:line};});
-  return {g:P.names[P.name],songs:[s1,s2,s3],years:Y,members:M,grade:E.grade};}
+  var y10=[pick((tier<=1?FT.y10top:FT.y10).filter(function(x){return !(/合宿所が閉じる/.test(y9)&&/合宿所/.test(x));}))];if(gone.length)y10.push('客席には、あの合宿をともに過ごした'+pick(gone).giv+'の姿もあった。');
+  leaves.forEach(function(lv){if(lv.gs&&lv.r!=='rest')y10.push(ftFill(pick(FT.guest),{X:S.tr[lv.id].giv}));});
+  y10.push(pick(FT.y10end));
+  year('10年目',y10,10);
+  /* メンバーのその後 */
+  var usedK={},usedS=[],dreamBy={},dreamOk={},habitN=0;function pickU(a){var f=a.filter(function(x){return usedS.indexOf(x)<0;}),x=pick(f.length?f:a);usedS.push(x);return x;}
+  function dq(d){return d.replace(/「/g,'『').replace(/」/g,'』');}
+  var anyLeft=leaves.some(function(lv){return lv.r!=='rest'&&!lv.rj;});
+  var M=D.map(function(t){var lv=leaves.filter(function(x){return x.id===t.id;})[0],ln=[],tag='',mm={G:G,H:t.home||'ふるさと'};
+    var partnerOf=leaves.filter(function(x){return x.p===t.id&&x.r!=='rest';})[0];
+    if(L&&t.id===L.id)ln.push(pick(coh>=60?['リーダーとしてグループの舵を取り続けた。','リーダーとして、10年間ずっと最初に練習室に来た。']:['リーダーとして、ぶつかり合うメンバーのあいだに何度も立った。','リーダーとして、うまくいかない年もグループを手放さなかった。']));
+    else if(!L&&t===D.slice().sort(function(a,b){return b.trust-a.trust;})[0])ln.push('決まったリーダーはいなかったが、迷ったときにみんなが顔を見るのは、いつもこの人だった。');
+    if(lv&&lv.r!=='rest'&&!lv.rj){tag=lv.y+'年目に卒業'+(lv.rj?'・'+lv.rj+'年目に復帰':'');
+      ln.push(lv.y+'年目に'+G+'を卒業した。'+{dir:'方向性の違いからだった。',solo:'ソロの道を選んだ。',study:'学業に専念するためだった。'}[lv.r]);
+      var lf=lv.r==='dir'?LEFT_FUT.dir[t.spec]:LEFT_FUT[lv.r];ln.push(ftFill(pickU(lf),mm));
+      if(lv.gs)ln.push('10年目の記念ライブには、客席から駆けつけた。');
+      else ln.push(pick(['記念日には毎年、メンバーに花を贈っている。','メンバーとは今も、誕生日にメッセージを送り合う。']));
+    }else{
+      if(lv&&lv.rj){tag=lv.y+'年目に卒業・'+lv.rj+'年目に復帰';ln.push(lv.y+'年目にいったん'+G+'を離れ、'+lv.rj+'年目に戻ってきた。'+(lv.r==='study'?'学んできた作曲を生かし、今はグループの曲を多く手がけている。':'外で組んだバンドで覚えた音を、グループの曲に持ちこんだ。'));}
+      if(lv&&lv.r==='rest')tag=lv.y+'年目に休止・'+lv.back+'年目に復帰';
+      if(t.awoke)ln.push(pickU(FUT_SPEC[t.spec])+'。');
+      else if(t.arc&&t.arc.step>=3&&t.arc.score>=2)ln.push(arcEnd(S,t).replace(/。?$/,'。'));
+      else ln.push(pickU(FUT_PLAIN[t.spec])+'。');
+      var ks=Object.keys(CAREER),wo={};ks.forEach(function(k){wo[k]=CAREER[k].w(t)*(usedK[k]?.15:1)+.15;});var ck=wpick(wo,ks);usedK[ck]=1;
+      ln.push(ftFill(pickU(CAREER[ck].s),mm));
+      if(lv&&lv.r==='rest')ln.push(lv.y+'年目にけがで休んだが、戻ってからはステージに立てる日を前よりずっと大事にしている。');
+      var cb=combos.filter(function(c){return c.a===t.id||c.b===t.id;})[0];
+      if(cb){var cp=S.tr[cb.a===t.id?cb.b:cb.a],cpl=leaves.filter(function(x){return x.id===cp.id&&x.r!=='rest'&&!x.rj;})[0];
+        ln.push(cpl?cp.giv+'とのコンビ「'+cb.n+'」は、'+cp.giv+'の卒業のあとも、記念日だけ復活する。':cp.giv+'とのコンビ「'+cb.n+'」は、ファンの間で定番になった。');}
+      else{var bf=bondsOf(S,t.id).filter(function(x){var o2=S.tr[x.o];return o2&&o2.status==='debut'&&x.b.v>=60&&!leaves.some(function(l){return l.id===x.o&&l.r!=='rest'&&!l.rj;});}).sort(function(a,b){return b.b.v-a.b.v;})[0];
+        if(bf&&R()<.7)ln.push(pick(['{B}とは、今も楽屋でいちばん長く話している。','{B}とは、休みの日もよく一緒に出かける。','ライブの前には、必ず{B}と拳を合わせる。']).replace('{B}',S.tr[bf.o].giv));}
+    }
+    if(partnerOf){var X=S.tr[partnerOf.id];ln.push(partnerOf.rj?X.giv+'が戻ってきてからは、ふたりで掛け合う曲が増えた。':partnerOf.r==='dir'?X.giv+'とは、卒業して何年かたってから、ようやくゆっくり話せた。今は互いの新曲を真っ先に聴く。':X.giv+'の卒業を、いちばん最後まで寂しがっていた。');}
+    if(t.dream){var left=!!(lv&&lv.r!=='rest'&&!lv.rj),ok=tier<=2||t.awoke||(left&&lv.r==='solo'&&SOLO_DREAM.test(t.dream))||(did[t.id]&&t.dream.indexOf(did[t.id])>=0)||!left&&({abroad:/海外/,writer:/自分で作った曲/,home:/地元|おばあちゃん/}[ck]||/^$/).test(t.dream),dqt='「'+dq(t.dream)+'」',twin=left?null:dreamBy[t.dream];
+      /* 夢をかなえた年は、グループを離れていた年に重ねない（ソロの夢は離れてからでもよい） */
+      var K=5+t.id%5;if(lv&&!(lv.r==='solo'&&SOLO_DREAM.test(t.dream))){var e1=lv.rj||lv.back||11;if(K>=lv.y&&K<e1)K=lv.y>2?lv.y-1:Math.min(10,e1);}mm.K=K;
+      if(t.dream==='10年後もこのメンバーで歌う')ln.push(left?dqt+'という夢は、グループの外から、別の形で見届けた。':anyLeft?dqt+'という夢は、形を少し変えて、10年目にかなった。':dqt+'——その夢は、10年目の記念ライブでかなった。');
+      else if(t.dream==='メンバー全員で旅行に行く'&&left)ln.push('卒業の前の年、念願だったメンバー全員での旅行に行った。');
+      else if(ok&&twin&&dreamOk[t.dream])ln.push('同じ'+dqt+'という夢を持っていた'+(twin.length>1?twin.join('や')+'と一緒に':twin[0]+'と、ふたりで')+'その夢をかなえた。');
+      else if(ok){ln.push(dqt+'という夢もかなえた。'+(DREAM_OK[t.dream]?ftFill(DREAM_OK[t.dream],mm):''));}
+      else ln.push(pick([dqt+'という夢は、まだ途中にある。',dqt+'という夢に向かって、今も一歩ずつ進んでいる。']));
+      if(!left){(dreamBy[t.dream]=dreamBy[t.dream]||[]).push(t.giv);if(ok)dreamOk[t.dream]=1;}}
+    var fam=t.bg&&FAM_FUT[t.bg.family];if(fam&&R()<.6)ln.push(fam);
+    if(t.bg&&t.bg.habit&&habitN<2&&R()<.3){ln.push(ftFill(pickU(['口癖の{H}は、今ではファンの合言葉になっている。','ライブの前には今も、小さく{H}とつぶやいてからステージに出る。','{H}——番組のころからの口癖は、10年たっても変わらない。']),{H:t.bg.habit}));habitN++;}
+    return {id:t.id,t:ln.join('').replace(/。。/g,'。'),tag:tag,k:lv&&lv.r!=='rest'?'':ck};});
+  return {g:G,songs:[s1,s2,s3],years:Y,members:M,grade:E.grade,leaves:leaves.map(function(lv){return {id:lv.id,r:lv.r,y:lv.y,rj:lv.rj||0,gs:lv.gs||0};})};}
 function startEnding(S){S.future=makeFuture(S,finalEval(S));S.ending=true;try{var c=loadCareer();if(c.hall&&c.hall[0]&&c.hall[0].season===c.seasons&&!c.hall[0].songs){c.hall[0].songs=S.future.songs.slice();saveCareer(c);}}catch(e){}}
 
 
@@ -3929,12 +4119,15 @@ function dexBox(c){var d=c.dex||{arc:{},combo:{}},AK=ARC_KEYS.concat(packArcKeys
 function vEnding(){var F=S.future,E=finalEval(S),others=S.tr.filter(function(t){return t.status!=='cand'&&t.status!=='cut0'&&t.status!=='debut';});
   var h='<div class="ending"><div class="roll'+(ui.endStatic?' static':'')+'" data-a="endpause">';
   h+='<div class="ecard"><div class="esub">その後の物語</div><div class="etitle"'+(S.prep&&S.prep.color!=null?' style="color:'+GCOLORS[S.prep.color][1]+'"':'')+'>'+esc(F.g)+'</div></div>';
-  F.years.forEach(function(y){h+='<div class="eyear"><div class="ey">'+esc(y.y)+'</div><p>'+esc(y.t)+'</p></div>';});
+  F.years.forEach(function(y){h+='<div class="eyear'+(y.ev?' ev':'')+'"><div class="ey">'+esc(y.y)+'</div><p>'+esc(y.t)+'</p></div>';});
   h+='<div class="esec">メンバーのその後</div>';
-  F.members.forEach(function(m){var t=S.tr[m.id];h+='<div class="emem">'+faceImg(t,'md')+'<div><b>'+esc(t.name)+'</b><small>'+SPEC[t.spec]+'</small><p>'+esc(m.t)+'</p></div></div>';});
+  F.members.forEach(function(m){var t=S.tr[m.id];h+='<div class="emem'+(m.tag&&/卒業$/.test(m.tag)?' gone':'')+'">'+faceImg(t,'md')+'<div><b>'+esc(t.name)+'</b><small>'+SPEC[t.spec]+'</small>'+(m.tag?'<span class="etag">'+esc(m.tag)+'</span>':'')+'<p>'+esc(m.t)+'</p></div></div>';});
+  var byK=function(k){return (F.members||[]).filter(function(m){return m.k===k;}).map(function(m){return esc(S.tr[m.id].name);});},grad=(F.members||[]).filter(function(m){return m.tag&&/卒業$/.test(m.tag);}).map(function(m){return esc(S.tr[m.id].name);});
   h+='<div class="esec">スタッフ</div><div class="ecred"><div><small>主題歌</small>「'+esc(F.songs[0])+'」</div><div><small>歌</small>'+esc(F.g)+'</div>'+
     '<div><small>出演</small>'+E.D.map(function(t){return esc(t.name);}).join('<br>')+'</div>'+
     (others.length?'<div><small>ともに戦った練習生</small>'+others.map(function(t){return esc(t.name);}).join('<br>')+'</div>':'')+
+    (byK('writer').length?'<div><small>作詞・作曲</small>'+byK('writer').join('<br>')+'</div>':'')+(byK('choreo').length?'<div><small>振付</small>'+byK('choreo').join('<br>')+'</div>':'')+
+    (grad.length?'<div><small>卒業したメンバー</small>'+grad.join('<br>')+'</div>':'')+
     ((E.combos||[]).length?'<div><small>コンビ</small>'+E.combos.map(function(c){return esc(c.n)+'（'+esc(S.tr[c.a].giv)+'・'+esc(S.tr[c.b].giv)+'）';}).join('<br>')+'</div>':'')+
     '<div><small>声</small>'+VOICE_NAMES.map(function(n){return 'VOICEVOX:'+esc(n);}).join('<br>')+'</div><div><small>音楽</small>つるはし社</div>'+'<div><small>番組の平均視聴率</small>'+E.avgR.toFixed(1)+'%</div><div><small>プロデューサー</small>あなた</div></div>';
   h+='<div class="ecard last"><div class="esub">ひかりの指名</div><div class="etitle">おしまい</div><div class="small">見守ってくれて、ありがとう。</div></div>';
