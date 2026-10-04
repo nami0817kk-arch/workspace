@@ -3517,5 +3517,35 @@
     "video_id": "XKv6JSuGbj4",
     "at": "2026-10-04T06:57:57+00:00",
     "publish_at": "2026-10-04T11:00:00Z"
+  },
+  {
+    "build": "20261004_bruno_ronaldo",
+    "video_id": "wE15DSrihuE",
+    "at": "2026-10-04T08:33:27+00:00",
+    "publish_at": "2026-10-04T11:30:00Z"
+  },
+  {
+    "build": "20261004_bruno_ronaldo_short",
+    "video_id": "ZZU4OuQu9UQ",
+    "at": "2026-10-04T08:33:45+00:00",
+    "publish_at": "2026-10-04T12:00:00Z"
+  },
+  {
+    "build": "20261004_england_croatia_short",
+    "video_id": "EFlM4spPwS8",
+    "at": "2026-10-04T08:34:02+00:00",
+    "publish_at": "2026-10-04T12:30:00Z"
+  },
+  {
+    "build": "20260926_ll05_barcelona",
+    "video_id": "4rE_dwoZhbc",
+    "at": "2026-10-04T08:34:32+00:00",
+    "publish_at": "2026-10-04T13:00:00Z"
+  },
+  {
+    "build": "20260926_ll05_barcelona_short",
+    "video_id": "8Y59ZI0UC8k",
+    "at": "2026-10-04T08:34:48+00:00",
+    "publish_at": "2026-10-05T00:00:00Z"
   }
 ]
