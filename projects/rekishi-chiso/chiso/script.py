@@ -73,6 +73,7 @@ class Line:
     figure: str | None = None         # 図（地図・グラフ・相関図）の指定。JSON の文字列（chiso/figures.py）
     bubble: str | None = None         # 肖像の人物の吹き出し（その行だけ）。JSON の文字列（chiso/extras.py）
     icon: str | None = None           # 1文の挿絵（その行だけ）。Phosphor のアイコン名
+    hook: bool = False                # 節の終わりの「引き」（次の節が気になる一言）。check が節ごとに確かめる
 
 
 MEMO_SIZE = 3
@@ -141,7 +142,7 @@ def _card(raw, where: str) -> Card | None:
     return Card(head=str(raw["head"]), body=str(raw.get("body", "")))
 
 
-FIGURE_TYPES = ("map", "pie", "bars", "people", "compare")
+FIGURE_TYPES = ("map", "pie", "bars", "people", "compare", "money")
 
 
 def _bubble(raw, where: str) -> str | None:
@@ -161,6 +162,9 @@ def _figure(raw, where: str) -> str | None:
     import json
     if not isinstance(raw, dict) or raw.get("type") not in FIGURE_TYPES:
         raise ScriptError(f"{where}: figure の type は {' / '.join(FIGURE_TYPES)} のどれかです: {raw!r}")
+    if raw["type"] == "money" and not all(raw.get(k) for k in ("then", "yen", "basis")):
+        # 換算の前提（何を何に置き換えたか）を出さない金額は、根拠のない数字になる
+        raise ScriptError(f"{where}: money には then（当時の金額）・yen（円）・basis（置き換えの前提）が要ります")
     return json.dumps(raw, ensure_ascii=False, sort_keys=True)
 
 
@@ -241,7 +245,7 @@ def parse(data: dict, path: Path | None = None) -> Script:
                 pause=float(pause) if pause is not None else None, shorts=tuple(shorts),
                 background=background, portrait=portrait, card=card, year=year,
                 memo=tuple(reversed(memo[-MEMO_SIZE:])), figure=figure,
-                bubble=_bubble(raw.get("bubble"), where), icon=(str(raw["icon"]) if raw.get("icon") else None),
+                bubble=_bubble(raw.get("bubble"), where), hook=bool(raw.get("hook")), icon=(str(raw["icon"]) if raw.get("icon") else None),
             ))
     if not lines:
         raise ScriptError("せりふが1行もありません")

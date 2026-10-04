@@ -32,8 +32,9 @@ def plan(lines: list, spoken: dict[int, object]) -> tuple[list[Cue], float]:
     return cues, round(t + TAIL, 3)
 
 
-def write_audio(cues: list[Cue], total: float, target: Path) -> None:
-    """全行を1本の wav にする（VOICEVOX の出力はどれも同じ形式なので、そのまま並べる）。"""
+def write_audio(cues: list[Cue], total: float, target: Path, effects: list | None = None) -> None:
+    """全行を1本の wav にする（VOICEVOX の出力はどれも同じ形式なので、そのまま並べる）。
+    effects は (時刻, 音の名前) の並び（chiso/sfx.py）。あれば小さく重ねる。"""
     params = None
     chunks: list[bytes] = []
     cursor = 0  # フレーム数
@@ -54,10 +55,19 @@ def write_audio(cues: list[Cue], total: float, target: Path) -> None:
     end = int(round(total * params.framerate))
     if end > cursor:
         chunks.append(b"\x00" * ((end - cursor) * params.sampwidth * params.nchannels))
+    data = b"".join(chunks)
+    if effects:
+        from array import array
+        from . import sfx
+        if params.sampwidth != 2:
+            raise ValueError("効果音は 16bit の音声にだけ重ねられます")
+        samples = array("h")
+        samples.frombytes(data)
+        data = sfx.overlay(samples, params.framerate, params.nchannels, effects).tobytes()
     target.parent.mkdir(parents=True, exist_ok=True)
     with wave.open(str(target), "wb") as out:
         out.setparams(params)
-        out.writeframes(b"".join(chunks))
+        out.writeframes(data)
 
 
 def _srt_time(t: float) -> str:

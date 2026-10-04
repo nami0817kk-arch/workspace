@@ -59,3 +59,19 @@ def test_unknown_place_is_error():
         figures.with_places({"type": "map", "route": ["どこでもない町"]})
     spec = figures.with_places({"type": "map", "route": ["パリ", "ヴェルサイユ"]})
     assert len(spec["places"]) == 2 and len(spec["bounds"]) == 4
+
+
+def test_section_end_needs_hook():
+    from chiso import script
+    base = {
+        "title": "t", "next": {"title": "次", "teaser": "t"},
+        "thumbnail": {k: "x" for k in ("image", "crop", "hook", "stamp", "name", "main")},
+        "sections": [{"title": "地表", "lines": [{"語り": "a"}]},                       # 導入は除く
+                     {"title": "生涯", "lines": [{"語り": "b"}, {"語り": "c"}, {"語り": "d"}]},
+                     {"title": "見立て：なぜ", "lines": [{"語り": "e"}]}],                 # 見立ても除く
+    }
+    errors, _ = check.episode(script.parse(base))
+    assert [e for e in errors if "引き" in e] == ["2節「生涯」の終わり2行に引き（hook: true）がありません"]
+    base["sections"][1]["lines"][1]["hook"] = True                                       # 終わりから2行目まではよい
+    errors, _ = check.episode(script.parse(base))
+    assert not [e for e in errors if "引き" in e]

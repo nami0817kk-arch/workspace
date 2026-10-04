@@ -139,3 +139,36 @@ def draw_compare(painter, img: Image.Image, spec: dict, t: float = 1.0) -> None:
         dr.text((x0 + w / 2, ay0 + ph + 34), name, font=nf, fill=INK, anchor="mm")
         if note:
             dr.text((x0 + w / 2, ay0 + ph + 76), note, font=sf, fill=(110, 90, 60), anchor="mm")
+
+
+# --- 当時のお金を今の円に ------------------------------------------------------
+# 10-04 追加。換算は「1リーヴル＝何円」が資料によって300〜2,000円と大きく割れるので使わない。
+# 当時の稼ぎ（日雇いの年収など）を今の稼ぎに置き換える。置き換えの前提（basis）は必ず画面に出す。
+def format_yen(v: float) -> str:
+    """金額を「約100億円」「約3,000万円」の形に。1万円未満はそのまま。"""
+    if v >= 1e8:
+        oku = v / 1e8
+        return f"約{oku:,.0f}億円" if oku >= 10 else f"約{oku:.1f}億円".replace(".0億", "億")
+    if v >= 1e4:
+        return f"約{v / 1e4:,.0f}万円"
+    return f"約{v:,.0f}円"
+
+
+def draw_money(painter, img: Image.Image, spec: dict, t: float = 1.0) -> None:
+    """当時の金額 → 今の円。円の数字は0から数え上がる（figures.draw から呼ばれる）。"""
+    from .figures import _panel
+    dr, (ax0, ay0, ax1, ay1) = _panel(painter, img, spec.get("title", ""))
+    cx = (ax0 + ax1) / 2
+    e = 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, t)))
+    lf = painter.font("gothic", 32)
+    dr.text((cx, ay0 + 40), "当時", font=lf, fill=(110, 90, 60), anchor="mm")
+    dr.text((cx, ay0 + 115), spec["then"], font=painter.font("serif", 84, bold=True), fill=INK, anchor="mm")
+    ay = ay0 + 190
+    dr.polygon([(cx - 46, ay), (cx + 46, ay), (cx, ay + 50)], fill=GOLD)
+    dr.text((cx, ay0 + 290), "今の円で", font=lf, fill=(110, 90, 60), anchor="mm")
+    yen = float(spec["yen"]) * (e if t < 1 else 1.0)
+    dr.text((cx, ay0 + 385), format_yen(yen) if yen >= 1 else "　", font=painter.font("serif", 120, bold=True),
+            fill=(176, 40, 30), anchor="mm")
+    if t >= 1:
+        bf = painter.font("gothic", 26)
+        dr.text((cx, ay1 - 10), f"※{spec['basis']}", font=bf, fill=(110, 90, 60), anchor="ms")
