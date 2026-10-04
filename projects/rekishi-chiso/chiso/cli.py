@@ -29,6 +29,7 @@ from pathlib import Path
 import yaml
 
 from . import check as check_mod, mix, render, script as script_mod, shorts as shorts_mod, tts, video
+from . import people
 from .voice import Voice, load_readings
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -45,11 +46,14 @@ def assets_dir(config: dict) -> Path:
 
 
 def voices(config: dict) -> dict[str, Voice]:
+    """立ち絵の2人と、人物の言葉の声（roles）。"""
+    from .people import roles
+    every = {**roles(config), **config["cast"]}
     return {k: Voice(style_id=c["style_id"], speed=c.get("speed", 1.0), pitch=c.get("pitch", 0.0),
                      intonation=c.get("intonation", 1.0), volume=c.get("volume", 1.0),
                      tone_strength=c.get("tone_strength", 1.0), max_intonation=c.get("max_intonation", 2.0),
                      max_speed=c.get("max_speed", 2.0))
-            for k, c in config["cast"].items()}
+            for k, c in every.items()}
 
 
 def ffmpeg() -> str:
@@ -102,6 +106,10 @@ def preflight(sc, config) -> bool:
     missing = check_mod.missing_assets(sc, assets_dir(config))
     for m in missing:
         print(f"  × 素材がありません: {m}")
+    from .people import unknown_roles
+    for who in unknown_roles(config, sc):
+        print(f"  × 人物「{who}」の声が config.yaml の roles にありません")
+        missing = missing + [who]
     if not str(sc.path.name).startswith("sample"):
         errors, warns = check_mod.episode(sc)
         for e in errors:
@@ -113,7 +121,7 @@ def preflight(sc, config) -> bool:
         print(f"  ! {w}")
     for who, (hit, n) in check_mod.saturation(sc, voices(config)).items():
         if hit:
-            print(f"  ! {config['cast'][who]['name']}：{n}行中{hit}行で抑揚が上限2.0を超えるか、1.2倍より早口です")
+            print(f"  ! {people.label(config, who)}：{n}行中{hit}行で抑揚が上限2.0を超えるか、1.2倍より早口です")
     return not missing
 
 
@@ -216,7 +224,7 @@ def make_video(args, draft: bool) -> int:
     print("重ねています…")
     video.compose(ffmpeg(), bg, lst, audio, target, v["fps"], preset="veryfast" if draft else "medium")
     bg.unlink()
-    names = {k: c["name"] for k, c in config["cast"].items()}
+    names = {k: people.label(config, k) for k in list(config["cast"]) + sc.roles}
     (out_dir() / f"{path.stem}.srt").write_text(mix.srt(cues, names), encoding="utf-8")
     print(f"{target}（{total / 60:.1f}分）")
     return 0
@@ -283,7 +291,7 @@ def description(sc, config, cues) -> str:
             print(f"  ! 章が YouTube の決まりに合いません（3つ以上・各10秒以上）: 数={len(chs)} 短い節={short}")
         out += ["■ 目次"] + chs + [""]
     out.append("■ 音声")
-    out += [f"VOICEVOX:{c['name']}" for c in config["cast"].values()]
+    out += [f"VOICEVOX:{n}" for n in people.credit_names(config, sc)]
     out += config.get("character_credits", [])
     seen, pics = set(), []
     for line in sc.lines:
@@ -348,7 +356,7 @@ def cmd_kana(args) -> int:
         q = engine.query(apply_readings(split_emphasis(line.text)[0], readings), vs[line.speaker].style_id)
         phrases, _ = __import__("chiso.voice", fromlist=["join_n_phrases"]).join_n_phrases(q["accent_phrases"])
         kana = "／".join("".join(m["text"] for m in p["moras"]) for p in phrases)
-        print(f"{line.index + 1:3} {config['cast'][line.speaker]['name'][:2]} {kana}")
+        print(f"{line.index + 1:3} {people.label(config, line.speaker)[:2]} {kana}")
     return 0
 
 

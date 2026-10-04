@@ -10,6 +10,7 @@ import math
 from PIL import Image, ImageDraw
 
 from .render import DIM, GOLD, INK, LISTENER_DIM, Painter, State
+from . import people
 from .subs import emphasis_mask
 
 
@@ -69,7 +70,7 @@ class ShortPainter(Painter):
             dr.text((W / 2, y + 200), state.card.head, font=self.font("gothic", 48), fill=GOLD, anchor="mt")
             if state.card.body:
                 dr.text((W / 2, y + 275), state.card.body, font=self.font("serif", 52), fill=INK, anchor="mt")
-        names = "　".join(f"VOICEVOX:{c['name']}" for c in self.config["cast"].values())
+        names = "　".join(f"VOICEVOX:{n}" for n in people.credit_names(self.config, self.script))
         dr.text((40, 40), names, font=self.font("serif", 24), fill=DIM, anchor="lt")
         return img
 
@@ -100,7 +101,7 @@ class ShortPainter(Painter):
             box_h = 40 + step * len(rows)
             dr.rounded_rectangle([60, top, self.W - 60, top + box_h], radius=18, fill=(250, 246, 236, 235),
                                  outline=GOLD, width=4)
-            name = self.config["cast"][speaker]["name"]
+            name = people.label(self.config, speaker)
             dr.text((90, top - 14), name, font=self.font("gothic", 34), fill=GOLD, anchor="ls")
             pos = 0
             for i, row in enumerate(rows):

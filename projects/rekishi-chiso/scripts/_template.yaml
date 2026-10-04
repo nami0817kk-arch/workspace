@@ -42,6 +42,9 @@ sections:
         figure: {type: map, title: 旅の題, route: [パリ, ヴェルサイユ], note: およそ○日}   # 地名は places.yaml
       - 語り: 図を消す行。
         figure: null
+      - 語り: 本人の言葉の前置き。「こう言ったと伝えられています」まで語りで言う。
+      - 人物: 「本人の言葉は、人物の行にして別の声で読む」
+        who: マリー                           # config.yaml の roles の名前。2人は聞き役になる
       - 語り: 1文の挿絵（その行だけ。真ん中の丸い板）。名前は Phosphor のアイコン名（chiso/extras.py の ICON_HINTS）
         icon: envelope-simple
       - 聞き: 肖像の人物の吹き出し（その行だけ。肖像が出ているときだけ）。x, y は肖像の中の口のあたり（0〜1）

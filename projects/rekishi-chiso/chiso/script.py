@@ -22,6 +22,11 @@
             tone: 驚き
             short: s1
 
+人物の言葉は、話者を「人物」にして who に誰かを書く。声は config.yaml の roles で決める（2026-10-04）:
+
+          - 人物: 「ごめんなさい。わざとではないのよ」
+            who: マリー
+
 画面の指定（background / portrait / card / year）は「次に変えるまで続く」。
 portrait と card は節が変わると消える。null を書けばその行で消せる。
 """
@@ -33,7 +38,8 @@ from pathlib import Path
 
 import yaml
 
-SPEAKERS = ("語り", "聞き")
+SPEAKERS = ("語り", "聞き", "人物")
+CAST = ("語り", "聞き")      # 画面に立ち絵がいる2人。「人物」の行は who の名前が話者になる
 _UNSET = object()
 
 
@@ -97,6 +103,15 @@ class Script:
         """題名の問いの部分（「｜」より前）。冒頭で大きく出す。"""
         return self.title.split("｜")[0]
 
+    @property
+    def roles(self) -> list[str]:
+        """人物の言葉を話す人（出てくる順）。"""
+        out: list[str] = []
+        for line in self.lines:
+            if line.speaker not in CAST and line.speaker not in out:
+                out.append(line.speaker)
+        return out
+
     def short_lines(self, short_id: str) -> list[Line]:
         return [line for line in self.lines if short_id in line.shorts]
 
@@ -157,6 +172,13 @@ def _speaker_and_text(raw: dict, where: str) -> tuple[str, str]:
     text = str(text or "").strip()
     if not text:
         raise ScriptError(f"{where}: せりふが空です")
+    who = raw.get("who")
+    if speaker == "人物":
+        if not who or str(who) in SPEAKERS:
+            raise ScriptError(f"{where}: 「人物」の行には who（誰の言葉か。config.yaml の roles の名前）が要ります")
+        return str(who), text
+    if who:
+        raise ScriptError(f"{where}: who は「人物」の行にだけ書きます")
     return speaker, text
 
 
