@@ -1434,6 +1434,16 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
+          // 昇格・優勝のときだけ、評価への道を添える。**押させない。**
+          // いちばん機嫌のいい瞬間に置くだけで、閉じるのと並べてある。
+          if (art != null)
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                ReviewPrompt().openStoreListing();
+              },
+              child: Text(Tr.pick('このアプリを評価する', 'Rate this app')),
+            ),
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(Tr.pick('閉じる', 'Close')),

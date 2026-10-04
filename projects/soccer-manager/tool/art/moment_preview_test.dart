@@ -138,7 +138,11 @@ void main() {
               ],
             ),
           ),
-          actions: [TextButton(onPressed: () {}, child: const Text('閉じる'))],
+          actions: [
+            // home_screen と同じく、節目のときだけ評価への道を添える。
+            TextButton(onPressed: () {}, child: const Text('このアプリを評価する')),
+            TextButton(onPressed: () {}, child: const Text('閉じる')),
+          ],
         );
 
     await tester.pumpWidget(MaterialApp(

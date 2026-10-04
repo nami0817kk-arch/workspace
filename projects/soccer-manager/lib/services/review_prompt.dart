@@ -14,6 +14,22 @@ class ReviewPrompt {
 
   final InAppReview _review;
 
+  /// App Store のアプリID。ストアページを開くのに要る。
+  ///
+  /// OS の窓（[maybeAsk]）は**出ないことがある**。Apple が年3回までに
+  /// 絞っていて、こちらからは出たかどうかも分からない。「評価したい」と
+  /// 思った人が自分で辿り着ける道を別に用意しておく。
+  static const appStoreId = '6809834913';
+
+  /// ストアのページを開く。評価を書きに行ってもらうための導線。
+  Future<void> openStoreListing() async {
+    try {
+      await _review.openStoreListing(appStoreId: appStoreId);
+    } catch (_) {
+      // 開けなくても進行には関係ない。
+    }
+  }
+
   /// 最後に頼んだシーズン。
   static const _lastAskedSeasonKey = 'review.lastAskedSeason';
 

@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../services/review_prompt.dart';
 import '../l10n/tr.dart';
 import '../state/game_state.dart';
 import '../state/settings_controller.dart';
@@ -18,6 +19,8 @@ import '../monetization/ad_service.dart';
 const String _privacyPolicyUrl =
     'https://soccer-manager.pages.dev/legal/privacy.html';
 const String _termsUrl = 'https://soccer-manager.pages.dev/legal/terms.html';
+const String _supportUrl =
+    'https://soccer-manager.pages.dev/legal/support.html';
 
 /// 表示・操作設定とセーブデータ管理をまとめた画面。
 class SettingsScreen extends StatelessWidget {
@@ -334,6 +337,24 @@ class SettingsScreen extends StatelessWidget {
           Card(
             child: Column(
               children: [
+                // **評価への道を1本置く。** OS の窓は年3回までに絞られて
+                // いて、出ないこともある。公開から10日で評価0件だった
+                // ので、自分から書きに行ける道を用意する。
+                ListTile(
+                  leading: const Icon(Icons.star_outline),
+                  title: Text(Tr.pick('このアプリを評価する', 'Rate this app')),
+                  subtitle: Text(Tr.pick('App Store のページを開きます',
+                      'Opens the App Store page')),
+                  trailing: const Icon(Icons.open_in_new, size: 16),
+                  onTap: () => ReviewPrompt().openStoreListing(),
+                ),
+                // 困った人が、星1つを付ける前に辿り着ける窓口。
+                ListTile(
+                  leading: const Icon(Icons.mail_outline),
+                  title: Text(Tr.pick('お問い合わせ', 'Contact support')),
+                  trailing: const Icon(Icons.open_in_new, size: 16),
+                  onTap: () => _openLink(context, _supportUrl),
+                ),
                 ListTile(
                   leading: const Icon(Icons.privacy_tip_outlined),
                   title: Text(Tr.pick('プライバシーポリシー', 'Privacy policy')),
