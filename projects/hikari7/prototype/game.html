@@ -3283,6 +3283,7 @@ function makeFuture(S,E){var used=[],P=S.prep||{names:['（名前なし）'],nam
       var K=5+t.id%5;if(lv&&!(lv.r==='solo'&&SOLO_DREAM.test(t.dream))){var e1=lv.rj||lv.back||11;if(K>=lv.y&&K<e1)K=lv.y>2?lv.y-1:Math.min(10,e1);}mm.K=K;
       if(t.dream==='10年後もこのメンバーで歌う')ln.push(left?dqt+'という夢は、グループの外から、別の形で見届けた。':anyLeft?dqt+'という夢は、形を少し変えて、10年目にかなった。':dqt+'——その夢は、10年目の記念ライブでかなった。');
       else if(t.dream==='メンバー全員で旅行に行く'&&left)ln.push('卒業の前の年、念願だったメンバー全員での旅行に行った。');
+      else if(t.dream==='メンバー全員で旅行に行く'&&twin)ln.push('同じ夢を持っていた'+twin.join('や')+'と計画を立て、8年目の休みに、念願だったメンバー全員での旅行に行った。');
       else if(ok&&twin&&dreamOk[t.dream])ln.push('同じ'+dqt+'という夢を持っていた'+(twin.length>1?twin.join('や')+'と一緒に':twin[0]+'と、ふたりで')+'その夢をかなえた。');
       else if(ok){ln.push(dqt+'という夢もかなえた。'+(DREAM_OK[t.dream]?ftFill(DREAM_OK[t.dream],mm):''));}
       else ln.push(pick([dqt+'という夢は、まだ途中にある。',dqt+'という夢に向かって、今も一歩ずつ進んでいる。']));
