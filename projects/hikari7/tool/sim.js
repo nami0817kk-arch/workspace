@@ -70,7 +70,7 @@ function play(g, pol) {
       resolveEvent(S, ci); nextEvent(S); }
     if (S.phase !== 'show') throw new Error('show? ' + S.phase);
     S.phase = 'stage';
-    if (ROUNDS[r].crit) { if (pol === 'random') alive(S).forEach(t => S.crit[t.id] = ri(0, 2)); applyCritique(S); }
+    if (ROUNDS[r].crit) { if (pol === 'random') alive(S).forEach(t => S.crit[t.id] = ri(0, CRIT.length - 1)); applyCritique(S); }
     if (pol !== 'naive') { S.feat = {}; const pr = popRankMap(S), B = alive(S), res = S.stage.res;
       const cand = pol === 'good' ? B.filter((x) => pr[x.id] > 3).sort((x, y) => res[y.id].sc - res[x.id].sc) : shuffle(B.slice());
       cand.slice(0, 3).forEach((x) => { S.feat[x.id] = true; }); }
