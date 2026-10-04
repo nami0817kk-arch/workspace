@@ -83,21 +83,44 @@ def motion_filter(kind: str, d: float, size: tuple[int, int], t0: float = 0.0) -
             f"crop={W}:{H}:x='(in_w-{W})*{px}':y='(in_h-{H})*{py}',setsar=1,format=yuv420p")
 
 
+class LengthError(RuntimeError):
+    pass
+
+
+def media_seconds(ffmpeg: str, path: Path) -> float | None:
+    """ファイルの長さ（秒）。読めなければ None。"""
+    import re
+    r = subprocess.run([ffmpeg, "-i", str(path)], capture_output=True, text=True, encoding="utf-8", errors="replace")
+    m = re.search(r"Duration: (\d+):(\d+):([\d.]+)", r.stderr)
+    return None if not m else int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
+
+
+def _ok_length(ffmpeg: str, path: Path, want: float, tol: float) -> bool:
+    got = media_seconds(ffmpeg, path)
+    return got is not None and abs(got - want) <= tol
+
+
 def _piece(ffmpeg: str, still_path: Path, kind: str, d: float, t0: float, length: float, fps: int, size,
            out: Path) -> Path:
-    if out.exists():
+    # 10-05：メモリ不足の ffmpeg が途中までしか書かずに終わった断片が控えに残り、
+    # 30分の本編が3分で仕上がった。控えも作ったものも、長さを測ってから使う
+    n = max(1, round(length * fps))                       # コマ数で切る（つなぎ目がずれないように）
+    want = n / fps
+    if out.exists() and _ok_length(ffmpeg, out, want, 0.2):
         return out
     tmp = out.with_suffix(".tmp.mp4")
-    n = max(1, round(length * fps))                       # コマ数で切る（つなぎ目がずれないように）
-    subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-loop", "1", "-framerate", str(fps), "-i", str(still_path),
-                    "-frames:v", str(n), "-vf", motion_filter(kind, d, size, t0), "-r", str(fps),
-                    "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", str(tmp)], check=True)
-    tmp.replace(out)
-    return out
+    for _ in range(2):
+        subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-loop", "1", "-framerate", str(fps), "-i", str(still_path),
+                        "-frames:v", str(n), "-vf", motion_filter(kind, d, size, t0), "-r", str(fps),
+                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", str(tmp)], check=True)
+        if _ok_length(ffmpeg, tmp, want, 0.2):
+            tmp.replace(out)
+            return out
+    raise LengthError(f"背景の断片が予定の長さになりません: {out.name}（{want:.1f}秒）")
 
 
-def _join(ffmpeg: str, pieces: list[Path], out: Path) -> Path:
-    if out.exists():
+def _join(ffmpeg: str, pieces: list[Path], out: Path, want: float | None = None) -> Path:
+    if out.exists() and (want is None or _ok_length(ffmpeg, out, want, 0.3)):
         return out
     lst = out.with_suffix(".txt")
     lst.write_text("".join(f"file '{p.as_posix()}'\n" for p in pieces), encoding="utf-8")
@@ -133,7 +156,8 @@ def background_track(ffmpeg: str, painter, runs: list[Run], work: Path, fps: int
     jobs = [p for pieces, _ in plans for p in pieces]
     with ThreadPoolExecutor(max_workers=workers) as ex:
         list(ex.map(lambda j: _piece(ffmpeg, j[0], j[1], j[2], j[3], j[4], fps, size, j[5]), jobs))
-    clips = [_join(ffmpeg, [p[5] for p in pieces], out) for pieces, out in plans]
+    clips = [_join(ffmpeg, [p[5] for p in pieces], out, sum(round(p[4] * fps) / fps for p in pieces))
+             for pieces, out in plans]
     if len(clips) == 1:
         clips[0].replace(target) if not target.exists() else None
         return target
