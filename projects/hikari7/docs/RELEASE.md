@@ -81,10 +81,11 @@ No login is required. The app is in Japanese.
 The game runs fully offline inside the app (all content is bundled; no remote web content is loaded).
 In-app purchase: one non-consumable, "Remove Ads" (hikari7_remove_ads), on the title screen ("広告を消す"). The button appears once the App Store price has loaded.
 "Restore purchases" ("購入を復元") is on the title screen.
-Rewarded video ads unlock one bonus per audition (an extra intensive-lesson slot, extra budget, or a re-audition).
-Interstitial ads: between auditions, from the end of the second audition. Not shown after purchasing Remove Ads.
+Rewarded video ads are optional and always started by the player: an extra intensive-lesson slot or a re-audition (together once per audition), extra budget (up to 3 times per audition), and a one-week promotion boost after the debut (once).
+Interstitial ads: one per season, just before the end credits. Not shown after purchasing Remove Ads.
+Support (including reporting an inappropriate ad) and the privacy policy open from the title screen and from Settings.
 The app does not use App Tracking Transparency and does not track users.
-Privacy policy and licenses are on the title screen.
+Privacy policy, support and licenses are on the title screen.
 All characters, shows, and songs are fictional. Trainees are selected by the player's own judgment; there is no real-world voting.
 Before release, AdMob may not fill ads for this new app, so the video may be unavailable. The bonuses can be checked by purchasing "Remove Ads" (sandbox), which enables them without video.
 ```

@@ -3660,7 +3660,7 @@ function vTitle(){
     '<div class="trank"><span>'+esc(rk[1])+'</span>'+(c.seasons?'<span>'+c.seasons+'シーズン</span>':'<span>はじめてのシーズン</span>')+'</div>';
   var qf=null;try{qf=HStore.get('hikari7_quit');}catch(e){}if(!sv&&qf&&!ui.loadBroken){var qb=loadBak();if(qb)h+='<div class="note tnote">前にやめたシーズン（'+(qb.rnd>0&&qb.fmt?'第'+qb.rnd+'審査':'書類審査')+'・'+(qb.g==='f'?'女性':'男性')+'）に戻れます（1回だけ）。<br><button class="btn-s" data-a="frombak">やめたシーズンに戻る</button></div>';}
   if(!sv&&ui.loadBroken){var bk=loadBak();h+='<div class="note tnote"><b>前回の続きが読み込めませんでした。</b>'+(bk?'ひとつ前の場面の保存から戻せます。<br><button class="btn-s" data-a="frombak">ひとつ前の保存から続ける</button>':'保存の予備もありません。新しいシーズンを始めてください。')+'</div>';}
-  if(APP)h+='<div class="tapp">'+(APP.adFree?'<span class="small">広告を消しています。ありがとうございます。</span>':'<button class="btn-s" data-a="buy" '+(APP.canBuy?'':'disabled')+'>広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'</button>')+'<button class="btn-s" data-a="restore">購入を復元</button><button class="btn-s" data-a="privacy">プライバシー</button><button class="btn-s" data-a="licenses">ライセンス</button></div>';
+  if(APP)h+='<div class="tapp">'+(APP.adFree?'<span class="small">広告を消しています。ありがとうございます。</span>':'<button class="btn-s" data-a="buy" '+(APP.canBuy?'':'disabled')+'>広告を消す'+(APP.price?'（'+esc(APP.price)+'）':'')+'</button>')+'<button class="btn-s" data-a="restore">購入を復元</button><button class="btn-s" data-a="privacy">プライバシー</button><button class="btn-s" data-a="support">サポート</button><button class="btn-s" data-a="licenses">ライセンス</button></div>';
   h+='<div class="tcopy">© つるはし社</div></div>';
   return h;
 }
@@ -4362,7 +4362,7 @@ function vSettings(){var st=ui.set;
   h+='<h3>わからないとき</h3><button class="btn sub" data-a="gloss">用語集を開く</button>';
   h+='<h3>データ</h3><p class="small muted">プロデューサー歴・実績・図鑑・名鑑・心得・進行中のシーズンをすべて消します。元に戻せません。</p><button class="btn sub'+(ui.wipeArm?' warnb':'')+'" data-a="wipe">'+(ui.wipeArm?'本当にすべて消す（もう一度押す）':'記録をすべて消す')+'</button>';
   h+='<h3>クレジット</h3><p class="small">BGM：つるはし社（自作の合成ツールで作曲）<br>声：'+VOICE_NAMES.map(function(n){return 'VOICEVOX:'+n;}).join('、')+'</p>';
-  h+='<p class="small muted" style="margin-top:14px">ひかりの指名　試作 v17'+(APP?'（アプリ）':'（テスト版）')+'</p></div></div>';
+  h+='<p class="small" style="margin-top:14px">'+(APP?'<button class="btn-s" data-a="privacy">プライバシーポリシー</button> <button class="btn-s" data-a="support">サポート・広告の報告</button>':'')+'</p><p class="small muted">ひかりの指名'+(APP?'':'（テスト版）')+'　© つるはし社</p></div></div>';
   return h;}
 
 
@@ -4561,6 +4561,7 @@ document.addEventListener('click',function(ev){
     case 'buy':appPost({type:'buy'});break;
     case 'restore':appPost({type:'restore'});break;
     case 'privacy':appPost({type:'open',url:'https://hikari7.pages.dev/privacy.html'});break;
+    case 'support':appPost({type:'open',url:'https://hikari7.pages.dev/support.html'});break;
     case 'licenses':appPost({type:'licenses'});break;
     case 'selok':go(function(){confirmSelect(S);});window.scrollTo(0,0);break;
     case 'autolesson':go(function(){autoLesson(S);});break;

@@ -55,6 +55,8 @@ SCENES = [
                   "applyFarewell(S);startPrep(S);S.prep.leader=S.tr.filter(function(t){return t.status==='debut';})[0].id;startMonth(S);"
                   "['tv','mv','rest','tv'].forEach(function(k){weekDo(S,k);});finishMonth(S);S.ending=false;"),
 ]
+# 課金アイテムの審査用：値段の付いた「広告を消す」ボタンが写った1枚（iPhone の寸法。値段は日本の価格の目安）
+IAP_SHOT = ('3_課金審査用', 'remove_ads', "S=null;ui.tsub=null;APP.price='¥370';APP.canBuy=true;")
 BOOT = ("window.__HIKARI_APP={adFree:false,store:{hikari7_tips:'{}'},owned:{},storeOk:true,canBuy:true,price:null,prices:{}};"
         "window.HikariApp={postMessage:function(){}};")
 
@@ -108,7 +110,8 @@ async def shoot():
             for dev, w, h, dpr, fs in DEVICES:
                 (OUT / dev).mkdir(parents=True, exist_ok=True)
                 await tab.call('Emulation.setDeviceMetricsOverride', width=w, height=h, deviceScaleFactor=dpr, mobile=True)
-                for name, setup in SCENES:
+                scenes = SCENES + ([IAP_SHOT[1:]] if dev.startswith('1_') else [])
+                for name, setup in scenes:
                     await tab.call('Page.navigate', url=f'http://127.0.0.1:{PORT}/index.html')
                     for _ in range(100):
                         if await tab.js("typeof render==='function'&&document.readyState==='complete'"):
@@ -117,10 +120,13 @@ async def shoot():
                     await tab.js("ui.tipsOff=true;ui.quick=false;ui.set.fs='%s';applySet();" % fs + PLAY + setup + "render();window.scrollTo(0,0);true")
                     await asyncio.sleep(2.2)  # 入りの動き・アイキャッチ・顔の絵が落ち着くまで
                     bad = await tab.js("var t=document.body.innerText;['テスト版','読み込んでいます','問題が起きました','undefined','NaN','¥','円で買う'].filter(function(x){return t.indexOf(x)>=0;})")
+                    if name == IAP_SHOT[1]:
+                        bad = [x for x in bad if x != '¥']
                     if bad:
                         raise SystemExit(f'{dev}/{name}: 写ってはいけない文字 {bad}')
                     shot = await tab.call('Page.captureScreenshot', format='png')
-                    p = OUT / dev / f'{name}.png'
+                    p = (OUT / IAP_SHOT[0] if name == IAP_SHOT[1] else OUT / dev) / f'{name}.png'
+                    p.parent.mkdir(parents=True, exist_ok=True)
                     p.write_bytes(base64.b64decode(shot['data']))
                     im = Image.open(p).convert('RGB')
                     assert im.size == (w * dpr, h * dpr), (p, im.size)
