@@ -207,11 +207,15 @@ class Painter:
             dr.rectangle([X(a), yb - 14, X(b), yb + 14], fill=color + (255,))
         u = self.H / 1080
         placed: list[tuple[float, float]] = []           # ラベルの重なりを避ける
+        years: list[tuple[float, float]] = []            # 年の数字の重なりを避ける（10-05「1894189 1900」と重なった）
         for y, label in sc.events:
             on = (year is not None and round(year) == y)
             dr.line([X(y), yb - 26, X(y), yb + 26], fill=(GOLD if on else DIM) + (255,), width=4 if on else 2)
-            dr.text((X(y), yb - 40 * u), str(y), font=self.font("gothic", int((30 if on else 26) * u)),
-                    fill=GOLD if on else DIM, anchor="ms")
+            yf = self.font("gothic", int((30 if on else 26) * u))
+            half = yf.getlength(str(y)) / 2
+            if on or not any(X(y) - half < b + 6 and X(y) + half > a - 6 for a, b in years):
+                dr.text((X(y), yb - 40 * u), str(y), font=yf, fill=GOLD if on else DIM, anchor="ms")
+                years.append((X(y) - half, X(y) + half))
             lf = self.font("serif", int((30 if on else 24) * u))
             lw = lf.getlength(label)
             ly = yb + 44 * u
