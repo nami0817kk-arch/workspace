@@ -21,7 +21,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;
-  -webkit-tap-highlight-color:transparent;overflow-x:hidden;-webkit-user-select:none;user-select:none}
+  -webkit-tap-highlight-color:transparent;overflow-x:hidden;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 button{font:inherit;color:inherit;cursor:pointer}
 .app{max-width:440px;margin:0 auto;padding:10px 16px 18px}
 header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
@@ -37,7 +37,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .bar{display:flex;align-items:center;gap:10px;margin-top:10px}
 .next{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--sub);border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:4px 6px 4px 10px;writing-mode:horizontal-tb}
 .next canvas{width:108px;height:40px}
-.hint{flex:1;font-size:12px;color:var(--sub);line-height:1.5}
+.hint{flex:1;font-size:11px;color:var(--sub);line-height:1.45}
 .rot{font-size:17px;font-weight:800;border:0;border-radius:16px;padding:14px 18px;background:var(--accent);color:#fff;min-width:100px;
   box-shadow:0 3px 0 rgba(0,0,0,.18)}
 .rot:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
@@ -83,7 +83,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   </div>
   <div class="bar">
     <div class="next"><span>つぎ</span><canvas id="nextCv" width="216" height="80"></canvas></div>
-    <div class="hint" id="hint">なぞって位置、はなすと落ちる</div>
+    <div class="hint" id="hint">なぞって、はなすと落ちる</div>
     <button class="rot" id="rot">まわす</button>
   </div>
 </div>
@@ -157,7 +157,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     parts = []; popups = []; links = []; shake = 0; newWords = []; recordBroken = false; best = bests[plat] || { p: 0, n: 0, h: 0 }; hudPts = 0; wordLog = [];
     hideSheet(); drawNext(); setHint();
   }
-  function setHint() { hint.textContent = s && s.def.seesaw ? 'かたよると板が傾く' : s && s.def.sway ? '台が左右に動く' : 'なぞって位置、はなすと落ちる'; }
+  function setHint() { hint.textContent = s && s.def.seesaw ? 'かたよると板が傾く' : s && s.def.sway ? '台が左右に動く' : 'なぞって、はなすと落ちる'; }
   // つぎの3字。先が見えると、どの字でことばを作るか考えられる
   function drawNext() {
     var g = nextCv.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, nextCv.width, nextCv.height);
@@ -278,6 +278,16 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     s.boards.forEach(function (b) { if (!s.def.seesaw) legs(ctx, b); });
     s.boards.forEach(function (b) { board(ctx, b); });
     if (s.def.seesaw) { ctx.fillStyle = '#7c6a58'; ctx.beginPath(); ctx.arc(W / 2, C.PIVOT_Y - C.PLANK_T / 2, 3.5, 0, Math.PI * 2); ctx.fill(); }
+    // 持っている字とことばになりそうな字に、金色の輪（2字のことばになる字は濃く）
+    if (phase === 'play') {
+      var pulse = 0.55 + 0.25 * Math.sin(frameN / 9);
+      C.partners(s, C.current(s)).forEach(function (h) {
+        var b = h.body, cx = (b.bounds.min.x + b.bounds.max.x) / 2, cy = (b.bounds.min.y + b.bounds.max.y) / 2;
+        ctx.save(); ctx.globalAlpha = h.strong ? pulse : pulse * 0.45;
+        var gr = ctx.createRadialGradient(cx, cy, 10, cx, cy, 52); gr.addColorStop(0, 'rgba(255,214,90,.55)'); gr.addColorStop(1, 'rgba(255,214,90,0)');
+        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, 52, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      });
+    }
     // 字
     s.cargo.forEach(function (b) { drawBody(ctx, b); if (b.squash) b.squash *= 0.8; if (b.squash < 0.02) b.squash = 0; if (b.glow) { b.glow -= 0.012; if (b.glow < 0) b.glow = 0; } });
     if (phase === 'end' && s.failedBody) {
@@ -335,7 +345,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (phase === 'play') {
       var recent = s.made.slice(-3).reverse(), y0 = 14;
       ctx.textAlign = 'right';
-      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText('たてか よこに くっつけて', W - 14, 26); ctx.fillText('ことばを つくろう', W - 14, 40); }
+      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText('たてか よこに くっつけて', W - 14, 26); ctx.fillText('ことばを つくろう', W - 14, 40);
+        if (s.score >= 3) { ctx.fillStyle = '#b5552a'; ctx.fillText('ひかっている字の となりや上が ねらいめ', W - 14, 56); } }
       recent.forEach(function (w, i) {
         ctx.font = '900 ' + (i ? 15 : 19) + 'px ' + G.font; var tw = ctx.measureText(w).width, x1 = W - 12, bh = i ? 24 : 30;
         ctx.globalAlpha = i ? 0.7 : 1; ctx.fillStyle = 'rgba(255,250,241,.9)'; roundRect(ctx, x1 - tw - 16, y0, tw + 16, bh, 9); ctx.fill();
@@ -343,7 +354,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
         ctx.fillStyle = '#3b2f24'; ctx.textBaseline = 'middle'; ctx.fillText(w, x1 - 8, y0 + bh / 2 + 1); ctx.textBaseline = 'alphabetic';
         ctx.globalAlpha = 1; y0 += bh + 5;
       });
-      if (!C.canDrop(s)) { ctx.fillStyle = 'rgba(138,118,99,.8)'; ctx.font = '700 11px "M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ゆれがおさまるまで まって', W / 2, VIEW_H - 14); }
+      if (!C.canDrop(s) && s.t - s.lastDropT > 40) { ctx.fillStyle = 'rgba(138,118,99,.8)'; ctx.font = '700 11px "M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ゆれがおさまるまで まって', W / 2, VIEW_H - 14); }
     }
     if (s.def.seesaw && phase === 'play') {
       var r = C.tilt(s), mx = 14, my = 88, mw = 96, mh = 8;
@@ -367,11 +378,25 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   function showMenu() {
     phase = 'menu';
-    showSheet('<h2>ひらがなてんびん</h2><p>ひらがなを1字ずつ積もう。<br>字と字を<b>たて（上から下）</b>か<b>よこ（左から右）</b>に<br>くっつけて<b>ことば</b>にすると点がふえる。<br>2字100点・3字400点・4字900点（字は1つ10点）<br>「まわす」で向きを変えられる。</p>' +
+    showSheet('<h2>ひらがなてんびん</h2><canvas id="demo" width="560" height="190" style="width:280px;height:95px;display:block;margin:6px auto 2px"></canvas><p>ひらがなを1字ずつ積もう。<br>字と字をくっつけて<b>ことば</b>にすると点がふえる。<br>持っている字とことばになる字は<b>ひかる</b>。<br>2字100点・3字400点・4字900点（字は1つ10点）<br>「まわす」で向きを変えられる。</p>' +
       '<p style="margin-top:10px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
       '<div class="row"><button class="btn" id="go">はじめる</button></div>');
+    drawDemo();
     wirePlats(function () { s = C.create(null, plat); drawNext(); showMenu(); });
     document.getElementById('go').onclick = function () { audio(); start(); };
+  }
+  // 見本: 「ね」を上・「こ」を下で たての ねこ、「う」「み」を並べて よこの うみ
+  function drawDemo() {
+    var el = document.getElementById('demo'); if (!el) return; var g = el.getContext('2d');
+    g.setTransform(2, 0, 0, 2, 0, 0); g.clearRect(0, 0, 280, 95);
+    function mini(ch, x, y) { g.save(); g.translate(x, y); g.scale(0.5, 0.5); drawGlyph(g, ch, 0, 0, 0, 1); g.restore(); }
+    function link(pts) { g.strokeStyle = '#f2b24f'; g.lineWidth = 3; g.lineCap = 'round'; g.beginPath(); pts.forEach(function (p, i) { if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); }); g.stroke(); }
+    link([[46, 26], [46, 66]]); mini('ね', 46, 26); mini('こ', 46, 66);
+    link([[150, 48], [186, 48]]); mini('う', 150, 48); mini('み', 186, 48);
+    g.font = '900 15px ' + G.font; g.fillStyle = '#d9472f'; g.textBaseline = 'middle';
+    g.fillText('ねこ', 70, 46); g.fillText('うみ', 210, 48);
+    g.font = '700 9px "M PLUS Rounded 1c",sans-serif'; g.fillStyle = '#8a7663';
+    g.fillText('たて（上から下）', 8, 90); g.fillText('よこ（左から右）', 140, 90);
   }
   function showResult() {
     var b = bests[plat] || { p: 0, n: 0, h: 0 }, rec = s.points > b.p;

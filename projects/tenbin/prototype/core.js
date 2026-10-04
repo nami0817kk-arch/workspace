@@ -131,6 +131,16 @@ var TenbinCore = (function () {
   WORDS.short.concat(WORDS.middle, WORDS.long).forEach(function (w) {
     var n = TRIE; for (var i = 0; i < w.length; i++) n = n[w[i]] = n[w[i]] || {}; n.$ = w;
   });
+  // 持っている字とつながりそうな字: 2字のことばになる（強い）／長いことばの一部になる（弱い）
+  var PAIRS = {};
+  WORDS.short.concat(WORDS.middle, WORDS.long).forEach(function (w) {
+    for (var i = 0; i + 1 < w.length; i++) { var k = w[i] + w[i + 1]; PAIRS[k] = Math.max(PAIRS[k] || 0, w.length === 2 ? 2 : 1); }
+  });
+  function partners(s, ch) {
+    var out = [];
+    s.cargo.forEach(function (c) { var a = PAIRS[ch + c.kind] || 0, b = PAIRS[c.kind + ch] || 0; if (a || b) out.push({ body: c, strong: Math.max(a, b) === 2 }); });
+    return out;
+  }
   // 字の中心（重心ではなく、字の外枠の中心）
   function centre(b) { return { x: (b.bounds.min.x + b.bounds.max.x) / 2, y: (b.bounds.min.y + b.bounds.max.y) / 2 }; }
   function step2(a, b, dir) {
@@ -296,6 +306,6 @@ var TenbinCore = (function () {
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
-    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
+    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;
