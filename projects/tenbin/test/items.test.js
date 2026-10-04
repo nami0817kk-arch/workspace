@@ -27,3 +27,30 @@ s = C.create(2, 'flat', { items: true }); var before = Object.keys(s.items).redu
 for (var t = 0; t < 30000 && s.placed < 8 && !s.failed; t++) { if (C.canDrop(s) && !s.pendingScore) C.drop(s, 200 + ((t * 37) % 60 - 30), 0); C.step(s); s.events.forEach(function (e) { if (e.type === 'item') got++; }); s.events.length = 0; }
 assert.ok(s.failed || got >= 1, '8字積んでもアイテムが増えない');
 console.log('items ok');
+
+// 2026-10-04「アイテム使用時の運動力学がおかしいときがある」の見直し
+// のり: ぶつかった勢いのままつながず、落ち着いてからくっつく。くっつけたときに字がはじけない
+var maxSp = 0;
+s = C.create(5, 'sway', { items: true });
+for (t = 0; t < 30000 && s.placed < 10 && !s.failed; t++) {
+  if (C.canDrop(s) && !s.pendingScore) { s.items.glue = 1; C.useItem(s, 'glue'); C.drop(s, 200 + ((t * 37) % 100 - 50), 0); }
+  C.step(s); s.events.length = 0;
+  s.cargo.forEach(function (b) { if (b.landed && b.speed > maxSp) maxSp = b.speed; });
+}
+assert.ok(maxSp < 13, 'のりで字がはじけた（速さ ' + maxSp.toFixed(1) + '）');
+// くっついた字どうしは同じかたまり（互いにぶつからない）
+var grouped = s.cargo.filter(function (b) { return b.weldGroup; }).length;
+assert.ok(grouped >= 2, 'のりでくっついた字が かたまりになっていない: ' + grouped);
+// つづける・とりけし で取り除いた字の拘束が残らない（残ると、ほかの字が空中に引っぱられて止まる）
+s = C.create(3, 'flat', { items: true });
+for (t = 0; t < 30000 && !s.failed; t++) {
+  if (C.canDrop(s) && !s.pendingScore) { if (s.placed % 3 === 2) { s.items.freeze = 1; C.useItem(s, 'freeze'); } C.drop(s, 200 + ((t * 53) % 300 - 150), 0); }
+  C.step(s); s.events.length = 0;
+}
+for (t = 0; t < 55; t++) C.physics(s);
+C.revive(s);
+var ghosts = C.M.Composite.allConstraints(s.engine.world).filter(function (c) {
+  return c.label === 'weld' && [c.bodyA, c.bodyB].some(function (b) { return s.cargo.indexOf(b) < 0 && s.boards.indexOf(b) < 0; });
+}).length;
+assert.strictEqual(ghosts, 0, '消えた字につながったままの拘束が残っている: ' + ghosts);
+console.log('item physics ok (のりの最大の速さ ' + maxSp.toFixed(1) + ')');

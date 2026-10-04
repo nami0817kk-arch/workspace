@@ -105,8 +105,8 @@ var TenbinCore = (function () {
         if (A !== b && B !== b) continue;
         b.landed = true;
         s.events.push({ type: 'land', kind: b.kind, x: b.position.x, y: b.bounds.max.y, speed: b.speed, mass: b.mass });
-        // のり: 最初に触れた字や台に、その場でくっつく
-        if (b.glue) { var o = A === b ? B : A; if (o.label !== 'ground') { weld(s, b, o); s.events.push({ type: 'glued', x: b.position.x, y: b.bounds.max.y }); } }
+        // のり: 触れた瞬間ではなく、勢いが落ちてからくっつける（ぶつかった勢いのままつなぐと、引き合って急に回ったり跳ねたりした）
+        if (b.glue) b.glueAt = s.t;
         return;
       }
     });
@@ -273,6 +273,7 @@ var TenbinCore = (function () {
     if (s.failed) return;
     physics(s);
     // つづけた直後は、板が戻り字が落ち着くまで失敗を数えない
+    settleGlue(s);
     if (s.grace > 0) { s.grace--; return; }
     if (s.def.seesaw) { var vs = s.plank.vertices;
       for (var i = 0; i < vs.length; i++) if (vs[i].y >= GROUND - 0.5) { s.failed = 'ground'; return; } }
@@ -326,15 +327,44 @@ var TenbinCore = (function () {
     var k = can[(s.rng() * can.length) | 0]; s.items[k]++;
     s.events.push({ type: 'item', item: k });
   }
-  // 2つの体をその場の形のままつなぐ（a の中の2点で留める）
+  // 2つの体をその場の形のままつなぐ（a の中の2点で留める。かたく留める: やわらかいと ぐにゃっと揺れた）
+  // つないだ字どうしは同じ「かたまり」にして、互いにぶつからないようにする
+  // （くっつける力と、ぶつかって離れようとする力がけんかして、ふるえたり少しずつずれたりした）
+  var nextGroup = -1;
+  function setGroup(b, g) { b.weldGroup = g; [b].concat(b.parts).forEach(function (p) { p.collisionFilter = Object.assign({}, p.collisionFilter, { group: g }); }); }
   function weld(s, a, b) {
     var key = Math.min(a.id, b.id) + '-' + Math.max(a.id, b.id);
     if (s.welded[key]) return; s.welded[key] = true;
+    // 止めてからつなぐ（勢いの差が残っていると、つないだ瞬間に引き合う）
+    [a, b].forEach(function (x) { if (!x.isStatic && x.label !== 'plank') { M.Body.setVelocity(x, { x: 0, y: 0 }); M.Body.setAngularVelocity(x, 0); } });
     var c = Math.cos(a.angle), sn = Math.sin(a.angle);
     [-12, 12].forEach(function (d) {
       var P = { x: a.position.x + d * c, y: a.position.y + d * sn };
       M.Composite.add(s.engine.world, M.Constraint.create({ bodyA: a, pointA: { x: P.x - a.position.x, y: P.y - a.position.y },
-        bodyB: b, pointB: { x: P.x - b.position.x, y: P.y - b.position.y }, length: 0, stiffness: 0.7, damping: 0.1, label: 'weld' }));
+        bodyB: b, pointB: { x: P.x - b.position.x, y: P.y - b.position.y }, length: 0, stiffness: 1, damping: 0.05, label: 'weld' }));
+    });
+    // 字どうしなら、かたまりをひとつにまとめる（台はまとめない。台は他の字とぶつかる必要がある）
+    if (s.cargo.indexOf(a) >= 0 && s.cargo.indexOf(b) >= 0) {
+      var g = a.weldGroup || b.weldGroup || nextGroup--, old = [a.weldGroup, b.weldGroup].filter(function (x) { return x && x !== g; });
+      s.cargo.forEach(function (x) { if (x === a || x === b || old.indexOf(x.weldGroup) >= 0) setGroup(x, g); });
+    }
+  }
+  // 字を世界から取り除く。つないでいた拘束も必ず一緒に外す
+  // （残すと、消えた字の場所に ほかの字が引っぱられ、空中で止まった）
+  function removeBody(s, b) {
+    M.Composite.remove(s.engine.world, b);
+    M.Composite.allConstraints(s.engine.world).slice().forEach(function (c) { if (c.bodyA === b || c.bodyB === b) M.Composite.remove(s.engine.world, c); });
+    var i = s.cargo.indexOf(b); if (i >= 0) s.cargo.splice(i, 1);
+  }
+  // のりの字: 着地して勢いが落ちたら（遅くても0.5秒で）、そのとき触れている字・台にくっつく
+  function settleGlue(s) {
+    s.cargo.forEach(function (b) {
+      if (b.glueAt == null || b.glued) return;
+      if (b.speed > 0.6 && s.t - b.glueAt < 30) return;
+      b.glued = true;
+      var hit = s.cargo.filter(function (o) { return o !== b && near(b, o); }).concat(s.boards.filter(function (bd) { return near(b, bd); }));
+      hit.forEach(function (o) { weld(s, b, o); });
+      if (hit.length) s.events.push({ type: 'glued', x: b.position.x, y: b.bounds.max.y });
     });
   }
   function useItem(s, k) {
@@ -343,9 +373,7 @@ var TenbinCore = (function () {
     else if (k === 'board') { if (s.queue[0] === BOARD) return false; s.queue.unshift(BOARD); }
     else if (k === 'undo') {
       var b = s.last; if (!b || s.cargo.indexOf(b) < 0) return false;
-      M.Composite.remove(s.engine.world, b);
-      s.engine.world.constraints.slice().forEach(function (c) { if (c.bodyA === b || c.bodyB === b) M.Composite.remove(s.engine.world, c); });
-      s.cargo.splice(s.cargo.indexOf(b), 1);
+      removeBody(s, b);
       s.last = s.cargo[s.cargo.length - 1] || null; if (s.last) s.last.landed = true;
       s.pendingScore = false; s.lastDropT = s.t - 20;
     } else if (k === 'freeze') {
@@ -373,8 +401,7 @@ var TenbinCore = (function () {
         b.position.x < -40 || b.position.x > W + 40 || b.speed > 1.2 || offBoard(b);
     });
     if (s.failed === 'ground' && s.last && drop.indexOf(s.last) < 0) drop.push(s.last);
-    drop.forEach(function (b) { M.Composite.remove(s.engine.world, b); });
-    s.cargo = s.cargo.filter(function (b) { return drop.indexOf(b) < 0; });
+    drop.forEach(function (b) { removeBody(s, b); });
     // てんびんは、片側に重さが偏ったままだとすぐまた傾く。つり合うまで新しい字から取り除く
     // （広告を見たのにすぐ負けるのがいちばんいやな体験）
     if (s.def.seesaw) {
@@ -385,7 +412,7 @@ var TenbinCore = (function () {
         var L = lean(), idx = -1;
         for (var q = s.cargo.length - 1; q >= 0; q--) if ((s.cargo[q].position.x - W / 2) * L > 0) { idx = q; break; }
         if (idx < 0) break;
-        M.Composite.remove(s.engine.world, s.cargo.splice(idx, 1)[0]);
+        removeBody(s, s.cargo[idx]);
       }
       M.Body.setAngle(s.plank, s.plank.angle * 0.5);
     }
