@@ -248,6 +248,8 @@ var TenbinCore = (function () {
   function step(s) {
     if (s.failed) return;
     physics(s);
+    // つづけた直後は、板が戻り字が落ち着くまで失敗を数えない
+    if (s.grace > 0) { s.grace--; return; }
     if (s.def.seesaw) { var vs = s.plank.vertices;
       for (var i = 0; i < vs.length; i++) if (vs[i].y >= GROUND - 0.5) { s.failed = 'ground'; return; } }
     for (var j = 0; j < s.cargo.length; j++) {
@@ -286,6 +288,33 @@ var TenbinCore = (function () {
     });
   }
 
+  // 報酬広告で「つづける」: 落ちた字（床より下・台より下・画面の外）を取り除き、点はそのままで続きから。
+  // てんびんが床に着いたときは、最後に置いた字も取り除いて、板が戻るまで待つ
+  function revive(s) {
+    if (!s.failed || s.revived) return false;
+    var boardTop = Infinity; s.boards.forEach(function (b) { boardTop = Math.min(boardTop, b.bounds.min.y); });
+    // 台の上に重心がない字（はみ出して落ちかけている）
+    var offBoard = function (b) { return !s.boards.some(function (bd) { return b.position.x >= bd.bounds.min.x - 4 && b.position.x <= bd.bounds.max.x + 4; }); };
+    var drop = s.cargo.filter(function (b) {
+      return b === s.failedBody || b.bounds.min.y > boardTop + PLANK_T || b.bounds.max.y >= GROUND - 1 ||
+        b.position.x < -40 || b.position.x > W + 40 || b.speed > 1.2 || offBoard(b);
+    });
+    if (s.failed === 'ground' && s.last && drop.indexOf(s.last) < 0) drop.push(s.last);
+    drop.forEach(function (b) { M.Composite.remove(s.engine.world, b); });
+    s.cargo = s.cargo.filter(function (b) { return drop.indexOf(b) < 0; });
+    // てんびんは、片側に重さが偏ったままだとすぐまた傾く。つり合うまで新しい字から取り除く
+    // （広告を見たのにすぐ負けるのがいちばんいやな体験）
+    if (s.def.seesaw) {
+      var lean = function () { return s.cargo.reduce(function (t, b) { return t + b.mass * (b.position.x - W / 2); }, 0); };
+      while (s.cargo.length && Math.abs(lean()) > 220) { var b = s.cargo.pop(); M.Composite.remove(s.engine.world, b); }
+      M.Body.setAngle(s.plank, s.plank.angle * 0.5);
+    }
+    s.cargo.forEach(function (b) { M.Body.setVelocity(b, { x: 0, y: 0 }); M.Body.setAngularVelocity(b, 0); });
+    if (s.def.seesaw) M.Body.setAngularVelocity(s.plank, 0);
+    s.failed = null; s.failedBody = null; s.revived = true; s.pendingScore = false; s.grace = 90; s.lastDropT = s.t;
+    return true;
+  }
+
   function settled(s) {
     if (s.def.seesaw && Math.abs(s.plank.angularVelocity) > 0.0008) return false;
     // ゆらゆらの台では、板と一緒に動いている分は数えない
@@ -306,6 +335,6 @@ var TenbinCore = (function () {
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
-    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
+    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, revive: revive, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;
