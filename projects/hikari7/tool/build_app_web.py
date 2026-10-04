@@ -50,6 +50,7 @@ def main():
     s = re.sub(r'<link href="https://fonts\.googleapis\.com[^>]*>\s*', '', s)
     face, size = dela_face(io.open(SRC, encoding='utf-8').read())
     s = s.replace('<style>', '<style>\n' + face + '\n', 1)
+    s = s.replace('<meta charset="utf-8">\n', '', 1)  # 本体を直接開いたとき用の指定。組み立てでは head に入れる
     i = s.index('<div id="app">')
     html = ('<!doctype html>\n<html lang="ja">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">\n'
