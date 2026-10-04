@@ -18,6 +18,7 @@ WebView で動かす。**ゲームの直しは game.html だけ**（`python tool
 | `tool/build_app_web.py` | アプリに入れるゲーム本体を組み立てる（`app/assets/web/index.html`。外の書体を外し、BGM を `app/assets/audio/bgm/` に写す）。組み立てた物は git に入れない |
 | `tool/make_icon.js` | アプリのアイコン（1024・透明なし）を描く。**Gemini の絵が届くまでの仮** |
 | `app/` | iOS アプリの外側（Flutter、2026-10-04）。hikari7 の app を写し、全画面広告を外し、BGM 3曲・通知を足した。課金アイテムは下の「広告と課金」、Bundle ID `com.namiki.tsuruhashi` |
+| `legal/` `site/` | プライバシーポリシー・サポート・利用規約と、公開ページの入口・app-ads.txt・robots.txt（hikari7 と同じ形）。`.github/workflows/tsuruhashi-site.yml` が master への push で Cloudflare Pages の `tsuruhashi` に出し、`tsuruhashi.dailyquarry.com` をつなぐ。**master に入れた時点で公開になる** |
 | `tool/smoke.js` | 画面の通し確認。ブラウザで5つの状態（はじめて・中盤・岩盤・代替わりの前・深層）を開き、タブ・シート・買い物を押してエラー0件か。CI で毎回回る（playwright） |
 | `tool/cut_sheet.js` | Gemini の図鑑の絵（1枚に5種・白い背景）を1種ずつの PNG に切る。`node tool/cut_sheet.js <絵> <層0〜9>` → `prototype/art/items/<id>.png`（256・背景透明）と並び確認用の `_sheet<層>.png`。縁の色を背景とみなし、大きいかたまり5つを「上の段左から3つ→下の段左から2つ」＝ ITEMS の順に当てる（小さな透かしは捨てる） |
 
@@ -125,7 +126,7 @@ v1 は同じ遊び方で1日目に6層を越え、3日目で止まっていた�
   見るたびに残りは5分に戻り、切れたら ×1 から。留守の間も残りの分は効く。
   ブラウザの試作は動画なしで押せるので、連打で一瞬に何百倍にならないよう、次に押せるまで30秒あける（`BOOST_GAP`）
 - **「広告を消す」は売らない。課金アイテムにする**（2026-10-04 ユーザー指示「広告を消すではなく、課金アイテムにする」。
-  種類は「買い切りの永続アイテム」と「使い切りのアイテム」、動画広告は今のまま残す——ユーザーが選んだ）。
+  種類は「買い切りの永続アイテム」と「使い切りのアイテム」、動画広告は今のまま残す——ユーザーが選んだ）。下の品ぞろえはユーザー了承（「品揃えはいい感じ」）。
   アプリでは**誰でも動画を見て**特典を受け取る（動画なしで受け取れる買い物はない）。売店は「社」のタブ（`shopHtml`）
   | 商品ID | 名前 | 種類 | 効果 |
   |---|---|---|---|
@@ -146,7 +147,7 @@ v1 は同じ遊び方で1日目に6層を越え、3日目で止まっていた�
 - **通知**（`app/lib/game/notifier.dart`、flutter_local_notifications）: 許可は初めて留守から戻ったときにゲームが頼む（`{"type":"notifAsk"}`、`S.notifAsked`）。
   裏に回るたびに、留守の上限（ゲームが `{"type":"notifCap","h"}` で伝える）の時刻に「留守の採掘がいっぱいになりました」を1件だけ予約し、戻ったら取り消す
 - アプリが裏から戻ったら `tsuruResume` を呼んで留守の計算をさせる（WebView の visibilitychange が来ない端末のため）
-- 設定の「プライバシー」は `https://tsuruhashi.dailyquarry.com/privacy.html` を開く（**ページはまだ無い**。公開ページを作るときに置く）
+- 設定の「プライバシー」は `https://tsuruhashi.dailyquarry.com/privacy.html` を開く（ページは `legal/privacy.html`。課金アイテム・通知・広告の中身を変えたら、ここと support・terms も直す）
 
 ## 公開後の更新の計画
 

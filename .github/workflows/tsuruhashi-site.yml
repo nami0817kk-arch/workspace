@@ -1,0 +1,77 @@
+# つるはし採掘の公開ページ（プライバシーポリシー・サポート・利用規約・app-ads.txt）を
+# Cloudflare Pages の tsuruhashi に出し、tsuruhashi.dailyquarry.com をつなぐ。
+# アプリの設定の「プライバシー」と App Store の URL 欄が、この URL を指す。hikari7-site.yml と同じ形。
+#
+# 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID
+name: つるはし採掘の公開ページ
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/tsuruhashi/legal/**"
+      - "projects/tsuruhashi/site/**"
+      - ".github/workflows/tsuruhashi-site.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tsuruhashi-site
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: projects/tsuruhashi
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Assemble site
+        run: |
+          mkdir -p dist
+          cp site/* dist/
+          cp legal/*.html dist/
+          if grep -rniE '\bnami\b|0817|なみ' dist; then echo "::error::公開ページに個人の名前が入っている"; exit 1; fi
+          ls -la dist
+
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"tsuruhashi","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/tsuruhashi
+          command: pages deploy dist --project-name=tsuruhashi --branch=master
+
+      # 独自ドメインをつなぐ（docs/public-identity.md。DNS は Cloudflare が引く）。
+      # 既につないであれば失敗が返るだけなので、止めずに次で開けるかを見る
+      - name: Attach tsuruhashi.dailyquarry.com
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects/tsuruhashi/domains" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"tsuruhashi.dailyquarry.com"}'
+
+      - name: Check the public URLs
+        run: |
+          sleep 20
+          for p in privacy.html support.html terms.html app-ads.txt robots.txt; do
+            curl -fsSL "https://tsuruhashi.pages.dev/$p" -o /tmp/page || { echo "::error::https://tsuruhashi.pages.dev/$p が開けません"; exit 1; }
+          done
+          grep -q "つるはし採掘" <(curl -fsSL https://tsuruhashi.pages.dev/privacy.html) || { echo "::error::tsuruhashi.pages.dev がつるはし採掘のページではありません"; exit 1; }
+          # 独自ドメインは証明書の発行に数分かかることがある。開けなければ知らせるだけ
+          curl -fsSL https://tsuruhashi.dailyquarry.com/privacy.html -o /tmp/page \
+            || echo "::warning::tsuruhashi.dailyquarry.com がまだ開けません。数分後に workflow_dispatch で回し直すか、Pages の Custom domains を確かめる"
