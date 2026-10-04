@@ -19,7 +19,11 @@ var TenbinCore = (function () {
   var WORDS = (typeof TenbinWords !== 'undefined') ? TenbinWords : require('./words.js');
 
   // 字ごとの部品（離れた画は別の輪郭）。点の少ない輪郭は捨てない
-  function outlines(kind) { return GLYPHS.chars[kind].map(function (poly) { return poly.map(function (q) { return { x: q[0], y: q[1] }; }); }); }
+  // アイテム「いた」で落とす木の板（字ではない。ことばにも点にも数えない）
+  var BOARD = 'いた', BOARD_W = 130, BOARD_H = 12;
+  function outlines(kind) {
+    if (kind === BOARD) return [[{ x: -BOARD_W / 2, y: -BOARD_H / 2 }, { x: BOARD_W / 2, y: -BOARD_H / 2 }, { x: BOARD_W / 2, y: BOARD_H / 2 }, { x: -BOARD_W / 2, y: BOARD_H / 2 }]];
+    return GLYPHS.chars[kind].map(function (poly) { return poly.map(function (q) { return { x: q[0], y: q[1] }; }); }); }
 
   // 字の中心を (x,y) に置き、ang だけ回した体を作る。離れた画も1つの硬い体にまとめる
   function build(kind, x, y, ang) {
@@ -50,7 +54,7 @@ var TenbinCore = (function () {
 
   // 字の中心から重心までのずれ（角度0のとき）。描くときに使う
   var OFFSET = {};
-  KINDS.forEach(function (k) { var b = build(k, 0, 0, 0); OFFSET[k] = { x: b.position.x, y: b.position.y }; });
+  KINDS.concat([BOARD]).forEach(function (k) { var b = build(k, 0, 0, 0); OFFSET[k] = { x: b.position.x, y: b.position.y }; });
 
   // 回したときの絵の原点からの上下左右のはみ出し
   var EXT = {};
@@ -71,7 +75,7 @@ var TenbinCore = (function () {
   };
   var PLATFORM_KEYS = Object.keys(PLATFORMS);
 
-  function create(seed, platform) {
+  function create(seed, platform, opts) {
     var def = PLATFORMS[platform] || PLATFORMS.flat;
     var engine = M.Engine.create({ positionIterations: 12, velocityIterations: 10, constraintIterations: 6 });
     var world = engine.world;
@@ -89,8 +93,10 @@ var TenbinCore = (function () {
     if (def.seesaw) M.Composite.add(world, M.Constraint.create({ pointA: { x: W / 2, y: py }, bodyB: boards[0], pointB: { x: 0, y: 0 }, stiffness: 1, length: 0 }));
     var s = { engine: engine, def: def, platform: PLATFORMS[platform] ? platform : 'flat', boards: boards, plank: boards[0], cargo: [], t: 0, sub: 0,
       failed: null, failedBody: null, lastDropT: -999, score: 0, pendingScore: false, rng: rng(seed == null ? (Math.random() * 1e9) | 0 : seed),
-      queue: [], made: [], madeBodies: [], points: 0, height: 0, events: [], last: null };
+      queue: [], made: [], madeBodies: [], points: 0, placed: 0,
+      useItems: !!(opts && opts.items), items: { glue: 0, board: 0, undo: 0, freeze: 0 }, glueArmed: false, welded: {}, height: 0, events: [], last: null };
     fillQueue(s); fillQueue(s);
+    if (s.useItems) { s.items.glue = 1; s.items.undo = 1; }
     // 落とした字が最初に何かへ当たった瞬間を「着地」として知らせる（音・粒・弾みに使う）
     M.Events.on(engine, 'collisionStart', function (e) {
       var b = s.last; if (!b || b.landed) return;
@@ -99,6 +105,8 @@ var TenbinCore = (function () {
         if (A !== b && B !== b) continue;
         b.landed = true;
         s.events.push({ type: 'land', kind: b.kind, x: b.position.x, y: b.bounds.max.y, speed: b.speed, mass: b.mass });
+        // のり: 最初に触れた字や台に、その場でくっつく
+        if (b.glue) { var o = A === b ? B : A; if (o.label !== 'ground') { weld(s, b, o); s.events.push({ type: 'glued', x: b.position.x, y: b.bounds.max.y }); } }
         return;
       }
     });
@@ -231,6 +239,7 @@ var TenbinCore = (function () {
     if (s.failed || !canDrop(s)) return null;
     var kind = s.queue[0];
     var b = build(kind, clampX(kind, ang, x), holdY(s, kind, ang), ang);
+    if (s.glueArmed) { b.glue = true; s.glueArmed = false; }
     s.cargo.push(b); s.last = b;
     s.queue.shift(); while (s.queue.length < 8) fillQueue(s);
     s.lastDropT = s.t; s.pendingScore = true;
@@ -273,11 +282,14 @@ var TenbinCore = (function () {
     }
     // 落とした字が落ち着いたら1字ぶん数える。ことばの最後の字なら、ことばができた
     if (s.pendingScore && canDrop(s)) {
-      s.pendingScore = false; s.score++;
+      s.pendingScore = false;
       var top = Infinity; s.cargo.forEach(function (c) { top = Math.min(top, c.bounds.min.y); });
       s.height = Math.max(s.height, PIVOT_Y - PLANK_T - top);
-      s.points += LETTER_PTS;
-      s.events.push({ type: 'score', kind: s.last.kind, pts: LETTER_PTS });
+      if (s.last.kind !== BOARD) {
+        s.score++; s.points += LETTER_PTS; s.placed++;
+        s.events.push({ type: 'score', kind: s.last.kind, pts: LETTER_PTS });
+        if (s.useItems && s.placed % 8 === 0) giveItem(s);
+      }
       checkWords(s);
     } else if (!s.pendingScore && s.t % 15 === 0 && s.cargo.length > 1 && settled(s)) {
       // 字があとからずれてくっついた場合も、落ち着いたところで拾う
@@ -299,8 +311,54 @@ var TenbinCore = (function () {
     fresh.forEach(function (f) {
       var pts = wordPoints(f.text) * fresh.length;
       s.made.push(f.text); s.madeBodies.push(f.bodies); s.points += pts;
+      if (s.useItems && f.text.length >= 3) giveItem(s);
       s.events.push({ type: 'word', text: f.text, bodies: f.bodies, pts: pts, mult: fresh.length });
     });
+  }
+
+  // --- アイテム（はじめの画面で あり／なし を選ぶ） ---
+  // のり: 次の字が最初に触れたものにくっつく / いた: 次に平らな板を落とす / とりけし: 最後の字を取り除く /
+  // こおり: いま触れ合っている字どうしと台を、全部くっつけて固める
+  var ITEM_KEYS = ['glue', 'board', 'undo', 'freeze'], ITEM_MAX = 2;
+  function giveItem(s) {
+    var can = ITEM_KEYS.filter(function (k) { return s.items[k] < ITEM_MAX; });
+    if (!can.length) return;
+    var k = can[(s.rng() * can.length) | 0]; s.items[k]++;
+    s.events.push({ type: 'item', item: k });
+  }
+  // 2つの体をその場の形のままつなぐ（a の中の2点で留める）
+  function weld(s, a, b) {
+    var key = Math.min(a.id, b.id) + '-' + Math.max(a.id, b.id);
+    if (s.welded[key]) return; s.welded[key] = true;
+    var c = Math.cos(a.angle), sn = Math.sin(a.angle);
+    [-12, 12].forEach(function (d) {
+      var P = { x: a.position.x + d * c, y: a.position.y + d * sn };
+      M.Composite.add(s.engine.world, M.Constraint.create({ bodyA: a, pointA: { x: P.x - a.position.x, y: P.y - a.position.y },
+        bodyB: b, pointB: { x: P.x - b.position.x, y: P.y - b.position.y }, length: 0, stiffness: 0.7, damping: 0.1, label: 'weld' }));
+    });
+  }
+  function useItem(s, k) {
+    if (!s.useItems || s.failed || !(s.items[k] > 0)) return false;
+    if (k === 'glue') { if (s.glueArmed) return false; s.glueArmed = true; }
+    else if (k === 'board') { if (s.queue[0] === BOARD) return false; s.queue.unshift(BOARD); }
+    else if (k === 'undo') {
+      var b = s.last; if (!b || s.cargo.indexOf(b) < 0) return false;
+      M.Composite.remove(s.engine.world, b);
+      s.engine.world.constraints.slice().forEach(function (c) { if (c.bodyA === b || c.bodyB === b) M.Composite.remove(s.engine.world, c); });
+      s.cargo.splice(s.cargo.indexOf(b), 1);
+      s.last = s.cargo[s.cargo.length - 1] || null; if (s.last) s.last.landed = true;
+      s.pendingScore = false; s.lastDropT = s.t - 20;
+    } else if (k === 'freeze') {
+      if (s.cargo.length < 1) return false;
+      var nb = touching(s);
+      s.cargo.forEach(function (a) {
+        nb.get(a).forEach(function (o) { weld(s, a, o); });
+        s.boards.forEach(function (bd) { if (near(a, bd)) weld(s, a, bd); });
+      });
+    }
+    s.items[k]--;
+    s.events.push({ type: 'use', item: k });
+    return true;
   }
 
   // 報酬広告で「つづける」: 落ちた字（床より下・台より下・画面の外）を取り除き、点はそのままで続きから。
@@ -358,6 +416,6 @@ var TenbinCore = (function () {
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
-    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, revive: revive, landingY: landingY, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
+    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, revive: revive, landingY: landingY, useItem: useItem, ITEM_KEYS: ITEM_KEYS, BOARD: BOARD, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;
