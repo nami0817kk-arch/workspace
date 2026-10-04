@@ -70,3 +70,18 @@ def test_next_and_thumbnail_and_question():
     sc = script.parse(d)
     assert sc.next["title"] == "西太后" and sc.thumbnail["main"] == "悪女？"
     assert sc.question == "王妃は本当に悪女だったのか"
+
+
+def test_figure_sticky_and_cleared():
+    d = _data()
+    d["sections"][0]["lines"][0]["figure"] = {"type": "pie", "title": "x", "parts": [["a", 1]]}
+    d["sections"][0]["lines"][1]["figure"] = None
+    sc = script.parse(d)
+    assert sc.lines[0].figure and sc.lines[1].figure is None
+
+
+def test_figure_type_checked():
+    d = _data()
+    d["sections"][0]["lines"][0]["figure"] = {"type": "video"}
+    with pytest.raises(script.ScriptError):
+        script.parse(d)

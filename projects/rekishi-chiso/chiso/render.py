@@ -35,6 +35,7 @@ POP_FRAMES = 6       # 飛び出すときの大きくなる動き（フレーム
 SHAKE_FRAMES = 6     # 驚きで画面が揺れる長さ（フレーム数）
 SHAKE_PX = 10        # 揺れの大きさ
 WIPE_FRAMES = 14     # 節の頭の地層のワイプ（フレーム数）
+FIG_FRAMES = 45      # 図が出たときに描き進める長さ（フレーム数。1.5秒）
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,7 @@ class State:
     year: int | None
     speaker: str
     memo: tuple = ()
+    figure: str | None = None
 
 
 def _ease(t: float) -> float:
@@ -223,7 +225,7 @@ class Painter:
             dr.text((cx, yb - 132 * u), txt, font=pf, fill=GOLD, anchor="mm")
 
     # --- 本編の画面（立ち絵と字幕より下の層） ------------------------------
-    def base(self, state: State, year=None, slide: float = 1.0) -> Image.Image:
+    def base(self, state: State, year=None, slide: float = 1.0, fig: float = 1.0) -> Image.Image:
         """year：年表の印の位置（移動の途中を描くとき）／slide：新しいメモの滑り込み（0〜1）。"""
         W, H = self.W, self.H
         img = self._canvas(state.background)
@@ -244,12 +246,17 @@ class Painter:
         dr.text((120, 145 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK,
                 stroke_width=2, stroke_fill=(12, 10, 8))
 
-        self._memo(img, state, slide)
+        if state.figure is None:
+            self._memo(img, state, slide)
+            if state.portrait is not None:
+                self._portrait(img, state.portrait)
+        else:                                              # 図のあいだは、メモと肖像を隠して図を大きく
+            import json as _json
+            from . import figures
+            img = figures.draw(self, img, _json.loads(state.figure), fig)
         dr = ImageDraw.Draw(img, "RGBA")
-        if state.portrait is not None:
-            self._portrait(img, state.portrait)
-            dr = ImageDraw.Draw(img, "RGBA")
-        self._timeline(dr, 470, W - 470, 770, state.year if year is None else year)
+        if state.figure is None:                           # 図のあいだは年表も隠す（図の板を下まで広げる）
+            self._timeline(dr, 470, W - 470, 770, state.year if year is None else year)
         if state.background is not None and state.background.credit:
             dr.text((W / 2, H - 14), f"背景：{state.background.credit}", font=self.font("serif", 18),
                     fill=DIM, anchor="ms", stroke_width=2, stroke_fill=(12, 10, 8))
@@ -506,7 +513,7 @@ class Painter:
 
 def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
-                 getattr(line, "memo", ()))
+                 getattr(line, "memo", ()), getattr(line, "figure", None))
 
 
 def _salt(painter) -> str:
@@ -627,14 +634,15 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             t += d
             cuts.add(min(talk_len, t))
         changed = special and prev_state is not None and prev_state.section == state.section and (
-            (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year)
-            != (state.background, state.portrait, state.memo, state.year))
+            (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year, prev_state.figure)
+            != (state.background, state.portrait, state.memo, state.year, state.figure))
         surprised = special and line.tone == "驚き"
         # 強調語の飛び出しは 10-04「4は不要」で外した（config の pop: true で戻せる）
         words = ([w for w in (plain(x) for x in __import__("re").findall(r"《(.+?)》", line.text))]
                  if special and painter.config.get("pop") else [])
+        fig_new = special and state.figure is not None and (prev_state is None or prev_state.figure != state.figure)
         n_fx = max(n_hop, TRANS_FRAMES if changed else 0, SHAKE_FRAMES if surprised else 0,
-                   POP_FRAMES if words else 0)
+                   POP_FRAMES if words else 0, FIG_FRAMES if fig_new else 0)
         for k in range(1, n_fx + 1):
             cuts.add(min(talk_len, k / fps))
         pop_len = POP_SECONDS if words else 0.0
@@ -659,23 +667,24 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             tr = (k / (TRANS_FRAMES + 1)) if (changed and k and k <= TRANS_FRAMES) else 1.0
             shake_k = k if (surprised and k and k <= SHAKE_FRAMES) else 0
             pop_t = (min(1.0, k / (POP_FRAMES + 1)) if k else 1.0) if (words and a < pop_len) else None
+            fig_t = (k / (FIG_FRAMES + 1)) if (fig_new and k and k <= FIG_FRAMES) else 1.0
 
             def make(s=state, ps=prev_state, text=text, hop_k=hop_k, n_hop=n_hop, tr=tr, shake_k=shake_k,
                      pop_t=pop_t, mouth_open=mouth_open, blink=blink, tone=line.tone, opening=opening,
-                     words=tuple(words), side=side):
+                     words=tuple(words), side=side, fig_t=fig_t):
                 hop_t = hop_k / (n_hop + 1) if hop_k else 0.0
                 if tr < 1.0 and ps is not None:
                     year = s.year
                     if ps.year is not None and s.year is not None:
                         year = ps.year + (s.year - ps.year) * _ease(tr)
                     slide = tr if (s.memo and s.memo != ps.memo) else 1.0
-                    base = painter.base(s, year=year, slide=slide)
-                    changed_pic = ((ps.portrait != s.portrait) if painter.layered
+                    base = painter.base(s, year=year, slide=slide, fig=fig_t)
+                    changed_pic = (((ps.portrait, ps.figure) != (s.portrait, s.figure)) if painter.layered
                                    else (ps.background, ps.portrait) != (s.background, s.portrait))
                     if changed_pic:
                         base = Image.blend(painter.base(ps), base, _ease(tr))
                 else:
-                    base = painter.base(s)
+                    base = painter.base(s, fig=fig_t)
                 if pop_t is not None:
                     base = painter.pop(base, words[0], pop_t, s.speaker)
                 im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink)
@@ -687,7 +696,8 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                 return im
 
             key = ("f2", state, prev_state if tr < 1.0 else None, round(tr, 3), hop_k, n_hop, text, shake_k,
-                   None if pop_t is None else (words[0], round(pop_t, 3)), mouth_open, blink, line.tone,
+                   None if pop_t is None else (words[0], round(pop_t, 3)), round(fig_t, 3), mouth_open, blink,
+                   line.tone,
                    bool(opening))
             emit(frame_dir / _name(salt, *key), make, b - a)
         prev_state = state
