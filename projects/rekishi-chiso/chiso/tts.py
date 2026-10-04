@@ -83,7 +83,7 @@ def speak(engine: Voicevox, text: str, voice: Voice, tone: str, readings: dict[s
     missing: list[str] = []
     if words:
         kanas = [kana_of(engine.query(apply_readings(w, readings), voice.style_id)) for w in words]
-        query, missing = emphasize(query, kanas)
+        query, missing = emphasize(query, kanas, voice.emphasis)
     query = end_rise(query, TONES[tone].get("end_rise", 0.0) * voice.tone_strength)
     data = engine.synthesize(query, voice.style_id)
     target.write_bytes(data)

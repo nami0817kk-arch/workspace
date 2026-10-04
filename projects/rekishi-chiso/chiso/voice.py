@@ -56,6 +56,7 @@ class Voice:
     tone_strength: float = 1.0
     max_intonation: float = 2.0
     max_speed: float = 2.0
+    emphasis: float = 1.0          # 《》の強調の効き（10-05「剣崎が色文字の時におかしな話かたになる」で話者ごとに）
 
 
 def tone_params(voice: Voice, tone: str) -> dict[str, float]:
@@ -114,11 +115,12 @@ def _kana(moras: list[dict]) -> str:
     return "".join(m.get("text", "") for m in moras)
 
 
-def emphasize(query: dict, word_kanas: list[str]) -> tuple[dict, list[str]]:
+def emphasize(query: dict, word_kanas: list[str], strength: float = 1.0) -> tuple[dict, list[str]]:
     """audio_query の結果のうち、強調する語の読み（カタカナ）に当たるモーラを持ち上げる。
 
     語の読みは、その語だけを audio_query にかけて得たモーラ列を渡す（漢字と読みの
     対応が分からないため）。見つからなかった語は2つ目の戻り値で返す。
+    strength は効きの強さ（1.0 で EMPHASIS_* のとおり、0.3 なら高さ・伸ばし・音量の変化を3割に）。
     """
     query = copy.deepcopy(query)
     moras = _moras(query)
@@ -139,11 +141,11 @@ def emphasize(query: dict, word_kanas: list[str]) -> tuple[dict, list[str]]:
         for i in targets:
             m = moras[i]
             if m.get("pitch", 0) > 0:          # 無声化したモーラ（pitch 0）は触らない
-                m["pitch"] = round(m["pitch"] + EMPHASIS_PITCH, 4)
+                m["pitch"] = round(m["pitch"] + EMPHASIS_PITCH * strength, 4)
             if m.get("vowel_length"):
-                m["vowel_length"] = round(m["vowel_length"] * EMPHASIS_LENGTH, 4)
+                m["vowel_length"] = round(m["vowel_length"] * (1 + (EMPHASIS_LENGTH - 1) * strength), 4)
     if word_kanas and len(missing) < len(word_kanas):
-        query["volumeScale"] = round(query.get("volumeScale", 1.0) * EMPHASIS_VOLUME, 4)
+        query["volumeScale"] = round(query.get("volumeScale", 1.0) * (1 + (EMPHASIS_VOLUME - 1) * strength), 4)
     return query, missing
 
 
