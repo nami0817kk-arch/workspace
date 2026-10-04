@@ -1266,7 +1266,7 @@ var INTV_LINES={
   sensai:['みんなが上手で、自分がここにいていいのか不安です','夜になると、失敗した場面を思い出してしまいます','本番の前は、ご飯がのどを通りません','うまくできた日も、次は駄目なんじゃないかって思ってしまいます','誰かにほめられると、少しだけ眠れるようになります']
 };
 var INTV_OPTS=[['期待している','自信が上がる'],['課題を正直に伝える','伸びるが、受け止め方は人それぞれ'],['無理しなくていい','疲れが抜ける']];
-function interviewLine(t){var L=tpick(INTV_LINES,t).slice();if(t.arc&&t.arc.step>=1&&ARCS[t.arc.k])L.push(ARCS[t.arc.k].reason+'。それだけは、忘れないようにしています');var r=typeof S!=='undefined'&&S?S.rnd:0;return L[(t.id*3+r)%L.length];}
+function interviewLine(t){var L=tpick(INTV_LINES,t).slice();if(t.arc&&t.arc.step>=1&&ARCS[t.arc.k])L.push((typeof S!=='undefined'&&S?arcText(S,t,ARCS[t.arc.k].reason):ARCS[t.arc.k].reason)+'。それだけは、忘れないようにしています');var r=typeof S!=='undefined'&&S?S.rnd:0;return L[(t.id*3+r)%L.length];}
 function applyInterview(S){
   alive(S).forEach(function(t){var c=S.interview[t.id]==null?0:S.interview[t.id];t.temperRev=true;
     if(c===0){t.conf+=t.temper==='sensai'?16:t.temper==='makezu'?6:10;t.trust+=6;}
