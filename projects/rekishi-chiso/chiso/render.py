@@ -54,6 +54,7 @@ class State:
     bubble: str | None = None
     icon: str | None = None
     term: tuple | None = None
+    place: tuple | None = None
 
 
 def _ease(t: float) -> float:
@@ -256,6 +257,7 @@ class Painter:
             self._memo(img, state, slide)
             if state.portrait is not None:
                 self._portrait(img, state.portrait)
+                self._age(img, state)
             from . import extras
             if state.icon:
                 img = extras.draw_icon(self, img, state.icon, icon_t)
@@ -266,9 +268,14 @@ class Painter:
             import json as _json
             from . import figures
             img = figures.draw(self, img, _json.loads(state.figure), fig)
+        from . import extras
+        top = extras.TERM_BOX[1]
         if state.term:                                     # 用語の札は右上（肖像と図の右の空き）
-            from . import extras
-            img = extras.draw_term(self, img, *state.term)
+            img, top = extras.draw_term(self, img, *state.term)
+            top += 18
+        is_map = state.figure is not None and '"type": "map"' in state.figure
+        if state.place and not is_map:                     # 地図の図が出ているあいだは要らない
+            img = extras.draw_minimap(self, img, state.place, top)
         dr = ImageDraw.Draw(img, "RGBA")
         if state.figure is None:                           # 図のあいだは年表も隠す（図の板を下まで広げる）
             self._timeline(dr, 470, W - 470, 770, state.year if year is None else year)
@@ -305,6 +312,25 @@ class Painter:
             if card.body:
                 dr.text((146 + dx, y + (54 if current else 46)), card.body, font=bf, fill=INK if current else DIM)
             y += h + 16
+
+    def _age(self, img: Image.Image, state) -> None:
+        """肖像の左上に「この時○歳」（台本の people: に生没がある人物だけ。10-04）。"""
+        from .script import age_at, person_of
+        people = getattr(self.script, "people", {}) or {}
+        who = person_of(people, state.portrait)
+        age = age_at(people[who], state.year, state.card) if who else None
+        if age is None:
+            return
+        from .extras import portrait_box
+        px, py, pw, ph = portrait_box(self, state.portrait)
+        dr = ImageDraw.Draw(img, "RGBA")
+        sf, bf = self.font("gothic", 20), self.font("serif", 40, bold=True)
+        text = f"{age}歳"
+        w = max(bf.getlength(text), sf.getlength("この時")) + 34
+        x0, y0 = px - 34, py - 34
+        dr.rounded_rectangle([x0, y0, x0 + w, y0 + 82], radius=10, fill=(150, 36, 30, 235), outline=GOLD, width=2)
+        dr.text((x0 + w / 2, y0 + 18), "この時", font=sf, fill=(255, 236, 210), anchor="mm")
+        dr.text((x0 + w / 2, y0 + 54), text, font=bf, fill=(255, 255, 255), anchor="mm")
 
     def _portrait(self, img: Image.Image, pic) -> None:
         W = self.W
@@ -530,7 +556,7 @@ class Painter:
 def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
                  getattr(line, "memo", ()), getattr(line, "figure", None), getattr(line, "bubble", None),
-                 getattr(line, "icon", None), getattr(line, "term", None))
+                 getattr(line, "icon", None), getattr(line, "term", None), getattr(line, "place", None))
 
 
 def _salt(painter) -> str:
