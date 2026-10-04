@@ -3820,7 +3820,7 @@ function vGloss(){return '<div class="ov" data-a="glclose"><div class="sheet" da
 function isDarkNow(){var t=ui.set&&ui.set.theme;if(t==='dark'||t==='stage')return true;if(t==='light')return false;try{return window.matchMedia('(prefers-color-scheme: dark)').matches;}catch(e){return false;}}
 function pushTheme(){if(APP)appPost({type:'theme',dark:isDarkNow()});}
 /* フェーズ43：アプリが裏に回る直前に、アプリ側から呼ばれる */
-window.hikariPause=function(){try{if(S)HStore.set(KEY,JSON.stringify(S));if(HStore.flush)HStore.flush();}catch(e){}};
+window.hikariPause=function(){try{if(S){HStore.set(KEY,JSON.stringify(S));HStore.set('hikari7_resume','1');}else HStore.del('hikari7_resume');if(HStore.flush)HStore.flush();}catch(e){}};
 
 
 /* ---------- BGM と台詞の声（2026-10-03） ----------
@@ -4055,5 +4055,8 @@ document.addEventListener('click',function(ev){
     case 'restart':ui.chal=null;try{HStore.set('hikari7_chal','');}catch(e){}stopTimer();clearSave();S=null;render();window.scrollTo(0,0);break;
   }
 });
-(function(){try{ui.set=loadSet();applySet();}catch(e){}var sv=load();if(sv){ui.g=sv.g||'m';if(sv.fmt)buildRounds(sv);}render();})();
+(function(){try{ui.set=loadSet();applySet();}catch(e){}var sv=load();if(sv){ui.g=sv.g||'m';if(sv.fmt)buildRounds(sv);}
+  /* アプリが裏で閉じられたあとの起動なら、タイトルを飛ばして続きから（印は1回で消す。次に裏へ回るとまた付く） */
+  try{if(APP&&sv&&HStore.get('hikari7_resume')==='1'){S=sv;HStore.del('hikari7_resume');}}catch(e){}
+  render();})();
 </script>
