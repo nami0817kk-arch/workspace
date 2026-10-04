@@ -49,6 +49,7 @@ class Picture:
     credit: str = ""      # 背景の出典（画面の下に小さく出す）
     caption: str = ""     # 肖像の下に出す説明
     who: str = ""         # 肖像の人物（people: の名前）。省けば caption の名前から探す
+    age: bool = True      # false で「この時○歳」を出さない（話の時代と絵の人物の年が離れるとき）
 
 
 @dataclass(frozen=True)
@@ -168,7 +169,8 @@ def _picture(raw, where: str) -> Picture | None:
     if not isinstance(raw, dict) or "image" not in raw:
         raise ScriptError(f"{where}: 絵の指定には image が要ります: {raw!r}")
     return Picture(image=str(raw["image"]), credit=str(raw.get("credit", "")),
-                   caption=str(raw.get("caption", "")), who=str(raw.get("who", "")))
+                   caption=str(raw.get("caption", "")), who=str(raw.get("who", "")),
+                   age=bool(raw.get("age", True)))
 
 
 def _card_year(card) -> int | None:
@@ -351,7 +353,7 @@ def digest(path: str | Path) -> str:
 
 def person_of(people: dict, pic) -> str | None:
     """肖像の人物。who があればそれ、無ければ caption の名前（「（」より前）が人物名か別名で終わるもの。"""
-    if pic is None:
+    if pic is None or not getattr(pic, "age", True):
         return None
     if pic.who:
         return pic.who if pic.who in people else None

@@ -74,6 +74,7 @@ sections:
         tone: 疑問
         short: s1
       - 語り: そういうことになります。しかも、彼女の言葉として書かれたのは、亡くなって50年ほどたってから。彼女は、実際にしたことよりも、「いかにも言いそうなこと」で覚えられてしまった王妃なんです。
+        portrait: {image: paintings/marie_vigee_1778.jpg, caption: "マリー・アントワネット（ヴィジェ＝ルブラン画、1778年）", age: false}
         tone: しみじみ
         card: null
         short: s1
