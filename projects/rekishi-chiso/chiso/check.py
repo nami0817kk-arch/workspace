@@ -91,6 +91,13 @@ def episode(script) -> tuple[list[str], list[str]]:
                 figures.with_places(spec)
             except ValueError as e:
                 errors.append(f"地図「{spec.get('title', '')}」: {e}")
+    from . import extras
+    for l in script.lines:
+        if l.bubble and (l.portrait is None or l.figure):
+            warns.append(f"{l.index + 1}行目：吹き出しは肖像が出ているときだけ出ます（いまは出ません）")
+    for name in sorted({l.icon for l in script.lines if l.icon}):
+        if name not in extras.known_icons():
+            errors.append(f"挿絵の名前が分かりません: {name}")
     if not any("《" in l.text for l in script.lines):
         warns.append("《》の強調が1つもありません")
     if not script.shorts:

@@ -82,7 +82,8 @@ def _panel(painter, img: Image.Image, title: str) -> tuple[ImageDraw.ImageDraw, 
 
 def draw(painter, img: Image.Image, spec: dict, t: float = 1.0) -> Image.Image:
     kind = spec.get("type")
-    fn = {"map": _map, "pie": _pie, "bars": _bars, "people": _people}.get(kind)
+    from .extras import draw_compare
+    fn = {"map": _map, "pie": _pie, "bars": _bars, "people": _people, "compare": draw_compare}.get(kind)
     if fn is None:
         raise ValueError(f"図の種類が分かりません: {kind}")
     img = img.copy()

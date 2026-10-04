@@ -42,6 +42,12 @@ sections:
         figure: {type: map, title: 旅の題, route: [パリ, ヴェルサイユ], note: およそ○日}   # 地名は places.yaml
       - 語り: 図を消す行。
         figure: null
+      - 語り: 1文の挿絵（その行だけ。真ん中の丸い板）。名前は Phosphor のアイコン名（chiso/extras.py の ICON_HINTS）
+        icon: envelope-simple
+      - 聞き: 肖像の人物の吹き出し（その行だけ。肖像が出ているときだけ）。x, y は肖像の中の口のあたり（0〜1）
+        bubble: {text: "一言のセリフ", x: 0.5, y: 0.25}
+      - 語り: 人物を並べて比べる
+        figure: {type: compare, title: 比べる題, people: [[人A, paintings/a.jpg, ひとこと], [人B, paintings/b.jpg, ひとこと]]}
 
   - title: 見立て：なぜそうなったのか
     lines:
