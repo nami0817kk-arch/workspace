@@ -146,7 +146,7 @@ WHITE: CMYK = (0, 0, 0, 0)
 NAVY: CMYK = (0.95, 0.75, 0.10, 0.45)
 GOLD: CMYK = (0.0, 0.18, 0.85, 0.0)
 FRONT_PAGES = 5  # 表題・はじめに・この本の見方・4つのことば・もくじ
-BACK_PAGES = 6  # おわりに・さくいん・英語から引くさくいん・フランス語から引くさくいん・参考にした資料・奥付
+BACK_PAGES = 7  # おわりに・書きとめメモ・さくいん・英語から引くさくいん・フランス語から引くさくいん・参考にした資料・奥付
 REGIONS = {
     "en": "イギリス・アメリカ・カナダ・オーストラリアなど",
     "fr": "フランス・ベルギー・スイス・カナダ（ケベック州）など",
@@ -253,7 +253,7 @@ def foreign_key(text: str) -> str:
 
 
 def page_count(spec: SekaiSpec) -> int:
-    total = FRONT_PAGES + sum(1 + len(ch["items"]) for ch in spec.chapters) + BACK_PAGES
+    total = FRONT_PAGES + sum(2 + len(ch["items"]) for ch in spec.chapters) + BACK_PAGES  # 章扉・各句・おさらい
     return total + (total % 2)
 
 
@@ -267,11 +267,17 @@ def item_page(spec: SekaiSpec, index: int) -> int:
             if k == index:
                 return p
             k += 1
+        p += 1  # 章のおさらい
     raise IndexError(index)
 
 
+def review_page(spec: SekaiSpec, ci: int) -> int:
+    """ci 章のおさらい（章の最後のページ）。"""
+    return chapter_page(spec, ci) + len(spec.chapters[ci]["items"]) + 1
+
+
 def chapter_page(spec: SekaiSpec, ci: int) -> int:
-    return FRONT_PAGES + 1 + sum(1 + len(ch["items"]) for ch in spec.chapters[:ci])
+    return FRONT_PAGES + 1 + sum(2 + len(ch["items"]) for ch in spec.chapters[:ci])
 
 
 _KINSOKU_HEAD = "，。、」）？！・ー』"
@@ -743,6 +749,83 @@ def draw_chapter(c: canvas.Canvas, f: Frame, spec: SekaiSpec, items: list[dict],
     c.restoreState()
 
 
+def review_quiz(items: list[dict], ci: int, n: int = 6) -> list[tuple[int, str, str]]:
+    """章のおさらいの問い。章扉のクイズに出した句と QUIZ_SKIP を除き、直訳から当てる問いを1句1問で選ぶ。"""
+    used = {k for k, _, _ in chapter_quiz(items, ci)}
+    cands = []
+    for k, it in enumerate(items):
+        if it["chapter"] != ci or k in used or it["jp"] in QUIZ_SKIP:
+            continue
+        best = None
+        for lang, _ in LANGS:
+            m = re.fullmatch(r"直訳「(.+)」", it[lang]["lit"])
+            if not m or not 5 <= len(m.group(1)) <= 26:
+                continue
+            body = m.group(1)
+            overlap = sum(ch in it["jp"] for ch in set(body) if re.match(r"[一-龥ぁ-んァ-ン]", ch))
+            if best is None or overlap < best[0]:
+                best = (overlap, k, lang, body)
+        if best:
+            cands.append(best)
+    cands.sort()
+    return sorted((k, lang, body) for _, k, lang, body in cands[:n])
+
+
+def draw_review(c: canvas.Canvas, f: Frame, spec: SekaiSpec, items: list[dict], ci: int) -> None:
+    """章の最後のおさらい。外国語の直訳から、この章のことわざを当てる。こたえは逆さまに。"""
+    ch = spec.chapters[ci]
+    col, tint = COLORS[ch["color"]]
+    L, R, w = f.left, f.right, f.width
+    fill_page(c, f, tint)
+    c.setFillColorCMYK(*col)
+    c.rect(0, f.y1 - 70, f.pw, 70 + BLEED, stroke=0, fill=1)
+    c.setFillColorCMYK(*WHITE)
+    c.setFont(FONT_BOLD, 9)
+    c.drawString(L, f.top - 6, f"第{ci + 1}章　{ch['title']}")
+    c.setFont(FONT_ROUNDED, 18)
+    c.drawString(L, f.top - 30, "おさらい　どこの国の言い方？")
+    y = f.y1 - 70 - 22
+    c.setFillColorCMYK(*INK)
+    c.setFont(FONT_REGULAR, 9)
+    c.drawString(L, y, "外国語の直訳を読んで、この章のどのことわざか当ててみましょう。")
+    y -= 16
+    qs = review_quiz(items, ci)
+    qh = (y - f.bottom - 84) / max(1, len(qs)) - 6
+    for j, (k, lang, lit) in enumerate(qs):
+        c.setFillColorCMYK(*WHITE)
+        c.roundRect(L, y - qh, w, qh, 3, stroke=0, fill=1)
+        c.setFillColorCMYK(*col)
+        c.circle(L + 16, y - qh / 2, 9, stroke=0, fill=1)
+        c.setFillColorCMYK(*WHITE)
+        c.setFont(FONT_ROUNDED, 10)
+        c.drawCentredString(L + 16, y - qh / 2 - 3.5, str(j + 1))
+        c.setFillColorCMYK(*LANG_COLOR[lang])
+        c.setFont(FONT_BOLD, 8)
+        c.drawString(L + 34, y - 14, f"{dict(LANGS)[lang]}では")
+        c.setFillColorCMYK(*INK)
+        text = f"「{lit}」"
+        fs = 11
+        while c.stringWidth(text, FONT_BOLD, fs) > w - 46 and fs > 8:
+            fs -= 0.25
+        c.setFont(FONT_BOLD, fs)
+        c.drawString(L + 34, y - 30, text)
+        c.setStrokeColorCMYK(0, 0, 0, 0.3)
+        c.setLineWidth(0.75)
+        c.line(L + 34, y - qh + 9, R - 10, y - qh + 9)
+        y -= qh + 6
+    c.saveState()
+    c.translate(R, f.bottom + 2)
+    c.rotate(180)
+    c.setFillColorCMYK(*SUB)
+    c.setFont(FONT_BOLD, 8)
+    c.drawString(0, -8, "こたえ")
+    c.setFont(FONT_REGULAR, 8)
+    for j, (k, _, _) in enumerate(qs):
+        c.drawString(34, -8 - j * 11, f"{j + 1}　{items[k]['jp']}（{item_page(spec, k)}ページ）")
+    c.restoreState()
+    folio(c, f, f"第{ci + 1}章　{ch['title']}")
+
+
 # クイズに出さない句（手がかりが「青天の霹靂」など別の日本語に読める／はじめに・章の導入で答えを見せている）
 QUIZ_SKIP = {"寝耳に水", "犬猿の仲", "猿も木から落ちる", "猫に小判"}
 
@@ -1060,7 +1143,7 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
         rows.append(("ch", ci, ch["title"], chapter_page(spec, ci)))
         rows += [("it", k + 1, it["jp"], item_page(spec, k)) for k, it in enumerate(items) if it["chapter"] == ci]
     rows += [("end", -1, label, pno) for label, pno in
-             (("おわりに", total - 5), ("さくいん", total - 4), ("英語から引くさくいん", total - 3),
+             (("おわりに", total - 6), ("さくいん", total - 4), ("英語から引くさくいん", total - 3),
               ("フランス語から引くさくいん", total - 2), ("参考にした資料", total - 1))]
     split = next(i for i, r in enumerate(rows) if r[0] == "ch" and r[1] == 3)  # 第4章から右の段
     LH = 12.2
@@ -1117,6 +1200,9 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
             assert n == item_page(spec, k)
             draw_item(c, page(), it, k + 1)
             turn()
+        assert n == review_page(spec, ci)
+        draw_review(c, page(), spec, items, ci)
+        turn()
 
     # 7. おわりに
     f = page()
@@ -1164,6 +1250,19 @@ def build_pdf(spec: SekaiSpec, output_path: str) -> int:
     art_r = min(60, (y - f.bottom - 10) / 2)
     if art_r > 25:
         draw_art(c, "title", mid, f.bottom + art_r + 2, art_r)
+    folio(c, f)
+    turn()
+
+    # 7b. 書きとめメモ
+    f = page()
+    fill_page(c, f, PAPER)
+    y = _heading(c, f, "書きとめておこう")
+    y = _para(c, f, "気に入った言い方や、ほかの国でも探してみたいことわざを書きとめておきましょう。", y, fs=9.5, gap=15) - 10
+    c.setStrokeColorCMYK(0, 0, 0, 0.25)
+    c.setLineWidth(0.75)
+    while y - 26 >= f.bottom:
+        y -= 26
+        c.line(f.left, y, f.right, y)
     folio(c, f)
     turn()
 
