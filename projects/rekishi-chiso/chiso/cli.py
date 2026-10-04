@@ -261,6 +261,7 @@ def cmd_shorts(args) -> int:
         # ショートの中では節の切れ目の長い間を入れない
         flat = [_same_section(line) for line in lines]
         cues, total = mix.plan(flat, spoken)
+        total += shorts_mod.END_SECONDS                     # 最後に「続きは本編で」（声なし）
         if total > sz["max_seconds"]:
             print(f"  ! {sid}: {total:.1f}秒で、上限 {sz['max_seconds']}秒を超えています")
         wd = work_dir(sc) / f"short-{sid}"
@@ -268,7 +269,8 @@ def cmd_shorts(args) -> int:
         mix.write_audio(cues, total, audio)
         cls = _stamp(shorts_mod.ShortPainter) if args.draft else shorts_mod.ShortPainter
         painter = cls(config, sc, assets_dir(config), meta.get("title", ""))
-        items = render.frames(painter, cues, total, wd / "frames", config["video"]["fps"], with_text=True)
+        items = render.frames(painter, cues, total, wd / "frames", config["video"]["fps"], with_text=True,
+                              end_card=True, end_seconds=shorts_mod.END_SECONDS)
         target = out_dir() / f"{path.stem}_short_{sid}{'_draft' if args.draft else ''}.mp4"
         encode(items, audio, target, config["video"]["fps"])
         print(f"{target}（{total:.1f}秒）")
