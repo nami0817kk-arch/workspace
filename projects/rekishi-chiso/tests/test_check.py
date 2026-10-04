@@ -96,3 +96,11 @@ def test_cast_rules():
     sighs = ok + [{"聞き": "そっか……"}, {"聞き": "うん……"}, {"聞き": "ひどい……。"}]
     _, warns = check.cast_rules(ep(sighs))
     assert any("続いて" in w for w in warns)
+
+
+def test_tsumugi_twice_in_a_row_warned():
+    from chiso import script
+    sc = script.parse({"title": "t", "sections": [{"title": "地表", "lines": [
+        {"語り": "a"}, {"聞き": "b"}, {"聞き": "c"}]}]})
+    _, warns = check.cast_rules(sc)
+    assert any("2行続いて" in w for w in warns)

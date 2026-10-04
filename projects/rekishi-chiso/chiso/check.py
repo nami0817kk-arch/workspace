@@ -148,6 +148,9 @@ def cast_rules(script) -> tuple[list[str], list[str]]:
             errors.append(f"{l.index + 1}行目：呼び方は「剣崎さん」「つむぎさん」（公式のあだ名は使わない）")
         if re.search(r"付喪神|3600歳|メスの", l.text):
             warns.append(f"{l.index + 1}行目：剣崎の素性は語らない決まり")
+    for a, b in zip(lines, lines[1:]):
+        if a.speaker == b.speaker == "聞き":      # 掛け合いが崩れる（10-04 Gemini の指摘）。1行にまとめるか剣崎の返しを挟む
+            warns.append(f"{a.index + 1}〜{b.index + 2}行目：つむぎが2行続いています")
     for sec in script.sections:
         mine = [l for l in lines if l.section == sec.index and l.speaker == "聞き"]
         parrot = [l for l in mine if l.tone == "驚き" and len(re.sub(r"[《》！？!?…、。]", "", l.text)) <= 8]
