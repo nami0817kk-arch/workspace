@@ -189,7 +189,7 @@ def draw_term(painter, img: Image.Image, word: str, note: str) -> Image.Image:
         size -= 2
     wf = painter.font("serif", size, bold=True)
     nf = painter.font("gothic", 25)
-    rows = wrap(note, nf, w - 30)
+    rows = wrap(note, nf, w - 56)        # 小さい「っ」などを行末に残す折り返しでも、枠からはみ出さない幅
     h = 46 + size + 18 + 36 * len(rows) + 16
     y1 = min(ymax, y0 + h)
     shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
@@ -204,4 +204,69 @@ def draw_term(painter, img: Image.Image, word: str, note: str) -> Image.Image:
     dr.line([x0 + 16, ny - 8, x1 - 16, ny - 8], fill=(214, 178, 110, 120), width=1)
     for k, row in enumerate(rows):
         dr.text((x0 + 16, ny + 36 * k), row, font=nf, fill=(225, 214, 190), anchor="lt")
+    return img, y1
+
+
+# --- 位置の小さな地図 ----------------------------------------------------------
+MINIMAP_SPAN = (18.0, 11.0)             # 見せる範囲（経度, 緯度）。国の形が分かる広さ
+MINIMAP_H = 160
+MINIMAP_REF = ("パリ", "ウィーン", "ロンドン", "ローマ", "北京", "京都", "江戸")   # 目印に薄く出す都市
+
+
+def draw_minimap(painter, img: Image.Image, place: tuple, top: int) -> Image.Image:
+    """地名が初めて出た行から3行、右上の空きに「ここ」と点を打った小さな地図（10-04）。"""
+    name, lon, lat = place
+    x0, _, x1, ymax = TERM_BOX
+    y0 = top + 14
+    if y0 + MINIMAP_H + 44 > ymax:
+        return img
+    key = ("minimap", name)
+    if key not in painter._images:
+        painter._images[key] = _minimap_tile(painter, name, lon, lat, x1 - x0 - 16, MINIMAP_H)
+    tile = painter._images[key]
+    shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, y0 + 8, x1 + 6, y0 + MINIMAP_H + 52], radius=12,
+                                             fill=(0, 0, 0, 140))
+    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
+    dr = ImageDraw.Draw(img, "RGBA")
+    dr.rounded_rectangle([x0, y0, x1, y0 + MINIMAP_H + 44], radius=12, fill=(24, 20, 14, 225), outline=GOLD, width=3)
+    img.alpha_composite(tile, (x0 + 8, y0 + 8))
+    dr = ImageDraw.Draw(img, "RGBA")
+    dr.rounded_rectangle([x0 + 14, y0 - 14, x0 + 104, y0 + 16], radius=6, fill=GOLD)
+    dr.text((x0 + 59, y0 + 1), "場所", font=painter.font("gothic", 22), fill=(24, 20, 14), anchor="mm")
+    dr.text(((x0 + x1) / 2, y0 + MINIMAP_H + 26), name, font=painter.font("serif", 28, bold=True),
+            fill=(240, 228, 200), anchor="mm")
     return img
+
+
+def _minimap_tile(painter, name: str, lon: float, lat: float, w: int, h: int) -> Image.Image:
+    from .figures import COAST, LAND, SEA, _land
+    from .figures import gazetteer
+    sx, sy = MINIMAP_SPAN
+    lon0, lon1, lat0, lat1 = lon - sx / 2, lon + sx / 2, lat - sy / 2, lat + sy / 2
+    kx = math.cos(math.radians(lat))
+    s = min(w / (sx * kx), h / sy)
+    ox, oy = (w - sx * kx * s) / 2, (h - sy * s) / 2
+    P = lambda a, b: (ox + (a - lon0) * kx * s, oy + (lat1 - b) * s)
+    tile = Image.new("RGBA", (w, h), SEA + (255,))
+    d = ImageDraw.Draw(tile)
+    for poly in _land(str(painter.assets / "maps" / "land_50m.geojson")):
+        xs = [p[0] for p in poly]
+        ys = [p[1] for p in poly]
+        if max(xs) < lon0 - 5 or min(xs) > lon1 + 5 or max(ys) < lat0 - 5 or min(ys) > lat1 + 5:
+            continue
+        d.polygon([P(a, b) for a, b in poly], fill=LAND + (255,), outline=COAST + (255,))
+    g = gazetteer()
+    rf = painter.font("gothic", 17)
+    for ref in MINIMAP_REF:
+        if ref == name or ref not in g:
+            continue
+        a, b = g[ref]
+        if lon0 < a < lon1 and lat0 < b < lat1 and math.dist((a, b), (lon, lat)) > 1.5:   # 近すぎる目印は重なるので出さない
+            x, y = P(a, b)
+            d.ellipse([x - 4, y - 4, x + 4, y + 4], fill=(110, 96, 74))
+            d.text((x + 7, y), ref, font=rf, fill=(90, 76, 56), anchor="lm")
+    x, y = P(lon, lat)
+    d.ellipse([x - 16, y - 16, x + 16, y + 16], outline=(200, 40, 30), width=3)
+    d.ellipse([x - 7, y - 7, x + 7, y + 7], fill=(200, 40, 30), outline=(255, 248, 230), width=2)
+    return tile

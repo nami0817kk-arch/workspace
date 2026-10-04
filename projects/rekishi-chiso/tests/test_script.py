@@ -110,3 +110,32 @@ def test_template_parses():
     from pathlib import Path
     sc = script.load(Path(__file__).resolve().parent.parent / "scripts" / "_template.yaml")
     assert sc.lines
+
+
+def test_age_at_uses_card_month_and_hides_outside_life():
+    from types import SimpleNamespace as NS
+    info = {"born": "1755-11-02", "died": "1793-10-16"}
+    assert script.age_at(info, 1774, NS(head="1774年5月")) == 18
+    assert script.age_at(info, 1793, NS(head="1793年10月16日")) == 37
+    assert script.age_at(info, 1770, NS(head="1770年 春")) == 14          # 月が無ければ7月1日とみなす
+    assert script.age_at(info, 1770, NS(head="1769年12月")) == 14         # 別の年の札の月は使わない
+    assert script.age_at(info, 1755, None) is None                        # 1歳未満は出さない
+    assert script.age_at(info, 1794, None) is None                        # 亡くなったあと
+
+
+def test_person_of_matches_caption_tail():
+    from types import SimpleNamespace as NS
+    people = {"マリー・アントワネット": {"match": ["マリー・アントワネット", "王妃", "マリア・アントニア"]},
+              "マリア・テレジア": {"match": ["マリア・テレジア"]}}
+    pic = lambda cap, who="": NS(caption=cap, who=who)
+    assert script.person_of(people, pic("処刑に向かう王妃（ダヴィッド）")) == "マリー・アントワネット"
+    assert script.person_of(people, pic("嫁ぐ前のマリア・アントニア（1769年）")) == "マリー・アントワネット"
+    assert script.person_of(people, pic("マリア・テレジアの家族（マイテンス画）")) is None   # 家族の絵は1人ではない
+    assert script.person_of(people, pic("だれか", who="マリア・テレジア")) == "マリア・テレジア"
+
+
+def test_places_attach_and_ignore_inside_terms():
+    d = {"title": "t", "sections": [{"title": "一", "lines": [
+        {"語り": "神聖ローマ皇帝の娘"}, {"語り": "ヴァレンヌで捕まる"}, {"語り": "a"}, {"語り": "b"}, {"語り": "c"}]}]}
+    sc = script.parse(d, glossary={"神聖ローマ皇帝": "皇帝"}, places={"ローマ": (12.5, 41.9), "ヴァレンヌ": (5.03, 49.23)})
+    assert [l.place[0] if l.place else None for l in sc.lines] == [None, "ヴァレンヌ", "ヴァレンヌ", "ヴァレンヌ", None]

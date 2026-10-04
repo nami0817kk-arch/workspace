@@ -48,6 +48,7 @@ class Picture:
     image: str
     credit: str = ""      # 背景の出典（画面の下に小さく出す）
     caption: str = ""     # 肖像の下に出す説明
+    who: str = ""         # 肖像の人物（people: の名前）。省けば caption の名前から探す
 
 
 @dataclass(frozen=True)
@@ -73,6 +74,7 @@ class Line:
     figure: str | None = None         # 図（地図・グラフ・相関図）の指定。JSON の文字列（chiso/figures.py）
     bubble: str | None = None         # 肖像の人物の吹き出し（その行だけ）。JSON の文字列（chiso/extras.py）
     icon: str | None = None           # 1文の挿絵（その行だけ）。Phosphor のアイコン名
+    place: tuple | None = None        # 位置の小さな地図 (地名, 経度, 緯度)。places.yaml から自動で付く
     term: tuple | None = None         # 用語の札 (言葉, 説明)。terms.yaml と台本の terms: から自動で付く
     hook: bool = False                # 節の終わりの「引き」（次の節が気になる一言）。check が節ごとに確かめる
 
@@ -82,8 +84,8 @@ TERM_LINES = 3        # 用語の札を出しておく行数（初めて出た�
 TERM_MAX = 40         # 説明の字数の上限（右上の狭い札に収める）
 
 
-def attach_terms(lines: list, glossary: dict[str, str]) -> None:
-    """その回で初めて出た用語に、札を付ける。新しい言葉が出たらすぐ差し替え、
+def attach_terms(lines: list, glossary: dict, attr: str = "term", value=None, mask=()) -> None:
+    """その回で初めて出た用語（地名）に、札（小さな地図）を付ける。新しい言葉が出たらすぐ差し替え、
     同じ行に2つ以上あれば、前の札が終わってから順に出す。節が変わると札は消える。"""
     import re
     if not glossary:
@@ -96,6 +98,8 @@ def attach_terms(lines: list, glossary: dict[str, str]) -> None:
         if line.section != sec:
             cur, left, sec, pending = None, 0, line.section, []
         plain = re.sub(r"[《》]", "", line.text)
+        for m in sorted(mask, key=len, reverse=True):      # 「神聖ローマ皇帝」の中の「ローマ」は地名にしない
+            plain = plain.replace(m, "＿" * len(m))
         found = []
         for w in words:
             pos = plain.find(w)
@@ -109,7 +113,7 @@ def attach_terms(lines: list, glossary: dict[str, str]) -> None:
         elif left <= 0 and pending:
             cur, left = pending.pop(0), TERM_LINES
         if cur is not None and left > 0:
-            line.term = (cur, glossary[cur])
+            setattr(line, attr, value(cur) if value else (cur, glossary[cur]))
             left -= 1
 
 
@@ -132,6 +136,7 @@ class Script:
     path: Path | None = None
     next: dict = field(default_factory=dict)        # 次回予告 {title, teaser}
     thumbnail: dict = field(default_factory=dict)   # サムネイルの文字と絵（thumb.py）
+    people: dict = field(default_factory=dict)      # 人物の生没（肖像に「この時○歳」を出す）
 
     @property
     def question(self) -> str:
@@ -163,7 +168,7 @@ def _picture(raw, where: str) -> Picture | None:
     if not isinstance(raw, dict) or "image" not in raw:
         raise ScriptError(f"{where}: 絵の指定には image が要ります: {raw!r}")
     return Picture(image=str(raw["image"]), credit=str(raw.get("credit", "")),
-                   caption=str(raw.get("caption", "")))
+                   caption=str(raw.get("caption", "")), who=str(raw.get("who", "")))
 
 
 def _card(raw, where: str) -> Card | None:
@@ -220,7 +225,8 @@ def _speaker_and_text(raw: dict, where: str) -> tuple[str, str]:
     return speaker, text
 
 
-def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None = None) -> Script:
+def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None = None,
+          places: dict | None = None) -> Script:
     if not isinstance(data, dict):
         raise ScriptError("台本の一番上は辞書（title / sections ...）にします")
     timeline = data.get("timeline") or {}
@@ -293,11 +299,19 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
     if long:
         raise ScriptError(f"用語の説明は{TERM_MAX}字までです: {long}")
     attach_terms(lines, gl)
+    if places:
+        attach_terms(lines, places, "place", lambda w: (w, *places[w]), mask=[k for k in gl if k not in places])
+    people = {}
+    for name, v in (data.get("people") or {}).items():
+        if not isinstance(v, dict) or "born" not in v:
+            raise ScriptError(f"people の {name} には born（生まれた日 YYYY-MM-DD）が要ります")
+        people[str(name)] = {"born": str(v["born"]), "died": str(v.get("died", "")),
+                             "match": [str(name)] + [str(m) for m in v.get("match", [])]}
     return Script(
         title=str(data.get("title", "")), series=str(data.get("series", "")),
         timeline_start=timeline.get("start"), timeline_end=timeline.get("end"), events=events,
         sections=sections, lines=lines, shorts=shorts_meta, path=path,
-        next=dict(data.get("next") or {}), thumbnail=dict(data.get("thumbnail") or {}),
+        next=dict(data.get("next") or {}), people=people, thumbnail=dict(data.get("thumbnail") or {}),
     )
 
 
@@ -309,9 +323,47 @@ def load(path: str | Path) -> Script:
     glossary = {}
     if gfile.exists():
         glossary = {str(k): str(v) for k, v in (yaml.safe_load(gfile.read_text(encoding="utf-8")) or {}).items()}
-    return parse(data, path, glossary)
+    pfile = path.resolve().parent.parent / "places.yaml"
+    places = {}
+    if pfile.exists():
+        places = {str(k): (float(v[0]), float(v[1]))
+                  for k, v in (yaml.safe_load(pfile.read_text(encoding="utf-8")) or {}).items()}
+    return parse(data, path, glossary, places)
 
 
 def digest(path: str | Path) -> str:
     """台本ファイルの中身のハッシュ。承認（approve）はこの値に対して出す。"""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def person_of(people: dict, pic) -> str | None:
+    """肖像の人物。who があればそれ、無ければ caption の名前（「（」より前）が人物名か別名で終わるもの。"""
+    if pic is None:
+        return None
+    if pic.who:
+        return pic.who if pic.who in people else None
+    name = pic.caption.partition("（")[0].strip()
+    for person, v in people.items():
+        if any(name == m or name.endswith(m) for m in v["match"]):
+            return person
+    return None
+
+
+def age_at(info: dict, year: int | None, card=None) -> int | None:
+    """その場面の年での満年齢。月は、同じ年の札（「1774年5月」など）があればそれを使い、無ければ年の半ば（7月1日）とみなす。
+    生まれる前・1歳未満・亡くなったあとは None。"""
+    import re
+    if year is None:
+        return None
+    month, day = 7, 1
+    if card is not None:
+        m = re.match(r"(\d{3,4})年\s*(?:(\d{1,2})月)?\s*(?:(\d{1,2})日)?", card.head)
+        if m and int(m.group(1)) == year and m.group(2):
+            month, day = int(m.group(2)), int(m.group(3) or 1)
+    by, bm, bd = (int(x) for x in info["born"].split("-"))
+    if info.get("died"):
+        dy, dm, dd = (int(x) for x in info["died"].split("-"))
+        if (year, month, day) > (dy, dm, dd):
+            return None
+    age = year - by - (1 if (month, day) < (bm, bd) else 0)
+    return age if age >= 1 else None

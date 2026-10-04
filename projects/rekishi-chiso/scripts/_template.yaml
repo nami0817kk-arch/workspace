@@ -25,6 +25,8 @@ thumbnail:                                   # chiso/thumb.py。絵は全面、�
   lead: 本当に
   main: 悪女？
 
+people:                                 # 肖像に「この時○歳」を出す人物（生没は百科事典で確かめる）
+  人物名: {born: 1755-11-02, died: 1793-10-16, match: [肖像の説明での言い換え]}
 terms:                                  # その回だけの用語（terms.yaml より優先。説明は40字まで）
   ○○: 説明
 sections:
