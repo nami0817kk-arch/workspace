@@ -17,7 +17,6 @@ library;
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -277,7 +276,7 @@ void main() {
     expect(frame, lessThan(_fps * 30),
         reason: 'App Preview は30秒以内。いま${frame / _fps}秒');
     // ignore: avoid_print
-    print('[preview] ${locale.code}: ${frame}コマ / '
+    print('[preview] ${locale.code}: $frame コマ / '
         '${(frame / _fps).toStringAsFixed(1)}秒 → $outDir');
     }, timeout: const Timeout(Duration(minutes: 20)));
   }
