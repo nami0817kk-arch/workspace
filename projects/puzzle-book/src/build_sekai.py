@@ -17,7 +17,7 @@ import functools
 import io
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from reportlab.lib.colors import CMYKColor
@@ -184,6 +184,7 @@ class SekaiSpec:
     trim: str = "a5"
     ink: str = "premium"
     edition_date: str = ""
+    kindle_toc: list = field(default_factory=list)  # Kindle 版のもくじ（tools/make_kindle_epub.py）
 
     @classmethod
     def load(cls, path: str | Path) -> "SekaiSpec":
