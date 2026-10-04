@@ -31,7 +31,7 @@ h1 span{color:var(--accent)}
 .chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 11px;font-size:12px;line-height:1;white-space:nowrap}
 .chip.off{color:var(--sub);text-decoration:line-through}
 .chip b{color:var(--accent)}
-.stage{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#f8eedc;touch-action:none;
+.stage{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#efe7d8;touch-action:none;
   box-shadow:0 1px 0 rgba(0,0,0,.04),0 8px 24px rgba(80,50,20,.08)}
 canvas{display:block;width:100%;height:auto;touch-action:none}
 .bar{display:flex;align-items:center;gap:10px;margin-top:10px}
@@ -435,9 +435,32 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   // --- 背景: 庭と山並み、高く積むほど 昼 → 夕焼け → 夕暮れ → 夜空 ---
   // （どうぶつタワーの 青空・白い雲・太陽 には寄せない。CLAUDE.md）
-  var SKY = [[0, '#f8eedc'], [350, '#f8e0c2'], [800, '#f4b893'], [1300, '#e08f86'], [1800, '#a7799e'], [2400, '#4e4a7c'], [3100, '#1d2145']];
+  // --- 景色は台（ステージ）ごと（2026-10-04「背景はステージごとに変える」）---
+  // どれも 地面のそばの景色 → 積むほど 夕方 → 夜空。どうぶつタワーの 青空・白い雲・太陽 には寄せない（CLAUDE.md）
+  var G0 = C.GROUND;
+  var SCENES = {
+    flat: { name: 'にわ', fx: 'sakura', sun: '#e8573e', floor: 'engawa',
+      sky: [[0, '#f8eedc'], [350, '#f8e0c2'], [800, '#f4b893'], [1300, '#e08f86'], [1800, '#a7799e'], [2400, '#4e4a7c'], [3100, '#1d2145']],
+      ridges: [[0.18, 1.3, 46, G0 - 170, '#dccbd2'], [0.32, 4.2, 38, G0 - 115, '#c4b3c2'], [0.5, 7.7, 30, G0 - 62, '#a596ab']] },
+    seesaw: { name: 'じんじゃ', fx: 'momiji', sun: '#d9452c', floor: 'gravel',
+      sky: [[0, '#f6e6cf'], [350, '#f3cfa3'], [800, '#ee9a6a'], [1300, '#c9624f'], [1800, '#7f4560'], [2400, '#3e2f55'], [3100, '#191a38']],
+      ridges: [[0.18, 2.1, 40, G0 - 165, '#e2c3ae'], [0.32, 5.3, 34, G0 - 112, '#cfa48f'], [0.5, 8.1, 26, G0 - 62, '#b0857a']] },
+    slope: { name: 'ちゃばたけ', fx: 'leaf', sun: '#ec6a3c', floor: 'earth',
+      sky: [[0, '#eef3df'], [350, '#e9eecd'], [800, '#f2d29a'], [1300, '#e3a07f'], [1800, '#94789f'], [2400, '#45467a'], [3100, '#1b2042']],
+      ridges: [[0.18, 3.3, 30, G0 - 150, '#d3e0bd'], [0.32, 6.1, 26, G0 - 102, '#b6cc9a'], [0.5, 9.2, 20, G0 - 58, '#95b67a']] },
+    twin: { name: 'かわ', fx: 'hotaru', sun: '#f08a5d', floor: 'stone',
+      sky: [[0, '#ecebe6'], [350, '#dfdcea'], [800, '#cdb5d6'], [1300, '#9a86b8'], [1800, '#5d5a92'], [2400, '#2f3466'], [3100, '#141a36']],
+      ridges: [[0.18, 4.4, 36, G0 - 160, '#d0cce0'], [0.32, 2.6, 28, G0 - 110, '#b2aecb']] },
+    sway: { name: 'うみ', fx: 'none', sun: '#ef5b3a', floor: 'pier',
+      sky: [[0, '#fbeedd'], [350, '#fbd9b5'], [800, '#f7b07c'], [1300, '#e57f74'], [1800, '#9b6a92'], [2400, '#3f3f76'], [3100, '#151a3a']],
+      ridges: [] },
+    narrow: { name: 'ゆきやま', fx: 'snow', sun: '#f0a07a', floor: 'snow',
+      sky: [[0, '#eef1f4'], [350, '#e1e6ee'], [800, '#d5cfe0'], [1300, '#b4a6c8'], [1800, '#7a76a8'], [2400, '#3d4476'], [3100, '#161c3c']],
+      ridges: [[0.18, 1.7, 52, G0 - 185, '#f6f8fb'], [0.32, 3.9, 42, G0 - 125, '#e6ebf2'], [0.5, 6.6, 30, G0 - 66, '#d2d9e4']] }
+  };
+  function scene() { return SCENES[(s && s.platform) || plat] || SCENES.flat; }
   function skyAt(y) {
-    var h = C.GROUND - y;
+    var SKY = scene().sky, h = C.GROUND - y;
     for (var i = 1; i < SKY.length; i++) if (h < SKY[i][0]) return mix(SKY[i - 1][1], SKY[i][1], (h - SKY[i - 1][0]) / (SKY[i][0] - SKY[i - 1][0]));
     return SKY[SKY.length - 1][1];
   }
@@ -445,7 +468,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // 決まった乱数（毎回同じ景色）
   function hash(n) { var x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); }
   var STARS = []; for (var si = 0; si < 220; si++) STARS.push({ x: hash(si) * W, y: C.GROUND - 2800 - hash(si + 500) * 5200, r: 0.6 + hash(si + 900) * 1.4, t: hash(si + 1300) * 6 });
-  var PETALS = []; for (var pi = 0; pi < 14; pi++) PETALS.push({ x: hash(pi + 40) * W, y: hash(pi + 80) * VIEW_H, s: 0.6 + hash(pi + 120) * 0.7, ph: hash(pi + 160) * 6 });
+  var PETALS = []; for (var pi = 0; pi < 16; pi++) PETALS.push({ x: hash(pi + 40) * W, y: hash(pi + 80) * VIEW_H, s: 0.6 + hash(pi + 120) * 0.7, ph: hash(pi + 160) * 6 });
   function ridge(seed, amp, base, step) {   // 山の稜線（いくつかの波を重ねる）
     ctx.beginPath(); ctx.moveTo(-20, C.GROUND + 40);
     for (var x = -20; x <= W + 20; x += step) {
@@ -458,13 +481,12 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function farY(L, f, frac) { return BASE_TOP - L + VIEW_H * frac - L * f; }
   var STREAKS = []; for (var ci = 0; ci < 7; ci++) STREAKS.push({ L: 450 + ci * 170, x: hash(ci + 70) * W, w: 90 + hash(ci + 90) * 120, frac: 0.15 + hash(ci + 110) * 0.6 });
   function drawScenery() {
-    var lift = BASE_TOP - camTop;   // どれだけ上へのぼったか
+    var sc = scene(), lift = BASE_TOP - camTop;   // どれだけ上へのぼったか
     var sky = ctx.createLinearGradient(0, camTop, 0, camTop + VIEW_H);
     sky.addColorStop(0, skyAt(camTop)); sky.addColorStop(1, skyAt(camTop + VIEW_H));
     ctx.fillStyle = sky; ctx.fillRect(-20, camTop - 20, W + 40, VIEW_H + 40);
     // 星（夜だけ。少しまたたく）
-    var dTop = darkness(camTop);
-    if (dTop > 0) STARS.forEach(function (st) {
+    if (darkness(camTop) > 0) STARS.forEach(function (st) {
       var y = st.y + lift * 0.7; if (y < camTop - 5 || y > camTop + VIEW_H) return;
       ctx.globalAlpha = darkness(y) * (0.6 + 0.4 * Math.sin(frameN / 40 + st.t)); ctx.fillStyle = '#fff8e0';
       ctx.beginPath(); ctx.arc(st.x, y, st.r, 0, Math.PI * 2); ctx.fill();
@@ -473,16 +495,18 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // 月（夜空の高い所）
     var my = farY(2800, 0.75, 0.3) + lift * 0.75;
     if (my > camTop - 60 && my < camTop + VIEW_H + 60) {
-      ctx.fillStyle = 'rgba(255,246,214,.18)'; ctx.beginPath(); ctx.arc(300, my, 46, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#fff3cf'; ctx.beginPath(); ctx.arc(300, my, 26, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = skyAt(my); ctx.beginPath(); ctx.arc(311, my - 7, 22, 0, Math.PI * 2); ctx.fill();
+      var mg = ctx.createRadialGradient(300, my, 20, 300, my, 60); mg.addColorStop(0, 'rgba(255,246,214,.3)'); mg.addColorStop(1, 'rgba(255,246,214,0)');
+      ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(300, my, 60, 0, Math.PI * 2); ctx.fill();
+      ctx.save(); ctx.beginPath(); ctx.arc(300, my, 26, 0, Math.PI * 2); ctx.clip();
+      ctx.fillStyle = '#fff3cf'; ctx.fillRect(270, my - 30, 60, 60);
+      ctx.fillStyle = skyAt(my); ctx.beginPath(); ctx.arc(311, my - 7, 22, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     }
-    // 夕日（夕焼けの帯の中、ゆっくり沈むように見える）
+    // 夕日（夕焼けの帯の中。海では水平線の近くに）
     var sy = farY(1050, 0.6, 0.55) + lift * 0.6;
     if (sy > camTop - 80 && sy < camTop + VIEW_H + 80) {
       var sg = ctx.createRadialGradient(110, sy, 10, 110, sy, 90); sg.addColorStop(0, 'rgba(255,190,140,.55)'); sg.addColorStop(1, 'rgba(255,190,140,0)');
       ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(110, sy, 90, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#e8573e'; ctx.beginPath(); ctx.arc(110, sy, 34, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = sc.sun; ctx.beginPath(); ctx.arc(110, sy, 34, 0, Math.PI * 2); ctx.fill();
     }
     // たなびく細い雲（夕焼けの帯。空の色より少し明るい）
     STREAKS.forEach(function (c) {
@@ -501,40 +525,128 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       ctx.moveTo(bx - 7, by2 - fl); ctx.quadraticCurveTo(bx - 3, by2 - 3, bx, by2); ctx.quadraticCurveTo(bx + 3, by2 - 3, bx + 7, by2 - fl); ctx.stroke();
     }
     // 山並み（遠いほどゆっくり動き、空の色にとける）
-    [[0.18, 1.3, 46, C.GROUND - 170, '#dccbd2'], [0.32, 4.2, 38, C.GROUND - 115, '#c4b3c2'], [0.5, 7.7, 30, C.GROUND - 62, '#a596ab']].forEach(function (L) {
+    sc.ridges.forEach(function (L) {
       var y0 = L[3] + lift * L[0];
       if (y0 - L[2] > camTop + VIEW_H + 20) return;
       ctx.fillStyle = mix(L[4], skyAt(y0), 0.25 + darkness(y0) * 0.3);
       ridge(L[1], L[2], y0, 8); ctx.fill();
     });
-    // 庭: 生け垣と石灯籠（地面のそば）
-    if (C.GROUND - 120 < camTop + VIEW_H) {
+    if (C.GROUND - 260 < camTop + VIEW_H) NEAR[(s && s.platform) || plat] ? NEAR[(s && s.platform) || plat]() : NEAR.flat();
+  }
+  // --- 地面のそばの景色（台のうしろ。台と字はこの上に描く）---
+  function lantern(x, y, sc) {   // 石灯籠
+    sc = sc || 1; ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc); ctx.fillStyle = '#9b948a';
+    ctx.fillRect(-4, -52, 8, 52); ctx.fillRect(-14, -64, 28, 14);
+    ctx.beginPath(); ctx.moveTo(-20, -64); ctx.lineTo(0, -82); ctx.lineTo(20, -64); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(255,214,140,.85)'; ctx.fillRect(-6, -61, 12, 8); ctx.fillStyle = '#9b948a'; ctx.fillRect(-12, -3, 24, 4); ctx.restore();
+  }
+  function pine(x, y, h, col, snow) {   // 杉・松（三角を重ねる）
+    for (var i = 0; i < 3; i++) {
+      var w = h * (0.5 - i * 0.1), top = y - h * (0.45 + i * 0.27);
+      ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(x - w, top + h * 0.35); ctx.lineTo(x, top); ctx.lineTo(x + w, top + h * 0.35); ctx.closePath(); ctx.fill();
+      if (snow) { ctx.fillStyle = '#f7f9fc'; ctx.beginPath(); ctx.moveTo(x - w * 0.55, top + h * 0.17); ctx.lineTo(x, top); ctx.lineTo(x + w * 0.55, top + h * 0.17); ctx.closePath(); ctx.fill(); }
+    }
+    ctx.fillStyle = '#6b4f3a'; ctx.fillRect(x - 3, y - h * 0.12, 6, h * 0.12);
+  }
+  var NEAR = {
+    flat: function () {   // にわ: 生け垣と石灯籠
       ctx.fillStyle = '#5e7a4e';
       for (var hx = -10; hx < W + 20; hx += 34) { ctx.beginPath(); ctx.arc(hx, C.GROUND - 18, 26 + hash(hx) * 8, Math.PI, 0); ctx.fill(); }
       ctx.fillStyle = '#4e6942'; ctx.fillRect(-20, C.GROUND - 18, W + 40, 18);
-      // 石灯籠（左はし）
-      ctx.fillStyle = '#9b948a';
-      ctx.fillRect(22, C.GROUND - 70, 8, 52); ctx.fillRect(12, C.GROUND - 82, 28, 14);
-      ctx.beginPath(); ctx.moveTo(6, C.GROUND - 82); ctx.lineTo(26, C.GROUND - 100); ctx.lineTo(46, C.GROUND - 82); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = 'rgba(255,214,140,.8)'; ctx.fillRect(20, C.GROUND - 79, 12, 8);
-      ctx.fillRect(14, C.GROUND - 20, 24, 4);
+      lantern(26, C.GROUND - 18);
+    },
+    seesaw: function () {   // じんじゃ: 赤い鳥居・もみじ・灯籠
+      var G = C.GROUND, red = '#c8402f';
+      ctx.globalAlpha = 0.9;
+      ctx.fillStyle = red; ctx.fillRect(122, G - 240, 14, 240); ctx.fillRect(264, G - 240, 14, 240);
+      ctx.fillRect(108, G - 205, 184, 10);
+      ctx.beginPath(); ctx.moveTo(90, G - 252); ctx.quadraticCurveTo(200, G - 240, 310, G - 252); ctx.lineTo(306, G - 238); ctx.quadraticCurveTo(200, G - 228, 94, G - 238); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#2e2522'; ctx.beginPath(); ctx.moveTo(86, G - 258); ctx.quadraticCurveTo(200, G - 246, 314, G - 258); ctx.lineTo(310, G - 251); ctx.quadraticCurveTo(200, G - 240, 90, G - 251); ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1;
+      [[18, G - 70, 44], [384, G - 84, 52], [352, G - 50, 34]].forEach(function (t, i) {   // もみじの木
+        ctx.fillStyle = '#6b4a36'; ctx.fillRect(t[0] - 3, t[1], 6, G - t[1]);
+        ['#d9542e', '#e8783a', '#c43c2a'].forEach(function (c, j) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(t[0] + (j - 1) * t[2] * 0.4, t[1] - t[2] * 0.2 * (j % 2), t[2] * 0.55, 0, Math.PI * 2); ctx.fill(); });
+      });
+      lantern(70, G, 0.8); lantern(330, G, 0.8);
+    },
+    slope: function () {   // ちゃばたけ: 段々の茶の木
+      var G = C.GROUND;
+      [[G - 64, '#9cbf7e', 30], [G - 40, '#7fa863', 34], [G - 14, '#628f4c', 38]].forEach(function (r, i) {
+        ctx.fillStyle = r[1];
+        for (var x = -20 + i * 12; x < W + 30; x += r[2] + 6) { ctx.beginPath(); ctx.ellipse(x, r[0], r[2] / 2 + 4, 12, 0, Math.PI, 0); ctx.fill(); }
+        ctx.fillRect(-20, r[0], W + 40, 4);
+      });
+      ctx.fillStyle = '#7a5a3c'; ctx.fillRect(-20, G - 6, W + 40, 6);
+    },
+    twin: function () {   // かわ: 川・柳・遠くの赤い太鼓橋
+      var G = C.GROUND;
+      ctx.strokeStyle = '#b8423a'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(250, G - 70); ctx.quadraticCurveTo(320, G - 120, 392, G - 70); ctx.stroke();
+      ctx.lineWidth = 2; for (var px = 262; px < 392; px += 18) { var py = G - 70 - 50 * (1 - Math.pow((px - 321) / 71, 2)) * 0.98; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py - 12); ctx.stroke(); }
+      var wg = ctx.createLinearGradient(0, G - 60, 0, G); wg.addColorStop(0, '#8fb3c9'); wg.addColorStop(1, '#5d86a3');
+      ctx.fillStyle = wg; ctx.fillRect(-20, G - 60, W + 40, 60);
+      ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1.2;
+      for (var i = 0; i < 9; i++) { var wx = (hash(i + 3) * W + frameN * 0.4 * (1 + (i % 3) * 0.3)) % (W + 40) - 20, wy = G - 52 + (i % 4) * 13; ctx.beginPath(); ctx.moveTo(wx, wy); ctx.lineTo(wx + 22, wy); ctx.stroke(); }
+      ctx.strokeStyle = '#5a4a3a'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(26, G - 60); ctx.quadraticCurveTo(20, G - 150, 40, G - 220); ctx.stroke();   // 柳
+      ctx.strokeStyle = 'rgba(110,150,90,.85)'; ctx.lineWidth = 1.6;
+      for (var k = 0; k < 16; k++) { var sx = 4 + k * 6, sy = G - 215 + Math.abs(k - 7) * 4, sw = Math.sin(frameN / 50 + k) * 4; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.quadraticCurveTo(sx + sw, sy + 60, sx + sw * 1.5, sy + 120 + (k % 3) * 18); ctx.stroke(); }
+    },
+    sway: function () {   // うみ: 水平線・砂浜・松・小舟
+      var G = C.GROUND, hz = G - 120;
+      var wg = ctx.createLinearGradient(0, hz, 0, G - 26); wg.addColorStop(0, mix('#3d6f9a', skyAt(hz), 0.25)); wg.addColorStop(1, '#2f5f86');
+      ctx.fillStyle = wg; ctx.fillRect(-20, hz, W + 40, G - 26 - hz);
+      ctx.fillStyle = 'rgba(255,200,150,.35)'; for (var i = 0; i < 6; i++) ctx.fillRect(90 - i * 3, hz + 6 + i * 12, 40 + i * 6, 2);   // 夕日の照り返し
+      ctx.strokeStyle = 'rgba(255,255,255,.4)'; ctx.lineWidth = 1;
+      for (var j = 0; j < 8; j++) { var x = (hash(j + 11) * W + frameN * 0.3) % (W + 40) - 20, y = hz + 14 + (j % 5) * 15; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 16, y); ctx.stroke(); }
+      ctx.fillStyle = '#3b3530'; ctx.beginPath(); ctx.moveTo(300, hz - 2); ctx.lineTo(330, hz - 2); ctx.lineTo(324, hz + 4); ctx.lineTo(306, hz + 4); ctx.closePath(); ctx.fill(); ctx.fillRect(314, hz - 18, 2, 16);   // 小舟
+      ctx.fillStyle = '#ead6ad'; ctx.beginPath(); ctx.moveTo(-20, G - 26); ctx.quadraticCurveTo(200, G - 34, W + 20, G - 24); ctx.lineTo(W + 20, G); ctx.lineTo(-20, G); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#4a3a2e'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(380, G - 20); ctx.quadraticCurveTo(372, G - 120, 340, G - 190); ctx.stroke();   // 松
+      ctx.fillStyle = '#3f5a3a'; [[340, G - 196, 30], [362, G - 160, 24], [318, G - 170, 22]].forEach(function (c) { ctx.beginPath(); ctx.ellipse(c[0], c[1], c[2], c[2] * 0.42, -0.1, 0, Math.PI * 2); ctx.fill(); });
+    },
+    narrow: function () {   // ゆきやま: 雪の杉と小屋
+      var G = C.GROUND;
+      ctx.fillStyle = '#eef2f7'; ctx.beginPath(); ctx.moveTo(-20, G - 30); ctx.quadraticCurveTo(120, G - 50, 220, G - 32); ctx.quadraticCurveTo(320, G - 18, W + 20, G - 40); ctx.lineTo(W + 20, G); ctx.lineTo(-20, G); ctx.closePath(); ctx.fill();
+      pine(24, G - 26, 110, '#3f5f55', true); pine(62, G - 30, 80, '#4a6a5e', true); pine(390, G - 34, 120, '#3f5f55', true);
+      ctx.fillStyle = '#7a5640'; ctx.fillRect(318, G - 70, 44, 38);   // 小屋
+      ctx.fillStyle = '#f7f9fc'; ctx.beginPath(); ctx.moveTo(310, G - 68); ctx.lineTo(340, G - 96); ctx.lineTo(370, G - 68); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = 'rgba(255,210,120,.95)'; ctx.fillRect(330, G - 60, 10, 10);
+    }
+  };
+  // 床（台ごと）
+  function drawFloor() {
+    var G = C.GROUND, f = scene().floor;
+    var C1 = { engawa: ['#caa06a', '#a87d4c', '#8f6a3e'], gravel: ['#d8d2c6', '#bdb5a6', '#a39b8c'], earth: ['#9b7550', '#7d5a3a', '#6a4a2e'],
+      stone: ['#a8a29a', '#8a847c', '#77716a'], pier: ['#b48a5c', '#8f6a42', '#6f5234'], snow: ['#f4f7fb', '#dfe6ef', '#c9d3e0'] }[f];
+    var g = ctx.createLinearGradient(0, G, 0, G + 50); g.addColorStop(0, C1[0]); g.addColorStop(1, C1[1]);
+    ctx.fillStyle = g; ctx.fillRect(-20, G, W + 40, 60); ctx.fillStyle = C1[2]; ctx.fillRect(-20, G, W + 40, 3);
+    if (f === 'engawa' || f === 'pier') {
+      ctx.strokeStyle = 'rgba(70,45,20,.25)'; ctx.lineWidth = 1;
+      if (f === 'pier') for (var x = -20; x < W + 20; x += 26) { ctx.beginPath(); ctx.moveTo(x, G + 3); ctx.lineTo(x, G + 60); ctx.stroke(); }
+      else for (var r = 0; r < 3; r++) { var y = G + 14 + r * 14; ctx.beginPath(); ctx.moveTo(-20, y); ctx.lineTo(W + 20, y); ctx.stroke();
+        for (var x2 = (r % 2) * 60 - 20; x2 < W + 20; x2 += 120) { ctx.beginPath(); ctx.moveTo(x2, y - 14); ctx.lineTo(x2, y); ctx.stroke(); } }
+    } else {   // 玉砂利・土・石・雪は粒で
+      for (var i = 0; i < 90; i++) { var px = hash(i + 300) * (W + 40) - 20, py = G + 6 + hash(i + 400) * 46, pr = f === 'stone' ? 3 + hash(i) * 5 : 1 + hash(i) * 1.6;
+        ctx.fillStyle = f === 'snow' ? 'rgba(180,195,215,.5)' : f === 'stone' ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.12)'; ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2); ctx.fill(); }
     }
   }
-  // 床: 縁側の板張り
-  function drawFloor() {
-    var g = ctx.createLinearGradient(0, C.GROUND, 0, C.GROUND + 50); g.addColorStop(0, '#caa06a'); g.addColorStop(1, '#a87d4c');
-    ctx.fillStyle = g; ctx.fillRect(-20, C.GROUND, W + 40, 60);
-    ctx.fillStyle = '#8f6a3e'; ctx.fillRect(-20, C.GROUND, W + 40, 3);
-    ctx.strokeStyle = 'rgba(90,60,30,.25)'; ctx.lineWidth = 1;
-    for (var r = 0; r < 3; r++) { var y = C.GROUND + 14 + r * 14; ctx.beginPath(); ctx.moveTo(-20, y); ctx.lineTo(W + 20, y); ctx.stroke();
-      for (var x = (r % 2) * 60 - 20; x < W + 20; x += 120) { ctx.beginPath(); ctx.moveTo(x, y - 14); ctx.lineTo(x, y); ctx.stroke(); } }
-  }
-  // 桜の花びら（画面に固定して、ゆっくり舞う）
+  // 舞うもの（画面に固定）: 桜・もみじ・若葉・ほたる・雪
   function drawPetals() {
-    PETALS.forEach(function (p) {
-      p.y += 0.35 * p.s; p.x += Math.sin(frameN / 60 + p.ph) * 0.3; if (p.y > VIEW_H + 10) { p.y = -10; p.x = Math.random() * W; }
+    var fx = scene().fx; if (fx === 'none') return;
+    PETALS.forEach(function (p, i) {
+      if (fx === 'hotaru') {   // ほたる: ふわふわ漂って明滅する
+        var hx = (p.x + Math.sin(frameN / 90 + p.ph) * 40), hy = VIEW_H * 0.35 + (p.y % (VIEW_H * 0.6)) + Math.cos(frameN / 70 + p.ph) * 20;
+        var a = 0.35 + 0.65 * Math.max(0, Math.sin(frameN / 25 + p.ph * 3));
+        var gg = ctx.createRadialGradient(hx, hy, 0, hx, hy, 9); gg.addColorStop(0, 'rgba(220,255,140,' + a + ')'); gg.addColorStop(1, 'rgba(220,255,140,0)');
+        ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(hx, hy, 9, 0, Math.PI * 2); ctx.fill(); return;
+      }
+      var sp = fx === 'snow' ? 0.5 : 0.35;
+      p.y += sp * p.s; p.x += Math.sin(frameN / 60 + p.ph) * (fx === 'snow' ? 0.2 : 0.3); if (p.y > VIEW_H + 10) { p.y = -10; p.x = Math.random() * W; }
       ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.sin(frameN / 30 + p.ph)); ctx.scale(p.s, p.s);
-      ctx.fillStyle = 'rgba(244,170,190,.55)'; ctx.beginPath(); ctx.ellipse(0, 0, 4, 2.4, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      if (fx === 'snow') { ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.beginPath(); ctx.arc(0, 0, 2.4, 0, Math.PI * 2); ctx.fill(); }
+      else if (fx === 'momiji') { ctx.fillStyle = i % 2 ? 'rgba(214,74,40,.75)' : 'rgba(232,130,50,.75)'; ctx.beginPath();
+        for (var k = 0; k < 10; k++) { var rr = k % 2 ? 2.2 : 5.5, an = k * Math.PI / 5; ctx.lineTo(Math.cos(an) * rr, Math.sin(an) * rr); } ctx.closePath(); ctx.fill(); }
+      else if (fx === 'leaf') { ctx.fillStyle = 'rgba(120,170,80,.6)'; ctx.beginPath(); ctx.ellipse(0, 0, 4.5, 2, 0, 0, Math.PI * 2); ctx.fill(); }
+      else { ctx.fillStyle = 'rgba(244,170,190,.55)'; ctx.beginPath(); ctx.ellipse(0, 0, 4, 2.4, 0, 0, Math.PI * 2); ctx.fill(); }
+      ctx.restore();
     });
   }
   // 2色を混ぜる。'#rrggbb' と 'rgb(r,g,b)' のどちらでも受ける（空の色は rgb で返るので、両方要る）
@@ -588,7 +700,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function platButtons() {
     return '<div class="plats">' + PLAT_ORDER.map(function (k) { var b = bests[bkey(k)], open = isOpenPlat(k);
       return '<button data-plat="' + k + '" class="' + (k === plat ? 'cur' : '') + (open ? '' : ' lock') + '"' + (open ? '' : ' disabled') + '>' + C.PLATFORMS[k].name +
-        '<small>' + (!open ? 'ことば' + PLAT_NEED[k] + 'こで' : b && b.p ? b.p + '点' : 'まだ') + '</small></button>'; }).join('') + '</div>';
+        '<small>' + SCENES[k].name + '・' + (!open ? 'ことば' + PLAT_NEED[k] + 'こで' : b && b.p ? b.p + '点' : 'まだ') + '</small></button>'; }).join('') + '</div>';
   }
   function themeButtons() {
     return '<div class="themes">' + THEMES.map(function (t) { var open = isOpenTheme(t);
