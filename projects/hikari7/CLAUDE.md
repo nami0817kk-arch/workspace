@@ -26,7 +26,7 @@
 | `docs/RELEASE.md` | TestFlight と App Store への出し方（護送ボートの手順を写したもの）。リリースは `hikari7-ios-release.yml` |
 | `tool/make_bgm.py` | BGM 6曲を作る（`platform/ai-lab` の audiogen で合成。生成AIではない）。`app/assets/audio/bgm/` に MP3 |
 | `tool/make_voice.py` | 台詞の声を作る（手元の VOICEVOX ENGINE で合成）。`app/assets/audio/voice/<声>/<FNV>.mp3` と `index.json`。足りない分だけ作る |
-| `tool/make_icon.py` | アプリアイコンを描く（7つの椅子・真ん中が金色） |
+| `tool/make_icon.py` | アプリアイコンを作る（元の絵は `art/icon_src.jpg`。2026-10-04 に FLUX.1 schnell の10案からユーザーが選んだ「3人のうち真ん中だけにスポットライト」） |
 | `fonts/` | 見出し書体 Dela Gothic One（OFL）。使う字だけに絞って埋め込む |
 | `web-test/` | テスト用Web版に添える `_headers`・`robots.txt` |
 
