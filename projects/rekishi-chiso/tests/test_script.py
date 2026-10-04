@@ -146,3 +146,13 @@ def test_card_year_moves_timeline_year():
         {"語り": "a"}, {"語り": "b", "card": {"head": "1772年 元日"}}, {"語り": "c"},
         {"語り": "d", "card": {"head": "首飾りの値段"}}, {"語り": "e", "card": {"head": "1783年"}, "year": 1780}]}]})
     assert [l.year for l in sc.lines] == [1755, 1772, 1772, 1772, 1780]   # 年の無い札は動かさない、year: が優先
+
+
+def test_portrait_age_can_be_hidden():
+    from types import SimpleNamespace as NS
+    people = {"マリー": {"match": ["マリー"], "born": "1755-11-02", "died": "1793-10-16"}}
+    sc = script.parse({"title": "t", "sections": [{"title": "一", "lines": [
+        {"語り": "a", "portrait": {"image": "x.jpg", "caption": "マリー", "age": False}}]}]})
+    assert sc.lines[0].portrait.age is False
+    assert script.person_of(people, sc.lines[0].portrait) is None          # 年齢の札を出さない
+    assert script.person_of(people, NS(caption="マリー", who="", age=True)) == "マリー"
