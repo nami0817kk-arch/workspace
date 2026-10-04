@@ -4329,7 +4329,7 @@ document.addEventListener('click',function(ev){
     case 'judgeauto':go(function(){var f=ROUNDS[S.rnd],A=alive(S).sort(function(a,b){return S.stage.res[b.id].sc-S.stage.res[a.id].sc;}),n=f.fin?Math.min(6,S.caps.finMax,A.length):capOf(S);S.pass={};A.slice(0,n).forEach(function(t){S.pass[t.id]=true;});});toast('出来の上位から選びました');break;
     case 'judgeclear':go(function(){S.pass={};});break;
     case 'pass':var pc=0;for(var pk in S.pass)if(S.pass[pk])pc++;if(v==='1'&&!S.pass[id]&&pc>=capOf(S)){toast((ROUNDS[S.rnd].fin?'デビューは':'合格は')+capOf(S)+'人まで。誰かを外してから');haptic('warn');break;}go(function(){var f=ROUNDS[S.rnd],cnt=0;for(var k in S.pass)if(S.pass[k])cnt++;if(v==='1'){if(!S.pass[id]&&cnt>=capOf(S))return;S.pass[id]=true;}else S.pass[id]=false;});break;
-    case 'retry':if(S.adUsed)break;if(ui.retryArm!==id){ui.retryArm=id;render();toast('動画を1本見て、この子をもう一度見ます（1審査に1回）。もう一度押すと始まります');break;}ui.retryArm=null;withAd(function(){go(function(){retry(S,id);});});break;
+    case 'retry':if(S.adUsed)break;if(ui.retryArm!==id){ui.retryArm=id;render();toast('動画を1本見て、この子をもう一度見ます（1審査に1回）。もう一度押すと始まります');break;}ui.retryArm=null;withAd(function(){go(function(){retry(S,id);});window.scrollTo(0,0);});break;
     case 'judgeok':stopTimer();go(function(){decide(S);});window.scrollTo(0,0);break;
     case 'callstart':stopTimer();S.call.n=0;timer=setTimeout(callTick,200);break;
     case 'calllast':stopTimer();go(function(){S.call.n=S.call.order.length;S.call.done=true;});break;
