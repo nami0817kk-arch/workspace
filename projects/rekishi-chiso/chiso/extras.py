@@ -172,3 +172,36 @@ def draw_money(painter, img: Image.Image, spec: dict, t: float = 1.0) -> None:
     if t >= 1:
         bf = painter.font("gothic", 26)
         dr.text((cx, ay1 - 10), f"※{spec['basis']}", font=bf, fill=(110, 90, 60), anchor="ms")
+
+
+# --- 用語の札 ----------------------------------------------------------------
+TERM_BOX = (1640, 76, 1895, 600)       # 肖像（右端 x=1590）と図の板（右端 x=1620）の右の空き。下はつむぎの頭の上まで
+
+
+def draw_term(painter, img: Image.Image, word: str, note: str) -> Image.Image:
+    """難しい言葉の札（10-04）。言葉を大きく、説明を小さく。高さは中身に合わせる。"""
+    from .subs import wrap
+    x0, y0, x1, ymax = TERM_BOX
+    w = x1 - x0
+    hf = painter.font("gothic", 22)
+    size = 40
+    while size > 24 and painter.font("serif", size, bold=True).getlength(word) > w - 28:
+        size -= 2
+    wf = painter.font("serif", size, bold=True)
+    nf = painter.font("gothic", 25)
+    rows = wrap(note, nf, w - 30)
+    h = 46 + size + 18 + 36 * len(rows) + 16
+    y1 = min(ymax, y0 + h)
+    shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, y0 + 8, x1 + 6, y1 + 8], radius=12, fill=(0, 0, 0, 140))
+    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
+    dr = ImageDraw.Draw(img, "RGBA")
+    dr.rounded_rectangle([x0, y0, x1, y1], radius=12, fill=(24, 20, 14, 225), outline=GOLD, width=3)
+    dr.rounded_rectangle([x0 + 14, y0 - 14, x0 + 104, y0 + 16], radius=6, fill=GOLD)
+    dr.text((x0 + 59, y0 + 1), "用語", font=hf, fill=(24, 20, 14), anchor="mm")
+    dr.text((x0 + 16, y0 + 34), word, font=wf, fill=(240, 228, 200), anchor="lt")
+    ny = y0 + 34 + size + 16
+    dr.line([x0 + 16, ny - 8, x1 - 16, ny - 8], fill=(214, 178, 110, 120), width=1)
+    for k, row in enumerate(rows):
+        dr.text((x0 + 16, ny + 36 * k), row, font=nf, fill=(225, 214, 190), anchor="lt")
+    return img

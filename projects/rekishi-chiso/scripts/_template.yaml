@@ -25,6 +25,8 @@ thumbnail:                                   # chiso/thumb.py。絵は全面、�
   lead: 本当に
   main: 悪女？
 
+terms:                                  # その回だけの用語（terms.yaml より優先。説明は40字まで）
+  ○○: 説明
 sections:
   - title: 地表：誰もが知っている通説
     background: {image: paintings/xxx.jpg, credit: "画家《題》年"}
@@ -38,7 +40,7 @@ sections:
       - 語り: 《強調したい語》は二重山かっこで囲む。
         card: {head: "1700年", body: "札の本文（22字まで）"}   # 左の「掘り出したメモ」に積み重なる
         year: 1700                            # 年表の印
-      - 語り: 図を出す行。節が変わるか figure: null まで続く。
+      - 語り: "図を出す行。節が変わるか figure: null まで続く。"
         figure: {type: map, title: 旅の題, route: [パリ, ヴェルサイユ], note: およそ○日}   # 地名は places.yaml
       - 語り: 図を消す行。
         figure: null

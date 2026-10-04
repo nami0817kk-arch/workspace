@@ -73,10 +73,44 @@ class Line:
     figure: str | None = None         # 図（地図・グラフ・相関図）の指定。JSON の文字列（chiso/figures.py）
     bubble: str | None = None         # 肖像の人物の吹き出し（その行だけ）。JSON の文字列（chiso/extras.py）
     icon: str | None = None           # 1文の挿絵（その行だけ）。Phosphor のアイコン名
+    term: tuple | None = None         # 用語の札 (言葉, 説明)。terms.yaml と台本の terms: から自動で付く
     hook: bool = False                # 節の終わりの「引き」（次の節が気になる一言）。check が節ごとに確かめる
 
 
 MEMO_SIZE = 3
+TERM_LINES = 3        # 用語の札を出しておく行数（初めて出た行から）
+TERM_MAX = 40         # 説明の字数の上限（右上の狭い札に収める）
+
+
+def attach_terms(lines: list, glossary: dict[str, str]) -> None:
+    """その回で初めて出た用語に、札を付ける。新しい言葉が出たらすぐ差し替え、
+    同じ行に2つ以上あれば、前の札が終わってから順に出す。節が変わると札は消える。"""
+    import re
+    if not glossary:
+        return
+    words = sorted(glossary, key=len, reverse=True)       # 長い言葉を先に（王太子妃の中の王太子より先に）
+    seen: set[str] = set()
+    pending: list[str] = []
+    cur, left, sec = None, 0, None
+    for line in lines:
+        if line.section != sec:
+            cur, left, sec, pending = None, 0, line.section, []
+        plain = re.sub(r"[《》]", "", line.text)
+        found = []
+        for w in words:
+            pos = plain.find(w)
+            if pos >= 0 and w not in seen and not any(w in f for _, f in found):
+                found.append((pos, w))
+        found = [w for _, w in sorted(found)]
+        seen.update(found)
+        if found:
+            cur, left = found[0], TERM_LINES
+            pending = found[1:] + pending
+        elif left <= 0 and pending:
+            cur, left = pending.pop(0), TERM_LINES
+        if cur is not None and left > 0:
+            line.term = (cur, glossary[cur])
+            left -= 1
 
 
 @dataclass
@@ -186,7 +220,7 @@ def _speaker_and_text(raw: dict, where: str) -> tuple[str, str]:
     return speaker, text
 
 
-def parse(data: dict, path: Path | None = None) -> Script:
+def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None = None) -> Script:
     if not isinstance(data, dict):
         raise ScriptError("台本の一番上は辞書（title / sections ...）にします")
     timeline = data.get("timeline") or {}
@@ -254,6 +288,11 @@ def parse(data: dict, path: Path | None = None) -> Script:
     missing = used - set(shorts_meta)
     if missing:
         raise ScriptError(f"shorts に定義のないショートが使われています: {sorted(missing)}")
+    gl = {**(glossary or {}), **{str(k): str(v) for k, v in (data.get("terms") or {}).items()}}
+    long = [k for k, v in gl.items() if len(v) > TERM_MAX]
+    if long:
+        raise ScriptError(f"用語の説明は{TERM_MAX}字までです: {long}")
+    attach_terms(lines, gl)
     return Script(
         title=str(data.get("title", "")), series=str(data.get("series", "")),
         timeline_start=timeline.get("start"), timeline_end=timeline.get("end"), events=events,
@@ -265,7 +304,12 @@ def parse(data: dict, path: Path | None = None) -> Script:
 def load(path: str | Path) -> Script:
     path = Path(path)
     with path.open(encoding="utf-8") as f:
-        return parse(yaml.safe_load(f), path)
+        data = yaml.safe_load(f)
+    gfile = path.resolve().parent.parent / "terms.yaml"       # scripts/ の隣
+    glossary = {}
+    if gfile.exists():
+        glossary = {str(k): str(v) for k, v in (yaml.safe_load(gfile.read_text(encoding="utf-8")) or {}).items()}
+    return parse(data, path, glossary)
 
 
 def digest(path: str | Path) -> str:

@@ -53,6 +53,7 @@ class State:
     figure: str | None = None
     bubble: str | None = None
     icon: str | None = None
+    term: tuple | None = None
 
 
 def _ease(t: float) -> float:
@@ -265,6 +266,9 @@ class Painter:
             import json as _json
             from . import figures
             img = figures.draw(self, img, _json.loads(state.figure), fig)
+        if state.term:                                     # 用語の札は右上（肖像と図の右の空き）
+            from . import extras
+            img = extras.draw_term(self, img, *state.term)
         dr = ImageDraw.Draw(img, "RGBA")
         if state.figure is None:                           # 図のあいだは年表も隠す（図の板を下まで広げる）
             self._timeline(dr, 470, W - 470, 770, state.year if year is None else year)
@@ -526,7 +530,7 @@ class Painter:
 def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
                  getattr(line, "memo", ()), getattr(line, "figure", None), getattr(line, "bubble", None),
-                 getattr(line, "icon", None))
+                 getattr(line, "icon", None), getattr(line, "term", None))
 
 
 def _salt(painter) -> str:

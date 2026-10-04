@@ -85,3 +85,28 @@ def test_figure_type_checked():
     d["sections"][0]["lines"][0]["figure"] = {"type": "video"}
     with pytest.raises(script.ScriptError):
         script.parse(d)
+
+
+def test_terms_first_appearance_three_lines_and_queue():
+    gl = {"枢機卿": "教皇の次の位", "王太子": "王位を継ぐ王子", "王太子妃": "王太子の妻"}
+    d = {"title": "t", "terms": {"三部会": "身分ごとの議会"}, "sections": [
+        {"title": "一", "lines": [{"語り": "ロアン枢機卿と王太子妃。"}, {"語り": "a"}, {"語り": "王太子と《三部会》"},
+                                 {"語り": "b"}, {"語り": "枢機卿ふたたび"}, {"語り": "c"}, {"語り": "d"}]},
+        {"title": "二", "lines": [{"語り": "e"}]}]}
+    sc = script.parse(d, glossary=gl)
+    words = [l.term[0] if l.term else None for l in sc.lines]
+    # 1行目は先に出た枢機卿。王太子妃は待ち、3行目で新しい言葉（王太子・三部会）が来たので差し替え。
+    # 王太子妃の中の王太子は数えない。2度目の枢機卿は出さない。節が変わると消える
+    assert words == ["枢機卿", "枢機卿", "王太子", "王太子", "王太子", "三部会", "三部会", None]
+
+
+def test_term_note_length_limited():
+    with pytest.raises(script.ScriptError):
+        script.parse({"title": "t", "terms": {"長": "あ" * 41}, "sections": [{"title": "一", "lines": [{"語り": "長"}]}]})
+
+
+def test_template_parses():
+    """見本の台本は写して使うので、いつも読める状態にしておく（10-04 まで壊れていた）。"""
+    from pathlib import Path
+    sc = script.load(Path(__file__).resolve().parent.parent / "scripts" / "_template.yaml")
+    assert sc.lines
