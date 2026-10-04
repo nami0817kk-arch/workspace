@@ -25,6 +25,8 @@ thumbnail:                                   # chiso/thumb.py。絵は全面、�
   lead: 本当に
   main: 悪女？
 
+terms:                                  # その回だけの用語（terms.yaml より優先。説明は40字まで）
+  ○○: 説明
 sections:
   - title: 地表：誰もが知っている通説
     background: {image: paintings/xxx.jpg, credit: "画家《題》年"}
