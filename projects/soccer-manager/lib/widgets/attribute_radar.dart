@@ -55,6 +55,11 @@ class AttributeRadar extends StatelessWidget {
             fillColor: scheme.primary.withValues(alpha: 0.25),
             gridColor: Theme.of(context).dividerColor,
             labelStyle: TextStyle(
+              // **書体を指定する。** CustomPainter の TextPainter は
+              // ウィジェットの木の外にいるので、テーマの書体が当たらない。
+              // 省くと端末の標準フォント任せになり、同梱フォントしか無い
+              // Web版で日本語が豆腐(□)になる(実際に軸のラベルがそうだった)。
+              fontFamily: 'NotoSansJP',
               fontSize: 10,
               color: Theme.of(context).textTheme.bodySmall?.color,
             ),

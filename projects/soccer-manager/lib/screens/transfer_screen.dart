@@ -6,6 +6,7 @@ import '../models/save_game.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
+import '../widgets/player_stat_chips.dart';
 import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
@@ -257,6 +258,10 @@ class _TransferScreenState extends State<TransferScreen>
                               child: Text(
                                 p.name,
                                 overflow: TextOverflow.ellipsis,
+                                // 名前が主役。既定の太さだと、下に続く
+                                // 数字と同じ重さに見えていた。
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
                             if (!affordable) ...[
@@ -286,14 +291,31 @@ class _TransferScreenState extends State<TransferScreen>
                                   "${p.originClubName ?? 'Club unknown'} / age ${p.age} / ${p.position.label}"),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text(
-                              Tr.pick(
-                                  '総合${p.overall} 潜在${p.potential} 移籍金${p.marketValue}万',
-                                  "Overall ${p.overall} / potential ${p.potential} / fee ${p.marketValue}"),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            // **1行につなげない。** 「総合78 潜在82
+                            // 移籍金1602万」と並べると、どこが数字でどこが
+                            // 見出しなのか目で切り分ける必要があった。
+                            // 札に分けると、数字だけを拾って読める。
+                            const SizedBox(height: 4),
+                            Wrap(
+                              spacing: 5,
+                              runSpacing: 4,
+                              children: [
+                                StatChip(
+                                  label: Tr.pick('総合', 'OVR'),
+                                  value: '${p.overall}',
+                                  color: OverallBadge.colorFor(
+                                      context, p.overall),
+                                ),
+                                StatChip(
+                                  label: Tr.pick('潜在', 'POT'),
+                                  value: '${p.potential}',
+                                ),
+                                StatChip(
+                                  label: Tr.pick('移籍金', 'Fee'),
+                                  value: Tr.pick('${p.marketValue}万',
+                                      '${p.marketValue}'),
+                                ),
+                              ],
                             ),
                           ],
                         ),
