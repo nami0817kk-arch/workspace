@@ -1,5 +1,5 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ひらがなてんびん</title>
+<title>もじつみ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
 <link href="fonts/kana.css" rel="stylesheet">
@@ -727,7 +727,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   function showMenu() {
     phase = 'menu'; drawItems();
-    showSheet('<h2>ひらがなてんびん</h2><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas><p>字を<b>くっつけて</b>ことばにすると点がふえる（向きは自由）。<br>2字100点・3字400点・4字900点。ことばになる字は<b>ひかる</b>。<br>アイテム（のり・いた・とりけし・こおり）は、3字のことばか字8つでもらえる。</p>' +
+    showSheet('<h2>もじつみ</h2><p style="margin:-6px 0 0;font-size:12px;opacity:.7">ひらがな積み上げ ことばパズル</p><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas><p>字を<b>くっつけて</b>ことばにすると点がふえる（向きは自由）。<br>2字100点・3字400点・4字900点。ことばになる字は<b>ひかる</b>。<br>アイテム（のり・いた・とりけし・こおり）は、3字のことばか字8つでもらえる。</p>' +
       '<p style="margin-top:6px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
       '<p style="margin-top:6px;font-weight:700;color:var(--ink)">アイテム</p><div class="seg"><button data-items="1" class="' + (useItems ? 'cur' : '') + '">あり</button><button data-items="0" class="' + (useItems ? '' : 'cur') + '">なし</button></div>' +
       '<p style="margin-top:6px;font-weight:700;color:var(--ink)">字の色</p>' + themeButtons() +

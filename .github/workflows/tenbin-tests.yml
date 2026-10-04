@@ -1,0 +1,48 @@
+name: tenbin tests
+
+# projects/tenbin（もじつみ）の試作の決まり（物理・ことば判定・アイテム・つづける・広告）を node で検査する。
+on:
+  push:
+    paths:
+      - "projects/tenbin/**"
+      - ".github/workflows/tenbin-tests.yml"
+  pull_request:
+    paths:
+      - "projects/tenbin/**"
+      - ".github/workflows/tenbin-tests.yml"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "回すテスト(例 test/items.test.js)。空なら全件"
+        required: false
+        default: ""
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: projects/tenbin
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: projects/tenbin/package-lock.json
+      - run: npm ci
+      - name: Test
+        env:
+          TARGET: ${{ github.event.inputs.target }}
+        run: |
+          set -e
+          if [ -n "$TARGET" ]; then files="$TARGET"; else files=$(ls test/*.test.js); fi
+          for f in $files; do echo "== $f"; node "$f"; done
