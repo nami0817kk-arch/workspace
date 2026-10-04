@@ -511,6 +511,13 @@ class _SquadScreenState extends State<SquadScreen> {
                             vertical: 4,
                           ),
                           child: ListTile(
+                            // **既定の余白を詰める。** 左右16・顔との間16が
+                            // 既定で、そのぶん本文の幅が減って「役割 スイーパー
+                            // キーパー」が折り返していた。
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(12, 4, 8, 4),
+                            horizontalTitleGap: 10,
+                            minLeadingWidth: 40,
                             tileColor: isSelected
                                 ? Theme.of(context)
                                     .colorScheme
@@ -556,6 +563,10 @@ class _SquadScreenState extends State<SquadScreen> {
                                   child: Text(
                                     p.name,
                                     overflow: TextOverflow.ellipsis,
+                                    // 名前が主役。既定の太さだと、下に続く
+                                    // 細かい数字と同じ重さに見えていた。
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w700),
                                   ),
                                 ),
                                 // 生え抜き(自クラブのユース出身)。買ってきた
@@ -760,11 +771,7 @@ class _SquadScreenState extends State<SquadScreen> {
                               ],
                             ),
                             trailing: _compareMode
-                                ? Text(
-                                    '${p.overall}',
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  )
+                                ? _OverallBadge(overall: p.overall)
                                 : Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -782,12 +789,8 @@ class _SquadScreenState extends State<SquadScreen> {
                                           return Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Text(
-                                                '${p.overall}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium,
-                                              ),
+                                              _OverallBadge(
+                                                  overall: p.overall),
                                               if (trend != 0)
                                                 Tooltip(
                                                   message: Tr.pick(
@@ -1058,4 +1061,50 @@ String _traitDormantSuffix(Player player) {
   return player.attributeValue(gate.attribute) >= gate.threshold
       ? ''
       : Tr.pick('(未発動)', ' (dormant)');
+}
+
+/// 総合力の数字。
+///
+/// **一覧でいちばん見る数字。** 素の `titleMedium` で置いていた頃は、
+/// 右端に小さな数字があるだけで、選手を見比べるときに目が止まらなかった。
+/// 強さで色が変わる丸い札にして、桁の揃う等幅の数字で描く。
+class _OverallBadge extends StatelessWidget {
+  final int overall;
+
+  const _OverallBadge({required this.overall});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    // 5部から1部まで通して使うので、刻みは広めに取る。
+    final color = switch (overall) {
+      >= 75 => const Color(0xFF1B7F4B),
+      >= 60 => const Color(0xFF2F6FB0),
+      >= 45 => const Color(0xFF8A6A1F),
+      _ => scheme.onSurfaceVariant,
+    };
+    return Container(
+      // **幅を詰める。** 大きくすると、その分だけ本文の幅が減って
+      // 「役割 スイーパーキーパー」が折り返した。札は小さくてよい。
+      width: 33,
+      height: 27,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(9),
+        border: Border.all(color: color.withValues(alpha: 0.30)),
+      ),
+      child: Text(
+        '$overall',
+        style: TextStyle(
+          fontFamily: 'NotoSansJP',
+          fontSize: 15,
+          fontWeight: FontWeight.w800,
+          height: 1.0,
+          color: color,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        ),
+      ),
+    );
+  }
 }
