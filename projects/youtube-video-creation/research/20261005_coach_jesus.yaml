@@ -26,7 +26,7 @@ theme:
   topic: ジョルジェ・ジェズス
   title: ジョルジェ・ジェズス、引き分けを狙わない遅咲きの名将。勝率を並べて見えたこと
   question: 54歳で名門に届いた遅咲きのジェズスは、どこで勝てる監督になり、その勝ち方は代表でも続いているのか
-  takeaway: ジェズスの勝率を時期で束ねると、名門の前のブラガの50%から、リスボンの名門2つで68.5%、初めての海外で74.7%と上がり、ベンフィカ再任とトルコで65.4%に下がったあと、サウジの3年で81.1%と最も高くなった。代表は4戦4勝で、ノルウェーにも逆転で勝ってグループ首位。11月14日、かつて率いたブラガの本拠地でデンマークに負けなければ、グループ1位が決まる
+  takeaway: ジェズスの勝率を時期で束ねると、名門の前のブラガの50%から、リスボンの名門2つで68.5%、初めての海外で74.7%と上がり、ベンフィカ再任とトルコで65.4%に下がったあと、サウジの3年で81.1%と最も高くなった。代表は4戦4勝。次は11月14日、かつて率いたブラガの本拠地でのデンマーク戦
   opening_image: assets/images/20261005_coach_jesus/01_w.jpg
 short_title: ジェズス監督「引き分けのための組み方は知らない」
 thumbnail:
@@ -698,13 +698,6 @@ sections:
       columns: *id009
       rows: *id010
       highlight_row: 5
-  - text: グループ首位のまま、来年3月の準々決勝への進出も決めました。
-    card:
-      type: table
-      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
-      columns: *id009
-      rows: *id010
-      highlight_row: 5
   - text: 4連勝の歩みを、監督自身はこう振り返ります。
     image: assets/images/20261005_coach_jesus/01_w.jpg
     card: none
@@ -734,13 +727,6 @@ sections:
       columns: *id009
       rows: *id010
       highlight_row: 0
-  - text: 負けなければ、グループ1位が決まります。
-    card:
-      type: table
-      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
-      columns: *id009
-      rows: *id010
-      highlight_row: 5
   - text: サウジで81%まで上げた勝ち方を、代表でも続けられるか。そこが次の答えです。
     card:
       type: table

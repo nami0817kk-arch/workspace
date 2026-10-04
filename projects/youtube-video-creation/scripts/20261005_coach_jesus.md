@@ -30,7 +30,7 @@ description: 'ジョルジェ・ジェズス、引き分けを狙わない遅咲
   この動画が答える問い: 54歳で名門に届いた遅咲きのジェズスは、どこで勝てる監督になり、その勝ち方は代表でも続いているのか
 
 
-  この動画の見立て: ジェズスの勝率を時期で束ねると、名門の前のブラガの50%から、リスボンの名門2つで68.5%、初めての海外で74.7%と上がり、ベンフィカ再任とトルコで65.4%に下がったあと、サウジの3年で81.1%と最も高くなった。代表は4戦4勝で、ノルウェーにも逆転で勝ってグループ首位。11月14日、かつて率いたブラガの本拠地でデンマークに負けなければ、グループ1位が決まる
+  この動画の見立て: ジェズスの勝率を時期で束ねると、名門の前のブラガの50%から、リスボンの名門2つで68.5%、初めての海外で74.7%と上がり、ベンフィカ再任とトルコで65.4%に下がったあと、サウジの3年で81.1%と最も高くなった。代表は4戦4勝。次は11月14日、かつて率いたブラガの本拠地でのデンマーク戦
 
 
   ※画面の札で、クラブが発表した「確定」、
@@ -528,7 +528,7 @@ cards:
     columns: *id009
     rows: *id010
     highlight_row: 5
-  view_7_card:
+  view_11_card:
     type: table
     title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
     columns: *id009
@@ -539,20 +539,8 @@ cards:
     title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
     columns: *id009
     rows: *id010
-    highlight_row: 5
-  view_13_card:
-    type: table
-    title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
-    columns: *id009
-    rows: *id010
     highlight_row: 0
-  view_14_card:
-    type: table
-    title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
-    columns: *id009
-    rows: *id010
-    highlight_row: 5
-  view_15_card:
+  view_13_card:
     type: table
     title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
     columns: *id009
@@ -842,10 +830,6 @@ cards:
   telop: 勝ち越し点のゴンサロ・ラモスは直前、監督に「エリアに入れ」と言われたそう
   card: view_6_card
   image: assets/images/20261005_coach_jesus/01_v.jpg
-解説: グループ首位のまま、来年3月の準々決勝への進出も決めました。
-  telop: グループ首位のまま、来年3月の準々決勝への進出も決めました
-  card: view_7_card
-  image: assets/images/20261005_coach_jesus/01_v.jpg
 解説: 4連勝の歩みを、監督自身はこう振り返ります。
   telop: 4連勝の歩みを、監督自身はこう振り返ります
   card: none
@@ -866,17 +850,13 @@ cards:
   image: assets/images/20261005_coach_jesus/01_w.jpg
 解説: 次の試合は11月14日、日本時間では15日の朝4時45分です。
   telop: 次の試合は11月14日、日本時間では15日の朝4時45分です
-  card: view_12_card
+  card: view_11_card
   image: assets/images/20261005_coach_jesus/01_v.jpg
 解説: 相手はデンマーク。場所は、かつて率いたブラガの本拠地です。
   telop: 相手はデンマーク。場所は、かつて率いたブラガの本拠地です
-  card: view_13_card
-  image: assets/images/20261005_coach_jesus/01_v.jpg
-解説: 負けなければ、グループ1位が決まります。
-  telop: 負けなければ、グループ1位が決まります
-  card: view_14_card
+  card: view_12_card
   image: assets/images/20261005_coach_jesus/01_v.jpg
 解説: サウジで81%まで上げた勝ち方を、代表でも続けられるか。そこが次の答えです。
   telop: サウジで81%まで上げた勝ち方を、代表でも続けられるか。そこが次の答えです
-  card: view_15_card
+  card: view_13_card
   image: assets/images/20261005_coach_jesus/01_v.jpg
