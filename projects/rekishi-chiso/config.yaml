@@ -20,6 +20,7 @@ cast:
     max_speed: 1.1
     volume: 1.0
     image: characters/kenzaki_helmet.png
+    faces: characters/kenzaki_faces   # 口パク（chiso/jaw.py で口を開けた絵を描き足す）
     side: left
     bust: 0.40                # 立ち絵の上から何割を見せるか
     height: 1250              # 立ち絵全体を何pxに縮めてから切るか

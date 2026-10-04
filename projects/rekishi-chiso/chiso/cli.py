@@ -375,6 +375,9 @@ def cmd_prepare_characters(args) -> int:
     for key, src in (("tsumugi", args.tsumugi), ("kenzaki", args.kenzaki)):
         cx, rim_y, w, angle, keep = PLACEMENTS[key]
         put(src, str(out / f"{key}_helmet.png"), cx, rim_y, w, angle, keep=keep)
+    from . import jaw
+    cx, rim_y, w, angle, keep = PLACEMENTS["kenzaki"]
+    jaw.build(args.kenzaki, out / "kenzaki_faces", lambda s_, o_: put(s_, o_, cx, rim_y, w, angle, keep=keep))
     if args.tsumugi_psd:
         # サムネイル用：驚いた顔（目＝見開く・口＝わあ！・眉＝困る・「！」・私服）
         from psd_tools import PSDImage
