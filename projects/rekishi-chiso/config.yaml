@@ -18,6 +18,8 @@ cast:
     tone_strength: 0.3
     max_intonation: 1.15
     max_speed: 1.1
+    # 10-05「剣崎が色文字の時におかしな話かたになる」：《》の強調（高さ・伸ばし・音量）を3割に。聞き比べで「控えめ」
+    emphasis: 0.3
     volume: 1.0
     image: characters/kenzaki_helmet.png
     faces: characters/kenzaki_faces   # 口パク（chiso/jaw.py で口を開けた絵を描き足す）

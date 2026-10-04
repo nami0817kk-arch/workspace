@@ -97,3 +97,15 @@ def test_join_n_phrases_keeps_pause():
     ph = [{"moras": [mk("ア")], "accent": 1, "pause_mora": {"text": "、"}}, {"moras": [mk("ン")], "accent": 1}]
     out, changed = voice.join_n_phrases(ph)
     assert not changed and len(out) == 2
+
+
+def test_emphasis_strength_scales_change():
+    from chiso.voice import EMPHASIS_PITCH, emphasize
+    q = {"accent_phrases": [{"moras": [{"text": "サ", "pitch": 5.0, "vowel_length": 0.1},
+                                       {"text": "ン", "pitch": 5.0, "vowel_length": 0.1}]}], "volumeScale": 1.0}
+    full, _ = emphasize(q, ["サン"])
+    calm, _ = emphasize(q, ["サン"], 0.3)
+    m_full, m_calm = full["accent_phrases"][0]["moras"][0], calm["accent_phrases"][0]["moras"][0]
+    assert abs((m_full["pitch"] - 5.0) - EMPHASIS_PITCH) < 1e-9
+    assert abs((m_calm["pitch"] - 5.0) - EMPHASIS_PITCH * 0.3) < 1e-4       # 剣崎は3割
+    assert m_calm["vowel_length"] < m_full["vowel_length"] and calm["volumeScale"] < full["volumeScale"]
