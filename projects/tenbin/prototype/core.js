@@ -328,7 +328,14 @@ var TenbinCore = (function () {
     // （広告を見たのにすぐ負けるのがいちばんいやな体験）
     if (s.def.seesaw) {
       var lean = function () { return s.cargo.reduce(function (t, b) { return t + b.mass * (b.position.x - W / 2); }, 0); };
-      while (s.cargo.length && Math.abs(lean()) > 220) { var b = s.cargo.pop(); M.Composite.remove(s.engine.world, b); }
+      // 1字だけなら偏り770まで床に着かない（実測）。崩れの元は塔の高さなので、450 をこえる分だけ
+      // 重い側の字だけを、新しいものから取り除く（軽い側を取ると偏りが増え、台が空になるまで続いてしまう）
+      while (Math.abs(lean()) > 450) {
+        var L = lean(), idx = -1;
+        for (var q = s.cargo.length - 1; q >= 0; q--) if ((s.cargo[q].position.x - W / 2) * L > 0) { idx = q; break; }
+        if (idx < 0) break;
+        M.Composite.remove(s.engine.world, s.cargo.splice(idx, 1)[0]);
+      }
       M.Body.setAngle(s.plank, s.plank.angle * 0.5);
     }
     s.cargo.forEach(function (b) { M.Body.setVelocity(b, { x: 0, y: 0 }); M.Body.setAngularVelocity(b, 0); });
@@ -345,7 +352,8 @@ var TenbinCore = (function () {
       if (Math.hypot(c.velocity.x - vx, c.velocity.y) > 0.12 || Math.abs(c.angularVelocity) > 0.008) return false; }
     return true;
   }
-  function canDrop(s) { var d = s.t - s.lastDropT; return !s.failed && d >= 20 && (settled(s) || d >= 180); }
+  // つづけた直後（grace の間）は落とせない。落としても数えられないまま次を落とせてしまうため
+  function canDrop(s) { var d = s.t - s.lastDropT; return !s.failed && !(s.grace > 0) && d >= 20 && (settled(s) || d >= 180); }
 
   // 板の傾き。-1..1（端が地面に着くと ±1）
   function tilt(s) {

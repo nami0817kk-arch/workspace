@@ -20,3 +20,25 @@ assert.ok(s.failed, 'てんびんが崩れない');
 C.revive(s); for (t = 0; t < 200; t++) { C.step(s); s.events.length = 0; }
 assert.ok(!s.failed, 'つづけたあと、てんびんがすぐまた失敗する: ' + s.failed);
 console.log('revive ok');
+
+// てんびんでつづけても、台が空にならない（軽い側の字を取って偏りが増え、全部消していた: 2026-10-04 の見直しで発見）
+var empties = 0, kept = 0, runs = 0;
+for (var r = 1; r <= 20; r++) {
+  s = C.create(r, 'seesaw');
+  for (t = 0; t < 20000 && !s.failed; t++) { if (C.canDrop(s) && !s.pendingScore) C.drop(s, 200 + ((t * 53) % 260 - 130), 0); C.step(s); s.events.length = 0; }
+  if (!s.failed || s.cargo.length < 4) continue;
+  runs++; for (var k = 0; k < 55; k++) C.physics(s);
+  C.revive(s); kept += s.cargo.length; if (!s.cargo.length) empties++;
+}
+assert.ok(runs >= 5, '試せた回数が少ない: ' + runs);
+assert.strictEqual(empties, 0, 'つづけたら台が空になった回: ' + empties + '/' + runs);
+// つづけた直後の待ちの間は落とせない（落としても数えられないまま次を落とせていた）
+s = C.create(3, 'flat');
+for (t = 0; t < 20000 && !s.failed; t++) { if (C.canDrop(s) && !s.pendingScore) C.drop(s, 200 + ((t * 53) % 300 - 150), 0); C.step(s); s.events.length = 0; }
+C.revive(s);
+assert.ok(!C.canDrop(s), 'つづけた直後に落とせてしまう');
+var before = s.score; for (t = 0; t < 100; t++) { C.step(s); s.events.length = 0; }
+assert.ok(C.canDrop(s), '待ちのあとに落とせない');
+C.drop(s, 200, 0); for (t = 0; t < 300; t++) { C.step(s); s.events.length = 0; }
+assert.strictEqual(s.score, before + 1, 'つづけたあと落とした字が数えられない');
+console.log('revive keeps letters ok (平均 ' + (kept / runs).toFixed(1) + ' 字のこる)');

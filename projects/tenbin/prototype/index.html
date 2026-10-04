@@ -468,9 +468,11 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     g.fillText('たて（上から下）', 8, 90); g.fillText('よこ（左から右）', 140, 90);
   }
   function showResult() {
-    var b = bests[plat] || { p: 0, n: 0, h: 0 }, rec = s.points > b.p;
-    if (rec) { bests[plat] = { p: s.points, n: s.score, h: Math.max(b.h, s.height) }; store.set('bests2', bests); }
+    // 記録は遊び始めたときのさいこう（best）とくらべる。結果画面を出し直しても「さいこう記録！」が消えないように
+    var b = bests[plat] || { p: 0, n: 0, h: 0 }, rec = s.points > best.p;
+    if (s.points > b.p) { bests[plat] = { p: s.points, n: s.score, h: Math.max(b.h, s.height) }; store.set('bests2', bests); }
     else if (s.height > b.h) { b.h = s.height; bests[plat] = b; store.set('bests2', bests); }
+    b = best;
     var why = s.failed === 'ground' ? 'てんびんが床に着いた' : '「' + s.failedBody.kind + '」が落ちた';
     // 同じことばは「ねこ ×2」にまとめる
     var agg = [], byText = {};
@@ -493,13 +495,16 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // 報酬広告。アプリでは本物の広告（見終わったら onReward）。試作では3秒まつ画面で代わりにする
   var Ads = {
     showRewarded: function (onReward, onCancel) {
-      var n = 3;
+      var n = 3, back = phase; phase = 'ad';
       showSheet('<div class="ad"><div class="ring"></div><h2>広告</h2><p>アプリでは ここで動画の広告が流れます<br>（試作なので ' + '<b id="adN">' + n + '</b> 秒まつだけ）</p><button class="btn sec" id="adX">やめる</button></div>');
-      var tm = setInterval(function () { n--; var el = document.getElementById('adN'); if (el) el.textContent = n; if (n <= 0) { clearInterval(tm); onReward(); } }, 1000);
-      document.getElementById('adX').onclick = function () { clearInterval(tm); onCancel(); };
+      var tm = setInterval(function () { n--; var el = document.getElementById('adN'); if (el) el.textContent = n; if (n <= 0) { clearInterval(tm); phase = back; onReward(); } }, 1000);
+      document.getElementById('adX').onclick = function () { clearInterval(tm); phase = back; onCancel(); };
     }
   };
   function showDict() {
+    // 開いている間にもう一度押されたら何もしない（2度目で「遊んでいなかった」扱いになり、はじめの画面へ飛んでいた）
+    // 広告の待ち中も開かない（待ちの時計が裏で進み、閉じたあとの画面が食い違う）
+    if (phase === 'pause' || phase === 'ad') return;
     var wasPlay = phase === 'play'; if (wasPlay) phase = 'pause';
     function list(title, arr) { return '<h3>' + title + '（' + arr.filter(function (w) { return dict[w]; }).length + '/' + arr.length + '）</h3><div class="words">' +
       arr.map(function (w) { return dict[w] ? '<span class="w">' + w + '</span>' : '<span class="w lock">' + '・'.repeat(w.length) + '</span>'; }).join('') + '</div>'; }
@@ -519,8 +524,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       if (s.failed) { phase = 'end'; endTimer = 110; shake = 9; SND.fail(); }
     } else if (phase === 'end') {
       // 崩れていく様子をゆっくり見せる
-      if (endTimer % 2 === 0) C.physics(s);
-      if (--endTimer === 0) showResult();
+      // 結果画面が出たら物理は止める（出たあとも回り続けて電池を使っていた）
+      if (endTimer > 0) { if (endTimer % 2 === 0) C.physics(s); if (--endTimer === 0) showResult(); }
     }
   }
   var acc = 0, last = performance.now();
