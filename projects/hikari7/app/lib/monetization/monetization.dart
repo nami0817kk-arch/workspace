@@ -21,9 +21,10 @@ enum RewardGate {
 
 /// ひかりの指名の広告と「広告を消す」の決まり（設計 2026-09-30、護送ボートと同じ形）。
 ///
-/// - 動画広告（報酬型）: 特訓の枠を1人ぶん増やす／制作費を30万足す／1人を再審査する。1審査に1回（どれか1つ）。
-///   1審査1回の数えはゲーム本体（JS）が持つ。ここは「見せて、見終えたか」だけを答える。
-/// - 全画面広告: 審査と審査の間。第2審査を終えた後から出す（1シーズンに最大3回）。広告を消した人には出さない。
+/// - 動画広告（報酬型）: 特訓の枠を1人ぶん増やす・1人を再審査する（合わせて1審査に1回）／制作費を30万足す（何度でも）／
+///   デビュー後1か月の宣伝を倍にする（1か月に1回）。回数の数えはゲーム本体（JS）が持つ。ここは「見せて、見終えたか」だけを答える。
+/// - 全画面広告: 審査と審査の間。はじめてのシーズンには出さず、第2審査を終えた後から1シーズンに2回まで（2026-10-04）。
+///   出すかどうかの数えはゲーム本体（JS）が持つ。広告を消した人には出さない。
 /// - 広告を消す: 全画面広告が出なくなり、動画の特典も動画なしで使える。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
@@ -120,7 +121,8 @@ class Monetization extends ChangeNotifier {
   }
 
   /// 特典の前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
-  Future<RewardGate> beforeReward({void Function()? onWaiting}) async {
+  /// [canceled] が true を返したら（ゲームで「やめる」が押された）、出さずに declined で返す。
+  Future<RewardGate> beforeReward({void Function()? onWaiting, void Function()? onShown, bool Function()? canceled}) async {
     if (adFree) return RewardGate.granted;
     if (!ads.isRewardedAdReady) {
       ads.ensureLoaded();
@@ -129,8 +131,9 @@ class Monetization extends ChangeNotifier {
         return adFree ? RewardGate.granted : RewardGate.unavailable;
       }
     }
+    if (canceled?.call() ?? false) return RewardGate.declined;
     if (!_foreground) return RewardGate.unavailable;
-    final r = await ads.showRewardedAd();
+    final r = await ads.showRewardedAd(onShown: onShown);
     // 見ている間に「広告を消す」が届いた（家族の承認など）なら、そのまま渡す
     if (adFree) return RewardGate.granted;
     return switch (r) {
@@ -141,13 +144,18 @@ class Monetization extends ChangeNotifier {
     };
   }
 
+  /// 全画面広告を出しそうな審査に入ったときに呼ぶ（ゲームが決める）。そのときだけ読み込む。
+  void prepareInterstitial() {
+    if (!adFree) ads.prepareInterstitial();
+  }
+
   /// 審査を終えて次の審査へ進むときに呼ぶ。出す番なら全画面広告を出し、閉じるまで待つ。
-  /// 在庫が無ければ何もせず false（進行を止めない）。
-  Future<bool> betweenRounds(int finishedRound) async {
+  /// 在庫が無ければ少しだけ待ち、来なければ何もせず false（進行を止めない）。
+  Future<bool> betweenRounds(int finishedRound, {void Function()? onShown}) async {
     if (adFree || finishedRound < firstInterstitialAfterRound || !_foreground) return false;
-    final shown = await ads.showInterstitialAd();
-    if (!shown) ads.ensureLoaded();
-    return shown;
+    if (!ads.isInterstitialReady && !await ads.waitForInterstitial(const Duration(seconds: 2))) return false;
+    if (adFree || !_foreground) return false;
+    return ads.showInterstitialAd(onShown: onShown);
   }
 
   bool get _foreground {
@@ -163,18 +171,9 @@ class Monetization extends ChangeNotifier {
   Future<String?> priceOf(String id) => store.priceLabel(id);
   Future<bool> get storeAvailable => store.isAvailable();
 
-  /// 買う。手に入れる処理は onDelivered（通知）が受け持つ。ここは結果を返すだけ
-  Future<PurchaseOutcome> buy([String id = PurchaseService.removeAdsId]) async {
-    final r = await store.buy(id);
-    if (r == PurchaseOutcome.purchased) {
-      if (id == PurchaseService.removeAdsId) {
-        await _setAdFree();
-      } else {
-        await _setOwn(id, true);
-      }
-    }
-    return r;
-  }
+  /// 買う。手に入れる処理は onDelivered（通知）だけが受け持つ。ここは結果を返すだけ
+  /// （通知を受け取れなかった購入は完了させず、次の起動で届き直す。ここで渡すと二重の入口になる）
+  Future<PurchaseOutcome> buy([String id = PurchaseService.removeAdsId]) => store.buy(id);
 
   Future<PurchaseOutcome> restore() async {
     final r = await store.restore();

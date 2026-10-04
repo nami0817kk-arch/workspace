@@ -22,6 +22,9 @@ enum PurchaseOutcome {
 
   /// ストアから失敗が返った。
   failed,
+
+  /// 購入の画面を閉じたが、結果の通知がまだ届かない。届けば onDelivered で入る。
+  timedOut,
 }
 
 /// 買い切り（非消費型）の窓口。「広告を消す」と、追加パック2つ（物語パック・審査パック、2026-10-04 追加）。
@@ -162,7 +165,8 @@ class StorePurchaseService implements PurchaseService {
           _finish(buying, PurchaseOutcome.canceled);
         case PurchaseStatus.error:
           _finish(buying, PurchaseOutcome.failed);
-          _finish(_restoring, PurchaseOutcome.failed);
+          // 別の商品の購入の失敗で、復元まで失敗にしない
+          if (buying == null) _finish(_restoring, PurchaseOutcome.failed);
         case PurchaseStatus.pending:
           break;
       }
@@ -226,9 +230,9 @@ class StorePurchaseService implements PurchaseService {
       return await c.future.timeout(
         const Duration(minutes: 5),
         onTimeout: () {
-          // 取りやめと決めつけない。後から届けば onDelivered で広告は消える
-          _finish(c, PurchaseOutcome.pending);
-          return PurchaseOutcome.pending;
+          // 取りやめと決めつけない。後から届けば onDelivered で入る
+          _finish(c, PurchaseOutcome.timedOut);
+          return PurchaseOutcome.timedOut;
         },
       );
     } catch (e) {

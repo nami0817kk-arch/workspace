@@ -39,12 +39,19 @@ abstract class AdService {
   /// 手元に無ければ読み込みを始める（読み込み失敗の後、次に使うときのため）。
   void ensureLoaded();
 
-  /// 動画を見せる。閉じられるまで待つ。
-  Future<RewardResult> showRewardedAd();
+  /// 動画を見せる。閉じられるまで待つ。表示が始まったら [onShown] を呼ぶ。
+  Future<RewardResult> showRewardedAd({void Function()? onShown});
 
-  /// 全画面広告を出し、閉じられるまで待つ。出せたら true。
+  /// 全画面広告を読み込み始める。**出しそうなときだけ呼ぶ**（起動時から読み続けると、
+  /// 表示に対してリクエストばかり増える。docs/app-pitfalls.md 3番）。
+  void prepareInterstitial();
+
+  /// 全画面広告が読み込み中なら、届くまで最大 [max] 待つ。
+  Future<bool> waitForInterstitial(Duration max);
+
+  /// 全画面広告を出し、閉じられるまで待つ。出せたら true。表示が始まったら [onShown] を呼ぶ。
   /// 在庫が無ければ何もせず false で戻る（進行を止めない）。
-  Future<bool> showInterstitialAd();
+  Future<bool> showInterstitialAd({void Function()? onShown});
 
   void dispose();
 }
@@ -67,10 +74,16 @@ class NoOpAdService implements AdService {
   void ensureLoaded() {}
 
   @override
-  Future<RewardResult> showRewardedAd() async => RewardResult.unavailable;
+  Future<RewardResult> showRewardedAd({void Function()? onShown}) async => RewardResult.unavailable;
 
   @override
-  Future<bool> showInterstitialAd() async => false;
+  void prepareInterstitial() {}
+
+  @override
+  Future<bool> waitForInterstitial(Duration max) async => false;
+
+  @override
+  Future<bool> showInterstitialAd({void Function()? onShown}) async => false;
 
   @override
   void dispose() {}
@@ -121,6 +134,9 @@ class AdMobAdService implements AdService {
   final _rewardedSlot = _Slot<RewardedAd>();
   final _interstitialSlot = _Slot<InterstitialAd>();
 
+  /// 全画面広告を頼まれているか（ゲームが「次で出しそう」と言ってから、出し終えるまで）。
+  bool _wantInterstitial = false;
+
   @override
   Future<void> initialize() async {
     // 広告を消した後に返金されたときは、もう一度ここから始める
@@ -140,6 +156,25 @@ class AdMobAdService implements AdService {
     _loadInterstitial();
   }
 
+  @override
+  void prepareInterstitial() {
+    _wantInterstitial = true;
+    _interstitialSlot.failures = 0;
+    _loadInterstitial();
+  }
+
+  @override
+  Future<bool> waitForInterstitial(Duration max) async {
+    if (_interstitialSlot.ready) return true;
+    if (!_initialized || _interstitialSlot.loadingSince == null) return false;
+    try {
+      await _interstitialSlot.changed().timeout(max);
+    } on TimeoutException {
+      // 間に合わなかった
+    }
+    return _interstitialSlot.ready;
+  }
+
   void _loadRewarded() => _load(_rewardedSlot, _loadRewarded, (onLoaded, onFailed) {
     return RewardedAd.load(
       adUnitId: _rewardedUnitId,
@@ -148,7 +183,11 @@ class AdMobAdService implements AdService {
     );
   });
 
-  void _loadInterstitial() => _load(_interstitialSlot, _loadInterstitial, (onLoaded, onFailed) {
+  void _loadInterstitial() {
+    if (_wantInterstitial) _loadInterstitialNow();
+  }
+
+  void _loadInterstitialNow() => _load(_interstitialSlot, _loadInterstitial, (onLoaded, onFailed) {
     return InterstitialAd.load(
       adUnitId: _interstitialUnitId,
       request: const AdRequest(),
@@ -245,13 +284,17 @@ class AdMobAdService implements AdService {
     void Function(FullScreenContentCallback<AdWithoutView>) setCallback,
     Future<void> Function() show, {
     bool keepAfterDismiss = false,
+    void Function()? onShown,
   }) async {
     final closed = Completer<bool>();
     final started = Completer<void>();
     setCallback(
       FullScreenContentCallback(
         onAdShowedFullScreenContent: (_) {
-          if (!started.isCompleted) started.complete();
+          if (!started.isCompleted) {
+            started.complete();
+            onShown?.call();
+          }
         },
         onAdDismissedFullScreenContent: (a) {
           if (!keepAfterDismiss) a.dispose();
@@ -285,7 +328,7 @@ class AdMobAdService implements AdService {
   }
 
   @override
-  Future<RewardResult> showRewardedAd() async {
+  Future<RewardResult> showRewardedAd({void Function()? onShown}) async {
     final ad = _rewardedSlot.take();
     if (ad == null) {
       _loadRewarded();
@@ -303,6 +346,7 @@ class AdMobAdService implements AdService {
       ),
       () => ad.show(onUserEarnedReward: (_, _) => earned = true),
       keepAfterDismiss: true,
+      onShown: onShown,
     );
     // 閉じた通知が報酬の通知より先に届くことがあるので、少しだけ待ってから捨てる
     if (shown && !earned) await Future<void>.delayed(_rewardGrace);
@@ -313,12 +357,11 @@ class AdMobAdService implements AdService {
   }
 
   @override
-  Future<bool> showInterstitialAd() async {
+  Future<bool> showInterstitialAd({void Function()? onShown}) async {
     final ad = _interstitialSlot.take();
-    if (ad == null) {
-      _loadInterstitial();
-      return false;
-    }
+    if (ad == null) return false;
+    // 出したら、次に頼まれるまで読み込まない
+    _wantInterstitial = false;
     // 閉じられるまで待たないと、広告の裏で次の画面が始まってしまう
     final shown = await _present(
       ad,
@@ -328,9 +371,8 @@ class AdMobAdService implements AdService {
         onAdFailedToShowFullScreenContent: cb.onAdFailedToShowFullScreenContent,
       ),
       () => ad.show(),
+      onShown: onShown,
     );
-    // 次の画面への切り替えと重ならないよう、少し置いてから次を読む
-    unawaited(Future<void>.delayed(const Duration(seconds: 2), _loadInterstitial));
     return shown;
   }
 

@@ -47,6 +47,10 @@ jobs:
       - name: 文章の点検
         run: node tool/texts.js 6
 
+      # アプリの中にいるふりで、広告の頼み・動画の番号・追加パックの出し入れを確かめる
+      - name: アプリとしてのつなぎ（広告・追加パック）
+        run: node tool/appflow.js
+
       - name: アプリに入れるゲーム本体を組み立てる
         run: |
           pip install --quiet fonttools

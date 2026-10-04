@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../monetization/monetization.dart';
+import '../monetization/purchase_service.dart';
 import 'bridge.dart';
 import 'game_audio.dart';
 
@@ -105,7 +106,15 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _load() async {
     final html = await rootBundle.loadString('assets/web/index.html');
-    final boot = <String, Object?>{'store': widget.store.snapshot(), 'adFree': widget.money.adFree};
+    final boot = <String, Object?>{
+      'store': widget.store.snapshot(),
+      'adFree': widget.money.adFree,
+      // 追加パックは起動の時点で入れる（ストアの返事を待つ間に始めた遊びで、買ったパックが抜けないように）
+      'owned': {
+        'story': widget.money.owns(PurchaseService.storyPackId),
+        'audition': widget.money.owns(PurchaseService.auditionPackId),
+      },
+    };
     await _web.loadHtmlString(injectBoot(html, boot));
   }
 
