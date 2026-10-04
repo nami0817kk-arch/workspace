@@ -26,3 +26,10 @@ flutter test tool/art/face_preview_test.dart --update-goldens
 `moment_preview_test.dart` はタイトル画面と、昇格・優勝の演出を書き出す
 （`_title.png` / `_moments.png`）。**絵を差し替えたら必ず出して見る。**
 `Image.asset` のパスを間違えても画面に赤い枠が出るだけで、テストは落ちない。
+
+`player_preview_test.dart` は選手詳細を書き出す（`_player.png`）。
+**この画面は掲載画像に入らない**ので、ここで見ないと誰も見ないまま出る。
+実際、能力レーダーの軸ラベルが豆腐（□）のままだったのをここで見つけた
+（`CustomPainter` の `TextPainter` はウィジェットの木の外にいるので、
+テーマの書体が当たらない。同梱フォントしか無い Web版で崩れる）。
+同じ穴は `test/painter_font_test.dart` が見ている。

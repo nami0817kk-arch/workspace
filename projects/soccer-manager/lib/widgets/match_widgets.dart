@@ -209,18 +209,53 @@ class CommentaryTile extends StatelessWidget {
     }
     return ListTile(
       dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      horizontalTitleGap: 10,
+      minLeadingWidth: 54,
+      // 時刻は等幅の太字、出来事の印は丸いバッジ。素のままだと、実況が
+      // ただの文の列に見えて、どこで何が起きたのかを追えなかった。
       leading: SizedBox(
-        width: 44,
+        width: 54,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("${event.minute}'"),
-            const SizedBox(width: 4),
-            Icon(icon, size: 16, color: color),
+            SizedBox(
+              width: 28,
+              child: Text(
+                "${event.minute}'",
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontFamily: 'NotoSansJP',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: SemanticColors.subtleText(context),
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.16),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, size: 12, color: color),
+            ),
           ],
         ),
       ),
-      title: Text(text),
+      title: Text(
+        text,
+        style: TextStyle(
+          height: 1.35,
+          // 得点は読み飛ばさせない。
+          fontWeight: event.type == MatchEventType.goal
+              ? FontWeight.w700
+              : FontWeight.w400,
+        ),
+      ),
       onTap: playerId == null
           ? null
           : () => Navigator.of(context).push(
@@ -587,32 +622,88 @@ class LiveMatchTally extends StatelessWidget {
     final reds = countOf(MatchEventType.redCard);
     final cards = (yellows.$1 + reds.$1, yellows.$2 + reds.$2);
 
-    Widget row(String label, (int, int) v) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 32,
-                child: Text('${v.$1}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
-              ),
-              Expanded(
-                child: Text(label,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: SemanticColors.subtleText(context))),
-              ),
-              SizedBox(
-                width: 32,
-                child: Text('${v.$2}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
-              ),
-            ],
-          ),
-        );
+    // **数字を3つ並べただけの表をやめる。** どちらが優勢なのかを読み取る
+    // のに、左右の数字を見比べる必要があった。左右から伸びるバーにすると
+    // 一目で分かる。色は「試合の流れ」のバーと同じ(藍=ホーム / 橙=アウェイ)。
+    const homeColor = Colors.indigo;
+    const awayColor = Colors.deepOrange;
+
+    Widget row(String label, (int, int) v) {
+      final total = v.$1 + v.$2;
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Column(
+          children: [
+            Text(label,
+                style: TextStyle(
+                    fontSize: 11,
+                    color: SemanticColors.subtleText(context))),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                SizedBox(
+                  width: 26,
+                  child: Text('${v.$1}',
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontFamily: 'NotoSansJP',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        height: 1.0,
+                        color: homeColor,
+                        fontFeatures: [FontFeature.tabularFigures()],
+                      )),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: SizedBox(
+                      height: 6,
+                      child: total == 0
+                          // まだ0対0のときは、どちらにも寄せない。
+                          ? ColoredBox(
+                              color: SemanticColors.subtleText(context)
+                                  .withValues(alpha: 0.22))
+                          : Row(
+                              // **縦に伸ばす。** 既定の中央揃えだと高さが
+                              // ゆるい制約で渡り、中身の無い ColoredBox が
+                              // 高さ0に潰れてバーが消える(実際に消えた)。
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  flex: v.$1 == 0 ? 0 : v.$1,
+                                  child: const ColoredBox(color: homeColor),
+                                ),
+                                Expanded(
+                                  flex: v.$2 == 0 ? 0 : v.$2,
+                                  child: const ColoredBox(color: awayColor),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 26,
+                  child: Text('${v.$2}',
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontFamily: 'NotoSansJP',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        height: 1.0,
+                        color: awayColor,
+                        fontFeatures: [FontFeature.tabularFigures()],
+                      )),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -625,7 +716,12 @@ class LiveMatchTally extends StatelessWidget {
                 Expanded(
                   child: Text(homeTeamName,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelMedium),
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelMedium
+                          ?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: homeColor)),
                 ),
                 Text(Tr.pick('ここまで', 'So far'),
                     style: TextStyle(
@@ -635,7 +731,12 @@ class LiveMatchTally extends StatelessWidget {
                   child: Text(awayTeamName,
                       textAlign: TextAlign.right,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelMedium),
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelMedium
+                          ?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: awayColor)),
                 ),
               ],
             ),

@@ -14,6 +14,7 @@ import '../monetization/monetization_controller.dart';
 import '../services/review_prompt.dart';
 import '../state/game_state.dart';
 import '../services/feedback_service.dart';
+import '../theme/club_palette.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/achievement_unlock_notifier.dart';
 import '../widgets/busy_overlay.dart';
@@ -75,6 +76,7 @@ class HomeScreen extends StatelessWidget {
     final userTeam = gameState.userTeam;
     final standings = league.sortedStandings;
     final userRank = standings.indexWhere((r) => r.teamId == userTeam.id) + 1;
+    final userRow = standings.firstWhere((r) => r.teamId == userTeam.id);
     final next = league.nextUnplayedFixture;
     final seasonComplete = league.isSeasonComplete;
     final net = _netWeekly(gameState);
@@ -114,67 +116,176 @@ class HomeScreen extends StatelessWidget {
               const NextActionCard(),
               // 終わったばかりのシーズンの振り返り。閉じるまで出る。
               const SeasonReviewCard(),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+              // クラブの色で染めた見出しの帯。
+              //
+              // **1枚だけ主役を作る。** 以前は「ヒント」「リーグ」「数字」
+              // 「今週の予定」が全部同じ重さの白いカードで縦に並んでいて、
+              // どこから見ればよいのか分からなかった。帯を1本置くと画面に
+              // 上下ができる。色はクラブごとに違うので、同じ画面が
+              // 「自分のクラブの画面」になる。
+              Builder(
+                builder: (context) {
+                  final palette =
+                      ClubPalette.of(userTeam.id, clubName: save.clubName);
+                  // 白い文字を載せるので、明るいクラブ色でも必ず暗くする。
+                  final hsl = HSLColor.fromColor(palette.base);
+                  final top = hsl.withLightness(0.30).toColor();
+                  final bottom = hsl.withLightness(0.18).toColor();
+                  final progress = BoardTargetProgressEngine.evaluate(
+                    league: league,
+                    userTeamId: save.userTeamId,
+                    targetRank: save.boardTargetRank,
+                    matchdaysLeft: gameState.remainingMatchdaysThisSeason,
+                  );
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [top, bottom],
+                      ),
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                          color: bottom.withValues(alpha: 0.35),
+                          blurRadius: 14,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(18),
+                      child: Stack(
                         children: [
-                          // リーグ名は英語だと長くなりがちなので、余った幅を
-                          // 与えて折り返させる。Chipは内容ぶんの幅を保つ。
-                          Expanded(
-                            child: Text(
-                              Tr.pick(
-                                  '${gameState.leagueDisplayName} シーズン${league.season}',
-                                  '${gameState.leagueDisplayName}, season ${league.season}'),
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Chip(label: Text(userTeam.formation.label)),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        Tr.pick(
-                            '目標: ${save.boardTargetRank}位以内${gameState.boardCupTargetLabel != null ? '・カップ${gameState.boardCupTargetLabel}進出' : ''}',
-                            "Target: top ${save.boardTargetRank}${gameState.boardCupTargetLabel != null ? ' • reach the ${gameState.boardCupTargetLabel} in the cup' : ''}"),
-                        style: TextStyle(color: scheme.onSurfaceVariant),
-                      ),
-                      // 目標だけでは、いま届いているのかが分からない。
-                      // 順位・勝点差・残り節数を添えて、あと何が要るかを言う。
-                      Builder(
-                        builder: (context) {
-                          final progress =
-                              BoardTargetProgressEngine.evaluate(
-                            league: league,
-                            userTeamId: save.userTeamId,
-                            targetRank: save.boardTargetRank,
-                            matchdaysLeft:
-                                gameState.remainingMatchdaysThisSeason,
-                          );
-                          if (progress == null) return const SizedBox.shrink();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 2),
-                            child: Text(
-                              progress.label,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: progress.onTrack && !progress.tight
-                                    ? SemanticColors.positive(context)
-                                    : progress.tight
-                                        ? SemanticColors.negative(context)
-                                        : scheme.onSurfaceVariant,
+                          // 右に薄くエンブレムを敷く。名前を二度書かずに
+                          // 「誰の画面か」を出す。
+                          Positioned(
+                            right: -34,
+                            top: -30,
+                            child: Opacity(
+                              opacity: 0.10,
+                              child: ClubEmblem(
+                                teamId: userTeam.id,
+                                teamName: save.clubName,
+                                size: 164,
                               ),
                             ),
-                          );
-                        },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // リーグ名は長い。シーズンを別の札に
+                                // 分けないと「…5部 シー／ズン1」と折り返す。
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        gameState.leagueDisplayName,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(color: Colors.white),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    _BandPill(
+                                        text: Tr.pick('S${league.season}',
+                                            'S${league.season}')),
+                                    const SizedBox(width: 6),
+                                    _BandPill(text: userTeam.formation.label),
+                                  ],
+                                ),
+                                const SizedBox(height: 14),
+                                // **順位をここに大きく出す。** このゲームで
+                                // いちばん見る数字なのに、6枚のタイルの1枚に
+                                // 埋もれていた。帯の主役にする。
+                                Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Text(
+                                      '$userRank',
+                                      style: const TextStyle(
+                                        fontFamily: 'NotoSansJP',
+                                        fontSize: 46,
+                                        fontWeight: FontWeight.w800,
+                                        height: 1.0,
+                                        letterSpacing: -2,
+                                        color: Colors.white,
+                                        fontFeatures: [
+                                          FontFeature.tabularFigures()
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      Tr.pick(
+                                          '位 / ${standings.length}クラブ',
+                                          ' of ${standings.length}'),
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.white
+                                            .withValues(alpha: 0.80),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Divider(
+                                  height: 1,
+                                  color: Colors.white.withValues(alpha: 0.22),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  Tr.pick(
+                                      '目標: ${save.boardTargetRank}位以内${gameState.boardCupTargetLabel != null ? '・カップ${gameState.boardCupTargetLabel}進出' : ''}',
+                                      "Target: top ${save.boardTargetRank}${gameState.boardCupTargetLabel != null ? ' • reach the ${gameState.boardCupTargetLabel} in the cup' : ''}"),
+                                  style: TextStyle(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.88)),
+                                ),
+                                if (progress != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      // **順位をここで繰り返さない。**
+                                      // engine の label は「現在5位。…」で
+                                      // 始まるので、帯に大きく出している
+                                      // 順位と二度書きになる。中の値から
+                                      // 組み直す。
+                                      progress.onTrack
+                                          ? Tr.pick(
+                                              '目標圏内（下位クラブとの差 ${progress.pointsGap}点・残り${progress.matchdaysLeft}節）',
+                                              'On target - ${progress.pointsGap} pts clear, ${progress.matchdaysLeft} to play')
+                                          : Tr.pick(
+                                              '目標まで勝点${progress.pointsGap}差（残り${progress.matchdaysLeft}節）',
+                                              '${progress.pointsGap} pts off target, ${progress.matchdaysLeft} to play'),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        // 暗い地の上なので、明るいほうへ振る。
+                                        color: progress.onTrack && !progress.tight
+                                            ? const Color(0xFF8BE6A8)
+                                            : progress.tight
+                                                ? const Color(0xFFFFA8A0)
+                                                : Colors.white
+                                                    .withValues(alpha: 0.75),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 4),
               LayoutBuilder(
@@ -189,14 +300,15 @@ class HomeScreen extends StatelessWidget {
                   // 文字サイズ設定に合わせて伸ばす。
                   mainAxisExtent: MediaQuery.textScalerOf(context).scale(104),
                   children: [
+                    // 順位は帯へ移した。空いた枠には勝点を置く。
+                    // 順位だけでは「あと何が要るのか」が分からない。
                     _StatTile(
                       icon: Icons.emoji_events,
-                      label: Tr.pick('順位', 'Position'),
-                      value: '$userRank / ${standings.length}',
-                      // 順位だけだと、良いのか悪いのかが分からない。
-                      // 理事会の目標を並べて置く。
-                      sub: Tr.pick('目標 ${save.boardTargetRank}位以内',
-                          'Target: top ${save.boardTargetRank}'),
+                      label: Tr.pick('勝点', 'Points'),
+                      value: Tr.pick('${userRow.points}', '${userRow.points}'),
+                      sub: Tr.pick(
+                          '${userRow.won}勝${userRow.draw}分${userRow.lost}敗',
+                          '${userRow.won}W ${userRow.draw}D ${userRow.lost}L'),
                       color: Colors.amber.shade800,
                     ),
                     _StatTile(
@@ -1926,13 +2038,15 @@ class _StatTile extends StatelessWidget {
         // 真っ平らな灰色にすると、今度は整いすぎて素っ気ない。地の色に
         // その項目の色をごく薄く混ぜて、気配だけ残す。
         color: Color.alphaBlend(
-            color.withValues(alpha: 0.055), scheme.surfaceContainer),
+            color.withValues(alpha: 0.035), scheme.surfaceContainer),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.22)),
+        border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.7)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+        // **上から積む。** 中央揃えだと、補足行やバーを持つタイルと
+        // 持たないタイルで数字の高さがずれて、6枚が揃って見えない。
+        mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
@@ -2267,4 +2381,31 @@ void _showCampSheet(BuildContext context) {
       ),
     ),
   );
+}
+
+/// 見出しの帯に置く小さな札。シーズンとフォーメーションに使う。
+class _BandPill extends StatelessWidget {
+  final String text;
+
+  const _BandPill({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
 }

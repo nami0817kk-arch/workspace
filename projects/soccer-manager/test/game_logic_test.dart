@@ -9004,9 +9004,14 @@ void main() {
     // 上がり続けていた(実測)。長期でも頭打ちになることを確認する。
     double longRunDrift() {
       const longSeasons = 24;
+      // **3クラブでは足りない。** CI で 12.14 を記録して落ちた(手元で
+      // 8回測ったときは 6.45〜9.22 で、上限 12.0 に収まっていた)。
+      // 12クラブにすると 6.33〜8.68 に締まる。上限は緩めない。
+      // 基準を緩めると、本当にインフレしたときに気づけなくなる。
+      const teams = 12;
       double startSum = 0;
       double endSum = 0;
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < teams; i++) {
         final team = PlayerGenerator.generateSquad(
           id: 'cpuLong$i',
           name: 'CPU長期$i FC',
@@ -9024,7 +9029,7 @@ void main() {
         }
         endSum += avgOverall(team);
       }
-      return (endSum - startSum) / 3;
+      return (endSum - startSum) / teams;
     }
 
     final longDrift = longRunDrift();
