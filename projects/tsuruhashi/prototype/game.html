@@ -174,6 +174,14 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .copt b{display:block;font-size:15px}
 .copt .g{color:var(--good)} .copt .x{color:var(--bad)}
 .copt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.heirs{display:grid;gap:6px;margin-bottom:8px}
+.hopt{border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:8px 10px;text-align:left;font-size:12px;line-height:1.45;display:flex;gap:10px;align-items:center}
+.hopt b{font-size:15px}
+.hopt .g{color:var(--good)} .hopt .x{color:var(--bad)}
+.hopt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.hopt.drop[aria-pressed="true"]{border-color:var(--bad)}
+.hic{flex:0 0 34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);font-size:18px}
+.lv{display:inline-block;margin-left:6px;font-size:11px;padding:0 6px;border-radius:8px;background:var(--accent);color:#fff;vertical-align:2px}
 .cardnote{font-size:13px;color:var(--muted);margin:2px 0}
 .big2{font-size:22px;font-weight:800;color:var(--accent)}
 .prog{height:7px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:6px}
@@ -520,6 +528,7 @@ const fresh = () => ({
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
   boostUntil:0, boostLv:0, boostAt:0, last:NOW(),
   own:{}, bento:0, bentoUntil:0, iapGot:{},
+  heir:[], mapTo:0, genStat:{ species:0, crits:0 }, passTold:false,
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0, play:0, best1:0 },
   sound:true, vol:2, bgm:2, amb:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false,
@@ -543,6 +552,10 @@ function normalize(o){
   if (!Array.isArray(S.frag)) S.frag = [];
   if (!S.own || typeof S.own !== 'object') S.own = {};
   if (!S.iapGot || typeof S.iapGot !== 'object') S.iapGot = {};
+  if (!Array.isArray(S.heir)) S.heir = [];
+  S.heir = S.heir.filter(h => h && HEIRS[h.k] && Number.isInteger(h.lv)).map(h => ({ k: h.k, lv: Math.max(1, Math.min(HEIR_MAX, h.lv)) })).slice(0, HEIR_SLOTS);
+  if (!Number.isInteger(S.mapTo) || S.mapTo < 0) S.mapTo = 0;
+  if (!S.genStat || typeof S.genStat !== 'object') S.genStat = { species: 0, crits: 0 };
   if (!Number.isInteger(S.bento) || S.bento < 0) S.bento = 0;
   if (typeof S.bentoUntil !== 'number' || !isFinite(S.bentoUntil)) S.bentoUntil = 0;
   while (S.frag.length < LAYERS.length) S.frag.push(0);
@@ -563,7 +576,7 @@ function setsDone(st){
 // 倍率は社訓・名声・図鑑の数だけで決まるので、それが変わるまで覚えておく
 const MODS_CACHE = new WeakMap();
 function mods(st){
-  const sig = st.creed.join(',') + '|' + st.fame + '|' + speciesCountOf(st) + '|' + ownSig(st);
+  const sig = st.creed.join(',') + '|' + st.fame + '|' + speciesCountOf(st) + '|' + ownSig(st) + '|' + (st.heir || []).map(h => h.k + h.lv).join('');
   const c = MODS_CACHE.get(st);
   if (c && c.sig === sig) return c.m;
   const m = calcMods(st);
@@ -590,6 +603,14 @@ function calcMods(st){
     else if (s.k === 'crit') { if (crit0 > 0) m.critP += s.v; } else if (s.k === 'side') m.side += s.v; else if (s.k === 'drop') m.drop += s.v;
     else if (s.k === 'off') m.off += s.v; else if (s.k === 'fame') m.fame *= 1 + s.v;
   });
+  // 家宝の代償と、ずっと効く良い点（始まりに付く物は rebirth で）
+  const hl = k => heirLv(st, k);
+  if (hl('pick')) m.pickCost *= 1.08;
+  if (hl('roster')) m.hire *= 1.05;
+  if (hl('map')) m.fame *= 0.9;
+  if (hl('diary')) { m.drop += hl('diary') / 100; m.ore *= 0.95; }
+  if (hl('safe')) m.off -= 1;
+  if (hl('charm')) { if (m.critP > 0) m.critP += [0, 0.02, 0.03, 0.04][hl('charm')]; m.crew *= 0.95; }
   if (owns(st, 'canteen')) m.crew *= 1 + CANTEEN;
   if (owns(st, 'cart')) m.off += CART_H;
   const fm = fameMul(st.fame);
@@ -605,7 +626,7 @@ const wkCost = (st, i, n, M) => { M = M || mods(st); return Math.ceil(WK[i].cost
 const HUMAN = 3;   // 0〜2 が人の坑夫、3 から先が機械
 const crewBase = (st, M) => st.w.reduce((a, n, i) => a + n * WK[i].dps * (i < HUMAN ? M.human : M.machine), 0) * CREW_K;
 const pickBoost = (st, M) => pickMul(st.pick) * (M || mods(st)).pick;
-const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn : 1); };
+const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn : 1) * mapMul(st); };
 const boostOn = st => NOW() < st.boostUntil;
 const boostMul = st => boostOn(st) ? 1 + (st.boostLv || 1) : 1;
 // 課金アイテム（2026-10-04 ユーザー指示「広告を消すではなく、課金アイテムにする」）。
@@ -717,13 +738,13 @@ function tick(st, dt, fx){
 function simulateAway(st, sec){
   const s2 = JSON.parse(JSON.stringify(st));
   const out = { ore:0, meters:0, finds:[], sec, stuck:false };
-  const dps = crewDps(s2, false);
+  const dps = crewDps(s2, false) / mapMul(s2);   // 地図の速さは、その深さにいる間だけ（下で1歩ずつ掛ける）
   // 留守の間の倍率の合計。動画の倍率も弁当も、出かける前から効いていて途中で切れる
   const left = until => Math.max(0, Math.min(sec, (until - (NOW() - sec * 1000)) / 1000));
   const bL = left(st.boostUntil), eL = left(st.bentoUntil || 0), bm = boostMul(st) - 1, em = BENTO_X - 1;
   const total = dps * (sec + bL * bm + eL * em + Math.min(bL, eL) * bm * em);
   const steps = 60;
-  for (let i = 0; i < steps; i++) applyDamage(s2, total / steps, out, null);
+  for (let i = 0; i < steps; i++) applyDamage(s2, total / steps * mapMul(s2), out, null);
   out.stuck = locked(s2);
   out.state = s2;
   return out;
@@ -824,13 +845,66 @@ function fameGain(st){
 }
 // 次の代で選べる社訓の組の数
 const creedSlots = gen => Math.min(CREEDS.length, gen);
-function rebirth(st, creed){
+// ---- 家宝（2026-10-04 ユーザー指示「代替わりの仕組みをもっと掘り下げて」「先代からの引継ぎものもあるでしょ」） ----
+// 代替わりのとき、先代が1つ「家宝」を残す。候補は先代の掘り方で変わる3つ（つるはしを鍛えた代ならつるはし、深く掘った代なら地図…）。
+// 棚は3つまで。同じ家宝をもう一度受け取ると Lv が上がる（最大3）。どれも良い点と代償を持つ。いっぱいなら1つ手放すか、受け取らない
+const HEIR_SLOTS = 3, HEIR_MAX = 3;
+const HEIRS = {
+  pick:   { n:'先代のつるはし', g:lv => `つるはしが、先代の Lv の ${[10, 15, 20][lv - 1]}% から始まる`, b:'つるはしの強化が 8% 高い' },
+  roster: { n:'先代の名簿',     g:lv => `先代がいちばん多く雇った仲間を ${[2, 4, 6][lv - 1]}人 連れて始まる`, b:'仲間の値段が 5% 高い' },
+  map:    { n:'先代の地図',     g:lv => `先代の最深の半分までは、掘る速さ ×${[2, 3, 4][lv - 1]}`, b:'名声の受け取り −10%' },
+  diary:  { n:'先代の日誌',     g:lv => `物が出る確率 +${lv}%`, b:'鉱石 −5%' },
+  safe:   { n:'先代の金庫',     g:lv => `代替わりのとき、手持ちの鉱石の ${[5, 10, 15][lv - 1]}% を持ち越す`, b:'留守の上限 −1時間' },
+  charm:  { n:'先代のお守り',   g:lv => `大当たりの出やすさ +${[2, 3, 4][lv - 1]}%`, b:'仲間の力 −5%' },
+};
+const heirLv = (st, k) => { const h = (st.heir || []).find(x => x.k === k); return h ? h.lv : 0; };
+// この代の掘り方から、先代が残す候補を3つ。よく伸ばした物から2つ＋残りから1つ（同じ代なら何度開いても同じ）
+function heirCands(st){
+  const tot = st.w.reduce((a, b) => a + b, 0), g0 = st.genStat || {};
+  const score = {
+    pick: st.pick / 80, roster: tot / 60, map: st.genDepth / 320,
+    diary: (speciesCountOf(st) - (g0.species || 0)) / 6, charm: (st.st.crits - (g0.crits || 0)) / 60, safe: 0.5,
+  };
+  const ks = Object.keys(HEIRS).filter(k => heirLv(st, k) < HEIR_MAX);
+  const top = ks.slice().sort((a, b) => score[b] - score[a]).slice(0, 2);
+  const rest = ks.filter(k => !top.includes(k));
+  if (rest.length) top.push(rest[(st.gen * 7 + st.genDepth) % rest.length]);
+  return top.map(k => ({ k, lv: heirLv(st, k) + 1 }));
+}
+// 家宝を棚に入れる（drop は手放す棚の番号）。入らなければ false
+function takeHeir(st, k, drop){
+  st.heir = st.heir || [];
+  const have = st.heir.find(x => x.k === k);
+  if (have) { if (have.lv >= HEIR_MAX) return false; have.lv++; return true; }
+  if (st.heir.length >= HEIR_SLOTS) {
+    if (!(drop >= 0 && drop < st.heir.length)) return false;
+    st.heir.splice(drop, 1);
+  }
+  st.heir.push({ k, lv: 1 });
+  return true;
+}
+// 地図：先代の最深の半分までは速く掘れる
+const mapMul = st => { const lv = heirLv(st, 'map'); return lv && st.depth < (st.mapTo || 0) ? [1, 2, 3, 4][lv] : 1; };
+// heir = { k, drop }（受け取らないなら null）
+function rebirth(st, creed, heir){
   const g = fameGain(st);
   if (!g) return false;
-  st.history.push({ gen:st.gen, depth:st.genDepth, fame:g, species:speciesCountOf(st), start:st.genStart, end:NOW(), creed:st.creed.slice() });
+  const tot = st.w.reduce((a, b) => a + b, 0);
+  const top = st.w.reduce((bi, n, i, a) => n > a[bi] ? i : bi, 0);
+  const prev = { pick: st.pick, ore: st.ore, depth: st.genDepth, top };
+  let took = null;
+  if (heir && HEIRS[heir.k] && takeHeir(st, heir.k, heir.drop)) took = { k: heir.k, lv: heirLv(st, heir.k) };
+  st.history.push({ gen:st.gen, depth:st.genDepth, fame:g, species:speciesCountOf(st), start:st.genStart, end:NOW(), creed:st.creed.slice(), heir:took, crew:tot, pick:st.pick });
   st.fame += g; st.gen++;
-  Object.assign(st, { ore:START_ORE, depth:0, dmg:0, side:0, pick:1, w:startCrew(), room:{}, genDepth:0, genStart:NOW(), recTold:false });
+  Object.assign(st, { ore:START_ORE, depth:0, dmg:0, side:0, pick:1, w:startCrew(), room:{}, genDepth:0, genStart:NOW(), recTold:false, passTold:false });
   st.creed = (creed || st.creed).slice(0, creedSlots(st.gen - 1));
+  // 家宝の効き目（受け継いだ代の始まりに付く）
+  const lp = heirLv(st, 'pick'), lr = heirLv(st, 'roster'), ls = heirLv(st, 'safe');
+  if (lp) st.pick = Math.max(1, Math.floor(prev.pick * [0, 0.10, 0.15, 0.20][lp]));
+  if (lr) st.w[prev.top] += [0, 2, 4, 6][lr];
+  if (ls) st.ore += Math.floor(prev.ore * [0, 0.05, 0.10, 0.15][ls]);
+  st.mapTo = Math.floor(prev.depth / 2);
+  st.genStat = { species: speciesCountOf(st), crits: st.st.crits };
   return g;
 }
 
@@ -1174,6 +1248,11 @@ function buildCo(){
     h += `<div class="cardnote" style="margin-top:6px">${REBIRTH_DEPTH}m（第6層の底）に着くと、会社を次の代に譲れます（代替わり）。</div><div class="prog"><i style="width:${(p * 100).toFixed(1)}%"></i></div>`;
   }
   h += `</div>`;
+  // 家宝の棚
+  h += `<div class="sec">家宝の棚 ${S.heir.length}/${HEIR_SLOTS}</div>`;
+  if (!S.heir.length) h += `<div class="note">代替わりのとき、先代が家宝を1つ残します。候補は先代の掘り方で変わります。</div>`;
+  else h += S.heir.map(x => `<div class="card"><div class="hic" aria-hidden="true">${HEIR_IC[x.k]}</div><div class="body"><div class="nm">${HEIRS[x.k].n}<span class="lv">Lv${x.lv}</span></div><div class="ds"><span style="color:var(--good)">${HEIRS[x.k].g(x.lv)}</span> ／ <span style="color:var(--bad)">${HEIRS[x.k].b}</span></div></div></div>`).join('');
+  if (heirLv(S, 'map') && S.mapTo > 0) h += `<div class="note">先代の地図：${S.mapTo}m までは速く掘れる（${S.depth >= S.mapTo ? '通り過ぎた' : 'あと ' + (S.mapTo - S.depth) + 'm'}）</div>`;
   h += shopHtml();
   // 社訓
   h += `<div class="sec">社訓</div>`;
@@ -1182,8 +1261,8 @@ function buildCo(){
   // 社史
   h += `<div class="sec">社史</div>`;
   if (!S.history.length) h += `<div class="note">代替わりすると、その代の記録がここに残ります。</div>`;
-  else h += `<table class="hist"><tr><th>代</th><th>最深</th><th>図鑑</th><th>名声</th><th>期間</th></tr>` +
-    S.history.map(r => `<tr><td>${genName(r.gen)}</td><td>${r.depth}m</td><td>${r.species}</td><td>+${fmt(r.fame)}</td><td>${fmtDur((r.end - r.start) / 1000)}</td></tr>`).join('') + `</table>`;
+  else h += `<table class="hist"><tr><th>代</th><th>最深</th><th>図鑑</th><th>名声</th><th>残した家宝</th><th>期間</th></tr>` +
+    S.history.map(r => `<tr><td>${genName(r.gen)}</td><td>${r.depth}m</td><td>${r.species}</td><td>+${fmt(r.fame)}</td><td>${r.heir ? HEIR_IC[r.heir.k] + ' Lv' + r.heir.lv : '－'}</td><td>${fmtDur((r.end - r.start) / 1000)}</td></tr>`).join('') + `</table>`;
   // 通算の記録
   const play = S.st.play || 0;
   h += `<div class="sec">通算の記録</div><div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px">
@@ -1514,12 +1593,13 @@ $('adBoost').addEventListener('click', () => {
 });
 
 // ================= 代替わり =================
-let rbOpen = false, rbChoice = [], rbArm = 0;
+let rbOpen = false, rbChoice = [], rbArm = 0, rbHeir = null, rbDrop = -1;   // rbHeir: 家宝の名前、'none' は受け取らない
 function openRebirth(){
   if (!canRebirth(S)) return;
   rbOpen = true; rbArm = 0;
   const slots = creedSlots(S.gen);
   rbChoice = []; for (let i = 0; i < slots; i++) rbChoice[i] = S.creed[i] || null;
+  rbHeir = null; rbDrop = -1;
   renderRebirth();
   $('rbModal').classList.add('on'); focusFirst('rbModal');
 }
@@ -1539,17 +1619,40 @@ function renderRebirth(){
     h += `<div class="creed">` + ['a', 'b'].map(k => `<button class="copt" type="button" data-ci="${i}" data-ck="${k}" aria-pressed="${c === k}"><b>${P[k].n}</b><span class="g">＋${P[k].g}</span><br><span class="x">－${P[k].b}</span></button>`).join('') + `</div>`;
   });
   if (rbChoice.length < CREEDS.length) h += `<p class="sub">代替わりするたびに、社訓の組が1つずつ増えます（全${CREEDS.length}組）。</p>`;
+  h += heirPickHtml();
   $('rbBody').innerHTML = h;
+  $('rbBody').querySelectorAll('[data-heir]').forEach(b => b.addEventListener('click', () => { rbHeir = b.dataset.heir; rbDrop = -1; rbArm = 0; sfx('ui'); renderRebirth(); }));
+  $('rbBody').querySelectorAll('[data-drop]').forEach(b => b.addEventListener('click', () => { rbDrop = +b.dataset.drop; rbArm = 0; sfx('ui'); renderRebirth(); }));
   $('rbBody').querySelectorAll('.copt').forEach(b => b.addEventListener('click', () => { rbChoice[+b.dataset.ci] = b.dataset.ck; rbArm = 0; sfx('ui'); renderRebirth(); }));
-  const ready = rbChoice.every(Boolean);
-  $('rbGo').disabled = !ready;
-  $('rbGo').textContent = !ready ? '社訓を選んでください' : rbArm ? 'もう一度押すと代替わりします' : '代替わりする';
+  const ready = rbChoice.every(Boolean), hr = heirReady();
+  $('rbGo').disabled = !ready || !hr;
+  $('rbGo').textContent = !ready ? '社訓を選んでください' : !hr ? (rbHeir ? '手放す家宝を選んでください' : '先代が残す物を選んでください') : rbArm ? 'もう一度押すと代替わりします' : '代替わりする';
+}
+// 家宝の絵文字の代わりの小さな印（文字で描く）
+const HEIR_IC = { pick:'⛏', roster:'📜', map:'🗺', diary:'📔', safe:'🔒', charm:'🧿' };
+const heirNeedsDrop = () => rbHeir && rbHeir !== 'none' && !heirLv(S, rbHeir) && S.heir.length >= HEIR_SLOTS;
+const heirReady = () => !!rbHeir && (!heirNeedsDrop() || rbDrop >= 0);
+function heirCard(k, lv, attrs, cls){
+  const H = HEIRS[k];
+  return `<button class="hopt ${cls || ''}" type="button" ${attrs}><span class="hic" aria-hidden="true">${HEIR_IC[k]}</span><span><b>${H.n}</b><span class="lv">Lv${lv}</span><br><span class="g">＋${H.g(lv)}</span><br><span class="x">－${H.b}</span></span></button>`;
+}
+function heirPickHtml(){
+  const cands = heirCands(S);
+  let h = `<div class="sec">先代が残す家宝（1つ）</div>
+    <p class="sub" style="margin-top:0">${genName(S.gen)}の掘り方で候補が変わります。家宝は棚に${HEIR_SLOTS}つまで、同じ物をもう一度受け取ると Lv が上がります（最大${HEIR_MAX}）。どれも代償があります。</p><div class="heirs">`;
+  h += cands.map(c => heirCard(c.k, c.lv, `data-heir="${c.k}" aria-pressed="${rbHeir === c.k}"`)).join('');
+  h += `<button class="hopt" type="button" data-heir="none" aria-pressed="${rbHeir === 'none'}"><span class="hic" aria-hidden="true">－</span><span><b>受け取らない</b><br><span class="sub">棚はそのまま</span></span></button></div>`;
+  if (heirNeedsDrop()) {
+    h += `<div class="cardnote" style="margin:4px 2px;color:var(--bad);font-weight:800">棚がいっぱいです。手放す家宝を1つ選んでください</div><div class="heirs">`;
+    h += S.heir.map((x, i) => heirCard(x.k, x.lv, `data-drop="${i}" aria-pressed="${rbDrop === i}"`, 'drop')).join('') + `</div>`;
+  }
+  return h;
 }
 $('rbCancel').addEventListener('click', () => { rbOpen = false; $('rbModal').classList.remove('on'); });
 $('rbGo').addEventListener('click', () => {
-  if (!rbChoice.every(Boolean)) return;
+  if (!rbChoice.every(Boolean) || !heirReady()) return;
   if (!rbArm) { rbArm = 1; renderRebirth(); return; }
-  const g = rebirth(S, rbChoice);
+  const g = rebirth(S, rbChoice, rbHeir && rbHeir !== 'none' ? { k: rbHeir, drop: rbDrop } : null);
   rbOpen = false; $('rbModal').classList.remove('on');
   if (!g) return;
   camY = -4; parts.length = 0; floats.length = 0; veinLeft = 0; veinEl.style.display = 'none';
@@ -1564,10 +1667,10 @@ function ceremony(g){
   const el = document.createElement('div');
   el.className = 'cere';
   el.innerHTML = `${document.querySelector('#title .logo').outerHTML}<div class="g1">つるはし社</div><div class="g2">${genName(S.gen)}社長 就任</div>
-    <div class="g3">名声 +${fmt(g)}</div><div class="g4">仲間の力 ×${fameMul(S.fame).toFixed(1)}　・　図鑑と社史は引き継がれる</div>`;
+    <div class="g3">名声 +${fmt(g)}</div><div class="g4">仲間の力 ×${fameMul(S.fame).toFixed(1)}　・　図鑑と社史は引き継がれる</div>${(() => { const last = S.history[S.history.length - 1]; return last && last.heir ? `<div class="g4">先代から「${HEIRS[last.heir.k].n}」Lv${last.heir.lv} を受け継いだ</div>` : ''; })()}`;
   document.body.appendChild(el);
   let done = false;
-  const close = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); banner(0); cheer(); }, 480); };
+  const close = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); banner(0); cheer(); elderT = 6; }, 480); };
   el.addEventListener('click', close); setTimeout(close, 2600);
 }
 
@@ -2253,6 +2356,37 @@ function drawSights(dt, fy, sx, sw){
   }
   ctx.restore();
 }
+// 隠居した先代（2代目から）。竪坑の左の端で杖をついて見守り、ときどき昔話をする
+let elderT = 25;
+const elderPos = () => { const sw = shaftW(); return { x: cx() - sw / 2 + 16, y: rowY(S.depth) }; };
+function elderSay(text, big){ if (S.gen < 2) return; const e = elderPos(); say(e.x + 4, e.y - 40, text, big); }
+function elderLine(){
+  const pv = S.history[S.history.length - 1]; if (!pv) return null;
+  const lines = [`わしの頃は ${pv.depth}m が精一杯じゃった`, `わしの代は図鑑 ${pv.species}種じゃった`, '焦らず掘れ', '岩盤は道具で割るんじゃ', 'いい音で掘っとるのう', '腰が痛いわい'];
+  if (pv.heir) lines.push(`${HEIRS[pv.heir.k].n}、大事にな`);
+  if (S.passTold) lines.push('よう越えた', 'もうわしの出番はないのう'); else lines.push(`${pv.depth}m、越えてみせい`);
+  if (S.history.length >= 3) lines.push('初代はもっと頑固じゃった');
+  return lines[Math.floor(Math.random() * lines.length)];
+}
+function drawElder(dt){
+  if (S.gen < 2 || S.depth < 2 || titleOpen) return;
+  const e = elderPos(), t = tAll, bob = reduced ? 0 : Math.sin(t * 1.4) * 0.6;
+  ctx.save(); ctx.translate(e.x, e.y); ctx.scale(0.62, 0.62);
+  // 杖
+  ctx.strokeStyle = '#6b4a2a'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(18, 0); ctx.lineTo(14, -34); ctx.stroke();
+  // 体（少し前かがみ）、足
+  ctx.fillStyle = '#3d3a46'; ctx.fillRect(-7, -14, 5, 14); ctx.fillRect(2, -14, 5, 14);
+  ctx.fillStyle = '#7a5a8a'; roundRect(-10, -44 + bob, 22, 32, 8); ctx.fill();
+  ctx.strokeStyle = '#7a5a8a'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(8, -36 + bob); ctx.lineTo(14, -32); ctx.stroke();
+  // 顔・白いひげ・白い髪
+  ctx.fillStyle = '#f0c8a0'; ctx.beginPath(); ctx.arc(3, -54 + bob, 10, 0, 7); ctx.fill();
+  ctx.fillStyle = '#f4f1ea'; ctx.beginPath(); ctx.moveTo(-5, -52 + bob); ctx.quadraticCurveTo(3, -32 + bob, 11, -52 + bob); ctx.fill();
+  ctx.beginPath(); ctx.arc(3, -58 + bob, 10, Math.PI, 0); ctx.fill();
+  ctx.fillStyle = '#2b2118'; ctx.fillRect(4, -56 + bob, 3, 1.6); ctx.fillRect(-1, -56 + bob, 3, 1.6);
+  ctx.restore();
+  elderT -= dt;
+  if (elderT <= 0) { elderT = 45 + Math.random() * 30; const l = elderLine(); if (l) elderSay(l); }
+}
 // 鉱石を地上へ運ぶ桶：竪坑の右のロープを上り（鉱石入り）、空で降りてくる
 function drawLift(fy, sx, sw){
   if (S.depth < 3) return;
@@ -2397,6 +2531,7 @@ function draw(dt){
     ctx.fillStyle = beam; ctx.beginPath(); ctx.arc(lx + 26, ly + 34, 64, 0, 7); ctx.fill();
   }
   drawLift(fy, sx, sw);
+  drawElder(dt);
   drawCrew(dt, fy);
   drawSights(dt, fy, sx, sw);
   swingT += dt;
@@ -2748,6 +2883,9 @@ function frame0(now){
   if (uiT > 0.2) { uiT = 0; updateUI(); }
   if (achT > 2) {
     achT = 0;
+    // 先代越え：すぐ前の代の最深を越えた瞬間。隠居した先代が喜ぶ
+    const pv = S.history[S.history.length - 1];
+    if (pv && !S.passTold && S.genDepth > pv.depth) { S.passTold = true; toast('先代越え', `${genName(pv.gen)}の ${pv.depth}m を越えた`, `${genName(S.gen)}社長、お見事`); cheer(); elderSay('わしを越えたか！', true); sfx('layer'); haptic('success'); }
     if (S.gen > 1 && !S.recTold && S.history.length && S.genDepth > Math.max(...S.history.map(h => h.depth))) { S.recTold = true; toast('最深記録を更新', `${genName(S.gen)}社長が ${S.genDepth}m`, 'これまでのどの代よりも深い'); sfx('layer'); haptic('success'); }
   for (const a of checkAch(S)) { toast('実績', a.n, `実績 ${Object.keys(S.ach).length}/${ACH.length}`); }
     if (tab === 'co' && !rbOpen) buildCoLight();

@@ -129,5 +129,30 @@ S = fresh(); S.own = { cart: true }; S.bento = 2; S.iapGot = { bento: 2 };
 S = claimAwayState(S, simulateAway(S, 60), 1); ok(owns(S, 'cart') && S.bento === 2 && S.iapGot.bento === 2, '留守の受け取りで買った物が消えない');
 S = normalize({ v: 2, bento: -1, own: 'x', iapGot: null }); ok(S.bento === 0 && typeof S.own === 'object' && typeof S.iapGot === 'object', '壊れた課金の記録は安全な値に戻す');
 
+// 家宝（先代が残すもの）
+const deep = () => { const t = fresh(); t.genDepth = 300; t.depth = 300; t.best = 300; t.pick = 150; t.w = [10, 8, 6, 30, 0, 0, 0]; t.ore = 1e6; return t; };
+S = deep(); let cs = heirCands(S);
+ok(cs.length === 3 && new Set(cs.map(c => c.k)).size === 3 && cs.every(c => HEIRS[c.k] && c.lv === 1), '家宝の候補は3つで重ならない');
+ok(JSON.stringify(heirCands(S)) === JSON.stringify(cs), '同じ代なら候補は何度見ても同じ');
+rebirth(S, ['a'], { k: 'pick' }); ok(S.pick === 15 && heirLv(S, 'pick') === 1, '先代のつるはし：先代の Lv の10%から始まる');
+ok(S.history[0].heir.k === 'pick', '社史に残した家宝が残る');
+S = deep(); rebirth(S, ['a'], { k: 'roster' }); ok(S.w[3] === 2 && S.w[0] === 2, '先代の名簿：いちばん多く雇った仲間を連れて始まる');
+S = deep(); rebirth(S, ['a'], { k: 'safe' }); ok(S.ore === START_ORE + 50000, '先代の金庫：手持ちの5%を持ち越す');
+S = deep(); rebirth(S, ['a'], { k: 'map' }); ok(S.mapTo === 150 && mapMul(S) === 2, '先代の地図：最深の半分までは2倍');
+S.depth = 150; ok(mapMul(S) === 1, '地図の深さを過ぎたら元の速さ');
+S = deep(); const fg0 = fameGain(S); S.heir = [{ k: 'map', lv: 1 }]; ok(fameGain(S) < fg0, '地図の代償：名声が減る');
+// 同じ物で Lv が上がり、棚は3つまで。いっぱいなら手放す物を選ばないと入らない
+S = fresh(); ok(takeHeir(S, 'pick') && takeHeir(S, 'pick') && heirLv(S, 'pick') === 2, '同じ家宝で Lv が上がる');
+takeHeir(S, 'pick'); ok(!takeHeir(S, 'pick') && heirLv(S, 'pick') === 3, 'Lv は3まで');
+takeHeir(S, 'map'); takeHeir(S, 'diary'); ok(!takeHeir(S, 'safe') && S.heir.length === 3, '棚がいっぱいなら、手放す物を選ばないと入らない');
+ok(takeHeir(S, 'safe', 0) && S.heir.length === 3 && !heirLv(S, 'pick') && heirLv(S, 'safe') === 1, '手放すと新しい家宝が入る');
+S = deep(); S.heir = [{ k: 'pick', lv: 3 }]; ok(!heirCands(S).some(c => c.k === 'pick'), 'Lv3 の家宝は候補に出ない');
+S = deep(); rebirth(S, ['a'], null); ok(S.heir.length === 0 && S.history[0].heir === null, '受け取らなくても代替わりできる');
+S = normalize({ v: 2, heir: [{ k: 'pick', lv: 9 }, { k: 'xxx', lv: 1 }, null] }); ok(S.heir.length === 1 && S.heir[0].lv === 3, '壊れた家宝の記録は直す');
+// 留守の計算でも、地図の速さは地図の深さまで
+S = fresh(); S.w = WK.map(() => 3); S.heir = [{ k: 'map', lv: 3 }]; S.mapTo = 5; S.last = NOW();
+const awayMap = simulateAway(S, 8 * 3600); S.heir = []; const awayNo = simulateAway(S, 8 * 3600);
+ok(awayMap.meters < awayNo.meters * 1.5, '留守でも地図は地図の深さまでしか効かない');
+
 if (fails) { console.log(`\n${fails}件 NG`); process.exit(1); }
 console.log('\nすべて ok');

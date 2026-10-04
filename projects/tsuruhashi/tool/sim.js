@@ -3,7 +3,7 @@
 //   node tool/sim.js --quick        … 7日だけ（CI で「止まらない・壊れない」ことを見る）
 //   PLAY=heavy node tool/sim.js     … よく遊ぶ人（1日5回、合わせて80分）
 //   CREED=abbaab node tool/sim.js   … 社訓の選び方（組ごとに a か b）
-//   DAYS=60 / SEED=3 / LOG=1（その回ごとの行を出す）
+//   DAYS=60 / SEED=3 / LOG=1（その回ごとの行を出す）／ HEIR=off（家宝を受け取らない）
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const file = 'game.html';
 const src = fs.readFileSync(path.join(__dirname, '..', 'prototype', file), 'utf8');
@@ -67,7 +67,13 @@ for (let day = 1; day <= DAYS; day++) {
       if (g >= S.fame + 5 || (stall >= 3 && g >= S.fame * 0.3)) {
         const cr = CREED.slice(0, creedSlots(S.gen)).map(c => c);
         rebirths.push(`${tm()} ${S.gen}代目→ 深さ${S.genDepth}m 名声+${g}`);
-        rebirth(S, cr); stall = 0; lastProg = 0;
+        // 家宝：候補の1つ目（その代でいちばん伸ばした物）。棚がいっぱいなら Lv のいちばん低い物を手放す。HEIR=off で受け取らない
+        let hr = null;
+        if (process.env.HEIR !== 'off') {
+          const c = heirCands(S)[0];
+          if (c) { const full = S.heir.length >= HEIR_SLOTS && !heirLv(S, c.k); hr = { k: c.k, drop: full ? S.heir.reduce((bi, h, i, a) => h.lv < a[bi].lv ? i : bi, 0) : -1 }; }
+        }
+        rebirth(S, cr, hr); stall = 0; lastProg = 0;
       }
     }
     // 広告を見る人は毎回の最初に1本（×2）。よく遊ぶ人は最初に4本（×5）、そのあとも5分ごとに1本ずつ上げる
@@ -91,7 +97,7 @@ for (let day = 1; day <= DAYS; day++) {
   daily.push({ day, best: S.best, gen: S.gen, z: speciesCountOf(S), sets: setsDone(S).length, ach: Object.keys(S.ach).length });
 }
 for (const k of Object.keys(S)) if (typeof S[k] === 'number' && !isFinite(S[k])) throw new Error('数値が壊れた: ' + k);
-console.log(`遊び方=${PLAY} 社訓=${CREED.join('')} ${DAYS}日`);
+console.log(`遊び方=${PLAY} 社訓=${CREED.join('')} ${DAYS}日 家宝=${S.heir.map(h => h.k + h.lv).join(',') || 'なし'}`);
 console.log('層の底に初めて着いた日: ' + Object.entries(firstLayer).map(([k, v]) => `${k}層 ${v}`).join(' / '));
 console.log('代替わり:\n  ' + rebirths.join('\n  '));
 const pickDays = [1, 2, 3, 5, 7, 10, 14, 21, 28, 35, 42, 60].filter(d => d <= DAYS);
