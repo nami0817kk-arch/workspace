@@ -36,6 +36,7 @@ SHAKE_FRAMES = 6     # 驚きで画面が揺れる長さ（フレーム数）
 SHAKE_PX = 10        # 揺れの大きさ
 WIPE_FRAMES = 14     # 節の頭の地層のワイプ（フレーム数）
 FIG_FRAMES = 45      # 図が出たときに描き進める長さ（フレーム数。1.5秒）
+ICON_FRAMES = 8      # 挿絵が出るときに大きくなる長さ（フレーム数）
 
 
 @dataclass(frozen=True)
@@ -48,6 +49,8 @@ class State:
     speaker: str
     memo: tuple = ()
     figure: str | None = None
+    bubble: str | None = None
+    icon: str | None = None
 
 
 def _ease(t: float) -> float:
@@ -225,7 +228,7 @@ class Painter:
             dr.text((cx, yb - 132 * u), txt, font=pf, fill=GOLD, anchor="mm")
 
     # --- 本編の画面（立ち絵と字幕より下の層） ------------------------------
-    def base(self, state: State, year=None, slide: float = 1.0, fig: float = 1.0) -> Image.Image:
+    def base(self, state: State, year=None, slide: float = 1.0, fig: float = 1.0, icon_t: float = 1.0) -> Image.Image:
         """year：年表の印の位置（移動の途中を描くとき）／slide：新しいメモの滑り込み（0〜1）。"""
         W, H = self.W, self.H
         img = self._canvas(state.background)
@@ -250,6 +253,12 @@ class Painter:
             self._memo(img, state, slide)
             if state.portrait is not None:
                 self._portrait(img, state.portrait)
+            from . import extras
+            if state.icon:
+                img = extras.draw_icon(self, img, state.icon, icon_t)
+            if state.bubble and state.portrait is not None:
+                import json as _j
+                img = extras.draw_bubble(self, img, state.portrait, _j.loads(state.bubble))
         else:                                              # 図のあいだは、メモと肖像を隠して図を大きく
             import json as _json
             from . import figures
@@ -513,7 +522,8 @@ class Painter:
 
 def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
-                 getattr(line, "memo", ()), getattr(line, "figure", None))
+                 getattr(line, "memo", ()), getattr(line, "figure", None), getattr(line, "bubble", None),
+                 getattr(line, "icon", None))
 
 
 def _salt(painter) -> str:
@@ -641,8 +651,9 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
         words = ([w for w in (plain(x) for x in __import__("re").findall(r"《(.+?)》", line.text))]
                  if special and painter.config.get("pop") else [])
         fig_new = special and state.figure is not None and (prev_state is None or prev_state.figure != state.figure)
+        icon_new = special and state.icon is not None and (prev_state is None or prev_state.icon != state.icon)
         n_fx = max(n_hop, TRANS_FRAMES if changed else 0, SHAKE_FRAMES if surprised else 0,
-                   POP_FRAMES if words else 0, FIG_FRAMES if fig_new else 0)
+                   POP_FRAMES if words else 0, FIG_FRAMES if fig_new else 0, ICON_FRAMES if icon_new else 0)
         for k in range(1, n_fx + 1):
             cuts.add(min(talk_len, k / fps))
         pop_len = POP_SECONDS if words else 0.0
@@ -668,23 +679,24 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             shake_k = k if (surprised and k and k <= SHAKE_FRAMES) else 0
             pop_t = (min(1.0, k / (POP_FRAMES + 1)) if k else 1.0) if (words and a < pop_len) else None
             fig_t = (k / (FIG_FRAMES + 1)) if (fig_new and k and k <= FIG_FRAMES) else 1.0
+            icon_t = (k / (ICON_FRAMES + 1)) if (icon_new and k and k <= ICON_FRAMES) else 1.0
 
             def make(s=state, ps=prev_state, text=text, hop_k=hop_k, n_hop=n_hop, tr=tr, shake_k=shake_k,
                      pop_t=pop_t, mouth_open=mouth_open, blink=blink, tone=line.tone, opening=opening,
-                     words=tuple(words), side=side, fig_t=fig_t):
+                     words=tuple(words), side=side, fig_t=fig_t, icon_t=icon_t):
                 hop_t = hop_k / (n_hop + 1) if hop_k else 0.0
                 if tr < 1.0 and ps is not None:
                     year = s.year
                     if ps.year is not None and s.year is not None:
                         year = ps.year + (s.year - ps.year) * _ease(tr)
                     slide = tr if (s.memo and s.memo != ps.memo) else 1.0
-                    base = painter.base(s, year=year, slide=slide, fig=fig_t)
+                    base = painter.base(s, year=year, slide=slide, fig=fig_t, icon_t=icon_t)
                     changed_pic = (((ps.portrait, ps.figure) != (s.portrait, s.figure)) if painter.layered
                                    else (ps.background, ps.portrait) != (s.background, s.portrait))
                     if changed_pic:
                         base = Image.blend(painter.base(ps), base, _ease(tr))
                 else:
-                    base = painter.base(s, fig=fig_t)
+                    base = painter.base(s, fig=fig_t, icon_t=icon_t)
                 if pop_t is not None:
                     base = painter.pop(base, words[0], pop_t, s.speaker)
                 im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink)
@@ -696,7 +708,8 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                 return im
 
             key = ("f2", state, prev_state if tr < 1.0 else None, round(tr, 3), hop_k, n_hop, text, shake_k,
-                   None if pop_t is None else (words[0], round(pop_t, 3)), round(fig_t, 3), mouth_open, blink,
+                   None if pop_t is None else (words[0], round(pop_t, 3)), round(fig_t, 3), round(icon_t, 3),
+                   mouth_open, blink,
                    line.tone,
                    bool(opening))
             emit(frame_dir / _name(salt, *key), make, b - a)
