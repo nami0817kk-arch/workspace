@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 40
+  seen: 41
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -23,12 +23,13 @@ sites:
   - '2026-09-25'
   - '2026-09-29'
   - '2026-09-30'
+  - '2026-10-04'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
 - host: forzaroma.info
-  seen: 23
+  seen: 24
   days:
   - '2026-09-02'
   - '2026-09-05'
@@ -41,6 +42,7 @@ sites:
   - '2026-09-30'
   - '2026-10-02'
   - '2026-10-03'
+  - '2026-10-04'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
@@ -73,7 +75,7 @@ sites:
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: calcionapoli1926.it
-  seen: 15
+  seen: 16
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -83,10 +85,27 @@ sites:
   - '2026-09-13'
   - '2026-09-27'
   - '2026-09-30'
+  - '2026-10-04'
   examples:
   - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
+- host: blog.domesoccer.jp
+  seen: 16
+  days:
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-14'
+  - '2026-09-16'
+  - '2026-09-21'
+  - '2026-09-27'
+  - '2026-09-30'
+  - '2026-10-03'
+  - '2026-10-04'
+  examples:
+  - https://blog.domesoccer.jp/archives/60253571.html
+  - https://blog.domesoccer.jp/archives/60253934.html
+  - https://blog.domesoccer.jp/archives/60253949.html
 - host: tuttobolognaweb.it
   seen: 15
   days:
@@ -101,21 +120,6 @@ sites:
   - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
-- host: blog.domesoccer.jp
-  seen: 15
-  days:
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-14'
-  - '2026-09-16'
-  - '2026-09-21'
-  - '2026-09-27'
-  - '2026-09-30'
-  - '2026-10-03'
-  examples:
-  - https://blog.domesoccer.jp/archives/60253571.html
-  - https://blog.domesoccer.jp/archives/60253934.html
-  - https://blog.domesoccer.jp/archives/60253949.html
 - host: mondoudinese.it
   seen: 15
   days:
@@ -165,7 +169,7 @@ sites:
   - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/si-presenta-gnonto-dalle-14-30-il-live-della-conferenza-stampa/?intcmp=gazzanet-violanews
 - host: sportsmole.co.uk
-  seen: 12
+  seen: 13
   days:
   - '2026-09-05'
   - '2026-09-16'
@@ -173,6 +177,7 @@ sites:
   - '2026-09-27'
   - '2026-10-02'
   - '2026-10-03'
+  - '2026-10-04'
   examples:
   - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
   - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
@@ -261,6 +266,18 @@ sites:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/notizie/genoa-de-rossi-pari-frosinone/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/coppa-italia/de-rossi-promuove-il-genoa-risposte-positive-traore-ed-el-shaarawy-possono-fare-la-differenza/?intcmp=gazzanet-genoaoggi
+- host: thehardtackle.com
+  seen: 7
+  days:
+  - '2026-09-16'
+  - '2026-09-26'
+  - '2026-09-27'
+  - '2026-09-28'
+  - '2026-10-04'
+  examples:
+  - https://thehardtackle.com/round-up/2026/09/16/coventry-city-vs-aston-villa-preview-prediction-probable-lineups-tactics-team-news-key-stats/
+  - https://thehardtackle.com/transfer-news/2026/09/26/michael-olise-prefers-la-liga-move-to-premier-league-return/
+  - https://thehardtackle.com/transfer-news/2026/09/26/julian-ward-could-target-aurelien-tchouameni-as-first-liverpool-signing-next-year/
 - host: bbc.co.uk
   seen: 6
   days:
@@ -277,17 +294,17 @@ sites:
   - https://www.vavel.com/en/football/2026/09/05/premier-league/1270194-brentford-vs-sunderland-can-the-bees-break-the-black-cats.html
   - https://www.vavel.com/en/football/2026/09/05/premier-league/1270256-daniel-farke-commends-the-work-done-in-the-transfer-market.html
   - https://www.vavel.com/en/football/2026/09/15/sunderland/1271588-xhaka-expects-the-stadium-of-light-to-be-on-fire-against-az-alkmaar.html
-- host: thehardtackle.com
+- host: barcablaugranes.com
   seen: 6
   days:
-  - '2026-09-16'
-  - '2026-09-26'
+  - '2026-09-05'
+  - '2026-09-14'
   - '2026-09-27'
-  - '2026-09-28'
+  - '2026-10-04'
   examples:
-  - https://thehardtackle.com/round-up/2026/09/16/coventry-city-vs-aston-villa-preview-prediction-probable-lineups-tactics-team-news-key-stats/
-  - https://thehardtackle.com/transfer-news/2026/09/26/michael-olise-prefers-la-liga-move-to-premier-league-return/
-  - https://thehardtackle.com/transfer-news/2026/09/26/julian-ward-could-target-aurelien-tchouameni-as-first-liverpool-signing-next-year/
+  - https://www.barcablaugranes.com/barcelona-team-news/131554/gabriel-jesus-not-100-yet-but-ready-to-make-barcelona-debut-against-valencia
+  - https://www.barcablaugranes.com/barcelona-team-news/132388/lamine-yamal-says-he-deserves-to-beat-kylian-mbappe-to-the-ballon-dor
+  - https://www.barcablaugranes.com/fc-barcelona-transfer-rumors-news/133512/prioritizing-two-summer-2027-sales
 - host: espn.co.uk
   seen: 5
   days:
@@ -314,16 +331,6 @@ sites:
   - https://www.cagliaricalcio-news.it/notizie/interviste/cagliari-pisacane-coppa-italia-fiducia-ragazzi/?intcmp=gazzanet-cagliaricalcionews
   - https://www.cagliaricalcio-news.it/notizie/pisacane-cagliari-atalanta-romano/?intcmp=gazzanet-cagliaricalcionews
   - https://www.cagliaricalcio-news.it/notizie/cagliari-pisacane-maldini-mendy-adopo/?intcmp=gazzanet-cagliaricalcionews
-- host: barcablaugranes.com
-  seen: 5
-  days:
-  - '2026-09-05'
-  - '2026-09-14'
-  - '2026-09-27'
-  examples:
-  - https://www.barcablaugranes.com/barcelona-team-news/131554/gabriel-jesus-not-100-yet-but-ready-to-make-barcelona-debut-against-valencia
-  - https://www.barcablaugranes.com/barcelona-team-news/132388/lamine-yamal-says-he-deserves-to-beat-kylian-mbappe-to-the-ballon-dor
-  - https://www.barcablaugranes.com/fc-barcelona-transfer-rumors-news/133512/prioritizing-two-summer-2027-sales
 - host: juvenews.eu
   seen: 5
   days:
@@ -367,6 +374,40 @@ sites:
   - https://www.dailystar.co.uk/sport/football/breaking-liverpool-richard-hughes-quits-37630544
   - https://www.dailystar.co.uk/sport/football/man-utd-city-goal-var-37659172
   - https://www.dailystar.co.uk/sport/football/fulham-man-utd-premier-league-37683165
+- host: football360.com.au
+  seen: 5
+  days:
+  - '2026-09-16'
+  - '2026-09-27'
+  - '2026-10-03'
+  - '2026-10-04'
+  examples:
+  - https://football360.com.au/man-utd-jj-gabriel-details-premier-league/
+  - https://football360.com.au/england-spain-highlights-result-reaction-uefa-nations-league/
+  - https://football360.com.au/ireland-austria-palestine-protest-israel-boycott-nations-league/
+- host: rte.ie
+  seen: 5
+  days:
+  - '2026-09-21'
+  - '2026-09-27'
+  - '2026-10-03'
+  - '2026-10-04'
+  examples:
+  - https://www.rte.ie/sport/soccer/2026/0920/1592284-euro-round-up-atletico-take-derby-betis-bench-parrott/
+  - https://www.rte.ie/sport/soccer/2026/0926/1593075-wsl-round-up-city-remain-unbeaten-and-lionesses-roar-on/
+  - https://www.rte.ie/sport/soccer/2026/1002/1593752-browns-brace-helps-northern-ireland-shock-ukraine/
+- host: france24.com
+  seen: 5
+  days:
+  - '2026-09-05'
+  - '2026-09-21'
+  - '2026-09-28'
+  - '2026-10-03'
+  - '2026-10-04'
+  examples:
+  - https://www.france24.com/en/live-news/20260904-winner-fernandez-fundamental-to-maresca-s-man-city-rebuild
+  - https://www.france24.com/en/sport/20260920-torres-strikes-again-as-psg-beat-bitter-rivals-marseille-2-1
+  - https://www.france24.com/en/live-news/20260927-england-closing-the-gap-on-spain-says-kane
 - host: thesun.my
   seen: 4
   days:
@@ -416,16 +457,6 @@ sites:
   - https://www.milanistichannel.com/news-milan/riconoscimento-importante-per-franco-baresi-il-suo-nome-nel-famedio-di-milano/?intcmp=gazzanet-milanistichannel
   - https://www.milanistichannel.com/news-milan/ex-milan-senti-rafa-leao-il-galatasaray-mi-voleva-davvero-sono-felice/?intcmp=gazzanet-milanistichannel
   - https://www.milanistichannel.com/casa-milan-societa-rossonera-news/esclusiva-mc-shevchenko-50-anni-da-campione-tassotti-uno-dei-primi-4-o-5-attaccanti-del-milan/?intcmp=gazzanet-milanistichannel
-- host: football360.com.au
-  seen: 4
-  days:
-  - '2026-09-16'
-  - '2026-09-27'
-  - '2026-10-03'
-  examples:
-  - https://football360.com.au/man-utd-jj-gabriel-details-premier-league/
-  - https://football360.com.au/england-spain-highlights-result-reaction-uefa-nations-league/
-  - https://football360.com.au/ireland-austria-palestine-protest-israel-boycott-nations-league/
 - host: yorkshireeveningpost.co.uk
   seen: 4
   days:
@@ -437,27 +468,16 @@ sites:
   - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-8962041
   - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-9191281
   - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-9194259
-- host: rte.ie
-  seen: 4
-  days:
-  - '2026-09-21'
-  - '2026-09-27'
-  - '2026-10-03'
-  examples:
-  - https://www.rte.ie/sport/soccer/2026/0920/1592284-euro-round-up-atletico-take-derby-betis-bench-parrott/
-  - https://www.rte.ie/sport/soccer/2026/0926/1593075-wsl-round-up-city-remain-unbeaten-and-lionesses-roar-on/
-  - https://www.rte.ie/sport/soccer/2026/1002/1593752-browns-brace-helps-northern-ireland-shock-ukraine/
-- host: france24.com
+- host: liverpool.com
   seen: 4
   days:
   - '2026-09-05'
   - '2026-09-21'
-  - '2026-09-28'
-  - '2026-10-03'
+  - '2026-10-04'
   examples:
-  - https://www.france24.com/en/live-news/20260904-winner-fernandez-fundamental-to-maresca-s-man-city-rebuild
-  - https://www.france24.com/en/sport/20260920-torres-strikes-again-as-psg-beat-bitter-rivals-marseille-2-1
-  - https://www.france24.com/en/live-news/20260927-england-closing-the-gap-on-spain-says-kane
+  - https://www.liverpool.com/liverpool-fc-news/transfer-news/liverpool-transfer-news-michael-olise-34570605
+  - https://www.liverpool.com/liverpool-fc-news/features/uk-media-hails-alexander-isak-34572193
+  - https://www.liverpool.com/liverpool-fc-news/features/jamie-carragher-florian-wirtz-klopp-34646182
 - host: leedsunited.com
   seen: 3
   days:
@@ -472,15 +492,6 @@ sites:
   examples:
   - https://www.mediagol.it/palermo/palermo-inzaghi-non-mi-e-piaciuto-assolutamente-quel-black-out-peda-vi-dico-come-sta/?intcmp=gazzanet-mediagol
   - https://www.mediagol.it/palermo/ex-palermo-brunori-subito-in-gol-ho-sentito-unenergia-che-mi-serviva-e-racconta-la-trattativa/?intcmp=gazzanet-mediagol
-- host: liverpool.com
-  seen: 3
-  days:
-  - '2026-09-05'
-  - '2026-09-21'
-  examples:
-  - https://www.liverpool.com/liverpool-fc-news/transfer-news/liverpool-transfer-news-michael-olise-34570605
-  - https://www.liverpool.com/liverpool-fc-news/features/uk-media-hails-alexander-isak-34572193
-  - https://www.liverpool.com/liverpool-fc-news/features/jamie-carragher-florian-wirtz-klopp-34646182
 - host: atalantaoggi.it
   seen: 3
   days:
@@ -590,6 +601,16 @@ sites:
   - https://madriduniversal.com/endricks-real-madrid-situation-is-becoming-a-serious-problem-for-the-young-striker/
   - https://madriduniversal.com/leaked-real-madrids-away-kit-for-2027-28-season/
   - https://madriduniversal.com/official-real-madrid-urge-uefa-to-conduct-negreira-case-investigation-as-quickly-as-possible/
+- host: aljazeera.com
+  seen: 3
+  days:
+  - '2026-09-05'
+  - '2026-09-16'
+  - '2026-10-04'
+  examples:
+  - https://www.aljazeera.com/sports/2026/9/5/coach-luis-enrique-unconcerned-by-psgs-poor-start-to-french-league-season
+  - https://www.aljazeera.com/sports/2026/9/15/champions-league-final-venues-revealed-munich-2028-barcelona-2029
+  - https://www.aljazeera.com/sports/2026/10/3/israeli-reporters-verbal-attack-ends-ireland-football-news-conference
 - host: today.rtl.lu
   seen: 2
   days:
@@ -609,14 +630,6 @@ sites:
   examples:
   - https://www.manchestereveningnews.co.uk/sport/football/transfer-talks-continue-fernandes-intrigue-34565442
   - https://www.manchestereveningnews.co.uk/sport/football/transfer-news/manchester-united-star-trial-contract-34570094
-- host: aljazeera.com
-  seen: 2
-  days:
-  - '2026-09-05'
-  - '2026-09-16'
-  examples:
-  - https://www.aljazeera.com/sports/2026/9/5/coach-luis-enrique-unconcerned-by-psgs-poor-start-to-french-league-season
-  - https://www.aljazeera.com/sports/2026/9/15/champions-league-final-venues-revealed-munich-2028-barcelona-2029
 - host: bavarianfootballworks.com
   seen: 2
   days:
@@ -726,6 +739,22 @@ sites:
   examples:
   - https://www.irishfa.com/news/2026/october/northern-ireland-in-good-shape-ahead-of-ukraine-game
   - https://www.irishfa.com/news/valiant-display-by-u19s-against-belgium
+- host: the4thofficial.net
+  seen: 2
+  days:
+  - '2026-09-16'
+  - '2026-10-04'
+  examples:
+  - https://the4thofficial.net/2026/09/mbaye-mings-and-abraham-to-start-4-2-3-1-aston-villa-predicted-lineup-vs-coventry-city/
+  - https://the4thofficial.net/2026/10/everton-target-e15m-rated-17-year-old-winger-should-moyes-walk-away/
+- host: celticway.co.uk
+  seen: 2
+  days:
+  - '2026-09-26'
+  - '2026-10-04'
+  examples:
+  - https://www.celticway.co.uk/interviews/26583948.hassan-plays-egypt-despite-manager-seemingly-ruling/
+  - https://www.celticway.co.uk/interviews/26605098.celtic-issue-fierce-statement-line-crossed-desmond-protest/
 - host: guardian.ng
   seen: 1
   days:
@@ -840,12 +869,6 @@ sites:
   - '2026-09-16'
   examples:
   - https://fss.rs/en/belgrade-to-host-2029-uefa-europa-league-final-european-football-spectacle-at-the-national-stadium/
-- host: the4thofficial.net
-  seen: 1
-  days:
-  - '2026-09-16'
-  examples:
-  - https://the4thofficial.net/2026/09/mbaye-mings-and-abraham-to-start-4-2-3-1-aston-villa-predicted-lineup-vs-coventry-city/
 - host: cultofcalcio.com
   seen: 1
   days:
@@ -918,12 +941,6 @@ sites:
   - '2026-09-26'
   examples:
   - https://hayters.com/sunderland-handed-another-major-injury-concern-following-brobbey-blow/
-- host: celticway.co.uk
-  seen: 1
-  days:
-  - '2026-09-26'
-  examples:
-  - https://www.celticway.co.uk/interviews/26583948.hassan-plays-egypt-despite-manager-seemingly-ruling/
 - host: newsletter.co.uk
   seen: 1
   days:
@@ -1020,3 +1037,27 @@ sites:
   - '2026-10-03'
   examples:
   - https://www.rfi.fr/en/sports/20261002-nations-league-italy-reel-in-france-to-spoil-zidane-s-homecoming-party
+- host: calgaryherald.com
+  seen: 1
+  days:
+  - '2026-10-04'
+  examples:
+  - https://calgaryherald.com/sports/we-beat-ourselves-cavalry-stunned-by-inter-toronto-in-stretch-drive-for-cpl-shield
+- host: wrexhamafc.co.uk
+  seen: 1
+  days:
+  - '2026-10-04'
+  examples:
+  - https://www.wrexhamafc.co.uk/news/2026/october/03/supporter-information--wrexham-afc-women-vs-the-new-saints/
+- host: gocentenary.com
+  seen: 1
+  days:
+  - '2026-10-04'
+  examples:
+  - https://www.gocentenary.com/sports/wsoc/2026-27/releases/20261003t8jpao
+- host: dailyrecord.co.uk
+  seen: 1
+  days:
+  - '2026-10-04'
+  examples:
+  - https://www.dailyrecord.co.uk/sport/football/football-news/celtic-statement-desmond-fans-collective-37732053

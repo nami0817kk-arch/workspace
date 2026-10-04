@@ -131,13 +131,21 @@ def main(argv: list[str]) -> int:
     if not argv:
         print(__doc__)
         return 2
-    if argv == ["--prompt"]:
+    if any(a in ("-h", "--help") for a in argv):
+        # **--help で Gemini を呼ばない**（2026-10-03〜04 に下請けが3回呼んだ。`--help` も
+        # 台本の名前と見なされ、`<台本> --prompt` の順でも呼ばれていた）
+        print(__doc__)
+        return 0
+    if "--prompt" in argv:
         # Gemini の無料枠が切れた日は、同じ問いを別の読み手（Claude の下請け）に渡す。
         # 控えは同じ output/flow/<台本>.md に、1行目を
         # 「# 流れの点検: <台本>（読み手: Claude。Gemini は無料枠切れ）」として書く
         print(PROMPT)
         return 0
     for arg in argv:
+        if arg.startswith("-"):
+            print(f"知らない指定です: {arg}（Gemini は呼びません）", file=sys.stderr)
+            return 2
         script = Path(arg)
         if not script.exists():
             print(f"台本がありません: {script}", file=sys.stderr)

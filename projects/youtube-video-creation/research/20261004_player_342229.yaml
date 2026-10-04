@@ -1,5 +1,10 @@
-# キリアン・エムバペ（レアル・マドリード）の紹介。8節の型（2026-09-28）。材料と出典は research/raw/20261004_mbappe_material.md。
-# 数字は Transfermarkt・FotMob（701154）・レアル公式・ESPN。本人の言葉は Goal日本／フットボールチャンネルの訳をそのまま。
+# キリアン・エムバペ（レアル・マドリード）の紹介。8節の型（2026-09-28）を、ヤマル紹介（research/20261002_player_937958.yaml）と
+# オリーセ紹介（research/20261003_player_566723.yaml）の形にそろえた（2026-10-04）。
+# 材料は research/raw/20261004_mbappe_material.md（9/28）、10/4 に取り直した数字とけがは research/raw/20261004_player_342229.md。
+# 通算は Transfermarkt・FotMob・レアル公式（選手ページの季ごとの数）で突き合わせ、試合と得点は一致（586試合444点）。アシストは食い違うので出さない。
+# 代表の数はフランス連盟のページが 403 で読めず、レアル公式 6/16 時点の数から足して一致を確かめた。
+# けが：クラブは期間を出していない。復帰は「現地10日のビジャレアル戦」と「25日のクラシコに万全で」で報道が割れている（10/2 の2本）。
+# 同じ週のフランス代表の回（scripts/20261003_france_italy.md・20261003_coach_zidane.md）と言い回しを重ねない。ジダンの就任と初陣の流れは言わない。
 # 体重・母の報酬・On の契約・花道の話は裏が取れないので出さない。W杯の大会ごとの試合数も出さない（3大会22試合22点だけ）。
 date: 2026年10月04日
 slot: other_1
@@ -14,14 +19,15 @@ theme:
   topic: レアル・マドリード
   title: エムバペってどんな選手？14歳のレアル見学で案内役だった人の話
   question: キリアン・エムバペはどういう作りの選手で、なぜ大舞台で点が出るのか
-  takeaway: W杯22試合22点は史上最多。シュート数とドリブルは同じFWの中で最上位、守備は下から4番目。14歳で見学したレアルに26歳で来て、案内役だったジダンの代表初陣で決勝点を挙げた
+  takeaway: ワールドカップは3大会22試合22点で史上最多。クラブと代表を合わせた通算は586試合444点（10月3日まで）。レアルでのクラシコは6試合6点を挙げながらチームの勝ちは1度で、点と勝ちを結びつけられるかが次の宿題。左ひざを痛めて迎える10月25日のクラシコと、翌26日のバロンドール発表が次の節目
   nameplate: キリアン・エムバペ｜レアル・マドリード FW／フランス代表
+  opening_image: assets/images/20261004_player_342229/01_w.jpg
   bgm: assets/audio/bgm_calm.wav
 watch: 明日は⑤ヴィティーニャ
 short_title: エムバペってどんな選手？
 thumbnail:
-  line1: エムバペ
-  line2: 14歳の見学の案内役は●●
+  line1: エムバペ、通算444点
+  line2: W杯●●点は史上最多
   tags:
   - レアル・マドリード
   - エンバペ
@@ -30,31 +36,30 @@ thumbnail:
   - キリアン・ムバッペ
   - 選手紹介
   - プレースタイル
-  photo: assets/images/20261004_mbappe_face_w/01.jpg
+  photo: assets/images/20261004_player_342229/thumbfull/01.jpg
   photos: []
 sections:
 - id: hook
   heading: どんな選手か
   tier: 報道
-  telop: 14歳で見学したレアルに、26歳で来た
+  telop: ワールドカップ22点、史上いちばん決めた男
   narrator: キャスター
   say:
-  - text: キリアン・エムバペ。ワールドカップで22試合22点、史上いちばん多く決めた選手です。
-    image: assets/images/20261004_mbappe_face_w/01.jpg
-  - 2026年の大会で10点。史上初めて、2大会続けて得点王になりました。
-  - 14歳のとき、レアル・マドリードに1週間招かれました。案内役は、当時クラブにいたジダン。
-  - そのジダンが今年7月にフランス代表の監督になり、9月の初陣でエムバペが決勝点を決めました。
-  - レアルについて、本人は9月にこう言っています。
+  - text: キリアン・エムバペ。ワールドカップで22試合22点、歴史上だれよりも多く決めた男です。
+    image: assets/images/20261004_player_342229/01_w.jpg
+  - text: 2026年の大会でも10点。史上初めて、2大会続けて得点王に輝きました。
+    emph: true
+  - 14歳のとき、レアル・マドリードに1週間招かれた少年。案内役は、当時クラブにいたジダンでした。
+  - その場所でいま、背番号10を背負っています。9月、本人はきっぱりとこう語っています。
   - voice: エムバペ
     text: サッカーの歴史に名を刻みたいなら、
   - voice: エムバペ
     text: レアル・マドリーでプレーするべき
     cont: true
     pause: 0.5
-  - 同じフォワードを100人並べると、シュートの数とドリブルは最上位、空中戦と守備は最下位。
-  - この形がどう出来たのかを、数字と話で。
+  - 今季、シュートの数とドリブルは、同じ位置のフォワードの中で最上位。
+  - 点を取ることに振り切ったこの形は、どう出来上がったのか。順に追っていきます。
   sources:
-  - https://www.fotmob.com/players/701154/kylian-mbappe
   - https://www.espn.com/soccer/story/_/id/49397919/kylian-mbappe-wins-golden-boot-2026-world-cup-lionel-messi-goalless-final
   - https://www.goal.com/en/lists/zinedine-zidane-kylian-mbappe-real-madrid-french-les-bleus/blt5ce4b4b305a42cf6
   - https://www.goal.com/jp/ニュース/2026-0918-real-madrid-mbppekil-inter-jp/bltd3689f32110e2d2e
@@ -88,12 +93,14 @@ sections:
       - 2億ユーロ
     source: Transfermarkt・レアル公式
   say:
-  - text: キリアン・エムバペ、27歳。レアル・マドリードのセンターフォワードです。
-    image: assets/images/20261004_mbappe_real2026/02.jpg
+  - text: キリアン・エムバペ、27歳。レアル・マドリードで最前線に立つ、センターフォワードです。
+    image: assets/images/20261004_mbappe_real2025/01.webp
   - 生まれはパリ、育ちは郊外のボンディ。
   - 父は少年サッカーの指導者、母はハンドボール1部の選手でした。
-  - 身長は1メートル78、右利き。契約は2029年まで残っています。
-  - 市場価値は2億ユーロ。27歳のいまも、最高額のままです。
+  - 178センチの右利き。レアルとの契約は2029年まで残っています。
+  - text: そして気になる市場価値。なんと、2億ユーロです。
+    emph: true
+  - この7月にまた上がって、自己最高の値を更新しました。
   sources:
   - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
   - https://www.realmadrid.com/ja-JP/football/first-team/players/kylian-mbappe
@@ -101,7 +108,7 @@ sections:
 - id: career
   heading: 歩んできた道と転機
   tier: 報道
-  telop: モナコで最年少、PSGで最多、レアルにはフリーで
+  telop: モナコで最年少、パリで頂点、レアルへはフリーで
   narrator: 解説
   card:
     type: table
@@ -125,27 +132,86 @@ sections:
       - 26歳〜27歳
       - 最高 2億ユーロ
     source: Transfermarkt
+  rows_career:
+  - &c1
+    - 15/16〜16/17
+    - モナコ
+    - 16歳〜18歳
+    - 最高 3500万ユーロ
+  - &c2
+    - 17/18〜23/24
+    - パリ・サンジェルマン
+    - 18歳〜25歳
+    - 最高 2億ユーロ
+  - &c3
+    - 24/25〜26/27
+    - レアル・マドリード
+    - 26歳〜27歳
+    - 最高 2億ユーロ
   say:
-  - text: エムバペの道はモナコから。16歳11か月でデビューしました。
-    image: assets/images/20261004_mbappe_wc2018/01.jpg
-  - 17歳62日で決めた初ゴールは、アンリの最年少記録を塗り替えています。
-  - text: 市場価値の線は、モナコの2年で3500万ユーロまで跳ねました。
+  - text: エムバペの道の始まりは、モナコ。16歳11か月で、プロの舞台に立ちました。
     image: assets/stats/player_20261004_701154_value.png
     no_telop: true
-  - 2017年8月31日、最大1億8,000万ユーロでパリ・サンジェルマンへ。
-  - 翌2018年7月15日、ワールドカップ決勝で得点。19歳207日は、ペレ以来の10代でした。
-  - パリでは7年で256点、クラブ史上最多。2024年6月3日、契約満了でフリーのままレアルへ。
-  - 14歳で見学した場所に、26歳で戻った形です。
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - *c1
+      - *c2
+      - *c3
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 17歳62日の初ゴールは、あのアンリの最年少記録を塗り替える一撃でした。
+    image: assets/stats/player_20261004_701154_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - text: 市場価値の線も、モナコでの2年で一気に跳ね上がります。
+    image: assets/stats/player_20261004_701154_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - text: 2017年8月31日、最大1億8,000万ユーロでパリ・サンジェルマンへ。
+    image: assets/images/20261004_mbappe_psg2019_w/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 翌年7月、ワールドカップ決勝でゴール。19歳207日、ペレ以来となる10代の得点です。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: パリで7季を戦い抜き、2024年6月、契約を満了してフリーでレアルへ。
+    image: assets/images/20261004_mbappe_real2026/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 14歳で見学した場所に、26歳で帰ってきたんです。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: お披露目のベルナベウには、あの日の案内役ジダンも駆けつけていました。
+    card:
+      <<: *career_card
+      highlight_row: 2
   sources:
   - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
   - https://www.asmonaco.com/en/news/happy-birthday-kylian-mbappe
   - https://www.france24.com/en/20170831-football-france-striker-mbappe-joins-psg-loan-monaco-neymar
   - https://www.espn.com/soccer/story/_/id/48979217/kylian-mbappe-fifa-world-cup-history-results-stats
   - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/mbappe-nuevo-jugador-del-real-madrid-03-06-2024
+  - https://www.goal.com/en/lists/dream-come-true-kylian-mbappe-first-speech-real-madrid-fans-santiago-bernabeu-welcome-zinedine-zidane-mother-tears/blt86c569c04f85266e
 - id: style
   heading: プレースタイル
   tier: 報道
-  telop: 速く、右足で、ボックスの中で
+  telop: 速さで抜け出し、右足で仕留める
   narrator: 解説
   card:
     type: bars
@@ -165,137 +231,322 @@ sections:
       value: 4
     source: FotMob
   say:
-  - text: 同じフォワードと並べたレーダーで、エムバペの形を見ます。
+  - text: 同じフォワードと並べたレーダーで、エムバペの形を見てみます。
     image: assets/stats/player_20261004_701154_radar.png
     no_telop: true
-  - レーダーで見ると、得点とシュート数が頂点。空中戦と守備は、ほぼゼロです。
-  - text: ボールを持つ場所は相手ゴールの近く。色の濃いところが、それです。
+  - text: とがっているのは、得点とシュートの数。仕事をゴール前に絞り込んでいます。
+    image: assets/stats/player_20261004_701154_radar.png
+    no_telop: true
+  - text: ボールを持つ場所も、相手ゴールの近く。色の濃いところが、それです。
     image: assets/stats/player_20261004_701154_heat.png
     no_telop: true
-  - 今季のドリブルは25回で最上位。ペナルティエリアの中でボールに触った回数も、85回で最上位。
-  - text: 今季のシュートは41本、うち右足が32本。速攻からの10本を含めて、7点を取っています。
+    card: none
+  - text: 今季のドリブルは25回、エリアの中でのタッチは85回。どちらも同じ位置で最上位です。
+    image: assets/images/20261004_mbappe_spain_w/01.jpg
+  - text: シュートは41本、うち右足が32本。速攻からの10本も含めて、7点をもぎ取りました。
     image: assets/stats/player_20261004_701154_shots.png
     no_telop: true
-  - つまり、速さで裏へ抜けて、右足で決める選手。作る側にも回り、ワールドカップでは4アシストでした。
-  - 弱点は空中戦と守備。空中戦の勝ちは今季1回、守備の数字は同じFWの中で下から4番目です。
-  - もう1つは左膝。去年12月、今年3月、そして9月と、同じ膝を痛めています。
+  - text: 速さで裏へ抜けて、右足で仕留める。ワールドカップでは4アシストと、作る側にも回ります。
+    image: assets/images/20261004_mbappe_sweden_wide/01.jpg
+  - 弱みを挙げるなら、空中戦と守備。空中戦で競り勝ったのは、今季まだ1回です。
+  - 守備の仕事も、比べた中ではいちばん少ない側。そのぶんの力を、点を取ることに注いでいます。
   sources:
   - https://www.fotmob.com/players/701154/kylian-mbappe
   - https://www.espn.com/soccer/story/_/id/42606854/the-numbers-kylian-mbappes-malaise-real-madrid
-  - https://news.yahoo.co.jp/articles/2923fd754f078de497e2b8fda3618c213e27ddb0
 - id: past
-  heading: 過去5シーズンの数字
+  heading: キャリア全体の数字
   tier: 報道
-  telop: 直近5シーズンの試合と得点
+  telop: 季ごとの数字と、10月3日までの通算
   narrator: 解説
   card:
     type: table
-    title: キリアン・エムバペ 直近5シーズン（代表を含む全公式戦）
+    title: キリアン・エムバペ 通算（2026年10月3日まで）
     columns:
-    - 季
+    - 所属
     - 試合
     - 得点
-    - アシスト
-    - 出場時間
     rows:
-    - - 21/22
-      - '54'
-      - '49'
-      - '29'
-      - 4599分
-    - - 22/23
-      - '56'
-      - '52'
-      - '16'
-      - 4562分
-    - - 23/24
-      - '58'
-      - '47'
-      - '16'
-      - 4707分
-    - - 24/25
-      - '69'
-      - '51'
-      - '10'
-      - 5600分
-    - - 25/26
-      - '56'
-      - '53'
-      - '11'
-      - 4533分
-    source: Transfermarkt
+    - - モナコ
+      - '60'
+      - '27'
+    - - パリ・サンジェルマン
+      - '308'
+      - '256'
+    - - レアル・マドリード
+      - '111'
+      - '94'
+    - - フランス代表
+      - '107'
+      - '67'
+    - - 合計
+      - '586'
+      - '444'
+    source: Transfermarkt・FotMob・レアル公式
+  rows_seasons_a:
+  - &s1
+    - 15/16
+    - モナコ
+    - '14'
+    - '1'
+  - &s2
+    - 16/17
+    - モナコ
+    - '44'
+    - '26'
+  - &s3
+    - 17/18
+    - モナコ・パリ
+    - '46'
+    - '21'
+  - &s4
+    - 18/19
+    - パリ
+    - '43'
+    - '39'
+  - &s5
+    - 19/20
+    - パリ
+    - '37'
+    - '30'
+  - &s6
+    - 20/21
+    - パリ
+    - '47'
+    - '42'
+  rows_seasons_b:
+  - &s7
+    - 21/22
+    - パリ
+    - '46'
+    - '39'
+  - &s8
+    - 22/23
+    - パリ
+    - '43'
+    - '41'
+  - &s9
+    - 23/24
+    - パリ
+    - '48'
+    - '44'
+  - &s10
+    - 24/25
+    - レアル
+    - '59'
+    - '44'
+  - &s11
+    - 25/26
+    - レアル
+    - '44'
+    - '42'
+  - &s12
+    - 26/27
+    - レアル
+    - '8'
+    - '8'
+  rows_total:
+  - &t1
+    - モナコ
+    - '60'
+    - '27'
+  - &t2
+    - パリ・サンジェルマン
+    - '308'
+    - '256'
+  - &t3
+    - レアル・マドリード
+    - '111'
+    - '94'
+  - &t4
+    - フランス代表
+    - '107'
+    - '67'
+  - &t5
+    - 合計
+    - '586'
+    - '444'
   say:
-  - text: 5シーズンをさかのぼります。エムバペは代表を含めて、毎年50点前後です。
-    image: assets/images/20261004_mbappe_psg2019/01.jpg
-  - 2021年からの季は54試合で49点29アシスト。
-  - 2022年からの季は56試合で52点。
-  - 12月のワールドカップ決勝で、ハットトリックを決めました。
-  - レアル1年目の2024年からは69試合で51点。ラ・リーガ31点で得点王です。
-  - 2025年からは56試合で53点。リーグは25点で2季連続の得点王。
-  - チャンピオンズリーグも15点で得点王でした。
+  - text: ここで、エムバペの10年を数字で一気にたどります。まずはクラブの公式戦から。
+    image: assets/images/20261004_mbappe_psg2019_w/01.jpg
+    card: &seasons_a
+      type: table
+      title: キリアン・エムバペ 季ごとの数字①（クラブの公式戦）
+      columns: &season_cols
+      - 季
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - *s1
+      - *s2
+      - *s3
+      - *s4
+      - *s5
+      - *s6
+      source: Transfermarkt・FotMob
+  - text: 最初の季は14試合で1点。それが翌年、いきなり44試合26点です。
+    card:
+      <<: *seasons_a
+      highlight_row: 1
+  - text: その年、モナコは17年ぶりのリーグ優勝。19歳になる前の主役でした。
+    card:
+      <<: *seasons_a
+      highlight_row: 1
+  - text: パリでは2018年からの季に39点。ここから6季続けて、フランス1部の得点王です。
+    card:
+      <<: *seasons_a
+      highlight_row: 3
+  - text: 舞台をレアルに移しても、勢いは落ちません。1年目は59試合で44点。
+    image: assets/images/20261004_mbappe_real2026/01.jpg
+    card: &seasons_b
+      type: table
+      title: キリアン・エムバペ 季ごとの数字②（クラブの公式戦）
+      columns: *season_cols
+      rows:
+      - *s7
+      - *s8
+      - *s9
+      - *s10
+      - *s11
+      - *s12
+      source: Transfermarkt・レアル公式
+      highlight_row: 3
+  - text: 2年目は44試合で42点。ほぼ1試合に1点という、とんでもないペースです。
+    emph: true
+    card:
+      <<: *seasons_b
+      highlight_row: 4
+  - text: そして通算。パリでは308試合256点、クラブの歴史でいちばん多い得点です。
+    card: &total_card
+      type: table
+      title: キリアン・エムバペ 通算（2026年10月3日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - *t1
+      - *t2
+      - *t3
+      - *t4
+      - *t5
+      source: Transfermarkt・FotMob・レアル公式
+      highlight_row: 1
+  - text: レアルではすでに111試合で94点を積み上げました。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: フランス代表は107試合67点。こちらも代表の歴代最多得点です。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: 合わせて586試合444点。16歳のデビューから、10年10か月で刻んだ数字です。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 4
   sources:
-  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
-  - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/mbappe-gana-el-trofeo-pichichi-2025-26-23-05-2026
-  - https://www.espn.com/soccer/story/_/id/48979217/kylian-mbappe-fifa-world-cup-history-results-stats
+  - https://www.transfermarkt.com/kylian-mbappe/leistungsdatenverein/spieler/342229
+  - https://www.fotmob.com/players/701154/kylian-mbappe
+  - https://www.realmadrid.com/en-US/football/first-team/players/kylian-mbappe
+  - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/mbappe-nuevo-jugador-del-real-madrid-03-06-2024
+  - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/mbappe-maximo-goleador-de-la-historia-de-la-seleccion-francesa-16-06-2026
+  - https://www.skysports.com/football/news/11800/10882142/monaco-2-0-st-etienne-kylian-mbappe-fires-monaco-to-first-ligue-1-title-in-17-years
 - id: season
-  heading: 今季の数字と直近5試合
+  heading: 今季の8点と、左ひざ
   tier: 報道
   main: true
-  telop: 今季ここまで
+  telop: 今季はクラブで8試合8点
   narrator: 解説
-  card:
-    type: table
-    title: 直近5試合（代表を含む）
-    columns:
-    - 日付
-    - 相手
-    - 出場
-    - 得点
-    - 評点
-    rows:
-    - - 9/25
-      - トルコ
-      - 59分
-      - 1G 0A
-      - '7.6'
-    - - 9/20
-      - アトレティコ・マドリード
-      - 90分
-      - 0G 0A
-      - '6.4'
-    - - 9/15
-      - エルチェ
-      - 90分
-      - 1G 1A
-      - '8.7'
-    - - 9/12
-      - ラージョ・バジェカーノ
-      - 90分
-      - 2G 1A
-      - '9.5'
-    - - 9/8
-      - インテル
-      - 89分
-      - 1G 0A
-      - '8.4'
-    source: FotMob
+  rows_recent:
+  - &r1
+    - 9/25
+    - トルコ（代表）
+    - 59分
+    - 1G 0A
+    - '7.6'
+  - &r2
+    - 9/20
+    - アトレティコ
+    - 90分
+    - 0G 0A
+    - '6.4'
+  - &r3
+    - 9/15
+    - エルチェ
+    - 90分
+    - 1G 1A
+    - '8.7'
+  - &r4
+    - 9/12
+    - ラージョ
+    - 90分
+    - 2G 1A
+    - '9.5'
+  - &r5
+    - 9/8
+    - インテル
+    - 89分
+    - 1G 0A
+    - '8.4'
   say:
-  - text: レアルのエムバペ、27歳。ワールドカップ史上最多の22点を持つ右足が、今季もリーグ7試合で7点です。
+  - text: レアルの背番号10、エムバペ。開幕戦のハットトリックの夜、監督はこう語りました。
     short_only: true
-  - text: 今季はここまで9試合で9得点2アシスト、出場時間は779分。1点あたり86分。
-    image: assets/images/20261004_mbappe_sweden_wide/01.jpg
-  - ラ・リーガは7試合で7点2アシスト、チャンピオンズリーグは1試合で1点。
-  - 直近5試合は5点2アシスト。ラージョ戦は2点1アシストで、評点は10点満点の9.5。
-  - ただし9月20日のアトレティコ戦は枠内0本で、評点6.4。
-  - 大一番の相性は、今季の宿題です。
-  - 9月25日、ジダンの初陣で決勝点を決めた直後に左膝を痛めました。
-  - 離脱は報道で10日から2週間です。
+    image: assets/images/20261004_player_342229/pair_mourinho/01.jpg
+  - voice: モウリーニョ
+    text: この男は信じられない。
+  - voice: モウリーニョ
+    text: レアル・マドリードで、歴史を作ることに飢えているように見える
+    cont: true
+    pause: 0.5
+  - text: 今季ここまで、クラブの公式戦8試合で8点。719分の出場で、ほぼ90分に1点のペースです。
+    image: assets/images/20261004_mbappe_real2026/02.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns:
+      - 日付
+      - 相手
+      - 出場
+      - 得点
+      - 評点
+      rows:
+      - *r1
+      - *r2
+      - *r3
+      - *r4
+      - *r5
+      source: FotMob
+  - text: ラージョ戦は2点1アシスト。10点満点の評点で、9.5をたたき出しました。
+    emph: true
+    card:
+      <<: *recent_card
+      highlight_row: 3
+  - text: ところが9月25日、代表のトルコ戦。右足で決勝点を挙げた、その着地で左ひざを痛めます。
+    image: assets/images/20261004_mbappe_face_w/01.jpg
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 5分後に交代。代表を離れ、そこからの2試合を欠場しました。
+    card: none
+  - text: クラブの診断は、左ひざの裏側を伸ばしすぎたけが。復帰の時期は出していません。
+    card: none
+  - text: 手術は避けられた、という報道です。ただ同じ左ひざは、12月と3月にも痛めています。
+    card: none
+  - text: 次は現地10日、本拠地ベルナベウでのビジャレアル戦です。
+    card: none
+  - text: 間に合うという報道もあれば、無理はさせないという報道もあります。
+    card: none
   sources:
-  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
+  - https://www.espn.com/soccer/story/_/id/49734942/kylian-mbappe-hat-trick-goals-real-madrid-sociedad-vinicius-bellingham
+  - https://www.realmadrid.com/en-US/football/first-team/players/kylian-mbappe
   - https://www.fotmob.com/players/701154/kylian-mbappe
-  - https://www.goal.com/en/news/a-partnership-that-is-deadly-for-both-sides-mbappe-faces-a-nightmare-in-the-big-matches-with-real/bltae31c8106c3ac85a
-  - https://web.gekisaka.jp/news/world/detail/?459733-459733-fl=
   - https://www.realmadrid.com/en-US/news/football/first-team/medical-reports/parte-medico-de-mbappe-26-09-2026
+  - https://okdiario.com/diariomadridista/real-madrid/mbappe-salva-rodilla-mourinho-respira-no-habido-dano-estructural-importante-664254
+  - https://www.futbolfantasy.com/laliga/noticias/151952-as-eleva-el-drama-con-mbappe-esquiva-el-quirofano-y-podria-descansar-contra-el-villarreal
+  - https://okdiario.com/diariomadridista/real-madrid/mbappe-estara-villarreal-konate-deja-mourinho-pendiente-rodilla-665313
+  - https://news.footeo.com/2026/10/02/real-madrid-kylian-mbappe-se-fixe-une-date-de-retour-13573
+  - https://news.yahoo.co.jp/articles/2923fd754f078de497e2b8fda3618c213e27ddb0
 - id: story
   heading: マル秘話
   tier: 報道
@@ -303,22 +554,23 @@ sections:
   narrator: 解説
   card:
     type: points
-    title: エムバペの原点
+    title: エムバペの素顔
     items:
     - 8歳のとき家族がくれたベルナベウの模型を、お披露目の会見に持ってきた
     - 2018年W杯の報酬（約5,700万円）を全額寄付。代表の報酬は以来受け取っていない
     - 母の手作りチェックシートで、授業を受けたか先生のサインをもらっていた
   say:
-  - text: ここで数字を止めて、原点を2つ。
+  - text: 数字の外にある、エムバペの素顔を3つ。
     image: assets/images/20261004_mbappe_spain_w/01.jpg
   - 1つ目は、レアルのお披露目会見に持ってきた、ベルナベウの模型。8歳のとき家族がくれたものです。
-  - 持ち帰ると約束して、18年後に果たしました。いまのレアルについては、こう。
+  - text: 持ち帰ると約束して、18年後に本当に果たしました。いまのレアルについては、こう。
+    emph: true
   - voice: エムバペ
     text: ここで幸せを感じなかった瞬間は一度もないよ
     pause: 0.6
   - 2つ目はお金の使い方。2018年のワールドカップの報酬、約5,700万円を全額寄付しました。
   - 代表の報酬は、それ以来ずっと受け取っていません。
-  - 少年時代には、授業をちゃんと受けたか先生のサインをもらう、母の手作りのチェックシートがありました。
+  - 3つ目は少年時代。授業をちゃんと受けたか先生のサインをもらう、母の手作りのチェックシートがありました。
   - text: 育ったボンディの町には、彼を描いた壁画があります。「何でも可能な町」と添えて。
     pause: 0.5
   sources:
@@ -329,25 +581,28 @@ sections:
   - https://www.soccerdigestweb.com/news/detail/id=65981
   - https://www.france24.com/en/20180629-first-bondy-now-messi-incredible-rise-kylian-mbappe
 - id: view
-  heading: ハーランドとの1点差と膝
+  heading: W杯22点とクラシコ1勝、大一番での点と勝ち
   tier: 背景
   viewpoint: true
   narrator: 解説
-  telop: 10月11日、ビジャレアル戦
+  telop: 10月25日にクラシコ、26日にバロンドール発表
   say:
-  - text: 終わりに、これからのエムバペを数字で。
-    image: assets/images/20261004_mbappe_real2026/01.jpg
-  - 比べる相手はハーランド。今季9試合で10点、773分。エムバペは9試合で9点、時間はほぼ同じ。
-  - 1点差。2人の差は、いまは膝です。
-  - バロンドール、世界最優秀選手の賞は10月26日に発表。候補に入っている本人の言葉です。
+  - text: 最後に、大一番でのエムバペを、数字から読み解きます。
+    image: assets/images/20261004_mbappe_real2025/01.webp
+  - ワールドカップでは、出た試合と同じ数のゴールを3大会かけて積み上げました。
+  - レアルでのクラシコ、バルセロナとの一戦でも6試合で6点。点はしっかり取っています。
+  - text: ところがチームの勝ちは1度。残る5試合は敗れ、そのうち3つは決勝でした。
+    emph: true
+  - パリ時代のバルサ戦は、4試合6点で2勝。白いユニホームでは、点の数ほど勝ちがついてきていません。
+  - 10月25日には、敵地カンプ・ノウでのクラシコ。
+  - その翌日には、世界最優秀選手を選ぶバロンドールの発表が控えます。
+  - 候補に名を連ねる本人は、9月にこう話しています。
   - voice: エムバペ
     text: 昨季、僕より優れた選手はいなかった
     pause: 0.6
-  - 膝の復帰は報道で10月10日前後。クラブの次の試合は10月11日、ビジャレアル戦です。
-  - そこに間に合うか。そして10月25日のクラシコで、大一番の相性を変えられるかを見ます。
+  - まずはひざを治して、その舞台に立てるか。点と勝ちを一緒に持ち帰れるかに注目です。
   sources:
-  - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
-  - https://www.transfermarkt.com/erling-haaland/profil/spieler/418560
-  - https://www.fotmob.com/players/701154/kylian-mbappe
+  - https://www.goal.com/en/news/a-partnership-that-is-deadly-for-both-sides-mbappe-faces-a-nightmare-in-the-big-matches-with-real/bltae31c8106c3ac85a
+  - https://www.espn.com/soccer/story/_/id/48979217/kylian-mbappe-fifa-world-cup-history-results-stats
   - https://www.footballchannel.jp/2026/09/22/post1016550/
-  - https://news.yahoo.co.jp/articles/2923fd754f078de497e2b8fda3618c213e27ddb0
+  - https://www.espn.com/soccer/story/_/id/49866841/ballon-dor-2026-nominees-harry-kane-kylian-mbappe-lead-30-man-shortlist

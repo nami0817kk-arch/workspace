@@ -1,0 +1,226 @@
+# 取材メモ（10/4 題材 kirin_final_eve、型は quote）。材料の控え: research/raw/20261004_kirin_final_eve.md
+# 主役は「まだ出番の少ない若手（松木玖生・後藤啓介・佐野航大）と、決勝で誰が出るか」。決勝は 10/5（月）19:30 国立、相手ニュージーランド。
+# 前日の予告の回なので、試合の結果は書かない。
+# 10/2 の「日本のPK戦（キッカー5人・PK戦の歴史）」「堂安と鈴木彩艶」「久保の代表先発（出場時間）」と重ねない。
+#   PK戦の歴史・エクアドル戦のPK戦のスコア・久保の出場時間は入れない（エクアドル戦のPK戦は JFA の本文 5-3 と記事 5-4 が食い違うので、この回では言わない）。
+# 森保監督の前日会見（10/4）は、10/4 09:30 の時点でゲキサカ・JFA にまだ記事が無かった（raw の 0.）。
+# 事実の裏:
+#   出場時間: JFA の試合記録 PDF（9/24・9/28・10/1）＋スポーツナビの交代時刻。90分基準、追加時間は数えない（raw の 8.）。
+#     松木 63（11分に初ゴール）／メンバー外／出場なし。後藤 メンバー外／45／出場なし。佐野航大 45／出場なし／出場なし。瀬古 90／71／90＝251（3試合とも先発は瀬古だけ）。
+#   ニュージーランド: 世界ランキング86位・日本17位（JFA 9/28、7/20 更新）。A代表は日本の3勝2敗（2003・2014・2017 と日本が3連勝）。
+#     東京五輪の準々決勝 0-0、PK戦4-2で日本。キリン杯準決勝はパナマと1-1、PK戦5-3（NZ は5人全員成功。JFA PDF m01）。
+#   発言はすべてゲキサカ（10/3 の練習後の取材）の原文。
+# 写真: ゲキサカの日本代表の練習の写真（©Kaoru WATANABE/GEKISAKA）。代理店ではない。01 松木・02 後藤・03 佐野航大・04 瀬古・05 板倉。
+date: 2026年10月4日
+slot: japan
+format: quote
+people:
+- 松木玖生
+- 後藤啓介
+- 佐野航大
+- 瀬古歩夢
+theme:
+  id: kirin_final_eve
+  league: japan
+  league_name: キリンカップ
+  kind: other
+  topic: 日本代表
+  title: 松木玖生、後藤啓介、佐野航大。キリンカップ決勝の国立で出番は来るのか
+  opening_image: assets/images/20261004_kirin_final_eve/01_w.jpg
+  takeaway: 9月からの3試合で、松木玖生は63分、後藤啓介と佐野航大は45分。3試合とも先発した瀬古歩夢の251分とは大きな差がある。主力が先発したエクアドル戦のあとの決勝は、出番を待つ3人にとって、この4連戦で力を見せられる最後の90分になる
+short_title: 松木玖生「劣っているとは一切思わない」。決勝前日、出番を待つ若手たち
+thumbnail:
+  photo: assets/images/20261004_kirin_final_eve/01.jpg
+  photos:
+  - assets/images/20261004_kirin_final_eve/01_v.jpg
+  - assets/images/20261004_kirin_final_eve/02_v.jpg
+  - assets/images/20261004_kirin_final_eve/03_v.jpg
+  line1: 松木・後藤・佐野航大 決勝へ
+  line2: デビュー弾の松木、その後の出場は●分
+  reaction: そこまで言うなら見せてもらおうか
+sections:
+- id: matsuki
+  main: true
+  heading: 初ゴールのあと、2試合出番なし
+  tier: 報道
+  telop: 松木玖生「自分が劣っているとは一切思わないし、違いを作れると思っている」
+  narrator: キャスター
+  say:
+  - text: 代表デビュー戦で点を取った若手が、決勝を前に強気の言葉を残しました。
+    short_only: true
+    image: assets/images/20261004_kirin_final_eve/01_w.jpg
+  - voice: 松木玖生
+    text: 5大リーグでやっている選手もいる中、
+  - voice: 松木玖生
+    text: 自分が劣っているとは一切思わないし、
+    cont: true
+  - voice: 松木玖生
+    text: 違いを作れると思っている
+    cont: true
+  - text: 初めて日本代表に呼ばれた松木玖生。
+  - text: 初戦のウルグアイ戦で先発し、前半11分に代表初ゴールを決めました。
+  - text: ところが、続くベネズエラ戦は試合のメンバーから外れ、エクアドル戦はベンチから見届けました。
+  - text: 決勝の舞台は国立競技場。高校選手権で優勝し、プロになってからも結果を残してきた場所です。
+  - voice: 松木玖生
+    text: 結構相性がいいと思うので、出たら決められると思う
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460258-460258-fl=
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460258-460258-fl=
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026092401/text
+- id: goto
+  heading: 上田綺世から学ぶポストプレー
+  tier: 報道
+  telop: 後藤啓介「綺世くんは技術で勝負している」
+  narrator: キャスター
+  say:
+  - text: 長身のフォワード、後藤啓介は、ベネズエラ戦で先発しました。
+    image: assets/images/20261004_kirin_final_eve/02_w.jpg
+  - text: 前半で交代し、エクアドル戦は出番を待ったまま終えています。
+  - text: 代表では6試合に出て、初ゴールはまだこれからです。
+  - text: 前線で体を張ってボールを収めるポストプレー。その手本にしているのが、エースの上田綺世です。
+  - voice: 後藤啓介
+    text: ポストプレーの部分は学ぶことしかない
+  - voice: 後藤啓介
+    text: 綺世くんは技術で勝負している。
+  - voice: 後藤啓介
+    text: ぶつけるタイミング、角度とか
+    cont: true
+  - voice: 後藤啓介
+    text: そういうところを学んでいきたい
+    cont: true
+  - text: その上田も、代表で初めて点を取ったのは14試合目でした。
+  - text: 後藤が理想に掲げるのは、バイエルンのハリー・ケイン。点を取ることには、とことんこだわっています。
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460259-460259-fl=
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460259-460259-fl=
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026092801/text
+- id: sano
+  heading: 初戦のあと、ベンチで待った2試合
+  tier: 報道
+  telop: 佐野航大「チャンスが来たら掴むというのはずっと変わらずに思っていること」
+  narrator: キャスター
+  say:
+  - text: 佐野航大は、初戦のウルグアイ戦に先発し、前半で退きました。そのあとは、ベンチで出番を待っています。
+    image: assets/images/20261004_kirin_final_eve/03_w.jpg
+  - text: 中盤の真ん中は、鎌田大地と田中碧が3試合すべてに出て、兄の佐野海舟が2試合で先発しています。
+  - voice: 佐野航大
+    text: チャンスが来たら掴むというのは
+  - voice: 佐野航大
+    text: ずっと変わらずに思っていること。
+    cont: true
+  - voice: 佐野航大
+    text: それに向けて良い準備をするだけ
+    cont: true
+  - text: 佐野は、南米の相手と違い、決勝では日本がボールを持つ時間が長くなると見ています。
+  - voice: 佐野航大
+    text: 自分の立ち位置やボールのもらい方を
+  - voice: 佐野航大
+    text: しっかりやっていきたい
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460260-460260-fl=
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460260-460260-fl=
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026092401/text
+- id: view
+  viewpoint: true
+  heading: 3試合の出場時間と、決勝で回ってくる時間
+  tier: 背景
+  telop: 3試合の出場は瀬古251分、松木63分、後藤45分、佐野航大45分
+  narrator: 解説
+  say:
+  - text: 9月からの3試合で、3人の出場時間を並べてみます。
+    card:
+      type: table
+      title: 9月からの3試合の出場時間
+      columns: ['', ウルグアイ, ベネズエラ, エクアドル, 合計]
+      rows: &mins
+      - ['瀬古歩夢', '90分', '71分', '90分', '251分']
+      - ['松木玖生', '63分', 'メンバー外', '出場なし', '63分']
+      - ['後藤啓介', 'メンバー外', '45分', '出場なし', '45分']
+      - ['佐野航大', '45分', '出場なし', '出場なし', '45分']
+  - text: 松木は初戦の63分。
+    card:
+      type: table
+      title: 9月からの3試合の出場時間
+      columns: ['', ウルグアイ, ベネズエラ, エクアドル, 合計]
+      rows: *mins
+      highlight_row: 1
+  - text: 後藤は2試合目の45分。
+    card:
+      type: table
+      title: 9月からの3試合の出場時間
+      columns: ['', ウルグアイ, ベネズエラ, エクアドル, 合計]
+      rows: *mins
+      highlight_row: 2
+  - text: 佐野航大は初戦の45分です。
+    card:
+      type: table
+      title: 9月からの3試合の出場時間
+      columns: ['', ウルグアイ, ベネズエラ, エクアドル, 合計]
+      rows: *mins
+      highlight_row: 3
+  - text: 3試合すべてで先発したのは、瀬古歩夢ただ1人。合わせて251分です。
+    image: assets/images/20261004_kirin_final_eve/04_w.jpg
+    card:
+      type: table
+      title: 9月からの3試合の出場時間
+      columns: ['', ウルグアイ, ベネズエラ, エクアドル, 合計]
+      rows: *mins
+      highlight_row: 0
+  - voice: 瀬古歩夢
+    text: 全部出たいですね
+    card:
+      type: table
+      title: 9月からの3試合の出場時間
+      columns: ['', ウルグアイ, ベネズエラ, エクアドル, 合計]
+      rows: *mins
+      highlight_row: 0
+  - text: 日本の準決勝、エクアドル戦は主力が先発しました。その分、出番を待つ3人に回る時間は、増えるかもしれません。
+    image: assets/images/20261004_kirin_final_eve/01_w.jpg
+  - text: 決勝は5日、夜7時半から国立競技場。9月からの4連戦は、この90分で締めくくりです。
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/20260924/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260928/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/samuraiblue/news/00036822/
+  - https://www.jfa.jp/samuraiblue/news/00036851/
+  - https://www.jfa.jp/samuraiblue/lp/20261005/
+  - https://en.wikipedia.org/wiki/Football_at_the_2020_Summer_Olympics_%E2%80%93_Men%27s_tournament_%E2%80%93_Knockout_stage
+  - https://web.gekisaka.jp/news/japan/detail/?460243-460243-fl=
+  - https://web.gekisaka.jp/news/japan/detail/?460261-460261-fl=
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「次の試合は出番があるはずだから頑張って欲しい」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（ゲキサカ 460258 松木の記事）のコメント欄 2ページ目 oku********。全文
+  - voice: ネット民
+    text: そこまで言うなら見せてもらおうか。
+    image: assets/images/20261004_kirin_final_eve/01_w.jpg
+    short_voice: true
+  # Yahoo!ニュース（ゲキサカ 460259 後藤の記事）のコメント欄 ocg********。全文
+  - voice: ネット民
+    text: 後藤の向上心がヤバすぎる。
+    image: assets/images/20261004_kirin_final_eve/02_w.jpg
+  - voice: ネット民
+    text: 目標であるケインに追いつき追い越せで頑張ってほしい。
+    cont: true
+  # Yahoo!ニュース（ゲキサカ 460260 佐野航大の記事）のコメント欄 sep********。全文
+  - voice: ネット民
+    text: 他のボランチには無い強みがあるけれど、
+    image: assets/images/20261004_kirin_final_eve/03_w.jpg
+  - voice: ネット民
+    text: それを殆ど発揮出来ないまま見切られてる印象。
+    cont: true
+  - voice: ネット民
+    text: 次の試合は出番があるはずだから頑張って欲しい
+    cont: true
+  sources:
+  - https://news.yahoo.co.jp/articles/4e0093b6602d3124e35a975fd633f30e64d764de/comments
+  - https://news.yahoo.co.jp/articles/3924b59a2ed99e32a3b9fadba237e6254b3c067a/comments
+  - https://news.yahoo.co.jp/articles/cb9ae72fd9e05b18998a69ae73e168159b147859/comments

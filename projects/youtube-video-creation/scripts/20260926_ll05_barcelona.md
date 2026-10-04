@@ -28,11 +28,14 @@ description: 'バルセロナ。107年空けておいた胸に、最初に入れ
   この動画が答える問い: どんなクラブなのか
 
 
-  ※各社の報道をもとにしています。クラブが発表した「確定」、
+  この動画の見立て: 今季のバルセロナはリーグ7試合すべてに勝ち、1試合あたりの勝ち点は3.0。昨季に94点で優勝したときの2.47を上回るペースで、最初の大一番は10月25日、本拠地でのクラシコになる
+
+
+  ※画面の札で、クラブが発表した「確定」、
 
   報道機関が伝える「報道」、SNS段階の「未確認」、
 
-  経緯の説明である「背景」を画面上で分けています。
+  経緯の説明である「背景」を分けています。
 
   '
 tags:
@@ -61,6 +64,9 @@ sources:
 - https://www.espn.com/soccer/team/results/_/name/barcelona
 - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
 - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+quote_sources:
+- https://www.fcbarcelona.com/en/football/first-team/news/4578296/hansi-flick-were-focused-on-our-own-job
+- https://www.fcbarcelona.com/en/football/first-team/news/4579409/flicks-barca-is-a-goal-machine
 cards:
   history_card:
     type: table
@@ -280,8 +286,8 @@ cards:
 キャスター: ホームタウンはバルセロナ。地中海に面した、カタルーニャ州の州都。
   no_telop: true
   image: assets/stats/ll_barcelona_data2.png
-キャスター: 本拠地はカンプ・ノウ。改修中で、いまは**6万2652人**。完成すれば**10万5000人**です。
-  telop: 本拠地はカンプ・ノウ。改修中で、いまは**6万2652人**。完成すれば**10万5000人**です
+キャスター: 本拠地はカンプ・ノウ。改修を終えれば、**10万5000人**が入る大きさになります。
+  telop: 本拠地はカンプ・ノウ。改修を終えれば、**10万5000人**が入る大きさになります
   image: assets/backgrounds/stadium_バルセロナ.png
 キャスター: 持ち主は**15万人**を超える会員。会長のラポルタは、**2026年3月**に再選されました。
   no_telop: true
@@ -358,14 +364,12 @@ cards:
 解説: 運営の型は、育てて使う。育成組織のラ・マシアには、**300人**を超える若手がいます。
   telop: 運営の型は、育てて使う。育成組織のラ・マシアには、**300人**を超える若手がいます
   card: features_1_card
-  image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
 解説: 2010年のバロンドールは、最終候補の**3人**とも、ラ・マシアの出身でした。
   telop: 2010年のバロンドールは、最終候補の**3人**とも、ラ・マシアの出身でした
   image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
 解説: 気質を表す合言葉は「クラブ以上の存在」。カタルーニャの誇りを背負ってきました。
   telop: 気質を表す合言葉は「クラブ以上の存在」。カタルーニャの誇りを背負ってきました
   card: features_3_card
-  image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
 
 ## ファンの呼び名は「お尻」
 @bg: assets/backgrounds/stadium_バルセロナ_in.png
@@ -477,12 +481,13 @@ cards:
 キャスター: リーグ戦で**129試合**に出ています。
   no_telop: true
   image: assets/stats/ll_barcelona_fw_f.png
-キャスター: ラミン・ヤマルはスペイン代表で**33試合**。
+キャスター: ラミン・ヤマルはスペイン代表で**36試合**。
   no_telop: true
   image: assets/stats/ll_barcelona_fw_f.png
 
-## 今季のここまで
+## 7戦7勝、昨季の優勝より速い勝ち点のペース
 @bg: assets/backgrounds/stadium_バルセロナ_in.png
+@viewpoint: true
 
 解説: ラ・リーガは7試合を終えて、**7勝**です。
   telop: ラ・リーガは7試合を終えて、**7勝**です
@@ -490,7 +495,11 @@ cards:
   card: season_card
 解説: 順位は**1位**、勝ち点は**21**です。
   telop: 順位は**1位**、勝ち点は**21**です
+解説: 1試合あたりの勝ち点は**3.0**。昨季は38試合で**94**、1試合あたり**2.47**で優勝しています。
+  telop: 1試合あたりの勝ち点は**3.0**。昨季は38試合で**94**、1試合あたり**2.47**で優勝しています
 解説: 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました。
   telop: 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました
 解説: 顔ぶれも変わりました。このクラブで欧州王者になった選手は、もう一人もいません。
   telop: 顔ぶれも変わりました。このクラブで欧州王者になった選手は、もう一人もいません
+解説: 最初の大一番は**10月25日**。本拠地カンプ・ノウに、レアル・マドリードを迎えるクラシコです。
+  telop: 最初の大一番は**10月25日**。本拠地カンプ・ノウに、レアル・マドリードを迎えるクラシコです

@@ -1,0 +1,241 @@
+# 取材メモ（10/4 題材 bruno_ronaldo、型は quote）。材料の控えは research/raw/20261004_bruno_ronaldo.md。
+# 10/2「ロナウドの代表離脱」、10/3「ロナウド不在のポルトガル」を出している。離脱の経緯は1行だけ。空港の騒ぎ・フォロワー・得点者の分散・146得点は言わない。
+# 主役は、チームの中からロナウドをどう語っているか。ブルーノ（10/3 の会見とテレビ）、ヴェイガ・レオン・メンデス（10/1）、監督（10/3）。
+# レオンの「7番」の言葉（10/3 で使用）とヴィティーニャの「距離を置こうとした」（10/2 で使用）は使わない。レオンは同じ日の別の答え。
+# 試合（10/4 19:45 ポルト）の結果は書かない。試合の前に出す回。
+# 事実の裏:
+#   ブルーノの会見: FPF 公式 news/58103 と Record の質疑の書き起こし（ポルトガル語の原文から訳した）。「選手の部屋で」は A Bola の版。
+#   テレビ: O Jogo・TSF の書き起こし（会見のあと、練習の前のインタビュー）。
+#   選手: O Jogo の10/1 のミックスゾーン（ヴェイガ・レオン・メンデス）。
+#   監督: A Bola の会見の全文（10/3）。
+#   数字: 代表96試合（Record の「95」＋デンマーク戦）、アシスト27で歴代3位（Bola na Rede、Playmaker のデータ。フィーゴ40・ロナウド35）。
+#   ロナウドの帰りの便: A Bola 10/3（着くのはポルトガル時間19:44、キックオフ19:45）。会長が試合後に話す見込み: Renascença 10/2。
+# 写真: 01 は Commons（CC BY-SA 4.0 / Bryan Berlin、2026年W杯のクロアチア戦）。02・03 は FPF 公式（Diogo Pinto / FPF）。代理店は使っていない。
+date: 2026年10月4日
+slot: other_1
+format: quote
+people:
+- ブルーノ・フェルナンデス
+- クリスティアーノ・ロナウド
+- ジョルジェ・ジェズス
+theme:
+  id: bruno_ronaldo
+  league: ''
+  league_name: UEFAネーションズリーグ
+  kind: other
+  topic: ポルトガル代表
+  title: ブルーノ・フェルナンデス、去ったロナウドに願ったこと
+  opening_image: assets/images/20261004_bruno_ronaldo/01_w.jpg
+  takeaway: 合宿を離れたロナウドについて、3日に主将の腕章を巻いたブルーノ・フェルナンデスが本人との会話を明かし、代表・サッカー・国の「いちばんの象徴」と言い切った。代表のアシストで歴代3位のブルーノが並べたのは、その上にいるフィーゴとロナウド。去るならお祝いの日に、という願いが叶うかは、4日のノルウェー戦のあとに監督と会長が何を話すかにかかっている
+short_title: ブルーノ・フェルナンデス、ロナウドと交わした会話を明かす
+thumbnail:
+  photo: assets/images/20261004_bruno_ronaldo/01.jpg
+  line1: ロナウドは「国の象徴」
+  line2: ブルーノ「去るなら●●の日に」
+  reaction: パーフェクトな大人コメントやな
+sections:
+- id: symbol
+  main: true
+  heading: 腕章を巻いた男が明かした会話
+  tier: 報道
+  telop: ブルーノ「クリスは代表の、この国のいちばんの象徴であり続ける」
+  narrator: キャスター
+  say:
+  - text: ロナウドがポルトガル代表のキャンプを離れて4日。代わりに主将を務めた男が、その会話を明かしました。
+    short_only: true
+  - text: 10月3日、ノルウェー戦を翌日に控えたポルトでの会見。
+    image: assets/images/20261004_bruno_ronaldo/01_w.jpg
+  - text: 監督の隣に座ったのは、デンマーク戦で主将の腕章を巻いたブルーノ・フェルナンデスでした。
+  - text: ロナウドのことを聞かれると、愛称の「クリス」と呼んで、まず本人と話したことを明かします。
+  - voice: ブルーノ
+    text: クリスとは、話をした。
+  - voice: ブルーノ
+    text: 伝えたことを、ここでもう一度言う。
+    cont: true
+  - voice: ブルーノ
+    text: 何が起きても、クリスは代表の
+    cont: true
+  - voice: ブルーノ
+    text: いちばんの象徴であり続ける。
+    cont: true
+    emph: true
+  - voice: ブルーノ
+    text: この国のサッカーの、そしてきっと、
+    cont: true
+  - voice: ブルーノ
+    text: この国のいちばんの象徴だ。
+    cont: true
+  - voice: ブルーノ
+    text: 彼の居場所は、史上最高の選手たちの中だけじゃない。
+  - voice: ブルーノ
+    text: ポルトガルのすべての人の、心の中にもある。
+    cont: true
+  quotes_from:
+  - ポルトガルサッカー連盟 https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58103
+  - Record https://www.record.pt/futebol/selecoes/detalhe/bruno-fernandes-tive-uma-conversa-com-o-cristiano-e-o-maior-simbolo-de-portugal
+  sources:
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58103
+  - https://www.record.pt/futebol/selecoes/detalhe/bruno-fernandes-tive-uma-conversa-com-o-cristiano-e-o-maior-simbolo-de-portugal
+  - https://www.abola.pt/noticias/bruno-fernandes-revela-conversa-com-ronaldo-nao-existem-divisoes-na-selecao-2026100316312794764
+  - https://www.espn.com/soccer/story/_/id/50092158/cristiano-ronaldo-eternally-portugal-greatest-symbol-bruno-fernandes
+- id: festa
+  heading: 去るなら、お祝いの日に
+  tier: 報道
+  telop: ブルーノ「もし去るなら、それはお祝いの日でなければならない」
+  narrator: キャスター
+  say:
+  - text: 会見のあとのテレビのインタビューでは、さらに一歩踏み込みました。
+    image: assets/images/20261004_bruno_ronaldo/02.jpg
+  - voice: ブルーノ
+    text: クリスと話したのは、敬意からだ。
+  - voice: ブルーノ
+    text: 願っているのは、彼がかっとなって、
+    cont: true
+  - voice: ブルーノ
+    text: 代表を完全に去ると決めないこと。
+    cont: true
+  - voice: ブルーノ
+    text: もし去るなら、それはお祝いの日でなければならない。
+    cont: true
+    emph: true
+  - voice: ブルーノ
+    text: 今回のようなやり方ではなく。
+    cont: true
+  - text: さらに、ポルトガルのサッカーの歴史に残るふたりの名前を挙げています。
+  - voice: ブルーノ
+    text: 彼は、この国の名前を、
+  - voice: ブルーノ
+    text: 来たことのない場所まで連れていった。
+    cont: true
+  - voice: ブルーノ
+    text: エウゼビオとルイス・フィーゴには、敬意を払ったうえでね。
+    cont: true
+  - text: エウゼビオは1966年のワールドカップの得点王。フィーゴは2000年のバロンドールです。
+  - text: そのふたりを前にしてもなお、ロナウドを上に置きました。
+  quotes_from:
+  - Record https://www.record.pt/futebol/selecoes/detalhe/bruno-fernandes-a-minha-esperanca-e-que-ronaldo-nao-tome-decisoes-a-quente-e-queira-abandonar-selecao-de-vez
+  - O Jogo https://www.ojogo.pt/internacional/artigo/bruno-fernandes-espera-que-cristiano-ronaldo-nao-tome-decisoes-a-quente/18133307
+  sources:
+  - https://www.record.pt/futebol/selecoes/detalhe/bruno-fernandes-a-minha-esperanca-e-que-ronaldo-nao-tome-decisoes-a-quente-e-queira-abandonar-selecao-de-vez
+  - https://www.ojogo.pt/internacional/artigo/bruno-fernandes-espera-que-cristiano-ronaldo-nao-tome-decisoes-a-quente/18133307
+  - https://www.tsf.pt/desporto/artigo/se-acontecer-tem-de-ser-num-dia-de-festa-bruno-fernandes-espera-que-ronaldo-nao-queira-abandonar-selecao-de-vez/18133299
+  - https://en.wikipedia.org/wiki/Eus%C3%A9bio
+  - https://en.wikipedia.org/wiki/Lu%C3%ADs_Figo
+- id: team
+  heading: 選手の部屋で、ずっとトランプを
+  tier: 報道
+  telop: ブルーノ「クリスもチームの一員だ」
+  narrator: キャスター
+  say:
+  - text: ここ数日の選手たちの様子を聞かれると、ブルーノはこう話しています。
+    card: none
+  - voice: ブルーノ
+    text: 選手の部屋で、ずっとトランプをしていた。
+  - voice: ブルーノ
+    text: クリスもチームの一員だ。今回の最初の試合にも出ていた。
+    cont: true
+  quotes_from:
+  - Record https://www.record.pt/futebol/selecoes/detalhe/bruno-fernandes-tive-uma-conversa-com-o-cristiano-e-o-maior-simbolo-de-portugal
+  sources:
+  - https://www.record.pt/futebol/selecoes/detalhe/bruno-fernandes-tive-uma-conversa-com-o-cristiano-e-o-maior-simbolo-de-portugal
+  - https://www.abola.pt/noticias/bruno-fernandes-revela-conversa-com-ronaldo-nao-existem-divisoes-na-selecao-2026100316312794764
+- id: view
+  viewpoint: true
+  heading: ブルーノの代表の数字と、ノルウェー戦の夜
+  tier: 報道
+  telop: アシストは代表の歴代3位。上にいるのはフィーゴとロナウド
+  narrator: 解説
+  card:
+    type: table
+    title: ポルトガル代表 アシストの歴代上位
+    columns: [選手, アシスト]
+    rows: &assist
+    - ['ルイス・フィーゴ', '40']
+    - ['クリスティアーノ・ロナウド', '35']
+    - ['ブルーノ・フェルナンデス', '27']
+  say:
+  - text: 同じ日、先に話したジェズス監督も、ロナウドとの歩み寄りを聞かれていました。
+    image: assets/images/20261004_bruno_ronaldo/03.jpg
+    card: none
+  - voice: ジェズス監督
+    text: ロナウドは代表の、そしてポルトガルの象徴だ。
+  - voice: ジェズス監督
+    text: その話は、試合のあとに時間がたっぷりある。
+    cont: true
+  - text: 監督の言葉は「象徴」。ブルーノは、そこに「いちばんの」を重ねました。
+    image: assets/images/20261004_bruno_ronaldo/01_w.jpg
+  - text: そのブルーノは、代表で96試合に出て29得点。
+    card:
+      type: table
+      title: ポルトガル代表 アシストの歴代上位
+      columns: [選手, アシスト]
+      rows: *assist
+  - text: アシストは27で、ポルトガル代表の歴代3位です。
+    card:
+      type: table
+      title: ポルトガル代表 アシストの歴代上位
+      columns: [選手, アシスト]
+      rows: *assist
+      highlight_row: 2
+  - text: 上にいるのは、敬意を払ったフィーゴと、象徴と呼んだロナウドの2人。
+    card:
+      type: table
+      title: ポルトガル代表 アシストの歴代上位
+      columns: [選手, アシスト]
+      rows: *assist
+      highlight_row: 1
+  - text: 数字で自分の前を行く2人のうち、ロナウドをフィーゴより上に置いた形です。
+    card:
+      type: table
+      title: ポルトガル代表 アシストの歴代上位
+      columns: [選手, アシスト]
+      rows: *assist
+      highlight_row: 0
+  - text: ノルウェー戦でも、腕章を巻くのはブルーノとみられています。
+    card: none
+  - text: キックオフは、日本では5日の明け方、3時45分。
+  - text: 試合の日、ロナウドはマドリードからサウジアラビアへ飛ぶ予定です。
+  - text: 着くのはポルトガルの時間で19時44分。試合が始まる、1分前です。
+    emph: true
+  - text: 監督が「話す時間がある」と言ったのも、連盟の会長が口を開くとみられるのも、この試合のあと。
+  - text: ブルーノの願った「お祝いの日」が来るのか、その答えも、そこから見えてきます。
+  sources:
+  - https://www.abola.pt/noticias/ronaldo-como-simbolo-orgulho-e-cansaco-tudo-o-que-disse-jorge-jesus-2026100314243370394
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58102
+  - https://www.record.pt/futebol/selecoes/detalhe/ruben-dias-capitao-da-selecao-apesar-de-bruno-fernandes-ter-mais-internacionalizacoes
+  - https://bolanarede.pt/especial-bola-na-rede/atualidade/bruno-fernandes-no-podio-de-mais-assistencias-pela-selecao-nacional-eis-o-registo/
+  - https://www.abola.pt/noticias/em-dia-de-jogo-de-portugal-ronaldo-vai-regressar-a-arabia-saudita-2026100319540038361
+  - https://rr.pt/bola-branca/noticia/clube-portugal/2026/10/02/pedro-proenca-quer-reunir-jesus-e-ronaldo-para-regresso-do-capitao/487731/
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58075
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「パーフェクトな大人コメントやな」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（GOAL「ブルーノ・フェルナンデス「C・ロナウドは最高の象徴。代表に分裂はない」」）のコメント欄 4bb2549a。全文（「直接的は」は原文のまま）
+  - voice: ネット民
+    text: 上手い言い回しやなぁ。
+  - voice: ネット民
+    text: 「象徴」でありそれは変わらないとはいってるが、
+    cont: true
+  - voice: ネット民
+    text: 直接的は発言は避け、代表自体を最大限に立てている。
+    cont: true
+  - voice: ネット民
+    text: 今までの功績は変わらないし、それだけは事実だからね。
+    cont: true
+  # 同じ欄 6151c4da。全文
+  - voice: ネット民
+    text: ロナウドの功績を讃え、しかしあの態度でもまだチームに必要で
+    short_voice: true
+  - voice: ネット民
+    text: 戻ってきてほしいとまでは言わない
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: パーフェクトな大人コメントやな
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/afd1d586c62e0868f50723bbf037954a74b4572e/comments

@@ -17,6 +17,7 @@ theme:
   topic: バルセロナ
   title: バルセロナ。107年空けておいた胸に、最初に入れた名前
   question: どんなクラブなのか
+  takeaway: 今季のバルセロナはリーグ7試合すべてに勝ち、1試合あたりの勝ち点は3.0。昨季に94点で優勝したときの2.47を上回るペースで、最初の大一番は10月25日、本拠地でのクラシコになる
   hook: いまの監督は、日本代表との一戦が、前の仕事の最後の試合でした。
   lead: スペインで、いちばん多い国内タイトル**82**個。
   opening_image: assets/stats/ll_barcelona_data_t.png
@@ -56,7 +57,7 @@ sections:
     text: ホームタウンはバルセロナ。地中海に面した、カタルーニャ州の州都。
     no_telop: true
   - image: assets/backgrounds/stadium_バルセロナ.png
-    text: 本拠地はカンプ・ノウ。改修中で、いまは**6万2652人**。完成すれば**10万5000人**です。
+    text: 本拠地はカンプ・ノウ。改修を終えれば、**10万5000人**が入る大きさになります。
   - image: assets/stats/ll_barcelona_data4.png
     text: 持ち主は**15万人**を超える会員。会長のラポルタは、**2026年3月**に再選されました。
     no_telop: true
@@ -418,14 +419,15 @@ sections:
     text: リーグ戦で**129試合**に出ています。
     no_telop: true
   - image: assets/stats/ll_barcelona_fw_f.png
-    text: ラミン・ヤマルはスペイン代表で**33試合**。
+    text: ラミン・ヤマルはスペイン代表で**36試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/FC_Barcelona
   bg: assets/backgrounds/stadium_バルセロナ_in.png
   official: false
 - id: season
-  heading: 今季のここまで
+  viewpoint: true
+  heading: 7戦7勝、昨季の優勝より速い勝ち点のペース
   tier: 報道
   telop: 7試合で7勝。1位
   narrator: 解説
@@ -461,8 +463,10 @@ sections:
   say:
   - ラ・リーガは7試合を終えて、**7勝**です。
   - 順位は**1位**、勝ち点は**21**です。
+  - 1試合あたりの勝ち点は**3.0**。昨季は38試合で**94**、1試合あたり**2.47**で優勝しています。
   - 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました。
   - 顔ぶれも変わりました。このクラブで欧州王者になった選手は、もう一人もいません。
+  - 最初の大一番は**10月25日**。本拠地カンプ・ノウに、レアル・マドリードを迎えるクラシコです。
   sources:
   - https://www.espn.com/soccer/team/results/_/name/barcelona
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard

@@ -1,0 +1,282 @@
+# 取材メモ（10/4 題材 england_croatia、型は news）。材料の控えは research/raw/20261004_england_croatia.md。
+# 問いは1つ：6月のW杯では4対2だった相手に、なぜ0対7まで差が開いたのか。主役はクロアチアの崩れ方（モドリッチの言葉）。
+# ケインの記録（年間10点以上を3度・通算89点）は得点の流れの中で1〜2行だけ。節は立てない。
+# 事実の裏:
+#   スコアと得点者・時間は Sky Sports と Total Croatia、アシストは FotMob（5181853）。ベリンガム1得点3アシストは FotMob。
+#   それまでの最大の負けはスペイン戦0-6（2018年ネーションズリーグ、Total Croatia）。
+#   無観客の処分は「ファンの騒ぎと人種差別的な振る舞い」（Rijeka Danas）。どの試合の件かは書かれていないので言わない。14歳以下の子どもは無料、約6,000人（Total Croatia）。
+#   W杯 6/17 ダラス 4-2（England Football の試合ページ。ムサの同点は45+5分）。数字は FotMob（4667825 と 5181853）。
+#   ダリッチ監督はW杯のあとに退任（いまはUAEの監督）。後任はビリッチ（TV Beč）。題材メモの「ダリッチの言葉」はビリッチの言葉に置き換えた。
+#   モドリッチの言葉は Dalmacija News（Index.hr の転載と明記）の文。Index.hr は 403 で原文を開けなかった。最後の「20年で初めて本当に恥」は前と同じ中身なので切った。
+#   次の試合：10/6 クロアチア対スペイン（スプリト）、イングランド対チェコ（ホーム）。スペインはグループで3連勝（FotMob の日ごとの一覧）。
+# 反応: Yahoo!ニュース（フットボールチャンネルの記事）のコメント欄から個人の投稿2件（全文）。子どもの来場を書いた投稿（はなたれ）は2つ目の節と中身が重なり、尺も4分を超えるので外した。海外の声は取れなかった（Reddit は requests で 403）。
+# 写真: Novi list の写真記事（Foto: Marko Gracin、Novi list の写真記者。代理店ではない）。冒頭は 01_w、ショートは 01_v。
+date: 2026年10月4日
+slot: その他
+format: news
+people:
+- ルカ・モドリッチ
+- スラヴェン・ビリッチ
+- トーマス・トゥヘル
+- ハリー・ケイン
+- ジュード・ベリンガム
+theme:
+  id: england_croatia
+  league: ''
+  league_name: UEFAネーションズリーグ
+  kind: match
+  topic: クロアチア代表
+  title: モドリッチ「20年で初めて」の恥。W杯で4対2の相手に、0対7まで開いた差
+  question: ワールドカップでは4対2だったクロアチアが、なぜイングランドに0対7まで差を開けられたのか
+  takeaway: 6月のワールドカップでは4対2で、クロアチアは2度追いついていた。今回イングランドのシュートは22本から19本に減ったのに、決定機は7回から12回に増えた。地面の競り合いの勝率は52%から63%、ドリブルの成功は7回から16回。クロアチアの枠内シュートは5本から1本になった。点差を広げたのは、主将モドリッチが嘆いた球際の差だった。次は6日、3連勝のスペインをスプリトで迎える
+  opening_image: assets/images/20261004_england_croatia/01_w.jpg
+short_title: クロアチアが史上最大の大敗。主将モドリッチが口にした言葉
+thumbnail:
+  photo: assets/images/20261004_england_croatia/01.jpg
+  line1: クロアチア 史上最大の0-7
+  line2: モドリッチ「20年で初めて●を感じた」
+  reaction: また強くはなると思う
+sections:
+- id: result
+  heading: 代表の歴史で最も大きな負け
+  tier: 報道
+  telop: クロアチア0対7イングランド。クロアチア代表の史上最大の大敗
+  narrator: キャスター
+  card:
+    type: table
+    title: イングランドの得点
+    columns: [時間, 得点, アシスト]
+    rows: &goals
+    - ['8分', 'ケイン', 'ベリンガム']
+    - ['21分', 'ベリンガム', 'ゴードン']
+    - ['39分', 'ゴードン', 'クアンサー']
+    - ['45分', 'サカ', 'ベリンガム']
+    - ['53分', 'ケイン', 'アンダーソン']
+    - ['68分', 'サカ', 'ケイン']
+    - ['87分', 'ロジャーズ', 'ベリンガム']
+  say:
+  - text: 3日、ヨーロッパの代表が争うネーションズリーグで、クロアチア対イングランド。
+    image: assets/images/20261004_england_croatia/01_w.jpg
+  - text: クロアチアがホームで0対7。代表の歴史で、最も大きな点差の負けです。
+  - text: それまでの最大は、2018年にスペインに0対6で負けた試合でした。
+  - text: 主将モドリッチが先発したクロアチアは、8分にケインに先制されます。
+    image: assets/images/20261004_england_croatia/02.jpg
+    card:
+      type: table
+      title: イングランドの得点
+      columns: [時間, 得点, アシスト]
+      rows: *goals
+      highlight_row: 0
+  - text: 21分にベリンガム、39分にゴードン、前半の終わりにはサカ。
+    card:
+      type: table
+      title: イングランドの得点
+      columns: [時間, 得点, アシスト]
+      rows: *goals
+      highlight_row: 3
+  - text: 後半も53分にケイン、68分にサカ、87分にロジャーズ。
+    image: assets/images/20261004_england_croatia/04_w.jpg
+    card:
+      type: table
+      title: イングランドの得点
+      columns: [時間, 得点, アシスト]
+      rows: *goals
+      highlight_row: 6
+  - text: トゥヘル監督は、こう振り返ります。
+  - voice: トーマス・トゥヘル
+    text: 3対0のあとの3分ほどは、
+  - voice: トーマス・トゥヘル
+    text: 大きなミスや簡単なボールロストがあったかもしれない。
+    cont: true
+  - voice: トーマス・トゥヘル
+    text: それでも、全員が90分間、高いレベルで戦った試合だった。
+    cont: true
+  - text: ベリンガムは自ら1点を決め、さらに3点をお膳立てしました。
+    card:
+      type: table
+      title: イングランドの得点
+      columns: [時間, 得点, アシスト]
+      rows: *goals
+  quotes_from:
+  - スカイスポーツ https://www.skysports.com/football/news/13594637
+  sources:
+  - https://www.skysports.com/football/news/13594637
+  - https://total-croatia-news.com/news/sport/croatia-suffer-heaviest-defeat-in-history-in-7-0-loss-to-england/
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181853
+  - https://news.yahoo.co.jp/articles/393384835bb311bf53c77e0b4048b4817dc1d9ce
+- id: shame
+  main: true
+  heading: 主将が口にした「恥」
+  tier: 報道
+  telop: モドリッチ「ここに来て20年になるが、試合のあとで恥を感じたのは初めてだ」
+  narrator: キャスター
+  say:
+  - text: クロアチア代表がホームでイングランドに0対7で敗戦。主将モドリッチは試合のあとこう語りました。
+    short_only: true
+  - voice: ルカ・モドリッチ
+    text: 競り合いも、激しさも、ファウルも、まとまりも無かった。
+    image: assets/images/20261004_england_croatia/01_w.jpg
+  - voice: ルカ・モドリッチ
+    text: この代表で20年になるが、
+    cont: true
+  - voice: ルカ・モドリッチ
+    text: 試合のあとで恥を感じたのは初めてだ。
+    cont: true
+  - voice: ルカ・モドリッチ
+    text: 負けることはある。相手のほうが上だった。
+    cont: true
+  - voice: ルカ・モドリッチ
+    text: でも、こんな負け方で、評判を台無しにするなんて。
+    cont: true
+  - voice: ルカ・モドリッチ
+    text: 許されないことだ。
+    cont: true
+  - text: この日のスタンドを埋めたのは、子どもたちでした。
+    image: assets/images/20261004_england_croatia/05.jpg
+  - text: ファンの騒ぎと差別的な振る舞いで処分を受け、一般の客を入れられませんでした。
+  - text: 代わりに、国じゅうのサッカースクールなどから、子どもたちが招かれていました。
+  - text: この夏にダリッチ前監督の後を継いだビリッチ監督も、まず子どもたちに触れました。
+    image: assets/images/20261004_england_croatia/03_w.jpg
+  - voice: スラヴェン・ビリッチ
+    text: がっかりしているし、来てくれた子どもたちに申し訳ない。
+  - voice: スラヴェン・ビリッチ
+    text: 自分たちにとっても、選手たちにとってもつらい。
+    cont: true
+  - voice: スラヴェン・ビリッチ
+    text: 彼らは最初から、サッカーのあらゆる面で
+    cont: true
+  - voice: スラヴェン・ビリッチ
+    text: 私たちよりはるかに上だった。速く、激しかった。
+    cont: true
+  quotes_from:
+  - ダルマツィヤ・ニュース https://www.dalmacijanews.hr/clanak/modric-nakon-sedam-komada-engleske-prvi-put-u-20-godina-osjecam-bas-sram/
+  - テレグラム https://www.telegram.hr/telesport/na-prvu/bilicu-tesko-pao-poraz-protiv-engleske-zao-mi-je-djece-koja-su-dosla-zao-mi-je-i-nas/
+  sources:
+  - https://www.dalmacijanews.hr/clanak/modric-nakon-sedam-komada-engleske-prvi-put-u-20-godina-osjecam-bas-sram/
+  - https://www.telegram.hr/telesport/na-prvu/bilicu-tesko-pao-poraz-protiv-engleske-zao-mi-je-djece-koja-su-dosla-zao-mi-je-i-nas/
+  - https://www.rijekadanas.com/hrvatska-i-engleska-na-rujevici-pred-gotovo-praznim-tribinama-uefa-odobrila-posebnu-iznimku/
+  - https://total-croatia-news.com/news/sport/croatia-suffer-heaviest-defeat-in-history-in-7-0-loss-to-england/
+  - https://www.tvbec.at/2026/10/03/bilic-hns-odgovornost-hrvatska-engleska-0-7/
+- id: view
+  viewpoint: true
+  heading: ワールドカップの4対2と比べて開いた数字
+  tier: 背景
+  telop: W杯より少ないシュートで、決定機は7回から12回。競り合いの勝率は52%から63%
+  narrator: 解説
+  card:
+    type: table
+    title: イングランド対クロアチアの数字（W杯と今回）
+    columns: ['', 'W杯 6月', '今回 10月']
+    rows: &cmp
+    - ['イングランドのシュート', '22本', '19本']
+    - ['イングランドの決定機', '7回', '12回']
+    - ['地面の競り合い（イングランドの勝率）', '52%', '63%']
+    - ['イングランドのドリブル成功', '7回', '16回']
+    - ['クロアチアの枠内シュート', '5本', '1本']
+  say:
+  - text: 両チームは、6月のワールドカップ初戦でも対戦しています。
+    card:
+      type: table
+      title: イングランド対クロアチアの数字（W杯と今回）
+      columns: ['', 'W杯 6月', '今回 10月']
+      rows: *cmp
+  - text: そのときはイングランドが4対2で勝ちましたが、クロアチアは2度追いつきました。
+    card:
+      type: table
+      title: イングランド対クロアチアの数字（W杯と今回）
+      columns: ['', 'W杯 6月', '今回 10月']
+      rows: *cmp
+  - text: 実はイングランドのシュートは、6月の22本より少ない19本です。
+    card:
+      type: table
+      title: イングランド対クロアチアの数字（W杯と今回）
+      columns: ['', 'W杯 6月', '今回 10月']
+      rows: *cmp
+      highlight_row: 0
+  - text: それなのに、決まって当然の場面は7回から12回に増えました。
+    card:
+      type: table
+      title: イングランド対クロアチアの数字（W杯と今回）
+      columns: ['', 'W杯 6月', '今回 10月']
+      rows: *cmp
+      highlight_row: 1
+  - text: 差が開いたのは、地面でボールを奪い合う、球際の競り合いです。
+    card:
+      type: table
+      title: イングランド対クロアチアの数字（W杯と今回）
+      columns: ['', 'W杯 6月', '今回 10月']
+      rows: *cmp
+      highlight_row: 2
+  - text: その勝率は、6月のイングランドが52%でほぼ互角。今回は63%でした。
+    emph: true
+    card:
+      type: table
+      title: イングランド対クロアチアの数字（W杯と今回）
+      columns: ['', 'W杯 6月', '今回 10月']
+      rows: *cmp
+      highlight_row: 2
+  - text: ドリブルで抜き去った回数も、7回から16回へ。
+    card:
+      type: table
+      title: イングランド対クロアチアの数字（W杯と今回）
+      columns: ['', 'W杯 6月', '今回 10月']
+      rows: *cmp
+      highlight_row: 3
+  - text: クロアチアが枠に飛ばしたシュートは、5本から1本に減りました。
+    card:
+      type: table
+      title: イングランド対クロアチアの数字（W杯と今回）
+      columns: ['', 'W杯 6月', '今回 10月']
+      rows: *cmp
+      highlight_row: 4
+  - text: モドリッチの嘆きは、この数字とそのまま重なります。
+    image: assets/images/20261004_england_croatia/01_w.jpg
+  - text: クロアチアの次は6日。南部の街スプリトに、このグループで3連勝のスペインを迎えます。
+  - text: イングランドは同じ日、ホームでチェコと戦います。
+  sources:
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181853
+  - https://www.fotmob.com/api/data/matchDetails?matchId=4667825
+  - https://www.englandfootball.com/england/mens-senior-team/fixtures-results/2025-26/World-Cup/england-v-croatia-fifa-world-cup-wednesday-17-june-2026-match-centre
+  - https://www.skysports.com/football/news/13594637
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「育成の地盤は東欧系では抜けてるからまた強くはなると思う」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（フットボールチャンネルの記事）のコメント欄 minxxxxx。全文
+  - voice: ネット民
+    text: ケインとベリンガムにいいようにやられたね。
+    image: assets/images/20261004_england_croatia/02.jpg
+  - voice: ネット民
+    text: グヴァルディオルと若いCBが全然守れてなかったが、
+    cont: true
+  - voice: ネット民
+    text: それはモドリッチ、コヴァチッチが動けてないのも一因かと。
+    cont: true
+  - voice: ネット民
+    text: なのでビルドアップも出来ないしプレスもかわせない。
+    cont: true
+  - voice: ネット民
+    text: モドリッチってのは、チームが悪い中でもゲームを組み立てて
+    cont: true
+  - voice: ネット民
+    text: 深い位置から効果的なパスをバンバン出す選手だけど、
+    cont: true
+  - voice: ネット民
+    text: そろそろお役御免なんだろうか
+    cont: true
+  # 同じ欄 bil********。全文
+  - voice: ネット民
+    text: クロアチアは緩やかに下降線辿ってるな。
+    short_voice: true
+  - voice: ネット民
+    text: 人口的に戦力に波が出るのは仕方ないけど、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 育成の地盤は東欧系では抜けてるからまた強くはなると思う。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/286737259514576cb25d3a7ff893efd2506685bf/comments

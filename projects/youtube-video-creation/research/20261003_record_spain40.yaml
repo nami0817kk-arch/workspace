@@ -1,5 +1,5 @@
 # 取材メモ（10/3 シリーズ「記録の解説」、key: record_spain40、型は news）。材料の控えは research/raw/20261003_record_spain40.md。
-# チェコ戦（日本時間 10/4 3:45）の前に出す回。チェコ戦の結果は書かない。
+# 10/4 に、チェコ戦（10/3、3-1）の結果を最後の節に足した（決まり「当日に試合がある題材は試合後に作る」）。分析は40試合のまま。
 # 記録の一覧・勝ち分けは FIFA の記事（2026-09-29）が正。RFEF の公式の記述には辿り着けなかった（一覧が JS 描画）。
 # 40試合・イタリア37試合のスコアは英語版Wikipedia の試合枠で数え、40試合は Flashscore の一覧と1試合ずつ一致を確かめた。
 #   得点102は自分で数えた値（Flashscore の本文の「109」は同じ記事のスコアを足すと合わない）。失点31・勝ち分けは FIFA と一致。
@@ -19,14 +19,14 @@ theme:
   league_name: スペイン代表
   kind: other
   topic: スペイン代表
-  title: スペイン代表、史上初の40試合無敗。イタリアの37試合とまるで違った中身
+  title: スペイン代表、無敗が41試合に。イタリアの37試合とまるで違った中身
   question: スペイン代表の40試合無敗は、これまで最長だったイタリアの37試合と何が違うのか
-  takeaway: スペインの40試合は得点102・失点31、イタリアの37試合は得点93・失点12。1試合の得点はほぼ同じで、失点は2倍を超える。2点以上取られた試合がイタリアは0、スペインは8あり、その8試合で一度も負けていない。守り切ったイタリアに対し、取り返して積んだ記録だ。ただW杯の8試合だけは失点1で、大一番では守りも締めていた。41試合目は日本時間10月4日3時45分からのチェコ戦
+  takeaway: スペインの40試合は得点102・失点31、イタリアの37試合は得点93・失点12。1試合の得点はほぼ同じで、失点は2倍を超える。2点以上取られた試合がイタリアは0、スペインは8あり、その8試合で一度も負けていない。守り切ったイタリアに対し、取り返して積んだ記録だ。ただW杯の8試合だけは失点1で、大一番では守りも締めていた。10月3日のチェコ戦にも3対1で勝ち、記録は41試合に伸びた
   opening_image: assets/images/20261003_record_spain40/01_trophy_w.jpg
-short_title: スペイン代表、40試合無敗で歴代1位に
+short_title: スペイン代表、41試合無敗。歴代1位をさらに更新
 thumbnail:
   photo: assets/images/20261003_record_spain40/01_trophy.jpg
-  line1: スペイン代表 40試合無敗
+  line1: スペイン代表 41試合無敗
   line2: 2点取られても負けない試合が●つ
   tags:
   - スペイン代表
@@ -578,36 +578,33 @@ sections:
       columns: *id009
       rows: *id010
       highlight_row: 3
-  - text: 次のチェコ戦は、日本時間10月4日の午前3時45分キックオフ。
+  - text: そして10月3日、スペイン北部のオビエドでのチェコ戦は3対1の勝ち。
     card:
       type: table
       title: スペインの40試合とイタリアの37試合
       columns: *id009
       rows: *id010
-  - text: 会場はスペイン北部のオビエド。勝つか引き分ければ、無敗は41試合です。
+  - text: ヤマルが3試合続けてゴールを決め、記録はさらに1つ伸びました。
     card:
       type: table
       title: スペインの40試合とイタリアの37試合
       columns: *id009
       rows: *id010
       highlight_row: 0
-  - text: いまは9連勝中。勝てば10連勝で、デ・ラ・フエンテ監督のもとで最長です。
-    card:
-      type: table
-      title: スペインの40試合とイタリアの37試合
-      columns: *id009
-      rows: *id010
-  - text: チェコはこの大会、2試合を終えてまだ勝ち点がありません。
-    card:
-      type: table
-      title: スペインの40試合とイタリアの37試合
-      columns: *id009
-      rows: *id010
+  - text: 勝って10連勝。デ・ラ・フエンテ監督のもとで最長の連勝です。
+  - text: 試合のあと、監督はヤマルについてこう話しています。
+  - voice: デ・ラ・フエンテ監督
+    text: 彼はいつも、私たちを驚かせ続けてくれる。
+  - voice: デ・ラ・フエンテ監督
+    text: 最高のラミンは、まだまったく見ていない。
+    cont: true
   sources:
   - https://en.wikipedia.org/wiki/Italy_national_football_team_results_(2010%E2%80%93present)
   - https://en.wikipedia.org/wiki/Spain_national_football_team_results_(2020%E2%80%93present)
   - https://www.uefa.com/uefanationsleague/match/2047971/
   - https://www.goal.com/en/news/spain-enter-the-history-books-with-a-record-run-of-40-matches/blta05b90aa1f07e369
+  - https://www.france24.com/en/live-news/20261003-yamal-on-target-as-spain-hold-off-czech-republic
+  - https://www.footballchannel.jp/2026/10/04/post1026330/
 - id: voices
   heading: ネットの反応
   tier: 未確認

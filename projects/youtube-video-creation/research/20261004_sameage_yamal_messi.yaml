@@ -1,0 +1,311 @@
+# 同じ年齢での比較：ラミン・ヤマルとリオネル・メッシを、同じ19歳83日で切って並べる。材料と数え方は research/raw/20261004_sameage_yamal_messi.md。
+# 比べる日はヤマルの今日（2026-10-04＝19歳83日）と、メッシの19歳83日（2006-09-15）。数字は Transfermarkt の試合ごとの記録を自分で足した。
+# ヤマルのバルサ通算（159試合57点51アシスト）は 10/2 のヤマル紹介と同じ。代表は 10/3 チェコ戦のぶん（1試合1点）が紹介より増えている。
+# 10/2 のヤマル紹介で言ったこと（赤ん坊の写真・304・ネイマール・プレースタイル・バロンドール）は繰り返さない。本人の言葉も紹介と別のもの。
+# どちらが上かは言い切らない（比較の型の決まり）。数字の違い（出場時間と立場）を見立てにする。反応は入れていない。
+date: 2026年10月04日
+slot: other_1
+format: news
+series: 同じ年齢での比較
+people:
+- ラミン・ヤマル
+- リオネル・メッシ
+- ロナウジーニョ
+- サミュエル・エトー
+- ロベルト・レヴァンドフスキ
+- ラフィーニャ
+theme:
+  id: sameage_yamal_messi
+  league: spain
+  kind: other
+  topic: バルセロナ
+  title: ヤマルとメッシを同じ19歳で数える。差がほぼ消えた数字
+  question: ヤマルとメッシを同じ19歳83日で切ると、数字のどこが違い、どこが並ぶのか
+  takeaway: 19歳83日で切ると、バルサの一軍の試合はヤマル159・メッシ39、出場時間は1万1890分と2044分で約5.8倍。それでも90分あたりの得点は0.43と0.48でほぼ並ぶ。差を生んだのは点を取る速さではなく、ロナウジーニョとエトーの後ろにいた18歳と、前線でいちばん長く任された18歳という立場の違い。次の物差しは10月11日、メッシが19歳で伝説のゴールを決めた相手ヘタフェとの試合
+  opening_image: assets/images/20261004_sameage_yamal_messi/pair/01.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ヤマルとメッシ、19歳83日のバルサでの数字
+thumbnail:
+  line1: ヤマルとメッシ 同じ19歳で
+  line2: 出場時間は●倍、でも並ぶ数字
+  tags:
+  - バルセロナ
+  - ラミネ・ヤマル
+  - 選手比較
+  - 同じ年齢
+  photos:
+  - assets/images/20261004_sameage_yamal_messi/yamal_thumb/01.jpg
+  - assets/images/20261004_sameage_yamal_messi/messi_thumb/01.jpg
+sections:
+- id: intro
+  heading: 同じ19歳83日で切る
+  tier: 報道
+  telop: ヤマル19歳83日＝2026年10月4日、メッシ19歳83日＝2006年9月15日
+  narrator: キャスター
+  card:
+    type: table
+    title: 比べる日
+    columns: ['', 生まれ, 19歳83日の日]
+    rows:
+    - &i0 [ヤマル, 2007年7月13日, 2026年10月4日]
+    - &i1 [メッシ, 1987年6月24日, 2006年9月15日]
+    source: 生年月日から計算
+  say:
+  - text: 2007年生まれのヤマルと、1987年生まれのメッシ。
+    image: assets/images/20261004_sameage_yamal_messi/pair/01.jpg
+    card: {type: table, title: 比べる日, columns: ['', 生まれ, 19歳83日の日], rows: [*i0, *i1], highlight_row: 0, source: 生年月日から計算}
+  - text: ヤマルは10月4日の今日で、19歳と83日になりました。
+    card: {type: table, title: 比べる日, columns: ['', 生まれ, 19歳83日の日], rows: [*i0, *i1], highlight_row: 0, source: 生年月日から計算}
+  - text: メッシが同じ19歳83日だったのは、2006年9月15日です。
+    card: {type: table, title: 比べる日, columns: ['', 生まれ, 19歳83日の日], rows: [*i0, *i1], highlight_row: 1, source: 生年月日から計算}
+  - ヤマルが17歳だった去年の春、メッシは彼をこう評しています。
+  - voice: メッシ
+    text: まだ17歳で、いままさに成長している最中だ。
+    card: none
+  - voice: メッシ
+    text: 僕がそうだったように、これからも選手として
+    cont: true
+  - voice: メッシ
+    text: レベルアップを続け、さらにプレーに磨きをかけていくだろう
+    cont: true
+    pause: 0.5
+  - では、そう話すメッシ自身は、19歳のときにどこまで来ていたのか。
+  - それぞれの19歳83日で切って、2人の数字を並べます。
+  quotes_from:
+  - サッカーダイジェストWeb https://www.soccerdigestweb.com/news/detail/id=171944
+  sources:
+  - https://www.soccerdigestweb.com/news/detail/id=171944
+  - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
+  - https://www.transfermarkt.com/lionel-messi/profil/spieler/28003
+- id: debut
+  heading: 最初の一歩の年齢
+  tier: 報道
+  telop: デビューと初ゴールの年齢
+  narrator: 解説
+  card:
+    type: table
+    title: 最初の一歩の年齢
+    columns: [項目, ヤマル, メッシ]
+    rows:
+    - &b1 [バルサ一軍の初出場, 15歳290日, 17歳114日]
+    - &b2 [バルサ一軍の初ゴール, 16歳87日, 17歳311日]
+    - &b3 [フル代表の初出場, 16歳57日, 18歳54日]
+    - &b4 [フル代表の初ゴール, 16歳57日, 18歳250日]
+    source: Transfermarkt・生年月日から計算
+  say:
+  - text: まずは、最初の一歩を踏み出した年齢から。
+    image: assets/images/20261004_sameage_yamal_messi/messi2005/01.jpg
+    card: {type: table, title: 最初の一歩の年齢, columns: [項目, ヤマル, メッシ], rows: [*b1, *b2, *b3, *b4], source: Transfermarkt・生年月日から計算}
+  - text: バルサの一軍の公式戦に初めて出たのは、ヤマル15歳、メッシ17歳。1年半の差です。
+    card: {type: table, title: 最初の一歩の年齢, columns: [項目, ヤマル, メッシ], rows: [*b1, *b2, *b3, *b4], highlight_row: 0, source: Transfermarkt・生年月日から計算}
+  - text: 一軍での初ゴールは、16歳87日と17歳311日。
+    card: {type: table, title: 最初の一歩の年齢, columns: [項目, ヤマル, メッシ], rows: [*b1, *b2, *b3, *b4], highlight_row: 1, source: Transfermarkt・生年月日から計算}
+  - text: 年齢制限の無いフル代表のデビューは、16歳57日と18歳54日。
+    card: {type: table, title: 最初の一歩の年齢, columns: [項目, ヤマル, メッシ], rows: [*b1, *b2, *b3, *b4], highlight_row: 2, source: Transfermarkt・生年月日から計算}
+  - text: メッシの代表の初陣は、途中から入ってわずか2分で退場でした。
+    card: {type: table, title: 最初の一歩の年齢, columns: [項目, ヤマル, メッシ], rows: [*b1, *b2, *b3, *b4], highlight_row: 2, source: Transfermarkt・生年月日から計算}
+  - text: 代表の初ゴールは、メッシが18歳250日。ヤマルはデビューの日に決めています。
+    card: {type: table, title: 最初の一歩の年齢, columns: [項目, ヤマル, メッシ], rows: [*b1, *b2, *b3, *b4], highlight_row: 3, source: Transfermarkt・生年月日から計算}
+  - text: どの一歩も、ヤマルが1年以上早く踏んでいます。
+    card: {type: table, title: 最初の一歩の年齢, columns: [項目, ヤマル, メッシ], rows: [*b1, *b2, *b3, *b4], highlight_row: 3, source: Transfermarkt・生年月日から計算}
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdatendetails/spieler/937958
+  - https://www.transfermarkt.com/lionel-messi/leistungsdatendetails/spieler/28003
+  - https://en.wikipedia.org/wiki/Career_of_Lionel_Messi
+- id: club
+  heading: 19歳83日までのバルサの数字
+  tier: 報道
+  main: true
+  telop: バルサ一軍の公式戦、19歳83日まで
+  narrator: 解説
+  card:
+    type: table
+    title: バルサ一軍の公式戦（19歳83日まで）
+    columns: [項目, ヤマル, メッシ]
+    rows:
+    - &c0 [試合, '159', '39']
+    - &c1 [先発, '131', '23']
+    - &c2 [出場時間, 11890分, 2044分]
+    - &c3 [得点, '57', '11']
+    - &c4 [アシスト, '51', '6']
+    - &c5 [90分あたりの得点, '0.43', '0.48']
+    source: Transfermarkt・FotMob
+  say:
+  - text: ヤマルとメッシ、同じ19歳83日までにバルセロナで積んだ数字です。
+    short_only: true
+  - voice: ラミン・ヤマル
+    text: 僕と同じくらいの年齢で、バルサのようなクラブで
+    image: assets/images/20261004_sameage_yamal_messi/yamal_run/01_w.jpg
+  - voice: ラミン・ヤマル
+    text: これほど多くの試合に出場した選手はほとんどいないよね
+    cont: true
+    pause: 0.5
+  - text: 17歳の春の言葉です。メッシの同じ年齢と比べると、どうか。
+    card: {type: table, title: バルサ一軍の公式戦（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*c0, *c1, *c2, *c3, *c4, *c5], highlight_row: 0, source: Transfermarkt・FotMob}
+  - text: 一軍の公式戦は、ヤマル159試合、メッシ39試合。4倍を超えます。
+    card: {type: table, title: バルサ一軍の公式戦（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*c0, *c1, *c2, *c3, *c4, *c5], highlight_row: 0, source: Transfermarkt・FotMob}
+  - text: 先発に限ると、131回と23回。
+    card: {type: table, title: バルサ一軍の公式戦（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*c0, *c1, *c2, *c3, *c4, *c5], highlight_row: 1, source: Transfermarkt・FotMob}
+  - text: 出場時間は1万1890分と2044分。差は、およそ5.8倍です。
+    card: {type: table, title: バルサ一軍の公式戦（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*c0, *c1, *c2, *c3, *c4, *c5], highlight_row: 2, source: Transfermarkt・FotMob}
+  - text: 得点は57と11。アシストは51と6。
+    card: {type: table, title: バルサ一軍の公式戦（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*c0, *c1, *c2, *c3, *c4, *c5], highlight_row: 3, source: Transfermarkt・FotMob}
+  - text: ところが、1試合ぶんの90分あたりの得点にすると、ヤマル0.43、メッシ0.48。
+    emph: true
+    card: {type: table, title: バルサ一軍の公式戦（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*c0, *c1, *c2, *c3, *c4, *c5], highlight_row: 5, source: Transfermarkt・FotMob}
+  - text: ピッチに立った時間あたりでは、2人はほぼ並んでいるんです。
+    card: {type: table, title: バルサ一軍の公式戦（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*c0, *c1, *c2, *c3, *c4, *c5], highlight_row: 5, source: Transfermarkt・FotMob}
+  quotes_from:
+  - サッカーキング https://www.soccer-king.jp/news/world/cl/20250501/2013692.html
+  sources:
+  - https://www.soccer-king.jp/news/world/cl/20250501/2013692.html
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdatendetails/spieler/937958
+  - https://www.transfermarkt.com/lionel-messi/leistungsdatendetails/spieler/28003
+  - https://www.fotmob.com/players/1467236
+- id: role
+  heading: 18歳の季、前線での立場
+  tier: 報道
+  telop: 18歳の季、前線の3人の出場時間
+  narrator: 解説
+  card: &rcard
+    type: table
+    title: 2005-06 バルサ（メッシ18歳の季）
+    columns: [選手, 試合, 出場時間, 得点]
+    rows:
+    - &m0 [ロナウジーニョ, '45', 3914分, '26']
+    - &m1 [エトー, '47', 4181分, '34']
+    - &m2 [メッシ, '25', 1414分, '8']
+    source: Transfermarkt
+  say:
+  - text: 時間の差は、2人がその年齢で立っていた場所から生まれています。
+    image: assets/images/20261004_sameage_yamal_messi/messi2007/01.jpg
+    card: {type: table, title: 2005-06 バルサ（メッシ18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*m0, *m1, *m2], source: Transfermarkt}
+  - text: メッシが18歳で戦った2005年からのシーズン。前線の主役は別の2人でした。
+    card: {type: table, title: 2005-06 バルサ（メッシ18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*m0, *m1, *m2], source: Transfermarkt}
+  - text: ロナウジーニョは45試合で26点。
+    card: {type: table, title: 2005-06 バルサ（メッシ18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*m0, *m1, *m2], highlight_row: 0, source: Transfermarkt}
+  - text: エトーは47試合で34点。2人とも、出た試合はすべて先発です。
+    card: {type: table, title: 2005-06 バルサ（メッシ18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*m0, *m1, *m2], highlight_row: 1, source: Transfermarkt}
+  - text: メッシは25試合で8点。出場時間は、エトーのおよそ3分の1でした。
+    card: {type: table, title: 2005-06 バルサ（メッシ18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*m0, *m1, *m2], highlight_row: 2, source: Transfermarkt}
+  - text: 国籍の手続きで開幕に間に合わず、3月には太もも裏の肉離れ。
+    card: {type: table, title: 2005-06 バルサ（メッシ18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*m0, *m1, *m2], highlight_row: 2, source: Transfermarkt}
+  - text: チャンピオンズリーグの決勝は、ピッチの外から見届けました。
+    card: {type: table, title: 2005-06 バルサ（メッシ18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*m0, *m1, *m2], highlight_row: 2, source: Transfermarkt}
+  - text: 一方、ヤマルが18歳で戦った2025年からのシーズンです。
+    image: assets/images/20261004_sameage_yamal_messi/yamal_esp/01_w.jpg
+    card: &ycard
+      type: table
+      title: 2025-26 バルサ（ヤマル18歳の季）
+      columns: [選手, 試合, 出場時間, 得点]
+      rows:
+      - &y0 [ヤマル, '45', 3702分, '24']
+      - &y1 [レヴァンドフスキ, '46', 2486分, '19']
+      - &y2 [ラフィーニャ, '33', 2194分, '21']
+      source: Transfermarkt
+  - text: ヤマルは45試合で24点。この3人の中で、出場時間がいちばん長い。
+    card: {type: table, title: 2025-26 バルサ（ヤマル18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*y0, *y1, *y2], highlight_row: 0, source: Transfermarkt}
+  - text: レヴァンドフスキは2486分、ラフィーニャは2194分です。
+    card: {type: table, title: 2025-26 バルサ（ヤマル18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*y0, *y1, *y2], highlight_row: 1, source: Transfermarkt}
+  - text: 偉大な2人の後ろで時間を勝ち取っていた18歳と、最初から時間を任された18歳。
+    emph: true
+    card: {type: table, title: 2025-26 バルサ（ヤマル18歳の季）, columns: [選手, 試合, 出場時間, 得点], rows: [*y0, *y1, *y2], highlight_row: 0, source: Transfermarkt}
+  sources:
+  - https://en.wikipedia.org/wiki/Career_of_Lionel_Messi
+  - https://en.wikipedia.org/wiki/2005%E2%80%9306_FC_Barcelona_season
+  - https://www.transfermarkt.com/ronaldinho/leistungsdatendetails/spieler/3373
+  - https://www.transfermarkt.com/samuel-etoo/leistungsdatendetails/spieler/4257
+  - https://www.transfermarkt.com/robert-lewandowski/leistungsdatendetails/spieler/38253
+  - https://www.transfermarkt.com/raphinha/leistungsdatendetails/spieler/411295
+- id: titles
+  heading: 19歳83日までのタイトル
+  tier: 報道
+  telop: その日までに手にしたタイトル
+  narrator: 解説
+  card:
+    type: table
+    title: 19歳83日までに獲ったタイトル
+    columns: [大会, ヤマル, メッシ]
+    rows:
+    - &t0 [ラ・リーガ, '3', '2']
+    - &t1 [チャンピオンズリーグ, '0', '1']
+    - &t2 [国王杯, '1', '0']
+    - &t3 [スペイン・スーパーカップ, '2', '2']
+    - &t4 [ユーロ／コパ・アメリカ, '1', '0']
+    - &t5 [ワールドカップ, '1', '0']
+    source: FotMob
+  say:
+  - text: 次は、その日までに手にしたタイトルです。
+    image: assets/images/20261004_sameage_yamal_messi/pair/01.jpg
+    card: {type: table, title: 19歳83日までに獲ったタイトル, columns: [大会, ヤマル, メッシ], rows: [*t0, *t1, *t2, *t3, *t4, *t5], source: FotMob}
+  - text: スペインのリーグ優勝は、ヤマル3回、メッシ2回。
+    card: {type: table, title: 19歳83日までに獲ったタイトル, columns: [大会, ヤマル, メッシ], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 0, source: FotMob}
+  - text: 欧州の頂点、チャンピオンズリーグは、メッシが18歳の季に1度。
+    card: {type: table, title: 19歳83日までに獲ったタイトル, columns: [大会, ヤマル, メッシ], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 1, source: FotMob}
+  - text: 国内のカップ戦、国王杯はヤマルが1度。スーパーカップは2人とも2度。
+    card: {type: table, title: 19歳83日までに獲ったタイトル, columns: [大会, ヤマル, メッシ], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 3, source: FotMob}
+  - text: 大きく違うのは代表です。ヨーロッパ選手権、ユーロの優勝は、17歳の誕生日の翌日。
+    card: {type: table, title: 19歳83日までに獲ったタイトル, columns: [大会, ヤマル, メッシ], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 4, source: FotMob}
+  - text: そして、19歳でワールドカップを掲げました。
+    card: {type: table, title: 19歳83日までに獲ったタイトル, columns: [大会, ヤマル, メッシ], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 5, source: FotMob}
+  - text: メッシのこの年齢の勲章は、20歳以下の世界大会。優勝と大会最優秀選手です。
+    card: {type: table, title: 19歳83日までに獲ったタイトル, columns: [大会, ヤマル, メッシ], rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 5, source: FotMob}
+  sources:
+  - https://www.fotmob.com/players/1467236
+  - https://www.fotmob.com/players/30981
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+- id: national
+  heading: 代表の数字とワールドカップ
+  tier: 報道
+  telop: フル代表、19歳83日まで
+  narrator: 解説
+  card:
+    type: table
+    title: フル代表（19歳83日まで）
+    columns: [項目, ヤマル, メッシ]
+    rows:
+    - &n0 [試合, '36', '11']
+    - &n1 [得点, '11', '2']
+    - &n2 [出場時間, 2577分, 531分]
+    - &n3 [ワールドカップ, 8試合1点, 3試合1点]
+    - &n4 [ワールドカップ初ゴール, 18歳343日, 18歳357日]
+    source: Transfermarkt
+  say:
+  - text: 代表でも、同じ日で切ります。試合は36と11、得点は11と2。
+    card: {type: table, title: フル代表（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 1, source: Transfermarkt}
+  - text: ワールドカップでは、ヤマルは8試合すべてに出ました。
+    card: {type: table, title: フル代表（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 3, source: Transfermarkt}
+  - text: メッシは3試合に出て、チームは準々決勝で敗れました。
+    card: {type: table, title: フル代表（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 3, source: Transfermarkt}
+  - text: ただ、ワールドカップでの初ゴールは、どちらも18歳のとき。
+    card: {type: table, title: フル代表（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 4, source: Transfermarkt}
+  - text: ヤマルは18歳343日、メッシは18歳357日。差はたった2週間です。
+    emph: true
+    card: {type: table, title: フル代表（19歳83日まで）, columns: [項目, ヤマル, メッシ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 4, source: Transfermarkt}
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdatendetails/spieler/937958
+  - https://www.transfermarkt.com/lionel-messi/leistungsdatendetails/spieler/28003
+- id: view
+  heading: 任された時間の差と、次のヘタフェ戦
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月11日、バルセロナ対ヘタフェ
+  say:
+  - text: 並べて見えたのは、点を取る速さより、任された時間の差でした。
+    image: assets/images/20261004_sameage_yamal_messi/pair/01.jpg
+  - 点を取るペースは互角。開いたのは、6倍近いピッチの上の時間です。
+  - text: メッシは19歳83日のあと、20歳の誕生日までに、バルサで31試合15点を足しました。
+    image: assets/images/20261004_sameage_yamal_messi/messi_getafe/01.jpg
+  - その中に、2007年4月のヘタフェ戦のゴールがあります。
+  - text: 60メートルを独りで運び、5人をかわして決めた1点。
+    emph: true
+  - 2019年のファン投票で、クラブ史上最高のゴールに選ばれました。
+  - text: そしてヤマルの次の試合は10月11日。相手は、そのヘタフェです。
+    image: assets/images/20261004_sameage_yamal_messi/yamal_run/01_w.jpg
+  - 20歳の誕生日まで、あと282日。
+  - メッシが15点を足した同じ1年で、ヤマルがどこまで積むのか。続きはピッチの上です。
+  sources:
+  - https://en.wikipedia.org/wiki/Career_of_Lionel_Messi
+  - https://www.fotmob.com/players/1467236
+  - https://www.transfermarkt.com/lionel-messi/leistungsdatendetails/spieler/28003

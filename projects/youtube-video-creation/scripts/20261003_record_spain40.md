@@ -1,10 +1,10 @@
 ---
-title: スペイン代表、史上初の40試合無敗。イタリアの37試合とまるで違った中身
+title: スペイン代表、無敗が41試合に。イタリアの37試合とまるで違った中身
 format: news
-short_title: スペイン代表、40試合無敗で歴代1位に
+short_title: スペイン代表、41試合無敗。歴代1位をさらに更新
 series: 記録の解説
 topic: スペイン代表
-thumbnail_line1: スペイン代表 40試合無敗
+thumbnail_line1: スペイン代表 41試合無敗
 thumbnail_line2: 2点取られても負けない試合が●つ
 thumbnail_tags:
 - スペイン代表
@@ -20,17 +20,17 @@ thumbnail_crest_main: []
 thumbnail_photo: assets/images/20261003_record_spain40/01_trophy.jpg
 bg: assets/backgrounds/stadium.png
 date: 2026年10月3日
-intro_title: スペイン代表、史上初の40試合無敗。イタリアの37試合とまるで違った中身
+intro_title: スペイン代表、無敗が41試合に。イタリアの37試合とまるで違った中身
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: 'スペイン代表、史上初の40試合無敗。イタリアの37試合とまるで違った中身
+description: 'スペイン代表、無敗が41試合に。イタリアの37試合とまるで違った中身
 
 
   この動画が答える問い: スペイン代表の40試合無敗は、これまで最長だったイタリアの37試合と何が違うのか
 
 
-  この動画の見立て: スペインの40試合は得点102・失点31、イタリアの37試合は得点93・失点12。1試合の得点はほぼ同じで、失点は2倍を超える。2点以上取られた試合がイタリアは0、スペインは8あり、その8試合で一度も負けていない。守り切ったイタリアに対し、取り返して積んだ記録だ。ただW杯の8試合だけは失点1で、大一番では守りも締めていた。41試合目は日本時間10月4日3時45分からのチェコ戦
+  この動画の見立て: スペインの40試合は得点102・失点31、イタリアの37試合は得点93・失点12。1試合の得点はほぼ同じで、失点は2倍を超える。2点以上取られた試合がイタリアは0、スペインは8あり、その8試合で一度も負けていない。守り切ったイタリアに対し、取り返して積んだ記録だ。ただW杯の8試合だけは失点1で、大一番では守りも締めていた。10月3日のチェコ戦にも3対1で勝ち、記録は41試合に伸びた
 
 
   ※画面の札で、クラブが発表した「確定」、
@@ -62,9 +62,15 @@ sources:
 - https://en.wikipedia.org/wiki/Italy_national_football_team_results_(2010%E2%80%93present)
 - https://www.uefa.com/uefanationsleague/match/2047971/
 - https://www.goal.com/en/news/spain-enter-the-history-books-with-a-record-run-of-40-matches/blta05b90aa1f07e369
+- https://www.france24.com/en/live-news/20261003-yamal-on-target-as-spain-hold-off-czech-republic
+- https://www.footballchannel.jp/2026/10/04/post1026330/
 - https://news.yahoo.co.jp/articles/5c6c9aa3ae058f7dc7944928683957c07d43be13/comments
 quote_sources:
 - AFP https://sports.yahoo.com/articles/yamal-inspires-spain-croatia-romp-205253118.html
+- https://www.uefa.com/uefanationsleague/match/2047971/
+- https://www.goal.com/en/news/spain-enter-the-history-books-with-a-record-run-of-40-matches/blta05b90aa1f07e369
+- https://www.france24.com/en/live-news/20261003-yamal-on-target-as-spain-hold-off-czech-republic
+- https://www.footballchannel.jp/2026/10/04/post1026330/
 cards:
   record_card:
     type: table
@@ -504,23 +510,13 @@ cards:
     columns: *id009
     rows: *id010
     highlight_row: 0
-  view_11_card:
-    type: table
-    title: スペインの40試合とイタリアの37試合
-    columns: *id009
-    rows: *id010
-  view_12_card:
-    type: table
-    title: スペインの40試合とイタリアの37試合
-    columns: *id009
-    rows: *id010
 ---
 
 ## オープニング
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: スペイン代表、史上初の40試合無敗。イタリアの37試合とまるで違った中身。
-  telop: スペイン代表、史上初の40試合無敗。イタリアの37試合とまるで違った中身
+キャスター: スペイン代表、無敗が41試合に。イタリアの37試合とまるで違った中身。
+  telop: スペイン代表、無敗が41試合に。イタリアの37試合とまるで違った中身
   se: assets/audio/se_pon.wav
   image: assets/images/20261003_record_spain40/01_trophy_w.jpg
 
@@ -737,21 +733,30 @@ cards:
   telop: ただ、W杯の守りは別でした。大一番では、きっちり締めています
   card: view_8_card
   image: assets/images/20261003_record_spain40/02_xi_france.jpg
-解説: 次のチェコ戦は、日本時間10月4日の午前3時45分キックオフ。
-  telop: 次のチェコ戦は、日本時間10月4日の午前3時45分キックオフ
+解説: そして10月3日、スペイン北部のオビエドでのチェコ戦は3対1の勝ち。
+  telop: そして10月3日、スペイン北部のオビエドでのチェコ戦は3対1の勝ち
   card: view_9_card
   image: assets/images/20261003_record_spain40/02_xi_france.jpg
-解説: 会場はスペイン北部のオビエド。勝つか引き分ければ、無敗は41試合です。
-  telop: 会場はスペイン北部のオビエド。勝つか引き分ければ、無敗は41試合です
+解説: ヤマルが3試合続けてゴールを決め、記録はさらに1つ伸びました。
+  telop: ヤマルが3試合続けてゴールを決め、記録はさらに1つ伸びました
   card: view_10_card
   image: assets/images/20261003_record_spain40/02_xi_france.jpg
-解説: いまは9連勝中。勝てば10連勝で、デ・ラ・フエンテ監督のもとで最長です。
-  telop: いまは9連勝中。勝てば10連勝で、デ・ラ・フエンテ監督のもとで最長です
-  card: view_11_card
+解説: 勝って10連勝。デ・ラ・フエンテ監督のもとで最長の連勝です。
+  telop: 勝って10連勝。デ・ラ・フエンテ監督のもとで最長の連勝です
+  card: none
   image: assets/images/20261003_record_spain40/02_xi_france.jpg
-解説: チェコはこの大会、2試合を終えてまだ勝ち点がありません。
-  telop: チェコはこの大会、2試合を終えてまだ勝ち点がありません
-  card: view_12_card
+解説: 試合のあと、監督はヤマルについてこう話しています。
+  telop: 試合のあと、監督はヤマルについてこう話しています
+  card: none
+  image: assets/images/20261003_record_spain40/02_xi_france.jpg
+デ・ラ・フエンテ監督: 彼はいつも、私たちを驚かせ続けてくれる。
+  telop: デ・ラ・フエンテ監督「彼はいつも、私たちを驚かせ続けてくれる」
+  card: none
+  image: assets/images/20261003_record_spain40/02_xi_france.jpg
+デ・ラ・フエンテ監督: 最高のラミンは、まだまったく見ていない。
+  cont: true
+  telop: デ・ラ・フエンテ監督「最高のラミンは、まだまったく見ていない」
+  card: none
   image: assets/images/20261003_record_spain40/02_xi_france.jpg
 
 ## ネットの反応

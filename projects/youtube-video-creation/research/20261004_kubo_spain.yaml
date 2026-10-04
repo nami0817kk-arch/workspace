@@ -1,0 +1,313 @@
+# 取材メモ（10/4 題材 kubo_spain、型は quote）。材料の控えは research/raw/20261004_kubo_spain.md。
+# 10/3 練習後の取材で、久保建英が W杯王者スペインと日本の差を語った言葉が主役。結婚の話は冒頭の1行だけ（10/3 に結婚の回を出している）。
+# 10/2 の「代表先発（出場時間）」「今季の数字」とは重ねない（W杯での久保の出場・クラブの数字は言わない）。
+# 見立て: 久保の言う「認める側／認められる側」を数字で。W杯の結果・FIFAランキング・W杯メンバーの所属（自国リーグ・他国の選手の受け入れ）・市場価値の合計。
+#   依頼文の「日本はベスト16」は誤り。48か国制で日本はラウンド32（決勝トーナメントの1回戦）でブラジルに敗れた。
+# 記者の補い「(他の国を)」「(右肩上がりに)」は読まない。勤勉さの発言は他人の声の量を抑えるため語りで言い換えた。
+# 写真: ゲキサカ（©Kaoru WATANABE/GEKISAKA）。02 は 10/3 の練習（冒頭・サムネ）、01 はこの取材の顔のアップ（4:3 のまま）。
+date: 2026年10月4日
+slot: japan_kubo
+format: quote
+people:
+- 久保建英
+theme:
+  id: kubo_spain
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: 久保建英「模倣や真似はオリジナルには敵わない」スペインとの間にあるもの
+  question: スペインで育った久保建英は、W杯王者スペインと日本の差をどこに見ているのか
+  takeaway: 久保が言う「認める側」と「認められる側」は数字にも出ている。W杯はスペインが優勝、日本は決勝トーナメントの1回戦で敗退。W杯メンバー26人のうち自国リーグの選手はスペイン17人・日本3人で、スペインのリーグには他国のW杯メンバーが68人いたのに対し日本のリーグは4人。市場価値の合計は4倍あまりの開きがある。久保はそれでも差は縮まっていると言い、次の一歩は10月5日のキリンカップ決勝になる
+  opening_image: assets/images/20261004_kubo_spain/02_w.jpg
+short_title: 久保建英がスペインとの差を語る。「真似する側では追いつけない」
+thumbnail:
+  photo: assets/images/20261004_kubo_spain/02.jpg
+  line1: 久保建英 スペインとの差
+  line2: 日本はまだ「●●側」の国
+  reaction: 勤勉さと学習能力の高さは世界に誇れる
+sections:
+- id: champion
+  heading: 優勝したスペインの層
+  tier: 報道
+  telop: 久保「どのポジションにも世界最高レベルの実力と市場価値の選手がわんさかいて」
+  narrator: キャスター
+  say:
+  - text: キリンカップの決勝を前にした千葉での練習のあと、久保建英が取材に応じました。
+    image: assets/images/20261004_kubo_spain/02_w.jpg
+  - text: 前の夜に発表した結婚の話が終わると、久保は自分から「ここからはサッカーの話で」と切り出します。
+  - text: 聞かれたのは、ワールドカップで優勝したスペインを、どう見たかでした。
+  - text: 久保にとってスペインは、少年時代と、プロになってからの7年あまりを過ごしてきた国です。
+  - voice: 久保建英
+    text: 簡単な話をすると、やっぱりどのポジションにも
+    image: assets/images/20261004_kubo_spain/01.jpg
+  - voice: 久保建英
+    text: 世界最高レベルの実力と市場価値の選手がわんさかいて、
+    cont: true
+  - voice: 久保建英
+    text: 他の国でレギュラーで出られそうな選手も1試合も出られない。
+    cont: true
+  - text: 実際スペイン代表では、アーセナルのゴールキーパー、ラヤや、サイドバックのグリマルド、
+  - text: フォワードのビクトル・ムニョスが、大会で一度も出番がありませんでした。
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460254-460254-fl=
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460254-460254-fl=
+  - https://www.chunichi.co.jp/article/1320317
+- id: copy
+  main: true
+  heading: 突き詰める側と、真似する側
+  tier: 報道
+  telop: 久保「模倣や真似はオリジナルには敵わないのかなと思います」
+  narrator: キャスター
+  say:
+  - text: 世界王者スペインと日本代表の差を、スペインで育った久保建英がこう語りました。
+    short_only: true
+  - voice: 久保建英
+    text: 似たようなことをやっていても、それを突き詰める側と
+  - voice: 久保建英
+    text: 真似する側ではいつまでも追いつけないと思いますね。
+    cont: true
+  - voice: 久保建英
+    text: それは日本だけじゃなく、何かを真似しているうちは
+    cont: true
+  - voice: 久保建英
+    text: オリジナルをコピーが超えることはないと思うので。
+    cont: true
+  - voice: 久保建英
+    text: 真似だけではどのスタイルを真似していても難しいのかなと。
+    cont: true
+  - voice: 久保建英
+    text: よく日本のサッカーと言われますけど、
+    cont: true
+  - voice: 久保建英
+    text: 日本だけの武器を見つける上で、
+    cont: true
+  - voice: 久保建英
+    text: 取り入れていくのは素晴らしいと思うけど、
+    cont: true
+  - voice: 久保建英
+    text: 模倣や真似はオリジナルには敵わないのかなと思います
+    cont: true
+    emph: true
+  - text: スペインの育成で揉まれ、日本の育成でも育った久保。
+  - text: 両方を知る選手が、スペインを手本に真似る道には、はっきりと否定的でした。
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460254-460254-fl=
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460254-460254-fl=
+- id: side
+  heading: 「認める側」と「認められる側」
+  tier: 報道
+  telop: 久保「まだやっぱり“認められる側”の国」「スペインは“認める側”の国」
+  narrator: キャスター
+  say:
+  - text: 差が生まれる理由として久保が挙げたのは、サッカー選手になるまでの競争でした。
+  - voice: 久保建英
+    text: 単純に入試とかで言ったら倍率が桁違いですよね。
+  - voice: 久保建英
+    text: あっちでサッカー選手になるのと、
+    cont: true
+  - voice: 久保建英
+    text: こっちでサッカー選手になるのとでは。
+    cont: true
+  - voice: 久保建英
+    text: よく冗談でチームメートに
+    cont: true
+  - voice: 久保建英
+    text: 『俺が日本にいたらね』って話をされて、
+    cont: true
+  - voice: 久保建英
+    text: 『いやそんなことないよ』って今は言えるけど、
+    cont: true
+  - voice: 久保建英
+    text: 5年前とかは全然言い返せない自分もいたりして。
+    cont: true
+  - voice: 久保建英
+    text: 今でこそ日本のサッカーを世界に見せられて
+    cont: true
+  - voice: 久保建英
+    text: 誇らしい気持ちはあるけど、
+    cont: true
+  - voice: 久保建英
+    text: まだやっぱり“認められる側”の国というのも事実ですし。
+    cont: true
+  - voice: 久保建英
+    text: それで言うとスペインは“認める側”の国なので。
+    cont: true
+    emph: true
+  - voice: 久保建英
+    text: そこにも差があるのかなと思います
+    cont: true
+  - text: 選ぶ側に立つ国では、選手はその国の若者だけでなく、世界から集まる選手とも席を争います。
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460254-460254-fl=
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460254-460254-fl=
+- id: view
+  viewpoint: true
+  heading: 「認める側」との差を数字で見る
+  tier: 背景
+  telop: W杯の結果も、選手の集まり方も、市場価値も。数字に出ている「認める側」との差
+  narrator: 解説
+  say:
+  - text: 久保の言う「認める側」と「認められる側」。数字で並べてみます。
+    image: assets/images/20261004_kubo_spain/02_w.jpg
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: &gap
+      - ['W杯2026', '優勝', '1回戦で敗退']
+      - ['FIFAランキング', '1位', '17位']
+      - ['W杯メンバーのうち自国リーグ', '26人中17人', '26人中3人']
+      - ['自国リーグにいた他国のW杯メンバー', '68人', '4人']
+      - ['市場価値の合計', '12億5000万€', '2億9285万€']
+  - text: まずワールドカップ。スペインは決勝でアルゼンチンを破り、頂点に立ちました。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 0
+  - text: 日本は決勝トーナメントの1回戦で、ブラジルに敗れています。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 0
+  - text: 大会のあと、7月の世界ランキングは、スペインが1位、日本は17位です。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 1
+  - text: 選手の居場所も違います。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 2
+  - text: ワールドカップのメンバー26人のうち、自国のリーグにいたのはスペインが17人。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 2
+  - text: 日本はJリーグの3人で、残る23人は海外のクラブでプレーしていました。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 2
+  - text: スペインのリーグには、ほかの国のワールドカップメンバーが68人。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 3
+  - text: 日本のリーグには4人でした。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 3
+  - text: 市場価値の合計は、いまの代表の顔ぶれで、スペインが12億5000万ユーロ。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 4
+  - text: 日本は2億9285万ユーロで、4倍あまりの開きがあります。
+    card:
+      type: table
+      title: スペインと日本
+      columns: [項目, スペイン, 日本]
+      rows: *gap
+      highlight_row: 4
+  - text: 一方で久保は、勤勉さや、一つ一つのプレーに全身全霊で臨む姿勢なら、
+    card: none
+  - text: 日本はほぼどこの国にも負けない、とも話しています。
+  - text: そして、差の行方については、こう見ていました。
+  - voice: 久保建英
+    text: 成長曲線という点では
+    image: assets/images/20261004_kubo_spain/01.jpg
+  - voice: 久保建英
+    text: 日本のほうが他の国よりも急なのかなと思う。
+    cont: true
+  - voice: 久保建英
+    text: もともとあった差がどれくらいのものかは
+    cont: true
+  - voice: 久保建英
+    text: 僕にも分からないので、
+    cont: true
+  - voice: 久保建英
+    text: 目には見えていないかもしれないけど、
+    cont: true
+  - voice: 久保建英
+    text: 少しずつ確実に差は縮まってきているのかなと思います
+    cont: true
+  - text: その差を縮める次の一歩は、10月5日の夜7時半、国立競技場。
+    image: assets/images/20261004_kubo_spain/02_w.jpg
+  - text: キリンカップの決勝で、日本はニュージーランドと戦います。
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460254-460254-fl=
+  sources:
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final
+  - https://en.wikipedia.org/wiki/Japan_national_football_team
+  - https://www.soccer-king.jp/news/japan/national/20260720/1876817.html
+  - https://inside.fifa.com/fifa-world-ranking/men
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads
+  - https://www.transfermarkt.com/spanien/startseite/verein/3375
+  - https://www.transfermarkt.com/japan/startseite/verein/3435
+  - https://web.gekisaka.jp/news/japan/detail/?460254-460254-fl=
+  - https://www.jfa.jp/samuraiblue/lp/20261005/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「勤勉さと学習能力の高さは世界に誇れる」
+  narrator: キャスター
+  say:
+  - text: ラ・ロハ、無敵艦隊は、どちらもスペイン代表の呼び名です。
+  # Yahoo!ニュース（ゲキサカの記事）のコメント欄 1ページ目 vfk********。全文
+  - voice: ネット民
+    text: ラ・ロハは同じポゼッションサッカーでも
+  - voice: ネット民
+    text: 常に３歩先を行くイメージ
+    cont: true
+  - voice: ネット民
+    text: 今でこそ本物の無敵艦隊でいるが、以前は揶揄された負の名称
+    cont: true
+  - voice: ネット民
+    text: そういう歴史を送っても尚貫いてきたスタイルだし、
+    cont: true
+  - voice: ネット民
+    text: 進化させて来たから今の結果がある
+    cont: true
+  - voice: ネット民
+    text: 日本の特長は模倣からアップデート
+    cont: true
+  - voice: ネット民
+    text: 勤勉さと学習能力の高さは世界に誇れる
+    cont: true
+  - voice: ネット民
+    text: それを継続すれば大いなる武器になると思う
+    cont: true
+  # 同じ欄 3ページ目 ney********。全文
+  - voice: ネット民
+    text: 結局スペインで生活して長い間プレーしてる久保が
+    short_voice: true
+  - voice: ネット民
+    text: 1番スペインを真似るのは無理だってわかってるんだな。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/b3db3856470313b90a48d1595155ef5b1dc74c81/comments
