@@ -33,7 +33,7 @@ function play(g, pol) {
   if (pol === 'good') { c.sort((a, b) => (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar); if (typeof watchVideo === 'function') c.slice(0, 3).forEach(t => watchVideo(S, t.id)); c.sort((a, b) => ((b.potRev && b.pot >= 1.3) - (a.potRev && a.pot >= 1.3)) || (HINT_LINES.includes(b.line) - HINT_LINES.includes(a.line)) || b.popStar - a.popStar); }
   else shuffle(c);
   S.sel = c.slice(0, S.caps.sel).map(t => t.id); confirmSelect(S);
-  if (pol === 'random') S.fmt = shuffle(FMT_KEYS.filter(k => !S.locked || !S.locked[k]).slice()).slice(0, 4);
+  if (pol === 'random') S.fmt = shuffle((typeof fmtKeys==='function'?fmtKeys():FMT_KEYS).filter(k => !S.locked || !S.locked[k]).slice()).slice(0, 4);
   startSeason(S);
   for (let r = 1; r <= NROUND; r++) {
     if (S.phase !== 'plan') throw new Error('plan? ' + S.phase);
