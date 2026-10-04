@@ -3962,7 +3962,7 @@ function vPlan(){
     if(a.k==='vlog'&&on){h+='<div class="pickrow sm">';A.forEach(function(t){h+='<button class="pk '+(P.vlogId===t.id?'on':'')+'" data-a="vlogid" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span></button>';});h+='</div>';}
     h+='</div>';});
   h+='</div>';
-  var bLeft=budgetAdLeft();if(!ROUNDS[S.rnd].fin&&S.chal!=='noad'&&bLeft>0)h+='<button class="btn ad" data-a="adbudget">'+adIcon()+'<span>制作費を30万足す<br><span class="small muted">'+adNote()+'。この審査ではあと'+bLeft+'回</span></span></button>';
+  var bLeft=budgetAdLeft();if(!ROUNDS[S.rnd].fin&&S.chal!=='noad'&&bLeft>0)h+='<button class="btn ad" data-a="adbudget">'+adIcon()+'<span>制作費を15万足す<br><span class="small muted">'+adNote()+'。この審査ではあと'+bLeft+'回</span></span></button>';
   if(S.rnd>=2&&S.rnd<=4&&S.revived==null){var L=reviveList(S);if(L.length){h+='<h3>復活枠 <span class="small muted">1シーズンに1回</span></h3><p class="small muted">不合格にした子を1人だけ戻せます。人気のある子なら喜ばれ、そうでなければ「基準が分からない」と言われます。</p><div class="pickrow">';
     L.forEach(function(t){h+='<button class="pk" data-a="revive" data-id="'+t.id+'">'+faceImg(t,'sm dim')+'<span>'+esc(t.giv)+'</span>'+pkStat(t)+'</button>';});h+='</div>';}}
   var ok=!(P.acts.vlog&&P.vlogId==null);
@@ -4583,7 +4583,7 @@ document.addEventListener('click',function(ev){
     case 'act':go(function(){S.plan.acts[v]=!S.plan.acts[v];if(v==='vlog'&&!S.plan.acts[v])S.plan.vlogId=null;});break;
     case 'coachk':go(function(){S.plan.coachK=v;});break;
     case 'vlogid':go(function(){S.plan.vlogId=id;});break;
-    case 'adbudget':if(budgetAdLeft()<=0)break;withAd(function(){go(function(){if(budgetAdLeft()<=0)return;S.budget+=30;S.budgetN=(S.budgetN||0)+1;});});break;
+    case 'adbudget':if(budgetAdLeft()<=0)break;withAd(function(){go(function(){if(budgetAdLeft()<=0)return;S.budget+=15;S.budgetN=(S.budgetN||0)+1;});});break;
     case 'revive':if(ui.reviveArm!==id){ui.reviveArm=id;render();toast(S.tr[id].giv+'を番組に戻します（1シーズン1回）。もう一度押すと決まります');break;}ui.reviveArm=null;go(function(){revive(S,id);});break;
     case 'planok':go(function(){applyPlan(S);});window.scrollTo(0,0);break;
     case 'talk':ui.talkY=window.scrollY;go(function(){doTalk(S,id);});window.scrollTo(0,0);break;
