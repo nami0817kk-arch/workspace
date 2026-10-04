@@ -1116,7 +1116,7 @@ function teamIdx(S,id){var T=S.plan&&S.plan.teams;if(!T)return -1;for(var i=0;i<
 function teamFmt(S,t,f){if(!f||f.kind!=='team'||!S.plan||!S.plan.tc)return f;var ti=teamIdx(S,t.id);if(ti<0)return f;var c=TEAM_CONCEPTS[S.plan.tc[ti]],o={};for(var k in f)o[k]=f[k];o.w=c.w;o.concept=c.n;return o;}
 function fitOf(t,w){var v=0;for(var k in w)v+=t.st[k]*w[k];return v;}
 function teamFit(S,ti){var P=S.plan,ids=P.teams[ti].filter(function(id){return S.tr[id].status==='alive';});if(!ids.length)return 0;var w=TEAM_CONCEPTS[P.tc[ti]].w;
-  return ids.reduce(function(a,id){return a+fitOf(S.tr[id],w);},0)/ids.length+relsIn(S,ids).length*1.5;}
+  return ids.reduce(function(a,id){return a+fitOf(S.tr[id],w);},0)/ids.length+linksIn(S,ids)*1.5;}
 function fixCenters(S){var P=S.plan;if(!P.teams)return;P.teams.forEach(function(ids,ti){var al=ids.filter(function(id){return S.tr[id].status==='alive';});
   if(P.tcen[ti]==null||al.indexOf(P.tcen[ti])<0)P.tcen[ti]=al.slice().sort(function(a,b){return S.tr[b].lastP-S.tr[a].lastP;})[0];});}
 function autoConcepts(S){var P=S.plan,used={};P.tc=[];P.teams.forEach(function(ids,ti){var best=-1,bv=-1;TEAM_CONCEPTS.forEach(function(c,ci){if(used[ci])return;var v=ids.reduce(function(a,id){return a+fitOf(S.tr[id],c.w);},0);if(v>bv){bv=v;best=ci;}});used[best]=1;P.tc[ti]=best;});}
@@ -1324,7 +1324,7 @@ function runStage(S){
     (P.teams||defaultTeams(S)).forEach(function(ids,ti){teams.push({ids:ids.filter(function(id){return aliveIds[id];}),score:0,bond:0,ti:ti,concept:P.tc?TEAM_CONCEPTS[P.tc[ti]]:null});});
     teams=teams.filter(function(tm){return tm.ids.length;});
     teams.forEach(function(tm){tm.score=tm.ids.reduce(function(a,id){return a+res[id].raw;},0)/tm.ids.length;
-      relsIn(S,tm.ids).forEach(function(r){if(r.k==='rival'){tm.bond+=1;S.tr[r.a].conf+=3;S.tr[r.b].conf+=3;}else tm.bond+=1.5;});tm.ids.forEach(function(id){if(hasT(S.tr[id],'mood'))tm.bond+=1.5;});teamChem(S,tm);tm.score+=tm.bond;});
+      tm.bond+=linksIn(S,tm.ids)*1.5;relsIn(S,tm.ids).forEach(function(r){if(r.k==='rival'){S.tr[r.a].conf+=3;S.tr[r.b].conf+=3;}});tm.ids.forEach(function(id){if(hasT(S.tr[id],'mood'))tm.bond+=1.5;});teamChem(S,tm);tm.score+=tm.bond;});
     var best=-1;teams.forEach(function(tm,i){if(tm.score>best){best=tm.score;win=i;}});
     teams.forEach(function(tm,i){tm.ids.forEach(function(id){res[id].raw=res[id].raw*.8+tm.score*.2+(i===win?2:0);res[id].team=i;});});
     teams.forEach(function(tm,i){for(var a=0;a<tm.ids.length;a++)for(var b=a+1;b<tm.ids.length;b++)addBond(S,tm.ids[a],tm.ids[b],i===win?12:8);});
@@ -1449,7 +1449,7 @@ function finalEval(S,Dopt){
   var confAvg=D.reduce(function(a,t){return a+t.conf;},0)/n;
   var coh=36+trustAvg*.5+(confAvg-50)*.12-miss*14-sd*1.1-Math.max(0,n-7)*7+(talk?5:0)+(n<=5?4:0);
   var ids=D.map(function(t){return t.id;}),bond=0;
-  S.rels.forEach(function(r){if(ids.indexOf(r.a)>=0&&ids.indexOf(r.b)>=0)bond+=r.k==='town'||r.k==='rival'?1:2;});
+  bond=linksIn(S,ids)*2;
   bond=Math.min(8,bond);coh+=bond;
   var goods=D.filter(function(t){return t.arc&&t.arc.step>=3&&t.arc.score>=2;}).length;
   coh+=goods*3;fanScore=clamp(fanScore+goods*3,0,100);
@@ -1588,6 +1588,9 @@ function assignArcs(tr){
   return rels;
 }
 function relsOf(S,id){return S.rels.filter(function(r){return r.a===id||r.b===id;}).map(function(r){return {k:r.k,o:r.a===id?r.b:r.a,n:r.k==='senpai'&&r.b===id?'慕ってくれる後輩':RELN[r.k]};});}
+/* 絆の深さを「つながり」に直す：25以上で0.5、50以上で1、75以上で1.5（2026-10-04 関係と絆をまとめた） */
+function bondLink(S,a,b){var o=S.bond&&S.bond[bkey(a,b)];var v=o?o.v:0;if(!o){S.rels.forEach(function(r){if((r.a===a&&r.b===b)||(r.a===b&&r.b===a))v=Math.max(v,BOND_BASE[r.k]||0);});}return v>=75?1.5:v>=50?1:v>=25?.5:0;}
+function linksIn(S,ids){var x=0;for(var i=0;i<ids.length;i++)for(var j=i+1;j<ids.length;j++)x+=bondLink(S,ids[i],ids[j]);return x;}
 function relsIn(S,ids){return S.rels.filter(function(r){return r.k!=='town'&&ids.indexOf(r.a)>=0&&ids.indexOf(r.b)>=0;});}
 function roomUp(S){ /* 合宿に入るときの部屋割り（2人部屋） */
   S.rels=S.rels.filter(function(r){return r.k!=='room';});
@@ -3151,7 +3154,7 @@ function vTitleNew(){
 
   if(loadCareer().seasons===0)h+='<div class="card firstflow"><div class="mh">はじめての方へ：1シーズンの流れ</div><ol class="tight"><li><b>書類・動画審査</b>　40人から最大24人を選ぶ</li><li><b>構成会議</b>　4つの審査の順番を決める</li><li><b>審査ごとに</b>　制作会議 → レッスン → 関わる時間 → 出来事 → ステージ → 講評 → <b>合否はあなたが決める</b></li><li><b>最終審査</b>　デビューメンバーを5〜8人選ぶ</li><li><b>デビュー後1か月</b>　活動を選び、評価とグループのその後を見る</li></ol><p class="small muted">1シーズンは30〜40分。迷ったら「おまかせ」や、画面の上に出るコツを見てください。</p></div>';
 
-  h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、9種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がって、使える審査が増える</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・個別指導・差し入れ・お出かけ・ふたりと話す・相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>練習生には特性がある。ふたりごとの相性と絆が深まると「ふたりの物語」が進み、息が合えばコンビになる。ひとりの物語を正しく支えきると覚醒する</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・曲の方向を決めて、デビュー後1か月の反響で評価される。最後にグループのその後がエンドロールで流れる</li></ul><p class="muted">試作 v18。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
+  h+='<div class="card small"><b>遊び方</b><ul class="tight"><li>応募者40人から最大24人を書類・動画審査で選ぶ（能力は一部しか見えない）</li><li>構成会議で、9種類の審査から4つを選んで順番を決める（最後は最終審査）</li><li>毎シーズン、スポンサーから3つの依頼が来る。局は審査ごとに目標の視聴率を示し、届かないと制作費が減る</li><li>シーズンを終えるたびにポイントがたまり、肩書きが上がって、使える審査が増える</li><li>審査ごとに、制作会議 → レッスン → 関わる時間（話す・出かける・ふたりと話す、と相談）→ 出来事 → <b>ステージ本番</b> → 講評 → <b>合否はあなたが決める</b></li><li>顔を押すと、その子の個人ページ（来た理由・目標・好み・物語・関係・思い出）が開く</li><li>世間の人気は決定には使わないが、人気の子を落とすと荒れる</li><li>練習生には特性がある。ふたりごとの相性と絆が深まると「ふたりの物語」が進み、息が合えばコンビになる。ひとりの物語を正しく支えきると覚醒する</li><li>最終審査でデビューメンバーを5〜8人選び、グループ名・リーダー・曲の方向を決めて、デビュー後1か月の反響で評価される。最後にグループのその後がエンドロールで流れる</li></ul><p class="muted">試作 v18。1シーズン約30〜40分。練習生は毎回ちがう顔ぶれです。</p></div>';
   return h;
 }
 function vSelect(){
@@ -3375,7 +3378,7 @@ function vPlan(){
     h+='<div class="tbtns"><span class="small muted">おまかせで組む：</span><button class="btn-s" data-a="tauto" data-v="even">実力を均等に</button><button class="btn-s" data-a="tauto" data-v="bond">仲の良い子で</button><button class="btn-s" data-a="tauto" data-v="fit">曲に合う子で</button></div>';
     var sel=ui.tsel!=null&&teamIdx(S,ui.tsel)>=0?ui.tsel:null,selTi=sel!=null?teamIdx(S,sel):-1;
     if(sel!=null)h+='<div class="note">'+esc(S.tr[sel].giv)+' を選んでいます。入れ替える相手を押してください（もう一度押すと取り消し）。</div>';
-    P.teams.forEach(function(ids,ti){var al=ids.filter(function(id){return S.tr[id].status==='alive';}),c=TEAM_CONCEPTS[P.tc[ti]],fit=teamFit(S,ti),bond=relsIn(S,al).length;
+    P.teams.forEach(function(ids,ti){var al=ids.filter(function(id){return S.tr[id].status==='alive';}),c=TEAM_CONCEPTS[P.tc[ti]],fit=teamFit(S,ti),bond=linksIn(S,al);
       h+='<div class="tcard"><div class="th"><b>チーム'+'ABCDEFG'.charAt(ti)+'</b><span class="small">'+al.length+'人・曲との相性 <b>'+Math.round(fit)+'</b>'+teamChemTxt(S,al)+'</span></div>';
       h+='<div class="fitbar"><i style="width:'+Math.min(100,Math.round(fit))+'%"></i></div>';
       h+='<div class="tcon">'+TEAM_CONCEPTS.map(function(cc,ci){var other=P.tc.indexOf(ci);return '<button class="chip'+(P.tc[ti]===ci?' on':'')+(other>=0&&other!==ti?' taken':'')+'" data-a="tcon" data-id="'+ti+'" data-v="'+ci+'">'+cc.n+(other>=0&&other!==ti?'<small>'+'ABCDEFG'.charAt(other)+'</small>':'')+'</button>';}).join('')+'</div>';
@@ -3517,7 +3520,7 @@ function moodTag(t){var m=moodOf(t);return '<span class="tag '+MOODC[m]+'">'+m+'
 function apDots(){var h='';for(var i=0;i<apMax(S);i++)h+='<i class="'+(i<S.ap?'on':'')+'"></i>';return '<span class="ap">'+h+'</span>';}
 function vTalk(){
   var h='<h2>関わる時間 '+apDots()+'</h2>';
-  if(S.sub&&S.sub.kind==='out'){var to=S.tr[S.sub.id];h+='<div class="card ev"'+scn('morning')+'><div class="ttl">お出かけ</div><div class="evfaces"><div>'+face(to,'lg')+esc(to.name)+'</div></div><p class="small muted">どこへ行きますか？ 行き先ごとに起きることが違います。</p>'+'<div class="otiles">'+OUTS.map(function(o,i){return '<button class="otile" style="--ob:var(--bgi-'+SCENE_OUT[i]+',none)" data-a="outplace" data-v="'+i+'" '+(S.budget<o.cost?'disabled':'')+'><b>'+o.n+'</b><span>'+(o.cost?'制作費'+o.cost+'万':'無料')+'</span></button>';}).join('')+'</div>'+'<button class="btn sub" data-a="subcancel">やめる</button></div>';return h;}
+  if(S.sub&&S.sub.kind==='out'){var to=S.tr[S.sub.id];h+='<div class="card ev"'+scn('morning')+'><div class="ttl">お出かけ</div><div class="evfaces"><div>'+face(to,'lg')+esc(to.name)+'</div></div><p class="small muted">どこへ出かけますか？ 行き先ごとに起きることが違います。合宿所で差し入れを渡すこともできます。</p>'+'<div class="otiles">'+'<button class="otile ogift" style="--ob:var(--bgi-dining,none)" data-a="gift" data-id="'+to.id+'"><b>差し入れを渡す</b><span>合宿所で</span></button>'+OUTS.map(function(o,i){return '<button class="otile" style="--ob:var(--bgi-'+SCENE_OUT[i]+',none)" data-a="outplace" data-v="'+i+'" '+(S.budget<o.cost?'disabled':'')+'><b>'+o.n+'</b><span>'+(o.cost?'制作費'+o.cost+'万':'無料')+'</span></button>';}).join('')+'</div>'+'<button class="btn sub" data-a="subcancel">やめる</button></div>';return h;}
   if(S.sub){var t=S.tr[S.sub.id];
     h+='<div class="card ev"'+scn(SCENE_TALK[S.sub.kind])+'><div class="ttl">'+(S.sub.kind==='coach'?'個別指導':'差し入れを渡す')+'</div><div class="evfaces"><div>'+face(t,'lg')+esc(t.name)+'</div></div>';
     if(S.sub.kind==='coach'){h+='<p class="small muted">どこを見るか選んでください。その能力が伸び、はっきり分かるようになります。疲れがたまり、繊細な子は緊張で自信を落とします。</p>'+['v','d','r','e'].map(function(k){return '<button class="choice" data-a="coachk2" data-v="'+k+'"><b>'+STATN[k]+'</b><span>いま '+(t.rev[k]===2?Math.round(t.st[k]):t.rev[k]===1?t.fz[k]+'前後':'?')+'</span></button>';}).join('');}
@@ -3536,7 +3539,7 @@ function vTalk(){
     else if(k==='honne'){h+='<p>'+esc(arcText(S,t2,HONNE[t2.arc.k]))+'</p>'+[['最後まで黙って聞く','自信が上がり、すべての能力が少し伸びる'],['「話してくれてありがとう」と伝える','信頼が上がり、すべての能力が少し伸びる']].map(function(c,i){return '<button class="choice" data-a="talkch" data-v="'+i+'"><b>'+c[0]+'</b><span>'+c[1]+'</span></button>';}).join('')+'</div>';}
     else{var sc=arcScene(S,t2);h+='<p>'+esc(arcText(S,t2,sc.t))+'</p>';arcChoices(S,t2).forEach(function(c,i){h+=choiceBtn('talkch',i,c.label,c.hint.tone,partsHtml(c.hint.parts));});h+='</div>'+(t2.temperRev?'':TONE_NOTE);}
     return h;}
-  h+='<details class="help"><summary>説明</summary><p class="small muted">レッスンのあと、'+apMax(S)+'回まで練習生と関われます。<b>話す</b>＝物語が進む・好みや目標が分かる／<b>お出かけ</b>＝連れ出すと何かが起きる（成功するかは運と調子しだい）／<b>個別指導</b>＝能力が伸びるが疲れる（繊細な子は緊張する）／<b>差し入れ</b>＝好きなものなら信頼が大きく上がり、苦手なものだと下がる。同じ子に2回以上構うと、ほかの子の信頼が少し下がる。信頼が「本音で話せる」まで上がり、物語を見終えた子は本音を打ち明けてくれます。</p></details>';
+  h+='<details class="help"><summary>説明</summary><p class="small muted">レッスンのあと、'+apMax(S)+'回まで練習生と関われます。<b>話す</b>＝物語が進む・好みや目標が分かる。助言すると弱いところが伸びる／<b>出かける</b>＝連れ出すと何かが起きる（成功するかは運と調子しだい）。合宿所で差し入れを渡すこともできる（好きなものなら信頼が大きく上がり、苦手なものだと下がる）／<b>ふたりと話す</b>＝ふたりの絆が深まる。同じ子に2回以上構うと、ほかの子の信頼が少し下がる。信頼が「本音で話せる」まで上がり、物語を見終えた子は本音を打ち明けてくれます。</p></details>';
   var open=S.reqs.filter(function(q){return !q.done;}).length;
   var PL=pairList(S).slice(0,6);if(PL.length){h+='<details class="pairbox"'+(ui.pairOpen?' open':'')+'><summary data-a="pairopen"><b>ふたりと話す</b> <span class="small muted">'+PL.length+'組・1回ぶん。絆が深まる</span></summary><p class="small muted" style="margin:4px 0">1回ぶん。ふたりとも信頼が上がり、絆が深まる。絆が25・50・75に届くと、ふたりの物語が進む</p><div class="pairs">';
     PL.forEach(function(r){var A=S.tr[r.a],B=S.tr[r.b];h+='<button class="pairb" data-a="pair" data-id="'+r.a+'" data-v="'+r.b+'" '+(S.ap<=0?'disabled':'')+'>'+faceImg(A,'sm')+faceImg(B,'sm')+'<span><b>'+esc(A.giv)+'と'+esc(B.giv)+'</b><small>'+RELN[r.k]+'・'+bondLabel(S,r.a,r.b)+'</small></span></button>';});h+='</div></details>';}
@@ -3552,7 +3555,7 @@ function vTalk(){
   A.forEach(function(t){var st=t.arc.step,hn=st>=3&&t.trust>=80&&!t.honne,dis=S.ap<=0?'disabled':'';
     h+='<div class="trow2">'+face(t,'sm')+'<div class="mid"><div class="nm">'+(t.fav?'<span style="color:var(--gold)">★</span>':'')+esc(t.name)+' '+moodTag(t)+(hn?' <span class="tag good">★ 本音</span>':st>0&&st<3?' <span class="tag good">★ '+ARCS[t.arc.k].name+' '+st+'/3</span>':'')+'</div>'+
       statMini(t,true).replace('</div>','<span class="trc">信頼<b>'+Math.round(t.trust)+'</b><i><u style="width:'+Math.round(clamp(t.trust,0,100))+'%"></u></i></span></div>')+((S.touch&&S.touch[t.id])?'<div class="small" style="color:var(--bad);font-weight:700">今回'+S.touch[t.id]+'回関わった'+(S.touch[t.id]===1?'・もう1回でほかの子が気にする':'')+'</div>':'')+
-      '</div><div class="tacts"><button data-a="talk" data-id="'+t.id+'" '+dis+'>話す</button><button data-a="coach" data-id="'+t.id+'" '+dis+'>個別指導</button><button data-a="gift" data-id="'+t.id+'" '+dis+'>差し入れ</button><button data-a="out" data-id="'+t.id+'" '+dis+'>お出かけ</button></div></div>';});
+      '</div><div class="tacts t2"><button data-a="talk" data-id="'+t.id+'" '+dis+'>話す</button><button data-a="out" data-id="'+t.id+'" '+dis+'>出かける</button></div></div>';});
   h+='<div class="foot"><div class="in"><div class="cnt">残り <b>'+S.ap+'</b> 回'+(open?'<br><span style="color:var(--bad)">相談 '+open+'件が未回答</span>':'')+'</div><button class="btn'+(ui.talkArm?' warnb':'')+'" data-a="talkok">'+(ui.talkArm?'それでも進む':(ROUNDS[S.rnd].interview?'個別面談へ':'出来事へ'))+'</button></div></div>';
   return h;
 }
@@ -3605,7 +3608,7 @@ function vProfile(t){
   if(t.hist.length){h+='<div class="prow"><span class="pl2">点の推移</span><span class="spark">'+t.hist.map(function(x){return '<i style="height:'+Math.max(8,x.sc*.42)+'px" class="'+(x.rest?'rest':'')+'"><em>'+x.sc+'</em></i>';}).join('')+'</span></div>';}
   h+=growRow(t);
   h+=bondRow(t);
-  var rs=relsOf(S,t.id);if(rs.length)h+='<div class="prow"><span class="pl2">関係</span><span>'+rs.map(function(r){var o=S.tr[r.o];return '<button class="rel" data-a="prof" data-id="'+o.id+'">'+esc(o.giv)+'<small>'+r.n+'</small></button>';}).join('')+'</span></div>';
+  var rs=relsOf(S,t.id);if(rs.length)h+='<div class="prow"><span class="pl2">関係</span><span>'+rs.map(function(r){var o=S.tr[r.o];var bv=Math.round(bondOf(S,t.id,o.id).v);return '<button class="rel" data-a="prof" data-id="'+o.id+'">'+esc(o.giv)+'<small>'+r.n+'・絆'+bv+'</small></button>';}).join('')+'<div class="small muted">関係は絆の始まり。絆が25・50・75を越えるごとに、チームとデビュー後のまとまりに効く</div></span></div>';
   var al=S.album.filter(function(x){return x.id===t.id;});
   if(al.length)h+='<div class="prow"><span class="pl2">思い出</span><span>'+al.map(function(x){return '<div class="memo"><b>'+esc(x.title)+'</b> <span class="muted small">'+(x.r?'第'+x.r+'審査':'')+'</span><br>'+esc(x.t)+'</div>';}).join('')+'</span></div>';
   if(t.log&&t.log.length){var LG=t.log.slice().reverse().slice(0,20),li=function(l){return '<li><span class="muted">'+(l.r?'第'+l.r+'審査':'書類')+'</span> '+esc(l.t)+'</li>';};
@@ -3787,6 +3790,7 @@ function vSettings(){var st=ui.set;
 
 /* ---------- フェーズ38：用語集 ---------- */
 var GLOSSARY=[
+  ['絆','ふたりのつながり（0〜100）。幼なじみ・ライバルなどの関係は絆の始まりの値になる。ふたりと話す・同じチーム・同室で深まり、25・50・75で「ふたりの物語」が進む。チームの点とデビュー後のまとまりは絆の深さで決まる'],
   ['華','人の目を引く力。人気の上がり方すべてに掛かる（大・中・小）。表現力担当は大きめ'],
   ['能力の札','歌・ダ（ダンス）・ラ（ラップ）・表（表現）・体（体力）。数字は見えている値、≈ の付いた字（S〜D）はおおよその評価、? はまだ見えていない。金の札はS、紫の札はA'],
   ['歌・ダンス・ラップ・表現・体力','能力。レッスンや出来事で伸びる。体力が高いと疲れがたまりにくい'],
