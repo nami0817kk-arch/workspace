@@ -96,6 +96,56 @@
 > **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
 > 記述が残っているのは、出すことになったときのため。当面は iOS だけを見る。
 
+## このバージョンの新機能（1.1.8）
+
+**提出するのはこの版（ビルド13）。** 1.1.4〜1.1.7 はビルドだけ作って提出して
+いない。中身はすべてこの版に入っている。掲載画像も作り直してある。
+
+提出のときに一緒に入れるもの（1.1.7 の節と同じ）:
+- **プレビュー動画**（`marketing/preview/app_preview_{ja,en}.mp4`）を日本語・英語に
+- **掲載画像9枚×4組を差し替え**（画面を作り直したので、ja/en とも全部）
+- 日本語の説明文を差し替え
+
+### 日本語
+
+```
+・画面を一通り作り直しました。順位・勝点・総合力といった数字を大きく
+　見やすくし、どこを見ればよいかが分かる並びにしています
+・ホーム画面にクラブの色の見出しを置き、順位を大きく出しました
+・試合の途中経過を、左右に伸びるバーで見比べられるようにしました
+・順位表で自分のクラブの行が一目で分かるようにしました
+・選手一覧と移籍市場で、総合力や移籍金を札に分けて読みやすくしました
+・能力レーダーの軸の文字が、環境によっては表示されないことがあったのを
+　直しました
+・設定から、このアプリを評価できるようになりました
+・設定に、お問い合わせの窓口を置きました
+・タイトル画面に絵を入れました
+・リーグ優勝・昇格を決めたときに、その絵が出るようになりました
+・選手の似顔絵、ピッチ、クラブのエンブレム、実績の記章を描き直しました
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- The screens have been redesigned. Key numbers (position, points, overall)
+  are larger and easier to read.
+- The home screen now has a club-coloured header with your position in it.
+- Match stats are now a side-by-side comparison bar.
+- Your club's row now stands out in the league table.
+- Overall and fees are shown as chips in the squad and transfer lists.
+- Fixed the attribute radar labels not showing on some platforms.
+- You can now rate the app from Settings.
+- Settings now has a link to contact support.
+- The title screen now has artwork.
+- Winning the league or going up now has artwork of its own.
+- Player portraits, the pitch, club crests and achievement badges have all
+  been redrawn.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
 ## このバージョンの新機能（1.1.7）
 
 **提出するのはこの版（ビルド12）。** 1.1.4〜1.1.6 はビルドを作っただけで
