@@ -577,7 +577,8 @@ def _name(salt: str, *parts) -> str:
 
 
 def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int,
-           with_text: bool = False, end_card: bool = False, workers: int = 10) -> list[tuple[Path, float]]:
+           with_text: bool = False, end_card: bool = False, workers: int = 10,
+           end_seconds: float = END_SECONDS) -> list[tuple[Path, float]]:
     """(画像, 表示する秒数) の並びを作る。同じ状態の画像は使い回す。画像は同時に描く（CPU を並べる）。
 
     1行のあいだに起きること（本編）：
@@ -620,7 +621,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             nxt = cues[i + 1]
             end = cue.end if (special and nxt.line.section != line.section) else nxt.start
         else:
-            end = total - (END_SECONDS if end_card else 0.0)
+            end = total - (end_seconds if end_card else 0.0)
         side = painter.config["cast"].get(line.speaker, {}).get("side", "left")
         n_hop = HOP_FRAMES if line.speaker != prev_speaker else 0
 
@@ -752,7 +753,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
     if end_card and cues:
         bg = cues[-1].line.background
         emit(frame_dir / _name(salt, "end", bg),
-             lambda: painter.with_cast(painter.end_card(bg), "語り", 0, "", "明るい"), END_SECONDS)
+             lambda: painter.with_cast(painter.end_card(bg), "語り", 0, "", "明るい"), end_seconds)
 
     # まとめて描く（同じ画像は1回だけ）。Pillow の描画は GIL を外すので、スレッドを並べると速くなる
     def run(item):
