@@ -82,6 +82,7 @@ def main():
     s = s[:a] + block + s[b:]
     s = put_bg(s)
     s = put_voice(s)
+    s = s.replace('<meta charset="utf-8">\n', '', 1)  # 本体を直接開いたとき用の指定。組み立てでは HEAD に入れる
     title = '<title>ひかりの指名</title>'
     assert title in s, 'game.html の <title> が見つからない'
     s = s.replace(title, '<title>ひかりの指名（テスト版）</title>', 1)
