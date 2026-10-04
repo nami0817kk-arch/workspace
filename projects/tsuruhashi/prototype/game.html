@@ -88,7 +88,13 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 @keyframes tin{from{transform:translateY(-14px) scale(.96);opacity:0}}
 @keyframes tout{to{transform:translateY(-10px);opacity:0}}
 
-.adbar{flex:0 0 auto;padding:8px 12px 0}
+.adbar{flex:0 0 auto;padding:8px 12px 0;display:flex;gap:8px}
+.adbar .adbtn{flex:1 1 auto;min-width:0}
+.bentobtn{flex:0 0 auto;border:0;border-radius:14px;padding:6px 12px;background:linear-gradient(135deg,#c9772c,#e8a44a);color:#fff;font-weight:800;font-size:14px;line-height:1.2;box-shadow:0 3px 0 rgba(110,60,20,.35);text-align:center}
+.bentobtn small{display:block;font-weight:500;font-size:11px;opacity:.95}
+.bentobtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(110,60,20,.35)}
+.bentobtn:disabled{opacity:.6}
+.bentochip{position:absolute;top:40px;right:22px;background:linear-gradient(135deg,#c9772c,#e8a44a);color:#fff;border-radius:12px;padding:4px 10px;font-size:13px;font-weight:800;pointer-events:none;display:none;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
 .adbtn{width:100%;border:0;border-radius:14px;padding:9px 12px;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;gap:10px;text-align:left;line-height:1.25;box-shadow:0 3px 0 rgba(40,30,110,.35)}
 .adbtn small{display:block;font-weight:500;font-size:12px;opacity:.92}
 .adbtn .play{flex:0 0 32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center}
@@ -250,13 +256,14 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
     <canvas id="cv" aria-label="地層の断面。仲間が掘り進める"></canvas>
     <div class="chip"><b id="cLayer">第1層 表土</b> <span id="cDepth"></span><div class="hpbar"><i id="cHp"></i></div></div>
     <div class="boostchip" id="boostChip">採掘×2 5:00</div>
+    <div class="bentochip" id="bentoChip">弁当×2 30:00</div>
     <div class="hint" id="hint">仲間が自動で掘ります</div>
     <div class="goal" id="goal"><div id="goalTxt"></div><div class="bar"><i id="goalBar"></i></div></div>
     <div class="toastwrap" id="toasts" role="status" aria-live="polite"></div>
     <button class="vein" id="vein" type="button" aria-label="鉱脈をたたく"><svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><path d="M6 30 L12 16 L22 10 L33 14 L39 28 L30 37 L14 37Z" fill="#6b4a2a" stroke="#3a2412" stroke-width="2"/><path d="M14 22 L19 16 L24 21 L19 26Z M24 26 L29 20 L33 27 L28 31Z M15 31 L19 28 L22 32Z" fill="#ffd166" stroke="#a36a00" stroke-width="1.2"/><path d="M16 19 l2 -1" stroke="#fff6c4" stroke-width="1.5"/></svg><span>鉱脈！</span></button>
   </div>
 
-  <div class="adbar"><button class="adbtn" id="adBoost" type="button"></button></div>
+  <div class="adbar"><button class="adbtn" id="adBoost" type="button"></button><button class="bentobtn" id="bentoBtn" type="button" hidden></button></div>
 
   <main class="panelwrap" id="panelwrap">
     <div class="panel" id="pTool"></div>
@@ -359,7 +366,7 @@ const OFFLINE_CAP_H = 8;
 const CRIT_P = 0.08, CRIT_X = 5;
 const DROP_P = 0.12;
 // 採掘の倍率：広告を見るたびに ×2→×3→×4…と上がり、上限はない（2026-10-03 ユーザー指示「広告はさらに×」「上限なし」）。
-// 見るたびに残りは5分に戻り、切れたら ×1。動画なしで押せる人（広告を消した人）は、次に押せるまで BOOST_GAP 秒あける
+// 見るたびに残りは5分に戻り、切れたら ×1。動画なしで押せる人（ブラウザの試作）は、次に押せるまで BOOST_GAP 秒あける
 const BOOST_SEC = 300, BOOST_GAP = 30;
 const REBIRTH_DEPTH = 240;            // 6層の底で代替わりできる
 const ENV = (globalThis.process && process.env) || {};   // tool/sim.js で数値を試すときだけ使う
@@ -512,6 +519,7 @@ const fresh = () => ({
   v:2, ore:START_ORE, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
   boostUntil:0, boostLv:0, boostAt:0, last:NOW(),
+  own:{}, bento:0, bentoUntil:0, iapGot:{},
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0, play:0, best1:0 },
   sound:true, vol:2, bgm:2, amb:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false,
@@ -533,6 +541,10 @@ function normalize(o){
   while (S.w.length < WK.length) S.w.push(0);
   if (!S.w.some(n => n > 0)) S.w[0] = 1;
   if (!Array.isArray(S.frag)) S.frag = [];
+  if (!S.own || typeof S.own !== 'object') S.own = {};
+  if (!S.iapGot || typeof S.iapGot !== 'object') S.iapGot = {};
+  if (!Number.isInteger(S.bento) || S.bento < 0) S.bento = 0;
+  if (typeof S.bentoUntil !== 'number' || !isFinite(S.bentoUntil)) S.bentoUntil = 0;
   while (S.frag.length < LAYERS.length) S.frag.push(0);
   S.st = Object.assign(fresh().st, S.st || {});
   if (!Array.isArray(S.creed)) S.creed = [];
@@ -551,7 +563,7 @@ function setsDone(st){
 // 倍率は社訓・名声・図鑑の数だけで決まるので、それが変わるまで覚えておく
 const MODS_CACHE = new WeakMap();
 function mods(st){
-  const sig = st.creed.join(',') + '|' + st.fame + '|' + speciesCountOf(st);
+  const sig = st.creed.join(',') + '|' + st.fame + '|' + speciesCountOf(st) + '|' + ownSig(st);
   const c = MODS_CACHE.get(st);
   if (c && c.sig === sig) return c.m;
   const m = calcMods(st);
@@ -578,6 +590,8 @@ function calcMods(st){
     else if (s.k === 'crit') { if (crit0 > 0) m.critP += s.v; } else if (s.k === 'side') m.side += s.v; else if (s.k === 'drop') m.drop += s.v;
     else if (s.k === 'off') m.off += s.v; else if (s.k === 'fame') m.fame *= 1 + s.v;
   });
+  if (owns(st, 'canteen')) m.crew *= 1 + CANTEEN;
+  if (owns(st, 'cart')) m.off += CART_H;
   const fm = fameMul(st.fame);
   m.crew *= fm; m.ore *= (1 + m.book * speciesCountOf(st));
   return m;
@@ -594,6 +608,34 @@ const pickBoost = (st, M) => pickMul(st.pick) * (M || mods(st)).pick;
 const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn : 1); };
 const boostOn = st => NOW() < st.boostUntil;
 const boostMul = st => boostOn(st) ? 1 + (st.boostLv || 1) : 1;
+// 課金アイテム（2026-10-04 ユーザー指示「広告を消すではなく、課金アイテムにする」）。
+// 買い切り2つ（ずっと効く・代替わりしても残る）と、使い切りの特製弁当。動画広告はそのまま残す
+const CANTEEN = 0.25, CART_H = 4, BENTO_SEC = 1800, BENTO_X = 2;
+const IAP = {
+  canteen:{ n:'社員食堂',      perm:true, d:'仲間の力 +25%。ずっと効き、代替わりしても残る' },
+  cart:   { n:'大きな荷車',    perm:true, d:'留守の上限 +4時間（8時間 → 12時間）' },
+  bento3: { n:'特製弁当 3個',  units:3,   d:'1個で30分、仲間の力 ×2。使う時は自分で選ぶ' },
+  bento10:{ n:'特製弁当 10個', units:10,  d:'1個で30分、仲間の力 ×2。使う時は自分で選ぶ' },
+};
+const owns = (st, k) => !!(st.own && st.own[k]);
+const ownSig = st => (owns(st, 'canteen') ? 'c' : '') + (owns(st, 'cart') ? 'k' : '');
+const bentoOn = st => NOW() < (st.bentoUntil || 0);
+// 採掘の速さに掛かる倍率（動画の倍率 × 弁当）
+const runMul = st => boostMul(st) * (bentoOn(st) ? BENTO_X : 1);
+// 弁当を1つ使う。使っている最中なら30分延びる（倍率は重ならない）
+function useBento(st){
+  if (!(st.bento > 0)) return false;
+  st.bento--; st.bentoUntil = Math.max(NOW(), st.bentoUntil || 0) + BENTO_SEC * 1000;
+  return true;
+}
+// アプリが持つ「これまでに届いた弁当の合計」から、まだ渡していない分だけ渡す（二度渡さない）
+function grantBento(st, total){
+  total = Math.floor(+total || 0);
+  const n = total - (st.iapGot.bento || 0);
+  if (n <= 0) return 0;
+  st.bento += n; st.iapGot.bento = total;
+  return n;
+}
 const reqAt = (d, st) => Math.ceil(REQ[d / LAYER_LEN] * mods(st).reqMul);
 const locked = st => isBed(st.depth) && st.pick < reqAt(st.depth, st);
 
@@ -668,7 +710,7 @@ function applyDamage(st, dmg, out, fx){
 }
 // 開いている間の1フレーム
 function tick(st, dt, fx){
-  const d = crewDps(st, true) * boostMul(st) * dt;
+  const d = crewDps(st, true) * runMul(st) * dt;
   if (d > 0) applyDamage(st, d, null, fx);
 }
 // 留守の計算（st は書き換えない。結果の state を返す）
@@ -676,8 +718,10 @@ function simulateAway(st, sec){
   const s2 = JSON.parse(JSON.stringify(st));
   const out = { ore:0, meters:0, finds:[], sec, stuck:false };
   const dps = crewDps(s2, false);
-  const boostLeft = Math.max(0, Math.min(sec, (st.boostUntil - (NOW() - sec * 1000)) / 1000));
-  const total = dps * (sec + boostLeft * (boostMul(st) - 1));
+  // 留守の間の倍率の合計。動画の倍率も弁当も、出かける前から効いていて途中で切れる
+  const left = until => Math.max(0, Math.min(sec, (until - (NOW() - sec * 1000)) / 1000));
+  const bL = left(st.boostUntil), eL = left(st.bentoUntil || 0), bm = boostMul(st) - 1, em = BENTO_X - 1;
+  const total = dps * (sec + bL * bm + eL * em + Math.min(bL, eL) * bm * em);
   const steps = 60;
   for (let i = 0; i < steps; i++) applyDamage(s2, total / steps, out, null);
   out.stuck = locked(s2);
@@ -693,7 +737,8 @@ function awaySeconds(st, now){
 // 留守の結果を受け取る（mult=2 は広告）
 function claimAwayState(st, r, mult){
   const keep = { pick:st.pick, w:st.w, boostUntil:st.boostUntil, boostLv:st.boostLv, sound:st.sound, haptic:st.haptic, theme:st.theme, seen:st.seen,
-    creed:st.creed, fame:st.fame, gen:st.gen, history:st.history, ach:st.ach, notifAsked:st.notifAsked };
+    creed:st.creed, fame:st.fame, gen:st.gen, history:st.history, ach:st.ach, notifAsked:st.notifAsked,
+    own:st.own, bento:st.bento, bentoUntil:st.bentoUntil, iapGot:st.iapGot };
   const ns = Object.assign(r.state, keep);
   if (mult > 1) { ns.ore += r.ore * (mult - 1); ns.total += r.ore * (mult - 1); }
   return ns;
@@ -755,7 +800,7 @@ function buyWorkerN(st, i, want){ const b = wkBulk(st, i, want); if (st.ore < b.
 // 開いている間の鉱石の入り（毎秒）。「あと何秒で買えるか」に使う
 function oreRate(st){
   const M = mods(st), lk = locked(st), d = lk ? st.depth - 1 : st.depth;
-  const r = crewDps(st, true, M) * boostMul(st) / hpOf(st, d, M) * oreOf(st, d, M);
+  const r = crewDps(st, true, M) * runMul(st) / hpOf(st, d, M) * oreOf(st, d, M);
   return lk ? r * M.side : r * (1 + M.critP * (M.critX - 1));
 }
 function startBoost(st){
@@ -905,12 +950,11 @@ function save(){
 
 // ================= 広告 =================
 let pendingAd = null, adTimer = 0;
-const adFree = () => !!(APP && APP.adFree);
-// 動画を見ずに効果が入る（広告を消した人・ブラウザの試作）
-const noVideo = () => !APP || APP.adFree;
-// 報酬型動画。見終えたら fn を呼ぶ。広告を消した人とブラウザの試作では、すぐ呼ぶ
+// 動画を見ずに効果が入る（ブラウザの試作だけ。アプリでは必ず動画）
+const noVideo = () => !APP;
+// 報酬型動画。見終えたら fn を呼ぶ。ブラウザの試作では、すぐ呼ぶ
 function withAd(kind, fn){
-  if (!APP || APP.adFree) { fn(); save(); return; }
+  if (!APP) { fn(); save(); return; }
   if (pendingAd) return;
   pendingAd = fn;
   appPost({ type:'reward', kind });
@@ -924,7 +968,23 @@ window.tsuruAdResult = (ok, msg) => {
   if (ok && f) { f(); save(); } else if (msg) toast('お知らせ', msg);
   updateUI(true);
 };
-window.tsuruSetApp = o => { if (!APP) return; for (const k in o) if (k !== 'msg') APP[k] = o[k]; if (o.msg) toast('お知らせ', o.msg); updateUI(true); if (tab === 'co') buildCo(); };
+window.tsuruSetApp = o => { if (!APP) return; for (const k in o) if (k !== 'msg') APP[k] = o[k]; if (o.msg) toast('お知らせ', o.msg); syncIap(); updateUI(true); if (tab === 'co') buildCo(); };
+// アプリが持つ購入の記録をゲームに映す。買い切りは持っているかどうか（返金されたら外れる）、弁当は届いた分だけ足す
+function syncIap(){
+  if (!APP) return;
+  const own = Array.isArray(APP.owned) ? APP.owned : [];
+  S.own = { canteen: own.includes('canteen'), cart: own.includes('cart') };
+  const n = grantBento(S, APP.got && APP.got.bento);
+  if (n > 0) { toast('特製弁当が届きました', `${n}個 受け取りました（手持ち ${S.bento}個）`, '採掘の下の「弁当」で使えます'); sfx('buy'); }
+  save(); sendCap();
+}
+function buyIap(k){
+  const it = IAP[k]; if (!it) return;
+  if (APP) { appPost({ type:'buy', id:k }); return; }
+  // ブラウザの試作：お金はかからず、その場で付く（買い切りはもう一度押すと外れる）
+  if (it.perm) S.own[k] = !S.own[k]; else S.bento += it.units;
+  save(); sendCap(); sfx('buy'); buildCo(); updateUI(true);
+}
 window.tsuruAdWaiting = () => { updateUI(true); };
 // 留守の上限（時間）をアプリへ。裏に回るときの「いっぱいになりました」の予約に使う
 let capSent = 0;
@@ -932,7 +992,7 @@ function sendCap(){ if (!APP) return; const h = mods(S).off; if (h !== capSent) 
 window.tsuruPause = () => { try { save(); TStore.flush(); if (AC) AC.suspend(); for (const k in BGM.els) BGM.els[k].pause(); } catch (e) {} };
 window.tsuruResume = () => { checkAway(); };
 const PLAY_IC = '<span class="play"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="#fff"/></svg></span>';
-const adLabel = (main, sub) => `${PLAY_IC}<span>${main}<small>${adFree() ? '広告なしで受け取れます' : sub}</small></span>`;
+const adLabel = (main, sub) => `${PLAY_IC}<span>${main}<small>${sub}</small></span>`;
 
 // ================= 画面：数字 =================
 const $ = id => document.getElementById(id);
@@ -1114,6 +1174,7 @@ function buildCo(){
     h += `<div class="cardnote" style="margin-top:6px">${REBIRTH_DEPTH}m（第6層の底）に着くと、会社を次の代に譲れます（代替わり）。</div><div class="prog"><i style="width:${(p * 100).toFixed(1)}%"></i></div>`;
   }
   h += `</div>`;
+  h += shopHtml();
   // 社訓
   h += `<div class="sec">社訓</div>`;
   if (!S.creed.filter(Boolean).length) h += `<div class="note">代替わりのたびに1組ずつ増え、組ごとにどちらか1つを選びます。選び直せるのは次の代替わりのときです。</div>`;
@@ -1134,6 +1195,21 @@ function buildCo(){
     ACH.map(a => { const pr = !S.ach[a.id] && a.p ? a.p(S) : null; return `<div class="ach ${S.ach[a.id] ? 'done' : 'no'}">${S.ach[a.id] ? '✓ ' : ''}${a.n}${pr ? `<div class="prog" style="height:4px;margin-top:4px"><i style="width:${Math.min(100, pr[0] / pr[1] * 100).toFixed(0)}%"></i></div>` : ''}</div>`; }).join('') + `</div>`;
   $('pCo').innerHTML = h;
   if ($('rbOpen')) $('rbOpen').addEventListener('click', openRebirth);
+  document.querySelectorAll('#pCo [data-iap]').forEach(b => b.addEventListener('click', () => buyIap(b.dataset.iap)));
+}
+// 売店（課金アイテム）。値段はストアから届いた表示をそのまま出す
+function shopHtml(){
+  const price = k => APP && APP.prices && APP.prices[k] ? esc(APP.prices[k]) : APP ? '買う' : '試す';
+  const canBuy = !APP || APP.canBuy;
+  let h = `<div class="sec">売店</div>`;
+  h += Object.keys(IAP).map(k => {
+    const it = IAP[k], have = it.perm && owns(S, k);
+    const btn = have && APP ? `<span class="note" style="margin:0">持っています</span>`
+      : `<button class="buy" type="button" data-iap="${k}" ${canBuy ? '' : 'disabled'}>${have ? '外す' : price(k)}</button>`;
+    return `<div class="card"><div class="body"><div class="nm">${it.n}${it.perm ? '' : `<span class="cardnote" style="margin-left:6px">手持ち ${S.bento}個</span>`}</div><div class="ds">${it.d}</div></div>${btn}</div>`;
+  }).join('');
+  h += `<div class="note">${APP ? (canBuy ? '買い切りは機種を変えても「購入を復元」（設定）で戻ります。弁当は使い切りで、復元はできません。' : 'いまはストアにつながっていません。') : '試作ではお金はかからず、その場で付きます（買い切りはもう一度押すと外れます）。'}</div>`;
+  return h;
 }
 
 // 設定（右上の歯車）
@@ -1146,8 +1222,7 @@ function buildSettings(){
     <div class="srow"><span>振動</span><button class="mini" type="button" id="hapBtn">${onoff(S.haptic)}</button></div>
     <div class="srow"><span>動きを減らす</span><button class="mini" type="button" id="redBtn">${reducedOS ? '端末で設定ずみ' : onoff(!!S.reduce)}</button></div>
     <div class="srow"><span>表示</span><button class="mini" type="button" id="themeBtn">${({ auto:'端末に合わせる', light:'明るい', dark:'暗い' })[S.theme]}</button></div>`;
-  if (APP) h += `<div class="srow"><span>広告</span>${APP.adFree ? '<span class="note" style="margin:0">消しています</span>' : `<button class="mini acc" type="button" id="buyBtn">広告を消す${APP.price ? '（' + esc(APP.price) + '）' : ''}</button>`}</div>
-    <div class="srow"><span>購入</span><button class="mini" type="button" id="restoreBtn">購入を復元</button></div>
+  if (APP) h += `<div class="srow"><span>購入</span><button class="mini" type="button" id="restoreBtn">購入を復元</button></div>
     <div class="srow"><span>このアプリについて</span><span class="setrow"><button class="mini" type="button" id="privBtn">プライバシー</button><button class="mini" type="button" id="licBtn">ライセンス</button></span></div>`;
   else h += `<div class="srow"><span>試作用</span><button class="mini" type="button" id="devSkip">1時間進める</button></div>`;
   h += `<div class="srow"><span>記録</span><button class="mini" type="button" id="resetBtn">すべて消す</button></div>`;
@@ -1159,7 +1234,6 @@ function buildSettings(){
   $('hapBtn').addEventListener('click', () => { S.haptic = !S.haptic; save(); haptic('light'); buildSettings(); });
   $('themeBtn').addEventListener('click', () => { S.theme = ({ auto:'light', light:'dark', dark:'auto' })[S.theme]; applyTheme(); save(); buildSettings(); });
   $('redBtn').addEventListener('click', () => { if (reducedOS) return; S.reduce = !S.reduce; reduced = !!S.reduce; save(); buildSettings(); });
-  if ($('buyBtn')) $('buyBtn').addEventListener('click', () => appPost({ type:'buy' }));
   if ($('restoreBtn')) $('restoreBtn').addEventListener('click', () => appPost({ type:'restore' }));
   if ($('privBtn')) $('privBtn').addEventListener('click', () => appPost({ type:'open', url:'https://tsuruhashi.dailyquarry.com/privacy.html' }));
   if ($('licBtn')) $('licBtn').addEventListener('click', () => appPost({ type:'licenses' }));
@@ -1167,7 +1241,8 @@ function buildSettings(){
   $('resetBtn').addEventListener('click', e => {
     if (Date.now() - resetArm < 3000) {
       TStore.set(BAK, JSON.stringify(S));
-      const keep = { sound:S.sound, haptic:S.haptic, theme:S.theme };
+      // 買った物（買い切り・弁当の手持ちと受け取り済みの数）は記録を消しても残す
+      const keep = { sound:S.sound, haptic:S.haptic, theme:S.theme, own:S.own, bento:S.bento, bentoUntil:S.bentoUntil, iapGot:S.iapGot };
       S = Object.assign(fresh(), keep); camY = -4; parts.length = 0; floats.length = 0; resetArm = 0;
       pendingAway = null; $('offModal').classList.remove('on');   // 消す前の留守の分は受け取らせない
       $('setModal').classList.remove('on');
@@ -1204,7 +1279,7 @@ function updateUI(force){
   { const r = oreRate(S); $('sRate').textContent = '+' + (r < 10 ? r.toFixed(1) : fmt(r)) + '／秒'; }
   $('sDepth').textContent = S.depth + 'm';
   $('sBest').textContent = S.best + 'm';
-  $('sDps').textContent = fmt(crewDps(S, true, M) * boostMul(S));
+  $('sDps').textContent = fmt(crewDps(S, true, M) * runMul(S));
   $('genBadge').textContent = genName(S.gen) + '社長' + (S.fame ? `・名声${fmt(S.fame)}` : '');
   const li = layerIdxForDepth(S.depth);
   $('cLayer').textContent = isBed(S.depth) ? '岩盤' : isRoom(S.depth) && !S.room[S.depth] ? '宝の部屋' : `第${li + 1}層 ${LAYERS[li].name}`;
@@ -1263,6 +1338,14 @@ function updateUI(force){
     : wait > 0 ? `${PLAY_IC}<span>採掘×${cur}<small>あと${wait}秒で ×${nx} に上げられる</small></span>`
     : !boostOn(S) ? adLabel('採掘×2を5分', '動画を見るたびに倍率アップ（上限なし）')
     : adLabel(`採掘×${nx}に上げる`, `いま×${cur}・残りも5分に戻る`);
+  // 特製弁当
+  const ec = $('bentoChip'), eb = $('bentoBtn');
+  if (bentoOn(S)) {
+    const r = Math.ceil((S.bentoUntil - NOW()) / 1000), mm = Math.floor(r / 60);
+    ec.style.display = 'block'; ec.textContent = `弁当×${BENTO_X}　${mm >= 60 ? Math.floor(mm / 60) + ':' + String(mm % 60).padStart(2, '0') + ':' : mm + ':'}${String(r % 60).padStart(2, '0')}`;
+  } else ec.style.display = 'none';
+  eb.hidden = !(S.bento > 0);
+  if (!eb.hidden) eb.innerHTML = `弁当<small>${bentoOn(S) ? '+30分' : '×2 30分'}・${S.bento}個</small>`;
 }
 // 採掘の絵の下の帯：次の目標
 function updateGoal(){
@@ -1280,7 +1363,7 @@ function updateGoal(){
     const start = (nr.k - 1) * LAYER_LEN;
     txt = `次の岩盤 <b>${nr.at}m</b> まで${nr.at - S.depth}m・必要 <b class="${S.pick < nr.lv ? 'need' : ''}">Lv${nr.lv}</b>${S.pick >= nr.lv ? ' ✓' : `（いま${S.pick}）`}`;
     // 1m に30秒以上かかるなら、それを出して強化をうながす（遅いのを「止まった」と思わせない）
-    const per = (hpOf(S, S.depth) - S.dmg) / Math.max(1e-9, crewDps(S, true) * boostMul(S));
+    const per = (hpOf(S, S.depth) - S.dmg) / Math.max(1e-9, crewDps(S, true) * runMul(S));
     if (per > 30) txt += `<br>このブロックあと${fmtDur(per)}・<b>仲間を雇うと速くなる</b>`;
     p = (S.depth - start) / LAYER_LEN;
   } else {
@@ -1381,7 +1464,7 @@ function showAway(sec, capped, isDev){
     }
     extra.innerHTML = h;
     $('offX2').style.display = r.ore > 0 ? 'block' : 'none';
-    $('offX2').innerHTML = adFree() ? '2倍で受け取る<small>広告なしで受け取れます</small>' : APP ? '2倍で受け取る<small>動画広告を見る</small>' : '2倍で受け取る<small>本番は動画広告（試作は即効果）</small>';
+    $('offX2').innerHTML = APP ? '2倍で受け取る<small>動画広告を見る</small>' : '2倍で受け取る<small>本番は動画広告（試作は即効果）</small>';
   }
   $('offModal').classList.add('on'); focusFirst('offModal');
 }
@@ -1414,6 +1497,12 @@ $('offX2').addEventListener('click', () => {
   const r = pendingAway;
   // 動画を見ている間に閉じられても、留守の分は失わない（受け取りは見終えたときに2倍で）
   withAd('away', () => { if (pendingAway === r) claimAway(2); });
+});
+$('bentoBtn').addEventListener('click', () => {
+  if (!useBento(S)) return;
+  sfx('tier'); haptic('success'); fxRing();
+  toast(`特製弁当 ×${BENTO_X}`, `${fmtDur((S.bentoUntil - NOW()) / 1000)} 仲間の力が${BENTO_X}倍`, `動画の倍率とも掛け合わさる（手持ち ${S.bento}個）`);
+  save(); updateUI(true);
 });
 $('adBoost').addEventListener('click', () => {
   if (pendingAd || (noVideo() && boostWait(S) > 0)) return;
@@ -2440,7 +2529,7 @@ function frame0(now){
 }
 // 社の画面は、代替わりの数字だけ追いかける（ボタンを作り直すと押しにくい）
 let coKey = '';
-function buildCoLight(){ const k = canRebirth(S) + ':' + fameGain(S) + ':' + S.genDepth + ':' + Object.keys(S.ach).length; if (k !== coKey) { coKey = k; buildCo(); } }
+function buildCoLight(){ const k = canRebirth(S) + ':' + fameGain(S) + ':' + S.genDepth + ':' + Object.keys(S.ach).length + ':' + S.bento + ':' + ownSig(S); if (k !== coKey) { coKey = k; buildCo(); } }
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { save(); TStore.flush(); try { if (AC) AC.suspend(); for (const k in BGM.els) BGM.els[k].pause(); } catch (e) {} }
   else { lastFrame = performance.now(); try { if (AC && !titleOpen) { AC.resume(); updateBgm(true); } } catch (e) {} checkAway(); }
@@ -2451,6 +2540,7 @@ if (window.matchMedia) { try { window.matchMedia('(prefers-color-scheme: dark)')
 
 // 起動
 const had = load();
+syncIap();
 reduced = reducedOS || !!S.reduce;
 applyTheme();
 camY = S.depth > 0 ? S.depth : -4;

@@ -35,31 +35,33 @@ class FakeAds implements AdService {
 
 /// 結果を返す前に通知で届ける差し替えストア（届いた購入を取りこぼさないかを見る）。
 class FakeStore implements PurchaseService {
-  Future<void> Function(String)? delivered;
-  bool? entitlement;
+  Future<void> Function(String, String?)? delivered;
+  Future<void> Function(String)? revoked;
+  final entitlement = <String, bool?>{};
   PurchaseOutcome buyResult = PurchaseOutcome.purchased;
   bool deliverBeforeReturn = true;
+  int _tx = 0;
 
   @override
-  set onDelivered(Future<void> Function(String productId)? cb) => delivered = cb;
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? cb) => delivered = cb;
   @override
-  set onRevoked(Future<void> Function(String productId)? cb) {}
+  set onRevoked(Future<void> Function(String productId)? cb) => revoked = cb;
   @override
   Future<void> initialize() async {}
   @override
   Future<bool> isAvailable() async => true;
   @override
-  Future<String?> priceLabel() async => '¥370';
+  Future<Map<String, String>> priceLabels() async => {for (final id in PurchaseService.all) id: '¥160'};
   @override
-  Future<PurchaseOutcome> buyRemoveAds() async {
-    if (buyResult == PurchaseOutcome.purchased && deliverBeforeReturn) await delivered?.call(PurchaseService.removeAdsId);
+  Future<PurchaseOutcome> buy(String productId) async {
+    if (buyResult == PurchaseOutcome.purchased && deliverBeforeReturn) await delivered?.call(productId, 'tx${++_tx}');
     return buyResult;
   }
 
   @override
   Future<PurchaseOutcome> restore() async => PurchaseOutcome.unavailable;
   @override
-  Future<bool?> hasEntitlement() async => entitlement;
+  Future<bool?> hasEntitlement(String productId) async => entitlement[productId];
   @override
   void dispose() {}
 }
@@ -132,26 +134,74 @@ void main() {
     expect(js, isEmpty);
   });
 
-  test('広告を消したら、動画なしで特典を渡す', () async {
+  test('課金アイテムを買っても、動画の特典はタダにならない（広告を消すは売らない）', () async {
     final (b, money, ads, _, js) = await setup();
-    await money.buy();
+    await money.buy('tsuruhashi_canteen');
     ads.rewardedReady = false;
     await b.handle('{"type":"reward"}');
-    expect(js.last, startsWith('window.tsuruAdResult&&tsuruAdResult(true,'));
+    expect(js.last, startsWith('window.tsuruAdResult&&tsuruAdResult(false,'));
   });
 
-  test('購入が通知だけで届いても（待っている人がいなくても）広告を消す', () async {
+  test('ゲームからの「買う」は決めた商品だけストアへ出す', () async {
+    final (b, money, _, _, _) = await setup();
+    await b.handle('{"type":"buy","id":"canteen"}');
+    await b.handle('{"type":"buy","id":"remove_ads"}');
+    await b.handle('{"type":"buy"}');
+    expect(money.owned, ['canteen']);
+  });
+
+  test('買い切りが通知だけで届いても（待っている人がいなくても）持っていることになる', () async {
     final (_, money, _, store, _) = await setup();
-    await store.delivered!(PurchaseService.removeAdsId);
-    expect(money.adFree, isTrue);
+    await store.delivered!('tsuruhashi_cart', 't1');
+    expect(money.owned, ['cart']);
   });
 
-  test('再インストール後は、端末の購入記録から広告なしに戻す', () async {
+  test('特製弁当は届いた数だけ足し、同じ取引が二度届いても二度渡さない', () async {
+    final (b, money, _, store, js) = await setup();
+    await store.delivered!('tsuruhashi_bento3', 'a');
+    await store.delivered!('tsuruhashi_bento3', 'a');
+    await store.delivered!('tsuruhashi_bento10', 'b');
+    expect(money.bentoTotal, 13);
+    await b.pushApp();
+    expect(js.last, contains('"got":{"bento":13}'));
+  });
+
+  test('特製弁当は買う操作の戻り値では渡さない（通知で届いた分だけ）', () async {
+    final (_, money, _, store, _) = await setup();
+    store.deliverBeforeReturn = false;
+    await money.buy('tsuruhashi_bento3');
+    expect(money.bentoTotal, 0);
+  });
+
+  test('届いた弁当の合計は再起動しても残る', () async {
+    final (_, _, _, store, _) = await setup();
+    await store.delivered!('tsuruhashi_bento10', 'x');
+    final p = await SharedPreferences.getInstance();
+    final again = Monetization(p, ads: FakeAds(), store: FakeStore());
+    await again.start();
+    expect(again.bentoTotal, 10);
+  });
+
+  test('再インストール後は、端末の購入記録から買い切りを戻し、返金されたら外す', () async {
     SharedPreferences.setMockInitialValues({});
     final p = await SharedPreferences.getInstance();
-    final money = Monetization(p, ads: FakeAds(), store: FakeStore()..entitlement = true);
+    final store = FakeStore()..entitlement['tsuruhashi_canteen'] = true;
+    final money = Monetization(p, ads: FakeAds(), store: store);
     await money.start();
-    expect(money.adFree, isTrue);
+    expect(money.owned, ['canteen']);
+    store.entitlement['tsuruhashi_canteen'] = false;
+    await store.revoked!('tsuruhashi_canteen');
+    expect(money.owned, isEmpty);
+  });
+
+  test('起動のときに埋め込む値は、待たずに分かる購入の記録', () async {
+    final (_, money, _, store, _) = await setup();
+    await store.delivered!('tsuruhashi_cart', 'k');
+    await store.delivered!('tsuruhashi_bento3', 'm');
+    expect(GameBridge.bootState(money), {
+      'owned': ['cart'],
+      'got': {'bento': 3},
+    });
   });
 
   test('外のページは決めた所だけ開く', () async {

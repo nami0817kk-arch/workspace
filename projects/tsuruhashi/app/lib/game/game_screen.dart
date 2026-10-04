@@ -116,7 +116,7 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _load() async {
     final html = await rootBundle.loadString('assets/web/index.html');
-    final boot = <String, Object?>{'store': widget.store.snapshot(), 'adFree': widget.money.adFree};
+    final boot = <String, Object?>{'store': widget.store.snapshot(), ...GameBridge.bootState(widget.money)};
     await _web.loadHtmlString(injectBoot(html, boot));
   }
 

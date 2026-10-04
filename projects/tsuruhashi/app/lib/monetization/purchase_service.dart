@@ -24,33 +24,46 @@ enum PurchaseOutcome {
   failed,
 }
 
-/// 「広告を消す」（買い切り・非消費型。価格は護送ボートと同じ370円を既定にしている）の窓口。
-/// 護送ボートの purchase_service.dart（soccer-manager から1商品に絞ったもの）を写した。
+/// 課金アイテムの窓口（2026-10-04 ユーザー指示「広告を消すではなく、課金アイテムにする」）。
+/// 護送ボートの purchase_service.dart（1商品）を、買い切り2つ＋使い切り2つに広げた。
+///
+/// ゲーム本体とは短い名前（[keyOf]）でやりとりする。値段は App Store Connect で決める。
 abstract class PurchaseService {
   /// App Store Connect の商品IDと一致させること。
-  static const removeAdsId = 'tsuruhashi_remove_ads';
+  static const prefix = 'tsuruhashi_';
+
+  /// 買い切り（非消費型）。社員食堂（仲間の力 +25%）・大きな荷車（留守の上限 +4時間）
+  static const permanent = {'${prefix}canteen', '${prefix}cart'};
+
+  /// 使い切り（消費型）の特製弁当と、1回で届く個数
+  static const consumable = {'${prefix}bento3': 3, '${prefix}bento10': 10};
+
+  static Set<String> get all => {...permanent, ...consumable.keys};
+  static String keyOf(String productId) => productId.substring(prefix.length);
+  static String? idOf(String key) => all.contains(prefix + key) ? prefix + key : null;
 
   /// **届いたら、待っているかどうかに関係なく呼ぶ。** ストアの通知は購入を始めた
   /// 瞬間に返るとは限らない（家族の承認・別の端末での購入・起動時の再送）。
-  set onDelivered(Future<void> Function(String productId)? callback);
+  /// [purchaseId] は取引の番号（使い切りを二度渡さないために使う）。
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback);
 
-  /// 返金・取り消しされた購入が届いたら呼ぶ（広告を戻す）。
+  /// 買い切りが返金・取り消しされたら呼ぶ（効果を外す）。
   set onRevoked(Future<void> Function(String productId)? callback);
 
   Future<void> initialize();
   Future<bool> isAvailable();
 
-  /// 表示用の価格（「¥370」など）。取れなければ null。
-  Future<String?> priceLabel();
+  /// 表示用の価格（商品ID → 「¥370」など）。取れなかった商品は入らない。
+  Future<Map<String, String>> priceLabels();
 
-  Future<PurchaseOutcome> buyRemoveAds();
+  Future<PurchaseOutcome> buy(String productId);
 
-  /// 機種変更・再インストール後に戻す。iOS は復元の導線が審査要件。
+  /// 機種変更・再インストール後に買い切りを戻す。iOS は復元の導線が審査要件。
   Future<PurchaseOutcome> restore();
 
-  /// 端末の購入記録から見て、いま「広告を消す」の権利があるか。
+  /// 端末の購入記録から見て、いま買い切り [productId] の権利があるか。
   /// true=有効な取引がある、false=取引はあるが全部返金済み、null=分からない（記録が無い・読めない）。
-  Future<bool?> hasEntitlement();
+  Future<bool?> hasEntitlement(String productId);
 
   void dispose();
 }
@@ -58,7 +71,7 @@ abstract class PurchaseService {
 /// 課金を扱わない実装。Web版・テストで使う。
 class NoOpPurchaseService implements PurchaseService {
   @override
-  set onDelivered(Future<void> Function(String productId)? callback) {}
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) {}
 
   @override
   set onRevoked(Future<void> Function(String productId)? callback) {}
@@ -70,16 +83,16 @@ class NoOpPurchaseService implements PurchaseService {
   Future<bool> isAvailable() async => false;
 
   @override
-  Future<String?> priceLabel() async => null;
+  Future<Map<String, String>> priceLabels() async => const {};
 
   @override
-  Future<PurchaseOutcome> buyRemoveAds() async => PurchaseOutcome.unavailable;
+  Future<PurchaseOutcome> buy(String productId) async => PurchaseOutcome.unavailable;
 
   @override
   Future<PurchaseOutcome> restore() async => PurchaseOutcome.unavailable;
 
   @override
-  Future<bool?> hasEntitlement() async => null;
+  Future<bool?> hasEntitlement(String productId) async => null;
 
   @override
   void dispose() {}
@@ -89,17 +102,18 @@ class NoOpPurchaseService implements PurchaseService {
 class StorePurchaseService implements PurchaseService {
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
-  Future<void> Function(String productId)? _onDelivered;
+  Future<void> Function(String productId, String? purchaseId)? _onDelivered;
   Future<void> Function(String productId)? _onRevoked;
 
   /// いま待っている購入と復元。重ねて押されたら同じものを返す（2度押しで結果が食い違わないように）。
-  /// 別々に持つのは、復元の「対象なし」が購入の結果として返らないようにするため。
+  /// 購入は一度に1つ（[_buyingId]）。別々に持つのは、復元の「対象なし」が購入の結果として返らないようにするため。
   Completer<PurchaseOutcome>? _buying;
+  String? _buyingId;
   Completer<PurchaseOutcome>? _restoring;
-  ProductDetails? _product;
+  Map<String, ProductDetails>? _products;
 
   @override
-  set onDelivered(Future<void> Function(String productId)? callback) => _onDelivered = callback;
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) => _onDelivered = callback;
 
   @override
   set onRevoked(Future<void> Function(String productId)? callback) => _onRevoked = callback;
@@ -121,26 +135,28 @@ class StorePurchaseService implements PurchaseService {
 
   Future<void> _onUpdate(List<PurchaseDetails> purchases) async {
     for (final p in purchases) {
-      if (p.productID != PurchaseService.removeAdsId) continue;
+      if (!PurchaseService.all.contains(p.productID)) continue;
+      final mine = p.productID == _buyingId;
       if (p.status == PurchaseStatus.pending) {
         // 保護者の承認待ち。待っている側には「承認待ち」と返し、承認されたら改めて届く
-        _finish(_buying, PurchaseOutcome.pending);
+        if (mine) _finish(_buying, PurchaseOutcome.pending);
         continue;
       }
       if ((p.status == PurchaseStatus.purchased || p.status == PurchaseStatus.restored) && isRevoked(p)) {
-        // 返金された。広告を戻し、取引は片付ける。待っている購入・復元には「広告なし」と返さない
+        // 返金された。買い切りは効果を外し、取引は片付ける。待っている購入・復元には「届いた」と返さない
+        // （使い切りは渡した物を取り上げない）
         try {
-          await _onRevoked?.call(p.productID);
+          if (PurchaseService.permanent.contains(p.productID)) await _onRevoked?.call(p.productID);
           if (p.pendingCompletePurchase) unawaited(_iap.completePurchase(p));
         } catch (_) {
-          // 広告を戻せなかったら完了させない。次の起動でもう一度届く
+          // 外せなかったら完了させない。次の起動でもう一度届く
         }
         continue;
       }
       var received = true;
       if (p.status == PurchaseStatus.purchased || p.status == PurchaseStatus.restored) {
         try {
-          await _onDelivered?.call(p.productID);
+          await _onDelivered?.call(p.productID, p.purchaseID);
         } catch (_) {
           received = false;
         }
@@ -148,13 +164,13 @@ class StorePurchaseService implements PurchaseService {
       switch (p.status) {
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
-          // 買った・戻ったのなら、どちらを待っていても「広告なし」になった
-          _finish(_buying, PurchaseOutcome.purchased);
-          _finish(_restoring, PurchaseOutcome.purchased);
+          if (!received) break; // 受け取れていない。次の起動でもう一度届く
+          if (mine) _finish(_buying, PurchaseOutcome.purchased);
+          if (PurchaseService.permanent.contains(p.productID)) _finish(_restoring, PurchaseOutcome.purchased);
         case PurchaseStatus.canceled:
-          _finish(_buying, PurchaseOutcome.canceled);
+          if (mine) _finish(_buying, PurchaseOutcome.canceled);
         case PurchaseStatus.error:
-          _finish(_buying, PurchaseOutcome.failed);
+          if (mine) _finish(_buying, PurchaseOutcome.failed);
           _finish(_restoring, PurchaseOutcome.failed);
         case PurchaseStatus.pending:
           break;
@@ -166,7 +182,10 @@ class StorePurchaseService implements PurchaseService {
 
   void _finish(Completer<PurchaseOutcome>? c, PurchaseOutcome o) {
     if (c == null || c.isCompleted) return;
-    if (identical(c, _buying)) _buying = null;
+    if (identical(c, _buying)) {
+      _buying = null;
+      _buyingId = null;
+    }
     if (identical(c, _restoring)) _restoring = null;
     c.complete(o);
   }
@@ -180,42 +199,54 @@ class StorePurchaseService implements PurchaseService {
     }
   }
 
-  Future<ProductDetails?> _load() async {
-    if (_product != null) return _product;
-    final r = await _iap.queryProductDetails({PurchaseService.removeAdsId});
-    return _product = r.productDetails.where((p) => p.id == PurchaseService.removeAdsId).firstOrNull;
+  Future<Map<String, ProductDetails>> _load() async {
+    final have = _products;
+    if (have != null && have.length == PurchaseService.all.length) return have;
+    final r = await _iap.queryProductDetails(PurchaseService.all);
+    return _products = {
+      for (final p in r.productDetails)
+        if (PurchaseService.all.contains(p.id)) p.id: p,
+    };
   }
 
   @override
-  Future<String?> priceLabel() async {
+  Future<Map<String, String>> priceLabels() async {
     try {
-      return (await _load())?.price;
+      return (await _load()).map((id, p) => MapEntry(id, p.price));
     } catch (_) {
-      return null;
+      return const {};
     }
   }
 
   @override
-  Future<PurchaseOutcome> buyRemoveAds() async {
+  Future<PurchaseOutcome> buy(String productId) async {
+    if (!PurchaseService.all.contains(productId)) return PurchaseOutcome.unavailable;
     final running = _buying;
-    if (running != null && !running.isCompleted) return running.future;
+    if (running != null && !running.isCompleted) {
+      // 別の商品の購入を待っている間は、重ねて買いに行かない
+      return _buyingId == productId ? running.future : PurchaseOutcome.unavailable;
+    }
     // 商品情報を取りに行く前に場所を取る（取得中の2度押しで2回買いに行かないように）
     final c = _buying = Completer<PurchaseOutcome>();
+    _buyingId = productId;
     try {
-      final product = await _load();
+      final product = (await _load())[productId];
       if (c.isCompleted) return await c.future; // 取得中に購入が届いた（起動時の再送・家族の承認）
       if (product == null) {
         _finish(c, PurchaseOutcome.unavailable);
         return await c.future;
       }
-      final started = await _iap.buyNonConsumable(purchaseParam: PurchaseParam(productDetails: product));
+      final param = PurchaseParam(productDetails: product);
+      final started = PurchaseService.consumable.containsKey(productId)
+          ? await _iap.buyConsumable(purchaseParam: param)
+          : await _iap.buyNonConsumable(purchaseParam: param);
       if (!started) _finish(c, PurchaseOutcome.failed);
       // StoreKit 2 では購入の画面が閉じてから戻り、結果は通知で届く。
-      // 通知が来ないまま待ち続けないための上限（届けば onDelivered で広告は消える）
+      // 通知が来ないまま待ち続けないための上限（後から届いても onDelivered で渡す）
       return await c.future.timeout(
         const Duration(minutes: 5),
         onTimeout: () {
-          // 取りやめと決めつけない。後から届けば onDelivered で広告は消える
+          // 取りやめと決めつけない。後から届けば onDelivered で渡す
           _finish(c, PurchaseOutcome.pending);
           return PurchaseOutcome.pending;
         },
@@ -257,10 +288,10 @@ class StorePurchaseService implements PurchaseService {
   }
 
   @override
-  Future<bool?> hasEntitlement() async {
+  Future<bool?> hasEntitlement(String productId) async {
     try {
       final mine = (await SK2Transaction.transactions())
-          .where((t) => t.productId == PurchaseService.removeAdsId)
+          .where((t) => t.productId == productId)
           .toList();
       if (mine.isEmpty) return null;
       return mine.any((t) => !_revokedJson(t.jsonRepresentation));

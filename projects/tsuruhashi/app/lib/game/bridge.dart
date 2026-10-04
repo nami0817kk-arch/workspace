@@ -24,7 +24,7 @@ class WebStore {
       value == null ? _prefs.remove(prefix + key) : _prefs.setString(prefix + key, value);
 }
 
-/// ページの `<head>` の直後に、起動のときの値（保存データ・広告を消したか）を埋め込む。
+/// ページの `<head>` の直後に、起動のときの値（保存データ・持っている課金アイテム）を埋め込む。
 /// `</script>` で閉じられないよう、`</` は `<\/` にしてから入れる。
 String injectBoot(String html, Map<String, Object?> boot) {
   final json = jsonEncode(boot).replaceAll('</', r'<\/');
@@ -100,7 +100,8 @@ class GameBridge {
       case 'reward':
         await _reward();
       case 'buy':
-        await _buy();
+        final id = PurchaseService.idOf('${m['id']}');
+        if (id != null) await _buy(id);
       case 'restore':
         await _restore();
       case 'open':
@@ -149,11 +150,12 @@ class GameBridge {
     }
   }
 
-  Future<void> _buy() async {
-    final r = await money.buy();
+  Future<void> _buy(String id) async {
+    final r = await money.buy(id);
     await pushApp(msg: switch (r) {
-      PurchaseOutcome.purchased => '広告を消しました。ありがとうございます',
-      PurchaseOutcome.pending => '保護者の承認を待っています。承認されると広告が消えます',
+      // 特製弁当はゲーム本体が「届きました」を出すので、ここでは買い切りのときだけ言う
+      PurchaseOutcome.purchased => PurchaseService.permanent.contains(id) ? 'お買い上げありがとうございます。効果はすぐに付きます' : null,
+      PurchaseOutcome.pending => '保護者の承認を待っています。承認されると届きます',
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable => 'ストアに接続できませんでした',
       PurchaseOutcome.failed => '購入できませんでした',
@@ -165,7 +167,7 @@ class GameBridge {
     await pushApp(msg: r == PurchaseOutcome.purchased ? '購入を復元しました' : '復元できる購入が見つかりませんでした');
   }
 
-  /// 広告を消したか・価格をゲーム本体に伝える（購入が後から届いたときにも呼ぶ）。
+  /// 持っている買い切り・届いた弁当の合計・価格をゲーム本体に伝える（購入が後から届いたときにも呼ぶ）。
   Future<void> pushApp({String? msg}) async {
     final s = await appState();
     if (msg != null) s['msg'] = msg;
@@ -173,12 +175,18 @@ class GameBridge {
   }
 
   Future<Map<String, Object?>> appState() async {
-    String? price;
+    var prices = const <String, String>{};
     var canBuy = false;
     try {
-      price = await money.price.timeout(const Duration(seconds: 3));
+      prices = await money.prices.timeout(const Duration(seconds: 3));
       canBuy = await money.canBuy.timeout(const Duration(seconds: 3));
     } catch (_) {}
-    return {'adFree': money.adFree, 'price': price, 'canBuy': canBuy};
+    return {...bootState(money), 'prices': prices, 'canBuy': canBuy};
   }
+
+  /// 起動のときにも埋め込む、待たずに分かる値。
+  static Map<String, Object?> bootState(Monetization money) => {
+    'owned': money.owned,
+    'got': {'bento': money.bentoTotal},
+  };
 }

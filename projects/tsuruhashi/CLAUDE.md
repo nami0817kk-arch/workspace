@@ -1,6 +1,6 @@
 # つるはし採掘（tsuruhashi・仮題）
 
-つるはしで地面を掘り進める放置ゲーム。本番は **iOS アプリ**（無料＋報酬型動画広告＋「広告を消す」買い切り）。
+つるはしで地面を掘り進める放置ゲーム。本番は **iOS アプリ**（無料＋報酬型動画広告＋課金アイテム）。
 2026-09-28 に別セッションで企画・試作（v1）し、2026-10-03 にユーザーが改善案と構成案に同意して作り始めた。
 
 **作り**: hikari7 と同じく、アプリの外側（広告・課金・保存・通知）は Flutter（`app/`）、ゲーム本体は `prototype/game.html` を
@@ -17,7 +17,7 @@ WebView で動かす。**ゲームの直しは game.html だけ**（`python tool
 | `tool/make_bgm.py` | BGM 3曲を作る（`platform/ai-lab` の audiogen。生成AIではない）。`prototype/audio/` に MP3（surface＝地上と1層・mine＝2〜5層・deep＝6層より下） |
 | `tool/build_app_web.py` | アプリに入れるゲーム本体を組み立てる（`app/assets/web/index.html`。外の書体を外し、BGM を `app/assets/audio/bgm/` に写す）。組み立てた物は git に入れない |
 | `tool/make_icon.js` | アプリのアイコン（1024・透明なし）を描く。**Gemini の絵が届くまでの仮** |
-| `app/` | iOS アプリの外側（Flutter、2026-10-04）。hikari7 の app を写し、全画面広告を外し、BGM 3曲・通知を足した。商品ID `tsuruhashi_remove_ads`、Bundle ID `com.namiki.tsuruhashi` |
+| `app/` | iOS アプリの外側（Flutter、2026-10-04）。hikari7 の app を写し、全画面広告を外し、BGM 3曲・通知を足した。課金アイテムは下の「広告と課金」、Bundle ID `com.namiki.tsuruhashi` |
 | `tool/smoke.js` | 画面の通し確認。ブラウザで5つの状態（はじめて・中盤・岩盤・代替わりの前・深層）を開き、タブ・シート・買い物を押してエラー0件か。CI で毎回回る（playwright） |
 | `tool/cut_sheet.js` | Gemini の図鑑の絵（1枚に5種・白い背景）を1種ずつの PNG に切る。`node tool/cut_sheet.js <絵> <層0〜9>` → `prototype/art/items/<id>.png`（256・背景透明）と並び確認用の `_sheet<層>.png`。縁の色を背景とみなし、大きいかたまり5つを「上の段左から3つ→下の段左から2つ」＝ ITEMS の順に当てる（小さな透かしは捨てる） |
 
@@ -123,11 +123,25 @@ v1 は同じ遊び方で1日目に6層を越え、3日目で止まっていた�
 - 報酬型動画だけ: 「採掘の倍率」と「留守の分を2倍で受け取る」。**全画面広告・バナーは入れない**（2026-10-03）
 - **採掘の倍率は見るたびに上がり、上限はない**（2026-10-03 ユーザー指示「広告はさらに×」「広告のかけるは上限なし」）: 1本目 ×2、5分のうちに続けて見ると ×3→×4→…。
   見るたびに残りは5分に戻り、切れたら ×1 から。留守の間も残りの分は効く。
-  動画なしで押せる人（広告を消した人・ブラウザの試作）は、連打で一瞬に何百倍にならないよう、次に押せるまで30秒あける（`BOOST_GAP`）
-- 「広告を消す」（買い切り・非消費型）を買った人は、**動画を見ずに2倍の効果を受け取れる**（2026-10-03、護送ボートのヒントと同じ考え）
+  ブラウザの試作は動画なしで押せるので、連打で一瞬に何百倍にならないよう、次に押せるまで30秒あける（`BOOST_GAP`）
+- **「広告を消す」は売らない。課金アイテムにする**（2026-10-04 ユーザー指示「広告を消すではなく、課金アイテムにする」。
+  種類は「買い切りの永続アイテム」と「使い切りのアイテム」、動画広告は今のまま残す——ユーザーが選んだ）。
+  アプリでは**誰でも動画を見て**特典を受け取る（動画なしで受け取れる買い物はない）。売店は「社」のタブ（`shopHtml`）
+  | 商品ID | 名前 | 種類 | 効果 |
+  |---|---|---|---|
+  | `tsuruhashi_canteen` | 社員食堂 | 買い切り | 仲間の力 +25%（`CANTEEN`）。代替わりしても残る |
+  | `tsuruhashi_cart` | 大きな荷車 | 買い切り | 留守の上限 +4時間（`CART_H`、8→12時間） |
+  | `tsuruhashi_bento3` / `tsuruhashi_bento10` | 特製弁当 3個／10個 | 使い切り | 1個で30分、仲間の力 ×2（`BENTO_X`）。使う時は自分で選ぶ（採掘の下の「弁当」）。使っている最中に使うと30分延びる（倍率は重ならない）。動画の倍率・留守とも掛け合わさる |
+  - 社員食堂の強さは sim で「1〜2日先を行く」程度（`CREW_K=2.5` で 3日目 298→323m、3週目 402→409m）。強くしすぎない
+  - 値段は App Store Connect で決める（コードには書かない。ゲームはストアの表示をそのまま出す）。**値段はユーザーが決める**
+  - 受け渡し: アプリは買い切りを「持っているか」（`own:<商品ID>`）、弁当を「これまでに届いた合計」（`bentoTotal`）で持つ。
+    ゲームは `S.iapGot.bento` との差だけを足す（`grantBento`）ので、何度伝えても二度は渡らない。同じ取引の再送は取引番号で捨てる（`bentoTx`）。
+    渡すのはストアの通知（`onDelivered`）だけで、買う操作の戻り値では渡さない（docs/app-pitfalls.md 1番）。返金された買い切りは外す、弁当は取り上げない
+  - 買った物は「すべて消す」でも残す（`own`・`bento`・`bentoUntil`・`iapGot`）。弁当は使い切りなので「購入を復元」では戻らない
+  - ブラウザの試作では、売店のボタンでお金をかけずにその場で付く（買い切りはもう一度押すと外れる）
 - 受け取りは画面の状態を見ない（`tsuruAdResult`。docs/app-pitfalls.md 2番）。留守の2倍は、動画の間に画面が変わっても失わない
-- アプリとのつなぎは hikari7 と同じ形: `window.__TSURU_APP`（store・adFree・price・credits）、`TsuruApp.postMessage`
-  （store・reward・buy・restore・haptic・theme）、アプリから呼ぶ `tsuruAdResult`・`tsuruSetApp`・`tsuruPause`・`tsuruResume`
+- アプリとのつなぎは hikari7 と同じ形: `window.__TSURU_APP`（store・owned・got・prices・canBuy・credits）、`TsuruApp.postMessage`
+  （store・reward・buy {id}・restore・haptic・theme）、アプリから呼ぶ `tsuruAdResult`・`tsuruSetApp`・`tsuruPause`・`tsuruResume`
 - 保存は `TStore`（アプリでは WebView の localStorage を使わずアプリ側へ）。12回に1回、予備（`tsuruhashi_v2_bak`）にも書く
 - **通知**（`app/lib/game/notifier.dart`、flutter_local_notifications）: 許可は初めて留守から戻ったときにゲームが頼む（`{"type":"notifAsk"}`、`S.notifAsked`）。
   裏に回るたびに、留守の上限（ゲームが `{"type":"notifCap","h"}` で伝える）の時刻に「留守の採掘がいっぱいになりました」を1件だけ予約し、戻ったら取り消す
@@ -141,7 +155,7 @@ v1.3 は13〜14層・社訓+2組。その後も層と図鑑を足す更新を、
 
 ## 決まっていること（ユーザー決定）
 
-- iOS のみ。無料＋広告（報酬型動画中心）＋「広告を消す」買い切り。月額・ガチャなし
+- iOS のみ。無料＋広告（報酬型動画だけ）＋課金アイテム（買い切り・使い切り。2026-10-04 に「広告を消す」から切り替え）。月額・ガチャなし
 - 公開名義は「つるはし社」。本名・nami・0817 は公開文面に出さない（tool/check.js が game.html を見ている）
 - 挑戦や遊ぶ回数を減らすものは入れない（護送ボートでのユーザー指示）
 - 選択には代償か裏目の可能性を持たせる（社訓・かけらの使い道）

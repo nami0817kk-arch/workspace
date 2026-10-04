@@ -104,7 +104,7 @@ class AdMobAdService implements AdService {
 
   @override
   Future<void> initialize() async {
-    // 広告を消した後に返金されたときは、もう一度ここから始める
+    // dispose の後にもう一度呼ばれたときは、ここから始め直す
     _disposed = false;
     // 広告の中身は全年齢向け（G）まで。4+ のアプリに合わない広告を出さない（Apple 2.5.18）
     try {
@@ -283,7 +283,7 @@ class AdMobAdService implements AdService {
   void dispose() {
     _disposed = true;
     _rewardedSlot.clear();
-    // 動画を待っている人がいれば起こす（広告を消した直後に6秒待たせない）
+    // 動画を待っている人がいれば起こす（片付けた後に6秒待たせない）
     _rewardedSlot.notify();
   }
 }

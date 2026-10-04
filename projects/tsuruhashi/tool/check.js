@@ -106,5 +106,28 @@ for (let k = 0; k < 200; k++) tick(S, 1, null);
 const rr = simulateAway(S, 8 * 3600); S = claimAwayState(S, rr, 2);
 ok(isFinite(S.ore) && isFinite(S.dmg) && S.depth >= 600, '深い所でも数が壊れない');
 
+// 課金アイテム（買い切り2つ・特製弁当）
+S = fresh(); const cd0 = crewDps(S, true), off0 = mods(S).off;
+S.own = { canteen: true, cart: true };
+ok(Math.abs(crewDps(S, true) / cd0 - 1.25) < 1e-9, '社員食堂で仲間の力 +25%');
+ok(mods(S).off === off0 + 4, '大きな荷車で留守の上限 +4時間');
+S.genDepth = 250; S.depth = 250; S.best = 250; rebirth(S, ['a']); ok(owns(S, 'canteen') && owns(S, 'cart'), '買い切りは代替わりしても残る');
+S = fresh(); ok(grantBento(S, 3) === 3 && S.bento === 3, '届いた弁当を受け取る');
+ok(grantBento(S, 3) === 0 && S.bento === 3, '同じ合計がもう一度届いても二度渡さない');
+ok(grantBento(S, 13) === 10 && S.bento === 13, '増えた分だけ足す');
+const rb0 = runMul(S); ok(useBento(S) && S.bento === 12 && runMul(S) === rb0 * 2, '弁当を使うと仲間の力 ×2');
+const u1 = S.bentoUntil; useBento(S); ok(S.bentoUntil - u1 === 1800e3 && runMul(S) === rb0 * 2, '重ねて使うと時間だけ延びる');
+S.bento = 0; ok(!useBento(S), '手持ちがなければ使えない');
+// 留守の計算にも弁当が効く（30分ぶんだけ2倍）
+S = fresh(); S.w = WK.map(() => 5);
+const awayA = simulateAway(S, 3600).ore;
+S.bentoUntil = NOW() + 1800e3; S.last = NOW();
+const awayB = simulateAway(S, 3600).ore;
+ok(awayB > awayA * 1.2, '留守の間も弁当が効く');
+// 消したり留守を受け取ったりしても、買った物は残る
+S = fresh(); S.own = { cart: true }; S.bento = 2; S.iapGot = { bento: 2 };
+S = claimAwayState(S, simulateAway(S, 60), 1); ok(owns(S, 'cart') && S.bento === 2 && S.iapGot.bento === 2, '留守の受け取りで買った物が消えない');
+S = normalize({ v: 2, bento: -1, own: 'x', iapGot: null }); ok(S.bento === 0 && typeof S.own === 'object' && typeof S.iapGot === 'object', '壊れた課金の記録は安全な値に戻す');
+
 if (fails) { console.log(`\n${fails}件 NG`); process.exit(1); }
 console.log('\nすべて ok');
