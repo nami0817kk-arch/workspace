@@ -15,6 +15,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from .subs import chunks as subtitle_chunks, emphasis_mask, wrap, wrap_balanced
+from . import people
 
 INK = (244, 236, 220)
 GOLD = (214, 178, 110)
@@ -22,6 +23,7 @@ DIM = (176, 164, 140)
 EMPH = (196, 72, 24)            # 字幕の強調語（明るい箱の上で読める濃い朱）
 STRATA = [(70, 58, 44), (92, 74, 52), (120, 96, 62), (150, 118, 74), (110, 52, 44)]
 SPEAKER_COLORS = {"left": (96, 112, 150), "right": (214, 140, 40)}
+ROLE_COLOR = (140, 36, 52)        # 人物の言葉（roles の声）の字幕。2人のどちらでもない深い赤
 
 HOP_PX = 22          # 話し始めに跳ねる高さ
 HOP_FRAMES = 8       # 跳ねる長さ（フレーム数）
@@ -269,7 +271,7 @@ class Painter:
         if state.background is not None and state.background.credit:
             dr.text((W / 2, H - 14), f"背景：{state.background.credit}", font=self.font("serif", 18),
                     fill=DIM, anchor="ms", stroke_width=2, stroke_fill=(12, 10, 8))
-        names = "　".join(f"VOICEVOX:{c['name']}" for c in self.config["cast"].values())
+        names = "　".join(f"VOICEVOX:{n}" for n in people.credit_names(self.config, self.script))
         dr.text((W - 40, 34), names, font=self.font("serif", 20), fill=DIM, anchor="rs",
                 stroke_width=2, stroke_fill=(12, 10, 8))
         return img
@@ -390,17 +392,18 @@ class Painter:
         ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, y0 + 10, x1 + 6, y1 + 10], radius=14, fill=(0, 0, 0, 140))
         img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
         dr = ImageDraw.Draw(img, "RGBA")
-        cast = self.config["cast"][speaker]
-        side = cast.get("side", "left")
-        color = SPEAKER_COLORS.get(side, GOLD)
+        side = self.config["cast"].get(speaker, {}).get("side", "center")
+        color = SPEAKER_COLORS.get(side, ROLE_COLOR)
+        name = people.label(self.config, speaker)
         dr.rounded_rectangle([x0, y0, x1, y1], radius=14, fill=(250, 246, 236, 240), outline=color, width=4)
-        stripe = [x0 + 4, y0 + 14, x0 + 12, y1 - 14] if side == "left" else [x1 - 12, y0 + 14, x1 - 4, y1 - 14]
-        dr.rounded_rectangle(stripe, radius=4, fill=color)
+        if side != "center":
+            stripe = [x0 + 4, y0 + 14, x0 + 12, y1 - 14] if side == "left" else [x1 - 12, y0 + 14, x1 - 4, y1 - 14]
+            dr.rounded_rectangle(stripe, radius=4, fill=color)
         nf = self.font("gothic", 28)
-        nw = nf.getlength(cast["name"]) + 28
-        nx = x0 + 20 if side == "left" else x1 - 20 - nw
+        nw = nf.getlength(name) + 28
+        nx = {"left": x0 + 20, "right": x1 - 20 - nw}.get(side, (x0 + x1 - nw) / 2)
         dr.rounded_rectangle([nx, y0 - 20, nx + nw, y0 + 18], radius=8, fill=color)
-        dr.text((nx + nw / 2, y0 - 1), cast["name"], font=nf, fill=(255, 255, 255), anchor="mm")
+        dr.text((nx + nw / 2, y0 - 1), name, font=nf, fill=(255, 255, 255), anchor="mm")
         body, mask = emphasis_mask(text)
         f = self.font("serif", 44, bold=True)
         rows = wrap_balanced(body, f, x1 - x0 - 70)[:SUB_ROWS]
@@ -426,7 +429,7 @@ class Painter:
         cx, cy = 740, self.H * 0.43                       # 右上の肖像（x 1270〜）にかからない
         layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
         dr = ImageDraw.Draw(layer)
-        side = self.config["cast"][speaker].get("side", "left")
+        side = self.config["cast"].get(speaker, {}).get("side", "left")
         color = (255, 214, 40) if side == "left" else (255, 170, 60)
         dr.text((cx + 8, cy + 10), word, font=f, fill=(0, 0, 0, int(160 * e)), anchor="mm")
         dr.text((cx, cy), word, font=f, fill=color + (int(255 * min(1, e * 1.5)),), anchor="mm",
@@ -567,7 +570,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
     prev_state: State | None = None
     prev_speaker = None
     plain_len = lambda x: len(emphasis_mask(x)[0])
-    has_faces = lambda who: bool(painter.config["cast"][who].get("faces"))
+    has_faces = lambda who: bool(painter.config["cast"].get(who, {}).get("faces"))   # 人物の行は誰も口を動かさない
 
     def emit(path: Path, make, dur: float):
         if dur <= 0:
@@ -588,7 +591,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             end = cue.end if (special and nxt.line.section != line.section) else nxt.start
         else:
             end = total - (END_SECONDS if end_card else 0.0)
-        side = painter.config["cast"][line.speaker].get("side", "left")
+        side = painter.config["cast"].get(line.speaker, {}).get("side", "left")
         n_hop = HOP_FRAMES if line.speaker != prev_speaker else 0
 
         # 字幕のかたまり（行の中の時刻と長さ）

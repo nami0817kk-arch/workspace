@@ -48,7 +48,9 @@ def saturation(script, voices: dict) -> dict[str, tuple[int, int]]:
     """
     out: dict[str, list[int]] = {}
     for line in script.lines:
-        v = voices[line.speaker]
+        v = voices.get(line.speaker)
+        if v is None:            # roles に無い人物（preflight が別に止める）
+            continue
         t = TONES[line.tone]
         raw_int = v.intonation * (1 + (t.get("intonation", 1.0) - 1) * v.tone_strength)
         raw_speed = v.speed * (1 + (t.get("speed", 1.0) - 1) * v.tone_strength)
