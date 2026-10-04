@@ -61,7 +61,9 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 - **台本確認は必須。** `build` / `shorts` は `approve` の控え（台本のハッシュ）が無いと動かない。
   approve を打つのは、ユーザーが台本にはっきり「OK」と言ったときだけ。「見せて」「出す」は承認ではない
 - 確認用は `draft` / `shorts --draft`（右上に「確認用」と出る）
-- 投稿の前に動画を見せる（投稿の仕組みはまだ無い。新チャンネル用の認証は別に用意する）
+- **投稿の前に本番の動画を見せる**。`upload` は承認（台本）と `screen`（動画のハッシュ）の両方が無いと動かない
+- 投稿：Google Cloud は**サッカーと別のプロジェクト「rekishi-chiso」**（API の枠を分ける。10-04 ユーザー決定）。鍵と許可は `dev/output/rekishi-chiso/secrets/`（リポジトリの外）。`whoami` でチャンネルを確かめ、違えば止まる。控えは `posted.json`
+- **投稿は1日1本、19時**（10-04）
 - 台本はコンセプトの細部が決まってから書く（2026-10-03 指示）
 
 ## 素材
@@ -90,6 +92,9 @@ python -m chiso.cli describe scripts/x.yaml     # 概要欄（章・クレジッ
 python -m chiso.cli kana     scripts/x.yaml     # 全行の読みをカタカナで（読み違いの点検）
 python -m chiso.cli check    scripts/x.yaml     # 素材の有無・長すぎ・抑揚の張りつき
 python -m chiso.cli thumb    scripts/x.yaml     # サムネイルと一覧の大きさの確認用
+python -m chiso.cli screen   scripts/x.yaml     # 本番の動画を見てもらった控え（OK のあとだけ）
+python -m chiso.cli upload   scripts/x.yaml --at "2026-10-05 19:00"   # 予約投稿
+python -m chiso.cli whoami                       # 許可したチャンネルの名前
 python -m chiso.cli prepare-characters --tsumugi <png> --kenzaki <png> --tsumugi-psd <psd>
 ```
 

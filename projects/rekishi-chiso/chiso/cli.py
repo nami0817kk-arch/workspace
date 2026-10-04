@@ -9,6 +9,9 @@
     python -m chiso.cli describe scripts/x.yaml         # 概要欄（章・クレジット・絵の出典）
     python -m chiso.cli kana    scripts/x.yaml          # 全行の読みをカタカナで書き出す（読み違いの点検）
     python -m chiso.cli thumb   scripts/x.yaml          # サムネイル（と、一覧で見える大きさの確認用）
+    python -m chiso.cli screen  scripts/x.yaml          # 本番の動画を見てもらった控え（ユーザーの OK のあとだけ）
+    python -m chiso.cli upload  scripts/x.yaml --at "2026-10-05 19:00"   # 予約投稿（承認と screen が要る）
+    python -m chiso.cli whoami                          # 許可したチャンネルの名前を出す（取り違えの確認）
     python -m chiso.cli check   scripts/x.yaml          # 素材の有無・書きすぎ・抑揚の張りつきを点検
 
 台本確認は必ず通す（チャンネル共通の決まり）。approve を打つのは、ユーザーが台本に
@@ -372,6 +375,84 @@ def cmd_check(args) -> int:
     return 0 if ok else 3
 
 
+# --- 投稿 ---------------------------------------------------------------
+
+def screened_path(path: Path) -> Path:
+    return ROOT / "approvals" / f"{path.stem}.screened.json"
+
+
+def _sha(p: Path) -> str:
+    import hashlib
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def cmd_screen(args) -> int:
+    """本番の動画をユーザーが見て OK と言ったときだけ打つ（投稿の前に動画を見せる決まり）。"""
+    path = Path(args.script)
+    video = out_dir() / f"{path.stem}.mp4"
+    if not video.exists():
+        print(f"本番の動画がありません: {video}（build を先に）")
+        return 1
+    a = screened_path(path)
+    a.write_text(json.dumps({"video": video.name, "sha256": _sha(video)}, ensure_ascii=False) + chr(10),
+                 encoding="utf-8")
+    print(f"動画の確認を控えました: {a.name}（動画を作り直したら確認し直し）")
+    return 0
+
+
+TAGS = ["歴史", "世界史", "日本史", "聞き流し", "歴史解説", "歴史の地層"]
+
+
+def cmd_upload(args) -> int:
+    from . import upload as up
+    config = load_config()
+    path = Path(args.script)
+    sc = script_mod.load(path)
+    video = out_dir() / f"{path.stem}.mp4"
+    if not is_approved(path):
+        print("台本が承認されていません。ユーザーの OK のあと approve してください")
+        return 2
+    a = screened_path(path)
+    if not a.exists() or not video.exists() or json.loads(a.read_text(encoding="utf-8"))["sha256"] != _sha(video):
+        print("本番の動画をユーザーに見せて OK をもらってから screen してください（動画を作り直したら確認し直し）")
+        return 2
+    log = ROOT / "posted.json"
+    key = f"{path.stem}:main"
+    done = up.already_posted(log, key)
+    if done:
+        print(f"もう投稿してあります: https://youtu.be/{done['video_id']}（{done['publish_at']}）")
+        return 1
+    publish_at = up.publish_time(args.at)
+    cues, _ = synthesize(sc, config)
+    desc = description(sc, config, cues)
+    thumb_p = out_dir() / f"{path.stem}_thumbnail.png"
+    if not thumb_p.exists():
+        from . import thumb
+        thumb.make(sc, config, assets_dir(config)).save(thumb_p)
+    srt = out_dir() / f"{path.stem}.srt"
+    tags = TAGS + [x for x in (sc.series, sc.thumbnail.get("name", "")) if x]
+    svc = up.service()
+    name = up.channel_title(svc)
+    if "歴史の地層" not in name:
+        print(f"許可しているチャンネルが違います: {name}（secrets/token.json を消して、歴史の地層を選び直す）")
+        return 2
+    print(f"投稿します：{sc.title}"); print(f"  チャンネル {name}／公開 {args.at}（日本時間）")
+    vid = up.upload(svc, video, sc.title, desc, tags, publish_at, thumb_p, srt)
+    up.record(log, {"key": key, "video_id": vid, "title": sc.title, "publish_at": args.at})
+    print(f"予約しました: https://youtu.be/{vid}")
+    return 0
+
+
+def cmd_whoami(args) -> int:
+    from . import upload as up
+    print(up.channel_title(up.service()))
+    return 0
+
+
 # --- 立ち絵 -------------------------------------------------------------
 
 def cmd_prepare_characters(args) -> int:
@@ -428,10 +509,16 @@ def main(argv=None) -> int:
     s.add_argument("script")
     s.add_argument("--no-voice", action="store_true", help="章の時刻を出さない（音声を作らない）")
     s.set_defaults(fn=cmd_describe)
-    for name, fn in [("kana", cmd_kana), ("check", cmd_check), ("thumb", cmd_thumb)]:
+    for name, fn in [("kana", cmd_kana), ("check", cmd_check), ("thumb", cmd_thumb), ("screen", cmd_screen)]:
         s = sub.add_parser(name)
         s.add_argument("script")
         s.set_defaults(fn=fn)
+    s = sub.add_parser("upload")
+    s.add_argument("script")
+    s.add_argument("--at", required=True, help="公開時刻（日本時間）'YYYY-MM-DD HH:MM'。9時〜24時")
+    s.set_defaults(fn=cmd_upload)
+    s = sub.add_parser("whoami")
+    s.set_defaults(fn=cmd_whoami)
     s = sub.add_parser("prepare-characters")
     s.add_argument("--tsumugi", required=True)
     s.add_argument("--kenzaki", required=True)

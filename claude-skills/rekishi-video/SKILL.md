@@ -35,7 +35,7 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
 6. `python -m chiso.cli draft scripts/x.yaml` で全体の確認用（約30分）。**見せる前にコマを抜いて確かめる**
 7. 台本はページかファイルで見せる。**approve を打つのは、ユーザーがその台本にはっきり「OK」と言ったときだけ**
    （「見せて」「出す」「声はOK」は台本の承認ではない）
-8. `build` → `shorts` → `thumb` → `describe`（概要欄）。投稿の仕組みはまだ無い（作るときは新チャンネル用の認証を別に用意）
+8. `build` → `shorts` → `thumb` → `describe`（概要欄）。`screen`（本番の動画をユーザーが見て OK と言ったときだけ）→ `upload --at "YYYY-MM-DD 19:00"`（予約投稿。字幕・サムネイル・概要欄つき）
 
 ## つまずき所
 
