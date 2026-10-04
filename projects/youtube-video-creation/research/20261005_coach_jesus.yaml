@@ -1,0 +1,761 @@
+# 監督の経歴：ジョルジェ・ジェズス（10/5）。2026年7月10日にポルトガル代表監督に就任（前任マルティネス、契約は2030年まで）。ここまで4戦4勝。
+# 監督の数字は Transfermarkt（trainer/2145 の詳細表示、ノルウェー戦まで入った版）。時期で束ねた勝率は自分で足して計算した（raw の3節）。
+#   フラメンゴは英語版Wikipedia（57試合43勝）と数え方が違うので、表の題に「Transfermarkt の数を束ねて計算」と断る。1990年代のクラブは数が欠けるので使わない。
+#   タイトル24は連盟（FPF）公式 news/57201 の就任発表の内訳を自分で足した（リオ州選手権は連盟の一覧に無い）。Transfermarkt・Wikipedia の Honours と内訳が一致。
+# 歩みの事実は英語版Wikipedia（経歴の本文）、BBC（リベルタドーレス決勝）、ギネス（34連勝）、サウジ・プロリーグ公式（無敗・最後の15分の得点）、Al Jazeera（アル・ナスルの優勝・ガンバ大阪に敗れた決勝）。
+# ノルウェー戦（10/4、日本時間10/5 3:45）は UEFA 公式の試合データ（2047924、2-1）と順位（グループA4 首位12点）で確かめた。得点の分は ESPN。次の試合は UEFA の 2047892（11/14 19:45 UTC、ブラガ）。
+#   同じ日の「数字で見る注目試合」（match_portugal_norway、雛形）と重ならないよう、試合の細部は3行に留めた。
+# 10/2〜10/4 にロナウドの合宿離脱を3本出しているので、離脱は1行だけ。10/3 の監督の言葉（試合のあとに時間がたっぷりある）は使わない。
+#   ロナウドの話の監督の言葉は 10/4 試合後の新しいもの（RTP、O Jogo の書き起こし）。見立ての言葉はロナウド以外（同じ談話の「ここまでの歩み」）。
+# 監督の言葉はすべて原文（ポルトガル語）から訳した: 年齢（FPF 57201）、引き分け（Sport TV、A Bola）、3点目・前の列（FPF 58015）、行き違い・歩み（RTP、O Jogo）。
+# ラモスの「エリアに入れ」は Canal 11（A Bola）。ラモスの写真が無いので語りで引いた。
+# ネットの反応は入れていない（シリーズの回）。
+# 写真: 01 FPF 58015（Diogo Pinto/FPF、9/27 オスロ）、02 FPF 57201（FPF、就任発表）、03 Commons 2012 ベンフィカ（CC BY-SA 3.0）、04 Commons 2019 フラメンゴ（CC BY-SA 4.0）、05 Commons 2023 フェネルバフチェ（CC BY-SA 3.0）。代理店は使っていない。
+#   材料の控えは research/raw/20261005_coach_jesus.md。
+date: 2026年10月05日
+slot: other_1
+format: news
+series: 監督の経歴
+people:
+- ジョルジェ・ジェズス
+theme:
+  id: coach_jesus
+  league: ''
+  league_name: ポルトガル代表
+  kind: other
+  topic: ジョルジェ・ジェズス
+  title: ジョルジェ・ジェズス、引き分けを狙わない遅咲きの名将。勝率を並べて見えたこと
+  question: 54歳で名門に届いた遅咲きのジェズスは、どこで勝てる監督になり、その勝ち方は代表でも続いているのか
+  takeaway: ジェズスの勝率を時期で束ねると、名門の前のブラガの50%から、リスボンの名門2つで68.5%、初めての海外で74.7%と上がり、ベンフィカ再任とトルコで65.4%に下がったあと、サウジの3年で81.1%と最も高くなった。代表は4戦4勝で、ノルウェーにも逆転で勝ってグループ首位。11月14日、かつて率いたブラガの本拠地でデンマークに負けなければ、グループ1位が決まる
+  opening_image: assets/images/20261005_coach_jesus/01_w.jpg
+short_title: ジェズス監督「引き分けのための組み方は知らない」
+thumbnail:
+  photo: assets/images/20261005_coach_jesus/01_t.jpg
+  line1: 代表4連勝のジェズス
+  line2: サウジで●●連勝の世界記録
+  tags:
+  - ジョルジェ・ジェズス
+  - ポルトガル代表
+  - ベンフィカ
+  - 監督の経歴
+sections:
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  official: true
+  telop: ジョルジェ・ジェズスの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: ジョルジェ・ジェズスの基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 生まれ
+      - 1954年7月24日（72歳）、アマドーラ
+    - - 選手時代
+      - 右の中盤。17年で13クラブ
+    - - 率いたクラブ
+      - ポルトガル12・海外4
+    - - 国内リーグ優勝
+      - 3か国で6回
+    - - タイトル
+      - 24（連盟の発表で数えて）
+    - - いま
+      - ポルトガル代表監督（2026年7月から）
+  say:
+  - text: この夏からポルトガルを率いる、ジョルジェ・ジェズス。
+    image: assets/images/20261005_coach_jesus/01_w.jpg
+    card: none
+  - text: 代表監督として、ここまで4戦4勝の滑り出しです。
+    image: assets/images/20261005_coach_jesus/01_v.jpg
+    card:
+      type: table
+      title: ジョルジェ・ジェズスの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: 就任の会見では、自分の年齢をこう話しました。
+    card:
+      type: table
+      title: ジョルジェ・ジェズスの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: 年齢の数字は71だ。
+    voice: ジェズス監督
+    image: assets/images/20261005_coach_jesus/02_w.jpg
+    card: none
+  - text: だが自分では、50歳のつもりでいる。
+    voice: ジェズス監督
+    cont: true
+    card: none
+  - text: 生まれは1954年、リスボン近郊の街アマドーラです。
+    image: assets/images/20261005_coach_jesus/01_v.jpg
+    card:
+      type: table
+      title: ジョルジェ・ジェズスの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 選手時代はスポルティング育ちの右の中盤。17年で13クラブを渡り歩きました。
+    card:
+      type: table
+      title: ジョルジェ・ジェズスの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 監督としては、国内と海外の16クラブを率いてきました。
+    card:
+      type: table
+      title: ジョルジェ・ジェズスの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 国内リーグは3か国で6回制し、連盟の発表で数えたタイトルは24。
+    emph: true
+    card:
+      type: table
+      title: ジョルジェ・ジェズスの基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  quotes_from:
+  - FPF https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/57201
+  sources:
+  - https://www.transfermarkt.com/jorge-jesus/profil/trainer/2145
+  - https://en.wikipedia.org/wiki/Jorge_Jesus
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/57201
+  - https://www.transfermarkt.com/jorge-jesus/erfolge/trainer/2145
+- id: road
+  heading: 名門に届くまでの20年
+  tier: 報道
+  official: true
+  telop: 国内の中小クラブで20年。昇格と欧州の大会をつかんで
+  narrator: 解説
+  card:
+    type: table
+    title: 名門の監督になるまで（1989〜2009）
+    columns: &id003
+    - 時期
+    - クラブ
+    - 要点
+    rows: &id004
+    - - 1989〜93
+      - アモーラ
+      - 監督の仕事の始まり
+    - - 1993〜98
+      - フェルゲイラス
+      - 1部に昇格させる
+    - - 1998〜2005
+      - セトゥーバルなど5クラブ
+      - 2クラブを1部へ
+    - - 2006〜08
+      - ベレネンセス
+      - 5位で欧州の大会へ
+    - - 2008〜09
+      - ブラガ
+      - インタートトカップ優勝
+    - - '2009'
+      - ベンフィカ
+      - 54歳で名門の監督に
+  say:
+  - text: 監督の道に入ったのは1989年の暮れ、下部リーグのアモーラでした。
+    image: assets/images/20261005_coach_jesus/03_v.jpg
+    card:
+      type: table
+      title: 名門の監督になるまで（1989〜2009）
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 1993年からのフェルゲイラスでは、2季目にクラブを1部へ押し上げます。
+    card:
+      type: table
+      title: 名門の監督になるまで（1989〜2009）
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: その後もセトゥーバルとアマドーラを1部に上げ、国内で経験を重ねます。
+    card:
+      type: table
+      title: 名門の監督になるまで（1989〜2009）
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 2006年からのベレネンセスでは5位に入り、欧州の大会への切符をつかみます。
+    card:
+      type: table
+      title: 名門の監督になるまで（1989〜2009）
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 2008年のブラガでは、欧州の夏の大会、インタートトカップで優勝。
+    card:
+      type: table
+      title: 名門の監督になるまで（1989〜2009）
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  - text: そして2009年6月、名門ベンフィカから声がかかります。
+    card:
+      type: table
+      title: 名門の監督になるまで（1989〜2009）
+      columns: *id003
+      rows: *id004
+      highlight_row: 5
+  - text: このとき、ジェズスは54歳でした。
+    emph: true
+    card:
+      type: table
+      title: 名門の監督になるまで（1989〜2009）
+      columns: *id003
+      rows: *id004
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Jorge_Jesus
+  - https://www.transfermarkt.com/jorge-jesus/stationen/trainer/2145/plus/1
+  - https://www.transfermarkt.com/jorge-jesus/erfolge/trainer/2145
+- id: lisbon
+  heading: ベンフィカで国内3冠
+  tier: 報道
+  official: true
+  telop: ベンフィカで6年、タイトル10。国内3冠はポルトガルで初めて
+  narrator: キャスター
+  card:
+    type: table
+    title: リスボンの2つの名門で（Transfermarkt の数え方）
+    columns: &id005
+    - 項目
+    - 数字
+    rows: &id006
+    - - ベンフィカ（2009〜15）
+      - 321試合 227勝（70.7%）
+    - - リーグ優勝
+      - 3回（2010・2014・2015）
+    - - 2013-14
+      - 国内3冠（ポルトガルで初）
+    - - ヨーロッパリーグ
+      - 準優勝2回（2013・2014）
+    - - スポルティング（2015〜18）
+      - 158試合 101勝（63.9%）
+    - - タイトル
+      - ベンフィカ10・スポルティング2
+  say:
+  - text: 1年目から、ジェズスはベンフィカを5年ぶりのリーグ優勝に導きます。
+    image: assets/images/20261005_coach_jesus/03_v.jpg
+    card:
+      type: table
+      title: リスボンの2つの名門で（Transfermarkt の数え方）
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 5季目には、リーグとカップ、リーグカップの3つを制覇。
+    card:
+      type: table
+      title: リスボンの2つの名門で（Transfermarkt の数え方）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: 国内の3冠は、ポルトガルで初めての快挙でした。
+    emph: true
+    card:
+      type: table
+      title: リスボンの2つの名門で（Transfermarkt の数え方）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: ヨーロッパリーグでも、2年続けて決勝に進みました。
+    card:
+      type: table
+      title: リスボンの2つの名門で（Transfermarkt の数え方）
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: 6年で積み上げたタイトルは10。1人の監督として、クラブ最多です。
+    card:
+      type: table
+      title: リスボンの2つの名門で（Transfermarkt の数え方）
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  - text: 2015年にはライバルのスポルティングへ。3年で、タイトルは2つでした。
+    card:
+      type: table
+      title: リスボンの2つの名門で（Transfermarkt の数え方）
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Jorge_Jesus
+  - https://en.wikipedia.org/wiki/2014_Ta%C3%A7a_de_Portugal_final
+  - https://www.transfermarkt.com/jorge-jesus/stationen/trainer/2145/plus/1
+  - https://www.abola.pt/noticias/jesus-olha-para-o-dragao-e-lembra-benfica-e-o-momento-kelvin-perdi-aqui-um-campeonato-2026100417341828276
+- id: abroad
+  heading: 国を出て、南米とサウジの頂点へ
+  tier: 報道
+  official: true
+  telop: フラメンゴで南米の頂点、アル・ヒラルで34連勝の世界記録
+  narrator: 解説
+  card:
+    type: table
+    title: 国を出てからの歩み（2018〜2026）
+    columns: &id007
+    - 時期
+    - チーム
+    - 主な結果
+    rows: &id008
+    - - 2018〜19
+      - アル・ヒラル
+      - スーパーカップ優勝
+    - - 2019〜20
+      - フラメンゴ
+      - 南米王者・ブラジル王者
+    - - 2020〜21
+      - ベンフィカ（2度目）
+      - 無冠
+    - - 2022〜23
+      - フェネルバフチェ
+      - トルコ杯優勝
+    - - 2023〜25
+      - アル・ヒラル（2度目）
+      - 34連勝の世界記録
+    - - 2025〜26
+      - アル・ナスル
+      - サウジのリーグ優勝
+  say:
+  - text: 2018年、ジェズスは初めて国を出て、サウジアラビアのアル・ヒラルへ。
+    image: assets/images/20261005_coach_jesus/04_v.jpg
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 翌2019年には、ブラジルの人気クラブ、フラメンゴに渡ります。
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 南米一のクラブを争うリベルタドーレス、決勝の相手はリーベル・プレート。
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 0対1から最後の5分で2点を奪い、2対1の逆転勝ちです。
+    emph: true
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 38年ぶりの南米の頂点。翌日には、ブラジルのリーグ優勝も決まります。
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: ベンフィカに戻った2度目は無冠。トルコのフェネルバフチェでは、カップを制します。
+    image: assets/images/20261005_coach_jesus/05.jpg
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: 2023年に戻ったアル・ヒラルでは、公式戦34連勝。
+    image: assets/images/20261005_coach_jesus/01_v.jpg
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: ギネス世界記録に認められた、男子のクラブの最多連勝です。
+    emph: true
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: その季のリーグは、31勝3分けの無敗で優勝しました。
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: 2025年からのアル・ナスルでは、古巣アル・ヒラルとの争いを2点差で制します。
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+  - text: アジアの大会の決勝では、日本のガンバ大阪に敗れています。
+    card:
+      type: table
+      title: 国を出てからの歩み（2018〜2026）
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Jorge_Jesus
+  - https://www.bbc.com/sport/football/50532892
+  - https://en.wikipedia.org/wiki/2019_Campeonato_Brasileiro_S%C3%A9rie_A
+  - https://www.guinnessworldrecords.com/world-records/607241-most-consecutive-association-football-victories-all-competitions-mens-footba
+  - https://www.spl.com.sa/en/news/500431/al-hilal-dominant-and-undefeated-enjoy-rsl-season-to-remember
+  - https://www.aljazeera.com/sports/2026/5/21/ronaldo-scores-twice-to-seal-saudi-pro-league-at-last-with-al-nassr
+  - https://www.transfermarkt.com/jorge-jesus/erfolge/trainer/2145
+- id: style
+  main: true
+  heading: 引き分けのための組み方は知らない
+  tier: 報道
+  official: true
+  telop: ノルウェー戦の直前「組むのは勝つためのチームだけだ」
+  narrator: キャスター
+  say:
+  - text: 4戦4勝のポルトガル代表。ジェズス監督は試合前、きっぱりこう語りました。
+    short_only: true
+    image: assets/images/20261005_coach_jesus/01_w.jpg
+  - text: 10月4日、ホームでのノルウェー戦の1時間ほど前、テレビに答えた言葉です。
+    image: assets/images/20261005_coach_jesus/01_w.jpg
+  - text: 引き分けのためのチームの組み方を、私は知らない。
+    voice: ジェズス監督
+  - text: 組むのは、勝つためのチームだけだ。
+    voice: ジェズス監督
+    cont: true
+  quotes_from:
+  - A Bola（Sport TV） https://www.abola.pt/noticias/jesus-olha-para-o-dragao-e-lembra-benfica-e-o-momento-kelvin-perdi-aqui-um-campeonato-2026100417341828276
+  sources:
+  - https://www.abola.pt/noticias/jesus-olha-para-o-dragao-e-lembra-benfica-e-o-momento-kelvin-perdi-aqui-um-campeonato-2026100417341828276
+  - https://www.rtp.pt/noticias/desporto/eu-nao-sei-montar-uma-equipa-para-empatar-jesus-monta-o-11-de-portugal-para-ganhar_v1769561
+- id: attack
+  heading: 最後の10分も、3点目を狙う
+  tier: 報道
+  official: true
+  telop: 交代は守るためではなく3点目のため。守りは前線から
+  narrator: 解説
+  card:
+    type: table
+    title: アル・ヒラル 2023-24 のリーグ（サウジ・プロリーグ公式）
+    columns:
+    - 項目
+    - 数字
+    rows:
+    - - リーグの得点
+      - 101（34試合）
+    - - 最後の15分の得点
+      - 全体の3割以上
+  say:
+  - text: その考えは、代表の最初の遠征でもはっきり出ていました。
+    image: assets/images/20261005_coach_jesus/01_w.jpg
+    card: none
+  - text: その1週間前、9月27日の敵地でのノルウェー戦は2対1の勝ちでした。
+  - text: リードして迎えた終盤、交代の狙いを試合後にこう説明しています。
+  - text: 最後の10分の交代も、リードを守るためではなかった。
+    voice: ジェズス監督
+  - text: いつも、3点目を取りに行くためだった。
+    voice: ジェズス監督
+    cont: true
+  - text: 無敗で優勝した季のアル・ヒラルも、得点の3割以上が最後の15分でした。
+    emph: true
+    image: assets/images/20261005_coach_jesus/01_v.jpg
+    card:
+      type: table
+      title: アル・ヒラル 2023-24 のリーグ（サウジ・プロリーグ公式）
+      columns:
+      - 項目
+      - 数字
+      rows:
+      - - リーグの得点
+        - 101（34試合）
+      - - 最後の15分の得点
+        - 全体の3割以上
+      highlight_row: 1
+  - text: 守り方にも、はっきりした考えがあります。
+    image: assets/images/20261005_coach_jesus/01_w.jpg
+    card: none
+  - text: 守るのは、最終ラインだけではない。
+    voice: ジェズス監督
+  - text: プレスをかけるチームには、前線の選手が大事だ。
+    voice: ジェズス監督
+    cont: true
+  - text: 私は、そういうチームにしたい。
+    voice: ジェズス監督
+    cont: true
+  quotes_from:
+  - FPF https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58015
+  sources:
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/58015
+  - https://match.uefa.com/v5/matches/2047978
+  - https://www.spl.com.sa/en/news/500431/al-hilal-dominant-and-undefeated-enjoy-rsl-season-to-remember
+- id: portugal
+  heading: 代表監督として、ロナウドと
+  tier: 報道
+  official: true
+  telop: 7月10日に就任、2030年まで。クラブでともに戦ったロナウドとは
+  narrator: キャスター
+  card:
+    type: table
+    title: ポルトガル代表監督ジェズス
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 就任
+      - 2026年7月10日
+    - - 契約・前任
+      - 2030年まで・マルティネス
+    - - ロナウドと
+      - アル・ナスルでリーグ優勝
+    - - 9月30日
+      - ロナウドが合宿を離れる
+  say:
+  - text: 2026年7月10日、ジェズスは代表監督に迎えられます。
+    image: assets/images/20261005_coach_jesus/02_v.jpg
+    card:
+      type: table
+      title: ポルトガル代表監督ジェズス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 就任
+        - 2026年7月10日
+      - - 契約・前任
+        - 2030年まで・マルティネス
+      - - ロナウドと
+        - アル・ナスルでリーグ優勝
+      - - 9月30日
+        - ロナウドが合宿を離れる
+      highlight_row: 0
+  - text: W杯でベスト16に終わった代表を、2030年まで任されました。
+    card:
+      type: table
+      title: ポルトガル代表監督ジェズス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 就任
+        - 2026年7月10日
+      - - 契約・前任
+        - 2030年まで・マルティネス
+      - - ロナウドと
+        - アル・ナスルでリーグ優勝
+      - - 9月30日
+        - ロナウドが合宿を離れる
+      highlight_row: 1
+  - text: クリスティアーノ・ロナウドとは、アル・ナスルで今年5月にリーグを制しました。
+    image: assets/images/20261005_coach_jesus/02_v.jpg
+    card:
+      type: table
+      title: ポルトガル代表監督ジェズス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 就任
+        - 2026年7月10日
+      - - 契約・前任
+        - 2030年まで・マルティネス
+      - - ロナウドと
+        - アル・ナスルでリーグ優勝
+      - - 9月30日
+        - ロナウドが合宿を離れる
+      highlight_row: 2
+  - text: そのロナウドは9月30日から、代表を離れたままです。
+    card:
+      type: table
+      title: ポルトガル代表監督ジェズス
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 就任
+        - 2026年7月10日
+      - - 契約・前任
+        - 2030年まで・マルティネス
+      - - ロナウドと
+        - アル・ナスルでリーグ優勝
+      - - 9月30日
+        - ロナウドが合宿を離れる
+      highlight_row: 3
+  - text: 10月4日の試合のあと、監督はこう話しました。
+    image: assets/images/20261005_coach_jesus/01_w.jpg
+    card: none
+  - text: わだかまりは無い。行き違いだったのだから。
+    voice: ジェズス監督
+    card: none
+  - text: 次の招集の前に、自分の道を決めるのはクリスだ。
+    voice: ジェズス監督
+    cont: true
+    card: none
+  quotes_from:
+  - RTP（O Jogo） https://www.ojogo.pt/internacional/artigo/jorge-jesus-aceita-regresso-de-cristiano-ronaldo-foi-um-mal-entendido/18133618
+  sources:
+  - https://www.fpf.pt/pt/News/Todas-as-not%C3%ADcias/Not%C3%ADcia/news/57201
+  - https://bolanarede.pt/especial-bola-na-rede/atualidade/em-direto-jorge-jesus-apresentado-como-novo-selecionador-nacional/
+  - https://www.aljazeera.com/sports/2026/5/21/ronaldo-scores-twice-to-seal-saudi-pro-league-at-last-with-al-nassr
+  - https://www.ojogo.pt/internacional/artigo/jorge-jesus-aceita-regresso-de-cristiano-ronaldo-foi-um-mal-entendido/18133618
+  - https://www.abola.pt/noticias/cristiano-ronaldo-ja-sabe-que-jorge-jesus-o-quer-na-selecao-em-novembro-2026100419131864280
+- id: view
+  viewpoint: true
+  heading: 時期ごとの勝率で見るジェズス
+  tier: 背景
+  telop: 勝率はブラガの50%から、サウジの3年で81.1%。代表は4戦4勝
+  narrator: 解説
+  card:
+    type: table
+    title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+    columns: &id009
+    - 時期
+    - 試合
+    - 勝率
+    - タイトル
+    rows: &id010
+    - - ブラガ（2008〜09）
+      - '48'
+      - 50.0%
+      - '1'
+    - - リスボンの名門2つ（2009〜18）
+      - '479'
+      - 68.5%
+      - '12'
+    - - 初めての海外（2018〜20）
+      - '83'
+      - 74.7%
+      - '5'
+    - - ベンフィカ再任とトルコ（2020〜23）
+      - '136'
+      - 65.4%
+      - '1'
+    - - サウジの2クラブ（2023〜26）
+      - '148'
+      - 81.1%
+      - '5'
+    - - ポルトガル代表（2026〜）
+      - '4'
+      - 100%
+      - ―
+  say:
+  - text: ジェズスの勝率を時期ごとに束ねると、名門の前のブラガでは50%。
+    image: assets/images/20261005_coach_jesus/01_v.jpg
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: リスボンの名門2つでは、68.5%に上がります。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: 初めての海外、サウジとブラジルでは74.7%。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: ベンフィカ再任からトルコまでの3年は65.4%、タイトルは1つでした。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: そしてサウジの3年は81.1%。クラブでいちばん勝ったのは、ここ3年です。
+    emph: true
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: 代表はまだ4試合で、4つとも勝利。4日の試合は、先制されてからの逆転でした。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 5
+  - text: 勝ち越し点のゴンサロ・ラモスは直前、監督に「エリアに入れ」と言われたそう。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 5
+  - text: グループ首位のまま、来年3月の準々決勝への進出も決めました。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 5
+  - text: 4連勝の歩みを、監督自身はこう振り返ります。
+    image: assets/images/20261005_coach_jesus/01_w.jpg
+    card: none
+  - text: ここまでの歩みは、
+    voice: ジェズス監督
+    card: none
+  - text: もしかすると、自分でも想像していなかったものだ。
+    voice: ジェズス監督
+    cont: true
+    card: none
+  - text: このチームのことは、強く信じていたけれど。
+    voice: ジェズス監督
+    cont: true
+    card: none
+  - text: 次の試合は11月14日、日本時間では15日の朝4時45分です。
+    image: assets/images/20261005_coach_jesus/01_v.jpg
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 5
+  - text: 相手はデンマーク。場所は、かつて率いたブラガの本拠地です。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 負けなければ、グループ1位が決まります。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 5
+  - text: サウジで81%まで上げた勝ち方を、代表でも続けられるか。そこが次の答えです。
+    card:
+      type: table
+      title: 時期ごとの勝率（Transfermarkt の数を束ねて計算）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  quotes_from:
+  - RTP（O Jogo） https://www.ojogo.pt/internacional/artigo/jorge-jesus-aceita-regresso-de-cristiano-ronaldo-foi-um-mal-entendido/18133618
+  sources:
+  - https://www.transfermarkt.com/jorge-jesus/stationen/trainer/2145/plus/1
+  - https://match.uefa.com/v5/matches/2047924
+  - https://standings.uefa.com/v1/standings?groupIds=2014194
+  - https://match.uefa.com/v5/matches/2047892
+  - https://comp.uefa.com/v2/rounds?competitionId=2014&seasonYear=2027
+  - https://www.ojogo.pt/internacional/artigo/portugal-vence-a-noruega-e-ja-tem-bilhete-para-os-quartos-da-liga-das-nacoes/18133597
+  - https://www.ojogo.pt/internacional/artigo/jorge-jesus-aceita-regresso-de-cristiano-ronaldo-foi-um-mal-entendido/18133618
+  - https://www.abola.pt/noticias/goncalo-ramos-revela-indicacao-de-jesus-antes-de-marcar-o-golo-da-vitoria-2026100421063911718

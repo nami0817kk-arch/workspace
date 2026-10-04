@@ -1,8 +1,9 @@
 # ヴィティーニャ（パリ・サンジェルマン）の紹介。8節の型（2026-09-28）を、ヤマル（research/20261002_player_937958.yaml）・
 # オリーセ（research/20261003_player_566723.yaml）・エムバペ（research/20261004_player_342229.yaml）の形にそろえて作り直した（2026-10-05）。
 # 材料は research/raw/20261005_vitinha_material.md（9/28）、10/5 に取り直した数字・代表初ゴール・写真は research/raw/20261005_player_487469.md。
-# 通算は Transfermarkt と FotMob で突き合わせ、試合と得点は一致（338試合33点。ポルトBと年代別は入れない）。アシストは食い違うので出さない。
-# 今季の数字は 10/3 まで（代表ウィーク）。10/4 のポルトガル対ノルウェー（日本時間 10/5 3:45）は数えていない。
+# 通算は Transfermarkt と FotMob で突き合わせ、試合と得点は一致（10/3 まで 338試合33点。ポルトBと年代別は入れない）。アシストは食い違うので出さない。
+# 10/5 朝に 10/4 のポルトガル対ノルウェー（先発86分、0点0アシスト、評点8.0）を足した → 339試合33点（代表47試合1点。FotMob の代表の通算も47試合1点）。
+# 今季の数字は 10/4 まで（代表ウィーク）。10/4 のポルトガル対ノルウェー（日本時間 10/5 3:45）まで数えた（12試合2点1アシスト）。
 # 元の台本の誤り2つを直した：ノルウェー戦は「35分で交代」ではなく途中出場、次の試合は「10月11日」ではなく現地10日。
 # 同じ試合のロナウドの話（10/2 ronaldo_walkout・10/3 portugal_without）は入れない。10/2 で使った「距離を置こうとした」も使わない。
 # 2025年CL決勝の先制点は「起点」まで。クラブW杯のシルバーボール・PKキッカー・背番号の由来は裏が取れないので出さない。
@@ -19,14 +20,14 @@ theme:
   topic: パリ・サンジェルマン
   title: ヴィティーニャってどんな選手？ウルブズで干された年に言い当てた未来
   question: ヴィティーニャはどういう作りの選手で、点の少ないMFがなぜ世界3位まで来たのか
-  takeaway: クラブと代表を合わせた通算は338試合33点（10月3日まで）。点ではなくパスで試合を動かす司令塔で、昨季のチャンピオンズリーグは90分あたり90.6本、今季のリーグは95.9本とパスの量は増えている。代表46試合目の初ゴールを決めた10月、10日のル・マン戦と26日のバロンドール授賞式が次の節目
+  takeaway: クラブと代表を合わせた通算は339試合33点（10月4日まで）。点ではなくパスで試合を動かす司令塔で、昨季のチャンピオンズリーグは90分あたり90.6本、今季のリーグは95.9本とパスの量は増えている。代表46試合目の初ゴールを決めた10月、10日のル・マン戦と26日のバロンドール授賞式が次の節目
   nameplate: ヴィティーニャ｜パリ・サンジェルマン MF／ポルトガル代表
   opening_image: assets/images/20261005_player_487469/01_w.jpg
   bgm: assets/audio/bgm_calm.wav
 watch: 明日は⑥ジュード・ベリンガム
 short_title: ヴィティーニャってどんな選手？
 thumbnail:
-  line1: ヴィティーニャ通算338試合
+  line1: ヴィティーニャ通算339試合
   line2: バロンドール●位、172cmの司令塔
   tags:
   - パリ・サンジェルマン
@@ -313,11 +314,11 @@ sections:
 - id: past
   heading: キャリア全体の数字
   tier: 報道
-  telop: 季ごとの数字と、10月3日までの通算
+  telop: 季ごとの数字と、10月4日までの通算
   narrator: 解説
   card:
     type: table
-    title: ヴィティーニャ 通算（2026年10月3日まで）
+    title: ヴィティーニャ 通算（2026年10月4日まで）
     columns:
     - 所属
     - 試合
@@ -333,10 +334,10 @@ sections:
       - '211'
       - '27'
     - - ポルトガル代表
-      - '46'
+      - '47'
       - '1'
     - - 合計
-      - '338'
+      - '339'
       - '33'
     source: Transfermarkt・FotMob
   rows_seasons_a:
@@ -396,11 +397,11 @@ sections:
     - '27'
   - &t4
     - ポルトガル代表
-    - '46'
+    - '47'
     - '1'
   - &t5
     - 合計
-    - '338'
+    - '339'
     - '33'
   say:
   - text: ヴィティーニャのプロ7季を、クラブの公式戦の表で振り返ります。
@@ -447,7 +448,7 @@ sections:
   - text: では通算です。パリでは211試合、27点を挙げてきました。
     card: &total_card
       type: table
-      title: ヴィティーニャ 通算（2026年10月3日まで）
+      title: ヴィティーニャ 通算（2026年10月4日まで）
       columns:
       - 所属
       - 試合
@@ -460,11 +461,11 @@ sections:
       - *t5
       source: Transfermarkt・FotMob
       highlight_row: 2
-  - text: ポルトガル代表は46試合。その1点は、つい先日決めたものです。
+  - text: ポルトガル代表は47試合。その1点は、つい先日決めたものです。
     card:
       <<: *total_card
       highlight_row: 3
-  - text: 合わせて338試合33点。点の数より、出続けた試合の数が語る7年です。
+  - text: 合わせて339試合33点。点の数より、出続けた試合の数が語る7年です。
     card:
       <<: *total_card
       highlight_row: 4
@@ -522,7 +523,7 @@ sections:
 - id: season
   heading: 今季の数字と直近5試合
   tier: 報道
-  telop: 今季はクラブと代表で11試合2点
+  telop: 今季はクラブと代表で12試合2点
   narrator: 解説
   card:
     type: table
@@ -534,6 +535,11 @@ sections:
     - 得点
     - 評点
     rows:
+    - - 10/4
+      - ノルウェー（代表）
+      - 86分
+      - 0G 0A
+      - '8.0'
     - - 10/1
       - デンマーク（代表）
       - 90分
@@ -554,45 +560,40 @@ sections:
       - 90分
       - 0G 0A
       - '8.3'
-    - - 9/13
-      - ブレスト
-      - 90分
-      - 0G 0A
-      - '7.8'
     source: FotMob
   rows_recent:
   - &r1
+    - 10/4
+    - ノルウェー（代表）
+    - 86分
+    - 0G 0A
+    - '8.0'
+  - &r2
     - 10/1
     - デンマーク（代表）
     - 90分
     - 1G 0A
     - '8.2'
-  - &r2
+  - &r3
     - 9/27
     - ノルウェー（代表）
     - 35分
     - 0G 0A
     - '6.4'
-  - &r3
+  - &r4
     - 9/24
     - ウェールズ（代表）
     - 90分
     - 0G 0A
     - '7.4'
-  - &r4
+  - &r5
     - 9/20
     - マルセイユ
     - 90分
     - 0G 0A
     - '8.3'
-  - &r5
-    - 9/13
-    - ブレスト
-    - 90分
-    - 0G 0A
-    - '7.8'
   say:
-  - text: ヴィティーニャの今季は、クラブと代表で11試合2点1アシスト。
+  - text: ヴィティーニャの今季は、クラブと代表を合わせて12戦で2点1アシスト。
     image: assets/images/20261005_player_487469/face/01.jpg
     card: &recent_card
       type: table
@@ -617,12 +618,20 @@ sections:
   - text: 伝統の一戦、マルセイユとのル・クラシックは、10点満点の評点で8.3。
     card:
       <<: *recent_card
-      highlight_row: 3
-  - text: 代表では、ノルウェー戦をベンチから迎え、後半の35分間を戦いました。
+      highlight_row: 4
+  - text: 代表では、敵地オスロのノルウェー戦をベンチから迎え、後半の35分間を戦いました。
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: そしてデンマーク戦は90分。得点を挙げて、評点8.2です。
     card:
       <<: *recent_card
       highlight_row: 1
-  - text: そしてデンマーク戦は90分。得点を挙げて、評点8.2です。
+  - text: 4日、ポルトでのノルウェーとの再戦は先発で86分。評点は8.0でした。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: パスの成功率は97%。勝ち越し点の起点にもなっています。
     card:
       <<: *recent_card
       highlight_row: 0
@@ -632,6 +641,8 @@ sections:
   - https://www.transfermarkt.com/vitinha/profil/spieler/487469
   - https://www.fotmob.com/players/1061249
   - https://www.abola.pt/noticias/o-bombom-nyland-nao-podia-ter-caido-melhor-a-portugal-cronica-2026092720391195022
+  - https://www.fotmob.com/matches/x/5181867
+  - https://maisfutebol.iol.pt/liga-das-nacoes/portugal/portugal-noruega-2-1-cronica
 - id: story
   heading: マル秘話
   tier: 報道

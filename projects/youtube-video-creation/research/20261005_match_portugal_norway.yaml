@@ -1,0 +1,498 @@
+# ポルトガル 2-1 ノルウェー（2026-10-04、UEFAネーションズリーグ A4 第4節、ポルトのエスタディオ・ド・ドラゴン）。
+# 雛形は tools/match_numbers.py --match 5181867（FotMob）。材料の控えは research/raw/20261005_match_portugal_norway.md。
+# 問いは1つ：1週間前のオスロと同じ2対1。中身の数字はどう変わったか。
+# 事実の裏:
+#   スコア・得点者・時間・退場は UEFA の試合データ（試合 id 2047924）まで辿った → 得点の流れは 確定。アシストは FotMob と報道。
+#   両チームの数字・評点・先週との比べは FotMob（5181867 と 5181864）。UEFA の数字とは少しずれる（シュート 19/8 など）ので、表は FotMob にそろえた。
+#   ロナウドが合宿を離れてから2試合目（1試合目は 10/1 デンマーク戦）。騒動は 10/2〜10/4 の回で扱ったので2行だけ。
+#   準々決勝進出は O Jogo・Maisfutebol・RTP・Record。「1位は残り2試合で勝ち点1」は Record。次の日程は O Jogo。
+#   ハーランドの交代は NRK の採点（11日で4試合目の先発、自分から交代の合図）。けがかどうかは言わない。
+# 本人の言葉はカンセロ（Maisfutebol の試合後の言葉）。反応は X の個人の投稿3件（全文。Yahoo!リアルタイム検索 → fxtwitter）。
+date: 2026年10月05日
+slot: results_1
+format: news
+series: 数字で見る注目試合
+people:
+- ポルトガル代表
+- ジョアン・カンセロ
+- ゴンサロ・ラモス
+- ヴィティーニャ
+- ヌーノ・メンデス
+- アーリング・ハーランド
+- マルティン・ウーデゴール
+theme:
+  id: match_portugal_norway
+  league: ''
+  league_name: UEFAネーションズリーグ
+  kind: match
+  topic: ポルトガル代表
+  title: ポルトガル、ノルウェーに1週間で2度目の2対1。同じスコアの中身はどう変わったか
+  question: 1週間前のオスロと同じ2対1。ポルトガル対ノルウェーの中身の数字はどう変わったのか
+  takeaway: 1週間前のオスロも今回のポルトも2対1でポルトガルの勝ち。でもノルウェーのシュートは22本から9本、ゴール期待値は2.52から0.45、決定機は6回から0回に減り、ハーランドのシュートも8本から3本になった。ポルトガルは4戦4勝で準々決勝進出を決め、11月14日のデンマーク戦と17日のウェールズ戦で勝ち点1を取ればグループ1位が決まる
+  opening_image: assets/images/20261005_match_portugal_norway/01_w.jpg
+short_title: ポルトガルがノルウェーに逆転勝ち。数字に出た差
+thumbnail:
+  photos:
+  - assets/images/20261005_match_portugal_norway/01.jpg
+  - assets/images/20261005_match_portugal_norway/haaland/01.jpg
+  line1: ポルトガル 4連勝で8強
+  line2: ノルウェーの決定機 6→●
+  tags:
+  - ポルトガル代表
+  - ノルウェー代表
+sections:
+- id: score
+  heading: 先制されてからの逆転
+  tier: 確定
+  official: true   # UEFA の試合データ（id 2047924）でスコア・得点者・時間・退場を確かめた
+  telop: ポルトガル2対1ノルウェー。36分に先制されて、2分後に同点、79分に勝ち越し
+  narrator: キャスター
+  card:
+    type: table
+    title: ポルトガル 2-1 ノルウェー（10月4日 ポルト）
+    columns: [時間, 得点, アシスト, スコア]
+    rows: &goals
+    - ['36分', 'アイエル（ノルウェー）', 'ウーデゴール', '0-1']
+    - ['38分', 'カンセロ', 'ヌーノ・メンデス', '1-1']
+    - ['79分', 'ゴンサロ・ラモス', 'フェリックス', '2-1']
+    source: UEFA・FotMob
+  say:
+  - text: 4日、欧州の国どうしで戦うネーションズリーグの第4節。
+    image: assets/images/20261005_match_portugal_norway/01_w.jpg
+  - text: ポルトガルが、ポルトのスタジアムにノルウェーを迎えました。
+  - text: ロナウドが合宿を離れて2試合目。主将はこの日もブルーノ・フェルナンデスです。
+  - text: 先制はノルウェー。36分、ウーデゴールのフリーキックからアイエルの一撃。
+    image: assets/images/20261005_match_portugal_norway/ajer/01_w.jpg
+    card:
+      type: table
+      title: ポルトガル 2-1 ノルウェー（10月4日 ポルト）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 0
+  - text: この夏からチームを率いるジェズス監督の下で、初めてリードされた瞬間です。
+    card:
+      type: table
+      title: ポルトガル 2-1 ノルウェー（10月4日 ポルト）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 0
+  - text: でも、わずか2分後。ヌーノ・メンデスのスローインから、カンセロが蹴り込みます。
+    image: assets/images/20261005_match_portugal_norway/cancelo/01_w.jpg
+    card:
+      type: table
+      title: ポルトガル 2-1 ノルウェー（10月4日 ポルト）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 1
+  - voice: カンセロ選手
+    text: ヌーノのスローインが強いのは知っていた。
+  - voice: カンセロ選手
+    text: あそこにいたのは本能だよ。
+    cont: true
+  - voice: カンセロ選手
+    text: うまくいって、すごいゴールになった。
+    cont: true
+    pause: 0.4
+  - text: 79分、ヴィティーニャが守備の裏へ通し、フェリックスがダイレクトでつなぐ。
+    image: assets/images/20261005_match_portugal_norway/ramos/01_w.jpg
+    card:
+      type: table
+      title: ポルトガル 2-1 ノルウェー（10月4日 ポルト）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 2
+  - text: 最後はゴンサロ・ラモスが押し込み、ついに逆転です。
+    emph: true
+    card:
+      type: table
+      title: ポルトガル 2-1 ノルウェー（10月4日 ポルト）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 2
+  - text: 86分にはフランシスコ・コンセイソンが、2枚目の警告で退場。
+    card: none
+  - text: それでも10人で守り切り、ポルトガルはこの大会4戦4勝です。
+  sources:
+  - https://match.uefa.com/v5/matches?fromDate=2026-10-04&toDate=2026-10-04&limit=100&offset=0&order=ASC
+  - https://www.uefa.com/uefanationsleague/match/2047924--portugal-vs-norway/
+  - https://www.ojogo.pt/internacional/artigo/portugal-vence-a-noruega-e-ja-tem-bilhete-para-os-quartos-da-liga-das-nacoes/18133597
+  - https://maisfutebol.iol.pt/liga-das-nacoes/portugal/portugal-noruega-2-1-cronica
+  - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/passe-incrivel-de-vitinha-assistencia-de-joao-felix-e-finalizacao-de-ramos-o-golo-da-reviravolta-contra-a-noruega
+  - https://sapo.pt/artigo/portugal-vence-noruega-e-garante-passagem-direta-a-final-four-da-liga-das-nacoes-6ac2bac8251665e3d603d2e2
+  - https://www.nrk.no/sport/nasjonsligaen_-norge-mener-portugal-mal-burde-blitt-annullert-etter-disse-bildene-1.18045000
+  - https://www.fotmob.com/matches/x/5181867
+- id: numbers
+  heading: シュート20本と9本、決定機は3回と0回
+  tier: 報道
+  main: true
+  telop: カンセロ「今日もまた、ピッチでいちばんのチームは僕たちだった」
+  narrator: 解説
+  card:
+    type: table
+    title: 両チームの数字（10月4日）
+    columns: ['', 'ポルトガル', 'ノルウェー']
+    rows: &nums
+    - ['ボール支配率', '59%', '41%']
+    - ['xG（ゴール期待値）', '1.80', '0.45']
+    - ['シュート', '20', '9']
+    - ['枠内シュート', '7', '3']
+    - ['決定機', '3', '0']
+    - ['パス成功', '433 (87%)', '274 (78%)']
+    source: FotMob
+  say:
+  - text: ポルトガル代表がノルウェーに逆転勝ち。同点弾のカンセロは、こう胸を張りました。
+    short_only: true
+    image: assets/images/20261005_match_portugal_norway/cancelo/01_w.jpg
+  - voice: カンセロ選手
+    text: 新しい監督の考え方を、すぐに自分たちのものにできた。
+  - voice: カンセロ選手
+    text: 今日もまた、ピッチでいちばんのチームは僕たちだった。
+    cont: true
+    pause: 0.5
+  - text: その言葉どおりだったのか、両チームの数字を並べます。
+    image: assets/images/20261005_match_portugal_norway/01_w.jpg
+    card:
+      type: table
+      title: 両チームの数字（10月4日）
+      columns: ['', 'ポルトガル', 'ノルウェー']
+      rows: *nums
+  - text: ボールを持っていた時間は、ポルトガルがおよそ6割。
+    card:
+      type: table
+      title: 両チームの数字（10月4日）
+      columns: ['', 'ポルトガル', 'ノルウェー']
+      rows: *nums
+      highlight_row: 0
+  - text: シュートは20本と9本。枠に飛んだのは7本と3本です。
+    card:
+      type: table
+      title: 両チームの数字（10月4日）
+      columns: ['', 'ポルトガル', 'ノルウェー']
+      rows: *nums
+      highlight_row: 2
+  - text: そして、決まって当然という決定機は、3回と0回。
+    emph: true
+    card:
+      type: table
+      title: 両チームの数字（10月4日）
+      columns: ['', 'ポルトガル', 'ノルウェー']
+      rows: *nums
+      highlight_row: 4
+  - text: 1週間前のオスロでは、ノルウェーが6回も作っていた場面です。
+    card:
+      type: table
+      title: 両チームの数字（10月4日）
+      columns: ['', 'ポルトガル', 'ノルウェー']
+      rows: *nums
+      highlight_row: 4
+  sources:
+  - https://www.fotmob.com/matches/x/5181867
+  - https://maisfutebol.iol.pt/selecao/selecao-nacional/joao-cancelo-fizemos-todos-um-grande-trabalho-ronaldo-incluido
+  quotes_from:
+  - マイスフテボル https://maisfutebol.iol.pt/selecao/selecao-nacional/joao-cancelo-fizemos-todos-um-grande-trabalho-ronaldo-incluido
+- id: goals_xg
+  heading: 2つのミドルと、82%の勝ち越し点
+  tier: 報道
+  telop: 決まる見込みは、アイエル2%、カンセロ5%、ラモス82%
+  narrator: 解説
+  card:
+    type: table
+    title: 3つのゴールの決まる見込み（xG）
+    columns: [時間, 得点, 場所, 見込み]
+    rows: &xg
+    - ['36分', 'アイエル', 'ペナルティエリアの外', '2%']
+    - ['38分', 'カンセロ', 'ペナルティエリアの外', '5%']
+    - ['79分', 'ゴンサロ・ラモス', 'ゴール前', '82%']
+    source: FotMob
+  say:
+  - text: ゴール期待値とは、そのシュートが決まる見込みを数字にしたものです。
+    image: assets/images/20261005_match_portugal_norway/01_w.jpg
+    card:
+      type: table
+      title: 両チームの数字（10月4日）
+      columns: ['', 'ポルトガル', 'ノルウェー']
+      rows: *nums
+      highlight_row: 1
+  - text: 90分ぶんを足すと、ポルトガルの1.80に対し、ノルウェーは0.45でした。
+    card:
+      type: table
+      title: 両チームの数字（10月4日）
+      columns: ['', 'ポルトガル', 'ノルウェー']
+      rows: *nums
+      highlight_row: 1
+  - text: では、入った3本の見込みはどうだったのか。
+    card:
+      type: table
+      title: 3つのゴールの決まる見込み（xG）
+      columns: [時間, 得点, 場所, 見込み]
+      rows: *xg
+  - text: アイエルの一撃は、ペナルティエリアの外から。見込みはわずか2%です。
+    image: assets/images/20261005_match_portugal_norway/ajer/01_w.jpg
+    card:
+      type: table
+      title: 3つのゴールの決まる見込み（xG）
+      columns: [時間, 得点, 場所, 見込み]
+      rows: *xg
+      highlight_row: 0
+  - text: すぐに返したカンセロも、エリアの外から。こちらも5%しかありません。
+    image: assets/images/20261005_match_portugal_norway/cancelo/01_w.jpg
+    card:
+      type: table
+      title: 3つのゴールの決まる見込み（xG）
+      columns: [時間, 得点, 場所, 見込み]
+      rows: *xg
+      highlight_row: 1
+  - text: 前半の2点は、どちらも滅多に入らない一撃だったわけです。
+    card:
+      type: table
+      title: 3つのゴールの決まる見込み（xG）
+      columns: [時間, 得点, 場所, 見込み]
+      rows: *xg
+      highlight_row: 1
+  - text: 一方、ラモスの勝ち越し点は、ゴール前で82%。
+    image: assets/images/20261005_match_portugal_norway/ramos/01_w.jpg
+    card:
+      type: table
+      title: 3つのゴールの決まる見込み（xG）
+      columns: [時間, 得点, 場所, 見込み]
+      rows: *xg
+      highlight_row: 2
+  - text: 縦パスとダイレクトのつなぎで、ほぼ決まる形を作った1点でした。
+    emph: true
+    card:
+      type: table
+      title: 3つのゴールの決まる見込み（xG）
+      columns: [時間, 得点, 場所, 見込み]
+      rows: *xg
+      highlight_row: 2
+  sources:
+  - https://www.fotmob.com/matches/x/5181867
+  - https://sapo.pt/artigo/portugal-vence-noruega-e-garante-passagem-direta-a-final-four-da-liga-das-nacoes-6ac2bac8251665e3d603d2e2
+- id: players
+  heading: 評点の高かった選手
+  tier: 報道
+  telop: いちばん高かったのはヌーノ・メンデスの8.3。ラモスは3試合続けてのゴール
+  narrator: 解説
+  card:
+    type: table
+    title: 評点の上位（10点満点）
+    columns: [選手, 評点, この試合]
+    rows: &players
+    - ['ヌーノ・メンデス', '8.3', '1アシスト・地上の競り合い8勝']
+    - ['カンセロ', '8.1', '1得点・枠内シュート3本']
+    - ['ヴィティーニャ', '8.0', 'パス67本中65本成功']
+    - ['フェリックス', '7.9', '1アシスト・ドリブル4回成功']
+    - ['ウーデゴール（ノルウェー）', '7.8', '1アシスト']
+    - ['ゴンサロ・ラモス', '7.7', '3試合連続ゴール']
+    source: FotMob
+  say:
+  - text: 10点満点の評点で、この試合のトップはポルトガルのヌーノ・メンデス、8.3。
+    image: assets/images/20261005_match_portugal_norway/mendes/01_w.jpg
+    card:
+      type: table
+      title: 評点の上位（10点満点）
+      columns: [選手, 評点, この試合]
+      rows: *players
+      highlight_row: 0
+  - text: 同点のスローインを投げ、地上の競り合いは11回で8勝しています。
+    card:
+      type: table
+      title: 評点の上位（10点満点）
+      columns: [選手, 評点, この試合]
+      rows: *players
+      highlight_row: 0
+  - text: 同点弾のカンセロの8.1に続いたのが、ヴィティーニャの8.0。
+    image: assets/images/20261005_match_portugal_norway/01_w.jpg
+    card:
+      type: table
+      title: 評点の上位（10点満点）
+      columns: [選手, 評点, この試合]
+      rows: *players
+      highlight_row: 2
+  - text: 67本のパスのうち、65本を味方に届けています。
+    card:
+      type: table
+      title: 評点の上位（10点満点）
+      columns: [選手, 評点, この試合]
+      rows: *players
+      highlight_row: 2
+  - text: ノルウェーで最も高かったのは、主将ウーデゴールの7.8です。
+    card:
+      type: table
+      title: 評点の上位（10点満点）
+      columns: [選手, 評点, この試合]
+      rows: *players
+      highlight_row: 4
+  - text: そして決勝点のゴンサロ・ラモスは、これで3試合続けてのゴール。
+    image: assets/images/20261005_match_portugal_norway/ramos/01_w.jpg
+    card:
+      type: table
+      title: 評点の上位（10点満点）
+      columns: [選手, 評点, この試合]
+      rows: *players
+      highlight_row: 5
+  - text: 1週間前のオスロでも勝ち越し点を決めていて、ノルウェーを2度沈めた男です。
+    emph: true
+    card:
+      type: table
+      title: 評点の上位（10点満点）
+      columns: [選手, 評点, この試合]
+      rows: *players
+      highlight_row: 5
+  sources:
+  - https://www.fotmob.com/matches/x/5181867
+  - https://www.fotmob.com/matches/x/5181864
+  - https://maisfutebol.iol.pt/liga-das-nacoes/portugal/portugal-noruega-2-1-cronica
+  - https://www.nrk.no/sport/nasjonsligaen_-norge-mener-portugal-mal-burde-blitt-annullert-etter-disse-bildene-1.18045000
+- id: view
+  heading: 1週間前のオスロと比べたノルウェーの数字
+  tier: 背景
+  viewpoint: true
+  telop: 同じ2対1でも、ノルウェーの決定機は6回から0回。ハーランドのシュートは8本から3本
+  narrator: 解説
+  card:
+    type: table
+    title: ポルトガルはどちらも2-1で勝利
+    columns: ['', '9/27 オスロ', '10/4 ポルト']
+    rows: &cmp
+    - ['ポルトガルの支配率', '38%', '59%']
+    - ['ノルウェーのシュート', '22本', '9本']
+    - ['ノルウェーのxG', '2.52', '0.45']
+    - ['ノルウェーの決定機', '6回', '0回']
+    - ['ハーランドのシュート', '8本', '3本']
+    - ['ハーランドのxG', '1.50', '0.30']
+    source: FotMob
+  say:
+  - text: ポルトガルは1週間前、敵地オスロでもノルウェーに2対1で勝っています。
+    image: assets/images/20261005_match_portugal_norway/haaland/01_w.jpg
+    card:
+      type: table
+      title: ポルトガルはどちらも2-1で勝利
+      columns: ['', '9/27 オスロ', '10/4 ポルト']
+      rows: *cmp
+  - text: スコアは同じ。ところが中身の数字は、まるで別の試合です。
+    card:
+      type: table
+      title: ポルトガルはどちらも2-1で勝利
+      columns: ['', '9/27 オスロ', '10/4 ポルト']
+      rows: *cmp
+  - text: オスロでボールを握ったのはノルウェー。ポルトガルの支配率は38%でした。
+    card:
+      type: table
+      title: ポルトガルはどちらも2-1で勝利
+      columns: ['', '9/27 オスロ', '10/4 ポルト']
+      rows: *cmp
+      highlight_row: 0
+  - text: ノルウェーのシュートは、22本から9本へ。
+    card:
+      type: table
+      title: ポルトガルはどちらも2-1で勝利
+      columns: ['', '9/27 オスロ', '10/4 ポルト']
+      rows: *cmp
+      highlight_row: 1
+  - text: ゴール期待値は2.52から0.45。5分の1を下回りました。
+    card:
+      type: table
+      title: ポルトガルはどちらも2-1で勝利
+      columns: ['', '9/27 オスロ', '10/4 ポルト']
+      rows: *cmp
+      highlight_row: 2
+  - text: 決定機は6回から0回。ポルトガルの3回は、2試合とも同じでした。
+    emph: true
+    card:
+      type: table
+      title: ポルトガルはどちらも2-1で勝利
+      columns: ['', '9/27 オスロ', '10/4 ポルト']
+      rows: *cmp
+      highlight_row: 3
+  - text: オスロで1点を奪ったハーランドも、シュートは8本から3本に減りました。
+    card:
+      type: table
+      title: ポルトガルはどちらも2-1で勝利
+      columns: ['', '9/27 オスロ', '10/4 ポルト']
+      rows: *cmp
+      highlight_row: 4
+  - text: 11日で4試合目の先発。後半の途中、自分から交代の合図を出し、67分に退きました。
+    card:
+      type: table
+      title: ポルトガルはどちらも2-1で勝利
+      columns: ['', '9/27 オスロ', '10/4 ポルト']
+      rows: *cmp
+      highlight_row: 5
+  - text: これでポルトガルは勝ち点12。上位2チームが進む準々決勝を決めました。
+    image: assets/images/20261005_match_portugal_norway/01_w.jpg
+    card: &table_card
+      type: table
+      title: グループA4の順位（4試合終了）
+      columns: [順位, チーム, 勝, 敗, 勝点]
+      rows:
+      - ['1', 'ポルトガル', '4', '0', '12']
+      - ['2', 'デンマーク', '2', '2', '6']
+      - ['3', 'ウェールズ', '1', '3', '3']
+      - ['4', 'ノルウェー', '1', '3', '3']
+      source: UEFA
+      highlight_row: 0
+  - text: 大会全体で一番乗りです。残る2試合で勝ち点1を取れば、グループ1位も決まります。
+    card:
+      <<: *table_card
+      highlight_row: 1
+  - text: 次は11月14日、ブラガでデンマーク戦。17日は敵地でウェールズと戦います。
+    card: none
+  - text: 相手の決定機をゼロに抑えたこの守りが、11月も続くかに注目です。
+  sources:
+  - https://www.fotmob.com/matches/x/5181867
+  - https://www.fotmob.com/matches/x/5181864
+  - https://www.nrk.no/sport/bors_-slik-spilte-norge-mot-portugal-1.18044817
+  - https://standings.uefa.com/v1/standings?groupIds=2014194
+  - https://www.ojogo.pt/internacional/artigo/portugal-vence-a-noruega-e-ja-tem-bilhete-para-os-quartos-da-liga-das-nacoes/18133597
+  - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/portugal-apurado-para-os-quartos-de-final-da-liga-das-nacoes-o-que-falta-para-conseguir-o-1-lugar
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「2試合前のホームポルトガル戦くらいの圧倒的な力を見せて欲しい」
+  narrator: キャスター
+  say:
+  # X Lie_yao__lu_sha（プロフィールにノルウェー代表のタグ。2026-10-04 20:58 UTC）。全文
+  - voice: ネット民
+    text: セルヴィキ含めて目立って悪いプレイヤーはいなかったけど、
+    image: assets/images/20261005_match_portugal_norway/haaland/01_w.jpg
+  - voice: ネット民
+    text: 強いていえばロングボールがズレがちな
+    cont: true
+  - voice: ネット民
+    text: セルヴィキとハーランドくらい？
+    cont: true
+  - voice: ネット民
+    text: 2試合前のホームポルトガル戦くらいの
+    cont: true
+  - voice: ネット民
+    text: 圧倒的な力を見せて欲しい…
+    cont: true
+  - voice: ネット民
+    text: あれ見せられたら期待しちゃうから
+    cont: true
+  # X ntnori7（2026-10-04 20:56 UTC）。Yahoo!リアルタイム検索「カンセロ」→ fxtwitter で全文
+  - voice: ネット民
+    text: ポルトガル代表、ロナウド離脱があったけど普通に強い。
+    image: assets/images/20261005_match_portugal_norway/mendes/01_w.jpg
+  - voice: ネット民
+    text: サイドバックの2人は世界トップクラスだし、
+    cont: true
+  - voice: ネット民
+    text: カンセロはバルセロナでもエグイの決めてたし
+    cont: true
+  - voice: ネット民
+    text: 好調だよなぁ。
+    cont: true
+  # X orengetakumi（2026-10-04 20:45 UTC）。全文
+  - voice: ネット民
+    text: ポルトガルなんだかんだでつえーな
+    short_voice: true
+  - voice: ネット民
+    text: ノルウェーがなかなか厳しい
+    cont: true
+    short_voice: true
+  sources:
+  - https://x.com/ntnori7/status/2106851020659945812
+  - https://x.com/Lie_yao__lu_sha/status/2106851497262940233
+  - https://x.com/orengetakumi/status/2106848188653273528
