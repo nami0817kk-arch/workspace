@@ -139,3 +139,10 @@ def test_places_attach_and_ignore_inside_terms():
         {"語り": "神聖ローマ皇帝の娘"}, {"語り": "ヴァレンヌで捕まる"}, {"語り": "a"}, {"語り": "b"}, {"語り": "c"}]}]}
     sc = script.parse(d, glossary={"神聖ローマ皇帝": "皇帝"}, places={"ローマ": (12.5, 41.9), "ヴァレンヌ": (5.03, 49.23)})
     assert [l.place[0] if l.place else None for l in sc.lines] == [None, "ヴァレンヌ", "ヴァレンヌ", "ヴァレンヌ", None]
+
+
+def test_card_year_moves_timeline_year():
+    sc = script.parse({"title": "t", "timeline": {"start": 1755}, "sections": [{"title": "一", "lines": [
+        {"語り": "a"}, {"語り": "b", "card": {"head": "1772年 元日"}}, {"語り": "c"},
+        {"語り": "d", "card": {"head": "首飾りの値段"}}, {"語り": "e", "card": {"head": "1783年"}, "year": 1780}]}]})
+    assert [l.year for l in sc.lines] == [1755, 1772, 1772, 1772, 1780]   # 年の無い札は動かさない、year: が優先

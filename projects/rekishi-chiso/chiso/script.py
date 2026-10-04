@@ -171,6 +171,14 @@ def _picture(raw, where: str) -> Picture | None:
                    caption=str(raw.get("caption", "")), who=str(raw.get("who", "")))
 
 
+def _card_year(card) -> int | None:
+    """札の見出しの年（「1774年5月」→1774）。年で始まらない札（「首飾りの値段」）は None。"""
+    import re
+    # 「1760年代半ば」は1つの年ではないので数えない
+    m = re.match(r"(\d{3,4})年(?!代)", card.head) if card is not None else None
+    return int(m.group(1)) if m else None
+
+
 def _card(raw, where: str) -> Card | None:
     if raw is None:
         return None
@@ -253,6 +261,8 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         card = _card(raw_section.get("card"), where_s)
         if raw_section.get("year") is not None:
             year = int(raw_section["year"])
+        elif _card_year(card) is not None:
+            year = _card_year(card)
         memo: list[Card] = [card] if card is not None else []
         figure = _figure(raw_section.get("figure"), where_s)
         raw_lines = raw_section.get("lines") or []
@@ -273,6 +283,9 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
                     memo.append(card)
             if raw.get("year") is not None:
                 year = int(raw["year"])
+            elif "card" in raw and _card_year(card) is not None:
+                # 札に年があれば、年表の印（と「この時○歳」）もその年へ（10-04 の確認で、札だけ進んで年齢がずれていた）
+                year = _card_year(card)
             tone = str(raw.get("tone", "普通"))
             if known_tones is not None and tone not in known_tones:
                 raise ScriptError(f"{where}: tone「{tone}」は定義されていません（{'、'.join(sorted(known_tones))}）")
