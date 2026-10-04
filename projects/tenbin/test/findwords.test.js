@@ -3,16 +3,17 @@
 var assert = require('assert'), C = require('../prototype/core.js');
 function settle(s) { for (var i = 0; i < 400; i++) C.step(s); }
 function place(s, ch, x, y) { var b = C.build(ch, x, y, 0); s.cargo.push(b); C.M.Composite.add(s.engine.world, b); return b; }
-function words(s) { settle(s); return C.findWords(s).map(function (f) { return f.text + ':' + f.dir; }); }
+function words(s) { settle(s); return C.findWords(s).map(function (f) { return f.text; }); }
 
 var s = C.create(1, 'flat'); place(s, 'こ', 200, 505); place(s, 'ね', 200, 430);
-assert.ok(words(s).indexOf('ねこ:tate') >= 0, '縦の ねこ ができない: ' + words(s));
+assert.ok(words(s).indexOf('ねこ') >= 0, '縦の ねこ ができない: ' + words(s));
 
 s = C.create(1, 'flat'); var a = C.extent('ね', 0), b = C.extent('こ', 0); place(s, 'ね', 166, 505); place(s, 'こ', 166 + a.maxX - b.minX + 3, 505);
-assert.ok(words(s).indexOf('ねこ:yoko') >= 0, '横の ねこ ができない: ' + words(s));
+assert.ok(words(s).indexOf('ねこ') >= 0, '横の ねこ ができない: ' + words(s));
 
-s = C.create(1, 'flat'); var a2 = C.extent('こ', 0), b2 = C.extent('ね', 0); place(s, 'こ', 166, 505); place(s, 'ね', 166 + a2.maxX - b2.minX + 3, 505);
-assert.ok(words(s).indexOf('ねこ:yoko') < 0, '右から左に読んで ねこ になってしまう');
+s = C.create(1, 'flat'); var a2 = C.extent('こ', 0), b2 = C.extent('ね', 0); place(s, 'こ', 166, 505); place(s, 'ね', 166 + a2.maxX - b2.minX - 6, 505);
+// 向きは問わない: 右から左（こ・ね の並び）でも ねこ
+assert.ok(words(s).indexOf('ねこ') >= 0, '右から左の ねこ ができない: ' + words(s));
 
 s = C.create(1, 'flat'); place(s, 'ね', 110, 505); place(s, 'こ', 290, 505);
 assert.deepStrictEqual(words(s), [], '離れた字で ことば ができてしまう');
@@ -40,11 +41,20 @@ s.queue[0] = 'ろ'; C.drop(s, 90, 0); for (i = 0; i < 400; i++) C.step(s);
 assert.ok(s.made.indexOf('あさ') < 0, 'あとから あさ を数え直している: ' + s.made);
 console.log('subword later ok');
 
+// 下から上（こ が上・ね が下）でも ねこ
+s = C.create(1, 'flat'); place(s, 'ね', 200, 505); place(s, 'こ', 200, 430);
+assert.ok(words(s).indexOf('ねこ') >= 0, '下から上の ねこ ができない: ' + words(s));
+// 間に別の字が挟まると、つながっていないので ねこ にならない
+s = C.create(1, 'flat'); var e3 = C.extent('ね', 0), e4 = C.extent('ら', 0), e5 = C.extent('こ', 0);
+var x2 = 100 + e3.maxX - e4.minX + 2, x3 = x2 + e4.maxX - e5.minX + 2;
+place(s, 'ね', 100, 505); place(s, 'ら', x2, 505); place(s, 'こ', x3, 505);
+assert.ok(words(s).indexOf('ねこ') < 0, '間に字が挟まっても ねこ になる: ' + words(s));
+
 // 2026-10-04「言葉として反応しない時がある」の見直し
 // 横に 8px あけて並べても くっついたとみなす（字の縁取りで、画面ではくっついて見える）
 s = C.create(1, 'flat'); var e1 = C.extent('ね', 0), e2 = C.extent('こ', 0);
 place(s, 'ね', 150, 505); place(s, 'こ', 150 + e1.maxX - e2.minX + 8, 505);
-assert.ok(words(s).indexOf('ねこ:yoko') >= 0, '8px あけた横の ねこ ができない');
+assert.ok(words(s).indexOf('ねこ') >= 0, '8px あけた横の ねこ ができない');
 // 同じことばでも、別の字で作れば2度目も数える
 s = C.create(1, 'flat'); s.queue.splice(0, 4, 'こ', 'ね', 'こ', 'ね');
 C.drop(s, 120, 0); for (i = 0; i < 400; i++) C.step(s);

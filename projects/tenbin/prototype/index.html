@@ -404,7 +404,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (phase === 'play') {
       var recent = s.made.slice(-3).reverse(), y0 = 14;
       ctx.textAlign = 'right';
-      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText('たてか よこに くっつけて', W - 14, 26); ctx.fillText('ことばを つくろう', W - 14, 40);
+      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText('字と字を くっつけて', W - 14, 26); ctx.fillText('ことばを つくろう', W - 14, 40);
         if (s.score >= 3) { ctx.fillStyle = '#b5552a'; ctx.fillText('ひかっている字の となりや上が ねらいめ', W - 14, 56); } }
       recent.forEach(function (w, i) {
         ctx.font = '900 ' + (i ? 15 : 19) + 'px ' + G.font; var tw = ctx.measureText(w).width, x1 = W - 12, bh = i ? 24 : 30;
@@ -445,7 +445,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   function showMenu() {
     phase = 'menu';
-    showSheet('<h2>ひらがなてんびん</h2><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas><p>字をくっつけて<b>ことば</b>にすると点がふえる。<br>2字100点・3字400点・4字900点。ことばになる字は<b>ひかる</b>。</p>' +
+    showSheet('<h2>ひらがなてんびん</h2><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas><p>字を<b>くっつけて</b>ことばにすると点がふえる（向きは自由）。<br>2字100点・3字400点・4字900点。ことばになる字は<b>ひかる</b>。</p>' +
       '<p style="margin-top:6px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
       '<p style="margin-top:6px;font-weight:700;color:var(--ink)">字の色</p>' + themeButtons() +
       '<p class="unlock">' + nextUnlock() + '</p>' +
@@ -454,18 +454,18 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     wirePlats(function () { s = C.create(null, plat); drawNext(); showMenu(); });
     document.getElementById('go').onclick = function () { audio(); start(); };
   }
-  // 見本: 「ね」を上・「こ」を下で たての ねこ、「う」「み」を並べて よこの うみ
+  // 見本: くっついていれば向きは問わない（上下の ねこ、右から左の うみ）
   function drawDemo() {
     var el = document.getElementById('demo'); if (!el) return; var g = el.getContext('2d');
     g.setTransform(2, 0, 0, 2, 0, 0); g.clearRect(0, 0, 280, 95);
     function mini(ch, x, y) { g.save(); g.translate(x, y); g.scale(0.5, 0.5); drawGlyph(g, ch, 0, 0, 0, 1); g.restore(); }
     function link(pts) { g.strokeStyle = '#f2b24f'; g.lineWidth = 3; g.lineCap = 'round'; g.beginPath(); pts.forEach(function (p, i) { if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); }); g.stroke(); }
     link([[46, 26], [46, 66]]); mini('ね', 46, 26); mini('こ', 46, 66);
-    link([[150, 48], [186, 48]]); mini('う', 150, 48); mini('み', 186, 48);
+    link([[186, 48], [150, 48]]); mini('み', 150, 48); mini('う', 186, 48);
     g.font = '900 15px ' + G.font; g.fillStyle = '#d9472f'; g.textBaseline = 'middle';
     g.fillText('ねこ', 70, 46); g.fillText('うみ', 210, 48);
     g.font = '700 9px "M PLUS Rounded 1c",sans-serif'; g.fillStyle = '#8a7663';
-    g.fillText('たて（上から下）', 8, 90); g.fillText('よこ（左から右）', 140, 90);
+    g.fillText('上と下でも', 20, 90); g.fillText('右から左でも', 146, 90);
   }
   function showResult() {
     // 記録は遊び始めたときのさいこう（best）とくらべる。結果画面を出し直しても「さいこう記録！」が消えないように
@@ -477,7 +477,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // 同じことばは「ねこ ×2」にまとめる
     var agg = [], byText = {};
     wordLog.forEach(function (l) { var a = byText[l.text]; if (!a) { a = byText[l.text] = { text: l.text, n: 0, pts: 0 }; agg.push(a); } a.n++; a.pts += l.pts; });
-    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new' : '') + '">' + a.text + (a.n > 1 ? '×' + a.n : '') + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>ことばは できなかった。たてか よこに くっつけてみよう</p>';
+    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new' : '') + '">' + a.text + (a.n > 1 ? '×' + a.n : '') + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>ことばは できなかった。字と字を くっつけてみよう</p>';
     var wsum = wordLog.reduce(function (t, l) { return t + l.pts; }, 0);
     var cont = !s.revived ? '<div class="revive"><p style="margin:0 0 6px;color:var(--ink);font-weight:700">落ちた字をどけて つづきから（1回だけ）</p>' +
       '<button class="btn" id="cont">動画を見て つづける</button></div>' : '';

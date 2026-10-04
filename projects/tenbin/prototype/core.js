@@ -126,7 +126,7 @@ var TenbinCore = (function () {
   function next(s) { return s.queue[1]; }
 
   // --- くっついている字で、ことばができているか ---
-  // 縦（上から下へ）か横（左から右へ）に、触れ合っている字をたどって読めればことば
+  // 触れ合っている字を、どの向きでもよいのでたどって読めればことば
   var TRIE = {};
   WORDS.short.concat(WORDS.middle, WORDS.long).forEach(function (w) {
     var n = TRIE; for (var i = 0; i < w.length; i++) n = n[w[i]] = n[w[i]] || {}; n.$ = w;
@@ -140,12 +140,6 @@ var TenbinCore = (function () {
     var out = [];
     s.cargo.forEach(function (c) { var a = PAIRS[ch + c.kind] || 0, b = PAIRS[c.kind + ch] || 0; if (a || b) out.push({ body: c, strong: Math.max(a, b) === 2 }); });
     return out;
-  }
-  // 字の中心（重心ではなく、字の外枠の中心）
-  function centre(b) { return { x: (b.bounds.min.x + b.bounds.max.x) / 2, y: (b.bounds.min.y + b.bounds.max.y) / 2 }; }
-  function step2(a, b, dir) {
-    var A = centre(a), B = centre(b), dx = B.x - A.x, dy = B.y - A.y;
-    return dir === 'tate' ? dy >= 10 && Math.abs(dx) <= Math.max(40, dy * 1.1) : dx >= 10 && Math.abs(dy) <= Math.max(40, dx * 1.1);
   }
   // 触れ合い = 物理で当たっている、または輪郭どうしが NEAR px 以内。
   // 重力は下向きなので、横に並べた字は少しすき間が空く。それも「くっついた」とみなす
@@ -188,14 +182,13 @@ var TenbinCore = (function () {
   function findWords(s) {
     var nb = touching(s), found = [];
     s.cargo.forEach(function (start) {
-      ['tate', 'yoko'].forEach(function (dir) {
-        (function walk(b, node, path) {
-          node = node[b.kind]; if (!node) return;
-          path = path.concat([b]);
-          if (node.$ && path.length >= 2) found.push({ text: node.$, bodies: path, dir: dir });
-          nb.get(b).forEach(function (o) { if (path.indexOf(o) < 0 && step2(b, o, dir)) walk(o, node, path); });
-        })(start, TRIE, []);
-      });
+      // 向きは問わない（2026-10-04「くっついていれば文字判定にしたい」）。触れ合う字をたどって読めればことば
+      (function walk(b, node, path) {
+        node = node[b.kind]; if (!node) return;
+        path = path.concat([b]);
+        if (node.$ && path.length >= 2) found.push({ text: node.$, bodies: path });
+        nb.get(b).forEach(function (o) { if (path.indexOf(o) < 0) walk(o, node, path); });
+      })(start, TRIE, []);
     });
     return found;
   }
@@ -306,7 +299,7 @@ var TenbinCore = (function () {
     fresh.forEach(function (f) {
       var pts = wordPoints(f.text) * fresh.length;
       s.made.push(f.text); s.madeBodies.push(f.bodies); s.points += pts;
-      s.events.push({ type: 'word', text: f.text, bodies: f.bodies, dir: f.dir, pts: pts, mult: fresh.length });
+      s.events.push({ type: 'word', text: f.text, bodies: f.bodies, pts: pts, mult: fresh.length });
     });
   }
 
