@@ -59,18 +59,20 @@ class FakeStore implements PurchaseService {
   Future<void> initialize() async {}
   @override
   Future<bool> isAvailable() async => true;
+  Map<String, bool?> packEntitlement = {};
   @override
-  Future<String?> priceLabel() async => '¥370';
+  Future<String?> priceLabel([String productId = PurchaseService.removeAdsId]) async => productId == PurchaseService.removeAdsId ? '¥370' : '¥320';
   @override
-  Future<PurchaseOutcome> buyRemoveAds() async {
-    if (buyResult == PurchaseOutcome.purchased && deliverBeforeReturn) await delivered?.call(PurchaseService.removeAdsId);
+  Future<PurchaseOutcome> buy(String productId) async {
+    if (buyResult == PurchaseOutcome.purchased && deliverBeforeReturn) await delivered?.call(productId);
     return buyResult;
   }
 
   @override
   Future<PurchaseOutcome> restore() async => PurchaseOutcome.unavailable;
   @override
-  Future<bool?> hasEntitlement() async => entitlement;
+  Future<bool?> hasEntitlement([String productId = PurchaseService.removeAdsId]) async =>
+      productId == PurchaseService.removeAdsId ? entitlement : packEntitlement[productId];
   @override
   void dispose() {}
 }
@@ -160,6 +162,35 @@ void main() {
     final (_, money, _, store, _) = await setup();
     await store.delivered!(PurchaseService.removeAdsId);
     expect(money.adFree, isTrue);
+  });
+
+  test('追加パックは、待っている人がいなくても届けば持っている扱いになり、広告は消えない', () async {
+    final (b, money, _, store, js) = await setup();
+    await store.delivered!(PurchaseService.storyPackId);
+    expect(money.owns(PurchaseService.storyPackId), isTrue);
+    expect(money.owns(PurchaseService.auditionPackId), isFalse);
+    expect(money.adFree, isFalse);
+    await b.pushApp();
+    expect(js.last, contains('"owned":{"story":true,"audition":false}'));
+  });
+
+  test('追加パックはゲームから商品IDを指定して買え、知らない商品IDは広告を消すとして扱う', () async {
+    final (b, money, _, _, _) = await setup();
+    await b.handle('{"type":"buy","id":"hikari7_audition_pack"}');
+    expect(money.owns(PurchaseService.auditionPackId), isTrue);
+    expect(money.adFree, isFalse);
+    await b.handle('{"type":"buy","id":"other"}');
+    expect(money.adFree, isTrue);
+  });
+
+  test('再インストール後は、端末の購入記録から追加パックも戻す', () async {
+    SharedPreferences.setMockInitialValues({});
+    final p = await SharedPreferences.getInstance();
+    final store = FakeStore()..packEntitlement = {PurchaseService.storyPackId: true};
+    final money = Monetization(p, ads: FakeAds(), store: store);
+    await money.start();
+    expect(money.owns(PurchaseService.storyPackId), isTrue);
+    expect(money.adFree, isFalse);
   });
 
   test('再インストール後は、端末の購入記録から広告なしに戻す', () async {

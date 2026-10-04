@@ -947,6 +947,11 @@ body.stg .telop{filter:brightness(1.12)}
 .bdown .brow.sum b{color:var(--gold)}
 /* 志願の印 */
 .pk{position:relative}.pk .wish{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:12px;font-weight:800;background:var(--gold);color:#2a1a00;border-radius:999px;padding:0 6px;z-index:1}
+
+/* 追加パック */
+.card.pack .pkh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.card.pack .pkh b{font-size:17px}
+.card.pack .pkh span{font-weight:800;color:var(--gold)}.card.pack .owned{font-style:normal;color:var(--ok)}
+.card.pack .btn{margin-top:8px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1069,7 +1074,7 @@ function genTrainee(id,used,g){
     fz:fz,rev:rev,popStar:popStar,potRev:false,trainN:0,status:'cand',inj:false,rest:false,lastP:0,outRound:0,retried:false,
     tier:tier,like:pick(LIKES),weak:pick(WEAKS),arc:null,hist:[],log:[],voices:[]};
 }
-function newGame(g,diff,chal,daily){if(daily)seedRng(dailySeed(daily,g));
+function newGame(g,diff,chal,daily){applyPacks();if(daily)seedRng(dailySeed(daily,g));
   var used={},tr=[],all=shuffle(Array.from({length:(FACE_IMG[g]||[]).length},function(_,i){return i;})),seenG={},imgs=[];
   all.forEach(function(i){var gr=(typeof FACE_GRP!=='undefined'&&FACE_GRP[g])?FACE_GRP[g][i]:i;if(!seenG[gr]){seenG[gr]=1;imgs.push(i);}});
   var nImg=imgs.length,nApp=Math.min(chal==='small'?20:40,nImg||40);
@@ -1098,7 +1103,7 @@ function changeFmt(S){var c=S.plan?S.plan.center:null,au=S.adUsed,ex=S.extra;bui
 function startRound(S){
   S.seatPlus=0;if(!S.sid)S.sid=Math.floor(Math.random()*1e9);
   alive(S).forEach(function(t){t.snap={sk:t.st.v+t.st.d+t.st.r+t.st.e,conf:t.conf};});
-  S.lesson={train:{},pos:{}}; S.adUsed=false; S.extra=0; S.wDrama=0; S.notes=[]; S.crit={}; S.critDone=false; S.pass={}; S.call=null; S.farewell={}; S.interview={};
+  S.lesson={train:{},pos:{}}; S.adUsed=false; S.budgetFree=false; S.extra=0; S.wDrama=0; S.notes=[]; S.crit={}; S.critDone=false; S.pass={}; S.call=null; S.farewell={}; S.interview={};
   alive(S).forEach(function(t){t.inj=false;t.rest=false; if(ROUNDS[S.rnd].kind==='pos') S.lesson.pos[t.id]=defaultPos(t);});
   S.phase='plan'; S.stage=null; S.events=[]; S.evIdx=0; S.evRes=null; S.feat={};
   S.plan={concept:0,center:null,acts:{},coachK:'v',vlogId:null,teams:ROUNDS[S.rnd].kind==='team'?defaultTeams(S):null};
@@ -1580,7 +1585,7 @@ function assignArcs(tr){
     if(t.tier<.15&&R()<.65)k='late';
     else if(t.age<=16&&R()<.35)k='young';
     else if(t.spec==='v'&&R()<.3)k='shy';
-    else k=pick(['retry','family','child','leader','lyric','local','rival','sports','street','elder','transfer','former','studio','quiet','abroad','promise','perfect']);
+    else k=pick(['retry','family','child','leader','lyric','local','rival','sports','street','elder','transfer','former','studio','quiet','abroad','promise','perfect'].concat(packArcKeys()));
     if(k==='young')t.age=Math.min(t.age,16);
     if(k==='late'&&R()<.8)t.line=pick(HINT_LINES);
     t.arc={k:k,step:0,score:0,p:null};
@@ -2110,7 +2115,7 @@ function weekDo(S,k){var M=S.month,a=WEEK_ACTS.filter(function(x){return x.k===k
   if(!a||M.w>=4)return;if(a.cost){if(S.budget<a.cost)return;S.budget-=a.cost;}
   var fx=a.fx,txt=[],star=pick(D);
   M.mvN=(M.mvN||0)+(k==='mv'?1:0);var half=k==='mv'&&M.mvN>=2?.5:1;
-  M.fan+=fx.fan||0;M.song+=(fx.song||0)*half;M.coh+=fx.coh||0;
+  M.fan+=fx.fan||0;M.song+=(fx.song||0)*half;M.coh+=fx.coh||0;if(M.boost&&fx.fan){M.fan+=fx.fan;M.boost=false;txt.push('宣伝を倍にしたぶん、ファンがさらに広がった。');}
   if(k==='radio'&&D.some(function(t){return t.spec==='t';})){M.fan+=2;var tk=D.filter(function(t){return t.spec==='t';})[0];txt.push(tk.giv+'の表紙の写真が評判になった。');}
   if(a.busy>0){M.busy++;if(M.busy>=3&&R()<.7){M.coh-=5;M.fan-=2;var sick=pick(D);txt.push('忙しさが続き、'+sick.giv+'が体調を崩した。');logT(S,sick,'デビュー後の忙しさで体調を崩した');}}
   else if(a.busy<0)M.busy=0;
@@ -2618,6 +2623,176 @@ var EVX=[
   ['ものまね企画を番組でやる','a',.7,{pop:6,drama:1,pb:{pop:4}},'ものまね企画が大受けした。',{pb:{conf:-4}},'企画はすべり、{B}が気まずそうだった。']]}
 ];
 var EVX_BY={};EVX.forEach(function(x){EVX_BY[x.id]=x;});
+/* ---------- 追加パック（買い切り）：物語パック・審査パック ----------
+   アプリでは買った人だけに足す（APP.owned）。Web のテスト版と検査の道具では全部入り。
+   中身はゲームが始まる前と、買ったとき（hikariSetApp）に足す。何度呼んでも二重に足さない */
+/* 物語パック（有料の追加）。形は game.html の ARCS・ARC_TONE・HONNE・EVX・EV_CB・SCENE_X・OUTS と同じ。
+   どの選択肢にも、代わりに失うもの（自信↓・信頼↓・疲れ↑・制作費・人気↓・油断）か、失敗する見込みを付けてある。 */
+var PACK_STORY={
+  arcs:{
+    shodo:{name:'書道の家',reason:'家は書道の教室。静かに座るのは得意。今度は、体ぜんぶで表したい',
+      sc:[
+        {t:'{N}の振りは、止めの形がきれいなのに、動きが小さい。「大きく動くと、字が崩れる気がして」',ch:[['止めの美しさを生かす振りを一緒に考える','表現が伸びるが疲れる',{up:['e',4],fat:6},1,'止めのたびに、筆を置くような静けさが生まれた。'],['崩れてもいいから大きく動かせる','ダンスが伸びるが、自信が下がる',{up:['d',4],conf:-5},0,'線が乱れるたびに、悔しそうに唇をかんだ。'],['振りを半紙に書かせてみる','信頼が上がるが、夜ふかしで疲れる',{trust:7,fat:5},1,'振りを一画ずつ書き分けた半紙が、壁いっぱいに並んだ。']]},
+        {t:'番組のロゴの題字を、{N}に書いてもらう話が出た。本人は「書道の子」とだけ見られるのが少し嫌らしい。',ch:[['題字を書いてもらう','人気が上がるが、本人は複雑',{pop:7,drama:1,conf:-4},0,'題字は評判になったが、本人は「踊りも見てほしいです」と小さく言った。'],['断ってもいいと伝える','信頼が上がるが、人気の機会を逃す',{trust:7,pop:-2},1,'「……今回は、踊りで覚えてもらいたいです」と、はっきり言った。'],['書と踊りを合わせた見せ場を作らせる','表現が伸びるが疲れる',{up:['e',4],fat:10},1,'大きな筆を振るように踊る見せ場に、練習室が静まり返った。']]},
+        {t:'「筆を持つときと同じくらい、今は踊るとき、息が静かなんです」',ch:[['それが{N}の踊りだと伝える','自信が上がるが、油断することがある',{conf:10,cmp:1},1,'「自分の踊り……」と、確かめるように手のひらを見た。'],['もっと激しい曲にも挑ませる','ダンスが伸びるが疲れる',{up:['d',4],fat:10},0,'「はい」と答えて、汗だくになるまで跳び続けた。'],['家族に踊る姿の映像を送る','人気と信頼が上がるが、自信が少し揺れる',{pop:5,trust:4,conf:-3},1,'返事は一行だけ。「いい線だ」。{N}はその画面を、しばらく閉じなかった。']]}],
+      good:'デビュー曲の題字を自分で書き、振りの「止め」がグループの代名詞になった',
+      bad:'大きな振りではまだ線が細く、激しい曲では埋もれてしまうことがある',
+      out:'家の教室で子どもたちに書を教えながら、ダンスも続けているらしい'},
+    choir:{name:'合唱団育ち',reason:'小さいころから合唱団にいた。みんなの声に溶けるのは得意。今度は、自分の声を見つけたい',
+      sc:[
+        {t:'ソロのパートなのに、{N}の声が周りに溶けて、誰が歌っているのか分からない。「目立たないように歌うのが、正しいと教わってきたので」',ch:[['ひとりで歌う練習を増やす','歌が伸びるが、自信が下がる',{up:['v',4],conf:-4},1,'ひとりの声が、少しずつ前に出てくるようになった。'],['ハモりの役を任せる','信頼が上がるが、ソロは遠のく',{trust:6,pop:-2},0,'「これなら安心です」と、ほっとした顔をした。'],['合唱のころの話を聞く','信頼が上がるが、話し込んで疲れる',{trust:7,fat:5},1,'「指揮の先生が、みんなの声を手で包むように集めてくれたんです」']]},
+        {t:'合唱団の仲間たちから、みんなで歌った応援の動画が届いた。',ch:[['すぐ本人に見せる','自信が上がるが、その夜は寝つけない',{conf:8,fat:5},1,'何度も再生して、一緒に口ずさんでいた。その夜は、なかなか寝つけなかったらしい。'],['番組で流す','人気が上がるが、本人は照れて固くなる',{pop:7,drama:1,conf:-3},0,'放送のあと「この合唱団、知ってる」という声が届いた。本人は耳まで赤くなっていた。'],['返事の歌を、ひとりで録らせる','表現が伸びるが疲れる',{up:['e',3],fat:8},1,'ひとりで歌った返事の歌を、納得がいくまで録り直していた。']]},
+        {t:'「みんなの中で歌う自分も、ひとりで歌う自分も、どっちも本当なんですね」',ch:[['どちらも武器だと伝える','自信が上がるが、油断することがある',{conf:10,cmp:1},1,'「武器……」と、うれしそうにくり返した。'],['ソロで勝負しろと言う','歌が伸びるが疲れる',{up:['v',3],fat:8},0,'「はい」と答えて、すぐ発声練習を始めた。'],['ハモりの要を任せる','信頼が上がるが、ソロの見せ場は減る',{trust:8,pop:-3},1,'「みんなの声を、手で包むように集めます」と笑った。']]}],
+      good:'ハモりの要としてグループの歌を支えながら、2番の頭のソロで客席を静かにさせている',
+      bad:'ひとりで歌う場面では、まだ声を周りに溶かしてしまうことがある',
+      out:'地元の合唱団に戻り、今はソロのパートを任されているらしい'},
+    twin:{name:'双子の片方',reason:'双子のきょうだいも、別のオーディションに出ている。比べられずに、自分を見てほしい',
+      sc:[
+        {t:'放送のあと、「双子の方がうまい」という書き込みを{N}が見てしまった。',ch:[['スマホを預かって練習に集中させる','自信は守れるが、信頼が少し下がる',{conf:3,trust:-3},0,'黙ってスマホを差し出したが、練習中も少し上の空だった。'],['きょうだいはきょうだいだと伝える','自信と信頼が上がるが、夜は眠りが浅い',{conf:6,trust:5,fat:4},1,'「……そうですよね。自分は自分です」と、少しだけ笑った。'],['違いが出る見せ場を探させる','表現が伸びるが疲れる',{up:['e',4],fat:8},1,'{N}にしかない身ぶりを、鏡の前で遅くまで探し続けた。']]},
+        {t:'双子のきょうだいから、短いメッセージが届いた。「そっちの番組も見てる。負けないから」',ch:[['返事を一緒に考える','信頼が上がるが、話し込んで疲れる',{trust:7,fat:4},1,'考えた返事は「こっちも」の4文字だけ。それで十分だったらしい。'],['返事は本人に任せる','自信が上がるが、少し放っておかれたと感じる',{conf:5,trust:-2},1,'しばらく画面を見つめてから、短く何かを打ち込んだ。'],['ふたりの競い合いを放送で取り上げる','人気が上がるが、比べられる重さも増す',{pop:9,drama:1,conf:-5},-1,'放送のあと、ふたりを並べた書き込みがさらに増えた。']]},
+        {t:'「ずっと『どっちが上か』ばかり考えてたんです。でも、同じ日に生まれただけで、違う人なんですよね」',ch:[['違う人だから違う景色が見えると伝える','自信が上がるが、油断することがある',{conf:10,cmp:1},1,'「違う景色……見てみたいです」と、まっすぐ前を向いた。'],['向こうより先にデビューしろと言う','得意が伸びるが、また比べてしまう',{spec:4,conf:-3},0,'「はい」と答えたが、また書き込みを気にする顔に戻った。'],['子どものころの話を聞く','信頼が上がるが、少し里心がつく',{trust:8,fat:4},1,'「昔は、ふたりでひとつの歌を半分ずつ歌ってたんです」と、懐かしそうに笑った。']]}],
+      good:'デビュー後、別のグループで活動するきょうだいと、互いの曲を勧め合う姿が「いい関係」と話題になった',
+      bad:'今もときどき、きょうだいの番組の結果を見て眠れなくなる夜がある',
+      out:'きょうだいのステージを客席で見て、「次は自分の番」と書類を書き始めたらしい'},
+    tofu:{name:'豆腐屋の朝',reason:'実家は町の豆腐屋。毎朝の仕込みを手伝いながら、合間に練習してきた',
+      sc:[
+        {t:'朝5時、{N}はもう起きている。「家だと、この時間から仕込みなんです」。練習の時間が少なかったぶん、基礎に穴がある。',ch:[['朝の時間を基礎練習にあてる','得意が伸びるが疲れる',{spec:4,fat:8},1,'まだ誰もいない練習室で、黙々と基礎を繰り返した。'],['合宿のあいだはゆっくり寝ていいと伝える','疲れが抜けるが、本人は落ち着かない',{fat:-15,conf:-3},0,'布団に戻ったが、「寝坊した気分です」と苦笑いした。'],['少ない時間で練習してきた工夫を聞く','信頼が上がるが、基礎の穴に気づいて少し落ち込む',{trust:7,conf:-2},1,'「配達の自転車で、リズムを数えてました」。話すうちに、自分の穴にも気づいたようだ。']]},
+        {t:'家から電話があった。「店はなんとかなってる。心配するな」。{N}は電話のあとも、店のことを気にしている。',ch:[['家の様子を聞いて安心させる','自信と信頼が上がるが、話し込んで寝るのが遅くなる',{conf:6,trust:3,fat:4},1,'「父さん、ひとりで仕込みしてるんです」と話しながら、少しずつ顔がほどけた。'],['今は自分のことだけ考えろと言う','得意が伸びるが、自信が下がる',{spec:3,conf:-5},0,'「……はい」とうなずいたが、目は電話の方を見ていた。'],['店の豆腐を番組で紹介する','人気が上がるが、店が忙しくならないか心配になる',{pop:7,drama:1,conf:-3},0,'放送のあと店に行列ができたと聞いて、{N}はうれしそうに、少し不安そうにした。']]},
+        {t:'「店を継ぐか、ここに残るか、ずっと決められなかったんです。でも今は、ここで最後までやりたい」',ch:[['その気持ちを家族に伝えるよう勧める','信頼が上がるが、緊張で眠れない',{trust:8,fat:5},1,'電話の向こうで、父親は「知ってた」とだけ言ったらしい。'],['決めた以上は全部かけろと言う','得意が伸びるが疲れる',{spec:4,fat:10},0,'「はい」と答えて、その日から誰よりも遅くまで残った。'],['決め方は本人に任せる','自信が上がるが、少し心細そう',{conf:8,trust:-2},1,'「自分で決めます」と言って、手帳に何か書き込んだ。']]}],
+      good:'デビュー後、店の前に「応援しています」の貼り紙が出た。休みの日は今も仕込みを手伝っている',
+      bad:'まだ朝早く目が覚めてしまい、夜の収録で眠そうにしていることがある',
+      out:'店に戻り、仕込みのあとに近所の公民館でダンスを教えているらしい'},
+    clown:{name:'盛り上げ役',reason:'クラスではいつも笑わせる役だった。今度は、真剣な顔も見てほしい',
+      sc:[
+        {t:'静かな曲の練習中、{N}がついおどけた身ぶりをして、みんなを笑わせた。先生の表情が曇っている。',ch:[['みんなの前で注意する','場は締まり表現が伸びるが、自信が下がる',{up:['e',3],conf:-6},0,'「すみません」と頭を下げ、そのあとは一度も笑わなかった。'],['あとでふたりで理由を聞く','信頼が上がるが、話し込んで疲れる',{trust:7,fat:4},1,'「静かになると、怖くなるんです」と、ぽつりと言った。'],['笑いを生かせる曲を任せる','人気が上がるが、油断することがある',{pop:6,cmp:1},0,'水を得たように盛り上げたが、静かな曲の練習は後回しになった。']]},
+        {t:'静かな曲を通して歌った{N}が、最後まで一度もおどけなかった。見ていた練習生たちが驚いている。',ch:[['真剣な表情がよかったと伝える','自信が上がるが、油断することがある',{conf:9,cmp:1},1,'「……変じゃなかったですか」と、何度も確かめた。'],['その通しを放送で使う','人気が上がるが、本人は戸惑う',{pop:8,drama:1,conf:-4},1,'「この子、こんな顔もするんだ」という書き込みが並んだ。'],['もっと深く入り込めと言う','表現が伸びるが疲れる',{up:['e',4],fat:9},0,'歌詞の意味を一行ずつ考え込み、くたくたになった。']]},
+        {t:'「笑わせてないと、ここにいていいのか分からなかったんです」',ch:[['笑わせなくてもここにいていいと伝える','信頼が上がるが、油断することがある',{trust:9,cmp:1},1,'しばらく黙って、それから少しだけ、いつもと違う顔で笑った。'],['笑いも真剣も両方磨けと言う','表現が伸びるが疲れる',{up:['e',3],fat:8},1,'「両方……欲ばりですね」と言いながら、目は真剣だった。'],['しばらく盛り上げ役を休ませる','疲れが抜けるが、目立つ場面が減る',{fat:-12,pop:-3},0,'練習室が少し静かになった。本人も、どこか落ち着かない様子だ。']]}],
+      good:'トークでは笑わせ、静かな曲では客席を泣かせる「温度差」がグループの名物になった',
+      bad:'真剣な曲の前には、まだつい場を和ませようとしてしまう',
+      out:'地元の劇団に入り、喜劇とまじめな芝居の両方に出ているらしい'},
+    douga:{name:'動画の歌い手',reason:'部屋で撮った歌の動画を、少しだけ見てくれる人がいた。今度は、撮り直しのきかない場所で歌いたい',
+      sc:[
+        {t:'{N}は通しの途中で止まると、すぐ「もう1回いいですか」と言う。撮り直しに慣れているらしい。',ch:[['止まらず最後まで通す練習をさせる','表現が伸びるが、自信が下がる',{up:['e',4],conf:-5},1,'途中で間違えても、歯を食いしばって最後まで歌いきった。'],['納得いくまでやり直させる','歌が伸びるが疲れる',{up:['v',3],fat:10},0,'何十回目かで、ようやく満足そうな顔をした。もう夜中だった。'],['動画を撮っていたころの話を聞く','信頼が上がるが、話し込んで疲れる',{trust:7,fat:4},1,'「押し入れの中で録ってたんです。声が響かないように」と笑った。']]},
+        {t:'動画を見てくれていた人たちが、番組に応援の書き込みを寄せている。{N}は、その名前をひとりずつ覚えているという。',ch:[['お礼の言葉を届けさせる','自信と人気が上がるが、返事に時間をとられて疲れる',{conf:5,pop:4,fat:5},1,'ひとりずつに宛てたお礼を書いて、夜遅くまで起きていた。'],['番組で昔の動画を流す','人気が上がるが、本人は恥ずかしがる',{pop:9,drama:1,conf:-5},0,'「あの頃の声、聞かないでください」と、顔を覆った。'],['今は目の前の審査に集中させる','得意が伸びるが、さみしそう',{spec:3,conf:-3},0,'スマホを置いて練習に戻ったが、少しさみしそうだった。']]},
+        {t:'「画面の向こうじゃなくて、目の前で拍手してもらえるんですね」',ch:[['その拍手を覚えておけと言う','自信が上がるが、油断することがある',{conf:10,cmp:1},1,'「忘れません。録画しなくても」と笑った。'],['撮り直しなしの生配信で1曲歌わせる','人気が上がるが、一発勝負で疲れる',{pop:6,conf:3,fat:8},1,'1回きりの歌に、昔からの視聴者がたくさんの言葉を寄せた。'],['まだ満足するなと言う','歌が伸びるが、自信が下がる',{up:['v',3],conf:-3},0,'「はい。まだです」と答えて、拍手の余韻をしまい込んだ。']]}],
+      good:'デビュー後、最初に動画を見てくれていた人たちへのお礼を、ライブのMCで伝えた',
+      bad:'まだ本番でミスをすると、頭の中で「撮り直し」を探してしまう',
+      out:'また部屋で歌の動画を撮り始めた。前より、撮り直しが減ったらしい'}
+  },
+  tones:{shodo:['shf','sah','sha'],choir:['hfs','sah','shf'],twin:['hsf','sfa','shs'],tofu:['hss','sha','shf'],clown:['hsf','sah','shf'],douga:['hfs','sah','sah']},
+  honne:{
+    shodo:'「字を書いてるときは、誰にも話しかけられないから好きだったんです。今は、話しかけてもらえるのがうれしいです」',
+    choir:'「合唱団で、ソロに選ばれたことは一度もなかったんです。だから、ここで名前を呼ばれるたびに少し震えます」',
+    twin:'「小さいころ、ずっと『どっちがどっち？』って聞かれてたんです。ここでは、最初から名前で呼んでもらえました」',
+    tofu:'「本当は、店を手伝うのを言い訳にしてたのかもしれません。練習が足りないのは、店のせいじゃないって分かってました」',
+    clown:'「笑ってるときの自分しか、知られたくなかったんです。……今の顔、変じゃないですか」',
+    douga:'「動画のころ、見てくれてたのは毎回12人でした。その12人のこと、今でも全員覚えてます」'
+  },
+  evx:[
+    {id:'blackout',title:'停電の夜',t:'夜の練習中、合宿所が停電した。真っ暗な練習室で、{A}がひとり歌い続けている。',ch:[
+     ['懐中電灯を集めてみんなで歌わせる','f',.6,{conf:4,all:{conf:2},fat:3},'小さな明かりの輪の中で、即席の合唱が始まった。',{fat:5,all:{fat:2}},'暗がりでつまずく子が出て、早めにお開きになった。'],
+     ['危ないので部屋に戻らせる','h',1,{fat:-6,conf:-2},'「いいところだったのに」と、名残惜しそうに部屋へ戻った。'],
+     ['暗がりの歌を録って放送する','a',pConf(.5),{pop:6,drama:1,conf:2},'顔も見えない歌声だけの映像が、静かに話題になった。',{conf:-3},'録った声は震えていて、使える部分がほとんどなかった。']]},
+    {id:'mic',title:'入らないマイク',cond:function(S,A){return A.spec==='v'||A.st.v>=50;},t:'リハーサルで、{A}のマイクだけ音が入らなかった。本人は歌い続けるか迷っている。',ch:[
+     ['地声で歌いきらせる','h',pStat('v',.5),{up:['v',3],conf:5},'マイクなしの声が、ホールの後ろまで届いた。',{conf:-5,fat:6},'声が届かず、途中で喉を痛めかけた。'],
+     ['予備のマイクを手配する（制作費3万）','s',1,{conf:3,budget:-3},'すぐに予備が届き、何事もなかったように歌い直した。'],
+     ['機材を自分で確かめる習慣をつけさせる','f',1,{up:['e',1],fat:4,conf:-1},'リハのたびに機材を確かめるようになった。そのぶん少し気が張っている。']]},
+    {id:'oldver',title:'古い振り',t:'{A}が、課題曲を変更前の振りで覚えていたことが分かった。本番まで日がない。',ch:[
+     ['一晩で覚え直させる','h',pFat(.4,.8),{spec:3,fat:8},'朝には新しい振りが体に入っていた。',{fat:14,conf:-5},'覚え直しが追いつかず、古い振りと混ざってしまった。'],
+     ['仲間に教わらせる','s',.7,{trust:4,all:{fat:2}},'教えてくれた子たちと、少し仲良くなった。',{conf:-3,all:{fat:2}},'教わるほど混乱して、かえって焦りが増した。'],
+     ['古い振りの良い所を残す案を先生に出させる','f',pStat('spec',.5),{up:['e',3],conf:4},'先生が「それ、いいね」と、一部を採り入れてくれた。',{conf:-4},'「今からは無理」と、あっさり却下された。']]},
+    {id:'quiz',title:'珍回答',t:'番組のクイズ企画で、{A}がとんでもない珍回答をした。スタジオは大笑いだ。',ch:[
+     ['そのまま笑いにして放送する','a',1,{pop:6,drama:1,conf:-2},'放送で大受けしたが、本人は「勉強します」と真っ赤になった。'],
+     ['撮り直しを頼む（制作費3万）','s',1,{conf:2,budget:-3,pop:-1},'撮り直しでは落ち着いて答えられた。ただ、あの珍回答ほどは話題にならなかった。'],
+     ['勉強の時間を作らせる','h',1,{trust:2,fat:4,conf:-1},'夜、食堂で問題集を開く姿が見られるようになった。']]},
+    {id:'kidq',title:'小さな見学者',t:'番組の見学会で、小学生が{A}に「どうしたら上手になれますか」と聞いた。',ch:[
+     ['自分の言葉で答えさせる','s',pConf(.55),{conf:6,pop:3},'「毎日ちょっとずつ、です」という答えに、子どもが目を輝かせた。',{conf:-3},'うまく言葉にできず、「がんばって」としか言えなかった。'],
+     ['一緒に踊ってみせる','a',pFat(.45,.8),{pop:6,fat:5,drama:1},'子どもたちが真似をして、大きな輪ができた。',{fat:8,conf:-3},'疲れが出て、ステップがもつれてしまった。'],
+     ['練習があるので短く切り上げる','h',1,{spec:2,pop:-2},'子どもは少し残念そうに手を振った。']]},
+    {id:'aircon',title:'冷房の故障',t:'練習室の冷房が壊れた。汗だくになっても、{A}は練習をやめようとしない。',ch:[
+     ['窓を開けて続けさせる','f',pFat(.4,.75),{spec:3,fat:8},'汗を拭きながら、最後まで動きを確かめきった。',{fat:16,conf:-3},'暑さで頭がぼんやりして、練習にならなかった。'],
+     ['涼しい食堂へ移らせる','s',1,{fat:-8,spec:-1},'体は楽になったが、狭くて大きな振りは練習できなかった。'],
+     ['扇風機を買い足す（制作費4万）','s',1,{fat:-6,all:{fat:-3},budget:-4},'扇風機の前に、練習生たちが列を作った。']]},
+    {id:'diary',title:'白紙の日誌',cond:function(S,A){return A.conf<60||A.fat>=30;},t:'{A}の練習日誌が、3日前から白紙のままだ。',ch:[
+     ['書けない理由を聞く','s',1,{trust:6,fat:3},'「書くと、できなかったことばかり並ぶんです」と打ち明けた。話し込んで、寝るのが遅くなった。'],
+     ['一行だけでも書かせる','h',pTemper(.8,.6,.35),{up:['e',2],conf:4},'一行のつもりが、気づけば1ページ書いていた。',{conf:-5},'ペンを持ったまま、何も書けずに夜が明けた。'],
+     ['日誌はしばらく休んでいいと言う','f',1,{fat:-8,spec:-1},'気は楽になったが、何を直すべきか少しあいまいになった。']]},
+    {id:'venue',title:'本番の会場',minR:2,t:'下見に来た本番の会場で、{A}が客席の広さに言葉を失っている。',ch:[
+     ['客席のいちばん後ろから舞台を見せる','s',1,{conf:5,fat:4},'「後ろの人にも届くように」と、何度もつぶやいていた。歩き回って少し疲れた。'],
+     ['舞台の真ん中で声を出させる','h',pConf(.55),{conf:8,up:['e',2]},'響いた自分の声に、{A}は小さく笑った。',{conf:-6},'声が吸い込まれるように消えて、かえって不安になった。'],
+     ['下見の様子を放送で使う','a',1,{pop:5,drama:1,conf:-3},'「ここに立つんだ」というひと言が使われた。本人はますます緊張している。']]},
+    /* ふたりの出来事 */
+    {id:'trade',title:'苦手の交換',pair:1,cond:function(S,A,B){return A.st.v<B.st.v&&B.st.d<A.st.d;},t:'歌が苦手な{A}と、ダンスが苦手な{B}が、教え合いたいと言ってきた。',ch:[
+     ['時間を取って教え合わせる','f',.65,{up:['v',2],fat:4,pb:{up:['d',2],fat:4}},'教えるほうも教わるほうも、目に見えて上達した。',{fat:6,conf:-2,pb:{fat:6,conf:-2}},'教え方がかみ合わず、ふたりとも疲れただけだった。'],
+     ['先生に見てもらう（制作費3万）','s',1,{up:['v',2],budget:-3,pb:{up:['d',2]}},'先生の助言で、ふたりとも苦手の原因が分かった。'],
+     ['苦手より得意を伸ばせと言う','h',1,{spec:2,trust:-2,pb:{spec:2,trust:-2}},'ふたりとも得意に戻ったが、少しがっかりした顔をした。']]},
+    {id:'alarm',title:'鳴らない目覚まし',pair:1,t:'同じ部屋の{A}と{B}の目覚ましが、どちらも鳴らなかった。朝のレッスンに遅れそうだ。',ch:[
+     ['ふたりで走らせる','f',pFat(.4,.8),{conf:2,fat:5,pb:{conf:2,fat:5}},'息を切らして、ぎりぎり間に合った。ふたりで顔を見合わせて笑った。',{conf:-4,trust:-2,pb:{conf:-4,trust:-2}},'間に合わず、ふたりそろって先生に頭を下げた。'],
+     ['一緒に先生へ謝りに行く','s',1,{trust:5,all:{conf:-1},pb:{trust:5}},'先生は許してくれたが、ほかの子は「甘い」と少し不満そうだ。'],
+     ['遅れた分を居残り練習にさせる','h',1,{spec:2,fat:8,pb:{spec:2,fat:8}},'夜の居残りで遅れは取り返したが、ふたりともへとへとになった。']]},
+    {id:'cue',title:'ふたりの合図',pair:1,minR:2,t:'{A}と{B}が、ステージで目を合わせる合図を決めたいと言ってきた。',ch:[
+     ['ふたりで合図を考えさせる','f',.7,{conf:4,trust:3,pb:{conf:4,trust:3}},'小さなうなずきひとつで、動きがぴたりとそろうようになった。',{conf:-2,pb:{conf:-2}},'合図を増やしすぎて、かえって混乱した。'],
+     ['振付に正式に入れる（制作費2万）','s',1,{up:['e',2],budget:-2,pb:{up:['e',2]}},'先生が振りに組み込み、見せ場がひとつ増えた。'],
+     ['合図に頼るなと言う','h',1,{spec:2,conf:-3,pb:{spec:2,conf:-3}},'ふたりとも、自分の動きだけに集中し直した。少し心細そうだ。']]},
+    {id:'mixup',title:'取り違え',pair:1,t:'スタッフが{A}と{B}の名前を取り違えて、紹介の映像を作ってしまった。',ch:[
+     ['撮り直しを頼む（制作費4万）','s',1,{conf:3,budget:-4,pb:{conf:3}},'作り直した映像で、ふたりともほっとした顔をした。'],
+     ['笑い話として放送する','a',.6,{pop:5,drama:1,pb:{pop:5}},'「取り違えコンビ」と呼ばれて、ふたりの名前がそろって広まった。',{conf:-4,showTrust:-1,pb:{conf:-4}},'「番組の確認が甘い」という声が出て、ふたりも気まずそうだった。'],
+     ['ふたりに自己紹介を考え直させる','f',1,{up:['e',2],fat:5,pb:{up:['e',2],fat:5}},'「もう間違えられない紹介」を、夜遅くまで考えていた。']]}
+  ],
+  evcb:{
+    blackout:['停電の夜に歌い続けた声が、明るい舞台でもぶれなかった。','暗がりの夜の疲れが、まだ少し残っていた。'],
+    mic:['マイクが入らなくても歌いきった声が、今日はいっそう太かった。','マイクの調子を気にしてか、出だしで一度だけ手元を見た。'],
+    oldver:['覚え直した振りに、前の振りの良さがひとつだけ残っていた。','古い振りが、一瞬だけ顔を出した。'],
+    quiz:['珍回答で緩んだ客席を、最初の一音で引き締めた。','珍回答の話題が先に立って、歌がかすんでしまった。'],
+    kidq:['見学の子どもに答えた「毎日ちょっとずつ」が、そのまま形になっていた。','子どもたちの前で崩れたステップが、また少しもつれた。'],
+    aircon:['暑い練習室で積んだ分、最後まで動きが落ちなかった。','冷房の故障で崩れた調子が、まだ戻りきっていない。'],
+    diary:['日誌に書いた一行を、そのまま舞台で見せた。','白紙の日誌のように、どこか迷いの残る動きだった。'],
+    venue:['下見で見上げた客席の後ろまで、まっすぐ声を届けた。','下見のときの広さが頭をよぎったのか、声が小さくまとまった。'],
+    trade:['教え合った苦手が、ふたりそろって得意に近づいていた。','教え合いの疲れが、ふたりの足もとに残っていた。'],
+    alarm:['あの朝ぎりぎりで走り込んだふたりが、今日は息をそろえた。','寝坊の朝の気まずさが、ふたりの間にまだ少し残っていた。'],
+    cue:['小さなうなずきの合図で、{P}との動きがぴたりとそろった。','合図を探して目が泳ぎ、{P}と半拍ずれた。'],
+    mixup:['取り違えから広まった名前を、今日は自分の歌で覚えさせた。','紹介の取り違えを気にしてか、名乗る声が硬かった。']
+  },
+  scene:{blackout:'night',mic:'backstage',oldver:'practice',quiz:'studio',kidq:'hallway',aircon:'practice',diary:'dorm',venue:'stage',
+    trade:'practice',alarm:'morning',cue:'wings',mixup:'meeting'},
+  outs:{
+    1:{t:'公園の噴水の前で、大道芸人が人を集めている。{A}が足を止めて見入っている。',ch:[
+     ['投げ銭をして最後まで見る（制作費1万）','s',1,{trust:4,up:['e',2],budget:-1},'「見せ方、勉強になりました」と、帰り道でずっと身ぶりを真似していた。'],
+     ['飛び入りで手伝わせる','a',pConf(.5),{pop:5,conf:5,fat:4},'芸人さんの合図に合わせて決めたポーズに、大きな拍手が起きた。',{conf:-4,fat:4},'段取りが分からず、芸人さんの足を引っぱってしまった。'],
+     ['人だかりは目立つからと離れる','h',1,{fat:-3,conf:-2},'「もうちょっと見たかったです」と、何度も振り返った。']]},
+    2:{t:'商店街の文房具屋で、{A}が色ペンの棚の前から動かない。「歌詞ノート用に、1本だけ」',ch:[
+     ['一緒に選ぶ','s',1,{trust:5,fat:3},'迷いに迷って、プロデューサーが指さした色に決めた。歩き回って少し疲れた。'],
+     ['好きなだけ選ばせる（制作費1万）','f',1,{conf:5,budget:-1,cmp:1},'12色のペンを抱えて、ほくほく顔で店を出た。'],
+     ['ペンより練習だと言う','h',1,{spec:2,trust:-2},'「……はい」と、棚を名残惜しそうに見ながら店を出た。']]},
+    4:{t:'神社の境内で、お祭りの準備をしている人たちが、{A}に「太鼓を叩いてみないか」と声をかけた。',ch:[
+     ['叩かせてもらう','f',pFat(.45,.8),{up:['d',3],conf:4,fat:5},'腹に響く音に合わせて、体が自然とリズムを刻んだ。',{fat:8,conf:-3},'腕がすぐに上がらなくなり、途中でばちを置いた。'],
+     ['準備を手伝う','s',1,{trust:4,fat:6},'提灯を吊るすのを手伝い、お茶をごちそうになった。腕が少しだるそうだ。'],
+     ['お祭りで1曲歌わせてもらえないか頼む','a',pConf(.5),{pop:6,drama:1,fat:4},'「ぜひ」と言われ、小さな舞台で1曲歌うことになった。',{conf:-4},'緊張してうまく頼めず、話はまとまらなかった。']]},
+    5:{t:'河川敷で、高校の吹奏楽部が練習している。{A}が音に合わせて、つま先で拍を取っている。',ch:[
+     ['音に合わせて踊らせる','a',pConf(.5),{pop:4,conf:5,up:['d',2]},'部員たちが、曲をもう一回分延ばしてくれた。',{conf:-4},'見られているのに気づいて、途中でやめてしまった。'],
+     ['拍の取り方を一緒に研究する','h',1,{up:['d',3],fat:5},'帰り道まで、ふたりで手拍子をしていた。'],
+     ['座って最後まで聴く','s',1,{fat:-8,spec:-1},'夕日の中で、ゆっくり聴き入った。勘は少し鈍ったかもしれない。']]}
+  }
+};
+var PACK_AUDITION={
+  acap:{t:'アカペラ審査',g:'team',kind:'team',size:4,min:8,w:{v:.6,e:.4},crit:true,hype:2,desc:'4人組で、伴奏なしの声だけで1曲を仕上げる。ひとりの音のずれが全員に響く。',good:'歌の力とチームの息がはっきり出る',bad:'歌が苦手な子は隠れられない'},
+  busk:{t:'路上ライブ',g:'live',kind:'solo',w:'all',crit:true,hype:3,live:true,fat:8,song:'街角でのライブ',desc:'商店街の一角で、通りがかりの人の前で歌って踊る。足を止めた人の数で競う。',good:'人気が大きく動き、話題になる',bad:'外での本番で全員が疲れる。自信のない子は声が届かない'},
+  musical:{t:'ミュージカル',g:'team',kind:'team',size:4,min:8,w:{e:.55,v:.3,d:.15},crit:true,hype:3,fat:8,desc:'4人組で、台詞と歌と踊りのある短い舞台を演じる。表現力がいちばん問われる。',good:'表現力担当が輝く',bad:'準備が多く、全員が少し疲れる'}
+};
+var PACKS={story:{n:'物語パック',id:'hikari7_story_pack',d:'新しいひとりの物語6つ（書道の家・合唱団育ち・双子の片方・豆腐屋の朝・盛り上げ役・動画の歌い手）、合宿の出来事12、お出かけの場面4つ'},
+  audition:{n:'審査パック',id:'hikari7_audition_pack',d:'新しい審査の型3つ（アカペラ審査・路上ライブ・ミュージカル）。構成会議で選べるようになる'}};
+function packOwned(k){if(typeof APP==='undefined'||!APP)return true;return !!(APP.owned&&APP.owned[k]);}
+var packDone={};
+function applyPacks(force){
+  if((force||packOwned('story'))&&!packDone.story){packDone.story=1;var P=PACK_STORY,k;
+    for(k in P.arcs){ARCS[k]=P.arcs[k];ARC_TONE[k]=P.tones[k];if(P.honne[k])HONNE[k]=P.honne[k];}
+    P.evx.forEach(function(x){if(!EVX_BY[x.id]){EVX.push(x);EVX_BY[x.id]=x;}});
+    for(k in P.evcb)EV_CB[k]=P.evcb[k];for(k in P.scene)SCENE_X[k]=P.scene[k];
+    for(k in P.outs){var o=OUTS[+k];if(o&&o.sc.indexOf(P.outs[k])<0)o.sc.push(P.outs[k]);}}
+  if((force||packOwned('audition'))&&!packDone.audition){packDone.audition=1;
+    for(var f in PACK_AUDITION){FORMATS[f]=PACK_AUDITION[f];if(FMT_KEYS.indexOf(f)<0)FMT_KEYS.push(f);}}}
+function packArcKeys(){return packDone.story?Object.keys(PACK_STORY.arcs):[];}
+
 function xText(s,A,B){return s.replace(/\{A\}/g,A.giv).replace(/\{B\}/g,B?B.giv:'');}
 function xP(c,A,B,S){var p=c[2];return typeof p==='function'?p(A,B,S):p;}
 /* 効き目を当てる */
@@ -3027,7 +3202,7 @@ var BAKKEY='hikari7_bak',lastSavedPhase=null;
 /* 今の保存を予備に写す（新しく始める・シーズンをやめる前に。タイトルから1回だけ戻せる） */
 function keepBak(){try{var cur=HStore.get(KEY);if(cur){HStore.set(BAKKEY,cur);HStore.set('hikari7_quit','1');}}catch(e){}lastSavedPhase=null;}
 function save(){try{var k=S?S.rnd+':'+S.phase:'';if(lastSavedPhase!==null&&k!==lastSavedPhase){var prev=HStore.get(KEY);if(prev)HStore.set(BAKKEY,prev);}lastSavedPhase=k;HStore.set(KEY,JSON.stringify(S));}catch(e){}}
-function parseSave(s){if(!s)return null;try{var o=JSON.parse(s);return o&&o.v===8&&o.tr&&o.tr.length?migrate(o):null;}catch(e){return null;}}
+function parseSave(s){if(!s)return null;try{if(/"k":"(shodo|choir|twin|tofu|clown|douga)"|"(acap|busk|musical)"/.test(s))applyPacks(true);var o=JSON.parse(s);return o&&o.v===8&&o.tr&&o.tr.length?migrate(o):null;}catch(e){return null;}}
 function load(){var s=null;try{s=HStore.get(KEY);}catch(e){}var o=parseSave(s);ui.loadBroken=!!(s&&!o);return o;}
 function loadBak(){try{return parseSave(HStore.get(BAKKEY));}catch(e){return null;}}
 /* 古いセーブに無い項目を補う（経歴・特性・絆・図鑑などは後から足したもの） */
@@ -3125,6 +3300,7 @@ function morphNode(p,x,y){
 function vTitle(){
   if(ui.tsub==='new')return vTitleNew();
   if(ui.tsub==='rec')return vTitleRec();
+  if(ui.tsub==='shop')return vTitleShop();
   var sv=load(),c=loadCareer(),rk=rankOf(c.points);
   var seats='';for(var i=0;i<7;i++){var mid=i===3;seats+='<div class="tseat'+(mid?' mid':'')+'" style="animation-delay:'+(.5+Math.abs(i-3)*.12).toFixed(2)+'s"><img decoding="async" class="face" src="'+faceURL(ui.g,i*2+(mid?1:0))+'" alt=""><i></i></div>';}
   var h='<div class="tscr"><div class="tbgm">'+bgmBtn(true)+'</div>'+
@@ -3132,7 +3308,7 @@ function vTitle(){
     '<div class="tseats">'+seats+'</div><div class="tmenu">';
   if(sv)h+='<button class="btn tbtn" data-a="cont">つづきから<small>'+(sv.rnd>0?esc(ROUNDS[sv.rnd]?ROUNDS[sv.rnd].name:'')+'・':'書類・動画審査・')+(sv.g==='f'?'女性':'男性')+'グループ</small></button>';
   h+='<button class="btn tbtn'+(sv?' sub':'')+'" data-a="tsub" data-v="new">新しいシーズン</button>'+
-    '<div class="tmrow"><button class="btn sub" data-a="tsub" data-v="rec">記録と今日の挑戦</button><button class="btn sub" data-a="settings">'+ICO.gear+' 設定</button></div></div>'+
+    '<div class="tmrow"><button class="btn sub" data-a="tsub" data-v="rec">記録と今日の挑戦</button><button class="btn sub" data-a="tsub" data-v="shop">追加パック</button></div><div class="tmrow"><button class="btn sub" data-a="settings">'+ICO.gear+' 設定</button></div></div>'+
     '<div class="trank"><span>'+esc(rk[1])+'</span>'+(c.seasons?'<span>'+c.seasons+'シーズン</span>':'<span>はじめてのシーズン</span>')+'</div>';
   var qf=null;try{qf=HStore.get('hikari7_quit');}catch(e){}if(!sv&&qf&&!ui.loadBroken){var qb=loadBak();if(qb)h+='<div class="note tnote">前にやめたシーズン（'+(qb.rnd>0&&qb.fmt?'第'+qb.rnd+'審査':'書類審査')+'・'+(qb.g==='f'?'女性':'男性')+'）に戻れます（1回だけ）。<br><button class="btn-s" data-a="frombak">やめたシーズンに戻る</button></div>';}
   if(!sv&&ui.loadBroken){var bk=loadBak();h+='<div class="note tnote"><b>前回の続きが読み込めませんでした。</b>'+(bk?'ひとつ前の場面の保存から戻せます。<br><button class="btn-s" data-a="frombak">ひとつ前の保存から続ける</button>':'保存の予備もありません。新しいシーズンを始めてください。')+'</div>';}
@@ -3140,6 +3316,17 @@ function vTitle(){
   h+='<div class="tcopy">© つるはし社</div></div>';
   return h;
 }
+function interOk(){try{if(!S||!loadCareer().seasons)return false;S.intN=S.intN||0;if(S.intN>=2)return false;S.intN++;return true;}catch(e){return false;}}
+function vTitleShop(){
+  var h='<div class="tsubhd"><button class="btn-s" data-a="tsub" data-v="">‹ タイトルへ</button><b>追加パック</b></div>';
+  if(!APP)h+='<p class="note">テスト版では、追加パックの中身がすべて入っています。アプリでは、買った人だけに入ります。</p>';
+  var pr=(APP&&APP.prices)||{},ok=APP&&APP.storeOk!==false;
+  ['story','audition'].forEach(function(k){var p=PACKS[k],own=packOwned(k);
+    h+='<div class="card pack"><div class="pkh"><b>'+p.n+'</b><span>'+(own?'<i class="owned">入っています</i>':(pr[k]?esc(pr[k]):'買い切り'))+'</span></div><p class="small">'+esc(p.d)+'</p>'+
+      (APP&&!own?'<button class="btn" data-a="buypack" data-v="'+k+'" '+(ok?'':'disabled')+'>'+(pr[k]?esc(pr[k])+'で買う':'買う')+'</button>':'')+'</div>';});
+  if(APP)h+='<div class="card pack"><div class="pkh"><b>広告を消す</b><span>'+(APP.adFree?'<i class="owned">消しています</i>':(APP.price?esc(APP.price):'買い切り'))+'</span></div><p class="small">審査のあいだの全画面広告が出なくなり、動画の特典も動画なしで使えます。</p>'+(APP.adFree?'':'<button class="btn" data-a="buy" '+(APP.canBuy?'':'disabled')+'>'+(APP.price?esc(APP.price)+'で買う':'買う')+'</button>')+'</div>';
+  h+='<p class="small muted">追加パックは買い切りです。今の中身は、買わなくてもすべて遊べます。'+(APP?' <button class="btn-s" data-a="restore">購入を復元</button>':'')+'</p>';
+  return h;}
 function vTitleRec(){
   var h='<div class="tsubhd"><button class="btn-s" data-a="tsub" data-v="">‹ タイトルへ</button><b>記録と今日の挑戦</b></div>';
   h+=dailyBox()+perkBox()+careerBox();
@@ -3419,7 +3606,7 @@ function vPlan(){
     if(a.k==='vlog'&&on){h+='<div class="pickrow sm">';A.forEach(function(t){h+='<button class="pk '+(P.vlogId===t.id?'on':'')+'" data-a="vlogid" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span></button>';});h+='</div>';}
     h+='</div>';});
   h+='</div>';
-  if(!S.adUsed&&!ROUNDS[S.rnd].fin&&S.chal!=='noad')h+='<button class="btn ad" data-a="adbudget">'+adIcon()+'<span>制作費を30万足す<br><span class="small muted">'+adNote()+'。1審査に1回（特訓の枠・再審査と共通）</span></span></button>';
+  var adRep=!!(APP&&!APP.adFree);if(!ROUNDS[S.rnd].fin&&S.chal!=='noad'&&(adRep||!S.budgetFree))h+='<button class="btn ad" data-a="adbudget">'+adIcon()+'<span>制作費を30万足す<br><span class="small muted">'+adNote()+'。'+(adRep?'動画1本ごとに、何度でも':'1審査に1回')+'</span></span></button>';
   if(S.rnd>=2&&S.rnd<=4&&S.revived==null){var L=reviveList(S);if(L.length){h+='<h3>復活枠 <span class="small muted">1シーズンに1回</span></h3><p class="small muted">不合格にした子を1人だけ戻せます。人気のある子なら喜ばれ、そうでなければ「基準が分からない」と言われます。</p><div class="pickrow">';
     L.forEach(function(t){h+='<button class="pk" data-a="revive" data-id="'+t.id+'">'+faceImg(t,'sm dim')+'<span>'+esc(t.giv)+'</span>'+pkStat(t)+'</button>';});h+='</div>';}}
   var ok=!(P.acts.vlog&&P.vlogId==null);
@@ -3647,6 +3834,7 @@ function vMonth(){var M=S.month,P=S.prep,D=S.tr.filter(function(t){return t.stat
   if(M.w>=4)return '<h2>デビューから1か月</h2><p class="small muted">4週間の活動が終わりました。</p><div class="card">'+M.log.map(function(l){return '<div class="fy" style="display:grid;grid-template-columns:4em 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px;line-height:1.7"><b>第'+l.w+'週</b><span><b>'+esc(l.n)+'</b><br>'+esc(l.t)+'</span></div>';}).join('')+'</div><div class="foot"><div class="in"><button class="btn" data-a="monthdone" style="flex:1">結果を見る</button></div></div>';
   var h='<div class="telop"><div class="ep">デビューから1か月</div><div class="tt">'+esc(P.names[P.name])+'</div><div class="ds">毎週1つ、グループの活動を選びます。忙しい週が3回続くと、体調を崩すメンバーが出ることがあります。</div><div class="meta">第'+Math.min(4,M.w+1)+'週 ／ 全4週　制作費 '+S.budget+'万</div><div class="mfaces">'+D.map(function(t){return faceImg(t,'sm');}).join('')+'</div></div>';
   h+='<div class="weeks">';for(var i=0;i<4;i++){var l=M.log[i];h+='<div class="wkc'+(i===M.w?' now':'')+'"><small>第'+(i+1)+'週</small><b>'+(l?esc(l.n.replace(/（.*）/,'')):i===M.w?'いま':'')+'</b></div>';}h+='</div>';
+  if(!M.boostUsed&&M.w<4&&S.chal!=='noad')h+='<button class="btn ad" data-a="adboost">'+adIcon()+'<span>次の週の宣伝を倍にする<br><span class="small muted">'+adNote()+'。ファンが広がる活動に効く。1か月に1回</span></span></button>';
   if(M.log.length){var l=M.log[M.log.length-1];h+='<div class="toast"><b>第'+l.w+'週</b> '+esc(l.t)+'</div>';}
   if(M.busy>=2)h+='<p class="note" style="color:var(--bad)">忙しい週が'+M.busy+'回続いている。そろそろ休ませないと危ない。</p>';
   WEEK_ACTS.forEach(function(a){var dis=a.cost&&S.budget<a.cost;var parts=[];for(var k in a.fx)parts.push([{fan:'ファン',song:'曲の評価',coh:'まとまり'}[k]+'↑',1]);if(a.busy>0)parts.push(['忙しい',0]);if(a.cost)parts.push(['制作費−'+a.cost+'万',0]);
@@ -3687,7 +3875,7 @@ function withAd(fn){if(S&&S.chal==='noad'){toast('チャレンジ「自力で勝
   clearTimeout(ui.adT);ui.adT=setTimeout(function(){if(pendingAd){pendingAd=null;ui.adWait=false;toast('動画を読み込めませんでした。少し待ってからもう一度お試しください');render();}},90000);}
 window.hikariAdWaiting=function(){ui.adWait=true;render();};
 window.hikariAdResult=function(ok,msg){var f=pendingAd;pendingAd=null;ui.adWait=false;if(ok&&f&&S){f();save();}else if(msg)toast(msg);render();};
-window.hikariSetApp=function(o){if(!APP)return;if(!ui.themeSent){ui.themeSent=true;pushTheme();}for(var k in o)if(k!=='msg')APP[k]=o[k];if(o.msg)toast(o.msg);render();};
+window.hikariSetApp=function(o){if(!APP)return;if(!ui.themeSent){ui.themeSent=true;pushTheme();}for(var k in o)if(k!=='msg')APP[k]=o[k];try{applyPacks();}catch(e){}if(o.msg)toast(o.msg);render();};
 function toast(m){ui.toast=m;clearTimeout(ui.toastT);ui.toastT=setTimeout(function(){ui.toast=null;render();},3500);}
 
 function forecastBox(D,ttl){var E=D?(D.length>=3?finalEval(S,D):null):forecast(S);if(!E)return '';var ks=['song','coh','fanScore','show'],low=ks.slice().sort(function(a,b){return E[a]-E[b];})[0];
@@ -3934,6 +4122,8 @@ document.addEventListener('click',function(ev){
   if(!AUD.unlocked&&!APP){AUD.unlocked=true;AUD.cur=undefined;}
   switch(a){
     case 'g':ui.g=v;render();break;
+    case 'adboost':if(!S.month||S.month.boostUsed)break;withAd(function(){go(function(){S.month.boost=true;S.month.boostUsed=true;});});break;
+    case 'buypack':if(APP&&PACKS[v])appPost({type:'buy',id:PACKS[v].id});break;
     case 'tsub':ui.tsub=v||null;ui.newArm=null;render();window.scrollTo(0,0);break;
     case 'new':if(load()&&ui.newArm!=='new'){ui.newArm='new';render();break;}ui.newArm=null;keepBak();stopTimer();ui.prof=null;S=newGame(ui.g,ui.diff,ui.chal);ui.filter='all';save();render();window.scrollTo(0,0);break;
     case 'cont':S=load();if(S&&S.fmt)buildRounds(S);render();break;
@@ -4024,7 +4214,7 @@ document.addEventListener('click',function(ev){
     case 'act':go(function(){S.plan.acts[v]=!S.plan.acts[v];if(v==='vlog'&&!S.plan.acts[v])S.plan.vlogId=null;});break;
     case 'coachk':go(function(){S.plan.coachK=v;});break;
     case 'vlogid':go(function(){S.plan.vlogId=id;});break;
-    case 'adbudget':if(S.adUsed)break;withAd(function(){go(function(){S.budget+=30;S.adUsed=true;});});break;
+    case 'adbudget':var rep_=!!(APP&&!APP.adFree);if(!rep_&&S.budgetFree)break;withAd(function(){go(function(){S.budget+=30;if(!rep_)S.budgetFree=true;});});break;
     case 'revive':if(ui.reviveArm!==id){ui.reviveArm=id;render();toast(S.tr[id].giv+'を番組に戻します（1シーズン1回）。もう一度押すと決まります');break;}ui.reviveArm=null;go(function(){revive(S,id);});break;
     case 'planok':go(function(){applyPlan(S);});window.scrollTo(0,0);break;
     case 'talk':ui.talkY=window.scrollY;go(function(){doTalk(S,id);});window.scrollTo(0,0);break;
@@ -4078,12 +4268,12 @@ document.addEventListener('click',function(ev){
     case 'calllast':stopTimer();go(function(){S.call.n=S.call.order.length;S.call.done=true;});break;
     case 'callskip':stopTimer();go(function(){S.call.n=S.call.order.length;S.call.done=true;});break;
     case 'fw':go(function(){S.farewell[id]=+v;});break;
-    case 'nextround':stopTimer();var fin0=S.rnd;go(function(){nextRound(S);});window.scrollTo(0,0);if(APP)appPost({type:'between',rnd:fin0});break;
+    case 'nextround':stopTimer();var fin0=S.rnd;go(function(){nextRound(S);});window.scrollTo(0,0);if(APP&&interOk())appPost({type:'between',rnd:fin0});break;
     case 'toresult':go(function(){applyFarewell(S);S.phase='result';startEnding(S);});window.scrollTo(0,0);break;
     case 'restart':ui.chal=null;try{HStore.set('hikari7_chal','');}catch(e){}stopTimer();clearSave();S=null;render();window.scrollTo(0,0);break;
   }
 });
-(function(){try{ui.set=loadSet();applySet();}catch(e){}var sv=load();if(sv){ui.g=sv.g||'m';if(sv.fmt)buildRounds(sv);}
+(function(){try{ui.set=loadSet();applySet();}catch(e){}try{applyPacks();}catch(e){}var sv=load();if(sv){ui.g=sv.g||'m';if(sv.fmt)buildRounds(sv);}
   /* アプリが裏で閉じられたあとの起動なら、タイトルを飛ばして続きから（印は1回で消す。次に裏へ回るとまた付く） */
   try{if(APP&&sv&&HStore.get('hikari7_resume')==='1'){S=sv;HStore.del('hikari7_resume');}}catch(e){}
   render();})();
