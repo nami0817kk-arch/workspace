@@ -116,14 +116,14 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // 字の色。ことば帳に集めた数で開く
   var THEMES = [
     { key: 'base', name: 'いつもの', need: 0, ink: ['#d9472f', '#e98a1f', '#2f9a5c', '#2f6fc2', '#7b4fc0', '#d8508f', '#1f9a9a', '#b5552a'] },
-    { key: 'sakura', name: 'さくら', need: 15, ink: ['#e2577f', '#f08aa8', '#c9476e', '#e98fae', '#d86a8f', '#b84a6a'] },
-    { key: 'umi', name: 'うみ', need: 30, ink: ['#2f6fc2', '#1f9a9a', '#4b8fd8', '#2a5aa0', '#3fb0c8', '#5577cc'] },
-    { key: 'mori', name: 'もり', need: 60, ink: ['#2f9a5c', '#5a9a2f', '#3e7a48', '#6fae4f', '#2a8070', '#7a9a3a'] },
-    { key: 'sumi', name: 'すみ', need: 90, ink: ['#3b2f24', '#5a4a3a', '#2a2420', '#4a3f36', '#6a5848'] },
-    { key: 'kin', name: 'きんいろ', need: 130, ink: ['#c8961e', '#e0ad2c', '#b5832a', '#d9a441', '#caa23a'] }
+    { key: 'sakura', name: 'さくら', need: 30, ink: ['#e2577f', '#f08aa8', '#c9476e', '#e98fae', '#d86a8f', '#b84a6a'] },
+    { key: 'umi', name: 'うみ', need: 70, ink: ['#2f6fc2', '#1f9a9a', '#4b8fd8', '#2a5aa0', '#3fb0c8', '#5577cc'] },
+    { key: 'mori', name: 'もり', need: 150, ink: ['#2f9a5c', '#5a9a2f', '#3e7a48', '#6fae4f', '#2a8070', '#7a9a3a'] },
+    { key: 'sumi', name: 'すみ', need: 250, ink: ['#3b2f24', '#5a4a3a', '#2a2420', '#4a3f36', '#6a5848'] },
+    { key: 'kin', name: 'きんいろ', need: 400, ink: ['#c8961e', '#e0ad2c', '#b5832a', '#d9a441', '#caa23a'] }
   ];
   // 台も、ことば帳に集めた数で開く（ふつう→てんびん→さか→ふたつ→ゆらゆら→せまい）
-  var PLAT_NEED = { flat: 0, seesaw: 5, slope: 10, twin: 20, sway: 35, narrow: 50 };
+  var PLAT_NEED = { flat: 0, seesaw: 10, slope: 25, twin: 50, sway: 90, narrow: 140 };
   var PLAT_ORDER = ['flat', 'seesaw', 'slope', 'twin', 'sway', 'narrow'];
   var INK = THEMES[0].ink;
   function inkOf(ch) { return INK[C.KINDS.indexOf(ch) % INK.length]; }
