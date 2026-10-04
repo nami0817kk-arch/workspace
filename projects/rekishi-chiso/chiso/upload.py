@@ -65,7 +65,9 @@ def service(secrets: Path = SECRETS):
                 raise UploadError(f"クライアント情報がありません: {client}（Google Cloud の rekishi-chiso から）")
             print("■ ブラウザで許可の画面を開きます。**「歴史の地層」のチャンネルを選んで**許可してください")
             cred = InstalledAppFlow.from_client_secrets_file(str(client), SCOPES).run_local_server(
-                port=0, prompt="consent")
+                port=0, prompt="select_account consent")
+            # 10-04：prompt=consent だけだと、前に選んだ「海外サッカーの理由」が黙って使われた（2回）。
+            # select_account でアカウント・ブランドアカウントを選ぶ画面を必ず出す
         token.parent.mkdir(parents=True, exist_ok=True)
         token.write_text(cred.to_json(), encoding="utf-8")
     return build("youtube", "v3", credentials=cred)
