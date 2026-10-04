@@ -92,6 +92,7 @@ def draw(painter, img: Image.Image, spec: dict, t: float = 1.0) -> Image.Image:
 
 # --- 地図 -------------------------------------------------------------------
 def _map(painter, img, spec, t):
+    spec = with_places(spec)
     dr, (ax0, ay0, ax1, ay1) = _panel(painter, img, spec.get("title", ""))
     lon0, lon1, lat0, lat1 = spec["bounds"]
     # 縦横比をそろえる（緯度の真ん中で経度を縮める）
@@ -157,6 +158,35 @@ def _map(painter, img, spec, t):
         bx, by = box[2] - w - 14, box[3] - 64
         dr.rounded_rectangle([bx, by, bx + w, by + 48], radius=10, fill=RED)
         dr.text((bx + w / 2, by + 24), spec["note"], font=nf, fill=(255, 255, 255), anchor="mm")
+
+
+GAZETTEER = Path(__file__).resolve().parent.parent / "places.yaml"
+
+
+def gazetteer() -> dict[str, tuple[float, float]]:
+    import yaml
+    if not GAZETTEER.exists():
+        return {}
+    return {k: (float(v[0]), float(v[1])) for k, v in (yaml.safe_load(GAZETTEER.read_text(encoding="utf-8")) or {}).items()}
+
+
+def with_places(spec: dict, _unused=None) -> dict:
+    """places を省いた地図は、route と marks の地名を辞書（places.yaml）から引く。bounds も省けば自動で決める。"""
+    spec = dict(spec)
+    if not spec.get("places"):
+        g = gazetteer()
+        names = list(dict.fromkeys(list(spec.get("route", [])) + list(spec.get("marks", []))))
+        missing = [n for n in names if n not in g]
+        if missing:
+            raise ValueError(f"地名の辞書（places.yaml）にない地名: {missing}")
+        spec["places"] = [[n, g[n][0], g[n][1]] for n in names]
+    if not spec.get("bounds"):
+        lons = [p[1] for p in spec["places"]]
+        lats = [p[2] for p in spec["places"]]
+        mx = max(1.5, (max(lons) - min(lons)) * 0.25)
+        my = max(1.0, (max(lats) - min(lats)) * 0.35)
+        spec["bounds"] = [min(lons) - mx, max(lons) + mx, min(lats) - my, max(lats) + my]
+    return spec
 
 
 def _route_reached(spec, name, t) -> bool:

@@ -99,6 +99,13 @@ def preflight(sc, config) -> bool:
     missing = check_mod.missing_assets(sc, assets_dir(config))
     for m in missing:
         print(f"  × 素材がありません: {m}")
+    if not str(sc.path.name).startswith("sample"):
+        errors, warns = check_mod.episode(sc)
+        for e in errors:
+            print(f"  × {e}")
+        for w in warns:
+            print(f"  ! {w}")
+        missing = missing + errors
     for w in check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60)):
         print(f"  ! {w}")
     for who, (hit, n) in check_mod.saturation(sc, voices(config)).items():

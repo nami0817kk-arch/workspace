@@ -29,6 +29,18 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
   右下に剣崎雌雄（後ろ）と驚き顔のつむぎ（手前）。シリーズ名・チャンネル名の札は入れない。目印は下端の細い地層。
   `out/*_thumbnail_preview.png` で一覧の大きさでも読めるか見る
 
+## 図（地図・グラフ・相関図）— 10-04 に仕組みにした
+
+- 台本の行に `figure:` を書くと、画面の真ん中に図の板が出る（節が変わるか `figure: null` まで）。出るときは描き進める
+- 種類：`map`（線がのびる。地名は `places.yaml`、bounds は省けば自動）／`pie`／`bars`／`people`（相関図、cross で「関わっていない」）
+- 図のあいだはメモ・肖像・年表を隠す。地図は Natural Earth（パブリックドメイン、クレジット不要）
+- **1本に3つ以上**（`check` が知らせる）。書き方は `scripts/_template.yaml`
+
+## 作り方の手順
+
+ユーザーレベルのスキル `rekishi-video`（`~/.claude/skills/rekishi-video/SKILL.md`、バックアップは workspace/claude-skills）。
+`check` は1本ぶんの決まり（見立ての節・次回予告・サムネイル・図の数・地名）を見て、足りなければ止める。
+
 ## 抑揚（ユーザーが一番気にしている）
 
 掛け合いを「読み上げ」ではなく「会話」に聞かせる。台本でこう書く（`chiso/voice.py`）:
@@ -70,7 +82,7 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 
 ```
 python -m chiso.cli voice    scripts/x.yaml     # 音声だけ（抑揚の確認）
-python -m chiso.cli draft    scripts/x.yaml     # 確認用の動画
+python -m chiso.cli draft    scripts/x.yaml [--lines 40]   # 確認用の動画（--lines で冒頭だけ）
 python -m chiso.cli shorts   scripts/x.yaml --draft
 python -m chiso.cli approve  scripts/x.yaml     # ユーザーの OK のあとだけ
 python -m chiso.cli build    scripts/x.yaml

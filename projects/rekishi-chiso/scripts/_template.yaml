@@ -1,0 +1,53 @@
+# 台本のひな形。これを写して scripts/<題材>.yaml を作る。
+# 決まり：最後の節は「見立て：…」／次回予告・サムネイル必須／図（地図・グラフ・相関図）は3つ以上／
+#         事実は出典を控える（台本の末尾か別メモ）／言い伝えは「伝えられています」と言う。
+title: ○○は本当に△△だったのか｜副題（問いの形。毎回同じ形にしない）
+series: 悪女と呼ばれた女たち
+timeline:
+  start: 1700
+  end: 1760
+  events: [[1700, 誕生], [1720, 結婚], [1760, 死去]]
+
+shorts:                                      # 1本の本編から何本も（各60秒以内）。行に short: s1 を付ける
+  s1: {title: "通説を／ひっくり返す一言"}       # ／で改行
+
+next:                                        # 最後の12秒の次回予告
+  title: 次の人物
+  teaser: 次回のひとこと。
+
+thumbnail:                                   # chiso/thumb.py。絵は全面、顔はやや左の中央に
+  image: paintings/xxx.jpg
+  crop: [0, 0, 1600, 900]                    # 絵のどこを使うか（左, 上, 右, 下）
+  focus: [150, 60, 1000, 760]                # 明るく残す範囲
+  hook: 「通説の一言…」
+  stamp: 言ってない！
+  name: 人物名
+  lead: 本当に
+  main: 悪女？
+
+sections:
+  - title: 地表：誰もが知っている通説
+    background: {image: paintings/xxx.jpg, credit: "画家《題》年"}
+    portrait: {image: paintings/yyy.jpg, caption: "人物名（画家画、年）"}
+    lines:
+      - 語り: 通説の一言。
+        tone: 強調                            # 普通／驚き／疑問／強調／しみじみ／明るい／笑い／重い／ひそひそ／納得
+        short: s1
+      - 聞き: 視聴者と同じ目線で驚く・聞き返す。
+        tone: 驚き
+      - 語り: 《強調したい語》は二重山かっこで囲む。
+        card: {head: "1700年", body: "札の本文（22字まで）"}   # 左の「掘り出したメモ」に積み重なる
+        year: 1700                            # 年表の印
+      - 語り: 図を出す行。節が変わるか figure: null まで続く。
+        figure: {type: map, title: 旅の題, route: [パリ, ヴェルサイユ], note: およそ○日}   # 地名は places.yaml
+      - 語り: 図を消す行。
+        figure: null
+
+  - title: 見立て：なぜそうなったのか
+    lines:
+      - 語り: 数字と当時の仕組みから考える。
+        figure: {type: pie, title: 題, parts: [[項目, 46], [そのほか, 54]], unit: "%"}
+      - 聞き: 相関図は人が増える節で。
+        figure: {type: people, title: 関係, nodes: [[人A, 役割], [人B, 役割]], edges: [[人A, 人B, 何をしたか]]}
+      - 語り: 次回の予告で締める。
+        tone: 明るい

@@ -59,3 +59,42 @@ def saturation(script, voices: dict) -> dict[str, tuple[int, int]]:
         c[0] += int(hit)
         c[1] += 1
     return {k: (a, b) for k, (a, b) in out.items()}
+
+
+# --- 1本ぶんの決まり（2026-10-04 に固めたコンセプト） ---------------------------
+MIN_FIGURES = 3          # 地図・グラフ・相関図を合わせて3つ以上
+MIN_MINUTES = 25.0       # 本編の長さの下限の目安（目標は30〜40分）
+
+
+def episode(script) -> tuple[list[str], list[str]]:
+    """1本ぶんの決まり。(止めるもの, 知らせるもの) を返す。"""
+    import json
+    errors, warns = [], []
+    if not script.sections or "見立て" not in script.sections[-1].title:
+        errors.append("最後の節は「見立て：…」にする（なぜそうなったか）")
+    if not script.next:
+        errors.append("次回予告（next: {title, teaser}）がありません")
+    if not script.thumbnail:
+        errors.append("サムネイル（thumbnail:）がありません")
+    else:
+        for k in ("image", "crop", "hook", "stamp", "name", "main"):
+            if k not in script.thumbnail:
+                errors.append(f"サムネイルの {k} がありません")
+    figs = {l.figure for l in script.lines if l.figure}
+    if len(figs) < MIN_FIGURES:
+        warns.append(f"図（地図・グラフ・相関図）が{len(figs)}つ（{MIN_FIGURES}つ以上を推奨）")
+    from . import figures
+    for f in figs:
+        spec = json.loads(f)
+        if spec["type"] == "map":
+            try:
+                figures.with_places(spec)
+            except ValueError as e:
+                errors.append(f"地図「{spec.get('title', '')}」: {e}")
+    if not any("《" in l.text for l in script.lines):
+        warns.append("《》の強調が1つもありません")
+    if not script.shorts:
+        warns.append("ショート（shorts:）がありません")
+    if not getattr(script, "question", ""):
+        warns.append("題名に問いがありません")
+    return errors, warns

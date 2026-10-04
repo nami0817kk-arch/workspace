@@ -32,3 +32,30 @@ def test_missing_assets(tmp_path):
     pic = lambda n: NS(image=n)
     sc = _sc([NS(background=pic("a.jpg"), portrait=pic("b.jpg"))])
     assert check.missing_assets(sc, tmp_path) == ["b.jpg"]
+
+
+def test_episode_rules():
+    from chiso import script
+    base = {
+        "title": "王妃は本当に悪女だったのか",
+        "next": {"title": "次", "teaser": "t"},
+        "thumbnail": {k: "x" for k in ("image", "crop", "hook", "stamp", "name", "main")},
+        "shorts": {"s1": {"title": "x"}},
+        "sections": [{"title": "地表", "lines": [{"語り": "《a》", "short": "s1",
+                                                  "figure": {"type": "map", "route": ["パリ", "ヴェルサイユ"]}}]},
+                     {"title": "見立て：なぜ", "lines": [{"語り": "b"}]}],
+    }
+    errors, warns = check.episode(script.parse(base))
+    assert errors == [] and any("図" in w for w in warns)
+    bad = dict(base, next={}, sections=base["sections"][:1])
+    errors, _ = check.episode(script.parse(bad))
+    assert any("見立て" in e for e in errors) and any("次回" in e for e in errors)
+
+
+def test_unknown_place_is_error():
+    from chiso import figures
+    import pytest
+    with pytest.raises(ValueError):
+        figures.with_places({"type": "map", "route": ["どこでもない町"]})
+    spec = figures.with_places({"type": "map", "route": ["パリ", "ヴェルサイユ"]})
+    assert len(spec["places"]) == 2 and len(spec["bounds"]) == 4
