@@ -83,7 +83,24 @@ class HomeScreen extends StatelessWidget {
       visible: gameState.isBusy,
       label: Tr.pick('シーズンを更新しています…', 'Rolling the season over…'),
       child: Scaffold(
-        appBar: AppBar(title: Text(save.clubName)),
+        // ヘッダーにエンブレムを出す。クラブ名だけだと、どの画面も
+        // 同じ見出しに見えて「自分のクラブ」の感じが出ない。
+        appBar: AppBar(
+          titleSpacing: 0,
+          title: Row(
+            children: [
+              ClubEmblem(
+                teamId: userTeam.id,
+                teamName: save.clubName,
+                size: 28,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(save.clubName, overflow: TextOverflow.ellipsis),
+              ),
+            ],
+          ),
+        ),
         drawer: const QuickAccessDrawer(),
         body: ResponsiveBody(
           child: ListView(
@@ -176,6 +193,10 @@ class HomeScreen extends StatelessWidget {
                       icon: Icons.emoji_events,
                       label: Tr.pick('順位', 'Position'),
                       value: '$userRank / ${standings.length}',
+                      // 順位だけだと、良いのか悪いのかが分からない。
+                      // 理事会の目標を並べて置く。
+                      sub: Tr.pick('目標 ${save.boardTargetRank}位以内',
+                          'Target: top ${save.boardTargetRank}'),
                       color: Colors.amber.shade800,
                     ),
                     _StatTile(
@@ -1895,11 +1916,19 @@ class _StatTile extends StatelessWidget {
   }
 
   Widget _tile(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.fromLTRB(14, 11, 14, 10),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        // **色をタイルごとに変えない。** 6枚が6色だった頃は、色に意味が
+        // 無いのに目移りして、どれが大事なのか分からなかった。地は
+        // 揃えて、色はアイコンと「良い/悪い」にだけ使う。
+        // 真っ平らな灰色にすると、今度は整いすぎて素っ気ない。地の色に
+        // その項目の色をごく薄く混ぜて、気配だけ残す。
+        color: Color.alphaBlend(
+            color.withValues(alpha: 0.055), scheme.surfaceContainer),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.22)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1908,45 +1937,77 @@ class _StatTile extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 16, color: color),
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.18),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 12, color: color),
+              ),
               const SizedBox(width: 6),
+              // 丸い印を足したぶん、見出しの幅が足りなくなって
+              // 「監督としての…」と切れた。入らないぶんは縮める。
               Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(fontSize: 12, color: color),
-                  overflow: TextOverflow.ellipsis,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          if (sub != null)
-            Text(
-              sub!,
+          const SizedBox(height: 6),
+          // **数字は太いゴシックで大きく。** titleLarge は明朝で、経営の
+          // 数字が本文に沈んでいた。桁が揃うよう等幅の数字にする。
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 11, color: color),
-            ),
-          if (progress != null) ...[
-            const SizedBox(height: 4),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 6,
-                color: color,
+              style: TextStyle(
+                fontFamily: 'NotoSansJP',
+                fontSize: 25,
+                fontWeight: FontWeight.w800,
+                height: 1.05,
+                letterSpacing: -0.5,
+                color: scheme.onSurface,
+                fontFeatures: const [FontFeature.tabularFigures()],
               ),
             ),
-          ],
+          ),
+          if (sub != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                sub!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 11, color: color),
+              ),
+            ),
+          if (progress != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 7),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: progress!.clamp(0.0, 1.0),
+                  minHeight: 6,
+                  backgroundColor: color.withValues(alpha: 0.16),
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+              ),
+            ),
         ],
       ),
     );
