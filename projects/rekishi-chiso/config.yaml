@@ -49,8 +49,8 @@ cast:
 roles:
   マリー:
     label: マリー・アントワネット
-    name: 九州そら              # 仮（見本5人から選んでもらう）
-    style_id: 16
+    name: 波音リツ              # 10-04 ユーザーが見本5人から選んだ（クイーン）。規約：「VOICEVOX:波音リツ」で商用可
+    style_id: 65
     speed: 0.95
     intonation: 1.0
     tone_strength: 0.5
