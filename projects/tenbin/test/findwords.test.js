@@ -39,3 +39,17 @@ console.log('subword ok');
 s.queue[0] = 'ろ'; C.drop(s, 90, 0); for (i = 0; i < 400; i++) C.step(s);
 assert.ok(s.made.indexOf('あさ') < 0, 'あとから あさ を数え直している: ' + s.made);
 console.log('subword later ok');
+
+// 2026-10-04「言葉として反応しない時がある」の見直し
+// 横に 8px あけて並べても くっついたとみなす（字の縁取りで、画面ではくっついて見える）
+s = C.create(1, 'flat'); var e1 = C.extent('ね', 0), e2 = C.extent('こ', 0);
+place(s, 'ね', 150, 505); place(s, 'こ', 150 + e1.maxX - e2.minX + 8, 505);
+assert.ok(words(s).indexOf('ねこ:yoko') >= 0, '8px あけた横の ねこ ができない');
+// 同じことばでも、別の字で作れば2度目も数える
+s = C.create(1, 'flat'); s.queue.splice(0, 4, 'こ', 'ね', 'こ', 'ね');
+C.drop(s, 120, 0); for (i = 0; i < 400; i++) C.step(s);
+C.drop(s, 120, 0); for (i = 0; i < 400; i++) C.step(s);
+C.drop(s, 290, 0); for (i = 0; i < 400; i++) C.step(s);
+C.drop(s, 290, 0); for (i = 0; i < 400; i++) C.step(s);
+assert.strictEqual(s.made.filter(function (w) { return w === 'ねこ'; }).length, 2, '2度目の ねこ を数えない: ' + s.made);
+console.log('gap/repeat ok');

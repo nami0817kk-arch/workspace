@@ -149,12 +149,12 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // --- 状態 ---
   var s, phase = 'menu', ang = 0, visAng = 0, pointer = { x: W / 2, active: false }, dragFrom = null, camTop = BASE_TOP, endTimer = 0, frameN = 0;
-  var parts = [], popups = [], links = [], shake = 0, newWords = [], recordBroken = false, best = { p: 0, n: 0, h: 0 }, hudPts = 0, wordPts = {};
+  var parts = [], popups = [], links = [], shake = 0, newWords = [], recordBroken = false, best = { p: 0, n: 0, h: 0 }, hudPts = 0, wordLog = [];
   window.__state = function () { return s; };
 
   function start() {
     s = C.create(null, plat); phase = 'play'; ang = visAng = 0; pointer.x = W / 2; camTop = BASE_TOP; endTimer = 0;
-    parts = []; popups = []; links = []; shake = 0; newWords = []; recordBroken = false; best = bests[plat] || { p: 0, n: 0, h: 0 }; hudPts = 0; wordPts = {};
+    parts = []; popups = []; links = []; shake = 0; newWords = []; recordBroken = false; best = bests[plat] || { p: 0, n: 0, h: 0 }; hudPts = 0; wordLog = [];
     hideSheet(); drawNext(); setHint();
   }
   function setHint() { hint.textContent = s && s.def.seesaw ? 'かたよると板が傾く' : s && s.def.sway ? '台が左右に動く' : 'なぞって位置、はなすと落ちる'; }
@@ -196,7 +196,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
         if (isNew) { dict[e.text] = 1; store.set('dict', dict); newWords.push(e.text); document.getElementById('dictN').textContent = dictCount(); }
         popup(e.text, Math.max(70, Math.min(W - 70, sx)), minY - 26, true, '#d9472f');
         var px = Math.max(70, Math.min(W - 70, sx));
-        wordPts[e.text] = e.pts;
+        wordLog.push({ text: e.text, pts: e.pts });
         popup('+' + e.pts + (e.mult > 1 ? '（×' + e.mult + '）' : ''), px, minY + 8, false, '#2f9a5c');
         if (isNew) popup('あたらしいことば！', px, minY - 62, false, '#b5552a');
         sparkle(sx, minY, 26); SND.word();
@@ -378,8 +378,11 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (rec) { bests[plat] = { p: s.points, n: s.score, h: Math.max(b.h, s.height) }; store.set('bests2', bests); }
     else if (s.height > b.h) { b.h = s.height; bests[plat] = b; store.set('bests2', bests); }
     var why = s.failed === 'ground' ? 'てんびんが床に着いた' : '「' + s.failedBody.kind + '」が落ちた';
-    var made = s.made.length ? '<div class="words">' + s.made.map(function (w) { return '<span class="w' + (newWords.indexOf(w) >= 0 ? ' new' : '') + '">' + w + '<small class="pt">+' + (wordPts[w] || C.wordPoints(w)) + '</small></span>'; }).join('') + '</div>' : '<p>ことばは できなかった。たてか よこに くっつけてみよう</p>';
-    var wsum = s.made.reduce(function (t, w) { return t + (wordPts[w] || C.wordPoints(w)); }, 0);
+    // 同じことばは「ねこ ×2」にまとめる
+    var agg = [], byText = {};
+    wordLog.forEach(function (l) { var a = byText[l.text]; if (!a) { a = byText[l.text] = { text: l.text, n: 0, pts: 0 }; agg.push(a); } a.n++; a.pts += l.pts; });
+    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new' : '') + '">' + a.text + (a.n > 1 ? '×' + a.n : '') + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>ことばは できなかった。たてか よこに くっつけてみよう</p>';
+    var wsum = wordLog.reduce(function (t, l) { return t + l.pts; }, 0);
     showSheet('<p>' + why + '</p><div class="big">' + s.points + '<small> 点</small></div>' +
       '<p>字 ' + s.score + '×10＝' + (s.score * C.LETTER_PTS) + '点 ＋ ことば ' + s.made.length + 'こ＝' + wsum + '点</p>' +
       '<p>' + C.PLATFORMS[plat].name + 'の台・高さ ' + (s.height * M_PER_PX).toFixed(1) + 'm</p>' +

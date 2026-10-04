@@ -62,12 +62,12 @@ var TenbinCore = (function () {
 
   // 台の種類。てんびんはその1つ。boards は板（中心x・幅・傾き）。どれも同じ高さに置く
   var PLATFORMS = {
-    flat:   { name: 'ふつう',   boards: [{ x: 200, w: 280 }] },
-    seesaw: { name: 'てんびん', boards: [{ x: 200, w: 320 }], seesaw: true },
-    sway:   { name: 'ゆらゆら', boards: [{ x: 200, w: 240 }], sway: { amp: 55, period: 480 } },
-    slope:  { name: 'さか',     boards: [{ x: 200, w: 280, a: -0.12 }] },
-    narrow: { name: 'せまい',   boards: [{ x: 200, w: 170 }] },
-    twin:   { name: 'ふたつ',   boards: [{ x: 118, w: 130 }, { x: 282, w: 130 }] }
+    flat:   { name: 'ふつう',   boards: [{ x: 200, w: 340 }] },
+    seesaw: { name: 'てんびん', boards: [{ x: 200, w: 370 }], seesaw: true },
+    sway:   { name: 'ゆらゆら', boards: [{ x: 200, w: 290 }], sway: { amp: 45, period: 480 } },
+    slope:  { name: 'さか',     boards: [{ x: 200, w: 340, a: -0.12 }] },
+    narrow: { name: 'せまい',   boards: [{ x: 200, w: 210 }] },
+    twin:   { name: 'ふたつ',   boards: [{ x: 108, w: 160 }, { x: 292, w: 160 }] }
   };
   var PLATFORM_KEYS = Object.keys(PLATFORMS);
 
@@ -135,11 +135,12 @@ var TenbinCore = (function () {
   function centre(b) { return { x: (b.bounds.min.x + b.bounds.max.x) / 2, y: (b.bounds.min.y + b.bounds.max.y) / 2 }; }
   function step2(a, b, dir) {
     var A = centre(a), B = centre(b), dx = B.x - A.x, dy = B.y - A.y;
-    return dir === 'tate' ? dy >= 12 && Math.abs(dx) <= Math.max(34, dy) : dx >= 12 && Math.abs(dy) <= Math.max(34, dx);
+    return dir === 'tate' ? dy >= 10 && Math.abs(dx) <= Math.max(40, dy * 1.1) : dx >= 10 && Math.abs(dy) <= Math.max(40, dx * 1.1);
   }
   // 触れ合い = 物理で当たっている、または輪郭どうしが NEAR px 以内。
-  // 重力は下向きなので、横に並べた字はほんの少しすき間が空く。それも「くっついた」とみなす
-  var NEAR = 4;
+  // 重力は下向きなので、横に並べた字は少しすき間が空く。それも「くっついた」とみなす
+  // （2026-10-04「言葉として反応しない時がある」: 4px では見た目にくっついた字の多くを取りこぼしていた）
+  var NEAR = 10;   // 字には縁取りがあるので、輪郭が 10px 離れていても画面ではくっついて見える
   function segDist(px, py, ax, ay, bx, by) {
     var dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy, t = L ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / L)) : 0;
     return Math.hypot(px - ax - t * dx, py - ay - t * dy);
@@ -250,23 +251,29 @@ var TenbinCore = (function () {
       s.height = Math.max(s.height, PIVOT_Y - PLANK_T - top);
       s.points += LETTER_PTS;
       s.events.push({ type: 'score', kind: s.last.kind, pts: LETTER_PTS });
-      // くっついてできたことば（1回の中で同じことばは1度だけ）。長いことばから知らせる
-      // 1字で同時にいくつもできたら、その数だけ倍（2つなら2倍）
-      var fresh = [];
-      findWords(s).sort(function (a, b) { return b.text.length - a.text.length; }).forEach(function (f) {
-        if (s.made.indexOf(f.text) >= 0 || fresh.some(function (x) { return x.text === f.text; })) return;
-        // 長いことばの一部（あさひ の中の あさ）は数えない。字を分け合う別のことば（十字に交わる）は数える
-        // 前にできたことばの一部も同じ（あとから別の字を置いたときに あさ を数え直さない）
-        var inside = function (bs) { return f.bodies.every(function (b) { return bs.indexOf(b) >= 0; }); };
-        if (fresh.some(function (x) { return inside(x.bodies); }) || s.madeBodies.some(inside)) return;
-        fresh.push(f);
-      });
-      fresh.forEach(function (f) {
-        var pts = wordPoints(f.text) * fresh.length;
-        s.made.push(f.text); s.madeBodies.push(f.bodies); s.points += pts;
-        s.events.push({ type: 'word', text: f.text, bodies: f.bodies, dir: f.dir, pts: pts, mult: fresh.length });
-      });
+      checkWords(s);
+    } else if (!s.pendingScore && s.t % 15 === 0 && s.cargo.length > 1 && settled(s)) {
+      // 字があとからずれてくっついた場合も、落ち着いたところで拾う
+      checkWords(s);
     }
+  }
+
+  // くっついてできたことばを数える。長いことばから。
+  // 同じことばでも、別の字で作れば何度でも数える。1字で同時にいくつもできたら、その数だけ倍（2つなら2倍）
+  function checkWords(s) {
+    var fresh = [];
+    findWords(s).sort(function (a, b) { return b.text.length - a.text.length; }).forEach(function (f) {
+      // 長いことばの一部（あさひ の中の あさ）は数えない。字を分け合う別のことば（十字に交わる）は数える。
+      // 前にできたことばと同じ字・その一部も数えない（あとから別の字を置いたときに あさ を数え直さない）
+      var inside = function (bs) { return f.bodies.every(function (b) { return bs.indexOf(b) >= 0; }); };
+      if (fresh.some(function (x) { return inside(x.bodies); }) || s.madeBodies.some(inside)) return;
+      fresh.push(f);
+    });
+    fresh.forEach(function (f) {
+      var pts = wordPoints(f.text) * fresh.length;
+      s.made.push(f.text); s.madeBodies.push(f.bodies); s.points += pts;
+      s.events.push({ type: 'word', text: f.text, bodies: f.bodies, dir: f.dir, pts: pts, mult: fresh.length });
+    });
   }
 
   function settled(s) {
