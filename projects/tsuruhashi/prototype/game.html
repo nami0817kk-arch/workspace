@@ -505,14 +505,16 @@ const CREEDS = [
 
 // ================= 状態 =================
 // 最初から見習い坑夫が2人いる（代替わりの後も）
+// 最初の鉱石（開いてすぐ見習い坑夫を1人雇える）
+const START_ORE = 20;
 const startCrew = () => WK.map((w, i) => i === 0 ? 2 : 0);
 const fresh = () => ({
-  v:2, ore:0, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
+  v:2, ore:START_ORE, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
   boostUntil:0, boostLv:0, boostAt:0, last:NOW(),
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0, play:0, best1:0 },
-  sound:true, vol:2, amb:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false,
+  sound:true, vol:2, bgm:2, amb:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false,
 });
 // 保存の形が変わったときはここで古い形を直す（v は保存の版）
 function migrate(o){
@@ -782,7 +784,7 @@ function rebirth(st, creed){
   if (!g) return false;
   st.history.push({ gen:st.gen, depth:st.genDepth, fame:g, species:speciesCountOf(st), start:st.genStart, end:NOW(), creed:st.creed.slice() });
   st.fame += g; st.gen++;
-  Object.assign(st, { ore:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(), room:{}, genDepth:0, genStart:NOW() });
+  Object.assign(st, { ore:START_ORE, depth:0, dmg:0, side:0, pick:1, w:startCrew(), room:{}, genDepth:0, genStart:NOW(), recTold:false });
   st.creed = (creed || st.creed).slice(0, creedSlots(st.gen - 1));
   return g;
 }
@@ -923,7 +925,7 @@ window.tsuruAdResult = (ok, msg) => {
   updateUI(true);
 };
 window.tsuruSetApp = o => { if (!APP) return; for (const k in o) if (k !== 'msg') APP[k] = o[k]; if (o.msg) toast('お知らせ', o.msg); updateUI(true); if (tab === 'co') buildCo(); };
-window.tsuruPause = () => { try { save(); TStore.flush(); if (AC) AC.suspend(); } catch (e) {} };
+window.tsuruPause = () => { try { save(); TStore.flush(); if (AC) AC.suspend(); for (const k in BGM.els) BGM.els[k].pause(); } catch (e) {} };
 window.tsuruResume = () => { checkAway(); };
 const PLAY_IC = '<span class="play"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="#fff"/></svg></span>';
 const adLabel = (main, sub) => `${PLAY_IC}<span>${main}<small>${adFree() ? '広告なしで受け取れます' : sub}</small></span>`;
@@ -956,7 +958,27 @@ function pickIcon(l, size){
   return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true"><path d="M19 9h3.5v29H19z" fill="#8a5a2b"/><path d="${SHAPES.pick.split(' M')[0]}" fill="${c}" stroke="rgba(0,0,0,.35)" stroke-width="1.2"/></svg>`;
 }
 const HAT = ['#f4f4f4', '#f08a24', '#d8344a', '#6f7b8a', '#58b7c9', '#c98a3a', '#e0b23a'];
+// 採掘の絵と同じ描き方で、仲間を小さな画像にする（一度だけ作って使い回す）
+const CREW_IMG = [];
+function crewImg(i){
+  if (CREW_IMG[i]) return CREW_IMG[i];
+  try {
+    const c = document.createElement('canvas'); c.width = c.height = 96;
+    const saved = ctx; ctx = c.getContext('2d');
+    ctx.translate(48, 92);
+    if (i === 3) drawDrill(6, 0, 1, 0.3, '#6f7b8a', 1.5);
+    else if (i === 4) drawRobot(0, 0, 1, -0.6, 1.6);
+    else if (i === 5) drawCart(0, 0, 1, 0, 1.6);
+    else if (i === 6) drawShield(4, 0, 1, 0.4, 1.45);
+    else drawPerson(-4, 0, 1.75, HAT[i], 1, -1.2, '#b9c2cc', false, i);
+    ctx = saved;
+    CREW_IMG[i] = c.toDataURL();
+  } catch (e) { CREW_IMG[i] = ''; }
+  return CREW_IMG[i];
+}
 function crewIcon(i){
+  const u = typeof ctx !== 'undefined' && crewImg(i);
+  if (u) return `<img src="${u}" width="44" height="44" alt="" style="display:block">`;
   const hat = HAT[i];
   if (i === 3) return `<svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="10" width="22" height="16" rx="3" fill="${hat}"/><path d="M28 12 L38 18 L28 24Z" fill="#c7ced8"/><circle cx="12" cy="30" r="4" fill="#333"/><circle cx="23" cy="30" r="4" fill="#333"/></svg>`;
   if (i === 4) return `<svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="8" width="22" height="18" rx="5" fill="${hat}"/><rect x="13" y="13" width="14" height="6" rx="3" fill="#123"/><circle cx="20" cy="16" r="2" fill="#7ff0ff"/><rect x="12" y="27" width="6" height="8" fill="#555"/><rect x="22" y="27" width="6" height="8" fill="#555"/></svg>`;
@@ -1115,6 +1137,7 @@ function buildSettings(){
   const onoff = v => v ? 'あり' : 'なし';
   const vl = ['なし', '小', '中', '大'][S.sound ? (S.vol == null ? 2 : S.vol) : 0];
   let h = `<div class="srow"><span>音の大きさ</span><button class="mini" type="button" id="soundBtn">${vl}</button></div>
+    <div class="srow"><span>BGM</span><button class="mini" type="button" id="bgmBtn">${['なし', '小', '中', '大'][S.bgm == null ? 2 : S.bgm]}</button></div>
     <div class="srow"><span>環境音（坑道の音）</span><button class="mini" type="button" id="ambBtn">${onoff(S.amb)}</button></div>
     <div class="srow"><span>振動</span><button class="mini" type="button" id="hapBtn">${onoff(S.haptic)}</button></div>
     <div class="srow"><span>動きを減らす</span><button class="mini" type="button" id="redBtn">${reducedOS ? '端末で設定ずみ' : onoff(!!S.reduce)}</button></div>
@@ -1126,6 +1149,7 @@ function buildSettings(){
   h += `<p class="sub" style="margin-top:10px">つるはし社${APP && APP.credits ? '<br>' + esc(APP.credits) : '　試作 v2'}</p>`;
   $('setBody').innerHTML = h;
   $('soundBtn').addEventListener('click', () => { const v = S.sound ? (S.vol == null ? 2 : S.vol) : 0, nv = (v + 1) % 4; S.sound = nv > 0; if (nv) S.vol = nv; ac(); applyVol(); save(); sfx('ui'); buildSettings(); });
+  $('bgmBtn').addEventListener('click', () => { S.bgm = ((S.bgm == null ? 2 : S.bgm) + 1) % 4; ac(); updateBgm(true); save(); buildSettings(); });
   $('ambBtn').addEventListener('click', () => { S.amb = !S.amb; startAmbient(); applyVol(); save(); buildSettings(); });
   $('hapBtn').addEventListener('click', () => { S.haptic = !S.haptic; save(); haptic('light'); buildSettings(); });
   $('themeBtn').addEventListener('click', () => { S.theme = ({ auto:'light', light:'dark', dark:'auto' })[S.theme]; applyTheme(); save(); buildSettings(); });
@@ -1464,7 +1488,9 @@ function updateCoach(){
   while (S.tut < COACH.length && COACH[S.tut].done(S)) S.tut++;
   const c = COACH[S.tut];
   const busy = titleOpen || pendingAway || rbOpen || document.querySelector('.modal.on');
-  if (!c || busy || (c.when && !c.when(S)) || tab === c.tab) { el.hidden = true; return; }
+  // 出しっぱなしにせず、9秒出して15秒休む（下の欄を隠し続けない）
+  const rest = (performance.now() / 1000) % 24 > 9;
+  if (!c || busy || rest || (c.when && !c.when(S)) || tab === c.tab) { el.hidden = true; return; }
   el.innerHTML = `${c.t}<small>${c.s}</small>`;
   el.hidden = false;
   const tb = document.querySelector(`.tabs [data-tab="${c.tab}"]`).getBoundingClientRect();
@@ -1479,7 +1505,34 @@ function ac(){
   if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); MG = AC.createGain(); MG.connect(AC.destination); applyVol(); } catch (e) { AC = null; } }
   return AC;
 }
-function applyVol(){ if (MG) MG.gain.value = S.sound ? VOLS[S.vol == null ? 2 : S.vol] : 0; if (AMB) AMB.g.gain.value = S.amb && S.sound ? 0.05 : 0; }
+function applyVol(){ if (MG) MG.gain.value = S.sound ? VOLS[S.vol == null ? 2 : S.vol] : 0; if (AMB) AMB.g.gain.value = S.amb && S.sound ? 0.05 : 0; if (BGM.cur) updateBgm(true); }
+// BGM：場面ごとの曲（tool/make_bgm.py で作った prototype/audio/*.mp3）。切り替えは1.5秒でなめらかに。
+// アプリでは鳴らす役をアプリ側に任せる（hikari7 と同じ。{"type":"bgm","k","vol"}）
+const BGM_VOLS = [0, 0.18, 0.32, 0.5];
+const BGM = { cur: null, els: {}, gains: {} };
+const bgmKey = () => titleOpen || S.depth < LAYER_LEN ? 'surface' : layerIdxForDepth(S.depth) < 5 ? 'mine' : 'deep';
+function bgmVol(){ return S.sound ? BGM_VOLS[S.bgm == null ? 2 : S.bgm] : 0; }
+function updateBgm(force){
+  const k = bgmKey();
+  if (APP) { if (k !== BGM.cur || force) { BGM.cur = k; appPost({ type:'bgm', k, vol: bgmVol() }); } return; }
+  const a = ac(); if (!a) return;
+  if (!BGM.els[k]) {
+    try {
+      const el = new Audio('audio/' + k + '.mp3'); el.loop = true; el.preload = 'auto';
+      const src = a.createMediaElementSource(el), g = a.createGain(); g.gain.value = 0;
+      src.connect(g); g.connect(a.destination);
+      BGM.els[k] = el; BGM.gains[k] = g;
+    } catch (e) { return; }
+  }
+  const t = a.currentTime;
+  for (const key in BGM.gains) {
+    const g = BGM.gains[key], target = key === k ? bgmVol() : 0;
+    g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(target, t + (force ? 0.2 : 1.5));
+    if (key === k && target > 0 && BGM.els[key].paused) BGM.els[key].play().catch(() => {});
+    if (key !== k) { const el = BGM.els[key]; setTimeout(() => { if (BGM.cur !== key) el.pause(); }, 1700); }
+  }
+  BGM.cur = k;
+}
 // 環境音：坑道のこもった音（茶色の雑音を低く絞ってくり返す）。しずくは frame から
 function startAmbient(){
   const a = ac(); if (!a || AMB) return;
@@ -1536,7 +1589,8 @@ function sfx(kind, n){
 // ================= 描画 =================
 const reducedOS = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 let reduced = reducedOS;
-const cv = $('cv'), ctx = cv.getContext('2d'), stage = $('stage');
+const cv = $('cv'), stage = $('stage');
+let ctx = cv.getContext('2d');
 let W = 340, H = 340, VW = 340, VH = 340, Z = 1, DPR = 1, R = 34, camY = -4, sky1 = '#8fd0f5', sky2 = '#e3f4ff', grass = '#5fae4a', dark = false;
 function readSky(){
   const cs = getComputedStyle(document.documentElement);
@@ -1709,6 +1763,9 @@ function sparks(x, y, n){
   }
 }
 function floatText(x, y, text, color, size){
+  // 近くに出たばかりの文字があれば、その上にずらして重ねない
+  const near = floats.filter(f => f.life > f.max - 0.5 && Math.abs(f.x - x) < 70 && Math.abs(f.y - y) < 40).length;
+  y -= near * 18;
   floats.push({ x: x + (Math.random() - 0.5) * 16, y, text, color, size: size || 16, life: 1.1, max: 1.1 });
   if (floats.length > 30) floats.shift();
 }
@@ -2361,13 +2418,14 @@ function frame0(now){
   const os = fmt(dispOre); if (os !== lastOreTxt) { const el = $('sOre'); el.textContent = os; lastOreTxt = os; }
   if (S.ore > popBase * 1.25 && S.ore - popBase > 20) { popBase = S.ore; const el = $('sOre'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
   else if (S.ore < popBase) popBase = S.ore;
-  coachT += dt; if (coachT > 0.5) { coachT = 0; updateCoach(); }
+  coachT += dt; if (coachT > 0.5) { coachT = 0; updateCoach(); if (!titleOpen && bgmKey() !== BGM.cur) updateBgm(); }
   if (AMB && S.amb && S.sound && (dripT -= dt) <= 0) { dripT = 2 + Math.random() * 5; if (S.depth > 30) sfx('drip'); }
   uiT += dt; saveT += dt; achT += dt;
   if (uiT > 0.2) { uiT = 0; updateUI(); }
   if (achT > 2) {
     achT = 0;
-    for (const a of checkAch(S)) { toast('実績', a.n, `実績 ${Object.keys(S.ach).length}/${ACH.length}`); }
+    if (S.gen > 1 && !S.recTold && S.history.length && S.genDepth > Math.max(...S.history.map(h => h.depth))) { S.recTold = true; toast('最深記録を更新', `${genName(S.gen)}社長が ${S.genDepth}m`, 'これまでのどの代よりも深い'); sfx('layer'); haptic('success'); }
+  for (const a of checkAch(S)) { toast('実績', a.n, `実績 ${Object.keys(S.ach).length}/${ACH.length}`); }
     if (tab === 'co' && !rbOpen) buildCoLight();
   }
   if (saveT > 5) { saveT = 0; save(); }
@@ -2376,8 +2434,8 @@ function frame0(now){
 let coKey = '';
 function buildCoLight(){ const k = canRebirth(S) + ':' + fameGain(S) + ':' + S.genDepth + ':' + Object.keys(S.ach).length; if (k !== coKey) { coKey = k; buildCo(); } }
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { save(); TStore.flush(); try { if (AC) AC.suspend(); } catch (e) {} }
-  else { lastFrame = performance.now(); try { if (AC && !titleOpen) AC.resume(); } catch (e) {} checkAway(); }
+  if (document.hidden) { save(); TStore.flush(); try { if (AC) AC.suspend(); for (const k in BGM.els) BGM.els[k].pause(); } catch (e) {} }
+  else { lastFrame = performance.now(); try { if (AC && !titleOpen) { AC.resume(); updateBgm(true); } } catch (e) {} checkAway(); }
 });
 window.addEventListener('pagehide', () => { save(); TStore.flush(); });
 if (window.ResizeObserver) new ResizeObserver(resize).observe(stage); else window.addEventListener('resize', resize);
@@ -2396,7 +2454,7 @@ if (loadBroken) toast('お知らせ', '保存が壊れていたので、少し�
 $('titleGo').textContent = had ? 'つづきから' : 'はじめる';
 if (had) $('titleTip').textContent = `${genName(S.gen)}社長・最深 ${S.best}m`;
 $('titleGo').addEventListener('click', () => {
-  titleOpen = false; ac(); startAmbient(); sfx('tier');
+  titleOpen = false; ac(); startAmbient(); updateBgm(true); sfx('tier');
   $('title').classList.add('hide'); setTimeout(() => { $('title').hidden = true; }, 520);
   if (had) checkAway(); else setTimeout(() => banner(0), 300);
 });

@@ -33,7 +33,7 @@ S = fresh(); S.w[0] = 5; S.pick = 4; const before = JSON.stringify(S);
 const r = simulateAway(S, 3600);
 ok(JSON.stringify(S) === before, '留守の計算は元の状態を書き換えない');
 const S2 = claimAwayState(S, r, 2);
-ok(S2.w[0] === 5 && S2.pick === 4 && Math.abs(S2.ore - r.ore * 2) < 1e-6, '2倍で受け取ると鉱石が2倍、仲間とつるはしはそのまま');
+ok(S2.w[0] === 5 && S2.pick === 4 && Math.abs(S2.ore - (S.ore + r.ore * 2)) < 1e-6, '2倍で受け取ると鉱石が2倍、仲間とつるはしはそのまま');
 
 // 代替わり：図鑑・かけら・名声は残り、深さ・仲間は戻る
 S = fresh(); S.genDepth = 260; S.depth = 260; S.best = 260; S.w[3] = 9; S.found.kosen = 2; S.frag[0] = 7;
