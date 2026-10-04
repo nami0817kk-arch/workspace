@@ -15,6 +15,7 @@ const game = fs.readFileSync(path.join(ROOT, 'prototype', 'game.html'), 'utf8')
 if (!game.includes('window.__ev')) throw new Error('撮るための口を差し込めなかった（game.html の終わりの形が変わった？）');
 fs.writeFileSync(path.join(tmp, 'game.html'), game);
 fs.cpSync(path.join(ROOT, 'prototype', 'audio'), path.join(tmp, 'audio'), { recursive: true });
+if (fs.existsSync(path.join(ROOT, 'prototype', 'art'))) fs.cpSync(path.join(ROOT, 'prototype', 'art'), path.join(tmp, 'art'), { recursive: true });
 
 // 撮る場面。setup は game.html の中で動く式、after は撮る直前に動く式、wait はその間の待ち（ミリ秒）
 const BASE = "S.tut=99;S.sound=false;S.bgm=0;S.amb=false;S.notifAsked=true;bannerT=9;document.getElementById('hint').style.opacity='0';";
@@ -25,7 +26,7 @@ const SHOTS = [
     after: "cheer();" },
   { id: '02', h1: '10の地層に\n50のお宝', sub: '化石・宝石・古代の遺物を図鑑に集めよう', bg: ['#6a4a1e', '#1c130a'],
     setup: BASE + found(31) + "S.depth=212;camY=212;S.genDepth=212;S.best=212;S.pick=122;S.w=[5,3,2,2,1,1,0];S.ore=3.2e9;", tab: 'book', wait: 1800,
-    after: "FX.find(ITEMS.find(i=>i.id==='kanmuri'), true);" },
+    after: "FX.find(ITEMS.find(i=>i.id==='kanmuri'), true); document.querySelectorAll('#pBook .lsec')[1].scrollIntoView({block:'start'});" },
   { id: '03', h1: '岩盤を割れ！', sub: 'つるはしを鍛えて、層の壁を打ち破る', bg: ['#2d4f6a', '#0d1820'],
     setup: BASE + found(24) + "S.depth=161;camY=161;S.genDepth=161;S.best=161;S.pick=79;S.w=[5,3,3,2,1,0,0];S.ore=1.2e8;", tab: 'tool', wait: 1500,
     after: "FX.brk(160, 4.2e7, false);", afterWait: 260 },
@@ -55,6 +56,7 @@ const SHOTS = [
     await p.waitForTimeout(s.wait);
     await p.evaluate(() => { document.getElementById('toasts').innerHTML = ''; });
     if (s.after) { await p.evaluate(c => __ev(c), s.after); await p.waitForTimeout(s.afterWait || 400); }
+    await p.evaluate(() => { document.getElementById('hint').style.opacity = '0'; });
     const shot = await p.screenshot({ type: 'png' });
     // 中身が写っているか（白紙・単色の画面を出さない）
     const ok = await p.evaluate(() => document.getElementById('sDepth').textContent.length > 0 && document.querySelectorAll('.panel:not([hidden]) *').length > 5 && !/試作/.test(document.body.innerText));

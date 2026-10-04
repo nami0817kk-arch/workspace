@@ -1,6 +1,6 @@
 // Gemini で描いてもらった図鑑の絵（1枚に5種、白い背景）を、1種ずつの PNG に切り分ける。
 //   node tool/cut_sheet.js <絵のファイル> <層の番号 0〜9>
-//   → prototype/art/items/<id>.png（256×256、背景は透明）と、確認用の prototype/art/items/_sheet<層>.png
+//   → prototype/art/items/<id>.webp（192×192、背景は透明。アプリに埋め込むので軽くする）と、確認用の prototype/art/check/_sheet<層>.png（git に入れない）
 // 並びは注文書と同じ「上の段 左から3つ → 下の段 左から2つ」＝ ITEMS の順。
 // 背景の色は縁から取り、背景とちがう色のかたまりを大きい順に5つ拾う（小さな透かし・ごみは捨てる）。
 const fs = require('fs');
@@ -52,7 +52,7 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
     const lab = new Int32Array(gw * gh), blobs = [];
     for (let s = 0; s < gw * gh; s++) if (md[s] && !lab[s]) {
       const id = blobs.length + 1, st = [s]; lab[s] = id;
-      const bb = { x0: gw, y0: gh, x1: 0, y1: 0, area: 0 };
+      const bb = { x0: gw, y0: gh, x1: 0, y1: 0, area: 0, id };
       while (st.length) {
         const k = st.pop(), x = k % gw, y = (k / gw) | 0;
         if (m[k]) bb.area++;
@@ -69,7 +69,7 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
     const found = blobs.length;
     const pick = blobs.slice(0, n).map(bb => ({
       x0: Math.max(0, (bb.x0 - R + 1) * S), y0: Math.max(0, (bb.y0 - R + 1) * S),
-      x1: Math.min(W, (bb.x1 + R) * S), y1: Math.min(H, (bb.y1 + R) * S), area: bb.area,
+      x1: Math.min(W, (bb.x1 + R) * S), y1: Math.min(H, (bb.y1 + R) * S), area: bb.area, id: bb.id,
     }));
     // 並べ替え：上から段に分け、段の中は左から
     pick.forEach(r => { r.cx = (r.x0 + r.x1) / 2; r.cy = (r.y0 + r.y1) / 2; r.h = r.y1 - r.y0; });
@@ -96,17 +96,25 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
         if (x > 0) st.push(k - 1); if (x < side - 1) st.push(k + 1);
         if (k >= side) st.push(k - side); if (k < side * (side - 1)) st.push(k + side);
       }
+      // 隣の物のはみ出し（別のかたまりに属する画素）は消す
+      const offX = Math.round((side - w) / 2), offY = Math.round((side - h) / 2);
+      for (let y = 0; y < side; y++) for (let x = 0; x < side; x++) {
+        const sx0 = x - offX + r.x0, sy0 = y - offY + r.y0;
+        if (sx0 < 0 || sy0 < 0 || sx0 >= W || sy0 >= H) continue;
+        const l = lab[Math.floor(sy0 / S) * gw + Math.floor(sx0 / S)];
+        if (l && l !== r.id) d[(y * side + x) * 4 + 3] = 0;
+      }
       cx.putImageData(id, 0, 0);
-      const o = document.createElement('canvas'); o.width = o.height = 256;
-      const ox = o.getContext('2d'); ox.imageSmoothingQuality = 'high'; ox.drawImage(c, 0, 0, 256, 256);
+      const o = document.createElement('canvas'); o.width = o.height = 192;
+      const ox = o.getContext('2d'); ox.imageSmoothingQuality = 'high'; ox.drawImage(c, 0, 0, 192, 192);
       return o;
     });
     // 確認用の一覧（並び順に横一列、市松模様の上）
-    const sh = document.createElement('canvas'); sh.width = 256 * Math.max(1, outs.length); sh.height = 256;
+    const sh = document.createElement('canvas'); sh.width = 192 * Math.max(1, outs.length); sh.height = 192;
     const sx = sh.getContext('2d');
-    for (let y = 0; y < 256; y += 16) for (let x = 0; x < sh.width; x += 16) { sx.fillStyle = ((x + y) / 16) % 2 ? '#ddd' : '#fff'; sx.fillRect(x, y, 16, 16); }
-    outs.forEach((o, i) => sx.drawImage(o, i * 256, 0));
-    return { found, bg, size: [W, H], pngs: outs.map(o => o.toDataURL('image/png')), sheet: sh.toDataURL('image/png') };
+    for (let y = 0; y < 192; y += 16) for (let x = 0; x < sh.width; x += 16) { sx.fillStyle = ((x + y) / 16) % 2 ? '#ddd' : '#fff'; sx.fillRect(x, y, 16, 16); }
+    outs.forEach((o, i) => sx.drawImage(o, i * 192, 0));
+    return { found, bg, size: [W, H], pngs: outs.map(o => o.toDataURL('image/webp', 0.88)), sheet: sh.toDataURL('image/png') };
   }, { src, n: ids.length });
   await b.close();
 
@@ -115,8 +123,9 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
     console.error(`物が ${res.pngs.length} つしか見つからない（要るのは ${ids.length}）。物どうしが重なっていないか確かめる`);
     process.exit(1);
   }
-  res.pngs.forEach((u, i) => put(ids[i] + '.png', u));
-  put('_sheet' + L + '.png', res.sheet);
+  res.pngs.forEach((u, i) => put(ids[i] + '.webp', u));
+  const CHECK = path.join(__dirname, '..', 'prototype', 'art', 'check'); fs.mkdirSync(CHECK, { recursive: true });
+  fs.writeFileSync(path.join(CHECK, '_sheet' + L + '.png'), Buffer.from(res.sheet.split(',')[1], 'base64'));
   console.log(`${res.size.join('×')} 背景 rgb(${res.bg}) かたまり ${res.found} → ${ids.join(', ')}`);
-  console.log('並びを確かめる: ' + path.join('prototype', 'art', 'items', '_sheet' + L + '.png'));
+  console.log('並びを確かめる: ' + path.join('prototype', 'art', 'check', '_sheet' + L + '.png'));
 })();

@@ -150,6 +150,11 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .lsec{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px;box-shadow:var(--shadow)}
 .lsec.locked{opacity:.75}
 .layerhead{font-size:14px;font-weight:800;margin:0 2px 8px;display:flex;align-items:center;gap:6px}
+.layerhead.scene{height:64px;margin:0 0 8px;padding:0 12px;border-radius:12px;color:#fff;background-size:cover;background-position:center;position:relative;overflow:hidden;text-shadow:0 2px 4px rgba(0,0,0,.8)}
+.layerhead.scene::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,6,3,.75),rgba(10,6,3,.1))}
+.layerhead.scene > *{position:relative} .layerhead.scene .pct{color:#f3e6d0}
+.cell img.art{display:block;margin:0 auto;object-fit:contain}
+.cell.unk img.art,.itembig .ic img.unk{filter:brightness(0);opacity:.28}
 .layerhead i{width:14px;height:14px;border-radius:4px;display:inline-block}
 .layerhead .pct{margin-left:auto;font-size:12px;color:var(--muted);font-weight:500}
 .frag{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 2px 2px;font-size:13px}
@@ -206,7 +211,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .srow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:14px}
 .srow:last-child{border-bottom:0}
 .itembig{display:flex;gap:12px;align-items:center;margin:6px 0 4px}
-.itembig .ic{flex:0 0 72px;height:72px;border-radius:16px;background:var(--panel2);display:grid;place-items:center}
+.itembig .ic{flex:0 0 96px;height:96px;border-radius:16px;background:var(--panel2);display:grid;place-items:center}
 
 /* ---- 案内の吹き出し・代替わりの演出・数字の跳ね ---- */
 .coach{position:fixed;z-index:30;bottom:calc(74px + env(safe-area-inset-bottom,0px));left:12px;max-width:260px;background:#2b2118;color:#fff4dc;border:2px solid #f6b85c;border-radius:14px;padding:8px 12px;font-size:13px;font-weight:800;line-height:1.4;box-shadow:var(--lift);pointer-events:none;animation:coachb 1.6s ease-in-out infinite}
@@ -232,6 +237,9 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .title.hide{opacity:0;pointer-events:none}
 .title > *{position:relative;z-index:1}
 .title #titleCv{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.title #titleArt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;animation:titlepan 26s ease-in-out infinite alternate}
+@keyframes titlepan{from{transform:scale(1.04) translateY(1.5%)}to{transform:scale(1.12) translateY(-2.5%)}}
+@media (prefers-reduced-motion: reduce){ .title #titleArt{animation:none} }
 .title::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 42% at 50% 46%,rgba(10,6,3,.78) 0,rgba(10,6,3,.45) 55%,rgba(10,6,3,.15) 100%)}
 .title .logo{width:132px;height:132px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5))}
 .title .co{font-size:14px;letter-spacing:.3em;color:#f6b85c;font-weight:800}
@@ -335,6 +343,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 
 <div class="title" id="title">
   <canvas id="titleCv" aria-hidden="true"></canvas>
+  <img id="titleArt" alt="" hidden>
   <svg class="logo" viewBox="0 0 120 120" aria-hidden="true">
     <circle cx="60" cy="60" r="56" fill="#2b1d10" stroke="#f6b85c" stroke-width="4"/>
     <circle cx="60" cy="60" r="47" fill="none" stroke="#f6b85c" stroke-width="1.5" opacity=".5"/>
@@ -934,6 +943,23 @@ function checkAch(st){
 }
 /*ENGINE-END*/
 
+// ================= 絵（Gemini で描いた物。prototype/art） =================
+// アプリでは tool/build_app_web.py が data URI で埋め込む（window.__TSURU_ART）。ブラウザでは art/ から読む。
+// 読めなかった物は今まで通り図形で描く
+const ART_SRC = (typeof window !== 'undefined' && window.__TSURU_ART) || null;
+const artUrl = k => ART_SRC ? ART_SRC[k] : 'art/' + k;
+const ART_IMG = {}, ART_OK = {};
+let artChanged = false;
+function artLoad(k){
+  if (k in ART_IMG) return;
+  if (ART_SRC && !ART_SRC[k]) { ART_OK[k] = false; ART_IMG[k] = null; return; }
+  const im = new Image();
+  im.onload = () => { ART_OK[k] = true; artChanged = true; }; im.onerror = () => { ART_OK[k] = false; };
+  im.src = artUrl(k); ART_IMG[k] = im;
+}
+const artImg = k => ART_OK[k] ? ART_IMG[k] : null;
+const itemArtKey = it => 'items/' + it.id + '.webp';
+
 // ================= 絵（図鑑のかたち） =================
 function gearPath(){
   let s = '';
@@ -1000,6 +1026,7 @@ const SHAPES = {
 const PATHS = {};
 function pathOf(shape){ return PATHS[shape] || (PATHS[shape] = new Path2D(SHAPES[shape])); }
 function iconSvg(it, size, unknown){
+  if (ART_OK[itemArtKey(it)]) return `<img class="art${unknown ? ' unk' : ''}" src="${artUrl(itemArtKey(it))}" width="${size}" height="${size}" alt="">`;
   const fill = unknown ? 'var(--line)' : it.color;
   return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true"><path d="${SHAPES[it.shape]}" fill="${fill}" fill-rule="evenodd" stroke="${unknown ? 'none' : 'rgba(0,0,0,.35)'}" stroke-width="1.2"/></svg>`;
 }
@@ -1189,13 +1216,14 @@ function buildBook(){
     const reached = S.best >= L * LAYER_LEN;
     const its = itemsOf(L), got = its.filter(it => S.found[it.id]).length;
     if (!reached) { h += `<div class="lsec locked"><div class="layerhead" style="margin:0"><i style="background:#555"></i>第${L + 1}層 ？？？<span class="pct">${L * LAYER_LEN}m に着くと分かる</span></div></div>`; continue; }
-    h += `<div class="lsec"><div class="layerhead"><i style="background:${LAYERS[L].block}"></i>第${L + 1}層 ${LAYERS[L].name}<span class="pct">${got}/5${done.includes(L) ? ' ✓' : ''}</span></div><div class="grid">`;
+    const sc = ART_OK['scene' + L + '.jpg'];
+    h += `<div class="lsec"><div class="layerhead${sc ? ' scene' : ''}"${sc ? ` style="background-image:url('${artUrl('scene' + L + '.jpg')}')"` : ''}><i style="background:${LAYERS[L].block}"></i><span>第${L + 1}層 ${LAYERS[L].name}</span><span class="pct">${got}/5${done.includes(L) ? ' ✓' : ''}</span></div><div class="grid">`;
     for (const it of its) {
       const n = S.found[it.id] || 0;
       const isNew = n && !S.seen[it.id];
       h += n
-        ? `<button type="button" class="cell btn r-${it.r}${isNew ? ' new' : ''}" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 32)}<div class="nm">${it.name}</div><div class="cnt">${n}個</div></button>`
-        : `<button type="button" class="cell unk btn" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 32, true)}<div class="nm">？？？</div><div class="cnt">&nbsp;</div></button>`;
+        ? `<button type="button" class="cell btn r-${it.r}${isNew ? ' new' : ''}" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 44)}<div class="nm">${it.name}</div><div class="cnt">${n}個</div></button>`
+        : `<button type="button" class="cell unk btn" data-item="${it.id}"><span class="rar">${RAR[it.r].label}</span>${iconSvg(it, 44, true)}<div class="nm">？？？</div><div class="cnt">&nbsp;</div></button>`;
     }
     h += `</div>`;
     const ac = appraiseCost(S, L), f = S.frag[L];
@@ -1225,7 +1253,7 @@ function focusFirst(id){ setTimeout(() => { const b = document.querySelector(`#$
 function openItem(id){
   const it = ITEM_BY_ID[id], n = S.found[id] || 0, L = it.L;
   const where = it.r === 'l' ? `第${L + 1}層の終わり近く（${L * LAYER_LEN + LAYER_LEN - 8}〜${(L + 1) * LAYER_LEN}m）でだけ出る` : `第${L + 1}層（${L * LAYER_LEN}〜${(L + 1) * LAYER_LEN}m）で出る。宝の部屋や鑑定でも`;
-  $('itemBody').innerHTML = `<div class="itembig"><div class="ic">${iconSvg(it, 60, !n)}</div><div>
+  $('itemBody').innerHTML = `<div class="itembig"><div class="ic">${iconSvg(it, 84, !n)}</div><div>
       <div class="sub">第${L + 1}層 ${LAYERS[L].name}　${RAR[it.r].label || '普通'}</div>
       <h2 id="itemTitle">${n ? it.name : '？？？'}</h2>
       <div class="sub">${n ? `${n}個 見つけた` : 'まだ見つけていない'}</div></div></div>
@@ -2420,6 +2448,11 @@ function drawElder(dt){
   elderT -= dt;
   if (elderT <= 0) { elderT = 45 + Math.random() * 30; const l = elderLine(); if (l) elderSay(l); }
 }
+// Gemini のタイトル絵が読めたら、動く断面の代わりにそれをゆっくり寄りながら見せる
+function showTitleArt(){
+  const im = $('titleArt'); if (!im.hidden) return;
+  im.src = artUrl('title.jpg'); im.hidden = false; titleCv.style.display = 'none';
+}
 // 起動画面の後ろ：地層の断面をゆっくり下っていく。各層で坑夫がつるはしを振り、宝石が光る
 const titleCv = $('titleCv'), tctx = titleCv.getContext('2d');
 let titleT = 0;
@@ -2692,10 +2725,15 @@ function draw(dt){
     rr.addColorStop(0, col); rr.addColorStop(1, 'rgba(255,240,180,0)');
     ctx.fillStyle = rr; ctx.beginPath(); ctx.arc(p.x, y, rad, 0, 7); ctx.fill();
     if (p.it.r !== 'c' && !reduced) { ctx.strokeStyle = col; ctx.lineWidth = 2; for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 + tAll * 1.5; ctx.beginPath(); ctx.moveTo(p.x + Math.cos(a) * 16, y + Math.sin(a) * 16); ctx.lineTo(p.x + Math.cos(a) * (24 + k % 2 * 6), y + Math.sin(a) * (24 + k % 2 * 6)); ctx.stroke(); } }
-    ctx.save(); ctx.translate(p.x - 16, y - 16); ctx.scale(0.8, 0.8);
-    ctx.fillStyle = p.it.color; ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1.5;
-    ctx.fill(pathOf(p.it.shape), 'evenodd'); ctx.stroke(pathOf(p.it.shape));
-    ctx.restore(); ctx.globalAlpha = 1;
+    const pim = artImg(itemArtKey(p.it));
+    if (pim) ctx.drawImage(pim, p.x - 22, y - 22, 44, 44);
+    else {
+      ctx.save(); ctx.translate(p.x - 16, y - 16); ctx.scale(0.8, 0.8);
+      ctx.fillStyle = p.it.color; ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1.5;
+      ctx.fill(pathOf(p.it.shape), 'evenodd'); ctx.stroke(pathOf(p.it.shape));
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
   }
   for (let i = floats.length - 1; i >= 0; i--) {
     const f = floats[i]; f.life -= dt;
@@ -2732,8 +2770,23 @@ function draw(dt){
     // 層の見出し：帯が横から伸び、名前と紹介文
     bannerT += dt;
     const a = bannerT < 0.3 ? bannerT / 0.3 : bannerT > 2.6 ? (3.2 - bannerT) / 0.6 : 1;
-    const L = LAYERS[bannerL], bw = W - MAP_W, by = H * 0.22, open = reduced ? 1 : Math.min(1, bannerT / 0.35);
+    const L = LAYERS[bannerL], bw = W - MAP_W, open = reduced ? 1 : Math.min(1, bannerT / 0.35);
+    let by = H * 0.22;
     ctx.globalAlpha = Math.max(0, a);
+    // 層の景色（Gemini の絵）があれば、名前の帯の上にカードで出す
+    const scn = artImg('scene' + bannerL + '.jpg');
+    if (scn) {
+      const cw = Math.min(bw - 28, (H * 0.5) / 0.5583), ch = cw * 0.5583, cxx = bw / 2, cyy = H * 0.06 + ch / 2;
+      const k = reduced ? 1 : 0.92 + 0.08 * Math.min(1, bannerT / 0.35), drift = reduced ? 0 : bannerT * 4;
+      ctx.save(); ctx.translate(cxx, cyy); ctx.scale(k, k);
+      ctx.fillStyle = 'rgba(0,0,0,.45)'; roundRect(-cw / 2 + 4, -ch / 2 + 6, cw, ch, 14); ctx.fill();
+      roundRect(-cw / 2, -ch / 2, cw, ch, 14); ctx.save(); ctx.clip();
+      ctx.drawImage(scn, -cw / 2 - 8 + drift, -ch / 2 - 5, cw + 16, ch + 10);
+      ctx.restore();
+      ctx.strokeStyle = L.speck; ctx.lineWidth = 3; roundRect(-cw / 2, -ch / 2, cw, ch, 14); ctx.stroke();
+      ctx.restore();
+      by = Math.min(H - 90, cyy + ch / 2 - 30);
+    }
     const bg = ctx.createLinearGradient(0, by, 0, by + 82);
     bg.addColorStop(0, 'rgba(10,6,3,.82)'); bg.addColorStop(1, 'rgba(10,6,3,.6)');
     ctx.fillStyle = bg; ctx.fillRect(bw / 2 * (1 - open), by, bw * open, 82);
@@ -2955,7 +3008,8 @@ function frame(now){
 }
 function frame0(now){
   let dt = (now - lastFrame) / 1000; lastFrame = now;
-  if (titleOpen) { try { drawTitle(Math.min(dt, 0.1)); } catch (e) {} }
+  if (titleOpen) { try { if (ART_OK['title.jpg']) showTitleArt(); else drawTitle(Math.min(dt, 0.1)); } catch (e) {} }
+  if (artChanged) { artChanged = false; if (tab === 'book') buildBook(); }
   // 止まっていた（裏に回っていた）なら留守として数える
   if (dt > 60 && !pendingAway) { checkAway(); dt = 0; }
   dt = Math.min(dt, 0.1);
@@ -3007,10 +3061,11 @@ if (window.matchMedia) { try { window.matchMedia('(prefers-color-scheme: dark)')
 // 起動
 const had = load();
 syncIap();
+artLoad('title.jpg'); for (let L = 0; L < NLAYER; L++) artLoad('scene' + L + '.jpg'); ITEMS.forEach(it => artLoad(itemArtKey(it)));
 reduced = reducedOS || !!S.reduce;
 applyTheme();
 camY = S.depth > 0 ? S.depth : -4;
-if (S.depth > 0) $('hint').style.opacity = '0'; else setTimeout(() => { $('hint').style.opacity = '0'; }, 5000);
+$('hint').style.opacity = '0';   // 「仲間が自動で掘ります」は、層の見出しが消えてから出す（はじめるの後）
 resize(); buildPanels(); updateUI(true);
 hintKnown = LAYERS.map((x, L) => hintShown(S, L) && !S.found[itemsOf(L).find(it => it.r === 'l').id]);
 coSeen = Object.keys(S.ach).length;
@@ -3021,6 +3076,7 @@ $('titleGo').addEventListener('click', () => {
   titleOpen = false; ac(); startAmbient(); updateBgm(true); sfx('tier');
   $('title').classList.add('hide'); setTimeout(() => { $('title').hidden = true; }, 520);
   if (had) checkAway(); else setTimeout(() => banner(0), 300);
+  if (S.depth === 0) { setTimeout(() => { $('hint').style.opacity = '1'; }, 3700); setTimeout(() => { $('hint').style.opacity = '0'; }, 8700); }
 });
 requestAnimationFrame(frame);
 })();
