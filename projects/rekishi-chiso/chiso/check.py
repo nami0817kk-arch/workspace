@@ -65,7 +65,8 @@ def saturation(script, voices: dict) -> dict[str, tuple[int, int]]:
 
 # --- 1本ぶんの決まり（2026-10-04 に固めたコンセプト） ---------------------------
 MIN_FIGURES = 3          # 地図・グラフ・相関図を合わせて3つ以上
-MIN_MINUTES = 25.0       # 本編の長さの下限の目安（目標は30〜40分）
+MIN_MINUTES = 25.0
+HOOK_WINDOW = 2          # 節の終わりから何行以内に「引き」（hook: true）を置くか       # 本編の長さの下限の目安（目標は30〜40分）
 
 
 def episode(script) -> tuple[list[str], list[str]]:
@@ -82,6 +83,12 @@ def episode(script) -> tuple[list[str], list[str]]:
         for k in ("image", "crop", "hook", "stamp", "name", "main"):
             if k not in script.thumbnail:
                 errors.append(f"サムネイルの {k} がありません")
+    # 節の終わりの引き（10-04）：途中で見るのをやめる人を減らすため、次の節が気になる一言で締める。
+    # 最初の節（導入。冒頭の問いが引きを兼ねる）と最後の節（見立て。次回予告で締める）は除く
+    for sec in script.sections[1:-1]:
+        tail = [l for l in script.lines if l.section == sec.index][-HOOK_WINDOW:]
+        if not any(l.hook for l in tail):
+            errors.append(f"{sec.index + 1}節「{sec.title}」の終わり{HOOK_WINDOW}行に引き（hook: true）がありません")
     figs = {l.figure for l in script.lines if l.figure}
     if len(figs) < MIN_FIGURES:
         warns.append(f"図（地図・グラフ・相関図）が{len(figs)}つ（{MIN_FIGURES}つ以上を推奨）")

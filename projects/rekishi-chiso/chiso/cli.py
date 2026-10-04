@@ -205,7 +205,8 @@ def make_video(args, draft: bool) -> int:
         total += render.END_SECONDS
     wd = work_dir(sc)
     audio = wd / "voice.wav"
-    mix.write_audio(cues, total, audio)
+    from . import sfx
+    mix.write_audio(cues, total, audio, sfx.events(cues) if config.get("sfx", True) else None)
     v = config["video"]
     size = (v["width"], v["height"])
     cls = _stamp(render.Painter) if draft else render.Painter
