@@ -1,0 +1,36 @@
+name: tsuruhashi
+description: "つるはし採掘 — つるはし社の放置採掘ゲーム"
+publish_to: 'none'
+
+# 版とビルド番号。App Store Connect は同じビルド番号を二度受け付けない
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.5.5
+  google_mobile_ads: ^9.1.0
+  in_app_review: ^2.0.10
+  audioplayers: ^6.1.0
+  in_app_purchase: ^3.3.1
+  in_app_purchase_storekit: ^0.4.13
+  url_launcher: ^6.3.2
+  webview_flutter: ^4.13.0
+  flutter_local_notifications: ^22.3.1
+  timezone: ^0.11.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  # ゲーム本体（試作をアプリ用に組み立てたもの）。tool/build_app_web.py が作る。手で直さない
+  assets:
+    - assets/web/index.html
+    # BGM（tool/make_bgm.py が prototype/audio/ に作り、tool/build_app_web.py が写す）
+    - assets/audio/bgm/

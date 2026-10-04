@@ -3,8 +3,8 @@
 つるはしで地面を掘り進める放置ゲーム。本番は **iOS アプリ**（無料＋報酬型動画広告＋「広告を消す」買い切り）。
 2026-09-28 に別セッションで企画・試作（v1）し、2026-10-03 にユーザーが改善案と構成案に同意して作り始めた。
 
-**作り**: hikari7 と同じく、アプリの外側（広告・課金・保存・通知）は Flutter、ゲーム本体は `prototype/game.html` を
-WebView で動かす予定（外側はまだ作っていない）。**ゲームの直しは game.html だけ**。
+**作り**: hikari7 と同じく、アプリの外側（広告・課金・保存・通知）は Flutter（`app/`）、ゲーム本体は `prototype/game.html` を
+WebView で動かす。**ゲームの直しは game.html だけ**（`python tool/build_app_web.py` でアプリ用に組み立てる）。
 
 ## 置き場所
 
@@ -15,6 +15,9 @@ WebView で動かす予定（外側はまだ作っていない）。**ゲーム�
 | `tool/sim.js` | 自動で遊ばせて進み方を測る。`--quick` は CI 用。`PLAY=heavy`・`PLAY=noads`・`CREED=aaaaaa`・`DAYS=60`・`SEED=3`・`LOG=1` |
 | `tool/check.js` | エンジンの決まりごとの検査（留守の上限・代替わりで残す物・鑑定で必ずそろう・★★の出る場所・まとめ買い・壊れた保存の復帰など）。CI で毎回回る |
 | `tool/make_bgm.py` | BGM 3曲を作る（`platform/ai-lab` の audiogen。生成AIではない）。`prototype/audio/` に MP3（surface＝地上と1層・mine＝2〜5層・deep＝6層より下） |
+| `tool/build_app_web.py` | アプリに入れるゲーム本体を組み立てる（`app/assets/web/index.html`。外の書体を外し、BGM を `app/assets/audio/bgm/` に写す）。組み立てた物は git に入れない |
+| `tool/make_icon.js` | アプリのアイコン（1024・透明なし）を描く。**Gemini の絵が届くまでの仮** |
+| `app/` | iOS アプリの外側（Flutter、2026-10-04）。hikari7 の app を写し、全画面広告を外し、BGM 3曲・通知を足した。商品ID `tsuruhashi_remove_ads`、Bundle ID `com.namiki.tsuruhashi` |
 | `tool/smoke.js` | 画面の通し確認。ブラウザで5つの状態（はじめて・中盤・岩盤・代替わりの前・深層）を開き、タブ・シート・買い物を押してエラー0件か。CI で毎回回る（playwright） |
 
 ## 中身（v2、2026-10-03）
@@ -116,7 +119,10 @@ v1 は同じ遊び方で1日目に6層を越え、3日目で止まっていた�
 - アプリとのつなぎは hikari7 と同じ形: `window.__TSURU_APP`（store・adFree・price・credits）、`TsuruApp.postMessage`
   （store・reward・buy・restore・haptic・theme）、アプリから呼ぶ `tsuruAdResult`・`tsuruSetApp`・`tsuruPause`・`tsuruResume`
 - 保存は `TStore`（アプリでは WebView の localStorage を使わずアプリ側へ）。12回に1回、予備（`tsuruhashi_v2_bak`）にも書く
-- 通知（「8時間たまりました」）は外側を作るときに入れる。許可は初めて留守から戻ったときに聞く
+- **通知**（`app/lib/game/notifier.dart`、flutter_local_notifications）: 許可は初めて留守から戻ったときにゲームが頼む（`{"type":"notifAsk"}`、`S.notifAsked`）。
+  裏に回るたびに、留守の上限（ゲームが `{"type":"notifCap","h"}` で伝える）の時刻に「留守の採掘がいっぱいになりました」を1件だけ予約し、戻ったら取り消す
+- アプリが裏から戻ったら `tsuruResume` を呼んで留守の計算をさせる（WebView の visibilitychange が来ない端末のため）
+- 設定の「プライバシー」は `https://tsuruhashi.dailyquarry.com/privacy.html` を開く（**ページはまだ無い**。公開ページを作るときに置く）
 
 ## 公開後の更新の計画
 

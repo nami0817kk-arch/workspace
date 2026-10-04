@@ -925,6 +925,10 @@ window.tsuruAdResult = (ok, msg) => {
   updateUI(true);
 };
 window.tsuruSetApp = o => { if (!APP) return; for (const k in o) if (k !== 'msg') APP[k] = o[k]; if (o.msg) toast('お知らせ', o.msg); updateUI(true); if (tab === 'co') buildCo(); };
+window.tsuruAdWaiting = () => { updateUI(true); };
+// 留守の上限（時間）をアプリへ。裏に回るときの「いっぱいになりました」の予約に使う
+let capSent = 0;
+function sendCap(){ if (!APP) return; const h = mods(S).off; if (h !== capSent) { capSent = h; appPost({ type:'notifCap', h }); } }
 window.tsuruPause = () => { try { save(); TStore.flush(); if (AC) AC.suspend(); for (const k in BGM.els) BGM.els[k].pause(); } catch (e) {} };
 window.tsuruResume = () => { checkAway(); };
 const PLAY_IC = '<span class="play"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="#fff"/></svg></span>';
@@ -1143,7 +1147,8 @@ function buildSettings(){
     <div class="srow"><span>動きを減らす</span><button class="mini" type="button" id="redBtn">${reducedOS ? '端末で設定ずみ' : onoff(!!S.reduce)}</button></div>
     <div class="srow"><span>表示</span><button class="mini" type="button" id="themeBtn">${({ auto:'端末に合わせる', light:'明るい', dark:'暗い' })[S.theme]}</button></div>`;
   if (APP) h += `<div class="srow"><span>広告</span>${APP.adFree ? '<span class="note" style="margin:0">消しています</span>' : `<button class="mini acc" type="button" id="buyBtn">広告を消す${APP.price ? '（' + esc(APP.price) + '）' : ''}</button>`}</div>
-    <div class="srow"><span>購入</span><button class="mini" type="button" id="restoreBtn">購入を復元</button></div>`;
+    <div class="srow"><span>購入</span><button class="mini" type="button" id="restoreBtn">購入を復元</button></div>
+    <div class="srow"><span>このアプリについて</span><span class="setrow"><button class="mini" type="button" id="privBtn">プライバシー</button><button class="mini" type="button" id="licBtn">ライセンス</button></span></div>`;
   else h += `<div class="srow"><span>試作用</span><button class="mini" type="button" id="devSkip">1時間進める</button></div>`;
   h += `<div class="srow"><span>記録</span><button class="mini" type="button" id="resetBtn">すべて消す</button></div>`;
   h += `<p class="sub" style="margin-top:10px">つるはし社${APP && APP.credits ? '<br>' + esc(APP.credits) : '　試作 v2'}</p>`;
@@ -1156,6 +1161,8 @@ function buildSettings(){
   $('redBtn').addEventListener('click', () => { if (reducedOS) return; S.reduce = !S.reduce; reduced = !!S.reduce; save(); buildSettings(); });
   if ($('buyBtn')) $('buyBtn').addEventListener('click', () => appPost({ type:'buy' }));
   if ($('restoreBtn')) $('restoreBtn').addEventListener('click', () => appPost({ type:'restore' }));
+  if ($('privBtn')) $('privBtn').addEventListener('click', () => appPost({ type:'open', url:'https://tsuruhashi.dailyquarry.com/privacy.html' }));
+  if ($('licBtn')) $('licBtn').addEventListener('click', () => appPost({ type:'licenses' }));
   if ($('devSkip')) $('devSkip').addEventListener('click', () => { if (pendingAway) return; $('setModal').classList.remove('on'); S.last = NOW() - 3600e3; showAway(3600, false, true); });
   $('resetBtn').addEventListener('click', e => {
     if (Date.now() - resetArm < 3000) {
@@ -1396,6 +1403,7 @@ function claimAway(mult){
   const gained = speciesCountOf(S) - before;
   if (r.ore > 0) { sfx('find'); floatText(cx(), rowY(S.depth) - 40, '+' + fmt(r.ore * mult), '#ffd166', 24); burst(cx(), rowY(S.depth), 30, LAYERS[layerIdxForDepth(S.depth)].speck, 1.4); }
   if (gained > 0) toast('図鑑に登録', `新しく ${gained}種`, '「図鑑」で確かめよう');
+  if (APP && !S.notifAsked) { S.notifAsked = true; setTimeout(() => appPost({ type:'notifAsk' }), 1200); }
   afterFind(setsB);
   if (layerIdxForDepth(S.depth) !== layerIdxForDepth(beforeDepth)) banner(layerIdxForDepth(S.depth));
   updateUI(true); save();
@@ -2428,7 +2436,7 @@ function frame0(now){
   for (const a of checkAch(S)) { toast('実績', a.n, `実績 ${Object.keys(S.ach).length}/${ACH.length}`); }
     if (tab === 'co' && !rbOpen) buildCoLight();
   }
-  if (saveT > 5) { saveT = 0; save(); }
+  if (saveT > 5) { saveT = 0; save(); sendCap(); }
 }
 // 社の画面は、代替わりの数字だけ追いかける（ボタンを作り直すと押しにくい）
 let coKey = '';

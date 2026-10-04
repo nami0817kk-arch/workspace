@@ -1,4 +1,4 @@
-# つるはし採掘の検証（ゲーム本体のエンジン）。アプリの外側を作ったら Flutter の検査を足す。
+# つるはし採掘の検証（ゲーム本体のエンジン・画面と、アプリの外側 Flutter）。
 name: tsuruhashi CI
 
 on:
@@ -11,6 +11,11 @@ on:
       - "projects/tsuruhashi/**"
       - ".github/workflows/tsuruhashi-ci.yml"
   workflow_dispatch:
+    inputs:
+      build_ios:
+        description: "iOS の署名なしビルドも回す（Xcode の設定を触ったとき用。macOS なので手動のときだけ）"
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -49,3 +54,47 @@ jobs:
           npm install --no-save --silent playwright@1.56.1
           npx playwright install --with-deps chromium
           node tool/smoke.js
+
+      - name: アプリに入れるゲーム本体を組み立てる
+        run: python tool/build_app_web.py
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        working-directory: projects/tsuruhashi/app
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: projects/tsuruhashi/app
+        run: flutter analyze
+
+      - name: Run tests
+        working-directory: projects/tsuruhashi/app
+        run: flutter test
+
+  ios-build:
+    if: ${{ inputs.build_ios == true }}
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: projects/tsuruhashi
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: アプリに入れるゲーム本体を組み立てる
+        run: python3 tool/build_app_web.py
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - working-directory: projects/tsuruhashi/app
+        run: flutter pub get
+      - working-directory: projects/tsuruhashi/app
+        run: flutter build ios --release --no-codesign
+      - name: 言語ごとのホーム画面名とゲーム本体が入っているか
+        working-directory: projects/tsuruhashi/app
+        run: |
+          app=build/ios/iphoneos/Runner.app
+          plutil -p "$app/ja.lproj/InfoPlist.strings" | grep 'つるはし採掘'
+          ls -la "$app/Frameworks/App.framework/flutter_assets/assets/web/index.html"
