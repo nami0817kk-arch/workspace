@@ -122,7 +122,8 @@ def episode(script) -> tuple[list[str], list[str]]:
 # --- 2人のキャラと会話の流れ（2026-10-04 にユーザーと決めた） ---------------------------
 # つむぎ：ふだん軽い話し言葉、驚くと素が出る。一人称「あーし」は節に1回くらい。剣崎を「剣崎さん」と呼ぶ。
 # 剣崎：落ち着いた丁寧語。つむぎを「つむぎさん」と呼ぶ。素性（付喪神・3600歳）は語らない。
-# 進行役は題材ごとに host で決める。締めは host「今日の地層は、ここまでです」→ 次回の通説 → 二人「また一緒に、掘りましょう！」
+# 進行役はいつも剣崎（10-04「いつも剣崎でお願いします」）。締めは剣崎「今日の地層は、ここまでです」→ 次回の通説 → 二人「また一緒に、掘りましょう！」
+HOST = "語り"            # 進行役は剣崎に固定
 CLOSING = "また一緒に、掘りましょう"
 HOST_CLOSE = "今日の地層は、ここまでです"
 PARROT_MAX = 2          # 1節の中で、驚くだけの短い返し（おうむ返し）の上限
@@ -134,16 +135,14 @@ POLITE = ("ですか", "ですね", "ですよね", "ました", "ます。", "�
 def cast_rules(script) -> tuple[list[str], list[str]]:
     import re
     errors, warns = [], []
-    host = getattr(script, "host", "")
-    if host not in ("語り", "聞き"):
-        errors.append("進行役（host: 語り か 聞き）がありません。題材ごとに決める")
+    host = HOST
     lines = script.lines
-    if lines and host in ("語り", "聞き") and lines[0].speaker != host:
-        errors.append(f"最初の行は進行役（{host}）が話す")
+    if lines and lines[0].speaker != host:
+        errors.append("最初の行は進行役の剣崎（語り）が話す")
     if not lines or lines[-1].speaker != "二人" or CLOSING not in lines[-1].text:
         errors.append(f"最後の行は二人で「{CLOSING}！」")
     if not any(HOST_CLOSE in l.text and l.speaker == host for l in lines):
-        errors.append(f"締めに進行役の「{HOST_CLOSE}」がありません")
+        errors.append(f"締めに剣崎の「{HOST_CLOSE}」がありません")
     for l in lines:
         if re.search(r"めすお|べっつー", l.text):
             errors.append(f"{l.index + 1}行目：呼び方は「剣崎さん」「つむぎさん」（公式のあだ名は使わない）")
