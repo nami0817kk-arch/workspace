@@ -64,38 +64,32 @@ const PLAY_ROUND = `applyPlan(S);applyLesson(S);S.ap=0;afterTalk(S);if(S.phase==
   var B=alive(S),res=S.stage.res,n=capOf(S);B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,n).forEach(function(t){S.pass[t.id]=true;});decide(S);`;
 const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S.caps.sel).map(function(t){return t.id;});confirmSelect(S);startSeason(S);`;
 
-// ===== 全画面広告 =====
+// ===== 全画面広告（エンドロールの前に1シーズン1回だけ。2026-10-04 ユーザー決定） =====
 {
-  const g = boot({ adFree: false, store: { hikari7_career: JSON.stringify({ seasons: 1, points: 0, hall: [] }) }, owned: {} });
+  const FIN = `var B=alive(S),res=S.stage.res;B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,Math.min(6,S.caps.finMax,B.length)).forEach(function(t){S.pass[t.id]=true;});decide(S);`;
+  const g = boot({ adFree: false, store: {}, owned: {} });
   g.run(START);
-  const between = () => g.posts.filter((p) => p.type === 'between');
-  const seen = [];
-  for (let r = 1; r <= 4; r++) {
-    g.run(PLAY_ROUND);
-    const before = between().length;
-    g.press('nextround');
-    const asked = between().length > before;
-    seen.push(asked);
-    if (asked) {
-      ok(g.run('S.rnd') === r, `第${r}審査の後: 広告を出し終えるまで次の審査に進まない`);
-      g.run('hikariBetweenDone()');
-    }
-    ok(g.run('S.rnd') === r + 1, `第${r}審査の後: 次の審査へ進んだ`);
-  }
-  ok(JSON.stringify(seen) === '[false,true,true,false]', '2シーズン目以降は第2・第3審査の後の2回だけ出す（' + JSON.stringify(seen) + '）');
-  ok(g.posts.some((p) => p.type === 'prepInter'), '出しそうな審査に入ったら、そのときだけ読み込みを頼む');
+  for (let r = 1; r <= 4; r++) { g.run(PLAY_ROUND); g.press('nextround'); }
+  ok(g.run('S.rnd') === 5 && !g.posts.some((p) => p.type === 'between' || p.type === 'prepInter'), '審査の間には全画面広告を出さず、読み込みも頼まない');
+  g.run(PLAY_ROUND.replace(/var B=alive[\s\S]*$/, '') + FIN);
+  g.press('toprep');
+  g.run("S.prep.color=2;S.prep.song=1;S.prep.leader=S.tr.filter(function(t){return t.status==='debut';})[0].id;startMonth(S);");
+  ok(g.posts.some((p) => p.type === 'prepInter'), 'デビュー後1か月に入ったら、そのときだけ読み込みを頼む');
+  g.press('monthdone');
+  ok(g.posts.filter((p) => p.type === 'between').length === 1 && g.run('S.phase') === 'month', 'エンドロールへ進むとき1回出し、閉じるまでは進まない');
+  g.run('hikariBetweenDone()');
+  ok(g.run('S.phase') === 'result' && g.run('S.ending') === true, '広告を閉じたらエンドロールへ進む');
 
-  const h = boot({ adFree: false, store: {}, owned: {} });
-  h.run(START);
-  for (let r = 1; r <= 4; r++) { h.run(PLAY_ROUND); h.press('nextround'); }
-  ok(!h.posts.some((p) => p.type === 'between' || p.type === 'prepInter'), 'はじめてのシーズンには出さず、読み込みも頼まない');
-
-  const k = boot({ adFree: false, store: { hikari7_career: JSON.stringify({ seasons: 1, points: 0, hall: [] }) }, owned: {} });
-  k.run(START);
-  k.run(PLAY_ROUND); k.press('nextround'); k.run(PLAY_ROUND); k.press('nextround');
-  ok(k.run('S.rnd') === 2, '返事が来ないうちは進まない');
+  const k = boot({ adFree: false, store: {}, owned: {} });
+  k.run(START + "S.tr.slice(0,6).forEach(function(t){t.status='debut';});startPrep(S);S.prep.leader=S.tr[0].id;S.phase='month';S.month={w:4,busy:0,fan:0,song:0,coh:0,log:[]};");
+  k.press('monthdone');
   k.timers.filter(Boolean).forEach((f) => f());
-  ok(k.run('S.rnd') === 3, 'アプリから返事が来なくても、少し待てば次の審査へ進む（固まらない）');
+  ok(k.run('S.phase') === 'result', 'アプリから返事が来なくても、少し待てばエンドロールへ進む（固まらない）');
+
+  const n = boot({ adFree: true, store: {}, owned: {} });
+  n.run(START + "S.tr.slice(0,6).forEach(function(t){t.status='debut';});startPrep(S);S.prep.leader=S.tr[0].id;S.phase='month';S.month={w:4,busy:0,fan:0,song:0,coh:0,log:[]};");
+  n.press('monthdone');
+  ok(!n.posts.some((p) => p.type === 'between') && n.run('S.phase') === 'result', '広告を消した人には出さず、すぐ進む');
 }
 
 // ===== 動画の特典 =====
@@ -126,6 +120,8 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(g.run('packArcKeys().length') === 6 && g.run("fmtKeys().indexOf('acap')") >= 0, '買ったらその場で中身が入る');
   g.run('hikariSetApp({owned:{story:false,audition:false}})');
   ok(g.run('packArcKeys().length') === 0 && g.run("fmtKeys().indexOf('acap')") < 0, '返金されたら、新しく始める中身から外す');
+  ok(!/data-a="buypack"/.test(g.run('vTitleShop()')) && /広告を消す/.test(g.run('vTitleShop()')), '売り出すまでは、追加パックを売り場に出さない');
+  g.run('PACK_SALE=true');
   g.press('tsub', 'shop');
   ok(g.posts.some((p) => p.type === 'refresh'), '追加パックの画面を開いたら、最新の値段を取りに行く');
   g.run('hikariSetApp({storeOk:true,prices:{story:null,audition:"¥320"}})');
