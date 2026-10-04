@@ -217,13 +217,16 @@ def make_video(args, draft: bool) -> int:
                           end_card=end_card)
     print("背景を動かしています…")
     bg = video.background_track(ffmpeg(), painter, video.runs_of(cues, total), wd / "bg", v["fps"], size,
-                                wd / "background.mp4")
+                                wd / "background.mp4", workers=v.get("bg_workers", 5))
     suffix = ("_draft" if draft else "") + (f"_{limit}lines" if limit else "")
     target = out_dir() / f"{path.stem}{suffix}.mp4"
     lst = wd / "overlay.txt"
     lst.write_text(render.concat_list(items), encoding="utf-8")
     print("重ねています…")
     video.compose(ffmpeg(), bg, lst, audio, target, v["fps"], preset="veryfast" if draft else "medium")
+    got = video.media_seconds(ffmpeg(), target)
+    if got is None or abs(got - total) > 2.0:               # 10-05：3分しかない本編が「30.7分」と出て通っていた
+        raise video.LengthError(f"仕上がりの長さが合いません: {got}秒（予定 {total:.1f}秒）。work/<台本>/bg を消して作り直す")
     bg.unlink()
     names = {k: people.label(config, k) for k in list(config["cast"]) + sc.roles}
     (out_dir() / f"{path.stem}.srt").write_text(mix.srt(cues, names), encoding="utf-8")

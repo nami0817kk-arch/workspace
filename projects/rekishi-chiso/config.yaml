@@ -86,6 +86,7 @@ fonts:
   gothic: C:/Windows/Fonts/YuGothB.ttc
 
 video:
+  bg_workers: 5      # 背景を同時に作る本数。10 だと空きメモリ5GB台で ffmpeg が落ちた（10-05、西太后の回）
   width: 1920
   height: 1080
   fps: 30
