@@ -87,17 +87,55 @@ void main() {
     expect(asked, isTrue, reason: '出せなかった回を数えている');
   });
 
-  test('頼むのはシーズンの区切りだけ(差し込み場所の確認)', () {
-    // 遊んでいる最中に出すと、むしろ悪い評価を呼ぶ。呼び出しが
+  test('OS の窓を出すのはシーズンの区切りだけ(差し込み場所の確認)', () {
+    // 遊んでいる最中に窓を出すと、むしろ悪い評価を呼ぶ。呼び出しが
     // シーズン更新の処理の中にあることを原文で見る。
+    //
+    // **見るのは `maybeAsk` の数。** `ReviewPrompt(` の数ではない。
+    // ストアのページを開くだけの `openStoreListing` は割り込みではなく、
+    // 設定や昇格のダイアログに置いてよい(置いてある)。構築の数で縛ると、
+    // 割り込まない導線まで足せなくなる。
     final src = File('lib/screens/home_screen.dart').readAsStringSync();
     final at = src.indexOf('Future<void> _startNextSeason');
     expect(at, greaterThan(0));
     final body = src.substring(at, at + 2000);
-    expect(body.contains('ReviewPrompt('), isTrue,
-        reason: 'シーズンの区切り以外から呼んでいる');
-    expect(src.split('ReviewPrompt(').length - 1, 1,
-        reason: '呼び出しが2か所以上ある');
+    expect(body.contains('maybeAsk('), isTrue,
+        reason: 'シーズンの区切り以外から窓を出している');
+
+    var asks = 0;
+    for (final file in Directory('lib')
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.dart'))) {
+      asks += file.readAsStringSync().split('.maybeAsk(').length - 1;
+    }
+    expect(asks, 1, reason: '窓を出す場所が2か所以上ある');
+  });
+  group('評価への道', () {
+    // OS の窓は年3回までに絞られ、出ないこともある。公開から10日で
+    // 評価0件だったので、自分で書きに行ける道を別に用意してある。
+    // **道が消えても例外は出ない**ので、ここで見ておく。
+    test('設定から評価とお問い合わせに行ける', () {
+      final settings =
+          File('lib/screens/settings_screen.dart').readAsStringSync();
+      expect(settings, contains('openStoreListing()'),
+          reason: '設定からストアのページへ行けない');
+      expect(settings, contains('legal/support.html'),
+          reason: '設定にお問い合わせの窓口が無い');
+    });
+
+    test('昇格・優勝のダイアログにも評価への道がある', () {
+      final home = File('lib/screens/home_screen.dart').readAsStringSync();
+      expect(home, contains('openStoreListing()'),
+          reason: 'いちばん機嫌のいい瞬間に評価への道が無い');
+    });
+
+    test('アプリIDが掲載情報と合っている', () {
+      // 違う ID を書くと、別のアプリのページが開く。
+      final listing = File('STORE_LISTING.md').readAsStringSync();
+      expect(listing, contains(ReviewPrompt.appStoreId),
+          reason: 'STORE_LISTING.md に無いアプリIDを指している');
+    });
   });
 }
 
@@ -122,4 +160,5 @@ class _FakeReview implements InAppReview {
     String? appStoreId,
     String? microsoftStoreId,
   }) async {}
+
 }
