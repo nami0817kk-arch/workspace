@@ -66,8 +66,8 @@ cover_text = dc[0].get_text()
 colophon = ptext(len(di))
 
 print("■ A. KDP の入稿要件（裁ち落としあり・PDF・色・書体）")
-check("本文のページ数が設計どおり・偶数・24以上・828以下",
-      len(di) == page_count(spec) and len(di) % 2 == 0 and 24 <= len(di) <= 828, f"{len(di)}ページ")
+check("本文のページ数が設計どおり・偶数・KDP の最小（72）以上・828以下",
+      len(di) == page_count(spec) and len(di) % 2 == 0 and kdp_spec.MIN_PAGES_UPLOAD <= len(di) <= 828, f"{len(di)}ページ")
 sizes = {(round(p.rect.width, 2), round(p.rect.height, 2)) for p in di}
 check("本文のページの大きさが 判型の幅+0.125in・高さ+0.25in（裁ち落としあり）",
       sizes == {(round(TW + B, 2), round(TH + 2 * B, 2))}, str(sizes))

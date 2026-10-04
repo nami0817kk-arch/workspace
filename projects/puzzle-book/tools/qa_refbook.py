@@ -64,7 +64,7 @@ def flat(text):
 
 print(f"■ A. KDP の入稿要件（{spec.title}）")
 n = len(di)
-check("本文のページ数が設計どおり・24以上", n == page_count(items) and n >= 24, f"{n}ページ")
+check("本文のページ数が設計どおり・KDP の最小（72）以上", n == page_count(items) and n >= kdp_spec.MIN_PAGES_UPLOAD, f"{n}ページ")
 sizes = {(round(p.rect.width, 2), round(p.rect.height, 2)) for p in di}
 check("本文の大きさが 判型の幅+0.125in・高さ+0.25in", sizes == {(round(TW + B, 2), round(TH + 2 * B, 2))}, str(sizes))
 check("本文・表紙の書体がすべて埋め込み",

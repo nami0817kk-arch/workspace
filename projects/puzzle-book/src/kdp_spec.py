@@ -34,6 +34,9 @@ def is_large(trim: str) -> bool:
     return t.width_in > STANDARD_MAX_IN[0] or t.height_in > STANDARD_MAX_IN[1]
 
 MIN_PAGES = 24  # topic/G201857950
+# 2026-10-04、A5・プレミアムカラーの本文（66ページ）を入れたら KDP の画面で「最小 72 ページが必要」と出た。
+# ヘルプの 24 より厳しい。どの判型・インクに当たるかは未確認なので、新しく作る本はこちらに合わせる
+MIN_PAGES_UPLOAD = 72
 
 # 線の最小の太さ 0.75 pt（topic/G201857950）。解答ページの縮小図もこれを下回らせない。
 MIN_LINE_PT = 0.75
