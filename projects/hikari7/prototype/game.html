@@ -837,6 +837,9 @@ body.reduce .pd,body.reduce .hudc{animation:none}@media (prefers-reduced-motion:
 .seg button.cr0.on{background:#1f7a50;border-color:#1f7a50;color:#fff}
 .seg button.cr1.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 .seg button.cr2.on{background:#c23848;border-color:#c23848;color:#fff}
+.seg.crg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:6px}.seg.crg button{min-width:0;min-height:34px;padding:0 2px}
+.seg button.cr3.on{background:#b5582a;border-color:#b5582a;color:#fff}.seg button.cr4.on{background:#2f6db5;border-color:#2f6db5;color:#fff}.seg button.cr5.on{background:#6b4fa8;border-color:#6b4fa8;color:#fff}.seg button.cr6.on{background:#1d7a80;border-color:#1d7a80;color:#fff}.seg button.cr7.on{background:#5c6270;border-color:#5c6270;color:#fff}
+.csay{margin-top:6px;color:var(--muted)}.crl>div{margin:3px 0}.crl .crc{color:var(--muted)}
 .seg button.best:not(.on){border-color:var(--gold);color:var(--gold)}
 /* 13. 合格人数のゲージ */
 .jbar{position:relative;display:block;width:96px;height:6px;border-radius:3px;background:rgba(127,127,127,.25);margin-top:4px;overflow:visible}
@@ -1368,24 +1371,129 @@ function runStage(S){
   checkGoalsStage(S);buildShow(S);S.nightQs=genReqs(S);S.phase='show';
 }
 /* ---------- 講評 ---------- */
-var CRIT=[['ほめる','自信が上がる'],['課題を伝える','次のレッスンで弱点が伸びやすい'],['厳しく言う','伸びるか、折れるか']];
+// [名前, 効き目, 代償, ボタンの短い名前, 1=言葉をかけない（地の文で出す）]
+var CRIT=[['ほめる','自信が上がる','負けず嫌いは油断し、お調子者も浮かれることがある','ほめる'],
+  ['課題を伝える','次のレッスンで弱点が伸びやすい','繊細な子は自信が少し下がる','課題'],
+  ['厳しく言う','全部の力が伸びる。負けず嫌いは大きく伸びる','疲れる。負けず嫌いのほかは自信と信頼が下がる。出来が良い子には特に響かない','厳しく'],
+  ['ライバルと比べる','得意が伸びる。負けず嫌いによく効く','比べた相手との絆が下がり、少し疲れる。繊細・マイペースには響かない','比べる'],
+  ['宿題を出す','得意が少し伸び、次のレッスンで得意がよく伸びる','疲れる。マイペース・お調子者はやらないことがある','宿題'],
+  ['自分で振り返らせる','出来が良ければ自信、悪ければ弱点が伸びる。マイペースによく効く','少し疲れる。出来が悪いと繊細な子は自分を責める','振り返り'],
+  ['チームとして講評する','近くの子との絆と、自信が上がる','力は伸びない。上位の負けず嫌い・お調子者は不満を持つ','チーム'],
+  ['あえて何も言わない','疲れが抜ける。マイペースによく効く','繊細・素直な子は不安になる。お調子者は浮かれる','見守る',1]];
+// プロデューサーの言葉。{D}=担当の見せどころ {W}=弱点の中身 {O}=比べた相手
+var CRIT_SAY=[
+  {hi:['{D}、今日いちばん客席に届いてた','{D}が良かった。あれは自信を持っていい','今日のステージ、迷いがなかった。{D}は特に','{D}、練習してきたことがそのまま出てた'],
+   lo:['点数は伸びなかったけど、{D}には光るものがあった','結果は悔しいね。でも{D}は前より良くなってる','最後まで投げ出さなかった。まずそこを認めたい']},
+  {hi:['良い出来だった。次は{W}を詰めよう','{D}は十分。足りないのは{W}だけだ','ここから上に行くなら、{W}が鍵になる'],
+   lo:['{W}で点を落としてる。そこから直そう','まずは{W}。ほかは後でいい','今日は{W}が崩れた。次のレッスンで集中して']},
+  {hi:['この出来で満足するなら、ここまでだ','{D}は良い。でも、それだけじゃデビューには届かない','今日の点数は忘れていい。もっと上を見て'],
+   lo:['このままだと次はない。本気で考えて','{W}が全然足りない。言い訳は聞かない','練習でできていたことが、本番で半分も出ていない']},
+  {up:['{O}との差は{D}だ。あそこを見てごらん','{O}のステージ、どこが違ったか分かる？','{O}にできて、今のきみにできていないことがある'],
+   dn:['すぐ後ろに{O}が来てる。気を抜いたら抜かれる','{O}の追い上げを見たか？ 今の差は小さい']},
+  {all:['次の審査までに、{D}をもう一段上げてきて','宿題を出す。{D}を毎日、映像に撮って確かめること','次に会うとき、{D}がどう変わったか見せて'],
+   lo:['得意の{D}で取り返そう。それが次までの宿題']},
+  {hi:['今日のステージ、自分では何点だった？','どこが良かったか、自分の言葉で話してみて'],
+   lo:['何がうまくいかなかったか、自分で見つけてきて','映像を見返して、明日の朝に話を聞かせて','今日の自分に、何て声をかける？']},
+  {team:['今日はチームとして見た。全員でつかんだ点だ','ひとりの出来より、隣と合わせられたかを見てた','このチームはまだ伸びる。次も一緒に詰めよう'],
+   solo:['今日は全員を一つのチームとして見てた','ひとりずつの舞台でも、袖で支え合ってたのは見えてた','全員の点で、この番組の評価が決まる']},
+  {all:['あえて何も言わず、軽くうなずくだけにした','目を合わせて、黙って肩をたたいた','何も言わずに、次の練習の予定表だけを渡した']}];
+var CRIT_SPD={v:['サビの高音','声の伸び','息つぎの置き方','最後のロングトーン'],d:['ターンの軸','止めの一瞬','足さばき','振りの大きさ'],r:['言葉の立ち方','リズムへの乗り方','韻の置き方','早口のところ'],t:['目線の運び','表情の切り替え','指先まで使った見せ方','曲の世界への入り方']};
+var CRIT_WKD={v:['音程の安定','声量','歌の入り'],d:['体の軸','振りの正確さ','踊りの体力'],r:['リズムの刻み','言葉の聞き取りやすさ','ラップの入り'],e:['表情の幅','目線','曲の気持ちの出し方']};
+// 担当ごとの決意のひと言（ほめる・宿題がうまく届いたときに、ときどき出る）
+var CRIT_SPRX={v:['「明日から、発声を朝と夜にやります」','「次は、もっと遠くまで声を届けます」','「息つぎの場所、全部決め直します」'],
+  d:['「鏡の前で、ターンだけ百回やります」','「次は、指の先までそろえてみせます」','「止めるところで、ちゃんと止まれるようにします」'],
+  r:['「歌詞、もう一回書き直してみます」','「言葉の置き場所、全部見直します」','「メトロノームと一緒に寝ます」と笑った'],
+  t:['「目線の置き方から、作り直します」','「曲の主人公の気持ち、もう一度考えてみます」','「鏡の前で、表情だけの練習をします」']};
+// 練習生の反応：気質ごとに、講評の種類ごとに、結果（hi=出来が良い lo=出来が悪い ok=届いた ng=裏目）ごと
 var REACT_X={
-  mypace:[['「そうですか」と、うれしそうに少しだけ笑った','「じゃあ、このままのやり方で行きます」'],['「なるほど。自分のペースで直してみます」','うなずいて、言われたところだけ何度か確かめた'],['「……急に言われても」と、少し困った顔をした','黙って聞いていたが、目が合わなかった']],
-  ochoshi:[['「でしょ！？ 自分でもそう思ってました！」','ガッツポーズをして、周りを笑わせた'],['「えー、そこですか？ ……分かりました、直します」','照れ笑いしながら、メモを取るふりをした'],['いつもの冗談が出ず、静かにうつむいた','「……はい」と言ったきり、すねたように黙った']]};
+  mypace:[{hi:['「そうですか」と、うれしそうに少しだけ笑った','「じゃあ、このままのやり方で行きます」'],lo:['「点数はともかく、楽しかったです」','「ほめてもらえるなら、それで十分です」']},
+    {hi:['「なるほど。自分のペースで直してみます」','うなずいて、言われたところだけ何度か確かめた'],lo:['「一つずつ、やっていきます」','「そこからですね」と、のんびりうなずいた']},
+    {hi:['「……急に言われても」と、少し困った顔をした','黙って聞いていたが、目が合わなかった'],lo:['「はあ」とだけ言って、首をかしげた','黙って聞いていたが、その夜はいつもより早く寝てしまった']},
+    {ng:['「人は人なので」と、あまり響いていない様子だった','「{O}は{O}、自分は自分です」','「比べるの、あんまり好きじゃないです」と、ぽつりと言った']},
+    {ok:['「自分のやり方でいいなら、やります」','宿題の紙を、ていねいに折ってしまった'],ng:['「宿題って、苦手なんですよね」と笑った','宿題の紙を、そっとポケットにしまった。たぶん、もう出てこない']},
+    {hi:['「楽しかったところから話してもいいですか」','ゆっくり考えてから、「あの一瞬は良かった」と言った'],lo:['「あ、分かりました。ここです」と、自分で答えを見つけた','映像を見ながら、自分だけのメモを作りはじめた']},
+    {ok:['「みんなでやるの、けっこう好きです」','みんなの輪の中で、のんびり笑っていた']},
+    {ok:['「ありがとうございます」と、なぜかいちばんうれしそうだった','そのまま、いつもの調子で練習室に戻っていった','言われないほうが、自分で考えられるらしい。ひとりで映像を見返していた']}],
+  ochoshi:[{hi:['「でしょ！？ 自分でもそう思ってました！」','ガッツポーズをして、周りを笑わせた'],lo:['「点数はアレですけど、気持ちは満点です！」','「よーし、乗ってきた！」と、急に元気になった']},
+    {hi:['「えー、そこですか？ ……分かりました、直します」','照れ笑いしながら、メモを取るふりをした'],lo:['「あ、バレてました？」と頭をかいた','「そこ、実は自分でも怪しいと思ってました」']},
+    {hi:['いつもの冗談が出ず、静かにうつむいた','「……はい」と言ったきり、すねたように黙った'],lo:['笑ってごまかそうとして、やめた','その日はいちども、冗談を言わなかった']},
+    {ok:['「{O}に勝ったら、何かくれます？」と笑いながら、目は本気だった','「よーし、見てろよ{O}！」と声を上げた'],ng:['「どうせ{O}のほうが上ですよ」と、口をとがらせた','冗談で流そうとしたが、うまく笑えていなかった']},
+    {ok:['「宿題、ちゃんとやります！ たぶん！」','宿題を大きな字で書いて、壁に貼った'],ng:['「宿題？ ……あっ、はい」と、すでに上の空だった','その日のうちに、宿題のことはすっかり忘れていた']},
+    {hi:['「自己採点は120点です！」と胸を張った','「えっと、全部良かったです！」と言って、自分で笑った'],lo:['冗談を言いかけて、やめて、まじめに考えはじめた','「……ふざけないで言うと、出だしで逃げました」'],ng:['「反省は明日します！」と笑ってごまかした','振り返るはずが、いつの間にか雑談になっていた']},
+    {ok:['「チーム最高！」と、みんなと肩を組んだ','「次もこのメンバーがいいです！」と手を挙げた'],ng:['「え、自分のことは？」と、ちょっとすねた','「自分、けっこう良くなかったです？」と食い下がった']},
+    {ok:['「……あれ、何も言われないと逆に怖いですね」と、珍しくまじめな顔をした','黙ってうなずき返して、いつもより静かに練習室へ戻った'],ng:['「何も言われないってことは、完璧ってことですね！」と、すっかり浮かれていた','鼻歌まじりで、練習を早めに切り上げた']}]};
 var REACT={
-  sunao:[['「ありがとうございます、もっと頑張ります！」','照れくさそうに笑って、何度も頭を下げた'],['「はい、そこを直します」','言われたことを、その場でメモに書き込んだ'],['しばらく黙って、「……はい」と答えた','「分かってはいたんです」と、小さく笑った']],
-  makezu:[['「まだまだです」とすぐ練習室に戻った','「ほめられると、かえって落ち着かないです」'],['「次は絶対に見返します」','「そこ、自分でも気になってました」と即答した'],['目の色が変わった。「見ていてください」','黙って一礼し、その夜は最後まで練習室にいた']],
-  sensai:[['ほっとした表情で、少し泣きそうになった','「……よかった」と、ようやく肩の力を抜いた'],['不安そうに何度もうなずいた','「直せるか分からないけど、やってみます」と小さく言った'],['練習のあと、ひとりで泣いていた','笑ってうなずいたが、食事にはほとんど手をつけなかった']]
+  sunao:[{hi:['「ありがとうございます、もっと頑張ります！」','照れくさそうに笑って、何度も頭を下げた','「ほめてもらえたところ、忘れないようにします」'],lo:['「……次は、点数でも応えたいです」','うれしそうにうなずいたあと、小さく「でも悔しい」とこぼした']},
+    {hi:['「はい、そこを直します」','言われたことを、その場でメモに書き込んだ'],lo:['「分かってはいたんです」と、小さく笑った','「明日の朝いちばんに、そこからやります」']},
+    {hi:['しばらく黙って、「……はい」と答えた','「もっと上、ですね」と、自分に言い聞かせた'],lo:['唇をかんで、「……はい」とだけ答えた','その夜、練習室の明かりは最後まで消えなかった'],ng:['「あれでも、足りないんですね」と、肩を落とした','うなずいてはいたが、どこを直せばいいのか分からない顔だった']},
+    {ok:['「{O}のステージ、見返してみます」','「どこが違うのか、ちゃんと見てきます」','{O}の映像を、ノートを取りながら見ていた']},
+    {ok:['「はい、毎日やって見せに来ます」','言われた宿題を、手帳のいちばん上に書いた']},
+    {hi:['「えっと……最後のサビは、うまくいったと思います」','少し考えてから、良かったところを3つ挙げた'],lo:['「入りで焦って、全部崩れました」と自分で言った','映像を何度も止めながら、気づいたことを書き出した']},
+    {ok:['「みんなで取った点、うれしいです」','隣の子と顔を見合わせて笑った']},
+    {ng:['何か言われるのを待っていたが、やがて静かに頭を下げた','「……何か、だめでしたか」と不安そうに聞いた']}],
+  makezu:[{hi:['「まだまだです」とすぐ練習室に戻った','「ほめられると、かえって落ち着かないです」'],lo:['「慰めはいりません」と、目をそらした','「この点数で、ほめないでください」']},
+    {hi:['「そこ、自分でも気になってました」と即答した','「次は絶対に見返します」'],lo:['「全部直して、次は上に行きます」','言われたところを、その場で何度も繰り返した']},
+    {hi:['目の色が変わった。「見ていてください」','「もっと言ってください。全部やります」'],lo:['黙って一礼し、その夜は最後まで練習室にいた','「……悔しい。でも、その通りです」']},
+    {ok:['「{O}には、次で必ず勝ちます」','{O}の映像を、その夜のうちに3回見返した','「差は分かりました。あとは埋めるだけです」']},
+    {ok:['「宿題、倍にしてもいいですか」','「次の審査で、答えを見せます」']},
+    {hi:['「良かったところより、直したいところが5つあります」','「自分では70点です。まだ上があります」'],lo:['「出だしで半拍、遅れました」と即答した','映像を止めては巻き戻し、気づけば夜中になっていた']},
+    {ok:['「みんなで上に行って、その中でいちばんになります」','まわりの子と、すぐに次の段取りを話しはじめた'],ng:['「自分の出来は、どうだったんですか」と食い下がった','みんなの話にうなずきながらも、納得していない顔だった']},
+    {ok:['何も言われないことが、かえって火をつけたらしい。誰より早く練習室に戻った','「……言われる前に、自分で直します」'],ng:['「何か言ってください」と、悔しそうに背を向けた','黙って一礼したが、その目は不満そうだった']}],
+  sensai:[{hi:['ほっとした表情で、少し泣きそうになった','「……よかった」と、ようやく肩の力を抜いた'],lo:['「点数が悪かったのに……ありがとうございます」と、目をうるませた','「明日も、ここにいていいんですね」と小さく笑った']},
+    {hi:['不安そうに何度もうなずいた','「直せるか分からないけど、やってみます」と小さく言った'],lo:['「やっぱり、そこですよね」と、うつむいた','メモを取る手が、少し震えていた']},
+    {hi:['笑ってうなずいたが、食事にはほとんど手をつけなかった','「……はい」と答えたあと、しばらく顔を上げなかった'],lo:['練習のあと、ひとりで泣いていた','その夜、部屋の明かりがなかなか消えなかった']},
+    {ng:['「{O}みたいには、なれないです」と、うつむいた','比べられたことが、ずっと頭から離れないようだった']},
+    {ok:['「毎日、ちゃんとやります」と、手帳に書きこんだ','やることがはっきりして、少し安心したようだった']},
+    {hi:['「……良かったところ、言ってもいいんですか」と照れた','少しずつ、自分の言葉で話しはじめた'],ng:['「全部、だめでした」と、自分を責める言葉ばかりが出てきた','振り返るうちに、声がどんどん小さくなった']},
+    {ok:['「みんなと一緒で、よかった」と、肩の力を抜いた','隣の子に、そっと「ありがとう」と言った']},
+    {ng:['何も言われなかったことを、夜まで気にしていた','「怒ってますか」と、何度もこちらを振り返った']}]
 };
+function critRx(tp,c,tag){var o=tpick(REACT,tp)[c];return o[tag]||(tag==='ok'||tag==='hi'?o.hi||o.ok:o.lo||o.ng)||o.ok||o.hi||o.lo||o.ng;}
+// 比べる相手：ライバルが残っていればその子、いなければ出来がひとつ上の子（1位なら2位）
+function critOther(S,t){var res=S.stage.res,ord=S.stage.order.filter(function(id){return res[id]&&S.tr[id].status==='alive';});
+  var rv=relsOf(S,t.id).filter(function(r){return r.k==='rival'&&res[r.o]&&S.tr[r.o].status==='alive';})[0],i=ord.indexOf(t.id),o;
+  if(rv)o=rv.o;else if(i>0)o=ord[i-1];else o=ord[1];
+  if(o==null)return null;return {o:S.tr[o],up:res[o].sc>=res[t.id].sc};}
+// チームとして講評するときの「近くの子」：チーム課題なら同じチーム、ほかは出来が前後の子
+function critMates(S,t){var st=S.stage,r=st.res[t.id];
+  if(r&&r.team!=null&&st.teams[r.team])return st.teams[r.team].ids.filter(function(id){return id!==t.id&&S.tr[id].status==='alive';});
+  var ord=st.order.filter(function(id){return S.tr[id].status==='alive';}),i=ord.indexOf(t.id);return [ord[i-1],ord[i+1]].filter(function(id){return id!=null;});}
+function critPick(S,arr){var u=S.critSeen||(S.critSeen={}),c=arr.filter(function(x){return !u[x];});if(!c.length){arr.forEach(function(x){delete u[x];});c=arr;}var x=pick(c);u[x]=1;return x;}
 function applyCritique(S){
   var out=[];
-  alive(S).forEach(function(t){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id],tp=t.temper,pot=t.pot;
-    if(c===0){ if(tp==='makezu'){t.conf+=6;t.trust+=2;t.complacent=true;} else if(tp==='ochoshi'){t.conf+=12;t.trust+=4;if(R()<.5)t.complacent=true;} else if(tp==='sensai'){t.conf+=15;t.trust+=6;} else {t.conf+=10;t.trust+=3;} }
-    else if(c===1){ var k=weakest(t);t.focus=k;t.st[k]=Math.min(99,t.st[k]+2*pot);t.conf+=tp==='makezu'?3:tp==='sensai'?-5:-1;t.trust+=tp==='sensai'?2:5; }
-    else { var g=tp==='makezu'?2.5:tp==='sunao'?1:.8;['v','d','r','e'].forEach(function(k){t.st[k]=Math.min(99,t.st[k]+g*pot);});t.fat+=8;
-      if(tp==='makezu'){t.conf+=6;t.trust+=2;} else if(tp==='sunao'){t.conf-=6;t.trust-=3;} else if(tp==='mypace'){t.conf-=8;t.trust-=8;} else if(tp==='ochoshi'){t.conf-=10;t.trust-=4;} else {t.conf-=16;t.trust-=8;} }
+  alive(S).forEach(function(t){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id],tp=t.temper,pot=t.pot,r=S.stage.res[t.id],sc=r?r.sc:60,hi=sc>=70,tag=hi?'hi':'lo',sk=t.spec==='t'?'e':t.spec,wk=weakest(t),oth=null,sayK=hi?'hi':'lo';
+    if(c===0){ if(tp==='makezu'){t.conf+=6;t.trust+=hi?2:-2;t.complacent=true;} else if(tp==='ochoshi'){t.conf+=12;t.trust+=4;if(R()<.5)t.complacent=true;} else if(tp==='sensai'){t.conf+=15;t.trust+=6;} else {t.conf+=10;t.trust+=3;} }
+    else if(c===1){ t.focus=wk;t.st[wk]=Math.min(99,t.st[wk]+2*pot);t.conf+=tp==='makezu'?3:tp==='sensai'?-5:-1;t.trust+=tp==='sensai'?2:5; }
+    else if(c===2){ var g=tp==='makezu'?2.5:tp==='sunao'?1:.8;['v','d','r','e'].forEach(function(k){t.st[k]=Math.min(99,t.st[k]+g*pot);});t.fat+=8;
+      if(tp==='makezu'){t.conf+=6;t.trust+=2;} else if(tp==='sunao'){t.conf-=6;t.trust-=3;} else if(tp==='mypace'){t.conf-=8;t.trust-=8;} else if(tp==='ochoshi'){t.conf-=10;t.trust-=4;} else {t.conf-=16;t.trust-=8;}
+      if(sc>=85&&tp!=='makezu'){t.trust-=3;tag='ng';} }
+    else if(c===3){ oth=critOther(S,t);sayK=oth&&!oth.up?'dn':'up';t.fat+=3;if(oth)addBond(S,t.id,oth.o.id,-4);tag='ok';
+      if(tp==='makezu'){t.st[sk]=Math.min(99,t.st[sk]+3.5*pot);t.conf+=5;}
+      else if(tp==='sunao'){t.st[sk]=Math.min(99,t.st[sk]+2.5*pot);t.conf-=1;}
+      else if(tp==='ochoshi'){if(R()<.5){t.st[sk]=Math.min(99,t.st[sk]+2.5*pot);t.conf+=6;}else{t.conf-=6;tag='ng';}}
+      else if(tp==='mypace'){t.st[sk]=Math.min(99,t.st[sk]+pot);t.trust-=5;t.conf-=2;tag='ng';}
+      else {t.st[sk]=Math.min(99,t.st[sk]+2*pot);t.conf-=10;t.trust-=3;tag='ng';} }
+    else if(c===4){ sayK=hi?'all':'lo';t.fat+=4;t.st[sk]=Math.min(99,t.st[sk]+2*pot);tag='ok';
+      if((tp==='mypace'&&R()<.4)||(tp==='ochoshi'&&R()<.5)){tag='ng';if(tp==='mypace')t.trust-=2;}
+      else {t.focus=sk;t.trust+=3;if(tp==='sensai'){t.fat+=3;t.conf-=2;}else if(tp==='sunao')t.conf+=2;else if(tp==='makezu')t.conf+=3;} }
+    else if(c===5){ t.fat+=2;
+      if(hi){t.conf+=7;t.trust+=4;if(tp==='ochoshi'&&R()<.4)t.complacent=true;}
+      else if(tp==='sensai'){t.st[wk]=Math.min(99,t.st[wk]+1.5*pot);t.conf-=10;tag='ng';}
+      else if(tp==='ochoshi'&&R()<.5){t.trust-=2;tag='ng';}
+      else {t.st[wk]=Math.min(99,t.st[wk]+(tp==='ochoshi'?2:tp==='sunao'?2.5:3)*pot);t.focus=wk;if(tp==='sunao')t.conf-=2;else if(tp==='makezu')t.conf+=2;else if(tp==='mypace')t.trust+=5;} }
+    else if(c===6){ var ms=critMates(S,t);sayK=r&&r.team!=null?'team':'solo';tag='ok';ms.forEach(function(id){addBond(S,t.id,id,7);});t.conf+=tp==='sensai'?8:5;t.trust+=3;
+      if((tp==='makezu'||tp==='ochoshi')&&S.stage.order.indexOf(t.id)<3){t.trust-=5;tag='ng';} }
+    else { sayK='all';t.fat=Math.max(0,t.fat-14);tag='ok';
+      if(tp==='mypace'){t.conf+=8;t.trust+=6;}
+      else if(tp==='makezu'){if(R()<.5){t.st[sk]=Math.min(99,t.st[sk]+2*pot);t.conf+=3;}else{t.trust-=5;tag='ng';}}
+      else if(tp==='sunao'){t.conf-=3;t.trust-=1;tag='ng';}
+      else if(tp==='sensai'){t.conf-=10;t.trust-=4;tag='ng';}
+      else {if(R()<.6){t.complacent=true;tag='ng';}else t.conf+=2;} }
     normT(t);
-    var rx=pick(tpick(REACT,tp)[c]);out.push({id:t.id,txt:rx,c:c});logT(S,t,'講評「'+CRIT[c][0]+'」→ '+rx);
+    var on=oth?oth.o.giv:'',fill=function(s){return s.replace(/\{D\}/g,pick(CRIT_SPD[t.spec])).replace(/\{W\}/g,pick(CRIT_WKD[wk])).replace(/\{O\}/g,on);};
+    var sy=CRIT_SAY[c],say=fill(critPick(S,sy[sayK]||sy.all||sy.hi));
+    var rx=(c===0||c===4)&&(tag==='hi'||tag==='ok')&&R()<.3?critPick(S,CRIT_SPRX[t.spec]):critPick(S,critRx(tp,c,tag));rx=fill(rx);
+    out.push({id:t.id,txt:rx,c:c,say:say});logT(S,t,'講評「'+CRIT[c][0]+'」→ '+rx);
     t.temperRev=true;
   });
   S.critRes=out;S.critDone=true;
@@ -1615,7 +1723,7 @@ function roomUp(S){ /* 合宿に入るときの部屋割り（2人部屋） */
 }
 function logT(S,t,txt){if(!t.log)t.log=[];t.log.push({r:S.rnd,t:txt});if(t.log.length>30)t.log.shift();}
 function critDefault(t){return 1;}
-function critBest(t){if(!t.temperRev)return -1;return t.temper==='sensai'||t.temper==='ochoshi'?0:t.temper==='makezu'?2:1;}
+function critBest(t){if(!t.temperRev)return -1;if(t.temper==='mypace'){var r=typeof S!=='undefined'&&S&&S.stage&&S.stage.res[t.id];return r&&r.sc<70?5:7;}return t.temper==='sensai'||t.temper==='ochoshi'?0:t.temper==='makezu'?2:1;}
 function arcText(S,t,s){var p=t.arc&&t.arc.p!=null?S.tr[t.arc.p]:null;
   return s.replace(/\{N\}/g,t.giv).replace(/\{P\}/g,p?p.giv:'あの子').replace(/\{H\}/g,t.home);}
 function applyFx(S,t,fx){
@@ -3465,14 +3573,14 @@ function vCritique(){
   var A=alive(S).sort(function(a,b){return S.stage.res[b.id].sc-S.stage.res[a.id].sc;});
   var h='<h2>講評</h2><p class="small muted">ひとりずつ言葉を返します。同じ言葉でも、気質によって受け止め方が変わります。</p>';
   if(S.critDone){
-    S.critRes.forEach(function(r){var t=S.tr[r.id];h+='<div class="card pl"><div class="top">'+face(t)+'<div class="who"><div class="nm">'+esc(t.name)+' <span class="tag lt">'+CRIT[r.c][0]+'</span> <span class="tag lt">'+TEMPER[t.temper]+'</span></div><div class="react" data-a="say" data-id="'+r.id+'">'+sayIcon(r.txt)+esc(r.txt)+'</div></div></div></div>';});
+    S.critRes.forEach(function(r){var t=S.tr[r.id];h+='<div class="card pl"><div class="top">'+face(t)+'<div class="who"><div class="nm">'+esc(t.name)+' <span class="tag lt">'+CRIT[r.c][0]+'</span> <span class="tag lt">'+TEMPER[t.temper]+'</span></div>'+(r.say?'<div class="csay small">'+(CRIT[r.c][4]?esc(r.say):'あなた：「'+esc(r.say)+'」')+'</div>':'')+'<div class="react" data-a="say" data-id="'+r.id+'">'+sayIcon(r.txt)+esc(r.txt)+'</div></div></div></div>';});
     h+='<button class="btn" data-a="tojudge">'+nextLbl(S)+'</button>';return h;
   }
   h+='<p class="small muted">最初は全員「課題を伝える」です。気質が分かっている子には、合う講評に ★ を付けています。顔を押すと詳しく見られます。</p><div class="card">';
   A.forEach(function(t){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id];
-    h+='<div class="jrow">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+'</div><div class="small muted">出来 '+S.stage.res[t.id].sc+'・気質 '+(t.temperRev?TEMPER[t.temper]:'?')+'</div></div><div class="seg">'+CRIT.map(function(o,i){return '<button class="cr'+i+(c===i?' on':'')+(critBest(t)===i?' best':'')+'" data-a="crit" data-id="'+t.id+'" data-v="'+i+'">'+(critBest(t)===i?'★':'')+['ほめる','課題','厳しく'][i]+'</button>';}).join('')+'</div></div>';});
+    h+='<div class="jrow">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+'</div><div class="small muted">出来 '+S.stage.res[t.id].sc+'・気質 '+(t.temperRev?TEMPER[t.temper]:'?')+'</div><div class="seg crg">'+CRIT.map(function(o,i){return '<button class="cr'+i+(c===i?' on':'')+(critBest(t)===i?' best':'')+'" data-a="crit" data-id="'+t.id+'" data-v="'+i+'" aria-label="'+o[0]+'">'+(critBest(t)===i?'★':'')+o[3]+'</button>';}).join('')+'</div></div></div>';});
   h+='</div>';
-  h+='<p class="note">ほめる＝自信が上がる（負けず嫌いな子は油断する）／課題を伝える＝次のレッスンで弱点がよく伸びる／厳しく言う＝負けず嫌いな子は大きく伸び、繊細な子は自信を失う</p>';
+  h+='<div class="note crl">'+CRIT.map(function(o){return '<div><b>'+o[0]+'</b>　'+o[1]+'。<span class="crc">代償：'+o[2]+'</span></div>';}).join('')+'<div class="small muted">同じ講評でも、出来の良し悪しで返し方が変わります。</div></div>';
   h+='<div class="foot"><div class="in"><div class="cnt">講評 <b>'+A.length+'</b>人</div><button class="btn" data-a="critok">講評を伝える</button></div></div>';
   return h;
 }
