@@ -597,9 +597,9 @@ cards:
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @main: true
 
-キャスター: スペイン代表が9月29日、40試合続けて負けなしの記録に届きました。
+キャスター: スペイン代表の負けなしは、10月3日のチェコ戦で41試合。代表チームの歴代1位を更新し続けています。
   only: short
-  telop: スペイン代表が9月29日、40試合続けて負けなしの記録に届きました
+  telop: スペイン代表の負けなしは、10月3日のチェコ戦で41試合。代表チームの歴代1位を更新し続けています
   card: none
   image: assets/images/20261003_record_spain40/01_trophy_w.jpg
 キャスター: 国の代表チームの連続無敗、これまでの長い記録を並べます。

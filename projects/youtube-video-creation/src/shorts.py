@@ -797,8 +797,12 @@ def _add_face(script: Script) -> None:
     カードとテロップで、写真は指定した行だけ。最初そう思い込んで先頭にだけ
     置いたところ、5秒出て消えた（実測して分かった）。全部の行に置く。
     """
+    # **ショート用に指定した写真があれば、それを使う**（2026-10-04）。3枚を上下に重ねると
+    # 3段目が字幕の裏に隠れる（キリンの回の佐野）
+    photo = str((script.meta or {}).get("short_photo") or "").strip()
     # **2枚並びのサムネは、上下に割った1枚にしてから敷く**（2026-09-17 指示）
-    photo = stacked_photo(script.meta)
+    if not photo:
+        photo = stacked_photo(script.meta)
     if not photo:
         photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
     if not photo:

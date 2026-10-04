@@ -74,7 +74,7 @@ sections:
     columns:
     - 項目
     - 内容
-    rows:
+    rows: &mbdata
     - - 所属
       - レアル・マドリード（10番）
     - - ポジション
@@ -95,12 +95,48 @@ sections:
   say:
   - text: キリアン・エムバペ、27歳。レアル・マドリードで最前線に立つ、センターフォワードです。
     image: assets/images/20261004_mbappe_real2025/01.webp
-  - 生まれはパリ、育ちは郊外のボンディ。
-  - 父は少年サッカーの指導者、母はハンドボール1部の選手でした。
-  - 178センチの右利き。レアルとの契約は2029年まで残っています。
+    card:
+      type: table
+      title: キリアン・エムバペ（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *mbdata
+      highlight_row: 1
+  - text: 生まれはパリ、育ちは郊外のボンディ。
+    card:
+      type: table
+      title: キリアン・エムバペ（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *mbdata
+      highlight_row: 3
+  - text: 父は少年サッカーの指導者、母はハンドボール1部の選手でした。
+    card:
+      type: table
+      title: キリアン・エムバペ（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *mbdata
+      highlight_row: 3
+  - text: 178センチの右利き。レアルとの契約は2029年まで残っています。
+    card:
+      type: table
+      title: キリアン・エムバペ（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *mbdata
+      highlight_row: 6
   - text: そして気になる市場価値。なんと、2億ユーロです。
     emph: true
-  - この7月にまた上がって、自己最高の値を更新しました。
+    card:
+      type: table
+      title: キリアン・エムバペ（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *mbdata
+      highlight_row: 7
+  - text: この7月にまた上がって、自己最高の値を更新しました。
+    card:
+      type: table
+      title: キリアン・エムバペ（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *mbdata
+      highlight_row: 7
   sources:
   - https://www.transfermarkt.com/kylian-mbappe/profil/spieler/342229
   - https://www.realmadrid.com/ja-JP/football/first-team/players/kylian-mbappe

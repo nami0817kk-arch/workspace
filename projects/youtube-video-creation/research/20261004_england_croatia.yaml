@@ -108,7 +108,7 @@ sections:
   main: true
   heading: 主将が口にした「恥」
   tier: 報道
-  telop: モドリッチ「ここに来て20年になるが、試合のあとで恥を感じたのは初めてだ」
+  telop: モドリッチ「この代表で20年になるが、試合のあとで恥を感じたのは初めてだ」
   narrator: キャスター
   say:
   - text: クロアチア代表がホームでイングランドに0対7で敗戦。主将モドリッチは試合のあとこう語りました。
@@ -131,6 +131,21 @@ sections:
   - voice: ルカ・モドリッチ
     text: 許されないことだ。
     cont: true
+  quotes_from:
+  - ダルマツィヤ・ニュース https://www.dalmacijanews.hr/clanak/modric-nakon-sedam-komada-engleske-prvi-put-u-20-godina-osjecam-bas-sram/
+  - テレグラム https://www.telegram.hr/telesport/na-prvu/bilicu-tesko-pao-poraz-protiv-engleske-zao-mi-je-djece-koja-su-dosla-zao-mi-je-i-nas/
+  sources:
+  - https://www.dalmacijanews.hr/clanak/modric-nakon-sedam-komada-engleske-prvi-put-u-20-godina-osjecam-bas-sram/
+  - https://www.telegram.hr/telesport/na-prvu/bilicu-tesko-pao-poraz-protiv-engleske-zao-mi-je-djece-koja-su-dosla-zao-mi-je-i-nas/
+  - https://www.rijekadanas.com/hrvatska-i-engleska-na-rujevici-pred-gotovo-praznim-tribinama-uefa-odobrila-posebnu-iznimku/
+  - https://total-croatia-news.com/news/sport/croatia-suffer-heaviest-defeat-in-history-in-7-0-loss-to-england/
+  - https://www.tvbec.at/2026/10/03/bilic-hns-odgovornost-hrvatska-engleska-0-7/
+- id: kids
+  heading: 子どもたちで埋まったスタンド
+  telop: ビリッチ監督「来てくれた子どもたちに申し訳ない」
+  tier: 報道
+  narrator: キャスター
+  say:
   - text: この日のスタンドを埋めたのは、子どもたちでした。
     image: assets/images/20261004_england_croatia/05.jpg
   - text: ファンの騒ぎと差別的な振る舞いで処分を受け、一般の客を入れられませんでした。

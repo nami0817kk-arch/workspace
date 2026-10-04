@@ -338,7 +338,8 @@ sections:
   - text: メッシは**13歳**で、アルゼンチンから来ました。2000年、紙ナプキンに書いた契約が始まりです。
     image: assets/photos/ll/barcelona/barcelona_legend_88f8ece0.jpg
   - 2012年、バルサと代表で**91得点**。1年の得点で、ゲルト・ミュラーの記録を抜きました。
-  - リーグ戦で**520試合474得点**。2021年、財政難で契約できず、涙の会見で去りました。
+  - text: リーグ戦で**520試合474得点**。2021年、財政難で契約できず、涙の会見で去りました。
+    card: none
   sources:
   - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
   - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
@@ -465,8 +466,10 @@ sections:
   - 順位は**1位**、勝ち点は**21**です。
   - 1試合あたりの勝ち点は**3.0**。昨季は38試合で**94**、1試合あたり**2.47**で優勝しています。
   - 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました。
-  - 顔ぶれも変わりました。このクラブで欧州王者になった選手は、もう一人もいません。
-  - 最初の大一番は**10月25日**。本拠地カンプ・ノウに、レアル・マドリードを迎えるクラシコです。
+  - text: 顔ぶれも変わりました。このクラブで欧州王者になった選手は、もう一人もいません。
+    card: none
+  - text: 最初の大一番は**10月25日**。本拠地カンプ・ノウに、レアル・マドリードを迎えるクラシコです。
+    card: none
   sources:
   - https://www.espn.com/soccer/team/results/_/name/barcelona
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard

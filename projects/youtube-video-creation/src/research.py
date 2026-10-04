@@ -2217,6 +2217,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # **ショートに反応を入れない回**（2026-09-14 指示）。取材メモに
         # `short_voices: false` と書く。既定は入れる
         **({} if notes.short_voices else {"short_voices": False}),
+        # **ショートだけ別の写真を敷く**（2026-10-04、キリンの回）。3人を上下に重ねると
+        # 3段目が字幕の裏に隠れ、1段目は頭が上で切れた。山場の主役1人の縦写真を指定する
+        **({"short_photo": str(thumbnail["short_photo"])} if thumbnail.get("short_photo") else {}),
         # 顔を並べる（2026-09-08）。2〜3枚で全面が写真になる
         "thumbnail_photos": [str(x) for x in (thumbnail.get("photos") or [])][:5],
         # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。

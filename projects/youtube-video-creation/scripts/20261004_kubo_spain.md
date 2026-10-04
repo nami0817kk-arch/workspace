@@ -196,21 +196,21 @@ cards:
   image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 簡単な話をすると、やっぱりどのポジションにも
   telop: 久保建英「簡単な話をすると、やっぱりどのポジションにも」
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 世界最高レベルの実力と市場価値の選手がわんさかいて、
   cont: true
   telop: 久保建英「世界最高レベルの実力と市場価値の選手がわんさかいて、」
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 他の国でレギュラーで出られそうな選手も1試合も出られない。
   cont: true
   telop: 久保建英「他の国でレギュラーで出られそうな選手も1試合も出られない」
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 キャスター: 実際スペイン代表では、アーセナルのゴールキーパー、ラヤや、サイドバックのグリマルド、
   telop: 実際スペイン代表では、アーセナルのゴールキーパー、ラヤや、サイドバックのグリマルド、
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 キャスター: フォワードのビクトル・ムニョスが、大会で一度も出番がありませんでした。
   telop: フォワードのビクトル・ムニョスが、大会で一度も出番がありませんでした
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 
 ## 突き詰める側と、真似する側
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -220,60 +220,60 @@ cards:
   only: short
   telop: 世界王者スペインと日本代表の差を、スペインで育った久保建英がこう語りました
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 似たようなことをやっていても、それを突き詰める側と
   telop: 久保建英「似たようなことをやっていても、それを突き詰める側と」
   source: 報道
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 真似する側ではいつまでも追いつけないと思いますね。
   cont: true
   telop: 久保建英「真似する側ではいつまでも追いつけないと思いますね」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: それは日本だけじゃなく、何かを真似しているうちは
   cont: true
   telop: 久保建英「それは日本だけじゃなく、何かを真似しているうちは」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: オリジナルをコピーが超えることはないと思うので。
   cont: true
   telop: 久保建英「オリジナルをコピーが超えることはないと思うので」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 真似だけではどのスタイルを真似していても難しいのかなと。
   cont: true
   telop: 久保建英「真似だけではどのスタイルを真似していても難しいのかなと」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: よく日本のサッカーと言われますけど、
   cont: true
   telop: 久保建英「よく日本のサッカーと言われますけど、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 日本だけの武器を見つける上で、
   cont: true
   telop: 久保建英「日本だけの武器を見つける上で、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 取り入れていくのは素晴らしいと思うけど、
   cont: true
   telop: 久保建英「取り入れていくのは素晴らしいと思うけど、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 模倣や真似はオリジナルには敵わないのかなと思います
   cont: true
   emph: true
   telop: 久保建英「模倣や真似はオリジナルには敵わないのかなと思います」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 キャスター: スペインの育成で揉まれ、日本の育成でも育った久保。
   telop: スペインの育成で揉まれ、日本の育成でも育った久保
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 キャスター: 両方を知る選手が、スペインを手本に真似る道には、はっきりと否定的でした。
   telop: 両方を知る選手が、スペインを手本に真似る道には、はっきりと否定的でした
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 
 ## 「認める側」と「認められる側」
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -281,71 +281,71 @@ cards:
 キャスター: 差が生まれる理由として久保が挙げたのは、サッカー選手になるまでの競争でした。
   telop: 差が生まれる理由として久保が挙げたのは、サッカー選手になるまでの競争でした
   source: 報道
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 単純に入試とかで言ったら倍率が桁違いですよね。
   telop: 久保建英「単純に入試とかで言ったら倍率が桁違いですよね」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: あっちでサッカー選手になるのと、
   cont: true
   telop: 久保建英「あっちでサッカー選手になるのと、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: こっちでサッカー選手になるのとでは。
   cont: true
   telop: 久保建英「こっちでサッカー選手になるのとでは」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: よく冗談でチームメートに
   cont: true
   telop: 久保建英「よく冗談でチームメートに」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 『俺が日本にいたらね』って話をされて、
   cont: true
   telop: 久保建英「『俺が日本にいたらね』って話をされて、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 『いやそんなことないよ』って今は言えるけど、
   cont: true
   telop: 久保建英「『いやそんなことないよ』って今は言えるけど、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 5年前とかは全然言い返せない自分もいたりして。
   cont: true
   telop: 久保建英「5年前とかは全然言い返せない自分もいたりして」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 今でこそ日本のサッカーを世界に見せられて
   cont: true
   telop: 久保建英「今でこそ日本のサッカーを世界に見せられて」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 誇らしい気持ちはあるけど、
   cont: true
   telop: 久保建英「誇らしい気持ちはあるけど、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: まだやっぱり“認められる側”の国というのも事実ですし。
   cont: true
   telop: 久保建英「まだやっぱり“認められる側”の国というのも事実ですし」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: それで言うとスペインは“認める側”の国なので。
   cont: true
   emph: true
   telop: 久保建英「それで言うとスペインは“認める側”の国なので」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: そこにも差があるのかなと思います
   cont: true
   telop: 久保建英「そこにも差があるのかなと思います」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 キャスター: 選ぶ側に立つ国では、選手はその国の若者だけでなく、世界から集まる選手とも席を争います。
   telop: 選ぶ側に立つ国では、選手はその国の若者だけでなく、世界から集まる選手とも席を争います
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 
 ## 「認める側」との差を数字で見る
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -411,32 +411,32 @@ cards:
 久保建英: 成長曲線という点では
   telop: 久保建英「成長曲線という点では」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 日本のほうが他の国よりも急なのかなと思う。
   cont: true
   telop: 久保建英「日本のほうが他の国よりも急なのかなと思う」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: もともとあった差がどれくらいのものかは
   cont: true
   telop: 久保建英「もともとあった差がどれくらいのものかは」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 僕にも分からないので、
   cont: true
   telop: 久保建英「僕にも分からないので、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 目には見えていないかもしれないけど、
   cont: true
   telop: 久保建英「目には見えていないかもしれないけど、」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 久保建英: 少しずつ確実に差は縮まってきているのかなと思います
   cont: true
   telop: 久保建英「少しずつ確実に差は縮まってきているのかなと思います」
   card: none
-  image: assets/images/20261004_kubo_spain/01.jpg
+  image: assets/images/20261004_kubo_spain/02_w.jpg
 解説: その差を縮める次の一歩は、10月5日の夜7時半、国立競技場。
   telop: その差を縮める次の一歩は、10月5日の夜7時半、国立競技場
   card: none

@@ -312,9 +312,13 @@ cards:
   telop: ルカ・モドリッチ「許されないことだ」
   card: none
   image: assets/images/20261004_england_croatia/01_w.jpg
+
+## 子どもたちで埋まったスタンド
+@bg: assets/backgrounds/stock/stadium_night.mp4
+
 キャスター: この日のスタンドを埋めたのは、子どもたちでした。
   telop: この日のスタンドを埋めたのは、子どもたちでした
-  card: none
+  source: 報道
   image: assets/images/20261004_england_croatia/05.jpg
 キャスター: ファンの騒ぎと差別的な振る舞いで処分を受け、一般の客を入れられませんでした。
   telop: ファンの騒ぎと差別的な振る舞いで処分を受け、一般の客を入れられませんでした

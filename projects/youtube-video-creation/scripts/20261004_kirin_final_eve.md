@@ -11,6 +11,7 @@ thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_reaction: そこまで言うなら見せてもらおうか
 thumbnail_band_full: false
+short_photo: assets/images/20261004_kirin_final_eve/01_v.jpg
 thumbnail_photos:
 - assets/images/20261004_kirin_final_eve/01_v.jpg
 - assets/images/20261004_kirin_final_eve/02_v.jpg

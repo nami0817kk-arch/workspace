@@ -244,11 +244,12 @@
     "videos.update": 138
   },
   "2026-10-03": {
-    "channels.list": 8,
-    "playlistItems.list": 8,
-    "videos.insert": 8,
-    "thumbnails.set": 8,
-    "playlistItems.insert": 4,
-    "playlists.insert": 2
+    "channels.list": 23,
+    "playlistItems.list": 23,
+    "videos.insert": 23,
+    "thumbnails.set": 23,
+    "playlistItems.insert": 12,
+    "playlists.insert": 5,
+    "videos.list": 1
   }
 }

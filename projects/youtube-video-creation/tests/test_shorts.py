@@ -1422,3 +1422,25 @@ def test_尺に収めるとき2行に分けた発言を途中で切らない():
     _fit(script, budget)
     texts = [l.text for l in script.scenes[-1].lines]
     assert texts == ["あ" * 40], texts
+
+
+def test_ショート用に指定した写真は重ねた写真より先に使う(tmp_path, monkeypatch):
+    """2026-10-04 キリンの回。3人を上下に重ねると、3段目（佐野）が字幕の裏に隠れた。"""
+    from PIL import Image
+    from src import shorts as shorts_mod
+    from src.script_model import Line, Scene, Script
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(shorts_mod, "STACK_DIR", tmp_path / "_stack")
+    for name in ("a.jpg", "b.jpg", "c.jpg", "m_v.jpg"):
+        Image.new("RGB", (480, 660), "gray").save(tmp_path / name)
+    line = Line(speaker="キャスター", text="a")
+    short = Script(title="t", scenes=[Scene(title="s", lines=[line])])
+    short.meta = {"thumbnail_photos": ["a.jpg", "b.jpg", "c.jpg"], "short_photo": "m_v.jpg"}
+    shorts_mod._add_face(short)
+    assert line.image == "m_v.jpg"
+
+
+def test_取材メモのショート用の写真は台本の頭に渡る():
+    from src import research
+    import inspect
+    assert '"short_photo"' in inspect.getsource(research)
