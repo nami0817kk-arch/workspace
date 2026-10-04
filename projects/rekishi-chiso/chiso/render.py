@@ -630,7 +630,9 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year)
             != (state.background, state.portrait, state.memo, state.year))
         surprised = special and line.tone == "驚き"
-        words = [w for w in (plain(x) for x in __import__("re").findall(r"《(.+?)》", line.text))] if special else []
+        # 強調語の飛び出しは 10-04「4は不要」で外した（config の pop: true で戻せる）
+        words = ([w for w in (plain(x) for x in __import__("re").findall(r"《(.+?)》", line.text))]
+                 if special and painter.config.get("pop") else [])
         n_fx = max(n_hop, TRANS_FRAMES if changed else 0, SHAKE_FRAMES if surprised else 0,
                    POP_FRAMES if words else 0)
         for k in range(1, n_fx + 1):
