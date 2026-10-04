@@ -1,0 +1,259 @@
+# 取材メモ（10/5 題材 doan_captain、型は quote）。材料の控え: research/raw/20261005_doan_captain.md
+# 主役は、主将の堂安律がキリンカップ決勝（10/5 19:30 国立、対ニュージーランド）の前日 10/4 に語った「自分の課題」と「勝つこと」。
+# 公開は 10/5 の試合前。試合の結果は書かない。
+# 10/2 の「堂安と鈴木彩艶」「日本のPK戦」、10/4 の「決勝の前日（松木・後藤・佐野航大）」と重ねない。
+#   PK戦の歴史・NZとの対戦成績・世界ランキング・東京五輪の話は入れない。
+# 事実の裏:
+#   発言はすべて 10/4 の練習後の取材。ゲキサカ 460315・サッカーキング 2212999・サッカーマガジン 17868155 の原文（raw の 1.）。
+#   主将の経緯: 2026年3月のイギリス遠征で初めてチームキャプテン（遠藤航の不在）。W杯は板倉滉が主将、ブラジル戦は堂安がキャプテンマーク。
+#     9月からの4連戦で森保監督が再び指名（9/24）。チームキャプテンの活動は 10/1 時点で5戦全勝（ゲキサカ 460136）。
+#   シュート数: JFA の試合記録 PDF（国内）＋ FotMob（国外・W杯）を1試合ずつ数えた（raw の 3.）。
+#     2025年10〜11月 4試合 6本1得点／2026年3〜5月 3試合 2本／W杯 4試合 1本／9月から 3試合 0本。
+#   最後のゴール: 2025-11-14 ガーナ戦（豊田）の後半15分、久保建英のパスから左足（JFA PDF）。
+# 写真: ゲキサカ（©Kaoru WATANABE/GEKISAKA、04 は ©Koki NAGAHAMA/GEKISAKA）。代理店ではない。
+#   01 10/4 国立の練習・02 9/24 ウルグアイ戦（腕章）・03 W杯（腕章）・04 2025/11/14 ガーナ戦のゴールのあと。
+date: 2026年10月5日
+slot: japan
+format: quote
+people:
+- 堂安律
+- 板倉滉
+- 森保一
+- 久保建英
+theme:
+  id: doan_captain
+  league: japan
+  league_name: キリンカップ
+  kind: other
+  topic: 日本代表
+  title: 堂安律がキャプテンとして口にした課題とは。決勝の国立で狙う約11か月ぶりのゴール
+  opening_image: assets/images/20261005_doan_captain/01_w.jpg
+  takeaway: 代表でのシュートを1試合ずつ数えると、最後にゴールを決めた去年秋の4試合は6本、ワールドカップの4試合は1本、キャプテンを任された9月からの3試合は0本だった。勝つことを最低条件にしてきた主将が、自分のシュートを課題に挙げた。決勝の国立で1本目を打てるかが、約11か月ぶりのゴールへの入り口になる
+short_title: 堂安律「シュート数が減ってる」。決勝前日、キャプテンが語った課題
+thumbnail:
+  photo: assets/images/20261005_doan_captain/02.jpg
+  short_photo: assets/images/20261005_doan_captain/02_v.jpg
+  line1: 主将・堂安「自分の課題」
+  line2: 9月からの3試合、シュートは●本
+  reaction: ゴールないのはFWの選手とはわけが違う
+sections:
+- id: shots
+  main: true
+  heading: 主将が口にした自分の課題
+  tier: 報道
+  telop: 堂安律「そもそもシュート数が減ってるんで、そこがやっぱり自分の課題」
+  narrator: キャスター
+  say:
+  - text: 日本代表の主将、堂安律。9月からの3試合で、シュートは0本でした。
+    short_only: true
+    image: assets/images/20261005_doan_captain/01_w.jpg
+  - voice: 堂安律
+    text: そもそもシュート数が減ってるんで、
+  - voice: 堂安律
+    text: そこがやっぱり自分の課題ではあると思います。
+    cont: true
+  quotes_from:
+  - サッカーマガジンWEB https://soccermagazine.jp/national_A/17868155
+  sources:
+  - https://soccermagazine.jp/national_A/17868155
+  - https://web.gekisaka.jp/news/japan/detail/?460315-460315-fl
+  - https://www.tokyo-sports.co.jp/articles/-/405494
+- id: roles
+  heading: シャドーとウイングバックで出た3試合
+  tier: 報道
+  telop: 堂安律「1、2試合目はもっと自分の強みを出さなくてはいけないと思いました」
+  narrator: キャスター
+  say:
+  - text: 10月4日、決勝の会場の国立競技場で、練習を終えたあとの言葉です。
+  - text: 9月からの3試合、堂安は役割を変えながらピッチに立ってきました。
+    image: assets/images/20261005_doan_captain/02_w.jpg
+  - text: 初戦のウルグアイ戦は、フォワードのすぐ後ろ、右のシャドーで先発。
+  - text: ベネズエラ戦は途中から入り、エクアドル戦は右のウイングバック。
+  - text: サイドを上下して、守備にも走る役割です。
+  - voice: 堂安律
+    text: 特に1試合目はシャドーで使ってもらった中で
+  - voice: 堂安律
+    text: シュートシーンが少なかったので、そこが課題かなと
+    cont: true
+  - text: 準決勝のエクアドル戦は、相手の力も一段上だったと受け止めています。
+  - voice: 堂安律
+    text: 前回の試合はやはり相手のレベルが一つ上がった。
+  - voice: 堂安律
+    text: 1、2試合目はもっと自分の強みを
+    cont: true
+  - voice: 堂安律
+    text: 出さなくてはいけないと思いました
+    cont: true
+  quotes_from:
+  - サッカーマガジンWEB https://soccermagazine.jp/national_A/17868155
+  - サッカーキング https://www.soccer-king.jp/news/japan/national/20261004/2212999.html
+  sources:
+  - https://soccermagazine.jp/national_A/17868155
+  - https://www.soccer-king.jp/news/japan/national/20261004/2212999.html
+  - https://web.gekisaka.jp/news/japan/detail/?460315-460315-fl
+  - https://www.jfa.jp/national_team/samuraiblue/20260924/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260928/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+- id: captain
+  heading: 勝つことが最低条件。キャプテンを任されて
+  tier: 報道
+  telop: 堂安律「試合に勝つことが最低条件」
+  narrator: キャスター
+  say:
+  - text: 堂安が初めてチームのキャプテンを任されたのは、今年3月のイギリス遠征でした。
+    image: assets/images/20261005_doan_captain/03_w.jpg
+  - text: ワールドカップでは板倉滉がキャプテンを務めました。
+  - text: 敗れたブラジル戦では、堂安がキャプテンマークを巻いていました。
+  - text: 9月からの4連戦で、森保一監督は再び堂安を指名しています。
+  - text: 堂安がキャプテンを務めた活動は、3月の遠征から5戦全勝です。
+  - voice: 堂安律
+    text: 試合に勝つことが最低条件。
+  - voice: 堂安律
+    text: 4連勝を掲げて代表に来て、近くまで来ているので、
+    cont: true
+  - voice: 堂安律
+    text: 集中力を切らさずに4連勝できるように頑張りたい
+    cont: true
+  - text: チームを勝たせることと、自分でゴールに迫ること。決勝では、その両方を狙います。
+    image: assets/images/20261005_doan_captain/01_w.jpg
+  - voice: 堂安律
+    text: 明日の試合展開ではより狙えると思うので、
+  - voice: 堂安律
+    text: やっていきたいです
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460315-460315-fl
+  - サッカーキング https://www.soccer-king.jp/news/japan/national/20261004/2212999.html
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460315-460315-fl
+  - https://www.soccer-king.jp/news/japan/national/20261004/2212999.html
+  - https://web.gekisaka.jp/news/japan/detail/?448565-448565-fl=
+  - https://web.gekisaka.jp/news/japan/detail/?460136-460136-fl
+  - https://www.soccer-king.jp/news/japan/national/20260925/2209075.html
+  - https://www.football-zone.net/archives/675311
+- id: view
+  viewpoint: true
+  heading: 代表でのシュート数。最後のゴールから今まで
+  tier: 背景
+  telop: 代表でのシュートは、去年秋の4試合で6本、W杯の4試合で1本、9月からの3試合は0本
+  narrator: 解説
+  say:
+  - text: 堂安律の代表でのシュートを、試合の記録で1試合ずつ数えました。
+    image: assets/images/20261005_doan_captain/04_w.jpg
+    card:
+      type: table
+      title: 堂安律 代表でのシュート数
+      columns: [時期, 試合, シュート, 得点]
+      rows: &shots
+      - ['2025年10〜11月', '4', '6本', '1']
+      - ['2026年3〜5月', '3', '2本', '0']
+      - ['ワールドカップ', '4', '1本', '0']
+      - ['9月から', '3', '0本', '0']
+  - text: 最後のゴールは、去年11月14日のガーナ戦です。
+    card:
+      type: table
+      title: 堂安律 代表でのシュート数
+      columns: [時期, 試合, シュート, 得点]
+      rows: *shots
+      highlight_row: 0
+  - text: 久保建英のパスを受け、左足でゴールの近い側を破りました。
+    card:
+      type: table
+      title: 堂安律 代表でのシュート数
+      columns: [時期, 試合, シュート, 得点]
+      rows: *shots
+      highlight_row: 0
+  - text: その秋の4試合で打ったシュートは、合わせて6本。
+    card:
+      type: table
+      title: 堂安律 代表でのシュート数
+      columns: [時期, 試合, シュート, 得点]
+      rows: *shots
+      highlight_row: 0
+  - text: 今年3月から5月の3試合は2本。
+    card:
+      type: table
+      title: 堂安律 代表でのシュート数
+      columns: [時期, 試合, シュート, 得点]
+      rows: *shots
+      highlight_row: 1
+  - text: ワールドカップでも4試合を戦い、シュートは1本でした。
+    image: assets/images/20261005_doan_captain/03_w.jpg
+    card:
+      type: table
+      title: 堂安律 代表でのシュート数
+      columns: [時期, 試合, シュート, 得点]
+      rows: *shots
+      highlight_row: 2
+  - text: そして主将として臨んだ9月からの3試合は、まだ0本です。
+    emph: true
+    card:
+      type: table
+      title: 堂安律 代表でのシュート数
+      columns: [時期, 試合, シュート, 得点]
+      rows: *shots
+      highlight_row: 3
+  - text: 決勝のニュージーランド戦は、5日の夜7時半から国立競技場。
+    image: assets/images/20261005_doan_captain/02_w.jpg
+    card: none
+  - text: 代表では通算72試合で11得点を挙げてきた堂安律。
+  - text: まず1本目のシュートが、去年11月以来の代表ゴールへの入り口になります。
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/20251010/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20251014/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20251114/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20251118/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260531/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260924/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260928/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+  - https://www.fotmob.com/players/629805/ritsu-doan
+  - https://www.jfa.jp/samuraiblue/lp/20261005/
+  - https://www.soccer-king.jp/news/japan/national/20261004/2212999.html
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「ゴールないのはFWの選手とはわけが違うしね」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（SOCCER DIGEST Web「ひとりで打開できる選手がいなかった」）のコメント欄 vfz********。全文
+  - voice: ネット民
+    text: 堂安律って昔の方が攻撃力あった気がするけど何でだろうな
+    image: assets/images/20261005_doan_captain/02_w.jpg
+  - voice: ネット民
+    text: 下手になってる分けないし
+    cont: true
+  - voice: ネット民
+    text: でも堂安が相手をかわしてシュートって姿を見る回数は減るばかり
+    cont: true
+  - voice: ネット民
+    text: 研究されただけなのか
+    cont: true
+  - voice: ネット民
+    text: 大人になって無理をしなくなったのか
+    cont: true
+  - voice: ネット民
+    text: 期待感が薄れたのだけは確か。
+    cont: true
+  # Yahoo!ニュース（SOCCER DIGEST Web「手を差し伸べるのが正解なのか」）のコメント欄 pyo********。全文
+  - voice: ネット民
+    text: 堂安の守備性能は高いよ。
+  - voice: ネット民
+    text: 彼がウイングやシャドウの位置に固執していたら
+    cont: true
+  - voice: ネット民
+    text: 生き残れなかったかもしれない
+    cont: true
+  # Yahoo!ニュース（中日スポーツ「初ゴール狙う若手へ”独特”エール」）のコメント欄 ehd********。全文
+  - voice: ネット民
+    text: 堂安の場合は守備などに労力割いてくれてるし
+    image: assets/images/20261005_doan_captain/01_w.jpg
+    short_voice: true
+  - voice: ネット民
+    text: ゴールないのはFWの選手とはわけが違うしね。
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/44a5f085e9cfa427abb19f2dfee37163a7cfd3af/comments
+  - https://news.yahoo.co.jp/articles/8098f003b83ee55f7ea68f6c44f3f8a7321f3491/comments
+  - https://news.yahoo.co.jp/articles/9b47ebaa9487e65f2b603f93c487244baed41da2/comments

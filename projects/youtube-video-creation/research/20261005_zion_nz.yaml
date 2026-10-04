@@ -1,0 +1,309 @@
+# 取材メモ（10/5 題材 zion_nz、型は quote）。材料の控え: research/raw/20261005_zion_nz.md
+# 主役は鈴木彩艶が決勝の前日（10/4 の練習後）に語った言葉。相手のエース（クリス・ウッド）への警戒・空中戦の備え・タイトルへの思い・PK戦になったら。
+# 決勝は 10/5（月）19:30 国立、相手ニュージーランド。試合の前に公開するので、結果は書かない。
+# 重ねない: 10/2 doan_zion（堂安の評・PK戦の手渡し・PK戦の歴史）／10/2 japan_ecuador（PK戦のキッカー）／10/4 kirin_final_eve（若手の出場時間・NZとの対戦成績・東京五輪）。
+#   10/1 zion_mvp（月間MVP・移籍金・9月の5試合6失点）とも重ねない。クラブの数字は今季の合計1行。同時に作っている堂安の回（主将）にも触れない。
+#   PK戦は本人の言葉の前置きでひと言だけ（「15年ぶりのPK戦勝利」も言わない）。
+# 事実の裏（raw の 2.・3.）:
+#   ウッド: 代表94試合45得点（Transfermarkt の試合記録・サッカーキング。歴代最多は英語版 Wikipedia）。W杯2026は3試合0得点、イラン戦2-2で2アシスト（Transfermarkt と FotMob が一致。NZ の2点はジャスト）。
+#     今季フォレスト: 公式戦5試合0得点、リーグは4試合とも途中から計62分（Transfermarkt・FotMob・RNZ）。今回の代表期間の最初の2試合（中国）は負担を抑えるために休んだ（RNZ 9/30）。
+#     9/12 ヴィラ 1-2 フォレスト: 鈴木 先発90分2失点、ウッド 1分（Transfermarkt・FotMob）。191cm・プレミア通算92得点はゲキサカの地の文。
+#   鈴木: 代表30試合20失点、無失点17試合（Transfermarkt。FotMob も30試合）。W杯2026は4試合5失点。今季ヴィラは公式戦6試合7失点（杯の後半45分を含む）。
+#   スポニチの「14試合ぶり無失点」は Transfermarkt・JFA の紹介文と合わないので言わない（raw の 3.）。
+#   発言はゲキサカ 460317（ウッド・空中戦）とサッカーキング 2212990（タイトル・PK戦）の原文のまま。同じ発言の言い回しが2社で少し違う（raw の 1.）。
+# 写真: 01 はゲキサカ 460317 の 10/4 練習の写真（©Kaoru WATANABE/GEKISAKA、代理店ではない）。_w・_v は facecrop。
+#   ウッドは Commons「File:Chris Wood, Nottingham Forest, 2025.jpg」（CC0 / Sebalston）。pair は鈴木（左）＋ウッド（右）、pair/01_v は上下。
+# 反応: Yahoo!ニュース（ゲキサカの転載）のコメント欄の1件だけ（サッカーキングの転載はコメント0件）。
+date: 2026年10月5日
+slot: japan
+format: quote
+people:
+- 鈴木彩艶
+- クリス・ウッド
+theme:
+  id: zion_nz
+  league: japan
+  league_name: キリンカップ
+  kind: other
+  topic: 日本代表
+  title: 鈴木彩艶「彼が相手チームの特長」。決勝の前日、守護神が名指しで警戒したエース
+  opening_image: assets/images/20261005_zion_nz/01_w.jpg
+  takeaway: ニュージーランド歴代最多の45得点を持つクリス・ウッドは、今夏のワールドカップでは3試合で無得点だった。それでもイラン戦ではチームの2点をどちらもアシストしている。自分で決めなくても攻撃の起点になる、鈴木彩艶の言う「特長」は数字にも出ている。今季のクラブではリーグ戦の出場が途中からの62分にとどまり、代表期間の最初の2試合を休んで迎える決勝。代表30試合のうち17試合を無失点で終えてきた鈴木が、5日の国立でその起点を止められるか
+short_title: 鈴木彩艶が決勝前日に警戒。「彼が相手チームの特長」と語ったエース
+thumbnail:
+  photo: assets/images/20261005_zion_nz/pair/01.jpg   # 本文の既定（横長）。サムネは photos の2枚を並べる
+  short_photo: assets/images/20261005_zion_nz/01_v.jpg
+  photos:
+  - assets/images/20261005_zion_nz/01_v.jpg
+  - assets/images/20261005_zion_nz/wood/01_t.jpg
+  line1: 鈴木彩艶 名指しで警戒
+  line2: W杯で無得点のエースが生んだ●点
+  reaction: ウッド選手の動き良かったからね
+sections:
+- id: wood
+  main: true
+  heading: ニュージーランドの起点
+  tier: 報道
+  telop: 鈴木彩艶「本当に起点になれるので彼が相手チームの特長」
+  narrator: キャスター
+  say:
+  - text: キリンカップ決勝を前に、日本代表のゴールキーパーが相手をこう分析しました。
+    short_only: true
+    image: assets/images/20261005_zion_nz/01_w.jpg
+  - voice: 鈴木彩艶
+    text: これまでの3試合とは違って南米ではないチームになるけど、
+  - voice: 鈴木彩艶
+    text: 相手の特徴的に背の高い選手がいる。
+    cont: true
+  - voice: 鈴木彩艶
+    text: ウッド選手も含めてかなり背の高い選手が多くて、
+    cont: true
+  - voice: 鈴木彩艶
+    text: 彼を起点に攻撃を組み立ててくるチームなので、
+    cont: true
+  - voice: 鈴木彩艶
+    text: まずはそこに警戒して臨みたい
+    cont: true
+  - text: 決勝の前の日、練習のあとに、相手のニュージーランドについて語った言葉です。
+  - text: 名前を挙げたクリス・ウッドについては、こう言い切りました。
+    image: assets/images/20261005_zion_nz/pair/01.jpg
+  - voice: 鈴木彩艶
+    text: 本当に起点になれるので彼が相手チームの特長
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460317-460317-fl=
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460317-460317-fl=
+- id: aerial
+  heading: 空中戦とこぼれ球への備え
+  tier: 報道
+  telop: 鈴木彩艶「一発目の管理、セカンドボールの準備をしっかりしたい」
+  narrator: キャスター
+  card:
+    type: table
+    title: クリス・ウッド
+    columns: ['', '']
+    rows: &wood
+    - ['年齢', '34歳']
+    - ['身長', '191センチ']
+    - ['プレミアリーグ通算', '92得点']
+  say:
+  - text: クリス・ウッドは34歳。ニュージーランド代表で主将を務めるフォワードです。
+    image: assets/images/20261005_zion_nz/wood/01_w.jpg
+    card:
+      type: table
+      title: クリス・ウッド
+      columns: ['', '']
+      rows: *wood
+      highlight_row: 0
+  - text: 身長は191センチ。イングランドのクラブを渡り歩いてきました。
+    card:
+      type: table
+      title: クリス・ウッド
+      columns: ['', '']
+      rows: *wood
+      highlight_row: 1
+  - text: プレミアリーグで挙げたゴールは、通算92を数えます。
+    card:
+      type: table
+      title: クリス・ウッド
+      columns: ['', '']
+      rows: *wood
+      highlight_row: 2
+  - text: 鈴木が見ているのは、その高さを生かした攻めです。
+    image: assets/images/20261005_zion_nz/pair/01.jpg
+  - voice: 鈴木彩艶
+    text: 空中戦を警戒しているところはあるので、
+  - voice: 鈴木彩艶
+    text: 自分がしっかりとパフォーマンスを発揮しないと
+    cont: true
+  - voice: 鈴木彩艶
+    text: いけない場面が多くなる
+    cont: true
+  - voice: 鈴木彩艶
+    text: どこからでも彼に放り込んできて、
+  - voice: 鈴木彩艶
+    text: 彼のポストプレーや、
+    cont: true
+  - voice: 鈴木彩艶
+    text: 競り合ったセカンドボールを拾って
+    cont: true
+  - voice: 鈴木彩艶
+    text: 攻撃してくるところがあるので、
+    cont: true
+  - voice: 鈴木彩艶
+    text: 一発目の管理、セカンドボールの準備をしっかりしたい
+    cont: true
+  - text: ポストプレーは、前線で背中を向けてボールを受け、味方へ落とすプレーのこと。
+  - text: 放り込まれたボールへの最初の競り合いが「一発目」。
+  - text: そこからこぼれたボールが、セカンドボールです。
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460317-460317-fl=
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460317-460317-fl=
+  - https://www.rnz.co.nz/news/sport/1665138/all-whites-want-to-double-goal-tally-in-kirin-cup
+- id: title
+  heading: 小さなタイトルを、アジアカップへ
+  tier: 報道
+  telop: 鈴木彩艶「こういった積み重ねがアジアカップにもつながっていく」
+  narrator: キャスター
+  say:
+  - text: 日本はキリンカップで、2016年と2022年、2大会続けて2位に終わっています。
+    image: assets/images/20261005_zion_nz/01_w.jpg
+  - voice: 鈴木彩艶
+    text: 大きな大会ではないですけど、
+  - voice: 鈴木彩艶
+    text: こういった小さいところから
+    cont: true
+  - voice: 鈴木彩艶
+    text: タイトルを穫ることが大事だと思います。
+    cont: true
+  - voice: 鈴木彩艶
+    text: こういった積み重ねが
+    cont: true
+  - voice: 鈴木彩艶
+    text: アジアカップにもつながっていくと思うので、
+    cont: true
+  - voice: 鈴木彩艶
+    text: しっかりと勝ちきって優勝すること。
+    cont: true
+  - text: 準決勝はPK戦で勝ち上がった日本。決勝でまたPK戦になったら、と聞かれると。
+  - voice: 鈴木彩艶
+    text: 展開によってはPK戦ということもあるかもしれませんが、
+  - voice: 鈴木彩艶
+    text: GKとしてゴールを防ぐということは変わらない。
+    cont: true
+  - voice: 鈴木彩艶
+    text: どんな展開になったとしても、
+    cont: true
+  - voice: 鈴木彩艶
+    text: 自分としては最後までゴールを守って、
+    cont: true
+  - voice: 鈴木彩艶
+    text: 結果につながるプレーをしたい
+    cont: true
+  quotes_from:
+  - サッカーキング https://www.soccer-king.jp/news/japan/national/20261004/2212990.html
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20261004/2212990.html
+- id: view
+  viewpoint: true
+  heading: ウッドの「起点」と鈴木彩艶の無失点、数字で比べる
+  tier: 背景
+  telop: ウッドは代表94試合45得点。鈴木彩艶は代表30試合で無失点が17試合
+  narrator: 解説
+  say:
+  - text: ここで、2人の数字を並べてみます。
+    image: assets/images/20261005_zion_nz/pair/01.jpg
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: &nums
+      - ['代表の通算', '94試合45得点', '30試合20失点']
+      - ['今夏のW杯', '3試合0得点 2アシスト', '4試合5失点']
+      - ['今季のクラブ', '5試合0得点', '6試合7失点']
+      - ['9月12日の対戦', '出場1分', '90分 2失点']
+  - text: ウッドは代表で94試合45得点。ニュージーランドの歴代最多です。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 0
+  - text: 鈴木は代表30試合で20失点。そのうち17試合を、無失点で終えています。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 0
+  - text: 今年のワールドカップで、ウッドは3試合に出て、得点はありませんでした。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 1
+  - text: それでも初戦のイラン戦では、チームの2点をどちらもアシストしています。
+    emph: true
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 1
+  - text: 自分で決めなくても、点を生む起点になる。鈴木の言う「特長」そのものです。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 1
+  - text: 今季のクラブでは、ウッドは5試合に出て、まだゴールがありません。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 2
+  - text: プレミアリーグの4試合は、どれも途中から。合わせて62分です。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 2
+  - text: この秋の代表戦も、中国での最初の2試合は、負担を抑えるために休んでいます。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 2
+  - text: 鈴木は今季、アストン・ヴィラで6試合に出て7失点です。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 2
+  - text: 実は2人は、9月12日のプレミアリーグで同じピッチに立っています。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 3
+  - text: ヴィラが1対2で敗れた試合。ウッドの出場時間は、1分でした。
+    card:
+      type: table
+      title: ウッドと鈴木彩艶の数字
+      columns: ['', 'ウッド', '鈴木彩艶']
+      rows: *nums
+      highlight_row: 3
+  - text: 5日の国立では、ゴール前で何度も向き合うことになりそうです。
+    card: none
+    image: assets/images/20261005_zion_nz/01_w.jpg
+  sources:
+  - https://www.transfermarkt.com/chris-wood/profil/spieler/108725
+  - https://www.transfermarkt.com/zion-suzuki/profil/spieler/432298
+  - https://www.fotmob.com/players/169719/chris-wood
+  - https://www.fotmob.com/players/1053679/zion-suzuki
+  - https://en.wikipedia.org/wiki/List_of_international_goals_scored_by_Chris_Wood
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_G
+  - https://www.rnz.co.nz/news/sport/1665138/all-whites-want-to-double-goal-tally-in-kirin-cup
+  - https://www.jfa.jp/samuraiblue/member/suzuki_zion.html
+  - https://www.jfa.jp/samuraiblue/lp/20261005/
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「ワールドカップでもウッド選手の動き良かったからね」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（ゲキサカ 460317 の転載）のコメント欄 nob********。全文
+  - voice: ネット民
+    text: ワールドカップでもウッド選手の動き良かったからね
+    image: assets/images/20261005_zion_nz/pair/01.jpg
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/9962eee675ae0dbe0df9abc97792aacaeb0490e3/comments

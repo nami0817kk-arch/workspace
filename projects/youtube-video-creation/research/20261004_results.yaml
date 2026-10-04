@@ -1,0 +1,65 @@
+# 候補テーマ（2026年10月4日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年10月4日"
+candidates:
+  - id: hokkaido_consadole_sapporo
+    title: "Hokkaido Consadole Sapporo 2 - 1 Iwaki FC（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836290
+    hours_ago: 3.8   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836290
+
+  - id: vanraure_hachinohe_yokohama
+    title: "Vanraure Hachinohe 0 - 2 Yokohama FC（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836295
+    hours_ago: 3.8   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836295
+
+  - id: blaublitz_akita_sagan
+    title: "Blaublitz Akita 1 - 0 Sagan Tosu（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836288
+    hours_ago: 3.8   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836288
+
+  - id: vegalta_sendai_j
+    title: "Vegalta Sendai 2 - 1 Júbilo Iwata（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836296
+    hours_ago: 3.8   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836296
+
+  - id: tegevajaro_miyazaki_rb
+    title: "Tegevajaro Miyazaki 1 - 1 RB Omiya Ardija（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836293
+    hours_ago: 3.8   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836293
+

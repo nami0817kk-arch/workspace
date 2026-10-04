@@ -1,0 +1,677 @@
+# ニュージーランド代表の紹介（代表チームの紹介）。10/5 キリンカップ決勝（国立 19:30）の相手。キックオフ前に公開する。
+# 材料の控え: research/raw/20261005_team_newzealand.md（数字はすべてそこに出典つき）
+# FIFAランキングは FIFA 公式（7/20 更新の回。次の更新は 10/7）。W杯の得点者は FIFA の試合データ。日本との対戦は JFA の対戦チーム情報（表は相手側から見た勝敗なので日本側に直した）。
+# 準決勝は JFA の公式記録 PDF と NZ協会の記事。9月の2試合は FotMob の試合記録。監督の経歴と会見の言葉はゲキサカ 460277（U-17 のコーチ就任はゲキサカ 2008年・Wikipedia 2009年で食い違うので年は言わない）。
+# 同時に作っている zion_nz（鈴木彩艶とウッド）と重ねないため、ウッドの数字は基礎DATAの2行だけ。日本戦でのウッドの得点・東京五輪は言わない。
+# 10/4 の kirin_final_eve とは中身が重ならない（日本の若手の出場時間の回）。決勝の日時は言い方を変えた。
+# ネットの反応は置いていない（紹介ものは声なしで通す。見本のエクアドル回と同じ）。
+date: 2026年10月05日
+slot: other_1
+format: news
+series: 代表チームの紹介
+people: []
+theme:
+  id: team_newzealand
+  league: japan
+  league_name: キリンカップ
+  kind: preview
+  topic: ニュージーランド代表
+  title: ニュージーランド代表ってどんなチーム？旧国立の最後の代表戦で戦った相手
+  question: 10月5日のキリンカップ決勝で日本と戦うニュージーランド代表は、どんなチームか
+  takeaway: ニュージーランドはこの秋の3試合すべてで13分までに先制したが、パレスチナ戦とパナマ戦は前半のうちに追いつかれた。9月からの3試合で失点2の日本に対し、立ち上がりにどちらが先に点を取るかが決勝の分かれ目になる
+  opening_image: assets/images/20261005_team_newzealand/02_w.jpg
+short_title: ニュージーランド代表の監督、選手を12歳の頃から知る強み
+thumbnail:
+  photo: assets/images/20261005_team_newzealand/02.jpg
+  short_photo: assets/images/20261005_team_newzealand/01_v.jpg
+  line1: ニュージーランド代表
+  line2: この秋3試合、全部●分までに先制
+  tags:
+  - ニュージーランド代表
+  - キリンカップ
+  - 日本代表
+  - 代表チーム紹介
+sections:
+- id: data
+  heading: 基礎DATA
+  tier: 確定
+  official: true
+  telop: ニュージーランド代表の基礎DATA
+  narrator: キャスター
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460277-460277-fl
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00036822/
+  - https://web.gekisaka.jp/news/japan/detail/?460277-460277-fl
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/news/00036835/
+  - https://api.fifa.com/api/v3/fifarankings/rankings/rankingsbyschedule?rankingScheduleId=FRS_Male_Football_20260611&language=en
+  - https://news.yahoo.co.jp/articles/4f52492da4132fff9899ba02eeacb7bb778d8cb0
+  - https://en.wikipedia.org/wiki/New_Zealand_men%27s_national_football_team
+  card:
+    type: table
+    title: ニュージーランド代表の基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 愛称
+      - オールホワイツ
+    - - FIFAランキング
+      - 86位（日本は17位）
+    - - 監督
+      - ダレン・ベイズリー（イングランド出身）
+    - - 主将
+      - クリス・ウッド（ノッティンガム・フォレスト）
+    - - W杯
+      - 3回目の出場（1982・2010・2026）
+    - - オセアニア予選
+      - 5戦全勝・29得点1失点
+  say:
+  - text: キリンカップの決勝、国立競技場で日本と優勝を争う相手です。
+    image: assets/images/20261005_team_newzealand/02_w.jpg
+  - text: どんな顔ぶれで、どう戦うチームなのか。まずは基礎データから。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+  - text: 愛称はオールホワイツ。上下真っ白のユニフォームから付いた呼び名です。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: ラグビーの代表、オールブラックスにかけた名前でもあります。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: フィファの世界ランキングは86位。17位の日本とは、大きな開きがあります。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 率いるのは、ダレン・ベイズリー監督。
+    image: assets/images/20261005_team_newzealand/01_w.jpg
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 日本との決勝へ向けて、監督が口にした言葉です。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - voice: ベイズリー監督
+    text: 決して簡単な試合にはならないが、
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - voice: ベイズリー監督
+    text: 参加するからには勝ちたい
+    cont: true
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: キャプテンは、フォワードのクリス・ウッド。
+    image: assets/images/20261005_team_newzealand/02_w.jpg
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: 代表で45ゴール。国の歴代最多の記録を持つエースです。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+  - text: W杯は今年が3回目。1982年、2010年に続く出場でした。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  - text: 2010年の南アフリカ大会は、3試合すべて引き分け。負けずに大会を去りました。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  - text: 今回のオセアニア予選は5戦全勝。29点を奪い、許したのは1点です。
+    card:
+      type: table
+      title: ニュージーランド代表の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+- id: wc
+  heading: W杯で3点を挙げた中盤の選手
+  tier: 確定
+  official: true
+  telop: W杯は1分け2敗。4点のうち3点がジャスト
+  narrator: 解説
+  sources:
+  - https://api.fifa.com/api/v3/live/football/17/285023/289273/400021476
+  - https://api.fifa.com/api/v3/live/football/17/285023/289273/400021480
+  - https://api.fifa.com/api/v3/live/football/17/285023/289273/400021481
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/news/00036835/
+  - https://www.fotmob.com/players/1053736/elijah-just
+  card:
+    type: table
+    title: W杯2026 ニュージーランドの3試合
+    columns: &id003
+    - 相手
+    - 結果
+    - ニュージーランドの得点
+    rows: &id004
+    - - イラン
+      - 2-2 引き分け
+      - ジャスト 2点
+    - - エジプト
+      - 1-3 負け
+      - サーマン
+    - - ベルギー
+      - 1-5 負け
+      - ジャスト
+  say:
+  - text: この夏のW杯で、ニュージーランドはどう戦ったのか。
+    image: assets/images/20261005_team_newzealand/02_w.jpg
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+  - text: 初戦はイラン。開始7分に、イライジャ・ジャストが先制します。
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 追いつかれた後半にも、ジャストがもう1点。もう一度リードを奪いました。
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 最後は2対2。これが、この大会でつかんだ唯一の勝ち点です。
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 続くエジプト戦も先に点を取りながら、1対3でひっくり返されました。
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: ベルギーには1対5。それでも終盤、ジャストが1点を返しています。
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 1分け2敗でグループ4位。W杯の初勝利は、またも持ち越しになりました。
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: チームの4点のうち3点が、ジャストのゴールでした。
+    emph: true
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: イングランドのスウォンジーでプレーする、26歳の中盤の選手です。
+    card:
+      type: table
+      title: W杯2026 ニュージーランドの3試合
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+- id: coach
+  main: true
+  heading: 選手を子どもの頃から知る監督
+  tier: 報道
+  telop: ベイズリー監督「選手が12歳、13歳、14歳の頃からよく知っている」
+  narrator: キャスター
+  say:
+  - text: 日本と決勝を戦う、オセアニアの王者。
+    image: assets/images/20261005_team_newzealand/01_w.jpg
+    short_only: true
+  - text: ベイズリー監督は前日、チームの強みをこう語りました。
+  - voice: ベイズリー監督
+    text: 選手が12歳、13歳、14歳の頃から
+  - voice: ベイズリー監督
+    text: よく知っているが、
+    cont: true
+  - voice: ベイズリー監督
+    text: 育成年代から関係を持つことで、
+    cont: true
+  - voice: ベイズリー監督
+    text: 選手たち一人一人を良く知ることができ、
+    cont: true
+  - voice: ベイズリー監督
+    text: 強い繋がりを持つことができる。
+    cont: true
+  - voice: ベイズリー監督
+    text: これは私だけの強さではなく、
+    cont: true
+  - voice: ベイズリー監督
+    text: ニュージーランドサッカー界の強さだ。
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460277-460277-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460277-460277-fl
+- id: path
+  heading: 17歳以下から歩んだおよそ15年
+  tier: 報道
+  telop: 17歳以下の代表から、およそ15年かけてA代表へ
+  narrator: 解説
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460277-460277-fl
+  - https://en.wikipedia.org/wiki/Darren_Bazeley
+  - https://www.fotmob.com/teams/5820/squad/new-zealand
+  card:
+    type: table
+    title: ベイズリー監督の歩み
+    columns: &id005
+    - 時期
+    - 役目
+    rows: &id006
+    - - 現役時代
+      - ワトフォードなど（イングランド）
+    - - 2012年
+      - 17歳以下の代表の監督
+    - - その後
+      - 20歳以下・23歳以下の代表の監督
+    - - いま
+      - A代表の監督
+  say:
+  - text: ベイズリー監督は、イングランドのノーサンプトン生まれ。
+    image: assets/images/20261005_team_newzealand/01_w.jpg
+    card:
+      type: table
+      title: ベイズリー監督の歩み
+      columns: *id005
+      rows: *id006
+  - text: 現役のころは、ワトフォードなどで右サイドを担いました。
+    card:
+      type: table
+      title: ベイズリー監督の歩み
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 選手生活の終わりにニュージーランドへ渡り、そこで指導者になります。
+    card:
+      type: table
+      title: ベイズリー監督の歩み
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 17歳以下の代表のコーチから始め、2012年からは監督に。
+    card:
+      type: table
+      title: ベイズリー監督の歩み
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 20歳以下、23歳以下と、選手の成長に合わせて年代を上がっていきます。
+    card:
+      type: table
+      title: ベイズリー監督の歩み
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: そしてたどり着いたのが、年齢の制限が無いA代表。指導はおよそ15年に及びます。
+    card:
+      type: table
+      title: ベイズリー監督の歩み
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: 決勝の10月5日は、そのベイズリー監督の54歳の誕生日です。
+    emph: true
+    card:
+      type: table
+      title: ベイズリー監督の歩み
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+- id: autumn
+  heading: この秋の3試合とPK戦
+  tier: 確定
+  official: true
+  telop: 準決勝はパナマと1-1、PK戦は5人全員が成功
+  narrator: キャスター
+  sources:
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/samuraiblue/news/00036851/
+  - https://www.nzfootball.co.nz/newsarticle/170803
+  - https://web.gekisaka.jp/news/japan/detail/?460105-460105-fl=
+  - https://www.fotmob.com/matches/palestine-vs-new-zealand/6280193
+  - https://www.fotmob.com/matches/china-vs-new-zealand/6280212
+  - https://www.rnz.co.nz/news/sport/1665138/all-whites-want-to-double-goal-tally-in-kirin-cup
+  - https://news.yahoo.co.jp/articles/4f52492da4132fff9899ba02eeacb7bb778d8cb0
+  card:
+    type: table
+    title: ニュージーランドのこの秋の3試合
+    columns: &id007
+    - 日付
+    - 相手
+    - 結果
+    rows: &id008
+    - - 9月24日
+      - パレスチナ
+      - 2-2 引き分け
+    - - 9月27日
+      - 中国
+      - 3-0 勝ち
+    - - 10月1日
+      - パナマ（準決勝）
+      - 1-1（PK戦5-3）
+  say:
+  - text: W杯が終わって迎えた、この秋の3試合です。
+    image: assets/images/20261005_team_newzealand/02_w.jpg
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+  - text: 9月24日のパレスチナ戦は、2対2の引き分け。
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 3日後の中国戦は3対0。3月以来となる勝利でした。
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: そして10月1日、キリンカップの準決勝でパナマと当たります。
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 1点ずつを取り合い、1対1のまま90分を終えてPK戦へ。
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: ニュージーランドは5人全員が決めて、5対3で決勝へ進みました。
+    emph: true
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: パナマの3人目を止めたのは、ゴールキーパーのアレックス・ポールセン。
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: メンバーには、ゴールキーパーのマイケル・ウッドもいます。
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: かつて京都サンガと甲府でプレーし、日本のサッカーを知る選手です。
+    card:
+      type: table
+      title: ニュージーランドのこの秋の3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+- id: h2h
+  heading: 日本との5試合と旧国立の最後の一戦
+  tier: 確定
+  official: true
+  telop: 日本の3勝2敗。2014年は旧国立で最後の日本代表戦
+  narrator: 解説
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00036822/
+  - http://samuraiblue.jp/timeline/20030618/
+  - http://samuraiblue.jp/diary/b_000307/
+  - https://www.kirin.co.jp/soccer/history/2014/kcc_0305.html
+  - https://www.jfa.jp/samuraiblue/20171006/match_page.html
+  card:
+    type: table
+    title: 日本とニュージーランドの対戦（日本から見て）
+    columns: &id009
+    - 日付
+    - 大会（会場）
+    - 結果
+    rows: &id010
+    - - 1983年9月25日
+      - ロス五輪予選
+      - 1-3 負け
+    - - 1983年10月7日
+      - ロス五輪予選
+      - 0-1 負け
+    - - 2003年6月18日
+      - コンフェデ杯（フランス）
+      - 3-0 勝ち
+    - - 2014年3月5日
+      - キリンチャレンジ杯（国立）
+      - 4-2 勝ち
+    - - 2017年10月6日
+      - キリンチャレンジ杯（豊田）
+      - 2-1 勝ち
+  say:
+  - text: 日本とニュージーランドは、これまで5回戦っています。
+    image: assets/images/20261005_team_newzealand/02_w.jpg
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+  - text: 成績は日本の3勝2敗。
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+  - text: 最初の2試合は1983年。ロサンゼルス五輪の予選で、日本が続けて敗れました。
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: 2003年は、各大陸の王者が集まるコンフェデレーションズカップ。
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: フランスでの一戦を、中村俊輔の2ゴールなどで3対0と制します。
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: そして2014年3月5日。舞台は、建て替えの前の国立競技場でした。
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: あの国立で行われた、最後の日本代表戦。その相手がニュージーランドです。
+    emph: true
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: 直近は2017年、豊田スタジアムで日本が2対1と競り勝ちました。
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: 国立で顔を合わせるのは、あの日から12年ぶりになります。
+    card:
+      type: table
+      title: 日本とニュージーランドの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+- id: view
+  heading: 先制の早さと、追いつかれる前半
+  tier: 背景
+  viewpoint: true
+  telop: 3試合すべて13分までに先制。ただし2試合は前半に追いつかれた
+  narrator: 解説
+  sources:
+  - https://www.nzfootball.co.nz/newsarticle/170803
+  - https://www.fotmob.com/matches/palestine-vs-new-zealand/6280193
+  - https://www.fotmob.com/matches/china-vs-new-zealand/6280212
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m01.pdf
+  - https://www.kirin.co.jp/soccer/history/2014/kcc_0305.html
+  - https://www.jfa.jp/samuraiblue/lp/20261005/
+  card:
+    type: table
+    title: この秋の3試合の先制点
+    columns: &id011
+    - 試合
+    - 先制
+    - その後
+    rows: &id012
+    - - パレスチナ戦
+      - 5分
+      - 前半に追いつかれる
+    - - 中国戦
+      - 4分
+      - 3-0で勝ち切る
+    - - パナマ戦
+      - 13分
+      - 前半に追いつかれる
+    - - 日本（9月からの3試合）
+      - ―
+      - 許したゴールは2
+  say:
+  - text: ここで見立てを1つ。鍵を握るのは、試合の立ち上がりです。
+    image: assets/images/20261005_team_newzealand/02_w.jpg
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+  - text: この秋の3試合、ニュージーランドはすべて先にゴールを奪っています。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+  - text: パレスチナ戦は5分。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: 中国戦は4分。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: パナマ戦も、13分に先制しました。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: ところが、パレスチナ戦とパナマ戦は、前半のうちに追いつかれました。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: リードを最後まで守ったのは、中国戦の1試合です。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: 迎える日本は、9月からの3試合で許したゴールが2つ。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 12年前の国立では、日本が開始17分までに4点を奪っています。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 早い時間に先に決めるのは、どちらか。
+    emph: true
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: キックオフは10月5日、夜7時30分です。
+    card:
+      type: table
+      title: この秋の3試合の先制点
+      columns: *id011
+      rows: *id012
+      highlight_row: 3

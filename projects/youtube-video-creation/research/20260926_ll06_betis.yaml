@@ -17,8 +17,9 @@ theme:
   topic: レアル・ベティス
   title: レアル・ベティス。3部まで落ちたクラブが掲げる言葉
   question: どんなクラブなのか
+  takeaway: 今季のベティスは7試合で勝ち点16と昨季の同じ時点より4多く、5つの勝ちはすべて1点差で、レバンテ戦の5失点を除けば6試合で2失点という守りで積んだ勝ち点が首位に通じるかは、10月17日に本拠地でバルセロナを迎える一戦で見える
   hook: 両チームのキーパーまでピーケーを蹴った決勝があります。
-  lead: スペインで、いちばん古いファンの会。
+  lead: ファンの会の古さは、スペインで一番。
   opening_image: assets/stats/ll_betis_data_t.png
 thumbnail:
   line1: 3部まで落ちたクラブ
@@ -56,7 +57,7 @@ sections:
     text: ホームタウンはセビージャ。アンダルシアの州都で、スペインで**5番目**に大きな町です。
     no_telop: true
   - image: assets/backgrounds/stadium_レアルベティス.png
-    text: 今の本拠地はラ・カルトゥーハ。いつもの競技場を改修するあいだの仮住まいで、**7万人**が入ります。
+    text: 今の本拠地はラ・カルトゥーハ。改修中のいつもの競技場に代わる、**7万人**の仮住まい。
   - image: assets/stats/ll_betis_data4.png
     text: 会長は**2016年**からアンヘル・アロ。株主が選ぶ形の株式会社です。
     no_telop: true
@@ -104,7 +105,7 @@ sections:
       - 勝ち点1
   say:
   - 1部の頂点に立ったのは**1935年**。率いたのはアイルランド人のオコンネル監督です。
-  - 決めたのは北の町サンタンデール。**5対0**で勝ち、マドリードを勝ち点1差でかわしました。
+  - 決めたのはサンタンデールで**5対0**。2位のマドリードを、勝ち点1差でかわしました。
   - その日のセビージャは春祭り。知らせは、祭りの小屋の黒板で伝えられました。
   sources:
   - https://en.wikipedia.org/wiki/Real_Betis
@@ -130,7 +131,7 @@ sections:
   say:
   - ところが翌年から内戦。優勝した顔ぶれは散り、残ったのは**2人**だけでした。
   - 1947年には、あの優勝を決めたサンタンデールで**1対4**。3部へ落ちます。
-  - text: 3部には7年。1954年に3部で優勝し、1部・2部・3部のすべてで優勝したクラブに。
+  - text: 3部には7年。1954年に3部も制し、1部から3部まですべてで優勝したクラブに。
     card:
       type: table
       title: 同じ町で3部へ
@@ -166,7 +167,7 @@ sections:
   say:
   - 1992年、法律で株式会社になるとき、ファンは3か月で**4億ペセタ**を集めました。
   - それでも足りず、残りを出した副会長のロペラが、筆頭株主になります。
-  - text: 2009年に2部へ落ちると、**6万人**を超えるファンが町を歩き、ロペラに身を引くよう求めました。
+  - text: 2009年の2部降格で、**6万人**超のファンが町を歩き、ロペラの退任を求めました。
     card:
       type: table
       title: ファンが取り戻したクラブ
@@ -174,7 +175,7 @@ sections:
       rows:
       - - 2017年
         - 株をファンと株主へ売り出す
-  - 2017年、株は1株**120ユーロ**でファンと株主に売り出され、ロペラはクラブを離れました。
+  - 2017年、株は1株**120ユーロ**でファンと株主の手に。ロペラは身を引きました。
   sources:
   - https://en.wikipedia.org/wiki/Real_Betis
   - https://es.wikipedia.org/wiki/Historia_del_Real_Betis_Balomp%C3%A9
@@ -199,7 +200,7 @@ sections:
   say:
   - text: ペジェグリーニ監督のチームは、とにかく打つ。
     image: assets/photos/ll/betis/betis_manager_56bb9280.jpg
-  - リーグ戦5試合を終えた9月半ばの時点で、シュートは**89本**でした。
+  - 開幕5試合でシュート**89本**。上はレアル・マドリードとバルセロナだけ。
   - text: ピッチの外は、行き場を失った実力者を拾う型。
     card:
       type: table
@@ -210,7 +211,7 @@ sections:
       - &id005
         - 運営の型
         - 行き場を失った実力者を拾う
-  - イスコはセビージャとの契約を解き、次の移籍も破談。所属先の無いまま、2023年に加入。
+  - イスコはセビージャと契約を解き、次の移籍も破談。無所属のまま2023年に加入。
   - そのシーズン、試合の最優秀選手に**19回**。リーグ最多でした。
   - text: そして、落ちても戻ってくる。2部での優勝は**7回**あります。
     card:
@@ -276,8 +277,8 @@ sections:
   say:
   - text: デニウソンは1998年、サンパウロから加わったブラジル代表のドリブラーです。
     image: assets/photos/ll/betis/betis_legend_62f14409.jpg
-  - 移籍金は**2150万ポンド**で、当時の世界最高額。それでも2年目、チームは2部へ落ちます。
-  - 残ってリーグ戦で**185試合**。在籍中の2002年、日韓ワールドカップで優勝しました。
+  - 移籍金**2150万ポンド**は、当時の世界最高額。それでも2年目、チームは2部へ。
+  - 残ってリーグ戦**185試合**。ベティスにいた2002年、日韓ワールドカップで世界一。
   sources:
   - https://en.wikipedia.org/wiki/Den%C3%ADlson_(footballer,_born_1977)
   - https://en.wikipedia.org/wiki/Rub%C3%A9n_Castro
@@ -305,7 +306,7 @@ sections:
   say:
   - text: ルベン・カストロは2010年、2部にいたベティスに加わった点取り屋です。
     image: assets/photos/ll/betis/betis_legend_db788c4e.jpg
-  - 再び2部で戦った2014年からのシーズン、リーグ戦**31得点**。1年で1部へ戻しました。
+  - 再び2部にいた2014年からのシーズン、**31得点**。1年で1部へ戻しました。
   - リーグ戦で**260試合135得点**。公式戦の**148得点**は、クラブの歴代最多です。
   sources:
   - https://en.wikipedia.org/wiki/Den%C3%ADlson_(footballer,_born_1977)
@@ -334,8 +335,9 @@ sections:
   say:
   - text: ボルハ・イグレシアスは2019年、**2800万ユーロ**で来たセンターフォワード。
     image: assets/photos/ll/betis/betis_legend_d078226b.jpg
-  - 2022年、国王杯の決勝で先制点。大会の得点王で、決勝の最優秀選手にも選ばれました。
-  - リーグ戦で**142試合39得点**。在籍中に、スペイン代表にも初めて呼ばれました。
+  - 2022年の国王杯決勝で先制点。大会の得点王で、決勝の最優秀選手にも。
+  - text: リーグ戦で**142試合39得点**。在籍中に、スペイン代表にも初めて呼ばれました。
+    card: none
   sources:
   - https://en.wikipedia.org/wiki/Den%C3%ADlson_(footballer,_born_1977)
   - https://en.wikipedia.org/wiki/Rub%C3%A9n_Castro
@@ -363,7 +365,7 @@ sections:
   say:
   - text: 今季の監督はマヌエル・ペジェグリーニ。**2020年7月**の就任です。
     image: assets/photos/ll/betis/betis_manager_56bb9280.jpg
-  - 前はイングランドのウェストハム。ベティスでは**319試合**を率い、クラブで最も多い数です。
+  - 前はイングランドのウェストハム。ベティスで率いた**319試合**は、クラブ最多です。
   sources:
   - https://en.wikipedia.org/wiki/Real_Betis
   - https://en.wikipedia.org/wiki/Manuel_Pellegrini
@@ -410,7 +412,7 @@ sections:
     text: フォワードは6人。
     no_telop: true
   - image: assets/stats/ll_betis_fw_f.png
-    text: アブデ・エザルズリはモロッコ代表で**37試合**。
+    text: アブデ・エザルズリはモロッコ代表で**39試合**。
     no_telop: true
   - image: assets/stats/ll_betis_fw_f.png
     text: アイトール・ルイバルはリーグ戦で**149試合**。
@@ -420,18 +422,19 @@ sections:
   bg: assets/backgrounds/stadium_レアルベティス_in.png
   official: false
 - id: season
-  heading: 今季のここまで
+  viewpoint: true
+  heading: 昨季より4多い勝ち点16、1点差を守って積んだ
   tier: 報道
   telop: 7試合で5勝1引き分け1敗。3位
   narrator: 解説
   card:
     type: table
     title: ラ・リーガの結果
-    columns:
+    columns: &rescols
     - 節
     - 相手
     - 結果
-    rows:
+    rows: &resrows
     - - 第1節
       - バレンシア（アウェー）
       - 1対0
@@ -454,12 +457,32 @@ sections:
       - デポルティーボ・ラ・コルーニャ（アウェー）
       - 1対1
   say:
-  - ラ・リーガは7試合を終えて、**5勝1引き分け1敗**です。
-  - 順位は**3位**、勝ち点は**16**です。
-  - この順位を保てば、来季のチャンピオンズリーグに出られます。
-  - チャンピオンズリーグの初戦は、上田綺世に先制されたリールに、**3対2**で逆転勝ちでした。
+  - 今季のベティスは、ラ・リーガ7試合で**5勝1引き分け1敗**。
+  - 勝ち点は**16**で**3位**。首位バルセロナの**21**とは、5の差です。
+  - text: 5つの勝ちは、すべて**1点差**。うち4つは**1対0**でした。
+    emph: true
+  - text: 失点**7**のうち**5**は、レバンテに敗れた1試合です。
+    card:
+      type: table
+      title: ラ・リーガの結果
+      columns: *rescols
+      rows: *resrows
+      highlight_row: 2
+  - text: 残る6試合は**2**失点。とにかく打つチームが、守って勝ち点を積んでいます。
+    card: none
+  - text: 昨季は同じ7試合を終えたところで、勝ち点**12**。今季は、それを**4**上回っています。
+    card: none
+  - text: 昨季の勝ち点を38試合でならすと、1試合**1.58**。今季は**2.29**のペースです。
+    card: none
+  - text: チャンピオンズリーグの初戦は、上田綺世に先制されたリールに**3対2**の逆転勝ち。
+    card: none
+  - text: 首位との直接対決は**10月17日**。本拠地に、7戦全勝のバルセロナを迎えます。
+    card: none
   sources:
   - https://www.espn.com/soccer/team/results/_/name/betis
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/244/schedule?season=2026&fixture=true
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/244/schedule?season=2025
+  - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
   - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_レアルベティス_in.png

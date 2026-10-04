@@ -1,6 +1,11 @@
-# ヴィティーニャ（パリ・サンジェルマン）の紹介。8節の型（2026-09-28）。材料と出典は research/raw/20261005_vitinha_material.md。
-# 数字は Transfermarkt・FotMob（1061249）・PSG公式・UEFA・Opta。本人の言葉は Goal日本／サッカーキングの訳をそのまま。
-# 2025年CL決勝の先制点は「起点」まで（アシストはドゥエ）。クラブW杯のシルバーボール・「英国勢相手のハット9人目」・背番号の由来は裏が取れないので出さない。
+# ヴィティーニャ（パリ・サンジェルマン）の紹介。8節の型（2026-09-28）を、ヤマル（research/20261002_player_937958.yaml）・
+# オリーセ（research/20261003_player_566723.yaml）・エムバペ（research/20261004_player_342229.yaml）の形にそろえて作り直した（2026-10-05）。
+# 材料は research/raw/20261005_vitinha_material.md（9/28）、10/5 に取り直した数字・代表初ゴール・写真は research/raw/20261005_player_487469.md。
+# 通算は Transfermarkt と FotMob で突き合わせ、試合と得点は一致（338試合33点。ポルトBと年代別は入れない）。アシストは食い違うので出さない。
+# 今季の数字は 10/3 まで（代表ウィーク）。10/4 のポルトガル対ノルウェー（日本時間 10/5 3:45）は数えていない。
+# 元の台本の誤り2つを直した：ノルウェー戦は「35分で交代」ではなく途中出場、次の試合は「10月11日」ではなく現地10日。
+# 同じ試合のロナウドの話（10/2 ronaldo_walkout・10/3 portugal_without）は入れない。10/2 で使った「距離を置こうとした」も使わない。
+# 2025年CL決勝の先制点は「起点」まで。クラブW杯のシルバーボール・PKキッカー・背番号の由来は裏が取れないので出さない。
 date: 2026年10月05日
 slot: other_1
 format: news
@@ -13,45 +18,49 @@ theme:
   kind: other
   topic: パリ・サンジェルマン
   title: ヴィティーニャってどんな選手？ウルブズで干された年に言い当てた未来
-  question: ヴィティーニャはどういう作りの選手で、なぜ点を取らずに世界3位まで来たのか
-  takeaway: パス成功は同じMFの中で最上位、空中戦と守備は最下位近く。ウルブズで1年干された172cmの司令塔が、宣言どおり2年後にPSGへ行き、CL連覇の軸とバロンドール3位まで来た
+  question: ヴィティーニャはどういう作りの選手で、点の少ないMFがなぜ世界3位まで来たのか
+  takeaway: クラブと代表を合わせた通算は338試合33点（10月3日まで）。点ではなくパスで試合を動かす司令塔で、昨季のチャンピオンズリーグは90分あたり90.6本、今季のリーグは95.9本とパスの量は増えている。代表46試合目の初ゴールを決めた10月、10日のル・マン戦と26日のバロンドール授賞式が次の節目
   nameplate: ヴィティーニャ｜パリ・サンジェルマン MF／ポルトガル代表
+  opening_image: assets/images/20261005_player_487469/01_w.jpg
   bgm: assets/audio/bgm_calm.wav
 watch: 明日は⑥ジュード・ベリンガム
 short_title: ヴィティーニャってどんな選手？
 thumbnail:
-  line1: ヴィティーニャ
-  line2: 干された年に言ったのは●●
+  line1: ヴィティーニャ通算338試合
+  line2: バロンドール●位、172cmの司令塔
   tags:
   - パリ・サンジェルマン
   - ビティーニャ
   - ヴィトール・フェレイラ
   - 選手紹介
   - プレースタイル
-  photo: assets/images/20261005_vitinha_usa2026_w/01.jpg
+  photo: assets/images/20261005_player_487469/thumbfull/01.jpg
   photos: []
 sections:
 - id: hook
   heading: どんな選手か
   tier: 報道
-  telop: 干された年に言った未来を、2年で現実にした
+  telop: 干された1年に口にした未来を、2年で現実にした
   narrator: キャスター
   say:
-  - text: ヴィティーニャ。全部のパスを自分で受けに行く、172センチの司令塔です。
-    image: assets/images/20261005_vitinha_usa2026_w/01.jpg
-  - 同じMF100人の中で、パスの成功数は最上位。空中戦と守備の関与は、最下位に近い。
-  - 2020年、ウルヴァーハンプトンにレンタルされて1年干されました。プレミアの先発は数えるほど。
-  - その年、同僚にこう言ったそうです。ポルトに戻って大暴れして、翌年は欧州ベスト8のクラブでやる、と。
-  - そのとおりになりました。今年5月、チャンピオンズリーグ決勝の最優秀選手に選ばれて、こう。
+  - text: ヴィティーニャ。すべてのパスを受けに行く、172センチの司令塔です。
+    image: assets/images/20261005_player_487469/01_w.jpg
+  - 20歳で渡ったイングランドのウルヴァーハンプトン、通称ウルブズ。
+  - 1年でつかんだ先発は、公式戦でわずか7回でした。
+  - それでも本人は、当時の同僚にこう言い切っていたそうです。
+  - ポルトに戻って大暴れする。その次は、欧州のベスト8に入るクラブでやる、と。
+  - text: そして本当に、宣言どおりパリへ。いまや欧州王者の中盤の柱です。
+    emph: true
+  - 今年5月の決勝では最優秀選手に選ばれ、胸を張りました。
   - voice: ヴィティーニャ
     text: 今日、僕らはヨーロッパで最高のチームだと言える
     pause: 0.5
-  - その道のりを、数字と話でたどります。
+  - その歩みを、表と本人の言葉で確かめていきましょう。
   sources:
-  - https://www.fotmob.com/players/1061249
   - https://www.goal.com/en-us/lists/vitinha-failed-wolves-loan-worlds-best-midfielder-psg/blt95482d96d8f61a53
   - https://www.goal.com/jp/ニュース/cl-psg-vitinha-final/bltf7a47ef738855ee7
   - https://www.uefa.com/uefachampionsleague/news/02a5-20c0324a93c4-a269d65f5aeb-1000--vitinha-named-official-2026-uefa-champions-league-final-play/
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2026/02/17/sg/
 - id: data
   heading: 基礎DATA
   tier: 報道
@@ -63,11 +72,11 @@ sections:
     columns:
     - 項目
     - 内容
-    rows:
+    rows: &vdata
     - - 所属
       - パリ・サンジェルマン（17番）
     - - ポジション
-      - 守備的MF
+      - 守備的MF（副主将）
     - - 生年月日
       - 2000年2月13日（26歳）
     - - 生まれ
@@ -82,12 +91,40 @@ sections:
       - 1.4億ユーロ
     source: Transfermarkt・PSG公式
   say:
-  - text: ヴィティーニャ、26歳。パリ・サンジェルマンの中盤の選手です。
+  - text: ヴィティーニャ、26歳。パリ・サンジェルマンで背番号17を背負います。
     image: assets/images/20261005_vitinha_psg2024/01.jpg
-  - 生まれはポルト近郊のサント・ティルソ。本名はヴィトル・フェレイラ。
-  - 父も同じMFのプロ選手で、1999年のポルトガル杯決勝に出た人です。
-  - 身長は1メートル72で右利き。契約は2029年の6月まで。
-  - 市場価値は1.4億ユーロ。いまが最高額。
+    card: &data_card
+      type: table
+      title: ヴィティーニャ（パリ・サンジェルマン）
+      columns: [項目, 内容]
+      rows: *vdata
+      source: Transfermarkt・PSG公式
+      highlight_row: 0
+  - text: 持ち場は中盤の底。ルイス・エンリケ監督から、副主将も任されています。
+    card:
+      <<: *data_card
+      highlight_row: 1
+  - text: 生まれはポルト近郊のサント・ティルソ。本名はヴィトル・フェレイラです。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長は172センチ。小柄な体で、中盤の真ん中に立ちます。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 契約は2029年まで。去年2月に延ばしました。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  - text: そして市場価値は、なんと1億4千万ユーロ。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 7
+  - text: この6月に3,000万ユーロ上がり、過去最高に届きました。
+    card:
+      <<: *data_card
+      highlight_row: 7
   sources:
   - https://www.transfermarkt.com/vitinha/profil/spieler/487469
   - https://www.psg.fr/en/players/vitinha
@@ -123,25 +160,94 @@ sections:
       - 22歳〜26歳
       - 最高 1.4億ユーロ
     source: Transfermarkt
+  rows_career:
+  - &c1
+    - 19/20〜20/21
+    - ポルト
+    - 19歳〜20歳
+    - 最高 500万ユーロ
+  - &c2
+    - 20/21
+    - ウォルバーハンプトン
+    - 20歳〜21歳
+    - 最高 700万ユーロ
+  - &c3
+    - 21/22
+    - ポルト
+    - 21歳〜22歳
+    - 最高 3000万ユーロ
+  - &c4
+    - 22/23〜26/27
+    - パリ・サンジェルマン
+    - 22歳〜26歳
+    - 最高 1.4億ユーロ
   say:
-  - text: ヴィティーニャは11歳でポルトへ。
-    image: assets/images/20261005_vitinha_usa2026/01.jpg
-  - 2019年、ヨーロッパのユースリーグの決勝で優勝しています。
-  - text: 市場価値の線は、2020年のウルヴァーハンプトンで止まり、そこから跳ねています。
+  - text: ヴィティーニャは11歳でポルトへ。19歳で、ユース年代の欧州王者に。
     image: assets/stats/player_20261005_1061249_value.png
     no_telop: true
-  - 2020年9月9日、ウルヴァーハンプトンへレンタル。
-  - プレミアリーグ19試合、先発は全公式戦で7回、1点。買い取りは見送られました。
-  - 翌年ポルトへ戻り、47試合でリーグとカップの2冠。若手の年間最優秀です。
-  - 2022年6月30日、契約解除金4,000万ユーロでパリ・サンジェルマンへ。
-  - 2025年5月31日、チャンピオンズリーグ決勝でインテルに5対0。
-  - 中盤の軸として、初優勝です。
-  - 2026年5月30日、アーセナルとの決勝で連覇。市場価値はいまの額に。
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - *c1
+      - *c2
+      - *c3
+      - *c4
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 市場価値の線は、ウルヴァーハンプトンの1年でほとんど伸びていません。
+    image: assets/stats/player_20261005_1061249_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: プレミアで初めて先発したのは12月。買い取りは見送られました。
+    image: assets/stats/player_20261005_1061249_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: ところがポルトに戻ると、一気に花開きます。
+    image: assets/stats/player_20261005_1061249_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: リーグと国内カップの2冠。リーグの年間最優秀若手の座もつかみます。
+    image: assets/stats/player_20261005_1061249_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 2022年6月、契約解除金4,000万ユーロでパリへ。
+    image: assets/images/20261005_vitinha_psg2022/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 1年目は、定位置を失う時期もありました。
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 流れを変えたのは、翌夏に来たルイス・エンリケ監督です。
+    card:
+      <<: *career_card
+      highlight_row: 3
+  - text: 2025年、クラブ初の欧州制覇。今年はアーセナルをPK戦で破って連覇です。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 3
   sources:
   - https://www.transfermarkt.com/vitinha/profil/spieler/487469
   - https://www.uefa.com/uefayouthleague/news/0269-126618579cd7-3a02f306579c-1000--youth-league-winners-tasting-champions-league-europa-leag/
   - https://www.goal.com/en-us/news/vitinha-psg-40m-midfielder-wolves/blt73833142d2fb5389
   - https://observador.pt/2022/06/30/40-milhoes-da-clausula-1525-milhoes-de-juros-4-milhoes-de-intermediacao-fc-porto-confirma-venda-de-vitinha-ao-psg/
+  - https://www.getfootballnewsfrance.com/2024/vitinha-from-faltering-form-and-lionel-messi-clash-to-psgs-key-performer/
   - https://www.beinsports.com/en-us/soccer/uefa-champions-league/articles/vitinha-champions-league-victory-is-a-dream-come-true-2025-05-31
 - id: style
   heading: プレースタイル
@@ -166,20 +272,29 @@ sections:
       value: 24
     source: FotMob
   say:
-  - text: ヴィティーニャの武器と弱点を、同じMFと並べた数字で。
+  - text: レーダーの図で、同じ中盤の選手と比べたヴィティーニャの形を見てみます。
     image: assets/stats/player_20261005_1061249_radar.png
     no_telop: true
-  - レーダーで高いのはパスとボールタッチ。低いのは空中戦と守備の関与です。
-  - text: ボールを持つ場所は中盤の全部。DFの隣にも、GKのそばにも降りていきます。
+  - text: 高く張り出すのは、パスとボールタッチ。低いのは、空中戦と守備の関わりです。
+    image: assets/stats/player_20261005_1061249_radar.png
+    no_telop: true
+  - text: ボールを受ける場所は、中盤のすべて。DFの隣にも、GKのそばにも降りていきます。
     image: assets/stats/player_20261005_1061249_heat.png
     no_telop: true
-  - 今季のパス成功は5試合で457本、1試合90本以上。ロングボールの成功52本も最上位です。
-  - 昨季のチャンピオンズリーグでは、パス成功1,448本。1大会の記録です。
-  - text: シュートは今季12本で1点。得点力は後から付いた側で、初のハットトリックは去年11月でした。
+    card: none
+  - text: 今季のリーグは5試合で、パス成功457本。1試合で90本を超えます。
+    image: assets/images/20261005_player_487469/usa96/01_w.jpg
+  - text: 昨季のチャンピオンズリーグでは、パス成功1,448本。なんと大会の記録です。
+    emph: true
+  - text: シュートは今季12本で1点。点は、あとから身に付けた武器です。
     image: assets/stats/player_20261005_1061249_shots.png
     no_telop: true
-  - 弱点は空中戦と守備の量。守備のアクションは同じMFの中で下から24番目。体は172センチです。
-  - 他者の評を1つ。スペイン代表のペドリは、こう言っています。
+  - text: 初めてのハットトリックは、去年11月のトッテナム戦でした。
+    image: assets/stats/player_20261005_1061249_shots.png
+    no_telop: true
+  - text: 守備の量は、比べた中では少ない側。そのぶん運ぶ仕事を磨いてきました。
+    image: assets/images/20261005_player_487469/usa96/01_w.jpg
+  - 対戦したスペイン代表のペドリは、こう驚いていました。
   - voice: ペドリ
     text: 彼と対戦したとき、本当に驚いたのは、
   - voice: ペドリ
@@ -196,63 +311,218 @@ sections:
   - https://www.goal.com/jp/ニュース/pedri-vitinha-spain-portugal-football-soccer-20260705/blt2f7901bf4dbe5358
   - https://www.soccer-king.jp/news/world/fra/20251127/2092189.html
 - id: past
-  heading: 過去5シーズンの数字
+  heading: キャリア全体の数字
   tier: 報道
-  telop: 直近5シーズンの試合と得点
+  telop: 季ごとの数字と、10月3日までの通算
   narrator: 解説
   card:
     type: table
-    title: ヴィティーニャ 直近5シーズン（代表を含む全公式戦）
+    title: ヴィティーニャ 通算（2026年10月3日まで）
     columns:
-    - 季
+    - 所属
     - 試合
     - 得点
-    - アシスト
-    - 出場時間
     rows:
-    - - 21/22
-      - '56'
+    - - ポルト
+      - '59'
       - '4'
-      - '5'
-      - 3764分
-    - - 22/23
-      - '58'
-      - '2'
-      - '4'
-      - 3630分
-    - - 23/24
-      - '53'
-      - '9'
-      - '6'
-      - 4186分
-    - - 24/25
-      - '73'
-      - '8'
-      - '8'
-      - 5660分
-    - - 25/26
-      - '58'
-      - '7'
-      - '10'
-      - 4572分
-    source: Transfermarkt
+    - - ウルヴァーハンプトン
+      - '22'
+      - '1'
+    - - パリ・サンジェルマン
+      - '211'
+      - '27'
+    - - ポルトガル代表
+      - '46'
+      - '1'
+    - - 合計
+      - '338'
+      - '33'
+    source: Transfermarkt・FotMob
+  rows_seasons_a:
+  - &s1
+    - 19/20
+    - ポルト
+    - '12'
+    - '0'
+  - &s2
+    - 20/21
+    - ウルブズ
+    - '22'
+    - '1'
+  - &s3
+    - 21/22
+    - ポルト
+    - '47'
+    - '4'
+  - &s4
+    - 22/23
+    - パリ
+    - '48'
+    - '2'
+  rows_seasons_b:
+  - &s5
+    - 23/24
+    - パリ
+    - '46'
+    - '9'
+  - &s6
+    - 24/25
+    - パリ
+    - '59'
+    - '8'
+  - &s7
+    - 25/26
+    - パリ
+    - '50'
+    - '7'
+  - &s8
+    - 26/27
+    - パリ
+    - '8'
+    - '1'
+  rows_total:
+  - &t1
+    - ポルト
+    - '59'
+    - '4'
+  - &t2
+    - ウルヴァーハンプトン
+    - '22'
+    - '1'
+  - &t3
+    - パリ・サンジェルマン
+    - '211'
+    - '27'
+  - &t4
+    - ポルトガル代表
+    - '46'
+    - '1'
+  - &t5
+    - 合計
+    - '338'
+    - '33'
   say:
-  - text: ヴィティーニャの5シーズン。代表を含む全公式戦で、点は少なく、試合数は多い。
-    image: assets/images/20261005_vitinha_face/01.jpg
-  - いちばん古い季はポルトで、56試合4点。
-  - 2023年からは53試合で9点。監督がルイス・エンリケになり、点が増えました。
-  - 2024年からは73試合。欧州5大リーグの野手で、最多の出場でした。
-  - 2025年からは58試合で7点10アシスト。
-  - チャンピオンズリーグ連覇と、決勝の最優秀選手です。
+  - text: ヴィティーニャのプロ7季を、クラブの公式戦の表で振り返ります。
+    image: assets/images/20261005_vitinha_psg2024/01.jpg
+    card: &seasons_a
+      type: table
+      title: ヴィティーニャ 季ごとの数字①（クラブの公式戦）
+      columns: &season_cols
+      - 季
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - *s1
+      - *s2
+      - *s3
+      - *s4
+      source: Transfermarkt・FotMob
+  - text: ポルトでの最初の季は12試合。ウルブズでは22試合で1点。
+    card:
+      <<: *seasons_a
+      highlight_row: 1
+  - text: ポルトに戻った季は47試合。ここで不動の主力になります。
+    card:
+      <<: *seasons_a
+      highlight_row: 2
+  - text: パリ2季目は46試合で9点。キャリアでいちばん多く決めた季です。
+    card: &seasons_b
+      type: table
+      title: ヴィティーニャ 季ごとの数字②（クラブの公式戦）
+      columns: *season_cols
+      rows:
+      - *s5
+      - *s6
+      - *s7
+      - *s8
+      source: Transfermarkt・FotMob
+      highlight_row: 0
+  - text: 翌季はクラブだけで59試合。代表も合わせると、70を超える試合を戦い抜きました。
+    emph: true
+    card:
+      <<: *seasons_b
+      highlight_row: 1
+  - text: では通算です。パリでは211試合、27点を挙げてきました。
+    card: &total_card
+      type: table
+      title: ヴィティーニャ 通算（2026年10月3日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - *t1
+      - *t2
+      - *t3
+      - *t4
+      - *t5
+      source: Transfermarkt・FotMob
+      highlight_row: 2
+  - text: ポルトガル代表は46試合。その1点は、つい先日決めたものです。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: 合わせて338試合33点。点の数より、出続けた試合の数が語る7年です。
+    card:
+      <<: *total_card
+      highlight_row: 4
   sources:
-  - https://www.transfermarkt.com/vitinha/profil/spieler/487469
+  - https://www.transfermarkt.com/vitinha/leistungsdatenverein/spieler/487469
+  - https://www.fotmob.com/players/1061249
+  - https://www.psg.fr/en/content/the-best-of-vitinhas-200-appearances-for-paris-psg-club-long-form-2025-2026
   - https://kvia.com/cnn-sports/2026/01/13/we-want-to-win-it-for-him-vitinha-tells-cnn-sports-why-memory-of-diogo-jota-fuels-portugals-world-cup-dream/
-  - https://www.getfootballnewsfrance.com/2024/luis-enrique-names-psgs-player-of-the-season/
+- id: goal
+  heading: 代表46試合目の初ゴールは頭
+  tier: 報道
+  main: true
+  telop: 10月1日、敵地デンマーク戦の67分
+  narrator: 解説
+  say:
+  - text: パリ・サンジェルマンの司令塔ヴィティーニャが、代表46試合目でついに初ゴール。
+    short_only: true
+    image: assets/images/20261005_player_487469/usa93/01_w.jpg
+  - voice: ヴィティーニャ
+    text: 2つの初めてだった。キャリアで初めての頭のゴールで、
+  - voice: ヴィティーニャ
+    text: 代表でも初めてのゴールだ。
+    cont: true
+  - voice: ヴィティーニャ
+    text: 遅くても、ないよりはずっといい
+    cont: true
+    pause: 0.5
+  - text: 10月1日、敵地でのデンマーク戦。ポルトガルが4対2で勝った一戦です。
+    image: assets/images/20261005_player_487469/wc2026/01_w.jpg
+    card: &goal_card
+      type: table
+      title: 代表初ゴール（10月1日 デンマーク2-4ポルトガル）
+      columns: [項目, 内容]
+      rows:
+      - [代表, 46試合目で初ゴール]
+      - [形, キャリア初の頭でのゴール]
+      - [時間, 2対2の67分]
+      - [結果, 決勝点、4対2で勝利]
+      source: ESPN・SAPO
+      highlight_row: 0
+  - text: 同点で迎えた67分。ブルーノ・フェルナンデスのボールに、頭で飛び込みます。
+    emph: true
+    card:
+      <<: *goal_card
+      highlight_row: 2
+  - text: これが、その夜の決勝点になりました。
+    card:
+      <<: *goal_card
+      highlight_row: 3
+  sources:
+  - https://sapo.pt/artigo/vitinha-feliz-por-se-ter-estreado-a-marcar-na-selecao-foi-um-jogo-muito-capaz-da-nossa-equipa-6abed6419406c429becb60a4
+  - https://www.espn.com/soccer/report/_/gameId/401861096
+  - https://news.mynavi.jp/article/20261002-5060714/
+  - https://www.psg.fr/en/content/vitinha-scores-as-portugal-beat-denmark-paris-saint-germain-internationals-20262027
 - id: season
   heading: 今季の数字と直近5試合
   tier: 報道
-  main: true
-  telop: 今季ここまで
+  telop: 今季はクラブと代表で11試合2点
   narrator: 解説
   card:
     type: table
@@ -264,13 +534,18 @@ sections:
     - 得点
     - 評点
     rows:
+    - - 10/1
+      - デンマーク（代表）
+      - 90分
+      - 1G 0A
+      - '8.2'
     - - 9/27
-      - ノルウェー
+      - ノルウェー（代表）
       - 35分
       - 0G 0A
       - '6.4'
     - - 9/24
-      - ウェールズ
+      - ウェールズ（代表）
       - 90分
       - 0G 0A
       - '7.4'
@@ -284,25 +559,79 @@ sections:
       - 90分
       - 0G 0A
       - '7.8'
-    - - 9/9
-      - スロヴァン・ブラチスラバ
-      - 90分
-      - 0G 0A
-      - '8.0'
     source: FotMob
+  rows_recent:
+  - &r1
+    - 10/1
+    - デンマーク（代表）
+    - 90分
+    - 1G 0A
+    - '8.2'
+  - &r2
+    - 9/27
+    - ノルウェー（代表）
+    - 35分
+    - 0G 0A
+    - '6.4'
+  - &r3
+    - 9/24
+    - ウェールズ（代表）
+    - 90分
+    - 0G 0A
+    - '7.4'
+  - &r4
+    - 9/20
+    - マルセイユ
+    - 90分
+    - 0G 0A
+    - '8.3'
+  - &r5
+    - 9/13
+    - ブレスト
+    - 90分
+    - 0G 0A
+    - '7.8'
   say:
-  - text: パリのヴィティーニャ、26歳。点を取らないまま、去年の世界3位まで来た司令塔です。
-    short_only: true
-  - text: 今季はここまで10試合、824分に出て、1得点1アシスト。
-    image: assets/images/20261005_vitinha_wc2026_wide/01.jpg
-  - 点ではなく、時間で見る選手です。
-  - リーグ・アンは5試合で1点1アシスト。10点満点の評点の平均は7.9。
-  - 直近5試合、クラブでは全部90分。マルセイユとのクラシックは評点8.3でした。
-  - 代表の直近2試合は0点で、ノルウェー戦は35分で交代。評点6.4です。
-  - 干された年から6年。いまは、欧州を2年続けて制したチームの中盤の真ん中にいます。
+  - text: ヴィティーニャの今季は、クラブと代表で11試合2点1アシスト。
+    image: assets/images/20261005_player_487469/face/01.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns:
+      - 日付
+      - 相手
+      - 出場
+      - 得点
+      - 評点
+      rows:
+      - *r1
+      - *r2
+      - *r3
+      - *r4
+      - *r5
+      source: FotMob
+  - text: パリでは8試合で1点1アシスト。9月のクラブの試合は、すべて90分でした。
+    card:
+      <<: *recent_card
+      highlight_row: 4
+  - text: 伝統の一戦、マルセイユとのル・クラシックは、10点満点の評点で8.3。
+    card:
+      <<: *recent_card
+      highlight_row: 3
+  - text: 代表では、ノルウェー戦をベンチから迎え、後半の35分間を戦いました。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: そしてデンマーク戦は90分。得点を挙げて、評点8.2です。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: けがの知らせは、いまのところありません。
+    card: none
   sources:
   - https://www.transfermarkt.com/vitinha/profil/spieler/487469
   - https://www.fotmob.com/players/1061249
+  - https://www.abola.pt/noticias/o-bombom-nyland-nao-podia-ter-caido-melhor-a-portugal-cronica-2026092720391195022
 - id: story
   heading: マル秘話
   tier: 報道
@@ -316,14 +645,17 @@ sections:
     - 幼なじみはGKのディオゴ・コスタ。同じ町のクラブで育った
     - 練習場は荒れた土のグラウンド。指導者は「イラク」と呼んでいた
   say:
-  - text: 数字を置いて、育ちの話を2つ。
-    image: assets/images/20261005_vitinha_usa2026_w/01.jpg
-  - 1つ目は父。本人は、父は一度もサッカーを強いなかった、と話しています。
-  - ロッカールームの流儀を知り尽くしていて、それでも監督より父親でいることを選んだ人だと。
-  - 2つ目は幼なじみ。ポルトガル代表のGK、ディオゴ・コスタと同じ町のクラブで育ちました。
-  - 練習場は荒れ果てた土のグラウンドで、指導者はそこを「イラク」と呼んでいたそうです。
-  - そこから2人とも、ポルトを経てワールドカップの代表へ。
-  - いまの監督、ルイス・エンリケについては、こう。
+  - text: ピッチの外のヴィティーニャを支えるのは、元プロの父です。
+    image: assets/images/20261005_player_487469/usa96/01_w.jpg
+  - 1999年には、ポルトガル杯の決勝への勝ち上がりを支えた中盤の選手でした。
+  - 本人いわく、その父は一度もサッカーを強いなかったそうです。
+  - ロッカールームの流儀を知り尽くしながら、監督より父親でいることを選んだ人だと。
+  - text: もう1人、欠かせないのが幼なじみです。
+    card: none
+  - 代表のGKディオゴ・コスタとは、同じ町のクラブで育ちました。
+  - 練習場は荒れ果てた土のグラウンド。指導者はそこを「イラク」と呼んでいました。
+  - そこから2人そろって、ポルトを経てワールドカップの舞台へ。
+  - パリで才能を開かせてくれた指揮官のことは、こう語っています。
   - voice: ヴィティーニャ
     text: 彼はおそらく僕のキャリアに最も影響を与えた人物だ
   - voice: ヴィティーニャ
@@ -333,30 +665,37 @@ sections:
     text: だって、上達できるから
     cont: true
     pause: 0.6
-  - text: その監督のもとで、副主将とPKのキッカーを任されています。
-    pause: 0.5
   sources:
+  - https://jornal-desportivo.pt/2025/06/06/vitinha/
   - https://www.elespanol.com/deportes/futbol/20260606/vitinha-anos-padre-nunca-obligo-jugar-gran-inspiracion-entiende-perfectamente-camino-dt/1003744275187_0.html
   - https://afporto.pt/noticias/pinheirinhos-de-ringe-transformaram-o-iraque-em-oportunidade/
   - https://www.goal.com/jp/ニュース/psg-vitinha-luis/bltc8c45f96615df320
-  - https://en.wikipedia.org/wiki/Vitinha
 - id: view
-  heading: 去年の自分と比べたパスの量
+  heading: 去年の自分と比べたパスの量と、10月の2つの節目
   tier: 背景
   viewpoint: true
   narrator: 解説
-  telop: 10月11日、ル・マン戦
+  telop: 10日にル・マン戦、26日にバロンドール授賞式
   say:
-  - text: 終わりに、この先のヴィティーニャを数字で。
-    image: assets/images/20261005_vitinha_wc2026_wide/01.jpg
-  - 比べるのは去年の自分。昨季のチャンピオンズリーグでパス成功は1試合90本。
-  - 今季のリーグは1試合91本。量は落ちていません。
-  - 10月26日には、世界最優秀選手を決めるバロンドールの発表。
-  - 去年3位の本人は、今年も候補30人に入っています。
-  - クラブは10月11日、ル・マン戦から再開します。
-  - 見るのは点ではなく、パスの本数と、90分出ているか。この2つが今季も続くかを見ます。
+  - text: 最後に、これからのヴィティーニャを、パスの数から見立てます。
+    image: assets/images/20261005_player_487469/wc2026/01_w.jpg
+  - 物差しは、去年の自分です。
+  - 昨季のチャンピオンズリーグは、90分あたり90.6本のパス成功。
+  - text: 大会は違いますが、今季のリーグは95.9本。量はむしろ増えています。
+    emph: true
+  - クラブは現地10日、本拠地でのル・マン戦から再び動き出します。
+  - 26日はロンドンで、バロンドールの授賞式。
+  - 去年3位の本人は、今年も30人の候補に入っています。
+  - 去年、3位が決まったあとには、こう書いていました。
+  - voice: ヴィティーニャ
+    text: 今年より上を目指すのは難しいか？ そうだ。
+  - voice: ヴィティーニャ
+    text: でも、もっと欲しがるのをやめたくない
+    cont: true
+    pause: 0.6
+  - パスの量と、90分出続けること。この2つが今季も続くかに注目です。
   sources:
-  - https://www.transfermarkt.com/vitinha/profil/spieler/487469
-  - https://www.fotmob.com/players/1061249
   - https://theanalyst.com/articles/vitinha-psg-reinvention-champions-league-final-stats
+  - https://www.fotmob.com/players/1061249
   - https://www.soccer-king.jp/news/world/20260909/2202579.html
+  - https://www.goal.com/en-us/lists/vitinha-priviliged-finish-behind-ousmane-dembele-lamine-yamal-ballon-d-or-praises-psg-co-star-world-best/blt2e69b5aaf27ed094
