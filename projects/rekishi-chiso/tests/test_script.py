@@ -103,3 +103,10 @@ def test_terms_first_appearance_three_lines_and_queue():
 def test_term_note_length_limited():
     with pytest.raises(script.ScriptError):
         script.parse({"title": "t", "terms": {"長": "あ" * 41}, "sections": [{"title": "一", "lines": [{"語り": "長"}]}]})
+
+
+def test_template_parses():
+    """見本の台本は写して使うので、いつも読める状態にしておく（10-04 まで壊れていた）。"""
+    from pathlib import Path
+    sc = script.load(Path(__file__).resolve().parent.parent / "scripts" / "_template.yaml")
+    assert sc.lines

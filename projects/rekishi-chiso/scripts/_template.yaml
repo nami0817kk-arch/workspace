@@ -40,7 +40,7 @@ sections:
       - 語り: 《強調したい語》は二重山かっこで囲む。
         card: {head: "1700年", body: "札の本文（22字まで）"}   # 左の「掘り出したメモ」に積み重なる
         year: 1700                            # 年表の印
-      - 語り: 図を出す行。節が変わるか figure: null まで続く。
+      - 語り: "図を出す行。節が変わるか figure: null まで続く。"
         figure: {type: map, title: 旅の題, route: [パリ, ヴェルサイユ], note: およそ○日}   # 地名は places.yaml
       - 語り: 図を消す行。
         figure: null
