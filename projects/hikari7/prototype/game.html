@@ -93,6 +93,8 @@ p{margin:6px 0}
 .acts button.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);font-weight:800}
 .acts button.pass.on{background:var(--ok);border-color:var(--ok);color:#fff}
 .acts button.fail.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.actb .ax{display:block;margin-top:3px}
+.actb .ax b{display:inline;font-size:inherit;margin-right:4px}
 .posr{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;margin-top:6px;align-items:center;font-size:12px}
 .posr button.on{outline:2px solid var(--fg);font-weight:800}
 .posr .pv.on{background:#b02c60;color:#fff}.posr .pd.on{background:#2253a8;color:#fff}.posr .pr.on{background:#9a5205;color:#fff}
@@ -1112,7 +1114,7 @@ function startRound(S){
   if(S.centerReq!=null&&S.rnd>=2&&S.tr[S.centerReq].status==='alive'){S.centerWish=S.centerReq;S.centerPromise=S.centerReq;}S.centerReq=null;
 }
 var LESSON_BASE=.5,SP_SLOTS=4;
-function slotsOf(S){return Math.max(0,SP_SLOTS+perkLv(S,'coach')+S.extra-(S.plan&&S.plan.acts.off?2:0));}
+function slotsOf(S){return Math.max(0,SP_SLOTS+perkLv(S,'coach')+S.extra-(S.plan&&S.plan.acts.off?2:0)-(S.plan&&S.plan.acts.care?1:0));}
 function usedSlots(S){var n=0;for(var k in (S.lesson.sp||{}))if(S.lesson.sp[k])n++;return n;}
 function suggestLesson(S,t){var f=teamFmt(S,t,roundFmt(S));if(t.fat>=60)return 'rest';if(t.focus)return t.focus;
   if(f.w==='pos')return S.lesson.pos[t.id]||defaultPos(t);if(f.w==='spec'||f.w==='all')return t.spec==='t'?'e':t.spec;
@@ -1316,10 +1318,10 @@ function runStage(S){
   var f=roundFmt(S), A=alive(S).sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}), res={}, teams=[], win=-1, P=S.plan||{acts:{}};
   S.hurt=[];
   A.forEach(function(t){
-    if(!t.rest&&!t.inj&&t.fat>=(hasT(t,'fragile')?70:80)&&R()<(t.fat-75+(hasT(t,'fragile')?15:0))/60){t.inj=true;S.hurt.push(t.id);logT(S,t,'疲れがたまりきった状態で本番に出て、足を痛めた');S.notes.push([t.giv+hon(S)+'、明らかに無理してた。休ませてあげて',1]);S.showTrust=clamp(S.showTrust-2,0,100);}
+    if(!t.rest&&!t.inj&&!P.acts.care&&t.fat>=(hasT(t,'fragile')?70:80)&&R()<(t.fat-75+(hasT(t,'fragile')?15:0))/60){t.inj=true;S.hurt.push(t.id);logT(S,t,'疲れがたまりきった状態で本番に出て、足を痛めた');S.notes.push([t.giv+hon(S)+'、明らかに無理してた。休ませてあげて',1]);S.showTrust=clamp(S.showTrust-2,0,100);}
     var pos=S.lesson.pos[t.id]||defaultPos(t);
     var r=t.rest?{p:(t.lastP>0?t.lastP*.85:45),br:[]}:perfOf(t,teamFmt(S,t,f),pos);
-    if(isCenter(S,t.id)&&!t.rest)r.p*=1.03; if(!t.rest)r.p*=traitPerf(S,t,f)*comboMul(S,t); if(f.live&&!t.rest)r.p*=0.92+(t.conf-50)/300;
+    if(isCenter(S,t.id)&&!t.rest)r.p*=1.03; if(P.acts.rehearse&&!t.rest)r.p*=1.04; if(!t.rest)r.p*=traitPerf(S,t,f)*comboMul(S,t); if(f.live&&!t.rest)r.p*=0.92+(t.conf-50)/300;
     res[t.id]={raw:r.p,br:r.br,pos:pos,rest:t.rest};
     if(!t.rest){revealFor(t,teamFmt(S,t,f),pos);t.fat+=8*(1.3-t.st.s/100)*(hasT(t,'stamina')?.7:1);}
   });
@@ -1333,7 +1335,7 @@ function runStage(S){
     S.pairs=pairs;}
   if(f.kind==='pos'){
     var cnt={v:0,d:0,r:0};A.forEach(function(t){cnt[res[t.id].pos]++;});var avg=A.length/3;
-    A.forEach(function(t){var c=cnt[res[t.id].pos];res[t.id].raw*=clamp(1-0.035*(c-avg),.85,1.08);});
+    A.forEach(function(t){var c=cnt[res[t.id].pos];res[t.id].raw*=clamp(1-0.035*(c-avg)*(P.acts.rehearse?.5:1),.85,1.08);});
     S.posCnt=cnt;
   }
   if(f.kind==='team'){
@@ -1341,7 +1343,7 @@ function runStage(S){
     (P.teams||defaultTeams(S)).forEach(function(ids,ti){teams.push({ids:ids.filter(function(id){return aliveIds[id];}),score:0,bond:0,ti:ti,concept:P.tc?TEAM_CONCEPTS[P.tc[ti]]:null});});
     teams=teams.filter(function(tm){return tm.ids.length;});
     teams.forEach(function(tm){tm.score=tm.ids.reduce(function(a,id){return a+res[id].raw;},0)/tm.ids.length;
-      tm.bond+=linksIn(S,tm.ids)*1.5;relsIn(S,tm.ids).forEach(function(r){if(r.k==='rival'){S.tr[r.a].conf+=3;S.tr[r.b].conf+=3;}});tm.ids.forEach(function(id){if(hasT(S.tr[id],'mood'))tm.bond+=1.5;});teamChem(S,tm);tm.score+=tm.bond;});
+      tm.bond+=linksIn(S,tm.ids)*1.5;relsIn(S,tm.ids).forEach(function(r){if(r.k==='rival'){S.tr[r.a].conf+=3;S.tr[r.b].conf+=3;}});tm.ids.forEach(function(id){if(hasT(S.tr[id],'mood'))tm.bond+=1.5;});teamChem(S,tm);if(P.acts.rehearse)tm.bond+=2;tm.score+=tm.bond;});
     var best=-1;teams.forEach(function(tm,i){if(tm.score>best){best=tm.score;win=i;}});
     teams.forEach(function(tm,i){tm.ids.forEach(function(id){res[id].raw=res[id].raw*.8+tm.score*.2+(i===win?2:0);res[id].team=i;});});
     teams.forEach(function(tm,i){for(var a=0;a<tm.ids.length;a++)for(var b=a+1;b<tm.ids.length;b++)addBond(S,tm.ids[a],tm.ids[b],i===win?12:8);});
@@ -1354,6 +1356,8 @@ function runStage(S){
   if(f.fat)A.forEach(function(t){if(t.rest)return;t.fat+=f.fat;t.st.s=Math.min(99,t.st.s+3*t.pot);t.rev.s=2;});
   var pr1=popRankMap(S);
   A.forEach(function(t){res[t.id].pr0=pr0[t.id];res[t.id].pr1=pr1[t.id];});
+  S.promoMiss=false;if(P.acts.promo){var pmBad=byP.filter(function(t,i){return pr0[t.id]<=3&&!res[t.id].rest&&i>=A.length*2/3;})[0];
+    if(pmBad){S.promoMiss=true;S.showTrust=clamp(S.showTrust-4,0,100);S.notes.push(['予告であんなに映ってた'+pmBad.giv+hon(S)+'、本番は普通だった。予告と違う',1]);}}
   S.stage={res:res,teams:teams,win:win,order:byP.map(function(t){return t.id;})};
   S.centerRes=null;
   S.centerOk=[];S.centerNg=[];
@@ -1392,7 +1396,7 @@ function applyCritique(S){
 }
 /* ---------- 合否 ---------- */
 function retry(S,id){var t=S.tr[id],f=ROUNDS[S.rnd],r=S.stage.res[id];
-  var f2=teamFmt(S,t,f),n=perfOf(t,f2,r.pos);n.p*=traitPerf(S,t,f2)*comboMul(S,t)*(isCenter(S,t.id)?1.03:1);var mx=Math.max.apply(null,Object.keys(S.stage.res).map(function(k){return S.stage.res[k].raw;}));
+  var f2=teamFmt(S,t,f),n=perfOf(t,f2,r.pos);n.p*=traitPerf(S,t,f2)*comboMul(S,t)*(isCenter(S,t.id)?1.03:1)*(S.plan&&S.plan.acts.rehearse?1.04:1);var mx=Math.max.apply(null,Object.keys(S.stage.res).map(function(k){return S.stage.res[k].raw;}));
   var sc=Math.round(clamp(100-(mx-n.p*1.05)*1.6,5,100));r.retry=sc;if(sc>r.sc){r.sc=sc;t.lastP=sc;}
   ['v','d','r','e','s'].forEach(function(k){t.rev[k]=2;});t.potRev=true;t.temperRev=true;t.retried=true;S.adUsed=true;logT(S,t,'再審査でもう一度ステージに立った（'+sc+'点）');}
 function decide(S){
@@ -1415,7 +1419,7 @@ function decide(S){
   // 視聴率
   var pops=A.map(function(t){return t.pop;}).sort(function(a,b){return b-a;}).slice(0,3);
   var topPop=pops.reduce(function(a,b){return a+b;},0)/pops.length;
-  var rating=3.4+(40-S.nApp)/40*.9+topPop*.04+S.wDrama*.22+S.rnd*.25+(f.fin?.8:0)+(f.hype||1)*.35-.35+flowBonus(S,S.rnd)+(S.showTrust-60)*.03+(R()-.5)*.4+(S.plan&&S.plan.acts.special?.9:0)+(S.plan&&S.plan.acts.stage?.4:0)+(S.centerRes?S.centerRes*.3:0);
+  var rating=3.4+(40-S.nApp)/40*.9+topPop*.04+S.wDrama*.22+S.rnd*.25+(f.fin?.8:0)+(f.hype||1)*.35-.35+flowBonus(S,S.rnd)+(S.showTrust-60)*.03+(R()-.5)*.4+(S.plan&&S.plan.acts.special?.9:0)+(S.plan&&S.plan.acts.stage?.4:0)+(S.plan&&S.plan.acts.doc?.5:0)+(S.plan&&S.plan.acts.promo&&!S.promoMiss?.8:0)+(S.centerRes?S.centerRes*.3:0);
   if(S.seatPlus){S.showTrust=clamp(S.showTrust-2,0,100);cm.push(['合格の枠を後から増やすの、基準が甘くない？',1]);}
   S.ratings.push(r1(clamp(rating,1.5,15)));
   var rt=S.ratings[S.ratings.length-1],tg=roundTarget(S.rnd,S),hit=rt>=tg;S.lastTgt={tg:tg,hit:hit,r:rt};if(!hit)S.warns++;else S.warns=0;
@@ -1663,6 +1667,12 @@ var ACT_ICO=(function(){var w=function(p){return '<svg viewBox="0 0 24 24" aria-
   stage:w('<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z"/>'),
   special:w('<rect x="3" y="5.5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17.5V21"/><path d="M10 9.5l5 2.5-5 2.5z"/>'),
   off:w('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'),
+  doc:w('<path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
+  care:w('<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/><path d="M12 10v5M9.5 12.5h5"/>'),
+  fanmeet:w('<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2.5 20c.7-3.5 3-5 5.5-5s4.8 1.5 5.5 5M10.5 20c.7-3.5 3-5 5.5-5s4.8 1.5 5.5 5"/>'),
+  rehearse:w('<path d="M4.5 11a7.5 7.5 0 0 1 13.4-4.2L20 9"/><path d="M20 4v5h-5"/><path d="M19.5 13a7.5 7.5 0 0 1-13.4 4.2L4 15"/><path d="M4 20v-5h5"/>'),
+  promo:w('<path d="M3 10v4h4l8 5V5L7 10z"/><path d="M18 9a4 4 0 0 1 0 6"/>'),
+  stay:w('<path d="M3 20L12 4l9 16z"/><path d="M12 20v-6M9 20h6"/>'),
   def:w('<circle cx="12" cy="12" r="8"/>')};})();
 var ACTS=[
   {k:'coach',n:'特別講師を呼ぶ',cost:40,d:'選んだ能力を全員ぶん底上げする'},
@@ -1670,7 +1680,13 @@ var ACTS=[
   {k:'vlog',n:'企画動画を撮る',cost:25,d:'選んだ1人の人気が上がる'},
   {k:'stage',n:'衣装と演出にこだわる',cost:30,d:'全員の自信が上がり、ステージで人気が伸びやすくなる。視聴率も上がる'},
   {k:'special',n:'特番を組む',cost:50,d:'視聴率が大きく上がる。全員に少し人気、少し疲れ',from:2,to:4},
-  {k:'off',n:'休みの日を作る',cost:0,d:'全員の疲れが大きく抜ける。練習枠が2つ減る'}
+  {k:'off',n:'休みの日を作る',cost:0,d:'全員の疲れが大きく抜ける。練習枠が2つ減る'},
+  {k:'doc',n:'密着カメラを入れる',cost:20,d:'練習の裏側が放送され、視聴率が上がる。人気が下の半分の子が少し注目される',x:'カメラを気にして全員の自信が下がり（繊細な子は大きく）、少し疲れる'},
+  {k:'care',n:'トレーナーとケア担当を付ける',cost:30,d:'全員の疲れが抜け、体力が少し伸びる。この審査の本番ではけがをしない',x:'練習の量を抑えるので、特訓の枠が1つ減る'},
+  {k:'fanmeet',n:'ファンとの交流会',cost:20,d:'全員の人気が上がる（人気が下の半分の子ほど大きい）。自信のある子はさらに自信がつく',x:'全員が疲れる。自信が50に届かない子は厳しい声も耳にして、自信が下がる',from:2},
+  {k:'rehearse',n:'本番の舞台で通し稽古',cost:35,d:'本番の出来が全員少し上がる。チーム課題ではチームの息が合い、ポジション別では担当の偏りが響きにくい',x:'全員がかなり疲れる（疲れがたまった子は、かえって出来が落ちることも）'},
+  {k:'promo',n:'予告映像を大きく打つ',cost:25,d:'人気の高い子を前に出した予告で、視聴率が大きく上がる',x:'人気上位3人の誰かが本番で振るわないと「予告と違う」と言われ、視聴率は上がらず番組への信頼が下がる'},
+  {k:'stay',n:'泊まり込みの合宿',cost:20,d:'全員どうしの絆が深まる。チーム課題では同じチームの子どうしがさらに深まる',x:'全員が少し疲れる。相性△で絆の浅いふたりはぶつかって、絆が下がる'}
 ];
 function actCost(S){var c=0;ACTS.forEach(function(a){if(S.plan.acts[a.k])c+=a.cost;});return c;}
 function applyPlan(S){if(S.centerWish!=null&&isCenter(S,S.centerWish)){var cw=S.tr[S.centerWish];cw.trust+=4;normT(cw);}S.centerWish=null;if(S.plan&&!S.plan.teams&&roundFmt(S).g==='solo')S.plan.center=null;
@@ -1683,6 +1699,16 @@ function applyPlan(S){if(S.centerWish!=null&&isCenter(S,S.centerWish)){var cw=S.
   if(P.acts.vlog&&P.vlogId!=null){var v=S.tr[P.vlogId];v.pop+=8*v.charm;v.conf+=3;S.wDrama+=.5;logT(S,v,'企画動画の主役になった');S.notes.push([v.giv+hon(S)+'の企画動画、何回も見てる',0]);}
   if(P.acts.special)A.forEach(function(t){t.pop+=2;t.fat+=6;});
   if(P.acts.off)A.forEach(function(t){t.fat=Math.max(0,t.fat-25);});
+  var apr=popRankMap(S),an=A.length;
+  if(P.acts.doc){A.forEach(function(t){if(apr[t.id]>an/2)t.pop+=3*t.charm;t.conf-=t.temper==='sensai'?7:3;t.fat+=3;});S.notes.push(['密着の映像、練習の裏側が見られてうれしい',0]);}
+  if(P.acts.care)A.forEach(function(t){t.fat=Math.max(0,t.fat-10);t.st.s=Math.min(99,t.st.s+1.5*t.pot);});
+  if(P.acts.fanmeet){var fmLow=[];A.forEach(function(t){t.pop+=(apr[t.id]>an/2?4:1.5)*t.charm;t.fat+=5;if(t.conf<50){t.conf-=6;fmLow.push(t);logT(S,t,'ファンとの交流会で厳しい声も耳にして、落ち込んだ');}else t.conf+=3;});
+    S.notes.push(['交流会、ひとりひとりと話せて最高だった',0]);if(fmLow.length)S.notes.push([fmLow[0].giv+hon(S)+'、交流会で元気がなかったけど大丈夫？',1]);}
+  if(P.acts.rehearse)A.forEach(function(t){t.fat+=7;});
+  if(P.acts.stay){var stT={};if(P.teams)P.teams.forEach(function(x,i){x.forEach(function(id){stT[id]=i+1;});});
+    for(var si=0;si<A.length;si++)for(var sj=si+1;sj<A.length;sj++){var sa=A[si].id,sb=A[sj].id,so=bondOf(S,sa,sb);
+      if(so.c==='b'&&so.v<40)addBond(S,sa,sb,-4);else addBond(S,sa,sb,3+(stT[sa]&&stT[sa]===stT[sb]?5:0));}
+    A.forEach(function(t){t.fat+=4;});}
   if(P.center!=null)logT(S,S.tr[P.center],'センターに選ばれた');
   if(S.rnd===2)roomUp(S);
   S.rels.forEach(function(r){if(r.k==='room'&&S.tr[r.a].status==='alive'&&S.tr[r.b].status==='alive')addBond(S,r.a,r.b,6);});
@@ -3619,7 +3645,7 @@ function vPlan(){
   h+=planFmtBox();
   h+='<h3>制作費の使い道</h3><div class="actgrid">';
   ACTS.forEach(function(a){if(a.from&&(S.rnd<a.from||S.rnd>a.to))return;var on=!!P.acts[a.k],can=on||S.budget-cost>=a.cost;
-    h+='<div class="act '+(on?'on':'')+'"><button class="actb" data-a="act" data-v="'+a.k+'" '+(can?'':'disabled')+'><span class="aico">'+(ACT_ICO[a.k]||ACT_ICO.def)+'</span>'+(on?'<span class="aon">✓</span>':'')+'<b>'+a.n+'</b><span class="cost">'+(a.cost?a.cost+'万':'0')+'</span><span class="small muted">'+a.d+'</span></button>';
+    h+='<div class="act '+(on?'on':'')+'"><button class="actb" data-a="act" data-v="'+a.k+'" '+(can?'':'disabled')+'><span class="aico">'+(ACT_ICO[a.k]||ACT_ICO.def)+'</span>'+(on?'<span class="aon">✓</span>':'')+'<b>'+a.n+'</b><span class="cost">'+(a.cost?a.cost+'万':'0')+'</span><span class="small muted">'+a.d+'</span>'+(a.x?'<span class="small muted ax"><b>代償</b> '+a.x+'</span>':'')+'</button>';
     if(a.k==='coach'&&on)h+='<div class="acts">'+['v','d','r','e'].map(function(k){return '<button class="'+(P.coachK===k?'on':'')+'" data-a="coachk" data-v="'+k+'">'+STATN[k]+'</button>';}).join('')+'</div>';
     if(a.k==='vlog'&&on){h+='<div class="pickrow sm">';A.forEach(function(t){h+='<button class="pk '+(P.vlogId===t.id?'on':'')+'" data-a="vlogid" data-id="'+t.id+'">'+faceImg(t,'sm')+'<span>'+esc(t.giv)+'</span></button>';});h+='</div>';}
     h+='</div>';});
