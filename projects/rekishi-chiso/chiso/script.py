@@ -138,6 +138,7 @@ class Script:
     next: dict = field(default_factory=dict)        # 次回予告 {title, teaser}
     thumbnail: dict = field(default_factory=dict)   # サムネイルの文字と絵（thumb.py）
     people: dict = field(default_factory=dict)      # 人物の生没（肖像に「この時○歳」を出す）
+    tags: list = field(default_factory=list)        # YouTube のタグ（全ショートと本編に共通）
 
     @property
     def question(self) -> str:
@@ -327,6 +328,7 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         timeline_start=timeline.get("start"), timeline_end=timeline.get("end"), events=events,
         sections=sections, lines=lines, shorts=shorts_meta, path=path,
         next=dict(data.get("next") or {}), people=people, thumbnail=dict(data.get("thumbnail") or {}),
+        tags=[str(t) for t in (data.get("tags") or [])],
     )
 
 

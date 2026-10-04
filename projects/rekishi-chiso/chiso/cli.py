@@ -418,6 +418,71 @@ def cmd_screen(args) -> int:
 TAGS = ["歴史", "世界史", "日本史", "聞き流し", "歴史解説", "歴史の地層"]
 
 
+def shorts_screened_path(path: Path) -> Path:
+    return ROOT / "approvals" / f"{path.stem}.shorts.screened.json"
+
+
+def short_video(path: Path, sid: str) -> Path:
+    return out_dir() / f"{path.stem}_short_{sid}.mp4"
+
+
+def cmd_screen_shorts(args) -> int:
+    """本番のショートをユーザーが見て OK と言ったときだけ打つ。全ショートの動画のハッシュを控える。"""
+    path = Path(args.script)
+    sc = script_mod.load(path)
+    got = {}
+    for sid in sc.shorts:
+        v = short_video(path, sid)
+        if not v.exists():
+            print(f"本番のショートがありません: {v.name}（shorts を先に）")
+            return 1
+        got[sid] = _sha(v)
+    shorts_screened_path(path).write_text(json.dumps(got, ensure_ascii=False, indent=1) + chr(10), encoding="utf-8")
+    print(f"ショート{len(got)}本の確認を控えました")
+    return 0
+
+
+def cmd_upload_shorts(args) -> int:
+    """ショートを順に予約投稿する。--start から --every 分ごと。投稿済みのものは飛ばす。"""
+    from . import shortpost, upload as up
+    config = load_config()
+    path = Path(args.script)
+    sc = script_mod.load(path)
+    if not is_approved(path):
+        print("台本が承認されていません")
+        return 2
+    sp = shorts_screened_path(path)
+    seen = json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else {}
+    log = ROOT / "posted.json"
+    main = up.already_posted(log, f"{path.stem}:main")
+    sids = [s for s in sc.shorts if not args.only or s in args.only.split(",")]
+    times = shortpost.schedule(args.start, args.every, len(sids))
+    for sid in sids:
+        v = short_video(path, sid)
+        if not v.exists() or seen.get(sid) != _sha(v):
+            print(f"{sid}: 本番のショートを見せて OK をもらってから screen-shorts（作り直したら確認し直し）")
+            return 2
+    svc = up.service()
+    name = up.channel_title(svc)
+    if "歴史の地層" not in name:
+        print(f"許可しているチャンネルが違います: {name}")
+        return 2
+    for sid, at in zip(sids, times):
+        key = f"{path.stem}:short:{sid}"
+        done = up.already_posted(log, key)
+        if done:
+            print(f"{sid}: もう投稿してあります https://youtu.be/{done['video_id']}")
+            continue
+        publish_at = up.publish_time(at)
+        t = shortpost.title(sc, sid)
+        desc = shortpost.description(sc, config, sid, main and main["video_id"])
+        print(f"{sid}: {t}（{at}）")
+        vid = up.upload(svc, short_video(path, sid), t, desc, shortpost.tags(sc, sid), publish_at)
+        up.record(log, {"key": key, "video_id": vid, "title": t, "publish_at": at})
+        print(f"  予約しました: https://youtu.be/{vid}")
+    return 0
+
+
 def cmd_upload(args) -> int:
     from . import upload as up
     config = load_config()
@@ -445,7 +510,7 @@ def cmd_upload(args) -> int:
         from . import thumb
         thumb.make(sc, config, assets_dir(config)).save(thumb_p)
     srt = out_dir() / f"{path.stem}.srt"
-    tags = TAGS + [x for x in (sc.series, sc.thumbnail.get("name", "")) if x]
+    tags = list(dict.fromkeys(TAGS + list(sc.tags) + [x for x in (sc.series, sc.thumbnail.get("name", "")) if x]))
     svc = up.service()
     name = up.channel_title(svc)
     if "歴史の地層" not in name:
@@ -528,6 +593,15 @@ def main(argv=None) -> int:
     s.add_argument("script")
     s.add_argument("--at", required=True, help="公開時刻（日本時間）'YYYY-MM-DD HH:MM'。9時〜24時")
     s.set_defaults(fn=cmd_upload)
+    s = sub.add_parser("screen-shorts")
+    s.add_argument("script")
+    s.set_defaults(fn=cmd_screen_shorts)
+    s = sub.add_parser("upload-shorts")
+    s.add_argument("script")
+    s.add_argument("--start", required=True, help="最初の公開時刻（日本時間）'YYYY-MM-DD HH:MM'")
+    s.add_argument("--every", type=int, default=60, help="何分ごとに出すか")
+    s.add_argument("--only", default="", help="s1,s3 のように一部だけ")
+    s.set_defaults(fn=cmd_upload_shorts)
     s = sub.add_parser("whoami")
     s.set_defaults(fn=cmd_whoami)
     s = sub.add_parser("prepare-characters")
