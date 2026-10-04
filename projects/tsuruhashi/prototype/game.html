@@ -1567,7 +1567,7 @@ function ceremony(g){
     <div class="g3">名声 +${fmt(g)}</div><div class="g4">仲間の力 ×${fameMul(S.fame).toFixed(1)}　・　図鑑と社史は引き継がれる</div>`;
   document.body.appendChild(el);
   let done = false;
-  const close = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); banner(0); }, 480); };
+  const close = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); banner(0); cheer(); }, 480); };
   el.addEventListener('click', close); setTimeout(close, 2600);
 }
 
@@ -1808,6 +1808,8 @@ function drawCrew(dt, fy){
       let dropY = 0;
       if (age < 0.45 && !reduced) { const k = age / 0.45; dropY = -(1 - k * k) * 90; }
       else if (!f.landed) { f.landed = true; burst(fx, y, 6, '#a08a70', 0.5); if (tAll - lastHello > 1.5) { lastHello = tAll; say(fx, y - 44, f.i < HUMAN ? 'よろしく！' : 'ガシャン！'); } }
+      // みんなで喜ぶ：少しずつずれて2回跳ねる（機械は小さく揺れる）
+      if (cheerT < 1.1 && !reduced && dropY === 0) { const q = cheerT - f.ph * 0.15; if (q > 0 && q < 0.9) dropY = -Math.abs(Math.sin(q / 0.45 * Math.PI)) * (f.i < HUMAN ? 9 : 3); }
       const y0 = y; { const y = y0 + dropY;
       const per = CREW_PER[f.i], t = (tAll + f.ph) % (per + 0.25);
       if (row === 0 && t < f.lt && f.i !== 3 && f.i !== 6 && Math.random() < 0.5) crewHit(f.i, fx, f.face);
@@ -1883,12 +1885,13 @@ const FX = {
     if (!reduced) shakeT = isBed(d) ? 0.45 : 0.12;
     if (isBed(d)) { sfx('bed'); flashT = 0; floatText(cx(), rowY(d) - 40, 'ドーン！', '#ffffff', 34); }
     else if (tAll - lastBreakSfx > 0.14) { lastBreakSfx = tAll; sfx('break'); }
-    if (isBed(d)) { banner(layerIdxForDepth(d + 1)); haptic('heavy'); setTimeout(() => sfx('layer'), 350); bossJoy = 0; say(cx(), rowY(d + 1) - 62, 'やった！', true); }
+    if (isBed(d)) { banner(layerIdxForDepth(d + 1)); haptic('heavy'); setTimeout(() => sfx('layer'), 350); bossJoy = 0; say(cx(), rowY(d + 1) - 62, 'やった！', true); cheer(); }
+    else if (S.st.blocks % 100 === 0 && S.st.blocks > 0) { cheer(); say(cx() - 40, rowY(d + 1) - 50, `${fmt(S.st.blocks)}個目！`, true); }
   },
   side(g){ sideAcc += g; },
   find(it, isNew, how){
     pops.push({ it, t: 0, x: cx() + (Math.random() - 0.5) * 60, y: rowY(S.depth) });
-    if (isNew && it.r !== 'c') sparks(cx(), rowY(S.depth) - 30, reduced ? 6 : it.r === 'l' ? 30 : 16);
+    if (isNew && it.r !== 'c') { sparks(cx(), rowY(S.depth) - 30, reduced ? 6 : it.r === 'l' ? 30 : 16); cheer(); }
     if (isNew) {
       sfx(it.r === 'c' ? 'find' : 'rare'); haptic('success');
       const head = how === 'room' ? '宝の部屋！ 図鑑に登録' : how === 'appraise' ? '鑑定で判明！ 図鑑に登録' : it.r === 'l' ? '大発見！ 図鑑に登録' : '発見！ 図鑑に登録';
@@ -2045,6 +2048,228 @@ function drawShield(x, y, face, t, sc){
 }
 
 let tAll = 0;
+// ================= 見どころ（2026-10-04 ユーザー指示「もっと、見ている人が楽しめるように」） =================
+// 開いて眺めている間だけ起きる出来事。どれも見るだけで、得も損もしない（たたく所を増やさない・遊ぶ回数を減らさない）。
+// - 層ごとの出来事（`SIGHTS`）と、どの層にも来る迷い猫。30〜50秒に1回、仲間がひと言で反応する
+// - 仲間どうしの掛け合い（`TALKS`、2人のやりとり）
+// - 鉱石を地上へ運ぶ桶（竪坑の右のロープを上り下り）
+// - 岩盤を割った・100個目のブロック・珍しい物を見つけた・代替わりのときは、みんなで跳ねて喜ぶ（`cheer`）
+let sightT = 16, sight = null, cheerT = 9, duoT = 40;
+function cheer(){ cheerT = 0; }
+const sideSpot = (sx, sw, fy) => {
+  // 出来事を置く壁の場所。左右の壁に余白があればそこ、なければ竪坑の奥の壁
+  const room = sx > 46, left = Math.random() < 0.5;
+  const x = room ? (left ? sx * 0.5 : Math.min(VW - MAP_W / Z - 20, sx + sw + sx * 0.5)) : sx + sw * (0.2 + Math.random() * 0.6);
+  return { x, y: fy - 70 - Math.random() * 50 };
+};
+// 層ごとの出来事：名前・長さ（秒）・反応のひと言
+const SIGHTS = [
+  { k:'mole',  dur:3.2, say:['モグラだ！', 'こんにちは', 'お隣さんか'] },
+  { k:'rock',  dur:2.2, say:['あぶない！', 'セーフ…', '上から来た！'] },
+  { k:'vein',  dur:3.0, say:['鉄の筋が光った', 'いい鉄だ！', '先輩の言ってた筋だ'] },
+  { k:'bats',  dur:3.4, say:['コウモリ！', 'うわっ', '起こしちゃった'] },
+  { k:'lava',  dur:2.6, say:['あちっ！', '下がれ下がれ', '溶岩が跳ねた'] },
+  { k:'mural', dur:4.0, say:['壁の絵が光った', 'つるはし…？', '初代の絵だ'] },
+  { k:'fish',  dur:2.4, say:['魚が跳ねた！', '目がない魚だ', '晩ごはん…？'] },
+  { k:'spore', dur:3.2, say:['へっくしょん！', 'くしゃみが…', '胞子だらけ'] },
+  { k:'eye',   dur:3.6, say:['…今、見られた？', '骨が動いた！？', '気のせいだよな'] },
+  { k:'star',  dur:2.0, say:['流れ星！', '願いごとを…', '地の底なのに'] },
+];
+const CAT_SAY = ['ネコ！？', 'どこから来た？', 'ついてきたのか', 'かわいい…'];
+// 仲間どうしの掛け合い（問い → 答え）。層の深さで中身が変わる
+const TALKS = [
+  [['腹へった', '昼まだ？'], ['弁当の時間か？', 'あと1m掘ってから']],
+  [['社長、張り切ってるな', 'いつものことさ'], ['今日は何m？', '数えてないや']],
+  [['この下に何がある？', '掘れば分かる'], ['いい音だ', 'だろ？']],
+  [['初代も掘ったのかな', 'もっと深くまで'], ['帰りの階段が長い', '言うなって']],
+  [['光る石、持って帰ろう', '社長に怒られるぞ'], ['今の、宝かな', 'ただの石だよ']],
+];
+function startSight(sx, sw, fy){
+  const li = layerIdxForDepth(S.depth), cat = Math.random() < 0.14;
+  const def = cat ? { k:'cat', dur:6, say:CAT_SAY } : SIGHTS[li];
+  const sp = sideSpot(sx, sw, fy);
+  sight = { k: def.k, t: 0, dur: def.dur, x: sp.x, y: sp.y, said: false, line: def.say[Math.floor(Math.random() * def.say.length)], dir: Math.random() < 0.5 ? 1 : -1,
+    rx: sx + 20 + Math.random() * Math.max(10, sw - 40), seed: Math.floor(Math.random() * 1e6) };
+  if (def.k === 'rock' || def.k === 'star') sight.x = sight.rx;
+}
+// 出来事に近い仲間（床の人）にひと言を言わせる
+function sightSay(x, fy, text){
+  const L = crewLay && crewLay.figs.filter(f => f.row === 0 && f.i < HUMAN);
+  let f = null;
+  if (L && L.length) f = L.reduce((a, b) => Math.abs(cx() + b.dx - x) < Math.abs(cx() + a.dx - x) ? b : a);
+  say(f ? cx() + f.dx : cx(), fy - 44, text);
+}
+function drawSights(dt, fy, sx, sw){
+  cheerT += dt;
+  if (titleOpen || S.depth < 2) return;
+  // 掛け合い
+  duoT -= dt;
+  if (duoT <= 0 && !locked(S)) {
+    duoT = 35 + Math.random() * 25;
+    const L = crewLay && crewLay.figs.filter(f => f.row === 0 && f.i < HUMAN);
+    if (L && L.length >= 2) {
+      const a = L[Math.floor(Math.random() * L.length)]; let b = a;
+      while (b === a) b = L[Math.floor(Math.random() * L.length)];
+      const set = TALKS[Math.min(TALKS.length - 1, Math.floor(layerIdxForDepth(S.depth) / 2))], pair = set[Math.floor(Math.random() * set.length)];
+      say(cx() + a.dx, fy - 44, pair[0]);
+      setTimeout(() => say(cx() + b.dx, rowY(S.depth) - 44, pair[1]), 1700);
+      talkT = Math.max(talkT, 8);
+    }
+  }
+  sightT -= dt;
+  if (!sight && sightT <= 0) { sightT = 30 + Math.random() * 20; startSight(sx, sw, fy); }
+  if (!sight) return;
+  const e = sight; e.t += dt;
+  const k = e.t / e.dur;
+  if (k >= 1) { sight = null; return; }
+  if (!e.said && e.t > e.dur * 0.35) { e.said = true; sightSay(e.x, fy, e.line); }
+  const ease = q => q < 0 ? 0 : q > 1 ? 1 : q * q * (3 - 2 * q);
+  ctx.save();
+  switch (e.k) {
+    case 'mole': {
+      // 壁の穴から顔を出して、きょろきょろして引っ込む
+      const up = ease(k / 0.2) * (1 - ease((k - 0.8) / 0.2)), look = Math.sin(e.t * 5) * 2;
+      ctx.fillStyle = '#2a1a10'; ctx.beginPath(); ctx.ellipse(e.x, e.y + 6, 13, 6, 0, 0, 7); ctx.fill();
+      ctx.save(); ctx.beginPath(); ctx.rect(e.x - 20, e.y - 30, 40, 36); ctx.clip();
+      const hy = e.y + 14 - up * 18;
+      ctx.fillStyle = '#5b4636'; ctx.beginPath(); ctx.ellipse(e.x, hy, 10, 11, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = '#ff9fb0'; ctx.beginPath(); ctx.arc(e.x + look, hy + 3, 2.6, 0, 7); ctx.fill();
+      ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(e.x - 4 + look, hy - 3, 1.3, 0, 7); ctx.arc(e.x + 4 + look, hy - 3, 1.3, 0, 7); ctx.fill();
+      ctx.fillStyle = '#e8c9a8'; ctx.fillRect(e.x - 9, hy + 5, 5, 3); ctx.fillRect(e.x + 4, hy + 5, 5, 3);
+      ctx.restore(); break;
+    }
+    case 'rock': {
+      // 上から石が落ちてきて、床で跳ねて砕ける
+      const top = fy - 150, land = 0.55;
+      let y, x = e.x + k * 30 * e.dir;
+      if (k < land) y = top + (fy - 8 - top) * (k / land) * (k / land);
+      else { const q = (k - land) / (1 - land); y = fy - 8 - Math.sin(Math.min(1, q * 2) * Math.PI) * 18; }
+      if (k >= land && !e.hit) { e.hit = true; burst(x, fy - 4, 8, LAYERS[layerIdxForDepth(S.depth)].block, 0.8); if (!reduced) shakeT = Math.max(shakeT, 0.1); sfx('break'); }
+      if (k < 0.85) { ctx.fillStyle = '#7a7f86'; ctx.strokeStyle = '#3a3d42'; ctx.lineWidth = 1.5; ctx.save(); ctx.translate(x, y); ctx.rotate(e.t * 6 * e.dir);
+        ctx.beginPath(); ctx.moveTo(-7, -4); ctx.lineTo(-2, -8); ctx.lineTo(6, -6); ctx.lineTo(8, 2); ctx.lineTo(2, 7); ctx.lineTo(-6, 5); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); }
+      break;
+    }
+    case 'vein': {
+      // 壁の赤い筋に光が走る
+      const len = 70, a = Math.sin(k * Math.PI);
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = `rgba(208,105,58,${0.5 + 0.5 * a})`; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(e.x - len / 2, e.y + 10); ctx.quadraticCurveTo(e.x, e.y - 12, e.x + len / 2, e.y + 4); ctx.stroke();
+      const q = (e.t * 0.9) % 1, px = e.x - len / 2 + len * q, py = e.y + 10 - Math.sin(q * Math.PI) * 11 - q * 6;
+      const g = ctx.createRadialGradient(px, py, 1, px, py, 16); g.addColorStop(0, `rgba(255,190,120,${a})`); g.addColorStop(1, 'rgba(255,190,120,0)');
+      ctx.fillStyle = g; ctx.fillRect(px - 16, py - 16, 32, 32);
+      if (Math.random() < dt * 8) sparks(px, py, 1);
+      break;
+    }
+    case 'bats': {
+      // コウモリの群れが竪坑を横切る
+      const n = 7, x0 = e.dir > 0 ? -30 : VW + 30, x1 = e.dir > 0 ? VW + 30 : -30;
+      // 暗い壁でも見えるよう、淡い縁取りを付ける
+      ctx.fillStyle = '#241c3a'; ctx.strokeStyle = 'rgba(214,200,255,.75)'; ctx.lineWidth = 1.2; ctx.lineJoin = 'round';
+      for (let i = 0; i < n; i++) {
+        const h = hash(e.seed + i * 97), q = k * 1.25 - (h % 100) / 400;
+        if (q < 0 || q > 1) continue;
+        const bx = x0 + (x1 - x0) * q, by = fy - 110 - (h % 60) + Math.sin(e.t * 6 + i) * 6, fl = Math.sin(e.t * 22 + i) * 4;
+        ctx.beginPath(); ctx.moveTo(bx - 8, by - fl); ctx.quadraticCurveTo(bx - 3, by - 2, bx, by + 1); ctx.quadraticCurveTo(bx + 3, by - 2, bx + 8, by - fl); ctx.lineTo(bx, by + 3); ctx.closePath(); ctx.fill(); ctx.stroke();
+      }
+      break;
+    }
+    case 'lava': {
+      // 壁の割れ目が赤く光り、溶岩のしずくと火の粉が跳ねる
+      const a = Math.sin(k * Math.PI);
+      const g = ctx.createRadialGradient(e.x, e.y, 2, e.x, e.y, 34); g.addColorStop(0, `rgba(255,140,40,${0.8 * a})`); g.addColorStop(1, 'rgba(255,90,20,0)');
+      ctx.fillStyle = g; ctx.fillRect(e.x - 34, e.y - 34, 68, 68);
+      ctx.strokeStyle = `rgba(255,180,60,${a})`; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(e.x - 10, e.y - 6); ctx.lineTo(e.x - 2, e.y + 2); ctx.lineTo(e.x + 4, e.y - 3); ctx.lineTo(e.x + 11, e.y + 5); ctx.stroke();
+      if (k > 0.25 && k < 0.7 && Math.random() < dt * 14) parts.push({ x: e.x, y: e.y, vx: (Math.random() - 0.5) * 140, vy: -120 - Math.random() * 120, life: 0.9, max: 0.9, s: 3.5, rot: 0, c: '#ff7b2a' });
+      if (Math.random() < dt * 10) parts.push({ x: e.x + (Math.random() - 0.5) * 20, y: e.y, vx: (Math.random() - 0.5) * 30, vy: -20, life: 1.2, max: 1.2, ember: true, c: '#ffb15a' });
+      break;
+    }
+    case 'mural': {
+      // 壁の石に刻まれた絵（つるはしを掲げる人と、下へ続く穴）が金色に浮かぶ
+      const a = Math.sin(k * Math.PI), w = 54, h = 34;
+      ctx.globalAlpha = a;
+      const g = ctx.createRadialGradient(e.x, e.y, 4, e.x, e.y, 50); g.addColorStop(0, 'rgba(230,201,106,.45)'); g.addColorStop(1, 'rgba(230,201,106,0)');
+      ctx.fillStyle = g; ctx.fillRect(e.x - 50, e.y - 50, 100, 100);
+      ctx.strokeStyle = '#f3dc8a'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+      ctx.strokeRect(e.x - w / 2, e.y - h / 2, w, h);
+      for (let i = 0; i < 3; i++) { const px = e.x - 16 + i * 12, py = e.y + 2;
+        ctx.beginPath(); ctx.arc(px, py - 9, 2.4, 0, 7); ctx.moveTo(px, py - 6); ctx.lineTo(px, py + 3); ctx.moveTo(px, py + 3); ctx.lineTo(px - 3, py + 9); ctx.moveTo(px, py + 3); ctx.lineTo(px + 3, py + 9);
+        ctx.moveTo(px, py - 4); ctx.lineTo(px + 5, py - 9); ctx.moveTo(px + 2, py - 12); ctx.quadraticCurveTo(px + 6, py - 11, px + 8, py - 6); ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(e.x + 18, e.y - 10); ctx.lineTo(e.x + 18, e.y + 12); ctx.moveTo(e.x + 14, e.y + 8); ctx.lineTo(e.x + 18, e.y + 13); ctx.lineTo(e.x + 22, e.y + 8); ctx.stroke();
+      ctx.globalAlpha = 1; break;
+    }
+    case 'fish': {
+      // 壁の水の筋から、目のない白い魚が弧を描いて跳ねる
+      const q = ease(k), x = e.x - 30 * e.dir + 60 * e.dir * q, y = e.y + 14 - Math.sin(q * Math.PI) * 44;
+      ctx.fillStyle = 'rgba(111,227,240,.35)'; ctx.fillRect(e.x - 34, e.y + 14, 68, 3);
+      if (k < 0.05 || (k > 0.92 && !e.splash)) { if (k > 0.92) e.splash = true; for (let i = 0; i < 5; i++) parts.push({ x: k < 0.5 ? e.x - 30 * e.dir : e.x + 30 * e.dir, y: e.y + 14, vx: (Math.random() - 0.5) * 80, vy: -80 - Math.random() * 60, life: 0.6, max: 0.6, s: 2.5, rot: 0, c: '#9ff0f7' }); }
+      const ang = Math.cos(q * Math.PI) * -0.9 * e.dir;
+      ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.scale(e.dir, 1);
+      ctx.fillStyle = '#e4eef1'; ctx.strokeStyle = '#7f9aa3'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.ellipse(0, 0, 10, 4.5, 0, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-9, 0); ctx.lineTo(-15, -5); ctx.lineTo(-15, 5); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.restore(); break;
+    }
+    case 'spore': {
+      // 床から光る胞子がいっせいに舞い上がる
+      if (k < 0.5 && Math.random() < dt * 30) parts.push({ x: sx + 20 + Math.random() * (sw - 40), y: fy - 4, vx: (Math.random() - 0.5) * 20, vy: -30 - Math.random() * 30, life: 2, max: 2, ember: true, c: Math.random() < 0.5 ? '#b6f06a' : '#e4ffb0' });
+      break;
+    }
+    case 'eye': {
+      // 壁に埋まった巨人の頭骨の目が、ゆっくり光ってまばたきする
+      const a = Math.sin(k * Math.PI), blink = Math.abs(Math.sin(e.t * 2.2)) < 0.12 ? 0.15 : 1;
+      ctx.fillStyle = 'rgba(241,230,200,.25)'; ctx.beginPath(); ctx.ellipse(e.x, e.y, 30, 22, 0, 0, 7); ctx.fill();
+      for (const d of [-11, 11]) {
+        ctx.fillStyle = '#120e0a'; ctx.beginPath(); ctx.ellipse(e.x + d, e.y - 2, 7, 6, 0, 0, 7); ctx.fill();
+        const g = ctx.createRadialGradient(e.x + d, e.y - 2, 0.5, e.x + d, e.y - 2, 9); g.addColorStop(0, `rgba(255,236,150,${a})`); g.addColorStop(1, 'rgba(255,236,150,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(e.x + d, e.y - 2, 9, 9 * blink, 0, 0, 7); ctx.fill();
+      }
+      if (Math.random() < dt * 6) parts.push({ x: e.x + (Math.random() - 0.5) * 50, y: e.y - 20, vx: 0, vy: 10, life: 0.8, max: 0.8, s: 2, rot: 0, c: '#d8ccb0' });
+      break;
+    }
+    case 'star': {
+      // 流れ星が竪坑を斜めに横切り、星くずを落とす
+      const x = e.x - 90 * e.dir + 180 * e.dir * k, y = fy - 170 + 90 * k;
+      const g = ctx.createLinearGradient(x, y, x - 60 * e.dir, y - 30);
+      g.addColorStop(0, 'rgba(255,230,250,.95)'); g.addColorStop(1, 'rgba(255,158,232,0)');
+      ctx.strokeStyle = g; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 60 * e.dir, y - 30); ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill();
+      if (Math.random() < dt * 20) parts.push({ x, y, vx: (Math.random() - 0.5) * 30, vy: 20, life: 0.8, max: 0.8, star: true, rot: 0, vr: 4, c: '#ffd6f4' });
+      break;
+    }
+    case 'cat': {
+      // 迷い猫が床をとことこ横切る（仲間の前を通る）
+      const x0 = e.dir > 0 ? sx - 20 : sx + sw + 20, x = x0 + e.dir * (sw + 40) * k, y = fy - 1, st = Math.sin(e.t * 12);
+      ctx.save(); ctx.translate(x, y); ctx.scale(e.dir, 1);
+      ctx.fillStyle = '#e8a050'; ctx.strokeStyle = '#6b3c14'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(-8, -8); ctx.quadraticCurveTo(-16, -16 - st * 2, -12, -22); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0, -8, 9, 5, 0, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillRect(-6, -5, 2, 5 + st); ctx.fillRect(4, -5, 2, 5 - st);
+      ctx.beginPath(); ctx.arc(9, -13, 4.5, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(6, -16); ctx.lineTo(7, -20); ctx.lineTo(9, -17); ctx.moveTo(10, -17); ctx.lineTo(12, -20); ctx.lineTo(12.5, -15.5); ctx.fill();
+      ctx.fillStyle = '#2b1a0c'; ctx.beginPath(); ctx.arc(10.5, -13.5, 0.9, 0, 7); ctx.fill();
+      ctx.restore(); break;
+    }
+  }
+  ctx.restore();
+}
+// 鉱石を地上へ運ぶ桶：竪坑の右のロープを上り（鉱石入り）、空で降りてくる
+function drawLift(fy, sx, sw){
+  if (S.depth < 3) return;
+  const x = sx + sw - 22, topY = -10, per = 10, q = (tAll % per) / per, floorY = fy - 14;
+  let y, full;
+  if (q < 0.15) { y = floorY; full = q > 0.07; }
+  else if (q < 0.55) { y = floorY + (topY - floorY) * ease01((q - 0.15) / 0.4); full = true; }
+  else if (q < 0.6) { y = topY; full = false; }
+  else { y = topY + (floorY - topY) * ease01((q - 0.6) / 0.4); full = false; }
+  ctx.strokeStyle = 'rgba(200,170,120,.55)'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(x, topY); ctx.lineTo(x, y - 8); ctx.stroke();
+  ctx.fillStyle = '#6b4a2a'; ctx.strokeStyle = '#2e1c0e'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(x - 7, y - 6); ctx.lineTo(x + 7, y - 6); ctx.lineTo(x + 5.5, y + 5); ctx.lineTo(x - 5.5, y + 5); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x - 7, y - 6); ctx.quadraticCurveTo(x, y - 14, x + 7, y - 6); ctx.stroke();
+  if (full) { const L = LAYERS[layerIdxForDepth(S.depth)]; ctx.fillStyle = L.speck; for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(x - 4 + i * 2.7, y - 7 - (i % 2) * 2, 2, 0, 7); ctx.fill(); } }
+}
+const ease01 = q => q <= 0 ? 0 : q >= 1 ? 1 : q * q * (3 - 2 * q);
 function draw(dt){
   tAll += dt;
   const tz = layoutCrew().z;
@@ -2171,7 +2396,9 @@ function draw(dt){
     beam.addColorStop(0, 'rgba(255,246,196,.2)'); beam.addColorStop(1, 'rgba(255,246,196,0)');
     ctx.fillStyle = beam; ctx.beginPath(); ctx.arc(lx + 26, ly + 34, 64, 0, 7); ctx.fill();
   }
+  drawLift(fy, sx, sw);
   drawCrew(dt, fy);
+  drawSights(dt, fy, sx, sw);
   swingT += dt;
   const pang = swingT < 0.4 ? swingAngle(swingT, 1) : -2.3 + Math.sin(tAll * 2.2) * 0.06;
   bossGlow += dt; evoT += dt;
@@ -2183,7 +2410,7 @@ function draw(dt){
   }
   // 社長：岩盤で弾かれている間は汗、割れたら跳ぶ
   bossJoy += dt;
-  const jump = bossJoy < 0.5 && !reduced ? -Math.sin(bossJoy / 0.5 * Math.PI) * 14 : 0;
+  const jump = bossJoy < 0.5 && !reduced ? -Math.sin(bossJoy / 0.5 * Math.PI) * 14 : cheerT < 0.9 && !reduced ? -Math.abs(Math.sin(cheerT / 0.45 * Math.PI)) * 10 : 0;
   drawPerson(cx(), fy + jump, 1, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true, 9);
   if (locked(S) && (tAll % 2.4) < 1.2) { const q = (tAll % 2.4) / 1.2; ctx.fillStyle = `rgba(150,210,255,${1 - q})`; ctx.beginPath(); ctx.ellipse(cx() - 8, fy - 46 + q * 8, 2, 3, 0, 0, 7); ctx.fill(); }
   // 仲間のひと言（ときどき）
