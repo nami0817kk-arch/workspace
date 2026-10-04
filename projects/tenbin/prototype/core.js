@@ -212,6 +212,28 @@ var TenbinCore = (function () {
   function holdY(s, kind, ang) { var e = extent(kind, ang); return Math.min(PIVOT_Y - 140, topY(s) - GAP) - e.maxY; }
   function clampX(kind, ang, x) { var e = extent(kind, ang); return Math.max(4 - e.minX, Math.min(W - 4 - e.maxX, x)); }
 
+  // 持っている字をこのまま落としたら、どこに着きそうか（真下にある字・台の上面）。狙いの目安の影に使う
+  // 字の幅に縦の線を何本か下ろし、いちばん上で当たる高さを返す（転がりや跳ねは考えない）
+  function landingY(s, kind, ang, x) {
+    var e = extent(kind, ang), y0 = holdY(s, kind, ang) + e.maxY, best = GROUND;
+    var bodies = s.boards.concat(s.cargo), parts = [];
+    bodies.forEach(function (b) { (b.parts.length > 1 ? b.parts.slice(1) : [b]).forEach(function (p) { parts.push(p); }); });
+    for (var i = 0; i < 7; i++) {
+      var cx = x + e.minX + 3 + (e.maxX - e.minX - 6) * i / 6;
+      parts.forEach(function (p) {
+        if (cx < p.bounds.min.x || cx > p.bounds.max.x || p.bounds.max.y < y0) return;
+        var vs = p.vertices;
+        for (var k = 0; k < vs.length; k++) {
+          var a = vs[k], b = vs[(k + 1) % vs.length];
+          if ((a.x - cx) * (b.x - cx) > 0 || a.x === b.x) continue;
+          var y = a.y + (b.y - a.y) * (cx - a.x) / (b.x - a.x);
+          if (y >= y0 && y < best) best = y;
+        }
+      });
+    }
+    return best;
+  }
+
   function drop(s, x, ang) {
     if (s.failed || !canDrop(s)) return null;
     var kind = s.queue[0];
@@ -335,6 +357,6 @@ var TenbinCore = (function () {
 
   return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
-    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, revive: revive, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
+    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, revive: revive, landingY: landingY, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;

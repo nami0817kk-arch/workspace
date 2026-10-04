@@ -40,6 +40,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .hint{flex:1;font-size:11px;color:var(--sub);line-height:1.45}
 .rot{font-size:17px;font-weight:800;border:0;border-radius:16px;padding:14px 18px;background:var(--accent);color:#fff;min-width:100px;
   box-shadow:0 3px 0 rgba(0,0,0,.18)}
+@media (max-width:380px){.hint{display:none}.bar{justify-content:space-between}}
 .rot:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
 /* 重ねる画面（はじめ・けっか・ことば帳） */
 .sheet{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:var(--scrim);padding:16px}
@@ -48,24 +49,26 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .card{max-height:100%;overflow:auto;background:var(--panel);color:var(--ink);border-radius:18px;padding:18px 16px 16px;width:100%;max-width:340px;text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,.25);animation:pop .22s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pop{from{transform:scale(.9)}to{transform:scale(1)}}
-.card h2{margin:0 0 4px;font-size:20px}
+.card h2{margin:0 0 2px;font-size:19px}
 .card p{margin:4px 0;font-size:13px;color:var(--sub);line-height:1.6}
 .big{font-size:60px;font-weight:800;line-height:1;margin:6px 0 0}
 .big small{font-size:20px}
 .big.sm{font-size:46px}
 .row{display:flex;gap:8px;justify-content:center;margin-top:12px}
+/* 中身が長くても、ボタンの段はカードの下にいつも見える */
+.card > .row:last-child,.card .dict > .row:last-child{position:sticky;bottom:-16px;background:var(--panel);margin:12px -16px -16px;padding:10px 16px 16px;box-shadow:0 -8px 12px -8px rgba(0,0,0,.12)}
 .btn{border:0;border-radius:14px;padding:12px 18px;font-weight:800;font-size:16px;background:var(--accent);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.18)}
 .btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
-.plats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.plats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:6px}
 .plats button{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:8px 2px 6px;font-size:14px;font-weight:700;line-height:1.25}
 .plats button small{display:block;font-size:11px;font-weight:400;color:var(--sub)}
 .plats button.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
 .plats button.lock,.themes button.lock{opacity:.55;cursor:default}
-.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
-.themes button{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:6px 2px;font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:3px}
+.themes{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:6px}
+.themes button{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:5px 0;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;white-space:nowrap}
 .themes button.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
-.dots{display:flex;gap:2px}.dots i{width:10px;height:10px;border-radius:50%;display:block}
-.unlock{font-weight:700;color:var(--accent) !important;margin-top:10px !important}
+.dots{display:flex;gap:1px}.dots i{width:7px;height:7px;border-radius:50%;display:block}
+.unlock{font-weight:700;color:var(--accent) !important;margin-top:8px !important}
 .revive{background:var(--bg);border:2px solid var(--accent2);border-radius:14px;padding:10px;margin:10px 0 4px}
 .revive .btn{width:100%;background:var(--ok)}
 .ad{display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -90,13 +93,13 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     </div>
   </header>
   <div class="stage" id="stage">
-    <canvas id="cv" width="400" height="560"></canvas>
+    <canvas id="cv" width="400" height="560" role="img" aria-label="ゲームの画面。ひらがなを積む台"></canvas>
     <div class="sheet" id="sheet"><div class="card" id="card"></div></div>
   </div>
   <div class="bar">
-    <div class="next"><span>つぎ</span><canvas id="nextCv" width="216" height="80"></canvas></div>
+    <div class="next"><span>つぎ</span><canvas id="nextCv" width="216" height="80" role="img" aria-label="つぎの字"></canvas></div>
     <div class="hint" id="hint">なぞって、はなすと落ちる</div>
-    <button class="rot" id="rot">まわす</button>
+    <button class="rot" id="rot" aria-label="持っている字を45度まわす">まわす</button>
   </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
@@ -161,7 +164,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   var SND = {
     land: function (mass, speed) { var f = 520 / Math.sqrt(mass); tone(f, 0.09, 'sine', Math.min(0.28, 0.08 + speed * 0.03), 0, f * 0.6); tone(f * 2.02, 0.05, 'triangle', 0.05); },
     rot: function () { tone(1400, 0.03, 'square', 0.03); },
-    word: function () { [0, 4, 7, 12].forEach(function (n, i) { tone(523 * Math.pow(2, n / 12), 0.22, 'triangle', 0.16, i * 0.07); }); },
+    word: function (len) { [0, 4, 7, 12, 16, 19, 24].slice(0, 2 + (len || 2)).forEach(function (n, i) { tone(523 * Math.pow(2, n / 12), 0.22, 'triangle', 0.16, i * 0.07); }); },
     fail: function () { tone(330, 0.5, 'sawtooth', 0.08, 0, 110); tone(220, 0.6, 'sine', 0.12, 0.05, 80); },
     record: function () { [0, 4, 7, 12, 16].forEach(function (n, i) { tone(587 * Math.pow(2, n / 12), 0.3, 'triangle', 0.14, i * 0.09); }); }
   };
@@ -188,7 +191,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // --- 状態 ---
   var s, phase = 'menu', ang = 0, visAng = 0, pointer = { x: W / 2, active: false }, dragFrom = null, camTop = BASE_TOP, endTimer = 0, frameN = 0;
-  var parts = [], popups = [], links = [], shake = 0, newWords = [], recordBroken = false, best = { p: 0, n: 0, h: 0 }, hudPts = 0, wordLog = [], unlocked = [];
+  var parts = [], popups = [], links = [], shake = 0, flash = 0, newWords = [], recordBroken = false, best = { p: 0, n: 0, h: 0 }, hudPts = 0, wordLog = [], unlocked = [];
   window.__state = function () { return s; };
 
   function start() {
@@ -201,6 +204,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function drawNext() {
     var g = nextCv.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, nextCv.width, nextCv.height);
     if (!s) return;
+    nextCv.setAttribute('aria-label', 'つぎの字 ' + s.queue.slice(1, 4).join('、'));
     for (var i = 0; i < 3; i++) {
       var k = s.queue[1 + i], e = C.extent(k, 0), w = e.maxX - e.minX, h = e.maxY - e.minY, box = 72, sc = Math.min(62 / w, 62 / h) * (i ? 0.82 : 1);
       g.setTransform(sc, 0, 0, sc, box * i + box / 2 - (e.minX + w / 2) * sc, nextCv.height / 2 - (e.minY + h / 2) * sc);
@@ -240,12 +244,15 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
           THEMES.forEach(function (t) { if (t.need === nOpen) un.push('字の色「' + t.name + '」がつかえる！'); });
           if (un.length) { unlocked = unlocked.concat(un); un.forEach(function (u, i) { popup(u, W / 2, camTop + 170 + i * 22, false, '#7b4fc0'); }); SND.record(); }
         }
-        popup(e.text, Math.max(70, Math.min(W - 70, sx)), minY - 26, true, '#d9472f');
+        popups.push({ text: e.text, x: Math.max(70, Math.min(W - 70, sx)), y: minY - 26, life: 1, big: true, col: '#d9472f', size: 30 + Math.min(4, e.text.length - 1) * 6 });
+        // 長いことばほど派手に（3字で揺れ、4字以上で画面が光る）
+        if (e.text.length >= 3) shake = Math.max(shake, 3 + e.text.length);
+        if (e.text.length >= 4) flash = 1;
         var px = Math.max(70, Math.min(W - 70, sx));
         wordLog.push({ text: e.text, pts: e.pts });
         popup('+' + e.pts + (e.mult > 1 ? '（×' + e.mult + '）' : ''), px, minY + 8, false, '#2f9a5c');
         if (isNew) popup('あたらしいことば！', px, minY - 62, false, '#b5552a');
-        sparkle(sx, minY, 26); SND.word();
+        sparkle(sx, minY, 18 * (e.text.length - 1) + (e.mult > 1 ? 20 : 0)); SND.word(e.text.length);
       } else if (e.type === 'score') {
         var lb = s.last; popup('+' + e.pts, (lb.bounds.min.x + lb.bounds.max.x) / 2, lb.bounds.min.y - 8, false, 'rgba(138,118,99,.9)');
       }
@@ -352,9 +359,14 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (phase === 'play') {
       var hp2 = holdPos(), ready = C.canDrop(s), e2 = C.extent(hp2.kind, ang), bob = Math.sin(frameN / 14) * 2;
       visAng += (ang - visAng) * 0.35;
-      var mid = hp2.x + (e2.minX + e2.maxX) / 2;
-      ctx.save(); ctx.strokeStyle = 'rgba(59,47,36,.25)'; ctx.setLineDash([3, 6]); ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(mid, hp2.y + e2.maxY + 6); ctx.lineTo(mid, C.GROUND); ctx.stroke(); ctx.restore();
+      var mid = hp2.x + (e2.minX + e2.maxX) / 2, ly = C.landingY(s, hp2.kind, ang, hp2.x);
+      ctx.save(); ctx.strokeStyle = 'rgba(59,47,36,.22)'; ctx.setLineDash([3, 6]); ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(mid, hp2.y + e2.maxY + 6); ctx.lineTo(mid, ly - (e2.maxY - e2.minY) - 2); ctx.stroke(); ctx.restore();
+      // 落ちる先の影（このまま落としたら ここに着きそう）
+      if (ready && ly < C.GROUND) {
+        ctx.save(); ctx.fillStyle = 'rgba(59,47,36,.16)'; ctx.beginPath(); ctx.ellipse(mid, ly + 1, (e2.maxX - e2.minX) / 2, 4, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        drawGlyph(ctx, hp2.kind, hp2.x, ly - e2.maxY - 1, ang, 0.16);
+      }
       drawGlyph(ctx, hp2.kind, hp2.x, hp2.y + bob, visAng, ready ? 1 : 0.35);
     }
     // 粒と文字の飛び出し
@@ -365,12 +377,13 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     popups.forEach(function (p) {
       var t = 1 - p.life, sc = p.big ? (t < 0.12 ? 0.6 + t / 0.12 * 0.55 : 1.15 - Math.min(0.15, (t - 0.12))) : 1;
       ctx.save(); ctx.translate(p.x, p.y); ctx.scale(sc, sc); ctx.globalAlpha = Math.min(1, p.life * 3);
-      ctx.font = p.big ? '900 34px ' + G.font + ',"M PLUS Rounded 1c",sans-serif' : '800 14px "M PLUS Rounded 1c",sans-serif';
+      ctx.font = p.big ? '900 ' + (p.size || 34) + 'px ' + G.font + ',"M PLUS Rounded 1c",sans-serif' : '800 14px "M PLUS Rounded 1c",sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
       ctx.lineWidth = p.big ? 7 : 4; ctx.strokeStyle = '#fffaf1'; ctx.strokeText(p.text, 0, 0); ctx.fillStyle = p.col; ctx.fillText(p.text, 0, 0); ctx.restore();
     });
     if (shake) { shake *= 0.9; if (shake < 0.3) shake = 0; }
     drawHud(k);
+    if (flash > 0) { ctx.setTransform(k, 0, 0, k, 0, 0); ctx.fillStyle = 'rgba(255,240,200,' + (flash * 0.45) + ')'; ctx.fillRect(0, 0, W, VIEW_H); flash -= 0.04; }
   }
   function mix(a, b, t) { var pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16), r = [16, 8, 0].map(function (sh) { var x = (pa >> sh) & 255, y = (pb >> sh) & 255; return Math.round(x + (y - x) * t); }); return 'rgb(' + r.join(',') + ')'; }
 
@@ -432,9 +445,9 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   function showMenu() {
     phase = 'menu';
-    showSheet('<h2>ひらがなてんびん</h2><canvas id="demo" width="560" height="190" style="width:280px;height:95px;display:block;margin:6px auto 2px"></canvas><p>ひらがなを1字ずつ積もう。<br>字と字をくっつけて<b>ことば</b>にすると点がふえる。<br>持っている字とことばになる字は<b>ひかる</b>。<br>2字100点・3字400点・4字900点（字は1つ10点）<br>「まわす」で向きを変えられる。</p>' +
-      '<p style="margin-top:10px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
-      '<p style="margin-top:10px;font-weight:700;color:var(--ink)">字の色</p>' + themeButtons() +
+    showSheet('<h2>ひらがなてんびん</h2><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas><p>字をくっつけて<b>ことば</b>にすると点がふえる。<br>2字100点・3字400点・4字900点。ことばになる字は<b>ひかる</b>。</p>' +
+      '<p style="margin-top:6px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
+      '<p style="margin-top:6px;font-weight:700;color:var(--ink)">字の色</p>' + themeButtons() +
       '<p class="unlock">' + nextUnlock() + '</p>' +
       '<div class="row"><button class="btn" id="go">はじめる</button></div>');
     drawDemo();
@@ -530,7 +543,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   });
   cv.addEventListener('pointerup', function () {
     if (!pointer.active) return; pointer.active = false;
-    if (phase === 'play' && C.canDrop(s)) { var hp = holdPos(); C.drop(s, hp.x, ang); ang = visAng = 0; drawNext(); }
+    dropNow();
   });
   cv.addEventListener('pointercancel', function () { pointer.active = false; });
   document.getElementById('rot').onclick = function () {
@@ -538,6 +551,18 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     ang += C.ROT_STEP; if (ang >= Math.PI * 2 - 1e-6) { ang -= Math.PI * 2; visAng -= Math.PI * 2; }
     pointer.x = holdPos().x; SND.rot();
   };
+
+  // キーボード（パソコンで遊ぶとき）: ←→ で動かす（Shift で細かく）、↑ か R でまわす、スペース・↓・Enter で落とす
+  function dropNow() { if (phase === 'play' && C.canDrop(s)) { audio(); var hp = holdPos(); C.drop(s, hp.x, ang); ang = visAng = 0; drawNext(); } }
+  document.addEventListener('keydown', function (e) {
+    if (phase !== 'play') return;
+    var k = e.key, step = e.shiftKey ? 2 : 8;
+    if (k === 'ArrowLeft' || k === 'ArrowRight') { pointer.x = C.clampX(C.current(s), ang, pointer.x + (k === 'ArrowLeft' ? -step : step)); }
+    else if (k === 'ArrowUp' || k === 'r' || k === 'R') document.getElementById('rot').onclick();
+    else if (k === ' ' || k === 'ArrowDown' || k === 'Enter') dropNow();
+    else return;
+    e.preventDefault();
+  });
 
   // 字形が読み込まれる前に描くと、当たり判定と見た目がずれる
   var ready = document.fonts && document.fonts.load ? document.fonts.load('900 72px ' + G.font, C.KINDS.join('')) : Promise.resolve();
