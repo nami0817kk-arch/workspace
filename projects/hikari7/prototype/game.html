@@ -1103,7 +1103,7 @@ function changeFmt(S){var c=S.plan?S.plan.center:null,au=S.adUsed,ex=S.extra;bui
 function startRound(S){
   S.seatPlus=0;if(!S.sid)S.sid=Math.floor(Math.random()*1e9);
   alive(S).forEach(function(t){t.snap={sk:t.st.v+t.st.d+t.st.r+t.st.e,conf:t.conf};});
-  S.lesson={train:{},pos:{}}; S.adUsed=false; S.budgetFree=false; try{interPrep();}catch(e){} S.extra=0; S.wDrama=0; S.notes=[]; S.crit={}; S.critDone=false; S.pass={}; S.call=null; S.farewell={}; S.interview={};
+  S.lesson={train:{},pos:{}}; S.adUsed=false; S.budgetFree=false; S.extra=0; S.wDrama=0; S.notes=[]; S.crit={}; S.critDone=false; S.pass={}; S.call=null; S.farewell={}; S.interview={};
   alive(S).forEach(function(t){t.inj=false;t.rest=false; if(ROUNDS[S.rnd].kind==='pos') S.lesson.pos[t.id]=defaultPos(t);});
   S.phase='plan'; S.stage=null; S.events=[]; S.evIdx=0; S.evRes=null; S.feat={};
   S.plan={concept:0,center:null,acts:{},coachK:'v',vlogId:null,teams:ROUNDS[S.rnd].kind==='team'?defaultTeams(S):null};
@@ -2113,7 +2113,7 @@ var WEEK_ACTS=[
   {k:'radio',n:'雑誌の撮影とSNS企画',d:'表現力担当がいると効く',busy:0,fx:{fan:1,coh:1}},
   {k:'rest',n:'休みを取る',d:'まとまりが上がり、疲れが抜ける',busy:-9,fx:{coh:2}}
 ];
-function startMonth(S){S.month={w:0,busy:0,fan:0,song:0,coh:0,log:[]};S.phase='month';}
+function startMonth(S){S.month={w:0,busy:0,fan:0,song:0,coh:0,log:[]};S.phase='month';try{interPrep();}catch(e){}}
 function weekDo(S,k){var M=S.month,a=WEEK_ACTS.filter(function(x){return x.k===k;})[0],D=S.tr.filter(function(t){return t.status==='debut';});
   if(!a||M.w>=4)return;if(a.cost){if(S.budget<a.cost)return;S.budget-=a.cost;}
   var fx=a.fx,txt=[],star=pick(D);
@@ -2782,6 +2782,8 @@ var PACK_AUDITION={
   busk:{t:'路上ライブ',g:'live',kind:'solo',w:'all',crit:true,hype:3,live:true,fat:8,song:'街角でのライブ',desc:'商店街の一角で、通りがかりの人の前で歌って踊る。足を止めた人の数で競う。',good:'人気が大きく動き、話題になる',bad:'外での本番で全員が疲れる（そのぶん体力は伸びる）。自信のない子は声が届かない'},
   musical:{t:'ミュージカル',g:'team',kind:'team',size:4,min:8,w:{e:.55,v:.3,d:.15},mixW:.6,crit:true,hype:3,fat:8,desc:'4人組で、台詞と歌と踊りのある短い舞台を演じる。表現力がいちばん問われる。',good:'表現力担当が輝く',bad:'準備が多く、全員が少し疲れる（そのぶん体力は伸びる）'}
 };
+/* 売り出すまでは false。ショップに出さず、アプリでは中身も入らない（買った記録がある人だけ入る） */
+var PACK_SALE=false;
 var PACKS={story:{n:'物語パック',id:'hikari7_story_pack',d:'新しいひとりの物語6つ（書道の家・合唱団育ち・双子の片方・豆腐屋の朝・盛り上げ役・動画の歌い手）、合宿の出来事12、お出かけの場面4つ'},
   audition:{n:'審査パック',id:'hikari7_audition_pack',d:'新しい審査の型3つ（アカペラ審査・路上ライブ・ミュージカル）。構成会議で選べるようになる'}};
 function packOwned(k){if(typeof APP==='undefined'||!APP)return true;return !!(APP.owned&&APP.owned[k]);}
@@ -3270,7 +3272,7 @@ function render0(){
   else if(S&&ui.prof!=null&&S.tr[ui.prof])h+=vProfile(S.tr[ui.prof]);
   else if(S&&S.bursts&&S.bursts.length){h+=burstBox();if(ui.lastBurst!==S.bursts.length+':'+S.bursts[0].title){ui.lastBurst=S.bursts.length+':'+S.bursts[0].title;setTimeout(function(){sfx('fan');haptic('success');},60);}}
   if(ui.toast)h+='<div class="apptoast" role="status">'+esc(ui.toast)+'</div>';
-  if(ui.adWait==='inter')h+='<div class="adwait"><div>次の審査へ…</div></div>';
+  if(ui.adWait==='inter')h+='<div class="adwait"><div>エンドロールへ…</div></div>';
   else if(ui.adWait)h+='<div class="adwait"><div>動画を読み込んでいます…<br><button class="btn-s" data-a="adcancel" style="margin-top:12px">やめる</button></div></div>';
   var tmp=document.createElement('div');tmp.innerHTML=h;
   /* 進むボタンは、どの画面でも下の固定の帯に置く（スクロールしなくても押せる） */
@@ -3319,7 +3321,7 @@ function vTitle(){
     '<div class="tseats">'+seats+'</div><div class="tmenu">';
   if(sv)h+='<button class="btn tbtn" data-a="cont">つづきから<small>'+(sv.rnd>0?esc(ROUNDS[sv.rnd]?ROUNDS[sv.rnd].name:'')+'・':'書類・動画審査・')+(sv.g==='f'?'女性':'男性')+'グループ</small></button>';
   h+='<button class="btn tbtn'+(sv?' sub':'')+'" data-a="tsub" data-v="new">新しいシーズン</button>'+
-    '<div class="tmrow"><button class="btn sub" data-a="tsub" data-v="rec">記録と今日の挑戦</button><button class="btn sub" data-a="tsub" data-v="shop">追加パック</button></div><div class="tmrow"><button class="btn sub" data-a="settings">'+ICO.gear+' 設定</button></div></div>'+
+    '<div class="tmrow"><button class="btn sub" data-a="tsub" data-v="rec">記録と今日の挑戦</button>'+(PACK_SALE?'<button class="btn sub" data-a="tsub" data-v="shop">追加パック</button></div><div class="tmrow">':'')+'<button class="btn sub" data-a="settings">'+ICO.gear+' 設定</button></div></div>'+
     '<div class="trank"><span>'+esc(rk[1])+'</span>'+(c.seasons?'<span>'+c.seasons+'シーズン</span>':'<span>はじめてのシーズン</span>')+'</div>';
   var qf=null;try{qf=HStore.get('hikari7_quit');}catch(e){}if(!sv&&qf&&!ui.loadBroken){var qb=loadBak();if(qb)h+='<div class="note tnote">前にやめたシーズン（'+(qb.rnd>0&&qb.fmt?'第'+qb.rnd+'審査':'書類審査')+'・'+(qb.g==='f'?'女性':'男性')+'）に戻れます（1回だけ）。<br><button class="btn-s" data-a="frombak">やめたシーズンに戻る</button></div>';}
   if(!sv&&ui.loadBroken){var bk=loadBak();h+='<div class="note tnote"><b>前回の続きが読み込めませんでした。</b>'+(bk?'ひとつ前の場面の保存から戻せます。<br><button class="btn-s" data-a="frombak">ひとつ前の保存から続ける</button>':'保存の予備もありません。新しいシーズンを始めてください。')+'</div>';}
@@ -3329,19 +3331,19 @@ function vTitle(){
 }
 var INTKEY='hikari7_inter';
 function interN(){try{var o=JSON.parse(HStore.get(INTKEY)||'null');return o&&o.sid===S.sid?o.n:0;}catch(e){return 0;}}
-/* 全画面広告を出してよいか：はじめてのシーズンには出さない・第2審査より後だけ・1シーズン2回まで。出すと決めたら数える */
-function interOk(fin,count){try{if(!S||fin<2||!loadCareer().seasons||interN()>=2)return false;if(count)HStore.set(INTKEY,JSON.stringify({sid:S.sid,n:interN()+1}));return true;}catch(e){return false;}}
-/* 出しそうな審査に入ったら、そのときだけ読み込んでもらう（起動時から読み続けない） */
-function interPrep(){if(APP&&!APP.adFree&&S&&!ROUNDS[S.rnd].fin&&interOk(S.rnd,false))appPost({type:'prepInter'});}
+/* 全画面広告を出してよいか：エンドロールの前に1シーズン1回だけ（2026-10-04 ユーザー決定。審査の間には出さない）。出すと決めたら数える */
+function interOk(count){try{if(!S||interN()>=1)return false;if(count)HStore.set(INTKEY,JSON.stringify({sid:S.sid,n:interN()+1}));return true;}catch(e){return false;}}
+/* デビュー後1か月に入ったら、そのときだけ読み込んでもらう（起動時から読み続けない） */
+function interPrep(){if(APP&&!APP.adFree&&S&&interOk(false))appPost({type:'prepInter'});}
 function vTitleShop(){
-  var h='<div class="tsubhd"><button class="btn-s" data-a="tsub" data-v="">‹ タイトルへ</button><b>追加パック</b></div>';
-  if(!APP)h+='<p class="note">テスト版では、追加パックの中身がすべて入っています。アプリでは、買った人だけに入ります。</p>';
+  var h='<div class="tsubhd"><button class="btn-s" data-a="tsub" data-v="">‹ タイトルへ</button><b>'+(PACK_SALE?'追加パック':'広告を消す')+'</b></div>';
+  if(PACK_SALE&&!APP)h+='<p class="note">テスト版では、追加パックの中身がすべて入っています。アプリでは、買った人だけに入ります。</p>';
   var pr=(APP&&APP.prices)||{},ok=APP&&APP.storeOk===true;
-  ['story','audition'].forEach(function(k){var p=PACKS[k],own=packOwned(k);
+  (PACK_SALE?['story','audition']:[]).forEach(function(k){var p=PACKS[k],own=packOwned(k);
     h+='<div class="card pack"><div class="pkh"><b>'+p.n+'</b><span>'+(own?'<i class="owned">入っています</i>':(pr[k]?esc(pr[k]):'買い切り'))+'</span></div><p class="small">'+esc(p.d)+'</p>'+
       (APP&&!own?'<button class="btn" data-a="buypack" data-v="'+k+'" '+(ok&&pr[k]?'':'disabled')+'>'+(pr[k]?esc(pr[k])+'で買う':'買う')+'</button>'+(ok&&pr[k]?'':'<p class="small muted">'+(APP.storeOk==null?'ストアに問い合わせています…':'ストアから値段を読み込めていません。通信を確かめて、開き直してください')+'</p>'):'')+'</div>';});
-  if(APP)h+='<div class="card pack"><div class="pkh"><b>広告を消す</b><span>'+(APP.adFree?'<i class="owned">消しています</i>':(APP.price?esc(APP.price):'買い切り'))+'</span></div><p class="small">審査のあいだの全画面広告が出なくなり、動画の特典も動画なしで使えます（制作費の特典は1審査に1回）。</p>'+(APP.adFree?'':'<button class="btn" data-a="buy" '+(APP.canBuy?'':'disabled')+'>'+(APP.price?esc(APP.price)+'で買う':'買う')+'</button>')+'</div>';
-  h+='<p class="small muted">追加パックは買い切りです。今の中身は、買わなくてもすべて遊べます。'+(APP?' <button class="btn-s" data-a="restore">購入を復元</button>':'')+'</p>';
+  if(APP)h+='<div class="card pack"><div class="pkh"><b>広告を消す</b><span>'+(APP.adFree?'<i class="owned">消しています</i>':(APP.price?esc(APP.price):'買い切り'))+'</span></div><p class="small">エンドロールの前の全画面広告が出なくなり、動画の特典も動画なしで使えます（制作費の特典は1審査に1回）。</p>'+(APP.adFree?'':'<button class="btn" data-a="buy" '+(APP.canBuy?'':'disabled')+'>'+(APP.price?esc(APP.price)+'で買う':'買う')+'</button>')+'</div>';
+  h+='<p class="small muted">'+(PACK_SALE?'追加パックは買い切りです。今の中身は、買わなくてもすべて遊べます。':'買い切りです。')+(APP?' <button class="btn-s" data-a="restore">購入を復元</button>':'')+'</p>';
   return h;}
 function vTitleRec(){
   var h='<div class="tsubhd"><button class="btn-s" data-a="tsub" data-v="">‹ タイトルへ</button><b>記録と今日の挑戦</b></div>';
@@ -4261,7 +4263,8 @@ document.addEventListener('click',function(ev){
     case 'gcolor':go(function(){S.prep.color=+v;});break;
     case 'gsong':go(function(){S.prep.song=+v;});break;
     case 'prepok':go(function(){startMonth(S);});window.scrollTo(0,0);break;
-    case 'monthdone':go(function(){finishMonth(S);});window.scrollTo(0,0);break;
+    case 'monthdone':var adv=function(){if(!ui.betw)return;ui.betw=null;clearTimeout(ui.betT);ui.adWait=false;go(function(){finishMonth(S);});window.scrollTo(0,0);};
+      if(ui.betw)break;ui.betw=adv;if(APP&&!APP.adFree&&interOk(true)){ui.adWait='inter';render();appPost({type:'between',rnd:ROUNDS.length});ui.betT=setTimeout(adv,5000);}else adv();break;
     case 'week':go(function(){weekDo(S,v);});window.scrollTo(0,0);break;
     case 'tr':go(function(){S.lesson.train[id]=[v];if(v==='rest'&&S.lesson.sp)delete S.lesson.sp[id];});break;
     case 'trpick':go(function(){S.lesson.train[id]=[v];if(v==='rest'&&S.lesson.sp)delete S.lesson.sp[id];});break;
@@ -4287,8 +4290,7 @@ document.addEventListener('click',function(ev){
     case 'calllast':stopTimer();go(function(){S.call.n=S.call.order.length;S.call.done=true;});break;
     case 'callskip':stopTimer();go(function(){S.call.n=S.call.order.length;S.call.done=true;});break;
     case 'fw':go(function(){S.farewell[id]=+v;});break;
-    case 'nextround':stopTimer();var fin0=S.rnd,adv=function(){if(!ui.betw)return;ui.betw=null;clearTimeout(ui.betT);ui.adWait=false;go(function(){nextRound(S);});window.scrollTo(0,0);};
-      if(ui.betw)break;ui.betw=adv;if(APP&&!APP.adFree&&interOk(fin0,true)){ui.adWait='inter';render();appPost({type:'between',rnd:fin0});ui.betT=setTimeout(adv,5000);}else adv();break;
+    case 'nextround':stopTimer();go(function(){nextRound(S);});window.scrollTo(0,0);break;
     case 'toresult':go(function(){applyFarewell(S);S.phase='result';startEnding(S);});window.scrollTo(0,0);break;
     case 'restart':ui.chal=null;try{HStore.set('hikari7_chal','');}catch(e){}stopTimer();clearSave();S=null;render();window.scrollTo(0,0);break;
   }

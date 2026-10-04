@@ -154,14 +154,12 @@ void main() {
     expect(js.last, startsWith('hikariAdResult(true,'));
   });
 
-  test('全画面広告は第2審査を終えた後から。第1審査の後と、広告を消した人には出さない', () async {
+  test('全画面広告はゲームが頼んだときに出し、広告を消した人には出さない', () async {
     final (b, money, ads, _, _) = await setup();
-    await b.handle('{"type":"between","rnd":1}');
-    expect(ads.interstitials, 0);
-    await b.handle('{"type":"between","rnd":2}');
+    await b.handle('{"type":"between","rnd":5}');
     expect(ads.interstitials, 1);
     await money.buy();
-    await b.handle('{"type":"between","rnd":3}');
+    await b.handle('{"type":"between","rnd":5}');
     expect(ads.interstitials, 1);
   });
 

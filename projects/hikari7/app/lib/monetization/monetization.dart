@@ -23,16 +23,13 @@ enum RewardGate {
 ///
 /// - 動画広告（報酬型）: 特訓の枠を1人ぶん増やす・1人を再審査する（合わせて1審査に1回）／制作費を30万足す（何度でも）／
 ///   デビュー後1か月の宣伝を倍にする（1か月に1回）。回数の数えはゲーム本体（JS）が持つ。ここは「見せて、見終えたか」だけを答える。
-/// - 全画面広告: 審査と審査の間。はじめてのシーズンには出さず、第2審査を終えた後から1シーズンに2回まで（2026-10-04）。
+/// - 全画面広告: デビュー後1か月を終えてエンドロールへ進むときに、1シーズン1回だけ（2026-10-04 ユーザー決定）。
 ///   出すかどうかの数えはゲーム本体（JS）が持つ。広告を消した人には出さない。
 /// - 広告を消す: 全画面広告が出なくなり、動画の特典も動画なしで使える。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
     : ads = ads ?? NoOpAdService(),
       store = store ?? NoOpPurchaseService();
-
-  /// この審査を終えた後から、次の審査へ進むときに全画面広告を出す。
-  static const firstInterstitialAfterRound = 2;
 
   final SharedPreferences _prefs;
   final AdService ads;
@@ -144,15 +141,15 @@ class Monetization extends ChangeNotifier {
     };
   }
 
-  /// 全画面広告を出しそうな審査に入ったときに呼ぶ（ゲームが決める）。そのときだけ読み込む。
+  /// 全画面広告を出しそうな場面に入ったときに呼ぶ（ゲームが決める）。そのときだけ読み込む。
   void prepareInterstitial() {
     if (!adFree) ads.prepareInterstitial();
   }
 
-  /// 審査を終えて次の審査へ進むときに呼ぶ。出す番なら全画面広告を出し、閉じるまで待つ。
+  /// ゲームが出す番と決めたときに呼ぶ（今はエンドロールの前）。全画面広告を出し、閉じるまで待つ。
   /// 在庫が無ければ少しだけ待ち、来なければ何もせず false（進行を止めない）。
   Future<bool> betweenRounds(int finishedRound, {void Function()? onShown}) async {
-    if (adFree || finishedRound < firstInterstitialAfterRound || !_foreground) return false;
+    if (adFree || !_foreground) return false;
     if (!ads.isInterstitialReady && !await ads.waitForInterstitial(const Duration(seconds: 2))) return false;
     if (adFree || !_foreground) return false;
     return ads.showInterstitialAd(onShown: onShown);
