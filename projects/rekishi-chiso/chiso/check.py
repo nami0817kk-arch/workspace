@@ -4,6 +4,8 @@
 """
 from __future__ import annotations
 
+import re
+
 from pathlib import Path
 
 from .voice import TONES, display_text
@@ -129,7 +131,7 @@ HOST_CLOSE = "今日の地層は、ここまでです"
 PARROT_MAX = 2          # 1節の中で、驚くだけの短い返し（おうむ返し）の上限
 SIGH_RUN_MAX = 2        # 「……」で終わるつむぎの感想が続いてよい数
 ASHI_MAX = 2            # 1節の「あーし」の上限（目安は1回）
-POLITE = ("ですか", "ですね", "ですよね", "ました", "ます。", "ません", "でしょうか")
+POLITE = re.compile(r"(ですか|ですね|ですよね|でした|ました|ます|ません|でしょうか)(?=[。？！?!、…\s]|$)")   # 文の切れ目の丁寧語だけ（「だました側」は数えない）
 
 
 def cast_rules(script) -> tuple[list[str], list[str]]:
@@ -165,7 +167,7 @@ def cast_rules(script) -> tuple[list[str], list[str]]:
             run = run + 1 if re.search(r"…+[。！？]?$", l.text) else 0
             if run == SIGH_RUN_MAX + 1:
                 warns.append(f"{l.index + 1}行目：「……」で終わるつむぎの感想が{run}回続いています")
-        polite = [l.index + 1 for l in mine if any(p in l.text for p in POLITE)]
+        polite = [l.index + 1 for l in mine if POLITE.search(l.text)]
         if polite:
             warns.append(f"{sec.index + 1}節：つむぎが丁寧語 {polite}（ふだんは軽い話し言葉）")
     return errors, warns
