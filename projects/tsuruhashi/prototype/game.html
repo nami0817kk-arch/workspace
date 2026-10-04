@@ -230,6 +230,9 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .title{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
   background:radial-gradient(ellipse at 50% 35%,#4a3420 0,#1c140d 60%,#0d0906 100%);color:#fff4dc;text-align:center;padding:24px;transition:opacity .5s}
 .title.hide{opacity:0;pointer-events:none}
+.title > *{position:relative;z-index:1}
+.title #titleCv{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.title::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 42% at 50% 46%,rgba(10,6,3,.78) 0,rgba(10,6,3,.45) 55%,rgba(10,6,3,.15) 100%)}
 .title .logo{width:132px;height:132px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5))}
 .title .co{font-size:14px;letter-spacing:.3em;color:#f6b85c;font-weight:800}
 .title h1{margin:0;font-size:36px;font-weight:800;letter-spacing:.06em;text-shadow:0 3px 0 #000}
@@ -331,6 +334,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 <div class="coach" id="coach" hidden></div>
 
 <div class="title" id="title">
+  <canvas id="titleCv" aria-hidden="true"></canvas>
   <svg class="logo" viewBox="0 0 120 120" aria-hidden="true">
     <circle cx="60" cy="60" r="56" fill="#2b1d10" stroke="#f6b85c" stroke-width="4"/>
     <circle cx="60" cy="60" r="47" fill="none" stroke="#f6b85c" stroke-width="1.5" opacity=".5"/>
@@ -1842,12 +1846,41 @@ const LINES = [
 ];
 const LINES_BED = ['カキン！', '歯が立たん', 'Lvが足りない', 'もっといい道具を', '横を掘ろう'];
 let swingT = 9, shakeT = 0, blockHitT = 9, bannerT = 9, bannerL = 0, ringT = 9, clankT = 9, flashT = 9, bossGlow = 9, evoT = 9, lastBreakSfx = 0;
+// 明かり：[x, y, 半径, 強さ]。暗さの幕を別の板に描き、明かりの所だけ抜いて重ねる
+const lights = [];
+let lightCv = null, lightCx = null;
+function drawLights(dark, ox, oy){
+  if (!lightCv) { lightCv = document.createElement('canvas'); lightCx = lightCv.getContext('2d'); }
+  const w = cv.width, h = cv.height;
+  if (lightCv.width !== w || lightCv.height !== h) { lightCv.width = w; lightCv.height = h; }
+  const L = lightCx, k = DPR * Z;
+  L.setTransform(1, 0, 0, 1, 0, 0); L.globalCompositeOperation = 'source-over'; L.clearRect(0, 0, w, h);
+  L.fillStyle = `rgba(6,4,10,${dark})`; L.fillRect(0, 0, w, h);
+  L.globalCompositeOperation = 'destination-out';
+  L.setTransform(k, 0, 0, k, ox * k, oy * k);
+  for (const [x, y, r, a] of lights) {
+    const g = L.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(0.55, `rgba(0,0,0,${a * 0.55})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+    L.fillStyle = g; L.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(lightCv, 0, 0); ctx.restore();
+  // 明かりの所に、暖かい色を少し足す
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (const [x, y, r, a] of lights) {
+    if (r < 60) continue;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.8);
+    g.addColorStop(0, `rgba(255,170,80,${0.10 * a})`); g.addColorStop(1, 'rgba(255,170,80,0)');
+    ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  ctx.restore();
+}
 // 竪坑に舞うほこり（画面に対する位置で持つ）
 const motes = Array.from({ length: 22 }, (_, i) => ({ x: (hash(i * 13 + 1) % 1000) / 1000, y: (hash(i * 29 + 7) % 1000) / 1000, s: 0.6 + (hash(i * 7) % 10) / 10, v: 0.004 + (hash(i * 3 + 2) % 10) / 1500 }));
 // 仲間は雇った人数だけ描く（2026-10-03 ユーザー指示「×でやるのではなく人をちゃんと増やす」）。
 // 増えたら竪坑に足場を段々に組んで上の段へ並べる。一度に描くのは CREW_CAP 人まで（種類ごとの割合は保つ）
 const CREW_PER = [0.95, 0.75, 1.3, 0.12, 0.5, 0.9, 0.2];
-const CREW_CAP = 100, ROW_GAP = 26, ROWS_MAX = 6, ZMIN = 0.6, GAP_H = 14, GAP_M = 30;   // 横幅は最大 1/ZMIN 倍。超えたら足場の段を足す。人は少し重なって並ぶ
+// CHAR は人物の大きさ（2026-10-04「絵とグラフィックの向上」で 1→1.25。小さくて表情が見えなかった）
+const CHAR = 1.25, CREW_CAP = 100, ROW_GAP = 26 * CHAR, ROWS_MAX = 6, ZMIN = 0.6, GAP_H = 14 * CHAR, GAP_M = 30 * CHAR;   // 横幅は最大 1/ZMIN 倍。超えたら足場の段を足す。人は少し重なって並ぶ
 let crewLay = null, crewKey = '';
 function crewAlloc(){
   const tot = S.w.reduce((a, b) => a + b, 0);
@@ -1871,13 +1904,13 @@ function layoutCrew(){
   const queue = mix(machines).concat(mix(humans));
   // まず床1段に並べきれる幅まで竪坑を広げる
   const wOf = f => f.i >= HUMAN ? GAP_M : GAP_H;
-  const need = queue.reduce((a, f) => a + wOf(f), 0) + 32 + 52;
+  const need = queue.reduce((a, f) => a + wOf(f), 0) + 32 + 52 * CHAR;
   const b0 = baseSW(), sw = Math.max(b0, Math.min(b0 / ZMIN, need)), figs = [];
   let q = 0;
   // 真ん中（社長）から左右へ交互に並べる。並びきらなければ上の段へ
   for (let row = 0; row < ROWS_MAX && q < queue.length; row++) {
-    const sc = 0.72 * Math.pow(0.88, row), g = sc / 0.72, edge = sw / 2 - 12;
-    let rc = row === 0 ? 24 : 0, lc = -rc, side = 1;
+    const sc = 0.72 * CHAR * Math.pow(0.88, row), g = sc / (0.72 * CHAR), edge = sw / 2 - 12;
+    let rc = row === 0 ? 24 * CHAR : 0, lc = -rc, side = 1;
     while (q < queue.length) {
       const f = queue[q], big = f.i >= HUMAN;
       if (big && row > 1) { q++; continue; }                  // 機械は上の足場に載せない
@@ -2387,6 +2420,60 @@ function drawElder(dt){
   elderT -= dt;
   if (elderT <= 0) { elderT = 45 + Math.random() * 30; const l = elderLine(); if (l) elderSay(l); }
 }
+// 起動画面の後ろ：地層の断面をゆっくり下っていく。各層で坑夫がつるはしを振り、宝石が光る
+const titleCv = $('titleCv'), tctx = titleCv.getContext('2d');
+let titleT = 0;
+function drawTitle(dt){
+  titleT += reduced ? 0 : dt;
+  const r = titleCv.getBoundingClientRect(), w = Math.max(1, r.width), h = Math.max(1, r.height), d = Math.min(2.5, window.devicePixelRatio || 1);
+  if (titleCv.width !== Math.round(w * d)) { titleCv.width = Math.round(w * d); titleCv.height = Math.round(h * d); }
+  const keep = ctx; ctx = tctx;
+  ctx.setTransform(d, 0, 0, d, 0, 0);
+  const LH = 230, cam = titleT * 22, sw = Math.min(150, w * 0.36), sx = w / 2 - sw / 2;
+  const first = Math.floor(cam / LH);
+  for (let k = first; k <= first + Math.ceil(h / LH) + 1; k++) {
+    const li = ((k % 10) + 10) % 10, L = LAYERS[li], y0 = k * LH - cam;
+    ctx.fillStyle = L.wall; ctx.fillRect(0, y0, w, LH + 1);
+    // 地層の筋と粒
+    ctx.fillStyle = 'rgba(0,0,0,.18)'; for (let b = 0; b < 4; b++) ctx.fillRect(0, y0 + 30 + b * 52 + (hash(k * 31 + b) % 14), w, 3);
+    for (let c = 0; c < 70; c++) {
+      const hh = hash(k * 7919 + c * 131), px = hh % Math.ceil(w), py = y0 + (hh >>> 9) % LH, sz = 2 + (hh >>> 18) % 3;
+      if (px > sx - 4 && px < sx + sw + 4) continue;
+      ctx.fillStyle = L.speck; ctx.globalAlpha = L.glow ? 0.5 + 0.5 * Math.sin(titleT * 2 + c) : 0.8; ctx.fillRect(px, py, sz, sz); ctx.globalAlpha = 1;
+    }
+    // 壁に埋まった宝石（ときどききらめく）
+    for (let g = 0; g < 3; g++) {
+      const hh = hash(k * 977 + g * 53), gx = (g % 2 ? sx + sw + 24 + hh % Math.max(10, sx - 48) : 12 + hh % Math.max(10, sx - 40)), gy = y0 + 40 + (hh >>> 8) % (LH - 80);
+      ctx.fillStyle = L.speck; ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(gx, gy - 7); ctx.lineTo(gx + 6, gy); ctx.lineTo(gx, gy + 7); ctx.lineTo(gx - 6, gy); ctx.closePath(); ctx.fill(); ctx.stroke();
+      const tw = Math.max(0, Math.sin(titleT * 1.7 + hh % 9));
+      if (tw > 0.8) { const q = (tw - 0.8) * 5, rr = 4 + q * 9; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,250,220,${q})`;
+        ctx.beginPath(); ctx.moveTo(gx, gy - rr); ctx.lineTo(gx + 1.6, gy - 1.6); ctx.lineTo(gx + rr, gy); ctx.lineTo(gx + 1.6, gy + 1.6); ctx.lineTo(gx, gy + rr); ctx.lineTo(gx - 1.6, gy + 1.6); ctx.lineTo(gx - rr, gy); ctx.lineTo(gx - 1.6, gy - 1.6); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    }
+    // 竪坑・はしご・梁とランタン
+    ctx.fillStyle = L.hollow; ctx.fillRect(sx, y0, sw, LH + 1);
+    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(sx, y0, 8, LH + 1); ctx.fillRect(sx + sw - 8, y0, 8, LH + 1);
+    ctx.fillStyle = '#4a321c'; ctx.fillRect(sx + 10, y0, 2.5, LH + 1); ctx.fillRect(sx + 22, y0, 2.5, LH + 1);
+    ctx.fillStyle = '#6e4c2a'; for (let ry = 4; ry < LH; ry += 10) ctx.fillRect(sx + 10, y0 + ry, 14.5, 2);
+    const by = y0 + LH - 40;
+    ctx.fillStyle = '#7d5a35'; ctx.fillRect(sx, by, sw, 6); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(sx, by + 6, sw, 2);
+    const lg = ctx.createRadialGradient(sx + sw - 18, by - 22, 2, sx + sw - 18, by - 22, 70);
+    lg.addColorStop(0, 'rgba(255,196,110,.35)'); lg.addColorStop(1, 'rgba(255,196,110,0)'); ctx.fillStyle = lg; ctx.fillRect(sx + sw - 88, by - 92, 140, 140);
+    ctx.fillStyle = '#ffd68c'; roundRect(sx + sw - 21, by - 26, 6, 8, 2); ctx.fill();
+    // 坑夫（層ごとに1〜2人、足場の上でつるはしを振る）
+    const n = 1 + hash(k * 13) % 2;
+    for (let m = 0; m < n; m++) {
+      const fx = sx + sw * (n === 1 ? 0.6 : 0.42 + m * 0.3), per = 0.9 + m * 0.2, t = (titleT + k * 0.37 + m * 0.5) % (per + 0.25);
+      drawPerson(fx, by, 1.15, HAT[(k + m) % 3], m ? -1 : 1, swingAngle(t, 1), PICK_TIER[Math.min(PICK_TIER.length - 1, li * 2)][1], li > 3, (k + m) % 3);
+    }
+  }
+  // 竪坑のロープと、上り下りする桶
+  ctx.strokeStyle = 'rgba(210,180,130,.6)'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(sx + sw * 0.78, 0); ctx.lineTo(sx + sw * 0.78, h); ctx.stroke();
+  const bq = (titleT * 0.12) % 1, bucketY = h * (1 - bq);
+  ctx.fillStyle = '#6b4a2a'; ctx.strokeStyle = '#2e1c0e'; ctx.beginPath(); ctx.moveTo(sx + sw * 0.78 - 9, bucketY - 7); ctx.lineTo(sx + sw * 0.78 + 9, bucketY - 7); ctx.lineTo(sx + sw * 0.78 + 7, bucketY + 7); ctx.lineTo(sx + sw * 0.78 - 7, bucketY + 7); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#ffd166'; for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(sx + sw * 0.78 - 5 + i * 3.3, bucketY - 9 - (i % 2) * 2, 2.4, 0, 7); ctx.fill(); }
+  ctx = keep;
+}
 // 鉱石を地上へ運ぶ桶：竪坑の右のロープを上り（鉱石入り）、空で降りてくる
 function drawLift(fy, sx, sw){
   if (S.depth < 3) return;
@@ -2421,6 +2508,7 @@ function draw(dt){
   const top = Math.floor(camY - baseY() / R) - 1, bot = Math.ceil(camY + (VH - baseY()) / R) + 1;
   if (top < 0) drawSurface();
   const sw = shaftW(), sx = cx() - sw / 2, lamps = [];
+  lights.length = 0;
   for (let m = Math.max(0, top); m <= bot; m++) {
     const y = rowY(m), li = layerIdxForDepth(m), L = LAYERS[li], bed = isBed(m);
     const room = isRoom(m) && !S.room[m];
@@ -2448,6 +2536,9 @@ function draw(dt){
         roundRect(sx + c * 22 + (h >>> 4) % 10 - 5, y + (h >>> 9) % (R - 10), 12 + (h >>> 13) % 14, 6 + (h >>> 17) % 6, 3); ctx.fill();
       }
       ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(sx, y - 0.3, 8, R + 0.9); ctx.fillRect(sx + sw - 8, y - 0.3, 8, R + 0.9);
+      // 左の壁に沿った木のはしご（地上から今の床まで続く）
+      ctx.fillStyle = '#4a321c'; ctx.fillRect(sx + 9, y - 0.3, 2.5, R + 0.9); ctx.fillRect(sx + 21, y - 0.3, 2.5, R + 0.9);
+      ctx.fillStyle = '#6e4c2a'; for (let ry = 4; ry < R; ry += 9) ctx.fillRect(sx + 9, y + ry, 14.5, 2);
       if (m % 5 === 0) {
         ctx.fillStyle = '#5a3d22'; ctx.fillRect(sx + 2, y, 6, R); ctx.fillRect(sx + sw - 8, y, 6, R);
         ctx.fillStyle = '#7d5a35'; ctx.fillRect(sx, y, sw, 5);
@@ -2494,7 +2585,7 @@ function draw(dt){
       ctx.fillText(m + 'm', 5 / Z, y + 12 / Z);
     }
   }
-  if (S.depth > 8) {
+  if (S.depth > 8 && (lowFx || reduced)) {
     const lx = cx(), ly = rowY(S.depth) - 30;
     const rg = ctx.createRadialGradient(lx, ly, 20, lx, ly, Math.max(VW, VH) * 0.75);
     rg.addColorStop(0, 'rgba(0,0,0,0)'); rg.addColorStop(1, `rgba(0,0,0,${Math.min(0.55, 0.15 + S.depth / 400)})`);
@@ -2503,6 +2594,7 @@ function draw(dt){
   // 梁のランタン（暖かい明かりの輪）
   for (const [lx, ly] of lamps) {
     const fl = reduced ? 1 : 0.9 + 0.1 * Math.sin(tAll * 7 + lx);
+    lights.push([lx, ly + 10, 95 * fl, 1]);
     const lg = ctx.createRadialGradient(lx, ly, 2, lx, ly, 70);
     lg.addColorStop(0, `rgba(255,196,110,${0.32 * fl})`); lg.addColorStop(1, 'rgba(255,196,110,0)');
     ctx.fillStyle = lg; ctx.fillRect(lx - 70, ly - 70, 140, 140);
@@ -2546,8 +2638,15 @@ function draw(dt){
   // 社長：岩盤で弾かれている間は汗、割れたら跳ぶ
   bossJoy += dt;
   const jump = bossJoy < 0.5 && !reduced ? -Math.sin(bossJoy / 0.5 * Math.PI) * 14 : cheerT < 0.9 && !reduced ? -Math.abs(Math.sin(cheerT / 0.45 * Math.PI)) * 10 : 0;
-  drawPerson(cx(), fy + jump, 1, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true, 9);
+  drawPerson(cx(), fy + jump, CHAR, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true, 9);
   if (locked(S) && (tAll % 2.4) < 1.2) { const q = (tAll % 2.4) / 1.2; ctx.fillStyle = `rgba(150,210,255,${1 - q})`; ctx.beginPath(); ctx.ellipse(cx() - 8, fy - 46 + q * 8, 2, 3, 0, 0, 7); ctx.fill(); }
+  // 暗さと明かり（深いほど暗く、ランタン・社長と仲間のヘルメットのライトだけが照らす）
+  if (S.depth > 8 && !lowFx && !reduced) {
+    lights.push([cx() + 6, fy - 30, 120, 1]);
+    if (crewLay) { let n = 0; for (const f of crewLay.figs) { if (f.row > 1 || f.i >= HUMAN) continue; if (n++ > 24) break; lights.push([cx() + f.dx, fy - 28 - f.row * ROW_GAP, 46, 0.7]); } }
+    if (sight) lights.push([sight.x, sight.y, 70, 0.8]);
+    drawLights(Math.min(0.62, 0.18 + S.depth / 420), ox, oy);
+  }
   // 仲間のひと言（ときどき）
   talkT -= dt;
   if (talkT <= 0) {
@@ -2574,13 +2673,14 @@ function draw(dt){
     p.vy += (p.ember ? -60 : 900) * dt; p.x += p.vx * dt; p.y += p.vy * dt;
     if (p.vr) p.rot += p.vr * dt;
     ctx.globalAlpha = Math.min(1, p.life / 0.3);
+    ctx.globalCompositeOperation = p.ember || p.star || p.spark ? 'lighter' : 'source-over';
     if (p.coin) { ctx.save(); ctx.translate(p.x, p.y); ctx.scale(Math.abs(Math.cos(p.rot)) + 0.2, 1); ctx.fillStyle = '#f2c43d'; ctx.beginPath(); ctx.arc(0, 0, 5, 0, 7); ctx.fill(); ctx.fillStyle = '#ffe9a0'; ctx.beginPath(); ctx.arc(-1, -1, 2, 0, 7); ctx.fill(); ctx.restore(); }
     else if (p.ember) { ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, 1.8, 0, 7); ctx.fill(); }
     else if (p.star) { ctx.fillStyle = p.c; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? 1 : 4; ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } ctx.fill(); ctx.restore(); }
     else if (p.spark) { ctx.strokeStyle = p.c; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx * 0.03, p.y - p.vy * 0.03); ctx.stroke(); }
     else { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s); ctx.restore(); }
   }
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   for (let i = pops.length - 1; i >= 0; i--) {
     const p = pops[i]; p.t += dt;
     if (p.t > 1.4) { pops.splice(i, 1); continue; }
@@ -2855,6 +2955,7 @@ function frame(now){
 }
 function frame0(now){
   let dt = (now - lastFrame) / 1000; lastFrame = now;
+  if (titleOpen) { try { drawTitle(Math.min(dt, 0.1)); } catch (e) {} }
   // 止まっていた（裏に回っていた）なら留守として数える
   if (dt > 60 && !pendingAway) { checkAway(); dt = 0; }
   dt = Math.min(dt, 0.1);
