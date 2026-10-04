@@ -39,20 +39,33 @@ class Monetization extends ChangeNotifier {
 
   bool get adFree => _prefs.getBool('adFree') ?? false;
 
+  /// 追加パック（物語パック・審査パック）を持っているか。「広告を消す」は adFree で見る
+  bool owns(String id) => id == PurchaseService.removeAdsId ? adFree : (_prefs.getBool('own:$id') ?? false);
+
+  static const packIds = [PurchaseService.storyPackId, PurchaseService.auditionPackId];
+
   /// 届いた購入の数。照合の最中に購入が届いたら、古い記録での判定を捨てるために使う。
   int _deliveries = 0;
 
   Future<void> start() async {
     store.onDelivered = (id) async {
-      if (id != PurchaseService.removeAdsId) return;
+      if (!PurchaseService.allIds.contains(id)) return;
       _deliveries++;
-      await _setAdFree();
+      if (id == PurchaseService.removeAdsId) {
+        await _setAdFree();
+      } else {
+        await _setOwn(id, true);
+      }
     };
     store.onRevoked = (id) async {
-      if (id != PurchaseService.removeAdsId) return;
+      if (!PurchaseService.allIds.contains(id)) return;
       final seen = _deliveries;
-      if (await store.hasEntitlement() == true || seen != _deliveries) return;
-      await _clearAdFree();
+      if (await store.hasEntitlement(id) == true || seen != _deliveries) return;
+      if (id == PurchaseService.removeAdsId) {
+        await _clearAdFree();
+      } else {
+        await _setOwn(id, false);
+      }
     };
     try {
       await store.initialize();
@@ -73,6 +86,17 @@ class Monetization extends ChangeNotifier {
     final e = await store.hasEntitlement();
     if (e == true && !adFree) await _setAdFree();
     if (e == false && adFree && seen == _deliveries) await _clearAdFree();
+    for (final id in packIds) {
+      final p = await store.hasEntitlement(id);
+      if (p == true && !owns(id)) await _setOwn(id, true);
+      if (p == false && owns(id) && seen == _deliveries) await _setOwn(id, false);
+    }
+  }
+
+  Future<void> _setOwn(String id, bool v) async {
+    if (owns(id) == v) return;
+    await _prefs.setBool('own:$id', v);
+    notifyListeners();
   }
 
   Future<void> _clearAdFree() async {
@@ -136,16 +160,28 @@ class Monetization extends ChangeNotifier {
 
   Future<bool> get canBuy async => !adFree && await store.isAvailable();
   Future<String?> get price => store.priceLabel();
+  Future<String?> priceOf(String id) => store.priceLabel(id);
+  Future<bool> get storeAvailable => store.isAvailable();
 
-  Future<PurchaseOutcome> buy() async {
-    final r = await store.buyRemoveAds();
-    if (r == PurchaseOutcome.purchased) await _setAdFree();
+  /// 買う。手に入れる処理は onDelivered（通知）が受け持つ。ここは結果を返すだけ
+  Future<PurchaseOutcome> buy([String id = PurchaseService.removeAdsId]) async {
+    final r = await store.buy(id);
+    if (r == PurchaseOutcome.purchased) {
+      if (id == PurchaseService.removeAdsId) {
+        await _setAdFree();
+      } else {
+        await _setOwn(id, true);
+      }
+    }
     return r;
   }
 
   Future<PurchaseOutcome> restore() async {
     final r = await store.restore();
-    if (r == PurchaseOutcome.purchased) await _setAdFree();
+    // 何が戻ったかは通知（onDelivered）で受け取る。念のため端末の記録とも照らし合わせる
+    try {
+      await _reconcile().timeout(const Duration(seconds: 3));
+    } catch (_) {}
     return r;
   }
 }

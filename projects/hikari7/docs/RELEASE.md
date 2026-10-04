@@ -105,3 +105,14 @@ Actions → **Build ひかりの指名 (iOS Release)** → Run workflow で `upl
 AdMob の Secrets が無くても、Google のテスト広告のまま作って TestFlight に上げる。
 - **このビルド番号は審査に出さない**。本番は AdMob の Secrets を入れてから、`pubspec.yaml` の `+N` を上げて作り直す
 - タグからのビルドでは選べない。TestFlight に上げないときは止まる
+
+
+## 追加パックの課金アイテム（2026-10-04 追加）
+
+App Store Connect → アプリ → 収益化 → App内課金 → ＋ で、次の2つを「非消耗型」で作る（広告を消すと同じ手順）。
+| 参照名 | 製品ID | 価格（案） |
+|---|---|---|
+| Story Pack | `hikari7_story_pack` | 320円 |
+| Audition Pack | `hikari7_audition_pack` | 320円 |
+- 種類ごとの最初の課金アイテムは、アプリの新しいバージョンと同じ提出物で出す
+- TestFlight（Sandbox）で買って試すには、課金アイテムが作られていて、価格と表示名が入っている必要がある

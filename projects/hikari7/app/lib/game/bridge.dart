@@ -99,7 +99,8 @@ class GameBridge {
       case 'between':
         await money.betweenRounds((m['rnd'] as num?)?.toInt() ?? 0);
       case 'buy':
-        await _buy();
+        final id = m['id'];
+        await _buy(id is String && PurchaseService.allIds.contains(id) ? id : PurchaseService.removeAdsId);
       case 'restore':
         await _restore();
       case 'open':
@@ -146,10 +147,10 @@ class GameBridge {
     }
   }
 
-  Future<void> _buy() async {
-    final r = await money.buy();
+  Future<void> _buy(String id) async {
+    final r = await money.buy(id);
     await pushApp(msg: switch (r) {
-      PurchaseOutcome.purchased => '広告を消しました。ありがとうございます',
+      PurchaseOutcome.purchased => id == PurchaseService.removeAdsId ? '広告を消しました。ありがとうございます' : '追加パックを入れました。ありがとうございます',
       PurchaseOutcome.pending => '保護者の承認を待っています。承認されると広告が消えます',
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable => 'ストアに接続できませんでした',
@@ -159,7 +160,8 @@ class GameBridge {
 
   Future<void> _restore() async {
     final r = await money.restore();
-    await pushApp(msg: r == PurchaseOutcome.purchased ? '購入を復元しました' : '復元できる購入が見つかりませんでした');
+    final any = money.adFree || Monetization.packIds.any(money.owns);
+    await pushApp(msg: r == PurchaseOutcome.purchased || any ? '購入を復元しました' : '復元できる購入が見つかりませんでした');
   }
 
   /// 広告を消したか・価格をゲーム本体に伝える（購入が後から届いたときにも呼ぶ）。
@@ -172,10 +174,22 @@ class GameBridge {
   Future<Map<String, Object?>> appState() async {
     String? price;
     var canBuy = false;
+    var avail = false;
+    final prices = <String, String?>{};
     try {
       price = await money.price.timeout(const Duration(seconds: 3));
       canBuy = await money.canBuy.timeout(const Duration(seconds: 3));
+      avail = await money.storeAvailable.timeout(const Duration(seconds: 3));
+      prices['story'] = await money.priceOf(PurchaseService.storyPackId).timeout(const Duration(seconds: 3));
+      prices['audition'] = await money.priceOf(PurchaseService.auditionPackId).timeout(const Duration(seconds: 3));
     } catch (_) {}
-    return {'adFree': money.adFree, 'price': price, 'canBuy': canBuy};
+    return {
+      'adFree': money.adFree,
+      'price': price,
+      'canBuy': canBuy,
+      'storeOk': avail,
+      'owned': {'story': money.owns(PurchaseService.storyPackId), 'audition': money.owns(PurchaseService.auditionPackId)},
+      'prices': prices,
+    };
   }
 }
