@@ -142,4 +142,11 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(JSON.parse(w).v >= 0.36, 'アカペラ審査は、曲の方向を選んでも歌の重みが主になる（' + w + '）');
 }
 
+// ===== 制作費の動画の回数は、審査の順番を入れ替えても戻らない（2026-10-05 点検） =====
+{
+  const g = boot({ adFree: false, store: {}, owned: {} });
+  g.run(START + 'S.budgetN=3;changeFmt(S);');
+  ok(g.run('budgetAdLeft()') === 0, '審査の順番を入れ替えても、制作費の動画の残りは戻らない');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
