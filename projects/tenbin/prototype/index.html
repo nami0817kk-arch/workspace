@@ -164,7 +164,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       if (mem) { mem[key] = j; appPost({ type: 'store', k: key, v: j }); return; }
       try { localStorage.setItem(key, j); } catch (e) {} } };
   // 公開ページ（プライバシーポリシー・お問い合わせ）。アプリでは端末のブラウザで開く
-  var SITE = 'https://mojitsumi.dailyquarry.com';
+  var SITE = 'https://mojitsumi.pages.dev';
   function openUrl(u) { if (APP) appPost({ type: 'open', url: u }); else window.open(u, '_blank', 'noopener'); }
   // 壊れた値・古い形の値が入っていても遊べるように、型を確かめてから使う
   function obj(v) { return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }

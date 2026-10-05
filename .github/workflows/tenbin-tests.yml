@@ -1,6 +1,7 @@
 name: tenbin tests
 
-# projects/tenbin（もじつみ）の試作の決まり（物理・ことば判定・アイテム・つづける・広告）を node で検査する。
+# projects/tenbin（もじつみ）の検査。ゲーム本体の決まり（物理・ことば判定・アイテム・つづける・広告）を node で、
+# アプリの外側（app/、Flutter）を flutter test で。
 on:
   push:
     paths:
@@ -16,6 +17,10 @@ on:
         description: "回すテスト(例 test/items.test.js)。空なら全件"
         required: false
         default: ""
+      build_ios:
+        description: "iOS の署名なしビルドも回す（Xcode の設定を触ったとき用）"
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -46,3 +51,63 @@ jobs:
           set -e
           if [ -n "$TARGET" ]; then files="$TARGET"; else files=$(ls test/*.test.js); fi
           for f in $files; do echo "== $f"; node "$f"; done
+
+  # アプリの外側（Flutter）。ゲーム本体を組み立ててから、つなぎ（広告・課金・保存）の試験を回す
+  app:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: projects/tenbin
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: projects/tenbin/package-lock.json
+      - run: npm ci
+      - name: アプリに入れるゲーム本体を組み立てる
+        run: python3 tool/build_app_web.py
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Install dependencies
+        working-directory: projects/tenbin/app
+        run: flutter pub get
+      - name: Analyze
+        working-directory: projects/tenbin/app
+        run: flutter analyze
+      - name: Run tests
+        working-directory: projects/tenbin/app
+        run: flutter test
+
+  # Xcode の設定（project.pbxproj・Info.plist・言語ごとの InfoPlist.strings）を触ったときに手で回す（macOS なので）
+  ios-build:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.build_ios == true }}
+    runs-on: macos-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: projects/tenbin
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: python3 tool/build_app_web.py
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - working-directory: projects/tenbin/app
+        run: flutter pub get
+      - working-directory: projects/tenbin/app
+        run: flutter build ios --release --no-codesign
+      - name: 言語ごとのホーム画面名とゲーム本体が入っているか（docs/app-pitfalls.md 5番）
+        working-directory: projects/tenbin/app
+        run: |
+          app=build/ios/iphoneos/Runner.app
+          plutil -p "$app/ja.lproj/InfoPlist.strings" | grep 'もじつみ'
+          plutil -p "$app/en.lproj/InfoPlist.strings" | grep 'Moji Stack'
+          ls -la "$app/Frameworks/App.framework/flutter_assets/assets/web/index.html"
