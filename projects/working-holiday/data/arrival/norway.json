@@ -47,15 +47,44 @@
     "rules": [
       "ノルウェーには全国一律の法定最低賃金は無く、団体協約の一般化適用（allmenngjøring）により法的拘束力を持つ最低賃金が設定されているのは建設業・清掃業・ホスピタリティ業など特定の9業界のみ",
       "対象業界以外では、賃金は雇用主と労働者の個別交渉または労働協約によって決まる"
-    ]
+    ],
+    "no_statutory": true
   },
   "sources": [
-    {"title": "Are you intending to work in Norway? - Skatteetaten", "url": "https://www.skatteetaten.no/en/person/foreign/are-you-intending-to-work-in-norway/", "checked": "2026-10-05"},
-    {"title": "Tax deduction cards for foreign workers - Skatteetaten", "url": "https://www.skatteetaten.no/en/person/foreign/are-you-intending-to-work-in-norway/tax-deduction-cards/", "checked": "2026-10-05"},
-    {"title": "Become an online user - Skatteetaten", "url": "https://www.skatteetaten.no/en/about-the-tax-administration/online-user/become-an-online-user/", "checked": "2026-10-05"},
-    {"title": "ノルウェーの医療情報 - 在ノルウェー日本国大使館", "url": "https://www.no.emb-japan.go.jp/itpr_ja/iryo_norway.html", "checked": "2026-10-05"},
-    {"title": "Minimum wage - Arbeidstilsynet (Norwegian Labour Inspection Authority)", "url": "https://www.arbeidstilsynet.no/en/pay-and-engagement-of-employees/pay-and-minimum-rates-of-pay/minimum-wage/", "checked": "2026-10-05"},
-    {"title": "Arbeidsplassen - NAV", "url": "https://arbeidsplassen.nav.no/", "checked": "2026-10-05"},
-    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+    {
+      "title": "Are you intending to work in Norway? - Skatteetaten",
+      "url": "https://www.skatteetaten.no/en/person/foreign/are-you-intending-to-work-in-norway/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Tax deduction cards for foreign workers - Skatteetaten",
+      "url": "https://www.skatteetaten.no/en/person/foreign/are-you-intending-to-work-in-norway/tax-deduction-cards/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Become an online user - Skatteetaten",
+      "url": "https://www.skatteetaten.no/en/about-the-tax-administration/online-user/become-an-online-user/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ノルウェーの医療情報 - 在ノルウェー日本国大使館",
+      "url": "https://www.no.emb-japan.go.jp/itpr_ja/iryo_norway.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Minimum wage - Arbeidstilsynet (Norwegian Labour Inspection Authority)",
+      "url": "https://www.arbeidstilsynet.no/en/pay-and-engagement-of-employees/pay-and-minimum-rates-of-pay/minimum-wage/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Arbeidsplassen - NAV",
+      "url": "https://arbeidsplassen.nav.no/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
   ]
 }

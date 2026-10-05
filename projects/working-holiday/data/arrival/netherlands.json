@@ -1,0 +1,73 @@
+{
+  "id": "netherlands",
+  "steps": [
+    {
+      "title": "個人記録データベース（BRP）に登録してBSNを取得する",
+      "body": "4か月を超えてオランダに滞在する場合は、到着から5日以内に居住地の市役所（gemeente）で個人記録データベース（BRP）に住民登録をする。登録すると自動的に市民サービス番号（BSN）が付与される。4か月未満の滞在なら、海外の住所のまま非居住者登録データベース（RNI）に登録できる。",
+      "url": "https://www.government.nl/faq/when-should-i-register-with-the-personal-records-database-as-a-resident"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在オランダ日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（警察・消防・救急共通の緊急通報番号）",
+    "summary": "オランダではホームドクター制（Huisarts）が採られており、通常の診療はまずホームドクターのクリニックで受ける。長期滞在者は事前にホームドクターへの登録が推奨される。主要都市にはアムステルダムUMC、エラスムスMCなど救急対応可能な総合病院がある。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "https://www.rijksoverheid.nl/onderwerpen/minimumloon",
+    "channels": [
+      {
+        "name": "Werk.nl（UWV＝被用者保険事業団が運営する公的求人検索サイト）",
+        "url": "https://www.werk.nl/",
+        "note": "オランダ政府機関UWVが運営する公的求人検索・職業紹介サイト"
+      }
+    ],
+    "rules": [
+      "法定最低賃金あり（21歳以上に適用、15〜20歳には低い若年者向け最低賃金が別途定められる）。時給の最低賃金は毎年1月1日と7月1日の年2回改定される",
+      "21歳以上は法定最低賃金（statutory minimum wage）が保障され、15〜20歳には別途低い最低若年者賃金（minimum youth wage）が適用される",
+      "時給の最低賃金を下回って支払われた場合は、本人からの申し立てで是正を求めることができる"
+    ]
+  },
+  "sources": [
+    {
+      "title": "When should I register with the Personal Records Database as a resident? - Government of the Netherlands",
+      "url": "https://www.government.nl/faq/when-should-i-register-with-the-personal-records-database-as-a-resident",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Citizen service number (BSN) - Government of the Netherlands",
+      "url": "https://www.government.nl/themes/government-and-democracy/personal-data/citizen-service-number-bsn",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Minimum wage - Government of the Netherlands",
+      "url": "https://www.government.nl/topics/minimum-wage/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "オランダの医療機関・緊急連絡先 - 在オランダ日本国大使館",
+      "url": "https://www.nl.emb-japan.go.jp/itpr_ja/r_info.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Werk.nl - UWV",
+      "url": "https://www.werk.nl/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "最低賃金についての公式の案内",
+      "url": "https://www.rijksoverheid.nl/onderwerpen/minimumloon",
+      "checked": "2026-10-05"
+    }
+  ]
+}

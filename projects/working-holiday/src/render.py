@@ -148,6 +148,19 @@ def short(text: str, limit: int = 40) -> str:
     return head if len(head) <= limit else head[: limit - 1] + "…"
 
 
+_PHONE = re.compile(r"(?<![\d.,])(\d{2,4})(?![\d.,時歳か年月日%])")
+
+
+def numbers_only(text: str) -> str:
+    """緊急番号の一覧表向け。文中の電話番号だけを順に拾って並べる
+    （「15（SAMU）/ 112（EU共通）」→「15 / 112」、「112。救急車の直通は999」→「112 / 999」）。"""
+    seen: list[str] = []
+    for n in _PHONE.findall(text):
+        if n not in seen:
+            seen.append(n)
+    return " / ".join(seen)
+
+
 def canonical_url(rel_path: str) -> str:
     """output/ 内の相対パスから、実際に配信される URL を組み立てる。
 
@@ -165,6 +178,7 @@ def canonical_url(rel_path: str) -> str:
 def _env() -> Environment:
     env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)), autoescape=True)
     env.filters["short"] = short
+    env.filters["numbers_only"] = numbers_only
     env.globals.update(
         SITE_URL=SITE_URL,
         SITE_NAME=site_config.SITE_NAME,

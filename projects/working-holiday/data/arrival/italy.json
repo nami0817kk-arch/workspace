@@ -33,7 +33,7 @@
     "hospitals": []
   },
   "jobs": {
-    "min_wage": "イタリアには一律の法定最低賃金（時給・月給での一律基準）は存在しない。2026年に成立した労働省の規定では、「正当な賃金（salario giusto）」は各業種で最も代表的な労使団体が締結する全国労働協約（CCNL）が定める総合的経済処遇（Trattamento Economico Complessivo）を基準とするとされている。",
+    "min_wage": "",
     "min_wage_url": "https://www.lavoro.gov.it/notizie/pagine/il-salario-giusto-e-legge",
     "channels": [
       {
@@ -43,19 +43,57 @@
       }
     ],
     "rules": [
+      "イタリアには一律の法定最低賃金（時給・月給での一律基準）は存在しない。2026年に成立した労働省の規定では、「正当な賃金（salario giusto）」は各業種で最も代表的な労使団体が締結する全国労働協約（CCNL）が定める総合的経済処遇（Trattamento Economico Complessivo）を基準とするとされている。",
       "法定の一律最低賃金制度はなく、賃金は各業種の全国労働協約（CCNL）によって定められる",
       "2026年の労働省令により、労働協約で定める総合的経済処遇（TEC）を下回らない賃金支払いが「正当な賃金」の原則として位置づけられている"
-    ]
+    ],
+    "no_statutory": true
   },
   "sources": [
-    {"title": "Il rilascio del permesso di soggiorno - Polizia di Stato", "url": "https://www.poliziadistato.it/articolo/225", "checked": "2026-10-05"},
-    {"title": "Codice Fiscale - Agenzia delle Entrate", "url": "https://www.agenziaentrate.gov.it/portale/codice-fiscale-e-tessera-sanitaria/che-cos-cittadini", "checked": "2026-10-05"},
-    {"title": "Anagrafe Nazionale della Popolazione Residente (ANPR) - Ministero dell'Interno", "url": "https://www.anagrafenazionale.interno.it/", "checked": "2026-10-05"},
-    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"},
-    {"title": "Il conto di base - Banca d'Italia (Economia per tutti)", "url": "https://economiapertutti.bancaditalia.it/aree-tematiche/conto-corrente/il-conto-di-base/index.html", "checked": "2026-10-05"},
-    {"title": "イタリア｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/italia.html", "checked": "2026-10-05"},
-    {"title": "領事情報 - 在イタリア日本国大使館", "url": "https://www.it.emb-japan.go.jp/itpr_ja/b_000094.html", "checked": "2026-10-05"},
-    {"title": "Il salario giusto è legge - Ministero del Lavoro e delle Politiche Sociali", "url": "https://www.lavoro.gov.it/notizie/pagine/il-salario-giusto-e-legge", "checked": "2026-10-05"},
-    {"title": "Cliclavoro - Ministero del Lavoro e delle Politiche Sociali", "url": "https://www.cliclavoro.gov.it/", "checked": "2026-10-05"}
+    {
+      "title": "Il rilascio del permesso di soggiorno - Polizia di Stato",
+      "url": "https://www.poliziadistato.it/articolo/225",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Codice Fiscale - Agenzia delle Entrate",
+      "url": "https://www.agenziaentrate.gov.it/portale/codice-fiscale-e-tessera-sanitaria/che-cos-cittadini",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Anagrafe Nazionale della Popolazione Residente (ANPR) - Ministero dell'Interno",
+      "url": "https://www.anagrafenazionale.interno.it/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Il conto di base - Banca d'Italia (Economia per tutti)",
+      "url": "https://economiapertutti.bancaditalia.it/aree-tematiche/conto-corrente/il-conto-di-base/index.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "イタリア｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/italia.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "領事情報 - 在イタリア日本国大使館",
+      "url": "https://www.it.emb-japan.go.jp/itpr_ja/b_000094.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Il salario giusto è legge - Ministero del Lavoro e delle Politiche Sociali",
+      "url": "https://www.lavoro.gov.it/notizie/pagine/il-salario-giusto-e-legge",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Cliclavoro - Ministero del Lavoro e delle Politiche Sociali",
+      "url": "https://www.cliclavoro.gov.it/",
+      "checked": "2026-10-05"
+    }
   ]
 }

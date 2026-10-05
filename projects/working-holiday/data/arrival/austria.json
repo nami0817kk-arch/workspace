@@ -47,7 +47,7 @@
     ]
   },
   "jobs": {
-    "min_wage": "オーストリアには全労働者に適用される法定最低賃金制度は無い。業種ごとの労働協約（Kollektivvertrag）で最低賃金が定められ、約800の労働協約がおよそ95％の労働者をカバーする。多くの労働協約は年14回払いで最低1,700ユーロ以上を定めている（社会省の公式記載）。",
+    "min_wage": "",
     "min_wage_url": "https://www.sozialministerium.gv.at/Themen/Arbeit/Arbeitsrecht/Entlohnung/Mindestlohn-in-OE.html",
     "channels": [
       {
@@ -57,20 +57,58 @@
       }
     ],
     "rules": [
+      "オーストリアには全労働者に適用される法定最低賃金制度は無い。業種ごとの労働協約（Kollektivvertrag）で最低賃金が定められ、約800の労働協約がおよそ95％の労働者をカバーする。多くの労働協約は年14回払いで最低1,700ユーロ以上を定めている（社会省の公式記載）。",
       "法定最低賃金は無く、業種ごとの労働協約（Kollektivvertrag）が定める最低賃金を下回ることはできない",
       "労働協約で定められた最低賃金は雇用契約や事業所協定でも引き下げられず、労働・社会裁判所で執行可能",
       "銀行口座開設には住所登録（Meldezettel）の完了が前提となることが多い"
-    ]
+    ],
+    "no_statutory": true
   },
   "sources": [
-    {"title": "Checkliste Meldepflicht in Österreich für Drittstaatsangehörige - oesterreich.gv.at", "url": "https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/umzug/2/1/Seite.180657", "checked": "2026-10-05"},
-    {"title": "Versicherungsnummer - Sozialversicherung.gv.at", "url": "https://www.sozialversicherung.gv.at/cdscontent/?contentid=10007.678576", "checked": "2026-10-05"},
-    {"title": "Basiskonto - FMA Österreich", "url": "https://www.fma.gv.at/konto/basiskonto/", "checked": "2026-10-05"},
-    {"title": "Mindestlohn in Österreich - Sozialministerium", "url": "https://www.sozialministerium.gv.at/Themen/Arbeit/Arbeitsrecht/Entlohnung/Mindestlohn-in-OE.html", "checked": "2026-10-05"},
-    {"title": "eJob-Room - AMS Österreich", "url": "https://jobroom.ams.or.at/jobroom/login_as.jsp", "checked": "2026-10-05"},
-    {"title": "オーストリア｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/austria.html", "checked": "2026-10-05"},
-    {"title": "オーストリアの渡航滞在にあたって - 在オーストリア日本国大使館", "url": "https://www.at.emb-japan.go.jp/itpr_ja/tokotaizai.html", "checked": "2026-10-05"},
-    {"title": "Notrufnummern - oesterreich.gv.at", "url": "https://www.oesterreich.gv.at/en/themen/notfaelle_unfaelle_und_kriminalitaet/notrufnummern", "checked": "2026-10-05"},
-    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+    {
+      "title": "Checkliste Meldepflicht in Österreich für Drittstaatsangehörige - oesterreich.gv.at",
+      "url": "https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/umzug/2/1/Seite.180657",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Versicherungsnummer - Sozialversicherung.gv.at",
+      "url": "https://www.sozialversicherung.gv.at/cdscontent/?contentid=10007.678576",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Basiskonto - FMA Österreich",
+      "url": "https://www.fma.gv.at/konto/basiskonto/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Mindestlohn in Österreich - Sozialministerium",
+      "url": "https://www.sozialministerium.gv.at/Themen/Arbeit/Arbeitsrecht/Entlohnung/Mindestlohn-in-OE.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "eJob-Room - AMS Österreich",
+      "url": "https://jobroom.ams.or.at/jobroom/login_as.jsp",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "オーストリア｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/austria.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "オーストリアの渡航滞在にあたって - 在オーストリア日本国大使館",
+      "url": "https://www.at.emb-japan.go.jp/itpr_ja/tokotaizai.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Notrufnummern - oesterreich.gv.at",
+      "url": "https://www.oesterreich.gv.at/en/themen/notfaelle_unfaelle_und_kriminalitaet/notrufnummern",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
   ]
 }

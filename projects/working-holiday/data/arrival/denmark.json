@@ -45,15 +45,44 @@
     "rules": [
       "デンマークには法定最低賃金が無く、賃金や労働条件の多くは労働組合と雇用主団体の労働協約（collective agreements）によって決まる",
       "労働協約が適用されない職種では、雇用主と個別に契約条件を交渉することになる"
-    ]
+    ],
+    "no_statutory": true
   },
   "sources": [
-    {"title": "CPR registration - International House Copenhagen / international.kk.dk", "url": "https://international.kk.dk/live/cpr-registration-and-documents/cpr-registration", "checked": "2026-10-05"},
-    {"title": "Get a tax card as a non-Danish employee - Skattestyrelsen (skat.dk)", "url": "https://skat.dk/en-us/businesses/employees-and-pay/non-danish-labour/get-a-tax-card-as-a-non-danish-employee", "checked": "2026-10-05"},
-    {"title": "MitID - Digitaliseringsstyrelsen", "url": "https://www.mitid.dk/en-gb/", "checked": "2026-10-05"},
-    {"title": "デンマークの医療制度 - 在デンマーク日本国大使館", "url": "https://www.dk.emb-japan.go.jp/itpr_ja/taizai-denma.html", "checked": "2026-10-05"},
-    {"title": "Terms of employment - WorkInDenmark", "url": "https://www.workindenmark.dk/working-in-denmark/terms-of-employment", "checked": "2026-10-05"},
-    {"title": "Jobnet - Styrelsen for Arbejdsmarked og Rekruttering", "url": "https://job.jobnet.dk/CV/FindWork", "checked": "2026-10-05"},
-    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+    {
+      "title": "CPR registration - International House Copenhagen / international.kk.dk",
+      "url": "https://international.kk.dk/live/cpr-registration-and-documents/cpr-registration",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Get a tax card as a non-Danish employee - Skattestyrelsen (skat.dk)",
+      "url": "https://skat.dk/en-us/businesses/employees-and-pay/non-danish-labour/get-a-tax-card-as-a-non-danish-employee",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "MitID - Digitaliseringsstyrelsen",
+      "url": "https://www.mitid.dk/en-gb/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "デンマークの医療制度 - 在デンマーク日本国大使館",
+      "url": "https://www.dk.emb-japan.go.jp/itpr_ja/taizai-denma.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Terms of employment - WorkInDenmark",
+      "url": "https://www.workindenmark.dk/working-in-denmark/terms-of-employment",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Jobnet - Styrelsen for Arbejdsmarked og Rekruttering",
+      "url": "https://job.jobnet.dk/CV/FindWork",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
   ]
 }

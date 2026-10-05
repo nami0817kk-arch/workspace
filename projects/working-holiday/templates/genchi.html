@@ -71,8 +71,8 @@
   {% for c in countries %}
   {% set em = (c.arrival.medical.emergency if c.arrival and c.arrival.medical and c.arrival.medical.emergency else c.links.emergency) %}
   <tr>
-    <th scope="row"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><a href="country/{{ c.id }}.html#iryou">{{ c.name }}</a></th>
-    <td style="white-space:nowrap">{% if em %}{{ em }}{% else %}<span class="unknown">公式サイトで確認</span>{% endif %}</td>
+    <th scope="row" style="white-space:nowrap"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><a href="country/{{ c.id }}.html#iryou">{{ c.name }}</a></th>
+    <td style="white-space:nowrap; font-variant-numeric: tabular-nums">{% if em %}{{ em|numbers_only }}{% else %}<span class="unknown">公式サイトで確認</span>{% endif %}</td>
     <td>{% if c.links.medical_url %}<a href="{{ c.links.medical_url }}" rel="noopener">世界の医療事情</a>{% else %}<span class="unknown">—</span>{% endif %}{% if c.arrival and c.arrival.medical and c.arrival.medical.hospitals %}<br><a class="small" href="country/{{ c.id }}.html#iryou">日本語が通じる病院 {{ c.arrival.medical.hospitals|length }}件</a>{% endif %}</td>
     <td>{% if c.links.japan_mission and c.links.japan_mission.url %}<a href="{{ c.links.japan_mission.url }}" rel="noopener">{{ c.links.japan_mission.name }}</a>{% else %}<span class="unknown">—</span>{% endif %}</td>
   </tr>
@@ -94,6 +94,11 @@
   </a>
   {% endfor %}
 </div>
+{% set nostat = detailed|selectattr("arrival.jobs.no_statutory")|list %}
+{% if nostat %}
+<p><strong>法定の最低賃金が無い国</strong>（賃金の下限は業種ごとの労働協約で決まる）</p>
+<p class="chips">{% for c in nostat %}<a href="country/{{ c.id }}.html#shigoto"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15">{{ c.name }}</a>{% endfor %}</p>
+{% endif %}
 {% endif %}
 
 <h2><span class="section-icon">{{ icon("briefcase", 24) }}</span>くわしく載せている国</h2>

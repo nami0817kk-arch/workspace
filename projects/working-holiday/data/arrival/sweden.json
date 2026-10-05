@@ -28,20 +28,41 @@
     "channels": [
       {
         "name": "Platsbanken（スウェーデン公共職業安定所Arbetsförmedlingenの求人検索）",
-        "url": "https://www.arbetsformedlingen.se/platsbanken",
+        "url": "https://arbetsformedlingen.se/platsbanken/",
         "note": "スウェーデン政府機関Arbetsförmedlingenが運営する公的求人検索サイト"
       }
     ],
     "rules": [
       "スウェーデンには法定最低賃金が無く、賃金・残業手当・休暇などは産業別の労働協約（kollektivavtal）によって職場ごとに定められる",
       "多くの職場では年に1度、個人の給与について雇用主と交渉する機会がある"
-    ]
+    ],
+    "no_statutory": true
   },
   "sources": [
-    {"title": "Flytta till Sverige (personnummer/samordningsnummer) - Skatteverket", "url": "https://www.skatteverket.se/privat/folkbokforing/flyttatillsverige.4.76a43be412206334b89800018617.html", "checked": "2026-10-05"},
-    {"title": "Pay and benefits - Working in Sweden, Arbetsförmedlingen", "url": "https://arbetsformedlingen.se/other-languages/english-engelska/working-in-sweden/pay-and-benefits", "checked": "2026-10-05"},
-    {"title": "Platsbanken - Arbetsförmedlingen", "url": "https://www.arbetsformedlingen.se/platsbanken", "checked": "2026-10-05"},
-    {"title": "スウェーデン｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/sweden.html", "checked": "2026-10-05"},
-    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+    {
+      "title": "Flytta till Sverige (personnummer/samordningsnummer) - Skatteverket",
+      "url": "https://www.skatteverket.se/privat/folkbokforing/flyttatillsverige.4.76a43be412206334b89800018617.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Pay and benefits - Working in Sweden, Arbetsförmedlingen",
+      "url": "https://arbetsformedlingen.se/other-languages/english-engelska/working-in-sweden/pay-and-benefits",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Platsbanken - Arbetsförmedlingen",
+      "url": "https://arbetsformedlingen.se/platsbanken/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "スウェーデン｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/sweden.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
   ]
 }

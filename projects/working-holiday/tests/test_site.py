@@ -181,3 +181,9 @@ def test_国のページに検索エンジン向けのパンくずが入る(site
 def test_共有用の画像がある(site):
     assert (site / "static" / "og.png").exists()
     assert 'property="og:image"' in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_緊急番号の一覧表は番号を全部残す():
+    assert render.numbers_only("15（SAMU・救急医療）/ 17（警察）/ 18（消防）/ 112（EU共通緊急通報）") == "15 / 17 / 18 / 112"
+    assert render.numbers_only("999 または 112（消防・警察・救急共通）") == "999 / 112"
+    assert render.numbers_only("000（警察・消防・救急共通）") == "000"

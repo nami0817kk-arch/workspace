@@ -35,14 +35,39 @@
     "rules": [
       "フィンランドには法定最低賃金が無く、一般的拘束力を持つ労働協約（universally binding collective agreement）がある業種では、雇用主が労働者団体に未加盟でもその賃金規定に従う必要がある",
       "適用される労働協約が無い場合は雇用契約で賃金を合意するが、合意が無ければ「その仕事として通常かつ妥当」とされる賃金を支払う義務がある"
-    ]
+    ],
+    "no_statutory": true
   },
   "sources": [
-    {"title": "Finnish personal identity codes for workers arriving in Finland - Vero", "url": "https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/arriving_in_finland/work_in_finland/finnish-personal-identity-codes-for-workers-arriving-in-finland/", "checked": "2026-10-05"},
-    {"title": "Arriving in Finland to work - Vero", "url": "https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/arriving_in_finland/work_in_finland/", "checked": "2026-10-05"},
-    {"title": "Pay - Occupational Safety and Health Administration (Tyosuojelu)", "url": "https://www.tyosuojelu.fi/web/en/employment-relationship/pay", "checked": "2026-10-05"},
-    {"title": "Job Market Finland (työmarkkinatori)", "url": "https://tyomarkkinatori.fi/en", "checked": "2026-10-05"},
-    {"title": "フィンランド｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/finland.html", "checked": "2026-10-05"},
-    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+    {
+      "title": "Finnish personal identity codes for workers arriving in Finland - Vero",
+      "url": "https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/arriving_in_finland/work_in_finland/finnish-personal-identity-codes-for-workers-arriving-in-finland/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Arriving in Finland to work - Vero",
+      "url": "https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/arriving_in_finland/work_in_finland/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Pay - Occupational Safety and Health Administration (Tyosuojelu)",
+      "url": "https://www.tyosuojelu.fi/web/en/employment-relationship/pay",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Job Market Finland (työmarkkinatori)",
+      "url": "https://tyomarkkinatori.fi/en",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "フィンランド｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/finland.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
   ]
 }
