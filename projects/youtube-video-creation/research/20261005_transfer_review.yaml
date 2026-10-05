@@ -1,16 +1,15 @@
 # 取材メモ（10/5 シリーズ「移籍の答え合わせ」初回、型は news）。材料と数え方は research/raw/20261005_transfer_review.md。
-# この夏の移籍金の上位10人（全員が5大リーグ）と、日本人の2人（鈴木彩艶・上田綺世）を、10/4 までのクラブの公式戦で数えた。
+# この夏の移籍金の上位10人（全員が5大リーグ）を、10/4 までのクラブの公式戦で数えた。
+# 10/5 ユーザー指示「サムネの鈴木を変えて、高額移籍の3人並べて」「無理に日本人は入れなくて良い」で日本人の節を外した（数字は raw に残す）。
 # 数字は Transfermarkt の1試合ずつの記録を自分で足したもの（FotMob と突き合わせ済み。食い違いは raw に）。移籍金は報道の確度。
 # 「時間の割合」は、加入してからクラブが戦った公式戦の時間のうち、ピッチにいた時間。どちらが上かは言い切らない。
 # 前の日までの回（10/3 バルセロナの財政、10/4 エムバペ紹介）とは重ねない。バルセロナのゴードン（11位）は入れていない。
-# 本人の言葉は鈴木彩艶の加入時のもの（GOAL 日本版の訳）。上田綺世本人の言葉は記事で確かめられなかった（raw の5）。反応は入れていない。
+# 本人の言葉は使っていない（語りだけ）。反応も入れていない。
 date: 2026年10月05日
 slot: other_1
 format: news
 series: 移籍の答え合わせ
 people:
-- 鈴木彩艶
-- 上田綺世
 - エンソ・フェルナンデス
 - モーガン・ロジャーズ
 - エリオット・アンダーソン
@@ -27,21 +26,27 @@ theme:
   league_name: 欧州5大リーグ
   kind: other
   topic: 夏の移籍
-  title: 鈴木彩艶とエンソ、夏の大型移籍は新天地で何分立ったか
+  title: エンソ、ロジャーズ、アンダーソン。夏の大型移籍、新天地で刻んだ出場時間
   question: この夏に大きな移籍金で動いた選手たちは、新しいクラブでどれだけピッチに立っているのか
-  takeaway: 移籍金の上位10人で、加入後のクラブの公式戦の時間に占める出場の割合がいちばん高いのは2位ロジャーズの88%（7試合3点4アシスト）。7月までに加わった4人は平均71%、8月以降の6人は平均49%と、加わった時期で約22ポイント開いた。日本人では鈴木彩艶が79%で12人中2番目、上田綺世は4試合で3点。次の答え合わせは1月
-  opening_image: assets/images/20261005_transfer_review/pair_zion_enzo/01.jpg
+  takeaway: 移籍金の上位10人で、加入後のクラブの公式戦の時間に占める出場の割合がいちばん高いのは2位ロジャーズの88%（7試合3点4アシスト）。移籍金1億ユーロあたりの出場時間は197分から400分まで2倍の開き。7月までに加わった4人は平均71%、8月以降の6人は平均49%と、加わった時期で約22ポイント開いた。次の答え合わせは1月
+  opening_image: assets/images/20261005_transfer_review/top3/01.jpg
   bgm: assets/audio/bgm_calm.wav
-short_title: 鈴木彩艶と上田綺世、夏の移籍から2か月の数字
+short_title: エンソ、ロジャーズ、アンダーソン。高額移籍3人のいま
 thumbnail:
-  line1: 鈴木彩艶とエンソ 夏の移籍
+  line1: 夏の高額移籍トップ3
   line2: 出場の割合1位は●●
   tags:
   - 移籍
   - 移籍金
+  - マンチェスター・シティ
+  - チェルシー
+  - トッテナム
+  crests: []
   photos:
-  - assets/images/20261005_transfer_review/zion/01.jpg
   - assets/images/20261005_transfer_review/enzo/01.jpg
+  - assets/images/20261005_transfer_review/rogers/01.jpg
+  - assets/images/20261005_transfer_review/anderson/01.jpg
+  short_photo: assets/images/20261005_transfer_review/rogers/01.jpg
 sections:
 - id: count
   heading: 何を数えたか
@@ -66,76 +71,20 @@ sections:
     note: Transfermarkt
   say:
   - text: この夏の移籍金、上位10人は全員が欧州の5大リーグへ移りました。
-    image: assets/images/20261005_transfer_review/pair_zion_enzo/01.jpg
+    image: assets/images/20261005_transfer_review/top3/01.jpg
     card: *feecard
   - text: 1億ユーロを超えたのは6人。
   - text: 10人のうち、マンチェスター・シティとトッテナムが3人ずつ獲っています。
   - text: 新しいクラブで、どれだけピッチに立っているのか。
+    card: none
   - text: 数えたのは、10月4日までのクラブの公式戦です。
   - text: 加入してからクラブが戦った時間のうち、何割に出ていたかも並べます。
   sources: &tmtop
   - https://www.transfermarkt.com/transfers/saisontransfers/statistik/top/plus/1/galerie/0?saison_id=2026&transferfenster=sommertransfers&land_id=&ausrichtung=&spielerposition_id=&altersklasse=&leihe=
-- id: japan
-  heading: 日本人の2人
-  tier: 報道
-  main: true
-  telop: 鈴木彩艶「高いレベルで自分の実力を証明したい」
-  narrator: キャスター
-  card:
-    type: table
-    title: 日本人の2人（10月4日までの公式戦）
-    columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点]
-    rows: &jp
-    - [鈴木彩艶（ヴィラ）, 3000万€, 6/7試合, 79%, GK]
-    - [上田綺世（リール）, 1500万€, 4/4試合, 75%, '3']
-  say:
-  - text: この夏、新天地へ移った日本人2人の数字です。
-    short_only: true
-  - text: まずはパルマからアストン・ヴィラへ移った鈴木彩艶。
-    image: assets/images/20261005_transfer_review/pair_zion_ueda/01.jpg
-  - voice: 鈴木彩艶
-    text: プレミアリーグでプレーすることが夢でした。
-  - voice: 鈴木彩艶
-    text: 今がそのときで、
-    cont: true
-  - voice: 鈴木彩艶
-    text: 高いレベルで自分の実力を証明したい。
-    cont: true
-  - voice: 鈴木彩艶
-    text: ピッチに立つのが本当に楽しみ。
-    cont: true
-  - text: 移籍金は3000万ユーロ。総額ではさらに500万ユーロ多いとも。
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 0}
-  - text: 5大リーグのクラブへ移った日本人で、いちばん高い額です。
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 0}
-  - text: 加入して最初の試合はベンチ。そこから6試合続けて出場し、495分。
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 0}
-  - text: 加入後のクラブの公式戦、その79%の時間でゴールの前に立っています。
-    emph: true
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 0}
-  - text: チャンピオンズリーグのデビュー戦にも先発し、90分ゴールを守りました。
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 0}
-  - text: 上田綺世は、フェイエノールトからリールへ。移籍金は鈴木彩艶の半分です。
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 1}
-  - text: 4試合とも出場して271分。そこで3点を取っています。
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 1}
-  - text: デビュー戦は途中から入って決勝点。チャンピオンズリーグでも1点。
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 1}
-  - text: ほぼ90分に1点の速さです。
-    emph: true
-    card: {type: table, title: 日本人の2人（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点], rows: *jp, highlight_row: 1}
-  quotes_from:
-  - GOAL https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/zion-suzuki-aston-villa/blt0bccf10d0b3a6ac1
-  sources:
-  - https://www.goal.com/jp/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/zion-suzuki-aston-villa/blt0bccf10d0b3a6ac1
-  - https://www.soccerdigestweb.com/news/detail/id=195652
-  - https://www.transfermarkt.com/transfers/transferrekorde/statistik/top/plus/0/galerie/0?saison_id=alle&land_id=77
-  - https://www.transfermarkt.com/zion-suzuki/leistungsdatendetails/spieler/432298
-  - https://www.transfermarkt.com/ayase-ueda/leistungsdatendetails/spieler/589128
-  - https://www.soccer-king.jp/news/world/fra/20260904/2200440.html
 - id: top5
   heading: 1位から5位の2か月
   tier: 報道
+  main: true
   telop: 移籍金の1位から5位、新しいクラブでの数字
   narrator: 解説
   card: &t1card
@@ -150,10 +99,10 @@ sections:
     - [ディオマンデ（レアル）, 1億2500万€, 8/8試合, 41%, '0', '1']
     source: Transfermarkt
   say:
-  - text: ここからは、移籍金の順に見ていきます。
-    image: assets/images/20261005_transfer_review/pair_enzo_rogers/01.jpg
-    card: {type: table, title: 移籍金1〜5位（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点, アシスト], rows: *t1, highlight_row: 0, source: Transfermarkt}
+  - text: 夏の移籍で、移籍金が高かった上位の選手。新しいクラブでの数字です。
+    short_only: true
   - text: 1位は、チェルシーからシティへ移ったエンソ・フェルナンデス。
+    image: assets/images/20261005_transfer_review/pair_enzo_rogers/01.jpg
     card: {type: table, title: 移籍金1〜5位（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点, アシスト], rows: *t1, highlight_row: 0, source: Transfermarkt}
   - text: 額は1億4500万ユーロ。加入は移籍市場の締め切り日、9月1日でした。
     card: {type: table, title: 移籍金1〜5位（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点, アシスト], rows: *t1, highlight_row: 0, source: Transfermarkt}
@@ -166,11 +115,11 @@ sections:
   - text: 7試合すべてに出て、時間の割合は88%。
     emph: true
     card: {type: table, title: 移籍金1〜5位（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点, アシスト], rows: *t1, highlight_row: 1, source: Transfermarkt}
-  - text: 数えた12人の中で、いちばん長くピッチにいます。
+  - text: 上位10人の中で、いちばん長くピッチにいます。
     card: {type: table, title: 移籍金1〜5位（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点, アシスト], rows: *t1, highlight_row: 1, source: Transfermarkt}
   - text: 3点に4アシスト。国内のカップ戦、リーグカップでは途中からの45分で3アシスト。
     card: {type: table, title: 移籍金1〜5位（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点, アシスト], rows: *t1, highlight_row: 1, source: Transfermarkt}
-  - text: 試合ごとの採点の平均も7.97。12人の中でいちばん高い数字です。
+  - text: 試合ごとの採点の平均も7.97。10人の中でいちばん高い数字です。
     card: {type: table, title: 移籍金1〜5位（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点, アシスト], rows: *t1, highlight_row: 1, source: Transfermarkt}
   - text: 3位のエリオット・アンダーソンは、ノッティンガム・フォレストからシティへ。
     card: {type: table, title: 移籍金1〜5位（10月4日までの公式戦）, columns: [選手（移籍先）, 移籍金, 出場, 時間の割合, 得点, アシスト], rows: *t1, highlight_row: 2, source: Transfermarkt}
@@ -265,7 +214,7 @@ sections:
     note: 10月4日までの公式戦（Transfermarkt の記録から数えた）
   say:
   - text: 最後に、払った額とピッチにいた時間を並べます。
-    image: assets/images/20261005_transfer_review/pair_zion_enzo/01.jpg
+    image: assets/images/20261005_transfer_review/pair_enzo_rogers/01.jpg
     card: *vcard
   - text: 移籍金1億ユーロあたり、何分出ていたか。いちばん長いのはロジャーズの400分。
     card:
@@ -317,12 +266,10 @@ sections:
     card: {type: table, title: 加わった時期と時間の割合, columns: [加わった時期, 人数, 時間の割合（平均）], rows: *when, source: Transfermarkt の記録から数えた, highlight_row: 1}
   - text: その中で、9月1日に来たエンソは75%。遅い加入を感じさせない数字です。
     card: {type: table, title: 加わった時期と時間の割合, columns: [加わった時期, 人数, 時間の割合（平均）], rows: *when, source: Transfermarkt の記録から数えた, highlight_row: 1}
-  - text: 日本人も同じ物差しで並べると、鈴木彩艶の79%はロジャーズに次ぐ2番目。
-    card: none
   - text: 次の区切りは、10月11日のリヴァプール対シティ。
   - text: バルコラと、シティのエンソ、アンダーソン、ブアディ。
   - text: 上位10人のうち4人が、同じ試合に名を連ねるかもしれません。
-  - text: 次の答え合わせは1月。冬の移籍市場が開くころに、同じ12人を数え直します。
+  - text: 次の答え合わせは1月。冬の移籍市場が開くころに、同じ10人を数え直します。
   sources:
   - https://www.transfermarkt.com/transfers/saisontransfers/statistik/top/plus/1/galerie/0?saison_id=2026&transferfenster=sommertransfers&land_id=&ausrichtung=&spielerposition_id=&altersklasse=&leihe=
   - https://www.fotmob.com/players/1297165/bradley-barcola

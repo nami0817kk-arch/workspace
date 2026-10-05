@@ -52,6 +52,12 @@ sections:
   - voice: 堂安律
     text: そこがやっぱり自分の課題ではあると思います。
     cont: true
+  - text: それでも決勝は、ゴールに迫れる展開になると見ています。
+  - voice: 堂安律
+    text: 明日の試合展開ではより狙えると思うので、
+  - voice: 堂安律
+    text: やっていきたいです
+    cont: true
   quotes_from:
   - サッカーマガジンWEB https://soccermagazine.jp/national_A/17868155
   sources:
@@ -113,13 +119,6 @@ sections:
     cont: true
   - voice: 堂安律
     text: 集中力を切らさずに4連勝できるように頑張りたい
-    cont: true
-  - text: チームを勝たせることと、自分でゴールに迫ること。決勝では、その両方を狙います。
-    image: assets/images/20261005_doan_captain/01_w.jpg
-  - voice: 堂安律
-    text: 明日の試合展開ではより狙えると思うので、
-  - voice: 堂安律
-    text: やっていきたいです
     cont: true
   quotes_from:
   - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460315-460315-fl

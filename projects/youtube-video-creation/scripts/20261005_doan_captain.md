@@ -183,6 +183,19 @@ cards:
   telop: 堂安律「そこがやっぱり自分の課題ではあると思います」
   card: none
   image: assets/images/20261005_doan_captain/01_w.jpg
+キャスター: それでも決勝は、ゴールに迫れる展開になると見ています。
+  telop: それでも決勝は、ゴールに迫れる展開になると見ています
+  card: none
+  image: assets/images/20261005_doan_captain/01_w.jpg
+堂安律: 明日の試合展開ではより狙えると思うので、
+  telop: 堂安律「明日の試合展開ではより狙えると思うので、」
+  card: none
+  image: assets/images/20261005_doan_captain/01_w.jpg
+堂安律: やっていきたいです
+  cont: true
+  telop: 堂安律「やっていきたいです」
+  card: none
+  image: assets/images/20261005_doan_captain/01_w.jpg
 
 ## シャドーとウイングバックで出た3試合
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -272,19 +285,6 @@ cards:
   telop: 堂安律「集中力を切らさずに4連勝できるように頑張りたい」
   card: none
   image: assets/images/20261005_doan_captain/03_w.jpg
-キャスター: チームを勝たせることと、自分でゴールに迫ること。決勝では、その両方を狙います。
-  telop: チームを勝たせることと、自分でゴールに迫ること。決勝では、その両方を狙います
-  card: none
-  image: assets/images/20261005_doan_captain/01_w.jpg
-堂安律: 明日の試合展開ではより狙えると思うので、
-  telop: 堂安律「明日の試合展開ではより狙えると思うので、」
-  card: none
-  image: assets/images/20261005_doan_captain/01_w.jpg
-堂安律: やっていきたいです
-  cont: true
-  telop: 堂安律「やっていきたいです」
-  card: none
-  image: assets/images/20261005_doan_captain/01_w.jpg
 
 ## 代表でのシュート数。最後のゴールから今まで
 @bg: assets/backgrounds/stock/stadium_night.mp4

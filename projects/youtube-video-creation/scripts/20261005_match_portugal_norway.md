@@ -13,6 +13,7 @@ thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_band_full: false
+short_photo: assets/images/20261005_match_portugal_norway/cancelo/01_v.jpg
 thumbnail_photos:
 - assets/images/20261005_match_portugal_norway/01.jpg
 - assets/images/20261005_match_portugal_norway/haaland/01.jpg
@@ -621,7 +622,7 @@ cards:
 カンセロ選手: 新しい監督の考え方を、すぐに自分たちのものにできた。
   telop: カンセロ選手「新しい監督の考え方を、すぐに自分たちのものにできた」
   source: 報道
-  card: numbers_card
+  card: none
   image: assets/images/20261005_match_portugal_norway/cancelo/01_w.jpg
 カンセロ選手: 今日もまた、ピッチでいちばんのチームは僕たちだった。
   cont: true

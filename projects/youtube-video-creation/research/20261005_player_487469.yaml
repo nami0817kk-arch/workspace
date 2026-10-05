@@ -497,7 +497,7 @@ sections:
     image: assets/images/20261005_player_487469/wc2026/01_w.jpg
     card: &goal_card
       type: table
-      title: 代表初ゴール（10月1日 デンマーク2-4ポルトガル）
+      title: 代表初ゴール（10月1日 デンマーク戦）
       columns: [項目, 内容]
       rows:
       - [代表, 46試合目で初ゴール]

@@ -9,6 +9,7 @@
 #     今季フォレスト: 公式戦5試合0得点、リーグは4試合とも途中から計62分（Transfermarkt・FotMob・RNZ）。今回の代表期間の最初の2試合（中国）は負担を抑えるために休んだ（RNZ 9/30）。
 #     9/12 ヴィラ 1-2 フォレスト: 鈴木 先発90分2失点、ウッド 1分（Transfermarkt・FotMob）。191cm・プレミア通算92得点はゲキサカの地の文。
 #   鈴木: 代表30試合20失点、無失点17試合（Transfermarkt。FotMob も30試合）。W杯2026は4試合5失点。今季ヴィラは公式戦6試合7失点（杯の後半45分を含む）。
+#   見立て（10/5 作り直し、ユーザー「ウッドの見立ては、日本の空中戦の勝率で考えて」）: 空中戦の数字は FotMob の試合記録（Aerial duels won）。エクアドル戦・パナマ戦は FotMob に数字が無い（raw の 7.）。
 #   スポニチの「14試合ぶり無失点」は Transfermarkt・JFA の紹介文と合わないので言わない（raw の 3.）。
 #   発言はゲキサカ 460317（ウッド・空中戦）とサッカーキング 2212990（タイトル・PK戦）の原文のまま。同じ発言の言い回しが2社で少し違う（raw の 1.）。
 # 写真: 01 はゲキサカ 460317 の 10/4 練習の写真（©Kaoru WATANABE/GEKISAKA、代理店ではない）。_w・_v は facecrop。
@@ -28,7 +29,7 @@ theme:
   topic: 日本代表
   title: 鈴木彩艶「彼が相手チームの特長」。決勝の前日、守護神が名指しで警戒したエース
   opening_image: assets/images/20261005_zion_nz/01_w.jpg
-  takeaway: ニュージーランド歴代最多の45得点を持つクリス・ウッドは、今夏のワールドカップでは3試合で無得点だった。それでもイラン戦ではチームの2点をどちらもアシストしている。自分で決めなくても攻撃の起点になる、鈴木彩艶の言う「特長」は数字にも出ている。今季のクラブではリーグ戦の出場が途中からの62分にとどまり、代表期間の最初の2試合を休んで迎える決勝。代表30試合のうち17試合を無失点で終えてきた鈴木が、5日の国立でその起点を止められるか
+  takeaway: 日本は9月のウルグアイ戦とベネズエラ戦で空中戦の勝率61%と54%と勝ち越したが、今夏のワールドカップの4試合ではちょうど5割、背の高いオランダには28回のうち7回しか勝てなかった。一方、191センチのクリス・ウッドはワールドカップの3試合で空中戦23回のうち12回に勝ち、チームが勝った38回のうち12回、エジプト戦では16回のうち10回を一人で取った。鈴木彩艶が「一発目の管理」と言うのは、この最初の競り合いのこと。5日の国立で日本がウッドとの空中戦に勝ち越せるかが、決勝の分かれ目になる
 short_title: 鈴木彩艶が決勝前日に警戒。「彼が相手チームの特長」と語ったエース
 thumbnail:
   photo: assets/images/20261005_zion_nz/pair/01.jpg   # 本文の既定（横長）。サムネは photos の2枚を並べる
@@ -37,7 +38,7 @@ thumbnail:
   - assets/images/20261005_zion_nz/01_v.jpg
   - assets/images/20261005_zion_nz/wood/01_t.jpg
   line1: 鈴木彩艶 名指しで警戒
-  line2: W杯で無得点のエースが生んだ●点
+  line2: 空中戦で勝った16回、ウッドが●回
   reaction: ウッド選手の動き良かったからね
 sections:
 - id: wood
@@ -86,6 +87,7 @@ sections:
     - ['年齢', '34歳']
     - ['身長', '191センチ']
     - ['プレミアリーグ通算', '92得点']
+    - ['ニュージーランド代表', '94試合45得点']
   say:
   - text: クリス・ウッドは34歳。ニュージーランド代表で主将を務めるフォワードです。
     image: assets/images/20261005_zion_nz/wood/01_w.jpg
@@ -109,6 +111,13 @@ sections:
       columns: ['', '']
       rows: *wood
       highlight_row: 2
+  - text: 代表では94試合で45得点。ニュージーランドの歴代最多です。
+    card:
+      type: table
+      title: クリス・ウッド
+      columns: ['', '']
+      rows: *wood
+      highlight_row: 3
   - text: 鈴木が見ているのは、その高さを生かした攻めです。
     image: assets/images/20261005_zion_nz/pair/01.jpg
   - voice: 鈴木彩艶
@@ -187,113 +196,107 @@ sections:
   - https://www.soccer-king.jp/news/japan/national/20261004/2212990.html
 - id: view
   viewpoint: true
-  heading: ウッドの「起点」と鈴木彩艶の無失点、数字で比べる
+  heading: 日本の空中戦の勝率と、ウッドの高さ
   tier: 背景
-  telop: ウッドは代表94試合45得点。鈴木彩艶は代表30試合で無失点が17試合
+  telop: 日本は9月の2試合で空中戦の勝率61%と54%。ウッドはW杯で52%
   narrator: 解説
+  card:
+    type: table
+    title: 空中戦の勝率
+    columns: ['', '空中戦', '勝率']
+    rows: &air
+    - ['日本 対ウルグアイ', '23回で14勝', '61%']
+    - ['日本 対ベネズエラ', '13回で7勝', '54%']
+    - ['瀬古歩夢 9月の2試合', '8回で5勝', '63%']
+    - ['日本 W杯4試合', '106回で53勝', '50%']
+    - ['ウッド W杯3試合', '23回で12勝', '52%']
+    - ['ウッド 今季クラブ', '16回で7勝', '44%']
   say:
-  - text: ここで、2人の数字を並べてみます。
+  - text: ここで、鈴木が警戒する空中戦を、数字で見てみます。
     image: assets/images/20261005_zion_nz/pair/01.jpg
     card:
       type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: &nums
-      - ['代表の通算', '94試合45得点', '30試合20失点']
-      - ['今夏のW杯', '3試合0得点 2アシスト', '4試合5失点']
-      - ['今季のクラブ', '5試合0得点', '6試合7失点']
-      - ['9月12日の対戦', '出場1分', '90分 2失点']
-  - text: ウッドは代表で94試合45得点。ニュージーランドの歴代最多です。
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
+  - text: 9月のウルグアイ戦、日本は空中戦23回のうち14回に勝ちました。
     card:
       type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
       highlight_row: 0
-  - text: 鈴木は代表30試合で20失点。そのうち17試合を、無失点で終えています。
+  - text: ベネズエラ戦は、13回のうち7回。どちらも勝ち越しています。
     card:
       type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
-      highlight_row: 0
-  - text: 今年のワールドカップで、ウッドは3試合に出て、得点はありませんでした。
-    card:
-      type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
       highlight_row: 1
-  - text: それでも初戦のイラン戦では、チームの2点をどちらもアシストしています。
+  - text: 最終ラインの瀬古歩夢は、2試合で8回競り合って5回勝っています。
+    card:
+      type: table
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
+      highlight_row: 2
+  - text: ただ、今年のワールドカップの4試合では、日本の勝率はちょうど5割。
+    card:
+      type: table
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
+      highlight_row: 3
+  - text: 背の高いオランダには、28回のうち7回しか勝てませんでした。
     emph: true
     card:
       type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
-      highlight_row: 1
-  - text: 自分で決めなくても、点を生む起点になる。鈴木の言う「特長」そのものです。
-    card:
-      type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
-      highlight_row: 1
-  - text: 今季のクラブでは、ウッドは5試合に出て、まだゴールがありません。
-    card:
-      type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
-      highlight_row: 2
-  - text: プレミアリーグの4試合は、どれも途中から。合わせて62分です。
-    card:
-      type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
-      highlight_row: 2
-  - text: この秋の代表戦も、中国での最初の2試合は、負担を抑えるために休んでいます。
-    card:
-      type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
-      highlight_row: 2
-  - text: 鈴木は今季、アストン・ヴィラで6試合に出て7失点です。
-    card:
-      type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
-      highlight_row: 2
-  - text: 実は2人は、9月12日のプレミアリーグで同じピッチに立っています。
-    card:
-      type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
       highlight_row: 3
-  - text: ヴィラが1対2で敗れた試合。ウッドの出場時間は、1分でした。
+  - text: 一方のウッドは、ワールドカップの3試合で23回競って12回勝利。
     card:
       type: table
-      title: ウッドと鈴木彩艶の数字
-      columns: ['', 'ウッド', '鈴木彩艶']
-      rows: *nums
-      highlight_row: 3
-  - text: 5日の国立では、ゴール前で何度も向き合うことになりそうです。
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
+      highlight_row: 4
+  - text: チームが勝った空中戦38回のうち、12回がウッドひとりの勝ちです。
+    card:
+      type: table
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
+      highlight_row: 4
+  - text: エジプト戦では、チームの16回のうち10回をウッドが取りました。
+    emph: true
+    card:
+      type: table
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
+      highlight_row: 4
+  - text: 今季のクラブでは、途中出場が多い中で16回のうち7回です。
+    card:
+      type: table
+      title: 空中戦の勝率
+      columns: ['', '空中戦', '勝率']
+      rows: *air
+      highlight_row: 5
+  - text: 鈴木が「一発目の管理」を口にした理由は、この数字に表れています。
     card: none
     image: assets/images/20261005_zion_nz/01_w.jpg
+  - text: 5日の国立で、日本がその一発目を何度ウッドから奪えるかです。
   sources:
-  - https://www.transfermarkt.com/chris-wood/profil/spieler/108725
-  - https://www.transfermarkt.com/zion-suzuki/profil/spieler/432298
+  - https://www.fotmob.com/match/6280194
+  - https://www.fotmob.com/match/6315013
+  - https://www.fotmob.com/match/4667783
+  - https://www.fotmob.com/match/4667792
   - https://www.fotmob.com/players/169719/chris-wood
-  - https://www.fotmob.com/players/1053679/zion-suzuki
-  - https://en.wikipedia.org/wiki/List_of_international_goals_scored_by_Chris_Wood
-  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_G
-  - https://www.rnz.co.nz/news/sport/1665138/all-whites-want-to-double-goal-tally-in-kirin-cup
-  - https://www.jfa.jp/samuraiblue/member/suzuki_zion.html
   - https://www.jfa.jp/samuraiblue/lp/20261005/
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_G
+  - https://www.transfermarkt.com/chris-wood/profil/spieler/108725
 - id: voices
   heading: ネットの反応
   tier: 未確認
@@ -303,7 +306,7 @@ sections:
   # Yahoo!ニュース（ゲキサカ 460317 の転載）のコメント欄 nob********。全文
   - voice: ネット民
     text: ワールドカップでもウッド選手の動き良かったからね
-    image: assets/images/20261005_zion_nz/pair/01.jpg
+    image: assets/images/20261005_zion_nz/01_w.jpg
     short_voice: true
   sources:
   - https://news.yahoo.co.jp/articles/9962eee675ae0dbe0df9abc97792aacaeb0490e3/comments

@@ -140,19 +140,8 @@ sites:
   - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
-- host: transfermarkt.co.uk
-  seen: 14
-  days:
-  - '2026-09-02'
-  - '2026-09-03'
-  - '2026-09-04'
-  - '2026-09-05'
-  examples:
-  - https://www.transfermarkt.co.uk/folarin-balogun-transfer-to-everton-collapses-monaco-miss-out-on-euro-45m-fee-plus-add-ons/view/news/486066
-  - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
-  - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: violanews.com
-  seen: 14
+  seen: 15
   days:
   - '2026-09-09'
   - '2026-09-12'
@@ -169,6 +158,17 @@ sites:
   - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/si-presenta-gnonto-dalle-14-30-il-live-della-conferenza-stampa/?intcmp=gazzanet-violanews
+- host: transfermarkt.co.uk
+  seen: 14
+  days:
+  - '2026-09-02'
+  - '2026-09-03'
+  - '2026-09-04'
+  - '2026-09-05'
+  examples:
+  - https://www.transfermarkt.co.uk/folarin-balogun-transfer-to-everton-collapses-monaco-miss-out-on-euro-45m-fee-plus-add-ons/view/news/486066
+  - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
+  - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: sportsmole.co.uk
   seen: 13
   days:
@@ -184,7 +184,7 @@ sites:
   - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
   - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
 - host: pianetamilan.it
-  seen: 12
+  seen: 13
   days:
   - '2026-09-08'
   - '2026-09-09'

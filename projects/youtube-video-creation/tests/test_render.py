@@ -993,3 +993,15 @@ def test_光らせる行だけ違う表は同じ表とみなす(tmp_path):
     assert r.same_table("c0", "c1")
     assert not r.same_table("c0", "other")
     assert not r.same_table(None, "c1")
+
+
+def test_ぶら下げた直後の約物も次の行の頭に置かない():
+    """2026-10-05 鈴木彩艶の回。「…特長」」をぶら下げたあと、「。」が次の行の頭に来ていた。"""
+    from PIL import Image, ImageDraw
+    from src import render
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.truetype(str(load_config().video.font_path()), 40)
+    text = "鈴木彩艶「彼が相手チームの特長」。決勝の前日、守護神が名指しで警戒したエース"
+    for width in range(300, 900, 7):
+        for line in render.wrap_text(draw, text, font, width)[1:]:
+            assert line[0] not in render.LINE_START_FORBIDDEN, (width, line)

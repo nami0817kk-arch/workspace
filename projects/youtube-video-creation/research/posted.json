@@ -3547,5 +3547,89 @@
     "video_id": "8Y59ZI0UC8k",
     "at": "2026-10-04T08:34:48+00:00",
     "publish_at": "2026-10-05T00:00:00Z"
+  },
+  {
+    "build": "20261005_doan_captain",
+    "video_id": "VpOPvyC1OYA",
+    "at": "2026-10-05T01:23:13+00:00",
+    "publish_at": "2026-10-05T02:00:00Z"
+  },
+  {
+    "build": "20261005_doan_captain_short",
+    "video_id": "sXaL4Hx00i8",
+    "at": "2026-10-05T01:23:48+00:00",
+    "publish_at": "2026-10-05T02:30:00Z"
+  },
+  {
+    "build": "20261005_zion_nz",
+    "video_id": "K16HFz8MGDA",
+    "at": "2026-10-05T02:08:01+00:00",
+    "publish_at": "2026-10-05T03:00:00Z"
+  },
+  {
+    "build": "20261005_zion_nz_short",
+    "video_id": "DY54B1yYLWU",
+    "at": "2026-10-05T02:08:23+00:00",
+    "publish_at": "2026-10-05T03:30:00Z"
+  },
+  {
+    "build": "20261005_team_newzealand_short",
+    "video_id": "1_OeCPpLghU",
+    "at": "2026-10-05T04:13:30+00:00",
+    "publish_at": "2026-10-05T04:30:00Z"
+  },
+  {
+    "build": "20261005_coach_jesus",
+    "video_id": "6iHRE6N6wgQ",
+    "at": "2026-10-05T04:14:06+00:00",
+    "publish_at": "2026-10-05T05:00:00Z"
+  },
+  {
+    "build": "20261005_coach_jesus_short",
+    "video_id": "TMOIWchDHng",
+    "at": "2026-10-05T04:14:23+00:00",
+    "publish_at": "2026-10-05T05:30:00Z"
+  },
+  {
+    "build": "20261005_team_newzealand",
+    "video_id": "LBuouB5FUWM",
+    "at": "2026-10-05T04:15:32+00:00",
+    "publish_at": "2026-10-05T04:20:00Z"
+  },
+  {
+    "build": "20261005_match_portugal_norway",
+    "video_id": "fkOO41QeBLw",
+    "at": "2026-10-05T05:15:49+00:00",
+    "publish_at": "2026-10-05T06:00:00Z"
+  },
+  {
+    "build": "20261005_match_portugal_norway_short",
+    "video_id": "HGTmr72Yqqo",
+    "at": "2026-10-05T05:16:11+00:00",
+    "publish_at": "2026-10-05T06:30:00Z"
+  },
+  {
+    "build": "20261005_player_487469",
+    "video_id": "LGZkFn-ve9Y",
+    "at": "2026-10-05T05:16:48+00:00",
+    "publish_at": "2026-10-05T07:00:00Z"
+  },
+  {
+    "build": "20261005_player_487469_short",
+    "video_id": "uOpdqwsqoiM",
+    "at": "2026-10-05T05:17:07+00:00",
+    "publish_at": "2026-10-05T07:30:00Z"
+  },
+  {
+    "build": "20260926_ll06_betis",
+    "video_id": "LoCNkzeNxd4",
+    "at": "2026-10-05T05:17:36+00:00",
+    "publish_at": "2026-10-05T08:00:00Z"
+  },
+  {
+    "build": "20260926_ll06_betis_short",
+    "video_id": "iN3sAG_CoMc",
+    "at": "2026-10-05T05:17:53+00:00",
+    "publish_at": "2026-10-05T08:30:00Z"
   }
 ]

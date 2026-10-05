@@ -32,6 +32,7 @@ theme:
   opening_image: assets/images/20261005_match_portugal_norway/01_w.jpg
 short_title: ポルトガルがノルウェーに逆転勝ち。数字に出た差
 thumbnail:
+  short_photo: assets/images/20261005_match_portugal_norway/cancelo/01_v.jpg
   photos:
   - assets/images/20261005_match_portugal_norway/01.jpg
   - assets/images/20261005_match_portugal_norway/haaland/01.jpg
@@ -145,6 +146,8 @@ sections:
     image: assets/images/20261005_match_portugal_norway/cancelo/01_w.jpg
   - voice: カンセロ選手
     text: 新しい監督の考え方を、すぐに自分たちのものにできた。
+    image: assets/images/20261005_match_portugal_norway/cancelo/01_w.jpg
+    card: none
   - voice: カンセロ選手
     text: 今日もまた、ピッチでいちばんのチームは僕たちだった。
     cont: true

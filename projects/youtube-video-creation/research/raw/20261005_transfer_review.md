@@ -93,3 +93,9 @@
 - 日本人の節: 鈴木彩艶（同上）＋上田綺世（Le Petit Lillois / Quentin Delcourt。10/1 の回と同じ1枚。代理店ではない）
 - 上位の節: ロジャーズ（Commons「Morgan Rogers England v Panama 27 June 26-144 (cropped).jpg」CC BY-SA 4.0 / Bryan Berlin）、トナーリ（Commons「Norway Italy - June 2025 B 03.jpg」CC BY 4.0 / MichaelEmilio）
 - 見送り: サッカーキングの上田の写真（©Getty Images の透かし）、フットボールチャンネルの鈴木の写真（getty）。Commons の上田（Go Ahead Eagles 戦）は過去回で使用済みのうえ、髪の色が違って見えたので使わない
+
+## 7. 10/5 の作り直し（ユーザー「サムネの鈴木を変えて、高額移籍の3人並べて」「無理に日本人は入れなくて良い」）
+- 日本人2人の節を外した（上の数字は控えとして残す）。山場は1〜5位の節。数える相手は上位10人だけ
+- 10人での並べ直し: 割合の1位はロジャーズ 87.6%（2位エンソ 75.1%、3位アンダーソン 69.9%）。平均評点の1位もロジャーズ 7.97
+- 1億€あたりの出場時間: 最長ロジャーズ 400分・最短ブアディ 197分（約2.0倍）。7月までの4人の割合の平均 71.2% / 8月以降の6人 48.7%（10人だけで数えた値で、前と変わらない）
+- サムネ: エンソ・ロジャーズ・アンダーソンの3枚（Commons）。アンダーソンは「Elliot Anderson England v Ghana 23 June 2026-059 (cropped).jpg」CC BY-SA 4.0 / Bryan Berlin

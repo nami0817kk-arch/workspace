@@ -1799,6 +1799,11 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
                 continue
             lines.append(current)
             current = char
+        elif not current and lines and char in forbidden:
+            # **ぶら下げた直後の約物も前の行へ**（2026-10-05、鈴木彩艶の回）。
+            # 「…特長」」をぶら下げたあと、続く「。」が次の行の頭に来ていた
+            # （「」。決勝の前日…」「なるけど、／」」）
+            lines[-1] += char
         else:
             current += char
     if current:

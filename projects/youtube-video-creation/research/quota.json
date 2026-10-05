@@ -253,10 +253,12 @@
     "videos.list": 1
   },
   "2026-10-04": {
-    "channels.list": 5,
-    "playlistItems.list": 5,
-    "videos.insert": 5,
-    "thumbnails.set": 5,
-    "playlistItems.insert": 2
+    "channels.list": 20,
+    "playlistItems.list": 20,
+    "videos.insert": 19,
+    "thumbnails.set": 19,
+    "playlistItems.insert": 9,
+    "playlists.insert": 1,
+    "videos.list": 1
   }
 }
