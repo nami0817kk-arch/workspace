@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_icons.html" import icon with context %}
 {% block title %}ワーホリの持ち物リスト｜書類・電気まわり・荷物・暮らし｜{{ SITE_NAME }}{% endblock %}
 {% block description %}ワーキング・ホリデーに持っていく物を、書類・お金、電気まわり、荷物、仕事探しと暮らしに分けてチェックリストにしました。チェックはこの端末に保存されます。{% endblock %}
 {% block content %}
@@ -8,7 +9,7 @@
 {% if AMAZON_ON %}<p class="ad-label">このページには広告（Amazon のリンク）を含みます。</p>{% endif %}
 
 {% for g in packing %}
-<h2>{{ g.group }}</h2>
+<h2><span class="section-icon">{{ icon(g.icon, 24) }}</span>{{ g.group }}</h2>
 <ul class="checklist">
   {% for item in g["items"] %}
   <li>

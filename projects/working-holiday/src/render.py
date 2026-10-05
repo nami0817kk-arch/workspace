@@ -22,6 +22,7 @@ from jinja2 import Environment, FileSystemLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import geo  # noqa: E402
 import site_config  # noqa: E402
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -56,24 +57,24 @@ REGIONS = ["オセアニア", "北米", "アジア", "ヨーロッパ", "中南�
 # 持ち物のページ。Amazon のリンクは AMAZON_TAG があるときだけ出す。
 # 国ごとに違う物（変換プラグの形など）は、ここでは決め打ちしない。
 PACKING: list[dict] = [
-    {"group": "書類・お金", "items": [
+    {"group": "書類・お金", "icon": "passport", "items": [
         {"name": "パスポート（残りの有効期間を確認）", "q": ""},
         {"name": "ビザの許可の控え（印刷と端末の両方）", "q": ""},
         {"name": "海外で使えるクレジットカード・デビットカード（2枚以上）", "q": ""},
         {"name": "資金の証明に使う残高証明（英文）", "q": ""},
     ]},
-    {"group": "電気まわり", "items": [
+    {"group": "電気まわり", "icon": "phone", "items": [
         {"name": "変換プラグ（渡航先のコンセントの形に合わせる）", "q": "変換プラグ 海外"},
         {"name": "モバイルバッテリー（機内持ち込みの容量の決まりに注意）", "q": "モバイルバッテリー"},
         {"name": "USB 充電器（複数口）", "q": "USB 充電器 複数ポート 海外対応"},
     ]},
-    {"group": "荷物", "items": [
+    {"group": "荷物", "icon": "suitcase", "items": [
         {"name": "大きめのスーツケース（1年分の荷物）", "q": "スーツケース 大型"},
         {"name": "圧縮袋", "q": "衣類 圧縮袋 旅行"},
         {"name": "スーツケースベルト・TSA ロック", "q": "TSAロック"},
         {"name": "折りたためるサブバッグ", "q": "折りたたみ バッグ 旅行"},
     ]},
-    {"group": "仕事探し・暮らし", "items": [
+    {"group": "仕事探し・暮らし", "icon": "briefcase", "items": [
         {"name": "英文の履歴書（現地で印刷できるようデータでも）", "q": ""},
         {"name": "常備薬（成分の英語名を控える）", "q": ""},
         {"name": "日本の調味料・だしなど（持ち込みの決まりは国ごとに確認）", "q": ""},
@@ -94,9 +95,23 @@ def amazon_url(query: str) -> str:
     return f"https://www.amazon.co.jp/s?k={quote_plus(query)}&tag={site_config.AMAZON_TAG}"
 
 
+# 現地の手続きの見出しから、添えるアイコンを決める（上から順に最初に当たったもの）。
+_STEP_ICONS = [
+    ("在留届", "pin"), ("税", "id"), ("番号", "id"), ("TFN", "id"), ("SIN", "id"), ("IRD", "id"),
+    ("銀行", "bank"), ("口座", "bank"), ("住民", "home"), ("登録", "home"), ("住所", "home"),
+    ("保険", "shield"), ("医療", "hospital"), ("許可", "passport"), ("ビザ", "passport"), ("電話", "phone"),
+]
+
+
+def step_icon(title: str) -> str:
+    return next((name for word, name in _STEP_ICONS if word in title), "form")
+
+
 def load_data() -> tuple[dict, list[dict]]:
     """外務省の一覧に、各国のデータを重ねる。各国のデータが無い国は外務省の分だけになる。"""
     mofa = json.loads((_DATA / "mofa.json").read_text(encoding="utf-8"))
+    links_path = _DATA / "links.json"
+    links = json.loads(links_path.read_text(encoding="utf-8"))["countries"] if links_path.exists() else {}
     countries = []
     for c in mofa["countries"]:
         detail_path = _DATA / "countries" / f"{c['id']}.json"
@@ -109,6 +124,13 @@ def load_data() -> tuple[dict, list[dict]]:
         merged["unverified"] = detail.get("unverified", [])
         merged["checked"] = max((s.get("checked", "") for s in merged["sources"]), default="")
         merged["filled"] = any(merged[k] for k, _ in FIELDS)
+        merged["quota_n"] = int(c["quota"].replace(",", "")) if c["quota"].replace(",", "").isdigit() else 0
+        merged["flag"] = geo.FLAG[c["id"]]
+        merged["links"] = links.get(c["id"], {})
+        arrival_path = _DATA / "arrival" / f"{c['id']}.json"
+        merged["arrival"] = json.loads(arrival_path.read_text(encoding="utf-8")) if arrival_path.exists() else None
+        for step in (merged["arrival"] or {}).get("steps", []):
+            step["icon"] = step_icon(step.get("title", ""))
         merged["twice"] = c["name"] in ("カナダ", "スロバキア", "韓国", "台湾")
         countries.append(merged)
     return mofa, countries
@@ -162,9 +184,10 @@ def _env() -> Environment:
 
 def build(out: Path = _OUTPUT_DIR) -> list[str]:
     """サイトを作り、作ったページの相対パスを返す。"""
-    if out.exists():
-        shutil.rmtree(out)
-    out.mkdir(parents=True)
+    # フォルダごと消さずに中身だけ消す（Windows では開発用サーバーがフォルダを掴んでいて消せないため）
+    out.mkdir(parents=True, exist_ok=True)
+    for child in out.iterdir():
+        shutil.rmtree(child) if child.is_dir() else child.unlink()
     env = _env()
     mofa, countries = load_data()
     updated = jst_today()
@@ -181,12 +204,14 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
         path.write_text(html, encoding="utf-8")
         pages.append(rel)
 
-    write("index.html", "index.html", countries=countries, by_region=by_region)
-    for i, c in enumerate(countries):
+    write("index.html", "index.html", countries=countries, by_region=by_region,
+          world=geo.world(), europe=geo.europe())
+    for c in countries:
         same_region = [o for o in countries if o["region"] == c["region"] and o["id"] != c["id"]]
-        write(f"country/{c['id']}.html", "country.html", c=c, same_region=same_region)
+        write(f"country/{c['id']}.html", "country.html", c=c, same_region=same_region, loc=geo.locator(c["id"]))
     write("country/index.html", "country_index.html", by_region=by_region)
     write("junbi.html", "junbi.html", countries=countries)
+    write("genchi.html", "genchi.html", countries=countries)
     write("mochimono.html", "mochimono.html", packing=PACKING)
     for name in ("about", "operator", "privacy", "contact"):
         write(f"{name}.html", f"{name}.html")

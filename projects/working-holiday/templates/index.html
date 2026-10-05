@@ -1,9 +1,12 @@
 {% extends "base.html" %}
-{% from "_macros.html" import brief, quota %}
+{% from "_macros.html" import brief, quota with context %}
+{% from "_viz.html" import world_map, quota_chart, timeline with context %}
 {% block title %}ワーホリ32か国の条件を比較｜年齢・期間・費用・資金・申請時期｜{{ SITE_NAME }}{% endblock %}
 {% block content %}
 <h1>ワーホリに行ける32か国・地域の条件を1つの表で比べる</h1>
 <p class="lead">日本とワーキング・ホリデー制度がある国・地域は、{{ mofa.source.as_of }}現在で{{ mofa.countries|length }}あります。年齢・滞在できる期間・申請費用・必要な資金・申請の時期を、各国の政府や大使館の公式情報から書き写して並べました。</p>
+
+{{ world_map(world, countries, "ワーキング・ホリデーで行ける32か国・地域の世界地図") }}
 
 <div class="card">
   <h2 style="margin-top:0">どの国にも共通すること</h2>
@@ -15,6 +18,13 @@
   </ul>
   <p class="small muted">出典: <a href="{{ mofa.source.url }}" rel="noopener">{{ mofa.source.title }}</a>（{{ mofa.source.as_of }}現在）</p>
 </div>
+
+<h2 id="quota">年間の発給枠（行ける人数の上限）</h2>
+<p>枠は国によって30人から1万人までと大きく違います。枠が小さい国は、受付が始まるとすぐ埋まることがあります。</p>
+{{ quota_chart(countries) }}
+
+<h2 id="history">制度が始まった年</h2>
+{{ timeline(countries) }}
 
 <h2 id="compare">32か国・地域の比較表</h2>
 <div class="filter" role="group" aria-label="地域で絞る">
@@ -33,7 +43,7 @@
   <tbody>
   {% for c in countries %}
     <tr data-region="{{ c.region }}">
-      <th scope="row"><a href="country/{{ c.id }}.html">{{ c.name }}</a>{% if c.twice %} <span class="tag">2回OK</span>{% endif %}<br><span class="small muted">{{ c.region }}・{{ c.since }}年〜</span></th>
+      <th scope="row"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><a href="country/{{ c.id }}.html">{{ c.name }}</a>{% if c.twice %} <span class="tag">2回OK</span>{% endif %}<br><span class="small muted">{{ c.region }}・{{ c.since }}年〜</span></th>
       <td>{{ quota(c) }}</td>
       {% for key, label in FIELDS if key in TABLE_FIELDS %}<td>{{ brief(c, key) }}</td>{% endfor %}
     </tr>
@@ -46,14 +56,16 @@
 <h2>国から探す</h2>
 {% for region, list in by_region %}
 <h3>{{ region }}</h3>
+{% if region == "ヨーロッパ" %}{{ world_map(europe, countries, "ヨーロッパの拡大図") }}{% endif %}
 <ul class="grid">
-  {% for c in list %}<li><a href="country/{{ c.id }}.html">{{ c.name }}<span class="quota">{{ quota(c) }}</span></a></li>{% endfor %}
+  {% for c in list %}<li><a href="country/{{ c.id }}.html"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15">{{ c.name }}<span class="quota">{{ quota(c) }}</span></a></li>{% endfor %}
 </ul>
 {% endfor %}
 
 <h2>次に読む</h2>
 <ul>
   <li><a href="junbi.html">出発までの準備の流れ</a></li>
+  <li><a href="genchi.html">現地に着いたら（手続き・病院・仕事探し）</a></li>
   <li><a href="mochimono.html">ワーホリの持ち物リスト</a></li>
 </ul>
 

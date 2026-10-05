@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon with context %}
+{% block title %}ワーホリで現地に着いたら｜手続き・日本語が通じる病院・仕事の探し方｜{{ SITE_NAME }}{% endblock %}
+{% block description %}ワーキング・ホリデーで現地に着いてからやること。在留届、税や社会保障の番号、銀行口座、日本語が通じる病院の探し方、公的な仕事探しの窓口と最低賃金を、国ごとの公式情報へのリンクつきでまとめました。{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="index.html">トップ</a> › <span aria-current="page">現地に着いたら</span></nav>
+<h1>現地に着いたら：手続き・病院・仕事探し</h1>
+<p class="lead">着いてすぐの数週間でやることを、どの国にも共通する順番で並べました。国ごとの手続きの名前・病院の一覧・最低賃金は、各国のページに載せています。</p>
+
+{% set detailed = countries|selectattr("arrival")|list %}
+
+<h2><span class="section-icon">{{ icon("plane", 24) }}</span>着いてからの流れ</h2>
+<ol class="steps">
+  <li>
+    <span class="step-icon">{{ icon("pin") }}</span>
+    <div>
+      <h3>在留届を出す（3か月以上いるなら義務）</h3>
+      <p>外国に3か月以上滞在する場合は、住む場所を管轄する日本大使館・総領事館に在留届を出す義務があります（旅券法第16条）。災害や事件のときに、大使館から安否の確認や連絡を受けられます。</p>
+      <p class="small"><a href="https://www.ezairyu.mofa.go.jp/" rel="noopener">ORRネット（外務省）でオンライン提出</a></p>
+    </div>
+  </li>
+  <li>
+    <span class="step-icon">{{ icon("home") }}</span>
+    <div>
+      <h3>住む場所を決め、必要なら住民登録・滞在の手続きをする</h3>
+      <p>住所を役所に届け出る国（ドイツなど）や、入国後に滞在許可の手続きが要る国（フランスなど）があります。期限がある手続きもあるので、着いたらまず確かめます。</p>
+    </div>
+  </li>
+  <li>
+    <span class="step-icon">{{ icon("id") }}</span>
+    <div>
+      <h3>働くための番号を取る</h3>
+      <p>多くの国で、働いて給料を受け取るには税や社会保障の番号が要ります（オーストラリアの TFN、カナダの SIN、英国の National Insurance number など）。番号が無いと、税が高く差し引かれることがあります。</p>
+    </div>
+  </li>
+  <li>
+    <span class="step-icon">{{ icon("bank") }}</span>
+    <div>
+      <h3>銀行口座を開く</h3>
+      <p>給料の振り込みに使います。口座を開くときに住所の証明を求められる国もあります。</p>
+    </div>
+  </li>
+  <li>
+    <span class="step-icon">{{ icon("briefcase") }}</span>
+    <div>
+      <h3>仕事を探す</h3>
+      <p>政府の求人サイトや公的な職業紹介の窓口があります。最低賃金より安い時給の仕事は違法です。同じ雇用主の下で働ける期間に制限がある国もあります。</p>
+    </div>
+  </li>
+</ol>
+
+<h2><span class="section-icon">{{ icon("hospital", 24) }}</span>病気やけがのとき</h2>
+<div class="stat-row">
+  <div class="stat emergency">
+    {{ icon("siren", 34) }}
+    <span class="stat-label">まず覚えること</span>
+    <span class="stat-value" style="font-size:1.05rem">その国の緊急の番号</span>
+  </div>
+  <div class="stat">
+    {{ icon("hospital", 34) }}
+    <span class="stat-label">日本語が通じる病院</span>
+    <span class="stat-value" style="font-size:1.05rem">外務省・日本大使館の一覧で探す</span>
+  </div>
+</div>
+<p>外務省の「世界の医療事情」には、国ごとの医療の水準、かかりやすい病気、日本語が通じる医療機関がまとまっています。現地の日本大使館・総領事館も、医療機関の一覧を出していることがあります。</p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th scope="col">国・地域</th><th scope="col">緊急の番号</th><th scope="col">医療の情報</th><th scope="col">日本の窓口</th></tr></thead>
+  <tbody>
+  {% for c in countries %}
+  {% set em = (c.arrival.medical.emergency if c.arrival and c.arrival.medical and c.arrival.medical.emergency else c.links.emergency) %}
+  <tr>
+    <th scope="row"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><a href="country/{{ c.id }}.html#iryou">{{ c.name }}</a></th>
+    <td style="white-space:nowrap">{% if em %}{{ em }}{% else %}<span class="unknown">公式サイトで確認</span>{% endif %}</td>
+    <td>{% if c.links.medical_url %}<a href="{{ c.links.medical_url }}" rel="noopener">世界の医療事情</a>{% else %}<span class="unknown">—</span>{% endif %}{% if c.arrival and c.arrival.medical and c.arrival.medical.hospitals %}<br><a class="small" href="country/{{ c.id }}.html#iryou">日本語が通じる病院 {{ c.arrival.medical.hospitals|length }}件</a>{% endif %}</td>
+    <td>{% if c.links.japan_mission and c.links.japan_mission.url %}<a href="{{ c.links.japan_mission.url }}" rel="noopener">{{ c.links.japan_mission.name }}</a>{% else %}<span class="unknown">—</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% set wages = detailed|selectattr("arrival.jobs.min_wage")|list %}
+{% if wages %}
+<h2><span class="section-icon">{{ icon("money", 24) }}</span>最低賃金（国ごと）</h2>
+<p>通貨も単位も国ごとに違うので、円に換算せず原文のまま並べています。これより安い時給・月給の仕事は、その国の法律に反します。</p>
+<div class="stat-row">
+  {% for c in wages %}
+  <a class="stat" href="country/{{ c.id }}.html#shigoto" style="text-decoration:none;color:inherit">
+    <img src="static/flags/{{ c.flag }}.svg" alt="" width="34" height="25" style="grid-row: span 2; border-radius: 3px">
+    <span class="stat-label">{{ c.name }}</span>
+    <span class="stat-value" style="font-size:1rem">{{ c.arrival.jobs.min_wage }}</span>
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<h2><span class="section-icon">{{ icon("briefcase", 24) }}</span>くわしく載せている国</h2>
+<p>次の国は、着いてからの手続き・日本語が通じる病院・仕事探しの窓口を、国のページにくわしく載せています。</p>
+<ul class="grid">
+  {% for c in detailed %}<li><a href="country/{{ c.id }}.html#genchi"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15">{{ c.name }}</a></li>{% endfor %}
+</ul>
+
+<div class="note">
+  外務省には、ワーキング・ホリデーで渡航した人から、不当に安い賃金で働かされた、雇用主からハラスメントを受けた、といった相談が寄せられています。困ったときは、現地の日本大使館・総領事館に相談できます。
+</div>
+<p class="small muted">出典: <a href="{{ mofa.source.url }}" rel="noopener">{{ mofa.source.title }}</a>、各国のページに載せた公式ページ</p>
+{% endblock %}

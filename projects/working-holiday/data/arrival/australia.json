@@ -1,0 +1,105 @@
+{
+  "id": "australia",
+  "steps": [
+    {
+      "title": "在留届を提出する（ORRネット）",
+      "body": "3か月以上海外に滞在する場合は、外務省の在留届をオンラインで提出する必要があります。緊急時の安否確認や現地大使館・総領事館からの連絡に使われます。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "TFN（税番号）を申請する",
+      "body": "オーストラリアで働くにはTFN（Tax File Number）が必要です。ワーキングホリデービザがあればオンライン（Individual Auto-Registration）で無料申請でき、約28日で郵送されます。TFNがないと税金を多く源泉徴収されます。",
+      "url": "https://www.ato.gov.au/individuals-and-families/tax-file-number/apply-for-a-tfn/foreign-passport-holders-permanent-migrants-and-temporary-visitors-tfn-application"
+    },
+    {
+      "title": "銀行口座を開設する",
+      "body": "給与や政府手当はほぼ口座振込のため、銀行口座の開設が必須です。到着から6週間以内はパスポートのみで開設でき、6週間を過ぎると運転免許証など写真付き身分証を含む2点の証明が必要になります。",
+      "url": "https://immi.homeaffairs.gov.au/settling-in-australia/settle-in-australia/key-settlement-topics/managing-your-finances"
+    },
+    {
+      "title": "雇用主にTFN申告書（TFN declaration）を提出する",
+      "body": "仕事を始める際、雇用主にTFN declarationを提出して正しい税率で源泉徴収してもらいます。雇用主がWHM雇用登録をしていないと、より高い外国人税率が適用されます。",
+      "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/coming-to-australia/working-holiday-makers"
+    }
+  ],
+  "medical": {
+    "emergency": "000（警察・消防・救急共通）",
+    "summary": "医療機関の受診はまずGP（総合診療医）からが基本で、専門医にかかるにはGPの紹介状が必要です。救急外来（ED）は24時間対応ですが緊急度の低い場合は長時間待つこともあります。救急車の利用や入院は高額になるため、海外旅行保険への加入が強く勧められています。",
+    "hospitals": [
+      {
+        "name": "Northbridge Medical Practice",
+        "city": "Sydney",
+        "japanese": "日本語で対応可能な一般開業医として在シドニー日本国総領事館が案内",
+        "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html"
+      },
+      {
+        "name": "Town Hall Clinic（Japanese Medical Service）",
+        "city": "Sydney",
+        "japanese": "日本語で対応可能な一般開業医として在シドニー日本国総領事館が案内",
+        "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html"
+      },
+      {
+        "name": "WorldCiti Medical Dental（ワールドシティ日本語医療・歯科センター）",
+        "city": "Sydney",
+        "japanese": "日本語で対応可能な一般開業医として在シドニー日本国総領事館が案内",
+        "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html"
+      },
+      {
+        "name": "Observatory Tower Medical Centre",
+        "city": "Sydney",
+        "japanese": "日本語で対応可能な一般開業医として在シドニー日本国総領事館が案内",
+        "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html"
+      },
+      {
+        "name": "SkyArch Medical Clinic Brisbane",
+        "city": "Brisbane",
+        "japanese": "日本語で対応可能な一般開業医（電話・ビデオ診療）として在シドニー日本国総領事館が案内",
+        "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html"
+      },
+      {
+        "name": "Canberra Hospital",
+        "city": "Canberra",
+        "japanese": "",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/oceania/australia.html"
+      },
+      {
+        "name": "North Canberra Hospital",
+        "city": "Canberra",
+        "japanese": "",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/oceania/australia.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "AUD 26.44/時（2026年7月1日から、週給ベースでは$1004.90）",
+    "min_wage_url": "https://www.fairwork.gov.au/pay-and-wages/minimum-wages",
+    "channels": [
+      {
+        "name": "Workforce Australia",
+        "url": "https://www.workforceaustralia.gov.au/individuals",
+        "note": "豪州政府が運営する求人検索サイトで、誰でも求人の閲覧・応募ができる"
+      },
+      {
+        "name": "Fair Work Ombudsman（日本語ページ）",
+        "url": "https://www.fairwork.gov.au/language-help/japanese",
+        "note": "最低賃金や労働条件、トラブル相談先を日本語で確認できる豪州政府の公式窓口"
+      }
+    ],
+    "rules": [
+      "働く前にTFN（税番号）を取得し、雇用主にTFN申告書を提出する",
+      "職種ごとの最低賃金を下回る賃金での就労は違法（21歳以上の全国最低賃金は時給AUD 26.44）",
+      "雇用主がWHM雇用登録をしていない場合、より高い外国人税率で源泉徴収される",
+      "農場などの危険作業は労働災害保険の対象外になる場合があるため、労働契約の内容を事前に確認する"
+    ]
+  },
+  "sources": [
+    { "title": "在留届 ORRネット", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05" },
+    { "title": "Foreign passport holders, permanent migrants and temporary visitors – TFN application | ATO", "url": "https://www.ato.gov.au/individuals-and-families/tax-file-number/apply-for-a-tfn/foreign-passport-holders-permanent-migrants-and-temporary-visitors-tfn-application", "checked": "2026-10-05" },
+    { "title": "Working holiday makers | ATO", "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/coming-to-australia/working-holiday-makers", "checked": "2026-10-05" },
+    { "title": "Managing your finances | Department of Home Affairs", "url": "https://immi.homeaffairs.gov.au/settling-in-australia/settle-in-australia/key-settlement-topics/managing-your-finances", "checked": "2026-10-05" },
+    { "title": "世界の医療事情 オーストラリア｜外務省", "url": "https://www.mofa.go.jp/mofaj/toko/medi/oceania/australia.html", "checked": "2026-10-05" },
+    { "title": "各種連絡・相談先（トラブル・困り事等）｜在シドニー日本国総領事館", "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html", "checked": "2026-10-05" },
+    { "title": "Minimum wages | Fair Work Ombudsman", "url": "https://www.fairwork.gov.au/pay-and-wages/minimum-wages", "checked": "2026-10-05" },
+    { "title": "Workforce Australia for individuals", "url": "https://www.workforceaustralia.gov.au/individuals", "checked": "2026-10-05" }
+  ]
+}
