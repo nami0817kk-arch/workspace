@@ -128,7 +128,77 @@ var TenbinMoney = (function () {
   Money.prototype.restore = function () { var self = this; return this.store.restore().then(function (r) { if (r === 'purchased') self._setAdFree(); return r; }); };
   Money.prototype._setAdFree = function () { if (!this.adFree()) this.ads.dispose(); this.prefs.set('adFree', true); };
 
-  return { Money: Money, FakeAds: FakeAds, FakeStore: FakeStore, REWARD: REWARD,
+  // 動画を待っている間の「やめる」（アプリでは広告の側にも知らせる。試作では何もしない）
+  Money.prototype.cancelReward = function () {};
+
+  // --- アプリの中（WebView）で動くとき ---
+  // 広告・課金は Flutter の側（app/lib/monetization）が持つ。全画面を出す番の数え（上の Money の決まり）はここに残し、
+  // 「見せて」「買って」だけをアプリに頼む。頼みは post({type:…})、返事は window.tenbin* の関数で届く。
+  // 動画の頼みには番号を付け、返事の番号が違えば捨てる（「やめる」のあとに届いた結果を別の特典に入れない）
+  var app = null;   // いま動いている AppMoney（返事の届け先）
+  function BridgeAds(post) { this.post = post; this.between = null; }
+  BridgeAds.prototype.initialize = function () { return Promise.resolve(); };
+  BridgeAds.prototype.isRewardedReady = function () { return false; };
+  BridgeAds.prototype.isInterstitialReady = function () { return false; };
+  BridgeAds.prototype.ensureLoaded = function (k) { if (k === 'interstitial') this.post({ type: 'prepInter' }); };
+  BridgeAds.prototype.showInterstitial = function () {
+    var self = this;
+    if (this.between) return Promise.resolve(false);
+    return new Promise(function (res) { self.between = res; self.post({ type: 'between' }); });
+  };
+  BridgeAds.prototype.dispose = function () {};
+
+  function AppMoney(prefs, post, state, opts) {
+    Money.call(this, prefs, new BridgeAds(post), null, opts);
+    this.post = post; this.state = state || {}; this.rid = 0; this.pending = null; this.waits = []; this.listeners = [];
+    app = this;
+  }
+  AppMoney.prototype = Object.create(Money.prototype);
+  AppMoney.prototype.adFree = function () { return !!this.state.adFree; };
+  AppMoney.prototype.start = function () { return Promise.resolve(); };
+  AppMoney.prototype.refresh = function () { this.post({ type: 'refresh' }); };
+  AppMoney.prototype.beforeReward = function (onWaiting) {
+    var self = this;
+    if (this.adFree()) return Promise.resolve('granted');
+    if (this.pending) return Promise.resolve('unavailable');   // 前の動画を扱っている間は受けない
+    var id = ++this.rid;
+    return new Promise(function (res) {
+      self.pending = { id: id, res: res, onWaiting: onWaiting };
+      self.post({ type: 'reward', id: id });
+    });
+  };
+  AppMoney.prototype.cancelReward = function () {
+    var p = this.pending; if (!p) return;
+    this.pending = null; this.post({ type: 'rewardCancel', id: p.id }); p.res('cancelled');
+  };
+  // 買う・復元: アプリから状態（tenbinSetApp）が届いたら終わり
+  AppMoney.prototype._ask = function (type) {
+    var self = this;
+    return new Promise(function (res) { self.waits.push(res); self.post({ type: type }); })
+      .then(function () { return self.adFree() ? 'purchased' : 'nothing'; });
+  };
+  AppMoney.prototype.buy = function () { return this._ask('buy'); };
+  AppMoney.prototype.restore = function () { return this._ask('restore'); };
+  AppMoney.prototype.onChange = function (f) { this.listeners.push(f); };
+
+  // アプリからの返事
+  var root = typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : {});
+  root.tenbinAdWaiting = function () { if (app && app.pending && app.pending.onWaiting) app.pending.onWaiting(); };
+  root.tenbinAdResult = function (gate, id) {
+    if (!app || !app.pending || app.pending.id !== id) return;   // やめたあとに届いた・別の番号
+    var p = app.pending; app.pending = null;
+    if (gate === 'granted' || gate === 'declined') app.prefs.set('lastRewardAt', app.now());
+    p.res(gate === 'granted' || gate === 'declined' || gate === 'unavailable' || gate === 'showFailed' ? gate : 'unavailable');
+  };
+  root.tenbinBetweenDone = function (shown) { if (!app) return; var f = app.ads.between; app.ads.between = null; if (f) f(!!shown); };
+  root.tenbinSetApp = function (o) {
+    if (!app || !o) return;
+    for (var k in o) if (k !== 'msg') app.state[k] = o[k];
+    var w = app.waits; app.waits = []; w.forEach(function (f) { f(); });
+    app.listeners.forEach(function (f) { f(o.msg || null); });
+  };
+
+  return { Money: Money, AppMoney: AppMoney, BridgeAds: BridgeAds, FakeAds: FakeAds, FakeStore: FakeStore, REWARD: REWARD,
     INTERSTITIAL_EVERY: INTERSTITIAL_EVERY, AFTER_REWARD_MS: AFTER_REWARD_MS, FREE_GAMES: FREE_GAMES, REWARD_WAIT_MS: REWARD_WAIT_MS, AD_LIFETIME_MS: AD_LIFETIME_MS };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinMoney;

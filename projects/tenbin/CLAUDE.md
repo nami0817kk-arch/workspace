@@ -1,6 +1,6 @@
 # もじつみ（tenbin）
 
-ばね付きのてんびんの上に、**ひらがなを1字ずつ積んでいく** iOS アプリ（予定）。
+台の上に、**ひらがなを1字ずつ積んでいく** iOS アプリ（`app/`。TestFlight に出す手前まで、2026-10-05）。
 手本は `projects/goso-boat`（ブラウザの試作 → Flutter の流れも同じ）。
 
 ## 決まったこと（ユーザー決定 2026-10-03）
@@ -23,7 +23,7 @@ goso-boat と同じ「ストアの正式名は検索語を並べた長い名前�
 
 - 決定: 正式名「もじつみ：ひらがな積み上げ ことばパズル」／ホーム「もじつみ」
   副題「くっつけて言葉を作る脳トレ バランスゲーム」
-  英語「Moji Stack: Hiragana Word Tower」
+  英語「Moji Stack: Hiragana Tower」（決めた「…Word Tower」は31字で App Store の30字を超えたので「Word」を外した。2026-10-05）
 - キーワード欄（100字、名前に入れた語は重ねない）例: 積み木,タワー,物理,文字,単語,言葉遊び,脳トレ,暇つぶし,てんびん,バランス
 - 避けたもの: 「ひらがなつみき」（同名の既存アプリあり）、「てんびん」を頭に置く（てんびんは台の1つにすぎず、検索もされない）
 - 2026-10-04 に検索したかぎり「もじつみ」という名のアプリは見当たらない（申請前に App Store Connect で名前を押さえて確かめる）
@@ -151,7 +151,41 @@ App Store の審査 4.1（Copycats）と評判で危ない。** 次のものは�
 - 字形 M PLUS Rounded 1c は SIL OFL 1.1（`fonts/OFL.txt`）、matter.js・poly-decomp は MIT
 - はじめの画面の「クレジット」に全部出している。アプリでも同じ画面を持つ
 
+## アプリ（2026-10-05「残っているのやって」）
+
+**作りはひかりの指名と同じ**: アプリの外側（広告・課金・保存・リンク）は Flutter（`app/`）、ゲーム本体は `prototype/index.html` を
+そのまま WebView で動かす。**ゲームの直しは index.html だけ**で、試作とアプリの両方に効く。Forge2D で作り直す案はやめた
+（物理の手ざわりが matter.js と変わる・作り直しが大きい。ひかりの指名で同じ作りが通っている）。
+- `tool/build_app_web.py` が、物理（node_modules の matter.js）・字形（woff2 を埋め込み）・ことば・決まりを1枚に組み立てて `app/assets/web/index.html` に出す（git には入れない。CI で作る）。
+  画面の丸ゴシックは iOS のヒラギノ丸ゴ。通信なしで動く（`test/bridge_test.dart` が外へ読みに行かないことを確かめる）
+- つなぎ: JS → アプリは `TenbinApp.postMessage({type:…})`、アプリ → JS は `tenbinAdWaiting` / `tenbinAdResult(gate,id)` / `tenbinBetweenDone(shown)` / `tenbinSetApp(state)` / `tenbinPause()`。
+  JS 側は `monetization.js` の `AppMoney`（**全画面を出す番の数えは JS の Money が持つ**。アプリは見せる・買うだけ）。Dart 側は `app/lib/game/bridge.dart`
+- 保存はアプリの SharedPreferences（`web:` を付ける）。WebView の localStorage は使わない（消えることがある）
+- Bundle ID `com.namiki.mojitsumi`、商品ID `mojitsumi_remove_ads`、**iPhone だけ**（iPad には出さない）。ホーム画面は もじつみ／Moji Stack（ja.lproj・en.lproj）
+- 公開ページは `legal/` `site/` を `tenbin-site.yml` が https://mojitsumi.pages.dev/ に出す（`test/site.test.js`）
+- アイコンは `tool/make_icon.js`（ゲームの字形で「もじ／つみ」。3案から読みやすいものを選んだ）、掲載画像は `tool/screenshots.js`（6.9インチ5枚）
+- 掲載文は `STORE_LISTING.md`、出し方は `docs/RELEASE.md`。**値段・年齢区分・提出はユーザーが決める**
+
+## つり合い（2026-10-05 に測った。`node tool/balance.js 8 flat`）
+
+ことばを狙う人の代わり（落とす前の「できそうなことば」を18か所で見て、いちばん長いことばになる所へ置く）に遊ばせた。
+
+| 台 | 点 | 字 | ことば | ことばの点の割合 | 長さ（8回の合計） | もらったアイテム |
+|---|---|---|---|---|---|---|
+| ふつう（アイテムあり） | 7715 | 16.5 | 17.0 | 95% | 2字97・3字35・4字4 | 5.1 |
+| ふつう（アイテムなし） | 7494 | 15.6 | 16.5 | 95% | 2字88・3字40・4字4 | 0 |
+| てんびん | 8568 | 16.8 | 17.8 | 95% | 2字90・3字47・4字5 | 5.0 |
+| せまい | 593 | 5.5 | 3.1 | 76% | 2字21・3字4 | 0.6 |
+
+- **点のほとんど（95%）はことば**。字の10点はほぼ効かない。高さは点ではなく「長く遊べる」ことに効く
+- ことばを狙うと横に広げることになり、16字前後で崩れる（積む と 作る の引っぱり合い。これが遊びの芯）
+- 狙えば1字につき約1語できる（2字のことばが多い）。ただしこの人の代わりは18か所を全部見ているので、人より上手。人の数字は TestFlight で見る
+- 決まり（2字100・3字400…、字8つごとにアイテム）は**変えていない**。変えるならユーザーが決める
+
 ## CI
 
 `.github/workflows/tenbin-tests.yml` が `projects/tenbin/**` の変更で `test/*.test.js` を全部回す（node 20、`npm ci`）。
+同じワークフローの `app` ジョブが、ゲーム本体を組み立てて `flutter analyze`・`flutter test`（`app/test/bridge_test.dart`）。
+Xcode の設定を触ったら workflow_dispatch で `build_ios` に印（macOS で署名なしビルドと ja.lproj の確かめ）。
+リリースは `tenbin-ios-release.yml`（`mojitsumi-v*` のタグか手で）、公開ページは `tenbin-site.yml`。
 合否はここで見る（手元で全部回さない）。手で1本だけ回すときは workflow_dispatch の target に `test/items.test.js` のように渡す。
