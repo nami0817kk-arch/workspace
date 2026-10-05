@@ -966,6 +966,10 @@ body.stg .telop{filter:brightness(1.12)}
 .gnin{display:flex;gap:8px;align-items:center;margin-top:8px}.gnin input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--fg)}
 /* リーダーを置かない */
 .pk.nolead .nlic{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:2px dashed var(--line);font-size:12px;font-weight:800;color:var(--muted)}
+
+/* 関わった回数の文は、顔の列ではなく下の段に横いっぱいで（2026-10-05 実機で縦に1字ずつ折れていた）。2つのボタンも横いっぱいに */
+.trow2 .touchn{grid-column:1/3;grid-row:4}
+.trow2 .tacts.t2{grid-template-columns:repeat(2,1fr)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4123,7 +4127,7 @@ function vTalk(){
   var A=alive(S).filter(function(t){if(tf==='story')return (t.arc.step>0&&t.arc.step<3)||(t.arc.step>=3&&t.trust>=80&&!t.honne);if(tf==='new')return !(S.touch&&S.touch[t.id]);return true;}).sort(function(a,b){var sa=(a.arc.step>0&&a.arc.step<3)||(a.arc.step>=3&&a.trust>=80&&!a.honne),sb=(b.arc.step>0&&b.arc.step<3)||(b.arc.step>=3&&b.trust>=80&&!b.honne);if(ts==='sk')return (!!b.fav-!!a.fav)||memberSkill(b)-memberSkill(a);if(ts==='pop')return (!!b.fav-!!a.fav)||b.pop-a.pop;if(ts==='trust')return (!!b.fav-!!a.fav)||b.trust-a.trust;return (!!b.fav-!!a.fav)||sb-sa||b.trust-a.trust;});
   A.forEach(function(t){var st=t.arc.step,hn=st>=3&&t.trust>=80&&!t.honne,dis=S.ap<=0?'disabled':'';
     h+='<div class="trow2">'+face(t,'sm')+'<div class="mid"><div class="nm">'+(t.fav?'<span style="color:var(--gold)">★</span>':'')+esc(t.name)+' '+moodTag(t)+(hn?' <span class="tag good">★ 本音</span>':st>0&&st<3?' <span class="tag good">★ '+ARCS[t.arc.k].name+' '+st+'/3</span>':'')+'</div>'+
-      statMini(t,true).replace('</div>','<span class="trc">信頼<b>'+Math.round(t.trust)+'</b><i><u style="width:'+Math.round(clamp(t.trust,0,100))+'%"></u></i></span></div>')+((S.touch&&S.touch[t.id])?'<div class="small" style="color:var(--bad);font-weight:700">'+(S.touch[t.id]===1?'この審査で1回話した（2回目は、ほかの子がやきもちを焼く）':'この審査で'+S.touch[t.id]+'回話した（ほかの子の信頼が少し下がった）')+'</div>':'')+
+      statMini(t,true).replace('</div>','<span class="trc">信頼<b>'+Math.round(t.trust)+'</b><i><u style="width:'+Math.round(clamp(t.trust,0,100))+'%"></u></i></span></div>')+((S.touch&&S.touch[t.id])?'<div class="small touchn" style="color:var(--bad);font-weight:700">'+(S.touch[t.id]===1?'この審査で1回話した（2回目は、ほかの子がやきもちを焼く）':'この審査で'+S.touch[t.id]+'回話した（ほかの子の信頼が少し下がった）')+'</div>':'')+
       '</div><div class="tacts t2"><button data-a="talk" data-id="'+t.id+'" '+dis+'>話す</button><button data-a="out" data-id="'+t.id+'" '+dis+'>出かける</button></div></div>';});
   h+='<div class="foot"><div class="in"><div class="cnt">残り <b>'+S.ap+'</b> 回'+(open?'<br><span style="color:var(--bad)">相談 '+open+'件が未回答</span>':'')+'</div><button class="btn'+(ui.talkArm?' warnb':'')+'" data-a="talkok">'+(ui.talkArm?'それでも進む':(ROUNDS[S.rnd].interview?'個別面談へ':'出来事へ'))+'</button></div></div>';
   return h;
