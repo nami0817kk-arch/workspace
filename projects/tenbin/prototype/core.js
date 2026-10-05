@@ -4,7 +4,7 @@
 var TenbinCore = (function () {
   var M = (typeof Matter !== 'undefined') ? Matter : require('matter-js');
   var env = (typeof process !== 'undefined' && process.env) || {};
-  var W = 400, GROUND = 600, PIVOT_Y = 556, PLANK_T = 14, PLANK_L = 320;
+  var W = 400, GROUND = 600, PIVOT_Y = 556, PLANK_T = 14;
   var DT = 1000 / 60, SUB = 4, SDT = DT / SUB;
   var CAT_STATIC = 1, CAT_PLANK = 2, CAT_CARGO = 4;
   var DENSITY = 0.0015, ROT_STEP = Math.PI / 4;
@@ -209,7 +209,7 @@ var TenbinCore = (function () {
     return top;
   }
 
-  // 持っている動物の高さ: 積んだ山の上 60px に、体の下端が来るように
+  // 持っている字の高さ: 積んだ山の上 GAP px に、字の下端が来るように
   function holdY(s, kind, ang) { var e = extent(kind, ang); return Math.min(PIVOT_Y - 140, topY(s) - GAP) - e.maxY; }
   function clampX(kind, ang, x) { var e = extent(kind, ang); return Math.max(4 - e.minX, Math.min(W - 4 - e.maxX, x)); }
 
@@ -441,7 +441,7 @@ var TenbinCore = (function () {
     return Math.max(0, Math.min(1, r)) * (low.x < W / 2 ? -1 : 1);
   }
 
-  return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
+  return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
     PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, revive: revive, landingY: landingY, useItem: useItem, giveItem: giveItem, ITEM_KEYS: ITEM_KEYS, BOARD: BOARD, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
