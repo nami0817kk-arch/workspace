@@ -994,6 +994,10 @@ body.stg .telop{filter:brightness(1.12)}
 .crb.ok{background:var(--ok);color:var(--ok-fg)}.crb.ng{background:var(--bad);color:#fff}
 .crres.isok{border-color:var(--ok)}.crres.isng{border-color:var(--bad)}
 .crsk{font-size:12.5px;margin-top:4px}.crsk .up{color:var(--ok)}.crsk .dn{color:var(--bad)}
+
+/* 人気の順位の札 */
+.smini .pchip{display:inline-flex;align-items:baseline;padding:0 6px;border-radius:6px;font-size:12px;font-weight:800;border:1px solid var(--accent);color:var(--accent)}
+.smini .pchip.top{border-color:var(--gold);color:var(--gold)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4323,7 +4327,10 @@ function statsLine(t,extra){
 var ST1={v:'歌',d:'ダ',r:'ラ',e:'表',s:'体'};
 function statG(t,k){var r=t.rev[k];return r===2?grade(t.st[k]):r===1?t.fz[k]:'q';}
 function statMini(t,fat){var h='<div class="smini">'+['v','d','r','e','s'].map(function(k){var r=t.rev[k];return '<span class="g'+statG(t,k)+(r===1?' fz':'')+'"'+(r===1?' title="おおよそ"':'')+'>'+ST1[k]+(r===2?'<b>'+Math.round(t.st[k])+'</b>':r===1?'<i>≈</i><b>'+t.fz[k]+'</b>':'<span class="q">?</span>')+'</span>';}).join('');
-  if(fat)h+='<span class="ft '+(t.fat>=80?'fbad':t.fat>=60?'fwarn':'')+'">疲れ'+Math.round(t.fat)+'</span>';return h+'</div>';}
+  if(fat)h+='<span class="ft '+(t.fat>=80?'fbad':t.fat>=60?'fwarn':'')+'">疲れ'+Math.round(t.fat)+'</span>';
+  /* 世間の人気の順位（2026-10-05 指摘「人気が確認しにくい」）。残っている子の中での順位、上位3人は金色 */
+  if(typeof S!=='undefined'&&S&&S.tr&&t.status==='alive'){var rk=popRankMap(S)[t.id];if(rk)h+='<span class="pchip'+(rk<=3?' top':'')+'" title="世間の人気 '+Math.round(t.pop)+'">人気'+rk+'位</span>';}
+  return h+'</div>';}
 /* 顔の下に置く小さな能力（得意な2つ） */
 function pkStat(t){var sv=function(k){return t.rev[k]===2?t.st[k]:50;};var ks=['v','d','r','e'].filter(function(k){return t.rev[k];}).sort(function(a,b){return sv(b)-sv(a);}).slice(0,2);return ks.length?'<em>'+ks.map(function(k){return ST1[k]+(t.rev[k]===2?Math.round(t.st[k]):t.fz[k]);}).join(' ')+'</em>':'';}
 function stars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'★':'☆';return s;}
@@ -4584,7 +4591,7 @@ function vJudge(){
   h+='<div class="card">';
   A.forEach(function(t){var r=S.stage.res[t.id],on=S.pass[t.id],p=pr[t.id];
     var warn=!on&&p<=3?' <span class="tag warn">荒れそう</span>':'';
-    h+='<div class="jrow'+(on?' jon':'')+'">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+'・人気 '+p+'位'+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+'</div><div class="seg">'+
+    h+='<div class="jrow'+(on?' jon':'')+'">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b>'+r.sc+'</b>'+(r.retry!=null?'（再'+r.retry+'）':'')+(t.hist.length>1?'・前回 '+t.hist[t.hist.length-2].sc:'')+warn+'</div>'+statMini(t)+'</div><div class="seg">'+
       (!S.adUsed&&!f.fin&&!t.retried&&S.chal!=='noad'?'<button data-a="retry" data-id="'+t.id+'" class="'+(ui.retryArm===t.id?'warnb':'')+'" title="もう一度見る（動画）">'+(ui.retryArm===t.id?'▶ 見る':'再審査')+'</button>':'')+
       '<button class="ptog'+(on?' on':'')+'" data-a="pass" data-id="'+t.id+'" data-v="'+(on?'0':'1')+'" aria-pressed="'+(on?'true':'false')+'">'+(on?(f.fin?'選んだ ✓':'合格 ✓'):(f.fin?'選ぶ':'不合格'))+'</button></div></div>';});
   h+='</div>'+hx;
