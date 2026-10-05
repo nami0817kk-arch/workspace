@@ -20,6 +20,7 @@ WebView で動かす。**ゲームの直しは game.html だけ**（`python tool
 | `tool/import_art.js` | Gemini の絵（アイコン・タイトル・層の景色）を使う大きさにして置く。`node tool/import_art.js <絵のフォルダ>` → アイコン 1024 PNG、`prototype/art/title.jpg`（768×1376）、`prototype/art/scene0〜9.jpg`（960×536）。どの絵が何かは `tool/art_sources.json` |
 | `prototype/art/` | Gemini の絵（ユーザーが Gemini アプリで描いた物。商用可）。`items/<id>.webp`（図鑑50種・192・背景透明）・`crew/<WKのid>.webp`（仲間7種・256）・`crew/boss.webp`・`crew/elder.webp`・`heirs/<家宝>.webp`（6種）・`shop/canteen・cart・bento.webp`・`title.jpg`・`scene0〜9.jpg`。`check/` は切り分けの確認用で git に入れない |
 | `tool/make_shots.js` | App Store の掲載画像6枚（6.7インチ 1290×2796、上に見出し）を `store/screenshots/` に作る。ゲームに `window.__ev` を差した写しを一時フォルダで開き、`__TSURU_APP` を偽ってアプリと同じ見た目で撮る。撮るたびに「中身が写っているか・『試作』の文字がないか・大きさ」を検査（docs/app-pitfalls.md 4番） |
+| `docs/RELEASE.md` | TestFlight と App Store への出し方（2026-10-05）。Secrets・App ID・課金アイテム4つ・AdMob・実機で見ること。ビルドは `.github/workflows/tsuruhashi-ios-release.yml`（`tsuruhashi-v*` のタグか手で。署名・本番の AdMob ID・法務ページが開けるか・IPA の中身を確かめてから出す） |
 | `STORE_LISTING.md` | App Store の掲載文の下書き（サブタイトル・キーワード・概要・審査へのメモ）。名前と値段はユーザーが決める |
 | `app/` | iOS アプリの外側（Flutter、2026-10-04）。hikari7 の app を写し、全画面広告を外し、BGM 3曲・通知を足した。課金アイテムは下の「広告と課金」、Bundle ID `com.namiki.tsuruhashi` |
 | `legal/` `site/` | プライバシーポリシー・サポート・利用規約と、公開ページの入口・app-ads.txt・robots.txt（hikari7 と同じ形）。`.github/workflows/tsuruhashi-site.yml` が master への push で Cloudflare Pages の `tsuruhashi` に出し、`tsuruhashi.dailyquarry.com` をつなぐ。**master に入れた時点で公開になる** |

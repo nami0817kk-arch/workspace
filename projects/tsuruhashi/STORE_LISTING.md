@@ -1,4 +1,4 @@
-# App Store の掲載文（下書き 2026-10-04）
+# App Store の掲載文（下書き 2026-10-04、審査メモは 2026-10-05 に今の中身へ）
 
 名前・価格は提出前にユーザーが決める。既存の作品名・商標をキーワードや文に入れない（App Store 2.3.7・5.2.1）。
 掲載画像は `node tool/make_shots.js` で `store/screenshots/01〜06.png`（6.7インチ 1290×2796）。並び順はこの番号のとおり。
@@ -51,7 +51,7 @@
 
 ■ 遊び方は自由
 ・タップ連打は不要。仲間が自動で掘ります
-・動画広告を見ると、採掘がしばらく速くなります（見たいときだけ。全画面広告・バナー広告はありません）
+・動画広告を見ると、採掘が30分速くなります。見るたびに速さが上乗せされます。留守の分の3倍受け取りや、代替わりの名声2倍にも使えます（見たいときだけ。全画面広告・バナー広告はありません）
 ・寝ている間・出かけている間の分は、戻ったときに受け取れます
 
 ※ 記録は端末の中だけに保存されます。機種変更での引き継ぎはできません。
@@ -59,9 +59,17 @@
 
 ## 審査へのメモ（App Review Information）
 
-Idle digging game. Your crew digs automatically; there is no tapping requirement. Rewarded video ads are optional (speed boost / double offline earnings); there are no full-screen or banner ads.
-In-app purchases: two non-consumables ("Staff Canteen" crew +25%, "Big Cart" offline cap +4h) and two consumables ("Special Bento" ×3 / ×10, 30-minute crew ×2 each). The shop is in the "社" (Company) tab. "購入を復元" (Restore Purchases) is in Settings (gear icon).
-The App is in Japanese.
+```
+No login is required. The app is in Japanese.
+Idle digging game: the crew digs automatically; there is no tapping requirement.
+The game runs fully offline inside the app (all content, images and music are bundled; no remote web content is loaded). Only the privacy policy / support pages open in the system browser.
+Ads: rewarded video only, always optional. There are no full-screen or banner ads. A video gives one of: digging speed +1x for 30 minutes (stackable), 3x offline earnings, 2x fame when handing over the company, or 3x a tapped ore vein.
+In-app purchases (shop in the "社" (Company) tab): two non-consumables, "社員食堂" Staff Canteen (tsuruhashi_canteen, crew +25%) and "大きな荷車" Big Cart (tsuruhashi_cart, offline cap +4h); two consumables, "特製弁当" Special Bento x3 / x10 (tsuruhashi_bento3 / tsuruhashi_bento10, 30 minutes of crew x2 each, used when the player chooses).
+"購入を復元" (Restore Purchases) is in Settings (gear icon, top right). Bento boxes are consumable and are not restored.
+Local notifications only (one reminder when the offline cap is full), requested after the first return from being away.
+The app does not use App Tracking Transparency and does not track users.
+Before release, AdMob may not fill ads for this new app, so videos may be unavailable; all video bonuses are optional and the game is fully playable without them.
+```
 
 ## 年齢区分
 
