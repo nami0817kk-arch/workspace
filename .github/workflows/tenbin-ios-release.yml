@@ -60,7 +60,7 @@ jobs:
           python-version: '3.12'
 
       # ゲーム本体をアプリ用に組み立てる（物理・字形・ことばを埋め込んだ1枚。通信なしで動く）
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
       - name: Build the game page for the app
