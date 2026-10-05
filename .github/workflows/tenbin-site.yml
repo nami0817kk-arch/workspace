@@ -57,7 +57,8 @@ jobs:
       # アプリの中のリンクは https://mojitsumi.pages.dev/ を指している。別の名前で作られていたら止める
       - name: Check the public URLs
         run: |
-          sleep 20
+          # 作ったばかりのプロジェクトは、名前が引けるようになるまで数分かかる（2026-10-05 の初回で 20 秒では引けなかった）
+          for i in $(seq 1 30); do curl -fsS -o /dev/null https://mojitsumi.pages.dev/ && break; sleep 10; done
           for p in privacy.html support.html terms.html app-ads.txt robots.txt; do
             curl -fsSL "https://mojitsumi.pages.dev/$p" -o /tmp/page || { echo "::error::https://mojitsumi.pages.dev/$p が開けません"; exit 1; }
           done
