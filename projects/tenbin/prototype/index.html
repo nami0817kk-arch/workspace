@@ -292,7 +292,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (vb) vb.onclick = function () {
       if (phase !== 'play' || s.itemVideoUsed) return;
       rewardThen(function () { s.itemVideoUsed = true; C.giveItem(s); hideSheet(); handleEvents(); drawItems(); },
-        function (msg) { hideSheet(); popup(msg, W / 2, camTop + 150, false, '#b5552a'); drawItems(); });
+        function (msg) { hideSheet(); if (msg) popup(msg, W / 2, camTop + 150, false, '#b5552a'); drawItems(); });
     };
     itemsEl.querySelectorAll('[data-item]').forEach(function (el) { el.onclick = function () {
       if (phase !== 'play') return; var k = el.getAttribute('data-item');
@@ -891,6 +891,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       '<p>字 ' + s.score + '×10＝' + (s.score * C.LETTER_PTS) + '点 ＋ ことば ' + s.made.length + 'こ＝' + wsum + '点</p>' +
       '<p>' + C.PLATFORMS[plat].name + 'の台・高さ ' + (s.height * M_PER_PX).toFixed(1) + 'm</p>' +
       (rec ? '<span class="badge">さいこう記録！</span>' : '<p>さいこう ' + b.p + '点' + (b.p > s.points ? '（あと ' + (b.p - s.points) + '点）' : '') + '</p>') +
+      (newWords.length ? '<p>あたらしいことば <b style="color:var(--accent)">' + newWords.length + 'こ</b>（ことば帳 ' + dictCount() + '）</p>' : '') +
       (longest.length >= 3 ? '<p>いちばん長いことば <b style="color:var(--accent);font-size:16px">' + longest + '</b></p>' : '') + made +
       (unlocked.length ? '<p class="unlock">' + unlocked.join('<br>') + '</p>' : '<p>' + nextUnlock() + '</p>') +
       '<p style="margin-top:8px"><button class="chip" id="share">結果をシェア</button></p>' +
@@ -938,12 +939,16 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   var money = new TenbinMoney.Money(moneyPrefs, ads, new TenbinMoney.FakeStore(), { isForeground: function () { return document.visibilityState !== 'hidden'; } });
   money.start();
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') money.refresh(); });
-  var GATE_MSG = { declined: '最後まで見ると もらえます', unavailable: 'いまは動画を読み込めません。少しあとで ためしてください', showFailed: '動画を出せませんでした。少しあとで ためしてください' };
+  var GATE_MSG = { cancelled: '', declined: '最後まで見ると もらえます', unavailable: 'いまは動画を読み込めません。少しあとで ためしてください', showFailed: '動画を出せませんでした。少しあとで ためしてください' };
   // 動画を見てごほうび。ごほうびは画面の状態を見ずに必ず渡す（docs/app-pitfalls.md の2）
   function rewardThen(onGranted, onOther) {
-    var back = phase; phase = 'ad';
-    money.beforeReward(function () { showSheet('<div class="ad"><div class="ring"></div><h2>動画を読み込み中…</h2><p>少しだけ まってください</p></div>'); })
-      .then(function (gate) { phase = back; if (gate === 'granted') onGranted(); else onOther(GATE_MSG[gate] || ''); });
+    var back = phase, cancelled = false; phase = 'ad';
+    // 読み込みを待つ間（最長6秒）も「やめる」で戻れる
+    money.beforeReward(function () {
+      showSheet('<div class="ad"><div class="ring"></div><h2>動画を読み込み中…</h2><p>少しだけ まってください</p><button class="btn sec" id="adCancel">やめる</button></div>');
+      document.getElementById('adCancel').onclick = function () { cancelled = true; phase = back; onOther(''); };
+    }, function () { return cancelled; })
+      .then(function (gate) { if (cancelled) return; phase = back; if (gate === 'granted') onGranted(); else onOther(GATE_MSG[gate] || ''); });
   }
   // 使わせてもらっているもの（ライセンスの表示）
   function showCredits() {
@@ -1040,6 +1045,10 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // キーボード（パソコンで遊ぶとき）: ←→ で動かす（Shift で細かく）、↑ か R でまわす、スペース・↓・Enter で落とす
   function dropNow() { if (phase === 'play' && C.canDrop(s)) { audio(); var hp = holdPos(); C.drop(s, hp.x, ang); ang = visAng = 0; drawNext(); drawItems(); } }
   document.addEventListener('keydown', function (e) {
+    // はじめの画面は Enter で はじめる、結果は Enter で もう一度（ボタンに枠が当たっているときはそのボタン）
+    if (e.key === 'Enter' && (phase === 'menu' || (phase === 'end' && !endTimer)) && !(document.activeElement && document.activeElement.tagName === 'BUTTON')) {
+      var def = document.getElementById(phase === 'menu' ? 'go' : 'again'); if (def) { def.click(); e.preventDefault(); return; }
+    }
     if (e.key === 'Escape' && phase === 'pause' && document.getElementById('resume')) { document.getElementById('resume').onclick(); return; }
     if (phase !== 'play') return;
     if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') { showPause(); e.preventDefault(); return; }
