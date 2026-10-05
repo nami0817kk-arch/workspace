@@ -223,6 +223,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 @keyframes coachb{50%{transform:translateY(-4px)}}
 .cere{position:fixed;inset:0;z-index:55;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse at 50% 40%,rgba(74,52,32,.96),rgba(13,9,6,.98));color:#fff4dc;text-align:center;animation:cerein .5s ease-out both}
 .cere .logo{width:110px;height:110px;animation:cerelogo 1.2s ease-out both}
+.cere .logo.boss{width:150px;height:150px;object-fit:contain;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
 .cere .g1{font-size:14px;letter-spacing:.3em;color:#f6b85c;font-weight:800}
 .cere .g2{font-size:32px;font-weight:800;text-shadow:0 3px 0 #000}
 .cere .g3{font-size:18px;font-weight:800;color:#ffd166}
@@ -961,7 +962,7 @@ function artLoad(k){
   im.src = artUrl(k); ART_IMG[k] = im;
 }
 const artImg = k => ART_OK[k] ? ART_IMG[k] : null;
-const ART_EXTRA = ['heirs/pick', 'heirs/roster', 'heirs/map', 'heirs/diary', 'heirs/safe', 'heirs/charm', 'shop/canteen', 'shop/cart', 'shop/bento'];
+const ART_EXTRA = ['crew/boss', 'crew/elder', 'heirs/pick', 'heirs/roster', 'heirs/map', 'heirs/diary', 'heirs/safe', 'heirs/charm', 'shop/canteen', 'shop/cart', 'shop/bento'];
 const itemArtKey = it => 'items/' + it.id + '.webp';
 // 家宝・売店・仲間の絵（無ければ今まで通りの絵文字・図形）
 const artTag = (k, size, fb) => ART_OK[k] ? `<img src="${artUrl(k)}" width="${size}" height="${size}" alt="" style="object-fit:contain">` : fb;
@@ -1710,7 +1711,7 @@ $('rbGo').addEventListener('click', () => {
 function ceremony(g){
   const el = document.createElement('div');
   el.className = 'cere';
-  el.innerHTML = `${document.querySelector('#title .logo').outerHTML}<div class="g1">つるはし社</div><div class="g2">${genName(S.gen)}社長 就任</div>
+  el.innerHTML = `${ART_OK['crew/boss.webp'] ? `<img class="logo boss" src="${artUrl('crew/boss.webp')}" alt="">` : document.querySelector('#title .logo').outerHTML}<div class="g1">つるはし社</div><div class="g2">${genName(S.gen)}社長 就任</div>
     <div class="g3">名声 +${fmt(g)}</div><div class="g4">仲間の力 ×${fameMul(S.fame).toFixed(1)}　・　図鑑と社史は引き継がれる</div>${(() => { const last = S.history[S.history.length - 1]; return last && last.heir ? `<div class="g4">先代から「${HEIRS[last.heir.k].n}」Lv${last.heir.lv} を受け継いだ</div>` : ''; })()}`;
   document.body.appendChild(el);
   let done = false;
@@ -2461,6 +2462,13 @@ function elderLine(){
 function drawElder(dt){
   if (S.gen < 2 || S.depth < 2 || titleOpen) return;
   const e = elderPos(), t = tAll, bob = reduced ? 0 : Math.sin(t * 1.4) * 0.6;
+  const eim = S.crewArt !== false && artImg('crew/elder.webp');
+  if (eim) {
+    // イラストの先代（絵は左向きなので、仲間のいる右へ向ける）。ゆっくり息をするように上下
+    const h = 46 * CHAR * 0.72;
+    ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(e.x, e.y, h * 0.26, h * 0.06, 0, 0, 7); ctx.fill();
+    ctx.save(); ctx.translate(e.x, e.y + bob * 0.5); ctx.scale(-1, 1); ctx.drawImage(eim, -h / 2, -h * 0.97, h, h); ctx.restore();
+  } else {
   ctx.save(); ctx.translate(e.x, e.y); ctx.scale(0.62, 0.62);
   // 杖
   ctx.strokeStyle = '#6b4a2a'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(18, 0); ctx.lineTo(14, -34); ctx.stroke();
@@ -2474,6 +2482,7 @@ function drawElder(dt){
   ctx.beginPath(); ctx.arc(3, -58 + bob, 10, Math.PI, 0); ctx.fill();
   ctx.fillStyle = '#2b2118'; ctx.fillRect(4, -56 + bob, 3, 1.6); ctx.fillRect(-1, -56 + bob, 3, 1.6);
   ctx.restore();
+  }
   elderT -= dt;
   if (elderT <= 0) { elderT = 45 + Math.random() * 30; const l = elderLine(); if (l) elderSay(l); }
 }
@@ -2700,7 +2709,9 @@ function draw(dt){
   // 社長：岩盤で弾かれている間は汗、割れたら跳ぶ
   bossJoy += dt;
   const jump = bossJoy < 0.5 && !reduced ? -Math.sin(bossJoy / 0.5 * Math.PI) * 14 : cheerT < 0.9 && !reduced ? -Math.abs(Math.sin(cheerT / 0.45 * Math.PI)) * 10 : 0;
-  drawPerson(cx(), fy + jump, CHAR, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true, 9);
+  const bossIm = S.crewArt !== false && artImg('crew/boss.webp');
+  if (bossIm) drawCrewSprite(bossIm, { i: 0, sc: CHAR * 1.05, face: 1, ph: 0 }, cx(), fy + jump, pang);
+  else drawPerson(cx(), fy + jump, CHAR, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true, 9);
   if (locked(S) && (tAll % 2.4) < 1.2) { const q = (tAll % 2.4) / 1.2; ctx.fillStyle = `rgba(150,210,255,${1 - q})`; ctx.beginPath(); ctx.ellipse(cx() - 8, fy - 46 + q * 8, 2, 3, 0, 0, 7); ctx.fill(); }
   // 暗さと明かり（深いほど暗く、ランタン・社長と仲間のヘルメットのライトだけが照らす）
   if (S.depth > 8 && !lowFx && !reduced) {

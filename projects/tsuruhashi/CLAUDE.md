@@ -18,7 +18,7 @@ WebView で動かす。**ゲームの直しは game.html だけ**（`python tool
 | `tool/build_app_web.py` | アプリに入れるゲーム本体を組み立てる（`app/assets/web/index.html`。外の書体を外し、BGM を `app/assets/audio/bgm/` に写す）。組み立てた物は git に入れない |
 | `tool/make_icon.js` | 図形で描いた仮のアイコン。**2026-10-04 から Gemini のアイコンに替えた**（`tool/import_art.js`）。絵が無いときの予備として残す |
 | `tool/import_art.js` | Gemini の絵（アイコン・タイトル・層の景色）を使う大きさにして置く。`node tool/import_art.js <絵のフォルダ>` → アイコン 1024 PNG、`prototype/art/title.jpg`（768×1376）、`prototype/art/scene0〜9.jpg`（960×536）。どの絵が何かは `tool/art_sources.json` |
-| `prototype/art/` | Gemini の絵（ユーザーが Gemini アプリで描いた物。商用可）。`items/<id>.webp`（図鑑50種・192・背景透明）・`crew/<WKのid>.webp`（仲間7種・256）・`heirs/<家宝>.webp`（6種）・`shop/canteen・cart・bento.webp`・`title.jpg`・`scene0〜9.jpg`。`check/` は切り分けの確認用で git に入れない |
+| `prototype/art/` | Gemini の絵（ユーザーが Gemini アプリで描いた物。商用可）。`items/<id>.webp`（図鑑50種・192・背景透明）・`crew/<WKのid>.webp`（仲間7種・256）・`crew/boss.webp`・`crew/elder.webp`・`heirs/<家宝>.webp`（6種）・`shop/canteen・cart・bento.webp`・`title.jpg`・`scene0〜9.jpg`。`check/` は切り分けの確認用で git に入れない |
 | `tool/make_shots.js` | App Store の掲載画像6枚（6.7インチ 1290×2796、上に見出し）を `store/screenshots/` に作る。ゲームに `window.__ev` を差した写しを一時フォルダで開き、`__TSURU_APP` を偽ってアプリと同じ見た目で撮る。撮るたびに「中身が写っているか・『試作』の文字がないか・大きさ」を検査（docs/app-pitfalls.md 4番） |
 | `STORE_LISTING.md` | App Store の掲載文の下書き（サブタイトル・キーワード・概要・審査へのメモ）。名前と値段はユーザーが決める |
 | `app/` | iOS アプリの外側（Flutter、2026-10-04）。hikari7 の app を写し、全画面広告を外し、BGM 3曲・通知を足した。課金アイテムは下の「広告と課金」、Bundle ID `com.namiki.tsuruhashi` |
@@ -136,8 +136,8 @@ WebView で動かす。**ゲームの直しは game.html だけ**（`python tool
   売店の3品（社員食堂・大きな荷車・特製弁当。弁当のボタンにも）、星の核の景色の描き直し（星空がひらける絵）。売店の絵に余分な「鉱石の木箱」があったが使わない。
   仲間の絵は下に英語の名前が入っていたので、文字の帯を白で消してから切った
 - **採掘の絵の仲間をイラストに**（`drawCrewSprite`、設定「仲間の絵 イラスト／図形」`S.crewArt`、既定はイラスト）: 体の絵は1枚なので、
-  人とロボは振り下ろしに合わせて前へ傾け、打った瞬間に少し縮める。掘削機と掘進シールドは小刻みに震え、トロッコは弾む。社長と隠居した先代は図形のまま
-  （社長の絵が無い。頼むなら黄色いヘルメットの社長1人）。絵が読み終わったら欄を作り直す（`artChanged` → `buildPanels`）
+  人とロボは振り下ろしに合わせて前へ傾け、打った瞬間に少し縮める。掘削機と掘進シールドは小刻みに震え、トロッコは弾む。社長（`crew/boss.webp`、仲間より少し大きく・同じ傾き）と
+  隠居した先代（`crew/elder.webp`、仲間の方を向けて息をするように上下）も 2026-10-05 にイラストに。代替わりの演出のロゴも社長の絵に替えた。絵が読み終わったら欄を作り直す（`artChanged` → `buildPanels`）
 
 ## 見どころ（2026-10-04 指示「もっと、見ている人が楽しめるように」）
 
