@@ -186,5 +186,8 @@ ok(S.v === 3 && S.depth === 100 && isBed(S.depth) && S.genDepth === 103 && S.bes
 ok(LAYER_LEN === 100 && isBed(100) && !isBed(40) && REBIRTH_DEPTH === 600, '1層は100m、代替わりは600m から');
 ok(Math.abs(baseHp(100) * DK / (HP0 * Math.pow(HP_G, 40)) - 1) < 1e-9, '浅い所の固さは前と同じ（1層ぶんの合計）');
 ok(baseHp(1600) / baseHp(1500) < 2 && baseHp(3100) / baseHp(3000) < 1.1 && baseHp(900) / baseHp(800) > 25, '深い所では固さの増え方が頭打ち（100m ごとに 800m までは×28〜39、1500m で×1.7、3000m で×1.08）');
+// アプリのアイコン（App Store はアルファ付き・1024 以外を受け付けない。canvas から書くと RGBA になるので tool/png_rgb.js を通す）
+{ const ic = require('fs').readFileSync(require('path').join(__dirname, '..', 'app', 'ios', 'Runner', 'Assets.xcassets', 'AppIcon.appiconset', 'Icon-1024.png'));
+  ok(ic.readUInt32BE(16) === 1024 && ic.readUInt32BE(20) === 1024 && ic[25] === 2, 'アプリのアイコンは 1024×1024・透明度なし（RGB）'); }
 if (fails) { console.log(`\n${fails}件 NG`); process.exit(1); }
 console.log('\nすべて ok');

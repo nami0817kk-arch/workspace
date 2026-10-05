@@ -36,7 +36,10 @@ for (let L = 0; L < 10; L++) jobs.push(['scene' + L, path.join(ART, `scene${L}.j
       x.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, 0, 0, w, h);
       return c.toDataURL(type, q);
     }, { url, w, h, type, q });
-    fs.writeFileSync(out, Buffer.from(data.split(',')[1], 'base64'));
+    let bin = Buffer.from(data.split(',')[1], 'base64');
+    // canvas の PNG は必ず透明度（アルファ）付き。App Store はアルファ付きのアイコンを受け付けないので RGB にする（tool/png_rgb.js）
+    if (role === 'icon') bin = require('./png_rgb').toRgb(bin).out;
+    fs.writeFileSync(out, bin);
     console.log(`${role.padEnd(7)} ${path.relative(ROOT, out)}  ${(fs.statSync(out).size / 1024).toFixed(0)}KB`);
   }
   await b.close();
