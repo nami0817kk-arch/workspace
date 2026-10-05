@@ -3936,7 +3936,9 @@ function makeFuture(S,E){var used=[],P=S.prep||{names:['（名前なし）'],nam
     if(partnerOf){var X=S.tr[partnerOf.id];ln.push(pickF(partnerOf.rj?MEM_X.pRj:partnerOf.r==='dir'?MEM_X.pDir:MEM_X.pEtc,{X:X.giv}));}
     if(t.dream){var left=!!(lv&&lv.r!=='rest'&&!lv.rj),ok=tier<=2||t.awoke||(left&&lv.r==='solo'&&SOLO_DREAM.test(t.dream))||(did[t.id]&&t.dream.indexOf(did[t.id])>=0)||!left&&({abroad:/海外/,writer:/自分で作った曲/,home:/地元|おばあちゃん/,lang:/海外/,studio:/自分で作った曲/}[ck]||/^$/).test(t.dream),dqt='「'+dq(t.dream)+'」',twin=left||/地元|おばあちゃん/.test(t.dream)?null:dreamBy[t.dream];
       /* 夢をかなえた年は、グループを離れていた年に重ねない（ソロの夢は離れてからでもよい） */
-      var K=5+t.id%5;if(lv&&!(lv.r==='solo'&&SOLO_DREAM.test(t.dream))){var e1=lv.rj||lv.back||11;if(K>=lv.y&&K<e1)K=lv.y>2?lv.y-1:Math.min(10,e1);}mm.K=K;var md={D:dq(t.dream)};
+      var K=5+t.id%5;if(lv&&!(lv.r==='solo'&&SOLO_DREAM.test(t.dream))){var e1=lv.rj||lv.back||11;if(K>=lv.y&&K<e1)K=lv.y>2?lv.y-1:Math.min(10,e1);}mm.K=K;
+      /* 全員で旅行の夢は、誰かが卒業する前の年に（卒業のあとに「全員で」とは言えない） */
+      if(t.dream==='メンバー全員で旅行に行く'){var lys=leaves.filter(function(l){return l.r!=='rest';}).map(function(l){return l.y;});if(lys.length){var ly=Math.min.apply(null,lys);if(K>=ly){K=Math.max(2,ly-1);mm.K=K;}}}var md={D:dq(t.dream)};
       if(t.dream==='10年後もこのメンバーで歌う')ln.push(left?pickU([dqt+'という夢は、グループの外から、別の形で見届けた。',dqt+'という夢は、客席の側から、かなう瞬間を見届けた。']):twin?'同じ夢を持っていた'+twin.join('や')+'と、10年目の記念ライブで、その夢をかなえた。':pickF(anyLeft?MEM_X.tenAny:MEM_X.ten,md));
       else if(t.dream==='メンバー全員で旅行に行く'&&left)ln.push(pickU(['卒業の前の年、念願だったメンバー全員での旅行に行った。','卒業の前に、メンバー全員での旅行の夢だけは、きちんとかなえた。']));
       else if(t.dream==='メンバー全員で旅行に行く'&&twin)ln.push('同じ夢を持っていた'+twin.join('や')+'と計画を立て、'+(dreamK[t.dream]||K)+'年目の休みに、念願だったメンバー全員での旅行に行った。');
