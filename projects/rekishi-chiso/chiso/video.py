@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import subprocess
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
@@ -100,6 +101,10 @@ def _ok_length(ffmpeg: str, path: Path, want: float, tol: float) -> bool:
     return got is not None and abs(got - want) <= tol
 
 
+PIECE_TRIES = 4
+PIECE_WAIT = 10.0       # 秒。落ちたら待つ（回ごとに長く）
+
+
 def _piece(ffmpeg: str, still_path: Path, kind: str, d: float, t0: float, length: float, fps: int, size,
            out: Path) -> Path:
     # 10-05：メモリ不足の ffmpeg が途中までしか書かずに終わった断片が控えに残り、
@@ -109,10 +114,15 @@ def _piece(ffmpeg: str, still_path: Path, kind: str, d: float, t0: float, length
     if out.exists() and _ok_length(ffmpeg, out, want, 0.2):
         return out
     tmp = out.with_suffix(".tmp.mp4")
-    for _ in range(2):
-        subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-loop", "1", "-framerate", str(fps), "-i", str(still_path),
-                        "-frames:v", str(n), "-vf", motion_filter(kind, d, size, t0), "-r", str(fps),
-                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", str(tmp)], check=True)
+    for k in range(PIECE_TRIES):
+        # 10-05 夜：空きメモリ2.4GBのとき、5本同時の ffmpeg が起動できずに落ちた（終了コード 0xDFABA7BB）。
+        # 落ちたら少し待ってやり直す（ほかの断片が終わればメモリが空く）
+        r = subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-loop", "1", "-framerate", str(fps), "-i", str(still_path),
+                            "-frames:v", str(n), "-vf", motion_filter(kind, d, size, t0), "-r", str(fps),
+                            "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", str(tmp)])
+        if r.returncode != 0:
+            time.sleep(PIECE_WAIT * (k + 1))
+            continue
         if _ok_length(ffmpeg, tmp, want, 0.2):
             tmp.replace(out)
             return out
