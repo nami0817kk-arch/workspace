@@ -94,6 +94,15 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  敦盛:                      # 10-06。幸若舞『敦盛』の一節（信長が舞った）。信長と同じ声で、札は演目名
+    label: 幸若舞『敦盛』の一節（信長が舞った）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
   本城:                      # 10-06。本城惣右衛門（80歳を過ぎて書いた覚書）。老人の声
     label: 本城惣右衛門（明智軍の一兵）
     name: ちび式じい
