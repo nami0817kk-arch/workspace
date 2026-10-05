@@ -22,7 +22,7 @@ __setClock(() => clock);
 
 // [時, 分の長さ]
 const SES = PLAY === 'heavy' ? [[7, 20], [12, 15], [18, 15], [21, 20], [23, 10]] : [[8, 5], [12, 5], [17, 5], [20, 5], [23, 5]];
-const ADS = PLAY !== 'noads';   // 広告を見る人：毎回の最初に採掘の倍率、留守は2倍で受け取る
+const ADS = PLAY !== 'noads';   // 広告を見る人：毎回の最初に採掘の倍率、留守は3倍で受け取る、代替わりの名声は2倍、たたいた鉱脈の半分で動画
 
 function buy(S){
   for (let g = 0; g < 2000; g++) {
@@ -58,7 +58,7 @@ for (let day = 1; day <= DAYS; day++) {
     if (S.last && t0 > S.last) {
       clock = t0;
       const a = awaySeconds(S, clock);
-      if (a.sec > 60 && crewDps(S, false) > 0) { const r = simulateAway(S, a.sec); S = claimAwayState(S, r, ADS ? 2 : 1); }
+      if (a.sec > 60 && crewDps(S, false) > 0) { const r = simulateAway(S, a.sec); S = claimAwayState(S, r, ADS ? AD_AWAY : 1); }
     }
     clock = t0;
     // 代替わり：名声が倍になるか、3回続けて進みが止まったら
@@ -73,7 +73,7 @@ for (let day = 1; day <= DAYS; day++) {
           const c = heirCands(S)[0];
           if (c) { const full = S.heir.length >= HEIR_SLOTS && !heirLv(S, c.k); hr = { k: c.k, drop: full ? S.heir.reduce((bi, h, i, a) => h.lv < a[bi].lv ? i : bi, 0) : -1 }; }
         }
-        rebirth(S, cr, hr); stall = 0; lastProg = 0;
+        rebirth(S, cr, hr, ADS ? AD_FAME : 1); stall = 0; lastProg = 0;
       }
     }
     // 広告を見る人は毎回の最初に1本（×2）。よく遊ぶ人は最初に4本（×5）、そのあとも5分ごとに1本ずつ上げる
@@ -83,7 +83,7 @@ for (let day = 1; day <= DAYS; day++) {
       clock += 1000;
       tick(S, 1, null);
       if (PLAY === 'heavy' && s % 300 === 299) startBoost(S);
-      if (++veinT >= 120) { veinT = 0; if (RNG() < 0.7) claimVein(S); }
+      if (++veinT >= 120) { veinT = 0; if (RNG() < 0.7) { const vg = claimVein(S); if (ADS && RNG() < 0.5) veinBonus(S, vg); } }
       if (s % 5 === 0) buy(S);
       if (s % 60 === 0) useFrags(S);
     }

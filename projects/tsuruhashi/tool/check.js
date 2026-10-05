@@ -154,5 +154,15 @@ S = fresh(); S.w = WK.map(() => 3); S.heir = [{ k: 'map', lv: 3 }]; S.mapTo = 5;
 const awayMap = simulateAway(S, 8 * 3600); S.heir = []; const awayNo = simulateAway(S, 8 * 3600);
 ok(awayMap.meters < awayNo.meters * 1.5, '留守でも地図は地図の深さまでしか効かない');
 
+// 動画の特典（留守3倍・名声2倍・鉱脈3倍）
+S = fresh(); S.w = WK.map(() => 2); S.last = NOW();
+const ra = simulateAway(S, 3600); const o0 = S.ore;
+const s3 = claimAwayState(JSON.parse(JSON.stringify(S)), ra, AD_AWAY);
+ok(AD_AWAY === 3 && Math.abs((s3.ore - o0) - ra.ore * 3) < Math.max(1, ra.ore * 1e-6), '留守を動画で3倍に');
+S = fresh(); S.genDepth = 280; S.depth = 280; S.best = 280; const fg = fameGain(S); rebirth(S, ['a'], null, AD_FAME);
+ok(S.fame === Math.floor(fg * 2) && S.history[0].fame === Math.floor(fg * 2), '代替わりの名声を動画で2倍に');
+S = fresh(); S.w = WK.map(() => 2); const vo = S.ore, vg = claimVein(S), vx = veinBonus(S, vg);
+ok(Math.abs(S.ore - vo - vg * 3) < 1e-6 && vx === vg * 2, '鉱脈を動画で3倍に');
+
 if (fails) { console.log(`\n${fails}件 NG`); process.exit(1); }
 console.log('\nすべて ok');
