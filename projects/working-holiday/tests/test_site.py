@@ -13,7 +13,7 @@ FIELD_KEYS = [k for k, _ in render.FIELDS]
 
 # 根拠にしない業者・まとめサイト（各国の公式ページだけを出典にする）。
 # 「確認できず」「推定」「検索結果」など、確かめていないことを示す書き方。
-MEMO = re.compile(r"確認でき|未確認|見当たら|記載(が)?な|不明|要確認|推定|見込み|検索結果")
+MEMO = re.compile(r"確認でき(ず|なかった|ない)|未確認|見当たら|記載(が)?な|が不明|は不明|要確認|推定|見込み|検索結果")
 
 NOT_OFFICIAL = ("wikipedia.org", "jawhm.or.jp", "ryugaku", "abroad", "blog", "note.com", "ameblo")
 
@@ -124,3 +124,38 @@ def test_比較表の短い形():
     assert render.short("初回 AUD840.00／2年目 AUD1,000.00") == "初回 AUD840.00"
     assert render.short("申請時18歳以上30歳以下（日本国籍者）") == "申請時18歳以上30歳以下"
     assert render.short("あ" * 60).endswith("…")
+
+
+def arrival_files():
+    return sorted((DATA / "arrival").glob("*.json"))
+
+
+@pytest.mark.parametrize("path", arrival_files(), ids=lambda p: p.stem)
+def test_現地情報は公式の出典だけで調査メモを含まない(path):
+    d = json.loads(path.read_text(encoding="utf-8"))
+    assert d["id"] == path.stem
+    texts = [s.get("title", "") + s.get("body", "") for s in d.get("steps", [])]
+    med = d.get("medical") or {}
+    texts += [med.get("summary", ""), med.get("emergency", "")]
+    texts += [h.get("japanese", "") + h.get("name", "") for h in med.get("hospitals", [])]
+    jobs = d.get("jobs") or {}
+    texts += [jobs.get("min_wage", "")] + jobs.get("rules", []) + [c.get("note", "") for c in jobs.get("channels", [])]
+    for t in texts:
+        assert not MEMO.search(t), f"調査メモが入っている: {t}"
+    urls = [s.get("url", "") for s in d.get("steps", [])] + [h.get("url", "") for h in med.get("hospitals", [])]
+    urls += [c.get("url", "") for c in jobs.get("channels", [])] + [jobs.get("min_wage_url", "")]
+    urls += [s["url"] for s in d.get("sources", [])]
+    for u in filter(None, urls):
+        assert u.startswith("http"), u
+        assert not any(bad in u for bad in NOT_OFFICIAL), f"公式でない出典: {u}"
+    if jobs.get("min_wage"):
+        assert jobs.get("min_wage_url"), "最低賃金に出典が無い"
+    # 「日本語が通じる医療機関」の表に出すので、日本語での対応が書いていないものは載せない
+    for h in med.get("hospitals", []):
+        assert h.get("japanese", "").strip(), f"日本語の対応が書いていない: {h.get('name')}"
+
+
+def test_現地情報のある国はページに病院と仕事の欄が出る(site):
+    html = (site / "country" / "australia.html").read_text(encoding="utf-8")
+    assert 'id="iryou"' in html and 'id="shigoto"' in html
+    assert "法定の最低賃金" in html

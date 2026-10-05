@@ -55,18 +55,6 @@
         "city": "Brisbane",
         "japanese": "日本語で対応可能な一般開業医（電話・ビデオ診療）として在シドニー日本国総領事館が案内",
         "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html"
-      },
-      {
-        "name": "Canberra Hospital",
-        "city": "Canberra",
-        "japanese": "",
-        "url": "https://www.mofa.go.jp/mofaj/toko/medi/oceania/australia.html"
-      },
-      {
-        "name": "North Canberra Hospital",
-        "city": "Canberra",
-        "japanese": "",
-        "url": "https://www.mofa.go.jp/mofaj/toko/medi/oceania/australia.html"
       }
     ]
   },
@@ -93,13 +81,45 @@
     ]
   },
   "sources": [
-    { "title": "在留届 ORRネット", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05" },
-    { "title": "Foreign passport holders, permanent migrants and temporary visitors – TFN application | ATO", "url": "https://www.ato.gov.au/individuals-and-families/tax-file-number/apply-for-a-tfn/foreign-passport-holders-permanent-migrants-and-temporary-visitors-tfn-application", "checked": "2026-10-05" },
-    { "title": "Working holiday makers | ATO", "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/coming-to-australia/working-holiday-makers", "checked": "2026-10-05" },
-    { "title": "Managing your finances | Department of Home Affairs", "url": "https://immi.homeaffairs.gov.au/settling-in-australia/settle-in-australia/key-settlement-topics/managing-your-finances", "checked": "2026-10-05" },
-    { "title": "世界の医療事情 オーストラリア｜外務省", "url": "https://www.mofa.go.jp/mofaj/toko/medi/oceania/australia.html", "checked": "2026-10-05" },
-    { "title": "各種連絡・相談先（トラブル・困り事等）｜在シドニー日本国総領事館", "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html", "checked": "2026-10-05" },
-    { "title": "Minimum wages | Fair Work Ombudsman", "url": "https://www.fairwork.gov.au/pay-and-wages/minimum-wages", "checked": "2026-10-05" },
-    { "title": "Workforce Australia for individuals", "url": "https://www.workforceaustralia.gov.au/individuals", "checked": "2026-10-05" }
+    {
+      "title": "在留届 ORRネット",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Foreign passport holders, permanent migrants and temporary visitors – TFN application | ATO",
+      "url": "https://www.ato.gov.au/individuals-and-families/tax-file-number/apply-for-a-tfn/foreign-passport-holders-permanent-migrants-and-temporary-visitors-tfn-application",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Working holiday makers | ATO",
+      "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/coming-to-australia/working-holiday-makers",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Managing your finances | Department of Home Affairs",
+      "url": "https://immi.homeaffairs.gov.au/settling-in-australia/settle-in-australia/key-settlement-topics/managing-your-finances",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "世界の医療事情 オーストラリア｜外務省",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/oceania/australia.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "各種連絡・相談先（トラブル・困り事等）｜在シドニー日本国総領事館",
+      "url": "https://www.sydney.au.emb-japan.go.jp/itpr_ja/okomari-no-kata.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Minimum wages | Fair Work Ombudsman",
+      "url": "https://www.fairwork.gov.au/pay-and-wages/minimum-wages",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Workforce Australia for individuals",
+      "url": "https://www.workforceaustralia.gov.au/individuals",
+      "checked": "2026-10-05"
+    }
   ]
 }

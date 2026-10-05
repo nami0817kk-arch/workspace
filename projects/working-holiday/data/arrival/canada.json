@@ -1,0 +1,93 @@
+{
+  "id": "canada",
+  "steps": [
+    {
+      "title": "在留届を提出する（ORRネット）",
+      "body": "3か月以上海外に滞在する場合は、外務省の在留届をオンラインで提出する必要があります。緊急時の安否確認や現地大使館・総領事館からの連絡に使われます。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "SIN（社会保険番号）を申請する",
+      "body": "カナダで働くにはSIN（Social Insurance Number）が必要です。ワーキングホリデーのワークパーミットがあればオンラインで申請でき、取得を待たずに働き始められます。一時滞在者のSINは「9」から始まり、ワークパーミットの有効期限と同じ日に失効します。",
+      "url": "https://www.canada.ca/en/employment-social-development/services/sin/temporary-residents.html"
+    },
+    {
+      "title": "銀行口座を開設する",
+      "body": "給与の受け取りなどに銀行口座が必要です。仕事や口座に入れるお金がなくても開設でき、通常は金融機関の窓口に本人確認書類を持参して申し込みます。",
+      "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/money/banking.html"
+    }
+  ],
+  "medical": {
+    "emergency": "911（警察・消防・救急共通、通訳を呼ぶことも可能とされる）",
+    "summary": "カナダは国民皆保険制度ですが、移民・留学生・ワーキングホリデー等の加入条件は州によって異なり、加入までの間や加入できない場合の医療費は自己負担（高額）になります。受診はまず家庭医（予約制で新規患者を受け付けていないことも多い）が基本で、専門医にかかるには家庭医の紹介状が必要です。家庭医がいない場合はウォークインクリニックや総合病院の救急外来（ER）を利用しますが、いずれも待ち時間が長くなりがちです。歯科や処方薬剤は全額自己負担のため、十分な額の海外旅行傷害保険への加入が勧められています。",
+    "hospitals": [
+      {
+        "name": "Yamashiro Clinic（小児科）",
+        "city": "Toronto",
+        "japanese": "Dr. Yamashiroは日本語を話す。予約制で受付は英語のみ、受診には家庭医からの紹介状が必要",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html"
+      },
+      {
+        "name": "HAZELDEAN DENTAL GROUP（歯科）",
+        "city": "Ottawa",
+        "japanese": "Dr. Tamaru（日本人歯科医）が勤務。予約が必要",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html"
+      },
+      {
+        "name": "Clinique Dentaire Tran（歯科クリニック）",
+        "city": "Montreal",
+        "japanese": "日本語を話すDr. Yoshiki Ishihara がいる他、日本人スタッフも勤務",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html"
+      },
+      {
+        "name": "Care Point Medical & Wellness Clinics",
+        "city": "Vancouver",
+        "japanese": "日本語のウェブサイトがあり、日本語が通じる英国人医師がいる",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html"
+      },
+      {
+        "name": "Bethelmed Clinic",
+        "city": "Vernon, BC",
+        "japanese": "日本とBC州の医師免許を持つ日本人医師によるオンラインクリニック。電話・メールも日本語対応可能、予約が必要",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html"
+      },
+      {
+        "name": "Dr. Kaori Sato General Dentistry（歯科）",
+        "city": "Richmond, BC",
+        "japanese": "受付から治療まで日本語で対応可能。予約が必要",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html"
+      },
+      {
+        "name": "武内歯科医院",
+        "city": "Vancouver",
+        "japanese": "日系の医師が日本語で対応、日本人アシスタントがいる。予約が必要",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "連邦最低賃金 CAD 18.15/時（2026年4月1日から）。ただし連邦規制業種（銀行・航空・鉄道・通信など）にのみ適用され、一般の仕事は働く州・準州ごとの最低賃金が適用される",
+    "min_wage_url": "https://www.canada.ca/en/employment-social-development/news/2026/03/government-of-canada-raises-the-federal-minimum-wage.html",
+    "channels": [
+      {
+        "name": "Job Bank（カナダ政府公式求人サイト）",
+        "url": "https://www.jobbank.gc.ca/findajob",
+        "note": "カナダ政府が運営する求人検索サイトで、誰でも求人の閲覧・応募ができる"
+      }
+    ],
+    "rules": [
+      "働く前にSIN（社会保険番号）を取得し、雇用主に提出する",
+      "SINを提出しないと給与から正しく税金を源泉徴収できない",
+      "最低賃金は州・準州ごとに定められており、働く州の規定を下回る賃金での就労は違法",
+      "カナダの公的医療保険にワーキングホリデーで加入できるかは州により異なるため、加入できない期間の医療費に備えて渡航前に海外旅行傷害保険へ加入しておく"
+    ]
+  },
+  "sources": [
+    { "title": "在留届 ORRネット", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05" },
+    { "title": "SIN for temporary residents in Canada - Canada.ca", "url": "https://www.canada.ca/en/employment-social-development/services/sin/temporary-residents.html", "checked": "2026-10-05" },
+    { "title": "Banking - Canada.ca（IRCC Settle in Canada）", "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/money/banking.html", "checked": "2026-10-05" },
+    { "title": "Government of Canada raises the federal minimum wage - Canada.ca", "url": "https://www.canada.ca/en/employment-social-development/news/2026/03/government-of-canada-raises-the-federal-minimum-wage.html", "checked": "2026-10-05" },
+    { "title": "Find a job - Job Bank", "url": "https://www.jobbank.gc.ca/findajob", "checked": "2026-10-05" },
+    { "title": "世界の医療事情 カナダ｜外務省", "url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html", "checked": "2026-10-05" }
+  ]
+}
