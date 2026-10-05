@@ -2008,9 +2008,11 @@ function drawCrew(dt, fy){
 // 機械は小刻みに揺らす（掘削機・掘進シールド）か、上下に弾ませる（ロボ・トロッコ）
 // 振り上げ・振り下ろしの2枚（crew/<名前>_up・_down）があれば、振りに合わせて差し替える（2026-10-05 ユーザー指示「つるはしを振らせたい」）
 function drawCrewSprite(im, f, x, y, ang, base){
-  const big = f.i >= HUMAN, h = (big ? 60 : 56) * f.sc;
-  let rot = 0, sy = 1, dx = 0, dy = 0;
+  const big = f.i >= HUMAN;
+  let h = (big ? 60 : 56) * f.sc, rot = 0, sy = 1, dx = 0, dy = 0;
   const up = base && artImg('crew/' + base + '_up.webp'), dn = base && artImg('crew/' + base + '_down.webp');
+  // 2ポーズの絵は振り上げたつるはしまで入れて切っている（tool/cut_poses.js）ので、体が同じ大きさに見えるよう大きめに描く
+  if (up && dn) h *= 1.3;
   if (up && dn) {
     const k = Math.max(0, Math.min(1, (ang + 2.3) / 3.05));
     im = k > 0.55 ? dn : up;
