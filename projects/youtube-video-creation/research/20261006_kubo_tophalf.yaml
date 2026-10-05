@@ -1,0 +1,315 @@
+# 取材メモ（10/6 題材 kubo_tophalf、型は quote）。材料の控え: research/raw/20261006_kubo_tophalf.md
+# 主役は「トップ下」。キリンカップ決勝（10/5 国立、日本 2-1 ニュージーランド）で、久保建英が本職のトップ下に入って64分。
+# 結婚の話は冒頭の語り2行まで（10/3 に結婚の回、10/4 にスペインとの差の回を出している）。
+# 重ねないもの: 10/5 の「堂安の決勝ゴール」「上田の4試合4点」、同時に作る「中村敬斗の決勝点演出」。
+#   試合の流れ・堂安の決勝点は言わない。「2年半ぶりの4バック」「15年ぶり」「シュート21本」も言わない。先制点は久保の関わりを1行だけ。
+# 事実の裏:
+#   位置と出場時間: JFA の試合記録 PDF（9/24・9/28・10/1・10/5）。位置はゲキサカ 460371（トップ下、近年はシャドー）、JFA 9/24 試合報告（堂安は右）、FotMob の並び（9/28 佐藤は右）、サッカーダイジェスト（10/1 右シャドー）。
+#   触った場所: スポーツナビの個人スタッツ（データスタジアム）の「プレー数」。ATサード＝相手ゴールに近い3分の1。チームの割合は日本の全選手の和。
+#   シュートは JFA（4試合とも0本）とスポーツナビ（1・0・1・1本）で割れるので使わない。
+#   シュートにつながったパス4本は、スポーツナビのテキスト速報で前半1分・10分・44分・46分を数えた（少なくとも、の数）。
+#   次の公式戦: FotMob（レアル・ソシエダ 8560）10/11 14:15 UTC ＝ 日本時間 23:15 ホームでデポルティーボ。クラブの主な位置は右のウイング（FotMob）。
+# 反応: Yahoo!ニュース（ゲキサカの記事）のコメント欄から個人の投稿を頭から終わりまで3件。海外の声は取れていない。
+# 写真: 01 ゲキサカ（©Kaoru WATANABE/GEKISAKA）。01_side_w は同じ写真を久保が右に寄るよう16:9に切ったもの（見立ての表と反応の箱が顔にかからないように）、01_side_w_v はその縦版。02 サッカーキング（写真＝金田慎平）はショートの写真 02_v だけ。代理店ではない。
+date: 2026年10月6日
+slot: japan_kubo
+format: quote
+people:
+- 久保建英
+- 福原遥
+- 中野就斗
+theme:
+  id: kubo_tophalf
+  league: japan
+  league_name: キリンカップ
+  kind: other
+  topic: 日本代表
+  title: 久保建英、新婚の初戦は本職のトップ下。「好きなので」と語った64分の中身
+  question: トップ下に戻った久保建英は、右のシャドーだった試合と何が変わったのか
+  opening_image: assets/images/20261006_kubo_tophalf/01_w.jpg
+  takeaway: 久保建英がボールに触った場所を数えると、右のシャドーだった9月からの3試合は、相手ゴールに近い3分の1が155回のうち70回で45%。トップ下に入った10月5日の決勝は77回のうち57回で74%だった。パスの数はエクアドル戦39本、決勝40本でほぼ同じで、変わったのは触った場所。チーム全体の割合も22%から34%に増えたが、久保は36%から74%と倍に伸びた。次は日本時間10月11日のデポルティーボ戦で、クラブの主な持ち場の右でも同じ仕事を出せるかを見る
+short_title: 久保建英、本職のトップ下へ。「好きなので上手くやれたら」
+thumbnail:
+  photo: assets/images/20261006_kubo_tophalf/01.jpg
+  focus: 0.0
+  short_photo: assets/images/20261006_kubo_tophalf/02_v.jpg
+  line1: 久保建英 本職のトップ下へ
+  line2: 右のときの2倍になった●●
+  reaction: 久保の頭脳を活かすなら真ん中の方が
+sections:
+- id: wife
+  heading: 妻が見守った決勝
+  tier: 報道
+  telop: 久保建英「試合を観に来てくれるのは初めてではないので」
+  narrator: キャスター
+  say:
+  - text: キリンカップ決勝の国立競技場。結婚の発表から3日、久保建英が先発しました。
+    image: assets/images/20261006_kubo_tophalf/01_w.jpg
+  - text: スタンドでは、久保のユニフォームを着た妻の福原遥さんが見守りました。
+  - voice: 久保建英
+    text: 試合を観に来てくれるのは初めてではないので。
+  - voice: 久保建英
+    text: 僕自身は責任感持ってプレーしたいなと思いました
+    cont: true
+  - text: この日は最終ラインが4人。久保は2列目の真ん中、トップ下に入りました。
+  quotes_from:
+  - サッカーキング https://www.soccer-king.jp/news/japan/national/20261005/2213674.html
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20261005/2213674.html
+  - https://web.gekisaka.jp/news/japan/detail/?460371-460371-fl
+- id: tophalf
+  main: true
+  heading: 本職のトップ下へ
+  tier: 報道
+  telop: 久保建英「僕はトップ下結構好きなので上手くやれたらなと思います」
+  narrator: キャスター
+  say:
+  - text: 結婚の発表後、最初の日本代表戦。久保建英は本職のトップ下で先発しました。
+    short_only: true
+    image: assets/images/20261006_kubo_tophalf/01_w.jpg
+  - voice: 久保建英
+    text: 4にこれから戻るかもしれないし、
+  - voice: 久保建英
+    text: 僕はトップ下結構好きなので
+    cont: true
+    emph: true
+  - voice: 久保建英
+    text: 上手くやれたらなと思います
+    cont: true
+  - text: 右のシャドーだった前の試合と比べ、相手ゴール近くで触れる割合は倍に。
+    short_only: true
+  - text: 先発したエクアドル戦は36%、トップ下の決勝は74%でした。
+    short_only: true
+    card:
+      type: table
+      title: 相手ゴール側で触った割合
+      columns: ['', 位置, 割合, パス]
+      rows: &pair
+      - ['10/1 エクアドル', '右シャドー', '36%', '39本']
+      - ['10/5 ニュージーランド', 'トップ下', '74%', '40本']
+      highlight_row: 1
+  - text: パスの数は39本と40本で、ほぼ同じ。変わったのは触る場所です。
+    short_only: true
+    card:
+      type: table
+      title: 相手ゴール側で触った割合
+      columns: ['', 位置, 割合, パス]
+      rows: *pair
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460371-460371-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460371-460371-fl
+  - https://www.soccer-king.jp/news/japan/national/20261005/2213674.html
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/match_page/m4.html
+- id: center
+  heading: 真ん中で受けると決めていた
+  tier: 報道
+  telop: 久保建英「ローテーションしないであそこで受けられたほうがチャンスになるので」
+  narrator: キャスター
+  say:
+  - text: ここ最近の代表は最終ラインが3人の形で、久保の持ち場は右のシャドーでした。
+  - text: シャドーは、最前線のフォワードのすぐ後ろに、2人並ぶ攻撃の選手です。
+  - text: 右のシャドーでは、サイドへ流れる場面が増えていました。
+  - text: この日は真ん中にとどまって、ボールを引き出そうとしていました。
+  - text: まわりと持ち場を入れ替えながら攻める動きを、久保はローテーションと呼びます。
+  - voice: 久保建英
+    text: できるならローテーションしたくないなと
+  - voice: 久保建英
+    text: 思いながら試合に臨んで、
+    cont: true
+  - voice: 久保建英
+    text: 実際には何度かしたけど、
+    cont: true
+  - voice: 久保建英
+    text: ローテーションしないであそこで受けられたほうが
+    cont: true
+  - voice: 久保建英
+    text: チャンスになるので
+    cont: true
+  - text: それでも先制点の場面では右へ流れ、ゴールライン際から中野就斗へ戻しています。
+  - text: ただ、真ん中を固められて、うまくいかない場面もあったと振り返りました。
+  - text: 動きが止まった状態を、久保はスタティックと言い表します。
+  - voice: 久保建英
+    text: スタティックになってもしょうがないので、
+  - voice: 久保建英
+    text: いい塩梅を見つけられたら
+    cont: true
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?460371-460371-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?460371-460371-fl
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026100501/text
+- id: view
+  viewpoint: true
+  heading: トップ下と右のシャドー、久保建英が触った場所
+  tier: 背景
+  telop: 相手ゴール側の3分の1で触った割合は、右のシャドーの3試合で45%、トップ下の決勝は74%
+  narrator: 解説
+  say:
+  - text: 久保がボールに触った場所を、9月からの4試合で数えて並べました。
+    image: assets/images/20261006_kubo_tophalf/01_side_w.jpg
+    card:
+      type: table
+      title: 久保建英 9月からの4試合
+      columns: ['', 位置, 相手ゴール側／全体]
+      rows: &area
+      - ['9/24 ウルグアイ', '右シャドー', '12／27（44%）']
+      - ['9/28 ベネズエラ', '右シャドー', '30／50（60%）']
+      - ['10/1 エクアドル', '右シャドー', '28／78（36%）']
+      - ['10/5 ニュージーランド', 'トップ下', '57／77（74%）']
+  - text: ピッチを3つに分けたうち、相手ゴールに近い3分の1で触った回数です。
+    card:
+      type: table
+      title: 久保建英 9月からの4試合
+      columns: ['', 位置, 相手ゴール側／全体]
+      rows: *area
+  - text: ウルグアイ戦は途中から27分。触った27回のうち12回が相手ゴール側でした。
+    card:
+      type: table
+      title: 久保建英 9月からの4試合
+      columns: ['', 位置, 相手ゴール側／全体]
+      rows: *area
+      highlight_row: 0
+  - text: ベネズエラ戦は後半の45分で50回。うち30回、6割が相手ゴール側です。
+    card:
+      type: table
+      title: 久保建英 9月からの4試合
+      columns: ['', 位置, 相手ゴール側／全体]
+      rows: *area
+      highlight_row: 1
+  - text: 先発したエクアドル戦は67分で78回。相手ゴール側は28回、36%でした。
+    card:
+      type: table
+      title: 久保建英 9月からの4試合
+      columns: ['', 位置, 相手ゴール側／全体]
+      rows: *area
+      highlight_row: 2
+  - text: 右のシャドーの3試合を合わせると、155回のうち70回。45%です。
+    card:
+      type: table
+      title: 久保建英 9月からの4試合
+      columns: ['', 位置, 相手ゴール側／全体]
+      rows: *area
+      highlight_row: 2
+  - text: トップ下の決勝は64分で77回。そのうち57回、74%が相手ゴール側でした。
+    emph: true
+    card:
+      type: table
+      title: 久保建英 9月からの4試合
+      columns: ['', 位置, 相手ゴール側／全体]
+      rows: *area
+      highlight_row: 3
+  - text: パスの数は、エクアドル戦が39本、決勝が40本で、ほぼ同じです。
+    card:
+      type: table
+      title: 久保建英 9月からの4試合
+      columns: ['', 位置, 相手ゴール側／全体]
+      rows: *area
+      highlight_row: 3
+  - text: 変わったのは数ではなく、ボールに触った場所でした。
+    card: none
+  - text: ただ、決勝は相手が引いて、日本がボールを長く持てた試合でもあります。
+  - text: エクアドル戦と比べると、チーム全体の割合も22%から34%に増えています。
+  - text: チームは1.5倍。久保は2倍です。持ち場の変化が、その差に出ました。
+  - text: 前半だけで、久保のパスから少なくとも4本のシュートが生まれました。
+  - text: 次はソシエダに戻ります。
+  - text: 日本時間10月11日の夜11時15分から、ホームでデポルティーボ戦です。
+  - text: クラブで主に任されているのは、右のウイング。
+  - text: 真ん中で増えた相手ゴール側の仕事を、右でも出せるか。そこが見どころになります。
+  sources:
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026092401/stats
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026092801/stats
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026100101/stats
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026100501/stats
+  - https://soccer.yahoo.co.jp/japan/category/men/game/2026100501/text
+  - https://www.jfa.jp/national_team/samuraiblue/20260924/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/20260928/schedule_result/pdf/m01.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m02.pdf
+  - https://www.jfa.jp/national_team/samuraiblue/kirincupsoccer_2026/schedule_result/pdf/m04.pdf
+  - https://www.jfa.jp/samuraiblue/news/00036813/
+  - https://www.fotmob.com/teams/8560/fixtures/real-sociedad
+  - https://www.fotmob.com/players/848289/takefusa-kubo
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「久保の頭脳を活かすなら真ん中の方が良いのかも」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（ゲキサカの記事）のコメント欄 1ページ目 hfc********。全文（写真の顔に箱がかからないよう短く分けた）
+  - voice: ネット民
+    text: ドリブルのイメージ強いけど、
+  - voice: ネット民
+    text: パスで良い感じに相手を
+    cont: true
+  - voice: ネット民
+    text: 振り回してた様に見えた。
+    cont: true
+  - voice: ネット民
+    text: 真ん中とサイドでは
+    cont: true
+  - voice: ネット民
+    text: 役割が違うからかもだけど、
+    cont: true
+  - voice: ネット民
+    text: 久保の頭脳を活かすなら
+    cont: true
+  - voice: ネット民
+    text: 真ん中の方が良いのかもと
+    cont: true
+  - voice: ネット民
+    text: 思ってしまったくらい。
+    cont: true
+  - voice: ネット民
+    text: 復調の気配はある。
+    cont: true
+  - voice: ネット民
+    text: あとは得点かなあ。
+    cont: true
+  # 同じ欄 4ページ目 cam********。全文
+  - voice: ネット民
+    text: もっとボールを
+  - voice: ネット民
+    text: 呼び込んで欲しかった
+    cont: true
+  - voice: ネット民
+    text: 上田と連動して
+    cont: true
+  - voice: ネット民
+    text: マークをずらして
+    cont: true
+  - voice: ネット民
+    text: 縦パスが入るスペースを
+    cont: true
+  - voice: ネット民
+    text: 作る工夫が欲しいね
+    cont: true
+  # 同じ欄 6ページ目 ミスターシービー。全文
+  - voice: ネット民
+    text: 久保はトップ下より、
+    short_voice: true
+  - voice: ネット民
+    text: 右のシャドー、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: ウィングバックなどの方が
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 向いているような気がする。
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 神出鬼没で
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: 様々なところに出没し、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: チャンスを演出していたが…
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/f8316bb6554828db02584525443c62322bb0b7a9/comments

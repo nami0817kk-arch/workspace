@@ -1,0 +1,436 @@
+# フランス 4-1 ベルギー（2026-10-05、UEFAネーションズリーグ A1 第4節、サン＝ドニのスタッド・ドゥ・フランス）。
+# 雛形は tools/match_numbers.py --match 5181794（FotMob）。材料の控えは research/raw/20261006_match_france_belgium.md。
+# 問いは1つ：途中から入ったオリーセとドゥエで、フランスは60分を境に何が変わったのか。
+# 事実の裏:
+#   スコア・得点者・時間は UEFA の試合データ（試合 id 2047937）まで辿った → 得点の流れは 確定。アシストと交代の時間は FotMob と報道（Goal.com）。
+#   両チームの数字・評点・交代の前と後（シュート一覧を60分で分けて数えた）は FotMob。UEFA の数字とは少しずれる（シュート 24/5 など）ので FotMob にそろえた。
+#   ジダン体制の4試合・順位・11月の日程は UEFA。「ミラノで引き分け以上なら2位以内」は勝ち点を数えて確かめた（控え 1.）。
+#   重ねない: 10/3 のオリーセ紹介（経歴・通算は言わない）、10/3 のフランス対イタリア、10/3 のジダン監督の経歴（経歴は言わない）。
+# 本人の言葉はドゥエ・オリーセ（TF1。Foot Mercato・Maxifoot）、ジダン（会見。La Provence）。反応は X の個人の投稿3件（全文。Yahoo!リアルタイム検索 → fxtwitter）。
+date: 2026年10月06日
+slot: results_1
+format: news
+series: 数字で見る注目試合
+people:
+- フランス代表
+- マイケル・オリーセ
+- デジレ・ドゥエ
+- ラヤン・シェルキ
+- リュカ・ダ・クーニャ
+- ジネディーヌ・ジダン
+theme:
+  id: match_france_belgium
+  league: ''
+  league_name: UEFAネーションズリーグ
+  kind: match
+  topic: フランス代表
+  title: オリーセとドゥエ、途中出場で全4点に関与。フランスの何を変えたのか
+  question: 途中から入ったオリーセとドゥエで、フランスの数字は60分を境に何が変わったのか
+  takeaway: 60分までのフランスはシュート15本で0点、1本あたりの決まる見込みは平均5%。オリーセたちが入ってからは8本で4点、1本あたり15%と3倍になり、4点とも途中出場の4人が決めてアシストした。ジダン体制は4試合で3勝1分けの勝ち点10。11月12日のイタリア戦で引き分け以上なら、準々決勝が決まる
+  opening_image: assets/images/20261006_match_france_belgium/01_w.jpg
+short_title: フランスが14分で4点。途中から入った2人が全部に関与
+thumbnail:
+  short_photo: assets/images/20261006_match_france_belgium/olise/01_v.jpg
+  photos:
+  - assets/images/20261006_match_france_belgium/olise/01.jpg
+  - assets/images/20261006_match_france_belgium/doue/01_t.jpg
+  line1: オリーセとドゥエで4点
+  line2: 1本の決まる見込み 5%→●%
+  tags:
+  - フランス代表
+  - ベルギー代表
+  - マイケル・オリーセ
+  - デジレ・ドゥエ
+sections:
+- id: score
+  heading: 先制されてから14分で4点
+  tier: 確定
+  official: true   # UEFA の試合データ（id 2047937）でスコア・得点者・時間を確かめた
+  telop: フランス4対1ベルギー。35分に先制されて、77分から14分で4点
+  narrator: キャスター
+  card:
+    type: table
+    title: フランス 4-1 ベルギー（10月5日 サン＝ドニ）
+    columns: [時間, 得点, アシスト, スコア]
+    rows: &goals
+    - ['35分', 'ルケバキオ（ベルギー）', 'ラヴィア', '0-1']
+    - ['77分', 'ドゥエ', 'ダ・クーニャ', '1-1']
+    - ['81分', 'シェルキ', 'オリーセ', '2-1']
+    - ['88分', 'オリーセ', 'ドゥエ', '3-1']
+    - ['90+1分', 'オリーセ', 'ドゥエ', '4-1']
+    source: UEFA・FotMob
+  say:
+  - text: 5日、ネーションズリーグのグループ第4戦。代表チームが勝ち点を競う大会です。
+    image: assets/images/20261006_match_france_belgium/01_w.jpg
+    card: none
+  - text: フランスが、パリ郊外のスタッド・ドゥ・フランスにベルギーを迎えました。
+  - text: 先制はベルギー。35分、ラヴィアの縦パスで抜け出したルケバキオが決めます。
+    image: assets/images/20261006_match_france_belgium/lukebakio/01_w.jpg
+    card:
+      type: table
+      title: フランス 4-1 ベルギー（10月5日 サン＝ドニ）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 0
+  - text: 7月から率いるジダン監督の下で、フランスが1点を追うのは初めてです。
+    card:
+      type: table
+      title: フランス 4-1 ベルギー（10月5日 サン＝ドニ）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 0
+  - text: 60分すぎ、監督は3人をまとめて送り出します。
+    image: assets/images/20261006_match_france_belgium/zidane/01_w.jpg
+    card: none
+  - text: オリーセ、シェルキ、そしてダ・クーニャ。72分にはドゥエも入りました。
+  - text: その5分後、ドゥエがペナルティエリアの外から左足で決め、同点に追いつきます。
+    image: assets/images/20261006_match_france_belgium/doue/01_t.jpg
+    card:
+      type: table
+      title: フランス 4-1 ベルギー（10月5日 サン＝ドニ）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 1
+  - voice: ジダン監督
+    text: 同点にしてからは、まったく別の試合になった。
+    pause: 0.3
+  - text: 81分、オリーセの折り返しをシェルキが押し込み、逆転。
+    image: assets/images/20261006_match_france_belgium/cherki/01_v.jpg
+    card:
+      type: table
+      title: フランス 4-1 ベルギー（10月5日 サン＝ドニ）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 2
+  - text: 88分には、ドゥエとの細かいパス交換からオリーセが決めます。
+    image: assets/images/20261006_match_france_belgium/olise/01_v.jpg
+    card:
+      type: table
+      title: フランス 4-1 ベルギー（10月5日 サン＝ドニ）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 3
+  - text: 終了間際にも、ドゥエのパスからオリーセ。4対1で勝ちました。
+    emph: true
+    card:
+      type: table
+      title: フランス 4-1 ベルギー（10月5日 サン＝ドニ）
+      columns: [時間, 得点, アシスト, スコア]
+      rows: *goals
+      highlight_row: 4
+  sources:
+  - https://match.uefa.com/v5/matches?fromDate=2026-10-05&toDate=2026-10-05&limit=100&offset=0&order=ASC
+  - https://www.uefa.com/uefanationsleague/match/2047937--france-vs-belgium/
+  - https://match.uefa.com/v5/matches/2047937/lineups
+  - https://www.fotmob.com/matches/x/5181794
+  - https://www.goal.com/en-us/lists/france-belgium-nations-league-comeback/blt0946771c48059ccd
+  - https://www.aljazeera.com/sports/2026/10/5/super-subs-help-france-demolish-belgium-with-late-flurry
+- id: subs
+  heading: 4点を決めたのも、最後のパスも途中出場
+  tier: 報道
+  main: true
+  telop: ドゥエ「このチームには才能のある選手がそろっている。最高だよ」
+  narrator: 解説
+  card:
+    type: table
+    title: 途中から入った4人（4点の中身）
+    columns: [選手, 入った時間, 得点, アシスト]
+    rows: &subs
+    - ['オリーセ', '60分', '2', '1']
+    - ['ドゥエ', '72分', '1', '2']
+    - ['シェルキ', '60分', '1', '0']
+    - ['ダ・クーニャ', '61分', '0', '1']
+    - ['先発の11人', '―', '0', '0']
+    source: UEFA・FotMob
+  say:
+  - text: フランス代表がベルギーに逆転勝ち。同点弾のドゥエは、こう話しました。
+    short_only: true
+    image: assets/images/20261006_match_france_belgium/doue/01_w.jpg
+  - voice: ドゥエ選手
+    text: 点を取るのは、いつだって簡単じゃない。
+    image: assets/images/20261006_match_france_belgium/doue/01_w.jpg
+    card: none
+  - voice: ドゥエ選手
+    text: 特に、こういう守りのいいチームが相手ならね。
+    cont: true
+  - voice: ドゥエ選手
+    text: でもこのチームには、才能のある選手がそろっている。
+    cont: true
+  - voice: ドゥエ選手
+    text: 最高だよ。
+    cont: true
+    pause: 0.4
+  - text: その才能が、どこから出てきたのか。4点の中身を、選手ごとに並べます。
+    image: assets/images/20261006_match_france_belgium/doue/01_t.jpg
+    card:
+      type: table
+      title: 途中から入った4人（4点の中身）
+      columns: [選手, 入った時間, 得点, アシスト]
+      rows: *subs
+  - text: 4点とも、決めたのも最後のパスを出したのも、途中から入った4人です。
+    emph: true
+    card:
+      type: table
+      title: 途中から入った4人（4点の中身）
+      columns: [選手, 入った時間, 得点, アシスト]
+      rows: *subs
+      highlight_row: 0
+  - text: 先発の11人は、最初の60分で得点もアシストも0でした。
+    card:
+      type: table
+      title: 途中から入った4人（4点の中身）
+      columns: [選手, 入った時間, 得点, アシスト]
+      rows: *subs
+      highlight_row: 4
+  - text: なかでもドゥエは、出場18分で1得点2アシスト。
+    card:
+      type: table
+      title: 途中から入った4人（4点の中身）
+      columns: [選手, 入った時間, 得点, アシスト]
+      rows: *subs
+      highlight_row: 1
+  - text: 6分に1度、ゴールに絡んだ計算です。
+    emph: true
+    card:
+      type: table
+      title: 途中から入った4人（4点の中身）
+      columns: [選手, 入った時間, 得点, アシスト]
+      rows: *subs
+      highlight_row: 1
+  - text: オリーセは30分で2得点1アシスト。
+    image: assets/images/20261006_match_france_belgium/olise/01_w.jpg
+    card: none
+  - text: 10点満点の評点は9.2。両チームを通じて、最も高い数字です。
+  sources:
+  - https://www.footmercato.net/a322584739654565112-equipe-de-france-la-reaction-ravie-de-desire-doue
+  - https://www.fotmob.com/matches/x/5181794
+  - https://sports.yahoo.com/articles/uefa-nations-league-olise-shines-210200394.html
+  quotes_from:
+  - フット・メルカート https://www.footmercato.net/a322584739654565112-equipe-de-france-la-reaction-ravie-de-desire-doue
+- id: before_after
+  heading: 60分の交代の前と後、シュート1本の決まる見込み
+  tier: 報道
+  telop: シュート1本の決まる見込みは、交代の前が平均5%、後が15%
+  narrator: 解説
+  card:
+    type: table
+    title: フランスの数字　交代の前と後
+    columns: ['', '0〜59分', '60分〜終了']
+    rows: &split
+    - ['シュート', '15本', '8本']
+    - ['xG（ゴール期待値）', '0.80', '1.20']
+    - ['1本あたりの見込み', '5%', '15%']
+    - ['得点', '0', '4']
+    - ['ベルギーのシュート', '4本', '1本']
+    source: FotMob（シュート一覧を60分で分けて数えた）
+  say:
+  - text: ジダン監督は試合のあと、前半の戦いぶりをこう振り返っています。
+    image: assets/images/20261006_match_france_belgium/zidane/01_w.jpg
+    card: none
+  - voice: ジダン監督
+    text: 相手ゴールまでの、最後の25〜30メートル。
+  - voice: ジダン監督
+    text: そこで突き破る力が足りなかった。
+    cont: true
+  - voice: ジダン監督
+    text: それは、これまでの試合でもずっと足りなかったものだ。
+    cont: true
+    pause: 0.4
+  - text: 90分を通すと、ボールを持った時間はフランスが66%。ベルギーの倍近くです。
+    image: assets/images/20261006_match_france_belgium/01_w.jpg
+  - text: その中身を、60分の交代の前と後に分けてみます。
+    image: assets/images/20261006_match_france_belgium/cherki/01_v.jpg
+    card:
+      type: table
+      title: フランスの数字　交代の前と後
+      columns: ['', '0〜59分', '60分〜終了']
+      rows: *split
+  - text: 交代の前、フランスは60分で15本のシュートを打っていました。
+    card:
+      type: table
+      title: フランスの数字　交代の前と後
+      columns: ['', '0〜59分', '60分〜終了']
+      rows: *split
+      highlight_row: 0
+  - text: 1本ごとの決まる確率を足したゴール期待値は0.80。1点にも届きません。
+    card:
+      type: table
+      title: フランスの数字　交代の前と後
+      columns: ['', '0〜59分', '60分〜終了']
+      rows: *split
+      highlight_row: 1
+  - text: 交代のあとの30分あまりは8本。1分あたりの本数は、前とほぼ同じです。
+    card:
+      type: table
+      title: フランスの数字　交代の前と後
+      columns: ['', '0〜59分', '60分〜終了']
+      rows: *split
+      highlight_row: 0
+  - text: 変わったのは1本の質。決まる見込みは平均5%から15%、3倍に上がりました。
+    emph: true
+    card:
+      type: table
+      title: フランスの数字　交代の前と後
+      columns: ['', '0〜59分', '60分〜終了']
+      rows: *split
+      highlight_row: 2
+  - text: 8本のうち7本は、途中から入った3人のシュート。そこから4点が生まれます。
+    card:
+      type: table
+      title: フランスの数字　交代の前と後
+      columns: ['', '0〜59分', '60分〜終了']
+      rows: *split
+      highlight_row: 3
+  - text: 守りでも、ベルギーのシュートは交代の前の4本から、後は1本だけでした。
+    card:
+      type: table
+      title: フランスの数字　交代の前と後
+      columns: ['', '0〜59分', '60分〜終了']
+      rows: *split
+      highlight_row: 4
+  sources:
+  - https://www.fotmob.com/matches/x/5181794
+  - https://matchstats.uefa.com/v1/team-statistics/2047937
+  - https://www.laprovence.com/article/sports/3897202379035114/equipe-de-france-je-suis-tres-optimiste-pour-la-suite-annonce-zinedine-zidane-apres-son-premier-rassemblement
+  quotes_from:
+  - ラ・プロヴァンス https://www.laprovence.com/article/sports/3897202379035114/equipe-de-france-je-suis-tres-optimiste-pour-la-suite-annonce-zinedine-zidane-apres-son-premier-rassemblement
+- id: view
+  heading: ジダン体制4試合の得点と、11月のイタリア戦
+  tier: 背景
+  viewpoint: true
+  telop: 3試合で3点だったチームが、この1試合で4点。11月12日のイタリア戦で引き分け以上なら8強
+  narrator: 解説
+  card:
+    type: table
+    title: ジダン監督の4試合
+    columns: [日付, 相手, 場所, 結果]
+    rows: &zz
+    - ['9月25日', 'トルコ', '敵地', '1-0']
+    - ['9月28日', 'ベルギー', '敵地', '1-0']
+    - ['10月2日', 'イタリア', 'ホーム', '1-1']
+    - ['10月5日', 'ベルギー', 'ホーム', '4-1']
+    - ['4試合', '3勝1分', '―', '7得点2失点']
+    source: UEFA
+  say:
+  - text: ジダン監督が就いてから、フランスはこれで4試合を戦いました。
+    image: assets/images/20261006_match_france_belgium/zidane/01_v.jpg
+    card:
+      type: table
+      title: ジダン監督の4試合
+      columns: [日付, 相手, 場所, 結果]
+      rows: *zz
+  - text: 3勝1分けで負けなし。勝ち点10で、グループの首位に立っています。
+    card:
+      type: table
+      title: ジダン監督の4試合
+      columns: [日付, 相手, 場所, 結果]
+      rows: *zz
+      highlight_row: 4
+  - text: ただ、前の3試合はどれも1点ずつ。3試合を足しても3点でした。
+    card:
+      type: table
+      title: ジダン監督の4試合
+      columns: [日付, 相手, 場所, 結果]
+      rows: *zz
+      highlight_row: 2
+  - text: それをこの1試合の4点で上回り、ホームでの初勝利もつかみました。
+    emph: true
+    card:
+      type: table
+      title: ジダン監督の4試合
+      columns: [日付, 相手, 場所, 結果]
+      rows: *zz
+      highlight_row: 3
+  - text: 4試合の7点のうち、6点に絡んだのがオリーセ。本人はこう話します。
+    image: assets/images/20261006_match_france_belgium/olise/01_w.jpg
+    card: none
+  - voice: オリーセ選手
+    text: チーム全体の力でもあると思う。
+  - voice: オリーセ選手
+    text: 監督が考えを持ち込んで、僕たちはそれについていく。
+    cont: true
+  - voice: オリーセ選手
+    text: 4試合ともよくやれた。このまま続けていくよ。
+    cont: true
+    pause: 0.4
+  - text: そのオリーセについて聞かれたジダン監督は、短く答えました。
+    image: assets/images/20261006_match_france_belgium/zidane/01_w.jpg
+  - voice: ジダン監督
+    text: 言うことは何もない。彼のやっていることは、ただただ特別だ。
+    pause: 0.4
+  - text: ただ、準々決勝はまだ決まっていません。同じ日に、イタリアも勝ったからです。
+    image: assets/images/20261006_match_france_belgium/olise/01_v.jpg
+    card: &table_card
+      type: table
+      title: グループA1の順位（4試合終了）
+      columns: [順位, チーム, 勝, 分, 敗, 勝点]
+      rows:
+      - ['1', 'フランス', '3', '1', '0', '10']
+      - ['2', 'イタリア', '2', '1', '1', '7']
+      - ['3', 'ベルギー', '2', '0', '2', '6']
+      - ['4', 'トルコ', '0', '0', '4', '0']
+      source: UEFA
+      highlight_row: 1
+  - text: 準々決勝に進めるのは、各グループの2位まで。首位と2位の差は、勝ち点3です。
+    card:
+      <<: *table_card
+      highlight_row: 0
+  - text: 次は11月12日、ミラノでそのイタリアと戦います。
+    image: assets/images/20261006_match_france_belgium/01_w.jpg
+    card: none
+  - text: ここで引き分け以上なら、2位以内が決まります。
+  - text: 15日はボルドーに戻り、まだ勝ち点0のトルコを迎えます。
+  - text: 最初の60分で5%だった1本の見込みを、先発の顔ぶれで上げられるか。
+  - text: 11月のミラノで注目したいのは、その一点です。
+  sources:
+  - https://standings.uefa.com/v1/standings?groupIds=2014191
+  - https://match.uefa.com/v5/matches?competitionId=2014&seasonYear=2027&groupId=2014191&limit=50&offset=0&order=ASC
+  - https://www.maxifoot.fr/france/olise-apprecie-les-idees-de-zidane-foot-465149.htm
+  - https://www.laprovence.com/article/sports/3897202379035114/equipe-de-france-je-suis-tres-optimiste-pour-la-suite-annonce-zinedine-zidane-apres-son-premier-rassemblement
+  - https://sports.yahoo.com/articles/uefa-nations-league-olise-shines-210200394.html
+  - https://www.aljazeera.com/sports/2026/10/5/super-subs-help-france-demolish-belgium-with-late-flurry
+  quotes_from:
+  - マキシフット https://www.maxifoot.fr/france/olise-apprecie-les-idees-de-zidane-foot-465149.htm
+  - ラ・プロヴァンス https://www.laprovence.com/article/sports/3897202379035114/equipe-de-france-je-suis-tres-optimiste-pour-la-suite-annonce-zinedine-zidane-apres-son-premier-rassemblement
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「後半で交代切った奴らが全員決めるのヤバすぎる」
+  narrator: キャスター
+  say:
+  # X IiIuzivert7（2026-10-05 20:33 UTC）。Yahoo!リアルタイム検索「ジダン 交代」→ fxtwitter で全文
+  - voice: ネット民
+    text: ドゥエ、シェルキ、オリーセ
+    image: assets/images/20261006_match_france_belgium/doue/01_w.jpg
+  - voice: ネット民
+    text: 後半で交代切った奴らが全員決めるのヤバすぎる
+    cont: true
+  - voice: ネット民
+    text: ジダンの采配力半端ないし
+    cont: true
+  - voice: ネット民
+    text: もうこれ勝てる国おらんレベルじゃね？今
+    cont: true
+  # X uribou0725（20:27 UTC。81分の逆転のころ）。全文
+  - voice: ネット民
+    text: 交代選手で逆転された……
+    image: assets/images/20261006_match_france_belgium/lukebakio/01_w.jpg
+  - voice: ネット民
+    text: 現時点の選手層の厚さでは、
+    cont: true
+  - voice: ネット民
+    text: ベルギーとフランスではまだ差があるな
+    cont: true
+  # X juuuun1228（22:01 UTC）。Yahoo!リアルタイム検索「オリーセ」→ fxtwitter で全文
+  - voice: ネット民
+    text: この完成度のオリーセとドゥエがまだ若手扱いなの、
+    image: assets/images/20261006_match_france_belgium/doue/01_w.jpg
+    short_voice: true
+  - voice: ネット民
+    text: フランス強すぎるやろ
+    cont: true
+    short_voice: true
+  sources:
+  - https://x.com/IiIuzivert7/status/2107207473841238058
+  - https://x.com/uribou0725/status/2107206028907684159
+  - https://x.com/juuuun1228/status/2107229823005561036

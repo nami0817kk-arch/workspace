@@ -1,0 +1,735 @@
+# 監督の経歴：森保一（10/6）。2018年7月から日本代表監督。10/5 キリンカップ決勝（国立、2-1 ニュージーランド）が国内で最後の試合。
+# 契約は AFCアジアカップ2027（2027/1/7〜2/5、サウジアラビア）の終了まで、後任は大岩剛（JFA 2026-07-23 news/00036548）。
+# 通算の数字は JFA の各年の「試合日程・結果」から自分で数えた（raw の3節に全112行）。実際に戦った国際試合111（2024-03-26 北朝鮮の不戦勝と
+#   2021-06-03 の U-24 日本代表戦は数えない）、PK戦は引き分け。JFA のプロフィール（7/23 時点 108試合74勝16分18敗）とは1試合1勝ずれる
+#   （不戦勝か U-24 戦のどちらかを含めた数）。報道の「通算111試合目」（スポニチ 10/5）・「100試合目＝2025-11-18」（Wikipedia）とは一致。
+# 大会ごと・期ごとの勝率と、欧州の国11試合（8勝3分0敗）も同じ数え方で自分で足した。Wikipedia の「欧州に8勝2分0敗（6/15 時点）」と一致。
+# 選手時代・監督の歩みは JFA のプロフィールと日本語版Wikipedia（森保一・ドーハの悲劇）、英語版Wikipedia（1992 アジアカップ優勝・2019 決勝・2026 W杯）。
+# 森保監督の言葉はすべてサッカーキング（10/5、2213691）から：前日会見・試合前の涙・サポーターへの感謝・退任後の話。
+# Jリーグは扱わない決まりなので、広島の優勝は表の1行と語りの1行だけ。同じ 10/5 に堂安の回を出しているので、試合の細部は1行。
+# 10/5 の試合後の「4バック」「アジア杯のシミュレーション」（ゲキサカ 460361）は題と別なので使わない。
+# ネットの反応は入れていない（シリーズの回）。
+# 写真: 01 ゲキサカ 460361（Koki NAGAHAMA/GEKISAKA、10/5）、02 サッカーキング 2213691（金田慎平、トロフィー）、03 サッカーキング 2213704（ベンチ、10/5）、
+#   04 Commons 2022 首相表敬（CC BY 4.0 内閣広報室）、05 Commons 2024 タイ戦（CC BY 4.0 RuinDig/Yuki Uchida）、06 Commons 2025 コロンバス（CC BY 4.0 Keiteay）。代理店は使っていない。
+#   材料の控えは research/raw/20261006_coach_moriyasu.md。
+date: 2026年10月06日
+slot: other_1
+format: news
+series: 監督の経歴
+people:
+- 森保一
+theme:
+  id: coach_moriyasu
+  league: ''
+  league_name: 日本代表
+  kind: other
+  topic: 森保一
+  title: 森保一、国内最後の試合で明かした胸の内。日本代表8年の勝率、大会ごとの差は
+  question: 8年で111試合を率いた森保監督は、どの舞台で勝ち、どこで壁に当たってきたのか
+  takeaway: 実際に戦った111試合（PK戦は引き分け）は76勝17分け18敗、勝率68.5%。大会ごとに束ねると、W杯のアジア予選は81.8%、アジアカップ75%と、アジアの公式戦ではほぼ5試合に4勝。それがW杯本大会では8試合3勝の37.5%に下がる一方、欧州の国には11試合負けなし。次は11月14日にシンガポールでブラジル、アジアカップは1月11日のインドネシア戦からで、20日には2019年の決勝で敗れたカタールと当たる
+  opening_image: assets/images/20261006_coach_moriyasu/03_w.jpg
+short_title: 森保監督、国立の最後に「涙がこみ上げてきた」
+thumbnail:
+  photo: assets/images/20261006_coach_moriyasu/01_w.jpg
+  short_photo: assets/images/20261006_coach_moriyasu/01_v.jpg
+  line1: 森保一 最後の国立で涙こらえ
+  line2: 欧州勢に●●試合負けなし
+  tags:
+  - 森保一
+  - 日本代表
+  - 森保ジャパン
+  - ドーハの悲劇
+  - 監督の経歴
+sections:
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  official: true
+  telop: 森保一の基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: 森保一の基礎DATA
+    columns: &id001
+    - 項目
+    - 内容
+    rows: &id002
+    - - 生まれ
+      - 1968年8月23日（58歳）、長崎市
+    - - 選手時代
+      - ボランチ。マツダ・広島など4クラブ
+    - - 日本代表（選手）
+      - 35試合1得点。1992年アジアカップ優勝
+    - - クラブの監督
+      - 広島でリーグ優勝3回（2012〜15）
+    - - 日本代表監督
+      - 2018年7月から。国際試合111
+    - - 契約
+      - 2027年のアジアカップまで
+  say:
+  - text: 日本代表を8年にわたって率いてきた、森保一監督。
+    image: assets/images/20261006_coach_moriyasu/03_w.jpg
+    card: none
+  - text: 10月5日のキリンカップ決勝が、国内で指揮を執る最後の試合でした。
+    image: assets/images/20261006_coach_moriyasu/03_v.jpg
+    card:
+      type: table
+      title: 森保一の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: 11月はシンガポール、来年1月のアジアカップはサウジアラビアで戦うからです。
+    card:
+      type: table
+      title: 森保一の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: 前日の会見では、いつもの落ち着いた口ぶりでした。
+    image: assets/images/20261006_coach_moriyasu/03_w.jpg
+    card: none
+  - text: センチメンタルになることはないですが、
+    voice: 森保監督
+    card: none
+  - text: いつも通り勝利を目指して、目の前の一戦に全力を尽くします。
+    voice: 森保監督
+    cont: true
+    card: none
+  - text: 1968年、長崎市の生まれ。現役のころは、守備的な中盤のボランチでした。
+    image: assets/images/20261006_coach_moriyasu/03_v.jpg
+    card:
+      type: table
+      title: 森保一の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 日本代表では35試合に出て、1992年のアジアカップ優勝も経験しています。
+    card:
+      type: table
+      title: 森保一の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 2018年から率いる日本代表では、ここまで111試合を戦いました。
+    card:
+      type: table
+      title: 森保一の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  - text: 契約は来年のアジアカップまで。その後は、大岩剛監督に引き継がれます。
+    card:
+      type: table
+      title: 森保一の基礎DATA
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  quotes_from:
+  - サッカーキング https://www.soccer-king.jp/news/japan/national/20261005/2213691.html
+  sources:
+  - https://www.jfa.jp/samuraiblue/news/00036548/
+  - https://www.jfa.jp/national_team/staff/MORIYASU_Hajime.html
+  - https://www.soccer-king.jp/news/japan/national/20261005/2213691.html
+  - https://en.wikipedia.org/wiki/Hajime_Moriyasu
+- id: road
+  heading: 読めなかった名前、ドーハのボランチ
+  tier: 報道
+  official: true
+  telop: 無名のボランチが代表へ。1993年、ドーハの悲劇をピッチで
+  narrator: 解説
+  card:
+    type: table
+    title: 選手・森保一の歩み
+    columns: &id003
+    - 年
+    - 出来事
+    rows: &id004
+    - - '1987'
+      - 長崎の高校からマツダへ
+    - - '1992'
+      - 日本代表に初めて呼ばれる
+    - - '1992'
+      - アジアカップ優勝（日本で初）
+    - - '1993'
+      - ドーハの悲劇（W杯予選のイラク戦）
+    - - 2002〜03
+      - 仙台が最後のクラブ
+  say:
+  - text: 選手としての出発は1987年。地元長崎の高校から、マツダに入りました。
+    image: assets/images/20261006_coach_moriyasu/05_v.jpg
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 1992年、オフト監督の日本代表に初めて呼ばれます。
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 同じ長崎出身の2人を除いて、代表の誰も「モリヤス」と読めなかったほど無名でした。
+    emph: true
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: それでも初戦のアルゼンチン戦で先発し、相手から「いいボランチだ」と認められます。
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: その年の秋には、日本が初めて制したアジアカップの優勝メンバーに。
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: そして1993年10月28日、カタールのドーハ。W杯初出場をかけたイラク戦です。
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: ボランチの位置には、出場停止が明けた森保一が戻っていました。
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 2対1で勝っていた終了間際、コーナーキックから追いつかれます。
+    emph: true
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 2対2の引き分けで、W杯への夢は消えました。
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 2003年まで仙台でプレーし、スパイクを脱ぎます。
+    card:
+      type: table
+      title: 選手・森保一の歩み
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  sources:
+  - https://ja.wikipedia.org/wiki/%E6%A3%AE%E4%BF%9D%E4%B8%80
+  - https://ja.wikipedia.org/wiki/%E3%83%89%E3%83%BC%E3%83%8F%E3%81%AE%E6%82%B2%E5%8A%87
+  - https://en.wikipedia.org/wiki/Hajime_Moriyasu
+  - https://www.jfa.jp/samuraiblue/news/00036548/
+- id: coach
+  heading: 指導者として、広島から代表へ
+  tier: 報道
+  official: true
+  telop: 広島で3度の優勝。2018年、W杯後の新しい代表を任される
+  narrator: キャスター
+  card:
+    type: table
+    title: 監督・森保一の歩み（2012〜2022）
+    columns: &id005
+    - 時期
+    - 出来事
+    rows: &id006
+    - - 2012〜17
+      - 広島の監督。リーグ優勝3回
+    - - 2017年10月
+      - 東京五輪を目指す代表の監督に
+    - - 2018年7月
+      - 日本代表の監督に（五輪代表と兼任）
+    - - 2019年2月
+      - アジアカップ準優勝
+    - - 2021年8月
+      - 東京五輪で4位
+    - - 2021〜22年
+      - W杯アジア最終予選を2位で突破
+  say:
+  - text: 引退後は指導者へ。2012年からの広島で、4年に3度リーグの頂点に。
+    image: assets/images/20261006_coach_moriyasu/06_v.jpg
+    card:
+      type: table
+      title: 監督・森保一の歩み（2012〜2022）
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: 2017年秋には、東京五輪を目指す世代の代表監督に。
+    card:
+      type: table
+      title: 監督・森保一の歩み（2012〜2022）
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 2018年のW杯のあと、森保一は日本代表の監督も任されます。
+    card:
+      type: table
+      title: 監督・森保一の歩み（2012〜2022）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: W杯のあとの新しい代表を日本人が任されるのは、初めてのことでした。
+    emph: true
+    card:
+      type: table
+      title: 監督・森保一の歩み（2012〜2022）
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: 最初の大きな大会、2019年のアジアカップは決勝まで勝ち進みます。
+    card:
+      type: table
+      title: 監督・森保一の歩み（2012〜2022）
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: しかし決勝はカタールに1対3。日本がアジアの決勝で敗れたのは、初めてでした。
+    card:
+      type: table
+      title: 監督・森保一の歩み（2012〜2022）
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: 地元開催の東京五輪は、1次リーグ3連勝のあと4位に終わります。
+    card:
+      type: table
+      title: 監督・森保一の歩み（2012〜2022）
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: W杯のアジア最終予選は最初の3試合で2敗。そこから6連勝で、2位で突破しました。
+    card:
+      type: table
+      title: 監督・森保一の歩み（2012〜2022）
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  sources:
+  - https://ja.wikipedia.org/wiki/%E6%A3%AE%E4%BF%9D%E4%B8%80
+  - https://en.wikipedia.org/wiki/Hajime_Moriyasu
+  - https://www.jfa.jp/samuraiblue/schedule_result/2019.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2021.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2022.html
+- id: qatar
+  heading: 因縁のカタールで、ドイツとスペインを倒す
+  tier: 報道
+  official: true
+  telop: 優勝経験国の2つに逆転勝ち。PK戦でベスト8を逃す
+  narrator: 解説
+  card:
+    type: table
+    title: カタールW杯の4試合（2022）
+    columns: &id007
+    - 日付
+    - 相手
+    - 結果
+    rows: &id008
+    - - 11月23日
+      - ドイツ
+      - 2-1 勝ち（逆転）
+    - - 11月27日
+      - コスタリカ
+      - 0-1 負け
+    - - 12月1日
+      - スペイン
+      - 2-1 勝ち（逆転）
+    - - 12月6日
+      - クロアチア
+      - 1-1、PK戦1-3
+  say:
+  - text: 2022年、森保一が率いてW杯に挑んだ舞台は、29年前と同じカタールでした。
+    image: assets/images/20261006_coach_moriyasu/04_w.jpg
+    card: none
+  - text: 初戦の相手は、W杯を4度制したドイツ。先制されてから、2対1で逆転勝ち。
+    image: assets/images/20261006_coach_moriyasu/04_w_v.jpg
+    card:
+      type: table
+      title: カタールW杯の4試合（2022）
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 3戦目では、2010年の王者スペインにも2対1で逆転勝ちです。
+    emph: true
+    card:
+      type: table
+      title: カタールW杯の4試合（2022）
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: どちらの国にも、日本代表として初めての勝利でした。
+    card:
+      type: table
+      title: カタールW杯の4試合（2022）
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: コスタリカには敗れたものの、グループを1位で突破します。
+    card:
+      type: table
+      title: カタールW杯の4試合（2022）
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 決勝トーナメント1回戦はクロアチアと1対1。PK戦で敗れ、ベスト16でした。
+    card:
+      type: table
+      title: カタールW杯の4試合（2022）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: 大会のあと、続投が決まります。W杯を率いた日本代表監督の続投は、初めてでした。
+    card:
+      type: table
+      title: カタールW杯の4試合（2022）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2022.html
+  - https://ja.wikipedia.org/wiki/%E6%A3%AE%E4%BF%9D%E4%B8%80
+  - https://ja.wikipedia.org/wiki/%E3%83%89%E3%83%BC%E3%83%8F%E3%81%AE%E6%82%B2%E5%8A%87
+  - https://en.wikipedia.org/wiki/Hajime_Moriyasu
+- id: second
+  heading: 2期目、ブラジルとイングランドから初白星
+  tier: 報道
+  official: true
+  telop: 敵地でドイツに4対1。ブラジルには14試合目で初勝利
+  narrator: キャスター
+  card:
+    type: table
+    title: 2期目の主な試合（2023〜2026）
+    columns: &id009
+    - 時期
+    - 相手
+    - 結果
+    rows: &id010
+    - - 2023年9月
+      - ドイツ（敵地）
+      - 4-1 勝ち
+    - - 2024年2月
+      - イラン（アジアカップ）
+      - 1-2、ベスト8
+    - - 2025年10月
+      - ブラジル
+      - 3-2 勝ち（初勝利）
+    - - 2026年4月
+      - イングランド（敵地）
+      - 1-0 勝ち
+    - - 2026年6月
+      - ブラジル（W杯）
+      - 1-2、32強
+  say:
+  - text: 2期目の森保一は、最初の秋に敵地でドイツと再戦し、4対1で勝ちます。
+    image: assets/images/20261006_coach_moriyasu/05_v.jpg
+    card:
+      type: table
+      title: 2期目の主な試合（2023〜2026）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: ただ2024年のアジアカップは、準々決勝でイランに敗れてベスト8。
+    card:
+      type: table
+      title: 2期目の主な試合（2023〜2026）
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: 2025年10月には、それまで13戦して勝てなかったブラジルから初勝利。
+    emph: true
+    image: assets/images/20261006_coach_moriyasu/06_v.jpg
+    card:
+      type: table
+      title: 2期目の主な試合（2023〜2026）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 今年4月には聖地ウェンブリーで、アジアの国として初めてイングランドに勝ちました。
+    card:
+      type: table
+      title: 2期目の主な試合（2023〜2026）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: そして北中米のW杯。1次リーグは1勝2分けの2位で、決勝トーナメントへ。
+    card:
+      type: table
+      title: 2期目の主な試合（2023〜2026）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: 32チームで争う決勝トーナメントの1回戦でブラジルと当たり、1対2で敗戦。
+    card:
+      type: table
+      title: 2期目の主な試合（2023〜2026）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  - text: 前回のベスト16から、ひとつ手前で大会を終えた形です。
+    card:
+      type: table
+      title: 2期目の主な試合（2023〜2026）
+      columns: *id009
+      rows: *id010
+      highlight_row: 4
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2023.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2024.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2025.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://ja.wikipedia.org/wiki/%E6%A3%AE%E4%BF%9D%E4%B8%80
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_F
+- id: tears
+  main: true
+  heading: 国立の最後に、こみ上げた涙
+  tier: 報道
+  telop: 「涙がこみ上げてきて、もう少しで泣きそうになっていた」
+  narrator: キャスター
+  say:
+  - text: 国内で最後の試合。森保監督が打ち明けた思いです。
+    short_only: true
+    image: assets/images/20261006_coach_moriyasu/03_w.jpg
+  - text: 10月5日、キックオフ前の森保一監督です。
+    image: assets/images/20261006_coach_moriyasu/03_w.jpg
+  - text: 満員の国立競技場のスタンドを見て、
+    voice: 森保監督
+  - text: こみ上げてくるものがありました。
+    voice: 森保監督
+    cont: true
+  - text: スタジアムを暗くして、イルミネーションを演出するところで、
+    voice: 森保監督
+    cont: true
+  - text: 涙がこみ上げてきて、もう少しで泣きそうになっていた。
+    voice: 森保監督
+    cont: true
+  quotes_from:
+  - サッカーキング https://www.soccer-king.jp/news/japan/national/20261005/2213691.html
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20261005/2213691.html
+- id: kirin
+  heading: 15年ぶりの優勝と、サポーターへの感謝
+  tier: 報道
+  official: true
+  telop: 堂安律の決勝点で2対1。キリンカップは2011年以来
+  narrator: 解説
+  say:
+  - text: 試合は1対1から、後半26分に主将の堂安律が決めて2対1の勝ち。
+    image: assets/images/20261006_coach_moriyasu/02_w.jpg
+    card: none
+  - text: 日本にとって、15年ぶりのキリンカップ優勝です。
+    card: none
+  - text: トロフィーを掲げた森保一監督の胸には、サポーターへの感謝もあったといいます。
+    card: none
+  - text: また未来で誰が監督になっても、日本代表を応援して、
+    voice: 森保監督
+    card: none
+  - text: 世界一の夢を一緒に見ていこう、追っていこうと
+    voice: 森保監督
+    cont: true
+    card: none
+  - text: 思ってもらえるようなチャレンジがしたいなと思いました。
+    voice: 森保監督
+    cont: true
+    card: none
+  quotes_from:
+  - サッカーキング https://www.soccer-king.jp/news/japan/national/20261005/2213691.html
+  sources:
+  - https://www.soccer-king.jp/news/japan/national/20261005/2213691.html
+  - https://web.gekisaka.jp/news/japan/detail/?460359-460359-fl
+  - https://www.jfa.jp/samuraiblue/kirincupsoccer_2026/match_page/m4.html
+- id: view
+  viewpoint: true
+  heading: 大会ごとの勝率で見る森保ジャパン
+  tier: 背景
+  telop: アジアの公式戦は約8割、W杯本大会は37.5%。欧州の国には負けなし
+  narrator: 解説
+  card:
+    type: table
+    title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+    columns: &id011
+    - 大会
+    - 試合
+    - 勝ち
+    - 勝率
+    rows: &id012
+    - - W杯アジア予選
+      - '33'
+      - '27'
+      - 81.8%
+    - - E-1選手権
+      - '9'
+      - '7'
+      - 77.8%
+    - - アジアカップ
+      - '12'
+      - '9'
+      - 75.0%
+    - - 親善試合
+      - '46'
+      - '30'
+      - 65.2%
+    - - W杯本大会
+      - '8'
+      - '3'
+      - 37.5%
+    - - コパ・アメリカ
+      - '3'
+      - '0'
+      - 0%
+  say:
+  - text: では、森保一の8年を大会ごとに束ねると、何が見えるでしょうか。
+    image: assets/images/20261006_coach_moriyasu/03_v.jpg
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: W杯のアジア予選は33試合で27勝。勝率は81.8%です。
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: 東アジアの国で争うE-1選手権は77.8%、アジアカップは75%と続きます。
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: アジアの公式戦を合わせると54試合で43勝。ほぼ5試合に4つ勝ってきました。
+    emph: true
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: 親善試合は46試合で、勝率65.2%。
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: ところがW杯の本大会では8試合で3勝。勝率は37.5%まで下がります。
+    emph: true
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 一方で、欧州の国とは11試合で8勝3分け。
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: PK戦を引き分けに数えると、まだ一度も負けていません。
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 時期で分けると、カタール大会までの1期目は66.1%。
+    card:
+      type: table
+      title: 期ごとの勝率（同じ数え方）
+      columns: &id013
+      - 時期
+      - 試合
+      - 勝ち・分け・負け
+      - 勝率
+      rows: &id014
+      - - 1期目（2018〜22）
+        - '62'
+        - 41・9・12
+        - 66.1%
+      - - 2期目（2023〜26）
+        - '45'
+        - 32・7・6
+        - 71.1%
+      - - 3期目（2026〜）
+        - '4'
+        - 3・1・0
+        - 75.0%
+      - - 通算
+        - '111'
+        - 76・17・18
+        - 68.5%
+      highlight_row: 0
+  - text: 北中米大会までの2期目は、71.1%に上がりました。
+    card:
+      type: table
+      title: 期ごとの勝率（同じ数え方）
+      columns: *id013
+      rows: *id014
+      highlight_row: 1
+  - text: いまの3期目は4試合で3勝1分け。通算は76勝17分け18敗。7割近い勝率です。
+    card:
+      type: table
+      title: 期ごとの勝率（同じ数え方）
+      columns: *id013
+      rows: *id014
+      highlight_row: 3
+  - text: 大きな相手を倒す力と、W杯の本番での勝ち星。その差が8年の数字に表れています。
+    card:
+      type: table
+      title: 大会ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 次は11月のシンガポール。ブラジルとは14日、パラグアイとは17日に対戦。
+    image: assets/images/20261006_coach_moriyasu/03_w.jpg
+    card: none
+  - text: 来年1月のアジアカップは、11日のインドネシア戦から。
+    card: none
+  - text: 1次リーグ3戦目の20日は、2019年の決勝で敗れたカタールとの対戦です。
+    card: none
+  - text: 最後の大会で、アジアの頂点に届くか。8年の締めくくりが近づいています。
+    card: none
+  - text: その先について聞かれると、森保監督は笑ってこう答えました。
+    image: assets/images/20261006_coach_moriyasu/02_w.jpg
+    card: none
+  - text: まだ決まっていないですけど、
+    voice: 森保監督
+    card: none
+  - text: 監督業はおそらく続ける予定なので、
+    voice: 森保監督
+    cont: true
+    card: none
+  - text: チームの一人として、国立でまた試合を
+    voice: 森保監督
+    cont: true
+    card: none
+  - text: させていただくことはあるかもしれません。
+    voice: 森保監督
+    cont: true
+    card: none
+  quotes_from:
+  - サッカーキング https://www.soccer-king.jp/news/japan/national/20261005/2213691.html
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2018.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://www.jfa.jp/samuraiblue/news/00036548/
+  - https://www.jfa.jp/samuraiblue/20261117/
+  - https://www.jfa.jp/samuraiblue/asiancup2027/
+  - https://ja.wikipedia.org/wiki/%E6%A3%AE%E4%BF%9D%E4%B8%80
+  - https://www.soccer-king.jp/news/japan/national/20261005/2213691.html

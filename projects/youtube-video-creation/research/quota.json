@@ -268,7 +268,8 @@
     "thumbnails.set": 6,
     "playlists.insert": 1,
     "playlistItems.insert": 3,
-    "videos.list": 14,
-    "videos.update": 1
+    "videos.list": 15,
+    "videos.update": 1,
+    "videoCategories.list": 1
   }
 }

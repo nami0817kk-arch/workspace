@@ -18,6 +18,7 @@ theme:
   topic: セルタ
   title: セルタ。ヨーロッパで16強に入った年の、まさかの結末
   question: どんなクラブなのか
+  takeaway: 今季のセルタは7試合で勝ち点7と昨季の同じ時点より2多く、失点6はリーグで最も少ない数に並ぶが、ラシン戦の5点を除くと6試合で3得点にとどまり、守りに見合う点が取れるかは10月15日に本拠地でユヴェントスを迎える一戦で見える
   hook: 消えかけたクラブを救ったのは、いまの主将でした。
   lead: スペイン1部の20クラブで、最も西にあるスタジアム。
   opening_image: assets/stats/ll_celta_data_t.png
@@ -35,7 +36,7 @@ sections:
   telop: 昨シーズンは欧州8強。率いるのは地元の監督
   narrator: キャスター
   say:
-  - text: 昨シーズンは、ヨーロッパリーグで**ベスト8**。鈴木唯人のフライブルクに、合計**1対6**で敗退。
+  - text: 昨季はヨーロッパリーグで**ベスト8**。鈴木唯人のフライブルクに、合計**1対6**で敗退。
     image: assets/stats/ll_celta_data_r1.png
     no_telop: true
   - text: 率いるヒラルデス監督は、こう話しています。
@@ -47,7 +48,7 @@ sections:
   - voice: クラウディオ・ヒラルデス
     text: 2年半前は、まだ1部で指揮をとったこともなかった
     image: assets/stats/ll_celta_data_r2.png
-  - text: そしてこのクラブは、チャンピオンズリーグで勝ち上がった同じシーズンに、2部へ落ちています。
+  - text: そしてこのクラブは、チャンピオンズリーグ16強の年に、2部へ落ちています。
     image: assets/stats/ll_celta_data_r3.png
     no_telop: true
   - image: assets/stats/ll_celta_data0.png
@@ -68,7 +69,7 @@ sections:
     text: リーグも国王杯も、優勝はありません。国王杯は、決勝で**3度**敗れました。
     no_telop: true
   - image: assets/stats/ll_celta_data6.png
-    text: 最多出場はイアゴ・アスパス。公式戦で**578試合**、いまも増え続けています。
+    text: 最多出場はイアゴ・アスパス。公式戦**578試合**に出て、いまも記録を伸ばしています。
     no_telop: true
   - image: assets/stats/ll_celta_data7.png
     text: 直近のタイトルは**2000年**、ヨーロッパのインタートトカップです。
@@ -173,7 +174,8 @@ sections:
       rows:
       - - 2009年6月
         - 21歳のアスパスが2得点
-  - この勝利で残留。その若者が、いまの主将です。
+  - この勝利で残留し、借金は半分以下まで減らせました。
+  - その若者が、いまの主将です。
   sources:
   - https://es.wikipedia.org/wiki/Real_Club_Celta_de_Vigo
   - https://en.wikipedia.org/wiki/Iago_Aspas
@@ -207,8 +209,8 @@ sections:
       - &id005
         - 運営の型
         - 育てて売る
-  - 生え抜きのガブリ・ベイガは**2023年**、**4000万ユーロ**でサウジアラビアのクラブへ。
-  - text: スタンドは町ぐるみ。席の無い会員も含め、会員証は**4万5812人**。町の人口の15パーセント超です。
+  - 生え抜きのガブリ・ベイガは**2023年**、**4000万ユーロ**でサウジアラビアへ移籍。
+  - text: スタンドは町ぐるみ。会員証を持つ人は、席の無い会員も含め**4万5812人**。
     card:
       type: table
       title: このクラブの特徴
@@ -218,6 +220,7 @@ sections:
       - *id005
       - - クラブの気質
         - 町の15%が会員証
+  - ビーゴの人口の、**15**パーセントを超える数です。
   sources:
   - https://en.wikipedia.org/wiki/RC_Celta_de_Vigo
   - https://en.wikipedia.org/wiki/Gabri_Veiga
@@ -245,7 +248,7 @@ sections:
   say:
   - text: ユニフォームの胸は、**31年**続けてシトロエンでした。
     image: assets/images/ll_celta_episode/scene.jpg
-  - 工場は**1958年**から、スタジアムから歩いて行ける場所にあります。
+  - 工場は**1958年**以来、スタジアムから歩いて行ける場所にあります。
   - スペインのサッカーで、いちばん長く続いたスポンサー契約でした。
   sources:
   - https://en.wikipedia.org/wiki/RC_Celta_de_Vigo
@@ -327,10 +330,11 @@ sections:
       - 2013-2022
       - 2度在籍したウイング
   say:
-  - text: ノリートはアンダルシア出身のウイング。**2013年**、ルイス・エンリケ監督が率いるセルタへ。
+  - text: ノリートはアンダルシア出身のウイング。**2013年**、ルイス・エンリケ監督のセルタへ。
     image: assets/photos/ll/celta/celta_legend_52e66466.jpg
   - 2015年、古巣バルセロナに**4対1**で勝利。自ら1点を決め、アスパスの2点も演出。
-  - シティなどを経て**2020年**に復帰。リーグ戦は2度の在籍で**175試合50得点**。
+  - text: シティなどを経て**2020年**に復帰。リーグ戦は2度の在籍で**175試合50得点**。
+    card: none
   sources:
   - https://en.wikipedia.org/wiki/Vladimir_Gudelj
   - https://en.wikipedia.org/wiki/Aleksandr_Mostovoi
@@ -376,16 +380,16 @@ sections:
     text: ゴールキーパーは3人。
     no_telop: true
   - image: assets/stats/ll_celta_gk_f.png
-    text: イオヌト・ラドゥはルーマニア代表で**10試合**。
+    text: イオヌト・ラドゥはルーマニア代表で**11試合**。
     no_telop: true
   - image: assets/stats/ll_celta_gk_f.png
-    text: イバン・ビジャールはリーグ戦で**61試合**。
+    text: イバン・ビジャールは、セルタの下部組織で育ったキーパーです。
     no_telop: true
   - image: assets/stats/ll_celta_df_f.png
     text: ディフェンダーは10人。
     no_telop: true
   - image: assets/stats/ll_celta_df_f.png
-    text: カール・スタルフェルトはスウェーデン代表で**20試合**。
+    text: カール・スタルフェルトはスウェーデン代表で**22試合**。
     no_telop: true
   - image: assets/stats/ll_celta_df_f.png
     text: マルコス・アロンソはリーグ戦で**68試合**。
@@ -413,21 +417,25 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/RC_Celta_de_Vigo
+  - https://en.wikipedia.org/wiki/Ionu%C8%9B_Radu
+  - https://en.wikipedia.org/wiki/Carl_Starfelt
+  - https://en.wikipedia.org/wiki/Iv%C3%A1n_Villar
   bg: assets/backgrounds/stadium_セルタ_in.png
   official: false
 - id: season
-  heading: 今季のここまで
+  viewpoint: true
+  heading: 14位でも失点はリーグ最少タイ、足りないのは点
   tier: 報道
   telop: 7試合で1勝4引き分け2敗。14位
   narrator: 解説
   card:
     type: table
     title: ラ・リーガの結果
-    columns:
+    columns: &rescols
     - 節
     - 相手
     - 結果
-    rows:
+    rows: &resrows
     - - 第1節
       - オサスナ（ホーム）
       - 1対2
@@ -450,13 +458,34 @@ sections:
       - ラシン・サンタンデール（ホーム）
       - 5対0
   say:
-  - ラ・リーガは7試合を終えて、**1勝4引き分け2敗**です。
-  - 順位は**14位**、勝ち点は**7**です。
-  - ヨーロッパリーグの初戦は、キプロスのオモニアに**0対1**の負け。88分の失点でした。
-  - 10月15日のホームには、ユヴェントスが**26年**ぶりにやって来ます。
+  - セルタはここまで、リーグ戦7試合で**1勝4引き分け2敗**。
+  - 勝ち点は**7**で**14位**。6位のアラベスまでは、勝ち点4の差です。
+  - text: それでも失点**6**は、リーグで最も少ない数に並びます。
+    emph: true
+  - text: 得点は**8**。うち**5**点は、ラシンに勝った1試合です。
+    card:
+      type: table
+      title: ラ・リーガの結果
+      columns: *rescols
+      rows: *resrows
+      highlight_row: 6
+  - text: 残る6試合は、合わせて**3**得点。守れても、点が遠い。
+    card: none
+  - text: 1年前の同じ時点は、まだ勝ちが無く勝ち点**5**。今季は**2**多い。
+    card: none
+  - text: 昨季は38試合をならすと、1試合あたり勝ち点**1.42**。今季はまだ**1.00**です。
+    card: none
+  - text: ヨーロッパリーグの初戦は、キプロスのオモニアに**0対1**の負け。88分の失点。
+    card: none
+  - text: 次の大一番は**10月15日**。ユヴェントスが**26年**ぶりにバライードスへ来ます。
+    card: none
   sources:
   - https://www.espn.com/soccer/team/results/_/name/celta
-  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/85/schedule?season=2026&fixture=true
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/85/schedule?season=2025
+  - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/teams/85/schedule?season=2026&fixture=true
+  - https://rccelta.es/club/actualidad/entradas-ya-a-la-venta-para-el-estreno-europeo-del-celta-en-balaidos-ante-la-juventus/
   - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   bg: assets/backgrounds/stadium_セルタ_in.png
   official: false

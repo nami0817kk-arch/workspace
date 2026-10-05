@@ -1,0 +1,760 @@
+# ジュード・ベリンガム（レアル・マドリード）の紹介。8節の型（2026-09-28）を、エムバペ（research/20261004_player_342229.yaml）・
+# ヴィティーニャ（research/20261005_player_487469.yaml）の形にそろえた（2026-10-06）。
+# 材料は research/raw/20261006_bellingham_material.md（下請けが出典つきで集めた）、数字と写真は research/raw/20261006_player_581678.md。
+# 通算は Transfermarkt（performance-season を季ごとに合計）と FotMob（careerHistory）で突き合わせ、試合と得点は一致
+#   （バーミンガム44-4・ドルトムント132-24・レアル148-49・イングランド代表59-14 → 383試合91点。U21 以下とユースは入れない）。
+#   アシストは食い違う（今季のレアルで TM 3／FotMob 2）ので、通算と今季のクラブの数には出さない。代表の今季3試合1点4アシストは両方一致。
+# 直近の試合は 10/3 のクロアチア戦。イングランド対チェコ（ウェンブリー）は現地 10/6 19:45（日本時間 10/7 3:45）で、まだ行われていない。
+#   チェコとの1戦目は 9/29 プラハ（途中出場19分、主将の腕章）。
+# トゥヘルは「次の段階に達した」とは言っていない。BBC の「別のレベルに達したか」に「今はそう見える」と答え、「次のレベルを目指し続けなければ」と続けた（原文どおりに訳した）。
+# ガーディアンの「本来の力を引き出す」は見出し（"unlocking Bellingham's full potential"、David Hytner 10/5）。中の発言はアシスタントコーチのバリーなので、声にはしない。
+# クロアチア戦のあとの本人の言葉は見つからなかった（BBC・Sky・英FA・ESPN）。
+# 同じ試合の回（scripts/20261004_england_croatia.md）と言い回しを重ねない（あちらはクロアチアの崩れ方が主役。モドリッチの話は入れない）。
+date: 2026年10月06日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ジュード・ベリンガム
+theme:
+  id: player_581678
+  league: spain
+  kind: other
+  topic: レアル・マドリード
+  title: ベリンガムってどんな選手？1季で永久欠番になった背番号22の足し算
+  question: ジュード・ベリンガムはどういう作りの選手で、なぜいま代表で点が止まらないのか
+  takeaway: クラブと代表を合わせた通算は383試合91点（10月5日まで）。代表はワールドカップの前まで48試合6点だったのが、この夏からの11試合で8点。決まった位置に縛らない中央の10番に置かれて、点のペースは約6倍になった。レアルでは今季8試合3点で、同じ自由をクラブでも得られるか。10日のビジャレアル戦と26日のバロンドール発表が次の節目
+  nameplate: ジュード・ベリンガム｜レアル・マドリード MF／イングランド代表
+  opening_image: assets/images/20261006_player_581678/real2026/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑦ジョアン・ネヴェス
+short_title: ベリンガムってどんな選手？
+thumbnail:
+  line1: ベリンガム通算91点
+  line2: 0対7の夜、●点に絡んだ10番
+  tags:
+  - レアル・マドリード
+  - ジュード・ベリンガム
+  - イングランド代表
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261006_player_581678/thumbfull/01.jpg
+  photos: []
+  short_photo: assets/images/20261006_player_581678/panama160/01_v.jpg
+sections:
+- id: hook
+  heading: 背番号22の意味
+  tier: 報道
+  telop: 4番と8番と10番、足して22
+  narrator: キャスター
+  card:
+    type: table
+    title: 背番号22の足し算
+    columns: [番号, 役目]
+    rows:
+    - ['4', '守る']
+    - ['8', '走る']
+    - ['10', '点を取る']
+    - ['22', '3つを足した数']
+    source: バーミンガムのアカデミー責任者（talkSPORT）
+  say:
+  - text: ジュード・ベリンガム。4番と8番と10番を、ひとりで兼ねる男です。
+    image: assets/images/20261006_player_581678/real2026/01_w.jpg
+    card: none
+  - text: 最初のクラブ、バーミンガムで背負ったのは22番。
+    image: assets/images/20261006_player_581678/birmingham/01.jpg
+  - text: 守る4番、走る8番、点を取る10番。足すと22、という意味でした。
+    emph: true
+    card: &n22
+      type: table
+      title: 背番号22の足し算
+      columns: [番号, 役目]
+      rows:
+      - ['4', '守る']
+      - ['8', '走る']
+      - ['10', '点を取る']
+      - ['22', '3つを足した数']
+      source: バーミンガムのアカデミー責任者（talkSPORT）
+      highlight_row: 3
+  - text: 在籍はわずか1季。それでもクラブは、その22番を永久欠番にします。
+    card:
+      <<: *n22
+      highlight_row: 3
+  - text: レアルで背番号5を受け取った日、本人はこう語っています。
+    image: assets/images/20261006_player_581678/real2026/01_w.jpg
+    card: none
+  - voice: ジュード・ベリンガム
+    text: 22番は自分にとって大きな意味がある。
+  - voice: ジュード・ベリンガム
+    text: 背番号5をつけていても、心の中ではまだ22番だ
+    cont: true
+    pause: 0.5
+  - その万能さが、いまイングランド代表の10番で花開いています。
+  - どこから来て、どこまで来たのか。表と言葉でたどります。
+  sources:
+  - https://www.theguardian.com/football/2026/oct/05/jude-awakening-how-a-more-fluid-england-are-unlocking-bellinghams-full-potential
+  - https://www.goal.com/en/news/reason-bellingham-no22-dortmund-combines-4-8-10/rf5cin48wktz1f02cmooy4amx
+  - https://www.skysports.com/football/news/11694/12034786/jude-bellingham-birmingham-retire-number-22-shirt-in-recognition-of-youngster
+  - https://www.afpbb.com/articles/-/3468565
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: ジュード・ベリンガムの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: ジュード・ベリンガム（レアル・マドリード）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - レアル・マドリード（5番）
+    - - ポジション
+      - 攻撃的MF
+    - - 生年月日
+      - 2003年6月29日（23歳）
+    - - 生まれ
+      - ストウブリッジ（イングランド）
+    - - 身長
+      - 1.86m
+    - - 契約
+      - 2029年まで
+    - - 市場価値
+      - 1.6億ユーロ
+    source: Transfermarkt・レアル公式
+  say:
+  - text: ベリンガム、23歳。レアル・マドリードの背番号5です。
+    image: assets/images/20261006_player_581678/real2026/01.webp
+    card: &data_card
+      type: table
+      title: ジュード・ベリンガム（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・レアル公式
+      highlight_row: 0
+  - text: 本職は攻撃的MF。中盤なら、前でも後ろでもこなします。
+    card:
+      <<: *data_card
+      highlight_row: 1
+  - text: 生まれはイングランド中部のストウブリッジ。バーミンガムの近くです。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長は186センチ。頭でも点を取れる体の強さがあります。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 契約は2029年まで残っています。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 今の市場価値は1億6千万ユーロ。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 6
+  - text: 7月の見直しで、前回から3千万ユーロ跳ね上がりました。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/profil/spieler/581678
+  - https://www.realmadrid.com/en-US/football/first-team/players/jude-bellingham
+- id: career
+  heading: 16歳の22番から、レアルの5番へ
+  tier: 報道
+  telop: 2つの最年少記録と、左肩の手術
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - シーズン
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows:
+    - - 19/20
+      - バーミンガム
+      - 16歳
+      - 最高 1200万ユーロ
+    - - 20/21〜22/23
+      - ドルトムント
+      - 17歳〜19歳
+      - 最高 1.2億ユーロ
+    - - 23/24〜26/27
+      - レアル・マドリード
+      - 20歳〜23歳
+      - 最高 1.8億ユーロ
+    source: Transfermarkt
+  rows_career:
+  - &c1
+    - 19/20
+    - バーミンガム
+    - 16歳
+    - 最高 1200万ユーロ
+  - &c2
+    - 20/21〜22/23
+    - ドルトムント
+    - 17歳〜19歳
+    - 最高 1.2億ユーロ
+  - &c3
+    - 23/24〜26/27
+    - レアル・マドリード
+    - 20歳〜23歳
+    - 最高 1.8億ユーロ
+  say:
+  - text: 16歳38日で、バーミンガムのトップチームへ。クラブの最年少記録です。
+    image: assets/stats/player_20261006_1077894_value.png
+    no_telop: true
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns:
+      - シーズン
+      - クラブ
+      - 年齢
+      - 市場価値
+      rows:
+      - *c1
+      - *c2
+      - *c3
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 翌年の夏、17歳でドイツのドルトムントへ渡ります。
+    image: assets/stats/player_20261006_1077894_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 2022年10月、19歳で主将に。リーグで記録が残る中の最年少でした。
+    image: assets/stats/player_20261006_1077894_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 2023年夏、固定で1億300万ユーロの移籍金でレアルへ。
+    image: assets/images/20261006_player_581678/laureus2/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - 入団の日、本人はこう胸を張りました。
+  - voice: ジュード・ベリンガム
+    text: 今日は人生でいちばん大事な日です。
+  - voice: ジュード・ベリンガム
+    text: 世界一のクラブに入るのだから
+    cont: true
+    pause: 0.5
+  - text: 1年目からリーグ19点。リーグとチャンピオンズリーグの2冠です。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: ところが2025年の夏、何度も外れた左肩を手術します。
+    image: assets/stats/player_20261006_1077894_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: その秋にはイングランド代表の招集から外れ、市場価値も下がりました。
+    image: assets/stats/player_20261006_1077894_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 最高の1億8千万から、今年6月には1億3千万ユーロへ。
+    image: assets/stats/player_20261006_1077894_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 巻き返しの舞台は、北米のワールドカップ。7点を挙げ、チームの3位を支えました。
+    image: assets/images/20261006_player_581678/panama117/01_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/profil/spieler/581678
+  - https://www.skysports.com/football/news/11694/12034786/jude-bellingham-birmingham-retire-number-22-shirt-in-recognition-of-youngster
+  - https://www.skysports.com/football/news/11899/12029767/jude-bellingham-signs-for-borussia-dortmund-from-birmingham
+  - https://www.bundesliga.com/en/bundesliga/news/jude-bellingham-borussia-dortmund-captaincy-a-dream-come-true-21408
+  - https://www.tbsnews.net/sports/real-madrid-agree-103-million-euros-fee-sign-jude-bellingham-dortmund-645794
+  - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/bellingham-unveiled-as-new-real-madrid-player
+  - https://www.realmadrid.com/en-US/news/football/first-team/medical-reports/parte-medico-de-bellingham-16-07-2025
+  - https://www.bbc.co.uk/sport/football/articles/cv5yn8znyx2ro
+- id: style
+  heading: プレースタイル
+  tier: 報道
+  telop: 守って運んで、ゴール前に飛び込む
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じ攻撃的MF・ウイングの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: ヘディングシュート
+      value: 95
+      highlight: true
+    - label: デュエル勝ち
+      value: 93
+      highlight: false
+    - label: デュエル勝率
+      value: 93
+      highlight: false
+    - label: インターセプト
+      value: 51
+    source: FotMob
+  say:
+  - text: レーダーの図で、ベリンガムの形を。比べる相手は攻撃的な中盤とサイドの選手。
+    image: assets/stats/player_20261006_1077894_radar.png
+    no_telop: true
+  - text: 大きく張り出すのは、ボールタッチと守備の関与。10番なのに、よく守ります。
+    image: assets/stats/player_20261006_1077894_radar.png
+    no_telop: true
+  - text: ボールに触る場所は、相手陣地の左寄りがいちばん濃い色です。
+    image: assets/stats/player_20261006_1077894_heat.png
+    no_telop: true
+    card: none
+  - text: そこからゴール前へ。今季のリーグは7試合でシュート16本。
+    image: assets/stats/player_20261006_1077894_shots.png
+    no_telop: true
+  - text: そのうち5本が頭。中盤の選手の中では、群を抜いて多い側です。
+    emph: true
+    image: assets/stats/player_20261006_1077894_shots.png
+    no_telop: true
+  - text: 競り合いの勝ちは52回、勝率62%。同じ位置の中でも上位の数字。
+    image: assets/images/20261006_player_581678/espanyol/01_w.jpg
+  - text: その分、ボールを失う回数は多め。仕掛け続ける10番の、表と裏です。
+  sources:
+  - https://www.fotmob.com/players/1077894
+  - https://www.realmadrid.com/en-US/news/football/first-team/personalities/bellingham-nunca-te-imaginas-lo-grande-que-es-el-real-madrid-31-01-2024
+- id: past
+  heading: 8季の数字と、ここまでの通算
+  tier: 報道
+  telop: 季ごとの数字と、10月5日までの通算
+  narrator: 解説
+  card:
+    type: table
+    title: ジュード・ベリンガム 通算（2026年10月5日まで）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows:
+    - - バーミンガム
+      - '44'
+      - '4'
+    - - ドルトムント
+      - '132'
+      - '24'
+    - - レアル・マドリード
+      - '148'
+      - '49'
+    - - イングランド代表
+      - '59'
+      - '14'
+    - - 合計
+      - '383'
+      - '91'
+    source: Transfermarkt・FotMob
+  rows_seasons_a:
+  - &s1
+    - 19/20
+    - バーミンガム
+    - '44'
+    - '4'
+  - &s2
+    - 20/21
+    - ドルトムント
+    - '46'
+    - '4'
+  - &s3
+    - 21/22
+    - ドルトムント
+    - '44'
+    - '6'
+  - &s4
+    - 22/23
+    - ドルトムント
+    - '42'
+    - '14'
+  rows_seasons_b:
+  - &s5
+    - 23/24
+    - レアル
+    - '42'
+    - '23'
+  - &s6
+    - 24/25
+    - レアル
+    - '58'
+    - '15'
+  - &s7
+    - 25/26
+    - レアル
+    - '40'
+    - '8'
+  - &s8
+    - 26/27
+    - レアル
+    - '8'
+    - '3'
+  rows_total:
+  - &t1
+    - バーミンガム
+    - '44'
+    - '4'
+  - &t2
+    - ドルトムント
+    - '132'
+    - '24'
+  - &t3
+    - レアル・マドリード
+    - '148'
+    - '49'
+  - &t4
+    - イングランド代表
+    - '59'
+    - '14'
+  - &t5
+    - 合計
+    - '383'
+    - '91'
+  say:
+  - text: まずはベリンガムのクラブでの8季。試合と得点を季ごとに並べました。
+    image: assets/images/20261006_player_581678/ghana168/01.jpg
+    card: &seasons_a
+      type: table
+      title: ジュード・ベリンガム 季ごとの数字①（クラブの公式戦）
+      columns: &season_cols
+      - 季
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - *s1
+      - *s2
+      - *s3
+      - *s4
+      source: Transfermarkt・FotMob
+  - text: バーミンガムの1季は44試合4点。ドイツでの1年目も4点でした。
+    card:
+      <<: *seasons_a
+      highlight_row: 1
+  - text: ドルトムント3季目は42試合14点。点を取れる中盤へ育っていきます。
+    card:
+      <<: *seasons_a
+      highlight_row: 3
+  - text: レアル1年目は42試合23点。前の季から、一気に9点も増やしました。
+    emph: true
+    card: &seasons_b
+      type: table
+      title: ジュード・ベリンガム 季ごとの数字②（クラブの公式戦）
+      columns: *season_cols
+      rows:
+      - *s5
+      - *s6
+      - *s7
+      - *s8
+      source: Transfermarkt・FotMob
+      highlight_row: 0
+  - text: 翌季は58試合。1年目より16も多い試合に出続けました。
+    card:
+      <<: *seasons_b
+      highlight_row: 1
+  - text: 肩の手術明けの季は40試合8点。少し数字を落としました。
+    card:
+      <<: *seasons_b
+      highlight_row: 3
+  - text: では通算です。レアルでは148試合で49点。
+    card: &total_card
+      type: table
+      title: ジュード・ベリンガム 通算（2026年10月5日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - *t1
+      - *t2
+      - *t3
+      - *t4
+      - *t5
+      source: Transfermarkt・FotMob
+      highlight_row: 2
+  - text: イングランド代表は59試合14点を数えます。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: 合わせて383試合91点。23歳で、100点の大台が見えてきました。
+    card:
+      <<: *total_card
+      highlight_row: 4
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatenverein/spieler/581678
+  - https://www.fotmob.com/players/1077894
+- id: croatia
+  heading: 0対7の夜、7点のうち4点に絡む
+  tier: 報道
+  main: true
+  telop: 10月3日、敵地リエカのクロアチア戦で1点3アシスト
+  narrator: 解説
+  say:
+  - text: レアル・マドリードのベリンガムが代表で1点3アシスト。一段上かと問われた監督は。
+    short_only: true
+    image: assets/images/20261006_player_581678/pair_tuchel/01.jpg
+  - voice: トーマス・トゥヘル
+    text: ああ、今はそう見える。そうでなくてはいけない。
+  - voice: トーマス・トゥヘル
+    text: 立ち止まることはできない。
+    cont: true
+  - voice: トーマス・トゥヘル
+    text: 次のレベルを目指し続けなければ、ほかに追いつかれる
+    cont: true
+    pause: 0.5
+  - text: 10月3日、敵地リエカでのクロアチア戦。7対0の大勝で、7点のうち4点に絡みました。
+    image: assets/images/20261006_player_581678/croatia/01_w.jpg
+  - text: 1試合で4点に絡んだイングランドのMFは、33年ぶりです。
+    emph: true
+  sources:
+  - https://www.bbc.co.uk/sport/football/articles/cv5yn8znyx2ro
+  - https://www.soccer-king.jp/news/world/eng/20261004/2212905.html
+  - https://www.novilist.hr/sport/nogomet/foto-ovo-je-bilo-nedopustivo-kane-bellingham-i-drustvo-ponizili-su-bilicevu-momcad-na-rujevici
+- id: four
+  heading: ベリンガムが絡んだ4点の中身
+  tier: 報道
+  telop: 8分・21分・45分・87分
+  narrator: 解説
+  card: &goal_card
+    type: table
+    title: ベリンガムが絡んだ4点（10月3日 クロアチア戦）
+    columns: [時間, 中身]
+    rows:
+    - ['8分', 'ケインの先制点をアシスト']
+    - ['21分', '自ら決めて2対0']
+    - ['45分', 'サカの得点をアシスト']
+    - ['87分', 'ロジャーズの得点をアシスト']
+    source: FotMob・BBC
+  say:
+  - text: ベリンガムが絡んだ4点を、時間の順に並べます。まず8分、ケインの先制点を演出。
+    image: assets/images/20261006_player_581678/panama132/01.jpg
+    card:
+      <<: *goal_card
+      highlight_row: 0
+  - text: 21分には、自らゴール前で押し込みます。これでリードは2点に。
+    card:
+      <<: *goal_card
+      highlight_row: 1
+  - text: 前半の終わりにはサカへ。87分にはロジャーズへ、最後まで点を作り続けました。
+    card:
+      <<: *goal_card
+      highlight_row: 3
+  sources:
+  - https://www.bbc.co.uk/sport/football/live/cm046w9zdkrwt
+  - https://www.fotmob.com/api/data/matchDetails?matchId=5181853
+- id: season
+  heading: 今季の11試合と、直近5試合
+  tier: 報道
+  telop: 今季はクラブと代表で11試合4点
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows:
+    - - 10/3
+      - クロアチア（代表）
+      - 90分
+      - 1G 3A
+      - '9.8'
+    - - 9/29
+      - チェコ（代表）
+      - 19分
+      - 0G 0A
+      - '6.2'
+    - - 9/26
+      - スペイン（代表）
+      - 90分
+      - 0G 1A
+      - '8.3'
+    - - 9/20
+      - アトレティコ
+      - 82分
+      - 0G 0A
+      - '7.9'
+    - - 9/15
+      - エルチェ
+      - 22分
+      - 0G 0A
+      - '6.6'
+    source: FotMob
+  rows_recent:
+  - &r1
+    - 10/3
+    - クロアチア（代表）
+    - 90分
+    - 1G 3A
+    - '9.8'
+  - &r2
+    - 9/29
+    - チェコ（代表）
+    - 19分
+    - 0G 0A
+    - '6.2'
+  - &r3
+    - 9/26
+    - スペイン（代表）
+    - 90分
+    - 0G 1A
+    - '8.3'
+  - &r4
+    - 9/20
+    - アトレティコ
+    - 82分
+    - 0G 0A
+    - '7.9'
+  - &r5
+    - 9/15
+    - エルチェ
+    - 22分
+    - 0G 0A
+    - '6.6'
+  say:
+  - text: 今季のベリンガムは、クラブで8試合3点。代表を合わせると4点です。
+    image: assets/images/20261006_player_581678/panama160/01.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns:
+      - 日付
+      - 相手
+      - 出場
+      - 得点
+      - 評点
+      rows:
+      - *r1
+      - *r2
+      - *r3
+      - *r4
+      - *r5
+      source: FotMob
+  - text: アトレティコとのダービーは評点7.9。自身の今季リーグ平均8.06に迫る出来。
+    card:
+      <<: *recent_card
+      highlight_row: 3
+  - text: 代表に合流すると、スペイン戦で1アシスト。試合は2対3の負けでした。
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: 続くチェコ戦は前の90分から一転、途中から19分。それでも主将の腕章を。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: そしてクロアチア戦は10点満点で9.8。直近5試合で最も高い評点です。
+    emph: true
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 代表では3試合で1点4アシスト。体の不安を伝える報道も出ていません。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/profil/spieler/581678
+  - https://www.fotmob.com/players/1077894
+  - https://www.theguardian.com/football/2026/sep/30/thomas-tuchel-harry-kane-jude-bellingham-trent-alexander-arnold-england-nations-league
+- id: story
+  heading: 父の偽物のユニホームと、母のひと言
+  tier: 報道
+  telop: 700点の父、ジダンのシャツ、付いてきた母
+  narrator: 解説
+  card:
+    type: table
+    title: ベリンガムを育てた家族
+    columns: [誰・何, 話]
+    rows:
+    - [父マーク, 下部リーグで700点以上の点取り屋]
+    - [父のシャツ, ビーチで買ったジダンの偽物]
+    - [母デニス, ドイツにもマドリードにも同居]
+    source: 英FA公式・Goal・theWORLD
+  say:
+  - text: ピッチの外のベリンガムを形づくったのは、家族です。
+    image: assets/images/20261006_player_581678/ghana61/01.jpg
+  - text: 父マークは、ノンリーグと呼ばれる下部リーグで700点以上を決めた点取り屋。
+    image: assets/images/20261006_player_581678/ghana127/01_w.jpg
+  - 少年ジュードは、その試合を毎週のように見に通っていました。
+  - voice: ジュード・ベリンガム
+    text: サッカーのヒーローの話をすると、
+  - voice: ジュード・ベリンガム
+    text: 僕にとって最初のヒーローは父だった
+    cont: true
+    pause: 0.5
+  - text: ジダンを知ったのも父から。ビーチで買ったジダンの偽物のシャツです。
+    card: none
+  - 父はそれを、どこへでも着ていったそうです。
+  - text: いまレアルで背負う5番は、そのジダンの番号。
+    emph: true
+  - 母デニスは、ドイツにもマドリードにも付いてきて、一緒に暮らしてきました。
+  - voice: ジュード・ベリンガム
+    text: 母さんのおかげで、地に足をつけていられる
+    pause: 0.6
+  sources:
+  - https://www.thefa.com/news/2021/mar/25/jude-bellingham-first-impressions-20210325
+  - https://www.footballista.jp/special/170222
+  - https://www.goal.com/en-my/news/jude-bellingham-names-footballing-idols-three-birmingham-stars-on-his-surprise-shortlist/blt3ac31092c3d542d6
+  - https://www.soccerdigestweb.com/news/detail/id=133594
+  - https://www.theworldmagazine.jp/20240515/01world/spain/406095
+- id: view
+  heading: ワールドカップの前と後、代表での点のペース
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 6日にチェコ戦、10日にビジャレアル戦、26日にバロンドール
+  card:
+    type: table
+    title: イングランド代表でのベリンガム
+    columns: [期間, 試合, 得点, 1試合あたり]
+    rows:
+    - [W杯の前まで, '48', '6', '0.13']
+    - [W杯から今まで, '11', '8', '0.73']
+    source: Transfermarkt・FotMob
+  say:
+  - text: 最後に、代表のベリンガムに何が起きたのかを、数字から見立てます。
+    image: assets/images/20261006_player_581678/ghana168/01_w.jpg
+    card: none
+  - text: 比べるのは、ワールドカップの前と後の代表です。
+    image: assets/images/20261006_player_581678/ghana127/01.jpg
+    card: &pace_card
+      type: table
+      title: イングランド代表でのベリンガム
+      columns: [期間, 試合, 得点, 1試合あたり]
+      rows:
+      - [W杯の前まで, '48', '6', '0.13']
+      - [W杯から今まで, '11', '8', '0.73']
+      source: Transfermarkt・FotMob
+  - text: 大会の前まで、代表では48試合で6点でした。
+    card:
+      <<: *pace_card
+      highlight_row: 0
+  - text: それがこの夏からの11試合で8点。点のペースは、ほぼ6倍です。
+    emph: true
+    card:
+      <<: *pace_card
+      highlight_row: 1
+  - text: 英紙ガーディアンは「流動的になった代表が、力を解き放った」と書きました。
+    image: assets/images/20261006_player_581678/panama117/01_w.jpg
+    card: none
+  - 決まった位置に縛らず、中央の10番として左右へ動かす形です。
+  - text: 一方のレアルでは、今季ここまで3点。同じ自由を、クラブでも得られるか。
+    image: assets/images/20261006_player_581678/real2026/01_w.jpg
+  - まずは現地6日、ウェンブリーでのチェコ戦。
+  - レアルの次の試合は10日。本拠地にビジャレアルを迎えます。
+  - 26日はロンドンで、30人の候補に入るバロンドールの発表です。
+  - 代表で目覚めた10番が、白いユニホームでも同じ輝きを放てるかに注目です。
+  sources:
+  - https://www.theguardian.com/football/2026/oct/05/jude-awakening-how-a-more-fluid-england-are-unlocking-bellinghams-full-potential
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatenverein/spieler/581678
+  - https://www.fotmob.com/players/1077894
+  - https://www.espn.com/soccer/story/_/id/49866841/ballon-dor-2026-nominees-harry-kane-kylian-mbappe-lead-30-man-shortlist
