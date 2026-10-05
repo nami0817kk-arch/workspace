@@ -1880,6 +1880,8 @@ function genGroupNames(){var o=[];while(o.length<5){var n=pick(GNAME_A)+pick(GNA
 var SONGDIR=[{k:'v',n:'歌で聴かせる'},{k:'d',n:'踊りで魅せる'},{k:'r',n:'ラップで攻める'}];
 var ACTIV=[{n:'テレビ中心',d:'ファンの広がりが伸びる。まとまりは少し下がる'},{n:'配信中心',d:'デビュー曲の再生数が伸びる'},{n:'ライブ中心',d:'まとまりが伸び、ファンも少し増える'}];
 /* グループ名：自分で入れた名前（custom）があればそれ、なければ候補から選んだもの */
+/* 万を単位にした数を、1億以上は「1億5,555万」、それ未満は「5,555万」の形に（2026-10-05 指摘「15555万回」） */
+function manStr(n){n=Math.max(0,Math.round(n||0));var c=function(x){return String(x).replace(/\B(?=(\d{3})+(?!\d))/g,',');},o=Math.floor(n/10000),m=n%10000;return o?o+'億'+(m?c(m)+'万':''):c(m)+'万';}
 function gName(P){P=P||S.prep||{};return (P.custom&&P.custom.trim())||(P.names?P.names[P.name]:'');}
 function startPrep(S){S.prep={names:genGroupNames(),name:0,leader:null,dir:0,act:-1,color:0,songs:songCands(),song:0};S.phase='prep';}
 
@@ -4009,7 +4011,7 @@ function makeFuture(S,E){var used=[],P=S.prep||{names:['（名前なし）'],nam
     if(hy&&y===ry){year(lab,[{s:pickY(FT_END.resume),m:{K:y},ids:[]}],y);return true;}
     return false;}
   var fc=Math.max(.3,Math.round(E.fanScore*E.fanScore/100*(tier<=1?14:6))/10);
-  year('デビュー',['デビュー曲「'+s1+'」は、1か月で'+Math.round(E.streams).toLocaleString()+'万回再生された。',pickY(act>=0&&FT.act[act]?FT.act[act]:FT.act0),pickY(FT.dir[dirK])],0);
+  year('デビュー',['デビュー曲「'+s1+'」は、1か月で'+manStr(E.streams)+'回再生された。',pickY(act>=0&&FT.act[act]?FT.act[act]:FT.act0),pickY(FT.dir[dirK])],0);
   var spotT=pick(D),ltp=L&&FT.leadT[L.temper]&&R()<.6?FT.leadT[L.temper]:FT.lead;
   if(!special(1))year('1年目',[pickY(FT.y1[tier])+' ファンクラブの会員は'+fc+'万人になった。',pickY(L?ltp:FT.nolead),bigBy[1]?'':ftFill(pickY(FT.spot[spotT.spec]),{A:spotT.giv})].filter(Boolean),1);
   var missK=['v','d','r'].filter(function(k){return E.roles&&E.roles[k]===0;})[0],y2x=[];
@@ -4605,7 +4607,7 @@ function vCall(){
 function resultCard(E,P){var col=P.color!=null?GCOLORS[P.color][1]:'#e9ba4b',d=new Date(),dt=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
   var EK=S.future&&S.future.end?endOf(S.future.end):null;
   return '<div class="rcard" style="border-color:'+col+'"><div class="rg"><b class="gr g-'+E.grade+'">'+E.grade+'</b><span>'+E.total.toFixed(1)+'点</span></div>'+(EK?'<div class="rend">結末「'+esc(EK.n)+'」'+(S.endNew?'<span class="rnew">はじめて</span>':'')+'</div>':'')+'<div class="rn" style="color:'+col+'">'+esc(gName(P))+'</div>'+
-    (P.songs?'<div class="small">デビュー曲「'+esc(P.songs[P.song||0])+'」・'+Math.round(E.streams).toLocaleString()+'万回</div>':'')+
+    (P.songs?'<div class="small">デビュー曲「'+esc(P.songs[P.song||0])+'」・'+manStr(E.streams)+'回</div>':'')+
     '<div class="rf">'+E.D.map(function(t){return faceImg(t,'sm');}).join('')+'</div><div class="small muted">'+(S.daily?'今日のオーディション（'+esc(S.daily)+'）・':'')+DIFF[S.diff||'normal'].n+(S.chal&&chalOf(S.chal)?'・チャレンジ「'+esc(chalOf(S.chal).n)+'」':'')+'・'+dt+'・ひかりの指名</div></div>';}
 function vResult(){
   if(!S.future){S.future=makeFuture(S,finalEval(S));if(S.recorded)noteEnding(S);}
@@ -5066,7 +5068,7 @@ function meikanBox(c){var L=c.meikan||[];if(!L.length)return '';var show=ui.meik
 function discoBox(c){var L=[];(c.hall||[]).forEach(function(x){(x.songs||(x.song?[x.song]:[])).forEach(function(s,i){L.push({s:s,g:x.name,se:x.season,i:i,col:x.color});});});if(!L.length)return '';
   return '<details class="achv"><summary>これまでの曲 '+L.length+'曲</summary><ul class="tight disco">'+L.map(function(x){return '<li>「'+esc(x.s)+'」 <span class="small"'+(x.col!=null?' style="color:'+GCOLORS[x.col][1]+';font-weight:800"':'')+'>'+esc(x.g)+'</span> <span class="small muted">第'+x.se+'シーズン・'+['デビュー曲','2枚目','アルバム'][x.i]+'</span></li>';}).join('')+'</ul></details>';}
 function statsBox(c){var st=c.stats;if(!st)return '';var g=st.grade||{};
-  var rows=[['シーズン',c.seasons+'回'],['デビューさせた人数',st.debut+'人'],['評価の内訳','S '+(g.S||0)+'・A '+(g.A||0)+'・B '+(g.B||0)+'・C '+(g.C||0)+'・D '+(g.D||0)],['最高点',st.best+'点'],['デビュー曲の最高再生数',(st.bestStreams||0).toLocaleString()+'万回'],
+  var rows=[['シーズン',c.seasons+'回'],['デビューさせた人数',st.debut+'人'],['評価の内訳','S '+(g.S||0)+'・A '+(g.A||0)+'・B '+(g.B||0)+'・C '+(g.C||0)+'・D '+(g.D||0)],['最高点',st.best+'点'],['デビュー曲の最高再生数',manStr(st.bestStreams||0)+'回'],
     ['覚醒させた人数',st.awoke+'人'],['結成したコンビ',st.combo+'組'],['本音を聞いた回数',st.honne+'回'],['難しさごとの最高',['easy','normal','hard','legend'].filter(function(k){return st.diff&&st.diff[k];}).map(function(k){return DIFF[k].n+' '+st.diff[k];}).join('・')||'—']];
   return '<details class="achv"><summary>通算の記録</summary><div class="stats">'+rows.map(function(r){return '<div class="kv"><span>'+r[0]+'</span><b>'+esc(String(r[1]))+'</b></div>';}).join('')+'</div></details>';}
 function highlightBox(){var H=seasonHighlights(S);if(!H.length)return '';
