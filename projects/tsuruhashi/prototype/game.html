@@ -58,7 +58,18 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .chip b{font-size:14px}
 .hpbar{height:5px;background:rgba(255,255,255,.22);border-radius:3px;margin-top:4px;overflow:hidden}
 .hpbar i{display:block;height:100%;width:100%;background:#ffd166;border-radius:3px}
-.boostchip{position:absolute;top:8px;right:22px;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff;border-radius:12px;padding:5px 10px;font-size:14px;font-weight:800;pointer-events:none;display:none;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+.boostchip{position:absolute;top:8px;right:22px;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff;border:0;border-radius:12px;padding:5px 10px 6px;font:inherit;font-size:16px;font-weight:800;line-height:1.15;text-align:right;display:none;box-shadow:0 0 0 2px rgba(255,255,255,.25);cursor:pointer;min-width:96px}
+.boostchip small{display:block;font-size:12px;font-weight:700;opacity:.95}
+.boostchip .bars{display:flex;flex-direction:column;gap:2px;margin-top:4px}
+.boostchip .bars i{display:block;height:3px;border-radius:2px;background:rgba(255,255,255,.28);overflow:hidden}
+.boostchip .bars i b{display:block;height:100%;background:#fff}
+.bm-big{font-size:40px;font-weight:800;text-align:center;color:#6a55e0;line-height:1.1}
+.bm-row{display:flex;align-items:center;gap:10px;padding:6px 2px;font-size:14px;font-variant-numeric:tabular-nums}
+.bm-row .bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bm-row .bar b{display:block;height:100%;background:linear-gradient(90deg,#5646c2,#7a66e8)}
+.bm-flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px;font-weight:800;margin:6px 0 2px}
+.bm-flow span{background:var(--accent-soft);border-radius:8px;padding:3px 8px}
+.bm-flow em{font-style:normal;color:var(--muted);font-size:12px;font-weight:700}
 .goal{position:absolute;left:8px;right:22px;bottom:8px;background:rgba(15,10,6,.78);color:#ffe9c2;border-radius:12px;padding:6px 10px;font-size:12px;pointer-events:none;line-height:1.35}
 .goal b{color:#fff}
 .goal .need{color:#ff9b80}
@@ -282,7 +293,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
   <div class="stage" id="stage">
     <canvas id="cv" aria-label="地層の断面。仲間が掘り進める"></canvas>
     <div class="chip"><b id="cLayer">第1層 表土</b> <span id="cDepth"></span><div class="hpbar"><i id="cHp"></i></div></div>
-    <div class="boostchip" id="boostChip">採掘×2 5:00</div>
+    <button class="boostchip" id="boostChip" type="button" aria-label="採掘の倍率の詳しい表示"></button>
     <div class="bentochip" id="bentoChip">弁当×2 30:00</div>
     <div class="hint" id="hint">仲間が自動で掘ります</div>
     <div class="goal" id="goal"><div id="goalTxt"></div><div class="bar"><i id="goalBar"></i></div></div>
@@ -333,6 +344,13 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
   </div>
 </div>
 
+<div class="modal" id="bmModal" role="dialog" aria-modal="true" aria-labelledby="bmTitle">
+  <div class="sheet">
+    <h2 id="bmTitle">採掘の倍率</h2>
+    <div id="bmBody"></div>
+    <div class="row"><button class="x2 adgo" id="bmMore" type="button"></button><button class="ok" id="bmClose" type="button">閉じる</button></div>
+  </div>
+</div>
 <div class="modal" id="setModal" role="dialog" aria-modal="true" aria-labelledby="setTitle">
   <div class="sheet">
     <h2 id="setTitle">設定</h2>
@@ -1474,10 +1492,13 @@ function updateUI(force){
   // 広告
   const bc = $('boostChip'), ab = $('adBoost');
   if (boostOn(S)) {
-    // いちばん早く切れる1本までの時間（そこで1つ下がる）
-    const r = Math.ceil((boostNextEnd(S) - NOW()) / 1000), mmss = t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
-    bc.style.display = 'block'; bc.textContent = boostMul(S) > 2 ? `採掘×${boostMul(S)}　次の−1まで ${mmss(r)}` : `採掘×2　${mmss(r)}`;
-  } else bc.style.display = 'none';
+    // 大きく今の倍率、下に「○:○○後に×(N−1)」。1本ごとの残りを細い棒で（押すと詳しい表示）
+    const m = boostMul(S), r = Math.ceil((boostNextEnd(S) - NOW()) / 1000);
+    const bars = boostLive(S).sort((a, b) => a - b).slice(0, 6).map(t => `<i><b style="width:${(Math.max(0, t - NOW()) / (BOOST_SEC * 1000) * 100).toFixed(1)}%"></b></i>`).join('');
+    bc.style.display = 'block';
+    bc.innerHTML = `採掘×${m}<small>${mmss(r)}後に×${m - 1}</small><span class="bars">${bars}</span>`;
+    if ($('bmModal').classList.contains('on')) renderBoostModal();
+  } else { bc.style.display = 'none'; if ($('bmModal').classList.contains('on')) renderBoostModal(); }
   const cur = boostMul(S), nx = boostNext(S), wait = noVideo() ? boostWait(S) : 0;
   // 動画1本で増える鉱石のおおよそ（今の入り ÷ 今の倍率 × 増える倍率 × 5分）
   const gainB = oreRate(S) / Math.max(1, cur) * (nx - cur) * BOOST_SEC;
@@ -1656,6 +1677,26 @@ $('bentoBtn').addEventListener('click', () => {
   toast(`特製弁当 ×${BENTO_X}`, `${fmtDur((S.bentoUntil - NOW()) / 1000)} 仲間の力が${BENTO_X}倍`, `動画の倍率とも掛け合わさる（手持ち ${S.bento}個）`);
   save(); updateUI(true);
 });
+const mmss = t => { t = Math.max(0, Math.ceil(t)); return t >= 3600 ? `${Math.floor(t / 3600)}:${String(Math.floor(t % 3600 / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` : `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
+// 採掘の倍率の詳しい表示：1本ごとの残りと、これから倍率がどう下がるか
+function renderBoostModal(){
+  const live = boostLive(S).sort((a, b) => a - b), m = boostMul(S), now = NOW();
+  let h = `<div class="bm-big">×${m}</div><p class="sub" style="text-align:center;margin:2px 0 10px">動画1本ごとに「＋1倍」が30分。1本ずつ切れて下がります</p>`;
+  if (!live.length) h += `<div class="note">いまは動画の倍率はありません。動画を見ると ×2 が30分つづきます。</div>`;
+  else {
+    h += `<div class="sec" style="margin-top:0">これからの倍率</div><div class="bm-flow"><span>いま ×${m}</span>` +
+      live.map((t, i) => `<em>→ ${mmss((t - now) / 1000)}後</em><span>×${m - 1 - i}</span>`).join('') + `</div>`;
+    h += `<div class="sec">動画1本ごとの残り</div>` + live.map((t, i) => `<div class="bm-row"><b style="min-width:44px">＋1倍</b><span class="bar"><b style="width:${((t - now) / (BOOST_SEC * 1000) * 100).toFixed(1)}%"></b></span><span style="min-width:54px;text-align:right">残り ${mmss((t - now) / 1000)}</span></div>`).join('');
+    h += `<p class="sub">アプリを閉じている間も、残りの時間は効きます。</p>`;
+  }
+  $('bmBody').innerHTML = h;
+  const nx = boostNext(S), wait = noVideo() ? boostWait(S) : 0;
+  $('bmMore').disabled = !!pendingAd || wait > 0;
+  $('bmMore').innerHTML = `${PLAY_IC}<span>${wait > 0 ? `あと${wait}秒で見られます` : `動画を見て ×${nx} に`}<small>この1本の＋1倍は30分</small></span>`;
+}
+$('boostChip').addEventListener('click', () => { renderBoostModal(); $('bmModal').classList.add('on'); sfx('ui'); focusFirst('bmModal'); });
+$('bmClose').addEventListener('click', () => $('bmModal').classList.remove('on'));
+$('bmMore').addEventListener('click', () => { veinAd = null; $('adBoost').click(); });   // ここからは必ず採掘の倍率（鉱脈の誘いは取り下げる）
 let veinAd = null;
 const veinAdOn = () => veinAd && NOW() < veinAd.until;
 $('adBoost').addEventListener('click', () => {
@@ -1667,7 +1708,9 @@ $('adBoost').addEventListener('click', () => {
   if (pendingAd || (noVideo() && boostWait(S) > 0)) return;
   withAd('boost', () => {
     startBoost(S);
-    sfx('tier'); toast(`採掘×${boostMul(S)}`, `この1本の＋1倍は30分`, '続けて見るほど倍率が上がる（1本ずつ30分で切れる）'); fxRing();
+    sfx('tier'); const m = boostMul(S);
+    toast(`採掘×${m} になりました`, m > 2 ? `いちばん早い1本は ${mmss((boostNextEnd(S) - NOW()) / 1000)}後に切れて ×${m - 1}` : '30分後に ×1 に戻ります', '右上の札を押すと、いつ下がるか見られます'); fxRing();
+    if ($('bmModal').classList.contains('on')) renderBoostModal();
     updateUI();
   });
 });
