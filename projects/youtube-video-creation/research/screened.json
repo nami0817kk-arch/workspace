@@ -1870,5 +1870,21 @@
  "20261005_transfer_review_short": {
   "at": "2026-10-05T17:08:06+09:00",
   "digest": "706b079407aa328b"
+ },
+ "20261005_kirin_final_doan": {
+  "at": "2026-10-05T23:07:44+09:00",
+  "digest": "bffe764d6432733f"
+ },
+ "20261005_kirin_final_doan_short": {
+  "at": "2026-10-05T23:07:46+09:00",
+  "digest": "d63bf0525eb9b6d2"
+ },
+ "20261005_ueda_4goals": {
+  "at": "2026-10-05T23:46:14+09:00",
+  "digest": "33ddb92f9be9fb51"
+ },
+ "20261005_ueda_4goals_short": {
+  "at": "2026-10-05T23:46:15+09:00",
+  "digest": "a029b64092ec43ad"
  }
 }
