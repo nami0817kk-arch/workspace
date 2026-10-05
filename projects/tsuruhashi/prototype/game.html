@@ -454,10 +454,10 @@ const isBed = d => d > 0 && d % LAYER_LEN === 0 && d / LAYER_LEN < NLAYER;
 const isRoom = d => d % LAYER_LEN === LAYER_LEN / 2 && d < MAX_DEPTH_LAYERED;
 const bandOf = d => d % LAYER_LEN >= LAYER_LEN - 8 * DK;   // ★★が出る、層の終わり近く
 const HP0 = +(ENV.HP0 || 10);
-// 深さの「固くなり方」。浅い所は1m（前の単位、DK ブロック）ごとに HP_G 倍。SL_D1（前の単位。いまの 690m）より深い所は増え方が (SL_D1/深さ)^SL_K でゆるみ、
+// 深さの「固くなり方」。浅い所は1m（前の単位、DK ブロック）ごとに HP_G 倍。SL_D1（前の単位。いまの 825m）より深い所は増え方が (SL_D1/深さ)^SL_K でゆるみ、
 // 1000m を過ぎるとほぼ頭打ちになる（鉱石も同じ形）。前はどこまでも同じ割合で固くなり、後半は1ブロックに17〜22時間かかって
 // 1日に1〜3m しか進まなかった（2026-10-05 ユーザー指示「掘り下げが全然進まないと萎えるので、掘り下げ数が多いように」）
-const SL_D1 = +(ENV.SL_D1 || 275), SL_K = +(ENV.SL_K || 3);
+const SL_D1 = +(ENV.SL_D1 || 330), SL_K = +(ENV.SL_K || 3);
 function slopeInt(x){   // 前の単位の深さ x までの「固くなり方」の積み上げ（傾き1あたり）
   if (x <= SL_D1) return x;
   return SL_D1 + (SL_K === 1 ? SL_D1 * Math.log(x / SL_D1) : Math.pow(SL_D1, SL_K) * (Math.pow(x, 1 - SL_K) - Math.pow(SL_D1, 1 - SL_K)) / (1 - SL_K));

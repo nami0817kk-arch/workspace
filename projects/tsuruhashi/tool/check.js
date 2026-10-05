@@ -185,6 +185,6 @@ ok(S.v === 3 && S.depth === 100 && isBed(S.depth) && S.genDepth === 103 && S.bes
 // 掘り下げが止まらない（2026-10-05「掘り下げが全然進まないと萎える」）
 ok(LAYER_LEN === 100 && isBed(100) && !isBed(40) && REBIRTH_DEPTH === 600, '1層は100m、代替わりは600m から');
 ok(Math.abs(baseHp(100) * DK / (HP0 * Math.pow(HP_G, 40)) - 1) < 1e-9, '浅い所の固さは前と同じ（1層ぶんの合計）');
-ok(baseHp(1600) / baseHp(1500) < 1.5 && baseHp(3100) / baseHp(3000) < 1.1 && baseHp(700) / baseHp(600) > 30, '深い所では固さの増え方が頭打ち（100m ごとに 600m で×39、1500m で×1.4、3000m で×1.04）');
+ok(baseHp(1600) / baseHp(1500) < 2 && baseHp(3100) / baseHp(3000) < 1.1 && baseHp(900) / baseHp(800) > 25, '深い所では固さの増え方が頭打ち（100m ごとに 800m までは×28〜39、1500m で×1.7、3000m で×1.08）');
 if (fails) { console.log(`\n${fails}件 NG`); process.exit(1); }
 console.log('\nすべて ok');
