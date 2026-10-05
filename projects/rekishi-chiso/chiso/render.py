@@ -546,8 +546,9 @@ class Painter:
         if nxt:
             dr.rounded_rectangle([x, 230, x + 190, 290], radius=10, fill=(176, 40, 40))
             dr.text((x + 95, 260), "次回予告", font=self.font("gothic", 34), fill=(255, 255, 255), anchor="mm")
-            if self.script.series:
-                dr.text((x, 330), self.script.series, font=self.font("gothic", 30), fill=GOLD)
+            series = nxt.get("series", self.script.series)      # 次の回が別のシリーズなら next.series で（"" で出さない）
+            if series:
+                dr.text((x, 330), series, font=self.font("gothic", 30), fill=GOLD)
             dr.text((x, 380), nxt.get("title", ""), font=self.font("serif", 76, bold=True), fill=INK,
                     stroke_width=3, stroke_fill=(12, 10, 8))
             teaser = nxt.get("teaser", "")
@@ -561,6 +562,12 @@ def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
                  getattr(line, "memo", ()), getattr(line, "figure", None), getattr(line, "bubble", None),
                  getattr(line, "icon", None), getattr(line, "term", None), getattr(line, "place", None))
+
+
+def end_key(script) -> tuple:
+    """次回予告の画面の中身。控えの画像の名前に入れる（10-05：予告を差し替えても前の回の画像が使い回された）。"""
+    nxt = getattr(script, "next", {}) or {}
+    return (getattr(script, "series", ""), tuple(sorted((str(k), str(v)) for k, v in nxt.items())))
 
 
 def _salt(painter) -> str:
@@ -756,7 +763,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
 
     if end_card and cues:
         bg = cues[-1].line.background
-        emit(frame_dir / _name(salt, "end", bg),
+        emit(frame_dir / _name(salt, "end", bg, end_key(painter.script)),
              lambda: painter.with_cast(painter.end_card(bg), "語り", 0, "", "明るい"), end_seconds)
 
     # まとめて描く（同じ画像は1回だけ）。Pillow の描画は GIL を外すので、スレッドを並べると速くなる
