@@ -91,11 +91,11 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .ad .ring{width:72px;height:72px;border-radius:50%;border:6px solid var(--line);border-top-color:var(--ok);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .words{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px;max-height:120px;overflow:auto}
-.w{font-family:TenbinKana,"M PLUS Rounded 1c",sans-serif;font-weight:900;font-size:16px;border-radius:10px;padding:5px 9px;background:var(--bg);border:1px solid var(--line)}
+.w{font-family:TenbinKana,"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;font-size:16px;border-radius:10px;padding:5px 9px;background:var(--bg);border:1px solid var(--line)}
 .w.new{border-color:var(--accent2);box-shadow:0 0 0 2px var(--accent2) inset}
-.w.new::after{content:"あたらしい";display:block;font:700 9px "M PLUS Rounded 1c",sans-serif;color:var(--accent)}
-.w .pt{display:block;font:700 10px "M PLUS Rounded 1c",sans-serif;color:var(--ok)}
-.w.lock{color:var(--sub);font-family:"M PLUS Rounded 1c",sans-serif;font-weight:400;letter-spacing:2px}
+.w.new::after{content:"あたらしい";display:block;font:700 9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--accent)}
+.w .pt{display:block;font:700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--ok)}
+.w.lock{color:var(--sub);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:400;letter-spacing:2px}
 .badge{display:inline-block;background:var(--accent2);color:#3b2f24;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;margin-top:6px}
 .dict .words{max-height:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -154,8 +154,18 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function inkOf(ch) { return INK[C.KINDS.indexOf(ch) % INK.length]; }
 
   // --- 保存（端末の中だけ。読めなくても遊べる） ---
-  var store = { get: function (k, d) { try { var v = localStorage.getItem('tenbin-kana-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
-    set: function (k, v) { try { localStorage.setItem('tenbin-kana-' + k, JSON.stringify(v)); } catch (e) {} } };
+  // アプリの中（WebView）では、保存はアプリの側（端末の設定の保存先）に置く。WebView の localStorage は消えることがある。
+  // 起動のときに全部を受け取り（APP.store）、書くたびにアプリへ送る（app/lib/game/bridge.dart の WebStore）
+  var APP = window.__TENBIN_APP || null;
+  function appPost(o) { try { window.TenbinApp.postMessage(JSON.stringify(o)); } catch (e) {} }
+  var mem = APP && APP.store ? APP.store : null;
+  var store = { get: function (k, d) { try { var v = mem ? mem['tenbin-kana-' + k] : localStorage.getItem('tenbin-kana-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { var key = 'tenbin-kana-' + k, j = JSON.stringify(v);
+      if (mem) { mem[key] = j; appPost({ type: 'store', k: key, v: j }); return; }
+      try { localStorage.setItem(key, j); } catch (e) {} } };
+  // 公開ページ（プライバシーポリシー・お問い合わせ）。アプリでは端末のブラウザで開く
+  var SITE = 'https://mojitsumi.dailyquarry.com';
+  function openUrl(u) { if (APP) appPost({ type: 'open', url: u }); else window.open(u, '_blank', 'noopener'); }
   // 壊れた値・古い形の値が入っていても遊べるように、型を確かめてから使う
   function obj(v) { return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
   var bests = obj(store.get('bests2', {})), dict = obj(store.get('dict', {})), plat = String(store.get('plat', 'flat')), muted = store.get('muted', false) === true;
@@ -207,7 +217,10 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   drawSoundBtn();
 
   // 手ごたえの振動（使える端末だけ。音を切っていても振動は残す）。アプリでは HapticFeedback に置きかえる
-  function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+  function buzz(ms) {
+    if (APP) { appPost({ type: 'haptic', k: Array.isArray(ms) ? (ms.length > 2 ? 'warn' : 'success') : 'light' }); return; }
+    try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {}
+  }
   // 動きを減らす設定の人には、揺れ・光・粒を控える
   var calm = false; try { var mq = window.matchMedia('(prefers-reduced-motion: reduce)'); calm = mq.matches; mq.addEventListener && mq.addEventListener('change', function () { calm = mq.matches; }); } catch (e) {}
   // --- 字の絵（当たり判定と同じ字形） ---
@@ -272,7 +285,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   var COACH = ['指でなぞると 字が動く。はなすと落ちる', '「まわす」で回してから落とせる', '字と字を くっつけると ことばになる'];
   function updateCoach() {
     var show = !coached && phase === 'play' && s && s.placed < COACH.length;
-    if (!show) { if (!coachEl.hidden) coachEl.hidden = true; if (!coached && s && s.placed >= COACH.length) { coached = true; store.set('coached', true); } return; }
+    if (!show) { if (!coachEl.hidden && !coachEl.style.zIndex) coachEl.hidden = true; if (!coached && s && s.placed >= COACH.length) { coached = true; store.set('coached', true); } return; }
     if (coachEl.textContent !== COACH[s.placed]) coachEl.textContent = COACH[s.placed];
     coachEl.hidden = false;
   }
@@ -325,6 +338,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // 小さいお知らせが続けて同じ所に出たら、下へずらして重ねない
   // 読み上げ（画面を見ない人にも、できたことばと結果を伝える）
   var liveEl = document.getElementById('live');
+  // 画面の下に短く出すお知らせ（購入の結果など。重ねる画面の上でも見える）
+  function toast(t) { var el = document.getElementById('coach'); el.textContent = t; el.hidden = false; el.style.zIndex = 5; clearTimeout(toast.t); toast.t = setTimeout(function () { el.hidden = true; el.style.zIndex = ''; }, 2600); say(t); }
   function say(t) { liveEl.textContent = ''; setTimeout(function () { liveEl.textContent = t; }, 30); }
   function popup(text, x, y, big, col) {
     if (!big) popups.forEach(function (p) { if (!p.big && p.life > 0.4 && Math.abs(p.x - x) < 120 && Math.abs(p.y - y) < 20) y = p.y + 22; });
@@ -428,13 +443,13 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     ctx.setTransform(k, 0, 0, k, sx * k, (-camTop + sy) * k);
     drawScenery();
     // 高さの目盛り（1m ごと）と、さいこう記録の線
-    ctx.font = '10px "M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'right';
+    ctx.font = '10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.textAlign = 'right';
     var base = C.PIVOT_Y - C.PLANK_T;
     for (var hy = base - 100; hy > camTop; hy -= 100) { var dk = darkness(hy); ctx.fillStyle = dk > 0.5 ? 'rgba(255,255,255,.25)' : 'rgba(120,90,50,.12)'; ctx.fillRect(W - 14, hy, 14, 1); ctx.fillStyle = dk > 0.5 ? 'rgba(255,255,255,.6)' : 'rgba(120,90,50,.5)'; ctx.fillText(((base - hy) * M_PER_PX).toFixed(0) + 'm', W - 16, hy + 3); }
     if (best.h > 0) {
       var by = base - best.h; ctx.save(); ctx.setLineDash([6, 6]); ctx.strokeStyle = recordBroken ? 'rgba(47,154,92,.7)' : 'rgba(217,71,47,.6)'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(0, by); ctx.lineTo(W, by); ctx.stroke(); ctx.restore();
-      ctx.fillStyle = recordBroken ? '#2f9a5c' : '#d9472f'; ctx.textAlign = 'left'; ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif';
+      ctx.fillStyle = recordBroken ? '#2f9a5c' : '#d9472f'; ctx.textAlign = 'left'; ctx.font = '700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif';
       ctx.fillText('さいこう ' + (best.h * M_PER_PX).toFixed(1) + 'm', 6, by - 4);
     }
     // 床
@@ -495,7 +510,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       // （落とせない間は出さないだけ。消すと、揺れで一瞬 落とせなくなったあと数え直さず出なくなった）
       if (ready && preview.words.length && ly < C.GROUND) {
         var pw = preview.words.slice(0, 2).join('・') + ' ？';
-        ctx.save(); ctx.font = '900 15px ' + G.font + ',"M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.save(); ctx.font = '900 15px ' + G.font + ',"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         // 影の横に出す（上に出すと、持っている字に隠れた）。右に入らなければ左
         var tw = ctx.measureText(pw).width, gh = e2.maxY - e2.minY, py = ly - gh / 2, half = (e2.maxX - e2.minX) / 2 + 10 + tw / 2 + 7;
         var px = mid + half + tw / 2 + 7 < W ? mid + half : mid - half; px = Math.max(tw / 2 + 8, Math.min(W - tw / 2 - 8, px));
@@ -505,7 +520,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       }
       // 落ちる先が台の外（そのまま床へ落ちる）なら知らせる
       if (ready && ly >= C.GROUND) {
-        ctx.save(); ctx.fillStyle = 'rgba(217,71,47,.85)'; ctx.font = '800 12px "M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'center';
+        ctx.save(); ctx.fillStyle = 'rgba(217,71,47,.85)'; ctx.font = '800 12px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.textAlign = 'center';
         ctx.fillText('ここは台の外', mid, hp2.y + e2.maxY + 22 + bob); ctx.restore();
       }
       // まだ落とせない間は、待ちの残りを輪で見せる（最長3秒）
@@ -527,7 +542,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     popups.forEach(function (p) {
       var t = 1 - p.life, sc = p.big ? (t < 0.12 ? 0.6 + t / 0.12 * 0.55 : 1.15 - Math.min(0.15, (t - 0.12))) : 1;
       ctx.save(); ctx.translate(p.x, p.y); ctx.scale(sc, sc); ctx.globalAlpha = Math.min(1, p.life * 3);
-      ctx.font = p.big ? '900 ' + (p.size || 34) + 'px ' + G.font + ',"M PLUS Rounded 1c",sans-serif' : '800 14px "M PLUS Rounded 1c",sans-serif';
+      ctx.font = p.big ? '900 ' + (p.size || 34) + 'px ' + G.font + ',"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif' : '800 14px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
       ctx.lineWidth = p.big ? 7 : 4; ctx.strokeStyle = '#fffaf1'; ctx.strokeText(p.text, 0, 0); ctx.fillStyle = p.col; ctx.fillText(p.text, 0, 0); ctx.restore();
     });
@@ -762,23 +777,23 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // 夜空でも読めるよう、点数の下に紙を敷く
     ctx.fillStyle = 'rgba(255,250,241,.82)'; roundRect(ctx, 6, 12, 112, (s.def.seesaw ? 104 : 70) + (s.useItems && phase === 'play' ? 18 : 0), 12); ctx.fill();
     ctx.textBaseline = 'alphabetic';
-    ctx.fillStyle = '#3b2f24'; ctx.textAlign = 'left'; ctx.font = '800 30px "M PLUS Rounded 1c",sans-serif';
+    ctx.fillStyle = '#3b2f24'; ctx.textAlign = 'left'; ctx.font = '800 30px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif';
     // 点は数え上げるように増やす
     hudPts += (s.points - hudPts) * 0.18; if (Math.abs(s.points - hudPts) < 0.5) hudPts = s.points;
     var shown = Math.round(hudPts), grow = s.points - hudPts > 1 ? 1.12 : 1;
     ctx.save(); ctx.translate(14, 40); ctx.scale(grow, grow); ctx.fillText(shown, 0, 0); var nw = ctx.measureText(String(shown)).width * grow; ctx.restore();
-    ctx.font = '700 13px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.fillText('点', 18 + nw, 40);
+    ctx.font = '700 13px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.fillText('点', 18 + nw, 40);
     ctx.fillText(s.score + '字・' + (s.height * M_PER_PX).toFixed(1) + 'm', 14, 58);
     ctx.fillText('ことば ' + s.made.length, 14, 74);
     if (s.useItems && phase === 'play') {   // つぎのアイテムまで（字8つごと）
       var left = C.ITEM_EVERY - (s.placed % C.ITEM_EVERY);
-      ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#1f7a9a'; ctx.fillText('アイテムまで あと' + left + '字', 14, s.def.seesaw ? 124 : 90);
+      ctx.font = '700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#1f7a9a'; ctx.fillText('アイテムまで あと' + left + '字', 14, s.def.seesaw ? 124 : 90);
     }
     // さいきんできたことば（右上）
     if (phase === 'play') {
       var recent = s.made.slice(-3).reverse(), y0 = 14;
       ctx.textAlign = 'right';
-      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText('字と字を くっつけて', W - 14, 26); ctx.fillText('ことばを つくろう', W - 14, 40);
+      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText('字と字を くっつけて', W - 14, 26); ctx.fillText('ことばを つくろう', W - 14, 40);
         if (s.score >= 3) { ctx.fillStyle = '#b5552a'; ctx.fillText('ひかっている字の となりや上が ねらいめ', W - 14, 56); } }
       recent.forEach(function (w, i) {
         ctx.font = '900 ' + (i ? 15 : 19) + 'px ' + G.font; var tw = ctx.measureText(w).width, x1 = W - 12, bh = i ? 24 : 30;
@@ -787,7 +802,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
         ctx.fillStyle = '#3b2f24'; ctx.textBaseline = 'middle'; ctx.fillText(w, x1 - 8, y0 + bh / 2 + 1); ctx.textBaseline = 'alphabetic';
         ctx.globalAlpha = 1; y0 += bh + 5;
       });
-      if (!C.canDrop(s) && s.t - s.lastDropT > 40) { ctx.fillStyle = 'rgba(138,118,99,.8)'; ctx.font = '700 11px "M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ゆれがおさまるまで まって', W / 2, VIEW_H - 14); }
+      if (!C.canDrop(s) && s.t - s.lastDropT > 40) { ctx.fillStyle = 'rgba(138,118,99,.8)'; ctx.font = '700 11px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ゆれがおさまるまで まって', W / 2, VIEW_H - 14); }
     }
     if (s.def.seesaw && phase === 'play') {
       var r = C.tilt(s), mx = 14, my = 86, mw = 90, mh = 8;
@@ -800,7 +815,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       if (Math.abs(r) < 0.45) tiltWarn = false;
       if (danger && frameN % 20 < 10) { ctx.strokeStyle = '#d9472f'; ctx.lineWidth = 2; roundRect(ctx, mx - 6, my - 6, mw + 12, mh + 20, 8); ctx.stroke(); }
       var nx = mx + mw / 2 + r * mw / 2; ctx.fillStyle = '#3b2f24'; ctx.fillRect(nx - 1.5, my - 3, 3, mh + 6);
-      ctx.font = '9px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.textAlign = 'left'; ctx.fillText('かたむき', mx, my + mh + 11);
+      ctx.font = '9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.textAlign = 'left'; ctx.fillText('かたむき', mx, my + mh + 11);
     }
   }
 
@@ -832,10 +847,13 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       '<p class="unlock">' + nextUnlock() + '</p>' +
       '<p style="font-size:11px">ことば帳 ' + dictCount() + ' / ' + ALL_WORDS.length + '・遊んだ回数 ' + (moneyPrefs.get('games', 0) || 0) + '</p>' +
       (money.adFree() ? '<p style="margin-top:8px">広告なし（購入ずみ）</p>' :
-        '<div class="row" style="margin-top:8px"><button class="btn sec" id="noads">広告を消す（370円）</button><button class="btn sec" id="restore">購入を復元</button></div>') +
-      '<p style="margin-top:8px;font-size:11px">試作用: 広告のふるまい <select id="adMode">' + ['normal:ふつう', 'nofill:読み込めない', 'closeEarly:途中で閉じる', 'showFail:表示に失敗'].map(function (o) {
+        // アプリでは値段はストアから（読めるまでボタンを出さない。審査の端末で値段が取れないと「課金が見つからない」になる）
+        '<div class="row" style="margin-top:8px">' + (!APP ? '<button class="btn sec" id="noads">広告を消す（370円）</button>' :
+          APP.canBuy && APP.price ? '<button class="btn sec" id="noads">広告を消す（' + APP.price + '）</button>' : '') +
+        '<button class="btn sec" id="restore">購入を復元</button></div>') +
+      (APP ? '' : '<p style="margin-top:8px;font-size:11px">試作用: 広告のふるまい <select id="adMode">' + ['normal:ふつう', 'nofill:読み込めない', 'closeEarly:途中で閉じる', 'showFail:表示に失敗'].map(function (o) {
         var kv = o.split(':'); return '<option value="' + kv[0] + '"' + (ads.mode === kv[0] ? ' selected' : '') + '>' + kv[1] + '</option>'; }).join('') + '</select>' +
-        (money.adFree() ? ' <button class="chip" id="unbuy">広告ありに戻す</button>' : '') + '</p>' +
+        (money.adFree() ? ' <button class="chip" id="unbuy">広告ありに戻す</button>' : '') + '</p>') +
       '<p style="margin-top:4px"><button class="chip" id="credits">クレジット</button></p>' +
       '<div class="row"><button class="btn" id="go">はじめる</button></div>');
     drawDemo();
@@ -843,11 +861,12 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     wirePlats(function () { s = C.create(null, plat); drawNext(); showMenu(); });
     document.getElementById('go').onclick = function () { audio(); start(); };
     var nb = document.getElementById('noads');
-    if (nb) nb.onclick = function () { if (window.confirm('試作なので本当の購入はしません。広告なしにしますか？')) money.buy().then(showMenu); };
+    if (nb) nb.onclick = function () { nb.disabled = true; if (APP || window.confirm('試作なので本当の購入はしません。広告なしにしますか？')) money.buy().then(function () { if (phase === 'menu') showMenu(); }); else nb.disabled = false; };
     var rb = document.getElementById('restore');
-    if (rb) rb.onclick = function () { money.restore().then(function (r) { if (r !== 'purchased') window.alert('復元できる購入がありません'); showMenu(); }); };
+    // アプリでは結果のお知らせはアプリから届く（tenbinSetApp の msg）
+    if (rb) rb.onclick = function () { rb.disabled = true; money.restore().then(function (r) { if (!APP && r !== 'purchased') window.alert('復元できる購入がありません'); if (phase === 'menu') showMenu(); }); };
     var am = document.getElementById('adMode');
-    am.onchange = function () { ads.mode = am.value; store.set('adMode', am.value); ads.dispose(); ads.ensureLoaded('rewarded'); };
+    if (am) am.onchange = function () { ads.mode = am.value; store.set('adMode', am.value); ads.dispose(); ads.ensureLoaded('rewarded'); };
     var ub = document.getElementById('unbuy');
     if (ub) ub.onclick = function () { moneyPrefs.set('adFree', false); money.store.owned = false; money.start(); showMenu(); };
   }
@@ -861,7 +880,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     link([[186, 48], [150, 48]]); mini('み', 150, 48); mini('う', 186, 48);
     g.font = '900 15px ' + G.font; g.fillStyle = '#d9472f'; g.textBaseline = 'middle';
     g.fillText('ねこ', 70, 46); g.fillText('うみ', 210, 48);
-    g.font = '700 9px "M PLUS Rounded 1c",sans-serif'; g.fillStyle = '#8a7663';
+    g.font = '700 9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; g.fillStyle = '#8a7663';
     g.fillText('上と下でも', 20, 90); g.fillText('右から左でも', 146, 90);
   }
   // さいこう記録を保存する（結果・途中でやめたとき）
@@ -900,7 +919,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     document.getElementById('share').onclick = function () {
       var text = 'もじつみ（' + C.PLATFORMS[plat].name + 'の台）で ' + s.points + '点！ ことば ' + s.made.length + 'こ' + (longest ? '・いちばん長いのは「' + longest + '」' : '') + ' #もじつみ';
       var el = this;
-      if (navigator.share) navigator.share({ text: text }).catch(function () {});
+      if (APP) appPost({ type: 'share', text: text });
+      else if (navigator.share) navigator.share({ text: text }).catch(function () {});
       else if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { el.textContent = 'コピーしました'; }, function () { el.textContent = 'コピーできませんでした'; });
     };
     // 1回の遊びの終わりを1度だけ数える（つづけたあと また崩れても数え直さない）。全画面はつぎを始めるときに
@@ -936,8 +956,15 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     });
   }
   var ads = new TenbinMoney.FakeAds({ mode: store.get('adMode', 'normal'), present: presentAd });
-  var money = new TenbinMoney.Money(moneyPrefs, ads, new TenbinMoney.FakeStore(), { isForeground: function () { return document.visibilityState !== 'hidden'; } });
+  var fg = { isForeground: function () { return document.visibilityState !== 'hidden'; } };
+  // アプリでは本物の広告・課金（Flutter の側）。試作では偽の広告と待ち画面
+  var money = APP ? new TenbinMoney.AppMoney(moneyPrefs, appPost, { adFree: !!APP.adFree }, fg) : new TenbinMoney.Money(moneyPrefs, ads, new TenbinMoney.FakeStore(), fg);
   money.start();
+  if (APP) money.onChange(function (msg) {
+    APP.price = money.state.price; APP.canBuy = money.state.canBuy;
+    if (msg) { if (phase === 'play') popup(msg, W / 2, camTop + 150, false, '#1f7a9a'); else toast(msg); }
+    if (phase === 'menu') showMenu();
+  });
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') money.refresh(); });
   var GATE_MSG = { cancelled: '', declined: '最後まで見ると もらえます', unavailable: 'いまは動画を読み込めません。少しあとで ためしてください', showFailed: '動画を出せませんでした。少しあとで ためしてください' };
   // 動画を見てごほうび。ごほうびは画面の状態を見ずに必ず渡す（docs/app-pitfalls.md の2）
@@ -946,7 +973,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // 読み込みを待つ間（最長6秒）も「やめる」で戻れる
     money.beforeReward(function () {
       showSheet('<div class="ad"><div class="ring"></div><h2>動画を読み込み中…</h2><p>少しだけ まってください</p><button class="btn sec" id="adCancel">やめる</button></div>');
-      document.getElementById('adCancel').onclick = function () { cancelled = true; phase = back; onOther(''); };
+      document.getElementById('adCancel').onclick = function () { cancelled = true; money.cancelReward(); phase = back; onOther(''); };
     }, function () { return cancelled; })
       .then(function (gate) { if (cancelled) return; phase = back; if (gate === 'granted') onGranted(); else onOther(GATE_MSG[gate] || ''); });
   }
@@ -957,8 +984,13 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       '<p><b>字形</b>: M PLUS Rounded 1c（© The Rounded M+ Project Authors）SIL Open Font License 1.1</p>' +
       '<p><b>ことば</b>: wordfreq（Robyn Speer）の頻度データ（CC BY-SA 4.0）で選び、UniDic（UniDic Consortium・BSD ライセンス）で品詞と読みを確かめた。ことばの一覧は CC BY-SA 4.0 で扱います</p>' +
       '<p><b>物理</b>: matter.js（Liam Brummitt・MIT）／ poly-decomp.js（Stefan Hedman・MIT）</p>' +
+      '<p style="text-align:center"><button class="chip" id="privacy">プライバシーポリシー</button> <button class="chip" id="support">お問い合わせ・広告の報告</button>' +
+      (APP ? ' <button class="chip" id="licenses">ライセンス一覧</button>' : '') + '</p>' +
       '<div class="row"><button class="btn" id="close">とじる</button></div></div>');
     document.getElementById('close').onclick = showMenu;
+    document.getElementById('privacy').onclick = function () { openUrl(SITE + '/privacy.html'); };
+    document.getElementById('support').onclick = function () { openUrl(SITE + '/support.html'); };
+    var lb = document.getElementById('licenses'); if (lb) lb.onclick = function () { appPost({ type: 'licenses' }); };
   }
   function showDict() {
     // 開いている間にもう一度押されたら何もしない（2度目で「遊んでいなかった」扱いになり、はじめの画面へ飛んでいた）
@@ -993,6 +1025,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     document.getElementById('toMenu').onclick = function () { saveBest(); showMenu(); };
   }
   pauseBtn.onclick = showPause;
+  // アプリが裏に回る直前（app の GameScreen から呼ばれる）。WebView では visibilitychange が来ないことがある
+  window.tenbinPause = function () { if (phase === 'play' || phase === 'pause') saveBest(); showPause(); };
   // 裏に回ったら止めて、記録も残しておく（そのままアプリを終了されても消えない）
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') { if (phase === 'play' || phase === 'pause') saveBest(); showPause(); } });
   document.getElementById('dictN').textContent = dictCount();
