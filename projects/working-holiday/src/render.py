@@ -151,6 +151,7 @@ def load_data() -> tuple[dict, list[dict]]:
         merged["unverified"] = detail.get("unverified", [])
         merged["checked"] = max((s.get("checked", "") for s in merged["sources"]), default="")
         merged["filled"] = any(merged[k] for k, _ in FIELDS)
+        merged["verified"] = sum(1 for k, _ in FIELDS if merged[k])
         merged["quota_n"] = int(c["quota"].replace(",", "")) if c["quota"].replace(",", "").isdigit() else 0
         merged["flag"] = geo.FLAG[c["id"]]
         merged["links"] = links.get(c["id"], {})
@@ -355,7 +356,7 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
     write("country/index.html", "country_index.html", by_region=by_region,
           crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html")])
     write("junbi.html", "junbi.html", countries=countries, crumbs=[("トップ", "index.html"), ("出発までの準備", "junbi.html")])
-    write("genchi.html", "genchi.html", countries=countries, crumbs=[("トップ", "index.html"), ("現地に着いたら", "genchi.html")])
+    write("genchi.html", "genchi.html", countries=countries, world=geo.world(), crumbs=[("トップ", "index.html"), ("現地に着いたら", "genchi.html")])
     by_id = {c["id"]: c for c in countries}
     top = [by_id[i] for i in COMPARE_TOP]
     pairs = [{"a": a, "b": b, "slug": pair_slug(a, b)} for i, a in enumerate(top) for b in top[i + 1:]]
@@ -371,8 +372,17 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
     write("hayami.html", "hayami.html", countries=countries,
           crumbs=[("トップ", "index.html"), ("現地に着いたら", "genchi.html"), ("手続き早見表", "hayami.html")])
     write("mochimono.html", "mochimono.html", packing=PACKING, crumbs=[("トップ", "index.html"), ("持ち物", "mochimono.html")])
+    stats = {
+        "countries": len(countries),
+        "fields_total": len(countries) * len(FIELDS),
+        "fields_filled": sum(c["verified"] for c in countries),
+        "steps": sum(len((c["arrival"] or {}).get("steps", [])) for c in countries),
+        "hospitals": sum(len((c["arrival"] or {}).get("medical", {}).get("hospitals", [])) for c in countries),
+        "hospital_countries": sum(1 for c in countries if (c["arrival"] or {}).get("medical", {}).get("hospitals")),
+        "sources": len({s["url"] for c in countries for s in c["sources"] + (c["arrival"] or {}).get("sources", [])}),
+    }
     for name in ("about", "operator", "privacy", "contact"):
-        write(f"{name}.html", f"{name}.html")
+        write(f"{name}.html", f"{name}.html", stats=stats)
     write("404.html", "404.html")
 
     if _STATIC_DIR.exists():

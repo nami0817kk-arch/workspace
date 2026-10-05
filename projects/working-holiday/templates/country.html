@@ -11,6 +11,7 @@
 <div class="country-head">
   <div>
     <h1><img class="flag" src="../static/flags/{{ c.flag }}.svg" alt="" width="32" height="24">{{ c.name }}のワーキング・ホリデー</h1>
+    <p class="small muted">ビザの条件 {{ FIELDS|length }}項目のうち、公式情報で確かめられたのは{{ c.verified }}項目{% if c.checked %}（{{ c.checked }} 確認）{% endif %}</p>
     <p class="lead">日本との制度は{{ c.since }}年から。年間発給枠は{{ quota(c) }}。{% if c.twice %}一生のうち2回まで参加できる国。{% endif %}</p>
     <p class="small">
       <a href="#joken">ビザの条件</a> ・

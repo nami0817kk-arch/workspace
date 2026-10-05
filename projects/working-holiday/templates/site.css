@@ -143,6 +143,17 @@ img.flag { border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.08); vertical-a
   .dec-stack a { grid-template-columns: 20px auto auto; }
   .dec-label { border-top: none; border-bottom: 2px solid var(--viz-1); flex-direction: row; gap: 0.6rem; text-align: left; padding: 0.2rem 0; }
 }
+.meter { display: inline-block; width: 4rem; height: 6px; background: var(--grid); border-radius: 3px; vertical-align: middle; overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--accent); }
+ul.checklist { list-style: none; padding: 0; }
+ul.checklist li { padding: 0.45rem 0; border-bottom: 1px solid var(--border); }
+ul.checklist input { transform: scale(1.15); margin-right: 0.4rem; }
+/* 準備の目安の帯 */
+.plan-row { display: flex; gap: 4px; }
+.plan-cell { flex: 0 0 var(--w); background: color-mix(in srgb, var(--viz-1) 14%, var(--card-bg)); border-top: 4px solid var(--viz-1); border-radius: 6px; padding: 0.5rem 0.6rem; display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.82rem; min-width: 0; }
+.plan-cell strong { font-size: 0.9rem; }
+.plan-cell.go { border-top-color: var(--viz-2); background: color-mix(in srgb, var(--viz-2) 14%, var(--card-bg)); }
+@media (max-width: 640px) { .plan-row { flex-direction: column; } .plan-cell { flex-basis: auto; } }
 /* 手順の流れ */
 ol.steps { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 0; }
 ol.steps > li { display: grid; grid-template-columns: 3.2rem 1fr; gap: 0.9rem; position: relative; padding-bottom: 1.2rem; }

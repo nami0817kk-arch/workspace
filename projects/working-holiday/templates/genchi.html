@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_icons.html" import icon with context %}
+{% from "_viz.html" import world_map with context %}
 {% block title %}ワーホリで現地に着いたら｜手続き・日本語が通じる病院・仕事の探し方｜{{ SITE_NAME }}{% endblock %}
 {% block description %}ワーキング・ホリデーで現地に着いてからやること。在留届、税や社会保障の番号、銀行口座、日本語が通じる病院の探し方、公的な仕事探しの窓口と最低賃金を、国ごとの公式情報へのリンクつきでまとめました。{% endblock %}
 {% block content %}
@@ -49,6 +50,32 @@
   </li>
 </ol>
 
+<h2><span class="section-icon">{{ icon("check", 24) }}</span>着いて最初の週のチェック</h2>
+<p class="small muted">チェックはこの端末のブラウザにだけ保存されます。</p>
+<ul class="checklist" id="first-week">
+  <li><label><input type="checkbox" data-key="zairyu"> 在留届を出した（ORRネット）</label></li>
+  <li><label><input type="checkbox" data-key="emergency"> 緊急の番号と、日本大使館・総領事館の連絡先を控えた</label></li>
+  <li><label><input type="checkbox" data-key="address"> 住む場所の届出・滞在の手続きの期限を確かめた</label></li>
+  <li><label><input type="checkbox" data-key="number"> 働くための番号（税・社会保障）の申請をした</label></li>
+  <li><label><input type="checkbox" data-key="bank"> 銀行口座を開いた（または必要な書類を確かめた）</label></li>
+  <li><label><input type="checkbox" data-key="insurance"> 保険の証書と、病気のときの連絡先を手元に置いた</label></li>
+  <li><label><input type="checkbox" data-key="wage"> その国の最低賃金と、働くときの制限を確かめた</label></li>
+</ul>
+<script>
+(function () {
+  var KEY = 'wh-first-week', saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+  document.querySelectorAll('#first-week input').forEach(function (box) {
+    var k = box.getAttribute('data-key');
+    box.checked = !!saved[k];
+    box.addEventListener('change', function () {
+      saved[k] = box.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+    });
+  });
+})();
+</script>
+
 <h2><span class="section-icon">{{ icon("hospital", 24) }}</span>病気やけがのとき</h2>
 <div class="stat-row">
   <div class="stat emergency">
@@ -62,6 +89,8 @@
     <span class="stat-value" style="font-size:1.05rem">外務省・日本大使館の一覧で探す</span>
   </div>
 </div>
+{% set hosp = countries|selectattr("arrival")|selectattr("arrival.medical.hospitals")|list %}
+{{ world_map(world, hosp, "日本語が通じる医療機関が公式の一覧に載っている国の地図", "日本語が通じる医療機関が公式の一覧に載っている国（" ~ hosp|length ~ "か国・地域。押すと病院の一覧へ）", "#iryou") }}
 <p>外務省の「世界の医療事情」には、国ごとの医療の水準、かかりやすい病気、日本語が通じる医療機関がまとまっています。現地の日本大使館・総領事館も、医療機関の一覧を出していることがあります。</p>
 
 <div class="table-wrap">

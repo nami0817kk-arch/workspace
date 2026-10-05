@@ -46,7 +46,8 @@
   <tbody>
   {% for c in countries %}
     <tr data-region="{{ c.region }}" data-name="{{ c.name }}">
-      <th scope="row" data-v="{{ c.since }}"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><a href="country/{{ c.id }}.html">{{ c.name }}</a>{% if c.twice %} <span class="tag">2回OK</span>{% endif %}<br><span class="small muted">{{ c.region }}・{{ c.since }}年〜</span></th>
+      <th scope="row" data-v="{{ c.since }}"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><a href="country/{{ c.id }}.html">{{ c.name }}</a>{% if c.twice %} <span class="tag">2回OK</span>{% endif %}<br><span class="small muted">{{ c.region }}・{{ c.since }}年〜</span>
+        <span class="meter" title="公式情報で確かめられた項目 {{ c.verified }}/{{ FIELDS|length }}"><span style="width:{{ c.verified / FIELDS|length * 100 }}%"></span></span><span class="small muted"> 確認 {{ c.verified }}/{{ FIELDS|length }}</span></th>
       <td data-v="{{ c.quota_n or 999999 }}">{{ quota(c) }}</td>
       {% for key, label in FIELDS if key in TABLE_FIELDS %}<td>{{ brief(c, key) }}</td>{% endfor %}
     </tr>
