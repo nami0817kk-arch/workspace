@@ -5,7 +5,7 @@ function setup(mode, presentResult) {
   var clock = { t: 0 }, shown = [];
   var ads = new T.FakeAds({ mode: mode || 'normal', loadMs: 5, now: function () { return clock.t; },
     present: function (kind) { shown.push(kind); return Promise.resolve(presentResult || 'earned'); } });
-  var p = prefs(), m = new T.Money(p, ads, new T.FakeStore());
+  var p = prefs(), m = new T.Money(p, ads, new T.FakeStore(), { now: function () { return clock.t; } });
   return { m: m, ads: ads, p: p, clock: clock, shown: shown };
 }
 (async function () {
@@ -46,6 +46,20 @@ function setup(mode, presentResult) {
   var h = setup(); await h.m.start(); for (game = 0; game < 4; game++) h.m.gameEnded();
   h.ads.mode = 'nofill'; h.ads.ready.interstitial = null;
   h.p.set('sinceAd', 2); assert.strictEqual(await h.m.beforeNextGame(true), false); assert.strictEqual(h.p.get('sinceAd'), 3);
+
+  // 待っている間に「やめる」なら広告を出さない
+  var q = setup(); q.ads.loadMs = 30; await q.m.start(); q.ads.ready.rewarded = null;
+  var cancel = false; setTimeout(function () { cancel = true; }, 5);
+  assert.strictEqual(await q.m.beforeReward(null, function () { return cancel; }), 'cancelled'); assert.deepStrictEqual(q.shown, []);
+  // 動画を見てから2分以内は全画面を出さず、次の回へ回す
+  var r = setup(); await r.m.start(); await new Promise(function (x) { setTimeout(x, 20); });
+  for (game = 0; game < 5; game++) r.m.gameEnded();
+  r.ads.ensureLoaded('interstitial'); await new Promise(function (x) { setTimeout(x, 20); });
+  r.p.set('sinceAd', 2); assert.strictEqual(await r.m.beforeReward(), 'granted');
+  r.clock.t += 60 * 1000; assert.strictEqual(await r.m.beforeNextGame(true), false, '動画のすぐあとに全画面が出た');
+  assert.strictEqual(r.p.get('sinceAd'), 3, '見送った回が次に回らない');
+  r.clock.t += 2 * 60 * 1000; r.ads.ensureLoaded('interstitial'); await new Promise(function (x) { setTimeout(x, 20); });
+  assert.strictEqual(await r.m.beforeNextGame(true), true, '2分すぎても全画面が出ない');
 
   // 広告を消す: 全画面が出ない・動画なしで渡す。復元でも戻る
   var k = setup(); await k.m.start(); await k.m.buy();

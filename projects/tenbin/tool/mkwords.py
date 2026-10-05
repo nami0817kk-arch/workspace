@@ -81,7 +81,8 @@ def main():
     head = ('// 字をくっつけて作る「ことば」。tool/mkwords.py が作る（手で直すなら words_manual.js の方を直して作り直す）。\n'
             '// 清音のひらがな46字だけで読める、よく使う言葉。手で選んだ言葉（words_manual.js）＋ 頻度表（wordfreq）の上位から\n'
             '// 名詞・形容詞・動詞（言い切り）・副詞を集め、カタカナ語・文法のための語・子どもに向かない語・漢字1字の音読み（かん・せん…）を除いた。\n'
-            '// 字の袋もここから作る（ことばに使う字が多めに来る）。node test/words.test.js で字・字数・重複を確かめる\n')
+            '// 字の袋もここから作る（ことばに使う字が多めに来る）。node test/words.test.js で字・字数・重複を確かめる\n'
+            '// 出どころ: wordfreq（Robyn Speer）の頻度データ（CC BY-SA 4.0）で選び、UniDic（BSD）で品詞と読みを見た。この一覧も CC BY-SA 4.0 で扱う（アプリの「クレジット」に表示）\n')
     js = head + 'var TenbinWords = {\n' + ',\n'.join('  %s: [\n%s]' % (k, fmt(v)) for k, v in tiers.items()) + \
         '\n};\nif (typeof module !== \'undefined\') module.exports = TenbinWords;\n'
     (ROOT / 'prototype/words.js').write_text(js, encoding='utf-8')

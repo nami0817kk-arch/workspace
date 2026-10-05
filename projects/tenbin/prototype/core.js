@@ -4,7 +4,7 @@
 var TenbinCore = (function () {
   var M = (typeof Matter !== 'undefined') ? Matter : require('matter-js');
   var env = (typeof process !== 'undefined' && process.env) || {};
-  var W = 400, GROUND = 600, PIVOT_Y = 556, PLANK_T = 14, PLANK_L = 320;
+  var W = 400, GROUND = 600, PIVOT_Y = 556, PLANK_T = 14;
   var DT = 1000 / 60, SUB = 4, SDT = DT / SUB;
   var CAT_STATIC = 1, CAT_PLANK = 2, CAT_CARGO = 4;
   var DENSITY = 0.0015, ROT_STEP = Math.PI / 4;
@@ -124,11 +124,18 @@ var TenbinCore = (function () {
       bag = bag.concat(pick(s, tier).split(''));
     }
     bag.push(pick(s, KINDS));
-    for (var i = bag.length - 1; i > 0; i--) { var j = (s.rng() * (i + 1)) | 0; var t = bag[i]; bag[i] = bag[j]; bag[j] = t; }
-    // 同じ字が続かないように
-    for (var k = 1; k < bag.length; k++) if (bag[k] === bag[k - 1]) { var m = (k + 2) % bag.length; t = bag[k]; bag[k] = bag[m]; bag[m] = t; }
-    if (s.queue.length && s.queue[s.queue.length - 1] === bag[0]) bag.push(bag.shift());
-    s.queue = s.queue.concat(bag);
+    // 袋から1字ずつ取り出して並べる。直前と同じ字は（ほかに残っていれば）取らない。
+    // （混ぜてから入れ替えて直す形では、入れ替えた先で別の重なりができ、同じ字が続くことがあった）
+    // 残りが同じ字だけになったら、すでに並べた中の、前後どちらとも違う所へ差し込む
+    var last = s.queue[s.queue.length - 1], from = s.queue.length;
+    while (bag.length) {
+      var can = []; for (var i = 0; i < bag.length; i++) if (bag[i] !== last) can.push(i);
+      if (can.length) { last = bag.splice(can[(s.rng() * can.length) | 0], 1)[0]; s.queue.push(last); continue; }
+      var x = bag.pop(), q = s.queue, at = -1;
+      for (var p = Math.max(1, from); p < q.length; p++) if (q[p - 1] !== x && q[p] !== x) { at = p; break; }
+      if (at < 0) q.push(x); else q.splice(at, 0, x);
+      last = q[q.length - 1];
+    }
   }
   function current(s) { return s.queue[0]; }
   function next(s) { return s.queue[1]; }
@@ -209,7 +216,7 @@ var TenbinCore = (function () {
     return top;
   }
 
-  // 持っている動物の高さ: 積んだ山の上 60px に、体の下端が来るように
+  // 持っている字の高さ: 積んだ山の上 GAP px に、字の下端が来るように
   function holdY(s, kind, ang) { var e = extent(kind, ang); return Math.min(PIVOT_Y - 140, topY(s) - GAP) - e.maxY; }
   function clampX(kind, ang, x) { var e = extent(kind, ang); return Math.max(4 - e.minX, Math.min(W - 4 - e.maxX, x)); }
 
@@ -233,6 +240,26 @@ var TenbinCore = (function () {
       });
     }
     return best;
+  }
+
+  // このまま落としたら、どのことばができそうか（狙いの手がかり）。落ちる先の影の位置に仮の字を置いて読む。
+  // 転がりや跳ねは考えないので「できそう」まで。長いことばの一部（あさひ の あさ）は返さない
+  function previewWords(s, kind, ang, x) {
+    if (!kind || kind === BOARD) return [];
+    x = clampX(kind, ang, x);
+    var ly = landingY(s, kind, ang, x); if (ly >= GROUND) return [];
+    var e = extent(kind, ang), t = build(kind, x, ly - e.maxY - 1, ang), saved = s.cargo, found;
+    s.cargo = saved.concat([t]);
+    try { found = findWords(s).filter(function (f) { return f.bodies.indexOf(t) >= 0; }); } finally { s.cargo = saved; }
+    found.sort(function (a, b) { return b.text.length - a.text.length; });
+    var keep = [];
+    found.forEach(function (f) {
+      var inside = function (bs) { return f.bodies.every(function (b) { return bs.indexOf(b) >= 0; }); };
+      if (keep.some(function (k) { return inside(k.bodies); }) || s.madeBodies.some(inside)) return;
+      keep.push(f);
+    });
+    var texts = []; keep.forEach(function (f) { if (texts.indexOf(f.text) < 0) texts.push(f.text); });
+    return texts;
   }
 
   function drop(s, x, ang) {
@@ -289,7 +316,7 @@ var TenbinCore = (function () {
       if (s.last.kind !== BOARD) {
         s.score++; s.points += LETTER_PTS; s.placed++;
         s.events.push({ type: 'score', kind: s.last.kind, pts: LETTER_PTS });
-        if (s.useItems && s.placed % 8 === 0) giveItem(s);
+        if (s.useItems && s.placed % ITEM_EVERY === 0) giveItem(s);
       }
       checkWords(s);
     } else if (!s.pendingScore && s.t % 15 === 0 && s.cargo.length > 1 && settled(s)) {
@@ -320,7 +347,7 @@ var TenbinCore = (function () {
   // --- アイテム（はじめの画面で あり／なし を選ぶ） ---
   // のり: 次の字が最初に触れたものにくっつく / いた: 次に平らな板を落とす / とりけし: 最後の字を取り除く /
   // こおり: いま触れ合っている字どうしと台を、全部くっつけて固める
-  var ITEM_KEYS = ['glue', 'board', 'undo', 'freeze'], ITEM_MAX = 2;
+  var ITEM_KEYS = ['glue', 'board', 'undo', 'freeze'], ITEM_MAX = 2, ITEM_EVERY = 8;   // 字8つごとに1つ
   function giveItem(s) {
     var can = ITEM_KEYS.filter(function (k) { return s.items[k] < ITEM_MAX; });
     if (!can.length) return;
@@ -441,8 +468,8 @@ var TenbinCore = (function () {
     return Math.max(0, Math.min(1, r)) * (low.x < W / 2 ? -1 : 1);
   }
 
-  return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, PLANK_L: PLANK_L, DT: DT, ROT_STEP: ROT_STEP,
+  return { M: M, W: W, GROUND: GROUND, PIVOT_Y: PIVOT_Y, PLANK_T: PLANK_T, DT: DT, ROT_STEP: ROT_STEP,
     GLYPHS: GLYPHS, KINDS: KINDS, OFFSET: OFFSET, outlines: outlines, create: create, build: build, extent: extent, drop: drop, step: step, physics: physics,
-    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, partners: partners, revive: revive, landingY: landingY, useItem: useItem, giveItem: giveItem, ITEM_KEYS: ITEM_KEYS, BOARD: BOARD, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
+    PLATFORMS: PLATFORMS, PLATFORM_KEYS: PLATFORM_KEYS, settled: settled, canDrop: canDrop, current: current, next: next, WORDS: WORDS, findWords: findWords, previewWords: previewWords, partners: partners, ITEM_EVERY: ITEM_EVERY, revive: revive, landingY: landingY, useItem: useItem, giveItem: giveItem, ITEM_KEYS: ITEM_KEYS, BOARD: BOARD, wordPoints: wordPoints, LETTER_PTS: LETTER_PTS, topY: topY, holdY: holdY, clampX: clampX, tilt: tilt };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinCore;

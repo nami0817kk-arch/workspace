@@ -19,10 +19,12 @@
   --accent:#ee6a50; --accent2:#f2b24f; --ok:#5fb77f; --scrim:rgba(0,0,0,.6);
 }
 *{box-sizing:border-box}
+[hidden]{display:none !important}   /* .items の display:grid が hidden に勝って、結果画面でもアイテムの段が残っていた */
 html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;
   -webkit-tap-highlight-color:transparent;overflow-x:hidden;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 button{font:inherit;color:inherit;cursor:pointer}
+button:focus:not(:focus-visible){outline:none}
 .app{max-width:440px;margin:0 auto;padding:10px 16px 18px}
 header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 h1{font-size:19px;margin:0;letter-spacing:.04em;font-weight:800;white-space:nowrap}
@@ -37,10 +39,10 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .bar{display:flex;align-items:center;gap:10px;margin-top:10px}
 .next{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--sub);border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:4px 6px 4px 10px;writing-mode:horizontal-tb}
 .next canvas{width:108px;height:40px}
-.hint{flex:1;font-size:11px;color:var(--sub);line-height:1.45}
+.hint{flex:1;min-width:0;font-size:11px;color:var(--sub);line-height:1.45}
 .rot{font-size:17px;font-weight:800;border:0;border-radius:16px;padding:14px 18px;background:var(--accent);color:#fff;min-width:100px;
   box-shadow:0 3px 0 rgba(0,0,0,.18)}
-@media (max-width:380px){.hint{display:none}.bar{justify-content:space-between}}
+@media (max-width:430px){.hint{display:none}.bar{justify-content:space-between}}
 .items{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}
 .items button.vid{background:var(--ok);color:#fff;border-color:var(--ok)}
 .items button.vid small{color:#e6f5ea}
@@ -52,6 +54,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
 .seg button{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:7px 0;font-weight:700;font-size:13px}
 .seg button.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.rot.back{min-width:0;padding:14px 13px;background:var(--panel);color:var(--accent);border:2px solid var(--accent);box-shadow:none}
+.bar .rot.back{margin-left:auto;margin-right:-4px}
 .rot:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
 /* 重ねる画面（はじめ・けっか・ことば帳） */
 .sheet{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:var(--scrim);padding:16px}
@@ -94,25 +98,32 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .w.lock{color:var(--sub);font-family:"M PLUS Rounded 1c",sans-serif;font-weight:400;letter-spacing:2px}
 .badge{display:inline-block;background:var(--accent2);color:#3b2f24;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;margin-top:6px}
 .dict .words{max-height:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.bar2{height:5px;border-radius:3px;background:var(--line);overflow:hidden;margin:4px 0 0}.bar2 i{display:block;height:100%;background:var(--ok)}
+.credits{text-align:left}.credits p{font-size:11px}
+.coach{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(59,47,36,.82);color:#fff;font-size:13px;font-weight:700;border-radius:999px;padding:7px 14px;white-space:nowrap;pointer-events:none;animation:fade .3s}
 .dict h3{font-size:13px;color:var(--sub);margin:12px 0 0;font-weight:700}
 </style></head><body>
 <div class="app">
   <header>
-    <h1>ひらがな<span>てんびん</span></h1>
+    <h1>もじ<span>つみ</span></h1>
     <div class="hbtn">
+      <button class="chip" id="pauseBtn" hidden aria-label="一時停止">とめる</button>
       <button class="chip" id="soundBtn" aria-label="音のオンとオフ">おと</button>
       <button class="chip" id="dictBtn">ことば帳 <b id="dictN">0</b></button>
     </div>
   </header>
   <div class="stage" id="stage">
     <canvas id="cv" width="400" height="560" role="img" aria-label="ゲームの画面。ひらがなを積む台"></canvas>
-    <div class="sheet" id="sheet"><div class="card" id="card"></div></div>
+    <div class="sheet" id="sheet"><div class="card" id="card" role="dialog" aria-modal="true"></div></div>
+    <div class="sr" id="live" aria-live="polite"></div>
+    <div class="coach" id="coach" hidden></div>
   </div>
   <div class="items" id="items" hidden></div>
-  <div class="bar">
+  <div class="bar" id="bar">
     <div class="next"><span>つぎ</span><canvas id="nextCv" width="216" height="80" role="img" aria-label="つぎの字"></canvas></div>
     <div class="hint" id="hint">なぞって、はなすと落ちる</div>
-    <button class="rot" id="rot" aria-label="持っている字を45度まわす">まわす</button>
+    <button class="rot back" id="rotL" aria-label="持っている字を左に45度まわす">↺</button><button class="rot" id="rot" aria-label="持っている字を右に45度まわす">まわす</button>
   </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
@@ -145,8 +156,10 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // --- 保存（端末の中だけ。読めなくても遊べる） ---
   var store = { get: function (k, d) { try { var v = localStorage.getItem('tenbin-kana-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
     set: function (k, v) { try { localStorage.setItem('tenbin-kana-' + k, JSON.stringify(v)); } catch (e) {} } };
-  var bests = store.get('bests2', {}), dict = store.get('dict', {}), plat = store.get('plat', 'flat'), muted = store.get('muted', false);
-  var theme = store.get('theme', 'base'), useItems = store.get('items', true);
+  // 壊れた値・古い形の値が入っていても遊べるように、型を確かめてから使う
+  function obj(v) { return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
+  var bests = obj(store.get('bests2', {})), dict = obj(store.get('dict', {})), plat = String(store.get('plat', 'flat')), muted = store.get('muted', false) === true;
+  var theme = String(store.get('theme', 'base')), useItems = store.get('items', true) !== false;
   // 記録はアイテムの あり／なし で分ける（使った点と使わない点を混ぜない）
   function bkey(k) { return (k || plat) + (useItems ? '+i' : ''); }
   function themeOf(k) { return THEMES.filter(function (t) { return t.key === k; })[0] || THEMES[0]; }
@@ -154,7 +167,9 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function isOpenTheme(t) { return dictCount() >= t.need; }
   if (!C.PLATFORMS[plat]) plat = 'flat';
   var ALL_WORDS = C.WORDS.short.concat(C.WORDS.middle, C.WORDS.long);
-  function dictCount() { return Object.keys(dict).length; }
+  // ことば帳の数は、いまの単語表にあることばだけ数える（表から外したことばで台がひらかないように）
+  var WORD_SET = {}; ALL_WORDS.forEach(function (w) { WORD_SET[w] = 1; });
+  function dictCount() { var n = 0; for (var w in dict) if (WORD_SET[w]) n++; return n; }
   if (!isOpenPlat(plat)) plat = 'flat';
   if (!isOpenTheme(themeOf(theme))) theme = 'base';
   INK = themeOf(theme).ink;
@@ -169,13 +184,16 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // --- 音（Web Audio でその場で鳴らす） ---
   var ac = null;
-  function audio() { if (muted) return null; if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (ac.state === 'suspended') ac.resume(); return ac; }
+  function audio() { if (muted) return null; if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (ac.state !== 'running') { try { ac.resume(); } catch (e) {} } return ac; }   // iOS は電話などのあと 'interrupted' になる
+  // 音を重ねても割れないよう、全部をひとつのコンプレッサーに通す
+  var out = null;
+  function outNode(a) { if (!out) { try { out = a.createDynamicsCompressor(); out.threshold.value = -14; out.ratio.value = 6; out.connect(a.destination); } catch (e) { out = a.destination; } } return out; }
   function tone(freq, dur, type, vol, when, slide) {
     var a = audio(); if (!a) return; var t = a.currentTime + (when || 0);
     var o = a.createOscillator(), g = a.createGain(); o.type = type || 'triangle'; o.frequency.setValueAtTime(freq, t);
     if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.2, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.02);
+    o.connect(g); g.connect(outNode(a)); o.start(t); o.stop(t + dur + 0.02);
   }
   var SND = {
     land: function (mass, speed) { var f = 520 / Math.sqrt(mass); tone(f, 0.09, 'sine', Math.min(0.28, 0.08 + speed * 0.03), 0, f * 0.6); tone(f * 2.02, 0.05, 'triangle', 0.05); },
@@ -188,8 +206,35 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   document.getElementById('soundBtn').onclick = function () { muted = !muted; store.set('muted', muted); drawSoundBtn(); if (!muted) SND.rot(); };
   drawSoundBtn();
 
+  // 手ごたえの振動（使える端末だけ。音を切っていても振動は残す）。アプリでは HapticFeedback に置きかえる
+  function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+  // 動きを減らす設定の人には、揺れ・光・粒を控える
+  var calm = false; try { var mq = window.matchMedia('(prefers-reduced-motion: reduce)'); calm = mq.matches; mq.addEventListener && mq.addEventListener('change', function () { calm = mq.matches; }); } catch (e) {}
   // --- 字の絵（当たり判定と同じ字形） ---
+  // 字は毎回 文字として描くと重い（縁取り・光・影で3回描く）。画面の倍率ごとに一度だけ絵にして使い回す
+  var SPRITE = {}, SPR = 128, ctxScale = 1, fontsReady = false;
+  function sprite(ch, k) {
+    var key = ch + '|' + inkOf(ch) + '|' + k.toFixed(3), c = SPRITE[key];
+    if (c) return c;
+    c = document.createElement('canvas'); c.width = c.height = Math.ceil(SPR * k);
+    var g = c.getContext('2d'); g.setTransform(k, 0, 0, k, SPR * k / 2, SPR * k / 2);
+    glyphPaint(g, ch);
+    return (SPRITE[key] = c);
+  }
+  function glyphPaint(g, ch) {
+    g.font = '900 ' + G.size + 'px ' + G.font; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.lineJoin = 'round'; g.lineWidth = 3.5; g.strokeStyle = 'rgba(70,45,20,.6)'; g.strokeText(ch, 0, 1.5);
+    g.fillStyle = inkOf(ch); g.fillText(ch, 0, 0);
+    g.globalAlpha *= 0.28; g.fillStyle = '#fff'; g.save(); g.beginPath(); g.rect(-50, -50, 100, 40); g.clip(); g.fillText(ch, 0, 0); g.restore();
+  }
   function drawGlyph(g, ch, ox, oy, ang, alpha, glow, sx, sy) {
+    if (g === ctx && ch !== C.BOARD && fontsReady) {
+      g.save(); g.translate(ox, oy); g.rotate(ang); if (sx) g.scale(sx, sy);
+      g.globalAlpha = alpha == null ? 1 : alpha;
+      if (glow) { g.shadowColor = 'rgba(255,214,90,' + glow + ')'; g.shadowBlur = 22 * glow * ctxScale; }
+      g.drawImage(sprite(ch, ctxScale), -SPR / 2, -SPR / 2, SPR, SPR);
+      g.restore(); return;
+    }
     g.save(); g.translate(ox, oy); g.rotate(ang); if (sx) g.scale(sx, sy);
     g.globalAlpha = alpha == null ? 1 : alpha;
     if (ch === C.BOARD) {   // アイテム「いた」
@@ -213,13 +258,23 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // --- 状態 ---
   var s, phase = 'menu', ang = 0, visAng = 0, pointer = { x: W / 2, active: false }, dragFrom = null, camTop = BASE_TOP, endTimer = 0, frameN = 0;
+  var preview = { key: '', at: -99, words: [] }, tiltWarn = false, barEl = document.getElementById('bar');
   var parts = [], popups = [], links = [], shake = 0, flash = 0, newWords = [], recordBroken = false, best = { p: 0, n: 0, h: 0 }, hudPts = 0, wordLog = [], unlocked = [], resultMsg = '';
   window.__state = function () { return s; }; window.__drawItems = function () { drawItems(); };
 
   function start() {
     s = C.create(null, plat, { items: useItems }); phase = 'play'; ang = visAng = 0; pointer.x = W / 2; camTop = BASE_TOP; endTimer = 0;
     parts = []; popups = []; links = []; shake = 0; newWords = []; recordBroken = false; best = bests[bkey()] || { p: 0, n: 0, h: 0 }; hudPts = 0; wordLog = []; unlocked = [];
-    hideSheet(); drawNext(); setHint(); drawItems();
+    hideSheet(); drawNext(); setHint(); drawItems(); preview = { key: '', at: -99, words: [] }; tiltWarn = false;
+  }
+  // はじめて遊ぶ人への手引き（最初の3字だけ。1度見たら出さない）
+  var coachEl = document.getElementById('coach'), coached = store.get('coached', false) === true;
+  var COACH = ['指でなぞると 字が動く。はなすと落ちる', '「まわす」で回してから落とせる', '字と字を くっつけると ことばになる'];
+  function updateCoach() {
+    var show = !coached && phase === 'play' && s && s.placed < COACH.length;
+    if (!show) { if (!coachEl.hidden) coachEl.hidden = true; if (!coached && s && s.placed >= COACH.length) { coached = true; store.set('coached', true); } return; }
+    if (coachEl.textContent !== COACH[s.placed]) coachEl.textContent = COACH[s.placed];
+    coachEl.hidden = false;
   }
   function setHint() { hint.textContent = s && s.def.seesaw ? 'かたよると板が傾く' : s && s.def.sway ? '台が左右に動く' : 'なぞって、はなすと落ちる'; }
   // アイテムのボタン
@@ -237,7 +292,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (vb) vb.onclick = function () {
       if (phase !== 'play' || s.itemVideoUsed) return;
       rewardThen(function () { s.itemVideoUsed = true; C.giveItem(s); hideSheet(); handleEvents(); drawItems(); },
-        function (msg) { hideSheet(); popup(msg, W / 2, camTop + 150, false, '#b5552a'); drawItems(); });
+        function (msg) { hideSheet(); if (msg) popup(msg, W / 2, camTop + 150, false, '#b5552a'); drawItems(); });
     };
     itemsEl.querySelectorAll('[data-item]').forEach(function (el) { el.onclick = function () {
       if (phase !== 'play') return; var k = el.getAttribute('data-item');
@@ -263,10 +318,14 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       parts.push({ x: x + (Math.random() - .5) * 30, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.6, life: 1, col: col, r: 2 + Math.random() * 3 }); }
   }
   function sparkle(x, y, n) {
+    if (calm) n = Math.min(n, 6);
     for (var i = 0; i < n; i++) { var a = Math.random() * Math.PI * 2, v = 1 + Math.random() * 3;
       parts.push({ x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1.5, life: 1, col: INK[i % INK.length], r: 2.5 + Math.random() * 2.5, g: 0.08 }); }
   }
   // 小さいお知らせが続けて同じ所に出たら、下へずらして重ねない
+  // 読み上げ（画面を見ない人にも、できたことばと結果を伝える）
+  var liveEl = document.getElementById('live');
+  function say(t) { liveEl.textContent = ''; setTimeout(function () { liveEl.textContent = t; }, 30); }
   function popup(text, x, y, big, col) {
     if (!big) popups.forEach(function (p) { if (!p.big && p.life > 0.4 && Math.abs(p.x - x) < 120 && Math.abs(p.y - y) < 20) y = p.y + 22; });
     popups.push({ text: text, x: x, y: y, life: 1, big: big, col: col || '#3b2f24' });
@@ -277,7 +336,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       if (e.type === 'land') {
         var b = s.last; b.squash = Math.min(1, 0.4 + e.speed * 0.25);
         burst(e.x, e.y, 6 + Math.min(8, e.speed * 3) | 0, 'rgba(150,115,70,.55)', 1 + e.speed * 0.4);
-        SND.land(e.mass, e.speed);
+        SND.land(e.mass, e.speed); buzz(8);
       } else if (e.type === 'word') {
         var minY = Infinity, sx = 0;
         e.bodies.forEach(function (b) { b.glow = 1; minY = Math.min(minY, b.bounds.min.y); sx += b.position.x; });
@@ -297,10 +356,10 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
         if (e.text.length >= 3) shake = Math.max(shake, 3 + e.text.length);
         if (e.text.length >= 4) flash = 1;
         var px = Math.max(70, Math.min(W - 70, sx));
-        wordLog.push({ text: e.text, pts: e.pts });
+        wordLog.push({ text: e.text, pts: e.pts }); say('ことば ' + e.text + '、' + e.pts + '点');
         popup('+' + e.pts + (e.mult > 1 ? '（×' + e.mult + '）' : ''), px, minY + 8, false, '#2f9a5c');
         if (isNew) popup('あたらしいことば！', px, minY - 62, false, '#b5552a');
-        sparkle(sx, minY, 18 * (e.text.length - 1) + (e.mult > 1 ? 20 : 0)); SND.word(e.text.length);
+        sparkle(sx, minY, 18 * (e.text.length - 1) + (e.mult > 1 ? 20 : 0)); SND.word(e.text.length); buzz(e.text.length >= 3 ? [20, 40, 30] : 18);
       } else if (e.type === 'item') {
         popup('「' + ITEM_INFO[e.item][0] + '」をもらった！', W / 2, camTop + 130, false, '#1f7a9a'); SND.rot(); setTimeout(drawItems, 0);
       } else if (e.type === 'use') {
@@ -351,9 +410,13 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function roundRect(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
 
   function render() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 3), wpx = Math.round(cv.clientWidth * dpr) || 400;
+    var pv = phase !== 'play' && phase !== 'pause'; if (pauseBtn.hidden !== pv) pauseBtn.hidden = pv;
+    updateCoach();
+    var bh = phase === 'menu' || phase === 'end'; if (barEl.hidden !== bh) barEl.hidden = bh;   // はじめ・結果の画面では つぎ・まわす を出さない
+    var dpr = Math.min(window.devicePixelRatio || 1, 2)   // 3倍は見た目がほぼ同じで、電池と描く時間が倍近い
+   , wpx = Math.round(cv.clientWidth * dpr) || 400;
     if (cv.width !== wpx) { cv.width = wpx; cv.height = Math.round(wpx * VIEW_H / W); }
-    var k = cv.width / W;
+    var k = cv.width / W; ctxScale = k;
     if (!s) { ctx.setTransform(k, 0, 0, k, 0, 0); ctx.fillStyle = '#f6eedf'; ctx.fillRect(0, 0, W, VIEW_H); return; }
     // 積むほど上へ: 持っている字の上に余白が残るよう、画面をゆっくり持ち上げる
     var want = BASE_TOP;
@@ -426,10 +489,37 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
         ctx.save(); ctx.fillStyle = 'rgba(59,47,36,.16)'; ctx.beginPath(); ctx.ellipse(mid, ly + 1, (e2.maxX - e2.minX) / 2, 4, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
         drawGlyph(ctx, hp2.kind, hp2.x, ly - e2.maxY - 1, ang, 0.16);
       }
+      // このまま落とせばできそうなことば（字を動かしたときだけ数え直す）
+      var pk = hp2.kind + ':' + Math.round(hp2.x) + ':' + ang.toFixed(2) + ':' + s.cargo.length + ':' + s.made.length;
+      if (ready && pk !== preview.key && frameN - preview.at > 4) { preview.key = pk; preview.at = frameN; preview.words = C.previewWords(s, hp2.kind, ang, hp2.x); }
+      // （落とせない間は出さないだけ。消すと、揺れで一瞬 落とせなくなったあと数え直さず出なくなった）
+      if (ready && preview.words.length && ly < C.GROUND) {
+        var pw = preview.words.slice(0, 2).join('・') + ' ？';
+        ctx.save(); ctx.font = '900 15px ' + G.font + ',"M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        // 影の横に出す（上に出すと、持っている字に隠れた）。右に入らなければ左
+        var tw = ctx.measureText(pw).width, gh = e2.maxY - e2.minY, py = ly - gh / 2, half = (e2.maxX - e2.minX) / 2 + 10 + tw / 2 + 7;
+        var px = mid + half + tw / 2 + 7 < W ? mid + half : mid - half; px = Math.max(tw / 2 + 8, Math.min(W - tw / 2 - 8, px));
+        ctx.globalAlpha = 0.85 + 0.15 * Math.sin(frameN / 7); ctx.fillStyle = 'rgba(255,250,241,.92)'; roundRect(ctx, px - tw / 2 - 7, py - 11, tw + 14, 22, 11); ctx.fill();
+        ctx.strokeStyle = '#f2b24f'; ctx.lineWidth = 2; roundRect(ctx, px - tw / 2 - 7, py - 11, tw + 14, 22, 11); ctx.stroke();
+        ctx.fillStyle = '#d9472f'; ctx.fillText(pw, px, py + 1); ctx.restore();
+      }
+      // 落ちる先が台の外（そのまま床へ落ちる）なら知らせる
+      if (ready && ly >= C.GROUND) {
+        ctx.save(); ctx.fillStyle = 'rgba(217,71,47,.85)'; ctx.font = '800 12px "M PLUS Rounded 1c",sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText('ここは台の外', mid, hp2.y + e2.maxY + 22 + bob); ctx.restore();
+      }
+      // まだ落とせない間は、待ちの残りを輪で見せる（最長3秒）
+      if (!ready) {
+        var waited = Math.min(1, (s.t - s.lastDropT) / 180), cy0 = hp2.y + (e2.minY + e2.maxY) / 2 + bob;
+        ctx.save(); ctx.strokeStyle = 'rgba(59,47,36,.35)'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.arc(mid, cy0, 44, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * waited); ctx.stroke(); ctx.restore();
+      }
       if (s.glueArmed) { ctx.save(); ctx.globalAlpha = 0.5 + 0.3 * Math.sin(frameN / 6); ctx.fillStyle = 'rgba(120,200,140,.35)'; ctx.beginPath(); ctx.arc(mid, hp2.y + (e2.minY + e2.maxY) / 2 + bob, 48, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
       drawGlyph(ctx, hp2.kind, hp2.x, hp2.y + bob, visAng, ready ? 1 : 0.35);
     }
     // 粒と文字の飛び出し
+    if (parts.length > 400) parts.splice(0, parts.length - 400);   // 粒は多すぎると重い
+    if (popups.length > 14) popups.splice(0, popups.length - 14);
     parts = parts.filter(function (p) { p.x += p.vx; p.y += p.vy; p.vy += p.g || 0.05; p.vx *= 0.97; p.life -= 0.025; return p.life > 0; });
     parts.forEach(function (p) { ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.col; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (0.5 + p.life / 2), 0, Math.PI * 2); ctx.fill(); });
     ctx.globalAlpha = 1;
@@ -441,12 +531,11 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
       ctx.lineWidth = p.big ? 7 : 4; ctx.strokeStyle = '#fffaf1'; ctx.strokeText(p.text, 0, 0); ctx.fillStyle = p.col; ctx.fillText(p.text, 0, 0); ctx.restore();
     });
+    if (calm) { shake = 0; flash = 0; }
     if (shake) { shake *= 0.9; if (shake < 0.3) shake = 0; }
     drawHud(k);
     if (flash > 0) { ctx.setTransform(k, 0, 0, k, 0, 0); ctx.fillStyle = 'rgba(255,240,200,' + (flash * 0.45) + ')'; ctx.fillRect(0, 0, W, VIEW_H); flash -= 0.04; }
   }
-  // --- 背景: 庭と山並み、高く積むほど 昼 → 夕焼け → 夕暮れ → 夜空 ---
-  // （どうぶつタワーの 青空・白い雲・太陽 には寄せない。CLAUDE.md）
   // --- 景色は台（ステージ）ごと（2026-10-04「背景はステージごとに変える」）---
   // どれも 地面のそばの景色 → 積むほど 夕方 → 夜空。どうぶつタワーの 青空・白い雲・太陽 には寄せない（CLAUDE.md）
   var G0 = C.GROUND;
@@ -671,7 +760,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     drawPetals();
     if (phase === 'menu') return;
     // 夜空でも読めるよう、点数の下に紙を敷く
-    ctx.fillStyle = 'rgba(255,250,241,.82)'; roundRect(ctx, 6, 12, 104, s.def.seesaw ? 104 : 70, 12); ctx.fill();
+    ctx.fillStyle = 'rgba(255,250,241,.82)'; roundRect(ctx, 6, 12, 112, (s.def.seesaw ? 104 : 70) + (s.useItems && phase === 'play' ? 18 : 0), 12); ctx.fill();
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#3b2f24'; ctx.textAlign = 'left'; ctx.font = '800 30px "M PLUS Rounded 1c",sans-serif';
     // 点は数え上げるように増やす
@@ -681,6 +770,10 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     ctx.font = '700 13px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.fillText('点', 18 + nw, 40);
     ctx.fillText(s.score + '字・' + (s.height * M_PER_PX).toFixed(1) + 'm', 14, 58);
     ctx.fillText('ことば ' + s.made.length, 14, 74);
+    if (s.useItems && phase === 'play') {   // つぎのアイテムまで（字8つごと）
+      var left = C.ITEM_EVERY - (s.placed % C.ITEM_EVERY);
+      ctx.font = '700 10px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#1f7a9a'; ctx.fillText('アイテムまで あと' + left + '字', 14, s.def.seesaw ? 124 : 90);
+    }
     // さいきんできたことば（右上）
     if (phase === 'play') {
       var recent = s.made.slice(-3).reverse(), y0 = 14;
@@ -701,6 +794,11 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       ctx.fillStyle = 'rgba(255,250,241,.85)'; roundRect(ctx, mx - 6, my - 6, mw + 12, mh + 20, 8); ctx.fill();
       var gr = ctx.createLinearGradient(mx, 0, mx + mw, 0); gr.addColorStop(0, '#d9472f'); gr.addColorStop(.3, '#e7dccb'); gr.addColorStop(.7, '#e7dccb'); gr.addColorStop(1, '#d9472f');
       ctx.fillStyle = gr; roundRect(ctx, mx, my, mw, mh, 4); ctx.fill();
+      // 傾きが大きくなったら、目盛りを赤く点滅させ、1度だけ知らせる
+      var danger = Math.abs(r) > 0.65;
+      if (danger && !tiltWarn) { tiltWarn = true; tone(880, 0.08, 'square', 0.05); tone(660, 0.1, 'square', 0.05, 0.1); buzz(25); }
+      if (Math.abs(r) < 0.45) tiltWarn = false;
+      if (danger && frameN % 20 < 10) { ctx.strokeStyle = '#d9472f'; ctx.lineWidth = 2; roundRect(ctx, mx - 6, my - 6, mw + 12, mh + 20, 8); ctx.stroke(); }
       var nx = mx + mw / 2 + r * mw / 2; ctx.fillStyle = '#3b2f24'; ctx.fillRect(nx - 1.5, my - 3, 3, mh + 6);
       ctx.font = '9px "M PLUS Rounded 1c",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.textAlign = 'left'; ctx.fillText('かたむき', mx, my + mh + 11);
     }
@@ -708,11 +806,11 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // --- 重ねる画面 ---
   function hideSheet() { sheet.className = 'sheet'; }
-  function showSheet(html) { card.innerHTML = html; sheet.className = 'sheet show'; }
+  function showSheet(html) { card.innerHTML = html; card.scrollTop = 0; sheet.className = 'sheet show'; }   // 前の画面のスクロール位置を持ち越さない
   function platButtons() {
     return '<div class="plats">' + PLAT_ORDER.map(function (k) { var b = bests[bkey(k)], open = isOpenPlat(k);
       return '<button data-plat="' + k + '" class="' + (k === plat ? 'cur' : '') + (open ? '' : ' lock') + '"' + (open ? '' : ' disabled') + '>' + C.PLATFORMS[k].name +
-        '<small>' + SCENES[k].name + '・' + (!open ? PLAT_NEED[k] + '語で' : b && b.p ? b.p + '点' : 'まだ') + '</small></button>'; }).join('') + '</div>';
+        '<small>' + (!open ? 'ことば' + PLAT_NEED[k] + 'でひらく' : SCENES[k].name + '・' + (b && b.p ? b.p + '点' : 'まだ')) + '</small></button>'; }).join('') + '</div>';
   }
   function themeButtons() {
     return '<div class="themes">' + THEMES.map(function (t) { var open = isOpenTheme(t);
@@ -727,18 +825,21 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   function showMenu() {
     phase = 'menu'; drawItems();
-    showSheet('<h2>もじつみ</h2><p style="margin:-6px 0 0;font-size:12px;opacity:.7">ひらがな積み上げ ことばパズル</p><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas><p>字を<b>くっつけて</b>ことばにすると点がふえる（向きは自由）。<br>2字100点・3字400点・4字900点。ことばになる字は<b>ひかる</b>。<br>アイテム（のり・いた・とりけし・こおり）は、3字のことばか字8つでもらえる。</p>' +
+    showSheet('<h2>もじつみ</h2><p style="margin:-6px 0 0;font-size:12px;opacity:.7">ひらがな積み上げ ことばパズル</p><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas><p>字を<b>くっつけて</b>ことばにすると点がふえる。向きは自由。<br>2字100点・3字400点・4字900点</p>' +
       '<p style="margin-top:6px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
       '<p style="margin-top:6px;font-weight:700;color:var(--ink)">アイテム</p><div class="seg"><button data-items="1" class="' + (useItems ? 'cur' : '') + '">あり</button><button data-items="0" class="' + (useItems ? '' : 'cur') + '">なし</button></div>' +
       '<p style="margin-top:6px;font-weight:700;color:var(--ink)">字の色</p>' + themeButtons() +
       '<p class="unlock">' + nextUnlock() + '</p>' +
+      '<p style="font-size:11px">ことば帳 ' + dictCount() + ' / ' + ALL_WORDS.length + '・遊んだ回数 ' + (moneyPrefs.get('games', 0) || 0) + '</p>' +
       (money.adFree() ? '<p style="margin-top:8px">広告なし（購入ずみ）</p>' :
         '<div class="row" style="margin-top:8px"><button class="btn sec" id="noads">広告を消す（370円）</button><button class="btn sec" id="restore">購入を復元</button></div>') +
       '<p style="margin-top:8px;font-size:11px">試作用: 広告のふるまい <select id="adMode">' + ['normal:ふつう', 'nofill:読み込めない', 'closeEarly:途中で閉じる', 'showFail:表示に失敗'].map(function (o) {
         var kv = o.split(':'); return '<option value="' + kv[0] + '"' + (ads.mode === kv[0] ? ' selected' : '') + '>' + kv[1] + '</option>'; }).join('') + '</select>' +
         (money.adFree() ? ' <button class="chip" id="unbuy">広告ありに戻す</button>' : '') + '</p>' +
+      '<p style="margin-top:4px"><button class="chip" id="credits">クレジット</button></p>' +
       '<div class="row"><button class="btn" id="go">はじめる</button></div>');
     drawDemo();
+    document.getElementById('credits').onclick = showCredits;
     wirePlats(function () { s = C.create(null, plat); drawNext(); showMenu(); });
     document.getElementById('go').onclick = function () { audio(); start(); };
     var nb = document.getElementById('noads');
@@ -763,19 +864,25 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     g.font = '700 9px "M PLUS Rounded 1c",sans-serif'; g.fillStyle = '#8a7663';
     g.fillText('上と下でも', 20, 90); g.fillText('右から左でも', 146, 90);
   }
+  // さいこう記録を保存する（結果・途中でやめたとき）
+  function saveBest() {
+    if (!s || !s.placed) return;
+    var b = bests[bkey()] || { p: 0, n: 0, h: 0 };
+    if (s.points > b.p) { bests[bkey()] = { p: s.points, n: s.score, h: Math.max(b.h || 0, s.height) }; store.set('bests2', bests); }
+    else if (s.height > (b.h || 0)) { b.h = s.height; bests[bkey()] = b; store.set('bests2', bests); }
+  }
   function showResult() {
     itemsEl.hidden = true;
     // 記録は遊び始めたときのさいこう（best）とくらべる。結果画面を出し直しても「さいこう記録！」が消えないように
-    var b = bests[bkey()] || { p: 0, n: 0, h: 0 }, rec = s.points > best.p;
-    if (s.points > b.p) { bests[bkey()] = { p: s.points, n: s.score, h: Math.max(b.h, s.height) }; store.set('bests2', bests); }
-    else if (s.height > b.h) { b.h = s.height; bests[bkey()] = b; store.set('bests2', bests); }
-    b = best;
+    var rec = s.points > best.p, b = best;
+    saveBest();
     var why = s.failed === 'ground' ? 'てんびんが床に着いた' : '「' + s.failedBody.kind + '」が落ちた';
     // 同じことばは「ねこ ×2」にまとめる
     var agg = [], byText = {};
     wordLog.forEach(function (l) { var a = byText[l.text]; if (!a) { a = byText[l.text] = { text: l.text, n: 0, pts: 0 }; agg.push(a); } a.n++; a.pts += l.pts; });
     var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new' : '') + '">' + a.text + (a.n > 1 ? '×' + a.n : '') + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>ことばは できなかった。字と字を くっつけてみよう</p>';
     var wsum = wordLog.reduce(function (t, l) { return t + l.pts; }, 0);
+    var longest = agg.reduce(function (m, a) { return !m || a.text.length > m.length ? a.text : m; }, '');
     var cont = !s.revived ? '<div class="revive"><p style="margin:0 0 6px;color:var(--ink);font-weight:700">落ちた字をどけて つづきから（1回だけ）</p>' +
       '<button class="btn" id="cont">' + (money.rewardNeedsAd() ? '▶ 動画を見て つづける' : 'つづける（広告なし）') + '</button>' +
       (resultMsg ? '<p style="margin:6px 0 0;color:var(--accent);font-weight:700">' + resultMsg + '</p>' : '') + '</div>' : '';
@@ -783,16 +890,30 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     showSheet('<p>' + why + '</p><div class="big' + (cont ? ' sm' : '') + '">' + s.points + '<small> 点</small></div>' + cont +
       '<p>字 ' + s.score + '×10＝' + (s.score * C.LETTER_PTS) + '点 ＋ ことば ' + s.made.length + 'こ＝' + wsum + '点</p>' +
       '<p>' + C.PLATFORMS[plat].name + 'の台・高さ ' + (s.height * M_PER_PX).toFixed(1) + 'm</p>' +
-      (rec ? '<span class="badge">さいこう記録！</span>' : '<p>さいこう ' + b.p + '点</p>') + made +
+      (rec ? '<span class="badge">さいこう記録！</span>' : '<p>さいこう ' + b.p + '点' + (b.p > s.points ? '（あと ' + (b.p - s.points) + '点）' : '') + '</p>') +
+      (newWords.length ? '<p>あたらしいことば <b style="color:var(--accent)">' + newWords.length + 'こ</b>（ことば帳 ' + dictCount() + '）</p>' : '') +
+      (longest.length >= 3 ? '<p>いちばん長いことば <b style="color:var(--accent);font-size:16px">' + longest + '</b></p>' : '') + made +
       (unlocked.length ? '<p class="unlock">' + unlocked.join('<br>') + '</p>' : '<p>' + nextUnlock() + '</p>') +
+      '<p style="margin-top:8px"><button class="chip" id="share">結果をシェア</button></p>' +
       '<div class="row"><button class="btn sec" id="menu">台をかえる</button><button class="btn" id="again">もう一度</button></div>');
+    say(why + '。' + s.points + '点。' + (rec ? 'さいこう記録' : ''));
+    document.getElementById('share').onclick = function () {
+      var text = 'もじつみ（' + C.PLATFORMS[plat].name + 'の台）で ' + s.points + '点！ ことば ' + s.made.length + 'こ' + (longest ? '・いちばん長いのは「' + longest + '」' : '') + ' #もじつみ';
+      var el = this;
+      if (navigator.share) navigator.share({ text: text }).catch(function () {});
+      else if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { el.textContent = 'コピーしました'; }, function () { el.textContent = 'コピーできませんでした'; });
+    };
     // 1回の遊びの終わりを1度だけ数える（つづけたあと また崩れても数え直さない）。全画面はつぎを始めるときに
     if (!s.endCounted) { s.endCounted = true; money.gameEnded(); }
-    function next(go) { var back = phase; money.beforeNextGame(true).then(function () { phase = back; go(); }); }
+    // 2度押しで全画面の数えが2回進まないように、1回だけ受ける
+    var going = false;
+    function next(go) { if (going) return; going = true; var back = phase; money.beforeNextGame(true).then(function () { phase = back; go(); }); }
     document.getElementById('again').onclick = function () { next(start); };
     document.getElementById('menu').onclick = function () { next(showMenu); };
     var cb = document.getElementById('cont');
     if (cb) cb.onclick = function () {
+      if (phase !== 'end') return;   // 2度押しで動画を2本見せない
+      cb.disabled = true;
       rewardThen(function () { C.revive(s); phase = 'play'; hideSheet(); drawNext(); drawItems(); popup('つづきから！', W / 2, camTop + 150, true, '#2f9a5c'); },
         function (msg) { resultMsg = msg; showResult(); });
     };
@@ -818,26 +939,62 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   var money = new TenbinMoney.Money(moneyPrefs, ads, new TenbinMoney.FakeStore(), { isForeground: function () { return document.visibilityState !== 'hidden'; } });
   money.start();
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') money.refresh(); });
-  var GATE_MSG = { declined: '最後まで見ると もらえます', unavailable: 'いまは動画を読み込めません。少しあとで ためしてください', showFailed: '動画を出せませんでした。少しあとで ためしてください' };
+  var GATE_MSG = { cancelled: '', declined: '最後まで見ると もらえます', unavailable: 'いまは動画を読み込めません。少しあとで ためしてください', showFailed: '動画を出せませんでした。少しあとで ためしてください' };
   // 動画を見てごほうび。ごほうびは画面の状態を見ずに必ず渡す（docs/app-pitfalls.md の2）
   function rewardThen(onGranted, onOther) {
-    var back = phase; phase = 'ad';
-    money.beforeReward(function () { showSheet('<div class="ad"><div class="ring"></div><h2>動画を読み込み中…</h2><p>少しだけ まってください</p></div>'); })
-      .then(function (gate) { phase = back; if (gate === 'granted') onGranted(); else onOther(GATE_MSG[gate] || ''); });
+    var back = phase, cancelled = false; phase = 'ad';
+    // 読み込みを待つ間（最長6秒）も「やめる」で戻れる
+    money.beforeReward(function () {
+      showSheet('<div class="ad"><div class="ring"></div><h2>動画を読み込み中…</h2><p>少しだけ まってください</p><button class="btn sec" id="adCancel">やめる</button></div>');
+      document.getElementById('adCancel').onclick = function () { cancelled = true; phase = back; onOther(''); };
+    }, function () { return cancelled; })
+      .then(function (gate) { if (cancelled) return; phase = back; if (gate === 'granted') onGranted(); else onOther(GATE_MSG[gate] || ''); });
+  }
+  // 使わせてもらっているもの（ライセンスの表示）
+  function showCredits() {
+    showSheet('<div class="credits"><h2 style="text-align:center">クレジット</h2>' +
+      '<p><b>もじつみ</b> © つるはし社</p>' +
+      '<p><b>字形</b>: M PLUS Rounded 1c（© The Rounded M+ Project Authors）SIL Open Font License 1.1</p>' +
+      '<p><b>ことば</b>: wordfreq（Robyn Speer）の頻度データ（CC BY-SA 4.0）で選び、UniDic（UniDic Consortium・BSD ライセンス）で品詞と読みを確かめた。ことばの一覧は CC BY-SA 4.0 で扱います</p>' +
+      '<p><b>物理</b>: matter.js（Liam Brummitt・MIT）／ poly-decomp.js（Stefan Hedman・MIT）</p>' +
+      '<div class="row"><button class="btn" id="close">とじる</button></div></div>');
+    document.getElementById('close').onclick = showMenu;
   }
   function showDict() {
     // 開いている間にもう一度押されたら何もしない（2度目で「遊んでいなかった」扱いになり、はじめの画面へ飛んでいた）
     // 広告の待ち中も開かない（待ちの時計が裏で進み、閉じたあとの画面が食い違う）
     if (phase === 'pause' || phase === 'ad') return;
+    // 崩れていく途中（結果がまだ出ていない）は開かない。閉じたときに結果が先に出て、あとでもう一度出ていた
+    if (phase === 'end' && endTimer > 0) return;
     var wasPlay = phase === 'play'; if (wasPlay) phase = 'pause';
-    function list(title, arr) { return '<h3>' + title + '（' + arr.filter(function (w) { return dict[w]; }).length + '/' + arr.length + '）</h3><div class="words">' +
-      arr.map(function (w) { return dict[w] ? '<span class="w">' + w + '</span>' : '<span class="w lock">' + '・'.repeat(w.length) + '</span>'; }).join('') + '</div>'; }
+    // 五十音の順に並べる。集めた割合を棒で
+    function list(title, arr) { arr = arr.slice().sort(function (a, b) { return a.localeCompare(b, 'ja'); }); var got = arr.filter(function (w) { return dict[w]; }).length;
+      return '<h3>' + title + '（' + got + '/' + arr.length + '）</h3><div class="bar2"><i style="width:' + (100 * got / arr.length).toFixed(1) + '%"></i></div><div class="words">' +
+      // まだのことばは数だけ（2000語ぶんの「・・」の箱が並ぶと、集めたことばが埋もれた）
+      arr.filter(function (w) { return dict[w]; }).map(function (w) { return '<span class="w">' + w + '</span>'; }).join('') +
+      (got < arr.length ? '<span class="w lock">まだ ' + (arr.length - got) + '語</span>' : '') + '</div>'; }
     showSheet('<div class="dict"><h2>ことば帳</h2><p>くっつけてできたことばが ここに入る。' + dictCount() + ' / ' + ALL_WORDS.length + '</p><p class="unlock">' + nextUnlock() + '</p>' +
       list('2字', C.WORDS.short) + list('3字', C.WORDS.middle) + list('4字より長い', C.WORDS.long) +
       '<div class="row"><button class="btn" id="close">とじる</button></div></div>');
     document.getElementById('close').onclick = function () { if (wasPlay) { phase = 'play'; hideSheet(); } else if (phase === 'end') showResult(); else showMenu(); };
   }
   document.getElementById('dictBtn').onclick = showDict;
+  // 一時停止（ボタン・Esc・アプリが裏に回ったとき）
+  var pauseBtn = document.getElementById('pauseBtn');
+  function showPause() {
+    if (phase !== 'play') return;
+    phase = 'pause'; pointer.active = false;
+    showSheet('<h2>ひとやすみ</h2><p>' + s.points + '点・' + s.score + '字</p>' +
+      '<div class="row" style="flex-direction:column"><button class="btn" id="resume">つづける</button>' +
+      '<button class="btn sec" id="retry">はじめから</button><button class="btn sec" id="toMenu">台をえらぶ画面へ</button></div>' +
+      (matchMedia('(hover: hover)').matches ? '<p style="font-size:11px">キーボード: ←→ 動かす（Shift で細かく）・↑/E と Q でまわす・スペースで落とす・Esc でとめる</p>' : ''));
+    document.getElementById('resume').onclick = function () { phase = 'play'; hideSheet(); };
+    document.getElementById('retry').onclick = function () { saveBest(); start(); };
+    document.getElementById('toMenu').onclick = function () { saveBest(); showMenu(); };
+  }
+  pauseBtn.onclick = showPause;
+  // 裏に回ったら止めて、記録も残しておく（そのままアプリを終了されても消えない）
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') { if (phase === 'play' || phase === 'pause') saveBest(); showPause(); } });
   document.getElementById('dictN').textContent = dictCount();
 
   // --- 進行 ---
@@ -845,7 +1002,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     frameN++;
     if (phase === 'play') {
       C.step(s); handleEvents();
-      if (s.failed) { phase = 'end'; endTimer = 110; shake = 9; SND.fail(); }
+      if (s.failed) { phase = 'end'; endTimer = 110; shake = 9; SND.fail(); buzz([40, 60, 80]); }
     } else if (phase === 'end') {
       // 崩れていく様子をゆっくり見せる
       // 結果画面が出たら物理は止める（出たあとも回り続けて電池を使っていた）
@@ -875,19 +1032,30 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     dropNow();
   });
   cv.addEventListener('pointercancel', function () { pointer.active = false; });
-  document.getElementById('rot').onclick = function () {
+  function rotate(dir) {
     if (phase !== 'play') return;
-    ang += C.ROT_STEP; if (ang >= Math.PI * 2 - 1e-6) { ang -= Math.PI * 2; visAng -= Math.PI * 2; }
-    pointer.x = holdPos().x; SND.rot();
-  };
+    ang += dir * C.ROT_STEP;
+    if (ang >= Math.PI * 2 - 1e-6) { ang -= Math.PI * 2; visAng -= Math.PI * 2; }
+    if (ang < -1e-6) { ang += Math.PI * 2; visAng += Math.PI * 2; }
+    pointer.x = holdPos().x; SND.rot(); preview.key = '';
+  }
+  document.getElementById('rot').onclick = function () { rotate(1); };
+  document.getElementById('rotL').onclick = function () { rotate(-1); };
 
   // キーボード（パソコンで遊ぶとき）: ←→ で動かす（Shift で細かく）、↑ か R でまわす、スペース・↓・Enter で落とす
   function dropNow() { if (phase === 'play' && C.canDrop(s)) { audio(); var hp = holdPos(); C.drop(s, hp.x, ang); ang = visAng = 0; drawNext(); drawItems(); } }
   document.addEventListener('keydown', function (e) {
+    // はじめの画面は Enter で はじめる、結果は Enter で もう一度（ボタンに枠が当たっているときはそのボタン）
+    if (e.key === 'Enter' && (phase === 'menu' || (phase === 'end' && !endTimer)) && !(document.activeElement && document.activeElement.tagName === 'BUTTON')) {
+      var def = document.getElementById(phase === 'menu' ? 'go' : 'again'); if (def) { def.click(); e.preventDefault(); return; }
+    }
+    if (e.key === 'Escape' && phase === 'pause' && document.getElementById('resume')) { document.getElementById('resume').onclick(); return; }
     if (phase !== 'play') return;
+    if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') { showPause(); e.preventDefault(); return; }
     var k = e.key, step = e.shiftKey ? 2 : 8;
     if (k === 'ArrowLeft' || k === 'ArrowRight') { pointer.x = C.clampX(C.current(s), ang, pointer.x + (k === 'ArrowLeft' ? -step : step)); }
-    else if (k === 'ArrowUp' || k === 'r' || k === 'R') document.getElementById('rot').onclick();
+    else if (k === 'ArrowUp' || k === 'r' || k === 'R' || k === 'e' || k === 'E') rotate(1);
+    else if (k === 'q' || k === 'Q') rotate(-1);
     else if (k === ' ' || k === 'ArrowDown' || k === 'Enter') dropNow();
     else return;
     e.preventDefault();
@@ -895,7 +1063,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // 字形が読み込まれる前に描くと、当たり判定と見た目がずれる
   var ready = document.fonts && document.fonts.load ? document.fonts.load('900 72px ' + G.font, C.KINDS.join('')) : Promise.resolve();
-  ready.catch(function () {}).then(function () { s = C.create(null, plat); drawNext(); showMenu(); requestAnimationFrame(frame); });
+  ready.catch(function () {}).then(function () { fontsReady = true; s = C.create(null, plat); drawNext(); showMenu(); requestAnimationFrame(frame); });
 })();
 </script>
 </body></html>

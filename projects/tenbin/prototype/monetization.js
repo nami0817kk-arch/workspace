@@ -11,6 +11,8 @@
 //   3 広告は55分で読み直す（1時間で期限切れ）。出すまで間がある全画面は、出す直前ではなく結果を見ている間に読む
 var TenbinMoney = (function () {
   var INTERSTITIAL_EVERY = 3, FREE_GAMES = 3, REWARD_WAIT_MS = 6000, AD_LIFETIME_MS = 55 * 60 * 1000;
+  // 動画を見てから これより早く全画面を出さない（続けて広告を見せると嫌われる）。出さなかった回は次の回へ回す
+  var AFTER_REWARD_MS = 2 * 60 * 1000;
   var REWARD = { earned: 'earned', closedEarly: 'closedEarly', unavailable: 'unavailable', showFailed: 'showFailed' };
 
   // 偽の広告。読み込みに少し時間がかかり、55分で期限切れになる。ふるまい（mode）を切り替えて失敗の流れも試せる。
@@ -72,6 +74,7 @@ var TenbinMoney = (function () {
   function Money(prefs, ads, store, opts) {
     this.prefs = prefs; this.ads = ads; this.store = store;
     this.isForeground = (opts && opts.isForeground) || function () { return true; };
+    this.now = (opts && opts.now) || function () { return Date.now(); };
   }
   Money.prototype.adFree = function () { return !!this.prefs.get('adFree', false); };
   Money.prototype.start = function () { if (!this.adFree()) return this.ads.initialize(); return Promise.resolve(); };
@@ -79,18 +82,21 @@ var TenbinMoney = (function () {
   Money.prototype.refresh = function () { if (!this.adFree()) this.ads.ensureLoaded('rewarded'); };
 
   // 動画の前に呼ぶ。広告を消した人はそのまま。読み込み中なら少し待つ（onWaiting で「読み込み中」を出せる）
-  // 返すのは granted（渡してよい）| declined（途中で閉じた）| unavailable（読み込めない）| showFailed
-  Money.prototype.beforeReward = function (onWaiting) {
+  // 返すのは granted（渡してよい）| declined（途中で閉じた）| unavailable（読み込めない）| showFailed | cancelled
+  // isCancelled: 読み込みを待っている間に「やめる」が押されたか（押されたら広告は出さない）
+  Money.prototype.beforeReward = function (onWaiting, isCancelled) {
     var self = this;
     if (this.adFree()) return Promise.resolve('granted');
     var wait = this.ads.isRewardedReady() ? Promise.resolve(true)
       : (this.ads.ensureLoaded('rewarded'), onWaiting && onWaiting(), this.ads.waitForRewarded(REWARD_WAIT_MS));
     return wait.then(function (ok) {
       if (self.adFree()) return 'granted';
+      if (isCancelled && isCancelled()) return 'cancelled';
       if (!ok) return 'unavailable';
       if (!self.isForeground()) return 'unavailable';   // 裏に回っている間に出さない
       return self.ads.showRewarded().then(function (r) {
         if (self.adFree()) return 'granted';   // 見ている間に「広告を消す」が届いた
+        if (r === REWARD.earned || r === REWARD.closedEarly) self.prefs.set('lastRewardAt', self.now());   // 見た時間は数える（途中で閉じても見ている）
         return r === REWARD.earned ? 'granted' : r === REWARD.closedEarly ? 'declined' : r;
       });
     });
@@ -112,7 +118,8 @@ var TenbinMoney = (function () {
     var self = this;
     if (this.adFree() || (this.prefs.get('games', 0) || 0) <= FREE_GAMES) return Promise.resolve(false);
     var n = (this.prefs.get('sinceAd', 0) || 0) + 1;
-    if (n < INTERSTITIAL_EVERY || mayShow === false || !this.isForeground()) { this.prefs.set('sinceAd', n); return Promise.resolve(false); }
+    var lastR = this.prefs.get('lastRewardAt', null), justWatched = lastR != null && this.now() - lastR < AFTER_REWARD_MS;
+    if (n < INTERSTITIAL_EVERY || mayShow === false || !this.isForeground() || justWatched) { this.prefs.set('sinceAd', n); return Promise.resolve(false); }
     this.prefs.set('sinceAd', 0);
     return this.ads.showInterstitial().then(function (shown) { if (!shown) self.prefs.set('sinceAd', n); return shown; });
   };
@@ -122,6 +129,6 @@ var TenbinMoney = (function () {
   Money.prototype._setAdFree = function () { if (!this.adFree()) this.ads.dispose(); this.prefs.set('adFree', true); };
 
   return { Money: Money, FakeAds: FakeAds, FakeStore: FakeStore, REWARD: REWARD,
-    INTERSTITIAL_EVERY: INTERSTITIAL_EVERY, FREE_GAMES: FREE_GAMES, REWARD_WAIT_MS: REWARD_WAIT_MS, AD_LIFETIME_MS: AD_LIFETIME_MS };
+    INTERSTITIAL_EVERY: INTERSTITIAL_EVERY, AFTER_REWARD_MS: AFTER_REWARD_MS, FREE_GAMES: FREE_GAMES, REWARD_WAIT_MS: REWARD_WAIT_MS, AD_LIFETIME_MS: AD_LIFETIME_MS };
 })();
 if (typeof module !== 'undefined') module.exports = TenbinMoney;
