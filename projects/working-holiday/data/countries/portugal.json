@@ -1,0 +1,26 @@
+{
+  "id": "portugal",
+  "name": "ポルトガル",
+  "age": "申請時18歳以上30歳以下（30歳当日まで可）",
+  "stay": "入国日から1年間。延長不可",
+  "fee": "",
+  "funds": "滞在中の生活資金の証明と、往復航空券または帰国用航空券を購入できる資金の証明が必要（具体的な必要金額は原文で確認できず）",
+  "apply": "本人が在京ポルトガル大使館領事部に出頭して国内査証（Mobilidade Jovem／Youth Mobility）を申請。代理・郵送申請不可",
+  "timing": "出発予定日の6か月前から、遅くとも15日前までに申請。通年受付（抽選なし）",
+  "work": "就労は休暇に付随する範囲でのみ可。期間の定めのない雇用契約は結べない",
+  "study": "ポルトガル語またはポルトガル文化の講座を受講することは可能（就学が主目的の滞在は不可）",
+  "insurance": "滞在全期間をカバーする旅行保険・医療保険（緊急医療・医療移送を含む）への加入が必須。クレジットカード付帯保険や生命保険のみは不可",
+  "points": [
+    "大使館に本人が出頭する必要があり、代理・郵送申請はできない",
+    "期間の定めのない雇用契約は結べない。就労はあくまで休暇の付随的なもの",
+    "保険はクレジットカード付帯や生命保険では不可。医療移送までカバーするものが必要",
+    "ポルトガル語・文化の講座は受講できるが、就学目的の渡航ではない",
+    "1年間の滞在は延長できない"
+  ],
+  "sources": [
+    {"title": "Youth Mobility - General Information (Vistos Portugal)", "url": "https://vistos.mne.gov.pt/en/national-visas/general-information/youth-mobility", "checked": "2026-10-05"},
+    {"title": "Youth Mobility - Necessary Documentation (Vistos Portugal)", "url": "https://vistos.mne.gov.pt/en/national-visas/necessary-documentation/youth-mobility", "checked": "2026-10-05"},
+    {"title": "Check list - Visto Mobilidade Jovem (Working Holiday) - Embaixada de Portugal em Tóquio", "url": "https://toquio.embaixadaportugal.mne.gov.pt/images/vistos/checklists/pt/estada_temporaria/pt-check_list-mobilidade_jovem_jun_2025.pdf", "checked": "2026-10-05"}
+  ],
+  "unverified": ["fee（査証料の金額）", "funds（必要資金の具体的な金額）", "年間発給枠"]
+}

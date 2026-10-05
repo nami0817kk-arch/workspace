@@ -107,6 +107,7 @@ def load_data() -> tuple[dict, list[dict]]:
         merged["sources"] = [s for s in detail.get("sources", []) if s.get("url", "").startswith("http")]
         merged["unverified"] = detail.get("unverified", [])
         merged["checked"] = max((s.get("checked", "") for s in merged["sources"]), default="")
+        merged["filled"] = any(merged[k] for k, _ in FIELDS)
         merged["twice"] = c["name"] in ("カナダ", "スロバキア", "韓国", "台湾")
         countries.append(merged)
     return mofa, countries

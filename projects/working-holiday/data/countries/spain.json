@@ -1,0 +1,24 @@
+{
+  "id": "spain",
+  "name": "スペイン",
+  "age": "申請時18歳以上30歳以下",
+  "stay": "最長1年間",
+  "fee": "無料",
+  "funds": "滞在のための十分な資金（manutención）の証明が必要（具体的な必要金額は原文で確認できず）",
+  "apply": "在京スペイン大使館領事部に査証を申請。ビザと同時に現地でNIE（外国人識別番号）も申請する運用のため、予約が別途必要になる",
+  "timing": "2017年7月から受付開始。通年受付",
+  "work": "滞在の主目的は休暇で、渡航資金を補うための付随的な就労のみ法令の範囲内で認められる",
+  "study": "",
+  "insurance": "",
+  "points": [
+    "制度開始は2017年で、既に実績のある協定国",
+    "ビザ申請とNIE（外国人識別番号）申請を同時に行う運用のため、手続きが2段階になる",
+    "就労はあくまで休暇の付随的なもの。資金を補う範囲にとどめる必要がある",
+    "査証は無料だが、必要資金の具体的な金額は大使館の公式ページ上では確認できなかった"
+  ],
+  "sources": [
+    {"title": "ワーキングホリデー (在バルセロナ日本国総領事館)", "url": "https://www.barcelona.es.emb-japan.go.jp/itpr_ja/workingholiday.html", "checked": "2026-10-05"},
+    {"title": "Programa de working holidays - Embajada de España en Tokio", "url": "https://www.exteriores.gob.es/Embajadas/tokio/es/Comunicacion/Noticias/Paginas/Articulos/20170703_NOT1.aspx", "checked": "2026-10-05"}
+  ],
+  "unverified": ["funds（必要資金の具体的な金額）", "study（就学の可否・制限）", "insurance（保険加入の義務の有無）", "年間発給枠"]
+}

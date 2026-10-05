@@ -1,0 +1,25 @@
+{
+  "id": "poland",
+  "name": "ポーランド",
+  "age": "申請時満18〜30歳",
+  "stay": "最長1年（365日）",
+  "fee": "無料（日本国籍者は申請料免除）",
+  "funds": "当初の生活費として少なくとも2000米ドル相当額",
+  "apply": "e-Konsulatで予約のうえ、駐日ポーランド共和国大使館領事部へ直接申請",
+  "timing": "出発日の6か月前から15日前までに申請。年間発給枠500人",
+  "work": "記載なし（就労目的の渡航ではないが有給の仕事に就くことは可とされる）",
+  "study": "原文に明記なし",
+  "insurance": "病院での治療をカバーする健康保険への加入が条件",
+  "points": [
+    "申請はオンライン予約制（e-Konsulat）。大使館窓口での直接申請が必要",
+    "年間発給枠は500人",
+    "滞在当初の資金として2000米ドル相当額の所持が必要",
+    "出発の6か月前〜15日前という申請可能期間が決まっている",
+    "健康保険への加入意思が条件になっている"
+  ],
+  "sources": [
+    {"title": "ビザの申請をしたい(タイプD) - 日本の中のポーランド (gov.pl/nippon)", "url": "https://www.gov.pl/web/nippon/Submission-of-an-application-for-an-D-visa", "checked": "2026-10-05"},
+    {"title": "The 'Working Holiday' Programme - Ministry of Family, Labour and Social Policy", "url": "https://www.gov.pl/web/family/working-holiday-poland--japan", "checked": "2026-10-05"}
+  ],
+  "unverified": ["study（就学制限の明文）", "work（就労制限の具体的な条件）"]
+}

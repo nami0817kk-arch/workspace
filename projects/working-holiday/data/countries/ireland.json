@@ -1,0 +1,27 @@
+{
+  "id": "ireland",
+  "name": "アイルランド",
+  "age": "申請時18歳以上30歳以下",
+  "stay": "入国日から最長12か月（1年）",
+  "fee": "17,300円",
+  "funds": "50万円以上の預金（滞在初期の生活費をカバーする資金として）",
+  "apply": "申請書を英語で記入し、指定のメールアドレス（VFS）へ送付。仮承認後、パスポート原本等の必要書類をVFS Services Japanへ郵送",
+  "timing": "年2回の申請受付期間のみ（例年1月および7月。受付期間外は受理されない）",
+  "work": "フルタイム就労可。他国のワーキングホリデーと異なり職種に制限はなし。就労は週39時間まで",
+  "study": "フルタイムまたはパートタイムで英語学校に通学可（月数の上限は公式ガイドに明記なし）",
+  "insurance": "滞在期間を完全にカバーする海外旅行保険（医療保険）への加入が必須。入院費用等をカバーする民間医療保険の証明書が申請書類に必要",
+  "points": [
+    "申請は年2回の受付期間のみで、期間外は申請書を受理されない（2026年は1月15日〜2月6日、7月15日〜31日の実績あり）",
+    "500,000円以上の預金証明（英文残高証明書）と、滞在期間をカバーする医療保険証明書の提出が必須",
+    "申請料は17,300円（変更の可能性あり）",
+    "過去にこのプログラムでアイルランドに渡航したことがある場合は再度利用不可",
+    "配偶者・扶養家族の同伴は不可（配偶者が別途本プログラムの資格を持つ場合を除く）",
+    "滞在期間の延長や在留資格の変更は不可。期限終了後は必ず出国する必要がある"
+  ],
+  "sources": [
+    {"title": "Ireland-Japan Working Holiday Programme: How to apply (Embassy of Ireland, Japan)", "url": "https://www.ireland.ie/1964/20251224_How_to_make_an_application_in_English.doc.pdf", "checked": "2026-10-05"},
+    {"title": "アイルランドワーキングホリデーガイド (Embassy of Ireland, Japan)", "url": "https://www.ireland.ie/2010/Working_Holiday_Guide.pdf", "checked": "2026-10-05"},
+    {"title": "Working Holiday programme - Embassy of Ireland, Japan", "url": "https://www.ireland.ie/en/japan/tokyo/services/visas/working-holiday-programme/", "checked": "2026-10-05"}
+  ],
+  "unverified": ["年間の受入人数枠（公式ガイドに具体的な人数の記載なし）", "英語学校就学の月数上限"]
+}

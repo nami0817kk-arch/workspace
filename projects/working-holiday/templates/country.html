@@ -23,7 +23,12 @@
 {% endif %}
 
 <h2>公式の情報</h2>
-{% if c.sources %}
+{% if c.sources and not c.filled %}
+<p>{{ c.name }}の条件は、公式ページを直接読んで確かめられなかったため載せていません。次の公式ページで確かめてください。</p>
+<ul class="sources">
+  {% for s in c.sources %}<li><a href="{{ s.url }}" rel="noopener">{{ s.title }}</a></li>{% endfor %}
+</ul>
+{% elif c.sources %}
 <p>上の条件は、次の公式ページで確かめたものです{% if c.checked %}（{{ c.checked }} 確認）{% endif %}。申請の前に、必ず最新の情報を確かめてください。</p>
 <ul class="sources">
   {% for s in c.sources %}<li><a href="{{ s.url }}" rel="noopener">{{ s.title }}</a></li>{% endfor %}

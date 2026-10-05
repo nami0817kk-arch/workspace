@@ -1,0 +1,38 @@
+{
+  "id": "norway",
+  "name": "ノルウェー",
+  "age": "",
+  "stay": "",
+  "fee": "",
+  "funds": "",
+  "apply": "",
+  "timing": "",
+  "work": "",
+  "study": "",
+  "insurance": "",
+  "points": [],
+  "sources": [
+    {
+      "title": "Want to apply: Exchange programmes, culture and organisational work - UDI",
+      "url": "https://www.udi.no/en/want-to-apply/work-immigration/exchange-programmes-culture-and-organisational-work/?c=jpn",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Fees - UDI",
+      "url": "https://www.udi.no/en/word-definitions/fees/",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": [
+    "age",
+    "stay",
+    "fee",
+    "funds",
+    "apply",
+    "timing",
+    "work",
+    "study",
+    "insurance",
+    "UDI（ノルウェー移民局）の公式サイトがアクセスを拒否し本文を直接読めなかった（2026-10-05）"
+  ]
+}
