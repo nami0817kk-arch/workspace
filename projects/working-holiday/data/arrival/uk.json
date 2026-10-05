@@ -1,0 +1,104 @@
+{
+  "id": "uk",
+  "steps": [
+    {
+      "title": "国民保険番号（National Insurance number）を申請する",
+      "body": "英国で働く・求職する人が対象。National Insurance numberは税金と社会保障の管理に使われ、英国に入国してから申請する。審査には数週間かかるが、番号が届く前でも就労権があれば働き始めてよい。",
+      "url": "https://www.gov.uk/apply-national-insurance-number"
+    },
+    {
+      "title": "GP（かかりつけ医）に登録する",
+      "body": "NHS（国民保健サービス）を無料で利用するには、まず近くのGP診療所に患者登録する必要がある。オンライン登録に対応している診療所も多く、登録には身分証明書や在留資格の証明は不要。",
+      "url": "https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や現地大使館・総領事館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "求人サイト Find a job に登録する",
+      "body": "英国政府が運営する求人検索サービスで、イングランド・スコットランド・ウェールズの求人を検索・応募できる。就労先を探す際の公的な窓口のひとつ。",
+      "url": "https://www.gov.uk/jobsearch"
+    }
+  ],
+  "medical": {
+    "emergency": "999（生命に関わる緊急時。警察・消防・救急共通。救急車は Ambulance と伝える）",
+    "summary": "英国の医療はNHS（国民保健サービス、無料だが原則GPの診察が先）と自己負担のプライベート医療に分かれる。NHSは待ち時間が長く、専門医受診まで数か月かかることもある。救急医療はNHS未加入者でも原則無料で受けられる。ロンドンには日本語対応のプライベートクリニック・歯科医院が複数ある。",
+    "hospitals": [
+      {
+        "name": "ジャパングリーンメディカルセンター（アクトンクリニック・レディースクリニック）Japan Green Medical Centre Acton Clinic & Ladies Clinic",
+        "city": "ロンドン",
+        "japanese": "日系のプライベート医療機関（日本語対応）、オンライン診察可能",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+      },
+      {
+        "name": "ジャパングリーンメディカルセンター（シティクリニック）Japan Green Medical Centre City Clinic",
+        "city": "ロンドン",
+        "japanese": "日系のプライベート医療機関（日本語対応）、オンライン診察可能",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+      },
+      {
+        "name": "ロンドン医療センター London Iryo Centre",
+        "city": "ロンドン",
+        "japanese": "日系のプライベート医療機関（日本語対応）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+      },
+      {
+        "name": "セントラル・ジャパニーズ・クリニック Central Japanese Clinic",
+        "city": "ロンドン",
+        "japanese": "日系のプライベート医療機関（日本語対応）、オンライン診察可能（詳細は問い合わせ）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+      },
+      {
+        "name": "Dr伊藤クリニック Dr Ito Clinic",
+        "city": "ロンドン",
+        "japanese": "日系のプライベート医療機関（日本語対応）、18歳以上のみ診療対象",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+      },
+      {
+        "name": "キースコーヘン総合歯科医院 Acton診療所 Keith Cohen Dental Surgery, Acton",
+        "city": "ロンドン",
+        "japanese": "日本人歯科医が勤務する歯科医院（プライベート）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+      },
+      {
+        "name": "高歯科医院 Ko Dental Practice",
+        "city": "ロンドン",
+        "japanese": "日本人歯科医が勤務する歯科医院（プライベート）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+      },
+      {
+        "name": "奈美デンタルクリニック Nami Dental Clinic",
+        "city": "ロンドン",
+        "japanese": "日本人歯科医が勤務する歯科医院（プライベート）",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "21歳以上 時給12.71ポンド、18〜20歳 10.85ポンド、18歳未満 8.00ポンド、見習い（Apprentice）8.00ポンド（2026年4月1日適用開始、National Living Wage / National Minimum Wage）",
+    "min_wage_url": "https://www.gov.uk/national-minimum-wage-rates",
+    "channels": [
+      {
+        "name": "Find a job（英国政府の求人検索サービス）",
+        "url": "https://www.gov.uk/jobsearch",
+        "note": "イングランド・スコットランド・ウェールズの求人を無料で検索・応募できる公的サービス（北アイルランドは別サービス）"
+      }
+    ],
+    "rules": [
+      "年齢・雇用形態にかかわらず最低賃金（National Minimum Wage / National Living Wage）が適用される",
+      "最低賃金が支払われていないと思われる場合はAcas（雇用に関する公的助言機関）に相談できる",
+      "就労にはNational Insurance numberが必要（取得前でも就労権があれば働き始められる）"
+    ]
+  },
+  "sources": [
+    {"title": "Apply for a National Insurance number - GOV.UK", "url": "https://www.gov.uk/apply-national-insurance-number", "checked": "2026-10-05"},
+    {"title": "National Minimum Wage and National Living Wage rates - GOV.UK", "url": "https://www.gov.uk/national-minimum-wage-rates", "checked": "2026-10-05"},
+    {"title": "Register with a GP surgery - NHS", "url": "https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/", "checked": "2026-10-05"},
+    {"title": "When to call 999 - NHS", "url": "https://www.nhs.uk/nhs-services/urgent-and-emergency-care-services/when-to-call-999/", "checked": "2026-10-05"},
+    {"title": "英国｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html", "checked": "2026-10-05"},
+    {"title": "Find a job - GOV.UK", "url": "https://www.gov.uk/jobsearch", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}

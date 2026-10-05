@@ -1,0 +1,63 @@
+{
+  "id": "czechia",
+  "steps": [
+    {
+      "title": "外国人警察（cizinecká policie）への滞在届出",
+      "body": "チェコに入国した外国人は、原則として入国後3営業日以内（EU市民で30日を超えて滞在する場合は30日以内）に、滞在地を管轄する警察の外国人部門（oddělení pobytových agend）に滞在先を届け出る義務がある。宿泊施設（ホテル・ホステル・学生寮など）の側が入居者の届出を代行する場合は、本人による届出は不要。15歳未満の子どもや外交官等は対象外。届出を怠ると違反となり、最大3,000コルナの罰金の対象になる。",
+      "url": "https://policie.gov.cz/reditelstvi-sluzby-cizinecke-policie/oddeleni-pobytovych-agend"
+    },
+    {
+      "title": "基本決済口座（základní platební účet）で銀行口座を開く",
+      "body": "決済サービス法（zákon č. 370/2017 Sb., o platebním styku）により、EU加盟国に合法的に滞在する消費者は、国籍を問わずチェコの銀行で基本決済口座を開設する権利が保障されている。口座開設にはパスポート等の身分証に加えて、チェコ国内の住所（滞在先の住所）を求められることが多い。",
+      "url": "https://e-sbirka.gov.cz/sb/2017/370"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在チェコ日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（警察・消防・救急共通、英語可）。個別番号は救急車155、消防150、警察158",
+    "summary": "病院の衛生環境・医療水準・設備は一般的な診療を受ける分には問題ないレベル。ただし公立病院は院内表示に英語の併記がなく、医師以外は英語が通じないことが多いため、ある程度チェコ語ができるか通訳の同行が望ましい。外国人向けの私立クリニックも利用できるが料金は高くなる。高度に専門的な治療が必要な場合は西ヨーロッパや日本への移送が必要になることがあり、移送には高額な費用がかかるため海外旅行保険への加入が強く勧められる。",
+    "hospitals": [
+      {
+        "name": "Unicare Medical Center",
+        "city": "プラハ",
+        "japanese": "私立の無床診療所（一般内科・小児科・歯科）。日本人スタッフがシフト制で勤務しており、日本語通訳の依頼が可能。往診あり",
+        "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/czech.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金 月額22,400コルナ・時給134.40コルナ（週所定労働時間40時間の場合。2026年1月1日から12月31日まで適用、MPSV告示356/2025 Sb.による）",
+    "min_wage_url": "https://mpsv.gov.cz/minimalni-mzda",
+    "channels": [
+      {
+        "name": "ÚP ČR（チェコ労働社会省・労働局 Úřad práce ČR）の求人検索",
+        "url": "https://up.gov.cz",
+        "note": "チェコの公的雇用機関（労働局）が運営する求人検索・職業相談の統合ポータル"
+      },
+      {
+        "name": "EURES（欧州雇用サービス）",
+        "url": "https://eures.europa.eu",
+        "note": "EU・EEA域内の公的求人ポータル。チェコの求人情報も掲載されている"
+      }
+    ],
+    "rules": [
+      "法定最低賃金（minimální mzda）は雇用契約のほか、DPP・DPČなどの契約外労働（dohody o pracích konaných mimo pracovní poměr）にも適用される",
+      "最低賃金は週所定労働時間40時間を基準に算定され、所定労働時間が短い場合は時間に応じて按分される",
+      "実際の賃金（手当等を除く）が最低賃金に満たない場合、雇用主は差額を補填（doplatek）して支払う義務がある",
+      "最低賃金は毎年9月30日までに翌年分がMPSVの告示で定められる"
+    ]
+  },
+  "sources": [
+    {"title": "Hlášení pobytu cizinců - oddělení pobytových agend - Policie České republiky", "url": "https://policie.gov.cz/reditelstvi-sluzby-cizinecke-policie/oddeleni-pobytovych-agend", "checked": "2026-10-05"},
+    {"title": "370/2017 Sb. Zákon o platebním styku（e-Sbírka）", "url": "https://e-sbirka.gov.cz/sb/2017/370", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"},
+    {"title": "チェコ｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/czech.html", "checked": "2026-10-05"},
+    {"title": "医療情報・緊急時の連絡先 - 在チェコ日本国大使館", "url": "https://www.cz.emb-japan.go.jp/ryoji_iryo-jyoho.html", "checked": "2026-10-05"},
+    {"title": "Minimální mzda v roce 2026 - MPSV", "url": "https://mpsv.gov.cz/minimalni-mzda", "checked": "2026-10-05"},
+    {"title": "Úřad práce ČR - Úvod", "url": "https://up.gov.cz", "checked": "2026-10-05"}
+  ]
+}

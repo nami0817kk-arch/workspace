@@ -1,0 +1,62 @@
+{
+  "id": "portugal",
+  "steps": [
+    {
+      "title": "滞在許可（Autorização de Residência）を申請する",
+      "body": "AIMA（移民庁）の予約制窓口（AIMA店舗）で対面申請する。有効なパスポートと査証、生活費の証明、住居に関する宣言書（賃借人なら家主の宣言書）、税務登録証明、社会保障登録証明、健康保険または国民保健サービスの加入証明などが必要。許可は発行日から2年間有効で、その後3年ごとに更新する。",
+      "url": "https://aima.gov.pt/pt/viver/autorizacao-de-residencia-regime-e-requisitos-gerais-art-o-77-o-n-o-1"
+    },
+    {
+      "title": "納税者番号（NIF）を取得する",
+      "body": "ポルトガル国籍者・外国人・居住者・非居住者を問わず誰でも申請でき、無料。租税関税局（Autoridade Tributária e Aduaneira）の窓口またはPortal das Financasのe-balcãoから手続きする。銀行口座開設や就労契約など、その後の多くの手続きに必要になる。",
+      "url": "https://www.gov.pt/servicos/pedir-o-numero-de-identificacao-fiscal-para-pessoa-singular"
+    },
+    {
+      "title": "社会保障番号（NISS）を取得する",
+      "body": "就労する場合に必要な社会保障の識別番号。Segurança Social Direta（社会保障庁のオンラインポータル）の「Sou Cidadão」内の申請フォーム、または窓口で申請する。有効な身分証明書（パスポート）のスキャンデータの添付が必要。",
+      "url": "https://www.seg-social.pt/atribuicao-de-numero-de-identificacao-da-seguranca-social-niss-1"
+    },
+    {
+      "title": "国民保健サービス（SNS）の利用者番号を取得する",
+      "body": "ポルトガルに合法的に滞在する外国人は、居住地域の保健センター（Centro de Saúde）を初めて利用する際に利用者番号（número de utente）が付与される。滞在許可証、身分証明、居住地の住所、税務番号などの提示が求められる。この番号があるとSNSの医療を受けられる。",
+      "url": "https://www.gov.pt/servicos/pedir-o-numero-de-utente-do-sns"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在ポルトガル日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（救急車・警察・消防共通の欧州緊急通報番号。通話無料、24時間対応）",
+    "summary": "ポルトガルの医療水準は日本と比較して高いとはいえず、都市と地方で医療水準の格差がある。医療機関は公立病院・公立診療所・私立病院・個人医に分かれ、公立病院は混雑し受診まで時間がかかるため、民間保険に加入して私立の医療機関を利用することが勧められている。在ポルトガル日本国大使館によれば、当地には日本語で対応可能な医療機関はない（ポルトガル語または英語での診療となる）。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金（Retribuição Mínima Mensal Garantida）月920ユーロ（2026年1月1日適用、Decreto-Lei n.º 139/2025による5.7%引き上げ）",
+    "min_wage_url": "https://www.dgert.gov.pt/retribuicao-minima-mensal-garantida-para-2026",
+    "channels": [
+      {
+        "name": "IEFPOnline（雇用職業訓練機構 IEFP の求人検索ポータル）",
+        "url": "https://iefponline.iefp.pt/",
+        "note": "ポルトガル政府の公的雇用機関が運営する求人・職業訓練・インターンシップの検索サイト。CV登録や応募も可能"
+      }
+    ],
+    "rules": [
+      "最低賃金は毎年1月に政労使の2025-2028年協定に基づき改定され、2027年970ユーロ、2028年1,020ユーロへの段階的引き上げが予定されている"
+    ]
+  },
+  "sources": [
+    {"title": "ワーキング・ホリデー制度｜外務省", "url": "https://www.mofa.go.jp/mofaj/toko/visa/working_h.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"},
+    {"title": "ポルトガル｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/portugal.html", "checked": "2026-10-05"},
+    {"title": "ポルトガルの医療事情 - 在ポルトガル日本国大使館", "url": "https://www.pt.emb-japan.go.jp/itpr_ja/00_000078.html", "checked": "2026-10-05"},
+    {"title": "Contactos de emergência em Portugal - gov.pt", "url": "https://www.gov.pt/guias/contactos-de-emergencia-em-portugal", "checked": "2026-10-05"},
+    {"title": "Autorização de Residência (Regime e Requisitos Gerais) - AIMA", "url": "https://aima.gov.pt/pt/viver/autorizacao-de-residencia-regime-e-requisitos-gerais-art-o-77-o-n-o-1", "checked": "2026-10-05"},
+    {"title": "Pedir o Número de Identificação Fiscal para pessoa singular - gov.pt", "url": "https://www.gov.pt/servicos/pedir-o-numero-de-identificacao-fiscal-para-pessoa-singular", "checked": "2026-10-05"},
+    {"title": "Atribuição de Número de Identificação da Segurança Social (NISS) - Segurança Social", "url": "https://www.seg-social.pt/atribuicao-de-numero-de-identificacao-da-seguranca-social-niss-1", "checked": "2026-10-05"},
+    {"title": "Pedir o número de utente do SNS - gov.pt", "url": "https://www.gov.pt/servicos/pedir-o-numero-de-utente-do-sns", "checked": "2026-10-05"},
+    {"title": "Retribuição mínima mensal garantida para 2026 - DGERT", "url": "https://www.dgert.gov.pt/retribuicao-minima-mensal-garantida-para-2026", "checked": "2026-10-05"},
+    {"title": "IEFPOnline - Instituto do Emprego e Formação Profissional", "url": "https://iefponline.iefp.pt/", "checked": "2026-10-05"}
+  ]
+}

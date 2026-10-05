@@ -1,0 +1,47 @@
+{
+  "id": "canada",
+  "name": "カナダ",
+  "age": "申請時18歳以上30歳以下",
+  "stay": "1回あたり最長12か月",
+  "fee": "IEC参加費 CAD 184.75（2025年12月1日から）＋オープンワークパーミット保有者手数料 CAD 100。国籍により生体認証 CAD 85 が別に必要な場合あり",
+  "funds": "CAD2,500以上（カナダでの生活費をカバーする資金）",
+  "apply": "IECオンラインプロフィールを登録してプール（候補者枠）に入り、招待（ITA: Invitation to Apply）を受けてから就労許可申請。招待から10日以内に申請開始、さらに20日以内に申請完了・手数料支払いが必要",
+  "timing": "通年プロフィール登録可。IRCCが定期的に抽選（ラウンド）を行い招待を発行。国別の割当数・頻度は年によって変動",
+  "work": "雇用主・勤務地の制限なし。同一雇用主・同一勤務地に縛られない「オープン」就労許可",
+  "study": "",
+  "insurance": "滞在期間をカバーする民間医療保険への加入が必須（入国時に証明を求められる場合あり）",
+  "points": [
+    "申請時点で日本の居住者であることを証明する必要がある（居住地住所または郵送先住所の提示）",
+    "CAD2,500以上の資金証明が必要",
+    "滞在期間を通じた民間医療保険への加入が必須で、入国時に証明を求められることがある",
+    "求人のオファーがなくても申請できるが、プール登録後に招待（ITA）が来るまで待つ必要があり、招待後は10日以内に申請開始・20日以内に申請完了という期限がある",
+    "手数料はIEC参加費に加えてオープン就労許可証保有料・生体認証料が別途かかる場合がある",
+    "日本人は一生のうち2回まで参加できる（外務省。日本とカナダの間で2024年12月1日から）"
+  ],
+  "sources": [
+    {
+      "title": "International Experience Canada: Who can apply - Eligibility by country and category (Japan—Working Holiday)",
+      "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/iec/eligibility/eligibility-by-country.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "International Experience Canada: About the program",
+      "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/iec/about.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "How much does it cost to participate in International Experience Canada? - IRCC Help Centre",
+      "url": "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=858&top=25",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Citizenship and immigration application fees: Fee list（IRCC）",
+      "url": "https://ircc.canada.ca/english/information/fees/fees.asp",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": [
+    "就学（留学）日数の上限",
+    "日本向けの年間招待枠数・ラウンド時期の詳細"
+  ]
+}

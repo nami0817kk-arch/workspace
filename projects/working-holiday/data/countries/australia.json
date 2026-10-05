@@ -1,0 +1,39 @@
+{
+  "id": "australia",
+  "name": "オーストラリア",
+  "age": "申請時18歳以上30歳以下（日本国籍者。一部の国籍は35歳まで）",
+  "stay": "初回12か月。3か月の特定の就労（セカンド）、6か月の特定の就労（サード）を満たせば2年目・3年目も申請可",
+  "fee": "初回 AUD840.00／2年目 AUD1,000.00／3年目 AUD1,000.00",
+  "funds": "AUD5,000程度（滞在に十分な資金の証明。出国用の渡航費も別途必要）",
+  "apply": "オンライン（ImmiAccount）。オーストラリア国外にいる間に申請・決定を受ける必要あり",
+  "timing": "通年受付。平均処理期間の目安は約3か月（予約・渡航の計画は visa 付与後に）",
+  "work": "職種の制限はなし。ただし同一雇用主の下で働けるのは原則6か月まで",
+  "study": "最長4か月（17週間）まで就学可",
+  "insurance": "加入は必須ではないが強く推奨（医療費は原則自己負担）",
+  "points": [
+    "AUD5,000程度の資金証明が必要（返りの航空券費用は別枠）",
+    "同一雇用主での就労は原則6か月まで",
+    "就学は最長4か月（17週間）",
+    "2年目ビザには3か月の特定就労、3年目には6か月の特定就労の実績が必要",
+    "健康保険は必須ではないが、医療費は全額自己負担となるため加入が強く推奨される",
+    "申請はオーストラリア国外からオンラインのみ。ビザ付与前に渡航・就労・就学の予約をしないこと"
+  ],
+  "sources": [
+    {
+      "title": "Working Holiday visa (subclass 417) - Department of Home Affairs",
+      "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Working Holiday visa (subclass 417) First Working Holiday visa - About this visa / Eligibility",
+      "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/first-working-holiday-417",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Visa fees and charges: Current visa pricing（Department of Home Affairs）",
+      "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/fees-and-charges/current-visa-pricing",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": []
+}

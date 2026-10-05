@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% from "_macros.html" import val, quota with context %}
+{% from "_icons.html" import icon with context %}
+{% from "_viz.html" import locator with context %}
+{% block title %}{{ c.name }}のワーホリの条件と現地での手続き・病院・仕事探し｜{{ SITE_NAME }}{% endblock %}
+{% block description %}{{ c.name }}のワーキング・ホリデーの条件。{% if c.age %}年齢は{{ c.age }}、{% endif %}{% if c.stay %}期間は{{ c.stay }}。{% endif %}申請費用・必要な資金・申請の方法に加え、{% if c.arrival %}現地に着いてからの手続き・日本語が通じる病院・仕事の探し方も{% else %}現地の医療情報や日本大使館の窓口も{% endif %}公式情報からまとめています。{% endblock %}
+{% block ogtype %}article{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="../index.html">トップ</a> › <a href="index.html">国から探す</a> › <span aria-current="page">{{ c.name }}</span></nav>
+
+<div class="country-head">
+  <div>
+    <h1><img class="flag" src="../static/flags/{{ c.flag }}.svg" alt="" width="32" height="24">{{ c.name }}のワーキング・ホリデー</h1>
+    <p class="small muted">ビザの条件 {{ FIELDS|length }}項目のうち、公式情報で確かめられたのは{{ c.verified }}項目{% if c.checked %}（{{ c.checked }} 確認）{% endif %}</p>
+    <p class="lead">日本との制度は{{ c.since }}年から。年間発給枠は{{ quota(c) }}。{% if c.twice %}一生のうち2回まで参加できる国。{% endif %}</p>
+    <p class="small">
+      <a href="#joken">ビザの条件</a> ・
+      <a href="#genchi">着いてからの手続き</a> ・
+      <a href="#iryou">病院・緊急の番号</a> ・
+      <a href="#shigoto">仕事の探し方</a>
+    </p>
+  </div>
+  {{ locator(loc, c) }}
+</div>
+
+<div class="stat-row facts-row">
+  <div class="stat">{{ icon("users", 30) }}<span class="stat-label">年間の発給枠</span><span class="stat-value">{{ quota(c) }}</span></div>
+  <div class="stat">{{ icon("calendar", 30) }}<span class="stat-label">制度の開始</span><span class="stat-value">{{ c.since }}年</span></div>
+  <div class="stat">{{ icon("clock", 30) }}<span class="stat-label">時差{% if c.basics.tz_note %}（{{ c.basics.tz_note }}）{% endif %}</span><span class="stat-value">{{ c.basics.diff }}</span></div>
+  <div class="stat">{{ icon("coins", 30) }}<span class="stat-label">通貨</span><span class="stat-value">{{ c.basics.currency }}（{{ c.basics.code }}）</span></div>
+  {% if c.basics.capital %}<div class="stat">{{ icon("city", 30) }}<span class="stat-label">首都</span><span class="stat-value">{{ c.basics.capital }}</span></div>{% endif %}
+</div>
+
+<h2 id="joken"><span class="section-icon">{{ icon("passport", 24) }}</span>ビザの条件</h2>
+<div class="card">
+<dl class="facts">
+  <dt>年間発給枠</dt><dd>{{ quota(c) }}<span class="small muted">（外務省、{{ mofa.source.as_of }}現在）</span></dd>
+  {% for key, label in FIELDS %}<dt>{{ label }}</dt><dd>{{ val(c, key) }}</dd>
+  {% endfor %}
+</dl>
+</div>
+
+{% if c.points %}
+<h3>行く前に知っておきたいこと</h3>
+<ul>
+  {% for p in c.points %}<li>{{ p }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+{% set a = c.arrival %}
+<h2 id="genchi"><span class="section-icon">{{ icon("plane", 24) }}</span>現地に着いてからの手続き</h2>
+{% if a and a.steps %}
+<ol class="steps">
+  {% for s in a.steps %}
+  <li>
+    <span class="step-icon">{{ icon(s.icon or "form") }}</span>
+    <div>
+      <h3>{{ s.title }}</h3>
+      <p>{{ s.body }}</p>
+      {% if s.url %}<p class="small"><a href="{{ s.url }}" rel="noopener">公式の案内を見る</a></p>{% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+{% else %}
+<ol class="steps">
+  <li>
+    <span class="step-icon">{{ icon("pin") }}</span>
+    <div>
+      <h3>在留届を出す</h3>
+      <p>3か月以上滞在するなら、住む場所を管轄する日本大使館・総領事館に在留届を出す義務があります（旅券法第16条）。オンラインの「ORRネット」で出せます。</p>
+      <p class="small"><a href="https://www.ezairyu.mofa.go.jp/" rel="noopener">ORRネット（外務省）</a></p>
+    </div>
+  </li>
+  <li>
+    <span class="step-icon">{{ icon("id") }}</span>
+    <div>
+      <h3>滞在の登録・税の番号などを確かめる</h3>
+      <p>住民登録や滞在許可の手続き、働くときに要る番号は国ごとに違います。{{ c.name }}の手続きは、ビザの条件に載せた公式ページか、下の日本大使館のページで確かめてください。</p>
+    </div>
+  </li>
+</ol>
+{% endif %}
+
+<h2 id="iryou"><span class="section-icon">{{ icon("hospital", 24) }}</span>病院・緊急の番号</h2>
+{% set em = (a.medical.emergency if a and a.medical and a.medical.emergency else c.links.emergency) %}
+<div class="stat-row">
+  <div class="stat emergency">
+    {{ icon("siren", 34) }}
+    <span class="stat-label">緊急の番号</span>
+    <span class="stat-value">{% if em %}{% for n in (em|numbers_only).split(" / ") if n %}<a class="tel noext" href="tel:{{ n }}">{{ n }}</a>{% if not loop.last %} / {% endif %}{% endfor %}<span class="small muted" style="display:block;font-weight:400">{{ em }}</span>{% else %}<span class="unknown">公式サイトで確認</span>{% endif %}</span>
+  </div>
+  {% if c.links.japan_mission and c.links.japan_mission.url %}
+  <div class="stat">
+    {{ icon("flag", 34) }}
+    <span class="stat-label">困ったときの日本の窓口</span>
+    <span class="stat-value" style="font-size:1rem"><a href="{{ c.links.japan_mission.url }}" rel="noopener">{{ c.links.japan_mission.name }}</a></span>
+  </div>
+  {% endif %}
+</div>
+{% if a and a.medical and a.medical.summary %}<p>{{ a.medical.summary }}</p>{% endif %}
+{% if a and a.medical and a.medical.hospitals %}
+<h3>日本語が通じる医療機関</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th scope="col">医療機関</th><th scope="col">都市</th><th scope="col">日本語での対応</th></tr></thead>
+  <tbody>
+  {% for h in a.medical.hospitals %}
+    <tr><th scope="row">{% if h.url %}<a href="{{ h.url }}" rel="noopener">{{ h.name }}</a>{% else %}{{ h.name }}{% endif %}</th><td>{{ h.city }}</td><td>{{ h.japanese }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="small muted">外務省や現地の日本大使館・総領事館が公開している一覧から載せています。日本語の対応は曜日や担当者で変わるので、かかる前に電話などで確かめてください。</p>
+{% endif %}
+{% if c.links.medical_url %}
+<p><a href="{{ c.links.medical_url }}" rel="noopener">世界の医療事情（外務省）: {{ c.name }}</a> — 医療の水準、かかりやすい病気、日本語が通じる医療機関などがまとまっています。</p>
+{% endif %}
+
+<h2 id="shigoto"><span class="section-icon">{{ icon("briefcase", 24) }}</span>仕事の探し方</h2>
+{% if a and a.jobs and (a.jobs.min_wage or a.jobs.channels or a.jobs.no_statutory) %}
+{% if a.jobs.no_statutory %}
+<div class="stat-row">
+  <div class="stat">
+    {{ icon("money", 34) }}
+    <span class="stat-label">法定の最低賃金</span>
+    <span class="stat-value" style="font-size:1.05rem">なし（業種ごとの労働協約で決まる）</span>
+  </div>
+</div>
+{% endif %}
+{% if a.jobs.min_wage %}
+<div class="stat-row">
+  <div class="stat">
+    {{ icon("money", 34) }}
+    <span class="stat-label">法定の最低賃金</span>
+    <span class="stat-value" style="font-size:1.1rem">{{ a.jobs.min_wage }}</span>
+  </div>
+</div>
+{% if a.jobs.min_wage_url %}<p class="small muted">出典: <a href="{{ a.jobs.min_wage_url }}" rel="noopener">{{ c.name }}政府の公式ページ</a>。これより安い時給の仕事は、その国の法律に反します。</p>{% endif %}
+{% endif %}
+{% if a.jobs.channels %}
+<h3>公的な仕事探しの窓口</h3>
+<ul>
+  {% for ch in a.jobs.channels %}<li><a href="{{ ch.url }}" rel="noopener">{{ ch.name }}</a>{% if ch.note %} — {{ ch.note }}{% endif %}</li>{% endfor %}
+</ul>
+{% endif %}
+{% if a.jobs.rules %}
+<h3>働くときの決まり</h3>
+<ul>
+  {% for r in a.jobs.rules %}<li>{{ r }}</li>{% endfor %}
+</ul>
+{% endif %}
+{% else %}
+<p>{{ c.name }}で働くときの制限は、上の「ビザの条件」の「働くときの制限」を見てください。仕事探しの公的な窓口と最低賃金は、まだ公式の情報で確かめられていません。</p>
+{% endif %}
+<div class="note">
+  外務省には、ワーキング・ホリデーで渡航した人から、不当に安い賃金で働かされた、雇用主からハラスメントを受けた、といった相談が寄せられています。困ったときは、現地の日本大使館・総領事館に相談できます。
+</div>
+
+<h2>公式の情報</h2>
+{% if c.sources and not c.filled %}
+<p>{{ c.name }}のビザの条件は、公式ページを直接読んで確かめられなかったため載せていません。次の公式ページで確かめてください。</p>
+<ul class="sources">
+  {% for s in c.sources %}<li><a href="{{ s.url }}" rel="noopener">{{ s.title }}</a></li>{% endfor %}
+</ul>
+{% elif c.sources %}
+<p>ビザの条件は、次の公式ページで確かめたものです{% if c.checked %}（{{ c.checked }} 確認）{% endif %}。申請の前に、必ず最新の情報を確かめてください。</p>
+<ul class="sources">
+  {% for s in c.sources %}<li><a href="{{ s.url }}" rel="noopener">{{ s.title }}</a></li>{% endfor %}
+</ul>
+{% else %}
+<p>この国の条件は、まだ公式の情報で確かめられていません。{{ c.name }}の駐日大使館の公式サイトで確かめてください。</p>
+{% endif %}
+{% if a and a.sources %}
+<p>現地での手続き・病院・仕事の情報は、次の公式ページから載せています。</p>
+<ul class="sources">
+  {% for s in a.sources %}<li><a href="{{ s.url }}" rel="noopener">{{ s.title }}</a></li>{% endfor %}
+</ul>
+{% endif %}
+<p class="small muted">制度の一覧と年間発給枠: <a href="{{ mofa.source.url }}" rel="noopener">{{ mofa.source.title }}</a></p>
+
+<nav class="pager" aria-label="前後の国">
+  {% if prev %}<a href="{{ prev.id }}.html">← {{ prev.name }}</a>{% else %}<span></span>{% endif %}
+  {% if next %}<a href="{{ next.id }}.html">{{ next.name }} →</a>{% endif %}
+</nav>
+
+{% if same_region %}
+<h2>{{ c.region }}のほかの国</h2>
+<ul class="grid">
+  {% for o in same_region %}<li><a href="{{ o.id }}.html"><img class="flag" src="../static/flags/{{ o.flag }}.svg" alt="" width="20" height="15">{{ o.name }}<span class="quota">{{ quota(o) }}</span></a></li>{% endfor %}
+</ul>
+{% endif %}
+
+<h2>次に読む</h2>
+<ul>
+  {% if c.compare %}<li>{{ c.name }}とほかの国を比べる: {% for p in c.compare %}<a href="../hikaku/{{ p.slug }}.html">{{ p.other }}</a>{% if not loop.last %}・{% endif %}{% endfor %}</li>{% endif %}
+  <li><a href="../index.html#compare">32か国・地域の条件を比較する</a></li>
+  <li><a href="../junbi.html">出発までの準備の流れ</a></li>
+  <li><a href="../genchi.html">現地に着いたら（どの国にも共通すること）</a></li>
+  <li><a href="../mochimono.html">ワーホリの持ち物リスト</a></li>
+</ul>
+{% endblock %}

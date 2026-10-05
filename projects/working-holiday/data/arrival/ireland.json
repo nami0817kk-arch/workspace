@@ -1,0 +1,89 @@
+{
+  "id": "ireland",
+  "steps": [
+    {
+      "title": "滞在許可登録（IRP登録）を行う",
+      "body": "就学・就労・ワーキングホリデー等の目的で90日を超えて滞在する場合、アイルランド移民局（Immigration Service Delivery）での滞在許可登録が必要。まずDigital Contact Centre（DCC）に登録し予約を取った上で、ダブリンの移民局窓口で登録する。予約が取りにくいため早めの予約が推奨される。",
+      "url": "https://www.irishimmigration.ie/registering-your-immigration-permission/"
+    },
+    {
+      "title": "PPSナンバー（Personal Public Service Number）を申請する",
+      "body": "就労や行政サービスの利用に必要な個人番号。MyGovIDの基本アカウントを作成した上でオンライン申請するか、郵送で申請する。身分証明書と住所を証明する書類（3か月以内発行）が必要。",
+      "url": "https://www.gov.ie/en/department-of-social-protection/services/get-a-personal-public-service-pps-number/"
+    },
+    {
+      "title": "GP（かかりつけ医）に登録する",
+      "body": "アイルランドはホームドクター制のため、救急時以外はまずGPの診察を受ける必要がある。通いやすいGP診療所を探して患者登録を行う。外国人でもPPSナンバーがあれば公営医療サービス（HSE）を利用できるが、GP受診は原則有料。",
+      "url": "https://www2.hse.ie/services/find-a-gp/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在アイルランド日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "999 または 112（消防・警察・救急共通。救急車は Ambulance と伝える）",
+    "summary": "アイルランドの医療は公営（HSE運営のPublic Health Service）とプライベート医療に分かれる。GP受診がまず必要なホームドクター制で、GP受診料は原則自己負担（1年以上の合法滞在者はPPSナンバー取得で公営医療サービスの対象になり得る）。公営医療は専門医受診まで数か月〜1年以上待たされることがあるため、滞在が1年未満の場合は海外旅行傷害保険への加入が推奨されている。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "20歳以上（National Minimum Wage）時給14.15ユーロ、19歳 12.74ユーロ（90%）、18歳 11.32ユーロ（80%）、18歳未満 9.91ユーロ（70%）（2026年1月1日適用開始）",
+    "min_wage_url": "https://www.workplacerelations.ie/en/what_you_should_know/hours-and-wages/national%20minimum%20wage/",
+    "channels": [
+      {
+        "name": "JobsIreland（アイルランド政府の求人サイト、Department of Social Protection運営）",
+        "url": "https://jobsireland.ie/",
+        "note": "公的機関が運営する求人検索・応募サイト"
+      }
+    ],
+    "rules": [
+      "雇用形態（フルタイム・パートタイム・臨時・季節労働等）にかかわらず最低賃金（National Minimum Wage）が適用される（雇用主の近親者や見習い等の例外あり）",
+      "年齢により最低賃金が異なる（20歳以上が満額、19歳は90%、18歳は80%、18歳未満は70%）",
+      "雇用主は従業員の最低賃金支払いを証明する記録を3年間保管する義務がある",
+      "公営医療サービスの一部利用やGP Visit Cardの取得にはPPSナンバーが必要"
+    ]
+  },
+  "sources": [
+    {
+      "title": "Get a Personal Public Service (PPS) Number - Gov.ie",
+      "url": "https://www.gov.ie/en/department-of-social-protection/services/get-a-personal-public-service-pps-number/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "National Minimum Wage - Workplace Relations Commission",
+      "url": "https://www.workplacerelations.ie/en/what_you_should_know/hours-and-wages/national%20minimum%20wage/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Find a GP in Ireland - HSE.ie",
+      "url": "https://www2.hse.ie/services/find-a-gp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "JobsIreland.ie",
+      "url": "https://jobsireland.ie/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "アイルランド｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/ireland.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "アイルランド滞在許可登録手続きについて - 在アイルランド日本国大使館",
+      "url": "https://www.ie.emb-japan.go.jp/itpr_ja/00_000596.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Registering your immigration permission - Immigration Service Delivery",
+      "url": "https://www.irishimmigration.ie/registering-your-immigration-permission/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{# 地図とグラフ。数字はすべて外務省の一覧（mofa.json）から。 #}
+
+{% macro world_map(m, countries, label, legend="ワーキング・ホリデーで行ける国・地域（押すと国のページへ）", anchor="") -%}
+<figure class="map">
+<svg viewBox="0 0 {{ m.width }} {{ m.height }}" role="img" aria-label="{{ label }}">
+  <path class="land" d="{{ m.base }}"/>
+  {% if m.japan %}<path class="japan" d="{{ m.japan }}"><title>日本（出発地）</title></path>{% endif %}
+  {% for c in countries %}{% if m.countries.get(c.id) %}
+  <a href="{{ base_url }}country/{{ c.id }}.html{{ anchor }}" class="wh" aria-label="{{ c.name }}"><path d="{{ m.countries[c.id] }}"><title>{{ c.name }}（{{ c.since }}年〜・{% if c.quota == "無" %}枠の上限なし{% else %}年{{ c.quota }}人{% endif %}）</title></path></a>
+  {% endif %}{% endfor %}
+  {% for c in countries %}{% if m.markers.get(c.id) %}{% set p = m.markers[c.id] %}
+  <a href="{{ base_url }}country/{{ c.id }}.html{{ anchor }}" class="wh dot" aria-label="{{ c.name }}"><circle cx="{{ p[0] }}" cy="{{ p[1] }}" r="5"><title>{{ c.name }}</title></circle></a>
+  {% endif %}{% endfor %}
+</svg>
+<figcaption class="legend">
+  <span><i class="sw sw-wh"></i>{{ legend }}</span>
+  <span><i class="sw sw-jp"></i>日本</span>
+</figcaption>
+</figure>
+{%- endmacro %}
+
+{% macro quota_chart(countries) -%}
+{% set limited = countries|selectattr("quota_n")|sort(attribute="quota_n", reverse=true)|list %}
+{% set unlimited = countries|rejectattr("quota_n")|list %}
+{% set top = limited[0].quota_n %}
+<figure class="bars" aria-label="年間発給枠の比較">
+  <ol>
+  {% for c in limited %}
+    <li title="{{ c.name }}: 年{{ c.quota }}人">
+      <a href="{{ base_url }}country/{{ c.id }}.html" class="bar-name"><img class="flag" src="{{ base_url }}static/flags/{{ c.flag }}.svg" alt="" width="20" height="15">{{ c.name }}</a>
+      <span class="bar-track"><span class="bar" style="width: {{ [c.quota_n / top * 100, 0.8]|max }}%"></span></span>
+      <span class="bar-val">{{ c.quota }}人</span>
+    </li>
+  {% endfor %}
+  </ol>
+  <figcaption>
+    <p><strong>上限なし（{{ unlimited|length }}か国）</strong></p>
+    <p class="chips">{% for c in unlimited %}<a href="{{ base_url }}country/{{ c.id }}.html"><img class="flag" src="{{ base_url }}static/flags/{{ c.flag }}.svg" alt="" width="20" height="15">{{ c.name }}</a>{% endfor %}</p>
+    <p class="small muted">出典: 外務省「ワーキング・ホリデー制度」（{{ mofa.source.as_of }}現在）。日本から相手国へ行く人の枠。</p>
+  </figcaption>
+</figure>
+{%- endmacro %}
+
+{% macro timeline(countries) -%}
+{# 10年ごとの柱に、その10年に始まった国を年の順に積む。柱の高さ＝国の数。 #}
+{% set decades = [1980, 1990, 2000, 2010, 2020] %}
+<figure class="decades" aria-label="制度が始まった年（10年ごと）">
+  <div class="dec-grid">
+  {% for d in decades %}
+    {% set group = countries|selectattr("since", ">=", d)|selectattr("since", "<", d + 10)|list %}
+    <div class="dec-col">
+      <ol class="dec-stack">
+        {% for c in group|reverse %}
+        <li><a href="{{ base_url }}country/{{ c.id }}.html" title="{{ c.name }}（{{ c.since }}年）"><img src="{{ base_url }}static/flags/{{ c.flag }}.svg" alt="" width="20" height="15"><span class="dec-name">{{ c.name }}</span><span class="dec-year">{{ c.since }}</span></a></li>
+        {% endfor %}
+      </ol>
+      <div class="dec-label"><strong>{{ d }}年代</strong><span>{{ group|length }}か国</span></div>
+    </div>
+  {% endfor %}
+  </div>
+  <figcaption class="small muted">1980年のオーストラリアから始まり、2026年にマルタとイタリアが加わって32か国・地域になった（外務省）。2010年以降に加わった22か国・地域のうち18がヨーロッパ。</figcaption>
+</figure>
+{%- endmacro %}
+
+{% macro locator(m, c) -%}
+<svg class="locator" viewBox="0 0 {{ m.width }} {{ m.height }}" role="img" aria-label="{{ c.name }}の位置">
+  <path class="land" d="{{ m.base }}"/>
+  {% for cid, d in m.countries.items() %}{% if cid != c.id %}<path class="land" d="{{ d }}"/>{% endif %}{% endfor %}
+  {% if m.japan %}<path class="japan" d="{{ m.japan }}"/>{% endif %}
+  {% if m.focus %}<path class="focus" d="{{ m.focus }}"/>{% endif %}
+  {% if m.marker %}<circle class="focus" cx="{{ m.marker[0] }}" cy="{{ m.marker[1] }}" r="7"/>{% endif %}
+</svg>
+{%- endmacro %}

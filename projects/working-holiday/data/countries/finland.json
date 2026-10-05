@@ -1,0 +1,33 @@
+{
+  "id": "finland",
+  "name": "フィンランド",
+  "age": "申請時満18歳以上30歳以下",
+  "stay": "",
+  "fee": "電子申請（Enter Finland）EUR 530、紙申請 EUR 630",
+  "funds": "最初の3か月分でおよそEUR 2,450",
+  "apply": "オンラインサービス「Enter Finland」で申請するか紙の申請書を用意し、本人確認はフィンランド在外公館（大使館・領事館）で行う",
+  "timing": "",
+  "work": "日本とフィンランドの協定上、日本国籍者の就労権には（オーストラリア・ニュージーランド国籍者にある9か月上限や同一雇用主3か月上限のような）制限が設けられていない",
+  "study": "",
+  "insurance": "フィンランド滞在期間全体を通じて有効な、病気・入院をカバーする保険への加入が必要",
+  "points": [
+    "就労期間の協定上の制限は日本国籍者には無い（旅行の目的は休暇が主、就労は従）",
+    "最初の3か月分の生活資金としてEUR 2,450程度の証明が必要",
+    "フィンランドでワーキング・ホリデー許可を過去に取得していないことが条件",
+    "同伴する家族がいないことが条件",
+    "申請費は電子申請の方が紙申請より安い（EUR 530 対 630）"
+  ],
+  "sources": [
+    {
+      "title": "Working holiday - Finnish Immigration Service (Migri)",
+      "url": "https://migri.fi/en/working-holiday/en",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "New agreement on working holiday arrangements enable Finnish youth to work temporarily in Japan - Finnish Government",
+      "url": "https://valtioneuvosto.fi/en/-//1410877/new-agreement-on-working-holiday-arrangements-enable-finnish-youth-to-work-temporarily-in-japan",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": ["stay（最長滞在期間の明記が公式ページで確認できず）", "timing（受付時期・年間枠の記載なし）", "study"]
+}

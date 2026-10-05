@@ -1,0 +1,27 @@
+{
+  "id": "hong-kong",
+  "name": "香港",
+  "age": "18歳以上30歳以下",
+  "stay": "最長12か月（延長は通常認められない）",
+  "fee": "無料",
+  "funds": "20,000香港ドル以上の財政的証明（financial proof of having not less than HK$20,000）",
+  "apply": "香港入境事務処（Immigration Department）のオンライン申請システムから申請書類をアップロードして提出",
+  "timing": "年間割当1,500人の先着順（first-come, first-served）制。枠に達し次第その期の受付は終了",
+  "work": "同一雇用主の下で6か月を超えて就労することはできない（permanent employmentへの従事も不可）",
+  "study": "就学は回数の制限はないが、受講期間の合計は6か月を超えてはならない",
+  "insurance": "十分な医療保険（sufficient medical insurance）への加入が必要",
+  "points": [
+    "年間の受入枠は1,500人で、先着順のため枠が埋まると申請自体ができなくなる",
+    "同じ雇用主のもとでは最長6か月までしか働けない（転職は可）",
+    "就学も通算6か月までという上限がある",
+    "ビザ延長は基本的に認められないため、最長12か月で帰国する前提で計画する"
+  ],
+  "sources": [
+    {
+      "title": "Working Holiday Scheme（香港入境事務処 Immigration Department）",
+      "url": "https://www.immd.gov.hk/eng/services/visas/working_holiday_scheme.html",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": []
+}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}ワーホリの国を2つ選んで比較｜人気の9か国・36通り｜{{ SITE_NAME }}{% endblock %}
+{% block description %}オーストラリア・カナダ・ニュージーランド・英国・アイルランド・韓国・台湾・ドイツ・フランスのワーキング・ホリデーを、2か国ずつ横に並べて比較できます。{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="../index.html">トップ</a> › <span aria-current="page">2か国を比べる</span></nav>
+<h1>ワーホリの国を2つ選んで比べる</h1>
+<p class="lead">行く人の多い9か国から、2か国ずつの組み合わせ（36通り）で条件を横に並べました。表の行と列が交わる「比較」を押してください。</p>
+<div class="table-wrap">
+<table class="matrix">
+  <thead><tr><th scope="col"></th>{% for c in top %}<th scope="col" style="text-align:center"><img class="flag" src="../static/flags/{{ c.flag }}.svg" alt="{{ c.name }}" title="{{ c.name }}" width="22" height="16"></th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for r in top %}
+    <tr><th scope="row" style="white-space:nowrap"><img class="flag" src="../static/flags/{{ r.flag }}.svg" alt="" width="20" height="15">{{ r.name }}</th>
+    {% for c in top %}<td style="text-align:center">{% if r.id != c.id %}<a href="{{ pair_slug(r, c) }}.html" title="{{ r.name }}と{{ c.name }}">比較</a>{% else %}—{% endif %}</td>{% endfor %}</tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<h2>組み合わせの一覧</h2>
+<ul class="grid">
+  {% for p in pairs %}<li><a href="{{ p.slug }}.html">{{ p.a.name }}と{{ p.b.name }}</a></li>{% endfor %}
+</ul>
+{% endblock %}

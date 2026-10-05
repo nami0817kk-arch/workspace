@@ -1,0 +1,22 @@
+{
+  "id": "lithuania",
+  "name": "リトアニア",
+  "age": "申請時18〜30歳（外務省）",
+  "stay": "",
+  "fee": "",
+  "funds": "",
+  "apply": "駐日リトアニア大使館。90日を超える滞在の査証・一時滞在許可証は、原則として日本を出発する前に申請する",
+  "timing": "",
+  "work": "",
+  "study": "",
+  "insurance": "",
+  "points": [
+    "長期滞在の査証は審査に通常15〜45日、一時滞在許可証は初回の申請で最大4か月かかる（在リトアニア日本国大使館の一般的な案内）",
+    "申請場所や必要書類の詳細は、駐日リトアニア大使館に直接問い合わせるよう案内されている"
+  ],
+  "sources": [
+    {"title": "リトアニア滞在情報｜在リトアニア日本国大使館", "url": "https://www.lt.emb-japan.go.jp/itpr_ja/ryouji_taizai.html", "checked": "2026-10-05"},
+    {"title": "ワーキング・ホリデー制度｜外務省", "url": "https://www.mofa.go.jp/mofaj/toko/visa/working_h.html", "checked": "2026-10-05"}
+  ],
+  "unverified": ["stay", "fee", "funds", "timing", "work", "study", "insurance"]
+}
