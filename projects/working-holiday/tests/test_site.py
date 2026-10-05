@@ -117,3 +117,10 @@ def test_sitemapに404を載せない(site):
     assert f"<loc>{site_config.SITE_URL}/</loc>" in xml
     assert f"<loc>{site_config.SITE_URL}/country/australia</loc>" in xml
     assert "404" not in xml
+
+
+def test_比較表の短い形():
+    assert render.short("初回12か月。3か月の特定の就労で2年目") == "初回12か月"
+    assert render.short("初回 AUD840.00／2年目 AUD1,000.00") == "初回 AUD840.00"
+    assert render.short("申請時18歳以上30歳以下（日本国籍者）") == "申請時18歳以上30歳以下"
+    assert render.short("あ" * 60).endswith("…")

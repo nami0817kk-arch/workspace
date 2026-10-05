@@ -10,6 +10,7 @@ shaho-tekiyo の src/render.py と同じ形（canonical・sitemap・robots の�
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import sys
 from datetime import datetime
@@ -113,6 +114,18 @@ def load_data() -> tuple[dict, list[dict]]:
     return mofa, countries
 
 
+_CUT = re.compile(r"[。（(／;；]")
+
+
+def short(text: str, limit: int = 40) -> str:
+    """比較表に入れる短い形。最初の句点・かっこ・区切りまでで切り、長ければ limit 文字で止める。
+    全文は国のページに出すので、ここでは比べるのに要る頭だけを残す。"""
+    head = _CUT.split(text, maxsplit=1)[0].strip(" 、,")
+    if not head:
+        head = text
+    return head if len(head) <= limit else head[: limit - 1] + "…"
+
+
 def canonical_url(rel_path: str) -> str:
     """output/ 内の相対パスから、実際に配信される URL を組み立てる。
 
@@ -129,6 +142,7 @@ def canonical_url(rel_path: str) -> str:
 
 def _env() -> Environment:
     env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)), autoescape=True)
+    env.filters["short"] = short
     env.globals.update(
         SITE_URL=SITE_URL,
         SITE_NAME=site_config.SITE_NAME,

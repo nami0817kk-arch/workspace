@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import val, quota %}
+{% from "_macros.html" import brief, quota %}
 {% block title %}ワーホリ32か国の条件を比較｜年齢・期間・費用・資金・申請時期｜{{ SITE_NAME }}{% endblock %}
 {% block content %}
 <h1>ワーホリに行ける32か国・地域の条件を1つの表で比べる</h1>
@@ -35,13 +35,13 @@
     <tr data-region="{{ c.region }}">
       <th scope="row"><a href="country/{{ c.id }}.html">{{ c.name }}</a>{% if c.twice %} <span class="tag">2回OK</span>{% endif %}<br><span class="small muted">{{ c.region }}・{{ c.since }}年〜</span></th>
       <td>{{ quota(c) }}</td>
-      {% for key, label in FIELDS if key in TABLE_FIELDS %}<td>{{ val(c, key) }}</td>{% endfor %}
+      {% for key, label in FIELDS if key in TABLE_FIELDS %}<td>{{ brief(c, key) }}</td>{% endfor %}
     </tr>
   {% endfor %}
   </tbody>
 </table>
 </div>
-<p class="small muted">「公式サイトで確認」は、公式の情報で確かめられなかった項目です。推測では埋めていません。各国のページに、確かめた公式ページへのリンクがあります。</p>
+<p class="small muted">「公式サイトで確認」は、公式の情報で確かめられなかった項目です。推測では埋めていません。表は要点だけを短く載せています。くわしい条件と、確かめた公式ページへのリンクは各国のページにあります。</p>
 
 <h2>国から探す</h2>
 {% for region, list in by_region %}

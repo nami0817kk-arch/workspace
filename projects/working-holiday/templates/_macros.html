@@ -5,3 +5,7 @@
 {% macro quota(c) -%}
 {%- if c.quota == "無" -%}上限なし{%- else -%}年{{ c.quota }}人{%- endif -%}
 {%- endmacro %}
+
+{% macro brief(c, key) -%}
+{%- if c[key] -%}{{ c[key]|short }}{%- else -%}<span class="unknown">公式サイトで確認</span>{%- endif -%}
+{%- endmacro %}
