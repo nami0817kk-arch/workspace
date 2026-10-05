@@ -2962,7 +2962,7 @@ def _cmd_draft(args, config) -> int:
     from .config import _resolve
     from .plan import load_plan
     from . import coverage as coverage_mod
-    from .research import advise, check_repeats, load_notes, to_script, verify
+    from .research import YARD_STRONG_MARK, advise, check_repeats, load_notes, to_script, verify
 
     plan = load_plan()
     notes = load_notes(args.notes)
@@ -3003,6 +3003,13 @@ def _cmd_draft(args, config) -> int:
         for note in serious:
             print(f"   ・{note}")
         print("■ 台本は書き出しましたが、このまま進めないでください", flush=True)
+    # **山場・見立てで物差しの無い数字が並ぶ節は、最後にもう一度出す**（2026-10-05 ⑧）。
+    # 止めない（終了コードは変えない）が、ヒントの山に埋もれないようにする
+    strong = [n for n in hints if n.startswith(YARD_STRONG_MARK)]
+    if strong:
+        print(f"{chr(10)}■ 数字に比べる物差しが無い節（山場・見立て）が {len(strong)}つあります（止めません）")
+        for note in strong:
+            print(f"   ・{note}")
     if args.check_only:
         return 1 if serious else 0
 

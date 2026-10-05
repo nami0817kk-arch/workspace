@@ -3631,5 +3631,17 @@
     "video_id": "iN3sAG_CoMc",
     "at": "2026-10-05T05:17:53+00:00",
     "publish_at": "2026-10-05T08:30:00Z"
+  },
+  {
+    "build": "20261005_transfer_review",
+    "video_id": "N8UPraURtJQ",
+    "at": "2026-10-05T08:09:17+00:00",
+    "publish_at": "2026-10-05T09:00:00Z"
+  },
+  {
+    "build": "20261005_transfer_review_short",
+    "video_id": "jwKnn0wpROg",
+    "at": "2026-10-05T08:10:04+00:00",
+    "publish_at": "2026-10-05T09:30:00Z"
   }
 ]

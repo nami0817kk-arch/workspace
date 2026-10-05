@@ -1503,6 +1503,134 @@ def _advise_ear(notes: Notes) -> list[str]:
     return hints
 
 
+# **数字には比べる物差しを1つ添える**（2026-10-05 ユーザー決定「動画の質を上げる仕組み ⑧」）。
+# 「勝ち点16」だけでは大きいのか小さいのか耳で分からない。「昨季の同じ時点より4多い」
+# 「2025年秋の4試合では6本」のように、比べる相手（過去・ほか・平均・順位・割合）を
+# 同じ行か前後の行で言う。数えるのは語りの行（キャスター・解説）だけ
+#
+# 数字に数えないもの。**先に消してから**残った数字を数える。
+# 年号・日付・時刻・背番号・日程・スコアはユーザーの指定。試合の中の時刻（55分、79分、）、
+# 年齢・期間（5年・9か月・16日間）、「1人の」「2つの」は、最近の台本に当てて鳴りすぎたので足した
+YARD_SKIP = re.compile(
+    r"(?:19|20)\d\d\s*[-/／－〜~]\s*\d{2,4}"          # 2025-26 / 2025/26（シーズン）
+    r"|\d{2}\s*[-/／－]\s*\d{2}(?=シーズン|季)"        # 25-26シーズン
+    r"|(?:19|20)\d\d(?:年代?)?"                         # 年号
+    r"|\d+月\d+日|\d+月|\d+日(?!間)|\d+/\d+"             # 日付
+    r"|\d+時(?:\d+分)?|\d+時半|\d+[:：]\d+"               # 時刻
+    r"|背番号\s*\d+|\d+番(?!目)"                         # 背番号
+    r"|\d+\s*(?:対|[-－ー−])\s*\d+(?:\s*[-－ー−]\s*\d+)*"   # スコア（2対1）・布陣（4-3-3）
+    r"|第\d+[節戦回]?|\d+節|\d+回戦|\d+次リーグ"         # 日程
+    r"|(?:前半|後半|延長(?:前半|後半)?|開始|アディショナルタイム|ロスタイム|迎えた|のは)\s*\d+分(?!間)"   # 試合の中の時刻
+    r"|(?:^|(?<=[。、]))\s*\d+分(?=[、。])|\d+分(?:に|から|まで|すぎ|過ぎ|ごろ|頃|後|前)"
+    r"|\d+歳(?:と\d+日)?"                                # 年齢
+    r"|\d[\d.]*(?:年|か月|ヶ月|カ月|週間?|日間)(?:半|あまり|足らず)?(?!前|ぶり)"   # 期間（「12年前」「11か月ぶり」は比べなので残す）
+    r"|(?<![\d.])[12](?:人|つ|度)"                        # 「1人の」「2つの」「2度」
+    r"|U-?\d+|\d+歳以下|ベスト\d+|トップ\d+|\d+大リーグ|\d+部|\d+バック|\d+トップ"   # 呼び名
+)
+YARD_NUMBER = re.compile(r"\d[\d,.]*(?:[万億千]\d*)*")
+# 数字のあとの単位（点・試合・本・ポンド…）。前後の行で同じ単位が並べば、並べて比べている
+YARD_UNIT = re.compile(r"\d[\d,.]*(?:[万億千]\d*)*\s*(か月|ヶ月|カ月|[一-龥ァ-ヴー%％]{1,2})")
+# 比べの言葉。⑥の VIEW_COMPARE に、平均・割合・順位・ぶり・同じ時点などを足した
+YARD_COMPARE = re.compile(
+    VIEW_COMPARE.pattern
+    + r"|平均|真ん中の値|中央値|前年|前季|昨年|昨シーズン|前の年|同じ時点|同じ|横並び|一方|ぶり|倍|％|%|パーセント|\d+割|割合"
+    + r"|対(?!戦|応|策|象|決|面|処)|位(?!置)|最多|最少|最高|最低|最年少|最年長|最速|(?<!最)初|ランキング|満点|ただ一人|ただ1人|唯一"
+    + r"|あたり|当たり|につき|ずつ|ペース|連覇|連勝|連敗|連続|全勝|全敗|無敗|負けなし|\d+(?:戦|試合)で?\d+(?:勝|敗|分け)|\d+分の\d+|半分"
+    + r"|\d+\D{0,3}目|\d+\D{0,4}中(?:で|\d)|のうち|うち\d|\d[^\d。]{0,8}(?:すべて|全て)|\d[^\d。]{0,4}続けて"
+    + r"|\d+(?:年|週間|か月|ヶ月|カ月|日|試合)前"
+    + r"|縮め|減ら|減っ|増え|増や|伸ば|伸び|跳ね上が|下が|上が|戻"           # 増えた・減った（10を6まで縮めた）
+    + r"|\d[^\d。]{0,8}から[^\d。]{0,8}\d|\d[\d,.]*[^\d。]{0,3}と[^\d。]{0,8}\d"   # 5位から2位へ・20本と9本
+)
+
+# 知らせる境目（2026-10-05、10/3〜10/5 の台本26本に当てて決めた。報告は CLAUDE.md ⑧）。
+# ふつうの節は、物差しの無い数字の行が2行から。1行だけの節まで知らせると、26本中ほぼ全部で鳴る
+YARD_HINT_LINES = 2
+# 題に答える山場（main）と見立ての節（viewpoint）は1行から知らせる。堂安の回の山場の頭
+# 「9月からの3試合で、シュートは0本でした」が、2行の境目では素通りした
+YARD_KEY_HINT_LINES = 1
+# 山場・見立ての節で、物差しの無い数字がこの数あれば強めに知らせる（draft の最後にもう一度出す）
+YARD_STRONG_NUMBERS = 3
+YARD_STRONG_MARK = "【強め】"
+
+
+def _bare_numbers(text: str) -> list[str]:
+    """年号・日付・時刻・背番号・日程・スコアを消して、残った数字。"""
+    return YARD_NUMBER.findall(YARD_SKIP.sub("・", str(text or "")))
+
+
+def _units(text: str) -> list[str]:
+    return YARD_UNIT.findall(YARD_SKIP.sub("・", str(text or "")))
+
+
+def _has_yardstick(text: str) -> bool:
+    """比べの言葉があるか。同じ単位が1行に2度出る（17本のうち15本、10試合11点と10試合10点）のも比べ。"""
+    # スコアの「対」は比べではない。先に消してから探す
+    if YARD_COMPARE.search(YARD_SKIP.sub("・", str(text or ""))):
+        return True
+    units = _units(text)
+    return len(units) != len(set(units))
+
+
+def _yardstick_gaps(section: Section) -> list[tuple[str, list[str]]]:
+    """節の中で、数字を言っているのに物差しが前後1行にも無い語りの行（行・数字）。"""
+    texts = [s if isinstance(s, str) else str((s or {}).get("text", "")) for s in section.say]
+    voices = list(section.voices) + [""] * (len(texts) - len(section.voices))
+    narrated = [not (v and v not in SPEAKERS) for v in voices]   # 本人の言葉・反応は見ない
+    out: list[tuple[str, list[str]]] = []
+    for i, text in enumerate(texts):
+        if not narrated[i]:
+            continue
+        nums = _bare_numbers(text)
+        if not nums:
+            continue
+        # 前後1行（語りの行だけ。本人の「減ってる」はこちらの物差しではない）
+        near = [texts[j] for j in (i - 1, i + 1) if 0 <= j < len(texts) and narrated[j]]
+        if _has_yardstick(text) or any(_has_yardstick(t) for t in near):
+            continue
+        # 前後の行と同じ単位の数字を並べている（「秋の4試合で6本」「3月からの3試合は2本」）のも比べ
+        mine = set(_units(text))
+        if any(mine & set(_units(t)) for t in near):
+            continue
+        out.append((text, nums))
+    return out
+
+
+def _advise_yardstick(notes: Notes) -> list[str]:
+    """**数字を言うたびに、比べる物差しを1つ添える**（2026-10-05「動画の質を上げる仕組み ⑧」）。
+
+    語りの行で数字を言っているのに、その行と前後1行（語りの行）に比べの言葉
+    （より・以来・昨季・平均・倍・％・位・最多・初・ぶり・から〜へ など）も、同じ単位で
+    並べた数字も無い行を、節ごとに数えて知らせる。**止めない。**
+    題に答える山場（main）と見立ての節（viewpoint）は1行から、ほかの節は2行から知らせ、
+    山場・見立てで物差しの無い数字が3つ以上なら強めに知らせる。
+    年号・日付・時刻・背番号・日程・スコア・試合の中の時刻・年齢・期間は数えない。
+    紹介の回（series あり）の「基礎DATA」の節は、板を読む節なので見ない。
+    """
+    hints: list[str] = []
+    for section in notes.sections:
+        if notes.series and "基礎DATA" in section.heading:
+            continue
+        gaps = _yardstick_gaps(section)
+        if not gaps:
+            continue
+        key = section.main or section.viewpoint
+        count = sum(len(nums) for _, nums in gaps)
+        example = gaps[0][0]
+        where = f"節『{section.heading}』"
+        if key:
+            where += "（見立ての節）" if section.viewpoint else "（山場の節）"
+        tail = ("「勝ち点16。昨季の同じ時点より4多い」「シュート0本。2025年秋の4試合では6本」のように、"
+                "過去・ほかの選手やチーム・平均・順位・割合のどれかと、同じ行か次の行で比べてください（2026-10-05 ⑧）")
+        if key and count >= YARD_STRONG_NUMBERS:
+            hints.append(
+                f"{YARD_STRONG_MARK}{where}: 比べる物差しの無い数字が{count}つあります"
+                f"（{len(gaps)}行。例『{example[:28]}』）。題に答える節なので、大きいのか小さいのか伝わりません。" + tail)
+        elif len(gaps) >= (YARD_KEY_HINT_LINES if key else YARD_HINT_LINES):
+            hints.append(
+                f"{where}: 比べる物差しの無い数字の行が{len(gaps)}行あります（例『{example[:28]}』）。" + tail)
+    return hints
+
+
 def _advise_readings(notes: Notes) -> list[str]:
     """**漢字の人名は読みの辞書に無いと誤読される**（2026-09-22）。
 
@@ -1968,7 +2096,8 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_card_telop_overlap(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
-                        + _advise_ear(notes) + _advise_readings(notes))
+                        + _advise_ear(notes) + _advise_readings(notes)
+                        + _advise_yardstick(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
