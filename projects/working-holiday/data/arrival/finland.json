@@ -1,0 +1,48 @@
+{
+  "id": "finland",
+  "steps": [
+    {
+      "title": "個人識別番号（henkilötunnus）を取得する",
+      "body": "フィンランドで働くために来た外国人は、税務署（Vero）の個人識別番号発行窓口（予約制）で申請する。有効なパスポート等の身分証明書、雇用契約書（自営業の場合は委託契約書）が必要で、就労内容を証明できる確定済みの書類が求められる（予備的な雇用契約書では不可）。処理には通常1〜3営業日。",
+      "url": "https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/arriving_in_finland/work_in_finland/finnish-personal-identity-codes-for-workers-arriving-in-finland/"
+    },
+    {
+      "title": "税カード（verokortti）を取得する",
+      "body": "個人識別番号の取得後、税務署で税カードを申請する。フィンランド企業に雇用される場合と外国企業に雇用される場合で手続きが異なる。サービスはフィンランド語・スウェーデン語・英語で提供され、それ以外の言語では通訳の手配が必要。",
+      "url": "https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/arriving_in_finland/work_in_finland/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在フィンランド日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（警察・消防・救急共通の緊急通報番号、英語可）",
+    "summary": "ヘルシンキ大学病院（HUS）をはじめとする公立病院や、Mehiläinen・Terveystaloなどの私立医療センターが利用できる。私立病院は24時間対応の窓口があり、予約なしで受診できる施設もある。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "https://www.tyosuojelu.fi/web/en/employment-relationship/pay",
+    "channels": [
+      {
+        "name": "Job Market Finland（työmarkkinatori、公的求人検索サイト）",
+        "url": "https://tyomarkkinatori.fi/en",
+        "note": "KEHA Centre（フィンランド経済開発・交通・環境センター群の共同事務局）が運営する公的求人検索サイト"
+      }
+    ],
+    "rules": [
+      "フィンランドには法定最低賃金が無く、一般的拘束力を持つ労働協約（universally binding collective agreement）がある業種では、雇用主が労働者団体に未加盟でもその賃金規定に従う必要がある",
+      "適用される労働協約が無い場合は雇用契約で賃金を合意するが、合意が無ければ「その仕事として通常かつ妥当」とされる賃金を支払う義務がある"
+    ]
+  },
+  "sources": [
+    {"title": "Finnish personal identity codes for workers arriving in Finland - Vero", "url": "https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/arriving_in_finland/work_in_finland/finnish-personal-identity-codes-for-workers-arriving-in-finland/", "checked": "2026-10-05"},
+    {"title": "Arriving in Finland to work - Vero", "url": "https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/arriving_in_finland/work_in_finland/", "checked": "2026-10-05"},
+    {"title": "Pay - Occupational Safety and Health Administration (Tyosuojelu)", "url": "https://www.tyosuojelu.fi/web/en/employment-relationship/pay", "checked": "2026-10-05"},
+    {"title": "Job Market Finland (työmarkkinatori)", "url": "https://tyomarkkinatori.fi/en", "checked": "2026-10-05"},
+    {"title": "フィンランド｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/finland.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}

@@ -149,8 +149,27 @@ def _path(polys, frame: Frame, tol: float, keep=None) -> str:
                 continue
             if max(xs) - min(xs) < tol * 2.5 and max(ys) - min(ys) < tol * 2.5:
                 continue
-            out.append("M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in pts) + "Z")
+            out.append(_compact(pts))
     return "".join(out)
+
+
+def _compact(pts: list[tuple[float, float]]) -> str:
+    """点の列を短い d 属性にする。0.5px 単位に丸め、2点目以降は直前からの差（l コマンド）で書く。
+    同じ位置に丸まった点は落とす。地図の幅は 320〜960px なので、0.5px の丸めは目に見えない。"""
+    q = [(round(x * 2) / 2, round(y * 2) / 2) for x, y in pts]
+    fmt = lambda v: (f"{v:.1f}".rstrip("0").rstrip(".") or "0")
+    x0, y0 = q[0]
+    parts = [f"M{fmt(x0)} {fmt(y0)}l"]
+    px, py = x0, y0
+    steps = []
+    for x, y in q[1:]:
+        if (x, y) == (px, py):
+            continue
+        steps.append(f"{fmt(x - px)} {fmt(y - py)}")
+        px, py = x, y
+    if len(steps) < 2:
+        return ""
+    return parts[0] + " ".join(steps).replace(" -", "-") + "z"
 
 
 def build_map(frame: Frame, tol: float) -> dict:
@@ -193,7 +212,7 @@ def world() -> dict:
 
 @lru_cache(maxsize=1)
 def europe() -> dict:
-    return build_map(Frame(-25, 34, 35, 71.5, 640), tol=1.2)
+    return build_map(Frame(-25, 34, 35, 71.5, 640), tol=1.4)
 
 
 @lru_cache(maxsize=None)

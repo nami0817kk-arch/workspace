@@ -1,0 +1,77 @@
+{
+  "id": "lithuania",
+  "steps": [
+    {
+      "title": "住所を移住局（Migration Department）等へ届け出る",
+      "body": "リトアニアに住む外国人は、居住地の住所を移住局（Migracijos departamentas）または居住地のeldership（セニューニヤ）窓口に届け出る必要がある。居住許可カードを受け取った場合はその受領から1か月以内に届け出る。虚偽の届け出や未届けには警告または10〜14ユーロの罰金が科される。",
+      "url": "https://www.migracija.lt/en/-/foreigners-can-also-declare-their-place-of-residence-at-the-migration-department"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在リトアニア日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "基本決済口座（basic payment account）を開設する",
+      "body": "EU域内に合法的に居住する人は、リトアニアの銀行・信用組合で基本決済口座を開設する権利がある。入出金・振込・口座引き落としなど基本的な決済サービスが対象で、月額手数料の上限はリトアニア銀行（Lietuvos bankas）の規定により定められている（低所得者向けはさらに低い上限）。",
+      "url": "https://www.lb.lt/en/payment-service-basket"
+    }
+  ],
+  "medical": {
+    "emergency": "112（公的救急車の緊急通報番号）",
+    "summary": "リトアニアの主な医療施設は国公立が中心で、医療機器や施設が老朽化していることも多い。多くの医師は英語を解するが、それ以外の職員は英語が通じないことが多く、リトアニア語またはロシア語が堪能でないと受診が難しい場合がある。近年は医療機器・設備が比較的充実した私立クリニックが開院しており、英語での受診が可能なところが多い。精密検査や高度な治療が必要な場合は西ヨーロッパや日本への移送が必要になることがあるため、海外旅行保険への加入が強く勧められる。当地に日本語で受診できる医療機関はない。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金（MMA） 月額1,153ユーロ・時給7.05ユーロ（2026年1月1日適用開始、2025年は月額1,038ユーロ・時給6.35ユーロ）",
+    "min_wage_url": "https://vdi.lrv.lt/lt/naujienos/nuo-2026-m-sausio-1-d-didesnis-minimalus-darbo-uzmokestis-1xW/?lang=en",
+    "channels": [
+      {
+        "name": "Užimtumo tarnyba（リトアニア国家雇用局 公式求人サイト）",
+        "url": "https://uzt.lt/en",
+        "note": "リトアニア政府の公的雇用機関が運営する求人検索サイト。サービスは無料"
+      }
+    ],
+    "rules": [
+      "法定最低賃金（MMA/MVA）は毎年、政府が社会保障・労働省の提案に基づき決定する（2026年は前年比11.1%引き上げ）",
+      "国家雇用局（Užimtumo tarnyba）の求職支援サービスは誰でも無料で利用できる"
+    ]
+  },
+  "sources": [
+    {
+      "title": "リトアニア｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/lithuani.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Foreigners can also declare their place of residence at the Migration Department - Migracijos departamentas",
+      "url": "https://www.migracija.lt/en/-/foreigners-can-also-declare-their-place-of-residence-at-the-migration-department",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Payment service basket - Lietuvos bankas (Bank of Lithuania)",
+      "url": "https://www.lb.lt/en/payment-service-basket",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Nuo 2026 m. sausio 1 d. – didesnis minimalus darbo užmokestis - Valstybinė darbo inspekcija (National Labour Inspectorate)",
+      "url": "https://vdi.lrv.lt/lt/naujienos/nuo-2026-m-sausio-1-d-didesnis-minimalus-darbo-uzmokestis-1xW/?lang=en",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Užimtumo tarnyba (Lithuanian Employment Service)",
+      "url": "https://uzt.lt/en",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Patvirtinta: MMA nuo 2026 m. 1153 eurai（リトアニア社会保障労働省）",
+      "url": "https://socmin.lrv.lt/lt/naujienos/patvirtinta-mma-nuo-2026-m-1153-eurai-mNK/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

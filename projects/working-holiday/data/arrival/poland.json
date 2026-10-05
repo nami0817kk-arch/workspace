@@ -1,0 +1,51 @@
+{
+  "id": "poland",
+  "steps": [
+    {
+      "title": "住所登録（zameldowanie）を行う",
+      "body": "ポーランドに住む外国人は住所登録（zameldowanie）が義務。EU・EFTA加盟国・スイス国籍の人は最後の居住地から30日以内、それ以外の国籍の人は滞在が30日を超える場合に到着から4日以内に、居住地を管轄する市区町村役場（urząd gminy）で届け出る。必要書類は旅券、住居の所有権または使用権を証明する書類（賃貸契約書など）、所有者による滞在確認書。EU・EFTA国籍者は信頼できるプロフィール（Profil Zaufany）を使ってオンライン申請もできる。登録自体は無料（一部証明書の発行のみ17ズロティ）。",
+      "url": "https://www.gov.pl/web/gov/zamelduj-sie-na-pobyt-staly-dla-cudzoziemcow"
+    },
+    {
+      "title": "個人番号PESELを取得する",
+      "body": "滞在が30日を超える登録（zameldowanie）を行うと、PESEL番号が自動的に付与される。登録ができない場合は、身分証明書を持って任意の市区町村役場に申請書を直接提出すれば取得できる（EU・EFTA・スイス・英国籍以外は本人が窓口に出向く必要がある）。費用は無料。PESELは銀行口座開設や雇用契約の締結、公的医療サービスの利用などに使う。",
+      "url": "https://www.gov.pl/web/gov/uzyskaj-numer-pesel-dla-cudzoziemcow"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所・連絡先を届け出る。緊急時の安否確認や在ポーランド日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（欧州共通緊急通報番号。携帯電話からも通報可能、24時間対応、英語可）。救急車の直通は999（ポーランド語のみ、24時間対応）",
+    "summary": "ポーランドには日本と類似の国民皆保険の公的医療システムがあるが、公的医療機関は混雑し設備が古いこともあり、ポーランド語が堪能でないと受診が困難。家庭医制度があり、救急時以外はまず家庭医を受診するリファラル・システム。近年は施設の整った私立医療機関（プライベートクリニック）が多数開業し、英語での受診が可能なところも多く、日本人を含む外国人はこれらを利用することが多い。私立医療機関の受診には事前の電話予約が必要。医薬分業制のため、薬は処方箋を持って薬局（APTEKA）で購入する。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金 月額4,806ズロティ（PLN）・時給31.40ズロティ（PLN）（2026年1月1日適用開始、2025年9月11日付閣僚会議規則による）",
+    "min_wage_url": "https://www.gov.pl/web/rodzina/minimalne-wynagrodzenie-za-prace",
+    "channels": [
+      {
+        "name": "praca.gov.pl（労働・家族・社会政策省の求人・雇用手続きポータル）",
+        "url": "https://www.praca.gov.pl",
+        "note": "公共職業安定所（urząd pracy）の求人検索・求職登録ができる政府ポータル"
+      }
+    ],
+    "rules": [
+      "すべての雇用契約・業務委託契約（umowa zlecenia）等に法定最低賃金・最低時給が適用される",
+      "最低賃金・最低時給は毎年1月に改定される（閣僚会議の規則による）",
+      "住民登録（zameldowanie）で付与されるPESELが、雇用契約の締結や銀行口座開設の前提となることが多い"
+    ]
+  },
+  "sources": [
+    {"title": "Zamelduj się na pobyt stały lub czasowy (dla cudzoziemców) - Gov.pl", "url": "https://www.gov.pl/web/gov/zamelduj-sie-na-pobyt-staly-dla-cudzoziemcow", "checked": "2026-10-05"},
+    {"title": "Uzyskaj numer PESEL - usługa dla cudzoziemców - Gov.pl", "url": "https://www.gov.pl/web/gov/uzyskaj-numer-pesel-dla-cudzoziemcow", "checked": "2026-10-05"},
+    {"title": "Minimalne wynagrodzenie za pracę - Ministerstwo Rodziny, Pracy i Polityki Społecznej", "url": "https://www.gov.pl/web/rodzina/minimalne-wynagrodzenie-za-prace", "checked": "2026-10-05"},
+    {"title": "Minimalna stawka godzinowa - Ministerstwo Rodziny, Pracy i Polityki Społecznej", "url": "https://www.gov.pl/web/rodzina/minimalna-stawka-godzinowa", "checked": "2026-10-05"},
+    {"title": "praca.gov.pl - Portal Publicznych Służb Zatrudnienia", "url": "https://www.praca.gov.pl", "checked": "2026-10-05"},
+    {"title": "ポーランド｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/poland.html", "checked": "2026-10-05"},
+    {"title": "ポーランド医療事情（在ポーランド日本国大使館）", "url": "https://www.pl.emb-japan.go.jp/konsulat/iryoujouhou.pdf", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}

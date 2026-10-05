@@ -6,10 +6,10 @@
   <path class="land" d="{{ m.base }}"/>
   {% if m.japan %}<path class="japan" d="{{ m.japan }}"><title>日本（出発地）</title></path>{% endif %}
   {% for c in countries %}{% if m.countries.get(c.id) %}
-  <a href="{{ base_url }}country/{{ c.id }}.html" class="wh"><path d="{{ m.countries[c.id] }}"><title>{{ c.name }}（{{ c.since }}年〜・{% if c.quota == "無" %}枠の上限なし{% else %}年{{ c.quota }}人{% endif %}）</title></path></a>
+  <a href="{{ base_url }}country/{{ c.id }}.html" class="wh" aria-label="{{ c.name }}"><path d="{{ m.countries[c.id] }}"><title>{{ c.name }}（{{ c.since }}年〜・{% if c.quota == "無" %}枠の上限なし{% else %}年{{ c.quota }}人{% endif %}）</title></path></a>
   {% endif %}{% endfor %}
   {% for c in countries %}{% if m.markers.get(c.id) %}{% set p = m.markers[c.id] %}
-  <a href="{{ base_url }}country/{{ c.id }}.html" class="wh dot"><circle cx="{{ p[0] }}" cy="{{ p[1] }}" r="5"><title>{{ c.name }}</title></circle></a>
+  <a href="{{ base_url }}country/{{ c.id }}.html" class="wh dot" aria-label="{{ c.name }}"><circle cx="{{ p[0] }}" cy="{{ p[1] }}" r="5"><title>{{ c.name }}</title></circle></a>
   {% endif %}{% endfor %}
 </svg>
 <figcaption class="legend">

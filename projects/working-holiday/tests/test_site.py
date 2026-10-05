@@ -81,11 +81,19 @@ def test_確かめていない項目は公式サイトで確認と出す(site):
     assert "公式サイトで確認" in html
 
 
+# 個人を指す文字列。nami は単語として出たときだけ止める（スペイン語の Empadronamiento などに含まれるため）。
+LEAK = re.compile(r"なみ|0817|(?<![a-z])nami(?![a-z])", re.I)
+# 第三者の固有名詞で、たまたま当たるもの（英国の日本人歯科医院の名前）。
+LEAK_OK = ("Nami Dental Clinic",)
+
+
 def test_公開ページに個人名を出さない(site):
     for path in site.rglob("*.html"):
         text = path.read_text(encoding="utf-8")
-        for leak in ("なみ", "nami", "0817"):
-            assert leak not in text, f"{path.name} に {leak} が出ている"
+        for ok in LEAK_OK:
+            text = text.replace(ok, "")
+        m = LEAK.search(text)
+        assert not m, f"{path.name} に {m.group(0) if m else ''} が出ている"
 
 
 def test_mailtoを使わない(site):
@@ -159,3 +167,17 @@ def test_現地情報のある国はページに病院と仕事の欄が出る(s
     html = (site / "country" / "australia.html").read_text(encoding="utf-8")
     assert 'id="iryou"' in html and 'id="shigoto"' in html
     assert "法定の最低賃金" in html
+
+
+def test_国のページに検索エンジン向けのパンくずが入る(site):
+    html = (site / "country" / "canada.html").read_text(encoding="utf-8")
+    m = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
+    assert m
+    data = json.loads(m.group(1))
+    assert [i["name"] for i in data["itemListElement"]] == ["トップ", "国から探す", "カナダ"]
+    assert data["itemListElement"][-1]["item"] == f"{site_config.SITE_URL}/country/canada"
+
+
+def test_共有用の画像がある(site):
+    assert (site / "static" / "og.png").exists()
+    assert 'property="og:image"' in (site / "index.html").read_text(encoding="utf-8")

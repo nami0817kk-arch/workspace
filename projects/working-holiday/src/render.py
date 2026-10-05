@@ -194,10 +194,21 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
     by_region = [(r, [c for c in countries if c["region"] == r]) for r in REGIONS]
     pages: list[str] = []
 
-    def write(rel: str, template: str, **ctx) -> None:
+    def write(rel: str, template: str, crumbs: list[tuple[str, str]] | None = None, **ctx) -> None:
+        """crumbs は検索エンジン向けのパンくず（名前, output 内の相対パス）。トップから順に並べる。"""
         depth = rel.count("/")
+        crumbs_ld = ""
+        if crumbs:
+            crumbs_ld = json.dumps({
+                "@context": "https://schema.org", "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": i + 1, "name": name, "item": canonical_url(path)}
+                    for i, (name, path) in enumerate(crumbs)
+                ],
+            }, ensure_ascii=False).replace("</", "<\\/")  # script の中で </ が終わりに読まれないように
         html = env.get_template(template).render(
-            base_url="../" * depth, canonical=canonical_url(rel), updated=updated, mofa=mofa, **ctx
+            base_url="../" * depth, canonical=canonical_url(rel), updated=updated, mofa=mofa,
+            crumbs=crumbs, crumbs_ld=crumbs_ld, **ctx
         )
         path = out / rel
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -208,11 +219,13 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
           world=geo.world(), europe=geo.europe())
     for c in countries:
         same_region = [o for o in countries if o["region"] == c["region"] and o["id"] != c["id"]]
-        write(f"country/{c['id']}.html", "country.html", c=c, same_region=same_region, loc=geo.locator(c["id"]))
-    write("country/index.html", "country_index.html", by_region=by_region)
-    write("junbi.html", "junbi.html", countries=countries)
-    write("genchi.html", "genchi.html", countries=countries)
-    write("mochimono.html", "mochimono.html", packing=PACKING)
+        write(f"country/{c['id']}.html", "country.html", c=c, same_region=same_region, loc=geo.locator(c["id"]),
+              crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html"), (c["name"], f"country/{c['id']}.html")])
+    write("country/index.html", "country_index.html", by_region=by_region,
+          crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html")])
+    write("junbi.html", "junbi.html", countries=countries, crumbs=[("トップ", "index.html"), ("出発までの準備", "junbi.html")])
+    write("genchi.html", "genchi.html", countries=countries, crumbs=[("トップ", "index.html"), ("現地に着いたら", "genchi.html")])
+    write("mochimono.html", "mochimono.html", packing=PACKING, crumbs=[("トップ", "index.html"), ("持ち物", "mochimono.html")])
     for name in ("about", "operator", "privacy", "contact"):
         write(f"{name}.html", f"{name}.html")
     write("404.html", "404.html")

@@ -1,0 +1,47 @@
+{
+  "id": "sweden",
+  "steps": [
+    {
+      "title": "個人番号（personnummer）の登録をする",
+      "body": "1年以上スウェーデンに滞在する予定の人は、税務庁（Skatteverket）のサービスセンター（servicekontor）で本人確認を行い、住民登録（folkbokföring）とpersonnummerの発行を申請する。パスポートと移民局発行の滞在許可証（uppehållstillståndskort）を持参し、事前予約が必要。審査には約4週間かかる。",
+      "url": "https://www.skatteverket.se/privat/folkbokforing/flyttatillsverige.4.76a43be412206334b89800018617.html"
+    },
+    {
+      "title": "1年未満の滞在ならコーディネーション番号（samordningsnummer）を申請する",
+      "body": "住民登録の対象にならない短期滞在者でも、就労先などの求めに応じて税務庁でsamordningsnummer（コーディネーション番号）を取得できる。personnummerと同じServicekontorの予約枠（Boka tid för flytt till Sverige och samordningsnummer）から申請する。",
+      "url": "https://www.skatteverket.se/privat/folkbokforing/flyttatillsverige.4.76a43be412206334b89800018617.html"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在スウェーデン日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（救急車・警察・消防共通の緊急通報番号）。医療相談は24時間対応の「1177」（英語対応可）",
+    "summary": "スウェーデンでは地域医療センター（vårdcentral）がかかりつけ医の役割を担い、通常の診療はまずここを受診する。24時間対応の医療相談電話「1177」で症状に応じた受診先の案内を受けられる。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "https://arbetsformedlingen.se/other-languages/english-engelska/working-in-sweden/pay-and-benefits",
+    "channels": [
+      {
+        "name": "Platsbanken（スウェーデン公共職業安定所Arbetsförmedlingenの求人検索）",
+        "url": "https://www.arbetsformedlingen.se/platsbanken",
+        "note": "スウェーデン政府機関Arbetsförmedlingenが運営する公的求人検索サイト"
+      }
+    ],
+    "rules": [
+      "スウェーデンには法定最低賃金が無く、賃金・残業手当・休暇などは産業別の労働協約（kollektivavtal）によって職場ごとに定められる",
+      "多くの職場では年に1度、個人の給与について雇用主と交渉する機会がある"
+    ]
+  },
+  "sources": [
+    {"title": "Flytta till Sverige (personnummer/samordningsnummer) - Skatteverket", "url": "https://www.skatteverket.se/privat/folkbokforing/flyttatillsverige.4.76a43be412206334b89800018617.html", "checked": "2026-10-05"},
+    {"title": "Pay and benefits - Working in Sweden, Arbetsförmedlingen", "url": "https://arbetsformedlingen.se/other-languages/english-engelska/working-in-sweden/pay-and-benefits", "checked": "2026-10-05"},
+    {"title": "Platsbanken - Arbetsförmedlingen", "url": "https://www.arbetsformedlingen.se/platsbanken", "checked": "2026-10-05"},
+    {"title": "スウェーデン｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/sweden.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}

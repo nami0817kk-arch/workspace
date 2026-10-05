@@ -33,7 +33,7 @@
     "channels": [
       {
         "name": "JobsIreland（アイルランド政府の求人サイト、Department of Social Protection運営）",
-        "url": "https://www.jobsireland.ie/en-US/",
+        "url": "https://jobsireland.ie/",
         "note": "公的機関が運営する求人検索・応募サイト"
       }
     ],
@@ -45,13 +45,45 @@
     ]
   },
   "sources": [
-    {"title": "Get a Personal Public Service (PPS) Number - Gov.ie", "url": "https://www.gov.ie/en/department-of-social-protection/services/get-a-personal-public-service-pps-number/", "checked": "2026-10-05"},
-    {"title": "National Minimum Wage - Workplace Relations Commission", "url": "https://www.workplacerelations.ie/en/what_you_should_know/hours-and-wages/national%20minimum%20wage/", "checked": "2026-10-05"},
-    {"title": "Find a GP in Ireland - HSE.ie", "url": "https://www2.hse.ie/services/find-a-gp/", "checked": "2026-10-05"},
-    {"title": "JobsIreland.ie", "url": "https://www.jobsireland.ie/en-US/", "checked": "2026-10-05"},
-    {"title": "アイルランド｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/ireland.html", "checked": "2026-10-05"},
-    {"title": "アイルランド滞在許可登録手続きについて - 在アイルランド日本国大使館", "url": "https://www.ie.emb-japan.go.jp/itpr_ja/00_000596.html", "checked": "2026-10-05"},
-    {"title": "Registering your immigration permission - Immigration Service Delivery", "url": "https://www.irishimmigration.ie/registering-your-immigration-permission/", "checked": "2026-10-05"},
-    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+    {
+      "title": "Get a Personal Public Service (PPS) Number - Gov.ie",
+      "url": "https://www.gov.ie/en/department-of-social-protection/services/get-a-personal-public-service-pps-number/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "National Minimum Wage - Workplace Relations Commission",
+      "url": "https://www.workplacerelations.ie/en/what_you_should_know/hours-and-wages/national%20minimum%20wage/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Find a GP in Ireland - HSE.ie",
+      "url": "https://www2.hse.ie/services/find-a-gp/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "JobsIreland.ie",
+      "url": "https://www.jobsireland.ie/en-US/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "アイルランド｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/ireland.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "アイルランド滞在許可登録手続きについて - 在アイルランド日本国大使館",
+      "url": "https://www.ie.emb-japan.go.jp/itpr_ja/00_000596.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Registering your immigration permission - Immigration Service Delivery",
+      "url": "https://www.irishimmigration.ie/registering-your-immigration-permission/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
   ]
 }

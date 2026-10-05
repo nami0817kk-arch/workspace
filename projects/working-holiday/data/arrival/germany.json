@@ -77,7 +77,7 @@
     ]
   },
   "jobs": {
-    "min_wage": "法定最低賃金 時給13.90ユーロ（2026年1月1日適用開始、2027年1月1日に14.60ユーロへ引き上げ予定）",
+    "min_wage": "法定最低賃金 時給13.90ユーロ（2026年1月1日から）",
     "min_wage_url": "https://www.bmas.de/DE/Arbeit/Arbeitsrecht/Mindestlohn/mindestlohn.html",
     "channels": [
       {
@@ -93,11 +93,35 @@
     ]
   },
   "sources": [
-    {"title": "Anmeldung (residence registration) - Willkommenszentrum Berlin", "url": "https://willkommenszentrum.berlin.de/en/housing/anmeldung-residence-registration", "checked": "2026-10-05"},
-    {"title": "Mindestlohn: Höhe, Anspruch und aktuelle Regelungen - BMAS", "url": "https://www.bmas.de/DE/Arbeit/Arbeitsrecht/Mindestlohn/mindestlohn.html", "checked": "2026-10-05"},
-    {"title": "Ein Bank-Konto für Jedermann: Basiskonto - BaFin", "url": "https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Verbrauchermitteilung/LeichteSprache/Kurzinfos/kurzinfo_basiskonto.html", "checked": "2026-10-05"},
-    {"title": "Jobbörse - Bundesagentur für Arbeit", "url": "https://www.arbeitsagentur.de/jobsuche/", "checked": "2026-10-05"},
-    {"title": "ドイツ｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html", "checked": "2026-10-05"},
-    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+    {
+      "title": "Anmeldung (residence registration) - Willkommenszentrum Berlin",
+      "url": "https://willkommenszentrum.berlin.de/en/housing/anmeldung-residence-registration",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Mindestlohn: Höhe, Anspruch und aktuelle Regelungen - BMAS",
+      "url": "https://www.bmas.de/DE/Arbeit/Arbeitsrecht/Mindestlohn/mindestlohn.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Ein Bank-Konto für Jedermann: Basiskonto - BaFin",
+      "url": "https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Verbrauchermitteilung/LeichteSprache/Kurzinfos/kurzinfo_basiskonto.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Jobbörse - Bundesagentur für Arbeit",
+      "url": "https://www.arbeitsagentur.de/jobsuche/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ドイツ｜外務省 世界の医療事情",
+      "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
   ]
 }

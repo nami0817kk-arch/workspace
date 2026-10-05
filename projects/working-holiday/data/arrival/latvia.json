@@ -1,0 +1,60 @@
+{
+  "id": "latvia",
+  "steps": [
+    {
+      "title": "滞在許可証（Residence Permit）の登録",
+      "body": "180日間のうち90日を超えて滞在する場合は滞在許可証（residence permit）が必要。ワーキング・ホリデー査証でラトビアに入国した後、市民・移民業務局（OCMA/PMLP）で予約のうえ滞在許可証カードを受け取る手続きを行う。必要書類・生活費要件・手数料はPMLP公式ページで確認する。",
+      "url": "https://www.pmlp.gov.lv/en/residence-permit"
+    },
+    {
+      "title": "住所の届出（Declaration of Residence）を行う",
+      "body": "ラトビアに住む人は市民・移民業務局（PMLP/OCMA）、または居住地の地方自治体の登録窓口で住所の届出（declaration of residence）を行う。第三国籍者は本人が直接、旅券など有効な身分証明書を提示して届け出る必要がある。州手数料は4.27ユーロ（電子サービス経由での届出は無料）。",
+      "url": "https://www.pmlp.gov.lv/en/services/declaration-residence-office-citizenship-and-migration-affairs"
+    },
+    {
+      "title": "基本口座（Basic Account）を開設する",
+      "body": "EU居住者は、ラトビアの金融機関に事業目的以外の個人用「基本口座（pamata konts）」の開設を申請する権利がある。国籍や居住地を理由にした拒否は禁止されており、金融機関は必要書類の受領から10営業日以内に開設可否を決める。同時に複数の基本口座は保有できない。",
+      "url": "https://www.bank.lv/en/operational-areas/customer-protection/customer-basic-account-services"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在ラトビア日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（警察・消防・救急共通の緊急通報番号）",
+    "summary": "首都リーガは高緯度ながらバルト海の影響で比較的温暖だが、冬季は氷点下20度以下まで冷え込むこともあり、暖房で室内が乾燥するため風邪などに注意が必要。水道水は石灰分等を多く含むためそのままの飲用は避け、ミネラルウォーターの使用が勧められている。市内の衛生状態は良好でレストランでの外食も問題ない。医療施設では一部英語が通じるが、主にラトビア語またはロシア語が使われる。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金 月額780ユーロ（2026年1月1日適用開始、740ユーロから引き上げ）。最低時給は固定ではなく、月間の所定労働時間（週40時間・週35時間など勤務形態ごとに異なる）に応じて月額780ユーロから算出される。",
+    "min_wage_url": "https://www.lm.gov.lv/en/minimum-monthly-wage",
+    "channels": [
+      {
+        "name": "NVA CV un vakanču portāls（国立雇用庁 CV・求人ポータル）",
+        "url": "https://cvvp.nva.gov.lv",
+        "note": "ラトビア国立雇用庁（NVA）が運営する求人データベース。ログインなしで求人検索が可能で、求人票には勤務地・雇用形態・給与の記載がある"
+      },
+      {
+        "name": "Nodarbinātības valsts aģentūra（国立雇用庁 NVA）公式サイト",
+        "url": "https://www.nva.gov.lv/en",
+        "note": "求人検索のほか、求職者としての各種手続き（e-サービス）の案内"
+      }
+    ],
+    "rules": [
+      "法定最低賃金（minimālā alga）は内閣規則（Cabinet Regulation）により定められ、毎年見直される",
+      "最低時給は固定値ではなく、その月の所定労働時間数に基づいて算出される"
+    ]
+  },
+  "sources": [
+    {"title": "The minimum wage in Latvia will be 780 euros - Ministry of Welfare (LM)", "url": "https://www.lm.gov.lv/en/minimum-monthly-wage", "checked": "2026-10-05"},
+    {"title": "Declaration of residence (Office of Citizenship and Migration Affairs) - PMLP", "url": "https://www.pmlp.gov.lv/en/services/declaration-residence-office-citizenship-and-migration-affairs", "checked": "2026-10-05"},
+    {"title": "Residence Permit - PMLP", "url": "https://www.pmlp.gov.lv/en/residence-permit", "checked": "2026-10-05"},
+    {"title": "Customer basic account services - Latvijas Banka", "url": "https://www.bank.lv/en/operational-areas/customer-protection/customer-basic-account-services", "checked": "2026-10-05"},
+    {"title": "NVA CV and Vacancy Portal", "url": "https://cvvp.nva.gov.lv", "checked": "2026-10-05"},
+    {"title": "State Employment Agency (NVA)", "url": "https://www.nva.gov.lv/en", "checked": "2026-10-05"},
+    {"title": "ラトビア｜外務省 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/latvia.html", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}
