@@ -980,6 +980,20 @@ body.stg .telop{filter:brightness(1.12)}
 /* 関わった回数の文は、顔の列ではなく下の段に横いっぱいで（2026-10-05 実機で縦に1字ずつ折れていた）。2つのボタンも横いっぱいに */
 .trow2 .touchn{grid-column:1/3;grid-row:4}
 .trow2 .tacts.t2{grid-template-columns:repeat(2,1fr)}
+
+/* 講評の作り込み（2026-10-05 指摘「講評の作り込みが雑」） */
+.crbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 10px}.crbar .btn-s{flex:1 1 auto;width:auto;margin:0}.crbar .small{flex-basis:100%}
+.crow{align-items:flex-start}.crow>.face{margin-top:4px}
+.crk{display:inline-block;margin-right:6px;font-size:12px;font-weight:800;color:var(--gold)}
+.crsc.hi{color:var(--ok)}.crsc.lo{color:var(--bad)}
+.crfx{margin-top:6px;font-size:12.5px;line-height:1.6;padding:6px 8px;border-radius:8px;background:var(--card2);border:1px solid var(--line)}
+.crfx .crc{display:block;color:var(--bad)}.crfx .crhint{display:block;color:var(--gold);font-weight:700}.crfx .crhint.ok{color:var(--ok)}
+.crsum{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 10px}
+.crs{font-size:13px;font-weight:800;padding:2px 10px;border-radius:999px;border:1px solid var(--line)}.crs.ok{color:var(--ok)}.crs.ng{color:var(--bad)}
+.crb{display:inline-block;margin-left:6px;font-size:12px;font-weight:800;padding:0 8px;border-radius:999px}
+.crb.ok{background:var(--ok);color:var(--ok-fg)}.crb.ng{background:var(--bad);color:#fff}
+.crres.isok{border-color:var(--ok)}.crres.isng{border-color:var(--bad)}
+.crsk{font-size:12.5px;margin-top:4px}.crsk .up{color:var(--ok)}.crsk .dn{color:var(--bad)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1488,7 +1502,7 @@ function critMates(S,t){var st=S.stage,r=st.res[t.id];
 function critPick(S,arr){var u=S.critSeen||(S.critSeen={}),c=arr.filter(function(x){return !u[x];});if(!c.length){arr.forEach(function(x){delete u[x];});c=arr;}var x=pick(c);u[x]=1;return x;}
 function applyCritique(S){
   var out=[];
-  alive(S).forEach(function(t){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id],tp=t.temper,pot=t.pot,r=S.stage.res[t.id],sc=r?r.sc:60,hi=sc>=70,tag=hi?'hi':'lo',sk=t.spec==='t'?'e':t.spec,wk=weakest(t),oth=null,sayK=hi?'hi':'lo';
+  alive(S).forEach(function(t){var b0={trust:t.trust,conf:t.conf,fat:t.fat,sk:t.st.v+t.st.d+t.st.r+t.st.e},best0=critBest(t);var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id],tp=t.temper,pot=t.pot,r=S.stage.res[t.id],sc=r?r.sc:60,hi=sc>=70,tag=hi?'hi':'lo',sk=t.spec==='t'?'e':t.spec,wk=weakest(t),oth=null,sayK=hi?'hi':'lo';
     if(c===0){ if(tp==='makezu'){t.conf+=6;t.trust+=hi?2:-2;t.complacent=true;} else if(tp==='ochoshi'){t.conf+=12;t.trust+=4;if(R()<.5)t.complacent=true;} else if(tp==='sensai'){t.conf+=15;t.trust+=6;} else {t.conf+=10;t.trust+=3;} }
     else if(c===1){ t.focus=wk;t.st[wk]=Math.min(99,t.st[wk]+2*pot);t.conf+=tp==='makezu'?3:tp==='sensai'?-5:-1;t.trust+=tp==='sensai'?2:5; }
     else if(c===2){ var g=tp==='makezu'?2.5:tp==='sunao'?1:.8;['v','d','r','e'].forEach(function(k){t.st[k]=Math.min(99,t.st[k]+g*pot);});t.fat+=8;
@@ -1520,7 +1534,8 @@ function applyCritique(S){
     var on=oth?oth.o.giv:'',fill=function(s){return s.replace(/\{D\}/g,pick(CRIT_SPD[t.spec])).replace(/\{W\}/g,pick(CRIT_WKD[wk])).replace(/\{O\}/g,on);};
     var sy=CRIT_SAY[c],say=fill(critPick(S,sy[sayK]||sy.all||sy.hi));
     var rx=(c===0||c===4)&&(tag==='hi'||tag==='ok')&&R()<.3?critPick(S,CRIT_SPRX[t.spec]):critPick(S,critRx(tp,c,tag));rx=fill(rx);
-    out.push({id:t.id,txt:rx,c:c,say:say});logT(S,t,'講評「'+CRIT[c][0]+'」→ '+rx);
+    var dl=[['信頼',Math.round(t.trust-b0.trust)],['自信',Math.round(t.conf-b0.conf)],['疲れ',Math.round(t.fat-b0.fat)]].filter(function(x){return x[1];}),dsk=Math.round((t.st.v+t.st.d+t.st.r+t.st.e-b0.sk)*10)/10;
+    out.push({id:t.id,txt:rx,c:c,say:say,d:dl,dsk:dsk,ng:tag==='ng',best:best0>=0&&c===best0,known:best0>=0});logT(S,t,'講評「'+CRIT[c][0]+'」→ '+rx);
     t.temperRev=true;
   });
   S.critRes=out;S.critDone=true;
@@ -4534,12 +4549,21 @@ function vCritique(){
   var A=alive(S).sort(function(a,b){return S.stage.res[b.id].sc-S.stage.res[a.id].sc;});
   var h='<h2>講評</h2><p class="small muted">ひとりずつ言葉を返します。同じ言葉でも、気質によって受け止め方が変わります。</p>';
   if(S.critDone){
-    S.critRes.forEach(function(r){var t=S.tr[r.id];h+='<div class="card pl"><div class="top">'+face(t)+'<div class="who"><div class="nm">'+esc(t.name)+' <span class="tag lt">'+CRIT[r.c][0]+'</span> <span class="tag lt">'+TEMPER[t.temper]+'</span></div>'+(r.say?'<div class="csay small">'+(CRIT[r.c][4]?esc(r.say):'あなた：「'+esc(r.say)+'」')+'</div>':'')+'<div class="react" data-a="say" data-id="'+r.id+'">'+sayIcon(r.txt)+esc(r.txt)+'</div></div></div></div>';});
+    var nB=S.critRes.filter(function(r){return r.best&&!r.ng;}).length,nN=S.critRes.filter(function(r){return r.ng;}).length;
+    h+='<div class="crsum"><span class="crs ok">合った ★ '+nB+'人</span><span class="crs ng">裏目 '+nN+'人</span><span class="small muted">気質はこの講評で全員分かった</span></div>';
+    S.critRes.forEach(function(r){var t=S.tr[r.id];
+      var badge=r.ng?'<span class="crb ng">裏目</span>':r.best?'<span class="crb ok">★ 合った</span>':'';
+      h+='<div class="card pl crres'+(r.ng?' isng':r.best?' isok':'')+'"><div class="top">'+face(t)+'<div class="who"><div class="nm">'+esc(t.name)+' <span class="tag lt">'+CRIT[r.c][0]+'</span> <span class="tag lt">'+TEMPER[t.temper]+'</span>'+badge+'</div>'+(r.say?'<div class="csay small">'+(CRIT[r.c][4]?esc(r.say):'あなた：「'+esc(r.say)+'」')+'</div>':'')+'<div class="react" data-a="say" data-id="'+r.id+'">'+sayIcon(r.txt)+esc(r.txt)+'</div>'+
+        (r.d?gauges(t,r.d):'')+(r.dsk?'<div class="crsk">能力 <b class="'+(r.dsk>0?'up':'dn')+'">'+(r.dsk>0?'+':'')+r.dsk+'</b>（4つの合計）</div>':'')+'</div></div></div>';});
     h+='<button class="btn" data-a="tojudge">'+nextLbl(S)+'</button>';return h;
   }
-  h+='<p class="small muted">最初は全員「課題を伝える」です。気質が分かっている子には、合う講評に ★ を付けています。顔を押すと詳しく見られます。</p><div class="card">';
-  A.forEach(function(t){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id];
-    h+='<div class="jrow">'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.name)+'</div><div class="small muted">出来 '+S.stage.res[t.id].sc+'・気質 '+(t.temperRev?TEMPER[t.temper]:'?')+'</div><div class="seg crg">'+CRIT.map(function(o,i){return '<button class="cr'+i+(c===i?' on':'')+(critBest(t)===i?' best':'')+'" data-a="crit" data-id="'+t.id+'" data-v="'+i+'" aria-label="'+o[0]+'">'+(critBest(t)===i?'★':'')+o[3]+'</button>';}).join('')+'</div></div></div>';});
+  var nStar=A.filter(function(t){return critBest(t)>=0;}).length,nOn=A.filter(function(t){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id];return critBest(t)>=0&&c===critBest(t);}).length;
+  h+='<p class="small muted">最初は全員「課題を伝える」です。気質が分かっている子には、合う講評に ★ を付けています。顔を押すと詳しく見られます。</p>';
+  h+='<div class="crbar"><button class="btn-s" data-a="critstar" '+(nStar?'':'disabled')+'>★ おすすめにする（'+nOn+' / '+nStar+'人）</button><button class="btn-s" data-a="critall" data-v="1">全員「課題」に戻す</button>'+
+    '<span class="small muted">'+(nStar?'気質の分からない子は、そのままです':'まだ気質の分かっている子がいません。講評のあとで全員分かります')+'</span></div><div class="card">';
+  A.forEach(function(t,ri){var c=S.crit[t.id]==null?critDefault(t):S.crit[t.id],bst=critBest(t),sc=S.stage.res[t.id].sc;
+    var eff='<div class="crfx"><b>'+CRIT[c][0]+'</b>：'+CRIT[c][1]+'<span class="crc">代償：'+CRIT[c][2]+'</span>'+(bst>=0&&bst!==c?'<span class="crhint">★は「'+CRIT[bst][0]+'」</span>':bst===c?'<span class="crhint ok">★ この子に合う</span>':'')+'</div>';
+    h+='<div class="jrow crow">'+face(t,'sm')+'<div class="mid"><div class="nm"><span class="crk">'+(ri+1)+'位</span>'+esc(t.name)+' '+tag(t.spec)+'</div><div class="small muted">出来 <b class="crsc '+(sc>=85?'hi':sc<60?'lo':'')+'">'+sc+'</b>・気質 '+(t.temperRev?TEMPER[t.temper]:'?')+'</div><div class="seg crg">'+CRIT.map(function(o,i){return '<button class="cr'+i+(c===i?' on':'')+(critBest(t)===i?' best':'')+'" data-a="crit" data-id="'+t.id+'" data-v="'+i+'" aria-label="'+o[0]+'">'+(critBest(t)===i?'★':'')+o[3]+'</button>';}).join('')+'</div>'+eff+'</div></div>';});
   h+='</div>';
   h+='<div class="note crl">'+CRIT.map(function(o){return '<div><b>'+o[0]+'</b>　'+o[1]+'。<span class="crc">代償：'+o[2]+'</span></div>';}).join('')+'<div class="small muted">同じ講評でも、出来の良し悪しで返し方が変わります。</div></div>';
   h+='<div class="foot"><div class="in"><div class="cnt">講評 <b>'+A.length+'</b>人</div><button class="btn" data-a="critok">講評を伝える</button></div></div>';
@@ -5371,6 +5395,8 @@ document.addEventListener('click',function(ev){
     case 'iv':go(function(){S.interview[id]=+v;});break;
     case 'ivok':go(function(){applyInterview(S);});window.scrollTo(0,0);break;
     case 'tocrit':go(function(){applyFeature(S);if(ROUNDS[S.rnd].crit)S.phase='critique';else toNight(S);});window.scrollTo(0,0);break;
+    case 'critstar':go(function(){alive(S).forEach(function(t){var b=critBest(t);if(b>=0)S.crit[t.id]=b;});});toast('★の付いている子を、おすすめの講評にそろえた');break;
+    case 'critall':go(function(){alive(S).forEach(function(t){S.crit[t.id]=+v;});});break;
     case 'crit':go(function(){S.crit[id]=+v;});break;
     case 'critok':go(function(){applyCritique(S);});window.scrollTo(0,0);break;
     case 'tojudge':go(function(){toNight(S);});window.scrollTo(0,0);break;
