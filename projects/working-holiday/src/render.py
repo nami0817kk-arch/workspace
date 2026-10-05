@@ -331,9 +331,12 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
                         if c["id"] in COMPARE_TOP and o["id"] in COMPARE_TOP and o["id"] != c["id"]]
     write("index.html", "index.html", countries=countries, by_region=by_region,
           world=geo.world(), europe=geo.europe())
-    for c in countries:
+    for i, c in enumerate(countries):
         same_region = [o for o in countries if o["region"] == c["region"] and o["id"] != c["id"]]
+        prev_c = countries[i - 1] if i > 0 else None
+        next_c = countries[i + 1] if i + 1 < len(countries) else None
         write(f"country/{c['id']}.html", "country.html", c=c, same_region=same_region, loc=geo.locator(c["id"]),
+              prev=prev_c, next=next_c,
               crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html"), (c["name"], f"country/{c['id']}.html")])
     write("country/index.html", "country_index.html", by_region=by_region,
           crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html")])
