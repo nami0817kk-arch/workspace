@@ -56,6 +56,21 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .stage canvas{display:block;width:100%;height:100%}
 .chip{position:absolute;top:8px;left:8px;background:rgba(15,10,6,.72);color:#fff;border-radius:12px;padding:5px 10px;font-size:12px;pointer-events:none;max-width:62%;backdrop-filter:blur(2px)}
 .chip b{font-size:14px}
+.pacechip{position:absolute;top:58px;left:8px;border:0;border-radius:12px;padding:4px 10px 5px;font:inherit;font-size:12px;font-weight:800;line-height:1.2;text-align:left;color:#fff;background:linear-gradient(135deg,#2f7a3e,#46a35a);box-shadow:0 0 0 2px rgba(255,255,255,.22);cursor:pointer;display:none}
+.pacechip b{font-size:15px}
+.pacechip small{display:block;font-size:11px;font-weight:700;opacity:.9}
+.pacechip.behind{background:linear-gradient(135deg,#a2531c,#d07a2c)}
+.powbtn{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline dotted rgba(255,255,255,.4);text-underline-offset:3px}
+.pw-row{display:flex;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
+.pw-row span{flex:1;min-width:0}
+.pw-row small{display:block;color:var(--muted);font-size:12px}
+.pw-row b{font-size:16px}
+.pw-row.hi b{color:var(--good)}
+.pw-tot{display:flex;justify-content:space-between;font-weight:800;font-size:16px;padding:8px 2px 2px}
+.pace-t{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.pace-t td,.pace-t th{padding:5px 4px;border-bottom:1px solid var(--line);text-align:right}
+.pace-t td:first-child,.pace-t th:first-child{text-align:left}
+.pace-t .fast{color:var(--good);font-weight:800}
 .hpbar{height:5px;background:rgba(255,255,255,.22);border-radius:3px;margin-top:4px;overflow:hidden}
 .hpbar i{display:block;height:100%;width:100%;background:#ffd166;border-radius:3px}
 .boostchip{position:absolute;top:8px;right:22px;background:linear-gradient(135deg,#5646c2,#7a66e8);color:#fff;border:0;border-radius:12px;padding:5px 10px 6px;font:inherit;font-size:16px;font-weight:800;line-height:1.15;text-align:right;display:none;box-shadow:0 0 0 2px rgba(255,255,255,.25);cursor:pointer;min-width:96px}
@@ -288,11 +303,12 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
       <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.4 7.4 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7.4 7.4 0 0 0 1.7-1l2.4 1 2-3.4zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
     </button>
   </header>
-  <div class="substats"><span>深さ <b id="sDepth">0m</b>（最深 <span id="sBest">0m</span>）</span><span>仲間の力 <b id="sDps">0</b>／秒</span></div>
+  <div class="substats"><span>深さ <b id="sDepth">0m</b>（最深 <span id="sBest">0m</span>）</span><button class="powbtn" id="powBtn" type="button" aria-label="仲間の力の内訳">仲間の力 <b id="sDps">0</b>／秒 ›</button></div>
 
   <div class="stage" id="stage">
     <canvas id="cv" aria-label="地層の断面。仲間が掘り進める"></canvas>
     <div class="chip"><b id="cLayer">第1層 表土</b> <span id="cDepth"></span><div class="hpbar"><i id="cHp"></i></div></div>
+    <button class="pacechip" id="paceChip" type="button" aria-label="先代との比べっこ"></button>
     <button class="boostchip" id="boostChip" type="button" aria-label="採掘の倍率の詳しい表示"></button>
     <div class="bentochip" id="bentoChip">弁当×2 30:00</div>
     <div class="hint" id="hint">仲間が自動で掘ります</div>
@@ -349,6 +365,13 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
     <h2 id="bmTitle">採掘の倍率</h2>
     <div id="bmBody"></div>
     <div class="row"><button class="x2 adgo" id="bmMore" type="button"></button><button class="ok" id="bmClose" type="button">閉じる</button></div>
+  </div>
+</div>
+<div class="modal" id="pwModal" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+  <div class="sheet">
+    <h2 id="pwTitle">仲間の力の内訳</h2>
+    <div id="pwBody"></div>
+    <div class="row"><button class="ok" id="pwClose" type="button">閉じる</button></div>
   </div>
 </div>
 <div class="modal" id="setModal" role="dialog" aria-modal="true" aria-labelledby="setTitle">
@@ -574,7 +597,7 @@ const fresh = () => ({
   boosts:[], boostAt:0, last:NOW(),
   own:{}, bento:0, bentoUntil:0, iapGot:{},
   heir:[], mapTo:0, genStat:{ species:0, crits:0 }, passTold:false,
-  gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
+  gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[], lt:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0, play:0, best1:0 },
   sound:true, vol:2, bgm:2, amb:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false, crewArt:true,
 });
@@ -610,6 +633,8 @@ function normalize(o){
   S.st = Object.assign(fresh().st, S.st || {});
   if (!Array.isArray(S.creed)) S.creed = [];
   if (!Array.isArray(S.history)) S.history = [];
+  if (!Array.isArray(S.lt)) S.lt = [];
+  S.lt = S.lt.map(v => typeof v === 'number' && isFinite(v) && v >= 0 ? v : null).slice(0, 200);
   if (!S.roomEver || typeof S.roomEver !== 'object') S.roomEver = {};
   return S;
 }
@@ -665,7 +690,10 @@ function calcMods(st){
   m.crew *= fm; m.ore *= (1 + m.book * speciesCountOf(st));
   return m;
 }
-const fameMul = f => 1 + 0.1 * f;
+// 名声の倍率（2026-10-05「代替わりの効果があまり感じられない」）。前は 1+0.1×名声 で、1回目の代替わり（名声10）が ×2＝深さにして8m ぶんしか効かず、
+// 代替わり直後の数分が初代と同じに見えた。序盤ほど強く効く形にして、名声10 で ×4.4（最後の方は前とほぼ同じ）
+const FM_A = +(ENV.FM_A || 0.6), FM_P = +(ENV.FM_P || 0.75);
+const fameMul = f => 1 + FM_A * Math.pow(f, FM_P);
 // 岩盤は Lv が届けばすぐ割れる（固さは普通のブロックと同じ）。待ちは Lv の関門だけ（2026-10-03「掘れなくなる時がある」）
 const hpOf = (st, d, M) => baseHp(d);
 const oreOf = (st, d, M) => Math.ceil(oreRaw(d)) * (isBed(d) ? 5 : 1) * (M || mods(st)).ore;
@@ -771,7 +799,11 @@ function applyDamage(st, dmg, out, fx){
       st.ore += g; st.total += g; if (out) { out.ore += g; out.meters++; }
       st.depth++; st.st.blocks++;
       if (isBed(d)) st.st.beds++;
-      if (st.depth > st.genDepth) st.genDepth = st.depth;
+      if (st.depth > st.genDepth) {
+        st.genDepth = st.depth;
+        // この代で10m ごとに着いた時刻（代の始まりからの秒）。先代と比べて「速くなった」を見せる
+        if (st.genDepth % 10 === 0) { const k = st.genDepth / 10; st.lt = st.lt || []; if (st.lt[k] == null) st.lt[k] = Math.max(0, Math.round(((LT_NOW ? LT_NOW() : NOW()) - st.genStart) / 1000)); }
+      }
       if (st.depth > st.best) st.best = st.depth;
       if (fx) fx.brk(d, g, jack);
       const before = speciesCountOf(st);
@@ -781,6 +813,19 @@ function applyDamage(st, dmg, out, fx){
     } else { st.dmg += dmg; dmg = 0; }
   }
 }
+let LT_NOW = null;   // 留守の計算の途中では、着いた時刻を留守の間に割り振る
+// 先代の同じ時刻の深さ（lt は10m ごとの着いた秒）。記録がなければ null
+function paceAt(lt, t){
+  if (!lt || !lt.length) return null;
+  let d = 0, t0 = 0;
+  for (let k = 1; k < lt.length; k++) {
+    if (lt[k] == null) continue;
+    if (lt[k] > t) return Math.floor(d + 10 * (t - t0) / Math.max(1, lt[k] - t0));
+    d = k * 10; t0 = lt[k];
+  }
+  return d;
+}
+const prevGen = st => st.history && st.history.length ? st.history[st.history.length - 1] : null;
 // 開いている間の1フレーム
 function tick(st, dt, fx){
   const d = crewDps(st, true) * runMul(st) * dt;
@@ -797,7 +842,9 @@ function simulateAway(st, sec){
   const eL = left(st.bentoUntil || 0), em = BENTO_X - 1, bls = boostLive(st).map(left);
   const total = dps * (sec + bls.reduce((a, b) => a + b, 0) + eL * em + em * bls.reduce((a, b) => a + Math.min(b, eL), 0));
   const steps = 60;
-  for (let i = 0; i < steps; i++) applyDamage(s2, total / steps * mapMul(s2), out, null);
+  const t0 = NOW() - sec * 1000;
+  try { for (let i = 0; i < steps; i++) { LT_NOW = () => t0 + (i + 1) / steps * sec * 1000; applyDamage(s2, total / steps * mapMul(s2), out, null); } }
+  finally { LT_NOW = null; }
   out.stuck = locked(s2);
   out.state = s2;
   return out;
@@ -949,9 +996,9 @@ function rebirth(st, creed, heir, fameX){
   const prev = { pick: st.pick, ore: st.ore, depth: st.genDepth, top };
   let took = null;
   if (heir && HEIRS[heir.k] && takeHeir(st, heir.k, heir.drop)) took = { k: heir.k, lv: heirLv(st, heir.k) };
-  st.history.push({ gen:st.gen, depth:st.genDepth, fame:g, species:speciesCountOf(st), start:st.genStart, end:NOW(), creed:st.creed.slice(), heir:took, crew:tot, pick:st.pick });
+  st.history.push({ gen:st.gen, depth:st.genDepth, fame:g, species:speciesCountOf(st), start:st.genStart, end:NOW(), creed:st.creed.slice(), heir:took, crew:tot, pick:st.pick, lt:(st.lt || []).slice() });
   st.fame += g; st.gen++;
-  Object.assign(st, { ore:START_ORE, depth:0, dmg:0, side:0, pick:1, w:startCrew(), room:{}, genDepth:0, genStart:NOW(), recTold:false, passTold:false });
+  Object.assign(st, { ore:START_ORE, depth:0, dmg:0, side:0, pick:1, w:startCrew(), room:{}, genDepth:0, genStart:NOW(), recTold:false, passTold:false, lt:[] });
   st.creed = (creed || st.creed).slice(0, creedSlots(st.gen - 1));
   // 家宝の効き目（受け継いだ代の始まりに付く）
   const lp = heirLv(st, 'pick'), lr = heirLv(st, 'roster'), ls = heirLv(st, 'safe');
@@ -1447,6 +1494,7 @@ function updateUI(force){
   const li = layerIdxForDepth(S.depth);
   $('cLayer').textContent = isBed(S.depth) ? '岩盤' : isRoom(S.depth) && !S.room[S.depth] ? '宝の部屋' : `第${li + 1}層 ${LAYERS[li].name}`;
   $('cDepth').textContent = S.depth + 'm';
+  updatePace();
   $('cHp').style.width = Math.max(0, 100 - S.dmg / hpOf(S, S.depth, M) * 100).toFixed(1) + '%';
   updateGoal();
   // つるはし
@@ -1677,6 +1725,84 @@ $('bentoBtn').addEventListener('click', () => {
   toast(`特製弁当 ×${BENTO_X}`, `${fmtDur((S.bentoUntil - NOW()) / 1000)} 仲間の力が${BENTO_X}倍`, `動画の倍率とも掛け合わさる（手持ち ${S.bento}個）`);
   save(); updateUI(true);
 });
+// ---- 先代との比べっこ（2026-10-05「代替わりの効果があまり感じられない」）----
+// 同じ時間で先代はどこまで掘っていたか（代の始まりからの時刻で比べる。留守の時間も入る）
+function paceInfo(){
+  const pv = prevGen(S);
+  if (!pv || !pv.lt || pv.lt.length < 2) return null;
+  const t = (NOW() - S.genStart) / 1000, gd = paceAt(pv.lt, t);
+  return { pv, t, gd, diff: S.genDepth - gd };
+}
+function updatePace(){
+  const el = $('paceChip'), p = paceInfo();
+  if (!p || titleOpen) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  const ahead = p.diff >= 0;
+  el.classList.toggle('behind', !ahead);
+  const h = ahead ? `先代より <b>${p.diff}m</b> 先<small>先代はいまごろ ${p.gd}m</small>` : `先代まで <b>あと${-p.diff}m</b><small>先代はいまごろ ${p.gd}m</small>`;
+  if (h !== el._h) { el.innerHTML = h; el._h = h; }
+  if ($('pwModal').classList.contains('on') && (el._r = (el._r || 0) + 1) % 5 === 0) renderPow();
+}
+// 仲間の力を、どこから来た倍率かに分ける（外したときとの比で測るので、掛け合わせると今の値になる）
+function powParts(){
+  const M = mods(S), dps = crewDps(S, true, M);
+  const without = o => { const c = Object.assign({}, S, o); return crewDps(c, true, mods(c)); };
+  const ratio = o => { const w = without(o); return w > 0 ? dps / w : 1; };
+  const n = S.w.reduce((a, b) => a + b, 0), raw = S.w.reduce((a, k, i) => a + k * WK[i].dps, 0) * CREW_K;
+  const rows = [
+    { k: 'pick', n: `つるはし Lv${S.pick}`, d: '強くするほど上がる。10Lv ごとに大きく', x: pickMul(S.pick) },
+    { k: 'fame', n: '名声（代替わり）', d: S.gen > 1 ? `名声 ${fmt(S.fame)}。代替わりのたびに増え、ずっと残る` : '代替わりすると付く。ずっと残る', x: fameMul(S.fame), hi: true },
+    { k: 'creed', n: '社訓', d: S.creed.filter(Boolean).map((c, i) => CREEDS[i][c].n).join('・') || 'なし', x: ratio({ creed: [] }) },
+    { k: 'heir', n: '家宝', d: (S.heir || []).map(h => HEIRS[h.k].n + ' Lv' + h.lv).join('・') || 'なし', x: ratio({ heir: [] }) },
+    { k: 'sets', n: '層の組（図鑑）', d: `そろった組 ${setsDone(S).length}`, x: ratio({ found: {} }) },
+    { k: 'canteen', n: '社員食堂', d: '買い切り', x: owns(S, 'canteen') ? 1 + CANTEEN : 1 },
+    { k: 'ad', n: '動画の倍率', d: '1本ごとに＋1倍を30分', x: boostMul(S) },
+    { k: 'bento', n: '特製弁当', d: '30分', x: bentoOn(S) ? BENTO_X : 1 },
+  ];
+  return { n, raw, rows, total: dps * runMul(S) };
+}
+function renderPow(){
+  const P = powParts(), p = paceInfo();
+  const fx = x => x >= 100 ? '×' + fmt(x) : '×' + (x >= 10 ? x.toFixed(1) : x.toFixed(2)).replace(/\.?0+$/, '');
+  let h = `<div class="pw-row"><span>仲間 ${P.n}人・台のもとの力<small>雇うほど増える</small></span><b>${fmt(P.raw)}</b></div>`;
+  h += P.rows.filter(r => Math.abs(r.x - 1) > 0.004 || r.k === 'fame' || r.k === 'pick').map(r =>
+    `<div class="pw-row${r.hi && r.x > 1 ? ' hi' : ''}"><span>${r.n}<small>${r.d}</small></span><b>${fx(r.x)}</b></div>`).join('');
+  h += `<div class="pw-tot"><span>いまの仲間の力</span><span>${fmt(P.total)}／秒</span></div>`;
+  if (p) {
+    const pv = p.pv, rows = [];
+    for (let L = 1; L <= NLAYER; L++) {
+      const k = L * 4, a = S.lt[k], b = pv.lt[k];
+      if (b == null && a == null) continue;
+      rows.push(`<tr><td>第${L}層の底（${L * LAYER_LEN}m）</td><td>${b == null ? '－' : fmtDur(b)}</td><td class="${a != null && b != null && a < b ? 'fast' : ''}">${a == null ? '…' : fmtDur(a)}</td></tr>`);
+    }
+    h += `<div class="sec">先代との比べっこ</div>
+      <p class="sub" style="margin:2px 0 6px">${genName(S.gen)}になってから ${fmtDur(p.t)}。同じだけの時間で、${genName(pv.gen)}は ${p.gd}m、いまは ${S.genDepth}m（${p.diff >= 0 ? p.diff + 'm 先' : 'あと' + (-p.diff) + 'm'}）。</p>
+      <table class="pace-t" id="paceTable"><tr><th>着くまで</th><th>${genName(pv.gen)}</th><th>${genName(S.gen)}</th></tr>${rows.join('')}</table>`;
+  } else if (S.gen === 1) h += `<p class="sub">代替わりすると「名声」の倍率がずっと付き、次の代は同じ深さまでずっと速く掘れます。先代と比べる札も出ます。</p>`;
+  $('pwBody').innerHTML = h;
+}
+function openPow(toPace){ renderPow(); $('pwModal').classList.add('on'); sfx('ui'); focusFirst('pwModal'); const t = toPace && $('paceTable'); if (t) t.previousElementSibling.previousElementSibling.scrollIntoView({ block: 'start' }); }
+$('powBtn').addEventListener('click', () => openPow(false));
+$('paceChip').addEventListener('click', () => openPow(true));
+$('pwClose').addEventListener('click', () => $('pwModal').classList.remove('on'));
+// 層の底に着いたら、先代より何分早いかを知らせる（続けて着いたときは間をあける）
+let paceK = -1, paceToastAt = 0;
+function checkPace(){
+  const k = Math.floor(S.genDepth / LAYER_LEN);
+  if (paceK < 0 || k < paceK) { paceK = k; return; }
+  if (k === paceK) return;
+  const pv = prevGen(S);
+  if (!pv || !pv.lt || NOW() - paceToastAt < 40000) { if (!pv || !pv.lt) paceK = k; return; }
+  paceK = k;
+  const a = S.lt[k * 4], b = pv.lt[k * 4];
+  if (a == null || b == null) return;
+  paceToastAt = NOW();
+  if (a < b) {
+    const r = b / Math.max(1, a);
+    toast('先代より速い', `第${k}層の底まで ${fmtDur(a)}`, `${genName(pv.gen)}は ${fmtDur(b)}${r >= 1.5 ? `（${r >= 10 ? Math.round(r) : r.toFixed(1)}倍の速さ）` : ''}。名声の力`);
+    elderSay(r >= 3 ? `わしは ${fmtDur(b)} かかったぞ…` : '速いのう', r >= 3);
+  } else toast('先代の背中', `第${k}層の底まで ${fmtDur(a)}`, `${genName(pv.gen)}は ${fmtDur(b)}。雇う・鍛えるで追いつける`);
+}
 const mmss = t => { t = Math.max(0, Math.ceil(t)); return t >= 3600 ? `${Math.floor(t / 3600)}:${String(Math.floor(t % 3600 / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` : `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
 // 採掘の倍率の詳しい表示：1本ごとの残りと、これから倍率がどう下がるか
 function renderBoostModal(){
@@ -1734,6 +1860,7 @@ function renderRebirth(){
       <div class="card" style="display:block;margin:0"><div class="cardnote" style="margin:0">いまの仲間の力</div><b style="font-size:20px">×${fameMul(S.fame).toFixed(1)}</b></div>
       <b style="font-size:20px;color:var(--accent)">→</b>
       <div class="card pick" style="display:block;margin:0"><div class="cardnote" style="margin:0">${genName(S.gen + 1)}</div><b style="font-size:20px;color:var(--good)">×${fameMul(S.fame + g).toFixed(1)}</b></div></div>
+    <p class="sub" style="margin:2px 0">名声の倍率は掘る速さに掛かり、鉱石の入り・強化・雇用まで全部速くなります。${(() => { const r = fameMul(S.fame + g) / fameMul(S.fame); return (r >= 1.05 ? `同じ仲間・同じつるはしなら <b>約${r.toFixed(1)}倍</b>の速さ。` : '') + (r < 1.5 ? 'もっと深く掘ってから譲ると、名声がぐっと増えます。' : ''); })()}動画で名声×${AD_FAME}なら <b>×${fameMul(S.fame + g * AD_FAME).toFixed(1)}</b>。</p>
     <p class="sub">戻るもの：深さ・つるはし・仲間・鉱石　／　残るもの：図鑑・かけら・名声・社史・実績</p>
     <div class="sec">${genName(S.gen + 1)}の社訓（組ごとにどちらか1つ）</div>`;
   rbChoice.forEach((c, i) => {
@@ -1801,7 +1928,7 @@ function ceremony(g){
   const el = document.createElement('div');
   el.className = 'cere';
   el.innerHTML = `${ART_OK['crew/boss.webp'] ? `<img class="logo boss" src="${artUrl('crew/boss.webp')}" alt="">` : document.querySelector('#title .logo').outerHTML}<div class="g1">つるはし社</div><div class="g2">${genName(S.gen)}社長 就任</div>
-    <div class="g3">名声 +${fmt(g)}</div><div class="g4">仲間の力 ×${fameMul(S.fame).toFixed(1)}　・　図鑑と社史は引き継がれる</div>${(() => { const last = S.history[S.history.length - 1]; return last && last.heir ? `<div class="g4">先代から「${HEIRS[last.heir.k].n}」Lv${last.heir.lv} を受け継いだ</div>` : ''; })()}`;
+    <div class="g3">名声 +${fmt(g)}</div><div class="g4">仲間の力 ×${fameMul(S.fame).toFixed(1)}　・　図鑑と社史は引き継がれる</div><div class="g4">左上の札で、先代の同じ頃の深さと比べられる</div>${(() => { const last = S.history[S.history.length - 1]; return last && last.heir ? `<div class="g4">先代から「${HEIRS[last.heir.k].n}」Lv${last.heir.lv} を受け継いだ</div>` : ''; })()}`;
   document.body.appendChild(el);
   let done = false;
   const close = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); banner(0); cheer(); elderT = 6; }, 480); };
@@ -2555,6 +2682,8 @@ function elderLine(){
   if (pv.heir) lines.push(`${HEIRS[pv.heir.k].n}、大事にな`);
   if (S.passTold) lines.push('よう越えた', 'もうわしの出番はないのう'); else lines.push(`${pv.depth}m、越えてみせい`);
   if (S.history.length >= 3) lines.push('初代はもっと頑固じゃった');
+  const p = paceInfo();
+  if (p && p.diff > 0) lines.push(`わしはこの頃まだ ${p.gd}m じゃった`, '速いのう、わしの頃とは大違いじゃ', '名声は代を重ねるほど効くんじゃ');
   return lines[Math.floor(Math.random() * lines.length)];
 }
 function drawElder(dt){
@@ -3179,6 +3308,7 @@ function frame0(now){
     achT = 0;
     // 先代越え：すぐ前の代の最深を越えた瞬間。隠居した先代が喜ぶ
     const pv = S.history[S.history.length - 1];
+    checkPace();
     if (pv && !S.passTold && S.genDepth > pv.depth) { S.passTold = true; toast('先代越え', `${genName(pv.gen)}の ${pv.depth}m を越えた`, `${genName(S.gen)}社長、お見事`); cheer(); elderSay('わしを越えたか！', true); sfx('layer'); haptic('success'); }
     if (S.gen > 1 && !S.recTold && S.history.length && S.genDepth > Math.max(...S.history.map(h => h.depth))) { S.recTold = true; toast('最深記録を更新', `${genName(S.gen)}社長が ${S.genDepth}m`, 'これまでのどの代よりも深い'); sfx('layer'); haptic('success'); }
   for (const a of checkAch(S)) { toast('実績', a.n, `実績 ${Object.keys(S.ach).length}/${ACH.length}`); }

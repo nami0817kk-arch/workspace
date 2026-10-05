@@ -47,7 +47,7 @@ function useFrags(S){
   }
 }
 let S = fresh();
-const firstLayer = {}, rebirths = [], daily = [];
+const firstLayer = {}, rebirths = [], daily = [], paces = [];
 let lastProg = 0, stall = 0;
 const tm = () => { const d = (clock - (Date.UTC(2026, 0, 1) - 9 * 3600e3)) / 864e5; return `${Math.floor(d) + 1}日目${String(Math.floor(d % 1 * 24)).padStart(2, '0')}時`; };
 const note = () => { const L = Math.floor(S.best / LAYER_LEN); for (let k = 1; k <= L; k++) if (!firstLayer[k]) firstLayer[k] = tm(); };
@@ -73,7 +73,9 @@ for (let day = 1; day <= DAYS; day++) {
           const c = heirCands(S)[0];
           if (c) { const full = S.heir.length >= HEIR_SLOTS && !heirLv(S, c.k); hr = { k: c.k, drop: full ? S.heir.reduce((bi, h, i, a) => h.lv < a[bi].lv ? i : bi, 0) : -1 }; }
         }
+        const lt = S.lt.slice();
         rebirth(S, cr, hr, ADS ? AD_FAME : 1); stall = 0; lastProg = 0;
+        paces.push(lt);
       }
     }
     // 広告を見る人は毎回の最初に1本（×2）。よく遊ぶ人は最初に4本（×5）、そのあとも5分ごとに1本ずつ上げる
@@ -100,6 +102,11 @@ for (const k of Object.keys(S)) if (typeof S[k] === 'number' && !isFinite(S[k]))
 console.log(`遊び方=${PLAY} 社訓=${CREED.join('')} ${DAYS}日 家宝=${S.heir.map(h => h.k + h.lv).join(',') || 'なし'}`);
 console.log('層の底に初めて着いた日: ' + Object.entries(firstLayer).map(([k, v]) => `${k}層 ${v}`).join(' / '));
 console.log('代替わり:\n  ' + rebirths.join('\n  '));
+// 代ごとの速さ：120m・240m に着いた時刻（代の始まりから）。前の代より何倍速いか
+const hm = t => t == null ? '－' : t < 3600 ? Math.round(t / 60) + '分' : (t / 3600).toFixed(1) + '時間';
+console.log('代ごとの速さ（120m／240m／先代の最深に着くまで）:');
+paces.forEach((lt, i) => { const pv = paces[i - 1]; const pd = pv ? (pv.length - 1) * 10 : 0;
+  console.log(`  ${i + 1}代目 120m ${hm(lt[12])} 240m ${hm(lt[24])}` + (pv ? `  先代${pd}m に ${hm(lt[pd / 10])}（先代 ${hm(pv[pd / 10])}）` : '')); });
 const pickDays = [1, 2, 3, 5, 7, 10, 14, 21, 28, 35, 42, 60].filter(d => d <= DAYS);
 console.log('日 | 最深 | 代 | 図鑑 | 組 | 実績');
 for (const d of pickDays) { const x = daily[d - 1]; console.log(`${x.day}日目 | ${x.best}m | ${x.gen} | ${x.z} | ${x.sets} | ${x.ach}`); }

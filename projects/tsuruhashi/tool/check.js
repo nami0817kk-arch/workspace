@@ -166,5 +166,19 @@ ok(S.fame === Math.floor(fg * 2) && S.history[0].fame === Math.floor(fg * 2), '�
 S = fresh(); S.w = WK.map(() => 2); const vo = S.ore, vg = claimVein(S), vx = veinBonus(S, vg);
 ok(Math.abs(S.ore - vo - vg * 3) < 1e-6 && vx === vg * 2, '鉱脈を動画で3倍に');
 
+// 代替わりの効き目と、先代との比べっこ
+ok(fameMul(0) === 1 && fameMul(10) > 4 && fameMul(10) < 5, '名声10 で仲間の力 ×4〜5（1回目の代替わりがはっきり効く）');
+ok(fameMul(7000) > 300 && fameMul(7000) < 900, '名声がたまった後は前（×701）と同じくらい');
+S = fresh(); S.genStart = clock; S.w = WK.map(() => 3); S.pick = 40;
+for (let i = 0; i < 600 && S.genDepth < 30; i++) { clock += 1000; tick(S, 1, null); }
+ok(S.lt[1] != null && S.lt[2] != null && S.lt[2] >= S.lt[1], '10m ごとに着いた時刻を残す');
+S.genDepth = 240; S.depth = 240; S.best = 240; const lt0 = S.lt.slice(); rebirth(S, [], null, 1);
+ok(JSON.stringify(S.history[0].lt) === JSON.stringify(lt0) && S.lt.length === 0, '代替わりで社史に移し、新しい代は空から');
+ok(paceAt([null, 100, 200], 50) === 5 && paceAt([null, 100, 200], 150) === 15 && paceAt([null, 100, 200], 999) === 20 && paceAt([], 10) === null, '先代の同じ時刻の深さ');
+S = fresh(); S.genStart = clock - 3600e3; S.w = WK.map(() => 3); S.pick = 40; S.last = clock - 3600e3;
+const rl = simulateAway(S, 3600), lts = rl.state.lt.filter(v => v != null);
+ok(lts.length > 1 && lts.every((v, i) => v > 0 && v <= 3600 && (!i || v >= lts[i - 1])), '留守の間に着いた時刻は留守の間に割り振る（受け取った時刻にしない）');
+ok(normalize({ v: 2, lt: [null, 'x', 5, -1] }).lt.join(',') === ',,5,', '壊れた時刻の記録は直す');
+
 if (fails) { console.log(`\n${fails}件 NG`); process.exit(1); }
 console.log('\nすべて ok');
