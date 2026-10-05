@@ -57,9 +57,9 @@ next:
   teaser: 古い権威を壊した革命児。その姿は、本当だったのか。
 
 thumbnail:
-  image: TODO
-  crop: [0, 0, 1600, 900]
-  focus: [150, 60, 1000, 760]
+  image: paintings/akechi_portrait_hontokuji.jpg
+  crop: [0, 20, 578, 345]
+  focus: [140, 0, 440, 320]
   hook: 「敵は本能寺にあり」
   stamp: 記録にない！
   name: 明智光秀
@@ -79,8 +79,8 @@ terms:
 sections:
   # ---------------------------------------------------------------- 1
   - title: 地表：「敵は本能寺にあり」
-    background: {image: TODO, credit: TODO}
-    portrait: {image: TODO, caption: TODO, age: false}
+    background: {image: paintings/nobunaga_rakuchu_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+    portrait: {image: paintings/akechi_portrait_hontokuji.jpg, caption: "明智光秀（本徳寺蔵の肖像画）", age: false}
     year: 1582
     lines:
       - 語り: 「敵は本能寺にあり」。主君を討つと決めた男が、兵に向かって言い放った言葉です。
@@ -118,7 +118,7 @@ sections:
 
   # ---------------------------------------------------------------- 2
   - title: 名前のない前半生
-    background: {image: TODO, credit: TODO}
+    background: {image: paintings/nobunaga_yoshiaki_escape_toyonobu.jpg, credit: "歌川豊宣《新撰太閤記》足利義昭の脱出（1884年）"}
     portrait: null
     year: 1566
     lines:
@@ -165,7 +165,7 @@ sections:
 
   # ---------------------------------------------------------------- 3
   - title: 二人の主君
-    background: {image: TODO, credit: TODO}
+    background: {image: paintings/nobunaga_document_shuin_5articles.jpg, credit: "織田信長の五か条の書き付け（1570年、宛名に「明智十兵衛尉」）"}
     portrait: null
     year: 1568
     lines:
@@ -184,6 +184,7 @@ sections:
         figure: null
       - 語り: 連歌という、歌をつなぐ遊びも得意でした。50回あまりの連歌の会に加わったとも言われます。
       - 語り: 1571年、信長は、比叡山の延暦寺を焼き討ちにします。光秀も、この戦いに加わりました。
+        background: {image: paintings/nobunaga_hiei_kyosai.jpg, credit: "河鍋暁斎《東海道名所之内 比叡山》1863年"}
         card: {head: "1571年", body: "比叡山の焼き討ち"}
       - 語り: そのあと光秀は、比叡山のふもと、近江の坂本を与えられ、琵琶湖のほとりに坂本城を築きます。
         card: {head: "1571年", body: "坂本城を築く（約5万石）"}
@@ -206,7 +207,7 @@ sections:
 
   # ---------------------------------------------------------------- 4
   - title: 丹波の5年と「天下の面目」
-    background: {image: TODO, credit: TODO}
+    background: {image: paintings/nobunaga_rakuchu_uesugi_left.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）左隻"}
     portrait: null
     year: 1575
     lines:
@@ -275,7 +276,7 @@ sections:
 
   # ---------------------------------------------------------------- 5
   - title: 本能寺の朝
-    background: {image: TODO, credit: TODO}
+    background: {image: paintings/nobunaga_rakuchu_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
     portrait: null
     year: 1582
     lines:
@@ -323,6 +324,7 @@ sections:
       - 語り: このとき信長は、少ない供だけで京都に泊まっていました。
       - 語り: 信長の家臣、太田牛一が書いた《信長公記》には、このときの信長の様子が書かれています。逃げのびた女性たちから聞いた話をもとにした記録です。
       - 語り: 騒ぎに気づいた信長は、誰の企てかと尋ね、明智の者だと聞くと、こう言ったとあります。
+        portrait: {image: paintings/nobunaga_chokoji_bust.jpg, caption: "織田信長（狩野宗秀画、長興寺蔵）"}
       - 人物: 「是非に及ばず」
         who: 信長
       - 聞き: 是非に及ばずって、どういう意味？
@@ -330,13 +332,14 @@ sections:
       - 語り: 「あれこれ言ってもしかたがない」というような意味です。信長は本能寺で最期を迎え、遺体は見つかりませんでした。同じ日、京都にいた長男の信忠も、命を落とします。
         tone: 重い
       - 聞き: 有名な一言は、光秀じゃなくて、信長の側に残ってたんだ。
+        portrait: null
         tone: しみじみ
       - 語り: では、光秀はなぜ、そこまでしたのか。残っている説を掘ってみましょう。
         hook: true
 
   # ---------------------------------------------------------------- 6
   - title: なぜ討ったのかを掘る
-    background: {image: TODO, credit: TODO}
+    background: {image: paintings/nobunaga_letter_to_nene.jpg, credit: "織田信長がねねに宛てた手紙（1576年ごろ）"}
     portrait: null
     year: 1582
     lines:
@@ -406,7 +409,7 @@ sections:
 
   # ---------------------------------------------------------------- 7
   - title: 11日間の天下
-    background: {image: TODO, credit: TODO}
+    background: {image: paintings/nobunaga_rakuchu_uesugi_left.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）左隻"}
     portrait: null
     year: 1582
     lines:
@@ -468,7 +471,7 @@ sections:
 
   # ---------------------------------------------------------------- 8
   - title: 天海説と、名君の伝説
-    background: {image: TODO, credit: TODO}
+    background: {image: paintings/nobunaga_hiei_kyosai.jpg, credit: "河鍋暁斎《東海道名所之内 比叡山》1863年"}
     portrait: null
     year: 1582
     lines:
@@ -493,7 +496,7 @@ sections:
       - 語り: そもそも光秀が6月13日から14日にかけて亡くなったことは、当時の記録に書かれています。天海説は、伝説として扱われています。
         short: s7
       - 語り: では、光秀が治めた土地では、どう語られてきたのでしょう。
-        background: {image: TODO, credit: TODO}
+        background: {image: paintings/nobunaga_rakuchu_uesugi_left.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）左隻"}
       - 語り: 京都府の福知山市は、光秀が町の人の税を免除した、と紹介しています。川の流れを変えて洪水を防いだ、という話も伝わっています。
       - 聞き: そっちは名君なんだ。
         tone: 疑問
@@ -515,7 +518,7 @@ sections:
 
   # ---------------------------------------------------------------- 9
   - title: 見立て：その一言は、誰の言葉か
-    background: {image: TODO, credit: TODO}
+    background: {image: paintings/nobunaga_honnoji_yoshitoshi.jpg, credit: "月岡芳年《大日本名将鑑》織田信長（1878年、後世の想像図）"}
     portrait: null
     year: 1641
     lines:
