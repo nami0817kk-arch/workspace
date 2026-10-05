@@ -1,5 +1,6 @@
 """サイトの生成と、データの決まり（推測で埋めない・出典を付ける）の検査。"""
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -11,6 +12,9 @@ DATA = Path(__file__).resolve().parents[1] / "data"
 FIELD_KEYS = [k for k, _ in render.FIELDS]
 
 # 根拠にしない業者・まとめサイト（各国の公式ページだけを出典にする）。
+# 「確認できず」「推定」「検索結果」など、確かめていないことを示す書き方。
+MEMO = re.compile(r"確認でき|未確認|見当たら|記載(が)?な|不明|要確認|推定|見込み|検索結果")
+
 NOT_OFFICIAL = ("wikipedia.org", "jawhm.or.jp", "ryugaku", "abroad", "blog", "note.com", "ameblo")
 
 
@@ -45,6 +49,11 @@ def test_各国のデータは外務省の一覧にある国で出典が付い�
     for s in d.get("sources", []):
         assert s["url"].startswith("https://") or s["url"].startswith("http://")
         assert not any(bad in s["url"] for bad in NOT_OFFICIAL), f"公式でない出典: {s['url']}"
+    # 値の中に「確かめられなかった」という調査メモを書かない（その項目は空にして unverified へ）
+    for k in FIELD_KEYS:
+        assert not MEMO.search(d.get(k) or ""), f"{k} に調査メモが入っている: {d.get(k)}"
+    for p in d.get("points", []):
+        assert not MEMO.search(p), f"points に調査メモが入っている: {p}"
     # 確かめられなかった項目に値が入っていない（推測で埋めない）
     for k in d.get("unverified", []):
         if k in FIELD_KEYS:

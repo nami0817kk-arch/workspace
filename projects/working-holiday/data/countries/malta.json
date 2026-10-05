@@ -1,0 +1,47 @@
+{
+  "id": "malta",
+  "name": "マルタ",
+  "age": "申請時18歳以上30歳以下",
+  "stay": "入国日から最長1年間",
+  "fee": "査証自体は無料。ただし外部申請機関（Identitàの委託先であるVFS）のサービス料が別途必要",
+  "funds": "マルタ滞在の初めの期間を自力で生活できるだけの相応の資金（具体的な額は示されていない）",
+  "apply": "外部申請機関VFSを通じ、マルタの出入国管理当局Identitàの予約システムで予約のうえ申請",
+  "timing": "2026年1月1日からマルタ国民向けの制度が導入。日本人向けの相互プログラムも開始されており、通年で申請可能（新規開始国）",
+  "work": "",
+  "study": "",
+  "insurance": "入院・損害賠償・医療移送をカバーする医療保険兼総合保険に、滞在期間全体にわたって加入していることが必要",
+  "points": [
+    "2026年1月1日から導入された新しい協定国。申請は始まっている",
+    "年間の発給数は100件に限定されているとされる（複数の公式系ページで言及）。枠に達すると受付が止まる可能性があるため早めの確認が必要",
+    "申請は外部委託のVFSを通す必要があり、査証自体は無料でもサービス料が別途かかる",
+    "保険は入院・医療移送までカバーするものが必須"
+  ],
+  "sources": [
+    {
+      "title": "Working Holiday Visa for Maltese Nationals - Embassy of Japan in Malta",
+      "url": "https://www.mt.emb-japan.go.jp/itpr_en/WorkingHolidayVisa.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Central Visa Unit Working Holiday Visa - Japan - Identità",
+      "url": "https://identita.gov.mt/central-visa-unit-working-holiday-visa-japan/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "List of Requirements Working Holiday Visa - Identità",
+      "url": "https://identita.gov.mt/wp-content/uploads/2026/01/12.-List-of-Requirements-Working-Holiday-Visa.pdf",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "PRESS RELEASE: Malta and Japan conclude agreement for youth working holiday visas - gov.mt",
+      "url": "https://www.gov.mt/en/Government/DOI/Press%20Releases/Pages/2025/07/16/PR251294en.aspx",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": [
+    "funds（必要資金の具体的な金額）",
+    "work（就労期間の制限）",
+    "study（就学の可否）",
+    "年間発給枠の正確な数（100件という記載の原文での完全な裏取りはできず）"
+  ]
+}
