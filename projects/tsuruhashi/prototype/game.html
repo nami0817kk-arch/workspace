@@ -185,7 +185,10 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .hopt .g{color:var(--good)} .hopt .x{color:var(--bad)}
 .hopt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .hopt.drop[aria-pressed="true"]{border-color:var(--bad)}
-.hic{flex:0 0 34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);font-size:18px}
+.hic{flex:0 0 44px;height:44px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);font-size:18px;overflow:hidden}
+.hic img{width:44px;height:44px;object-fit:contain}
+.card .shopic{flex:0 0 56px;height:56px;object-fit:contain}
+.bentobtn img{width:26px;height:26px;display:block;margin:0 auto -2px}
 .lv{display:inline-block;margin-left:6px;font-size:11px;padding:0 6px;border-radius:8px;background:var(--accent);color:#fff;vertical-align:2px}
 .cardnote{font-size:13px;color:var(--muted);margin:2px 0}
 .big2{font-size:22px;font-weight:800;color:var(--accent)}
@@ -544,7 +547,7 @@ const fresh = () => ({
   heir:[], mapTo:0, genStat:{ species:0, crits:0 }, passTold:false,
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
   ach:{}, st:{ blocks:0, crits:0, veins:0, ads:0, appraise:0, sold:0, beds:0, play:0, best1:0 },
-  sound:true, vol:2, bgm:2, amb:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false,
+  sound:true, vol:2, bgm:2, amb:true, haptic:true, theme:'auto', notifAsked:false, buyN:1, tut:0, reduce:false, crewArt:true,
 });
 // 保存の形が変わったときはここで古い形を直す（v は保存の版）
 function migrate(o){
@@ -958,7 +961,13 @@ function artLoad(k){
   im.src = artUrl(k); ART_IMG[k] = im;
 }
 const artImg = k => ART_OK[k] ? ART_IMG[k] : null;
+const ART_EXTRA = ['heirs/pick', 'heirs/roster', 'heirs/map', 'heirs/diary', 'heirs/safe', 'heirs/charm', 'shop/canteen', 'shop/cart', 'shop/bento'];
 const itemArtKey = it => 'items/' + it.id + '.webp';
+// 家宝・売店・仲間の絵（無ければ今まで通りの絵文字・図形）
+const artTag = (k, size, fb) => ART_OK[k] ? `<img src="${artUrl(k)}" width="${size}" height="${size}" alt="" style="object-fit:contain">` : fb;
+const heirIcon = (k, size) => artTag('heirs/' + k + '.webp', size || 44, HEIR_IC[k]);
+const shopArtKey = k => 'shop/' + (IAP[k] && !IAP[k].perm ? 'bento' : k) + '.webp';
+const crewArtKey = i => 'crew/' + WK[i].id + '.webp';
 
 // ================= 絵（図鑑のかたち） =================
 function gearPath(){
@@ -1146,6 +1155,7 @@ function crewImg(i){
   return CREW_IMG[i];
 }
 function crewIcon(i){
+  if (ART_OK[crewArtKey(i)]) return `<img src="${artUrl(crewArtKey(i))}" width="48" height="48" alt="" style="display:block;object-fit:contain">`;
   const u = typeof ctx !== 'undefined' && crewImg(i);
   if (u) return `<img src="${u}" width="44" height="44" alt="" style="display:block">`;
   const hat = HAT[i];
@@ -1283,7 +1293,7 @@ function buildCo(){
   // 家宝の棚
   h += `<div class="sec">家宝の棚 ${S.heir.length}/${HEIR_SLOTS}</div>`;
   if (!S.heir.length) h += `<div class="note">代替わりのとき、先代が家宝を1つ残します。候補は先代の掘り方で変わります。</div>`;
-  else h += S.heir.map(x => `<div class="card"><div class="hic" aria-hidden="true">${HEIR_IC[x.k]}</div><div class="body"><div class="nm">${HEIRS[x.k].n}<span class="lv">Lv${x.lv}</span></div><div class="ds"><span style="color:var(--good)">${HEIRS[x.k].g(x.lv)}</span> ／ <span style="color:var(--bad)">${HEIRS[x.k].b}</span></div></div></div>`).join('');
+  else h += S.heir.map(x => `<div class="card"><div class="hic" aria-hidden="true">${heirIcon(x.k)}</div><div class="body"><div class="nm">${HEIRS[x.k].n}<span class="lv">Lv${x.lv}</span></div><div class="ds"><span style="color:var(--good)">${HEIRS[x.k].g(x.lv)}</span> ／ <span style="color:var(--bad)">${HEIRS[x.k].b}</span></div></div></div>`).join('');
   if (heirLv(S, 'map') && S.mapTo > 0) h += `<div class="note">先代の地図：${S.mapTo}m までは速く掘れる（${S.depth >= S.mapTo ? '通り過ぎた' : 'あと ' + (S.mapTo - S.depth) + 'm'}）</div>`;
   h += shopHtml();
   // 社訓
@@ -1294,7 +1304,7 @@ function buildCo(){
   h += `<div class="sec">社史</div>`;
   if (!S.history.length) h += `<div class="note">代替わりすると、その代の記録がここに残ります。</div>`;
   else h += `<table class="hist"><tr><th>代</th><th>最深</th><th>図鑑</th><th>名声</th><th>残した家宝</th><th>期間</th></tr>` +
-    S.history.map(r => `<tr><td>${genName(r.gen)}</td><td>${r.depth}m</td><td>${r.species}</td><td>+${fmt(r.fame)}</td><td>${r.heir ? HEIR_IC[r.heir.k] + ' Lv' + r.heir.lv : '－'}</td><td>${fmtDur((r.end - r.start) / 1000)}</td></tr>`).join('') + `</table>`;
+    S.history.map(r => `<tr><td>${genName(r.gen)}</td><td>${r.depth}m</td><td>${r.species}</td><td>+${fmt(r.fame)}</td><td>${r.heir ? heirIcon(r.heir.k, 22) + ' Lv' + r.heir.lv : '－'}</td><td>${fmtDur((r.end - r.start) / 1000)}</td></tr>`).join('') + `</table>`;
   // 通算の記録
   const play = S.st.play || 0;
   h += `<div class="sec">通算の記録</div><div class="card" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px">
@@ -1317,7 +1327,7 @@ function shopHtml(){
     const it = IAP[k], have = it.perm && owns(S, k);
     const btn = have && APP ? `<span class="note" style="margin:0">持っています</span>`
       : `<button class="buy" type="button" data-iap="${k}" ${canBuy ? '' : 'disabled'}>${have ? '外す' : price(k)}</button>`;
-    return `<div class="card"><div class="body"><div class="nm">${it.n}${it.perm ? '' : `<span class="cardnote" style="margin-left:6px">手持ち ${S.bento}個</span>`}</div><div class="ds">${it.d}</div></div>${btn}</div>`;
+    return `<div class="card">${ART_OK[shopArtKey(k)] ? `<img class="shopic" src="${artUrl(shopArtKey(k))}" alt="">` : ''}<div class="body"><div class="nm">${it.n}${it.perm ? '' : `<span class="cardnote" style="margin-left:6px">手持ち ${S.bento}個</span>`}</div><div class="ds">${it.d}</div></div>${btn}</div>`;
   }).join('');
   h += `<div class="note">${APP ? (canBuy ? '買い切りは機種を変えても「購入を復元」（設定）で戻ります。弁当は使い切りで、復元はできません。' : 'いまはストアにつながっていません。') : '試作ではお金はかからず、その場で付きます（買い切りはもう一度押すと外れます）。'}</div>`;
   return h;
@@ -1331,6 +1341,7 @@ function buildSettings(){
     <div class="srow"><span>BGM</span><button class="mini" type="button" id="bgmBtn">${['なし', '小', '中', '大'][S.bgm == null ? 2 : S.bgm]}</button></div>
     <div class="srow"><span>環境音（坑道の音）</span><button class="mini" type="button" id="ambBtn">${onoff(S.amb)}</button></div>
     <div class="srow"><span>振動</span><button class="mini" type="button" id="hapBtn">${onoff(S.haptic)}</button></div>
+    <div class="srow"><span>仲間の絵</span><button class="mini" type="button" id="artBtn">${S.crewArt !== false ? 'イラスト' : '図形'}</button></div>
     <div class="srow"><span>動きを減らす</span><button class="mini" type="button" id="redBtn">${reducedOS ? '端末で設定ずみ' : onoff(!!S.reduce)}</button></div>
     <div class="srow"><span>表示</span><button class="mini" type="button" id="themeBtn">${({ auto:'端末に合わせる', light:'明るい', dark:'暗い' })[S.theme]}</button></div>`;
   if (APP) h += `<div class="srow"><span>購入</span><button class="mini" type="button" id="restoreBtn">購入を復元</button></div>
@@ -1344,6 +1355,7 @@ function buildSettings(){
   $('ambBtn').addEventListener('click', () => { S.amb = !S.amb; startAmbient(); applyVol(); save(); buildSettings(); });
   $('hapBtn').addEventListener('click', () => { S.haptic = !S.haptic; save(); haptic('light'); buildSettings(); });
   $('themeBtn').addEventListener('click', () => { S.theme = ({ auto:'light', light:'dark', dark:'auto' })[S.theme]; applyTheme(); save(); buildSettings(); });
+  $('artBtn').addEventListener('click', () => { S.crewArt = S.crewArt === false; save(); sfx('ui'); buildSettings(); });
   $('redBtn').addEventListener('click', () => { if (reducedOS) return; S.reduce = !S.reduce; reduced = !!S.reduce; save(); buildSettings(); });
   if ($('restoreBtn')) $('restoreBtn').addEventListener('click', () => appPost({ type:'restore' }));
   if ($('privBtn')) $('privBtn').addEventListener('click', () => appPost({ type:'open', url:'https://tsuruhashi.dailyquarry.com/privacy.html' }));
@@ -1456,7 +1468,7 @@ function updateUI(force){
     ec.style.display = 'block'; ec.textContent = `弁当×${BENTO_X}　${mm >= 60 ? Math.floor(mm / 60) + ':' + String(mm % 60).padStart(2, '0') + ':' : mm + ':'}${String(r % 60).padStart(2, '0')}`;
   } else ec.style.display = 'none';
   eb.hidden = !(S.bento > 0);
-  if (!eb.hidden) eb.innerHTML = `弁当<small>${bentoOn(S) ? '+30分' : '×2 30分'}・${S.bento}個</small>`;
+  if (!eb.hidden) eb.innerHTML = `${ART_OK['shop/bento.webp'] ? `<img src="${artUrl('shop/bento.webp')}" alt="">` : ''}弁当<small>${bentoOn(S) ? '+30分' : '×2 30分'}・${S.bento}個</small>`;
 }
 // 採掘の絵の下の帯：次の目標
 function updateGoal(){
@@ -1666,7 +1678,7 @@ const heirNeedsDrop = () => rbHeir && rbHeir !== 'none' && !heirLv(S, rbHeir) &&
 const heirReady = () => !!rbHeir && (!heirNeedsDrop() || rbDrop >= 0);
 function heirCard(k, lv, attrs, cls){
   const H = HEIRS[k];
-  return `<button class="hopt ${cls || ''}" type="button" ${attrs}><span class="hic" aria-hidden="true">${HEIR_IC[k]}</span><span><b>${H.n}</b><span class="lv">Lv${lv}</span><br><span class="g">＋${H.g(lv)}</span><br><span class="x">－${H.b}</span></span></button>`;
+  return `<button class="hopt ${cls || ''}" type="button" ${attrs}><span class="hic" aria-hidden="true">${heirIcon(k)}</span><span><b>${H.n}</b><span class="lv">Lv${lv}</span><br><span class="g">＋${H.g(lv)}</span><br><span class="x">－${H.b}</span></span></button>`;
 }
 function heirPickHtml(){
   const cands = heirCands(S);
@@ -1979,7 +1991,9 @@ function drawCrew(dt, fy){
       if (row === 0 && t < f.lt && f.i !== 3 && f.i !== 6 && Math.random() < 0.5) crewHit(f.i, fx, f.face);
       f.lt = t;
       const ang = swingAngle(t, per > 0.6 ? 1 : 0.8);
-      if (f.i === 3) { drawDrill(fx, y, f.face, tAll + f.ph, '#6f7b8a', f.sc); if (row === 0 && Math.random() < dt * 4) burst(fx + f.face * 20, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.5); }
+      const spr = S.crewArt !== false && artImg(crewArtKey(f.i));
+      if (spr) drawCrewSprite(spr, f, fx, y, ang);
+      else if (f.i === 3) { drawDrill(fx, y, f.face, tAll + f.ph, '#6f7b8a', f.sc); if (row === 0 && Math.random() < dt * 4) burst(fx + f.face * 20, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.5); }
       else if (f.i === 4) drawRobot(fx, y, f.face, ang, f.sc);
       else if (f.i === 5) drawCart(fx, y, f.face, tAll + f.ph, f.sc);
       else if (f.i === 6) { drawShield(fx, y, f.face, tAll + f.ph, f.sc); if (row === 0 && Math.random() < dt * 5) burst(fx + f.face * 22, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.6); }
@@ -1987,6 +2001,21 @@ function drawCrew(dt, fy){
       }
     }
   }
+}
+// 仲間をイラストで描く（Gemini の絵。2026-10-05）。体の絵は1枚なので、振り下ろしに合わせて前へ傾け、打った瞬間に少し縮める。
+// 機械は小刻みに揺らす（掘削機・掘進シールド）か、上下に弾ませる（ロボ・トロッコ）
+function drawCrewSprite(im, f, x, y, ang){
+  const big = f.i >= HUMAN, h = (big ? 60 : 56) * f.sc;
+  let rot = 0, sy = 1, dx = 0, dy = 0;
+  if (!reduced) {
+    if (f.i < HUMAN || f.i === 4) { const k = Math.max(0, Math.min(1, (ang + 2.3) / 3.05)); rot = (-0.08 + 0.2 * k) * (f.i === 4 ? 0.6 : 1); sy = 1 - 0.07 * Math.max(0, k - 0.82) / 0.18; }
+    else if (f.i === 3 || f.i === 6) { dx = Math.sin(tAll * 40 + f.ph * 9) * 0.8; dy = Math.sin(tAll * 33 + f.ph * 5) * 0.5; }
+    else dy = -Math.abs(Math.sin(tAll * 6 + f.ph * 7)) * 1.6;
+  }
+  ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(x, y, h * 0.3, h * 0.07, 0, 0, 7); ctx.fill();
+  ctx.save(); ctx.translate(x + dx, y + dy); ctx.scale(f.face, 1); ctx.rotate(rot); ctx.scale(1, sy);
+  ctx.drawImage(im, -h / 2, -h * 0.97, h, h);
+  ctx.restore();
 }
 // 層ごとの破片：結晶のかけら・火の粉・しずく・星屑
 function layerBurst(li, x, y){
@@ -3009,7 +3038,8 @@ function frame(now){
 function frame0(now){
   let dt = (now - lastFrame) / 1000; lastFrame = now;
   if (titleOpen) { try { if (ART_OK['title.jpg']) showTitleArt(); else drawTitle(Math.min(dt, 0.1)); } catch (e) {} }
-  if (artChanged) { artChanged = false; if (tab === 'book') buildBook(); }
+  // 絵が読み終わったら、絵を使う欄を作り直す（起動直後は図形のまま作られていることがある）
+  if (artChanged) { artChanged = false; buildPanels(); updateUI(true); if (tab === 'book') buildBook(); if (tab === 'co') buildCo(); }
   // 止まっていた（裏に回っていた）なら留守として数える
   if (dt > 60 && !pendingAway) { checkAway(); dt = 0; }
   dt = Math.min(dt, 0.1);
@@ -3061,7 +3091,7 @@ if (window.matchMedia) { try { window.matchMedia('(prefers-color-scheme: dark)')
 // 起動
 const had = load();
 syncIap();
-artLoad('title.jpg'); for (let L = 0; L < NLAYER; L++) artLoad('scene' + L + '.jpg'); ITEMS.forEach(it => artLoad(itemArtKey(it)));
+artLoad('title.jpg'); for (let L = 0; L < NLAYER; L++) artLoad('scene' + L + '.jpg'); ITEMS.forEach(it => artLoad(itemArtKey(it))); ART_EXTRA.forEach(k => artLoad(k + '.webp')); WK.forEach((w, i) => artLoad(crewArtKey(i)));
 reduced = reducedOS || !!S.reduce;
 applyTheme();
 camY = S.depth > 0 ? S.depth : -4;

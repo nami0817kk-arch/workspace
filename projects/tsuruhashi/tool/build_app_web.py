@@ -33,15 +33,18 @@ def main():
     assert 'fonts.googleapis.com' not in s
     for name in ('window.__TSURU_APP', 'TsuruApp.postMessage', 'window.tsuruAdResult', 'window.tsuruSetApp', 'window.tsuruPause', 'window.tsuruResume', 'TStore'):
         assert name in s, 'つなぎの口が無い: ' + name
-    # 絵を埋め込む（items/*.webp・title.jpg・scene0〜9.jpg）。無い物はゲームが図形で描く
+    # 絵を埋め込む（title.jpg・scene0〜9.jpg・items/・crew/・heirs/・shop/。check/ は除く）。無い物はゲームが図形で描く
     art = {}
     mime = {'.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png'}
-    for sub, names in (('', sorted(os.listdir(ART)) if os.path.isdir(ART) else []), ('items/', sorted(os.listdir(os.path.join(ART, 'items'))) if os.path.isdir(os.path.join(ART, 'items')) else [])):
-        for n in names:
+    subs = [('', ART)] + [(d + '/', os.path.join(ART, d)) for d in sorted(os.listdir(ART)) if os.path.isdir(os.path.join(ART, d)) and d != 'check'] if os.path.isdir(ART) else []
+    for sub, folder in subs:
+        for n in sorted(os.listdir(folder)):
             ext = os.path.splitext(n)[1].lower()
             if ext not in mime or n.startswith('_'):
                 continue
-            b = open(os.path.join(ART, sub, n), 'rb').read()
+            if os.path.isdir(os.path.join(folder, n)):
+                continue
+            b = open(os.path.join(folder, n), 'rb').read()
             art[sub + n] = 'data:%s;base64,%s' % (mime[ext], base64.b64encode(b).decode('ascii'))
     if art:
         import json

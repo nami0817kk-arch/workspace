@@ -3,21 +3,32 @@
 //   → prototype/art/items/<id>.webp（192×192、背景は透明。アプリに埋め込むので軽くする）と、確認用の prototype/art/check/_sheet<層>.png（git に入れない）
 // 並びは注文書と同じ「上の段 左から3つ → 下の段 左から2つ」＝ ITEMS の順。
 // 背景の色は縁から取り、背景とちがう色のかたまりを大きい順に5つ拾う（小さな透かし・ごみは捨てる）。
+// 図鑑以外（家宝・売店・仲間）は名前を並び順に渡す:
+//   node tool/cut_sheet.js <絵> --names a,b,c --dir heirs [--size 256]  → prototype/art/<dir>/<名前>.webp
+//   並びは「上の段から、段の中は左から」。物の大きさがばらばらで段がずれる絵は、確認用の一覧を見て名前の順を合わせる
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 let pw;
 try { pw = require('playwright'); } catch (e) { pw = require('/opt/node22/lib/node_modules/playwright'); }
 
-const [file, layerArg] = process.argv.slice(2);
-const L = Number(layerArg);
-if (!file || !(L >= 0 && L <= 9)) { console.error('使い方: node tool/cut_sheet.js <絵> <層 0〜9>'); process.exit(1); }
-
-const html = fs.readFileSync(path.join(__dirname, '..', 'prototype', 'game.html'), 'utf8');
-const engine = html.split('/*ENGINE-START*/')[1].split('/*ENGINE-END*/')[0];
-const ctx = {}; vm.createContext(ctx); vm.runInContext(engine + ';this.ITEMS=ITEMS;', ctx);
-const ids = ctx.ITEMS.filter(it => it.L === L).map(it => it.id);
-const OUT = path.join(__dirname, '..', 'prototype', 'art', 'items');
+const args = process.argv.slice(2), file = args[0];
+const opt = k => { const i = args.indexOf('--' + k); return i > 0 ? args[i + 1] : null; };
+const SIZE = +(opt('size') || 192), RAD = +(opt('r') || 2), HOLES = args.includes('--holes');   // HOLES: 囲まれた背景（腕と体のすき間など）も抜く。白い物がある絵（真珠・雪花石）には使わない
+// RAD: かたまりをつなぐ太らせ方。物どうしが近い絵は 1 か 0
+let ids, OUT, L;
+if (opt('names')) {
+  ids = opt('names').split(','); L = opt('dir') || 'misc';
+  OUT = path.join(__dirname, '..', 'prototype', 'art', L);
+} else {
+  L = Number(args[1]);
+  if (!file || !(L >= 0 && L <= 9)) { console.error('使い方: node tool/cut_sheet.js <絵> <層 0〜9>  ／  <絵> --names a,b --dir 置き場 [--size 256]'); process.exit(1); }
+  const html = fs.readFileSync(path.join(__dirname, '..', 'prototype', 'game.html'), 'utf8');
+  const engine = html.split('/*ENGINE-START*/')[1].split('/*ENGINE-END*/')[0];
+  const ctx = {}; vm.createContext(ctx); vm.runInContext(engine + ';this.ITEMS=ITEMS;', ctx);
+  ids = ctx.ITEMS.filter(it => it.L === L).map(it => it.id);
+  OUT = path.join(__dirname, '..', 'prototype', 'art', 'items');
+}
 fs.mkdirSync(OUT, { recursive: true });
 
 const mime = /\.jpe?g$/i.test(file) ? 'image/jpeg' : /\.webp$/i.test(file) ? 'image/webp' : 'image/png';
@@ -26,7 +37,7 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
 (async () => {
   const b = await pw.chromium.launch();
   const p = await b.newPage();
-  const res = await p.evaluate(async ({ src, n }) => {
+  const res = await p.evaluate(async ({ src, n, SIZE, RAD, HOLES }) => {
     const img = new Image(); img.src = src; await img.decode();
     const W = img.naturalWidth, H = img.naturalHeight;
     const full = document.createElement('canvas'); full.width = W; full.height = H;
@@ -46,7 +57,7 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
       for (let y = gy * S; y < Math.min(H, gy * S + S); y++) for (let x = gx * S; x < Math.min(W, gx * S + S); x++) if (diff((y * W + x) * 4) > 60) hit++;
       if (hit * 4 >= S * S) m[gy * gw + gx] = 1;
     }
-    const R = 2, md = new Uint8Array(gw * gh);
+    const R = RAD, md = new Uint8Array(gw * gh);
     for (let gy = 0; gy < gh; gy++) for (let gx = 0; gx < gw; gx++) if (m[gy * gw + gx])
       for (let dy = -R; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) { const x = gx + dx, y = gy + dy; if (x >= 0 && y >= 0 && x < gw && y < gh) md[y * gw + x] = 1; }
     const lab = new Int32Array(gw * gh), blobs = [];
@@ -96,6 +107,20 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
         if (x > 0) st.push(k - 1); if (x < side - 1) st.push(k + 1);
         if (k >= side) st.push(k - side); if (k < side * (side - 1)) st.push(k + side);
       }
+      // 囲まれた背景のすき間：背景とほぼ同じ色のひとまとまりが大きければ抜く（小さい白目・光は残す）
+      if (HOLES) {
+        const lim = side * side * 0.002;
+        for (let s0 = 0; s0 < side * side; s0++) {
+          if (seen[s0] || dif(s0 * 4) > 24) continue;
+          const reg = [s0], q = [s0]; seen[s0] = 1;
+          while (q.length) { const k = q.pop(), x = k % side;
+            for (const nb of [x > 0 ? k - 1 : -1, x < side - 1 ? k + 1 : -1, k - side, k + side]) {
+              if (nb < 0 || nb >= side * side || seen[nb] || dif(nb * 4) > 24) continue;
+              seen[nb] = 1; reg.push(nb); q.push(nb);
+            } }
+          if (reg.length >= lim) for (const k of reg) d[k * 4 + 3] = 0;
+        }
+      }
       // 隣の物のはみ出し（別のかたまりに属する画素）は消す
       const offX = Math.round((side - w) / 2), offY = Math.round((side - h) / 2);
       for (let y = 0; y < side; y++) for (let x = 0; x < side; x++) {
@@ -105,8 +130,8 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
         if (l && l !== r.id) d[(y * side + x) * 4 + 3] = 0;
       }
       cx.putImageData(id, 0, 0);
-      const o = document.createElement('canvas'); o.width = o.height = 192;
-      const ox = o.getContext('2d'); ox.imageSmoothingQuality = 'high'; ox.drawImage(c, 0, 0, 192, 192);
+      const o = document.createElement('canvas'); o.width = o.height = SIZE;
+      const ox = o.getContext('2d'); ox.imageSmoothingQuality = 'high'; ox.drawImage(c, 0, 0, SIZE, SIZE);
       return o;
     });
     // 確認用の一覧（並び順に横一列、市松模様の上）
@@ -115,7 +140,7 @@ const src = 'data:' + mime + ';base64,' + fs.readFileSync(file).toString('base64
     for (let y = 0; y < 192; y += 16) for (let x = 0; x < sh.width; x += 16) { sx.fillStyle = ((x + y) / 16) % 2 ? '#ddd' : '#fff'; sx.fillRect(x, y, 16, 16); }
     outs.forEach((o, i) => sx.drawImage(o, i * 192, 0));
     return { found, bg, size: [W, H], pngs: outs.map(o => o.toDataURL('image/webp', 0.88)), sheet: sh.toDataURL('image/png') };
-  }, { src, n: ids.length });
+  }, { src, n: ids.length, SIZE, RAD, HOLES });
   await b.close();
 
   const put = (name, url) => fs.writeFileSync(path.join(OUT, name), Buffer.from(url.split(',')[1], 'base64'));

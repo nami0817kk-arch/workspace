@@ -18,13 +18,13 @@ WebView で動かす。**ゲームの直しは game.html だけ**（`python tool
 | `tool/build_app_web.py` | アプリに入れるゲーム本体を組み立てる（`app/assets/web/index.html`。外の書体を外し、BGM を `app/assets/audio/bgm/` に写す）。組み立てた物は git に入れない |
 | `tool/make_icon.js` | 図形で描いた仮のアイコン。**2026-10-04 から Gemini のアイコンに替えた**（`tool/import_art.js`）。絵が無いときの予備として残す |
 | `tool/import_art.js` | Gemini の絵（アイコン・タイトル・層の景色）を使う大きさにして置く。`node tool/import_art.js <絵のフォルダ>` → アイコン 1024 PNG、`prototype/art/title.jpg`（768×1376）、`prototype/art/scene0〜9.jpg`（960×536）。どの絵が何かは `tool/art_sources.json` |
-| `prototype/art/` | Gemini の絵（ユーザーが Gemini アプリで描いた物。商用可）。`items/<id>.webp`（図鑑50種・192・背景透明）・`title.jpg`・`scene0〜9.jpg`。`check/` は切り分けの確認用で git に入れない |
+| `prototype/art/` | Gemini の絵（ユーザーが Gemini アプリで描いた物。商用可）。`items/<id>.webp`（図鑑50種・192・背景透明）・`crew/<WKのid>.webp`（仲間7種・256）・`heirs/<家宝>.webp`（6種）・`shop/canteen・cart・bento.webp`・`title.jpg`・`scene0〜9.jpg`。`check/` は切り分けの確認用で git に入れない |
 | `tool/make_shots.js` | App Store の掲載画像6枚（6.7インチ 1290×2796、上に見出し）を `store/screenshots/` に作る。ゲームに `window.__ev` を差した写しを一時フォルダで開き、`__TSURU_APP` を偽ってアプリと同じ見た目で撮る。撮るたびに「中身が写っているか・『試作』の文字がないか・大きさ」を検査（docs/app-pitfalls.md 4番） |
 | `STORE_LISTING.md` | App Store の掲載文の下書き（サブタイトル・キーワード・概要・審査へのメモ）。名前と値段はユーザーが決める |
 | `app/` | iOS アプリの外側（Flutter、2026-10-04）。hikari7 の app を写し、全画面広告を外し、BGM 3曲・通知を足した。課金アイテムは下の「広告と課金」、Bundle ID `com.namiki.tsuruhashi` |
 | `legal/` `site/` | プライバシーポリシー・サポート・利用規約と、公開ページの入口・app-ads.txt・robots.txt（hikari7 と同じ形）。`.github/workflows/tsuruhashi-site.yml` が master への push で Cloudflare Pages の `tsuruhashi` に出し、`tsuruhashi.dailyquarry.com` をつなぐ。**master に入れた時点で公開になる** |
 | `tool/smoke.js` | 画面の通し確認。ブラウザで5つの状態（はじめて・中盤・岩盤・代替わりの前・深層）を開き、タブ・シート・買い物を押してエラー0件か。CI で毎回回る（playwright） |
-| `tool/cut_sheet.js` | Gemini の図鑑の絵（1枚に5種・白い背景）を1種ずつに切る。`node tool/cut_sheet.js <絵> <層0〜9>` → `prototype/art/items/<id>.webp`（192・背景透明）と並び確認用の `prototype/art/check/_sheet<層>.png`。縁の色を背景とみなし、大きいかたまり5つを「上の段左から3つ→下の段左から2つ」＝ ITEMS の順に当てる（小さな透かしは捨てる。隣の物のはみ出しは消す） |
+| `tool/cut_sheet.js` | Gemini の図鑑の絵（1枚に5種・白い背景）を1種ずつに切る。図鑑以外は `--names a,b --dir 置き場 [--size 256] [--r 1] [--holes]`（`--r` は物どうしが近い絵、`--holes` は腕と体のすき間の白を抜く。白い物がある絵には使わない）。`node tool/cut_sheet.js <絵> <層0〜9>` → `prototype/art/items/<id>.webp`（192・背景透明）と並び確認用の `prototype/art/check/_sheet<層>.png`。縁の色を背景とみなし、大きいかたまり5つを「上の段左から3つ→下の段左から2つ」＝ ITEMS の順に当てる（小さな透かしは捨てる。隣の物のはみ出しは消す） |
 
 ## 中身（v2、2026-10-03）
 
@@ -132,6 +132,12 @@ WebView で動かす。**ゲームの直しは game.html だけ**（`python tool
 - アプリでは `tool/build_app_web.py` が絵を index.html に data URI で埋め込む（`window.__TSURU_ART`、61枚・約2.6MB）。ブラウザの試作は `art/` から読む。
   試作ページに出すときは `art/` も一緒に出す
 - 起動直後の「仲間が自動で掘ります」は、層の見出しのカードが消えてから出す（重なっていた）
+- **追加の絵**（2026-10-05、チャットに添付）: 仲間7種（仲間のタブの顔と、**採掘の絵の中の仲間**）、家宝6種（代替わりの画面・家宝の棚・社史。前は絵文字）、
+  売店の3品（社員食堂・大きな荷車・特製弁当。弁当のボタンにも）、星の核の景色の描き直し（星空がひらける絵）。売店の絵に余分な「鉱石の木箱」があったが使わない。
+  仲間の絵は下に英語の名前が入っていたので、文字の帯を白で消してから切った
+- **採掘の絵の仲間をイラストに**（`drawCrewSprite`、設定「仲間の絵 イラスト／図形」`S.crewArt`、既定はイラスト）: 体の絵は1枚なので、
+  人とロボは振り下ろしに合わせて前へ傾け、打った瞬間に少し縮める。掘削機と掘進シールドは小刻みに震え、トロッコは弾む。社長と隠居した先代は図形のまま
+  （社長の絵が無い。頼むなら黄色いヘルメットの社長1人）。絵が読み終わったら欄を作り直す（`artChanged` → `buildPanels`）
 
 ## 見どころ（2026-10-04 指示「もっと、見ている人が楽しめるように」）
 
