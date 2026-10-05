@@ -57,9 +57,9 @@ next:
   teaser: 古い権威を壊した革命児。その姿は、本当だったのか。
 
 thumbnail:
-  image: paintings/akechi_portrait_hontokuji.jpg
-  crop: [0, 20, 578, 345]
-  focus: [140, 0, 440, 320]
+  image: paintings/akechi_portrait_hontokuji_full.jpg
+  crop: [0, 280, 1341, 1034]
+  focus: [350, 100, 900, 700]
   hook: 「敵は本能寺にあり」
   stamp: 記録にない！
   name: 明智光秀
@@ -79,7 +79,7 @@ terms:
 sections:
   # ---------------------------------------------------------------- 1
   - title: 地表：「敵は本能寺にあり」
-    background: {image: paintings/nobunaga_rakuchu_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+    background: {image: paintings/akechi_honnoji_nobukazu_1896.jpg, credit: "楊斎延一《本能寺焼討之図》1896年（後世の想像図）"}
     portrait: {image: paintings/akechi_portrait_hontokuji.jpg, caption: "明智光秀（本徳寺蔵の肖像画）", age: false}
     year: 1582
     lines:
@@ -118,7 +118,7 @@ sections:
 
   # ---------------------------------------------------------------- 2
   - title: 名前のない前半生
-    background: {image: paintings/nobunaga_yoshiaki_escape_toyonobu.jpg, credit: "歌川豊宣《新撰太閤記》足利義昭の脱出（1884年）"}
+    background: {image: paintings/akechi_mitsuhide_yoshiiku_1867.jpg, credit: "歌川芳幾《太平記英勇伝 明智日向守光秀》1867年（後世の武者絵）"}
     portrait: null
     year: 1566
     lines:
@@ -187,6 +187,7 @@ sections:
         background: {image: paintings/nobunaga_hiei_kyosai.jpg, credit: "河鍋暁斎《東海道名所之内 比叡山》1863年"}
         card: {head: "1571年", body: "比叡山の焼き討ち"}
       - 語り: そのあと光秀は、比叡山のふもと、近江の坂本を与えられ、琵琶湖のほとりに坂本城を築きます。
+        background: {image: paintings/akechi_karasaki_night_rain_hiroshige.jpg, credit: "歌川広重《近江八景之内 唐崎夜雨》1834年ごろ（坂本のすぐ南）"}
         card: {head: "1571年", body: "坂本城を築く（約5万石）"}
       - 聞き: お城を任されたんだ！ 名簿のいちばん最後だった人が。
         tone: 驚き
@@ -207,7 +208,7 @@ sections:
 
   # ---------------------------------------------------------------- 4
   - title: 丹波の5年と「天下の面目」
-    background: {image: paintings/nobunaga_rakuchu_uesugi_left.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）左隻"}
+    background: {image: paintings/akechi_tamba_kameyama_castle_map.jpg, credit: "《丹波国亀山城絵図》（正保城絵図、1640年代。光秀より後の姿）"}
     portrait: null
     year: 1575
     lines:
@@ -224,7 +225,9 @@ sections:
         tone: 驚き
       - 語り: 同じ年、妻が亡くなったと伝わります。貧しかったころ、妻が自分の黒髪を売って光秀を支えた、という話も有名ですが、これは言い伝えで、記録では確かめられません。
       - 語り: 娘の一人、玉は、のちに細川藤孝の息子、忠興に嫁ぎます。キリスト教の洗礼を受けて、細川ガラシャと呼ばれる人です。
+        portrait: {image: paintings/akechi_gracia_kiyochika_1885.jpg, caption: "細川ガラシャ（小林清親画、1885年）"}
       - 聞き: ガラシャって、光秀さんの娘だったんだ。あーし、別々の人だと思ってた。
+        portrait: null
         tone: 納得
       - 語り: 丹波を平らげるまでに、およそ5年かかりました。そのあいだに、丹波の亀山に城を築き、城下町をつくっています。今の京都府亀岡市です。
         card: {head: "1579年", body: "丹波を平定"}
@@ -262,6 +265,7 @@ sections:
         short: s4
         tone: しみじみ
       - 語り: ただ、この軍法には、本物ではない、という説もあります。福知山の神社に伝わり、市の文化財になっていますが、そこは割り引いて聞いてください。
+        background: {image: paintings/akechi_fukuchiyama_castle_map.jpg, credit: "《丹波国福知山平山城絵図》（正保城絵図、1640年代）"}
         short: s4
         card: {head: "1581年の日付", body: "家中軍法（本物かは議論あり）"}
         year: 1581
@@ -276,7 +280,7 @@ sections:
 
   # ---------------------------------------------------------------- 5
   - title: 本能寺の朝
-    background: {image: paintings/nobunaga_rakuchu_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
+    background: {image: paintings/akechi_atago_renga_ehon_taikoki.jpg, credit: "『絵本太閤記』光秀連歌の図（江戸後期の読み物の挿絵）"}
     portrait: null
     year: 1582
     lines:
@@ -293,6 +297,7 @@ sections:
       - 聞き: あとから読むと、全部それっぽく見えちゃうやつだ。
         tone: 納得
       - 語り: 6月1日の夕方、光秀は、およそ1万3000の兵を連れて、丹波の亀山城を出ました。表向きは、西の備中へ向かう出陣です。
+        background: {image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻"}
         card: {head: "6月1日の夕方", body: "1万3000の兵で亀山城を出る"}
       - 語り: ところが軍は、京都のほうへ向かいます。夜明け前、桂川を渡るところで、鉄砲の火縄に火をつけ、戦いの支度をするよう命じたとされます。
       - 聞き: ここで「敵は本能寺にあり」って言ったことになってるんだよね。
@@ -317,6 +322,7 @@ sections:
       - 聞き: じゃあ、兵の前で「敵は本能寺にあり」って叫ぶ場面は、なかったのかもしれないんだ。
         tone: 納得
       - 語り: 6月2日の明け方、明智軍は本能寺を囲みました。西暦では、1582年6月21日です。
+        background: {image: paintings/akechi_honnoji_nobukazu_1893.jpg, credit: "楊斎延一《真書太閤記 本能寺焼討之図》1893年（後世の想像図）"}
         card: {head: "1582年6月2日", body: "本能寺の変（西暦で6月21日）"}
       - 語り: 本城の覚書によれば、本能寺の門は開いていて、中には、ねずみ一匹ほどのものもいなかったそうです。
       - 聞き: 信長さん、ほとんど守りがなかったんだ。
@@ -339,7 +345,7 @@ sections:
 
   # ---------------------------------------------------------------- 6
   - title: なぜ討ったのかを掘る
-    background: {image: paintings/nobunaga_letter_to_nene.jpg, credit: "織田信長がねねに宛てた手紙（1576年ごろ）"}
+    background: {image: paintings/akechi_nobunaga_strikes_toyonobu_1883.jpg, credit: "歌川豊宣《新撰太閤記》信長が光秀を打つ場面（1883年、後世の創作）"}
     portrait: null
     year: 1582
     lines:
@@ -373,6 +379,7 @@ sections:
       - 聞き: 手紙が一通見つかるたびに、説が動くんだね。
         tone: 納得
       - 語り: 本能寺の変の動機で、近年有力とされる説の一つが、四国の説です。
+        background: {image: paintings/nobunaga_letter_to_nene.jpg, credit: "織田信長がねねに宛てた手紙（1576年ごろ）"}
         short: s8
       - 聞き: 四国？ 京都の事件なのに？
         short: s8
@@ -421,6 +428,7 @@ sections:
         tone: 納得
       - 語り: 京都の町の税を免除した、という記録もあります。都の人たちの心をつかもうとしたんですね。
       - 語り: 同じ6月9日、光秀は、盟友の細川藤孝と、その息子の忠興に、味方になってほしいと手紙を書きます。忠興の妻は、光秀の娘の玉でした。
+        portrait: {image: paintings/akechi_tadaoki_portrait.jpg, caption: "細川忠興（江戸時代の肖像画）"}
         card: {head: "6月9日", body: "細川父子へ光秀の手紙"}
       - 語り: その手紙には、こんな一節があります。
       - 人物: 「50日か100日のうちに近くの国を固めたら、あとは息子の十五郎や、与一郎どのに譲って、身を引くつもりだ」
@@ -437,6 +445,7 @@ sections:
       - 聞き: 娘の嫁ぎ先にまで断られるの、つらすぎる。
         tone: しみじみ
       - 語り: 一方、備中で毛利と戦っていた秀吉は、すぐに和睦して、大急ぎで京都へ引き返してきました。
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（高台寺蔵の肖像画）"}
         figure: {type: map, title: 秀吉の引き返し, bounds: [133.4, 136.2, 34.2, 35.4], route: [備中高松, 姫路, 尼崎, 山崎], places: [[備中高松, 133.82, 34.70], [姫路, 134.69, 34.83], [尼崎, 135.42, 34.73], [山崎, 135.68, 34.89], [京都, 135.77, 35.01]], note: およそ230kmを10日ほどで}
       - 聞き: 早っ！ 秀吉さん、準備よすぎない？
         tone: 驚き
@@ -444,6 +453,8 @@ sections:
       - 聞き: 味方は集まらない、敵はすぐ戻ってくる。あーしだったら、もう頭が真っ白。
         tone: しみじみ
       - 語り: 6月13日、京都の南、山崎で、両軍はぶつかります。秀吉の軍がおよそ2万7000、明智軍がおよそ1万7000。数には諸説あります。
+        background: {image: paintings/akechi_yamazaki_sadahide_met.jpg, credit: "歌川貞秀《山崎大合戦之図》19世紀中ごろ"}
+        portrait: null
         short: s6
         card: {head: "6月13日", body: "山崎の戦い"}
         figure: null
@@ -496,7 +507,7 @@ sections:
       - 語り: そもそも光秀が6月13日から14日にかけて亡くなったことは、当時の記録に書かれています。天海説は、伝説として扱われています。
         short: s7
       - 語り: では、光秀が治めた土地では、どう語られてきたのでしょう。
-        background: {image: paintings/nobunaga_rakuchu_uesugi_left.jpg, credit: "狩野永徳《洛中洛外図屏風》（上杉本）左隻"}
+        background: {image: paintings/akechi_fukuchiyama_castle_map.jpg, credit: "《丹波国福知山平山城絵図》（正保城絵図、1640年代）"}
       - 語り: 京都府の福知山市は、光秀が町の人の税を免除した、と紹介しています。川の流れを変えて洪水を防いだ、という話も伝わっています。
       - 聞き: そっちは名君なんだ。
         tone: 疑問
@@ -518,7 +529,7 @@ sections:
 
   # ---------------------------------------------------------------- 9
   - title: 見立て：その一言は、誰の言葉か
-    background: {image: paintings/nobunaga_honnoji_yoshitoshi.jpg, credit: "月岡芳年《大日本名将鑑》織田信長（1878年、後世の想像図）"}
+    background: {image: paintings/akechi_mitsuhide_kabuki_kunichika_1890.jpg, credit: "豊原国周《太閤記十段目》光秀を演じる市川団十郎（1890年、芝居の絵）"}
     portrait: null
     year: 1641
     lines:
