@@ -962,7 +962,8 @@ function artLoad(k){
   im.src = artUrl(k); ART_IMG[k] = im;
 }
 const artImg = k => ART_OK[k] ? ART_IMG[k] : null;
-const ART_EXTRA = ['crew/boss', 'crew/elder', 'heirs/pick', 'heirs/roster', 'heirs/map', 'heirs/diary', 'heirs/safe', 'heirs/charm', 'shop/canteen', 'shop/cart', 'shop/bento'];
+const POSED = ['minarai', 'veteran', 'happa', 'robot', 'boss'];   // 2ポーズの絵が来る（予定の）仲間
+const ART_EXTRA = ['crew/boss', 'crew/elder', ...POSED.flatMap(n => ['crew/' + n + '_up', 'crew/' + n + '_down']), 'heirs/pick', 'heirs/roster', 'heirs/map', 'heirs/diary', 'heirs/safe', 'heirs/charm', 'shop/canteen', 'shop/cart', 'shop/bento'];
 const itemArtKey = it => 'items/' + it.id + '.webp';
 // 家宝・売店・仲間の絵（無ければ今まで通りの絵文字・図形）
 const artTag = (k, size, fb) => ART_OK[k] ? `<img src="${artUrl(k)}" width="${size}" height="${size}" alt="" style="object-fit:contain">` : fb;
@@ -1993,7 +1994,7 @@ function drawCrew(dt, fy){
       f.lt = t;
       const ang = swingAngle(t, per > 0.6 ? 1 : 0.8);
       const spr = S.crewArt !== false && artImg(crewArtKey(f.i));
-      if (spr) drawCrewSprite(spr, f, fx, y, ang);
+      if (spr) drawCrewSprite(spr, f, fx, y, ang, WK[f.i].id);
       else if (f.i === 3) { drawDrill(fx, y, f.face, tAll + f.ph, '#6f7b8a', f.sc); if (row === 0 && Math.random() < dt * 4) burst(fx + f.face * 20, y, 1, LAYERS[layerIdxForDepth(S.depth)].block, 0.5); }
       else if (f.i === 4) drawRobot(fx, y, f.face, ang, f.sc);
       else if (f.i === 5) drawCart(fx, y, f.face, tAll + f.ph, f.sc);
@@ -2005,10 +2006,16 @@ function drawCrew(dt, fy){
 }
 // 仲間をイラストで描く（Gemini の絵。2026-10-05）。体の絵は1枚なので、振り下ろしに合わせて前へ傾け、打った瞬間に少し縮める。
 // 機械は小刻みに揺らす（掘削機・掘進シールド）か、上下に弾ませる（ロボ・トロッコ）
-function drawCrewSprite(im, f, x, y, ang){
+// 振り上げ・振り下ろしの2枚（crew/<名前>_up・_down）があれば、振りに合わせて差し替える（2026-10-05 ユーザー指示「つるはしを振らせたい」）
+function drawCrewSprite(im, f, x, y, ang, base){
   const big = f.i >= HUMAN, h = (big ? 60 : 56) * f.sc;
   let rot = 0, sy = 1, dx = 0, dy = 0;
-  if (!reduced) {
+  const up = base && artImg('crew/' + base + '_up.webp'), dn = base && artImg('crew/' + base + '_down.webp');
+  if (up && dn) {
+    const k = Math.max(0, Math.min(1, (ang + 2.3) / 3.05));
+    im = k > 0.55 ? dn : up;
+    if (!reduced && k > 0.85) sy = 1 - 0.05 * (k - 0.85) / 0.15;
+  } else if (!reduced) {
     if (f.i < HUMAN || f.i === 4) { const k = Math.max(0, Math.min(1, (ang + 2.3) / 3.05)); rot = (-0.08 + 0.2 * k) * (f.i === 4 ? 0.6 : 1); sy = 1 - 0.07 * Math.max(0, k - 0.82) / 0.18; }
     else if (f.i === 3 || f.i === 6) { dx = Math.sin(tAll * 40 + f.ph * 9) * 0.8; dy = Math.sin(tAll * 33 + f.ph * 5) * 0.5; }
     else dy = -Math.abs(Math.sin(tAll * 6 + f.ph * 7)) * 1.6;
@@ -2710,7 +2717,7 @@ function draw(dt){
   bossJoy += dt;
   const jump = bossJoy < 0.5 && !reduced ? -Math.sin(bossJoy / 0.5 * Math.PI) * 14 : cheerT < 0.9 && !reduced ? -Math.abs(Math.sin(cheerT / 0.45 * Math.PI)) * 10 : 0;
   const bossIm = S.crewArt !== false && artImg('crew/boss.webp');
-  if (bossIm) drawCrewSprite(bossIm, { i: 0, sc: CHAR * 1.05, face: 1, ph: 0 }, cx(), fy + jump, pang);
+  if (bossIm) drawCrewSprite(bossIm, { i: 0, sc: CHAR * 1.05, face: 1, ph: 0 }, cx(), fy + jump, pang, 'boss');
   else drawPerson(cx(), fy + jump, CHAR, '#f2c230', 1, pang, PICK_TIER[tierOf(S.pick)][1], true, 9);
   if (locked(S) && (tAll % 2.4) < 1.2) { const q = (tAll % 2.4) / 1.2; ctx.fillStyle = `rgba(150,210,255,${1 - q})`; ctx.beginPath(); ctx.ellipse(cx() - 8, fy - 46 + q * 8, 2, 3, 0, 0, 7); ctx.fill(); }
   // 暗さと明かり（深いほど暗く、ランタン・社長と仲間のヘルメットのライトだけが照らす）
