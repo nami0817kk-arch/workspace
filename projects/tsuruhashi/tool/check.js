@@ -68,15 +68,17 @@ ok(typeof tapOnce === 'undefined', 'たたく操作はエンジンにない');
 // つるはしは仲間の力を上げる
 const p1 = crewDps(S, true); S.pick = 10; ok(crewDps(S, true) > p1, 'つるはしを強くすると仲間の力が上がる');
 
-// 広告の採掘倍率：見るたびに ×2→×3→×4→×5、見るたびに残り5分、切れたら ×1
-S = fresh(); startBoost(S); ok(boostMul(S) === 2 && S.boostUntil - clock === 300e3, '1回目は ×2 を5分');
-clock += 200e3; startBoost(S); ok(boostMul(S) === 3 && S.boostUntil - clock === 300e3, '5分のうちに見ると ×3、残りは5分に戻る');
-for (let k = 0; k < 8; k++) startBoost(S); ok(boostMul(S) === 11, '倍率に上限はない（10回で ×11）');
+// 広告の採掘倍率：動画1本ごとに「＋1倍を30分」の時計を別々に持つ。倍率 = 1 + 動いている時計の数（上限なし）
+S = fresh(); startBoost(S); ok(boostMul(S) === 2 && S.boosts[0] - clock === 1800e3, '1本目は ×2 を30分');
+clock += 600e3; startBoost(S); ok(boostMul(S) === 3 && S.boosts[1] - clock === 1800e3, '10分後に見ると ×3。2本目は別の30分');
+clock += 1201e3; ok(boostMul(S) === 2, '1本目が切れたら ×2（2本目はまだ残る）');
+clock += 600e3; ok(boostMul(S) === 1, '2本目も切れたら ×1');
+for (let k = 0; k < 10; k++) startBoost(S); ok(boostMul(S) === 11, '倍率に上限はない（10本で ×11）');
 ok(boostWait(S) === BOOST_GAP, '動画なしで押した直後は30秒あける');
-clock += 301e3; ok(boostMul(S) === 1, '切れたら ×1');
-startBoost(S); ok(boostMul(S) === 2, '切れた後はまた ×2 から');
+clock += 1801e3; startBoost(S); ok(boostMul(S) === 2, '切れた後はまた ×2 から');
 const sw = fresh(); sw.w[0] = 10; const away1 = simulateAway(sw, 600).ore;
-sw.boostLv = 3; sw.boostUntil = clock + 300e3; ok(simulateAway(sw, 600).ore > away1, '留守の間も残っていた倍率が効く');
+sw.boosts = [clock + 300e3, clock + 300e3]; ok(simulateAway(sw, 600).ore > away1 * 1.5, '留守の間も残っていた倍率が効く');
+ok(normalize({ v: 2, boostUntil: clock + 60e3, boostLv: 3 }).boosts.length === 3, '前の形の保存（倍率×4）は時計3本に直す');
 
 // 古い保存や壊れた保存を読んでも落ちない
 S = normalize({ v: 2, w: [1, 2], frag: null, st: null });

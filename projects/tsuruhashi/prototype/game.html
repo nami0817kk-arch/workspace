@@ -395,9 +395,10 @@ const SIDE = 0.8;
 const OFFLINE_CAP_H = 8;
 const CRIT_P = 0.08, CRIT_X = 5;
 const DROP_P = 0.12;
-// 採掘の倍率：広告を見るたびに ×2→×3→×4…と上がり、上限はない（2026-10-03 ユーザー指示「広告はさらに×」「上限なし」）。
-// 見るたびに残りは5分に戻り、切れたら ×1。動画なしで押せる人（ブラウザの試作）は、次に押せるまで BOOST_GAP 秒あける
-const BOOST_SEC = 300, BOOST_GAP = 30;
+// 採掘の倍率：動画1本ごとに「＋1倍を30分」の時計を別々に持つ（2026-10-05 ユーザー指示「時間は30分にして、再度見ると別の30分をカウントする」）。
+// 倍率 = 1 + 動いている時計の数（上限なし。2026-10-03「広告はさらに×」「上限なし」）。時計は1つずつ切れていく。
+// 動画なしで押せる人（ブラウザの試作）は、次に押せるまで BOOST_GAP 秒あける
+const BOOST_SEC = 1800, BOOST_GAP = 30;
 // 動画の特典（2026-10-05 ユーザー指示「広告を使いたくなるようなバランス」）。sim で広告を見ない人と比べて決めた数字
 const AD_AWAY = 3;   // 留守の分を3倍で受け取る（前は2倍）
 const AD_FAME = 2;   // 代替わりの名声を2倍で受け取る
@@ -552,7 +553,7 @@ const startCrew = () => WK.map((w, i) => i === 0 ? 2 : 0);
 const fresh = () => ({
   v:2, ore:START_ORE, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
-  boostUntil:0, boostLv:0, boostAt:0, last:NOW(),
+  boosts:[], boostAt:0, last:NOW(),
   own:{}, bento:0, bentoUntil:0, iapGot:{},
   heir:[], mapTo:0, genStat:{ species:0, crits:0 }, passTold:false,
   gen:1, fame:0, creed:[], genDepth:0, best:0, genStart:NOW(), history:[],
@@ -562,7 +563,8 @@ const fresh = () => ({
 // 保存の形が変わったときはここで古い形を直す（v は保存の版）
 function migrate(o){
   if (!o || typeof o !== 'object') return o;
-  if (o.v === 2 && o.boostLv == null) o.boostLv = 0;
+  // 前の形（1つの時計に倍率）を、倍率の数だけの時計に直す
+  if (o.v === 2 && !Array.isArray(o.boosts)) o.boosts = o.boostUntil > NOW() ? Array(Math.max(1, o.boostLv || 1)).fill(o.boostUntil) : [];
   return o;
 }
 function normalize(o){
@@ -578,6 +580,8 @@ function normalize(o){
   if (!Array.isArray(S.frag)) S.frag = [];
   if (!S.own || typeof S.own !== 'object') S.own = {};
   if (!S.iapGot || typeof S.iapGot !== 'object') S.iapGot = {};
+  if (!Array.isArray(S.boosts)) S.boosts = [];
+  S.boosts = S.boosts.filter(t => typeof t === 'number' && isFinite(t) && t > NOW()).slice(-200);
   if (!Array.isArray(S.heir)) S.heir = [];
   S.heir = S.heir.filter(h => h && HEIRS[h.k] && Number.isInteger(h.lv)).map(h => ({ k: h.k, lv: Math.max(1, Math.min(HEIR_MAX, h.lv)) })).slice(0, HEIR_SLOTS);
   if (!Number.isInteger(S.mapTo) || S.mapTo < 0) S.mapTo = 0;
@@ -653,8 +657,12 @@ const HUMAN = 3;   // 0〜2 が人の坑夫、3 から先が機械
 const crewBase = (st, M) => st.w.reduce((a, n, i) => a + n * WK[i].dps * (i < HUMAN ? M.human : M.machine), 0) * CREW_K;
 const pickBoost = (st, M) => pickMul(st.pick) * (M || mods(st)).pick;
 const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn : 1) * mapMul(st); };
-const boostOn = st => NOW() < st.boostUntil;
-const boostMul = st => boostOn(st) ? 1 + (st.boostLv || 1) : 1;
+const boostLive = st => (st.boosts || []).filter(t => t > NOW());
+const boostOn = st => boostLive(st).length > 0;
+const boostMul = st => 1 + boostLive(st).length;
+// いちばん早く切れる時計・いちばん遅く切れる時計（画面の表示用）
+const boostNextEnd = st => Math.min(...boostLive(st));
+const boostLastEnd = st => Math.max(...boostLive(st));
 // 課金アイテム（2026-10-04 ユーザー指示「広告を消すではなく、課金アイテムにする」）。
 // 買い切り2つ（ずっと効く・代替わりしても残る）と、使い切りの特製弁当。動画広告はそのまま残す
 const CANTEEN = 0.25, CART_H = 4, BENTO_SEC = 1800, BENTO_X = 2;
@@ -767,8 +775,9 @@ function simulateAway(st, sec){
   const dps = crewDps(s2, false) / mapMul(s2);   // 地図の速さは、その深さにいる間だけ（下で1歩ずつ掛ける）
   // 留守の間の倍率の合計。動画の倍率も弁当も、出かける前から効いていて途中で切れる
   const left = until => Math.max(0, Math.min(sec, (until - (NOW() - sec * 1000)) / 1000));
-  const bL = left(st.boostUntil), eL = left(st.bentoUntil || 0), bm = boostMul(st) - 1, em = BENTO_X - 1;
-  const total = dps * (sec + bL * bm + eL * em + Math.min(bL, eL) * bm * em);
+  // 倍率 = (1 + 動いている時計の数) × 弁当。時計はそれぞれ残りの分だけ効く
+  const eL = left(st.bentoUntil || 0), em = BENTO_X - 1, bls = boostLive(st).map(left);
+  const total = dps * (sec + bls.reduce((a, b) => a + b, 0) + eL * em + em * bls.reduce((a, b) => a + Math.min(b, eL), 0));
   const steps = 60;
   for (let i = 0; i < steps; i++) applyDamage(s2, total / steps * mapMul(s2), out, null);
   out.stuck = locked(s2);
@@ -783,7 +792,7 @@ function awaySeconds(st, now){
 }
 // 留守の結果を受け取る（mult=2 は広告）
 function claimAwayState(st, r, mult){
-  const keep = { pick:st.pick, w:st.w, boostUntil:st.boostUntil, boostLv:st.boostLv, sound:st.sound, haptic:st.haptic, theme:st.theme, seen:st.seen,
+  const keep = { pick:st.pick, w:st.w, boosts:st.boosts, boostAt:st.boostAt, sound:st.sound, haptic:st.haptic, theme:st.theme, seen:st.seen,
     creed:st.creed, fame:st.fame, gen:st.gen, history:st.history, ach:st.ach, notifAsked:st.notifAsked,
     own:st.own, bento:st.bento, bentoUntil:st.bentoUntil, iapGot:st.iapGot };
   const ns = Object.assign(r.state, keep);
@@ -854,13 +863,12 @@ function oreRate(st){
 }
 function startBoost(st){
   const now = NOW();
-  st.boostLv = boostOn(st) ? (st.boostLv || 1) + 1 : 1;
+  st.boosts = boostLive(st).concat(now + BOOST_SEC * 1000);
   st.boostAt = now;
-  st.boostUntil = now + BOOST_SEC * 1000;
   st.st.ads++;
 }
 // 次に見たときの倍率（上限なら今のまま、時間だけ5分に戻る）
-const boostNext = st => 1 + (boostOn(st) ? (st.boostLv || 1) + 1 : 1);
+const boostNext = st => boostMul(st) + 1;
 // 動画なしで押したとき、次に押せるまでの秒数
 const boostWait = st => Math.max(0, Math.ceil(((st.boostAt || 0) + BOOST_GAP * 1000 - NOW()) / 1000));
 
@@ -1466,8 +1474,9 @@ function updateUI(force){
   // 広告
   const bc = $('boostChip'), ab = $('adBoost');
   if (boostOn(S)) {
-    const r = Math.ceil((S.boostUntil - NOW()) / 1000);
-    bc.style.display = 'block'; bc.textContent = `採掘×${boostMul(S)}　${Math.floor(r / 60)}:${String(r % 60).padStart(2, '0')}`;
+    // いちばん早く切れる1本までの時間（そこで1つ下がる）
+    const r = Math.ceil((boostNextEnd(S) - NOW()) / 1000), mmss = t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+    bc.style.display = 'block'; bc.textContent = boostMul(S) > 2 ? `採掘×${boostMul(S)}　次の−1まで ${mmss(r)}` : `採掘×2　${mmss(r)}`;
   } else bc.style.display = 'none';
   const cur = boostMul(S), nx = boostNext(S), wait = noVideo() ? boostWait(S) : 0;
   // 動画1本で増える鉱石のおおよそ（今の入り ÷ 今の倍率 × 増える倍率 × 5分）
@@ -1476,8 +1485,8 @@ function updateUI(force){
   ab.innerHTML = pendingAd ? `${PLAY_IC}<span>動画を読み込んでいます…<small>しばらくお待ちください</small></span>`
     : veinAdOn() ? adLabel(`鉱脈 +${fmt(veinAd.g * (AD_VEIN - 1))} をもう2回分`, `いまだけ・あと${Math.ceil((veinAd.until - NOW()) / 1000)}秒`)
     : wait > 0 ? `${PLAY_IC}<span>採掘×${cur}<small>あと${wait}秒で ×${nx} に上げられる</small></span>`
-    : !boostOn(S) ? adLabel(`採掘×2を5分（約+${fmt(gainB)}）`, '動画を見るたびに倍率アップ（上限なし）')
-    : adLabel(`採掘×${nx}に上げる（約+${fmt(gainB)}）`, `いま×${cur}・残りも5分に戻る`);
+    : !boostOn(S) ? adLabel(`採掘×2を30分（約+${fmt(gainB)}）`, '見るたびに＋1倍の30分が増える（上限なし）')
+    : adLabel(`採掘×${nx}に上げる（約+${fmt(gainB)}）`, `いま×${cur}・この1本の＋1倍は30分`);
   // 特製弁当
   const ec = $('bentoChip'), eb = $('bentoBtn');
   if (bentoOn(S)) {
@@ -1658,7 +1667,7 @@ $('adBoost').addEventListener('click', () => {
   if (pendingAd || (noVideo() && boostWait(S) > 0)) return;
   withAd('boost', () => {
     startBoost(S);
-    sfx('tier'); toast(`採掘×${boostMul(S)}`, `5分間 すべての採掘が${boostMul(S)}倍`, '5分のうちにもう一度見ると、さらに上がる'); fxRing();
+    sfx('tier'); toast(`採掘×${boostMul(S)}`, `この1本の＋1倍は30分`, '続けて見るほど倍率が上がる（1本ずつ30分で切れる）'); fxRing();
     updateUI();
   });
 });

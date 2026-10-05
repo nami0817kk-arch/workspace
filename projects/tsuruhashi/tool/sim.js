@@ -3,7 +3,7 @@
 //   node tool/sim.js --quick        … 7日だけ（CI で「止まらない・壊れない」ことを見る）
 //   PLAY=heavy node tool/sim.js     … よく遊ぶ人（1日5回、合わせて80分）
 //   CREED=abbaab node tool/sim.js   … 社訓の選び方（組ごとに a か b）
-//   DAYS=60 / SEED=3 / LOG=1（その回ごとの行を出す）／ HEIR=off（家宝を受け取らない）
+//   DAYS=60 / SEED=3 / LOG=1（その回ごとの行を出す）／ HEIR=off（家宝を受け取らない）／ ADN=2（毎回の最初に動画を2本）
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const file = 'game.html';
 const src = fs.readFileSync(path.join(__dirname, '..', 'prototype', file), 'utf8');
@@ -77,7 +77,7 @@ for (let day = 1; day <= DAYS; day++) {
       }
     }
     // 広告を見る人は毎回の最初に1本（×2）。よく遊ぶ人は最初に4本（×5）、そのあとも5分ごとに1本ずつ上げる
-    if (ADS) for (let k = 0; k < (PLAY === 'heavy' ? 4 : 1); k++) startBoost(S);
+    if (ADS) for (let k = 0; k < (PLAY === 'heavy' ? 4 : +(process.env.ADN || 1)); k++) startBoost(S);   // ADN: ふつうの人が毎回の最初に見る本数
     let veinT = 0;
     for (let s = 0; s < len * 60; s++) {
       clock += 1000;
