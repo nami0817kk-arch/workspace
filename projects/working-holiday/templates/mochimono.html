@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}ワーホリの持ち物リスト｜書類・電気まわり・荷物・暮らし｜{{ SITE_NAME }}{% endblock %}
+{% block description %}ワーキング・ホリデーに持っていく物を、書類・お金、電気まわり、荷物、仕事探しと暮らしに分けてチェックリストにしました。チェックはこの端末に保存されます。{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="index.html">トップ</a> › <span aria-current="page">持ち物</span></nav>
+<h1>ワーホリの持ち物リスト</h1>
+<p class="lead">1年近く暮らす前提の持ち物です。チェックを付けると、この端末のブラウザに保存されます（ほかの人には見えません）。</p>
+{% if AMAZON_ON %}<p class="ad-label">このページには広告（Amazon のリンク）を含みます。</p>{% endif %}
+
+{% for g in packing %}
+<h2>{{ g.group }}</h2>
+<ul class="checklist">
+  {% for item in g["items"] %}
+  <li>
+    <label><input type="checkbox" data-key="{{ g.group }}/{{ item.name }}"> {{ item.name }}</label>
+    {% set link = amazon_url(item.q) %}{% if link %} <a class="small" href="{{ link }}" rel="sponsored noopener" target="_blank">Amazonで見る</a>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
+
+<div class="note">
+  食品・薬の持ち込みには国ごとの決まりがあります。オーストラリアやニュージーランドのように持ち込みの検査が厳しい国もあるので、行く国の公式の案内で確かめてください。
+</div>
+
+<h2>次に読む</h2>
+<ul>
+  <li><a href="junbi.html">出発までの準備の流れ</a></li>
+  <li><a href="index.html#compare">32か国・地域の条件を比較する</a></li>
+</ul>
+
+<style>
+  ul.checklist { list-style: none; padding: 0; }
+  ul.checklist li { padding: 0.45rem 0; border-bottom: 1px solid var(--border); }
+  ul.checklist input { transform: scale(1.15); margin-right: 0.4rem; }
+</style>
+<script>
+(function () {
+  var KEY = 'wh-packing';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+  document.querySelectorAll('ul.checklist input').forEach(function (box) {
+    var k = box.getAttribute('data-key');
+    box.checked = !!saved[k];
+    box.addEventListener('change', function () {
+      saved[k] = box.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+    });
+  });
+})();
+</script>
+{% endblock %}

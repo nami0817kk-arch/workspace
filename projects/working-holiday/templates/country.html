@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_macros.html" import val, quota %}
+{% block title %}{{ c.name }}のワーホリの条件｜年齢・期間・費用・必要な資金・申請方法｜{{ SITE_NAME }}{% endblock %}
+{% block description %}{{ c.name }}のワーキング・ホリデーの条件。{% if c.age %}年齢は{{ c.age }}、{% endif %}{% if c.stay %}期間は{{ c.stay }}。{% endif %}申請費用・必要な資金・申請の方法と時期・働くときの制限を、公式情報から確かめてまとめています。{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="../index.html">トップ</a> › <a href="index.html">国から探す</a> › <span aria-current="page">{{ c.name }}</span></nav>
+<h1>{{ c.name }}のワーキング・ホリデーの条件</h1>
+<p class="lead">日本との制度は{{ c.since }}年から。年間発給枠は{{ quota(c) }}。{% if c.twice %}一生のうち2回まで参加できる国。{% endif %}</p>
+
+<div class="card">
+<dl class="facts">
+  <dt>年間発給枠</dt><dd>{{ quota(c) }}<span class="small muted">（外務省、{{ mofa.source.as_of }}現在）</span></dd>
+  {% for key, label in FIELDS %}<dt>{{ label }}</dt><dd>{{ val(c, key) }}</dd>
+  {% endfor %}
+</dl>
+</div>
+
+{% if c.points %}
+<h2>行く前に知っておきたいこと</h2>
+<ul>
+  {% for p in c.points %}<li>{{ p }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<h2>公式の情報</h2>
+{% if c.sources %}
+<p>上の条件は、次の公式ページで確かめたものです{% if c.checked %}（{{ c.checked }} 確認）{% endif %}。申請の前に、必ず最新の情報を確かめてください。</p>
+<ul class="sources">
+  {% for s in c.sources %}<li><a href="{{ s.url }}" rel="noopener">{{ s.title }}</a></li>{% endfor %}
+</ul>
+{% else %}
+<p>この国の条件は、まだ公式の情報で確かめられていません。{{ c.name }}の駐日大使館の公式サイトで確かめてください。</p>
+{% endif %}
+<p class="small muted">制度の一覧と年間発給枠: <a href="{{ mofa.source.url }}" rel="noopener">{{ mofa.source.title }}</a></p>
+
+<div class="note">
+  外務省は、ワーキング・ホリデー・ビザの申請代行をうたう業者による書類の不適正な処理のトラブルが報じられているとして、業者を使う場合でも書類の準備を任せきりにせず、自分で公式の情報を確かめるよう呼びかけています。
+</div>
+
+{% if same_region %}
+<h2>{{ c.region }}のほかの国</h2>
+<ul class="grid">
+  {% for o in same_region %}<li><a href="{{ o.id }}.html">{{ o.name }}<span class="quota">{{ quota(o) }}</span></a></li>{% endfor %}
+</ul>
+{% endif %}
+
+<h2>次に読む</h2>
+<ul>
+  <li><a href="../index.html#compare">32か国・地域の条件を比較する</a></li>
+  <li><a href="../junbi.html">出発までの準備の流れ</a></li>
+  <li><a href="../mochimono.html">ワーホリの持ち物リスト</a></li>
+</ul>
+{% endblock %}

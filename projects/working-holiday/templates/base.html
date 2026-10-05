@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="google-site-verification" content="{{ SEARCH_CONSOLE_TOKEN }}" />
+<title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+<meta name="description" content="{% block description %}日本とワーキング・ホリデー制度がある32か国・地域の条件（年齢・期間・費用・必要な資金・申請の時期）を、各国の公式情報から1つの表にまとめています。{% endblock %}">
+<link rel="canonical" href="{{ canonical }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ SITE_NAME }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="{{ base_url }}static/favicon.svg" type="image/svg+xml">
+{% if ADSENSE_CLIENT %}<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ ADSENSE_CLIENT }}" crossorigin="anonymous"></script>{% endif %}
+<style>
+  :root {
+    --bg: #f6f7f4;
+    --card-bg: #ffffff;
+    --text: #1b1d1a;
+    --muted: #5f6a64;
+    --accent: #1f6f5c;
+    --accent-soft: #e3f1ec;
+    --border: #dfe3dd;
+    --note-bg: #fff7df;
+    --note-border: #eedc9c;
+    --link: #0f6e9e;
+    --link-visited: #6d4c9e;
+    --unknown: #8a8f8b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #131614;
+      --card-bg: #1b1f1d;
+      --text: #e7eae6;
+      --muted: #9ba8a1;
+      --accent: #57c2a6;
+      --accent-soft: #1b3029;
+      --border: #2d3430;
+      --note-bg: #2b2715;
+      --note-border: #4d4422;
+      --link: #6fb8e3;
+      --link-visited: #b39ddb;
+      --unknown: #7c837f;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", sans-serif;
+    line-height: 1.75; font-size: 16px;
+  }
+  a { color: var(--link); }
+  a:visited { color: var(--link-visited); }
+  header.site-header { background: var(--card-bg); border-bottom: 1px solid var(--border); }
+  header.site-header .inner, main, footer .inner { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+  header.site-header .inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 1rem; padding-top: 0.7rem; padding-bottom: 0.7rem; }
+  header.site-header a.logo { color: var(--text); text-decoration: none; font-weight: 700; font-size: 1.05rem; }
+  header.site-header a.logo span { color: var(--accent); }
+  header.site-header nav { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; font-size: 0.9rem; }
+  header.site-header nav a { color: var(--muted); text-decoration: none; }
+  header.site-header nav a:hover { color: var(--text); text-decoration: underline; }
+  main { padding-top: 1.2rem; padding-bottom: 2.5rem; }
+  h1 { font-size: 1.55rem; line-height: 1.4; margin: 0.6rem 0 0.8rem; }
+  h2 { font-size: 1.2rem; margin: 2.2rem 0 0.7rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--accent-soft); }
+  h3 { font-size: 1.02rem; margin: 1.4rem 0 0.4rem; }
+  .lead { color: var(--muted); margin-top: 0; }
+  .crumbs { font-size: 0.82rem; color: var(--muted); }
+  .crumbs a { color: var(--muted); }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; margin: 1rem 0; }
+  .note { background: var(--note-bg); border: 1px solid var(--note-border); border-radius: 8px; padding: 0.7rem 0.9rem; font-size: 0.92rem; }
+  .muted { color: var(--muted); }
+  .small { font-size: 0.85rem; }
+  .unknown { color: var(--unknown); font-size: 0.88em; }
+  .tag { display: inline-block; font-size: 0.72rem; padding: 0.05rem 0.45rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600; vertical-align: 0.1em; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th, td { text-align: left; vertical-align: top; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); }
+  thead th { position: sticky; top: 0; background: var(--card-bg); font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+  tbody tr:last-child td, tbody tr:last-child th { border-bottom: none; }
+  table.compare td { min-width: 9rem; }
+  table.compare th[scope=row] { white-space: nowrap; min-width: 7rem; }
+  dl.facts { display: grid; grid-template-columns: minmax(7rem, 11rem) 1fr; margin: 0; }
+  dl.facts dt, dl.facts dd { padding: 0.6rem 0.2rem; border-bottom: 1px solid var(--border); margin: 0; }
+  dl.facts dt { color: var(--muted); font-size: 0.9rem; }
+  @media (max-width: 560px) {
+    dl.facts { grid-template-columns: 1fr; }
+    dl.facts dt { border-bottom: none; padding-bottom: 0; }
+  }
+  ul.grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem; }
+  ul.grid a { display: block; padding: 0.5rem 0.7rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text); }
+  ul.grid a:hover { border-color: var(--accent); }
+  ul.grid .quota { display: block; font-size: 0.75rem; color: var(--muted); }
+  .filter { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.6rem 0; }
+  .filter button { font: inherit; font-size: 0.85rem; padding: 0.3rem 0.8rem; border-radius: 999px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); cursor: pointer; }
+  .filter button[aria-pressed=true] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .sources li { font-size: 0.88rem; word-break: break-all; }
+  .ad-label { font-size: 0.75rem; color: var(--muted); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem 0 2rem; font-size: 0.85rem; color: var(--muted); }
+  footer a { color: var(--muted); margin-right: 0.9rem; }
+  footer p { margin: 0.4rem 0; }
+</style>
+{% block head %}{% endblock %}
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="{{ base_url }}index.html">ワーホリ<span>条件くらべ</span></a>
+    <nav aria-label="サイト内">
+      <a href="{{ base_url }}index.html">32か国の比較</a>
+      <a href="{{ base_url }}country/index.html">国から探す</a>
+      <a href="{{ base_url }}junbi.html">出発までの準備</a>
+      <a href="{{ base_url }}mochimono.html">持ち物</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+<footer>
+  <div class="inner">
+    <p>
+      <a href="{{ base_url }}about.html">このサイトについて</a>
+      <a href="{{ base_url }}operator.html">運営者情報</a>
+      <a href="{{ base_url }}contact.html">お問い合わせ</a>
+      <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
+    </p>
+    {% if AMAZON_ON %}<p>Amazonのアソシエイトとして、{{ OWNER }}は適格販売により収入を得ています。</p>{% endif %}
+    <p>条件は変わることがあります。申請の前に、必ず各国の公式サイトで最新の情報を確かめてください。最終更新 {{ updated }}</p>
+  </div>
+</footer>
+</body>
+</html>

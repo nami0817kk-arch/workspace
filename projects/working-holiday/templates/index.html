@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% from "_macros.html" import val, quota %}
+{% block title %}ワーホリ32か国の条件を比較｜年齢・期間・費用・資金・申請時期｜{{ SITE_NAME }}{% endblock %}
+{% block content %}
+<h1>ワーホリに行ける32か国・地域の条件を1つの表で比べる</h1>
+<p class="lead">日本とワーキング・ホリデー制度がある国・地域は、{{ mofa.source.as_of }}現在で{{ mofa.countries|length }}あります。年齢・滞在できる期間・申請費用・必要な資金・申請の時期を、各国の政府や大使館の公式情報から書き写して並べました。</p>
+
+<div class="card">
+  <h2 style="margin-top:0">どの国にも共通すること</h2>
+  <ul>
+    <li><strong>年齢</strong>: 原則として申請時に18〜30歳。オーストラリア・カナダ・韓国・アイルランドは協定上18〜25歳で、相手国が認める場合は30歳まで。</li>
+    <li><strong>回数</strong>: 原則として1つの国で1回まで。カナダ・スロバキア・韓国・台湾は一生のうち2回まで参加でき、英国は最長2年間滞在できる。</li>
+    <li><strong>年間発給枠</strong>: 「上限なし」の国と、人数の枠がある国がある。枠が小さい国は早く埋まる。</li>
+    <li><strong>在留届</strong>: 3か月以上滞在するなら、現地の日本大使館・総領事館に在留届を出す義務がある（旅券法第16条。オンラインの「ORRネット」で出せる）。</li>
+  </ul>
+  <p class="small muted">出典: <a href="{{ mofa.source.url }}" rel="noopener">{{ mofa.source.title }}</a>（{{ mofa.source.as_of }}現在）</p>
+</div>
+
+<h2 id="compare">32か国・地域の比較表</h2>
+<div class="filter" role="group" aria-label="地域で絞る">
+  <button type="button" data-region="" aria-pressed="true">すべて</button>
+  {% for region, list in by_region %}<button type="button" data-region="{{ region }}" aria-pressed="false">{{ region }}（{{ list|length }}）</button>{% endfor %}
+</div>
+<div class="table-wrap">
+<table class="compare">
+  <thead>
+    <tr>
+      <th scope="col">国・地域</th>
+      <th scope="col">年間発給枠</th>
+      {% for key, label in FIELDS if key in TABLE_FIELDS %}<th scope="col">{{ label }}</th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in countries %}
+    <tr data-region="{{ c.region }}">
+      <th scope="row"><a href="country/{{ c.id }}.html">{{ c.name }}</a>{% if c.twice %} <span class="tag">2回OK</span>{% endif %}<br><span class="small muted">{{ c.region }}・{{ c.since }}年〜</span></th>
+      <td>{{ quota(c) }}</td>
+      {% for key, label in FIELDS if key in TABLE_FIELDS %}<td>{{ val(c, key) }}</td>{% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="small muted">「公式サイトで確認」は、公式の情報で確かめられなかった項目です。推測では埋めていません。各国のページに、確かめた公式ページへのリンクがあります。</p>
+
+<h2>国から探す</h2>
+{% for region, list in by_region %}
+<h3>{{ region }}</h3>
+<ul class="grid">
+  {% for c in list %}<li><a href="country/{{ c.id }}.html">{{ c.name }}<span class="quota">{{ quota(c) }}</span></a></li>{% endfor %}
+</ul>
+{% endfor %}
+
+<h2>次に読む</h2>
+<ul>
+  <li><a href="junbi.html">出発までの準備の流れ</a></li>
+  <li><a href="mochimono.html">ワーホリの持ち物リスト</a></li>
+</ul>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll('.filter button');
+  var rows = document.querySelectorAll('table.compare tbody tr');
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var region = b.getAttribute('data-region');
+      buttons.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      rows.forEach(function (r) { r.hidden = !!region && r.getAttribute('data-region') !== region; });
+    });
+  });
+})();
+</script>
+{% endblock %}

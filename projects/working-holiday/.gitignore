@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ビルド成果物（CI実行のたびに再生成）
+output/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 実行時の一時ファイル
+.pytest_cache/

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}お問い合わせ｜{{ SITE_NAME }}{% endblock %}
+{% block description %}{{ SITE_NAME }}へのご連絡先。掲載している条件の誤りや古くなった情報のご指摘をメールで受け付けています。{% endblock %}
+{% block content %}
+<h1>お問い合わせ</h1>
+<p>本サイトへのご連絡は、下記のメールアドレス宛にお願いします。お問い合わせフォームは設けていません。</p>
+{# mailto: では書かない（Cloudflare の Email Address Obfuscation 対策。docs/public-identity.md） #}
+<p style="font-size:1.15rem; font-weight:bold; margin:1.25rem 0;">{{ CONTACT_EMAIL.replace("@", "[at]") }}</p>
+<p class="small muted" style="margin-top:-0.75rem;">迷惑メール対策のため <code>[at]</code> と書いています。送信時は <code>@</code> に置き換えてください。</p>
+
+<h2>お受けできる内容</h2>
+<ul>
+  <li>掲載している条件の誤り・古くなった情報のご指摘</li>
+  <li>掲載内容の削除・訂正のご依頼</li>
+  <li>サイトの不具合のご連絡</li>
+</ul>
+
+<h2>お受けできない内容</h2>
+<p><strong>個別のビザ申請や渡航のご相談にはお答えできません。</strong>申請の条件や手続きは、各国の大使館・移民局にお問い合わせください。</p>
+
+<h2>返信について</h2>
+<p>個人で運営しているため、すべてのご連絡に返信できるとは限りません。返信までに日数をいただくことがあります。</p>
+
+<p class="small muted">運営者: {{ OWNER }}（<a href="{{ base_url }}operator.html">運営者情報</a>）</p>
+{% endblock %}
