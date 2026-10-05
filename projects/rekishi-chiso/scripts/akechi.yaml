@@ -58,7 +58,7 @@ next:
 
 thumbnail:
   image: paintings/akechi_portrait_hontokuji_full.jpg
-  crop: [0, 280, 1341, 1034]
+  crop: [0, 1180, 1341, 1934]
   focus: [350, 100, 900, 700]
   hook: 「敵は本能寺にあり」
   stamp: 記録にない！
