@@ -78,6 +78,8 @@ function season(g, diff, chal) {
 }
 const cases = [['m', 'normal', null], ['f', 'hard', 'poor'], ['m', 'easy', 'small'], ['f', 'normal', 'busy'], ['m', 'normal', null]];
 for (const [g, d, c] of cases) season(g, d, c);
+// 結末の筋（C・D の解散・休止）のエンドロールと結果の画面も描く
+run(`['S','B','C','D','C','D'].forEach(function(gr){S.future=makeFuture(S,Object.assign({},finalEval(S),{grade:gr}));S.ending=true;__shot();S.ending=false;__shot();});`);
 run(`S=null;ui.tsub='new';__shot();ui.tsub='rec';__shot();ui.tsub=null;ui.settings=true;__shot();ui.settings=false;ui.gloss=true;__shot();ui.gloss=false;ui.hallAll=true;ui.meikanAll=true;__shot();`);
 run(`S=newGame('m','normal',null,todayKey());__shot();S=null;`);
 
