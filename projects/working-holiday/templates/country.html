@@ -21,6 +21,14 @@
   {{ locator(loc, c) }}
 </div>
 
+<div class="stat-row facts-row">
+  <div class="stat">{{ icon("users", 30) }}<span class="stat-label">年間の発給枠</span><span class="stat-value">{{ quota(c) }}</span></div>
+  <div class="stat">{{ icon("calendar", 30) }}<span class="stat-label">制度の開始</span><span class="stat-value">{{ c.since }}年</span></div>
+  <div class="stat">{{ icon("clock", 30) }}<span class="stat-label">時差{% if c.basics.tz_note %}（{{ c.basics.tz_note }}）{% endif %}</span><span class="stat-value">{{ c.basics.diff }}</span></div>
+  <div class="stat">{{ icon("coins", 30) }}<span class="stat-label">通貨</span><span class="stat-value">{{ c.basics.currency }}（{{ c.basics.code }}）</span></div>
+  {% if c.basics.capital %}<div class="stat">{{ icon("city", 30) }}<span class="stat-label">首都</span><span class="stat-value">{{ c.basics.capital }}</span></div>{% endif %}
+</div>
+
 <h2 id="joken"><span class="section-icon">{{ icon("passport", 24) }}</span>ビザの条件</h2>
 <div class="card">
 <dl class="facts">
@@ -178,6 +186,7 @@
 
 <h2>次に読む</h2>
 <ul>
+  {% if c.compare %}<li>{{ c.name }}とほかの国を比べる: {% for p in c.compare %}<a href="../hikaku/{{ p.slug }}.html">{{ p.other }}</a>{% if not loop.last %}・{% endif %}{% endfor %}</li>{% endif %}
   <li><a href="../index.html#compare">32か国・地域の条件を比較する</a></li>
   <li><a href="../junbi.html">出発までの準備の流れ</a></li>
   <li><a href="../genchi.html">現地に着いたら（どの国にも共通すること）</a></li>

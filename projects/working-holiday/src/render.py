@@ -107,11 +107,37 @@ def step_icon(title: str) -> str:
     return next((name for word, name in _STEP_ICONS if word in title), "form")
 
 
+def _hours(delta) -> float:
+    return delta.total_seconds() / 3600
+
+
+def time_difference(tz: str, year: int) -> dict:
+    """日本との時差（時間）。1月と7月の正午で比べ、夏時間がある国は両方を返す。"""
+    from datetime import datetime as _dt
+    jp = ZoneInfo("Asia/Tokyo")
+    out = {}
+    for key, month in (("winter", 1), ("summer", 7)):
+        t = _dt(year, month, 15, 12, tzinfo=ZoneInfo(tz))
+        out[key] = _hours(t.utcoffset()) - _hours(t.astimezone(jp).utcoffset())
+    return out
+
+
+def fmt_diff(h: float) -> str:
+    """-8.0 → 「日本より8時間遅い」。0 → 「日本と同じ」。"""
+    if h == 0:
+        return "日本と同じ"
+    n = abs(h)
+    text = f"{int(n)}時間" if n == int(n) else f"{int(n)}時間{int((n - int(n)) * 60)}分"
+    return f"日本より{text}{'進んでいる' if h > 0 else '遅い'}"
+
+
 def load_data() -> tuple[dict, list[dict]]:
     """外務省の一覧に、各国のデータを重ねる。各国のデータが無い国は外務省の分だけになる。"""
     mofa = json.loads((_DATA / "mofa.json").read_text(encoding="utf-8"))
     links_path = _DATA / "links.json"
     links = json.loads(links_path.read_text(encoding="utf-8"))["countries"] if links_path.exists() else {}
+    basics = json.loads((_DATA / "basics.json").read_text(encoding="utf-8"))["countries"]
+    year = datetime.now(ZoneInfo("Asia/Tokyo")).year
     countries = []
     for c in mofa["countries"]:
         detail_path = _DATA / "countries" / f"{c['id']}.json"
@@ -131,6 +157,15 @@ def load_data() -> tuple[dict, list[dict]]:
         merged["arrival"] = json.loads(arrival_path.read_text(encoding="utf-8")) if arrival_path.exists() else None
         for step in (merged["arrival"] or {}).get("steps", []):
             step["icon"] = step_icon(step.get("title", ""))
+        b = basics[c["id"]]
+        diff = time_difference(b["tz"], year)
+        if diff["summer"] > diff["winter"]:  # 北半球の夏時間（7月が夏時間）
+            label = f"{fmt_diff(diff['winter'])}（夏時間は{fmt_diff(diff['summer']).removeprefix('日本より')}）"
+        elif diff["summer"] < diff["winter"]:  # 南半球の夏時間（1月が夏時間）
+            label = f"{fmt_diff(diff['summer'])}（夏時間は{fmt_diff(diff['winter']).removeprefix('日本より')}）"
+        else:
+            label = fmt_diff(diff["winter"])
+        merged["basics"] = {**b, "diff": label}
         merged["twice"] = c["name"] in ("カナダ", "スロバキア", "韓国", "台湾")
         countries.append(merged)
     return mofa, countries
@@ -159,6 +194,67 @@ def numbers_only(text: str) -> str:
         if n not in seen:
             seen.append(n)
     return " / ".join(seen)
+
+
+# 2か国の比較ページを作る国（行く人が多く、現地情報もくわしい9か国）。この順で組み合わせる。
+COMPARE_TOP = ["australia", "canada", "new-zealand", "uk", "ireland", "korea", "taiwan", "germany", "france"]
+
+
+def pair_slug(a: dict, b: dict) -> str:
+    """組み合わせの URL 名。COMPARE_TOP の順に並べる（どちらから押しても同じページ）。"""
+    x, y = sorted((a["id"], b["id"]), key=COMPARE_TOP.index)
+    return f"{x}-{y}"
+
+
+def build_faq(mofa: dict, countries: list[dict]) -> list[dict]:
+    """よくある質問。答えは外務省の一覧と各国のデータから作る（文章は決まった形、国の並びはデータから）。"""
+    pick = lambda pred: [c for c in countries if pred(c)]
+    unlimited = pick(lambda c: c["quota"] == "無")
+    biggest = max(countries, key=lambda c: c["quota_n"])
+    smallest = min((c for c in countries if c["quota_n"]), key=lambda c: c["quota_n"])
+    free = pick(lambda c: c["fee"].startswith("無料"))
+    newest_year = max(c["since"] for c in countries)
+    newest = pick(lambda c: c["since"] == newest_year)
+    hosp = pick(lambda c: c["arrival"] and c["arrival"].get("medical", {}).get("hospitals"))
+    nostat = pick(lambda c: c["arrival"] and c["arrival"].get("jobs", {}).get("no_statutory"))
+    twice = pick(lambda c: c["twice"])
+    n = len(countries)
+    return [
+        {"id": "nansai", "q": "ワーホリは何歳まで行けますか？",
+         "a": f"原則として、ビザを申請する時点で18歳以上30歳以下です（外務省）。オーストラリア・カナダ・韓国・アイルランドとの間では協定上18〜25歳ですが、相手国が認める場合は30歳まで申請できます。細かい数え方（「31歳の誕生日の前日まで」など）は国ごとに違うので、各国のページで確かめてください。",
+         "countries": [], "link": ("32か国の年齢を比較表で見る", "index.html#compare")},
+        {"id": "nankai", "q": "ワーホリは何回行けますか？",
+         "a": f"原則として1つの国につき1回です。{'・'.join(c['name'] for c in twice)}は一生のうち2回まで参加でき、英国は最長2年間滞在できます（外務省）。別の国なら、それぞれの国の条件を満たせば行けます。",
+         "countries": twice},
+        {"id": "kazu", "q": "ワーホリで行ける国はいくつありますか？",
+         "a": f"{mofa['source']['as_of']}現在、{n}か国・地域です（外務省）。最も新しいのは{newest_year}年に加わった{'・'.join(c['name'] for c in newest)}です。",
+         "countries": newest, "link": ("世界地図で見る", "index.html")},
+        {"id": "waku", "q": "人数の枠に上限がない国はどこですか？",
+         "a": f"{len(unlimited)}か国です。枠がある国で最も多いのは{biggest['name']}（年{biggest['quota']}人）、最も少ないのは{smallest['name']}（年{smallest['quota']}人）です（外務省）。",
+         "countries": unlimited, "link": ("年間発給枠のグラフを見る", "index.html#quota")},
+        {"id": "muryou", "q": "ビザの申請費用が無料の国はどこですか？",
+         "a": f"公式情報で無料と確かめられた国は{len(free)}か国・地域です。申請費用が確かめられていない国もあるので、載っていない国は各国の公式ページで確かめてください。",
+         "countries": free},
+        {"id": "zairyu", "q": "在留届は出さないといけませんか？",
+         "a": "外国に3か月以上滞在するなら、住む場所を管轄する日本大使館・総領事館に在留届を出す義務があります（旅券法第16条）。外務省の「ORRネット」からオンラインで出せます。",
+         "countries": [], "link": ("現地に着いてからの流れを見る", "genchi.html")},
+        {"id": "byouin", "q": "日本語が通じる病院がある国はどこですか？",
+         "a": f"外務省の「世界の医療事情」や現地の日本大使館・総領事館の一覧で、日本語での対応が書かれている医療機関を載せている国は{len(hosp)}か国・地域です。日本語の対応は曜日や担当者で変わるので、かかる前に確かめてください。",
+         "countries": hosp, "link": ("国ごとの緊急の番号と医療情報を見る", "genchi.html")},
+        {"id": "saiteichingin", "q": "最低賃金が法律で決まっていない国はありますか？",
+         "a": f"{len(nostat)}か国は、法律で決まった全国一律の最低賃金がなく、業種ごとの労働協約で賃金の下限が決まります。",
+         "countries": nostat},
+        {"id": "dairi", "q": "ビザの申請は代行業者に頼んでもいいですか？",
+         "a": "外務省は、申請代行をうたう業者による書類の不適正な処理のトラブルが報じられているとして、業者を使う場合でも書類の準備を任せきりにせず、自分で公式の情報を確かめ、必要なら直接問い合わせるよう呼びかけています。",
+         "countries": []},
+    ]
+
+
+def faq_ld(faq: list[dict]) -> str:
+    data = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": q["q"], "acceptedAnswer": {"@type": "Answer", "text": q["a"]}} for q in faq
+    ]}
+    return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 
 
 def canonical_url(rel_path: str) -> str:
@@ -192,6 +288,7 @@ def _env() -> Environment:
         TABLE_FIELDS=TABLE_FIELDS,
         POLICY_UPDATED=POLICY_UPDATED,
         amazon_url=amazon_url,
+        pair_slug=pair_slug,
     )
     return env
 
@@ -229,6 +326,9 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
         path.write_text(html, encoding="utf-8")
         pages.append(rel)
 
+    for c in countries:
+        c["compare"] = [{"slug": pair_slug(c, o), "other": o["name"]} for o in countries
+                        if c["id"] in COMPARE_TOP and o["id"] in COMPARE_TOP and o["id"] != c["id"]]
     write("index.html", "index.html", countries=countries, by_region=by_region,
           world=geo.world(), europe=geo.europe())
     for c in countries:
@@ -239,6 +339,20 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
           crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html")])
     write("junbi.html", "junbi.html", countries=countries, crumbs=[("トップ", "index.html"), ("出発までの準備", "junbi.html")])
     write("genchi.html", "genchi.html", countries=countries, crumbs=[("トップ", "index.html"), ("現地に着いたら", "genchi.html")])
+    by_id = {c["id"]: c for c in countries}
+    top = [by_id[i] for i in COMPARE_TOP]
+    pairs = [{"a": a, "b": b, "slug": pair_slug(a, b)} for i, a in enumerate(top) for b in top[i + 1:]]
+    for p in pairs:
+        others = [o for o in pairs if o is not p and (o["a"] in (p["a"], p["b"]) or o["b"] in (p["a"], p["b"]))]
+        write(f"hikaku/{p['slug']}.html", "hikaku.html", a=p["a"], b=p["b"], others=others,
+              crumbs=[("トップ", "index.html"), ("2か国を比べる", "hikaku/index.html"),
+                      (f"{p['a']['name']}と{p['b']['name']}", f"hikaku/{p['slug']}.html")])
+    write("hikaku/index.html", "hikaku_index.html", top=top, pairs=pairs,
+          crumbs=[("トップ", "index.html"), ("2か国を比べる", "hikaku/index.html")])
+    faq = build_faq(mofa, countries)
+    write("faq.html", "faq.html", faq=faq, faq_ld=faq_ld(faq), crumbs=[("トップ", "index.html"), ("よくある質問", "faq.html")])
+    write("hayami.html", "hayami.html", countries=countries,
+          crumbs=[("トップ", "index.html"), ("現地に着いたら", "genchi.html"), ("手続き早見表", "hayami.html")])
     write("mochimono.html", "mochimono.html", packing=PACKING, crumbs=[("トップ", "index.html"), ("持ち物", "mochimono.html")])
     for name in ("about", "operator", "privacy", "contact"):
         write(f"{name}.html", f"{name}.html")

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_macros.html" import val, quota with context %}
+{% block title %}{{ a.name }}と{{ b.name }}のワーホリを比較｜年齢・期間・費用・資金・最低賃金｜{{ SITE_NAME }}{% endblock %}
+{% block description %}{{ a.name }}と{{ b.name }}のワーキング・ホリデーを横に並べて比較。年間の発給枠、年齢、滞在できる期間、申請費用、必要な資金、申請の時期、働くときの制限、時差、最低賃金、日本語が通じる病院の有無を公式情報からまとめました。{% endblock %}
+{% macro times(c) %}{% if c.twice %}一生のうち2回まで{% elif c.id == "uk" %}最長2年（1回）{% else %}1回{% endif %}{% endmacro %}
+{% macro wage(c) %}{% set j = (c.arrival or {}).get("jobs", {}) %}{% if j.get("min_wage") %}{{ j.min_wage }}{% elif j.get("no_statutory") %}法定の最低賃金なし（労働協約で決まる）{% else %}<span class="unknown">公式サイトで確認</span>{% endif %}{% endmacro %}
+{% macro hosp(c) %}{% set h = (c.arrival or {}).get("medical", {}).get("hospitals", []) %}{% if h %}{{ h|length }}件（<a href="../country/{{ c.id }}.html#iryou">一覧</a>）{% else %}公式の一覧に記載なし{% endif %}{% endmacro %}
+{% block content %}
+<nav class="crumbs" aria-label="パンくず"><a href="../index.html">トップ</a> › <a href="index.html">2か国を比べる</a> › <span aria-current="page">{{ a.name }}と{{ b.name }}</span></nav>
+<h1><img class="flag" src="../static/flags/{{ a.flag }}.svg" alt="" width="32" height="24">{{ a.name }}と<img class="flag" src="../static/flags/{{ b.flag }}.svg" alt="" width="32" height="24">{{ b.name }}のワーホリを比較</h1>
+<p class="lead">2つの国の条件を横に並べました。くわしい説明と出典は、それぞれの国のページにあります。</p>
+<div class="table-wrap">
+<table class="vs">
+  <thead><tr><th scope="col"></th><th scope="col"><a href="../country/{{ a.id }}.html">{{ a.name }}</a></th><th scope="col"><a href="../country/{{ b.id }}.html">{{ b.name }}</a></th></tr></thead>
+  <tbody>
+    <tr><th scope="row">年間の発給枠</th><td>{{ quota(a) }}</td><td>{{ quota(b) }}</td></tr>
+    <tr><th scope="row">制度の開始</th><td>{{ a.since }}年</td><td>{{ b.since }}年</td></tr>
+    <tr><th scope="row">参加できる回数</th><td>{{ times(a) }}</td><td>{{ times(b) }}</td></tr>
+    {% for key, label in FIELDS %}<tr><th scope="row">{{ label }}</th><td>{{ val(a, key) }}</td><td>{{ val(b, key) }}</td></tr>
+    {% endfor %}
+    <tr><th scope="row">時差</th><td>{{ a.basics.diff }}</td><td>{{ b.basics.diff }}</td></tr>
+    <tr><th scope="row">通貨</th><td>{{ a.basics.currency }}（{{ a.basics.code }}）</td><td>{{ b.basics.currency }}（{{ b.basics.code }}）</td></tr>
+    <tr><th scope="row">最低賃金</th><td>{{ wage(a) }}</td><td>{{ wage(b) }}</td></tr>
+    <tr><th scope="row">日本語が通じる医療機関</th><td>{{ hosp(a) }}</td><td>{{ hosp(b) }}</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="small muted">「公式サイトで確認」は、公式の情報で確かめられなかった項目です。金額は原文の通貨のままで、円に換算していません。参加できる回数は外務省の記載によります。</p>
+
+<h2>ほかの組み合わせ</h2>
+<ul class="grid">
+  {% for p in others %}<li><a href="{{ p.slug }}.html">{{ p.a.name }}と{{ p.b.name }}</a></li>{% endfor %}
+</ul>
+{% endblock %}

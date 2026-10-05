@@ -18,8 +18,8 @@
     "hospitals": []
   },
   "jobs": {
-    "min_wage": "",
-    "min_wage_url": "https://www.rijksoverheid.nl/onderwerpen/minimumloon",
+    "min_wage": "21歳以上 時給14.71ユーロ（2026年1月1日から）、14.99ユーロ（2026年7月1日から）",
+    "min_wage_url": "https://www.rijksoverheid.nl/onderwerpen/minimumloon/bedragen-minimumloon/bedragen-minimumloon-2026",
     "channels": [
       {
         "name": "Werk.nl（UWV＝被用者保険事業団が運営する公的求人検索サイト）",
@@ -28,7 +28,6 @@
       }
     ],
     "rules": [
-      "法定最低賃金あり（21歳以上に適用、15〜20歳には低い若年者向け最低賃金が別途定められる）。時給の最低賃金は毎年1月1日と7月1日の年2回改定される",
       "21歳以上は法定最低賃金（statutory minimum wage）が保障され、15〜20歳には別途低い最低若年者賃金（minimum youth wage）が適用される",
       "時給の最低賃金を下回って支払われた場合は、本人からの申し立てで是正を求めることができる"
     ]
@@ -67,6 +66,11 @@
     {
       "title": "最低賃金についての公式の案内",
       "url": "https://www.rijksoverheid.nl/onderwerpen/minimumloon",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Bedragen minimumloon 2026（オランダ政府）",
+      "url": "https://www.rijksoverheid.nl/onderwerpen/minimumloon/bedragen-minimumloon/bedragen-minimumloon-2026",
       "checked": "2026-10-05"
     }
   ]

@@ -101,8 +101,8 @@
 {% endif %}
 {% endif %}
 
-<h2><span class="section-icon">{{ icon("briefcase", 24) }}</span>くわしく載せている国</h2>
-<p>次の国は、着いてからの手続き・日本語が通じる病院・仕事探しの窓口を、国のページにくわしく載せています。</p>
+<h2><span class="section-icon">{{ icon("briefcase", 24) }}</span>国ごとのくわしい情報</h2>
+<p>着いてからの手続き・日本語が通じる病院・仕事探しの窓口は、国のページにくわしく載せています。国ごとの番号や登録の名前は<a href="hayami.html">手続き早見表</a>で一覧にしました。</p>
 <ul class="grid">
   {% for c in detailed %}<li><a href="country/{{ c.id }}.html#genchi"><img class="flag" src="static/flags/{{ c.flag }}.svg" alt="" width="20" height="15">{{ c.name }}</a></li>{% endfor %}
 </ul>
