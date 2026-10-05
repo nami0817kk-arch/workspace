@@ -47,7 +47,7 @@ function useFrags(S){
   }
 }
 let S = fresh();
-const firstLayer = {}, rebirths = [], daily = [], paces = [];
+const firstLayer = {}, rebirths = [], daily = [], paces = [], liveB = {};
 let lastProg = 0, stall = 0;
 const tm = () => { const d = (clock - (Date.UTC(2026, 0, 1) - 9 * 3600e3)) / 864e5; return `${Math.floor(d) + 1}日目${String(Math.floor(d % 1 * 24)).padStart(2, '0')}時`; };
 const note = () => { const L = Math.floor(S.best / LAYER_LEN); for (let k = 1; k <= L; k++) if (!firstLayer[k]) firstLayer[k] = tm(); };
@@ -64,7 +64,10 @@ for (let day = 1; day <= DAYS; day++) {
     // 代替わり：名声が倍になるか、3回続けて進みが止まったら
     if (canRebirth(S)) {
       const g = fameGain(S);
-      if (g >= S.fame + 5 || (stall >= 3 && g >= S.fame * 0.3)) {
+      // POLICY=eager: 1ブロックに2分より長くかかるようになり、名声が5割以上増えるなら譲る（ゲームの「代替わりどき」と同じ）
+      const slow = hpOf(S, S.depth) / Math.max(1e-9, crewDps(S, true)) > +(process.env.RB_SLOW || 120) || locked(S);
+      const go = process.env.POLICY === 'eager' ? (slow && g >= Math.max(5, S.fame * +(process.env.RB_T || 0.5))) || g >= S.fame * 2 + 5 : g >= S.fame + 5 || (stall >= 3 && g >= S.fame * 0.3);
+      if (go) {
         const cr = CREED.slice(0, creedSlots(S.gen)).map(c => c);
         rebirths.push(`${tm()} ${S.gen}代目→ 深さ${S.genDepth}m 名声+${g}`);
         // 家宝：候補の1つ目（その代でいちばん伸ばした物）。棚がいっぱいなら Lv のいちばん低い物を手放す。HEIR=off で受け取らない
@@ -80,7 +83,7 @@ for (let day = 1; day <= DAYS; day++) {
     }
     // 広告を見る人は毎回の最初に1本（×2）。よく遊ぶ人は最初に4本（×5）、そのあとも5分ごとに1本ずつ上げる
     if (ADS) for (let k = 0; k < (PLAY === 'heavy' ? 4 : +(process.env.ADN || 1)); k++) startBoost(S);   // ADN: ふつうの人が毎回の最初に見る本数
-    let veinT = 0;
+    let veinT = 0; const b0 = S.st.blocks;
     for (let s = 0; s < len * 60; s++) {
       clock += 1000;
       tick(S, 1, null);
@@ -89,14 +92,15 @@ for (let day = 1; day <= DAYS; day++) {
       if (s % 5 === 0) buy(S);
       if (s % 60 === 0) useFrags(S);
     }
+    liveB[day] = (liveB[day] || 0) + S.st.blocks - b0;
     buy(S); useFrags(S); checkAch(S);
     S.last = clock;
     note();
     if (S.genDepth <= lastProg + 1) stall++; else stall = 0;
     lastProg = S.genDepth;
-    if (LOG) console.log(`${tm()} ${S.gen}代 深さ${S.depth}m Lv${S.pick} 仲間${S.w.join('/')} 図鑑${speciesCountOf(S)} 名声${S.fame}`);
+    if (LOG) console.log(`${tm()} ${S.gen}代 深さ${S.depth}m Lv${S.pick} 仲間${S.w.join('/')} 図鑑${speciesCountOf(S)} 名声${S.fame} 開いて割った${S.st.blocks - b0} 1個${Math.round(hpOf(S, S.depth) / crewDps(S, true))}秒${locked(S) ? ' 岩盤' : ''}`);
   }
-  daily.push({ day, best: S.best, gen: S.gen, z: speciesCountOf(S), sets: setsDone(S).length, ach: Object.keys(S.ach).length });
+  daily.push({ day, live: Math.round((liveB[day] || 0) / SES.length), best: S.best, gen: S.gen, z: speciesCountOf(S), sets: setsDone(S).length, ach: Object.keys(S.ach).length });
 }
 for (const k of Object.keys(S)) if (typeof S[k] === 'number' && !isFinite(S[k])) throw new Error('数値が壊れた: ' + k);
 console.log(`遊び方=${PLAY} 社訓=${CREED.join('')} ${DAYS}日 家宝=${S.heir.map(h => h.k + h.lv).join(',') || 'なし'}`);
@@ -108,5 +112,5 @@ console.log('代ごとの速さ（120m／240m／先代の最深に着くまで�
 paces.forEach((lt, i) => { const pv = paces[i - 1]; const pd = pv ? (pv.length - 1) * 10 : 0;
   console.log(`  ${i + 1}代目 120m ${hm(lt[12])} 240m ${hm(lt[24])}` + (pv ? `  先代${pd}m に ${hm(lt[pd / 10])}（先代 ${hm(pv[pd / 10])}）` : '')); });
 const pickDays = [1, 2, 3, 5, 7, 10, 14, 21, 28, 35, 42, 60].filter(d => d <= DAYS);
-console.log('日 | 最深 | 代 | 図鑑 | 組 | 実績');
-for (const d of pickDays) { const x = daily[d - 1]; console.log(`${x.day}日目 | ${x.best}m | ${x.gen} | ${x.z} | ${x.sets} | ${x.ach}`); }
+console.log('日 | 最深 | 代 | 図鑑 | 組 | 実績 | 開いている間に割った数（1回あたり）');
+for (const d of pickDays) { const x = daily[d - 1]; console.log(`${x.day}日目 | ${x.best}m | ${x.gen} | ${x.z} | ${x.sets} | ${x.ach} | ${x.live}`); }

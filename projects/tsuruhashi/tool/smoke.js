@@ -7,10 +7,10 @@ const path = require('path');
 const url = 'file://' + path.join(__dirname, '..', 'prototype', 'game.html');
 const STATES = {
   はじめて: null,
-  中盤: { v:2, depth:93, genDepth:93, best:93, pick:31, ore:52000, w:[14,9,4,1,0,0,0], found:{ kosen:3, doki:2, kugi:1 }, frag:[4,2,0,0,0,0,0,0,0,0] },
-  岩盤: { v:2, depth:120, genDepth:120, best:120, pick:20, ore:10, w:[20,10,3,0,0,0,0] },
-  代替わりの前: { v:2, depth:250, genDepth:250, best:250, pick:110, ore:1e9, w:[40,30,20,10,5,2,0], gen:2, fame:8, creed:['b'] },
-  深層: { v:2, depth:430, genDepth:430, best:430, pick:300, ore:1e15, w:[120,100,90,80,70,60,50], gen:9, fame:3000, creed:['a','b','a','b','a','b'], boostUntil: Date.now() + 3e5, boostLv: 6 },
+  中盤: { v:3, depth:232, genDepth:232, best:232, pick:31, ore:52000, w:[14,9,4,1,0,0,0], found:{ kosen:3, doki:2, kugi:1 }, frag:[4,2,0,0,0,0,0,0,0,0] },
+  岩盤: { v:3, depth:300, genDepth:300, best:300, pick:20, ore:10, w:[20,10,3,0,0,0,0] },
+  代替わりの前: { v:3, depth:625, genDepth:625, best:625, pick:110, ore:1e9, w:[40,30,20,10,5,2,0], gen:2, fame:8, creed:['b'] },
+  深層: { v:3, depth:1075, genDepth:1075, best:1075, pick:300, ore:1e15, w:[120,100,90,80,70,60,50], gen:9, fame:3000, creed:['a','b','a','b','a','b'], boostUntil: Date.now() + 3e5, boostLv: 6 },
 };
 (async () => {
   const b = await pw.chromium.launch();

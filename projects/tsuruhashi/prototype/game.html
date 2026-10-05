@@ -88,6 +88,7 @@ button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
 .goal{position:absolute;left:8px;right:22px;bottom:8px;background:rgba(15,10,6,.78);color:#ffe9c2;border-radius:12px;padding:6px 10px;font-size:12px;pointer-events:none;line-height:1.35}
 .goal b{color:#fff}
 .goal .need{color:#ff9b80}
+.goal .rbnow{color:#9be38a}
 .goal .bar{height:6px;background:rgba(255,255,255,.18);border-radius:3px;margin-top:5px;overflow:hidden}
 .goal .bar i{display:block;height:100%;background:linear-gradient(90deg,#f6b85c,#ffd166);border-radius:3px;transition:width .3s}
 .goal.lock{background:rgba(70,20,12,.85)}
@@ -427,7 +428,9 @@ const TStore = (() => {
 // ===== つるはし採掘のエンジン（画面を持たない。tool/sim.js もここだけを読む） =====
 let NOW = () => Date.now();
 let RNG = Math.random;
-const LAYER_LEN = 40;                 // 1層 = 40m（1m = 1ブロック）
+// 1層 = 100m（1m = 1ブロック）。2026-10-05 ユーザー指示「掘り下げが全然進まないと萎えるので、掘り下げ数が多いように」で 40m から増やした。
+// DK は前の 1m を何ブロックに割ったか（1ブロックの固さ・鉱石・物の出やすさは DK で割って、1層ぶんの合計は前と同じにそろえる）
+const LAYER_LEN = 100, DK = LAYER_LEN / 40;
 const NLAYER = 10;
 const MAX_DEPTH_LAYERED = LAYER_LEN * NLAYER;
 // その層へ抜ける岩盤に必要なつるはしLv（REQ[k] = k層目の底の岩盤）
@@ -444,15 +447,25 @@ const BOOST_SEC = 1800, BOOST_GAP = 30;
 const AD_AWAY = 3;   // 留守の分を3倍で受け取る（前は2倍）
 const AD_FAME = 2;   // 代替わりの名声を2倍で受け取る
 const AD_VEIN = 3;   // たたいた鉱脈の分を3倍に（もう2回分）
-const REBIRTH_DEPTH = 240;            // 6層の底で代替わりできる
+const REBIRTH_DEPTH = LAYER_LEN * 6;   // 6層の底で代替わりできる
 const ENV = (globalThis.process && process.env) || {};   // tool/sim.js で数値を試すときだけ使う
 const HP_G = +(ENV.HP_G || 1.096), ORE_G = +(ENV.ORE_G || 1.072);
 const isBed = d => d > 0 && d % LAYER_LEN === 0 && d / LAYER_LEN < NLAYER;
 const isRoom = d => d % LAYER_LEN === LAYER_LEN / 2 && d < MAX_DEPTH_LAYERED;
-const bandOf = d => d % LAYER_LEN >= LAYER_LEN - 8;   // ★★が出る、層の終わり近く
+const bandOf = d => d % LAYER_LEN >= LAYER_LEN - 8 * DK;   // ★★が出る、層の終わり近く
 const HP0 = +(ENV.HP0 || 10);
-const baseHp = d => HP0 * Math.pow(HP_G, d);
-const oreRaw = d => 1.5 * Math.pow(ORE_G, d);
+// 深さの「固くなり方」。浅い所は1m（前の単位、DK ブロック）ごとに HP_G 倍。SL_D1（前の単位。いまの 690m）より深い所は増え方が (SL_D1/深さ)^SL_K でゆるみ、
+// 1000m を過ぎるとほぼ頭打ちになる（鉱石も同じ形）。前はどこまでも同じ割合で固くなり、後半は1ブロックに17〜22時間かかって
+// 1日に1〜3m しか進まなかった（2026-10-05 ユーザー指示「掘り下げが全然進まないと萎えるので、掘り下げ数が多いように」）
+const SL_D1 = +(ENV.SL_D1 || 275), SL_K = +(ENV.SL_K || 3);
+function slopeInt(x){   // 前の単位の深さ x までの「固くなり方」の積み上げ（傾き1あたり）
+  if (x <= SL_D1) return x;
+  return SL_D1 + (SL_K === 1 ? SL_D1 * Math.log(x / SL_D1) : Math.pow(SL_D1, SL_K) * (Math.pow(x, 1 - SL_K) - Math.pow(SL_D1, 1 - SL_K)) / (1 - SL_K));
+}
+const LN_HP = Math.log(HP_G), LN_ORE = Math.log(ORE_G);
+const baseHp = d => HP0 / DK * Math.exp(LN_HP * slopeInt(d / DK));
+const ORE_FLAT = ENV.ORE_FLAT !== '0';
+const oreRaw = d => 1.5 / DK * Math.exp(LN_ORE * (ORE_FLAT ? slopeInt(d / DK) : d / DK));
 const layerIdxForDepth = d => Math.min(NLAYER - 1, Math.floor(d / LAYER_LEN) - (isBed(d) ? 1 : 0));
 // つるはしは仲間の力の倍率（1Lv ごとに+2%、10Lv ごとに1.15倍）。プレイヤーはたたかない（2026-10-03 ユーザー指示「クリックは不要」）
 const PK_A = +(ENV.PK_A || 0.02), PK_B = +(ENV.PK_B || 1.15), CREW_K = +(ENV.CREW_K || 2);
@@ -592,7 +605,7 @@ const CREEDS = [
 const START_ORE = 20;
 const startCrew = () => WK.map((w, i) => i === 0 ? 2 : 0);
 const fresh = () => ({
-  v:2, ore:START_ORE, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
+  v:3, ore:START_ORE, total:0, depth:0, dmg:0, side:0, pick:1, w:startCrew(),
   found:{}, seen:{}, frag:LAYERS.map(() => 0), room:{}, roomEver:{},
   boosts:[], boostAt:0, last:NOW(),
   own:{}, bento:0, bentoUntil:0, iapGot:{},
@@ -606,6 +619,15 @@ function migrate(o){
   if (!o || typeof o !== 'object') return o;
   // 前の形（1つの時計に倍率）を、倍率の数だけの時計に直す
   if (o.v === 2 && !Array.isArray(o.boosts)) o.boosts = o.boostUntil > NOW() ? Array(Math.max(1, o.boostLv || 1)).fill(o.boostUntil) : [];
+  // v2 → v3（2026-10-05）: 1層を 40m から 100m にしたので、深さを 2.5 倍に直す（岩盤の上なら岩盤の上のまま）
+  if (o.v === 2) {
+    const k = LAYER_LEN / 40, sc = x => typeof x === 'number' && isFinite(x) ? Math.round(x * k) : x;
+    for (const f of ['depth', 'genDepth', 'best', 'mapTo']) o[f] = sc(o[f]);
+    for (const f of ['room', 'roomEver']) if (o[f] && typeof o[f] === 'object') o[f] = Object.fromEntries(Object.keys(o[f]).map(d => [sc(+d), 1]));
+    if (Array.isArray(o.history)) o.history = o.history.map(h => h && typeof h === 'object' ? Object.assign({}, h, { depth: sc(h.depth), lt: [] }) : h);
+    if (o.st && typeof o.st === 'object') o.st.best1 = sc(o.st.best1);
+    o.dmg = 0; o.side = 0; o.lt = []; o.v = 3;
+  }
   return o;
 }
 function normalize(o){
@@ -634,7 +656,7 @@ function normalize(o){
   if (!Array.isArray(S.creed)) S.creed = [];
   if (!Array.isArray(S.history)) S.history = [];
   if (!Array.isArray(S.lt)) S.lt = [];
-  S.lt = S.lt.map(v => typeof v === 'number' && isFinite(v) && v >= 0 ? v : null).slice(0, 200);
+  S.lt = S.lt.map(v => typeof v === 'number' && isFinite(v) && v >= 0 ? v : null).slice(0, 600);
   if (!S.roomEver || typeof S.roomEver !== 'object') S.roomEver = {};
   return S;
 }
@@ -702,7 +724,8 @@ const wkCost = (st, i, n, M) => { M = M || mods(st); return Math.ceil(WK[i].cost
 const HUMAN = 3;   // 0〜2 が人の坑夫、3 から先が機械
 const crewBase = (st, M) => st.w.reduce((a, n, i) => a + n * WK[i].dps * (i < HUMAN ? M.human : M.machine), 0) * CREW_K;
 const pickBoost = (st, M) => pickMul(st.pick) * (M || mods(st)).pick;
-const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn : 1) * mapMul(st); };
+const LIVE_X = +(ENV.LIVE_X || 1);
+const crewDps = (st, on, M) => { M = M || mods(st); return crewBase(st, M) * pickBoost(st, M) * M.crew * (on ? M.crewOn * LIVE_X : 1) * mapMul(st); };
 const boostLive = st => (st.boosts || []).filter(t => t > NOW());
 const boostOn = st => boostLive(st).length > 0;
 const boostMul = st => 1 + boostLive(st).length;
@@ -761,7 +784,7 @@ function gainItem(st, it, out, fx, how){
   return isNew;
 }
 function rollDrop(st, d, forced, out, fx, M){
-  if (!forced && RNG() >= M.drop) return;
+  if (!forced && RNG() >= M.drop / DK) return;
   gainItem(st, pickItem(st, d, M), out, fx);
 }
 // 宝の部屋：初めて開けたときはその層の未発見（★★以外）を1つ。2回目からと、未発見がないときはかけら3つ
@@ -875,7 +898,7 @@ function claimVein(st){ const g = veinReward(st); st.ore += g; st.total += g; st
 // 鉱脈の分を動画でもう2回分（g はたたいたときの分）
 function veinBonus(st, g){ const x = g * (AD_VEIN - 1); st.ore += x; st.total += x; return x; }
 // かけら
-const fragPrice = (st, L) => Math.ceil(oreRaw(Math.max(st.depth, L * LAYER_LEN + 1)) * 3 * mods(st).ore);
+const fragPrice = (st, L) => Math.ceil(oreRaw(Math.max(st.depth, L * LAYER_LEN + 1)) * 3 * DK * mods(st).ore);
 function sellFrag(st, L){ if (st.frag[L] <= 0) return 0; const g = fragPrice(st, L); st.frag[L]--; st.ore += g; st.total += g; st.st.sold++; return g; }
 function appraiseCost(st, L){
   const unk = itemsOf(L).filter(it => !st.found[it.id]);
@@ -939,10 +962,11 @@ const boostWait = st => Math.max(0, Math.ceil(((st.boostAt || 0) + BOOST_GAP * 1
 
 // ================= 代替わり =================
 const canRebirth = st => st.genDepth >= REBIRTH_DEPTH;
-let FAME_A = +(ENV.FAME_A || 5), FAME_B = +(ENV.FAME_B || 1.03);
+let FAME_A = +(ENV.FAME_A || 5), FAME_B = +(ENV.FAME_B || 1.03), FAME_P = +(ENV.FAME_P || 1);
 function fameGain(st){
   if (!canRebirth(st)) return 0;
-  return Math.floor(FAME_A * Math.pow(FAME_B, st.genDepth - REBIRTH_DEPTH) * mods(st).fame);
+  // 固さが頭打ちになる深さから先も、深く掘るほど名声が増えるように (深さ/600m)^FAME_P を掛ける
+  return Math.floor(FAME_A * Math.exp(Math.log(FAME_B) * (slopeInt(st.genDepth / DK) - slopeInt(REBIRTH_DEPTH / DK))) * Math.pow(st.genDepth / REBIRTH_DEPTH, FAME_P) * mods(st).fame);
 }
 // 次の代で選べる社訓の組の数
 const creedSlots = gen => Math.min(CREEDS.length, gen);
@@ -963,7 +987,7 @@ const heirLv = (st, k) => { const h = (st.heir || []).find(x => x.k === k); retu
 function heirCands(st){
   const tot = st.w.reduce((a, b) => a + b, 0), g0 = st.genStat || {};
   const score = {
-    pick: st.pick / 80, roster: tot / 60, map: st.genDepth / 320,
+    pick: st.pick / 80, roster: tot / 60, map: st.genDepth / (LAYER_LEN * 8),
     diary: (speciesCountOf(st) - (g0.species || 0)) / 6, charm: (st.st.crits - (g0.crits || 0)) / 60, safe: 0.5,
   };
   const ks = Object.keys(HEIRS).filter(k => heirLv(st, k) < HEIR_MAX);
@@ -1012,7 +1036,7 @@ function rebirth(st, creed, heir, fameX){
 
 // ================= 実績（30） =================
 const ACH = [
-  ...[40, 80, 120, 160, 200, 240, 280, 320, 360, 400].map((d, i) => ({ id:'d' + d, n:`${d}m に到達`, t:st => st.best >= d, g:i, p:st => [st.best, d] })),
+  ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(k => k * LAYER_LEN).map((d, i) => ({ id:'d' + d, n:`${d}m に到達`, t:st => st.best >= d, g:i, p:st => [st.best, d] })),
   ...[10, 20, 30, 40, 50].map(n => ({ id:'z' + n, n:`図鑑 ${n}種`, t:st => speciesCountOf(st) >= n, p:st => [speciesCountOf(st), n] })),
   ...[2, 3, 5, 10].map(n => ({ id:'g' + n, n:`${n}代目の社長`, t:st => st.gen >= n, p:st => [st.gen, n] })),
   ...[20, 50, 100].map(n => ({ id:'p' + n, n:`つるはし Lv${n}`, t:st => st.pick >= n, p:st => [st.pick, n] })),
@@ -1591,6 +1615,12 @@ function updateGoal(){
     txt = canRebirth(S) ? `岩盤はもうありません。深く掘るほど代替わりの名声が増えます（いま +${fmt(fameGain(S))}）` : '岩盤はもうありません。どこまでも掘り進めます';
     p = (S.depth % LAYER_LEN) / LAYER_LEN;
   }
+  // 代替わりどき：1ブロックに2分より長くかかり、名声が5割以上増えるなら知らせる（2026-10-05「掘り下げが全然進まないと萎える」。
+  // 止まりかけたら譲って、次の代で一気に掘り直すのがいちばん深くまで行ける）
+  if (!lk && canRebirth(S)) {
+    const per = (hpOf(S, S.depth) - S.dmg) / Math.max(1e-9, crewDps(S, true) * runMul(S)), g2 = fameGain(S);
+    if (per > 120 && g2 >= Math.max(5, S.fame * 0.5)) txt += `<br><b class="rbnow">代替わりどき</b> 名声 +${fmt(g2)}（×${fameMul(S.fame).toFixed(1)}→×${fameMul(S.fame + g2).toFixed(1)}）`;
+  }
   if (txt !== g._t) { $('goalTxt').innerHTML = txt; g._t = txt; }
   $('goalBar').style.width = (Math.max(0, Math.min(1, p)) * 100).toFixed(1) + '%';
 }
@@ -1771,7 +1801,7 @@ function renderPow(){
   if (p) {
     const pv = p.pv, rows = [];
     for (let L = 1; L <= NLAYER; L++) {
-      const k = L * 4, a = S.lt[k], b = pv.lt[k];
+      const k = L * LAYER_LEN / 10, a = S.lt[k], b = pv.lt[k];
       if (b == null && a == null) continue;
       rows.push(`<tr><td>第${L}層の底（${L * LAYER_LEN}m）</td><td>${b == null ? '－' : fmtDur(b)}</td><td class="${a != null && b != null && a < b ? 'fast' : ''}">${a == null ? '…' : fmtDur(a)}</td></tr>`);
     }
@@ -1794,7 +1824,7 @@ function checkPace(){
   const pv = prevGen(S);
   if (!pv || !pv.lt || NOW() - paceToastAt < 40000) { if (!pv || !pv.lt) paceK = k; return; }
   paceK = k;
-  const a = S.lt[k * 4], b = pv.lt[k * 4];
+  const a = S.lt[k * LAYER_LEN / 10], b = pv.lt[k * LAYER_LEN / 10];
   if (a == null || b == null) return;
   paceToastAt = NOW();
   if (a < b) {
