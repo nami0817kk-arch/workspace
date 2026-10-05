@@ -2,10 +2,10 @@
 
 このファイルは `growth-loop` ワークフローが自動生成している。手で編集しても次回上書きされる。
 
-- 最終更新: 2026-09-28
-- 平均成熟度: **89** `▁▄▁▇███▇`
-- これまでに解決: **120** 件
-- 未対応: **28** 件
+- 最終更新: 2026-10-05
+- 平均成熟度: **83** `▁▄▁▇███▇▆`
+- これまでに解決: **121** 件
+- 未対応: **45** 件（ほかに判断待ち 1 件）
 
 ## プロジェクト別の成熟度
 
@@ -14,9 +14,10 @@
 | `workspace` | monorepo | 100 | ±0 | 1 |
 | `workspace/projects/ai-side-business` | Python | 100 | ±0 | 1 |
 | `workspace/projects/gemini-api` | Python | 100 | ±0 | 0 |
-| `workspace/projects/kabu-agari-ranking` | Python | 100 | ±0 | 1 |
+| `workspace/projects/kabu-agari-ranking` | Python | 100 | ±0 | 2 |
 | `workspace/projects/price-tracker` | Python | 100 | ±0 | 1 |
 | `workspace/projects/youtube-video-creation` | Python | 100 | ±0 | 2 |
+| `workspace/projects/goso-boat` | Flutter | 95 | ±0 | 2 |
 | `workspace/projects/puzzle-book` | Python | 95 | ±0 | 3 |
 | `workspace/projects/shaho-tekiyo` | Python | 95 | ±0 | 4 |
 | `workspace/projects/soccer-career` | Flutter | 95 | ±0 | 2 |
@@ -24,10 +25,13 @@
 | `workspace/libs/kabutan` | Python | 95 | ±0 | 0 |
 | `workspace/libs/puzzle-generator` | Python | 95 | ±0 | 1 |
 | `workspace/projects/kdp-novel` | Python | 87 | ±0 | 2 |
-| `workspace/projects/goso-boat` | Flutter | 85 | ±0 | 3 |
+| `workspace/projects/rekishi-chiso` | Python | 85 | ±0 | 6 |
 | `workspace/projects/ipa-kakomon` | Python | 78 | ±0 | 3 |
 | `workspace/projects/dailyquarry-home` | Python | 75 | ±0 | 3 |
+| `workspace/projects/hikari7` | Flutter | 67 | ±0 | 4 |
+| `workspace/projects/tenbin` | Node | 62 | ±0 | 6 |
 | `workspace/projects/cohabitation-budget` | 雛形のみ | 15 | ±0 | 0 |
+| `workspace/projects/torishirabe` | 雛形のみ | 0 | ±0 | 2 |
 
 ## 次にやること
 
@@ -35,14 +39,18 @@
    - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
 2. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/dailyquarry-home`
    - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
-3. **[高] 依存パッケージがどこにも書かれていない** — `workspace/projects/kdp-novel`
-   - `requirements.txt`（または `pyproject.toml`）を作り、import しているサードパーティを列挙する。
-4. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/shaho-tekiyo`
+3. **[高] README が無い** — `workspace/projects/hikari7`
+   - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
+4. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/hikari7`
    - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
-5. **[中] 必要な環境変数の一覧が無い** — `workspace/projects/dailyquarry-home`
-   - `.env.example` にキー名だけ（値は空）を並べる。README からそれを参照する。 参考: workspace/projects/youtube-video-creation が既に同じことをやっているので、そこから写すのが早い。
+5. **[高] 依存パッケージがどこにも書かれていない** — `workspace/projects/kdp-novel`
+   - `requirements.txt`（または `pyproject.toml`）を作り、import しているサードパーティを列挙する。
 
-詳細と依頼文は `docs/growth/2026-09-28.md` を見る。
+詳細と依頼文は `docs/growth/2026-10-05.md` を見る。
+
+## あなたの判断が要るもの
+
+- `workspace/projects/torishirabe` **雛形だけ作られて中身が無い**
 
 ## 保留中（理由あり）
 
@@ -50,11 +58,7 @@
 
 ## 直近で解決したもの
 
-- `workspace/projects/stock-investment` 例外を握りつぶしている箇所がある
-- `workspace/projects/stock-investment` 依存バージョンが固定されていない
-- `workspace/projects/soccer-career` 1ファイルが大きくなりすぎている
-- `workspace/projects/stock-investment` 1つの関数が長くなりすぎている
-- `workspace/projects/price-tracker` 1ファイルが大きくなりすぎている
+- `workspace/projects/goso-boat` README に「動かし方」のコマンドが書かれていない
 
 ## 使い方
 
