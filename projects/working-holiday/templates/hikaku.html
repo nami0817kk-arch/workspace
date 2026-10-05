@@ -5,6 +5,7 @@
 {% macro times(c) %}{% if c.twice %}一生のうち2回まで{% elif c.id == "uk" %}最長2年（1回）{% else %}1回{% endif %}{% endmacro %}
 {% macro wage(c) %}{% set j = (c.arrival or {}).get("jobs", {}) %}{% if j.get("min_wage") %}{{ j.min_wage }}{% elif j.get("no_statutory") %}法定の最低賃金なし（労働協約で決まる）{% else %}<span class="unknown">公式サイトで確認</span>{% endif %}{% endmacro %}
 {% macro hosp(c) %}{% set h = (c.arrival or {}).get("medical", {}).get("hospitals", []) %}{% if h %}{{ h|length }}件（<a href="../country/{{ c.id }}.html#iryou">一覧</a>）{% else %}公式の一覧に記載なし{% endif %}{% endmacro %}
+{% block ogtype %}article{% endblock %}
 {% block content %}
 <nav class="crumbs" aria-label="パンくず"><a href="../index.html">トップ</a> › <a href="index.html">2か国を比べる</a> › <span aria-current="page">{{ a.name }}と{{ b.name }}</span></nav>
 <h1><img class="flag" src="../static/flags/{{ a.flag }}.svg" alt="" width="32" height="24">{{ a.name }}と<img class="flag" src="../static/flags/{{ b.flag }}.svg" alt="" width="32" height="24">{{ b.name }}のワーホリを比較</h1>

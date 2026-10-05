@@ -53,6 +53,7 @@ FIELDS: list[tuple[str, str]] = [
 TABLE_FIELDS = ["age", "stay", "fee", "funds", "timing"]
 
 REGIONS = ["オセアニア", "北米", "アジア", "ヨーロッパ", "中南米"]
+REGION_SLUG = {"オセアニア": "oceania", "北米": "north-america", "アジア": "asia", "ヨーロッパ": "europe", "中南米": "latin-america"}
 
 # 持ち物のページ。Amazon のリンクは AMAZON_TAG があるときだけ出す。
 # 国ごとに違う物（変換プラグの形など）は、ここでは決め打ちしない。
@@ -271,6 +272,13 @@ def canonical_url(rel_path: str) -> str:
     return f"{SITE_URL}/{rel.removesuffix('.html')}"
 
 
+import hashlib  # noqa: E402
+
+_CSS = (_TEMPLATES_DIR / "site.css").read_text(encoding="utf-8")
+# CSS を変えたら URL も変わるようにして、古いキャッシュが残らないようにする
+CSS_VERSION = hashlib.sha1(_CSS.encode("utf-8")).hexdigest()[:8]
+
+
 def _env() -> Environment:
     env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)), autoescape=True)
     env.filters["short"] = short
@@ -289,6 +297,7 @@ def _env() -> Environment:
         POLICY_UPDATED=POLICY_UPDATED,
         amazon_url=amazon_url,
         pair_slug=pair_slug,
+        CSS_VERSION=CSS_VERSION,
     )
     return env
 
@@ -338,6 +347,11 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
         write(f"country/{c['id']}.html", "country.html", c=c, same_region=same_region, loc=geo.locator(c["id"]),
               prev=prev_c, next=next_c,
               crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html"), (c["name"], f"country/{c['id']}.html")])
+    regions = [(r, REGION_SLUG[r]) for r in REGIONS]
+    for r, lst in by_region:
+        write(f"region/{REGION_SLUG[r]}.html", "region.html", region=r, list=lst, regions=regions,
+              map=geo.europe() if r == "ヨーロッパ" else None,
+              crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html"), (r, f"region/{REGION_SLUG[r]}.html")])
     write("country/index.html", "country_index.html", by_region=by_region,
           crumbs=[("トップ", "index.html"), ("国から探す", "country/index.html")])
     write("junbi.html", "junbi.html", countries=countries, crumbs=[("トップ", "index.html"), ("出発までの準備", "junbi.html")])
@@ -363,12 +377,15 @@ def build(out: Path = _OUTPUT_DIR) -> list[str]:
 
     if _STATIC_DIR.exists():
         shutil.copytree(_STATIC_DIR, out / "static")
+    (out / "static").mkdir(exist_ok=True)
+    (out / "static" / "site.css").write_text(_CSS, encoding="utf-8")
     (out / f"{site_config.INDEXNOW_KEY}.txt").write_text(site_config.INDEXNOW_KEY, encoding="utf-8")
     (out / "robots.txt").write_text(
         f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n", encoding="utf-8"
     )
+    today = datetime.now(ZoneInfo("Asia/Tokyo")).date().isoformat()
     urls = "".join(
-        f"  <url><loc>{canonical_url(p)}</loc></url>\n" for p in pages if p != "404.html"
+        f"  <url><loc>{canonical_url(p)}</loc><lastmod>{today}</lastmod></url>\n" for p in pages if p != "404.html"
     )
     (out / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'

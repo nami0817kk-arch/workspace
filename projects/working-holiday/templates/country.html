@@ -4,6 +4,7 @@
 {% from "_viz.html" import locator with context %}
 {% block title %}{{ c.name }}のワーホリの条件と現地での手続き・病院・仕事探し｜{{ SITE_NAME }}{% endblock %}
 {% block description %}{{ c.name }}のワーキング・ホリデーの条件。{% if c.age %}年齢は{{ c.age }}、{% endif %}{% if c.stay %}期間は{{ c.stay }}。{% endif %}申請費用・必要な資金・申請の方法に加え、{% if c.arrival %}現地に着いてからの手続き・日本語が通じる病院・仕事の探し方も{% else %}現地の医療情報や日本大使館の窓口も{% endif %}公式情報からまとめています。{% endblock %}
+{% block ogtype %}article{% endblock %}
 {% block content %}
 <nav class="crumbs" aria-label="パンくず"><a href="../index.html">トップ</a> › <a href="index.html">国から探す</a> › <span aria-current="page">{{ c.name }}</span></nav>
 

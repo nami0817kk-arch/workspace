@@ -187,3 +187,96 @@ def test_緊急番号の一覧表は番号を全部残す():
     assert render.numbers_only("15（SAMU・救急医療）/ 17（警察）/ 18（消防）/ 112（EU共通緊急通報）") == "15 / 17 / 18 / 112"
     assert render.numbers_only("999 または 112（消防・警察・救急共通）") == "999 / 112"
     assert render.numbers_only("000（警察・消防・救急共通）") == "000"
+
+
+# ---- 作ったページ全体の検査（改善37〜46） ----
+
+def _pages(site):
+    return sorted(site.rglob("*.html"))
+
+
+def test_サイト内のリンクがすべて実在するページを指す(site):
+    from urllib.parse import urlsplit
+    missing = []
+    for path in _pages(site):
+        if path.name == "404.html":
+            continue  # 404 はどの階層でも出るので / から始まるリンクを使っている
+        html = path.read_text(encoding="utf-8")
+        for href in re.findall(r'(?:href|src)="([^"]+)"', html):
+            if href.startswith(("http", "#", "mailto:", "tel:", "data:")):
+                continue
+            target = (path.parent / urlsplit(href).path).resolve()
+            if not target.exists():
+                missing.append(f"{path.relative_to(site)} → {href}")
+    assert not missing, "\n".join(missing[:20])
+
+
+def test_構造化データはすべてJSONとして読める(site):
+    for path in _pages(site):
+        for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', path.read_text(encoding="utf-8"), re.S):
+            json.loads(block)
+
+
+def test_ページの題名はすべて違う(site):
+    titles = {}
+    for path in _pages(site):
+        m = re.search(r"<title>(.*?)</title>", path.read_text(encoding="utf-8"), re.S)
+        assert m, path.name
+        titles.setdefault(m.group(1), []).append(str(path.relative_to(site)))
+    dup = {t: p for t, p in titles.items() if len(p) > 1}
+    assert not dup, dup
+
+
+def test_説明文は検索結果に収まる長さ(site):
+    for path in _pages(site):
+        if path.name == "404.html":
+            continue
+        m = re.search(r'<meta name="description" content="([^"]*)"', path.read_text(encoding="utf-8"))
+        assert m and 40 <= len(m.group(1)) <= 200, f"{path.relative_to(site)}: {len(m.group(1)) if m else 0}文字"
+
+
+def test_テンプレートの書き残しが無い(site):
+    for path in _pages(site):
+        html = path.read_text(encoding="utf-8")
+        for bad in ("{{", "{%", ">None<", "undefined", "Undefined"):
+            assert bad not in html, f"{path.relative_to(site)} に {bad}"
+
+
+def test_sitemapに404以外の全ページが載る(site):
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    for path in _pages(site):
+        rel = path.relative_to(site).as_posix()
+        if rel == "404.html":
+            assert "404" not in xml
+            continue
+        assert f"<loc>{render.canonical_url(rel)}</loc>" in xml, rel
+    assert "<lastmod>" in xml
+
+
+def test_国のページには国旗と位置図と緊急番号がある(site):
+    for c in render.load_data()[1]:
+        html = (site / "country" / f"{c['id']}.html").read_text(encoding="utf-8")
+        assert f"static/flags/{c['flag']}.svg" in html
+        assert 'class="locator"' in html
+        assert 'class="tel noext"' in html, f"{c['id']} に緊急番号が無い"
+
+
+def test_2か国比較は36ページ(site):
+    pages = [p for p in (site / "hikaku").glob("*.html") if p.name != "index.html"]
+    assert len(pages) == 36
+
+
+def test_地域のページは5つで全32か国を覆う(site):
+    names = set()
+    for p in (site / "region").glob("*.html"):
+        names |= set(re.findall(r'href="\.\./country/([a-z-]+)\.html"', p.read_text(encoding="utf-8")))
+    assert len(list((site / "region").glob("*.html"))) == 5
+    names.discard("index")  # パンくずの「国から探す」
+    assert len(names) == 32
+
+
+def test_共通のCSSは1つのファイルで各ページに埋め込まない(site):
+    assert (site / "static" / "site.css").exists()
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert "static/site.css?v=" in html
+    assert "<style>\n  :root" not in html

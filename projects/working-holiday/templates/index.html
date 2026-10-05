@@ -2,6 +2,7 @@
 {% from "_macros.html" import brief, quota with context %}
 {% from "_viz.html" import world_map, quota_chart, timeline with context %}
 {% block title %}ワーホリ32か国の条件を比較｜年齢・期間・費用・資金・申請時期｜{{ SITE_NAME }}{% endblock %}
+{% block head %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"{{ SITE_NAME }}","url":"{{ SITE_URL }}/","inLanguage":"ja","publisher":{"@type":"Organization","name":"{{ OWNER }}"}}</script>{% endblock %}
 {% block content %}
 <h1>ワーホリに行ける32か国・地域の条件を1つの表で比べる</h1>
 <p class="lead">日本とワーキング・ホリデー制度がある国・地域は、{{ mofa.source.as_of }}現在で{{ mofa.countries|length }}あります。年齢・滞在できる期間・申請費用・必要な資金・申請の時期を、各国の政府や大使館の公式情報から書き写して並べました。</p>
