@@ -10,21 +10,21 @@ sources:                   # 画面の下に出し続ける出典
   - 財務省「揮発油税・地方揮発油税」
 
 sections:
-  - no: "00"
+  - id: "00"
     name: 表面
     figure: null
     lines:
       - 語り: 報じられたことを、そのまま1つ。
       - 聞き: 素朴な反応。
 
-  - no: "01"
+  - id: "01"
     name: 問い
     figure: null
     lines:
       - 聞き: それって、なんでなんですか。
       - 語り: その問いを、今日は切って見ていきます。
 
-  - no: "02"
+  - id: "02"
     name: 一の断面
     figure:
       kind: stack          # stack（積み上げ）/ timeline（年表）/ flow（流れ図）/ compare（比べる）/ bars
@@ -38,7 +38,7 @@ sections:
       - 語り(強): 意外なところだけ強くする。
       - 聞き(強): 自分の暮らしに置き換える。
 
-  - no: "03"
+  - id: "03"
     name: 二の断面
     figure:
       kind: timeline
@@ -49,7 +49,7 @@ sections:
     lines:
       - 語り: 経緯を話す。
 
-  - no: "04"
+  - id: "04"
     name: 三の断面
     figure:
       kind: flow
@@ -60,14 +60,27 @@ sections:
     lines:
       - 語り: お金の流れを話す。
 
-  - no: "05"
+  - id: "05"
+    name: 四の断面
+    figure:
+      kind: compare
+      title: よその国は、どうしているか
+      items:
+        - { label: 日本, value: 53.8, note: 1リットルあたり }
+        - { label: アメリカ, value: 0, note: 調べて入れる }
+        - { label: イギリス, value: 0, note: 調べて入れる }
+    lines:
+      - 語り: 日本だけなのかを確かめる。
+      - 聞き: よその国がうらやましく聞こえたら、条件の違いも言う。
+
+  - id: "06"
     name: よくある誤解
     figure: null
     lines:
       - 聞き: よく言われる説を、聞き役の側から出す。
       - 語り: 原典を見ると、こうです。
 
-  - no: "06"
+  - id: "07"
     name: 見立て
     figure:
       kind: bars
@@ -78,7 +91,7 @@ sections:
       - 語り: 理由を番号で出す。
       - 聞き: 理由ごとに、自分の言葉で言い直す。
 
-  - no: "07"
+  - id: "08"
     name: 締め
     figure: null
     lines:
