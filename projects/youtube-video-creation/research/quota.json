@@ -271,5 +271,12 @@
     "videos.list": 16,
     "videos.update": 1,
     "videoCategories.list": 1
+  },
+  "2026-10-06": {
+    "channels.list": 8,
+    "playlistItems.list": 8,
+    "videos.insert": 8,
+    "thumbnails.set": 8,
+    "playlistItems.insert": 4
   }
 }

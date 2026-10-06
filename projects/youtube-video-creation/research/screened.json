@@ -1934,5 +1934,37 @@
  "20260926_ll07_celta_short": {
   "at": "2026-10-06T12:30:12+09:00",
   "digest": "46e7f95017340add"
+ },
+ "20261006_season_kamada": {
+  "at": "2026-10-06T16:56:55+09:00",
+  "digest": "95441401e3662930"
+ },
+ "20261006_season_kamada_short": {
+  "at": "2026-10-06T16:57:01+09:00",
+  "digest": "eb67dc934e82ac81"
+ },
+ "20261006_coach_halilhodzic": {
+  "at": "2026-10-06T17:33:18+09:00",
+  "digest": "e907152ba060f5c7"
+ },
+ "20261006_coach_halilhodzic_short": {
+  "at": "2026-10-06T17:33:20+09:00",
+  "digest": "e57223c5ebc3bacf"
+ },
+ "20261006_coach_zaccheroni": {
+  "at": "2026-10-06T17:45:16+09:00",
+  "digest": "c0ca1d382c5c199b"
+ },
+ "20261006_coach_zaccheroni_short": {
+  "at": "2026-10-06T17:45:19+09:00",
+  "digest": "67170916fb805136"
+ },
+ "20261006_team_brazil": {
+  "at": "2026-10-06T17:45:20+09:00",
+  "digest": "471587c3562091aa"
+ },
+ "20261006_team_brazil_short": {
+  "at": "2026-10-06T17:45:22+09:00",
+  "digest": "8dddae858ba8ed19"
  }
 }
