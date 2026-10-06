@@ -1,0 +1,283 @@
+# ヴィニシウス・ジュニオール（レアル・マドリード）の紹介。8節の型。数字は Transfermarkt（https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998）と FotMob（https://www.fotmob.com/players/846033）。
+# （…）の行は人が書く。材料は research/raw/<日付>_<選手>_material.md に下請けが出典つきで集める（docs/player_material_prompt.md）。
+# 写真は時期ごとに image: を置く（同じ選手を横に並べない。表の無い節は横長に切る）。スタジアムの写真は使わない。
+# 身長・利き足は Transfermarkt の値。クラブ公式と食い違えば公式に直す（ヤマルは TM 1.83m／公式 178cm だった）。
+# 武器（同じポジション比のパーセンタイル）: 敵陣ボックス内タッチ 95、被ファウル 95、敵陣でのボール奪取 93 ／ 弱点: 守備アクション 7
+# 日本語にする（辞書に無い名前）: CR Flamengo
+date: 2026年10月07日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ヴィニシウス・ジュニオール
+theme:
+  id: player_371998
+  league: spain
+  kind: other
+  topic: レアル・マドリード
+  title: ジュニオールってどんな選手？（答えを伏せた言い換えを足す。例：ボールに触らないのに点だけ取る理由）
+  question: ヴィニシウス・ジュニオールはどういう作りの選手で、なぜ数字が出るのか
+  takeaway: （数字で分かったことを1文で）
+  nameplate: ヴィニシウス・ジュニオール｜レアル・マドリード FW
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑧ペドリ
+short_title: ジュニオールってどんな選手？
+thumbnail:
+  line1: ジュニオール
+  line2: （いちばん強い事実を伏せる。例：ボールに触らないのに●●）
+  tags:
+  - レアル・マドリード
+  - 選手紹介
+  - プレースタイル
+  photo: （横長の顔写真1枚。縦なら tools/widecrop.py）
+  photos: []
+sections:
+- id: hook
+  heading: どんな選手か
+  tier: 報道
+  telop: （一言の定義。例：ボールに触らないのに、点だけ取る）
+  narrator: キャスター
+  say:
+  - （ヴィニシウス・ジュニオールを一言で定義する1行。数字か意外な事実を1つ）
+  - （同じポジションの中でどこが最上位・最下位かを、100人の中の何番目、の言い方で）
+  - （幼少期の逸話を1つ）
+  - voice: ジュニオール
+    text: （本人の言葉を1つ。声は16秒までに。記事の訳をそのまま）
+    pause: 0.5
+  sources:
+  - https://www.fotmob.com/players/846033
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: ヴィニシウス・ジュニオールの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: ヴィニシウス・ジュニオール（レアル・マドリード）
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 所属
+      - レアル・マドリード（7番）
+    - - ポジション
+      - 左ウイング
+    - - 生年月日
+      - 2000年7月12日（26歳）
+    - - 身長
+      - 1.76m
+    - - 利き足
+      - 右
+    - - 契約
+      - 2032年まで
+    - - 市場価値
+      - 1.4億ユーロ
+    source: Transfermarkt
+  say:
+  - ヴィニシウス・ジュニオール、26歳。レアル・マドリードの左ウイングです。
+  - （生まれた場所と家族の話を1行。出典つき）
+  - 身長は1メートル76。右利きで、契約は2032年まで。
+  - 市場価値は1.4億ユーロ。
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+- id: career
+  heading: 歩んできた道と転機
+  tier: 報道
+  telop: （どこで値が跳ねたかを一言で）
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - シーズン
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows:
+    - - 16/17〜17/18
+      - CR Flamengo
+      - 17歳
+      - 最高 3500万ユーロ
+    - - 18/19〜26/27
+      - レアル・マドリード
+      - 18歳〜26歳
+      - 最高 2億ユーロ
+    source: Transfermarkt
+  say:
+  - ジュニオールの17歳はCR Flamengo。市場価値は3500万ユーロでした。
+  - text: （2つ目のクラブと年齢・市場価値を1行）
+    image: assets/stats/player_20261007_846033_value.png
+    no_telop: true
+  - （転機を1つ：入団拒否・大怪我・大舞台での一撃、など。日付と相手を入れる。出典つき）
+  - （いまのクラブまでの道を1〜2行。「そしていまの額に」で締める）
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+- id: style
+  heading: プレースタイル
+  tier: 報道
+  telop: （左足・ボックスの中・ボールは持たない、のような3語）
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じFWの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: 敵陣ボックス内タッチ
+      value: 95
+      highlight: true
+    - label: 被ファウル
+      value: 95
+      highlight: false
+    - label: 敵陣でのボール奪取
+      value: 93
+      highlight: false
+    - label: 守備アクション
+      value: 7
+    source: FotMob
+  say:
+  - text: 同じFWの中で、ジュニオールはどこが尖っているか。レーダーで見ます。
+    image: assets/stats/player_20261007_846033_radar.png
+    no_telop: true
+  - （6つの軸のうち最上位と最下位を言う）
+  - （つまりどういう選手か、を1行で）
+  - （弱点を1つ。数字で）
+  - text: （では、その強みはどこから来るか。動きの話を1〜2行。出典つき）
+    image: assets/stats/player_20261007_846033_heat.png
+    no_telop: true
+  - text: （今季のシュートの傾向を1行：本数・ペナルティエリアの中の割合）
+    image: assets/stats/player_20261007_846033_shots.png
+    no_telop: true
+  - （体の数字：身長・最高速度など1行）
+  sources:
+  - https://www.fotmob.com/players/846033
+- id: past
+  heading: 過去5シーズンの数字
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: ヴィニシウス・ジュニオール 直近5シーズン（代表を含む全公式戦）
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows:
+    - - 21/22
+      - '58'
+      - '23'
+      - '20'
+      - 4658分
+    - - 22/23
+      - '60'
+      - '24'
+      - '21'
+      - 5137分
+    - - 23/24
+      - '57'
+      - '28'
+      - '14'
+      - 4500分
+    - - 24/25
+      - '58'
+      - '22'
+      - '19'
+      - 4629分
+    - - 25/26
+      - '66'
+      - '28'
+      - '18'
+      - 5253分
+    source: Transfermarkt
+  say:
+  - 5シーズン前まで戻ります。ジュニオールの、代表を含む全公式戦の数字です。
+  - 2021年からのシーズンは58試合で23点。
+  - （いちばん多かったシーズンと、その意味を1行。記録があれば出典つきで）
+  - そのあとのシーズンも表のとおり。（傾向を1行）
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+- id: season
+  heading: 今季の数字と直近5試合
+  tier: 報道
+  main: true
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows:
+    - - 10/3
+      - India
+      - 45分
+      - 0G 0A
+      - '6.5'
+    - - 9/29
+      - Australia
+      - 82分
+      - 1G 0A
+      - '8.6'
+    - - 9/25
+      - Australia
+      - 65分
+      - 0G 0A
+      - '7.4'
+    - - 9/20
+      - アトレティコ・マドリード
+      - 54分
+      - 0G 0A
+      - '6.5'
+    - - 9/15
+      - エルチェ
+      - 68分
+      - 0G 0A
+      - '6.9'
+    source: FotMob
+  say:
+  - text: （前置き1行：ジュニオールはどういう選手か＋題の答えを一言で。ショートはここから）
+    short_only: true
+  - 今季はここまで11試合で2得点3アシスト、出場時間は844分。422分に1点。
+  - ラ・リーガは7試合で1得点3アシスト。
+  - 国際親善試合は3試合で1得点0アシスト。
+  - （直近5試合の表から1行：出場時間・得点・10点満点の評点）
+  - （題の答えを1行。ショートはこの節だけで完結させる）
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+  - https://www.fotmob.com/players/846033
+- id: story
+  heading: マル秘話
+  tier: 報道
+  telop: （エピソードを一言で）
+  narrator: 解説
+  say:
+  - ここからは数字を離れて、ジュニオールらしい話を2つ。
+  - （1つ目：食事・家族・背番号の由来・憧れの選手など。出典つき）
+  - voice: ジュニオール
+    text: '（本人の言葉。記事の訳をそのまま。30字で割る。最後の行に pause: 0.6）'
+  - （2つ目のエピソード）
+  - text: （締めの1行）
+    pause: 0.5
+  sources:
+  - （記事のURL）
+- id: view
+  heading: （何についての見立てか。例：エムバペとの今季の差）
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月11日、レアル・マドリード対ビジャレアル
+  say:
+  - 最後に、数字でこの先を見ます。
+  - （同じポジションの選手1人と比べる数字を1つ）
+  - （数字が落ちていないか・伸びているか。1行）
+  - クラブの次の試合は10月11日、レアル・マドリード対ビジャレアル。
+  - （そこで何を見るか）
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+  - https://www.fotmob.com/players/846033
