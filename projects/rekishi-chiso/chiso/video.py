@@ -72,6 +72,8 @@ def motion_filter(kind: str, d: float, size: tuple[int, int], t0: float = 0.0) -
     W, H = size
     bw, bh = int(W * OVER), int(H * OVER)
     u = f"((t+{t0:.3f})/{d:.3f})"
+    if kind == "still":                                  # 動かさない（10-06 ユーザー「背景を微妙に動かさないで」）
+        return f"scale={W}:{H}:flags=bicubic,setsar=1,format=yuv420p"
     if kind == "in":
         z, px, py = f"(1+{ZOOM}*{u})", "0.5", "0.5"
     elif kind == "out":
@@ -141,7 +143,7 @@ def _join(ffmpeg: str, pieces: list[Path], out: Path, want: float | None = None)
 
 
 def background_track(ffmpeg: str, painter, runs: list[Run], work: Path, fps: int, size, target: Path,
-                     workers: int = 10) -> Path:
+                     workers: int = 10, motion: bool = True) -> Path:
     """区間ごとに動く背景を作り、溶け合わせて1本にする。区間は同時に作る（速くするため）。"""
     import hashlib
     work.mkdir(parents=True, exist_ok=True)
@@ -149,7 +151,7 @@ def background_track(ffmpeg: str, painter, runs: list[Run], work: Path, fps: int
     for i, r in enumerate(runs):
         last = i == len(runs) - 1
         d = (r.end - r.start) + (0 if last else XFADE)      # 次と重なるぶん長く作る
-        kind = MOTIONS[i % len(MOTIONS)]
+        kind = MOTIONS[i % len(MOTIONS)] if motion else "still"
         key = hashlib.sha1(repr((r.picture, kind, round(d, 3), fps, size, OVER, ZOOM)).encode()).hexdigest()[:12]
         sp = work / f"still_{hashlib.sha1(repr(r.picture).encode()).hexdigest()[:10]}.png"
         if not sp.exists():

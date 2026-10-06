@@ -217,7 +217,8 @@ def make_video(args, draft: bool) -> int:
                           end_card=end_card)
     print("背景を動かしています…")
     bg = video.background_track(ffmpeg(), painter, video.runs_of(cues, total), wd / "bg", v["fps"], size,
-                                wd / "background.mp4", workers=v.get("bg_workers", 5))
+                                wd / "background.mp4", workers=v.get("bg_workers", 5),
+                                motion=v.get("bg_motion", True))
     suffix = ("_draft" if draft else "") + (f"_{limit}lines" if limit else "")
     target = out_dir() / f"{path.stem}{suffix}.mp4"
     lst = wd / "overlay.txt"

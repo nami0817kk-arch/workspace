@@ -144,6 +144,7 @@ video:
   width: 1920
   height: 1080
   fps: 30
+  bg_motion: false   # 背景の絵をゆっくり寄せたり流したりしない（10-06 ユーザー「背景を微妙に動かさないで」）
 
 short:
   width: 1080
