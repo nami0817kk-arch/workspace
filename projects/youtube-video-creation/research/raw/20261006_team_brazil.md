@@ -80,10 +80,11 @@ W杯の5試合＋この秋の3試合＝8試合。
 - 日本はW杯で 29分から56分まで、27分間リードしていた
 
 ## 9. 写真（すべて Commons、Bryan Berlin、CC BY-SA 4.0、2026-06-13 ブラジル対モロッコ）
-- 01 Carlo Ancelotti Brazil V Morocco 13 June 2026-47.jpg
-- 02 Vinícius Júnior Brazil V Morocco 13 June 2026-207.jpg
-- 03 Marquinhos Brazil V Morocco 13 June 2026-153.jpg（腕章あり）
-- 04 Bruno Guimaraes Brazil V Morocco 13 June 2026-78.jpg
-- 05 Casemiro Brazil V Morocco 13 June 2026-76.jpg
-- 06 Gabriel Martinelli Brazil V Morocco 13 June 2026-144.jpg（ビブス姿）
+- 01 Carlo Ancelotti Brazil V Morocco 13 June 2026-34.jpg（-47 は左端に別の人の頭と耳が写り込むので替えた）。01t は色味を少し暖かく・明るくしたサムネ用
+- 02 Vinícius Júnior …-207.jpg / 03 Marquinhos …-153.jpg（腕章あり）/ 04 Bruno Guimaraes …-78.jpg / 05 Casemiro …-76.jpg / 06 Gabriel Martinelli …-144.jpg（ビブス姿）
+- 07 Brahim Diaz Vinicius Junior …-128.jpg（横長の試合の写真。今は台本で使っていない）
+- 08 = 06 と同じ写真（日本戦の数字を読む行用）。08_v はショート用に 05（上）と 03（下）を上下に並べた1枚（表が顔にかからない位置）
+- 09 = 01 と 05 を左右に並べた1枚（山場の監督の言葉の行。語る人＝左、主役＝右）。09_v は 01_v と同じ
+- 10 = 05 と 06 を左右に並べた1枚（勝ち越しの行。ゴールを決めた2人）。10_v は 06_v と同じ
+- 表のある行は縦写真を右に立てる形（表が左）。表の無い行は 09・10（2枚並べ）。日本戦の1〜3行目は 09 を引き継ぐ
 - エステヴァンは Commons にパルメイラス時代（2024年）しか無く、使っていない

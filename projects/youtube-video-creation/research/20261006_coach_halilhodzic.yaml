@@ -185,7 +185,7 @@ sections:
       columns: *id005
       rows: *id006
       highlight_row: 0
-  - text: 1978年には21歳以下の欧州選手権で優勝し、大会の最優秀選手にも選ばれました。
+  - text: 1978年には21歳以下の欧州選手権で優勝し、大会でいちばんの選手に輝きます。
     card:
       type: table
       title: 選手・ハリルホジッチの歩み

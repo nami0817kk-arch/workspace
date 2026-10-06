@@ -544,8 +544,8 @@ cards:
 ## 基礎DATA
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: 指揮を執ったのは、イタリアから来たアルベルト・ザッケローニ。1953年生まれです。
-  telop: 指揮を執ったのは、イタリアから来たアルベルト・ザッケローニ。1953年生まれです
+キャスター: 率いたのは、イタリアから来たアルベルト・ザッケローニ。1953年生まれです。
+  telop: 率いたのは、イタリアから来たアルベルト・ザッケローニ。1953年生まれです
   source: 報道
   card: data_0_card
   image: assets/images/20261006_coach_zaccheroni/10_w.jpg
@@ -565,32 +565,32 @@ cards:
 ## ミランで就任1年目のスクデット
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-解説: 名前が広く知られたのは、1997〜98年にウディネーゼをリーグ3位へ導いたときです。
-  telop: 名前が広く知られたのは、1997〜98年にウディネーゼをリーグ3位へ導いたときです
+解説: 名を上げたのは、1997〜98年。ウディネーゼをリーグ3位へ導きます。
+  telop: 名を上げたのは、1997〜98年。ウディネーゼをリーグ3位へ導きます
   source: 報道
   card: italy_0_card
-  image: assets/images/20261006_coach_zaccheroni/08.jpg
+  image: assets/images/20261006_coach_zaccheroni/12_v.jpg
 解説: その手腕を買われて移ったミランで、いきなり頂点に立ちます。
   telop: その手腕を買われて移ったミランで、いきなり頂点に立ちます
   card: italy_1_card
-  image: assets/images/20261006_coach_zaccheroni/08.jpg
+  image: assets/images/20261006_coach_zaccheroni/12_v.jpg
 解説: 1998〜99年のシーズン、ミランは最後の7試合に7連勝。
   telop: 1998〜99年のシーズン、ミランは最後の7試合に7連勝
   card: italy_2_card
-  image: assets/images/20261006_coach_zaccheroni/08.jpg
+  image: assets/images/20261006_coach_zaccheroni/12_v.jpg
 解説: 首位のラツィオを抜き去り、就任1年目でセリエAを制しました。
   emph: true
   telop: 首位のラツィオを抜き去り、就任1年目でセリエAを制しました
   card: italy_3_card
-  image: assets/images/20261006_coach_zaccheroni/08.jpg
+  image: assets/images/20261006_coach_zaccheroni/12_v.jpg
 解説: その後はラツィオやインテルを、シーズンの途中から任されます。
   telop: その後はラツィオやインテルを、シーズンの途中から任されます
   card: italy_4_card
-  image: assets/images/20261006_coach_zaccheroni/08.jpg
+  image: assets/images/20261006_coach_zaccheroni/12_v.jpg
 解説: 2010年のユヴェントスも、4か月だけの契約で7位でした。
   telop: 2010年のユヴェントスも、4か月だけの契約で7位でした
   card: italy_5_card
-  image: assets/images/20261006_coach_zaccheroni/08.jpg
+  image: assets/images/20261006_coach_zaccheroni/12_v.jpg
 解説: その年の8月、日本代表の新監督に決まります。就任会見で語った理由です。
   telop: その年の8月、日本代表の新監督に決まります。就任会見で語った理由です
   card: none

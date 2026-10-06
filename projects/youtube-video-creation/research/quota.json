@@ -268,7 +268,7 @@
     "thumbnails.set": 18,
     "playlists.insert": 1,
     "playlistItems.insert": 9,
-    "videos.list": 15,
+    "videos.list": 16,
     "videos.update": 1,
     "videoCategories.list": 1
   }

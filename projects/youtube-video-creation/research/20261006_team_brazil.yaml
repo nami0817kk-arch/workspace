@@ -22,14 +22,14 @@ theme:
   title: ブラジル代表ってどんなチーム？W杯で日本の先制をひっくり返した5度の王者
   question: 11月14日に日本と戦うブラジル代表は、どんなチームか
   takeaway: W杯からの8試合でブラジルは19点を挙げ、そのうち4点が90分を過ぎてから。相手にリードを許した5試合で負けたのはノルウェー戦の1つだけ。W杯の日本戦も、27分間リードされながらシュート19対5で押し返した。90分で終わる11月14日の一戦は、日本が先に取ったリードを最後の笛まで守れるかが分かれ目になる
-  opening_image: assets/images/20261006_team_brazil/p2.jpg
+  opening_image: assets/images/20261006_team_brazil/pair_open/01.jpg
 short_title: ブラジル代表の名将が明かした、W杯の日本戦で苦しんだ前半
 thumbnail:
-  photo: assets/images/20261006_team_brazil/p2.jpg
+  photo: assets/images/20261006_team_brazil/07_w.jpg
   short_photo: assets/images/20261006_team_brazil/01_v.jpg
   photos:
   - assets/images/20261006_team_brazil/02.jpg
-  - assets/images/20261006_team_brazil/01.jpg
+  - assets/images/20261006_team_brazil/01t.jpg
   line1: ブラジル代表
   line2: 日本はここまで 1勝2分●敗
   tags:
@@ -51,9 +51,9 @@ sections:
   say:
   - text: W杯で、先に点を取った日本をひっくり返したブラジル。
     short_only: true
-    image: assets/images/20261006_team_brazil/p1.jpg
+    image: assets/images/20261006_team_brazil/09.jpg
   - text: 6月30日、日本戦を終えた名将アンチェロッティの言葉です。
-    image: assets/images/20261006_team_brazil/p1.jpg
+    image: assets/images/20261006_team_brazil/09.jpg
   - voice: アンチェロッティ監督
     text: 前半は日本が上手く守備を固めて、
   - voice: アンチェロッティ監督
@@ -100,18 +100,17 @@ sections:
       - 31%
   say:
   - text: 舞台はアメリカのヒューストン。勝ち残った32か国の、負ければ終わりの1回戦です。
-    image: assets/images/20261006_team_brazil/p5.jpg
     card: none
   - text: 29分、佐野海舟のゴールで日本が先にリードを奪います。
     card: none
   - text: ブラジルは後半に攻め方を変え、56分にカゼミーロが同点に。
     card: none
   - text: そして90分を過ぎた5分。ガブリエル・マルティネッリが勝ち越しました。
-    image: assets/images/20261006_team_brazil/p6.jpg
+    image: assets/images/20261006_team_brazil/10.jpg
     emph: true
     card: none
   - text: シュートは19本対5本。日本のおよそ4倍を打っています。
-    image: assets/images/20261006_team_brazil/s1.jpg
+    image: assets/images/20261006_team_brazil/08.jpg
     card:
       type: table
       title: W杯 ブラジル対日本（6月30日）
@@ -162,7 +161,7 @@ sections:
       - ベスト16
   say:
   - text: 11月14日、シンガポールで日本と戦う相手を、基礎データで見ます。
-    image: assets/images/20261006_team_brazil/p2.jpg
+    image: assets/images/20261006_team_brazil/02.jpg
     card:
       type: table
       title: ブラジル代表の基礎DATA
@@ -183,7 +182,7 @@ sections:
       rows: *id004
       highlight_row: 1
   - text: 監督は2025年5月から、イタリア出身のカルロ・アンチェロッティ。
-    image: assets/images/20261006_team_brazil/p1.jpg
+    image: assets/images/20261006_team_brazil/01.jpg
     card:
       type: table
       title: ブラジル代表の基礎DATA
@@ -191,7 +190,7 @@ sections:
       rows: *id004
       highlight_row: 2
   - text: キャプテンは、代表112試合を誇るマルキーニョスです。
-    image: assets/images/20261006_team_brazil/p3.jpg
+    image: assets/images/20261006_team_brazil/03.jpg
     card:
       type: table
       title: ブラジル代表の基礎DATA
@@ -236,7 +235,7 @@ sections:
       - 1-2 負け
   say:
   - text: この夏の北中米W杯、ブラジルはどこまで勝ち進んだのか。
-    image: assets/images/20261006_team_brazil/p2.jpg
+    image: assets/images/20261006_team_brazil/02.jpg
     card:
       type: table
       title: W杯2026 ブラジルの5試合
@@ -318,7 +317,7 @@ sections:
       - 4-0 勝ち
   say:
   - text: W杯が終わって迎えた、9月と10月の3試合です。
-    image: assets/images/20261006_team_brazil/p4.jpg
+    image: assets/images/20261006_team_brazil/04.jpg
     card:
       type: table
       title: W杯のあとの3試合
@@ -368,7 +367,7 @@ sections:
       rows: *id008
       highlight_row: 2
   - text: インド戦のあと、監督が手応えを口にしています。
-    image: assets/images/20261006_team_brazil/p1.jpg
+    image: assets/images/20261006_team_brazil/01.jpg
     card:
       type: table
       title: W杯のあとの3試合
@@ -411,7 +410,7 @@ sections:
       - 1勝2分12敗（9得点39失点）
   say:
   - text: では、日本はこの王国とどう渡り合ってきたのか。
-    image: assets/images/20261006_team_brazil/p3.jpg
+    image: assets/images/20261006_team_brazil/03.jpg
     card:
       type: table
       title: 日本とブラジルの対戦（日本から見て）
@@ -475,7 +474,7 @@ sections:
       - どちらも先制した側が負け
   say:
   - text: ここからは見立てです。W杯からの8試合で、ブラジルのゴールの時間を数えました。
-    image: assets/images/20261006_team_brazil/p2.jpg
+    image: assets/images/20261006_team_brazil/02.jpg
     card:
       type: table
       title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）

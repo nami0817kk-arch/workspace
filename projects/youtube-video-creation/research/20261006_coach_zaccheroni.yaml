@@ -180,7 +180,7 @@ sections:
     - - 日本のあと
       - 北京国安、UAE代表。2024年 日本サッカー殿堂
   say:
-  - text: 指揮を執ったのは、イタリアから来たアルベルト・ザッケローニ。1953年生まれです。
+  - text: 率いたのは、イタリアから来たアルベルト・ザッケローニ。1953年生まれです。
     card:
       type: table
       title: アルベルト・ザッケローニの基礎DATA
@@ -244,8 +244,8 @@ sections:
       - '2010'
       - 7位（4か月の契約）
   say:
-  - text: 名前が広く知られたのは、1997〜98年にウディネーゼをリーグ3位へ導いたときです。
-    image: assets/images/20261006_coach_zaccheroni/08.jpg
+  - text: 名を上げたのは、1997〜98年。ウディネーゼをリーグ3位へ導きます。
+    image: assets/images/20261006_coach_zaccheroni/12_v.jpg
     card:
       type: table
       title: イタリアで率いた主なクラブ

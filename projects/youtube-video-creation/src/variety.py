@@ -64,8 +64,14 @@ CROSS_REPEAT_MIN = 10
 NARRATORS = ("キャスター", "解説", "ナレーター")
 
 
-def _cross_repeats(scripts: list[Script]) -> list[str]:
-    """語りの行どうしで、10字以上続けて重なるところ。反応（他人の文）は見ない。"""
+def _cross_repeats(scripts: list[Script], least: int | None = None,
+                   focus: list[Script] | None = None) -> list[str]:
+    """語りの行どうしで、10字以上続けて重なるところ。反応（他人の文）は見ない。
+
+    `least` は重なりとみなす長さ（既定は本数で決まる）。`focus` を渡すと、そのどれかを含む
+    組だけを見る（`tools/precheck.py` が、その日と前日・前々日の台本を並べて、見せる台本の
+    重なりだけを出すため。3本以上に出る型の文は、並べた全部で数える）。
+    """
     import itertools
     import re
 
@@ -115,11 +121,15 @@ def _cross_repeats(scripts: list[Script]) -> list[str]:
         for n in ns:
             count_n[n] = count_n.get(n, 0) + 1
     # 10本を超える並び（シリーズ）は決まり文句が多いので、長い重なりだけ見る
-    least = CROSS_REPEAT_MIN if len(scripts) < 10 else CROSS_REPEAT_MIN + 6
+    if least is None:
+        least = CROSS_REPEAT_MIN if len(scripts) < 10 else CROSS_REPEAT_MIN + 6
+    focused = None if focus is None else {id(s) for s in focus}
 
     out: list[str] = []
     seen: set[str] = set()
     for (a, la, wa, na), (b, lb, wb, nb) in itertools.combinations(per_script, 2):
+        if focused is not None and id(a) not in focused and id(b) not in focused:
+            continue
         for tok in sorted(na & nb):
             if count_n.get(tok, 0) == 2 and tok not in seen:
                 seen.add(tok)
