@@ -1,0 +1,163 @@
+title: 10月7日の題材
+lead: シリーズ6本はこちらで決めました。ニュースは16件から○×をお願いします
+note: '<b>ニュースに○×を付けてください。</b>明日の本編10本は、シリーズ6本＋ニュース4本（日本人3・ほか1）の予定です。シリーズ（21〜26）はこちらで決めました。外したいものには×を、入れ替えたいときは予備（27・28）に○を付けてください。<br>メッシの代表最後の試合（対ベナン）は日本時間7日の朝8時キックオフで、結果は10時ごろに出ます。クロアチア対スペインは7日の3時45分開始です。どちらも試合後に作ります。<br>ロマーノの X は、手元の Chrome に繋がらず読めませんでした。移籍の話は Sky・独紙・スペイン紙から拾っています。'
+items:
+- num: 21
+  slot: シリーズ
+  fmt: 記録
+  head: ハリー・ケイン、イングランド代表の最多得点記録に並んだか（チェコ戦のあと）
+  why: 昨日から回した回。チェコ戦（7日 3:45）に出たか・決めたかを入れて作り直す。バイエルンと2029年までの延長の報道（独スカイ）もここに1行で入れる
+  src: BBC・Sky Sports・t-online（10/6）
+- num: 22
+  slot: シリーズ
+  fmt: 数字で見る
+  head: FIFAランキング更新、W杯のあと最初の代表ウィークで上がった国・下がった国
+  why: 昨日から回した回。7日21時の公式の発表を待って、日本・韓国・スペイン・クロアチアなどの順位を並べる
+  src: FIFA（10/7 発表）
+- num: 23
+  slot: シリーズ
+  fmt: クラブ紹介
+  head: ラ・リーガ紹介⑧デポルティーボ
+  why: 9/26 に作った台本を、今季の数字・見立ての節・冒頭の強い一点に合わせて直して出す（セルタの続き）
+  src: 作り置き（20260926_ll08_deportivo）
+- num: 24
+  slot: シリーズ
+  fmt: 選手紹介
+  head: 選手紹介⑦ヴィニシウス・ジュニオール（レアル・マドリード）
+  why: 11月14日に日本と戦うブラジルのエース。昨日のブラジル代表紹介の回の続きとして見られる。ベリンガムと同じ形で作る
+  src: 選手紹介の型（tools/player_intro.py）
+- num: 25
+  slot: シリーズ
+  fmt: 仕組みの解説
+  head: アジアカップで久保建英は最大11試合いなくなる？代表の招集とクラブのルール
+  why: 水曜の「仕組みの解説」。アジアカップ（2027年1月）は欧州のシーズン中で、大会の12日前から招集できる。クラブは断れるのか、何試合欠けるのかを、FIFA の規定の原文まで辿って説明する
+  src: FIFA の選手の地位と移籍に関する規則（付属文書1）・Estadio Deportivo（10/5）
+- num: 26
+  slot: シリーズ
+  fmt: 監督の経歴
+  head: トルシエ、日本代表を初めてW杯の決勝トーナメントへ。フラット3と4年間の数字
+  why: 森保・ハリル・ザッケローニに続く、日本代表の監督の経歴。2002年日韓W杯ベスト16。勝率と大会ごとの成績を数字で並べる
+  src: JFA・Wikipedia（原文まで辿る）
+- num: 27
+  slot: シリーズ（予備）
+  fmt: 若手の数字
+  head: ゴールデンボーイ2026の最終候補25人。プレミアから最多、バルセロナは3人
+  why: 21歳以下の欧州最優秀の候補。今季の出場時間と得点・アシストを同じ物差しで並べる
+  src: トゥットスポルト（10/5〜6）
+- num: 28
+  slot: シリーズ（予備）
+  fmt: クラブの財政
+  head: マンチェスター・シティの判決、ほかのクラブはどう見ているか
+  why: 10/1 に判決の中身は出した。今回は罰の重さ（勝ち点・降格）をめぐる他クラブとキャラガーの声。出すなら判決の文書と突き合わせる
+  src: Sky Sports・The Athletic（10/6）
+- num: 1
+  slot: 日本人
+  fmt: news
+  head: 久保建英は「1月にソシエダを去る」とスペイン紙。序列が下がり、アジアカップで最大11試合いなくなる
+  why: スペイン『Estadio Deportivo』（10/5）と地元紙『Diario Vasco』の報道。契約は2029年6月まで、適切なオファーなら途中でも交渉に応じると。25（仕組みの解説）と同じ話の芯なので、出すならどちらかを主にする
+  src: Estadio Deportivo・Diario Vasco（10/5）
+  url: https://football-tribe.com/japan/2026/10/06/360097/
+- num: 2
+  slot: 日本人
+  fmt: news
+  head: 伊藤洋輝、バイエルンで「大失敗補強のひとつ」と独メディア。本人は「まずはアジアカップで優勝」
+  why: 独『90min』のエベール体制の失敗補強5人に入った。9/28 の「冬に売却」の回と同じ選手
+  src: 90min.de（10/4）・ゲキサカ（10/5）
+  url: https://web.gekisaka.jp/news/detail/?460368-460368-fl
+- num: 3
+  slot: 日本人
+  fmt: news
+  head: 佐藤龍之介、スペイン紙マルカ「修士課程はわずか90日」。アギーレ新監督のバレンシアで
+  why: マルカの評と市場価値の倍増。今季5試合・4先発、初ゴールはまだ。次は敵地のラシン戦
+  src: マルカ（10/5）・サッカーダイジェスト・Football ZONE（10/6）
+  url: https://www.soccerdigestweb.com/news/detail/id=198173
+- num: 4
+  slot: 日本人
+  fmt: news
+  head: 田中碧、リーズの地元紙「出てきてすぐ試合を変えた」。NZ戦の途中出場の評
+  why: 英『ヨークシャー・イブニング・ポスト』の評。現地の声を入れられる回
+  src: Yorkshire Evening Post（10/5）
+  url: https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/leeds-united-ao-tanaka-japan-new-zealand-9267378
+- num: 5
+  slot: 日本人
+  fmt: news
+  head: 三笘薫、リヴァプール専門サイト「今のリヴァプールにあの位置は埋まっている」
+  why: 英『Anfield Watch』の見立て。10/3 の三笘の移籍の噂の回の続き（新しいのはこの見立てだけ）
+  src: Anfield Watch（10/5）
+  url: https://www.soccerdigestweb.com/news/detail/id=198149
+- num: 6
+  slot: 日本人
+  fmt: news
+  head: 鈴木彩艶、ヴィラの地元メディア「プレミアで彼よりミスが少ないGKはいない」
+  why: 英語で「森保監督のためにタイトルを取る」とも。鈴木は 10/1・10/5 にも回がある
+  src: AstonVillaNews・Leeds Live（サッカーダイジェスト経由）・ゲキサカ
+  url: https://web.gekisaka.jp/news/japan/detail/?460378-460378-fl
+- num: 7
+  slot: 日本人
+  fmt: quote
+  head: 伊東純也「しゃあなしやった。やりたくはないです」。右サイドバック起用の本音
+  why: NZ戦の途中から右サイドバック。「上がりたくてウズウズしていた」とも。所属はベルギー（ゲンク）だが話は日本代表
+  src: サッカーダイジェスト・ゲキサカ（10/5〜6）
+  url: https://www.soccerdigestweb.com/news/detail/id=198127
+- num: 8
+  slot: 日本人
+  fmt: quote
+  head: 前田大然「全部あれで台無しにしてしまった」。同点を招いたバックパス
+  why: 本人の悔いと英記者の評
+  src: ゲキサカ・Football ZONE（10/5〜6）
+  url: https://web.gekisaka.jp/news/japan/detail/?460372-460372-fl
+- num: 9
+  slot: 日本人
+  fmt: news
+  head: 鈴木唯人、フライブルクでは4戦4発、日本代表では9試合0ゴール
+  why: NZ戦は出番なし。クラブと代表の数字の差を並べる
+  src: Football ZONE・フットボールチャンネル・JFA
+  url: https://www.footballchannel.jp/2026/10/05/post1027032/
+- num: 10
+  slot: 日本人
+  fmt: quote
+  head: 齋藤俊輔「見ている世界が違う」。初招集の21歳、4連戦で出たのは45分
+  why: 所属はベルギー（ウェステルロー）だが話は日本代表
+  src: サッカーダイジェスト・フットボールチャンネル（10/6）
+  url: https://www.footballchannel.jp/2026/10/06/post1028259/
+- num: 11
+  slot: 日本人
+  fmt: quote
+  head: 佐野航大、ラストプレーで1対1の速攻も「あそこで打ちきれないのは課題」
+  why: 3試合ぶりの出場。78分から
+  src: ゲキサカ（10/6）
+  url: https://web.gekisaka.jp/news/detail/?460376-460376-fl
+- num: 12
+  slot: 日本人
+  fmt: news
+  head: 遠藤航、リヴァプールで「今季が最後のシーズン」と英サイト
+  why: 出どころは英『Inside Futbol』の「退団が近い5人」という一覧記事で、根拠は今季まだ出番が無いこと。裏付けは弱い
+  src: Inside Futbol（football-tribe 経由）
+  url: https://football-tribe.com/japan/2026/10/06/360115/
+- num: 13
+  slot: ほか
+  fmt: news
+  head: メッシ、アルゼンチン代表の最後の試合（対ベナン）
+  why: 7日朝8時キックオフ、結果は10時ごろ。代表207試合125得点。前日の言葉「きっと恋しくなる特別な瞬間」。試合後に作る
+  src: サッカーキング・ゲキサカ（10/6）
+  url: https://web.gekisaka.jp/news/detail/?460416-460416-fl
+- num: 14
+  slot: ほか
+  fmt: news
+  head: クロアチア、0対7の4日後にスペインと再戦。モドリッチ「前に進まなければ」
+  why: スペインは41試合無敗。7日3時45分開始。試合後に作る
+  src: サッカーキング・Goal（10/5〜6）
+  url: https://www.soccer-king.jp/news/world/world_other/20261006/2213811.html
+- num: 15
+  slot: ほか
+  fmt: news
+  head: エムバペ、ひざの負傷から復帰へ。目標は10日のビジャレアル戦
+  why: 出典は1本だけ（Football España）
+  src: Football España（10/6）
+  url: https://www.football-espana.net/2026/10/06/mbappe-knee-recovery
+- num: 16
+  slot: ほか
+  fmt: news
+  head: カルバハル、レアルを出て1か月半。ヘタフェ入りが目前
+  why: 独 kicker の見出し「ヘタフェが獲得に動くが壁がある」。出典は1本だけ
+  src: kicker（10/6）
