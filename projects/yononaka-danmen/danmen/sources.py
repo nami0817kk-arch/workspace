@@ -1,0 +1,154 @@
+# -*- coding: utf-8 -*-
+"""「世の中の気になる」を集める。3つの源から拾う。
+
+1. ニュース  … いま起きていること（RSS）
+2. サジェスト … 人が実際に打ち込んでいる疑問（Google の検索補完）
+3. はてブ    … いま議論になっていること
+
+どれも無料・鍵なしで取れるものだけを使う。
+"""
+from __future__ import annotations
+
+import json
+import re
+import urllib.error
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+from dataclasses import dataclass, field
+
+UA = {"User-Agent": "Mozilla/5.0 (danmen-gather)"}
+
+NEWS_FEEDS: dict[str, str] = {
+    "主要":     "https://news.yahoo.co.jp/rss/topics/top-picks.xml",
+    "国内":     "https://news.yahoo.co.jp/rss/topics/domestic.xml",
+    "国際":     "https://news.yahoo.co.jp/rss/topics/world.xml",
+    "経済":     "https://news.yahoo.co.jp/rss/topics/business.xml",
+    "科学":     "https://news.yahoo.co.jp/rss/topics/science.xml",
+    "IT":       "https://news.yahoo.co.jp/rss/topics/it.xml",
+    "暮らし":   "https://news.yahoo.co.jp/rss/topics/life.xml",
+    "NHK主要":  "https://www.nhk.or.jp/rss/news/cat0.xml",
+    "NHK経済":  "https://www.nhk.or.jp/rss/news/cat5.xml",
+    "NHK科学":  "https://www.nhk.or.jp/rss/news/cat3.xml",
+    "NHK国際":  "https://www.nhk.or.jp/rss/news/cat6.xml",
+    "ITmedia":  "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml",
+    "東洋経済": "https://toyokeizai.net/list/feed/rss",
+    "ダイヤモンド": "https://diamond.jp/list/feed/rss/dol",
+    "トレンド": "https://trends.google.co.jp/trending/rss?geo=JP",
+}
+
+HATENA_FEEDS: dict[str, str] = {
+    "はてブ総合": "https://b.hatena.ne.jp/hotentry.rss",
+    "はてブ経済": "https://b.hatena.ne.jp/hotentry/economics.rss",
+    "はてブ社会": "https://b.hatena.ne.jp/hotentry/social.rss",
+    "はてブ技術": "https://b.hatena.ne.jp/hotentry/it.rss",
+}
+
+# 毎日かならず引く種。世の中の定番の疑問を取りこぼさないため
+SEED_QUERIES = [
+    "なぜ 日本 だけ", "なぜ 日本 は", "どうして 値上げ", "なぜ 税金",
+    "なぜ 減った", "なぜ 増えた", "なぜ 高い", "なぜ 安い",
+]
+
+
+@dataclass
+class Item:
+    """拾ったひとつ。"""
+    source: str
+    text: str
+    link: str = ""
+    kind: str = "news"          # news / suggest / hatena
+    seed: str = ""              # サジェストのとき、どの語から出たか
+    hits: list[str] = field(default_factory=list)
+    score: int = 0
+
+
+def _get(url: str, timeout: int = 20) -> bytes:
+    return urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout).read()
+
+
+def _rss(url: str) -> list[tuple[str, str]]:
+    root = ET.fromstring(_get(url))
+    out = []
+    for item in root.iter():
+        tag = item.tag.split("}")[-1]
+        if tag not in ("item", "entry"):
+            continue
+        title = link = ""
+        for child in item:
+            t = child.tag.split("}")[-1]
+            if t == "title":
+                title = (child.text or "").strip()
+            elif t == "link":
+                link = (child.text or child.get("href") or "").strip()
+        if title:
+            out.append((title, link))
+    return out
+
+
+def news() -> list[Item]:
+    out: list[Item] = []
+    for name, url in NEWS_FEEDS.items():
+        try:
+            for title, link in _rss(url):
+                out.append(Item(source=name, text=title, link=link, kind="news"))
+        except Exception:
+            continue
+    return out
+
+
+def hatena() -> list[Item]:
+    out: list[Item] = []
+    for name, url in HATENA_FEEDS.items():
+        try:
+            for title, link in _rss(url):
+                out.append(Item(source=name, text=title, link=link, kind="hatena"))
+        except Exception:
+            continue
+    return out
+
+
+def suggest(seed: str) -> list[str]:
+    """Google の検索補完。人が実際に打っている疑問が取れる。"""
+    url = ("https://suggestqueries.google.com/complete/search"
+           f"?client=firefox&hl=ja&q={urllib.parse.quote(seed)}")
+    try:
+        data = json.loads(_get(url, timeout=12).decode("utf-8"))
+        return [s for s in data[1] if isinstance(s, str)]
+    except Exception:
+        return []
+
+
+# ニュースの見出しから、サジェストに投げる語を拾う
+STOP = set("ため こと もの よう これ それ 日本 発表 検討 可能性 見通し 方針 社長 首相 大臣".split())
+WORD = re.compile(r"[一-龥ァ-ヶー]{3,8}")
+
+
+def keywords_from(items: list[Item], limit: int = 12) -> list[str]:
+    counts: dict[str, int] = {}
+    for it in items:
+        for w in WORD.findall(it.text):
+            if w in STOP:
+                continue
+            counts[w] = counts.get(w, 0) + 1
+    return [w for w, _ in sorted(counts.items(), key=lambda kv: -kv[1])[:limit]]
+
+
+def suggests(seeds: list[str]) -> list[Item]:
+    out: list[Item] = []
+    seen: set[str] = set()
+    for seed in seeds:
+        for s in suggest(seed):
+            if s in seen or s == seed:
+                continue
+            seen.add(s)
+            out.append(Item(source="サジェスト", text=s, kind="suggest", seed=seed))
+    return out
+
+
+def gather_all() -> list[Item]:
+    ns = news()
+    hs = hatena()
+    seeds = SEED_QUERIES + [f"なぜ {w}" for w in keywords_from(ns, limit=10)]
+    ss = suggests(seeds)
+    return ns + hs + ss
