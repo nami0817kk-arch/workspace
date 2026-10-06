@@ -1,0 +1,693 @@
+# 監督の経歴：アルベルト・ザッケローニ（10/6）。2010年8月〜2014年6月の日本代表監督。シリーズ「監督の経歴」。
+# 日本代表の55試合は JFA の各年の「試合日程・結果」（2010〜2014）から自分で数えた（raw の1節に全行）。PK戦は引き分け、
+#   2011-03-29 のチャリティーマッチ（対Jリーグ選抜）は国際試合ではないので数えない。Wikipedia（日英）の 55試合30勝12分13敗と一致。
+#   時期ごとの勝率・年ごとの勝率も同じ数え方で足した。森保一の 68.5% は 10/6 の回（research/20261006_coach_moriyasu.yaml）の数字。
+# イタリアの経歴は日本語版・英語版 Wikipedia。就任会見の言葉はサンケイスポーツ（2010-08-31、Wayback の控え）。
+# アジアカップ・フランス戦・初陣・初黒星・退任会見はゲキサカ。コロンビア戦後の言葉はスポーツナビ（2014-06-25、Wayback の控え）。
+# 冒頭は山場（アジアカップ決勝の李忠成と交代の言葉）から。基礎DATAは3節目に置いて4項目だけ読む（10/6 の決まり）。
+# 同じ日のハリルホジッチの回とは重ねない（触れない）。ネットの反応は入れていない（シリーズの回）。
+# 写真: 日本代表の時期はゲキサカの当時の記事の写真（©Koki NAGAHAMA / ©Kaoru WATANABE、一部 /JMPA の表記。代理店の表記・透かしは無し）。
+#   10・11 2011年1月アジア杯優勝の翌日（?79967・?79962）、12 2012年10月フランス戦前日会見（?106068）、13 2014年6月W杯コロンビア戦（?141840）、
+#   14 2014年6月退任会見（?141985）。08 は Commons の1988〜90年ごろ（Public domain）の01の上に同じ色の余白を足したもの。イタリア時代の節だけ。
+#   ゲキサカの ?106110・?142097 は ©Getty Images なので使っていない。サムネは thumb_13.jpg（13 に自作の時期ごとの勝率の表、サムネ専用）。20 は決勝の会場ハリファ国際スタジアム（Commons、2009年、CC BY 2.0）でアジア杯の表の行だけ。
+#   材料の控えは research/raw/20261006_coach_zaccheroni.md。
+date: 2026年10月06日
+slot: other_1
+format: news
+series: 監督の経歴
+people:
+- アルベルト・ザッケローニ
+theme:
+  id: coach_zaccheroni
+  league: ''
+  league_name: 日本代表
+  kind: other
+  topic: アルベルト・ザッケローニ
+  title: ザッケローニがアジア杯決勝で切ったカード。ザックジャパンの勝率が落ちた年
+  question: アジアカップを制したザッケローニの日本代表は、4年間のどこで勝てなくなり、W杯で何が足りなかったのか
+  takeaway: JFA の記録から数えた55試合（PK戦は引き分け）は30勝12分け13敗、勝率54.5%。アジアカップまでの8試合は負けなしの62.5%、2011〜12年も61.9%と高いまま、落ちたのは2013年（19試合8勝8敗、42.1%）で、W杯までの11敗のうち8敗がこの1年に集まる。W杯前の4試合は全勝で立て直したが、本大会は0勝1分け2敗。同じ数え方の森保一（68.5%）とは14ポイント差
+  opening_image: assets/images/20261006_coach_zaccheroni/11_w.jpg
+short_title: ザッケローニ「勇気を持ってやった」李忠成の決勝弾
+thumbnail:
+  photo: assets/images/20261006_coach_zaccheroni/13_w.jpg
+  short_photo: assets/images/20261006_coach_zaccheroni/11_v.jpg
+  line1: ザッケローニ 日本代表の4年
+  line2: 勝率4割に沈んだ1年は●●
+  board: assets/images/20261006_coach_zaccheroni/thumb_13.jpg
+  tags:
+  - ザッケローニ
+  - 日本代表
+  - ザックジャパン
+  - アジアカップ
+  - 監督の経歴
+sections:
+- id: final
+  main: true
+  heading: 延長後半4分、李忠成のボレー
+  tier: 報道
+  telop: 「勇気を持ってやった」。アジアカップ決勝で切った交代のカード
+  narrator: キャスター
+  say:
+  - text: 2011年、就任5か月のザッケローニ監督がアジアの決勝で下した決断です。
+    short_only: true
+    image: assets/images/20261006_coach_zaccheroni/11_w.jpg
+  - text: アジアカップ決勝の延長戦。途中から送り出した李忠成が、ボレーで決勝点。
+    image: assets/images/20261006_coach_zaccheroni/11_w.jpg
+    card: none
+  - text: そこでリスクを負ってでも、そのカードを切った。
+    voice: ザッケローニ監督
+    card: none
+  - text: チームのコンセプトである勇気を持ってやった。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?79967-79967-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?79959-72010-fl
+  - https://web.gekisaka.jp/news/japan/detail/?79967-79967-fl
+- id: asia
+  card:
+    type: table
+    title: アジアカップ2011の6試合
+    columns: &id001
+    - 日付
+    - 相手
+    - 結果
+    rows: &id002
+    - - 1月9日
+      - ヨルダン
+      - 1-1
+    - - 1月13日
+      - シリア
+      - 2-1 勝ち
+    - - 1月17日
+      - サウジアラビア
+      - 5-0 勝ち
+    - - 1月21日
+      - カタール（準々決勝）
+      - 3-2 勝ち
+    - - 1月25日
+      - 韓国（準決勝）
+      - 2-2、PK戦3-0
+    - - 1月29日
+      - オーストラリア（決勝）
+      - 1-0 勝ち（延長）
+  heading: 就任5か月でアジアの頂点へ
+  tier: 確定
+  official: true
+  telop: 2試合続けて延長の末に優勝。アジア制覇は史上最多の4度目
+  narrator: 解説
+  say:
+  - text: 交代は延長前半8分。決勝点は延長後半4分、長友佑都の左からのクロスでした。
+    card: none
+  - text: 決勝の舞台は、ドーハのハリファ国際スタジアム。そこまでの道も平坦ではありません。
+    image: assets/images/20261006_coach_zaccheroni/20.jpg
+    card:
+      type: table
+      title: アジアカップ2011の6試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: 大会の初戦は、ヨルダンと1対1の引き分けでした。
+    card:
+      type: table
+      title: アジアカップ2011の6試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 準々決勝でカタールに3対2で勝ち、準決勝の韓国戦はPK戦の末に突破します。
+    card:
+      type: table
+      title: アジアカップ2011の6試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 4
+  - text: 決勝も0対0のまま延長へ。2試合続けて120分の戦いでした。
+    card:
+      type: table
+      title: アジアカップ2011の6試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: 2大会ぶりの優勝で、日本のアジア制覇は史上最多の4度目です。
+    emph: true
+    card:
+      type: table
+      title: アジアカップ2011の6試合
+      columns: *id001
+      rows: *id002
+      highlight_row: 5
+  - text: それでも一夜明けた指揮官は、浮かれていませんでした。
+    image: assets/images/20261006_coach_zaccheroni/10_w.jpg
+    card: none
+  - text: アジア杯優勝は我々にとって
+    voice: ザッケローニ監督
+    card: none
+  - text: スタート地点に過ぎない。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?79967-79967-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?79959-72010-fl
+  - https://web.gekisaka.jp/news/japan/detail/?79967-79967-fl
+  - https://www.jfa.jp/samuraiblue/schedule_result/2011.html
+  - https://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%AA%E3%83%95%E3%82%A1%E5%9B%BD%E9%9A%9B%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A0
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: アルベルト・ザッケローニの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: アルベルト・ザッケローニの基礎DATA
+    columns: &id003
+    - 項目
+    - 内容
+    rows: &id004
+    - - 生まれ
+      - 1953年4月1日（73歳）、イタリア・メルドラ
+    - - 選手時代
+      - サイドバック。病気とけがで20歳前に引退
+    - - 監督の始まり
+      - 1983年、30歳で地元のアマチュアクラブ
+    - - 主なタイトル
+      - セリエA（1998-99）、アジアカップ（2011）
+    - - 日本代表監督
+      - 2010年8月〜2014年6月、55試合
+    - - 日本のあと
+      - 北京国安、UAE代表。2024年 日本サッカー殿堂
+  say:
+  - text: 指揮を執ったのは、イタリアから来たアルベルト・ザッケローニ。1953年生まれです。
+    card:
+      type: table
+      title: アルベルト・ザッケローニの基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 選手としては病気とけがに泣き、20歳を前に現役を退きました。
+    card:
+      type: table
+      title: アルベルト・ザッケローニの基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 指導者としての第一歩は30歳、地元のアマチュアクラブでした。
+    card:
+      type: table
+      title: アルベルト・ザッケローニの基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 日本代表は、2014年のW杯までの4年間を率いました。
+    card:
+      type: table
+      title: アルベルト・ザッケローニの基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 4
+  sources:
+  - https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%AB%E3%83%99%E3%83%AB%E3%83%88%E3%83%BB%E3%82%B6%E3%83%83%E3%82%B1%E3%83%AD%E3%83%BC%E3%83%8B
+  - https://en.wikipedia.org/wiki/Alberto_Zaccheroni
+  - https://www.jfa.jp/news/00034151/
+- id: italy
+  heading: ミランで就任1年目のスクデット
+  tier: 報道
+  telop: 最後の7試合に7連勝。首位ラツィオを抜いてセリエA優勝
+  narrator: 解説
+  card:
+    type: table
+    title: イタリアで率いた主なクラブ
+    columns: &id005
+    - クラブ
+    - 時期
+    - 成績
+    rows: &id006
+    - - ウディネーゼ
+      - 1995〜98
+      - 3位（1997-98）
+    - - ミラン
+      - 1998〜2001
+      - セリエA優勝（1998-99）
+    - - ラツィオ
+      - 2001〜02
+      - 6位（途中就任）
+    - - インテル
+      - 2003〜04
+      - 4位（途中就任）
+    - - トリノ
+      - 2006〜07
+      - シーズン途中で退任
+    - - ユヴェントス
+      - '2010'
+      - 7位（4か月の契約）
+  say:
+  - text: 名前が広く知られたのは、1997〜98年にウディネーゼをリーグ3位へ導いたときです。
+    image: assets/images/20261006_coach_zaccheroni/08.jpg
+    card:
+      type: table
+      title: イタリアで率いた主なクラブ
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: その手腕を買われて移ったミランで、いきなり頂点に立ちます。
+    card:
+      type: table
+      title: イタリアで率いた主なクラブ
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 1998〜99年のシーズン、ミランは最後の7試合に7連勝。
+    card:
+      type: table
+      title: イタリアで率いた主なクラブ
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 首位のラツィオを抜き去り、就任1年目でセリエAを制しました。
+    emph: true
+    card:
+      type: table
+      title: イタリアで率いた主なクラブ
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: その後はラツィオやインテルを、シーズンの途中から任されます。
+    card:
+      type: table
+      title: イタリアで率いた主なクラブ
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: 2010年のユヴェントスも、4か月だけの契約で7位でした。
+    card:
+      type: table
+      title: イタリアで率いた主なクラブ
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  - text: その年の8月、日本代表の新監督に決まります。就任会見で語った理由です。
+    image: assets/images/20261006_coach_zaccheroni/10_w.jpg
+    card: none
+  - text: セリエAは一番激しいリーグで優勝も遂げたが、
+    voice: ザッケローニ監督
+    card: none
+  - text: さらに大きな挑戦を経験するには
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: 代表監督の仕事をしたかった。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  quotes_from:
+  - サンケイスポーツ http://www.sanspo.com/soccer/news/100831/scc1008311420004-n1.htm
+  sources:
+  - https://en.wikipedia.org/wiki/Alberto_Zaccheroni
+  - https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%AB%E3%83%99%E3%83%AB%E3%83%88%E3%83%BB%E3%82%B6%E3%83%83%E3%82%B1%E3%83%AD%E3%83%BC%E3%83%8B
+  - http://www.sanspo.com/soccer/news/100831/scc1008311420004-n1.htm
+- id: japan
+  heading: フランスに初勝利、いちばん早いW杯切符
+  tier: 確定
+  official: true
+  telop: 16試合負けなしで発進。2013年6月、開催国を除いて最初にW杯出場決定
+  narrator: キャスター
+  card:
+    type: table
+    title: 日本代表での主な試合（2010〜2013）
+    columns: &id007
+    - 時期
+    - 相手
+    - 結果
+    rows: &id008
+    - - 2010年10月
+      - アルゼンチン
+      - 1-0 勝ち（初陣）
+    - - 2011年1月
+      - アジアカップ
+      - 優勝
+    - - 2011年11月
+      - 北朝鮮（平壌）
+      - 0-1、17試合目で初黒星
+    - - 2012年10月
+      - フランス（敵地）
+      - 1-0 勝ち（初勝利）
+    - - 2013年6月
+      - オーストラリア
+      - 1-1、W杯出場決定
+    - - 2013年6月
+      - コンフェデ杯
+      - 3戦3敗
+  say:
+  - text: 初陣は2010年10月のアルゼンチン戦。それまで6戦全敗の相手に1対0で勝利。
+    image: assets/images/20261006_coach_zaccheroni/12_w.jpg
+    card:
+      type: table
+      title: 日本代表での主な試合（2010〜2013）
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 就任から16試合負けなし。初めての黒星は、17試合目の敵地の北朝鮮戦でした。
+    card:
+      type: table
+      title: 日本代表での主な試合（2010〜2013）
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 2012年10月の敵地フランス戦は、後半43分の香川真司の一撃で初勝利。
+    emph: true
+    card:
+      type: table
+      title: 日本代表での主な試合（2010〜2013）
+      columns: *id007
+      rows: *id008
+      highlight_row: 3
+  - text: 試合後、指揮官はこの遠征を組んだ理由を明かしています。
+    card: none
+  - text: これまでほとんどの戦いがアジアだったので、
+    voice: ザッケローニ監督
+    card: none
+  - text: 今回のように世界の強豪と戦うことで
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: 自分たちがどこにいるのかを確認したかった。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: 2013年6月のオーストラリア戦は、終了間際に本田圭佑がPKを決めてドロー。
+    card:
+      type: table
+      title: 日本代表での主な試合（2010〜2013）
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: これでW杯出場が決まり、開催国を除けば世界でいちばん早い切符でした。
+    card:
+      type: table
+      title: 日本代表での主な試合（2010〜2013）
+      columns: *id007
+      rows: *id008
+      highlight_row: 4
+  - text: ところが同じ月、大陸王者が集うコンフェデ杯では、
+    card:
+      type: table
+      title: 日本代表での主な試合（2010〜2013）
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+  - text: ブラジル、イタリア、メキシコに3連敗を喫します。
+    card:
+      type: table
+      title: 日本代表での主な試合（2010〜2013）
+      columns: *id007
+      rows: *id008
+      highlight_row: 5
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?106124-106124-fl
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2010.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2011.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2012.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2013.html
+  - https://web.gekisaka.jp/news/japan/detail/?74798-64405-fl
+  - https://web.gekisaka.jp/news/japan/detail/?92525-89628-fl
+  - https://web.gekisaka.jp/news/japan/detail/?106106-106106-fl
+  - https://web.gekisaka.jp/news/japan/detail/?106124-106124-fl
+  - https://jp.reuters.com/article/idUSTYE95308U/
+- id: brazil
+  heading: ブラジルで1分け2敗
+  tier: 確定
+  official: true
+  telop: 初戦は先制から逆転負け。コロンビアに1対4で大会を去る
+  narrator: 解説
+  card:
+    type: table
+    title: W杯ブラジル大会の3試合（2014）
+    columns: &id009
+    - 日付
+    - 相手
+    - 結果
+    rows: &id010
+    - - 6月14日
+      - コートジボワール
+      - 1-2 負け
+    - - 6月19日
+      - ギリシャ
+      - 0-0
+    - - 6月24日
+      - コロンビア
+      - 1-4 負け
+  say:
+  - text: 2014年、W杯ブラジル大会。初戦のコートジボワールには先制しながら、
+    image: assets/images/20261006_coach_zaccheroni/13_w.jpg
+    card:
+      type: table
+      title: W杯ブラジル大会の3試合（2014）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 後半の2失点で、1対2の逆転負けとなりました。
+    card:
+      type: table
+      title: W杯ブラジル大会の3試合（2014）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 2戦目は前半にギリシャが1人退場。それでも0対0で、勝ち点1にとどまりました。
+    card:
+      type: table
+      title: W杯ブラジル大会の3試合（2014）
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: 望みをかけたコロンビア戦は、前半終了間際に岡崎慎司が追いつくも、後半に3失点。
+    card:
+      type: table
+      title: W杯ブラジル大会の3試合（2014）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 1対4の敗戦で、グループ4位のまま大会を去りました。
+    card:
+      type: table
+      title: W杯ブラジル大会の3試合（2014）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+  - text: 試合後の会見で、ザッケローニ監督が挙げた理由です。
+    card: none
+  - text: コンフェデレーションズ、W杯では
+    voice: ザッケローニ監督
+    card: none
+  - text: 間違ったアプローチを取ってしまった。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: もし何かを変える必要があったとしたら、
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: 戦術面ではなく、精神面を変えるべきだった。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  quotes_from:
+  - スポーツナビ http://brazil2014.yahoo.co.jp/column/detail/201406250002-spnavi
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2014.html
+  - http://brazil2014.yahoo.co.jp/column/detail/201406250002-spnavi
+  - https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%AB%E3%83%99%E3%83%AB%E3%83%88%E3%83%BB%E3%82%B6%E3%83%83%E3%82%B1%E3%83%AD%E3%83%BC%E3%83%8B
+- id: farewell
+  heading: 「責任はすべて私にある」
+  tier: 報道
+  telop: 敗退の翌日、総括の会見で退任を表明
+  narrator: キャスター
+  say:
+  - text: 敗退の翌日、総括の会見で、ザッケローニ監督は自ら口を開きました。
+    image: assets/images/20261006_coach_zaccheroni/14_w.jpg
+    card: none
+  - text: 今回のメンバーは私が選び、
+    voice: ザッケローニ監督
+    card: none
+  - text: 戦い方も戦術も私が決めた。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: 責任はすべて私にある。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: 私は日本代表を離れなければならないと思っている。
+    voice: ザッケローニ監督
+    card: none
+  - text: スタッフやサポーターへの感謝を並べたあと、こう続けます。
+    card: none
+  - text: この4年間、何不自由なく仕事に集中させていただいた。
+    voice: ザッケローニ監督
+    card: none
+  - text: 濃密な時間を過ごすことができた。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: 充実感と、感動にあふれる4年間だったと感じている。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?141985-141985-fl
+  sources:
+  - https://web.gekisaka.jp/news/japan/detail/?141985-141985-fl
+- id: view
+  viewpoint: true
+  heading: 時期で分けたザックジャパンの勝率
+  tier: 背景
+  telop: アジアカップまで62.5%、2013年は42.1%。森保一の通算とは14ポイント差
+  narrator: 解説
+  card:
+    type: table
+    title: 時期ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+    columns: &id011
+    - 時期
+    - 試合
+    - 勝ち・分け・負け
+    - 勝率
+    rows: &id012
+    - - アジアカップまで
+      - '8'
+      - 5・3・0
+      - 62.5%
+    - - その後〜W杯の前
+      - '44'
+      - 25・8・11
+      - 56.8%
+    - - W杯本大会
+      - '3'
+      - 0・1・2
+      - 0%
+    - - 通算
+      - '55'
+      - 30・12・13
+      - 54.5%
+    - - 森保一の通算（同じ数え方）
+      - '111'
+      - 76・17・18
+      - 68.5%
+  say:
+  - text: 55試合を、アジアカップまで・その後・W杯本大会の3つに分けて数えてみます。
+    image: assets/images/20261006_coach_zaccheroni/14_w.jpg
+    card:
+      type: table
+      title: 時期ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: PK戦を引き分けとすると、アジアカップまでの8試合は負けなしで、勝率62.5%。
+    card:
+      type: table
+      title: 時期ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: その後、W杯の直前までの44試合は25勝。勝率は56.8%に下がります。
+    card:
+      type: table
+      title: 時期ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: 年で分けると、2011年から12年は21試合で13勝。61.9%と高いままです。
+    card:
+      type: table
+      title: 「その後」を年で分けると（同じ数え方）
+      columns: &id013
+      - 時期
+      - 試合
+      - 勝ち・分け・負け
+      - 勝率
+      rows: &id014
+      - - 2011年6月〜12年
+        - '21'
+        - 13・5・3
+        - 61.9%
+      - - 2013年
+        - '19'
+        - 8・3・8
+        - 42.1%
+      - - 2014年（W杯の前）
+        - '4'
+        - 4・0・0
+        - 100%
+      highlight_row: 0
+  - text: 落ちたのは2013年。19試合で8勝8敗、勝率は42.1%でした。
+    emph: true
+    card:
+      type: table
+      title: 「その後」を年で分けると（同じ数え方）
+      columns: *id013
+      rows: *id014
+      highlight_row: 1
+  - text: コンフェデ杯の3敗に、秋の東欧遠征での2敗。
+    card:
+      type: table
+      title: 「その後」を年で分けると（同じ数え方）
+      columns: *id013
+      rows: *id014
+      highlight_row: 1
+  - text: W杯までの負け11のうち、8つがこの1年に集まっています。
+    card:
+      type: table
+      title: 「その後」を年で分けると（同じ数え方）
+      columns: *id013
+      rows: *id014
+      highlight_row: 1
+  - text: 年が明けた2014年は、W杯前の4試合に全勝。立て直して本番へ向かいました。
+    card:
+      type: table
+      title: 「その後」を年で分けると（同じ数え方）
+      columns: *id013
+      rows: *id014
+      highlight_row: 2
+  - text: それでも本大会の3試合は0勝。通算は30勝12分け13敗、勝率54.5%です。
+    card:
+      type: table
+      title: 時期ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 同じ数え方で、森保一は111試合で76勝。勝率で14ポイント上回ります。
+    card:
+      type: table
+      title: 時期ごとの勝率（JFAの記録から計算・PK戦は引き分け）
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 退任の会見では、4年前の約束にも触れていました。
+    card: none
+  - text: 4年前の就任会見で『4年後、日本サッカー界に何かを残したい、
+    voice: ザッケローニ監督
+    card: none
+  - text: 少しでも遺産を置いていきたい』と言った。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: その意味で何かを残せたという自負はある。
+    voice: ザッケローニ監督
+    cont: true
+    card: none
+  - text: 2024年、ザッケローニは日本サッカー殿堂に名を連ねています。
+    card: none
+  quotes_from:
+  - ゲキサカ https://web.gekisaka.jp/news/japan/detail/?141985-141985-fl
+  sources:
+  - https://www.jfa.jp/samuraiblue/schedule_result/2010.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2011.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2012.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2013.html
+  - https://www.jfa.jp/samuraiblue/schedule_result/2014.html
+  - https://www.jfa.jp/news/00034151/
+  - https://web.gekisaka.jp/news/japan/detail/?141985-141985-fl
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  - https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%AB%E3%83%99%E3%83%AB%E3%83%88%E3%83%BB%E3%82%B6%E3%83%83%E3%82%B1%E3%83%AD%E3%83%BC%E3%83%8B

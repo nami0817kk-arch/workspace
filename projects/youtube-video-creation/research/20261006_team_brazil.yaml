@@ -1,0 +1,534 @@
+# ブラジル代表の紹介（代表チームの紹介）。11/14（土）シンガポールで日本と戦う相手。
+# 材料の控え: research/raw/20261006_team_brazil.md（数字はすべてそこに出典つき）
+# W杯2026 の結果・得点者・主将は FIFA 公式の試合データ（api.fifa.com）。優勝はスペイン（決勝でアルゼンチンに延長1-0）。
+# 日本との対戦成績・FIFAランキング（7月20日発表の5位）は JFA の参加国の対戦チーム情報。1989年の初対戦と2025年の初勝利は JFA の記録。
+# この秋の3試合と、W杯の日本戦のシュート・保持は FotMob の試合記録。監督の言葉はサッカーダイジェストWeb（W杯の日本戦後）とスポーツ報知（インド戦後）。
+# 見立ての表は自分で数えた（W杯5試合＋この秋3試合の得点時刻。raw の 8.）。
+# 重ねない: 9/10 の「ブラジル」の回（17人入れ替え・チアゴ・シウヴァ）は使わない。10/6 の森保監督の回とは対戦の言い方を変えた。
+#   FIFAランキングの回（明日）とは、基礎DATAの1行だけ。ライブの順位・11月に増える点は言わない。
+# 10/6 の決まり: 冒頭は「いちばん強い一点」（W杯で日本に逆転勝ちした試合と監督の言葉）から。基礎DATAは後ろで短く（読み上げ4項目）。
+# ネットの反応は置いていない（紹介ものは声なしで通す。見本のエクアドル・ニュージーランド回と同じ）。
+date: 2026年10月06日
+slot: other_1
+format: news
+series: 代表チームの紹介
+people: []
+theme:
+  id: team_brazil
+  league: japan
+  league_name: 日本代表
+  kind: preview
+  topic: ブラジル代表
+  title: ブラジル代表ってどんなチーム？W杯で日本の先制をひっくり返した5度の王者
+  question: 11月14日に日本と戦うブラジル代表は、どんなチームか
+  takeaway: W杯からの8試合でブラジルは19点を挙げ、そのうち4点が90分を過ぎてから。相手にリードを許した5試合で負けたのはノルウェー戦の1つだけ。W杯の日本戦も、27分間リードされながらシュート19対5で押し返した。90分で終わる11月14日の一戦は、日本が先に取ったリードを最後の笛まで守れるかが分かれ目になる
+  opening_image: assets/images/20261006_team_brazil/p2.jpg
+short_title: ブラジル代表の名将が明かした、W杯の日本戦で苦しんだ前半
+thumbnail:
+  photo: assets/images/20261006_team_brazil/p2.jpg
+  short_photo: assets/images/20261006_team_brazil/01_v.jpg
+  photos:
+  - assets/images/20261006_team_brazil/02.jpg
+  - assets/images/20261006_team_brazil/01.jpg
+  line1: ブラジル代表
+  line2: 日本はここまで 1勝2分●敗
+  tags:
+  - ブラジル代表
+  - 日本代表
+  - アンチェロッティ
+  - 代表チーム紹介
+sections:
+- id: japan_wc
+  main: true
+  heading: 日本の守りに手を焼いた名将
+  tier: 報道
+  telop: アンチェロッティ監督「前半は日本が上手く守備を固めて、スペースを見つけるのに苦労しました」
+  narrator: キャスター
+  quotes_from:
+  - サッカーダイジェスト https://www.soccerdigestweb.com/news/detail/id=193448
+  sources:
+  - https://www.soccerdigestweb.com/news/detail/id=193448
+  say:
+  - text: W杯で、先に点を取った日本をひっくり返したブラジル。
+    short_only: true
+    image: assets/images/20261006_team_brazil/p1.jpg
+  - text: 6月30日、日本戦を終えた名将アンチェロッティの言葉です。
+    image: assets/images/20261006_team_brazil/p1.jpg
+  - voice: アンチェロッティ監督
+    text: 前半は日本が上手く守備を固めて、
+  - voice: アンチェロッティ監督
+    text: スペースを見つけるのに苦労しました。
+    cont: true
+  - voice: アンチェロッティ監督
+    text: 後半はクロスをより多く入れ、
+    cont: true
+  - voice: アンチェロッティ監督
+    text: ペナルティエリアへの入り込みを増やすことで
+    cont: true
+  - voice: アンチェロッティ監督
+    text: 解決策を見出しました。
+    cont: true
+- id: match
+  heading: 90分を過ぎて決まった1点
+  tier: 確定
+  official: true
+  telop: 日本が29分に先制。56分カゼミーロ、90+5分マルティネッリで逆転
+  narrator: 解説
+  sources:
+  - https://api.fifa.com/api/v3/live/football/17/285023/289287/400021516
+  - https://www.fotmob.com/matches/x/4653711
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  card:
+    type: table
+    title: W杯 ブラジル対日本（6月30日）
+    columns: &id001
+    - 項目
+    - ブラジル
+    - 日本
+    rows: &id002
+    - - 得点
+      - 2（56分・90+5分）
+      - 1（29分）
+    - - シュート
+      - '19'
+      - '5'
+    - - 枠内シュート
+      - '7'
+      - '2'
+    - - ボール保持
+      - 69%
+      - 31%
+  say:
+  - text: 舞台はアメリカのヒューストン。勝ち残った32か国の、負ければ終わりの1回戦です。
+    image: assets/images/20261006_team_brazil/p5.jpg
+    card: none
+  - text: 29分、佐野海舟のゴールで日本が先にリードを奪います。
+    card: none
+  - text: ブラジルは後半に攻め方を変え、56分にカゼミーロが同点に。
+    card: none
+  - text: そして90分を過ぎた5分。ガブリエル・マルティネッリが勝ち越しました。
+    image: assets/images/20261006_team_brazil/p6.jpg
+    emph: true
+    card: none
+  - text: シュートは19本対5本。日本のおよそ4倍を打っています。
+    image: assets/images/20261006_team_brazil/s1.jpg
+    card:
+      type: table
+      title: W杯 ブラジル対日本（6月30日）
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 枠に飛んだのは7本対2本。ボールも7割近くをブラジルが握りました。
+    card:
+      type: table
+      title: W杯 ブラジル対日本（6月30日）
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 27分間リードした日本を、数字の上では押し続けていたのです。
+    card:
+      type: table
+      title: W杯 ブラジル対日本（6月30日）
+      columns: *id001
+      rows: *id002
+      highlight_row: 3
+- id: data
+  heading: 基礎DATA
+  tier: 確定
+  official: true
+  telop: ブラジル代表の基礎DATA
+  narrator: キャスター
+  sources:
+  - https://www.jfa.jp/samuraiblue/20261117/team_info.html
+  - https://www.fotmob.com/teams/8256/overview/brazil
+  - https://en.wikipedia.org/wiki/Carlo_Ancelotti
+  - https://api.fifa.com/api/v3/live/football/17/285023/289288/400021532
+  card:
+    type: table
+    title: ブラジル代表の基礎DATA
+    columns: &id003
+    - 項目
+    - 内容
+    rows: &id004
+    - - W杯の優勝
+      - 5回（最多。1958・62・70・94・2002）
+    - - FIFAランキング
+      - 5位（7月20日発表。日本は17位）
+    - - 監督
+      - カルロ・アンチェロッティ（2025年5月から）
+    - - 主将
+      - マルキーニョス（パリ・サンジェルマン）
+    - - W杯2026
+      - ベスト16
+  say:
+  - text: 11月14日、シンガポールで日本と戦う相手を、基礎データで見ます。
+    image: assets/images/20261006_team_brazil/p2.jpg
+    card:
+      type: table
+      title: ブラジル代表の基礎DATA
+      columns: *id003
+      rows: *id004
+  - text: W杯の優勝は5回。どの国よりも多い回数です。
+    card:
+      type: table
+      title: ブラジル代表の基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: フィファの世界ランキングは5位。17位の日本より12も上にいます。
+    card:
+      type: table
+      title: ブラジル代表の基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 1
+  - text: 監督は2025年5月から、イタリア出身のカルロ・アンチェロッティ。
+    image: assets/images/20261006_team_brazil/p1.jpg
+    card:
+      type: table
+      title: ブラジル代表の基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: キャプテンは、代表112試合を誇るマルキーニョスです。
+    image: assets/images/20261006_team_brazil/p3.jpg
+    card:
+      type: table
+      title: ブラジル代表の基礎DATA
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+- id: wc
+  heading: W杯はベスト16。5試合の歩み
+  tier: 確定
+  official: true
+  telop: 1次リーグは2勝1分けで首位。16強でノルウェーに1-2
+  narrator: キャスター
+  sources:
+  - https://api.fifa.com/api/v3/calendar/matches?idSeason=285023&idCompetition=17&count=200&language=en
+  - https://api.fifa.com/api/v3/live/football/17/285023/289288/400021532
+  - https://www.fotmob.com/matches/x/4667768
+  - https://en.wikipedia.org/wiki/Carlo_Ancelotti
+  - https://www.espn.com/soccer/story/_/id/49279982/brazil-norway-world-cup-2026-erling-haaland
+  - https://www.jfa.jp/samuraiblue/schedule_result/2026.html
+  card:
+    type: table
+    title: W杯2026 ブラジルの5試合
+    columns: &id005
+    - 日付
+    - 相手
+    - 結果
+    rows: &id006
+    - - 6月14日
+      - モロッコ
+      - 1-1 引き分け
+    - - 6月20日
+      - ハイチ
+      - 3-0 勝ち
+    - - 6月25日
+      - スコットランド
+      - 3-0 勝ち
+    - - 6月30日
+      - 日本（32強）
+      - 2-1 勝ち
+    - - 7月6日
+      - ノルウェー（16強）
+      - 1-2 負け
+  say:
+  - text: この夏の北中米W杯、ブラジルはどこまで勝ち進んだのか。
+    image: assets/images/20261006_team_brazil/p2.jpg
+    card:
+      type: table
+      title: W杯2026 ブラジルの5試合
+      columns: *id005
+      rows: *id006
+  - text: 初戦のモロッコ戦は、先に許した1点をエースのヴィニシウスが返して引き分け。
+    card:
+      type: table
+      title: W杯2026 ブラジルの5試合
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: ハイチとスコットランドには、続けて3対0で勝ちました。
+    card:
+      type: table
+      title: W杯2026 ブラジルの5試合
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: ヴィニシウスは1次リーグの3試合で4ゴール。グループ1位で抜けます。
+    emph: true
+    card:
+      type: table
+      title: W杯2026 ブラジルの5試合
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: 日本を退けた次の相手はノルウェー。ハーランドに2点を奪われ、1対2。
+    card:
+      type: table
+      title: W杯2026 ブラジルの5試合
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: ベスト8に届かなかったのは、1990年の大会以来のことでした。
+    card:
+      type: table
+      title: W杯2026 ブラジルの5試合
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: 頂点に立ったのはスペイン。決勝でアルゼンチンを延長の末に1対0で破りました。
+    card:
+      type: table
+      title: W杯2026 ブラジルの5試合
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+- id: autumn
+  heading: W杯のあとの3試合と、26人の起用
+  tier: 報道
+  telop: 9月・10月は2勝1分け。招集した26人を全員起用
+  narrator: 解説
+  quotes_from:
+  - スポーツ報知 https://news.yahoo.co.jp/articles/947e271a4f22ed1b8c3f268fd0c817a99a6e843c
+  sources:
+  - https://www.fotmob.com/matches/x/5924776
+  - https://www.fotmob.com/matches/x/5924777
+  - https://www.fotmob.com/matches/x/5985687
+  - https://canalgoat.com.br/noticias/selecao-brasileira/brasil-goleia-a-india-por-4-a-0-em-calcuta-com-golaco-de-estevao-pedro-de-pivo-e-dois-de-samuel-lino-e-fecha-a-data-fifa-invicto-duas-vitorias-um-empate-e-26-jogadores-usados.html
+  - https://www.mixvale.com.br/2026/10/01/capitao-inedito-bruno-guimaraes-chega-a-50-jogos-na-selecao-brasileira/
+  - https://news.yahoo.co.jp/articles/947e271a4f22ed1b8c3f268fd0c817a99a6e843c
+  card:
+    type: table
+    title: W杯のあとの3試合
+    columns: &id007
+    - 日付
+    - 相手
+    - 結果
+    rows: &id008
+    - - 9月25日
+      - オーストラリア
+      - 1-1 引き分け
+    - - 9月29日
+      - オーストラリア
+      - 4-2 勝ち
+    - - 10月3日
+      - インド
+      - 4-0 勝ち
+  say:
+  - text: W杯が終わって迎えた、9月と10月の3試合です。
+    image: assets/images/20261006_team_brazil/p4.jpg
+    card:
+      type: table
+      title: W杯のあとの3試合
+      columns: *id007
+      rows: *id008
+  - text: オーストラリアとの1戦目は、20歳のハイアンが終了間際に追いつき、引き分け。
+    card:
+      type: table
+      title: W杯のあとの3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 2戦目は先制のあと逆転されながら、3点を重ねて4対2の勝ち。
+    card:
+      type: table
+      title: W杯のあとの3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: この日が代表50試合目のブルーノ・ギマランイスも、1点を決めました。
+    card:
+      type: table
+      title: W杯のあとの3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: 10月3日は、初めて戦うインドに4対0の勝ち。
+    card:
+      type: table
+      title: W杯のあとの3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 19歳のエステヴァンが先制し、サムエル・リノが2点を加えています。
+    card:
+      type: table
+      title: W杯のあとの3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: 3試合で、招集した26人を全員ピッチに送り出しました。
+    emph: true
+    card:
+      type: table
+      title: W杯のあとの3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - text: インド戦のあと、監督が手応えを口にしています。
+    image: assets/images/20261006_team_brazil/p1.jpg
+    card:
+      type: table
+      title: W杯のあとの3試合
+      columns: *id007
+      rows: *id008
+      highlight_row: 2
+  - voice: アンチェロッティ監督
+    text: 数人の若手が良いプレーをしたのが収穫
+    card: none
+- id: h2h
+  heading: 日本との15試合、ただ1つの白星
+  tier: 確定
+  official: true
+  telop: 日本の1勝2分け12敗。2025年10月に初めて勝った
+  narrator: キャスター
+  sources:
+  - https://www.jfa.jp/samuraiblue/20261117/team_info.html
+  - http://samuraiblue.jp/timeline/19890723/
+  - https://www.jfa.jp/samuraiblue/20251014/
+  - https://www.fotmob.com/matches/x/4947213
+  card:
+    type: table
+    title: 日本とブラジルの対戦（日本から見て）
+    columns: &id009
+    - 日付
+    - 会場
+    - 結果
+    rows: &id010
+    - - 1989年7月23日
+      - リオデジャネイロ
+      - 0-1 負け
+    - - 2025年10月14日
+      - 東京スタジアム
+      - 3-2 勝ち
+    - - 2026年6月30日
+      - ヒューストン（W杯）
+      - 1-2 負け
+    - - 通算15試合
+      - ''
+      - 1勝2分12敗（9得点39失点）
+  say:
+  - text: では、日本はこの王国とどう渡り合ってきたのか。
+    image: assets/images/20261006_team_brazil/p3.jpg
+    card:
+      type: table
+      title: 日本とブラジルの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+  - text: 対戦は15回。日本の1勝2分け12敗で、奪ったゴール9に対し許したのは39です。
+    card:
+      type: table
+      title: 日本とブラジルの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 3
+  - text: 最初の対戦は1989年。リオデジャネイロで0対1の負けでした。
+    card:
+      type: table
+      title: 日本とブラジルの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: ただ1つの勝利は2025年10月。0対2から3点を奪い返しました。
+    emph: true
+    card:
+      type: table
+      title: 日本とブラジルの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 1
+  - text: その8か月後、W杯の舞台でブラジルが借りを返した形です。
+    card:
+      type: table
+      title: 日本とブラジルの対戦（日本から見て）
+      columns: *id009
+      rows: *id010
+      highlight_row: 2
+- id: view
+  heading: 11月14日の鍵、試合終盤のブラジル
+  tier: 背景
+  viewpoint: true
+  telop: 直近8試合の19点のうち4点が90分以降。リードを許した5試合で負けは1つ
+  narrator: 解説
+  sources:
+  - https://api.fifa.com/api/v3/calendar/matches?idSeason=285023&idCompetition=17&count=200&language=en
+  - https://www.fotmob.com/teams/8256/fixtures/brazil
+  - https://www.jfa.jp/samuraiblue/20261117/about.html
+  card:
+    type: table
+    title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+    columns: &id011
+    - 項目
+    - 数
+    rows: &id012
+    - - 得点
+      - 19（1試合2.4）
+    - - うち90分を過ぎてから
+      - 4（およそ5点に1点）
+    - - 相手にリードを許した試合
+      - '5'
+    - - そこから負けた試合
+      - 1（ノルウェー戦）
+    - - 日本との直近2試合
+      - どちらも先制した側が負け
+  say:
+  - text: ここからは見立てです。W杯からの8試合で、ブラジルのゴールの時間を数えました。
+    image: assets/images/20261006_team_brazil/p2.jpg
+    card:
+      type: table
+      title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+      columns: *id011
+      rows: *id012
+  - text: 8試合で19点。1試合あたり2点を超えます。
+    card:
+      type: table
+      title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+      columns: *id011
+      rows: *id012
+      highlight_row: 0
+  - text: そのうち4点が、90分を過ぎてから。およそ5点に1点です。
+    emph: true
+    card:
+      type: table
+      title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+      columns: *id011
+      rows: *id012
+      highlight_row: 1
+  - text: 相手にリードを許した試合は5つ。
+    card:
+      type: table
+      title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+      columns: *id011
+      rows: *id012
+      highlight_row: 2
+  - text: そこから負けたのは、ノルウェー戦の1試合にとどまります。
+    card:
+      type: table
+      title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+      columns: *id011
+      rows: *id012
+      highlight_row: 3
+  - text: 日本との直近2試合も、どちらも先に点を取った側が敗れました。
+    card:
+      type: table
+      title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 11月14日の試合は、W杯の決勝トーナメントと違って延長もPK戦もありません。
+    card:
+      type: table
+      title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
+  - text: 先に取ったとして、最後の笛までそれを守れるか。そこが分かれ目です。
+    emph: true
+    card:
+      type: table
+      title: 数えてみた：ブラジルの直近8試合（W杯5・この秋3）
+      columns: *id011
+      rows: *id012
+      highlight_row: 4
