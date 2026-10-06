@@ -265,6 +265,8 @@ class Painter:
             from . import extras
             if state.icon:
                 img = extras.draw_icon(self, img, state.icon, icon_t)
+            elif state.portrait is None and state.background is not None and self.config.get("center_panel", True):
+                self._panel(img, state.background)         # 真ん中が空かないように、その場面の絵を額に入れて出す
             if state.bubble and state.portrait is not None:
                 import json as _j
                 img = extras.draw_bubble(self, img, state.portrait, _j.loads(state.bubble))
@@ -335,6 +337,28 @@ class Painter:
         dr.rounded_rectangle([x0, y0, x0 + w, y0 + 82], radius=10, fill=(150, 36, 30, 235), outline=GOLD, width=2)
         dr.text((x0 + w / 2, y0 + 18), "この時", font=sf, fill=(255, 236, 210), anchor="mm")
         dr.text((x0 + w / 2, y0 + 54), text, font=bf, fill=(255, 255, 255), anchor="mm")
+
+    PANEL_BOX = (960, 250, 1600, 720)                     # メモ（左、右端 x≈940）と用語の札（x=1640〜）のあいだ、年表の上
+
+    def _panel(self, img: Image.Image, pic) -> None:
+        """真ん中の額：背景と同じ絵を、暗くせずに額に入れて出す（10-06 ユーザー「画面の真ん中に何もない時を避けて」）。"""
+        key = ("panel", pic.image, getattr(pic, "crop", None))
+        p = self._images.get(key)
+        if p is None:
+            src = self.image(pic.image).convert("RGB")
+            x0, y0, x1, y1 = self.PANEL_BOX
+            bw, bh = x1 - x0 - 40, y1 - y0 - 40
+            s = min(bw / src.width, bh / src.height)
+            p = src.resize((max(1, int(src.width * s)), max(1, int(src.height * s))), Image.LANCZOS)
+            self._images[key] = p
+        x0, y0, x1, y1 = self.PANEL_BOX
+        px = (x0 + x1) // 2 - p.width // 2
+        py = (y0 + y1) // 2 - p.height // 2
+        dr = ImageDraw.Draw(img, "RGBA")
+        dr.rectangle([px - 18, py - 18, px + p.width + 18, py + p.height + 18], fill=(30, 24, 16, 255),
+                     outline=GOLD, width=2)                     # 肖像と同じ二重の金の額
+        dr.rectangle([px - 7, py - 7, px + p.width + 7, py + p.height + 7], outline=GOLD, width=3)
+        img.paste(p, (px, py))
 
     def _portrait(self, img: Image.Image, pic) -> None:
         W = self.W
@@ -736,7 +760,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                         year = ps.year + (s.year - ps.year) * _ease(tr)
                     slide = tr if (s.memo and s.memo != ps.memo) else 1.0
                     base = painter.base(s, year=year, slide=slide, fig=fig_t, icon_t=icon_t)
-                    changed_pic = (((ps.portrait, ps.figure) != (s.portrait, s.figure)) if painter.layered
+                    changed_pic = (((ps.background, ps.portrait, ps.figure, ps.icon) != (s.background, s.portrait, s.figure, s.icon)) if painter.layered
                                    else (ps.background, ps.portrait) != (s.background, s.portrait))
                     if changed_pic:
                         base = Image.blend(painter.base(ps), base, _ease(tr))
