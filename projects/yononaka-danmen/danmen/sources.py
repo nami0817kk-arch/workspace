@@ -108,10 +108,16 @@ def hatena() -> list[Item]:
     return out
 
 
-def suggest(seed: str) -> list[str]:
-    """Google の検索補完。人が実際に打っている疑問が取れる。"""
+def suggest(seed: str, youtube: bool = False) -> list[str]:
+    """検索補完。人が実際に打っている疑問が取れる。
+
+    youtube=True にすると YouTube 側の補完になる。Google とは結果が違い、
+    「動画で見たい疑問」が出る（例：ガソリン → Google は「価格」「近く」、
+    YouTube は「ガソリン税」「減税」「廃止」）。
+    """
+    ds = "&ds=yt" if youtube else ""
     url = ("https://suggestqueries.google.com/complete/search"
-           f"?client=firefox&hl=ja&q={urllib.parse.quote(seed)}")
+           f"?client=firefox&hl=ja{ds}&q={urllib.parse.quote(seed)}")
     try:
         data = json.loads(_get(url, timeout=12).decode("utf-8"))
         return [s for s in data[1] if isinstance(s, str)]
@@ -134,21 +140,33 @@ def keywords_from(items: list[Item], limit: int = 12) -> list[str]:
     return [w for w, _ in sorted(counts.items(), key=lambda kv: -kv[1])[:limit]]
 
 
-def suggests(seeds: list[str]) -> list[Item]:
+def suggests(seeds: list[str], youtube: bool = False) -> list[Item]:
     out: list[Item] = []
     seen: set[str] = set()
+    label = "YouTube検索" if youtube else "サジェスト"
+    kind = "yt_suggest" if youtube else "suggest"
     for seed in seeds:
-        for s in suggest(seed):
+        for s in suggest(seed, youtube=youtube):
             if s in seen or s == seed:
                 continue
             seen.add(s)
-            out.append(Item(source="サジェスト", text=s, kind="suggest", seed=seed))
+            out.append(Item(source=label, text=s, kind=kind, seed=seed))
     return out
+
+
+def demand(word: str) -> dict[str, list[str]]:
+    """ひとつの言葉について、Google と YouTube の両方で何が検索されているか見る。
+    題材を決める前に、動画としての需要があるか確かめるのに使う。"""
+    return {"Google": suggest(word), "YouTube": suggest(word, youtube=True)}
 
 
 def gather_all() -> list[Item]:
     ns = news()
     hs = hatena()
-    seeds = SEED_QUERIES + [f"なぜ {w}" for w in keywords_from(ns, limit=10)]
+    words = keywords_from(ns, limit=10)
+    seeds = SEED_QUERIES + [f"なぜ {w}" for w in words]
     ss = suggests(seeds)
-    return ns + hs + ss
+    # YouTube 側は「なぜ」を付けず、言葉そのもので引く。
+    # 動画で何が見られているかは、言い回しが検索と違うため。
+    ys = suggests(words + ["なぜ", "なぜ 日本"], youtube=True)
+    return ns + hs + ss + ys

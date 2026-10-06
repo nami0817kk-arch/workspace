@@ -70,9 +70,10 @@ def main() -> int:
     kinds: dict[str, int] = {}
     for it in items:
         kinds[it.kind] = kinds.get(it.kind, 0) + 1
-    print(f"■ 集めた　{len(items)} 件"
-          f"（ニュース {kinds.get('news', 0)} ／ サジェスト {kinds.get('suggest', 0)}"
-          f" ／ はてブ {kinds.get('hatena', 0)}）\n")
+    print("■ 集めた　%d 件（ニュース %d ／ 検索の疑問 %d ／ YouTube %d ／ はてブ %d）"
+          % (len(items), kinds.get("news", 0), kinds.get("suggest", 0),
+             kinds.get("yt_suggest", 0), kinds.get("hatena", 0)))
+    print()
 
     if args.raw:
         for it in items[:80]:

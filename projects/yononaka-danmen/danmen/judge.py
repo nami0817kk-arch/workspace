@@ -21,9 +21,9 @@ PROMPT = """あなたは YouTube チャンネル「世の中の断面図」の�
 このチャンネルは、ニュースや世の中の疑問を1つ選び、制度・歴史・数字の断面を見せます。
 
 【採る条件】次のどれかに強く当てはまるものだけ採ります。
-1. 結果は報じられているが、**理由が説明されていない**
-2. 多くの人が**誤解している**（言葉の意味、数字の読み方）
-3. **日本だけ、あるいは1国だけが異質**
+1. 結果は報じられているが、理由が説明されていない
+2. 多くの人が誤解している（言葉の意味、数字の読み方）
+3. 日本だけ、あるいは1国だけが異質
 
 【採らないもの】
 - 政治的な是非（どちらが正しいか）を論じることになるもの
@@ -33,13 +33,15 @@ PROMPT = """あなたは YouTube チャンネル「世の中の断面図」の�
 - 30分の動画にするには中身が薄いもの
 - 公的な統計や法令に当たれないもの（出典が取れないもの）
 
-【出力】採るものだけを JSON の配列で返してください。説明文は書かないでください。
-各要素は次の形です。
-{"n": 元の番号, "title": "疑問形のタイトル案", "why": "なぜ成立するか30字以内",
- "cond": 1か2か3, "source": "当たるべき原典（役所名や統計名）", "score": 1〜5}
+【加点】[YouTube検索] から来たものは、動画として見たい人がいる証拠なので少し高く見ます。
 
-score は「30分の動画として面白くなるか」。5がいちばん良い。
-多くても12件までに絞ってください。
+【出力】JSON の配列だけを返してください。前置きも説明も、コードの囲みも書かないでください。
+1文字目は [ 、最後の文字は ] です。各要素は次の形です。
+
+{"n": 元の番号, "title": "疑問形のタイトル案", "why": "なぜ成立するか30字以内", "cond": 1, "source": "当たるべき原典（役所名や統計名）", "score": 5}
+
+cond は 1 か 2 か 3。score は「30分の動画として面白くなるか」で 1〜5、5がいちばん良い。
+多くても8件までに絞ってください。
 
 【候補】
 """
@@ -54,13 +56,22 @@ def _key() -> str:
 
 def ask(prompt: str, tries: int = 3) -> str:
     key = _key()
-    body = json.dumps({"contents": [{"parts": [{"text": prompt}]}],
-                       "generationConfig": {"temperature": 0.3, "maxOutputTokens": 3000}}).encode()
+    body = json.dumps({
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "temperature": 0.3,
+            "maxOutputTokens": 8000,
+            # これを指定すると JSON で返すことが保証される。
+            # 指定しないと箇条書きで返してくることがある（2026-10-06 に踏んだ）
+            "responseMimeType": "application/json",
+        },
+    }).encode()
     for _ in range(tries):
         for m in MODELS:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={key}"
             try:
-                req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
+                req = urllib.request.Request(url, data=body,
+                                             headers={"Content-Type": "application/json"})
                 with urllib.request.urlopen(req, timeout=180) as res:
                     d = json.load(res)
                 return d["candidates"][0]["content"]["parts"][0]["text"]
@@ -70,17 +81,48 @@ def ask(prompt: str, tries: int = 3) -> str:
     raise SystemExit("Gemini がどのモデルでも応えませんでした（混んでいるときは少し待つ）")
 
 
+def as_json(text: str) -> list[dict]:
+    """返事から JSON の配列を取り出す。囲みや前置きが混ざることがある。"""
+    t = text.strip()
+    t = re.sub(r"^```(?:json)?\s*", "", t)
+    t = re.sub(r"\s*```$", "", t)
+    candidates = [t]
+    candidates += [m.group(0) for m in re.finditer(r"\[[\s\S]*\]", t)]
+    for cand in candidates:
+        try:
+            data = json.loads(cand)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, list):
+            return data
+        if isinstance(data, dict):
+            for v in data.values():
+                if isinstance(v, list):
+                    return v
+    rows = []
+    for line in t.splitlines():
+        line = line.strip().rstrip(",")
+        if line.startswith("{") and line.endswith("}"):
+            try:
+                rows.append(json.loads(line))
+            except json.JSONDecodeError:
+                pass
+    if rows:
+        return rows
+    head = text[:500]
+    raise SystemExit("返事を JSON として読めませんでした。返ってきたもの:\n" + head)
+
+
 def judge(items: list) -> list[dict]:
-    lines = [f"{i+1}. [{it.source}] {it.text}" for i, it in enumerate(items)]
-    text = ask(PROMPT + "\n".join(lines))
-    m = re.search(r"\[.*\]", text, re.S)
-    if not m:
-        raise SystemExit(f"返事を読めませんでした:\n{text[:300]}")
-    out = json.loads(m.group(0))
+    lines = [f"{i + 1}. [{it.source}] {it.text}" for i, it in enumerate(items)]
+    out = as_json(ask(PROMPT + "\n".join(lines)))
     for row in out:
-        n = int(row.get("n", 0)) - 1
+        try:
+            n = int(row.get("n", 0)) - 1
+        except (TypeError, ValueError):
+            continue
         if 0 <= n < len(items):
             row["original"] = items[n].text
             row["source_feed"] = items[n].source
             row["link"] = items[n].link
-    return sorted(out, key=lambda r: -int(r.get("score", 0)))
+    return sorted(out, key=lambda r: -int(r.get("score", 0) or 0))
