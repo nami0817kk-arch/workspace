@@ -360,7 +360,13 @@ def main(argv: list[str]) -> int:
             skip = tuple(k for k in argv[argv.index("--skip") + 1].split(",") if k)
         stems: tuple[str, ...] = ()
         if "--stems" in argv:
-            stems = tuple(k for k in argv[argv.index("--stems") + 1].split(",") if k)
+            # 空白で区切って渡しても全部拾う（2026-10-07、空白区切りで渡して1本目しか載らなかった）
+            after = []
+            for a in argv[argv.index("--stems") + 1:]:
+                if a.startswith("--"):
+                    break
+                after.append(a)
+            stems = tuple(k for a in after for k in a.split(",") if k)
         print(scripts(argv[1], images="--images" in argv, skip=skip, stems=stems))
         return 0
     print(__doc__)
