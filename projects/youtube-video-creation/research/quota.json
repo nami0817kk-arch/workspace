@@ -262,12 +262,12 @@
     "videos.list": 1
   },
   "2026-10-05": {
-    "channels.list": 8,
-    "playlistItems.list": 19,
-    "videos.insert": 6,
-    "thumbnails.set": 6,
+    "channels.list": 20,
+    "playlistItems.list": 31,
+    "videos.insert": 18,
+    "thumbnails.set": 18,
     "playlists.insert": 1,
-    "playlistItems.insert": 3,
+    "playlistItems.insert": 9,
     "videos.list": 15,
     "videos.update": 1,
     "videoCategories.list": 1

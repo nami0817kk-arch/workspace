@@ -1462,6 +1462,9 @@ def check_quote_speed(out_dir: Path, portrait: bool) -> Finding:
     if not script_json.exists():
         return Finding(False, "言葉の早さ", "script.json がありません")
     data = json.loads(script_json.read_text(encoding="utf-8"))
+    # **シリーズの回の本編は見ない**（2026-10-06。research._check_quote_timing と同じ決まり）
+    if not portrait and str((data.get("meta") or {}).get("series") or data.get("series") or "").strip():
+        return Finding(True, "言葉の早さ", "シリーズの回の本編は見ません")
     narrators = {"キャスター", "解説", "ナレーター"}
     elapsed = 0.0
     for scene in data.get("scenes", []):

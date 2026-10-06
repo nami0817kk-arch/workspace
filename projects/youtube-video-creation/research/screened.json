@@ -1886,5 +1886,53 @@
  "20261005_ueda_4goals_short": {
   "at": "2026-10-05T23:46:15+09:00",
   "digest": "a029b64092ec43ad"
+ },
+ "20261006_kubo_tophalf": {
+  "at": "2026-10-06T12:08:30+09:00",
+  "digest": "a81156a656e7e87f"
+ },
+ "20261006_kubo_tophalf_short": {
+  "at": "2026-10-06T12:08:33+09:00",
+  "digest": "b34c3e1e3b0e6096"
+ },
+ "20261006_nakamura_assist": {
+  "at": "2026-10-06T12:08:39+09:00",
+  "digest": "a896ec5808814df5"
+ },
+ "20261006_nakamura_assist_short": {
+  "at": "2026-10-06T12:08:44+09:00",
+  "digest": "7849fdb4644bcbcf"
+ },
+ "20261006_match_france_belgium": {
+  "at": "2026-10-06T12:08:49+09:00",
+  "digest": "24d7f8f324c13762"
+ },
+ "20261006_match_france_belgium_short": {
+  "at": "2026-10-06T12:08:53+09:00",
+  "digest": "bc72f10918bf8a35"
+ },
+ "20261006_coach_moriyasu": {
+  "at": "2026-10-06T12:08:55+09:00",
+  "digest": "3ee1df85e7a7bd35"
+ },
+ "20261006_coach_moriyasu_short": {
+  "at": "2026-10-06T12:09:00+09:00",
+  "digest": "6948e73b95b96cc0"
+ },
+ "20261006_player_581678": {
+  "at": "2026-10-06T12:30:07+09:00",
+  "digest": "cf7fdc1c25c25ac0"
+ },
+ "20261006_player_581678_short": {
+  "at": "2026-10-06T12:30:09+09:00",
+  "digest": "260f16fcf7be0a37"
+ },
+ "20260926_ll07_celta": {
+  "at": "2026-10-06T12:30:11+09:00",
+  "digest": "11d1d3ae6eb4f561"
+ },
+ "20260926_ll07_celta_short": {
+  "at": "2026-10-06T12:30:12+09:00",
+  "digest": "46e7f95017340add"
  }
 }
