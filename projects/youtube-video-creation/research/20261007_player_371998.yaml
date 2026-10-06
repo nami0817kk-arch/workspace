@@ -1,0 +1,679 @@
+# ヴィニシウス・ジュニオール（レアル・マドリード）の紹介。8節の型（2026-09-28）を、ベリンガム（research/20261006_player_581678.yaml）・
+# ヤマル（research/20261002_player_937958.yaml）の形にそろえた（2026-10-07）。雛形は tools/player_intro.py 371998（player_pool の一覧は1クラブ2人までなので --per-club 3 で10番目）。
+# 材料は research/raw/20261007_vinicius_material.md、数字と写真は research/raw/20261007_player_371998.md。
+# 通算は Transfermarkt（performance-season を季ごとに合計）と FotMob（careerHistory）で突き合わせ、試合と得点は一致
+#   （フラメンゴ69-14・レアル383-129・ブラジル代表57-14 → 509試合157点。カスティージャ・U17 は入れない）。アシストは食い違うので出さない。
+# 市場価値は 10/5 に 1.4億→1.3億ユーロ（雛形の控えは古い 1.4億だった）。身長はレアル公式・TM とも 1.76m。
+# 入口は 11/14 の日本戦だが、前日の scripts/20261006_team_brazil.md と重ねないよう、ブラジル代表の話は冒頭と見立ての2行だけ。
+# 獲得の額（4500万ユーロ、スポルティーバの換算で約60億円）はクラブが発表していない報道の額なので「報じられた額」と言う。題は円で言う（10/5 の移籍の答え合わせの回が別の選手の「4500万」を読んでいて、variety の「本のあいだ」に当たった）。人種差別の件は判決の事実と本人の言葉だけ。
+date: 2026年10月07日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ヴィニシウス・ジュニオール
+theme:
+  id: player_371998
+  league: spain
+  kind: other
+  topic: レアル・マドリード
+  title: ヴィニシウスってどんな選手？出場20分の16歳に約60億円が動いた理由
+  question: ヴィニシウスはどういう作りの選手で、出場20分ほどの16歳が、どうやって決勝で決める7番になったのか
+  takeaway: 最初の3季は公式戦118試合15点だったが、21/22から5季つづけて22点以上。ところが今季は10月5日の時点でクラブ8試合1点と、過去4季の同じ時点（2〜7点）より少ない。それでもゴール期待値では3.0ぶんの形を作っていて、6試合2点の出足から季の最多に届いた23/24の例もある。日本時間11日のビジャレアル戦と、11月の日本戦が次の節目
+  nameplate: ヴィニシウス｜レアル・マドリード FW／ブラジル代表
+  opening_image: assets/images/20261007_player_371998/city2026/01_r.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑧ペドリ
+short_title: ヴィニシウスってどんな選手？
+thumbnail:
+  line1: ヴィニシウス通算157点
+  line2: 欧州の決勝で2度●●た7番
+  tags:
+  - レアル・マドリード
+  - ヴィニシウス・ジュニオール
+  - ブラジル代表
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261007_player_371998/thumbfull/01.jpg
+  photos: []
+  short_photo: assets/images/20261007_player_371998/final2024/01_v.jpg
+sections:
+- id: hook
+  heading: 16歳に投じられた大金
+  tier: 報道
+  telop: 出場20分ほどの16歳に、約60億円
+  narrator: キャスター
+  card:
+    type: table
+    title: レアルが獲得を決めたとき
+    columns: [項目, 中身]
+    rows: &deal_rows
+    - [合意, 2017年5月23日]
+    - [年齢, 16歳]
+    - [プロでの出場, 2試合・約20分]
+    - [報じられた額, 4500万ユーロ（約60億円）]
+    source: SI・ESPN・スポルティーバ（額は報道）
+  say:
+  - text: 11月14日、日本と戦うブラジルの背番号7。
+    image: assets/images/20261007_player_371998/wc94/01_w.jpg
+  - text: ヴィニシウス・ジュニオール。左から仕掛け続ける、レアルのウイングです。
+    image: assets/images/20261007_player_371998/rso2026/01_w.jpg
+  - text: レアルが獲得で合意したのは、2017年5月。まだ16歳でした。
+    image: assets/images/20261007_player_371998/rso2026/01_v.jpg
+    card: &deal_card
+      type: table
+      title: レアルが獲得を決めたとき
+      columns: [項目, 中身]
+      rows: *deal_rows
+      source: SI・ESPN・スポルティーバ（額は報道）
+      highlight_row: 1
+  - text: プロで出た時間は、まだ2試合で20分ほど。1試合の4分の1にも届きません。
+    card:
+      <<: *deal_card
+      highlight_row: 2
+  - text: それでもレアルは、この16歳に大金を投じます。
+    emph: true
+    card:
+      <<: *deal_card
+      highlight_row: 3
+  - text: 憧れの白いユニホームへの思いを、本人は2021年にこう明かしています。
+    image: assets/images/20261007_player_371998/rso2026/01_w.jpg
+    card: none
+  - voice: ヴィニシウス
+    text: 少年時代から憧れたレアル・マドリードで
+  - voice: ヴィニシウス
+    text: 活躍することが夢だったから、
+    cont: true
+  - voice: ヴィニシウス
+    text: このエンブレムにキスをする。
+    cont: true
+  - voice: ヴィニシウス
+    text: そのために、僕はたくさんトレーニングをしているんだ
+    cont: true
+    pause: 0.5
+  - その夢は、どうやって形になったのか。順に見ていきます。
+  sources:
+  - https://www.si.com/soccer/2017/05/23/vinicius-junior-real-madrid-transfer-flamengo-brazil
+  - https://www.espn.co.uk/football/story/_/id/37521468/real-madrid-sign-flamengo-vinicius-junior-16-45m-reports
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2023/05/12/fw_2/?page=2
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2023/05/12/fw_2/?page=3
+  - https://www.jfa.jp/samuraiblue/20261117/about.html
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: ヴィニシウス・ジュニオールの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: ヴィニシウス・ジュニオール（レアル・マドリード）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - レアル・マドリード（7番）
+    - - ポジション
+      - 左ウイング
+    - - 生年月日
+      - 2000年7月12日（26歳）
+    - - 生まれ
+      - サン・ゴンサロ（ブラジル）
+    - - 身長
+      - 1.76m
+    - - 契約
+      - 2032年6月まで
+    - - 市場価値
+      - 1.3億ユーロ
+    source: Transfermarkt・レアル公式
+  say:
+  - text: ヴィニシウス、26歳。レアルの背番号7で、本職は左ウイング。
+    image: assets/images/20261007_player_371998/espanyol2026/01_v.jpg
+    card: &data_card
+      type: table
+      title: ヴィニシウス・ジュニオール（レアル・マドリード）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・レアル公式
+      highlight_row: 1
+  - text: 生まれはブラジル、リオデジャネイロ州のサン・ゴンサロです。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長は176センチ。空中戦より、地面での勝負を磨いてきました。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: この夏、クラブとの契約を2032年6月まで延ばしています。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は1億3千万ユーロ。2024年秋の最高、2億からは下げています。
+    card:
+      <<: *data_card
+      highlight_row: 6
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+  - https://www.realmadrid.com/en-US/football/first-team/players/vinicius-paixao-de-oliveira-junior
+  - https://www.realmadrid.com/ja-JP/news/club/announcements/comunicado-oficial-vini-jr-renovado-hasta-2032-06-08-2026
+- id: career
+  heading: 18試合2点から始まったレアル
+  tier: 報道
+  telop: 1年目のリーグ戦は18試合2点
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns:
+    - シーズン
+    - クラブ
+    - 年齢
+    - 市場価値
+    rows: &career_rows
+    - - 16/17〜17/18
+      - フラメンゴ
+      - 16〜17歳
+      - 最高 3500万ユーロ
+    - - 18/19〜26/27
+      - レアル・マドリード
+      - 18〜26歳
+      - 最高 2億ユーロ
+    source: Transfermarkt
+  say:
+  - text: フラメンゴの下部組織で育ち、トップチームに上がったのは16歳。
+    image: assets/images/20261007_player_371998/flamengo/01.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [シーズン, クラブ, 年齢, 市場価値]
+      rows: *career_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: レアルへの移籍は、18歳になった2018年7月に実現します。
+    image: assets/images/20261007_player_371998/real2018/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: ところがヴィニシウスの1年目、リーグ戦は18試合で2点にとどまります。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 金額に見合わない、という声まで上がりました。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 市場価値もこの時期、7千万から4千万ユーロへ下がっていきます。
+    image: assets/stats/player_20261007_846033_value.png
+    no_telop: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 続く2季も、リーグ戦の点は3点ずつでした。
+    image: assets/images/20261007_player_371998/y2021/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: それでも本人は、ひたすら練習に打ち込んだといいます。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+  - https://www.realmadrid.com/en-US/football/first-team/players/vinicius-paixao-de-oliveira-junior
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2023/05/12/fw_2/?page=2
+- id: finals
+  heading: 決勝の夜に2度決めた7番
+  tier: 報道
+  main: true
+  telop: 2022年パリ、2024年ロンドン。2度の決勝で得点
+  narrator: 解説
+  card:
+    type: table
+    title: 2度の決勝と、その年の受賞
+    columns: [いつ, 何をしたか]
+    rows: &final_rows
+    - [2022年5月 パリ, リヴァプール戦 59分に決勝点]
+    - [2024年6月 ロンドン, ドルトムント戦 83分に2点目]
+    - [2024年12月, フィファ年間最優秀選手]
+    source: UEFA・レアル公式
+  say:
+  - text: レアルのヴィニシウス、最初の3季はリーグ戦で合計8点。そこからの変化は。
+    short_only: true
+    image: assets/images/20261007_player_371998/final2024/01.webp
+  - text: 2022年5月、初めて欧州の頂点に立った夜、本人はこう語りました。
+    image: assets/images/20261007_player_371998/final2024/01.webp
+  - voice: ヴィニシウス
+    text: シーズン中は何度も辛い思いをしたが、
+  - voice: ヴィニシウス
+    text: 頑張り続けた結果、このステージにたどり着くことができた
+    cont: true
+    pause: 0.5
+  - text: パリでのチャンピオンズリーグ決勝。59分の決勝点が、21歳の彼でした。
+    emph: true
+    image: assets/images/20261007_player_371998/final2024/01_v.jpg
+    card: &final_card
+      type: table
+      title: 2度の決勝と、その年の受賞
+      columns: [いつ, 何をしたか]
+      rows: *final_rows
+      source: UEFA・レアル公式
+      highlight_row: 0
+  - text: この季の公式戦は22点。前の季の6点から、一気に伸ばしました。
+    card:
+      <<: *final_card
+      highlight_row: 0
+  - text: 2024年6月にはロンドンの決勝でも1点。2度の決勝で、名前を刻みます。
+    card:
+      <<: *final_card
+      highlight_row: 1
+  - text: その年の暮れには、フィファの年間最優秀選手に輝きました。
+    card:
+      <<: *final_card
+      highlight_row: 2
+  sources:
+  - https://www.soccer-king.jp/news/world/cl/20220529/1652894.html
+  - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/vini-jr-todos-han-trabajado-de-manera-increible-para-poder-llegar-aqui-01-06-2024
+  - https://www.realmadrid.com/ja-JP/news/football/first-team/latest-news/premio-vini-the-best-17-12-2024
+  - https://www.realmadrid.com/ja-JP/news/club/announcements/comunicado-oficial-vini-jr-renovado-hasta-2032-06-08-2026
+- id: style
+  heading: プレースタイル
+  tier: 報道
+  telop: 左の高い位置から、ゴール前へ
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じFWの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: 敵陣ボックス内タッチ
+      value: 95
+      highlight: true
+    - label: 被ファウル
+      value: 95
+      highlight: false
+    - label: 敵陣でのボール奪取
+      value: 93
+      highlight: false
+    - label: 守備アクション
+      value: 7
+    source: FotMob
+  say:
+  - text: ヴィニシウスの形を、同じフォワードと比べたレーダーで見ます。
+    image: assets/stats/player_20261007_846033_radar.png
+    no_telop: true
+  - text: 外へ大きく伸びるのは、味方の好機をつくる回数と、ボールに触る回数。
+    image: assets/stats/player_20261007_846033_radar.png
+    no_telop: true
+  - text: 反対に空中戦と守備の関与は、いちばん少ない側です。
+    image: assets/stats/player_20261007_846033_radar.png
+    no_telop: true
+  - text: よくボールを持つのは、左サイドの高い位置。
+    image: assets/stats/player_20261007_846033_heat.png
+    no_telop: true
+    card: none
+  - text: ペナルティエリアの左の角に、最も色が濃く出ています。
+    image: assets/stats/player_20261007_846033_heat.png
+    no_telop: true
+    card: none
+  - text: 今季のリーグは7試合でシュート22本。多くをゴール前の中から打っています。
+    image: assets/stats/player_20261007_846033_shots.png
+    no_telop: true
+  - text: 相手のファウルを受けた回数は23回。同じフォワードの中で上の側です。
+    image: assets/images/20261007_player_371998/city2026/01_w.jpg
+  - text: 止めようとすれば、ファウルになる。仕掛け続ける7番の、何よりの武器です。
+    emph: true
+  sources:
+  - https://www.fotmob.com/players/846033
+  - https://www.realmadrid.com/en-US/football/first-team/players/vinicius-paixao-de-oliveira-junior
+- id: past
+  heading: 15点の3季と、22点以上の5季
+  tier: 報道
+  telop: 季ごとの数字と、10月5日までの通算
+  narrator: 解説
+  card:
+    type: table
+    title: ヴィニシウス 通算（2026年10月5日まで）
+    columns:
+    - 所属
+    - 試合
+    - 得点
+    rows:
+    - - フラメンゴ
+      - '69'
+      - '14'
+    - - レアル・マドリード
+      - '383'
+      - '129'
+    - - ブラジル代表
+      - '57'
+      - '14'
+    - - 合計
+      - '509'
+      - '157'
+    source: Transfermarkt・FotMob
+  rows_seasons_a:
+  - &s1
+    - 18/19
+    - '31'
+    - '4'
+  - &s2
+    - 19/20
+    - '38'
+    - '5'
+  - &s3
+    - 20/21
+    - '49'
+    - '6'
+  rows_seasons_b:
+  - &s4
+    - 21/22
+    - '52'
+    - '22'
+  - &s5
+    - 22/23
+    - '55'
+    - '23'
+  - &s6
+    - 23/24
+    - '39'
+    - '24'
+  - &s7
+    - 24/25
+    - '58'
+    - '22'
+  - &s8
+    - 25/26
+    - '53'
+    - '22'
+  - &s9
+    - 26/27
+    - '8'
+    - '1'
+  rows_total:
+  - &t1
+    - フラメンゴ
+    - '69'
+    - '14'
+  - &t2
+    - レアル・マドリード
+    - '383'
+    - '129'
+  - &t3
+    - ブラジル代表
+    - '57'
+    - '14'
+  - &t4
+    - 合計
+    - '509'
+    - '157'
+  say:
+  - text: ヴィニシウスの、レアルでの季ごとの数字です。最初の3季は118試合15点。
+    image: assets/images/20261007_player_371998/city2026/01_v.jpg
+    card: &seasons_a
+      type: table
+      title: ヴィニシウス 季ごとの数字①（レアルの公式戦）
+      columns: &season_cols
+      - 季
+      - 試合
+      - 得点
+      rows:
+      - *s1
+      - *s2
+      - *s3
+      source: Transfermarkt・FotMob
+  - text: 21/22は52試合22点。ここから、点の取れるウイングに変わります。
+    card: &seasons_b
+      type: table
+      title: ヴィニシウス 季ごとの数字②（レアルの公式戦）
+      columns: *season_cols
+      rows:
+      - *s4
+      - *s5
+      - *s6
+      - *s7
+      - *s8
+      - *s9
+      source: Transfermarkt・FotMob
+      highlight_row: 0
+  - text: 23/24は39試合で24点。出た試合は少なくても、最も多くの点を挙げた季です。
+    emph: true
+    card:
+      <<: *seasons_b
+      highlight_row: 2
+  - text: 24/25は58試合。夏のクラブ・ワールドカップまで戦い抜きました。
+    card:
+      <<: *seasons_b
+      highlight_row: 3
+  - text: 25/26も22点。5季つづけて、22点以上を並べました。
+    card:
+      <<: *seasons_b
+      highlight_row: 4
+  - text: 通算では、レアルで383試合129点。
+    card: &total_card
+      type: table
+      title: ヴィニシウス 通算（2026年10月5日まで）
+      columns:
+      - 所属
+      - 試合
+      - 得点
+      rows:
+      - *t1
+      - *t2
+      - *t3
+      - *t4
+      source: Transfermarkt・FotMob
+      highlight_row: 1
+  - text: ブラジル代表では、57試合で14点を数えます。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: フラメンゴの69試合を足すと、509試合157点です。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/leistungsdatenverein/spieler/371998
+  - https://www.fotmob.com/players/846033
+- id: season
+  heading: 今季の11試合と、直近5試合
+  tier: 報道
+  telop: 今季はクラブと代表で11試合2点
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows: &recent_rows
+    - - 10/3
+      - インド（代表）
+      - 45分
+      - 0G 0A
+      - '6.5'
+    - - 9/29
+      - オーストラリア（代表）
+      - 82分
+      - 1G 0A
+      - '8.6'
+    - - 9/25
+      - オーストラリア（代表）
+      - 65分
+      - 0G 0A
+      - '7.4'
+    - - 9/20
+      - アトレティコ
+      - 54分
+      - 0G 0A
+      - '6.5'
+    - - 9/15
+      - エルチェ
+      - 68分
+      - 0G 0A
+      - '6.9'
+    source: FotMob
+  say:
+  - text: 今季のヴィニシウスは、代表戦も含めて11試合で2点。
+    image: assets/images/20261007_player_371998/rayo2026/01.webp
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns: [日付, 相手, 出場, 得点, 評点]
+      rows: *recent_rows
+      source: FotMob
+  - text: クラブの1点は8月26日、本拠地でのレアル・ソシエダ戦でした。
+    card: *recent_card
+  - text: 同じ試合では、エムバペの3点目もお膳立てしています。
+    card: *recent_card
+  - text: 9月29日の代表戦では、ペナルティーキックで1点。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  - text: 10点満点の評点は8.6。この5試合の中で、いちばんの出来でした。
+    card:
+      <<: *recent_card
+      highlight_row: 1
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/profil/spieler/371998
+  - https://www.fotmob.com/players/846033
+  - https://www.realmadrid.com/en-US/news/football/first-team/reports/cronica-real-madrid-real-sociedad-jornada-1-liga-26-08-2026
+- id: story
+  heading: 「パスするな」と、初の有罪判決
+  tier: 報道
+  telop: ベンゼマとの関係、そしてバレンシアでの出来事
+  narrator: 解説
+  card:
+    type: table
+    title: ピッチの外の2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - [点が伸びないころ, ベンゼマの「パスするな」が報じられる]
+    - [2023年5月, バレンシア戦で人種差別を受ける]
+    - [2024年6月, 観客3人に有罪判決]
+    source: スポルティーバ・AFPBB
+  say:
+  - text: 数字の外にも、ヴィニシウスを語るうえで外せない話があります。
+    image: assets/images/20261007_player_371998/y2021/01.jpg
+    card: &story_card
+      type: table
+      title: ピッチの外の2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: スポルティーバ・AFPBB
+      highlight_row: 0
+  - text: 点が伸びないころ、エースのベンゼマが味方に話した言葉が報じられました。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: 「あいつにはパスするな」。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: それが21/22の季には、ベンゼマとの連係がレアルの得点源に変わります。
+    card:
+      <<: *story_card
+      highlight_row: 0
+  - text: もう1つは2023年5月、敵地でのバレンシア戦。人種差別的な行為を受けました。
+    image: assets/images/20261007_player_371998/espanyol2026/01_v.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 翌年6月、裁判所は観客3人に執行猶予つきの禁錮8か月を言い渡します。
+    card:
+      <<: *story_card
+      highlight_row: 2
+  - text: スペインのサッカーで、人種差別をめぐる初めての有罪判決でした。
+    card:
+      <<: *story_card
+      highlight_row: 2
+  - text: 判決のあと、本人が自身の投稿に記した言葉です。
+    card: none
+  - voice: ヴィニシウス
+    text: スペイン史上初のこの有罪判決は、
+  - voice: ヴィニシウス
+    text: 自分のためではなく、黒人の人々全員のためのものだ
+    cont: true
+    pause: 0.6
+  sources:
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2023/05/12/fw_2/?page=2
+  - https://sportiva.shueisha.co.jp/clm/football/wfootball/2023/05/12/fw_2/?page=3
+  - https://www.afpbb.com/articles/-/3523639
+  - https://www.soccer-king.jp/news/world/esp/20240611/1899653.html
+- id: view
+  heading: 今季の出足、過去4季の同じ時点と比べる
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 日本時間11日にビジャレアル戦、11月に日本戦
+  card:
+    type: table
+    title: 10月5日時点のクラブの数字
+    columns: [季, 試合, 得点, アシスト]
+    rows: &pace_rows
+    - ['22/23', '11', '7', '3']
+    - ['23/24', '6', '2', '0']
+    - ['24/25', '12', '4', '7']
+    - ['25/26', '10', '5', '4']
+    - ['26/27', '8', '1', '3']
+    source: Transfermarkt（7月15日〜10月5日の公式戦を数えた）
+  say:
+  - text: 最後に、今季の出足を見立てます。比べるのは、過去4季の10月5日の時点です。
+    image: assets/images/20261007_player_371998/rso2026/01_v.jpg
+    card: &pace_card
+      type: table
+      title: 10月5日時点のクラブの数字
+      columns: [季, 試合, 得点, アシスト]
+      rows: *pace_rows
+      source: Transfermarkt（7月15日〜10月5日の公式戦を数えた）
+  - text: 昨季の同じ時点は、10試合で5点でした。
+    card:
+      <<: *pace_card
+      highlight_row: 3
+  - text: 今季は8試合で1点。点のペースは、4季のどれよりも落ちています。
+    card:
+      <<: *pace_card
+      highlight_row: 4
+  - text: ただ、ゴール期待値、つまりシュートの決まりやすさを足した数字では3.0。
+    card:
+      <<: *pace_card
+      highlight_row: 4
+  - text: 点になる形は、3点ぶん作れていることになります。
+    card:
+      <<: *pace_card
+      highlight_row: 4
+  - text: 23/24も、6試合で2点という出足でした。
+    emph: true
+    card:
+      <<: *pace_card
+      highlight_row: 1
+  - text: その季は終わってみれば、自己最多の点に届いています。
+    card:
+      <<: *pace_card
+      highlight_row: 1
+  - text: 9月の会見で、モウリーニョ監督は次のように語りました。
+    image: assets/images/20261007_player_371998/mourinho/01_w.jpg
+    card: none
+  - voice: モウリーニョ
+    text: ヴィニシウスの最高の姿を皆が求めており、
+  - voice: モウリーニョ
+    text: その最高の姿が訪れるでしょう。
+    cont: true
+  - voice: モウリーニョ
+    text: ただ、現時点ではまだ到達していません。
+    cont: true
+  - voice: モウリーニョ
+    text: それでも、彼はこれまで以上に努力しているヴィニです
+    cont: true
+    pause: 0.5
+  - text: 次は日本時間11日、本拠地でビジャレアルと戦います。
+    image: assets/images/20261007_player_371998/city2026/01_w.jpg
+  - text: 日本代表とは、11月にシンガポールで向き合います。
+    image: assets/images/20261007_player_371998/wc94/01_w.jpg
+  - 監督の言う「最高の姿」が、いつ戻ってくるのか。そこに注目です。
+  sources:
+  - https://www.transfermarkt.com/vinicius-junior/leistungsdatenverein/spieler/371998
+  - https://www.fotmob.com/players/846033
+  - https://www.realmadrid.com/ja-JP/news/football/first-team/press-conference/rueda-prensa-mourinho-pre-rm-rayo-j5-liga-11-09-2026
+  - https://www.jfa.jp/samuraiblue/20261117/about.html

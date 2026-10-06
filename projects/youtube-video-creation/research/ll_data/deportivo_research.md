@@ -189,3 +189,24 @@
 | legend | ルーカス・ペレス | Deportivo da Coruña - CD Castellón, ida da final da Primeira RFEF 2023-24 - 52.jpg | CC BY-SA 4.0 | Estevoaei | デポルティーボの7番。上半身に切り出し |
 | manager | アントニオ・ヒダルゴ | Spartak-aek-15 — копия (3).jpg | CC BY-SA 3.0 | Дмитрий Голубович | AEKラルナカのベンチ。上半身に切り出し |
 | scene | episode | Camisetafrancentenariazo.jpg | CC0 | Magno2002 | センテナリアソのサイン入りユニフォーム（展示） |
+
+---
+
+## 10. 2026-10-07 の取り直し（⑦セルタの 10/6 の直しと同じ形にした）
+
+- `CLUB_LEAGUE=laliga python tools/llresults.py`（10/6 取得）: 第7節まで69試合。デポルティーボの7試合は 8. の表と同じ（国際Aマッチ期間で第8節は 10/10〜11）。
+- ESPN の順位表 https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings （10/6 取得）: **7位・7試合2勝4分1敗・10得点8失点・勝ち点10**。results.json の7試合から数え直しても一致（2×3＋4＝10、得点1+1+3+3+1+0+1＝10、失点1+1+1+2+1+1+1＝8）。
+- 昇格3クラブ（英語版 2025–26 Segunda División の infobox「promoted = Racing Santander / Deportivo La Coruña / Málaga」）の同じ時点: ラシン 16位・勝ち点7・11得点21失点／マラガ 20位・勝ち点3・3得点12失点（ESPN 同上）。
+- 次の試合: 10月11日 アウェーのレアル・ソシエダ戦（ESPN https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/90/schedule?season=2026&fixture=true 「2026-10-11T14:15Z Deportivo at Real Sociedad」）。その次は 10/16 ホームのレバンテ戦。
+- オーバメヤン（MD 2026-09-24 本文）「autor de cinco goles y dos asistencias en siete jornadas」→ チーム10得点のうち7点に絡んだ（自分で数えた。得点とアシストは別の点）。
+- 開幕5節連続得点（MD 2026-09-13 本文）「no había un jugador que arrancara tan fino un campeonato desde Zlatan Ibrahimovic en 2009 con el FC Barcelona, con el que también marcó en las cinco primeras jornadas」。クラブ記録は Pandiani の「seis tantos en seis jornadas en la temporada 2003-2004」。
+- 見立ての計算（自分で数えた）: 10÷7＝1.43／試合、×38＝54.3。残留の目安42（監督の言葉）まで残り32、残る31試合で 32÷31＝1.03／試合。差 0.40。
+- 登録選手の数字は英語版 infobox を 10/6 に見直して変わらず（パレーニョ56・ヒモ・ナバーロ77・ビジャレス192・ソリアーノ119・イェレマイ133、ヒメネス代表100・オーバメヤン代表86）。
+
+### 写真の差し替え（precheck の「1.6倍を超える引き伸ばし」と「顔に表がかかる」を直した）
+| 役割 | 新しいファイル | 元 | ライセンス | 作者 | 見たこと |
+|---|---|---|---|---|---|
+| legend ベベット | assets/images/20260926_ll08_deportivo/bebeto.jpg | File:Bebeto Pretoria 2010.jpg（3500x2387）から縦に切り出し | CC BY 3.0 br | Marcello Casal Jr./ABr（アジェンシア・ブラジル） | 本人、2010年。サングラス姿。前の 323x435 は約3倍に引き伸ばしていた |
+| legend ロイ・マカーイ | assets/images/20260926_ll08_deportivo/makaay.jpg | File:Roy Makaay2.jpg（2848x2136）から縦に切り出し | CC BY-SA 3.0 | Michael Hofmann | 本人、2007年バイエルン。前の横長1枚は全面に敷かれて表が顔にかかっていた |
+| legend ルーカス・ペレス | assets/images/20260926_ll08_deportivo/lucas_perez.jpg | 同じ File を原寸から切り直し | CC BY-SA 4.0 | Estevoaei | 顔を大きく、字幕より上に |
+- ヒダルゴ監督は Commons に 391x766 の1枚しか無い（Category:Antonio Hidalgo Morilla）。クラブ公式の og:image はエンブレム、MD の写真は EFE（通信社）の配信なので使わない。引き伸ばしの × は残る。

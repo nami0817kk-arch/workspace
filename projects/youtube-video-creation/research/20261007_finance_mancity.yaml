@@ -1,0 +1,527 @@
+# クラブの財政：マンチェスター・シティの判決、ほかのクラブはどう見ているか（10/7、シリーズ「クラブの財政」）。材料の控えは research/raw/20261007_finance_mancity.md。
+# ユーザーが○を付けた題。10/2（city_verdict：認定の中身・スポンサー料・前例の超過額・40倍）と 10/3（city_appeal：控訴の日付・ピント）は言い直さない。
+# この回の主題は「罰の重さをめぐる声」：ライバルの見方（1季の降格では足りない）→ キャラガー（何年も続くべき）→ 規則で何ができるか → 前例の減点を数えた表。
+# 一次情報（1行ずつ突き合わせた。raw の「一次情報」）:
+#   PL ハンドブック 2026/27：W.63（リーグとクラブが事情を出す）・W.64（罰金は上限なし・勝ち点は取った分もこれからの分も・除名は勧めるだけ・組み合わせ）・
+#     B.6（除名は総会で、投票したクラブの4分の3以上）・W.76（罰にもシティ・リーグ双方が控訴できる）・W.86（控訴の判断は審理の最終日から30日。10/1＋84日＋30日＝1/23）・
+#     歴代の最終順位表の注記（減点はミドルスブラ3・ポーツマス9・エヴァートン6＋2・フォレスト4の4クラブ5回）・2023/24 と 1996/97 の最終順位。
+#   PL 公式：シティ 9/29（罰は同じ独立委員会が別の非公開の審理で）・10/2（控訴）、エヴァートン 3788486・3912574・3960088・4001861、フォレスト 3999776、チェルシー 4616198（2026-03-16、罰金計1075万ポンド、減点なし）。
+#   エヴァートンの判断 PDF 87・89項（リーグの式：6点から、上限を500万ポンド超えるごとに1点。委員会は採らず）。
+#   「リーグは12点を求めた」は記事だけで判断の公開版に数字が無いので言わない。
+# 発言：キャラガー（Sky Sports 10/6 が引いた Sky Sports News の言葉／Independent・GB News 10/6 が引いた The Overlap の言葉）。原文と訳は raw。
+#   匿名のクラブ関係者（Guardian 9/30・BBC 9/30）は声にせず語りでまとめた。
+# 見立て：前例の減点を自分で数えた表（6行）。「財務の規則での減点は3件で計12点、シティの認定は114件＝件数で38倍」。何点引かれるかは言わない。
+# 写真：エティハド（Commons、Little Savage、CC BY-SA 4.0、2015年）01 正面・02 トロフィーの棚・03 スタンド。キャラガー（Commons、Ludovic Péron、CC BY-SA 3.0、2014）。
+#   キャラガーは縦写真なので pairphoto でエティハド正面と並べた pair_carra。記事の写真は Getty・PA なので使わない。
+# 反応：海外1件（Bluesky、Eddie Gibbs）・日本2件（X、Yahoo!リアルタイム検索）。全文。外したものは raw。
+date: 2026年10月7日
+slot: other_1
+format: news
+series: クラブの財政
+people:
+- マンチェスター・シティ
+- ジェイミー・キャラガー
+theme:
+  id: finance_mancity
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンチェスター・シティの判決、ほかのクラブはどう見ているか
+  question: 有罪とされたシティの罰の重さを、ライバルのクラブや識者はどう見ているのか
+  takeaway: ライバルのクラブが見ているのは「2部に1季なら翌季に戻れる」ことで、9季破った規則に1季の罰では釣り合わないという見方が伝えられている。キャラガーは3年から5年と年数まで挙げた。ただ規則の一覧に降格という罰は無く、委員会ができるのは上限のない罰金と勝ち点の剥奪、除名を勧めることまでで、除名を決めるには総会で投票したクラブの4分の3以上の賛成が要る。プレミアリーグで勝ち点を引かれたのは1992年から4クラブ5回だけで、財務の規則での減点は3件で計12点。減点で降格が決まったのは1997年のミドルスブラの3点だけで、財務の2クラブはどちらも残った。シティの認定は件数で前例の38倍だが、件数を点数に置き換える式は無い。罰の審理の日程が出ないまま、5戦全勝のシティは10月11日にアンフィールドへ向かう
+  opening_image: assets/images/20261007_finance_mancity/pair_carra/01.jpg
+short_title: マンCの罰はどこまで重く。キャラガーが挙げた年数は
+thumbnail:
+  photos:
+  - assets/images/20261007_finance_mancity/01.jpg
+  - assets/images/20261007_finance_mancity/carra/01.jpg
+  short_photo: assets/images/20261007_finance_mancity/pair_carra/01_v.jpg
+  line1: マンCの罰、ライバルの見方は
+  line2: キャラガー「罰は●年から●年」
+  reaction: 元通り、では済まない
+  crests: []
+  tags:
+  - マンチェスター・シティ
+  - プレミアリーグ
+  - クラブの財政
+sections:
+- id: rivals
+  heading: ライバルの見方は「1季では足りない」
+  tier: 報道
+  telop: 控訴が通らなければ、来季のプレミアにシティはいない。ライバルの多くはそう見ている
+  narrator: キャスター
+  card:
+    type: table
+    title: 9季の違反と、ライバルの見方
+    columns: ['', '']
+    rows: &rivals
+    - [違反が認められた期間, 9季（2009年から）]
+    - [その間のシティのタイトル, 8つ（うちリーグ優勝3）]
+    - [ライバルが足りないとみる罰, 2部に1季]
+    - [補償を求める権利を残した, 4クラブ（2024年9月）]
+  say:
+  - text: 控訴が通らなければ、来季のプレミアリーグにシティはいない。
+    image: assets/images/20261007_finance_mancity/pair_carra/01.jpg
+    emph: true
+  - text: 財務規則の違反で、9月29日に有罪とされたシティ。
+  - text: ライバルのクラブの多くが、そう見ていると伝えられています。
+  - text: 規則違反が認められたのは、2009年からの9季です。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 0
+  - text: その9季に、シティはリーグ優勝3回を含む、8つのタイトルを取りました。
+    image: assets/images/20261007_finance_mancity/02_w.jpg
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 1
+  - text: ライバルが気にするのは、2部に落ちても、1季で戻ってこられることです。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 2
+  - text: 9季にわたって破った規則に、1季だけの罰では釣り合わない、という見方です。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 2
+  - text: シティが落ちれば、降格するクラブが1つ減り、欧州の大会の枠も1つ空きます。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 2
+  - text: そんな損得より、規則はどのクラブにも同じ、という考えが中心だといいます。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 2
+  - text: 罰の重さを気にする訳は、もう1つあります。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 3
+  - text: アーセナル、トッテナム、リヴァプール、マンチェスター・ユナイテッド。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 3
+  - text: この4クラブは2024年9月、有罪なら補償を求める権利を残すと、
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 3
+  - text: 弁護士を通じてシティに伝えていました。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 3
+  - text: 実際に求めるかどうかは、罰が決まるのを見てから、とみられています。
+    card:
+      type: table
+      title: 9季の違反と、ライバルの見方
+      columns: ['', '']
+      rows: *rivals
+      highlight_row: 3
+  sources:
+  - https://www.skysports.com/football/news/13595428/man-city-charges-premier-league-clubs-do-not-expect-city-to-be-in-premier-league-next-season-if-appeal-fails
+  - https://www.theguardian.com/football/2026/sep/30/rival-clubs-feel-relegating-manchester-city-championship-not-enough-premier-league
+  - https://www.bbc.com/sport/football/articles/c6vgyg3zv3kwo
+  - https://www.skysports.com/football/news/13593535/man-city-premier-league-charges-jamie-carragher-says-clubs-titles-should-be-stripped-and-owners-removed
+  - https://www.espn.com/soccer/story/_/id/50109791/man-city-premier-league-guilty-verdict-legal-action-arsenal-liverpool-man-united-tottenham
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+- id: carragher
+  main: true
+  heading: キャラガー「罰も何年も続くべき」
+  tier: 報道
+  telop: キャラガー「何年も何年も続いてきたことだから、罰も何年も続くべきだ」
+  narrator: キャスター
+  say:
+  - text: 財務の違反で有罪のマンC。ライバルは「9季の違反に1季の降格は軽い」と見ます。
+    short_only: true
+    image: assets/images/20261007_finance_mancity/pair_carra/01.jpg
+  - text: 解説者のキャラガーも、スカイスポーツでこう話しました。
+    image: assets/images/20261007_finance_mancity/pair_carra/01.jpg
+  - voice: キャラガー
+    text: 罰は今季のうちに決めないといけない。
+  - voice: キャラガー
+    text: 来季のシティに効かせるためにね。
+    cont: true
+  - voice: キャラガー
+    text: どんな罰であれ、1季かぎりで済むとは思わない。
+    cont: true
+  - voice: キャラガー
+    text: 何年も何年も続いてきたことだから、
+    cont: true
+  - voice: キャラガー
+    text: 罰も何年も続くべきだと思う。
+    cont: true
+    emph: true
+  quotes_from:
+  - スカイスポーツ https://www.skysports.com/football/news/13595428/man-city-charges-premier-league-clubs-do-not-expect-city-to-be-in-premier-league-next-season-if-appeal-fails
+  sources:
+  - https://www.skysports.com/football/news/13595428/man-city-charges-premier-league-clubs-do-not-expect-city-to-be-in-premier-league-next-season-if-appeal-fails
+- id: rules
+  heading: 3年から5年の罰は、規則でできるのか
+  tier: 確定
+  official: true   # PL ハンドブック 2026/27 の W.63・W.64・W.76・W.86・B.6 と PL 9/29 の声明まで辿った。キャラガーの2つめの言葉は報道（Independent・GB News）
+  telop: 規則に「降格」という罰は無い。除名を決めるのはクラブの総会で、4分の3以上の賛成が要る
+  narrator: キャスター
+  card:
+    type: table
+    title: 罰を決める仕組み（リーグの規則）
+    columns: ['', '']
+    rows: &rules
+    - [罰を決める人, 判定を出した独立委員会の3人]
+    - [罰金, 上限なし]
+    - [勝ち点, これから取る分も引ける]
+    - [除名, 委員会は勧めるだけ]
+    - [除名を決める場, 総会で4分の3以上の賛成]
+    - [決まった罰への控訴, シティもリーグもできる]
+  say:
+  - text: キャラガーは別の番組で、年数まで挙げています。
+  - voice: キャラガー
+    text: 80点や100点を引くと言っても、それは1季だけの話だ。
+  - voice: キャラガー
+    text: 降格して、また戻ってくる。
+    cont: true
+  - voice: キャラガー
+    text: これだけ長く続いたのだから、罰は何年かにわたるべきだ。
+    cont: true
+  - voice: キャラガー
+    text: 3年から5年。そうすれば選手も出ていく。
+    cont: true
+  - text: では、何年も続く罰は、リーグの規則でできるのでしょうか。
+    image: assets/images/20261007_finance_mancity/03_w.jpg
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+  - text: 罰を決めるのは、有罪と判定した、リーグから独立した委員会の3人です。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 0
+  - text: リーグの理事会が求める罰を示し、シティは軽くすべき事情を訴えます。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 0
+  - text: ほかのクラブは、この審理には加われません。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 0
+  - text: 委員会に許されているのは、まず、上限のない罰金。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 1
+  - text: 勝ち点は、すでに取った分も、これから取る分も引けます。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 2
+  - text: ただ、規則の一覧に「降格」という罰はありません。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 2
+  - text: 落とすには、勝ち点を引くか、リーグから外す除名か、です。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 3
+  - text: その除名も、委員会ができるのは勧めることまで。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 3
+  - text: 決めるのはクラブの総会。投票したクラブの4分の3以上の賛成が要ります。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 4
+    emph: true
+  - text: 罰の審理に加われないライバルが、ここでは1票を持つことになります。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 4
+  - text: そして罰が決まれば、シティもリーグも、その罰に控訴できます。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 5
+  - text: 罰を決める審理の日程は、まだ発表されていません。
+    card:
+      type: table
+      title: 罰を決める仕組み（リーグの規則）
+      columns: ['', '']
+      rows: *rules
+      highlight_row: 5
+  quotes_from:
+  - インディペンデント https://sports.yahoo.com/articles/jamie-carragher-demands-multi-punishment-091303343.html
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+  - https://www.premierleague.com/en/news/4729207/premier-league-statement-manchester-city-fc-appeal-decision-of-independent-commission-02-october-2026
+  - https://sports.yahoo.com/articles/jamie-carragher-demands-multi-punishment-091303343.html
+  - https://www.gbnews.com/sport/football/jamie-carragher-man-city-punishment
+  - https://www.theguardian.com/football/2026/sep/30/rival-clubs-feel-relegating-manchester-city-championship-not-enough-premier-league
+- id: view
+  viewpoint: true
+  heading: 前例の減点と、シティの114件を比べる
+  tier: 確定
+  official: true   # 歴代の最終順位表の注記（PL ハンドブック 2026/27）と PL 公式の声明（エヴァートン・フォレスト・チェルシー）、エヴァートンの判断 87・89項
+  telop: プレミアで勝ち点を引かれたのは4クラブ5回。財務の規則では3件で計12点。シティの認定は114件
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+    columns: [クラブ（季）, 理由, 勝ち点, その季]
+    rows: &past
+    - ['ミドルスブラ（96-97）', 試合を延期, '-3', 降格]
+    - ['ポーツマス（09-10）', 経営破綻, '-9', 降格]
+    - ['エヴァートン（23-24）', 財務の規則2件, '-8', 15位で残留]
+    - ['フォレスト（23-24）', 財務の規則1件, '-4', 17位で残留]
+    - ['チェルシー（26年3月）', 届け出ない支払い, '0（罰金）', ―]
+    - [シティ, 認定114件, これから, ―]
+  say:
+  - text: プレミアリーグの歴史で、勝ち点を引かれた前例を数えました。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+  - text: 1992年からの34季で、4クラブ、5回。7季に1回ほどです。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+  - text: 減点で降格が決まったのは、1997年のミドルスブラだけ。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 0
+  - text: 試合を一方的に延期して3点。それが無ければ残留していました。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 0
+  - text: 経営破綻で9点を引かれたポーツマスは、引かれなくても20位でした。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 1
+  - text: 財務の規則では、エヴァートンが2件で計8点。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 2
+  - text: それでも15位で、降格した18位とは14点の差がありました。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 2
+  - text: 当時リーグは、6点を出発点にする罰の式を示しました。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 2
+  - text: 上限を500万ポンド超えるごとに、1点ずつ足す形です。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 2
+  - text: 委員会は、式は規則の広い権限と合わないとして、採りませんでした。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 2
+  - text: フォレストは1件で4点。17位で、18位とは6点の差で残りました。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 3
+  - text: チェルシーは今年3月、選手や代理人への届け出ていない支払いを、
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 4
+  - text: 自ら申し出ていました。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 4
+  - text: 罰金は1075万ポンド。それまでの最高、550万ポンドの倍近い額です。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 4
+  - text: それでも、勝ち点は引かれていません。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 4
+  - text: 帳簿に正しく載せても、収支の規則は破っていなかった、とリーグは確かめています。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 4
+  - text: 財務の規則での減点は、3件で合わせて12点。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 5
+  - text: シティの認定は114件。数え方は違いますが、件数では38倍です。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 5
+    emph: true
+  - text: ただ、件数を勝ち点に置き換える式は、どこにもありません。
+    card:
+      type: table
+      title: プレミアリーグで勝ち点を引かれた前例（自分で数えた）
+      columns: [クラブ（季）, 理由, 勝ち点, その季]
+      rows: *past
+      highlight_row: 5
+  - text: 罰が決まらないまま、5戦全勝で首位のシティは、
+    card: none
+  - text: 10月11日、敵地アンフィールドでリヴァプールと戦います。
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.premierleague.com/news/3788486
+  - https://resources.premierleague.com/premierleague/document/2023/11/17/49989e4e-01a2-44f9-a012-c3a31ae5536b/2023-11-17-Premier-League-v-Everton-FC-Decision-for-Publication.pdf
+  - https://www.premierleague.com/en/news/3912574
+  - https://www.premierleague.com/en/news/3960088
+  - https://www.premierleague.com/en/news/4001861
+  - https://www.premierleague.com/en/news/3999776
+  - https://www.premierleague.com/en/news/4616198/premier-league-statement-on-chelsea-sanctions-march-2026
+  - https://en.wikipedia.org/wiki/1996%E2%80%9397_FA_Premier_League
+  - https://en.wikipedia.org/wiki/2009%E2%80%9310_Portsmouth_F.C._season
+  - https://www.mancity.com/news/mens/liverpool-v-city-premier-league-match-preview-october-2026-63926279
+  - https://sports.yahoo.com/articles/jamie-carragher-demands-multi-punishment-091303343.html
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「とてつもない減点のあとに昇格して、元通り、では済まない」
+  narrator: キャスター
+  say:
+  # Bluesky @eddiegibbs.co.uk（10/4 10:00 UTC）。連投の7つ目を1件として全文。原文は raw に
+  - voice: ネット民
+    text: 何年もの規則違反で得た優位は、なくしてほしい。
+    image: assets/images/20261007_finance_mancity/01_w.jpg
+  - voice: ネット民
+    text: 責任のある人には、責任を取らせてほしい。
+    cont: true
+  - voice: ネット民
+    text: とてつもない減点のあとに昇格して、元通り、では済まない。
+    cont: true
+  - voice: ネット民
+    text: その結果は、何年もシティについて回るべきだ。
+    cont: true
+  # X @SgTMkL（10/4 20:50 JST）。全文
+  - voice: ネット民
+    text: 今季から初めてプレミアリーグ見るしユニも色々買って
+  - voice: ネット民
+    text: マンチェスターシティ応援しはじめたけど、
+    cont: true
+  - voice: ネット民
+    text: 有罪判決で降格とか処分食らうの結構悲しい。
+    cont: true
+  # X @koxya（10/1 10:11 JST）。全文
+  - voice: ネット民
+    text: エヴァートン事件の勝ち点剥奪も
+    short_voice: true
+  - voice: ネット民
+    text: 残留争いギリギリの状況になったのに、
+    cont: true
+    short_voice: true
+  - voice: ネット民
+    text: シティはどうなるんだ
+    cont: true
+    short_voice: true
+  sources:
+  - https://bsky.app/profile/eddiegibbs.co.uk/post/3mx25ej5bll2d
+  - https://x.com/SgTMkL/status/2106713678674628754
+  - https://x.com/koxya/status/2105465694695629160

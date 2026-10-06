@@ -17,8 +17,9 @@ theme:
   topic: デポルティーボ・ラ・コルーニャ
   title: デポルティーボ・ラ・コルーニャ。リーグ王者が3部で過ごした年月
   question: どんなクラブなのか
-  hook: 決めれば初優勝のピーケーを、止められたシーズンもあります。
+  hook: 決めれば初優勝のピーケーが、止められた年もあります。
   lead: ガリシアでただひとつの、スペイン王者。
+  takeaway: 8年ぶりに1部へ戻ったデポルティーボは7試合で勝ち点10の7位と、一緒に昇格した3クラブで最も上にいる。ただ10得点のうち7点に絡んだ37歳のオーバメヤンが約2か月離れる。いまの1試合1.43の歩みなら38試合で54、監督が掲げる残留の42へは残る31試合を1試合1.03で届く計算で、エース不在でもその歩みを保てるかは10月11日のレアル・ソシエダ戦から見えてくる
   opening_image: assets/stats/ll_deportivo_data_t.png
 thumbnail:
   line1: 3部に落ちたリーグ王者
@@ -31,51 +32,36 @@ sections:
   heading: いま見る理由と基礎DATA
   main: true
   tier: 背景
-  telop: 37歳のエースと、残留を見すえる監督
+  telop: 37歳のエースと、1年で1部へ戻した監督
   narrator: キャスター
   say:
-  - text: '**37歳**のオーバメヤンが、開幕から**5節**連続ゴール。いまは右ひざの手術で離脱中。'
+  - text: '**37歳**のオーバメヤンが、開幕から**5節**続けてゴール。'
     image: assets/stats/ll_deportivo_data_r1.png
     no_telop: true
-  - text: 率いるヒダルゴ監督は、目標をこう話します。
+    emph: true
+  - text: リーガでは**2009年**のイブラヒモビッチ以来。いまは右ひざの手術で離脱中です。
+    image: assets/stats/ll_deportivo_data_r1.png
+    no_telop: true
+  - text: ヒダルゴ監督は就任1年目で、2部のチームを昇格に導きました。
     image: assets/stats/ll_deportivo_data_r2.png
     no_telop: true
-  - voice: アントニオ・ヒダルゴ
-    text: 僕らは昇格組。残留の勝ち点42か43へ、毎日限界まで戦い、苦しまないといけない
-    image: assets/stats/ll_deportivo_data_r2.png
-  - text: そしてこのクラブは、**2000年**のリーグ優勝チーム。3部まで落ちて、はい上がってきました。
+  - text: '**2000年**のリーグ王者デポルティーボ。3部まで落ち、そこからはい上がってきました。'
     image: assets/stats/ll_deportivo_data_r3.png
     no_telop: true
-  - image: assets/stats/ll_deportivo_data0.png
-    text: 創立は**1906年**。体育館サラ・カルベットの仲間たちが作りました。
-    no_telop: true
-  - image: assets/stats/ll_deportivo_data1.png
-    text: 愛称は「エルクリーノス」。町に立つローマの灯台、ヘラクレスの塔から来ています。
-    no_telop: true
-  - image: assets/stats/ll_deportivo_data2.png
-    text: ホームタウンはア・コルーニャ。大西洋に面したガリシアの町で、**約25万人**が暮らします。
-    no_telop: true
   - image: assets/backgrounds/stadium_デポルティーボラコルーニャ.png
-    text: 本拠地はリアソール。浜辺のすぐそばに建ち、クラブの発表では**3万2490人**が入ります。
-  - image: assets/stats/ll_deportivo_data4.png
-    text: オーナーはガリシアの銀行、アバンカ。株の**99パーセント**以上を持っています。
-    no_telop: true
+    text: 本拠地は浜辺のそばのリアソール。クラブの発表では**3万2490人**が入ります。
   - image: assets/stats/ll_deportivo_cups.png
-    text: 1部の優勝は**1回**。国王杯**2回**、スーペルコパ**3回**、インタートトカップ**1回**。
-    no_telop: true
-  - image: assets/stats/ll_deportivo_data6.png
-    text: 最多出場は、中盤のフラン。このクラブひと筋で**700試合**に出ました。
+    text: 1部の優勝は**1回**。国王杯**2回**、スーペルコパ**3回**、欧州のインタートトカップ**1回**。
     no_telop: true
   - image: assets/stats/ll_deportivo_data7.png
-    text: 直近のタイトルは、2023年から24年のシーズンに取った、3部の優勝です。
+    text: 最後に取ったタイトルは、2023年から24年のシーズンの、3部の優勝。
     no_telop: true
   - image: assets/stats/ll_deportivo_data8.png
-    text: 昨シーズンは2部で**2位**。勝ち点**77**で、1部への昇格を決めました。
+    text: 昨シーズンは2部で**2位**。勝ち点**77**で、8年ぶりの1部を決めました。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Deportivo_de_A_Coruña
-  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
-  - https://www.mundodeportivo.com/futbol/deportivo-coruna/20260904/1004223310/hidalgo-deja-claro-objetivo-deportivo-temporada.html
+  - https://en.wikipedia.org/wiki/Estadio_Riazor
   - https://www.mundodeportivo.com/futbol/deportivo-coruna/20260913/1004226817/aubameyang-vuelve-cinco-jornadas-seguidas-marcando-record-tiro.html
   - https://www.mundodeportivo.com/futbol/deportivo-coruna/20260924/1004230823/aubameyang-pasado-quirofano.html
   - https://en.wikipedia.org/wiki/Pierre-Emerick_Aubameyang
@@ -154,7 +140,7 @@ sections:
       - 2対0で初めてのリーグ優勝
   say:
   - 6年後の**2000年**、優勝はまた最終節までもつれます。
-  - 今度はホームでエスパニョールに**2対0**。初めて、リーグを制しました。
+  - 今度はホームでエスパニョールに**2対0**で勝利。悲願の初優勝です。
   sources:
   - https://es.wikipedia.org/wiki/Real_Club_Deportivo_de_La_Coru%C3%B1a
   - https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a
@@ -182,8 +168,8 @@ sections:
       - 8年ぶりに1部へ
   say:
   - 2018年に降格すると、2020年には**39年ぶり**に3部へ。
-  - 3部で**4シーズン**を過ごし、2024年に2部へ戻ります。
-  - そして昨シーズン、セカンドチームから上がった**21歳**の2得点で、1部行きを決めました。
+  - 3部で**4シーズン**。2024年に、ようやく2部へ戻ります。
+  - そして昨シーズン、セカンドチーム育ちの**21歳**の2得点で、1部行きを決めました。
   sources:
   - https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a
   - https://es.wikipedia.org/wiki/Real_Club_Deportivo_de_La_Coru%C3%B1a
@@ -207,7 +193,7 @@ sections:
       - 守って好機を待つ
   say:
   - text: ヒダルゴ監督のチームは、守って好機を待つ。昇格したシーズンも、この戦い方でした。
-    image: assets/photos/ll/deportivo/deportivo_manager_7a979908.jpg
+    image: assets/images/20260926_ll08_deportivo/hidalgo_v.jpg
   - text: ピッチの外は、借金を消しての出直し。
     card:
       type: table
@@ -218,8 +204,8 @@ sections:
       - &id003
         - 運営の型
         - 借金ゼロからの出直し
-  - 1部を離れた頃の借金は**1億ユーロ**超。2024年の夏に**ゼロ**になったと、クラブは言います。
-  - text: 3部でも、ファンは離れませんでした。2022年から23年の年間シートは**2万5001人**です。
+  - 1部を離れた頃の**1億ユーロ**超から、2024年の夏に**ゼロ**へ。
+  - text: 3部でもファンは離れず、2022年から23年の年間シートは**2万5001人**。
     card:
       type: table
       title: このクラブの特徴
@@ -229,6 +215,7 @@ sections:
       - *id003
       - - クラブの気質
         - 3部でも年間シート2万5千
+  - リアソールの席の、**77**パーセントにあたる数です。
   sources:
   - https://en.wikipedia.org/wiki/Deportivo_de_A_Coruña
   - https://www.mundodeportivo.com/en/soccer/20260818/1004217118/1-1-depor-and-elche-share-the-points-after-stunning-goals-from-aubameyang-and-aguado.html
@@ -283,9 +270,9 @@ sections:
       - 1年目に得点王
   say:
   - text: ベベットはブラジル代表のフォワード。**1992年**に加わりました。
-    image: assets/photos/ll/deportivo/deportivo_legend_f91c5c83.jpg
+    image: assets/images/20260926_ll08_deportivo/bebeto.jpg
   - その年のホームのレアル・マドリード戦、0対2から2点を決め、**3対2**の逆転勝ち。
-  - 1年目はリーグ戦**29得点**で得点王。在籍中の1994年には、ワールドカップも制しました。
+  - 1年目はリーグ最多の**29得点**。在籍中の1994年には、ワールドカップも制覇。
   sources:
   - https://en.wikipedia.org/wiki/Bebeto
   - https://en.wikipedia.org/wiki/Roy_Makaay
@@ -313,8 +300,8 @@ sections:
       - ヨーロッパの得点王
   say:
   - text: ロイ・マカーイはオランダのフォワード。**1999年**、テネリフェから来ました。
-    image: assets/photos/ll/deportivo/deportivo_legend_ceb4cbe2.jpg
-  - デビュー戦でハットトリック。2002年から03年は、ヨーロッパの得点王になりました。
+    image: assets/images/20260926_ll08_deportivo/makaay.jpg
+  - デビュー戦でハットトリック。2002年から03年は、ヨーロッパの得点王になります。
   - リーグ戦で**79得点**。2003年、当時のバイエルンの最高額で移りました。
   sources:
   - https://en.wikipedia.org/wiki/Bebeto
@@ -341,10 +328,10 @@ sections:
       - 4度在籍
       - 自腹で3部へ
   say:
-  - text: ルーカス・ペレスはア・コルーニャ生まれのフォワード。**4度**、このクラブに来ました。
-    image: assets/photos/ll/deportivo/deportivo_legend_4255fe39.jpg
-  - 2022年の暮れ、3部のこのクラブへ移るため、自分で**49万3000ユーロ**を払いました。
-  - 2024年、フリーキックで2部復帰を決めた1点。リーグ戦は4度の在籍で**162試合56得点**です。
+  - text: 地元出身のフォワード、ルーカス・ペレス。**4度**、このクラブに来ました。
+    image: assets/images/20260926_ll08_deportivo/lucas_perez.jpg
+  - 2022年の暮れ、1部から3部のこのクラブへ。違約金**49万3000ユーロ**は自腹。
+  - 2024年、直接フリーキックで2部復帰を決めます。リーグ戦は**162試合56得点**。
   sources:
   - https://en.wikipedia.org/wiki/Bebeto
   - https://en.wikipedia.org/wiki/Roy_Makaay
@@ -371,13 +358,20 @@ sections:
       - ウエスカ
   say:
   - text: 今季の監督はアントニオ・ヒダルゴ。スペインの人で、**2025年6月**に就任しました。
-    image: assets/photos/ll/deportivo/deportivo_manager_7a979908.jpg
-  - 前はウエスカ。このクラブでは1年目で1部に上げ、**2028年**まで延長しました。
+    image: assets/images/20260926_ll08_deportivo/hidalgo_v.jpg
+  - 前は2部のウエスカ。昇格のあと、契約を**2028年**まで延ばしました。
+  - 今季の目標について、ヒダルゴ監督の言葉です。
+  - voice: アントニオ・ヒダルゴ
+    text: 僕らは昇格組。残留の勝ち点42か43へ、
+  - voice: アントニオ・ヒダルゴ
+    text: 毎日限界まで戦い、苦しまないといけない
+    cont: true
   sources:
   - https://en.wikipedia.org/wiki/Deportivo_de_A_Coruña
   - https://en.wikipedia.org/wiki/Antonio_Hidalgo_(footballer,_born_1979)
   - https://www.rcdeportivo.es/noticias/antonio-hidalgo-nuevo-entrenador-del-rc-deportivo
   - https://www.mundodeportivo.com/futbol/deportivo-coruna/20260813/1004215797/antonio-hidalgo-renueva-depor-2028.html
+  - https://www.mundodeportivo.com/futbol/deportivo-coruna/20260904/1004223310/hidalgo-deja-claro-objetivo-deportivo-temporada.html
   bg: assets/backgrounds/stadium_デポルティーボラコルーニャ_in.png
   official: false
 - id: squad
@@ -386,7 +380,7 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - text: 今季の登録選手は26人です。
+  - text: 登録選手は、今季26人。
     image: assets/stats/ll_deportivo_gk.png
     no_telop: true
   - image: assets/stats/ll_deportivo_gk_f.png
@@ -396,7 +390,7 @@ sections:
     text: ヘルマン・パレーニョはリーグ戦で**56試合**。
     no_telop: true
   - image: assets/stats/ll_deportivo_gk_f.png
-    text: レオ・ロマンは、違約金**900万ユーロ**でマジョルカから獲ったゴールキーパー。
+    text: レオ・ロマンは、マジョルカから違約金**900万ユーロ**で迎えたキーパー。
     no_telop: true
   - image: assets/stats/ll_deportivo_df_f.png
     text: ディフェンダーは10人。
@@ -414,7 +408,7 @@ sections:
     text: 主将を務めるのが**ディエゴ・ビジャレス**。
     no_telop: true
   - image: assets/stats/ll_deportivo_mf_f.png
-    text: リーグ戦で**192試合**に出ています。
+    text: このクラブで、リーグ戦**192試合**を戦ってきました。
     no_telop: true
   - image: assets/stats/ll_deportivo_mf_f.png
     text: マリオ・ソリアーノはリーグ戦で**119試合**。
@@ -433,9 +427,10 @@ sections:
   bg: assets/backgrounds/stadium_デポルティーボラコルーニャ_in.png
   official: false
 - id: season
-  heading: 今季のここまで
+  viewpoint: true
+  heading: 昇格組で最上位の7位、残留の勝ち点42への道のり
   tier: 報道
-  telop: 7試合で2勝4引き分け1敗。7位
+  telop: 7試合で2勝4引き分け1敗。昇格3クラブで最上位の7位
   narrator: 解説
   card:
     type: table
@@ -467,12 +462,65 @@ sections:
       - レアル・ベティス（ホーム）
       - 1対1
   say:
-  - ラ・リーガは7試合を終えて、**2勝4引き分け1敗**です。
-  - 順位は**7位**、勝ち点は**10**です。
-  - エースのオーバメヤンが戻るのは、2か月ほど先になる見込みです。
+  - デポルティーボは1部に戻った今季、7試合を終えて**2勝4引き分け1敗**。
+  - text: 勝ち点**10**で**7位**。一緒に上がった3クラブで、いちばん上です。
+    card:
+      type: table
+      title: 昇格3クラブのここまで（7試合）
+      columns: &procols
+      - クラブ
+      - 順位
+      - 勝ち点
+      - 得点
+      - 失点
+      rows: &prorows
+      - - デポルティーボ
+        - 7位
+        - '10'
+        - '10'
+        - '8'
+      - - ラシン
+        - 16位
+        - '7'
+        - '11'
+        - '21'
+      - - マラガ
+        - 20位
+        - '3'
+        - '3'
+        - '12'
+      highlight_row: 0
+  - text: ラシンは勝ち点**7**で16位、マラガは**3**で20位にいます。
+    card:
+      type: table
+      title: 昇格3クラブのここまで（7試合）
+      columns: *procols
+      rows: *prorows
+      highlight_row: 1
+  - text: 得点**10**のうち**7点**は、オーバメヤンのゴールかアシストでした。
+    emph: true
+    card:
+      type: table
+      title: 昇格3クラブのここまで（7試合）
+      columns: *procols
+      rows: *prorows
+      highlight_row: 0
+  - text: そのエースが戻るのは、2か月ほど先になる見込みです。
+    card: none
+  - text: いまの1試合**1.43**の歩みなら、38試合で勝ち点は**54**。
+    card: none
+  - text: 監督の言う残留の**42**へは、残る31試合を1試合**1.03**で届きます。
+    card: none
+  - text: いまより**0.4**ゆるい歩みでも足りる。エースのいない間に、それを守れるか。
+    card: none
+  - text: 次は**10月11日**、アウェーでレアル・ソシエダと戦います。
+    card: none
   sources:
   - https://www.espn.com/soccer/team/results/_/name/deportivo
-  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
-  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/90/schedule?season=2026&fixture=true
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Segunda_Divisi%C3%B3n
+  - https://www.mundodeportivo.com/futbol/deportivo-coruna/20260924/1004230823/aubameyang-pasado-quirofano.html
+  - https://www.mundodeportivo.com/futbol/deportivo-coruna/20260904/1004223310/hidalgo-deja-claro-objetivo-deportivo-temporada.html
   bg: assets/backgrounds/stadium_デポルティーボラコルーニャ_in.png
   official: false

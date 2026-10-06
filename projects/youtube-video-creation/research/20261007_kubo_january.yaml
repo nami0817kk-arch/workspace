@@ -1,0 +1,328 @@
+# 取材メモ（10/7 題材 kubo_january、型は news、日本人枠）。材料の控え: research/raw/20261007_kubo_january.md
+# 問い: 久保は本当に1月に出ていくのか／なぜそう書かれたのか。
+# 原文で確かめたこと:
+#   日本に「1月にソシエダを去る」と伝わった一節は、Estadio Deportivo（10/5）の小見出し「Take Kubo, adiós a la Real Sociedad en enero」。
+#   本文はアジアカップで抜ける話だけで、移籍の話は無い（見出しは「problema a la vista para Matarazzo」）。
+#   Diario Vasco の「序列低下・早ければ1月に移籍・適切なオファーなら途中でも交渉」は、robots.txt が Claude を断っているので原文に当たっていない。台本では使わない。
+#   契約 2029-06-30・違約金6000万ユーロはクラブ発表（2024-02-12）を伝えた記事と Transfermarkt。半分はレアル・マドリード（dorsal16 10/2）。
+#   冬の代役探しは dorsal16（10/2、東スポ 10/4 が転載）。「代わりに加える」話で、売る話ではない。
+# 同じ日に別の回（アジアカップの招集の仕組み）がある。招集の規定（12日前・FIFA の付属文書）は言わない。最大11試合は見立ての1行と前回比だけ。
+# 10/2（今季の軌跡・代表の先発）・10/3（結婚）・10/6（トップ下）と言い回しを重ねない。結婚の話は入れない。
+#   9/22 の「どうしようもない」は 10/2 で使ったので、同じ日の「こっちに来たら試合に出られる」を使う。監督の言葉も 10/2（9/6 の会見）とは別の 9/2 の会見。
+# 出場の数字: Transfermarkt の試合記録。リーグ戦の最初の7試合で、昨季（8/16〜9/28）と今季（8/21〜9/20）を並べた。
+# 反応: Yahoo!ニュース（東スポの代役補強の記事）のコメント欄から2件、スペイン語の個人の投稿（Bluesky）1件。全文。
+# 写真: ゲキサカ 9/22 の代表合流の写真（Kaoru WATANABE/GEKISAKA）。冒頭は 01_w（ショートは 01_w_v）。数字の節から 01_side_w（久保を右に寄せた16:9。表が顔にかからない）に1回だけ替える。ショートは 01_side_w_v
+date: 2026年10月7日
+slot: japan_kubo
+format: news
+people:
+- 久保建英
+- マタラッツォ
+theme:
+  id: kubo_january
+  league: spain
+  league_name: ラ・リーガ
+  kind: transfer
+  topic: レアル・ソシエダ
+  title: 久保建英は1月にソシエダを去るのか。スペインで書かれた「別れ」が指していたもの
+  question: 久保建英は本当に1月にソシエダを出ていくのか。なぜそう書かれたのか
+  takeaway: スペインの一節「1月にソシエダに別れ」は、移籍ではなく、来年1月のアジアカップで最大11試合いなくなる話だった。それでも移籍の話に広がった下地は数字にある。リーグ戦の最初の7試合で、出場時間は昨季の443分から223分とほぼ半分、先発は5から3に減った。一方で契約は2029年6月まで2年9か月残り、違約金6000万ユーロは今の推定の市場価値2000万ユーロの3倍で、権利の半分はレアル・マドリードが持つ。1月を左右するのは、抜ける前に残るリーグ戦10試合で先発を取り戻せるか
+  opening_image: assets/images/20261007_kubo_january/01_w.jpg
+short_title: 久保建英「こっちに来たら試合に出られる」1月の移籍の話の中身
+thumbnail:
+  photo: assets/images/20261007_kubo_january/01.jpg
+  short_photo: assets/images/20261007_kubo_january/01_v.jpg
+  line1: 久保建英 1月に去る？
+  line2: 「1月の別れ」の正体は●●
+  reaction: 今冬の移籍の話が進んでるのかもね
+sections:
+- id: report
+  heading: 「1月に別れ」と書かれた中身
+  tier: 報道
+  telop: 「1月にレアル・ソシエダに別れ」。続く中身はアジアカップの話だった
+  narrator: キャスター
+  say:
+  - text: 久保建英が、年明けにクラブを離れる。日本では、そんな話が駆け巡りました。
+    image: assets/images/20261007_kubo_january/01_w.jpg
+  - text: もとになったのは、スペインの一節。「1月にレアル・ソシエダに別れ」。
+  - text: ところが、その続きにあったのは移籍ではなく、年明けのアジアカップでした。
+  - text: 日本代表が勝ち進むほど、久保は長くクラブを離れることになります。
+  - text: それでも移籍の話として広がったわけは、代表に合流した日の本人の一言に表れています。
+  quotes_from:
+  - Estadio Deportivo https://www.estadiodeportivo.com/futbol/real-sociedad/take-kubo-problema-vista-para-matarazzo-real-sociedad-20261005-547930.html
+  sources:
+  - https://www.estadiodeportivo.com/futbol/real-sociedad/take-kubo-problema-vista-para-matarazzo-real-sociedad-20261005-547930.html
+  - https://football-tribe.com/japan/2026/10/06/360097/
+- id: place
+  main: true
+  heading: 代表で口にした「試合に出られる」
+  tier: 報道
+  telop: 久保建英「こっちに来たら試合に出られるんで嬉しい」
+  narrator: キャスター
+  say:
+  - text: 「別れ」の正体はアジアカップ。それでも移籍がささやかれる久保の、9月の一言です。
+    short_only: true
+  - voice: 久保建英
+    text: こっちに来たら、
+  - voice: 久保建英
+    text: 試合に出られるんで嬉しい
+    cont: true
+  - text: 冗談まじりの一言。ただ当時、ソシエダでは控えからの出番が続いていました。
+  - text: 始まりは6月のワールドカップ初戦。左ひざを痛め、夏の準備に出遅れました。
+  quotes_from:
+  - ゲキサカ https://news.yahoo.co.jp/articles/3a2466d393ccfccb16679a87559cde6e6e32c318
+  sources:
+  - https://news.yahoo.co.jp/articles/3a2466d393ccfccb16679a87559cde6e6e32c318
+  - https://www.estadiodeportivo.com/futbol/real-sociedad/kubo-sobre-situacion-real-sociedad-gustaria-que-esto-fuera-noticia-pero-sinceramente-algo-que-puedo-evitar-20260923-547105.html
+- id: minutes
+  heading: 昨季の同じ7試合と並べると
+  tier: 報道
+  telop: リーグ戦の最初の7試合。ピッチに立った時間は昨季443分、今季223分
+  narrator: キャスター
+  card:
+    type: table
+    title: 久保建英 リーグ戦の最初の7試合
+    columns: ['', '昨季', '今季']
+    rows: &mins
+    - ['出場', '7試合', '5試合']
+    - ['先発', '5試合', '3試合']
+    - ['出場時間', '443分', '223分']
+    - ['得点', '1', '0']
+  say:
+  - text: リーグ戦の最初の7試合で、昨季の久保と並べてみます。
+    image: assets/images/20261007_kubo_january/01_side_w.jpg
+    card:
+      type: table
+      title: 久保建英 リーグ戦の最初の7試合
+      columns: ['', '昨季', '今季']
+      rows: *mins
+  - text: 出場した試合は、昨季の7から、今季は5へ。
+    card:
+      type: table
+      title: 久保建英 リーグ戦の最初の7試合
+      columns: ['', '昨季', '今季']
+      rows: *mins
+      highlight_row: 0
+  - text: 先発で名前が呼ばれたのは、5試合から3試合に減りました。
+    card:
+      type: table
+      title: 久保建英 リーグ戦の最初の7試合
+      columns: ['', '昨季', '今季']
+      rows: *mins
+      highlight_row: 1
+  - text: ピッチに立った時間は、443分と223分。ほぼちょうど半分です。
+    card:
+      type: table
+      title: 久保建英 リーグ戦の最初の7試合
+      columns: ['', '昨季', '今季']
+      rows: *mins
+      highlight_row: 2
+  - text: ゴールは、昨季の1に対して、今季はまだ0です。
+    card:
+      type: table
+      title: 久保建英 リーグ戦の最初の7試合
+      columns: ['', '昨季', '今季']
+      rows: *mins
+      highlight_row: 3
+  - text: 最後の先発は9月3日のセルタ戦。その前日の会見で、監督はこう口にしました。
+    card: none
+  - voice: マタラッツォ監督
+    text: 今季、彼は私たちにとって、とても大事な役割を担う。
+    card: none
+  - voice: マタラッツォ監督
+    text: ここ数試合は、
+    cont: true
+    card: none
+  - voice: マタラッツォ監督
+    text: できることを全部は見せられていないかもしれない。
+    cont: true
+    card: none
+  - voice: マタラッツォ監督
+    text: それでも、必ず本来の力に戻ると確信している。
+    cont: true
+    card: none
+  - text: この言葉のあと、公式戦4試合はすべて控えから。うち2試合は出番がありません。
+    card: none
+  - text: 出番なしの試合は、昨季の同じ時期には1つもありませんでした。
+    card: none
+  quotes_from:
+  - Estadio Deportivo https://www.estadiodeportivo.com/futbol/real-sociedad/matarazzo-advierte-take-kubo-explica-salida-mikel-goti-nunca-echo-ningun-jugador-20260902-545719.html
+  sources:
+  - https://www.transfermarkt.jp/takefusa-kubo/leistungsdatendetails/spieler/405398
+  - https://www.estadiodeportivo.com/futbol/real-sociedad/matarazzo-advierte-take-kubo-explica-salida-mikel-goti-nunca-echo-ningun-jugador-20260902-545719.html
+  - https://www.estadiodeportivo.com/futbol/real-sociedad/kubo-sobre-situacion-real-sociedad-gustaria-que-esto-fuera-noticia-pero-sinceramente-algo-que-puedo-evitar-20260923-547105.html
+- id: view
+  viewpoint: true
+  heading: 1月の移籍、動く理由と動かない理由
+  tier: 報道
+  telop: 動く理由はクラブの代役探し。動かない理由は契約の残り2年9か月と違約金
+  narrator: 解説
+  card:
+    type: table
+    title: 1月の移籍 動く理由と動かない理由
+    columns: ['', '中身', '数字']
+    rows: &why
+    - ['動く', 'アジアカップで欠ける試合', '最大11']
+    - ['動かない', '契約の残り', '2年9か月']
+    - ['動かない', '違約金', '6000万ユーロ']
+    - ['動かない', '移籍金の取り分', '半分はレアル・マドリード']
+    - ['この先', '抜ける前のリーグ戦', '10試合']
+  say:
+  - text: 1月に動く理由と、動かない理由。数字で並べます。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+  - text: 動く側にあるのは、減った出番と、1月の長い不在です。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 0
+  - text: アジアカップを最後まで勝ち上がれば、ソシエダの試合を欠くのは最大11。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 0
+  - text: 今季ここまでのリーグ戦7試合より多い試合を、ひと月あまりで抜ける計算です。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 0
+  - text: その穴を埋める選手を、冬の移籍市場で探すことも考えているといいます。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 0
+  - text: クラブの中には、2部で戦うBチームの右ウイング、ダニ・ディアスもいます。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 0
+  - text: 売る話ではありません。ただ、代わりが活躍すれば、戻った久保の出番は細ります。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 0
+  - text: 一方の動かない側。契約の期限は2029年の6月で、残りは2年9か月。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 1
+  - text: 契約を解くための違約金は6000万ユーロ。推定の市場価値2000万の3倍です。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 2
+  - text: しかも売って入るお金の半分は、もといたレアル・マドリードのものです。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 3
+  - text: このクラブで過ごす年月について、本人は9月にこんな言葉を残しています。
+    card: none
+  - voice: 久保建英
+    text: 僕は毎年のように、クラブを移る選手でした。
+    card: none
+  - voice: 久保建英
+    text: ここでは、年を重ねています
+    cont: true
+    card: none
+  - text: 1月にほぼ確かなのは、移籍よりも、代表で抜けることのほうです。
+    card: none
+  - text: 抜ける前に残るリーグ戦は10試合。今季ここまで出た5試合の倍です。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 4
+  - text: その1試合目は、日本時間11日の23時15分。ホームにデポルティーボを迎えます。
+    card:
+      type: table
+      title: 1月の移籍 動く理由と動かない理由
+      columns: ['', '中身', '数字']
+      rows: *why
+      highlight_row: 4
+  - text: この10試合で先発を取り戻せるか。それが、1月の答えを左右します。
+    card: none
+  quotes_from:
+  - Noticias de Gipuzkoa https://www.noticiasdegipuzkoa.eus/reala/2026/09/15/take-kubo-objetivo-ganar-europa-11545191.html
+  sources:
+  - https://www.estadiodeportivo.com/futbol/real-sociedad/take-kubo-problema-vista-para-matarazzo-real-sociedad-20261005-547930.html
+  - https://www.noticiasdegipuzkoa.eus/reala/2026/10/01/kubo-take-real-sociedad-enero-copa-asia-japon-11602213.html
+  - https://www.dorsal16.com/fichajes-de-la-real-sociedad-pendientes-de-kubo/
+  - https://www.cope.es/emisoras/pais-vasco/deportes-guipuzcoa/noticias/take-kubo-renueva-con-real-sociedad-hasta-2029-manteniendo-clausula-millones-20240212_3141007
+  - https://www.naiz.eus/en/info/noticia/20240212/take-se-queda-en-casa-kubo-renueva-con-la-real-hasta-2029
+  - https://www.soccerdigestweb.com/news/detail/id=198175
+  - https://www.noticiasdegipuzkoa.eus/reala/2026/09/15/take-kubo-objetivo-ganar-europa-11545191.html
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「W杯の怪我で出遅れてるから現時点で2番手、3番手」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（東スポWEB 10/4）のコメント欄 1ページ目 uh*****。全文
+  - voice: ネット民
+    text: いい加減アジアカップやアフリカネイションズを
+    card: none
+  - voice: ネット民
+    text: ヨーロッパと合わせて貰いたいよ。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: W杯の怪我で出遅れてるから
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 現時点で2番手、3番手になってしまってるのに代役とは…？
+    cont: true
+    card: none
+  - voice: ネット民
+    text: でも今までリーガで数々の苦境を打開して
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 活躍してきたのも事実。
+    cont: true
+    card: none
+  - voice: ネット民
+    text: きっと返り咲いてくれるから大丈夫！
+    cont: true
+    card: none
+  - voice: ネット民
+    text: 応援しましょう！！
+    cont: true
+    card: none
+  # Bluesky josepoza（スペイン語）。アジアカップで1か月いなくなる、という投稿への返信。全文の訳
+  - voice: ネット民
+    text: ダニ・ディアス、体を温めておけ。出番だぞ。
+    card: none
+  # Yahoo!ニュース（東スポWEB 10/4）のコメント欄 6ページ目 mk5*****。全文
+  - voice: ネット民
+    text: 事実なら来夏、もしくは今冬の移籍の話が進んでるのかもね。
+    short_voice: true
+    card: none
+  sources:
+  - https://news.yahoo.co.jp/articles/e25edc4230fb5d590d35c40635f4bc412a9de6fd/comments
+  - https://news.yahoo.co.jp/profile/news/comments/8ec6c8f5-129c-47db-8670-3418e4dcdfe8
+  - https://bsky.app/profile/josepoza.bsky.social/post/3mwsmiiwus22l
+  - https://news.yahoo.co.jp/profile/news/comments/21be8012-8790-4da2-b75c-9ea3beeadf6e

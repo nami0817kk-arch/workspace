@@ -1,0 +1,538 @@
+# 取材メモ（10/7 シリーズ「若手の数字」、key: young_goldenboy、型は news）。材料と数え方は research/raw/20261007_young_goldenboy.md。
+# 候補25人は主催の発表の原文（europeangoldenboy.com・tuttosport.com、10/5）。リーグ別・クラブ別・プレミアの8人の国籍は自分で数えた（原文の数と一致）。
+# 前の年の比べ: 2025 はプレミア9（公式の原文）、自分で数えて ラ・リーガ4・ブンデス2・セリエA2・ポルトガル3・リーグ・アン4。2024 はプレミア7（公式）。
+# 今季の数字: 2026/27 のリーグ戦だけ、10月5日まで。Transfermarkt の1試合ずつの記録を足した（FotMob の今季リーグの合計と突き合わせ済み）。
+#   どのリーグも 9/18〜9/20 の試合のあと代表の期間で止まっている。
+# 過去の受賞者: ヤマル（2024/25 ラ・リーガ 10/6 まで）・ドゥエ（2025/26 リーグ・アン 10/5 まで）を同じ数え方で。
+# 言葉: リナ・スルク（元ローマ CEO、発表の場のパネル）と、賞を作ったマッシモ・フランキ（10/6 の署名記事）。候補の選手本人の言葉は見つからなかった。
+# 反応は Yahoo!ニュースのコメント欄（サッカーキング・GOAL の記事）から個人の投稿を頭から終わりまで3件。日本人は候補にいないので入れない。
+# 写真は Commons だけ（portrait）。代理店の写真は使っていない。
+date: 2026年10月7日
+slot: other_1
+format: news
+series: 若手の数字
+people:
+- パウ・クバルシ
+- マイルズ・ルイス＝スケリー
+- ジャンルカ・プレスティアンニ
+- ラミン・ヤマル
+- デジレ・ドゥエ
+- アユーブ・ブアディ
+- ワレン・ザイール＝エムリ
+- ヤン・ディオマンデ
+theme:
+  id: young_goldenboy
+  league: england
+  league_name: 欧州の若手
+  kind: other
+  topic: ゴールデンボーイ
+  title: バルセロナから3人。ゴールデンボーイ最終候補25人で、いちばん多かったリーグは
+  question: ゴールデンボーイ2026の最終候補25人は、どのリーグ・クラブから、どんな数字で選ばれたのか
+  takeaway: 最終候補25人のうちプレミアは8人で、3年続けてリーグ別の最多。ただし8人のうちイングランド国籍はルイス＝スケリー1人。今季のリーグ戦（10月5日まで）は番付1位のクバルシが422分、25人の得点最多はプレスティアンニの5点。過去の受賞者を同じ10月上旬で比べると、ヤマルは724分、ドゥエは169分と4倍以上の差があっても2人とも受賞した。候補は直近12か月で見られ、クバルシの12か月にはワールドカップの優勝が入る。受賞者の発表は11月
+  opening_image: assets/images/20261007_young_goldenboy/06_w.jpg
+short_title: クバルシが先頭、プレミアから最多8人。ゴールデンボーイ最終候補
+thumbnail:
+  photo: assets/images/20261007_young_goldenboy/pair/01.jpg
+  photos:
+  - assets/images/20261007_young_goldenboy/01.jpg
+  - assets/images/20261007_young_goldenboy/02.jpg
+  short_photo: assets/images/20261007_young_goldenboy/06_v.jpg
+  line1: クバルシら最終候補25人
+  line2: プレミア8人、イングランド人は●人
+  tags:
+  - ゴールデンボーイ
+  - パウ・クバルシ
+  - プレミアリーグ
+  - バルセロナ
+  - 若手の数字
+sections:
+- id: leagues
+  heading: 25人のうち8人がプレミア
+  tier: 報道
+  telop: 最終候補25人のうちプレミアは8人。2024年7人、2025年9人で3年続けて最多
+  narrator: キャスター
+  card:
+    type: table
+    title: 最終候補のリーグ別の人数
+    columns: &lgcol
+    - リーグ
+    - 2026年
+    - 2025年
+    rows: &lgrow
+    - ['プレミアリーグ', '8', '9']
+    - ['ラ・リーガ', '6', '4']
+    - ['ブンデスリーガ', '5', '2']
+    - ['セリエA', '3', '2']
+    - ['ポルトガル', '2', '3']
+    - ['リーグ・アン', '1', '4']
+  say:
+  - text: 最終候補25人のうち8人が、プレミアリーグの選手です。
+    image: assets/images/20261007_young_goldenboy/01.jpg
+    card:
+      type: table
+      title: 最終候補のリーグ別の人数
+      columns: *lgcol
+      rows: *lgrow
+      highlight_row: 0
+  - text: 2024年は7人、2025年は9人。3年続けて、リーグ別でいちばん多い数です。
+    emph: true
+    card:
+      type: table
+      title: 最終候補のリーグ別の人数
+      columns: *lgcol
+      rows: *lgrow
+      highlight_row: 0
+  - text: ゴールデンボーイは、欧州のクラブにいる21歳以下から、1年の最優秀を選ぶ賞。
+    card:
+      type: table
+      title: 最終候補のリーグ別の人数
+      columns: *lgcol
+      rows: *lgrow
+  - text: 選び方は、21歳以下の100人の番付から、上の20人。
+    card:
+      type: table
+      title: 最終候補のリーグ別の人数
+      columns: *lgcol
+      rows: *lgrow
+  - text: そこに、主催者が推薦枠で選んだ5人を足しています。
+    card:
+      type: table
+      title: 最終候補のリーグ別の人数
+      columns: *lgcol
+      rows: *lgrow
+  - text: 2位は、番付1位のクバルシがいるラ・リーガ。去年の4人から6人に増えました。
+    card:
+      type: table
+      title: 最終候補のリーグ別の人数
+      columns: *lgcol
+      rows: *lgrow
+      highlight_row: 1
+  - text: ブンデスリーガは5人。去年の2人から、倍以上に増えています。
+    card:
+      type: table
+      title: 最終候補のリーグ別の人数
+      columns: *lgcol
+      rows: *lgrow
+      highlight_row: 2
+  - text: 去年4人を出したリーグ・アンは、パリのザイール＝エムリひとりです。
+    card:
+      type: table
+      title: 最終候補のリーグ別の人数
+      columns: *lgcol
+      rows: *lgrow
+      highlight_row: 5
+  sources:
+  - https://www.europeangoldenboy.com/2026/10/05/european-golden-boy-2026-the-25-finalists-in-the-running-for-the-absolute-best-award-have-been-revealed/
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/05-151674075/european_golden_boy_2026_svelati_i_25_finalisti_in_corsa_per_labsolute_best
+  - https://www.europeangoldenboy.com/2025/10/16/european-golden-boy-2025-the-25-finalists-for-the-absolute-best-revealed/
+  - https://www.europeangoldenboy.com/2024/10/18/european-golden-boy-2024-the-25-finalists-competing-for-the-absolute-best-have-been-revealed/
+  - https://www.si.com/soccer/golden-boy-2025-full-list-of-nominees
+- id: clubs
+  heading: クラブ別はバルセロナの3人
+  tier: 報道
+  telop: クラブ別はバルセロナの3人が最多。番付2位のヤマルは受賞済みで候補に入らない
+  narrator: キャスター
+  card:
+    type: table
+    title: 最終候補を2人以上出したクラブ
+    columns: &clcol
+    - クラブ
+    - 人数
+    - 候補
+    rows: &clrow
+    - ['バルセロナ', '3', 'クバルシ、ベルナル、エスパルト']
+    - ['レアル・マドリード', '2', 'ディオマンデ、エンドリッキ']
+    - ['チェルシー', '2', 'ハト、エステヴァン']
+    - ['ブライトン', '2', 'ヴシュコヴィッチ、コストゥラス']
+    - ['ボーンマス', '2', 'ハヤン、クルピ']
+    - ['ドルトムント', '2', 'カレツァス、ガドゥ']
+  say:
+  - text: クラブで見ると、先頭はバルセロナの3人です。
+    card:
+      type: table
+      title: 最終候補を2人以上出したクラブ
+      columns: *clcol
+      rows: *clrow
+      highlight_row: 0
+  - text: 番付1位のクバルシ、19位のベルナル、そして推薦枠のエスパルト。
+    card:
+      type: table
+      title: 最終候補を2人以上出したクラブ
+      columns: *clcol
+      rows: *clrow
+      highlight_row: 0
+  - text: 実は、番付の2位もバルセロナのヤマルでした。
+    emph: true
+    card:
+      type: table
+      title: 最終候補を2人以上出したクラブ
+      columns: *clcol
+      rows: *clrow
+      highlight_row: 0
+  - text: ただ、この賞は1人1回まで。2024年に17歳で受けたヤマルは、候補に入れません。
+    card:
+      type: table
+      title: 最終候補を2人以上出したクラブ
+      columns: *clcol
+      rows: *clrow
+      highlight_row: 0
+  - text: 去年3人ずつだったパリとレアルは、今年は1人と2人です。
+    card:
+      type: table
+      title: 最終候補を2人以上出したクラブ
+      columns: *clcol
+      rows: *clrow
+      highlight_row: 1
+  - text: プレミアのチェルシー、ブライトン、ボーンマスも、2人ずつ入りました。
+    card:
+      type: table
+      title: 最終候補を2人以上出したクラブ
+      columns: *clcol
+      rows: *clrow
+      highlight_row: 3
+  - text: 最年少は、2008年2月22日生まれ、18歳のバイエルンのカールです。
+    card: none
+  - text: 25人の市場価値を足すと、およそ13億ユーロ。1月より56.65％上がりました。
+    card: none
+  sources:
+  - https://www.europeangoldenboy.com/2026/10/05/european-golden-boy-2026-the-25-finalists-in-the-running-for-the-absolute-best-award-have-been-revealed/
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702486/cubars_saldo_il_catalano_al_comando_nella_graduatoria_del_golden_boy_vola_vuskovic
+  - https://www.europeangoldenboy.com/2025/10/16/european-golden-boy-2025-the-25-finalists-for-the-absolute-best-revealed/
+  - https://www.skysports.com/football/news/13595540/golden-boy-2026-arsenals-myles-lewis-skelly-among-premier-league-stars-on-25-man-shortlist-for-europes-best-u21-player
+- id: premier
+  main: true
+  heading: プレミアの8人、イングランド国籍は1人
+  tier: 報道
+  telop: リナ・スルク氏「答えはイエス。ただ、ほかのリーグほどではありません」
+  narrator: キャスター
+  say:
+  - text: 21歳以下の欧州最優秀の賞。候補25人の最多は、プレミアの8人です。
+    short_only: true
+    image: assets/images/20261007_young_goldenboy/06_w.jpg
+  - text: クバルシのような生え抜きを、プレミアは自分で育てられるのか。
+    image: assets/images/20261007_young_goldenboy/06_w.jpg
+  - voice: リナ・スルク
+    text: 答えはイエス。ただ、ほかのリーグほどではありません。
+  - text: 候補の発表の場で、こう答えたのはリナ・スルク。ローマなどで経営を担った人です。
+  - voice: リナ・スルク
+    text: 価値をどう作るか。市場が気づく前に、才能を押さえることです。
+  - text: 25人の32％を占めるプレミアの8人。イングランド国籍は、そのうち1人です。
+    emph: true
+  quotes_from:
+  - トゥットスポルト https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702374/dal_golden_boy_allarme_premier_un_modello_in_pericolo_souloukou_attenti_ai_ricavi
+  sources:
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702374/dal_golden_boy_allarme_premier_un_modello_in_pericolo_souloukou_attenti_ai_ricavi
+  - https://www.europeangoldenboy.com/2026/10/05/european-golden-boy-2026-the-25-finalists-in-the-running-for-the-absolute-best-award-have-been-revealed/
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702486/cubars_saldo_il_catalano_al_comando_nella_graduatoria_del_golden_boy_vola_vuskovic
+  - https://www.skysports.com/football/news/13595540/golden-boy-2026-arsenals-myles-lewis-skelly-among-premier-league-stars-on-25-man-shortlist-for-europes-best-u21-player
+- id: nations
+  heading: 8人の国籍、ルイス＝スケリーほか
+  tier: 報道
+  telop: プレミアの8人で国籍は7つ。イングランドはアーセナルのルイス＝スケリーひとり
+  narrator: キャスター
+  card:
+    type: table
+    title: プレミアの8人と国籍
+    columns: &plcol
+    - クラブ
+    - 候補
+    - 国籍
+    rows: &plrow
+    - ['アーセナル', 'ルイス＝スケリー', 'イングランド']
+    - ['マンチェスター・シティ', 'ブアディ', 'モロッコ']
+    - ['チェルシー', 'ハト、エステヴァン', 'オランダ、ブラジル']
+    - ['ブライトン', 'ヴシュコヴィッチ、コストゥラス', 'クロアチア、ギリシャ']
+    - ['ボーンマス', 'ハヤン、クルピ', 'ブラジル、フランス']
+  say:
+  - text: 8人の国籍を、クラブごとに並べます。
+    image: assets/images/20261007_young_goldenboy/02.jpg
+    card:
+      type: table
+      title: プレミアの8人と国籍
+      columns: *plcol
+      rows: *plrow
+  - text: イングランド国籍のひとりは、アーセナルのルイス＝スケリーです。
+    card:
+      type: table
+      title: プレミアの8人と国籍
+      columns: *plcol
+      rows: *plrow
+      highlight_row: 0
+  - text: クラブの下部組織から上がった20歳。2年続けて候補に入りました。
+    card:
+      type: table
+      title: プレミアの8人と国籍
+      columns: *plcol
+      rows: *plrow
+      highlight_row: 0
+  - text: 番付は、9月の16位から8位へ。8つ順位を上げています。
+    card:
+      type: table
+      title: プレミアの8人と国籍
+      columns: *plcol
+      rows: *plrow
+      highlight_row: 0
+  - text: シティのブアディはモロッコ。この夏の加入で、番付はクバルシ、ヤマルに次ぐ3位。
+    card:
+      type: table
+      title: プレミアの8人と国籍
+      columns: *plcol
+      rows: *plrow
+      highlight_row: 1
+  - text: チェルシーはオランダとブラジル、ブライトンはクロアチアとギリシャ。
+    card:
+      type: table
+      title: プレミアの8人と国籍
+      columns: *plcol
+      rows: *plrow
+      highlight_row: 2
+  - text: ボーンマスは、ブラジルとフランス。8人で7つの国。25人全体の14か国の半分です。
+    card:
+      type: table
+      title: プレミアの8人と国籍
+      columns: *plcol
+      rows: *plrow
+      highlight_row: 4
+  sources:
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702374/dal_golden_boy_allarme_premier_un_modello_in_pericolo_souloukou_attenti_ai_ricavi
+  - https://www.europeangoldenboy.com/2026/10/05/european-golden-boy-2026-the-25-finalists-in-the-running-for-the-absolute-best-award-have-been-revealed/
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702486/cubars_saldo_il_catalano_al_comando_nella_graduatoria_del_golden_boy_vola_vuskovic
+  - https://www.skysports.com/football/news/13595540/golden-boy-2026-arsenals-myles-lewis-skelly-among-premier-league-stars-on-25-man-shortlist-for-europes-best-u21-player
+- id: season
+  heading: 主な候補6人の今季のリーグ戦
+  tier: 背景
+  telop: 今季のリーグ戦（10月5日まで）。番付1位のクバルシは422分、得点最多はプレスティアンニの5点
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季のリーグ戦（10月5日まで）
+    columns: &sscol
+    - 選手
+    - 番付
+    - 出場時間
+    - 得点
+    - アシスト
+    rows: &ssrow
+    - ['クバルシ', '1位', '422分', '0', '0']
+    - ['ブアディ', '3位', '22分', '0', '0']
+    - ['ザイール＝エムリ', '4位', '381分', '0', '0']
+    - ['ディオマンデ', '5位', '281分', '0', '1']
+    - ['ルイス＝スケリー', '8位', '273分', '0', '0']
+    - ['プレスティアンニ', '15位', '572分', '5', '3']
+  say:
+  - text: では、主な候補の今季のリーグ戦を、10月5日までの数字で並べます。
+    image: assets/images/20261007_young_goldenboy/01.jpg
+    card:
+      type: table
+      title: 今季のリーグ戦（10月5日まで）
+      columns: *sscol
+      rows: *ssrow
+  - text: どのリーグも、9月20日ごろの試合のあと、代表の期間で止まっています。
+    card:
+      type: table
+      title: 今季のリーグ戦（10月5日まで）
+      columns: *sscol
+      rows: *ssrow
+  - text: 番付1位のクバルシは422分。バルセロナの7試合のうち、5試合に先発です。
+    card:
+      type: table
+      title: 今季のリーグ戦（10月5日まで）
+      columns: *sscol
+      rows: *ssrow
+      highlight_row: 0
+  - text: そのうち4試合は、90分すべてピッチに立っています。
+    card:
+      type: table
+      title: 今季のリーグ戦（10月5日まで）
+      columns: *sscol
+      rows: *ssrow
+      highlight_row: 0
+  - text: 3位のブアディは22分。夏に移ったシティで、2試合の途中出場です。
+    card:
+      type: table
+      title: 今季のリーグ戦（10月5日まで）
+      columns: *sscol
+      rows: *ssrow
+      highlight_row: 1
+  - text: 4位のザイール＝エムリは381分。パリの5試合すべてに出ています。
+    card:
+      type: table
+      title: 今季のリーグ戦（10月5日まで）
+      columns: *sscol
+      rows: *ssrow
+      highlight_row: 2
+  - text: 5位のディオマンデは281分。レアルの7試合に欠かさず出て、アシストが1つ。
+    image: assets/images/20261007_young_goldenboy/03.jpg
+    card:
+      type: table
+      title: 今季のリーグ戦（10月5日まで）
+      columns: *sscol
+      rows: *ssrow
+      highlight_row: 3
+  - text: 8位のルイス＝スケリーは273分。アーセナルでは5試合中4試合に出場。
+    image: assets/images/20261007_young_goldenboy/02.jpg
+    card:
+      type: table
+      title: 今季のリーグ戦（10月5日まで）
+      columns: *sscol
+      rows: *ssrow
+      highlight_row: 4
+  - text: そして25人で、リーグ戦の得点がいちばん多いのが、プレスティアンニ。
+    emph: true
+    image: assets/images/20261007_young_goldenboy/goals_board.png
+    card: none
+  - text: ベンフィカで7試合、5得点3アシスト。
+    image: assets/images/20261007_young_goldenboy/goals_board.png
+    card: none
+  - text: 得点で2番目のマスタントゥオーノは3点。それを2つ上回ります。
+    image: assets/images/20261007_young_goldenboy/goals_board.png
+    card: none
+  - text: 番付は9月の27位から12上げて、15位に入りました。
+    image: assets/images/20261007_young_goldenboy/goals_board.png
+    card: none
+  sources:
+  - https://www.transfermarkt.com/pau-cubarsi/leistungsdatendetails/spieler/962110/saison/2026/wettbewerb/ES1
+  - https://www.fotmob.com/players/1532137/pau-cubarsi
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702486/cubars_saldo_il_catalano_al_comando_nella_graduatoria_del_golden_boy_vola_vuskovic
+- id: view
+  viewpoint: true
+  heading: 秋の出場時間と受賞、過去2人の同じ時点
+  tier: 背景
+  telop: 同じ10月上旬までのリーグ戦で、ヤマル724分・ドゥエ169分。4倍以上の差でも2人とも受賞
+  narrator: 解説
+  card:
+    type: table
+    title: 10月上旬までのリーグ戦（受賞した年）
+    columns: &vwcol
+    - 選手
+    - 年
+    - 出場時間
+    - 得点
+    - アシスト
+    rows: &vwrow
+    - ['ヤマル', '2024年 受賞', '724分', '4', '5']
+    - ['ドゥエ', '2025年 受賞', '169分', '0', '1']
+    - ['クバルシ', '2026年 候補', '422分', '0', '0']
+  say:
+  - text: この秋の数字は、受賞をどこまで左右するのか。過去2人を同じ時点で比べます。
+    image: assets/images/20261007_young_goldenboy/04_v.jpg
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+  - text: 2024年のヤマルは、9試合に全部出場して724分。4得点5アシストです。
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+      highlight_row: 0
+  - text: その年の11月、17歳で受賞者に選ばれました。
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+      highlight_row: 0
+  - text: 2025年のドゥエは、同じ時点で169分。9月半ばから、けがで離れていました。
+    image: assets/images/20261007_young_goldenboy/05_v.jpg
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+      highlight_row: 1
+  - text: 724分と169分。4倍以上の差があっても、2人とも受賞しています。
+    emph: true
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+      highlight_row: 1
+  - text: ドゥエの1年の山は、5月31日のチャンピオンズリーグ決勝でした。
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+      highlight_row: 1
+  - text: インテルに5対0の勝ち。チームの5点のうち3点に、ドゥエが絡みました。
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+      highlight_row: 1
+  - text: 賞を作ったマッシモ・フランキは、選び方をこう書いています。
+    image: assets/images/20261007_young_goldenboy/06_v.jpg
+    card: none
+  - voice: マッシモ・フランキ
+    text: 候補の出来は、直近の12か月で見ています。
+  - text: クバルシの12か月には、スペイン代表でつかんだワールドカップの優勝があります。
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+      highlight_row: 2
+  - text: 大会の最優秀若手選手の賞も受けています。今季の出場時間は、2人のあいだです。
+    card:
+      type: table
+      title: 10月上旬までのリーグ戦（受賞した年）
+      columns: *vwcol
+      rows: *vwrow
+      highlight_row: 2
+  - text: 投票は27か国の記者50人。1人が5人を選び、1位に10点、2位に7点を配ります。
+    card: none
+  - text: 受賞者の発表は11月の会見。12月に、トリノで表彰されます。
+    card: none
+  quotes_from:
+  - トゥットスポルト https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702486/cubars_saldo_il_catalano_al_comando_nella_graduatoria_del_golden_boy_vola_vuskovic
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdatendetails/spieler/937958/saison/2024/wettbewerb/ES1
+  - https://www.transfermarkt.com/desire-doue/leistungsdatendetails/spieler/914562/saison/2025/wettbewerb/FR1
+  - https://www.europeangoldenboy.com/2024/11/27/golden-boy-2024-lamine-yamal/
+  - https://www.europeangoldenboy.com/2025/11/04/european-golden-boy-absolute-best-2025-desire-doue/
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/06-151702486/cubars_saldo_il_catalano_al_comando_nella_graduatoria_del_golden_boy_vola_vuskovic
+  - https://www.tuttosport.com/news/calcio/golden-boy/2026/10/05-151662313/golden_boy_a_venezia_l_ultimo_rush_con_i_25_finalisti_chi_sar_l_erede_di_doue_
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「ゴールデンボーイ獲れないなんて事ないでしょ」
+  narrator: キャスター
+  say:
+  # Yahoo!ニュース（サッカーキングの記事）のコメント欄 1ページ目 Ryu.....。全文
+  - voice: ネット民
+    text: 正直言って、ゴールデンボーイはクバルシ以外あり得ない
+    image: assets/images/20261007_young_goldenboy/06_w.jpg
+  - voice: ネット民
+    text: ワールドカップ最優秀若手賞取って、
+    cont: true
+  - voice: ネット民
+    text: ゴールデンボーイ獲れないなんて事ないでしょ
+    cont: true
+  # Yahoo!ニュース（GOALの記事）のコメント欄 1ページ目 bar********。全文
+  - voice: ネット民
+    text: クバルシとってもらいたい。
+  - voice: ネット民
+    text: その後にベルナル、シャビエスパルトまで
+    cont: true
+  - voice: ネット民
+    text: 控えてるバルセロナはすごいな。
+    cont: true
+  - voice: ネット民
+    text: 他チームならザイールエメリとかいつかチャンスか
+    cont: true
+  # Yahoo!ニュース（サッカーキングの記事）のコメント欄 1ページ目 ivr********。全文
+  - voice: ネット民
+    text: クバルシじゃなきゃスキャンダルだと思うぐらい
+    short_voice: true
+  - voice: ネット民
+    text: クバルシが凄すぎる
+    cont: true
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/86b923eb8fe4cf361b2bab909945f5309ef23779/comments
+  - https://news.yahoo.co.jp/articles/5a932281ca958222e6d9f5214a5a2a29f1b66acf/comments
