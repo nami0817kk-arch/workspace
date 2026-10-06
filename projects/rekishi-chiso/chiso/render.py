@@ -208,14 +208,19 @@ class Painter:
         u = self.H / 1080
         placed: list[tuple[float, float]] = []           # ラベルの重なりを避ける
         years: list[tuple[float, float]] = []            # 年の数字の重なりを避ける（10-05「1894189 1900」と重なった）
+        for y, _ in sc.events:                           # いまの年を先に場所取り（10-06 明智で 1566 と 1582 がくっついた）
+            if year is not None and round(year) == y:
+                half = self.font("gothic", int(30 * u)).getlength(str(y)) / 2
+                years.append((X(y) - half, X(y) + half))
         for y, label in sc.events:
             on = (year is not None and round(year) == y)
             dr.line([X(y), yb - 26, X(y), yb + 26], fill=(GOLD if on else DIM) + (255,), width=4 if on else 2)
             yf = self.font("gothic", int((30 if on else 26) * u))
             half = yf.getlength(str(y)) / 2
-            if on or not any(X(y) - half < b + 6 and X(y) + half > a - 6 for a, b in years):
+            if on or not any(X(y) - half < b + 12 and X(y) + half > a - 12 for a, b in years):
                 dr.text((X(y), yb - 40 * u), str(y), font=yf, fill=GOLD if on else DIM, anchor="ms")
-                years.append((X(y) - half, X(y) + half))
+                if not on:
+                    years.append((X(y) - half, X(y) + half))
             lf = self.font("serif", int((30 if on else 24) * u))
             lw = lf.getlength(label)
             ly = yb + 44 * u
@@ -576,7 +581,9 @@ class Painter:
             dr.text((x, 380), nxt.get("title", ""), font=self.font("serif", 76, bold=True), fill=INK,
                     stroke_width=3, stroke_fill=(12, 10, 8))
             teaser = nxt.get("teaser", "")
-            for k, row in enumerate(wrap(teaser, self.font("serif", 40), 760)[:3]):
+            rows = [r for sent in __import__("re").findall(r"[^。]+。?", teaser)      # 文の切れ目で改行する
+                    for r in wrap(sent, self.font("serif", 40), 760)]       # （10-06「本当だったの／か。」と割れた）
+            for k, row in enumerate(rows[:3]):
                 dr.text((x, 500 + 56 * k), row, font=self.font("serif", 40), fill=INK)
         # 右側（x 1080〜1800, y 200〜605）は、YouTube の終了画面（次の動画・登録ボタン）を置くために空けておく
         return img
