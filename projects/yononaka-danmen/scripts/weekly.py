@@ -34,6 +34,16 @@ def week_id(monday: date) -> str:
     return f"{monday.isocalendar().year}-W{monday.isocalendar().week:02d}"
 
 
+def too_similar(a: str, b: str) -> bool:
+    """同じ題材かどうか。2回集めると言い回し違いの重複が出るため。"""
+    import re
+    norm = lambda t: set(re.findall(r"[一-龥ァ-ヶーA-Za-z0-9]{2,}", re.sub(r"なぜ|どうして|のか|？|\?", "", t)))
+    sa, sb = norm(a), norm(b)
+    if not sa or not sb:
+        return False
+    return len(sa & sb) / min(len(sa), len(sb)) >= 0.6
+
+
 def collect(n_rounds: int = 2) -> list[dict]:
     """1週間ぶん選ぶには候補が要るので、少し多めに集める。"""
     from danmen import judge
@@ -46,10 +56,13 @@ def collect(n_rounds: int = 2) -> list[dict]:
             it.score, it.hits = rough_score(it.text)
         rough = sorted([i for i in items if i.score > 0], key=lambda i: -i.score)[:70]
         for r in judge.judge(rough):
-            t = r.get("title")
-            if t and t not in seen:
-                seen.add(t)
-                rows.append(r)
+            t = str(r.get("title") or "")
+            if not t or t in seen:
+                continue
+            if any(too_similar(t, str(x.get("title", ""))) for x in rows):
+                continue        # 言い回し違いの同じ題材
+            seen.add(t)
+            rows.append(r)
     return rows
 
 
