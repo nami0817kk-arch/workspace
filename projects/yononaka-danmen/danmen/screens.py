@@ -241,3 +241,32 @@ def draw(kind: str, spec: dict, out: Path) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     im.save(out)
     return out
+
+
+def agenda(spec: dict) -> Image.Image:
+    """冒頭の目次。30分で何を見るのかを最初に示す。
+
+    「あと何があるか」が見えると、途中で切られにくい。
+    """
+    im = _veil(backdrop(spec.get("photo"), dark=0.24, blur=5), top=180, bottom=200)
+    d = ImageDraw.Draw(im)
+    _logo(im, 64, 44, box=72)
+    d = ImageDraw.Draw(im)
+    d.text((152, 50), "世の中の断面図", font=F(27, 800), fill="#D6E0F0")
+    d.text((64, 150), str(spec.get("title", "今日みる断面")), font=F(50), fill="white")
+    d.line([(64, 230), (W - 64, 230)], fill=GOLD, width=3)
+
+    items = spec.get("items", [])[:6]
+    y = 280
+    for i, it in enumerate(items, 1):
+        col = GREEN if i == 1 else (70, 96, 150)
+        d.rounded_rectangle([64, y, 134, y + 70], radius=10, fill=col)
+        num = "{:02d}".format(i)
+        d.text((64 + 35 - d.textlength(num, font=F(34)) / 2, y + 16), num, font=F(34), fill="white")
+        d.text((162, y + 8), str(it), font=F(38), fill="white")
+        y += 96
+    d.text((64, y + 20), "出典はすべて画面に出します", font=F(26, 700), fill="#9FB0C9")
+    return im
+
+
+KINDS["agenda"] = agenda

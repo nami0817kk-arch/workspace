@@ -345,3 +345,66 @@ def world(fig: dict) -> Image.Image:
 
 
 KINDS["world"] = world
+
+
+# --- 足した板（2026-10-06 夜） --------------------------------------------
+
+RED = "#C0392B"          # 問題・警告のときだけ使う。系列の色としては使わない
+
+
+def photo(fig: dict) -> Image.Image:
+    """写真を1枚、札つきで見せる板。人物や現場を出すときに使う。"""
+    src = Path(str(fig.get("src", "")))
+    w, h = 1060, 620
+    im, d, top = _card(w, h, fig.get("title", ""))
+    if src.exists():
+        pic = Image.open(src).convert("RGB")
+        bw, bh = w - 116, h - top - 120
+        pic.thumbnail((bw, bh))
+        x = (w - pic.width) // 2 + 24
+        im.paste(pic, (x, top + 10))
+        d.rectangle([x, top + 10, x + pic.width, top + 10 + pic.height], outline="#D9DCE1", width=2)
+        cap = str(fig.get("caption", ""))
+        if cap:
+            d.text((x, top + 24 + pic.height), cap, font=F(27, 800), fill=INK)
+        src_note = str(fig.get("credit", ""))
+        if src_note:
+            d.text((x, top + 64 + pic.height), src_note, font=F(20, 500), fill=INK_SUB)
+    else:
+        d.text((58, top + 20), "（写真が見つかりません: {}）".format(src), font=F(24, 600), fill=RED)
+    return im
+
+
+def convert(fig: dict) -> Image.Image:
+    """換算の板。「1回ぶん」を「1年ぶん」に直して、自分ごとに引き戻す。
+
+    items は {label, value, note} を2〜3個。矢印でつなぐ。
+    """
+    items = fig["items"]
+    w, h = 1160, 380
+    im, d, top = _card(w, h, fig.get("title", ""))
+    n = len(items)
+    bw = (w - 120 - (n - 1) * 90) // max(n, 1)
+    x, y = 58, top + 20
+    for i, it in enumerate(items):
+        last = i == n - 1
+        col = SERIES[1] if last else "#8C97A4"
+        d.rounded_rectangle([x, y, x + bw, y + 170], radius=14,
+                            fill=(255, 255, 255, 0), outline=col, width=3)
+        lab = str(it["label"])
+        d.text((x + 24, y + 20), lab, font=F(25, 800), fill=INK_SUB)
+        val = str(it["value"])
+        f = F(54 if last else 46)
+        d.text((x + 24, y + 58), val, font=f, fill=col)
+        _note(d, str(it.get("note", "")), x + 24, y + 126)
+        if not last:
+            ax = x + bw + 20
+            d.line([(ax, y + 85), (ax + 40, y + 85)], fill=INK_SUB, width=5)
+            d.polygon([(ax + 40, y + 72), (ax + 40, y + 98), (ax + 62, y + 85)], fill=INK_SUB)
+        x += bw + 90
+    _note(d, fig.get("note", ""), 58, h - 4)
+    return im
+
+
+KINDS["photo"] = photo
+KINDS["convert"] = convert
