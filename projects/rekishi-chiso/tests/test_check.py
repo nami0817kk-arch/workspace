@@ -104,3 +104,12 @@ def test_tsumugi_twice_in_a_row_warned():
         {"語り": "a"}, {"聞き": "b"}, {"聞き": "c"}]}]})
     _, warns = check.cast_rules(sc)
     assert any("2行続いて" in w for w in warns)
+
+
+def test_lint_warns_stage_card_in_short():
+    """見立ての「段階N」の札がショートに入ると唐突（10-06）。"""
+    from chiso import script, check
+    sc = script.parse({"title": "t", "shorts": {"s1": {"title": "a"}}, "sections": [{"title": "見立て", "lines": [
+        {"語り": "一つ目は宣伝です。", "short": "s1", "card": {"head": "段階1", "body": "風刺画"}},
+        {"語り": "二つ目。"}]}]})
+    assert any("段階1" in w for w in check.lint(sc))

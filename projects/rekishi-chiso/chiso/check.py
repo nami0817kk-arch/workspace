@@ -40,6 +40,9 @@ def lint(script, short_limit: float = 60.0) -> list[str]:
         est = chars / CHARS_PER_SEC
         if est > short_limit:
             warns.append(f"ショート {sid}：見積もり約{est:.0f}秒（{short_limit:.0f}秒を超えそう）")
+        for l in script.short_lines(sid):               # 見立ての「段階N」の札は、ショート単体では唐突（10-06 ナポレオン s10）
+            if l.card is not None and l.card.head.startswith("段階"):
+                warns.append(f"ショート {sid}：{l.index + 1}行目に「{l.card.head}」の札が出ます（ショートに入れない行に移す）")
     return warns
 
 
