@@ -1197,7 +1197,11 @@ def _check_quote_timing(notes: Notes) -> list[str]:
             elapsed += _seconds_of(sentence)
         if found:
             break
-    if found and elapsed > MAIN_QUOTE_BY:
+    # **シリーズの回の本編は見ない**（2026-10-06 ユーザー「その人の発言を何秒以内に入れるって
+    # 制約のせいで流れおかしくない？」）。46秒はニュースの回の数字から決めたもので、基礎DATAから
+    # 始まるシリーズでは、言葉を経歴の途中へ押し込む形になっていた（森保・ジェズス・セルタ）。
+    # ショート（16秒）は山場の節から始まるので、シリーズでも下で見る
+    if found and elapsed > MAIN_QUOTE_BY and not (notes.series or "").strip():
         problems.append(
             f"本編で誰かの言葉が出るのが{elapsed:.0f}秒目です（{MAIN_QUOTE_BY:.0f}秒まで）。"
             "本人の発言か反応を、前のほうの節に1つ置いてください")

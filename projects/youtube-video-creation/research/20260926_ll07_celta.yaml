@@ -39,15 +39,9 @@ sections:
   - text: 昨季はヨーロッパリーグで**ベスト8**。鈴木唯人のフライブルクに、合計**1対6**で敗退。
     image: assets/stats/ll_celta_data_r1.png
     no_telop: true
-  - text: 率いるヒラルデス監督は、こう話しています。
+  - text: 率いるのは、地元ガリシア生まれのヒラルデス監督です。
     image: assets/stats/ll_celta_data_r2.png
     no_telop: true
-  - voice: クラウディオ・ヒラルデス
-    text: ここにいられるのは、ぜいたくなことだ
-    image: assets/stats/ll_celta_data_r2.png
-  - voice: クラウディオ・ヒラルデス
-    text: 2年半前は、まだ1部で指揮をとったこともなかった
-    image: assets/stats/ll_celta_data_r2.png
   - text: そしてこのクラブは、チャンピオンズリーグ16強の年に、2部へ落ちています。
     image: assets/stats/ll_celta_data_r3.png
     no_telop: true
@@ -362,6 +356,12 @@ sections:
   say:
   - 今シーズンの監督はクラウディオ・ヒラルデス。**2024年3月**の就任です。
   - 前はセルタのセカンドチーム。同じ県のポリーニョで生まれました。
+  - text: 欧州の8強まで進んだいまの立場を、本人はこう話しています。
+  - voice: クラウディオ・ヒラルデス
+    text: ここにいられるのは、ぜいたくなことだ
+  - voice: クラウディオ・ヒラルデス
+    text: 2年半前は、まだ1部で指揮をとったこともなかった
+    cont: true
   sources:
   - https://en.wikipedia.org/wiki/RC_Celta_de_Vigo
   - https://en.wikipedia.org/wiki/Claudio_Gir%C3%A1ldez

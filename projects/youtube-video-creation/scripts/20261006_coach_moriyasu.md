@@ -106,25 +106,25 @@ cards:
     columns: *id001
     rows: *id002
     highlight_row: 5
-  data_6_card:
+  data_3_card:
     type: table
     title: 森保一の基礎DATA
     columns: *id001
     rows: *id002
     highlight_row: 1
-  data_7_card:
+  data_4_card:
     type: table
     title: 森保一の基礎DATA
     columns: *id001
     rows: *id002
     highlight_row: 2
-  data_8_card:
+  data_5_card:
     type: table
     title: 森保一の基礎DATA
     columns: *id001
     rows: *id002
     highlight_row: 4
-  data_9_card:
+  data_6_card:
     type: table
     title: 森保一の基礎DATA
     columns: *id001
@@ -545,30 +545,19 @@ cards:
 キャスター: 11月はシンガポール、来年1月のアジアカップはサウジアラビアで戦うからです。
   telop: 11月はシンガポール、来年1月のアジアカップはサウジアラビアで戦うからです
   card: data_2_card
-キャスター: 前日の会見では、いつもの落ち着いた口ぶりでした。
-  telop: 前日の会見では、いつもの落ち着いた口ぶりでした
-  card: none
-  image: assets/images/20261006_coach_moriyasu/03_w.jpg
-森保監督: センチメンタルになることはないですが、
-  telop: 森保監督「センチメンタルになることはないですが、」
-  card: none
-森保監督: いつも通り勝利を目指して、目の前の一戦に全力を尽くします。
-  cont: true
-  telop: 森保監督「いつも通り勝利を目指して、目の前の一戦に全力を尽くします」
-  card: none
 キャスター: 1968年、長崎市の生まれ。現役のころは、守備的な中盤のボランチでした。
   telop: 1968年、長崎市の生まれ。現役のころは、守備的な中盤のボランチでした
-  card: data_6_card
+  card: data_3_card
   image: assets/images/20261006_coach_moriyasu/03_v.jpg
 キャスター: 日本代表では35試合に出て、1992年のアジアカップ優勝も経験しています。
   telop: 日本代表では35試合に出て、1992年のアジアカップ優勝も経験しています
-  card: data_7_card
+  card: data_4_card
 キャスター: 2018年から率いる日本代表では、ここまで111試合を戦いました。
   telop: 2018年から率いる日本代表では、ここまで111試合を戦いました
-  card: data_8_card
+  card: data_5_card
 キャスター: 契約は来年のアジアカップまで。その後は、大岩剛監督に引き継がれます。
   telop: 契約は来年のアジアカップまで。その後は、大岩剛監督に引き継がれます
-  card: data_9_card
+  card: data_6_card
 
 ## 読めなかった名前、ドーハのボランチ
 @bg: assets/backgrounds/stock/stadium_night.mp4

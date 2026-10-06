@@ -85,16 +85,6 @@ sections:
       columns: *id001
       rows: *id002
       highlight_row: 5
-  - text: 前日の会見では、いつもの落ち着いた口ぶりでした。
-    image: assets/images/20261006_coach_moriyasu/03_w.jpg
-    card: none
-  - text: センチメンタルになることはないですが、
-    voice: 森保監督
-    card: none
-  - text: いつも通り勝利を目指して、目の前の一戦に全力を尽くします。
-    voice: 森保監督
-    cont: true
-    card: none
   - text: 1968年、長崎市の生まれ。現役のころは、守備的な中盤のボランチでした。
     image: assets/images/20261006_coach_moriyasu/03_v.jpg
     card:
