@@ -29,6 +29,21 @@ def load_config(path: Path) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
+def parse_yaml_script(data: dict) -> list[tuple[str, str, str]]:
+    """YAML の台本（sections → lines）を (話者, 強さ, 本文) に並べ直す。"""
+    out: list[tuple[str, str, str]] = []
+    for sec in data.get("sections", []):
+        for line in sec.get("lines", []):
+            if not isinstance(line, dict) or len(line) != 1:
+                raise ValueError(f"読めない行です（節 {sec.get('no')}）: {line}")
+            key, text = next(iter(line.items()))
+            m = re.match(r"^(?P<who>[^\s(（]+)\s*(?:[（(](?P<tone>[^）)]+)[）)])?$", key)
+            if not m:
+                raise ValueError(f"話者の書き方が読めません: {key}")
+            out.append((m["who"], m["tone"] or "ふつう", str(text)))
+    return out
+
+
 def parse_script(text: str) -> list[tuple[str, str, str]]:
     """「話者(強さ): 本文」の行を (話者, 強さ, 本文) にする。"""
     out: list[tuple[str, str, str]] = []
@@ -93,7 +108,13 @@ def main() -> int:
     args = ap.parse_args()
 
     cfg = load_config(Path(args.config))
-    lines = parse_script(Path(args.script).read_text(encoding="utf-8"))
+    src = Path(args.script)
+    if src.suffix in (".yaml", ".yml"):
+        data = yaml.safe_load(src.read_text(encoding="utf-8"))
+        lines = parse_yaml_script(data)
+        print(f"■ {data.get('title', '(題名なし)')}　節 {len(data.get('sections', []))}　行 {len(lines)}")
+    else:
+        lines = parse_script(src.read_text(encoding="utf-8"))
     out = Path(args.out); out.parent.mkdir(parents=True, exist_ok=True)
     work = out.parent / "lines"; work.mkdir(exist_ok=True)
 
