@@ -145,7 +145,7 @@ sections:
     card:
       <<: *data_card
       highlight_row: 4
-  - text: 契約は2029年まで残っています。
+  - text: 契約は2029年6月まで。まだ2年9か月あります。
     card:
       <<: *data_card
       highlight_row: 5
@@ -228,14 +228,14 @@ sections:
     card:
       <<: *career_card
       highlight_row: 1
-  - text: 2022年10月、19歳で主将に。リーグで記録が残る中の最年少でした。
+  - text: 2022年10月、19歳で主将に。ブンデスリーガで記録が残る中の最年少。
     image: assets/stats/player_20261006_1077894_value.png
     no_telop: true
     card:
       <<: *career_card
       highlight_row: 1
   - text: 2023年夏、固定で1億300万ユーロの移籍金でレアルへ。
-    image: assets/images/20261006_player_581678/laureus2/01.jpg
+    image: assets/images/20261006_player_581678/laureus3/01.jpg
     card:
       <<: *career_card
       highlight_row: 2
@@ -499,8 +499,10 @@ sections:
   telop: 10月3日、敵地リエカのクロアチア戦で1点3アシスト
   narrator: 解説
   say:
-  - text: レアル・マドリードのベリンガムが代表で1点3アシスト。一段上かと問われた監督は。
+  - text: レアル・マドリードのベリンガムが、代表で1点3アシスト。監督の評価は。
     short_only: true
+    image: assets/images/20261006_player_581678/pair_tuchel/01.jpg
+  - text: 一段上に来たかと聞かれたトゥヘル監督は、こう答えています。
     image: assets/images/20261006_player_581678/pair_tuchel/01.jpg
   - voice: トーマス・トゥヘル
     text: ああ、今はそう見える。そうでなくてはいけない。
@@ -511,9 +513,10 @@ sections:
     text: 次のレベルを目指し続けなければ、ほかに追いつかれる
     cont: true
     pause: 0.5
-  - text: 10月3日、敵地リエカでのクロアチア戦。7対0の大勝で、7点のうち4点に絡みました。
+  - text: 10月3日、敵地リエカでのクロアチア戦は、7対0の大勝。
     image: assets/images/20261006_player_581678/croatia/01_w.jpg
-  - text: 1試合で4点に絡んだイングランドのMFは、33年ぶりです。
+  - ベリンガムは、そのうち4点に絡みました。
+  - text: イングランドのMFが1試合でここまで絡むのは、33年ぶりです。
     emph: true
   sources:
   - https://www.bbc.co.uk/sport/football/articles/cv5yn8znyx2ro
@@ -625,7 +628,7 @@ sections:
     - '6.6'
   say:
   - text: 今季のベリンガムは、クラブで8試合3点。代表を合わせると4点です。
-    image: assets/images/20261006_player_581678/panama160/01.jpg
+    image: assets/images/20261006_player_581678/ghana127/01.jpg
     card: &recent_card
       type: table
       title: 直近5試合（代表を含む）
@@ -691,12 +694,15 @@ sections:
     text: 僕にとって最初のヒーローは父だった
     cont: true
     pause: 0.5
-  - text: ジダンを知ったのも父から。ビーチで買ったジダンの偽物のシャツです。
+  - text: ジダンを知ったのも、父が浜辺で買った偽物のシャツから。
+    image: assets/images/20261006_player_581678/laureus/01_w.jpg
     card: none
   - 父はそれを、どこへでも着ていったそうです。
   - text: いまレアルで背負う5番は、そのジダンの番号。
     emph: true
-  - 母デニスは、ドイツにもマドリードにも付いてきて、一緒に暮らしてきました。
+    image: assets/images/20261006_player_581678/espanyol/01_w.jpg
+  - text: 母デニスは、ドイツにもマドリードにも付いてきて、一緒に暮らしてきました。
+    image: assets/images/20261006_player_581678/ghana168/01_w.jpg
   - voice: ジュード・ベリンガム
     text: 母さんのおかげで、地に足をつけていられる
     pause: 0.6
@@ -722,10 +728,10 @@ sections:
     source: Transfermarkt・FotMob
   say:
   - text: 最後に、代表のベリンガムに何が起きたのかを、数字から見立てます。
-    image: assets/images/20261006_player_581678/ghana168/01_w.jpg
+    image: assets/images/20261006_player_581678/panama132/01_w.jpg
     card: none
   - text: 比べるのは、ワールドカップの前と後の代表です。
-    image: assets/images/20261006_player_581678/ghana127/01.jpg
+    image: assets/images/20261006_player_581678/panama160/01.jpg
     card: &pace_card
       type: table
       title: イングランド代表でのベリンガム
@@ -743,13 +749,13 @@ sections:
     card:
       <<: *pace_card
       highlight_row: 1
-  - text: 英紙ガーディアンは「流動的になった代表が、力を解き放った」と書きました。
+  - text: 英紙ガーディアンは、流動的になった代表が彼の力を引き出したと書きました。
     image: assets/images/20261006_player_581678/panama117/01_w.jpg
     card: none
   - 決まった位置に縛らず、中央の10番として左右へ動かす形です。
   - text: 一方のレアルでは、今季ここまで3点。同じ自由を、クラブでも得られるか。
     image: assets/images/20261006_player_581678/real2026/01_w.jpg
-  - まずは現地6日、ウェンブリーでのチェコ戦。
+  - その前に代表は現地6日、ウェンブリーでチェコと戦います。
   - レアルの次の試合は10日。本拠地にビジャレアルを迎えます。
   - 26日はロンドンで、30人の候補に入るバロンドールの発表です。
   - 代表で目覚めた10番が、白いユニホームでも同じ輝きを放てるかに注目です。
