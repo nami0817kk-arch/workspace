@@ -1635,6 +1635,139 @@ def _advise_yardstick(notes: Notes) -> list[str]:
     return hints
 
 
+# **シリーズの回の質を上げる2つ**（2026-10-06 ユーザー決定「動画の質を上げる仕組み ⑩」）。
+# どちらも止めない（draft のヒント）。2つ目が欠けているときは【強め】にして、draft の最後にもう一度出す。
+#
+# 1. 冒頭は「いちばん強い一点」から。本編213本の離脱の測定（research/metrics/dropmap_main_20261005.md）で、
+#    落ち幅の上位5本のうち4本がクラブ紹介の基礎DATAの節、30秒の維持はシリーズ45%・ニュース57%。
+#    オープニングの次の最初の節が基礎DATAで、その前に強い一点（いま見る理由の1つ目・山場の事実）が
+#    1〜2行で置かれていなければ知らせる。基礎DATAで読み上げる語りが多すぎる節も知らせる
+#    （読み上げは題に答える3〜4項目、残りは板・表に出すだけ）。
+#    クラブ紹介の「冒頭に板を敷く」形（2026-09-23 決定）は咎めない。板の上で読む「いま見る理由」
+#    （plbuild の `_data_r*.png` の行）は強い一点として数え、咎めるのは読み上げの長さだけ
+# 2. この回だけの数字。見立ての節に、自分で数えた比べ（表＋「数字2つ＋比べの言葉」の1行）が無ければ【強め】
+SERIES_DATA_HEADING = re.compile(r"基礎\s*(?:DATA|データ)|基本\s*(?:DATA|データ)", re.IGNORECASE)
+# 基礎DATAの節で読み上げてよい語りの行数。これを超えたら知らせる（題に答える3〜4項目＋つなぎ1行）
+SERIES_DATA_READ_MAX = 5
+# 強い一点は、基礎DATAの前の1〜2行に置く
+SERIES_FRONT_LINES = 2
+# クラブ紹介の「いま見る理由」の行の板（tools/plbuild.py が `<key>_data_r<k>.png` を当てる）
+SERIES_REASON_BOARD = re.compile(r"_data_r\d*\.png$")
+# 強い一点の言葉：⑧の比べの言葉に、いちばん・最も・記録・首位を足す
+SERIES_STRONG = re.compile(YARD_COMPARE.pattern + r"|いちばん|一番|最も|記録|首位|頂点")
+# 見立ての比べの言葉：⑥⑧の語彙に、物差し・時点・前後を足す
+SERIES_VIEW_COMPARE = re.compile(YARD_COMPARE.pattern + r"|物差し|時点|前後")
+
+
+def _main_narration(section: Section) -> list[tuple[int, str]]:
+    """本編で読む語りの行（行番号・文）。本人の言葉・反応と、ショート専用の行は外す。"""
+    texts = [s if isinstance(s, str) else str((s or {}).get("text", "")) for s in section.say]
+    voices = list(section.voices) + [""] * len(texts)
+    onlys = list(section.line_onlys) + [""] * len(texts)
+    return [(i, t) for i, t in enumerate(texts)
+            if not (voices[i] and voices[i] not in SPEAKERS) and onlys[i] != "short"]
+
+
+def _strong_point(text: str) -> bool:
+    """強い一点：比べられる数字（年号・日付・年齢などを除いた数字）と、比べ・最上の言葉がある。"""
+    clean = YARD_SKIP.sub("・", str(text or ""))
+    return bool(_bare_numbers(text)) and bool(SERIES_STRONG.search(clean))
+
+
+def _data_front(section: Section) -> int:
+    """基礎DATAの節の頭で、強い一点として読んでいる語りの行数（読み上げの行数から外す）。"""
+    narr = _main_narration(section)
+    images = list(section.line_images) + [""] * len(section.say)
+    front = 0
+    for i, _ in narr:                      # クラブ紹介の「いま見る理由」の行（板の上で読む）
+        if SERIES_REASON_BOARD.search(str(images[i] or "")):
+            front += 1
+        else:
+            break
+    if front:
+        return front
+    texts = [t for _, t in narr[:SERIES_FRONT_LINES]]
+    first = bool(texts) and _strong_point(texts[0])
+    # 2行で1つの強い一点（「4戦4勝です。」「クラブの歴史で、いちばんの滑り出し」）も数える
+    if (len(texts) > 1 and _strong_point(" ".join(texts))
+            and (not first or SERIES_STRONG.search(YARD_SKIP.sub("・", texts[1])))):
+        return 2
+    return int(first)
+
+
+def _advise_series_opening(notes: Notes) -> list[str]:
+    """**シリーズの回の冒頭は「いちばん強い一点」から**（2026-10-06「動画の質を上げる仕組み ⑩」の1）。
+
+    1. オープニングの次の最初の節が基礎DATAで、その頭の1〜2行に強い一点（比べられる数字と、
+       比べ・最上の言葉）が無ければ知らせる。前に別の節（どんな選手か など）があれば知らせない
+    2. 基礎DATAの節で、強い一点を除いて読み上げる語りが SERIES_DATA_READ_MAX 行を超えれば知らせる
+    ニュースの回（series なし）は見ない。止めない。
+    """
+    if not (notes.series or "").strip() or not notes.sections:
+        return []
+    hints: list[str] = []
+    for n, section in enumerate(notes.sections):
+        if not SERIES_DATA_HEADING.search(section.heading or ""):
+            continue
+        front = _data_front(section)
+        read = len(_main_narration(section)) - front
+        where = f"節『{section.heading}』"
+        if n == 0 and not front:
+            hints.append(
+                f"{where}: オープニングのすぐあとが基礎DATAから始まっています。シリーズの回は30秒の維持が"
+                "45%（ニュース57%）で、落ち幅の上位5本のうち4本が基礎DATAの節でした（dropmap 10/5）。"
+                "基礎DATAの前に、いちばん強い一点（いま見る理由の1つ目・山場の事実）を1〜2行で置いてください"
+                "（例「今季は公式戦8戦8勝。クラブの歴史で、いちばんの滑り出しです」）（2026-10-06 ⑩）")
+        if read > SERIES_DATA_READ_MAX:
+            hints.append(
+                f"{where}: 基礎DATAで読み上げる語りが{read}行あります（{SERIES_DATA_READ_MAX}行まで）。"
+                "読み上げは題に答える3〜4項目にして、残りは板・表に出すだけにしてください（2026-10-06 ⑩）")
+    return hints
+
+
+def _view_comparison(text: str) -> bool:
+    """自分で数えた比べの1行：数字が2つ以上と、比べの言葉（より・対・倍・％・差・時点 など）。"""
+    clean = YARD_SKIP.sub("・", str(text or ""))
+    return len(_bare_numbers(text)) >= 2 and bool(SERIES_VIEW_COMPARE.search(clean))
+
+
+def _has_count_table(section: Section) -> bool:
+    """見立ての節に表があるか。節の card（表・棒）か、行ごとの card。引用カード（見立ての一言）は数えない。"""
+    card = section.card if isinstance(section.card, dict) else {}
+    if str(card.get("type", "")).lower() in ("table", "bars"):
+        return True
+    return any(isinstance(c, dict) and c for c in section.line_cards)
+
+
+def _advise_series_numbers(notes: Notes) -> list[str]:
+    """**シリーズの回は、見立ての節に「この回だけの数字」を置く**（2026-10-06「動画の質を上げる仕組み ⑩」の2）。
+
+    見立ての節（viewpoint）に表（card の table・bars、または行ごとの card）があり、かつ語りの
+    どこかに「数字2つ以上＋比べの言葉」の行（続く2行にまたがってもよい）があれば通す。どちらかが欠けたら【強め】で知らせる
+    （draft の最後にもう一度出す。止めない）。ニュースの回（series なし）は見ない。
+    """
+    if not (notes.series or "").strip():
+        return []
+    hints: list[str] = []
+    for section in notes.sections:
+        if not section.viewpoint:
+            continue
+        table = _has_count_table(section)
+        texts = [t for _, t in _main_narration(section)]
+        # 1行で言い切るか、続く2行で比べる（「ブラガでは50%。」「名門2つでは68.5%に上がります」）。
+        # 10/6 に最近の25本へ当てたら、時期ごとの勝率を1行ずつ並べたジェズスの回が1行の判定では鳴った
+        line = any(_view_comparison(t) for t in texts) or any(
+            _view_comparison(a + " " + b) for a, b in zip(texts, texts[1:]))
+        if table and line:
+            continue
+        missing = "・".join(x for x, ok in (("自分で数えた表", table), ("数字2つを比べた1行", line)) if not ok)
+        hints.append(
+            f"{YARD_STRONG_MARK}見立ての節『{section.heading}』に、この回だけの数字（{missing}）がありません。"
+            "シリーズの回は、ほかの動画や記事に無い比べを自分で数えて、表と1行で見せてください"
+            "（例「同じ7試合で、今季は勝ち点21、昨季は16」）（2026-10-06 ⑩）")
+    return hints
+
+
 def _advise_readings(notes: Notes) -> list[str]:
     """**漢字の人名は読みの辞書に無いと誤読される**（2026-09-22）。
 
@@ -2101,7 +2234,8 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
                         + _advise_ear(notes) + _advise_readings(notes)
-                        + _advise_yardstick(notes))
+                        + _advise_yardstick(notes)
+                        + _advise_series_opening(notes) + _advise_series_numbers(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
