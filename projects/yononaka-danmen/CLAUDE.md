@@ -209,7 +209,7 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 | `charts4.py` | `newspaper` 新聞記事風／`donut` ドーナツ／`schedule` これからの予定／`checklist` ○×の点検／`thermometer` 縦のゲージ（5種） |
 | `charts5.py` | `flowchart` 分岐の判定図／`matrix` 4象限／`receipt` レシート風の明細／`numberline` 数直線／`verdict` ◎○△×の比較表（5種） |
 
-#### 画面（1920×1080 をまるごと作る。全 28 種）
+#### 画面（1920×1080 をまるごと作る。全 27 種）
 
 | ところ | 中身 |
 |---|---|
@@ -217,9 +217,21 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 | `studio.py` | `flip` スタジオ解説（白いフリップ＋黒帯の見出し＋札＋ワイプ＋番組帯。日テレ式）（1種） |
 | `news2.py` | `breaking` 速報の帯／`lshape` L字／`voices` 街の声／`split` 分割画面（4種） |
 | `news3.py` | `qa` Q&Aの札／`points` きょうのポイント／`glossary` ことばの意味／`before` 写真の左右比べ／`statement` 公式発言の引用（5種） |
-| `news4.py` | `poll` 世論調査の結果／`recap` ここまでのおさらい／`sources` 出典のまとめ／`live` 中継風／`versus` 左右の全画面比べ（5種） |
+| `news4.py` | `poll` 世論調査の結果／`recap` ここまでのおさらい／`live` 中継風／`versus` 左右の全画面比べ（4種） |
 | `fullscreen.py` | 背景に直接描く3種（下と右の安全域を空ける） |
 | `parts.py` | `number` 数字の組版／`marker` 印／`leader` 引き出し線／`balloon` 吹き出し／`cut_edge` 切り口／`progress` 進み具合（6種の部品） |
+
+#### 仕上げ（出来上がった図や画面の上から掛ける）
+
+| ところ | 中身 |
+|---|---|
+| `annotate.py` | 手で書き込んだ強調。`circle` 赤で囲む／`box` 四角く囲む／`underline` 下線／`strike` 取り消し線／`highlight` 蛍光ペン／`arrow` 矢印で指す／`cross` ×印／`check` レの印／`bang` ！の書き込み／`note` 短い手書き（9種＋添え書き） |
+| `texture.py` | 質感。`paper` 紙の目／`grain` 粒子／`vignette` 四隅を落とす／`warm` わずかに暖色。`finish(im, "panel")` と `finish(im, "screen")` でまとめて掛かる |
+
+**掛ける順は「質感 → 書き込み」**（書き込みは紙の上に書くので、紙の目の影響を受けない）。
+`finish` は画面を組み終わってから1回だけ掛ける。二度掛けると汚れて見える。
+
+**書き込みは1つの画面に2つまで。** 全部に赤を入れると、どれが大事か分からなくなる。
 
 ### 素材の置き場（リポジトリには入れない）
 
