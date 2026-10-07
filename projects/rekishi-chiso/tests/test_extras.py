@@ -34,3 +34,12 @@ def test_money_needs_basis():
         script.parse(sc({"type": "money", "then": "160万リーヴル", "yen": 1e10}))
     ok = script.parse(sc({"type": "money", "then": "160万リーヴル", "yen": 1e10, "basis": "日雇いの年収で置き換え"}))
     assert '"money"' in ok.lines[0].figure
+
+
+def test_still_background_has_no_motion():
+    """背景を動かさない（10-06）。止めた絵は拡大率も位置も時刻に依らない。"""
+    from chiso import video
+    f = video.motion_filter("still", 12.0, (1920, 1080))
+    assert "t+" not in f and "eval=frame" not in f
+    assert f.startswith("scale=1920:1080")
+    assert "eval=frame" in video.motion_filter("in", 12.0, (1920, 1080))

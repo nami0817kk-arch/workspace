@@ -55,6 +55,7 @@ class State:
     icon: str | None = None
     term: tuple | None = None
     place: tuple | None = None
+    reaction: str | None = None
 
 
 def _ease(t: float) -> float:
@@ -208,14 +209,19 @@ class Painter:
         u = self.H / 1080
         placed: list[tuple[float, float]] = []           # ラベルの重なりを避ける
         years: list[tuple[float, float]] = []            # 年の数字の重なりを避ける（10-05「1894189 1900」と重なった）
+        for y, _ in sc.events:                           # いまの年を先に場所取り（10-06 明智で 1566 と 1582 がくっついた）
+            if year is not None and round(year) == y:
+                half = self.font("gothic", int(30 * u)).getlength(str(y)) / 2
+                years.append((X(y) - half, X(y) + half))
         for y, label in sc.events:
             on = (year is not None and round(year) == y)
             dr.line([X(y), yb - 26, X(y), yb + 26], fill=(GOLD if on else DIM) + (255,), width=4 if on else 2)
             yf = self.font("gothic", int((30 if on else 26) * u))
             half = yf.getlength(str(y)) / 2
-            if on or not any(X(y) - half < b + 6 and X(y) + half > a - 6 for a, b in years):
+            if on or not any(X(y) - half < b + 12 and X(y) + half > a - 12 for a, b in years):
                 dr.text((X(y), yb - 40 * u), str(y), font=yf, fill=GOLD if on else DIM, anchor="ms")
-                years.append((X(y) - half, X(y) + half))
+                if not on:
+                    years.append((X(y) - half, X(y) + half))
             lf = self.font("serif", int((30 if on else 24) * u))
             lw = lf.getlength(label)
             ly = yb + 44 * u
@@ -240,6 +246,9 @@ class Painter:
         """year：年表の印の位置（移動の途中を描くとき）／slide：新しいメモの滑り込み（0〜1）。"""
         W, H = self.W, self.H
         img = self._canvas(state.background)
+        if state.reaction:                                 # つむぎの「寄り」：背景を落として集中線と大きな数字
+            from . import reaction
+            img = reaction.backdrop(self, img, state.reaction, fig)
         dr = ImageDraw.Draw(img, "RGBA")
         n_sec = len(self.script.sections)
         title = self.script.sections[state.section].title
@@ -257,7 +266,10 @@ class Painter:
         dr.text((120, 145 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK,
                 stroke_width=2, stroke_fill=(12, 10, 8))
 
-        if state.figure is None:
+        is_versus = state.figure is not None and '"type": "versus"' in state.figure
+        if state.reaction:
+            pass                                           # 寄りのあいだは、メモ・肖像・図・年表を隠す
+        elif state.figure is None:
             self._memo(img, state, slide)
             if state.portrait is not None:
                 self._portrait(img, state.portrait)
@@ -265,6 +277,8 @@ class Painter:
             from . import extras
             if state.icon:
                 img = extras.draw_icon(self, img, state.icon, icon_t)
+            elif state.portrait is None and state.background is not None and self.config.get("center_panel", True):
+                self._panel(img, state.background)         # 真ん中が空かないように、その場面の絵を額に入れて出す
             if state.bubble and state.portrait is not None:
                 import json as _j
                 img = extras.draw_bubble(self, img, state.portrait, _j.loads(state.bubble))
@@ -274,16 +288,16 @@ class Painter:
             img = figures.draw(self, img, _json.loads(state.figure), fig)
         from . import extras
         top = extras.TERM_BOX[1]
-        if state.term:                                     # 用語の札は右上（肖像と図の右の空き）
+        if state.term and not state.reaction and not is_versus:   # 用語の札は右上（肖像と図の右の空き）
             img, top = extras.draw_term(self, img, *state.term)
             top += 18
         is_map = state.figure is not None and '"type": "map"' in state.figure
-        if state.place and not is_map:                     # 地図の図が出ているあいだは要らない
+        if state.place and not is_map and not is_versus and not state.reaction:   # 地図の図が出ているあいだは要らない
             img = extras.draw_minimap(self, img, state.place, top)
         dr = ImageDraw.Draw(img, "RGBA")
-        if state.figure is None:                           # 図のあいだは年表も隠す（図の板を下まで広げる）
+        if state.figure is None and not state.reaction:    # 図のあいだは年表も隠す（図の板を下まで広げる）
             self._timeline(dr, 470, W - 470, 770, state.year if year is None else year)
-        if state.background is not None and state.background.credit:
+        if state.background is not None and state.background.credit and not is_versus:   # 左右比べは絵の出典を図が出す
             dr.text((W / 2, H - 14), f"背景：{state.background.credit}", font=self.font("serif", 18),
                     fill=DIM, anchor="ms", stroke_width=2, stroke_fill=(12, 10, 8))
         names = "　".join(f"VOICEVOX:{n}" for n in people.credit_names(self.config, self.script))
@@ -336,6 +350,28 @@ class Painter:
         dr.text((x0 + w / 2, y0 + 18), "この時", font=sf, fill=(255, 236, 210), anchor="mm")
         dr.text((x0 + w / 2, y0 + 54), text, font=bf, fill=(255, 255, 255), anchor="mm")
 
+    PANEL_BOX = (960, 250, 1600, 720)                     # メモ（左、右端 x≈940）と用語の札（x=1640〜）のあいだ、年表の上
+
+    def _panel(self, img: Image.Image, pic) -> None:
+        """真ん中の額：背景と同じ絵を、暗くせずに額に入れて出す（10-06 ユーザー「画面の真ん中に何もない時を避けて」）。"""
+        key = ("panel", pic.image, getattr(pic, "crop", None))
+        p = self._images.get(key)
+        if p is None:
+            src = self.image(pic.image).convert("RGB")
+            x0, y0, x1, y1 = self.PANEL_BOX
+            bw, bh = x1 - x0 - 40, y1 - y0 - 40
+            s = min(bw / src.width, bh / src.height)
+            p = src.resize((max(1, int(src.width * s)), max(1, int(src.height * s))), Image.LANCZOS)
+            self._images[key] = p
+        x0, y0, x1, y1 = self.PANEL_BOX
+        px = (x0 + x1) // 2 - p.width // 2
+        py = (y0 + y1) // 2 - p.height // 2
+        dr = ImageDraw.Draw(img, "RGBA")
+        dr.rectangle([px - 18, py - 18, px + p.width + 18, py + p.height + 18], fill=(30, 24, 16, 255),
+                     outline=GOLD, width=2)                     # 肖像と同じ二重の金の額
+        dr.rectangle([px - 7, py - 7, px + p.width + 7, py + p.height + 7], outline=GOLD, width=3)
+        img.paste(p, (px, py))
+
     def _portrait(self, img: Image.Image, pic) -> None:
         W = self.W
         dr = ImageDraw.Draw(img, "RGBA")
@@ -369,10 +405,18 @@ class Painter:
 
     # --- 立ち絵と字幕 -----------------------------------------------------
     def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "",
-                  tone: str = "普通", mouth: bool = False, blink: bool = False) -> Image.Image:
+                  tone: str = "普通", mouth: bool = False, blink: bool = False, reaction: str | None = None) -> Image.Image:
         """立ち絵を重ねる。話している側は明るく、足もとに光、hop（0〜1）のぶん跳ねる。text は字幕。
-        表情のある話者は、話しているあいだ tone の顔で mouth のとき口を開け、blink のとき目を閉じる。"""
+        表情のある話者は、話しているあいだ tone の顔で mouth のとき口を開け、blink のとき目を閉じる。
+        reaction（つむぎの寄り）があれば、下の小さい2人の代わりに聞き手を腰から上で大きく出す。"""
         img = base.copy()
+        if reaction:
+            from . import reaction as _r
+            who = _r.spec_of(reaction).get("who") or "聞き"
+            _r.put_figure(self, img, reaction, speaker in (who, "二人"), mouth, blink, hop)
+            if text:
+                self._subtitle(img, speaker, text)
+            return img if self.layered else img.convert("RGB")
         for who, cast in self.config["cast"].items():
             talking = who == speaker or speaker == "二人"
             if cast.get("faces"):
@@ -546,12 +590,15 @@ class Painter:
         if nxt:
             dr.rounded_rectangle([x, 230, x + 190, 290], radius=10, fill=(176, 40, 40))
             dr.text((x + 95, 260), "次回予告", font=self.font("gothic", 34), fill=(255, 255, 255), anchor="mm")
-            if self.script.series:
-                dr.text((x, 330), self.script.series, font=self.font("gothic", 30), fill=GOLD)
+            series = nxt.get("series", self.script.series)      # 次の回が別のシリーズなら next.series で（"" で出さない）
+            if series:
+                dr.text((x, 330), series, font=self.font("gothic", 30), fill=GOLD)
             dr.text((x, 380), nxt.get("title", ""), font=self.font("serif", 76, bold=True), fill=INK,
                     stroke_width=3, stroke_fill=(12, 10, 8))
             teaser = nxt.get("teaser", "")
-            for k, row in enumerate(wrap(teaser, self.font("serif", 40), 760)[:3]):
+            rows = [r for sent in __import__("re").findall(r"[^。]+。?", teaser)      # 文の切れ目で改行する
+                    for r in wrap(sent, self.font("serif", 40), 760)]       # （10-06「本当だったの／か。」と割れた）
+            for k, row in enumerate(rows[:3]):
                 dr.text((x, 500 + 56 * k), row, font=self.font("serif", 40), fill=INK)
         # 右側（x 1080〜1800, y 200〜605）は、YouTube の終了画面（次の動画・登録ボタン）を置くために空けておく
         return img
@@ -560,7 +607,14 @@ class Painter:
 def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
                  getattr(line, "memo", ()), getattr(line, "figure", None), getattr(line, "bubble", None),
-                 getattr(line, "icon", None), getattr(line, "term", None), getattr(line, "place", None))
+                 getattr(line, "icon", None), getattr(line, "term", None), getattr(line, "place", None),
+                 getattr(line, "reaction", None))
+
+
+def end_key(script) -> tuple:
+    """次回予告の画面の中身。控えの画像の名前に入れる（10-05：予告を差し替えても前の回の画像が使い回された）。"""
+    nxt = getattr(script, "next", {}) or {}
+    return (getattr(script, "series", ""), tuple(sorted((str(k), str(v)) for k, v in nxt.items())))
 
 
 def _salt(painter) -> str:
@@ -607,6 +661,9 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
     plain_len = lambda x: len(emphasis_mask(x)[0])
     has_faces = lambda who: (who == "二人" or bool(painter.config["cast"].get(who, {}).get("faces")))   # 人物の行は誰も口を動かさない
 
+    def _rk(s) -> dict:                  # つむぎの寄り（本編だけ。ショートはいつもの画面）
+        return {"reaction": s.reaction} if (special and s.reaction) else {}
+
     def emit(path: Path, make, dur: float):
         if dur <= 0:
             return
@@ -652,7 +709,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             new_section = special and prev_state is not None and prev_state.section != state.section
             title = painter.script.sections[state.section].title
             def base_lead(s=state):
-                return painter.with_cast(painter.base(s), s.speaker, 0, "", "聞く")
+                return painter.with_cast(painter.base(s), s.speaker, 0, "", "聞く", **_rk(s))
             if new_section:
                 n_w = min(WIPE_FRAMES, int(lead * fps) - 1)
                 for k in range(1, n_w + 1):
@@ -684,11 +741,15 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
         changed = special and prev_state is not None and prev_state.section == state.section and (
             (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year, prev_state.figure)
             != (state.background, state.portrait, state.memo, state.year, state.figure))
-        surprised = special and line.tone == "驚き"
+        surprised = special and line.tone == "驚き" and not state.reaction   # 寄りは集中線を自分で持つ
         # 強調語の飛び出しは 10-04「4は不要」で外した（config の pop: true で戻せる）
         words = ([w for w in (plain(x) for x in __import__("re").findall(r"《(.+?)》", line.text))]
                  if special and painter.config.get("pop") else [])
+        # 図が出る・図が1項目増える（upto。script.parse が grow_from を付けるので、新しい項目だけが描き進む）・
+        # つむぎの寄りが出る（数字が弾む）。どれも FIG_FRAMES のあいだ t=0→1
         fig_new = special and state.figure is not None and (prev_state is None or prev_state.figure != state.figure)
+        fig_new = fig_new or (special and state.reaction is not None
+                              and (prev_state is None or prev_state.reaction != state.reaction))
         icon_new = special and state.icon is not None and (prev_state is None or prev_state.icon != state.icon)
         n_fx = max(n_hop, TRANS_FRAMES if changed else 0, SHAKE_FRAMES if surprised else 0,
                    POP_FRAMES if words else 0, FIG_FRAMES if fig_new else 0, ICON_FRAMES if icon_new else 0)
@@ -729,7 +790,8 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                         year = ps.year + (s.year - ps.year) * _ease(tr)
                     slide = tr if (s.memo and s.memo != ps.memo) else 1.0
                     base = painter.base(s, year=year, slide=slide, fig=fig_t, icon_t=icon_t)
-                    changed_pic = (((ps.portrait, ps.figure) != (s.portrait, s.figure)) if painter.layered
+                    from .figures import base_key       # 同じ図が1項目増えただけなら溶け合わせない（前の項目は動かさない）
+                    changed_pic = (((ps.background, ps.portrait, base_key(ps.figure), ps.icon) != (s.background, s.portrait, base_key(s.figure), s.icon)) if painter.layered
                                    else (ps.background, ps.portrait) != (s.background, s.portrait))
                     if changed_pic:
                         base = Image.blend(painter.base(ps), base, _ease(tr))
@@ -737,7 +799,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                     base = painter.base(s, fig=fig_t, icon_t=icon_t)
                 if pop_t is not None:
                     base = painter.pop(base, words[0], pop_t, s.speaker)
-                im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink)
+                im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink, **_rk(s))
                 if shake_k:
                     im = painter.burst(im, side, shake_k / (SHAKE_FRAMES + 1))
                     im = painter.shake(im, shake_k)
@@ -756,7 +818,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
 
     if end_card and cues:
         bg = cues[-1].line.background
-        emit(frame_dir / _name(salt, "end", bg),
+        emit(frame_dir / _name(salt, "end", bg, end_key(painter.script)),
              lambda: painter.with_cast(painter.end_card(bg), "語り", 0, "", "明るい"), end_seconds)
 
     # まとめて描く（同じ画像は1回だけ）。Pillow の描画は GIL を外すので、スレッドを並べると速くなる

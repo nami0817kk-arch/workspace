@@ -83,7 +83,8 @@ def events(cues: list) -> list[tuple[float, str]]:
         if prev is not None and prev.section != line.section:
             out.append((cues[i - 1].end, "rumble"))                  # 節の頭のワイプは前の行の話し終わりから
         fig = getattr(line, "figure", None)
-        if fig and (prev is None or getattr(prev, "figure", None) != fig):
+        # 同じ図が1項目増えただけ（upto）は鳴らさない（10-07。図が出たときの1回だけ）
+        if fig and (prev is None or getattr(prev, "figure", None) != fig) and "grow_from" not in json.loads(fig):
             out.append((cue.start, "whoosh"))
             if json.loads(fig).get("type") == "money":
                 out.append((cue.start + FIG_SECONDS, "coin"))

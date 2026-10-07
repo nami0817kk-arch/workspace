@@ -65,6 +65,8 @@ class ShortPainter(Painter):
             fake = _Landscape(self)
             canvas = figures.draw(fake, canvas, _json.loads(state.figure), fig)
             x0, y0, x1, y1 = figures.PANEL
+            if '"type": "versus"' in state.figure:      # 左右の全画面比べは、画面ぜんぶを縮めて出す
+                x0, y0, x1, y1 = 12, 12, 1920 - 22, 1080 - 26
             panel = canvas.crop((x0 - 12, y0 - 12, x1 + 22, y1 + 26))
             s = (W - 60) / panel.width
             panel = panel.resize((int(panel.width * s), int(panel.height * s)), Image.LANCZOS)
@@ -119,7 +121,8 @@ class ShortPainter(Painter):
         return self._images[key]
 
     def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "",
-                  tone: str = "普通", mouth: bool = False, blink: bool = False) -> Image.Image:
+                  tone: str = "普通", mouth: bool = False, blink: bool = False, reaction=None) -> Image.Image:
+        # つむぎの寄り（reaction）はショートでは出さない（縦長の画面はいつもの形のまま）
         img = super().with_cast(base, speaker, hop, "", tone, mouth, blink).convert("RGBA")
         if text:
             dr = ImageDraw.Draw(img, "RGBA")

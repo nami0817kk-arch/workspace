@@ -50,7 +50,7 @@ def test_episode_rules():
     assert errors == [] and any("図" in w for w in warns)
     bad = dict(base, next={}, sections=base["sections"][:1])
     errors, _ = check.episode(script.parse(bad))
-    assert any("見立て" in e for e in errors) and any("次回" in e for e in errors)
+    assert any("まとめ" in e for e in errors) and any("次回" in e for e in errors)
 
 
 def test_unknown_place_is_error():
@@ -104,3 +104,21 @@ def test_tsumugi_twice_in_a_row_warned():
         {"語り": "a"}, {"聞き": "b"}, {"聞き": "c"}]}]})
     _, warns = check.cast_rules(sc)
     assert any("2行続いて" in w for w in warns)
+
+
+def test_lint_warns_stage_card_in_short():
+    """見立ての「段階N」の札がショートに入ると唐突（10-06）。"""
+    from chiso import script, check
+    sc = script.parse({"title": "t", "shorts": {"s1": {"title": "a"}}, "sections": [{"title": "見立て", "lines": [
+        {"語り": "一つ目は宣伝です。", "short": "s1", "card": {"head": "段階1", "body": "風刺画"}},
+        {"語り": "二つ目。"}]}]})
+    assert any("段階1" in w for w in check.lint(sc))
+
+
+def test_pacing_warns_long_same_background_and_host_share():
+    from chiso import script
+    long = "あ" * 70                                      # 1行およそ10秒
+    sc = script.parse({"title": "t", "sections": [{"title": "s", "background": {"image": "a.jpg"},
+                       "lines": [{"語り": long}] * 6 + [{"聞き": "うん"}]}]})
+    w = check.pacing(sc)
+    assert any("同じ背景" in x for x in w) and any("剣崎の字数" in x for x in w)

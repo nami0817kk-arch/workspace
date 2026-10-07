@@ -59,6 +59,28 @@ sections:
         bubble: {text: "一言のセリフ", x: 0.5, y: 0.25}
       - 語り: 人物を並べて比べる
         figure: {type: compare, title: 比べる題, people: [[人A, paintings/a.jpg, ひとこと], [人B, paintings/b.jpg, ひとこと]]}
+      # 1項目ずつ増やす（10-07）：同じ図を行ごとに upto: 1, 2, 3 と書く。新しく増えた項目だけが描き進む
+      # （bars・people・compare・map の route・stats・calc・numberline・line）。upto のほかは前の行と同じに書く
+      - 語り: 桶狭間は約2000。
+        figure: {type: bars, title: 信長の軍, bars: [[桶狭間, 2000], [長篠, 30000], [本能寺の供, 100]], labels: ["約2000", "約3万", "約100"], upto: 1}
+      - 語り: 長篠は約3万。
+        figure: {type: bars, title: 信長の軍, bars: [[桶狭間, 2000], [長篠, 30000], [本能寺の供, 100]], labels: ["約2000", "約3万", "約100"], upto: 2}
+      # 数字の図（10-07）。数字は大きく、単位は小さく組まれる。「55歳?」のように ? を含む値は "" で囲む
+      - 語り: 数字を最大3つ並べる（最後の1つが朱）
+        figure: {type: stats, title: 信長の数字, items: [[生涯, 49年, 満で], [元服, 13歳, 数えで], [石高, 約700万石, 最盛期]]}
+      - 語り: 計算の式（項が順に出る。最後が答え）
+        figure: {type: calc, title: 中国大返し, terms: [[200km, 備中高松→山崎], [7日], [約29km/日, 1日あたり]], ops: [÷, ＝]}
+      - 語り: 数直線（享年・年号の比べ。focus を朱に。min・max は省けば自動）
+        figure: {type: numberline, title: 三英傑の享年, items: [[織田信長, 48], [豊臣秀吉, 61], [徳川家康, 73]], unit: 歳, focus: 織田信長}
+      - 語り: 折れ線（石高・人口の移り変わり。点が順に打たれる）
+        figure: {type: line, title: 信長の石高, points: [[1560年, 57], [1568年, 120], [1582年, 700]], unit: 万石, note: 目安}
+      - 語り: 左右の全画面比べ（明るさは自動でそろう。絵の出典は credit に）
+        figure: {type: versus, title: 1582年の2人, credit: "左：…　右：…",
+                 left: {image: paintings/a.jpg, name: 織田信長, number: "48歳", note: 本能寺で死す},
+                 right: {image: paintings/b.jpg, name: 明智光秀, number: "55歳?", note: 11日後に死す, focus: false}}
+      - 聞き: つむぎの「寄り」（その行だけ。1本2回まで。数字の山場に）。下の2人は隠れ、つむぎが腰から上で大きく出る
+        tone: 驚き
+        reaction: {number: "100人", lead: 信長の供は, say: 少なっ！ 天下人なのに？}   # say は省いてよい
 
   - title: 見立て：なぜそうなったのか
     lines:

@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import subprocess
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
@@ -71,6 +72,8 @@ def motion_filter(kind: str, d: float, size: tuple[int, int], t0: float = 0.0) -
     W, H = size
     bw, bh = int(W * OVER), int(H * OVER)
     u = f"((t+{t0:.3f})/{d:.3f})"
+    if kind == "still":                                  # 動かさない（10-06 ユーザー「背景を微妙に動かさないで」）
+        return f"scale={W}:{H}:flags=bicubic,setsar=1,format=yuv420p"
     if kind == "in":
         z, px, py = f"(1+{ZOOM}*{u})", "0.5", "0.5"
     elif kind == "out":
@@ -100,6 +103,10 @@ def _ok_length(ffmpeg: str, path: Path, want: float, tol: float) -> bool:
     return got is not None and abs(got - want) <= tol
 
 
+PIECE_TRIES = 4
+PIECE_WAIT = 10.0       # 秒。落ちたら待つ（回ごとに長く）
+
+
 def _piece(ffmpeg: str, still_path: Path, kind: str, d: float, t0: float, length: float, fps: int, size,
            out: Path) -> Path:
     # 10-05：メモリ不足の ffmpeg が途中までしか書かずに終わった断片が控えに残り、
@@ -109,10 +116,15 @@ def _piece(ffmpeg: str, still_path: Path, kind: str, d: float, t0: float, length
     if out.exists() and _ok_length(ffmpeg, out, want, 0.2):
         return out
     tmp = out.with_suffix(".tmp.mp4")
-    for _ in range(2):
-        subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-loop", "1", "-framerate", str(fps), "-i", str(still_path),
-                        "-frames:v", str(n), "-vf", motion_filter(kind, d, size, t0), "-r", str(fps),
-                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", str(tmp)], check=True)
+    for k in range(PIECE_TRIES):
+        # 10-05 夜：空きメモリ2.4GBのとき、5本同時の ffmpeg が起動できずに落ちた（終了コード 0xDFABA7BB）。
+        # 落ちたら少し待ってやり直す（ほかの断片が終わればメモリが空く）
+        r = subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-loop", "1", "-framerate", str(fps), "-i", str(still_path),
+                            "-frames:v", str(n), "-vf", motion_filter(kind, d, size, t0), "-r", str(fps),
+                            "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", str(tmp)])
+        if r.returncode != 0:
+            time.sleep(PIECE_WAIT * (k + 1))
+            continue
         if _ok_length(ffmpeg, tmp, want, 0.2):
             tmp.replace(out)
             return out
@@ -131,7 +143,7 @@ def _join(ffmpeg: str, pieces: list[Path], out: Path, want: float | None = None)
 
 
 def background_track(ffmpeg: str, painter, runs: list[Run], work: Path, fps: int, size, target: Path,
-                     workers: int = 10) -> Path:
+                     workers: int = 10, motion: bool = True) -> Path:
     """区間ごとに動く背景を作り、溶け合わせて1本にする。区間は同時に作る（速くするため）。"""
     import hashlib
     work.mkdir(parents=True, exist_ok=True)
@@ -139,7 +151,7 @@ def background_track(ffmpeg: str, painter, runs: list[Run], work: Path, fps: int
     for i, r in enumerate(runs):
         last = i == len(runs) - 1
         d = (r.end - r.start) + (0 if last else XFADE)      # 次と重なるぶん長く作る
-        kind = MOTIONS[i % len(MOTIONS)]
+        kind = MOTIONS[i % len(MOTIONS)] if motion else "still"
         key = hashlib.sha1(repr((r.picture, kind, round(d, 3), fps, size, OVER, ZOOM)).encode()).hexdigest()[:12]
         sp = work / f"still_{hashlib.sha1(repr(r.picture).encode()).hexdigest()[:10]}.png"
         if not sp.exists():

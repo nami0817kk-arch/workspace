@@ -67,6 +67,60 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  浅野:                      # 10-05。浅野内匠頭（30代の大名）。落ち着いた低めの男性の声
+    label: 浅野内匠頭
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  光秀:                      # 10-06。明智光秀。落ち着いた男性の声
+    label: 明智光秀
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  信長:                      # 10-06。織田信長。低めの男性の声
+    label: 織田信長
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  敦盛:                      # 10-06。幸若舞『敦盛』の一節（信長が舞った）。信長と同じ声で、札は演目名
+    label: 幸若舞『敦盛』の一節（信長が舞った）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ナポレオン:                # 10-06。ナポレオンの手紙の一文。落ち着いた男性の声（別の回の光秀と同じ声。回が違えば可）
+    label: ナポレオン（手紙の一文）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  本城:                      # 10-06。本城惣右衛門（80歳を過ぎて書いた覚書）。老人の声
+    label: 本城惣右衛門（明智軍の一兵）
+    name: ちび式じい
+    style_id: 42
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
   上諭:                      # 皇帝の名で出た命令。決めたのは西太后なので同じ声で読み、札は「上諭」にする（10-05 の確認）
     label: 上諭（皇帝の名で出た命令）
     name: 東北イタコ
@@ -90,6 +144,7 @@ video:
   width: 1920
   height: 1080
   fps: 30
+  bg_motion: false   # 背景の絵をゆっくり寄せたり流したりしない（10-06 ユーザー「背景を微妙に動かさないで」）
 
 short:
   width: 1080

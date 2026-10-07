@@ -22,3 +22,13 @@ def test_runs_switch_background_in_section_gap():
     runs = video.runs_of(cues, 6.0)
     assert [r.picture for r in runs] == [pa, pb]
     assert runs[1].start == 2.0                        # 前の行の話し終わり（節の頭の間）で替わる
+
+
+def test_end_key_changes_with_next():
+    # 10-05：次回予告を差し替えても、背景が同じだと前の予告の画像が使い回されていた
+    from types import SimpleNamespace
+    from chiso.render import end_key
+    a = SimpleNamespace(series="悪女と呼ばれた女たち", next={"title": "武則天", "teaser": "…"})
+    b = SimpleNamespace(series="悪女と呼ばれた女たち", next={"title": "吉良上野介", "teaser": "…"})
+    c = SimpleNamespace(series="悪女と呼ばれた女たち", next={"title": "吉良上野介", "teaser": "…", "series": ""})
+    assert end_key(a) != end_key(b) != end_key(c)

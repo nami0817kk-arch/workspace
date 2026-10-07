@@ -138,7 +138,46 @@ def synthesize(sc, config) -> tuple[list[mix.Cue], float]:
         spoken[line.index] = s
         print(f"\r音声 {i}/{len(sc.lines)}", end="", flush=True)
     print()
+    voicevox_guard(config)
     return mix.plan(sc.lines, spoken)
+
+
+VOICEVOX_MAX_GB = 6.0
+
+
+def voicevox_guard(config) -> None:
+    """VOICEVOX のエンジンは動かし続けるとメモリを抱え込む（10-06、9/24 から動いて約15GB。
+    ffmpeg が malloc に失敗して書き出しが止まった）。音声を作り終えたあと、抱えすぎなら立ち上げ直す。"""
+    if os.name != "nt":
+        return
+    port = str(config["voicevox_url"]).rstrip("/").rsplit(":", 1)[-1]
+    ps = ("$p = Get-CimInstance Win32_Process -Filter \"Name='run.exe'\" | "
+          f"Where-Object {{ $_.CommandLine -like '*vv-engine*' -and $_.CommandLine -like '*{port}*' }} | Select-Object -First 1; "
+          "if ($p) { '{0}|{1}|{2}' -f $p.ProcessId, $p.PrivatePageCount, $p.ExecutablePath }")
+    try:
+        out = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True,
+                             timeout=60).stdout.strip()
+    except Exception:
+        return
+    if not out:
+        return
+    pid, used, exe = out.split("|", 2)
+    gb = int(used) / 1024 ** 3
+    if gb < VOICEVOX_MAX_GB:
+        return
+    print(f"VOICEVOX のエンジンが {gb:.1f}GB 抱えているので立ち上げ直します")
+    subprocess.run(["powershell", "-NoProfile", "-Command",
+                    f"Stop-Process -Id {pid} -Force; Start-Process -FilePath '{exe}' "
+                    f"-ArgumentList '--host','127.0.0.1','--port','{port}' -WindowStyle Hidden"], timeout=60)
+    import time, urllib.request
+    for _ in range(60):
+        time.sleep(2)
+        try:
+            urllib.request.urlopen(f"{config['voicevox_url'].rstrip('/')}/version", timeout=2)
+            return
+        except Exception:
+            pass
+    print("  ! VOICEVOX のエンジンが立ち上がりません")
 
 
 def cmd_voice(args) -> int:
@@ -217,7 +256,8 @@ def make_video(args, draft: bool) -> int:
                           end_card=end_card)
     print("背景を動かしています…")
     bg = video.background_track(ffmpeg(), painter, video.runs_of(cues, total), wd / "bg", v["fps"], size,
-                                wd / "background.mp4", workers=v.get("bg_workers", 5))
+                                wd / "background.mp4", workers=v.get("bg_workers", 5),
+                                motion=v.get("bg_motion", True))
     suffix = ("_draft" if draft else "") + (f"_{limit}lines" if limit else "")
     target = out_dir() / f"{path.stem}{suffix}.mp4"
     lst = wd / "overlay.txt"
