@@ -23,6 +23,16 @@
       variants:
         b: {crop: [左, 上, 右, 下]}         # 無ければ focus の上のほう（顔のあたり）に自動で寄せる
         c: {top: 約168cm, main: 小男？}     # top が無ければ判子→見出しの数字→見出しの順に自動で選ぶ
+
+構図（10-07 ユーザー決定「量産型に見せない」）：そろえるのは目印（下端の地層の帯・字体・黄白赤）だけ。
+構図は回ごとに `thumbnail.layout:` で選ぶ（書かなければ classic＝上の形。画素まで今と同じ）。
+    face    顔の大写し。肖像を片側に大きく（side: right／left）、反対側に2段の極太の文字
+    scene   場面の全景（戦い・行列・港）。絵を全面、文字は上か下の黒い帯に1行（band: bottom／top）
+    versus  2人の対比。left・right に {image, crop, name, number}。数字が両方あれば数字の対、無ければ真ん中に VS
+    number  大きな数字が主役（number: 約168cm）。絵は暗く後ろに
+    map     地図が主役（map: {route: [...], marks: [...]}。地名は places.yaml、bounds は省けば自動）。名前と一言
+どの構図でも name・lead（白）・main（特大の黄）の書き方はそのまま使える。右下の2人は cast: true／false
+（既定は classic と number だけ出す）。同じ構図が3回続くと check が知らせる（check.layout_streak）。
 """
 from __future__ import annotations
 
@@ -129,8 +139,9 @@ def variant_spec(t: dict, key: str, src_size=None) -> dict:
         raise ValueError(f"サムネイルの案は {VARIANTS} のどれか: {key}")
     base = {k: v for k, v in t.items() if k != "variants"}
     over = dict((t.get("variants") or {}).get(key) or {})
-    if key == "a":
-        return {**base, **over, "layout": "a"}
+    if key == "a":                                      # a は台本の構図のまま（classic は内部では "a"）
+        layout = layout_of(base)
+        return {**base, **over, "layout": "a" if layout == "classic" else layout}
     keep = ("image", "crop", "focus", "name", "main") + (("lead",) if key == "c" else ())
     spec = {k: base[k] for k in keep if k in base}
     if key == "b" and "crop" not in over:
@@ -241,16 +252,300 @@ def _layout_c(img, t, gothic):
         _text(dr, (36, (C_BAND[0] + C_BAND[1]) // 2 + 2), words, _fit(gothic, words, 130, 820 - 36, 72), WHITE, 8, "lm")
 
 
+# --- 構図（10-07）。目印（地層の帯・字体・黄白赤）だけそろえて、文字の位置・大きさ・色の配分を構図ごとに変える ---
+
+LAYOUTS = ("classic", "face", "scene", "versus", "number", "map")
+DEFAULT_CAST = {"a": True, "b": False, "c": True, "face": False, "scene": False, "versus": False,
+                "number": True, "map": False}
+SAFE_W = W - 170 - 40           # 右下の再生時間の表示にかかる行の、文字の右端
+STRATA_TOP = H - 15
+
+
+def layout_of(t: dict) -> str:
+    """台本の thumbnail: の構図の名前（書いていなければ classic）。"""
+    return str((t or {}).get("layout") or "classic")
+
+
+def problems(t: dict) -> list[str]:
+    """構図の名前の誤り・構図に要る項目の不足（check が × にする）。"""
+    layout = layout_of(t)
+    if layout not in LAYOUTS:
+        return [f"サムネイルの構図（layout）が分かりません: {layout}（{'・'.join(LAYOUTS)} のどれか）"]
+    need = {"classic": ("image", "crop", "name", "main"), "face": ("image", "crop", "name", "main"),
+            "scene": ("image", "crop", "name", "main"), "number": ("image", "crop", "number", "name", "main"),
+            "versus": ("left", "right"), "map": ("map", "name", "main")}[layout]
+    out = [f"サムネイルの {k} がありません（構図 {layout}）" for k in need if not t.get(k)]
+    if layout == "versus":
+        for side in ("left", "right"):
+            v = t.get(side)
+            if v is not None and not isinstance(v, dict):
+                out.append(f"サムネイルの {side} は {{image, name, crop, number}} の形で書く")
+                continue
+            for k in ("image", "name"):
+                if v and not v.get(k):
+                    out.append(f"サムネイルの {side}.{k} がありません（構図 versus）")
+    if layout == "map" and t.get("map"):
+        m = t["map"]
+        if not isinstance(m, dict) or not (m.get("route") or m.get("marks") or m.get("places")):
+            out.append("サムネイルの map に route か marks（地名）がありません")
+        else:
+            from . import figures
+            try:
+                figures.with_places(dict(m, marks=list(m.get("marks", []))))
+            except ValueError as e:
+                out.append(f"サムネイルの地図: {e}")
+    if layout == "face" and t.get("side", "right") not in ("left", "right"):
+        out.append("サムネイルの side は right か left")
+    if layout == "scene" and t.get("band", "bottom") not in ("top", "bottom"):
+        out.append("サムネイルの band は bottom か top")
+    return out
+
+
+def _graded(src: Image.Image, crop, size) -> Image.Image:
+    """絵の crop の範囲を size いっぱいに（はみ出す分は真ん中で切る）。色は _background と同じ上げ方。"""
+    region = src.crop(tuple(crop)) if crop else src
+    tw, th = size
+    k = max(tw / region.width, th / region.height)
+    rw, rh = max(tw, round(region.width * k)), max(th, round(region.height * k))
+    img = region.resize((rw, rh), Image.LANCZOS)
+    x0, y0 = (rw - tw) // 2, (rh - th) // 2
+    img = img.crop((x0, y0, x0 + tw, y0 + th))
+    img = ImageEnhance.Contrast(img).enhance(1.12)
+    img = ImageEnhance.Color(img).enhance(1.25)
+    return ImageEnhance.Brightness(img).enhance(1.12)
+
+
+def _tag(dr, xy, text, gothic, size=44, fill=RED, ink=WHITE):
+    """赤い名前札（左上の角を xy に）。札の右端を返す。"""
+    f = _font(gothic, size)
+    x, y = xy
+    w = f.getlength(text)
+    dr.rectangle([x, y, x + w + 36, y + int(size * 1.45)], fill=fill)
+    dr.text((x + 18, y + int(size * 0.72)), text, font=f, fill=ink, anchor="lm")
+    return x + w + 36
+
+
+def _lead_main(dr, x, y, t, gothic, size, width, anchor="lm", minimum=60):
+    """lead（白）＋main（特大の黄）を1行に。width に収まるまで両方そろえて小さくする。"""
+    lead, main = str(t.get("lead") or ""), str(t.get("main") or "")
+    if not (lead or main):
+        return
+    lead_k = 0.62                                       # lead は main の6割の大きさ
+    while size > minimum:
+        lf, mf = _font(gothic, int(size * lead_k)), _font(gothic, size)
+        total = (lf.getlength(lead) + 14 if lead else 0) + mf.getlength(main)
+        if total <= width:
+            break
+        size -= 6
+    lf, mf = _font(gothic, int(size * lead_k)), _font(gothic, size)
+    total = (lf.getlength(lead) + 14 if lead else 0) + mf.getlength(main)
+    if anchor == "mm":
+        x -= total / 2
+    if lead:
+        _text(dr, (x, y + size * 0.08), lead, lf, WHITE, max(6, size // 14), "lm")
+        x += lf.getlength(lead) + 14
+    _text(dr, (x, y), main, mf, YEL, max(8, size // 11), "lm")
+
+
+FACE_FADE = 220
+
+
+def _layout_face(img, t, gothic, src):
+    """肖像を片側（既定は右）に大きく、反対側の暗い所に2段の極太の文字。"""
+    right = t.get("side", "right") == "right"
+    pw = 720
+    back = _graded(src, t["crop"], (W, H)).filter(ImageFilter.GaussianBlur(28))
+    img.paste(ImageEnhance.Brightness(back).enhance(0.32))
+    face = _graded(src, t["crop"], (pw, H))
+    mask = Image.new("L", (pw, H), 255)
+    fade = Image.linear_gradient("L").rotate(90, expand=True).resize((FACE_FADE, H))    # 左が0・右が255。文字の側へ溶かす
+    mask.paste(fade if right else fade.transpose(Image.FLIP_LEFT_RIGHT), (0 if right else pw - FACE_FADE, 0))
+    img.paste(face, (W - pw if right else 0, 0), mask)
+    dr = ImageDraw.Draw(img)
+    x0 = 44 if right else W - pw + 120
+    tw = W - pw + 100 - 44 if right else SAFE_W - x0
+    top = str(t.get("lead") or t.get("name") or "")
+    if t.get("lead"):                                    # lead があれば名前は札、無ければ名前を白の大きな段に
+        _tag(dr, (x0 + 4, 150), str(t["name"]), gothic, 46)
+    _text(dr, (x0, 300), top, _fit(gothic, top, 130, tw, 70), WHITE, 11, "lm")
+    if t.get("main"):
+        _text(dr, (x0 - 4, 480), t["main"], _fit(gothic, t["main"], 230, tw, 90), YEL, 17, "lm")
+
+
+SCENE_BAND = 200
+
+
+def _layout_scene(img, t, gothic, src):
+    """絵を全面に（暗くしない）、上か下の黒い帯に1行。名前は帯の縁に赤い札。"""
+    img.paste(_graded(src, t["crop"], (W, H)))
+    bottom = t.get("band", "bottom") == "bottom"
+    y0 = STRATA_TOP - SCENE_BAND if bottom else 0
+    band = Image.new("RGBA", (W, SCENE_BAND), (6, 4, 2, 225))
+    img.paste(band, (0, y0), band)
+    dr = ImageDraw.Draw(img)
+    if t.get("name"):
+        f = 48
+        _tag(dr, (40, y0 - int(f * 1.45) if bottom else y0 + SCENE_BAND), str(t["name"]), gothic, f)
+    _lead_main(dr, 40, y0 + SCENE_BAND // 2 + 4, t, gothic, 160, (SAFE_W if bottom else W - 80) - 40)
+
+
+def _layout_versus(img, t, gothic, assets):
+    """左右に2枚の絵（斜めの金の線で分ける）。数字が両方あれば数字の対、無ければ真ん中に大きな VS。"""
+    sides = []
+    for key in ("left", "right"):
+        v = t[key]
+        with Image.open(assets / v["image"]) as im:
+            sides.append(_graded(im.convert("RGB"), v.get("crop"), (W // 2 + 60, H)))
+    img.paste(sides[0], (0, 0))
+    mask = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(mask).polygon([(W // 2 + 50, 0), (W, 0), (W, H), (W // 2 - 50, H)], fill=255)
+    right = Image.new("RGB", (W, H))
+    right.paste(sides[1], (W // 2 - 60, 0))
+    img.paste(right, (0, 0), mask)
+    _shade(img, 150, 0.85, 330, 0.95)
+    dr = ImageDraw.Draw(img)
+    dr.line([(W // 2 + 50, 0), (W // 2 - 50, H)], fill=YEL, width=12)
+    numbers = all(t[k].get("number") for k in ("left", "right"))
+    for i, key in enumerate(("left", "right")):
+        v = t[key]
+        cx = W // 4 + (W // 2) * i - (20 if i else -10)
+        width = W // 2 - 100 if i == 0 else SAFE_W - W // 2 - 40
+        _text(dr, (cx, 610), str(v["name"]), _fit(gothic, str(v["name"]), 96, width, 50), WHITE, 10, "mm")
+        if numbers:
+            n = str(v["number"])
+            _text(dr, (cx, 470), n, _fit(gothic, n, 180, width, 80), YEL, 15, "mm")
+    if not numbers:
+        _text(dr, (W // 2, 360), "VS", _font(gothic, 210), YEL, 18, "mm")
+        dr = ImageDraw.Draw(img)
+    if t.get("main") or t.get("lead"):
+        _lead_main(dr, W // 2, 78, t, gothic, 120, W - 120, "mm")
+
+
+_NUM_PART = re.compile(r"[0-9０-９][0-9０-９,，.．]*")
+
+
+def _number_parts(text: str) -> list[tuple[str, bool]]:
+    """数字の所と、それ以外（約・cm・年）に分ける。数字は大きく、それ以外は半分の大きさで描く。"""
+    out, i = [], 0
+    for m in _NUM_PART.finditer(text):
+        if m.start() > i:
+            out.append((text[i:m.start()], False))
+        out.append((m.group(0), True))
+        i = m.end()
+    if i < len(text):
+        out.append((text[i:], False))
+    return out or [(text, True)]
+
+
+def _big_number(dr, x, y, text, gothic, size, width):
+    parts = _number_parts(text)
+    while size > 80:
+        big, small = _font(gothic, size), _font(gothic, size // 2)
+        if sum((big if n else small).getlength(s) for s, n in parts) <= width:
+            break
+        size -= 8
+    big, small = _font(gothic, size), _font(gothic, size // 2)
+    for s, is_num in parts:                              # 下の線をそろえる
+        f = big if is_num else small
+        _text(dr, (x, y), s, f, YEL if is_num else WHITE, 20 if is_num else 11, "ls")
+        x += f.getlength(s) + (4 if not is_num else 0)
+
+
+def _layout_number(img, t, gothic, src, cast: bool):
+    """大きな数字（画面の半分の高さ）が主役。絵は暗くぼかして後ろに。上に名前、下に lead＋main。"""
+    back = _graded(src, t["crop"], (W, H)).filter(ImageFilter.GaussianBlur(5))
+    img.paste(ImageEnhance.Brightness(back).enhance(0.38))
+    dr = ImageDraw.Draw(img)
+    right = (SAFE_W - 220 if cast else W - 60)             # 2人（右下）にかからない幅
+    _text(dr, (44, 92), str(t["name"]), _fit(gothic, str(t["name"]), 92, right - 44, 50), WHITE, 9, "lm")
+    _big_number(dr, 40, 470, str(t["number"]), gothic, 340, right - 40)
+    _lead_main(dr, 44, 590, t, gothic, 120, (SAFE_W - 160 if cast else SAFE_W) - 44)
+
+
+MAP_SEA = (38, 58, 78)
+MAP_LAND = (214, 190, 140)
+MAP_COAST = (96, 72, 44)
+
+
+def _layout_map(img, t, gothic, assets):
+    """地図を全面に（海は濃い色、陸は古地図の色）、道のりは赤い点線。左上に名前（白）と一言（黄）。"""
+    import math
+    from . import figures
+    spec = figures.with_places(dict(t["map"], marks=list(t["map"].get("marks", []))))
+    lon0, lon1, lat0, lat1 = spec["bounds"]
+    kx = math.cos(math.radians((lat0 + lat1) / 2))
+    top, bottom = 170, STRATA_TOP - 30                   # 名前と一言の下から地図を見せる
+    s = min((W - 120) / ((lon1 - lon0) * kx), (bottom - top) / (lat1 - lat0))
+    cx, cy = (lon0 + lon1) / 2, (lat0 + lat1) / 2
+    ox, oy = W / 2 + 40, (top + bottom) / 2
+    P = lambda lon, lat: (ox + (lon - cx) * kx * s, oy - (lat - cy) * s)
+    vis = (cx - (W / 2 + 60) / (kx * s), cx + (W / 2 + 60) / (kx * s), cy - H / s, cy + H / s)
+    img.paste(MAP_SEA, (0, 0, W, H))
+    dr = ImageDraw.Draw(img)
+    for poly in figures._land(str(assets / "maps" / "land_50m.geojson")):
+        xs = [p[0] for p in poly]
+        ys = [p[1] for p in poly]
+        if max(xs) < vis[0] or min(xs) > vis[1] or max(ys) < vis[2] or min(ys) > vis[3]:
+            continue
+        dr.polygon([P(x, y) for x, y in poly], fill=MAP_LAND, outline=MAP_COAST)
+    _shade(img, 260, 0.75, 0, 0)
+    dr = ImageDraw.Draw(img)
+    places = {n: P(lon, lat) for n, lon, lat in spec["places"]}
+    route = [places[n] for n in spec.get("route", []) if n in places]
+    for a, b in zip(route, route[1:]):                   # 白い縁の赤い点線
+        n = max(2, int(math.dist(a, b) / 22))
+        for j in range(0, n, 2):
+            p0 = (a[0] + (b[0] - a[0]) * j / n, a[1] + (b[1] - a[1]) * j / n)
+            p1 = (a[0] + (b[0] - a[0]) * (j + 1) / n, a[1] + (b[1] - a[1]) * (j + 1) / n)
+            dr.line([p0, p1], fill=WHITE, width=16)
+            dr.line([p0, p1], fill=RED, width=10)
+    pf = _font(gothic, 42)
+    taken = []
+    for name, (x, y) in places.items():
+        dr.ellipse([x - 15, y - 15, x + 15, y + 15], fill=RED, outline=WHITE, width=5)
+        taken.append((x - 16, y - 16, x + 16, y + 16))
+    for name, (x, y) in places.items():                  # 地名は右→左→上→下の順に、ほかの地名と点に重ならない所へ
+        w = pf.getlength(name)
+        spots = [(x + 22, y, "lm"), (x - 22, y, "rm"), (x, y - 40, "mm"), (x, y + 40, "mm")]
+        spots += [(x + 22, y + d, "lm") for d in (50, -50, 100, -100)] + [(x - 22, y + d, "rm") for d in (50, -50, 100, -100)]
+        for bx, by, anchor in spots:
+            x0 = {"lm": bx, "rm": bx - w, "mm": bx - w / 2}[anchor]
+            box = (x0 - 6, by - 26, x0 + w + 6, by + 26)
+            if box[0] >= 10 and box[2] <= W - 10 and not any(
+                    box[0] < b[2] and b[0] < box[2] and box[1] < b[3] and b[1] < box[3] for b in taken):
+                break
+        taken.append(box)
+        _text(dr, (bx, by), name, pf, WHITE, 6, anchor)
+    _text(dr, (40, 70), str(t["name"]), _fit(gothic, str(t["name"]), 96, W - 80, 50), WHITE, 9, "lm")
+    _lead_main(dr, 40, 175, t, gothic, 140, W - 80)
+
+
 _LAYOUTS = {"a": _layout_a, "b": _layout_b, "c": _layout_c}
 
 
 def render_spec(t: dict, config: dict, assets: Path) -> Image.Image:
     gothic = (config.get("fonts") or {}).get("gothic")
-    src = Image.open(assets / t["image"]).convert("RGB")
-    img = _background(src, t)
     layout = t.get("layout", "a")
-    _LAYOUTS[layout](img, t, gothic)
-    if layout != "b":                                   # b は顔が主役なので2人を出さない
+    cast = bool(t.get("cast", DEFAULT_CAST[layout]))
+    if layout in _LAYOUTS:
+        src = Image.open(assets / t["image"]).convert("RGB")
+        img = _background(src, t)
+        _LAYOUTS[layout](img, t, gothic)
+    else:
+        img = Image.new("RGB", (W, H), BLACK)
+        if layout in ("face", "scene"):
+            with Image.open(assets / t["image"]) as im:
+                {"face": _layout_face, "scene": _layout_scene}[layout](img, t, gothic, im.convert("RGB"))
+        elif layout == "number":
+            with Image.open(assets / t["image"]) as im:
+                _layout_number(img, t, gothic, im.convert("RGB"), cast)
+        elif layout == "versus":
+            _layout_versus(img, t, gothic, assets)
+        elif layout == "map":
+            _layout_map(img, t, gothic, assets)
+        else:
+            raise ValueError(f"サムネイルの構図が分かりません: {layout}")
+    if cast:                                            # b は顔が主役なので2人を出さない（既定）
         _cast(img, assets)
     dr = ImageDraw.Draw(img)
     for i, c in enumerate(STRATA):                        # 目印：下端の細い地層
@@ -266,6 +561,8 @@ def make(script, config: dict, assets: Path) -> Image.Image:
 def make_variants(script, config: dict, assets: Path) -> dict[str, Image.Image]:
     """3案（a・b・c）。YouTube Studio の「テストと比較」に載せる。"""
     t = script.thumbnail
+    if not (t.get("image") and t.get("crop")):          # versus・map は絵1枚の b・c が作れないので a だけ
+        return {"a": render_spec(variant_spec(t, "a"), config, assets)}
     with Image.open(assets / t["image"]) as im:
         size = im.size
     return {k: render_spec(variant_spec(t, k, size), config, assets) for k in VARIANTS}

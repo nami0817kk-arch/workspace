@@ -17,7 +17,14 @@ next:                                        # 最後の12秒の次回予告
   title: 次の人物
   teaser: 次回のひとこと。
 
-thumbnail:                                   # chiso/thumb.py。絵は全面、顔はやや左の中央に
+thumbnail:                                   # chiso/thumb.py。構図は題材ごとに選ぶ（同じ構図が3回続くと check が知らせる）
+  # layout: face                               # 書かなければ classic（下の形）。選び方：
+  #   face   顔の大写し（人物の回。肖像を右に大きく、左に2段の文字。side: left で反対）。crop は顔のまわり
+  #   scene  場面の全景（戦い・行列・港）。絵を全面、下の黒い帯に lead＋main を1行（band: top で上）
+  #   versus 2人の対比。left: {image, crop, name, number}・right: も同じ。number が両方あれば数字の対、無ければ VS
+  #   number 数字が主役。number: 約168cm（数字は大きく、約・cm は半分）。絵は暗く後ろに
+  #   map    航路・遠征・国の広がり。map: {route: [コルシカ島, パリ, エルバ島]}（地名は places.yaml）。image・crop は要らない
+  # cast: false                                # 右下の2人（既定は classic と number だけ出す）
   image: paintings/xxx.jpg
   crop: [0, 0, 1600, 900]                    # 絵のどこを使うか（左, 上, 右, 下）
   focus: [150, 60, 1000, 760]                # 明るく残す範囲
