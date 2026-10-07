@@ -8,6 +8,13 @@
     python tools/hide_news.py --hours       # 残る側・引っ込める側の視聴時間も出す
     python tools/hide_news.py --apply       # 非公開にする（控えは research/hidden.json）
     python tools/hide_news.py --restore     # 控えにあるものを元の公開状態に戻す
+    python tools/hide_news.py --level ng --limit 20 --apply   # 「危ない」ものだけ、1日20本ずつ
+
+**「危ない」だけ先に引っ込める**（2026-10-07 決定「危ないは消していく」「まとめて消すと
+API の残がなくなるので、徐々に減らしたい」）。`--level ng` で、台本の中身が
+他人の声（発言の引用＋ネットの反応）5割超の本編と、そのショートだけを選ぶ。
+1本の非公開で `videos.update` 50 を使うので、`--limit` で刻み、台帳の残りが
+`--reserve`（既定3,000＝その日の投稿20本ぶん）を切ったら止める。
 
 **残すのはシリーズだけ**（台本の front matter に `series:` があるもの。
 クラブ紹介・クラブ同士の比較など）。`format:` では分けない。シリーズの回も
@@ -34,6 +41,14 @@ sys.path.insert(0, str(ROOT))
 POSTED = ROOT / "research" / "posted.json"
 HIDDEN = ROOT / "research" / "hidden.json"
 SCRIPTS = ROOT / "scripts"
+OUTPUT = ROOT / "output"
+
+# 中身の仕分け（2026-10-07 の点検と同じ数え方。src/review.py・tools/ypp_audit.py と同じ話者の分け方）
+CROWD = {"ネット民", "現地サポ", "海外のファン"}
+NARRATORS = {"キャスター", "解説", "ナレーター", ""}
+OTHER_MAX = 50      # 他人の声（引用＋反応）がこれを超えたら「危ない」
+CROWD_MAX = 20      # 反応だけでこれを超えたら「大丈夫」に入れない
+UPDATE_COST = 50    # videos.update
 
 _SUFFIX = re.compile(r"_(short|tiktok)$")
 _FRONT = re.compile(r"\A---\n(.*?)\n---\n", re.S)
@@ -68,6 +83,35 @@ def classify(build: str, scripts: Path | None = None) -> str:
     return "keep" if fm.get("series") else "hide"
 
 
+def content_class(build: str, output: Path | None = None) -> str | None:
+    """書き出した台本（script.json）の中身で "safe" / "border" / "ng"。無ければ None。
+
+    safe   … 他人の声5割以下・見立ての節あり・反応2割以下
+    border … 他人の声5割以下だが、見立てが無いか反応が多い
+    ng     … 他人の声が5割を超える
+    """
+    path = (output or OUTPUT) / base_build(build) / "script.json"
+    if not path.exists():
+        return None
+    counts = {"crowd": 0, "quote": 0, "narr": 0, "view": 0}
+    for scene in json.loads(path.read_text(encoding="utf-8")).get("scenes", []):
+        for line in scene.get("lines", []):
+            speaker, size = line.get("speaker") or "", len(line.get("text") or "")
+            if speaker in CROWD:
+                counts["crowd"] += size
+            elif speaker not in NARRATORS:
+                counts["quote"] += size
+            else:
+                counts["view" if scene.get("viewpoint") else "narr"] += size
+    total = sum(counts.values()) or 1
+    other = 100 * (counts["crowd"] + counts["quote"]) / total
+    if other > OTHER_MAX:
+        return "ng"
+    if counts["view"] and 100 * counts["crowd"] / total <= CROWD_MAX:
+        return "safe"
+    return "border"
+
+
 def plan(rows: list[dict], scripts: Path | None = None, keep: set[str] = frozenset()) -> dict[str, list[dict]]:
     """控えの1行ずつを3つに分ける。同じ動画が二重に控えてあれば1つにまとめる。"""
     out: dict[str, list[dict]] = {"keep": [], "hide": [], "noscript": []}
@@ -81,6 +125,13 @@ def plan(rows: list[dict], scripts: Path | None = None, keep: set[str] = frozens
         out[kind].append({"video_id": vid, "build": base_build(row.get("build", "")),
                           "short": bool(_SUFFIX.search(Path(str(row.get("build", ""))).name))})
     return out
+
+
+def only_ng(groups: dict[str, list[dict]], output: Path | None = None) -> dict[str, list[dict]]:
+    """引っ込める側のうち、中身が「危ない」ものだけ残す。ショートは本編の判定に従う。"""
+    ng = [x for x in groups["hide"] if content_class(x["build"], output) == "ng"]
+    ng.sort(key=lambda x: x["short"])   # 本編を先に。審査が見るのも、時間に数えるのも本編
+    return {"keep": groups["keep"], "hide": ng, "noscript": []}
 
 
 def _statuses(service, ids: list[str]) -> dict[str, dict]:
@@ -147,7 +198,17 @@ def show(groups: dict[str, list[dict]], hours: bool) -> None:
         print(f"  台本なし  {x['build']:40} https://youtu.be/{x['video_id']}")
 
 
-def apply(service, groups: dict[str, list[dict]]) -> int:
+def _quota_left() -> int | None:
+    try:
+        from src import quota
+    except ImportError:
+        return None
+    return quota.left()
+
+
+def apply(service, groups: dict[str, list[dict]], limit: int | None = None,
+          reserve: int = 0, left=_quota_left) -> int:
+    """非公開にする。`limit` 本で止める。台帳の残りが `reserve` を切りそうなら止める。"""
     targets = groups["hide"] + groups["noscript"]
     status = _statuses(service, [x["video_id"] for x in targets])
     hidden = _load_hidden()
@@ -160,6 +221,13 @@ def apply(service, groups: dict[str, list[dict]]) -> int:
             continue
         if st.get("privacyStatus") == "private" and not st.get("publishAt"):
             continue                  # もう非公開
+        if limit is not None and count >= limit:
+            print(f"  今日はここまで（{limit} 本）")
+            break
+        remain = left()
+        if remain is not None and remain - UPDATE_COST < reserve:
+            print(f"  枠の残り {remain} が投稿のための取り置き {reserve} を切るので止めます")
+            break
         _set_privacy(service, x["video_id"], st, "private")
         if x["video_id"] not in done:
             hidden.append({"video_id": x["video_id"], "build": x["build"], "short": x["short"],
@@ -199,6 +267,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--restore", action="store_true", help="控えにあるものを元に戻す")
     ap.add_argument("--hours", action="store_true", help="本編の視聴時間も出す")
     ap.add_argument("--keep", action="append", default=[], metavar="VIDEO_ID", help="残す動画（何度でも）")
+    ap.add_argument("--level", choices=["all", "ng"], default="all",
+                    help="all＝シリーズ以外すべて（審査の直前）／ng＝中身が危ないものだけ")
+    ap.add_argument("--limit", type=int, help="1回で非公開にする本数の上限")
+    ap.add_argument("--reserve", type=int, default=3000, help="台帳の残りをこれだけ残す（投稿のぶん）")
     args = ap.parse_args(argv)
 
     if args.restore:
@@ -209,13 +281,15 @@ def main(argv: list[str] | None = None) -> int:
 
     rows = json.loads(POSTED.read_text(encoding="utf-8"))
     groups = plan(rows, keep=set(args.keep))
+    if args.level == "ng":
+        groups = only_ng(groups)
     show(groups, args.hours)
     if not args.apply:
         print("\n（並べただけ。非公開にするには --apply）")
         return 0
     from src import upload as upload_mod
 
-    print(f"\n非公開にした: {apply(upload_mod.get_service(), groups)} 本（控え: {HIDDEN.relative_to(ROOT)}）")
+    print(f"\n非公開にした: {apply(upload_mod.get_service(), groups, limit=args.limit, reserve=args.reserve)} 本（控え: {HIDDEN.relative_to(ROOT)}）")
     return 0
 
 

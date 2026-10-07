@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -109,3 +110,52 @@ def test_apply_clears_schedule_and_restore_reschedules_future(tmp_path, monkeypa
     assert "publishAt" not in service._v.status["V1"]    # 予約が残ると勝手に公開される
     hide_news.restore(service)
     assert service._v.status["V1"]["publishAt"] == "2999-01-01T10:00:00Z"
+
+
+def _built(dir_: Path, name: str, lines: list[tuple[str, str]], viewpoint_lines: int = 0) -> None:
+    scenes = [{"lines": [{"speaker": sp, "text": tx} for sp, tx in lines]}]
+    if viewpoint_lines:
+        scenes.append({"viewpoint": True,
+                       "lines": [{"speaker": "解説", "text": "あ" * 10}] * viewpoint_lines})
+    (dir_ / name).mkdir(parents=True)
+    (dir_ / name / "script.json").write_text(json.dumps({"scenes": scenes}, ensure_ascii=False),
+                                             encoding="utf-8")
+
+
+def test_content_class_by_other_voices(tmp_path):
+    # 他人の声が半分を超えたら危ない
+    _built(tmp_path, "ng", [("キャスター", "あ" * 10), ("ネット民", "い" * 8), ("久保", "う" * 8)])
+    # 見立てがあって反応も少なければ大丈夫
+    _built(tmp_path, "safe", [("キャスター", "あ" * 30), ("久保", "う" * 10)], viewpoint_lines=2)
+    # 他人の声は少ないが見立てが無い
+    _built(tmp_path, "border", [("キャスター", "あ" * 30), ("久保", "う" * 10)])
+    assert hide_news.content_class("ng", tmp_path) == "ng"
+    assert hide_news.content_class("safe", tmp_path) == "safe"
+    assert hide_news.content_class("border_short", tmp_path) == "border"   # ショートは本編で決める
+    assert hide_news.content_class("missing", tmp_path) is None
+
+
+def test_only_ng_keeps_dangerous_main_and_its_short(tmp_path):
+    _built(tmp_path, "a", [("ネット民", "い" * 30), ("キャスター", "あ" * 10)])
+    _built(tmp_path, "b", [("キャスター", "あ" * 30)], viewpoint_lines=1)
+    groups = {"keep": [], "noscript": [{"video_id": "N", "build": "x", "short": False}],
+              "hide": [{"video_id": "A", "build": "a", "short": False},
+                       {"video_id": "As", "build": "a", "short": True},
+                       {"video_id": "B", "build": "b", "short": False}]}
+    got = hide_news.only_ng(groups, tmp_path)
+    assert [x["video_id"] for x in got["hide"]] == ["A", "As"]   # 本編が先
+    assert got["noscript"] == []      # 台本の無いものは「危ない」と言えないので触らない
+
+
+def test_apply_stops_at_limit_and_reserve(tmp_path, monkeypatch):
+    monkeypatch.setattr(hide_news, "HIDDEN", tmp_path / "hidden.json")
+    status = {v: {"privacyStatus": "public"} for v in ("V1", "V2", "V3")}
+    groups = {"keep": [], "noscript": [],
+              "hide": [{"video_id": v, "build": v, "short": False} for v in ("V1", "V2", "V3")]}
+    service = _Service(dict(status))
+    assert hide_news.apply(service, groups, limit=2, left=lambda: None) == 2
+    # 枠の残りが取り置きを切るなら、1本も触らない
+    service = _Service({v: {"privacyStatus": "public"} for v in ("V1", "V2", "V3")})
+    monkeypatch.setattr(hide_news, "HIDDEN", tmp_path / "hidden2.json")
+    assert hide_news.apply(service, groups, reserve=3000, left=lambda: 3020) == 0
+    assert service._v.updates == []
