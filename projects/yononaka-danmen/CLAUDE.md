@@ -210,7 +210,7 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 | `charts5.py` | `flowchart` 分岐の判定図／`matrix` 4象限／`receipt` レシート風の明細／`numberline` 数直線／`verdict` ◎○△×の比較表（5種） |
 | `charts6.py` | アイコンが主役。`icon_stats` アイコン＋数字を並べる／`icon_flow` アイコンを矢印でつなぐ／`icon_list` アイコン付きの箇条書き／`icon_compare` 大きなアイコン2つで比べる（4種） |
 
-#### 画面（1920×1080 をまるごと作る。全 27 種）
+#### 画面（1920×1080 をまるごと作る。全 30 種）
 
 | ところ | 中身 |
 |---|---|
@@ -219,6 +219,7 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 | `news2.py` | `breaking` 速報の帯／`lshape` L字／`voices` 街の声／`split` 分割画面（4種） |
 | `news3.py` | `qa` Q&Aの札／`points` きょうのポイント／`glossary` ことばの意味／`before` 写真の左右比べ／`statement` 公式発言の引用（5種） |
 | `news4.py` | `poll` 世論調査の結果／`recap` ここまでのおさらい／`live` 中継風／`versus` 左右の全画面比べ（4種） |
+| `talk.py` | 掛け合い。`talk` 2人が左右に立って1往復／`reaction` 聞き手が大きく驚く／`aside` すでにある画面に立ち絵と一言を重ねる（後掛け）（3種） |
 | `fullscreen.py` | 背景に直接描く3種（下と右の安全域を空ける） |
 | `parts.py` | `number` 数字の組版／`marker` 印／`leader` 引き出し線／`balloon` 吹き出し／`cut_edge` 切り口／`progress` 進み具合（6種の部品） |
 
@@ -234,6 +235,19 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 
 **書き込みは1つの画面に2つまで。** 全部に赤を入れると、どれが大事か分からなくなる。
 
+#### 立ち絵の決まり
+
+- 読み込みは `danmen/cast.py`。`katari`（語り手）と `kikite`（聞き手）の2人。
+  表情は名前で呼ぶ（`odoroki` `nattoku` `setsumei` …）。絵が無い表情は近いものに自動で寄る
+- **`aside` の吹き出しは立ち絵の真上に出る。** 横に出すと図の上に乗るため。
+  だから図は画面のどこに置いてもよい
+- **`reaction` は1本に2回まで。** 毎回使うと安く見える
+- 画面に出す高さは `talk` と `reaction` が腰から上、`aside` が胸から上。
+  背の違いを作らないよう、2人とも同じ高さにしてある
+
+**立ち絵を足したら、ファイル名と中身が合っているか目で見る。**
+`katari_nattoku` は中身が聞き手だった（`characters/raw/` に退避済み）。
+
 ### 素材の置き場（リポジトリには入れない）
 
 `output/yononaka-danmen/assets/` の下に置く。workspace は public なので。
@@ -244,7 +258,7 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 | `photos/` | 実写 24点 | Pexels（商用可）。`sources.json` に出典 |
 | `wikimedia/` | 資料写真 | Wikimedia。`CREDITS.md` が自動で付く |
 | `videos/` | 実写動画 6本 | Pexels。背景に敷く |
-| `characters/` | 立ち絵 2人 | Gemini で作り、白背景を抜いた |
+| `characters/` | 立ち絵 2人・19枚 | Gemini。`danmen/cast.py` から表情の名前で呼ぶ |
 | `brand/` | ロゴ | Gemini。40pxまで縮めても形が分かる |
 | `geo/` | 世界地図のデータ | **Natural Earth**（パブリックドメイン） |
 | `fonts/` | （予備） | 本番は Windows 標準の Noto Sans JP を使う |
