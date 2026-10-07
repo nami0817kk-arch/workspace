@@ -202,5 +202,30 @@ def compose(ffmpeg: str, background: Path, overlay_list: Path, audio: Path, targ
         "-filter_complex", "[1:v]format=rgba,fps=" + str(fps) + "[o];[0:v][o]overlay=0:0:format=auto:shortest=1,format=yuv420p[v]",
         "-map", "[v]", "-map", "2:a",
         "-c:v", "libx264", "-preset", preset, "-crf", "20", "-g", str(fps * 2),
-        "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+        "-af", loudnorm_filter(ffmpeg, audio), "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
         "-movflags", "+faststart", "-shortest", str(target)], check=True)
+
+
+LOUD = "I=-14:TP=-1.5:LRA=11"     # YouTube の基準の大きさ
+
+
+def loudnorm_filter(ffmpeg: str, audio) -> str:
+    """音の大きさを2回に分けて揃える：先に測ってから、測った値を渡して掛ける。
+    1回だけ掛けると -16 LUFS ほどにしかならなかった（10-07、信長の回を qc で測った）。"""
+    import json, re
+    try:
+        r = subprocess.run([ffmpeg, "-hide_banner", "-nostats", "-i", str(audio),
+                            "-af", f"loudnorm={LOUD}:print_format=json", "-f", "null", "-"],
+                           capture_output=True, text=True, encoding="utf-8", errors="ignore")
+    except OSError:
+        return f"loudnorm={LOUD}"
+    m = None
+    for m in re.finditer(r"\{[^{}]*\"input_i\"[^{}]*\}", r.stderr):
+        pass
+    try:
+        d = json.loads(m.group(0))
+        return (f"loudnorm={LOUD}:measured_I={d['input_i']}:measured_TP={d['input_tp']}"
+                f":measured_LRA={d['input_lra']}:measured_thresh={d['input_thresh']}"
+                f":offset={d['target_offset']}:linear=true")
+    except Exception:
+        return f"loudnorm={LOUD}"
