@@ -33,7 +33,7 @@ from danmen import tts
 
 W, H = 1920, 1080
 FONT_PATH = "C:/Windows/Fonts/NotoSansJP-VF.ttf"
-GOLD = (231, 185, 63)
+GOLD = (255, 206, 72)        # 字幕の数字。板の金より明るくする
 EDGE = (6, 10, 18)
 NUM = re.compile(r"(\d+(?:[.,]\d+)*)")
 FPS = 30
@@ -116,14 +116,12 @@ def caption(im: Image.Image, text: str, size: int = 74) -> Image.Image:
                 continue
             place.append((part, x, y, bool(NUM.fullmatch(part))))
             x += d.textlength(part, font=f)
-    # ① 黒い太い縁を全部
+    # ① 黒い太い縁を全部。縁を先に全部描いてから本体を描く
     for part, x, y, _ in place:
-        d.text((x, y), part, font=f, fill=EDGE, stroke_width=16, stroke_fill=EDGE)
-    # ② 数字だけ金の細い縁
-    for part, x, y, is_num in place:
-        if is_num:
-            d.text((x, y), part, font=f, fill=EDGE, stroke_width=6, stroke_fill=GOLD)
-    # ③ 本体
+        d.text((x, y), part, font=f, fill=EDGE, stroke_width=17, stroke_fill=EDGE)
+    # ② 本体。数字は金、ほかは白
+    #    金の文字にさらに金の縁を重ねていたのをやめた（2026-10-07）。
+    #    金の上に金を重ねると輪郭がぼやけ、黒の縁も細くなって読みにくかった。
     for part, x, y, is_num in place:
         d.text((x, y), part, font=f, fill=GOLD if is_num else (255, 255, 255))
     return out
