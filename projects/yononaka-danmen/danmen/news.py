@@ -186,7 +186,7 @@ def change(fig: dict) -> Image.Image:
         f = F(62)
         tw = d.textlength(txt, font=f)
         d.text((w - tw - 30, top + 70), txt, font=f, fill=col)
-        lab, lf = "この間の変化", F(24, 700)
+        lab, lf = "この間の変化", F(typo.NOTE, 700)
         d.text((w - d.textlength(lab, font=lf) - 30, top + 30), lab, font=lf, fill=INK_SUB)
     _credit(d, fig.get("credit", ""), w, h)
     return im

@@ -71,13 +71,13 @@ def newspaper(fig: dict) -> Image.Image:
         im.paste(pic, (w - 60 - pic.width, y))
         d.rectangle([w - 60 - pic.width, y, w - 60, y + pic.height], outline=(180, 180, 186), width=2)
         body_w = w - pad * 2 - 40 - pic.width - 40
-    bf = F(27, 600)
+    bf = F(typo.NOTE, 600)
     for ln in _wrap(d, str(fig.get("body", "")), bf, body_w)[:7]:
         d.text((pad + 20, y), ln, font=bf, fill=(40, 40, 46))
         y += 40
     paper = str(fig.get("paper", ""))
     if paper:
-        d.text((pad + 20, h - 54), paper, font=F(22, 700), fill=INK_SUB)
+        d.text((pad + 20, h - 54), paper, font=F(typo.NOTE, 700), fill=INK_SUB)
     _credit(d, fig.get("credit", ""), w, h)
     return im
 
@@ -106,7 +106,7 @@ def donut(fig: dict) -> Image.Image:
         put_number(d, center, cx - _text_w(center, size) / 2, cy - size * 0.62, size, fill=INK)
     sub = str(fig.get("center_sub", ""))
     if sub:
-        sf = F(22, 700)
+        sf = F(typo.NOTE, 700)
         d.text((cx - d.textlength(sub, font=sf) / 2, cy + 30), sub, font=sf, fill=INK_SUB)
     y = top + 30
     for n, it in enumerate(items):
