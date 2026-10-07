@@ -4,9 +4,10 @@
 台本（YAML）の行を上から読み、
 
   ・`screen:` の行  … ここから出す画面を切り替える（画像の名前）
-  ・`cast:` の行    … 立ち絵の出し方を決める。
-                      `auto` … **2人とも常に出す**（左に語り手、右に聞き手）。
-                               しゃべっている人が明るく、聞いている人は少し暗い
+  ・`cast:` の行    … 立ち絵の出し方を決める。**どちらも2人とも出す。**
+                      `auto` … 左右の**下**に2人（板に載る図の画面）
+                      `wipe` … 右上の**箱**に2人（全画面の様式）
+                      しゃべっている人が明るく、聞いている人は少し暗い
                       `なし` … 消す
   ・話者の行        … 読み上げて、その長さだけ画面を出す。字幕も焼く
 
@@ -108,20 +109,27 @@ def auto_mood(art: str, tone: str) -> str:
 
 
 def parse_cast(text: str) -> dict | None:
-    """立ち絵の出し方を読む。
+    """立ち絵の出し方を読む。誰を出すかは `SEATS` で決まっている（2人とも）。
 
-    `auto` または `auto 420` … **2人とも出す**（数字は高さ、既定 400）
-    `なし` … 消す
+    `auto`  … 左右の**下**に2人。板に載る図の画面で（下 420px が空いている）
+    `wipe`  … **箱**に2人。全画面の様式で（画面いっぱいに描くので、
+              下に置くと中身と重なる）。場所を足せる（`wipe 右下`）。
+              **画面ごとに空いている場所が違うので、画面を見て決める**
+    どちらも数字を足すと大きさを変えられる（`auto 460` / `wipe 210`）。
+    `なし`  … 消す
     """
     t = text.split()
     if not t or t[0] in ("なし", "none", "-"):
         return None
-    # 高さだけ指定できる（既定 400）。誰を出すかは SEATS で決まっている
-    h = 400
+    style = "wipe" if t[0] in ("wipe", "箱", "ワイプ") else "bottom"
+    h = 190 if style == "wipe" else 400
+    pos = "右上"
     for a in t[1:]:
         if a.isdigit():
             h = int(a)
-    return {"height": h}
+        elif a in WIPE_POS:
+            pos = a
+    return {"style": style, "height": h, "pos": pos}
 
 
 def cast_width(height: int) -> int:
@@ -132,6 +140,48 @@ def cast_width(height: int) -> int:
         if ch is not None:
             w = max(w, ch.width)
     return w
+
+
+# ワイプを置ける場所。(箱の幅, 2つぶんの高さ) を受け取り、左上の座標を返す
+WIPE_POS = {
+    "右上": lambda w, h: (W - 44 - w, 44),
+    "左上": lambda w, h: (44, 44),
+    "右下": lambda w, h: (W - 44 - w, H - 270 - h),
+    "左下": lambda w, h: (44, H - 270 - h),
+}
+
+
+def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
+             pos: str = "右上") -> Image.Image:
+    """右上の箱に2人を縦に並べる。**全画面の様式**で使う。
+
+    画面いっぱいに描く様式（速報の帯・左右の比べ・おさらい）では、下に立ち絵を
+    置くと中身と重なった（2026-10-08）。`studio.flip` のワイプと同じ形。
+    """
+    im = base.convert("RGBA").copy()
+    bw, bh = int(height * 0.86), height
+    total = bh * 2 + 24
+    x, y0 = WIPE_POS.get(pos, WIPE_POS["右上"])(bw, total)
+    for i, (_, who) in enumerate(SEATS):
+        y = y0 + i * (bh + 24)
+        speaking = who == speaker
+        mood = auto_mood(who, tone) if speaking else LISTEN_MOOD.get(who, "")
+        ch = cast.load(who, mood, int(bh * 2.0), "bust")
+        d = ImageDraw.Draw(im)
+        # 枠。しゃべっている人は金、聞いている人は灰
+        edge = (231, 185, 63) if speaking else (96, 104, 118)
+        d.rectangle([x - 5, y - 5, x + bw + 5, y + bh + 5], fill=edge)
+        tile = Image.new("RGBA", (bw, bh), (20, 28, 44, 255))
+        if ch is not None:
+            # 顔が箱の中に収まるよう、上のほうを切り出す
+            face = ch.crop((0, 0, ch.width, min(int(ch.height * 0.60), ch.height)))
+            sc = bh / face.height
+            face = face.resize((max(int(face.width * sc), 1), bh), Image.LANCZOS)
+            tile.alpha_composite(face, ((bw - face.width) // 2, 0))
+        if not speaking:
+            tile = ImageEnhance.Brightness(tile.convert("RGB")).enhance(0.66).convert("RGBA")
+        im.alpha_composite(tile, (x, y))
+    return im.convert("RGB")
 
 
 def put_cast(base: Image.Image, height: int, speaker: str, tone: str) -> Image.Image:
@@ -266,12 +316,21 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         # 中間の画像は JPEG。PNG は 1枚 0.59 秒かかるが JPEG なら 0.04 秒。
         # 最後に H.264 にするので、この段階の劣化は見えない（2026-10-07 実測）
         art = who_art.get(step["who"], "")
-        # 立ち絵が出ているぶん、字幕が使える幅を左右から狭める
-        # 立ち絵の矩形には透明な余白がある。実際の人の幅に合わせて少し詰める
-        room = int(cast_width(cast_spec["height"]) * 0.76) if cast_spec else 0
+        # 立ち絵が出ているぶん、字幕が使える幅を左右から狭める。
+        # 立ち絵の矩形には透明な余白があるので、実際の人の幅に合わせて少し詰める。
+        # ワイプは画面の上にいるので、字幕の幅は狭めなくてよい
+        room = 0
+        if cast_spec and cast_spec["style"] == "bottom":
+            room = int(cast_width(cast_spec["height"]) * 0.76)
         shot = work / "{:03d}.jpg".format(n)
-        frame = (put_cast(current, cast_spec["height"], art, step["tone"])
-                 if cast_spec else current)
+        if cast_spec:
+            if cast_spec["style"] == "wipe":
+                frame = put_wipe(current, cast_spec["height"], art, step["tone"],
+                                 cast_spec.get("pos", "右上"))
+            else:
+                frame = put_cast(current, cast_spec["height"], art, step["tone"])
+        else:
+            frame = current
         caption(frame, step["text"], side_room=room).save(shot, quality=93)
         shots.append((shot, sec))
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。

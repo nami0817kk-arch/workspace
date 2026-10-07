@@ -108,7 +108,8 @@ def recap(spec: dict) -> Image.Image:
     im = _bg(spec, dark=0.26, blur=8)
     d = ImageDraw.Draw(im)
     # 中央に紙の板
-    bx0, by0, bx1, by1 = 230, 180, W - 230, H - 180
+    # 右上に立ち絵のワイプが来るので、板は左に寄せて幅を抑える（2026-10-08）
+    bx0, by0, bx1, by1 = 120, 210, W - 470, H - 190
     sh = Image.new("RGBA", (bx1 - bx0 + 80, by1 - by0 + 80), (0, 0, 0, 0))
     ImageDraw.Draw(sh).rounded_rectangle([40, 44, bx1 - bx0 + 40, by1 - by0 + 44],
                                          radius=20, fill=(0, 0, 0, 170))

@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from danmen import cast, screens, typo
 
@@ -160,7 +160,16 @@ def reaction(spec: dict) -> Image.Image:
                 fill=(255, 255, 255, 26), width=9)
     im.alpha_composite(rays.filter(ImageFilter.GaussianBlur(3)))
 
-    cast.put(im, str(spec.get("who", "kikite")), str(spec.get("mood", "odoroki")),
+    # **2人とも出す**（人は切り替えない）。驚く人を右に大きく、
+    # 相方を左に小さく暗く置く（2026-10-08 ユーザー指示）
+    who = str(spec.get("who", "kikite"))
+    other = "katari" if who == "kikite" else "kikite"
+    mate = cast.load(other, "", 560, "half")
+    if mate is not None:
+        dim = ImageEnhance.Brightness(mate.convert("RGB")).enhance(0.46).convert("RGBA")
+        dim.putalpha(mate.split()[3].point(lambda v: int(v * 0.90)))
+        im.alpha_composite(dim, (36, H - dim.height + 10))
+    cast.put(im, who, str(spec.get("mood", "odoroki")),
              h=900, part="half", right=60, bottom=H + 10)
     d = ImageDraw.Draw(im)
     lead = str(spec.get("lead", ""))
