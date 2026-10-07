@@ -89,8 +89,9 @@ def fig_for(kind: str) -> dict:
     if kind in ("hero", "big_number"):
         return {**base, "value": "175円", "label": "レギュラー1リットル", "note": "2026年10月"}
     if kind == "line":
-        return {**base, "items": [{"label": "店頭価格",
-                                   "points": [[2020, 140], [2023, 168], [2026, 175]]}]}
+        return {**base, "items": [{"label": "2020年", "value": 140},
+                                  {"label": "2023年", "value": 168},
+                                  {"label": "2026年", "value": 175, "note": "175円"}]}
     if kind == "people":
         return {**base, "total": 10, "filled": 4, "per_row": 10,
                 "lead": "10人のうち4人が「知らなかった」"}
@@ -126,7 +127,10 @@ def fig_for(kind: str) -> dict:
                                   {"value": "4万円", "label": "1年ぶん", "note": "1台あたり"}],
                 "note": "年に700リットル使う前提"}
     if kind == "photo":
-        return {**base, "src": "", "caption": "都内の給油所（2026年10月）"}
+        return {**base,
+                "src": str(Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/photos"
+                                r"/pexels_18569250_A_contemporary_gas_station_wit.jpeg")),
+                "caption": "都内の給油所（2026年10月）"}
     if kind == "world":
         return {**base, "values": {"JPN": 56.6, "DEU": 86}}
     if kind == "japan":
@@ -148,15 +152,36 @@ def measure(mod, kind: str, fig: dict):
     """
     sizes: list[int] = []
     orig = mod.F
+    watching = [True]
 
     def spy(size, weight=900):
-        sizes.append(int(size))
+        if watching[0]:
+            sizes.append(int(size))
         return orig(size, weight)
+
+    # 数字の単位（「円」「年」）は本体の 0.64 倍なので、必ず下限に当たる。
+    # 読める大きさには持ち上がるので実害がない。ここでは数えない。
+    def quiet(fn):
+        def wrapped(*a, **kw):
+            watching[0] = False
+            try:
+                return fn(*a, **kw)
+            finally:
+                watching[0] = True
+        return wrapped
 
     mod.F = spy
     news_orig = news.F
     if mod is not news:
         news.F = spy
+    # 数字の大きさを測るだけの関数も、数えない（描く字ではない）
+    saved = []
+    for holder in {mod, news}:
+        for nm in ("put_number", "_text_w"):
+            f = getattr(holder, nm, None)
+            if f is not None:
+                saved.append((holder, nm, f))
+                setattr(holder, nm, quiet(f))
     try:
         im = mod.KINDS[kind](fig)
     except Exception:
@@ -164,6 +189,8 @@ def measure(mod, kind: str, fig: dict):
     finally:
         mod.F = orig
         news.F = news_orig
+        for holder, nm, f in saved:
+            setattr(holder, nm, f)
     if not sizes:
         return None
     hits = sum(1 for z in sizes if z < typo.MIN_PX)

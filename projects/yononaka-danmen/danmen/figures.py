@@ -77,6 +77,10 @@ def _note(d, text: str, x: int, y: int) -> None:
 
 
 def stack(fig: dict) -> Image.Image:
+    """積み上げの帯。**ひとつの量が何でできているか**を、割合の長さで見せる。
+
+    金額の明細なら `charts5.receipt`、割合を円で見せるなら `charts4.donut`。
+    """
     items = fig["items"]
     w, h = typo.PANEL_W, 150 + len(items) * 104
     im, d, top = _card(w, h, fig.get("title", ""))
@@ -107,6 +111,10 @@ def stack(fig: dict) -> Image.Image:
 
 
 def compare(fig: dict) -> Image.Image:
+    """横棒で比べる。項目を並べて、長さで大小を見せる。
+
+    ニュース調にするなら `news.ranking`（注目の1本だけ色が付く）。
+    """
     items = fig["items"]
     focus = str(fig.get("focus", items[0]["label"]))
     w, h = typo.PANEL_W, 140 + len(items) * 92
@@ -129,6 +137,10 @@ def compare(fig: dict) -> Image.Image:
 
 
 def timeline(fig: dict) -> Image.Image:
+    """年表。横一本の線に、**過去の**出来事を並べる。
+
+    これからの予定なら `charts4.schedule`。
+    """
     items = fig["items"]
     w, h = typo.PANEL_W, 400
     im, d, top = _card(w, h, fig.get("title", ""))
@@ -161,6 +173,10 @@ def timeline(fig: dict) -> Image.Image:
 
 
 def flow(fig: dict) -> Image.Image:
+    """流れ図。箱を矢印でつなぐ。
+
+    アイコンを使って作り込むなら `charts6.icon_flow`。
+    """
     items = fig["items"]
     n = len(items)
     w, h = typo.PANEL_W, 420
@@ -189,6 +205,10 @@ def flow(fig: dict) -> Image.Image:
 
 
 def bars(fig: dict) -> Image.Image:
+    """番号つきの箇条書き。理由や条件を順に並べる。
+
+    アイコンを添えるなら `charts6.icon_list`。
+    """
     items = fig["items"]
     w, h = typo.PANEL_W, 120 + len(items) * 116
     im, d, top = _card(w, h, fig.get("title", ""))
@@ -205,7 +225,10 @@ def bars(fig: dict) -> Image.Image:
 
 
 def hero(fig: dict) -> Image.Image:
-    """ひとつの数字を大きく見せる。山場で使う。"""
+    """ひとつの数字を大きく見せる。山場で使う。
+
+    ニュース調にするなら `news.big_number`、画面いっぱいなら `fullscreen.number`。
+    """
     w, h = typo.PANEL_W, 360
     im, d, top = _card(w, h, fig.get("title", ""))
     value = str(fig.get("value", ""))
@@ -220,7 +243,10 @@ def hero(fig: dict) -> Image.Image:
 
 
 def table(fig: dict) -> Image.Image:
-    """比べる表。items は {label, values:[...]}、cols は見出しの並び。"""
+    """比べる表。items は {label, values:[...]}、cols は見出しの並び。
+
+    値ではなく ◎○△× で比べるなら `charts5.verdict`。
+    """
     cols = fig.get("cols", [])
     items = fig["items"]
     w, h = typo.PANEL_W, 180 + len(items) * (typo.ROW + 14)
@@ -246,6 +272,10 @@ def table(fig: dict) -> Image.Image:
 
 
 def pie(fig: dict) -> Image.Image:
+    """円グラフ。割合をひと目で。
+
+    真ん中に数字を置きたいなら `charts4.donut`（そちらのほうが使いでがある）。
+    """
     items = fig["items"][:5]
     w, h = typo.PANEL_W, 460
     im, d, top = _card(w, h, fig.get("title", ""))
@@ -300,10 +330,9 @@ def _geo() -> dict:
 
 
 def world(fig: dict) -> Image.Image:
-    """世界地図。marks に {name, color, note} を書くと、その国を塗って札を出す。
+    """世界地図。marks に {name, color, note} を書くと、その国が塗られる。
 
-    name は Natural Earth の英語名（Japan / United States of America / Germany …）。
-    投影は正距円筒（素直に経度緯度を置く）。南極は切る。
+    日本の都道府県なら `charts2.japan`。
     """
     w, h = typo.PANEL_W, 620
     im, d, top = _card(w, h, fig.get("title", ""))
@@ -358,7 +387,7 @@ RED = "#C0392B"          # 問題・警告のときだけ使う。系列の色�
 
 
 def photo(fig: dict) -> Image.Image:
-    """写真を1枚、札つきで見せる板。人物や現場を出すときに使う。"""
+    """写真を板に載せ、下に説明を置く。出典を必ず添える。"""
     src = Path(str(fig.get("src", "")))
     w, h = typo.PANEL_W, 620
     im, d, top = _card(w, h, fig.get("title", ""))
@@ -381,9 +410,9 @@ def photo(fig: dict) -> Image.Image:
 
 
 def convert(fig: dict) -> Image.Image:
-    """換算の板。「1回ぶん」を「1年ぶん」に直して、自分ごとに引き戻す。
+    """言い換え。「1リットルで70.6円」を「1年で4万円」に置き直す。
 
-    items は {label, value, note} を2〜3個。矢印でつなぐ。
+    同じ数字を、見る人の暮らしの単位に直して見せるための図。
     """
     items = fig["items"]
     w, h = typo.PANEL_W, 380

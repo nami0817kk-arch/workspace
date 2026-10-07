@@ -25,6 +25,19 @@ GEO_JP = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/geo/japan.geoj
 _jp_cache = None
 
 
+UNIT = re.compile(r"(\d+(?:[,.]\d+)*)|([^\d]+)")
+
+
+def _text_w(text: str, size: int) -> float:
+    """数字の組版（単位だけ小さい）での、文字の幅。"""
+    probe = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    t = 0.0
+    for m in UNIT.finditer(text):
+        t += probe.textlength(m.group(0),
+                              font=F(size) if m.group(1) else F(int(size * 0.64), 800))
+    return t
+
+
 def line(fig: dict) -> Image.Image:
     """折れ線。点は丸、最後だけ大きく。面を薄く塗る。"""
     items = fig["items"]
@@ -63,11 +76,8 @@ def line(fig: dict) -> Image.Image:
             d.text((x - d.textlength(lab, font=f) / 2, plot_b + 16), lab, font=f, fill=INK_SUB)
         note = str(items[i].get("note", ""))
         if note and (last or items[i].get("show")):
-            size = 44 if last else 32
-            probe = ImageDraw.Draw(Image.new("RGB", (1, 1)))
-            tw = sum(probe.textlength(m.group(0),
-                     font=F(size) if m.group(1) else F(int(size * 0.58), 800))
-                     for m in re.finditer(r"(\d+(?:[,.]\d+)*)|([^\d]+)", note))
+            size = 48 if last else 36
+            tw = _text_w(note, size)
             put_number(d, note, x - tw / 2, y - size - 34, size,
                        fill=INK if last else INK_SUB)
     _credit(d, fig.get("credit", ""), w, h)

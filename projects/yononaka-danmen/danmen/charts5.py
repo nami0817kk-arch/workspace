@@ -117,7 +117,7 @@ def matrix(fig: dict) -> Image.Image:
     # 札。重なったら上下にずらし、右に出ないときは左に出す
     taken: list[tuple[float, float, float, float]] = []
     for px, py, r, focus, lab in pts:
-        f = F(27, 900 if focus else 700)
+        f = F(typo.NOTE, 900 if focus else 700)
         tw = d.textlength(lab, font=f)
         left = px + r + 12 + tw > x1 + 10
         lx = (px - r - 12 - tw) if left else (px + r + 12)
@@ -222,8 +222,8 @@ def numberline(fig: dict) -> Image.Image:
         up = n % 2 == 0
         d.line([(px, ly), (px, ly - 70 if up else ly + 70)], fill=col, width=4)
         d.ellipse([px - r, ly - r, px + r, ly + r], fill=col, outline="white", width=4)
-        lab, f = str(it.get("label", "")), F(27, 900 if focus else 700)
-        note, nf = str(it.get("note", "")), F(31 if focus else 26)
+        lab, f = str(it.get("label", "")), F(typo.NOTE, 900 if focus else 700)
+        note, nf = str(it.get("note", "")), F(typo.NOTE + (6 if focus else 0))
         ty = ly - 152 if up else ly + 96
         d.text((px - d.textlength(lab, font=f) / 2, ty), lab, font=f, fill=INK if focus else INK_SUB)
         if note:
