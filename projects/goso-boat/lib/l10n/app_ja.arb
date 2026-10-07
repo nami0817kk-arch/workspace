@@ -1,0 +1,490 @@
+{
+  "@@locale": "ja",
+  "appTitle": "護送ボート",
+  "tagline": "囚人を舟で向こう岸へ。1人も逃がすな。",
+  "start": "はじめる",
+  "continueAt": "つづきから（{id}）",
+  "@continueAt": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "chooseStage": "ステージを選ぶ",
+  "stages": "ステージ",
+  "levelLocked": "{id}、まだ遊べない",
+  "@levelLocked": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "levelStars": "{id}、星{stars}",
+  "@levelStars": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "placeLeft": "手前の岸",
+  "placeRight": "向こう岸",
+  "placeIsland": "中州",
+  "goTo": "{place}へ",
+  "@goTo": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "boatIsAt": "舟は{place}にある",
+  "@boatIsAt": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "boatSeats": "舟は{n}席まで",
+  "@boatSeats": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "boatSeatsCuffed": "舟は{n}席まで（手錠の2人は2席）",
+  "@boatSeatsCuffed": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "needSomeone": "先に誰かを舟に乗せる",
+  "noRower": "舟を漕げるのは警官と看守長だけ",
+  "notAdjacent": "そこへは直接行けない",
+  "unsolvable": "ここからは渡しきれない。一手戻して",
+  "hintSay": "{load}で{place}へ",
+  "@hintSay": {
+    "placeholders": {
+      "load": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "hintJoin": "＋",
+  "undo": "一手戻す",
+  "restart": "最初から",
+  "hint": "ヒント",
+  "failBoat": "舟の上で 見張り{guard}人分に 囚人{weight}人分。\n見張りが足りず、川へ飛び込んだ。",
+  "@failBoat": {
+    "placeholders": {
+      "guard": {
+        "type": "int"
+      },
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "failAlone": "{place}に囚人だけが残った。",
+  "@failAlone": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "failBank": "{place}で 見張り{guard}人分に 囚人{weight}人分。\n見張りが足りなかった。",
+  "@failBank": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      },
+      "guard": {
+        "type": "int"
+      },
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "personLabel": "{name}、{where}",
+  "@personLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "onBoat": "舟の上",
+  "coachTap": "警官や囚人をタップすると舟に乗る",
+  "coachGo": "乗せたら、下の「{button}」を押す",
+  "@coachGo": {
+    "placeholders": {
+      "button": {
+        "type": "String"
+      }
+    }
+  },
+  "tallyGuard": "見張り{n}",
+  "@tallyGuard": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tallyPrisoner": "囚人{n}",
+  "@tallyPrisoner": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "backToStages": "ステージ選択へ",
+  "tripsCount": "{n}回",
+  "@tripsCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "par": "最短 {n}回",
+  "@par": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "escaped": "脱走された",
+  "cleared": "全員護送",
+  "noteHint": "ヒントを使ったので星2つまで",
+  "noteBest": "最短で渡りきった",
+  "noteParFor3": "{n}回で渡れば星3つ",
+  "@noteParFor3": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "crossedIn": "{n}回で渡りきった",
+  "@crossedIn": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "nextLevel": "次の面へ",
+  "allCleared": "全{n}面 クリア",
+  "@allCleared": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "again": "もう一度",
+  "stageSelect": "ステージ選択",
+  "gotIt": "わかった",
+  "rulesTitle": "決まり",
+  "rulesBody": "・岸でも舟の上でも、見張りが囚人より少ないと逃げる\n・見張りのいない所に囚人を残しても逃げる\n・舟は{cap}席。漕げる人がいないと出せない",
+  "@rulesBody": {
+    "placeholders": {
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "rulesIsland": "・舟は「手前の岸と中州」「中州と向こう岸」の間を行き来する。岸から岸へ直接は行けない",
+  "rolePolice": "警官",
+  "roleChief": "看守長",
+  "roleDog": "警察犬",
+  "rolePrisoner": "囚人",
+  "roleBoss": "ボス",
+  "roleCuffed": "手錠の2人",
+  "descPolice": "見張り1人分。舟を漕げる",
+  "descChief": "見張り2人分。舟を漕げる",
+  "descDog": "見張り1人分。舟は漕げない",
+  "descPrisoner": "見張りが1人分要る",
+  "descBoss": "1人で見張りが2人分要る",
+  "descCuffed": "2人で見張り2人分。舟の席を2つ使う",
+  "world1": "川べり",
+  "world2": "看守長",
+  "world3": "手錠",
+  "world4": "ボス",
+  "world5": "警察犬",
+  "world6": "中州",
+  "intro1Title": "囚人を向こう岸へ",
+  "intro1Body": "警官や囚人をタップして舟に乗せ、「向こう岸へ」で渡す。\n岸でも舟の上でも、囚人より警官が少ないと逃げる。\n警官のいない岸に囚人を残しても逃げる。",
+  "intro2Title": "看守長が来た",
+  "intro2Body": "看守長は1人で囚人2人分を見張れる。舟も漕げる。",
+  "intro3Title": "手錠の2人",
+  "intro3Body": "2人はつながっていて離れられない。見張りは2人分、舟の席も2つ使う。",
+  "intro4Title": "ボスが来た",
+  "intro4Body": "ボスは1人でも見張りが2人分いる。舟の上でも同じ。",
+  "intro5Title": "警察犬が来た",
+  "intro5Body": "警察犬は囚人1人を見張れる。でも舟は漕げない。",
+  "intro6Title": "川に中州がある",
+  "intro6Body": "舟は「手前の岸と中州」「中州と向こう岸」の間を行き来する。岸から岸へ直接は行けない。\n中州に人を残すこともできる。中州でも見張りが要る。",
+  "world7": "総力戦",
+  "world8": "鬼門",
+  "intro7Title": "総力戦",
+  "intro7Body": "中州に、看守長も警察犬もボスも手錠の2人も。\nこれまでの決まりを全部使って渡しきる。",
+  "intro8Title": "鬼門",
+  "intro8Body": "全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。",
+  "hintWithAd": "動画で\nヒント",
+  "hintDeclined": "動画を最後まで見るとヒントが出る",
+  "removeAds": "広告を消す（{price}）",
+  "@removeAds": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "restorePurchases": "購入を復元",
+  "adFreeOn": "広告なし",
+  "purchaseThanks": "広告を消しました。ご購入ありがとうございます！",
+  "purchaseRestored": "購入を復元しました",
+  "purchaseNothing": "復元できる購入が見つかりませんでした。電波のある所で、購入したときの Apple ID でサインインしているか確かめてください",
+  "purchaseFailed": "購入できませんでした。支払いが済んでいれば、少しして自動で広告が消えます",
+  "kicker": "脱獄させるな！",
+  "settingsTitle": "設定",
+  "settingSound": "効果音",
+  "settingHaptics": "振動",
+  "licenses": "ライセンス",
+  "resetProgress": "進み具合を消す",
+  "resetConfirmTitle": "進み具合を消しますか？",
+  "resetConfirmBody": "星・記録・実績がすべて消えます。「広告を消す」の購入はそのまま残ります。",
+  "cancel": "やめる",
+  "doReset": "消す",
+  "resetDone": "進み具合を消しました",
+  "personalBest": "自己ベスト {n}回",
+  "@personalBest": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "newRecord": "新記録！",
+  "placeBoat": "舟",
+  "lockedHint": "前の面を解くと開く",
+  "hintNoAd": "動画の準備ができていません。少し待ってもう一度",
+  "daily": "今日の1問（{id}）",
+  "@daily": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyDoneLabel": "今日の1問 達成済み",
+  "dailyStreak": "連続{n}日",
+  "@dailyStreak": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyCleared": "今日の1問 達成！ 連続{n}日",
+  "@dailyCleared": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dailyAbout": "星3で解くと達成",
+  "records": "記録",
+  "statClears": "解いた面",
+  "statStars": "星",
+  "statThree": "星3の面",
+  "statEscapes": "脱走された回数",
+  "statTrips": "舟を出した回数",
+  "statStreak": "今日の1問の最長連続",
+  "achievementsTitle": "実績",
+  "achUnlocked": "実績: {name}",
+  "@achUnlocked": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nightmareLock": "舞台1〜7で★{need}を集めると開く（いま★{now}）",
+  "@nightmareLock": {
+    "placeholders": {
+      "need": {
+        "type": "int"
+      },
+      "now": {
+        "type": "int"
+      }
+    }
+  },
+  "ach_firstClear": "初めての護送",
+  "achDesc_firstClear": "最初の面を解く",
+  "ach_clears10": "見習い看守",
+  "achDesc_clears10": "10面を解く",
+  "ach_clears60": "一人前の看守",
+  "achDesc_clears60": "60面を解く",
+  "ach_allClear": "伝説の看守",
+  "achDesc_allClear": "全120面を解く",
+  "ach_threeStar30": "最短の達人",
+  "achDesc_threeStar30": "30面を星3で解く",
+  "ach_threeStarAll": "完全護送",
+  "achDesc_threeStarAll": "全面を星3で解く",
+  "ach_escape10": "逃げられ上手",
+  "achDesc_escape10": "10回脱走される",
+  "ach_escape100": "脱獄の名所",
+  "achDesc_escape100": "100回脱走される",
+  "ach_nightmareThree": "鬼門を越えて",
+  "achDesc_nightmareThree": "鬼門の面を星3で解く",
+  "ach_dailyWeek": "毎日の見回り",
+  "achDesc_dailyWeek": "今日の1問を7日続けて達成",
+  "startGoal": "最短{n}回で★3",
+  "@startGoal": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "resumed": "続きから",
+  "triesClear": "{n}回目の挑戦でクリア！",
+  "@triesClear": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "worldClear": "舞台{no}「{name}」クリア！ ★{got}/{max}",
+  "@worldClear": {
+    "placeholders": {
+      "no": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      },
+      "got": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "nightmareNeed": "鬼門まで あと★{n}",
+  "@nightmareNeed": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "taunt1": "あばよ！",
+  "taunt2": "お先に〜",
+  "taunt3": "へへっ",
+  "taunt4": "自由だー！",
+  "timeLine": "タイム {t}",
+  "@timeLine": {
+    "placeholders": {
+      "t": {
+        "type": "String"
+      }
+    }
+  },
+  "bestTimeLine": "最速 {t}",
+  "@bestTimeLine": {
+    "placeholders": {
+      "t": {
+        "type": "String"
+      }
+    }
+  },
+  "fastest": "最速！",
+  "noUndoClear": "一手も戻さずにクリア",
+  "rankUp": "階級が上がった: {name}",
+  "@rankUp": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rankNext": "次の階級まで ★{n}",
+  "@rankNext": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "reminder": "今日の1問のお知らせ",
+  "reminderBody": "今日の1問が届いています。星3で達成！",
+  "reminderDenied": "お知らせが許可されていません。iPhone の設定から許可してください",
+  "rank0": "見習い",
+  "rank1": "巡査",
+  "rank2": "巡査長",
+  "rank3": "巡査部長",
+  "rank4": "警部補",
+  "rank5": "警部",
+  "rank6": "警視",
+  "rank7": "警視正",
+  "rank8": "警視長",
+  "rank9": "警視総監",
+  "ach_perfect1": "川べりの達人",
+  "achDesc_perfect1": "舞台1「川べり」の全面を星3で解く",
+  "ach_perfect2": "看守長の達人",
+  "achDesc_perfect2": "舞台2「看守長」の全面を星3で解く",
+  "ach_perfect3": "手錠の達人",
+  "achDesc_perfect3": "舞台3「手錠」の全面を星3で解く",
+  "ach_perfect4": "ボスの達人",
+  "achDesc_perfect4": "舞台4「ボス」の全面を星3で解く",
+  "ach_perfect5": "警察犬の達人",
+  "achDesc_perfect5": "舞台5「警察犬」の全面を星3で解く",
+  "ach_perfect6": "中州の達人",
+  "achDesc_perfect6": "舞台6「中州」の全面を星3で解く",
+  "ach_perfect7": "総力戦の達人",
+  "achDesc_perfect7": "舞台7「総力戦」の全面を星3で解く",
+  "ach_perfect8": "鬼門の達人",
+  "achDesc_perfect8": "舞台8「鬼門」の全面を星3で解く",
+  "ach_firstTryThree": "一発護送",
+  "achDesc_firstTryThree": "1回目の挑戦で星3を取る",
+  "ach_nightmareNoUndo": "戻らない勇気",
+  "achDesc_nightmareNoUndo": "一手も戻さずに鬼門の面を解く",
+  "sep": "・",
+  "colon": "：",
+  "purchasePending": "購入の手続きが保留中です。完了すると広告が消えます",
+  "privacyPolicy": "プライバシーポリシー",
+  "supportAndAdReport": "お問い合わせ・広告の報告",
+  "linkFailed": "開けなかった: {url}",
+  "@linkFailed": {"placeholders": {"url": {"type": "String"}}},
+  "restoreFailed": "購入を復元できませんでした。時間をおいてもう一度お試しください",
+  "hintLoading": "動画を読み込んでいます…",
+  "hintShowFailed": "動画を表示できませんでした。全画面表示にしてもう一度",
+  "dailyNeedsNoHint": "今日の1問は、ヒントなしの星3で達成になります"
+}

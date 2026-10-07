@@ -20,3 +20,25 @@
 # 上書きされて実測4時間キャッシュされ、直した見た目が読み手に届かなかった。
 /style.*.css
   Cache-Control: public, max-age=31536000, immutable
+
+/app.*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/list.*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+# 検索の索引。3.9MB（圧縮後1.1MB）あり、名前が固定だと検索のたび取り直しに
+# なっていた。指紋付きなので、この名前のものは二度と変わらない。
+/search-index.*.json
+  Cache-Control: public, max-age=31536000, immutable
+
+# 印と共有用の絵。中身は図形だけで、色や形を変えない限り同じものが出る。
+# 名前に指紋が入っていないので immutable にはせず、1日で見直させる。
+/icon.png
+  Cache-Control: public, max-age=86400
+/favicon.ico
+  Cache-Control: public, max-age=86400
+/og.png
+  Cache-Control: public, max-age=86400
+/og.svg
+  Cache-Control: public, max-age=86400

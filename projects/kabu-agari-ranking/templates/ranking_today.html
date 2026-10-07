@@ -1,6 +1,11 @@
 {% extends "base.html" %}
-{% block title %}本日の{{ heading }} TOP{{ rows|length }}｜東証全市場{% endblock %}
-{% block description %}{{ rec_date_ja }}の{{ heading }}上位{{ rows|length }}銘柄。{{ summary }}{% endblock %}
+{# **いつのデータかを見出しに入れる。** 「本日の」だけだと、検索結果に並んだとき
+   先週のページと見分けが付かない。毎営業日16時に更新しているのが伝わらない。
+   ただし**「本日の」は外さない**。外すと同じ日の日別アーカイブ
+   （「2026-10-02の値上がりランキング」）と見分けが付かなくなる。 #}
+{% block title %}本日の{{ heading }} {{ rec_date_short_ja }} TOP{{ rows|length }}{% endblock %}
+{# 見出しから外した「東証全市場」はここで名乗る（見出しは日付を優先した）。 #}
+{% block description %}{{ rec_date_ja }}の{{ heading }}上位{{ rows|length }}銘柄（東証プライム・スタンダード・グロース）。{{ summary }}{% endblock %}
 {% block structured_data %}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ItemList","name":{{ (rec_date ~ " " ~ heading)|tojson }},"numberOfItems":{{ rows|length }},"itemListElement":[{% for row in rows %}{"@type":"ListItem","position":{{ row.rank }},"name":{{ (row.name ~ "（" ~ row.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}
@@ -22,6 +27,12 @@
 </ul>
 {% endif %}
 {% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
+{% if stop_note %}
+<p class="stop-note">
+  この日{{ stop_note.term }}になったのは<strong>{{ stop_note.count }}銘柄</strong>です{% if stop_note.outside %}（うち{{ stop_note.outside }}銘柄はこの表の外）{% endif %}。
+  <a href="{{ base_url }}{{ stop_note.href }}">{{ stop_note.term }}の記録を見る →</a>
+</p>
+{% endif %}
 {% include "_ranking_table.html" %}
 {% if chart %}
 <figure class="chart-figure">
@@ -42,7 +53,11 @@
   <figcaption>1日あたりの「10%以上動いた銘柄」の数（上位30銘柄のうち）</figcaption>
 </figure>
 {% endif %}
-<p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}を見る →</a></p>
+{% if calendar %}
+<h2>日付から探す</h2>
+{% include "_calendar.html" %}
+{% endif %}
+<p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}をすべて見る →</a></p>
 <p>
   {{ intro }}
   用語の意味は<a href="{{ base_url }}glossary.html">用語解説</a>、

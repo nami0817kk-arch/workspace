@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 import eligibility
+import extras
 import premium
 import render
 import site_config
@@ -21,7 +22,7 @@ def site(tmp_path, monkeypatch):
 
 def test_計算機ページが生成される(site):
     html = (site / "index.html").read_text(encoding="utf-8")
-    assert "加入判定チェッカー" in html
+    assert "パートの社会保険 計算機" in html
     assert 'id="calc-form"' in html
 
 
@@ -160,3 +161,259 @@ def test_都道府県は47すべて選べる(site):
     html = (site / "index.html").read_text(encoding="utf-8")
     for pref in premium.PREFECTURES:
         assert f'<option value="{pref}"' in html, pref
+
+
+def test_月収別のページが8万から25万まで(site):
+    for m in render.AMOUNTS_MAN:
+        assert (site / "getsushu" / f"{m}man.html").exists(), m
+    assert (site / "getsushu" / "index.html").exists()
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert f"<loc>{site_config.SITE_URL}/getsushu/10man</loc>" in xml
+
+
+def test_月収10万円_東京の保険料が円単位で出る(site):
+    # 令和8年度・東京: 標準報酬 98,000円 → 健保 4,826（4,826.5 の50銭は切り捨て）+ 支援金 113 + 厚年 8,967
+    html = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert "東京なら月 13,906円 引かれて、手取りは 85,594円" in html
+    for pref in premium.PREFECTURES:
+        assert f"<th>{extras.pref_full(pref)}</th>" in html, pref
+    assert "<strong>85,594円" in html  # 雇用保険料 500円（5/1,000）も引いた手取りの目安
+    assert "年約6,445円増えます" in html
+    assert "月8,953円安く" in html  # 国民年金 17,920円 − 厚生年金 8,967円
+
+
+def test_どのページからも月収別の一覧へ行ける(site):
+    for name in ("index.html", "faq.html"):
+        assert "getsushu/index.html" in (site / name).read_text(encoding="utf-8")
+
+
+def test_計算方法と更新履歴のページ(site):
+    html = (site / "keisan.html").read_text(encoding="utf-8")
+    for src in ("kyoukaikenpo.or.jp", "mhlw.go.jp/content/001692566.pdf", "nenkin.go.jp", "nta.go.jp"):
+        assert src in html, src
+    assert "更新履歴" in html
+    assert "keisan.html" in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_計算機に時給の入力と正式な都道府県名(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'id="hourly"' in html
+    assert '<option value="東京" selected>東京都</option>' in html
+    assert 'id="extras-data"' in html
+
+
+def test_月収20万円のページに所得税と手取り(site):
+    html = (site / "getsushu" / "20man.html").read_text(encoding="utf-8")
+    assert "</span></th><td>3,290円" in html  # 所得税
+    assert "<strong>167,330円</strong>" in html  # 200,000 − 28,380 − 1,000 − 3,290
+
+
+def test_計算機に通勤手当と扶養の人数(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'id="commute"' in html and 'id="dependents"' in html
+
+
+def test_週20時間の壁のページ(site):
+    for h in render.KABE_HOURLY:
+        assert (site / "kabe" / f"{h}yen.html").exists(), h
+    html = (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert "週20時間にすると手取りは月 9,617円 減る。週22.5時間で元に戻る" in html
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert f"<loc>{site_config.SITE_URL}/kabe/1100yen</loc>" in xml
+
+
+def test_共有画像とパンくずの構造化データ(site):
+    assert (site / "static" / "og.png").exists()
+    html = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert f'<meta property="og:image" content="{site_config.SITE_URL}/static/og.png">' in html
+    m = re.search(r'<script type="application/ld\+json">(\{"@context": "https://schema.org", "@type": "BreadcrumbList".*?)</script>', html)
+    assert m, "BreadcrumbList が無い"
+    items = json.loads(m.group(1))["itemListElement"]
+    assert [i["name"] for i in items] == ["計算機", "月収別の保険料", "月収10万円"]
+    assert items[-1]["item"] == f"{site_config.SITE_URL}/getsushu/10man"
+    assert items[1]["item"] == f"{site_config.SITE_URL}/getsushu/"
+
+
+def test_図が入っている(site):
+    amount = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert 'class="bar100"' in amount and "手取り <strong>85,594円</strong>" in amount  # 月収の行き先
+    assert 'class="hbars"' in amount and "国民年金（自分で払う）" in amount  # 国民年金と厚生年金
+    wall = (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert wall.count('class="fill-s2"') + wall.count('class="fill-s1"') + wall.count('class="fill-base"') >= 8
+    assert "週20時間: 手取り 80,950円（週19時間より−9,617円）" in wall  # 棒にマウスを乗せたときの値
+    for name in ("index.html", "year/2029-10.html"):
+        assert 'class="timeline"' in (site / name).read_text(encoding="utf-8"), name
+    assert (site / "static" / "charts.js").exists()
+    assert 'src="static/charts.js"' in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_図の色はライトとダークの両方で決めてある(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert html.count("--s1:") == 2  # ライトとダーク
+
+
+def test_トップに早見表と週20時間の壁とよくある質問(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert "<title>パートの社会保険はいくら引かれる？計算" in html
+    assert 'href="getsushu/10man.html">10万円</a><span class="sub">年収120万円</span>' in html
+    assert "月9,617円減り" in html and "週22.5時間" in html
+    faq = (site / "faq.html").read_text(encoding="utf-8")
+    for anchor in ("q-106", "q-130", "q-student", "q-small", "q-takehome", "q-oct", "q-20h", "q-low"):
+        assert f'id="{anchor}"' in faq, anchor
+    for anchor in re.findall(r'faq\.html#([\w-]+)', html):
+        assert f'id="{anchor}"' in faq, anchor  # トップからのリンク先が faq にある
+
+
+def test_最終更新日とsitemapのlastmod(site):
+    assert f"最終更新 {render._env.globals['updated']}" in (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert xml.count("<lastmod>") == xml.count("<loc>")
+    assert f"<lastmod>{render.UPDATED}</lastmod>" in xml
+
+
+def test_月収別と週20時間の壁が互いにリンクする(site):
+    amount = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert "年収120万円" in amount and 'kabe/index.html' in amount
+    wall = (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert 'getsushu/10man.html">月収10万円の保険料の内訳' in wall
+
+
+def test_説明文とタイトルの長さ(site):
+    # 検索で呼び込むページだけ見る（404・問い合わせ・運営者・プライバシーは対象外）
+    skip = {"404.html", "contact.html", "operator.html", "privacy.html"}
+    for path in site.rglob("*.html"):
+        if path.name in skip:
+            continue
+        html = path.read_text(encoding="utf-8")
+        m = re.search(r'<meta name="description" content="([^"]*)"', html)
+        assert m and 40 <= len(m.group(1)) <= 160, (path, len(m.group(1)) if m else None)
+        t = re.search(r"<title>(.*?)</title>", html, re.S).group(1)
+        assert len(t) <= 70, (path, len(t))
+
+
+def test_計算機の新しいレイアウト(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'class="hero-band"' in html and 'class="calc-layout"' in html
+    assert 'id="summary"' in html and 'id="mobile-bar"' in html
+    assert '<details class="more">' in html  # 詳しい入力はたたむ
+    for page in ("index.html", "getsushu/10man.html", "kabe/1100yen.html"):
+        assert html.count('class="card-link"') == 6 if page == "index.html" else True
+        assert 'class="card-link"' in (site / page).read_text(encoding="utf-8"), page
+
+
+def test_indexnowのキーファイルがサイト直下にある(site):
+    key = site_config.INDEXNOW_KEY
+    assert re.fullmatch(r"[0-9a-f]{32}", key)
+    assert (site / f"{key}.txt").read_text(encoding="utf-8") == key
+
+
+def test_年収別の手取り早見表(site):
+    html = (site / "nenshu.html").read_text(encoding="utf-8")
+    assert "<title>パートの年収別 手取り早見表" in html
+    rows = render._nenshu_rows(premium.TABLES[-1].valid_from)
+    by = {r["man"]: r for r in rows}
+    # 入る場合は保険料の分だけ手取りが少ない。130万円以上は扶養内の列を出さない
+    assert by[120]["net_in"] < by[120]["net_out"] <= 1_200_000
+    assert by[130]["net_out"] is None and by[200]["net_out"] is None
+    assert f'{by[120]["net_in"]:,}円' in html
+    assert "108,333円" in html  # 130万円の壁の月額（130万÷12）
+    assert f"<loc>{site_config.SITE_URL}/nenshu</loc>" in (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert 'href="nenshu.html"' in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_加入条件と等級表のページ(site):
+    html = (site / "jyoken.html").read_text(encoding="utf-8")
+    assert "<h1>パートの社会保険の加入条件</h1>" in html
+    for m in eligibility.MILESTONES:
+        assert f"{m.effective_from.year}年{m.effective_from.month}月" in html
+    g = (site / "hyoujun.html").read_text(encoding="utf-8")
+    # 4等級（標準 88,000円）: 月収9万円の計算機の既定値と同じ 12,487円
+    assert "<th>4（1）</th><td>88,000円</td>" in g and "12,487円" in g
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    for p in ("jyoken", "hyoujun"):
+        assert f"<loc>{site_config.SITE_URL}/{p}</loc>" in xml
+
+
+def test_手取りからの逆算は届く最小の月収(site):
+    as_of = premium.TABLES[-1].valid_from
+    for r in render._reverse_rows(as_of):
+        target = r["net_man"] * 10_000
+        assert render._net_monthly(as_of, r["pay"]) >= target
+        assert render._net_monthly(as_of, r["pay"] - 100) < target
+    assert "手取り◯万円にするには月収いくら" in (site / "getsushu" / "index.html").read_text(encoding="utf-8")
+
+
+def test_faqの構造化データは見出しと同じ数(site):
+    html = (site / "faq.html").read_text(encoding="utf-8")
+    n = len(re.findall(r'<h2 id="q-', html))
+    blocks = [json.loads(b) for b in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)]
+    faq = [b for b in blocks if b.get("@type") == "FAQPage"][0]
+    assert len(faq["mainEntity"]) == n >= 14
+    assert all(q["acceptedAnswer"]["text"] for q in faq["mainEntity"])
+    assert '"@type":"WebApplication"' in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_計算機の入力例と共有とページからの直リンク(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert html.count("data-preset=") == 4 and 'id="copy-link"' in html
+    assert 'href="../index.html?w=100000"' in (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert 'href="../index.html?h=20&amp;hr=1100"' in (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert "入る・40〜64歳" in (site / "nenshu.html").read_text(encoding="utf-8")
+
+
+def test_長いページに目次が入りidが重ならない(site):
+    for rel in ("getsushu/10man.html", "kabe/1100yen.html", "nenshu.html", "jyoken.html"):
+        html = (site / rel).read_text(encoding="utf-8")
+        toc = re.search(r'<nav class="toc" aria-label="このページの目次">.*?</nav>', html, re.S)
+        assert toc, rel
+        ids = re.findall(r'<h2 id="([^"]+)"', html)
+        assert len(ids) == len(set(ids)), rel
+        for target in re.findall(r'href="#([^"]+)"', toc.group(0)):
+            assert f'id="{target}"' in html, (rel, target)
+
+
+def test_計算機に年収の壁と1日の時間(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert "function wallsHtml(" in html and 'id="per-day"' in html and 'id="days"' in html
+    for wall in ("1360000", "1300000", "1690000", "1780000"):
+        assert wall in html
+    assert "【2026年版】" in html
+
+
+def test_10月1日の前後で時制を書き分ける(tmp_path, monkeypatch):
+    monkeypatch.setattr(render, "_OUTPUT_DIR", tmp_path / "out")
+    for day, word in (("2026-09-30", "無くなります"), ("2026-10-01", "無くなりました")):
+        monkeypatch.setattr(render, "BUILD_DATE", render.date.fromisoformat(day))
+        render._env.globals["oct_done"] = render.BUILD_DATE >= render.date(2026, 10, 1)
+        render.build_all()
+        hero = re.search(r'<p class="hero-news">(.*?)</p>', (tmp_path / "out" / "index.html").read_text(encoding="utf-8")).group(1)
+        assert word in hero, day
+        assert word in (tmp_path / "out" / "faq.html").read_text(encoding="utf-8"), day
+    render._env.globals["oct_done"] = render.date.today() >= render.date(2026, 10, 1)
+
+
+def test_計算機に賞与の入力(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'id="bonus"' in html and 'id="bonus-times"' in html and "function bonusHtml(" in html
+    assert "['b', 'bonus']" in html
+    assert "標準賞与額" in (site / "keisan.html").read_text(encoding="utf-8")
+
+
+def test_スマホで横にはみ出さない指定(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    # 1列のときも grid の列を minmax(0, 1fr) にしないと、長い選択肢で入力欄が画面より広がる
+    assert ".calc-layout { display: grid; grid-template-columns: minmax(0, 1fr);" in html
+    # 目次は nav の中だが、長い質問は折り返す（nav a の nowrap を打ち消す）
+    assert "nav.toc a { white-space: normal;" in html
+
+
+def test_損得のページと検索向けの見出し(site):
+    html = (site / "sontoku.html").read_text(encoding="utf-8")
+    assert "<title>パートが社会保険に入ると損？" in html
+    assert "約16.7年" in html and "2,180円" in html  # 月収10万円: 傷病手当金の日額
+    assert f"<loc>{site_config.SITE_URL}/sontoku</loc>" in (site / "sitemap.xml").read_text(encoding="utf-8")
+    g = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert "<title>パート月収10万円、社会保険はいくら引かれる？手取りは月85,594円【2026年度】</title>" in g
+    assert "いくら引かれる" in re.search(r"<title>(.*?)</title>", (site / "index.html").read_text(encoding="utf-8")).group(1)
+    y = (site / "year" / "2026-10.html").read_text(encoding="utf-8")
+    assert "<title>106万円の壁は2026年10月1日に撤廃" in y

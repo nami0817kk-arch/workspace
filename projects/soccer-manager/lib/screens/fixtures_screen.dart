@@ -270,7 +270,12 @@ class FixturesScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ),
-                        title: Text(team.name),
+                        title: Text(
+                    team.name,
+                    style: TextStyle(
+                      fontWeight: isUser ? FontWeight.w800 : FontWeight.w600,
+                    ),
+                  ),
                         subtitle: Text(
                           Tr.pick('予測勝点 ${p.avgFinalPoints.toStringAsFixed(1)}',
                               'Projected points ${p.avgFinalPoints.toStringAsFixed(1)}'),
@@ -402,15 +407,23 @@ class _StandingsTab extends StatelessWidget {
               }
               final row = Container(
                 decoration: BoxDecoration(
+                  // 自分の行は、20行の中から一目で見つかる必要がある。
+                  // 薄い色だけだと、昇格圏の帯に紛れて見失っていた。
                   color: isUser
                       ? Theme.of(context)
                           .colorScheme
                           .primaryContainer
-                          .withValues(alpha: 0.4)
+                          .withValues(alpha: 0.72)
                       : null,
-                  border: zoneColor == null
-                      ? null
-                      : Border(left: BorderSide(color: zoneColor, width: 4)),
+                  border: Border(
+                    left: BorderSide(
+                      color: zoneColor ??
+                          (isUser
+                              ? Theme.of(context).colorScheme.primary
+                              : Colors.transparent),
+                      width: 4,
+                    ),
+                  ),
                 ),
                 child: ListTile(
                   leading: SizedBox(
@@ -420,7 +433,23 @@ class _StandingsTab extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(width: 20, child: Text('${i + 1}')),
+                        SizedBox(
+                          width: 20,
+                          // 順位は縦に並べて読む数字。等幅にしないと
+                          // 1桁と2桁で頭の位置がずれる。
+                          child: Text(
+                            '${i + 1}',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontFamily: 'NotoSansJP',
+                              fontWeight:
+                                  isUser ? FontWeight.w800 : FontWeight.w600,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures()
+                              ],
+                            ),
+                          ),
+                        ),
                         const SizedBox(width: 6),
                         ClubEmblem(
                           teamId: team.id,
@@ -430,7 +459,12 @@ class _StandingsTab extends StatelessWidget {
                       ],
                     ),
                   ),
-                  title: Text(team.name),
+                  title: Text(
+                    team.name,
+                    style: TextStyle(
+                      fontWeight: isUser ? FontWeight.w800 : FontWeight.w600,
+                    ),
+                  ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -475,9 +509,31 @@ class _StandingsTab extends StatelessWidget {
                       ),
                     ],
                   ),
-                  trailing: Text(
-                    Tr.pick('${r.points}pt', Tr.plural(r.points, 'pt')),
-                    style: Theme.of(context).textTheme.titleMedium,
+                  // 勝点は一覧でいちばん見る数字。明朝の titleMedium だと
+                  // 添え物に見えていた。太いゴシックの等幅にする。
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${r.points}',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansJP',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          height: 1.0,
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                      Text(
+                        Tr.pick('pt', 'pts'),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: SemanticColors.subtleText(context),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );

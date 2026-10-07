@@ -9004,9 +9004,14 @@ void main() {
     // 上がり続けていた(実測)。長期でも頭打ちになることを確認する。
     double longRunDrift() {
       const longSeasons = 24;
+      // **3クラブでは足りない。** CI で 12.14 を記録して落ちた(手元で
+      // 8回測ったときは 6.45〜9.22 で、上限 12.0 に収まっていた)。
+      // 12クラブにすると 6.33〜8.68 に締まる。上限は緩めない。
+      // 基準を緩めると、本当にインフレしたときに気づけなくなる。
+      const teams = 12;
       double startSum = 0;
       double endSum = 0;
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < teams; i++) {
         final team = PlayerGenerator.generateSquad(
           id: 'cpuLong$i',
           name: 'CPU長期$i FC',
@@ -9024,7 +9029,7 @@ void main() {
         }
         endSum += avgOverall(team);
       }
-      return (endSum - startSum) / 3;
+      return (endSum - startSum) / teams;
     }
 
     final longDrift = longRunDrift();
@@ -10849,7 +10854,12 @@ void main() {
     // ことを固定する。
     double growthOver(String mode, {int facilityLevel = 3}) {
       // 1人あたりの成長は乱数のブレが大きいので、多めの人数で平均する。
-      const cohort = 60;
+      //
+      // **60人では足りなかった。** 下の「放置した控えより良い」の判定だけ
+      // 余裕が薄く、60人だと余裕が -0.13〜+1.35 まで振れて CI で落ちた
+      // (2026-10-03)。300人にすると +0.80〜+1.04 に収まる。
+      // 1回あたり 0.25 秒ほどで、テスト全体では 1秒強しか増えない。
+      const cohort = 300;
       const seasons = 4;
       final team = Team(id: 'ca8$mode$facilityLevel', name: 'CA8', players: []);
       for (var i = 0; i < cohort; i++) {

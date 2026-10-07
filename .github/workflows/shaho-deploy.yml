@@ -14,6 +14,9 @@ on:
       - "projects/shaho-tekiyo/data/**"
       - "projects/shaho-tekiyo/requirements.txt"
       - ".github/workflows/shaho-deploy.yml"
+  # 毎日 0:05（日本時間）に作り直す。10月1日などの日付で文面の時制や「いまの段階」の図が変わるため
+  schedule:
+    - cron: "5 15 * * *"
   workflow_dispatch: {}
 
 concurrency:
@@ -22,6 +25,8 @@ concurrency:
 
 permissions:
   contents: read
+  # 失敗を Issue で知らせるために必要
+  issues: write
 
 jobs:
   build:
@@ -63,6 +68,12 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: projects/shaho-tekiyo
           command: pages deploy output --project-name=shaho-tekiyo --branch=master
+
+      - name: Notify search engines (IndexNow)
+        # Bing・Yandex・Naver などに sitemap の URL を知らせる。失敗しても公開は止めない（スクリプト側で握る）
+        # 毎日の作り直しでは送らない（中身が変わっていない URL を毎日送ると送りすぎになる）
+        if: github.event_name != 'schedule'
+        run: python tools/indexnow.py
 
       - name: Notify on failure
         if: failure()

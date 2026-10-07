@@ -15,18 +15,24 @@ class Monetization extends ChangeNotifier {
       _purchases = purchases ?? createPurchaseService();
 
   static const String _noAdsKey = 'monetize.noAds';
-  static const String _tipsKey = 'monetize.tips';
 
-  /// **最初の数シーズンは広告を出さない。**
+  /// **何シーズン終えたら広告を出し始めるか。**
   ///
-  /// 始めたばかりの人にとって、シーズンの切れ目は「続きが見たい」瞬間そのもの。
-  /// ここで広告を挟むと、まだ面白さが分かる前に離れる。
-  static const int freeSeasons = 3;
+  /// 前は `freeSeasons = 3`（＝最初の2回の季末が無料）だったが、
+  /// **広告が出る場所は季末しか無く、1キャリアは 18.6季**なので、
+  /// 無料にするぶんがそのまま上限を削る。1 にして「1季目の終わりから」
+  /// にした（2026-09-26、ユーザーの判断「少し上げる」）。
+  ///
+  /// 数え方は `seasonsPlayed >= adsFromSeason`。1季目を終えた時点で
+  /// `seasonsPlayed == 1` なので、**1 なら1季目の終わりから出る**。
+  static const int adsFromSeason = 1;
 
   /// 広告と広告のあいだに必ず空ける時間。
   ///
   /// シーズンは自動で飛ばせるので、間隔を置かないと連続で出る。
-  static const Duration adInterval = Duration(minutes: 4);
+  /// **ここは遊ぶ側を守るための線**で、飛ばして遊ぶ人にだけ効く
+  /// （1シーズンを手で進めれば数十分かかるので、普通は当たらない）。
+  static const Duration adInterval = Duration(minutes: 3);
 
   final AdService _ads;
   final PurchaseService _purchases;
@@ -35,9 +41,6 @@ class Monetization extends ChangeNotifier {
 
   /// 広告を消す買い切りを持っているか。
   bool noAds = false;
-
-  /// 応援を受け取った回数。**ゲームには何も効かない。**
-  int tips = 0;
 
   /// ストアが使えるか。使えない環境では購入の導線を出さない。
   bool storeAvailable = false;
@@ -53,10 +56,13 @@ class Monetization extends ChangeNotifier {
   Future<void> initialize() async {
     final prefs = await SharedPreferences.getInstance();
     noAds = prefs.getBool(_noAdsKey) ?? false;
-    tips = prefs.getInt(_tipsKey) ?? 0;
 
     if (!noAds) await _ads.initialize();
-    await _purchases.initialize();
+    // **受け取るのはここ1か所（`_grant`）。** 買った瞬間に `buy()` の側で
+    // 渡していた頃、アプリを落としている間に決済が通った購入は誰も
+    // 受け取らなかった。`initialize` の引数にしてあるので、渡し忘れると
+    // コンパイルが通らない。
+    await _purchases.initialize(onDelivered: _grant, onRevoked: _revoke);
     storeAvailable = await _purchases.isAvailable();
     if (storeAvailable) {
       for (final product in Product.values) {
@@ -75,7 +81,7 @@ class Monetization extends ChangeNotifier {
   /// 「4分あいているか」を確かめる方法が無くなる。
   bool shouldShowSeasonAd({required int seasonsPlayed, DateTime? now}) {
     if (noAds) return false;
-    if (seasonsPlayed < freeSeasons) return false;
+    if (seasonsPlayed < adsFromSeason) return false;
     final last = _lastAd;
     if (last == null) return true;
     return (now ?? DateTime.now()).difference(last) >= adInterval;
@@ -85,41 +91,54 @@ class Monetization extends ChangeNotifier {
   ///
   /// 在庫が無ければ [AdService] 側が何もせずに戻るので、広告のせいで
   /// シーズンが進まなくなることはない。
-  Future<void> showSeasonAd({required int seasonsPlayed, DateTime? now}) async {
-    if (!shouldShowSeasonAd(seasonsPlayed: seasonsPlayed, now: now)) return;
-    // **出したことにするのは、出す前。** 出したあとに記録すると、
-    // 在庫切れで即座に戻ったときに間隔が空かず、次のシーズンでまた出る。
-    _lastAd = now ?? DateTime.now();
-    await _ads.showInterstitial();
-  }
-
-  Future<PurchaseOutcome> buy(Product product) async {
-    final outcome = await _purchases.buy(product);
-    if (outcome != PurchaseOutcome.purchased) return outcome;
-    switch (product) {
-      case Product.noAds:
-        await _markNoAds();
-      case Product.tip:
-        tips++;
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setInt(_tipsKey, tips);
-        notifyListeners();
+  ///
+  /// **実際に出せたら true。** 呼ぶ側がこれを見て、広告を閉じた直後に
+  /// 星を頼まないようにしている（`ReviewPrompt`）。
+  Future<bool> showSeasonAd({
+    required int seasonsPlayed,
+    DateTime? now,
+  }) async {
+    if (!shouldShowSeasonAd(seasonsPlayed: seasonsPlayed, now: now)) {
+      return false;
     }
-    return outcome;
+    final at = now ?? DateTime.now();
+    // **出せた回だけ間隔を数える。** 前は出す前に記録していたので、
+    // 在庫が無くて何も起きなかった回まで「出した」ことになり、
+    // **見せていないのに次の機会が潰れていた**（広告の在庫は毎回あるとは
+    // 限らないので、そのぶんそのまま収入が消える）。
+    // 遊ぶ側から見ても、出ていないものを数える理由は無い。
+    if (!await _ads.showInterstitial()) return false;
+    _lastAd = at;
+    return true;
   }
 
-  Future<PurchaseOutcome> restore() async {
-    final outcome = await _purchases.restore();
-    if (outcome == PurchaseOutcome.purchased) await _markNoAds();
-    return outcome;
-  }
+  /// 買う。**受け取るのは [_grant] のほう**なので、ここでは結果を返すだけ。
+  Future<PurchaseOutcome> buy(Product product) => _purchases.buy(product);
 
-  Future<void> _markNoAds() async {
+  Future<PurchaseOutcome> restore() => _purchases.restore();
+
+  /// 届いたものを受け取る。ストアから流れてきたぶんも、買った直後のぶんも、
+  /// 復元したぶんも、全部ここを通る。
+  Future<void> _grant(Product product) async {
+    if (product != Product.noAds) return;
+    if (noAds) return;
     noAds = true;
     // もう出さないので、読み込み済みの広告も手放す。
     _ads.dispose();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_noAdsKey, true);
+    notifyListeners();
+  }
+
+  /// 返金・取り消しで戻す。**買った状態のまま残さない。**
+  Future<void> _revoke(Product product) async {
+    if (product != Product.noAds) return;
+    if (!noAds) return;
+    noAds = false;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_noAdsKey, false);
+    // 買った時点で手放しているので、広告を出せるように初期化し直す。
+    await _ads.initialize();
     notifyListeners();
   }
 

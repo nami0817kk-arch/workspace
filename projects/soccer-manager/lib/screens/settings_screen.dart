@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../services/review_prompt.dart';
 import '../l10n/tr.dart';
 import '../state/game_state.dart';
 import '../state/settings_controller.dart';
@@ -18,6 +19,8 @@ import '../monetization/ad_service.dart';
 const String _privacyPolicyUrl =
     'https://soccer-manager.pages.dev/legal/privacy.html';
 const String _termsUrl = 'https://soccer-manager.pages.dev/legal/terms.html';
+const String _supportUrl =
+    'https://soccer-manager.pages.dev/legal/support.html';
 
 /// 表示・操作設定とセーブデータ管理をまとめた画面。
 class SettingsScreen extends StatelessWidget {
@@ -189,6 +192,7 @@ class SettingsScreen extends StatelessWidget {
           Card(
             child: Column(
               children: [
+                if (gameState.save != null) const _RestorePointTiles(),
                 ListTile(
                   leading: const Icon(Icons.copy_all_outlined),
                   title: Text(
@@ -333,6 +337,24 @@ class SettingsScreen extends StatelessWidget {
           Card(
             child: Column(
               children: [
+                // **評価への道を1本置く。** OS の窓は年3回までに絞られて
+                // いて、出ないこともある。公開から10日で評価0件だった
+                // ので、自分から書きに行ける道を用意する。
+                ListTile(
+                  leading: const Icon(Icons.star_outline),
+                  title: Text(Tr.pick('このアプリを評価する', 'Rate this app')),
+                  subtitle: Text(Tr.pick('App Store のページを開きます',
+                      'Opens the App Store page')),
+                  trailing: const Icon(Icons.open_in_new, size: 16),
+                  onTap: () => ReviewPrompt().openStoreListing(),
+                ),
+                // 困った人が、星1つを付ける前に辿り着ける窓口。
+                ListTile(
+                  leading: const Icon(Icons.mail_outline),
+                  title: Text(Tr.pick('お問い合わせ', 'Contact support')),
+                  trailing: const Icon(Icons.open_in_new, size: 16),
+                  onTap: () => _openLink(context, _supportUrl),
+                ),
                 ListTile(
                   leading: const Icon(Icons.privacy_tip_outlined),
                   title: Text(Tr.pick('プライバシーポリシー', 'Privacy policy')),
@@ -499,6 +521,133 @@ class SettingsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// 端末の中に1つだけ置ける控え(復元ポイント)の操作。
+///
+/// 既にあるクリップボードへの書き出しは端末を移すためのもので、1MBを
+/// 超えるJSONを自分でどこかへ保管しなければならない。「大型補強の前に
+/// 念のため」という使い方には重すぎるので、押すだけで取れて押すだけで
+/// 戻せる場所を用意する。
+class _RestorePointTiles extends StatelessWidget {
+  const _RestorePointTiles();
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    return FutureBuilder<RestorePointInfo?>(
+      future: gameState.restorePointInfo(),
+      builder: (context, snapshot) {
+        final info = snapshot.data;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.bookmark_add_outlined),
+              title: Text(Tr.pick('この端末に控えを取る', 'Save a restore point')),
+              subtitle: Text(
+                info == null
+                    ? Tr.pick('移籍や大事な試合の前に、戻れる地点を1つ作れます',
+                        'Keep one point you can come back to')
+                    : Tr.pick('いまの控え: ${_describe(info)}',
+                        'Current point: ${_describe(info)}'),
+              ),
+              onTap: () => _take(context, replacing: info),
+            ),
+            if (info != null)
+              ListTile(
+                leading: const Icon(Icons.history),
+                title: Text(Tr.pick('控えの時点に戻す', 'Go back to that point')),
+                subtitle: Text(Tr.pick('控えを取ってからの進行は失われます',
+                    'Anything since then will be lost')),
+                onTap: () => _confirmRestore(context, info),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  static String _describe(RestorePointInfo info) {
+    final t = info.takenAt;
+    final date = '${t.year}/${t.month.toString().padLeft(2, '0')}/'
+        '${t.day.toString().padLeft(2, '0')} '
+        '${t.hour.toString().padLeft(2, '0')}:'
+        '${t.minute.toString().padLeft(2, '0')}';
+    final where = info.matchday == null
+        ? Tr.pick('${info.season}年目 シーズン終了後',
+            'season ${info.season}, after the final matchday')
+        : Tr.pick('${info.season}年目 第${info.matchday}節の前',
+            'season ${info.season}, before matchday ${info.matchday}');
+    return '$date($where)';
+  }
+
+  Future<void> _take(BuildContext context,
+      {required RestorePointInfo? replacing}) async {
+    final gameState = context.read<GameState>();
+    final messenger = ScaffoldMessenger.of(context);
+    if (replacing != null) {
+      // 控えは1つしか置けない。取り直すと前の地点へは戻れなくなる。
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(Tr.pick('控えを取り直しますか？', 'Replace the restore point?')),
+          content: Text(Tr.pick('いまの控え(${_describe(replacing)})には戻れなくなります。',
+              'You will no longer be able to return to ${_describe(replacing)}.')),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(Tr.pick('キャンセル', 'Cancel')),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(Tr.pick('取り直す', 'Replace')),
+            ),
+          ],
+        ),
+      );
+      if (ok != true) return;
+    }
+    final saved = await gameState.saveRestorePoint();
+    messenger.showSnackBar(SnackBar(
+      content: Text(saved
+          ? Tr.pick('控えを取りました', 'Restore point saved')
+          : Tr.pick('控えを取れませんでした。端末の空き容量を確認してください。',
+              'Could not save the restore point. Check the free space on your device.')),
+    ));
+  }
+
+  Future<void> _confirmRestore(
+      BuildContext context, RestorePointInfo info) async {
+    final gameState = context.read<GameState>();
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(Tr.pick('控えの時点に戻しますか？', 'Go back to that point?')),
+        content: Text(Tr.pick(
+            '${_describe(info)}の状態に戻します。それ以降の試合・移籍・育成は失われ、この操作は取り消せません。',
+            'This returns you to ${_describe(info)}. Matches, transfers and training since then will be lost, and this cannot be undone.')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(Tr.pick('キャンセル', 'Cancel')),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(Tr.pick('戻す', 'Go back')),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    final restored = await gameState.restoreFromRestorePoint();
+    messenger.showSnackBar(SnackBar(
+      content: Text(restored
+          ? Tr.pick('控えの時点に戻しました', 'Went back to the restore point')
+          : Tr.pick('控えを読み込めませんでした', 'The restore point could not be read')),
+    ));
   }
 }
 

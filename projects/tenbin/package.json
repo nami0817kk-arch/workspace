@@ -1,0 +1,15 @@
+{
+  "name": "tenbin",
+  "private": true,
+  "description": "てんびんタワーの試作と道具（物理の自動試験・写真の輪郭取り）",
+  "scripts": {
+    "sim": "node tool/sim.js 30 smart"
+  },
+  "devDependencies": {
+    "@fontsource/m-plus-rounded-1c": "^5.3.0",
+    "jpeg-js": "^0.4.4",
+    "matter-js": "0.19.0",
+    "pngjs": "^7.0.0",
+    "poly-decomp": "0.3.0"
+  }
+}

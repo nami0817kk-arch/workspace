@@ -1,0 +1,76 @@
+name: dailyquarry-home deploy
+
+# dailyquarry.com（ルート）の入口と ads.txt。push のたびにビルドし直して公開する。
+# カスタムドメイン dailyquarry.com は Cloudflare のダッシュボードで Pages プロジェクトに足す（1回だけ）。
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/dailyquarry-home/src/**"
+      - "projects/dailyquarry-home/templates/**"
+      - "projects/dailyquarry-home/requirements.txt"
+      - ".github/workflows/dailyquarry-home-deploy.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/dailyquarry-home
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Run tests
+        run: pytest
+
+      - name: Build site
+        run: python src/build.py
+
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"dailyquarry-home","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/dailyquarry-home
+          command: pages deploy output --project-name=dailyquarry-home --branch=master
+
+      - name: Notify on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create ci-failure --color B60205 --description "定期実行の失敗" --force || true
+          body="$(date -u '+%Y-%m-%d %H:%M UTC') のビルド・公開が失敗しました。 ログ: ${RUN_URL}"
+          existing=$(gh issue list --label ci-failure --state open --search "dailyquarry-home" --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "dailyquarry-home の公開が失敗しています" --label ci-failure --body "$body"
+          fi

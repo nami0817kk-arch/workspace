@@ -44,6 +44,13 @@ class _FakeAdService implements AdService {
 }
 
 class _FakePurchaseService implements PurchaseService {
+  /// 受け取り口。本物は待っているかどうかに関係なく呼ぶ。
+  @override
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) =>
+      onDeliveredCallback = callback;
+
+  Future<void> Function(String productId, String? purchaseId)? onDeliveredCallback;
+
   _FakePurchaseService({this.outcome = PurchaseOutcome.purchased});
 
   PurchaseOutcome outcome;
@@ -57,8 +64,16 @@ class _FakePurchaseService implements PurchaseService {
   @override
   Future<String?> priceLabel() async => '¥480';
 
+  /// 本物のストアは、結果を返す前に通知で商品を届ける。ここを返すだけに
+  /// すると「払ったのに届かない」形のテストになってしまう。
   @override
-  Future<PurchaseOutcome> buySupporter() async => outcome;
+  Future<PurchaseOutcome> buySupporter() async {
+    if (outcome == PurchaseOutcome.purchased) {
+      await onDeliveredCallback?.call(
+          PurchaseService.supporterProductId, 'tx-${_seq++}');
+    }
+    return outcome;
+  }
 
   @override
   Future<String?> priceLabelFor(FundsPack pack) async => null;
@@ -67,8 +82,20 @@ class _FakePurchaseService implements PurchaseService {
   Future<PurchaseOutcome> buyFundsPack(FundsPack pack) async =>
       PurchaseOutcome.unavailable;
 
+  /// ストアから通知だけが届いた状態(待っている人が居ない)を作る。
+  int _seq = 0;
+
+  Future<void> deliverFromStore(String productId) async =>
+      onDeliveredCallback?.call(productId, 'tx-${_seq++}');
+
   @override
-  Future<PurchaseOutcome> restorePurchases() async => outcome;
+  Future<PurchaseOutcome> restorePurchases() async {
+    if (outcome == PurchaseOutcome.purchased) {
+      await onDeliveredCallback?.call(
+          PurchaseService.supporterProductId, 'tx-${_seq++}');
+    }
+    return outcome;
+  }
 
   @override
   void dispose() {}

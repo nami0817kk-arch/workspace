@@ -1,0 +1,66 @@
+# もじつみ の公開ページ（プライバシーポリシー・サポート・利用規約・app-ads.txt）を
+# Cloudflare Pages の mojitsumi に出す。App Store の提出とアプリ内のリンクが、この URL を指す。
+# ひかりの指名の公開ページのワークフローと同じ形。
+#
+# 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID
+name: もじつみ の公開ページ
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/tenbin/legal/**"
+      - "projects/tenbin/site/**"
+      - ".github/workflows/tenbin-site.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tenbin-site
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: projects/tenbin
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Assemble site
+        run: |
+          mkdir -p dist
+          cp site/* dist/
+          cp legal/*.html dist/
+          ls -la dist
+
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"mojitsumi","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/tenbin
+          command: pages deploy dist --project-name=mojitsumi --branch=master
+
+      # アプリの中のリンクは https://mojitsumi.pages.dev/ を指している。別の名前で作られていたら止める
+      - name: Check the public URLs
+        run: |
+          # 作ったばかりのプロジェクトは、名前が引けるようになるまで数分かかる（2026-10-05 の初回で 20 秒では引けなかった）
+          for i in $(seq 1 30); do curl -fsS -o /dev/null https://mojitsumi.pages.dev/ && break; sleep 10; done
+          for p in privacy.html support.html terms.html app-ads.txt robots.txt; do
+            curl -fsSL "https://mojitsumi.pages.dev/$p" -o /tmp/page || { echo "::error::https://mojitsumi.pages.dev/$p が開けません"; exit 1; }
+          done
+          grep -q "もじつみ" <(curl -fsSL https://mojitsumi.pages.dev/privacy.html) || { echo "::error::mojitsumi.pages.dev がもじつみのページではありません"; exit 1; }
+          curl -fsSL https://mojitsumi.pages.dev/app-ads.txt

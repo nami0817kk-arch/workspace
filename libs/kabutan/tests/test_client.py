@@ -27,3 +27,18 @@ def test_stock_name_falls_back_to_code_on_failure(monkeypatch):
 
     monkeypatch.setattr(client.requests, "get", _boom)
     assert client.fetch_stock_name("7203") == "7203"
+
+
+def test_個別ページの失敗も記録に残す(monkeypatch):
+    """残さないと、取得元が丸ごと落ちているのか、その銘柄のページだけ
+    無いのかを呼び出し元が区別できない（他の取得は記録している）。"""
+    import kabutan.client as client
+
+    def boom(*a, **k):
+        raise RuntimeError("接続できません")
+
+    monkeypatch.setattr(client.requests, "get", boom)
+    client.fetch_errors.clear()
+    assert client.fetch_stock_page("5131") is None
+    assert any("stock code=5131" in e for e in client.fetch_errors)
+    client.fetch_errors.clear()

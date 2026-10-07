@@ -11,6 +11,15 @@ from pathlib import Path
 import pytest
 
 import render
+
+# 見た目は 2026-09-27 に base.html の <style> から static/site.css へ移した
+# （1枚 16.6KB が 200 ページ全部に複製されていた）。CSS を見るテストは
+# ここから読む。**出来上がった output の中身を見る**ので、実際に配られる
+# ものと同じであることが保証される。
+def _built_css(out_dir):
+    files = list(out_dir.glob("site.*.css"))
+    assert len(files) == 1, f"見た目のファイルが {len(files)} 個ある"
+    return files[0].read_text(encoding="utf-8")
 import site_config
 
 
@@ -55,20 +64,26 @@ def test_日付は和暦風の表記と曜日を出す():
 
 
 def test_次回更新予定は次の営業日():
-    assert "2026年9月18日（金）" in render.next_update_note("2026-09-17")
+    """**画面に出ているほう（updated_line）を見る。** 同じことをする関数が
+    2つあり、テストが出ていないほうを見ていた（2026-09-28 に片方を消した）。"""
+    line = render.updated_line("2026-09-17")
+    assert "9月18日（金）" in line
     # 連休を挟まないので、余計な但し書きは付けない
-    assert "休場" not in render.next_update_note("2026-09-17")
+    assert "休場" not in line
 
 
 def test_連休前は休場だと言う():
-    note = render.next_update_note("2026-09-18")
-    assert "2026年9月24日（木）" in note
-    assert "休場" in note
+    """連休中に来た人が「止まったサイト」と思って離れるのを防ぐ。"""
+    line = render.updated_line("2026-09-18")
+    assert "9月24日（木）" in line
+    assert "休場" in line
 
 
-def test_祝日表の範囲外なら黙る():
+def test_祝日表の範囲外なら次回を書かない():
     # 嘘の更新予定を出すくらいなら何も言わない
-    assert render.next_update_note("2030-05-07") == ""
+    line = render.updated_line("2030-05-07")
+    assert "次回" not in line
+    assert "更新: 2030年5月7日" in line
 
 
 def test_要約は首位と件数を数字で言う():
@@ -97,7 +112,9 @@ def test_アーカイブ一覧は年月でまとまる():
 
 # --- 生成物 ---------------------------------------------------------------
 
-def test_審査前は空の広告枠を出さない(site):
+def test_pubIDが空のあいだは広告を出さない(site, monkeypatch):
+    monkeypatch.setattr(render, "ADSENSE_CLIENT", "")
+    monkeypatch.setitem(render._env.globals, "ADSENSE_CLIENT", "")
     data_dir, out_dir = site
     _write_day(data_dir, "2026-09-18")
     render.build_all()
@@ -215,14 +232,17 @@ def test_暗い地の色が定義されている(site):
     _write_day(data_dir, "2026-09-18")
     render.build_all()
 
-    css = (out_dir / "index.html").read_text(encoding="utf-8")
+    css = _built_css(out_dir)
     assert "prefers-color-scheme: dark" in css
     # グラフの2色は明暗それぞれで定義する（片方だけだと暗い地で沈む）
     assert css.count("--chart-gain:") == 2 and css.count("--chart-loss:") == 2
-    assert 'name="color-scheme"' in css
+    # この1つだけは HTML 側（<meta>）。地の色をブラウザに先に伝えるもので、
+    # CSS が届く前に白く光らせないために head に置いてある。
+    assert 'name="color-scheme"' in (out_dir / "index.html").read_text(encoding="utf-8")
 
 
-def test_審査前はadsテキストを置かない(site):
+def test_pubIDが空のあいだはadsテキストを置かない(site, monkeypatch):
+    monkeypatch.setattr(render, "ADSENSE_CLIENT", "")
     data_dir, out_dir = site
     _write_day(data_dir, "2026-09-18")
     render.build_all()
@@ -294,8 +314,60 @@ def test_相場の振り返りは日ごとの数字を持つ():
         "active": [],
     }]
     row = render.market_rows(days)[0]
-    assert row == {"rec_date": "2026-09-18", "big": 1, "stop_high": 1,
-                   "stop_low": 1, "top_pct": 44.25}
+    assert row == {"rec_date": "2026-09-18", "big": 1, "stop_high": 1, "stop_low": 1,
+                   "stop_high_source": "estimated", "stop_low_source": "estimated",
+                   "top_pct": 44.25}
+
+
+def test_相場の振り返りは記録がある日は全件を数える():
+    """ストップ高のページと同じ数え方を使う。別々に数えると、同じ日の件数が
+    ページによって違うという、直しようのない食い違いになる。"""
+    days = [{
+        "rec_date": "2026-09-28",
+        # 値上がり上位30銘柄には1件しか出ていないが、
+        "gainers": [
+            {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+             "change_pct": 44.25, "metric_value": 1},
+        ],
+        "losers": [],
+        "active": [],
+        # 取得元の一覧には3件あった（うち引けまで保ったのは2件）
+        "stop_high": [
+            {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+             "change_pct": 44.25, "at_limit": True},
+            {"rank": 2, "code": "9999", "name": "上位外", "close": 500.0,
+             "change_pct": 20.0, "at_limit": True},
+            {"rank": 3, "code": "8888", "name": "場中だけ", "close": 700.0,
+             "change_pct": 15.0, "at_limit": False},
+        ],
+        "stop_low": [
+            {"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+             "change_pct": -25.08, "at_limit": True},
+        ],
+    }]
+    row = render.market_rows(days)[0]
+    assert row["stop_high"] == 2
+    assert row["stop_low"] == 1
+    assert row["stop_high_source"] == "recorded"
+    assert row["stop_low_source"] == "recorded"
+
+
+def test_相場の振り返りは上下それぞれの出どころを持つ():
+    """片方だけを持っていたため、ストップ安が推定の日にも札が出なかった。"""
+    days = [{
+        "rec_date": "2026-09-28",
+        "gainers": [{"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+                     "change_pct": 44.25, "metric_value": 1}],
+        "losers": [{"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+                    "change_pct": -25.08, "metric_value": 1}],
+        "active": [],
+        # ストップ高は記録できたが、ストップ安のページは1枚も取れなかった日
+        "stop_high": [{"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+                       "change_pct": 44.25, "at_limit": True}],
+    }]
+    row = render.market_rows(days)[0]
+    assert row["stop_high_source"] == "recorded"
+    assert row["stop_low_source"] == "estimated"
 
 
 def test_相場の振り返りの一文は最も荒れた日を指す():
@@ -446,7 +518,7 @@ def test_スマホで一番見たい列が横スクロールの外に出ない(s
     headers = re.findall(r'<th scope="col">([^<]*)</th>', html)
     assert headers[:5] == ["順位", "銘柄名", "コード", "終値", "騰落率"]
     assert headers[5] == "出来高", "最後の列（狭い画面で落とす列）が出来高でなくなっている"
-    assert "max-width: 600px" in html
+    assert "max-width: 600px" in _built_css(out_dir)
 
 
 def test_銘柄ページがある銘柄だけ名前をリンクにする(site):
@@ -594,3 +666,80 @@ def test_広告を本文の先頭に置かない(site, monkeypatch):
     html = (out_dir / "index.html").read_text(encoding="utf-8")
     body = html[html.index("<main"):]
     assert body.index("<table") < body.index("<ins"), "表より先に広告が出ている"
+
+
+def test_案内は本文の後ろに置く(site):
+    """横の案内（rail）が本文より先に来ると、スマホでランキングの前に
+    リンクの列が挟まる。HTML の順序で本文を先にしておく。"""
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert html.index("<main") < html.index('class="rail"')
+    assert html.index("<table") < html.index('class="rail"')
+
+
+def test_アイコンを配る(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert 'rel="icon"' in html
+    assert (Path(__file__).resolve().parents[1] / "static" / "favicon.svg").exists()
+
+
+def test_列幅の指定は広い画面だけに当てる(site):
+    """狭い画面に当てると銘柄名の幅が足りず、毎行2行に折り返す。"""
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    css = _built_css(out_dir)
+    block = css[css.index("余った幅は銘柄名に回し"):]
+    assert "@media (min-width: 601px)" in block[:400]
+
+
+def test_トップのカレンダーは表より後ろ(site):
+    """カレンダーが表より上に来ると、見に来たランキングが押し出される。"""
+    data_dir, out_dir = site
+    for d in ("2026-09-17", "2026-09-18"):
+        _write_day(data_dir, d)
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert html.index("<table") < html.index('class="calendar"')
+    # トップは直近1か月だけ（全期間はアーカイブ一覧）
+    assert html.count('class="cal-month"') == 1
+
+
+def test_姉妹サイトへ戻る線がある(site):
+    """入口からは3サイトへリンクされているのに、こちらから戻る線が無かった。
+
+    読み手が他のものを見つけられないうえ、検索側から見ても一群のサイトとして
+    繋がっていない状態になる。
+    """
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert 'href="https://dailyquarry.com/"' in html
+    # 自分自身は姉妹サイトに並べない
+    assert html.count('href="https://kabu.dailyquarry.com/"') <= 1
+
+
+def test_印刷用のCSSに画面用の定義を混ぜない(tmp_path):
+    """@media print の中に .highlights 一式が丸ごと貼り込まれていた
+    （2026-09-27 に除去）。二重定義は、片方を直したときにもう片方が残る。"""
+    import re
+    css = (Path(__file__).resolve().parents[1] / "static" / "site.css").read_text(
+        encoding="utf-8")
+    block = re.search(r"@media print \{(.*?)\n  \}", css, re.S)
+    assert block, "@media print のブロックが見つからない"
+    body = block.group(1)
+    # 印刷では「落とすもの」と「色を戻すもの」だけを書く。
+    # 画面用のレイアウトをここで組み直さない。
+    assert "grid-template-columns" not in body
+    assert "@media" not in body, "入れ子のメディアクエリが残っている"

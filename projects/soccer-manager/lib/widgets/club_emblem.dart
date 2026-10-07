@@ -50,13 +50,26 @@ class ClubEmblem extends StatelessWidget {
                 motifIndex: motifIndex,
               ),
             ),
+            // 頭文字。濃い縁取りを敷いた上に白を重ねる。影だけだと、
+            // 明るい地の色(黄土・薄緑)の上で輪郭が沈んでいた。
+            Text(
+              initial,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: size * 0.38,
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = size * 0.07
+                  ..strokeJoin = StrokeJoin.round
+                  ..color = _darken(base, 0.45),
+              ),
+            ),
             Text(
               initial,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: size * 0.4,
-                shadows: const [Shadow(color: Colors.black45, blurRadius: 2)],
+                fontSize: size * 0.38,
               ),
             ),
           ],
@@ -64,6 +77,12 @@ class ClubEmblem extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 明度を [factor] 倍する。縁取りと内側の縁に使う。
+Color _darken(Color c, double factor) {
+  final hsl = HSLColor.fromColor(c);
+  return hsl.withLightness((hsl.lightness * factor).clamp(0.0, 1.0)).toColor();
 }
 
 class _EmblemPainter extends CustomPainter {
@@ -163,7 +182,8 @@ class _EmblemPainter extends CustomPainter {
         canvas.restore();
       case 1: // 星
         canvas.drawPath(
-          _starPath(Offset(w / 2, h * 0.32), w * 0.18),
+          // 頭文字に重ならない高さに置く。以前は文字の裏に隠れていた。
+          _starPath(Offset(w / 2, h * 0.21), w * 0.13),
           motifPaint,
         );
       case 2: // 横二分割
@@ -191,14 +211,36 @@ class _EmblemPainter extends CustomPainter {
         canvas.drawRect(Rect.fromLTWH(0, 0, w / 2, h / 2), motifPaint);
         canvas.drawRect(Rect.fromLTWH(w / 2, h / 2, w / 2, h / 2), motifPaint);
     }
+    // 上を明るく、下を暗くする。平らな塗りのままだと、紋章ではなく
+    // 色の付いた図形に見える。
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0x38FFFFFF), Color(0x00FFFFFF), Color(0x2B000000)],
+          stops: [0.0, 0.46, 1.0],
+        ).createShader(Offset.zero & size),
+    );
     canvas.restore();
 
+    // 縁は二重にする。濃い縁の中央に細い白を通すのは実際の紋章の作りで、
+    // これだけで「図形」から「エンブレム」に見え方が変わる。黒の半透明を
+    // 1本引いていた頃は、背景と混ざって灰色のふちどりに見えていた。
     canvas.drawPath(
       path,
       Paint()
-        ..color = Colors.black.withValues(alpha: 0.25)
+        ..color = _darken(base, 0.5)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = size.width * 0.04,
+        ..strokeWidth = size.width * 0.075,
+    );
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = Colors.white.withValues(alpha: 0.82)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = size.width * 0.022,
     );
   }
 

@@ -84,3 +84,40 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: projects/soccer-career
           command: pages deploy build/web --project-name=soccer-career --branch=master
+
+      # **配信されている中身を確かめる。** ファイルを置いたかどうかでは足りない
+      # ——Cloudflare Pages は見つからない経路に index.html を返すので、
+      # 置き忘れると /robots.txt に HTML が返り、**AdMob の「アプリを確認」が
+      # 黙って止まる**（サカマネ・護送ボート・選手キャリアの3本とも踏んだ。
+      # docs/app-pitfalls.md の「AdMob が app-ads.txt を見つけられない」）。テストでは見えない（配信の話なので）。
+      #
+      # 反映に少し間があるので、少し待ってから見る。
+      - name: Check the published site
+        run: |
+          set -euo pipefail
+          host=soccer-career-49p.pages.dev
+          sleep 20
+          fail=0
+          check() { # パス, 期待する Content-Type, 中に含まれる語
+            body=$(curl -sS --max-time 20 "https://$host/$1")
+            type=$(curl -sS --max-time 20 -o /dev/null -w '%{content_type}' "https://$host/$1")
+            case "$type" in
+              *"$2"*) ;;
+              *) echo "::error::/$1 が $type を返している（$2 のはず）"; fail=1; return;;
+            esac
+            case "$body" in
+              *"$3"*) echo "  OK  /$1";;
+              *) echo "::error::/$1 に $3 が無い"; fail=1;;
+            esac
+          }
+          check robots.txt text/plain Google-adstxt
+          check app-ads.txt text/plain pub-6409014819339195
+          code=$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' \
+            "https://$host/this-path-does-not-exist")
+          if [ "$code" = "404" ]; then
+            echo "  OK  無い経路は 404"
+          else
+            echo "::error::無い経路が $code を返している（404.html が効いていない）"
+            fail=1
+          fi
+          exit $fail

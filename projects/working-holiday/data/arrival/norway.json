@@ -1,0 +1,90 @@
+{
+  "id": "norway",
+  "steps": [
+    {
+      "title": "ID確認を受けてD番号（D number）を取得する",
+      "body": "ノルウェーで就労する外国人は、税務署（skattekontor）等でID確認（ID-check）を受け、永住者向けの国民識別番号（national identity number）の要件を満たさない場合はD番号（D number）が発行される。この番号が税控除カードや各種登録の前提となる。",
+      "url": "https://www.skatteetaten.no/en/person/foreign/are-you-intending-to-work-in-norway/what-do-i-need-to-do/"
+    },
+    {
+      "title": "税控除カード（tax deduction card）を取得する",
+      "body": "ノルウェーで働くほとんどの人は税控除カードが必要。ノルウェーの識別番号（D numberまたは国民識別番号）を取得したうえで、税務当局（Skatteetaten）のオンラインサービスまたは窓口で申請する。",
+      "url": "https://www.skatteetaten.no/en/person/foreign/are-you-intending-to-work-in-norway/tax-deduction-cards/"
+    },
+    {
+      "title": "電子ID（オンラインユーザー登録）を取得する",
+      "body": "税務申告や行政サービスのオンライン利用には電子ID（electronic ID）が必要。電子IDが無い場合は書面での申告も可能だが、銀行口座開設やオンライン行政手続きには電子ID（BankID等）の取得が前提になることが多い。",
+      "url": "https://www.skatteetaten.no/en/about-the-tax-administration/online-user/become-an-online-user/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在ノルウェー日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "113（救急車）",
+    "summary": "ノルウェーではかかりつけ医制度（Fastlege）が採用されており、居住登録をした人は自身のかかりつけ医を持つ権利がある。通常の診療はかかりつけ医で行い、専門的治療が必要な場合は紹介を受ける。かかりつけ医の営業時間外や旅行者向けには公立・私立の救急病院（legevakt）がある。",
+    "hospitals": [
+      {
+        "name": "Tannlege Hermannsen",
+        "city": "オスロ",
+        "japanese": "日本人歯科医が在籍するクリニックとして在ノルウェー日本国大使館が案内",
+        "url": "https://www.no.emb-japan.go.jp/itpr_ja/iryo_norway.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "https://www.arbeidstilsynet.no/en/pay-and-engagement-of-employees/pay-and-minimum-rates-of-pay/minimum-wage/",
+    "channels": [
+      {
+        "name": "Arbeidsplassen（NAV運営の公的求人検索サイト）",
+        "url": "https://arbeidsplassen.nav.no/",
+        "note": "ノルウェー労働福祉局（NAV）が運営する公的な求人検索サイト"
+      }
+    ],
+    "rules": [
+      "ノルウェーには全国一律の法定最低賃金は無く、団体協約の一般化適用（allmenngjøring）により法的拘束力を持つ最低賃金が設定されているのは建設業・清掃業・ホスピタリティ業など特定の9業界のみ",
+      "対象業界以外では、賃金は雇用主と労働者の個別交渉または労働協約によって決まる"
+    ],
+    "no_statutory": true
+  },
+  "sources": [
+    {
+      "title": "Are you intending to work in Norway? - Skatteetaten",
+      "url": "https://www.skatteetaten.no/en/person/foreign/are-you-intending-to-work-in-norway/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Tax deduction cards for foreign workers - Skatteetaten",
+      "url": "https://www.skatteetaten.no/en/person/foreign/are-you-intending-to-work-in-norway/tax-deduction-cards/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Become an online user - Skatteetaten",
+      "url": "https://www.skatteetaten.no/en/about-the-tax-administration/online-user/become-an-online-user/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "ノルウェーの医療情報 - 在ノルウェー日本国大使館",
+      "url": "https://www.no.emb-japan.go.jp/itpr_ja/iryo_norway.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Minimum wage - Arbeidstilsynet (Norwegian Labour Inspection Authority)",
+      "url": "https://www.arbeidstilsynet.no/en/pay-and-engagement-of-employees/pay-and-minimum-rates-of-pay/minimum-wage/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Arbeidsplassen - NAV",
+      "url": "https://arbeidsplassen.nav.no/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

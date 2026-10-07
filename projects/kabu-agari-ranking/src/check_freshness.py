@@ -26,7 +26,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import aggregate
 from market_calendar import (
+    COVERED_YEARS,
     CalendarOutOfRange,
     business_days_between,
     is_business_day,
@@ -40,6 +42,14 @@ JST = timezone(timedelta(hours=9))
 FETCH_DONE_AT = time(16, 40)
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+
+# ストップ高・ストップ安の一覧を記録し始めた日。これより前のファイルには
+# キーが無いのが正しいので、欠落として数えない。
+STOP_RECORDS_FROM = date(2026, 9, 28)
+
+# 休場日の表が切れる何日前から知らせるか。年をまたぐ前に気づければよいので
+# 余裕をとる（切れてからでは鮮度の監視そのものが止まる）。
+HOLIDAY_TABLE_WARN_DAYS = 90
 
 
 def expected_rec_date(now: datetime, *, after_fetch: bool = False) -> date:
@@ -62,6 +72,19 @@ def check(rec_date: date, now: datetime, *, after_fetch: bool = False) -> tuple[
     return behind, f"latest rec_date={rec_date} / 期待={expected} / 営業日で{behind}日ぶん遅れ"
 
 
+def missing_stop_records(payload: dict) -> list[str]:
+    """当日分に、ストップ高／ストップ安の記録が欠けていないか。
+
+    **0件の日は空リストが入る**ので、キーが無い＝1ページも取れなかった日。
+    ランキングのほうは取れているので鮮度の判定には引っかからず、
+    黙って推定にフォールバックしてしまう。**当日中しか取り直せない**ので、
+    気づけないことの損が大きい（翌日には取得元が次の営業日に切り替わる）。
+    """
+    if date.fromisoformat(payload["rec_date"]) < STOP_RECORDS_FROM:
+        return []
+    return [key for key in aggregate.LIMIT_KEYS if key not in payload]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="ランキングデータの鮮度を確認する")
     parser.add_argument(
@@ -76,7 +99,17 @@ def main() -> int:
         print(f"::error::{latest} がありません。")
         return 1
 
-    rec_date = date.fromisoformat(json.loads(latest.read_text(encoding="utf-8"))["rec_date"])
+    # 「無い」は丁寧に扱うのに「壊れている」は素の traceback、では
+    # ログを見た人が何をすればよいか分からない（黙って止まるのと同じ）。
+    try:
+        payload = json.loads(latest.read_text(encoding="utf-8"))
+        rec_date = date.fromisoformat(payload["rec_date"])
+    except (json.JSONDecodeError, KeyError, ValueError) as e:
+        print(f"::error::{latest} を読めません（{e}）。")
+        print("::error::直前の取得が途中で止まった可能性があります。"
+              "data/latest.json の中身を確認し、壊れていれば当日分の "
+              "data/YYYY-MM-DD.json から作り直してください。")
+        return 1
     now = datetime.now(JST)
     try:
         behind, message = check(rec_date, now, after_fetch=args.after_fetch)
@@ -88,6 +121,10 @@ def main() -> int:
         return 1
     print(message)
 
+    # **途中で return しない。** 鮮度が古いところで止めると、そのあとの
+    # 「ストップ高・ストップ安が取れていない」を見ないまま終わる。
+    status = 0
+
     if behind >= 1:
         print(
             f"::error::ランキングデータが{behind}営業日ぶん古いままです（最新 {rec_date}）。"
@@ -95,8 +132,33 @@ def main() -> int:
             "同ディレクトリの run-daily.log を確認してください。"
             "当日中に src\\build_site.py を回さないと、その営業日は二度と取れません。"
         )
-        return 1
-    return 0
+        status = 1
+
+    # **切れてから気づくのでは遅い。** 表の外に出ると休場日の判定ができず、
+    # 鮮度の監視そのものが止まる。年末に追記する作業を思い出せるよう、
+    # 余裕があるうちから知らせる。
+    last_covered = date(max(COVERED_YEARS), 12, 31)
+    days_left = (now.date() - last_covered).days * -1
+    if days_left <= HOLIDAY_TABLE_WARN_DAYS:
+        print(
+            f"::warning::休場日の表が {last_covered} で切れます（残り {days_left} 日）。"
+            "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv から"
+            "src/market_calendar.py に翌年ぶんを追記してください。"
+        )
+
+    missing = missing_stop_records(payload)
+    if missing:
+        names = {"stop_high": "ストップ高", "stop_low": "ストップ安"}
+        print(
+            f"::error::{rec_date} の"
+            + "・".join(names.get(key, key) for key in missing)
+            + "の一覧が取れていません（ランキング自体は取れています）。"
+            "当日中に tools\\fetch_stop_records.py --write を回せば拾えます。"
+            "翌営業日になると取得元が次の日に切り替わり、二度と取れません。"
+        )
+        status = 1
+
+    return status
 
 
 if __name__ == "__main__":

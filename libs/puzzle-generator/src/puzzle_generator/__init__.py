@@ -1,4 +1,5 @@
 from .maze import (
+    build_maze,
     DIFFICULTIES,
     Maze,
     build_puzzle,
@@ -8,9 +9,24 @@ from .maze import (
     verify_unique_solution,
 )
 from .render import render_svg
+from .drills import (
+    build_arithmetic,
+    build_clock,
+    build_number_search,
+    build_pair_search,
+    clock_label,
+)
 from .schema import SCHEMA_VERSION, validate_record
+from .wordsearch import (
+    BLOCKED_WORDS,
+    DIRS,
+    WORDSEARCH_DIFFICULTIES,
+    build_wordsearch,
+    find_all,
+    verify_wordsearch,
+)
 
-__version__ = "0.1.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "__version__",
@@ -24,4 +40,16 @@ __all__ = [
     "solve",
     "validate_record",
     "verify_unique_solution",
+    "BLOCKED_WORDS",
+    "DIRS",
+    "WORDSEARCH_DIFFICULTIES",
+    "build_wordsearch",
+    "find_all",
+    "verify_wordsearch",
+    "build_maze",
+    "build_arithmetic",
+    "build_clock",
+    "build_number_search",
+    "build_pair_search",
+    "clock_label",
 ]

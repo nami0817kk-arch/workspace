@@ -1,14 +1,13 @@
 # Google Play 提出用の Android リリースビルド。
 #
-# 手動実行 (workflow_dispatch) か、soccer-manager-v* タグの push で走る。
+# **手動実行のみ。** 2026-09-26 に「Android(Google Play)には出さない」と決めた。
+# タグでも走らせていた頃は、iOS を出すたびに署名鍵の未登録でここが赤くなり、
+# 本当に見るべき失敗と区別が付かなかった。出すことになったら push: tags を戻す。
 # 署名鍵は GitHub Secrets から復元するため、リポジトリには一切含まれない。
 # 必要な Secrets と鍵の作り方は docs/RELEASE_GUIDE.md を参照。
 name: Build Soccer Manager (Android Release)
 
 on:
-  push:
-    tags:
-      - "soccer-manager-v*"
   workflow_dispatch:
     inputs:
       build_number:

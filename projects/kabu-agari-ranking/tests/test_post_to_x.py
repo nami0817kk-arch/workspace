@@ -4,6 +4,7 @@
 長さ超過で 403 になっても、投稿処理は警告を出すだけで止まらない
 （サイトの公開を巻き込まないため）＝壊れても気づきにくい。ここで固定する。
 """
+import json
 import post_to_x
 
 
@@ -84,3 +85,95 @@ def test_銘柄名は途中で切る():
 def test_件数が3件未満でも作れる():
     text = post_to_x._build_tweet(_payload(n=1))
     assert "1位" in text and "2位" not in text
+
+
+def test_本当に上限を超える日は後ろから削る(monkeypatch):
+    """上限を定数に置いてあるのに、どこでも見ていなかった（2026-09-28 に気づいた）。
+    _truncate が効くので普段は超えないが、超えた日は 403 で弾かれていた。"""
+    monkeypatch.setattr(post_to_x, "_NAME_MAX_LEN", 40)
+    monkeypatch.setattr(post_to_x, "_TOP_N", 10)
+    payload = _payload()
+    payload["gainers"] = [
+        {"rank": i, "code": f"{1000 + i}", "name": "あ" * 40,
+         "close": 163.0, "change_pct": 44.25, "metric_value": 1}
+        for i in range(1, 11)
+    ]
+    text = post_to_x._build_tweet(payload)
+    assert post_to_x.weighted_length(text) <= post_to_x._TWEET_LIMIT
+    # 日付と行き先は最後まで残す
+    assert payload["rec_date"] in text
+    assert post_to_x.SITE_URL in text
+    # 順位の高いものほど残る
+    assert "1位 " in text
+
+
+def test_削るのはハッシュタグが先(monkeypatch):
+    """本文の銘柄より、ハッシュタグのほうが無くても意味が通る。"""
+    monkeypatch.setattr(post_to_x, "_TOP_N", 5)
+    # ハッシュタグ（17文字ぶん）を外せばちょうど収まる長さ
+    payload = _payload()
+    payload["gainers"] = [
+        {"rank": i, "code": f"{1000 + i}", "name": "あ" * 8,
+         "close": 163.0, "change_pct": 44.25, "metric_value": 1}
+        for i in range(1, 6)
+    ]
+    text = post_to_x._build_tweet(payload)
+    assert post_to_x.weighted_length(text) <= post_to_x._TWEET_LIMIT
+    assert "#日本株" not in text
+    assert "5位 " in text, "ハッシュタグを削れば足りるのに銘柄まで削っている"
+
+
+# --- 投稿しない分岐 -----------------------------------------------------------
+
+def _no_network(monkeypatch):
+    """ここを通ったら実際に投稿しようとしている。"""
+    def boom(*a, **k):
+        raise AssertionError("投稿してはいけない場面で送信しようとした")
+    monkeypatch.setattr(post_to_x, "OAuth1Session", boom)
+
+
+def test_キーが無ければ投稿しない(monkeypatch, capsys):
+    _no_network(monkeypatch)
+    for key in ("X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_TOKEN_SECRET"):
+        monkeypatch.delenv(key, raising=False)
+    post_to_x.post_today()
+    assert "未設定" in capsys.readouterr().out
+
+
+def _with_keys(monkeypatch):
+    for key in ("X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_TOKEN_SECRET"):
+        monkeypatch.setenv(key, "dummy")
+
+
+def test_最新データが無ければ投稿しない(monkeypatch, tmp_path, capsys):
+    _no_network(monkeypatch)
+    _with_keys(monkeypatch)
+    monkeypatch.setattr(post_to_x, "_LATEST_PATH", tmp_path / "latest.json")
+    post_to_x.post_today()
+    assert "latest.json が無い" in capsys.readouterr().out
+
+
+def test_同じ日を二度投稿しない(monkeypatch, tmp_path, capsys):
+    """記録の置き場が手元しか無いので、ここが唯一の歯止め。"""
+    _no_network(monkeypatch)
+    _with_keys(monkeypatch)
+    latest = tmp_path / "latest.json"
+    latest.write_text(json.dumps(_payload(), ensure_ascii=False), encoding="utf-8")
+    last = tmp_path / "last_tweet.txt"
+    last.write_text(_payload()["rec_date"], encoding="utf-8")
+    monkeypatch.setattr(post_to_x, "_LATEST_PATH", latest)
+    monkeypatch.setattr(post_to_x, "_LAST_POST_PATH", last)
+    post_to_x.post_today()
+    assert "投稿済み" in capsys.readouterr().out
+
+
+def test_値上がりが空なら投稿しない(monkeypatch, tmp_path, capsys):
+    _no_network(monkeypatch)
+    _with_keys(monkeypatch)
+    payload = {**_payload(), "gainers": []}
+    latest = tmp_path / "latest.json"
+    latest.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(post_to_x, "_LATEST_PATH", latest)
+    monkeypatch.setattr(post_to_x, "_LAST_POST_PATH", tmp_path / "none.txt")
+    post_to_x.post_today()
+    assert "値上がりデータが無い" in capsys.readouterr().out

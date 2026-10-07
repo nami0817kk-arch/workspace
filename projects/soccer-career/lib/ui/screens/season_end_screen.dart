@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../budget_lines.dart';
@@ -11,9 +12,12 @@ import '../../game/world.dart';
 import '../../models/agent.dart';
 import '../../models/competition.dart';
 import '../../models/life.dart';
+import '../../monetize/monetization.dart';
+import 'support_screen.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../player_banner.dart';
+import '../stat_tile.dart';
 import '../../models/career.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
@@ -21,9 +25,16 @@ import '../../models/career.dart';
 /// オファーごとに「受け入れる」か「上乗せを要求する」かを選べる。
 /// 要求は代理人の交渉力次第で、失敗するとオファーが消えることもある。
 class SeasonEndScreen extends StatefulWidget {
-  const SeasonEndScreen({super.key, required this.controller});
+  const SeasonEndScreen({
+    super.key,
+    required this.controller,
+    this.monetization,
+  });
 
   final CareerController controller;
+
+  /// 広告と課金。**渡されなければ何も出さない**（テストとブラウザ版）。
+  final Monetization? monetization;
 
   @override
   State<SeasonEndScreen> createState() => _SeasonEndScreenState();
@@ -145,6 +156,26 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
+  /// 「広告を消す」を勧めてよいか。
+  ///
+  /// 出る前に勧めても何の話か分からないので、**広告が出るようになってから**。
+  bool get _offersNoAds {
+    final money = widget.monetization;
+    if (money == null || money.noAds || !money.storeAvailable) return false;
+    return (widget.controller.state?.history.length ?? 0) >=
+        Monetization.adsFromSeason;
+  }
+
+  void _openSupport() {
+    final money = widget.monetization;
+    if (money == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SupportScreen(monetization: money),
+      ),
+    );
+  }
+
   Future<void> _retire() async {
     if (_busy) return;
     final ok = await showDialog<bool>(
@@ -251,38 +282,39 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                             ],
                             if (state.cupStage.participated) ...[
                               const SizedBox(height: 6),
-                              Chip(
-                                label: Text('国内カップ ${state.cupStage.label}'),
-                                backgroundColor:
-                                    state.cupStage == CupStage.winner
+                              Tag(
+                                '国内カップ ${state.cupStage.label}',
+                                background: state.cupStage == CupStage.winner
                                     ? theme.colorScheme.primaryContainer
                                     : null,
-                                visualDensity: VisualDensity.compact,
+                                foreground: state.cupStage == CupStage.winner
+                                    ? theme.colorScheme.onPrimaryContainer
+                                    : null,
                               ),
                             ],
                             if (state.worldCupStage.participated) ...[
                               const SizedBox(height: 6),
-                              Chip(
-                                label: Text(
-                                  '世界大会 ${state.worldCupStage.label}',
-                                ),
-                                backgroundColor:
-                                    theme.colorScheme.tertiaryContainer,
-                                visualDensity: VisualDensity.compact,
+                              Tag(
+                                '世界大会 ${state.worldCupStage.label}',
+                                background: theme.colorScheme.tertiaryContainer,
+                                foreground:
+                                    theme.colorScheme.onTertiaryContainer,
                               ),
                             ],
                             if (state.continentalStage.participated) ...[
                               const SizedBox(height: 6),
-                              Chip(
-                                label: Text(
-                                  '大陸カップ ${state.continentalStage.label}',
-                                ),
-                                backgroundColor:
+                              Tag(
+                                '大陸カップ ${state.continentalStage.label}',
+                                background:
                                     state.continentalStage ==
                                         ContinentalStage.winner
                                     ? theme.colorScheme.primaryContainer
                                     : null,
-                                visualDensity: VisualDensity.compact,
+                                foreground:
+                                    state.continentalStage ==
+                                        ContinentalStage.winner
+                                    ? theme.colorScheme.onPrimaryContainer
+                                    : null,
                               ),
                             ],
                             const SizedBox(height: 16),
@@ -328,6 +360,14 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   everBackedUp: state.backedUpYear > 0,
                   onBackup: () => TransferCode.show(context, widget.controller),
                 ),
+                // **広告を消せることは、広告が出る場所で伝える。**
+                // ⋮ の奥にしか置いていなかったので、出るのは知っていても
+                // 消せることを知らないままになる。
+                // 広告が出る前（`adsFromSeason` に届く前）と、買った人には出さない。
+                if (_offersNoAds) ...[
+                  const SizedBox(height: 12),
+                  _NoAdsCard(onOpen: _openSupport),
+                ],
                 const SizedBox(height: 24),
                 if (mustRetire) ...[
                   Text('${state.player.age}歳。体は限界を迎えた。', style: muted),
@@ -665,6 +705,11 @@ class _OfferCard extends StatelessWidget {
 /// 保存は端末の中にしか無い。ブラウザのデータを消せば消えるし、
 /// iOS はしばらく開かないサイトの保存領域を自分で消す。
 /// 「⋮」の奥に置いてあるだけでは、気付かないまま何年も進んでしまう。
+///
+/// **何を消すと消えるかは、動いている先で違う。** Web なら「ブラウザの
+/// データ」だが、アプリで遊んでいる人にブラウザの話をしても通じない
+/// （掲載用の絵を撮ったときに、iPhone の画面に「ブラウザのデータを消すと
+/// 消える」と出ていた）。
 class _BackupCard extends StatelessWidget {
   const _BackupCard({
     required this.years,
@@ -679,10 +724,14 @@ class _BackupCard extends StatelessWidget {
   /// これだけ控えていなければ、色を変えて促す。
   static const int warnAfterYears = 3;
 
+  /// 何をすると消えるか。動いている先で言い方を変える。
+  static String get erases => kIsWeb ? 'ブラウザのデータを消す' : 'アプリを消す';
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final warn = years >= warnAfterYears;
+    final erases = _BackupCard.erases;
     return Card(
       color: warn ? theme.colorScheme.errorContainer : null,
       child: Padding(
@@ -699,10 +748,10 @@ class _BackupCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               everBackedUp
-                  ? '前に控えてから$years年。ブラウザのデータを消すと、'
+                  ? '前に控えてから$years年。$erasesと、'
                         'そこから先のキャリアは戻せない。'
                   : 'この記録は、この端末の中にしか無い。'
-                        'ブラウザのデータを消すと消える。1度だけ控えておけば、'
+                        '$erasesと消える。1度だけ控えておけば、'
                         '別の端末でも続きから遊べる。',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: warn ? theme.colorScheme.onErrorContainer : null,
@@ -834,6 +883,44 @@ class _SeasonBand extends StatelessWidget {
                   FateChip(fate: fate, tier: state.club.tier),
                 ],
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 「広告を消す」への入口。シーズンの切れ目——広告が出る場所に置く。
+class _NoAdsCard extends StatelessWidget {
+  const _NoAdsCard({required this.onOpen});
+
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('広告', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 6),
+            Text(
+              'シーズンの切れ目に1回だけ出る。買い切りで消せる。'
+              '強くなる課金は置いていない。',
+              style: theme.textTheme.bodySmall,
+            ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton.icon(
+                onPressed: onOpen,
+                icon: const Icon(Icons.block, size: 18),
+                label: const Text('広告を消す'),
+              ),
             ),
           ],
         ),

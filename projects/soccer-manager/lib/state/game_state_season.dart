@@ -614,8 +614,25 @@ extension GameStateSeason on GameState {
 
   Future<void> startNextSeason() async {
     if (_save == null) return;
+    // 二重に呼ばれると、賞金・理事会の報奨金・昇格ボーナスがもう一度
+    // 支払われ、シーズンも2つ進む。ボタンは isBusy の覆いで塞がるが、
+    // 覆いが描かれるのは次のフレームなので、その前の連打は素通りする。
+    // playNextMatchday には同じ理由の防止が入っている。
+    if (isBusy) return;
     isBusy = true;
     _notify();
+    try {
+      await _rollSeasonOver();
+    } catch (_) {
+      // 途中で落ちたら覆いを外しておく。外さないと上の多重実行の防止に
+      // 引っかかり続け、二度と次のシーズンへ進めなくなる。
+      isBusy = false;
+      _notify();
+      rethrow;
+    }
+  }
+
+  Future<void> _rollSeasonOver() async {
     // ローディング表示を1フレーム描画させてから、裏ディビジョンの1シーズン分の
     // シミュレーションなど重い処理に入る。
     await Future<void>.delayed(Duration.zero);
@@ -769,7 +786,9 @@ extension GameStateSeason on GameState {
     _save!.pendingYouthIntake = List.generate(
       intakeCount,
       (_) => ScoutingEngine.generateAcademyGraduate(
-        youthCoachLevel: infra.staffLevel(StaffRole.youthCoach),
+        // 有望な子を見つけてこられるかは見極めの仕事。
+        youthCoachLevel: infra.staffAttributeLevel(
+            StaffRole.youthCoach, StaffAttribute.judging),
       ),
     );
 
@@ -922,6 +941,9 @@ extension GameStateSeason on GameState {
     } else {
       lastDivisionChangeMessage = null;
     }
+    lastSeasonFinale = finalRank == 1
+        ? SeasonFinale.champion
+        : (newTier < playedTier ? SeasonFinale.promoted : SeasonFinale.none);
     _save!.currentDivisionTier = newTier;
     for (int tier = 1; tier <= totalDivisionTiers; tier++) {
       if (tier == newTier) {

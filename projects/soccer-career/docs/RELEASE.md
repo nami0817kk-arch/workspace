@@ -1,0 +1,208 @@
+# リリース手順（App Store）
+
+出す先は **iOS だけ**。掲載する文面と絵は [`../STORE_LISTING.md`](../STORE_LISTING.md)、
+収益化の設計は [`MONETIZATION.md`](MONETIZATION.md) が正。
+
+**証明書・プロビジョニングプロファイル・GitHub Secrets の作り方は、
+[`soccer-manager/docs/RELEASE_GUIDE.md`](../../soccer-manager/docs/RELEASE_GUIDE.md)
+が正。** Mac なしで CSR を作る手順もそちらにある。ここには**このアプリだけの差分**を書く。
+
+`soccer-manager` は 2026-09-24 に公開済みで、同じ手順を一度通してある。
+
+---
+
+## 0. 毎回の手順は soccer-manager の手順書が正
+
+版を上げる → タグ → **手動実行でアップロード** → 掲載欄を埋める → ビルドを選ぶ →
+提出 → 却下されたら「審査内容を更新」→ リリースボタン → 公開後に外から確かめる、
+までの①〜⑩は
+[`soccer-manager/docs/RELEASE_GUIDE.md` の「0-2. 毎回のリリース手順」](../../soccer-manager/docs/RELEASE_GUIDE.md)
+にある。**このアプリでも同じ**。名前だけ読み替える（タグ `soccer-career-v*`、
+ワークフロー `Build Soccer Career (iOS Release)`）。
+
+とくに**タグを押しただけでは TestFlight に上がらない**。`upload_to_testflight` は
+`workflow_dispatch` の入力で、タグからの実行では渡せないのでアップロードが
+skipped になる。サカマネで2回踏んでいる。
+
+## 0-2. 初回だけ要ること
+
+このアプリはまだ一度も出していないので、①の前に次が要る。**どれもコンソール側**で、
+CI からは手が出ない。
+
+| やること | 場所 | 使う値 |
+|---|---|---|
+| iOS アプリを1件追加し、**インタースティシャルを1つ**作る（リワードは無い） | AdMob | → `CAREER_ADMOB_APP_ID_IOS` / `CAREER_ADMOB_INTERSTITIAL_IOS` |
+| アプリレコードを作る | App Store Connect | `com.namiki.soccercareer` |
+| App内課金を1件登録して審査に出す | App Store Connect | `soccer_career_no_ads`（**非消耗型**・¥400） |
+| App ID とプロビジョニングプロファイルを作る | Apple Developer | → `CAREER_IOS_PROVISIONING_PROFILE_BASE64` |
+
+課金アイテムには**審査用のスクリーンショットが必須**（値段のボタンが写った画面）。
+手で撮らずに生成器で作る:
+
+```bash
+flutter test tool/screenshots/iap_review_test.dart \
+  --dart-define=ADMOB_INTERSTITIAL_ANDROID=ca-app-pub-0000000000000000/0000000000
+```
+
+`marketing/iap_review/remove_ads.png`（1290x2796）ができる。
+**上げ直しはできても消せない**ので、値段を変えたら撮り直してから上げる。
+
+証明書（`IOS_DIST_CERT_BASE64` ほか）と Team ID、App Store Connect API キーは
+**サカマネのものをそのまま使う**。同じ Apple アカウントなので作り直さない。
+
+> **課金は商品の審査が別にある。** 最初のバージョンと一緒に提出しないと
+> 「準備中」のまま実機で商品が出てこない。
+
+## 1. このアプリの値
+
+| 項目 | 値 |
+|---|---|
+| Bundle ID | `com.namiki.soccercareer` |
+| タグ | `soccer-career-v*`（例: `soccer-career-v1.0.0`） |
+| ワークフロー | `.github/workflows/soccer-career-ios-release.yml` |
+| 広告 | **インタースティシャルだけ**（リワードは無い） |
+| App内課金 | `soccer_career_no_ads`（非消耗型・¥400）の1件だけ |
+
+## 2. GitHub Secrets
+
+**`soccer-manager` と共有するもの**（同じ Apple アカウント）:
+
+| 名前 | 中身 |
+|---|---|
+| `IOS_DIST_CERT_BASE64` | 配布証明書の .p12 を base64 |
+| `IOS_DIST_CERT_PASSWORD` | その .p12 のパスワード |
+| `IOS_TEAM_ID` | Apple Developer の Team ID |
+| `APPSTORE_API_KEY_ID` ほか2つ | TestFlight へ自動で上げるとき（任意） |
+
+**このアプリ専用**（頭に `CAREER_` が付く）:
+
+| 名前 | 中身 |
+|---|---|
+| `CAREER_IOS_PROVISIONING_PROFILE_BASE64` | `com.namiki.soccercareer` のプロファイル |
+| `CAREER_ADMOB_APP_ID_IOS` | AdMob のアプリID（`~` 区切り） |
+| `CAREER_ADMOB_INTERSTITIAL_IOS` | インタースティシャルの広告ユニットID（`/` 区切り） |
+
+> **接頭辞は `CAREER_`。** `goso-boat`（`GOSO_`）とユーザーレベルスキル `ios-app-release` の
+> 流儀に合わせてある。後ろに付けると一覧で離れて並ぶ。
+>
+> **名前を分けてあるのは、取り違えると気付けないから。**
+> 同じ名前にすると `soccer-manager` のIDでこのアプリをビルドすることになる。
+> プロファイルは Bundle ID ごとに別なので署名の段で落ちるが、**AdMob のIDは
+> 落ちずに通る**——広告は出るのに、収益が別のアプリに付く。
+> ワークフローはプロファイルの App ID と Bundle ID を突き合わせて、
+> 食い違ったらその場で止める。
+
+## 3. 出す
+
+```bash
+git tag soccer-career-v1.0.0
+git push origin soccer-career-v1.0.0
+```
+
+ワークフローが次の順で走る。**どれか1つでも欠けたらそこで止まる。**
+
+1. `flutter test`
+2. **`python3 tool/preflight.py`**（出す前の点検28項目）
+3. 署名の Secrets が揃っているか
+4. **AdMob が本番IDか**——Google のテスト用ID（`ca-app-pub-3940256099942544`）が
+   登録されていたら止める。置換したあと、置換できたことも確かめる
+5. **AdMob のIDの形と発行元**——アプリIDは `~`、広告ユニットIDは `/`。
+   発行元の16桁が食い違っていたら止める（別アカウントのIDが混ざると
+   収益が別の場所に付く）
+6. **法務3ページが開けて、中身がこのアプリのものか**——404 や他人のページの
+   まま出すと審査で却下される
+7. 証明書とプロファイル（**App ID と Bundle ID の突き合わせ**）
+8. IPA ビルド → TestFlight（`workflow_dispatch` で選んだときだけ）
+
+**テスト用IDのまま公開すると、広告は出るのに収益がゼロになる。しかも審査は
+通ってしまうので、気づくのが遅れる。** だから署名と同じ扱いで止めている。
+
+## 4. バージョンの上げ方
+
+`pubspec.yaml` の1行だけ。
+
+```yaml
+version: 1.0.0+1
+#        ^^^^^ ^
+#        |     └─ ビルド番号（CFBundleVersion）。提出のたびに +1
+#        └─ ユーザーに見えるバージョン（CFBundleShortVersionString）
+```
+
+App Store Connect は**同じビルド番号を二度受け付けない**。上げ忘れたときは
+`workflow_dispatch` の `build_number` で上書きできる。
+
+## 5. 実機で確かめること
+
+**この環境では一度も実機で動かしていない。** 広告・課金・復元・評価ダイアログは
+ストアとネットワークが要るので、TestFlight のビルドで次を確かめる。
+
+### まず一巡
+
+- [ ] 起動して選手を作れる（名前と代理人だけで始められる）
+- [ ] 第1節の試合に入り、3つの手から選べて、結果が出る
+- [ ] シーズンを終えて、シーズン終了の画面が出る
+- [ ] 引き継ぎコードを出して、別の端末（かアプリの再インストール後）で読める
+
+### 広告
+
+- [ ] **1シーズン目の終わり**に全画面広告が出る（`adsFromSeason` = 1）
+- [ ] 試合中とメニュー操作には**割り込まない**
+- [ ] バナー広告が**どこにも出ない**
+- [ ] シーズンを続けて飛ばしても、前の広告から3分以内なら出ない（`adInterval`）
+- [ ] 「広告はテスト用のままです」の**赤字が出ていない**（本番IDが効いている証拠）
+
+### 課金
+
+- [ ] メニュー →「広告について」が開き、売り物が**「広告を消す」1つだけ**
+- [ ] 「広告を消す」を買うと、以降**シーズン終了で広告が出ない**
+- [ ] **ボタンの値段が「広告を消す（¥400）」と読める**（□400 になっていない）
+      ——同梱フォントに半角の `¥`（U+00A5）が無い。ストアから来る文字なので
+      機械の検査では拾えず、**ここで目で見るしかない**（`docs/app-pitfalls.md` の6番）
+- [ ] **「購入を復元」が動く**（iOS の審査要件）
+- [ ] 「決まりごと」の3行を押すと、URLが控えに入る
+- [ ] アプリを消して入れ直し、「購入を復元」で広告が消えたままになる
+
+### 評価
+
+- [ ] 3季目以降の**良い季**（目標達成・優勝・昇格）の後に評価ダイアログが出る
+      ——ただし**出すかどうかは OS が決める**ので、出なくても不具合ではない
+- [ ] 全画面広告を閉じた直後には**出ない**
+
+### 見た目
+
+- [ ] 文字が豆腐（□）になっていない
+- [ ] ノッチのある端末で、上下が切れていない
+- [ ] 明るいテーマと暗いテーマの両方で読める
+
+### 公開後（外から見える値を見る）
+
+「直したはず」で終わらせない。App ID はアプリレコードを作ると決まる。
+
+```bash
+curl "https://itunes.apple.com/lookup?id=<App ID>&country=jp"
+```
+
+- [ ] `languageCodesISO2A` が `['JA']` になっている
+      ——`CFBundleLocalizations` の申告だけでは英語のままになる。
+      `ios/Runner/ja.lproj/InfoPlist.strings` の実体が要る（サカマネで踏んだ）
+- [ ] `version` が出したバージョンになっている
+- [ ] 掲載画像の1枚目とサブタイトルをストアページで目で見る
+
+## 6. よくある詰まりどころ
+
+`soccer-manager` の RELEASE_GUIDE にある表がそのまま当てはまる。
+このアプリで足すとすれば:
+
+| 症状 | 原因と対処 |
+|---|---|
+| プロファイルの App ID が一致しないと言われる | `soccer-manager` のプロファイルを `CAREER_IOS_PROVISIONING_PROFILE_BASE64` に登録していないか |
+| 「Google のテスト用IDが登録されています」で止まる | `CAREER_ADMOB_APP_ID_IOS` にテスト用IDを入れている。AdMob で作った自分のIDに置き換える |
+| preflight が「アルファチャンネルが無い」で落ちる | `python tool/make_icons.py` を回し直す（iOS 用は `convert("RGB")` を通している） |
+| ストアの「言語」が英語になっている | `ja.lproj/InfoPlist.strings` がバンドルに入っていない。`preflight.py` の「言語」の節が見ている |
+| 審査で却下された | **返信だけでは審査は再開しない。**「審査内容を更新」まで押す（`soccer-manager` で踏んだ） |
+
+## 7. 提出のときに埋めるもの
+
+[`../STORE_LISTING.md`](../STORE_LISTING.md) の「申請チェックリスト」。
+App 名・サブタイトル・説明・キーワード・レビュー用メモ・App プライバシーの申告まで
+文面が揃えてある。

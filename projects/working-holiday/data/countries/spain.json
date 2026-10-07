@@ -1,0 +1,30 @@
+{
+  "id": "spain",
+  "name": "スペイン",
+  "age": "18〜30歳",
+  "stay": "最長1年",
+  "fee": "無料（査証は無料で取得）",
+  "funds": "",
+  "apply": "在日スペイン大使館領事部に査証を申請",
+  "timing": "",
+  "work": "旅の主目的は休暇。旅行資金を補うための就労は法令の範囲で可能",
+  "study": "",
+  "insurance": "",
+  "points": [
+    "滞在のための十分な資金・有効なパスポート・往復の航空券・犯罪歴がないことが条件",
+    "過去にこの制度の査証を受けた人は対象外"
+  ],
+  "sources": [
+    {
+      "title": "Programa de working holidays - Embajada de España en Tokio",
+      "url": "https://www.exteriores.gob.es/Embajadas/tokio/es/Comunicacion/Noticias/Paginas/Articulos/20170703_NOT1.aspx",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": [
+    "funds",
+    "timing",
+    "study",
+    "insurance"
+  ]
+}

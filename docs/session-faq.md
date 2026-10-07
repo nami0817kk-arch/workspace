@@ -10,7 +10,7 @@ workspace で作業する Claude セッション向け。**ここに無い疑問
 
 - **全PJTはモノレポ `C:\Users\なみ\dev\workspace`**（private、nami0817kk-arch/workspace）。
   旧 dev/ 直下の個別フォルダ・個別リポジトリは**もう使わない**（アーカイブ待ち）。
-- レイアウト: `projects/<pjt>`（採番なし: stock-investment / ai-blog 等）、`libs/kabutan`、
+- レイアウト: `projects/<pjt>`（採番なし: kabu-agari-ranking / price-tracker 等）、`libs/kabutan`、
   `platform/ai-lab`、ルート `.github/workflows`（**必ず paths: で絞る**）。
 - 新しいPJTを足したら: `projects/<name>/` に置き、`<name>-tests.yml` を既存パターン
   （python-tests.yml の workflow_call）で作り、ルート `.github/dependabot.yml` の
@@ -491,7 +491,7 @@ CP932 のコンソールに `Perú` の `ú` を出そうとすると UnicodeEnc
 
 | 系統 | 置く場所 | 実例 |
 |---|---|---|
-| **A. `sys.stdout` を直接差し替える** | `if __name__ == "__main__":` ブロック | `projects/{ai-side-business,ir-analysis,quality-gainer-tracker}/main.py` |
+| **A. `sys.stdout` を直接差し替える** | `if __name__ == "__main__":` ブロック | `projects/ai-side-business/main.py`（ir-analysis・quality-gainer-tracker も同じだったが 2026-09-26 に廃止） |
 | **B. 付け替える関数を呼ぶ**（`reconfigure`） | `main()` 冒頭 | `platform/ai-lab/src/browser/control.py`、`src/docparse/cli.py`、`projects/youtube-video-creation/src/cli.py` |
 
 **A を main() の中に置いてはいけない。** `sys.stdout = io.TextIOWrapper(...)` は
@@ -1166,3 +1166,40 @@ for path in (_ROOT, _ROOT / "src"):
 ```
 
 手元で確かめるときは `pytest`（`python -m` を付けない）で回すと、CI と同じ条件になる。
+
+## アプリ内課金は「待っている側」に返すだけでは届かない（2026-09-26 実例）
+
+`in_app_purchase` の通知（`purchaseStream`）は、**購入を始めた瞬間に返ってくるとは
+限らない**。あとから届く道が少なくとも4つある。
+
+- アプリを落としている間に決済が通った
+- 家族の承認（Ask to Buy）が後から下りた
+- `await` 側が上限（タイムアウト）で待つのをやめた後に届いた
+- 別の端末で買ったぶんが、起動時に流れてきた
+
+`soccer-career` と `soccer-manager` はどちらも「購入を待っている `Completer`
+（`_pending`）に結果を返し、その戻り値で特典を渡す」形だった。**待っている人が
+居ないときに届いた購入は、ストアへ完了通知だけ返して捨てられる**——利用者から見ると
+**払ったのに何も起きない**。
+
+**買い切り（非消費型）は `復元` で戻せるが、消耗型は戻せない。** 払った額がそのまま消える。
+
+直し方は2つ重ねる。
+
+1. **渡すほうは、待っているかどうかを見ない。** 届いた商品は必ず渡し先へ流す。
+   特典を渡すのは1か所だけにして、`buy()` / `restore()` の戻り値では渡さない
+   （戻り値は画面の文言にだけ使う）。
+2. **渡し先を `initialize` の必須引数にする。** setter にしておくと、
+   購読を始めたあとに設定することも、設定しないまま始めることもできる。
+   **起動時に残っていた購入は購読した直後に流れてくる**ので、順番を間違えるとそこが落ちる。
+
+```dart
+// 渡し先が無ければコンパイルが通らない形にする
+Future<void> initialize({
+  required void Function(Product product) onDelivered,
+});
+```
+
+テストは**偽のストアから「誰も await していない状態で」届けて**、特典が付くことを見る。
+`soccer-career` の `test/monetize_test.dart`「アプリを落としている間に決済が通っても、
+ちゃんと受け取る」が先例（古い形に戻すと落ちることを確かめてある）。

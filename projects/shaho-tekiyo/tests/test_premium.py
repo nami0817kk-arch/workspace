@@ -85,3 +85,13 @@ def test_料率表の全国一律の率():
         assert rates["pension"] == 18300
         assert rates["care"] == 1620
         assert rates["kodomo"] == 230
+
+
+def test_賞与の保険料は1000円未満を切り捨てて上限を当てる():
+    from datetime import date as _d
+    r = premium.bonus_estimate(as_of=_d(2026, 12, 10), prefecture="東京", bonus_yen=100_999, age_40_to_64=False)
+    assert r.standard_yen == 100_000
+    # 厚生年金 18.3% の半分 = 9.15% → 9,150円
+    assert r.pension_yen == 9_150
+    big = premium.bonus_estimate(as_of=_d(2026, 12, 10), prefecture="東京", bonus_yen=2_000_000, age_40_to_64=False)
+    assert big.pension_yen == 137_250  # 150万円で頭打ち（150万 × 9.15%）

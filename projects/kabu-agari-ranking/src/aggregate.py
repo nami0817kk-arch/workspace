@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import date
 
 import price_limit
 
@@ -75,14 +76,17 @@ def _longest_run(dates: list[str], all_dates: list[str]) -> int:
 SEARCH_WINDOW_DAYS = 60
 
 
-def search_index(days: list[dict]) -> dict:
+def search_index(days: list[dict], profiles: dict[str, dict] | None = None) -> dict:
     """銘柄名・コードから登場日を引くための索引。
 
     { "from": 最古の日, "to": 最新の日,
-      "stocks": [ {"c": コード, "n": 名前, "g": [日...], "l": [...], "a": [...]} ] }
+      "ind": [業種名...],
+      "stocks": [ {"c": コード, "n": 名前, "i": 業種の番号,
+                   "g": [日...], "l": [...], "a": [...]} ] }
 
     キーを1文字にしているのは、そのままブラウザに配る JSON だから。
     銘柄数×日数ぶん繰り返されるので、ここのバイト数がそのまま読み込み時間になる。
+    **業種は名前ではなく番号で持つ**（同じ文字列が何百回も繰り返されるのを避ける）。
     """
     window = days[:SEARCH_WINDOW_DAYS]
     if not window:
@@ -108,9 +112,23 @@ def search_index(days: list[dict]) -> dict:
                 ):
                     e["s"] += 1
 
+    # 業種は名前の一覧を1度だけ持ち、銘柄側は番号で指す。
+    # 名前をそのまま入れると「情報・通信業」だけで数百回ぶん重くなる。
+    industries: list[str] = []
+    index_of: dict[str, int] = {}
+    for entry in stocks.values():
+        name = ((profiles or {}).get(entry["c"]) or {}).get("industry")
+        if not name:
+            continue
+        if name not in index_of:
+            index_of[name] = len(industries)
+            industries.append(name)
+        entry["i"] = index_of[name]
+
     return {
         "from": window[-1]["rec_date"],
         "to": window[0]["rec_date"],
+        "ind": industries,
         "stocks": sorted(stocks.values(), key=lambda e: e["c"]),
     }
 
@@ -144,13 +162,12 @@ def weekly_summaries(days: list[dict]) -> list[dict]:
         big = sum(
             1 for day in group for r in day.get("gainers", []) if abs(r["change_pct"]) >= 10
         )
-        stops = sum(
-            1 for day in group for r in day.get("gainers", [])
-            if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-        )
+        counts = stop_counts(group)
         out.append({
             "big_moves": big,
-            "stop_highs": stops,
+            "stop_highs": counts["stop_highs"],
+            "stop_lows": counts["stop_lows"],
+            "stops_estimated": counts["has_estimated"],
             "slug": f"{year}-W{week:02d}",
             "year": year,
             "week": week,
@@ -214,6 +231,10 @@ def stock_histories(days: list[dict], min_appearances: int = STOCK_PAGE_MIN_APPE
         e["stops"] = sum(
             1 for r in e["rows"] if r["flag"] in (price_limit.STOP_HIGH, price_limit.STOP_LOW)
         )
+        # 上限と下限は分けて数える。「3回いっぱいまで動いた」とだけ書くと、
+        # 上がって止まったのか下がって止まったのかが読み手に分からない。
+        e["stop_highs"] = sum(1 for r in e["rows"] if r["flag"] == price_limit.STOP_HIGH)
+        e["stop_lows"] = sum(1 for r in e["rows"] if r["flag"] == price_limit.STOP_LOW)
         e["first"] = e["rows"][-1]["rec_date"]
         e["latest"] = e["rows"][0]["rec_date"]
         out.append(e)
@@ -228,43 +249,94 @@ def stock_histories(days: list[dict], min_appearances: int = STOCK_PAGE_MIN_APPE
 # 日をまたいで残している場所はほとんど無い。**このサイトの持ち札はここ**なので、
 # 独立した章として出せる形にまとめる。
 #
-# 対象は値上がりランキングの上位30銘柄に限られる（取得しているのがそこまで）。
-# 「東証の全ストップ高」ではないので、見せる側でその旨を必ず書く。
+# 2026-09-28 より前の日は、値上がり／値下がり上位30銘柄からの推定しか無い
+# （取得していたのがそこまで）。それ以降は取得元の専用ランキングから全件取る。
+# **出どころが違うものを同じ数として見せない**。見せる側で必ず区別を書く。
 
-def stop_high_rows(day: dict) -> tuple[list[dict], str]:
-    """その日のストップ高銘柄と、その出どころ。
+# 値幅の上限側と下限側。**向きの対応表はここ1つだけ。**
+# 以前は「どのランキングがどの記録に対応するか」を render に3つ、
+# stock_profile に1つ、と別々に持っていた。片方を直したときにもう片方が
+# 置き去りになり、実際に stock_profile がストップ安を拾い損ねていた
+# （2026-09-28 に1本化）。表示の語彙は render.LIMIT_PAGES がここを参照する。
+LIMIT_SIDES = {
+    "gainers": {
+        "kind": "gainers",
+        "key": "stop_high",
+        "flag": price_limit.STOP_HIGH,
+        "worst": max,
+    },
+    "losers": {
+        "kind": "losers",
+        "key": "stop_low",
+        "flag": price_limit.STOP_LOW,
+        "worst": min,
+    },
+}
+
+# 日次ファイルに記録として入るキー。**側を足したら自動で増える。**
+# 保存・欠落の監視・属性の取得が、それぞれ別の一覧を持たないようにするため。
+LIMIT_KEYS = tuple(side["key"] for side in LIMIT_SIDES.values())
+
+
+def _limit_rows(day: dict, key: str, estimate_from: str, flag: str) -> tuple[list[dict], str]:
+    """その日のストップ高／ストップ安の銘柄と、その出どころ。
 
     - recorded … 取得元の専用ランキングをそのまま記録したもの（全件）
-    - estimated … 値上がり上位30銘柄から、終値と騰落率で推定したもの
+    - estimated … 値上がり／値下がり上位30銘柄から、終値と騰落率で推定したもの
 
     2026-09-28 以降は recorded。それ以前は専用ランキングを取っていなかったので
     estimated しか無い。**出どころが違うものを混ぜて数えると、件数の増減が
     相場の変化なのか取り方の変化なのか分からなくなる**ので、区別して持つ。
     """
-    recorded = day.get("stop_high")
+    recorded = day.get(key)
     if recorded is not None:
-        # 引けまで上限を保った銘柄だけを数える（場中につけて下げた分は除く）。
+        # 引けまで上限（下限）を保った銘柄だけを数える。
+        # 場中につけて戻した銘柄は「その日そこで止まっていた」とは言えない。
         return [r for r in recorded if r.get("at_limit")], "recorded"
     return [
-        r for r in day.get("gainers", [])
-        if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
+        r for r in day.get(estimate_from, [])
+        if price_limit.classify(r.get("close"), r.get("change_pct")) == flag
     ], "estimated"
 
 
-def stop_high_history(days: list[dict]) -> dict:
-    """ストップ高の日別・銘柄別のまとめ。
+def limit_rows(day: dict, kind: str) -> tuple[list[dict], str]:
+    """その日、値幅の上限（下限）まで動いた銘柄と、その出どころ。
+
+    Args:
+        kind: "gainers"（ストップ高）か "losers"（ストップ安）。
+    """
+    side = LIMIT_SIDES[kind]
+    return _limit_rows(day, side["key"], side["kind"], side["flag"])
+
+
+def stop_high_rows(day: dict) -> tuple[list[dict], str]:
+    """その日ストップ高だった銘柄と、その出どころ。"""
+    return limit_rows(day, "gainers")
+
+
+def stop_low_rows(day: dict) -> tuple[list[dict], str]:
+    """その日ストップ安だった銘柄と、その出どころ。"""
+    return limit_rows(day, "losers")
+
+
+def _limit_history(days: list[dict], row_fn, *, worst) -> dict:
+    """ストップ高／ストップ安の日別・銘柄別のまとめ。
 
     returns:
         per_day … 新しい日が先。{rec_date, count, rows, source}
-        stocks  … 複数回ストップ高になった銘柄（回数の多い順）
+        stocks  … 複数回そうなった銘柄（回数の多い順）
         total   … のべ件数
         has_estimated … 推定の日が混じっているか（画面で断るために使う）
+
+    Args:
+        worst: 「最も大きく動いた日」の選び方。ストップ高は max、
+            ストップ安は min（下落率は負の値なので、小さいほど大きく下げている）。
     """
     per_day, by_code = [], {}
     order = [d["rec_date"] for d in sorted(days, key=lambda d: d["rec_date"])]
 
     for day in days:
-        rows, source = stop_high_rows(day)
+        rows, source = row_fn(day)
         per_day.append({"rec_date": day["rec_date"], "count": len(rows),
                         "rows": rows, "source": source})
         for row in rows:
@@ -273,8 +345,7 @@ def stop_high_history(days: list[dict]) -> dict:
             entry["name"] = row["name"]
             entry["dates"].append(day["rec_date"])
             pct = row["change_pct"]
-            if entry["best_pct"] is None or pct > entry["best_pct"]:
-                entry["best_pct"] = pct
+            entry["best_pct"] = pct if entry["best_pct"] is None else worst(entry["best_pct"], pct)
 
     stocks = []
     for entry in by_code.values():
@@ -294,6 +365,37 @@ def stop_high_history(days: list[dict]) -> dict:
         "total": sum(d["count"] for d in per_day),
         "has_estimated": any(d["source"] == "estimated" for d in per_day),
         "has_recorded": any(d["source"] == "recorded" for d in per_day),
+    }
+
+
+def limit_history(days: list[dict], kind: str) -> dict:
+    """上限側／下限側の日別・銘柄別のまとめ。"""
+    side = LIMIT_SIDES[kind]
+    return _limit_history(days, lambda day: limit_rows(day, kind), worst=side["worst"])
+
+
+def stop_counts(days: list[dict]) -> dict:
+    """その期間の、のべ件数と出どころ。
+
+    **数えるのは `stop_high_rows` / `stop_low_rows` と同じ道を通す。**
+    週まとめ・月まとめ・トップのハイライトが別々に数え直していたため、
+    記録を使い始めると同じ日の件数がページによって違う、という
+    直しようのない食い違いになっていた（2026-09-27 に揃えた）。
+    """
+    counts = {kind: 0 for kind in LIMIT_SIDES}
+    sources = set()
+    for day in days:
+        for kind in LIMIT_SIDES:
+            rows, source = limit_rows(day, kind)
+            counts[kind] += len(rows)
+            # **両側の出どころを見る。** 上限側だけを見ていたため、
+            # ストップ安が推定でも「推定が混じる」と断らなかった（2026-09-28 に修正）。
+            sources.add(source)
+    return {
+        "stop_highs": counts["gainers"],
+        "stop_lows": counts["losers"],
+        # 期間の中に推定の日が混じっていれば、画面でその旨を断る
+        "has_estimated": "estimated" in sources,
     }
 
 
@@ -317,10 +419,7 @@ def monthly_summaries(days: list[dict]) -> list[dict]:
             for day in group for row in day.get("gainers", [])
         ]
         movers.sort(key=lambda r: r["change_pct"], reverse=True)
-        stops = sum(
-            1 for day in group for r in day.get("gainers", [])
-            if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-        )
+        counts = stop_counts(group)
         out.append({
             "slug": month,
             "year": int(month[:4]),
@@ -328,9 +427,15 @@ def monthly_summaries(days: list[dict]) -> list[dict]:
             "from": group[-1]["rec_date"],
             "to": group[0]["rec_date"],
             "day_count": len(group),
-            "stop_highs": stops,
+            "stop_highs": counts["stop_highs"],
+            "stop_lows": counts["stop_lows"],
+            "stops_estimated": counts["has_estimated"],
             "top_movers": movers[:20],
             "frequent": frequent(group, "gainers", top_n=20),
+            # その月に**何が**上限まで動いたか。件数だけだと、
+            # 記録のページまで行かないと顔ぶれが分からない。
+            "stop_high_stocks": limit_history(group, "gainers")["stocks"][:10],
+            "stop_low_stocks": limit_history(group, "losers")["stocks"][:10],
         })
     out.sort(key=lambda m: m["slug"], reverse=True)
     return out
@@ -357,3 +462,89 @@ def co_occurring(days: list[dict], code: str, top_n: int = 10) -> list[dict]:
     out = [e for e in counts.values() if e["count"] >= 2]
     out.sort(key=lambda e: (-e["count"], e["code"]))
     return out[:top_n]
+
+
+def profile_breakdown(codes, profiles: dict[str, dict], key: str) -> list[dict]:
+    """銘柄の属性ごとの内訳。多い順。
+
+    **属性が取れていない銘柄は数えない。** 「不明」を1項目として混ぜると、
+    取得の進み具合が相場の話のように見えてしまう。代わりに呼び出し側が
+    `covered` で「何銘柄ぶんを数えたか」を断る。
+
+    Returns:
+        [{"label": 表記, "count": 銘柄数, "share": 全体に対する割合(%)}]
+    """
+    counts: dict[str, int] = {}
+    for code in codes:
+        value = (profiles.get(str(code)) or {}).get(key)
+        if value:
+            counts[value] = counts.get(value, 0) + 1
+    total = sum(counts.values())
+    if not total:
+        return []
+    return [
+        {"label": label, "count": count, "share": round(count * 100 / total, 1)}
+        for label, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+    ]
+
+
+# --- ストップ高／ストップ安の翌営業日 -----------------------------------------
+#
+# **このサイトでしか出せない数字。** 当日のランキングはどこにでもあるが、
+# 「上限まで買われた銘柄が、次の日どこにいたか」は前日の記録を持っていないと
+# 数えられない。
+#
+# 書くのは数えた事実だけで、**続くかどうかの見通しは書かない**。
+# 「翌日も値上がり上位30に残った」は「上がった」とも「上がり続ける」とも違う。
+
+def limit_followup(days: list[dict], kind: str, *, next_business_day=None) -> dict:
+    """記録がある日の銘柄が、翌営業日どこにいたか。
+
+    Args:
+        kind: "gainers"（ストップ高）か "losers"（ストップ安）。
+        next_business_day: 休場日を飛ばして次の営業日を返す関数。渡すと
+            **掲載が飛んでいる日を数えない**（間が抜けていると「翌営業日」と
+            言えないため）。渡さなければ掲載日の並びで次の日を使う。
+
+    Returns:
+        per_day … {rec_date, next_date, count, same_side, other_side, absent}
+        total   … 上と同じ形の合計（count が0なら None）
+    """
+    side = LIMIT_SIDES[kind]
+    other = "losers" if kind == "gainers" else "gainers"
+    order = sorted(days, key=lambda d: d["rec_date"])
+    per_day = []
+
+    for i, day in enumerate(order[:-1]):
+        if side["key"] not in day:      # 記録が無い日は数えない（推定と混ぜない）
+            continue
+        rows, source = limit_rows(day, kind)
+        if source != "recorded" or not rows:
+            continue
+        nxt = order[i + 1]
+        if next_business_day is not None:
+            try:
+                expected = next_business_day(date.fromisoformat(day["rec_date"])).isoformat()
+            except Exception:
+                continue
+            if nxt["rec_date"] != expected:
+                continue        # 掲載が飛んでいる。「翌営業日」とは言えない
+        codes = {r["code"] for r in rows}
+        same = codes & {r["code"] for r in nxt.get(kind) or []}
+        opposite = codes & {r["code"] for r in nxt.get(other) or []}
+        per_day.append({
+            "rec_date": day["rec_date"],
+            "next_date": nxt["rec_date"],
+            "count": len(codes),
+            "same_side": len(same),
+            "other_side": len(opposite),
+            "absent": len(codes - same - opposite),
+        })
+
+    per_day.sort(key=lambda d: d["rec_date"], reverse=True)
+    if not per_day:
+        return {"per_day": [], "total": None}
+    total = {k: sum(d[k] for d in per_day)
+             for k in ("count", "same_side", "other_side", "absent")}
+    total["days"] = len(per_day)
+    return {"per_day": per_day, "total": total}

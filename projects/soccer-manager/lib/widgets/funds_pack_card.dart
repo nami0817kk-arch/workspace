@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
+import '../monetization/funds_delivery.dart';
 import '../monetization/funds_pack.dart';
 import '../monetization/monetization_controller.dart';
 import '../monetization/purchase_service.dart';
@@ -94,8 +95,11 @@ class _FundsPackCardState extends State<FundsPackCard> {
     // Tr.pick は日本語と英語の両方を引数として受け取るため、どちらの文字列も
     // 評価される。受け取り処理を文字列の中に書くと2回加算される(実際に
     // 特典側でそうなっていた)。必ず外で1回だけ呼ぶこと。
-    final granted =
-        outcome == PurchaseOutcome.purchased ? gameState.claimPurchasedFunds(pack) : 0;
+    //
+    // 加算するのは「このパック」ではなく「預かっているぶん全部」。買った
+    // ぶんはストアからの通知で預かりに入るので、ここで直接このパックを
+    // 足すと、通知で入ったぶんと二重になる。
+    final granted = await deliverPendingFunds(money, gameState);
 
     final message = switch (outcome) {
       PurchaseOutcome.purchased =>

@@ -20,6 +20,13 @@
 {% block content %}
 <h1>{{ rec_date_ja }} の{{ heading }}</h1>
 {% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
+{# この表は上位30銘柄まで。その日の全件は記録のほうにある。 #}
+{% if stop_note %}
+<p class="stop-note">
+  この日{{ stop_note.term }}になったのは<strong>{{ stop_note.count }}銘柄</strong>です{% if stop_note.outside %}（うち{{ stop_note.outside }}銘柄はこの表の外）{% endif %}。
+  <a href="{{ base_url }}{{ stop_note.href }}">{{ stop_note.term }}の記録を見る →</a>
+</p>
+{% endif %}
 {% include "_ranking_table.html" %}
 {% if chart %}
 <figure class="chart-figure">
@@ -41,6 +48,7 @@
 </nav>
 <p>
   <a href="{{ base_url }}{{ today_href }}">最新の{{ heading }}を見る →</a>
-  ／ <a href="{{ base_url }}weekly/index.html">この週のまとめを見る →</a>
+  ／ <a href="{{ base_url }}{{ week_href }}">この週のまとめ →</a>
+  ／ <a href="{{ base_url }}{{ month_href }}">この月のまとめ →</a>
 </p>
 {% endblock %}

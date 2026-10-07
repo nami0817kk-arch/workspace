@@ -20,6 +20,7 @@ import 'package:soccer_career/ui/trait_row.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/models/attributes.dart';
+import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/training.dart';
@@ -1041,6 +1042,45 @@ void main() {
     }
   });
 
+  testWidgets('局面の3択は、どちらのテーマでもカードと同じ面で浮く', (tester) async {
+    // **暗いほうだけ逆に沈んでいた。** 面の色を `surfaceContainerLowest` と
+    // 直に書いていたので、暗いテーマでは地（#121210）より暗い面（#0B0B09）に
+    // なり、明るいほうでは浮いて見えるボタンが暗いほうでは窪んで見えた。
+    // 書き出して並べるまで気付けない（`font_test` も `ui_test` も見ない）。
+    for (final brightness in [Brightness.light, Brightness.dark]) {
+      final controller = await newCareer();
+      controller.startNextMatch();
+      final theme = appTheme(const Color(0xFF1B5E3F), brightness);
+
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(theme: theme, home: MatchScreen(controller: controller)),
+      );
+      await tester.pumpAndSettle();
+
+      final button = tester.widget<OutlinedButton>(
+        find.byType(OutlinedButton).first,
+      );
+      final face = button.style?.backgroundColor?.resolve(const {});
+      expect(
+        face,
+        theme.cardTheme.color,
+        reason: '$brightness で、手の面がカードと違う',
+      );
+      // **どちらのテーマでも、面は地より明るい＝浮いている。**
+      // 「面の明るさで前後を分けて、影はその裏付けに留める」という
+      // 決まりが、暗いほうでも同じ向きで成り立っていること。
+      final ground = theme.colorScheme.surface;
+      expect(
+        face!.computeLuminance(),
+        greaterThan(ground.computeLuminance()),
+        reason: '$brightness で、手の面が地より暗い（沈んで見える）',
+      );
+    }
+  });
+
   testWidgets('試合の画面は、3つの手を見比べられる', (tester) async {
     final controller = await newCareer();
     controller.startNextMatch();
@@ -1307,10 +1347,10 @@ void main() {
     await pumpHub(tester, controller);
     await tester.tap(find.byIcon(Icons.more_vert));
     await tester.pumpAndSettle();
-    expect(find.text('広告・応援'), findsNothing);
+    expect(find.text('広告について'), findsNothing);
   });
 
-  testWidgets('広告・応援の画面が開き、売り物は2つだけ', (tester) async {
+  testWidgets('広告の画面が開き、売り物は「広告を消す」だけ', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final money = Monetization(
       ads: NoAdService(),
@@ -1321,14 +1361,14 @@ void main() {
     await pumpHub(tester, controller, monetization: money);
     await tester.tap(find.byIcon(Icons.more_vert));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('広告・応援'));
+    await tester.tap(find.text('広告について'));
     await tester.pumpAndSettle();
 
     // 見出しとボタンで2つ出る。
     expect(find.text('広告を消す'), findsWidgets);
-    expect(find.text('応援する'), findsWidgets);
     expect(find.widgetWithText(FilledButton, '広告を消す'), findsOneWidget);
-    expect(find.widgetWithText(OutlinedButton, '応援する'), findsOneWidget);
+    // **応援（消耗型）は 2026-10-01 に外した。**
+    expect(find.textContaining('応援'), findsNothing);
     // iOS の審査要件。
     expect(find.text('購入を復元'), findsOneWidget);
     // 強くなるものを売っていないことを、最初に書く。
@@ -1339,4 +1379,173 @@ void main() {
     );
     expect(buy.onPressed, isNull);
   });
+
+  testWidgets('引退した季も、広告の機会として数える', (tester) async {
+    // 引退はシーズン終了の画面から行くので、`_endSeason` の広告を
+    // そのまま通る（`retire()` が最後の季を履歴に足す）。
+    // **キャリアで一番最後の1回**なので、落とすとそのまま消える。
+    SharedPreferences.setMockInitialValues({});
+    final money = Monetization(
+      ads: NoAdService(),
+      purchases: _FakeStoreForUi(available: true),
+    );
+    await money.initialize();
+
+    final controller = await newCareer(age: 21);
+    while (!controller.state!.seasonFinished) {
+      await controller.simulateMatch();
+    }
+    await controller.finishSeason();
+    final before = controller.state!.history.length;
+    await controller.retire();
+    final after = controller.state!.history.length;
+
+    expect(after, before + 1, reason: '引退した季が履歴に入っていない');
+    expect(controller.state!.retired, isTrue);
+    expect(money.shouldShowSeasonAd(seasonsPlayed: after), isTrue);
+  });
+
+  testWidgets('広告が出るようになってから、消せることをシーズン終了に書く', (tester) async {
+    // **⋮ の奥にしか置いていなかった。** 広告が出ることは分かっても、
+    // 消せることを知らないままになる。広告が出る場所で伝える。
+    Future<Monetization> money({bool bought = false, bool store = true}) async {
+      SharedPreferences.setMockInitialValues(
+        bought ? {'monetize.noAds': true} : {},
+      );
+      final m = Monetization(
+        ads: NoAdService(),
+        purchases: _FakeStoreForUi(available: store),
+      );
+      await m.initialize();
+      return m;
+    }
+
+    Future<void> open(CareerController c, Monetization m) async {
+      tester.view.physicalSize = const Size(390, 3200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(useMaterial3: true),
+          home: SeasonEndScreen(controller: c, monetization: m),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    final controller = await newCareer();
+    while (!controller.state!.seasonFinished) {
+      await controller.simulateMatch();
+    }
+    await controller.finishSeason();
+
+    // 1季目。まだ広告は出ないので、勧めない。
+    expect(controller.state!.history.length, lessThan(Monetization.adsFromSeason));
+    await open(controller, await money());
+    expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsNothing);
+
+    // 広告が出るようになった頃。
+    // 季末の画面では履歴がまだ増えていない（増えるのは advanceSeason）。
+    for (var i = controller.state!.history.length;
+        i < Monetization.adsFromSeason;
+        i++) {
+      controller.state!.history.add(
+        SeasonRecord(
+          year: 2026 + i,
+          clubName: controller.state!.club.name,
+          tier: controller.state!.club.tier,
+          leaguePosition: 5,
+          stats: const SeasonStats(
+            appearances: 0,
+            goals: 0,
+            assists: 0,
+            averageRating: 0,
+          ),
+          salary: 1000,
+          caps: 0,
+          objectiveMet: false,
+          countryId: controller.state!.countryId,
+        ),
+      );
+    }
+    await open(controller, await money());
+    expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsOneWidget);
+
+    // 買った人には出さない。
+    await open(controller, await money(bought: true));
+    expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsNothing);
+
+    // ストアに繋がらない環境（ブラウザ版）にも出さない。
+    await open(controller, await money(store: false));
+    expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsNothing);
+  });
+
+  /// **iPad の幅で、中身が細い1列に縮こまらない。**
+  ///
+  /// 掲載用の絵を iPad 13インチ（論理1032幅）で撮ったら、中身が真ん中の
+  /// 520px に収まって左右が大きく空いていた。崩れてはいないが、13インチの
+  /// 絵として間が持たない。`soccer-manager` は同じ役の `ResponsiveBody` を
+  /// 720 にしていて、あちらの iPad の絵は幅が埋まっている（2026-09-26 に
+  /// 揃えた）。
+  ///
+  /// スマホでは何も変わらない（390〜430 はどちらの値より狭い）。だから
+  /// **スマホだけ見ていると、520 に戻しても誰も気付かない。**
+  testWidgets('iPad の幅では、中身が細い1列に縮こまらない', (tester) async {
+    final controller = await newCareer();
+    tester.view.physicalSize = const Size(1032, 1376);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      MaterialApp(home: HubScreen(controller: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    final body = tester.getSize(
+      find
+          .descendant(
+            of: find.byType(ReadableWidth).first,
+            matching: find.byType(ConstrainedBox),
+          )
+          .first,
+    );
+    expect(
+      body.width,
+      greaterThanOrEqualTo(700),
+      reason: 'iPad で中身が ${body.width} 幅しかない。'
+          'ReadableWidth.maxContentWidth を狭めていないか',
+    );
+    // 逆に、広げすぎて1行が伸び切っていないこと（読めなくなる）。
+    expect(body.width, lessThan(1032));
+  });
+}
+
+/// 価格まで返す偽のストア。`monetize_test` の偽物は本文側に置いてあるので、
+/// ここでは画面に必要なぶんだけ持つ。
+class _FakeStoreForUi implements PurchaseService {
+  _FakeStoreForUi({required this.available});
+
+  final bool available;
+
+  @override
+  Future<void> initialize({
+    required Future<void> Function(Product product) onDelivered,
+    required Future<void> Function(Product product) onRevoked,
+  }) async {}
+
+  @override
+  Future<bool> isAvailable() async => available;
+
+  @override
+  Future<String?> priceOf(Product product) async => available ? '¥400' : null;
+
+  @override
+  Future<PurchaseOutcome> buy(Product product) async =>
+      PurchaseOutcome.unavailable;
+
+  @override
+  Future<PurchaseOutcome> restore() async => PurchaseOutcome.unavailable;
+
+  @override
+  void dispose() {}
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +16,7 @@ import '../logic/style_engine.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/pitch_art.dart';
 import '../widgets/formation_layout.dart';
 import '../widgets/player_face_avatar.dart';
 import '../widgets/quick_access_drawer.dart';
@@ -1341,72 +1344,85 @@ class _PitchView extends StatelessWidget {
 class _PitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    const dark = Color(0xFF2E7D32);
-    const light = Color(0xFF34893A);
-    const stripeCount = 8;
-    final stripeHeight = size.height / stripeCount;
-    for (var i = 0; i < stripeCount; i++) {
-      final stripe = Paint()..color = i.isEven ? dark : light;
-      canvas.drawRect(
-        Rect.fromLTWH(0, i * stripeHeight, size.width, stripeHeight),
-        stripe,
-      );
-    }
+    PitchArt.paintTurf(canvas, size, horizontalStripes: true);
 
-    final line = Paint()
-      ..color = Colors.white.withValues(alpha: 0.75)
+    final linePaint = Paint()
+      ..color = PitchArt.line
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
-    canvas.drawRect(Rect.fromLTWH(4, 4, size.width - 8, size.height - 8), line);
-    canvas.drawLine(
-      Offset(4, size.height / 2),
-      Offset(size.width - 4, size.height / 2),
-      line,
-    );
-    canvas.drawCircle(
-      Offset(size.width / 2, size.height / 2),
-      size.width * 0.16,
-      line,
-    );
-    canvas.drawCircle(
-      Offset(size.width / 2, size.height / 2),
-      2,
-      Paint()..color = line.color,
-    );
+    final dot = Paint()..color = PitchArt.line;
 
-    final boxW = size.width * 0.55;
-    final boxH = size.height * 0.12;
-    canvas.drawRect(
-      Rect.fromLTWH(size.width / 2 - boxW / 2, 4, boxW, boxH),
-      line,
-    );
-    canvas.drawRect(
-      Rect.fromLTWH(
-        size.width / 2 - boxW / 2,
-        size.height - 4 - boxH,
-        boxW,
-        boxH,
-      ),
-      line,
-    );
+    // タッチライン。外に余白を残して、ゴールを張り出させる場所を作る。
+    final margin = min(size.width, size.height) * 0.045;
+    final field = Rect.fromLTRB(
+        margin, margin, size.width - margin, size.height - margin);
+    canvas.drawRect(field, linePaint);
 
-    const cornerRadius = 10.0;
-    const halfPi = 1.5708;
-    final corners = [
-      (const Offset(4, 4), 0.0), // top-left
-      (Offset(size.width - 4, 4), halfPi), // top-right
-      (Offset(size.width - 4, size.height - 4), halfPi * 2), // bottom-right
-      (Offset(4, size.height - 4), halfPi * 3), // bottom-left
-    ];
-    for (final (center, start) in corners) {
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: cornerRadius),
-        start,
-        halfPi,
-        false,
-        line,
+    // ハーフウェイラインとセンターサークル。
+    canvas.drawLine(Offset(field.left, field.center.dy),
+        Offset(field.right, field.center.dy), linePaint);
+    final circleR = field.width * 0.17;
+    canvas.drawCircle(field.center, circleR, linePaint);
+    canvas.drawCircle(field.center, 2.2, dot);
+
+    // ゴール前。ペナルティエリア・ゴールエリア・ペナルティスポットと
+    // アーク・ゴールまで引く。線が足りないと、ただの緑の長方形に見える。
+    for (final top in const [true, false]) {
+      final boxW = field.width * 0.60;
+      final boxH = field.height * 0.155;
+      final goalAreaW = field.width * 0.28;
+      final goalAreaH = field.height * 0.055;
+
+      final boxY = top ? field.top : field.bottom - boxH;
+      canvas.drawRect(
+        Rect.fromLTWH(field.center.dx - boxW / 2, boxY, boxW, boxH),
+        linePaint,
       );
+      final goalAreaY = top ? field.top : field.bottom - goalAreaH;
+      canvas.drawRect(
+        Rect.fromLTWH(
+            field.center.dx - goalAreaW / 2, goalAreaY, goalAreaW, goalAreaH),
+        linePaint,
+      );
+
+      final spotY = top
+          ? field.top + field.height * 0.105
+          : field.bottom - field.height * 0.105;
+      canvas.drawCircle(Offset(field.center.dx, spotY), 2, dot);
+      canvas.drawArc(
+        Rect.fromCircle(
+            center: Offset(field.center.dx, spotY), radius: circleR),
+        top ? pi / 6 : pi + pi / 6,
+        pi * 2 / 3,
+        false,
+        linePaint,
+      );
+
+      // ゴール。タッチラインの外へ出す。
+      final goalDepth = margin * 0.6;
+      final goalW = field.width * 0.22;
+      final goalRect = Rect.fromLTWH(
+        field.center.dx - goalW / 2,
+        top ? field.top - goalDepth : field.bottom,
+        goalW,
+        goalDepth,
+      );
+      canvas.drawRect(goalRect, Paint()..color = const Color(0x33FFFFFF));
+      canvas.drawRect(goalRect, linePaint);
     }
+
+    // コーナーアーク。
+    final cornerR = min(size.width, size.height) * 0.03;
+    void corner(Offset center, double startAngle) => canvas.drawArc(
+        Rect.fromCircle(center: center, radius: cornerR),
+        startAngle,
+        pi / 2,
+        false,
+        linePaint);
+    corner(field.topLeft, 0);
+    corner(field.topRight, pi / 2);
+    corner(field.bottomRight, pi);
+    corner(field.bottomLeft, -pi / 2);
   }
 
   @override

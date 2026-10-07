@@ -1,0 +1,103 @@
+# 台本の雛形。写して使う。
+# 行は「- 語り: 本文」。強さを変えるときは「- 語り(強): 本文」。
+# figure を書くと、その節のあいだ画面の真ん中に図が出る。
+
+title: ここに題名（疑問形）
+question: この回で答える問い（1つだけ）
+date: 2026-10-06           # 価格や数字を調べた日。画面に出す
+sources:                   # 画面の下に出し続ける出典
+  - 資源エネルギー庁「石油製品価格調査」
+  - 財務省「揮発油税・地方揮発油税」
+
+sections:
+  - id: "00"
+    name: 表面
+    figure: null
+    lines:
+      - 語り: 報じられたことを、そのまま1つ。
+      - 聞き: 素朴な反応。
+
+  - id: "01"
+    name: 問い
+    figure: null
+    lines:
+      - 聞き: それって、なんでなんですか。
+      - 語り: その問いを、今日は切って見ていきます。
+
+  - id: "02"
+    name: 一の断面
+    figure:
+      kind: stack          # stack（積み上げ）/ timeline（年表）/ flow（流れ図）/ compare（比べる）/ bars
+      title: 1リットルの値段を、切って見る
+      items:
+        - { label: 本体価格, value: 121.2, note: 121円20銭 }
+        - { label: ガソリン税, value: 53.8, note: 53円80銭 }
+        - { label: 消費税, value: 15.9, note: 15円90銭 }
+    lines:
+      - 語り: 数字を出す。
+      - 語り(強): 意外なところだけ強くする。
+      - 聞き(強): 自分の暮らしに置き換える。
+
+  - id: "03"
+    name: 二の断面
+    figure:
+      kind: timeline
+      title: いつ、誰が決めたか
+      items:
+        - { label: 1954年, note: 道路を作るための税として始まる }
+        - { label: 1974年, note: 「当分のあいだ」として税率を倍に }
+    lines:
+      - 語り: 経緯を話す。
+
+  - id: "04"
+    name: 三の断面
+    figure:
+      kind: flow
+      title: 誰が払い、どこへ行くか
+      items:
+        - { label: 給油する人, note: 1リットルごとに }
+        - { label: 国, note: 一般財源へ }
+    lines:
+      - 語り: お金の流れを話す。
+
+  - id: "05"
+    name: 四の断面
+    figure:
+      kind: compare
+      title: よその国は、どうしているか
+      items:
+        - { label: 日本, value: 53.8, note: 1リットルあたり }
+        - { label: アメリカ, value: 0, note: 調べて入れる }
+        - { label: イギリス, value: 0, note: 調べて入れる }
+    lines:
+      - 語り: 日本だけなのかを確かめる。
+      - 聞き: よその国がうらやましく聞こえたら、条件の違いも言う。
+
+  - id: "06"
+    name: よくある誤解
+    figure: null
+    lines:
+      - 聞き: よく言われる説を、聞き役の側から出す。
+      - 語り: 原典を見ると、こうです。
+
+  - id: "07"
+    name: 見立て
+    figure:
+      kind: bars
+      title: なぜ、そうなったか
+      items:
+        - { label: 理由1, value: 0 }
+    lines:
+      - 語り: 理由を番号で出す。
+      - 聞き: 理由ごとに、自分の言葉で言い直す。
+
+  - id: "08"
+    name: 締め
+    figure: null
+    lines:
+      - 語り: 今日の断面は、ここまでです。
+      - 聞き: 次回の問いを一言で振る。
+
+next:
+  title: 次回の題名
+  teaser: 次回の問いを一言で

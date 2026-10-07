@@ -27,8 +27,19 @@ SEARCH_CONSOLE_TOKEN = os.environ.get(
 #     審査を申し込むときは、これだけ入っていればよい。
 #   ADSENSE_SLOT   … 手で置く枠の ID。自動広告に任せるなら空のままでよい。
 # 空のあいだは広告のスクリプトも枠も一切描かない。
-ADSENSE_CLIENT = os.environ.get("KABU_ADSENSE_CLIENT", "")
+ADSENSE_CLIENT = os.environ.get("KABU_ADSENSE_CLIENT", "ca-pub-6409014819339195")
 ADSENSE_SLOT = os.environ.get("KABU_ADSENSE_SLOT", "")
+
+# 同じ運営者が出している他のサイト。フッタから相互に行き来できるようにする。
+#
+# 入口（dailyquarry.com）からは3サイトへリンクされているのに、こちらから
+# 戻る線が無かった。読み手が他のものを見つけられないうえ、検索側から見ても
+# 一群のサイトとして繋がっていない状態だった。
+SIBLING_SITES = [
+    {"url": "https://dailyquarry.com/", "name": "つるはし社", "note": "運営しているサイトの一覧"},
+    {"url": "https://kakaku.dailyquarry.com/", "name": "楽天 値下がりウォッチ", "note": "毎日の値下がりと最安値圏"},
+    {"url": "https://shaho.dailyquarry.com/", "name": "パートの社会保険 計算機", "note": "106万円の壁の判定"},
+]
 
 # 公開名義と連絡先。**個人名は出さない**（屋号で通す）。
 # AdSense の審査は「誰が運営し、どこへ連絡できるか」が分かることを求めるので、

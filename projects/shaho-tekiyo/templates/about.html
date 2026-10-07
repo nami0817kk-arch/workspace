@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}このサイトについて｜社会保険 加入判定チェッカー{% endblock %}
-{% block description %}社会保険 加入判定チェッカーが何を計算し、何を計算していないか。判定の根拠と限界をまとめています。{% endblock %}
+{% block title %}このサイトについて｜パートの社会保険 計算機{% endblock %}
+{% block description %}パートの社会保険 計算機が何を計算し、何を計算していないか。加入判定と保険料・手取りの根拠にした公的な資料、計算の前提と限界、個別の相談には答えられないことをまとめています。{% endblock %}
 {% block breadcrumb %}
 <nav class="crumbs" aria-label="パンくずリスト">
   <a href="{{ base_url }}index.html">計算機</a>
@@ -35,9 +35,9 @@
 <h2>何を計算していないか</h2>
 <ul>
   <li>健康保険組合に入っている会社の保険料（料率が組合ごとに違うため）。</li>
-  <li>所得税・住民税・雇用保険料の変化、賞与にかかる保険料。</li>
+  <li>住民税（前の年の所得で決まるため）と、賞与にかかる所得税。</li>
   <li>まだ公表されていない年度の保険料（健康保険料率は毎年3月分から改定されます）。</li>
-  <li>複数事業所で働く場合の合算判定。</li>
+  <li>複数の勤め先でそれぞれ加入する場合の保険料（勤め先ごとの賃金を合わせて等級が決まるため）。</li>
   <li>個人事業所特有の適用除外（士業など）。</li>
   <li>育児休業・産前産後休業中の扱い。</li>
 </ul>
@@ -53,7 +53,7 @@
 
 <h2>関連するページ</h2>
 <ul>
-  <li><a href="{{ base_url }}faq.html">よくある誤解</a>（106万円の壁と130万円の壁の違いなど）</li>
+  <li><a href="{{ base_url }}faq.html">よくある質問</a>（106万円の壁と130万円の壁の違いなど）</li>
   <li><a href="{{ base_url }}operator.html">運営者情報</a></li>
   <li><a href="{{ base_url }}privacy.html">プライバシーポリシー</a></li>
   <li><a href="{{ base_url }}contact.html">お問い合わせ</a></li>

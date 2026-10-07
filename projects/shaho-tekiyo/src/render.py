@@ -7,6 +7,11 @@ robots.txt の作り方はそちらの先例に合わせてある）。データ
 from __future__ import annotations
 
 import json
+import re
+from datetime import date, datetime
+import os
+from zoneinfo import ZoneInfo
+from urllib.parse import urljoin
 import shutil
 import sys
 from pathlib import Path
@@ -15,7 +20,10 @@ from jinja2 import Environment, FileSystemLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import charts
 import eligibility
+import extras
+import kabe
 import premium
 import site_config
 
@@ -38,6 +46,13 @@ _env.globals["SITE_URL"] = SITE_URL
 _env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
 _env.globals["OWNER"] = site_config.OWNER
 _env.globals["CONTACT_EMAIL"] = site_config.CONTACT_EMAIL
+_env.globals["pref_full"] = extras.pref_full
+# ビルドした日（日本時間）。2026年10月1日の前後で「無くなります／無くなりました」を書き分ける。
+# 毎日 0時台に作り直す（.github/workflows/shaho-deploy.yml の schedule）ので、日付が変わっても古い時制が残らない。
+# テストでは SHAHO_BUILD_DATE=2026-10-02 のように上書きできる
+BUILD_DATE: date = date.fromisoformat(os.environ["SHAHO_BUILD_DATE"]) if os.environ.get("SHAHO_BUILD_DATE") else datetime.now(ZoneInfo("Asia/Tokyo")).date()
+_env.globals["oct_done"] = BUILD_DATE >= date(2026, 10, 1)
+_env.globals["era"] = f"令和{premium.TABLES[-1].fiscal_year - 2018}年度"
 
 
 def canonical_url(rel_path: str) -> str:
@@ -55,8 +70,94 @@ def canonical_url(rel_path: str) -> str:
     return f"{SITE_URL}/{rel.removesuffix('.html')}"
 
 
+_CRUMBS = re.compile(r'<nav class="crumbs"[^>]*>(.*?)</nav>', re.S)
+_CRUMB_LINK = re.compile(r'<a href="([^"]+)">([^<]+)</a>')
+_CRUMB_HERE = re.compile(r'<span aria-current="page">([^<]+)</span>')
+
+
+def breadcrumb_ld(html: str, rel_path: str) -> str | None:
+    """ページのパンくず（nav.crumbs）から、検索エンジン向けの BreadcrumbList（JSON-LD）を作る。
+    見た目のパンくずと中身がずれないように、HTML から読み取って作る。"""
+    m = _CRUMBS.search(html)
+    if not m:
+        return None
+    base = f"{SITE_URL}/{rel_path}"
+    items = []
+    for href, name in _CRUMB_LINK.findall(m.group(1)):
+        target = urljoin(base, href)
+        items.append((name.strip(), canonical_url(target.removeprefix(SITE_URL + "/"))))
+    here = _CRUMB_HERE.search(m.group(1))
+    if here:
+        items.append((here.group(1).strip(), canonical_url(rel_path)))
+    data = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": name, "item": url} for i, (name, url) in enumerate(items)
+        ],
+    }
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+
+
+_FAQ_ITEM = re.compile(r'<h2 id="q-[^"]+">(.*?)</h2>(.*?)(?=<h2|<div class="disclaimer">)', re.S)
+_TAG = re.compile(r"<[^>]+>")
+
+
+def faq_ld(html: str) -> str | None:
+    """よくある質問の見出し（h2 id="q-…"）と、その下の本文から FAQPage（JSON-LD）を作る。
+    見た目の質問と中身がずれないように HTML から読み取る。出典の注記（p.hint）は答えに含めない。"""
+    items = []
+    for q, body in _FAQ_ITEM.findall(html):
+        body = re.sub(r'<p class="hint">.*?</p>', "", body, flags=re.S)
+        answer = re.sub(r"\s+", " ", _TAG.sub("", body)).strip()
+        if answer:
+            items.append({"@type": "Question", "name": _TAG.sub("", q).strip(),
+                          "acceptedAnswer": {"@type": "Answer", "text": answer}})
+    if not items:
+        return None
+    data = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": items}
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+
+
+_TOC_PAGES = re.compile(r"^(getsushu/\d+man|kabe/\d+yen|nenshu|jyoken|hyoujun)\.html$")
+_H2 = re.compile(r"<h2( id=\"([^\"]+)\")?>(.*?)</h2>", re.S)
+
+
+def add_toc(html: str) -> str:
+    """長いページの最初の h2 の前に目次を入れる。id の無い h2 には sec-1… を振る。
+    「ほかの計算・解説」（関連カード）は目次に入れない。"""
+    head, sep, body = html.partition("<main")
+    if not sep:
+        return html
+    items: list[tuple[str, str]] = []
+    count = iter(range(1, 1000))
+
+    def name(m: re.Match) -> str:
+        text = re.sub(r"<[^>]+>", "", m.group(3)).strip()
+        hid = m.group(2) or f"sec-{next(count)}"
+        if text != "ほかの計算・解説":
+            items.append((hid, text))
+        return f'<h2 id="{hid}">{m.group(3)}</h2>'
+
+    body = _H2.sub(name, body)
+    if len(items) < 3:
+        return html
+    toc = '<nav class="toc" aria-label="このページの目次"><strong>目次</strong>\n<ol>\n' + "".join(
+        f'  <li><a href="#{i}">{t}</a></li>\n' for i, t in items) + "</ol>\n</nav>\n"
+    first = body.find("<h2 ")
+    return head + sep + body[:first] + toc + body[first:]
+
+
 def _write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.suffix == ".html" and path.name != "404.html":
+        ld = breadcrumb_ld(content, path.relative_to(_OUTPUT_DIR).as_posix())
+        if ld:
+            content = content.replace("</head>", ld + "\n</head>", 1)
+        if _TOC_PAGES.match(path.relative_to(_OUTPUT_DIR).as_posix()):
+            content = add_toc(content)
+        if path.name == "faq.html":
+            content = content.replace("</head>", (faq_ld(content.split("<main", 1)[1]) or "") + "\n</head>", 1)
     path.write_text(content, encoding="utf-8")
 
 
@@ -84,7 +185,9 @@ def schedule_json() -> str:
 # 読み物としての文章はここに分けて持つ。
 _MILESTONE_NOTES: dict[str, str] = {
     "2026-10": (
-        "これまで「月額8.8万円以上（年収106万円の壁）」だった賃金要件が無くなります。"
+        "これまで「月額8.8万円以上（年収106万円の壁）」だった賃金要件が"
+        + ("無くなりました。" if BUILD_DATE >= date(2026, 10, 1) else "無くなります。")
+        + ""
         "週20時間以上働いていて、勤務先が51人以上の会社であれば、"
         "月収が8.8万円に届いていなくても加入対象になりえます。"
         "一方で、企業規模の要件（51人以上）はこの段階ではまだ変わりません。"
@@ -103,9 +206,40 @@ _MILESTONE_NOTES: dict[str, str] = {
     ),
     "2035-10": (
         "企業規模要件そのものが撤廃されます。会社の人数にかかわらず、"
-        "週20時間以上・学生でない・継続2か月超の見込みという要件を満たせば加入対象になります。"
+        "週20時間以上・学生でない・継続2か月超の見込みという要件を満たせば加入対象になります"
+        "（従業員5人未満の個人事業所など、もともと社会保険の事業所でないところは別です）。"
     ),
 }
+
+
+def size_timeline(as_of: date | None = None, here: str = "いまの段階") -> str:
+    """企業規模要件の段階の図。いま（as_of）がどの段階かを濃い色で示す。"""
+    stages = []
+    today_size = eligibility.regime_for(as_of or BUILD_DATE).company_size_threshold
+    seen = set()
+    for r in eligibility.SCHEDULE:
+        size = r.company_size_threshold
+        if size in seen:
+            continue  # 2026年10月は賃金要件だけの変化なので、規模の図には出さない
+        seen.add(size)
+        when = "いま" if r is eligibility.SCHEDULE[0] else f"{r.effective_from.year}年{r.effective_from.month}月"
+        who = f"{size}人以上" if size else "すべて"
+        stages.append((when, who, size == today_size))
+    return charts.stages_timeline(stages, f"社会保険に入る会社の規模（従業員数）は、2035年までに段階的に広がる。濃い色が{here}")
+
+
+def _quick_amounts() -> list[dict]:
+    """トップの早見表。8万〜20万円を2万円刻み（細かい一覧は月収別のページ）。"""
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    rows = []
+    for man in range(8, 21, 2):
+        pay = man * 10_000
+        r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=False)
+        koyo = extras.employment_yen(as_of, pay)
+        tax = extras.income_tax_yen(as_of, pay - r.total_yen - koyo, 0) or 0
+        rows.append({"man": man, "slug": f"{man}man", "total": r.total_yen, "net": pay - r.total_yen - koyo - tax})
+    return rows
 
 
 def _build_calculator_page() -> None:
@@ -119,7 +253,11 @@ def _build_calculator_page() -> None:
             hours_requirement=eligibility.WEEKLY_HOURS_REQUIREMENT,
             milestones=eligibility.MILESTONES,
             prefectures=premium.PREFECTURES,
+            timeline=size_timeline(),
+            quick_amounts=_quick_amounts(),
+            kabe_example=kabe.analyze(max(premium.TABLES[-1].valid_from, date(2026, 10, 1)), 1100),
             rates_json=premium.tables_json(),
+            extras_json=extras.extras_json(),
         ),
     )
 
@@ -150,6 +288,7 @@ def _build_year_pages() -> None:
                 current_index=eligibility.SCHEDULE.index(regime),
                 prev_page=pages[i - 1] if i > 0 else None,
                 next_page=pages[i + 1] if i + 1 < len(pages) else None,
+                timeline=size_timeline(regime.effective_from, "このページの段階"),
             ),
         )
 
@@ -163,8 +302,325 @@ def _build_year_pages() -> None:
     )
 
 
+# 月収別のページ（/getsushu/10man.html）。8万〜25万円を1万円刻みで。
+AMOUNTS_MAN: tuple[int, ...] = tuple(range(8, 26))
+
+
+def _era(fiscal_year: int) -> str:
+    return f"令和{fiscal_year - 2018}年度"
+
+
+def _build_amount_pages() -> None:
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    period = f"{table.valid_from.year}年{table.valid_from.month}月分〜{table.valid_until.year}年{table.valid_until.month}月分"
+    era = _era(table.fiscal_year)
+
+    def est(pref: str, pay: int, care: bool = False) -> premium.PremiumResult:
+        return premium.estimate(as_of=as_of, prefecture=pref, monthly_pay_yen=pay, age_40_to_64=care)
+
+    all_amounts = [
+        {"man": m, "slug": f"{m}man", "r": est("東京", m * 10_000)} for m in AMOUNTS_MAN
+    ]
+    common = dict(era=era, period=period, source=table.source, all_amounts=all_amounts, other=extras.RATES)
+    tmpl = _env.get_template("amount.html")
+    for i, a in enumerate(all_amounts):
+        pay = a["man"] * 10_000
+        rows = [(est(p, pay), est(p, pay, True)) for p in premium.PREFECTURES]
+        by_total = sorted((r for r, _ in rows), key=lambda r: r.total_yen)
+        koyo = extras.employment_yen(as_of, pay)
+        tax = extras.income_tax_yen(as_of, pay - a["r"].total_yen - koyo, 0) or 0
+        r = a["r"]
+        chart = charts.breakdown_bar(
+            [
+                ("手取り", pay - r.total_yen - koyo - tax, "s1"),
+                ("厚生年金保険料", r.pension_yen, "s2"),
+                ("健康保険料・子ども・子育て支援金", r.health_yen + r.kodomo_yen, "s3"),
+                ("雇用保険料・所得税", koyo + tax, "s4"),
+            ],
+            pay,
+            f"月収{a['man']}万円の行き先（東京・39歳以下・扶養する家族0人）",
+        )
+        kokumin = extras.kokumin_nenkin_yen(as_of)
+        pension_chart = charts.hbars(
+            [("国民年金（自分で払う）", kokumin, "s2"), ("厚生年金（本人負担）", r.pension_yen, "s1")],
+            f"年金の保険料（1か月）。厚生年金は会社もほぼ同じ額を払い、将来の年金は国民年金に上乗せされる",
+        )
+        rel = f"getsushu/{a['slug']}.html"
+        _write(
+            _OUTPUT_DIR / rel,
+            tmpl.render(
+                base_url="../",
+                canonical=canonical_url(rel),
+                man=a["man"],
+                pay=pay,
+                tokyo=a["r"],
+                tokyo_care=est("東京", pay, True),
+                cheapest=by_total[0],
+                dearest=by_total[-1],
+                rows=rows,
+                neighbors=all_amounts[max(0, i - 1): i + 2],
+                chart=chart,
+                pension_chart=pension_chart,
+                koyo=extras.employment_yen(as_of, pay),
+                tax=extras.income_tax_yen(
+                    as_of, pay - a["r"].total_yen - extras.employment_yen(as_of, pay), 0
+                ),
+                kokumin=extras.kokumin_nenkin_yen(as_of),
+                pension_inc=extras.pension_increase_per_year(a["r"].pension_standard),
+                sick=extras.sickness_daily_yen(a["r"].health_standard),
+                **common,
+            ),
+        )
+    _write(
+        _OUTPUT_DIR / "getsushu" / "index.html",
+        _env.get_template("amount_index.html").render(
+            base_url="../", canonical=canonical_url("getsushu/index.html"),
+            reverse=_reverse_rows(as_of), **common
+        ),
+    )
+    _write(
+        _OUTPUT_DIR / "hyoujun.html",
+        _env.get_template("hyoujun.html").render(
+            base_url="", canonical=canonical_url("hyoujun.html"), grades=_grade_rows(as_of), **common
+        ),
+    )
+
+
+def _net_monthly(as_of: date, pay: int) -> int:
+    """社会保険に入ったときの手取りの目安（月、東京・39歳以下・扶養0人・通勤手当なし）。"""
+    r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=False)
+    koyo = extras.employment_yen(as_of, pay) or 0
+    tax = extras.income_tax_yen(as_of, pay - r.total_yen - koyo, 0) or 0
+    return pay - r.total_yen - koyo - tax
+
+
+# 手取りから月収を逆算する表（月収別の一覧の下）。「パート 手取り12万 社会保険」で探す人向け。
+REVERSE_NET_MAN: tuple[int, ...] = tuple(range(7, 21))
+
+
+def _reverse_rows(as_of: date) -> list[dict]:
+    """手取り n 万円に届く最小の月収（100円単位）。等級の境目で手取りが下がることがあるので、
+    「その月収以上なら、どの額でも手取りが n 万円を下回らない」額を探す。"""
+    rows = []
+    for man in REVERSE_NET_MAN:
+        target = man * 10_000
+        pay = 350_000
+        while pay - 100 > 0 and _net_monthly(as_of, pay - 100) >= target:
+            pay -= 100
+        rows.append({"net_man": man, "pay": pay, "net": _net_monthly(as_of, pay),
+                     "hourly_20": -(-pay * 12 // (52 * 20))})
+    return rows
+
+
+def _grade_rows(as_of: date) -> list[dict]:
+    """標準報酬月額の等級表（健康保険の等級ごと、厚生年金の上限 65万円まで）と本人負担（東京）。"""
+    table = premium.table_for(as_of)
+    rows = []
+    grades = table.health_grades
+    for i, (grade, standard, lower) in enumerate(grades):
+        if standard > 650_000:
+            break
+        upper = grades[i + 1][2] if i + 1 < len(grades) else None
+        pay = max(lower, 1)
+        r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=False)
+        rc = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=True)
+        rows.append({"grade": grade, "pension_grade": r.pension_grade, "standard": standard, "lower": lower,
+                     "upper": upper, "total": r.total_yen, "total_care": rc.total_yen, "pension": r.pension_yen})
+    return rows
+
+
+# 損得のページ（/sontoku.html）。「パート 社会保険 加入 メリット デメリット」「損しない」で探す人向け。
+SONTOKU_MAN: tuple[int, ...] = (8, 10, 12, 15, 20)
+
+
+def _sontoku_rows(as_of: date) -> list[dict]:
+    """月収ごとに、配偶者の扶養（保険料0円）から加入したときの負担と、受けられるものの額。東京・39歳以下。"""
+    rows = []
+    for man in SONTOKU_MAN:
+        pay = man * 10_000
+        r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=False)
+        inc = extras.pension_increase_per_year(r.pension_standard)
+        daily = extras.sickness_daily_yen(r.health_standard)
+        rows.append(dict(
+            man=man, total=r.total_yen, year=r.total_yen * 12, pension_year=r.pension_yen * 12, pension_inc=inc,
+            # 厚生年金の保険料1年分を、増える年金で取り戻すのに何年受け取るか（今の価値での目安）
+            payback=round(r.pension_yen * 12 / inc, 1) if inc else None,
+            sick=daily, maternity=daily * 98,  # 出産手当金は産前42日・産後56日
+        ))
+    return rows
+
+
+def _build_sontoku_page() -> None:
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    _write(
+        _OUTPUT_DIR / "sontoku.html",
+        _env.get_template("sontoku.html").render(
+            base_url="", canonical=canonical_url("sontoku.html"), rows=_sontoku_rows(as_of),
+            era=_era(table.fiscal_year), kokumin=extras.kokumin_nenkin_yen(as_of),
+        ),
+    )
+
+
+# 年収別の手取り早見表（/nenshu.html）。「パート 年収 手取り 表」で探す人向け。
+NENSHU_MAN: tuple[int, ...] = (90, 100, 106, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)
+
+
+def _nenshu_rows(as_of: date) -> list[dict]:
+    """年収ごとに、勤務先の社保に入る場合と入らない場合（扶養内・週20時間未満）の手取り（年額）の目安。
+    賞与なし・毎月同じ額・東京・39歳以下・扶養0人。所得税は年末調整後の年額（令和8年分）、住民税は含めない。"""
+    rows = []
+    for man in NENSHU_MAN:
+        monthly = round(man * 10_000 / 12)
+        r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=monthly, age_40_to_64=False)
+        koyo = extras.employment_yen(as_of, monthly) or 0
+        annual = man * 10_000
+        # 所得税は年末調整後の年額（令和8年分）。毎月の天引き額×12 ではない
+        tax_in = extras.annual_income_tax_yen(annual, (r.total_yen + koyo) * 12) or 0
+        tax_out = extras.annual_income_tax_yen(annual, 0) or 0
+        net_in = annual - (r.total_yen + koyo) * 12 - tax_in
+        rc = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=monthly, age_40_to_64=True)
+        tax_c = extras.annual_income_tax_yen(annual, (rc.total_yen + koyo) * 12) or 0
+        net_in_care = annual - (rc.total_yen + koyo) * 12 - tax_c
+        # 130万円以上は配偶者などの扶養から外れるので「入らない＝扶養内」の手取りは出さない
+        net_out = annual - tax_out if man < 130 else None
+        rows.append(dict(man=man, monthly=monthly, social=r.total_yen * 12, koyo=koyo * 12,
+                         tax_in=tax_in, net_in=net_in, net_in_care=net_in_care, tax_out=tax_out, net_out=net_out,
+                         near=min(AMOUNTS_MAN, key=lambda m: abs(m * 10_000 - monthly))))
+    return rows
+
+
+def _build_nenshu_page() -> None:
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    rows = _nenshu_rows(as_of)
+    _write(
+        _OUTPUT_DIR / "nenshu.html",
+        _env.get_template("nenshu.html").render(
+            base_url="",
+            canonical=canonical_url("nenshu.html"),
+            rows=rows,
+            era=_era(table.fiscal_year),
+            source=table.source,
+            kokumin=extras.kokumin_nenkin_yen(as_of),
+        ),
+    )
+
+
+# 週20時間の壁のページ（/kabe/1100yen.html）。週19時間でも年収130万円を超えない時給まで。
+KABE_HOURLY: tuple[int, ...] = tuple(range(1050, 1301, 50))
+_KABE_ROWS_X10: tuple[int, ...] = (190, 200, 210, 220, 225, 230, 240, 250, 300)
+
+
+def _build_kabe_pages() -> None:
+    table = premium.TABLES[-1]
+    # 賃金要件が無くなった後（2026-10-01 以降）の話。料率表の最初の日がそれより後ならそちら。
+    as_of = max(table.valid_from, date(2026, 10, 1))
+    era = _era(table.fiscal_year)
+    results = [kabe.analyze(as_of, h) for h in KABE_HOURLY]
+    if any(r is None or r.breakeven_hours_x10 is None for r in results):
+        raise RuntimeError("週20時間の壁のページに必要な料率・税額がそろっていない")
+    tmpl = _env.get_template("kabe.html")
+    for k in results:
+        rows = []
+        for hx10 in _KABE_ROWS_X10:
+            pay = kabe.monthly_pay(k.hourly, hx10)
+            net = k.net_19 if hx10 == 190 else kabe.net_covered(as_of, pay, "東京", False)
+            rows.append({"hx10": hx10, "label": f"週{hx10 / 10:g}時間", "pay": pay, "net": net})
+        chart_rows = []
+        for row in rows:
+            if row["hx10"] > 250:
+                continue
+            chart_rows.append({
+                "label": row["label"], "short": f'{row["hx10"] / 10:g}', "net": row["net"], "base": row["hx10"] == 190,
+                "label_value": row["hx10"] in (190, 200, k.breakeven_hours_x10),
+            })
+        chart = charts.wall_columns(chart_rows, k.net_19, f"時給{k.hourly:,}円・週の時間ごとの手取り（東京・39歳以下・配偶者の扶養に入っている人）")
+        p20 = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=k.pay_20, age_40_to_64=False)
+        rel = f"kabe/{k.hourly}yen.html"
+        _write(
+            _OUTPUT_DIR / rel,
+            tmpl.render(
+                base_url="../",
+                canonical=canonical_url(rel),
+                k=k,
+                be_hours=f"{k.breakeven_hours_x10 / 10:g}",
+                chart=chart,
+                near_amount=min(AMOUNTS_MAN, key=lambda m: abs(m * 10_000 - k.pay_20)),
+                rows=rows,
+                others=results,
+                era=era,
+                pension_inc=extras.pension_increase_per_year(p20.pension_standard),
+                sick=extras.sickness_daily_yen(p20.health_standard),
+            ),
+        )
+    common = max(set(r.breakeven_hours_x10 for r in results), key=[r.breakeven_hours_x10 for r in results].count)
+    _write(
+        _OUTPUT_DIR / "kabe" / "index.html",
+        _env.get_template("kabe_index.html").render(
+            base_url="../", canonical=canonical_url("kabe/index.html"), others=results, era=era, common_be=f"{common / 10:g}"
+        ),
+    )
+
+
+def kabe_page_paths() -> list[str]:
+    return ["kabe/index.html"] + [f"kabe/{h}yen.html" for h in KABE_HOURLY]
+
+
+def amount_page_paths() -> list[str]:
+    return ["getsushu/index.html"] + [f"getsushu/{m}man.html" for m in AMOUNTS_MAN]
+
+
+# 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
+HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-10-03", "検索される言い方に合わせて、月収別のページの見出しを「いくら引かれる？手取りは月◯円」に。社会保険に入ると損かを金額で比べるページ（メリット・デメリット）を追加。10月の変更のページを「いつから・どう変わった」の形に"),
+    ("2026-09-28", "保険料調整制度の案内を、使える会社（人数の条件が広がって新たに対象になった会社など）の場合だけに"),
+    ("2026-09-28", "所得税の計算に令和9年分以降の源泉徴収（国税庁の電算機計算の特例。給与所得控除の最低57,500円・基礎控除51,667円）を追加。2027年1月以降も毎月の所得税が出る"),
+    ("2026-09-28", "週20時間の壁の手取りを年末調整後の所得税で比べるように。保険料0円で比べるのは配偶者の扶養（国民年金の第3号）の人だけと明記し、親の扶養の人の比べ方を案内。保険料調整制度の説明を短く、随時改定・2035年の書き方を正確に"),
+    ("2026-09-28", "年収の壁を令和8年度税制改正の数字（配偶者控除136万・配偶者特別控除の満額169万・本人の所得税178万円）に直した。年収別の手取りの所得税を年末調整後の年額に。実際の労働時間が2か月続けて20時間以上の場合、保険料調整制度の対象（12.6万円以下・会社が選ぶ）、雇用保険の週10時間化（2028年10月）を書き足し、言い回しの食い違いを揃えた"),
+    ("2026-09-28", "スマホで「詳しく入力する」を開いたときと、よくある質問の目次で、画面の横にはみ出していたのを直した"),
+    ("2026-09-28", "計算機に賞与（1回あたりの額と年の回数）を追加。賞与から引かれる保険料（標準賞与額・上限つき）を出し、年収の壁の判定にも足す"),
+    ("2026-09-28", "毎日0時台に作り直し、2026年10月1日の前後で「無くなります／無くなりました」を書き分けるように。短かった説明文と運営者情報の文面を今の中身に合わせた"),
+    ("2026-09-27", "人気の計算サイトを参考に: 計算結果に年収の壁チェック（106万・123万・130万・160万円）、1日の時間×週の日数での入力、会社負担の額、長いページに目次。タイトルに2026年版"),
+    ("2026-09-27", "加入条件のページと標準報酬月額の等級表を追加。月収別の一覧に手取りからの逆算、年収別に40〜64歳の列。計算機に入力例と条件のリンクのコピー（入力を URL に残す）。よくある質問に目次、検索エンジン向けの FAQ・計算ツールの構造化データ"),
+    ("2026-09-27", "何のサイトか分かるように: ロゴの印と説明の一行、トップに「分かること3つ」と10月の変更のお知らせ、ブラウザのタブ・検索結果に出るアイコン"),
+    ("2026-09-27", "年収別の手取り早見表（90万〜200万円、社会保険に入る場合と扶養内の場合）を追加。よくある質問に交通費・残業代、130万円の壁の月額と19〜22歳の150万円、ダブルワーク、加入を断れるかの4問を追加。サイト名を「パートの社会保険 計算機」に"),
+    ("2026-09-27", "公開のたびに IndexNow（Bing など）へページの一覧を知らせるようにした"),
+    ("2026-09-27", "計算機の見た目を作り直し: 冒頭の帯、入力を5項目＋「詳しく入力する」に、結果の要約を大きな数字で入力の横に（スマホは画面下にも）、関連ページのカード"),
+    ("2026-09-27", "トップに月収別の早見表と週20時間の壁の要約を追加。よくある質問を質問の形に直し、10月の変更・週20時間ちょうど・8.8万円未満の3問を追加。各ページに最終更新日"),
+    ("2026-09-26", "週20時間の壁（週19時間から増やしたときの手取りと、元に戻る時間）のページと計算を追加"),
+    ("2026-09-26", "所得税（国税庁の月額表・甲欄の電算機計算の特例、令和8年分）を手取りの目安に追加。通勤手当と残業代を分けて入力できるように"),
+    ("2026-09-26", "雇用保険料・手取りの目安、加入前との比べ方、将来の年金と傷病手当金の目安、時給での入力を追加"),
+    ("2026-09-26", "月収別の保険料のページ（8万〜25万円）を追加"),
+    ("2026-09-26", "公開。賃金要件の撤廃日を令和8年政令第275号（2026年10月1日）で確認し、協会けんぽ 令和8年度の料率で保険料の目安を追加"),
+)
+
+# 最終更新日（全ページの下と sitemap の lastmod に出す）。HISTORY の先頭の日付。
+UPDATED: str = HISTORY[0][0]
+_env.globals["updated"] = f"{int(UPDATED[:4])}年{int(UPDATED[5:7])}月{int(UPDATED[8:10])}日"
+
+
+def _build_keisan_page() -> None:
+    table = premium.TABLES[-1]
+    _write(
+        _OUTPUT_DIR / "keisan.html",
+        _env.get_template("keisan.html").render(
+            base_url="",
+            canonical=canonical_url("keisan.html"),
+            rates=table,
+            koyo=extras.RATES["employment"][-1],
+            kokumin=extras.RATES["kokumin_nenkin"][-1],
+            other=extras.RATES,
+            history=HISTORY,
+        ),
+    )
+
+
 def _build_static_pages() -> None:
-    for name in ("faq.html", "about.html", "operator.html", "privacy.html", "contact.html"):
+    table = premium.TABLES[-1]
+    ex10 = premium.estimate(as_of=table.valid_from, prefecture="東京", monthly_pay_yen=100_000, age_40_to_64=False)
+    for name in ("faq.html", "jyoken.html", "about.html", "operator.html", "privacy.html", "contact.html"):
         tmpl = _env.get_template(name)
         _write(
             _OUTPUT_DIR / name,
@@ -174,6 +630,7 @@ def _build_static_pages() -> None:
                 policy_updated=POLICY_UPDATED,
                 schedule=eligibility.SCHEDULE,
                 milestones=eligibility.MILESTONES,
+                ex10=ex10,
             ),
         )
 
@@ -204,16 +661,23 @@ def _write_sitemap() -> None:
     urls: list[tuple[str, str | None]] = [
         (canonical_url("index.html"), None),
         (canonical_url("faq.html"), None),
+        (canonical_url("jyoken.html"), None),
         (canonical_url("about.html"), None),
         (canonical_url("operator.html"), None),
         (canonical_url("contact.html"), None),
         (canonical_url("privacy.html"), None),
         (canonical_url("year/index.html"), None),
+        (canonical_url("keisan.html"), None),
+        (canonical_url("hyoujun.html"), None),
+        (canonical_url("nenshu.html"), None),
+        (canonical_url("sontoku.html"), None),
     ]
+    urls += [(canonical_url(p), None) for p in amount_page_paths() + kabe_page_paths()]
     for regime in eligibility.MILESTONES:
         slug = _milestone_slug(regime)
         urls.append((canonical_url(f"year/{slug}.html"), None))
 
+    urls = [(loc, lastmod or UPDATED) for loc, lastmod in urls]
     entries = "\n".join(
         f"  <url><loc>{loc}</loc>"
         + (f"<lastmod>{lastmod}</lastmod>" if lastmod else "")
@@ -237,8 +701,15 @@ def build_all() -> None:
 
     _build_calculator_page()
     _build_year_pages()
+    _build_amount_pages()
+    _build_kabe_pages()
+    _build_nenshu_page()
+    _build_sontoku_page()
+    _build_keisan_page()
     _build_static_pages()
     _write_robots()
+    # IndexNow のキーファイル（サイト直下）。tools/indexnow.py が公開後に使う
+    (_OUTPUT_DIR / f"{site_config.INDEXNOW_KEY}.txt").write_text(site_config.INDEXNOW_KEY, encoding="utf-8")
     _write_sitemap()
 
     ads_txt = _ads_txt()
@@ -248,6 +719,8 @@ def build_all() -> None:
     static_src = _ROOT / "static"
     if static_src.exists():
         shutil.copytree(static_src, _OUTPUT_DIR / "static", dirs_exist_ok=True)
+        # ブラウザや検索エンジンが決め打ちで読みに来る /favicon.ico も置く
+        shutil.copy(static_src / "favicon.ico", _OUTPUT_DIR / "favicon.ico")
 
 
 if __name__ == "__main__":

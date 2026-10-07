@@ -191,7 +191,8 @@ class SearchIndexTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             subprocess.run([sys.executable, str(root / "build.py"), "--out", tmp],
                            cwd=root, check=True, capture_output=True)
-            idx = json.loads((Path(tmp) / "search-index.json").read_text(encoding="utf-8"))
+            idx = json.loads(next(Path(tmp).glob("search-index.*.json"))
+                             .read_text(encoding="utf-8"))
             page = (Path(tmp) / "search" / "index.html").read_text(encoding="utf-8")
 
         self.assertTrue(idx, "索引が空")
@@ -331,7 +332,8 @@ class PagingAndExtrasTest(unittest.TestCase):
         self.assertIn('rel="prev"', second)
 
     def test_一覧に構造化データが入る(self):
-        s = (self.out / "index.html").read_text(encoding="utf-8")
+        # トップは案内ページなので商品を並べない。一覧は /now/
+        s = (self.out / "now" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn("ItemList", s)
 
@@ -584,25 +586,42 @@ class ScriptTimingTest(unittest.TestCase):
                        cwd=root, check=True, capture_output=True)
         cls.html = (out / "lows" / "index.html").read_text(encoding="utf-8")
         cls.robots = (out / "robots.txt").read_text(encoding="utf-8")
+        # 本文は共有ファイルへ移した（2026-09-27）。検査先もそちらへ。
+        cls.app = next(out.glob("app.*.js")).read_text(encoding="utf-8")
+        cls.list_js = next(out.glob("list.*.js")).read_text(encoding="utf-8")
 
     @classmethod
     def tearDownClass(cls):
         cls.tmp.cleanup()
 
     def test_一覧を探す処理はDOMを待ってから動く(self):
+        # 本文は list.js に移した。読み込みは一覧より前なので、
+        # 要素を探す処理が DOM を待っていることを見る。
         for target in (".cards", ".watch-mini"):
-            i = self.html.index(f"querySelector") if target == ".cards" else 0
-            self.assertIn(target, self.html)
-        # 一覧より前に script があること自体は許す。待っていることを見る。
+            with self.subTest(target=target):
+                self.assertIn(target, self.list_js)
         self.assertLess(self.html.index('id="sort"'), self.html.index('<ul class="cards">'))
-        self.assertGreaterEqual(self.html.count("DOMContentLoaded"), 2)
+        self.assertGreaterEqual(self.list_js.count("DOMContentLoaded"), 2)
+
+    def test_要素を触る処理はDOMを待ってから動く(self):
+        # 共有ファイルは head で読むので、この時点では要素がまだ無い。
+        # 待つ塊が増えても壊れないよう、位置の前後関係で見る
+        for target in ("getElementById('watch')", ".chart-svg[data-series]",
+                       "getElementById('theme')"):
+            with self.subTest(target=target):
+                self.assertLess(self.app.index("DOMContentLoaded"),
+                                self.app.index(target))
 
     def test_見守りの仕組みは1回だけ定義する(self):
-        self.assertEqual(self.html.count("var PTWatch"), 1)
+        # ページごとに直書きしていた頃の名残が残っていないこと
+        self.assertEqual(self.app.count("var PTWatch"), 1)
+        self.assertNotIn("var PTWatch", self.html)
 
     def test_配布用の大きなファイルはクロールさせない(self):
-        for name in ("history.csv", "data.csv", "search-index.json"):
-            self.assertIn(f"Disallow: /{name}", self.robots)
+        # 索引の名前には指紋が入るので、前方一致で塞いでいる
+        for name in ("history.csv", "data.csv", "search-index."):
+            with self.subTest(name=name):
+                self.assertIn(f"Disallow: /{name}", self.robots)
 
 
 class ShortNameTest(unittest.TestCase):
@@ -732,7 +751,16 @@ class ItemPageTest(unittest.TestCase):
         self.assertNotIn("100%", note)
 
     def test_一覧へ戻れる(self):
-        self.assertIn('class="back"', self.html())
+        # 行き先は見出しの上（class="back"）から本文の終わり（class="onward"）へ
+        # 移した。パンくずと二段に積んでいて、本題の前に案内が2行あったため。
+        html = self.html()
+
+        self.assertIn('class="onward"', html)
+        # トップは案内ページになったので、行き先は一覧そのもの（/now/）を指す
+        for href in ('href="../../now/"', 'href="../../drops/"', 'href="../../lows/"',
+                     'href="../../search/"'):
+            with self.subTest(href=href):
+                self.assertIn(href, html.split('class="onward"')[1])
 
     def test_値が動かなくてもグラフが潰れない(self):
         flat = [[f"2026-09-{i + 1:02d}", 1000] for i in range(19)]
@@ -849,11 +877,84 @@ class PointDeadlineTest(unittest.TestCase):
         self.assertNotIn("まで", self.theme.point_note(self.row("")))
 
     def test_商品説明は出典を添えて出す(self):
-        block = self.theme.caption_block({"caption": "説明の冒頭"})
+        # 見本は30字以上にする。短い説明は clean_caption が落とすため
+        # （煽りを抜いた残りかすを載せないための下限）。
+        text = ("内容量は300mLです。素材はステンレスで、食洗機に対応しています。"
+                "保証は購入から1年間です。")
+        block = self.theme.caption_block({"caption": text})
 
-        self.assertIn("説明の冒頭", block)
+        self.assertIn("内容量は300mLです。", block)
         self.assertIn("リンク先", block)
         self.assertEqual(self.theme.caption_block({"caption": ""}), "")
+
+    def test_売り込みだけの説明は出さない(self):
+        self.assertEqual(
+            self.theme.caption_block({"caption": "ぜひどうぞ。オススメです。"}), "")
+
+
+class 共有したときの絵Test(unittest.TestCase):
+    """og:image に SVG を渡していた。X も Facebook も LINE も SVG を描かない。"""
+
+    def setUp(self):
+        from src import theme, icon
+        self.theme = theme
+        self.icon = icon
+
+    def site(self):
+        return {"name": "見本", "base_url": "https://example.com",
+                "description": "見本の説明", "owner": "見本"}
+
+    def test_既定はPNG(self):
+        out = self.theme.head("題", "説明", "https://example.com/", self.site())
+
+        self.assertIn('og:image" content="https://example.com/og.png"', out)
+        self.assertIn('twitter:card" content="summary"', out)
+
+    def test_商品ページは商品写真を渡せる(self):
+        out = self.theme.head("題", "説明", "https://example.com/x/", self.site(),
+                              image="https://thumbnail.image.rakuten.co.jp/a.jpg")
+
+        self.assertIn('og:image" content="https://thumbnail.image.rakuten.co.jp/a.jpg"', out)
+        # 写真があるときは大きく見せる
+        self.assertIn('twitter:card" content="summary_large_image"', out)
+
+    def test_OGPのPNGが作れる(self):
+        data = self.icon.og_png()
+
+        self.assertTrue(data.startswith(b"\x89PNG"))
+        # OGP は横長（1200x630）が求められる
+        import struct
+        w, h = struct.unpack(">II", data[16:24])
+        self.assertEqual((w, h), (1200, 630))
+
+
+class 検索の読み替えTest(unittest.TestCase):
+    """「いやほん」と打っても「イヤホン」に当たるようにする。
+
+    NFKC は半角カナを全角カナに直すが（ｲﾔﾎﾝ→イヤホン）、ひらがなは
+    カタカナにしない。実測（2026-09-28）で「いやほん」「すいっち」
+    「けーす」はどれも0件だった（カタカナなら476/655/1,423件）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def js(self):
+        return self.theme.search_page(
+            {"name": "見本", "base_url": "https://example.com",
+             "description": "見本", "owner": "見本"},
+            "https://example.com/search/", "2026-09-28",
+            {"items": 1, "days": 1, "updated": "2026-09-28"})
+
+    def test_ひらがなをカタカナへ寄せる(self):
+        out = self.js()
+
+        self.assertIn("u3041", out)
+        self.assertIn("0x60", out)
+
+    def test_半角カナの読み替えは残す(self):
+        self.assertIn("normalize('NFKC')", self.js())
 
 
 class SearchDisplayTest(unittest.TestCase):
@@ -895,7 +996,8 @@ class SearchDisplayTest(unittest.TestCase):
         self.assertIn("ptShort(h.name, 46)", self.watch)
 
     def test_短縮処理は1度だけ定義する(self):
-        self.assertEqual(self.search.count("function ptShort"), 1)
+        # 本文は共有ファイルに1つだけ置く。ページ側には持たせない
+        self.assertEqual(self.search.count("function ptShort"), 0)
 
 
 class SitePagesAuditTest(unittest.TestCase):
@@ -1267,3 +1369,839 @@ class LayoutTest(unittest.TestCase):
 
         self.assertIn('<ul class="genres">', html)
         self.assertIn('<span class="count">1,538商品</span>', html)
+
+
+class BracketKindTest(unittest.TestCase):
+    """囲みは開きと閉じを対で見る。
+
+    どちらも文字の集合で書いていたため【】と[]しか通らず、
+    『送料無料！』「楽天1位」［RSL］（地域限定）が素通りしていた（実測86件）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_全角かぎ括弧の宣伝を落とす(self):
+        for name, want in (
+                ("『送料無料！』（地域限定）サッポロビール ヱビス缶セット",
+                 "サッポロビール ヱビス缶セット"),
+                ("「楽天1位」 カラオケマイク bluetooth", "カラオケマイク bluetooth"),
+                ("［メール便OK]ワリオランドシェイク", "ワリオランドシェイク"),
+                ("《3個セットで500円OFF》シャンプー 詰め替え", "シャンプー 詰め替え")):
+            with self.subTest(name=name):
+                self.assertEqual(self.theme.clean_name(name), want)
+
+    def test_配送とキャンペーンの断りを落とす(self):
+        for name in ("［最強配送］モニター 27インチ", "［RSL］ヘアアイロン カール",
+                     "【60日保証キャンペーン中】電動歯ブラシ 替えブラシ"):
+            with self.subTest(name=name):
+                self.assertFalse(self.theme.clean_name(name).startswith(("［", "【")),
+                                 self.theme.clean_name(name))
+
+    def test_商品を見分ける囲みは残す(self):
+        # 状態・種別・保証は買う側が見分けに使う。落とすと何の商品か分からなくなる
+        for name in ("【中古】シャープ 液晶テレビ", "【新品】Nintendo Switch 2",
+                     "【公式】ダイソン 掃除機", "【2個セット】乾電池 単三",
+                     "（POPOLO／ポポロ） オカリナ アルトC管"):
+            with self.subTest(name=name):
+                self.assertEqual(self.theme.clean_name(name), name)
+
+    def test_全角と半角が混ざった囲みも読む(self):
+        # 「［メール便OK]」のように開きと閉じが混ざる名前が実在するので、
+        # 対を厳密には見ない。落とすかは中身で決めているので行き過ぎない
+        self.assertEqual(self.theme.clean_name("［メール便OK]ワリオランドシェイク"),
+                         "ワリオランドシェイク")
+        self.assertEqual(self.theme.clean_name("【送料無料] テレビ 42型"), "テレビ 42型")
+
+
+class ViewsMapTest(unittest.TestCase):
+    """どの一覧を見るかの索引。
+
+    一覧は14ある。ナビに名前が並ぶだけで「よく動く」と「最安値更新」を
+    どう使い分けるのかがどこにも書いていなかった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_名前と件数と何を出すかを並べる(self):
+        html = self.theme.views_map([
+            ("drops/", "今日の値下がり", 52, "前回の記録より安くなったもの"),
+            ("lows/", "最安値圏", 3988, "記録した最安値と同じか、それに近いもの")])
+
+        self.assertIn('href="drops/"', html)
+        self.assertIn("3,988件", html)          # 桁区切りを付ける
+        self.assertIn("前回の記録より安くなったもの", html)
+
+    def test_何も無ければ出さない(self):
+        self.assertEqual(self.theme.views_map([]), "")
+
+
+class FlatChartTest(unittest.TestCase):
+    """価格が動いていない商品の図は畳む。
+
+    追跡している12,658件のうち11,172件（88%）は一度も動いていない。
+    その図は横一直線で、180pxを使って何も言わない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "S", "base_url": "https://e.test",
+                     "owner": "o", "contact_email": "c@e.test"}
+
+    def row(self, prices):
+        tail = [[f"2026-09-{i + 1:02d}", p] for i, p in enumerate(prices)]
+        return {"item_code": "a", "name": "テスト商品", "price": prices[-1],
+                "low": min(prices), "high": max(prices), "days": len(prices),
+                "vs_low_pct": 0, "at_low": True, "near_low": False,
+                "dropped": False, "label": "横ばい", "image": "", "shop": "店",
+                "url": "", "low_date": "2026-09-01", "tail": tail}
+
+    def test_動いていなければ畳む(self):
+        html = self.theme.item_page(self.row([1000] * 20), self.site, "2026-09-26")
+
+        self.assertIn('<details class="chart flat">', html)
+
+    def test_動いていれば開いたまま出す(self):
+        html = self.theme.item_page(self.row([1000] * 19 + [900]),
+                                    self.site, "2026-09-26")
+
+        self.assertNotIn('class="chart flat"', html)
+        self.assertIn('<div class="chart">', html)
+
+    def test_畳んでも図そのものは入れておく(self):
+        # 開けば見られること。載せないのとは違う
+        html = self.theme.item_page(self.row([1000] * 20), self.site, "2026-09-26")
+
+        self.assertIn("<svg", html.split('class="chart flat"')[1])
+
+
+class RankAndBadgeTest(unittest.TestCase):
+    """順位と判定の札。
+
+    価格.com が順位を出し、camelcamelcamel が判定を札にしているのを見て
+    当てた。点で並べている一覧なのに、順位が画面から読めなかった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "S", "base_url": "https://e.test",
+                     "owner": "o", "contact_email": "c@e.test"}
+
+    def row(self, code="a", **kw):
+        base = {"item_code": code, "name": "テスト商品", "price": 1000,
+                "low": 900, "high": 1200, "days": 20, "vs_low_pct": 0.1,
+                "at_low": True, "near_low": False, "dropped": False,
+                "label": "記録した中で最安", "image": "", "shop": "店",
+                "url": "", "low_date": "2026-09-20", "tail": []}
+        base.update(kw)
+        return base
+
+    def test_点で並べる一覧には順位を出す(self):
+        html = self.theme.listing("題", "説明", [self.row("a"), self.row("b")],
+                                  self.site, "https://e.test/", "2026-09-26",
+                                  show_score=True)
+
+        self.assertIn('<span class="rank">1</span>', html)
+        self.assertIn('<span class="rank">2</span>', html)
+
+    def test_2ページ目の順位は続きから振る(self):
+        html = self.theme.listing("題", "説明", [self.row("a")], self.site,
+                                  "https://e.test/2/", "2026-09-26",
+                                  page=2, pages=3, total=120, show_score=True)
+
+        self.assertIn('<span class="rank">51</span>', html)
+
+    def test_順位に意味が無い一覧には出さない(self):
+        # 値下がりは下げ幅の順で、点の順ではない。番号を振ると順位に見える
+        html = self.theme.listing("題", "説明", [self.row("a")], self.site,
+                                  "https://e.test/", "2026-09-26")
+
+        self.assertNotIn('class="rank"', html)
+
+    def test_判定の札は名前の前に置く(self):
+        # 価格の後ろに並べると、価格・判定・送料が一列に連なって
+        # どれが値段なのか分からなくなっていた
+        html = self.theme.card(self.row())
+        body = html.split('<div class="body">')[1]
+
+        self.assertLess(body.index('class="badge'), body.index('class="name"'))
+        self.assertNotIn('class="badge', html.split('<div class="body">')[0])
+
+    def test_範囲を断る言葉を札から削らない(self):
+        # 「最安」だけにすると市場全体の最安値に読める
+        html = self.theme.card(self.row())
+
+        self.assertIn("記録した中で最安", html)
+
+
+class GenreMixTest(unittest.TestCase):
+    """ジャンルごとの取得件数。
+
+    同じ1,500件ずつ取るのは、動かない棚に同じ枠を割いていることになる。
+    実測（2026-09-26・21日分）で、21日のうち一度でも価格が動いた商品は
+    家電28.5%に対してパソコン・周辺機器17.2%だった。
+    """
+
+    def setUp(self):
+        import fetch
+        self.fetch = fetch
+
+    def test_ジャンル側の指定を使う(self):
+        site = {"hits_per_genre": 1500}
+
+        self.assertEqual(self.fetch.hits_for({"genre_id": "1", "hits": 2000}, site), 2000)
+
+    def test_指定が無ければ全体の既定値(self):
+        site = {"hits_per_genre": 1500}
+
+        self.assertEqual(self.fetch.hits_for({"genre_id": "1"}, site), 1500)
+        self.assertEqual(self.fetch.hits_for("1", site), 1500)
+
+    def test_0は指定なし扱いにする(self):
+        # 0件取得は事故にしかならない。既定値へ倒す
+        self.assertEqual(
+            self.fetch.hits_for({"genre_id": "1", "hits": 0}, {"hits_per_genre": 1500}),
+            1500)
+
+
+class GenreReportTest(unittest.TestCase):
+    """どのジャンルを厚く追うかを決めるための集計。
+
+    値動きは履歴でしか測れないので、楽天に問い合わせる explore.py では出せない。
+    """
+
+    def setUp(self):
+        import genre_report
+        self.report = genre_report
+
+    def test_記録が足りないジャンルは判定不可にする(self):
+        # 追加した翌日に0%と出るのは、動かないからではなく比べる相手が無いから。
+        # それを見て切ると、中身を見ずに捨てることになる
+        rows = [{"name": "新しいジャンル", "hits": 1500, "items": 100, "days": 2,
+                 "judgeable": False, "moved": 0.0, "twice": 0.0,
+                 "pointed": 0.13, "ending": 0.14, "median_price": 3300}]
+
+        out = self.report.render(rows)
+
+        self.assertIn("---", out)
+        self.assertNotIn("0.0%", out.split("倍率")[0])
+        self.assertIn("あと5日で判定できる", out)
+
+    def test_記録が足りていれば割合を出す(self):
+        rows = [{"name": "家電", "hits": 2000, "items": 100, "days": 20,
+                 "judgeable": True, "moved": 0.285, "twice": 0.07,
+                 "pointed": 0.213, "ending": 0.228, "median_price": 6384}]
+
+        out = self.report.render(rows)
+
+        self.assertIn("28.5%", out)
+        self.assertNotIn("判定できる", out)
+
+
+class EffectivePriceChartTest(unittest.TestCase):
+    """ポイント分を引いた実質価格の推移。
+
+    楽天の値引きは価格より倍率で動く。価格だけで「動いたか」を数えると
+    1,486件（13.9%）だが、ポイントを含めると2,252件（21.0%）になる
+    （実測 2026-09-26・記録2日以上の10,701件）。価格だけで畳むと、
+    766件の「実際には動いていた」商品の図を隠すことになる。
+    """
+
+    def setUp(self):
+        from src import analyze, theme
+        self.analyze = analyze
+        self.theme = theme
+
+    def rec(self, tail):
+        return {"tail": tail}
+
+    def test_倍率の変化を実質価格に映す(self):
+        # 価格は据え置きで倍率だけ上がった日
+        out = self.analyze.effective_series(self.rec(
+            [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 10]]))
+
+        self.assertEqual(out, [("2026-09-01", 990), ("2026-09-02", 900)])
+
+    def test_価格が動かなくても実質は動いたと数える(self):
+        rec = self.rec([["2026-09-01", 1000, 1], ["2026-09-02", 1000, 10]])
+
+        self.assertEqual(self.analyze.change_count(rec), 0)
+        self.assertEqual(self.analyze.effective_change_count(rec), 1)
+
+    def test_倍率が無い記録も読める(self):
+        # 倍率を控える前の古い記録は2要素しかない
+        out = self.analyze.effective_series(self.rec(
+            [["2026-09-01", 1000], ["2026-09-02", 900]]))
+
+        self.assertEqual(out, [("2026-09-01", 990), ("2026-09-02", 891)])
+
+    def test_図に破線を重ねる(self):
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 10]]
+        eff = self.analyze.effective_series(self.rec(tail))
+
+        self.assertIn("eff-line", self.theme.chart(tail, effective=eff))
+        self.assertNotIn("eff-line", self.theme.chart(tail))
+
+    def test_数が合わない実質は重ねない(self):
+        # 日付がずれた線を描くと、読み手に嘘を見せることになる
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 10]]
+
+        out = self.theme.chart(tail, effective=[("2026-09-01", 990)])
+
+        self.assertNotIn("eff-line", out)
+
+    def test_目盛りは実質価格まで含めて取る(self):
+        # 実質が価格より下にあるのに、目盛りを価格だけで取ると枠からはみ出す
+        tail = [["2026-09-01", 1000, 1], ["2026-09-02", 1000, 50]]
+        eff = self.analyze.effective_series(self.rec(tail))
+
+        out = self.theme.chart(tail, effective=eff)
+
+        self.assertIn("500", out)   # 実質の下限が目盛りに出ている
+
+    def test_価格は横ばいでも実質が下がったら書く(self):
+        # そこで文を止めると、すぐ下の図（破線）と食い違って見える
+        tail = ([["2026-09-%02d" % i, 14850, 1] for i in range(1, 12)]
+                + [["2026-09-%02d" % i, 14850, 10] for i in range(12, 19)])
+
+        out = self.theme.cheaper_days({"price": 14850, "tail": tail})
+
+        self.assertIn("変わっていません", out)
+        self.assertIn("実質", out)
+        self.assertIn("13,365円", out)
+
+    def test_実質も動いていなければ余計なことを書かない(self):
+        tail = [["2026-09-%02d" % i, 1000, 1] for i in range(1, 12)]
+
+        out = self.theme.cheaper_days({"price": 1000, "tail": tail})
+
+        self.assertNotIn("実質", out)
+
+    def test_実質が上がっただけのときは下がったと書かない(self):
+        # 倍率が下がって実質が上がった場合。「下がりました」は嘘になる
+        tail = ([["2026-09-%02d" % i, 1000, 10] for i in range(1, 12)]
+                + [["2026-09-%02d" % i, 1000, 1] for i in range(12, 19)])
+
+        out = self.theme.cheaper_days({"price": 1000, "tail": tail})
+
+        self.assertNotIn("下がりました", out)
+
+
+class RelatedByNameTest(unittest.TestCase):
+    """似た商品は名前の近さで選ぶ。
+
+    同じジャンルの先頭から8件を取っていたとき、商品ページ60枚が
+    33商品・5通りしか出していなかった（実測 2026-09-26）。読み手には
+    関係のない商品が並び、ページどうしのリンクもひと握りに集中して、
+    残りは一覧のページ送りからしか辿れなかった。
+    """
+
+    def setUp(self):
+        from src import relate
+        self.relate = relate
+
+    def rows(self, *names):
+        return [{"item_code": f"c{i}", "name": n} for i, n in enumerate(names)]
+
+    def related(self, rows, limit=8):
+        return self.relate.related(rows, lambda r: r["name"], limit=limit)
+
+    def test_同じ語を持つ商品を選ぶ(self):
+        rows = self.rows("ワイヤレスイヤホン Bluetooth 骨伝導",
+                         "骨伝導イヤホン Bluetooth ワイヤレス",
+                         "冷蔵庫 二人暮らし 150L")
+
+        out = self.related(rows)
+
+        self.assertEqual([r["item_code"] for r in out["c0"]], ["c1"])
+
+    def test_自分は入れない(self):
+        rows = self.rows("イヤホン ワイヤレス", "イヤホン ワイヤレス")
+
+        self.assertNotIn("c0", [r["item_code"] for r in self.related(rows)["c0"]])
+
+    def test_珍しい語を重く見る(self):
+        # 「ケース」は全件にあるので手がかりにならない。型番で寄せること
+        rows = self.rows("ケース AX-HP117 専用", "ケース AX-HP117 交換用",
+                         "ケース 汎用 ソフト", "ケース 汎用 ハード")
+
+        out = self.related(rows, limit=1)
+
+        self.assertEqual(out["c0"][0]["item_code"], "c1")
+
+    def test_手がかりが無ければ空を返す(self):
+        # 呼ぶ側が従来の埋め方に倒せるようにする
+        rows = self.rows("あ", "い")
+
+        self.assertEqual(self.related(rows)["c0"], [])
+
+    def test_件数の上限を守る(self):
+        # 同じ語を持つ相手が10件いても、出すのは指定した数だけ
+        rows = self.rows(*([f"骨伝導 イヤホン 型番{i}" for i in range(10)]
+                           + [f"冷蔵庫 型番{i}" for i in range(90)]))
+
+        self.assertEqual(len(self.related(rows, limit=5)["c0"]), 5)
+
+    def test_同じ顔ぶれを使い回さない(self):
+        # 束ごとに違う相手が出ること。以前は全ページが同じ8件を指していた
+        groups = []
+        for g in range(10):
+            groups += [f"品目{g} 型番{g}{i}" for i in range(5)]
+        rows = self.rows(*groups)
+
+        out = self.related(rows, limit=3)
+        combos = {tuple(r["item_code"] for r in v) for v in out.values() if v}
+
+        self.assertGreaterEqual(len(combos), 10)
+
+
+class StatsConsistencyTest(unittest.TestCase):
+    """記録ページの数え方を、商品ページとそろえる。
+
+    「動いたか」を商品ページはポイント込みの実質価格で見るのに、記録ページだけ
+    価格しか見ていなかった。同じサイトで数え方が2つある状態で、11,172件を
+    「一度も動いていない」と出していた（実質で見ると10,406件）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def render(self, buckets):
+        return self.theme.stats_page(
+            {"name": "S", "base_url": "https://e.test", "owner": "o",
+             "contact_email": "c@e.test"},
+            "https://e.test/stats/", "2026-09-26",
+            {"items": 12658, "days": 21}, buckets, [])
+
+    def test_価格と実質の両方を出す(self):
+        # 片方だけ出すと、動いている商品を少なく見せることになる
+        html = self.render({"price_moved": 1486, "eff_moved": 2252,
+                            "active": 985, "still": 10406, "pointed": 1325})
+
+        self.assertIn("1,486 件", html)
+        self.assertIn("2,252 件", html)
+        self.assertIn("ポイント込みの実質価格が動いた商品", html)
+
+    def test_動いていない数は実質で数える(self):
+        html = self.render({"price_moved": 1486, "eff_moved": 2252,
+                            "active": 985, "still": 10406, "pointed": 1325})
+
+        self.assertIn("10,406 件", html)
+        self.assertNotIn("11,172", html)
+
+
+class ChartReadTest(unittest.TestCase):
+    """図の値を読めるようにする。
+
+    価格.com も Keepa も、図に触れればその日の値が出る。こちらは最安と最高の
+    目盛りしか無く、途中の日がいくらだったか読めなかった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def tail(self, n=5):
+        return [[f"2026-09-{i + 1:02d}", 1000 + i * 10, 1] for i in range(n)]
+
+    def test_日付と値を図に持たせる(self):
+        out = self.theme.chart(self.tail())
+
+        self.assertIn('data-series="2026-09-01,1000;', out)
+        self.assertIn("data-pad=", out)
+        self.assertIn("data-step=", out)
+
+    def test_実質価格も持たせる(self):
+        tail = self.tail()
+        eff = [(d, p - 100) for d, p, _ in tail]
+
+        out = self.theme.chart(tail, effective=eff)
+
+        self.assertIn("2026-09-01,1000,900;", out)
+
+    def test_読み取り欄を置く(self):
+        self.assertIn('class="chart-read"', self.theme.chart(self.tail()))
+
+    def test_目印はhidden属性で隠さない(self):
+        # SVG の要素に hidden プロパティは無い（HTML要素のもの）。
+        # JS で代入しても何も起きず、目印が出たままになる
+        out = self.theme.chart(self.tail())
+
+        self.assertIn('class="chart-guide"', out)
+        self.assertNotIn("hidden", out)
+
+    def test_実質が無ければ実質の点も置かない(self):
+        self.assertNotIn("chart-dot-eff", self.theme.chart(self.tail()))
+        self.assertIn("chart-dot-eff",
+                      self.theme.chart(self.tail(),
+                                       effective=[(d, p - 50)
+                                                  for d, p, _ in self.tail()]))
+
+    def test_記録が足りなければ図を出さない(self):
+        out = self.theme.chart([["2026-09-01", 1000, 1]])
+
+        self.assertNotIn("data-series", out)
+
+
+class ThemeToggleTest(unittest.TestCase):
+    """配色の切り替え。
+
+    style.css は data-theme に対応していたのに、切り替える手立てを
+    どこにも置いていなかった（使えない仕組みが眠っていた）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_切り替えの押しどころを置く(self):
+        out = self.theme.foot({"name": "S", "owner": "o"}, "", "2026-09-27")
+
+        self.assertIn('id="theme"', out)
+
+    def test_最終更新が無い日でも押しどころは出す(self):
+        out = self.theme.foot({"name": "S", "owner": "o"}, "", "")
+
+        self.assertIn('id="theme"', out)
+        self.assertNotIn("最終更新", out)
+
+
+class ToTopTest(unittest.TestCase):
+    """「先頭へ」はスクロールに追従させる。
+
+    一覧は携帯で19,000px 近くになる。末尾にだけ置いた戻りリンクは、
+    途中で読むのをやめた人には届かない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def row(self, i):
+        return {"item_code": f"c{i}", "name": f"商品{i}", "price": 1000,
+                "dropped": False, "days": 10, "at_low": False, "near_low": False,
+                "label": "横ばい", "image": "", "shop": "店", "tail": []}
+
+    def listing(self, n):
+        return self.theme.listing("題", "説明", [self.row(i) for i in range(n)],
+                                  {"name": "S", "base_url": "https://e.test",
+                                   "owner": "o", "contact_email": "c@e.test"},
+                                  "https://e.test/", "2026-09-27")
+
+    def test_長い一覧にだけ置く(self):
+        self.assertIn('class="to-top"', self.listing(20))
+        self.assertNotIn('class="to-top"', self.listing(5))
+
+    def test_読み上げ用の名前を付ける(self):
+        # 「▲」だけでは何の押しどころか伝わらない
+        self.assertIn('aria-label="ページの先頭へ戻る"', self.listing(20))
+
+    def test_最初は出さない(self):
+        # ひと目盛り分スクロールしてから出す。上にいる人には要らない
+        from src import theme
+
+        self.assertIn(".to-top.on", theme.__file__ and open(
+            theme.__file__.replace("theme.py", "style.css"),
+            encoding="utf-8").read())
+
+
+class ItemLedeTest(unittest.TestCase):
+    """商品ページの頭。画像と値段をひとまとまりにする。
+
+    間に広告表示を挟んでいたため、携帯では値段が690px下にあり、
+    最初の画面に入らなかった（Amazon も楽天も画像の隣に値段が来る）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "S", "base_url": "https://e.test",
+                     "owner": "o", "contact_email": "c@e.test"}
+
+    def row(self, image="https://img.test/a.jpg"):
+        return {"item_code": "a", "name": "テスト商品", "price": 14850,
+                "low": 14850, "high": 14850, "days": 19, "vs_low_pct": 0,
+                "at_low": True, "near_low": False, "dropped": False,
+                "label": "記録した中で最安", "image": image, "shop": "店",
+                "url": "", "low_date": "2026-09-08", "tail": []}
+
+    def test_画像と値段を同じ塊に入れる(self):
+        html = self.theme.item_page(self.row(), self.site, "2026-09-27")
+        lede = html.split('class="lede"')[1].split("</div>")[0]
+
+        self.assertIn('class="hero"', lede)
+        self.assertIn('class="headline"', lede)
+
+    def test_広告表示は塊の後ろに置く(self):
+        # 間に挟むと値段が押し下げられる。表示義務は位置ではなく有無
+        html = self.theme.item_page(self.row(), self.site, "2026-09-27")
+
+        self.assertLess(html.index('class="headline"'), html.index("ad-notice"))
+        self.assertIn("楽天アフィリエイト", html)
+
+    def test_画像が無くても値段は出す(self):
+        html = self.theme.item_page(self.row(image=""), self.site, "2026-09-27")
+
+        self.assertIn('class="lede"', html)
+        self.assertIn("14,850円", html)
+        self.assertNotIn('class="hero"', html)
+
+
+class 同じ数字を繰り返さないTest(unittest.TestCase):
+    """商品ページの表は9行のうち5行が、図のすぐ上下の表と同じ数字だった
+    （2026-09-28 実測）。現在の価格・前回の価格・倍率・実質価格が
+    「記録を始めてからの変化」「価格の記録」にも出ていた。
+    同じ数字が3か所にあると、どれを見ればよいのかが分からなくなる。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://e.dev"}
+
+    def row(self, tail, **kw):
+        base = {"item_code": "a", "name": "テスト商品", "price": tail[-1][1],
+                "prev": tail[0][1] if len(tail) > 1 else None,
+                "low": min(e[1] for e in tail), "high": max(e[1] for e in tail),
+                "days": len(tail), "vs_low_pct": 0.0, "off_high_pct": 0.0,
+                "at_low": False, "near_low": False, "dropped": False,
+                "trustworthy": True, "label": "変動なし", "shop": "店",
+                "moved": len({e[1] for e in tail}) > 1,
+                "point_rate": tail[-1][2], "eff_price": 1126,
+                "image": "https://e.dev/a.jpg", "low_date": tail[0][0],
+                "tail": tail}
+        base.update(kw)
+        return base
+
+    def test_記録が2日以上あるなら現在の価格を表に繰り返さない(self):
+        tail = [["2026-09-27", 1408, 1], ["2026-09-28", 1408, 20]]
+
+        html = self.theme.item_page(self.row(tail), self.site, "2026-09-28")
+
+        self.assertNotIn("<th>現在の価格</th>", html)
+        self.assertNotIn("<th>前回の価格</th>", html)
+        self.assertIn("記録した中での最安値", html)
+
+    def test_記録が1日だけなら価格を表に出す(self):
+        """上下の表がどちらも出ないので、どこにも表の形では出なくなる。"""
+        html = self.theme.item_page(
+            self.row([["2026-09-28", 1408, 20]]), self.site, "2026-09-28")
+
+        self.assertIn("<th>現在の価格</th>", html)
+        self.assertIn("<th>ポイント倍率</th>", html)
+
+
+class 商品ページの頭Test(unittest.TestCase):
+    """送料・在庫・ポイント倍率・実質価格は一覧のカードには出ていたのに、
+    商品ページの頭には無かった（2026-09-28 実測）。
+
+    送料無料にいたっては構造化データにだけ書いていて、画面には出していなかった。
+    画面に出していないものを検索側にだけ伝えるのは、こちらの決まりに反する。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://e.dev"}
+
+    def row(self, **kw):
+        base = {"item_code": "a", "name": "テスト商品", "price": 1408, "prev": 1408,
+                "low": 1408, "high": 1408, "days": 20, "vs_low_pct": 0.0,
+                "off_high_pct": 0.0, "at_low": False, "near_low": False,
+                "dropped": False, "trustworthy": True, "label": "変動なし",
+                "shop": "店", "moved": False, "low_date": "2026-09-08",
+                "tail": [["2026-09-27", 1408, 1], ["2026-09-28", 1408, 20]]}
+        base.update(kw)
+        return base
+
+    def head(self, **kw):
+        html = self.theme.item_page(self.row(**kw), self.site, "2026-09-28")
+        return html.split('class="lede"', 1)[-1].split("</div>", 1)[0]
+
+    def test_ポイント倍率と実質価格を価格のすぐ下に出す(self):
+        # 倍率20倍だと実質は19%下。価格だけを頭に出すと、いちばん大事な数字が消える
+        out = self.head(point_rate=20, eff_price=1126)
+
+        self.assertIn("ポイント20倍", out)
+        self.assertIn("1,126円", out)
+
+    def test_送料無料を画面にも出す(self):
+        out = self.head(free_shipping=True)
+
+        self.assertIn("送料無料", out)
+
+    def test_在庫切れを画面にも出す(self):
+        out = self.head(in_stock=False)
+
+        self.assertIn("在庫切れ", out)
+
+
+class 買える場所への導線Test(unittest.TestCase):
+    """商品ページの「楽天市場で見る」は1つだけで、スマホでは 2,848px
+    （3.5画面ぶん）下にあった。実測（2026-09-26〜29）で検索から5人来たあいだ、
+    楽天へのクリックは27から1つも動いていない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://e.dev"}
+
+    def row(self, **kw):
+        base = {"item_code": "a", "name": "テスト商品", "price": 1000, "prev": 1000,
+                "low": 900, "high": 1100, "days": 20, "vs_low_pct": 0.1,
+                "off_high_pct": 0.0, "at_low": False, "near_low": False,
+                "dropped": False, "trustworthy": True, "label": "変動なし",
+                "shop": "店", "moved": True, "low_date": "2026-09-08",
+                "url": "https://example.com/buy",
+                "tail": [[f"2026-09-{i + 1:02d}", 1000, 1] for i in range(20)]}
+        base.update(kw)
+        return base
+
+    def test_価格のすぐ下にも買う口を置く(self):
+        html = self.theme.item_page(self.row(), self.site, "2026-09-28")
+
+        self.assertEqual(html.count("楽天市場で見る"), 2)   # 上と下
+        head = html.split('class="lede"', 1)[-1][:1200]
+        self.assertIn("楽天市場で見る", head)
+
+    def test_断りを買う口より先に出す(self):
+        """何で収益を得ているかを、押す前に読めるようにする。"""
+        html = self.theme.item_page(self.row(), self.site, "2026-09-28")
+
+        self.assertLess(html.index("楽天アフィリエイト"),
+                        html.index("楽天市場で見る"))
+
+    def test_行き先が無い商品には出さない(self):
+        html = self.theme.item_page(self.row(url=""), self.site, "2026-09-28")
+
+        self.assertNotIn("楽天市場で見る", html)
+
+
+class 検索結果での見え方Test(unittest.TestCase):
+    """表示115に対しクリック5（4.3%）だった。検索結果に並んだときの題と説明が、
+    押す理由を伝えていなかった（2026-09-30 実測）。
+
+    題は中央50字あり、日本語の検索結果は30〜40字で切られるので
+    「の価格推移・最安値｜楽天 値下がりウォッチ」がまるごと見えていなかった。
+    説明は「6日分の記録では価格は横ばいです」で終わっていた。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "楽天 値下がりウォッチ", "base_url": "https://e.dev"}
+
+    def row(self, **kw):
+        base = {"item_code": "a", "name": "あ" * 60, "price": 1000, "prev": 1100,
+                "low": 1000, "high": 1200, "days": 20, "vs_low_pct": 0.0,
+                "off_high_pct": 0.167, "at_low": True, "near_low": False,
+                "dropped": True, "drop_pct": 0.09, "trustworthy": True,
+                "label": "記録した中で最安", "shop": "店", "moved": True,
+                "low_date": "2026-09-20",
+                "tail": [[f"2026-09-{i + 1:02d}", 1000, 1] for i in range(20)]}
+        base.update(kw)
+        return base
+
+    def html(self, **kw):
+        return self.theme.item_page(self.row(**kw), self.site, "2026-09-30")
+
+    def title(self, **kw):
+        import re
+        return re.search(r"<title>(.*?)</title>", self.html(**kw)).group(1)
+
+    def desc(self, **kw):
+        import re
+        return re.search(r'<meta name="description" content="(.*?)"',
+                         self.html(**kw), re.S).group(1)
+
+    def test_商品ページの題にサイト名を付けない(self):
+        """商品名28字＋「の価格推移」で33字あり、サイト名（11字）を足すと
+        何のページなのかを言う部分まで切れる。ドメインは検索結果に別に出る。"""
+        title = self.title()
+
+        self.assertNotIn("楽天 値下がりウォッチ", title)
+        self.assertTrue(title.endswith("の価格推移"))
+        self.assertLessEqual(len(title), 40)
+
+    def test_説明の頭に判定を出す(self):
+        # 「6日分の記録では価格は横ばいです」で始めると、押す理由が読めない
+        self.assertTrue(self.desc().startswith("記録した中でいちばん安い"))
+
+    def test_ポイント込みで最安ならそう書く(self):
+        d = self.desc(at_low=False, eff_at_low=True, eff_price=880)
+
+        self.assertTrue(d.startswith("ポイント込みの実質"))
+
+    def test_説明は切られない長さに収める(self):
+        # Google は120字前後で切る
+        self.assertLessEqual(len(self.desc()), 120)
+
+    def test_持っていない値を0として文にしない(self):
+        """「0.0% 下がりました」「実質 0円」は嘘になる。
+        値が無い分岐は使わず、言えることだけを言う。
+        """
+        import re
+
+        def desc(row):
+            html = self.theme.item_page(row, self.site, "2026-09-30")
+            return re.search(r'name="description" content="([^"]*)"', html).group(1)
+
+        base = self.row(at_low=True)
+        del base["off_high_pct"]
+        out = desc(base)
+        self.assertIn("記録した中でいちばん安い", out)
+        self.assertNotIn("0.0%", out)
+
+        dropped = self.row(at_low=False, dropped=True)
+        del dropped["drop_pct"]
+        self.assertNotIn("下がって", desc(dropped))
+
+        eff = self.row(at_low=False, eff_at_low=True)
+        self.assertNotIn("実質 0円", desc(eff))
+
+
+class 同じ分類の中での位置Test(unittest.TestCase):
+    """記録している13,544商品のうち **9,700件（71.6%）は価格も実質価格も
+    一度も動いていない**（2026-10-03 実測）。その商品ページには「ずっと同じ値段」
+    という情報しか無く、価格を追うサイトとして出せるものが何も無かった。
+
+    同じ分類の中での位置なら、動いていない商品にも言える。13,544商品ぶんの
+    価格を毎日持っているからこそ出せるもので、1商品だけを見ても分からない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def row(self, **kw):
+        base = {"sub_name": "季節・空調家電", "sub_rank": 123, "sub_count": 614,
+                "sub_low": 980, "sub_mid": 12800, "sub_high": 198000,
+                "sub_path": "genre/562637/502823/"}
+        base.update(kw)
+        return base
+
+    def test_安い方にいるときは安い方から数える(self):
+        out = self.theme.sub_position(self.row(), "../../")
+
+        self.assertIn("安い方から <strong>123番目", out)
+        self.assertIn("614件", out)
+        self.assertIn('href="../../genre/562637/502823/"', out)
+
+    def test_高い方にいるときは高い方から数える(self):
+        # 614件中600番目を「安い方から600番目」と書かれても位置が分からない
+        out = self.theme.sub_position(self.row(sub_rank=600), "../../")
+
+        self.assertIn("高い方から <strong>15番目", out)
+
+    def test_件数が少ない分類では出さない(self):
+        self.assertEqual(self.theme.sub_position(self.row(sub_count=9)), "")
+
+    def test_位置が分からない商品では出さない(self):
+        self.assertEqual(self.theme.sub_position({}), "")

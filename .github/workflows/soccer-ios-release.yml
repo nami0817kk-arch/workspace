@@ -18,7 +18,7 @@ on:
         required: false
         default: ""
       upload_to_testflight:
-        description: "ビルド後に TestFlight へアップロードする"
+        description: "ビルド後に TestFlight へアップロードする（タグで走らせた場合は指定不要。常に上げる）"
         type: boolean
         required: false
         default: false
@@ -34,7 +34,8 @@ permissions:
 jobs:
   build:
     # Apple のツールチェーンは macOS でしか動かないため、ここだけ macOS ランナー。
-    # 非公開リポジトリのため macOS ランナーは無料枠の対象外（分単位で消費する）。
+    # このリポジトリは 2026-09-08 から public なので、macOS ランナーも無料枠で動く
+    # （非公開だった頃は分単位で消費していた。その前提で書かれた注記を訂正）。
     runs-on: macos-latest
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
     timeout-minutes: 60
@@ -240,8 +241,13 @@ jobs:
             --dart-define=ADMOB_INTERSTITIAL_IOS="$ADMOB_INTERSTITIAL"
           ls -la build/ios/ipa/
 
+      # **タグで走ったときは自動で上げる。** タグ(soccer-manager-v*)は公開の
+      # ためにしか作らないので、上げないという選択肢が無い。以前は手動実行の
+      # チェックだけを見ていたため、タグを押した後に「もう一度、今度は
+      # チェックを入れて実行」が必要だった。2026-09-26・09-27・09-30 に
+      # 3回この2段構えで止まっている(既定オフなので、忘れると黙って skip)。
       - name: Upload to TestFlight
-        if: ${{ github.event.inputs.upload_to_testflight == 'true' }}
+        if: ${{ startsWith(github.ref, 'refs/tags/soccer-manager-v') || github.event.inputs.upload_to_testflight == 'true' }}
         env:
           API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
           API_ISSUER_ID: ${{ secrets.APPSTORE_API_ISSUER_ID }}

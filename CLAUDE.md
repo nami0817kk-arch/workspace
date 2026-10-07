@@ -50,7 +50,8 @@ CI と Dependabot の増殖）を、この1本で構造的に解消する。
 
 ## 収益・運用に関わる注意
 
-- `projects/kabu-agari-ranking/` の取得は**このPCのタスクスケジューラ「kabu-daily-fetch」**
+- **`projects/kabu-agari-ranking/` は 2026-10-07 に終了**（取得タスクは無効化済み、サイトは終了案内のみ）。以下は当時の記録。
+  `projects/kabu-agari-ranking/` の取得は**このPCのタスクスケジューラ「kabu-daily-fetch」**
   （平日16:10、run-daily.ps1）が行う。kabutan は GitHub Actions の IP を 405 で
   ブロックするため、CI から取得する形に戻さない。CI は data/ push でビルド・公開、
   17:00 JST に鮮度監視（1営業日の欠測で Issue。休場日は数えない）。
@@ -62,6 +63,14 @@ CI と Dependabot の増殖）を、この1本で構造的に解消する。
   `CLOUDFLARE_ACCOUNT_ID` ほか）に置き、コードにも data/ にも残さない。
 - 共通テストCIは `.github/workflows/python-tests.yml`（workflow_call、同一リポ参照）。
   actions のバージョン更新はこの1ファイルで済む。
+
+## アプリ（Flutter・広告・課金）を触るとき
+
+`projects/soccer-manager` `projects/soccer-career` `projects/goso-boat` のように
+広告と課金を入れてストアに出すアプリでは、**着手前に `docs/app-pitfalls.md` を読む。**
+実際に踏んで利用者に届いてしまった穴だけを、検査の形まで書いてある
+（払ったのに届かない／広告を見たのに入らない／広告の期限切れ／掲載画像が白紙／
+ストアの言語欄）。どれも例外を出さずに壊れるので、知らないと同じ所で踏む。
 
 ## 点検
 

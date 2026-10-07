@@ -1,0 +1,88 @@
+# goso-boat の検証。公開系のワークフローとは分けてある
+# （公開設定のミスでテストまで赤くならないように）。
+name: goso-boat CI
+
+on:
+  push:
+    paths:
+      - "projects/goso-boat/**"
+      - ".github/workflows/goso-boat-ci.yml"
+  pull_request:
+    paths:
+      - "projects/goso-boat/**"
+      - ".github/workflows/goso-boat-ci.yml"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "テスト対象を絞る（例: test/engine_test.dart）"
+        type: string
+        default: ""
+      skip_analyze:
+        description: "analyze を飛ばす"
+        type: boolean
+        default: false
+      build_ios:
+        description: "iOS の署名なしビルドも回す（Xcode の設定を触ったとき用。macOS なので手動のときだけ）"
+        type: boolean
+        default: false
+
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+# 連続で push したとき、途中の版のテストに時間を使わないため。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/goso-boat
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 文言に字を足したのにフォントを絞り直し忘れると、その字だけ別の書体で出る
+      - name: 同梱フォントに文言の字がすべて入っているか
+        run: |
+          pip install --quiet fonttools
+          python tool/subset_fonts.py --check
+
+      - name: Analyze
+        if: ${{ inputs.skip_analyze != true }}
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test ${{ inputs.target }}
+
+  # Xcode のプロジェクト設定（project.pbxproj・Info.plist・言語ごとの InfoPlist.strings）を
+  # Windows では確かめられないので、触ったときに手動で回す。
+  ios-build:
+    if: ${{ inputs.build_ios == true }}
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: projects/goso-boat
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter build ios --release --no-codesign
+      - name: 言語ごとのホーム画面名が入っているか
+        run: |
+          app=build/ios/iphoneos/Runner.app
+          plutil -p "$app/ja.lproj/InfoPlist.strings" | grep '護送ボート'
+          plutil -p "$app/en.lproj/InfoPlist.strings" | grep 'Prison Ferry'
+

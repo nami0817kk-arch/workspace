@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.1.0+4
+version: 1.1.8+13
 
 environment:
   sdk: ^3.5.4
@@ -46,6 +46,8 @@ dependencies:
   package_info_plus: ^10.2.1
   google_mobile_ads: ^9.1.0
   in_app_purchase: ^3.3.0
+  # ストアの評価をその場で頼む(OSの小さな窓)。年3回までOS側が制限する。
+  in_app_review: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -98,6 +100,9 @@ flutter:
 
   assets:
     - assets/icon/
+    # 節目の演出に出す絵。枚数が決まっている場所にだけ画像を持つ
+    # (選手とクラブは自動生成で点数が無限なので、絵は同梱できない)。
+    - assets/art/
 
   # しっぽり明朝は同梱する。google_fonts 経由だと初回起動時に
   # fonts.gstatic.com へ取りに行き、利用者のIPアドレスが Google に渡るため

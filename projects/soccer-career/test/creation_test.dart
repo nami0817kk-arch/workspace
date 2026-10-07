@@ -3,6 +3,8 @@ library;
 
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:soccer_career/ui/screens/create_player_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
@@ -37,6 +39,39 @@ CareerController controller({int seed = 3}) => CareerController(
 );
 
 void main() {
+  /// **始めるのに要るものは、最初の画面に収まっている。**
+  ///
+  /// 決めることは11あって全体は3画面ぶんあるが、始めるのに本当に要るのは
+  /// 名前と代理人だけ（年齢も身体も見た目も割り振りも既定で埋まっている）。
+  /// 以前は「今回狙うもの」（2周目向けの挑戦の宣言）が名前より上にあり、
+  /// **代理人は下から400pxのところ**にあったので、こだわらない人まで
+  /// 3画面スクロールしてからでないと始められなかった。
+  testWidgets('始めるのに要るものは、最初の画面に収まっている', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    final controller = CareerController(repository: _MemoryRepository());
+    await tester.pumpWidget(
+      MaterialApp(home: CreatePlayerScreen(controller: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    double topOf(Finder f) =>
+        tester.getTopLeft(f.first).dy;
+
+    // 名前と代理人が、開いた時点で画面の中にある。
+    expect(topOf(find.widgetWithText(TextField, '選手名')), lessThan(844));
+    expect(topOf(find.text('代理人')), lessThan(844));
+
+    // 始めるボタンは下に固定してあるので、スクロールしなくても押せる。
+    final button = find.widgetWithText(FilledButton, 'キャリアを始める');
+    expect(button, findsOneWidget);
+    expect(topOf(button), lessThan(844));
+
+    // 挑戦の宣言（2周目向け）は、こだわる人が下まで見たときに出る。
+    expect(topOf(find.text('今回狙うもの')), greaterThan(844));
+  });
+
   group('立つ側', () {
     test('利き足と合うかどうかが決まる', () {
       expect(Side.left.matches(Foot.left), isTrue);

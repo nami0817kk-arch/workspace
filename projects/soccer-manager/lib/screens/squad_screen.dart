@@ -8,6 +8,7 @@ import '../models/team.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
+import '../widgets/player_stat_chips.dart';
 import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
@@ -511,6 +512,13 @@ class _SquadScreenState extends State<SquadScreen> {
                             vertical: 4,
                           ),
                           child: ListTile(
+                            // **既定の余白を詰める。** 左右16・顔との間16が
+                            // 既定で、そのぶん本文の幅が減って「役割 スイーパー
+                            // キーパー」が折り返していた。
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(12, 4, 8, 4),
+                            horizontalTitleGap: 10,
+                            minLeadingWidth: 40,
                             tileColor: isSelected
                                 ? Theme.of(context)
                                     .colorScheme
@@ -556,6 +564,10 @@ class _SquadScreenState extends State<SquadScreen> {
                                   child: Text(
                                     p.name,
                                     overflow: TextOverflow.ellipsis,
+                                    // 名前が主役。既定の太さだと、下に続く
+                                    // 細かい数字と同じ重さに見えていた。
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w700),
                                   ),
                                 ),
                                 // 生え抜き(自クラブのユース出身)。買ってきた
@@ -760,11 +772,7 @@ class _SquadScreenState extends State<SquadScreen> {
                               ],
                             ),
                             trailing: _compareMode
-                                ? Text(
-                                    '${p.overall}',
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  )
+                                ? OverallBadge(overall: p.overall)
                                 : Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -782,12 +790,8 @@ class _SquadScreenState extends State<SquadScreen> {
                                           return Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Text(
-                                                '${p.overall}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium,
-                                              ),
+                                              OverallBadge(
+                                                  overall: p.overall),
                                               if (trend != 0)
                                                 Tooltip(
                                                   message: Tr.pick(

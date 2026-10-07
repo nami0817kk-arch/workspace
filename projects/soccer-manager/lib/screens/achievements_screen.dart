@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/achievement_highlights.dart';
 import '../models/achievement.dart';
 import '../state/game_state.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/achievement_badge.dart';
 
 /// 実績(アチーブメント)一覧画面。カテゴリごとに達成済み・未達成の実績を
 /// まとめて表示し、長期的なやり込み目標を可視化する。
@@ -19,6 +21,16 @@ class AchievementsScreen extends StatelessWidget {
     final all = gameState.allAchievements;
     final unlockedCount = gameState.unlockedAchievementCount;
     const categories = AchievementCategory.values;
+    // 33件が5つのカテゴリに分かれて並ぶので、手の届く位置にあるものは
+    // 全部のバーを見比べないと分からない。近いものだけ先に出す。
+    final nearby = gameState.save == null
+        ? const <AchievementProgress>[]
+        : AchievementHighlights.almostThere(
+            all,
+            gameState.save!,
+            gameState.userTeam,
+            isUnlocked: gameState.isAchievementUnlocked,
+          );
 
     return Scaffold(
       appBar: AppBar(
@@ -92,6 +104,8 @@ class AchievementsScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 children: [
+                  if (nearby.isNotEmpty)
+                    _NearbySection(nearby: nearby, gameState: gameState),
                   for (final category in categories)
                     _CategorySection(
                       category: category,
@@ -106,6 +120,50 @@ class AchievementsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// 達成に近い実績だけを先に並べる欄。
+class _NearbySection extends StatelessWidget {
+  final List<AchievementProgress> nearby;
+  final GameState gameState;
+
+  const _NearbySection({required this.nearby, required this.gameState});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
+          child: Row(
+            children: [
+              Icon(Icons.flag_outlined,
+                  size: 18, color: Theme.of(context).colorScheme.primary),
+              const SizedBox(width: 6),
+              Text(
+                Tr.pick('あと少し', 'Almost there'),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        for (final p in nearby)
+          _AchievementTile(
+            achievement: p.achievement,
+            gameState: gameState,
+            remainingNote: _remainingNote(p),
+          ),
+      ],
+    );
+  }
+
+  static String _remainingNote(AchievementProgress p) {
+    return Tr.pick('あと${p.remaining}', '${p.remaining} to go');
   }
 }
 
@@ -147,7 +205,14 @@ class _AchievementTile extends StatelessWidget {
   final Achievement achievement;
   final GameState gameState;
 
-  const _AchievementTile({required this.achievement, required this.gameState});
+  /// 「あと少し」の欄に出すときだけ添える残り数。
+  final String? remainingNote;
+
+  const _AchievementTile({
+    required this.achievement,
+    required this.gameState,
+    this.remainingNote,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -163,14 +228,9 @@ class _AchievementTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       color: unlocked ? null : Theme.of(context).colorScheme.surfaceContainer,
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor:
-              unlocked ? Colors.amber.shade700 : Colors.grey.shade400,
-          child: Icon(
-            unlocked ? Icons.emoji_events : Icons.lock,
-            color: Colors.white,
-            size: 20,
-          ),
+        leading: AchievementBadge(
+          achievement: achievement,
+          unlocked: unlocked,
         ),
         title: Text(
           achievement.name,
@@ -211,7 +271,10 @@ class _AchievementTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '${progress.$1.clamp(0, progress.$2)} / ${progress.$2}',
+                    remainingNote == null
+                        ? '${progress.$1.clamp(0, progress.$2)} / ${progress.$2}'
+                        : '${progress.$1.clamp(0, progress.$2)} / ${progress.$2}'
+                            '($remainingNote)',
                     style: TextStyle(
                         fontSize: 11,
                         color: SemanticColors.subtleText(context)),

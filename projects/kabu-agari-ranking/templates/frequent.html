@@ -13,70 +13,20 @@
 
 <h2>値上がりランキングに複数回</h2>
 {% if gainers %}
-<div class="table-wrap">
-<table class="ranking">
-  <caption>直近{{ day_count }}営業日で値上がりランキングに2回以上入った銘柄</caption>
-  <thead>
-    <tr>
-      <th scope="col">回数</th>
-      <th scope="col">銘柄名</th>
-      <th scope="col">コード</th>
-      <th scope="col">最大上昇率</th>
-      <th scope="col">ストップ高</th>
-      <th scope="col">最長連続</th>
-      <th scope="col">直近</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for e in gainers %}
-    <tr>
-      <th scope="row">{{ e.count }}回</th>
-      <td><a href="{{ base_url }}stock/{{ e.code }}/">{{ e.name }}</a></td>
-      <td>{{ e.code }}</td>
-      <td class="gain">{{ "%+.2f"|format(e.best_pct) }}%</td>
-      <td>{{ e.stops }}回</td>
-      <td>{{ e.streak }}日</td>
-      <td>{{ e.latest }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-</div>
+{% set rows = gainers %}
+{% set caption = "直近" ~ day_count ~ "営業日で値上がりランキングに2回以上入った銘柄" %}
+{% set side = LIMIT_PAGES["gainers"] %}{% set show_latest = true %}
+{% include "_frequent_table.html" %}
 {% else %}
 <p>この期間に複数回入った銘柄はありませんでした。</p>
 {% endif %}
 
 <h2>値下がりランキングに複数回</h2>
 {% if losers %}
-<div class="table-wrap">
-<table class="ranking">
-  <caption>直近{{ day_count }}営業日で値下がりランキングに2回以上入った銘柄</caption>
-  <thead>
-    <tr>
-      <th scope="col">回数</th>
-      <th scope="col">銘柄名</th>
-      <th scope="col">コード</th>
-      <th scope="col">最大下落率</th>
-      <th scope="col">ストップ安</th>
-      <th scope="col">最長連続</th>
-      <th scope="col">直近</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for e in losers %}
-    <tr>
-      <th scope="row">{{ e.count }}回</th>
-      <td><a href="{{ base_url }}stock/{{ e.code }}/">{{ e.name }}</a></td>
-      <td>{{ e.code }}</td>
-      <td class="loss">{{ "%+.2f"|format(e.best_pct) }}%</td>
-      <td>{{ e.stops }}回</td>
-      <td>{{ e.streak }}日</td>
-      <td>{{ e.latest }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-</div>
+{% set rows = losers %}
+{% set caption = "直近" ~ day_count ~ "営業日で値下がりランキングに2回以上入った銘柄" %}
+{% set side = LIMIT_PAGES["losers"] %}{% set show_latest = true %}
+{% include "_frequent_table.html" %}
 {% else %}
 <p>この期間に複数回入った銘柄はありませんでした。</p>
 {% endif %}

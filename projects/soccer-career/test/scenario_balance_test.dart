@@ -26,6 +26,42 @@ final _all = [
 ];
 
 void main() {
+  /// **骨格の局面は、いつ引かれるか分からない。**
+  ///
+  /// 展開に関係なく引ける側（`ScenarioTempo.any`）は、前半でも後半でも、
+  /// 勝っていても負けていても出る。にもかかわらず「後半40分、1点ビハインド」
+  /// のように時間と点差を言い切った文面が3つ混じっていた。局面カードの上には
+  /// 本物の時計と点差（「前半28分・1-0」）が出ているので、**画面の中で
+  /// 食い違う**。掲載用の絵を撮って初めて気付いた——1枚目がそれだった。
+  ///
+  /// 時間や点差を前提にした局面は、そのための入れ物（追いかける展開・
+  /// 守り切る展開）のほうに置く。
+  test('展開に関係なく引ける局面は、時間も点差も言い切らない', () {
+    const forbidden = [
+      '前半',
+      '後半',
+      'アディショナルタイム',
+      'ロスタイム',
+      'ビハインド',
+      '1点リード',
+      '2点リード',
+      '同点',
+      '勝ち越',
+      '追う終盤',
+    ];
+    final bad = <String>[];
+    for (final family in ScenarioFamily.values) {
+      for (final scenario in ScenarioPool.neutralFor(family)) {
+        for (final word in forbidden) {
+          if (scenario.situation.contains(word)) {
+            bad.add('${scenario.id}: ${scenario.situation}（$word）');
+          }
+        }
+      }
+    }
+    expect(bad, isEmpty, reason: bad.join(', '));
+  });
+
   test('同じ見返り・同じ能力で、難しいだけの手が無い', () {
     final dead = <String>[];
     for (final scenario in _all) {

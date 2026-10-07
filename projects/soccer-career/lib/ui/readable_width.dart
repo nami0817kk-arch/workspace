@@ -8,9 +8,18 @@ import 'package:flutter/material.dart';
 class ReadableWidth extends StatelessWidget {
   const ReadableWidth({super.key, required this.child, this.maxWidth = maxContentWidth});
 
-  /// 本文の最大幅。スマホの縦画面（390〜430px）より少しだけ広くしてある。
-  /// 広げすぎると、そもそも縦に積む前提の配置が間延びする。
-  static const double maxContentWidth = 520;
+  /// 本文の最大幅。
+  ///
+  /// 以前は 520 だった（スマホの縦画面より少しだけ広い値）。iPad 13インチの
+  /// 掲載用の絵を撮ったら、**中身が真ん中の細い1列に収まって左右が大きく
+  /// 空いた**。崩れてはいないが、13インチの絵として間が持たない。
+  ///
+  /// `soccer-manager` は同じ役の `ResponsiveBody` を **720** にしていて、
+  /// iPad の絵は幅が埋まっている。2026-09-26 にそちらへ揃えた。
+  ///
+  /// **スマホでは何も変わらない**（画面幅 390〜430 はどちらの値より狭いので、
+  /// 常に画面いっぱいになる）。変わるのは iPad と PC のブラウザだけ。
+  static const double maxContentWidth = 720;
 
   final Widget child;
   final double maxWidth;

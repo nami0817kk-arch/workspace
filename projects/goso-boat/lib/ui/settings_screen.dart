@@ -1,0 +1,229 @@
+import 'package:flutter/material.dart';
+
+import '../app/links.dart';
+import '../app/progress.dart';
+import '../app/reminder.dart';
+import '../app/settings.dart';
+import '../l10n/l10n_ext.dart';
+import '../monetization/monetization.dart';
+import '../monetization/purchase_service.dart';
+import 'palette.dart';
+
+/// 設定。音・振動・購入の復元（iOS の審査要件）・進み具合を消す・ライセンス。
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key, required this.progress, required this.money});
+  final Progress progress;
+  final Monetization money;
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _storeAvailable = false;
+  String? _price;
+
+  /// 復元の2度押しよけ（重ねると結果の表示が食い違う）
+  bool _restoring = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.money.store.isAvailable().then((v) async {
+      final price = v && !widget.money.adFree ? await widget.money.price : null;
+      if (mounted) {
+        setState(() {
+          _storeAvailable = v;
+          _price = price;
+        });
+      }
+    });
+  }
+
+  Future<void> _openLink(Uri url) async {
+    final t = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    if (!await Links.open(url)) {
+      messenger.showSnackBar(SnackBar(content: Text(t.linkFailed(url.toString()))));
+    }
+  }
+
+  Future<void> _restore() => _run(restore: true);
+
+  Future<void> _run({required bool restore}) async {
+    final t = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    if (_restoring) return;
+    setState(() => _restoring = true);
+    PurchaseOutcome r;
+    try {
+      r = await (restore ? widget.money.restore() : widget.money.buy());
+    } catch (_) {
+      r = PurchaseOutcome.failed;
+    } finally {
+      if (mounted) setState(() => _restoring = false);
+    }
+    final msg = switch (r) {
+      PurchaseOutcome.purchased => restore ? t.purchaseRestored : t.purchaseThanks,
+      PurchaseOutcome.pending => t.purchasePending,
+      PurchaseOutcome.canceled => null,
+      PurchaseOutcome.unavailable => restore ? t.purchaseNothing : t.purchaseFailed,
+      PurchaseOutcome.failed => restore ? t.restoreFailed : t.purchaseFailed,
+    };
+    if (msg != null) {
+      messenger.removeCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(content: Text(msg)));
+    }
+  }
+
+  Future<void> _reset() async {
+    final t = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.resetConfirmTitle),
+        content: Text(t.resetConfirmBody),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text(t.cancel)),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(t.doReset, style: const TextStyle(color: Palette.bad, fontWeight: FontWeight.w800)),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await widget.progress.resetAll();
+    messenger.showSnackBar(SnackBar(content: Text(t.resetDone)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.l10n;
+    final fx = AppScope.of(context);
+    return Scaffold(
+      backgroundColor: Palette.sky,
+      appBar: AppBar(
+        backgroundColor: Palette.sky,
+        foregroundColor: Palette.ink,
+        elevation: 0,
+        title: Text(t.settingsTitle, style: const TextStyle(fontWeight: FontWeight.w900)),
+      ),
+      body: ListenableBuilder(
+        listenable: Listenable.merge([fx, widget.money]),
+        builder: (context, _) => ListView(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+          children: [
+            _Card(children: [
+              SwitchListTile(
+                title: Text(t.settingSound, style: const TextStyle(fontWeight: FontWeight.w800)),
+                secondary: const Icon(Icons.volume_up_rounded, color: Palette.ink),
+                value: fx.sound,
+                onChanged: (v) {
+                  fx.setSound(v);
+                  if (v) fx.play(Sfx.tap);
+                },
+              ),
+              if (Reminder.supported)
+                SwitchListTile(
+                  title: Text(t.reminder, style: const TextStyle(fontWeight: FontWeight.w800)),
+                  secondary: const Icon(Icons.notifications_active_rounded, color: Palette.ink),
+                  value: fx.reminder,
+                  onChanged: (v) async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    if (!v) {
+                      await Reminder.disable();
+                      await fx.setReminder(false);
+                      return;
+                    }
+                    final ok = await Reminder.enable(title: t.appTitle, body: t.reminderBody);
+                    if (ok) {
+                      await fx.setReminder(true);
+                    } else {
+                      messenger.showSnackBar(SnackBar(content: Text(t.reminderDenied)));
+                    }
+                  },
+                ),
+              SwitchListTile(
+                title: Text(t.settingHaptics, style: const TextStyle(fontWeight: FontWeight.w800)),
+                secondary: const Icon(Icons.vibration_rounded, color: Palette.ink),
+                value: fx.haptics,
+                onChanged: (v) {
+                  fx.setHaptics(v);
+                  if (v) fx.buzz(Buzz.medium);
+                },
+              ),
+            ]),
+            if (_storeAvailable || widget.money.adFree)
+              _Card(children: [
+                if (widget.money.adFree)
+                  ListTile(
+                    leading: const Icon(Icons.check_circle_rounded, color: Palette.ok),
+                    title: Text(t.adFreeOn, style: const TextStyle(fontWeight: FontWeight.w800)),
+                  ),
+                // 買う入口はホームだけだと見つけにくい（小さい画面では下まで送らないと見えない）
+                if (_storeAvailable && !widget.money.adFree && _price != null)
+                  ListTile(
+                    leading: const Icon(Icons.block_rounded, color: Palette.ink),
+                    title: Text(t.removeAds(_price!), style: const TextStyle(fontWeight: FontWeight.w800)),
+                    enabled: !_restoring,
+                    onTap: () => _run(restore: false),
+                  ),
+                if (_storeAvailable)
+                  ListTile(
+                    leading: const Icon(Icons.restore_rounded, color: Palette.ink),
+                    title: Text(t.restorePurchases, style: const TextStyle(fontWeight: FontWeight.w800)),
+                    enabled: !_restoring,
+                    onTap: _restore,
+                  ),
+              ]),
+            _Card(children: [
+              // プライバシーポリシーはアプリの中からも開けること（Apple 5.1.1）
+              ListTile(
+                leading: const Icon(Icons.privacy_tip_outlined, color: Palette.ink),
+                title: Text(t.privacyPolicy, style: const TextStyle(fontWeight: FontWeight.w800)),
+                trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                onTap: () => _openLink(Links.privacy),
+              ),
+              // 不適切な広告を報告できる手段を用意すること（Apple 2.5.18）
+              ListTile(
+                leading: const Icon(Icons.support_agent_rounded, color: Palette.ink),
+                title: Text(t.supportAndAdReport, style: const TextStyle(fontWeight: FontWeight.w800)),
+                trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                onTap: () => _openLink(Links.support),
+              ),
+              ListTile(
+                leading: const Icon(Icons.description_outlined, color: Palette.ink),
+                title: Text(t.licenses, style: const TextStyle(fontWeight: FontWeight.w800)),
+                onTap: () => showLicensePage(context: context, applicationName: t.appTitle),
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete_outline_rounded, color: Palette.bad),
+                title: Text(t.resetProgress, style: const TextStyle(fontWeight: FontWeight.w800, color: Palette.bad)),
+                onTap: _reset,
+              ),
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Card extends StatelessWidget {
+  const _Card({required this.children});
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        margin: const EdgeInsets.only(bottom: 14),
+        decoration: BoxDecoration(
+          color: Palette.card,
+          border: Border.all(color: Palette.ink, width: 2),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Material(color: Colors.transparent, child: Column(children: children)),
+      );
+}

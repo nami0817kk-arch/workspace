@@ -25,6 +25,45 @@ def last_change(rec: dict) -> str | None:
     return tail[0][0] if tail else None
 
 
+HIKE_THRESHOLD = 0.02
+HIKE_MIN_BASE = 3
+HIKE_IGNORE_UNTIL = "2026-09-12"
+
+
+def last_hike(rec: dict, threshold: float = HIKE_THRESHOLD) -> dict | None:
+    """記録の中でいちばん新しい値上げ（1回で threshold 以上）。いまも上がったままのものだけ。
+
+    検索では「氷結無糖レモン 値上げ」「スタイルフリー いくら値上げ」が表示されているのに
+    クリックが0だった（2026-10-06・表示46回で0）。探している人が知りたいのは
+    「いつ・いくら上がったか」で、題が「◯◯の価格推移」のままでは答えになっていない。
+    実際に 2026-09-27〜10-03 に酒類で値上げが記録されている。
+    見るのは価格だけ（倍率の上下は値上げと呼ばない）。値上げ前の価格まで戻っていたら出さない。
+    """
+    tail = [(e[0], e[1]) for e in map(_entry, rec.get("tail") or []) if e[1]]
+    if len(tail) < 2:
+        return None
+    current = tail[-1][1]
+    for i in range(len(tail) - 1, 0, -1):
+        before, after = tail[i - 1][1], tail[i][1]
+        # 上がった先が、それまでに記録したどの価格よりも高いこと。セールが終わって
+        # 元の価格に戻っただけの回を「値上げ」と呼ばないため。
+        # 上がる前の記録が HIKE_MIN_BASE 日以上あること（1〜2日の値段は基準にならない）。
+        # また HIKE_IGNORE_UNTIL までの上昇は数えない。記録は 9/5 からで、その時点で
+        # スーパーセール（〜9/11）が進んでいたため、セール価格しか知らない商品では
+        # 終了で戻った値段も「記録上いちばん高い」になる。実測（2026-10-07）で
+        # 9/11〜12 に685件がそれで「値上げ」になっていた。データからは区別できない。
+        if (i >= HIKE_MIN_BASE and tail[i][0] > HIKE_IGNORE_UNTIL
+                and after > before and (after - before) / before >= threshold
+                and after > max(p for _, p in tail[:i])):
+            # 上げたあと下げて、上げ幅の半分も残っていない商品は「値上げ」と呼ばない。
+            # 店が日々価格を上下させているだけの商品まで拾うと、読み手を誤らせる。
+            if current - before < (after - before) / 2:
+                return None
+            return {"date": tail[i][0], "from": before, "to": after,
+                    "pct": (after - before) / before}
+    return None
+
+
 def effective(price, rate) -> int:
     """ポイント分を引いた実質価格。
 
@@ -56,24 +95,63 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
     high = rec.get("max") or price
     off_high_pct = (high - price) / high if high else 0.0
 
+    # 記録のあいだに価格が一度でも動いたか。
+    # これを見ないと「最安値」の意味が壊れる。実測（2026-09-28・記録23日）で、
+    # 「記録した中で最安」が付いていた3,925件のうち3,701件（94.3%）は
+    # 1円も動いていなかった。ずっと同じ値段なので自動的に最安になっていただけで、
+    # 読み手は「安くなった」と受け取る。動いて最安に来たのは224件しかない。
+    moved = high > low
+
+    # 値幅そのものがしきい値以下だと、その商品はどの日でも「最安値に近い」に
+    # なる。実測（2026-09-28）で87件中66件がこれで、うち50件は
+    # いまが記録上の最高値なのに「最安値に近い」の札が付いていた。
+    spread_pct = (high - low) / high if high else 0.0
+
     trustworthy = days >= MIN_DAYS_FOR_LOW
-    at_low = trustworthy and price <= low
-    near_low = trustworthy and 0 < vs_low_pct <= near_low_threshold
+    at_low = trustworthy and moved and price <= low
+    near_low = (trustworthy and moved and spread_pct > near_low_threshold
+                and 0 < vs_low_pct <= near_low_threshold)
     dropped = drop_pct >= drop_threshold
+
+    rate = int(rec.get("last_rate") or 1)
+    eff = effective(price, rate)
+
+    # 実質価格でも同じ判定をする。楽天の値引きは価格ではなくポイント倍率で
+    # 動くことが多いので、価格だけを見ると「いまがいちばん得」を取りこぼす。
+    # 実測（2026-09-28・記録が足りている5,074件）では、価格が記録した中で
+    # 最安なのは224件だが、実質で見ると481件あり、そのうち**269件は価格では
+    # 最安でなかった**。
+    effs = [v for _, v in effective_series(rec)]
+    if effs:
+        # 最後の日は、期限切れの倍率を直したあとの値に入れ替える
+        # （evaluate_all が last_rate を1に戻している場合がある）。
+        effs[-1] = eff
+        eff_low, eff_high = min(effs), max(effs)
+        eff_moved = eff_high > eff_low
+        eff_at_low = trustworthy and eff_moved and eff <= eff_low
+    else:
+        eff_low = eff_high = None
+        eff_moved = eff_at_low = False
 
     if at_low:
         label = "記録した中で最安"
+    elif eff_at_low:
+        # 価格は最安でないが、ポイントを含めると記録した中でいちばん安い。
+        # 「記録した中で最安」と同じ札にすると、価格の表と食い違って見える。
+        label = "ポイント込みで最安"
     elif near_low:
         label = "最安値に近い"
     elif dropped:
         label = "値下がり"
     elif not trustworthy:
         label = "記録中"
+    elif not moved:
+        label = "変動なし"
     else:
-        label = "横ばい"
+        # 「横ばい」だと、記録のあいだずっと動いていない「変動なし」と
+        # 見分けが付かない。ここが指しているのは前回との比較だけ。
+        label = "前回から変わらず"
 
-    rate = int(rec.get("last_rate") or 1)
-    eff = effective(price, rate)
     # 倍率を記録し始める前の日は prev_rate が無い。1倍と決めつけると、記録開始の
     # 翌日に「倍率が下がった/上がった」偽の変化が一斉に出る。分からない日は
     # 実質の比較そのものをしない。
@@ -81,19 +159,26 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
     if prev and prev_rate is not None:
         eff_prev = effective(prev, int(prev_rate))
         eff_drop_pct = (eff_prev - eff) / eff_prev if eff_prev > eff else 0.0
+        # 倍率が下がる（期限切れを含む）と、価格が同じでも実質は上がる。
+        # 「もう得ではなくなった」は、待っていた人にいちばん要る知らせ。
+        eff_rise_pct = (eff - eff_prev) / eff_prev if eff > eff_prev else 0.0
     else:
-        eff_prev, eff_drop_pct = None, 0.0
+        eff_prev, eff_drop_pct, eff_rise_pct = None, 0.0, 0.0
 
     return {
         "changed_date": last_change(rec),
         "point_rate": rate, "eff_price": eff, "eff_prev": eff_prev,
-        "eff_drop_pct": eff_drop_pct,
+        "eff_drop_pct": eff_drop_pct, "eff_rise_pct": eff_rise_pct,
         "price": price, "low": low, "high": high, "days": days,
         "prev": prev, "drop_pct": drop_pct, "rise_pct": rise_pct,
         "vs_low_pct": vs_low_pct, "off_high_pct": off_high_pct,
         "at_low": at_low, "near_low": near_low, "dropped": dropped,
+        "moved": moved, "spread_pct": spread_pct,
+        "eff_low": eff_low, "eff_high": eff_high,
+        "eff_moved": eff_moved, "eff_at_low": eff_at_low,
         "trustworthy": trustworthy, "label": label,
         "low_date": rec.get("min_date"), "tail": rec.get("tail") or [],
+        "hike": last_hike(rec),
     }
 
 
@@ -104,11 +189,30 @@ def evaluate_all(summary: dict, items: dict, drop_threshold: float,
     履歴にしか無い商品（販売終了などで今日取得できなかったもの）は、
     価格が今日のものだと誤解されるため出さない。
     """
+    # 取得した日より前に終わっている倍率は、倍率1として扱う。
+    # 楽天が期限切れの倍率を返してくることがあり（実測2026-09-28に93件、
+    # うち63件は倍率が1より大きかった）、そのまま出すと
+    # 「ポイント2倍 / 実質13,710円」と、もう受け取れない値引きを見せることになる。
+    latest = max((str(r.get("last_date") or "") for r in summary.values()), default="")
     out = []
     for code, meta in items.items():
         rec = summary.get(code)
         if not rec:
             continue
+        until = str(meta.get("point_until") or "")[:10]
+        if until and latest and until < latest:
+            # 履歴の最終日も直す。図・「記録を始めてからの変化」・「価格の記録」は
+            # すべて tail から作るので、last_rate だけ直すと画面の中で食い違う。
+            # 実測（2026-09-28）で、頭は「実質 27,225円 ▲16.5%」なのに表の
+            # 同じ日が 23,375円 になっている商品があった。
+            tail = [list(e) for e in (rec.get("tail") or [])]
+            if tail:
+                last = tail[-1]
+                while len(last) < 3:
+                    last.append(1)
+                last[2] = 1
+            rec = {**rec, "last_rate": 1, "tail": tail}
+            meta = {**meta, "point_until": None, "point_rate_expired": True}
         verdict = evaluate(rec, drop_threshold, near_low_threshold)
         if not verdict:
             continue
@@ -124,8 +228,14 @@ def drops(rows: list[dict], limit: int | None = None) -> list[dict]:
 
 
 def lows(rows: list[dict], limit: int | None = None) -> list[dict]:
-    """記録した中で最安、またはそれに近いもの。"""
-    hit = [r for r in rows if r["at_low"] or r["near_low"]]
+    """記録した中で最安、またはそれに近いもの。
+
+    ポイント込みの実質価格で最安のものも入れる。楽天の値引きは価格ではなく
+    倍率で動くことが多く、価格だけで切ると「いまがいちばん得」な269件
+    （2026-09-28 実測）が一覧に出てこない。
+    """
+    hit = [r for r in rows
+           if r["at_low"] or r["near_low"] or r.get("eff_at_low")]
     hit.sort(key=lambda r: (r["vs_low_pct"], -r["days"]))
     return hit[:limit] if limit else hit
 
@@ -135,9 +245,17 @@ def rises(rows: list[dict], threshold: float, limit: int | None = None) -> list[
 
     値下がりだけを並べると「安いから買え」としか言わないサイトになる。
     高くなったものを同じ基準で出すことが、価格を追う道具としての値打ちになる。
+
+    ポイント込みの実質価格で高くなったものも入れる。倍率が下がる（期限切れを
+    含む）と、価格が同じでも実質は上がる。実測（2026-09-28・しきい値5%）で、
+    価格が上がったのは45件だが実質では139件あり、**101件は価格では
+    上がっていなかった**。待っていた人には「もう得ではない」が要る。
     """
-    hit = [r for r in rows if r.get("rise_pct", 0) >= threshold]
-    hit.sort(key=lambda r: (-r["rise_pct"], r["price"]))
+    def up(r):
+        return max(r.get("rise_pct", 0), r.get("eff_rise_pct", 0))
+
+    hit = [r for r in rows if up(r) >= threshold]
+    hit.sort(key=lambda r: (-up(r), r["price"]))
     return hit[:limit] if limit else hit
 
 
@@ -161,6 +279,33 @@ def change_count(rec_or_row: dict) -> int:
     return sum(1 for i in range(1, len(prices)) if prices[i] != prices[i - 1])
 
 
+def effective_series(rec_or_row: dict) -> list[tuple]:
+    """ポイント分を引いた実質価格の推移。[(日付, 実質価格), ...]
+
+    履歴には倍率も控えてある（[日付, 価格, 倍率]）。価格だけを線にすると、
+    楽天でいちばんよく動く値引きが画面から消える。
+    """
+    out = []
+    for e in map(_entry, rec_or_row.get("tail") or []):
+        price = e[1]
+        if not price:
+            continue
+        rate = e[2] if len(e) > 2 and e[2] else 1
+        out.append((e[0], effective(price, rate)))
+    return out
+
+
+def effective_change_count(rec_or_row: dict) -> int:
+    """実質価格が動いた回数。
+
+    価格だけで数えると動いたのは 1,486件（13.9%）だが、ポイントを含めると
+    2,252件（21.0%）になる（実測 2026-09-26・記録2日以上の10,701件）。
+    「この商品に見せる履歴があるか」はこちらで判断する。
+    """
+    values = [v for _, v in effective_series(rec_or_row)]
+    return sum(1 for i in range(1, len(values)) if values[i] != values[i - 1])
+
+
 def active(rows: list[dict], limit: int | None = None) -> list[dict]:
     """よく動く商品を、動いた回数の多い順に。"""
     hit = [r for r in rows if change_count(r) >= 2]
@@ -174,6 +319,9 @@ def drops_on(rows: list[dict], day: str, threshold: float,
 
     「最後に価格が動いたのがその日」ではない。過ぎた日の一覧を作るには、
     履歴のその日と直前を突き合わせて、当日の下げ幅を出し直す必要がある。
+
+    ポイント込みの実質価格で下がった回も拾う。実測（2026-09-28）で、
+    9/26 は価格52件に対し実質69件、9/27 は17件に対し27件だった。
     """
     hit = []
     for row in rows:
@@ -182,11 +330,21 @@ def drops_on(rows: list[dict], day: str, threshold: float,
             if tail[i][0] != day:
                 continue
             before, now = tail[i - 1][1], tail[i][1]
-            if before and before > now and (before - now) / before >= threshold:
-                hit.append({**row, "drop_pct": (before - now) / before,
-                            "prev": before, "price": now, "dropped": True})
+            eff_before = effective(before, tail[i - 1][2])
+            eff_now = effective(now, tail[i][2])
+            drop = (before - now) / before if before and before > now else 0.0
+            eff_drop = ((eff_before - eff_now) / eff_before
+                        if eff_before and eff_before > eff_now else 0.0)
+            if max(drop, eff_drop) >= threshold:
+                # その日の値だけを差し替える。実質でしか下がっていない回も
+                # 拾う（実測2026-09-26 で価格52件に対し実質69件）。
+                hit.append({**row, "drop_pct": drop, "prev": before, "price": now,
+                            "dropped": drop >= threshold,
+                            "point_rate": tail[i][2],
+                            "eff_price": eff_now, "eff_prev": eff_before,
+                            "eff_drop_pct": eff_drop, "eff_rise_pct": 0.0})
             break
-    hit.sort(key=lambda r: (-r["drop_pct"], r["price"]))
+    hit.sort(key=lambda r: (-max(r["drop_pct"], r["eff_drop_pct"]), r["price"]))
     return hit[:limit] if limit else hit
 
 
@@ -195,9 +353,27 @@ def new_lows(rows: list[dict], day: str, limit: int | None = None) -> list[dict]
 
     「最安値圏」は近い価格も含むが、こちらは記録を塗り替えた当日だけ。
     履歴を持っていないと出せない一覧で、買い手にとっては一番強い合図になる。
+
+    ポイント込みの実質価格で塗り替えた回も入れる。価格が動かなくても、
+    倍率が上がれば実質の最安値は更新される。
     """
-    hit = [r for r in rows
-           if r.get("at_low") and r.get("trustworthy") and r.get("low_date") == day]
+    def eff_low_day(r):
+        """実質価格が記録した中でいちばん安かった日。"""
+        ser = effective_series(r)
+        if not ser:
+            return None
+        lo = min(v for _, v in ser)
+        return next(d for d, v in ser if v == lo)
+
+    hit = []
+    for r in rows:
+        if not r.get("trustworthy"):
+            continue
+        if r.get("at_low") and r.get("low_date") == day:
+            hit.append(r)
+        elif r.get("eff_at_low") and eff_low_day(r) == day:
+            # 価格が動かなくても、倍率が上がれば実質の最安値は塗り替わる。
+            hit.append(r)
     hit.sort(key=lambda r: (-r.get("off_high_pct", 0), r["price"]))
     return hit[:limit] if limit else hit
 
@@ -243,7 +419,12 @@ SCORE_PARTS = (
 
 def score_breakdown(row: dict) -> list[tuple[str, int]]:
     """条件ごとの点を返す。合計ではなく内訳で持つ（根拠を出せる形にする）。"""
-    near = max(0.0, 1 - min(row.get("vs_low_pct", 1.0), 0.3) / 0.3)
+    # 動いていない商品は、自分の値段と自分の最安値を比べているだけなので
+    # 「最安値に近い」は情報にならない。実測で600件中358件がこれだった。
+    if row.get("moved") is False:
+        near = 0.0
+    else:
+        near = max(0.0, 1 - min(row.get("vs_low_pct", 1.0), 0.3) / 0.3)
     eff = min(max(row.get("eff_drop_pct", 0.0), 0.0), 0.2) / 0.2
     drop = min(max(row.get("drop_pct", 0.0), 0.0), 0.2) / 0.2
     moves = min(change_count(row), 5) / 5

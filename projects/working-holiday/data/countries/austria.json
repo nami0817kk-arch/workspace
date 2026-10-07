@@ -1,0 +1,25 @@
+{
+  "id": "austria",
+  "name": "オーストリア",
+  "age": "申請時18歳以上30歳以下",
+  "stay": "ビザ開始日から最長12か月間。延長不可",
+  "fee": "無料",
+  "funds": "入国後最初の一定期間を自力で生活できるだけの十分な資金が必要。直近6か月分の銀行取引明細の提示が求められる",
+  "apply": "本人が在京オーストリア大使館の窓口で申請",
+  "timing": "ビザ開始日の3か月前から申請可能。遅くとも3週間前までの申請が望ましい",
+  "work": "基本的にどの職種でも就労許可なしで働ける（一部の資格要件がある職種を除く）。ただし就労・就学が渡航の主目的であってはならない",
+  "study": "教育活動への参加は付随的な範囲で可能。就学が渡航の主目的であってはならない",
+  "insurance": "滞在全期間をカバーする旅行疾病保険・傷害保険が必須。医療行為1件あたり最低3万ユーロ（医療移送・新型コロナ関連費用を含む）の補償が必要",
+  "points": [
+    "1か国につき1回しか申請できないため、やり直しはできない",
+    "就労はほぼ自由（無許可）だが、資格が必要な一部の職種は対象外",
+    "保険は医療移送や新型コロナ関連費用まで含め最低3万ユーロの補償が求められる",
+    "銀行取引明細は直近6か月分の提示が必要",
+    "ビザ開始日の3週間前までに申請するのが望ましいとされる"
+  ],
+  "sources": [
+    {"title": "Working Holiday Visa - BMEIA", "url": "https://www.bmeia.gv.at/en/travel-stay/entrance-and-residence-in-austria/working-holiday-programmes/working-holiday-visa", "checked": "2026-10-05"},
+    {"title": "How to apply? - Austrian Embassy Tokyo", "url": "https://www.bmeia.gv.at/en/austrian-embassy-tokyo/travels-to-austria/entrance-and-residence/how-to-apply", "checked": "2026-10-05"}
+  ],
+  "unverified": ["funds（必要資金の具体的な金額）", "年間発給枠（原文上の記載は確認できず）"]
+}

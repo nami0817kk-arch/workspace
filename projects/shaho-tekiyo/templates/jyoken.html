@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}パートの社会保険の加入条件（2026年10月から）｜週20時間・従業員数・学生・50人以下の会社{% endblock %}
+{% block description %}パート・アルバイトが勤務先の社会保険（健康保険・厚生年金）に入る条件を一覧に。2026年10月に月8.8万円の条件が無くなり、週20時間以上・従業員51人以上・2か月超・学生でないの4つに。従業員数の条件が2035年までにどう広がるかも。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">加入条件</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>パートの社会保険の加入条件</h1>
+<p class="updated">2026年10月1日からの条件（令和8年政令第275号で日付が確定）</p>
+
+<p>
+  2026年10月1日からは、パート・アルバイトは次の<strong>4つをすべて満たすと</strong>、勤務先の社会保険（健康保険・厚生年金）に入ります。
+  本人が入りたくなくても、条件を満たせば加入します。
+</p>
+
+<div class="table-wrap">
+<table class="plain">
+  <thead><tr><th>条件</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><th>1. 週20時間以上</th><td>雇用契約書やシフトで決まっている週の所定労働時間が20時間以上。たまたまの残業は含めない。ただし実際の時間が2か月続けて週20時間以上で、その後も続く見込みなら3か月目から入る。<a href="{{ base_url }}faq.html#q-20h">20時間ちょうどは？</a></td></tr>
+    <tr><th>2. 会社の従業員数</th><td>厚生年金に入っている人が<strong>51人以上</strong>（2026年10月時点）。法人は全事業所の合計。この人数は下の表のとおり段階的に下がる</td></tr>
+    <tr><th>3. 2か月を超えて働く見込み</th><td>雇用期間が2か月以内でも、契約に更新の可能性が書かれていれば当たる</td></tr>
+    <tr><th>4. 学生でない</th><td>昼間の学生は対象外。夜間・定時制・通信制・休学中、卒業前に就職して同じ職場で続ける人は対象。<a href="{{ base_url }}faq.html#q-student">くわしく</a></td></tr>
+    <tr class="muted-row"><th><s>月8.8万円以上</s><span class="sub">2026年10月に廃止</span></th><td>いわゆる「106万円の壁」。<strong>2026年10月1日に無くなり</strong>、それからは月収にかかわらず入る（9月までは月8.8万円未満なら対象外）</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="size">従業員数の条件はいつから何人に？</h2>
+<div class="table-wrap">
+<table class="plain">
+  <thead><tr><th>いつから</th><th>会社の従業員数</th></tr></thead>
+  <tbody>
+    {% for m in milestones %}
+    <tr><th><a href="{{ base_url }}year/{{ m.effective_from.year }}-{{ '%02d'|format(m.effective_from.month) }}.html">{{ m.effective_from.year }}年{{ m.effective_from.month }}月</a></th>
+      <td>{% if m.company_size_threshold %}{{ m.company_size_threshold }}人以上{% else %}人数を問わない{% endif %}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p>
+  2035年10月には人数の条件が無くなり、週20時間以上などの条件を満たせば、法人などの社会保険に入っている事業所ならどこで働いていても入ります（従業員5人未満の個人事業所などは、もともと社会保険の事業所ではありません）。
+</p>
+
+<h2 id="small">従業員50人以下の会社なら入らない？</h2>
+<p>
+  2026年10月時点では、従業員50人以下の会社のパートは、この条件では加入の対象になりません（正社員の4分の3以上の時間・日数を働く人は、会社の規模にかかわらず入ります）。
+  ただし、従業員の2分の1以上が同意すれば、50人以下の会社でもパートが加入できる制度があります。
+  また、2027年10月からは36人以上の会社も対象になります。<a href="{{ base_url }}faq.html#q-small">くわしく</a>
+</p>
+
+<h2 id="double">掛け持ち（ダブルワーク）の場合</h2>
+<p>
+  週20時間などの条件は勤め先ごとに見ます。2か所で合わせて20時間以上でも、どちらか1か所で条件を満たさなければ入りません。
+  <a href="{{ base_url }}faq.html#q-double">くわしく</a>
+</p>
+
+<h2 id="money">入ると、いくら引かれる？</h2>
+<p>
+  引かれる保険料は月収で決まります。月収10万円なら、東京の会社で月{{ "{:,}".format(ex10.total_yen) }}円です（{{ era }}の料率）。
+  自分の条件で確かめるなら<a href="{{ base_url }}index.html">計算機</a>、月収ごとの額は<a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>、
+  年収ごとの手取りは<a href="{{ base_url }}nenshu.html">年収別の手取り</a>にあります。
+</p>
+
+<p class="hint">
+  出典: <a href="https://www.nenkin.go.jp/service/kounen/tekiyo/jigyosho/tanjikan.html" rel="nofollow noopener" target="_blank">日本年金機構「短時間労働者に対する健康保険・厚生年金保険の適用の拡大」</a>、
+  <a href="https://www.mhlw.go.jp/content/12500000/001633788.pdf" rel="nofollow noopener" target="_blank">厚生労働省「短時間労働者の社会保険（健康保険・厚生年金保険）の加入拡大のポイント」</a>。
+</p>
+
+{% include "_cards.html" %}
+{% endblock %}

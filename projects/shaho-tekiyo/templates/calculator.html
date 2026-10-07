@@ -1,90 +1,155 @@
 {% extends "base.html" %}
-{% block title %}社会保険 加入判定チェッカー｜パート・アルバイトの106万円の壁{% endblock %}
-{% block description %}週の労働時間・月収・勤務先の従業員数を入れると、社会保険（健康保険・厚生年金）の加入対象かどうかと、引かれる保険料の目安を出します。2026年10月の賃金要件撤廃、2027〜2035年の企業規模要件拡大に対応。{% endblock %}
+{% block title %}パートの社会保険はいくら引かれる？計算シミュレーション【2026年版】｜手取り・加入条件・年収の壁{% endblock %}
+{% block description %}パートの社会保険料はいくら引かれて、手取りはいくらになるかを計算します。週の時間・時給か月収・勤務先の人数で、加入の対象か、保険料と手取りはいくらかを{{ era }}の料率で円単位に。106万円の壁の撤廃（2026年10月）と週20時間の壁にも対応。{% endblock %}
+{% block main_class %}wide{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"パートの社会保険 計算機","url":"{{ SITE_URL }}/","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ja","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"description":"パート・アルバイトが勤務先の社会保険に入る対象か、保険料と手取りはいくらかを{{ era }}の料率で計算する"}</script>{% endblock %}
 {% block content %}
-<h1>社会保険 加入判定チェッカー</h1>
-<p>
-  パート・アルバイトで働く人が、社会保険（健康保険・厚生年金）の加入対象になるかどうかを、
-  公表されている基準に沿って判定します。<strong>2026年10月から賃金要件（月額8.8万円＝いわゆる「106万円の壁」）が撤廃</strong>され、
-  企業規模の要件も2035年まで段階的に広がります。時点を選んで確かめてください。
-</p>
+<section class="hero-band">
+  <p class="hero-eyebrow">パート・アルバイトで働く人のための計算サイト</p>
+  <h1>パートの社会保険 計算機</h1>
+  <p class="hero-lead">週の労働時間と月の賃金（または時給）、勤務先の人数を入れると、次の3つが分かります。</p>
+  <ul class="hero-points">
+    <li><svg viewBox="0 0 40 40" aria-hidden="true"><rect class="ico-bg" width="40" height="40" rx="10"/><path class="ico-fg" d="M12 20.5l5.5 5.5L28 15"/></svg><span><span class="num">1</span><strong>加入の対象か</strong></span></li>
+    <li><svg viewBox="0 0 40 40" aria-hidden="true"><rect class="ico-bg" width="40" height="40" rx="10"/><rect class="ico-fg" x="11" y="9" width="18" height="22" rx="2"/><path class="ico-fg" d="M15 15h10M15 20h10M15 25h6"/></svg><span><span class="num">2</span><strong>保険料の額</strong></span></li>
+    <li><svg viewBox="0 0 40 40" aria-hidden="true"><rect class="ico-bg" width="40" height="40" rx="10"/><path class="ico-fg" d="M13 10l7 9.5 7-9.5M20 19.5V30M14.5 21h11M14.5 25h11"/></svg><span><span class="num">3</span><strong>毎月の手取り</strong></span></li>
+  </ul>
+  <p class="hero-news"><strong>{% if oct_done %}2026年10月1日に「106万円の壁」が無くなりました。{% else %}2026年10月1日から「106万円の壁」が無くなります。{% endif %}</strong>従業員51人以上の会社なら、週20時間以上で月収にかかわらず加入の対象です。<a href="faq.html#q-oct">何が変わる？</a></p>
+  <ul class="badges">
+    <li>{{ era }}の料率（協会けんぽ）</li>
+    <li>2026年10月の改正に対応</li>
+    <li>入力は送信しません</li>
+    <li><a href="keisan.html">額表・国税庁の計算例と照合済み</a></li>
+  </ul>
+</section>
 
-<form id="calc-form" class="card" novalidate>
-  <div class="field">
-    <label for="as-of">確かめる時点</label>
-    <select id="as-of">
-      <option value="today" id="today-option">今日時点</option>
-      {% for m in milestones %}
-      <option value="{{ m.effective_from.isoformat() }}">{{ m.effective_from.year }}年{{ m.effective_from.month }}月以降</option>
-      {% endfor %}
-    </select>
-    <p class="hint">企業規模の要件は時点によって変わります。将来の時点を選ぶと「今は対象外でも、その頃には対象になるか」を確かめられます。</p>
+<div class="calc-layout">
+<form id="calc-form" class="card calc-form" novalidate>
+  <h2 class="card-head">入力</h2>
+  <div class="presets" role="group" aria-label="入力例">
+    <span class="presets-label">入力例</span>
+    <button type="button" data-preset="h=19&amp;hr=1100">扶養内・週19時間</button>
+    <button type="button" data-preset="h=20&amp;hr=1100">週20時間に増やす</button>
+    <button type="button" data-preset="h=30&amp;w=150000">月収15万円・週30時間</button>
+    <button type="button" data-preset="h=20&amp;hr=1100&amp;s=1">昼間の学生</button>
   </div>
 
-  <div class="field">
-    <label for="hours">1週間の所定労働時間</label>
-    <input type="number" id="hours" min="0" max="80" step="0.5" value="20" inputmode="decimal">
-    <p class="hint">シフト表・雇用契約書に書かれている時間です（残業は含みません）。要件は「{{ hours_requirement }}時間以上」。</p>
+  <div class="row">
+    <label for="hours">週の労働時間</label>
+    <div class="ctl"><input type="number" id="hours" min="0" max="80" step="0.5" value="20" inputmode="decimal"><span class="unit">時間</span></div>
+    <p class="hint">契約やシフトで決まっている時間（残業は除く）</p>
+    <p class="hint per-day">1日 <input type="number" id="per-day" min="0" max="24" step="0.5" inputmode="decimal" aria-label="1日の時間"> 時間 × 週 <input type="number" id="days" min="0" max="7" step="1" inputmode="numeric" aria-label="週の日数"> 日 で入れる</p>
   </div>
 
-  <div class="field">
-    <label for="wage">1か月の賃金（基本給＋諸手当。賞与・残業代・通勤手当などは除く）</label>
-    <input type="number" id="wage" min="0" step="1000" value="90000" inputmode="numeric">
-    <p class="hint">円単位で入力してください（例: 90000）。2026年10月以降はこの金額が低くても対象になりえます。</p>
+  <div class="row">
+    <label for="hourly">時給<span class="opt">任意</span></label>
+    <div class="ctl"><input type="number" id="hourly" min="0" step="10" placeholder="例: 1100" inputmode="numeric"><span class="unit">円</span></div>
+    <p class="hint">入れると下の月の賃金を自動で計算（×週の時間×52÷12）</p>
   </div>
 
-  <div class="field">
-    <label for="employer-size">勤務先の従業員数（厚生年金保険の被保険者数のめやす）</label>
-    <input type="number" id="employer-size" min="0" step="1" value="60" inputmode="numeric">
-    <p class="hint">法人なら、同じ法人番号のすべての事業所の合計です。正確な人数が分からない場合は、およその人数で構いません。この人数が要件未満でも、従業員の2分の1以上の同意があれば加入できる制度があります。</p>
+  <div class="row">
+    <label for="wage">月の賃金</label>
+    <div class="ctl"><input type="number" id="wage" min="0" step="1000" value="90000" inputmode="numeric"><span class="unit">円</span></div>
+    <p class="hint">基本給＋諸手当（賞与・残業代・通勤手当は除く）</p>
   </div>
 
-  <div class="field">
-    <div class="checkbox-row">
-      <input type="checkbox" id="is-student">
-      <label for="is-student">学生である（昼間部）</label>
+  <div class="row">
+    <label for="employer-size">会社の従業員数</label>
+    <div class="ctl"><input type="number" id="employer-size" min="0" step="1" value="60" inputmode="numeric"><span class="unit">人</span></div>
+    <p class="hint">厚生年金に入っている人数。法人なら全事業所の合計（およそで可）</p>
+  </div>
+
+  <div class="row">
+    <label for="prefecture">会社の都道府県</label>
+    <div class="ctl">
+      <select id="prefecture">
+        {% for p in prefectures %}
+        <option value="{{ p }}"{% if p == "東京" %} selected{% endif %}>{{ pref_full(p) }}</option>
+        {% endfor %}
+      </select>
     </div>
-    <p class="hint">夜間部・定時制・通信制の学生、休学中の人、卒業前に就職して卒業後も同じ勤務先で働く予定の人は、ここにチェックを入れずに判定してください。</p>
+    <p class="hint">健康保険料率は勤務先の都道府県で決まります</p>
   </div>
 
-  <h2 class="form-subhead">保険料の目安も出す</h2>
-  <p class="hint">加入対象になる場合に、給与から引かれる保険料（本人負担分）の目安を出します。勤務先が協会けんぽに入っている場合の計算です。</p>
+  <details class="more">
+    <summary>詳しく入力する（通勤手当・残業代・賞与・扶養・年齢・学生・時点）</summary>
 
-  <div class="field">
-    <label for="prefecture">勤務先の所在地（都道府県）</label>
-    <select id="prefecture">
-      {% for p in prefectures %}
-      <option value="{{ p }}"{% if p == "東京" %} selected{% endif %}>{{ p }}</option>
-      {% endfor %}
-    </select>
-    <p class="hint">健康保険料率は、住んでいる所ではなく勤務先（事業所）の都道府県で決まります。</p>
-  </div>
+    <div class="row">
+      <label for="commute">通勤手当（月）</label>
+      <div class="ctl"><input type="number" id="commute" min="0" step="1000" value="0" inputmode="numeric"><span class="unit">円</span></div>
+      <p class="hint">保険料には含め、所得税はかからない</p>
+    </div>
 
-  <div class="field">
-    <label for="extra">通勤手当・残業代などの見込み（1か月）</label>
-    <input type="number" id="extra" min="0" step="1000" value="0" inputmode="numeric">
-    <p class="hint">加入するかどうかの判定には含めませんが、保険料の計算には含めます（標準報酬月額は通勤手当なども含めた報酬で決まるため）。</p>
-  </div>
+    <div class="row">
+      <label for="extra">残業代など（月）</label>
+      <div class="ctl"><input type="number" id="extra" min="0" step="1000" value="0" inputmode="numeric"><span class="unit">円</span></div>
+      <p class="hint">加入の判定には含めず、保険料と所得税には含める</p>
+    </div>
 
-  <div class="field">
-    <div class="checkbox-row">
+    <div class="row">
+      <label for="bonus">賞与（1回あたり）</label>
+      <div class="ctl"><input type="number" id="bonus" min="0" step="1000" value="0" inputmode="numeric"><span class="unit">円</span>
+        <select id="bonus-times" aria-label="賞与の回数"><option value="1">年1回</option><option value="2" selected>年2回</option><option value="3">年3回</option></select></div>
+      <p class="hint">賞与からも社会保険料が引かれる。年収の壁の判定にも足す</p>
+    </div>
+
+    <div class="row">
+      <label for="dependents">扶養している家族</label>
+      <div class="ctl">
+        <select id="dependents">
+          <option value="0" selected>0人</option><option value="1">1人</option><option value="2">2人</option>
+          <option value="3">3人</option><option value="4">4人</option><option value="5">5人</option>
+        </select>
+      </div>
+      <p class="hint">所得税の計算用。配偶者や親の扶養に入っている人は0人</p>
+    </div>
+
+    <div class="row check">
       <input type="checkbox" id="age-40-64">
-      <label for="age-40-64">40歳以上65歳未満である</label>
+      <label for="age-40-64">40歳以上65歳未満（介護保険料が加わる）</label>
     </div>
-    <p class="hint">40〜64歳の人は介護保険料が加わります。</p>
-  </div>
+
+    <div class="row check">
+      <input type="checkbox" id="is-student">
+      <label for="is-student">昼間の学生である</label>
+    </div>
+    <p class="hint">夜間・定時制・通信制・休学中、卒業前に就職して同じ勤務先で働き続ける人はチェックしない</p>
+
+    <div class="row">
+      <label for="as-of">確かめる時点</label>
+      <div class="ctl">
+        <select id="as-of">
+          <option value="today" id="today-option">今日時点</option>
+          {% for m in milestones %}
+          <option value="{{ m.effective_from.isoformat() }}">{{ m.effective_from.year }}年{{ m.effective_from.month }}月以降</option>
+          {% endfor %}
+        </select>
+      </div>
+      <p class="hint">会社の人数の条件は時点で変わる。将来の時点も確かめられる</p>
+    </div>
+  </details>
+  <p class="share-row"><button type="button" id="copy-link">この条件のリンクをコピー</button><span id="copy-status" class="hint" aria-live="polite"></span></p>
 </form>
 
-<div id="result" aria-live="polite"></div>
+<aside class="calc-side">
+  <div id="summary" class="summary-card" aria-live="polite"></div>
+</aside>
+</div>
+
+<a id="mobile-bar" class="mobile-bar" href="#summary" hidden></a>
+
+<div id="result"></div>
 
 <script id="schedule-data" type="application/json">{{ schedule_json|safe }}</script>
 <script id="rates-data" type="application/json">{{ rates_json|safe }}</script>
+<script id="extras-data" type="application/json">{{ extras_json|safe }}</script>
 <script src="{{ base_url }}static/calc.js"></script>
+<script src="{{ base_url }}static/charts.js"></script>
 <script>
 (function () {
   "use strict";
   var SCHEDULE = JSON.parse(document.getElementById('schedule-data').textContent);
   var TABLES = JSON.parse(document.getElementById('rates-data').textContent);
+  var EXTRAS = JSON.parse(document.getElementById('extras-data').textContent);
   var HOURS_REQUIREMENT = {{ hours_requirement }};
   var calc = window.ShahoCalc;
 
@@ -107,52 +172,225 @@
     return rawValue === 'today' ? todayIso() : rawValue;
   }
 
-  function premiumHtml(asOf, wage, extra) {
+  var lastPremium = null;
+
+  // 入力の右（スマホでは下）に出す要約。結論の数字を大きく、内訳は「くわしく」へ。
+  function summaryHtml(r, pay) {
+    var html = '<div class="pill ' + (r.eligible ? 'ok' : 'ng') + '">' + (r.eligible ? '社会保険に入る対象' : '今回の入力では対象外') + '</div>';
+    if (r.eligible && lastPremium) {
+      html += '<p class="big-label">手取りの目安（1か月）</p>';
+      html += '<p class="big-num">' + lastPremium.net.toLocaleString('ja-JP') + '<small>円</small></p>';
+      html += '<dl class="sum-rows">';
+      html += '<dt>月の収入</dt><dd>' + yen(lastPremium.pay) + '</dd>';
+      html += '<dt>社会保険料</dt><dd>−' + yen(lastPremium.total) + '</dd>';
+      if (lastPremium.koyo !== null) html += '<dt>雇用保険料</dt><dd>−' + yen(lastPremium.koyo) + '</dd>';
+      if (lastPremium.tax !== null) html += '<dt>所得税</dt><dd>−' + yen(lastPremium.tax) + '</dd>';
+      html += '</dl>';
+      html += '<p class="hint">住民税は含みません。<a href="#result">内訳と図を見る ↓</a></p>';
+    } else if (r.eligible) {
+      html += '<p class="hint">この時点の保険料率はまだ公表されていないため、金額は出していません。</p>';
+    } else {
+      var why = !r.hoursOk ? '週の労働時間が' + HOURS_REQUIREMENT + '時間未満' : !r.employerSizeOk ? '会社の人数が' + r.regime.company_size_threshold + '人未満' : !r.notStudentOk ? '昼間の学生' : '月の賃金が条件未満';
+      html += '<p class="big-label">理由</p><p class="why">' + why + '</p>';
+      html += '<p class="hint">社会保険料は給与から引かれません（雇用保険料は週20時間以上なら引かれます。2028年10月からは週10時間以上）。<a href="#result">判定の内訳 ↓</a></p>';
+    }
+    return html;
+  }
+
+  function premiumHtml(asOf, wage, extra, commute, dependents) {
     var prefecture = document.getElementById('prefecture').value;
     var age = document.getElementById('age-40-64').checked;
-    var pay = wage + extra;
+    var pay = wage + extra + commute;
     var p = calc.estimate(TABLES, asOf, prefecture, pay, age);
-    var html = '<h2>保険料の目安（1か月・本人負担分）</h2>';
+    var html = '<h2>引かれる額の目安（1か月・本人負担分）</h2>';
     if (!p) {
       return html + '<p class="note">この時点の保険料率はまだ公表されていないため、金額は出していません'
         + '（健康保険料率は毎年3月分から改定されます）。「今日時点」を選ぶと、いまの料率での目安を出します。</p>';
     }
+    var koyo = calc.employmentYen(EXTRAS, asOf, pay);
+    var tax = koyo === null ? null : calc.incomeTaxYen(EXTRAS, asOf, pay - commute - p.total - koyo, dependents);
+    var net = p.takeHome - (koyo || 0) - (tax || 0);
+    lastPremium = { pay: pay, total: p.total, koyo: koyo, tax: tax, net: net };
     html += '<div class="table-wrap"><table class="plain premium">';
     html += '<tr><th>健康保険料' + (age ? '（介護保険料を含む）' : '') + '</th><td>' + yen(p.health) + '</td></tr>';
     html += '<tr><th>子ども・子育て支援金</th><td>' + yen(p.kodomo) + '</td></tr>';
     html += '<tr><th>厚生年金保険料</th><td>' + yen(p.pension) + '</td></tr>';
-    html += '<tr class="current"><th>合計</th><td><strong>' + yen(p.total) + '</strong></td></tr>';
-    html += '<tr><th>報酬月額（' + yen(pay) + '）から引いた残り</th><td>' + yen(p.takeHome) + '</td></tr>';
+    html += '<tr class="current"><th>社会保険料の合計</th><td><strong>' + yen(p.total) + '</strong>（年 ' + yen(p.total * 12) + '）</td></tr>';
+    if (koyo !== null) {
+      html += '<tr><th>雇用保険料<span class="sub">週20時間以上なら加入前から引かれている分</span></th><td>' + yen(koyo) + '</td></tr>';
+      if (tax !== null) {
+        html += '<tr><th>所得税<span class="sub">扶養' + dependents + '人。給与から天引きされる額の目安</span></th><td>' + yen(tax) + '</td></tr>';
+      }
+      html += '<tr><th>手取りの目安<span class="sub">' + yen(pay) + 'から上の全部を引いた額' + (tax === null ? '。所得税・' : '。') + '住民税は含まない</span></th><td><strong>' + yen(net) + '</strong></td></tr>';
+    } else {
+      html += '<tr><th>' + yen(pay) + 'から引いた残り</th><td>' + yen(p.takeHome) + '</td></tr>';
+    }
     html += '</table></div>';
+    if (koyo !== null) {
+      html += window.ShahoCharts.breakdownBar([
+        ['手取り', net, 's1'],
+        ['厚生年金保険料', p.pension, 's2'],
+        ['健康保険料・子ども・子育て支援金', p.health + p.kodomo, 's3'],
+        ['雇用保険料・所得税', koyo + (tax || 0), 's4']
+      ], pay, yen(pay) + 'の行き先');
+    }
+    html += '<p class="hint">会社もほぼ同じ額（月約' + yen(p.total) + '）の社会保険料を負担しています（労使折半）。会社が払う分は、あなたの給与からは引かれません。</p>';
+
+    html += '<h2>加入する前と比べると</h2><ul class="compare">';
+    html += '<li><strong>配偶者の扶養に入っていた人</strong>（国民年金の第3号）: それまで0円だった保険料が、月' + yen(p.total) + '増えます。</li>';
+    var kokumin = calc.kokuminNenkinYen(EXTRAS, asOf);
+    if (kokumin !== null) {
+      var diff = kokumin - p.pension;
+      html += '<li><strong>自分で国民年金を払っていた人</strong>（親の扶養に入っていた20歳以上の人も）: 国民年金保険料（月' + yen(kokumin) + '）がなくなり、厚生年金保険料（月'
+        + yen(p.pension) + '）に替わります。年金の分だけで月' + yen(Math.abs(diff)) + (diff > 0 ? '安く' : '高く')
+        + 'なります。国民健康保険も勤務先の健康保険に替わります（国民健康保険料は市区町村で違うので、ここでは比べていません）。</li>';
+    }
+    html += '</ul>';
+
+    var inc = calc.pensionIncreasePerYear(EXTRAS, p.pensionStandard);
+    var sick = calc.sicknessDailyYen(p.healthStandard);
+    html += '<h2>加入すると受けられるもの</h2><ul class="compare">';
+    html += '<li><strong>将来の年金が増える</strong>: 1年加入するごとに、65歳から受け取る年金（老齢厚生年金）が年約' + yen(inc)
+      + '増えます。10年なら年約' + yen(inc * 10) + '。一生受け取れる額です。</li>';
+    html += '<li><strong>病気やけがで休んだときの手当</strong>: 仕事を休んで給与が出ないとき、4日目から1日約' + yen(sick)
+      + '（傷病手当金。最長で通算1年6か月）。</li>';
+    html += '</ul>';
+    html += '<p class="hint">年金は標準報酬月額 × 5.481/1000 × 加入月数で出した今の価値での目安（実際は物価などで再評価されます）。'
+      + '傷病手当金は加入から1年たつ前は計算の元が変わることがあります。どちらも個別の額は年金事務所・協会けんぽへ。</p>';
+
     html += '<p class="hint">標準報酬月額: 健康保険 ' + yen(p.healthStandard) + '・厚生年金 ' + yen(p.pensionStandard)
-      + '。' + prefecture + 'の料率（' + p.table.source.title + '）で、労使折半・端数は50銭以下切り捨てで計算しています。'
-      + '所得税・住民税・雇用保険料の変化は含みません。健康保険組合に入っている会社では料率が違います。</p>';
-    html += '<p class="hint">企業規模要件を満たさない会社で任意に加入する場合などには、'
-      + '勤務先が本人負担の一部を持つと国の支援を受けられる3年間の制度（保険料調整制度）があります。'
-      + 'この目安は労使折半のままの額です。</p>';
-    html += '<p class="hint">出典: <a href="' + p.table.source.page + '" rel="nofollow noopener" target="_blank">'
-      + p.table.source.name + '「' + p.table.source.title + '」</a>（料率をもとに当サイトで計算）</p>';
+      + '。' + calc.prefFull(prefecture) + 'の料率（' + p.table.source.title + '）で、労使折半・端数は50銭以下切り捨てで計算しています。'
+      + '健康保険組合に入っている会社では料率が違います。計算のしかたは<a href="keisan.html">計算方法と出典</a>に。</p>';
+    // 保険料調整制度は、人数の条件が広がって新たに対象になった会社（2027年10月以降・50人以下）などだけ。51人以上の会社には出さない
+    if (parseInt(document.getElementById('employer-size').value, 10) <= 50) html += '<p class="hint">人数の条件が広がって新たに対象になった会社では、月収（標準報酬月額）およそ12.6万円以下の人は、会社が選べば本人負担が3年間軽くなる制度（保険料調整制度）があります。使うかは勤務先に聞いてみてください（<a href="faq.html#q-small">くわしく</a>）。'
+      + '';
+    html += '<p class="hint">この目安は労使折半のままの額です。</p>';
+    return html;
+  }
+
+  function kabeHtml(asOf, hourly) {
+    var prefecture = document.getElementById('prefecture').value;
+    var age = document.getElementById('age-40-64').checked;
+    var k = calc.kabeAnalyze(TABLES, EXTRAS, asOf, hourly, prefecture, age);
+    if (!k || !k.breakeven) return '';
+    var be = k.breakeven.hoursX10 / 10;
+    var html = '<h2>週20時間の壁（時給' + yen(hourly) + '・配偶者の扶養に入っている場合）</h2>';
+    html += '<p>週19時間なら手取り月<strong>' + yen(k.net19) + '</strong>、週20時間にして社会保険に入ると月<strong>' + yen(k.net20)
+      + '</strong>で、<strong>' + yen(k.loss) + '減ります</strong>。週' + be + '時間まで増やすと、手取りは' + yen(k.breakeven.net) + 'になり元に戻ります。</p>';
+    if (k.pay19 * 12 >= 1300000) {
+      html += '<p class="note">この時給だと週19時間でも年収' + yen(k.pay19 * 12) + 'で130万円を超えるため、もともと扶養からは外れます。この比べ方は当てはまりません。</p>';
+    }
+    var hoursList = [190, 200, 210, 220, 225, 230, 240, 250];
+    if (hoursList.indexOf(k.breakeven.hoursX10) < 0) { hoursList.push(k.breakeven.hoursX10); hoursList.sort(function (a, b) { return a - b; }); }
+    var chartRows = calc.kabeRows(TABLES, EXTRAS, asOf, hourly, prefecture, age, hoursList).map(function (row) {
+      return { short: String(row.hoursX10 / 10), label: '週' + (row.hoursX10 / 10) + '時間', net: row.net, base: row.hoursX10 === 190,
+               labelValue: row.hoursX10 === 190 || row.hoursX10 === 200 || row.hoursX10 === k.breakeven.hoursX10 };
+    });
+    html += window.ShahoCharts.wallColumns(chartRows, k.net19, '時給' + yen(hourly) + '・週の時間ごとの手取り');
+    html += '<p class="hint">週19時間は社会保険・雇用保険なし、週20時間以上はどちらもありで、所得税は年末調整のあとで見た額（この範囲では0円）。住民税・通勤手当は含みません。'
+      + '配偶者の会社の配偶者手当が止まる場合もあります。<a href="kabe/index.html">時給別の一覧</a></p>';
+    return html;
+  }
+
+  // 1日の時間×週の日数から、週の労働時間を埋める
+  function fillHoursFromDays() {
+    var perDay = parseFloat(document.getElementById('per-day').value);
+    var days = parseFloat(document.getElementById('days').value);
+    if (!isNaN(perDay) && !isNaN(days) && perDay > 0 && days > 0) {
+      document.getElementById('hours').value = Math.round(perDay * days * 10) / 10;
+    }
+  }
+
+  // 賞与から引かれる保険料（1回あたり）
+  function bonusHtml(asOf, bonus, times) {
+    var prefecture = document.getElementById('prefecture').value;
+    var age = document.getElementById('age-40-64').checked;
+    var b = calc.bonusEstimate(TABLES, asOf, prefecture, bonus, age);
+    if (!b) return '';
+    var koyo = calc.employmentYen(EXTRAS, asOf, bonus);
+    var cut = b.total + (koyo || 0);
+    var html = '<h2 id="bonus-result">賞与から引かれる保険料（1回あたり）</h2>';
+    html += '<div class="table-wrap"><table class="plain premium">';
+    html += '<tr><th>健康保険料' + (age ? '（介護保険料を含む）' : '') + '</th><td>' + yen(b.health) + '</td></tr>';
+    html += '<tr><th>子ども・子育て支援金</th><td>' + yen(b.kodomo) + '</td></tr>';
+    html += '<tr><th>厚生年金保険料</th><td>' + yen(b.pension) + '</td></tr>';
+    if (koyo !== null) html += '<tr><th>雇用保険料</th><td>' + yen(koyo) + '</td></tr>';
+    html += '<tr class="current"><th>合計（1回）</th><td><strong>' + yen(cut) + '</strong>（年' + times + '回で ' + yen(cut * times) + '）</td></tr>';
+    html += '<tr><th>賞与から保険料を引いた残り<span class="sub">所得税は含まない</span></th><td>' + yen(bonus - cut) + '</td></tr>';
+    html += '</table></div>';
+    html += '<p class="hint">標準賞与額 ' + yen(b.standard) + '（賞与の1,000円未満を切り捨てた額）に料率を掛けています。'
+      + '賞与にかかる所得税は前の月の給与で税率が決まるため、ここでは出していません。賞与の保険料も将来の年金に反映されます。</p>';
+    return html;
+  }
+
+  // 年収の壁（106万・130万・136万・169万・178万円）を、入力から見込む年収で並べて判定する
+  function wallsHtml(asOf, r, wage, extra, commute, bonusYear) {
+    var taxable = (wage + extra) * 12 + bonusYear;   // 税の年収（通勤手当は非課税）
+    var depend = (wage + commute) * 12 + bonusYear;  // 扶養の年収（通勤手当を含む。2026年4月から残業代は含めない）
+    function row(ok, wall, text) {
+      return '<tr><th>' + wall + '</th><td><span class="wall ' + (ok ? 'in' : 'over') + '">' + (ok ? '内' : '超える') + '</span></td><td>' + text + '</td></tr>';
+    }
+    var html = '<h2 id="walls">年収の壁チェック</h2>';
+    html += '<p>入力から見込む年収は <strong>' + yen(taxable) + '</strong>（税の判定に使う額）、<strong>' + yen(depend) + '</strong>（扶養の判定に使う額。交通費込み）です。</p>';
+    html += '<div class="table-wrap"><table class="plain walls">';
+    html += '<tr><th>106万円<span class="sub">勤務先の社会保険</span></th><td><span class="wall gone">' + (asOf >= '2026-10-01' ? '廃止' : '10月廃止') + '</span></td><td>2026年10月1日に無くなり、入るかどうかは週20時間などで決まります（上の判定）。</td></tr>';
+    if (r.eligible) {
+      html += '<tr><th>130万円<span class="sub">社会保険の扶養</span></th><td><span class="wall gone">対象外</span></td><td>自分が勤務先の社会保険に入るので、年収にかかわらず配偶者や親の扶養からは外れます。</td></tr>';
+    } else {
+      html += row(depend < 1300000, '130万円<span class="sub">社会保険の扶養</span>', depend < 1300000
+        ? '配偶者や親の健康保険の扶養に入っていられる年収です（19〜22歳は150万円未満）。'
+        : '扶養から外れる見込みです。自分で国民健康保険と国民年金を払うことになります。');
+    }
+    // 税は令和8年分（2026年12月の年末調整から）: 給与所得控除の最低74万円・基礎控除104万円（合計所得132万円以下）
+    html += row(taxable <= 1360000, '136万円<span class="sub">配偶者控除</span>', taxable <= 1360000
+      ? '配偶者の税金で配偶者控除（38万円）が受けられる年収です。'
+      : '配偶者控除から配偶者特別控除に切り替わります（169万円までは同じ38万円の控除）。');
+    html += row(taxable <= 1690000, '169万円<span class="sub">配偶者特別控除の満額</span>', taxable <= 1690000
+      ? '配偶者の税金の控除は満額（38万円）のままです。'
+      : '配偶者特別控除が年収に応じて減っていきます。');
+    html += row(taxable <= 1780000, '178万円<span class="sub">本人の所得税</span>', taxable <= 1780000
+      ? '本人の所得税はかかりません（毎月天引きされた分は年末調整で戻ります）。'
+      : '本人に所得税がかかることがあります（社会保険料を払っていれば、その分かかり始めが上がります）。');
+    html += '</table></div>';
+    html += '<p class="hint">毎月同じ額で12か月働き、賞与は入力の額×回数の見込みです。住民税がかかり始める年収（市区町村で違う）は含めていません。'
+      + '税は令和8年分（令和8年度税制改正。2026年12月の年末調整から）で、国税庁「No.1190 配偶者控除」「No.1199 基礎控除」によります。配偶者の年収が高い（合計所得900万円超）と控除は減ります。扶養は日本年金機構の案内によります。'
+      + '<a href="nenshu.html">年収別の手取り</a>・<a href="faq.html#q-130">130万円の壁との違い</a></p>';
     return html;
   }
 
   function render() {
+    fillHoursFromDays();
     var asOf = resolveAsOf(document.getElementById('as-of').value);
     var hours = parseFloat(document.getElementById('hours').value);
+    var hourly = parseFloat(document.getElementById('hourly').value);
+    if (!isNaN(hourly) && hourly > 0 && !isNaN(hours)) {
+      document.getElementById('wage').value = Math.round(hourly * hours * 52 / 12);
+    }
     var wage = parseInt(document.getElementById('wage').value, 10);
     var employerSize = parseInt(document.getElementById('employer-size').value, 10);
     var isStudent = document.getElementById('is-student').checked;
     var extra = parseInt(document.getElementById('extra').value, 10);
     if (isNaN(extra) || extra < 0) extra = 0;
+    var commute = parseInt(document.getElementById('commute').value, 10);
+    if (isNaN(commute) || commute < 0) commute = 0;
+    var dependents = parseInt(document.getElementById('dependents').value, 10) || 0;
+    var bonus = parseInt(document.getElementById('bonus').value, 10);
+    if (isNaN(bonus) || bonus < 0) bonus = 0;
+    var bonusTimes = parseInt(document.getElementById('bonus-times').value, 10) || 2;
 
     var out = document.getElementById('result');
+    var summary = document.getElementById('summary');
+    lastPremium = null;
     if (isNaN(hours) || isNaN(wage) || isNaN(employerSize)) {
       out.innerHTML = '';
+      summary.innerHTML = '<p class="hint">週の労働時間・月の賃金・会社の従業員数を入れると、ここに結果が出ます。</p>';
       return;
     }
 
     var r = calc.evaluate(SCHEDULE, HOURS_REQUIREMENT, asOf, hours, wage, isStudent, employerSize);
     if (!r) {
       out.innerHTML = '<p class="note">この計算機は2024年10月以降の基準を対象にしています。</p>';
+      summary.innerHTML = '';
       return;
     }
     var wageLabel = r.regime.wage_requirement_yen === null
@@ -175,39 +413,152 @@
     html += '</ul>';
     html += '<p class="hint">この判定は「継続して2か月を超える雇用が見込まれること」を満たしている前提です。'
       + '短期のアルバイトなど見込みが2か月以下の場合は対象外です。</p>';
-    if (r.eligible) html += premiumHtml(asOf, wage, extra);
-    out.innerHTML = html;
+    if (r.eligible) html += premiumHtml(asOf, wage, extra, commute, dependents);
+    if (r.eligible && bonus > 0) html += bonusHtml(asOf, bonus, bonusTimes);
+    html += wallsHtml(asOf, r, wage, extra, commute, bonus * bonusTimes);
+    if (!isNaN(hourly) && hourly > 0 && r.employerSizeOk && r.notStudentOk) html += kabeHtml(asOf < '2026-10-01' ? '2026-10-01' : asOf, Math.round(hourly));
+    out.innerHTML = '<h2 class="result-head">くわしい結果</h2>' + html;
+    summary.innerHTML = summaryHtml(r, wage + extra + commute);
+    // スマホ（1列）では結果がフォームの下になるので、画面の下に結論だけ出しておく
+    var bar = document.getElementById('mobile-bar');
+    if (r.eligible && lastPremium) {
+      bar.innerHTML = '<span>手取りの目安</span><strong>' + yen(lastPremium.net) + '</strong><span>社会保険料 ' + yen(lastPremium.total) + ' ↓</span>';
+    } else {
+      bar.innerHTML = '<strong>' + (r.eligible ? '社会保険に入る対象' : '今回の入力では対象外') + '</strong><span>結果を見る ↓</span>';
+    }
+    bar.hidden = false;
   }
 
-  document.getElementById('calc-form').addEventListener('input', render);
-  document.getElementById('calc-form').addEventListener('change', render);
+  // 入力を URL（?h=20&w=90000…）に残す。ブックマークや共有で同じ結果を開ける
+  var FIELDS = [
+    ['h', 'hours'], ['hr', 'hourly'], ['w', 'wage'], ['n', 'employer-size'], ['p', 'prefecture'],
+    ['c', 'commute'], ['x', 'extra'], ['b', 'bonus'], ['bt', 'bonus-times'], ['d', 'dependents'], ['a', 'age-40-64'], ['s', 'is-student'], ['as_of', 'as-of']
+  ];
+  function applyParams(params, reset) {
+    FIELDS.forEach(function (f) {
+      var el = document.getElementById(f[1]);
+      var v = params.get(f[0]);
+      if (el.type === 'checkbox') {
+        if (v !== null) { el.checked = v === '1'; } else if (reset) { el.checked = false; }
+      } else if (v !== null) {
+        el.value = v;
+      } else if (reset && (f[0] === 'hr' || f[0] === 'w')) {
+        el.value = '';
+      }
+    });
+    if (params.get('s') === '1' || params.get('a') === '1' || params.get('c') || params.get('x') || params.get('d') || params.get('b')) {
+      document.querySelector('details.more').open = true;
+    }
+  }
+  function stateQuery() {
+    var q = [];
+    FIELDS.forEach(function (f) {
+      var el = document.getElementById(f[1]);
+      if (el.type === 'checkbox') { if (el.checked) q.push(f[0] + '=1'); return; }
+      if (el.value === '' || (f[0] === 'as_of' && el.value === 'today')) return;
+      if ((f[0] === 'c' || f[0] === 'x' || f[0] === 'd' || f[0] === 'b') && el.value === '0') return;
+      if (f[0] === 'bt' && (document.getElementById('bonus').value === '0' || el.value === '2')) return;
+      if (f[0] === 'w' && document.getElementById('hourly').value !== '') return;  // 時給から計算した額は残さない
+      q.push(f[0] + '=' + encodeURIComponent(el.value));
+    });
+    return q.join('&');
+  }
+  function saveState() {
+    try { history.replaceState(null, '', window.location.pathname + '?' + stateQuery()); } catch (e) { /* 保存できなくても計算は動く */ }
+  }
+  function onInput(e) {
+    if (e && e.target && e.target.id === 'hours') { document.getElementById('per-day').value = ''; document.getElementById('days').value = ''; }
+    render(); saveState();
+  }
+  document.getElementById('calc-form').addEventListener('input', onInput);
+  document.getElementById('calc-form').addEventListener('change', onInput);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-preset]'), function (btn) {
+    btn.addEventListener('click', function () {
+      applyParams(new URLSearchParams(btn.getAttribute('data-preset')), true);
+      onInput();
+    });
+  });
+  document.getElementById('copy-link').addEventListener('click', function () {
+    saveState();
+    var status = document.getElementById('copy-status');
+    var url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { status.textContent = 'コピーしました'; },
+        function () { status.textContent = url; });
+    } else {
+      status.textContent = url;
+    }
+  });
 
   // 「今日時点」の選択肢に、閲覧している端末の実際の日付を出す。
   try {
     document.getElementById('today-option').textContent = '今日（' + todayIso() + '）時点';
   } catch (e) { /* 失敗しても "今日時点" のまま動く */ }
 
-  // 年次ページの「この時点で確かめる」リンク（?as_of=2027-10-01）から来た場合、
-  // その時点をあらかじめ選んでおく。
+  // URL の条件（共有されたリンクや、年次ページの「この時点で確かめる」の ?as_of=2027-10-01）を入力に戻す。
+  // 選択肢に無い値（古い時点など）は既定値のまま。
   try {
     var params = new URLSearchParams(window.location.search);
+    var select = document.getElementById('as-of');
     var wanted = params.get('as_of');
-    if (wanted) {
-      var select = document.getElementById('as-of');
-      for (var i = 0; i < select.options.length; i++) {
-        if (select.options[i].value === wanted) {
-          select.selectedIndex = i;
-          break;
-        }
-      }
-    }
+    applyParams(params, false);
+    if (wanted && select.value !== wanted) { select.value = 'today'; }
+    if (select.selectedIndex < 0) { select.value = 'today'; }
+    ['prefecture', 'dependents', 'bonus-times'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el.selectedIndex < 0) { el.selectedIndex = id === 'prefecture' ? Array.prototype.map.call(el.options, function (o) { return o.value; }).indexOf('東京') : 0; }
+    });
   } catch (e) { /* URLSearchParams非対応の環境では既定値のまま */ }
 
   render();
 })();
 </script>
 
+<h2>2026年10月から何が変わる？</h2>
+<p>
+  <strong>月収の条件（月8.8万円＝いわゆる「106万円の壁」）が無くなり</strong>、従業員51人以上の会社では<strong>週20時間以上</strong>で社会保険に入ります。
+  会社の人数の条件も、2027年10月から36人以上、2029年10月から21人以上、2032年10月から11人以上と広がり、2035年10月に無くなります。
+  計算は{{ era }}の料率（協会けんぽ）・雇用保険料率・所得税（国税庁の計算式）で行っています（最終更新 {{ updated }}）。
+</p>
+
+<h2>月収別の保険料と手取り（早見表）</h2>
+<p>東京の会社・39歳以下・扶養する家族0人・通勤手当なしの場合です。月収を押すと、47都道府県の額や内訳が見られます。</p>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>月収（年収）</th><th>社会保険料</th><th>手取りの目安</th></tr></thead>
+  <tbody>
+    {% for a in quick_amounts %}
+    <tr><th><a href="getsushu/{{ a.slug }}.html">{{ a.man }}万円</a><span class="sub">年収{{ a.man * 12 }}万円</span></th><td>{{ "{:,}".format(a.total) }}円</td><td>{{ "{:,}".format(a.net) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p><a href="getsushu/index.html">8万〜25万円の一覧を見る →</a></p>
+
+<h2>週20時間の壁 — 増やすと手取りが減るのは本当？</h2>
+<p>
+  配偶者の扶養に入って週19時間で働いている人が週20時間に増やすと、社会保険料が引かれ始めるので手取りは減ります。
+  たとえば時給{{ "{:,}".format(kabe_example.hourly) }}円なら月{{ "{:,}".format(kabe_example.loss_at_20) }}円減り、
+  <strong>週{{ "%g"|format(kabe_example.breakeven_hours_x10 / 10) }}時間</strong>まで増やすと元の手取りに戻ります。
+  上の計算機に時給を入れると、自分の条件で出ます。
+</p>
+<p><a href="kabe/index.html">時給別の一覧を見る →</a></p>
+
+{% include "_cards.html" %}
+
+<h2>よくある質問</h2>
+<ul class="faq-links">
+  <li><a href="faq.html#q-106">「106万円の壁」が無くなると、保険料を払わなくてよくなる？</a></li>
+  <li><a href="faq.html#q-130">「106万円の壁」と「130万円の壁」は何が違う？</a></li>
+  <li><a href="faq.html#q-student">学生は社会保険に入らなくていい？</a></li>
+  <li><a href="faq.html#q-small">従業員50人以下の会社なら、ずっと入らなくていい？</a></li>
+  <li><a href="faq.html#q-commute">交通費（通勤手当）や残業代は含める？</a></li>
+  <li><a href="faq.html#q-double">ダブルワーク（掛け持ち）は時間を合計する？</a></li>
+  <li><a href="sontoku.html">社会保険に入ると損？ メリット・デメリットを金額で</a></li>
+</ul>
+
 <h2>この5段階で対象が広がります</h2>
+{{ timeline|safe }}
 <ul class="milestone-list">
   {% for m in milestones %}
   <li>

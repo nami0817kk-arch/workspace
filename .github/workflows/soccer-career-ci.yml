@@ -53,3 +53,12 @@ jobs:
 
       - name: Run tests
         run: flutter test ${{ inputs.target }}
+
+      # **テストの外側を見る。** flutter test が見ているのは
+      # 「コードが壊れていないか」で、提出に必要なものが揃っているかは
+      # 見ていない。iOS アイコンのアルファチャンネルはその典型で、
+      # テストは全部緑のまま Apple のアップロードで初めて弾かれる
+      # （実際にボールのアイコンの頃からずっと入っていた）。
+      - name: Preflight
+        if: ${{ inputs.target == '' }}
+        run: python3 tool/preflight.py

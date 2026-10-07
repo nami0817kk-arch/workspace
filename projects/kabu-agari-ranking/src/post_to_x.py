@@ -8,6 +8,7 @@ GitHub Secretsに未設定の場合は、何もせず正常終了する（機能
 data/last_tweet.txt に記録し、次回実行時に比較する。
 """
 import json
+import re
 import os
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from requests_oauthlib import OAuth1Session
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import aggregate
 import price_limit
 import site_config
 
@@ -38,6 +40,8 @@ _NAME_MAX_LEN = 10
 # ここを素の len() で見ていると、名前が長い日に上限を超えて 403 で弾かれる。
 # 投稿の失敗は警告を出すだけでサイトには影響しないので、**気づきにくい**。
 _TWEET_LIMIT = 280
+_HASHTAGS = "#日本株 #株式投資"
+_RANK_LINE = re.compile(r"^\d+位 ")
 _URL_WEIGHT = 23
 _LIGHT_RANGES = ((0, 4351), (8192, 8205), (8208, 8223), (8242, 8247))
 
@@ -78,17 +82,50 @@ def _build_tweet(payload: dict) -> str:
             stop = "（S高）"
         lines.append(f"{row['rank']}位 {_truncate(row['name'])} +{row['change_pct']:.2f}%{stop}")
 
-    stops = sum(
-        1 for r in gainers
-        if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-    )
+    # サイトと同じ数え方を使う。記録がある日はその日の全件、
+    # 無い日は上位30銘柄からの推定なので、断り方を変える。
+    stops, source = aggregate.stop_high_rows(payload)
     if stops:
-        lines.append(f"上位{len(gainers)}銘柄のうちストップ高は{stops}銘柄")
+        if source == "recorded":
+            lines.append(f"この日のストップ高は{len(stops)}銘柄")
+        else:
+            lines.append(f"上位{len(gainers)}銘柄のうちストップ高は{len(stops)}銘柄")
 
     lines.append("")
     lines.append(_day_url(payload["rec_date"]))
-    lines.append("#日本株 #株式投資")
-    return "\n".join(lines)
+    lines.append(_HASHTAGS)
+    return _fit(lines)
+
+
+def _fit(lines: list[str]) -> str:
+    """X の上限に収める。**削るのは後ろから、URL は最後まで残す。**
+
+    上限（`_TWEET_LIMIT`）を定数として置いてあるのに、どこでも見ていなかった。
+    長い日は 280 を超えたまま投稿して 403 で弾かれる（2026-09-28 に気づいた）。
+    投稿の失敗は警告が出るだけでサイトには影響しないので、気づきにくい。
+
+    削る順番は「無くても意味が通る順」:
+      1. ハッシュタグ（検索の入口だが、本文より優先度が低い）
+      2. 銘柄の行（下位から。順位の高いものほど残す）
+
+    日付と URL は削らない。**後から読まれる投稿で、行き先が消えるのが一番困る。**
+    """
+    text = "\n".join(lines)
+    if weighted_length(text) <= _TWEET_LIMIT:
+        return text
+
+    if _HASHTAGS in lines:
+        lines = [line for line in lines if line != _HASHTAGS]
+        text = "\n".join(lines)
+        if weighted_length(text) <= _TWEET_LIMIT:
+            return text
+
+    # 銘柄の行は「N位 」で始まる。下位から落とす。
+    ranked = [i for i, line in enumerate(lines) if _RANK_LINE.match(line)]
+    while ranked and weighted_length(text) > _TWEET_LIMIT:
+        del lines[ranked.pop()]
+        text = "\n".join(lines)
+    return text
 
 
 def post_today() -> None:

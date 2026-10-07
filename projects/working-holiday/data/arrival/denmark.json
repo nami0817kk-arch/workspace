@@ -1,0 +1,88 @@
+{
+  "id": "denmark",
+  "steps": [
+    {
+      "title": "CPR番号（個人識別番号）を登録する",
+      "body": "デンマークに3か月以上連続して滞在する人は、国際市民サービス（International Citizen Service）またはInternational House Copenhagenなどの市民サービスセンターでCPR番号の登録を行う。登録には居住先の住所が確定していることが前提で、登録後4週間ほどで黄色の健康保険証（sundhedskort）が届く。",
+      "url": "https://international.kk.dk/live/cpr-registration-and-documents/cpr-registration"
+    },
+    {
+      "title": "税カード（skattekort）を取得する",
+      "body": "就労する人はデンマーク税務局（Skattestyrelsen）に税カードを申請する必要がある。E-tax（TastSelv）での電子申請なら即日発行、紙の申請書（様式04.063）では約2週間かかる。雇用契約書とパスポートまたは身分証明書が必要で、就業開始の1か月前から申請できる。",
+      "url": "https://skat.dk/en-us/businesses/employees-and-pay/non-danish-labour/get-a-tax-card-as-a-non-danish-employee"
+    },
+    {
+      "title": "MitID（デジタルID）を取得する",
+      "body": "MitIDはデンマークの公的デジタルIDで、銀行取引や行政手続きのオンラインログインに必要。CPR番号の登録後に申請・有効化する。",
+      "url": "https://www.mitid.dk/en-gb/"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上海外に滞在する場合、外務省の在留届オンラインサービス（ORRネット）から住所や連絡先を届け出る。緊急時の安否確認や在デンマーク日本国大使館からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（救急車・警察・消防共通の緊急通報番号）",
+    "summary": "CPR番号を登録した住民は、家庭医（praktiserende læge）制度に基づく公的医療を基本的に無料で受けられる。登録後に交付される黄色の健康保険証（sundhedskort）が医療機関受診の証明となる。通常の診療はまず家庭医を受診し、専門treatment が必要な場合は紹介を受ける。",
+    "hospitals": []
+  },
+  "jobs": {
+    "min_wage": "",
+    "min_wage_url": "https://www.workindenmark.dk/working-in-denmark/terms-of-employment",
+    "channels": [
+      {
+        "name": "Jobnet（デンマーク公共雇用サービスの求人検索）",
+        "url": "https://job.jobnet.dk/CV/FindWork",
+        "note": "デンマーク政府（雇用庁）が運営する公的求人検索サイト"
+      },
+      {
+        "name": "WorkInDenmark（EURES加盟の外国人向け求人・生活情報サイト）",
+        "url": "https://www.workindenmark.dk/",
+        "note": "デンマーク雇用庁が運営する、外国人労働者向けの公式求人・生活情報ポータル"
+      }
+    ],
+    "rules": [
+      "デンマークには法定最低賃金が無く、賃金や労働条件の多くは労働組合と雇用主団体の労働協約（collective agreements）によって決まる",
+      "労働協約が適用されない職種では、雇用主と個別に契約条件を交渉することになる"
+    ],
+    "no_statutory": true
+  },
+  "sources": [
+    {
+      "title": "CPR registration - International House Copenhagen / international.kk.dk",
+      "url": "https://international.kk.dk/live/cpr-registration-and-documents/cpr-registration",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Get a tax card as a non-Danish employee - Skattestyrelsen (skat.dk)",
+      "url": "https://skat.dk/en-us/businesses/employees-and-pay/non-danish-labour/get-a-tax-card-as-a-non-danish-employee",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "MitID - Digitaliseringsstyrelsen",
+      "url": "https://www.mitid.dk/en-gb/",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "デンマークの医療制度 - 在デンマーク日本国大使館",
+      "url": "https://www.dk.emb-japan.go.jp/itpr_ja/taizai-denma.html",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Terms of employment - WorkInDenmark",
+      "url": "https://www.workindenmark.dk/working-in-denmark/terms-of-employment",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "Jobnet - Styrelsen for Arbejdsmarked og Rekruttering",
+      "url": "https://job.jobnet.dk/CV/FindWork",
+      "checked": "2026-10-05"
+    },
+    {
+      "title": "外務省 在留届（ORRネット）",
+      "url": "https://www.ezairyu.mofa.go.jp/",
+      "checked": "2026-10-05"
+    }
+  ]
+}

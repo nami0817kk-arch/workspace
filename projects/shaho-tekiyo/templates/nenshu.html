@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}パートの年収別 手取り早見表｜年収106万・130万・150万で社会保険に入るといくら残る？（{{ era }}）{% endblock %}
+{% block description %}パート・アルバイトの年収90万〜200万円の手取りを一覧に。勤務先の社会保険に入る場合と、扶養内で入らない場合の手取り（年額）を{{ era }}の料率で円単位に比べます。130万円の壁は月いくらかも。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">年収別の手取り</span>
+</nav>
+{% endblock %}
+{% block content %}
+{% set r130 = rows|selectattr("man", "equalto", 130)|first %}
+{% set r120 = rows|selectattr("man", "equalto", 120)|first %}
+<h1>パートの年収別 手取り早見表</h1>
+<p class="updated">{{ era }}の料率（協会けんぽ・東京）で計算</p>
+
+<p>
+  パート・アルバイトの年収ごとに、<strong>勤務先の社会保険に入った場合</strong>と、<strong>扶養内で入らない場合</strong>の手取り（1年分）を並べました。
+  たとえば年収120万円なら、社会保険に入ると手取りは約{{ "{:,}".format(r120.net_in) }}円、入らなければ約{{ "{:,}".format(r120.net_out) }}円です。
+</p>
+
+<div class="table-wrap">
+<table class="plain num">
+  <thead>
+    <tr><th>年収</th><th>月あたり</th><th>社会保険に入る<span class="sub">手取り（年）</span></th><th>入る・40〜64歳<span class="sub">介護保険料込み</span></th><th>扶養内で入らない<span class="sub">手取り（年）</span></th></tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr{% if r.man in (106, 130) %} class="current"{% endif %}>
+      <th><a href="{{ base_url }}getsushu/{{ r.near }}man.html">{{ r.man }}万円</a></th>
+      <td>{{ "{:,}".format(r.monthly) }}円</td>
+      <td>{{ "{:,}".format(r.net_in) }}円</td>
+      <td>{{ "{:,}".format(r.net_in_care) }}円</td>
+      <td>{% if r.net_out is not none %}{{ "{:,}".format(r.net_out) }}円{% else %}<span class="sub">扶養から外れる</span>{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">
+  賞与なし・毎月同じ額・東京の会社・扶養する家族0人の目安です（「入る・40〜64歳」以外は39歳以下）。
+  「社会保険に入る」は健康保険・子ども・子育て支援金・厚生年金・雇用保険の保険料と所得税を引いた額、
+  「扶養内で入らない」は週20時間未満で働き、保険料が引かれない場合の額です。
+  所得税は年末調整のあとの1年分（令和8年分の基礎控除104万円・給与所得控除の最低74万円で計算）で、この範囲の年収ではかかりません（毎月天引きされても年末調整で戻ります）。<strong>住民税は含みません</strong>。年収を押すと、近い月収の内訳が見られます。
+</p>
+
+<h2 id="breakdown">引かれる額の内訳（社会保険に入る場合）</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>年収</th><th>社会保険料</th><th>雇用保険料</th><th>所得税<span class="sub">年末調整後</span></th><th>手取り</th></tr></thead>
+  <tbody>
+    {% for r in rows %}
+    <tr><th>{{ r.man }}万円</th><td>{{ "{:,}".format(r.social) }}円</td><td>{{ "{:,}".format(r.koyo) }}円</td><td>{{ "{:,}".format(r.tax_in) }}円</td><td>{{ "{:,}".format(r.net_in) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<h2 id="kabe-106">年収106万円の壁は2026年10月に無くなる</h2>
+<p>
+  「106万円の壁」は、勤務先の社会保険に入る条件のひとつ「月の賃金8.8万円以上」を年収に直した額です。
+  この条件は<strong>2026年10月1日に無くなり</strong>、従業員51人以上の会社で週20時間以上働けば（学生でなく、2か月を超えて働く見込みがある場合）、年収にかかわらず加入します。
+  つまり、年収106万円未満に抑えても、週20時間以上なら社会保険料はかかります。
+  加入するかどうかを分けるのは、これからは年収ではなく<a href="{{ base_url }}kabe/index.html">週20時間</a>です。
+</p>
+
+<h2 id="kabe-130">年収130万円の壁は月いくら？</h2>
+<p>
+  「130万円の壁」は、配偶者や親の健康保険の扶養に入っていられるかの基準です。月に直すと<strong>108,333円</strong>（130万円÷12）で、
+  月にこれを超える見込みだと扶養から外れます。勤務先の社会保険に入らない場合は、自分で国民年金（月{{ "{:,}".format(kokumin) }}円）と
+  国民健康保険（額は市区町村で違う）を払うことになります。
+</p>
+<ul>
+  <li>通勤手当（交通費）も年収に含めて判定します（106万円の壁の「月8.8万円」では含めませんでした）。</li>
+  <li>2026年4月からは、労働条件通知書などで決まっている賃金から見込む年収で判定し、<strong>残業代は含めません</strong>。</li>
+  <li>19歳以上23歳未満の人（配偶者を除く）は、2025年10月から基準が<strong>年収150万円未満</strong>に上がっています。</li>
+</ul>
+<p class="hint">
+  出典: <a href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202512/1225.html" rel="nofollow noopener" target="_blank">日本年金機構「労働契約内容による年間収入が基準額未満である場合の被扶養者の認定における年間収入の取り扱いについて」</a>、
+  <a href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html" rel="nofollow noopener" target="_blank">日本年金機構「19歳以上23歳未満の方の被扶養者認定における年間収入要件が変わります」</a>。
+  健康保険組合によって扱いが違うことがあるので、扶養に入っている健康保険にも確かめてください。
+</p>
+
+<h2 id="loss">社会保険に入ると損？</h2>
+<p>
+  年収130万円の場合、社会保険に入ると1年で約{{ "{:,}".format(r130.social) }}円の保険料を払います。その分、
+  将来の年金（厚生年金）が上乗せされ、病気やけがで休んだときの傷病手当金、出産手当金が受けられるようになります。
+  目先の手取りだけで比べず、<a href="{{ base_url }}getsushu/{{ r130.near }}man.html">月収{{ r130.near }}万円のページ</a>で受けられるものの額も見てください。
+</p>
+
+<p class="hint">
+  料率の出典: <a href="{{ source.page }}" rel="nofollow noopener" target="_blank">{{ source.name }}「{{ source.title }}」</a>。計算のしかたは<a href="{{ base_url }}keisan.html">計算方法と出典</a>に。
+  自分の時給・時間・都道府県で計算するなら<a href="{{ base_url }}index.html">計算機</a>へ。
+</p>
+
+{% include "_cards.html" %}
+{% endblock %}

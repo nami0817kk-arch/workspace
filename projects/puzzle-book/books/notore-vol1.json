@@ -1,0 +1,252 @@
+{
+ "title": "ゆったり あたまの体操 30日",
+ "subtitle": "計算・時計・数字さがし・迷路・同じ絵さがし",
+ "publisher": "つるはし社",
+ "trim": "a4",
+ "ink": "premium",
+ "copy_ok": true,
+ "seed_start": 300000,
+ "edition_date": "",
+ "days": [
+  {
+   "day": 1,
+   "difficulty": "easy",
+   "talk": "子どものころの朝ごはんは、何でしたか？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 2,
+   "difficulty": "easy",
+   "talk": "得意だったお弁当のおかずは？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 3,
+   "difficulty": "easy",
+   "talk": "はじめて海を見たのは、いつでしたか？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 4,
+   "difficulty": "easy",
+   "talk": "学校で好きだった科目は何ですか？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 5,
+   "difficulty": "easy",
+   "talk": "銭湯に行った思い出はありますか？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 6,
+   "difficulty": "easy",
+   "talk": "ふるさとの山の景色を覚えていますか？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 7,
+   "difficulty": "easy",
+   "talk": "星空がきれいだった夜の思い出は？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 8,
+   "difficulty": "easy",
+   "talk": "よく使った駅はどこですか？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 9,
+   "difficulty": "easy",
+   "talk": "お気に入りだった服を覚えていますか？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 10,
+   "difficulty": "easy",
+   "talk": "心に残っているお祝いの日は？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 11,
+   "difficulty": "medium",
+   "talk": "お米づくりを見たり手伝ったりしたことは？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 12,
+   "difficulty": "medium",
+   "talk": "秋の夜長は、どう過ごしましたか？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 13,
+   "difficulty": "medium",
+   "talk": "縁日でいちばん楽しみだったものは？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 14,
+   "difficulty": "medium",
+   "talk": "大そうじの思い出はありますか？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 15,
+   "difficulty": "medium",
+   "talk": "散歩でよく歩いた道は？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 16,
+   "difficulty": "medium",
+   "talk": "最近うれしかったことは何ですか？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 17,
+   "difficulty": "medium",
+   "talk": "好きな季節と、その理由は？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 18,
+   "difficulty": "medium",
+   "talk": "若いころに流行ったものは？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 19,
+   "difficulty": "medium",
+   "talk": "得意な家事は何ですか？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 20,
+   "difficulty": "medium",
+   "talk": "旅先で食べたおいしいものは？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 21,
+   "difficulty": "hard",
+   "talk": "子どものころのあだ名は？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 22,
+   "difficulty": "hard",
+   "talk": "よく聴いた歌や、好きな歌手は？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 23,
+   "difficulty": "hard",
+   "talk": "はじめて自分で買った大きなものは？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 24,
+   "difficulty": "hard",
+   "talk": "ふるさとの自慢は何ですか？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 25,
+   "difficulty": "hard",
+   "talk": "育てたことのある植物や動物は？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 26,
+   "difficulty": "hard",
+   "talk": "思い出の映画やテレビ番組は？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 27,
+   "difficulty": "hard",
+   "talk": "好きなお菓子と、よく買ったお店は？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 28,
+   "difficulty": "hard",
+   "talk": "家族で出かけた思い出の場所は？",
+   "right": {
+    "kind": "pair_search"
+   }
+  },
+  {
+   "day": 29,
+   "difficulty": "hard",
+   "talk": "今いちばん会いたい人は誰ですか？",
+   "right": {
+    "kind": "maze"
+   }
+  },
+  {
+   "day": 30,
+   "difficulty": "hard",
+   "talk": "30日間おつかれさまでした。いちばん楽しかった問題は？",
+   "right": {
+    "kind": "pair_search"
+   }
+  }
+ ]
+}

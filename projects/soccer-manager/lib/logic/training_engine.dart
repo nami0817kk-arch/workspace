@@ -585,6 +585,18 @@ class TrainingEngine {
   /// 能力値(1-20)は「どれだけ上手いか」しか表さないため、誰を雇っても
   /// 育つ能力が同じだった。得意分野を見て伸ばす先を変えると、コーチの
   /// 人選がそのままユースの色になる。
+  /// ユースコーチの指導で、追加で伸びる項目。
+  ///
+  /// **倍率を上げても効かない。** [_grow]は1週1項目につき最大+1で、確率が
+  /// 1を超えている選手は倍率を上げても毎週+1のままになる(メンターの
+  /// ボーナスで実測済み)。指導が高いほど「手の回る項目が増える」という
+  /// 形にすると、確率が飽和していても差が出る。
+  static List<String> coachTeachingKeys(int coachLevel, Player p) {
+    final keys = _youthGrowthKeysFor(p);
+    final count = (coachLevel - 1).clamp(0, keys.length);
+    return keys.take(count).toList();
+  }
+
   static List<String> specialtyKeys(StaffSpecialty specialty, Player p) {
     final isKeeper = p.position.group == PositionGroup.gk;
     switch (specialty) {
@@ -643,6 +655,9 @@ class TrainingEngine {
 
     /// ユースコーチの得意分野。その分野の能力が追加で伸びる。
     StaffSpecialty coachSpecialty = StaffSpecialty.balanced,
+
+    /// ユースコーチの指導のレベル(1-8)。高いほど手の回る項目が増える。
+    int coachLevel = 1,
   }) {
     final factor = youthAcademyGrowthFactor(facilityLevel);
     final byId = {for (final m in mentors) m.id: m};
@@ -670,6 +685,11 @@ class TrainingEngine {
         for (final k in mentorTeachingKeys(validMentor, p)) {
           _grow(p, k, 0.5 * factor);
         }
+      }
+
+      // ユースコーチの指導。手が回る項目が増える形で効く。
+      for (final k in coachTeachingKeys(coachLevel, p)) {
+        _grow(p, k, 0.5 * factor);
       }
 
       // ユースコーチの得意分野。担当が違う分野(GKに決定力など)は効かない。

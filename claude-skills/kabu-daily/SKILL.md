@@ -1,12 +1,16 @@
 ---
 name: kabu-daily
-description: 日本株の日次ルーチン。quality-gainer-tracker で値上がり質ランキングを記録・追跡価格を更新し、2週間パフォーマンスと A/B/C 手法の買い候補を出したうえで、kabu-agari-ranking の公開サイトが当日分に更新されているかまで確認する。「株の日次」「今日の値上がり」「買い候補を出して」「ランキング更新された?」「トラッカー回して」のときに使う。
+description: 値上がり株ランキング（kabu-agari-ranking、kabu.dailyquarry.com）の日次確認。当日分のデータが取れて、公開サイトが直近営業日に更新されているかを確かめる。「株の日次」「ランキング更新された?」「kabu のサイト大丈夫?」のときに使う。
 ---
 
-# 日本株 日次ルーチン
+# 値上がり株ランキング 日次確認
 
-`projects/quality-gainer-tracker`（記録・分析）と `projects/kabu-agari-ranking`（公開サイト）を
-まとめて見て、**今日見るべき銘柄と、収益サイトが壊れていないか**を報告する。
+`projects/kabu-agari-ranking`（公開サイト https://kabu.dailyquarry.com/ ）が、
+**今日も止まらずに更新されているか**を確かめて報告する。
+
+> 2026-09-26 に、値上がり銘柄を記録して手法を検証する道具（quality-gainer-tracker）を
+> **廃止した**（8/28 から使われていなかった。検証の最終成績は 14日後の平均 −4.9%）。
+> このスキルから記録・答え合わせ・買い候補の手順は外した。再提案しない。
 
 ## 前提
 
@@ -20,32 +24,7 @@ git -C C:/Users/なみ/dev/workspace worktree add C:/Users/なみ/dev/wt-<topic>
 疑問が出たら、まず `docs/session-faq.md` を読む。載っていなければ自分で判断し、
 判断できないものはユーザーに直接聞く（調整役は 2026-09-07 に廃止）。
 
-| 対象 | パス | Python |
-|---|---|---|
-| quality-gainer-tracker | `workspace/projects/quality-gainer-tracker` | システムの `python`（venv 無し） |
-| kabu-agari-ranking | `workspace/projects/kabu-agari-ranking` | `.venv\Scripts\python.exe` |
-
-データは quality-gainer-tracker の SQLite に貯まる。**これが資産**なので、取得に失敗した日も
-後から `backfill` で埋める。土日祝は `rank` が空を返すが異常ではない。
-
-## 手順
-
-### 1〜3. 記録・更新・分析
-
-```bash
-cd "C:/Users/なみ/dev/workspace/projects/quality-gainer-tracker" && python main.py rank --top 20
-cd "C:/Users/なみ/dev/workspace/projects/quality-gainer-tracker" && python main.py update
-cd "C:/Users/なみ/dev/workspace/projects/quality-gainer-tracker" && python main.py report
-cd "C:/Users/なみ/dev/workspace/projects/quality-gainer-tracker" && python main.py detect
-```
-
-- `rank` は平日 15:30 JST（大引け）以降でないと当日値が確定しない。それ以前なら
-  「ザラ場中の暫定値」と明示する。0件なら休場日か kabutan の構造変更を疑う。
-- `update` は **`rank` の直後に必ず回す**。飛ばすと `report` の集計が古いままになる。
-- `report` = 記録済み銘柄の2週間パフォーマンス。**手法の答え合わせ**。
-- `detect` = A/B/C 手法の候補。絞るなら `--rsi 20`。
-
-### 4. 公開サイトの確認
+## 仕組み
 
 **取得は CI ではなく、このPCのタスクスケジューラが行う。**
 kabutan が GitHub Actions の IP を 405 でブロックするため、CI から取得する形には戻さない。
@@ -53,14 +32,14 @@ kabutan が GitHub Actions の IP を 405 でブロックするため、CI か�
 | 役割 | 実体 |
 |---|---|
 | 取得 | タスクスケジューラ **`kabu-daily-fetch`**（平日16:10、`projects/kabu-agari-ranking/run-daily.ps1`）→ `data/` を push |
-| ビルド・公開 | Actions `kabu-daily.yml` が data/ の push で発火 → Cloudflare Pages `kabu-agari-ranking` |
-| 監視 | 同ワークフローが平日17:00 JST に実行。**最新データが4日超古いと失敗し Issue が立つ** |
+| ビルド・公開 | Actions `kabu-daily.yml` が data/ の push で発火 → Cloudflare Pages |
+| 監視 | 同ワークフローが平日17:00 JST に実行。1営業日の欠測で Issue が立つ（休場日は数えない） |
 
-確認はこの順で速い。
+## 確認の順番
 
 ```bash
 # 手元のデータが今日（直近営業日）まで来ているか
-cd "C:/Users/なみ/dev/workspace" && ls -t projects/kabu-agari-ranking/data/*.json | head -3
+cd "C:/Users/なみ/dev/workspace" && git fetch -q origin && git ls-tree --name-only origin/master projects/kabu-agari-ranking/data/ | tail -3
 
 # 取得タスクが動いているか
 powershell -Command "Get-ScheduledTaskInfo -TaskName kabu-daily-fetch | Format-List LastRunTime,LastTaskResult,NextRunTime"
@@ -69,25 +48,21 @@ powershell -Command "Get-ScheduledTaskInfo -TaskName kabu-daily-fetch | Format-L
 cd "C:/Users/なみ/dev/workspace" && gh run list --workflow kabu-daily.yml --limit 5
 ```
 
-公開サイト https://kabu-agari-ranking.pages.dev/ は WebFetch で取得し、
+公開サイト https://kabu.dailyquarry.com/ は WebFetch で取得し、
 **200 が返ることではなく、出ている日付が直近営業日か**を見る。
+16:10 より前に見た場合は、前営業日の分が出ていれば正常。
 
-> Cloudflare の Secrets は登録済みで、デプロイまで通る（2026-09-02 解消。
-> kabu-agari-ranking / soccer-manager の2サイトとも公開中）。
-> デプロイ段が failure になったら、今は本物の異常として報告する。
+取り逃した営業日は二度と取れない（kabutan は当日分しか出さない）。16:10 の取得が失敗していたら、
+**その日のうちに** `projects/kabu-agari-ranking` で `src/build_site.py` を手で回す（プロジェクトの CLAUDE.md 参照）。
 
 ## 報告の書き方
 
-1. **今日の記録** — 何件記録したか。休場・失敗ならその旨。
-2. **答え合わせ** — `report` が前回からどう動いたか。手法が効いているか。
-3. **候補** — `detect` の銘柄。**必ず「これは投資助言ではない」と添える**。
-   買い/売りの判断は書かず、検出条件に当たった事実だけを書く。
-
-データ取得が止まっていた場合は、1〜3 より先にそれを書く。収益に直結するため。
+1. **データ** — 直近営業日の分があるか。無ければ最初にそれを書く（収益サイトなので）
+2. **取得タスク** — 最後の実行時刻と結果
+3. **公開** — サイトに出ている日付と、Actions の最新の結果
 
 ## やらないこと
 
-- `query` は SELECT のデバッグ専用。DB を書き換える SQL は流さない。
-- 「上がりそう」「買い時」といった予測の断定はしない。
-- `output/` を commit しない（CI が再生成する）。`data/` は資産なので commit する。
-- 他セッションの `claude/*` ブランチには触らない。
+- 「上がりそう」「買い時」といった予測や売買の判断を書かない
+- `output/` を commit しない（CI が再生成する）。`data/` は資産なので commit する
+- 他セッションの `claude/*` ブランチには触らない

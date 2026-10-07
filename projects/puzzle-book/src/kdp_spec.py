@@ -1,0 +1,134 @@
+"""KDP ペーパーバックの寸法・費用の決まり。
+
+**値はすべて kdp.amazon.co.jp/ja_JP/help/ の公式ヘルプで 2026-09-26 に確認したもの。**
+変えるときは出典を読み直すこと。日本語版の実体は kdp.amazon.co.jp 側にあり、
+kdp.amazon.com/ja_JP/... は英語版へ転送される。
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class Trim:
+    width_in: float
+    height_in: float
+
+
+# 判型。本文PDFのページサイズはこれと完全に一致させる（裁ち落としなしの場合）。
+# 出典: topic/GVBQ3CMEQW3W2VL6 の「(kdp.amazon.co.jp)」の表。
+# 8.5 x 11 in は「(kdp.amazon.com)」の表にしか無いので置かない。
+TRIMS: dict[str, Trim] = {
+    "a4": Trim(8.27, 11.69),  # 21.0 x 29.7 cm。白黒・白い紙で 24〜780 ページ
+    "b5": Trim(7.17, 10.12),  # 18.2 x 25.7 cm。24〜828 ページ
+    "a5": Trim(5.83, 8.27),  # 14.8 x 21.0 cm。標準判型（2026-09-30 に同じ表で確認）
+}
+
+# 標準判型は幅 6.12 in・高さ 9 in 以下（topic/G201834340）。これを超えると大判
+STANDARD_MAX_IN = (6.12, 9.0)
+
+
+def is_large(trim: str) -> bool:
+    t = TRIMS[trim]
+    return t.width_in > STANDARD_MAX_IN[0] or t.height_in > STANDARD_MAX_IN[1]
+
+MIN_PAGES = 24  # topic/G201857950
+# 2026-10-04、A5・プレミアムカラーの本文（66ページ）を入れたら KDP の画面で「最小 72 ページが必要」と出た。
+# ヘルプの 24 より厳しい。どの判型・インクに当たるかは未確認なので、新しく作る本はこちらに合わせる
+MIN_PAGES_UPLOAD = 72
+
+# 線の最小の太さ 0.75 pt（topic/G201857950）。解答ページの縮小図もこれを下回らせない。
+MIN_LINE_PT = 0.75
+
+# 裁ち落としなしのときの天・地・小口の最小は 0.25 in（topic/GVBQ3CMEQW3W2VL6）。
+# 高齢者が手で押さえて書き込むので、最小値よりずっと広く取る。
+OUTSIDE_MARGIN_IN = 0.6
+TOP_MARGIN_IN = 0.6
+BOTTOM_MARGIN_IN = 0.6
+
+# ノドは最小値に加えて少し足す（書き込むときに綴じ側へ手が入りにくいため）。
+GUTTER_EXTRA_IN = 0.125
+
+# ページ数ごとの内側（ノド）の最小値 (上限ページ数, インチ)。topic/GVBQ3CMEQW3W2VL6
+_INSIDE_MARGIN_TABLE: list[tuple[int, float]] = [
+    (150, 0.375),
+    (300, 0.5),
+    (500, 0.625),
+    (700, 0.75),
+    (828, 0.875),
+]
+
+# 表紙（topic/G201953020）
+COVER_BLEED_IN = 0.125
+SPINE_PER_PAGE_IN = {"white": 0.002252, "cream": 0.0025}
+SPINE_TEXT_MIN_PAGES = 80  # 79 と書かれた箇所もある。厳しい方を取る
+SPINE_TEXT_SIDE_MARGIN_IN = 0.0625
+COVER_SAFE_IN = 0.25  # 切れては困るものは表紙の外縁からこれ以上内側（topic/G201857950）
+BARCODE_BOX_IN = (2.0, 1.2)  # 裏表紙の右下に Amazon が置く白い箱（topic/GGE5T76TWKA85DJM）
+
+# amazon.co.jp の印刷コスト（黒インク・白またはクリーム・大判）。topic/G201834340
+# 大判 = 幅 6.12 in 超 または 高さ 9 in 超。A4・B5 はどちらも大判。
+# 「24〜110 ページ」と「110〜828 ページ」で 110 が両方に入っていて境目があいまいなので、
+# 固定費だけで済ませたいときは 108 ページ以下に収める。
+LARGE_FLAT_MAX_PAGES = 108
+LARGE_FLAT_COST_JPY = 530
+LARGE_FIXED_JPY = 206
+LARGE_PER_PAGE_JPY = 3
+
+# プレミアムカラー（大判）。A4 は標準カラーが使えない（topic/GX56BFPW4BKNPGFW）ので、カラーならこれ。
+# 24〜40 ページは一律 475 円、42 ページ以上は 206 円 + 1ページ 5 円（topic/G201834340、2026-09-26 確認）
+PREMIUM_LARGE_FLAT_MAX_PAGES = 40
+PREMIUM_LARGE_FLAT_COST_JPY = 475
+PREMIUM_LARGE_FIXED_JPY = 206
+PREMIUM_LARGE_PER_PAGE_JPY = 5
+# 背幅はインクで変わる。プレミアムカラーは 1ページ 0.002347 in（topic/G201953020）
+SPINE_PER_PAGE_PREMIUM_IN = 0.002347
+
+
+def inside_margin_in(page_count: int) -> float:
+    for max_pages, margin in _INSIDE_MARGIN_TABLE:
+        if page_count <= max_pages:
+            return margin
+    raise ValueError(f"KDP のペーパーバックの上限を超えている: {page_count}ページ")
+
+
+# 標準判型の印刷コスト（topic/G201834340、2026-09-30 確認）。黒は 110 ページまで一律 422 円、
+# それを超えると 206 円 + 1ページ 2 円。プレミアムカラーは 40 ページまで 475 円、42 ページ以上は 206 円 + 1ページ 4 円
+STANDARD_FLAT_COST_JPY = 422
+STANDARD_PER_PAGE_JPY = 2
+PREMIUM_STANDARD_PER_PAGE_JPY = 4
+
+
+def print_cost_jpy(page_count: int, ink: str = "black", trim: str = "a4") -> int:
+    """amazon.co.jp の印刷コスト。ink は "black" か "premium"（プレミアムカラー）。"""
+    if not is_large(trim):
+        if ink == "premium":
+            if page_count <= PREMIUM_LARGE_FLAT_MAX_PAGES:
+                return PREMIUM_LARGE_FLAT_COST_JPY
+            return PREMIUM_LARGE_FIXED_JPY + PREMIUM_STANDARD_PER_PAGE_JPY * page_count
+        if page_count <= LARGE_FLAT_MAX_PAGES:
+            return STANDARD_FLAT_COST_JPY
+        return LARGE_FIXED_JPY + STANDARD_PER_PAGE_JPY * page_count
+    if ink == "premium":
+        if page_count <= PREMIUM_LARGE_FLAT_MAX_PAGES:
+            return PREMIUM_LARGE_FLAT_COST_JPY
+        return PREMIUM_LARGE_FIXED_JPY + PREMIUM_LARGE_PER_PAGE_JPY * page_count
+    if page_count <= LARGE_FLAT_MAX_PAGES:
+        return LARGE_FLAT_COST_JPY
+    return LARGE_FIXED_JPY + LARGE_PER_PAGE_JPY * page_count
+
+
+def royalty_jpy(list_price_ex_tax: int, page_count: int, ink: str = "black", trim: str = "a4") -> float:
+    """1冊あたりの印税。価格は税抜で入力する（消費税は Amazon が足す）。topic/G201834330
+
+    999円以下は 50%、1,000円以上は 60%。
+    """
+    rate = 0.6 if list_price_ex_tax >= 1000 else 0.5
+    return rate * list_price_ex_tax - print_cost_jpy(page_count, ink, trim)
+
+
+def spine_width_in(page_count: int, paper: str = "white", ink: str = "black") -> float:
+    if ink == "premium":
+        return page_count * SPINE_PER_PAGE_PREMIUM_IN
+    return page_count * SPINE_PER_PAGE_IN[paper]

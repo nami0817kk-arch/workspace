@@ -15,20 +15,60 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import aggregate
 import fetcher
-from fetcher import fetch_active, fetch_gainers, fetch_losers, fetch_stop_high
+from fetcher import (
+    fetch_active,
+    fetch_gainers,
+    fetch_losers,
+    fetch_stop_high,
+    fetch_stop_low,
+)
 import render
+import stock_profile
 import validate
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 _ROW_COLS = ["rank", "code", "name", "close", "change_pct", "metric_value"]
-# ストップ高の一覧には出来高が無い（その列がニュース欄になっている）代わりに、
-# 引けで上限に張り付いていたかの印がある。
+# ストップ高・ストップ安の一覧には出来高が無い（その列がニュース欄になっている）
+# 代わりに、引けで上限（下限）に張り付いていたかの印がある。
 _STOP_COLS = ["rank", "code", "name", "close", "change_pct", "at_limit"]
 
 
-def _save_today(gainers, losers, active, stop_high=None, *, skip_checks: bool = False) -> str | None:
+def _stop_rows(df, label, rec_date=None):
+    """ストップ高／ストップ安の一覧を保存する形に直す。
+
+    **1ページも取得できなかった日は `None` を返す**（呼び出し側がキーごと落とす）。
+    空リスト（その日は本当に0件だった）と区別するため。0件は相場が穏やかなだけで
+    異常ではないが、取れなかった日を0件として記録すると、あとから見たときに
+    「その日はストップ高が無かった」という嘘になる。
+
+    `rec_date` を渡すと、**その日のものでなければ入れない**。ランキングとは
+    別のページから取っているので、片方だけ前営業日を指していることがありうる。
+    混ぜると、あとから見分けられない形で記録が濁る。
+    """
+    if not fetcher.pages_fetched.get(label):
+        return None
+    if df is None or df.empty:
+        return []
+    if rec_date and "rec_date" in df.columns:
+        got = set(df["rec_date"].unique())
+        if got != {rec_date}:
+            fetcher.parse_failures.append(
+                f"{label}: 相場日がランキングと違います"
+                f"（ランキング={rec_date} / この一覧={sorted(got)}）。記録しません。"
+            )
+            return None
+    return df[_STOP_COLS].to_dict(orient="records")
+
+
+def _count(payload, key):
+    return len(payload[key]) if key in payload else "取得なし"
+
+
+def _save_today(gainers, losers, active, stop_high=None, stop_low=None, *,
+                skip_checks: bool = False) -> str | None:
     if gainers.empty:
         print("  本日分のランキングを取得できませんでした(休場日、または取得失敗)。スキップします。")
         return None
@@ -38,14 +78,19 @@ def _save_today(gainers, losers, active, stop_high=None, *, skip_checks: bool = 
         "rec_date": rec_date,
         # その日ストップ高をつけた銘柄の全件。上位30銘柄からの推定ではない。
         # 0件の日もある（相場が穏やかな日）。取得できなかった日はキーごと無い。
-        "stop_high": (
-            stop_high[_STOP_COLS].to_dict(orient="records")
-            if stop_high is not None and not stop_high.empty else []
-        ),
+        "stop_high": _stop_rows(stop_high, fetcher.STOP_HIGH_LABEL, rec_date),
+        # ストップ安も同じ形で全件記録する。値下がり上位30銘柄からの推定では
+        # 30位の外にあったストップ安が数えられない（ストップ高と同じ理由）。
+        "stop_low": _stop_rows(stop_low, fetcher.STOP_LOW_LABEL, rec_date),
         "gainers": gainers[_ROW_COLS].to_dict(orient="records"),
         "losers": losers[_ROW_COLS].to_dict(orient="records") if not losers.empty else [],
         "active": active[_ROW_COLS].to_dict(orient="records") if not active.empty else [],
     }
+
+    # 取れなかったランキングはキーごと落とす（0件と取り違えさせない）
+    for key in aggregate.LIMIT_KEYS:
+        if payload[key] is None:
+            del payload[key]
 
     # 保存する前に検査する。data/ は取り直しのきかない資産なので、
     # おかしなものを書き込むより、その日を落とすほうがまし。
@@ -61,11 +106,16 @@ def _save_today(gainers, losers, active, stop_high=None, *, skip_checks: bool = 
     (_DATA_DIR / "latest.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    print(
-        f"  {day_path} に保存しました"
-        f"(値上がり{len(payload['gainers'])}/値下がり{len(payload['losers'])}"
-        f"/活況{len(payload['active'])}/ストップ高{len(payload['stop_high'])}件)"
+    # **落ちたキーを直に読まない。** 取れなかったランキングはキーごと消して
+    # あるので、ここで payload['stop_high'] と書くと KeyError で落ちる。
+    # 保存は済んでいるのにサイトのビルドまで行かず、その日が公開されなくなる。
+    counts = "/".join(
+        f"{label}{_count(payload, key)}"
+        for label, key in (("値上がり", "gainers"), ("値下がり", "losers"),
+                           ("活況", "active"), ("ストップ高", "stop_high"),
+                           ("ストップ安", "stop_low"))
     )
+    print(f"  {day_path} に保存しました（{counts}）")
     return rec_date
 
 
@@ -86,9 +136,10 @@ def main() -> None:
     losers = fetch_losers(top_n=30)
     active = fetch_active(top_n=30)
     stop_high = fetch_stop_high()
+    stop_low = fetch_stop_low()
 
     try:
-        rec_date = _save_today(gainers, losers, active, stop_high,
+        rec_date = _save_today(gainers, losers, active, stop_high, stop_low,
                                skip_checks="--force" in sys.argv)
     except validate.InvalidPayload as e:
         # 既存のデータには一切触れずに落とす。run-daily.ps1 が通知を出す。
@@ -119,6 +170,16 @@ def main() -> None:
     if rec_date is None and not any(_DATA_DIR.glob("????-??-??.json")):
         print("  data/ に既存データも無いため、サイトのビルドを中止します。")
         return
+
+    # 銘柄の基本属性（市場区分・業種・売買単位）。**未知の銘柄が出たときだけ**
+    # 取りに行く。ここが失敗してもサイトの公開は止めない（属性は飾りで、
+    # 無ければその行を出さないだけ。ランキングが出ないほうが損が大きい）。
+    try:
+        days = render.load_days()
+        codes = stock_profile.needed_codes(days, (s["code"] for s in aggregate.stock_histories(days)))
+        stock_profile.sync(codes)
+    except Exception as e:
+        print(f"  [WARN] 銘柄属性の取得に失敗しました（サイトは続けて作ります）: {e}")
 
     render.build_all()
 

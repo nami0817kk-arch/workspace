@@ -1,0 +1,100 @@
+# ひかりの指名の検証（アプリの外側 Flutter と、中に入れるゲーム本体）。
+# 公開系（テスト用Web版・iOSリリース）とは分けてある。
+name: hikari7 CI
+
+on:
+  push:
+    paths:
+      - "projects/hikari7/**"
+      - ".github/workflows/hikari7-ci.yml"
+  pull_request:
+    paths:
+      - "projects/hikari7/**"
+      - ".github/workflows/hikari7-ci.yml"
+  workflow_dispatch:
+    inputs:
+      build_ios:
+        description: "iOS の署名なしビルドも回す（Xcode の設定を触ったとき用。macOS なので手動のときだけ）"
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/hikari7
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      # ゲーム本体：どの遊び方・どの審査の組み合わせでも最後まで止まらないこと
+      - name: 通しプレイの試算
+        run: node tool/sim.js --quick
+
+      # 全画面をブラウザなしで描き、描くときのエラーが0件か（男女・難しさ・チャレンジを変えて5シーズン）
+      - name: 画面の点検
+        run: node tool/views.js
+
+      # 文章の点検：ばらばらに遊ばせて、画面の文に {A}・undefined などの差し込み漏れがないか
+      - name: 文章の点検
+        run: node tool/texts.js 6
+
+      # アプリの中にいるふりで、広告の頼み・動画の番号・追加パックの出し入れを確かめる
+      - name: アプリとしてのつなぎ（広告・追加パック）
+        run: node tool/appflow.js
+
+      - name: アプリに入れるゲーム本体を組み立てる
+        run: |
+          pip install --quiet fonttools
+          python tool/build_app_web.py
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        working-directory: projects/hikari7/app
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: projects/hikari7/app
+        run: flutter analyze
+
+      - name: Run tests
+        working-directory: projects/hikari7/app
+        run: flutter test
+
+  ios-build:
+    if: ${{ inputs.build_ios == true }}
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: projects/hikari7
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: アプリに入れるゲーム本体を組み立てる
+        run: |
+          pip3 install --quiet --break-system-packages fonttools || pip3 install --quiet fonttools
+          python3 tool/build_app_web.py
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - working-directory: projects/hikari7/app
+        run: flutter pub get
+      - working-directory: projects/hikari7/app
+        run: flutter build ios --release --no-codesign
+      - name: 言語ごとのホーム画面名とゲーム本体が入っているか
+        working-directory: projects/hikari7/app
+        run: |
+          app=build/ios/iphoneos/Runner.app
+          plutil -p "$app/ja.lproj/InfoPlist.strings" | grep 'ひかりの指名'
+          ls -la "$app/Frameworks/App.framework/flutter_assets/assets/web/index.html"

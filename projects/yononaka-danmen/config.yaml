@@ -1,0 +1,52 @@
+# 世の中の断面図 — 制作の設定
+#
+# 絵（立ち絵）はリポジトリに入れない。workspace は public なので。
+# 置き場: ../../../output/yononaka-danmen/assets
+assets_dir: ../../../output/yononaka-danmen/assets
+
+# 声は AivisSpeech（VOICEVOX ではない）。起動していないと作れない。
+engine_url: http://127.0.0.1:10101
+
+cast:
+  語り:
+    name: 阿井田 茂          # クレジットに出す名前
+    style_id: 1310138977     # Calm
+    license: ACML 1.0        # 商用可（2026-10-06 に規約の見出しで確認）
+    speed: 1.0
+    pitch: 0.0
+    # 2026-10-06 ユーザー決定「基本は1で、文ごとに変える」
+    intonation: 1.0
+    tempo_dynamics: 1.0
+    pre: 0.10
+    post: 0.25
+    image: characters/katari.png
+    side: left
+  聞き:
+    name: 花音
+    style_id: 1325133120     # ノーマル（2026-10-06 ユーザーが まお・まい・花音 を聴き比べて選んだ）
+    license: ACML 1.0       # 商用可
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    tempo_dynamics: 1.0
+    pre: 0.10
+    post: 0.25
+    image: characters/kikite.png
+    side: right
+
+# 文ごとの強さ。台本では「語り(強)」のように括弧で指定する。
+# 何も付けなければ「ふつう」。1.45 を超えるとエンジンが落ちる（実測）。
+tones:
+  ふつう:
+    intonation: 1.0
+    tempo_dynamics: 1.0
+  強:
+    intonation: 1.3
+    tempo_dynamics: 1.2
+  特強:
+    intonation: 1.45
+    tempo_dynamics: 1.3
+  抑:
+    intonation: 0.9
+    tempo_dynamics: 1.0
+    speed: 0.97

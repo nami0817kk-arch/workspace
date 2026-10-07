@@ -1,0 +1,129 @@
+# 台本のひな形。これを写して scripts/<題材>.yaml を作る。
+# 決まり：最後の節は「見立て：…」／次回予告・サムネイル必須／図（地図・グラフ・相関図）は3つ以上／
+#         事実は出典を控える（台本の末尾か別メモ）／言い伝えは「伝えられています」と言う。
+title: ○○は本当に△△だったのか｜副題（問いの形。毎回同じ形にしない）
+series: 悪女と呼ばれた女たち
+texture: true                                # 図の板・メモの札・額の台紙にうっすら紙の目（10-07。前の回は付けていない）
+recap: true                                  # 節の頭の「第N節」に、前の節のメモの札を2〜3枚並べて振り返る（まとめの節の頭は出ない）
+timeline:
+  start: 1700
+  end: 1760
+  events: [[1700, 誕生], [1720, 結婚], [1760, 死去]]
+
+shorts:                                      # 1本の本編から何本も（各60秒以内）。行に short: s1 を付ける
+  s1: {title: "通説を／ひっくり返す一言"}       # ／で改行
+
+next:                                        # 最後の12秒の次回予告
+  title: 次の人物
+  teaser: 次回のひとこと。
+
+thumbnail:                                   # chiso/thumb.py。構図は題材ごとに選ぶ（同じ構図が3回続くと check が知らせる）
+  # layout: face                               # 書かなければ classic（下の形）。選び方：
+  #   face   顔の大写し（人物の回。肖像を右に大きく、左に2段の文字。side: left で反対）。crop は顔のまわり
+  #   scene  場面の全景（戦い・行列・港）。絵を全面、下の黒い帯に lead＋main を1行（band: top で上）
+  #   versus 2人の対比。left: {image, crop, name, number}・right: も同じ。number が両方あれば数字の対、無ければ VS
+  #   number 数字が主役。number: 約168cm（数字は大きく、約・cm は半分）。絵は暗く後ろに
+  #   map    航路・遠征・国の広がり。map: {route: [コルシカ島, パリ, エルバ島]}（地名は places.yaml）。image・crop は要らない
+  # cast: false                                # 右下の2人（既定は classic と number だけ出す）
+  # 作り込み（layout を書いたときだけ。既定で構図ごとの光・縁取り・質感が入る）。足す・外す：
+  # badge: 1582年                             # 古文書の切れ端の札（{text, at: [x, y], angle}）
+  # arrow: {from: [300, 600], to: [800, 300]}   # 赤い矢印（サムネイルの座標。bend で曲げる）
+  # circle: [60, 70, 360, 400]                 # 手書き風の赤い丸囲み
+  # light: right                               # 斜めの光 left／right／top／none
+  # tint: right                                # 片側を朱に（versus の既定）。none で外す
+  # rays: false                                # 放射の光（versus・number の既定）
+  # cutout: false                              # 人物の切り抜き（face・versus の既定。rembg が無ければ切り抜かない）。paintings/x.png で手で抜いた絵
+  # fx: false                                  # 作り込みを全部外す
+  image: paintings/xxx.jpg
+  crop: [0, 0, 1600, 900]                    # 絵のどこを使うか（左, 上, 右, 下）
+  focus: [150, 60, 1000, 760]                # 明るく残す範囲
+  hook: 「通説の一言…」
+  stamp: 言ってない！
+  name: 人物名
+  lead: 本当に
+  main: 悪女？
+  variants:                                  # 3案（thumb --variants。YouTube の「テストと比較」用）。書かなければ自動
+    b: {crop: [400, 100, 1040, 460]}         # b：顔に寄せる範囲（元の絵の座標）。無ければ focus の上のほうに自動で寄せる
+    c: {top: 約168cm}                        # c：上に大きく出す数字か短い語。無ければ判子→見出しの数字の順に選ぶ
+
+people:                                 # 肖像に「この時○歳」を出す人物（生没は百科事典で確かめる）
+  人物名: {born: 1755-11-02, died: 1793-10-16, match: [肖像の説明での言い換え]}
+terms:                                  # その回だけの用語（terms.yaml より優先。説明は40字まで）
+  ○○: 説明
+sections:
+  - title: 地表：誰もが知っている通説
+    background: {image: paintings/xxx.jpg, credit: "画家《題》年"}
+    portrait: {image: paintings/yyy.jpg, caption: "人物名（画家画、年）"}
+    lines:
+      - 語り: 通説の一言。
+        tone: 強調                            # 普通／驚き／疑問／強調／しみじみ／明るい／笑い／重い／ひそひそ／納得
+        short: s1
+      - 聞き: 視聴者と同じ目線で驚く・聞き返す。
+        tone: 驚き
+      - 語り: 《強調したい語》は二重山かっこで囲む。
+        card: {head: "1700年", body: "札の本文（22字まで）"}   # 左の「掘り出したメモ」に積み重なる
+        year: 1700                            # 年表の印
+      - 語り: "図を出す行。節が変わるか figure: null まで続く。"
+        figure: {type: map, title: 旅の題, route: [パリ, ヴェルサイユ], note: およそ○日}   # 地名は places.yaml
+      - 語り: 図を消す行。
+        figure: null
+      - 語り: 当時のお金を今の円に。日当を今の1万円として、前提を basis に（「1リーヴル＝何円」は使わない）
+        figure: {type: money, title: ○○を今のお金にすると, then: "160万リーヴル", yen: 13000000000, basis: "当時の日雇いの日当（約1.2リーヴル）を今の1万円とし、1年365日で数えた目安"}
+      - 語り: 節の終わり2行のどこかに、次の節が気になる一言（導入と見立ての節は要らない）
+        hook: true
+      - 語り: 本人の言葉の前置き。「こう言ったと伝えられています」まで語りで言う。
+      - 人物: 「本人の言葉は、人物の行にして別の声で読む」
+        who: マリー                           # config.yaml の roles の名前。2人は聞き役になる
+      - 語り: 1文の挿絵（その行だけ。真ん中の丸い板）。名前は Phosphor のアイコン名（chiso/extras.py の ICON_HINTS）
+        icon: envelope-simple
+      - 聞き: 肖像の人物の吹き出し（その行だけ。肖像が出ているときだけ）。x, y は肖像の中の口のあたり（0〜1）
+        bubble: {text: "一言のセリフ", x: 0.5, y: 0.25}
+      - 語り: 人物を並べて比べる
+        figure: {type: compare, title: 比べる題, people: [[人A, paintings/a.jpg, ひとこと], [人B, paintings/b.jpg, ひとこと]]}
+      # 1項目ずつ増やす（10-07）：同じ図を行ごとに upto: 1, 2, 3 と書く。新しく増えた項目だけが描き進む
+      # （bars・people・compare・map の route・stats・calc・numberline・line）。upto のほかは前の行と同じに書く
+      - 語り: 桶狭間は約2000。
+        figure: {type: bars, title: 信長の軍, bars: [[桶狭間, 2000], [長篠, 30000], [本能寺の供, 100]], labels: ["約2000", "約3万", "約100"], upto: 1}
+      - 語り: 長篠は約3万。
+        figure: {type: bars, title: 信長の軍, bars: [[桶狭間, 2000], [長篠, 30000], [本能寺の供, 100]], labels: ["約2000", "約3万", "約100"], upto: 2}
+      # 数字の図（10-07）。数字は大きく、単位は小さく組まれる。「55歳?」のように ? を含む値は "" で囲む
+      - 語り: 数字を最大3つ並べる（最後の1つが朱）
+        figure: {type: stats, title: 信長の数字, items: [[生涯, 49年, 満で], [元服, 13歳, 数えで], [石高, 約700万石, 最盛期]]}
+      - 語り: 計算の式（項が順に出る。最後が答え）
+        figure: {type: calc, title: 中国大返し, terms: [[200km, 備中高松→山崎], [7日], [約29km/日, 1日あたり]], ops: [÷, ＝]}
+      - 語り: 数直線（享年・年号の比べ。focus を朱に。min・max は省けば自動）
+        figure: {type: numberline, title: 三英傑の享年, items: [[織田信長, 48], [豊臣秀吉, 61], [徳川家康, 73]], unit: 歳, focus: 織田信長}
+      - 語り: 折れ線（石高・人口の移り変わり。点が順に打たれる）
+        figure: {type: line, title: 信長の石高, points: [[1560年, 57], [1568年, 120], [1582年, 700]], unit: 万石, note: 目安}
+      - 語り: 左右の全画面比べ（明るさは自動でそろう。絵の出典は credit に）
+        figure: {type: versus, title: 1582年の2人, credit: "左：…　右：…",
+                 left: {image: paintings/a.jpg, name: 織田信長, number: "48歳", note: 本能寺で死す},
+                 right: {image: paintings/b.jpg, name: 明智光秀, number: "55歳?", note: 11日後に死す, focus: false}}
+      # 絵の一部を大きく（10-07。その行だけ）。同じ絵1枚から何度も「新しいもの」を作る。box は元の絵の画素か 0〜1 の割合。
+      # 真ん中の額に止まった絵で出し、下に札。肖像・図・年表はその行だけ隠れる。続けたい行は同じ detail を書く
+      - 語り: 屏風の真ん中に、木の柵が描かれています。
+        detail: {box: [1240, 200, 1880, 760], label: 柵と鉄砲隊}      # 別の絵からなら image: paintings/x.jpg
+      # 赤ペン（10-07）：circle（丸）／arrow（矢印）／underline（下線）／strike（取り消し線）／note（一言。text 必須）。
+      # at は図なら「何番目の項目」（1から）、絵なら [x, y] か [x0, y0, x1, y1]（割合か元の絵の画素）。text は印の横の一言（任意）。
+      # 同じ絵・図の上なら行ごとに1つずつ足していける（前の印は残る）。絵・図が替わるか mark: null で消える
+      - 聞き: 柵の後ろから撃ってるじゃん。
+        detail: {box: [1240, 200, 1880, 760], label: 柵と鉄砲隊}
+        mark: [{type: circle, at: [1430, 330, 1640, 560]}, {type: arrow, at: [1700, 640], text: 煙}]
+      - 語り: 数を比べます。
+        figure: {type: bars, title: 長篠の鉄砲の数, bars: [[信長公記, 1000], [甫庵信長記, 3000]]}
+        mark: {type: strike, at: 2, text: 後の本}                     # 2番目の棒に取り消し線
+      - 聞き: つむぎの「寄り」（その行だけ。1本2回まで。数字の山場に）。下の2人は隠れ、つむぎが腰から上で大きく出る
+        tone: 驚き
+        reaction: {number: "100人", lead: 信長の供は, say: 少なっ！ 天下人なのに？}   # say は省いてよい
+
+  - title: 見立て：なぜそうなったのか
+    lines:
+      - 語り: 数字と当時の仕組みから考える。
+        figure: {type: pie, title: 題, parts: [[項目, 46], [そのほか, 54]], unit: "%"}
+      - 聞き: 相関図は人が増える節で。
+        figure: {type: people, title: 関係, nodes: [[人A, 役割], [人B, 役割]], edges: [[人A, 人B, 何をしたか]]}
+      - 語り: 今日の地層は、ここまでです。（剣崎が言う。進行役はいつも剣崎）
+      - 聞き: 次回は○○。「〜」って言われてるけど……本当？（つむぎが次回の通説を一言で）
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい

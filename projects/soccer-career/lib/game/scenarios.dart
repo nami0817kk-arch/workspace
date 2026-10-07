@@ -393,7 +393,7 @@ class ScenarioPool {
     Scenario(
       id: 'gk-lastminute',
       spot: PitchSpot.ownBox,
-      situation: '後半アディショナルタイム、1点リード。相手GKまで上がってきたコーナー。',
+      situation: '相手が人数をかけてきたコーナー。GKまで前に出てきている。',
       options: [
         ScenarioOption(
           label: '飛び出してキャッチ',
@@ -1016,7 +1016,7 @@ class ScenarioPool {
     Scenario(
       id: 'fw-lastminute',
       spot: PitchSpot.box,
-      situation: '後半アディショナルタイム。コーナーキックがこぼれてきた。',
+      situation: 'コーナーキックがこぼれてきた。詰めれば届く位置にいる。',
       options: [
         ScenarioOption(
           label: 'ボレーで叩く',
@@ -1641,7 +1641,7 @@ class ScenarioPool {
     Scenario(
       id: 'mf-late',
       spot: PitchSpot.betweenLines,
-      situation: '後半40分、1点ビハインド。ボールは自分の足元、前に空きはない。',
+      situation: 'ボールは自分の足元。前に空きはなく、味方も動き出さない。',
       options: [
         ScenarioOption(
           label: 'ペナルティエリアに飛び込む',

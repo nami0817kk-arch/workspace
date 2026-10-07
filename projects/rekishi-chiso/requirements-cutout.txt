@@ -1,0 +1,3 @@
+# 任意：サムネイルの人物の切り抜き（chiso/thumbfx.py）。CI には入れない（無ければ切り抜かずに描く）。
+# 学習済みデータ isnet-general-use（約179MB）は初回に ~/.rembg/models/ に入る。
+rembg[cpu]>=2.0

@@ -205,3 +205,37 @@ class GaugeBar extends StatelessWidget {
     );
   }
 }
+
+/// **読むだけの札。**
+///
+/// `Chip` は押せる部品なので、押せない札に使うとタップ領域のぶんだけ
+/// 縦に太る（1行 32px）。読むだけの札は文字の周りの余白だけでよく、
+/// 1行 22px で済む。並ぶ場所では 10px の差がそのまま効く。
+///
+/// 試合画面の局面の札で先に作ったものを、シーズン終了の成績札でも使う
+/// （同じ間違いが2か所にあった）。
+class Tag extends StatelessWidget {
+  const Tag(this.label, {super.key, this.background, this.foreground});
+
+  final String label;
+  final Color? background;
+  final Color? foreground;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: background ?? theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        label,
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: foreground ?? theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}

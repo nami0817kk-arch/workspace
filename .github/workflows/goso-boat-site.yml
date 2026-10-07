@@ -1,0 +1,74 @@
+# 護送ボートの公開ページ（法務ページ・app-ads.txt・紹介）を Cloudflare Pages の goso-boat に出す。
+# アプリの設定画面は https://goso-boat.pages.dev/privacy.html と support.html を開く（lib/app/links.dart）。
+# ストアの「マーケティング URL」もここにするので、AdMob は直下の app-ads.txt を読みに来る。
+#
+# テスト用の Web版（goso-boat-web-test.yml → goso-boat-test）とは別のプロジェクト。
+# 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（soccer-pages.yml と同じ値）
+name: 護送ボートの公開ページ
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/goso-boat/legal/**"
+      - "projects/goso-boat/site/**"
+      - "scripts/check-app-site.sh"
+      - ".github/workflows/goso-boat-site.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: goso-boat-site
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: projects/goso-boat
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Assemble site
+        run: |
+          mkdir -p dist
+          cp site/* dist/
+          cp legal/*.html dist/
+          ls -la dist
+
+      # 無ければ作る。既にあれば重複エラーが返るだけ。production_branch を master に固定する
+      # （デプロイの --branch とずれると、本番ではなくプレビューの別URLに出て法務リンクが404になる）
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"goso-boat","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/goso-boat
+          command: pages deploy dist --project-name=goso-boat --branch=master
+
+      # アプリが開く URL で本当に見えるか（プロジェクト名が取られていて別の URL になった場合もここで分かる）
+      - name: Check the public URLs
+        run: |
+          sleep 20
+          for p in privacy.html support.html terms.html app-ads.txt; do
+            curl -fsSL "https://goso-boat.pages.dev/$p" -o /tmp/page || { echo "::error::https://goso-boat.pages.dev/$p が開けません"; exit 1; }
+          done
+          grep -q "護送ボート" <(curl -fsSL https://goso-boat.pages.dev/privacy.html) || { echo "::error::goso-boat.pages.dev が護送ボートのページではありません"; exit 1; }
+          curl -fsSL https://goso-boat.pages.dev/app-ads.txt
+
+      # AdMob が app-ads.txt を確かめられる状態か（robots.txt がテキスト・app-ads.txt の行・無いパスは 404）。
+      # 2026-10-02 に robots.txt が HTML を返していて「アプリを確認」が通らなかった。次のアプリでも同じ点検を写す
+      - name: Check the site for AdMob (robots.txt / app-ads.txt)
+        run: bash ../../scripts/check-app-site.sh goso-boat.pages.dev pub-6409014819339195

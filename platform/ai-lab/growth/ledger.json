@@ -137,6 +137,60 @@
         "workspace/projects/tool-factory": 100,
         "workspace/projects/youtube-video-creation": 100
       }
+    },
+    {
+      "average": 89,
+      "date": "2026-09-28",
+      "open": 29,
+      "resolved_total": 120,
+      "scores": {
+        "workspace": 100,
+        "workspace/libs/kabutan": 95,
+        "workspace/libs/puzzle-generator": 95,
+        "workspace/projects/ai-side-business": 100,
+        "workspace/projects/cohabitation-budget": 15,
+        "workspace/projects/dailyquarry-home": 75,
+        "workspace/projects/gemini-api": 100,
+        "workspace/projects/goso-boat": 85,
+        "workspace/projects/ipa-kakomon": 78,
+        "workspace/projects/kabu-agari-ranking": 100,
+        "workspace/projects/kdp-novel": 87,
+        "workspace/projects/price-tracker": 100,
+        "workspace/projects/puzzle-book": 95,
+        "workspace/projects/shaho-tekiyo": 95,
+        "workspace/projects/soccer-career": 95,
+        "workspace/projects/soccer-manager": 95,
+        "workspace/projects/youtube-video-creation": 100
+      }
+    },
+    {
+      "average": 83,
+      "date": "2026-10-05",
+      "open": 47,
+      "resolved_total": 121,
+      "scores": {
+        "workspace": 100,
+        "workspace/libs/kabutan": 95,
+        "workspace/libs/puzzle-generator": 95,
+        "workspace/projects/ai-side-business": 100,
+        "workspace/projects/cohabitation-budget": 15,
+        "workspace/projects/dailyquarry-home": 75,
+        "workspace/projects/gemini-api": 100,
+        "workspace/projects/goso-boat": 95,
+        "workspace/projects/hikari7": 67,
+        "workspace/projects/ipa-kakomon": 78,
+        "workspace/projects/kabu-agari-ranking": 100,
+        "workspace/projects/kdp-novel": 87,
+        "workspace/projects/price-tracker": 100,
+        "workspace/projects/puzzle-book": 95,
+        "workspace/projects/rekishi-chiso": 85,
+        "workspace/projects/shaho-tekiyo": 95,
+        "workspace/projects/soccer-career": 95,
+        "workspace/projects/soccer-manager": 95,
+        "workspace/projects/tenbin": 62,
+        "workspace/projects/torishirabe": 0,
+        "workspace/projects/youtube-video-creation": 100
+      }
     }
   ],
   "proposals": {
@@ -159,12 +213,12 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "note": "再利用ワークフロー呼び出し（uses:）のジョブには timeout-minutes を指定できない。実行時間の上限は共通の .github/workflows/python-tests.yml が timeout-minutes: 15 で一括適用済み。検出側が呼び出し側だけを見ているための誤検知",
       "project": "workspace",
       "rule_id": "ci.no-timeout",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:53:05+00:00",
       "title": "ワークフローに実行時間の上限が無い",
@@ -240,6 +294,19 @@
       "title": "自動テストが1本もない",
       "topic": "tests"
     },
+    "0af32fa6b0cc": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/ipa-kakomon",
+      "rule_id": "xpol.env-example",
+      "seen_count": 2,
+      "status": "open",
+      "title": ".env.example で必要な設定を明示する（youtube-video-creation で既に実践中）",
+      "topic": "env"
+    },
     "0af4017c59db": {
       "exemplar": null,
       "first_seen": "2026-08-31T15:18:08+00:00",
@@ -289,9 +356,10 @@
       "last_seen": "2026-09-21T04:48:31+00:00",
       "last_seen_date": "2026-09-21",
       "project": "workspace/projects/stock-investment",
+      "resolved_at": "2026-09-28T05:15:58+00:00",
       "rule_id": "quality.swallowed-exception",
       "seen_count": 4,
-      "status": "open",
+      "status": "resolved",
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
     },
@@ -337,6 +405,32 @@
       "title": ".env.example で必要な設定を明示する（ai-lab / 成長ループ本体 で既に実践中）",
       "topic": "env"
     },
+    "136b88e0a24c": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/puzzle-book",
+      "rule_id": "quality.long-function",
+      "seen_count": 2,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
+    },
+    "14ac70566a4d": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/hikari7",
+      "rule_id": "secret.gitignore-env",
+      "seen_count": 1,
+      "status": "open",
+      "title": "環境変数を使っているのに .gitignore が .env を除外していない",
+      "topic": "secrets"
+    },
     "18837140fa2d": {
       "exemplar": null,
       "first_seen": "2026-08-31T15:18:08+00:00",
@@ -364,6 +458,32 @@
       "status": "resolved",
       "title": "README が無い",
       "topic": "readme"
+    },
+    "1cf18d12ee95": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/tenbin",
+      "rule_id": "secret.gitignore-env",
+      "seen_count": 1,
+      "status": "open",
+      "title": "環境変数を使っているのに .gitignore が .env を除外していない",
+      "topic": "secrets"
+    },
+    "1d2f5560777c": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/rekishi-chiso",
+      "rule_id": "env.no-example",
+      "seen_count": 1,
+      "status": "open",
+      "title": "必要な環境変数の一覧が無い",
+      "topic": "env"
     },
     "1d3ebb775d45": {
       "exemplar": null,
@@ -401,9 +521,10 @@
       "last_seen": "2026-09-21T04:48:31+00:00",
       "last_seen_date": "2026-09-21",
       "project": "workspace/projects/stock-investment",
+      "resolved_at": "2026-09-28T05:15:58+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 4,
-      "status": "open",
+      "status": "resolved",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
     },
@@ -521,6 +642,19 @@
       "title": "雛形だけ作られて中身が無い",
       "topic": "dormant"
     },
+    "2c7cb7df0209": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/puzzle-book",
+      "rule_id": "xpol.pinned-deps",
+      "seen_count": 2,
+      "status": "open",
+      "title": "依存バージョンを固定する（youtube-video-creation で既に実践中）",
+      "topic": "deps"
+    },
     "30d45652864c": {
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
@@ -548,6 +682,19 @@
       "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
+    },
+    "39111eb1ae34": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/hikari7",
+      "rule_id": "env.no-example",
+      "seen_count": 1,
+      "status": "open",
+      "title": "必要な環境変数の一覧が無い",
+      "topic": "env"
     },
     "397632e28c7d": {
       "exemplar": null,
@@ -583,11 +730,11 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "project": "workspace",
       "rule_id": "quality.long-function",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "open",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
@@ -638,11 +785,11 @@
       "exemplar": null,
       "first_seen": "2026-09-14T04:48:30+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "project": "workspace/projects/youtube-video-creation",
       "rule_id": "quality.swallowed-exception",
-      "seen_count": 2,
+      "seen_count": 4,
       "status": "open",
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
@@ -668,9 +815,10 @@
       "last_seen": "2026-09-21T04:48:31+00:00",
       "last_seen_date": "2026-09-21",
       "project": "workspace/projects/soccer-career",
+      "resolved_at": "2026-09-28T05:15:58+00:00",
       "rule_id": "quality.oversized-file",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
     },
@@ -715,6 +863,32 @@
       "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
+    },
+    "512e7214dc0c": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/tenbin",
+      "rule_id": "docs.readme-missing",
+      "seen_count": 1,
+      "status": "open",
+      "title": "README が無い",
+      "topic": "readme"
+    },
+    "5160851bce41": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/kabu-agari-ranking",
+      "rule_id": "quality.oversized-file",
+      "seen_count": 2,
+      "status": "open",
+      "title": "1ファイルが大きくなりすぎている",
+      "topic": "structure"
     },
     "516eb2e25755": {
       "exemplar": null,
@@ -762,6 +936,19 @@
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
     },
+    "54fc4f17e28e": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/shaho-tekiyo",
+      "rule_id": "env.no-example",
+      "seen_count": 2,
+      "status": "open",
+      "title": "必要な環境変数の一覧が無い",
+      "topic": "env"
+    },
     "559d9a3b3e0d": {
       "exemplar": null,
       "first_seen": "2026-08-31T15:18:08+00:00",
@@ -790,6 +977,20 @@
       "title": "自動テストが1本もない",
       "topic": "tests"
     },
+    "5bf2532625a9": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-28T05:15:58+00:00",
+      "last_seen_date": "2026-09-28",
+      "project": "workspace/projects/goso-boat",
+      "resolved_at": "2026-10-05T05:29:16+00:00",
+      "rule_id": "docs.readme-no-runbook",
+      "seen_count": 1,
+      "status": "resolved",
+      "title": "README に「動かし方」のコマンドが書かれていない",
+      "topic": "readme"
+    },
     "5ff1c614d384": {
       "exemplar": null,
       "first_seen": "2026-08-29T12:20:52+00:00",
@@ -811,9 +1012,10 @@
       "last_seen": "2026-09-21T04:48:31+00:00",
       "last_seen_date": "2026-09-21",
       "project": "workspace/projects/stock-investment",
+      "resolved_at": "2026-09-28T05:15:58+00:00",
       "rule_id": "quality.long-function",
       "seen_count": 4,
-      "status": "open",
+      "status": "resolved",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
     },
@@ -844,6 +1046,19 @@
       "status": "resolved",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
+    },
+    "67f20fde950d": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/shaho-tekiyo",
+      "rule_id": "secret.gitignore-env",
+      "seen_count": 2,
+      "status": "open",
+      "title": "環境変数を使っているのに .gitignore が .env を除外していない",
+      "topic": "secrets"
     },
     "684601abf9ff": {
       "exemplar": null,
@@ -893,12 +1108,12 @@
       "exemplar": "workspace/projects/ai-side-business",
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "note": "requirements.txt に「意図的に標準ライブラリだけで動かしている。追加するときは == で固定し理由を書く」と明記済み。固定すべき依存が存在しない",
       "project": "workspace/projects/price-tracker",
       "rule_id": "xpol.pinned-deps",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:58:19+00:00",
       "title": "依存バージョンを固定する（youtube-video-creation で既に実践中）",
@@ -948,20 +1163,46 @@
       "title": "自動テストが1本もない",
       "topic": "tests"
     },
+    "742fd429e006": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/goso-boat",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 2,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
+    },
     "7581efc719c3": {
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "note": "index.html 1枚で完結させることが価値の完成品。README に「完成・運用中／構成を分割しない」と明記済み",
       "project": "workspace/projects/cohabitation-budget",
       "rule_id": "scaffold.dormant",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "snoozed",
       "status_changed_at": "2026-09-01T04:48:15+00:00",
       "title": "雛形だけ作られて中身が無い",
       "topic": "dormant"
+    },
+    "765c45f9fcc3": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/kabu-agari-ranking",
+      "rule_id": "quality.swallowed-exception",
+      "seen_count": 1,
+      "status": "open",
+      "title": "例外を握りつぶしている箇所がある",
+      "topic": "error-handling"
     },
     "7776cdbdb0b1": {
       "exemplar": null,
@@ -1066,6 +1307,19 @@
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
     },
+    "80f71971abfd": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/tenbin",
+      "rule_id": "docs.stale-reference",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ドキュメントが存在しないファイルを載せている",
+      "topic": "doc-accuracy"
+    },
     "83ffdcf5ddbd": {
       "exemplar": "ai-lab",
       "first_seen": "2026-08-29T10:18:31+00:00",
@@ -1079,6 +1333,19 @@
       "seen_count": 2,
       "status": "resolved",
       "title": "必要な環境変数の一覧が無い",
+      "topic": "env"
+    },
+    "844e9372d99d": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/puzzle-book",
+      "rule_id": "xpol.env-example",
+      "seen_count": 2,
+      "status": "open",
+      "title": ".env.example で必要な設定を明示する（youtube-video-creation で既に実践中）",
       "topic": "env"
     },
     "845435707534": {
@@ -1166,6 +1433,19 @@
       "title": "ワークフローがトークンの権限を絞っていない",
       "topic": "ci-permissions"
     },
+    "86fcea0dba69": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/soccer-career",
+      "rule_id": "quality.long-function",
+      "seen_count": 2,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
+    },
     "872145fabf41": {
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
@@ -1237,6 +1517,19 @@
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
+    "91ebf1c08e5f": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/dailyquarry-home",
+      "rule_id": "secret.gitignore-env",
+      "seen_count": 2,
+      "status": "open",
+      "title": "環境変数を使っているのに .gitignore が .env を除外していない",
+      "topic": "secrets"
+    },
     "930ba2770532": {
       "exemplar": null,
       "first_seen": "2026-08-29T12:20:52+00:00",
@@ -1265,18 +1558,44 @@
       "title": "ワークフローがトークンの権限を絞っていない",
       "topic": "ci-permissions"
     },
+    "943cfca8cad7": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/kdp-novel",
+      "rule_id": "xpol.env-example",
+      "seen_count": 2,
+      "status": "open",
+      "title": ".env.example で必要な設定を明示する（youtube-video-creation で既に実践中）",
+      "topic": "env"
+    },
     "946d7987cac7": {
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "project": "workspace/projects/ai-side-business",
       "rule_id": "quality.long-function",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "open",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
+    },
+    "949fee1d122f": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/torishirabe",
+      "rule_id": "scaffold.dormant",
+      "seen_count": 1,
+      "status": "open",
+      "title": "雛形だけ作られて中身が無い",
+      "topic": "dormant"
     },
     "960a26d669ae": {
       "exemplar": "workspace",
@@ -1363,6 +1682,19 @@
       "status_changed_at": "2026-08-31T15:52:42+00:00",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
+    },
+    "9c84947053c4": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/rekishi-chiso",
+      "rule_id": "secret.gitignore-env",
+      "seen_count": 1,
+      "status": "open",
+      "title": "環境変数を使っているのに .gitignore が .env を除外していない",
+      "topic": "secrets"
     },
     "9d52f669969d": {
       "exemplar": "ai-lab",
@@ -1463,6 +1795,19 @@
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
     },
+    "ab170b883d2d": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/shaho-tekiyo",
+      "rule_id": "quality.oversized-file",
+      "seen_count": 2,
+      "status": "open",
+      "title": "1ファイルが大きくなりすぎている",
+      "topic": "structure"
+    },
     "afc9dcd85984": {
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
@@ -1478,6 +1823,19 @@
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
     },
+    "b002912597ba": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/shaho-tekiyo",
+      "rule_id": "docs.stale-reference",
+      "seen_count": 2,
+      "status": "open",
+      "title": "ドキュメントが存在しないファイルを載せている",
+      "topic": "doc-accuracy"
+    },
     "b02bab0a7f0e": {
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
@@ -1491,6 +1849,19 @@
       "status": "resolved",
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
+    },
+    "b0eb7c624f91": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/torishirabe",
+      "rule_id": "docs.readme-missing",
+      "seen_count": 1,
+      "status": "open",
+      "title": "README が無い",
+      "topic": "readme"
     },
     "b10ee312fed0": {
       "exemplar": "soccer-manager",
@@ -1524,11 +1895,11 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "project": "workspace/projects/youtube-video-creation",
       "rule_id": "quality.long-function",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "open",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
@@ -1573,6 +1944,19 @@
       "seen_count": 1,
       "status": "resolved",
       "title": "必要な環境変数の一覧が無い",
+      "topic": "env"
+    },
+    "ba3f6d226a0a": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/libs/puzzle-generator",
+      "rule_id": "xpol.env-example",
+      "seen_count": 2,
+      "status": "open",
+      "title": ".env.example で必要な設定を明示する（youtube-video-creation で既に実践中）",
       "topic": "env"
     },
     "bca5cc28e425": {
@@ -1636,6 +2020,19 @@
       "title": "tests/ が空のまま置かれている",
       "topic": "tests"
     },
+    "c03486aa7683": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/rekishi-chiso",
+      "rule_id": "docs.readme-no-runbook",
+      "seen_count": 1,
+      "status": "open",
+      "title": "README に「動かし方」のコマンドが書かれていない",
+      "topic": "readme"
+    },
     "c1768cf60bbb": {
       "exemplar": null,
       "first_seen": "2026-08-29T12:20:52+00:00",
@@ -1651,6 +2048,32 @@
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
+    "c1e949c617b1": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/hikari7",
+      "rule_id": "docs.readme-missing",
+      "seen_count": 1,
+      "status": "open",
+      "title": "README が無い",
+      "topic": "readme"
+    },
+    "c28a4d70a6bb": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/dailyquarry-home",
+      "rule_id": "env.no-example",
+      "seen_count": 2,
+      "status": "open",
+      "title": "必要な環境変数の一覧が無い",
+      "topic": "env"
+    },
     "c438bc0959a7": {
       "exemplar": "workspace/projects/ai-side-business",
       "first_seen": "2026-09-01T04:44:27+00:00",
@@ -1664,6 +2087,19 @@
       "status": "resolved",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
+    },
+    "c545a749fdb8": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/goso-boat",
+      "rule_id": "quality.oversized-file",
+      "seen_count": 2,
+      "status": "open",
+      "title": "1ファイルが大きくなりすぎている",
+      "topic": "structure"
     },
     "c74d8d0e3822": {
       "exemplar": "workspace/projects/ai-side-business",
@@ -1712,16 +2148,55 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "note": "指摘の index.html は cohabitation-budget の実在ファイルを正しく説明している行。記述は実在物と一致",
       "project": "workspace",
       "rule_id": "docs.stale-reference",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:58:20+00:00",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
+    },
+    "cd018fdc366a": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/price-tracker",
+      "rule_id": "quality.long-function",
+      "seen_count": 2,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
+    },
+    "d02795e43ac4": {
+      "exemplar": null,
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/kdp-novel",
+      "rule_id": "deps.undeclared",
+      "seen_count": 2,
+      "status": "open",
+      "title": "依存パッケージがどこにも書かれていない",
+      "topic": "deps"
+    },
+    "d074a0b72405": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/rekishi-chiso",
+      "rule_id": "quality.long-function",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
     },
     "d562584e6f6a": {
       "exemplar": null,
@@ -1736,6 +2211,32 @@
       "status": "resolved",
       "title": "依存パッケージがどこにも書かれていない",
       "topic": "deps"
+    },
+    "d5677024c88d": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/ipa-kakomon",
+      "rule_id": "xpol.claude-md",
+      "seen_count": 2,
+      "status": "open",
+      "title": "CLAUDE.md で AI に前提を渡す（soccer-manager で既に実践中）",
+      "topic": "claude-md"
+    },
+    "d56fa431afec": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/ipa-kakomon",
+      "rule_id": "docs.readme-no-runbook",
+      "seen_count": 2,
+      "status": "open",
+      "title": "README に「動かし方」のコマンドが書かれていない",
+      "topic": "readme"
     },
     "d8c07b75dd9a": {
       "exemplar": null,
@@ -1783,12 +2284,12 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "note": "指摘された video.mp4 / subtitles.srt / script.json 等は出力物の説明。scripts/setup_voicevox_core.py も実在。記述は実在物と一致",
       "project": "workspace/projects/youtube-video-creation",
       "rule_id": "docs.stale-reference",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:58:20+00:00",
       "title": "ドキュメントが存在しないファイルを載せている",
@@ -1798,24 +2299,50 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "project": "workspace/projects/soccer-manager",
       "rule_id": "quality.oversized-file",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "open",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
+    },
+    "dd90d97e854b": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/tenbin",
+      "rule_id": "env.no-example",
+      "seen_count": 1,
+      "status": "open",
+      "title": "必要な環境変数の一覧が無い",
+      "topic": "env"
+    },
+    "debb35841cdc": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/tenbin",
+      "rule_id": "ci.no-test-run",
+      "seen_count": 1,
+      "status": "open",
+      "title": "テストはあるが CI で実行されていない",
+      "topic": "ci"
     },
     "df35c8fe7583": {
       "exemplar": null,
       "first_seen": "2026-09-14T04:48:30+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "project": "workspace/projects/soccer-career",
       "rule_id": "docs.stale-reference",
-      "seen_count": 2,
+      "seen_count": 4,
       "status": "open",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
@@ -1854,16 +2381,29 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-21T04:48:31+00:00",
-      "last_seen_date": "2026-09-21",
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
       "note": "検出された47件は全て platform/ai-lab/site/content/guides/*.md の /tools/... /guides/... で、adsite が生成する公開サイトのURLパス。ファイルパスとして解決できる性質のものではない",
       "project": "workspace",
       "rule_id": "docs.broken-link",
-      "seen_count": 4,
+      "seen_count": 6,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T05:07:04+00:00",
       "title": "ドキュメント内のリンク先が存在しない",
       "topic": "links"
+    },
+    "e3d435f4d199": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-09-28T05:15:58+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/dailyquarry-home",
+      "rule_id": "docs.readme-missing",
+      "seen_count": 2,
+      "status": "open",
+      "title": "README が無い",
+      "topic": "readme"
     },
     "e443781823df": {
       "exemplar": null,
@@ -1900,9 +2440,10 @@
       "last_seen": "2026-09-21T04:48:31+00:00",
       "last_seen_date": "2026-09-21",
       "project": "workspace/projects/price-tracker",
+      "resolved_at": "2026-09-28T05:15:58+00:00",
       "rule_id": "quality.oversized-file",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
     },
@@ -1963,6 +2504,19 @@
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
     },
+    "ece3f0b487fe": {
+      "exemplar": "workspace/projects/youtube-video-creation",
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/rekishi-chiso",
+      "rule_id": "deps.unpinned",
+      "seen_count": 1,
+      "status": "open",
+      "title": "依存バージョンが固定されていない",
+      "topic": "deps"
+    },
     "efcac6367544": {
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
@@ -1977,6 +2531,19 @@
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
+    "f05f0e62b5a0": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/tenbin",
+      "rule_id": "quality.oversized-file",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1ファイルが大きくなりすぎている",
+      "topic": "structure"
+    },
     "f1106e728c4f": {
       "exemplar": "workspace/projects/soccer-manager",
       "first_seen": "2026-09-01T04:44:27+00:00",
@@ -1990,6 +2557,32 @@
       "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
+    },
+    "f24591c33387": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/hikari7",
+      "rule_id": "quality.oversized-file",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1ファイルが大きくなりすぎている",
+      "topic": "structure"
+    },
+    "f512ba7689fa": {
+      "exemplar": null,
+      "first_seen": "2026-10-05T05:29:16+00:00",
+      "issue_url": null,
+      "last_seen": "2026-10-05T05:29:16+00:00",
+      "last_seen_date": "2026-10-05",
+      "project": "workspace/projects/rekishi-chiso",
+      "rule_id": "quality.swallowed-exception",
+      "seen_count": 1,
+      "status": "open",
+      "title": "例外を握りつぶしている箇所がある",
+      "topic": "error-handling"
     },
     "f5d43d1bee7a": {
       "exemplar": null,
@@ -2062,9 +2655,14 @@
       "emitted": 7,
       "resolved": 8
     },
+    "ci.no-test-run": {
+      "dismissed": 0,
+      "emitted": 1,
+      "resolved": 0
+    },
     "ci.no-timeout": {
       "dismissed": 2,
-      "emitted": 15,
+      "emitted": 16,
       "resolved": 21
     },
     "ci.silent-failure": {
@@ -2079,13 +2677,13 @@
     },
     "deps.undeclared": {
       "dismissed": 0,
-      "emitted": 2,
+      "emitted": 3,
       "resolved": 2
     },
     "deps.unpinned": {
       "dismissed": 0,
-      "emitted": 10,
-      "resolved": 11
+      "emitted": 11,
+      "resolved": 12
     },
     "docs.bom": {
       "dismissed": 0,
@@ -2099,22 +2697,22 @@
     },
     "docs.readme-missing": {
       "dismissed": 0,
-      "emitted": 5,
+      "emitted": 9,
       "resolved": 6
     },
     "docs.readme-no-runbook": {
       "dismissed": 0,
-      "emitted": 1,
-      "resolved": 2
+      "emitted": 4,
+      "resolved": 3
     },
     "docs.stale-reference": {
       "dismissed": 0,
-      "emitted": 12,
+      "emitted": 14,
       "resolved": 9
     },
     "env.no-example": {
       "dismissed": 0,
-      "emitted": 3,
+      "emitted": 8,
       "resolved": 4
     },
     "legal.no-license": {
@@ -2124,27 +2722,27 @@
     },
     "quality.long-function": {
       "dismissed": 0,
-      "emitted": 9,
-      "resolved": 5
+      "emitted": 13,
+      "resolved": 6
     },
     "quality.oversized-file": {
       "dismissed": 0,
-      "emitted": 8,
-      "resolved": 8
+      "emitted": 13,
+      "resolved": 10
     },
     "quality.swallowed-exception": {
       "dismissed": 0,
-      "emitted": 8,
-      "resolved": 11
+      "emitted": 10,
+      "resolved": 12
     },
     "scaffold.dormant": {
       "dismissed": 0,
-      "emitted": 4,
+      "emitted": 5,
       "resolved": 3
     },
     "secret.gitignore-env": {
       "dismissed": 0,
-      "emitted": 2,
+      "emitted": 7,
       "resolved": 3
     },
     "test.empty-dir": {
@@ -2159,17 +2757,17 @@
     },
     "xpol.claude-md": {
       "dismissed": 0,
-      "emitted": 12,
+      "emitted": 13,
       "resolved": 14
     },
     "xpol.env-example": {
       "dismissed": 0,
-      "emitted": 4,
+      "emitted": 8,
       "resolved": 4
     },
     "xpol.pinned-deps": {
       "dismissed": 0,
-      "emitted": 3,
+      "emitted": 4,
       "resolved": 1
     }
   },
@@ -2177,8 +2775,10 @@
     "2026-08-29": "https://github.com/nami0817kk-arch/ai-lab/issues/1",
     "2026-09-07": "https://github.com/nami0817kk-arch/workspace/issues/74",
     "2026-09-14": "https://github.com/nami0817kk-arch/workspace/issues/175",
-    "2026-09-21": "https://github.com/nami0817kk-arch/workspace/issues/180"
+    "2026-09-21": "https://github.com/nami0817kk-arch/workspace/issues/180",
+    "2026-09-28": "https://github.com/nami0817kk-arch/workspace/issues/404",
+    "2026-10-05": "https://github.com/nami0817kk-arch/workspace/issues/580"
   },
-  "updated_at": "2026-09-21T04:48:32+00:00",
+  "updated_at": "2026-10-05T05:29:17+00:00",
   "version": 1
 }

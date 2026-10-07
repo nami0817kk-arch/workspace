@@ -1,0 +1,5 @@
+# 日本語を原本とし、英語はその翻訳として管理する（サカマネと同じ）。
+arb-dir: lib/l10n
+template-arb-file: app_ja.arb
+output-localization-file: app_localizations.dart
+untranslated-messages-file: l10n_untranslated.json

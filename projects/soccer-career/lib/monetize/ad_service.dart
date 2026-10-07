@@ -23,7 +23,10 @@ abstract class AdService {
 
   /// 全画面広告を出し、閉じられるまで待つ。
   /// 在庫が無いときは何もせずに戻る（広告のために進行を止めない）。
-  Future<void> showInterstitial();
+  ///
+  /// **実際に出せたかどうかを返す。** 返さないと、在庫が無くて何も
+  /// 起きなかった回まで「出した」ことになり、次の機会が潰れる。
+  Future<bool> showInterstitial();
 
   void dispose();
 }
@@ -37,7 +40,7 @@ class NoAdService implements AdService {
   bool get isInterstitialReady => false;
 
   @override
-  Future<void> showInterstitial() async {}
+  Future<bool> showInterstitial() async => false;
 
   @override
   void dispose() {}
@@ -85,58 +88,116 @@ class AdMobAdService implements AdService {
   static String get _unitId => isIOS ? _iosUnitId : _androidUnitId;
 
   InterstitialAd? _ad;
-  bool _loading = false;
+  DateTime? _loadedAt;
+  Completer<void>? _pendingLoad;
+
+  /// 読み込んだ広告が使える時間。
+  ///
+  /// **AdMob の広告は1時間で期限切れになる。** 公式が「キャッシュを捨てて
+  /// 1時間ごとに読み直せ」と書いている。持ったままにしていると、読んだ広告を
+  /// 何時間でも「準備できている」と扱い、いざ出そうとして失敗する。
+  /// `soccer-manager` はこれで、実測7日のリクエスト231回に対して表示6回だった。
+  /// https://developers.google.com/admob/android/rewarded
+  static const Duration adLifetime = Duration(minutes: 55);
+
+  /// シーズンの切れ目で広告を読むのに待てる時間。
+  /// これを過ぎたら広告なしで先へ進める（広告のために進行を止めない）。
+  static const Duration loadTimeout = Duration(seconds: 5);
+
+  /// 読み込んでから[adLifetime]を過ぎていれば、もう出せない。
+  /// 時計を渡せるようにしてあるのは、検査から呼ぶため。
+  static bool adExpired(DateTime? loadedAt, {DateTime? now}) =>
+      loadedAt == null ||
+      (now ?? DateTime.now()).difference(loadedAt) >= adLifetime;
+
+  /// 期限切れの広告を捨てる。**ここで読み直さない**——次に出すのは
+  /// 38節先なので、読み直してもまた期限切れになる。
+  void _dropIfExpired() {
+    if (_ad != null && adExpired(_loadedAt)) {
+      _ad!.dispose();
+      _ad = null;
+      _loadedAt = null;
+    }
+  }
 
   @override
   Future<void> initialize() async {
     await MobileAds.instance.initialize();
-    unawaited(_load());
+    // **ここで先読みしない。** 広告が出るのはシーズンの切れ目だけで、
+    // 1シーズンは38節ある。起動時に読んでも、出す頃には必ず期限切れに
+    // なっている——1シーズンに1回の確実な表示を、そのたびに落とすことになる。
+    // 読むのは[showInterstitial]の直前。
   }
 
-  Future<void> _load() async {
-    if (_loading || _ad != null) return;
-    _loading = true;
-    try {
-      await InterstitialAd.load(
-        adUnitId: _unitId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (ad) {
-            _ad = ad;
-            _loading = false;
-          },
-          // 読み込み失敗は珍しくない（在庫切れ・通信断）。例外にせず、
-          // 次に必要になったときに読み直す。
-          onAdFailedToLoad: (error) {
-            _ad = null;
-            _loading = false;
-          },
-        ),
-      );
-    } catch (_) {
+  /// 広告が届く（か、届かないと分かる）まで完了しない Future を返す。
+  ///
+  /// **`InterstitialAd.load` を `await` しても広告は待てない。** あれが返るのは
+  /// 「ネイティブ側に読み込みを頼み終えた」時点で、広告そのものは
+  /// `onAdLoaded` で後から届く。`await` しただけで在庫を見ると必ず空なので、
+  /// 出す直前に読む作りが成り立たなくなる。だから待ち合わせを自分で持つ。
+  Future<void> _load() {
+    if (_ad != null) return Future<void>.value();
+    // すでに読み込み中なら、その待ち合わせに相乗りする（二重に頼まない）。
+    final pending = _pendingLoad;
+    if (pending != null) return pending.future;
+
+    final completer = Completer<void>();
+    _pendingLoad = completer;
+    void done() {
+      if (_pendingLoad == completer) _pendingLoad = null;
+      if (!completer.isCompleted) completer.complete();
+    }
+
+    InterstitialAd.load(
+      adUnitId: _unitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          _ad = ad;
+          _loadedAt = DateTime.now();
+          done();
+        },
+        // 読み込み失敗は珍しくない（在庫切れ・通信断）。例外にせず、
+        // 次に必要になったときに読み直す。
+        onAdFailedToLoad: (error) {
+          _ad = null;
+          _loadedAt = null;
+          done();
+        },
+      ),
+    ).catchError((Object _) {
       _ad = null;
-      _loading = false;
-    }
+      _loadedAt = null;
+      done();
+    });
+    return completer.future;
   }
 
   @override
-  bool get isInterstitialReady => _ad != null;
+  bool get isInterstitialReady {
+    _dropIfExpired();
+    return _ad != null;
+  }
 
   @override
-  Future<void> showInterstitial() async {
-    final ad = _ad;
-    if (ad == null) {
-      unawaited(_load());
-      return;
+  Future<bool> showInterstitial() async {
+    _dropIfExpired();
+    if (_ad == null) {
+      // **出す直前に読む。** シーズンの切れ目は集計の後なので、ここで
+      // 数秒は待てる。読めなければ広告なしで先へ進める。
+      await _load().timeout(loadTimeout, onTimeout: () {});
     }
+    final ad = _ad;
+    if (ad == null) return false;
     _ad = null;
+    _loadedAt = null;
 
     // **閉じられるまで待つ。** 待たないと、広告の裏で次のシーズンの
     // 画面が動き出す。
     final closed = Completer<void>();
     void finish(Ad ad) {
       ad.dispose();
-      unawaited(_load()); // 次のシーズンのために先読みする
+      // 次のシーズンは38節先。ここで読んでも期限切れになるので読まない。
       if (!closed.isCompleted) closed.complete();
     }
 
@@ -146,12 +207,14 @@ class AdMobAdService implements AdService {
     );
     await ad.show();
     await closed.future;
+    return true;
   }
 
   @override
   void dispose() {
     _ad?.dispose();
     _ad = null;
+    _loadedAt = null;
   }
 }
 

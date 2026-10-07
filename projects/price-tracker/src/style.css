@@ -104,13 +104,15 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 /* ポイント込みの実質価格。価格を置き換えず、併記する。 */
 .point-line { margin: 4px 0 0; font-size: 13px; }
 .point-line:empty { display: none; }
+/* 実質が上がったときの印。行の末尾に置くので、右の余白は要らない */
+.point-line .up, .lede .up { margin: 0 0 0 6px; }
 .point { display: inline-block; padding: 1px 8px; margin-right: 8px; border-radius: 999px;
   font-size: 12px; color: var(--near); border: 1px solid currentColor; }
 .eff { color: var(--ink); font-weight: 600; }
 .eff small { font-weight: 400; color: var(--muted); font-size: 11px; }
 .empty { padding: 24px; text-align: center; color: var(--muted); list-style: none;
   border: 1px dashed var(--line); border-radius: var(--radius); }
-.empty .go { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+.go { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
   margin-top: 12px; }
 .thin { margin: 0 0 14px; padding: 10px 12px; font-size: 13px; color: var(--muted);
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -119,6 +121,9 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   font-size: 12px; border: 1px solid currentColor; white-space: nowrap; }
 .badge.low { color: var(--low); } .badge.near { color: var(--near); }
 .badge.drop { color: var(--down); } .badge.flat { color: var(--flat); }
+/* ポイント込みで最安。価格の最安と同じ緑にするが、枠を破線にして分ける
+   （価格の図でも実質価格は破線で描いている。意味づけを揃える）。 */
+.badge.efflow { color: var(--low); border-style: dashed; }
 
 /* 送料と在庫。買うかどうかに直結するので、判定と並べて出す。 */
 .cond { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px;
@@ -186,7 +191,18 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .card .name { padding: 2px 0; }
 .watch-mini, .reset, .pager a { min-height: 32px; display: inline-flex;
   align-items: center; }
-.to-top { display: inline-block; margin: 8px 0 0; font-size: 13px; }
+/* 一覧は携帯で19,000px 近くになる。末尾にだけ置いた戻りリンクは、
+   途中で読むのをやめた人には届かない。スクロールに追従させる。 */
+.to-top { position: fixed; right: 16px; bottom: 16px; z-index: 30;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 15px; font-size: 13px; text-decoration: none;
+  color: var(--accent); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+  opacity: 0; visibility: hidden; transition: opacity .15s; }
+.to-top.on { opacity: 1; visibility: visible; }
+.to-top:hover { border-color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .to-top { transition: none; } }
 .hit .since { color: var(--muted); font-size: 12px; margin-left: 8px; }
 .hit .badge { margin-left: 8px; }
 
@@ -240,6 +256,12 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .buy { display: inline-block; padding: 11px 22px; border-radius: var(--radius);
   background: var(--accent); color: var(--bg); font-weight: 700; text-decoration: none; }
 .shop { color: var(--muted); font-size: 14px; }
+/* 価格のすぐ下に置くほうの買う口。下にあるものと同じ見た目にする
+   （読み終えた人向けのものは残す） */
+.cta.top { margin: 0 0 18px; }
+/* 同じ分類の中での位置。動いていない商品（71.6%）にも言えることを出す */
+.rankin { margin: 8px 0 0; }
+.rankin strong { font-size: 17px; }
 
 .static p, .static li { max-width: 62em; }
 
@@ -299,6 +321,32 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .genre a:hover { color: var(--accent); }
 .genre .count { flex: none; font-size: 13px; color: var(--muted);
   font-variant-numeric: tabular-nums; }
+/* そのジャンルらしい語。価格.com のカテゴリの下のサブ項目に当たる。
+   名前と件数の下に回すので、ます目は2段になる。 */
+.genre { flex-wrap: wrap; }
+.genre .terms { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px 10px;
+  margin-top: 6px; font-size: 12px; }
+.genre .terms a { position: relative; z-index: 1; font-weight: 400;
+  color: var(--muted); text-decoration: none; }
+.genre .terms a:hover { color: var(--accent); text-decoration: underline; }
+/* 中分類は件数を添える（ページがあるので、押す前に手応えが分かる） */
+.genre .terms.subs a { color: var(--ink); }
+.genre .terms.subs .n { margin-left: 3px; font-size: 11px; color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+
+/* 61. 一覧の頭に置く、語での絞り込み。価格.com のカテゴリページは
+   「注目スペック」とメーカーを件数つきで並べていて、1,500件の中から1手で
+   奥へ入れる。うちはページ送りしか無く、道が「次へ」だけだった。 */
+.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
+  margin: 0 0 14px; }
+.chips-label { font-size: 12px; color: var(--muted); margin-right: 2px; }
+.chips a { display: inline-flex; align-items: center; gap: 6px; min-height: 32px;
+  padding: 4px 12px; font-size: 13px; text-decoration: none; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 999px; }
+.chips a:hover { border-color: var(--accent); color: var(--accent); }
+.chips .n { font-size: 11px; color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+.chips a:hover .n { color: inherit; }
 @media (min-width: 720px) {
   .genres { grid-template-columns: 1fr 1fr; }
 }
@@ -321,7 +369,7 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   .foot-nav a { padding: 8px 0; }
   .tools select { padding: 9px 10px; }
   .tools .check { padding: 6px 0; }
-  .to-top { display: inline-block; padding: 9px 0; }
+  .to-top span { display: none; }   /* 携帯では矢印だけ。本文に重ねない */
   .pager a, .pager .now { padding: 9px 13px; }
   .jump a { padding: 7px 11px; }
   /* 小さすぎる字を13pxへ。12pxは日本語では読みにくい。 */
@@ -333,3 +381,614 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   /* 商品ページの画像が画面の高さの3分の1を占め、値段を画面の外へ押していた */
   .item .hero img { max-width: 180px; }
 }
+
+/* ===== 構成とデザイン（2026-09-26） ===== */
+
+/* ヘッダに手がかりを置く。サイト名だけでは何のサイトか分からなかった。
+   説明は config.json の description を出しているので二重に書かない。 */
+.site-head .wrap { align-items: center; }
+.site-name { display: inline-flex; align-items: center; gap: 8px; }
+.site-name .mark { width: 18px; height: 18px; flex: none; border-radius: 5px;
+  background: var(--accent); position: relative; }
+.site-name .mark::after { content: ""; position: absolute; left: 50%; top: 4px;
+  width: 2px; height: 7px; margin-left: -1px; background: var(--panel);
+  box-shadow: 0 7px 0 -1px var(--panel), -3px 5px 0 -1px var(--panel),
+              3px 5px 0 -1px var(--panel); }
+.tagline { flex: 1 1 100%; order: 3; margin: 0; font-size: 13px; color: var(--muted); }
+.site-nav { order: 2; }
+
+/* 広い画面でカードの右側が空いていた。値段を右へ回すと商品名が潰れたので、
+   推移の図をそこへ持っていく。図は下に置くより値段の隣にある方が読める。 */
+@media (min-width: 760px) {
+  .card .body { display: grid; grid-template-columns: 1fr 150px;
+    column-gap: 20px; align-items: start; }
+  .card > .body > .badge, .card .name, .card .price,
+  .card .point-line, .card .meta { grid-column: 1; }
+  /* グリッドの子は既定で列いっぱいに伸びる。札は中身の幅で止める */
+  .card > .body > .badge { justify-self: start; }
+  .card .card-spark { grid-column: 2; grid-row: 1 / span 4;
+    margin-top: 0; align-self: center; }
+  .card .score { grid-column: 1 / -1; }
+}
+
+/* 点は札の集まりに埋もれていた。満点に対する位置を帯で見せる。 */
+.score { position: relative; padding-top: 10px; }
+.score::before { content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: 2px; background: var(--line); }
+.score::after { content: ""; position: absolute; top: 0; left: 0;
+  width: var(--fill, 0%); height: 3px; border-radius: 2px; background: var(--accent); }
+
+/* 動いていない商品の図は畳む。88%（11,172件）が一直線だった。 */
+.chart.flat > summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.chart.flat[open] > summary { margin-bottom: 8px; }
+
+/* 読み終えた先の行き先。見出しの上ではなく本文の終わりに置く。 */
+.onward { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px;
+  margin: 28px 0 0; padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 14px; }
+.onward > span { color: var(--muted); }
+
+/* 見出しの強弱。h1 と h2 が近すぎて、どこで話が変わるのか読めなかった。 */
+h2 { padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.item h2 { margin-top: 32px; }
+
+/* 一覧の索引。名前が並ぶだけでは「よく動く」と「最安値更新」を使い分けられない。 */
+.views { margin: 36px 0 0; }
+.views ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.views li { display: grid; grid-template-columns: auto auto 1fr; gap: 4px 12px;
+  align-items: baseline; padding: 10px 14px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.views a { font-weight: 600; text-decoration: none; white-space: nowrap; }
+.views a:hover { color: var(--accent); }
+.views .n { font-size: 13px; color: var(--muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap; }
+.views .what { font-size: 13px; color: var(--muted); }
+@media (max-width: 560px) {
+  .views li { grid-template-columns: 1fr auto; }
+  .views .what { grid-column: 1 / -1; }
+}
+
+/* 検索の例。入力欄だけだと何を打てば当たるのか分からなかった。 */
+.examples { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
+  margin: 12px 0 0; }
+.examples > span { font-size: 13px; color: var(--muted); }
+.examples button { padding: 6px 12px; font-size: 14px; cursor: pointer;
+  color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 999px; font-family: inherit; }
+.examples button:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ===== 見た目の作り直し（2026-09-26）
+   参考にしたのは価格.com（順位を出す・価格を主役にする）と
+   camelcamelcamel（判定を写真の角に置く・絞り込みを押せる札にする）。 */
+
+/* 順位。並び順に意味があることを画面から読めるようにする。 */
+.card { position: relative; transition: border-color .12s, box-shadow .12s; }
+.card:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
+.rank { position: absolute; top: -8px; left: -8px; z-index: 1;
+  min-width: 26px; height: 26px; padding: 0 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+  color: var(--panel); background: var(--muted); border-radius: 999px; }
+/* 上位3件だけ色を変える。全部を強調すると強調にならない。 */
+.card:nth-child(1) .rank, .card:nth-child(2) .rank, .card:nth-child(3) .rank {
+  background: var(--accent); }
+
+/* 判定は名前の上に1行で出す。価格の後ろに並べると、価格・判定・送料が
+   一列に連なってどれが値段なのか分からなくなる。写真の角に載せる形も
+   試したが、「記録した中で最安」は携帯（72px）で2行になり写真を半分隠した。
+   日本語の長い札は、角より行で置く方が読める。 */
+.card .thumb { align-self: flex-start; }
+.card .body > .badge { display: inline-block; margin: 0 0 4px; padding: 2px 9px;
+  font-size: 12px; font-weight: 600; border: 0; border-radius: 999px;
+  color: var(--panel); }
+.card .body > .badge.low { background: var(--low); }
+.card .body > .badge.near { background: var(--near); }
+.card .body > .badge.drop { background: var(--down); }
+.card .body > .badge.efflow { background: var(--low);
+  border: 1px dashed rgba(255, 255, 255, .75); padding: 1px 8px; }
+.card .body > .badge.flat { display: none; }   /* 「横ばい」は貼る値打ちがない */
+
+/* 価格を主役にする。カードの中でいちばん大きい字にする。 */
+.card .price { margin: 8px 0 4px; }
+.card .price strong { font-size: 22px; letter-spacing: -.01em; }
+
+/* 商品写真。白背景の写真が紙の上に浮くので、薄い枠で受ける。 */
+.card img, .card .noimg { border: 1px solid var(--line); padding: 4px; }
+
+/* 絞り込みは押せる札にして、畳まずに出す。使うのはこの2つがほとんど。 */
+.quick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin: 0 0 10px; }
+.quick .chip { display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; font-size: 14px; cursor: pointer; white-space: nowrap;
+  color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 999px; }
+.quick .chip:hover { border-color: var(--accent); }
+.quick .chip:has(input:checked) { color: var(--accent);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.quick .chip input { width: 16px; height: 16px; accent-color: var(--accent); }
+.quick .of { margin-left: auto; font-size: 13px; color: var(--muted); }
+
+/* 見出しの段。h1 を大きくして、一覧の題と本文の差をはっきりさせる。 */
+h1 { font-size: 27px; letter-spacing: -.01em; }
+@media (max-width: 560px) {
+  h1 { font-size: 22px; }
+  .card .price strong { font-size: 20px; }
+  .rank { top: -6px; left: -6px; min-width: 23px; height: 23px; font-size: 12px; }
+  .quick .of { width: 100%; margin-left: 0; }
+}
+
+/* トップの一番上の検索窓。価格を追うサイトで最初にやるのは
+   「自分の商品を探す」。camelcamelcamel も入口の一番上が検索窓だった。 */
+.hero { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+.hero input { flex: 1 1 260px; min-width: 0; padding: 12px 15px; font-size: 16px;
+  color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.hero input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.hero button { padding: 12px 24px; font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: inherit; color: var(--panel);
+  background: var(--accent); border: 1px solid var(--accent);
+  border-radius: var(--radius); }
+.hero button:hover { filter: brightness(1.08); }
+/* 読み上げにだけ渡す見出し。目で見る人には placeholder が同じことを言う。 */
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ===== 図を読めるようにする（2026-09-27）
+   価格.com も Keepa も、図に触れればその日の値が出る。こちらは最安と最高の
+   目盛りしか無く、途中の日がいくらだったか読めなかった。 */
+.chart-svg { cursor: crosshair; }
+/* 読み取りの目印。SVG に hidden プロパティは無いので、クラスで出し入れする。 */
+.chart-guide, .chart-dot, .chart-dot-eff { visibility: hidden; }
+.chart-svg.reading .chart-guide,
+.chart-svg.reading .chart-dot,
+.chart-svg.reading .chart-dot-eff { visibility: visible; }
+.chart-read { min-height: 1.7em; margin: -12px 0 16px; font-size: 14px;
+  color: var(--ink); font-variant-numeric: tabular-nums; }
+.chart-read:empty::before { content: "図に触れると、その日の値が出ます";
+  color: var(--muted); font-size: 13px; }
+
+/* 凡例。実線と破線の意味を、文章ではなく図の近くで示す。 */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: -8px 0 10px;
+  font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend span::before { content: ""; width: 22px; height: 0;
+  border-top: 2px solid var(--accent); }
+.legend .k-eff::before { border-top-style: dashed; opacity: .75; }
+
+/* 配色の切り替え。style.css は data-theme に対応していたのに、
+   切り替える手立てをどこにも置いていなかった。 */
+.updated { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.theme-btn { padding: 5px 12px; font-size: 13px; cursor: pointer;
+  font-family: inherit; color: var(--muted); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 999px; }
+.theme-btn:hover { color: var(--accent); border-color: var(--accent); }
+@media (max-width: 560px) {
+  .theme-btn { padding: 8px 14px; }
+}
+
+/* ===== 一覧カードの作り直し（2026-09-28）
+   Amazon の検索結果を見て当てた。あちらは商品画像が大きく、価格が一行で強く、
+   付帯情報はその下に小さく積む。こちらは画像が72pxしかなく、価格と下げ幅が
+   2行に分かれ、点の内訳が5段に縦積みになってカードの3割を占めていた。 */
+
+/* 1. 商品画像を大きくする。文字が主役になっていて、何の商品か分かりにくかった */
+.card .thumb { flex: 0 0 104px; }
+.card img, .card .noimg { width: 104px; height: 104px; }
+
+/* 2. 価格の行を詰める。変化・元の値段・現在の値段・送料が1行に収まらず、
+   2行に割れて視線が上下に飛んでいた。元の値段は小さくして場所を空ける。 */
+.card .price { display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: 2px 7px; margin: 6px 0 0; }
+.card .price .was { margin-right: 0; font-size: 13px; }
+.card .down small, .card .up small { font-size: 12px; }
+
+/* 3. 点の内訳を2列に並べる。幅が足りず1つずつ改行していた（147px＝カードの3割） */
+.score .parts { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+/* 札の中で名前と数字を離しすぎない（右端まで飛んで対に見えなかった） */
+.score .part { justify-content: flex-start; }
+
+/* 4. カードの区切りを強くする。間隔12pxだけでは切れ目が読めなかった */
+.cards { gap: 14px; }
+
+@media (max-width: 560px) {
+  .card .thumb { flex-basis: 88px; }
+  .card img, .card .noimg { width: 88px; height: 88px; }
+  /* 内訳は狭い画面では1列。2列にすると「ポイント込みの下げ幅」が折り返して
+     かえって背が伸びた（実測で札が22→39px）。字と余白だけ詰める。 */
+  .score .parts { grid-template-columns: 1fr; gap: 2px; }
+  .score .part { padding: 1px 7px; font-size: 11px; gap: 4px; }
+}
+
+/* 5. 見出しと本文の間隔をそろえる。h1 直後の説明文だけ詰まっていた */
+h1 { margin-bottom: 10px; }
+.lead { line-height: 1.75; max-width: 40em; }
+
+/* 6. 一覧の題と件数を対にする。件数が題から離れて読めていた */
+h1 .count { display: inline-block; padding: 2px 10px; margin-left: 8px;
+  font-size: 14px; color: var(--muted); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 999px; vertical-align: middle; }
+
+/* 7. 表の読みやすさ。行の区切りが無く、目が横に滑っていた（Amazon の仕様表と同じ形） */
+.facts { width: 100%; border-collapse: collapse; margin: 14px 0 20px; }
+.facts th, .facts td { padding: 11px 14px; text-align: left; vertical-align: top;
+  border-bottom: 1px solid var(--line); }
+.facts th { width: 42%; font-weight: 500; color: var(--muted);
+  background: var(--panel); }
+.facts td { font-variant-numeric: tabular-nums; }
+.facts tr:last-child th, .facts tr:last-child td { border-bottom: 0; }
+.facts { border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; }
+
+/* 8. 店名の行。店・記録日数・見守りが詰まって読めなかった。
+   区切り記号を消しただけでは地の文が繋がるので、それぞれを要素に分ける。 */
+.card .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
+  margin-top: 6px; min-width: 0; }
+.card .meta .shop { min-width: 0; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; max-width: 60%; }
+.card .meta .since { flex: none; }
+.watch-mini { margin-left: 0; }
+
+/* 9. 商品名の行間。3行になると詰まって読みにくい */
+.card .name { line-height: 1.55; }
+
+/* 10. 一覧の画像が縦長・横長でも枠の中で揃える（Amazon は正方形の枠で統一） */
+.card img { object-fit: contain; }
+
+/* 11. 商品ページの頭。画像と値段をひとまとまりにする。
+   間に広告表示を挟んでいたため、携帯では値段が690px下にあって
+   最初の画面に入らなかった（Amazon も楽天も画像の隣に値段が来る）。 */
+.lede { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px;
+  margin: 8px 0 14px; }
+.lede .hero { margin: 0; flex: 0 0 auto; }
+.lede .headline { margin: 0; flex: 1 1 200px; }
+@media (max-width: 560px) {
+  .lede { gap: 2px 14px; align-items: flex-start; }
+  .lede .hero img { max-width: 132px; }
+  .lede .headline { flex: 1 1 140px; }
+  .item .headline strong { font-size: 26px; }
+}
+
+/* ===== 第2回（2026-09-28）。トップ・ジャンル・見出し・押しどころ ===== */
+
+/* 12. トップの検索窓が小さく、入口に見えなかった。Amazon も楽天も入口の窓は
+   横いっぱいで大きい。ボタンを窓と同じ行に置いて、押しどころを1つにする。 */
+.hero { gap: 0; }
+.hero input { flex: 1 1 200px; padding: 14px 16px; font-size: 16px;
+  border-radius: var(--radius) 0 0 var(--radius); border-right: 0; }
+.hero button { flex: 0 0 auto; padding: 14px 22px;
+  border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* 13. ジャンルの入口に件数しか無く、どれが厚いか一目で分からなかった。
+   件数を数字として揃える（表と同じ扱い）。 */
+.genre .count { font-variant-numeric: tabular-nums; }
+
+/* 14. 一覧の索引とジャンルの入口で、押せる範囲がリンクの文字だけだった。
+   Amazon も楽天も行ごと押せる。枠の中を全部押せるようにする。 */
+.views li, .genre { position: relative; transition: border-color .12s; }
+.views li:hover, .genre:hover { border-color: var(--accent); }
+.views li a::after, .genre > a::after { content: ""; position: absolute;
+  inset: 0; }
+
+/* 15. 見出しの下の余白が題ごとにばらついていた */
+h2 { margin: 32px 0 12px; }
+.views h2, .howto h2 { margin-top: 36px; }
+
+/* 16. 本文の行長。画面が広いと1行が長くなりすぎて目が戻れない */
+.howto p, .verdict, .note { max-width: 42em; }
+
+/* 17. パンくずが本文と同じ濃さで、見出しと競っていた */
+.crumb { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+/* 18. 商品の説明（楽天の文章）が本文と同じ濃さで、こちらの判定と紛れていた */
+.caption { color: var(--muted); font-size: 14px; line-height: 1.8; }
+
+/* 19. 「似た商品」「同じ店の商品」の一覧が詰まっていた。行ごとに区切る。 */
+.hits { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.hits li { display: flex; flex-wrap: wrap; align-items: baseline;
+  justify-content: space-between; gap: 4px 12px; padding: 11px 14px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); }
+.hits li:hover { border-color: var(--accent); }
+.hits a { text-decoration: none; }
+.hits .price { flex: none; font-variant-numeric: tabular-nums; color: var(--ink); }
+@media (min-width: 720px) { .hits { grid-template-columns: 1fr 1fr; } }
+
+/* 20. 押しどころの当たり判定。一覧の索引・ジャンルは行が細かった */
+@media (max-width: 560px) {
+  .views li { padding: 13px 14px; }
+  .genre { padding: 14px 15px; }
+  .hits li { padding: 13px 14px; }
+}
+
+/* ===== 第3回（2026-09-28）。広い画面の使い方と、細部 ===== */
+
+/* 21. 広い画面でカードの中身が左に寄り、右が空いていた。
+   推移の図を大きくして、空きを埋める（この図がこのサイトの持ち物） */
+@media (min-width: 760px) {
+  .card .body { grid-template-columns: 1fr 190px; }
+  .card-spark .spark { max-width: 190px; }
+}
+
+/* 22. 一覧の並び順が変わったとき、何で並んでいるか画面に残らなかった */
+.tools-box > summary { font-weight: 600; }
+.quick .chip:has(input:checked)::after { content: " ●"; font-size: 9px; }
+
+/* 23. ページ送りの現在地が他と同じ大きさで埋もれていた */
+.pager .now { font-size: 15px; }
+
+/* 24. 統計の行（12,658商品を追跡…）が本文と同じ濃さで、読み飛ばせなかった */
+.stats { padding: 10px 0; border-bottom: 1px solid var(--line); }
+
+/* 25. 広告表示が本文と同じ幅で、文章の一部に見えていた */
+.ad-notice { max-width: 46em; }
+
+/* 26. 商品ページの見出しが長く、2〜4行になっても行間が本文と同じだった */
+.item h1 { line-height: 1.45; margin-bottom: 6px; }
+
+/* 27. 価格の記録の表（日付ごと）が facts と同じ見た目で、区別が付かなかった */
+.history th { width: 34%; }
+.history td:last-child { color: var(--muted); }
+
+/* 28. 「次の行き先」が本文と地続きで、終わりに見えなかった */
+.onward { margin-top: 36px; padding-top: 18px; }
+.onward a { padding: 7px 0; }
+
+/* 29. 暗い配色のとき、カードの影が背景に溶けて枠が見えなかった */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .card:hover,
+  :root:not([data-theme="light"]) .views li:hover { box-shadow: none; }
+}
+:root[data-theme="dark"] .card:hover,
+:root[data-theme="dark"] .views li:hover { box-shadow: none; }
+
+/* 30. 動きを減らす設定の端末では、色や枠の変化も止める */
+@media (prefers-reduced-motion: reduce) {
+  .card, .views li, .genre, .hits li { transition: none; }
+}
+
+/* 31. 幅360pxの端末で「記録」の表が画面から89pxはみ出していた。
+   見出しセルに白ヌケ防止の nowrap が残っていて、長い項目名が折り返せなかった。 */
+.facts th { white-space: normal; }
+
+/* 32. 同じく幅360pxで、店名の長い商品のカードが画面から出ていた（最大29px）。
+   一覧は1列のグリッドだが、列幅の下限が中身の最小幅になるため、
+   縮められない中身があると列ごと画面外へ伸びていた。 */
+.cards { grid-template-columns: minmax(0, 1fr); }
+.card { min-width: 0; }
+.card .meta .shop { max-width: 100%; }
+
+/* 33. 日付別・記録の一覧は、枠に触れると色が変わるのに押せるのは文字だけだった。
+   押せる範囲を行全体に広げる（一覧カードと同じやり方）。 */
+.hits li { position: relative; }
+.hits li > a::after { content: ""; position: absolute; inset: 0; }
+
+/* 34. 記録ページの表に並ぶ日付・ジャンルのリンクが、
+   セルの中で高さ21pxしか無く、指で押しにくかった。 */
+.facts th > a:only-child { display: block; margin: -11px -14px; padding: 11px 14px; }
+
+/* 35. 商品ページの折り畳み2つ（商品名・図）が高さ22pxで、
+   ヘッダの折り畳みだけ42pxあり、揃っていなかった。 */
+.fullname > summary, .chart.flat > summary {
+  padding: 9px 0; min-height: 40px; display: flex; align-items: center; }
+
+/* 36. ヘッダのサイト名が高さ27px。押しどころとして小さい。 */
+.site-name { padding: 6px 0; }
+
+/* 37. 並び替え・価格帯の選択と「条件を外す」が高さ32px未満だった。 */
+.tools select { min-height: 38px; }
+.reset { min-height: 38px; }
+
+/* 38. 画面が広いとき、本文が1行52〜64字になって目が戻れなかった。
+   日本語は1行40字前後までが読みやすい。
+   説明ページ（.static）は 62em の指定が残っていて、これが1行52字の原因だった。 */
+.tagline, .site-foot .disclaimer, .howto p,
+main > p, main > section > p, main > div > p, .fullname p, .desc p { max-width: 40em; }
+.static p, .static li { max-width: 40em; }
+.caption, .card-note, .item-note { max-width: 40em; }
+
+/* 39. 実質価格の脇の「（目安）」だけが11pxで、他の注記より一段小さかった。 */
+.eff small { font-size: 12px; }
+
+/* 40. 上の並びに、いま見ている一覧の印が無く、自分の居場所が分からなかった。 */
+.site-nav > a[aria-current] { color: var(--accent); font-weight: 700; }
+.site-nav > a[aria-current="page"] { box-shadow: inset 0 -2px 0 var(--accent); }
+.nav-more-list a[aria-current] { color: var(--accent); font-weight: 700; }
+.nav-more.here > summary { color: var(--accent); font-weight: 700; }
+
+/* 41. 価格の図の目盛りが、携帯で実寸 6.7px までつぶれていた。
+   560 の絵を幅 343 に縮めているので、SVG の中に書いた font-size="11" は
+   0.61 倍になる。右端の日付も絵の枠から出て切れていた。
+   目盛りは SVG の外に HTML として置き、縮まないようにする。 */
+.chart-box { max-width: 560px; }
+.chart-plot { position: relative; }
+.chart-plot .chart-svg { display: block; width: 100%; max-width: none; height: auto; }
+.chart-tick { position: absolute; left: 0; width: var(--gutter);
+  padding-right: 8px; transform: translateY(-50%);
+  text-align: right; font-size: 12px; line-height: 1.1; color: var(--muted);
+  font-variant-numeric: tabular-nums; pointer-events: none; }
+.chart-dates { display: flex; justify-content: space-between;
+  margin: 2px 0 0 var(--gutter); padding-right: 1.5%;
+  font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* 42. 目盛りを図の外に出したぶん行が増え、日付の行と
+   「図に触れると〜」の行が重なった（-12px は目盛りが中にあった頃の詰め）。 */
+.chart-read { margin-top: 6px; }
+
+/* 43. 点の内訳の数字が11px。同じ並びの他の文字より一段小さく、
+   携帯では読みづらかった（折り返しは増えない。実測で行数は5のまま）。 */
+@media (max-width: 560px) { .score .part { font-size: 12px; } }
+
+/* 44. 広い画面のときだけ、上の並びの押しどころが 35.8px と
+   携帯（41.8px）より小さかった。指でもマウスでも同じにする。 */
+.site-nav > a, .nav-more > summary { padding: 8px 0; }
+
+/* 45. 一覧のカードは、押せるのが写真（88px）と商品名の行（1行だと29px）だけで、
+   カードの他の場所に触れても何も起きなかった。一覧の行・ジャンルの枠は
+   すでに全体が押せるのに、いちばん数の多いカードだけ揃っていなかった。 */
+.card > .body > .name::after { content: ""; position: absolute; inset: 0; }
+.card .thumb, .card .watch-mini { position: relative; z-index: 1; }
+
+/* 46. 下の並びのリンクが、広い画面でだけ高さ22pxだった（余白が狭い画面にしか無い）。 */
+.foot-nav a { padding: 8px 0; }
+
+/* 47. 上の並びが2行に折り返したとき、上の行と下の行の当たり判定が
+   隙間0pxで接していた（「最安値圏」の下端＝「商品を探す」の上端）。
+   触った指が少しずれただけで隣の一覧へ飛ぶ。下の並びも4pxしかなかった。 */
+@media (max-width: 560px) { .site-nav { gap: 6px 12px; } }
+.foot-nav { gap: 6px 16px; }
+
+/* 48. ページ送りの数字が高さ34pxで、同じ並びの他の押しどころより小さかった。 */
+.watch-mini, .reset, .pager a { min-height: 36px; }
+
+/* 49. ページ飛び（5ページごとの数字）と明暗の切り替えだけが
+   高さ28px・31pxで、他の押しどころ（36px）と揃っていなかった。 */
+.jump a, .theme-btn { min-height: 36px; display: inline-flex;
+  align-items: center; justify-content: center; }
+
+/* 50. 「ほかの一覧」を開くと、幅360pxの端末で畳みの中身が画面から8px出て
+   横スクロールが生まれていた。畳みの位置（並びの何番目に来るか）を基準に
+   していたため、折り返し方によって左にも右にもはみ出す。
+   基準を並び全体にして、並びの左端から出すようにする。 */
+.site-nav { position: relative; }
+.nav-more { position: static; }
+.nav-more-list { left: 0; right: auto; max-width: calc(100vw - 32px); }
+.nav-more-list a { white-space: normal; }
+
+/* 51. 楽天から来る文字列は、区切りの無い長い並びを含むことがある。
+   「HDMIケーブル 0.7m/1m/1.5m/2m/3m/4m/5m/7m/10m…」は幅375pxで
+   カードの中身が219px枠に312px入り、ページが64px横に伸びていた。
+   ブラウザは / で折り返さないので、必要なときだけどこでも折れるようにする。 */
+.card .name, .hits a, .caption, .fullname, h1,
+.views .what, .desc, .verdict, .note { overflow-wrap: anywhere; }
+
+/* 52. 楽天のサムネイルが読めなくなったとき（商品が消える・差し替わる）、
+   壊れた絵の記号と40文字の代替文がカードの中で溢れていた。
+   読めなかった画像は枠だけに差し替える（app.js）。その枠の見た目。 */
+.noimg { display: block; background: var(--bg);
+  border: 1px solid var(--line); border-radius: 6px; }
+.hero .noimg { width: 100%; max-width: 260px; aspect-ratio: 1 / 1; }
+
+/* 53. 価格の記録の表に見出し行が無く、3列目は名前も中身も無い空セルだった。
+   見出しを付けたので、左端の日付だけ色を変えて行の見出しだと分かるようにする。 */
+.history thead th { background: var(--panel); color: var(--ink); font-weight: 600;
+  white-space: nowrap; }
+.history tbody th { font-variant-numeric: tabular-nums; }
+.history td:last-child { color: var(--muted); }
+
+/* 54. 空の一覧・見守りが空のときに出す「行き先」のリンクが高さ27pxだった。
+   ここは他に押すものが無い場所なので、いちばん押しやすくしておく。 */
+.go a { display: inline-flex; align-items: center; min-height: 40px;
+  padding: 0 14px; border: 1px solid var(--line); border-radius: 999px;
+  text-decoration: none; }
+.go a:hover { border-color: var(--accent); }
+
+/* 55. 印刷したときの指定が無く、上下の並び・切り替えボタン・次の行き先まで
+   そのまま紙に出ていた。価格の記録を紙やPDFに残したい人が要るのは、
+   商品名・価格・図・表だけ。リンクは紙の上では押せないので下線も外す。 */
+@media print {
+  .site-nav, .site-foot, .theme-btn, .to-top, .onward, .quick,
+  .tools, .tools-box, .pager, .jump, .watch-btn, .watch-mini,
+  .buy, .skip, .crumb { display: none !important; }
+  .site-head { border: 0; padding: 0; }
+  .site-head .tagline { display: none; }
+  body { background: #fff; color: #000; }
+  .card, .views li, .hits li, .facts { break-inside: avoid; }
+  a { text-decoration: none; color: inherit; }
+  .chart-box, .card-spark { break-inside: avoid; }
+  /* 出典は紙にも残す（どこで見た価格か分からなくなる） */
+  .ad-notice { font-size: 10px; color: #444; }
+}
+
+/* 56. 価格の記録の表を、価格.com の「日別の価格変動」に倣って
+   前日との差が読める形にする。うちは実質価格の差も並べる
+   （楽天の値引きは倍率で動くので、価格の列だけでは動きが見えない日がある）。 */
+.history .move { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.history .move .down { color: var(--down); font-weight: 600; }
+.history .move .up { color: var(--up, #a5462f); }
+.history .move .same { color: var(--muted); }
+.history { table-layout: fixed; }
+.history th, .history td { padding: 8px 4px; font-size: 13px; }
+.history thead th { font-size: 11px; white-space: nowrap; }
+/* 日付は5文字なので狭くてよい。金額の2列を広く取る */
+.history col.c-day { width: 15%; }
+.history col.c-price { width: 24%; }
+.history col.c-move { width: 18.5%; }
+.history tbody th { width: auto; background: none; color: var(--muted); }
+.history td { text-align: right; }
+.history thead th:not(:first-child) { text-align: right; }
+/* 倍率は実質価格の下に小さく添える（列を足すと幅320pxで表がはみ出す） */
+.history td small { display: block; font-size: 11px; color: var(--muted);
+  line-height: 1.3; }
+
+/* 58. 商品ページの頭。送料・在庫・ポイント倍率・実質価格は一覧のカードには
+   出していたのに、商品ページには無かった。価格の次に大きい数字なので、
+   価格のすぐ下に置く。 */
+.lede .point-line { margin: 6px 0 0; font-size: 14px; }
+.lede .headline .cond { vertical-align: middle; }
+
+/* 59. 価格の記録は、古い日を捨てずに畳んでおく。表を2枚出すと配信物が
+   ふくらむ（13,406ページある）ので、1枚の表の行を隠して印で開く。
+   JS は使わない（読み込む前でも開ける）。 */
+.allhist-toggle { position: absolute; width: 1px; height: 1px;
+  opacity: 0; pointer-events: none; }
+.history.limited tbody tr:nth-child(n+15) { display: none; }
+.allhist-toggle:checked ~ .history.limited tbody tr { display: table-row; }
+.allhist-toggle:checked ~ .allhist { display: none; }
+.allhist { display: inline-block; margin: 8px 0 0; padding: 8px 14px;
+  min-height: 36px; border: 1px solid var(--line); border-radius: 8px;
+  font-size: 13px; color: var(--ink); cursor: pointer; }
+.allhist:hover { background: var(--panel); }
+.allhist-toggle:focus-visible ~ .allhist { outline: 2px solid var(--accent);
+  outline-offset: 2px; }
+
+/* 60. 索引は広い画面では面で並べる。縦1列だと、幅1900pxで右がまるごと空き、
+   11項目が縦に伸びて一画面に収まらなかった（2026-09-28 にユーザーの画面で
+   価格.com のトップと並べて確認）。あちらは全カテゴリを3列のます目で出す。
+   1マスが狭くなるので、中では「名前＋件数」と「何を出すか」を縦に積む。 */
+@media (min-width: 640px) {
+  .views > ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .views li { grid-template-columns: 1fr auto; align-items: baseline; }
+  .views .what { grid-column: 1 / -1; margin-top: 2px; }
+}
+/* トップは索引だけのページなので、広い画面では本文の幅も広げる。
+   860px のままだと幅1900pxで右がまるごと空く。カードも表も無いページなので
+   広げても間延びしない（他のページは 860px のまま）。
+   `.howto` はトップにしか無い。:has() が効かない環境では 860px のままで、
+   それでも読めるので害はない。 */
+@media (min-width: 1100px) {
+  main.wrap:has(> .howto) { max-width: 1120px; }
+}
+@media (min-width: 1040px) {
+  .views > ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .genres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+/* 名前が長い一覧（「ポイント込みで安くなった商品」）は折り返してよい。
+   nowrap のままだと1マスからはみ出す */
+@media (min-width: 640px) {
+  .views a { white-space: normal; }
+}
+@media print {
+  /* 紙には全部出す（畳んだままだと記録が欠ける） */
+  .history.limited tbody tr { display: table-row; }
+  .allhist { display: none; }
+}
+
+/* 57. 「記録を始めてからの変化」。価格.com の価格推移ページにある
+   「初値 / 現在 / 差額・値下がり率」の3行表に倣う。
+   いくらから、いくらまで、いくら動いたかが一目で分かる。
+   うちは実質価格の行も並べる（楽天の値引きは倍率で動くため）。 */
+.change { table-layout: fixed; }
+.change th:first-child { width: 16%; white-space: nowrap; }
+.change th, .change td { padding: 8px 4px; }
+.change td { text-align: right; font-variant-numeric: tabular-nums; }
+.change thead th:not(:first-child) { text-align: right; font-size: 12px;
+  white-space: nowrap; }
+.change .move { white-space: nowrap; }
+.change .move .down { color: var(--down); font-weight: 700; }
+.change .move .up { color: var(--up, #a5462f); font-weight: 600; }
+.change .move .same { color: var(--muted); font-weight: 400; }
+.change .move small { display: block; font-weight: 400; color: var(--muted);
+  font-size: 11px; line-height: 1.3; }
+.change .move span { display: block; }

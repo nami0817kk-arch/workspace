@@ -1,0 +1,28 @@
+{
+  "id": "sweden",
+  "name": "スウェーデン",
+  "age": "申請時満18歳以上30歳以下",
+  "stay": "最長1年間（パスポートの有効期限を超えない範囲）。延長は不可",
+  "fee": "SEK 1,500",
+  "funds": "SEK 15,000以上（渡航直後の生活資金として）",
+  "apply": "スウェーデン国外（居住国）のスウェーデン大使館・総領事館に申請。スウェーデン国内からの申請は不可",
+  "timing": "通年受付。完全な申請の75%は3か月以内、不完全な申請の75%は4か月以内に決定",
+  "work": "就労は可能だが、渡航の主目的にしてはならず、許可の期限が切れたら就労も終了する",
+  "study": "",
+  "insurance": "滞在全期間を通じて有効な総合医療保険（緊急医療・その他医療・入院・緊急歯科治療の費用をカバーするもの）への加入が必要",
+  "points": [
+    "申請はスウェーデン国外（自国）の大使館・総領事館からのみ。入国後の切り替えはできない",
+    "許可は延長できない（1回限り最長1年）",
+    "滞在全期間をカバーする総合医療保険（緊急歯科治療含む）が必須",
+    "就労はできるが、あくまで旅行の「主目的」であってはならない",
+    "帰国用航空券、またはそれを購入できる資金の証明が必要"
+  ],
+  "sources": [
+    {
+      "title": "Apply for a permit for working holiday in Sweden - Migrationsverket",
+      "url": "https://www.migrationsverket.se/en/you-want-to-apply/work/temporary-work-in-sweden/working-holiday-visa-for-young-people.html",
+      "checked": "2026-10-05"
+    }
+  ],
+  "unverified": ["study"]
+}

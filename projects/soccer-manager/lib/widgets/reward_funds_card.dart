@@ -110,14 +110,19 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
     final gameState = context.read<GameState>();
 
     final result = await money.claimReward();
-    if (!mounted) return;
-    setState(() => _busy = false);
 
+    // **受け取りは mounted を見ない。** 広告を見終えた後に画面を離れると
+    // State が捨てられる。ここで返していた頃は、回数だけ消費して資金が
+    // 入らなかった(広告は最後まで見ているので、こちらには収入が立つ)。
+    //
     // Tr.pick は日本語と英語を「両方とも引数として」受け取るため、どちらの
     // 文字列も評価される。受け取り処理を文字列の中に書くと2回実行され、
     // 特典が二重に支払われる。必ず外で1回だけ呼ぶこと。
     final granted =
         result == ClaimResult.granted ? gameState.claimRewardFunds() : 0;
+
+    if (!mounted) return;
+    setState(() => _busy = false);
     final message = switch (result) {
       ClaimResult.granted => Tr.pick('特別協賛金$granted万円を受け取りました',
           'You received $granted in sponsorship'),

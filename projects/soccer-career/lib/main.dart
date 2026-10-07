@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'feedback/review_prompt.dart';
 import 'monetize/monetization.dart';
 import 'state/career_controller.dart';
 import 'ui/app_theme.dart';
@@ -31,6 +32,7 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
   /// 広告と課金。**ゲームの状態とは別に持つ。** 購入はストアのアカウントに
   /// 紐づくもので、どのキャリアを遊んでいるかとは関係がない。
   final _monetization = Monetization();
+  final _reviewPrompt = ReviewPrompt();
 
   @override
   void initState() {
@@ -39,12 +41,14 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
     // 起動を待たせない。初期化が終わる前に拠点を開いたときは、広告も
     // 課金の導線も出ないだけで、遊ぶほうは先に進める。
     _monetization.initialize();
+    _reviewPrompt.initialize();
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _monetization.dispose();
+    _reviewPrompt.dispose();
     super.dispose();
   }
 
@@ -88,6 +92,10 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
     if (_controller.state!.retired) {
       return RetiredScreen(controller: _controller);
     }
-    return HubScreen(controller: _controller, monetization: _monetization);
+    return HubScreen(
+      controller: _controller,
+      monetization: _monetization,
+      reviewPrompt: _reviewPrompt,
+    );
   }
 }

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{% endblock %}</title>
+<meta name="description" content="{% block description %}{% endblock %}">
+{% if page != "404.html" %}<link rel="canonical" href="{{ SITE_URL }}/{% if page != 'index.html' %}{{ page[:-5] }}{% endif %}">{% endif %}
+<meta name="google-site-verification" content="{{ SEARCH_CONSOLE_TOKEN }}">
+{% if ADSENSE_CLIENT %}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ ADSENSE_CLIENT }}" crossorigin="anonymous"></script>
+{% endif %}
+<style>
+  :root { --fg:#1f2328; --muted:#5b636b; --line:#d8dee4; --bg:#fff; --card:#f6f8fa; --link:#0b5cad; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg:#e6edf3; --muted:#9aa4ae; --line:#30363d; --bg:#0d1117; --card:#161b22; --link:#58a6ff; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif; line-height:1.75; }
+  a { color:var(--link); }
+  header, main, footer { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  header { padding-top: 20px; }
+  header a.brand { color:var(--fg); text-decoration:none; font-weight:700; font-size:1.1rem; }
+  h1 { font-size: 1.5rem; line-height:1.4; margin: 1.5rem 0 1rem; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 .5rem; }
+  dt { font-weight:700; margin-top: 1rem; }
+  dd { margin-left: 0; }
+  .sites { list-style:none; padding:0; }
+  .sites li { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin: 12px 0; }
+  .sites a { font-weight:700; font-size:1.05rem; }
+  .sites p { margin:.25rem 0 0; color:var(--muted); font-size:.95rem; }
+  .updated { color:var(--muted); font-size:.85rem; margin-top:2rem; }
+  footer { border-top:1px solid var(--line); margin-top: 3rem; padding-top: 16px; padding-bottom: 32px; font-size:.9rem; color:var(--muted); }
+  footer nav a { margin-right: 1rem; }
+</style>
+</head>
+<body>
+<header><a class="brand" href="/">{{ OWNER }}</a></header>
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer>
+  <nav>
+    <a href="/operator">運営者情報</a>
+    <a href="/privacy">プライバシーポリシー</a>
+    <a href="/contact">お問い合わせ</a>
+  </nav>
+  <p>© 2026 {{ OWNER }}</p>
+</footer>
+</body>
+</html>

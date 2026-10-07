@@ -89,6 +89,42 @@ class BuildTest(unittest.TestCase):
                                 path.read_text(encoding="utf-8")).group(1)
                 self.assertTrue(ref.endswith(css), ref)
 
+    def test_ジャンルの題に値下がりと書かない(self):
+        """「◯◯の値下がり」で全商品を出していた。実測（2026-09-28）では
+        パソコン・周辺機器1,528件のうち値下がりは3件しか無かった。
+        中身を絞ると13,000ページへの導線が消えて索引から落ちるので、
+        絞るのではなく題のほうを中身に合わせる。"""
+        import re
+        pages = list((self.out / "genre").glob("*/index.html"))
+        self.assertTrue(pages, "ジャンルのページが無い")
+        for p in pages:
+            h = p.read_text(encoding="utf-8")
+            title = re.search(r"<title>(.*?)</title>", h, re.S).group(1)
+            with self.subTest(page=p.parent.name):
+                self.assertNotIn("の値下がり", title)
+                self.assertIn("の価格記録", title)
+
+    def test_ジャンルと日付別に3段のパンくずを置く(self):
+        """トップ → ジャンル別 → パソコン・周辺機器 の3階層なのに
+        道しるべが無かった。ページ送りの奥でもリンク先が合っていること。"""
+        import re
+        seen = 0
+        for path, mid in (("genre", "genre/"), ("archive", "archive/")):
+            pages = sorted((self.out / path).glob("*/index.html"))
+            if not pages:
+                continue     # 見本のデータでは日付別が1枚も出ないことがある
+            seen += 1
+            h = pages[0].read_text(encoding="utf-8")
+            with self.subTest(path=path):
+                crumb = re.search(r'<nav class="crumb">(.*?)</nav>', h, re.S)
+                self.assertIsNotNone(crumb, path + " にパンくずが無い")
+                self.assertIn(mid, crumb.group(1))
+                # 構造化データも3段になっていること
+                ld = re.search(r'"@type": "BreadcrumbList".*?\]', h, re.S)
+                self.assertIsNotNone(ld)
+                self.assertIn('"position": 3', ld.group(0))
+        self.assertTrue(seen, "ジャンルも日付別も1枚も出ていない")
+
     def test_expected_pages_exist(self):
         for path in ("index.html", "lows/index.html", "about/index.html",
                      "privacy/index.html", "contact/index.html",
@@ -102,7 +138,9 @@ class BuildTest(unittest.TestCase):
         self.assertNotIn("履歴のない商品", self.read("index.html") + self.read("lows", "index.html"))
 
     def test_drop_is_listed_on_the_front_page(self):
-        page = self.read("index.html")
+        # トップは案内だけのページになり、点で並べた一覧は /now/ へ移した
+        # （2026-09-26 ユーザー指示）
+        page = self.read("now", "index.html")
         self.assertIn("値下がりした商品", page)
         self.assertIn("▼20.0%", page)
         self.assertIn("10,000円", page)   # 変更前の価格
@@ -202,9 +240,9 @@ class EmptyDataTest(unittest.TestCase):
             out = root / "dist"
             stats = builder.build(root, out)
             self.assertEqual(stats["items"], 0)
-            # トップは「いま条件がそろっている商品」（2026-09-25 に入れ替え）。
+            # 点で並べた一覧は /now/（2026-09-26 にトップを案内ページへ replaced）。
             # 値下がりは動きの少ない日にほぼ空になるため、入口に置かない。
-            top = (out / "index.html").read_text(encoding="utf-8")
+            top = (out / "now" / "index.html").read_text(encoding="utf-8")
             self.assertIn("条件がそろった商品はまだありません", top)
             self.assertIn("判定できるほどの値下がりはありません",
                           (out / "drops" / "index.html").read_text(encoding="utf-8"))
@@ -295,16 +333,568 @@ class SearchAppearanceTest(unittest.TestCase):
 
         self.assertTrue(title.startswith("ロイヤルカナン"), title)
 
-    def test_説明に値段と日付を入れる(self):
+    def test_説明は判定と値段から始める(self):
+        """検索結果に並んだとき、押す理由が読めるようにする。
+
+        「6日分の記録では価格は横ばいです」で終わっていたとき、表示115に対し
+        クリックは5（4.3%）だった（2026-09-30 実測）。商品名を繰り返すだけでも
+        見分けが付かない。日付は入れない（Google が別に出すし、題と説明の
+        字数を使い切ってしまう）。
+        """
         page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
             encoding="utf-8")
         desc = re.search(r'name="description" content="([^"]*)"', page).group(1)
 
-        # 商品名を繰り返すだけでは、検索結果に並んだとき見分けが付かない
         self.assertIn("4,000円", desc)
-        self.assertIn("月", desc)
+        self.assertIn("記録", desc)
+        self.assertFalse(desc.startswith("ロイヤルカナン"), desc)
 
     def test_検索の索引にも宣伝を積まない(self):
-        index = json.loads((self.out / "search-index.json").read_text(encoding="utf-8"))
+        # 名前には中身の指紋が入る（2026-09-27 から）
+        index = json.loads(next(self.out.glob("search-index.*.json"))
+                           .read_text(encoding="utf-8"))
 
         self.assertTrue(index[0][1].startswith("ロイヤルカナン"), index[0][1])
+
+
+class UpdatedDateTest(unittest.TestCase):
+    """「最終更新」は価格を記録した日であること。
+
+    ビルドした日を出していたため、取得が失敗した朝でも「最終更新 今日」と
+    表示され、前日の価格を今日の価格として見せていた（2026-09-26 に発生）。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "記録のある商品", "shop": "店A",
+                       "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [9000] * 9 + [8000]})
+        # 取得できた最後の日を 2026-09-25 とする（今日ではない）
+        snaps = cls.root / "data" / "snapshots"
+        snaps.mkdir(parents=True, exist_ok=True)
+        for day in ("2026-09-24", "2026-09-25"):
+            (snaps / f"{day}.csv.gz").write_bytes(b"")
+        cls.out = cls.root / "dist"
+        cls.stats = builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_最終更新は記録した日を出す(self):
+        self.assertEqual(self.stats["updated"], "2026-09-25")
+        self.assertIn("最終更新: 2026-09-25",
+                      (self.out / "index.html").read_text(encoding="utf-8"))
+
+    def test_ビルドした日は出さない(self):
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+
+        self.assertNotIn(builder.today(), page)
+
+    def test_記録が1日も無ければ今日で組む(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_data(root, {"shop:a": {"name": "商品", "shop": "店", "url": "",
+                                        "image": "", "genre_id": "1"}},
+                      {"shop:a": [1000] * 10})
+
+            stats = builder.build(root, root / "dist")
+
+        self.assertEqual(stats["updated"], builder.today())
+
+
+class HomeSearchTest(unittest.TestCase):
+    """トップの一番上の検索窓。
+
+    トップは一覧そのもので、検索から来た人はいきなり600件の並びと採点の
+    説明を読まされていた。価格を追うサイトで最初にやるのは
+    「自分の商品を探す」。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A",
+                       "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [9000] * 9 + [8000]})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_一覧より前に置く(self):
+        # 検索が第一の用事。一覧の索引より前に来ること
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+
+        self.assertLess(page.index('class="hero"'), page.index('class="views"'))
+
+    def test_トップに商品を並べない(self):
+        # 案内だけのページにする（2026-09-26 ユーザー指示）
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+
+        self.assertNotIn('class="card"', page)
+
+    def test_他の一覧には出さない(self):
+        # どのページにも置くと、一覧の題より前に窓が並ぶ
+        self.assertNotIn('class="hero"',
+                         (self.out / "lows" / "index.html").read_text(encoding="utf-8"))
+
+    def test_JavaScriptを待たずに飛べる(self):
+        # 読み込みが終わる前に打ち始めても取りこぼさないこと。
+        # 検索ページは URL の q を読んでそのまま結果を出す
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        form = page.split('class="hero"')[1].split("</form>")[0]
+
+        self.assertIn('method="get"', page.split('<form class="hero"')[0][-80:]
+                      + page.split('class="hero"')[1][:80])
+        self.assertIn('name="q"', form)
+        self.assertIn('action="search/"', page)
+
+    def test_件数は下の行と二度出さない(self):
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        hero = page.split('class="hero"')[1].split("</form>")[0]
+
+        self.assertNotIn("商品を追跡", hero)
+
+
+class LandingPageTest(unittest.TestCase):
+    """トップは案内だけのページ（2026-09-26 ユーザー指示）。
+
+    以前のトップは一覧そのもので、検索から来た人がいきなり600件の並びと
+    採点の説明を読まされていた。一覧は /now/ へ移した。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A",
+                       "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [9000] * 9 + [8000]})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+        cls.home = (cls.out / "index.html").read_text(encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_一覧はnowへ移した(self):
+        self.assertTrue((self.out / "now" / "index.html").exists())
+        self.assertIn("商品A",
+                      (self.out / "now" / "index.html").read_text(encoding="utf-8"))
+
+    def test_入口をひととおり置く(self):
+        for part in ('class="hero"', 'class="views"', "ジャンルから探す",
+                     "何をしているサイトか"):
+            with self.subTest(part=part):
+                self.assertIn(part, self.home)
+
+    def test_一覧の索引の先頭はnow(self):
+        views = self.home.split('class="views"')[1]
+
+        self.assertLess(views.index('href="now/"'), views.index('href="drops/"'))
+
+    def test_ヘッダと同じ文を本文で繰り返さない(self):
+        # ヘッダの tagline が config の description を出している。
+        # 本文の lead で同じ文をもう一度書かないこと
+        lead = re.search(r'<p class="lead">(.*?)</p>', self.home, re.S).group(1)
+        tagline = re.search(r'<p class="tagline">(.*?)</p>', self.home, re.S).group(1)
+
+        self.assertEqual(tagline, CONFIG["description"])
+        self.assertNotEqual(lead, tagline)
+
+    def test_最安値の範囲をトップでも断る(self):
+        # 市場全体の最安値と誤解されないことは、入口でも守る
+        self.assertIn("記録を開始してからの期間内での最安値", self.home)
+
+    def test_サイトマップにトップと一覧の両方を入れる(self):
+        sitemap = (self.out / "sitemap.xml").read_text(encoding="utf-8")
+
+        self.assertIn("<loc>https://example.test/price/</loc>", sitemap)
+        self.assertIn("<loc>https://example.test/price/now/</loc>", sitemap)
+
+    def test_ナビの先頭はnowを指す(self):
+        self.assertIn('<a href="now/">いま条件がそろう</a>', self.home)
+
+
+class FaviconTest(unittest.TestCase):
+    """検索結果に出る印。
+
+    data: の URI を <link rel="icon"> に直接書いていた。ブラウザのタブには
+    出るが、Google は取りに行けるURLからしか印を拾わない。実際、携帯の
+    検索結果では3件とも地球儀の代替アイコンになっていた（2026-09-26）。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A", "url": "", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [1000] * 10})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_印をファイルとして置く(self):
+        for name in ("icon.png", "favicon.ico"):
+            with self.subTest(name=name):
+                self.assertTrue((self.out / name).exists(), name)
+
+    def test_dataURIで指定しない(self):
+        # 取りに行けない形だと検索結果には出ない
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        tag = re.search(r'<link rel="icon"[^>]*>', page).group(0)
+
+        self.assertNotIn("data:", tag)
+        self.assertIn("icon.png", tag)
+
+    def test_深い階層からも辿れる(self):
+        # 商品ページは2階層下。相対で書くので prefix が要る
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertIn('href="../../icon.png"', page)
+
+    def test_PNGとして妥当(self):
+        import struct
+        import zlib
+
+        data = (self.out / "icon.png").read_bytes()
+
+        self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+        w, h, depth, color = struct.unpack(">IIBB", data[16:26])
+        self.assertEqual((w, h), (192, 192))   # 48の倍数の正方形
+        self.assertEqual((depth, color), (8, 6))
+        off = 8
+        while off < len(data):
+            ln = struct.unpack(">I", data[off:off + 4])[0]
+            kind = data[off + 4:off + 8]
+            body = data[off + 8:off + 8 + ln]
+            crc = struct.unpack(">I", data[off + 8 + ln:off + 12 + ln])[0]
+            with self.subTest(chunk=kind):
+                self.assertEqual(zlib.crc32(kind + body) & 0xFFFFFFFF, crc)
+            off += 12 + ln
+
+    def test_サイト名を検索側に渡す(self):
+        # 検索結果が「kakaku.dailyquarry.com」と生のドメインで出ていた
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        block = re.search(r'\{"@context": "https://schema\.org", "@type": "WebSite".*?\}'
+                          r'</script>', page, re.S).group(0)[:-9]
+        data = json.loads(block.replace("\u003c", "<").replace("\u003e", ">")
+                          .replace("\u0026", "&"))
+
+        self.assertEqual(data["name"], CONFIG["name"])
+        self.assertEqual(data["url"], "https://example.test/price/")
+
+    def test_WebSiteはトップにだけ置く(self):
+        # サイト全体の情報なので、全ページに撒くものではない
+        listing = (self.out / "lows" / "index.html").read_text(encoding="utf-8")
+
+        self.assertNotIn('"@type": "WebSite"', listing)
+
+
+class OfferFieldsTest(unittest.TestCase):
+    """Offer に何を書き、何を書かないか。
+
+    Search Console から6項目の推奨（重大ではない）が届いた（2026-09-27）。
+    持っていないものを埋めると検索結果に嘘を出すことになるので、
+    正直に書けるものだけ入れる。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:free": {"name": "送料無料の商品", "shop": "店A", "url": "",
+                          "image": "", "genre_id": "1", "free_shipping": True},
+            "shop:paid": {"name": "送料別の商品", "shop": "店B", "url": "",
+                          "image": "", "genre_id": "1", "free_shipping": False},
+        }, {"shop:free": [1000] * 10, "shop:paid": [2000] * 10})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def offer(self, code):
+        page = (self.out / "item" / theme.slug(code) / "index.html").read_text(
+            encoding="utf-8")
+        block = re.search(r'(\{"@context": "https://schema\.org", "@type": "Product".*?\})'
+                          r'</script>', page, re.S).group(1)
+        return json.loads(block.replace("\u003c", "<").replace("\u003e", ">")
+                          .replace("\u0026", "&"))["offers"]
+
+    def test_値段が言える期間を書く(self):
+        offer = self.offer("shop:free")
+
+        self.assertEqual(offer["validFrom"], builder.today())
+        self.assertGreater(offer["priceValidUntil"], offer["validFrom"])
+
+    def test_送料無料の回だけ送料を書く(self):
+        self.assertIn("shippingDetails", self.offer("shop:free"))
+        # 有料の回は金額を知らない。推測で埋めない
+        self.assertNotIn("shippingDetails", self.offer("shop:paid"))
+
+    def test_送料無料は0円として書く(self):
+        rate = self.offer("shop:free")["shippingDetails"]["shippingRate"]
+
+        self.assertEqual(rate["value"], 0)
+        self.assertEqual(rate["currency"], "JPY")
+
+    def test_持っていないレビューを書かない(self):
+        # 楽天のレビューであって当サイトのものではない。画面にも出していない。
+        # 出していないものを構造化データにだけ書くのは、検索側への嘘になる
+        offer = self.offer("shop:free")
+        page = (self.out / "item" / theme.slug("shop:free") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertNotIn("aggregateRating", page)
+        self.assertNotIn('"review"', page)
+        self.assertNotIn("aggregateRating", json.dumps(offer))
+
+    def test_知らない返品条件を書かない(self):
+        # 当サイトは販売者ではない
+        page = (self.out / "item" / theme.slug("shop:free") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertNotIn("hasMerchantReturnPolicy", page)
+
+    def test_推測した型番や銘柄を書かない(self):
+        # 楽天APIが返さない。名前から推測すると外す
+        page = (self.out / "item" / theme.slug("shop:free") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertNotIn('"gtin', page)
+        self.assertNotIn('"brand"', page)
+
+
+class SharedScriptTest(unittest.TestCase):
+    """JavaScript は外に出して使い回す。
+
+    以前は全ページに同じ本文を直書きしていた（商品ページ2.5KB × 12,658枚、
+    一覧5.7KB × 約200枚）。ページを移るたび読み直させていて、
+    キャッシュも効かなかった。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A",
+                       "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [9000] * 9 + [8000]})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def names(self, pattern):
+        return sorted(p.name for p in self.out.glob(pattern))
+
+    def test_指紋付きで書き出す(self):
+        for pattern, head in (("app.*.js", "app."), ("list.*.js", "list.")):
+            with self.subTest(pattern=pattern):
+                got = self.names(pattern)
+                self.assertEqual(len(got), 1, got)
+                self.assertRegex(got[0], r"^%s[0-9a-f]{8}\.js$" % re.escape(head))
+
+    def test_全ページが共有の本文を指す(self):
+        app = self.names("app.*.js")[0]
+        for rel in ("index.html", "lows/index.html",
+                    f"item/{theme.slug('shop:a')}/index.html"):
+            with self.subTest(rel=rel):
+                page = (self.out / rel).read_text(encoding="utf-8")
+                self.assertIn(app, page)
+
+    def test_見守りの本文をページに直書きしない(self):
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertNotIn("var PTWatch", page)
+        self.assertNotIn("PTWatch.toggle", page)
+
+    def test_共有の本文はheadで先に読む(self):
+        # 本文側が PTWatch を使うので、後から読ませると壊れる。
+        # defer にもしない（読み込み終わりまで待たれると順序が変わる）
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        tag = re.search(r'<script src="[^"]*app\.[0-9a-f]{8}\.js"[^>]*>', page).group(0)
+
+        self.assertNotIn("defer", tag)
+        self.assertNotIn("async", tag)
+        self.assertLess(page.index(tag), page.index("<body"))
+
+    def test_一覧の本文は一覧にだけ読ませる(self):
+        lst = self.names("list.*.js")[0]
+
+        self.assertIn(lst, (self.out / "lows" / "index.html").read_text(encoding="utf-8"))
+        # 商品ページには並び替えも絞り込みも無い
+        self.assertNotIn(lst, (self.out / "item" / theme.slug("shop:a")
+                               / "index.html").read_text(encoding="utf-8"))
+
+    def test_深い階層からも辿れる(self):
+        app = self.names("app.*.js")[0]
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertIn(f'src="../../{app}"', page)
+
+
+class SearchIndexCacheTest(unittest.TestCase):
+    """検索の索引も指紋を付けて長く持たせる。
+
+    3.9MB（圧縮後1.1MB）あるのに名前が固定で、Cloudflare の指定が
+    max-age=0 だった。検索のたびに取り直していた。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A", "url": "", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [1000] * 10})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_指紋付きの名前で書き出す(self):
+        got = sorted(p.name for p in self.out.glob("search-index.*.json"))
+
+        self.assertEqual(len(got), 1, got)
+        self.assertRegex(got[0], r"^search-index\.[0-9a-f]{8}\.json$")
+
+    def test_固定の名前では置かない(self):
+        # 残しておくと、古い方を読みに行くページが出る
+        self.assertFalse((self.out / "search-index.json").exists())
+
+    def test_使う側に名前を渡す(self):
+        name = next(self.out.glob("search-index.*.json")).name
+        for rel in ("search/index.html", "watch/index.html"):
+            with self.subTest(rel=rel):
+                page = (self.out / rel).read_text(encoding="utf-8")
+                self.assertIn(f'var PT_INDEX="{name}"', page)
+
+    def test_クロールさせない(self):
+        # 3.9MB を毎回取りに来られても検索結果の役には立たない
+        robots = (self.out / "robots.txt").read_text(encoding="utf-8")
+
+        self.assertIn("Disallow: /search-index.", robots)
+
+    def test_中身が変われば名前も変わる(self):
+        first = next(self.out.glob("search-index.*.json")).name
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_data(root, {
+                "shop:b": {"name": "別の商品", "shop": "店B", "url": "",
+                           "image": "", "genre_id": "1"},
+            }, {"shop:b": [2000] * 10})
+            builder.build(root, root / "dist")
+            second = next((root / "dist").glob("search-index.*.json")).name
+
+        self.assertNotEqual(first, second)
+
+
+class 下位のジャンルTest(unittest.TestCase):
+    """楽天は商品ごとに末端のジャンルID（1,054種類）を返すが、名前は返さない。
+    ジャンル検索APIで一度引いて data/genres.json に控えてある。
+
+    価格.com のカテゴリページは下位カテゴリを件数つきで並べていて、
+    2,973製品の中から1手で奥へ入れる。末端のままだと大ジャンル1つに
+    57〜202種類あって多すぎるので、level 2 でまとめる。
+    """
+
+    def test_中分類でまとめて件数つきで並べる(self):
+        from src import theme
+        html = theme.listing(
+            "家電の価格記録", "説明", [], {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/562637/", "2026-09-28", prefix="../../",
+            subs=[("季節・空調家電", 608, "genre/562637/208375/"),
+                  ("美容・健康家電", 479, "genre/562637/565105/")])
+
+        self.assertIn("下位のジャンル", html)
+        self.assertIn("季節・空調家電", html)
+        self.assertIn("608", html)
+        self.assertIn('href="../../genre/562637/208375/"', html)
+
+    def test_ページ送りの奥でも行き先が合う(self):
+        from src import theme
+        html = theme.listing(
+            "家電の価格記録", "説明", [], {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/562637/2/", "2026-09-28", prefix="../../../",
+            page=2, pages=3,
+            subs=[("季節・空調家電", 608, "genre/562637/208375/")])
+
+        self.assertIn('href="../../../genre/562637/208375/"', html)
+
+
+class ジャンル索引の深さTest(unittest.TestCase):
+    """中分類（126枚）への入口がジャンルページの中にしか無く、トップからは
+    2クリック先にあった。`/genre/` に集めると1段縮み、その奥の商品ページまでの
+    深さも全部1段縮む。読み手が着けない場所にはクロールも届かない。
+    """
+
+    def test_ジャンル索引に中分類を出す(self):
+        from src import theme
+        html = theme.genre_index(
+            [{"genre_id": "562637", "name": "家電", "count": 2051,
+              "subs": [("季節・空調家電", 614, "genre/562637/502823/"),
+                       ("美容・健康家電", 488, "genre/562637/565105/")]}],
+            {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/", "2026-10-03", prefix="../")
+
+        self.assertIn("季節・空調家電", html)
+        self.assertIn("614", html)
+        self.assertIn('href="../genre/562637/502823/"', html)
+
+    def test_中分類が無いジャンルでも壊れない(self):
+        from src import theme
+        html = theme.genre_index(
+            [{"genre_id": "1", "name": "新しいジャンル", "count": 3}],
+            {"name": "テスト", "base_url": "https://e.dev"},
+            "https://e.dev/genre/", "2026-10-03", prefix="../")
+
+        self.assertIn("新しいジャンル", html)
+        self.assertNotIn("terms subs", html)
+
+
+class 同じ値段は同じ順位Test(unittest.TestCase):
+    """並べ替えの偶然で「9番目」「10番目」「11番目」と散ると、順位が何も
+    意味しなくなる（実測で、同じ2,980円の商品3件に別々の順位が付いていた）。
+    """
+
+    def test_同じ値段の商品は同じ順位になる(self):
+        prices = [1000, 2000, 2000, 2000, 3000]
+        rank_of = {}
+        for i, p in enumerate(sorted(prices), 1):
+            rank_of.setdefault(p, i)
+
+        self.assertEqual(rank_of[1000], 1)
+        self.assertEqual(rank_of[2000], 2)   # 2,3,4 ではなく 2
+        self.assertEqual(rank_of[3000], 5)   # 飛ばした分は戻さない

@@ -1,0 +1,70 @@
+{
+  "id": "malta",
+  "steps": [
+    {
+      "title": "一時居住許可（Temporary Permit・ワーキングホリデー区分）を取得する",
+      "body": "マルタ入国後、移民当局Identitàへワーキングホリデー区分のTemporary Permit（Form O）をオンラインで申請する。在マルタ日本国大使館またはCentral Visa Unitが発給したワーキングホリデービザの承認が前提で、申請者は18〜30歳である必要がある。手数料は許可1年につき€50。承認後は生体認証（指紋・顔写真）の予約・来訪が必要で、就労の可否はDIERまたはJobsplusが発行する許可の内容に従う。",
+      "url": "https://identita.gov.mt/expatriates-unit-main-page/noneu-nationals/non-employment-permits/temporary/expatriates-unit-non-employment-permits-temporary-permit-policy/"
+    },
+    {
+      "title": "税番号（Tax Number）を登録する",
+      "body": "Malta Tax and Customs Administration（旧Commissioner for Revenue）の「Expatriates Taxpayer Registration」オンラインフォームで税番号を登録する。氏名・旅券番号・マルタ到着日・雇用開始日・登録目的（Employment等）を申告し、宣言書（Expatriates Taxpayer Declaration）に署名のうえ添付する。給与から税を源泉徴収されるために必要な手続き。",
+      "url": "https://mtca.gov.mt/personal-tax/individual/expatriatesregistrationform"
+    },
+    {
+      "title": "雇用先によるJobsplusへの雇用登録（Engagement Form）を確認する",
+      "body": "マルタで有給の仕事に就く場合、雇用主は雇用開始日から原則4営業日以内に、労働市場の公的機関Jobsplusへ各労働者の加入届（Engagement Form）を提出する義務がある。提出はオンラインサービスまたはメールで雇用主が行うため、就労を始めたら雇用先が届出を済ませているか確認するとよい。",
+      "url": "https://jobsplus.gov.mt/knowledge-base-employer/do-i-need-to-submit-an-engagement-form"
+    },
+    {
+      "title": "在留届を提出する",
+      "body": "3か月以上マルタに滞在する場合、外務省の在留届電子届出システム（ORRネット）から住所や連絡先を届け出る。マルタは在イタリア日本国大使館が兼轄するが、スリーマに在マルタ兼勤駐在官事務所（2024年開設）があり、緊急時の安否確認や現地からの情報提供に使われる。",
+      "url": "https://www.ezairyu.mofa.go.jp/"
+    },
+    {
+      "title": "銀行口座（Basic Payment Account）を開設する",
+      "body": "マルタに合法的に居住する人は誰でも、他の銀行商品の利用資格がなくても「ベーシック・ペイメント・アカウント」を開く権利がある。マルタ国内に5支店以上を持つ銀行はこの口座の提供を義務付けられており、入出金・デビットカード決済・口座振替などの基本機能が使える。金融規制当局MFSAが監督している。",
+      "url": "https://www.mfsa.mt/consumers/consumer-awareness-and-education/banking/accounts/payment-account-with-basic-features/"
+    }
+  ],
+  "medical": {
+    "emergency": "112（警察・救急・消防共通の緊急通報番号）",
+    "summary": "マルタは英国から先進医療技術が継続的に導入されており、西欧先進国同様に医療水準は高い。医師の多くが英国の卒後専門医資格を持ち、医療スタッフのほとんどが英語（およびマルタ語）を話すため院内表示も英語で統一されている。一方で日本語の通じる医療機関はない。公的医療機関は国民は無料で受診でき、公立の救急搬送サービスの質も高く、島内のどこからでもおおむね30分以内に大病院へ搬送できる。",
+    "hospitals": [
+      {
+        "name": "Mater Dei Hospital（マター・デイ病院）",
+        "city": "ムシダ（Msida）",
+        "japanese": "マルタ唯一の公立急性期病院（基幹病院）。日本語での電話通訳サービスを提供（事前予約推奨）",
+        "url": "https://www.mofa.go.jp/mofaj/ms/h_w/page22_002879.html"
+      }
+    ]
+  },
+  "jobs": {
+    "min_wage": "法定最低賃金 週給229.44ユーロ（18歳以上のフルタイム労働者、2026年1月適用、時給換算5.74ユーロ）",
+    "min_wage_url": "https://dier.gov.mt/en/services/employment-conditions/wages/national-minimum-wage/",
+    "channels": [
+      {
+        "name": "Jobsplus（マルタ政府の公的雇用エージェンシー）",
+        "url": "https://jobsplus.gov.mt/",
+        "note": "マルタ政府が運営する求人検索・職業紹介の公式窓口"
+      }
+    ],
+    "rules": [
+      "雇用主は雇用開始日から原則4営業日以内にJobsplusへEngagement Formを提出する義務がある",
+      "ワーキングホリデー区分のTemporary Permit保持者の就労可否は、DIERまたはJobsplusが発行する許可・ライセンスの内容に従う",
+      "最低賃金は毎年1月に、生計費調整（COLA）等を反映して改定される"
+    ]
+  },
+  "sources": [
+    {"title": "大使館について | 在マルタ日本国大使館", "url": "https://www.mt.emb-japan.go.jp/itpr_ja/aboutus.html", "checked": "2026-10-05"},
+    {"title": "マルタへの出入国・査証・滞在許可証等 | 在マルタ日本国大使館", "url": "https://www.mt.emb-japan.go.jp/itpr_ja/maltavisa.html", "checked": "2026-10-05"},
+    {"title": "マルタ｜外務省 - 世界の医療事情", "url": "https://www.mofa.go.jp/mofaj/ms/h_w/page22_002879.html", "checked": "2026-10-05"},
+    {"title": "Central Visa Unit Working Holiday Visa - Japan - Identità", "url": "https://identita.gov.mt/central-visa-unit-working-holiday-visa-japan/", "checked": "2026-10-05"},
+    {"title": "Expatriates Unit Non-Employment Permits - Temporary Permit Policy - Identità", "url": "https://identita.gov.mt/expatriates-unit-main-page/noneu-nationals/non-employment-permits/temporary/expatriates-unit-non-employment-permits-temporary-permit-policy/", "checked": "2026-10-05"},
+    {"title": "Expatriates Registration Form - Malta Tax and Customs Administration", "url": "https://mtca.gov.mt/personal-tax/individual/expatriatesregistrationform", "checked": "2026-10-05"},
+    {"title": "Do I need to submit an Engagement Form? - Jobsplus Knowledge Base", "url": "https://jobsplus.gov.mt/knowledge-base-employer/do-i-need-to-submit-an-engagement-form", "checked": "2026-10-05"},
+    {"title": "National Minimum Wage - DIER", "url": "https://dier.gov.mt/en/services/employment-conditions/wages/national-minimum-wage/", "checked": "2026-10-05"},
+    {"title": "Payment Account with Basic Features - MFSA", "url": "https://www.mfsa.mt/consumers/consumer-awareness-and-education/banking/accounts/payment-account-with-basic-features/", "checked": "2026-10-05"},
+    {"title": "外務省 在留届（ORRネット）", "url": "https://www.ezairyu.mofa.go.jp/", "checked": "2026-10-05"}
+  ]
+}

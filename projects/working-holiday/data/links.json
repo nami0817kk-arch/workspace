@@ -1,0 +1,197 @@
+{
+  "checked": "2026-10-05",
+  "countries": {
+    "australia": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/oceania/australia.html",
+      "japan_mission": {"name": "在オーストラリア日本国大使館", "url": "https://www.au.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "new-zealand": {
+      "medical_url": "",
+      "japan_mission": {"name": "在ニュージーランド日本国大使館", "url": "https://www.nz.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "canada": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html",
+      "japan_mission": {"name": "在カナダ日本国大使館", "url": "https://www.ca.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "911（救急車・救急ホットライン）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/n_ame/canada.html"
+    },
+    "korea": {
+      "medical_url": "",
+      "japan_mission": {"name": "在大韓民国日本国大使館", "url": "https://www.kr.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "france": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/france.html",
+      "japan_mission": {"name": "在フランス日本国大使館", "url": "https://www.fr.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "germany": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html",
+      "japan_mission": {"name": "在ドイツ日本国大使館", "url": "https://www.de.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/germany.html"
+    },
+    "uk": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html",
+      "japan_mission": {"name": "在英国日本国大使館", "url": "https://www.uk.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "999（警察・消防・救急）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/uk.html"
+    },
+    "ireland": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/ireland.html",
+      "japan_mission": {"name": "在アイルランド日本国大使館", "url": "https://www.ie.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "999／112（警察・消防・救急）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/ireland.html"
+    },
+    "denmark": {
+      "medical_url": "",
+      "japan_mission": {"name": "在デンマーク日本国大使館", "url": "https://www.dk.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "taiwan": {
+      "medical_url": "",
+      "japan_mission": {"name": "公益財団法人日本台湾交流協会", "url": "https://www.koryu.or.jp/"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "hong-kong": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/asia/hongkong.html",
+      "japan_mission": {"name": "在香港日本国総領事館", "url": "https://www.hk.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "999（救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/asia/hongkong.html"
+    },
+    "norway": {
+      "medical_url": "",
+      "japan_mission": {"name": "在ノルウェー日本国大使館", "url": "https://www.no.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "portugal": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/portugal.html",
+      "japan_mission": {"name": "在ポルトガル日本国大使館", "url": "https://www.pt.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/portugal.html"
+    },
+    "poland": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/poland.html",
+      "japan_mission": {"name": "在ポーランド日本国大使館", "url": "https://www.pl.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（欧州共通緊急通報番号）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/poland.html"
+    },
+    "slovakia": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/slovak.html",
+      "japan_mission": {"name": "在スロバキア日本国大使館", "url": "https://www.sk.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/slovak.html"
+    },
+    "austria": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/austria.html",
+      "japan_mission": {"name": "在オーストリア（ウィーン）日本国大使館", "url": "https://www.at.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "144（救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/austria.html"
+    },
+    "hungary": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/hungary.html",
+      "japan_mission": {"name": "在ハンガリー日本国大使館", "url": "https://www.hu.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "spain": {
+      "medical_url": "",
+      "japan_mission": {"name": "在スペイン日本国大使館", "url": "https://www.es.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "argentina": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/argentin.html",
+      "japan_mission": {"name": "在アルゼンチン日本国大使館", "url": "https://www.ar.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "chile": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/chile.html",
+      "japan_mission": {"name": "在チリ日本国大使館", "url": "https://www.cl.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "iceland": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/iceland.html",
+      "japan_mission": {"name": "在アイスランド日本国大使館", "url": "https://www.is.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（警察・救急・消防）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/iceland.html"
+    },
+    "czechia": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/czech.html",
+      "japan_mission": {"name": "在チェコ共和国日本国大使館", "url": "https://www.cz.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "155（救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/czech.html"
+    },
+    "lithuania": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/lithuani.html",
+      "japan_mission": {"name": "在リトアニア日本国大使館", "url": "https://www.lt.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（公的救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/lithuani.html"
+    },
+    "sweden": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/sweden.html",
+      "japan_mission": {"name": "在スウェーデン日本国大使館", "url": "https://www.se.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（警察・消防・救急共通）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/sweden.html"
+    },
+    "estonia": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/estonia.html",
+      "japan_mission": {"name": "在エストニア日本国大使館", "url": "https://www.ee.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/estonia.html"
+    },
+    "netherlands": {
+      "medical_url": "",
+      "japan_mission": {"name": "在オランダ日本国大使館", "url": "https://www.nl.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "uruguay": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/cs_ame/uruguay.html",
+      "japan_mission": {"name": "在ウルグアイ日本国大使館", "url": "https://www.uy.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "finland": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/finland.html",
+      "japan_mission": {"name": "在フィンランド日本国大使館", "url": "https://www.fi.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（公設救急車・警察・消防共通）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/finland.html"
+    },
+    "latvia": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/latvia.html",
+      "japan_mission": {"name": "在ラトビア日本国大使館", "url": "https://www.lv.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "固定電話：03／携帯電話：113（救急車）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/latvia.html"
+    },
+    "luxembourg": {
+      "medical_url": "",
+      "japan_mission": {"name": "在ルクセンブルク日本国大使館", "url": "https://www.lu.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "",
+      "emergency_url": ""
+    },
+    "malta": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/ms/h_w/page22_002879.html",
+      "japan_mission": {"name": "在マルタ日本国大使館", "url": "https://www.mt.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "112（救急車・警察・消防）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/ms/h_w/page22_002879.html"
+    },
+    "italy": {
+      "medical_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/italia.html",
+      "japan_mission": {"name": "在イタリア日本国大使館", "url": "https://www.it.emb-japan.go.jp/itprtop_ja/index.html"},
+      "emergency": "118（救急車・公営）／112（EU共通）",
+      "emergency_url": "https://www.mofa.go.jp/mofaj/toko/medi/europe/italia.html"
+    }
+  }
+}

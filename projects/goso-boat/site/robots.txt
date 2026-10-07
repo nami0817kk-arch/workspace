@@ -1,0 +1,7 @@
+# Allow all crawlers.
+User-agent: *
+Allow: /
+
+# Google crawler for app-ads.txt (AdMob help: support.google.com/admob/answer/9776740)
+User-agent: Google-adstxt
+Disallow:

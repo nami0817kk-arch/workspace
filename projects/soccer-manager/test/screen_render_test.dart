@@ -55,6 +55,8 @@ void main() {
   const sizes = <String, Size>{
     '360x780': Size(360, 780),
     '320x568': Size(320, 568),
+    // iPad。掲載画像も出しているのに、この幅では一度も確かめていなかった。
+    '1032x1376': Size(1032, 1376),
   };
 
   for (final lang in const [AppLanguage.japanese, AppLanguage.english]) {
@@ -170,6 +172,13 @@ void main() {
 
 /// ストアに触らない差し替え。画面の描画にはストアの応答は要らない。
 class _StubPurchaseService implements PurchaseService {
+  /// 受け取り口。本物は待っているかどうかに関係なく呼ぶ。
+  @override
+  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) =>
+      onDeliveredCallback = callback;
+
+  Future<void> Function(String productId, String? purchaseId)? onDeliveredCallback;
+
   @override
   Future<void> initialize() async {}
 

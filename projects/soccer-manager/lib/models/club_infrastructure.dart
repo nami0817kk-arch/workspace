@@ -54,8 +54,9 @@ extension StaffRoleInfo on StaffRole {
             'Raises the quality of scouted players and lowers the cost'),
         StaffRole.physio => Tr.pick('負傷の発生率と療養期間を減らす',
             'Cuts how often injuries happen and how long they last'),
-        StaffRole.youthCoach =>
-          Tr.pick('アカデミー昇格候補の質を高める', 'Raises the quality of academy graduates'),
+        // 見極めと指導で仕事が違う唯一の役職。どちらも要るが、揃えると高い。
+        StaffRole.youthCoach => Tr.pick('見極めで良い子を集めて見立て、指導でアカデミー生を伸ばす',
+            'Judging brings in and reads the youngsters; coaching develops them'),
         StaffRole.fitnessCoach => Tr.pick('週次トレーニングでの疲労回復量をさらに高める',
             'Further increases how much fatigue the weekly training recovers'),
       };
@@ -121,6 +122,13 @@ class ClubInfrastructure {
   /// トレーニング効率・負傷率・スカウトの質などは以前からこの数値を見て
   /// 決まっている。人に置き換えても、そこから先の計算は変わらない。
   int staffLevel(StaffRole role) => staff[role]?.effectiveLevel ?? 1;
+
+  /// その役職に就いている人の、能力1つぶんのレベル(1-8)。空席なら1。
+  ///
+  /// 役職の総合力ではなく特定の能力だけを見る仕事に使う(ユースコーチの
+  /// 見極め=見立ての精度、指導=育成の伸び、など)。
+  int staffAttributeLevel(StaffRole role, StaffAttribute a) =>
+      staff[role]?.levelOf(a) ?? 1;
   int facilityLevel(FacilityType type) => facilityLevels[type] ?? 1;
 
   /// 役職を空けたまま置いたときの週俸(=0)との比較用に残している、

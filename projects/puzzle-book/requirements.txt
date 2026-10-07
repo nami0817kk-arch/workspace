@@ -1,0 +1,15 @@
+# 生成器はモノレポ内の共有ライブラリを直接参照する（別リポジトリ化していない）。
+# モノレポ内参照: pip install -e ../../libs/puzzle-generator
+-e ../../libs/puzzle-generator
+
+# KDP入稿用PDF(ベクター)の組版に使う。システム側の追加ライブラリ(cairo等)が
+# 要らない点を優先して選んだ。
+reportlab==5.0.1
+
+# 表紙・本文の図版（Noto Emoji の SVG）を PDF にベクターのまま描く
+svglib==2.2.0
+# 裏表紙に貼る見本ページを画像にする（表紙の文字は 7pt 以上という KDP の決まりのため）
+pypdfium2==5.13.0
+Pillow>=10
+# 日本語を文節の切れ目で折り返す（語の途中で改行しない）。Apache License 2.0
+budoux==0.9.3

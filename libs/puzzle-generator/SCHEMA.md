@@ -91,7 +91,82 @@
 | hard | 22 × 30 |
 
 具体的な冊子1ページあたりの物理サイズ（何mm四方のマスにするか等）は
-KDPの入稿サイズに依存するため、`projects/puzzle-book-maze` 側で決める。
+KDPの入稿サイズに依存するため、`projects/puzzle-book` 側で決める。
+
+## type: `"wordsearch"`（ことば探し）
+
+2026-09-26 に追加（方式5の1冊目。介護向けの紙の本）。**文字は1マス1文字の文字列**
+として扱うので、言語に依存しない（日本語のひらがな・カタカナでも、英語でも同じ形）。
+
+```json
+"params": {"size": 10, "directions": ["E", "S"]},
+"board": {
+  "size": 10,
+  "grid": [["だ", "い", "こ", "ん", ...], ...],
+  "words": [{"answer": "だいこん", "label": "だいこん（大根）"}, ...],
+  "theme": "畑の野菜"
+},
+"solution": {
+  "placements": [{"answer": "だいこん", "start": [0, 0], "dir": "E"}, ...]
+}
+```
+
+- `grid[y][x]` は1マスの文字（`len == 1`）。小書き文字（ゃ・っ）や長音（ー）も1マス。
+- `words[].answer` が盤面に並ぶ文字列、`label` は語の一覧に出す表記（漢字の添え書きなど）。
+- `dir` は `E`（→）`S`（↓）`SE`（↘）`W` `N` `NW` `NE` `SW` のどれか。
+  `start` は `[x, y]`。`params.directions` がその盤面で使った向き。
+- **検証（`verified: true` の条件）**: 8方向すべてを数えて、どの `answer` も盤面に
+  **ちょうど1回だけ**現れ、その位置が `placements` と一致すること。逆向きや斜めに
+  偶然もう1回できていたら落とす。加えて、埋め草の文字で**不適切な語**
+  （`wordsearch.BLOCKED_WORDS`）が8方向のどこにもできていないこと。
+
+### 難易度とパラメータ
+
+`puzzle_generator.WORDSEARCH_DIFFICULTIES` に定義。高齢者向けの紙面を先に決めたので、
+既定は**逆向きを使わない**（→と↓だけ。むずかしいで↘を足す）。
+
+| difficulty | size | directions |
+|---|---|---|
+| easy | 8 | E, S |
+| medium | 10 | E, S |
+| hard | 12 | E, S, SE |
+
+## 脳トレ用の小さなパズル（2026-09-27 追加、`puzzle_generator.drills`）
+
+高齢者向けの脳トレ詰め合わせの本（方式5）のために足した。どれも答えを計算で出せるので、
+**生成した時点で正しさが決まる**（検証は「形が崩れていないか」と「答えが問題から再計算して一致するか」）。
+
+### type: `"arithmetic"`（計算）
+```json
+"params": {"count": 10, "ops": ["+", "-"], "digits": 2, "carry": true},
+"board": {"problems": [{"a": 23, "op": "+", "b": 45}, ...]},
+"solution": {"answers": [68, ...]}
+```
+- 引き算の答えは0以上。`op` は `"+"` `"-"` `"×"`。
+
+### type: `"number_search"`（数字さがし。1から順に指でたどる）
+```json
+"params": {"size": 5},
+"board": {"size": 5, "grid": [[17, 3, ...], ...]},
+"solution": {"order": [[x, y], ...]}
+```
+- `grid` は 1〜size² をちょうど1回ずつ含む。`order[k]` は数 `k+1` の位置 `[x, y]`。
+
+### type: `"clock"`（時計の読み取り）
+```json
+"params": {"count": 3, "step": 15},
+"board": {"times": [[3, 15], [10, 30], ...]},
+"solution": {"answers": ["3時15分", "10時30分", ...]}
+```
+- 時は 1〜12、分は `step` の倍数（0〜55）。
+
+### type: `"pair_search"`（同じ絵さがし）
+```json
+"params": {"rows": 6, "cols": 6},
+"board": {"rows": 6, "cols": 6, "grid": [["1f338", "1f33b", ...], ...]},
+"solution": {"pair": [[x1, y1], [x2, y2]]}
+```
+- `grid` の絵（絵文字のコード）は、**ちょうど1組だけ**が同じで、それ以外はすべて違う。
 
 ## 将来 type を増やすとき
 

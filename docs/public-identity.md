@@ -48,7 +48,7 @@ Email Routing は受信専用で `info@` から送り返せない。屋号名義
 
 | サブドメイン | PJT | 設定の置き場所 |
 |---|---|---|
-| `kabu.dailyquarry.com` | kabu-agari-ranking | `projects/kabu-agari-ranking/src/site_config.py` |
+| `kabu.dailyquarry.com` | kabu-agari-ranking（**2026-10-07 終了。終了案内のみ**） | `projects/kabu-agari-ranking/closed/` |
 | `kakaku.dailyquarry.com` | price-tracker | `projects/price-tracker/config.json` |
 
 新しいサイトを公開するときは、`<名前>.dailyquarry.com` を Cloudflare Pages の
@@ -77,10 +77,23 @@ Email Routing は受信専用で `info@` から送り返せない。屋号名義
 
 ## AdSense
 
+**状態（2026-09-26）: `dailyquarry.com` で審査中。** pub-ID は `pub-6409014819339195`。
+- アカウントは AdMob 由来の、サイトを持てない形だった（メニューに「サイト」が無い）。
+  **新規作成はせず** `https://adsense.google.com/start/` の「登録」からアップグレードした（1人1アカウント）
+- 所有確認はコードスニペット。コードは入口（dailyquarry-home）と kabu に入れてある。
+  shaho は作り物の枠を直してから入れる。kakaku は入れない（楽天規約）
+- 欧州向けの同意メッセージは Google の CMP（無料）で作成済み
+- 通ったら: kabu の `/privacy` の「予定です」を直す（入口は pub-ID で自動で切り替わる）
+
 - **`*.pages.dev` では申請できない。** 自分のドメインが要る。これが
   `dailyquarry.com` を取った直接の理由。
-- サブドメインは**1回の申請で全部まとめて扱われる**（`ads.txt` で紐づく）。
-  サイトごとに申請し直す必要は無い。
+- **申請するサイトはルートの `dailyquarry.com`。** AdSense はサブドメインをサイトとして
+  足せず、ルートドメイン単位で扱う。`ads.txt` もルート（`dailyquarry.com/ads.txt`）に置く。
+  サブドメインが同じ pub-ID なら、ルートの1枚で足りる（`subdomain=` は販売者が違うときだけ）。
+  ルートには 2026-09-26 まで何も出ていなかったので、`projects/dailyquarry-home/` を置いた。
+  手順はそこの CLAUDE.md
+  （[サイト管理の変更](https://support.google.com/adsense/answer/12170421?hl=ja)、
+  [ads.txt の FAQ](https://support.google.com/adsense/answer/9785052?hl=ja)）。
 - 審査は「誰が運営し、どこへ連絡できるか」が読めることを求める。
   **運営者情報・プライバシーポリシー・問い合わせの3枚が揃うまで出さない。**
   kabu は 2026-09-25 に3枚とも揃えた（`projects/kabu-agari-ranking/templates/`

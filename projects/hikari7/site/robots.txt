@@ -1,0 +1,7 @@
+# Allow all crawlers. Must exist as a real file so AdMob can read app-ads.txt (see docs/app-pitfalls.md item 8).
+User-agent: *
+Allow: /
+
+# Google crawler for app-ads.txt (AdMob help: https://support.google.com/admob/answer/9776740)
+User-agent: Google-adstxt
+Disallow:

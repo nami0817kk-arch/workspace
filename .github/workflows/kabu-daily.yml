@@ -1,107 +1,36 @@
-name: Daily Gainers Site
+name: kabu closed page
 
-# 運用: 取得は手元PC（run-daily.ps1、毎平日16:10）が行い data/ を push する。
-# kabutan が GitHub Actions の IP を 405 でブロックしているため、CI からは取得しない。
-# この CI は push された data/ からのビルド・公開と、鮮度の監視だけを行う。
-# X への投稿は手元の run-daily.ps1 から行う（重複投稿を防ぐ記録の置き場が手元しか無い）。
+# kabu-agari-ranking は 2026-10-07 に終了した（ユーザー判断）。
+# 取得（手元PCのタスク kabu-daily-fetch）は無効化し、定期の鮮度監視も外した。
+# kabu.dailyquarry.com には終了の案内だけを置く。旧URLは 404.html（同じ案内）で返し、
+# 検索エンジンから順に外れるようにする。広告のスクリプトと ads.txt は置かない。
 on:
   push:
     branches: [master]
     paths:
-      # **公開物になるものは全部並べる。** templates/ が抜けていて、
-      # 文面だけ直しても再公開されない期間があった（2026-09-25 に気づいた）。
-      - "projects/kabu-agari-ranking/data/**"
-      - "projects/kabu-agari-ranking/src/**"
-      - "projects/kabu-agari-ranking/templates/**"
-      - "projects/kabu-agari-ranking/static/**"
-      - "libs/kabutan/**"
+      - "projects/kabu-agari-ranking/closed/**"
       - ".github/workflows/kabu-daily.yml"
-  schedule:
-    # 17:00 JST = 08:00 UTC、平日のみ。手元PCの取得が止まっていないかの監視役。
-    - cron: "0 8 * * 1-5"
   workflow_dispatch: {}
 
-# 途中で止めると害がある（公開・リリース・通知）。重複は避けるが打ち切らない。
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 permissions:
-  contents: write
-  # 失敗を Issue で知らせるために必要
-  issues: write
+  contents: read
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: projects/kabu-agari-ranking
-    # 取得先が応答しないまま既定の6時間走り続けるのを防ぐ。
-    # 通常は数分で終わる。超えたら失敗として通知が飛ぶ。
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: pip install -e ../../libs/kabutan -r requirements.txt pytest
-
-      # 壊れたパーサのまま取得・デプロイまで進むと、空のランキングで
-      # サイトを上書きしてしまう。その前に落とす。
-      - name: Run tests
-        run: pytest
-
-      - name: Build site (data/ から。取得はしない)
-        run: python src/build_site.py --no-fetch
-
-      - name: Ensure Cloudflare Pages project exists
-        run: |
-          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
-            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            --data '{"name":"kabu-agari-ranking","production_branch":"master"}'
-
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy closed page to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: projects/kabu-agari-ranking
-          command: pages deploy output --project-name=kabu-agari-ranking --branch=master
-
-      # **公開のあとに置く。**監視で落とすとそれ以降が走らないので、ここが
-      # 前にあると「データが古い」だけでデプロイまで止まる（2026-09-22 に実際に起きた）。
-      # 手元PCの取得タスクが止まっていないかの監視。
-      # 失敗そのものは run-daily.ps1 がデスクトップ通知で知らせる。ここが拾うのは
-      # 「PCが起動していない」「タスクが実行されなかった」など、手元で通知すら
-      # 出ない止まり方。1営業日ぶん遅れたら鳴らす（2026-09-06 に4日→1営業日）。
-      #
-      # 休場日を数えないのが要点。土日しか見ていなかった頃は、シルバーウィーク
-      # （2026-09-21〜23）で3日続けて誤検知した。鳴りっぱなしの警報は読まれなくなる。
-      # 判定は src/check_freshness.py（祝日表は src/market_calendar.py が持つ）。
-      - name: Check data freshness
-        run: python src/check_freshness.py
-
-      # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
-      # 既に開いている失敗 Issue があれば、増やさずコメントを足す。
-      - name: Notify on failure
-        if: failure()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          gh label create ci-failure --color B60205 --description "定期実行の失敗" --force || true
-          body="$(date -u '+%Y-%m-%d %H:%M UTC') の実行が失敗しました。 ログ: ${RUN_URL}"
-          existing=$(gh issue list --label ci-failure --state open --limit 1 --json number --jq '.[0].number // empty')
-          if [ -n "$existing" ]; then
-            gh issue comment "$existing" --body "$body"
-          else
-            gh issue create --title "日次ランキングの取得・公開が失敗しています" --label ci-failure --body "$body"
-          fi
+          command: pages deploy closed --project-name=kabu-agari-ranking --branch=master

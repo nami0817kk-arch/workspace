@@ -140,12 +140,21 @@ class StaffMember {
   ///
   /// トレーニング効率・負傷率・スカウトの質などは、すべてこのレベルを見て
   /// 決まっている。人に置き換えても、そこから先の計算は変えなくて済む。
-  int get effectiveLevel {
-    final level = ((roleAbility - 1) / 19 * (ClubInfrastructure.maxLevel - 1))
-            .round() +
-        1;
+  int get effectiveLevel => levelFromAbility(roleAbility);
+
+  /// 1-20 の能力を 1-8 のレベルへ直す。
+  static int levelFromAbility(double ability) {
+    final level =
+        ((ability - 1) / 19 * (ClubInfrastructure.maxLevel - 1)).round() + 1;
     return level.clamp(1, ClubInfrastructure.maxLevel);
   }
+
+  /// 能力1つぶんのレベル(1-8)。
+  ///
+  /// 役職の総合力([effectiveLevel])は複数の能力を混ぜた値なので、
+  /// 「見極めが高いほど見立てが正確」のように能力ごとに効かせたい仕事には
+  /// 使えない。混ぜたまま使うと、指導だけが高い人でも見立てが鋭くなる。
+  int levelOf(StaffAttribute a) => levelFromAbility(attribute(a).toDouble());
 
   /// 能力に見合った週俸の相場。交渉は行わず、この額で受けるかどうかだけ。
   ///

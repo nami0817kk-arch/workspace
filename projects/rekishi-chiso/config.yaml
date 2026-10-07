@@ -1,0 +1,160 @@
+# 歴史の地層 — 制作の設定
+#
+# 素材（立ち絵・絵画）はリポジトリに入れない。立ち絵は規約で再配布が禁止されていて、
+# workspace は public なので。置き場は assets_dir（環境変数 CHISO_ASSETS で上書きできる）。
+assets_dir: ../../../output/rekishi-chiso/assets
+
+voicevox_url: http://127.0.0.1:50021
+
+# 掛け合いの2人。key は台本の話者名。
+cast:
+  語り:
+    name: 剣崎雌雄            # クレジットに出す名前（VOICEVOX:剣崎雌雄）
+    style_id: 21
+    speed: 1.08
+    pitch: 0.0
+    # 10-04「男性側は、抑揚はかなり控えめ」：素の抑揚に戻し、調子の効きを3割、上限1.15に
+    intonation: 1.0
+    tone_strength: 0.3
+    max_intonation: 1.15
+    max_speed: 1.1
+    # 10-05「剣崎が色文字の時におかしな話かたになる」：《》の強調（高さ・伸ばし・音量）を3割に。聞き比べで「控えめ」
+    emphasis: 0.3
+    volume: 1.0
+    image: characters/kenzaki_helmet.png
+    faces: characters/kenzaki_faces   # 口パク（chiso/jaw.py で口を開けた絵を描き足す）
+    side: left
+    bust: 0.40                # 立ち絵の上から何割を見せるか
+    height: 1250              # 立ち絵全体を何pxに縮めてから切るか
+  聞き:
+    name: 春日部つむぎ
+    style_id: 8
+    speed: 1.0
+    pitch: 0.0
+    # 10-04「女の子の声がおかしい」「かなり抑えて」：抑揚が上限に張りつき早口でキンキンしていた。
+    # 基本を素の値に戻し、調子の効きを4割に、抑揚と速さに上限を置く
+    intonation: 1.0
+    tone_strength: 0.4
+    max_intonation: 1.3
+    max_speed: 1.08
+    volume: 1.0
+    image: characters/tsumugi_helmet.png
+    faces: characters/tsumugi_faces   # 表情・口パク・まばたき（chiso/faces.py で作る）
+    side: right
+    bust: 0.40
+    height: 1150
+
+# 立ち絵のクレジット（概要欄に出す）
+# 人物の言葉を読む声（台本で `- 人物: 「…」` と `who: マリー` と書いた行）。立ち絵は出さず、2人は聞き役になる。
+# 2026-10-04 追加。label は字幕の名前、name はクレジットに出す VOICEVOX の声。
+# 剣崎（style 21）・つむぎ（style 8）とは別の声にする
+roles:
+  マリー:
+    label: マリー・アントワネット
+    name: 波音リツ              # 10-04 ユーザーが見本5人から選んだ（クイーン）。規約：「VOICEVOX:波音リツ」で商用可
+    style_id: 65
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  西太后:
+    label: 西太后
+    name: 東北イタコ            # 10-05。マリー（波音リツ）と別の、落ち着いた大人の女性の声
+    style_id: 109
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  浅野:                      # 10-05。浅野内匠頭（30代の大名）。落ち着いた低めの男性の声
+    label: 浅野内匠頭
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  光秀:                      # 10-06。明智光秀。落ち着いた男性の声
+    label: 明智光秀
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  信長:                      # 10-06。織田信長。低めの男性の声
+    label: 織田信長
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  敦盛:                      # 10-06。幸若舞『敦盛』の一節（信長が舞った）。信長と同じ声で、札は演目名
+    label: 幸若舞『敦盛』の一節（信長が舞った）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ナポレオン:                # 10-06。ナポレオンの手紙の一文。落ち着いた男性の声（別の回の光秀と同じ声。回が違えば可）
+    label: ナポレオン（手紙の一文）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  本城:                      # 10-06。本城惣右衛門（80歳を過ぎて書いた覚書）。老人の声
+    label: 本城惣右衛門（明智軍の一兵）
+    name: ちび式じい
+    style_id: 42
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  上諭:                      # 皇帝の名で出た命令。決めたのは西太后なので同じ声で読み、札は「上諭」にする（10-05 の確認）
+    label: 上諭（皇帝の名で出た命令）
+    name: 東北イタコ
+    style_id: 109
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+
+character_credits:
+  - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"
+  - "立ち絵：剣崎雌雄 公式イラスト（銃口會）"
+
+fonts:
+  serif: C:/Windows/Fonts/NotoSerifJP-VF.ttf
+  gothic: C:/Windows/Fonts/YuGothB.ttc
+
+video:
+  bg_workers: 5      # 背景を同時に作る本数。10 だと空きメモリ5GB台で ffmpeg が落ちた（10-05、西太后の回）
+  width: 1920
+  height: 1080
+  fps: 30
+  bg_motion: false   # 背景の絵をゆっくり寄せたり流したりしない（10-06 ユーザー「背景を微妙に動かさないで」）
+
+short:
+  width: 1080
+  height: 1920
+  max_seconds: 60
+
+operator: つるはし社
+
+# 本編の画面に字幕を出す（10-04 ユーザー指示「字幕もだしたい」）
+subtitles: true
+
+# 効果音（節の切り替え・図・お金の札・驚き）。BGM は入れない。合成音なので素材の出典は要らない（chiso/sfx.py）
+sfx: true

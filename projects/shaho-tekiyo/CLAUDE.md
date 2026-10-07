@@ -1,10 +1,10 @@
-# shaho-tekiyo — 社会保険 加入判定チェッカー
+# shaho-tekiyo — パートの社会保険 計算機
 
 社会保険（健康保険・厚生年金）の短時間労働者への適用拡大について、
 「自分は加入対象になるか」を厚生労働省の公表基準に沿って判定する計算機。
 広告収入が目的。**方式1（`docs/session-briefs/method1.md`）の中で最優先の案。**
 
-公開予定URL: https://shaho.dailyquarry.com/（AdSense・ドメインは `projects/ipa-kakomon` と共用）
+公開URL: https://shaho.dailyquarry.com/（AdSense・ドメインは `projects/ipa-kakomon` と共用）
 
 企画書: https://claude.ai/artifact/JvCm7MmGbxE1y7gz9jEgcH
 
@@ -31,13 +31,38 @@
 3. `src/premium.py` の `RATE_FILES` に1行足す。古い年度のファイルは消さない
 4. `tests/test_premium.py` の期待値（北海道の額表の数字）を新しい額表で足す
 
+**1月にもう1つ**: 所得税の計算（`data/other_rates.json` の `withholding`）は暦年ごと。国税庁が
+「令和◯年分 月額表の甲欄を適用する給与等に対する税額の電算機計算の特例について」を出したら、
+第1〜4表の数字で新しい年を1件足し、`tests/test_extras.py` にその PDF の計算例を足す。
+やらないと1月以降は所得税が出ず、手取りは「所得税を含まない」表示に戻る。
+令和9年分は 2026-09-28 に入れた（valid_until 2027-12-31）。次は2027年末に令和10年分を確かめる。
+**年末調整後の年額**（`extras.annual_income_tax_yen`。年収別の早見表・週20時間の壁・年収の壁で使う）は
+令和8・9年分の基礎控除104万円（合計所得132万円以下）と給与所得控除の最低74万円で書いてある。
+令和10年分からは基礎控除が99万円になる（国税庁 No.1199）ので、2027年中に直す。年収の壁（136万・169万・178万円）も同じ。
+
+**4月にもう1つ**: 雇用保険料率と国民年金保険料は4月から変わる。`data/other_rates.json` の
+`employment` と `kokumin_nenkin` に新しい年度を1件ずつ足す（出典の URL も）。やらないと4月以降は
+雇用保険料・手取り・国民年金との比較が出なくなる（間違った額は出さない作り）。
+`src/render.py` の `HISTORY`（計算方法と出典のページの更新履歴）にも1行足す。
+
 等級表（標準報酬月額の区切りと上限）も額表から読むので、制度改正で等級が変わっても
 取り込みで入る。ただし import は全都道府県で等級表が同じことを前提にしている。
 
 ### まだやっていないこと
 
-- 都道府県別の料率ページ（企画書の47ページ）
-- 公開（Cloudflare Pages のプロジェクト作成とカスタムドメイン `shaho.dailyquarry.com`）
+- 都道府県別の料率ページ（企画書の47ページ）。検索の量を確かめてから決める
+- Search Console への登録と sitemap の送信（ユーザーの作業）。`shaho.dailyquarry.com` は 2026-09-27 時点でつながっている
+
+### 検索向けの決まり（2026-09-27）
+
+- 表示中の「最終更新」と sitemap の lastmod は `render.py` の `HISTORY` の先頭の日付。**中身を変えたら HISTORY に1行足す**
+- よくある質問（faq.html）の見出しは検索される問いの形にし、`id` を付けてトップから直接リンクしている。id は変えない
+- 月収別ページのタイトルには年収（×12）も入れて、年収での検索も拾う。年収ごとの個別ページは作らない（中身が重複する）。
+  年収は `nenshu.html` の早見表1枚にまとめている（「パート 年収 手取り 表」の受け皿。社保に入る場合と扶養内を並べる）
+- 加入条件は `jyoken.html`、等級表は `hyoujun.html`、手取りからの逆算は `getsushu/index.html` の下（2026-09-27）
+- 計算機の入力は URL（?h=20&hr=1100&w=…）に残る。月収別・週20時間の壁のページから `index.html?w=…` で開く。キーを変えるとリンクが切れる
+- よくある質問の FAQPage（JSON-LD）は `render.faq_ld` が h2 id="q-…" から作る。見出しを足せば自動で入る
+- サイト名は「パートの社会保険 計算機」（2026-09-27 に「社会保険 加入判定チェッカー」から変更。検索される言葉に合わせた）
 
 ## 仕組み
 
@@ -50,6 +75,8 @@
   **JS は Python（`eligibility.py`・`premium.py`）の写し。** `tests/test_calc_js.py` が node で
   calc.js を動かし、判定と保険料が Python と全件一致することを確かめている。
   片方を直したら、もう片方も同じように直すこと。
+- `src/extras.py` と `data/other_rates.json` — 雇用保険料・国民年金保険料・将来の年金（報酬比例 5.481/1000）・
+  傷病手当金（標準報酬月額÷30×2/3）。calc.js に同じ計算があり、`tests/test_calc_js.py` が突き合わせる
 - `data/kyoukaikenpo_<年度>.json` — 料率の正。手で書き換えない（`tools/import_kyoukaikenpo.py` で作る）。
   料率は 1/100000 単位の整数（10.28% → 10280）。端数処理は「50銭以下切り捨て・超えたら切り上げ」
 - 年次ページ（`templates/year.html`、5ページ）は `eligibility.MILESTONES`

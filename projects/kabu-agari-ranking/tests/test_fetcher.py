@@ -8,6 +8,7 @@
 import pandas as pd
 import pytest
 
+import fetcher
 from fetcher import (
     _extract_asof_date,
     _parse_market_html,
@@ -161,4 +162,36 @@ def test_ページ自体が取れないときは解析の故障にしない(offl
     monkeypatch.setattr(fetcher, "_fetch_market_html", lambda mode, market, retries=3: None)
     assert fetch_gainers(top_n=10).empty
     # これは通信の失敗（fetch_errors 側で扱う）
+    assert fetcher.parse_failures == []
+
+
+def test_相場日が読み取れなければ実行日で埋めない():
+    """実行日で埋めると、大引け後の営業日にはたまたま一致して検査もすり抜ける。
+    2026-09-07 に月曜分が金曜のファイルを上書きしたのと同じ型の事故になる。"""
+    fetcher.parse_failures.clear()
+    df = fetcher._finalize(
+        pd.DataFrame([{"ticker": "5131", "code": "5131", "name": "A",
+                       "close": 163.0, "change_pct": 44.25, "metric_value": 1}]),
+        None, fetcher.GAINERS_LABEL)
+    assert df["rec_date"].iloc[0] == ""
+    assert any("相場日を読み取れません" in m for m in fetcher.parse_failures)
+    fetcher.parse_failures.clear()
+
+
+def test_相場日が空なら保存前の検査が弾く():
+    import datetime
+
+    import validate
+    with pytest.raises(validate.InvalidPayload):
+        validate.check({"rec_date": "", "gainers": [{}] * 30},
+                       datetime.datetime.now(validate.JST))
+
+
+def test_相場日が取れていれば通知は出ない():
+    fetcher.parse_failures.clear()
+    df = fetcher._finalize(
+        pd.DataFrame([{"ticker": "5131", "code": "5131", "name": "A",
+                       "close": 163.0, "change_pct": 44.25, "metric_value": 1}]),
+        "2026-09-28", fetcher.GAINERS_LABEL)
+    assert df["rec_date"].iloc[0] == "2026-09-28"
     assert fetcher.parse_failures == []

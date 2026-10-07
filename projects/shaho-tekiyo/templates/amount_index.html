@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}パートの社会保険はいくら引かれる？月収8万〜25万円の早見表と手取り【2026年度】{% endblock %}
+{% block description %}月収8万〜25万円のパート・アルバイトが社会保険に入ったときに引かれる保険料（本人負担）を、{{ era }}の協会けんぽの料率で円単位に。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">月収別の保険料</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>パートの社会保険はいくら引かれる？ 月収別の早見表（{{ era }}）</h1>
+<p>
+  社会保険に入ったときに給与から引かれる保険料（健康保険・子ども・子育て支援金・厚生年金の本人負担）を、
+  月収ごとに円単位でまとめました。東京の会社・39歳以下の額です。月収を押すと、47都道府県の額と40〜64歳の額が見られます。
+</p>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>月収</th><th>引かれる保険料</th><th>残り</th></tr></thead>
+  <tbody>
+    {% for a in all_amounts %}
+    <tr><th><a href="{{ a.slug }}.html">{{ a.man }}万円</a></th><td>{{ "{:,}".format(a.r.total_yen) }}円</td><td>{{ "{:,}".format(a.r.take_home_yen) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">
+  出典: <a href="{{ source.page }}" rel="nofollow noopener" target="_blank">{{ source.name }}「{{ source.title }}」</a>の料率をもとに当サイトで計算（{{ period }}）。
+  「残り」は社会保険料だけを引いた額です。雇用保険料・所得税も引いた手取りの目安は、各月収のページにあります（住民税は含みません）。
+</p>
+
+<h2 id="reverse">手取りから逆算: 手取り◯万円にするには月収いくら？</h2>
+<p>
+  社会保険に入ったうえで、毎月の手取りを◯万円にするのに要る月収の目安です。
+  東京の会社・39歳以下・扶養する家族0人・通勤手当なしで、保険料・雇用保険料・所得税を引いた額で見ています（住民税は含みません）。
+</p>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>手取り</th><th>要る月収</th><th>週20時間なら時給</th></tr></thead>
+  <tbody>
+    {% for r in reverse %}
+    <tr><th>{{ r.net_man }}万円</th><td>{{ "{:,}".format(r.pay) }}円</td><td>{{ "{:,}".format(r.hourly_20) }}円</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">月収がこの額以上なら、手取りはその額を下回りません（保険料は月収の区切り＝等級ごとに上がるため、少し下の月収だと届かないことがあります）。等級の区切りは<a href="{{ base_url }}hyoujun.html">標準報酬月額の等級表</a>に。</p>
+
+{% include "_cards.html" %}
+{% endblock %}

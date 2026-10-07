@@ -1,6 +1,10 @@
 {% extends "base.html" %}
-{% block title %}{{ s.name }}（{{ s.code }}）の値上がり・ストップ高の記録{% endblock %}
-{% block description %}{{ s.name }}（{{ s.code }}）が値上がり・値下がり・活況ランキングに載った日の一覧。{{ summary }}{% endblock %}
+{# 検索結果で並ぶのは「◯◯の株価・チャート」ばかり。**同じことを名乗っても勝てない**ので、
+   このサイトが答えられる問い（いつ動いたか）と、その場で分かる数字を出す。 #}
+{% block title %}{{ s.name }}（{{ s.code }}）はいつ動いたか｜{{ day_count }}営業日で{{ s.rows|length }}回ランクイン{% endblock %}
+{# **結論を先に。** 検索結果に出るのは2行ぶんなので、冒頭に数字が無いと
+   「何が分かるページか」が伝わらないまま切れる。 #}
+{% block description %}直近{{ day_count }}営業日のうち{{ s.rows|length }}回ランクイン{% if s.best_pct is not none %}、最大の変動{{ "%+.2f"|format(s.best_pct) }}%{% endif %}{% if s.stop_highs %}、ストップ高{{ s.stop_highs }}回{% endif %}{% if s.stop_lows %}、ストップ安{{ s.stop_lows }}回{% endif %}。{{ s.name }}（{{ s.code }}{% if profile_short %}／{{ profile_short }}{% endif %}）が値上がり・値下がり・活況ランキングに載った日を、順位と終値つきで一覧にしています。{% endblock %}
 {% block structured_data %}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
@@ -16,7 +20,24 @@
 ] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>{{ s.name }}（{{ s.code }}）</h1>
+{# 市場区分・業種・売買単位。年に数回しか変わらないので貯めてある値を出す。
+   PER や時価総額のような毎日変わる数字は置かない（古い数字を出すことになる）。 #}
+{% if profile %}<p class="stock-profile">{{ profile }}</p>{% endif %}
 <p class="summary">{{ summary }}</p>
+{# 「いっぱいまで動いた」と書くなら、その記録の置き場所まで案内する。
+   **数えているのはランキングに載った日のうち**なので、そう断る。
+   記録のページは全件を数えているので、同じ銘柄でも回数が違いうる。 #}
+{% if s.stop_highs or s.stop_lows %}
+<p class="stop-note">
+  ランキングに載った日のうち
+  {%- if s.stop_highs %}<strong>ストップ高 {{ s.stop_highs }}回</strong>{% endif %}
+  {%- if s.stop_highs and s.stop_lows %}、{% endif %}
+  {%- if s.stop_lows %}<strong>ストップ安 {{ s.stop_lows }}回</strong>{% endif %}です。
+  {% if s.stop_highs %}<a href="{{ base_url }}stop-high/index.html">ストップ高の記録</a>{% endif %}
+  {%- if s.stop_highs and s.stop_lows %} ／ {% endif %}
+  {%- if s.stop_lows %}<a href="{{ base_url }}stop-low/index.html">ストップ安の記録</a>{% endif %}
+</p>
+{% endif %}
 
 {% if chart %}
 <figure class="chart-figure">
@@ -67,7 +88,31 @@
   </thead>
   <tbody>
     {% for e in together %}
-    <tr><th scope="row">{{ e.count }}回</th><td>{{ e.name }}</td><td>{{ e.code }}</td></tr>
+    <tr><th scope="row">{{ e.count }}回</th><td>{% if e.has_page %}<a href="{{ base_url }}stock/{{ e.code }}/">{{ e.name }}</a>{% else %}{{ e.name }}{% endif %}</td><td>{{ e.code }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if same_industry %}
+<h2>同じ業種でランキングに載った銘柄</h2>
+<p>
+  {{ s.name }}と同じ<strong>{{ industry }}</strong>に分類されていて、
+  この期間にランキングへ入った銘柄です。
+  <strong>連動するという意味ではありません</strong>（同じ業種に分けられている、という事実だけです）。
+</p>
+<div class="table-wrap">
+<table class="breakdown-table">
+  <caption>{{ industry }}の銘柄（登場の多い順）</caption>
+  <thead><tr><th scope="col">銘柄名</th><th scope="col">コード</th><th scope="col">登場</th></tr></thead>
+  <tbody>
+    {% for e in same_industry %}
+    <tr>
+      <th scope="row"><a href="{{ base_url }}stock/{{ e.code }}/">{{ e.name }}</a></th>
+      <td>{{ e.code }}</td>
+      <td>{{ e.rows|length }}回</td>
+    </tr>
     {% endfor %}
   </tbody>
 </table>
@@ -83,7 +128,9 @@
 <p>
   ここに出るのは<strong>ランキングに入った日だけ</strong>で、株価の連続した推移ではありません。
   値動きが小さかった日は載らないため、日付が飛びます。
-  ランキングの読み方は<a href="{{ base_url }}guide.html">こちら</a>、
+  {# リンクの文字は、それだけ読んでも行き先が分かるようにする。
+     「こちら」はリンクだけを拾って読む人には意味を成さない。 #}
+  <a href="{{ base_url }}guide.html">ランキングの読み方</a>もあわせてご覧ください。
   ほかの銘柄は<a href="{{ base_url }}search.html">銘柄検索</a>から探せます。
 </p>
 {% include "_ad_slot.html" %}

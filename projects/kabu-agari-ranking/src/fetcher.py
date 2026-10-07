@@ -2,7 +2,7 @@
 当日の株価ランキングを kabutan.jp から取得する。
 
 HTML の取得・解析は 共有パッケージ kabutan-client に一本化してある
-（quality-gainer-tracker と共通）。kabutan.jp の構造が変わったときに
+（もう1つの利用側だった quality-gainer-tracker は 2026-09-26 に廃止）。kabutan.jp の構造が変わったときに
 直すのは kabutan-client 側で、このファイルはランキングの組み立てだけを持つ。
 
 kabutan.jp/warning/ の各ランキングの mode:
@@ -20,6 +20,7 @@ from kabutan import (
     MODE_GAINERS as _MODE_GAINERS,
     MODE_LOSERS as _MODE_LOSERS,
     MODE_STOP_HIGH as _MODE_STOP_HIGH,
+    MODE_STOP_LOW as _MODE_STOP_LOW,
     fetch_errors,
 )
 from kabutan import extract_asof_date as _extract_asof_date
@@ -34,6 +35,19 @@ from kabutan import parse_ranking_table as _parse_market_html
 # 0件になり、「休場日でランキングが無い」のと見分けが付かない。休場日でも
 # kabutan は直近営業日のランキングを出すので、ページがあって0件なら解析が壊れている。
 parse_failures: list[str] = []
+
+# ランキングごとに、市場のページを何枚取得できたか。
+# **0件だったのか、取得そのものに失敗したのかを呼び出し側が区別するため**に使う。
+# ストップ高・ストップ安は0件の日が普通にあるので、両者を取り違えると
+# 「取れなかった日」を「1件も無かった日」として記録してしまう。
+pages_fetched: dict[str, int] = {}
+
+# ランキングの名前。ログ・pages_fetched のキー・失敗の通知で同じものを使う。
+GAINERS_LABEL = "値上がりランキング"
+LOSERS_LABEL = "値下がりランキング"
+ACTIVE_LABEL = "活況銘柄ランキング"
+STOP_HIGH_LABEL = "ストップ高銘柄"
+STOP_LOW_LABEL = "ストップ安銘柄"
 
 
 def _fetch_market_html(mode: str, market: int, retries: int = 3) -> str | None:
@@ -55,11 +69,11 @@ def _fetch_ranking(mode: str, label: str, top_n: int) -> tuple[pd.DataFrame, str
     print(f"  {label}取得中（kabutan.jp）...")
     all_rows = []
     asof_date = None
-    pages_fetched = 0
+    fetched = 0
     for market in _KABUTAN_MARKETS:
         html = _fetch_market_html(mode, market)
         if html:
-            pages_fetched += 1
+            fetched += 1
             if asof_date is None:
                 asof_date = _extract_asof_date(html)
             df_m = _parse_market_html(html)
@@ -67,12 +81,14 @@ def _fetch_ranking(mode: str, label: str, top_n: int) -> tuple[pd.DataFrame, str
                 all_rows.append(df_m)
         time.sleep(1)
 
+    pages_fetched[label] = fetched
+
     if not all_rows:
-        # ストップ高は「その日は1件も無かった」が普通に起こる。
+        # ストップ高・ストップ安は「その日は1件も無かった」が普通に起こる。
         # 他のランキング（値上がり等）が0件なら解析の故障だが、ここは違う。
-        if pages_fetched and mode != _MODE_STOP_HIGH:
+        if fetched and mode not in _ZERO_OK_MODES:
             parse_failures.append(
-                f"{label}: ページは{pages_fetched}件取得できたのに1行も解析できませんでした"
+                f"{label}: ページは{fetched}件取得できたのに1行も解析できませんでした"
                 "（表の構造が変わった可能性があります）"
             )
         return pd.DataFrame(), asof_date
@@ -85,38 +101,56 @@ def _fetch_ranking(mode: str, label: str, top_n: int) -> tuple[pd.DataFrame, str
     return df, asof_date
 
 
-def _finalize(df: pd.DataFrame, rec_date: str | None) -> pd.DataFrame:
+def _finalize(df: pd.DataFrame, rec_date: str | None, label: str = "") -> pd.DataFrame:
+    """順位を振り、相場日を入れて返す。
+
+    **相場日が取れなければ空のままにする。** 以前は実行日で埋めていたが、
+    それが正しい保証はない（ページが前営業日を出していたかもしれない）。
+    大引け後の営業日に実行すると実行日と一致してしまうので、
+    保存前の検査もすり抜ける。2026-09-07 に月曜分が金曜のファイルを
+    上書きしたのと同じ型の事故になる。空なら validate が必ず弾く。
+    """
     df = _fill_names(df.reset_index(drop=True))
-    df["rec_date"] = rec_date or str(date.today())
+    if not rec_date:
+        parse_failures.append(
+            f"{label or 'ランキング'}: ページから相場日を読み取れませんでした"
+            "（日付の欄の作りが変わった可能性があります）"
+        )
+    df["rec_date"] = rec_date or ""
     df.insert(0, "rank", range(1, len(df) + 1))
     return df
 
 
+# 0件が正常なランキング。値上がり・値下がり・活況は0件なら解析の故障だが、
+# ストップ高とストップ安は穏やかな日には本当に1件も無い。
+_ZERO_OK_MODES = frozenset({_MODE_STOP_HIGH, _MODE_STOP_LOW})
+
+
 def fetch_gainers(top_n: int = 30) -> pd.DataFrame:
     """値上がり率上位 top_n 件。columns: rank,ticker,code,name,close,change_pct,metric_value(出来高),rec_date"""
-    df, asof_date = _fetch_ranking(_MODE_GAINERS, "値上がりランキング", top_n)
+    df, asof_date = _fetch_ranking(_MODE_GAINERS, GAINERS_LABEL, top_n)
     if df.empty:
         return df
     df = df[df["change_pct"] > 0].sort_values("change_pct", ascending=False).head(top_n)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, GAINERS_LABEL)
 
 
 def fetch_losers(top_n: int = 30) -> pd.DataFrame:
     """値下がり率上位 top_n 件（下落率が大きい順）。columns同上（change_pctは負値）。"""
-    df, asof_date = _fetch_ranking(_MODE_LOSERS, "値下がりランキング", top_n)
+    df, asof_date = _fetch_ranking(_MODE_LOSERS, LOSERS_LABEL, top_n)
     if df.empty:
         return df
     df = df[df["change_pct"] < 0].sort_values("change_pct", ascending=True).head(top_n)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, LOSERS_LABEL)
 
 
 def fetch_active(top_n: int = 30) -> pd.DataFrame:
     """約定回数（取引の活発さ）上位 top_n 件。metric_valueは約定回数。"""
-    df, asof_date = _fetch_ranking(_MODE_ACTIVE, "活況銘柄ランキング", top_n)
+    df, asof_date = _fetch_ranking(_MODE_ACTIVE, ACTIVE_LABEL, top_n)
     if df.empty:
         return df
     df = df.sort_values("metric_value", ascending=False).head(top_n)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, ACTIVE_LABEL)
 
 
 def fetch_stop_high() -> pd.DataFrame:
@@ -132,9 +166,29 @@ def fetch_stop_high() -> pd.DataFrame:
 
     件数は日によって0件になりうる（相場が穏やかな日）。0件は異常ではない。
     """
-    df, asof_date = _fetch_ranking(_MODE_STOP_HIGH, "ストップ高銘柄", top_n=0)
+    df, asof_date = _fetch_ranking(_MODE_STOP_HIGH, STOP_HIGH_LABEL, top_n=0)
     if df.empty:
         return df
     # 順位の概念が無いランキングなので、上昇率の高い順に並べておく
     df = df.sort_values("change_pct", ascending=False)
-    return _finalize(df, asof_date)
+    return _finalize(df, asof_date, STOP_HIGH_LABEL)
+
+
+def fetch_stop_low() -> pd.DataFrame:
+    """その日ストップ安をつけた銘柄。**上位30銘柄に限らない全件**。
+
+    ストップ高（`fetch_stop_high`）と対になるもので、性質もまったく同じ。
+    値下がりランキングからの推定では上位30銘柄の中しか分からない。
+
+    このランキングは「その日ストップ安を**つけた**銘柄」で、引けまで
+    下限に張り付いていたとは限らない。引けで保ったかは `at_limit`
+    （表の S の印）で分かる。**大引け後に取ることが前提**。
+
+    件数は日によって0件になりうる（相場が穏やかな日）。0件は異常ではない。
+    """
+    df, asof_date = _fetch_ranking(_MODE_STOP_LOW, STOP_LOW_LABEL, top_n=0)
+    if df.empty:
+        return df
+    # 順位の概念が無いランキングなので、下落率の大きい順に並べておく
+    df = df.sort_values("change_pct", ascending=True)
+    return _finalize(df, asof_date, STOP_LOW_LABEL)

@@ -1,9 +1,11 @@
 /// 広告と課金。
 ///
-/// **売っているものが「広告を消す」と「応援」だけ**であることと、
+/// **売っているものが「広告を消す」1つだけ**であることと、
 /// 広告がいつ出るかを見張る。ここが緩むと、10ラウンドかけて測ってきた
 /// バランスが金で飛ばせるものになる。
 library;
+
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +14,7 @@ import 'package:soccer_career/monetize/monetization.dart';
 import 'package:soccer_career/monetize/purchase_service.dart';
 
 class FakeAds implements AdService {
+  int tried = 0;
   int shown = 0;
   bool disposed = false;
   bool ready = true;
@@ -23,7 +26,13 @@ class FakeAds implements AdService {
   bool get isInterstitialReady => ready;
 
   @override
-  Future<void> showInterstitial() async => shown++;
+  Future<bool> showInterstitial() async {
+    tried++;
+    // 在庫が無ければ、出さずに false を返す（本物と同じ振る舞い）。
+    if (!ready) return false;
+    shown++;
+    return true;
+  }
 
   @override
   void dispose() => disposed = true;
@@ -37,25 +46,48 @@ class FakeStore implements PurchaseService {
   final List<Product> bought = [];
   int restores = 0;
 
+  Future<void> Function(Product product)? _onDelivered;
+  Future<void> Function(Product product)? _onRevoked;
+
+  /// ストアから後から流れてくるぶん（アプリを落としている間に決済が通った、
+  /// 家族の承認が下りた、別の端末で買った）。
+  Future<void> deliver(Product product) async =>
+      _onDelivered?.call(product);
+
+  /// 返金・取り消しで戻ってくるぶん。
+  Future<void> revoke(Product product) async => _onRevoked?.call(product);
+
   @override
-  Future<void> initialize() async {}
+  Future<void> initialize({
+    required Future<void> Function(Product product) onDelivered,
+    required Future<void> Function(Product product) onRevoked,
+  }) async {
+    _onDelivered = onDelivered;
+    _onRevoked = onRevoked;
+  }
 
   @override
   Future<bool> isAvailable() async => available;
 
   @override
   Future<String?> priceOf(Product product) async =>
-      available ? '¥${product == Product.noAds ? 400 : 200}' : null;
+      available ? '¥400' : null;
 
   @override
   Future<PurchaseOutcome> buy(Product product) async {
-    if (outcome == PurchaseOutcome.purchased) bought.add(product);
+    if (outcome == PurchaseOutcome.purchased) {
+      bought.add(product);
+      await _onDelivered?.call(product);
+    }
     return outcome;
   }
 
   @override
   Future<PurchaseOutcome> restore() async {
     restores++;
+    if (outcome == PurchaseOutcome.purchased) {
+      await _onDelivered?.call(Product.noAds);
+    }
     return outcome;
   }
 
@@ -78,6 +110,35 @@ Future<Monetization> started({
 }
 
 void main() {
+  /// **利用者に配る文面も、実装と突き合わせる。**
+  ///
+  /// サポートページに「始めてから数シーズンのあいだは広告を出さない」と
+  /// 書いてあったが、`adsFromSeason` を 3 → 1 にした時点で**嘘になっていた**
+  /// （1シーズン目の終わりから出る）。ガイド（`guide_test`）は見張っていたが、
+  /// **法務ページを見ている検査が1つも無かった**。
+  ///
+  /// HTML を細かく読み解くことはしない——広告の頻度のように
+  /// **数字が変われば嘘になる記述**だけを、最小限の形で縛る。
+  test('サポートページの広告の説明が、実装と食い違っていない', () {
+    final page = File('legal/support.html').readAsStringSync();
+
+    // 「いつから出るか」。1季目の終わりから出るなら、数シーズン待たせない。
+    expect(Monetization.adsFromSeason, 1);
+    expect(page.contains('1シーズン目の終わりから'), isTrue);
+    expect(
+      page.contains('数シーズン'),
+      isFalse,
+      reason: '広告が1季目の終わりから出るのに「数シーズン出さない」と書いてある',
+    );
+
+    // 「どこに出るか」。ここは仕組みの側（季末だけ・バナー無し）と揃える。
+    expect(page.contains('シーズンの切れ目にだけ'), isTrue);
+    expect(page.contains('バナー広告は出しません'), isTrue);
+
+    // 売り物は1つだけ、という約束もここに書いてある。
+    expect(Product.values.length, 1);
+  });
+
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('売っているもの', () {
@@ -85,10 +146,16 @@ void main() {
       // **この検査が要点。** 伸びしろ・金・出場機会を売る商品を足したら
       // ここで落ちる。バランスは `balance_sim` で測って釣り合わせてあり、
       // 売った瞬間にその調整が意味を失う。
-      expect(Product.values.length, 2);
-      expect(Product.values.toSet(), {Product.noAds, Product.tip});
+      expect(Product.values.length, 1);
+      expect(Product.values.toSet(), {Product.noAds});
+      // **消耗型は売らない**（2026-10-01）。復元できないので、取りこぼすと
+      // 払った額がそのまま消える。
       expect(Product.noAds.consumable, isFalse);
-      expect(Product.tip.consumable, isTrue);
+      expect(
+        Product.values.where((p) => p.consumable),
+        isEmpty,
+        reason: '消耗型を足すなら、復元できないことへの手当てがいる',
+      );
     });
 
     test('商品IDは重ならず、IDから引ける', () {
@@ -104,17 +171,30 @@ void main() {
     test('始めたばかりのうちは出さない', () async {
       final ads = FakeAds();
       final money = await started(ads: ads);
-      for (var season = 0; season < Monetization.freeSeasons; season++) {
+      for (var season = 0; season < Monetization.adsFromSeason; season++) {
         await money.showSeasonAd(seasonsPlayed: season);
       }
       expect(ads.shown, 0, reason: '序盤で広告が出ている');
     });
 
-    test('数シーズン過ぎたら出る', () async {
+    test('出し始める季から出る', () async {
       final ads = FakeAds();
       final money = await started(ads: ads);
-      await money.showSeasonAd(seasonsPlayed: Monetization.freeSeasons);
+      await money.showSeasonAd(seasonsPlayed: Monetization.adsFromSeason);
       expect(ads.shown, 1);
+    });
+
+    test('出る場所が季末しか無いので、無料の季はそのまま上限を削る', () async {
+      // **1キャリアは 18.6季**（`balance_sim`）。広告の機会はその季末だけ
+      // なので、無料にした季はそのまま機会から消える。
+      // 3 だった頃は 16.6回、1 にして 18.6回（2026-09-26）。
+      const seasonsPerCareer = 18.6;
+      final slots = seasonsPerCareer - (Monetization.adsFromSeason - 1);
+      expect(
+        slots,
+        greaterThan(17.0),
+        reason: '無料の季を増やすと、広告の機会がそのまま減る',
+      );
     });
 
     test('間隔が空いていなければ出さない', () async {
@@ -135,13 +215,32 @@ void main() {
       expect(ads.shown, 2);
     });
 
-    test('在庫が無くても、間隔は空けたことにする', () async {
-      // **出したことにするのは出す前。** 出したあとに記録すると、
-      // 在庫切れで即座に戻ったときに間隔が空かず、次の季でまた出る。
+    test('在庫が無かった回は、間隔を数えない', () async {
+      // **出せた回だけ数える。** 出す前に記録していた頃は、在庫が無くて
+      // 何も起きなかった回まで「出した」ことになり、**見せていないのに
+      // 次の機会が潰れていた**（そのぶんそのまま収入が消える）。
       final ads = FakeAds()..ready = false;
       final money = await started(ads: ads);
       final now = DateTime(2026, 9, 25, 12);
       await money.showSeasonAd(seasonsPlayed: 5, now: now);
+      expect(ads.tried, 1);
+      expect(ads.shown, 0);
+      expect(
+        money.shouldShowSeasonAd(
+          seasonsPlayed: 6,
+          now: now.add(const Duration(minutes: 1)),
+        ),
+        isTrue,
+        reason: '出していない回で間隔を潰している',
+      );
+    });
+
+    test('出せた回のあとは、間隔を空ける', () async {
+      final ads = FakeAds();
+      final money = await started(ads: ads);
+      final now = DateTime(2026, 9, 25, 12);
+      await money.showSeasonAd(seasonsPlayed: 5, now: now);
+      expect(ads.shown, 1);
       expect(
         money.shouldShowSeasonAd(
           seasonsPlayed: 6,
@@ -188,15 +287,19 @@ void main() {
       expect(money.noAds, isFalse);
     });
 
-    test('応援はゲームに何もしない。数だけ残る', () async {
-      final ads = FakeAds();
-      final money = await started(ads: ads);
-      await money.buy(Product.tip);
-      await money.buy(Product.tip);
-      expect(money.tips, 2);
-      // 応援では広告は消えない。
+    test('返金されたら、広告が戻る', () async {
+      // **返金された取引も「購入」として流れてくる。** 見分けないと、
+      // 払い戻したのに広告が消えたままになる。
+      final store = FakeStore();
+      final money = await started(store: store);
+      await store.deliver(Product.noAds);
+      expect(money.noAds, isTrue);
+
+      await store.revoke(Product.noAds);
       expect(money.noAds, isFalse);
       expect(money.shouldShowSeasonAd(seasonsPlayed: 10), isTrue);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool('monetize.noAds'), isFalse);
     });
 
     test('復元で広告が消える', () async {
@@ -204,6 +307,31 @@ void main() {
       final money = await started(store: store);
       expect(await money.restore(), PurchaseOutcome.purchased);
       expect(store.restores, 1);
+      expect(money.noAds, isTrue);
+    });
+
+    test('アプリを落としている間に決済が通っても、ちゃんと受け取る', () async {
+      // **払ったのに何も起きない**を潰す検査。ストアの通知は購入を始めた
+      // 瞬間に返ってくるとは限らない（家族の承認、5分の上限を過ぎた後、
+      // 別の端末で買ったぶん）。待っている人が居なくても受け取る。
+      final ads = FakeAds();
+      final store = FakeStore();
+      final money = await started(ads: ads, store: store);
+      expect(money.noAds, isFalse);
+
+      await store.deliver(Product.noAds); // 誰も購入を待っていない
+
+      expect(money.noAds, isTrue);
+      expect(money.shouldShowSeasonAd(seasonsPlayed: 10), isFalse);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool('monetize.noAds'), isTrue);
+    });
+
+    test('同じ購入が二度流れてきても、一度しか受け取らない', () async {
+      final store = FakeStore();
+      final money = await started(store: store);
+      await store.deliver(Product.noAds);
+      await store.deliver(Product.noAds);
       expect(money.noAds, isTrue);
     });
 

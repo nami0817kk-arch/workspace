@@ -1,0 +1,22 @@
+{
+  "id": "slovakia",
+  "name": "スロバキア",
+  "age": "申請時18〜30歳（外務省）",
+  "stay": "",
+  "fee": "",
+  "funds": "",
+  "apply": "駐日スロバキア共和国大使館",
+  "timing": "",
+  "work": "",
+  "study": "",
+  "insurance": "",
+  "points": [
+    "2025年1月1日から、日本人は一生のうち2回まで参加できる（外務省）",
+    "駐日スロバキア大使館のサイトにはワーキング・ホリデー専用のページが無く、長期滞在用の「ナショナル・ビザ」の案内に含まれている"
+  ],
+  "sources": [
+    {"title": "National Visa | Embassy of the Slovak Republic in Tokyo", "url": "https://www.mzv.sk/en/web/tokio-en/visa-and-services/national-visa", "checked": "2026-10-05"},
+    {"title": "ワーキング・ホリデー制度｜外務省", "url": "https://www.mofa.go.jp/mofaj/toko/visa/working_h.html", "checked": "2026-10-05"}
+  ],
+  "unverified": ["stay", "fee", "funds", "timing", "work", "study", "insurance"]
+}

@@ -29,7 +29,7 @@ def test_ストップ高だけを日ごとに数える():
                             _row("7203", "トヨタ", close=2500.0, pct=1.5, rank=2)]),
         _day("2026-09-17", [_row("5131", "リンカーズ")]),
     ]
-    h = aggregate.stop_high_history(days)
+    h = aggregate.limit_history(days, "gainers")
     assert h["total"] == 2                       # トヨタは上限に届いていない
     assert h["per_day"][0]["rec_date"] == "2026-09-18"
     assert h["per_day"][0]["count"] == 1
@@ -39,12 +39,12 @@ def test_ストップ高だけを日ごとに数える():
 
 def test_1回だけの銘柄は一覧に出さない():
     days = [_day("2026-09-18", [_row("5131", "リンカーズ")])]
-    assert aggregate.stop_high_history(days)["stocks"] == []
+    assert aggregate.limit_history(days, "gainers")["stocks"] == []
 
 
 def test_ストップ高が無い日も記録に残す():
     days = [_day("2026-09-18", [_row("7203", "トヨタ", close=2500.0, pct=1.5)])]
-    h = aggregate.stop_high_history(days)
+    h = aggregate.limit_history(days, "gainers")
     assert h["total"] == 0
     assert h["per_day"][0]["count"] == 0          # 「無かった」ことも記録
 
@@ -177,6 +177,176 @@ def test_出どころが混ざっていることを画面で断る():
             {"code": "9999", "name": "圏外", "close": 500.0, "change_pct": 19.0, "at_limit": True}]},
         _day("2026-09-25", [_row("5131", "リンカーズ")]),
     ]
-    h = aggregate.stop_high_history(days)
+    h = aggregate.limit_history(days, "gainers")
     assert h["has_recorded"] and h["has_estimated"]
     assert [d["source"] for d in h["per_day"]] == ["recorded", "estimated"]
+
+
+# --- 市場区分・業種の内訳 ---------------------------------------------------
+
+def _recorded_day(rec_date, codes):
+    """取得元のストップ高一覧から記録した日。"""
+    return {
+        "rec_date": rec_date,
+        "gainers": [_row(c, f"銘柄{c}") for c in codes],
+        "losers": [], "active": [],
+        "stop_high": [
+            {"rank": i + 1, "code": c, "name": f"銘柄{c}", "close": 163.0,
+             "change_pct": 44.25, "at_limit": True}
+            for i, c in enumerate(codes)
+        ],
+    }
+
+
+@pytest.fixture
+def breakdown_site(tmp_path, monkeypatch):
+    data_dir = tmp_path / "data"
+    out_dir = tmp_path / "output"
+    data_dir.mkdir()
+    monkeypatch.setattr(render, "_DATA_DIR", data_dir)
+    monkeypatch.setattr(render, "_OUTPUT_DIR", out_dir)
+    monkeypatch.setattr(render, "_ROOT", tmp_path)
+    (data_dir / "stocks.json").write_text(json.dumps({"stocks": {
+        "1111": {"market": "東証グロース", "industry": "情報・通信業", "unit": "100株"},
+        "2222": {"market": "東証グロース", "industry": "サービス業", "unit": "100株"},
+        "3333": {"market": "東証プライム", "industry": "情報・通信業", "unit": "100株"},
+    }}, ensure_ascii=False), encoding="utf-8")
+    for d in ("2026-09-28", "2026-09-29", "2026-09-30"):
+        (data_dir / f"{d}.json").write_text(
+            json.dumps(_recorded_day(d, ["1111", "2222", "3333"]), ensure_ascii=False),
+            encoding="utf-8")
+    render.build_all()
+    return out_dir
+
+
+def test_ストップ高の市場別業種別の内訳が出る(breakdown_site):
+    html = (breakdown_site / "stop-high" / "index.html").read_text(encoding="utf-8")
+    assert "どの市場・どの業種で起きているか" in html
+    # 3営業日 × グロース2銘柄 = のべ6件（66.7%）
+    assert ">6<" in html and "66.7%" in html
+    assert "情報・通信業" in html
+
+
+def test_内訳は推定の日を数えない(tmp_path, monkeypatch):
+    """推定の日を混ぜると「上位30銘柄の中の数」と「全ストップ高」が同じ数に見える。"""
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    monkeypatch.setattr(render, "_DATA_DIR", data_dir)
+    monkeypatch.setattr(render, "_OUTPUT_DIR", tmp_path / "output")
+    monkeypatch.setattr(render, "_ROOT", tmp_path)
+    (data_dir / "stocks.json").write_text(
+        json.dumps({"stocks": {"1111": {"market": "東証グロース"}}}, ensure_ascii=False),
+        encoding="utf-8")
+    # stop_high キーを持たない日＝推定しかできない日
+    (data_dir / "2026-09-18.json").write_text(
+        json.dumps(_day("2026-09-18", [_row("1111", "銘柄1111")]), ensure_ascii=False),
+        encoding="utf-8")
+    render.build_all()
+    html = (tmp_path / "output" / "stop-high" / "index.html").read_text(encoding="utf-8")
+    assert "どの市場・どの業種で起きているか" not in html
+
+
+def test_銘柄ページに市場区分と業種が出る(breakdown_site):
+    html = (breakdown_site / "stock" / "1111" / "index.html").read_text(encoding="utf-8")
+    assert "東証グロース／情報・通信業／売買単位100株" in html
+    # meta description には売買単位まで入れない（文が長くなる）
+    assert "（1111／東証グロース／情報・通信業）" in html
+
+
+# --- ストップ安 -------------------------------------------------------------
+
+def _low_row(code, name, close=239.0, pct=-25.08, rank=1):
+    """既定は 319円 → 239円（値幅80円）＝ストップ安。"""
+    return {"rank": rank, "code": code, "name": name, "close": close,
+            "change_pct": pct, "metric_value": 100}
+
+
+def test_ストップ安も記録があればそれを正として使う():
+    day = {
+        "rec_date": "2026-09-28",
+        "losers": [_low_row("4599", "ステムリム")],
+        "stop_low": [
+            {"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+             "change_pct": -25.08, "at_limit": True},
+            {"rank": 2, "code": "9999", "name": "上位外", "close": 100.0,
+             "change_pct": -20.0, "at_limit": True},
+            {"rank": 3, "code": "8888", "name": "場中だけ", "close": 200.0,
+             "change_pct": -18.0, "at_limit": False},
+        ],
+    }
+    rows, source = aggregate.stop_low_rows(day)
+    assert source == "recorded"
+    # 引けまで下限を保った2件だけ。上位30銘柄の外にあった9999も数える。
+    assert [r["code"] for r in rows] == ["4599", "9999"]
+
+
+def test_ストップ安の記録が無い日は値下がり上位から推定する():
+    day = {"rec_date": "2026-09-18", "losers": [_low_row("4599", "ステムリム")]}
+    rows, source = aggregate.stop_low_rows(day)
+    assert source == "estimated"
+    assert [r["code"] for r in rows] == ["4599"]
+
+
+def test_ストップ安の最大は最も下げた日を指す():
+    """下落率は負の値なので、最大を取ると最も下げていない日になってしまう。"""
+    days = [
+        {"rec_date": "2026-09-29", "losers": [], "stop_low": [
+            {"code": "4599", "name": "ステムリム", "close": 239.0,
+             "change_pct": -25.08, "at_limit": True}]},
+        {"rec_date": "2026-09-28", "losers": [], "stop_low": [
+            {"code": "4599", "name": "ステムリム", "close": 300.0,
+             "change_pct": -15.0, "at_limit": True}]},
+    ]
+    h = aggregate.limit_history(days, "losers")
+    assert h["stocks"][0]["best_pct"] == -25.08
+
+
+def test_ストップ安の章が作られる(site):
+    html = (site / "stop-low" / "index.html").read_text(encoding="utf-8")
+    assert "ストップ安の記録" in html
+    # 上位30銘柄に限られることを必ず断る（全ストップ安だと誤解させない）
+    assert "上位30銘柄です" in html
+    # この fixture は値上がりしか持たない日ばかりなので、値下がりアーカイブが
+    # 作られない。**無いものへリンクしない**のが正しい（2026-09-27 に 404 を直した）。
+    import re
+    day_links = re.findall(r"archive/(\w+)/\d{4}-\d{2}-\d{2}\.html", html)
+    assert not day_links, f"無いアーカイブへ張っている: {day_links}"
+    assert html.count('<div class="archive-plain">') == 3, "リンクにできない日は押せない行として出す"
+
+
+def test_ストップ安の記録は値下がりのアーカイブへ張る(tmp_path, monkeypatch):
+    """アーカイブがある日は、値上がりではなく値下がりの日別ページへ行く。"""
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    monkeypatch.setattr(render, "_DATA_DIR", data_dir)
+    monkeypatch.setattr(render, "_OUTPUT_DIR", tmp_path / "output")
+    monkeypatch.setattr(render, "_ROOT", tmp_path)
+    (data_dir / "2026-09-18.json").write_text(json.dumps({
+        "rec_date": "2026-09-18",
+        "gainers": [_row("5131", "リンカーズ")],
+        "losers": [_low_row("4599", "ステムリム")],
+        "active": [],
+    }, ensure_ascii=False), encoding="utf-8")
+    render.build_all()
+    import re
+    html = (tmp_path / "output" / "stop-low" / "index.html").read_text(encoding="utf-8")
+    assert "archive/losers/2026-09-18.html" in html
+    assert set(re.findall(r"archive/(\w+)/\d{4}-\d{2}-\d{2}\.html", html)) == {"losers"}
+
+
+def test_ストップ安がsitemapに載る(site):
+    assert "/stop-low/" in (site / "sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_ストップ高とストップ安は別の章として作られる(site):
+    high = (site / "stop-high" / "index.html").read_text(encoding="utf-8")
+    low = (site / "stop-low" / "index.html").read_text(encoding="utf-8")
+    assert "<h1>ストップ高の記録</h1>" in high
+    assert "<h1>ストップ安の記録</h1>" in low
+    # 語彙が混ざっていないこと（1枚のテンプレートを共用しているため、
+    # 片方の語をベタ書きすると、もう片方のページに紛れ込む）
+    import re
+    headings = re.findall(r"<(?:h1|h2|h3|caption|figcaption)>(.*?)</", low, re.S)
+    assert headings, "見出しが1つも無い"
+    assert not [h for h in headings if "ストップ高" in h]
+    assert [h for h in headings if "ストップ安" in h]

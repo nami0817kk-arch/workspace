@@ -7,7 +7,8 @@
 
 | 項目 | 内容 |
 |---|---|
-| アプリ名（正式） | サッカー経営マネージャー |
+| アプリ名（正式） | サッカー経営マネージャー クラブ育成シミュレーション |
+| App Store のアプリID | 6809834913（アプリ内の「このアプリを評価する」がこのIDでページを開く） |
 | アプリ名（短縮・ホーム画面表示） | サカマネ |
 | カテゴリ | ゲーム > スポーツ / シミュレーション |
 | 対象年齢 | 全年齢（暴力表現・実写、ギャンブル要素なし。クラブ経営の「融資」「スポンサー契約」はすべて架空のゲーム内通貨） |
@@ -17,15 +18,37 @@
 | 利用規約 | https://soccer-manager.pages.dev/legal/terms.html |
 | サポート窓口 | https://soccer-manager.pages.dev/legal/support.html |
 
+### アプリ名を長くしてある理由
+
+公開3日の実測で**露出148回・ページ閲覧39回・初回DL8**だった。ページを見た人の
+11%が入れており（App Store の平均は3〜5%程度）、**見せ方ではなく「そもそも
+見られていない」のが問題**と分かった。名前は検索に最も重く効く欄で、30字まで
+使えるのに11字しか使っていなかった。
+
+同じ分野の上位（カルチョビットA）も
+`カルチョビットＡ(アー) サッカークラブ育成シミュレーション` という作りで、
+ブランド名の後ろにカテゴリ語を足している。
+
+**端末のホーム画面に出る名前は `サカマネ` のまま**（`CFBundleDisplayName`）。
+長くなるのはストアの掲載名だけ。
+
 ## 短い説明文（Google Play「簡単な説明」80字以内 目安）
 
 > 弱小クラブを率いて下部リーグから成り上がれ。育成・移籍・戦術、すべてお前次第。
 
 ## 長い説明文（ストア掲載用）
 
+> **読まれるのは冒頭3行だけ。** その先は「もっと見る」を押さないと出ない。
+> ここに「本格サッカークラブ経営シミュレーション」とだけ書いていた頃は、
+> ジャンル名を名乗っているだけで、入れる理由になっていなかった。
+> **1行目に状況、2行目に何を決めるのか、3行目にどこまで行けるのか**を置く。
+> 説明文は検索順位には効かない（効くのはキーワード欄）ので、ここは
+> まるごと「入れてもらうための文」に使ってよい。
+
 ```
-弱小クラブのオーナー兼監督として、下部リーグからの成り上がりを目指す
-本格サッカークラブ経営シミュレーション。
+5部リーグの弱小クラブ。オーナー兼監督は、あなた一人。
+スタメンも、移籍も、クラブの金も、すべてあなたが決める。
+1部リーグの頂点まで勝ち上がる、本格サッカー経営シミュレーション。
 
 ■ クラブを育てる
 選手のトレーニング方針・強度を個別に設定し、メンター制度やピンポイント特訓で
@@ -70,6 +93,260 @@
 購入しなくても最後まで遊べますが、購入するとクラブを早く強くできます。
 ```
 
+> **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
+> 記述が残っているのは、出すことになったときのため。当面は iOS だけを見る。
+
+## このバージョンの新機能（1.1.8）
+
+**提出するのはこの版（ビルド13）。** 1.1.4〜1.1.7 はビルドだけ作って提出して
+いない。中身はすべてこの版に入っている。掲載画像も作り直してある。
+
+提出のときに一緒に入れるもの（1.1.7 の節と同じ）:
+- **プレビュー動画**（`marketing/preview/app_preview_{ja,en}.mp4`）を日本語・英語に
+- **掲載画像9枚×4組を差し替え**（画面を作り直したので、ja/en とも全部）
+- 日本語の説明文を差し替え
+
+### 日本語
+
+```
+・画面を一通り作り直しました。順位・勝点・総合力といった数字を大きく
+　見やすくし、どこを見ればよいかが分かる並びにしています
+・ホーム画面にクラブの色の見出しを置き、順位を大きく出しました
+・試合の途中経過を、左右に伸びるバーで見比べられるようにしました
+・順位表で自分のクラブの行が一目で分かるようにしました
+・選手一覧と移籍市場で、総合力や移籍金を札に分けて読みやすくしました
+・能力レーダーの軸の文字が、環境によっては表示されないことがあったのを
+　直しました
+・設定から、このアプリを評価できるようになりました
+・設定に、お問い合わせの窓口を置きました
+・タイトル画面に絵を入れました
+・リーグ優勝・昇格を決めたときに、その絵が出るようになりました
+・選手の似顔絵、ピッチ、クラブのエンブレム、実績の記章を描き直しました
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- The screens have been redesigned. Key numbers (position, points, overall)
+  are larger and easier to read.
+- The home screen now has a club-coloured header with your position in it.
+- Match stats are now a side-by-side comparison bar.
+- Your club's row now stands out in the league table.
+- Overall and fees are shown as chips in the squad and transfer lists.
+- Fixed the attribute radar labels not showing on some platforms.
+- You can now rate the app from Settings.
+- Settings now has a link to contact support.
+- The title screen now has artwork.
+- Winning the league or going up now has artwork of its own.
+- Player portraits, the pitch, club crests and achievement badges have all
+  been redrawn.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
+## このバージョンの新機能（1.1.7）
+
+**提出するのはこの版（ビルド12）。** 1.1.4〜1.1.6 はビルドを作っただけで
+提出していない。中身はすべてこの版に入っている。
+
+このとき一緒に入れるもの:
+
+- **プレビュー動画**（`marketing/preview/app_preview_{ja,en}.mp4`）を日本語・
+  英語それぞれにアップロードする。**いちばん大きな空き枠だった。**
+- **英語の掲載画像9枚を差し替える**（クラブ名が日本語のままだった）
+- 日本語の説明文を差し替える（冒頭3行を練り直した）
+
+### 日本語
+
+```
+・設定から、このアプリを評価できるようになりました
+・設定に、お問い合わせの窓口を置きました
+・タイトル画面に絵を入れました
+・リーグ優勝・昇格を決めたときに、その絵が出るようになりました
+・選手の似顔絵を描き直しました。首から上だけの平たい絵をやめ、
+　ユニフォームと陰影を入れています
+・ピッチの芝とラインを描き直しました。スタメン画面にゴールエリアや
+　ペナルティアークが入り、試合画面と見た目が揃いました
+・クラブのエンブレムに縁取りと立体感を入れました
+・実績に1件ずつの記章を付けました。これまでは33件すべて同じ絵でした
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- You can now rate the app from Settings.
+- Settings now has a link to contact support.
+- The title screen now has artwork.
+- Winning the league or going up now has artwork of its own.
+- Player portraits have been redrawn, with a shirt and proper shading
+  instead of a flat floating head.
+- The pitch has been redrawn. The lineup screen now has the goal areas and
+  penalty arcs, and matches the look of the match screen.
+- Club crests now have a border and some depth.
+- Every achievement has its own badge. They all used to share one icon.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
+## このバージョンの新機能（1.1.6）
+
+1.1.5 と同じ掲載画像で出せる（タイトル画面と演出は掲載画像に写らない）。
+**1.1.5 をまだ提出していなければ、この版に差し替えて1回で出す。**
+
+### 日本語
+
+```
+・タイトル画面に絵を入れました
+・リーグ優勝・昇格を決めたときに、その絵が出るようになりました
+・選手の似顔絵を描き直しました。首から上だけの平たい絵をやめ、
+　ユニフォームと陰影を入れています
+・ピッチの芝とラインを描き直しました。スタメン画面にゴールエリアや
+　ペナルティアークが入り、試合画面と見た目が揃いました
+・クラブのエンブレムに縁取りと立体感を入れました
+・実績に1件ずつの記章を付けました。これまでは33件すべて同じ絵でした
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- The title screen now has artwork.
+- Winning the league or going up now has artwork of its own.
+- Player portraits have been redrawn, with a shirt and proper shading
+  instead of a flat floating head.
+- The pitch has been redrawn. The lineup screen now has the goal areas and
+  penalty arcs, and matches the look of the match screen.
+- Club crests now have a border and some depth.
+- Every achievement has its own badge. They all used to share one icon.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
+## このバージョンの新機能（1.1.5）
+
+1.1.4 はビルドを作っただけで提出していない。掲載画像を差し替える版だったが、
+その直後にゲーム内の絵（似顔絵・ピッチ・エンブレム・実績の記章）を作り直した
+ため、1.1.4 の掲載画像では中身と見た目がずれる。**1本にまとめてこの版で出す。**
+
+### 日本語
+
+```
+・選手の似顔絵を描き直しました。首から上だけの平たい絵をやめ、
+　ユニフォームと陰影を入れています
+・ピッチの芝とラインを描き直しました。スタメン画面にゴールエリアや
+　ペナルティアークが入り、試合画面と見た目が揃いました
+・クラブのエンブレムに縁取りと立体感を入れました
+・実績に1件ずつの記章を付けました。これまでは33件すべて同じ絵でした
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+```
+
+### 英語
+
+```
+- Player portraits have been redrawn, with a shirt and proper shading
+  instead of a flat floating head.
+- The pitch has been redrawn. The lineup screen now has the goal areas and
+  penalty arcs, and matches the look of the match screen.
+- Club crests now have a border and some depth.
+- Every achievement has its own badge. They all used to share one icon.
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+```
+
+## このバージョンの新機能（1.1.4）
+
+中身の変更は1件で、主目的は**掲載画像の差し替え**。掲載の更新はバージョンを
+出さないと反映されないため、この版を出す。1枚目を専用の下絵の中に置き、
+2枚目以降は帯の色を振って端末の枠に入れた。
+
+### 日本語
+
+```
+・シーズンの区切りで、評価のお願いを出すようにしました。理事会の目標を
+　達成したときだけで、何度も出ることはありません
+・App Store の掲載画像を新しくしました
+```
+
+### 英語
+
+```
+- We now ask for a rating at the end of a season, and only when you have met
+  the board's target. It will not keep asking.
+- New App Store screenshots.
+```
+
+## このバージョンの新機能（1.1.3）
+
+**ビルド8は TestFlight に上げてある**（2026-10-01）。提出はこの欄を貼って
+ビルド8を選ぶだけで、タグも手動実行も要らない。
+
+### 日本語
+
+```
+・アプリのアイコンを新しくしました
+・まれに、購入したぶんが二重に反映されることがあったのを直しました
+```
+
+### 英語
+
+```
+- New app icon.
+- Fixed a rare case where a purchase could be credited twice.
+```
+
+## このバージョンの新機能（1.1.2）
+
+App Store Connect の「このバージョンの新機能」に貼る文面。**日本語と英語で別々に入れる。**
+
+中身は不具合の修正2件。掲載の文面・画像は 1.1.1 から変えないので、
+差し替えるのはこの欄とビルドだけ。
+
+### 日本語
+
+```
+・広告を見ようとしたときに出ないことがあったのを直しました。特典を
+　受け取れないまま回数だけ減ってしまう場合がありました
+・ダークモードで、ユースの「育成方針」「メンター」で選んだ内容が
+　読めなくなっていたのを直しました
+```
+
+### 英語
+
+```
+- Fixed ads sometimes failing to appear when you asked for one, which could
+  use up one of your daily rewards without paying it out.
+- In dark mode, the training focus and mentor you picked for a youth player
+  were unreadable. Fixed.
+```
+
+## このバージョンの新機能（1.1.1）
+
+App Store Connect の「このバージョンの新機能」に貼る文面。**日本語と英語で別々に入れる。**
+
+中身の変更は1件だけで、あとはストアの掲載（名前・サブタイトル・キーワード・
+掲載画像・英語ローカライズ）の更新。掲載の更新はバージョンを出さないと
+反映されないため、この版を出す。
+
+### 日本語
+
+```
+・ダービーの収入が、実際に入れた人数で決まるようになりました。満員でも
+　入れる人数を超えて入場料が入っていたのを直しています
+```
+
+### 英語
+
+```
+- Derby income is now based on how many people actually got in. It used to
+  count gate receipts for more than the stadium holds.
+```
+
 ## このバージョンの新機能（1.1.0）
 
 App Store Connect / Google Play Console の「このバージョンの新機能」に貼る文面。
@@ -82,28 +359,164 @@ App Store Connect / Google Play Console の「このバージョンの新機能�
 ・有望株の流出。19歳を過ぎた選手は出場機会を求め、放っておくと去ります
 ・昇格はプロ契約に。背番号・週俸・契約金が発生し、慣れるまで時間がかかります
 ・生え抜きの印。育てた選手と買ってきた選手が見分けられます
+・ユースコーチの見極めと指導が、別々の仕事をするようになりました
+　（見極め＝良い子を集めて見立てる／指導＝アカデミーで伸ばす）
 
-遊びやすさも直しました。
+「次に何をすればいいか」が分かるようにしました。
 
 ・ホームに「次にやること」を1件だけ提案します
+・試合前にスタメンの不備（出場停止・疲労・ポジション違い）を知らせます
+・移籍の締切が近づくと知らせます
+・実績画面の一番上に、あと少しで届くものが出ます
+・まだ何も無い画面に、どうすれば埋まるかを書きました
+・選手ごとに、いま手を打つべきことを出します
+
+見て分かるようにしました。
+
 ・シーズンが終わると、その年の総括が出ます
 ・試合中に得点・決定機・カードの途中経過が見えます
 ・画面の数字から用語集を引けます
 ・クラブニュースを種類と本文で探せます
+・移籍市場で2人を並べて比べられます
+・日程画面からユースの日程と順位表を見られます
+・理事会の目標まであと何点・何節かが分かります
 ・スタッフに得意分野（攻撃・守備・GK・フィジカル）が付きました
 ・ユースの新人は「見立て」で表示されます（コーチの見極めで精度が変わります）
 
+セーブを守る仕組みを足しました。
+
+・設定から、いつでも戻れる控えを1つ取れます
+・セーブが壊れたときは、直前の控えから自動で復元します
+
 不具合の修正:
+・押して開いた画面からホームに戻れないことがあったのを直しました
+・購入したのにクラブ資金や特典が反映されないことがあったのを直しました
+・広告を最後まで見た後に画面を離れると、資金が入らないことがあったのを直しました
+・分割払いで獲得した選手を手放すと、残金の支払いが消えていたのを直しました
 ・掲載画像に英語が混ざっていたのを直しました
 ・一覧の文字が語の途中で折り返していたのを直しました
 ・昇格プレーオフ決勝のホームが順位と無関係に決まっていたのを直しました
-・セーブが壊れたときに控えから復元するようにしました
+```
+
+## プロモーション用テキスト（App Store、170字以内）
+
+**審査なしでいつでも差し替えられる唯一の欄。** 説明文の上に出る。短い期間で
+文言を試せる場所なので、埋めておく。
+
+```
+弱小クラブのオーナー兼監督。選手を育て、移籍で整え、戦術を組み、
+クラブの金を回す。下部リーグから頂点をめざす本格シミュレーション。
+一度も広告を見なくても、最後まで遊べます。
+```
+
+## サブタイトル（App Store、30字以内）
+
+名前のすぐ下に出て、検索にも効く欄。**空欄のままだと無料の枠を1つ捨てることになる。**
+
+**アプリ名に入れた語をここで繰り返さない。** 名前が
+「サッカー経営マネージャー クラブ育成シミュレーション」になったので、
+`クラブ` `育成` `シミュレーション` はここでは使わない。
+
+```
+下部リーグから成り上がる、監督の采配と移籍
+```
+
+## 英語圏向けの掲載（App Store の英語ローカライズ）
+
+アプリは UI だけでなく**選手名・クラブ名まで英語のプールを持っている**
+（`lib/data/name_pool.dart` が `Tr.isEnglish` で切り替える）。英語版として
+完成しているのに掲載が日本語だけだったため、英語圏では存在しないのと同じ
+だった。日本語圏の検索は激戦（公開3日で露出148回）で、同じ商品のまま
+市場をもう1つ増やせるのがこの欄。
+
+**画像は `marketing/screenshots_en/` と `marketing/screenshots_ipad_en/`。**
+日本語の画面に英語の説明文を添えると、中身が伝わらないどころか不信を招く。
+
+### アプリ名（30字以内）
+
+```
+Underdog FC: Soccer Club Sim
+```
+
+`Soccer Manager` `Football Manager` はどちらも実在のアプリ・シリーズの名前
+なので、その並びは避けている。`Underdog` で中身（弱小クラブ）を出し、
+`Soccer` `Club` `Sim` で検索の手がかりを確保する。
+
+### サブタイトル（30字以内）
+
+```
+Take a small club to the top
+```
+
+### キーワード（100字以内）
+
+アプリ名に入れた `soccer` `club` `sim` は繰り返さない。
+
+```
+manager,management,tactics,transfer,youth,squad,league,promotion,scout,simulation,coach,football
+```
+
+### プロモーション用テキスト（170字以内・審査なしで差し替え可）
+
+```
+Start with nothing but a badge and a shoestring budget. Sign, train and sell players, pick your tactics, and drag a fifth-tier club all the way up.
+```
+
+### 説明文
+
+```
+Take charge of a broke fifth-tier club and drag it to the top.
+
+You are the owner and the manager. Nobody else picks the team, balances the
+books or decides who to sell.
+
+- BUILD A SQUAD
+Set training for each player, pair a veteran with a prospect as his mentor,
+and send the ones who cannot get a game out on loan. Players peak and decline
+by position, and game time changes how fast they grow.
+
+- RUN AN ACADEMY
+Your academy plays its own season, so prospects get real matches. Pair them
+with a first-team veteran and they pick up his traits. But once they turn 19
+they want first-team football, and clubs will come for the ones you leave
+behind. Deciding when to hand out a professional contract is the job.
+
+- WIN ON MATCHDAY
+Pick the shape, set the instructions, and watch it play out minute by minute.
+At half time you can change the tactics, make substitutions and pick the words
+you use in the dressing room.
+
+- KEEP THE CLUB ALIVE
+Wages, transfer fees, gate receipts, sponsors, bank loans, ticket prices,
+stadium and facility upgrades. Miss the board's target for too long and you
+are out of a job.
+
+- CLIMB
+Five divisions, promotion play-offs, domestic cups and a continental cup.
+Top scorers, player of the season and a team of the season along the way.
+
+Your progress is saved on your device. No account, no sign-in.
+
+The rewarded video is there for people who want it; you can finish the game
+without watching a single one. One full-screen ad appears when a season rolls
+over, never during a match or while you are in the menus. There are no banners.
+Buying Supporter removes the full-screen ad. You can also buy club funds if you
+want to grow faster, but you never have to.
 ```
 
 ## キーワード（App Store キーワードフィールド、100字以内目安）
 
+**アプリ名・サブタイトルに入っている語をここで繰り返さない。** 検索の突き合わせは
+名前・サブタイトル・キーワードをまとめて見るので、重ねたぶんは枠を削るだけになる。
+以前ここに `サッカー,マネージャー,経営` と書いていたが、3つともアプリ名に
+入っていた。名前を長くしたぶん `クラブ` `育成` `シミュレーション` も名前側に移り、
+`リーグ` `監督` `采配` `移籍` `成り上がり` はサブタイトルに入った。ここに残すのは
+どちらにも無い語だけ。
+
+区切りは読点ではなくカンマで、スペースは入れない（入れると1文字ぶん損をする）。
+
 ```
-サッカー,マネージャー,経営,シミュレーション,育成,移籍,戦術,リーグ,クラブ,監督,フットボール
+ゲーム,戦術,戦略,選手,ユース,スカウト,契約,昇格,優勝,フットボール,スポーツ,無料,無課金,オフライン,サカマネ,オーナー,本格,シミュ,マネジメント,名門
 ```
 
 ## スクリーンショットとフィーチャーグラフィック
@@ -122,24 +535,64 @@ flutter test tool/screenshots/feature_graphic_test.dart --update-goldens
 
 | 出力先 | 寸法 | 用途 |
 |---|---|---|
-| `marketing/screenshots/` | 1290x2796 | iPhone 6.7インチ。Google Play もこのまま通る |
-| `marketing/screenshots_ipad/` | 2064x2752 | iPad 13インチ |
+| `marketing/screenshots/` | 1290x2796 | iPhone 6.9インチ・日本語 |
+| `marketing/screenshots_ipad/` | 2064x2752 | iPad 13インチ・日本語 |
+| `marketing/screenshots_en/` | 1290x2796 | iPhone 6.9インチ・英語 |
+| `marketing/screenshots_ipad_en/` | 2064x2752 | iPad 13インチ・英語 |
+
+英語ぶんは**翻訳ではなく、英語で動かしたアプリを撮ったもの**。選手名・クラブ名
+まで英語のプールに切り替わる。生成器は言語を決めてからシミュレーションに入る
+（記者会見やニュースは作られた時点の言語で確定し、後から切り替えても遡って
+訳されない）。撮る前に、記者会見と選手名がその言語になっているかを検査している。
 
 iPad ぶんが要るのは、アプリが iPad でも動く設定になっているため。iPhone
 だけだと「13インチのiPadディスプレイのスクリーンショットをアップロード
 する必要があります」で提出できない。
 
-| ファイル | 画面 |
-|---|---|
-| `00_start.png` | タイトル・セーブ選択 |
-| `01_home.png` | ホーム（クラブ状況ダッシュボード） |
-| `02_squad.png` | スカッド（選手一覧） |
-| `03_lineup.png` | スタメン編成・戦術 |
-| `04_transfer.png` | 移籍市場 |
-| `05_standings.png` | 日程・順位表 |
-| `06_scorers.png` | 得点・アシストランキング |
-| `07_live_match.png` | 試合（ライブ経過・ゴール演出） |
-| `08_halftime.png` | ハーフタイム（檄・交代・戦術変更） |
+**番号は撮る順ではなく、ストアに並べる順。** 検索結果には**先頭3枚しか出ない**ので、
+そこに何を置くかで見られ方が変わる。起動画面を先頭にしていた頃は、いちばん目立つ枠が
+「何のゲームか伝わらない絵」で埋まっていた。
+
+| ファイル | 画面 | この順にした理由 |
+|---|---|---|
+| `00_lineup.png` | スタメン編成・戦術（**専用の下絵の中に置く**） | 検索結果でいちばん見られる枠。ここだけ「撮っただけ」から離し、石段を昇った先にトロフィーがある絵の中へ実機の画面を置く（iPhone のみ） |
+| `01_live_match.png` | 試合（ライブ経過・ゴール演出） | 「GOAL!」が小さくても読める。試合が実際に動くことが伝わる |
+| `02_home.png` | ホーム（クラブ状況ダッシュボード） | 経営の数字。ここまでの3枚が検索結果に出る |
+| `03_transfer.png` | 移籍市場 | |
+| `04_standings.png` | 日程・順位表 | |
+| `05_squad.png` | スカッド（選手一覧） | |
+| `06_halftime.png` | ハーフタイム（檄・交代・戦術変更） | |
+| `07_scorers.png` | 得点・アシストランキング | |
+| `08_club.png` | クラブ施設・スタッフ | 能力と得意分野で人を選ぶ画面。スタッフを雇った状態で撮る（空席のままだと「就いている人がいない」の赤字だけが目立つ） |
+
+## プレビュー動画（App Preview）
+
+`marketing/preview/app_preview_ja.mp4` と `app_preview_en.mp4`（20秒・886x1920）。
+**検索結果でもページでも1枠目に出て、自動再生される。** ここが空のままだと、
+いちばん目立つ枠を静止画に使うことになる。
+
+```bash
+flutter test tool/preview/capture_frames_test.dart   # コマを書き出す
+python tool/preview/encode.py                        # 動画にまとめる
+```
+
+**撮った絵をつないでいるのではなく、動いているアプリをそのまま撮っている。**
+試合画面は時間で動くので、1コマ進めては書き出す、を繰り返すと実際の映像になる。
+App Preview は「アプリが動いている様子」であることを求められるので、静止画の
+紙芝居では出せない。試合以外の画面は自分では動かないため、ゆっくり送りながら撮る。
+
+守っている決まり（encode.py が検査する）:
+
+- 長さ 15〜30秒（いまは20秒）、H.264、500MB 以内（いまは約1.2MB）
+- iPhone 6.5インチ以上は 886x1920（縦）
+- `yuv420p`。外すと再生できない端末が出る
+- **無音でも音声トラックを1本入れる。** 音声トラックが無い動画が弾かれた事例がある
+
+踏んだ穴:
+- 20秒のうち10秒がハーフタイムの静止画だった。**止まった画面を何秒も映さない。**
+- 送り先に横並びの絞り込みを掴んで、一覧が横にずれた。**縦に動くものを選ぶ。**
+- 送った直後の未描画の状態を撮りにいって落ちた。**送ってから1コマ進めて撮る。**
+- 移籍ウィンドウを試合開始後に待とうとして固まった。**試合を始める前に開けておく。**
 
 フィーチャーグラフィック（Google Play 必須、1024x500）は
 `marketing/feature/feature_graphic.png`。背景の
@@ -147,6 +600,36 @@ iPad ぶんが要るのは、アプリが iPad でも動く設定になってい
 クラブ・選手は写っていない。文字はアプリ同梱のフォントで載せているので、
 ストアの絵とアプリの中で書体が揃う。
 
+> **1枚目だけは専用の下絵を敷く**（`marketing/hero/hero_bg.png`、生成AIで作った絵）。
+> 下絵の中央に端末を置く場所が空けてあり、生成器がそこへ実機の画面を重ねる。
+> **絵だけにはできない**——App Review 2.3.3 が「掲載画像はアプリが動いている様子を
+> 見せること。タイトル絵・ログイン画面・起動画面だけのものは不可」としている。
+> 端末の中は**実機の寸法で組ませてから縮める**（枠の幅で組み直させると、
+> 選手名が「Ashwo…」のように切れる）。
+> **iPad では使わない。** 下絵は縦長（9:16）なので、横に広い iPad ではどこで
+> 切っても端末を置く空き枠がはみ出して白く残る。iPad は検索結果に出ないため、
+> 帯のままにしてある。
+>
+> **2枚目以降には言葉の帯を乗せてある**（生成器が自動で付ける。`_captions` に文言）。
+> 画面をそのまま撮っただけでは、スクロールしている人に何のゲームか伝わらない。
+> 同じ分野の上位（カルチョビットA・サッカークラブ物語）は全カットに帯がある。
+> 露出5,730に対してページ閲覧557（9.7%）で詰まっていたので、ここを上げにいく。
+> 帯の文字には **`fontFamily` を明示する**（省くと日本語が豆腐になる。実際なった）。
+> 帯は **`Material` で包む**（包まないと黄色い二重下線が引かれる。実際引かれた）。
+> 帯の地の色は画像ごとに振ってある（`_shades`）。同じ緑が9枚続くと、並べたときに
+> 単調になる。画面は端末の枠に入れて影を落とす（切り抜きに見えないように）。
+>
+> **開始画面は撮らない。** セーブ一覧の読み込みを待つ画面で、読み込み中の丸だけが
+> 写った白紙になっていた。それを1枚目としてストアに出していた（2026-09-28 に
+> ユーザーの指摘で判明）。例外もはみ出しも出さないので、それまでの検査を全部
+> すり抜けていた。いまは撮るたびに「読み込み中の丸が無いこと」「文字が3つ以上
+> あること」を見ている。
+>
+> 移籍市場は、移籍ウィンドウが開いている時期に撮る。閉じている時期だと
+> 「クローズ中」の帯が出て「獲得する」が全部灰色になり、何もできない画面が
+> ストアに載る（1.1.0 の撮り直しで気づいた）。生成器が自分で開く時期まで
+> 進めるので、手で合わせる必要はない。
+>
 > 撮り直しが必要になるのは、画面の見た目や文言を変えたとき。
 > 以前ここに置かれていた画像は、アイコンフォントを読まないまま撮ったため
 > 天気アイコンが豆腐（□）で写っていた。生成器はアイコンフォントを

@@ -31,7 +31,7 @@ Difficulty = Literal["easy", "medium", "hard"]
 
 # 難易度は盤面の大きさで制御する（棒倒し法は盤面が大きいほど行き止まりと
 # 折り返しが増え、自然に難しくなる）。具体的な冊子の紙面設計は
-# projects/puzzle-book-maze 側で決める。
+# projects/puzzle-book 側で決める。
 DIFFICULTIES: dict[Difficulty, dict[str, int]] = {
     "easy": {"width": 10, "height": 10},
     "medium": {"width": 16, "height": 16},
@@ -186,6 +186,17 @@ def to_record(maze: Maze, difficulty: Difficulty, path: list[Cell]) -> dict:
             "algorithm": "backtracker",
         },
     }
+
+
+def build_maze(width: int, height: int, seed: int, difficulty: Difficulty = "easy") -> dict:
+    """大きさを指定して、検証済みの迷路を1問作る（脳トレの本で紙面の半分に収めるため）。
+
+    検証は build_puzzle と同じ。通らない盤面は例外にする。
+    """
+    maze = generate_maze(width, height, seed=seed)
+    if not verify_unique_solution(maze):
+        raise RuntimeError(f"seed={seed} の迷路が一意解の検証に落ちた。本に入れてはいけない。")
+    return to_record(maze, difficulty, solve(maze))
 
 
 def build_puzzle(difficulty: Difficulty, seed: int) -> dict:

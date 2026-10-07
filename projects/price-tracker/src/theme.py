@@ -4,25 +4,37 @@ import html
 import json
 import re
 from datetime import datetime, timedelta
+from urllib.parse import quote
 
-from .analyze import MIN_DAYS_FOR_LOW
+from .analyze import (MIN_DAYS_FOR_LOW, effective, effective_change_count,
+                      effective_series)
 from .store import entry as store_entry
 
 SAFE = re.compile(r"[^a-z0-9]+")
 # 先頭に付く宣伝。商品の識別には要らないうえ、検索結果でここだけが見えてしまう。
 # 【】で囲まれた断り書き、＼…／の煽り、記号の連なり、期間限定のうたい文句の4種。
 # ＼…／ の囲みは飾りそのものが宣伝なので中身を見ずに落とす。
-# 【】[] は中身次第で、ブランド名や品目名が入っていることがある。
-LEAD_SHOUT = re.compile(r"^\s*(?:＼[^／\\/]{0,60}[／\\/]|《[^》]{0,60}》)\s*")
-LEAD_BRACKET = re.compile(r"^\s*[【\[]([^】\]]{0,60})[】\]]\s*")
+LEAD_SHOUT = re.compile(r"^\s*＼[^／\\/]{0,60}[／\\/]\s*")
+# 囲みの種類が【】と[]しか無かったため、『送料無料！』「楽天1位」［RSL］
+# （地域限定）が素通りしていた（実測86件）。開き・閉じとも全部並べる。
+# 対を厳密に見ない（「［メール便OK]」のように全角と半角が混ざる名前が実在する）。
+# 中身は60文字までで、閉じ記号で止まる。落とすかどうかは PROMO_HINT が決める。
+LEAD_BRACKET = re.compile(
+    r"^\s*[【\[［『「（〔《≪“〈]([^】\]］』」）〕》≫”〉]{0,60})[】\]］』」）〕》≫”〉]\s*")
 # 囲みの中が宣伝・配送のうたい文句なら落とす。それ以外は商品の情報として残す
 PROMO_HINT = re.compile(
     r"送料無料|送料込|クーポン|ポイント|\d+\s*倍|\d+\s*[%％]|OFF|オフ|還元|エントリー"
     r"|限定|セール|SALE|特価|激安|値下げ|割引|半額|値引|お買い得|ポッキリ|在庫処分"
     r"|お買い物マラソン|買い回り|抽選|プレゼント"
     r"|ゆうパケット|ネコポス|メール便|定形外|宅配便|あす楽|即納|翌日|最短"
+    # 配送のうたい文句と、期間もののお知らせ。実測で279件が囲みの先頭にいた。
+    # 「新品」「中古」「公式」「2個セット」「1年保証」は商品を見分ける情報なので入れない
+    r"|最強配送|即日出荷|RSL|在庫あり|キャンペーン|もらえる|\d+\s*P(?![A-Za-z])"
     r"|楽天\d+位|ランキング|レビュー|同梱|高評価|大人気|累計|\d{1,2}/\d{1,2}")
-LEAD_MARK = re.compile(r"^[\s★☆◆◇■□●○◎▼▲▽△※・!！?？＼\\／/｜|:：、,，\-ー－_＿~〜+＋*＊]+")
+# 飾りの記号。✨⇒♪ のような絵文字・矢印・音符が抜けていて、
+# 「✨【限定配布1,000円OFF】ポータブルDVDプレーヤー」のように
+# 記号で止まって、その後ろの宣伝の囲みまで残っていた（実測87件）。
+LEAD_MARK = re.compile(r"^[\s★☆◆◇■□●○◎▼▲▽△※・!！?？＼\\／/｜|:：、,，\-ー－_＿~〜+＋*＊✨✅❗❕⚡💥🔥🎁🎉➡→⇒⇨⇔♪♫♬〓☆★]+")
 LEAD_PROMO = re.compile(
     r"^\s*(?:"
     # 日時は細かい形を先に置く。Python の | は最長ではなく先に当たった方を採るので、
@@ -49,6 +61,40 @@ LEAD_PROMO = re.compile(
     r")\s*[｜|/／・、,，！!♪★☆\s]*")
 
 
+# 名前の途中に残る宣伝。先頭だけを落としていたので、
+# 「SDカードリーダー 楽天ランキング1位 大容量対応…」のように
+# 途中に紛れた売り文句が題にも一覧にも出ていた（実測491件・3.7%）。
+# 落とすのは商品を見分けるのに使えないものだけ。
+# 「送料無料」「新品」「2個セット」「1年保証」は商品の情報なので残す。
+MID_PROMO = re.compile(
+    r"(?:楽天(?:市場)?(?:ランキング)?\s*\d+\s*位(?:獲得|受賞|入賞)?"
+    r"|ランキング\s*\d*\s*位(?:獲得)?"
+    r"|\d+冠(?:達成)?|殿堂入り|大人気|売れ筋"
+    r"|TIMESALE|タイムセール|スーパーSALE|楽天スーパーSALE"
+    r"|(?:楽天|業界)?最安値挑戦(?:中)?"
+    r"|クーポンで[\d,]+円|クーポン利用で[\d,]+円"
+    r"|累計[\d,]+\s*(?:万|億)?(?:枚|個|本|台|点|食|袋)?突破"
+    r"|高評価\s*\d+(?:\.[0-9]+)?"
+    r"|レビュー\s*[\d,]+\s*件"
+    r"|今だけ|本日限り|早い者勝ち|在庫処分)")
+
+# 中身が宣伝だけの囲みは、囲みごと落とす（【楽天1位】など）
+ANY_BRACKET = re.compile(r"[【\[［（(＜<『「]" + r"[^】\]］）)＞>』」]*" + r"[】\]］）)＞>』」]")
+
+
+EMPTY_BRACKET = re.compile(r"[【\[［（(＜<『「《≪〈][\s]*[】\]］）)＞>』」》≫〉]")
+
+
+def strip_mid_promo(text: str) -> str:
+    """名前の途中に残った売り文句を落とす。"""
+    t = ANY_BRACKET.sub(
+        lambda m: "" if MID_PROMO.search(m.group(0)) else m.group(0), text)
+    t = MID_PROMO.sub("", t)
+    t = EMPTY_BRACKET.sub("", t)   # 宣伝だけが入っていた囲みの殻
+    t = re.sub(r"[\s]{2,}", " ", t)
+    return t.strip(" 　/／|｜-－・")
+
+
 def clean_name(name: str) -> str:
     """商品名の頭に積まれた宣伝文句を落とし、商品そのものの名前を先頭に出す。
 
@@ -66,14 +112,35 @@ def clean_name(name: str) -> str:
     for _ in range(8):  # 「【…】＼…／★」のように積まれるので繰り返す
         before = text
         text = LEAD_SHOUT.sub("", text)
-        hit = LEAD_BRACKET.match(text)
-        if hit and PROMO_HINT.search(hit.group(1)):
-            text = text[hit.end():]
+        # 囲みは並ぶ。宣伝でない囲みで止めると、その後ろの宣伝が残る
+        # （「【純正】［レビューキャンペーン中］PS3…」実測132件）。
+        # 残す囲みは飛ばして、宣伝の囲みだけ抜く。
+        head, rest = "", text
+        while True:
+            hit = LEAD_BRACKET.match(rest)
+            if not hit:
+                break
+            if PROMO_HINT.search(hit.group(1)):
+                rest = rest[hit.end():]
+            else:
+                head += rest[:hit.end()]
+                rest = rest[hit.end():]
+        text = head + rest
         text = LEAD_PROMO.sub("", text)
         text = LEAD_MARK.sub("", text)
         if text == before:
             break
-    text = text.strip()
+    text = strip_mid_promo(text.strip())
+    # 途中の宣伝を落とすと記号や値段が先頭に来ることがある
+    # （「TIMESALE！1,730円～ ハンディファン」→「！1,730円～ ハンディファン」）。
+    # もう一度、頭の掃除だけ通す。
+    for _ in range(4):
+        before = text
+        text = LEAD_MARK.sub("", text)
+        text = LEAD_PROMO.sub("", text)
+        text = text.strip()
+        if text == before:
+            break
     return text if len(text) >= 3 else original
 
 
@@ -128,6 +195,25 @@ def page_titles(rows: list, limit: int = 28, cap: int = 64) -> dict:
             else:
                 rest.extend(members)
         pending, width = rest, width + 6
+
+    # 64文字まで伸ばしても同じになる組が残る。同じ商品を複数の店が出している
+    # ことが多く（実測2026-09-28で598枚のうち290枚は組の中の店が全部違った）、
+    # その場合は店名で分かれる。名前は短いほう（limit）に戻してから足すので、
+    # 題が長くなりすぎることもない。
+    # 同じ店で名前も同じものは分ける材料が無いので、そのままにする
+    # （意味のない番号を足しても読み手の役に立たない）。
+    by_title = {}
+    for row in rows:
+        t = out.get(row["item_code"])
+        if t:
+            by_title.setdefault(t, []).append(row)
+    for title, members in by_title.items():
+        if len(members) < 2:
+            continue
+        shops = [str(r.get("shop") or "").strip() for r in members]
+        if all(shops) and len(set(shops)) == len(members):
+            for row, shop in zip(members, shops):
+                out[row["item_code"]] = f'{short_name(row["name"], limit)}（{shop}）'
     return out
 
 
@@ -175,11 +261,11 @@ def sparkline(tail: list, width: int = 220, height: int = 44) -> str:
             f'</svg>')
 
 
-FAVICON = ("data:image/svg+xml,"
-           "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
-           "%3Crect width='32' height='32' rx='7' fill='%231f6f5c'/%3E"
-           "%3Cpath d='M16 7v13m0 0l-6-6m6 6l6-6' stroke='%23fff' stroke-width='3' "
-           "fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+# 印は data: ではなくファイルで置く。ブラウザのタブには data: でも出るが、
+# Google の検索結果はクロールできるURLからしか取りに行かない。
+# 実際、携帯の検索結果では3件とも地球儀の代替アイコンになっていた
+# （2026-09-26 にユーザーの画面で確認）。
+ICON_PNG = "icon.png"
 
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
@@ -187,7 +273,7 @@ AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを
 # ナビは14項目を1行に並べていた。実測で携帯（375px）では 1,187px 中 844px が
 # 画面の外にあり、見えていたのは3項目だけだった。横スクロールできる印も無い。
 # よく使う5つを出し、残りは「ほかの一覧」に畳む。どれも1タップで届く。
-NAV_MAIN = [("./", "いま条件がそろう"), ("drops/", "今日の値下がり"),
+NAV_MAIN = [("now/", "いま条件がそろう"), ("drops/", "今日の値下がり"),
             ("lows/", "最安値圏"), ("search/", "商品を探す"), ("watch/", "見守り")]
 NAV_MORE = [("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
             ("rises/", "値上がり"), ("active/", "よく動く"), ("ending/", "期限が近い"),
@@ -196,13 +282,30 @@ NAV_MORE = [("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
 NAV = NAV_MAIN + NAV_MORE
 
 
-def nav_html(prefix: str) -> str:
+def nav_html(prefix: str, here: str = "") -> str:
+    """上の並びを組む。here は今いるページの、site の根からの道のり。
+
+    どの一覧を見ているのかが並びの中で分からず、行ったり来たりしないと
+    自分の居場所が掴めなかった。今いる一覧に印を付ける。
+    枝のページ（genre/562637/ など）では、その親の一覧に印を付ける。
+    """
     def link(href, label):
-        return f'<a href="{(prefix + href).replace("/./", "/")}">{esc(label)}</a>'
+        if here == href:
+            mark = ' aria-current="page"'
+        elif here.startswith(href) and href:
+            mark = ' aria-current="true"'
+        else:
+            mark = ""
+        return (f'<a href="{(prefix + href).replace("/./", "/")}"{mark}>'
+                f'{esc(label)}</a>')
     main = "".join(link(h, l) for h, l in NAV_MAIN)
     more = "".join(link(h, l) for h, l in NAV_MORE)
+    # 開いたままにすると、畳みの中身が本文の上に覆いかぶさる（携帯で全面が隠れた）。
+    # 開かずに、畳みの見出しの方に印を付ける。
+    in_more = any(h == here or (here.startswith(h) and h) for h, _ in NAV_MORE)
     return (f'<nav class="site-nav">{main}'
-            f'<details class="nav-more"><summary>ほかの一覧</summary>'
+            f'<details class="nav-more{" here" if in_more else ""}">'
+            f'<summary>ほかの一覧</summary>'
             f'<div class="nav-more-list">{more}</div></details></nav>')
 
 
@@ -219,8 +322,19 @@ def _verification(site: dict) -> str:
     return f'\n<meta name="google-site-verification" content="{esc(token)}">'
 
 
+def _here(canonical: str, site: dict) -> str:
+    """canonical から、site の根を除いた道のりを取り出す。
+
+    head() を呼ぶ箇所は40か所以上あり、どのページかを別引数で渡して回ると
+    渡し忘れが必ず出る。canonical は全ページが必ず正しく持っている。
+    """
+    base = str(site.get("base_url") or "").rstrip("/") + "/"
+    c = str(canonical or "")
+    return c[len(base):] if c.startswith(base) else ""
+
+
 def head(title: str, description: str, canonical: str, site: dict, prefix: str = "",
-         extra: str = "", indexable: bool = True) -> str:
+         extra: str = "", indexable: bool = True, image: str = "") -> str:
     robots = ("index,follow,max-image-preview:large" if indexable
               else "noindex,follow")
     return f"""<!doctype html>
@@ -228,6 +342,8 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17161a" media="(prefers-color-scheme: dark)">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{esc(canonical)}">
@@ -237,25 +353,34 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(canonical)}">
 <meta property="og:site_name" content="{esc(site['name'])}">
-<meta name="twitter:card" content="summary">
-<meta property="og:image" content="{esc(site["base_url"].rstrip("/"))}/og.svg">
+<meta name="twitter:card" content="{"summary_large_image" if image else "summary"}">
+<meta property="og:image" content="{esc(image or (site["base_url"].rstrip("/") + "/og.png"))}">
 <link rel="alternate" type="application/rss+xml" title="今日の値下がり" href="{prefix}feed.xml">
-<link rel="icon" href="{FAVICON}">
+<link rel="preconnect" href="https://thumbnail.image.rakuten.co.jp" crossorigin>
+<link rel="dns-prefetch" href="https://thumbnail.image.rakuten.co.jp">
+<link rel="icon" href="{prefix}{ICON_PNG}" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="{prefix}{ICON_PNG}">
 <link rel="stylesheet" href="{prefix}{site.get("css", "style.css")}">
-{WATCH_JS}
+<script src="{prefix}{site.get("app_js", "app.js")}"></script>
 {extra}
 </head>
 <body>
 <a class="skip" href="#main">本文へ</a>
 <header class="site-head"><div class="wrap">
-  <a class="site-name" href="{prefix or './'}">{esc(site['name'])}</a>
-  {nav_html(prefix)}
+  <a class="site-name" href="{prefix or './'}"><span class="mark" aria-hidden="true"></span>{esc(site['name'])}</a>
+  <p class="tagline">{esc(site.get('description', ''))}</p>
+  {nav_html(prefix, _here(canonical, site))}
 </div></header>
 <main class="wrap" id="main">"""
 
 
 def foot(site: dict, prefix: str = "", updated: str = "") -> str:
-    stamp = f'<p class="updated">最終更新: {esc(updated)}</p>' if updated else ""
+    # 配色の切り替え。CSS は data-theme に対応済みだったのに、
+    # 切り替える手立てがどこにも無く、使えない仕組みになっていた。
+    stamp = ('<p class="updated">'
+             + (f'最終更新: {esc(updated)}' if updated else '')
+             + '<button id="theme" type="button" class="theme-btn">暗く</button>'
+             + '</p>')
     owner = esc(site.get("owner") or site["name"])
     return f"""</main>
 <footer class="site-foot"><div class="wrap">
@@ -297,15 +422,52 @@ def verdict_note(row: dict) -> str:
     if not row.get("trustworthy"):
         return (f"記録は{days}日分です。最安値かどうかを言うには"
                 f"{MIN_DAYS_FOR_LOW}日分必要なため、まだ判断できません。")
+    if row.get("eff_at_low"):
+        # 価格が動いていない商品でもここに来る（倍率だけが動いた場合）。
+        # moved の分岐より前に置かないと、いちばん言うべきことが消える。
+        # 「最安」と言うだけでは値幅2%の商品と30%の商品が同じ顔になるので、
+        # 実質の最高値からどれだけ下がったかを添える（at_low と同じ扱い）。
+        eff_high, eff = row.get("eff_high") or 0, row.get("eff_price") or 0
+        off = (eff_high - eff) / eff_high if eff_high else 0
+        tail = (f'記録{days}日の実質の最高 {yen(eff_high)} から '
+                f'{pct(off)} 下がっています。')
+        if row.get("moved"):
+            return (f'価格そのものは記録した中の最安値 {yen(row["low"])} より'
+                    f' {pct(row["vs_low_pct"])} 高いのですが、ポイントを含めた'
+                    f'実質価格では記録した中でいちばん安くなっています。{tail}')
+        return ('価格は記録のあいだ変わっていませんが、ポイント倍率が上がった'
+                f'ぶん、実質価格は記録した中でいちばん安くなっています。{tail}')
+    if row.get("eff_rise_pct") and not row.get("rise_pct"):
+        # 価格は前回と同じなのに、倍率が下がった（期限切れを含む）ぶん実質が
+        # 上がった。「もう得ではない」は、待っていた人にいちばん要る知らせで、
+        # 価格しか見ない作りでは出せない。moved の分岐より前に置く
+        # （価格が動いていない商品はそこで打ち切られる）。
+        return (f'価格は前回と同じですが、ポイント倍率が下がったぶん、'
+                f'実質価格は {yen(row["eff_prev"])} から '
+                f'{yen(row["eff_price"])} へ {pct(row["eff_rise_pct"])} '
+                f'高くなっています。')
+    if row.get("moved") is False:
+        # 価格が動いていないことは cheaper_days が言う（ポイントで実質だけが
+        # 動いた場合もあちらが拾う）。ここで言うと同じ文が2行続く。
+        # 最安値と最高値も同じ数字なので、並べると同じ数を2回読ませることになる。
+        return ""
     if row.get("at_low"):
-        return "記録した中で最も安い価格です。"
+        # 「どれだけ下がって最安に来たか」を添える。最安値だと言うだけでは、
+        # 値幅0.4%の商品と30%の商品が同じ顔になる。
+        # 値幅が分からない行では添えない（「0.0% 下がっています」は嘘になる）。
+        off = row.get("off_high_pct") or 0
+        if not off:
+            return "記録した中で最も安い価格です。"
+        return (f'記録した中で最も安い価格です。'
+                f'記録{days}日の最高値 {yen(row.get("high") or 0)} から '
+                f'{pct(off)} 下がっています。')
     if row.get("near_low"):
         return f'記録した中の最安値 {yen(row["low"])} に近い価格です。'
     if row.get("rise_pct"):
         return f'前回より {pct(row["rise_pct"])} 高くなっています。'
-    if row.get("dropped"):
+    if row.get("dropped") and row.get("drop_pct"):
         return (f'前回より {pct(row["drop_pct"])} 安くなりましたが、'
-                f'最安値 {yen(row["low"])} には届いていません。')
+                f'最安値 {yen(row.get("low") or 0)} には届いていません。')
     return f'記録した中の最安値は {yen(row["low"])}、最高値は {yen(row["high"])} です。'
 
 
@@ -316,13 +478,32 @@ def point_note(row: dict) -> str:
     価格と併記し、「目安」と明示する。
     """
     rate = int(row.get("point_rate") or 1)
-    if rate <= 1 or not row.get("eff_price"):
+    rise = row.get("eff_rise_pct") or 0
+    if not row.get("eff_price") or (rate <= 1 and not rise):
         return ""
     until = str(row.get("point_until") or "")[:10]
     mark = (f'<span class="until">{esc(until[5:].replace("-", "/"))}まで</span>'
             if until else "")
-    return (f'<span class="point">ポイント{rate}倍</span>{mark}'
-            f'<span class="eff">実質 {yen(row["eff_price"])}<small>（目安）</small></span>')
+    # 実質が上がったなら、そう出す。倍率が下がる（期限切れを含む）と価格は
+    # 同じでも実質は上がるので、これを出さないと一覧では何も変わって見えない。
+    # 価格が動いた回は、同じ割合がカードの価格の行にも出る。
+    # 「▲458.8%」が1枚に2回並んでいた（2026-09-28）。
+    # ここで出すのは「価格は同じなのに実質だけ動いた」回だけにする。
+    # **「前回より」を必ず添える。** すぐ下の「記録を始めてからの変化」は
+    # 記録開始との比較なので、「変わらず」と「▲16.5%」が並ぶことがある。
+    drop = row.get("eff_drop_pct") or 0
+    if rise and not row.get("rise_pct"):
+        move = f'<span class="up">前回より ▲{pct(rise)}</span>'
+    elif drop and not row.get("dropped"):
+        move = f'<span class="down">前回より ▼{pct(drop)}</span>'
+    else:
+        move = ""
+    eff = (f'<span class="eff">実質 {yen(row["eff_price"])}'
+           f'<small>（目安）</small></span>')
+    if rate <= 1:
+        # 倍率が1に戻った。倍率の札は出さず、実質が上がったことだけを出す。
+        return f'{eff}{move}'
+    return f'<span class="point">ポイント{rate}倍</span>{mark}{eff}{move}'
 
 
 def conditions(row: dict) -> str:
@@ -340,6 +521,10 @@ def conditions(row: dict) -> str:
 def badge(row: dict) -> str:
     if row["at_low"]:
         cls = "low"
+    elif row.get("eff_at_low"):
+        # 価格は最安でないので、価格の最安と同じ色にはしない。
+        # ポイントで安くなっていることが色でも分かるようにする。
+        cls = "efflow"
     elif row["near_low"]:
         cls = "near"
     elif row["dropped"]:
@@ -358,7 +543,7 @@ def history_note(row: dict) -> str:
     days = int(row.get("days") or 0)
     if days <= 0:
         return ""
-    return f'<span class="sep">/</span>記録{days}日'
+    return f'<span class="since">記録{days}日</span>'
 
 
 def card_spark(row: dict) -> str:
@@ -388,12 +573,15 @@ def score_bar(row: dict) -> str:
     # 条件ごとに分けて、名前と点の対が目で拾えるようにする。
     parts = "".join(f'<span class="part">{esc(name)}<b>{pt}</b></span>'
                     for name, pt in score_breakdown(row) if pt)
-    return (f'<p class="score"><span class="num">{total}</span>'
+    # 帯の長さは点そのもの。数字だけだと 97 と 62 の差が目に入らない
+    return (f'<p class="score" style="--fill:{min(total, 100)}%">'
+            f'<span class="num">{total}</span>'
             f'<span class="max">/100</span>'
             f'<span class="parts">{parts}</span></p>')
 
 
-def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = False) -> str:
+def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = False,
+         rank: int = 0) -> str:
     href = f'{prefix}item/{slug(row["item_code"])}/'
     change = ""
     if row["dropped"]:
@@ -411,17 +599,24 @@ def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = Fa
     img = (f'<img src="{esc(row["image"])}" alt="{esc(short_name(row["name"], 40))}" '
            f'loading="{"eager" if eager else "lazy"}" decoding="async" '
            f'width="120" height="120">'
-           if row.get("image") else '<span class="noimg"></span>')
+           if row.get("image") else '')
+    # 画像の無い商品でリンクだけ残すと、名前も絵も無いリンクになる
+    # （読み上げは「リンク」としか言えず、Tab の行き先も増える）。
+    # カード全体が押せるので、ここは枠だけ置く。
+    thumb = (f'<a class="thumb" href="{href}">{img}</a>' if img
+             else '<span class="thumb noimg"></span>')
     return f"""<li class="card" data-price="{row["price"]}" data-drop="{row.get("drop_pct", 0):.4f}"
     data-days="{row.get("days", 0)}" data-eff="{row.get("eff_price") or row["price"]}"
     data-code="{esc(row["item_code"])}" data-free="{1 if row.get("free_shipping") else 0}"
     data-stock="{0 if row.get("in_stock") is False else 1}">
-  <a class="thumb" href="{href}">{img}</a>
+  {f'<span class="rank">{rank}</span>' if rank else ""}
+  {thumb}
   <div class="body">
+    {badge(row)}
     <a class="name" href="{href}" title="{esc(row["name"])}">{esc(short_name(row["name"]))}</a>
-    <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}{conditions(row)}</p>
+    <p class="price">{change}<strong>{yen(row["price"])}</strong>{conditions(row)}</p>
     <p class="point-line">{point_note(row)}</p>
-    <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}
+    <p class="meta"><span class="shop">{esc(row.get("shop", ""))}</span>{history_note(row)}
       <button class="watch-mini" type="button" data-code="{esc(row["item_code"])}"
               data-price="{row["price"]}" aria-label="この商品を見守る">見守る</button></p>
     {score_bar(row) if show_score else ""}
@@ -437,7 +632,16 @@ SEARCH_JS = r"""
   var note = document.getElementById('note');
   var index = null, loading = false, LIMIT = 60, MAX_SCAN = 400;
 
-  function norm(s) { return s.normalize('NFKC').toLowerCase().replace(/\\s+/g, ''); }
+  // 「いやほん」と打っても「イヤホン」に当たるようにする。
+  // NFKC は半角カナを全角カナに直すが（ｲﾔﾎﾝ→イヤホン、実測476件に当たる）、
+  // ひらがなはカタカナにしない。日本語は仮名の並びが同じなので、
+  // ひらがなを機械的にカタカナへ寄せるだけで足りる（辞書は要らない）。
+  function norm(s) {
+    return s.normalize('NFKC').toLowerCase().replace(/\\s+/g, '')
+      .replace(/[\u3041-\u3096]/g, function (c) {
+        return String.fromCharCode(c.charCodeAt(0) + 0x60);
+      });
+  }
 
   function terms() {
     return input.value.trim().split(/\\s+/).map(norm).filter(Boolean);
@@ -486,7 +690,7 @@ SEARCH_JS = r"""
     if (index || loading) { return; }
     loading = true;
     note.textContent = '商品一覧を読み込んでいます…';
-    fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
+    fetch('../' + PT_INDEX).then(function (r) { return r.json(); }).then(function (data) {
       // 正規化した名前を持たせておく（入力のたびに作り直さない）
       // 判定(r[4])を残したまま、正規化した名前を末尾に足す。
       // 4要素に詰め直していたため判定が落ち、バッジが出ていなかった。
@@ -511,6 +715,16 @@ SEARCH_JS = r"""
 
   input.addEventListener('focus', load);
   input.addEventListener('input', function () { syncUrl(); if (index) { render(); } else { load(); } });
+
+  // 例の語。押したら入力欄に入れてそのまま探す
+  document.querySelectorAll('.examples button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      input.value = b.dataset.q;
+      syncUrl();
+      if (index) { render(); } else { load(); }
+      input.focus();
+    });
+  });
 })();
 """
 
@@ -526,10 +740,15 @@ def stats_page(site: dict, canonical: str, updated: str, stats: dict,
     title = "記録の全体像"
     lead = "当サイトが何をどれだけ記録しているかをまとめています。"
     rows = [("記録している商品", f'{stats["items"]:,} 件'),
-            ("記録した日数", f'{stats["days"]} 日'),
-            ("価格が一度も動いていない商品", f'{buckets["still"]:,} 件'),
-            ("1回動いた商品", f'{buckets["once"]:,} 件'),
-            ("2回以上動いた商品", f'{buckets["active"]:,} 件'),
+            ("記録日数", f'{stats["days"]} 日'),
+            # 楽天の値引きは倍率で動くので、価格だけの数と実質の数を並べて出す。
+            # 価格だけで数えていたとき、この表だけが11,172件を
+            # 「一度も動いていない」と書いていて、商品ページの判定とずれていた。
+            ("価格が動いた商品", f'{buckets["price_moved"]:,} 件'),
+            ("ポイント込みの実質価格が動いた商品", f'{buckets["eff_moved"]:,} 件'),
+            ("そのうち2回以上動いた商品", f'{buckets["active"]:,} 件'),
+            ("一度も動いていない商品（ポイント込みで見て）",
+             f'{buckets["still"]:,} 件'),
             ("ポイントが通常より高い商品", f'{buckets["pointed"]:,} 件')]
     table = "".join(f"<tr><th>{esc(k)}</th><td>{v}</td></tr>" for k, v in rows)
     per_genre = "".join(
@@ -558,6 +777,13 @@ def stats_page(site: dict, canonical: str, updated: str, stats: dict,
             + foot(site, "../", updated))
 
 
+# 検索の例。実際の索引に当てて件数を数えてから選んだ（2026-09-26 実測）。
+# イヤホン439 / ビール485 / インク641 / テレビ425 / ギター348 / ドッグフード188 /
+# ノートパソコン208 / 掃除機136。8ジャンルから当たりの多いものを1つずつ取る。
+SEARCH_EXAMPLES = ("イヤホン", "ノートパソコン", "テレビ", "インク",
+                   "ギター", "ビール", "ドッグフード", "掃除機")
+
+
 def search_page(site: dict, canonical: str, updated: str, stats: dict) -> str:
     """商品名で絞り込む。通信は検索用データの取得だけで、サーバは要らない。"""
     title = "商品を探す"
@@ -568,7 +794,15 @@ def search_page(site: dict, canonical: str, updated: str, stats: dict) -> str:
             + AD_NOTICE
             + '<input id="q" type="search" class="q" placeholder="例: モニター 27インチ" '
               'autocomplete="off" aria-label="商品名で検索">'
+            # 入力欄だけ置くと、何を打てば当たるのかが分からない。
+            # 実際に記録しているジャンルから、当たる語を並べて押せるようにする。
+            + ('<p class="examples"><span>よく使われる言葉</span>'
+               + "".join(f'<button type="button" data-q="{esc(w)}">{esc(w)}</button>'
+                         for w in SEARCH_EXAMPLES)
+               + '</p>')
             + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
+            # 索引の名前は中身の指紋で毎日変わる。ページ側に渡す
+            + f'<script>var PT_INDEX={safe_json(site.get("search_index", "search-index.json"))};</script>'
             + f'<script>{SEARCH_JS}</script>'
             + foot(site, "../", updated))
 
@@ -642,54 +876,10 @@ def item_list_ld(rows: list, site: dict, prefix: str) -> str:
     return f'<script type="application/ld+json">{ld}</script>'
 
 
-WATCH_MINI_JS = r"""
-<script>
-// 同じ理由で DOM を待つ。.watch-mini は一覧の中にある。
-document.addEventListener('DOMContentLoaded', function () {
-  function label(btn, on) {
-    btn.textContent = on ? '見守り中' : '見守る';
-    btn.classList.toggle('on', on);
-  }
-  var store = PTWatch.read();
-  document.querySelectorAll('.watch-mini').forEach(function (btn) {
-    label(btn, !!store[btn.dataset.code]);
-    btn.addEventListener('click', function () {
-      var s = PTWatch.toggle(btn.dataset.code, parseInt(btn.dataset.price, 10));
-      label(btn, !!s[btn.dataset.code]);
-    });
-  });
-});
-</script>
-"""
 
-LIST_TOOLS = r"""
-<details class="tools-box">
-<summary>絞り込み・並び替え</summary>
-<div class="tools">
-  <label>並び替え <select id="sort">
-    <option value="">既定のまま</option>
-    <option value="price">価格が安い順</option>
-    <option value="-price">価格が高い順</option>
-    <option value="-drop">下げ幅が大きい順</option>
-    <option value="-eff">実質が高い順</option>
-    <option value="eff">実質が安い順</option>
-    <option value="-days">記録が長い順</option>
-  </select></label>
-  <label class="check"><input type="checkbox" id="freeonly"> 送料無料だけ</label>
-  <label class="check"><input type="checkbox" id="instock"> 在庫ありだけ</label>
-  <label>価格帯 <select id="range">
-    <option value="">すべて</option>
-    <option value="0-3000">3,000円まで</option>
-    <option value="3000-10000">3,000〜10,000円</option>
-    <option value="10000-30000">10,000〜30,000円</option>
-    <option value="30000-">30,000円以上</option>
-  </select></label>
-  <button id="reset" type="button" class="reset" hidden>条件を外す</button>
-  <span id="shown" class="of"></span>
-  <span class="scope">このページに出ている分だけを並べ替えます</span>
-</div>
-</details>
-<script>
+# 一覧の動き（並び替え・絞り込み・見守りの小ボタン）。以前は一覧ページ1枚ごとに
+# 直書きしていた（5.7KB × 約200枚）。外に出すと1回読めば使い回せる。
+LIST_JS = r"""
 // この script は一覧より前に置かれる。読み込み時点で .cards はまだ無いので、
 // DOM が揃うのを待ってから繋ぐ（待たずに書いたため、並び替えが丸ごと
 // 効いていなかった。2026-09-24 に公開サイトで確認）。
@@ -733,6 +923,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     list.textContent = '';
     keep.forEach(function (li) { list.appendChild(li); });
+    // 全部消えたときに何も出さないと、ページが空白になって壊れたように見える。
+    // 空の一覧（該当0件）のときと同じ書き方で、外し方まで出す。
+    var none = document.getElementById('nofit');
+    if (!none) {
+      none = document.createElement('p');
+      none.id = 'nofit';
+      none.className = 'empty';
+      list.parentNode.insertBefore(none, list);
+    }
+    none.hidden = keep.length > 0;
+    if (!keep.length) {
+      none.textContent = 'この条件に合う商品はこのページにありません。'
+        + '「条件を外す」で元に戻せます。';
+    }
     shown.textContent = keep.length === all.length
       ? '' : keep.length + ' / ' + all.length + ' 件を表示';
     reset.hidden = !(sort.value || range.value || freeonly.checked || instock.checked);
@@ -746,13 +950,17 @@ document.addEventListener('DOMContentLoaded', function () {
     history.replaceState(null, '', s ? '?' + s : location.pathname);
   }
 
+  // 取り出しは、値を使うより前に置く。var は巻き上げで宣言だけが上がり、
+  // 値は undefined のままなので、?free=1 付きのURLを開くと
+  // 「undefined.checked = true」で例外になり、一覧の道具が丸ごと死んでいた
+  // （並び替えも価格帯も「条件を外す」も効かなくなる。2026-09-28 に発見）。
+  var freeonly = document.getElementById('freeonly');
+  var instock = document.getElementById('instock');
+  var reset = document.getElementById('reset');
   if (q.get('sort')) { sort.value = q.get('sort'); }
   if (q.get('range')) { range.value = q.get('range'); }
   if (q.get('free')) { freeonly.checked = true; }
   if (q.get('stock')) { instock.checked = true; }
-  var freeonly = document.getElementById('freeonly');
-  var instock = document.getElementById('instock');
-  var reset = document.getElementById('reset');
   reset.addEventListener('click', function () {
     sort.value = ''; range.value = '';
     freeonly.checked = false; instock.checked = false; apply();
@@ -763,7 +971,53 @@ document.addEventListener('DOMContentLoaded', function () {
   instock.addEventListener('change', apply);
   if (q.get('sort') || q.get('range') || q.get('free') || q.get('stock')) { apply(); }
 });
-</script>
+
+// 同じ理由で DOM を待つ。.watch-mini は一覧の中にある。
+document.addEventListener('DOMContentLoaded', function () {
+  function label(btn, on) {
+    btn.textContent = on ? '見守り中' : '見守る';
+    btn.classList.toggle('on', on);
+  }
+  var store = PTWatch.read();
+  document.querySelectorAll('.watch-mini').forEach(function (btn) {
+    label(btn, !!store[btn.dataset.code]);
+    btn.addEventListener('click', function () {
+      var s = PTWatch.toggle(btn.dataset.code, parseInt(btn.dataset.price, 10));
+      label(btn, !!s[btn.dataset.code]);
+    });
+  });
+});
+"""
+
+LIST_TOOLS = r"""
+<div class="quick">
+  <label class="chip"><input type="checkbox" id="freeonly"> 送料無料だけ</label>
+  <label class="chip"><input type="checkbox" id="instock"> 在庫ありだけ</label>
+  <span id="shown" class="of"></span>
+</div>
+<details class="tools-box">
+<summary>並び替え・価格帯</summary>
+<div class="tools">
+  <label>並び替え <select id="sort">
+    <option value="">既定のまま</option>
+    <option value="price">価格が安い順</option>
+    <option value="-price">価格が高い順</option>
+    <option value="-drop">下げ幅が大きい順</option>
+    <option value="-eff">実質が高い順</option>
+    <option value="eff">実質が安い順</option>
+    <option value="-days">記録が長い順</option>
+  </select></label>
+  <label>価格帯 <select id="range">
+    <option value="">すべて</option>
+    <option value="0-3000">3,000円まで</option>
+    <option value="3000-10000">3,000〜10,000円</option>
+    <option value="10000-30000">10,000〜30,000円</option>
+    <option value="30000-">30,000円以上</option>
+  </select></label>
+  <button id="reset" type="button" class="reset" hidden>条件を外す</button>
+  <span class="scope">このページに出ている分だけを並べ替えます</span>
+</div>
+</details>
 """
 
 
@@ -771,11 +1025,16 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
             stats: dict | None = None, page: int = 1, pages: int = 1,
             page_prefix: str = "", total: int | None = None,
-            show_score: bool = False) -> str:
-    body = ("".join(card(r, prefix, eager=i < 3, show_score=show_score)
+            show_score: bool = False, parent: tuple | None = None,
+            terms: list | None = None, subs: list | None = None) -> str:
+    # 点で並べている一覧は順位を出す。並び順に意味があることが
+    # 画面から読めないと、ただ並んでいるだけに見える（価格.com の「1位」に相当）
+    start = (page - 1) * 50
+    body = ("".join(card(r, prefix, eager=i < 3, show_score=show_score,
+                         rank=(start + i + 1) if show_score else 0)
                     for i, r in enumerate(rows)) if rows
             else ('<li class="empty">' + esc(empty)
-                  + f'<span class="go"><a href="{prefix}">いま条件がそろっている商品</a>'
+                  + f'<span class="go"><a href="{prefix}now/">いま条件がそろっている商品</a>'
                   + f'<a href="{prefix}lows/">最安値圏</a>'
                   + f'<a href="{prefix}search/">商品を探す</a></span></li>'))
     total = len(rows) if total is None else total
@@ -792,18 +1051,33 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
     nav = pager(page, pages, page_prefix, total)
     return (head(f"{short_name(heading, 30)}｜{site['name']}", desc, canonical, site, prefix,
                  extra=item_list_ld(rows, site, prefix))
+            + (f'<script defer src="{prefix}{site.get("list_js", "list.js")}">'
+               f'</script>' if rows else "")
+            # ジャンルと日付別は「トップ → ジャンル別 → パソコン・周辺機器」の
+            # 3階層なので、いまどこにいるかの道しるべを置く。
+            # 一覧そのもの（最安値圏など）は2階層で、上の並びの印で足りる。
+            + (breadcrumb2(site, parent[0], parent[1], title, prefix)
+               if parent else "")
             + f'<h1>{heading}{count}</h1><p class="lead">{esc(lead)}</p>'
             + stats_bar(stats or {})
             + AD_NOTICE
+            # 語は組み立て済みの文字列で受けない。ページ送りの2枚目からは
+            # 階層が1つ深くなるので、../../ を外から渡すと 404 になる
+            # （2026-09-28 に踏んだ。breadcrumb2 でも同じ所で踏んでいる）。
+            + chip_list(subs or [], "下位のジャンル", prefix, "ジャンルで絞り込む")
+            + term_chips(terms or [], prefix)
             + nav_top
             + (f'<p class="thin">この一覧は前回の記録との比較なので、'
                f'動きが少ない日は少なくなります。'
-               f'<a href="{prefix}">いま条件がそろっている商品</a>もご覧ください。</p>'
+               f'<a href="{prefix}now/">いま条件がそろっている商品</a>もご覧ください。</p>'
                if 0 < len(rows) < 10 and page == 1 else '')
-            + (LIST_TOOLS + WATCH_MINI_JS if rows else "")
+            + (LIST_TOOLS if rows else "")
             + f'<ul class="cards">{body}</ul>'
             + nav
-            + ('<a class="to-top" href="#main">▲ ページの先頭へ</a>' if len(rows) > 10 else '')
+            # 一覧は携帯で19,000px 近くになる。末尾にだけ置いた戻りリンクは、
+            # 途中で読むのをやめた人には届かない。スクロールに追従させる。
+            + ('<a class="to-top" href="#main" aria-label="ページの先頭へ戻る">'
+               '▲<span>先頭へ</span></a>' if len(rows) > 10 else '')
             + foot(site, prefix, updated))
 
 
@@ -818,10 +1092,183 @@ def archive_nav(day: str, older: str | None, newer: str | None) -> str:
     return f'<nav class="pager">{"".join(parts)}</nav>'
 
 
+def term_chips(terms: list, prefix: str = "") -> str:
+    """一覧の頭に置く、語での絞り込み。
+
+    価格.com のカテゴリページは上のほうに「注目スペック」（おもに6畳用・
+    自動掃除機能付き・窓用エアコン…）とメーカーを件数つきで並べていて、
+    1,500件の中から自分の探しているものへ1手で入れる。うちのジャンルページは
+    31ページのページ送りしか無く、奥へ行く道が「次へ」しか無かった。
+
+    語は `relate.genre_terms` が出したもの。件数を添える（価格.com の
+    「ダイキン(747)」と同じで、押す前に手応えが分かる）。
+    """
+    return chip_list([(str(w), n, f'search/?q={quote(str(w))}')
+                      for w, n in terms], "よく出る語", prefix, "語で絞り込む")
+
+
+def chip_list(rows: list, label: str, prefix: str = "",
+              aria: str = "") -> str:
+    """(名前, 件数, 行き先) を丸い印で並べる。
+
+    行き先は**サイトの根からの相対**で受ける。組み立て済みの相対パスを外から
+    渡すと、ページ送りの2枚目からは階層が1つ深くなって 404 になる
+    （2026-09-28 に踏んだ）。
+    """
+    body = "".join(
+        f'<a href="{prefix}{href}">{esc(str(name))}'
+        f'<span class="n">{n:,}</span></a>' for name, n, href in rows if n)
+    if not body:
+        return ""
+    return (f'<nav class="chips"{f" aria-label={aria!r}" if aria else ""}>'
+            f'<span class="chips-label">{esc(label)}</span>{body}</nav>')
+
+
+def sub_genre_html(subs: list, prefix: str = "") -> str:
+    """ジャンルの下に置く中分類。`(名前, 件数, 行き先)` を受ける。
+
+    行き先はサイトの根からの相対で受け、`prefix` はここで付ける
+    （組み立て済みの相対パスを外から渡すと、階層の違うページで 404 になる）。
+    """
+    if not subs:
+        return ""
+    links = "".join(
+        f'<a href="{prefix}{href}">{esc(str(name))}'
+        f'<span class="n">{n:,}</span></a>' for name, n, href in subs if n)
+    return f'<span class="terms subs">{links}</span>' if links else ""
+
+
+def genre_terms_html(terms: list, prefix: str = "") -> str:
+    """ジャンルの下に置く「そのジャンルらしい語」。
+
+    価格.com のトップはカテゴリの下にサブ項目を2行置いていて、それが
+    「ここに何があるか」を伝えている。うちは楽天のジャンルを8つしか
+    取っておらず下の階層を持たないので、商品名から出す（`relate.genre_terms`）。
+    語は検索への行き先にする（読むだけの飾りにしない）。
+    """
+    if not terms:
+        return ""
+    links = "".join(
+        f'<a href="{prefix}search/?q={quote(str(t))}">{esc(str(t))}</a>'
+        for t in terms)
+    return f'<span class="terms">{links}</span>'
+
+
+def home_search(prefix: str = "") -> str:
+    """トップの先頭に置く検索窓。
+
+    トップは一覧そのもので、検索から来た人はいきなり600件の並びと採点の説明を
+    読まされていた。価格を追うサイトで最初にやることは「自分の商品を探す」で、
+    camelcamelcamel も入口の一番上が検索窓だった。
+
+    form の GET で search/?q= に飛ばす。JavaScript を待たないので、
+    読み込みが終わる前に打ち始めても取りこぼさない（検索ページ側は
+    URL の q を読んで、そのまま結果を出す）。
+
+    件数はすぐ下の stats が出すので、ここでは繰り返さない。
+    """
+    return (f'<form class="hero" action="{prefix}search/" method="get" role="search">'
+            f'<label class="sr" for="hq">商品名で探す</label>'
+            f'<input id="hq" name="q" type="search" autocomplete="off"'
+            f' placeholder="商品名で探す（例: イヤホン）">'
+            f'<button type="submit">探す</button></form>')
+
+
+def site_ld(site: dict) -> str:
+    """サイトそのものの構造化データ。
+
+    検索結果はサイト名を「kakaku.dailyquarry.com」という生のドメインで
+    出していた（2026-09-26 にユーザーの画面で確認）。読める名前を出すには、
+    トップで WebSite の name を渡す必要がある。
+    あわせて検索の入口も知らせる（サイト内検索として使われることがある）。
+    """
+    base = site["base_url"].rstrip("/")
+    ld = safe_json({
+        "@context": "https://schema.org", "@type": "WebSite",
+        "name": site["name"], "url": base + "/",
+        "description": site.get("description", ""),
+        "publisher": {"@type": "Organization", "name": site.get("owner", "")},
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {"@type": "EntryPoint",
+                       "urlTemplate": base + "/search/?q={search_term_string}"},
+            "query-input": "required name=search_term_string",
+        },
+    })
+    return f'<script type="application/ld+json">{ld}</script>'
+
+
+def home_page(site: dict, canonical: str, updated: str, stats: dict,
+              views: list, genres: list) -> str:
+    """トップ。商品は並べず、入口だけを置く。
+
+    以前のトップは一覧そのもの（いま条件がそろっている商品）で、検索から来た人が
+    いきなり600件の並びと採点の説明を読まされていた。一覧は /now/ へ移し、
+    ここは「何ができるか」と「どこへ行くか」に絞る。
+
+    商品を出さないぶん中身が薄くならないよう、記録の規模・一覧の索引・
+    ジャンルの入口・判定のやり方への導線を置く。
+    """
+    # 説明文はヘッダの一行が同じことを言っている。ここでは繰り返さず、
+    # 何をすればよいかを書く（検索の meta には site の description を使う）。
+    lead = "商品名で探すか、下の一覧から選んでください。"
+    # 件数の多い中分類はトップから直に出す。トップ → 中分類 → 商品 で
+    # 深さ2になる（ジャンルページを挟むと3）。実測（2026-10-03）で商品
+    # 13,465枚のうち5,631枚（42%）が深さ4以上にあった。
+    # 語（`terms`）はジャンルページの頭に出してあるので、ここでは出さない。
+    genre_links = "".join(
+        f'<li class="genre"><a href="genre/{esc(str(g["genre_id"]))}/">'
+        f'{esc(g["name"])}</a>'
+        f'<span class="count">{g["count"]:,}商品</span>'
+        + sub_genre_html((g.get("subs") or [])[:3])
+        + '</li>' for g in genres)
+    return (head(site["name"], site.get("description", ""), canonical, site, "",
+                 extra=site_ld(site))
+            + f'<h1>{esc(site["name"])}</h1><p class="lead">{esc(lead)}</p>'
+            + home_search()
+            + stats_bar(stats)
+            + AD_NOTICE
+            + views_map(views)
+            + (f'<section class="views"><h2>ジャンルから探す</h2>'
+               f'<ul class="genres">{genre_links}</ul></section>' if genres else "")
+            + '<section class="howto"><h2>何をしているサイトか</h2>'
+              '<p>楽天市場の価格を毎日記録し、その履歴から'
+              '「前回より安くなったか」「記録した中での最安値と比べてどうか」を'
+              '計算だけで判定しています。人の主観も生成AIによる文章も入れていません。</p>'
+              '<p>「最安値」は<strong>当サイトが記録を開始してからの期間内での最安値</strong>'
+              'であり、市場全体・全期間の最安値ではありません。'
+              '<a href="about/">判定のやり方と限界</a>に全部書いています。</p>'
+              '</section>'
+            + foot(site, "", updated))
+
+
+def views_map(counts: list, prefix: str = "") -> str:
+    """どの一覧が何を出すのかの索引。
+
+    一覧は14ある。ナビに名前が並ぶだけで、「よく動く」と「最安値更新」を
+    どう使い分けるのかがどこにも書いていなかった。名前・件数・何を出すかを
+    1行ずつ並べて、選べるようにする。
+    """
+    if not counts:
+        return ""
+    body = "".join(
+        f'<li><a href="{prefix}{esc(path)}">{esc(name)}</a>'
+        f'<span class="n">{count:,}件</span>'
+        f'<span class="what">{esc(what)}</span></li>'
+        for path, name, count, what in counts)
+    return ('<section class="views"><h2>どの一覧を見るか</h2>'
+            f'<ul>{body}</ul></section>')
+
+
 def archive_index(days: list, site: dict, canonical: str, updated: str) -> str:
     """日付別の入口。一覧が増えても、どの日を見られるかが分からないと辿れない。"""
-    title = "日付別の値下がり"
-    lead = "記録を始めてからの各日について、その日に安くなった商品を残しています。"
+    # 中身は「価格が下がったもの」と「ポイント倍率が上がって実質が下がったもの」の
+    # 両方なので、題を「値下がり」に限定しない（一覧の題は中身に合わせる）。
+    title = "日付別 安くなった商品"
+    lead = ("記録を始めてからの各日について、その日に安くなった商品を残しています。"
+            "価格が下がったものと、ポイント倍率が上がって実質価格が下がったものを"
+            "含みます（今日ぶんは「今日の値下がり」と「ポイント込みで安くなった商品」"
+            "に分けて出しています）。")
     body = "".join(
         f'<li class="hit"><a href="{esc(day)}/">{esc(day)}</a>'
         f'<span class="price">{n:,}件</span></li>' for day, n in days)
@@ -842,32 +1289,48 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
     """
     title = "ジャンル別で見る"
     lead = "記録している商品をジャンルごとに、値下がりの大きい順で並べています。"
+    # 中分類（126枚）への入口をここに集める。ジャンルページの中にしか
+    # 置いていなかったとき、トップからは2クリック先にあった。1段縮めると、
+    # 奥の商品ページまでの深さも全部1段縮む。
     links = "".join(
         f'<li class="genre"><a href="{prefix}genre/{esc(str(g["genre_id"]))}/">'
-        f'{esc(g["name"])}</a><span class="count">{g["count"]:,}商品</span></li>'
-        for g in genres)
+        f'{esc(g["name"])}</a><span class="count">{g["count"]:,}商品</span>'
+        + sub_genre_html(g.get("subs") or [], prefix)
+        + '</li>' for g in genres)
     return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + f'<ul class="genres">{links}</ul>'
             + foot(site, prefix, updated))
 
 
-def chart(tail: list, width: int = 560, height: int = 180) -> str:
+def chart(tail: list, width: int = 560, height: int = 180,
+          effective: list | None = None) -> str:
     """商品ページの価格推移。日付と価格の目盛りを付ける。
 
     一覧の小さな線は形が分かればよいが、商品ページでは「いつ・いくら」まで
     読めないと判断に使えない。
+
+    effective を渡すと、ポイント分を引いた実質価格を破線で重ねる。
+    楽天の値引きは価格より倍率で動くので、価格の線だけだと
+    いちばんよく動く値引きが画面から消える（実測で、動いた商品は
+    価格だけなら1,486件、ポイントを含めると2,252件）。
     """
     points = [(e[0], e[1]) for e in map(store_entry, tail) if e[1]]
     if len(points) < 2:
         return '<span class="spark-none">記録が足りません</span>'
     prices = [p for _, p in points]
-    low, high = min(prices), max(prices)
+    effs = [v for _, v in (effective or [])]
+    if len(effs) != len(prices):
+        effs = []   # 数が合わないものは重ねない（描くと日付がずれる）
+    low = min(prices + effs)
+    high = max(prices + effs)
     span = (high - low) or 1
     # 値が動いていないと線が下端に張り付き、余白だけの図に見える。
     # その場合は中央に引く。
     flat = high == low
-    pad_l, pad_b, pad_t = 64, 22, 10
+    # 日付は SVG の外（HTML）に出した。下の余白は、いちばん下の目盛りの
+    # 文字（外に置いてあり高さ13px）が絵からはみ出さない分だけ残す。
+    pad_l, pad_b, pad_t = 64, 16, 10
     w = width - pad_l - 8
     h = height - pad_b - pad_t
     step = w / (len(points) - 1)
@@ -878,23 +1341,52 @@ def chart(tail: list, width: int = 560, height: int = 180) -> str:
         return pad_t + h - (v - low) / span * h
 
     coords = " ".join(f"{pad_l + i * step:.1f},{y(p):.1f}" for i, p in enumerate(prices))
+    # 目盛りの文字は SVG の外（HTML）に置く。中に置くと viewBox ごと縮むため、
+    # 幅343pxの携帯では font-size="11" が実寸 6.7px まで小さくなっていた
+    # （560 の絵を 343 に縮めているので 0.61 倍）。右端の日付も切れていた。
     grid = "".join(
         f'<line x1="{pad_l}" y1="{y(v):.1f}" x2="{width - 8}" y2="{y(v):.1f}" '
         f'stroke="currentColor" stroke-opacity=".15"/>'
-        f'<text x="{pad_l - 8}" y="{y(v) + 4:.1f}" text-anchor="end" '
-        f'font-size="11" fill="currentColor" opacity=".65">{v:,}</text>'
         for v in sorted({low, high}, reverse=True))
-    labels = "".join(
-        f'<text x="{pad_l + i * step:.1f}" y="{height - 6}" text-anchor="middle" '
-        f'font-size="11" fill="currentColor" opacity=".65">{points[i][0][5:]}</text>'
-        for i in ({0, len(points) - 1} if len(points) > 1 else {0}))
-    return (f'<svg class="chart-svg" viewBox="0 0 {width} {height}" role="img" '
-            f'aria-label="{len(points)}日分の価格推移。最安 {low:,}円、最高 {high:,}円">'
-            f'{grid}{labels}'
+    ticks = "".join(
+        f'<span class="chart-tick" style="top:{y(v) / height * 100:.2f}%">{v:,}</span>'
+        for v in sorted({low, high}, reverse=True))
+    dates = (f'<p class="chart-dates"><span>{esc(points[0][0][5:])}</span>'
+             f'<span>{esc(points[-1][0][5:])}</span></p>')
+    eff_line = ""
+    if effs:
+        eff_coords = " ".join(
+            f"{pad_l + i * step:.1f},{y(v):.1f}" for i, v in enumerate(effs))
+        eff_line = (f'<polyline class="eff-line" points="{eff_coords}" fill="none" '
+                    f'stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" '
+                    f'stroke-linejoin="round" stroke-linecap="round" opacity=".75"/>')
+    # 値を読めるようにする。価格.com も Keepa も、図に触れればその日の値が出る。
+    # こちらは最安と最高の目盛りしか無く、途中の日がいくらだったか読めなかった。
+    # 日付と値は data- に持たせ、描き直しは JS 側（app.js）が受け持つ。
+    series = ";".join(
+        f'{points[i][0]},{prices[i]}' + (f',{effs[i]}' if effs else '')
+        for i in range(len(points)))
+    # SVG の要素に hidden プロパティは無い（HTML要素のもの）。JS で代入しても
+    # 何も起きないので、表示の切り替えはクラスと CSS で行う。
+    guide = (f'<line class="chart-guide" x1="0" y1="{pad_t}" x2="0" '
+             f'y2="{pad_t + h}" stroke="currentColor" stroke-opacity=".35"/>'
+             f'<circle class="chart-dot" r="4" fill="currentColor"/>'
+             + ('<circle class="chart-dot-eff" r="4" fill="currentColor" '
+                'opacity=".75"/>' if effs else ''))
+    return (f'<div class="chart-box" style="--gutter:{pad_l / width * 100:.2f}%">'
+            f'<div class="chart-plot">'
+            f'<svg class="chart-svg" viewBox="0 0 {width} {height}" role="img" '
+            f'data-series="{esc(series)}" data-pad="{pad_l}" data-step="{step:.4f}" '
+            f'aria-label="{len(points)}日分の価格推移。最安 {low:,}円、最高 {high:,}円'
+            + ('。破線はポイント込みの実質価格' if effs else '') + '">'
+            f'{grid}{guide}'
             f'<polyline points="{coords}" fill="none" stroke="currentColor" '
             f'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+            f'{eff_line}'
             f'<circle cx="{pad_l + (len(points) - 1) * step:.1f}" '
-            f'cy="{y(prices[-1]):.1f}" r="3.5" fill="currentColor"/></svg>')
+            f'cy="{y(prices[-1]):.1f}" r="3.5" fill="currentColor"/></svg>'
+            f'{ticks}</div>{dates}'
+            f'<p class="chart-read" aria-live="polite"></p></div>')
 
 
 def cheaper_days(row: dict) -> str:
@@ -908,13 +1400,58 @@ def cheaper_days(row: dict) -> str:
         return ""
     now = row["price"]
     if len(set(prices)) == 1:
+        # 価格は動いていないが、ポイント倍率で実質が動いていることがある。
+        # そこで文を止めると、すぐ下の図（破線）と食い違って見える。
+        effs = [v for _, v in effective_series(row)]
+        if effs and len(set(effs)) > 1 and effs[-1] < max(effs):
+            return (f'記録{len(prices)}日のあいだ、価格は{yen(now)}のまま'
+                    f'変わっていません。ただしポイント倍率が上がったぶん、'
+                    f'実質は{yen(max(effs))}から{yen(effs[-1])}まで下がりました。')
         # 一度も動いていない。「100%」と出しても何も伝わらない
         return f'記録{len(prices)}日のあいだ、価格は{yen(now)}のまま変わっていません。'
     n = sum(1 for p in prices if p <= now)
+    if n == len(prices):
+        # 全日が「この価格以下」= いまが記録上いちばん高い。
+        # 「100%」と出すと安い日が多いように読めるが、事実は逆。
+        return (f'記録{len(prices)}日のうち、これより安かった日はありません。'
+                f'いまが記録した中でいちばん高い価格です。')
     if n == 1:
         return f'記録{len(prices)}日のうち、この価格以下だったのは今日だけです。'
     return (f'記録{len(prices)}日のうち、この価格以下だったのは{n}日です'
             f'（{n / len(prices):.0%}）。')
+
+
+CAPTION_JUNK = re.compile(r"関連商品|＼|／|(?:[0-9,]+円.*?){2,}", re.S)
+
+# 楽天の掲載文に混ざる売り込み。当サイトが書いた文ではないが、
+# 商品ページに載せれば読み手には当サイトが勧めているように映る。
+CAPTION_APPEAL = re.compile(
+    r"ぜひ|是非|おすすめ|オススメ|お勧め|おススメ|お買い求め|ご購入ください|"
+    r"プレゼントに|贈り物に|ギフトに|最適です|いかがでしょう|お見逃しなく|"
+    r"この機会に|大人気|売れ筋|自信を持って|満足いただけ|お買い得|"
+    r"セール|特価|激安|クーポン|還元|エントリー|ランキング\d*位|楽天\d+位|高評価")
+
+CAPTION_SPLIT = re.compile(r"(?<=[。！？!?])|\n+")
+
+
+def clean_caption(text: str) -> str:
+    """商品の説明から、売り込みと羅列を落とす。
+
+    楽天の掲載文をそのまま載せていたため、12,750件のうち2,028件（15.9%）に
+    「ぜひ」「オススメ」「超お買い得です」といった買い煽りが入っていた。
+    さらに「関連商品＼楽天1位獲得／…1,000円1,000円…」のように、
+    別商品の名前と値段の羅列が説明として入っているものが1,360件あった。
+    どちらも商品の情報ではないので、羅列は説明ごと出さず、
+    煽りは文の単位で落とす。残りが短ければ出さない。
+    """
+    text = str(text or "").strip()
+    if not text:
+        return ""
+    if CAPTION_JUNK.search(text):
+        return ""
+    parts = [p for p in CAPTION_SPLIT.split(text) if p and p.strip()]
+    kept = "".join(p for p in parts if not CAPTION_APPEAL.search(p)).strip()
+    return kept if len(kept) >= 30 else ""
 
 
 def caption_block(row: dict) -> str:
@@ -923,12 +1460,97 @@ def caption_block(row: dict) -> str:
     全文は中央値1,123文字あり、5,500件ぶん持つと数MBになるので冒頭だけ持つ。
     出典がリンク先であることは必ず書く。
     """
-    text = str(row.get("caption") or "").strip()
+    text = clean_caption(row.get("caption"))
     if not text:
         return ""
     return ('<h2>商品の説明</h2>'
             f'<p class="caption">{esc(text)}…</p>'
             '<p class="note">楽天市場の掲載内容の冒頭です。全文はリンク先をご確認ください。</p>')
+
+
+def since_start(row: dict) -> str:
+    """記録を始めた日といまを並べる。
+
+    価格.com の価格推移ページは冒頭に「初値 / 現在 / 差額・値下がり率」を
+    3行で出す。いくらから、いくらまで、いくら動いたかが一目で分かる。
+    同じ形を置くが、うちは**実質価格の変化も並べる**。楽天の値引きは価格では
+    なく倍率で動くことが多く、価格の行だけでは動きが見えない商品がある。
+
+    「初値」とは書かない。うちが持っているのは記録を始めた日の値段であって、
+    発売時の値段ではない。
+    """
+    tail = [store_entry(e) for e in (row.get("tail") or [])]
+    if len(tail) < 2:
+        return ""
+    (first_day, first_price, first_rate) = tail[0]
+    (last_day, last_price, last_rate) = tail[-1]
+    first_eff = effective(first_price, first_rate)
+    last_eff = effective(last_price, last_rate)
+
+    def line(label, before, now):
+        d = now - before
+        if not d:
+            return (f'<tr><th>{esc(label)}</th><td>{yen(before)}</td>'
+                    f'<td>{yen(now)}</td><td class="move">'
+                    f'<span class="same">変わらず</span></td></tr>')
+        cls = "up" if d > 0 else "down"
+        sign = "+" if d > 0 else "−"
+        rate = abs(d) / before if before else 0
+        # 「−268円（19.2%）」を1セルに入れると、幅320pxで表が40px出る。
+        # 率は下の段へ落とす（横に伸ばさず、縦に積む）。
+        return (f'<tr><th>{esc(label)}</th><td>{yen(before)}</td>'
+                f'<td>{yen(now)}</td>'
+                f'<td class="move"><span class="{cls}">{sign}{abs(d):,}円</span>'
+                f'<small>{rate:.1%}</small></td></tr>')
+
+    body = line("価格", first_price, last_price)
+    # 倍率が一度も付いていない商品は、実質の行を出しても価格と同じ形になる
+    rates = {e[2] for e in tail}
+    note = ""
+    if rates != {1}:
+        # 「実質（ポイント込み）」は行見出しに入れると表がはみ出す
+        # （幅320pxで347pxになった）。ポイント込みであることは下の注記に書く。
+        body += line("実質", first_eff, last_eff)
+        note = "「実質」はポイント分を引いた目安です。"
+    return ('<h2>記録を始めてからの変化</h2>'
+            '<table class="facts change">'
+            f'<thead><tr><th scope="col"></th>'
+            f'<th scope="col">{esc(jp_date(first_day))}</th>'
+            f'<th scope="col">{esc(jp_date(last_day))}</th>'
+            f'<th scope="col">差</th></tr></thead>'
+            f'<tbody>{body}</tbody></table>'
+            f'<p class="note">{note}{len(tail)}日分の記録での比較で、'
+            f'発売時の値段ではありません。</p>')
+
+
+def sub_position(row: dict, prefix: str = "") -> str:
+    """同じ分類の中で、その値段がどのあたりか。
+
+    実測（2026-10-03）で、記録している13,544商品のうち**9,700件（71.6%）は
+    価格も実質価格も一度も動いていない**。その商品ページには「ずっと同じ値段」
+    という情報しか無く、価格を追うサイトとして出せるものが何も無かった。
+
+    同じ分類の中での位置なら、動いていない商品にも言える。13,544商品ぶんの
+    価格を毎日持っているからこそ出せるもので、1商品だけを見ていても分からない。
+    """
+    n = int(row.get("sub_count") or 0)
+    rank = int(row.get("sub_rank") or 0)
+    if n < 10 or not rank:
+        return ""
+    name, path = row.get("sub_name") or "", row.get("sub_path") or ""
+    where = (f'<a href="{prefix}{path}">{esc(str(name))}</a>' if path
+             else esc(str(name)))
+    # 「安い方から◯番目」は、高いほうに居るときは分かりにくい。
+    # 真ん中より高ければ「高い方から」で数える。
+    if rank * 2 > n:
+        side = f'高い方から <strong>{n - rank + 1:,}番目</strong>'
+    else:
+        side = f'安い方から <strong>{rank:,}番目</strong>'
+    return ('<h2>同じ分類の中での位置</h2>'
+            f'<p class="rankin">{where} の {n:,}件のうち、{side} です。'
+            f'この分類の価格は {yen(row.get("sub_low") or 0)} 〜 '
+            f'{yen(row.get("sub_high") or 0)}'
+            f'（真ん中は {yen(row.get("sub_mid") or 0)}）。</p>')
 
 
 def history_table(row: dict) -> str:
@@ -937,15 +1559,61 @@ def history_table(row: dict) -> str:
     折れ線は形しか分からない。「いつ・いくらだったか」を読めるようにする。
     倍率が付いている日はそれも出す（実質いくらだったかを後から確かめられる）。
     """
-    tail = [store_entry(e) for e in (row.get("tail") or [])][-14:]
+    tail = [store_entry(e) for e in (row.get("tail") or [])]
     if len(tail) < 2:
         return ""
-    body = "".join(
-        f"<tr><th>{esc(day)}</th><td>{yen(price)}</td>"
-        f"<td>{('ポイント' + str(rate) + '倍') if rate > 1 else ''}</td></tr>"
-        for day, price, rate in reversed(tail))
+    # 記録が伸びるほど価値が出るものなので、古い日を捨てない。既定は直近14日で、
+    # それより前は畳んでおく。表を2枚出すと配信物がその分ふくらむので
+    # （13,406ページある）、1枚の表の行を CSS で隠し、印で開く。
+    limited = len(tail) > 14
+
+    def move(now, before):
+        """前の日からの差。価格.com の「変動額」に当たる列。
+        どの日に動いたかが、価格そのものを読み比べなくても分かる。"""
+        if before is None or now == before:
+            return '<span class="same">0</span>'
+        d = now - before
+        cls = "up" if d > 0 else "down"
+        return f'<span class="{cls}">{"+" if d > 0 else "−"}{abs(d):,}</span>'
+
+    def rate_note(rate):
+        """倍率そのものも残す。実質価格だけだと、値引きが倍率で来たのか
+        価格で来たのかが表から読めない。通常ポイント（1倍）は書かない。"""
+        return f'<small>{rate}倍</small>' if rate and rate > 1 else ""
+
+    # 実質価格の変動も同じ表に出す。楽天の値引きは価格ではなく倍率で動くので、
+    # 価格の列だけを見ると「動いていない」ように見える日がある。
+    # ここが価格.com の「日別の価格変動」に無いもの。
+    rows_ = list(reversed(tail))
+    body = []
+    for i, (day, price, rate) in enumerate(rows_):
+        prev = rows_[i + 1] if i + 1 < len(rows_) else None
+        eff = effective(price, rate)
+        eff_prev = effective(prev[1], prev[2]) if prev else None
+        body.append(
+            f'<tr><th scope="row">{esc(day[5:].replace("-", "/"))}</th>'
+            f'<td>{yen(price)}</td>'
+            f'<td class="move">{move(price, prev[1] if prev else None)}</td>'
+            f'<td>{yen(eff)}{rate_note(rate)}</td>'
+            f'<td class="move">{move(eff, eff_prev)}</td></tr>')
+    head_row = ('<thead><tr><th scope="col">日付</th>'
+                '<th scope="col">価格</th><th scope="col">前日差</th>'
+                '<th scope="col">実質</th><th scope="col">前日差</th></tr></thead>')
+    cols = ('<colgroup><col class="c-day"><col class="c-price">'
+            '<col class="c-move"><col class="c-price"><col class="c-move"></colgroup>')
+    more = ('<input type="checkbox" id="allhist" class="allhist-toggle">'
+            if limited else "")
+    opener = (f'<label for="allhist" class="allhist">記録{len(tail)}日ぶんを'
+              f'すべて見る</label>' if limited else "")
     return ('<h2>価格の記録</h2>'
-            f'<table class="facts history">{body}</table>')
+            + more
+            + f'<table class="facts history{" limited" if limited else ""}">'
+            f'{cols}{head_row}'
+            f'<tbody>{"".join(body)}</tbody></table>'
+            + opener
+            + '<p class="note">「実質」はポイント分を引いた目安です。'
+            '楽天の値引きは価格ではなく倍率で動くことが多いため、'
+            '価格が同じ日でも実質は動きます。</p>')
 
 
 def og_image(site: dict, stats: dict) -> str:
@@ -984,16 +1652,21 @@ def not_found(site: dict, updated: str) -> str:
     リンクも壊れるので、ルートからの絶対パスで書く。
     """
     root = root_prefix(site)
+    # canonical にトップを入れていたため、存在しないURLすべてが
+    # 「トップと同じページ」だと検索側に申告される形になっていた。
+    # 404 は索引に載せるページではないので noindex にし、canonical も
+    # 404 自身のURLにする。
     return (head(f"ページが見つかりません｜{site['name']}",
-                 "お探しのページは見つかりませんでした。", site["base_url"], site,
-                 prefix=root_prefix(site))
+                 "お探しのページは見つかりませんでした。",
+                 site["base_url"].rstrip("/") + "/404.html", site,
+                 prefix=root_prefix(site), indexable=False)
             + '<h1>ページが見つかりません</h1>'
             + '<p class="lead">記録から外れた商品のページは、時間がたつと無くなります。'
             + '商品名で探すか、一覧から辿ってください。</p>'
             + '<ul class="cards">'
             + f'<li class="card"><div class="body"><a class="name" href="{root}search/">商品を探す</a>'
             + '<p class="meta">記録している商品を名前で絞り込めます</p></div></li>'
-            + f'<li class="card"><div class="body"><a class="name" href="{root}">今日の値下がり</a>'
+            + f'<li class="card"><div class="body"><a class="name" href="{root}drops/">今日の値下がり</a>'
             + '<p class="meta">前回より安くなった商品</p></div></li>'
             + f'<li class="card"><div class="body"><a class="name" href="{root}lows/">最安値圏</a>'
             + '<p class="meta">記録した中で最も安い価格の商品</p></div></li>'
@@ -1037,6 +1710,26 @@ def feed(site: dict, rows: list, updated: str, title: str = "今日の値下が�
             f'<language>ja</language>{items}</channel></rss>')
 
 
+def breadcrumb2(site: dict, mid_name: str, mid_href: str, name: str,
+                prefix: str) -> str:
+    """3段のパンくず。ジャンルと日付別は間にもう1枚ある。"""
+    base = site["base_url"].rstrip("/")
+    ld = safe_json({
+        "@context": "https://schema.org", "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": site["name"], "item": base + "/"},
+            {"@type": "ListItem", "position": 2, "name": mid_name,
+             "item": base + "/" + mid_href},
+            {"@type": "ListItem", "position": 3, "name": name},
+        ],
+    })
+    return (f'<nav class="crumb"><a href="{prefix}">{esc(site["name"])}</a>'
+            f'<span class="sep">/</span>'
+            f'<a href="{prefix}{esc(mid_href)}">{esc(mid_name)}</a>'
+            f'<span class="sep">/</span>{esc(name)}</nav>'
+            f'<script type="application/ld+json">{ld}</script>')
+
+
 def breadcrumb(site: dict, name: str, prefix: str) -> str:
     """パンくず。5,600ページあるので、いまどこにいるか分かる道しるべを置く。"""
     base = site["base_url"].rstrip("/")
@@ -1052,33 +1745,73 @@ def breadcrumb(site: dict, name: str, prefix: str) -> str:
             f'<script type="application/ld+json">{ld}</script>')
 
 
+def distinct_short(rows: list, limit: int = 46) -> list:
+    """並べたときに見分けの付く短い名前を返す。
+
+    名前の近い商品を選ぶ作りなので、頭が同じで末尾だけ違う商品
+    （枚数違い・色違い）が隣り合う。切り詰めた結果が同じになると、
+    行き先の違うリンクが3本とも同じ文字になり、どれを押せばよいか分からない。
+    同じになった組だけ、名前が分かれる位置から先を足す。
+    それでも同じなら店名を添える。
+    """
+    full = [clean_name(r["name"]) for r in rows]
+    out = [t if len(t) <= limit else t[:limit].rstrip() + "…" for t in full]
+    groups = {}
+    for i, t in enumerate(out):
+        groups.setdefault(t, []).append(i)
+    for text, idx in groups.items():
+        if len(idx) < 2:
+            continue
+        names = [full[i] for i in idx]
+        head = 0
+        while head < min(len(n) for n in names) and len({n[head] for n in names}) == 1:
+            head += 1
+        stem = text[:-1].rstrip() if text.endswith("…") else text
+        for i, n in zip(idx, names):
+            tail = n[head:head + 16].strip()
+            if tail:
+                out[i] = stem + "…" + tail + ("…" if len(n) > head + 16 else "")
+            else:
+                shop = (rows[i].get("shop") or "").strip()
+                if shop:
+                    out[i] = text + "（" + shop + "）"
+    return out
+
+
 def same_shop(rows: list, shop: str) -> str:
     """同じ店の商品。店ごとにポイント倍率や送料の条件が揃うことが多い。"""
     if not rows or not shop:
         return ""
+    labels = distinct_short(rows)
     body = "".join(
         f'<li><a href="../{slug(r["item_code"])}/" title="{esc(r["name"])}">'
-        f'{esc(short_name(r["name"]))}</a>'
-        f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
+        f'{esc(label)}</a>'
+        f'<span class="price">{yen(r["price"])}</span></li>'
+        for r, label in zip(rows, labels))
     return f'<h2>{esc(shop)} の他の商品</h2><ul class="hits">{body}</ul>'
 
 
 def related(rows: list, site: dict) -> str:
-    """同じジャンルの商品へ。5,500ページが互いに孤立していると、
-    読み手も検索エンジンも辿れない。"""
+    """名前の近い商品へ。12,658ページが互いに孤立していると、
+    読み手も検索エンジンも辿れない。
+
+    以前は同じジャンルの先頭から取っていたため、同じ顔ぶれを全ページで
+    使い回していた（実測で60ページが33商品・5通り）。名前の近さで選ぶと
+    リンクされる商品が 64 → 12,022種類に広がる。"""
     if not rows:
         return ""
+    labels = distinct_short(rows)
     body = "".join(
         f'<li><a href="../{slug(r["item_code"])}/" title="{esc(r["name"])}">'
-        f'{esc(short_name(r["name"]))}</a>'
-        f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
-    return f'<h2>同じジャンルの商品</h2><ul class="hits">{body}</ul>'
+        f'{esc(label)}</a>'
+        f'<span class="price">{yen(r["price"])}</span></li>'
+        for r, label in zip(rows, labels))
+    return f'<h2>名前が近い商品</h2><ul class="hits">{body}</ul>'
 
 
 # 見守りの保存は端末の中だけ。登録した時の価格も控えて、次に来たときに
 # 「自分が見始めてから下がったか」を出せるようにする。
 WATCH_JS = r"""
-<script>
 function ptShort(name, limit) {
   // 索引に積む時点で宣伝は落としてある（build.py の clean_name）ので、
   // ここは切り詰めるだけ。同じ規則を二か所に書くと必ずずれる。
@@ -1126,28 +1859,20 @@ var PTWatch = (function () {
   });
   return {read: read, toggle: toggle, count: count, setTarget: setTarget};
 })();
-</script>
-"""
 
-WATCH_BUTTON = r"""
-<p class="watch"><button id="watch" type="button" data-code="{code}" data-price="{price}">見守る</button>
-<span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
-<p class="target" id="targetbox" hidden>
-  <label>この値段以下になったら知りたい
-    <input id="target" type="number" inputmode="numeric" min="0" step="100"
-           placeholder="例 {price}"></label>
-  <span class="note">次に見守り一覧を開いたとき、達したものを先頭に出します。</span>
-</p>
-<script>
-(function () {
+// 商品ページの見守りボタン。以前は商品ページ1枚ごとに同じ本文を直書きしていた
+// （12,658枚 × 1.4KB）。共有ファイルは head で読むのでこの時点では要素がまだ
+// 無く、DOM が揃うのを待つ必要がある。
+document.addEventListener('DOMContentLoaded', function () {
   var btn = document.getElementById('watch');
+  if (!btn) { return; }          // 商品ページ以外
+  var box = document.getElementById('targetbox');
+  var input = document.getElementById('target');
   function draw(store) {
     var on = !!store[btn.dataset.code];
     btn.textContent = on ? '見守りを外す' : '見守る';
     btn.classList.toggle('on', on);
   }
-  var box = document.getElementById('targetbox');
-  var input = document.getElementById('target');
   function sync(store) {
     draw(store);
     var on = !!store[btn.dataset.code];
@@ -1161,8 +1886,131 @@ WATCH_BUTTON = r"""
   input.addEventListener('change', function () {
     PTWatch.setTarget(btn.dataset.code, parseInt(input.value, 10) || 0);
   });
+});
+
+// 価格の図。触れた位置の日付と値を読めるようにする。
+// 目盛りは最安と最高しか無く、途中の日がいくらだったか読めなかった。
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.chart-svg[data-series]').forEach(function (svg) {
+    var rows = svg.dataset.series.split(';').map(function (r) {
+      var c = r.split(',');
+      return {date: c[0], price: +c[1], eff: c.length > 2 ? +c[2] : null};
+    });
+    if (rows.length < 2) { return; }
+    var pad = +svg.dataset.pad, step = +svg.dataset.step;
+    // 目盛りを HTML に出した都合で、svg の親は .chart-plot になった。
+    var wrap = svg.closest('.chart-box') || svg.parentNode;
+    var out = wrap.querySelector('.chart-read');
+    var guide = svg.querySelector('.chart-guide');
+    var dot = svg.querySelector('.chart-dot');
+    var dotEff = svg.querySelector('.chart-dot-eff');
+    var line = svg.querySelector('polyline:not(.eff-line)');
+    var effLine = svg.querySelector('.eff-line');
+
+    function at(i) { return line.points.getItem(i); }
+
+    function show(i) {
+      var r = rows[i], p = at(i);
+      if (!r) { return; }
+      guide.setAttribute('x1', p.x); guide.setAttribute('x2', p.x);
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
+      if (effLine && dotEff) {
+        var q = effLine.points.getItem(i);
+        dotEff.setAttribute('cx', q.x); dotEff.setAttribute('cy', q.y);
+      }
+      svg.classList.add('reading');
+      var text = r.date + '　' + r.price.toLocaleString() + '円';
+      if (r.eff !== null && r.eff !== r.price) {
+        text += '（ポイント込み ' + r.eff.toLocaleString() + '円）';
+      }
+      out.textContent = text;
+    }
+
+    function hide() {
+      svg.classList.remove('reading');
+      out.textContent = '';
+    }
+
+    function pick(ev) {
+      // 画面の座標を図の座標へ直す。viewBox で拡大されているのでそのままでは合わない
+      var box = svg.getBoundingClientRect();
+      // 畳んだ図（details）は開くまで実寸が0。割ると NaN になって落ちる
+      if (!box.width) { return; }
+      var vb = svg.viewBox.baseVal;
+      var x = (ev.clientX - box.left) / box.width * vb.width;
+      var i = Math.round((x - pad) / step);
+      if (!isFinite(i)) { return; }
+      show(Math.max(0, Math.min(rows.length - 1, i)));
+    }
+
+    svg.addEventListener('pointermove', pick);
+    svg.addEventListener('pointerdown', pick);
+    svg.addEventListener('pointerleave', hide);
+  });
+});
+
+// 楽天のサムネイルは、商品が消えたり差し替えられたりすると読めなくなる。
+// そのままだと壊れた絵の記号と、40文字の代替文がカードの中で溢れる。
+// 読めなかった画像は枠だけに差し替える（画像の無い商品と同じ見た目）。
+// error は泡立たないので、捕捉の段階（第3引数 true）で受ける。
+document.addEventListener('error', function (ev) {
+  var el = ev.target;
+  if (!el || el.tagName !== 'IMG') { return; }
+  var box = document.createElement('span');
+  box.className = 'noimg' + (el.className ? ' ' + el.className : '');
+  if (el.parentNode) { el.parentNode.replaceChild(box, el); }
+}, true);
+
+// 追従する「先頭へ」。ひと目盛り分スクロールしたら出す。
+document.addEventListener('DOMContentLoaded', function () {
+  var top = document.querySelector('.to-top');
+  if (!top) { return; }
+  function check() { top.classList.toggle('on', scrollY > innerHeight); }
+  check();
+  addEventListener('scroll', check, {passive: true});
+});
+
+// 明暗の切り替え。style.css は data-theme に対応していたのに、
+// 切り替える手立てをどこにも置いていなかった（使えない仕組みが眠っていた）。
+(function () {
+  var KEY = 'pt-theme';
+  function apply(v) {
+    if (v) { document.documentElement.dataset.theme = v; }
+    else { delete document.documentElement.dataset.theme; }
+  }
+  try { apply(localStorage.getItem(KEY)); } catch (e) {}
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('theme');
+    if (!btn) { return; }
+    function label() {
+      var v = document.documentElement.dataset.theme;
+      btn.textContent = v === 'dark' ? '明るく' : v === 'light' ? '端末に合わせる' : '暗く';
+      btn.setAttribute('aria-label', '配色を変える（いまは'
+        + (v === 'dark' ? '暗い' : v === 'light' ? '明るい' : '端末の設定') + '）');
+    }
+    label();
+    btn.addEventListener('click', function () {
+      // 端末の設定 → 暗く → 明るく → 端末の設定 の順に回す
+      var v = document.documentElement.dataset.theme;
+      var next = v === 'dark' ? 'light' : v === 'light' ? '' : 'dark';
+      apply(next);
+      try { next ? localStorage.setItem(KEY, next) : localStorage.removeItem(KEY); }
+      catch (e) {}
+      label();
+    });
+  });
 })();
-</script>
+"""
+
+WATCH_BUTTON = r"""
+<p class="watch"><button id="watch" type="button" data-code="{code}" data-price="{price}">見守る</button>
+<span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
+<p class="target" id="targetbox" hidden>
+  <label>この値段以下になったら知りたい
+    <input id="target" type="number" inputmode="numeric" min="0" step="100"
+           placeholder="例 {price}"></label>
+  <span class="note">次に見守り一覧を開いたとき、達したものを先頭に出します。</span>
+</p>
 """
 
 
@@ -1176,11 +2024,20 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
     title = "見守り中の商品"
     lead = ("商品ページで「見守る」を押した商品を、見始めた時からの差が大きい順に並べます。"
             "保存先はお使いの端末の中だけです。")
-    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
+    # 中身は端末の中にしか無い。他人が検索から来ても空のページしか見えないので、
+    # 索引に載せない（sitemap からも自動で外れる）。
+    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../",
+                 indexable=False)
             + breadcrumb(site, title, "../")
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + AD_NOTICE
+            + '<noscript><p class="empty">この一覧は端末に保存した控えから作ります。'
+              'ブラウザの JavaScript を有効にするとご覧いただけます。</p></noscript>'
+            + '<noscript><p class="empty">絞り込みはブラウザの中で行うため、'
+              'JavaScript を有効にするとお使いいただけます。'
+              '下の「よく使われる言葉」からは JavaScript 無しでも辿れます。</p></noscript>'
             + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
+            + f'<script>var PT_INDEX={safe_json(site.get("search_index", "search-index.json"))};</script>'
             + """<script>
 (function () {
   var out = document.getElementById('results');
@@ -1188,11 +2045,14 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
   var store = PTWatch.read();
   var codes = Object.keys(store);
   if (!codes.length) {
-    note.textContent = 'まだありません。商品ページの「見守る」を押すとここに並びます。';
+    // 空のときに文だけ置くと行き止まりになる。探しに行く先を出す。
+    note.innerHTML = 'まだありません。商品ページの「見守る」を押すとここに並びます。'
+      + '<span class="go"><a href="../now/">いま条件がそろっている商品</a>'
+      + '<a href="../lows/">最安値圏</a><a href="../search/">商品を探す</a></span>';
     return;
   }
   note.textContent = '読み込んでいます…';
-  fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
+  fetch('../' + PT_INDEX).then(function (r) { return r.json(); }).then(function (data) {
     var hits = data.filter(function (r) { return store[r[3]]; }).map(function (r) {
       var e = store[r[3]];
       var was = e.p || 0;
@@ -1203,9 +2063,16 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
     // 目標に達したものを先に。次が下げ幅の大きい順。
     hits.sort(function (a, b) { return (b.hit - a.hit) || (b.diff - a.diff); });
     var reached = hits.filter(function (h) { return h.hit; }).length;
-    note.textContent = reached
+    // 見守った商品が記録から外れる（販売終了・取得対象から外れる）ことがある。
+    // そのとき「0件」とだけ出すと、消えた理由が読み手に分からない。
+    var gone = codes.length - hits.length;
+    var lost = gone > 0
+      ? '（見守り中の' + codes.length + '件のうち' + gone
+        + '件は、いま記録にありません。販売終了などで取得できなくなった商品です）'
+      : '';
+    note.textContent = (reached
       ? hits.length + '件のうち ' + reached + '件が目標の値段に達しています'
-      : hits.length + '件';
+      : hits.length + '件') + lost;
     out.textContent = '';
     hits.forEach(function (h) {
       var li = document.createElement('li');
@@ -1262,40 +2129,111 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     canonical = f'{site["base_url"].rstrip("/")}/item/{slug(row["item_code"])}/'
     # 検索結果でタイトルは30文字前後、説明は120文字前後で切られる。
     # 商品名をそのまま入れると204文字になり、要点が全部切り落とされる。
-    title = f'{title_name or short_name(row["name"], 28)}の価格推移・最安値'
-    # 説明には値と日付を入れる。商品名を繰り返しても、検索結果に並んだとき
-    # 他のページと見分けが付かない。
-    state = ("いまが記録上の最安値" if row.get("at_low") else
-             "最安値に近い" if row.get("near_low") else
-             "前回より値下がり" if row.get("dropped") else
-             f'最安値より{pct(row["vs_low_pct"])}高い' if row.get("vs_low_pct") else
-             "価格は横ばい")
-    desc = (f'{short_name(row["name"], 26)} の価格推移。'
-            f'{jp_date(updated)}時点 {yen(row["price"])}、'
-            f'記録した中での最安値は {yen(row["low"])}'
-            f'（{jp_date(row.get("low_date") or "")}）。'
-            + ('記録を始めたばかりで、まだ値動きを比べられません。'
-               if int(row.get("days") or 0) < 2
-               else f'{row["days"]}日分の記録では{state}です。'))
+    # 「・最安値」は検索結果では切れて見えない位置にあった（題は中央50字で、
+    # 日本語は30〜40字で切られる）。短くして、商品名と「価格推移」を残す。
+    title = f'{title_name or short_name(row["name"], 28)}の価格推移'
+    # 値上げが記録されている商品は、題と説明の頭をそれに答える形にする（analyze.last_hike）。
+    # 「値上げ」で探されて表示されているのに、題が答えていなかった。
+    # 上がったのは**この店の楽天での価格**で、メーカーの改定額ではない。そう書く。
+    hike = row.get("hike")
+    if hike:
+        title = f'{title_name or short_name(row["name"], 28)}の値上げ・価格推移'
+    # 説明の頭は**いまの判定**にする。商品名は題にあるので繰り返さない。
+    # 「6日分の記録では価格は横ばいです」で始めていたときは、検索結果に並んでも
+    # 押す理由が読めなかった（表示115に対しクリック5＝4.3%）。
+    # 値は必ずあるとは限らない（組み替えた行や、古い記録から作った行では欠ける）。
+    # **無い値を0として文にしない。** 「0.0% 下がりました」「実質 0円」は嘘になる。
+    # その分岐を使わず、言えることだけを言う。
+    days = int(row.get("days") or 0)
+    price, low = row.get("price") or 0, row.get("low") or 0
+    off = row.get("off_high_pct") or 0
+    if days < 2:
+        lead_state = (f'{yen(price)}。記録を始めたばかりで、'
+                      f'まだ値動きを比べられません。')
+    elif row.get("at_low"):
+        lead_state = (f'記録した中でいちばん安い {yen(price)} です'
+                      + (f'（最高値から{pct(off)}下がりました）。' if off else '。'))
+    elif row.get("eff_at_low") and row.get("eff_price"):
+        lead_state = (f'ポイント込みの実質 {yen(row["eff_price"])} が'
+                      f'記録した中でいちばん安い状態です（価格は{yen(price)}）。')
+    elif row.get("dropped") and row.get("drop_pct"):
+        lead_state = (f'前回より {pct(row["drop_pct"])} 下がって '
+                      f'{yen(price)} です。')
+    elif row.get("near_low"):
+        lead_state = f'記録した中の最安値 {yen(low)} に近い {yen(price)} です。'
+    elif row.get("moved") is False and int(row.get("sub_count") or 0) >= 10:
+        # 動いていない商品（実測で71.6%）は「ずっと同じ値段」としか書けず、
+        # 検索結果に並んでも押す理由が無かった。同じ分類の中での位置なら
+        # 言える（13,544商品ぶんの価格を毎日持っているから出せる）。
+        n, rank = int(row["sub_count"]), int(row["sub_rank"])
+        side = (f'高い方から{n - rank + 1:,}番目'
+                if rank * 2 > n else f'安い方から{rank:,}番目')
+        lead_state = (f'{esc(str(row.get("sub_name") or ""))} {n:,}件のうち'
+                      f'{side}の {yen(price)}。'
+                      f'記録{days}日のあいだ動いていません。')
+    elif row.get("moved") is False:
+        lead_state = (f'{yen(price)}。記録{days}日のあいだ'
+                      f'価格は動いていません。')
+    elif row.get("vs_low_pct"):
+        lead_state = (f'{yen(price)}。記録した中の最安値 {yen(low)} より '
+                      f'{pct(row["vs_low_pct"])} 高い状態です。')
+    else:
+        lead_state = f'{yen(price)}。'
+    # 動いていない商品では最安と最高が同じ値になる。頭で「動いていません」と
+    # 言ったうえで「最安 650円／最高 650円」を続けると、同じことを2回読ませる。
+    high = row.get("high") or 0
+    span = (f'記録{days}日分・最安 {yen(low)}／最高 {yen(high)}。'
+            if low != high else '')
+    hike_text = ''
+    if hike:
+        hike_text = (f'この店の価格は{jp_date(hike["date"])}に {yen(hike["from"])} → '
+                     f'{yen(hike["to"])}（+{yen(hike["to"] - hike["from"])}・'
+                     f'{pct(hike["pct"])}）に上がりました。'
+                     + (f'いまは {yen(price)}。' if price != hike["to"] else ''))
+        lead_state = hike_text
+    desc = lead_state + span + f'{short_name(row["name"], 16)} の価格の記録。'
 
-    rows_html = [("現在の価格", yen(row["price"])),
-                 ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
+    # ポイント分を引いた実質価格の推移。倍率が一度も動かない商品では
+    # 価格の線と重なるだけなので、その時は重ねない。
+    eff = effective_series(row)
+    rates = [e[2] if len(e) > 2 and e[2] else 1
+             for e in map(store_entry, row.get("tail") or [])]
+    if len(set(rates)) <= 1 and max(rates or [1]) == 1:
+        eff, eff_note = [], ""
+    else:
+        eff_note = ('<p class="legend"><span class="k-price">価格</span>'
+                    '<span class="k-eff">ポイント込みの実質価格</span></p>'
+                    '<p class="note">倍率は購入額の何%が戻るかの目安で、'
+                    '実際の付与はキャンペーンや会員ランクでも変わります。</p>')
+
+    # 現在の価格・前回の価格・倍率・実質価格は、すぐ上の「記録を始めてからの変化」と
+    # 下の「価格の記録」に出ている。同じ数字を3か所に置くと、どれを見ればよいのかが
+    # 分からなくなる（2026-09-28 に9行のうち5行が重複していた）。
+    # ここに残すのは「記録した中でのいまの位置」だけにする。
+    rows_html = [("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
                  ("記録した中での最高値", yen(row["high"])),
                  ("最安値との差", pct(row["vs_low_pct"]) if row["vs_low_pct"] else "最安値と同じ"),
-                 ("記録日数", f'{row["days"]}日')]
-    if int(row.get("point_rate") or 1) > 1:
-        rows_html.insert(1, ("ポイント倍率", f'{row["point_rate"]}倍'))
-        rows_html.insert(2, ("ポイント分を引いた実質価格",
-                             f'{yen(row["eff_price"])}（目安）'))
-    if row.get("prev"):
-        rows_html.insert(1, ("前回の価格", yen(row["prev"])))
+                 ("記録した中の値幅",
+                  (f'{yen(row["low"])} 〜 {yen(row["high"])}'
+                   f'（{pct((row["high"] - row["low"]) / row["high"])}）')
+                  if row.get("moved") else "動いていません")]
+    if len(row.get("tail") or []) < 2:
+        # 記録が1日しかないと上下の表がどちらも出ない。そのときだけ、
+        # 価格そのものをここに出す（どこにも出ないよりはよい）。
+        first = [("現在の価格", yen(row["price"]))]
+        if int(row.get("point_rate") or 1) > 1:
+            # 図の凡例が「ポイント込みの実質価格」なので、表もその言い方に揃える。
+            first += [("ポイント倍率", f'{row["point_rate"]}倍'),
+                      ("ポイント込みの実質価格", f'{yen(row["eff_price"])}（目安）')]
+        rows_html = first + rows_html
+    rows_html.append(("記録日数", f'{row["days"]}日'))
     table = "".join(f"<tr><th>{esc(k)}</th><td>{v}</td></tr>" for k, v in rows_html)
 
     # 商品情報の構造化データ。価格は当サイトの取得値であることを本文で明示している。
     ld = safe_json({
         "@context": "https://schema.org", "@type": "Product",
         "name": clean_name(row["name"]), "image": row.get("image") or None,
-        "description": (row.get("caption") or "")[:200] or None,
+        "description": clean_caption(row.get("caption"))[:200] or None,
         "sku": row.get("item_code") or None,
         "offers": {"@type": "Offer", "price": row["price"], "priceCurrency": "JPY",
                    "url": row.get("url") or canonical,
@@ -1304,8 +2242,19 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                    "availability": ("https://schema.org/InStock"
                                     if row.get("in_stock", True)
                                     else "https://schema.org/OutOfStock"),
-                   # 毎日取り直すので、この値段が言えるのは次の取得までとする
+                   # 毎日取り直すので、この値段が言えるのは
+                   # 記録した日から次の取得まで
+                   "validFrom": updated,
                    "priceValidUntil": next_day(updated),
+                   # 送料は「無料かどうか」しか取れない。無料の回だけ書く。
+                   # 有料の回は金額を知らないので、推測で埋めない
+                   **({"shippingDetails": {
+                       "@type": "OfferShippingDetails",
+                       "shippingRate": {"@type": "MonetaryAmount",
+                                        "value": 0, "currency": "JPY"},
+                       "shippingDestination": {"@type": "DefinedRegion",
+                                               "addressCountry": "JP"}}}
+                      if row.get("free_shipping") else {}),
                    "seller": {"@type": "Organization",
                               "name": row.get("shop") or ""}},
     })
@@ -1314,10 +2263,15 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     # indexable はどの一覧からも辿れるかで build が決める（実測で270件が該当なし）。
     # 辿れない商品は検索結果にだけ出る行き止まりになるので索引に載せない。
     # ページ自体は残す。見守りや外からのリンクの行き先になっている。
-    return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra,
-                 indexable=indexable)
+    # 共有したときに出る絵。og.svg のままだと X も Facebook も LINE も
+    # SVG を描かないので、13,402件が持っている楽天の商品写真を使う。
+    # ページの中で既に出している同じ画像なので、新しく持つものは無い。
+    # 商品ページだけサイト名を題に付けない。商品名28字＋「の価格推移」で33字あり、
+    # 日本語の検索結果は30〜40字で切られる。サイト名（11字）を足すと、何のページ
+    # なのかを言う「の価格推移」まで切れる。ドメインは検索結果に別に出る。
+    return (head(title, desc, canonical, site, prefix, extra,
+                 indexable=indexable, image=str(row.get("image") or ""))
             + breadcrumb(site, "商品の価格推移", prefix)
-            + '<p class="back"><a href="../../">今日の値下がりへ</a><span class="sep">/</span><a href="../../lows/">最安値圏へ</a><span class="sep">/</span><a href="../../search/">商品を探す</a></p>'
             + f'<article class="item"><h1 title="{esc(row["name"])}">'
               f'{esc(short_name(row["name"], 70))}</h1>'
             # 楽天での正式名称。宣伝込みで200文字あることもあり、そのまま
@@ -1327,15 +2281,51 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
                f'<p>{esc(row["name"])}</p></details>'
                if clean_name(row["name"]) != row["name"]
                or len(row["name"]) > 70 else '')
+            # 画像と値段をひとまとまりにする。間に広告表示を挟んでいたため、
+            # 携帯では値段が690px下にあって最初の画面に入らなかった。
+            + '<div class="lede">'
             + (f'<p class="hero"><img src="{esc(row["image"])}" '
                f'alt="{esc(short_name(row["name"], 40))}" width="300" height="300" '
-               f'decoding="async"></p>' if row.get("image") else '')
+               f'loading="eager" fetchpriority="high" decoding="async"></p>'
+               if row.get("image") else '')
+            # 送料・在庫・ポイントは一覧のカードには出していたのに、商品ページの
+            # 頭には無かった。倍率が付いた商品では実質価格が19%も違うことがあり
+            # （dentendo-10026508-15813ae1）、いちばん大事な数字が頭に出ていない。
+            # 送料無料は構造化データにだけ書いていて、画面には出していなかった。
+            + f'<p class="headline"><strong>{yen(row["price"])}</strong> '
+            + f'{badge(row)}{conditions(row)}</p>'
+            + f'<p class="point-line">{point_note(row)}</p>'
+            + '</div>'
             + AD_NOTICE
-            + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
-            + f'<p class="verdict">{esc(verdict_note(row))}</p>'
-            + f'<div class="chart">{chart(row.get("tail") or [])}</div>'
+            # 買える場所へは、価格を見た所から行けるようにする。ここに置くまで
+            # 商品ページの「楽天市場で見る」は1つだけで、スマホでは 2,848px
+            # （3.5画面ぶん）下にあった。実測（2026-09-26〜29）で検索から5人
+            # 来たあいだ、楽天へのクリックは27から1つも動いていない。
+            # 断り（AD_NOTICE）より後ろに置く。何で収益を得ているかを先に言う。
+            + (f'<p class="cta top">{buy_link(row)}</p>' if row.get("url") else '')
+            # 題と説明で「値上げ」と言った商品は、本文の頭でも同じことを言う
+            # （検索結果に出したことが、開いた先に無いと嘘になる）。
+            + (f'<p class="verdict hike"><strong>値上げ</strong> {esc(hike_text)}</p>'
+               if hike_text else '')
+            + (f'<p class="verdict">{esc(verdict_note(row))}</p>'
+               if verdict_note(row) else '')
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
+            # 見せる履歴があるかは実質価格で見る。価格だけで数えると動いたのは
+            # 1,486件（13.9%）だが、ポイントを含めると2,252件（21.0%）になる。
+            # 楽天の値引きは倍率で動くので、価格だけで畳むと766件の
+            # 「実際には動いていた」商品の図を隠すことになる。
+            + (f'<div class="chart">{chart(row.get("tail") or [], effective=eff)}'
+               f'</div>{eff_note}'
+               if effective_change_count(row) else
+               # 動いていないことは直前の注記が書いている。ここは入口だけ
+               f'<details class="chart flat"><summary>記録{row["days"]}日分の図を見る'
+               f'</summary>{chart(row.get("tail") or [], effective=eff)}</details>')
+            # 並びは価格.com の価格推移ページに倣う。
+            # 図 → 何がどれだけ動いたかの要約 → 詳しい表。
+            + since_start(row)
+            + '<h2>記録した中での位置</h2>'
             + f'<table class="facts">{table}</table>'
+            + sub_position(row, prefix)
             + caption_block(row)
             + history_table(row)
             + (WATCH_BUTTON.replace("{code}", esc(row["item_code"]))
@@ -1345,5 +2335,14 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + f'<p class="shop">販売店: {esc(row.get("shop", ""))}</p>'
             + related(kin or [], site)
             + same_shop(shopmates or [], row.get("shop", ""))
+            # 次の行き先はページの終わりに置く。見出しの上にパンくずと二段に
+            # 積んでいたため、本題の前に案内が2行あった。
+            # 先頭の札は「今日の値下がりへ」のまま ../../ を指していて、
+            # トップを値下がりから入れ替えた時に直し忘れていた。
+            + '<nav class="onward"><span>ほかの一覧を見る</span>'
+              '<a href="../../now/">いま条件がそろっている商品</a>'
+              '<a href="../../drops/">今日の値下がり</a>'
+              '<a href="../../lows/">最安値圏</a>'
+              '<a href="../../search/">商品を探す</a></nav>'
             + '</article>'
             + foot(site, prefix, updated))
