@@ -151,7 +151,7 @@ def test_episode_reports_opening_and_shorts():
                 {"語り": "今日の話です。", "short": "s1"}, {"語り": "今日の地層は、ここまでです。"},
                 {"二人": "また一緒に、掘りましょう！"}]}]}
     errors, warns = check.episode(script.parse(base))
-    assert any("冒頭15秒" in w for w in warns) and any("ショート s1" in w for w in warns)
+    assert any("冒頭15秒" in w for w in warns) and any("ショート" in w and "s1" in w for w in warns)
     assert not any("冒頭" in e or "ショート" in e for e in errors)          # 止めはしない
 
 

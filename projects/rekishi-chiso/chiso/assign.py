@@ -20,8 +20,7 @@ from pathlib import Path
 
 from .voice import display_text
 
-CHARS_PER_SEC = 7.0
-BG_MAX_SEC = 40.0          # check.pacing と同じ（同じ背景は40秒まで）
+from .check import BG_MAX_SEC, CHARS_PER_SEC  # noqa: E402  check.pacing と同じ目安
 MIN_HOLD_SEC = 15.0        # 替えたばかりの絵は、これより短くは替えない（目がうるさくなる。節の頭は別）
 SWITCH_SCORE = 3.0         # これ以上の点で、いまの絵より MARGIN 以上よく合う絵があれば替える
 MARGIN = 1.0

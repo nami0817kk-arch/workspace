@@ -45,7 +45,7 @@ SIZES = {"large": 0.88, "medium": 0.68}       # 画面の高さの何割を立�
 BUST = 0.42                                   # 立ち絵の上から何割を見せるか（腰から上）
 HIDE_STYLES = ("silhouette", "blackout", "blur")
 CONTRAST_STYLES = ("auto", "arrow", "strike")
-MAX_HOOKS = 2                                 # これより多く足すと check が知らせる
+from .check import THUMB_HOOKS_MAX as MAX_HOOKS  # noqa: E402  これより多く足すと check が知らせる（目安は check.py の頭）
 
 
 def used(t: dict) -> list[str]:

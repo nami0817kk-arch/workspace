@@ -108,31 +108,31 @@ def cmd_approve(args) -> int:
 # --- 音声 ---------------------------------------------------------------
 
 def preflight(sc, config) -> bool:
-    """作る前の点検。素材が無いときは False（音声を作る前に止める）。"""
-    missing = check_mod.missing_assets(sc, assets_dir(config))
-    for m in missing:
-        print(f"  × 素材がありません: {m}")
+    """作る前の点検。止めるもの（×）があれば False（音声を作る前に止める）。
+    並びは check.report：止めるもの → 直すと効くもの → 参考。同じ種類は1件にまとめる（10-08）。"""
+    errors = [f"素材がありません: {m}" for m in check_mod.missing_assets(sc, assets_dir(config))]
     from .people import unknown_roles
-    for who in unknown_roles(config, sc):
-        print(f"  × 人物「{who}」の声が config.yaml の roles にありません")
-        missing = missing + [who]
+    errors += [f"人物「{who}」の声が config.yaml の roles にありません" for who in unknown_roles(config, sc)]
+    warns: list[str] = []
     if not str(sc.path.name).startswith("sample"):
-        errors, warns = check_mod.episode(sc)
+        e, w = check_mod.episode(sc)
+        errors += e
+        warns += w
         if sc.thumbnail:                                 # 同じ構図が3回続いたら知らせる（10-07）
             from .thumb import layout_of
-            warns = warns + check_mod.layout_streak(ROOT / "posted.json", ROOT / "scripts", sc.path.stem,
-                                                    layout_of(sc.thumbnail))
-        for e in errors:
-            print(f"  × {e}")
-        for w in warns:
-            print(f"  ! {w}")
-        missing = missing + errors
-    for w in check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60)):
-        print(f"  ! {w}")
+            warns += check_mod.layout_streak(ROOT / "posted.json", ROOT / "scripts", sc.path.stem,
+                                             layout_of(sc.thumbnail))
+    warns += check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60))
     for who, (hit, n) in check_mod.saturation(sc, voices(config)).items():
         if hit:
-            print(f"  ! {people.label(config, who)}：{n}行中{hit}行で抑揚が上限2.0を超えるか、1.2倍より早口です")
-    return not missing
+            warns.append(f"{people.label(config, who)}：{n}行中{hit}行で抑揚が上限2.0を超えるか、1.2倍より早口です")
+    rows = check_mod.report(errors, warns)
+    for row in rows:
+        print(f"  {row}")
+    if rows:
+        n = {k: sum(r.startswith(k) for r in rows) for k in ("×", "!", "・")}
+        print(f"  （止める {n['×']}件・直すと効く {n['!']}件・参考 {n['・']}件）")
+    return not errors
 
 
 def synthesize(sc, config) -> tuple[list[mix.Cue], float]:
@@ -248,7 +248,9 @@ def make_video(args, draft: bool) -> int:
         return 2
     if not preflight(sc, config):
         return 3
+    clock = Clock()
     cues, total = synthesize(sc, config)
+    clock.lap("音声")
     end_card = bool(sc.next)
     if end_card:
         total += render.END_SECONDS
@@ -264,16 +266,19 @@ def make_video(args, draft: bool) -> int:
     print("前景を描いています…")
     items = render.frames(painter, cues, total, wd / ("frames-draft" if draft else "frames"), v["fps"],
                           end_card=end_card)
+    clock.lap("前景")
     print("背景を動かしています…")
     bg = video.background_track(ffmpeg(), painter, video.runs_of(cues, total), wd / "bg", v["fps"], size,
                                 wd / "background.mp4", workers=v.get("bg_workers", 5),
                                 motion=v.get("bg_motion", True))
+    clock.lap("背景")
     suffix = ("_draft" if draft else "") + (f"_{limit}lines" if limit else "")
     target = out_dir() / f"{path.stem}{suffix}.mp4"
     lst = wd / "overlay.txt"
     lst.write_text(render.concat_list(items), encoding="utf-8")
     print("重ねています…")
     video.compose(ffmpeg(), bg, lst, audio, target, v["fps"], preset="veryfast" if draft else "medium")
+    clock.lap("重ね")
     got = video.media_seconds(ffmpeg(), target)
     if got is None or abs(got - total) > 2.0:               # 10-05：3分しかない本編が「30.7分」と出て通っていた
         raise video.LengthError(f"仕上がりの長さが合いません: {got}秒（予定 {total:.1f}秒）。work/<台本>/bg を消して作り直す")
@@ -281,7 +286,26 @@ def make_video(args, draft: bool) -> int:
     names = {k: people.label(config, k) for k in list(config["cast"]) + sc.roles}
     (out_dir() / f"{path.stem}.srt").write_text(mix.srt(cues, names), encoding="utf-8")
     print(f"{target}（{total / 60:.1f}分）")
+    print(f"かかった時間：{clock}")
     return 0
+
+
+class Clock:
+    """段ごとにかかった時間（10-08。build の遅い所を見るため）。"""
+    def __init__(self):
+        import time
+        self._t = time.perf_counter()
+        self.laps: list[tuple[str, float]] = []
+
+    def lap(self, name: str) -> None:
+        import time
+        now = time.perf_counter()
+        self.laps.append((name, now - self._t))
+        self._t = now
+
+    def __str__(self) -> str:
+        total = sum(s for _, s in self.laps)
+        return "・".join(f"{n} {s / 60:.1f}分" for n, s in self.laps) + f"（計 {total / 60:.1f}分）"
 
 
 def cmd_draft(args) -> int:

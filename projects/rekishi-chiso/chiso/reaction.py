@@ -28,7 +28,7 @@ INK = (244, 236, 220)
 WAIST = 0.47          # 立ち絵の上から何割を見せるか（腰から上。ヘルメットの上端から数える）
 SHOW_H = 940          # 見せる部分の高さ（px、1080 の画面で）
 RIGHT = 70            # 右の余白
-MAX_PER_EPISODE = 2   # 1本に何回まで
+from .check import REACTION_MAX as MAX_PER_EPISODE  # noqa: E402  1本に何回まで（目安は check.py の頭）
 
 
 def spec_of(raw) -> dict:
