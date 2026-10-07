@@ -146,9 +146,9 @@ def receipt(fig: dict) -> Image.Image:
     """レシート風の明細。断面図のチャンネルに合う形。"""
     items = fig["items"]
     slots = max(int(fig.get("slots", len(items))), 1)
-    w, h = 900, 290 + slots * 64
+    w, h = 1240, 290 + slots * 64
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
-    pad = 70
+    pad = 80
     d.rectangle([pad, top, w - pad + 40, h - 60], fill=(252, 251, 246))
     y = top + 24
     for it in items:

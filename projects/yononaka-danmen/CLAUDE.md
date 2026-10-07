@@ -296,6 +296,44 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 python -c "from danmen import sequence; print(sequence.report())"   # 全節の点検
 ```
 
+---
+
+## 動かす（2026-10-07 に通した）
+
+台本と画面をつないで mp4 にする。**行ごとに声を作って長さを測る**ので、
+画面の切り替えは語りにぴったり合う。
+
+```bash
+python scripts/make_screens.py                      # 画面を作る（out は assets の隣）
+python -m danmen.movie 台本.yaml     --screens C:/Users/なみ/dev/output/yononaka-danmen/screens     --out C:/Users/なみ/dev/output/yononaka-danmen/試作.mp4
+```
+
+### 台本に画面を書く
+
+`screen:` の行で、ここから出す画面を切り替える。話者の行はそのまま読み上げる。
+
+```yaml
+sections:
+  - id: "02"
+    lines:
+      - screen: s05
+      - 語り: レギュラーガソリン、1リットル175円。
+      - screen: s06
+      - 語り: このうち、ガソリンそのものの値段は92円です。
+      - 聞き(強): え、半分くらいしかないんですか。
+```
+
+### 分かったこと
+
+- **AivisSpeech が起動していないと作れない**（ポート 10101）。先に立ち上げる
+- **行と行のあいだは 0.28 秒**。これより短いと詰まって聞こえる
+- **字幕は読点・句点のあとで折り返す**。文字数で切ると2行目が1語だけになる
+- **板は横長に作る。** 縦長の板（900×674）だと、16:9 の画面に置いたとき
+  左右が大きく空いて小さく見えた。レシートは 1240 幅に直した
+- **板の下 280px は空ける**（字幕の場所）
+- ffmpeg は `imageio_ffmpeg` 同梱のものを使う。別に入れなくてよい
+- 30秒で 1.6MB。30分なら 100MB 前後の見込み
+
 ### 素材の置き場（リポジトリには入れない）
 
 `output/yononaka-danmen/assets/` の下に置く。workspace は public なので。
