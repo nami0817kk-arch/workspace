@@ -56,6 +56,8 @@ class State:
     term: tuple | None = None
     place: tuple | None = None
     reaction: str | None = None
+    detail: str | None = None
+    mark: str | None = None
 
 
 def _ease(t: float) -> float:
@@ -72,6 +74,11 @@ class Painter:
         self._images: dict = {}
         # layered=True（本編）：背景は video.py が動かすので、ここでは透明な前景だけを描く
         self.layered = False
+
+    def look(self, name: str) -> bool:
+        """画面の道具（texture・recap）を使うか。台本の一番上に書いたものが config.yaml より優先。"""
+        mine = getattr(self.script, "look", None) or {}
+        return bool(mine[name]) if name in mine else bool(self.config.get(name, False))
 
     # --- 素材 -------------------------------------------------------------
     def font(self, kind: str, size: int, bold: bool = False):
@@ -242,8 +249,10 @@ class Painter:
             dr.text((cx, yb - 132 * u), txt, font=pf, fill=GOLD, anchor="mm")
 
     # --- 本編の画面（立ち絵と字幕より下の層） ------------------------------
-    def base(self, state: State, year=None, slide: float = 1.0, fig: float = 1.0, icon_t: float = 1.0) -> Image.Image:
-        """year：年表の印の位置（移動の途中を描くとき）／slide：新しいメモの滑り込み（0〜1）。"""
+    def base(self, state: State, year=None, slide: float = 1.0, fig: float = 1.0, icon_t: float = 1.0,
+             mark_t: float = 1.0) -> Image.Image:
+        """year：年表の印の位置（移動の途中を描くとき）／slide：新しいメモの滑り込み（0〜1）／
+        mark_t：新しい赤ペンの描き進み（0〜1）。"""
         W, H = self.W, self.H
         img = self._canvas(state.background)
         if state.reaction:                                 # つむぎの「寄り」：背景を落として集中線と大きな数字
@@ -267,18 +276,32 @@ class Painter:
                 stroke_width=2, stroke_fill=(12, 10, 8))
 
         is_versus = state.figure is not None and '"type": "versus"' in state.figure
+        on = None                                          # 赤ペンの乗る所（chiso/pen.py）
         if state.reaction:
             pass                                           # 寄りのあいだは、メモ・肖像・図・年表を隠す
+        elif state.detail:                                 # 絵の一部を大きく（その行だけ。肖像と図は隠す）
+            import json as _json
+            from . import pen
+            self._memo(img, state, slide)
+            spec = _json.loads(state.detail)
+            view = pen.draw_detail(self, img, spec)
+            on = ("pic", view, pen.detail_tile(self, spec)[1], self.PANEL_BOX)
         elif state.figure is None:
             self._memo(img, state, slide)
             if state.portrait is not None:
                 self._portrait(img, state.portrait)
                 self._age(img, state)
+                if state.mark:
+                    from .extras import portrait_box
+                    pb = portrait_box(self, state.portrait)
+                    on = ("pic", pb, self.image(state.portrait.image).size,
+                          (pb[0], pb[1], pb[0] + pb[2], pb[1] + pb[3]))
             from . import extras
             if state.icon:
                 img = extras.draw_icon(self, img, state.icon, icon_t)
             elif state.portrait is None and state.background is not None and self.config.get("center_panel", True):
-                self._panel(img, state.background)         # 真ん中が空かないように、その場面の絵を額に入れて出す
+                view = self._panel(img, state.background)  # 真ん中が空かないように、その場面の絵を額に入れて出す
+                on = ("pic", view, self.image(state.background.image).size, self.PANEL_BOX)
             if state.bubble and state.portrait is not None:
                 import json as _j
                 img = extras.draw_bubble(self, img, state.portrait, _j.loads(state.bubble))
@@ -286,6 +309,9 @@ class Painter:
             import json as _json
             from . import figures
             img = figures.draw(self, img, _json.loads(state.figure), fig)
+            on = ("fig", _json.loads(state.figure))
+        if state.mark and on is not None:
+            img = self._marks(img, state.mark, on, mark_t)
         from . import extras
         top = extras.TERM_BOX[1]
         if state.term and not state.reaction and not is_versus:   # 用語の札は右上（肖像と図の右の空き）
@@ -326,6 +352,11 @@ class Painter:
             dr.rounded_rectangle([120 + dx, y, 120 + dx + w, y + h], radius=10,
                                  fill=(20, 16, 10, 205 if current else 150),
                                  outline=GOLD if current else (120, 100, 70), width=3 if current else 1)
+            if self.look("texture"):                            # 札の中にだけ紙の目（枠の線は残す）
+                from . import texture
+                b = 3 if current else 1
+                texture.apply(img, (120 + dx + b, y + b, 120 + dx + w - b + 1, y + h - b + 1), radius=8)
+                dr = ImageDraw.Draw(img, "RGBA")
             dr.text((146 + dx, y + 12), card.head, font=hf, fill=GOLD if current else DIM)
             if card.body:
                 dr.text((146 + dx, y + (54 if current else 46)), card.body, font=bf, fill=INK if current else DIM)
@@ -352,7 +383,40 @@ class Painter:
 
     PANEL_BOX = (960, 250, 1600, 720)                     # メモ（左、右端 x≈940）と用語の札（x=1640〜）のあいだ、年表の上
 
-    def _panel(self, img: Image.Image, pic) -> None:
+    def frame(self, img: Image.Image, px: int, py: int, w: int, h: int) -> None:
+        """肖像と同じ二重の金の額（台紙は暗い茶）。texture のときは台紙に紙の目。"""
+        dr = ImageDraw.Draw(img, "RGBA")
+        dr.rectangle([px - 18, py - 18, px + w + 18, py + h + 18], fill=(30, 24, 16, 255), outline=GOLD, width=2)
+        if self.look("texture"):
+            from . import texture
+            texture.apply(img, (px - 16, py - 16, px + w + 17, py + h + 17))
+            dr = ImageDraw.Draw(img, "RGBA")
+        dr.rectangle([px - 7, py - 7, px + w + 7, py + h + 7], outline=GOLD, width=3)
+
+    def _marks(self, img: Image.Image, mark: str, on, t: float) -> Image.Image:
+        """赤ペン（chiso/pen.py）。on は ("pic", 絵の場所, 元の絵の大きさか切り抜き範囲, 描いてよい範囲) か ("fig", 図)。"""
+        from . import pen
+        if on[0] == "fig":
+            from . import figures
+            spec = on[1]
+            boxes = figures.item_boxes(self, spec)
+            x0, y0, x1, y1 = figures.PANEL
+            area = figures.PANEL
+
+            def locate(at):
+                if isinstance(at, int):
+                    return boxes.get(at - 1)
+                if max(at) <= 1.0:
+                    return pen.resolve(at, (x0, y0, x1 - x0, y1 - y0))
+                return tuple(at) * (2 if len(at) == 2 else 1)
+        else:
+            _, view, src, area = on
+
+            def locate(at):
+                return None if isinstance(at, int) else pen.resolve(at, view, src)
+        return pen.draw_marks(self, img, mark, locate, area, t)
+
+    def _panel(self, img: Image.Image, pic) -> tuple[int, int, int, int]:
         """真ん中の額：背景と同じ絵を、暗くせずに額に入れて出す（10-06 ユーザー「画面の真ん中に何もない時を避けて」）。"""
         key = ("panel", pic.image, getattr(pic, "crop", None))
         p = self._images.get(key)
@@ -366,11 +430,9 @@ class Painter:
         x0, y0, x1, y1 = self.PANEL_BOX
         px = (x0 + x1) // 2 - p.width // 2
         py = (y0 + y1) // 2 - p.height // 2
-        dr = ImageDraw.Draw(img, "RGBA")
-        dr.rectangle([px - 18, py - 18, px + p.width + 18, py + p.height + 18], fill=(30, 24, 16, 255),
-                     outline=GOLD, width=2)                     # 肖像と同じ二重の金の額
-        dr.rectangle([px - 7, py - 7, px + p.width + 7, py + p.height + 7], outline=GOLD, width=3)
+        self.frame(img, px, py, p.width, p.height)              # 肖像と同じ二重の金の額
         img.paste(p, (px, py))
+        return px, py, p.width, p.height
 
     def _portrait(self, img: Image.Image, pic) -> None:
         W = self.W
@@ -560,6 +622,39 @@ class Painter:
         return img
 
     # --- 特別な画面 -------------------------------------------------------
+    def recap(self, img: Image.Image, section: int, cards: tuple) -> Image.Image:
+        """節の頭の「第N節 題名」の下に、前の節で出たメモの札を小さく並べて振り返る（10-07）。section は前の節の番号（1から）。"""
+        if not cards:
+            return img
+        img = img.copy()
+        dr = ImageDraw.Draw(img, "RGBA")
+        hf = self.font("gothic", 22)
+        cy = self.H * 0.40 + 150
+        dr.text((self.W / 2, cy), f"▼ ここまでの地層（第{section}節）", font=self.font("gothic", 24), fill=DIM,
+                anchor="mm")
+        ws = []
+        for c in cards:
+            size = 26
+            while size > 18 and self.font("serif", size).getlength(c.body or "") > 380:
+                size -= 2
+            body_w = self.font("serif", size).getlength(c.body or "")
+            ws.append((max(240, int(max(hf.getlength(c.head), body_w)) + 44), size))
+        gap = 22
+        x = self.W / 2 - (sum(w for w, _ in ws) + gap * (len(ws) - 1)) / 2
+        top = cy + 26
+        for c, (w, size) in zip(cards, ws):
+            dr.rounded_rectangle([x, top, x + w, top + 86], radius=8, fill=(20, 16, 10, 225),
+                                 outline=(150, 124, 84), width=2)
+            if self.look("texture"):
+                from . import texture
+                texture.apply(img, (x + 2, top + 2, x + w - 1, top + 85), radius=6)
+                dr = ImageDraw.Draw(img, "RGBA")
+            dr.text((x + 20, top + 12), c.head, font=hf, fill=GOLD)
+            if c.body:
+                dr.text((x + 20, top + 44), c.body, font=self.font("serif", size), fill=INK)
+            x += w + gap
+        return img
+
     def overlay_title(self, img: Image.Image, head: str, body: str, strength: float = 1.0) -> Image.Image:
         """画面の真ん中に大きな題（冒頭の問い・節の頭）。strength は暗くする強さ。"""
         img = img.convert("RGBA")
@@ -608,7 +703,27 @@ def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
                  getattr(line, "memo", ()), getattr(line, "figure", None), getattr(line, "bubble", None),
                  getattr(line, "icon", None), getattr(line, "term", None), getattr(line, "place", None),
-                 getattr(line, "reaction", None))
+                 getattr(line, "reaction", None), getattr(line, "detail", None), getattr(line, "mark", None))
+
+
+RECAP_MAX = 3
+
+
+def recap_cards(script, section: int) -> tuple:
+    """節の頭で振り返る札：前の節で出たメモの札から、最初・真ん中・最後のように散らして3枚まで。
+    最初の節の頭（間が無い）とまとめの節の頭、札が2枚に満たない節は出さない。"""
+    if section <= 0 or section >= len(script.sections) - 1:
+        return ()
+    cards = []
+    for l in script.lines:
+        if l.section == section - 1 and l.card is not None and l.card not in cards:
+            cards.append(l.card)
+    if len(cards) < 2:
+        return ()
+    if len(cards) > RECAP_MAX:
+        n = len(cards)
+        cards = [cards[round(k * (n - 1) / (RECAP_MAX - 1))] for k in range(RECAP_MAX)]
+    return tuple(cards)
 
 
 def end_key(script) -> tuple:
@@ -625,6 +740,12 @@ def _salt(painter) -> str:
     except OSError:
         pass
     src += json.dumps(painter.config, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    src += json.dumps(getattr(painter.script, "look", {}) or {}, sort_keys=True).encode("utf-8")
+    for extra in ("pen.py", "texture.py"):
+        try:
+            src += (Path(__file__).parent / extra).read_bytes()
+        except OSError:
+            pass
     src += type(painter).__name__.encode()
     return hashlib.sha1(src).hexdigest()[:8]
 
@@ -663,6 +784,9 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
 
     def _rk(s) -> dict:                  # つむぎの寄り（本編だけ。ショートはいつもの画面）
         return {"reaction": s.reaction} if (special and s.reaction) else {}
+
+    def _mk(t) -> dict:                  # 赤ペンの描き進み（ショートの base は受け取らない）
+        return {"mark_t": t} if (special and t < 1.0) else {}
 
     def emit(path: Path, make, dur: float):
         if dur <= 0:
@@ -711,14 +835,17 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             def base_lead(s=state):
                 return painter.with_cast(painter.base(s), s.speaker, 0, "", "聞く", **_rk(s))
             if new_section:
+                rc = recap_cards(painter.script, state.section) if painter.look("recap") else ()
+                more = ("recap", rc) if rc else ()
+
+                def head(s=state, t=title, rc=rc):
+                    im = painter.overlay_title(base_lead(s), f"第{s.section + 1}節", t)
+                    return painter.recap(im, s.section, rc) if rc else im
                 n_w = min(WIPE_FRAMES, int(lead * fps) - 1)
                 for k in range(1, n_w + 1):
-                    emit(frame_dir / _name(salt, "wipe", state, k, n_w),
-                         lambda s=state, k=k, n=n_w, t=title: painter.wipe(
-                             painter.overlay_title(base_lead(s), f"第{s.section + 1}節", t), k / (n + 1)), 1 / fps)
-                emit(frame_dir / _name(salt, "sec", state, title),
-                     lambda s=state, t=title: painter.overlay_title(base_lead(s), f"第{s.section + 1}節", t),
-                     lead - n_w / fps)
+                    emit(frame_dir / _name(salt, "wipe", state, k, n_w, *more),
+                         lambda k=k, n=n_w, head=head: painter.wipe(head(), k / (n + 1)), 1 / fps)
+                emit(frame_dir / _name(salt, "sec", state, title, *more), head, lead - n_w / fps)
             else:
                 emit(frame_dir / _name(salt, "lead", state), base_lead, lead)
 
@@ -739,8 +866,9 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             t += d
             cuts.add(min(talk_len, t))
         changed = special and prev_state is not None and prev_state.section == state.section and (
-            (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year, prev_state.figure)
-            != (state.background, state.portrait, state.memo, state.year, state.figure))
+            (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year, prev_state.figure,
+             prev_state.detail)
+            != (state.background, state.portrait, state.memo, state.year, state.figure, state.detail))
         surprised = special and line.tone == "驚き" and not state.reaction   # 寄りは集中線を自分で持つ
         # 強調語の飛び出しは 10-04「4は不要」で外した（config の pop: true で戻せる）
         words = ([w for w in (plain(x) for x in __import__("re").findall(r"《(.+?)》", line.text))]
@@ -751,8 +879,14 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
         fig_new = fig_new or (special and state.reaction is not None
                               and (prev_state is None or prev_state.reaction != state.reaction))
         icon_new = special and state.icon is not None and (prev_state is None or prev_state.icon != state.icon)
+        # 赤ペン：新しく足した印だけを、行の頭で1つずつ描き進める（chiso/pen.py）
+        from .pen import MARK_FRAMES, spec_of
+        m_items, m_from = spec_of(state.mark)
+        n_mark = MARK_FRAMES * (len(m_items) - m_from) if (special and state.mark and (
+            prev_state is None or prev_state.mark != state.mark)) else 0
         n_fx = max(n_hop, TRANS_FRAMES if changed else 0, SHAKE_FRAMES if surprised else 0,
-                   POP_FRAMES if words else 0, FIG_FRAMES if fig_new else 0, ICON_FRAMES if icon_new else 0)
+                   POP_FRAMES if words else 0, FIG_FRAMES if fig_new else 0, ICON_FRAMES if icon_new else 0,
+                   n_mark)
         for k in range(1, n_fx + 1):
             cuts.add(min(talk_len, k / fps))
         pop_len = POP_SECONDS if words else 0.0
@@ -779,24 +913,26 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             pop_t = (min(1.0, k / (POP_FRAMES + 1)) if k else 1.0) if (words and a < pop_len) else None
             fig_t = (k / (FIG_FRAMES + 1)) if (fig_new and k and k <= FIG_FRAMES) else 1.0
             icon_t = (k / (ICON_FRAMES + 1)) if (icon_new and k and k <= ICON_FRAMES) else 1.0
+            mark_t = (k / (n_mark + 1)) if (n_mark and k and k <= n_mark) else 1.0
 
             def make(s=state, ps=prev_state, text=text, hop_k=hop_k, n_hop=n_hop, tr=tr, shake_k=shake_k,
                      pop_t=pop_t, mouth_open=mouth_open, blink=blink, tone=line.tone, opening=opening,
-                     words=tuple(words), side=side, fig_t=fig_t, icon_t=icon_t):
+                     words=tuple(words), side=side, fig_t=fig_t, icon_t=icon_t, mark_t=mark_t):
                 hop_t = hop_k / (n_hop + 1) if hop_k else 0.0
                 if tr < 1.0 and ps is not None:
                     year = s.year
                     if ps.year is not None and s.year is not None:
                         year = ps.year + (s.year - ps.year) * _ease(tr)
                     slide = tr if (s.memo and s.memo != ps.memo) else 1.0
-                    base = painter.base(s, year=year, slide=slide, fig=fig_t, icon_t=icon_t)
+                    base = painter.base(s, year=year, slide=slide, fig=fig_t, icon_t=icon_t, **_mk(mark_t))
                     from .figures import base_key       # 同じ図が1項目増えただけなら溶け合わせない（前の項目は動かさない）
-                    changed_pic = (((ps.background, ps.portrait, base_key(ps.figure), ps.icon) != (s.background, s.portrait, base_key(s.figure), s.icon)) if painter.layered
-                                   else (ps.background, ps.portrait) != (s.background, s.portrait))
+                    changed_pic = (((ps.background, ps.portrait, base_key(ps.figure), ps.icon, ps.detail)
+                                    != (s.background, s.portrait, base_key(s.figure), s.icon, s.detail)) if painter.layered
+                                   else (ps.background, ps.portrait, ps.detail) != (s.background, s.portrait, s.detail))
                     if changed_pic:
                         base = Image.blend(painter.base(ps), base, _ease(tr))
                 else:
-                    base = painter.base(s, fig=fig_t, icon_t=icon_t)
+                    base = painter.base(s, fig=fig_t, icon_t=icon_t, **_mk(mark_t))
                 if pop_t is not None:
                     base = painter.pop(base, words[0], pop_t, s.speaker)
                 im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink, **_rk(s))
@@ -809,6 +945,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
 
             key = ("f2", state, prev_state if tr < 1.0 else None, round(tr, 3), hop_k, n_hop, text, shake_k,
                    None if pop_t is None else (words[0], round(pop_t, 3)), round(fig_t, 3), round(icon_t, 3),
+                   *((round(mark_t, 3),) if state.mark else ()),
                    mouth_open, blink,
                    line.tone,
                    bool(opening))

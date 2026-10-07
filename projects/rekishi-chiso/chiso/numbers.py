@@ -19,8 +19,8 @@ import math
 
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
-from .figures import (COAST, INKD, PAPER, RED, _ease, _grow, _items, _panel, _steps, fit_number, number_width,
-                      put_number)
+from .figures import (COAST, INKD, PAPER, RED, _ease, _grow, _items, _panel, _steps, fit_number, note_item,
+                      number_width, put_number)
 
 SUB = (110, 90, 60)          # 見出し・説明（薄い墨）
 RULE = (190, 160, 110)       # 区切りの線
@@ -73,6 +73,8 @@ def draw_stats(painter, img, spec, t):
         cx = x0 + cw / 2
         hot = i == focus
         size = fit_number(painter, str(it["value"]), 150 if hot else 124, cw - 60)
+        nw = number_width(painter, str(it["value"]), size)
+        note_item(i, (cx - nw / 2, cy + 60 - size * 0.78, cx + nw / 2, cy + 60 + 6))
 
         def one(d, dy, it=it, cx=cx, hot=hot, size=size, x0=x0, i=i):
             if i:
@@ -121,6 +123,8 @@ def draw_calc(painter, img, spec, t):
                 d.text((x + gap, base - sizes[0] * 0.32 + dy), op, font=of, fill=SUB, anchor="lm")
             _fade(img, steps[k], draw_op, rise=0)
             x += of.getlength(op) + gap * 2
+
+        note_item(k, (x, base - sizes[k] * 0.78, x + widths[k], base + 6))
 
         def draw_term(d, dy, x=x, k=k, hot=hot):
             tm = terms[k]
@@ -173,6 +177,10 @@ def draw_numberline(painter, img, spec, t):
         col = RED if hot else INKD
         px = X(vals[i])
         u = up[i]
+
+        _num = str(it["note"]) or f"{_fmt(it['value'])}{unit}"
+        _nw = number_width(painter, _num, 58 if hot else 46) / 2 + 6
+        note_item(i, (px - _nw, ly - 200, px + _nw, ly - 104) if u else (px - _nw, ly + 104, px + _nw, ly + 200))
 
         def one(d, dy, it=it, px=px, u=u, col=col, hot=hot):
             r = 18 if hot else 13
@@ -251,6 +259,7 @@ def draw_line(painter, img, spec, t):
         w = number_width(painter, num, size)
         nx = min(max(x - w / 2, ax0 + 10), ax1 - 10 - w)
         put_number(painter, dr, nx, y - r - 14, num, size, RED if hot else INKD, stroke=3, stroke_fill=PAPER)
+        note_item(i, (nx, y - r - 14 - size * 0.78, nx + w, y + r))
     _note(painter, ImageDraw.Draw(img, "RGBA"), spec, box, t >= 1 and hi >= n)
 
 
@@ -315,6 +324,9 @@ def draw_versus(painter, img, spec, t):
             num = str(side.get("number", ""))
             if num:
                 size = fit_number(painter, num, 190, half - 160)
+                if not dy:
+                    w0 = number_width(painter, num, size)
+                    note_item(k, (cx - w0 / 2, 300 + size * 0.95 - size * 0.78, cx + w0 / 2, 300 + size * 0.95 + 6))
                 w = number_width(painter, num, size)
                 hot = side.get("focus", True)
                 put_number(painter, d, cx - w / 2, 300 + size * 0.95 + dy, num, size,

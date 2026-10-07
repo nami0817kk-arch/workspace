@@ -150,14 +150,51 @@ def _rivers(path: str):
     return out
 
 
-def _panel(painter, img: Image.Image, title: str) -> tuple[ImageDraw.ImageDraw, tuple[int, int, int, int]]:
-    """紙の板と題。中の描ける範囲を返す。"""
+# --- 項目の場所（赤ペンが「何番目の項目」を指すため。chiso/pen.py） -----------------
+import threading
+
+_REC = threading.local()
+
+
+def note_item(i: int, box) -> None:
+    """i 番目（0から）の項目が描かれた範囲を控える（item_boxes で描いているときだけ）。"""
+    rec = getattr(_REC, "items", None)
+    if rec is not None and i not in rec:
+        rec[i] = tuple(float(v) for v in box)
+
+
+def item_boxes(painter, spec: dict) -> dict[int, tuple]:
+    """図の項目ごとの画面の範囲 {0: (x0, y0, x1, y1), …}。透明な紙に1回描いて控える。"""
+    key = ("items", json.dumps(spec, ensure_ascii=False, sort_keys=True), painter.W, painter.H)
+    if key not in painter._images:
+        _REC.items = {}
+        try:
+            draw(painter, Image.new("RGBA", (painter.W, painter.H), (0, 0, 0, 0)), spec, 1.0)
+            painter._images[key] = dict(_REC.items)
+        finally:
+            _REC.items = None
+    return painter._images[key]
+
+
+def _plate(img: Image.Image) -> None:
     x0, y0, x1, y1 = PANEL
     shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
     ImageDraw.Draw(shadow).rounded_rectangle([x0 + 10, y0 + 14, x1 + 10, y1 + 14], radius=16, fill=(0, 0, 0, 150))
     img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(10)))
     dr = ImageDraw.Draw(img, "RGBA")
     dr.rounded_rectangle([x0, y0, x1, y1], radius=16, fill=PAPER + (250,), outline=(150, 118, 74), width=4)
+
+
+def _panel(painter, img: Image.Image, title: str) -> tuple[ImageDraw.ImageDraw, tuple[int, int, int, int]]:
+    """紙の板と題。中の描ける範囲を返す。texture のときは紙の目を乗せた板（1回だけ作って控える）を重ねる。"""
+    x0, y0, x1, y1 = PANEL
+    look = getattr(painter, "look", None)
+    if look is not None and look("texture") and img.size == (1920, 1080):
+        from . import texture
+        img.alpha_composite(texture.plate("figure", img.size, (x0 + 4, y0 + 4, x1 - 3, y1 - 3), 12, _plate))
+    else:
+        _plate(img)
+    dr = ImageDraw.Draw(img, "RGBA")
     dr.rounded_rectangle([x0 + 10, y0 + 10, x1 - 10, y1 - 10], radius=10, outline=(190, 160, 110), width=2)
     top = y0 + 18
     if title:
@@ -234,6 +271,7 @@ def _map(painter, img, spec, t):
             reached = name not in spec.get("route", []) or _route_reached(spec, name, t)
         dr.ellipse([x - 9, y - 9, x + 9, y + 9], fill=(RED if reached else COAST), outline=(255, 248, 230), width=3)
         dr.text((x + 14, y - 4), name, font=f, fill=INKD, anchor="lm", stroke_width=4, stroke_fill=(245, 236, 210))
+        note_item(i, (x - 12, y - 24, x + 18 + f.getlength(name), y + 16))
     if spec.get("note") and t >= 1 and hi >= len(names):
         nf = painter.font("gothic", 30)
         w = nf.getlength(spec["note"]) + 40
@@ -328,6 +366,7 @@ def _pie(painter, img, spec, t):
         y = ly + i * 120
         dr.rectangle([x, y + 10, x + 40, y + 50], fill=color)
         dr.text((x + 60, y + 30), label, font=lf, fill=INKD, anchor="lm")
+        note_item(i, (x, y + 4, x + 60 + max(lf.getlength(label), vf.getlength(f"{v:g}{unit}")), y + 112))
         if t >= 1:
             dr.text((x + 60, y + 86), f"{v:g}{unit}", font=vf, fill=color, anchor="lm")
     if spec.get("note") and t >= 1:
@@ -361,6 +400,7 @@ def _bars(painter, img, spec, t):
         dr.rounded_rectangle([ax0 + label_w, y, ax0 + label_w + max(6, w), y + h], radius=6, fill=color)
         if t >= 1 or i < lo:
             dr.text((ax0 + label_w + w + 14, y + h / 2), texts[i], font=vf, fill=color, anchor="lm")
+        note_item(i, (ax0 + label_w - 16 - lf.getlength(label), y, ax0 + label_w + w + 14 + vf.getlength(texts[i]), y + h))
     if spec.get("note") and t >= 1 and hi >= n:
         nf = painter.font("gothic", 28)
         dr.text(((ax0 + ax1) / 2, ay1 - 6), spec["note"], font=nf, fill=INKD, anchor="ms")
@@ -414,5 +454,6 @@ def _people(painter, img, spec, t):
                              fill=(250, 244, 228), outline=(COAST if not crossed else (120, 120, 120)), width=3)
         dr.text((x, y - 12), name, font=nf, fill=INKD, anchor="mm")
         dr.text((x, y + 24), role, font=rf, fill=(110, 90, 60), anchor="mm")
+        note_item(i, (x - w / 2, y - 44, x + w / 2, y + 44))
         if crossed and (t >= 1 or i < lo):
             dr.line([x - w / 2 + 8, y + 40, x + w / 2 - 8, y - 40], fill=(90, 90, 90, 180), width=4)

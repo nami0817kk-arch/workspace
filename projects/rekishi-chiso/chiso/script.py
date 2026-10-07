@@ -79,9 +79,12 @@ class Line:
     term: tuple | None = None         # 用語の札 (言葉, 説明)。terms.yaml と台本の terms: から自動で付く
     hook: bool = False                # 節の終わりの「引き」（次の節が気になる一言）。check が節ごとに確かめる
     reaction: str | None = None       # つむぎの「寄り」（その行だけ）。JSON の文字列（chiso/reaction.py）
+    detail: str | None = None         # 絵の一部を大きく（その行だけ）。JSON の文字列（chiso/pen.py）
+    mark: str | None = None           # 赤ペンの書き込み。JSON {"items": [...], "from": n}（chiso/pen.py）
 
 
 MEMO_SIZE = 3
+LOOK_KEYS = ("texture", "recap")   # 台本の一番上に書くと config.yaml の同じ名前より優先（10-07）
 TERM_LINES = 3        # 用語の札を出しておく行数（初めて出た行から）
 TERM_MAX = 40         # 説明の字数の上限（右上の狭い札に収める）
 
@@ -140,6 +143,7 @@ class Script:
     thumbnail: dict = field(default_factory=dict)   # サムネイルの文字と絵（thumb.py）
     people: dict = field(default_factory=dict)      # 人物の生没（肖像に「この時○歳」を出す）
     tags: list = field(default_factory=list)        # YouTube のタグ（全ショートと本編に共通）
+    look: dict = field(default_factory=dict)        # 画面の道具の入り切り（texture・recap）。config より優先
 
     @property
     def question(self) -> str:
@@ -259,6 +263,74 @@ def _reaction(raw, where: str) -> str | None:
     return json.dumps({k: str(v) for k, v in raw.items()}, ensure_ascii=False, sort_keys=True)
 
 
+def _detail(raw, where: str, background) -> str | None:
+    """絵の一部を大きく：{box: [x0, y0, x1, y1], label: 鉄砲隊, image: (省けばその場面の背景)}。
+    box は元の絵の画素か、0〜1 の割合（4つとも1以下なら割合とみなす）。"""
+    if raw is None:
+        return None
+    import json
+    if not isinstance(raw, dict) or "box" not in raw:
+        raise ScriptError(f"{where}: detail には box（[左, 上, 右, 下]）が要ります: {raw!r}")
+    box = raw["box"]
+    if (not isinstance(box, (list, tuple)) or len(box) != 4
+            or not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in box)):
+        raise ScriptError(f"{where}: detail の box は数4つ [左, 上, 右, 下] です: {box!r}")
+    if not (box[0] < box[2] and box[1] < box[3]) or min(box) < 0:
+        raise ScriptError(f"{where}: detail の box は 左<右・上<下 の順に書きます: {box!r}")
+    image = raw.get("image") or (background.image if background is not None else None)
+    if not image:
+        raise ScriptError(f"{where}: detail は背景の絵があるときだけ使えます（別の絵なら image: を書く）")
+    unknown = set(raw) - {"box", "label", "image"}
+    if unknown:
+        raise ScriptError(f"{where}: detail に書けるのは box・label・image です: {sorted(unknown)}")
+    return json.dumps({"image": str(image), "box": [float(v) for v in box], "label": str(raw.get("label", ""))},
+                      ensure_ascii=False, sort_keys=True)
+
+
+MARK_TYPES = ("circle", "arrow", "underline", "strike", "note")
+
+
+def _marks(raw, where: str, figure: str | None) -> list[dict]:
+    """赤ペン：[{type: circle, at: 2}, {type: note, at: [0.6, 0.2], text: ここ}]。
+    at は図の何番目の項目（1から）か、絵の上の点 [x, y]・範囲 [x0, y0, x1, y1]（割合か元の絵の画素）。"""
+    if isinstance(raw, dict):
+        raw = [raw]
+    if not isinstance(raw, list):
+        raise ScriptError(f"{where}: mark は書き込みの並び（[{{type: circle, at: 2}}]）です: {raw!r}")
+    out = []
+    for m in raw:
+        if not isinstance(m, dict) or m.get("type") not in MARK_TYPES:
+            raise ScriptError(f"{where}: mark の type は {' / '.join(MARK_TYPES)} のどれかです: {m!r}")
+        at = m.get("at")
+        if isinstance(at, bool) or at is None:
+            raise ScriptError(f"{where}: mark には at（図の項目の番号か、絵の上の [x, y]・[x0, y0, x1, y1]）が要ります")
+        if isinstance(at, int):
+            if at < 1:
+                raise ScriptError(f"{where}: mark の at（項目の番号）は1からです: {at}")
+            if figure is None:
+                raise ScriptError(f"{where}: mark の at を番号で書けるのは図が出ているときだけです")
+        elif not (isinstance(at, (list, tuple)) and len(at) in (2, 4)
+                  and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in at)):
+            raise ScriptError(f"{where}: mark の at は番号か [x, y]・[x0, y0, x1, y1] です: {at!r}")
+        if m["type"] == "note" and not str(m.get("text", "")).strip():
+            raise ScriptError(f"{where}: note には text が要ります")
+        unknown = set(m) - {"type", "at", "text", "from"}
+        if unknown:
+            raise ScriptError(f"{where}: mark に書けるのは type・at・text・from です: {sorted(unknown)}")
+        out.append({k: (list(v) if isinstance(v, tuple) else v) for k, v in m.items()})
+    return out
+
+
+def _mark_target(detail, figure, background, portrait, section) -> str:
+    """書き込みが乗っているもの。これが替わると前の書き込みは消える。"""
+    from .figures import base_key
+    if detail:
+        return f"d{section}:{detail}"
+    if figure:
+        return f"f{section}:{base_key(figure)}"
+    return f"p{section}:{background.image if background else ''}:{portrait.image if portrait else ''}"
+
+
 def _speaker_and_text(raw: dict, where: str) -> tuple[str, str]:
     found = [(key, raw[key]) for key in SPEAKERS if key in raw]
     if len(found) != 1:
@@ -312,6 +384,8 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         raw_lines = raw_section.get("lines") or []
         if not raw_lines:
             raise ScriptError(f"{where_s}: lines がありません")
+        marks: list[dict] = []
+        mark_on = None
         for l_index, raw in enumerate(raw_lines):
             where = f"{where_s} {l_index + 1}行目"
             speaker, text = _speaker_and_text(raw, where)
@@ -337,13 +411,28 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
             if isinstance(shorts, str):
                 shorts = (shorts,)
             pause = raw.get("pause")
+            detail = _detail(raw.get("detail"), where, background)
+            # 赤ペンは、同じもの（大きく見せた絵・図・背景）の上にいるあいだ足していく。替わると消える
+            target = _mark_target(detail, figure, background, portrait, s_index)
+            if target != mark_on:
+                marks, mark_on = [], target
+            start = len(marks)
+            if "mark" in raw:
+                if raw["mark"] in (None, []):
+                    marks = []
+                    start = 0
+                else:
+                    marks = marks + _marks(raw["mark"], where, figure if not detail else None)
+            import json as _json
+            mark = (_json.dumps({"items": marks, "from": start}, ensure_ascii=False, sort_keys=True)
+                    if marks else None)
             lines.append(Line(
                 index=len(lines), section=s_index, speaker=speaker, text=text, tone=tone,
                 pause=float(pause) if pause is not None else None, shorts=tuple(shorts),
                 background=background, portrait=portrait, card=card, year=year,
                 memo=tuple(reversed(memo[-MEMO_SIZE:])), figure=figure,
                 bubble=_bubble(raw.get("bubble"), where), hook=bool(raw.get("hook")), icon=(str(raw["icon"]) if raw.get("icon") else None),
-                reaction=_reaction(raw.get("reaction"), where),
+                reaction=_reaction(raw.get("reaction"), where), detail=detail, mark=mark,
             ))
     if not lines:
         raise ScriptError("せりふが1行もありません")
@@ -371,6 +460,7 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         sections=sections, lines=lines, shorts=shorts_meta, path=path,
         next=dict(data.get("next") or {}), people=people, thumbnail=dict(data.get("thumbnail") or {}),
         tags=[str(t) for t in (data.get("tags") or [])],
+        look={k: bool(data[k]) for k in LOOK_KEYS if k in data},
     )
 
 
