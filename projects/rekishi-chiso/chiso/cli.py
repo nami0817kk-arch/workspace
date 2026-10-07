@@ -6,9 +6,10 @@
     python -m chiso.cli approve scripts/x.yaml          # 台本の承認を控える（ユーザーの OK が出たときだけ）
     python -m chiso.cli build   scripts/x.yaml          # 本番の動画。承認した台本の中身と一致しないと動かない
     python -m chiso.cli shorts  scripts/x.yaml [--draft]  # short: を付けた行からショートを全部作る
-    python -m chiso.cli describe scripts/x.yaml         # 概要欄（章・クレジット・絵の出典）
+    python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典。--keywords で扱う語）
+    python -m chiso.cli keywords "織田信長" [--all]      # YouTube の検索候補でよく続く語・題名とタグの候補
     python -m chiso.cli kana    scripts/x.yaml          # 全行の読みをカタカナで書き出す（読み違いの点検）
-    python -m chiso.cli thumb   scripts/x.yaml          # サムネイル（と、一覧で見える大きさの確認用）
+    python -m chiso.cli thumb   scripts/x.yaml [--variants]   # サムネイル（--variants で3案 a・b・c と一覧の大きさの確認用）
     python -m chiso.cli screen  scripts/x.yaml          # 本番の動画を見てもらった控え（ユーザーの OK のあとだけ）
     python -m chiso.cli upload  scripts/x.yaml --at "2026-10-05 19:00"   # 予約投稿（承認と screen が要る）
     python -m chiso.cli whoami                          # 許可したチャンネルの名前を出す（取り違えの確認）
@@ -385,9 +386,39 @@ def cmd_describe(args) -> int:
     if not args.no_voice:
         cues, _ = synthesize(sc, config)
     text = description(sc, config, cues)
+    if args.keywords:                     # 検索候補から拾った語のうち、台本で扱っているものを最後に
+        from . import keywords as kw
+        name = sc.thumbnail.get("name") or next(iter(sc.people), "") or sc.question
+        cache = kw.cache_path(out_dir(), name)
+        if cache.exists():
+            data = json.loads(cache.read_text(encoding="utf-8"))
+        else:
+            _, data = kw.report(name, kw.collect(name))
+            cache.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+        line = kw.description_line(kw.covered_words([w for w, _ in data["words"]], sc))
+        if line:
+            text += "\n" + line + "\n"
+        else:
+            print(f"  ! 「{name}」の検索候補の語で、台本に出てくるものがありませんでした")
     target = out_dir() / f"{sc.path.stem}_description.txt"
     target.write_text(text, encoding="utf-8")
     print(text)
+    return 0
+
+
+def cmd_keywords(args) -> int:
+    """YouTube の検索候補から、名前のあとによく続く語を数える。題名・タグ・概要欄の語の下書きも出す。"""
+    from . import keywords as kw
+    raw = kw.collect(args.name, full=args.all)
+    if not any(raw.values()):
+        print("検索候補が1件も取れませんでした（通信を確かめる）")
+        return 1
+    text, data = kw.report(args.name, raw)
+    cache = kw.cache_path(out_dir(), args.name)
+    cache.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    cache.with_suffix(".md").write_text(text, encoding="utf-8")
+    print(text)
+    print(f"控え：{cache.with_suffix('.md').as_posix()}")
     return 0
 
 
@@ -414,10 +445,21 @@ def cmd_thumb(args) -> int:
     if not sc.thumbnail:
         print("台本に thumbnail の欄がありません")
         return 1
+    out = Path(args.out) if args.out else out_dir()
+    out.mkdir(parents=True, exist_ok=True)
+    stem = sc.path.stem
+    if args.variants:                     # 3案（YouTube Studio の「テストと比較」用）
+        imgs = thumb.make_variants(sc, config, assets_dir(config))
+        for k, img in imgs.items():
+            img.save(out / f"{stem}_thumbnail_{k}.png")
+            print(out / f"{stem}_thumbnail_{k}.png")
+        thumb.variants_preview(imgs, config["fonts"]["gothic"]).save(out / f"{stem}_thumbnail_variants_preview.png")
+        print(out / f"{stem}_thumbnail_variants_preview.png")
+        return 0
     img = thumb.make(sc, config, assets_dir(config))
-    target = out_dir() / f"{sc.path.stem}_thumbnail.png"
+    target = out / f"{stem}_thumbnail.png"
     img.save(target)
-    thumb.preview(img).save(out_dir() / f"{sc.path.stem}_thumbnail_preview.png")
+    thumb.preview(img).save(out / f"{stem}_thumbnail_preview.png")
     print(target)
     return 0
 
@@ -647,8 +689,18 @@ def main(argv=None) -> int:
     s = sub.add_parser("describe")
     s.add_argument("script")
     s.add_argument("--no-voice", action="store_true", help="章の時刻を出さない（音声を作らない）")
+    s.add_argument("--keywords", action="store_true", help="最後に「この動画で扱うこと：」（検索候補の語のうち台本に出てくるもの）")
     s.set_defaults(fn=cmd_describe)
-    for name, fn in [("kana", cmd_kana), ("check", cmd_check), ("thumb", cmd_thumb), ("screen", cmd_screen)]:
+    s = sub.add_parser("keywords")
+    s.add_argument("name", help="人物・出来事の名前（例：織田信長）")
+    s.add_argument("--all", action="store_true", help="頭文字をあ〜ん全部（46回）。既定は各行の頭の10回")
+    s.set_defaults(fn=cmd_keywords)
+    s = sub.add_parser("thumb")
+    s.add_argument("script")
+    s.add_argument("--variants", action="store_true", help="3案（a・b・c）と一覧の大きさの確認用を作る")
+    s.add_argument("--out", help="書き出す場所（省けば out/）")
+    s.set_defaults(fn=cmd_thumb)
+    for name, fn in [("kana", cmd_kana), ("check", cmd_check), ("screen", cmd_screen)]:
         s = sub.add_parser(name)
         s.add_argument("script")
         s.set_defaults(fn=fn)
