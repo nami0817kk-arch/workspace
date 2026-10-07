@@ -145,7 +145,8 @@ def matrix(fig: dict) -> Image.Image:
 def receipt(fig: dict) -> Image.Image:
     """レシート風の明細。断面図のチャンネルに合う形。"""
     items = fig["items"]
-    w, h = 900, 290 + len(items) * 64
+    slots = max(int(fig.get("slots", len(items))), 1)
+    w, h = 900, 290 + slots * 64
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     pad = 70
     d.rectangle([pad, top, w - pad + 40, h - 60], fill=(252, 251, 246))
@@ -167,6 +168,8 @@ def receipt(fig: dict) -> Image.Image:
             d.line([(x, y + 22), (x + 6, y + 22)], fill="#CFD3D8", width=2)
             x += 14
         y += 64
+    # 合計の線は、行が増えても動かない位置に固定する
+    y = top + 24 + slots * 64
     d.line([(pad + 26, y + 6), (w - pad + 14, y + 6)], fill=INK, width=3)
     total_l = str(fig.get("total_label", "合計"))
     total_v = str(fig.get("total_value", ""))
@@ -217,7 +220,7 @@ def verdict(fig: dict) -> Image.Image:
     """◎○△× の比較表。案を並べて比べる。"""
     cols = fig.get("cols", [])
     items = fig["items"]
-    w, h = 1180, 260 + len(items) * 86
+    w, h = 1180, 260 + max(int(fig.get("slots", len(items))), 1) * 86
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     label_w = 460
     cw = (w - label_w - 60) // max(len(cols), 1)

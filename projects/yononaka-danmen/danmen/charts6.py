@@ -54,7 +54,8 @@ def icon_stats(fig: dict) -> Image.Image:
     items = fig["items"][:4]
     w, h = 1240, 500
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
-    cw = (w - 80) // max(len(items), 1)
+    slots = max(int(fig.get("slots", len(items))), 1)
+    cw = (w - 80) // slots
     for n, it in enumerate(items):
         cx = 40 + cw * n + cw / 2
         focus = bool(it.get("focus"))
@@ -76,7 +77,7 @@ def icon_stats(fig: dict) -> Image.Image:
         for i, ln in enumerate(_wrap(d, lab, lf, cw - 30)[:2]):
             d.text((cx - d.textlength(ln, font=lf) / 2, vy + size + 18 + i * 36), ln,
                    font=lf, fill=INK_SUB)
-        if n < len(items) - 1:
+        if n < slots - 1:
             d.line([(40 + cw * (n + 1), top + 30), (40 + cw * (n + 1), h - 90)],
                    fill="#E2E5EA", width=2)
     _credit(d, fig.get("credit", ""), w, h)
@@ -89,7 +90,8 @@ def icon_flow(fig: dict) -> Image.Image:
     w, h = 1320, 480
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     n = len(steps)
-    cw = (w - 100) / max(n, 1)
+    slots = max(int(fig.get("slots", n)), 1)
+    cw = (w - 100) / slots
     for i, st in enumerate(steps):
         cx = 50 + cw * i + cw / 2
         focus = bool(st.get("focus"))
@@ -132,7 +134,7 @@ def icon_flow(fig: dict) -> Image.Image:
 def icon_list(fig: dict) -> Image.Image:
     """アイコン付きの箇条書き。見立ての節で理由を並べるときに使う。"""
     items = fig["items"][:5]
-    w, h = 1180, 160 + len(items) * 142
+    w, h = 1180, 160 + max(int(fig.get("slots", len(items))), 1) * 142
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     y = top
     for n, it in enumerate(items, 1):
