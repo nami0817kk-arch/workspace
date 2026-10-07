@@ -34,6 +34,13 @@ thumbnail:                                   # chiso/thumb.py。構図は題材�
   # rays: false                                # 放射の光（versus・number の既定）
   # cutout: false                              # 人物の切り抜き（face・versus の既定。rembg が無ければ切り抜かない）。paintings/x.png で手で抜いた絵
   # fx: false                                  # 作り込みを全部外す
+  # 引きの要素（どの構図にも。1枚に1つか2つまで。**台本で答えが出ることだけ**）:
+  # reactor: {who: tsumugi, face: 驚き, side: right, size: large}   # 聞き手の驚き顔を大きく（主役の方を向く）
+  # hide: {box: [700, 40, 1180, 700], style: silhouette, mark: "？"}  # 隠して「？」。silhouette／blackout／blur
+  # contrast: [天下人, 供は100人]                # 落差の二語（lead・main の代わり）。{from, to, style: strike} で上の語を消す
+  # flip: auto                                 # 顔を文字の方へ向ける（facing: 元の絵で向いている側）。和服・文字・紋の絵は使わない
+  # facing: right
+  # flash: true                                # 事件の瞬間の赤い光（{at: [x, y]}）
   image: paintings/xxx.jpg
   crop: [0, 0, 1600, 900]                    # 絵のどこを使うか（左, 上, 右, 下）
   focus: [150, 60, 1000, 760]                # 明るく残す範囲

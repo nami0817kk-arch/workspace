@@ -82,6 +82,15 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
   （信長の長興寺本は首だけになり外れる）。控えは `work/<台本>/cutout_<ハッシュ>.png`。rembg は任意（`requirements-cutout.txt`、CI には入れない。無ければ切り抜かない）。
   `cutout: false` で切る、`cutout: paintings/x.png`（透明 PNG）や `{image, x, y, height}` で手で抜いた絵を重ねる。
   見本と作り込み前後の一覧（640・320・168px）：`dev/output/rekishi-chiso/research/thumb_layouts2/_before_after.png`
+- **サムネの引きの要素**（10-08 ユーザー「サムネにもう少し人を惹きつける要素を入れたい！」、`chiso/hooks.py`）：人気の歴史解説24枚の調べ（`research/thumb_hooks.md`）で効いた順に、
+  どの構図にも台本で足せる。書かなければ画素まで今と同じ。**1枚に1つか2つまで**（3つ以上は check が知らせる。主役を1つに絞る）。
+  **台本で答えが出ることだけをサムネに**（隠したもの・落差の語が本編と合わないと YouTube の「誤解を招く」決まりに当たる。check が確かめるよう知らせる）。
+  `reactor: {who: tsumugi, face: 驚き, side: right, size: large|medium}`（聞き手を腰から上で大きく、主役＝真ん中の方を向く。右下の小さい2人は出さず、文字はその手前まで）／
+  `hide: {box: [x0, y0, x1, y1], style: silhouette|blackout|blur, mark: "？"}`（影絵は rembg で人の形、無ければ頭と肩の形）／
+  `contrast: [天下人, 供は100人]` か `{from, to, style: arrow|strike}`（lead・main の所に。左の語は白・右の語は特大の黄・間に赤い矢印。狭ければ上の語を赤線で消して下に本当の語）／
+  `flip: true|auto` ＋ `facing: left|right`（元の絵で人物が向く側。face は文字の方、versus は真ん中を向くよう反転。left・right の中にも書ける。
+  **和服（左前＝死者の着方になる）・文字・紋の入った絵は反転しない**。自動の顔の向きの判定は入れていない＝絵画で外れるので facing を書く）／
+  `flash: true` か `{at: [x, y], color}`（事件の瞬間の赤い光と火の粉）。見本 `dev/output/rekishi-chiso/research/thumb_hooks/`（`_contact.png` に 1280・320・168幅）
 - **冒頭とショートの出だし**（10-07、check が知らせる・止めない）：最初の4行（約100字）に数字・年・人名が無い／ショートの1行目が「そして・しかも・それ・でも・はい」で始まる、
   または名前（people: とその言い換え・サムネの名前・4字の名前は2字ずつ）も数字も無い
 

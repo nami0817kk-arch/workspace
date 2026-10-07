@@ -101,6 +101,8 @@ def episode(script) -> tuple[list[str], list[str]]:
     else:                                                  # hook・stamp は任意（10-07、通説を打ち消す形をやめた）
         from . import thumb
         errors += thumb.problems(script.thumbnail)         # 構図（layout）の名前と、構図ごとに要る項目
+        from . import hooks
+        warns += hooks.notes(script.thumbnail)             # 引きの要素（10-08）：隠し・落差は本編で答えが出るか、反転の注意、盛りすぎ
     # 節の終わりの引き（10-04）：途中で見るのをやめる人を減らすため、次の節が気になる一言で締める。
     # 最初の節（導入。冒頭の問いが引きを兼ねる）と最後の節（見立て。次回予告で締める）は除く
     for sec in script.sections[1:-1]:

@@ -41,7 +41,7 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
-from . import thumbfx
+from . import hooks, thumbfx
 
 W, H = 1280, 720
 YEL = (255, 214, 40)
@@ -69,6 +69,18 @@ def _fit(path: str, text: str, size: int, width: int, minimum: int = 40):
 
 def _text(dr, xy, s, f, fill, stroke, anchor="la"):
     dr.text(xy, s, font=f, fill=fill, stroke_width=stroke, stroke_fill=BLACK, anchor=anchor)
+
+
+def _hi(t: dict, x: float) -> float:
+    """文字の右端。聞き手の大きな顔（reactor）が右にいれば、その手前まで。いなければ x のまま。"""
+    r = t.get("_reactor")
+    return min(x, r[0] - 12) if r and r[0] > W / 2 else x
+
+
+def _lo(t: dict, x: float) -> float:
+    """文字の左端。reactor が左にいれば、その右から。"""
+    r = t.get("_reactor")
+    return max(x, r[2] + 12) if r and r[2] < W / 2 else x
 
 
 def _stamp(text: str, gothic: str, size: int = 70, angle: float = -8) -> Image.Image:
@@ -195,11 +207,12 @@ def _layout_a(img, t, gothic):
     dr = ImageDraw.Draw(img)
     # 上：通説＋判子
     stamp = _stamp(t["stamp"], gothic) if t.get("stamp") else None
-    hook_w = W - 60 - (stamp.width if stamp else 0)
+    top_r = _hi(t, W) if (t.get("_reactor") or (0, H))[1] < 160 else W      # 聞き手の顔が上まで届くときは手前で止める
+    hook_w = top_r - 60 - (stamp.width if stamp else 0)
     if t.get("hook"):
         _text(dr, (36, 88), t["hook"], _fit(gothic, t["hook"], 76, hook_w), WHITE, 9, "lm")
     if stamp:
-        img.paste(stamp, (W - stamp.width - 24, 22), stamp)
+        img.paste(stamp, (int(top_r) - stamp.width - 24, 22), stamp)
         dr = ImageDraw.Draw(img)
     # 下：名前札＋問い
     if t.get("name"):
@@ -213,7 +226,7 @@ def _layout_a(img, t, gothic):
         _text(dr, (x, 612), t["lead"], lf, WHITE, 10, "lm")
         x += int(lf.getlength(t["lead"])) + 12
     if t.get("main"):
-        mf = _fit(gothic, t["main"], 168, 820 - x, 96)    # 右下の2人と再生時間の表示にかからない幅
+        mf = _fit(gothic, t["main"], 168, _hi(t, 820) - x, 96)    # 右下の2人と再生時間の表示にかからない幅
         _text(dr, (x, 612), t["main"], mf, YEL, 15, "lm")
 
 
@@ -276,6 +289,8 @@ def problems(t: dict) -> list[str]:
     need = {"classic": ("image", "crop", "name", "main"), "face": ("image", "crop", "name", "main"),
             "scene": ("image", "crop", "name", "main"), "number": ("image", "crop", "number", "name", "main"),
             "versus": ("left", "right"), "map": ("map", "name", "main")}[layout]
+    if t.get("contrast"):                               # 落差の二語があれば main は要らない
+        need = tuple(k for k in need if k != "main")
     out = [f"サムネイルの {k} がありません（構図 {layout}）" for k in need if not t.get(k)]
     if layout == "versus":
         for side in ("left", "right"):
@@ -302,7 +317,7 @@ def problems(t: dict) -> list[str]:
         out.append("サムネイルの band は bottom か top")
     if layout != "classic":
         out += thumbfx.problems(t)
-    return out
+    return out + hooks.problems(t)
 
 
 def _graded(src: Image.Image, crop, size) -> Image.Image:
@@ -449,13 +464,15 @@ def _layout_face(img, t, gothic, src, o=OFF, assets=None):
         if o.get("blur"):
             cx = W - pw // 2 if right else pw // 2
             thumbfx.depth(img, (cx - 420, -260, cx + 420, H + 120), radius=6, dark=0.85)
-        _pop(img, o, face, (W - pw if right else 0, 0), assets / t["image"], t["crop"])
+        _pop(img, o, face, (W - pw if right else 0, 0), assets / t["image"],
+             [*t["crop"], "flip"] if t.get("_flip") else t["crop"])
         _person(img, t, o, assets, side)
+    hooks.under_text(img, t, gothic, o.get("cache"))
     dr = ImageDraw.Draw(img)
-    x0 = 44 if right else W - pw + 120
-    tw = W - pw + 100 - 44 if right else SAFE_W - x0
-    top = str(t.get("lead") or t.get("name") or "")
-    if t.get("lead"):                                    # lead があれば名前は札、無ければ名前を白の大きな段に
+    x0 = _lo(t, 44 if right else W - pw + 120)
+    tw = _hi(t, W - pw + 100 if right else SAFE_W) - x0
+    top = "" if t.get("_contrast") else str(t.get("lead") or t.get("name") or "")
+    if t.get("lead") or t.get("_contrast"):              # lead があれば名前は札、無ければ名前を白の大きな段に
         _tag(dr, (x0 + 4, 150), str(t["name"]), gothic, 46, o=o, img=img)
     _say(img, dr, o, (x0, 300), top, _fit(gothic, top, 130, tw, 70), WHITE, 11, "lm")
     if t.get("main"):
@@ -477,6 +494,7 @@ def _layout_scene(img, t, gothic, src, o=OFF, assets=None):
         if o.get("blur"):
             thumbfx.depth(img, (-200, -260 if bottom else 120, W + 200, y0 + 160 if bottom else H + 260), radius=7, dark=0.8)
         _person(img, t, o, assets, "right")
+    hooks.under_text(img, t, gothic, o.get("cache"))
     if o.get("on") and o.get("torn"):
         thumbfx.torn_edge(img, y0 if bottom else y0 + SCENE_BAND, below=(6, 4, 2), up=not bottom)
     else:
@@ -486,7 +504,7 @@ def _layout_scene(img, t, gothic, src, o=OFF, assets=None):
     if t.get("name"):
         f = 48
         _tag(dr, (40, y0 - int(f * 1.45) if bottom else y0 + SCENE_BAND), str(t["name"]), gothic, f, o=o, img=img)
-    _lead_main(dr, 40, y0 + SCENE_BAND // 2 + 4, t, gothic, 160, (SAFE_W if bottom else W - 80) - 40, o=o, img=img)
+    _lead_main(dr, 40, y0 + SCENE_BAND // 2 + 4, t, gothic, 160, _hi(t, SAFE_W if bottom else W - 80) - 40, o=o, img=img)
 
 
 def _layout_versus(img, t, gothic, assets, o=OFF):
@@ -495,7 +513,10 @@ def _layout_versus(img, t, gothic, assets, o=OFF):
     for key in ("left", "right"):
         v = t[key]
         with Image.open(assets / v["image"]) as im:
-            sides.append(_graded(im.convert("RGB"), v.get("crop"), (W // 2 + 60, H)))
+            pic, crop = im.convert("RGB"), v.get("crop")
+            if hooks.want_flip(v, "right" if key == "left" else "left"):     # 2人とも真ん中を向かせる
+                pic, crop = hooks.mirror(pic, crop)
+            sides.append(_graded(pic, crop, (W // 2 + 60, H)))
     img.paste(sides[0], (0, 0))
     mask = Image.new("L", (W, H), 0)
     ImageDraw.Draw(mask).polygon([(W // 2 + 50, 0), (W, 0), (W, H), (W // 2 - 50, H)], fill=255)
@@ -512,8 +533,12 @@ def _layout_versus(img, t, gothic, assets, o=OFF):
             _rays(img, o, (W // 2, 360))
         for i, key in enumerate(("left", "right")):
             clip = mask if i else ImageChops.invert(mask)
-            _pop(img, o, sides[i], (W // 2 - 60 if i else 0, 0), assets / t[key]["image"], t[key].get("crop"), clip)
+            crop = t[key].get("crop")
+            if hooks.want_flip(t[key], "right" if key == "left" else "left"):
+                crop = [*(crop or []), "flip"]
+            _pop(img, o, sides[i], (W // 2 - 60 if i else 0, 0), assets / t[key]["image"], crop, clip)
         _person(img, t, o, assets, "right")
+    hooks.under_text(img, t, gothic, o.get("cache"))
     _shade(img, 150, 0.85, 330, 0.95)
     dr = ImageDraw.Draw(img)
     if o.get("on") and o.get("torn"):
@@ -572,7 +597,7 @@ def _layout_number(img, t, gothic, src, cast: bool, o=OFF, assets=None):
     """大きな数字（画面の半分の高さ）が主役。絵は暗くぼかして後ろに。上に名前、下に lead＋main。"""
     back = _graded(src, t["crop"], (W, H)).filter(ImageFilter.GaussianBlur(5))
     img.paste(ImageEnhance.Brightness(back).enhance(0.38))
-    right = (SAFE_W - 220 if cast else W - 60)             # 2人（右下）にかからない幅
+    right = _hi(t, SAFE_W - 220 if cast else W - 60)       # 2人（右下）にかからない幅
     if o.get("on"):
         _side_light(img, o, "left")
         _tint(img, o)
@@ -580,10 +605,11 @@ def _layout_number(img, t, gothic, src, cast: bool, o=OFF, assets=None):
             thumbfx.depth(img, radius=4, dark=0.8)
         _rays(img, o, (right // 2 + 20, 380))
         _person(img, t, o, assets, "right")
+    hooks.under_text(img, t, gothic, o.get("cache"))
     dr = ImageDraw.Draw(img)
     _say(img, dr, o, (44, 92), str(t["name"]), _fit(gothic, str(t["name"]), 92, right - 44, 50), WHITE, 9, "lm")
     _big_number(dr, 40, 470, str(t["number"]), gothic, 340, right - 40, o=o, img=img)
-    _lead_main(dr, 44, 590, t, gothic, 120, (SAFE_W - 160 if cast else SAFE_W) - 44, o=o, img=img)
+    _lead_main(dr, 44, 590, t, gothic, 120, _hi(t, SAFE_W - 160 if cast else SAFE_W) - 44, o=o, img=img)
 
 
 MAP_SEA = (38, 58, 78)
@@ -675,15 +701,49 @@ def _layout_map(img, t, gothic, assets, o=OFF):
         taken.append(box)
         _say(img, dr, o, (bx, by), name, pf, WHITE, 6, anchor)
     _say(img, dr, o, (40, 70), str(t["name"]), _fit(gothic, str(t["name"]), 96, W - 80, 50), WHITE, 9, "lm")
-    _lead_main(dr, 40, 175, t, gothic, 140, W - 80, o=o, img=img)
+    _lead_main(dr, 40, 175, t, gothic, 140, _hi(t, W - 40) - 40, o=o, img=img)
 
 
 _LAYOUTS = {"a": _layout_a, "b": _layout_b, "c": _layout_c}
 
 
+def _prepare(t: dict, config: dict, assets: Path) -> dict:
+    """引きの要素（chiso/hooks.py）のための下ごしらえ。書いていなければ t をそのまま返す（画素まで今と同じ）。"""
+    if not hooks.used(t):
+        return t
+    t = dict(t)
+    if t.get("reactor") not in (None, False):
+        t["_reactor"] = hooks.reactor_box(t, config, assets)
+        t.setdefault("cast", False)                     # 大きな顔を出すときは右下の小さい2人は出さない
+    if t.get("contrast") not in (None, False):          # 落差の二語は lead・main の所に出す
+        t["_contrast"] = True
+        t["lead"] = t["main"] = None
+    return t
+
+
+CONTRAST_ZONE = {      # 落差の二語を置く所（x0, y0, x1, y1）。lead・main がふだん出る所
+    "a": (30, 528, 820, 704), "c": (30, 528, 820, 704), "b": (34, 470, 734, 704),
+    "number": (44, 492, SAFE_W, 704), "versus": (60, 6, W - 60, 168), "map": (40, 112, W - 40, 250),
+}
+
+
+def contrast_zone(t: dict, layout: str):
+    if layout == "face":
+        right = t.get("side", "right") == "right"
+        z = (40, 226, W - 720 + 100, 650) if right else (W - 720 + 120, 226, SAFE_W, 650)
+    elif layout == "scene":
+        bottom = t.get("band", "bottom") == "bottom"
+        y0 = STRATA_TOP - SCENE_BAND if bottom else 0
+        z = (40, y0 + 10, SAFE_W if bottom else W - 40, y0 + SCENE_BAND - 10)
+    else:
+        z = CONTRAST_ZONE[layout]
+    return (_lo(t, z[0]), z[1], _hi(t, z[2]), z[3])
+
+
 def render_spec(t: dict, config: dict, assets: Path, cache: Path | None = None) -> Image.Image:
     """cache は人物の切り抜きの控えの置き場（work/<台本>）。無ければ控えない。"""
     gothic = (config.get("fonts") or {}).get("gothic")
+    t = _prepare(t, config, assets)
     layout = t.get("layout", "a")
     cast = bool(t.get("cast", DEFAULT_CAST[layout]))
     o = thumbfx.options(t, layout)                       # 作り込み（face・scene・versus・number・map だけ）
@@ -691,12 +751,17 @@ def render_spec(t: dict, config: dict, assets: Path, cache: Path | None = None) 
     if layout in _LAYOUTS:
         src = Image.open(assets / t["image"]).convert("RGB")
         img = _background(src, t)
+        hooks.under_text(img, t, gothic, cache)
         _LAYOUTS[layout](img, t, gothic)
     else:
         img = Image.new("RGB", (W, H), BLACK)
         if layout in ("face", "scene"):
             with Image.open(assets / t["image"]) as im:
-                {"face": _layout_face, "scene": _layout_scene}[layout](img, t, gothic, im.convert("RGB"), o, assets)
+                src = im.convert("RGB")
+            if layout == "face" and hooks.want_flip(t, "left" if t.get("side", "right") == "right" else "right"):
+                src, crop = hooks.mirror(src, t["crop"])     # 顔を文字の方へ向ける
+                t = dict(t, crop=crop, _flip=True)
+            {"face": _layout_face, "scene": _layout_scene}[layout](img, t, gothic, src, o, assets)
         elif layout == "number":
             with Image.open(assets / t["image"]) as im:
                 _layout_number(img, t, gothic, im.convert("RGB"), cast, o, assets)
@@ -704,10 +769,14 @@ def render_spec(t: dict, config: dict, assets: Path, cache: Path | None = None) 
             _layout_versus(img, t, gothic, assets, o)
         elif layout == "map":
             _layout_map(img, t, gothic, assets, o)
+            hooks.under_text(img, t, gothic, cache)
         else:
             raise ValueError(f"サムネイルの構図が分かりません: {layout}")
+    if t.get("_contrast"):
+        hooks.draw_contrast(img, t, contrast_zone(t, layout), gothic, center=layout == "versus")
     if o.get("on"):
         thumbfx.finish(img, o, gothic, assets, _font)
+    hooks.put_reactor(img, t, config, assets)
     if cast:                                            # b は顔が主役なので2人を出さない（既定）
         _cast(img, assets)
     dr = ImageDraw.Draw(img)
