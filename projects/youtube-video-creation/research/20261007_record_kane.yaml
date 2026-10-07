@@ -1,0 +1,510 @@
+# 取材メモ（10/7 シリーズ「記録の解説」、key: record_kane、型は news）。材料の控えは research/raw/20261007_record_kane.md。
+# 10/6 に試合前の版（research/20261006_record_kane.yaml）を作ったが、試合前なので出していない。結果に合わせて作り直した。
+# 何の回か: 10/6 のチェコ戦（ウェンブリー、3対0）でケインが代表125試合目に出て、シルトンの最多出場125に並んだ。その試合で2得点、1点目はケインのクロスからのオウンゴール。
+#   数字は The FA（試合の頁・試合後の数字の記事・得点の一覧）と Sky Sports・BBC で確かめた。125試合までの年月（11年193日 対 19年224日、8年31日早い）は The FA の数。
+#   1年あたりの試合・100点まで何試合かは自分で割った値（言い切らない）。
+# 単独1位は次に出た試合。予定では 11/12 のクロアチア戦（ウェンブリー、日本時間 11/13 4:45）。招集前なので「出れば」。
+# 言葉: ケイン（試合後の放送のインタビュー。Sky Sports の試合記事）、トゥヘル（The FA の試合後の記事・PA）、シルトン（本人の SNS。BBC が引いた）。
+# 重ねない: 10/6 の版の言い回し（「36年続いた記録」・120試合でのルーニー比べ・年に10点以上3度の表・前日会見の言葉・9/24 会見の言葉）は使わない。
+#   10/4 のイングランド対クロアチアの回は「3日前のクロアチア戦でも2点」の1行だけ。ロナウドの話は出さない。
+# バイエルンとの延長（2029年まで）はドイツの Sky Sport の報道。署名前なので「報じられている」の1行だけ。
+# 写真: ケインは 10/6 と同じ Commons（代理店なし）。シルトンは Commons（2008年）。試合の記事の写真は The FA・Sky とも代理店の配信なので使っていない。
+# follow_up: 10/6 の版は draft までの控え（出していない・承認もしていない）。結果に合わせた作り直しなので掘り直しとして扱う。
+#   シルトンの言葉の行は、シルトン（左）＋ケイン（右）を並べた1枚（tools/pairphoto.py）。
+date: 2026年10月7日
+slot: other_1
+format: news
+series: 記録の解説
+follow_up: true
+people:
+- ハリー・ケイン
+- ピーター・シルトン
+- トーマス・トゥヘル
+theme:
+  id: record_kane
+  league: england
+  league_name: イングランド代表
+  kind: other
+  topic: イングランド代表
+  title: ハリー・ケイン、最多出場に並んだ夜に2得点。シルトンの20年と何が違ったのか
+  question: シルトンの最多出場125に並んだケインの125試合は、シルトンと何が違ったのか
+  takeaway: ケインは10月6日のチェコ戦で代表125試合目に出て、シルトンの最多出場に並んだ。その試合で2得点し、残る1点もケインのクロスから生まれた。125試合に届くまでの年月は、シルトンの19年224日に対してケインは11年193日で、8年31日早い。1年あたりに直すと約6.4試合と約10.8試合で、ケインは1.7倍のペースで代表に出てきた。代表の得点は91、今年は13試合で13点。100点まではあと9点で、通算の割合なら13試合目あたり、今年の割合なら9試合の計算になる。単独1位は、出れば11月12日のクロアチア戦
+  opening_image: assets/images/20261006_record_kane/02_2026ghana_w.jpg
+short_title: ケイン、シルトンの125試合に並ぶ。その夜に自ら2得点
+thumbnail:
+  photo: assets/images/20261006_record_kane/02_2026ghana.jpg
+  short_photo: assets/images/20261006_record_kane/02_2026ghana_v.jpg
+  line1: ケイン 125試合目で2得点
+  line2: シルトンより●年早く並んだ
+  tags:
+  - ハリー・ケイン
+  - イングランド代表
+  - ピーター・シルトン
+  - UEFAネーションズリーグ
+  - 記録の解説
+sections:
+- id: night
+  heading: 125試合目、3点すべてに絡む
+  tier: 報道
+  telop: 最多出場に並んだチェコ戦。ケインは2得点、残る1点もクロスから
+  narrator: キャスター
+  card:
+    type: table
+    title: チェコ戦 ケインが絡んだ3点
+    columns: &id001
+    - 時間
+    - 得点
+    - ケインの役目
+    rows: &id002
+    - - 27分
+      - オウンゴール
+      - 低いクロスで誘う
+    - - 40分
+      - ケイン
+      - 右からの折り返しを決める
+    - - 57分
+      - ケイン
+      - コーナーキックを頭で
+  say:
+  - text: 歴代最多に並んだ一戦。その試合で、ケインは3点すべてに絡みました。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+    image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+    emph: true
+  - text: 大会は、欧州の代表チームによるネーションズリーグ。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+  - text: ホームのウェンブリーで、チェコを3対0で下しました。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+  - text: 先制は27分。ケインの低いクロスを、相手がクリアしきれずオウンゴール。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 0
+  - text: 40分には右からの折り返しを押し込み、これが代表90点目。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 中盤アンダーソンの浮き球を、ロジャーズが右で受けて一度で折り返した形。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: 1点目の形には、ケイン自身もほれ込んでいます。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: ワンタッチでつないで、最後はダイレクトのクロス。
+    card: none
+    voice: ハリー・ケイン
+  - text: あれ以上の崩しは無い。
+    card: none
+    voice: ハリー・ケイン
+    cont: true
+  - text: ストライカーは、ああいう一瞬を待って生きているんだ。
+    card: none
+    voice: ハリー・ケイン
+    cont: true
+  - text: 57分はコーナーキックを頭で合わせて、91点目です。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 3日前のクロアチア戦に続いて、2試合続けての2得点。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+  - text: 33歳での2試合連続2得点は、イングランド代表の最年長です。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 2
+    emph: true
+  sources:
+  - https://www.englandfootball.com/england/mens-senior-team/fixtures-results/2026-27/Nations-League/england-czechia-uefa-nations-league-tuesday-6-october-2026-match-centre
+  - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-post-match-stats-20260610
+  - https://www.bbc.co.uk/sport/football/articles/cx7vp3lqv985o
+  - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-harry-kane-reaction-20260610
+  quotes_from:
+  - The FA https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-harry-kane-reaction-20260610
+- id: words
+  main: true
+  heading: 並んだ夜、ケインが口にしたこと
+  tier: 報道
+  telop: 「思い描いた夢さえ超えている」
+  narrator: キャスター
+  say:
+  - text: イングランド代表で125試合目。ケインがシルトンの最多出場に並びました。
+    short_only: true
+    image: assets/images/20261006_record_kane/02_2026ghana_w.jpg
+  - text: 代表デビューの日も、夢がかなった瞬間だった。
+    voice: ハリー・ケイン
+    image: assets/images/20261006_record_kane/11_2026panama184_w.jpg
+  - text: でも今夜は、思い描いた夢さえ超えている。
+    voice: ハリー・ケイン
+    cont: true
+  - text: 125試合まで来られたのは、この上ない光栄だ。
+    voice: ハリー・ケイン
+    cont: true
+  quotes_from:
+  - スカイスポーツ https://www.skysports.com/football/news/13595647/england-3-0-czech-republic-harry-kane-marks-record-equalling-125th-cap-with-two-goals-and-an-assist-in-nations-league-victory
+  sources:
+  - https://www.skysports.com/football/news/13595647/england-3-0-czech-republic-harry-kane-marks-record-equalling-125th-cap-with-two-goals-and-an-assist-in-nations-league-victory
+  - https://english.aawsat.com/sports/5326801-kane-eyes-ronaldo-record-after-matching-england-cap-mark
+- id: moved
+  heading: この90分で動いた数字
+  tier: 報道
+  telop: 得点は91、2位ルーニーとは38点差。今年は13試合で13点
+  narrator: 解説
+  card:
+    type: table
+    title: チェコ戦の前と後
+    columns: &id003
+    - 項目
+    - 試合の前
+    - 試合の後
+    rows: &id004
+    - - 代表の出場
+      - '124'
+      - 125（歴代1位タイ）
+    - - 代表の得点
+      - '89'
+      - '91'
+    - - 2026年の得点
+      - 11（12試合）
+      - 13（13試合）
+    - - 2位ルーニーとの差
+      - '36'
+      - '38'
+  say:
+  - text: この1試合で、ケインの数字はどれだけ動いたのか。
+    card:
+      type: table
+      title: チェコ戦の前と後
+      columns: *id003
+      rows: *id004
+    image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+  - text: 出場は124から125へ。1990年から誰も届かなかった数です。
+    card:
+      type: table
+      title: チェコ戦の前と後
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: そのうち先発は111試合。9割近くを、頭から任されてきました。
+    card:
+      type: table
+      title: チェコ戦の前と後
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 出た試合で勝ったのは83。3試合に2試合は勝ってきた計算です。
+    card:
+      type: table
+      title: チェコ戦の前と後
+      columns: *id003
+      rows: *id004
+      highlight_row: 0
+  - text: 得点は89から91へ。2位ルーニーとの差は38点に開きました。
+    card:
+      type: table
+      title: チェコ戦の前と後
+      columns: *id003
+      rows: *id004
+      highlight_row: 3
+  - text: 今年の代表での得点は、これで13。出た試合と同じ数。
+    card:
+      type: table
+      title: チェコ戦の前と後
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: 1年で13点は、イングランド代表で歴代2番目の多さです。
+    card:
+      type: table
+      title: チェコ戦の前と後
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+    emph: true
+  - text: 上にいるのは2021年の16点。こちらもケイン自身の数字です。
+    card:
+      type: table
+      title: チェコ戦の前と後
+      columns: *id003
+      rows: *id004
+      highlight_row: 2
+  - text: トゥヘル監督は、試合のあとにこう話しました。
+    card: none
+    image: assets/images/20261006_record_kane/20_pair_tuchel.jpg
+  - text: これが彼なんだ。当たり前だとは思っていない。
+    card: none
+    voice: トーマス・トゥヘル
+  - text: 毎試合、並外れている。
+    card: none
+    voice: トーマス・トゥヘル
+    cont: true
+  - text: この舞台も、称賛も、彼にふさわしい。
+    card: none
+    voice: トーマス・トゥヘル
+  quotes_from:
+  - The FA https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-thomas-tuchel-reaction-20260610
+  - PA通信 https://www.irishnews.com/sport/soccer/thomas-tuchel-hails-brilliant-brilliant-harry-kane-after-landmark-double-4R4MOJ4TZBLZXBRQQQ5KPYNQMM/
+  sources:
+  - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-post-match-stats-20260610
+  - https://www.englandfootball.com/articles/2021/Nov/15/england-mens-all-time-record-goalscorers-20211115
+  - https://www.englandfootball.com/articles/2026/Oct/06/harry-kane-england-career-in-numbers-20260610
+  - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-thomas-tuchel-reaction-20260610
+  - https://www.irishnews.com/sport/soccer/thomas-tuchel-hails-brilliant-brilliant-harry-kane-after-landmark-double-4R4MOJ4TZBLZXBRQQQ5KPYNQMM/
+  - https://www.bbc.co.uk/sport/football/articles/cm5ynj882zw0o
+- id: view
+  viewpoint: true
+  heading: シルトンとケイン、125試合までの道のりの差
+  tier: 背景
+  telop: 125試合までシルトン19年224日、ケイン11年193日。1年あたり約6.4試合と約10.8試合
+  narrator: 解説
+  card:
+    type: table
+    title: 125試合を比べる
+    columns: &id005
+    - 項目
+    - シルトン
+    - ケイン
+    rows: &id006
+    - - ポジション
+      - ゴールキーパー
+      - フォワード
+    - - 代表にいた期間
+      - 1970〜1990
+      - 2015〜
+    - - 125試合までの年月
+      - 19年224日
+      - 11年193日
+    - - 1年あたりの試合
+      - 約6.4
+      - 約10.8
+    - - 125試合目の年齢
+      - 40歳
+      - 33歳
+    - - 125試合目
+      - 1990年W杯 3位決定戦
+      - チェコ戦で2得点
+  say:
+  - text: 同じ125試合でも、そこへ至る道のりはまるで違います。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+    image: assets/images/20261006_record_kane/11_2026panama184_v.jpg
+  - text: シルトンはゴールキーパー。ケインはフォワードです。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 0
+  - text: シルトンは1970年から1990年まで、ゴールを守り続けました。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: ケインは2015年3月のデビューから、いまも主将として先頭に立っています。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 1
+  - text: 125試合までの年月は、シルトンが19年224日、ケインは11年193日。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+  - text: その差は、8年と31日です。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 2
+    emph: true
+  - text: 1年あたりでは、シルトンが約6.4試合、ケインは約10.8試合。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: ケインは、シルトンの1.7倍のペースで代表に呼ばれ続けた計算です。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 3
+  - text: 毎回の招集について、ケイン自身の言葉があります。
+    card: none
+  - text: 代表の合宿には、毎回喜んで来ている。
+    card: none
+    voice: ハリー・ケイン
+  - text: どの試合も、国を背負って出るのが好きなんだ。
+    card: none
+    voice: ハリー・ケイン
+    cont: true
+  - text: 125試合目を迎えた年齢も、シルトンの40歳に対して、ケインは33歳。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 4
+  - text: シルトンの125試合目は、1990年W杯の3位決定戦でした。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+    image: assets/images/20261006_record_kane/06_2023_v.jpg
+  - text: ケインはその節目の試合で、自ら2点を決めています。
+    card:
+      type: table
+      title: 125試合を比べる
+      columns: *id005
+      rows: *id006
+      highlight_row: 5
+  - text: もう1つの節目、代表100点までは、あと9点です。
+    card:
+      type: table
+      title: 代表100点まで あと9点
+      columns: &id007
+      - 物差し
+      - 1試合の得点
+      - 9点に要る試合
+      rows: &id008
+      - - 代表の通算
+        - '0.73'
+        - 約13試合
+      - - 2026年
+        - '1.00'
+        - 9試合
+  - text: 通算の割合、1試合0.73点なら、届くのは13試合目あたり。
+    card:
+      type: table
+      title: 代表100点まで あと9点
+      columns: *id007
+      rows: *id008
+      highlight_row: 0
+  - text: 今年の1試合1点の割合なら、9試合で届く計算になります。
+    card:
+      type: table
+      title: 代表100点まで あと9点
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: あくまで計算の上の話ですが、100点はもう視界に入っています。
+    card:
+      type: table
+      title: 代表100点まで あと9点
+      columns: *id007
+      rows: *id008
+      highlight_row: 1
+  - text: では、単独1位はいつか。次に出た試合で決まります。
+    card:
+      type: table
+      title: 単独1位がかかる試合
+      columns: &id009
+      - 日本時間
+      - 試合
+      - 出れば
+      rows: &id010
+      - - 11月13日 4時45分
+        - クロアチア戦（ホーム）
+        - 126 単独1位
+      - - 11月16日 4時45分
+        - スペイン戦（アウェー）
+        - '127'
+    image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+  - text: 最短は11月12日のクロアチア戦。日本時間では13日の早朝です。
+    card:
+      type: table
+      title: 単独1位がかかる試合
+      columns: *id009
+      rows: *id010
+      highlight_row: 0
+  - text: 記録を持つシルトンは、自身の投稿でケインにこう呼びかけました。
+    card: none
+    image: assets/images/20261007_record_kane/20_pair_shilton.jpg
+  - text: 11月には、きっと君が抜いていく。私はそう確信している。
+    card: none
+    voice: シルトン（元ゴールキーパー）
+  - text: そして、誰にも破られない記録を作るかもしれない。
+    card: none
+    voice: シルトン（元ゴールキーパー）
+    cont: true
+  - text: 所属クラブでも、バイエルンとの2029年までの延長が近いという報道が出ています。
+    card: none
+    image: assets/images/20261006_record_kane/02_2026ghana_w.jpg
+  - text: 当の本人は、記録の夜をこう締めくくっていました。
+    card: none
+  - text: いちばん大事なのは、勝ったことだ。
+    card: none
+    voice: ハリー・ケイン
+  - text: 主役は僕じゃない。チームなんだ。
+    card: none
+    voice: ハリー・ケイン
+    cont: true
+  quotes_from:
+  - BBC https://www.bbc.co.uk/sport/football/articles/cx2ln5n7yqdo
+  - スカイスポーツ https://www.skysports.com/football/news/13595647/england-3-0-czech-republic-harry-kane-marks-record-equalling-125th-cap-with-two-goals-and-an-assist-in-nations-league-victory
+  sources:
+  - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-post-match-stats-20260610
+  - https://en.wikipedia.org/wiki/Peter_Shilton
+  - https://www.englandfootball.com/articles/2026/Oct/06/harry-kane-england-career-in-numbers-20260610
+  - https://www.englandfootball.com/articles/2026/Feb/13/uefa-nations-league-2026-27-fixture-dates-confirmed-20261302
+  - https://www.bbc.co.uk/sport/football/articles/cx2ln5n7yqdo
+  - https://sport.sky.de/transfer/news/34132/13595485/durchbruch-harry-kane-vor-vertragsverlaengerung-beim-fc-bayern-bis-2029
+  - https://www.skysports.com/football/news/13595647/england-3-0-czech-republic-harry-kane-marks-record-equalling-125th-cap-with-two-goals-and-an-assist-in-nations-league-victory
+- id: voices
+  heading: ネットの反応
+  tier: 未確認
+  telop: 「今がピークとも言える」
+  narrator: キャスター
+  say:
+  - text: 33歳にして、今がピークとも言えるこの得点力は本当にすごい。
+    voice: ネット民
+    short_voice: true
+  sources:
+  - https://news.yahoo.co.jp/articles/cdc0e6fb8b55877b19074a66836ba08352c5b5ee/comments

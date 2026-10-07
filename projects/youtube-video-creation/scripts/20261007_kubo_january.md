@@ -495,6 +495,7 @@ cards:
   card: none
   image: assets/images/20261007_kubo_january/01_side_w.jpg
 ネット民: ダニ・ディアス、体を温めておけ。出番だぞ。
+  only: main
   telop: ネット民「ダニ・ディアス、体を温めておけ。出番だぞ」
   card: none
   image: assets/images/20261007_kubo_january/01_side_w.jpg

@@ -315,6 +315,7 @@ sections:
   # Bluesky josepoza（スペイン語）。アジアカップで1か月いなくなる、という投稿への返信。全文の訳
   - voice: ネット民
     text: ダニ・ディアス、体を温めておけ。出番だぞ。
+    main_only: true
     card: none
   # Yahoo!ニュース（東スポWEB 10/4）のコメント欄 6ページ目 mk5*****。全文
   - voice: ネット民

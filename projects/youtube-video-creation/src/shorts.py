@@ -170,6 +170,21 @@ def portrait(config: ProjectConfig) -> ProjectConfig:
     return replace(config, video=video, titles=titles, cast=cast)
 
 
+def _drop_main_only(script: Script) -> Script:
+    """本編にだけ出す行（`only: main`）を、ショートの材料から外す。
+
+    2026-10-07、久保の回で、本編の見立てで説明した「ダニ・ディアス」の反応が
+    ショートの締めに説明なしで出た（ユーザー「推しで良いよ、本編はそのまま」）。
+    """
+    if not any(str(getattr(l, "only", "") or "") == "main"
+               for sc in script.scenes for l in sc.lines):
+        return script
+    out = copy.deepcopy(script)
+    for sc in out.scenes:
+        sc.lines = [l for l in sc.lines if str(getattr(l, "only", "") or "") != "main"]
+    return out
+
+
 def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) -> Script:
     """冒頭と、掘る節を1つだけ残す。
 
@@ -178,6 +193,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     """
     if len(script.scenes) < 2:
         raise ShortError("節が1つしかありません。ショートにする意味がありません")
+    script = _drop_main_only(script)
 
     opening = script.scenes[0]
     body = _pick(script, section)

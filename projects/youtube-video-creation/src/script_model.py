@@ -353,8 +353,8 @@ def _apply_attr(line: Line, key: str, value: str, number: int) -> None:
     elif key in ("no_telop", "short_voice", "cont", "emph"):
         setattr(line, key, value.lower() not in ("false", "no", "0", ""))
     elif key == "only":
-        if value.strip() not in ("short",):
-            raise ScriptError(f"{number}行目: only に書けるのは short だけです")
+        if value.strip() not in ("short", "main"):
+            raise ScriptError(f"{number}行目: only に書けるのは short か main だけです")
         line.only = value.strip()
     else:
         setattr(line, key, value)

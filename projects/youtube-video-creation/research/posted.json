@@ -3786,5 +3786,23 @@
     "video_id": "LpGcAH9yJvE",
     "at": "2026-10-06T08:47:18+00:00",
     "publish_at": "2026-10-07T00:00:00Z"
+  },
+  {
+    "build": "20261007_kubo_january",
+    "video_id": "acc2cKCG5Bk",
+    "at": "2026-10-07T00:16:00+00:00",
+    "publish_at": "2026-10-07T02:00:00Z"
+  },
+  {
+    "build": "20261007_sato_valencia",
+    "video_id": "p4G3dRavtUw",
+    "at": "2026-10-07T00:17:22+00:00",
+    "publish_at": "2026-10-07T03:00:00Z"
+  },
+  {
+    "build": "20261007_sato_valencia_short",
+    "video_id": "oZ3AQHHDYoI",
+    "at": "2026-10-07T00:18:25+00:00",
+    "publish_at": "2026-10-07T03:30:00Z"
   }
 ]

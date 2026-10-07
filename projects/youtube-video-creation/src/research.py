@@ -418,7 +418,10 @@ def build_notes(raw: dict) -> Notes:
                 # **ショートにだけ出す行**（2026-09-14 指示「ショートでも、
                 # 試合の概要を最初に説明して」）。ショートは節を切り出して
                 # 単体で出すので前置きが要るが、本編に残すと言い直しになる
-                onlys.append("short" if item.get("short_only") else "")
+                # **本編にだけ出す行**（2026-10-07、本編で前置きした人の名前が
+                # ショートの反応に説明なしで出た。久保の回の「ダニ・ディアス」）
+                onlys.append("short" if item.get("short_only")
+                             else "main" if item.get("main_only") else "")
                 # **ショートの締めに回す反応**（2026-09-15 指示）。
                 # 上から順に取ると、1件目が見出しの言い直しになる回がある
                 picks.append(bool(item.get("short_voice")))
@@ -768,7 +771,7 @@ def _check_voice_clash(notes: Notes) -> list[str]:
 
 # 1行ぶんの辞書に書いてよい鍵
 LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image", "pause",
-                       "short_only", "short_voice", "no_telop", "cont", "emph"})
+                       "short_only", "main_only", "short_voice", "no_telop", "cont", "emph"})
 
 
 def _check_card(section: Section) -> list[str]:
@@ -2731,8 +2734,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
             # 本編に残る最初の行（`only: short` を飛ばす）
             first_kept = next(
                 (i for i in range(len(section.say))
-                 if not (section.line_onlys[i]
-                         if i < len(section.line_onlys) else "")), 0)
+                 if (section.line_onlys[i]
+                     if i < len(section.line_onlys) else "") != "short"), 0)
             if (number < len(section.line_short_voices)
                     and section.line_short_voices[number]):
                 lines.append("  short_voice: true")
