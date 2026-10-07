@@ -50,7 +50,7 @@ def test_episode_rules():
     assert errors == [] and any("図" in w for w in warns)
     bad = dict(base, next={}, sections=base["sections"][:1])
     errors, _ = check.episode(script.parse(bad))
-    assert any("見立て" in e for e in errors) and any("次回" in e for e in errors)
+    assert any("まとめ" in e for e in errors) and any("次回" in e for e in errors)
 
 
 def test_unknown_place_is_error():

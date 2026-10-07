@@ -78,14 +78,15 @@ def episode(script) -> tuple[list[str], list[str]]:
     """1本ぶんの決まり。(止めるもの, 知らせるもの) を返す。"""
     import json
     errors, warns = [], []
-    if not script.sections or "見立て" not in script.sections[-1].title:
-        errors.append("最後の節は「見立て：…」にする（なぜそうなったか）")
+    last = script.sections[-1].title if script.sections else ""
+    if not ("まとめ" in last or "見立て" in last):        # 10-07 から人物・出来事を掘る形。最後は「まとめ：…」（前の回の「見立て」も通す）
+        errors.append("最後の節は「まとめ：…」にする（その人・出来事は何だったのか）")
     if not script.next:
         errors.append("次回予告（next: {title, teaser}）がありません")
     if not script.thumbnail:
         errors.append("サムネイル（thumbnail:）がありません")
     else:
-        for k in ("image", "crop", "hook", "stamp", "name", "main"):
+        for k in ("image", "crop", "name", "main"):        # hook・stamp は任意（10-07、通説を打ち消す形をやめた）
             if k not in script.thumbnail:
                 errors.append(f"サムネイルの {k} がありません")
     # 節の終わりの引き（10-04）：途中で見るのをやめる人を減らすため、次の節が気になる一言で締める。
@@ -119,8 +120,6 @@ def episode(script) -> tuple[list[str], list[str]]:
         warns.append("《》の強調が1つもありません")
     if not script.shorts:
         warns.append("ショート（shorts:）がありません")
-    if not getattr(script, "question", ""):
-        warns.append("題名に問いがありません")
     return errors, warns
 
 
