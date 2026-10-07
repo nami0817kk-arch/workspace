@@ -4,6 +4,8 @@
 台本（YAML）の行を上から読み、
 
   ・`screen:` の行  … ここから出す画面を切り替える（画像の名前）
+  ・`cast:` の行    … ここから立ち絵を出す（「kikite odoroki right 430」の形。
+                      「なし」で消す）。**しゃべっている人の口は声に合わせて動く**
   ・話者の行        … 読み上げて、その長さだけ画面を出す。字幕も焼く
 
 行ごとに声を作って**長さを測る**ので、画面の切り替えは語りに合う。
@@ -31,7 +33,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from danmen import typo
 
-from danmen import tts
+from danmen import cast, lipsync, tts
 
 W, H = 1920, 1080
 FONT_PATH = "C:/Windows/Fonts/NotoSansJP-VF.ttf"
@@ -77,11 +79,37 @@ def read_script(path: Path) -> list[dict]:
             if key == "screen":
                 out.append({"screen": str(val)})
                 continue
+            if key == "cast":
+                out.append({"cast": str(val)})
+                continue
             m = re.match(r"^(?P<who>[^\s(（]+)\s*(?:[（(](?P<tone>[^）)]+)[）)])?$", key)
             if not m:
                 raise SystemExit("話者の書き方が読めません: {}".format(key))
             out.append({"who": m["who"], "tone": m["tone"] or "ふつう", "text": str(val)})
     return out
+
+
+def parse_cast(text: str) -> dict | None:
+    """「kikite odoroki right 430」を読む。「なし」なら立ち絵を消す。"""
+    t = text.split()
+    if not t or t[0] in ("なし", "none", "-"):
+        return None
+    return {"who": t[0],
+            "mood": (t[1] if len(t) > 1 and t[1] != "-" else ""),
+            "side": (t[2] if len(t) > 2 else "right"),
+            "height": int(t[3]) if len(t) > 3 else 430}
+
+
+def put_cast(base: Image.Image, spec: dict, amount: float = 0.0) -> Image.Image:
+    """画面に立ち絵を重ねる。amount は口の開き具合。"""
+    im = base.convert("RGBA").copy()
+    # 口を開けるのは cast.load の中（切り出す前の全身の絵に対して行う）
+    ch = cast.load(spec["who"], spec["mood"], spec["height"], "bust", mouth=amount)
+    if ch is None:
+        return im.convert("RGB")
+    x = (W - 40 - ch.width) if spec["side"] != "left" else 40
+    im.alpha_composite(ch, (x, H - 6 - ch.height))
+    return im.convert("RGB")
 
 
 # ---- 字幕 -------------------------------------------------------------------
@@ -90,17 +118,22 @@ def _wrap(d, text: str, font, width: float) -> list[str]:
     """折り返しは `typo.wrap` に任せる（日本語の組版の決まりを守る）。"""
     return typo.wrap(d, text, font, width)
 
-def caption(im: Image.Image, text: str, size: int = 74) -> Image.Image:
-    """字幕を焼く。縁を全部描いてから本体を描く（潰れを避けるため）。"""
+def caption(im: Image.Image, text: str, size: int = 74,
+            side_room: int = 0) -> Image.Image:
+    """字幕を焼く。縁を全部描いてから本体を描く（潰れを避けるため）。
+
+    `side_room` は、立ち絵のために空ける右の幅。立ち絵が出ている画面で
+    字幕を画面いっぱいに書くと、字の端が立ち絵にかかる。
+    """
     out = im.convert("RGB").copy()
     d = ImageDraw.Draw(out)
     f = F(size)
-    lines = _wrap(d, text, f, W - 220)[:2]
+    lines = _wrap(d, text, f, W - 220 - side_room)[:2]
     y0 = H - 60 - len(lines) * int(size * 1.34)
     # 置き場所を先に決めておく（文字ごとの x）
     place: list[tuple[str, float, float, bool]] = []
     for n, ln in enumerate(lines):
-        x = (W - d.textlength(ln, font=f)) / 2
+        x = (W - side_room - d.textlength(ln, font=f)) / 2
         y = y0 + n * int(size * 1.34)
         for part in NUM.split(ln):
             if not part:
@@ -136,11 +169,18 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
 
     current: Image.Image | None = None
     current_name = ""
+    cast_spec: dict | None = None
+    # 台本の話者の名前（語り／聞き）から、立ち絵の名前（katari／kikite）へ
+    who_art = {k: Path(str(v.get("image", ""))).stem or k
+               for k, v in cfg.get("cast", {}).items()}
     too_fast: list[tuple[int, str, float]] = []
     wavs: list[Path] = []
     shots: list[tuple[Path, float]] = []      # (画像, 出す秒数)
     n = 0
     for step in steps:
+        if "cast" in step:
+            cast_spec = parse_cast(step["cast"])
+            continue
         if "screen" in step:
             current_name = step["screen"]
             p = screens_dir / (current_name + ".png")
@@ -157,9 +197,43 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         wav.write_bytes(tts.synth(cfg["engine_url"], step["text"], style_id, **params))
         wavs.append(wav)
         sec = wav_seconds(wav) + gap
-        shot = work / "{:03d}.png".format(n)
-        caption(current, step["text"]).save(shot)
-        shots.append((shot, sec))
+        # 中間の画像は JPEG。PNG は 1枚 0.59 秒かかるが JPEG なら 0.04 秒。
+        # 最後に H.264 にするので、この段階の劣化は見えない（2026-10-07 実測）
+        art = who_art.get(step["who"], "")
+        speaking = bool(cast_spec) and cast_spec["who"] == art
+        # 立ち絵が出ているぶん、字幕が使える幅を狭める
+        room = 0
+        if cast_spec:
+            ch = cast.load(cast_spec["who"], cast_spec["mood"], cast_spec["height"], "bust")
+            room = (ch.width + 80) if ch is not None else 0
+        if speaking:
+            mood_name = cast_spec["who"] + (
+                "_" + cast_spec["mood"] if cast_spec["mood"] else "")
+            # もともと口が開いている表情は動かせないので、1枚で済ませる
+            speaking = lipsync.can_move(mood_name)
+        if speaking:
+            # 声に合わせて口を動かす。同じ開き具合が続くところはまとめるので、
+            # 作る画像は3枚（閉じ・半分・開き）で済む
+            made: dict[float, Path] = {}
+            for amt, dur in lipsync.runs(lipsync.levels(wav)):
+                if amt not in made:
+                    p = work / "{:03d}_{:.0f}.jpg".format(n, amt * 100)
+                    caption(put_cast(current, cast_spec, amt),
+                            step["text"], side_room=room).save(p, quality=93)
+                    made[amt] = p
+                shots.append((made[amt], dur))
+            # 行と行のあいだの無音ぶんは、口を閉じたコマで埋める
+            if 0.0 not in made:
+                p = work / "{:03d}_sil.jpg".format(n)
+                caption(put_cast(current, cast_spec, 0.0),
+                        step["text"], side_room=room).save(p, quality=93)
+                made[0.0] = p
+            shots.append((made[0.0], gap))
+        else:
+            shot = work / "{:03d}.jpg".format(n)
+            frame = put_cast(current, cast_spec) if cast_spec else current
+            caption(frame, step["text"], side_room=room).save(shot, quality=93)
+            shots.append((shot, sec))
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。
         # これを超えると、聞けても読めない（読み終わる前に次へ行く）。
         cps = len(step["text"]) / sec if sec else 0
@@ -186,8 +260,10 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         fh.write("file '{}'\n".format(shots[-1][0].as_posix()))   # 最後は1回多く要る
 
     out.parent.mkdir(parents=True, exist_ok=True)
+    # preset は veryfast。medium（45分）より速く（29分）、しかも容量が小さい
     cmd = [ffmpeg(), "-y", "-f", "concat", "-safe", "0", "-i", str(lst),
-           "-i", str(voice), "-c:v", "libx264", "-pix_fmt", "yuv420p",
+           "-i", str(voice), "-c:v", "libx264", "-preset", "veryfast",
+           "-pix_fmt", "yuv420p",
            "-r", str(FPS), "-c:a", "aac", "-b:a", "192k", "-shortest", str(out)]
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0:

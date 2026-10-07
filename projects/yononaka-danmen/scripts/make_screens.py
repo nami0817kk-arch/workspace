@@ -86,12 +86,12 @@ def main() -> int:
         im = place(texture.finish(panel.convert("RGB"), "panel").convert("RGBA"), bg)
         texture.finish(im.convert("RGB"), "screen").save(OUT / "s{:02d}.png".format(i))
 
-    # ④ 聞き手が割り込む（最後の書き込みの画面に重ねる）
-    #    立ち絵の場所を空けるため、この画面だけ板を縮めて左に寄せる
+    # ④ 聞き手が割り込むときの画面。**立ち絵は入れない**。
+    #    口を動かすために、立ち絵は動画を作るときに重ねる（danmen/movie.py）。
+    #    ここでは板を縮めて左に寄せ、右に立ち絵の場所を空けるだけ。
     base = place(marked[-1].convert("RGBA"), bg, width=1360, align="left")
-    im = talk.aside(base, dict(who="kikite", mood="odoroki", height=360,
-                               say="え、半分近くが税金なんですか"))
-    texture.finish(im, "screen").save(OUT / "s{:02d}.png".format(len(frames) + 1))
+    texture.finish(base.convert("RGB"), "screen").save(
+        OUT / "s{:02d}.png".format(len(frames) + 1))
 
     print("画面 {} 枚を書き出しました: {}".format(len(frames) + 1, OUT))
     return 0
