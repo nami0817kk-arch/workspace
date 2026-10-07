@@ -27,6 +27,8 @@ def missing_assets(script, assets: Path) -> list[str]:
         fig = json.loads(line.figure) if getattr(line, "figure", None) else {}
         if fig.get("type") == "versus":                        # 左右比べの絵（10-07）
             used.update(str(fig[k]["image"]) for k in ("left", "right") if fig.get(k, {}).get("image"))
+        if getattr(line, "detail", None):                      # 絵の一部を大きく（10-07）
+            used.add(json.loads(line.detail)["image"])
     return sorted(p for p in used if not (assets / p).exists())
 
 
@@ -119,6 +121,11 @@ def episode(script) -> tuple[list[str], list[str]]:
     for l in script.lines:
         if l.bubble and (l.portrait is None or l.figure):
             warns.append(f"{l.index + 1}行目：吹き出しは肖像が出ているときだけ出ます（いまは出ません）")
+    for l in script.lines:
+        if getattr(l, "detail", None) and l.icon:
+            warns.append(f"{l.index + 1}行目：絵の一部（detail）と挿絵（icon）が同じ行にあります（挿絵は出ません）")
+        if getattr(l, "mark", None) and not getattr(l, "detail", None) and not l.figure and l.portrait is None                 and (l.icon or l.background is None):
+            warns.append(f"{l.index + 1}行目：赤ペン（mark）を乗せる絵・図がありません（出ません）")
     for name in sorted({l.icon for l in script.lines if l.icon}):
         if name not in extras.known_icons():
             errors.append(f"挿絵の名前が分かりません: {name}")
@@ -203,6 +210,16 @@ NOVELTY_MAX_SEC = 20.0   # 20秒に1回は新しいもの（絵・札・図・�
 HOST_SHARE_MAX = 0.70    # 剣崎の字数の割合（10-07 の5本は72〜79%で講義に近かった）
 
 
+def _new_mark(line, prev_mark) -> bool:
+    """この行で赤ペンの印が新しく足されたか（10-07。絵の一部・赤ペンも「新しいもの」と数える）。"""
+    from .pen import spec_of
+    mark = getattr(line, "mark", None)
+    if not mark or mark == prev_mark:
+        return False
+    items, start = spec_of(mark)
+    return len(items) > start
+
+
 def pacing(script) -> list[str]:
     warns = []
     def sec(l):
@@ -214,7 +231,12 @@ def pacing(script) -> list[str]:
     for l in script.lines:
         bg = l.background.image if l.background else None
         new_bg = prev is None or bg != prev.get("bg") or l.section != prev.get("sec")
-        new_thing = new_bg or (l.card is not None and l.card != prev.get("card")) or bool(l.figure and l.figure != prev.get("fig"))             or bool(getattr(l, "icon", None)) or (l.portrait is not None and l.portrait != prev.get("por"))             or bool(getattr(l, "reaction", None))
+        new_thing = (new_bg or (l.card is not None and l.card != prev.get("card"))
+                     or bool(l.figure and l.figure != prev.get("fig"))
+                     or bool(getattr(l, "icon", None)) or (l.portrait is not None and l.portrait != prev.get("por"))
+                     or bool(getattr(l, "reaction", None))
+                     or bool(getattr(l, "detail", None) and l.detail != prev.get("det"))
+                     or _new_mark(l, prev.get("mark")))
         if new_bg:
             bg_t, bg_start, reported_bg = 0.0, l, False
         if new_thing:
@@ -227,7 +249,8 @@ def pacing(script) -> list[str]:
         if nov_t > NOVELTY_MAX_SEC * 2 and not reported_nov:
             warns.append(f"{nov_start.index + 1}行目から{NOVELTY_MAX_SEC * 2:.0f}秒以上、画面に新しいものが出ません（札・図・挿絵・絵）")
             reported_nov = True
-        prev = {"bg": bg, "sec": l.section, "card": l.card, "fig": l.figure, "por": l.portrait}
+        prev = {"bg": bg, "sec": l.section, "card": l.card, "fig": l.figure, "por": l.portrait,
+                "det": getattr(l, "detail", None), "mark": getattr(l, "mark", None)}
     total = sum(len(display_text(l.text)) for l in script.lines) or 1
     host = sum(len(display_text(l.text)) for l in script.lines if l.speaker == "語り")
     if host / total > HOST_SHARE_MAX:

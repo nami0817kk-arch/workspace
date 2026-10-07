@@ -139,6 +139,8 @@ def draw_compare(painter, img: Image.Image, spec: dict, t: float = 1.0) -> None:
         dr = ImageDraw.Draw(img, "RGBA")
         dr.rectangle([x0, ay0, x0 + w, ay0 + ph], outline=GOLD, width=4)
         dr.text((x0 + w / 2, ay0 + ph + 34), name, font=nf, fill=INK, anchor="mm")
+        from .figures import note_item
+        note_item(i, (x0, ay0, x0 + w, ay0 + ph))
         if note:
             dr.text((x0 + w / 2, ay0 + ph + 76), note, font=sf, fill=(110, 90, 60), anchor="mm")
 
@@ -165,12 +167,17 @@ def draw_money(painter, img: Image.Image, spec: dict, t: float = 1.0) -> None:
     lf = painter.font("gothic", 32)
     dr.text((cx, ay0 + 40), "当時", font=lf, fill=(110, 90, 60), anchor="mm")
     dr.text((cx, ay0 + 115), spec["then"], font=painter.font("serif", 84, bold=True), fill=INK, anchor="mm")
+    from .figures import note_item
+    tw = painter.font("serif", 84, bold=True).getlength(spec["then"])
+    note_item(0, (cx - tw / 2, ay0 + 70, cx + tw / 2, ay0 + 160))
     ay = ay0 + 190
     dr.polygon([(cx - 46, ay), (cx + 46, ay), (cx, ay + 50)], fill=GOLD)
     dr.text((cx, ay0 + 290), "今の円で", font=lf, fill=(110, 90, 60), anchor="mm")
     yen = float(spec["yen"]) * (e if t < 1 else 1.0)
     dr.text((cx, ay0 + 385), format_yen(yen) if yen >= 1 else "　", font=painter.font("serif", 120, bold=True),
             fill=(176, 40, 30), anchor="mm")
+    yw = painter.font("serif", 120, bold=True).getlength(format_yen(float(spec["yen"])))
+    note_item(1, (cx - yw / 2, ay0 + 320, cx + yw / 2, ay0 + 450))
     if t >= 1:
         bf = painter.font("gothic", 26)
         dr.text((cx, ay1 - 10), f"※{spec['basis']}", font=bf, fill=(110, 90, 60), anchor="ms")

@@ -33,6 +33,11 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
 4. `python -m chiso.cli check scripts/x.yaml`：素材・まとめの節・次回・サムネ・図・長さ。× があれば直す
 5. `python -m chiso.cli draft scripts/x.yaml --lines 40` で冒頭だけの確認用（約5分で作れる）→ コマを抜いて重なりを見る
 6. `python -m chiso.cli draft scripts/x.yaml` で全体の確認用（約30分）。**見せる前にコマを抜いて確かめる**
+   - **コマを抜いて確かめる＝`python -m chiso.cli qc scripts/x.yaml [--video out/x_draft.mp4]`**（10-07。35分の動画で約3分）。
+     20秒ごとの一覧を節ごとの段で `out/x_qc.png` に出すので、**画像を開いて目で見る**（重なり・はみ出し・同じ絵の続き）。
+     `out/x_qc.md` の「画面が大きく変わらない区間」で40秒超えがあれば、その節に絵を足すか `detail:`（絵の一部を大きく）・
+     `mark:`（赤ペン）・札・図を入れて直す。字幕と長さの差（次回予告の12秒のほか）・音の大きさ（-14 LUFS 前後）・長い無音も見る。
+     build のあとの本番（`out/x.mp4`）にも同じく回してから見せる
 7. **台本のユーザー確認は不要**（10-05 ユーザー「今後台本確認は不要です」）。代わりに自分で何回も確かめる：
    事実（前半・後半）・流れとキャラ・読み（kana）を Agent で並べて確認 → 直す → 直した所の確認 → 最後の通し確認で
    「公開してよい水準」が出たら approve。確認の記録は dev/output/rekishi-chiso/review/ に残す
