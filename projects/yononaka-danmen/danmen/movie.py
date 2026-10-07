@@ -29,6 +29,7 @@ import sys
 import urllib.parse
 import urllib.request
 import wave
+from array import array
 from pathlib import Path
 
 import yaml
@@ -36,7 +37,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from danmen import typo
 
-from danmen import cast, tts
+from danmen import cast, sfx, tts
 
 W, H = 1920, 1080
 FONT_PATH = "C:/Windows/Fonts/NotoSansJP-VF.ttf"
@@ -286,6 +287,9 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
     current: Image.Image | None = None
     current_name = ""
     cast_spec: dict | None = None
+    cues: list[dict] = []          # 効果音を置くための、行ごとの時刻
+    at = 0.0                       # いまの時刻（秒）
+    screen_changed = True          # 直前に画面が変わったか
     # 台本の話者の名前（語り／聞き）から、立ち絵の名前（katari／kikite）へ
     who_art = {k: Path(str(v.get("image", ""))).stem or k
                for k, v in cfg.get("cast", {}).items()}
@@ -305,6 +309,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
             current = Image.open(p).convert("RGB")
             if current.size != (W, H):
                 current = current.resize((W, H), Image.LANCZOS)
+            screen_changed = True
             continue
         if current is None:
             raise SystemExit("最初の話者の行より前に screen: がありません")
@@ -333,6 +338,10 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
             frame = current
         caption(frame, step["text"], side_room=room).save(shot, quality=93)
         shots.append((shot, sec))
+        cues.append({"start": at, "screen_changed": screen_changed,
+                     "who": step["who"], "tone": step["tone"]})
+        at += sec
+        screen_changed = False
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。
         # これを超えると、聞けても読めない（読み終わる前に次へ行く）。
         cps = len(step["text"]) / sec if sec else 0
@@ -349,6 +358,20 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
     # 音声をつなぐ
     voice = work / "voice.wav"
     tts.join_wavs(wavs, voice, gap_sec=gap)
+    # 効果音を重ねる。**BGM は入れない。** 画面が変わるところと、
+    # 聞き手が驚くところにだけ、声よりずっと小さく置く
+    evs = sfx.events(cues)
+    if evs:
+        with wave.open(str(voice), "rb") as w:
+            params = w.getparams()
+            data = w.readframes(w.getnframes())
+        a = array("h")
+        a.frombytes(data)
+        a = sfx.overlay(a, params.framerate, params.nchannels, evs)
+        with wave.open(str(voice), "wb") as w:
+            w.setparams(params)
+            w.writeframes(a.tobytes())
+        print("  効果音 {} か所（画面の変わり目と、聞き手の驚き）".format(len(evs)))
 
     # 画像の並びを ffmpeg の concat で渡す
     lst = work / "list.txt"
