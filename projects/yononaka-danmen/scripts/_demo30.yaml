@@ -1,6 +1,6 @@
 # 試作30秒。節02「一の断面」の冒頭だけ。
 # `screen:` の行で画面を切り替え、`cast:` の行で立ち絵を出す。
-# 立ち絵を出した人がしゃべると、口が声に合わせて動く。
+# しゃべっている人は、縁がうっすら光る。
 title: ガソリンはなぜ高いのか（試作30秒）
 sections:
   - id: "02"
@@ -10,7 +10,7 @@ sections:
       - 語り: レギュラーガソリン、1リットル175円。
       - screen: s06
       - 語り: このうち、ガソリンそのものの値段は92円です。
-      - cast: kikite nattoku right 380
+      - cast: kikite odoroki right 380
       - 聞き(強): え、半分くらいしかないんですか。
       - cast: なし
       - screen: s08
@@ -21,7 +21,7 @@ sections:
       - 語り(抑): この上乗せは、1974年に、2年だけという約束で始まりました。
       - 聞き: 2年だけ、ですか。
       - screen: s14
-      - cast: kikite nattoku right 380
+      - cast: kikite odoroki right 380
       - 聞き: え、半分近くが税金なんですか。
       - cast: なし
       - screen: s13
