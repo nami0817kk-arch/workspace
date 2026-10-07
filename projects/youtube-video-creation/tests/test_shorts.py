@@ -1444,3 +1444,18 @@ def test_取材メモのショート用の写真は台本の頭に渡る():
     from src import research
     import inspect
     assert '"short_photo"' in inspect.getsource(research)
+
+
+def test_本編にだけ出す行はショートに入らない():
+    """2026-10-07 久保の回。本編で前置きした人の名前の反応が、ショートに説明なしで出た"""
+    text = ("---\ntitle: T\n---\n\n## オープニング\n\nキャスター: 題です。\n\n"
+            "## 山場\n\nキャスター: 本題の一行です。\n"
+            "ネット民: 本編だけの反応です。\n  only: main\n"
+            "ネット民: どちらにも出る反応です。\n")
+    script = parse_script(text)
+    main_texts = [l.text for sc in script.scenes for l in sc.lines]
+    assert "本編だけの反応です。" in main_texts
+    short = trim(script)
+    short_texts = [l.text for sc in short.scenes for l in sc.lines]
+    assert "本編だけの反応です。" not in short_texts
+    assert "どちらにも出る反応です。" in short_texts
