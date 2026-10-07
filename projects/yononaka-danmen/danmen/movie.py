@@ -4,8 +4,10 @@
 台本（YAML）の行を上から読み、
 
   ・`screen:` の行  … ここから出す画面を切り替える（画像の名前）
-  ・`cast:` の行    … ここから立ち絵を出す（「kikite odoroki right 430」の形。
-                      「なし」で消す）
+  ・`cast:` の行    … 立ち絵の出し方を決める。
+                      `auto` … そのあとずっと、**しゃべっている人**の立ち絵を出す
+                      `kikite odoroki right 380` … その人を固定で出す
+                      `なし` … 消す
   ・話者の行        … 読み上げて、その長さだけ画面を出す。字幕も焼く
 
 行ごとに声を作って**長さを測る**ので、画面の切り替えは語りに合う。
@@ -89,15 +91,37 @@ def read_script(path: Path) -> list[dict]:
     return out
 
 
+# 行の強さから表情を決める。**語り手と聞き手で意味が違う。**
+# 語り手の「強」は力をこめて話すこと、聞き手の「強」は驚くこと。
+AUTO_MOOD = {
+    "katari": {"ふつう": "setsumei", "強": "shinken", "特強": "shinken", "抑": ""},
+    "kikite": {"ふつう": "", "強": "odoroki", "特強": "odoroki", "抑": "nattoku"},
+}
+
+
+def auto_mood(art: str, tone: str) -> str:
+    """その人の、その強さに合う表情。無ければ素の顔。"""
+    return AUTO_MOOD.get(art, {}).get(tone, "")
+
+
 def parse_cast(text: str) -> dict | None:
-    """「kikite odoroki right 430」を読む。「なし」なら立ち絵を消す。"""
+    """立ち絵の出し方を読む。
+
+    `auto` … しゃべっている人を自動で出す（表情は行の強さから決める）
+    `kikite odoroki right 380` … その人を固定で出す
+    `なし` … 消す
+    """
     t = text.split()
     if not t or t[0] in ("なし", "none", "-"):
         return None
+    if t[0] in ("auto", "自動"):
+        return {"auto": True,
+                "side": (t[1] if len(t) > 1 else "right"),
+                "height": int(t[2]) if len(t) > 2 else 400}
     return {"who": t[0],
             "mood": (t[1] if len(t) > 1 and t[1] != "-" else ""),
             "side": (t[2] if len(t) > 2 else "right"),
-            "height": int(t[3]) if len(t) > 3 else 430}
+            "height": int(t[3]) if len(t) > 3 else 400}
 
 
 def put_cast(base: Image.Image, spec: dict, speaking: bool = False) -> Image.Image:
@@ -211,14 +235,23 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         # 中間の画像は JPEG。PNG は 1枚 0.59 秒かかるが JPEG なら 0.04 秒。
         # 最後に H.264 にするので、この段階の劣化は見えない（2026-10-07 実測）
         art = who_art.get(step["who"], "")
-        speaking = bool(cast_spec) and cast_spec["who"] == art
+        # auto なら、この行をしゃべっている人の立ち絵にする
+        here = cast_spec
+        if cast_spec and cast_spec.get("auto"):
+            if not art:
+                here = None
+            else:
+                here = {"who": art,
+                        "mood": auto_mood(art, step["tone"]),
+                        "side": cast_spec["side"],
+                        "height": cast_spec["height"]}
         # 立ち絵が出ているぶん、字幕が使える幅を狭める
         room = 0
-        if cast_spec:
-            ch = cast.load(cast_spec["who"], cast_spec["mood"], cast_spec["height"], "bust")
+        if here:
+            ch = cast.load(here["who"], here["mood"], here["height"], "bust")
             room = (ch.width + 80) if ch is not None else 0
         shot = work / "{:03d}.jpg".format(n)
-        frame = put_cast(current, cast_spec, speaking) if cast_spec else current
+        frame = put_cast(current, here, True) if here else current
         caption(frame, step["text"], side_room=room).save(shot, quality=93)
         shots.append((shot, sec))
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。

@@ -23,18 +23,21 @@ W, H = 1920, 1080
 SAFE_BOTTOM = 250            # 字幕のために空ける
 
 
-def place(panel: Image.Image, bg: Image.Image, width: int = 1850,
-          align: str = "center") -> Image.Image:
-    """板を背景の上に、字幕の場所を避けて置く。
+def place(panel: Image.Image, bg: Image.Image, width: int = 1430,
+          align: str = "left") -> Image.Image:
+    """板を背景の上に、**字幕と立ち絵の場所を避けて**置く。
 
-    align が left のときは左に寄せる（右に立ち絵を置く画面で使う）。
+    立ち絵は右下に常に出る（`cast: auto`）ので、板は左に寄せて幅を抑える。
+    中央に置いて画面いっぱいに広げると、板の右下（出典）が立ち絵に隠れた
+    （2026-10-08）。
     """
     out = bg.copy()
-    room_h = H - SAFE_BOTTOM - 40
+    # 立ち絵（右下）と字幕（下）の場所を空けるため、板は上に寄せる
+    room_h = H - SAFE_BOTTOM - 110
     s = min(width / panel.width, room_h / panel.height, 1.0)
     p = panel.resize((int(panel.width * s), int(panel.height * s)), Image.LANCZOS)
-    x = 20 if align == "left" else (W - p.width) // 2
-    out.alpha_composite(p.convert("RGBA"), (x, 24 + (room_h - p.height) // 2))
+    x = 40 if align == "left" else (W - p.width) // 2
+    out.alpha_composite(p.convert("RGBA"), (x, 10 + (room_h - p.height) // 2))
     return out
 
 
@@ -89,7 +92,7 @@ def main() -> int:
     # ④ 聞き手が割り込むときの画面。**立ち絵は入れない**。
     #    口を動かすために、立ち絵は動画を作るときに重ねる（danmen/movie.py）。
     #    ここでは板を縮めて左に寄せ、右に立ち絵の場所を空けるだけ。
-    base = place(marked[-1].convert("RGBA"), bg, width=1360, align="left")
+    base = place(marked[-1].convert("RGBA"), bg)
     texture.finish(base.convert("RGB"), "screen").save(
         OUT / "s{:02d}.png".format(len(frames) + 1))
 
