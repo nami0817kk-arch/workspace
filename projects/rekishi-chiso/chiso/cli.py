@@ -202,7 +202,7 @@ def encode(items, audio: Path, target: Path, fps: int) -> None:
            "-r", str(fps), "-c:v", "libx264", "-tune", "stillimage", "-preset", "medium", "-crf", "20",
            "-g", str(fps * 2),                                   # 2秒ごとにキーフレーム（シークしやすい）
            "-pix_fmt", "yuv420p",
-           "-af", "loudnorm=I=-14:TP=-1.5:LRA=11",               # YouTube の基準の大きさに揃える
+           "-af", video.loudnorm_filter(ffmpeg(), audio),        # YouTube の基準の大きさに揃える（2回に分けて）
            "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
            "-movflags", "+faststart",                            # 読み込みの途中から再生できる形
            "-shortest", str(target)]

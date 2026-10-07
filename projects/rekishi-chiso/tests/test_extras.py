@@ -43,3 +43,10 @@ def test_still_background_has_no_motion():
     assert "t+" not in f and "eval=frame" not in f
     assert f.startswith("scale=1920:1080")
     assert "eval=frame" in video.motion_filter("in", 12.0, (1920, 1080))
+
+
+def test_loudnorm_filter_falls_back_when_not_measurable(tmp_path):
+    """測れないとき（ffmpeg が無い・壊れた音）は、1回で掛ける形に戻る。"""
+    from chiso import video
+    f = video.loudnorm_filter("ffmpeg-does-not-exist", tmp_path / "none.wav")
+    assert f.startswith("loudnorm=" + video.LOUD)
