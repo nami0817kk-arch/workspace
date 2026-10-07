@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-"""ニュース番組の「画面の作法」、さらに5つ。
+"""ニュース番組の「画面の作法」、さらに4つ。
 
     poll     … 世論調査の結果。横棒と大きな％
     recap    … ここまでのおさらい。節の切れ目に挟む
-    sources  … 出典のまとめ。節の終わりと動画の終わりに出す
     live     … 中継風。実写の上に「現地」の札と地名・日時
     versus   … 左右の全画面比べ。日本と世界を並べる
 
@@ -151,32 +150,6 @@ def recap(spec: dict) -> Image.Image:
     return im.convert("RGB")
 
 
-def sources(spec: dict) -> Image.Image:
-    """出典のまとめ。節の終わりと動画の終わりに出す。このチャンネルの作法の核。"""
-    im = _bg(spec, dark=0.22, blur=10)
-    d = _head(im, str(spec.get("title", "この節で使った出典")),
-              str(spec.get("note", "数字はすべて原典にあたって確かめています")))
-    items = spec.get("items", [])[:6]
-    y = max(240, int((H - len(items) * 118) / 2))
-    for it in items:
-        name = str(it.get("name", ""))
-        where = str(it.get("where", ""))
-        when = str(it.get("when", ""))
-        d.rectangle([150, y + 6, 160, y + 62], fill=GOLD)
-        d.text((190, y), name, font=F(36, 900), fill="white")
-        if where:
-            d.text((194, y + 50), where, font=F(27, 700), fill="#C8D3E4")
-        if when:
-            wf = F(26, 700)
-            d.text((W - d.textlength(when, font=wf) - 150, y + 12), when, font=wf, fill="#9FB0C9")
-        y += 118
-    tail = str(spec.get("tail", ""))
-    if tail:
-        tf = F(26, 700)
-        d.text((150, H - 110), tail, font=tf, fill="#9FB0C9")
-    return im.convert("RGB")
-
-
 def live(spec: dict) -> Image.Image:
     """中継風。実写の上に「現地」の札と地名・日時。撮った場所と日を必ず書く。"""
     im = _bg(spec, dark=0.72, blur=0)
@@ -290,7 +263,7 @@ def versus(spec: dict) -> Image.Image:
     return im.convert("RGB")
 
 
-KINDS = {"poll": poll, "recap": recap, "sources": sources, "live": live, "versus": versus}
+KINDS = {"poll": poll, "recap": recap, "live": live, "versus": versus}
 
 
 def draw(spec: dict, out: Path) -> Path:
