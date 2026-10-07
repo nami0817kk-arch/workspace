@@ -24,7 +24,7 @@ from danmen.news import (AMBER_D, AMBER_L, BLUE_D, BLUE_L, GOLD, GRAY_D, GRAY_L,
 UNIT = re.compile(r"(\d+(?:[,.]\d+)*)|([^\d]+)")
 GREEN = (16, 140, 118)
 RED = (196, 48, 42)
-AMBER = (196, 122, 10)
+AMBER = (164, 102, 8)        # 文字用。塗りより濃い（白地で 4.6:1）
 
 
 def _text_w(text: str, size: int) -> float:

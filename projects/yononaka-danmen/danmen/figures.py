@@ -93,7 +93,9 @@ def stack(fig: dict) -> Image.Image:
         d.rounded_rectangle([x, y + 8, x + max(bw, 6), y + 84], radius=8, fill=col)
         label, f = str(it["label"]), F(typo.BODY)
         if d.textlength(label, font=f) + 36 <= bw:
-            d.text((x + 18, y + 26), label, font=f, fill="white")
+            # 琥珀の棒のうえは白が浮きにくいので、細い縁で担保する
+            d.text((x + 18, y + 26), label, font=f, fill="white",
+                   stroke_width=3, stroke_fill=(32, 24, 6))
         else:
             d.text((x + max(bw, 6) + 16, y + 26), label, font=f, fill=col)
         note, nf = str(it.get("note", "")), F(typo.VALUE)
@@ -172,9 +174,11 @@ def flow(fig: dict) -> Image.Image:
         ic = _icon(str(it.get("icon", "")), 60)
         if ic:
             im.alpha_composite(ic, (x + 20, y + 10))
-            d.text((x + 20, y + 88), str(it["label"]), font=F(typo.BODY), fill="white")
+            d.text((x + 20, y + 88), str(it["label"]), font=F(typo.BODY), fill="white",
+                   stroke_width=3, stroke_fill=(16, 20, 28))
         else:
-            d.text((x + 20, y + 52), str(it["label"]), font=F(typo.BODY), fill="white")
+            d.text((x + 20, y + 52), str(it["label"]), font=F(typo.BODY), fill="white",
+                   stroke_width=3, stroke_fill=(16, 20, 28))
         _note(d, str(it.get("note", "")), x, y + 170)
         if i < n - 1:
             ax = x + bw + 16
