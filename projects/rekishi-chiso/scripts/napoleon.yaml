@@ -3,6 +3,26 @@
 # 年齢は満。お金には換算しない。戦争・処刑は事実だけを短く（言い換えは下調べの8章）。現代の人物と比べない。
 title: ナポレオンは本当に背の低い独裁者だったのか｜「小男」の姿は、誰が作ったか
 series: ""
+# 再生リスト（本編・ショート）と英語の題名・説明（10-08 ユーザー OK。案は research/en_titles.md）
+playlists: [世界史を掘る（聞き流し）]
+shorts_playlists: [世界史ショート]
+en:
+  title: "Napoleon: Was He Really a Short Dictator? | Who Created the \"Little Man\"?"
+  description: |-
+    Napoleon was about 168 cm tall, about average or a little above for a Frenchman of his day. The image of the short, hot-tempered "Little Boney" grew from British caricatures by James Gillray, a measurement of "5 pieds 2 pouces" read as English feet and inches, and the phrase "Napoleon complex," which a 1928 article used for ambitious businessmen.
+    But the dictator side is half true: he silenced the newspapers and restored slavery in the colonies. We follow his life from Corsica to Saint Helena, and peel away both the "little man" made by his enemies and the hero made by himself and later generations.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "The Surface: The Short Dictator"
+    - The Boy from Corsica
+    - The Young General Who Rose by Cannon
+    - Egypt and the Coup
+    - The Emperor and What He Left Behind
+    - The Face of a Dictator
+    - Russia and the Hundred Days
+    - Saint Helena and the Cause of Death
+    - The Truth About His Height
+    - "Verdict: Who Made the \"Little Man\"?"
 timeline:
   start: 1760
   end: 1940

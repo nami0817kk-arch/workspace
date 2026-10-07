@@ -2,6 +2,24 @@
 # 事実の出どころは末尾の「事実の控え」（10-04 の確認で作った）。数字はそこにあるものだけを使う。
 title: マリー・アントワネットは本当に悪女だったのか｜「パンがなければ」と言わなかった王妃の37年
 series: 悪女と呼ばれた女たち
+# 再生リスト（本編・ショート）と英語の題名・説明（10-08 ユーザー OK。案は research/en_titles.md）
+playlists: [世界史を掘る（聞き流し）, 悪女と呼ばれた女たち]
+shorts_playlists: [世界史ショート]
+en:
+  title: "Marie Antoinette: Was She Really a Villain? | The Queen Who Never Said \"Let Them Eat Cake\""
+  description: |-
+    No record shows that Marie Antoinette ever said "Let them eat cake." A similar line first appears in Rousseau's Confessions, spoken by "a woman of high rank" — written when Marie Antoinette was a child of under ten in Vienna.
+    We follow her 37 years, from Vienna to the French throne and the guillotine, including the Diamond Necklace Affair, in which she bought nothing at all. And why did public anger fall on her rather than the king? Visible luxury, her Austrian origins, cheap pamphlets and caricatures, and a king who was hard to blame directly.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - She Never Said Those Words
+    - The Youngest Daughter of Vienna
+    - A Bride at 14
+    - The Queen's Little Palace
+    - The Diamond Necklace Affair
+    - Revolution and Flight
+    - The Final Year
+    - "Verdict: Why Did the Hatred Fall on the Queen?"
 timeline:
   start: 1755
   end: 1793

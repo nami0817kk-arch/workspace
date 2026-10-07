@@ -3,6 +3,25 @@
 # お金には換算しない（隻・人・回・年で言い換える）。人物の回ではないので、肖像の年齢は出さない。
 title: 江戸時代の日本は本当に国を閉ざしていたのか｜「鎖国」という言葉は、いつ生まれたか
 series: ""
+# 再生リスト（本編・ショート）と英語の題名・説明（10-08 ユーザー OK。案は research/en_titles.md）
+playlists: [日本史を掘る（聞き流し）]
+shorts_playlists: [日本史ショート]
+en:
+  title: "Did Edo Japan Really Close Itself Off? | When the Word \"Sakoku\" Was Born"
+  description: |-
+    Edo Japan is said to have closed itself off from the world for more than 200 years. Yet in one year over 190 Chinese ships came to Nagasaki, Korean embassies marched all the way to Edo, and news from abroad arrived every year. Japan kept contact with the Dutch, China, Korea, Ryukyu and the Ainu through four gateways.
+    The word "sakoku" itself did not exist at first. It was coined in 1801, when former Dutch interpreter Shizuki Tadao translated an essay by Engelbert Kaempfer. We follow how the word took hold, and how a 2017 draft of Japan's curriculum guidelines proposed replacing it.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "The Surface: Japan Closed Itself Off"
+    - There Was No "Closed Country Edict"
+    - Dejima and the Chinese Quarter in Nagasaki
+    - Tsushima, Satsuma and Matsumae
+    - Embassies Marching to Edo
+    - The World News That Still Arrived
+    - Ships at the Door, and the "Opening"
+    - Not Only Japan
+    - "Verdict: When Was the Word \"Sakoku\" Born?"
 timeline:
   start: 1600
   end: 1870

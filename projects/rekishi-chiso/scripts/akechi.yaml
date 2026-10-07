@@ -4,6 +4,25 @@
 # 広告の点：本能寺・最期・処刑は事実だけを短く。首・刺した等の描写はしない。燃える寺は遠景の絵。
 title: 「敵は本能寺にあり」明智光秀は本当に言ったのか｜その一言は、誰の言葉か
 series: ""
+# 再生リスト（本編・ショート）と英語の題名・説明（10-08 ユーザー OK。案は research/en_titles.md）
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+en:
+  title: "Akechi Mitsuhide: Did He Really Say \"The Enemy Is at Honnō-ji\"? | Whose Words Were They?"
+  description: |-
+    In 1582, Akechi Mitsuhide attacked his lord Oda Nobunaga at Honnō-ji in Kyoto. His famous line, "The enemy is at Honnō-ji," appears in no record from the time, and one of his own soldiers later wrote that he thought they were going after Tokugawa Ieyasu.
+    We trace Mitsuhide's rise from obscure origins to a daimyo of 340,000 koku, his 11 days after the coup, and how the line first appeared about 60 years later in Hayashi Razan's biography of Nobunaga before becoming a stock phrase through Rai San'yō's Nihon Gaishi (1827).
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "The Surface: \"The Enemy Is at Honnō-ji\""
+    - The Unrecorded Early Years
+    - Two Masters
+    - Five Years in Tanba and "the Honor of the Realm"
+    - The Morning of Honnō-ji
+    - Digging into the Motive
+    - The 11-Day Reign
+    - The Tenkai Theory and the "Good Lord" Legend
+    - "Verdict: Whose Words Were They?"
 timeline:
   start: 1550
   end: 1840
