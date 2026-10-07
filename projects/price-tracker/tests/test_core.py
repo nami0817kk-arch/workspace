@@ -1255,3 +1255,42 @@ class 語の絞り込みTest(unittest.TestCase):
             prefix="../../", terms=[("インク", 0)])
 
         self.assertNotIn("chips", html)
+
+
+class 値上げの判定Test(unittest.TestCase):
+    """analyze.last_hike。題を「値上げ・価格推移」にする商品を決める。"""
+
+    def rec(self, prices, start=20):
+        return {"tail": [[f"2026-09-{start + i:02d}", p, 1] for i, p in enumerate(prices)]}
+
+    def test_上がったまま続いている値上げを拾う(self):
+        hike = analyze.last_hike(self.rec([4809, 4809, 4809, 4954, 4954]))
+        self.assertEqual((hike["date"], hike["from"], hike["to"]), ("2026-09-23", 4809, 4954))
+
+    def test_元の価格に戻っただけは値上げと呼ばない(self):
+        # セールで下がって戻った。上がった先が記録上いちばん高い値段ではない
+        self.assertIsNone(analyze.last_hike(self.rec([5000, 5000, 4500, 4500, 5000])))
+
+    def test_下げ戻したものは値上げと呼ばない(self):
+        self.assertIsNone(analyze.last_hike(self.rec([1000, 1000, 1000, 1100, 1010])))
+
+    def test_小さな上下は値上げと呼ばない(self):
+        self.assertIsNone(analyze.last_hike(self.rec([3025, 3025, 3025, 3064])))
+
+    def test_基準の記録が短いと値上げと呼ばない(self):
+        self.assertIsNone(analyze.last_hike(self.rec([1000, 1000, 1200])))
+
+    def test_スーパーセール終了の日までは数えない(self):
+        self.assertIsNone(analyze.last_hike(self.rec([900, 900, 900, 900, 1000], start=8)))
+
+    def test_商品ページの題と説明と本文が値上げを言う(self):
+        from src import theme
+        rec = {"last": 4954, "min": 4809, "max": 4954, "days": 5, "prev": 4954,
+               **self.rec([4809, 4809, 4809, 4954, 4954])}
+        row = {"name": "キリン 氷結 無糖 レモン 500ml", "item_code": "shop:1",
+               **analyze.evaluate(rec, 0.05, 0.02)}
+        html = theme.item_page(row, {"name": "楽天 値下がりウォッチ",
+                                     "base_url": "https://kakaku.dailyquarry.com"}, "2026-09-24")
+        self.assertIn("の値上げ・価格推移</title>", html)
+        self.assertIn("9月23日に 4,809円 → 4,954円（+145円・3.0%）に上がりました", html)
+        self.assertIn('<p class="verdict hike">', html)
