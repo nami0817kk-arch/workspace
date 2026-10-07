@@ -157,8 +157,10 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         wav.write_bytes(tts.synth(cfg["engine_url"], step["text"], style_id, **params))
         wavs.append(wav)
         sec = wav_seconds(wav) + gap
-        shot = work / "{:03d}.png".format(n)
-        caption(current, step["text"]).save(shot)
+        # 中間の画像は JPEG。PNG は 1枚 0.59 秒かかるが JPEG なら 0.04 秒。
+        # 最後に H.264 にするので、この段階の劣化は見えない（2026-10-07 実測）
+        shot = work / "{:03d}.jpg".format(n)
+        caption(current, step["text"]).save(shot, quality=93)
         shots.append((shot, sec))
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。
         # これを超えると、聞けても読めない（読み終わる前に次へ行く）。
@@ -186,8 +188,10 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         fh.write("file '{}'\n".format(shots[-1][0].as_posix()))   # 最後は1回多く要る
 
     out.parent.mkdir(parents=True, exist_ok=True)
+    # preset は veryfast。medium（45分）より速く（29分）、しかも容量が小さい
     cmd = [ffmpeg(), "-y", "-f", "concat", "-safe", "0", "-i", str(lst),
-           "-i", str(voice), "-c:v", "libx264", "-pix_fmt", "yuv420p",
+           "-i", str(voice), "-c:v", "libx264", "-preset", "veryfast",
+           "-pix_fmt", "yuv420p",
            "-r", str(FPS), "-c:a", "aac", "-b:a", "192k", "-shortest", str(out)]
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0:
