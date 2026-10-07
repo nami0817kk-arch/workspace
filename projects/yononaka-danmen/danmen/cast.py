@@ -57,26 +57,15 @@ def _file(who: str, mood: str) -> Path | None:
     return p if p.exists() else None
 
 
-def load(who: str, mood: str = "", h: int = 520, part: str = "bust",
-         mouth: float = 0.0) -> Image.Image | None:
-    """立ち絵を読む。h は切り出したあとの高さ。
-
-    `mouth` は口の開き具合（0〜1）。**切り出す前の全身の絵に対して開ける。**
-    胸から上に切ったあとだと、顔の位置の割合が変わって口がずれる
-    （2026-10-07 に実際にずれた）。
-    """
-    key = (who, mood, h, part, round(mouth, 2))
+def load(who: str, mood: str = "", h: int = 520, part: str = "bust") -> Image.Image | None:
+    """立ち絵を読む。h は切り出したあとの高さ。"""
+    key = (who, mood, h, part)
     if key in _CACHE:
         return _CACHE[key]
     p = _file(who, mood)
     if p is None:
         return None
     im = Image.open(p).convert("RGBA")
-    if mouth > 0.02:
-        from danmen import lipsync
-        mood_name = (who + "_" + mood) if mood else who
-        if lipsync.can_move(mood_name):
-            im = lipsync.open_mouth(im, who, mouth)
     frac = PARTS.get(part, 0.30)
     if frac < 1.0:
         im = im.crop((0, 0, im.width, int(im.height * frac)))

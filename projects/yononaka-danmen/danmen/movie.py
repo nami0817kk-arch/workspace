@@ -5,7 +5,7 @@
 
   ・`screen:` の行  … ここから出す画面を切り替える（画像の名前）
   ・`cast:` の行    … ここから立ち絵を出す（「kikite odoroki right 430」の形。
-                      「なし」で消す）。**しゃべっている人の口は声に合わせて動く**
+                      「なし」で消す）
   ・話者の行        … 読み上げて、その長さだけ画面を出す。字幕も焼く
 
 行ごとに声を作って**長さを測る**ので、画面の切り替えは語りに合う。
@@ -29,11 +29,11 @@ import wave
 from pathlib import Path
 
 import yaml
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 from danmen import typo
 
-from danmen import cast, lipsync, tts
+from danmen import cast, tts
 
 W, H = 1920, 1080
 FONT_PATH = "C:/Windows/Fonts/NotoSansJP-VF.ttf"
@@ -100,14 +100,25 @@ def parse_cast(text: str) -> dict | None:
             "height": int(t[3]) if len(t) > 3 else 430}
 
 
-def put_cast(base: Image.Image, spec: dict, amount: float = 0.0) -> Image.Image:
-    """画面に立ち絵を重ねる。amount は口の開き具合。"""
+def put_cast(base: Image.Image, spec: dict, speaking: bool = False) -> Image.Image:
+    """画面に立ち絵を重ねる。
+
+    **口は動かさない。** 画像処理で口を開ける方法を3通り試したが、
+    線画＋淡い彩色の絵のなかで口だけが浮いた（2026-10-07、やめた）。
+    代わりに、しゃべっている人は縁をうっすら光らせて、聞いている人と区別する。
+    """
     im = base.convert("RGBA").copy()
-    # 口を開けるのは cast.load の中（切り出す前の全身の絵に対して行う）
-    ch = cast.load(spec["who"], spec["mood"], spec["height"], "bust", mouth=amount)
+    ch = cast.load(spec["who"], spec["mood"], spec["height"], "bust")
     if ch is None:
         return im.convert("RGB")
     x = (W - 40 - ch.width) if spec["side"] != "left" else 40
+    if speaking:
+        # 縁をうっすら光らせる（誰がしゃべっているか分かるように）
+        a = ch.split()[3]
+        ring = a.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(7))
+        halo = Image.new("RGBA", ch.size, (255, 248, 226, 0))
+        halo.putalpha(ring.point(lambda v: int(v * 0.52)))
+        im.alpha_composite(halo, (x, H - 6 - ch.height))
     im.alpha_composite(ch, (x, H - 6 - ch.height))
     return im.convert("RGB")
 
@@ -206,34 +217,10 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         if cast_spec:
             ch = cast.load(cast_spec["who"], cast_spec["mood"], cast_spec["height"], "bust")
             room = (ch.width + 80) if ch is not None else 0
-        if speaking:
-            mood_name = cast_spec["who"] + (
-                "_" + cast_spec["mood"] if cast_spec["mood"] else "")
-            # もともと口が開いている表情は動かせないので、1枚で済ませる
-            speaking = lipsync.can_move(mood_name)
-        if speaking:
-            # 声に合わせて口を動かす。同じ開き具合が続くところはまとめるので、
-            # 作る画像は3枚（閉じ・半分・開き）で済む
-            made: dict[float, Path] = {}
-            for amt, dur in lipsync.runs(lipsync.levels(wav)):
-                if amt not in made:
-                    p = work / "{:03d}_{:.0f}.jpg".format(n, amt * 100)
-                    caption(put_cast(current, cast_spec, amt),
-                            step["text"], side_room=room).save(p, quality=93)
-                    made[amt] = p
-                shots.append((made[amt], dur))
-            # 行と行のあいだの無音ぶんは、口を閉じたコマで埋める
-            if 0.0 not in made:
-                p = work / "{:03d}_sil.jpg".format(n)
-                caption(put_cast(current, cast_spec, 0.0),
-                        step["text"], side_room=room).save(p, quality=93)
-                made[0.0] = p
-            shots.append((made[0.0], gap))
-        else:
-            shot = work / "{:03d}.jpg".format(n)
-            frame = put_cast(current, cast_spec) if cast_spec else current
-            caption(frame, step["text"], side_room=room).save(shot, quality=93)
-            shots.append((shot, sec))
+        shot = work / "{:03d}.jpg".format(n)
+        frame = put_cast(current, cast_spec, speaking) if cast_spec else current
+        caption(frame, step["text"], side_room=room).save(shot, quality=93)
+        shots.append((shot, sec))
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。
         # これを超えると、聞けても読めない（読み終わる前に次へ行く）。
         cps = len(step["text"]) / sec if sec else 0
