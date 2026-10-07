@@ -20,30 +20,29 @@ OUT = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
 PHOTO = str(ASSETS / "photos" / "pexels_18569250_A_contemporary_gas_station_wit.jpeg")
 
 W, H = 1920, 1080
-SAFE_BOTTOM = 250            # 字幕のために空ける
+SAFE_BOTTOM = 420            # 字幕と、左右の立ち絵のために空ける
 
 
-def place(panel: Image.Image, bg: Image.Image, width: int = 1430,
-          align: str = "left") -> Image.Image:
+def place(panel: Image.Image, bg: Image.Image, width: int = 1740,
+          align: str = "center") -> Image.Image:
     """板を背景の上に、**字幕と立ち絵の場所を避けて**置く。
 
-    立ち絵は右下に常に出る（`cast: auto`）ので、板は左に寄せて幅を抑える。
-    中央に置いて画面いっぱいに広げると、板の右下（出典）が立ち絵に隠れた
-    （2026-10-08）。
+    立ち絵は**左右の下に2人とも**出るので、板は画面の上半分に置く。
+    下 420px は字幕と立ち絵のために空ける（2026-10-08）。
     """
     out = bg.copy()
     # 立ち絵（右下）と字幕（下）の場所を空けるため、板は上に寄せる
-    room_h = H - SAFE_BOTTOM - 110
+    room_h = H - SAFE_BOTTOM - 30
     s = min(width / panel.width, room_h / panel.height, 1.0)
     p = panel.resize((int(panel.width * s), int(panel.height * s)), Image.LANCZOS)
     x = 40 if align == "left" else (W - p.width) // 2
-    out.alpha_composite(p.convert("RGBA"), (x, 10 + (room_h - p.height) // 2))
+    out.alpha_composite(p.convert("RGBA"), (x, 34 + (room_h - p.height) // 2))
     return out
 
 
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
-    bg = screens.backdrop(PHOTO, dark=0.34, blur=10).convert("RGBA")
+    bg = screens.backdrop(PHOTO, dark=0.44, blur=9).convert("RGBA")
 
     frames: list[Image.Image] = []
 

@@ -5,8 +5,8 @@
 
   ・`screen:` の行  … ここから出す画面を切り替える（画像の名前）
   ・`cast:` の行    … 立ち絵の出し方を決める。
-                      `auto` … そのあとずっと、**しゃべっている人**の立ち絵を出す
-                      `kikite odoroki right 380` … その人を固定で出す
+                      `auto` … **2人とも常に出す**（左に語り手、右に聞き手）。
+                               しゃべっている人が明るく、聞いている人は少し暗い
                       `なし` … 消す
   ・話者の行        … 読み上げて、その長さだけ画面を出す。字幕も焼く
 
@@ -31,7 +31,7 @@ import wave
 from pathlib import Path
 
 import yaml
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from danmen import typo
 
@@ -97,6 +97,9 @@ AUTO_MOOD = {
     "katari": {"ふつう": "setsumei", "強": "shinken", "特強": "shinken", "抑": ""},
     "kikite": {"ふつう": "", "強": "odoroki", "特強": "odoroki", "抑": "nattoku"},
 }
+# 画面の左右に、いつも同じ人が立つ（入れ替わらない）
+SEATS = [("left", "katari"), ("right", "kikite")]
+LISTEN_MOOD = {"katari": "", "kikite": "nattoku"}      # 聞いているときの顔
 
 
 def auto_mood(art: str, tone: str) -> str:
@@ -107,43 +110,63 @@ def auto_mood(art: str, tone: str) -> str:
 def parse_cast(text: str) -> dict | None:
     """立ち絵の出し方を読む。
 
-    `auto` … しゃべっている人を自動で出す（表情は行の強さから決める）
-    `kikite odoroki right 380` … その人を固定で出す
+    `auto` または `auto 420` … **2人とも出す**（数字は高さ、既定 400）
     `なし` … 消す
     """
     t = text.split()
     if not t or t[0] in ("なし", "none", "-"):
         return None
-    if t[0] in ("auto", "自動"):
-        return {"auto": True,
-                "side": (t[1] if len(t) > 1 else "right"),
-                "height": int(t[2]) if len(t) > 2 else 400}
-    return {"who": t[0],
-            "mood": (t[1] if len(t) > 1 and t[1] != "-" else ""),
-            "side": (t[2] if len(t) > 2 else "right"),
-            "height": int(t[3]) if len(t) > 3 else 400}
+    # 高さだけ指定できる（既定 400）。誰を出すかは SEATS で決まっている
+    h = 400
+    for a in t[1:]:
+        if a.isdigit():
+            h = int(a)
+    return {"height": h}
 
 
-def put_cast(base: Image.Image, spec: dict, speaking: bool = False) -> Image.Image:
-    """画面に立ち絵を重ねる。
+def cast_width(height: int) -> int:
+    """その高さで立ち絵を出したときの、画面の左右それぞれの占有幅。"""
+    w = 0
+    for _, who in SEATS:
+        ch = cast.load(who, "", height, "bust")
+        if ch is not None:
+            w = max(w, ch.width)
+    return w
 
-    **口は動かさない。** 画像処理で口を開ける方法を3通り試したが、
-    線画＋淡い彩色の絵のなかで口だけが浮いた（2026-10-07、やめた）。
-    代わりに、しゃべっている人は縁をうっすら光らせて、聞いている人と区別する。
+
+def put_cast(base: Image.Image, height: int, speaker: str, tone: str) -> Image.Image:
+    """画面に立ち絵を重ねる。**2人とも常に出す。**
+
+    片方だけ出すと、話者が変わるたびに画面の人が入れ替わって落ち着かない
+    （2026-10-08 ユーザー指示）。左に語り手、右に聞き手で固定し、
+    **しゃべっている人を明るく、聞いている人を少し暗く小さく**する。
+
+    口は動かさない（画像処理で開ける方法は3通り試して、どれも浮いた）。
     """
     im = base.convert("RGBA").copy()
-    ch = cast.load(spec["who"], spec["mood"], spec["height"], "bust")
-    if ch is None:
-        return im.convert("RGB")
-    x = (W - 40 - ch.width) if spec["side"] != "left" else 40
-    if speaking:
-        # 縁をうっすら光らせる（誰がしゃべっているか分かるように）
-        a = ch.split()[3]
-        ring = a.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(7))
-        halo = Image.new("RGBA", ch.size, (255, 248, 226, 0))
-        halo.putalpha(ring.point(lambda v: int(v * 0.52)))
-        im.alpha_composite(halo, (x, H - 6 - ch.height))
-    im.alpha_composite(ch, (x, H - 6 - ch.height))
+    for side, who in SEATS:
+        speaking = who == speaker
+        h = height if speaking else int(height * 0.90)
+        mood = auto_mood(who, tone) if speaking else LISTEN_MOOD.get(who, "")
+        ch = cast.load(who, mood, h, "bust")
+        if ch is None:
+            continue
+        x = 62 if side == "left" else (W - 62 - ch.width)
+        y = H - 6 - ch.height
+        if speaking:
+            # 縁をうっすら光らせる
+            a = ch.split()[3]
+            ring = a.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(7))
+            halo = Image.new("RGBA", ch.size, (255, 248, 226, 0))
+            halo.putalpha(ring.point(lambda v: int(v * 0.50)))
+            im.alpha_composite(halo, (x, y))
+        else:
+            # 聞いている人は少し暗く落とす（誰がしゃべっているかを見失わないように）
+            rgb = ImageEnhance.Brightness(ch.convert("RGB")).enhance(0.72)
+            dim = rgb.convert("RGBA")
+            dim.putalpha(ch.split()[3].point(lambda v: int(v * 0.88)))
+            ch = dim
+        im.alpha_composite(ch, (x, y))
     return im.convert("RGB")
 
 
@@ -157,18 +180,26 @@ def caption(im: Image.Image, text: str, size: int = 74,
             side_room: int = 0) -> Image.Image:
     """字幕を焼く。縁を全部描いてから本体を描く（潰れを避けるため）。
 
-    `side_room` は、立ち絵のために空ける右の幅。立ち絵が出ている画面で
+    `side_room` は、**左右それぞれ**に空ける幅。立ち絵が2人いる画面で
     字幕を画面いっぱいに書くと、字の端が立ち絵にかかる。
     """
     out = im.convert("RGB").copy()
     d = ImageDraw.Draw(out)
+    width = W - 160 - side_room * 2
+    # **3行目は捨てずに、字を小さくして2行に収める。**
+    # 2人の立ち絵で字幕の幅が狭まったとき、文末が切れていた（2026-10-08）
     f = F(size)
-    lines = _wrap(d, text, f, W - 220 - side_room)[:2]
+    lines = _wrap(d, text, f, width)
+    while len(lines) > 2 and size > 52:
+        size -= 4
+        f = F(size)
+        lines = _wrap(d, text, f, width)
+    lines = lines[:2]
     y0 = H - 60 - len(lines) * int(size * 1.34)
     # 置き場所を先に決めておく（文字ごとの x）
     place: list[tuple[str, float, float, bool]] = []
     for n, ln in enumerate(lines):
-        x = (W - side_room - d.textlength(ln, font=f)) / 2
+        x = (W - d.textlength(ln, font=f)) / 2
         y = y0 + n * int(size * 1.34)
         for part in NUM.split(ln):
             if not part:
@@ -235,23 +266,12 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         # 中間の画像は JPEG。PNG は 1枚 0.59 秒かかるが JPEG なら 0.04 秒。
         # 最後に H.264 にするので、この段階の劣化は見えない（2026-10-07 実測）
         art = who_art.get(step["who"], "")
-        # auto なら、この行をしゃべっている人の立ち絵にする
-        here = cast_spec
-        if cast_spec and cast_spec.get("auto"):
-            if not art:
-                here = None
-            else:
-                here = {"who": art,
-                        "mood": auto_mood(art, step["tone"]),
-                        "side": cast_spec["side"],
-                        "height": cast_spec["height"]}
-        # 立ち絵が出ているぶん、字幕が使える幅を狭める
-        room = 0
-        if here:
-            ch = cast.load(here["who"], here["mood"], here["height"], "bust")
-            room = (ch.width + 80) if ch is not None else 0
+        # 立ち絵が出ているぶん、字幕が使える幅を左右から狭める
+        # 立ち絵の矩形には透明な余白がある。実際の人の幅に合わせて少し詰める
+        room = int(cast_width(cast_spec["height"]) * 0.76) if cast_spec else 0
         shot = work / "{:03d}.jpg".format(n)
-        frame = put_cast(current, here, True) if here else current
+        frame = (put_cast(current, cast_spec["height"], art, step["tone"])
+                 if cast_spec else current)
         caption(frame, step["text"], side_room=room).save(shot, quality=93)
         shots.append((shot, sec))
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。
