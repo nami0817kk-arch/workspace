@@ -3846,5 +3846,41 @@
     "video_id": "kncBvArnIMo",
     "at": "2026-10-07T01:46:12+00:00",
     "publish_at": "2026-10-07T06:30:00Z"
+  },
+  {
+    "build": "20261007_finance_mancity",
+    "video_id": "CLAh4SbxtwY",
+    "at": "2026-10-07T03:27:43+00:00",
+    "publish_at": "2026-10-07T07:00:00Z"
+  },
+  {
+    "build": "20261007_finance_mancity_short",
+    "video_id": "7Bv_L9JHS-o",
+    "at": "2026-10-07T03:28:04+00:00",
+    "publish_at": "2026-10-07T07:30:00Z"
+  },
+  {
+    "build": "20261007_player_371998",
+    "video_id": "BMCGCGD0WgI",
+    "at": "2026-10-07T03:28:42+00:00",
+    "publish_at": "2026-10-07T08:00:00Z"
+  },
+  {
+    "build": "20261007_player_371998_short",
+    "video_id": "iMaedgqYKHw",
+    "at": "2026-10-07T03:29:01+00:00",
+    "publish_at": "2026-10-07T08:30:00Z"
+  },
+  {
+    "build": "20261007_record_kane",
+    "video_id": "14gC-x6X4eo",
+    "at": "2026-10-07T03:29:38+00:00",
+    "publish_at": "2026-10-07T09:00:00Z"
+  },
+  {
+    "build": "20261007_record_kane_short",
+    "video_id": "2ImSbu5-6RU",
+    "at": "2026-10-07T03:30:00+00:00",
+    "publish_at": "2026-10-07T09:30:00Z"
   }
 ]

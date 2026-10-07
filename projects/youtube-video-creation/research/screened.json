@@ -2006,5 +2006,29 @@
  "20261007_young_goldenboy_short": {
   "at": "2026-10-07T10:37:12+09:00",
   "digest": "fedacf6d7c428ff0"
+ },
+ "20261007_finance_mancity": {
+  "at": "2026-10-07T12:26:49+09:00",
+  "digest": "906439cf58db0755"
+ },
+ "20261007_finance_mancity_short": {
+  "at": "2026-10-07T12:26:51+09:00",
+  "digest": "195227fc5df67b5b"
+ },
+ "20261007_player_371998": {
+  "at": "2026-10-07T12:26:53+09:00",
+  "digest": "cd285eeeefb7ebe2"
+ },
+ "20261007_player_371998_short": {
+  "at": "2026-10-07T12:26:55+09:00",
+  "digest": "ffc41098e45dfa8a"
+ },
+ "20261007_record_kane": {
+  "at": "2026-10-07T12:26:58+09:00",
+  "digest": "2b7d053072391a0f"
+ },
+ "20261007_record_kane_short": {
+  "at": "2026-10-07T12:27:01+09:00",
+  "digest": "b4911cbdb6883a65"
  }
 }

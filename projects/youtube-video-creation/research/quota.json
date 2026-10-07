@@ -273,11 +273,11 @@
     "videoCategories.list": 1
   },
   "2026-10-06": {
-    "channels.list": 18,
-    "playlistItems.list": 18,
-    "videos.insert": 18,
-    "thumbnails.set": 18,
-    "playlistItems.insert": 9,
+    "channels.list": 24,
+    "playlistItems.list": 24,
+    "videos.insert": 24,
+    "thumbnails.set": 24,
+    "playlistItems.insert": 12,
     "playlists.insert": 1
   }
 }
