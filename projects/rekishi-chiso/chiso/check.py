@@ -18,11 +18,15 @@ CHARS_PER_SEC = 7.0     # 合成音声のおおよその速さ（字／秒）。
 
 def missing_assets(script, assets: Path) -> list[str]:
     """台本が使う絵のうち、置き場に無いもの。"""
+    import json
     used = set()
     for line in script.lines:
         for pic in (line.background, line.portrait):
             if pic is not None:
                 used.add(pic.image)
+        fig = json.loads(line.figure) if getattr(line, "figure", None) else {}
+        if fig.get("type") == "versus":                        # 左右比べの絵（10-07）
+            used.update(str(fig[k]["image"]) for k in ("left", "right") if fig.get(k, {}).get("image"))
     return sorted(p for p in used if not (assets / p).exists())
 
 
@@ -99,7 +103,8 @@ def episode(script) -> tuple[list[str], list[str]]:
     errors += e2
     warns += w2
     warns += pacing(script)
-    figs = {l.figure for l in script.lines if l.figure}
+    from .figures import base_key
+    figs = {base_key(l.figure): l.figure for l in script.lines if l.figure}.values()   # 1項目ずつ増やす図（upto）は1つと数える
     if len(figs) < MIN_FIGURES:
         warns.append(f"図（地図・グラフ・相関図）が{len(figs)}つ（{MIN_FIGURES}つ以上を推奨）")
     from . import figures
@@ -117,11 +122,26 @@ def episode(script) -> tuple[list[str], list[str]]:
     for name in sorted({l.icon for l in script.lines if l.icon}):
         if name not in extras.known_icons():
             errors.append(f"挿絵の名前が分かりません: {name}")
+    warns += reaction_rules(script)
     if not any("《" in l.text for l in script.lines):
         warns.append("《》の強調が1つもありません")
     if not script.shorts:
         warns.append("ショート（shorts:）がありません")
     return errors, warns
+
+
+def reaction_rules(script) -> list[str]:
+    """つむぎの寄り（reaction）は1本に2回まで（10-07。毎回使うと安くなる）。続けて同じ寄りを書いた行は1回と数える。"""
+    from .reaction import MAX_PER_EPISODE
+    runs, prev = [], None
+    for l in script.lines:
+        r = getattr(l, "reaction", None)
+        if r and r != prev:
+            runs.append(l.index + 1)
+        prev = r
+    if len(runs) > MAX_PER_EPISODE:
+        return [f"つむぎの寄り（reaction）が{len(runs)}回 {runs}（1本{MAX_PER_EPISODE}回まで。数字の山場だけに）"]
+    return []
 
 
 # --- 2人のキャラと会話の流れ（2026-10-04 にユーザーと決めた） ---------------------------
@@ -194,7 +214,7 @@ def pacing(script) -> list[str]:
     for l in script.lines:
         bg = l.background.image if l.background else None
         new_bg = prev is None or bg != prev.get("bg") or l.section != prev.get("sec")
-        new_thing = new_bg or (l.card is not None and l.card != prev.get("card")) or bool(l.figure and l.figure != prev.get("fig"))             or bool(getattr(l, "icon", None)) or (l.portrait is not None and l.portrait != prev.get("por"))
+        new_thing = new_bg or (l.card is not None and l.card != prev.get("card")) or bool(l.figure and l.figure != prev.get("fig"))             or bool(getattr(l, "icon", None)) or (l.portrait is not None and l.portrait != prev.get("por"))             or bool(getattr(l, "reaction", None))
         if new_bg:
             bg_t, bg_start, reported_bg = 0.0, l, False
         if new_thing:

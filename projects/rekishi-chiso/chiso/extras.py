@@ -118,11 +118,13 @@ def draw_compare(painter, img: Image.Image, spec: dict, t: float = 1.0) -> None:
     n = len(people)
     gap = 30
     w = (ax1 - ax0 - gap * (n - 1)) / n
-    shown = (0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, t)))) * n
+    from .figures import _grow
+    lo, hi = _grow(spec, n)                       # upto：先頭 hi 人だけ（幅は全員の数で決める）
+    shown = (0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, t)))) * (hi - lo)
     nf = painter.font("serif", 40, bold=True)
     sf = painter.font("gothic", 26)
     for i, person in enumerate(people):
-        if shown < i + 0.3:
+        if i >= hi or (i >= lo and shown < i - lo + 0.3):
             break
         name, image = person[0], person[1]
         note = person[2] if len(person) > 2 else ""

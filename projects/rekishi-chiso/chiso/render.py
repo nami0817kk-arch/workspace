@@ -55,6 +55,7 @@ class State:
     icon: str | None = None
     term: tuple | None = None
     place: tuple | None = None
+    reaction: str | None = None
 
 
 def _ease(t: float) -> float:
@@ -245,6 +246,9 @@ class Painter:
         """year：年表の印の位置（移動の途中を描くとき）／slide：新しいメモの滑り込み（0〜1）。"""
         W, H = self.W, self.H
         img = self._canvas(state.background)
+        if state.reaction:                                 # つむぎの「寄り」：背景を落として集中線と大きな数字
+            from . import reaction
+            img = reaction.backdrop(self, img, state.reaction, fig)
         dr = ImageDraw.Draw(img, "RGBA")
         n_sec = len(self.script.sections)
         title = self.script.sections[state.section].title
@@ -262,7 +266,10 @@ class Painter:
         dr.text((120, 145 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK,
                 stroke_width=2, stroke_fill=(12, 10, 8))
 
-        if state.figure is None:
+        is_versus = state.figure is not None and '"type": "versus"' in state.figure
+        if state.reaction:
+            pass                                           # 寄りのあいだは、メモ・肖像・図・年表を隠す
+        elif state.figure is None:
             self._memo(img, state, slide)
             if state.portrait is not None:
                 self._portrait(img, state.portrait)
@@ -281,16 +288,16 @@ class Painter:
             img = figures.draw(self, img, _json.loads(state.figure), fig)
         from . import extras
         top = extras.TERM_BOX[1]
-        if state.term:                                     # 用語の札は右上（肖像と図の右の空き）
+        if state.term and not state.reaction and not is_versus:   # 用語の札は右上（肖像と図の右の空き）
             img, top = extras.draw_term(self, img, *state.term)
             top += 18
         is_map = state.figure is not None and '"type": "map"' in state.figure
-        if state.place and not is_map:                     # 地図の図が出ているあいだは要らない
+        if state.place and not is_map and not is_versus and not state.reaction:   # 地図の図が出ているあいだは要らない
             img = extras.draw_minimap(self, img, state.place, top)
         dr = ImageDraw.Draw(img, "RGBA")
-        if state.figure is None:                           # 図のあいだは年表も隠す（図の板を下まで広げる）
+        if state.figure is None and not state.reaction:    # 図のあいだは年表も隠す（図の板を下まで広げる）
             self._timeline(dr, 470, W - 470, 770, state.year if year is None else year)
-        if state.background is not None and state.background.credit:
+        if state.background is not None and state.background.credit and not is_versus:   # 左右比べは絵の出典を図が出す
             dr.text((W / 2, H - 14), f"背景：{state.background.credit}", font=self.font("serif", 18),
                     fill=DIM, anchor="ms", stroke_width=2, stroke_fill=(12, 10, 8))
         names = "　".join(f"VOICEVOX:{n}" for n in people.credit_names(self.config, self.script))
@@ -398,10 +405,18 @@ class Painter:
 
     # --- 立ち絵と字幕 -----------------------------------------------------
     def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "",
-                  tone: str = "普通", mouth: bool = False, blink: bool = False) -> Image.Image:
+                  tone: str = "普通", mouth: bool = False, blink: bool = False, reaction: str | None = None) -> Image.Image:
         """立ち絵を重ねる。話している側は明るく、足もとに光、hop（0〜1）のぶん跳ねる。text は字幕。
-        表情のある話者は、話しているあいだ tone の顔で mouth のとき口を開け、blink のとき目を閉じる。"""
+        表情のある話者は、話しているあいだ tone の顔で mouth のとき口を開け、blink のとき目を閉じる。
+        reaction（つむぎの寄り）があれば、下の小さい2人の代わりに聞き手を腰から上で大きく出す。"""
         img = base.copy()
+        if reaction:
+            from . import reaction as _r
+            who = _r.spec_of(reaction).get("who") or "聞き"
+            _r.put_figure(self, img, reaction, speaker in (who, "二人"), mouth, blink, hop)
+            if text:
+                self._subtitle(img, speaker, text)
+            return img if self.layered else img.convert("RGB")
         for who, cast in self.config["cast"].items():
             talking = who == speaker or speaker == "二人"
             if cast.get("faces"):
@@ -592,7 +607,8 @@ class Painter:
 def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
                  getattr(line, "memo", ()), getattr(line, "figure", None), getattr(line, "bubble", None),
-                 getattr(line, "icon", None), getattr(line, "term", None), getattr(line, "place", None))
+                 getattr(line, "icon", None), getattr(line, "term", None), getattr(line, "place", None),
+                 getattr(line, "reaction", None))
 
 
 def end_key(script) -> tuple:
@@ -645,6 +661,9 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
     plain_len = lambda x: len(emphasis_mask(x)[0])
     has_faces = lambda who: (who == "二人" or bool(painter.config["cast"].get(who, {}).get("faces")))   # 人物の行は誰も口を動かさない
 
+    def _rk(s) -> dict:                  # つむぎの寄り（本編だけ。ショートはいつもの画面）
+        return {"reaction": s.reaction} if (special and s.reaction) else {}
+
     def emit(path: Path, make, dur: float):
         if dur <= 0:
             return
@@ -690,7 +709,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             new_section = special and prev_state is not None and prev_state.section != state.section
             title = painter.script.sections[state.section].title
             def base_lead(s=state):
-                return painter.with_cast(painter.base(s), s.speaker, 0, "", "聞く")
+                return painter.with_cast(painter.base(s), s.speaker, 0, "", "聞く", **_rk(s))
             if new_section:
                 n_w = min(WIPE_FRAMES, int(lead * fps) - 1)
                 for k in range(1, n_w + 1):
@@ -722,11 +741,15 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
         changed = special and prev_state is not None and prev_state.section == state.section and (
             (prev_state.background, prev_state.portrait, prev_state.memo, prev_state.year, prev_state.figure)
             != (state.background, state.portrait, state.memo, state.year, state.figure))
-        surprised = special and line.tone == "驚き"
+        surprised = special and line.tone == "驚き" and not state.reaction   # 寄りは集中線を自分で持つ
         # 強調語の飛び出しは 10-04「4は不要」で外した（config の pop: true で戻せる）
         words = ([w for w in (plain(x) for x in __import__("re").findall(r"《(.+?)》", line.text))]
                  if special and painter.config.get("pop") else [])
+        # 図が出る・図が1項目増える（upto。script.parse が grow_from を付けるので、新しい項目だけが描き進む）・
+        # つむぎの寄りが出る（数字が弾む）。どれも FIG_FRAMES のあいだ t=0→1
         fig_new = special and state.figure is not None and (prev_state is None or prev_state.figure != state.figure)
+        fig_new = fig_new or (special and state.reaction is not None
+                              and (prev_state is None or prev_state.reaction != state.reaction))
         icon_new = special and state.icon is not None and (prev_state is None or prev_state.icon != state.icon)
         n_fx = max(n_hop, TRANS_FRAMES if changed else 0, SHAKE_FRAMES if surprised else 0,
                    POP_FRAMES if words else 0, FIG_FRAMES if fig_new else 0, ICON_FRAMES if icon_new else 0)
@@ -767,7 +790,8 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                         year = ps.year + (s.year - ps.year) * _ease(tr)
                     slide = tr if (s.memo and s.memo != ps.memo) else 1.0
                     base = painter.base(s, year=year, slide=slide, fig=fig_t, icon_t=icon_t)
-                    changed_pic = (((ps.background, ps.portrait, ps.figure, ps.icon) != (s.background, s.portrait, s.figure, s.icon)) if painter.layered
+                    from .figures import base_key       # 同じ図が1項目増えただけなら溶け合わせない（前の項目は動かさない）
+                    changed_pic = (((ps.background, ps.portrait, base_key(ps.figure), ps.icon) != (s.background, s.portrait, base_key(s.figure), s.icon)) if painter.layered
                                    else (ps.background, ps.portrait) != (s.background, s.portrait))
                     if changed_pic:
                         base = Image.blend(painter.base(ps), base, _ease(tr))
@@ -775,7 +799,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                     base = painter.base(s, fig=fig_t, icon_t=icon_t)
                 if pop_t is not None:
                     base = painter.pop(base, words[0], pop_t, s.speaker)
-                im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink)
+                im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink, **_rk(s))
                 if shake_k:
                     im = painter.burst(im, side, shake_k / (SHAKE_FRAMES + 1))
                     im = painter.shake(im, shake_k)

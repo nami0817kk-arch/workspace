@@ -78,6 +78,7 @@ class Line:
     place: tuple | None = None        # 位置の小さな地図 (地名, 経度, 緯度)。places.yaml から自動で付く
     term: tuple | None = None         # 用語の札 (言葉, 説明)。terms.yaml と台本の terms: から自動で付く
     hook: bool = False                # 節の終わりの「引き」（次の節が気になる一言）。check が節ごとに確かめる
+    reaction: str | None = None       # つむぎの「寄り」（その行だけ）。JSON の文字列（chiso/reaction.py）
 
 
 MEMO_SIZE = 3
@@ -192,7 +193,10 @@ def _card(raw, where: str) -> Card | None:
     return Card(head=str(raw["head"]), body=str(raw.get("body", "")))
 
 
-FIGURE_TYPES = ("map", "pie", "bars", "people", "compare", "money")
+FIGURE_TYPES = ("map", "pie", "bars", "people", "compare", "money", "stats", "calc", "numberline", "line", "versus")
+FIGURE_NEEDS = {"stats": ("items",), "calc": ("terms",), "numberline": ("items",), "line": ("points",),
+                "versus": ("left", "right"), "bars": ("bars",), "people": ("nodes",), "compare": ("people",),
+                "pie": ("parts",)}
 
 
 def _bubble(raw, where: str) -> str | None:
@@ -215,7 +219,44 @@ def _figure(raw, where: str) -> str | None:
     if raw["type"] == "money" and not all(raw.get(k) for k in ("then", "yen", "basis")):
         # 換算の前提（何を何に置き換えたか）を出さない金額は、根拠のない数字になる
         raise ScriptError(f"{where}: money には then（当時の金額）・yen（円）・basis（置き換えの前提）が要ります")
+    missing = [k for k in FIGURE_NEEDS.get(raw["type"], ()) if not raw.get(k)]
+    if missing:
+        raise ScriptError(f"{where}: {raw['type']} には {'・'.join(missing)} が要ります")
+    if raw["type"] == "versus" and not all(isinstance(raw[k], dict) and raw[k].get("image") for k in ("left", "right")):
+        raise ScriptError(f"{where}: versus の left・right には image（絵）が要ります")
+    if "upto" in raw and (not isinstance(raw["upto"], int) or isinstance(raw["upto"], bool) or raw["upto"] < 1):
+        raise ScriptError(f"{where}: upto は1以上の整数です（先頭から何項目を出すか）: {raw['upto']!r}")
+    if "grow_from" in raw:
+        raise ScriptError(f"{where}: grow_from は自動で付きます（台本には upto だけを書く）")
     return json.dumps(raw, ensure_ascii=False, sort_keys=True)
+
+
+def _grown(new: str | None, prev: str | None) -> str | None:
+    """同じ図に upto だけを変えて書いた行なら、前の行の upto を grow_from に入れる（新しい項目だけ描き進める）。"""
+    import json
+    if new is None or prev is None:
+        return new
+    a, b = json.loads(new), json.loads(prev)
+    if "upto" not in a:
+        return new
+    from .figures import base_key
+    if base_key(a) != base_key(b):
+        return new
+    before = b.get("upto")
+    if before == a["upto"]:
+        return prev                                   # 同じ図をそのまま書き直しただけ
+    a["grow_from"] = min(int(before), a["upto"]) if before is not None else a["upto"]
+    return json.dumps(a, ensure_ascii=False, sort_keys=True)
+
+
+def _reaction(raw, where: str) -> str | None:
+    """つむぎの「寄り」：{number: "100人", lead: "信長の供は", say: "少なっ！"}。number は必ず書く。"""
+    if raw is None:
+        return None
+    import json
+    if not isinstance(raw, dict) or not str(raw.get("number", "")).strip():
+        raise ScriptError(f"{where}: reaction には number（大きく出す数字）が要ります: {raw!r}")
+    return json.dumps({k: str(v) for k, v in raw.items()}, ensure_ascii=False, sort_keys=True)
 
 
 def _speaker_and_text(raw: dict, where: str) -> tuple[str, str]:
@@ -279,7 +320,7 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
             if "portrait" in raw:
                 portrait = _picture(raw["portrait"], where)
             if "figure" in raw:
-                figure = _figure(raw["figure"], where)
+                figure = _grown(_figure(raw["figure"], where), figure)
             if "card" in raw:
                 card = _card(raw["card"], where)
                 if card is not None and (not memo or memo[-1] != card):
@@ -302,6 +343,7 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
                 background=background, portrait=portrait, card=card, year=year,
                 memo=tuple(reversed(memo[-MEMO_SIZE:])), figure=figure,
                 bubble=_bubble(raw.get("bubble"), where), hook=bool(raw.get("hook")), icon=(str(raw["icon"]) if raw.get("icon") else None),
+                reaction=_reaction(raw.get("reaction"), where),
             ))
     if not lines:
         raise ScriptError("せりふが1行もありません")
