@@ -65,16 +65,15 @@ def breaking(spec: dict) -> Image.Image:
     sub = str(spec.get("sub", ""))
     if sub:
         d.text((tw + 124, y + 142), sub, font=F(38), fill=INK)
-    # 右上の局名ふう（チャンネルの名）
+    # チャンネルの名と日付。**左上に置く**。
+    # 右上は立ち絵のワイプが来るので空けておく（2026-10-08）
     name = str(spec.get("channel", "世の中の断面図"))
     nf = F(30, 800)
-    d.rectangle([W - d.textlength(name, font=nf) - 64, 36,
-                 W - 32, 92], fill=(0, 0, 0, 150))
-    d.text((W - d.textlength(name, font=nf) - 48, 46), name, font=nf, fill="white")
+    d.rectangle([32, 36, 32 + d.textlength(name, font=nf) + 32, 92], fill=(0, 0, 0, 150))
+    d.text((48, 46), name, font=nf, fill="white")
     when = str(spec.get("when", ""))
     if when:
-        wf = F(typo.NOTE, 700)
-        d.text((W - d.textlength(when, font=wf) - 48, 100), when, font=wf, fill="#C8D3E4")
+        d.text((48, 100), when, font=F(typo.NOTE, 700), fill="#C8D3E4")
     return im.convert("RGB")
 
 
