@@ -29,6 +29,10 @@ def missing_assets(script, assets: Path) -> list[str]:
             used.update(str(fig[k]["image"]) for k in ("left", "right") if fig.get(k, {}).get("image"))
         if getattr(line, "detail", None):                      # 絵の一部を大きく（10-07）
             used.add(json.loads(line.detail)["image"])
+    thumb = getattr(script, "thumbnail", None) or {}
+    if thumb.get("layout"):                                    # 構図を選んだサムネイルの絵（10-07。classic は今までどおり見ない）
+        used.update(str(v) for v in [thumb.get("image")] + [(thumb.get(k) or {}).get("image") if isinstance(thumb.get(k), dict) else None
+                                                           for k in ("left", "right")] if v)
     return sorted(p for p in used if not (assets / p).exists())
 
 
@@ -91,10 +95,9 @@ def episode(script) -> tuple[list[str], list[str]]:
         errors.append("次回予告（next: {title, teaser}）がありません")
     if not script.thumbnail:
         errors.append("サムネイル（thumbnail:）がありません")
-    else:
-        for k in ("image", "crop", "name", "main"):        # hook・stamp は任意（10-07、通説を打ち消す形をやめた）
-            if k not in script.thumbnail:
-                errors.append(f"サムネイルの {k} がありません")
+    else:                                                  # hook・stamp は任意（10-07、通説を打ち消す形をやめた）
+        from . import thumb
+        errors += thumb.problems(script.thumbnail)         # 構図（layout）の名前と、構図ごとに要る項目
     # 節の終わりの引き（10-04）：途中で見るのをやめる人を減らすため、次の節が気になる一言で締める。
     # 最初の節（導入。冒頭の問いが引きを兼ねる）と最後の節（見立て。次回予告で締める）は除く
     for sec in script.sections[1:-1]:
@@ -333,3 +336,37 @@ def short_opening_rules(script) -> list[str]:
         elif not (has_number(first.text) or has_name(first.text, names)):
             warns.append(f"ショート {sid}：1行目（{first.index + 1}行目）に名前も数字もありません（最初の2秒で誰の何の話か分かるように）")
     return warns
+
+
+# --- サムネイルの構図が続いていないか（10-07 ユーザー決定「量産型に見せない」）---------------------
+LAYOUT_STREAK = 3        # 同じ構図がこの回数続いたら知らせる
+
+
+def _layout_of_script(path: Path) -> str | None:
+    import yaml
+    from .thumb import layout_of
+    if not path.exists():
+        return None
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return layout_of(data.get("thumbnail") or {})
+
+
+def layout_streak(posted_log: Path, scripts_dir: Path, stem: str, layout: str) -> list[str]:
+    """投稿済みの本編（posted.json の <名前>:main を publish_at 順）と、今の台本の構図を並べ、
+    最後に同じ構図が3回以上続いていたら知らせる。今の台本が投稿済みなら、その回までで数える。"""
+    import json
+    entries = json.loads(posted_log.read_text(encoding="utf-8")) if posted_log.exists() else []
+    mains = sorted((e for e in entries if str(e.get("key", "")).endswith(":main")), key=lambda e: e.get("publish_at", ""))
+    names = [e["key"][: -len(":main")] for e in mains]
+    if stem in names:
+        names = names[: names.index(stem)]
+    seq = [(n, _layout_of_script(scripts_dir / f"{n}.yaml")) for n in names] + [(stem, layout)]
+    run = []
+    for n, lay in reversed(seq):
+        if lay != layout:
+            break
+        run.append(n)
+    if len(run) >= LAYOUT_STREAK:
+        return [f"サムネイルの構図「{layout}」が{len(run)}回続いています（{'→'.join(reversed(run))}）。"
+                "題材に合う別の構図（face・scene・versus・number・map・classic）を thumbnail.layout で選ぶ"]
+    return []

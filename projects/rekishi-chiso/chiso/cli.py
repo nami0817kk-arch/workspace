@@ -115,6 +115,10 @@ def preflight(sc, config) -> bool:
         missing = missing + [who]
     if not str(sc.path.name).startswith("sample"):
         errors, warns = check_mod.episode(sc)
+        if sc.thumbnail:                                 # 同じ構図が3回続いたら知らせる（10-07）
+            from .thumb import layout_of
+            warns = warns + check_mod.layout_streak(ROOT / "posted.json", ROOT / "scripts", sc.path.stem,
+                                                    layout_of(sc.thumbnail))
         for e in errors:
             print(f"  × {e}")
         for w in warns:
