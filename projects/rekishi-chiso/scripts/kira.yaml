@@ -5,6 +5,25 @@
 # 年齢は満で言う（肖像の「この時○歳」と合わせる）。数えは「数えで」と断ってから。
 title: 吉良上野介は本当に意地悪な悪役だったのか｜忠臣蔵の「顔」は誰の顔か
 series: ""
+# 再生リスト（本編・ショート）と英語の題名・説明（10-08 ユーザー OK。案は research/en_titles.md）
+playlists: [日本史を掘る（聞き流し）]
+shorts_playlists: [日本史ショート]
+en:
+  title: "Kira Kōzuke-no-suke: Was the Villain of the 47 Ronin Really Spiteful? | Whose Face Is It?"
+  description: |-
+    In Chūshingura, the story of the 47 Ronin, Kira Kōzuke-no-suke is the spiteful old man who humiliated the young Lord Asano. Yet the records do not tell us why Asano drew his sword on him in Edo Castle in 1701. Asano spoke only of a grudge, and was ordered to commit seppuku that same day.
+    We follow Kira's life as head of a family of court ceremony, who traveled to Kyoto 24 times and whose son became lord of Yonezawa. Then we see how his villain's face was made: scholars praising the ronin as "righteous men," and the 1748 puppet play Kanadehon Chūshingura, which recast him as the medieval villain Kō no Moronao.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "The Surface: Chūshingura's Greatest Villain"
+    - Born into a House of Ceremony
+    - His Son Becomes Lord of Yonezawa
+    - "24 Trips to Kyoto: A Master of Protocol"
+    - The Attack in the Pine Corridor
+    - Digging into the Motive
+    - To Honjo, and the Night Raid
+    - The Vanished Kira House and the "Good Lord" Legend
+    - "Verdict: Whose Face Is the Villain's?"
 timeline:
   start: 1641
   end: 1750

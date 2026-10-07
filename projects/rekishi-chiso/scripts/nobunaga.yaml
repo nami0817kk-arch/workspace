@@ -5,6 +5,27 @@
 # 広告の点：比叡山・一揆・本能寺は事実だけを短く。数字の幅は言うが、惨状の描写はしない。
 title: 織田信長は本当に革命児だったのか｜「革命児」の姿は、いつ作られたか
 series: ""
+# 再生リスト（本編・ショート）と英語の題名・説明（10-08 ユーザー OK。案は research/en_titles.md）
+playlists: [日本史を掘る（聞き流し）, 戦国時代を掘る]
+shorts_playlists: [日本史ショート]
+en:
+  title: "Oda Nobunaga: Was He Really a Revolutionary? | When the \"Revolutionary\" Image Was Made"
+  description: |-
+    Free markets, the three-rank musket volley at Nagashino, the burning of Mount Hiei, "Tenka Fubu": Oda Nobunaga is remembered as the revolutionary who swept away the old order. But the volley does not appear in the chronicle written by his retainer, and recent research sees a Nobunaga who valued the shogun and the imperial court more than we thought.
+    We follow his life from the "great fool" young lord to Honnō-ji, and trace how his image changed: unpopular in the Edo period, honored as a loyalist in the Meiji era (Kenkun Shrine, 1869), and reborn as a revolutionary after the war through Shiba Ryōtarō's novel Kunitori Monogatari (from 1963).
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "The Surface: The Revolutionary Who Broke the Old Order"
+    - The "Great Fool" Young Lord
+    - The Real Battle of Okehazama
+    - What "Tenka Fubu" Really Meant
+    - Did Free Markets Start with Nobunaga?
+    - Betrayals and Ten Years of War
+    - Mount Hiei and the "Demon King"
+    - Digging into Nagashino
+    - Azuchi Castle and the Imperial Court
+    - Honnō-ji and "Fifty Years of Human Life"
+    - "Verdict: When Was the Revolutionary Born?"
 timeline:
   start: 1520
   end: 1980

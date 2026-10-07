@@ -4,6 +4,25 @@
 # 広告の点：題・サムネ・冒頭に残酷な描写を集めない（10-05 の確認）。処刑や死は事実だけを短く。
 title: 西太后は清を滅ぼした悪女なのか｜残酷な伝説は、どこから来たのか
 series: 悪女と呼ばれた女たち
+# 再生リスト（本編・ショート）と英語の題名・説明（10-08 ユーザー OK。案は research/en_titles.md）
+playlists: [世界史を掘る（聞き流し）, 悪女と呼ばれた女たち]
+shorts_playlists: [世界史ショート]
+en:
+  title: "Empress Dowager Cixi: Did She Really Destroy the Qing? | Where the Cruel Legends Came From"
+  description: |-
+    Empress Dowager Cixi ran the Qing state for nearly half a century, and in Japan she is counted among "China's three great wicked women." But she died in 1908, and the Qing fell in 1912. In her last years she abolished the 1,300-year-old civil service examination and began preparing a constitution.
+    We trace her life from a minor official's daughter to the center of power, and dig into where the cruel legends came from: reformers' propaganda abroad, a 1910 biography built on a forged court diary, revolutionary propaganda, and the 1985 film. We also look at what the records do show, including her decision to fight the foreign powers in 1900.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "The Surface: The Villain Who Destroyed the Qing?"
+    - Daughter of a Minor Official
+    - A Coup at 25
+    - A Son's Death and a Three-Year-Old Emperor
+    - The Summer Palace and the Missing Warships
+    - The Hundred Days' Reform
+    - The Gamble of 1900
+    - Final Reforms and Two Deaths
+    - "Verdict: Where Did the Villain Story Come From?"
 timeline:
   start: 1835
   end: 1908
