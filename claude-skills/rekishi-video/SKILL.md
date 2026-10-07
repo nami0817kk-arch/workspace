@@ -45,6 +45,7 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
    「公開してよい水準」が出たら approve。確認の記録は dev/output/rekishi-chiso/review/ に残す
 8. `build` → `shorts` → `thumb` → `describe`（概要欄。`--keywords` で最後に「この動画で扱うこと：」＝検索候補の語のうち台本に出てくるもの）。
    サムネはまず**構図を題材で選ぶ**（台本の `thumbnail.layout:` に face 顔の大写し／scene 場面の全景／versus 2人の対比／number 大きな数字／map 地図／classic 書かない。前の2本と同じなら別のものに。3回続くと check が知らせる。書き方はひな形、見本は research/thumb_layouts/）。
+   layout を書くと作り込み（文字の二重縁取り・グラデ・光・紙の質感）が既定で入る。face・versus は人物を rembg で切り抜いて縁取り（日本の肖像画は抜けないことがあるので出来を見る。`cutout: false` で外す）。札 `badge`・矢印 `arrow`・赤丸 `circle` も足せる。見本は research/thumb_layouts2/
    `thumb --variants` で3案（a 今の形／b 顔に寄せて名前と main だけ／c 上に大きな数字・短い語、下に赤い帯）と out/x_thumbnail_variants_preview.png を作り、一覧の大きさで読めるか見てから YouTube Studio の「テストと比較」に3枚載せる（API では載せられない。台本の thumbnail.variants で b の crop・c の top を上書きできる）。
    `screen`（本番の動画をユーザーが見て OK と言ったときだけ）→ `upload --at "YYYY-MM-DD 19:00"`（予約投稿。字幕・サムネイル・概要欄つき）
 
