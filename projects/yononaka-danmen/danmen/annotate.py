@@ -224,7 +224,9 @@ def _highlight(im: Image.Image, spec: dict) -> Image.Image:
     x0, y0, x1, y1 = spec["box"]
     col = spec.get("color")
     rgb = tuple(col) if isinstance(col, (list, tuple)) else MARKER
-    alpha = int(spec.get("alpha", 150))
+    # 150 だと、琥珀で強調した行に塗ったとき 3.9:1 まで落ちた（2026-10-07）。
+    # 120 にすると 4.0:1 を超える。見た目も、濃すぎる蛍光ペンより自然になる。
+    alpha = int(spec.get("alpha", 120))
     layer = Image.new("RGBA", im.size, (0, 0, 0, 0))
     ld = ImageDraw.Draw(layer)
     h = (y1 - y0) * float(spec.get("thickness", 0.82))

@@ -23,7 +23,7 @@ from danmen.news import (AMBER_D, AMBER_L, GOLD, GREEN_D, GREEN_L, INK, INK_SUB,
                          F, _bar, _credit, _panel, put_number)
 
 UNIT = re.compile(r"(\d+(?:[,.]\d+)*)|([^\d]+)")
-AMBER = (196, 122, 10)
+AMBER = (164, 102, 8)        # 文字用。塗りより濃い（白地で 4.6:1）
 TEAL = (16, 140, 118)
 GRAY = (118, 126, 138)
 
