@@ -7,7 +7,7 @@
 
     grow(fn, fig)       … 項目が1つずつ増える画像の列を作る
     reveal(im, marks)   … 書き込みが1つずつ増える画像の列を作る
-    PATTERNS            … 9つの節それぞれの、画面の並びの型
+    PATTERNS            … 冒頭と9つの節それぞれの、画面の並びの型
     plan(kind)          … その節で出す画面と、1枚あたりの秒数の目安
     check(plan, secs)   … 節の長さに対して画面の数が足りているか見る
 
@@ -59,6 +59,10 @@ def reveal(im: Image.Image, marks: list[dict], keep_first: bool = True) -> list[
 #   (画面の種類, 枚数, 役割)。枚数は「その図から何枚ぶん作るか」。
 #   `+` で始まるものは**前の画面に重ねる**もの（別の図を作らない）
 PATTERNS: dict[str, list[tuple[str, int, str]]] = {
+    "hook": [                         # 冒頭の10秒。**ここで離脱が決まる**
+        ("fullscreen.number", 1, "いちばん強い数字を、理由を言わずに出す"),
+        ("screens.title", 1, "その数字から問いを立てる。これが題名になる"),
+    ],
     "surface": [                      # 00 表面（2分）
         ("breaking", 2, "報じられたことを速報の帯で。見出しと添えを順に"),
         ("newspaper", 3, "どう報じられたか。本文を増やしながら"),
@@ -127,7 +131,7 @@ PATTERNS: dict[str, list[tuple[str, int, str]]] = {
 
 # 節の名前と、台本での長さの目安（秒）
 SECTIONS = {
-    "surface": 120, "question": 30, "cut1": 240, "cut2": 300, "cut3": 300,
+    "hook": 10, "surface": 120, "question": 30, "cut1": 240, "cut2": 300, "cut3": 300,
     "world": 240, "myth": 240, "reading": 240, "close": 90,
 }
 
@@ -154,7 +158,8 @@ def check(kind: str, seconds: int | None = None) -> str:
         need = int(secs / HOLD_GOOD) - n + 1
         return "1枚あたり{:.0f}秒。長すぎます（上限{}秒）。あと{}枚ぶん刻んでください。".format(
             hold, HOLD_MAX, need)
-    if hold < HOLD_MIN:
+    if hold < HOLD_MIN and kind != "hook":
+        # 冒頭だけは例外。掴みなので、ゆっくり出さない
         return "1枚あたり{:.0f}秒。短すぎます（下限{}秒）。画面を減らしてください。".format(
             hold, HOLD_MIN)
     return "1枚あたり{:.0f}秒。ちょうどよい幅です。".format(hold)

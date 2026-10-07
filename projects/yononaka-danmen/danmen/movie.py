@@ -46,6 +46,7 @@ EDGE = (6, 10, 18)
 NUM = re.compile(r"(\d+(?:[.,]\d+)*)")
 FPS = 30
 READ_MAX = 6.5        # 字幕が読める速さの上限（字／秒）
+FADE_FRAMES = 3       # 画面が変わるときの重なり（30fps で 0.1 秒）
 
 
 def F(size: int, weight: int = 900) -> ImageFont.FreeTypeFont:
@@ -268,6 +269,39 @@ def caption(im: Image.Image, text: str, size: int = 74,
     return out
 
 
+def fade_frames(before: Image.Image, after: Image.Image, work: Path,
+                tag: str, n: int = FADE_FRAMES) -> list[Path]:
+    """2つの画面のあいだに挟む、重なりのコマ。
+
+    画面がパッと切り替わると、静止画を並べただけに見える。
+    0.1 秒だけ重ねると落ち着く。コマは3枚なので手間はほとんど増えない。
+    """
+    out: list[Path] = []
+    a = before.convert("RGB")
+    b = after.convert("RGB")
+    for i in range(n):
+        p = work / "{}_f{}.jpg".format(tag, i)
+        Image.blend(a, b, (i + 1) / (n + 1)).save(p, quality=88)
+        out.append(p)
+    return out
+
+
+def gap_after(text: str, nxt: dict | None, base: float) -> float:
+    """その行のあとに空ける間。**一律にしない。**
+
+    問いのあとは受け手が考える間がいる。驚きはかぶせ気味のほうが自然。
+    一律 0.28 秒だと、どの行も同じ間合いになって機械的に聞こえる（2026-10-08）。
+    """
+    t = text.rstrip()
+    if t.endswith(("？", "?")) or t.endswith("でしょうか。") or t.endswith("ですか。"):
+        return base + 0.26            # 問いのあとは長めに
+    if nxt and nxt.get("who") == "聞き" and nxt.get("tone") in ("強", "特強"):
+        return max(base - 0.14, 0.10)  # 驚きはかぶせ気味に
+    if t.endswith("。") and len(t) <= 12:
+        return base + 0.10            # 短い言い切りは、少し置く
+    return base
+
+
 # ---- 組み立て ---------------------------------------------------------------
 
 def wav_seconds(p: Path) -> float:
@@ -288,6 +322,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
     current_name = ""
     cast_spec: dict | None = None
     cues: list[dict] = []          # 効果音を置くための、行ごとの時刻
+    gaps: list[float] = []         # 行ごとの間（一律にしない）
     at = 0.0                       # いまの時刻（秒）
     screen_changed = True          # 直前に画面が変わったか
     # 台本の話者の名前（語り／聞き）から、立ち絵の名前（katari／kikite）へ
@@ -317,7 +352,15 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         wav = work / "{:03d}.wav".format(n)
         wav.write_bytes(tts.synth(cfg["engine_url"], step["text"], style_id, **params))
         wavs.append(wav)
-        sec = wav_seconds(wav) + gap
+        # 次の話者の行を先に見て、間を決める
+        nxt = None
+        for later in steps[steps.index(step) + 1:]:
+            if "who" in later:
+                nxt = later
+                break
+        this_gap = gap_after(step["text"], nxt, gap)
+        gaps.append(this_gap)
+        sec = wav_seconds(wav) + this_gap
         # 中間の画像は JPEG。PNG は 1枚 0.59 秒かかるが JPEG なら 0.04 秒。
         # 最後に H.264 にするので、この段階の劣化は見えない（2026-10-07 実測）
         art = who_art.get(step["who"], "")
@@ -336,7 +379,14 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
                 frame = put_cast(current, cast_spec["height"], art, step["tone"])
         else:
             frame = current
-        caption(frame, step["text"], side_room=room).save(shot, quality=93)
+        painted = caption(frame, step["text"], side_room=room)
+        painted.save(shot, quality=93)
+        # 画面が変わるところに、短い重なりを挟む
+        if shots and screen_changed:
+            prev = Image.open(shots[-1][0]).convert("RGB")
+            for p in fade_frames(prev, painted, work, "{:03d}".format(n)):
+                shots.append((p, 1.0 / FPS))
+            at += FADE_FRAMES / FPS
         shots.append((shot, sec))
         cues.append({"start": at, "screen_changed": screen_changed,
                      "who": step["who"], "tone": step["tone"]})
