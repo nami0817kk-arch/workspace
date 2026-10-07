@@ -1,0 +1,4 @@
+# 任意：サムネの人物の切り抜き（src/thumbfx.py、構図 face・versus の cutout）。
+# CI には入れない（入っていなければ切り抜かずに描く。tests/test_thumb_layouts.py もそれで通る）。
+# 学習済みデータ isnet-general-use（約179MB、無料）は初回に ~/.rembg/models/ へ1回だけ落ちる。
+rembg[cpu]>=2.0

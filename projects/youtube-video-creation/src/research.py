@@ -291,6 +291,8 @@ class Notes:
     topic: str = ""                  # 話題のまとまり。続報かどうかを見るのに使う
     thumbnail: dict = field(default_factory=dict)
     sections: list[Section] = field(default_factory=list)
+    # 取材メモのファイル名（拡張子なし）。サムネの構図が続いていないかを、投稿の控えと突き合わせるのに使う
+    stem: str = ""
 
     @property
     def video_title(self) -> str:
@@ -353,7 +355,9 @@ def load_notes(path: str | Path) -> Notes:
                 '（例: - "**4試合**になりました。"）。YAML は `*` を別名の印とみなします'
             ) from err
         raise ResearchError(f"{path} を読めません: {err}") from err
-    return build_notes(raw)
+    notes = build_notes(raw)
+    notes.stem = path.stem
+    return notes
 
 
 def _viewpoint_card(raw: dict) -> dict | None:
@@ -566,6 +570,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     problems += _check_voices_last(notes)
     problems += _check_quote_timing(notes)
     problems += _check_thumbnail_resolution(notes)
+    problems += _check_thumbnail_layout(notes)
     problems += _check_line_images_wide(notes)
     problems += _check_20261001(notes)
     problems += _check_viewpoint_substance(notes)
@@ -1602,6 +1607,84 @@ def _advise_offtopic_section(notes: Notes) -> list[str]:
     return hints
 
 
+def _notes_layout(thumbnail: dict) -> dict | None:
+    from .thumbnail import notes_layout
+
+    return notes_layout(thumbnail)
+
+
+def _check_thumbnail_layout(notes: Notes) -> list[str]:
+    """**サムネの構図の名前の誤り・要る項目の不足は止める**（2026-10-08）。
+
+    構図（face・scene・versus・number）は書き出すまで絵にならないので、写真が無い・
+    縦長・数字が無い、を書き出してから気づくと台本から作り直しになる。
+    """
+    from .thumbnail import layout_problems
+
+    return layout_problems(notes.thumbnail or {})
+
+
+# 同じ構図がこの回数続いたら知らせる（2026-10-08、「歴史の地層」と同じ）
+LAYOUT_STREAK = 3
+LAYOUT_LEDGER = Path("research/posted.json")
+
+
+def _layout_of_note(path: Path) -> str | None:
+    from .thumbnail import layout_of
+
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return None
+    return layout_of((raw.get("thumbnail") or {}).get("layout"))
+
+
+def _advise_layout_streak(notes: Notes, ledger: Path | None = None,
+                          research_dir: Path | None = None) -> list[str]:
+    """**同じ構図が3回続いたら知らせる**（2026-10-08。止めない）。
+
+    投稿の控え（research/posted.json）の本編を公開の順に並べ、それぞれの取材メモの
+    `thumbnail.layout`（書いていなければ classic）を見て、最後にこの回を足す。
+    この回がもう投稿済みなら、その手前までで数える。控えに取材メモが無い本（9/5 以前）は数えない。
+    """
+    import json
+
+    from .thumbnail import LAYOUTS, layout_of
+
+    if not getattr(notes, "stem", ""):
+        return []            # ファイルから読んだ取材メモだけ（どの回か分からないと控えと突き合わせられない）
+    ledger = ledger or _resolve(LAYOUT_LEDGER)
+    research_dir = research_dir or _resolve("research")
+    try:
+        entries = json.loads(Path(ledger).read_text(encoding="utf-8")) if Path(ledger).exists() else []
+    except (OSError, ValueError):
+        entries = []
+    mains = [e for e in entries if isinstance(e, dict)
+             and not str(e.get("build", "")).endswith("_short")]
+    mains.sort(key=lambda e: str(e.get("publish_at") or e.get("at") or ""))
+    names: list[str] = []
+    for entry in mains:
+        build = str(entry.get("build") or "")
+        if build and build not in names and (Path(research_dir) / f"{build}.yaml").exists():
+            names.append(build)
+    if notes.stem and notes.stem in names:
+        names = names[:names.index(notes.stem)]
+    layout = layout_of((notes.thumbnail or {}).get("layout"))
+    run = [notes.stem]
+    for name in reversed(names):
+        if len(run) >= 10 or _layout_of_note(Path(research_dir) / f"{name}.yaml") != layout:
+            break
+        run.append(name)
+    if len(run) < LAYOUT_STREAK:
+        return []
+    count = f"{len(run)}回以上" if len(run) >= 10 else f"{len(run)}回"
+    shown = "→".join(reversed(run[:4]))
+    others = "・".join(x for x in LAYOUTS if x != layout)
+    return [f"サムネの構図「{layout}」が{count}続いています（…→{shown}）。続けて見ると繰り返しに見えます"
+            f"（収益化の審査の「繰り返し」）。題材に合う別の構図（{others}）を thumbnail.layout で選んでください"
+            "（選び方は CLAUDE.md「サムネの構図」）"]
+
+
 def _check_thumbnail_resolution(notes: Notes) -> list[str]:
     thumb = notes.thumbnail or {}
     photos = [str(x) for x in (thumb.get("photos") or []) if str(x).strip()]
@@ -2403,6 +2486,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_card_telop_overlap(notes) + _advise_convert_math(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
+                        + _advise_layout_streak(notes)
                         + _advise_ear(notes) + _advise_readings(notes)
                         + _advise_yardstick(notes)
                         + _advise_series_opening(notes) + _advise_series_numbers(notes))
@@ -2691,6 +2775,8 @@ def _compose_script(notes: Notes, plan: Plan) -> str:
         # 横長の写真を縦の画面に敷くと真ん中で切られ、端の人が落ちる
         **({"thumbnail_focus_x": thumbnail["focus_x"]}
            if thumbnail.get("focus_x") is not None else {}),
+        # **サムネの構図**（2026-10-08）。書いた回だけ持ち越す（classic の台本は今と1字も変わらない）
+        **({"thumbnail_layout": _layout} if (_layout := _notes_layout(thumbnail)) else {}),
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える
         "bg": "assets/backgrounds/stadium.png",

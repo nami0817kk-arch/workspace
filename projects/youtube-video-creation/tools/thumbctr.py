@@ -64,8 +64,16 @@ T_FULL_PANEL = "全面写真＋通算の表"
 T_PHOTO = "写真1枚"
 T_NONE = "指定なし（台本の背景）"
 T_UNKNOWN = "取材メモが無い"
+# 構図（2026-10-08、`thumbnail.layout`）。本編だけに効く（ショートの縦サムネは構図を見ない）
+T_LAYOUT_FACE = "構図 face（顔の大写し）"
+T_LAYOUT_SCENE = "構図 scene（場面＋黒帯）"
+T_LAYOUT_VERSUS = "構図 versus（左右に2人）"
+T_LAYOUT_NUMBER = "構図 number（大きな数字）"
+LAYOUT_TYPES = {"face": T_LAYOUT_FACE, "scene": T_LAYOUT_SCENE,
+                "versus": T_LAYOUT_VERSUS, "number": T_LAYOUT_NUMBER}
 TYPES = (T_PHOTO, T_PHOTOS2, T_PHOTOS3, T_VS, T_CREST, T_DATA_BOARD, T_BOARD,
-         T_FULL_PANEL, T_NONE, T_UNKNOWN)
+         T_FULL_PANEL, T_LAYOUT_FACE, T_LAYOUT_SCENE, T_LAYOUT_VERSUS, T_LAYOUT_NUMBER,
+         T_NONE, T_UNKNOWN)
 
 # サムネが出る場所から来た再生（Analytics の insightTrafficSourceType）。
 # SUBSCRIBER は「ブラウジング機能」（ホーム・登録チャンネル）。SHORTS はショートのフィードで、
@@ -85,7 +93,7 @@ def is_board(path: str) -> bool:
     return "/assets/stats/" in text or text.startswith("assets/stats/")
 
 
-def classify_thumbnail(thumb: dict | None, exists=None) -> str:
+def classify_thumbnail(thumb: dict | None, exists=None, short: bool = False) -> str:
     """取材メモの `thumbnail` からサムネの型を1つ返す。
 
     src/thumbnail.py の本編（16:9）の組み方に合わせた優先順：
@@ -98,6 +106,9 @@ def classify_thumbnail(thumb: dict | None, exists=None) -> str:
     if not isinstance(thumb, dict):
         return T_NONE
     exists = exists or (lambda p: (ROOT / p).exists())
+    layout = str(thumb.get("layout") or "classic")
+    if not short and layout in LAYOUT_TYPES:
+        return LAYOUT_TYPES[layout]
     board = str(thumb.get("board") or "")
     photo = str(thumb.get("photo") or "")
     background = board or photo
@@ -216,7 +227,8 @@ def label(videos: list[Video], research: Path, exists=None) -> None:
         notes = cache[key]
         v.genre = genre_of(notes)
         v.series = str((notes or {}).get("series") or "")
-        v.thumb_type = classify_thumbnail(None if notes is None else notes.get("thumbnail"), exists)
+        v.thumb_type = classify_thumbnail(None if notes is None else notes.get("thumbnail"), exists,
+                                          short=is_short(v.build))
 
 
 # ---------------------------------------------------------------- Analytics（代わりの数字）

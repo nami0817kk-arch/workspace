@@ -9,12 +9,12 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageEnhance, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from . import ffmpeg
 from .config import ProjectConfig, _resolve
 from .ffmpeg import is_video
-from .render import _cover, _hex, _layer, wrap_text
+from .render import BRAND_GREEN, _cover, _hex, _layer, wrap_text
 
 SIZE = (1280, 720)
 MARGIN = 64
@@ -357,7 +357,8 @@ def from_meta(meta: dict, title: str) -> dict:
     return {
         "title": line1,
         "subtitle": line2,
-        "lines": (line1, line2),
+        # 構図を書いた回は、2行に構図の指定を持たせる（ThumbLines の説明を参照）
+        "lines": _lines_with_layout((line1, line2), layout_spec(meta)),
         "tags": [str(t) for t in (meta.get("thumbnail_tags") or [])],
         # 指定が無ければ、タイトルの【】をそのままバッジにする。
         # **既定の「速報」を出しっぱなしにすると、悲報の記事に速報と出る**
@@ -415,6 +416,8 @@ def from_meta(meta: dict, title: str) -> dict:
         "crest_link": str(meta.get("thumbnail_crest_link", "対")),
         # 並べた顔の継ぎ目に置く印。対立の回だけ
         "face_link": str(meta.get("thumbnail_face_link", "")),
+        # **構図**（2026-10-08）。書かなければ None＝今の形（classic）。画素まで今と同じ
+        "layout": layout_spec(meta),
     }
 
 
@@ -501,13 +504,19 @@ def variants(meta: dict, title: str) -> list[dict]:
         entry = dict(entry or {})
         line1 = str(entry.get("line1") or base["title"])
         line2 = str(entry.get("line2") or base["subtitle"])
+        # **案ごとに構図を替えられる**（2026-10-08）。YouTube の「テストと比較」に
+        # 構図違いを並べる。`alt: [{layout: face}]` か `{layout: {layout: number, number: …}}`
+        spec = base.get("layout")
+        if entry.get("layout") is not None:
+            spec = _merge_layout(spec, entry["layout"])
         found.append(
             {
                 **base,
                 "name": f"案{number}",
                 "title": line1,
                 "subtitle": line2,
-                "lines": (line1, line2),
+                "lines": _lines_with_layout((line1, line2), spec),
+                "layout": spec,
                 "tags": [str(t) for t in (entry.get("tags") or base["tags"])],
                 "badge": str(entry.get("badge") or base["badge"]),
             }
@@ -539,11 +548,14 @@ def build_thumbnail(
     crests: list[str] | None = None,
     crest_link: str = "対",
     face_link: str = "",
+    layout: dict | None = None,
 ) -> Path:
     """サムネイルを1枚作る。
 
     style="band" にすると、写真の上に黄色帯と赤帯を重ねる形になる。
     lines は (黄色帯の文字, 赤帯の文字)。省略時は title / subtitle を使う。
+    layout は構図の指定（`from_meta` の "layout"）。None か classic なら今の形。
+    渡さなくても、`from_meta` の lines（ThumbLines）が持っていればそれを使う。
     """
     chosen = style or config.video.thumbnail_style
     # **縦の動画には縦のサムネ**（2026-09-09）。ショートは portrait() で
@@ -554,6 +566,13 @@ def build_thumbnail(
             lines or (title, subtitle), tags or [], focus,
             quote or reaction, photos or [], crest_main or [], crest_link,
             focus_x=focus_x,
+        )
+    # **構図を書いた回だけ**、ここで別の描き方へ（2026-10-08）。classic は下へ素通り
+    spec = layout if layout is not None else getattr(lines, "layout", None)
+    if spec and str(spec.get("layout") or "classic") != "classic":
+        return _layout_thumbnail(
+            config, out_path, background, lines or (title, subtitle), tags or [],
+            crests, photos or [], focus, focus_x, face_link, spec,
         )
     if chosen == "news":
         return _news_thumbnail(
@@ -1524,3 +1543,727 @@ def _draw_date(draw: ImageDraw.ImageDraw, date: str, font_path: str, y: int) -> 
         (MARGIN, y), date, font=font, fill=(214, 222, 234, 255),
         stroke_width=4, stroke_fill=(0, 0, 0, 210),
     )
+
+
+# ------------------------------------------------------------------ 構図（2026-10-08）
+#
+# **そろえるのは目印だけ、構図は回ごとに選ぶ**（2026-10-08 ユーザー承認）。
+# 毎回「写真＋下の蛍光イエローの帯に黒と赤の2行」で同じ形だった。収益化の審査は
+# 「テンプレートで作ったように見える・続けて見ると繰り返しに感じる」ものを対象外にする。
+# 別チャンネル「歴史の地層」が 10-07 に同じことをした（chiso/thumb.py・thumbfx.py）。
+#
+# そろえる目印（どの構図でも同じ）:
+#   - **字体**：config の video.font（いまは Meiryo Bold）
+#   - **色**：主役の語は蛍光イエロー（BAND_YELLOW）、伏せ字の ● は赤（BAND_RED）、
+#     名前の札は深い緑（BRAND_GREEN）に黄色の縦帯（本編の節の名前のピルと同じ作り）
+#   - **下端の細い線**：蛍光イエロー 10px ＋ その上に緑 5px（帯の代わり）
+#
+# 構図（取材メモの `thumbnail.layout:`、台本の `thumbnail_layout:`）:
+#   classic … 今の形（書かない＝これ）。画素まで今と同じ
+#   face    … 顔の大写し（写真を顔に寄せて片側へ）＋反対側に2段の極太の字（1行目は白、2行目は黄）
+#   scene   … 試合や場面の全景＋上か下の黒い帯に1行（2行目）。1行目は帯の縁の緑の札
+#   versus  … 左右に2人（photos の2枚）、真ん中に VS（face_link）か数字の対（numbers）
+#   number  … 数字（number）が画面の半分。写真は暗く後ろに
+#
+# **左はぼかさない**（2026-09-20）。どの構図も写真をぼかさない。文字の側は暗くするだけ。
+# 周辺のぼかし（ビネット）も入れない（「左がぼやける」と取られる）。
+
+LAYOUTS = ("classic", "face", "scene", "versus", "number")
+# 取材メモの thumbnail: から台本の thumbnail_layout へ持ち越す項目
+LAYOUT_KEYS = ("layout", "side", "band", "number", "names", "numbers",
+               "fx", "light", "rays", "tint", "cutout")
+# 写真が要る構図（thumbnail.photo。横に広いもの）
+PHOTO_LAYOUTS = ("face", "scene", "number")
+
+WHITE = (255, 255, 255)
+TEXT_DARK = BAND_TEXT_DARK
+RULE_YELLOW_H = 10        # 下端の目印：蛍光イエローの線
+RULE_GREEN_H = 5          # その上の緑の線
+LAYOUT_ZOOM_MAX = 1.5     # 顔に寄せるときの拡大の上限（決まりは1.6倍まで。少し手前で止める）
+WIDE_MIN = 1.2            # 横に広い写真とみなす横÷縦（face・scene・number は全面に敷くので要る）
+
+# 作り込みの既定（構図ごと）。台本で light・rays・tint・cutout を書けば上書き、fx: false で全部外す
+FX_DEFAULTS = {
+    "face": {"light": "auto", "rays": False, "tint": "none", "cutout": True},
+    "scene": {"light": "none", "rays": False, "tint": "none", "cutout": False},
+    "versus": {"light": "none", "rays": True, "tint": "right", "cutout": True},
+    "number": {"light": "none", "rays": True, "tint": "none", "cutout": False},
+}
+
+
+class ThumbLines(tuple):
+    """(1行目, 2行目) に、構図の指定（`.layout`）を持たせた tuple。
+
+    書き出しの経路（pipeline.py・cli の thumbnail）は `lines=look["lines"]` を渡すだけで、
+    構図の引数をまだ持たない。**ここに載せれば、その2か所を触らずに構図が届く。**
+    中身はただの2つ組なので、今までの使い方（比べる・添字で取る）はそのまま通る。
+    呼ぶ側が `layout=look["layout"]` を渡すようになれば、そちらが優先される。
+    """
+
+    layout: dict | None = None
+
+    def __new__(cls, lines, layout: dict | None = None):
+        obj = super().__new__(cls, tuple(lines))
+        obj.layout = layout
+        return obj
+
+
+def _lines_with_layout(lines, spec):
+    return ThumbLines(lines, spec) if spec else tuple(lines)
+
+
+def layout_of(spec) -> str:
+    """構図の名前（書いていなければ classic）。"""
+    if isinstance(spec, str):
+        return spec.strip() or "classic"
+    if isinstance(spec, dict):
+        return str(spec.get("layout") or "classic").strip()
+    return "classic"
+
+
+def layout_spec(meta: dict) -> dict | None:
+    """台本の `thumbnail_layout` を読む。classic・未指定は None（今の形）。
+
+    `thumbnail_layout: face` と名前だけでも、`{layout: face, side: left, …}` でも書ける。
+    """
+    raw = (meta or {}).get("thumbnail_layout")
+    if not raw:
+        return None
+    spec = {"layout": str(raw)} if isinstance(raw, str) else dict(raw)
+    return None if layout_of(spec) == "classic" else spec
+
+
+def _merge_layout(base: dict | None, extra) -> dict | None:
+    spec = dict(base or {})
+    if isinstance(extra, str):
+        spec["layout"] = extra
+    else:
+        spec.update(dict(extra or {}))
+    return None if layout_of(spec) == "classic" else spec
+
+
+def notes_layout(thumb: dict) -> dict | None:
+    """取材メモの thumbnail: から、台本へ持ち越す構図の指定を抜く（classic なら None）。"""
+    thumb = thumb or {}
+    if layout_of(thumb.get("layout")) == "classic":
+        return None
+    return {k: thumb[k] for k in LAYOUT_KEYS if k in thumb}
+
+
+def layout_problems(thumb: dict, root: Path | None = None) -> list[str]:
+    """構図の名前の誤り・構図に要る項目の不足（draft が止める）。thumb は取材メモの thumbnail:。"""
+    thumb = thumb or {}
+    name = layout_of(thumb.get("layout"))
+    if name not in LAYOUTS:
+        return [f"thumbnail.layout の『{name}』は分かりません（{'・'.join(LAYOUTS)} のどれか）"]
+    out: list[str] = []
+    for alt in thumb.get("alt") or []:
+        if isinstance(alt, dict) and alt.get("layout") is not None:
+            merged = dict(thumb, **(alt["layout"] if isinstance(alt["layout"], dict)
+                                    else {"layout": alt["layout"]}))
+            merged.pop("alt", None)
+            out += [f"thumbnail.alt の案: {p}" for p in layout_problems(merged, root)]
+    if name == "classic":
+        return out
+    where = f"（構図 {name}）"
+    if thumb.get("crest_main"):
+        out.append(f"thumbnail.crest_main と layout は一緒に使えません{where}。"
+                   "エンブレムが主役の回は layout を書かない（今の形）")
+    if thumb.get("board"):
+        out.append(f"thumbnail.board と layout は一緒に使えません{where}。"
+                   "板が主役の回は layout を書かない（今の形）か、number で数字を出す")
+    if name in PHOTO_LAYOUTS:
+        photo = str(thumb.get("photo") or "").strip()
+        if not photo:
+            out.append(f"thumbnail.photo（横に広い写真）がありません{where}")
+        else:
+            size = _image_size(photo, root)
+            if size and size[0] < size[1] * WIDE_MIN:
+                out.append(f"thumbnail.photo {Path(photo).name} は {size[0]}×{size[1]} で横に広くありません{where}。"
+                           "全面に敷くので横長（og:image や _w.jpg）を使う（縦長を切ると頭のてっぺんだけになる）")
+    if name == "versus":
+        photos = [str(x) for x in (thumb.get("photos") or []) if str(x).strip()]
+        if len(photos) != 2:
+            out.append(f"thumbnail.photos に2枚（左・右の順）が要ります{where}。いまは{len(photos)}枚")
+        for key in ("names", "numbers"):
+            value = thumb.get(key)
+            if value is not None and not (isinstance(value, (list, tuple)) and len(value) == 2):
+                out.append(f"thumbnail.{key} は [左, 右] の2つで書く{where}")
+    if name == "number":
+        number = str(thumb.get("number") or "").strip()
+        if not number:
+            out.append(f"thumbnail.number（大きく出す数字。例: 125試合・●●位）がありません{where}")
+        elif not re.search(r"[0-9０-９●]", number):
+            out.append(f"thumbnail.number『{number}』に数字も伏せ字（●）もありません{where}")
+    for key, allowed in (("side", ("left", "right")), ("band", ("bottom", "top")),
+                         ("light", ("left", "right", "top", "none", "auto")),
+                         ("tint", ("left", "right", "none"))):
+        if key in thumb and thumb[key] not in allowed and thumb[key] not in (False, None):
+            out.append(f"thumbnail.{key} は {'／'.join(allowed)} のどれか（いまは {thumb[key]}）")
+    for key in ("fx", "rays", "cutout"):
+        if key in thumb and not isinstance(thumb[key], bool):
+            out.append(f"thumbnail.{key} は true か false")
+    return out
+
+
+def _image_size(path: str, root: Path | None = None) -> tuple[int, int] | None:
+    file = (root / path) if root else _resolve(path)
+    if not file.exists() or is_video(file.name):
+        return None
+    try:
+        with Image.open(file) as image:
+            return image.size
+    except OSError:
+        return None
+
+
+def fx_options(spec: dict) -> dict:
+    """作り込みの設定。書いていないものは構図の既定。fx: false なら全部切る。"""
+    name = layout_of(spec)
+    if name not in FX_DEFAULTS or (spec or {}).get("fx") is False:
+        return {"on": False, "light": "none", "rays": False, "tint": "none", "cutout": False}
+    o = dict(FX_DEFAULTS[name])
+    for key in ("light", "rays", "tint", "cutout"):
+        if key in spec and spec[key] is not None:
+            o[key] = spec[key]
+    o["on"] = True
+    o["layout"] = name
+    return o
+
+
+# ---- 部品
+
+
+def _open_photo(background: str | None, out_path: Path) -> Image.Image | None:
+    if not background:
+        return None
+    source = _resolve(background)
+    if source.exists() and is_video(source.name):
+        still = out_path.parent / "thumbnail_bg.png"
+        still.parent.mkdir(parents=True, exist_ok=True)
+        source = ffmpeg.grab_frame(source, still)
+    if not source.exists():
+        return None
+    with Image.open(source) as image:
+        return image.convert("RGB")
+
+
+def _main_face(image: Image.Image):
+    """いちばん大きい顔の枠（x, y, w, h）。OpenCV が無い・見つからなければ None。"""
+    from . import faces
+
+    if not faces.available():
+        return None
+    try:
+        return faces.main_face(image, min_face=0.035)
+    except Exception:
+        return None
+
+
+def _place(image: Image.Image, size, anchor, face=None, face_h: float = 0.0,
+           focus: float | None = None, focus_x: float | None = None):
+    """写真を size に切り出す。顔（face）が size の中の anchor（割合）に来るように寄せる。
+
+    寄せる大きさは顔の高さが face_h（size の高さに対する割合）になるまで。ただし
+    **元の写真の LAYOUT_ZOOM_MAX 倍まで**（引き伸ばすとぼやける）。画面を埋めるのが先。
+    顔が分からなければ focus・focus_x（0〜1）を中心に、埋める大きさで切る。
+    返すのは (切った絵, 切った絵の中の顔の枠 or None)。
+    """
+    width, height = size
+    cover = max(width / image.width, height / image.height)
+    if face is not None:
+        scale = (height * face_h) / max(1, face[3]) if face_h else cover
+        cx, cy = face[0] + face[2] / 2, face[1] + face[3] / 2
+    else:
+        scale = cover
+        cx = image.width * (0.5 if focus_x is None else float(focus_x))
+        cy = image.height * (0.35 if focus is None else float(focus))
+    scale = max(cover, min(scale, LAYOUT_ZOOM_MAX))
+    rw, rh = max(width, round(image.width * scale)), max(height, round(image.height * scale))
+    resized = image.resize((rw, rh), Image.LANCZOS)
+    left = int(min(max(0, cx * scale - anchor[0] * width), rw - width))
+    top = int(min(max(0, cy * scale - anchor[1] * height), rh - height))
+    tile = resized.crop((left, top, left + width, top + height))
+    moved = None
+    if face is not None:
+        moved = (round(face[0] * scale - left), round(face[1] * scale - top),
+                 round(face[2] * scale), round(face[3] * scale))
+    return tile, moved
+
+
+def _spans(text: str, fill) -> list[tuple[str, tuple]]:
+    """伏せ字の ● だけ赤にする区切り。"""
+    out: list[tuple[str, tuple]] = []
+    for part in re.split(r"(●+)", text):
+        if part:
+            out.append((part, BAND_RED if part.startswith("●") else tuple(fill)))
+    return out
+
+
+def _say(canvas: Image.Image, o: dict, xy, text: str, font, fill, main: bool = False,
+         anchor: str = "la", angle: float = 0.0) -> None:
+    """1行描く。作り込みが入なら二重の縁取り＋影（主役の語は外に白い縁）。切なら黒い縁だけ。
+
+    anchor は左寄せ（la・lm・ls）だけ。真ん中に置くときは呼ぶ側で幅を引いておく。
+    """
+    from . import thumbfx
+
+    if not text:
+        return
+    size = getattr(font, "size", 60)
+    stroke = max(6, size // 9) if main else max(5, size // 10)
+    spans = _spans(text, fill)
+    if o.get("on"):
+        outer = max(3, size // 30) if main else 0
+        thumbfx.text(canvas, xy, text, font, fill=fill, inner=TEXT_DARK, inner_w=stroke,
+                     outer=WHITE if outer else None, outer_w=outer, shadow=True,
+                     angle=angle, anchor=anchor, spans=spans)
+        return
+    draw = ImageDraw.Draw(canvas)
+    x, y = xy
+    for part, color in spans:
+        draw.text((x, y), part, font=font, fill=tuple(color) + (255,), anchor=anchor,
+                  stroke_width=stroke, stroke_fill=TEXT_DARK + (255,))
+        x += font.getlength(part)
+
+
+# 2行に割るときに、そこで切ってよい所（この字のあと）。助詞・読点・中黒
+BREAK_AFTER = set("はがをにでともへや、。・！？!?")
+# 「0本だった／シュートは」のように、過去の形で名詞に続く所も切ってよい
+BREAK_AFTER_WORDS = ("より", "から", "まで", "ので", "のに", "けど", "ても", "った", "した", "れた", "いた")
+
+
+def _natural_split(text: str) -> list[tuple[str, str]]:
+    """2行に割る候補（左右の長さが近い順）。空白・助詞・読点のあとだけで切る（語の途中で割らない）。"""
+    found: list[tuple[str, str]] = []
+    for i in range(1, len(text)):
+        before, after = text[:i], text[i:]
+        if after[0] in " 　":
+            found.append((before.rstrip(), after.strip()))
+        elif before[-1] in " 　":
+            continue
+        elif ((before[-1] in BREAK_AFTER or before.endswith(BREAK_AFTER_WORDS))
+              and after[0] not in BREAK_AFTER and not after[0].isdigit()):
+            found.append((before, after))
+    found = [(a, b) for a, b in found if len(a) > 1 and len(b) > 2]
+    return sorted(set(found), key=lambda ab: (max(len(ab[0]), len(ab[1])), -len(ab[0])))
+
+
+def _fit_rows(text: str, font_path: str, sizes, width: float, max_rows: int):
+    """入る中でいちばん大きい字と、その行。
+
+    2行に割るときは**空白か助詞のあとで切る**（「最後のパスを／託した相手は●●」。
+    1字ずつ幅で割ると「託／した」のように語の途中で切れる）。どこで切っても入らないときだけ幅で割る。
+    """
+    text = (text or "").replace("\\n", " ").replace("\n", " ").strip()
+    probe = ImageDraw.Draw(Image.new("RGB", (8, 8)))
+    if not text:
+        return ImageFont.truetype(font_path, sizes[-1]), []
+    splits = _natural_split(text) if max_rows >= 2 else []
+    for size in sizes:
+        font = ImageFont.truetype(font_path, size)
+        if font.getlength(text) <= width:
+            return font, [text]
+        for head, tail in splits:
+            if font.getlength(head) <= width and font.getlength(tail) <= width:
+                return font, [head, tail]
+    for size in sizes:
+        font = ImageFont.truetype(font_path, size)
+        rows = wrap_text(probe, re.sub(r"[ 　]+", "", text), font, width)
+        if len(rows) <= max_rows and all(font.getlength(r) <= width for r in rows):
+            return font, rows
+    font = ImageFont.truetype(font_path, sizes[-1])
+    return font, wrap_text(probe, text, font, width)[:max_rows]
+
+
+def _tag(canvas: Image.Image, o: dict, x: float, y: float, text: str, font_path: str,
+         size: int = 50, centre: bool = False) -> tuple[int, int, int, int]:
+    """名前の札：深い緑に黄色の縦帯、白い字（本編の節の名前のピルと同じ作り）。範囲を返す。"""
+    font = ImageFont.truetype(font_path, size)
+    width = font.getlength(text)
+    box_w, box_h = int(width + 64), int(size * 1.5)
+    if centre:
+        x -= box_w / 2
+    x, y = int(x), int(y)
+    if o.get("on"):
+        shadow = Image.new("L", canvas.size, 0)
+        ImageDraw.Draw(shadow).rectangle([x + 6, y + 6, x + box_w + 6, y + box_h + 6], fill=150)
+        canvas.paste((0, 0, 0, 255), (0, 0), shadow.filter(ImageFilter.GaussianBlur(4)))
+    draw = ImageDraw.Draw(canvas)
+    draw.rectangle([x, y, x + box_w, y + box_h], fill=BRAND_GREEN + (255,))
+    draw.rectangle([x, y, x + 12, y + box_h], fill=BAND_YELLOW + (255,))
+    draw.text((x + 36, y + box_h / 2), text, font=font, fill=WHITE + (255,), anchor="lm")
+    return x, y, x + box_w, y + box_h
+
+
+def _brand_rule(canvas: Image.Image) -> None:
+    """どの構図でも同じ目印：下端に蛍光イエローの細い線、その上に緑の細い線。"""
+    width, height = canvas.size
+    draw = ImageDraw.Draw(canvas)
+    draw.rectangle([0, height - RULE_YELLOW_H - RULE_GREEN_H, width, height - RULE_YELLOW_H - 1],
+                   fill=BRAND_GREEN + (255,))
+    draw.rectangle([0, height - RULE_YELLOW_H, width, height], fill=BAND_YELLOW + (255,))
+
+
+def _shade(canvas: Image.Image, top: int = 0, top_alpha: int = 0,
+           bottom: int = 0, bottom_alpha: int = 0) -> None:
+    """上・下の端だけ暗くする（字を読ませる）。ぼかさない。"""
+    width, height = canvas.size
+    layer, draw = _layer(canvas.size)
+    for y in range(top):
+        draw.line([(0, y), (width, y)], fill=(0, 0, 0, int(top_alpha * (1 - y / top) ** 1.3)))
+    for y in range(bottom):
+        draw.line([(0, height - 1 - y), (width, height - 1 - y)],
+                  fill=(0, 0, 0, int(bottom_alpha * (1 - y / bottom) ** 1.3)))
+    canvas.alpha_composite(layer)
+
+
+def _side_shade(canvas: Image.Image, side: str, alpha: int, reach: float) -> None:
+    """字を置く側（side）を暗くする。写真は透けて見える（灰色の面にしない・ぼかさない）。"""
+    width, height = canvas.size
+    layer, draw = _layer(canvas.size)
+    span = int(width * reach)
+    for i in range(span):
+        a = int(alpha * (1 - i / span) ** 1.2)
+        x = i if side == "left" else width - 1 - i
+        draw.line([(x, 0), (x, height)], fill=(0, 0, 0, a))
+    canvas.alpha_composite(layer)
+
+
+def _corner_crests(canvas: Image.Image, names: list[str], side: str, top: int = 30,
+                   height: int = 92) -> int:
+    """エンブレム・国旗を上の角に並べる（2つまで）。使った下端を返す（置けなければ top）。"""
+    marks = [m for m in (_crest_image(n, height) for n in (names or [])[:2]) if m is not None]
+    if not marks:
+        return top
+    x = 40 if side == "left" else canvas.width - 40
+    for mark in marks:
+        if side == "left":
+            canvas.alpha_composite(mark, (x, top))
+            x += mark.width + 18
+        else:
+            x -= mark.width
+            canvas.alpha_composite(mark, (x, top))
+            x -= 18
+    return top + height
+
+
+def _pop(canvas: Image.Image, o: dict, tile: Image.Image, pos, source: str | None,
+         face=None, outline=WHITE, clip=None, salt=()) -> bool:
+    """主役の写真から人物を切り抜いて前に浮かせる（cutout）。rembg が無い・抜けが悪ければ何もしない。"""
+    from . import thumbfx
+
+    if not (o.get("on") and o.get("cutout")) or not source:
+        return False
+    try:
+        mask = thumbfx.person_mask(tile, thumbfx.key_of(tile, *salt), face=face)
+    except Exception:
+        return False
+    if mask is None:
+        return False
+    thumbfx.pop_out(canvas, tile, pos, mask, outline=outline, clip=clip)
+    return True
+
+
+# ---- 構図
+
+
+def _layout_thumbnail(config: ProjectConfig, out_path: Path, background: str | None,
+                      lines, tags: list[str], crests: list[str] | None, photos: list[str],
+                      focus, focus_x, face_link: str, spec: dict) -> Path:
+    font_path = str(config.video.font_path())
+    name = layout_of(spec)
+    if name not in LAYOUTS:
+        raise ValueError(f"サムネの構図『{name}』は分かりません（{'・'.join(LAYOUTS)}）")
+    o = fx_options(spec)
+    marks = tags if crests is None else crests
+    pair = tuple(lines or ("", ""))
+    line1 = str(pair[0] or "").replace("\\n", " ")
+    line2 = str(pair[1] or "") if len(pair) > 1 else ""
+    if name == "versus":
+        canvas = _layout_versus(spec, o, photos, line1, line2, marks, face_link, font_path, out_path)
+    else:
+        photo = _open_photo(background, out_path)
+        draw_fn = {"face": _layout_face, "scene": _layout_scene, "number": _layout_number}[name]
+        canvas = draw_fn(spec, o, photo, background, line1, line2, marks, focus, focus_x, font_path)
+    _brand_rule(canvas)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    canvas.convert("RGB").save(out_path, quality=95)
+    return out_path
+
+
+def _blank() -> Image.Image:
+    return Image.new("RGBA", SIZE, (14, 20, 32, 255))
+
+
+FACE_TEXT_W = 0.52        # face：字を置く側の幅（画面に対する割合）
+FACE_LEAD_MAX = 1.15      # face：1行目（白）の字は、2行目（主役）のこの倍まで
+
+
+def _layout_face(spec, o, photo, source, line1, line2, marks, focus, focus_x, font_path):
+    """顔の大写し＋反対側に2段の極太の字。顔は side（既定 right）の側へ寄せる。"""
+    from . import thumbfx
+
+    right = str(spec.get("side") or "right") == "right"
+    face = _main_face(photo) if photo is not None else None
+    tile = moved = None
+    if photo is not None:
+        tile, moved = _place(photo, SIZE, (0.72 if right else 0.28, 0.40), face, 0.30,
+                             focus, focus_x)
+        canvas = tile.convert("RGBA")
+    else:
+        canvas = _blank()
+    text_side = "left" if right else "right"
+    if o.get("on"):
+        light = o.get("light")
+        light = ("right" if right else "left") if light == "auto" else str(light)
+        thumbfx.light(canvas, light)
+        if o.get("tint") in ("left", "right"):
+            thumbfx.tint(canvas, o["tint"])
+        if o.get("rays"):
+            thumbfx.rays(canvas, (int(SIZE[0] * (0.70 if right else 0.30)), 260))
+        if tile is not None:
+            _pop(canvas, o, tile, (0, 0), source, face=moved)
+    _side_shade(canvas, text_side, 195, 0.62)
+    _shade(canvas, bottom=150, bottom_alpha=110)
+    width = int(SIZE[0] * FACE_TEXT_W)
+    x0 = 48 if right else SIZE[0] - width - 40
+    top = _corner_crests(canvas, marks, text_side, top=34, height=84)
+    f1, rows1 = _fit_rows(line1, font_path, (104, 96, 88, 80, 72, 64, 58, 52), width, 2)
+    f2, rows2 = _fit_rows(line2, font_path, (156, 144, 132, 120, 110, 100, 92, 84, 76, 68, 60),
+                          width, 2)
+    if rows2 and f1.size > int(f2.size * FACE_LEAD_MAX):
+        # **主役は2行目**。1行目（白）がずっと大きいと、どちらを読めばいいか分からない
+        f1, rows1 = _fit_rows(line1, font_path, tuple(x for x in (104, 96, 88, 80, 72, 64, 58, 52)
+                                                     if x <= int(f2.size * FACE_LEAD_MAX)) or (52,),
+                              width, 2)
+    gap = 22
+    step1, step2 = int(f1.size * 1.16), int(f2.size * 1.14)
+    floor = SIZE[1] - RULE_YELLOW_H - RULE_GREEN_H - 30
+    ceiling = top + 20
+    y = max(ceiling, ceiling + (floor - ceiling - step1 * len(rows1) - gap - step2 * len(rows2)) // 2)
+    for row in rows1:
+        _say(canvas, o, (x0, y), row, f1, WHITE)
+        y += step1
+    y += gap
+    for row in rows2:
+        _say(canvas, o, (x0 - 4, y), row, f2, BAND_YELLOW, main=True)
+        y += step2
+    return canvas
+
+
+SCENE_BAND = 168
+
+
+def _layout_scene(spec, o, photo, source, line1, line2, marks, focus, focus_x, font_path):
+    """場面の全景（暗くしない）＋上か下の黒い帯に1行（2行目）。1行目は帯の縁の緑の札。"""
+    from . import thumbfx
+
+    bottom = str(spec.get("band") or "bottom") == "bottom"
+    if photo is not None:
+        canvas = _cover(photo.convert("RGBA"), *SIZE,
+                        focus=(0.35 if focus is None else focus), focus_x=focus_x)
+    else:
+        canvas = _blank()
+    if o.get("on"):
+        if o.get("light") in ("left", "right", "top"):
+            thumbfx.light(canvas, str(o["light"]), dark=0.8)
+        if o.get("tint") in ("left", "right"):
+            thumbfx.tint(canvas, o["tint"])
+        if o.get("rays"):
+            thumbfx.rays(canvas, (SIZE[0] // 2, SIZE[1] // 2))
+    rule = RULE_YELLOW_H + RULE_GREEN_H
+    y0 = SIZE[1] - rule - SCENE_BAND if bottom else 0
+    band, draw = _layer(SIZE)
+    if o.get("on"):
+        # 帯の縁に薄い影（帯が写真から浮く）
+        for i in range(28):
+            yy = (y0 - 1 - i) if bottom else (y0 + SCENE_BAND + i)
+            draw.line([(0, yy), (SIZE[0], yy)], fill=(0, 0, 0, int(110 * (1 - i / 28))))
+    draw.rectangle([0, y0, SIZE[0], y0 + SCENE_BAND], fill=(6, 8, 12, 232))
+    canvas.alpha_composite(band)
+    _corner_crests(canvas, marks, "right", top=(30 if bottom else SCENE_BAND + 30), height=84)
+    if line1:
+        size = 50
+        tag_h = int(size * 1.5)
+        _tag(canvas, o, 40, (y0 - tag_h) if bottom else (y0 + SCENE_BAND), line1, font_path, size)
+    font, rows = _fit_rows(line2 or line1, font_path,
+                           (124, 116, 108, 100, 92, 84, 76, 68, 60, 54), SIZE[0] - 96, 1)
+    if rows:
+        _say(canvas, o, (48, y0 + SCENE_BAND // 2 + 4), rows[0], font, BAND_YELLOW, main=True,
+             anchor="lm")
+    return canvas
+
+
+def _layout_versus(spec, o, photos, line1, line2, marks, face_link, font_path, out_path):
+    """左右に2人。斜めの黄色い線で分け、真ん中に VS（face_link）か、各自の数字（numbers）。"""
+    from PIL import ImageChops
+
+    from . import thumbfx
+
+    half = SIZE[0] // 2 + 60
+    slant = 50
+    tiles, faces_in = [], []
+    for index in range(2):
+        path = photos[index] if index < len(photos) else None
+        photo = _open_photo(path, out_path)
+        if photo is None:
+            tiles.append(Image.new("RGB", (half, SIZE[1]), (14, 20, 32)))
+            faces_in.append(None)
+            continue
+        tile, moved = _place(photo, (half, SIZE[1]), (0.5, 0.42), _main_face(photo), 0.22)
+        tiles.append(tile)
+        faces_in.append(moved)
+    canvas = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+    canvas.paste(tiles[0].convert("RGBA"), (0, 0))
+    split = Image.new("L", SIZE, 0)
+    ImageDraw.Draw(split).polygon([(SIZE[0] // 2 + slant, 0), (SIZE[0], 0), (SIZE[0], SIZE[1]),
+                                   (SIZE[0] // 2 - slant, SIZE[1])], fill=255)
+    right = Image.new("RGBA", SIZE, (0, 0, 0, 0))
+    right.paste(tiles[1].convert("RGBA"), (SIZE[0] // 2 - 60, 0))
+    canvas.paste(right, (0, 0), split)
+    numbers = [str(x) for x in (spec.get("numbers") or [])][:2]
+    numbers = numbers if len(numbers) == 2 and all(numbers) else []
+    mark = str(face_link or "").strip() or ("" if numbers else "VS")
+    if o.get("on"):
+        if o.get("tint") in ("left", "right"):
+            thumbfx.tint(canvas, o["tint"], split=(SIZE[0] // 2 + slant, SIZE[0] // 2 - slant),
+                         strength=0.32)
+        if o.get("light") in ("left", "right", "top"):
+            thumbfx.light(canvas, str(o["light"]), dark=0.8)
+        if o.get("rays"):
+            thumbfx.rays(canvas, (SIZE[0] // 2, 350), alpha=0.12, hole=170)
+        for index in range(2):
+            clip = split if index else ImageChops.invert(split)
+            source = photos[index] if index < len(photos) else None
+            pos = (SIZE[0] // 2 - 60, 0) if index else (0, 0)
+            _pop(canvas, o, tiles[index], pos, source, face=faces_in[index],
+                 outline=BAND_YELLOW, clip=clip, salt=("versus", index))
+    _shade(canvas, top=170, top_alpha=200, bottom=250, bottom_alpha=215)
+    draw = ImageDraw.Draw(canvas)
+    seam = [(SIZE[0] // 2 + slant, 0), (SIZE[0] // 2 - slant, SIZE[1])]
+    draw.line(seam, fill=TEXT_DARK + (255,), width=22)
+    draw.line(seam, fill=BAND_YELLOW + (255,), width=12)
+    # 上：1行目（白）
+    font, rows = _fit_rows(line1, font_path, (92, 86, 80, 74, 68, 62, 56, 50), SIZE[0] - 120, 1)
+    if rows:
+        _say(canvas, o, ((SIZE[0] - font.getlength(rows[0])) / 2, 74), rows[0], font, WHITE,
+             anchor="lm")
+    # 真ん中：VS（または face_link の字）
+    crest_floor = 300
+    if mark:
+        big = ImageFont.truetype(font_path, 190 if len(mark) <= 2 else 120)
+        _say(canvas, o, (SIZE[0] / 2 - big.getlength(mark) / 2, 350), mark, big, BAND_YELLOW,
+             main=True, anchor="lm", angle=(-6.0 if o.get("on") else 0.0))
+        crest_floor = int(350 - big.size * 0.62)
+    crest_marks = [m for m in (_crest_image(n, 96) for n in (marks or [])[:2]) if m is not None]
+    if len(crest_marks) == 1:
+        piece = crest_marks[0]
+        canvas.alpha_composite(piece, (SIZE[0] // 2 - piece.width // 2,
+                                       max(130, crest_floor - piece.height - 14)))
+    elif len(crest_marks) == 2:
+        canvas.alpha_composite(crest_marks[0], (30, 140))
+        canvas.alpha_composite(crest_marks[1], (SIZE[0] - crest_marks[1].width - 30, 140))
+    # 各自の数字と名前（左右の真ん中）
+    names = [str(x) for x in (spec.get("names") or [])][:2]
+    for index in range(2):
+        cx = SIZE[0] // 4 + (SIZE[0] // 2) * index + (-10 if index else 10)
+        if numbers:
+            nf, nrows = _fit_rows(numbers[index], font_path, (132, 120, 108, 96, 84, 72),
+                                  SIZE[0] // 2 - 120, 1)
+            if nrows:
+                _say(canvas, o, (cx - nf.getlength(nrows[0]) / 2, 440), nrows[0], nf,
+                     BAND_YELLOW, main=True, anchor="lm")
+        if index < len(names) and names[index]:
+            _tag(canvas, o, cx, 500, names[index], font_path, 44, centre=True)
+    # 下：2行目（黄）
+    if line2:
+        font, rows = _fit_rows(line2, font_path, (100, 92, 86, 80, 74, 68, 62, 56), SIZE[0] - 120, 1)
+        rule = RULE_YELLOW_H + RULE_GREEN_H
+        if rows:
+            _say(canvas, o, ((SIZE[0] - font.getlength(rows[0])) / 2, SIZE[1] - rule - 62),
+                 rows[0], font, BAND_YELLOW, main=True, anchor="lm")
+    return canvas
+
+
+_NUMBER_PART = re.compile(r"[0-9０-９●][0-9０-９,，.．●]*")
+
+
+def _number_parts(text: str) -> list[tuple[str, bool]]:
+    """数字（と伏せ字）の所と、それ以外（位・試合・年）に分ける。数字は大きく、ほかは小さく。"""
+    out, i = [], 0
+    for m in _NUMBER_PART.finditer(text):
+        if m.start() > i:
+            out.append((text[i:m.start()], False))
+        out.append((m.group(0), True))
+        i = m.end()
+    if i < len(text):
+        out.append((text[i:], False))
+    return out or [(text, True)]
+
+
+def _part_font(text: str, is_number: bool, big, small):
+    """数字は大きく、ほかは小さく。**伏せ字の ● は数字の7割**（同じ大きさだと赤い丸が画面を埋める）。"""
+    if not is_number:
+        return small
+    if text and set(text) <= {"●"}:
+        return ImageFont.truetype(big.path, int(big.size * 0.7))
+    return big
+
+
+def _layout_number(spec, o, photo, source, line1, line2, marks, focus, focus_x, font_path):
+    """数字が画面の半分。写真は暗く後ろに（ぼかさない）。上に1行目、下に2行目。"""
+    from . import thumbfx
+
+    if photo is not None:
+        canvas = _cover(photo.convert("RGBA"), *SIZE, focus=focus, focus_x=focus_x)
+    else:
+        canvas = _blank()
+    # 字の側（左）を濃く、右は顔が見える程度に
+    dark, draw = _layer(SIZE)
+    for x in range(SIZE[0]):
+        draw.line([(x, 0), (x, SIZE[1])], fill=(0, 0, 0, int(190 - 80 * (x / SIZE[0]))))
+    canvas.alpha_composite(dark)
+    parts = _number_parts(str(spec.get("number") or "").strip())
+    room = SIZE[0] - 96
+    size = 330
+
+    def measure(big, small) -> float:
+        return sum(_part_font(s, n, big, small).getlength(s) + (0 if n else 8) for s, n in parts)
+
+    while size > 120:
+        if measure(ImageFont.truetype(font_path, size),
+                   ImageFont.truetype(font_path, int(size * 0.42))) <= room:
+            break
+        size -= 10
+    big, small = ImageFont.truetype(font_path, size), ImageFont.truetype(font_path, int(size * 0.42))
+    baseline = 468
+    x = 48
+    if o.get("on"):
+        light = o.get("light")
+        if light in ("left", "right", "top"):
+            thumbfx.light(canvas, str(light), dark=0.8)
+        if o.get("tint") in ("left", "right"):
+            thumbfx.tint(canvas, o["tint"])
+        if o.get("rays"):
+            thumbfx.rays(canvas, (int(x + measure(big, small) / 2), int(baseline - size * 0.38)),
+                         color=(255, 240, 120), alpha=0.20, hole=150)
+    _corner_crests(canvas, marks, "right", top=34, height=84)
+    f1, rows1 = _fit_rows(line1, font_path, (84, 78, 72, 66, 60, 54, 48), SIZE[0] - 96 - 230, 1)
+    if rows1:
+        _say(canvas, o, (48, 92), rows1[0], f1, WHITE, anchor="lm")
+    for text, is_number in parts:
+        if is_number:
+            font = _part_font(text, True, big, small)
+            _say(canvas, o, (x, baseline), text, font, BAND_YELLOW, main=True, anchor="ls")
+            x += font.getlength(text)
+        else:
+            x += 8
+            _say(canvas, o, (x, baseline), text, small, WHITE, anchor="ls")
+            x += small.getlength(text)
+    if line2:
+        f2, rows2 = _fit_rows(line2, font_path, (92, 86, 80, 74, 68, 62, 56), SIZE[0] - 96, 1)
+        rule = RULE_YELLOW_H + RULE_GREEN_H
+        if rows2:
+            _say(canvas, o, (48, SIZE[1] - rule - 84), rows2[0], f2, WHITE, anchor="lm")
+    return canvas
