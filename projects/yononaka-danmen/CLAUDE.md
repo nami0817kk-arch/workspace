@@ -190,12 +190,27 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 
 ### 使える部品
 
-**図（`danmen/figures.py`）… 9種**
-`stack` 積み上げ／`compare` 比べる／`timeline` 年表／`flow` 流れ図／`bars` まとめ／
-`hero` 大きな数字／`table` 比べる表／`pie` 割合／`world` 世界地図
+#### 図（板に載せる。全 37 種）
 
-**画面（`danmen/screens.py`）… 5種＋札**
-`title` 冒頭／`chapter` 節の中扉／`quote` 原文の引用／`outro` 締め／`thumbnail` サムネイル／`term` 用語の札
+| ところ | 中身 |
+|---|---|
+| `figures.py` | `stack` 積み上げ／`compare` 比べる／`timeline` 年表／`flow` 流れ図／`bars` まとめ／`hero` 大きな数字／`table` 比べる表／`pie` 割合／`world` 世界地図／`photo` 写真＋説明／`convert` 言い換え（12種） |
+| `news.py` | `ranking` 順位／`change` 増減／`board` 一覧の板／`big_number` 大きな数字（4種。ニュース調の色帯つき） |
+| `charts2.py` | `line` 折れ線／`people` 人の形で割合／`japan` 日本地図／`waterfall` 増減の積み重ね（4種） |
+| `charts3.py` | `relation` 関係図／`calc` 計算の式／`stats` 数字の並べ置き／`gauge` 弧のゲージ（4種） |
+| `charts4.py` | `newspaper` 新聞記事風／`donut` ドーナツ／`schedule` これからの予定／`checklist` ○×の点検／`thermometer` 縦のゲージ（5種） |
+| `charts5.py` | `flowchart` 分岐の判定図／`matrix` 4象限／`receipt` レシート風の明細／`numberline` 数直線／`verdict` ◎○△×の比較表（5種） |
+
+#### 画面（1920×1080 をまるごと作る。全 23 種）
+
+| ところ | 中身 |
+|---|---|
+| `screens.py` | `title` 冒頭／`chapter` 節の中扉／`quote` 原文の引用／`outro` 締め／`thumbnail` サムネイル／`term` 用語の札／`backdrop` 下地（7種） |
+| `studio.py` | `flip` スタジオ解説（白いフリップ＋黒帯の見出し＋札＋ワイプ＋番組帯。日テレ式）（1種） |
+| `news2.py` | `breaking` 速報の帯／`lshape` L字／`voices` 街の声／`split` 分割画面（4種） |
+| `news3.py` | `qa` Q&Aの札／`points` きょうのポイント／`glossary` ことばの意味／`before` 写真の左右比べ／`statement` 公式発言の引用（5種） |
+| `fullscreen.py` | 背景に直接描く3種（下と右の安全域を空ける） |
+| `parts.py` | `number` 数字の組版／`marker` 印／`leader` 引き出し線／`balloon` 吹き出し／`cut_edge` 切り口／`progress` 進み具合（6種の部品） |
 
 ### 素材の置き場（リポジトリには入れない）
 
