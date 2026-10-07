@@ -58,8 +58,8 @@ def fig_for(kind: str) -> dict:
                                  "note": "上乗せ分あり"},
                 "right": {"icon": "globe", "name": "ドイツ", "value": "86円", "note": "1本"}}
     if kind == "timeline":
-        return {**base, "items": [{"when": "1974年", "what": "上乗せが始まる"},
-                                  {"when": "2010年", "what": "期限が外れる"}]}
+        return {**base, "items": [{"label": "1974年", "note": "上乗せが始まる"},
+                                  {"label": "2010年", "note": "期限が外れる"}]}
     if kind == "schedule":
         return {**base, "items": [{"when": "2026年12月", "what": "見直しの議論", "now": True},
                                   {"when": "2027年4月", "what": "結論"}]}
@@ -67,8 +67,8 @@ def fig_for(kind: str) -> dict:
         return {**base, "items": [{"label": "すぐ効く", "ok": True, "note": "補助金"},
                                   {"label": "全員に届く", "ok": False, "note": "車のみ"}]}
     if kind == "flow":
-        return {**base, "steps": [{"label": "私たち", "note": "給油"},
-                                  {"label": "国", "note": "揮発油税"}]}
+        return {**base, "items": [{"label": "私たち", "note": "給油のとき", "icon": "people"},
+                                  {"label": "国", "note": "揮発油税", "icon": "parliament"}]}
     if kind == "flowchart":
         return {**base, "steps": [{"ask": "車に乗りますか", "no": "関係ない"}], "end": "月500円"}
     if kind == "verdict":
@@ -83,27 +83,37 @@ def fig_for(kind: str) -> dict:
                                  "left": "気づきにくい", "right": "気づきやすい"},
                 "items": [{"label": "ガソリン税", "x": -0.6, "y": 0.5}]}
     if kind == "table":
-        return {**base, "cols": ["国", "税"], "rows": [["日本", "56.6円"], ["ドイツ", "86円"]]}
+        return {**base, "cols": ["税", "1リットル"],
+                "items": [{"label": "日本", "values": ["56.6円"], "strong": True},
+                          {"label": "ドイツ", "values": ["86円"]}]}
     if kind in ("hero", "big_number"):
         return {**base, "value": "175円", "label": "レギュラー1リットル", "note": "2026年10月"}
     if kind == "line":
-        return {**base, "series": [{"label": "店頭価格",
-                                    "points": [[2020, 140], [2023, 168], [2026, 175]]}]}
+        return {**base, "items": [{"label": "店頭価格",
+                                   "points": [[2020, 140], [2023, 168], [2026, 175]]}]}
     if kind == "people":
-        return {**base, "value": 40, "total": 100, "label": "税金の割合"}
+        return {**base, "total": 10, "filled": 4, "per_row": 10,
+                "lead": "10人のうち4人が「知らなかった」"}
     if kind == "waterfall":
         return {**base, "items": [{"label": "本体", "value": 92},
                                   {"label": "税", "value": 70.6}], "total_label": "店頭"}
     if kind == "calc":
-        return {**base, "lines": [{"left": "92円", "op": "＋", "right": "70.6円"},
-                                  {"left": "合計", "op": "＝", "right": "175円"}]}
+        return {**base, "terms": [{"label": "本体", "value": "92円"},
+                                  {"label": "税", "value": "70.6円"},
+                                  {"label": "店頭", "value": "175円"}],
+                "ops": ["＋", "＝"], "note": "2026年10月時点"}
     if kind == "stats":
         return {**base, "items": [{"value": "175円", "label": "1リットル"},
                                   {"value": "70.6円", "label": "うち税"}]}
     if kind == "gauge":
         return {**base, "value": 40, "max": 100, "label": "税の割合", "note": "40%"}
     if kind == "relation":
-        return {**base, "center": "ガソリン税", "items": [{"label": "国"}, {"label": "地方"}]}
+        return {**base,
+                "nodes": [{"id": "a", "label": "私たち", "x": 0.14, "y": 0.5},
+                          {"id": "b", "label": "国", "x": 0.5, "y": 0.5, "kind": "focus"},
+                          {"id": "c", "label": "道路の工事", "x": 0.86, "y": 0.5}],
+                "links": [{"from": "a", "to": "b", "label": "53.8円"},
+                          {"from": "b", "to": "c", "label": "使い道は自由"}]}
     if kind == "thermometer":
         return {**base, "value": 70, "goal": 175, "label": "いま", "note": "70.6円"}
     if kind == "newspaper":
@@ -112,10 +122,11 @@ def fig_for(kind: str) -> dict:
         return {**base, "items": [{"label": "ガソリン税", "note": "53.8円"},
                                   {"label": "消費税", "note": "14.4円"}]}
     if kind == "convert":
-        return {**base, "from": {"value": "70.6円", "label": "1リットル"},
-                "to": {"value": "4万円", "label": "年間"}}
+        return {**base, "items": [{"value": "70.6円", "label": "1リットル", "note": "いま払う税"},
+                                  {"value": "4万円", "label": "1年ぶん", "note": "1台あたり"}],
+                "note": "年に700リットル使う前提"}
     if kind == "photo":
-        return {**base, "photo": "", "caption": "給油所"}
+        return {**base, "src": "", "caption": "都内の給油所（2026年10月）"}
     if kind == "world":
         return {**base, "values": {"JPN": 56.6, "DEU": 86}}
     if kind == "japan":
