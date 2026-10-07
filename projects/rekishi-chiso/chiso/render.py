@@ -285,7 +285,7 @@ class Painter:
             self._memo(img, state, slide)
             spec = _json.loads(state.detail)
             view = pen.draw_detail(self, img, spec)
-            on = ("pic", view, pen.detail_tile(self, spec)[1], self.PANEL_BOX)
+            on = ("pic", view, pen.detail_tile(self, spec)[1], self.DETAIL_BOX)
         elif state.figure is None:
             self._memo(img, state, slide)
             if state.portrait is not None:
@@ -321,7 +321,7 @@ class Painter:
         if state.place and not is_map and not is_versus and not state.reaction:   # 地図の図が出ているあいだは要らない
             img = extras.draw_minimap(self, img, state.place, top)
         dr = ImageDraw.Draw(img, "RGBA")
-        if state.figure is None and not state.reaction:    # 図のあいだは年表も隠す（図の板を下まで広げる）
+        if state.figure is None and not state.reaction and not state.detail:   # 図・絵の一部のあいだは年表も隠す
             self._timeline(dr, 470, W - 470, 770, state.year if year is None else year)
         if state.background is not None and state.background.credit and not is_versus:   # 左右比べは絵の出典を図が出す
             dr.text((W / 2, H - 14), f"背景：{state.background.credit}", font=self.font("serif", 18),
@@ -382,6 +382,7 @@ class Painter:
         dr.text((x0 + w / 2, y0 + 54), text, font=bf, fill=(255, 255, 255), anchor="mm")
 
     PANEL_BOX = (960, 250, 1600, 720)                     # メモ（左、右端 x≈940）と用語の札（x=1640〜）のあいだ、年表の上
+    DETAIL_BOX = (960, 236, 1610, 830)                    # 絵の一部を大きく（年表を隠して下まで使う。字幕の名札 y≈872 の上）
 
     def frame(self, img: Image.Image, px: int, py: int, w: int, h: int) -> None:
         """肖像と同じ二重の金の額（台紙は暗い茶）。texture のときは台紙に紙の目。"""
@@ -629,7 +630,7 @@ class Painter:
         img = img.copy()
         dr = ImageDraw.Draw(img, "RGBA")
         hf = self.font("gothic", 22)
-        cy = self.H * 0.40 + 150
+        cy = self.H * 0.40 + 128
         dr.text((self.W / 2, cy), f"▼ ここまでの地層（第{section}節）", font=self.font("gothic", 24), fill=DIM,
                 anchor="mm")
         ws = []

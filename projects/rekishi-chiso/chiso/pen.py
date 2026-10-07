@@ -7,8 +7,8 @@
     mark: [{type: circle, at: [0.3, 0.2, 0.6, 0.5]}, {type: note, at: [0.62, 0.15], text: 三段撃ち？}]
     mark: {type: strike, at: 2}                              # 図の2番目の項目に取り消し線
 
-detail はその行のあいだ、真ん中の額（render.Painter.PANEL_BOX）にその絵の一部を大きく出し、下に小さな札。
-止まった絵で、動かさない（背景を動かさない決まり）。肖像はその行だけ隠れる。
+detail はその行のあいだ、真ん中の額（render.Painter.DETAIL_BOX）にその絵の一部を大きく出し、下に小さな札。
+止まった絵で、動かさない（背景を動かさない決まり）。肖像・図・年表はその行だけ隠れる（図より先に出る）。
 
 mark は大きく見せた絵・図・真ん中の額（背景の絵）・肖像の上に、赤い手書き風の印を1つずつ足していく。
 同じもの（同じ detail・同じ図・同じ背景）の上にいるあいだは前の行の印が残り、替わると消える（mark: null でも消える）。
@@ -47,7 +47,7 @@ def crop_box(spec: dict, size: tuple[int, int]) -> tuple[int, int, int, int]:
 
 def detail_tile(painter, spec: dict) -> tuple[Image.Image, tuple[int, int, int, int]]:
     """切り抜いて額の中の大きさに合わせた絵と、元の絵での範囲。作るのは1回だけ（控える）。"""
-    x0, y0, x1, y1 = painter.PANEL_BOX
+    x0, y0, x1, y1 = painter.DETAIL_BOX
     key = ("detail", spec["image"], tuple(spec["box"]), x1 - x0, y1 - y0)
     if key not in painter._images:
         src = painter.image(spec["image"]).convert("RGB")
@@ -61,10 +61,10 @@ def detail_tile(painter, spec: dict) -> tuple[Image.Image, tuple[int, int, int, 
 
 
 def draw_detail(painter, img: Image.Image, spec: dict) -> tuple[int, int, int, int]:
-    """真ん中の額に、絵の一部を大きく。下に小さな札（label）。左下に全体の中のどこかを小さく。
+    """真ん中の額に、絵の一部を大きく。下に小さな札（label）。左上に全体の中のどこかを小さく。
     絵が出ている場所 (x, y, w, h) を返す（赤ペンの位置合わせに使う）。"""
     part, box = detail_tile(painter, spec)
-    x0, y0, x1, y1 = painter.PANEL_BOX
+    x0, y0, x1, y1 = painter.DETAIL_BOX
     px = (x0 + x1) // 2 - part.width // 2
     py = (y0 + y1) // 2 - part.height // 2
     painter.frame(img, px, py, part.width, part.height)
@@ -232,8 +232,11 @@ def draw_one(painter, layer: Image.Image, m: dict, box, area, i: int, p: float) 
         pts = [(x0 - 8 + (x1 - x0 + 16) * k / n, y + math.sin(k * 0.5) * (2.2 if kind == "underline" else 1.2)
                 + (-(k / n - 0.5) * 6 if kind == "strike" else 0)) for k in range(n + 1)]
         _line(d, _part(_wobble(pts, rnd, 0.8), p), PEN_W + (1 if kind == "strike" else 0))
-        if text and p >= 1:
-            _write(painter, layer, text, x1 + 14, y + (44 if kind == "underline" else -8), 1.0, "ls")
+        if text and p >= 1:                                     # 線の右の端の上（下線は下）に書く
+            if kind == "underline":
+                _write(painter, layer, text, x1 + 8, y + 52, 1.0, "rs")
+            else:
+                _write(painter, layer, text, x1 + 8, y - 26, 1.0, "rs")
     elif kind == "arrow":
         ax0, ay0, ax1, ay1 = area
         if m.get("from"):

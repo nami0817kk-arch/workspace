@@ -13,6 +13,7 @@
     python -m chiso.cli upload  scripts/x.yaml --at "2026-10-05 19:00"   # 予約投稿（承認と screen が要る）
     python -m chiso.cli whoami                          # 許可したチャンネルの名前を出す（取り違えの確認）
     python -m chiso.cli check   scripts/x.yaml          # 素材の有無・書きすぎ・抑揚の張りつきを点検
+    python -m chiso.cli qc      scripts/x.yaml [--video out/x.mp4]   # 出来上がった動画の点検（一覧・画面の替わり方・音）
 
 台本確認は必ず通す（チャンネル共通の決まり）。approve を打つのは、ユーザーが台本に
 はっきり「OK」と言ったときだけ。「見せて」「出す」は承認ではない。
@@ -429,6 +430,25 @@ def cmd_check(args) -> int:
     return 0 if ok else 3
 
 
+def cmd_qc(args) -> int:
+    """出来上がった動画を見る：20秒ごとの一覧（節ごとの段）・画面が大きく変わらない区間・字幕と長さの差・音の大きさ・無音。"""
+    from . import qc
+    config = load_config()
+    sc = script_mod.load(args.script)
+    video_path = Path(args.video) if args.video else out_dir() / f"{sc.path.stem}.mp4"
+    if not video_path.exists():
+        print(f"動画がありません: {video_path.as_posix()}")
+        return 1
+    stem = sc.path.stem
+    png, md = out_dir() / f"{stem}_qc.png", out_dir() / f"{stem}_qc.md"
+    print(f"{video_path.as_posix()} を読んでいます（1回通して見ます）…")
+    lines = qc.run(ffmpeg(), sc, video_path, png, md, config.get("fonts", {}).get("gothic"),
+                   end_seconds=render.END_SECONDS if sc.next else 0.0)
+    print("\n".join(lines))
+    print(f"\n控え：{md.as_posix()}")
+    return 0
+
+
 # --- 投稿 ---------------------------------------------------------------
 
 def screened_path(path: Path) -> Path:
@@ -632,6 +652,10 @@ def main(argv=None) -> int:
         s = sub.add_parser(name)
         s.add_argument("script")
         s.set_defaults(fn=fn)
+    s = sub.add_parser("qc")
+    s.add_argument("script")
+    s.add_argument("--video", help="点検する動画（省けば out/<台本>.mp4）")
+    s.set_defaults(fn=cmd_qc)
     s = sub.add_parser("upload")
     s.add_argument("script")
     s.add_argument("--at", required=True, help="公開時刻（日本時間）'YYYY-MM-DD HH:MM'。9時〜24時")
