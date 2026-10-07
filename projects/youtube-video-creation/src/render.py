@@ -814,12 +814,8 @@ class Renderer:
         話している行を光らせるために行ごとに別のカードを持たせているので、カードの名前は毎行変わる。
         名前で比べると、行が替わるたびに表が空から組み直されていた
         """
-        a = self.script_cards.get(first or "")
-        b = self.script_cards.get(second or "")
-        if not a or not b:
-            return False
-        strip = lambda spec: {k: v for k, v in spec.items() if k != "highlight_row"}
-        return strip(a) == strip(b)
+        # 散らばり図の highlight（2026-10-07 夜）も同じ。決まりは cards.same_table の1か所に置く
+        return cards.same_table(self.script_cards.get(first or ""), self.script_cards.get(second or ""))
 
     def _card(self, name: str, beside: bool = False, limit: int | None = None,
               reveal: int | None = None) -> Image.Image | None:

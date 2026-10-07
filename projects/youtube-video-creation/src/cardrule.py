@@ -17,6 +17,9 @@ BAR_MARKS = ("倍", "対して", "に対し", "％", "%", "パーセント", "�
 TABLE_MARKS = ("分に", "分、", "節", "順", "そのあと", "続いて", "得点の流れ")
 # 整理・列挙
 POINT_MARKS = ("つあり", "つの", "まず", "ひとつ", "ふたつ", "以下の", "並べる")
+# お金の換算（2026-10-07 夜、換算の板）。外貨の額と、円・週給・年俸が同じ文に出る
+CURRENCY_MARKS = ("ポンド", "ユーロ", "ドル")
+CONVERT_MARKS = ("円", "週給", "年俸", "年収", "換算")
 
 # 画面が変わらない時間の上限（秒）。**20秒では長すぎた**ので詰める
 SAME_LOOK_MAX = 8.0
@@ -37,6 +40,9 @@ def suggest(text: str, voice: str = "") -> str:
     import re
 
     numbers = re.findall(r"[0-9]+(?:[.,][0-9]+)?", body)
+    if (len(numbers) >= 2 and any(m in body for m in CURRENCY_MARKS)
+            and any(m in body for m in CONVERT_MARKS)):
+        return "convert"        # 週給→年俸、ポンド→円。換算の板で元の数字と換算を並べる
     if any(m in body for m in TABLE_MARKS) and len(numbers) >= 2:
         return "table"          # 時系列は表。棒より先に見る
     if len(numbers) >= 3 or (len(numbers) >= 2 and any(m in body for m in BAR_MARKS)):

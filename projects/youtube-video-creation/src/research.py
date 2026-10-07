@@ -23,6 +23,7 @@ from .config import _resolve
 
 from . import coverage, xposts
 from . import marks as _marks
+from . import cards as _cards
 from .plan import Plan
 
 # 節の中身に合う背景を選ぶ。順番に配るだけだと、緑の芝ばかりが続く
@@ -875,11 +876,14 @@ NEW_CARD_KEYS = {
     "verdict": frozenset({"type", "title", "columns", "rows", "highlight_row", "note", "source", "color"}),
     "calc": frozenset({"type", "title", "terms", "ops", "note", "source", "color"}),
     "versus": frozenset({"type", "title", "left", "right", "credit"}),
+    # 2026-10-07 夜（③2軸の散らばり図・⑤換算の板）。鍵の一覧は cards の側に1つだけ置く
+    "scatter": _cards.SCATTER_KEYS,
+    "convert": _cards.CONVERT_KEYS,
 }
 
 
 def _check_number_card(section: Section, card: dict, kind: str) -> list[str]:
-    """stats・verdict・calc・versus の形を見る（2026-10-07）。落ちる条件は cards の側と同じ。"""
+    """stats・verdict・calc・versus・scatter・convert の形を見る（2026-10-07）。落ちる条件は cards の側と同じ。"""
     from . import cards as cards_mod
 
     where = f"{section.id}: {kind} カード"
@@ -945,6 +949,11 @@ def _check_number_card(section: Section, card: dict, kind: str) -> list[str]:
                 problems.append(f"{where}の {side_name} に image がありません")
             elif not _resolve(image).exists():
                 problems.append(f"{where}の {side_name} の写真がありません: {image}")
+    elif kind == "scatter":
+        # 点11個・数でない座標・知らない focus は、書き出しの途中ではなくここで止める
+        problems += [f"{section.id}: {p}" for p in cards_mod.check_scatter(card)]
+    elif kind == "convert":
+        problems += [f"{section.id}: {p}" for p in cards_mod.check_convert(card)]
     return problems
 
 
@@ -1513,10 +1522,12 @@ def _advise_card_telop_overlap(notes: Notes) -> list[str]:
     hints: list[str] = []
     for section in notes.sections:
         card = section.card or {}
-        # 判定表（verdict、2026-10-07）も表と同じく上から伸びる
-        if str(card.get("type", "")).lower() not in ("table", "verdict"):
+        # 判定表（verdict、2026-10-07）も表と同じく上から伸びる。散らばり図（scatter）は
+        # 行の数によらず背が高い（本編で約660px）ので、いつも行の多い表と同じに見る
+        kind = str(card.get("type", "")).lower()
+        if kind not in ("table", "verdict", "scatter"):
             continue
-        rows = len(card.get("rows") or [])
+        rows = len(card.get("rows") or []) if kind != "scatter" else TABLE_ROWS_WITH_LONG_LINE
         if rows < TABLE_ROWS_WITH_LONG_LINE:
             continue
         for number, sentence in enumerate(section.say):
@@ -1526,10 +1537,35 @@ def _advise_card_telop_overlap(notes: Notes) -> list[str]:
             text = _bare_text(sentence if isinstance(sentence, str) else str((sentence or {}).get("text", "")))
             if len(text) > LONG_TELOP_CHARS:
                 hints.append(
-                    f"節『{section.heading}』: 表が{rows}行あり、{len(text)}字の行（『{text[:16]}…』）の"
+                    f"節『{section.heading}』: {'散らばり図があり' if kind == 'scatter' else f'表が{rows}行あり'}、"
+                    f"{len(text)}字の行（『{text[:16]}…』）の"
                     "テロップが3行になって表の下にかかります。行を2つに割るか、表を減らしてください"
                     "（2026-09-25 ラフィーニャ）")
                 break
+    return hints
+
+
+def _advise_convert_math(notes: Notes) -> list[str]:
+    """**換算の板の検算**（2026-10-07 夜、⑬）。via に倍率が数で書いてあれば、元 × 倍率 と書いた値を比べる。
+
+    換算の値は書いた人が計算する決まり（機械は確かめない）。ただ「×52週」「1ポンド＝195円」のように
+    倍率が数で書いてあれば掛け算はできるので、1割を超えてずれたら知らせる。**止めない**
+    （為替を丸めた・税引きの額を書いた、など書いた人に理由があることもある）。
+    """
+    from . import cards as cards_mod
+
+    hints: list[str] = []
+    for section in notes.sections:
+        for card in [section.card] + list(section.line_cards or []):
+            if not (isinstance(card, dict) and str(card.get("type", "")).lower() == "convert"):
+                continue
+            if cards_mod.check_convert(card):
+                continue            # 形の誤りは _check_card が止める
+            for gap in cards_mod.convert_mismatches(card):
+                hint = (f"節『{section.heading}』: 換算の板の値が式と合いません（{gap}）。"
+                        "計算し直すか、via の倍率を直してください")
+                if hint not in hints:
+                    hints.append(hint)
     return hints
 
 
@@ -1861,16 +1897,16 @@ def _view_comparison(text: str) -> bool:
 def _has_count_table(section: Section) -> bool:
     """見立ての節に表があるか。節の card（表・棒）か、行ごとの card。引用カード（見立ての一言）は数えない。"""
     card = section.card if isinstance(section.card, dict) else {}
-    # 判定表・数字の板・計算の式（2026-10-07）も自分で数えた表に数える
-    if str(card.get("type", "")).lower() in ("table", "bars", "verdict", "stats", "calc"):
+    # 判定表・数字の板・計算の式・散らばり図・換算の板（2026-10-07）も自分で数えた表に数える
+    if str(card.get("type", "")).lower() in ("table", "bars", "verdict", "stats", "calc", "scatter", "convert"):
         return True
     return any(isinstance(c, dict) and c for c in section.line_cards)
 
 
 def _has_calc(section: Section) -> bool:
-    """見立ての節に計算の式（calc）があるか。**式そのものが「この回だけの数字」の比べ**（2026-10-07）。"""
+    """見立ての節に計算の式（calc）か換算の板（convert）があるか。**式そのものが「この回だけの数字」の比べ**（2026-10-07）。"""
     cards = [section.card] + list(section.line_cards or [])
-    return any(isinstance(c, dict) and str(c.get("type", "")).lower() == "calc" for c in cards)
+    return any(isinstance(c, dict) and str(c.get("type", "")).lower() in ("calc", "convert") for c in cards)
 
 
 def _advise_series_numbers(notes: Notes) -> list[str]:
@@ -2364,7 +2400,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_player_photos(notes)
                         + _advise_placeholders(notes)
                         + _advise_offtopic_section(notes)
-                        + _advise_card_telop_overlap(notes)
+                        + _advise_card_telop_overlap(notes) + _advise_convert_math(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
                         + _advise_ear(notes) + _advise_readings(notes)

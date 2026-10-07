@@ -16,7 +16,7 @@ from PIL import Image, ImageDraw, ImageFont
 TEAM_SIZES = (46, 42, 38, 34, 30, 26, 22)
 
 CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions", "kit",
-              "stats", "verdict", "calc", "versus")
+              "stats", "verdict", "calc", "versus", "scatter", "convert")
 # **画面いっぱいの絵になる型**（2026-10-07）。板（カード）ではなく、写真の下地の代わりに敷く。
 # render.py は板と同じ扱い（上に節の名前・見出し・ほかのカードを重ねない）で描く
 FULL_SCREEN_TYPES = ("versus",)
@@ -71,6 +71,11 @@ def row_count(spec: dict) -> int:
         return len(spec.get("terms") or [])
     if kind == "verdict":
         return min(6, len(spec.get("rows") or []))
+    # 2026-10-07 夜。散らばり図は点を1つずつ、換算は 元 → 矢印 → 換算 の順に
+    if kind == "scatter":
+        return min(SCATTER_MAX, len(spec.get("points") or []))
+    if kind == "convert":
+        return max(0, len(convert_values(spec)) * 2 - 1)
     return 0
 
 
@@ -79,16 +84,20 @@ def is_full_screen(spec: dict | None) -> bool:
     return bool(spec) and str(spec.get("type", "")).lower() in FULL_SCREEN_TYPES
 
 
+# 話している行・点を光らせる鍵。これだけが違うカードは「同じ表」（表は highlight_row、散らばり図は highlight）
+HIGHLIGHT_KEYS = ("highlight_row", "highlight")
+
+
 def same_table(a: dict | None, b: dict | None) -> bool:
-    """光らせる行（highlight_row）だけが違う、同じ表か（render.same_table・書き込みの引き継ぎ）。"""
+    """光らせる行（highlight_row・散らばり図の highlight）だけが違う、同じ表か（render.same_table・書き込みの引き継ぎ）。"""
     if not a or not b:
         return False
-    strip = lambda spec: {k: v for k, v in spec.items() if k != "highlight_row"}
+    strip = lambda spec: {k: v for k, v in spec.items() if k not in HIGHLIGHT_KEYS}
     return strip(a) == strip(b)
 
 
 # **書き込み（赤ペン）を足せる型**（2026-10-07、src/marks.py）。項目の番号・列で指す
-MARKABLE_TYPES = ("table", "verdict", "bars", "stats", "calc", "points")
+MARKABLE_TYPES = ("table", "verdict", "bars", "stats", "calc", "points", "scatter", "convert")
 
 
 def mark_units(spec: dict | None) -> int:
@@ -106,6 +115,10 @@ def mark_units(spec: dict | None) -> int:
         return len(spec.get("terms") or [])
     if kind == "points":
         return min(5, len(spec.get("items") or []))
+    if kind == "scatter":
+        return min(SCATTER_MAX, len(spec.get("points") or []))
+    if kind == "convert":
+        return len(convert_values(spec))
     return 0
 
 
@@ -121,8 +134,10 @@ def mark_columns(spec: dict | None) -> list[str]:
         return named if len(named) == width else ["項目", "判定", "一言"][:width]
     if kind == "bars":
         return ["名前", "棒", "値"]
-    if kind in ("stats", "calc"):
+    if kind in ("stats", "calc", "convert"):
         return ["数字", "注記"]
+    if kind == "scatter":
+        return ["点", "名前"]
     return []
 
 
@@ -134,7 +149,7 @@ def layout(spec: dict, width: int, font_path: str, latin_font_path: str | None =
     """
     kind = str(spec.get("type", "quote")).lower()
     builder = {"bars": _bars, "table": _table, "stats": _stats, "verdict": _verdict,
-               "calc": _calc, "points": _points}.get(kind)
+               "calc": _calc, "points": _points, "scatter": _scatter, "convert": _convert}.get(kind)
     if builder is None:
         raise CardError(f"{kind} カードには書き込みを足せません（{'・'.join(MARKABLE_TYPES)}）")
     blocks = builder(spec, width, font_path, latin_font_path or font_path)
@@ -212,6 +227,8 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
         "stats": _stats,
         "verdict": _verdict,
         "calc": _calc,
+        "scatter": _scatter,
+        "convert": _convert,
     }[kind]
     blocks = builder(spec, width, font_path, latin_font_path or font_path)
 
@@ -1335,6 +1352,666 @@ def _verdict(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
 
         blocks.append({"height": row_h, "draw": draw_row, "row": True, "unit": unit_row})
     return blocks + _note_blocks(spec, width, font_path)
+
+
+# ------------------------------------------------------------------ 2軸の散らばり図・換算の板（2026-10-07 夜）
+#
+# ユーザーが「3.5」を選んだ（③2軸の散らばり図・⑤換算の板）。世の中の断面図の charts5.matrix
+# （2軸に印を打ち、札が重ならないように逃がす）と figures.convert（「1回ぶん」を「1年ぶん」に直す
+# 箱と矢印）を、こちらの「縦に積むブロック＋reveal で1つずつ出す」作りに書き直した。
+
+SCATTER_MAX = 10          # 点は10まで。それより多いと札が逃げきれず、目で追えない
+SCATTER_KEYS = frozenset({"type", "title", "x", "y", "points", "focus", "highlight", "diagonal",
+                          "note", "source", "color"})
+AXIS_KEYS = frozenset({"label", "unit"})
+CONVERT_KEYS = frozenset({"type", "title", "from", "to", "steps", "via", "note", "source", "color"})
+CONVERT_MAX = 3           # 週給→年俸→円 の3段まで
+DOT = (74, 200, 128, 255)          # ふつうの点（判定の○と同じ緑）
+DOT_DIM = (40, 112, 76, 255)       # 話している人がいるとき、ほかの点は沈める
+DOT_RING = (12, 18, 28, 255)       # 点の縁（板の地の色。重なった点を分ける）
+LABEL = (214, 220, 230, 255)
+LEADER = (112, 122, 138, 255)      # 離した札と点を結ぶ細い線
+DIAGONAL = (150, 160, 176, 255)
+BOX = (24, 31, 42, 255)            # 換算の途中の箱
+ARROW = (200, 208, 220, 255)
+
+_FULLWIDTH = str.maketrans("０１２３４５６７８９．，－＋", "0123456789.,-+")
+_KANJI_UNITS = {"千": 1e3, "万": 1e4, "億": 1e8, "兆": 1e12}
+
+
+def to_number(value) -> float | None:
+    """点の座標に使う数。数字そのもの（`9.8`・`"1,240"`）だけを数に。字が混じれば None。"""
+    if isinstance(value, bool) or value is None:
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    text = str(value).strip().translate(_FULLWIDTH).replace(",", "").replace("−", "-")
+    if not _re.fullmatch(r"[-+]?\d+(?:\.\d+)?", text):
+        return None
+    return float(text)
+
+
+def amount(text) -> float | None:
+    """金額などの量。「約30億」「1560万」「1億2000万」「300,000」を数に。数字で始まらなければ None。"""
+    text = str(text or "").translate(_FULLWIDTH).replace(",", "")
+    text = _re.sub(r"^\s*(?:約|およそ|ほぼ)\s*", "", text)
+    piece = _re.compile(r"(\d+(?:\.\d+)?)((?:[千万億兆])*)")
+    total, found, pos = 0.0, False, 0
+    while True:
+        m = piece.match(text, pos)
+        if not m:
+            break
+        value = float(m.group(1))
+        for unit in m.group(2):
+            value *= _KANJI_UNITS[unit]
+        total += value
+        found, pos = True, m.end()
+        if not m.group(2):          # 「1億2000万」の続きだけ足す。「30ポンド」はここで終わり
+            break
+    return total if found else None
+
+
+# ---- 散らばり図
+
+
+def _axis(spec: dict, key: str) -> dict:
+    axis = spec.get(key)
+    if isinstance(axis, str):
+        return {"label": axis.strip(), "unit": ""}
+    if isinstance(axis, dict):
+        return {"label": str(axis.get("label") or "").strip(), "unit": str(axis.get("unit") or "").strip()}
+    return {"label": "", "unit": ""}
+
+
+def scatter_points(spec: dict) -> list[dict]:
+    """points を {name, x, y} の並びに。数でない座標は None のまま（check_scatter が止める）。"""
+    out = []
+    for point in spec.get("points") or []:
+        if isinstance(point, dict):
+            name, x, y = point.get("name"), point.get("x"), point.get("y")
+        elif isinstance(point, (list, tuple)) and len(point) == 3:
+            name, x, y = point
+        else:
+            out.append({"name": "", "x": None, "y": None, "raw": point})
+            continue
+        out.append({"name": str(name if name is not None else "").strip(),
+                    "x": to_number(x), "y": to_number(y), "raw": point})
+    return out
+
+
+def scatter_pick(spec: dict, key: str, count: int) -> int | None:
+    """focus・highlight を点の番号に。名前か 0 始まりの番号。無ければ None、合わなければ -1。"""
+    value = spec.get(key)
+    if value is None or value == "":
+        return None
+    if isinstance(value, int) and not isinstance(value, bool):
+        return value if 0 <= value < count else -1
+    names = [p["name"] for p in scatter_points(spec)]
+    return names.index(str(value).strip()) if str(value).strip() in names else -1
+
+
+def check_scatter(spec: dict) -> list[str]:
+    """散らばり図の形の誤り（描く前に止める。research の draft も同じものを見る）。"""
+    problems = []
+    unknown = sorted(str(k) for k in spec if k not in SCATTER_KEYS)
+    if unknown:
+        problems.append(f"scatter カードに知らない鍵があります（{unknown[0]}）。"
+                        f"使えるのは {'・'.join(sorted(SCATTER_KEYS))}")
+    for key in ("x", "y"):
+        axis = spec.get(key)
+        if isinstance(axis, dict):
+            extra = sorted(str(k) for k in axis if k not in AXIS_KEYS)
+            if extra:
+                problems.append(f"scatter の {key} に知らない鍵があります（{extra[0]}）。使えるのは label・unit")
+        if not _axis(spec, key)["label"]:
+            problems.append(f"scatter には {key}: {{label: …, unit: …}}（軸の名前）が必要です")
+    points = scatter_points(spec)
+    if len(points) < 2:
+        problems.append("scatter の points は [名前, x, y] を2つ以上書いてください")
+    elif len(points) > SCATTER_MAX:
+        problems.append(f"scatter の points は{SCATTER_MAX}までです（{len(points)}）。札が重なって読めません")
+    for point in points:
+        if point["x"] is None or point["y"] is None or not point["name"]:
+            problems.append(f"scatter の点は [名前, x, y]（x・y は数だけ）で書いてください（{str(point['raw'])[:30]}）")
+            break
+    names = [p["name"] for p in points if p["name"]]
+    if len(set(names)) != len(names):
+        problems.append("scatter の点の名前が重なっています（focus・highlight・書き込みで指せません）")
+    for key in ("focus", "highlight"):
+        if points and scatter_pick(spec, key, len(points)) == -1:
+            problems.append(f"scatter の {key}『{spec.get(key)}』は点の名前か 0〜{len(points) - 1} の番号で書いてください")
+    diagonal = spec.get("diagonal")
+    if diagonal is not None and not isinstance(diagonal, (bool, str)):
+        problems.append("scatter の diagonal は true か、線の名前（字）で書いてください")
+    return problems
+
+
+def nice_ticks(lo: float, hi: float, target: int = 5) -> list[float]:
+    """切りのよい目盛り（1・2・2.5・5 の10のべき倍）。lo〜hi を覆う。"""
+    import math
+
+    if hi <= lo:
+        hi = lo + 1.0
+    raw = (hi - lo) / target
+    mag = 10 ** math.floor(math.log10(raw))
+    step = mag * 10
+    for m in (1, 2, 2.5, 5, 10):
+        if (hi - lo) / (m * mag) <= target:
+            step = m * mag
+            break
+    start = math.floor(lo / step + 1e-9) * step
+    end = math.ceil(hi / step - 1e-9) * step
+    count = int(round((end - start) / step))
+    return [round(start + i * step, 10) for i in range(count + 1)]
+
+
+def _scatter_range(values: list[float]) -> tuple[float, float]:
+    lo, hi = min(values), max(values)
+    span = (hi - lo) or max(abs(hi), 1.0)
+    # 0 からの軸にする（得点・期待値・出場時間は 0 から見たほうが差の大きさが正しく見える）
+    if lo >= 0 and lo <= hi * 0.5:
+        lo = 0.0
+    else:
+        lo -= span * 0.06
+    hi += span * 0.08          # 端の点の札が外へ出ないように少し空ける
+    return lo, hi
+
+
+def _tick_text(value: float) -> str:
+    return f"{value:g}" if abs(value) < 1e6 else f"{value:.3g}"
+
+
+def _scatter(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """2軸の散らばり図（2026-10-07 夜）。比較の回・若手の数字・得点王レース（得点×期待値）に。
+
+    ```yaml
+    card: {type: scatter, title: 得点と期待値（xG）, x: {label: 期待値, unit: xG}, y: {label: 得点, unit: 点},
+           points: [[ハーランド, 9.8, 14], [サラー, 6.1, 5], …], focus: ハーランド, diagonal: 期待値どおり}
+    ```
+    点が1つずつ出て（reveal）、`highlight`（名前か番号）の点が光る。行ごとにカードを分けて
+    highlight だけ替えても開き直さない（same_table）。注目（focus）だけ黄で大きく、ほかは緑。
+    名前の札は点・ほかの札・枠にかからない場所へ逃がし、離れたら細い線で結ぶ。
+    """
+    problems = check_scatter(spec)
+    if problems:
+        raise CardError(problems[0])
+    points = scatter_points(spec)
+    n = len(points)
+    focus = scatter_pick(spec, "focus", n)
+    highlight = scatter_pick(spec, "highlight", n)
+    x_axis, y_axis = _axis(spec, "x"), _axis(spec, "y")
+    diagonal = spec.get("diagonal")
+    wide = width >= 1050
+    ruler = _ruler()
+
+    tick_font = _font(font_path, 28 if wide else 27)
+    axis_font = _font(font_path, 30 if wide else 29)
+    label_size = 34 if wide else 33
+    fonts = [_font(font_path, label_size + (2 if k == focus else 0)) for k in range(n)]
+
+    xs = [p["x"] for p in points]
+    ys = [p["y"] for p in points]
+    if diagonal:
+        # 斜めの線（y＝x）を角から角へ通すため、2つの軸の幅をそろえる
+        lo, hi = _scatter_range(xs + ys)
+        x_ticks = y_ticks = nice_ticks(lo, hi)
+    else:
+        x_ticks = nice_ticks(*_scatter_range(xs))
+        y_ticks = nice_ticks(*_scatter_range(ys))
+    x_lo, x_hi, y_lo, y_hi = x_ticks[0], x_ticks[-1], y_ticks[0], y_ticks[-1]
+
+    left = PAD + 12
+    y_tick_w = max(ruler.textlength(_tick_text(t), font=tick_font) for t in y_ticks)
+    plot_left = left + y_tick_w + 16
+    plot_right = width - PAD - 14
+    head = 56                       # 縦軸の名前の段（上の目盛りの字とぶつけない）
+    # 縦（ショート）は 0.50。0.60 だと板が画面の半分を超え、上に寄せた顔（_v.jpg）の目元までかかった
+    plot_h = min(380, int(width * 0.34)) if wide else int(width * 0.50)
+    plot_top, plot_bottom = head, head + plot_h
+    tail = 76                       # 横軸の目盛り＋名前の段
+    height = plot_bottom + tail
+
+    def px(value: float) -> float:
+        return plot_left + (value - x_lo) / (x_hi - x_lo) * (plot_right - plot_left)
+
+    def py(value: float) -> float:
+        return plot_bottom - (value - y_lo) / (y_hi - y_lo) * (plot_bottom - plot_top)
+
+    radius = [19 if k == focus else 13 for k in range(n)]
+    dots = [(px(p["x"]), py(p["y"])) for p in points]
+    dot_boxes = [(cx - r - 5, cy - r - 5, cx + r + 5, cy + r + 5) for (cx, cy), r in zip(dots, radius)]
+
+    # 斜めの線の名前は凡例として縦軸の名前の段の右に置く（線の上に字を載せると点の札とぶつかる）
+    legend = str(diagonal).strip() if isinstance(diagonal, str) else ""
+
+    # ---- 札の置き場（reveal・highlight で動かないよう、全部の点で先に決める）
+    pad_x, pad_y = 10, 5
+    # 札は縦軸の目盛りの列まで使ってよい（目盛りの字は避ける）。枠の内に限ると、左端の点の札を
+    # 押し戻した先が自分の点に重なった（10/7 の見本のペドロ、ショートの幅）
+    area = (left - 2, plot_top + 2, plot_right - 2, plot_bottom - 4)
+    tick_boxes = []
+    for t in y_ticks:
+        tw = ruler.textlength(_tick_text(t), font=tick_font)
+        tick_boxes.append((plot_left - 12 - tw - 2, py(t) - 16, plot_left - 8, py(t) + 16))
+    # 札の長いものから置く（長い札ほど置き場が少ない。キャルバート＝ルーウィンを後に回すと、
+    # 空いているのが隣の点の上だけになった）。注目の点はいつも先
+    sizes = {k: ruler.textbbox((0, 0), points[k]["name"], font=fonts[k], anchor="ls") for k in range(n)}
+    order = sorted(range(n), key=lambda k: (k != focus, -(sizes[k][2] - sizes[k][0]), k))
+    taken: list[tuple] = []
+    places: dict[int, tuple] = {}
+    for k in order:
+        cx, cy = dots[k]
+        r = radius[k]
+        bbox = sizes[k]
+        tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        bw, bh = tw + pad_x * 2, th + pad_y * 2 + 4
+        spots = []          # (左上 x, 左上 y, 離した量, 置き場の順)
+        for reach in (0, 34, 70, 110, 160):
+            gap = r + 8 + reach
+            for rank, (bx, by) in enumerate([
+                    (cx + gap, cy - bh / 2), (cx - gap - bw, cy - bh / 2),
+                    (cx - bw / 2, cy - gap - bh), (cx - bw / 2, cy + gap),
+                    (cx + gap * 0.75, cy - gap * 0.75 - bh), (cx + gap * 0.75, cy + gap * 0.75),
+                    (cx - gap * 0.75 - bw, cy - gap * 0.75 - bh), (cx - gap * 0.75 - bw, cy + gap * 0.75)]):
+                spots.append((bx, by, reach, SPOT_COST[rank]))
+        # 横に置いたまま1段・2段・3段ずらす（混んだところでは、札を縦に積んで線で結ぶ）
+        for step in (1, -1, 2, -2, 3, -3):
+            dy = step * (bh + 6)
+            for side, cost in ((cx + r + 30, 30), (cx - r - 30 - bw, 31)):
+                spots.append((side, cy - bh / 2 + dy, 24 + abs(step) * 26, cost))
+        best = None
+        for bx, by, reach, cost in spots:
+            # はみ出しは枠の内側へ押し戻してから当たりを見る（押し戻した先で自分の点に重なった。
+            # 10/7 の見本のペドロ）。押し戻した量は点から離れた分として数える
+            dx = max(0, area[0] - bx) - max(0, bx + bw - area[2])
+            dy = max(0, area[1] - by) - max(0, by + bh - area[3])
+            rect = (bx + dx, by + dy, bx + dx + bw, by + dy + bh)
+            outside = abs(dx) + abs(dy)
+            hit_labels = sum(1 for t in taken if _overlap(rect, t, 4))
+            hit_dots = sum(1 for d in dot_boxes if _overlap(rect, d, 2))
+            hit_ticks = sum(1 for d in tick_boxes if _overlap(rect, d, 2))
+            # 離した札を結ぶ線が、ほかの札・点を横切らないか（横切るとどの点の札か読み違える）
+            crossing = 0
+            if reach > 0 or outside > 8:
+                ex, ey = min(max(cx, rect[0]), rect[2]), min(max(cy, rect[1]), rect[3])
+                # 札は少し広げて見る（札と点のすき間を線が通っても、どちらの線か読み違えた）
+                others = ([(t[0] - 12, t[1] - 8, t[2] + 12, t[3] + 8) for t in taken]
+                          + [d for j, d in enumerate(dot_boxes) if j != k])
+                crossing = sum(1 for box in others if _segment_hits((cx, cy), (ex, ey), box))
+            # 横（右・左）を先に、上下、斜めは後に。真下に置いた長い札は隣の点の札に見えた（10/7 の見本のペドロ）。
+            # 少しの押し戻しは軽く、大きな押し戻しは重く（点から離れる）。目盛りの字にかかるのは点より軽い
+            score = ((outside if outside <= 14 else 400 + outside * 40)
+                     + hit_labels * 5000 + hit_dots * 3000 + hit_ticks * 1500 + crossing * 2000
+                     + reach * 6 + cost)
+            if best is None or score < best[0]:
+                best = (score, rect, reach, outside)
+        _, rect, reach, moved = best
+        taken.append(rect)
+        places[k] = (rect, reach > 0 or moved > 8, -bbox[0], -bbox[1] + pad_y + 2)
+
+    def draw_axes(draw, y):
+        ylabel = y_axis["label"] + (f"（{y_axis['unit']}）" if y_axis["unit"] else "")
+        draw.text((left, y + 4), ylabel, font=axis_font, fill=SUB)
+        if legend:
+            lw = ruler.textlength(legend, font=tick_font)
+            lx = plot_right - lw
+            _dashed(draw, (lx - 66, y + 22), (lx - 14, y + 22), DIAGONAL, 3)
+            draw.text((lx, y + 8), legend, font=tick_font, fill=SUB)
+        for t in y_ticks:
+            yy = y + py(t)
+            draw.line([(plot_left, yy), (plot_right, yy)], fill=GRID, width=1 if t != y_lo else 2)
+            label = _tick_text(t)
+            draw.text((plot_left - 12, yy), label, font=tick_font, fill=SUB, anchor="rm")
+        for t in x_ticks:
+            xx = px(t)
+            draw.line([(xx, y + plot_top), (xx, y + plot_bottom)], fill=GRID, width=1 if t != x_lo else 2)
+            draw.text((xx, y + plot_bottom + 8), _tick_text(t), font=tick_font, fill=SUB, anchor="ma")
+        xlabel = x_axis["label"] + (f"（{x_axis['unit']}）" if x_axis["unit"] else "")
+        draw.text((plot_right, y + plot_bottom + 42), xlabel, font=axis_font, fill=SUB, anchor="ra")
+        if diagonal:
+            lo, hi = max(x_lo, y_lo), min(x_hi, y_hi)
+            _dashed(draw, (px(lo), y + py(lo)), (px(hi), y + py(hi)), DIAGONAL, 3)
+
+    blocks = _title_block(spec, font_path)
+    blocks.append({"height": 0, "draw": draw_axes})
+    for k, point in enumerate(points):
+        def draw_point(draw, y, k=k, point=point):
+            cx, cy = dots[k]
+            cy += y
+            r = radius[k]
+            hot = k == focus
+            lit = k == highlight
+            rect, linked, ox, oy = places[k]
+            rx0, ry0, rx1, ry1 = rect[0], rect[1] + y, rect[2], rect[3] + y
+            if linked:
+                # 離した札は、どの点のものか分かるように細い線で結ぶ
+                ex = min(max(cx, rx0), rx1)
+                ey = min(max(cy, ry0), ry1)
+                draw.line([(cx, cy), (ex, ey)], fill=LEADER, width=2)
+            if lit:
+                draw.ellipse([cx - r - 11, cy - r - 11, cx + r + 11, cy + r + 11], outline=BRAND_GOLD, width=5)
+            color = BRAND_GOLD if hot else (DOT if (highlight is None or lit) else DOT_DIM)
+            draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=color, outline=DOT_RING, width=3)
+            # 札の下は板の地の色で塗る（斜めの線・目盛りの線が字を横切らない）。光らせる点は緑の札
+            if lit:
+                draw.rounded_rectangle([rx0, ry0, rx1, ry1], radius=10, fill=BRAND_GREEN, outline=BRAND_GOLD, width=2)
+            else:
+                draw.rounded_rectangle([rx0, ry0, rx1, ry1], radius=10, fill=PANEL[:3] + (255,))
+            fill = BRAND_GOLD if (hot or lit) else (LABEL if highlight is None else SUB)
+            draw.text((rx0 + pad_x + ox, ry0 + oy), point["name"], font=fonts[k], fill=fill, anchor="ls")
+
+        def unit_point(y, k=k):
+            cx, cy = dots[k]
+            r = radius[k]
+            rect = places[k][0]
+            dot = (cx - r - 12, y + cy - r - 12, cx + r + 12, y + cy + r + 12)
+            label = (rect[0], y + rect[1], rect[2], y + rect[3])
+            return {"box": _union([dot, label]), "cells": [dot, label]}
+
+        blocks.append({"height": 0, "draw": draw_point, "row": True, "unit": unit_point})
+    blocks.append({"height": height, "draw": lambda draw, y: None})
+    return blocks + _note_blocks(spec, width, font_path)
+
+
+SPOT_COST = (0, 1, 24, 26, 60, 61, 62, 63)    # 札の置き場の順（右・左・上・下・右上・右下・左上・左下）
+
+
+def _segment_hits(a, b, box, samples: int = 24) -> bool:
+    """線分 a→b が枠 box（少し内側）を通るか。"""
+    x0, y0, x1, y1 = box[0] + 2, box[1] + 2, box[2] - 2, box[3] - 2
+    for i in range(1, samples):
+        t = i / samples
+        x, y = a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t
+        if x0 < x < x1 and y0 < y < y1:
+            return True
+    return False
+
+
+def _overlap(a, b, pad: float = 0.0) -> bool:
+    return a[0] < b[2] + pad and b[0] < a[2] + pad and a[1] < b[3] + pad and b[1] < a[3] + pad
+
+
+def _dashed(draw, start, end, fill, width: int, dash: float = 14.0, gap: float = 9.0) -> None:
+    import math
+
+    (x0, y0), (x1, y1) = start, end
+    length = math.hypot(x1 - x0, y1 - y0)
+    if length <= 0:
+        return
+    ux, uy = (x1 - x0) / length, (y1 - y0) / length
+    t = 0.0
+    while t < length:
+        u = min(length, t + dash)
+        draw.line([(x0 + ux * t, y0 + uy * t), (x0 + ux * u, y0 + uy * u)], fill=fill, width=width)
+        t = u + gap
+
+
+# ---- 換算の板
+
+
+def _convert_value(value) -> dict:
+    if isinstance(value, dict):
+        cells = [value.get("number", ""), value.get("unit", ""), value.get("note", "")]
+    elif isinstance(value, (list, tuple)):
+        cells = list(value)[:3]
+    else:
+        cells = [value]
+    cells = [str(c if c is not None else "").strip() for c in cells] + ["", "", ""]
+    return {"number": cells[0], "unit": cells[1], "note": cells[2]}
+
+
+def convert_values(spec: dict) -> list[dict]:
+    """換算の段を {number, unit, note} の並びに（from・to か steps）。"""
+    if spec.get("steps") is not None:
+        return [_convert_value(v) for v in (spec.get("steps") or [])]
+    return [_convert_value(spec[k]) for k in ("from", "to") if spec.get(k) is not None]
+
+
+def convert_vias(spec: dict, count: int) -> list[str]:
+    """段のあいだの式。1つの字なら最初のあいだ、並びなら順に。"""
+    via = spec.get("via")
+    if via is None or via == "":
+        return [""] * max(0, count - 1)
+    if isinstance(via, (list, tuple)):
+        return [str(v if v is not None else "").strip() for v in via]
+    return [str(via).strip()] + [""] * max(0, count - 2)
+
+
+def check_convert(spec: dict) -> list[str]:
+    problems = []
+    unknown = sorted(str(k) for k in spec if k not in CONVERT_KEYS)
+    if unknown:
+        problems.append(f"convert カードに知らない鍵があります（{unknown[0]}）。"
+                        f"使えるのは {'・'.join(sorted(CONVERT_KEYS))}")
+    has_steps = spec.get("steps") is not None
+    if has_steps and (spec.get("from") is not None or spec.get("to") is not None):
+        problems.append("convert は from・to か steps のどちらか一方で書いてください")
+    elif not has_steps and (spec.get("from") is None or spec.get("to") is None):
+        problems.append("convert には from: [数字, 単位, 注記] と to: [数字, 単位, 注記] が必要です"
+                        "（3段なら steps: [[…], […], […]]）")
+    values = convert_values(spec)
+    if has_steps and not 2 <= len(values) <= CONVERT_MAX:
+        problems.append(f"convert の steps は2〜{CONVERT_MAX}段です（{len(values)}段）")
+    for value in values:
+        if not _re.search(r"[0-9０-９]", value["number"]):
+            problems.append(f"convert の数字『{value['number'] or '（空）'}』に数字がありません。"
+                            "[数字, 単位, 注記] の1つ目は数で書いてください")
+            break
+    via = spec.get("via")
+    if isinstance(via, (list, tuple)):
+        if len(via) != max(0, len(values) - 1):
+            problems.append(f"convert の via は段のあいだの数（{max(0, len(values) - 1)}つ）にしてください（いまは{len(via)}つ）")
+    elif via not in (None, "") and len(values) > 2:
+        problems.append(f"convert が{len(values)}段なら via は [1段目→2段目, 2段目→3段目] の並びで書いてください")
+    return problems
+
+
+def via_factor(via: str) -> float | None:
+    """via に書いた倍率（「×52週」「1ポンド＝195円」「÷12」）を掛け合わせた数。数が無ければ None。"""
+    text = str(via or "").translate(_FULLWIDTH).replace(",", "").replace("約", "")
+    factor, found = 1.0, False
+    # 「1ポンド＝195円」のような為替・単位の換算
+    rate = _re.compile(r"(?<![\d.])1\s*[^\d\s=＝≒・、/]+?\s*[=＝≒]\s*(\d+(?:\.\d+)?)\s*((?:[千万億兆])*)")
+    for m in rate.finditer(text):
+        value = float(m.group(1))
+        for unit in m.group(2):
+            value *= _KANJI_UNITS[unit]
+        factor *= value
+        found = True
+    rest = rate.sub(" ", text)
+    for m in _re.finditer(r"([×*＊÷])\s*(\d+(?:\.\d+)?)\s*((?:[千万億兆])*)", rest):
+        value = float(m.group(2))
+        for unit in m.group(3):
+            value *= _KANJI_UNITS[unit]
+        if value == 0:
+            continue
+        factor = factor / value if m.group(1) == "÷" else factor * value
+        found = True
+    return factor if found else None
+
+
+CONVERT_TOLERANCE = 0.10    # via の倍率で計算した値と、書いた値のずれ（これより大きければ知らせる）
+
+
+def convert_mismatches(spec: dict) -> list[str]:
+    """via に倍率が数で書いてあれば、from × 倍率 と to を比べる（止めない。draft が知らせる）。"""
+    values = convert_values(spec)
+    vias = convert_vias(spec, len(values))
+    out = []
+    for k, via in enumerate(vias[:len(values) - 1]):
+        factor = via_factor(via)
+        a = amount(values[k]["number"] + values[k]["unit"])
+        b = amount(values[k + 1]["number"] + values[k + 1]["unit"])
+        if factor is None or a is None or not b:
+            continue
+        expect = a * factor
+        if abs(expect - b) / abs(b) > CONVERT_TOLERANCE:
+            out.append(f"{values[k]['number']}{values[k]['unit']} {via} → 計算では {_round_amount(expect)}、"
+                       f"書いた値は {values[k + 1]['number']}{values[k + 1]['unit']}")
+    return out
+
+
+def _round_amount(value: float) -> str:
+    for unit, size in (("兆", 1e12), ("億", 1e8), ("万", 1e4)):
+        if abs(value) >= size:
+            return f"{value / size:.3g}{unit}"
+    return f"{value:.4g}"
+
+
+def _convert(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """換算の板（2026-10-07 夜）。クラブの財政・移籍金・年俸を、ポンド・ユーロから円へ、週給から年俸へ。
+
+    ```yaml
+    card: {type: convert, title: 週給を円に直すと, steps: [[30万, ポンド, 週給], [1560万, ポンド, 年俸],
+           [約30, 億円, 1ポンド＝約195円]], via: [×52週, ×195円]}
+    ```
+    左（縦の画面では上）に元の数字、右（下）に換算した数字を黄で大きく、あいだに矢印と式（via）。
+    `reveal` で 元 → 矢印 → 換算 の順に出る。**換算の値は書いた人が計算する**（via に倍率が数で
+    あれば draft がずれを知らせるが、止めない）。
+    """
+    problems = check_convert(spec)
+    if problems:
+        raise CardError(problems[0])
+    values = convert_values(spec)
+    vias = convert_vias(spec, len(values))
+    n = len(values)
+    wide = width >= 1050
+    ruler = _ruler()
+    inner = width - PAD * 2 - 24
+    left = PAD + 12
+    via_font = _font(font_path, 30)
+    note_font = _font(font_path, 28)
+    texts = [v["number"] + v["unit"] for v in values]
+    blocks = _title_block(spec, font_path)
+
+    if wide and n == 2:
+        # 横に並べる（本編の2段）。矢印の幅は式の長さで（2行まで）、残りを2つの箱で等分。
+        # **3段は横に並べない**：本編で写真の上に置くと板は幅900まで縮み、「1560万ポンド」が40px を切った
+        lines = _wrap(vias[0], via_font, int(inner * 0.26))[:2] if vias[0] else []
+        arrow_w = max(130, max((ruler.textlength(c, font=via_font) for c in lines), default=0) + 36)
+        box_w = (inner - arrow_w) / 2
+        room = box_w - 44
+        last = fit_number(texts[1], 118, room, font_path)
+        first = min(fit_number(texts[0], 92, room, font_path), last)
+        sizes = [first, last]
+        notes = [_wrap(v["note"], note_font, int(box_w - 32))[:2] if v["note"] else [] for v in values]
+        note_h = max(len(x) for x in notes) * 38
+        num_h = last + 20
+        box_h = 26 + num_h + note_h + (18 if note_h else 6)
+        xs = [left, left + box_w + arrow_w]
+
+        def value_parts(k, y):
+            w = number_width(texts[k], sizes[k], font_path)
+            baseline = y + 26 + num_h - 22
+            return xs[k] + box_w / 2 - w / 2, baseline
+
+        for k in range(2):
+            def draw_value(draw, y, k=k):
+                hot = k == 1
+                x0 = xs[k]
+                draw.rounded_rectangle([x0, y, x0 + box_w, y + box_h], radius=16,
+                                       fill=BRAND_GREEN if hot else BOX,
+                                       outline=BRAND_GOLD if hot else GRID, width=4 if hot else 2)
+                nx, baseline = value_parts(k, y)
+                put_number(draw, nx, baseline, texts[k], sizes[k], BRAND_GOLD if hot else TEXT, font_path)
+                for j, chunk in enumerate(notes[k]):
+                    tw = draw.textlength(chunk, font=note_font)
+                    draw.text((x0 + box_w / 2 - tw / 2, y + 26 + num_h + 4 + j * 38), chunk,
+                              font=note_font, fill=TEXT if hot else SUB)
+
+            def unit_value(y, k=k):
+                nx, baseline = value_parts(k, y)
+                number = _number_box(nx, baseline, texts[k], sizes[k], font_path)
+                note = _union([_text_box(xs[k] + box_w / 2 - ruler.textlength(c, font=note_font) / 2,
+                                         y + 26 + num_h + 4 + j * 38, c, note_font)
+                               for j, c in enumerate(notes[k])])
+                return {"box": (xs[k], y, xs[k] + box_w, y + box_h), "cells": [number, note]}
+
+            # 横に並ぶので、高さは最後の箱だけが持つ（出ていない段も場所は空けておく）
+            blocks.append({"height": box_h + 14 if k == 1 else 0, "draw": draw_value, "row": True,
+                           "unit": unit_value})
+            if k == 0:
+                def draw_arrow(draw, y):
+                    a0, a1 = xs[0] + box_w + 14, xs[1] - 14
+                    mid = y + box_h / 2
+                    draw.line([(a0, mid), (a1 - 22, mid)], fill=ARROW, width=7)
+                    draw.polygon([(a1 - 28, mid - 18), (a1 - 28, mid + 18), (a1, mid)], fill=ARROW)
+                    for j, chunk in enumerate(reversed(lines)):
+                        tw = draw.textlength(chunk, font=via_font)
+                        draw.text(((a0 + a1) / 2 - tw / 2, mid - 18 - (j + 1) * 40), chunk,
+                                  font=via_font, fill=TEXT)
+
+                blocks.append({"height": 0, "draw": draw_arrow, "row": True})
+        return blocks + _note_blocks(spec, width, font_path)
+
+    # 縦に積む（ショートと、本編の3段）。数字は左、注記は右。あいだに下向きの矢印、式は矢印の右
+    room = inner - 40
+    # 3段で板が画面の半分を超えないよう、縦の数字は本編の横並びより一回り小さく（ショートで顔の目元が残る高さ）
+    last = fit_number(texts[-1], 112, room, font_path)
+    rest = min([fit_number(t, 86, room, font_path) for t in texts[:-1]] + [last])
+    sizes = [rest] * (n - 1) + [last]
+    blocks_out = []
+    for k in range(n):
+        hot = k == n - 1
+        size = sizes[k]
+        num_w = number_width(texts[k], size, font_path)
+        side = inner - 48 - num_w - 36
+        note = values[k]["note"]
+        beside = bool(note) and side >= 170
+        lines = (_wrap(note, note_font, int(side))[:2] if beside else
+                 (_wrap(note, note_font, int(inner - 48))[:2] if note else []))
+        num_h = int(size * 1.0) + 26
+        box_h = num_h + (0 if beside or not lines else len(lines) * 38 + 6) + 14
+
+        def draw_value(draw, y, k=k, hot=hot, size=size, num_w=num_w, beside=beside, lines=lines,
+                       num_h=num_h, box_h=box_h):
+            draw.rounded_rectangle([left, y, left + inner, y + box_h], radius=16,
+                                   fill=BRAND_GREEN if hot else BOX,
+                                   outline=BRAND_GOLD if hot else GRID, width=4 if hot else 2)
+            baseline = y + num_h - 14
+            x0 = left + 24 if lines else left + inner / 2 - num_w / 2
+            put_number(draw, x0, baseline, texts[k], size, BRAND_GOLD if hot else TEXT, font_path)
+            if beside:
+                top = y + (box_h - len(lines) * 38) / 2 - 2
+                for j, chunk in enumerate(lines):
+                    tw = draw.textlength(chunk, font=note_font)
+                    draw.text((left + inner - 24 - tw, top + j * 38), chunk, font=note_font,
+                              fill=TEXT if hot else SUB)
+            else:
+                for j, chunk in enumerate(lines):
+                    draw.text((left + 24, y + num_h + j * 38), chunk, font=note_font,
+                              fill=TEXT if hot else SUB)
+
+        def unit_value(y, k=k, size=size, num_w=num_w, beside=beside, lines=lines, num_h=num_h, box_h=box_h):
+            baseline = y + num_h - 14
+            x0 = left + 24 if lines else left + inner / 2 - num_w / 2
+            number = _number_box(x0, baseline, texts[k], size, font_path)
+            if beside:
+                top = y + (box_h - len(lines) * 38) / 2 - 2
+                note = _union([_text_box(left + inner - 24 - ruler.textlength(c, font=note_font), top + j * 38,
+                                         c, note_font) for j, c in enumerate(lines)])
+            else:
+                note = _union([_text_box(left + 24, y + num_h + j * 38, c, note_font) for j, c in enumerate(lines)])
+            return {"box": (left, y, left + inner, y + box_h), "cells": [number, note]}
+
+        blocks_out.append({"height": box_h + 8, "draw": draw_value, "row": True, "unit": unit_value})
+        if k < n - 1:
+            via = vias[k]
+            cx = left + 96
+            via_lines = _wrap(via, via_font, int(left + inner - (cx + 44))) if via else []
+            via_lines = via_lines[:2]
+            arrow_h = max(72, len(via_lines) * 40 + 24)
+
+            def draw_arrow(draw, y, via_lines=via_lines, arrow_h=arrow_h, cx=cx):
+                top, bottom = y + 4, y + arrow_h - 6
+                draw.line([(cx, top), (cx, bottom - 22)], fill=ARROW, width=8)
+                draw.polygon([(cx - 19, bottom - 26), (cx + 19, bottom - 26), (cx, bottom)], fill=ARROW)
+                first = y + arrow_h / 2 - len(via_lines) * 40 / 2
+                for j, chunk in enumerate(via_lines):
+                    draw.text((cx + 44, first + j * 40), chunk, font=via_font, fill=TEXT)
+
+            blocks_out.append({"height": arrow_h, "draw": draw_arrow, "row": True})
+    return blocks + blocks_out + _note_blocks(spec, width, font_path)
 
 
 # ------------------------------------------------------------------ 左右の全画面比べ（2026-10-07）

@@ -10,6 +10,7 @@
     mark: {kind: note, row: 0, text: アジアカップで抜ける}  # その横に添え書き
     mark: {kind: circle, row: 4, col: 判定}              # 判定表の×の印を赤丸で
     mark: {kind: circle, item: 0}                       # 数字の板の1つ目を囲む
+    mark: {kind: circle, item: 2}                       # 散らばり図の3つ目の点を囲む（換算の板も item）
     mark: {kind: circle, on: photo}                     # 写真のいちばん大きい顔を囲む
 
 - 書き込みは**前の行から引き継いで積もる**。カードが替われば消える（光らせる行だけ違う同じ表
@@ -299,8 +300,9 @@ def card_target(mark: dict, spec: dict, geo: dict, origin: tuple[float, float], 
             return None
         return (ox + box[0] * scale, oy + box[1] * scale, ox + box[2] * scale, oy + box[3] * scale)
 
-    if col is None and str(spec.get("type", "")).lower() in ("stats", "calc"):
-        col = 0          # 数字の板・式は、指さなければ数字そのもの（注記まで囲むと板の縁にかかる）
+    if col is None and str(spec.get("type", "")).lower() in ("stats", "calc", "convert", "scatter"):
+        col = 0          # 数字の板・式・換算は、指さなければ数字そのもの（注記まで囲むと板の縁にかかる）。
+        #                  散らばり図は点そのもの（名前の札は col: 名前）
     box = unit["cells"][col] if col is not None and col < len(unit["cells"]) else unit["text"]
     if not box:
         box = unit["box"]
