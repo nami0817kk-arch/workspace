@@ -236,7 +236,9 @@ def _screen_change(script_json: Path) -> Finding:
     worst_telop = ""
     for scene in data.get("scenes", []):
         for line in scene.get("lines", []):
-            now = (line.get("telop") or "", line.get("card") or "", line.get("image") or "")
+            # 書き込み（2026-10-07）を足した行は画面が変わる。数に入れる
+            now = (line.get("telop") or "", line.get("card") or "", line.get("image") or "",
+                   len(line.get("marks") or []))
             if now == look:
                 span += float(line.get("duration") or 0)
             else:
@@ -1528,6 +1530,9 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
             if not seen_photo:
                 current, span = None, 0.0
                 continue
+            # **書き込みを足した行は同じ絵ではない**（2026-10-07）。赤ペンが1つ増えると目が行く。
+            # 同じ表で光らせる行を替えるのと同じく、そこで数え直す
+            card = card + "#" * len(line.get("marks") or [])
             if card == current:
                 span += float(line.get("duration") or 0)
             else:

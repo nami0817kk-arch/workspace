@@ -79,6 +79,114 @@ def is_full_screen(spec: dict | None) -> bool:
     return bool(spec) and str(spec.get("type", "")).lower() in FULL_SCREEN_TYPES
 
 
+def same_table(a: dict | None, b: dict | None) -> bool:
+    """光らせる行（highlight_row）だけが違う、同じ表か（render.same_table・書き込みの引き継ぎ）。"""
+    if not a or not b:
+        return False
+    strip = lambda spec: {k: v for k, v in spec.items() if k != "highlight_row"}
+    return strip(a) == strip(b)
+
+
+# **書き込み（赤ペン）を足せる型**（2026-10-07、src/marks.py）。項目の番号・列で指す
+MARKABLE_TYPES = ("table", "verdict", "bars", "stats", "calc", "points")
+
+
+def mark_units(spec: dict | None) -> int:
+    """書き込みで指せる項目の数（表・判定表・棒は行、数字の板・式・箇条書きは項目）。描けない型は 0。"""
+    if not spec:
+        return 0
+    kind = str(spec.get("type", "")).lower()
+    if kind in ("table", "verdict"):
+        return len([r for r in (spec.get("rows") or []) if isinstance(r, (list, tuple))])
+    if kind == "bars":
+        return min(6, len(spec.get("items") or []))
+    if kind == "stats":
+        return len(spec.get("items") or [])
+    if kind == "calc":
+        return len(spec.get("terms") or [])
+    if kind == "points":
+        return min(5, len(spec.get("items") or []))
+    return 0
+
+
+def mark_columns(spec: dict | None) -> list[str]:
+    """`col:` で指せる列の名前。列の無い型は空（番号も名前も使えない）。"""
+    kind = str((spec or {}).get("type", "")).lower()
+    if kind == "table":
+        return [str(c) for c in (spec.get("columns") or [])]
+    if kind == "verdict":
+        rows = verdict_rows(spec)
+        width = len(rows[0]) if rows else 3
+        named = [str(c) for c in (spec.get("columns") or [])]
+        return named if len(named) == width else ["項目", "判定", "一言"][:width]
+    if kind == "bars":
+        return ["名前", "棒", "値"]
+    if kind in ("stats", "calc"):
+        return ["数字", "注記"]
+    return []
+
+
+def layout(spec: dict, width: int, font_path: str, latin_font_path: str | None = None) -> dict:
+    """カードの中の項目の位置（`render` と同じ寸法で、描かずに測る）。書き込みの的に使う。
+
+    返すのは ``{"size": (幅, 高さ), "units": [{"box": 行の枠, "cells": [列ごとの字の枠 or None], "text": 字の枠}]}``。
+    座標はカードの左上が原点（px）。
+    """
+    kind = str(spec.get("type", "quote")).lower()
+    builder = {"bars": _bars, "table": _table, "stats": _stats, "verdict": _verdict,
+               "calc": _calc, "points": _points}.get(kind)
+    if builder is None:
+        raise CardError(f"{kind} カードには書き込みを足せません（{'・'.join(MARKABLE_TYPES)}）")
+    blocks = builder(spec, width, font_path, latin_font_path or font_path)
+    source = str(spec.get("source") or "").strip()
+    height = PAD * 2 + sum(block["height"] for block in blocks) + (18 if source else 0)
+    units = []
+    y = PAD
+    for block in blocks:
+        if block.get("unit"):
+            unit = block["unit"](y)
+            texts = [c for c in unit["cells"] if c]
+            unit["text"] = _union(texts) if texts else unit["box"]
+            units.append(unit)
+        y += block["height"]
+    return {"size": (width, height), "units": units}
+
+
+_RULER = None
+
+
+def _ruler():
+    global _RULER
+    if _RULER is None:
+        _RULER = ImageDraw.Draw(Image.new("RGB", (4, 4)))
+    return _RULER
+
+
+def _text_box(x: float, y: float, text: str, font, anchor: str = "la"):
+    """描いた字の枠（x0, y0, x1, y1）。空なら None。"""
+    if not str(text).strip():
+        return None
+    return tuple(float(v) for v in _ruler().textbbox((x, y), str(text), font=font, anchor=anchor))
+
+
+def _union(boxes):
+    boxes = [b for b in boxes if b]
+    if not boxes:
+        return None
+    return (min(b[0] for b in boxes), min(b[1] for b in boxes),
+            max(b[2] for b in boxes), max(b[3] for b in boxes))
+
+
+def _number_box(x: float, baseline: float, text: str, size: int, font_path: str):
+    """put_number で描いた数字の枠。"""
+    boxes = []
+    for chunk, ratio in _segments(text):
+        font = _font(font_path, size * ratio)
+        boxes.append(_text_box(x, baseline, chunk, font, "ls"))
+        x += _ruler().textlength(chunk, font=font)
+    return _union(boxes)
+
+
 def render(spec: dict, width: int, font_path: str, out_path: Path,
            latin_font_path: str | None = None, reveal: int | None = None) -> Path:
     """カード1枚を透過PNGで書き出す。高さは中身に合わせて決まる。
@@ -374,7 +482,11 @@ def _points(spec: dict, width: int, font_path: str, latin_path: str) -> list[dic
             for offset, chunk in enumerate(lines):
                 draw.text((PAD + 58, y + offset * 52), chunk, font=item_font, fill=TEXT)
 
-        blocks.append({"height": 52 * len(lines) + 12, "draw": draw_item})
+        def unit_item(y, lines=lines):
+            text = _union([_text_box(PAD + 58, y + k * 52, chunk, item_font) for k, chunk in enumerate(lines)])
+            return {"box": (PAD + 8, y, width - PAD, y + 52 * len(lines) + 4), "cells": [text]}
+
+        blocks.append({"height": 52 * len(lines) + 12, "draw": draw_item, "unit": unit_item})
     return blocks
 
 
@@ -567,7 +679,16 @@ def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]
             tw = draw.textlength(text, font=value_font)
             draw.text((value_col - tw, y + 8), text, font=value_font, fill=BRAND_GOLD if strong else TEXT)
 
-        blocks.append({"height": row_height, "draw": draw_row, "row": True})
+        def unit_row(y, item=item, ratio=ratio):
+            length = max(8, int(bar_span * ratio))
+            text = f"{_number(item['value'])}{unit}"
+            tw = _ruler().textlength(text, font=value_font)
+            return {"box": (PAD + 4, y + 2, width - PAD - 4, y + row_height - 6),
+                    "cells": [_text_box(PAD + 12, y + 12, str(item["label"]), label_font),
+                              (bar_left, y + 10, bar_left + length, y + 54),
+                              _text_box(value_col - tw, y + 8, text, value_font)]}
+
+        blocks.append({"height": row_height, "draw": draw_row, "row": True, "unit": unit_row})
 
     note = str(spec.get("note") or "").strip()
     if note:
@@ -721,7 +842,18 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
                     draw.text((x, y + text_dy), shown, font=cell_font, fill=color)
                 x += widths[index]
 
-        blocks.append({"height": row_h, "draw": draw_row, "row": True})
+        def unit_row(y, row=row):
+            cells = []
+            x = PAD + 12
+            for index, cell in enumerate(row):
+                shown = _fit_cell(ruler, cell, cell_font, widths[index] - 16)
+                tw = ruler.textlength(shown, font=cell_font)
+                x0 = x + widths[index] - 16 - tw if (numeric[index] and index > 0) else x
+                cells.append(_text_box(x0, y + text_dy, shown, cell_font))
+                x += widths[index]
+            return {"box": (PAD - 8, y - 4, width - PAD + 8, y + row_h - 8), "cells": cells}
+
+        blocks.append({"height": row_h, "draw": draw_row, "row": True, "unit": unit_row})
     return blocks
 
 
@@ -962,8 +1094,19 @@ def _stats(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
                 tw = draw.textlength(chunk, font=note_font)
                 draw.text((cx - tw / 2, y + num_h + 6 + k * 40), chunk, font=note_font, fill=SUB)
 
+        def unit_item(y, index=index, item=item):
+            x0 = left + index * col
+            cx = x0 + col / 2
+            text = item["number"] + item["unit"]
+            w = number_width(text, sizes[index], font_path)
+            number = _number_box(cx - w / 2, y + num_h - 14, text, sizes[index], font_path)
+            note = _union([_text_box(cx - _ruler().textlength(chunk, font=note_font) / 2, y + num_h + 6 + k * 40,
+                                     chunk, note_font) for k, chunk in enumerate(notes[index])])
+            return {"box": (x0 + 6, y, x0 + col - 6, y + height - 10), "cells": [number, note]}
+
         # 横に並ぶので、高さは最後の1つだけが持つ（reveal で出ていない項目も場所は空けておく）
-        blocks.append({"height": height if index == n - 1 else 0, "draw": draw_item, "row": True})
+        blocks.append({"height": height if index == n - 1 else 0, "draw": draw_item, "row": True,
+                       "unit": unit_item})
     return blocks + _note_blocks(spec, width, font_path)
 
 
@@ -1051,7 +1194,17 @@ def _calc(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]
                 nw = ruler.textlength(term["note"], font=note_font)
                 draw.text((cx - nw / 2, baseline + 24), term["note"], font=note_font, fill=SUB)
 
-        blocks.append({"height": height if k == n - 1 else 0, "draw": draw_term, "row": True})
+        def unit_term(y, k=k, term=term):
+            baseline = y + num_h - 10
+            cx = starts[k] + slots[k] / 2
+            value = _number_box(cx - term_w[k] / 2, baseline, term["value"], sizes[k], font_path)
+            note = (_text_box(cx - note_w[k] / 2, baseline + 24, term["note"], note_font)
+                    if term["note"] else None)
+            return {"box": (starts[k] - 10, y, starts[k] + slots[k] + 10, y + height - 10),
+                    "cells": [value, note]}
+
+        blocks.append({"height": height if k == n - 1 else 0, "draw": draw_term, "row": True,
+                       "unit": unit_term})
     return blocks + _note_blocks(spec, width, font_path)
 
 
@@ -1167,7 +1320,20 @@ def _verdict(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
                 draw.text((left + item_w + mark_w + 16, first + k * line_h), chunk,
                           font=comment_font, anchor="lm", fill=TEXT if number == highlight else SUB)
 
-        blocks.append({"height": row_h, "draw": draw_row, "row": True})
+        def unit_row(y, row=row, number=number):
+            mid = y + (row_h - 12) / 2
+            item = _fit_cell(ruler, row[0], item_font, item_w - 16)
+            cx = left + item_w + mark_w / 2
+            chunks = comments[number]
+            first = mid - (len(chunks) - 1) * line_h / 2
+            comment = _union([_text_box(left + item_w + mark_w + 16, first + k * line_h, chunk,
+                                        comment_font, "lm") for k, chunk in enumerate(chunks)])
+            cells = [_text_box(left, mid, item, item_font, "lm"), (cx - r, mid - r, cx + r, mid + r)]
+            if three:
+                cells.append(comment)
+            return {"box": (PAD - 8, y - 4, width - PAD + 8, y + row_h - 8), "cells": cells}
+
+        blocks.append({"height": row_h, "draw": draw_row, "row": True, "unit": unit_row})
     return blocks + _note_blocks(spec, width, font_path)
 
 

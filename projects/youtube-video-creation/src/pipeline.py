@@ -279,13 +279,17 @@ def spread_long_cards(script: Script, limit: float | None = None) -> int:
     if not photo:
         return 0
 
+    from .marks import on_screen
+
     inserted = 0
     look = None
     span = 0.0
     showing = None      # いま画面に出ているカード
     for scene in script.scenes:
         showing = None  # カードは節をまたいで引き継がない
-        for line in scene.lines:
+        # **書き込みを足した行は画面が変わる**（2026-10-07）。review の「カードの持ち」と同じ数え方
+        drawn = on_screen(scene, script.cards or {})
+        for number, line in enumerate(scene.lines):
             seconds = float(line.duration or 0)
             # **カードは書かれた行で切り替わり、次の行からは引き継がれて残る。**
             # 生の line.card を見ると、引き継いでいる行が「カード無し」に見えて
@@ -293,7 +297,7 @@ def spread_long_cards(script: Script, limit: float | None = None) -> int:
             # 9.1秒と14秒に割って数えていた）。script_model._scene_lines と同じ扱いにする。
             if line.card is not None:
                 showing = None if line.card in ("none", "なし") else line.card
-            now = (showing or "", line.image or "")
+            now = (showing or "", line.image or "", len(drawn[number]))
             if now != look:
                 look, span = now, seconds
                 continue
@@ -302,7 +306,7 @@ def spread_long_cards(script: Script, limit: float | None = None) -> int:
             if span + seconds > limit and not line.image:
                 line.image = photo
                 inserted += 1
-                look, span = (showing or "", photo), seconds
+                look, span = (showing or "", photo, len(drawn[number])), seconds
                 continue
             span += seconds
     return inserted

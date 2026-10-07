@@ -16,6 +16,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from . import cards, emphasis, ffmpeg
+from . import marks as marks_mod
 from .backgrounds import moving_background
 from .inserts import Inserts
 from .ffmpeg import is_video
@@ -50,6 +51,10 @@ PHOTO_MAX_ZOOM = 1.25    # 写真の寄りの上限（背景の 1.45 だと顔�
 PILL_IN = 0.35           # 節の頭で左上のピルとテロップが滑り込む秒数（動きの段3）
 IMAGE_FADE = 0.35        # 写真が別の写真に替わる行は、前の絵から溶かして切り替える（品質100回の11）
 ROW_IN = 0.14            # 表・棒グラフの行が1本ずつ現れる間隔（動きの段2）
+# **書き込み（赤ペン）を描き進める秒数とコマ数**（2026-10-07、src/marks.py）。線が伸び、添え書きが1字ずつ出る。
+# 読み上げの内側から取るので尺は変わらない
+MARK_IN = 0.5
+MARK_STEPS = 7
 # 読み上げの数字は自動で黄色にする（「22点」「75.5%」「4試合」）。囲みで指定した強調があればそちらを優先
 AUTO_STRONG = re.compile(r"\d[\d,.]*(?:[億万千])?(?:[点本人%回分秒位歳勝敗年倍]|試合|ゴール|アシスト|ユーロ|パーセント|メートル|キロ|センチ|km|m)?")   # 2文字の単位は字の集合に入れない（「キロ」が「キ」で切れた）
 
@@ -132,6 +137,10 @@ class Renderer:
         # 節の番号（左上のピルに「02」と出す）と、右上の点（何節目か）
         self.scene_order: dict[str, int] = {}
         self.scene_total: int = 0
+        # 書き込みの的：いま描いたカードの置き場（名前・幅・画面の枠）と、写真ごとの顔の位置
+        self._card_place: tuple[str, int, tuple[float, float, float, float]] | None = None
+        self._mark_heads: dict[str, list] = {}
+        self._card_layouts: dict[str, dict] = {}
         self.frame_dir.mkdir(parents=True, exist_ok=True)
 
         font_path = str(config.video.font_path())
@@ -167,8 +176,14 @@ class Renderer:
         panel: tuple[str, str | None, str | None] | None = None,
         stack: tuple[str, ...] = (),
         reveal: int | None = None,
+        marks: tuple | None = None,
+        mark_new: int = 0,
+        mark_t: float = 1.0,
     ) -> Path:
         """1枚の画面を描いて PNG のパスを返す。
+
+        marks は画面に出ている書き込み（赤ペン、src/marks.py）。後ろの mark_new 個は
+        この行で足したもので、mark_t（0→1）まで描き進める。panel を渡さないときは行の書き込み。
 
         reveal は表・棒グラフの行を何本まで出すか（出現アニメの1コマ）。
         節の頭の行では telop_t で左上のピルも滑り込む（2026-09-28 動きの段3）。
@@ -184,6 +199,8 @@ class Renderer:
         text, source, card = (
             (line.telop_text(), line.source, line.card) if panel is None else panel
         )
+        if marks is None:
+            marks = tuple(line.marks) if panel is None else ()
         background = scene.background or self.script_background or self.config.video.background
         opening = scene.title == self.opening_scene and self.opening_photo
         stage_path = line.image or (self.opening_photo if opening else None)
@@ -218,6 +235,7 @@ class Renderer:
                 "|".join(stack),
                 f"s{self.scene_order.get(scene.title, 0)}/{self.scene_total}",
                 f"r{reveal if reveal is not None else '-'}",
+                (f"m{marks_mod.dump(list(marks))}/{mark_new}/{mark_t:.2f}" if marks else ""),
                 # 節の頭かどうかは、滑り込みの途中（telop_t<1）でだけ絵に効く。それ以外は同じ絵を使い回す
                 f"head{bool(scene.lines and line is scene.lines[0]) and telop_t < 1.0}",
             ]
@@ -258,6 +276,7 @@ class Renderer:
         # 写真を下地にしたときは小さなカードを重ねない。図表だけ左半分に置く。
         # **縦型は左半分に寄せない。**写真が画面いっぱいなので、寄せる相手がいない
         # （2026-09-09。1080の幅をさらに半分にすると図表が読めなくなる）
+        self._card_place = None
         if not board:
             # 表は見出しの帯の上に収める（3行の見出しで表の最後の行が隠れた。2026-09-28）。
             # 反応の積み上げのときは帯が無い
@@ -270,6 +289,10 @@ class Renderer:
                              # 横長の写真の上では左に寄せる（真ん中に置くと人の顔にかかる）
                              align_left=(stage is not None and wide and not self.layout.is_portrait),
                              reveal=reveal)
+            # **書き込み（赤ペン）**（2026-10-07）。表の行が出きってから（reveal 中は描かない）。
+            # 見出しの帯・節の名前より下に描くので、帯と名前は書き込みの上に乗る
+            if marks and reveal is None and not self.layout.with_characters:
+                self._draw_marks(canvas, marks, mark_new, mark_t, stage, stage_path, floor, telop_t)
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
@@ -576,6 +599,7 @@ class Renderer:
         side_by_side = (bool(image_path) and bool(card_name)
                         and not self.layout.is_portrait)
         items: list[Image.Image] = []
+        card_at: tuple[int, int] | None = None     # (items の中の番号, 描いた幅)。書き込みの的に使う
 
         if image_path:
             picture = self._picture(image_path, slot_height, beside=side_by_side)
@@ -590,13 +614,16 @@ class Renderer:
             limit = int(self.layout.width * 0.58) if left_half else None
             card = self._card(card_name, beside=side_by_side, limit=limit, reveal=reveal)
             if card is not None:
+                card_at = (len(items), card.width)
                 items.append(card)
         if not items:
             return
 
         gap = 26
         if side_by_side and len(items) == 2:
-            self._place_beside(canvas, items, slot_top, slot_height, gap, progress)
+            placed = self._place_beside(canvas, items, slot_top, slot_height, gap, progress)
+            if card_at is not None and placed:
+                self._card_place = (card_name, card_at[1], placed[card_at[0]])
             return
         total = sum(item.height for item in items) + gap * (len(items) - 1)
         if total > slot_height:  # 入りきらないときは全体を縮める
@@ -611,7 +638,7 @@ class Renderer:
 
         y = slot_top + (slot_height - total) // 2
         span = self.layout.width // 2 if left_half else self.layout.width
-        for item in items:
+        for number, item in enumerate(items):
             if item.width > span - 60 and left_half:
                 ratio = (span - 60) / item.width
                 item = item.resize((int(item.width * ratio), int(item.height * ratio)),
@@ -624,6 +651,8 @@ class Renderer:
             x = 48 if align_left else (span - item.width) // 2
             self._drop_shadow(canvas, item, (x, y))
             canvas.alpha_composite(item, (x, y))
+            if card_at is not None and number == card_at[0]:
+                self._card_place = (card_name, card_at[1], (x, y, x + item.width, y + item.height))
             y += item.height + gap
 
     def _place_beside(
@@ -634,8 +663,8 @@ class Renderer:
         slot_height: int,
         gap: int,
         progress: float,
-    ) -> None:
-        """写真とカードを左右に並べる。高さは各自の中央でそろえる。"""
+    ) -> list[tuple[int, int, int, int]]:
+        """写真とカードを左右に並べる。高さは各自の中央でそろえる。置いた枠を返す。"""
         total_w = sum(item.width for item in items) + gap
         if total_w > self.layout.width - 96:  # 端に寄りすぎないよう全体を縮める
             ratio = (self.layout.width - 96) / total_w
@@ -645,13 +674,16 @@ class Renderer:
             ]
             total_w = sum(item.width for item in items) + gap
         x = (self.layout.width - total_w) // 2
+        placed = []
         for item in items:
             if progress < 1.0:
                 item = item.copy()
                 item.putalpha(item.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
             y = slot_top + (slot_height - item.height) // 2
             canvas.alpha_composite(item, (x, y))
+            placed.append((x, y, x + item.width, y + item.height))
             x += item.width + gap
+        return placed
 
     def _picture(
         self, image_path: str, slot_height: int, beside: bool = False
@@ -703,6 +735,73 @@ class Renderer:
 
     def is_full_card(self, name: str | None) -> bool:
         return cards.is_full_screen(self.script_cards.get(name or ""))
+
+    # ------------------------------------------------------------------ 書き込み（2026-10-07）
+
+    def mark_heads(self, stage_path: str | None, stage: Image.Image | None) -> list:
+        """写真の下地の頭の枠（x, y, w, h）。書き込みが顔を囲む・顔を避けるのに使う。同じ写真は1回だけ探す。"""
+        if stage is None or not stage_path:
+            return []
+        key = f"{stage_path}|{self.layout.width}x{self.layout.height}|{self.layout.focus_x}"
+        if key not in self._mark_heads:
+            from . import faces
+
+            heads = []
+            try:
+                for box in faces.find_faces(stage.convert("RGB")):
+                    heads.append(faces.head_box(box))
+            except Exception:       # 顔が取れなくても書き込み（表の上）は描く
+                heads = []
+            self._mark_heads[key] = heads
+        return self._mark_heads[key]
+
+    def _card_layout(self, name: str, width: int) -> dict | None:
+        spec = self.script_cards.get(name)
+        if not spec or str(spec.get("type", "")).lower() not in cards.MARKABLE_TYPES:
+            return None
+        key = cards.card_key(spec, width)
+        if key not in self._card_layouts:
+            self._card_layouts[key] = cards.layout(spec, width, str(self.config.video.font_path()),
+                                                   str(self.config.video.latin_font_path()))
+        return self._card_layouts[key]
+
+    def mark_targets(self, marks, stage_path: str | None = None, stage: Image.Image | None = None) -> list:
+        """書き込みごとの的（画面の座標）。指した先が今の画面に無ければ None（描かない）。"""
+        out = []
+        for mark in marks:
+            if marks_mod.is_photo(mark):
+                out.append(marks_mod.photo_target(mark, self.mark_heads(stage_path, stage)))
+                continue
+            if self._card_place is None:
+                out.append(None)
+                continue
+            name, drawn, (x0, y0, x1, _) = self._card_place
+            geo = self._card_layout(name, drawn)
+            if geo is None:
+                out.append(None)
+                continue
+            out.append(marks_mod.card_target(mark, self.script_cards[name], geo, (x0, y0), (x1 - x0) / drawn))
+        return out
+
+    def _draw_marks(self, canvas: Image.Image, marks, fresh: int, t: float, stage, stage_path,
+                    floor: int | None, progress: float) -> None:
+        """書き込みを、透明の層に描いてから重ねる（RGB に落とさない＝黒い枠が出ない）。"""
+        targets = self.mark_targets(marks, stage_path, stage)
+        if not any(targets):
+            return
+        width, height = self.layout.width, self.layout.height
+        band = floor if floor is not None else self.layout.media_slot[1] + 34
+        avoid = [(0, 0, width, marks_mod.TOP_BAND), (0, band, width, height)]
+        avoid += [(x, y, x + w, y + h) for x, y, w, h in self.mark_heads(stage_path, stage)]
+        planned = marks_mod.plan(list(marks), targets, (width, height), avoid,
+                                 str(self.config.video.font_path()))
+        layer = marks_mod.render_layer((width, height), planned, fresh, t,
+                                       str(self.config.video.font_path()))
+        if layer is None:
+            return
+        if progress < 1.0:
+            layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
+        canvas.alpha_composite(layer)
 
     def card_rows(self, name: str | None) -> int:
         spec = self.script_cards.get(name or "")
@@ -1335,6 +1434,8 @@ class Renderer:
                 previous = None  # 章タイトル直後は転換の溶かしを入れない
             headline: tuple[str, str | None] = ("", None)
             card: str | None = None
+            # **書き込みは前の行から積もる**（2026-10-07）。カードが替われば消える（同じ表のあいだは残る）
+            board = marks_mod.Board()
             # **反応は画面に積む**（2026-09-07）。匿名の書き込みが続くあいだ、
             # 前の行を見出しの上に残す。別の話者が入ったら積み直す
             stack: list[str] = []
@@ -1361,10 +1462,18 @@ class Renderer:
                 # 出さない決まりにしたので、ここに入れないと読んでいる声が
                 # 画面のどこにも出なくなる
                 shown = tuple(stack + [emphasis.strip(line.telop_text() or line.text)]) if crowd else ()
+                new_marks = list(line.marks) if not self.layout.with_characters else []
+                drawn = (tuple(board.step(card, self.script_cards.get(card or ""),
+                                          line.image or (self.opening_photo if scene.title == self.opening_scene else None),
+                                          new_marks))
+                         if not self.layout.with_characters else None)
+                ink = {"marks": drawn, "mark_new": len(new_marks)}
                 closed = self.frame(line, scene, mouth_open=False, panel=current,
-                                    stack=shown)
+                                    stack=shown, **ink)
                 opened = self.frame(line, scene, mouth_open=True, panel=current,
-                                    stack=shown)
+                                    stack=shown, **ink)
+                # 出現のアニメ・行の出現のあいだは、この行の書き込みはまだ描かない
+                ink_before = dict(ink, mark_t=0.0)
                 # 積むのは匿名の反応だけ。語りが入ったらいったん流す
                 stack = (stack + [emphasis.strip(line.telop_text() or line.text)]) if crowd else []
                 pause = line.pause or 0.0
@@ -1397,20 +1506,29 @@ class Renderer:
                     ):
                         # 見出しやカードが変わったときだけ、出現のアニメを入れる
                         intro = min(motion.telop_in, speaking * 0.5)
-                        entries += self._intro(line, scene, intro, current, shown)
+                        entries += self._intro(line, scene, intro, current, shown, ink=ink_before)
                     elif is_scene_head and not stack and PILL_IN > 0:
                         # **節の頭ではピルとテロップが滑り込む**（2026-09-28 動きの段3）。時間は足さない
                         intro = min(PILL_IN, speaking * 0.4)
                         entries += self._intro(line, scene, intro, current, shown,
-                                               reveal=0 if rows else None)
+                                               reveal=0 if rows else None, ink=ink_before)
                     if rows and motion.enabled and not stack:
                         # **表の行が1本ずつ現れる**（2026-09-28 動きの段2）。読み上げの内側から取る
                         step = min(ROW_IN, max(0.0, speaking * 0.5 - intro) / rows)
                         if step > 0.02:
                             for k in range(1, rows + 1):
                                 entries.append((self.frame(line, scene, False, panel=current, stack=shown,
-                                                           reveal=k if k < rows else None), step))
+                                                           reveal=k if k < rows else None,
+                                                           **ink_before), step))
                             intro += step * rows
+                    if new_marks and MARK_IN > 0 and MARK_STEPS > 1:
+                        # **書き込みを描き進める**（2026-10-07）。線が伸び、添え書きが1字ずつ出る。読み上げの内側から取る
+                        step = min(MARK_IN / MARK_STEPS, max(0.0, speaking * 0.6 - intro) / MARK_STEPS)
+                        if step > 0.02:
+                            for k in range(1, MARK_STEPS):
+                                entries.append((self.frame(line, scene, False, panel=current, stack=shown,
+                                                           **dict(ink, mark_t=k / MARK_STEPS)), step))
+                            intro += step * (MARK_STEPS - 1)
 
                 entries += self._mouth_loop(closed, opened, speaking - intro)
                 if pause > 0.01:
@@ -1468,6 +1586,7 @@ class Renderer:
         panel: tuple[str, str | None, str | None] | None = None,
         stack: tuple[str, ...] = (),
         reveal: int | None = None,
+        ink: dict | None = None,
     ) -> list[tuple[Path, float]]:
         steps = max(1, round(seconds * self.config.motion.fps))
         step = seconds / steps
@@ -1482,7 +1601,7 @@ class Renderer:
                     # 反応の行でも0.3秒だけ大テロップが描かれていた
                     self.frame(
                         line, scene, False, telop_t=progress, hop_t=progress,
-                        panel=panel, stack=stack, reveal=reveal
+                        panel=panel, stack=stack, reveal=reveal, **(ink or {})
                     ),
                     step,
                 )

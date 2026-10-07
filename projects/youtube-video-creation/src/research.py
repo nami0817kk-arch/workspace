@@ -22,6 +22,7 @@ from .backgrounds import moving_background
 from .config import _resolve
 
 from . import coverage, xposts
+from . import marks as _marks
 from .plan import Plan
 
 # 節の中身に合う背景を選ぶ。順番に配るだけだと、緑の芝ばかりが続く
@@ -146,6 +147,8 @@ class Section:
     line_conts: list = field(default_factory=list)
     # **山を作る行**（2026-10-03 ④）。台本に `emph: true` を書き、声の抑揚を強める
     line_emphs: list = field(default_factory=list)
+    # **書き込み（赤ペン）**（2026-10-07、src/marks.py）。行ごとに確かめた辞書の並び
+    line_marks: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
     # **その節の地の文を誰が読むか**（2026-09-09 ユーザー指示）。
     # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
@@ -397,6 +400,7 @@ def build_notes(raw: dict) -> Notes:
         picks: list[bool] = []
         conts: list[bool] = []
         emphs: list[bool] = []
+        inks: list[list] = []
         mutes: list[bool] = []
         for item in raw_lines:
             if isinstance(item, dict):
@@ -428,6 +432,12 @@ def build_notes(raw: dict) -> Notes:
                 mutes.append(bool(item.get("no_telop")))
                 conts.append(bool(item.get("cont")))
                 emphs.append(bool(item.get("emph")))
+                # **書き込み**（2026-10-07）。書き方の誤り（知らない kind・鍵）はここで止める。
+                # 指した行がカードにあるか・1画面2つまでかは verify が台本の形で見る
+                try:
+                    inks.append(_marks.parse(item.get("mark"), f"{entry.get('id') or index}: "))
+                except _marks.MarkError as exc:
+                    raise ResearchError(str(exc)) from exc
             else:
                 lines.append(str(item).strip())
                 voices.append("")
@@ -440,6 +450,7 @@ def build_notes(raw: dict) -> Notes:
                 mutes.append(False)
                 conts.append(False)
                 emphs.append(False)
+                inks.append([])
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
@@ -459,6 +470,7 @@ def build_notes(raw: dict) -> Notes:
                 line_short_voices=[picks[i] for i in keep],
                 line_conts=[conts[i] for i in keep],
                 line_emphs=[emphs[i] for i in keep],
+                line_marks=[inks[i] for i in keep],
                 line_no_telops=[mutes[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 quotes_from=[str(u).strip() for u in (entry.get("quotes_from") or []) if str(u).strip()],
@@ -604,7 +616,28 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 "発表を確認できないなら tier を下げてください"
             )
     problems += _check_voice_clash(notes)
+    if not problems:
+        problems += _check_marks(notes, plan)
     return problems
+
+
+def _check_marks(notes: Notes, plan) -> list[str]:
+    """**書き込み（赤ペン）の先と数**（2026-10-07）。台本に組んだ形で見る。
+
+    カードは行をまたいで引き継がれ、写真があると1行で下ろされる（CARD_LINES_MAX）。取材メモの
+    並びだけで数えるとずれるので、実際に組んだ台本の行で「その行に出ている表の何行目か」
+    「1画面2つまでか」を見る（script_model の読み込みと同じ決まり）。
+    """
+    if not any(m for section in notes.sections for m in section.line_marks):
+        return []
+    from .script_model import parse_script
+
+    try:
+        script = parse_script(_compose_script(notes, plan))
+    except Exception as exc:          # 書き込み以外で組めないときは、その知らせが先に出ている
+        message = str(exc)
+        return [message] if "書き込み" in message else []
+    return [f"書き込み（mark）: {p}" for p in _marks.check_script(script)]
 
 def _has_crowd(notes: Notes) -> bool:
     """匿名の反応の行があるか。voice が付いていてキャスター・解説ではないもの。"""
@@ -771,7 +804,7 @@ def _check_voice_clash(notes: Notes) -> list[str]:
 
 # 1行ぶんの辞書に書いてよい鍵
 LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image", "pause",
-                       "short_only", "main_only", "short_voice", "no_telop", "cont", "emph"})
+                       "short_only", "main_only", "short_voice", "no_telop", "cont", "emph", "mark"})
 
 
 def _check_card(section: Section) -> list[str]:
@@ -2550,6 +2583,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
     problems = verify(notes, plan)
     if problems:
         raise ResearchError("取材メモに不備があります:\n  - " + "\n  - ".join(problems))
+    return _compose_script(notes, plan)
+
+
+def _compose_script(notes: Notes, plan: Plan) -> str:
+    """台本の Markdown を組む（検証は to_script の側。書き込みの点検は検証の中からこれを呼ぶ）。"""
+    from . import tags as tags_mod
 
     thumbnail = notes.thumbnail or {}
     shape = FORMATS[notes.format]
@@ -2843,6 +2882,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
             if (number < len(section.line_emphs)
                     and section.line_emphs[number]):
                 lines.append("  emph: true")
+            # **書き込み**（2026-10-07）。1つずつ1行に
+            own_marks = (section.line_marks[number]
+                         if number < len(section.line_marks) else [])
+            for one in own_marks:
+                lines.append(f"  mark: {_marks.dump(one)}")
             # **`only: short` の行に節のカードを付けない**（2026-09-18 に踏んだ）。
             # その行は本編では落ちるので、**カードごと消える**。
             # クロップの回で、選手の表が画面に一度も出なかった。
@@ -2943,6 +2987,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     shown_for = 0
                 elif own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
+                    shown_for = 0
+                elif own_marks:
+                    # **書き込みを足す行では表を下ろさない**（2026-10-07）。書き込みの先が消える。
+                    # 赤ペンが1つ増えれば画面は変わるので、数え直す
                     shown_for = 0
                 elif shown_for >= CARD_LINES_MAX:
                     # **同じカードを出しっぱなしにしない**（2026-09-12）。

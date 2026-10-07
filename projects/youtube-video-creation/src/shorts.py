@@ -746,6 +746,7 @@ def _add_subscribe(short: Script) -> None:
         last.duration = 0.0
         last.audio_path = None
         last.card = "none"
+        last.marks = []       # 書き込み（2026-10-07）は写した行に付いてこさせない
         # 前の行の確度の札を引き継がない（2026-10-07、ケインの回で反応の
         # 「未確認」が締めの一言に付いていた）
         last.source = None
@@ -1387,6 +1388,7 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
         tail.duration = 0.0
         tail.audio_path = None
         tail.card = "none"
+        tail.marks = []
         lines.append(tail)
         lines[-1].audio_path = None
         lines[-1].duration = 0.0
