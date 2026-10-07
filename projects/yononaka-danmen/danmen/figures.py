@@ -23,6 +23,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
+from danmen import typo
+
 CARD = (255, 255, 255, 248)
 INK = "#141C26"
 INK_SUB = "#6B7684"
@@ -36,6 +38,8 @@ ICON_DIR = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/icons")
 
 
 def F(size: int, weight: int = 900) -> ImageFont.FreeTypeFont:
+    # 読めない大きさは作らない。1920 の画面での 28px が、スマホで 5.7pt の下限
+    size = max(int(size), typo.MIN_PX)
     f = ImageFont.truetype(FONT_PATH, size)
     try:
         f.set_variation_by_axes([weight])

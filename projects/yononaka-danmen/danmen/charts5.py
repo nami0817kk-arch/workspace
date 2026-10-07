@@ -16,6 +16,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
 
+from danmen import typo
 from danmen.news import (AMBER_D, AMBER_L, BLUE_D, BLUE_L, GOLD, GRAY_D, GRAY_L,
                          GREEN_D, GREEN_L, INK, INK_SUB, RED_D, RED_L, F, _bar,
                          _credit, _panel, put_number)
@@ -50,11 +51,11 @@ def _wrap(d, text: str, font, width: float) -> list[str]:
 def flowchart(fig: dict) -> Image.Image:
     """分岐の図。問い → はい／いいえ → 結論。視聴者が自分で辿れる。"""
     steps = fig["steps"]          # [{ask, yes, no}] 最後に ends
-    w, h = 1180, 230 + len(steps) * 190 + (110 if fig.get("end") else 0)
+    w, h = typo.PANEL_W, 230 + len(steps) * 190 + (110 if fig.get("end") else 0)
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     y = top
-    cw = 620
-    cx = 70
+    cw = int(w * 0.46)
+    cx = 80
     for i, st in enumerate(steps):
         ask = str(st.get("ask", ""))
         # 問いの箱
@@ -69,10 +70,10 @@ def flowchart(fig: dict) -> Image.Image:
             d.polygon([(ax + 50, y + 42), (ax + 50, y + 68), (ax + 72, y + 55)], fill=RED)
             d.text((ax + 6, y + 14), "いいえ", font=F(22, 800), fill=RED)
             nf = F(28, 800)
-            nw = max(d.textlength(l, font=nf) for l in _wrap(d, no, nf, 320)[:2]) + 50
+            nw = max(d.textlength(l, font=nf) for l in _wrap(d, no, nf, 420)[:2]) + 56
             d.rounded_rectangle([ax + 84, y + 14, ax + 84 + nw, y + 96], radius=10,
                                 fill=(252, 240, 238), outline=RED, width=3)
-            for n, ln in enumerate(_wrap(d, no, nf, 320)[:2]):
+            for n, ln in enumerate(_wrap(d, no, nf, 420)[:2]):
                 d.text((ax + 108, y + 26 + n * 36), ln, font=nf, fill=(140, 30, 26))
         # 下へ「はい」
         if i < len(steps) - 1 or fig.get("end"):
@@ -91,7 +92,7 @@ def flowchart(fig: dict) -> Image.Image:
 
 def matrix(fig: dict) -> Image.Image:
     """4象限。2つの軸で分ける。items は {label, x, y}（それぞれ -1〜1）。"""
-    w, h = 1060, 760
+    w, h = typo.PANEL_W, 760
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     pad = 120
     x0, y0 = pad, top + 40
@@ -143,40 +144,64 @@ def matrix(fig: dict) -> Image.Image:
 
 
 def receipt(fig: dict) -> Image.Image:
-    """レシート風の明細。断面図のチャンネルに合う形。"""
+    """レシート風の明細。断面図のチャンネルに合う形。
+
+    大きさと文字は `typo` の基準どおり。画面に等倍で置いたとき、
+    スマホでも読める太さにしてある。
+    """
     items = fig["items"]
     slots = max(int(fig.get("slots", len(items))), 1)
-    w, h = 1240, 290 + slots * 64
+    if slots > typo.max_rows():
+        raise SystemExit(
+            "行が多すぎます（{}行）。板に入るのは{}行までです。2つに割ってください。".format(
+                slots, typo.max_rows()))
+    w = typo.PANEL_W
+    h = 126 + slots * typo.ROW + 200
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
-    pad = 80
-    d.rectangle([pad, top, w - pad + 40, h - 60], fill=(252, 251, 246))
-    y = top + 24
+    pad = 90
+    d.rectangle([pad, top, w - pad + 40, h - 52], fill=(252, 251, 246))
+    y = top + 18
     for it in items:
         lab = str(it.get("label", ""))
         val = str(it.get("value", ""))
         strong = bool(it.get("strong"))
-        f = F(30, 900 if strong else 700)
-        d.text((pad + 26, y), lab, font=f, fill=AMBER if strong else INK)
-        size = 32 if strong else 28
+        f = F(typo.BODY, 900 if strong else 700)
+        d.text((pad + 30, y), lab, font=f, fill=AMBER if strong else INK)
+        size = typo.VALUE + (6 if strong else 0)
         put_number(d, val, w - pad - _text_w(val, size) + 10, y - 2, size,
                    fill=AMBER if strong else INK)
-        # 点線
-        dots_x = pad + 26 + d.textlength(lab, font=f) + 16
-        end_x = w - pad - _text_w(val, size) - 10
+        # 点線。細いと画面では見えないので、少し太く・濃く
+        dots_x = pad + 30 + d.textlength(lab, font=f) + 20
+        end_x = w - pad - _text_w(val, size) - 16
         x = dots_x
         while x < end_x:
-            d.line([(x, y + 22), (x + 6, y + 22)], fill="#CFD3D8", width=2)
-            x += 14
-        y += 64
+            d.line([(x, y + 34), (x + 9, y + 34)], fill="#BFC5CD", width=3)
+            x += 20
+        y += typo.ROW
     # 合計の線は、行が増えても動かない位置に固定する
-    y = top + 24 + slots * 64
-    d.line([(pad + 26, y + 6), (w - pad + 14, y + 6)], fill=INK, width=3)
+    y = top + 18 + slots * typo.ROW
+    d.line([(pad + 30, y + 10), (w - pad + 14, y + 10)], fill=INK, width=4)
     total_l = str(fig.get("total_label", "合計"))
     total_v = str(fig.get("total_value", ""))
-    d.text((pad + 26, y + 26), total_l, font=F(36), fill=INK)
-    put_number(d, total_v, w - pad - _text_w(total_v, 44) + 10, y + 20, 44, fill=INK)
+    d.text((pad + 30, y + 30), total_l, font=F(typo.TITLE), fill=INK)
+    put_number(d, total_v, w - pad - _text_w(total_v, typo.TITLE + 16) + 10, y + 24,
+               typo.TITLE + 16, fill=INK)
     _credit(d, fig.get("credit", ""), w, h)
     return im
+
+
+def row_box(i: int, side: str = "label") -> list[int]:
+    """レシートの i 行目（0 から）の矩形。**書き込みを当てる場所**を計算で出す。
+
+    板の大きさを変えるたびに書き込みの座標を手で直すのは事故のもと。
+    蛍光ペンや丸はここから取る。side は label（左のことば）か value（右の数字）。
+    """
+    top = 28 + typo.BAND_H + 26
+    y = top + 18 + i * typo.ROW
+    pad = 90
+    if side == "value":
+        return [typo.PANEL_W - pad - 230, y - 8, typo.PANEL_W - pad + 24, y + 62]
+    return [pad + 22, y - 2, pad + 22 + 660, y + 58]
 
 
 def numberline(fig: dict) -> Image.Image:
@@ -185,7 +210,7 @@ def numberline(fig: dict) -> Image.Image:
     lo = float(fig.get("min", min(float(i["value"]) for i in items)))
     hi = float(fig.get("max", max(float(i["value"]) for i in items)))
     span = (hi - lo) or 1
-    w, h = 1180, 560
+    w, h = typo.PANEL_W, 560
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     x0, x1 = 110, w - 70
     ly = top + 190
@@ -220,7 +245,7 @@ def verdict(fig: dict) -> Image.Image:
     """◎○△× の比較表。案を並べて比べる。"""
     cols = fig.get("cols", [])
     items = fig["items"]
-    w, h = 1180, 260 + max(int(fig.get("slots", len(items))), 1) * 86
+    w, h = typo.PANEL_W, 260 + max(int(fig.get("slots", len(items))), 1) * 86
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     label_w = 460
     cw = (w - label_w - 60) // max(len(cols), 1)

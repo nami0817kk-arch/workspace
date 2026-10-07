@@ -20,17 +20,21 @@ OUT = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
 PHOTO = str(ASSETS / "photos" / "pexels_18569250_A_contemporary_gas_station_wit.jpeg")
 
 W, H = 1920, 1080
-SAFE_BOTTOM = 280            # 字幕のために空ける
+SAFE_BOTTOM = 250            # 字幕のために空ける
 
 
-def place(panel: Image.Image, bg: Image.Image) -> Image.Image:
-    """板を背景の上に、字幕の場所を避けて置く。"""
+def place(panel: Image.Image, bg: Image.Image, width: int = 1850,
+          align: str = "center") -> Image.Image:
+    """板を背景の上に、字幕の場所を避けて置く。
+
+    align が left のときは左に寄せる（右に立ち絵を置く画面で使う）。
+    """
     out = bg.copy()
-    room_h = H - SAFE_BOTTOM - 110
-    s = min(1340 / panel.width, room_h / panel.height, 1.18)
+    room_h = H - SAFE_BOTTOM - 40
+    s = min(width / panel.width, room_h / panel.height, 1.0)
     p = panel.resize((int(panel.width * s), int(panel.height * s)), Image.LANCZOS)
-    out.alpha_composite(p.convert("RGBA"),
-                        ((W - p.width) // 2, 70 + (room_h - p.height) // 2))
+    x = 20 if align == "left" else (W - p.width) // 2
+    out.alpha_composite(p.convert("RGBA"), (x, 24 + (room_h - p.height) // 2))
     return out
 
 
@@ -64,11 +68,15 @@ def main() -> int:
 
     # ③ 書き込みが1つずつ増える（3枚）
     full = texture.finish(grown[-1].convert("RGB"), "panel")
+    # 書き込みの座標は、板から計算で出す（手で書くと板の大きさを変えたときにずれる）
+    lab = charts5.row_box(2, "label")        # 「ガソリン税（上乗せ分）」の行
+    val = charts5.row_box(2, "value")
     marks = [
-        {"kind": "highlight", "box": [96, 290, 450, 334]},
-        {"kind": "circle", "box": [1020, 278, 1210, 346], "seed": 3},
-        {"kind": "arrow", "from": [820, 198], "to": [1020, 300], "text": "2年だけの約束",
-         "bend": -0.26, "seed": 5},
+        {"kind": "highlight", "box": [lab[0] - 10, lab[1] + 6, lab[0] + 620, lab[3] - 4]},
+        {"kind": "circle", "box": [val[0] + 10, val[1], val[2], val[3]], "seed": 3},
+        {"kind": "arrow", "from": [val[0] - 340, val[1] - 96],
+         "to": [val[0] + 30, val[1] + 24], "text": "2年だけの約束",
+         "bend": -0.24, "seed": 5},
     ]
     marked = sequence.reveal(full, marks, keep_first=False)
     frames += marked
@@ -79,8 +87,9 @@ def main() -> int:
         texture.finish(im.convert("RGB"), "screen").save(OUT / "s{:02d}.png".format(i))
 
     # ④ 聞き手が割り込む（最後の書き込みの画面に重ねる）
-    base = place(marked[-1].convert("RGBA"), bg)
-    im = talk.aside(base, dict(who="kikite", mood="odoroki", height=430,
+    #    立ち絵の場所を空けるため、この画面だけ板を縮めて左に寄せる
+    base = place(marked[-1].convert("RGBA"), bg, width=1360, align="left")
+    im = talk.aside(base, dict(who="kikite", mood="odoroki", height=360,
                                say="え、半分近くが税金なんですか"))
     texture.finish(im, "screen").save(OUT / "s{:02d}.png".format(len(frames) + 1))
 
