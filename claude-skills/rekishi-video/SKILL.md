@@ -25,12 +25,14 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
 題材 → 台本 → kana → check → 自分で複数回の確認 → approve → build → コマを抜いて確かめる → ユーザーが本番を見て OK → screen → upload（本編＋ショートで1日9本まで）
 ```
 
-1. **題材**：題材カレンダーの次の人物・出来事。いちばんの見どころ（名場面・数字・謎）を1つ決める（それが冒頭とサムネイルになる）。題名は名前を先頭に。検索の多さは research/search_demand.md
+1. **題材**：題材カレンダーの次の人物・出来事。いちばんの見どころ（名場面・数字・謎）を1つ決める（それが冒頭とサムネイルになる）。題名は名前を先頭に。検索の多さは research/search_demand.md。
+   `python -m chiso.cli keywords "織田信長"` で YouTube の検索候補によく続く語を数える（ゲーム・大河の語は印付きで分ける）。題名の候補3つ・タグ15・概要欄の語の下書きが out/keywords_<名前>.md に出る
 2. **台本**：`scripts/_template.yaml` を写して書く。事実は出典を控え、数字は確かめたものだけ。
    言い伝えは「伝えられています」と言う。図は3つ以上（地名は `places.yaml`、無ければ座標を確かめて足す）。
    絵は Commons のパブリックドメインだけ（撮影者の CC 付きは使わない）。取ったら**1枚ずつ目で見る**（別人の絵が混じる）
+   絵の割り当ては `python -m chiso.cli assign scripts/x.yaml --assets <research>/x_assets.md` で下書き（out/x_assign.md。行番号・せりふの頭・絵・理由、40秒を超える所は detail の候補）。台本は書き換えないので、見て採るものだけ台本に写す
 3. `python -m chiso.cli kana scripts/x.yaml` で**全行の読みを見る**。読み違いは `readings.yaml` に足す
-4. `python -m chiso.cli check scripts/x.yaml`：素材・まとめの節・次回・サムネ・図・長さ。× があれば直す
+4. `python -m chiso.cli check scripts/x.yaml`：素材・まとめの節・次回・サムネ・図・長さ。× があれば直す。! の「冒頭15秒に数字・年・人名がない」「ショートの1行目がそして等で始まる／名前も数字もない」も直す
 5. `python -m chiso.cli draft scripts/x.yaml --lines 40` で冒頭だけの確認用（約5分で作れる）→ コマを抜いて重なりを見る
 6. `python -m chiso.cli draft scripts/x.yaml` で全体の確認用（約30分）。**見せる前にコマを抜いて確かめる**
    - **コマを抜いて確かめる＝`python -m chiso.cli qc scripts/x.yaml [--video out/x_draft.mp4]`**（10-07。35分の動画で約3分）。
@@ -41,7 +43,9 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
 7. **台本のユーザー確認は不要**（10-05 ユーザー「今後台本確認は不要です」）。代わりに自分で何回も確かめる：
    事実（前半・後半）・流れとキャラ・読み（kana）を Agent で並べて確認 → 直す → 直した所の確認 → 最後の通し確認で
    「公開してよい水準」が出たら approve。確認の記録は dev/output/rekishi-chiso/review/ に残す
-8. `build` → `shorts` → `thumb` → `describe`（概要欄）。`screen`（本番の動画をユーザーが見て OK と言ったときだけ）→ `upload --at "YYYY-MM-DD 19:00"`（予約投稿。字幕・サムネイル・概要欄つき）
+8. `build` → `shorts` → `thumb` → `describe`（概要欄。`--keywords` で最後に「この動画で扱うこと：」＝検索候補の語のうち台本に出てくるもの）。
+   サムネは `thumb --variants` で3案（a 今の形／b 顔に寄せて名前と main だけ／c 上に大きな数字・短い語、下に赤い帯）と out/x_thumbnail_variants_preview.png を作り、一覧の大きさで読めるか見てから YouTube Studio の「テストと比較」に3枚載せる（API では載せられない。台本の thumbnail.variants で b の crop・c の top を上書きできる）。
+   `screen`（本番の動画をユーザーが見て OK と言ったときだけ）→ `upload --at "YYYY-MM-DD 19:00"`（予約投稿。字幕・サムネイル・概要欄つき）
 
 ## つまずき所
 

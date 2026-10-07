@@ -130,6 +130,8 @@ def episode(script) -> tuple[list[str], list[str]]:
         if name not in extras.known_icons():
             errors.append(f"挿絵の名前が分かりません: {name}")
     warns += reaction_rules(script)
+    warns += opening_rules(script)
+    warns += short_opening_rules(script)
     if not any("《" in l.text for l in script.lines):
         warns.append("《》の強調が1つもありません")
     if not script.shorts:
@@ -255,4 +257,79 @@ def pacing(script) -> list[str]:
     host = sum(len(display_text(l.text)) for l in script.lines if l.speaker == "語り")
     if host / total > HOST_SHARE_MAX:
         warns.append(f"剣崎の字数が{host * 100 // total}%（{HOST_SHARE_MAX:.0%}まで。つむぎにも事実を言わせる）")
+    return warns
+
+
+# --- 冒頭とショートの出だし（10-07）---------------------------------------------
+# 伸びている歴史の長尺18本の調べ（research/benchmark_long.md）：冒頭15秒でいちばん重い事実を1文。
+# ショートは最初の2秒で誰の何の話か分からないと流される。どちらも知らせるだけで止めない。
+OPENING_LINES = 4        # 冒頭15秒 ≒ 最初の4行
+OPENING_CHARS = 100      # ≒ 15秒 × 7字／秒
+_KANSUJI = "〇一二三四五六七八九十百千万億"
+COUNTERS = ("人", "年", "歳", "日", "か月", "ヶ月", "月", "万", "億", "回", "代", "石", "両", "里", "倍", "割",
+            "枚", "隻", "本", "つ", "度", "時間", "分", "秒", "キロ", "メートル", "円", "文", "貫", "通", "か国", "カ国")
+_FACT = re.compile(r"[0-9０-９]|[" + _KANSUJI + r"]+(?:" + "|".join(COUNTERS) + r")")
+WEAK_STARTS = ("そして", "しかも", "それ", "でも", "はい")
+
+
+def has_number(text: str) -> bool:
+    """数字・年・数（「四十七人」「三日」のような漢数字＋数え方）が入っているか。"""
+    return bool(_FACT.search(display_text(text)))
+
+
+def name_words(script) -> list[str]:
+    """台本の人物の呼び方：people: の名前と言い換え・サムネイルの名前・題名の頭の名前。
+    4字の漢字の名前は、名字と名前の2字ずつも（「信長」「明智」）。"""
+    out: list[str] = []
+    for name, v in (getattr(script, "people", None) or {}).items():
+        out += [name] + list(v.get("match", []))
+    thumb = getattr(script, "thumbnail", None) or {}
+    if thumb.get("name"):
+        out.append(str(thumb["name"]))
+    more = []
+    for n in out:
+        if re.fullmatch(r"[一-鿿]{4}", n):
+            more += [n[:2], n[2:]]
+    head = re.sub(r"^[「『][^」』]*[」』]", "", getattr(script, "title", "") or "")
+    m = re.match(r"(.+?)(?:とは|は|の|、|｜|「|$)", head)
+    if m and len(m.group(1)) >= 2:
+        out.append(m.group(1))
+    return list(dict.fromkeys(w for w in out + more if len(w) >= 2))
+
+
+def has_name(text: str, names: list[str]) -> bool:
+    plain = display_text(text)
+    return any(n in plain for n in names)
+
+
+def opening_rules(script) -> list[str]:
+    """冒頭15秒（最初の4行・約100字）に、数字・年・人名などの具体的な事実が入っているか。"""
+    window, chars = [], 0
+    for l in script.lines[:OPENING_LINES]:
+        if chars >= OPENING_CHARS:
+            break
+        window.append(l)
+        chars += len(display_text(l.text))
+    names = name_words(script)
+    if window and not any(has_number(l.text) or has_name(l.text, names) for l in window):
+        return [f"冒頭15秒（最初の{len(window)}行・{chars}字）に数字・年・人名がありません"
+                "（冒頭15秒でいちばん重い事実を1文）"]
+    return []
+
+
+def short_opening_rules(script) -> list[str]:
+    """ショートの1行目：つなぎの言葉で始まらないこと、名前か数字が入っていること（最初の2秒で何の話か分かるように）。"""
+    warns = []
+    names = name_words(script)
+    for sid in getattr(script, "shorts", {}) or {}:
+        lines = script.short_lines(sid)
+        if not lines:
+            continue
+        first = lines[0]
+        plain = display_text(first.text).lstrip("「『（ 　")
+        head = next((w for w in WEAK_STARTS if plain.startswith(w)), None)
+        if head:
+            warns.append(f"ショート {sid}：1行目（{first.index + 1}行目）が「{head}」で始まります（単体で見ると前が無い。最初の2秒で何の話か分かる一言に）")
+        elif not (has_number(first.text) or has_name(first.text, names)):
+            warns.append(f"ショート {sid}：1行目（{first.index + 1}行目）に名前も数字もありません（最初の2秒で誰の何の話か分かるように）")
     return warns

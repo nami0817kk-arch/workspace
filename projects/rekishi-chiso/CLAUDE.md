@@ -60,6 +60,11 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 - **サムネイル**（`thumb`、台本の `thumbnail:`）：絵を全面・上にいちばんの見どころの一言（hook、任意）＋赤い判子（数字など、任意）・下に赤い名前札＋その人を一言で（lead 白＋main 特大の黄。例「天下を支えた（白）弟（黄）」）。10/11 までは「本当に（白）悪女？（黄）」の通説型・
   右下に剣崎雌雄（後ろ）と驚き顔のつむぎ（手前）。シリーズ名・チャンネル名の札は入れない。目印は下端の細い地層。
   `out/*_thumbnail_preview.png` で一覧の大きさでも読めるか見る
+- **サムネ3案**（10-07、`thumb --variants`）：YouTube Studio の「テストと比較」（1本3枚）に載せる。a＝今の形／b＝顔に寄せる（focus の上のほうに自動、
+  台本の `thumbnail.variants.b.crop` で上書き）＋名前と main だけ・2人なし／c＝上に大きな数字か短い語（判子→見出しの数字の順、`variants.c.top`）・判子なし・下は赤い帯に白抜き。
+  `out/x_thumbnail_variants_preview.png` に 640・320・168px で並ぶ。b は元の絵が粗いとぼやける（吉良の古写真）ので、そのときは crop を書く
+- **冒頭とショートの出だし**（10-07、check が知らせる・止めない）：最初の4行（約100字）に数字・年・人名が無い／ショートの1行目が「そして・しかも・それ・でも・はい」で始まる、
+  または名前（people: とその言い換え・サムネの名前・4字の名前は2字ずつ）も数字も無い
 
 ## 質を上げる決まり（10-07。分析の前に自分でできることとして）
 
@@ -181,11 +186,13 @@ python -m chiso.cli draft    scripts/x.yaml [--lines 40]   # 確認用の動画�
 python -m chiso.cli shorts   scripts/x.yaml --draft
 python -m chiso.cli approve  scripts/x.yaml     # ユーザーの OK のあとだけ
 python -m chiso.cli build    scripts/x.yaml
-python -m chiso.cli describe scripts/x.yaml     # 概要欄（章・クレジット・絵の出典・次回）
+python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典・次回。--keywords で最後に「この動画で扱うこと：」）
+python -m chiso.cli keywords "織田信長" [--all] # YouTube の検索候補によく続く語（ゲーム・大河は印付き）・題名3・タグ15・概要欄の語の下書き
 python -m chiso.cli kana     scripts/x.yaml     # 全行の読みをカタカナで（読み違いの点検）
 python -m chiso.cli check    scripts/x.yaml     # 素材の有無・長すぎ・抑揚の張りつき
 python -m chiso.cli qc       scripts/x.yaml [--video out/x.mp4]   # 出来上がった動画の点検（一覧・画面の替わり方・音・無音）
-python -m chiso.cli thumb    scripts/x.yaml     # サムネイルと一覧の大きさの確認用
+python -m chiso.cli thumb    scripts/x.yaml [--variants] [--out dir]   # サムネイルと一覧の大きさの確認用（--variants で3案 a・b・c）
+python -m chiso.cli assign   scripts/x.yaml --assets research/x_assets.md   # 絵の割り当ての下書き（out/x_assign.md、台本は書き換えない）
 python -m chiso.cli screen   scripts/x.yaml     # 本番の動画を見てもらった控え（OK のあとだけ）
 python -m chiso.cli upload   scripts/x.yaml --at "2026-10-05 19:00"   # 予約投稿
 python -m chiso.cli whoami                       # 許可したチャンネルの名前
