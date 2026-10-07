@@ -71,13 +71,13 @@ sources:
 - https://sport.sky.de/transfer/news/34132/13595485/durchbruch-harry-kane-vor-vertragsverlaengerung-beim-fc-bayern-bis-2029
 - https://news.yahoo.co.jp/articles/cdc0e6fb8b55877b19074a66836ba08352c5b5ee/comments
 quote_sources:
-- The FA https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-harry-kane-reaction-20260610
 - スカイスポーツ https://www.skysports.com/football/news/13595647/england-3-0-czech-republic-harry-kane-marks-record-equalling-125th-cap-with-two-goals-and-an-assist-in-nations-league-victory
+- The FA https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-harry-kane-reaction-20260610
 - The FA https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-thomas-tuchel-reaction-20260610
 - PA通信 https://www.irishnews.com/sport/soccer/thomas-tuchel-hails-brilliant-brilliant-harry-kane-after-landmark-double-4R4MOJ4TZBLZXBRQQQ5KPYNQMM/
 - BBC https://www.bbc.co.uk/sport/football/articles/cx2ln5n7yqdo
 cards:
-  night_card:
+  words_card:
     type: table
     title: チェコ戦 ケインが絡んだ3点
     columns: &id001
@@ -94,58 +94,35 @@ cards:
     - - 57分
       - ケイン
       - コーナーキックを頭で
-  night_0_card:
+  words_4_card:
     type: table
     title: チェコ戦 ケインが絡んだ3点
     columns: *id001
     rows: *id002
-  night_1_card:
+  words_5_card:
     type: table
     title: チェコ戦 ケインが絡んだ3点
     columns: *id001
     rows: *id002
-  night_2_card:
-    type: table
-    title: チェコ戦 ケインが絡んだ3点
-    columns: *id001
-    rows: *id002
-  night_3_card:
+  words_6_card:
     type: table
     title: チェコ戦 ケインが絡んだ3点
     columns: *id001
     rows: *id002
     highlight_row: 0
-  night_4_card:
+  words_7_card:
     type: table
     title: チェコ戦 ケインが絡んだ3点
     columns: *id001
     rows: *id002
     highlight_row: 1
-  night_5_card:
-    type: table
-    title: チェコ戦 ケインが絡んだ3点
-    columns: *id001
-    rows: *id002
-    highlight_row: 1
-  night_6_card:
-    type: table
-    title: チェコ戦 ケインが絡んだ3点
-    columns: *id001
-    rows: *id002
-    highlight_row: 1
-  night_10_card:
+  words_8_card:
     type: table
     title: チェコ戦 ケインが絡んだ3点
     columns: *id001
     rows: *id002
     highlight_row: 2
-  night_11_card:
-    type: table
-    title: チェコ戦 ケインが絡んだ3点
-    columns: *id001
-    rows: *id002
-    highlight_row: 2
-  night_12_card:
+  words_9_card:
     type: table
     title: チェコ戦 ケインが絡んだ3点
     columns: *id001
@@ -173,46 +150,58 @@ cards:
       - '38'
   moved_0_card:
     type: table
-    title: チェコ戦の前と後
-    columns: *id003
-    rows: *id004
+    title: チェコ戦 ケインが絡んだ3点
+    columns: *id001
+    rows: *id002
+    highlight_row: 1
   moved_1_card:
     type: table
-    title: チェコ戦の前と後
-    columns: *id003
-    rows: *id004
-    highlight_row: 0
-  moved_2_card:
-    type: table
-    title: チェコ戦の前と後
-    columns: *id003
-    rows: *id004
-    highlight_row: 0
-  moved_3_card:
-    type: table
-    title: チェコ戦の前と後
-    columns: *id003
-    rows: *id004
-    highlight_row: 0
-  moved_4_card:
-    type: table
-    title: チェコ戦の前と後
-    columns: *id003
-    rows: *id004
-    highlight_row: 3
+    title: チェコ戦 ケインが絡んだ3点
+    columns: *id001
+    rows: *id002
+    highlight_row: 1
   moved_5_card:
     type: table
     title: チェコ戦の前と後
     columns: *id003
     rows: *id004
-    highlight_row: 2
   moved_6_card:
     type: table
     title: チェコ戦の前と後
     columns: *id003
     rows: *id004
-    highlight_row: 2
+    highlight_row: 0
   moved_7_card:
+    type: table
+    title: チェコ戦の前と後
+    columns: *id003
+    rows: *id004
+    highlight_row: 0
+  moved_8_card:
+    type: table
+    title: チェコ戦の前と後
+    columns: *id003
+    rows: *id004
+    highlight_row: 0
+  moved_9_card:
+    type: table
+    title: チェコ戦の前と後
+    columns: *id003
+    rows: *id004
+    highlight_row: 3
+  moved_10_card:
+    type: table
+    title: チェコ戦の前と後
+    columns: *id003
+    rows: *id004
+    highlight_row: 2
+  moved_11_card:
+    type: table
+    title: チェコ戦の前と後
+    columns: *id003
+    rows: *id004
+    highlight_row: 2
+  moved_12_card:
     type: table
     title: チェコ戦の前と後
     columns: *id003
@@ -371,56 +360,7 @@ cards:
   se: assets/audio/se_pon.wav
   image: assets/images/20261006_record_kane/02_2026ghana_w.jpg
 
-## 125試合目、3点すべてに絡む
-@bg: assets/backgrounds/stock/stadium_night.mp4
-
-キャスター: 歴代最多に並んだ一戦。その試合で、ケインは3点すべてに絡みました。
-  emph: true
-  telop: 歴代最多に並んだ一戦。その試合で、ケインは3点すべてに絡みました
-  source: 報道
-  card: night_0_card
-  image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
-キャスター: 大会は、欧州の代表チームによるネーションズリーグ。
-  telop: 大会は、欧州の代表チームによるネーションズリーグ
-  card: night_1_card
-キャスター: ホームのウェンブリーで、チェコを3対0で下しました。
-  telop: ホームのウェンブリーで、チェコを3対0で下しました
-  card: night_2_card
-キャスター: 先制は27分。ケインの低いクロスを、相手がクリアしきれずオウンゴール。
-  telop: 先制は27分。ケインの低いクロスを、相手がクリアしきれずオウンゴール
-  card: night_3_card
-キャスター: 40分には右からの折り返しを押し込み、これが代表90点目。
-  telop: 40分には右からの折り返しを押し込み、これが代表90点目
-  card: night_4_card
-キャスター: 中盤アンダーソンの浮き球を、ロジャーズが右で受けて一度で折り返した形。
-  telop: 中盤アンダーソンの浮き球を、ロジャーズが右で受けて一度で折り返した形
-  card: night_5_card
-キャスター: 1点目の形には、ケイン自身もほれ込んでいます。
-  telop: 1点目の形には、ケイン自身もほれ込んでいます
-  card: night_6_card
-ハリー・ケイン: ワンタッチでつないで、最後はダイレクトのクロス。
-  telop: ハリー・ケイン「ワンタッチでつないで、最後はダイレクトのクロス」
-  card: none
-ハリー・ケイン: あれ以上の崩しは無い。
-  cont: true
-  telop: ハリー・ケイン「あれ以上の崩しは無い」
-  card: none
-ハリー・ケイン: ストライカーは、ああいう一瞬を待って生きているんだ。
-  cont: true
-  telop: ハリー・ケイン「ストライカーは、ああいう一瞬を待って生きているんだ」
-  card: none
-キャスター: 57分はコーナーキックを頭で合わせて、91点目です。
-  telop: 57分はコーナーキックを頭で合わせて、91点目です
-  card: night_10_card
-キャスター: 3日前のクロアチア戦に続いて、2試合続けての2得点。
-  telop: 3日前のクロアチア戦に続いて、2試合続けての2得点
-  card: night_11_card
-キャスター: 33歳での2試合連続2得点は、イングランド代表の最年長です。
-  emph: true
-  telop: 33歳での2試合連続2得点は、イングランド代表の最年長です
-  card: night_12_card
-
-## 並んだ夜、ケインが口にしたこと
+## 並んだ夜、3点すべてに絡む
 @bg: assets/backgrounds/stock/stadium_night.mp4
 @main: true
 
@@ -432,6 +372,7 @@ cards:
 ハリー・ケイン: 代表デビューの日も、夢がかなった瞬間だった。
   telop: ハリー・ケイン「代表デビューの日も、夢がかなった瞬間だった」
   source: 報道
+  card: none
   image: assets/images/20261006_record_kane/11_2026panama184_w.jpg
 ハリー・ケイン: でも今夜は、思い描いた夢さえ超えている。
   cont: true
@@ -443,43 +384,91 @@ cards:
   telop: ハリー・ケイン「125試合まで来られたのは、この上ない光栄だ」
   card: none
   image: assets/images/20261006_record_kane/11_2026panama184_w.jpg
+キャスター: そう語ったこの試合で、ケインは3点すべてに絡みました。
+  emph: true
+  telop: そう語ったこの試合で、ケインは3点すべてに絡みました
+  card: words_4_card
+  image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+キャスター: 欧州の代表戦ネーションズリーグ、ウェンブリーでチェコを3対0で下しました。
+  telop: 欧州の代表戦ネーションズリーグ、ウェンブリーでチェコを3対0で下しました
+  card: words_5_card
+  image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+キャスター: 先制は27分。ケインの低いクロスを、相手がクリアしきれずオウンゴール。
+  telop: 先制は27分。ケインの低いクロスを、相手がクリアしきれずオウンゴール
+  card: words_6_card
+  image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+キャスター: 40分には右からの折り返しを押し込み、これが代表90点目。
+  telop: 40分には右からの折り返しを押し込み、これが代表90点目
+  card: words_7_card
+  image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+キャスター: 57分はコーナーキックを頭で合わせて、91点目です。
+  telop: 57分はコーナーキックを頭で合わせて、91点目です
+  card: words_8_card
+  image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+キャスター: 3日前のクロアチア戦に続く2試合連続2得点。33歳では代表の最年長です。
+  emph: true
+  telop: 3日前のクロアチア戦に続く2試合連続2得点。33歳では代表の最年長です
+  card: words_9_card
+  image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
 
 ## この90分で動いた数字
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-解説: この1試合で、ケインの数字はどれだけ動いたのか。
-  telop: この1試合で、ケインの数字はどれだけ動いたのか
+解説: 1点目は、中盤アンダーソンの浮き球を、ロジャーズが一度で折り返した形。
+  telop: 1点目は、中盤アンダーソンの浮き球を、ロジャーズが一度で折り返した形
   source: 報道
   card: moved_0_card
   image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+解説: この崩しには、ケイン自身もほれ込んでいます。
+  telop: この崩しには、ケイン自身もほれ込んでいます
+  card: moved_1_card
+  image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+ハリー・ケイン: ワンタッチでつないで、最後はダイレクトのクロス。
+  telop: ハリー・ケイン「ワンタッチでつないで、最後はダイレクトのクロス」
+  card: none
+  image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+ハリー・ケイン: あれ以上の崩しは無い。
+  cont: true
+  telop: ハリー・ケイン「あれ以上の崩しは無い」
+  card: none
+  image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+ハリー・ケイン: ストライカーは、ああいう一瞬を待って生きているんだ。
+  cont: true
+  telop: ハリー・ケイン「ストライカーは、ああいう一瞬を待って生きているんだ」
+  card: none
+  image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+解説: では、この1試合で、ケインの数字はどれだけ動いたのか。
+  telop: では、この1試合で、ケインの数字はどれだけ動いたのか
+  card: moved_5_card
+  image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
 解説: 出場は124から125へ。1990年から誰も届かなかった数です。
   telop: 出場は124から125へ。1990年から誰も届かなかった数です
-  card: moved_1_card
+  card: moved_6_card
   image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
 解説: そのうち先発は111試合。9割近くを、頭から任されてきました。
   telop: そのうち先発は111試合。9割近くを、頭から任されてきました
-  card: moved_2_card
+  card: moved_7_card
   image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
 解説: 出た試合で勝ったのは83。3試合に2試合は勝ってきた計算です。
   telop: 出た試合で勝ったのは83。3試合に2試合は勝ってきた計算です
-  card: moved_3_card
+  card: moved_8_card
   image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
 解説: 得点は89から91へ。2位ルーニーとの差は38点に開きました。
   telop: 得点は89から91へ。2位ルーニーとの差は38点に開きました
-  card: moved_4_card
+  card: moved_9_card
   image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
 解説: 今年の代表での得点は、これで13。出た試合と同じ数。
   telop: 今年の代表での得点は、これで13。出た試合と同じ数
-  card: moved_5_card
+  card: moved_10_card
   image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
 解説: 1年で13点は、イングランド代表で歴代2番目の多さです。
   emph: true
   telop: 1年で13点は、イングランド代表で歴代2番目の多さです
-  card: moved_6_card
+  card: moved_11_card
   image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
 解説: 上にいるのは2021年の16点。こちらもケイン自身の数字です。
   telop: 上にいるのは2021年の16点。こちらもケイン自身の数字です
-  card: moved_7_card
+  card: moved_12_card
   image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
 解説: トゥヘル監督は、試合のあとにこう話しました。
   telop: トゥヘル監督は、試合のあとにこう話しました

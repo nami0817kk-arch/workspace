@@ -43,44 +43,49 @@ thumbnail:
   - UEFAネーションズリーグ
   - 記録の解説
 sections:
-- id: night
-  heading: 125試合目、3点すべてに絡む
+- id: words
+  main: true
+  heading: 並んだ夜、3点すべてに絡む
   tier: 報道
-  telop: 最多出場に並んだチェコ戦。ケインは2得点、残る1点もクロスから
+  telop: 「思い描いた夢さえ超えている」。その試合で2得点、残る1点もクロスから
   narrator: キャスター
-  card:
-    type: table
-    title: チェコ戦 ケインが絡んだ3点
-    columns: &id001
-    - 時間
-    - 得点
-    - ケインの役目
-    rows: &id002
-    - - 27分
-      - オウンゴール
-      - 低いクロスで誘う
-    - - 40分
-      - ケイン
-      - 右からの折り返しを決める
-    - - 57分
-      - ケイン
-      - コーナーキックを頭で
   say:
-  - text: 歴代最多に並んだ一戦。その試合で、ケインは3点すべてに絡みました。
+  - text: イングランド代表で125試合目。ケインがシルトンの最多出場に並びました。
+    short_only: true
+    image: assets/images/20261006_record_kane/02_2026ghana_w.jpg
+  - text: 代表デビューの日も、夢がかなった瞬間だった。
+    voice: ハリー・ケイン
+    image: assets/images/20261006_record_kane/11_2026panama184_w.jpg
+    card: none
+  - text: でも今夜は、思い描いた夢さえ超えている。
+    voice: ハリー・ケイン
+    cont: true
+    card: none
+  - text: 125試合まで来られたのは、この上ない光栄だ。
+    voice: ハリー・ケイン
+    cont: true
+    card: none
+  - text: そう語ったこの試合で、ケインは3点すべてに絡みました。
     card:
       type: table
       title: チェコ戦 ケインが絡んだ3点
-      columns: *id001
-      rows: *id002
-    image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+      columns: &id001
+      - 時間
+      - 得点
+      - ケインの役目
+      rows: &id002
+      - - 27分
+        - オウンゴール
+        - 低いクロスで誘う
+      - - 40分
+        - ケイン
+        - 右からの折り返しを決める
+      - - 57分
+        - ケイン
+        - コーナーキックを頭で
     emph: true
-  - text: 大会は、欧州の代表チームによるネーションズリーグ。
-    card:
-      type: table
-      title: チェコ戦 ケインが絡んだ3点
-      columns: *id001
-      rows: *id002
-  - text: ホームのウェンブリーで、チェコを3対0で下しました。
+    image: assets/images/20261006_record_kane/02_2026ghana_p.jpg
+  - text: 欧州の代表戦ネーションズリーグ、ウェンブリーでチェコを3対0で下しました。
     card:
       type: table
       title: チェコ戦 ケインが絡んだ3点
@@ -100,31 +105,6 @@ sections:
       columns: *id001
       rows: *id002
       highlight_row: 1
-  - text: 中盤アンダーソンの浮き球を、ロジャーズが右で受けて一度で折り返した形。
-    card:
-      type: table
-      title: チェコ戦 ケインが絡んだ3点
-      columns: *id001
-      rows: *id002
-      highlight_row: 1
-  - text: 1点目の形には、ケイン自身もほれ込んでいます。
-    card:
-      type: table
-      title: チェコ戦 ケインが絡んだ3点
-      columns: *id001
-      rows: *id002
-      highlight_row: 1
-  - text: ワンタッチでつないで、最後はダイレクトのクロス。
-    card: none
-    voice: ハリー・ケイン
-  - text: あれ以上の崩しは無い。
-    card: none
-    voice: ハリー・ケイン
-    cont: true
-  - text: ストライカーは、ああいう一瞬を待って生きているんだ。
-    card: none
-    voice: ハリー・ケイン
-    cont: true
   - text: 57分はコーナーキックを頭で合わせて、91点目です。
     card:
       type: table
@@ -132,14 +112,7 @@ sections:
       columns: *id001
       rows: *id002
       highlight_row: 2
-  - text: 3日前のクロアチア戦に続いて、2試合続けての2得点。
-    card:
-      type: table
-      title: チェコ戦 ケインが絡んだ3点
-      columns: *id001
-      rows: *id002
-      highlight_row: 2
-  - text: 33歳での2試合連続2得点は、イングランド代表の最年長です。
+  - text: 3日前のクロアチア戦に続く2試合連続2得点。33歳では代表の最年長です。
     card:
       type: table
       title: チェコ戦 ケインが絡んだ3点
@@ -147,37 +120,21 @@ sections:
       rows: *id002
       highlight_row: 2
     emph: true
+  quotes_from:
+  - スカイスポーツ https://www.skysports.com/football/news/13595647/england-3-0-czech-republic-harry-kane-marks-record-equalling-125th-cap-with-two-goals-and-an-assist-in-nations-league-victory
+  - The FA https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-harry-kane-reaction-20260610
   sources:
   - https://www.englandfootball.com/england/mens-senior-team/fixtures-results/2026-27/Nations-League/england-czechia-uefa-nations-league-tuesday-6-october-2026-match-centre
   - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-post-match-stats-20260610
   - https://www.bbc.co.uk/sport/football/articles/cx7vp3lqv985o
   - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-harry-kane-reaction-20260610
-  quotes_from:
-  - The FA https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-harry-kane-reaction-20260610
-- id: words
-  main: true
-  heading: 並んだ夜、ケインが口にしたこと
-  tier: 報道
-  telop: 「思い描いた夢さえ超えている」
-  narrator: キャスター
-  say:
-  - text: イングランド代表で125試合目。ケインがシルトンの最多出場に並びました。
-    short_only: true
-    image: assets/images/20261006_record_kane/02_2026ghana_w.jpg
-  - text: 代表デビューの日も、夢がかなった瞬間だった。
-    voice: ハリー・ケイン
-    image: assets/images/20261006_record_kane/11_2026panama184_w.jpg
-  - text: でも今夜は、思い描いた夢さえ超えている。
-    voice: ハリー・ケイン
-    cont: true
-  - text: 125試合まで来られたのは、この上ない光栄だ。
-    voice: ハリー・ケイン
-    cont: true
-  quotes_from:
-  - スカイスポーツ https://www.skysports.com/football/news/13595647/england-3-0-czech-republic-harry-kane-marks-record-equalling-125th-cap-with-two-goals-and-an-assist-in-nations-league-victory
-  sources:
   - https://www.skysports.com/football/news/13595647/england-3-0-czech-republic-harry-kane-marks-record-equalling-125th-cap-with-two-goals-and-an-assist-in-nations-league-victory
   - https://english.aawsat.com/sports/5326801-kane-eyes-ronaldo-record-after-matching-england-cap-mark
+  card:
+    type: table
+    title: チェコ戦 ケインが絡んだ3点
+    columns: *id001
+    rows: *id002
 - id: moved
   heading: この90分で動いた数字
   tier: 報道
@@ -204,7 +161,33 @@ sections:
       - '36'
       - '38'
   say:
-  - text: この1試合で、ケインの数字はどれだけ動いたのか。
+  - text: 1点目は、中盤アンダーソンの浮き球を、ロジャーズが一度で折り返した形。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+    image: assets/images/20261006_record_kane/12_2026ghana05_v.jpg
+  - text: この崩しには、ケイン自身もほれ込んでいます。
+    card:
+      type: table
+      title: チェコ戦 ケインが絡んだ3点
+      columns: *id001
+      rows: *id002
+      highlight_row: 1
+  - text: ワンタッチでつないで、最後はダイレクトのクロス。
+    card: none
+    voice: ハリー・ケイン
+  - text: あれ以上の崩しは無い。
+    card: none
+    voice: ハリー・ケイン
+    cont: true
+  - text: ストライカーは、ああいう一瞬を待って生きているんだ。
+    card: none
+    voice: ハリー・ケイン
+    cont: true
+  - text: では、この1試合で、ケインの数字はどれだけ動いたのか。
     card:
       type: table
       title: チェコ戦の前と後
@@ -284,6 +267,7 @@ sections:
   - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-thomas-tuchel-reaction-20260610
   - https://www.irishnews.com/sport/soccer/thomas-tuchel-hails-brilliant-brilliant-harry-kane-after-landmark-double-4R4MOJ4TZBLZXBRQQQ5KPYNQMM/
   - https://www.bbc.co.uk/sport/football/articles/cm5ynj882zw0o
+  - https://www.englandfootball.com/articles/2026/Oct/06/england-czechia-uefa-nations-league-harry-kane-reaction-20260610
 - id: view
   viewpoint: true
   heading: シルトンとケイン、125試合までの道のりの差
