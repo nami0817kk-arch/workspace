@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import shutil
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -107,21 +108,25 @@ def build_script(
         work_dir,
     )
 
-    soundtrack = audio.mix(
-        voice_track,
-        work_dir / "soundtrack.m4a",
-        work_dir,
-        config.audio,
-        duration=script.duration + inserts.total,
-        effects=audio.collect_effects(script, config),
-        # 【速報】は緊迫した曲、【詳報】は落ち着いた曲。frontmatter の bgm が優先
-        bgm=audio_gen.track_for(script.title, script.meta.get("bgm")),
-    )
-
+    # **音の混ぜは、絵を描くあいだに別スレッドで回す**（2026-10-08）。どちらも相手の
+    # 結果を要らないので、順に待つ意味が無い。`build_video` が ffmpeg に渡す手前で待つ
+    bgm = audio_gen.track_for(script.title, script.meta.get("bgm"))
     renderer = Renderer(config, work_dir)
-    video = renderer.build_video(
-        script, soundtrack, out_dir / "video.mp4", work_dir, inserts
-    )
+    with ThreadPoolExecutor(max_workers=1, thread_name_prefix="mix") as pool:
+        soundtrack = pool.submit(
+            audio.mix,
+            voice_track,
+            work_dir / "soundtrack.m4a",
+            work_dir,
+            config.audio,
+            duration=script.duration + inserts.total,
+            effects=audio.collect_effects(script, config),
+            # 【速報】は緊迫した曲、【詳報】は落ち着いた曲。frontmatter の bgm が優先
+            bgm=bgm,
+        )
+        video = renderer.build_video(
+            script, soundtrack, out_dir / "video.mp4", work_dir, inserts
+        )
 
     look = from_meta(script.meta, script.title)
     # 帯の上に出す反応。指定が無ければ台本から短いものを拾う（2026-09-07）

@@ -248,6 +248,8 @@ def test_左右の比べの行は見出しも節の名前も重ねない(tmp_pat
     config = load_config()
     left, right = _photo(tmp_path / "l.jpg", 90), _photo(tmp_path / "r.jpg", 120)
     renderer = Renderer(config, tmp_path / "work")
+    # 画素を1つずつ比べるので、可逆の PNG で保存させる（下地が静止画の回の途中の画像は JPEG。2026-10-08）
+    renderer.over_video = True
     spec = {"type": "versus", "left": {"image": left, "name": "ケイン", "number": "125試合"},
             "right": {"image": right, "name": "シルトン", "number": "125試合"}}
     renderer.script_cards = {"vs": spec}

@@ -52,8 +52,8 @@ def test_frames_are_cached_by_content(tmp_path):
     script = _script_with_timing()
     renderer = Renderer(config, tmp_path)
     renderer.frame_entries(script)
-    # 2行 x (口を閉じた絵 + 開けた絵) = 4枚だけ
-    assert len(list((tmp_path / "frames").glob("*.png"))) == 4
+    # 2行 x (口を閉じた絵 + 開けた絵) = 4枚だけ（下地が静止画の回は JPEG。2026-10-08）
+    assert len(list((tmp_path / "frames").glob("*.jpg"))) == 4
 
 
 def test_news_layout_skips_mouth_frames(tmp_path):
@@ -70,7 +70,7 @@ def test_news_layout_skips_mouth_frames(tmp_path):
     renderer = Renderer(config, tmp_path)
     renderer.frame_entries(script)
     # 見出し2種類ぶんだけ。口の開閉では増えない
-    assert len(list((tmp_path / "frames").glob("*.png"))) == 2
+    assert len(list((tmp_path / "frames").glob("*.jpg"))) == 2
 
 
 def test_news_layout_keeps_previous_headline(tmp_path):
@@ -133,8 +133,8 @@ def test_scene_change_uses_crossfade(tmp_path):
         line.duration, line.pause = 2.0, 0.4
     renderer = Renderer(config, tmp_path)
     renderer.frame_entries(script)
-    # blend() が作る中間フレームは x で始まる名前にしている
-    assert list((tmp_path / "frames").glob("x*.png"))
+    # blend() が作る中間フレームは x で始まる名前にしている（下地が静止画の回は JPEG）
+    assert list((tmp_path / "frames").glob("x*.jpg"))
 
 
 def test_intro_is_capped_by_speaking_time(tmp_path):
@@ -974,6 +974,7 @@ def test_溶かしの途中の絵も透過つきで保存する(tmp_path):
     from src.render import Renderer
 
     r = Renderer(load_config(), tmp_path / "work")
+    r.over_video = True     # 動画の下地に重ねる回の話（下地が静止画だけの回は JPEG にそろえる）
     a = tmp_path / "a.png"; b = tmp_path / "b.png"
     Image.new("RGBA", (64, 36), (255, 0, 0, 255)).save(a)
     Image.new("RGBA", (64, 36), (0, 0, 255, 255)).save(b)

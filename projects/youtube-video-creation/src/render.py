@@ -9,8 +9,11 @@ from __future__ import annotations
 
 import hashlib
 import math
+import os
 import re
 from dataclasses import dataclass
+from collections import OrderedDict
+from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -163,6 +166,91 @@ class Renderer:
         self.over_video = False
         self._backgrounds: dict[str, Image.Image] = {}
         self._sprites: dict[tuple[str, str, bool], Image.Image | None] = {}
+        # **絵の保存は別スレッドに回す**（2026-10-08）。PNG の書き出しは描くのと同じくらい
+        # 時間を食うので、次のコマを描いているあいだに書く。`frame_entries` が返るときに
+        # 全部待ち合わせるので、ffmpeg が書きかけの絵を読むことは無い
+        self._saver: ThreadPoolExecutor | None = None
+        self._pending: dict[Path, Future] = {}
+        # 保存した絵の控え（溶かしの中間フレームを、ファイルを読み直さずに作るため）。
+        # 1920x1080 の RGBA は1枚8MBなので、直近のぶんだけ持つ
+        self._recent: OrderedDict[Path, Image.Image] = OrderedDict()
+        self._saved: set[Path] = set()
+
+    # -------------------------------------------------------------- 絵の保存
+
+    # 控えに残す枚数。溶かしは直前の絵と今の絵だけを使うので、少しで足りる
+    RECENT_MAX = 8
+
+    def _frame_suffix(self) -> str:
+        """途中の絵の形式。
+
+        **動画の下地に重ねる回は RGBA の PNG のまま**（透過が要る。写真が替わる瞬間に
+        下地が見えてしまう）。**下地が静止画だけの回は JPEG**（透過が要らないので、
+        書くのも読むのも速い）。
+        **1本の列の中で形式を混ぜない。**RGB の絵を RGBA の列に混ぜたとき、
+        ffmpeg がそのコマを落とした（2026-10-01「エクアドルの本編でスタジアムの背景が入る」）。
+        `over_video` は1本のあいだ変わらないので、形式も1本のあいだ変わらない。
+        """
+        return ".png" if self.over_video else ".jpg"
+
+    def _frame_path(self, stem: str) -> Path:
+        return self.frame_dir / (stem + self._frame_suffix())
+
+    def _have(self, target: Path) -> bool:
+        """もう作ってあるか。別スレッドが書いている途中のものも「ある」と数える。"""
+        return target in self._saved or target.exists()
+
+    def _save_frame(self, image: Image.Image, target: Path) -> Path:
+        """1枚を保存する。形式は `_frame_suffix` に合わせる（混ぜない）。"""
+        target = Path(target).with_suffix(self._frame_suffix())
+        if self.over_video:
+            if image.mode != "RGBA":
+                image = image.convert("RGBA")
+        elif image.mode != "RGB":
+            image = image.convert("RGB")
+        self._remember(target, image)
+        self._saved.add(target)
+        if self._saver is not None:
+            self._pending[target] = self._saver.submit(_write_image, image, target)
+        else:
+            _write_image(image, target)
+        return target
+
+    def _remember(self, target: Path, image: Image.Image) -> None:
+        self._recent[target] = image
+        self._recent.move_to_end(target)
+        while len(self._recent) > self.RECENT_MAX:
+            self._recent.popitem(last=False)
+
+    def _image(self, target: Path) -> Image.Image:
+        """保存した絵を取り出す。控えにあればファイルを読まない。
+
+        控えに無ければ読み直すが、**書きかけを読まないようにそのコマだけ待つ**。
+        """
+        mode = "RGBA" if self.over_video else "RGB"
+        got = self._recent.get(Path(target))
+        if got is not None:
+            return got if got.mode == mode else got.convert(mode)
+        pending = self._pending.get(Path(target))
+        if pending is not None:
+            pending.result()
+        with Image.open(target) as opened:
+            return opened.convert(mode)
+
+    def _open_saver(self) -> None:
+        """保存を別スレッドに回し始める。"""
+        self._close_saver()
+        self._saver = ThreadPoolExecutor(max_workers=max(2, min(4, (os.cpu_count() or 2))),
+                                         thread_name_prefix="frame-save")
+
+    def _close_saver(self) -> None:
+        """書きかけを全部待ってから閉じる。ここを抜けたら、並びの絵は全部読める。"""
+        saver, self._saver = self._saver, None
+        pending, self._pending = list(self._pending.values()), {}
+        for future in pending:
+            future.result()       # 失敗していればここで上がる（黙って欠けた絵を残さない）
+        if saver is not None:
+            saver.shutdown(wait=True)
 
     # ------------------------------------------------------------------ 画面
 
@@ -240,8 +328,8 @@ class Renderer:
                 f"head{bool(scene.lines and line is scene.lines[0]) and telop_t < 1.0}",
             ]
         )
-        target = self.frame_dir / f"{hashlib.sha1(key.encode('utf-8')).hexdigest()[:16]}.png"
-        if target.exists():
+        target = self._frame_path(hashlib.sha1(key.encode('utf-8')).hexdigest()[:16])
+        if self._have(target):
             return target
 
         # **冒頭の節はサムネの写真を敷く**（2026-09-08）。ぼかした夜景に黒い板では、
@@ -324,9 +412,8 @@ class Renderer:
             else:
                 self._draw_headline(canvas, text, telop_t, source,
                                     compact=bool(card) and not board and not self.layout.is_portrait)
-        # 動画背景のときは重ねる前提なのでアルファを残す
-        canvas.save(target) if over_video else canvas.convert("RGB").save(target)
-        return target
+        # 動画背景のときは重ねる前提なのでアルファを残す（`_save_frame` が形式をそろえる）
+        return self._save_frame(canvas, target)
 
     def _black(self) -> Path:
         target = self.frame_dir / "black_rgba.png"
@@ -340,13 +427,14 @@ class Renderer:
         # フレーム列は RGBA の PNG を concat して背景動画に重ねている。ここだけ RGB で保存していたため、
         # 形式が切り替わるところで ffmpeg がコマを落とし、写真が替わる瞬間に下地（スタジアム）が見えていた
         key = f"{first.name}|{second.name}|{ratio:.3f}|rgba"
-        target = self.frame_dir / f"x{hashlib.sha1(key.encode('utf-8')).hexdigest()[:15]}.png"
-        if target.exists():
+        target = self._frame_path("x" + hashlib.sha1(key.encode('utf-8')).hexdigest()[:15])
+        if self._have(target):
             return target
-        a = Image.open(first).convert("RGBA")
-        b = Image.open(second).convert("RGBA")
-        Image.blend(a, b, ratio).save(target)
-        return target
+        # **手元に残した絵から作る**（2026-10-08）。保存を別スレッドに回したので、
+        # ここでファイルを読むと書き終わるのを待つことになる。読み直しても同じ絵になる
+        a = self._image(first)
+        b = self._image(second)
+        return self._save_frame(Image.blend(a, b, ratio), target)
 
     def _transparent(self) -> Image.Image:
         """動画背景に重ねるための透過キャンバス。
@@ -1284,8 +1372,8 @@ class Renderer:
     ) -> Path:
         """冒頭タイトル / 章タイトルの1枚。progress は 0→1 のフェード。"""
         key = f"title|{kind}|{background}|{heading}|{sub}|{label}|{progress:.2f}|{self.over_video}"
-        target = self.frame_dir / f"t{hashlib.sha1(key.encode('utf-8')).hexdigest()[:15]}.png"
-        if target.exists():
+        target = self._frame_path("t" + hashlib.sha1(key.encode('utf-8')).hexdigest()[:15])
+        if self._have(target):
             return target
 
         stage = self._photo_stage(background) if kind == "intro" else None
@@ -1336,8 +1424,7 @@ class Renderer:
         if progress < 1.0:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
         base.alpha_composite(layer)
-        base.save(target) if self.over_video else base.convert("RGB").save(target)
-        return target
+        return self._save_frame(base, target)
 
     def _title_entries(
         self,
@@ -1382,9 +1469,6 @@ class Renderer:
         self.script_date = script.date
         motion = self.config.motion
         inserts = inserts or Inserts()
-        entries: list[tuple[Path, float]] = []
-        previous: Path | None = None
-        prev_stage: str | None = None
         # **横のどこを残すか**（2026-09-18）。縦型は写真を画面いっぱいに敷くので、
         # 端に写っている人が落ちる。台本の `thumbnail_focus_x` で寄せる
         _fx = script.meta.get("thumbnail_focus_x")
@@ -1399,6 +1483,18 @@ class Renderer:
         self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script, inserts))
         self.scene_order = {scene.title: index + 1 for index, scene in enumerate(script.scenes)}
         self.scene_total = len(script.scenes)
+        # ここから先の保存は別スレッドに回す。**返る前に全部待ち合わせる**（下の finally）ので、
+        # この並びを受け取った側は、どのコマもそのまま読める
+        self._open_saver()
+        try:
+            return self._frame_entries(script, inserts, motion)
+        finally:
+            self._close_saver()
+
+    def _frame_entries(self, script: Script, inserts: Inserts, motion) -> list[tuple[Path, float]]:
+        entries: list[tuple[Path, float]] = []
+        previous: Path | None = None
+        prev_stage: str | None = None
 
         if inserts.intro > 0 and script.scenes:
             first_bg = script.scenes[0].background or script.background or self.config.video.background
@@ -1721,7 +1817,7 @@ class Renderer:
     def build_video(
         self,
         script: Script,
-        audio_path: Path | None,
+        audio_path: Path | None | Future,
         out_path: Path,
         work_dir: Path,
         inserts: Inserts | None = None,
@@ -1730,15 +1826,27 @@ class Renderer:
         list_path = ffmpeg.write_concat_list(entries, work_dir / "frames.txt")
         out_path.parent.mkdir(parents=True, exist_ok=True)
         size = (self.layout.width, self.layout.height)
+        # **混ぜている途中の音は、ffmpeg に渡す前に待つ**（2026-10-08）。音の混ぜは
+        # 絵を描くあいだに別スレッドで回している（pipeline）。渡すのは出来上がった音のパス
+        if isinstance(audio_path, Future):
+            audio_path = audio_path.result()
 
         if self.over_video:
-            # 背景をつないだ1本の動画にしてから、透過フレームを重ねる
-            track = ffmpeg.build_background_track(
-                self.background_segments(script, inserts),
-                work_dir / "background.mp4",
-                size,
-                self.config.video.fps,
-            )
+            segments = self.background_segments(script, inserts)
+            if len(segments) == 1 and is_video(segments[0][0]):
+                # **下地が動画1本だけなら、つなぎ直さずにそのまま敷く**（2026-10-08）。
+                # `encode_video_over_clip` は `-stream_loop -1` で尺に合わせて回し、
+                # 画面いっぱいに拡大して切り出すので、作り直す意味が無い。
+                # メッシの回（3分15秒）の実測で、ここの 298秒が丸ごと消えた
+                track = Path(segments[0][0])
+            else:
+                # 下地が複数（静止画が混ざる・節ごとに違う）なら、今までどおりつないで1本にする
+                track = ffmpeg.build_background_track(
+                    segments,
+                    work_dir / "background.mp4",
+                    size,
+                    self.config.video.fps,
+                )
             return ffmpeg.encode_video_over_clip(
                 list_path, track, audio_path, out_path, size, self.config.video.fps,
                 progress=self._progress_spec(entries),
@@ -1755,6 +1863,26 @@ class Renderer:
             return None
         total = sum(seconds for _, seconds in entries)
         return (total, PROGRESS_HEIGHT) if total > 1.0 and PROGRESS_HEIGHT > 0 else None
+
+
+def _write_image(image: Image.Image, target: Path) -> None:
+    """1枚をファイルに書く（別スレッドから呼ばれる）。
+
+    **PNG は圧縮を軽くするだけ**（可逆なので画素は変わらない）。JPEG は色を間引かない
+    （`subsampling=0`）。書きかけを ffmpeg に読ませないよう、別名に書いてから置き換える。
+    """
+    target = Path(target)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    tmp = target.with_name(f"{target.name}.{os.getpid()}.part")
+    try:
+        if target.suffix.lower() == ".png":
+            image.save(tmp, "PNG", compress_level=1)
+        else:
+            image.save(tmp, "JPEG", quality=92, subsampling=0, optimize=False)
+        os.replace(tmp, target)
+    finally:
+        if tmp.exists():
+            tmp.unlink(missing_ok=True)
 
 
 def _emphasis_segments(chunk: str, spans: list[tuple[int, int]]
