@@ -48,7 +48,7 @@ Email Routing は受信専用で `info@` から送り返せない。屋号名義
 
 | サブドメイン | PJT | 設定の置き場所 |
 |---|---|---|
-| `kabu.dailyquarry.com` | kabu-agari-ranking | `projects/kabu-agari-ranking/src/site_config.py` |
+| `kabu.dailyquarry.com` | kabu-agari-ranking（**2026-10-07 終了。終了案内のみ**） | `projects/kabu-agari-ranking/closed/` |
 | `kakaku.dailyquarry.com` | price-tracker | `projects/price-tracker/config.json` |
 
 新しいサイトを公開するときは、`<名前>.dailyquarry.com` を Cloudflare Pages の
