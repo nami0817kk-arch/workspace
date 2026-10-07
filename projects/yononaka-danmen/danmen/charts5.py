@@ -66,20 +66,24 @@ def flowchart(fig: dict) -> Image.Image:
         no = str(st.get("no", ""))
         if no:
             ax = cx + cw + 16
-            d.line([(ax, y + 55), (ax + 50, y + 55)], fill=RED, width=5)
-            d.polygon([(ax + 50, y + 42), (ax + 50, y + 68), (ax + 72, y + 55)], fill=RED)
-            d.text((ax + 6, y + 14), "いいえ", font=F(22, 800), fill=RED)
+            # 「いいえ」の札が箱に重ならないよう、矢印を長めに取る
+            lf = F(typo.NOTE, 800)
+            lw = d.textlength("いいえ", font=lf)
+            d.line([(ax, y + 60), (ax + lw + 24, y + 60)], fill=RED, width=5)
+            d.polygon([(ax + lw + 24, y + 44), (ax + lw + 24, y + 76),
+                       (ax + lw + 50, y + 60)], fill=RED)
+            d.text((ax + 10, y + 10), "いいえ", font=lf, fill=RED)
             nf = F(28, 800)
             nw = max(d.textlength(l, font=nf) for l in _wrap(d, no, nf, 420)[:2]) + 56
-            d.rounded_rectangle([ax + 84, y + 14, ax + 84 + nw, y + 96], radius=10,
+            d.rounded_rectangle([ax + lw + 62, y + 10, ax + lw + 62 + nw, y + 100], radius=10,
                                 fill=(252, 240, 238), outline=RED, width=3)
             for n, ln in enumerate(_wrap(d, no, nf, 420)[:2]):
-                d.text((ax + 108, y + 26 + n * 36), ln, font=nf, fill=(140, 30, 26))
+                d.text((ax + lw + 86, y + 22 + n * 44), ln, font=nf, fill=(140, 30, 26))
         # 下へ「はい」
         if i < len(steps) - 1 or fig.get("end"):
             d.line([(cx + 60, y + 110), (cx + 60, y + 170)], fill=GREEN, width=5)
             d.polygon([(cx + 47, y + 170), (cx + 73, y + 170), (cx + 60, y + 190)], fill=GREEN)
-            d.text((cx + 80, y + 126), "はい", font=F(22, 800), fill=GREEN)
+            d.text((cx + 80, y + 126), "はい", font=F(typo.NOTE, 800), fill=GREEN)
         y += 190
     end = str(fig.get("end", ""))
     if end:
@@ -102,13 +106,13 @@ def matrix(fig: dict) -> Image.Image:
     d.line([(cxm, y0), (cxm, y1)], fill="#C9CDD3", width=3)
     d.line([(x0, cym), (x1, cym)], fill="#C9CDD3", width=3)
     ax = fig.get("axis", {})
-    d.text(((x0 + x1) / 2 - d.textlength(str(ax.get("top", "")), font=F(26, 800)) / 2, y0 - 36),
-           str(ax.get("top", "")), font=F(26, 800), fill=INK_SUB)
-    d.text(((x0 + x1) / 2 - d.textlength(str(ax.get("bottom", "")), font=F(26, 800)) / 2, y1 + 14),
-           str(ax.get("bottom", "")), font=F(26, 800), fill=INK_SUB)
-    d.text((x0 - 50, cym - 48), str(ax.get("left", "")), font=F(26, 800), fill=INK_SUB)
+    d.text(((x0 + x1) / 2 - d.textlength(str(ax.get("top", "")), font=F(typo.NOTE, 800)) / 2, y0 - 36),
+           str(ax.get("top", "")), font=F(typo.NOTE, 800), fill=INK_SUB)
+    d.text(((x0 + x1) / 2 - d.textlength(str(ax.get("bottom", "")), font=F(typo.NOTE, 800)) / 2, y1 + 14),
+           str(ax.get("bottom", "")), font=F(typo.NOTE, 800), fill=INK_SUB)
+    d.text((x0 - 50, cym - 48), str(ax.get("left", "")), font=F(typo.NOTE, 800), fill=INK_SUB)
     rt = str(ax.get("right", ""))
-    d.text((x1 - d.textlength(rt, font=F(26, 800)) + 60, cym - 48), rt, font=F(26, 800), fill=INK_SUB)
+    d.text((x1 - d.textlength(rt, font=F(typo.NOTE, 800)) + 60, cym - 48), rt, font=F(typo.NOTE, 800), fill=INK_SUB)
     # 印を先に全部打ってから、札を置く（札が印を隠さないように）
     pts = []
     for it in fig.get("items", []):
@@ -215,9 +219,9 @@ def numberline(fig: dict) -> Image.Image:
     x0, x1 = 110, w - 70
     ly = top + 190
     d.line([(x0, ly), (x1, ly)], fill="#C9CDD3", width=8)
-    d.text((x0 - 20, ly + 26), str(fig.get("min_label", lo)), font=F(24, 700), fill=INK_SUB)
+    d.text((x0 - 20, ly + 26), str(fig.get("min_label", lo)), font=F(typo.NOTE, 700), fill=INK_SUB)
     mxl = str(fig.get("max_label", hi))
-    d.text((x1 - d.textlength(mxl, font=F(24, 700)) + 20, ly + 26), mxl, font=F(24, 700), fill=INK_SUB)
+    d.text((x1 - d.textlength(mxl, font=F(typo.NOTE, 700)) + 20, ly + 26), mxl, font=F(typo.NOTE, 700), fill=INK_SUB)
     for n, it in enumerate(items):
         v = float(it["value"])
         px = x0 + (v - lo) / span * (x1 - x0)
@@ -269,7 +273,7 @@ def verdict(fig: dict) -> Image.Image:
         y += 86
     note = str(fig.get("note", ""))
     if note:
-        d.text((58, h - 66), note, font=F(22, 600), fill=INK_SUB)
+        d.text((58, h - 66), note, font=F(typo.NOTE, 600), fill=INK_SUB)
     _credit(d, fig.get("credit", ""), w, h)
     return im
 

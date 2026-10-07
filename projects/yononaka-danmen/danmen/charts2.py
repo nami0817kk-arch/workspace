@@ -59,7 +59,7 @@ def line(fig: dict) -> Image.Image:
                   outline=(16, 140, 118), width=4)
         lab = str(items[i].get("label", ""))
         if lab:
-            f = F(24, 700)
+            f = F(typo.NOTE, 700)
             d.text((x - d.textlength(lab, font=f) / 2, plot_b + 16), lab, font=f, fill=INK_SUB)
         note = str(items[i].get("note", ""))
         if note and (last or items[i].get("show")):
@@ -155,10 +155,10 @@ def japan(fig: dict) -> Image.Image:
     for m in fig.get("marks", []):
         col = m.get("color", "#0E8C77")
         d.rounded_rectangle([w - legend_w + 40, y, w - legend_w + 66, y + 24], radius=5, fill=col)
-        d.text((w - legend_w + 82, y - 4), str(m.get("label", m["name"])), font=F(27), fill=INK)
+        d.text((w - legend_w + 82, y - 4), str(m.get("label", m["name"])), font=F(typo.NOTE), fill=INK)
         note = str(m.get("note", ""))
         if note:
-            d.text((w - legend_w + 82, y + 28), note, font=F(21, 600), fill=INK_SUB)
+            d.text((w - legend_w + 82, y + 28), note, font=F(typo.NOTE, 600), fill=INK_SUB)
         y += 76
     _credit(d, fig.get("credit", "地図: dataofjapan/land"), w, h)
     return im
@@ -187,7 +187,7 @@ def waterfall(fig: dict) -> Image.Image:
     bar = _bar((cw, int(plot_b - ypos(base))), GRAY_D, GRAY_L)
     im.alpha_composite(bar, (x, int(ypos(base))))
     d = ImageDraw.Draw(im)
-    d.text((x, plot_b + 16), str(fig.get("base_label", "もと")), font=F(26, 800), fill=INK_SUB)
+    d.text((x, plot_b + 16), str(fig.get("base_label", "もと")), font=F(typo.NOTE, 800), fill=INK_SUB)
     put_number(d, str(fig.get("base_note", base)), x, plot_b + 54, 34, fill=INK_SUB)
     x += cw + 40
     for it in items:
@@ -200,7 +200,7 @@ def waterfall(fig: dict) -> Image.Image:
         im.alpha_composite(bar, (x, int(topy)))
         d = ImageDraw.Draw(im)
         d.line([(x - 40, y0), (x, y0)], fill="#C9CDD3", width=3)
-        d.text((x, plot_b + 16), str(it["label"]), font=F(26, 800), fill=INK_SUB)
+        d.text((x, plot_b + 16), str(it["label"]), font=F(typo.NOTE, 800), fill=INK_SUB)
         mark = "＋" if up else "−"
         put_number(d, mark + str(it.get("note", abs(v))), x, int(topy) - 48, 34,
                    fill=(176, 40, 32) if up else (24, 86, 170))
@@ -210,7 +210,7 @@ def waterfall(fig: dict) -> Image.Image:
     bar = _bar((cw, int(plot_b - ypos(prev))), AMBER_D, AMBER_L)
     im.alpha_composite(bar, (x, int(ypos(prev))))
     d = ImageDraw.Draw(im)
-    d.text((x, plot_b + 16), str(fig.get("total_label", "いま")), font=F(26, 800), fill=INK)
+    d.text((x, plot_b + 16), str(fig.get("total_label", "いま")), font=F(typo.NOTE, 800), fill=INK)
     put_number(d, str(fig.get("total_note", prev)), x, plot_b + 50, 40, fill=INK)
     _credit(d, fig.get("credit", ""), w, h)
     return im

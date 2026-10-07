@@ -42,7 +42,7 @@ def relation(fig: dict) -> Image.Image:
     w, h = typo.PANEL_W, 640
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     area_t, area_b = top, h - 40
-    bw, bh = 230, 108
+    bw, bh = 320, 124
 
     def pos(n):
         x = 60 + float(n.get("x", 0.5)) * (w - 120 - bw)
@@ -82,7 +82,7 @@ def relation(fig: dict) -> Image.Image:
         lab = str(ln.get("label", ""))
         if lab:
             mx, my = (p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2
-            f = F(24, 800)
+            f = F(typo.NOTE + 4, 800)
             tw = d.textlength(lab, font=f)
             d.rounded_rectangle([mx - tw / 2 - 14, my - 22, mx + tw / 2 + 14, my + 22],
                                 radius=8, fill=(255, 255, 255, 240), outline=col, width=2)
@@ -100,11 +100,11 @@ def relation(fig: dict) -> Image.Image:
         im.alpha_composite(sh.filter(ImageFilter.GaussianBlur(8)), (int(x) - 12, int(y) - 10))
         im.alpha_composite(box, (int(x), int(y)))
         d = ImageDraw.Draw(im)
-        lab, f = str(n["label"]), F(30)
+        lab, f = str(n["label"]), F(typo.BODY)
         d.text((x + (bw - d.textlength(lab, font=f)) / 2, y + 18), lab, font=f, fill="white")
         note = str(n.get("note", ""))
         if note:
-            nf = F(22, 700)
+            nf = F(typo.NOTE, 700)
             d.text((x + (bw - d.textlength(note, font=nf)) / 2, y + 62), note, font=nf,
                    fill=(255, 255, 255, 220))
     _credit(d, fig.get("credit", ""), w, h)
@@ -119,7 +119,7 @@ def calc(fig: dict) -> Image.Image:
     ops = fig.get("ops", ["×"] * (len(terms) - 2) + ["＝"])
     sizes = [52] * (len(terms) - 1) + [78]
     total_w = sum(_text_w(str(t["value"]), s) for t, s in zip(terms, sizes))
-    total_w += sum(ImageDraw.Draw(Image.new("RGB", (1, 1))).textlength(o, font=F(44, 800)) + 56
+    total_w += sum(ImageDraw.Draw(Image.new("RGB", (1, 1))).textlength(o, font=F(typo.TITLE, 800)) + 56
                    for o in ops)
     x = (w - total_w) / 2 + 20
     y = top + 30
@@ -130,18 +130,18 @@ def calc(fig: dict) -> Image.Image:
         put_number(d, val, x, y + (0 if last else 14), size, fill=col, shadow=last)
         lab = str(t.get("label", ""))
         if lab:
-            lf = F(24, 700)
+            lf = F(typo.NOTE + 2, 700)
             lw = d.textlength(lab, font=lf)
             vw = _text_w(val, size)
             d.text((x + (vw - lw) / 2, y + (96 if last else 88)), lab, font=lf, fill=INK_SUB)
         x += _text_w(val, size)
         if i < len(ops):
-            of = F(44, 800)
+            of = F(typo.TITLE, 800)
             d.text((x + 24, y + 26), ops[i], font=of, fill=INK_SUB)
             x += d.textlength(ops[i], font=of) + 56
     note = str(fig.get("note", ""))
     if note:
-        d.text((60, h - 30), note, font=F(23, 600), fill=INK_SUB)
+        d.text((60, h - 40), note, font=F(typo.NOTE, 600), fill=INK_SUB)
     _credit(d, fig.get("credit", ""), w, h)
     return im
 
@@ -157,7 +157,7 @@ def stats(fig: dict) -> Image.Image:
         last = i == len(items) - 1
         if i:
             d.line([(x - 10, top + 10), (x - 10, h - 60)], fill="#E3E6EA", width=2)
-        lab, lf = str(it.get("label", "")), F(26, 800)
+        lab, lf = str(it.get("label", "")), F(typo.NOTE + 4, 800)
         d.text((x + (cw - d.textlength(lab, font=lf)) / 2, top), lab, font=lf, fill=INK_SUB)
         val, size = str(it["value"]), 72 if last else 60
         vw = _text_w(val, size)
@@ -168,7 +168,7 @@ def stats(fig: dict) -> Image.Image:
                    fill=(196, 122, 10) if last else INK, shadow=last)
         note = str(it.get("note", ""))
         if note:
-            nf = F(23, 700)
+            nf = F(typo.NOTE, 700)
             d.text((x + (cw - d.textlength(note, font=nf)) / 2, top + 150), note,
                    font=nf, fill=INK_SUB)
     _credit(d, fig.get("credit", ""), w, h)
@@ -179,26 +179,26 @@ def gauge(fig: dict) -> Image.Image:
     """半円のメーター。割合や達成度をひとつ見せる。"""
     value = float(fig.get("value", 0))
     mx = float(fig.get("max", 100))
-    w, h = typo.PANEL_W, 500
+    w, h = typo.PANEL_W, 560
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
-    cx, cy, r = w / 2 + 14, top + 250, 190
-    th = 44
+    cx, cy, r = w / 2, top + 290, 250
+    th = 58
     d.arc([cx - r, cy - r, cx + r, cy + r], 180, 360, fill="#E1E4E9", width=th)
     ratio = max(0.0, min(value / mx if mx else 0, 1.0))
     if ratio > 0:
         d.arc([cx - r, cy - r, cx + r, cy + r], 180, 180 + 180 * ratio,
               fill=(196, 122, 10), width=th)
     val = str(fig.get("note", "{:.0f}%".format(ratio * 100)))
-    size = 92
-    put_number(d, val, cx - _text_w(val, size) / 2, cy - 118, size, fill=INK)
+    size = 120
+    put_number(d, val, cx - _text_w(val, size) / 2, cy - 150, size, fill=INK)
     lead = str(fig.get("lead", ""))
     if lead:                                   # 弧の外（下）に置く。重ねない
-        lf = F(30, 800)
-        d.text((cx - d.textlength(lead, font=lf) / 2, cy + 74), lead, font=lf, fill=INK_SUB)
+        lf = F(typo.BODY, 800)
+        d.text((cx - d.textlength(lead, font=lf) / 2, cy + 86), lead, font=lf, fill=INK_SUB)
     lo, hi = str(fig.get("min_label", "0")), str(fig.get("max_label", int(mx)))
-    lf2 = F(24, 700)
-    d.text((cx - r - d.textlength(lo, font=lf2) / 2, cy + 36), lo, font=lf2, fill=INK_SUB)
-    d.text((cx + r - d.textlength(hi, font=lf2) / 2, cy + 36), hi, font=lf2, fill=INK_SUB)
+    lf2 = F(typo.NOTE, 700)
+    d.text((cx - r - d.textlength(lo, font=lf2) / 2, cy + 40), lo, font=lf2, fill=INK_SUB)
+    d.text((cx + r - d.textlength(hi, font=lf2) / 2, cy + 40), hi, font=lf2, fill=INK_SUB)
     _credit(d, fig.get("credit", ""), w, h)
     return im
 

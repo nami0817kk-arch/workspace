@@ -60,32 +60,25 @@ def _icon(name: str, box: int):
 
 
 def _card(w: int, h: int, title: str):
-    """白い板。影と金の細線つき。戻り値は (画像, 描くもの, 中身を始める y)。"""
-    im = Image.new("RGBA", (w + 48, h + 48), (0, 0, 0, 0))
-    shadow = Image.new("RGBA", im.size, (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle([30, 34, w + 30, h + 34], radius=18,
-                                             fill=(0, 0, 0, 150))
-    im.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(14)))
-    d = ImageDraw.Draw(im)
-    d.rounded_rectangle([24, 24, w + 24, h + 24], radius=18, fill=CARD)
-    d.rounded_rectangle([24, 24, w + 24, h + 24], radius=18, outline=GOLD, width=2)
-    top = 46
-    if title:
-        d.text((58, top), title, font=F(36), fill=INK)
-        top += 52
-        d.line([(58, top), (w, top)], fill=RULE, width=2)
-        top += 22
-    return im, d, top
+    """板。**news の板と同じ作りに揃えた**（2026-10-07）。
+
+    もとは白地に細い罫線の見出しで、他の図（濃紺の帯＋金の線）と見た目が
+    違っていた。同じ動画の中に2種類の板が出ると、作りが揃っていないと感じる。
+    戻り値は (画像, 描くもの, 中身を始める y)。
+    """
+    from danmen.news import _panel
+    # 帯のぶん中身が下がるので、高さを 34 だけ足す（元の見出しとの差）
+    return _panel(w, h + 34, title)
 
 
 def _note(d, text: str, x: int, y: int) -> None:
     if text:
-        d.text((x, y), text, font=F(21, 500), fill=INK_SUB)
+        d.text((x, y), text, font=F(typo.NOTE, 600), fill=INK_SUB)
 
 
 def stack(fig: dict) -> Image.Image:
     items = fig["items"]
-    w, h = 1060, 150 + len(items) * 104
+    w, h = typo.PANEL_W, 150 + len(items) * 104
     im, d, top = _card(w, h, fig.get("title", ""))
     total = max(float(i["value"]) for i in items) or 1
     y = top
@@ -96,14 +89,14 @@ def stack(fig: dict) -> Image.Image:
         if ic:
             im.alpha_composite(ic, (x, y + (92 - ic.height) // 2))
             x += 106
-        bw = int(500 * float(it["value"]) / total)
+        bw = int((w - x - 420) * float(it["value"]) / total)
         d.rounded_rectangle([x, y + 8, x + max(bw, 6), y + 84], radius=8, fill=col)
-        label, f = str(it["label"]), F(30)
+        label, f = str(it["label"]), F(typo.BODY)
         if d.textlength(label, font=f) + 36 <= bw:
             d.text((x + 18, y + 26), label, font=f, fill="white")
         else:
             d.text((x + max(bw, 6) + 16, y + 26), label, font=f, fill=col)
-        note, nf = str(it.get("note", "")), F(35)
+        note, nf = str(it.get("note", "")), F(typo.VALUE)
         if note:
             d.text((w - d.textlength(note, font=nf) + 10, y + 22), note, font=nf, fill=INK)
         y += 104
@@ -114,7 +107,7 @@ def stack(fig: dict) -> Image.Image:
 def compare(fig: dict) -> Image.Image:
     items = fig["items"]
     focus = str(fig.get("focus", items[0]["label"]))
-    w, h = 1060, 140 + len(items) * 92
+    w, h = typo.PANEL_W, 140 + len(items) * 92
     im, d, top = _card(w, h, fig.get("title", ""))
     mx = max(float(i["value"]) for i in items) or 1
     y = top
@@ -122,10 +115,11 @@ def compare(fig: dict) -> Image.Image:
         is_focus = str(it["label"]) == focus
         col = SERIES[0] if is_focus else MUTED
         d.text((58, y + 14), str(it["label"]), font=F(30, 900 if is_focus else 700), fill=INK)
-        bw = int(520 * float(it["value"]) / mx)
-        d.rounded_rectangle([250, y + 8, 250 + max(bw, 4), y + 66], radius=6, fill=col)
+        bx = int(w * 0.26)
+        bw = int((w - bx - 300) * float(it["value"]) / mx)
+        d.rounded_rectangle([bx, y + 8, bx + max(bw, 4), y + 66], radius=6, fill=col)
         note = str(it.get("note", it["value"]))
-        d.text((250 + max(bw, 4) + 16, y + 16), note, font=F(29, 800),
+        d.text((bx + max(bw, 4) + 20, y + 14), note, font=F(typo.BODY, 800),
                fill=INK if is_focus else INK_SUB)
         y += 92
     _note(d, fig.get("note", ""), 58, h - 4)
@@ -134,7 +128,7 @@ def compare(fig: dict) -> Image.Image:
 
 def timeline(fig: dict) -> Image.Image:
     items = fig["items"]
-    w, h = 1180, 400
+    w, h = typo.PANEL_W, 400
     im, d, top = _card(w, h, fig.get("title", ""))
     y = top + 160
     x0, x1 = 150, w - 110
@@ -152,47 +146,47 @@ def timeline(fig: dict) -> Image.Image:
             lines, cur = [], ""
             for ch in note:
                 cur += ch
-                if d.textlength(cur, font=F(23, 600)) > width:
+                if d.textlength(cur, font=F(typo.NOTE, 600)) > width:
                     lines.append(cur)
                     cur = ""
             if cur:
                 lines.append(cur)
             for i, ln in enumerate(lines[:4]):
-                tw = d.textlength(ln, font=F(23, 600))
+                tw = d.textlength(ln, font=F(typo.NOTE, 600))
                 d.text((x - tw / 2, y - 54 - (len(lines[:4]) - 1 - i) * 30), ln,
-                       font=F(23, 600), fill=INK_SUB)
+                       font=F(typo.NOTE, 600), fill=INK_SUB)
     return im
 
 
 def flow(fig: dict) -> Image.Image:
     items = fig["items"]
     n = len(items)
-    w, h = 1180, 350
+    w, h = typo.PANEL_W, 420
     im, d, top = _card(w, h, fig.get("title", ""))
-    bw = min(250, (w - 140 - (n - 1) * 80) // max(n, 1))
-    y = top + 20
+    bw = max((w - 140 - (n - 1) * 80) // max(n, 1), 220)
+    y = top + 16
     x = 58
     for i, it in enumerate(items):
         col = SERIES[i % len(SERIES)]
-        d.rounded_rectangle([x, y, x + bw, y + 130], radius=12, fill=col)
-        ic = _icon(str(it.get("icon", "")), 54)
+        d.rounded_rectangle([x, y, x + bw, y + 152], radius=12, fill=col)
+        ic = _icon(str(it.get("icon", "")), 60)
         if ic:
-            im.alpha_composite(ic, (x + 16, y + 14))
-            d.text((x + 18, y + 80), str(it["label"]), font=F(28), fill="white")
+            im.alpha_composite(ic, (x + 20, y + 10))
+            d.text((x + 20, y + 88), str(it["label"]), font=F(typo.BODY), fill="white")
         else:
-            d.text((x + 18, y + 48), str(it["label"]), font=F(28), fill="white")
-        _note(d, str(it.get("note", "")), x, y + 148)
+            d.text((x + 20, y + 52), str(it["label"]), font=F(typo.BODY), fill="white")
+        _note(d, str(it.get("note", "")), x, y + 170)
         if i < n - 1:
             ax = x + bw + 16
-            d.line([(ax, y + 65), (ax + 44, y + 65)], fill=INK_SUB, width=5)
-            d.polygon([(ax + 44, y + 52), (ax + 44, y + 78), (ax + 66, y + 65)], fill=INK_SUB)
+            d.line([(ax, y + 76), (ax + 44, y + 76)], fill=INK_SUB, width=5)
+            d.polygon([(ax + 44, y + 62), (ax + 44, y + 90), (ax + 68, y + 76)], fill=INK_SUB)
         x += bw + 80
     return im
 
 
 def bars(fig: dict) -> Image.Image:
     items = fig["items"]
-    w, h = 1160, 120 + len(items) * 116
+    w, h = typo.PANEL_W, 120 + len(items) * 116
     im, d, top = _card(w, h, fig.get("title", ""))
     y = top
     for n, it in enumerate(items, 1):
@@ -200,15 +194,15 @@ def bars(fig: dict) -> Image.Image:
         d.ellipse([58, y, 112, y + 54], fill=col)
         num, f = str(n), F(30)
         d.text((58 + 27 - d.textlength(num, font=f) / 2, y + 8), num, font=f, fill="white")
-        d.text((140, y + 2), str(it["label"]), font=F(33), fill=INK)
-        _note(d, str(it.get("note", "")), 140, y + 50)
+        d.text((140, y - 2), str(it["label"]), font=F(typo.BODY), fill=INK)
+        _note(d, str(it.get("note", "")), 140, y + 54)
         y += 116
     return im
 
 
 def hero(fig: dict) -> Image.Image:
     """ひとつの数字を大きく見せる。山場で使う。"""
-    w, h = 920, 360
+    w, h = typo.PANEL_W, 360
     im, d, top = _card(w, h, fig.get("title", ""))
     value = str(fig.get("value", ""))
     f = F(130)
@@ -225,33 +219,34 @@ def table(fig: dict) -> Image.Image:
     """比べる表。items は {label, values:[...]}、cols は見出しの並び。"""
     cols = fig.get("cols", [])
     items = fig["items"]
-    w, h = 1160, 160 + len(items) * 76
+    w, h = typo.PANEL_W, 180 + len(items) * (typo.ROW + 14)
     im, d, top = _card(w, h, fig.get("title", ""))
-    cw = (w - 420) // max(len(cols), 1)
+    label_w = int(w * 0.32)
+    cw = (w - label_w - 80) // max(len(cols), 1)
     for i, c in enumerate(cols):
-        d.text((400 + i * cw, top), str(c), font=F(27, 800), fill=INK_SUB)
+        d.text((label_w + i * cw, top), str(c), font=F(typo.NOTE + 4, 800), fill=INK_SUB)
     top += 44
     d.line([(58, top), (w, top)], fill=RULE, width=2)
     y = top + 14
     for n, it in enumerate(items):
         if n % 2 == 0:
-            d.rectangle([48, y - 6, w + 10, y + 58], fill="#F7F8FA")
-        d.text((58, y + 8), str(it["label"]), font=F(29, 800), fill=INK)
+            d.rectangle([48, y - 10, w + 10, y + typo.ROW], fill="#F2F4F7")
+        d.text((58, y + 4), str(it["label"]), font=F(typo.BODY, 800), fill=INK)
         for i, v in enumerate(it.get("values", [])):
             strong = bool(it.get("strong")) and i == len(it.get("values", [])) - 1
-            d.text((400 + i * cw, y + 6), str(v),
-                   font=F(31 if strong else 29, 900 if strong else 700),
+            d.text((label_w + i * cw, y + 2), str(v),
+                   font=F(typo.BODY + (4 if strong else 0), 900 if strong else 700),
                    fill=SERIES[1] if strong else INK)
-        y += 76
+        y += typo.ROW + 14
     return im
 
 
 def pie(fig: dict) -> Image.Image:
     items = fig["items"][:5]
-    w, h = 1060, 460
+    w, h = typo.PANEL_W, 460
     im, d, top = _card(w, h, fig.get("title", ""))
     total = sum(float(i["value"]) for i in items) or 1
-    cx, cy, r = 290, top + 150, 130
+    cx, cy, r = int(w * 0.21), top + 160, 150
     start = -90.0
     for n, it in enumerate(items):
         ang = 360 * float(it["value"]) / total
@@ -261,12 +256,14 @@ def pie(fig: dict) -> Image.Image:
     y = top + 20
     for n, it in enumerate(items):
         col = SERIES[n % len(SERIES)]
-        d.rounded_rectangle([540, y, 566, y + 26], radius=5, fill=col)
-        d.text((584, y - 2), str(it["label"]), font=F(29), fill=INK)
+        lx = int(w * 0.44)
+        d.rounded_rectangle([lx, y + 4, lx + 30, y + 34], radius=6, fill=col)
+        d.text((lx + 52, y - 2), str(it["label"]), font=F(typo.BODY), fill=INK)
         pct = "{:.0f}%".format(float(it["value"]) / total * 100)
-        d.text((w - d.textlength(pct, font=F(30)) + 10, y - 2), pct, font=F(30), fill=INK_SUB)
-        _note(d, str(it.get("note", "")), 584, y + 32)
-        y += 74
+        pf = F(typo.BODY)
+        d.text((w - d.textlength(pct, font=pf) + 10, y - 2), pct, font=pf, fill=INK_SUB)
+        _note(d, str(it.get("note", "")), lx + 52, y + 46)
+        y += 92
     return im
 
 
@@ -304,7 +301,7 @@ def world(fig: dict) -> Image.Image:
     name は Natural Earth の英語名（Japan / United States of America / Germany …）。
     投影は正距円筒（素直に経度緯度を置く）。南極は切る。
     """
-    w, h = 1180, 620
+    w, h = typo.PANEL_W, 620
     im, d, top = _card(w, h, fig.get("title", ""))
     marks = {str(m["name"]): m for m in fig.get("marks", [])}
 
@@ -339,10 +336,10 @@ def world(fig: dict) -> Image.Image:
         label = str(m.get("label", m["name"]))
         col = m.get("color", SERIES[0])
         d.rounded_rectangle([w - legend_w + 40, y, w - legend_w + 66, y + 24], radius=5, fill=col)
-        d.text((w - legend_w + 82, y - 4), label, font=F(27), fill=INK)
+        d.text((w - legend_w + 82, y - 4), label, font=F(typo.NOTE), fill=INK)
         note = str(m.get("note", ""))
         if note:
-            d.text((w - legend_w + 82, y + 28), note, font=F(21, 600), fill=INK_SUB)
+            d.text((w - legend_w + 82, y + 28), note, font=F(typo.NOTE, 600), fill=INK_SUB)
         y += 72
     _note(d, fig.get("note", "地図: Natural Earth（パブリックドメイン）"), 58, h - 4)
     return im
@@ -359,7 +356,7 @@ RED = "#C0392B"          # 問題・警告のときだけ使う。系列の色�
 def photo(fig: dict) -> Image.Image:
     """写真を1枚、札つきで見せる板。人物や現場を出すときに使う。"""
     src = Path(str(fig.get("src", "")))
-    w, h = 1060, 620
+    w, h = typo.PANEL_W, 620
     im, d, top = _card(w, h, fig.get("title", ""))
     if src.exists():
         pic = Image.open(src).convert("RGB")
@@ -370,12 +367,12 @@ def photo(fig: dict) -> Image.Image:
         d.rectangle([x, top + 10, x + pic.width, top + 10 + pic.height], outline="#D9DCE1", width=2)
         cap = str(fig.get("caption", ""))
         if cap:
-            d.text((x, top + 24 + pic.height), cap, font=F(27, 800), fill=INK)
+            d.text((x, top + 24 + pic.height), cap, font=F(typo.NOTE, 800), fill=INK)
         src_note = str(fig.get("credit", ""))
         if src_note:
-            d.text((x, top + 64 + pic.height), src_note, font=F(20, 500), fill=INK_SUB)
+            d.text((x, top + 64 + pic.height), src_note, font=F(typo.NOTE, 500), fill=INK_SUB)
     else:
-        d.text((58, top + 20), "（写真が見つかりません: {}）".format(src), font=F(24, 600), fill=RED)
+        d.text((58, top + 20), "（写真が見つかりません: {}）".format(src), font=F(typo.NOTE, 600), fill=RED)
     return im
 
 
@@ -385,7 +382,7 @@ def convert(fig: dict) -> Image.Image:
     items は {label, value, note} を2〜3個。矢印でつなぐ。
     """
     items = fig["items"]
-    w, h = 1160, 380
+    w, h = typo.PANEL_W, 380
     im, d, top = _card(w, h, fig.get("title", ""))
     n = len(items)
     bw = (w - 120 - (n - 1) * 90) // max(n, 1)
@@ -396,7 +393,7 @@ def convert(fig: dict) -> Image.Image:
         d.rounded_rectangle([x, y, x + bw, y + 170], radius=14,
                             fill=(255, 255, 255, 0), outline=col, width=3)
         lab = str(it["label"])
-        d.text((x + 24, y + 20), lab, font=F(25, 800), fill=INK_SUB)
+        d.text((x + 24, y + 20), lab, font=F(typo.NOTE, 800), fill=INK_SUB)
         val = str(it["value"])
         f = F(54 if last else 46)
         d.text((x + 24, y + 58), val, font=f, fill=col)
