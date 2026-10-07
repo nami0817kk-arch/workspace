@@ -36,12 +36,6 @@ POLICY_UPDATED = "2026年9月26日"
 #         第10条1項(4) で AdSense を載せられない（docs/public-identity.md）。
 SITES = [
     {
-        "name": "値上がり株ランキング",
-        "url": "https://kabu.dailyquarry.com/",
-        "summary": "東証全市場の値上がり率・値下がり率・売買の活発さを、営業日ごとに自動で集計して残しています。",
-        "ads": True,
-    },
-    {
         "name": "パートの社会保険 計算機",
         "url": "https://shaho.dailyquarry.com/",
         "summary": "週の労働時間・月収・勤務先の従業員数から、パート・アルバイトが社会保険の加入対象になるかと保険料の目安を出します。",
