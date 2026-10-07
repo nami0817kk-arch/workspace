@@ -144,6 +144,9 @@ class Script:
     people: dict = field(default_factory=dict)      # 人物の生没（肖像に「この時○歳」を出す）
     tags: list = field(default_factory=list)        # YouTube のタグ（全ショートと本編に共通）
     look: dict = field(default_factory=dict)        # 画面の道具の入り切り（texture・recap）。config より優先
+    playlists: list = field(default_factory=list)   # 本編を入れる再生リスト（省けば series:。chiso/channel.py）
+    shorts_playlists: list = field(default_factory=list)   # ショートを入れる再生リスト（省けば入れない）
+    en: dict = field(default_factory=dict)          # 英語の題名・説明・章の題 {title, description, chapters}
 
     @property
     def question(self) -> str:
@@ -461,7 +464,39 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         next=dict(data.get("next") or {}), people=people, thumbnail=dict(data.get("thumbnail") or {}),
         tags=[str(t) for t in (data.get("tags") or [])],
         look={k: bool(data[k]) for k in LOOK_KEYS if k in data},
+        playlists=_names(data["playlists"]) if "playlists" in data else _names(data.get("series")),
+        shorts_playlists=_names(data.get("shorts_playlists")),
+        en=_english(data.get("en"), len(sections)),
     )
+
+
+def _names(v) -> list[str]:
+    """再生リストの名前の並び。1つなら文字列で書いてもよい。空・null は入れない。"""
+    if v is None or v == "":
+        return []
+    items = [v] if isinstance(v, str) else list(v)
+    out = [str(x).strip() for x in items if str(x or "").strip()]
+    long = [x for x in out if len(x) > 150]
+    if long:
+        raise ScriptError(f"再生リストの名前は150字までです: {long}")
+    return list(dict.fromkeys(out))
+
+
+def _english(v, n_sections: int) -> dict:
+    """en: {title, description, chapters}。章の題は節と同じ数（時刻は日本語の概要欄の目次から取る）。"""
+    if not v:
+        return {}
+    if not isinstance(v, dict) or not str(v.get("title", "")).strip():
+        raise ScriptError("en: には title（英語の題名）が要ります")
+    out = {"title": str(v["title"]).strip(), "description": str(v.get("description", "")).strip(),
+           "chapters": [str(c).strip() for c in (v.get("chapters") or [])]}
+    if len(out["title"]) > 100:
+        raise ScriptError(f"en.title は100字までです（{len(out['title'])}字）")
+    if any(c in out["title"] + out["description"] for c in "<>"):
+        raise ScriptError("en の題名・説明に < > は使えません（YouTube が受け付けない）")
+    if out["chapters"] and len(out["chapters"]) != n_sections:
+        raise ScriptError(f"en.chapters は節と同じ数にします（節 {n_sections}・章 {len(out['chapters'])}）")
+    return out
 
 
 def load(path: str | Path) -> Script:

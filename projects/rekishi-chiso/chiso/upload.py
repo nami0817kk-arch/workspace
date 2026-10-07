@@ -4,8 +4,10 @@
 - 予約公開は private ＋ publishAt
 - サムネイルで落ちても動画の id は返す（掛け直すと同じ動画が2本になる。2026-09-08 に実際に起きた）
 - 掛け直す前に、同じ題名が少し前に上がっていないかを見る（二重投稿の防止）
-- 認証が失効していたら、同意画面からやり直す（prompt=consent で毎回 refresh token を出させる）
-新しく足したもの：字幕ファイル（SRT）の登録、控え（posted.json）。
+- 許可の取り直しは `reauth` だけ（同意画面で毎回アカウントを選ばせる）。ほかのコマンドはブラウザを開かず、
+  許可が足りない・失効しているときは NeedConsent で止まる（10-08。同意はユーザーがする）
+新しく足したもの：字幕ファイル（SRT）の登録、控え（posted.json）、英語の題名と説明（localizations）。
+再生リストは chiso/channel.py。
 
 鍵と許可はリポジトリの外に置く（workspace は public）：
     C:/Users/なみ/dev/output/rekishi-chiso/secrets/client_secret.json   … Google Cloud「rekishi-chiso」のクライアント
@@ -21,16 +23,27 @@ from pathlib import Path
 
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
-    "https://www.googleapis.com/auth/youtube.force-ssl",     # 字幕の登録と、公開後の概要欄の直しに使う
+    "https://www.googleapis.com/auth/youtube.force-ssl",     # 字幕・概要欄の直し・再生リスト・英語の題名（videos.update）
 ]
+# 再生リスト（playlists.insert・playlistItems.insert）と videos.update はどちらかが要る。
+# force-ssl で足りるので youtube は求めない（足すと今の許可の更新が invalid_scope で落ちる）
+MANAGE_SCOPES = {"https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.force-ssl"}
 SECRETS = Path(os.environ.get("CHISO_SECRETS", r"C:/Users/なみ/dev/output/rekishi-chiso/secrets"))
 JST = timezone(timedelta(hours=9))
 OPEN_HOUR, CLOSE_HOUR = 9, 24        # 公開は9時から24時（チャンネル共通の決まり）
 CATEGORY_EDUCATION = "27"
+REAUTH = ("許可を取り直す必要があります（ブラウザでの同意はユーザーが行う）。\n"
+          "  python -m chiso.cli reauth   … ブラウザが開くので、Google アカウントを選び、"
+          "「歴史の地層」のチャンネルを選んで、すべての項目を許可する。\n"
+          "  古い許可は secrets/token.<日時>.json.old に残ります")
 
 
 class UploadError(RuntimeError):
     pass
+
+
+class NeedConsent(UploadError):
+    """今の許可では足りない・失効している。reauth をユーザーに打ってもらう。"""
 
 
 def _deps():
@@ -45,32 +58,74 @@ def _deps():
     return Request, Credentials, InstalledAppFlow, build, MediaFileUpload
 
 
-def service(secrets: Path = SECRETS):
-    Request, Credentials, InstalledAppFlow, build, _ = _deps()
+def credentials(secrets: Path = SECRETS):
+    """保存してある許可を読む（期限切れなら更新して書き戻す）。ブラウザは開かない。
+    無い・失効しているときは NeedConsent（取り直しは reauth で、ユーザーが同意する）。"""
+    Request, Credentials, *_ = _deps()
+    token = secrets / "token.json"
+    if not token.exists():
+        raise NeedConsent(f"許可がありません: {token}\n" + REAUTH)
+    cred = Credentials.from_authorized_user_file(str(token))      # 許可したときのスコープのまま読む
+    if not cred.valid:
+        if not (cred.expired and cred.refresh_token):
+            raise NeedConsent("保存してある許可が使えません。\n" + REAUTH)
+        try:
+            cred.refresh(Request())
+        except Exception as err:  # noqa: BLE001
+            if "invalid_grant" in str(err) or "invalid_scope" in str(err):
+                raise NeedConsent(f"保存してある許可が失効しています（{str(err)[:60]}）。\n" + REAUTH) from err
+            raise
+        token.write_text(cred.to_json(), encoding="utf-8")
+    return cred
+
+
+def granted_scopes(cred) -> set[str]:
+    """Google が実際に認めているスコープ（token.json の scopes 欄は書いた側の申告なので当てにしない）。"""
+    import urllib.parse
+    import urllib.request
+    data = urllib.parse.urlencode({"access_token": cred.token}).encode()
+    with urllib.request.urlopen("https://oauth2.googleapis.com/tokeninfo", data=data, timeout=30) as r:
+        return set(json.load(r).get("scope", "").split())
+
+
+def can_manage(scopes: set[str]) -> bool:
+    return bool(scopes & MANAGE_SCOPES)
+
+
+def service(secrets: Path = SECRETS, need_manage: bool = False, scopes_of=granted_scopes):
+    """YouTube Data API。need_manage で再生リスト・videos.update の許可があるかを先に確かめる。"""
+    *_, build, _ = _deps()
+    cred = credentials(secrets)
+    if need_manage and not can_manage(scopes_of(cred)):
+        raise NeedConsent("今の許可は投稿（youtube.upload）だけで、再生リストと英語の題名を書き込めません。\n" + REAUTH)
+    return build("youtube", "v3", credentials=cred)
+
+
+def reauth(secrets: Path = SECRETS, run_flow=None, now: datetime | None = None) -> Path | None:
+    """許可を取り直す（ユーザーがブラウザで同意する）。古い token.json は消さずに別名へ写してから。
+    返り値は古い許可の控えの場所（無ければ None）。"""
+    import shutil
     token, client = secrets / "token.json", secrets / "client_secret.json"
-    cred = Credentials.from_authorized_user_file(str(token), SCOPES) if token.exists() else None
-    if not cred or not cred.valid:
-        refreshed = False
-        if cred and cred.expired and cred.refresh_token:
-            try:
-                cred.refresh(Request())
-                refreshed = True
-            except Exception as err:  # noqa: BLE001
-                if "invalid_grant" not in str(err):
-                    raise
-                print("■ 保存してある許可が失効していました。同意画面を開きます")
-                token.replace(token.with_name("token.json.revoked"))
-        if not refreshed:
-            if not client.exists():
-                raise UploadError(f"クライアント情報がありません: {client}（Google Cloud の rekishi-chiso から）")
-            print("■ ブラウザで許可の画面を開きます。**「歴史の地層」のチャンネルを選んで**許可してください")
-            cred = InstalledAppFlow.from_client_secrets_file(str(client), SCOPES).run_local_server(
-                port=0, prompt="select_account consent")
+    if not client.exists():
+        raise UploadError(f"クライアント情報がありません: {client}（Google Cloud の rekishi-chiso から）")
+    backup = None
+    if token.exists():
+        stamp = (now or datetime.now(JST)).strftime("%Y%m%d-%H%M%S")
+        backup = token.with_name(f"token.{stamp}.json.old")
+        shutil.copy2(token, backup)
+    if run_flow is None:
+        *_, InstalledAppFlow, _, _ = _deps()
+
+        def run_flow():
             # 10-04：prompt=consent だけだと、前に選んだ「海外サッカーの理由」が黙って使われた（2回）。
             # select_account でアカウント・ブランドアカウントを選ぶ画面を必ず出す
-        token.parent.mkdir(parents=True, exist_ok=True)
-        token.write_text(cred.to_json(), encoding="utf-8")
-    return build("youtube", "v3", credentials=cred)
+            return InstalledAppFlow.from_client_secrets_file(str(client), SCOPES).run_local_server(
+                port=0, prompt="select_account consent")
+    print("■ ブラウザで許可の画面を開きます。**「歴史の地層」のチャンネルを選んで**、すべての項目を許可してください")
+    cred = run_flow()
+    token.parent.mkdir(parents=True, exist_ok=True)
+    token.write_text(cred.to_json(), encoding="utf-8")
+    return backup
 
 
 def channel_title(svc) -> str:
@@ -111,7 +166,8 @@ def recently_uploaded(svc, title: str, minutes: int = 180) -> str | None:
 
 
 def upload(svc, video: Path, title: str, description: str, tags: list[str], publish_at: str,
-           thumbnail: Path | None = None, captions: Path | None = None, made_for_kids: bool = False) -> str:
+           thumbnail: Path | None = None, captions: Path | None = None, made_for_kids: bool = False,
+           localizations: dict | None = None) -> str:
     """予約投稿して videoId を返す。サムネイルと字幕は落ちても警告だけ（あとで付け直せる）。"""
     *_, MediaFileUpload = _deps()
     if not video.exists():
@@ -125,7 +181,11 @@ def upload(svc, video: Path, title: str, description: str, tags: list[str], publ
         "status": {"privacyStatus": "private", "publishAt": publish_at,
                    "selfDeclaredMadeForKids": made_for_kids},
     }
-    req = svc.videos().insert(part="snippet,status", body=body,
+    part = "snippet,status"
+    if localizations:                      # 英語の題名と説明（日本語が既定の言語）
+        body["localizations"] = localizations
+        part += ",localizations"
+    req = svc.videos().insert(part=part, body=body,
                               media_body=MediaFileUpload(str(video), chunksize=-1, resumable=True))
     resp = None
     while resp is None:

@@ -51,6 +51,9 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
    `flip: auto` ＋ `facing`（顔を文字の方へ。和服・文字・紋の入った絵は反転しない）／`flash`（事件の瞬間の赤い光）。**台本で答えが出ることだけをサムネに**（隠したもの・落差の語は本編の事実と合わせる）
    `thumb --variants` で3案（a 今の形／b 顔に寄せて名前と main だけ／c 上に大きな数字・短い語、下に赤い帯）と out/x_thumbnail_variants_preview.png を作り、一覧の大きさで読めるか見てから YouTube Studio の「テストと比較」に3枚載せる（API では載せられない。台本の thumbnail.variants で b の crop・c の top を上書きできる）。
    `screen`（本番の動画をユーザーが見て OK と言ったときだけ）→ `upload --at "YYYY-MM-DD 19:00"`（予約投稿。字幕・サムネイル・概要欄つき）
+   **再生リストと英語の題名**（10-08）：台本に `playlists:`（省けば series:）・`shorts_playlists:`・`en: {title, description, chapters}` を書くと、upload／upload-shorts が投稿のあとに再生リストへ入れ、英語の題名と説明を付ける。
+   投稿済みは `playlists --sync`（まず --sync なしで計画を見る）と `localize scripts/x.yaml [--dry-run]`。英語は概要欄の要点を短く・事実は台本にあることだけ。案は research/en_titles.md。
+   書き込みは各50単位（1日10,000）。許可が足りない・失効したらコマンドは止まり、**`reauth` はユーザーが打つ**（ブラウザで「歴史の地層」を選んで全部許可。古い token は .json.old に残る）
 
 ## つまずき所
 

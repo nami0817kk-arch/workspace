@@ -14,6 +14,9 @@
     python -m chiso.cli screen  scripts/x.yaml          # 本番の動画を見てもらった控え（ユーザーの OK のあとだけ）
     python -m chiso.cli upload  scripts/x.yaml --at "2026-10-05 19:00"   # 予約投稿（承認と screen が要る）
     python -m chiso.cli whoami                          # 許可したチャンネルの名前を出す（取り違えの確認）
+    python -m chiso.cli playlists [--sync]              # 投稿済みを台本の playlists:／series:／shorts_playlists: の再生リストへ
+    python -m chiso.cli localize scripts/x.yaml [--dry-run]   # 投稿済みの本編に台本の en:（英語の題名と説明）を付ける
+    python -m chiso.cli reauth                          # 許可の取り直し（ブラウザで同意する。ユーザーが打つ）
     python -m chiso.cli check   scripts/x.yaml          # 素材の有無・書きすぎ・抑揚の張りつきを点検
     python -m chiso.cli qc      scripts/x.yaml [--video out/x.mp4]   # 出来上がった動画の点検（一覧・画面の替わり方・音）
 
@@ -589,10 +592,8 @@ def cmd_upload_shorts(args) -> int:
         if not v.exists() or seen.get(sid) != _sha(v):
             print(f"{sid}: 本番のショートを見せて OK をもらってから screen-shorts（作り直したら確認し直し）")
             return 2
-    svc = up.service()
-    name = up.channel_title(svc)
-    if "歴史の地層" not in name:
-        print(f"許可しているチャンネルが違います: {name}")
+    svc = _service(need_manage=bool(sc.shorts_playlists))
+    if svc is None:
         return 2
     for sid, at in zip(sids, times):
         key = f"{path.stem}:short:{sid}"
@@ -607,6 +608,7 @@ def cmd_upload_shorts(args) -> int:
         vid = up.upload(svc, short_video(path, sid), t, desc, shortpost.tags(sc, sid), publish_at)
         up.record(log, {"key": key, "video_id": vid, "title": t, "publish_at": at})
         print(f"  予約しました: https://youtu.be/{vid}")
+        _into_playlists(svc, sc.shorts_playlists, key, vid)
     return 0
 
 
@@ -638,21 +640,138 @@ def cmd_upload(args) -> int:
         thumb.make(sc, config, assets_dir(config), work_dir(sc)).save(thumb_p)
     srt = out_dir() / f"{path.stem}.srt"
     tags = list(dict.fromkeys(TAGS + list(sc.tags) + [x for x in (sc.series, sc.thumbnail.get("name", "")) if x]))
-    svc = up.service()
-    name = up.channel_title(svc)
-    if "歴史の地層" not in name:
-        print(f"許可しているチャンネルが違います: {name}（secrets/token.json を消して、歴史の地層を選び直す）")
+    from . import channel
+    loc = channel.localizations(sc.en, desc) if sc.en else None     # 章の数の食い違いは投稿の前に止める
+    svc = _service(need_manage=bool(sc.en or sc.playlists))
+    if svc is None:
         return 2
-    print(f"投稿します：{sc.title}"); print(f"  チャンネル {name}／公開 {args.at}（日本時間）")
-    vid = up.upload(svc, video, sc.title, desc, tags, publish_at, thumb_p, srt)
+    print(f"投稿します：{sc.title}"); print(f"  公開 {args.at}（日本時間）")
+    vid = up.upload(svc, video, sc.title, desc, tags, publish_at, thumb_p, srt, localizations=loc)
     up.record(log, {"key": key, "video_id": vid, "title": sc.title, "publish_at": args.at})
     print(f"予約しました: https://youtu.be/{vid}")
+    _into_playlists(svc, sc.playlists, key, vid)
+    return 0
+
+
+def _service(need_manage: bool = False):
+    """許可を読み、チャンネルが「歴史の地層」かを確かめる。足りなければ取り直しの手順を出して None。"""
+    from . import upload as up
+    try:
+        svc = up.service(need_manage=need_manage)
+    except up.NeedConsent as err:
+        print(str(err))
+        return None
+    name = up.channel_title(svc)
+    if "歴史の地層" not in name:
+        print(f"許可しているチャンネルが違います: {name}\n" + up.REAUTH)
+        return None
+    print(f"  チャンネル：{name}")
+    return svc
+
+
+def _into_playlists(svc, names, key: str, vid: str) -> None:
+    """投稿した1本を再生リストへ。落ちても投稿は済んでいるので警告だけ（あとで playlists --sync）。"""
+    if not names:
+        return
+    from . import channel
+    p = channel.Plan()
+    for n in names:
+        p.add(n, key, vid)
+    try:
+        channel.sync(svc, p, channel.load_descriptions(ROOT / "playlists.yaml"), channel.Budget(1000))
+    except Exception as err:  # noqa: BLE001
+        print(f"! 再生リストに入りませんでした（{str(err)[:80]}）。あとで playlists --sync を打ってください")
+
+
+def posted_scripts(root: Path = ROOT) -> dict:
+    """posted.json に出てくる台本（stem → Script）。"""
+    log = root / "posted.json"
+    entries = json.loads(log.read_text(encoding="utf-8")) if log.exists() else []
+    out = {}
+    for stem in dict.fromkeys(str(e.get("key", "")).split(":")[0] for e in entries):
+        f = root / "scripts" / f"{stem}.yaml"
+        if f.exists():
+            out[stem] = script_mod.load(f)
+    return out
+
+
+def cmd_playlists(args) -> int:
+    """投稿済みの動画を再生リストへ。--sync が無ければ計画を出すだけ（API を使わない）。"""
+    from . import channel
+    log = ROOT / "posted.json"
+    posted = json.loads(log.read_text(encoding="utf-8")) if log.exists() else []
+    p = channel.plan(posted_scripts(), posted, args.only)
+    if not p.lists:
+        print("入れる再生リストがありません（台本に playlists:・series:・shorts_playlists: を書く）")
+        return 0
+    for name, items in p.lists.items():
+        print(f"■ {name}（{len(items)}本）")
+        for key, vid in items:
+            print(f"  {key}  https://youtu.be/{vid}")
+    print(f"書き込みは最大 {p.max_units()} 単位（作る1つ・足す1本ごとに50。入っているものは飛ばす）／1日の枠は 10,000")
+    if not args.sync:
+        print("（計画だけ。入れるのは --sync）")
+        return 0
+    svc = _service(need_manage=True)
+    if svc is None:
+        return 2
+    budget = channel.Budget(args.budget)
+    r = channel.sync(svc, p, channel.load_descriptions(ROOT / "playlists.yaml"), budget)
+    print(f"作ったリスト {len(r['created'])}・足した動画 {len(r['added'])}・入っていた {r['skipped']}（使った単位 約{budget.used}）")
+    return 1 if r["stopped"] else 0
+
+
+def cmd_localize(args) -> int:
+    """投稿済みの本編に英語の題名と説明を付ける。video_id は posted.json から。"""
+    from . import channel, upload as up
+    path = Path(args.script)
+    sc = script_mod.load(path)
+    if not sc.en:
+        print("台本に en: {title, description, chapters} がありません")
+        return 2
+    done = up.already_posted(ROOT / "posted.json", f"{path.stem}:main")
+    if not done:
+        print(f"posted.json に {path.stem}:main がありません（まだ投稿していない回は upload のときに付きます）")
+        return 2
+    svc = _service(need_manage=True)
+    if svc is None:
+        return 2
+    body = channel.localize(svc, done["video_id"], sc.en, dry_run=args.dry_run)
+    en = body["localizations"]["en"]
+    print(f"https://youtu.be/{done['video_id']}")
+    print(f"題名（英語）：{en['title']}")
+    print(en["description"])
+    if not args.dry_run:
+        print("英語の題名と説明を付けました（videos.update 50 単位）")
+    return 0
+
+
+def cmd_reauth(args) -> int:
+    """許可の取り直し。ブラウザが開くので、ユーザーが「歴史の地層」を選んで同意する。"""
+    from . import upload as up
+    backup = up.reauth()
+    if backup:
+        print(f"古い許可は残してあります: {backup}")
+    svc = _service(need_manage=True)
+    if svc is None:
+        if backup:
+            print(f"前の許可に戻すときは {backup.name} を token.json に名前を戻す")
+        return 2
+    print("投稿・再生リスト・英語の題名を書き込めます")
     return 0
 
 
 def cmd_whoami(args) -> int:
     from . import upload as up
-    print(up.channel_title(up.service()))
+    try:
+        cred = up.credentials()
+    except up.NeedConsent as err:
+        print(str(err))
+        return 2
+    *_, build, _ = up._deps()
+    print(up.channel_title(build("youtube", "v3", credentials=cred)))
+    ok = up.can_manage(up.granted_scopes(cred))
+    print("許可：投稿" + ("・再生リスト・英語の題名（videos.update）" if ok else "だけ（再生リストと英語の題名には reauth が要る）"))
     return 0
 
 
@@ -749,6 +868,17 @@ def main(argv=None) -> int:
     s.set_defaults(fn=cmd_upload_shorts)
     s = sub.add_parser("whoami")
     s.set_defaults(fn=cmd_whoami)
+    s = sub.add_parser("playlists")
+    s.add_argument("--sync", action="store_true", help="作って入れる（書き込み）。無ければ計画を出すだけ（API を使わない）")
+    s.add_argument("--only", default="", help="1つの台本だけ（例 kira）")
+    s.add_argument("--budget", type=int, default=3000, help="今回の書き込みで使ってよい単位（既定 3000＝約60本）")
+    s.set_defaults(fn=cmd_playlists)
+    s = sub.add_parser("localize")
+    s.add_argument("script")
+    s.add_argument("--dry-run", action="store_true", help="今の概要欄から英語の説明を作って見せるだけ（videos.list 1 単位）")
+    s.set_defaults(fn=cmd_localize)
+    s = sub.add_parser("reauth")
+    s.set_defaults(fn=cmd_reauth)
     s = sub.add_parser("prepare-characters")
     s.add_argument("--tsumugi", required=True)
     s.add_argument("--kenzaki", required=True)

@@ -188,6 +188,19 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 - 確認用は `draft` / `shorts --draft`（右上に「確認用」と出る）
 - **投稿の前に本番の動画を見せる**。`upload` は承認（台本）と `screen`（動画のハッシュ）の両方が無いと動かない
 - 投稿：Google Cloud は**サッカーと別のプロジェクト「rekishi-chiso」**（API の枠を分ける。10-04 ユーザー決定）。鍵と許可は `dev/output/rekishi-chiso/secrets/`（リポジトリの外）。`whoami` でチャンネルを確かめ、違えば止まる。控えは `posted.json`
+- **再生リストと英語の題名**（10-08 ユーザー指示。固定コメントはやらない）：
+  - 台本の `playlists: [..]`（省けば `series:`）に本編、`shorts_playlists: [..]` にショートを入れる。無いリストは作る（公開）。
+    説明は `playlists.yaml`（無ければ決まった文）。`upload`・`upload-shorts` が投稿のあとに入れる。投稿済みは `playlists --sync`（何度打っても同じ）
+  - 台本の `en: {title, description, chapters}` で `upload` が `defaultLanguage: ja`＋`localizations.en` を付ける。投稿済みは `localize`（video_id は posted.json）。
+    英語の説明は日本語の概要欄の要点を短く・**事実は台本にあることだけ**。章の時刻は日本語の目次から取り、`chapters` は節と同じ数。
+    VOICEVOX のクレジット・絵の出典は日本語の概要欄から自動で写す（英語で見る人には英語の説明だけが出るため）。案は `dev/output/rekishi-chiso/research/en_titles.md`
+  - API の枠（1日 10,000・無料）：playlists.insert・playlistItems.insert・videos.update は各50、一覧は1。参考：投稿 videos.insert 1,600・字幕 400。
+    投稿済み全部（本編7＋ショート約70）を入れると約4,000。投稿の日は `--budget` で抑え、残りは翌日もう一度打つ
+  - **許可**：書き込みには `youtube.force-ssl`（か `youtube`）が要る。10-08 に確かめた時点の token は upload と force-ssl の両方を持っていて、取り直しは要らなかった（`whoami` の2行目で分かる）。
+    足りない・失効したときは、コマンドは**ブラウザを開かずに止まり**、取り直しの手順を出す。取り直しは**ユーザーが**：
+    `python -m chiso.cli reauth` → ブラウザが開く → 「歴史の地層」を持っている Google アカウントを選ぶ → チャンネルの一覧で**「歴史の地層」**を選ぶ（「海外サッカーの理由」を選ばない）→
+    「Google はこのアプリを確認していません」と出たら「続行」（自分の Google Cloud「rekishi-chiso」のアプリ）→ **項目のチェックを全部入れて**「続行」→「認証が完了しました」でブラウザを閉じる。
+    古い token は `secrets/token.<日時>.json.old` に写してから書き換える（消さない）。終わると `whoami` と同じ確認をし、違うチャンネルなら止まる
 - **投稿は1日1本、19時**（10-04）。**ショートは本編の翌日の11・12・13・14・16・17・18・19・20・21時に10本**（10-06 ユーザー。15時は空ける）
 - 台本はコンセプトの細部が決まってから書く（2026-10-03 指示）
 
@@ -223,7 +236,10 @@ python -m chiso.cli thumb    scripts/x.yaml [--variants] [--out dir]   # サム�
 python -m chiso.cli assign   scripts/x.yaml --assets research/x_assets.md   # 絵の割り当ての下書き（out/x_assign.md、台本は書き換えない）
 python -m chiso.cli screen   scripts/x.yaml     # 本番の動画を見てもらった控え（OK のあとだけ）
 python -m chiso.cli upload   scripts/x.yaml --at "2026-10-05 19:00"   # 予約投稿
-python -m chiso.cli whoami                       # 許可したチャンネルの名前
+python -m chiso.cli whoami                       # 許可したチャンネルの名前と、再生リスト・英語の題名を書き込めるか
+python -m chiso.cli playlists [--sync] [--only x] [--budget 3000]   # 投稿済みを再生リストへ（--sync が無ければ計画だけ・API を使わない）
+python -m chiso.cli localize scripts/x.yaml [--dry-run]   # 投稿済みの本編に台本の en:（英語の題名と説明）を付ける
+python -m chiso.cli reauth                       # 許可の取り直し（ブラウザで同意。**ユーザーが打つ**）
 python -m chiso.cli prepare-characters --tsumugi <png> --kenzaki <png> --tsumugi-psd <psd>
 ```
 
