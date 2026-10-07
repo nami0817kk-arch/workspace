@@ -93,6 +93,14 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
   `flash: true` か `{at: [x, y], color}`（事件の瞬間の赤い光と火の粉）。見本 `dev/output/rekishi-chiso/research/thumb_hooks/`（`_contact.png` に 1280・320・168幅）
 - **冒頭とショートの出だし**（10-07、check が知らせる・止めない）：最初の4行（約100字）に数字・年・人名が無い／ショートの1行目が「そして・しかも・それ・でも・はい」で始まる、
   または名前（people: とその言い換え・サムネの名前・4字の名前は2字ずつ）も数字も無い
+- **ショートの頭と終わり**（10-08、`chiso/shorts.py`）：頭の約2秒（1.8秒＋縮み0.4秒）、画面の上半分を暗くして short の問い（`shorts.sN.hook`、無ければ `title`）を特大で出し、
+  いつもの題の位置へ縮めながら溶かす。終わりは「続きは本編で」を3.5→2秒にし、最後に頭と同じ画を1秒（最後のコマ＝最初のコマなのでループがつながる。音は足さない）。
+  config の `short.hook_intro: false` / `short.loop: false` で切れる（既定は入）。新しく作るショートから。見本と前後の比べ：`dev/output/rekishi-chiso/research/shorts_look/`
+- **文体の点検**（10-08、`chiso/style.py`、check が「文体：」で知らせる・止めない）：剣崎の同じ文末（です・ます・ました…）が4文続く（つむぎの行を挟んでも剣崎の文を通して数え、節で数え直す）／
+  同じ8字以上の言い回しが1本に4回（名前・「」の引用・決まった締めは数えない）／書き言葉（である・とされる・における・すなわち・なお、…）／
+  つむぎの返しの頭が「え」「へえ」で1節3回／読点5つ以上か、4つで60字以上の文。既存6本で1本1〜7件
+- **章の題**（10-08、check が知らせる）：節の題（＝概要欄の目次）に年・数字・人名（people:）・地名（places.yaml）・「」の言葉・出来事の語（事件・戦い・の変…）・用語の札の言葉のどれも無いもの。
+  places.yaml に無い地名（桶狭間・長篠）は拾えないので、知らせが出ても地名なら気にしない
 
 ## 質を上げる決まり（10-07。分析の前に自分でできることとして）
 
@@ -224,7 +232,7 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 ```
 python -m chiso.cli voice    scripts/x.yaml     # 音声だけ（抑揚の確認）
 python -m chiso.cli draft    scripts/x.yaml [--lines 40]   # 確認用の動画（--lines で冒頭だけ）
-python -m chiso.cli shorts   scripts/x.yaml --draft
+python -m chiso.cli shorts   scripts/x.yaml --draft [--only s1,s3]
 python -m chiso.cli approve  scripts/x.yaml     # ユーザーの OK のあとだけ
 python -m chiso.cli build    scripts/x.yaml
 python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典・次回。--keywords で最後に「この動画で扱うこと：」）

@@ -33,6 +33,8 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
    絵の割り当ては `python -m chiso.cli assign scripts/x.yaml --assets <research>/x_assets.md` で下書き（out/x_assign.md。行番号・せりふの頭・絵・理由、40秒を超える所は detail の候補）。台本は書き換えないので、見て採るものだけ台本に写す
 3. `python -m chiso.cli kana scripts/x.yaml` で**全行の読みを見る**。読み違いは `readings.yaml` に足す
 4. `python -m chiso.cli check scripts/x.yaml`：素材・まとめの節・次回・サムネ・図・長さ。× があれば直す。! の「冒頭15秒に数字・年・人名がない」「ショートの1行目がそして等で始まる／名前も数字もない」も直す
+   **文体と章の題**（10-08、! で知らせる）：「文体：」の剣崎の同じ文末が4文続く・同じ8字以上の言い回しが4回・書き言葉（である・とされる・すなわち…）・つむぎの返しの頭が「え／へえ」で1節3回・読点の多い長い文、と「章の題に年・人名・場面がない」（節の題＝概要欄の目次）。台本を書いた後に直す。
+   ショートは頭の約2秒に `title`（`hook:` で別の問いも可）を上半分に特大で出し、最後は「続きは本編で」2秒＋頭と同じ画1秒でループさせる（config の short.hook_intro / short.loop で切れる。`shorts --only s1` で1本だけ）
 5. `python -m chiso.cli draft scripts/x.yaml --lines 40` で冒頭だけの確認用（約5分で作れる）→ コマを抜いて重なりを見る
 6. `python -m chiso.cli draft scripts/x.yaml` で全体の確認用（約30分）。**見せる前にコマを抜いて確かめる**
    - **コマを抜いて確かめる＝`python -m chiso.cli qc scripts/x.yaml [--video out/x_draft.mp4]`**（10-07。35分の動画で約3分）。
