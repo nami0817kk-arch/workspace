@@ -113,3 +113,12 @@ def test_lint_warns_stage_card_in_short():
         {"語り": "一つ目は宣伝です。", "short": "s1", "card": {"head": "段階1", "body": "風刺画"}},
         {"語り": "二つ目。"}]}]})
     assert any("段階1" in w for w in check.lint(sc))
+
+
+def test_pacing_warns_long_same_background_and_host_share():
+    from chiso import script
+    long = "あ" * 70                                      # 1行およそ10秒
+    sc = script.parse({"title": "t", "sections": [{"title": "s", "background": {"image": "a.jpg"},
+                       "lines": [{"語り": long}] * 6 + [{"聞き": "うん"}]}]})
+    w = check.pacing(sc)
+    assert any("同じ背景" in x for x in w) and any("剣崎の字数" in x for x in w)
