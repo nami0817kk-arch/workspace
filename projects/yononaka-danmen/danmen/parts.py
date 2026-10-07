@@ -9,6 +9,8 @@ import re
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
+from danmen import typo
+
 FONT_PATH = "C:/Windows/Fonts/NotoSansJP-VF.ttf"
 GOLD = "#E7B93F"
 INK = "#141C26"
@@ -17,6 +19,8 @@ UNIT = re.compile(r"(\d+(?:\.\d+)?)|([^\d]+)")
 
 
 def F(size: int, weight: int = 900) -> ImageFont.FreeTypeFont:
+    # 読めない大きさは作らない。1920 の画面での 28px が、スマホで 5.7pt の下限
+    size = max(int(size), typo.MIN_PX)
     f = ImageFont.truetype(FONT_PATH, size)
     try:
         f.set_variation_by_axes([weight])

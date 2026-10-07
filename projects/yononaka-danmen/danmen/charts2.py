@@ -16,6 +16,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
+from danmen import typo
 from danmen.news import F, PANEL, INK, INK_SUB, GOLD, put_number, _panel, _credit, _bar
 from danmen.news import GREEN_D, GREEN_L, AMBER_D, AMBER_L, GRAY_D, GRAY_L, RED_D, RED_L
 from danmen.news import BLUE_D, BLUE_L
@@ -27,7 +28,7 @@ _jp_cache = None
 def line(fig: dict) -> Image.Image:
     """折れ線。点は丸、最後だけ大きく。面を薄く塗る。"""
     items = fig["items"]
-    w, h = 1180, 560
+    w, h = typo.PANEL_W, 560
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     vals = [float(i["value"]) for i in items]
     mx, mn = max(vals), min(vals)
@@ -79,7 +80,7 @@ def people(fig: dict) -> Image.Image:
     filled = float(fig.get("filled", 3))
     per_row = int(fig.get("per_row", 10))
     rows = (total + per_row - 1) // per_row
-    w, h = 1120, 180 + rows * 150
+    w, h = typo.PANEL_W, 180 + rows * 150
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     size = 96
     gap = (w - 120 - per_row * size) // max(per_row - 1, 1)
@@ -109,7 +110,7 @@ def _jp() -> dict:
 
 def japan(fig: dict) -> Image.Image:
     """日本地図。marks に {name: 都道府県名, color, note} を書くとその県を塗る。"""
-    w, h = 1180, 700
+    w, h = typo.PANEL_W, 700
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     marks = {str(m["name"]): m for m in fig.get("marks", [])}
     lon0, lon1, lat0, lat1 = 122.0, 146.5, 24.0, 46.0   # 沖縄・先島まで入れる
@@ -166,7 +167,7 @@ def japan(fig: dict) -> Image.Image:
 def waterfall(fig: dict) -> Image.Image:
     """増減の内訳。何が上げ、何が下げたか。最後に合計。"""
     items = fig["items"]
-    w, h = 1180, 520
+    w, h = typo.PANEL_W, 520
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     base = float(fig.get("base", 0))
     running = base

@@ -16,6 +16,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
 
+from danmen import typo
 from danmen.news import (AMBER_D, AMBER_L, BLUE_D, BLUE_L, GOLD, GRAY_D, GRAY_L,
                          GREEN_D, GREEN_L, INK, INK_SUB, RED_D, RED_L, F, _bar,
                          _credit, _panel, put_number)
@@ -38,7 +39,7 @@ def relation(fig: dict) -> Image.Image:
     x,y は 0〜1 の割合で置く。kind は give（実線・矢印）/ weak（点線）。
     """
     nodes = {str(n["id"]): n for n in fig["nodes"]}
-    w, h = 1180, 640
+    w, h = typo.PANEL_W, 640
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     area_t, area_b = top, h - 40
     bw, bh = 230, 108
@@ -113,7 +114,7 @@ def relation(fig: dict) -> Image.Image:
 def calc(fig: dict) -> Image.Image:
     """計算の板。式をそのまま見せる。『どう出した数字か』を隠さない。"""
     terms = fig["terms"]          # [{value, label}] 最後が答え
-    w, h = 1180, 380
+    w, h = typo.PANEL_W, 380
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     ops = fig.get("ops", ["×"] * (len(terms) - 2) + ["＝"])
     sizes = [52] * (len(terms) - 1) + [78]
@@ -148,7 +149,7 @@ def calc(fig: dict) -> Image.Image:
 def stats(fig: dict) -> Image.Image:
     """数字を3つ並べる。1日／1年／生涯のように、同じものを尺度を変えて出す。"""
     items = fig["items"][:3]
-    w, h = 1180, 340
+    w, h = typo.PANEL_W, 340
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     cw = (w - 100) // max(len(items), 1)
     for i, it in enumerate(items):
@@ -178,7 +179,7 @@ def gauge(fig: dict) -> Image.Image:
     """半円のメーター。割合や達成度をひとつ見せる。"""
     value = float(fig.get("value", 0))
     mx = float(fig.get("max", 100))
-    w, h = 940, 500
+    w, h = typo.PANEL_W, 500
     im, d, top = _panel(w, h, fig.get("title", ""), band=fig.get("band", (20, 34, 64)))
     cx, cy, r = w / 2 + 14, top + 250, 190
     th = 44

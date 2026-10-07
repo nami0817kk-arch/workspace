@@ -16,6 +16,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
+from danmen import typo
+
 W, H = 1920, 1080
 GOLD = "#E7B93F"
 CYAN = "#5BD6F5"
@@ -26,6 +28,8 @@ FONT_PATH = "C:/Windows/Fonts/NotoSansJP-VF.ttf"
 
 
 def F(size: int, weight: int = 900) -> ImageFont.FreeTypeFont:
+    # 読めない大きさは作らない。1920 の画面での 28px が、スマホで 5.7pt の下限
+    size = max(int(size), typo.MIN_PX)
     f = ImageFont.truetype(FONT_PATH, size)
     try:
         f.set_variation_by_axes([weight])
