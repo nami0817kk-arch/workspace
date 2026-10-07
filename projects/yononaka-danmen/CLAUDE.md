@@ -348,7 +348,8 @@ sections:
 - 板に入るのは **7行**まで。超えるなら2画面に割る
 
 ```bash
-python scripts/audit_type.py      # 全図の文字が基準を満たすか、まとめて測る
+python scripts/audit_type.py      # 板に載る図（41種）の文字を測る
+python scripts/audit_screens.py   # 全画面の様式（25種）の文字を測る
 ```
 
 この点検は、**要求された大きさ・下限に当たった回数・板が画面で縮む倍率**を出す。

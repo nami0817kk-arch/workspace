@@ -83,7 +83,7 @@ def _title(im: Image.Image, text: str, sub: str = "") -> int:
     d.text((100, 96), text, font=F(52), fill="white",
            stroke_width=6, stroke_fill=(6, 10, 18))
     if sub:
-        d.text((102, 162), sub, font=F(26, 700), fill=INK_LIGHT)
+        d.text((102, 162), sub, font=F(typo.NOTE, 700), fill=INK_LIGHT)
     return 250
 
 
@@ -120,7 +120,7 @@ def _paste_bar(im: Image.Image, bar: Image.Image, x: int, y: int, glow=True) -> 
 def _credit(im: Image.Image, text: str) -> None:
     if text:
         d = ImageDraw.Draw(im)
-        f = F(21, 600)
+        f = F(typo.NOTE, 600)
         d.text((W - d.textlength(text, font=f) - 56, H - 46), text, font=f, fill="#9FB0C9")
 
 
@@ -133,19 +133,24 @@ def ranking(fig: dict) -> Image.Image:
     label_w = 260
     bar_max = W - SAFE_RIGHT - label_w - 330
     y = top
-    step = min(110, (H - SAFE_BOTTOM - top) // max(len(items), 1))
+    # 件数が少ないときは、空けるのではなく**1本を太くする**（画面を使い切る）
+    room = H - SAFE_BOTTOM - top
+    step = max(min(room // max(len(items), 1), 200), 96)
+    bar_h = min(int(step * 0.58), 112)
     for it in items:
         is_focus = str(it["label"]) == focus
         dark, light = (GREEN_D, GREEN_L) if is_focus else (GRAY_D, GRAY_L)
         d = ImageDraw.Draw(im)
-        d.text((64, y + 14), str(it["label"]), font=F(34, 900 if is_focus else 700),
+        lf = F(typo.BODY, 900 if is_focus else 700)
+        d.text((64, y + (bar_h - typo.BODY) // 2 + 8), str(it["label"]), font=lf,
                fill="white" if is_focus else INK_LIGHT, stroke_width=5, stroke_fill=(6, 10, 18))
         bw = int(bar_max * float(it["value"]) / mx)
-        _paste_bar(im, _glow_bar((max(bw, 8), 56), dark, light), 64 + label_w, y + 10,
+        _paste_bar(im, _glow_bar((max(bw, 8), bar_h), dark, light), 64 + label_w, y + 8,
                    glow=is_focus)
         d = ImageDraw.Draw(im)
-        _num(d, str(it.get("note", it["value"])), 64 + label_w + max(bw, 8) + 26, y + 6,
-             48, fill="white" if is_focus else INK_LIGHT, stroke=7)
+        _num(d, str(it.get("note", it["value"])), 64 + label_w + max(bw, 8) + 30,
+             y + (bar_h - 62) // 2 + 6, 62,
+             fill="white" if is_focus else INK_LIGHT, stroke=8)
         y += step
     _credit(im, fig.get("credit", ""))
     return im.convert("RGB")

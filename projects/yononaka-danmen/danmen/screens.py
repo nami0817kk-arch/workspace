@@ -82,7 +82,7 @@ def title(spec: dict) -> Image.Image:
     _logo(im, 54, 44)
     d = ImageDraw.Draw(im)
     d.text((158, 48), "世の中の断面図", font=F(30, 800), fill="#D6E0F0")
-    d.text((158, 86), "ニュースを数字で切る", font=F(20, 500), fill="#8FA3C4")
+    d.text((158, 86), "ニュースを数字で切る", font=F(typo.NOTE, 500), fill="#8FA3C4")
 
     lines = spec.get("lines", [])
     sizes = [96] * len(lines)
@@ -151,20 +151,20 @@ def quote(spec: dict) -> Image.Image:
     y0 = (H - h) // 2
     d.rounded_rectangle([pad, y0, W - pad, y0 + h], radius=18, fill=(252, 251, 247))
     d.rectangle([pad, y0, pad + 14, y0 + h], fill=GOLD)
-    d.text((pad + 50, y0 + 26), "原文", font=F(26, 800), fill="#B08A20")
+    d.text((pad + 50, y0 + 26), "原文", font=F(typo.NOTE, 800), fill="#B08A20")
     y = y0 + 76
     for ln in lines:
         d.text((pad + 50, y), ln, font=f, fill="#141C26")
         y += 68
     if src:
-        d.text((pad + 50, y0 + h - 48), src, font=F(23, 600), fill="#6B7684")
+        d.text((pad + 50, y0 + h - 48), src, font=F(typo.NOTE, 600), fill="#6B7684")
     return im
 
 
 def term(im: Image.Image, word: str, mean: str) -> Image.Image:
     """用語の札。右上に小さく出す（画面に重ねる）。"""
     d = ImageDraw.Draw(im)
-    f1, f2 = F(28, 900), F(21, 600)
+    f1, f2 = F(28, 900), F(typo.NOTE, 600)
     w = max(d.textlength(word, font=f1), d.textlength(mean, font=f2)) + 60
     x, y = W - w - 50, 130
     d.rounded_rectangle([x, y, x + w, y + 104], radius=10, fill=(252, 251, 247))
@@ -256,7 +256,7 @@ def agenda(spec: dict) -> Image.Image:
     d = ImageDraw.Draw(im)
     _logo(im, 64, 44, box=72)
     d = ImageDraw.Draw(im)
-    d.text((152, 50), "世の中の断面図", font=F(27, 800), fill="#D6E0F0")
+    d.text((152, 50), "世の中の断面図", font=F(typo.NOTE, 800), fill="#D6E0F0")
     d.text((64, 150), str(spec.get("title", "今日みる断面")), font=F(50), fill="white")
     d.line([(64, 230), (W - 64, 230)], fill=GOLD, width=3)
 
@@ -269,7 +269,7 @@ def agenda(spec: dict) -> Image.Image:
         d.text((64 + 35 - d.textlength(num, font=F(34)) / 2, y + 16), num, font=F(34), fill="white")
         d.text((162, y + 8), str(it), font=F(38), fill="white")
         y += 96
-    d.text((64, y + 20), "出典はすべて画面に出します", font=F(26, 700), fill="#9FB0C9")
+    d.text((64, y + 20), "出典はすべて画面に出します", font=F(typo.NOTE, 700), fill="#9FB0C9")
     return im
 
 

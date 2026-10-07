@@ -82,7 +82,7 @@ def breaking(spec: dict) -> Image.Image:
     d.text((W - d.textlength(name, font=nf) - 48, 46), name, font=nf, fill="white")
     when = str(spec.get("when", ""))
     if when:
-        wf = F(26, 700)
+        wf = F(typo.NOTE, 700)
         d.text((W - d.textlength(when, font=wf) - 48, 100), when, font=wf, fill="#C8D3E4")
     return im.convert("RGB")
 
@@ -119,7 +119,7 @@ def lshape(spec: dict) -> Image.Image:
         d.text((50, H - bottom_h + 130), sub, font=F(34, 700), fill="#C8D3E4")
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((48, H - 44), credit, font=cf, fill="#8FA3C4")
     return im.convert("RGB")
 
@@ -133,7 +133,7 @@ def voices(spec: dict) -> Image.Image:
            stroke_width=6, stroke_fill=(6, 10, 18))
     note = str(spec.get("note", ""))
     if note:
-        d.text((102, 120), note, font=F(26, 700), fill="#C8D3E4")
+        d.text((102, 120), note, font=F(typo.NOTE, 700), fill="#C8D3E4")
 
     items = spec.get("items", [])[:4]
     y = 210
@@ -159,13 +159,13 @@ def voices(spec: dict) -> Image.Image:
                    font=f, fill=INK)
             ty += 54
         if who:
-            wf = F(26, 700)
+            wf = F(typo.NOTE, 700)
             d.text((W - 260 - d.textlength(who, font=wf) - 20, y + bh - 44), who,
                    font=wf, fill=(110, 118, 128))
         y += bh + 28
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((W - d.textlength(credit, font=cf) - 60, H - 48), credit, font=cf, fill="#9FB0C9")
     return im.convert("RGB")
 
@@ -225,11 +225,11 @@ def split(spec: dict) -> Image.Image:
                 xx += d.textlength(unit, font=sf)
         note = str(it.get("note", ""))
         if note:
-            d.text((x, y + 44 + size + 6), note, font=F(24, 700), fill="#9FB0C9")
+            d.text((x, y + 44 + size + 6), note, font=F(typo.NOTE, 700), fill="#9FB0C9")
         y += size + 110
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((x, H - 54), credit, font=cf, fill="#8FA3C4")
     return im.convert("RGB")
 
