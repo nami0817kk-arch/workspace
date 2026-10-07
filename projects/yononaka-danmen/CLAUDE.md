@@ -198,7 +198,7 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 
 ### 使える部品
 
-#### 図（板に載せる。全 37 種）
+#### 図（板に載せる。全 41 種）
 
 | ところ | 中身 |
 |---|---|
@@ -208,6 +208,7 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 | `charts3.py` | `relation` 関係図／`calc` 計算の式／`stats` 数字の並べ置き／`gauge` 弧のゲージ（4種） |
 | `charts4.py` | `newspaper` 新聞記事風／`donut` ドーナツ／`schedule` これからの予定／`checklist` ○×の点検／`thermometer` 縦のゲージ（5種） |
 | `charts5.py` | `flowchart` 分岐の判定図／`matrix` 4象限／`receipt` レシート風の明細／`numberline` 数直線／`verdict` ◎○△×の比較表（5種） |
+| `charts6.py` | アイコンが主役。`icon_stats` アイコン＋数字を並べる／`icon_flow` アイコンを矢印でつなぐ／`icon_list` アイコン付きの箇条書き／`icon_compare` 大きなアイコン2つで比べる（4種） |
 
 #### 画面（1920×1080 をまるごと作る。全 27 種）
 
@@ -239,7 +240,7 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 
 | 置き場 | 中身 | 出どころ |
 |---|---|---|
-| `icons/` | 3Dアイコン 18点 | **Gemini で自作**（Chrome 経由） |
+| `icons/` | 3Dアイコン 30点 | **Gemini で自作**（Chrome 経由）。`danmen/icons.py` から名前で呼ぶ |
 | `photos/` | 実写 24点 | Pexels（商用可）。`sources.json` に出典 |
 | `wikimedia/` | 資料写真 | Wikimedia。`CREDITS.md` が自動で付く |
 | `videos/` | 実写動画 6本 | Pexels。背景に敷く |
@@ -250,3 +251,9 @@ python scripts/weekly.py --fix 3,7,1,12,5,9,14
 
 **素材を足すときは出典を必ず控える。** Pexels と Pixabay は商用可・クレジット不要だが、
 Wikimedia は個別に確認する。
+
+**アイコンを足したら、絵の中に文字が焼き込まれていないか必ず目で見る。**
+Gemini は頼んでいなくても名前を書き込むことがあり、しかも崩れた漢字になる
+（実際に smartphone に「ヘルメット」、toolbox と worker に崩れた漢字が入っていた。
+文字の帯を切り落として直し、元は `icons/raw/` に置いた）。
+切り落とせないもの（印鑑の面の字など）は `danmen/icons.py` の `AVOID` に入れて使わない。
