@@ -38,17 +38,8 @@ def F(size: int, weight: int = 900) -> ImageFont.FreeTypeFont:
 
 
 def _wrap(d, text: str, font, width: float) -> list[str]:
-    lines, cur = [], ""
-    for ch in text:
-        if ch == "\n":
-            lines.append(cur); cur = ""; continue
-        cur += ch
-        if d.textlength(cur, font=font) > width:
-            lines.append(cur); cur = ""
-    if cur:
-        lines.append(cur)
-    return lines
-
+    """折り返しは `typo.wrap` に任せる（日本語の組版の決まりを守る）。"""
+    return typo.wrap(d, text, font, width)
 
 def _bubble_size(text: str, max_w: int, size: int) -> tuple[int, int, list[str]]:
     """吹き出しの大きさを、描く前に測る。置き場所を決めるのに要る。"""

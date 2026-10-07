@@ -29,6 +29,8 @@ from pathlib import Path
 import yaml
 from PIL import Image, ImageDraw, ImageFont
 
+from danmen import typo
+
 from danmen import tts
 
 W, H = 1920, 1080
@@ -37,6 +39,7 @@ GOLD = (255, 206, 72)        # 字幕の数字。板の金より明るくする
 EDGE = (6, 10, 18)
 NUM = re.compile(r"(\d+(?:[.,]\d+)*)")
 FPS = 30
+READ_MAX = 6.5        # 字幕が読める速さの上限（字／秒）
 
 
 def F(size: int, weight: int = 900) -> ImageFont.FreeTypeFont:
@@ -84,20 +87,8 @@ def read_script(path: Path) -> list[dict]:
 # ---- 字幕 -------------------------------------------------------------------
 
 def _wrap(d, text: str, font, width: float) -> list[str]:
-    """折り返す。切れるなら**読点・句点のあと**で切る（字幕が読みやすくなる）。"""
-    lines, cur = [], ""
-    for ch in text:
-        cur += ch
-        if d.textlength(cur, font=font) > width:
-            cut = max(cur.rfind("、"), cur.rfind("。"))
-            if cut >= len(cur) * 0.45:
-                lines.append(cur[:cut + 1]); cur = cur[cut + 1:]
-            else:
-                lines.append(cur); cur = ""
-    if cur:
-        lines.append(cur)
-    return lines
-
+    """折り返しは `typo.wrap` に任せる（日本語の組版の決まりを守る）。"""
+    return typo.wrap(d, text, font, width)
 
 def caption(im: Image.Image, text: str, size: int = 74) -> Image.Image:
     """字幕を焼く。縁を全部描いてから本体を描く（潰れを避けるため）。"""
@@ -145,6 +136,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
 
     current: Image.Image | None = None
     current_name = ""
+    too_fast: list[tuple[int, str, float]] = []
     wavs: list[Path] = []
     shots: list[tuple[Path, float]] = []      # (画像, 出す秒数)
     n = 0
@@ -168,8 +160,14 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         shot = work / "{:03d}.png".format(n)
         caption(current, step["text"]).save(shot)
         shots.append((shot, sec))
-        print("  {:>3}  {:>5.2f}秒  [{}]  {}".format(
-            n + 1, sec, current_name, step["text"][:30]))
+        # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。
+        # これを超えると、聞けても読めない（読み終わる前に次へ行く）。
+        cps = len(step["text"]) / sec if sec else 0
+        fast = "  ← 速い（{:.1f}字/秒）".format(cps) if cps > READ_MAX else ""
+        if fast:
+            too_fast.append((n + 1, step["text"], cps))
+        print("  {:>3}  {:>5.2f}秒  {:>4.1f}字/秒  [{}]  {}{}".format(
+            n + 1, sec, cps, current_name, step["text"][:26], fast))
         n += 1
 
     if not shots:
@@ -197,6 +195,13 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         raise SystemExit("ffmpeg が失敗しました")
     total = sum(s for _, s in shots)
     print("書き出しました: {}（{:.1f}秒 / 画面 {}枚）".format(out, total, len(shots)))
+    if too_fast:
+        print()
+        print("字幕が速すぎる行が {} つあります（目安は {} 字/秒まで）。".format(
+            len(too_fast), READ_MAX))
+        for i, text, cps in too_fast:
+            print("  {:>3}  {:.1f}字/秒  {}".format(i, cps, text))
+        print("  → 台本を短くするか、2行に割って画面を1枚足してください。")
     return out
 
 
