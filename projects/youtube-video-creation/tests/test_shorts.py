@@ -1459,3 +1459,15 @@ def test_本編にだけ出す行はショートに入らない():
     short_texts = [l.text for sc in short.scenes for l in sc.lines]
     assert "本編だけの反応です。" not in short_texts
     assert "どちらにも出る反応です。" in short_texts
+
+
+def test_締めの一言に前の行の確度の札を引き継がない():
+    """2026-10-07 ケインの回。反応の「未確認」の札が締めの一言に付いていた"""
+    from src.shorts import _add_subscribe
+    text = ("---\ntitle: T\n---\n\n## オープニング\n\nキャスター: 題です。\n\n"
+            "## 山場\n\nキャスター: 本題の一行です。\n"
+            "ネット民: 反応です。\n  source: 未確認\n")
+    short = trim(parse_script(text))
+    _add_subscribe(short)
+    tail = short.scenes[-1].lines[-2:]
+    assert [l.source for l in tail] == [None, None]

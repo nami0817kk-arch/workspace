@@ -1978,5 +1978,33 @@
  "20261007_sato_valencia_short": {
   "at": "2026-10-07T09:14:51+09:00",
   "digest": "38758eb8dbb81fb8"
+ },
+ "20261007_kubo_january_short": {
+  "at": "2026-10-07T10:13:16+09:00",
+  "digest": "42418a8894632daf"
+ },
+ "20260926_ll08_deportivo": {
+  "at": "2026-10-07T10:19:15+09:00",
+  "digest": "526e5f04b5b73734"
+ },
+ "20260926_ll08_deportivo_short": {
+  "at": "2026-10-07T10:19:39+09:00",
+  "digest": "6123b9bf3785e743"
+ },
+ "20261007_coach_troussier": {
+  "at": "2026-10-07T10:34:34+09:00",
+  "digest": "60beed452b69009a"
+ },
+ "20261007_coach_troussier_short": {
+  "at": "2026-10-07T10:35:17+09:00",
+  "digest": "5b5b04245ad2060d"
+ },
+ "20261007_young_goldenboy": {
+  "at": "2026-10-07T10:36:00+09:00",
+  "digest": "72c4b0c637f214e3"
+ },
+ "20261007_young_goldenboy_short": {
+  "at": "2026-10-07T10:37:12+09:00",
+  "digest": "fedacf6d7c428ff0"
  }
 }

@@ -746,6 +746,9 @@ def _add_subscribe(short: Script) -> None:
         last.duration = 0.0
         last.audio_path = None
         last.card = "none"
+        # 前の行の確度の札を引き継がない（2026-10-07、ケインの回で反応の
+        # 「未確認」が締めの一言に付いていた）
+        last.source = None
         lines.append(last)
 
 
