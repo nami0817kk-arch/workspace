@@ -20,16 +20,17 @@ theme:
   league_name: 日本代表
   kind: other
   topic: 日本代表
-  title: 日本代表、4連勝でもFIFAランキングは17位のまま。順位が動かなかった理由は
+  title: 日本代表、4連勝でもFIFAランキングの順位が動かなかった理由
   question: 9月から4連勝した日本代表は、なぜ10月7日発表のFIFAランキングで順位を上げられなかったのか
   takeaway: 4連勝で日本が積んだのは11.08ポイント。20位ウルグアイに勝ってプラス4.63だったのに対し、88位ニュージーランドへの勝ちはプラス1.75、PK戦で勝ったエクアドル戦はプラス1.61で、相手の強さと勝ち方で1勝の重みが3倍近く違った。16位アメリカは同じ時期に4連勝で15.14を積み、差は16.65から20.71に開いた。11月のブラジル戦は勝てばプラス6.15で、2連勝しても今のアメリカには10.87届かない
-  opening_image: assets/images/20261007_fifa_ranking/02_w.jpg
-short_title: 日本代表、4連勝でも17位のまま。決勝の勝利で増えたのは1.75
+  opening_image: assets/images/20261007_fifa_ranking/10_kirin_w.jpg
+short_title: 日本代表、4連勝でもFIFAランキングの順位が動かなかった理由
 thumbnail:
-  photo: assets/images/20261007_fifa_ranking/02.jpg
-  short_photo: assets/images/20261007_fifa_ranking/02_v.jpg
-  line1: 日本代表 4連勝でも17位
-  line2: 決勝の1勝で増えたのは●.●●
+  photo: assets/images/20261007_fifa_ranking/10_kirin.jpg
+  focus: 0.25
+  short_photo: assets/images/20261007_fifa_ranking/10_kirin_w_v.jpg
+  line1: 日本代表 4連勝したのに
+  line2: FIFAランキングは●●位
   tags:
   - 日本代表
   - FIFAランキング
@@ -163,7 +164,7 @@ sections:
       title: 日本の4試合で増えたポイント
       columns: *id003
       rows: *id004
-    image: assets/images/20261007_fifa_ranking/03_w.jpg
+    image: assets/images/20261007_fifa_ranking/01_w.jpg
   - text: いちばん効いたのは初戦。20位のウルグアイに3対1で勝ち、プラス4.63。
     card:
       type: table

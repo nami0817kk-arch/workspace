@@ -1,11 +1,11 @@
 ---
-title: 日本代表、4連勝でもFIFAランキングは17位のまま。順位が動かなかった理由は
+title: 日本代表、4連勝でもFIFAランキングの順位が動かなかった理由
 format: news
-short_title: 日本代表、4連勝でも17位のまま。決勝の勝利で増えたのは1.75
+short_title: 日本代表、4連勝でもFIFAランキングの順位が動かなかった理由
 series: 数字で見るランキング
 topic: 日本代表
-thumbnail_line1: 日本代表 4連勝でも17位
-thumbnail_line2: 決勝の1勝で増えたのは●.●●
+thumbnail_line1: 日本代表 4連勝したのに
+thumbnail_line2: FIFAランキングは●●位
 thumbnail_tags:
 - 日本代表
 - FIFAランキング
@@ -15,17 +15,18 @@ thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_band_full: false
-short_photo: assets/images/20261007_fifa_ranking/02_v.jpg
+short_photo: assets/images/20261007_fifa_ranking/10_kirin_w_v.jpg
 thumbnail_photos: []
 thumbnail_crest_main: []
-thumbnail_photo: assets/images/20261007_fifa_ranking/02.jpg
+thumbnail_photo: assets/images/20261007_fifa_ranking/10_kirin.jpg
+thumbnail_focus: 0.25
 bg: assets/backgrounds/stadium.png
 date: 2026年10月7日
-intro_title: 日本代表、4連勝でもFIFAランキングは17位のまま。順位が動かなかった理由は
+intro_title: 日本代表、4連勝でもFIFAランキングの順位が動かなかった理由
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: '日本代表、4連勝でもFIFAランキングは17位のまま。順位が動かなかった理由は
+description: '日本代表、4連勝でもFIFAランキングの順位が動かなかった理由
 
 
   この動画が答える問い: 9月から4連勝した日本代表は、なぜ10月7日発表のFIFAランキングで順位を上げられなかったのか
@@ -543,10 +544,10 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stock/stadium_night.mp4
 
-キャスター: 日本代表、4連勝でもFIFAランキングは17位のまま。順位が動かなかった理由は。
-  telop: 日本代表、4連勝でもFIFAランキングは17位のまま。順位が動かなかった理由は
+キャスター: 日本代表、4連勝でもFIFAランキングの順位が動かなかった理由。
+  telop: 日本代表、4連勝でもFIFAランキングの順位が動かなかった理由
   se: assets/audio/se_pon.wav
-  image: assets/images/20261007_fifa_ranking/02_w.jpg
+  image: assets/images/20261007_fifa_ranking/10_kirin_w.jpg
 
 ## 正式発表でも17位のまま
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -600,20 +601,20 @@ cards:
 キャスター: 格下に勝っても、点はあまり増えないということです。4試合を並べます。
   telop: 格下に勝っても、点はあまり増えないということです。4試合を並べます
   card: weight_4_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: いちばん効いたのは初戦。20位のウルグアイに3対1で勝ち、プラス4.63。
   telop: いちばん効いたのは初戦。20位のウルグアイに3対1で勝ち、プラス4.63
   card: weight_5_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: 決勝の相手、ニュージーランドは88位。2対1で勝って、プラス1.75です。
   telop: 決勝の相手、ニュージーランドは88位。2対1で勝って、プラス1.75です
   card: weight_6_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: 同じ1勝でも、ウルグアイ戦の半分にも届きません。
   emph: true
   telop: 同じ1勝でも、ウルグアイ戦の半分にも届きません
   card: weight_7_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 
 ## PK戦の勝ちと、上の国との差
 @bg: assets/backgrounds/stock/stadium_night.mp4
@@ -622,31 +623,31 @@ cards:
   telop: 計算の中身は、試合の重みと、結果と見込みの差のかけ算です
   source: 確定
   card: pk_0_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: 親善試合の重みは10。強い相手に勝つほど、見込みとの差が大きくなります。
   telop: 親善試合の重みは10。強い相手に勝つほど、見込みとの差が大きくなります
   card: pk_1_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: 2戦目は49位のベネズエラ。2対1の勝利で、3.09増えました。
   telop: 2戦目は49位のベネズエラ。2対1の勝利で、3.09増えました
   card: pk_2_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: 準決勝のエクアドル戦は、0対0からのPK戦で勝ちました。増えたのは1.61。
   telop: 準決勝のエクアドル戦は、0対0からのPK戦で勝ちました。増えたのは1.61
   card: pk_3_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: 計算の決まりでは、PK戦の勝ちは、勝ちと引き分けの間として数えます。
   telop: 計算の決まりでは、PK戦の勝ちは、勝ちと引き分けの間として数えます
   card: pk_4_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: もし90分で勝っていれば、プラス4.11。PK戦で2.5ほど少なくなった形です。
   telop: もし90分で勝っていれば、プラス4.11。PK戦で2.5ほど少なくなった形です
   card: pk_5_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: では4つ勝っても、なぜ16位との差は開いたのか。
   telop: では4つ勝っても、なぜ16位との差は開いたのか
   card: pk_6_card
-  image: assets/images/20261007_fifa_ranking/03_w.jpg
+  image: assets/images/20261007_fifa_ranking/01_w.jpg
 キャスター: アメリカも同じ時期に、ペルー、チリ、メキシコ、カナダに4連勝。
   telop: アメリカも同じ時期に、ペルー、チリ、メキシコ、カナダに4連勝
   card: none
