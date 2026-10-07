@@ -20,13 +20,20 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
 
-# 顔の矩形に対する、口の位置と大きさ
+# 顔の矩形に対する、口の位置と大きさ。y は**閉じた口の線**の位置
 MOUTH = {
-    "katari": {"y": 0.735, "w": 0.21, "h": 0.052},
-    "kikite": {"y": 0.760, "w": 0.17, "h": 0.048},
+    "katari": {"y": 0.726, "w": 0.195, "h": 0.054},
+    "kikite": {"y": 0.752, "w": 0.150, "h": 0.058},
 }
 STEP = 0.08             # 声の大きさを測る間隔（秒）
 LEVELS = (0.0, 0.5, 0.9)   # 口の開き具合の3段階
+
+# **もともと口が開いている表情**には描かない（二重になる）
+OPEN_ALREADY = {
+    "katari_egao", "katari_hakushu", "katari_ikari", "katari_odoroki",
+    "kikite_hakushu", "kikite_naki", "kikite_odoroki", "kikite_warai",
+    "kikite_yorokobi",
+}
 
 
 def face_box(im: Image.Image) -> tuple[int, int, int, int]:
@@ -37,27 +44,38 @@ def face_box(im: Image.Image) -> tuple[int, int, int, int]:
     return bb if bb else (0, 0, im.width, h)
 
 
+def can_move(mood_name: str) -> bool:
+    """その表情で口パクできるか。もともと口が開いているものは動かさない。"""
+    return mood_name not in OPEN_ALREADY
+
+
 def open_mouth(im: Image.Image, who: str, amount: float) -> Image.Image:
-    """口を開けた立ち絵。amount は 0（閉じ）〜1（最大）。"""
+    """口を開けた立ち絵。amount は 0（閉じ）〜1（最大）。
+
+    **開いた口の上端を、もとの閉じた口の線に合わせる。** 中心を合わせると、
+    もとの線が上に残ったまま下に口ができて、二重に見えた（2026-10-07）。
+    **幅は開き具合で変えない。** 人が口を開けるとき、横には広がらず縦に開く。
+    """
     m = MOUTH.get(who)
     if not m or amount <= 0.02:
         return im
     x0, y0, x1, y1 = face_box(im)
     fw, fh = x1 - x0, y1 - y0
     cx = x0 + fw * 0.5
-    cy = y0 + fh * m["y"]
-    w = fw * m["w"] * (0.78 + 0.22 * amount)
+    line = y0 + fh * m["y"]          # もとの閉じた口の線
+    w = fw * m["w"] * (1.0 - 0.06 * amount)      # 開くほど少しすぼまる
     h = fh * m["h"] * amount
     if h < 2:
         return im
+    top = line - h * 0.22            # 上端を線の少し上に置き、下へ開く
     out = im.convert("RGBA").copy()
     layer = Image.new("RGBA", out.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(layer)
-    d.ellipse([cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2], fill=(122, 52, 50, 255))
+    d.ellipse([cx - w / 2, top, cx + w / 2, top + h], fill=(142, 64, 58, 255))
     # 下の歯のきわ。これが無いと、ただの黒い穴に見える
-    ty0, ty1 = cy - h / 2 + 2, cy + h * 0.1
+    ty0, ty1 = top + 2, top + h * 0.28
     if ty1 > ty0 and w > 12:
-        d.ellipse([cx - w / 2 + 4, ty0, cx + w / 2 - 4, ty1], fill=(228, 206, 198, 255))
+        d.ellipse([cx - w / 2 + 5, ty0, cx + w / 2 - 5, ty1], fill=(222, 198, 190, 255))
     layer = layer.filter(ImageFilter.GaussianBlur(1.2))
     # 立ち絵の外（透明なところ）には描かない
     layer.putalpha(Image.composite(layer.split()[3],
