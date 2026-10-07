@@ -25,6 +25,45 @@ def last_change(rec: dict) -> str | None:
     return tail[0][0] if tail else None
 
 
+HIKE_THRESHOLD = 0.02
+HIKE_MIN_BASE = 3
+HIKE_IGNORE_UNTIL = "2026-09-12"
+
+
+def last_hike(rec: dict, threshold: float = HIKE_THRESHOLD) -> dict | None:
+    """記録の中でいちばん新しい値上げ（1回で threshold 以上）。いまも上がったままのものだけ。
+
+    検索では「氷結無糖レモン 値上げ」「スタイルフリー いくら値上げ」が表示されているのに
+    クリックが0だった（2026-10-06・表示46回で0）。探している人が知りたいのは
+    「いつ・いくら上がったか」で、題が「◯◯の価格推移」のままでは答えになっていない。
+    実際に 2026-09-27〜10-03 に酒類で値上げが記録されている。
+    見るのは価格だけ（倍率の上下は値上げと呼ばない）。値上げ前の価格まで戻っていたら出さない。
+    """
+    tail = [(e[0], e[1]) for e in map(_entry, rec.get("tail") or []) if e[1]]
+    if len(tail) < 2:
+        return None
+    current = tail[-1][1]
+    for i in range(len(tail) - 1, 0, -1):
+        before, after = tail[i - 1][1], tail[i][1]
+        # 上がった先が、それまでに記録したどの価格よりも高いこと。セールが終わって
+        # 元の価格に戻っただけの回を「値上げ」と呼ばないため。
+        # 上がる前の記録が HIKE_MIN_BASE 日以上あること（1〜2日の値段は基準にならない）。
+        # また HIKE_IGNORE_UNTIL までの上昇は数えない。記録は 9/5 からで、その時点で
+        # スーパーセール（〜9/11）が進んでいたため、セール価格しか知らない商品では
+        # 終了で戻った値段も「記録上いちばん高い」になる。実測（2026-10-07）で
+        # 9/11〜12 に685件がそれで「値上げ」になっていた。データからは区別できない。
+        if (i >= HIKE_MIN_BASE and tail[i][0] > HIKE_IGNORE_UNTIL
+                and after > before and (after - before) / before >= threshold
+                and after > max(p for _, p in tail[:i])):
+            # 上げたあと下げて、上げ幅の半分も残っていない商品は「値上げ」と呼ばない。
+            # 店が日々価格を上下させているだけの商品まで拾うと、読み手を誤らせる。
+            if current - before < (after - before) / 2:
+                return None
+            return {"date": tail[i][0], "from": before, "to": after,
+                    "pct": (after - before) / before}
+    return None
+
+
 def effective(price, rate) -> int:
     """ポイント分を引いた実質価格。
 
@@ -139,6 +178,7 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
         "eff_moved": eff_moved, "eff_at_low": eff_at_low,
         "trustworthy": trustworthy, "label": label,
         "low_date": rec.get("min_date"), "tail": rec.get("tail") or [],
+        "hike": last_hike(rec),
     }
 
 

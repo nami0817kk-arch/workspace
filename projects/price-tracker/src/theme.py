@@ -2132,6 +2132,12 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     # 「・最安値」は検索結果では切れて見えない位置にあった（題は中央50字で、
     # 日本語は30〜40字で切られる）。短くして、商品名と「価格推移」を残す。
     title = f'{title_name or short_name(row["name"], 28)}の価格推移'
+    # 値上げが記録されている商品は、題と説明の頭をそれに答える形にする（analyze.last_hike）。
+    # 「値上げ」で探されて表示されているのに、題が答えていなかった。
+    # 上がったのは**この店の楽天での価格**で、メーカーの改定額ではない。そう書く。
+    hike = row.get("hike")
+    if hike:
+        title = f'{title_name or short_name(row["name"], 28)}の値上げ・価格推移'
     # 説明の頭は**いまの判定**にする。商品名は題にあるので繰り返さない。
     # 「6日分の記録では価格は横ばいです」で始めていたときは、検索結果に並んでも
     # 押す理由が読めなかった（表示115に対しクリック5＝4.3%）。
@@ -2178,6 +2184,13 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     high = row.get("high") or 0
     span = (f'記録{days}日分・最安 {yen(low)}／最高 {yen(high)}。'
             if low != high else '')
+    hike_text = ''
+    if hike:
+        hike_text = (f'この店の価格は{jp_date(hike["date"])}に {yen(hike["from"])} → '
+                     f'{yen(hike["to"])}（+{yen(hike["to"] - hike["from"])}・'
+                     f'{pct(hike["pct"])}）に上がりました。'
+                     + (f'いまは {yen(price)}。' if price != hike["to"] else ''))
+        lead_state = hike_text
     desc = lead_state + span + f'{short_name(row["name"], 16)} の価格の記録。'
 
     # ポイント分を引いた実質価格の推移。倍率が一度も動かない商品では
@@ -2290,6 +2303,10 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             # 来たあいだ、楽天へのクリックは27から1つも動いていない。
             # 断り（AD_NOTICE）より後ろに置く。何で収益を得ているかを先に言う。
             + (f'<p class="cta top">{buy_link(row)}</p>' if row.get("url") else '')
+            # 題と説明で「値上げ」と言った商品は、本文の頭でも同じことを言う
+            # （検索結果に出したことが、開いた先に無いと嘘になる）。
+            + (f'<p class="verdict hike"><strong>値上げ</strong> {esc(hike_text)}</p>'
+               if hike_text else '')
             + (f'<p class="verdict">{esc(verdict_note(row))}</p>'
                if verdict_note(row) else '')
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
