@@ -61,7 +61,7 @@ class ScriptError(Exception):
     """台本の書式エラー。行番号つきで投げる。"""
 
 
-def _scene_lines(scene) -> list[dict]:
+def _scene_lines(scene, cards: dict | None = None) -> list[dict]:
     """script.json に残す行。**画面に出ているものを記録する。**
 
     見出しとカードは、指定した行で差し替わり、それ以外の行では出たままになる
@@ -89,6 +89,9 @@ def _scene_lines(scene) -> list[dict]:
             "no_telop": line.no_telop,
             "source": source,
             "card": card,
+            # **カードの型も残す**（2026-10-07）。左右の比べ（versus）は画面いっぱいの絵で見出しを
+            # 出さないので、review の「画面に出る字」がこれを見て、板の行と同じく画面に出たと数える
+            "card_type": str(((cards or {}).get(card) or {}).get("type", "")).lower() if card else "",
             "emotion": line.emotion,
             "image": line.image,
             "start": round(line.start, 3),
@@ -215,7 +218,7 @@ class Script:
                     "background": scene.background,
                     "main": scene.main,
                     "viewpoint": scene.viewpoint,
-                    "lines": _scene_lines(scene),
+                    "lines": _scene_lines(scene, self.cards),
                 }
                 for scene in self.scenes
             ],

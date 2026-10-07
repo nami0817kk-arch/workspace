@@ -15,7 +15,11 @@ from PIL import Image, ImageDraw, ImageFont
 
 TEAM_SIZES = (46, 42, 38, 34, 30, 26, 22)
 
-CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions", "kit")
+CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions", "kit",
+              "stats", "verdict", "calc", "versus")
+# **画面いっぱいの絵になる型**（2026-10-07）。板（カード）ではなく、写真の下地の代わりに敷く。
+# render.py は板と同じ扱い（上に節の名前・見出し・ほかのカードを重ねない）で描く
+FULL_SCREEN_TYPES = ("versus",)
 
 # 棒グラフは「同じ指標を並べて比べる」用途なので、色は1色で通し、
 # 注目させたい1本だけ同じ色相の明るい段を使う（カテゴリ配色にはしない）。
@@ -60,7 +64,19 @@ def row_count(spec: dict) -> int:
         return min(6, len(spec.get("rows") or []))
     if kind == "bars":
         return min(6, len(spec.get("items") or []))
+    # 2026-10-07 に足した3つも1項目ずつ出す（数字・式の項・判定の行）
+    if kind == "stats":
+        return min(3, len(spec.get("items") or []))
+    if kind == "calc":
+        return len(spec.get("terms") or [])
+    if kind == "verdict":
+        return min(6, len(spec.get("rows") or []))
     return 0
+
+
+def is_full_screen(spec: dict | None) -> bool:
+    """画面いっぱいの絵になるカードか（versus）。"""
+    return bool(spec) and str(spec.get("type", "")).lower() in FULL_SCREEN_TYPES
 
 
 def render(spec: dict, width: int, font_path: str, out_path: Path,
@@ -73,6 +89,8 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     kind = str(spec.get("type", "quote")).lower()
     if kind not in CARD_TYPES:
         raise CardError(f"カードの type は {CARD_TYPES} のいずれか: {kind}")
+    if kind in FULL_SCREEN_TYPES:
+        raise CardError(f"{kind} は板ではなく画面いっぱいの絵です。render_versus で描いてください")
 
     builder = {
         "quote": _quote,
@@ -83,6 +101,9 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
         "bars": _bars,
         "table": _table,
         "reactions": _reactions,
+        "stats": _stats,
+        "verdict": _verdict,
+        "calc": _calc,
     }[kind]
     blocks = builder(spec, width, font_path, latin_font_path or font_path)
 
@@ -771,6 +792,546 @@ def _reactions(spec: dict, width: int, font_path: str, latin_path: str) -> list[
         blocks.append({"height": 10, "draw": lambda draw, y: None})
         blocks.append(_text_block(note, note_font, width - PAD * 2 - 12, SUB, 6))
     return blocks
+
+
+# ------------------------------------------------------------------ 数字の板（2026-10-07）
+#
+# 歴史の地層（chiso/numbers.py の stats・calc・versus）と世の中の断面図（charts5 の verdict・
+# charts4 の checklist）から移した。向こうは古紙色の板に t=0→1 で描き進める作り／1枚の静止画を
+# 返す作りなので、こちらの「縦に積むブロック＋reveal で行を出す」作りに書き直した。
+# **数字は太く大きく、単位は半分の大きさ**（figures.put_number と同じ組み方）。注目の1つだけ黄。
+
+UNIT_RATIO = 0.5          # 単位（数字でない字）の大きさ。数字に対する割合
+WORD_RATIO = 0.66         # 数字を含まない値（「W杯」）の大きさ
+
+# 判定の印の色。不透明の色で塗る（半透明を RGBA の板に直接描くと白く抜ける）
+MARK_COLORS = {
+    "◎": (255, 213, 74, 255),    # 黄（いちばん良い）
+    "○": (74, 200, 128, 255),    # 緑
+    "△": (235, 165, 40, 255),    # 橙
+    "×": (226, 80, 80, 255),     # 赤
+    "✓": (74, 200, 128, 255),
+    "✗": (226, 80, 80, 255),
+}
+# 書き方の揺れを1つに寄せる
+MARK_ALIASES = {"◎": "◎", "○": "○", "〇": "○", "◯": "○", "△": "△", "▲": "△",
+                "×": "×", "✕": "×", "x": "×", "X": "×", "✖": "×",
+                "✓": "✓", "✔": "✓", "レ": "✓", "✗": "✗", "✘": "✗"}
+VERDICT_MARKS = tuple(MARK_COLORS)
+_DIGIT_CHARS = "0123456789０１２３４５６７８９"
+
+
+def verdict_mark(text) -> str:
+    """判定の字を ◎○△×✓✗ のどれかに寄せる。知らない字なら空。"""
+    return MARK_ALIASES.get(str(text or "").strip(), "")
+
+
+def _segments(text: str) -> list[tuple[str, float]]:
+    """数字は大きく（1.0）、単位は小さく（0.5）。数字を1つも含まなければ全体を 0.66 で。"""
+    text = str(text)
+    if not _re.search(r"[0-9０-９]", text):
+        return [(text, WORD_RATIO)] if text else []
+    out = []
+    for m in _re.finditer(r"[0-9０-９][0-9０-９,.，．]*|[^0-9０-９]+", text):
+        chunk = m.group(0)
+        out.append((chunk, 1.0 if chunk[0] in _DIGIT_CHARS else UNIT_RATIO))
+    return out
+
+
+def _font(path: str, size: float) -> ImageFont.FreeTypeFont:
+    return ImageFont.truetype(path, max(8, int(size)))
+
+
+def number_width(text: str, size: int, font_path: str) -> float:
+    ruler = ImageDraw.Draw(Image.new("RGB", (4, 4)))
+    return sum(ruler.textlength(chunk, font=_font(font_path, size * ratio))
+               for chunk, ratio in _segments(text))
+
+
+def fit_number(text: str, size: int, room: float, font_path: str, floor: int = 40) -> int:
+    """room に収まるまで縮めた大きさ。"""
+    while size > floor and number_width(text, size, font_path) > room:
+        size -= 4
+    return size
+
+
+def put_number(draw, x: float, baseline: float, text: str, size: int, fill, font_path: str,
+               stroke: int = 0, stroke_fill=(0, 0, 0, 255)) -> float:
+    """数字を大きく、単位を半分の大きさで、下の線をそろえて描く。右端の x を返す。"""
+    for chunk, ratio in _segments(text):
+        font = _font(font_path, size * ratio)
+        draw.text((x, baseline), chunk, font=font, fill=fill, anchor="ls",
+                  stroke_width=stroke if ratio == 1.0 else max(0, stroke * 2 // 3),
+                  stroke_fill=stroke_fill)
+        x += draw.textlength(chunk, font=font)
+    return x
+
+
+def _title_block(spec: dict, font_path: str) -> list[dict]:
+    title = str(spec.get("title") or "").strip()
+    if not title:
+        return []
+    font = ImageFont.truetype(font_path, 44)
+    return [{"height": 66, "draw": lambda draw, y: draw.text((PAD + 12, y), title, font=font, fill=TEXT)}]
+
+
+def _note_blocks(spec: dict, width: int, font_path: str) -> list[dict]:
+    note = str(spec.get("note") or "").strip()
+    if not note:
+        return []
+    note_font = ImageFont.truetype(font_path, 28)
+    return [{"height": 14, "draw": lambda draw, y: None},
+            _text_block(note, note_font, width - PAD * 2 - 12, SUB, 6)]
+
+
+def stat_items(spec: dict) -> list[dict]:
+    """stats の items を {number, unit, note} の並びに。`[数字, 単位, 注記]` か辞書。"""
+    out = []
+    for item in spec.get("items") or []:
+        if isinstance(item, dict):
+            out.append({"number": str(item.get("number", "")).strip(),
+                        "unit": str(item.get("unit", "") or "").strip(),
+                        "note": str(item.get("note", "") or "").strip()})
+        elif isinstance(item, (list, tuple)):
+            cells = [str(c if c is not None else "").strip() for c in item]
+            cells += [""] * (3 - len(cells))
+            out.append({"number": cells[0], "unit": cells[1], "note": cells[2]})
+        else:
+            out.append({"number": str(item).strip(), "unit": "", "note": ""})
+    return out
+
+
+def focus_index(spec: dict, count: int) -> int:
+    """注目の1つ。`focus` は 0 始まりの番号か、数字・注記の字。無ければ最後。"""
+    focus = spec.get("focus")
+    if focus is None or focus == "":
+        return count - 1
+    if isinstance(focus, int) and not isinstance(focus, bool):
+        return focus if 0 <= focus < count else count - 1
+    for index, item in enumerate(stat_items(spec)):
+        if str(focus).strip() in (item["number"], item["note"], item["number"] + item["unit"]):
+            return index
+    return count - 1
+
+
+def _stats(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """数字3つの大きな板（2026-10-07）。シリーズの冒頭の「いちばん強い一点」に。
+
+    ```yaml
+    card: {type: stats, title: メッシの代表, items: [[208, 試合, 歴代最多], [126, 点], [W杯, 優勝, 2022年]]}
+    ```
+    数字は太く大きく、単位は半分。注目の1つ（`focus`、無ければ最後）だけ黄、ほかは白。
+    """
+    items = stat_items(spec)
+    if not items or not all(item["number"] for item in items):
+        raise CardError("stats カードには items（[数字, 単位, 注記] を1〜3つ）が必要です")
+    if len(items) > 3:
+        raise CardError("stats の items は3つまでです")
+    n = len(items)
+    hot = focus_index(spec, n)
+    left, right = PAD + 12, width - PAD
+    col = (right - left) / n
+    room = col - 40
+    # 大きさ：注目は 150、ほかは 118 から。ほかの数字は同じ大きさにそろえる（ばらつくと注目が立たない）
+    base = 150 if n > 1 else 190
+    hot_size = fit_number(items[hot]["number"] + items[hot]["unit"], base, room, font_path)
+    rest = [fit_number(it["number"] + it["unit"], int(base * 0.79), room, font_path)
+            for i, it in enumerate(items) if i != hot]
+    other = min(min(rest) if rest else hot_size, hot_size)
+    sizes = [hot_size if i == hot else other for i in range(n)]
+    note_font = ImageFont.truetype(font_path, 30)
+    notes = [_wrap(it["note"], note_font, int(col - 28))[:2] if it["note"] else [] for it in items]
+    note_h = max((len(x) for x in notes), default=0) * 40
+    num_h = int(hot_size * 1.02) + 18
+    height = num_h + note_h + 20
+
+    blocks = _title_block(spec, font_path)
+    for index, item in enumerate(items):
+        def draw_item(draw, y, index=index, item=item):
+            x0 = left + index * col
+            cx = x0 + col / 2
+            if index:
+                draw.line([(x0, y + 10), (x0, y + height - 16)], fill=GRID, width=2)
+            text = item["number"] + item["unit"]
+            size = sizes[index]
+            w = number_width(text, size, font_path)
+            baseline = y + num_h - 14
+            put_number(draw, cx - w / 2, baseline, text, size,
+                       BRAND_GOLD if index == hot else TEXT, font_path)
+            for k, chunk in enumerate(notes[index]):
+                tw = draw.textlength(chunk, font=note_font)
+                draw.text((cx - tw / 2, y + num_h + 6 + k * 40), chunk, font=note_font, fill=SUB)
+
+        # 横に並ぶので、高さは最後の1つだけが持つ（reveal で出ていない項目も場所は空けておく）
+        blocks.append({"height": height if index == n - 1 else 0, "draw": draw_item, "row": True})
+    return blocks + _note_blocks(spec, width, font_path)
+
+
+def calc_terms(spec: dict) -> list[dict]:
+    out = []
+    for term in spec.get("terms") or []:
+        if isinstance(term, dict):
+            out.append({"value": str(term.get("value", "")).strip(),
+                        "note": str(term.get("note", "") or "").strip()})
+        elif isinstance(term, (list, tuple)):
+            cells = [str(c if c is not None else "").strip() for c in term] + ["", ""]
+            out.append({"value": cells[0], "note": cells[1]})
+        else:
+            out.append({"value": str(term).strip(), "note": ""})
+    return out
+
+
+CALC_OPS = ("÷", "×", "＋", "+", "－", "-", "−", "＝", "=", "≒", "→")
+
+
+def calc_ops(spec: dict, count: int) -> list[str]:
+    ops = spec.get("ops")
+    if ops is None:
+        return ["×"] * max(0, count - 2) + ["＝"]
+    return [str(op).strip() for op in ops]
+
+
+def _calc(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """計算の式（2026-10-07）。見立ての「この回だけの数字」に。
+
+    ```yaml
+    card: {type: calc, title: ケインの代表, terms: [[125試合, 代表の出場], [11年, 2015〜2026], [年10.8試合, 1年あたり]], ops: [÷, ＝]}
+    ```
+    項が左から順に出て（reveal）、最後の項（答え）だけ大きく黄、下に黄の線。
+    """
+    terms = calc_terms(spec)
+    if len(terms) < 2 or not all(t["value"] for t in terms):
+        raise CardError("calc カードには terms（[値, 注記] を2つ以上）が必要です")
+    n = len(terms)
+    ops = calc_ops(spec, n)
+    if len(ops) != n - 1:
+        raise CardError(f"calc の ops は項の数より1つ少なく（{n - 1}個）書いてください")
+    inner = width - PAD * 2 - 24
+    note_font = ImageFont.truetype(font_path, 28)
+    ruler = ImageDraw.Draw(Image.new("RGB", (4, 4)))
+    scale = 1.0
+    while True:
+        sizes = [int((134 if k == n - 1 else 104) * scale) for k in range(n)]
+        op_font = _font(font_path, 70 * scale)
+        gap = 26 * scale
+        term_w = [number_width(t["value"], s, font_path) for t, s in zip(terms, sizes)]
+        note_w = [ruler.textlength(t["note"], font=note_font) if t["note"] else 0 for t in terms]
+        slots = [max(a, b) for a, b in zip(term_w, note_w)]
+        op_w = [ruler.textlength(op, font=op_font) + gap * 2 for op in ops]
+        total = sum(slots) + sum(op_w)
+        if total <= inner or scale <= 0.45:
+            break
+        scale -= 0.05
+    x = PAD + 12 + max(0.0, (inner - total) / 2)
+    starts = []
+    for k in range(n):
+        if k:
+            x += op_w[k - 1]
+        starts.append(x)
+        x += slots[k]
+    num_h = int(sizes[-1] * 1.02) + 10
+    height = num_h + (44 if any(t["note"] for t in terms) else 12) + 14
+
+    blocks = _title_block(spec, font_path)
+    for k, term in enumerate(terms):
+        def draw_term(draw, y, k=k, term=term):
+            baseline = y + num_h - 10
+            hot = k == n - 1
+            if k:
+                # 記号は、そのあとに出る項と一緒に出る
+                op = ops[k - 1]
+                ox = starts[k] - op_w[k - 1] + gap
+                draw.text((ox, baseline - sizes[0] * 0.30), op, font=op_font, fill=SUB, anchor="lm")
+            cx = starts[k] + slots[k] / 2
+            tx = cx - term_w[k] / 2
+            put_number(draw, tx, baseline, term["value"], sizes[k], BRAND_GOLD if hot else TEXT, font_path)
+            if hot:
+                draw.rectangle([tx - 4, baseline + 10, tx + term_w[k] + 4, baseline + 16], fill=BRAND_GOLD)
+            if term["note"]:
+                nw = ruler.textlength(term["note"], font=note_font)
+                draw.text((cx - nw / 2, baseline + 24), term["note"], font=note_font, fill=SUB)
+
+        blocks.append({"height": height if k == n - 1 else 0, "draw": draw_term, "row": True})
+    return blocks + _note_blocks(spec, width, font_path)
+
+
+def verdict_rows(spec: dict) -> list[list[str]]:
+    return [[str(c if c is not None else "").strip() for c in row] for row in (spec.get("rows") or [])
+            if isinstance(row, (list, tuple))]
+
+
+def _draw_mark(draw, cx: float, cy: float, mark: str, r: int = 26) -> None:
+    """判定の印。字ではなく図形で描く（フォントに ✓ が無い環境がある・大きさがそろう）。"""
+    color = MARK_COLORS.get(mark, TEXT)
+    if mark in ("✓", "✗"):
+        # 塗った丸に白い印（断面図の checklist と同じ。輪郭だけだと小さい画面で見えない）
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=color)
+        if mark == "✓":
+            draw.line([(cx - r * 0.5, cy + 1), (cx - r * 0.12, cy + r * 0.42), (cx + r * 0.55, cy - r * 0.42)],
+                      fill=(255, 255, 255, 255), width=7, joint="curve")
+        else:
+            k = r * 0.42
+            draw.line([(cx - k, cy - k), (cx + k, cy + k)], fill=(255, 255, 255, 255), width=7)
+            draw.line([(cx + k, cy - k), (cx - k, cy + k)], fill=(255, 255, 255, 255), width=7)
+        return
+    if mark == "◎":
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], outline=color, width=7)
+        q = r * 0.48
+        draw.ellipse([cx - q, cy - q, cx + q, cy + q], outline=color, width=6)
+    elif mark == "○":
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], outline=color, width=8)
+    elif mark == "△":
+        draw.line([(cx, cy - r), (cx + r * 1.05, cy + r * 0.8), (cx - r * 1.05, cy + r * 0.8), (cx, cy - r)],
+                  fill=color, width=8, joint="curve")
+    elif mark == "×":
+        k = r * 0.82
+        draw.line([(cx - k, cy - k), (cx + k, cy + k)], fill=color, width=10)
+        draw.line([(cx + k, cy - k), (cx - k, cy + k)], fill=color, width=10)
+
+
+def _verdict(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """判定表（2026-10-07）。◎○△×（checklist 形は ✓✗）を色つきの印で。
+
+    ```yaml
+    card: {type: verdict, title: 夏の補強の答え合わせ, rows: [[イサク, ◎, 8試合6点], [ヴィルツ, △, 1点だけ]]}
+    ```
+    行は `[項目, 判定, 一言]`（一言は省いてよい）。表と同じく `reveal` で1行ずつ出て、
+    `highlight_row` の行が光る（行ごとにカードを分けても `same_table` で開き直さない）。
+    """
+    rows = verdict_rows(spec)
+    if not rows:
+        raise CardError("verdict カードには rows（[項目, 判定, 一言]）が必要です")
+    lengths = {len(row) for row in rows}
+    if len(lengths) != 1 or next(iter(lengths)) not in (2, 3):
+        raise CardError("verdict の各行は [項目, 判定] か [項目, 判定, 一言] でそろえてください")
+    for row in rows:
+        if not verdict_mark(row[1]):
+            raise CardError(f"verdict の判定は {'・'.join(VERDICT_MARKS)} のどれか: {row[1]}")
+    three = len(rows[0]) == 3
+    columns = [str(c) for c in (spec.get("columns") or [])]
+    if columns and len(columns) != len(rows[0]):
+        raise CardError("verdict の columns は行と同じ数にしてください")
+    highlight = spec.get("highlight_row")
+
+    many = len(rows) > TABLE_ROWS_FULL
+    item_font = ImageFont.truetype(font_path, 40 if not many else max(28, int(40 * TABLE_ROWS_FULL / len(rows))))
+    head_font = ImageFont.truetype(font_path, 30)
+    ruler = ImageDraw.Draw(Image.new("RGB", (4, 4)))
+    left, right = PAD + 12, width - PAD
+    inner = right - left
+    mark_w = 120 if columns else 104
+    # 項目の列は中身の長さで（3列なら幅の 40% まで。入らなければ字を縮める）
+    want = max(ruler.textlength(row[0], font=item_font) for row in rows) + 30
+    item_w = min(want, inner * (0.40 if three else 0.70))
+    while item_font.size > 26 and max(ruler.textlength(r[0], font=item_font) for r in rows) > item_w - 20:
+        item_font = ImageFont.truetype(font_path, item_font.size - 2)
+    comment_w = inner - item_w - mark_w
+    comment_font = ImageFont.truetype(font_path, max(26, item_font.size - 4))
+    comments = [_wrap(row[2], comment_font, int(comment_w - 16))[:2] if three and row[2] else [] for row in rows]
+    lines = max((len(c) for c in comments), default=1) or 1
+    base_h = 72 if not many else max(48, int(72 * TABLE_ROWS_FULL / len(rows)))
+    row_h = max(base_h, 26 + lines * (comment_font.size + 10))
+    r = max(14, min(26, (base_h - 22) // 2))
+    line_h = comment_font.size + 10
+
+    blocks = _title_block(spec, font_path)
+
+    if columns:
+        def draw_head(draw, y):
+            draw.rectangle([PAD - 8, y - 6, width - PAD + 8, y + 44], fill=BRAND_GREEN)
+            xs = (left, left + item_w, left + item_w + mark_w + 16)
+            for index, name in enumerate(columns):
+                if index == 1:
+                    tw = draw.textlength(name, font=head_font)
+                    draw.text((xs[1] + (mark_w - tw) / 2, y + 2), name, font=head_font, fill=BRAND_GOLD)
+                else:
+                    draw.text((xs[index], y + 2), name, font=head_font, fill=BRAND_GOLD)
+
+        blocks.append({"height": 58, "draw": draw_head})
+
+    for number, row in enumerate(rows):
+        def draw_row(draw, y, row=row, number=number):
+            if number == highlight:
+                draw.rounded_rectangle([PAD - 8, y - 4, width - PAD + 8, y + row_h - 8], radius=10, fill=HILITE)
+                draw.rectangle([PAD - 8, y + 4, PAD - 2, y + row_h - 16], fill=BRAND_GOLD)
+            elif number % 2 == 0:
+                draw.rectangle([PAD - 8, y - 4, width - PAD + 8, y + row_h - 8], fill=ZEBRA)
+            mid = y + (row_h - 12) / 2
+            item = _fit_cell(draw, row[0], item_font, item_w - 16)
+            draw.text((left, mid), item, font=item_font, anchor="lm",
+                      fill=BRAND_GOLD if number == highlight else TEXT)
+            _draw_mark(draw, left + item_w + mark_w / 2, mid, verdict_mark(row[1]), r)
+            chunks = comments[number]
+            first = mid - (len(chunks) - 1) * line_h / 2
+            for k, chunk in enumerate(chunks):
+                draw.text((left + item_w + mark_w + 16, first + k * line_h), chunk,
+                          font=comment_font, anchor="lm", fill=TEXT if number == highlight else SUB)
+
+        blocks.append({"height": row_h, "draw": draw_row, "row": True})
+    return blocks + _note_blocks(spec, width, font_path)
+
+
+# ------------------------------------------------------------------ 左右の全画面比べ（2026-10-07）
+
+VERSUS_SIDE_KEYS = frozenset({"image", "name", "number", "note", "center", "top"})
+VERSUS_BRIGHT = (88.0, 128.0)
+TITLE_BAND = 86                 # 題の札の高さ（字46＋上下40）   # 2枚の明るさ（灰色の平均）をそろえる先の下限と上限
+
+
+def _versus_tile(side: dict, w: int, h: int, third: float) -> Image.Image:
+    """写真を w×h に切る。顔が取れれば顔を残す位置で（faces.crop_box）、取れなければ上寄り。
+
+    `center`（顔の左右の位置、0〜1）・`top`（切り出しの上端、0〜1）を書けば顔の位置より優先する。
+    """
+    from . import faces
+    from .config import _resolve
+
+    path = _resolve(str(side.get("image") or ""))
+    if not path.exists():
+        raise CardError(f"versus の写真がありません: {side.get('image')}")
+    with Image.open(path) as opened:
+        photo = opened.convert("RGB")
+    face = faces.main_face(photo) if faces.available() else None
+    kw = {}
+    if side.get("center") not in (None, ""):
+        kw["center"] = float(side["center"])
+    if side.get("top") not in (None, ""):
+        kw["top"] = float(side["top"])
+    box = faces.crop_box(photo.size, w / h, face, third=third, **kw)
+    return photo.crop(box).resize((w, h), Image.LANCZOS)
+
+
+def _even_brightness(tiles: list[Image.Image]) -> list[Image.Image]:
+    """2枚の明るさをそろえる。片方だけ暗い・明るいと、暗いほうが負けて見える。"""
+    from PIL import ImageEnhance, ImageStat
+
+    means = [ImageStat.Stat(t.convert("L").resize((48, 48))).mean[0] for t in tiles]
+    target = min(VERSUS_BRIGHT[1], max(VERSUS_BRIGHT[0], sum(means) / len(means)))
+    out = []
+    for tile, mean in zip(tiles, means):
+        factor = max(0.55, min(1.7, target / max(mean, 1.0)))
+        out.append(ImageEnhance.Color(ImageEnhance.Brightness(tile).enhance(factor)).enhance(0.92))
+    return out
+
+
+def _shade(tile: Image.Image, start: float, end: float, strength: int = 215,
+           from_top: bool = False) -> Image.Image:
+    """字を置く側を暗く落とす。**不透明の絵に合成するので白く抜けない。**"""
+    w, h = tile.size
+    mask = Image.new("L", (w, h), 0)
+    draw = ImageDraw.Draw(mask)
+    a, b = int(h * start), int(h * end)
+    for y in range(h):
+        t = (y - a) / max(1, b - a) if not from_top else (b - y) / max(1, b - a)
+        t = max(0.0, min(1.0, t))
+        draw.line([(0, y), (w, y)], fill=int(strength * t ** 1.2))
+    dark = Image.new("RGB", (w, h), (6, 12, 10))
+    return Image.composite(dark, tile, mask)
+
+
+def render_versus(spec: dict, size: tuple[int, int], font_path: str, out_path: Path,
+                  latin_font_path: str | None = None) -> Path:
+    """左右の全画面比べ（2026-10-07）。画面いっぱいの不透明な絵を書き出す。
+
+    ```yaml
+    card: {type: versus, title: 代表の出場数, left: {image: …, name: ケイン, number: 112試合, note: 2015〜},
+           right: {image: …, name: シルトン, number: 125試合, note: 1970〜1990}, credit: "写真: …"}
+    ```
+    横（本編）は左右に割り、真ん中に黄の縦線。縦（ショート）は上下に割り、真ん中に黄の横線。
+    写真は顔を残す位置で切り（faces.crop_box）、2枚の明るさを自動でそろえる。
+    名前と大きな数字は、横では各半分の下、縦では真ん中の線をはさんだ側（上の人は線の上、
+    下の人は線の下）に置く。**縦の下端はショートの画面の題名・ボタンに隠れる**ので使わない。
+    """
+    width, height = size
+    portrait = height > width
+    sides = [spec.get("left") or {}, spec.get("right") or {}]
+    for side in sides:
+        if not isinstance(side, dict) or not side.get("image") or not str(side.get("name") or "").strip():
+            raise CardError("versus の left・right には image と name が必要です")
+    if portrait:
+        tw, th = width, height // 2
+        tiles = [_versus_tile(sides[0], tw, th, third=0.36), _versus_tile(sides[1], tw, th, third=0.60)]
+    else:
+        tw, th = width // 2, height
+        tiles = [_versus_tile(s, tw, th, third=0.30) for s in sides]
+    tiles = _even_brightness(tiles)
+    if portrait:
+        tiles = [_shade(tiles[0], 0.52, 1.0), _shade(tiles[1], 0.0, 0.46, from_top=True)]
+    else:
+        tiles = [_shade(t, 0.50, 0.96) for t in tiles]
+
+    canvas = Image.new("RGBA", (width, height), (0, 0, 0, 255))
+    for index, tile in enumerate(tiles):
+        canvas.paste(tile.convert("RGBA"), (0, index * th) if portrait else (index * tw, 0))
+    draw = ImageDraw.Draw(canvas)
+    line = 10
+    if portrait:
+        draw.rectangle([0, th - line // 2, width, th + line // 2], fill=BRAND_GOLD)
+    else:
+        draw.rectangle([tw - line // 2, 0, tw + line // 2, height], fill=BRAND_GOLD)
+
+    stroke = (6, 12, 10, 255)
+    name_size = 64 if not portrait else 66
+    for index, side in enumerate(sides):
+        name = str(side.get("name") or "").strip()
+        number = str(side.get("number") or "").strip()
+        note = str(side.get("note") or "").strip()
+        room = (tw if not portrait else width) - 120
+        num_size = fit_number(number, 170 if not portrait else 160, room, font_path) if number else 0
+        name_font = _font(font_path, name_size)
+        while name_font.size > 34 and draw.textlength(name, font=name_font) > room:
+            name_font = _font(font_path, name_font.size - 4)
+        note_font = _font(font_path, 36)
+        note = _fit_cell(draw, note, note_font, room) if note else ""
+        # 字のかたまりの高さ（名前・数字・注記）
+        block = name_size + 18 + (int(num_size * 0.98) if number else 0) + (54 if note else 0)
+        cx = (tw / 2 + index * tw) if not portrait else width / 2
+        if portrait:
+            # 題の札が真ん中の線に乗るので、その上下を空ける
+            gap = (TITLE_BAND // 2 + 26) if spec.get("title") else 44
+            top = (th - gap - block) if index == 0 else (th + gap)
+        else:
+            top = height - 70 - block
+        y = top
+        nw = draw.textlength(name, font=name_font)
+        draw.text((cx - nw / 2, y), name, font=name_font, fill=TEXT, stroke_width=5, stroke_fill=stroke)
+        y += name_size + 18
+        if number:
+            w = number_width(number, num_size, font_path)
+            put_number(draw, cx - w / 2, y + num_size * 0.86, number, num_size, BRAND_GOLD, font_path,
+                       stroke=6, stroke_fill=stroke)
+            y += int(num_size * 0.98)
+        if note:
+            tw_note = draw.textlength(note, font=note_font)
+            draw.text((cx - tw_note / 2, y + 8), note, font=note_font, fill=(225, 230, 236, 255),
+                      stroke_width=3, stroke_fill=stroke)
+
+    title = str(spec.get("title") or "").strip()
+    if title:
+        title_font = _font(font_path, 46)
+        tw_title = draw.textlength(title, font=title_font)
+        while title_font.size > 28 and tw_title + 80 > width - 80:
+            title_font = _font(font_path, title_font.size - 2)
+            tw_title = draw.textlength(title, font=title_font)
+        # 横は上の真ん中（2人の顔のあいだ）。**縦は真ん中の線の上**（上端に置くと上の人の顔にかかった。
+        # 10/7 の見本でケインの額に乗った。ショートの上端は画面の操作ボタンにも隠れる）
+        band = title_font.size + 40
+        top = 44 if not portrait else th - band // 2
+        box = [width / 2 - tw_title / 2 - 40, top, width / 2 + tw_title / 2 + 40, top + band]
+        draw.rounded_rectangle(box, radius=16, fill=BRAND_GREEN, outline=BRAND_GOLD, width=3)
+        draw.text((width / 2, (box[1] + box[3]) / 2), title, font=title_font, fill=BRAND_GOLD, anchor="mm")
+    credit = str(spec.get("credit") or "").strip()
+    if credit:
+        credit_font = _font(font_path, 22)
+        cw = draw.textlength(credit, font=credit_font)
+        # 右下に小さく（写真の表示は概要欄にも出す。ショートでは下の操作の帯に隠れてよい）
+        y = height - 34
+        draw.text((width - 24 - cw, y), credit, font=credit_font, fill=(200, 206, 214, 255),
+                  stroke_width=2, stroke_fill=stroke)
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(out_path)
+    return out_path
 
 
 def _number(value) -> str:

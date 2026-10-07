@@ -13,6 +13,7 @@ from pathlib import Path
 
 from .config import _resolve
 from .script_model import Script
+from .cards import FULL_SCREEN_TYPES
 from .render import _is_board
 from .subtitles import chapters
 
@@ -277,6 +278,12 @@ def _telop_coverage(script_json: Path) -> Finding:
             # 登録選手一覧の上に読み上げ文を重ねると、タイルが読めなくなる。
             # ここで数えないと、板の回だけ「声だけで流れている」と出てしまう
             if line.get("no_telop") and _is_board(str(line.get("image") or "")):
+                shown += len(line.get("text") or "")
+                previous = None
+                continue
+            # **左右の比べ（versus）も同じ**（2026-10-07）。画面いっぱいの絵で、名前と数字が画面の字。
+            # 見出しは重ねない（render.frame）ので、ここで数えないとこの行だけ声だけに見える
+            if str(line.get("card_type") or "") in FULL_SCREEN_TYPES:
                 shown += len(line.get("text") or "")
                 previous = None
                 continue

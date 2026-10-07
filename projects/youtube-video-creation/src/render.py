@@ -229,6 +229,12 @@ class Renderer:
         # **冒頭の節はサムネの写真を敷く**（2026-09-08）。ぼかした夜景に黒い板では、
         # 最初の3秒が止まって見えた。参考は0秒目からその人の実写が出ている
         stage = self._photo_stage(stage_path)
+        # **画面いっぱいのカード（versus）は下地そのものにする**（2026-10-07）。
+        # 板（一覧板・数字の図）と同じで、それ自体が読ませる絵。上に節の名前・見出し・
+        # ほかのカードを重ねない。ショート（縦）は上下に割った絵を描く
+        full = self._full_card(card)
+        if full is not None:
+            stage, stage_path = full, None
         # **板を出している間は、その上に何も重ねない**（2026-09-17 ユーザー指示
         # 「松木の顔ではなくて、サムネ画面をだしておいて」）。板は文字でできた絵なので、
         # カードや節の名前を乗せると板の文字が読めなくなる。
@@ -238,7 +244,7 @@ class Renderer:
         # 板（一覧板・数字の図）はそれ自体が読ませる絵なので、上に何も重ねない。
         # ふつうの写真は重ねてよい
         board = bool(stage is not None and stage_path
-                     and str(stage_path) in self._board_stages)
+                     and str(stage_path) in self._board_stages) or full is not None
         if stage is not None and over_video and self.moving_photo(stage_path):
             # 写真は背景側の動画がゆっくり寄っている。絵の側は透明にして、その上に文字と表だけ描く
             canvas = self._transparent()
@@ -285,7 +291,12 @@ class Renderer:
             # **反応の最中はテロップを出さない**（2026-09-14 指示
             # 「ネット民の声の時は複数の声が並ぶ感じで、その時にテロップは不要」）。
             # 声は白い箱に並ぶので、同じ一文を下でもう一度読ませる意味がない
-            if stack:
+            if full is not None:
+                # **左右の比べの上に見出しを重ねない**（2026-10-07）。名前と数字が画面の字で、
+                # 下の帯を出すと名前・数字に重なる（板の行の no_telop と同じ考え。review の
+                # 「画面に出る字」は、この行を画面に出たと数える）
+                pass
+            elif stack:
                 self._draw_stack(canvas, stack)
             else:
                 self._draw_headline(canvas, text, telop_t, source,
@@ -673,6 +684,25 @@ class Renderer:
         )
         framed.alpha_composite(picture, (8, 8))
         return framed
+
+    def _full_card(self, name: str | None) -> Image.Image | None:
+        """その名前のカードが画面いっぱいの絵（versus）なら、画面の大きさで描いた絵を返す。"""
+        spec = self.script_cards.get(name or "")
+        if not cards.is_full_screen(spec):
+            return None
+        size = (self.layout.width, self.layout.height)
+        target = self.card_dir / f"full_{cards.card_key(spec, size[0] * 10000 + size[1])}.png"
+        if str(target) in self._stages:
+            return self._stages[str(target)]
+        if not target.exists():
+            cards.render_versus(spec, size, str(self.config.video.font_path()), target,
+                                str(self.config.video.latin_font_path()))
+        stage = Image.open(target).convert("RGBA")
+        self._stages[str(target)] = stage
+        return stage
+
+    def is_full_card(self, name: str | None) -> bool:
+        return cards.is_full_screen(self.script_cards.get(name or ""))
 
     def card_rows(self, name: str | None) -> int:
         spec = self.script_cards.get(name or "")
@@ -1348,6 +1378,11 @@ class Renderer:
                 stage_now = line.image or (self.opening_photo if scene.title == self.opening_scene else None)
                 image_changed = bool(previous is not None and stage_now and stage_now != prev_stage)
                 prev_stage = stage_now
+                if not self.layout.with_characters and previous is not None and (
+                        self.is_full_card(current[2]) or self.is_full_card(before[1])) \
+                        and current[2] != before[1]:
+                    # **左右の比べ（versus）に入る・出るところも溶かす**（2026-10-07）。画面が丸ごと替わる
+                    image_changed = True
                 if motion.enabled:
                     if image_changed and IMAGE_FADE > 0:
                         # **写真が替わる行は前の絵から溶かす**（品質100回の11）。ぶつ切りだと編集していないように見える
@@ -1803,6 +1838,19 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
             # **ぶら下げた直後の約物も前の行へ**（2026-10-05、鈴木彩艶の回）。
             # 「…特長」」をぶら下げたあと、続く「。」が次の行の頭に来ていた
             # （「」。決勝の前日…」「なるけど、／」」）
+            prev = lines[-1]
+            if draw.textlength(prev, font=font) > max_width:
+                # **2文字目はぶら下げず、追い出す**（2026-10-07、「ロジャー」の
+                # 「ャ」をぶら下げたあと「ー」も足して、右端の外へ切れていた）。
+                # 前の行の最後の「頭に来てよい文字」から後ろを、次の行へ送る
+                cut = len(prev)
+                while cut > 1 and prev[cut - 1] in forbidden:
+                    cut -= 1
+                cut -= 1
+                if cut > 0:
+                    lines[-1] = prev[:cut]
+                    current = prev[cut:] + char
+                    continue
             lines[-1] += char
         else:
             current += char

@@ -380,8 +380,8 @@ def strength(scene: Scene, cards: dict) -> int:
         kind = str((cards.get(name) or {}).get("type", "")).lower() if name else ""
         if kind == "quote":
             score += 3          # 原文の引用が画面に出る
-        elif kind in ("bars", "table"):
-            score += 2          # 数字が語る
+        elif kind in ("bars", "table", "stats", "calc", "verdict", "versus"):
+            score += 2          # 数字が語る（2026-10-07 に足した数字の板・式・判定表・左右の比べも）
         elif kind:
             score += 1
         if getattr(line, "image", None):

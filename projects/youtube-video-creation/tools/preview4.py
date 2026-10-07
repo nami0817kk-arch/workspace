@@ -300,6 +300,11 @@ class PreviewRenderer(Renderer):
         """
         if isinstance(item, _Lazy) and item.kind == "frame":
             line, scene = item.args[0], item.args[1]
+            panel = item.kwargs.get("panel")
+            if self.is_full_card(panel[2] if panel is not None else line.card):
+                # **左右の比べ（versus）は画面いっぱいの絵**（2026-10-07）。写真の下地と比べると全面が
+                # 「上に描いたもの」になり、顔に板が掛かったと誤って出る。板と同じくコマで顔を探す
+                return None, False
             opening = scene.title == self.opening_scene and self.opening_photo
             stage_path = line.image or (self.opening_photo if opening else None)
             stage = self._photo_stage(stage_path)

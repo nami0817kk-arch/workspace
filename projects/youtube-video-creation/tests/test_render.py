@@ -1005,3 +1005,21 @@ def test_ぶら下げた直後の約物も次の行の頭に置かない():
     for width in range(300, 900, 7):
         for line in render.wrap_text(draw, text, font, width)[1:]:
             assert line[0] not in render.LINE_START_FORBIDDEN, (width, line)
+
+
+def test_ぶら下げは1文字まで_2文字目は追い出す():
+    """2026-10-07。「ロジャー」の「ャ」をぶら下げたあと「ー」も足して、右端の外へ切れていた。"""
+    from PIL import Image, ImageDraw
+    from src import render
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.truetype(str(load_config().video.font_path()), 40)
+    one = draw.textlength("あ", font=font)
+    for text in ("いちばん応えているのはロジャーズ。7試合すべてに出て、3点4アシストです。",
+                 "鈴木彩艶「彼が相手チームの特長」。決勝の前日、守護神が名指しで警戒したエース"):
+        for width in range(300, 900, 7):
+            lines = render.wrap_text(draw, text, font, width)
+            assert "".join(lines) == text
+            for line in lines:
+                assert draw.textlength(line, font=font) <= width + one + 1, (width, line)
+            for line in lines[1:]:
+                assert line[0] not in render.LINE_START_FORBIDDEN, (width, line)

@@ -782,11 +782,19 @@ def _check_card(section: Section) -> list[str]:
     `render` で「table カードには columns と rows が必要です」で落ちた。
     落ちる条件はカードの側が知っているので、ここで先に同じことを見る。
     """
-    card = section.card or {}
+    problems: list[str] = []
+    # **行ごとのカードも見る**（2026-10-07）。判定表（verdict）は話している行を光らせるために
+    # 行ごとにカードを持たせるので、節のカードだけ見ていると壊れた行が書き出しまで通る
+    cards = [section.card] + list(section.line_cards or [])
+    for card in cards:
+        if isinstance(card, dict) and card:
+            problems += _check_one_card(section, card)
+    return problems
+
+
+def _check_one_card(section: Section, card: dict) -> list[str]:
     kind = str(card.get("type", "")).lower()
     problems: list[str] = []
-    if not card:
-        return problems
     # **type の名前そのものを見ていなかった**（2026-09-18 に踏んだ）。
     # `type: bullets` と書いた取材メモが draft を通り、**音声を合成し終えた
     # あとの render** で「カードの type は … のいずれか」で落ちた。
@@ -822,6 +830,88 @@ def _check_card(section: Section) -> list[str]:
                                     f"{{label: …, value: …}} で書いてください（{str(item)[:30]}）")
                     break
         problems += _check_bar_units(section, card)
+    elif kind in NEW_CARD_KEYS:
+        problems += _check_number_card(section, card, kind)
+    return problems
+
+
+# 2026-10-07 に足した4つの型で書いてよい鍵。**知らない鍵は止める**（行の鍵と同じ考え。
+# `item:` と `items:` の書き違いを、書き出しの途中ではなく draft で見つける）
+NEW_CARD_KEYS = {
+    "stats": frozenset({"type", "title", "items", "focus", "note", "source", "color"}),
+    "verdict": frozenset({"type", "title", "columns", "rows", "highlight_row", "note", "source", "color"}),
+    "calc": frozenset({"type", "title", "terms", "ops", "note", "source", "color"}),
+    "versus": frozenset({"type", "title", "left", "right", "credit"}),
+}
+
+
+def _check_number_card(section: Section, card: dict, kind: str) -> list[str]:
+    """stats・verdict・calc・versus の形を見る（2026-10-07）。落ちる条件は cards の側と同じ。"""
+    from . import cards as cards_mod
+
+    where = f"{section.id}: {kind} カード"
+    unknown = sorted(str(k) for k in card if k not in NEW_CARD_KEYS[kind])
+    if unknown:
+        return [f"{where}に知らない鍵があります（{unknown[0]}）。"
+                f"使えるのは {'・'.join(sorted(NEW_CARD_KEYS[kind]))}"]
+    problems: list[str] = []
+    if kind == "stats":
+        items = cards_mod.stat_items(card)
+        if not items or not all(i["number"] for i in items):
+            problems.append(f"{where}には items（[数字, 単位, 注記] を1〜3つ）が必要です")
+        elif len(items) > 3:
+            problems.append(f"{where}の items は3つまでです（{len(items)}つ）。強い一点に絞ってください")
+        focus = card.get("focus")
+        if isinstance(focus, int) and not isinstance(focus, bool) and items and not 0 <= focus < len(items):
+            problems.append(f"{where}の focus（{focus}）は 0〜{len(items) - 1} で書いてください")
+    elif kind == "verdict":
+        rows = card.get("rows") or []
+        if not rows or not all(isinstance(r, (list, tuple)) for r in rows):
+            problems.append(f"{where}には rows（[項目, 判定, 一言] の並び）が必要です")
+            return problems
+        lengths = {len(r) for r in rows}
+        if len(lengths) != 1 or next(iter(lengths)) not in (2, 3):
+            problems.append(f"{where}の各行は [項目, 判定] か [項目, 判定, 一言] でそろえてください")
+            return problems
+        bad = [str(r[1]) for r in rows if not cards_mod.verdict_mark(r[1])]
+        if bad:
+            problems.append(f"{where}の判定『{bad[0]}』は使えません。"
+                            f"{'・'.join(cards_mod.VERDICT_MARKS)} のどれかにしてください")
+        columns = card.get("columns")
+        if columns and len(columns) != len(rows[0]):
+            problems.append(f"{where}の columns は行と同じ数（{len(rows[0])}）にしてください")
+        hl = card.get("highlight_row")
+        if hl is not None and not (isinstance(hl, int) and 0 <= hl < len(rows)):
+            problems.append(f"{where}の highlight_row（{hl}）は 0〜{len(rows) - 1} で書いてください")
+    elif kind == "calc":
+        terms = cards_mod.calc_terms(card)
+        if len(terms) < 2 or not all(t["value"] for t in terms):
+            problems.append(f"{where}には terms（[値, 注記] を2つ以上）が必要です")
+            return problems
+        ops = cards_mod.calc_ops(card, len(terms))
+        if len(ops) != len(terms) - 1:
+            problems.append(f"{where}の ops は項より1つ少なく（{len(terms) - 1}個）書いてください"
+                            f"（いまは{len(ops)}個）")
+        odd = [op for op in ops if op not in cards_mod.CALC_OPS]
+        if odd:
+            problems.append(f"{where}の記号『{odd[0]}』は使えません（{' '.join(cards_mod.CALC_OPS)}）")
+    elif kind == "versus":
+        for side_name in ("left", "right"):
+            side = card.get(side_name)
+            if not isinstance(side, dict):
+                problems.append(f"{where}には {side_name}: {{image, name, number, note}} が必要です")
+                continue
+            extra = sorted(str(k) for k in side if k not in cards_mod.VERSUS_SIDE_KEYS)
+            if extra:
+                problems.append(f"{where}の {side_name} に知らない鍵があります（{extra[0]}）。"
+                                f"使えるのは {'・'.join(sorted(cards_mod.VERSUS_SIDE_KEYS))}")
+            if not str(side.get("name") or "").strip():
+                problems.append(f"{where}の {side_name} に name がありません")
+            image = str(side.get("image") or "").strip()
+            if not image:
+                problems.append(f"{where}の {side_name} に image がありません")
+            elif not _resolve(image).exists():
+                problems.append(f"{where}の {side_name} の写真がありません: {image}")
     return problems
 
 
@@ -1390,7 +1480,8 @@ def _advise_card_telop_overlap(notes: Notes) -> list[str]:
     hints: list[str] = []
     for section in notes.sections:
         card = section.card or {}
-        if str(card.get("type", "")).lower() != "table":
+        # 判定表（verdict、2026-10-07）も表と同じく上から伸びる
+        if str(card.get("type", "")).lower() not in ("table", "verdict"):
             continue
         rows = len(card.get("rows") or [])
         if rows < TABLE_ROWS_WITH_LONG_LINE:
@@ -1737,9 +1828,16 @@ def _view_comparison(text: str) -> bool:
 def _has_count_table(section: Section) -> bool:
     """見立ての節に表があるか。節の card（表・棒）か、行ごとの card。引用カード（見立ての一言）は数えない。"""
     card = section.card if isinstance(section.card, dict) else {}
-    if str(card.get("type", "")).lower() in ("table", "bars"):
+    # 判定表・数字の板・計算の式（2026-10-07）も自分で数えた表に数える
+    if str(card.get("type", "")).lower() in ("table", "bars", "verdict", "stats", "calc"):
         return True
     return any(isinstance(c, dict) and c for c in section.line_cards)
+
+
+def _has_calc(section: Section) -> bool:
+    """見立ての節に計算の式（calc）があるか。**式そのものが「この回だけの数字」の比べ**（2026-10-07）。"""
+    cards = [section.card] + list(section.line_cards or [])
+    return any(isinstance(c, dict) and str(c.get("type", "")).lower() == "calc" for c in cards)
 
 
 def _advise_series_numbers(notes: Notes) -> list[str]:
@@ -1760,7 +1858,7 @@ def _advise_series_numbers(notes: Notes) -> list[str]:
         # 1行で言い切るか、続く2行で比べる（「ブラガでは50%。」「名門2つでは68.5%に上がります」）。
         # 10/6 に最近の25本へ当てたら、時期ごとの勝率を1行ずつ並べたジェズスの回が1行の判定では鳴った
         line = any(_view_comparison(t) for t in texts) or any(
-            _view_comparison(a + " " + b) for a, b in zip(texts, texts[1:]))
+            _view_comparison(a + " " + b) for a, b in zip(texts, texts[1:])) or _has_calc(section)
         if table and line:
             continue
         missing = "・".join(x for x, ok in (("自分で数えた表", table), ("数字2つを比べた1行", line)) if not ok)
