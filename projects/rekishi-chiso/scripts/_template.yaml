@@ -25,6 +25,15 @@ thumbnail:                                   # chiso/thumb.py。構図は題材�
   #   number 数字が主役。number: 約168cm（数字は大きく、約・cm は半分）。絵は暗く後ろに
   #   map    航路・遠征・国の広がり。map: {route: [コルシカ島, パリ, エルバ島]}（地名は places.yaml）。image・crop は要らない
   # cast: false                                # 右下の2人（既定は classic と number だけ出す）
+  # 作り込み（layout を書いたときだけ。既定で構図ごとの光・縁取り・質感が入る）。足す・外す：
+  # badge: 1582年                             # 古文書の切れ端の札（{text, at: [x, y], angle}）
+  # arrow: {from: [300, 600], to: [800, 300]}   # 赤い矢印（サムネイルの座標。bend で曲げる）
+  # circle: [60, 70, 360, 400]                 # 手書き風の赤い丸囲み
+  # light: right                               # 斜めの光 left／right／top／none
+  # tint: right                                # 片側を朱に（versus の既定）。none で外す
+  # rays: false                                # 放射の光（versus・number の既定）
+  # cutout: false                              # 人物の切り抜き（face・versus の既定。rembg が無ければ切り抜かない）。paintings/x.png で手で抜いた絵
+  # fx: false                                  # 作り込みを全部外す
   image: paintings/xxx.jpg
   crop: [0, 0, 1600, 900]                    # 絵のどこを使うか（左, 上, 右, 下）
   focus: [150, 60, 1000, 760]                # 明るく残す範囲

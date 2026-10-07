@@ -471,14 +471,14 @@ def cmd_thumb(args) -> int:
     out.mkdir(parents=True, exist_ok=True)
     stem = sc.path.stem
     if args.variants:                     # 3案（YouTube Studio の「テストと比較」用）
-        imgs = thumb.make_variants(sc, config, assets_dir(config))
+        imgs = thumb.make_variants(sc, config, assets_dir(config), work_dir(sc))
         for k, img in imgs.items():
             img.save(out / f"{stem}_thumbnail_{k}.png")
             print(out / f"{stem}_thumbnail_{k}.png")
         thumb.variants_preview(imgs, config["fonts"]["gothic"]).save(out / f"{stem}_thumbnail_variants_preview.png")
         print(out / f"{stem}_thumbnail_variants_preview.png")
         return 0
-    img = thumb.make(sc, config, assets_dir(config))
+    img = thumb.make(sc, config, assets_dir(config), work_dir(sc))
     target = out / f"{stem}_thumbnail.png"
     img.save(target)
     thumb.preview(img).save(out / f"{stem}_thumbnail_preview.png")
@@ -635,7 +635,7 @@ def cmd_upload(args) -> int:
     thumb_p = out_dir() / f"{path.stem}_thumbnail.png"
     if not thumb_p.exists():
         from . import thumb
-        thumb.make(sc, config, assets_dir(config)).save(thumb_p)
+        thumb.make(sc, config, assets_dir(config), work_dir(sc)).save(thumb_p)
     srt = out_dir() / f"{path.stem}.srt"
     tags = list(dict.fromkeys(TAGS + list(sc.tags) + [x for x in (sc.series, sc.thumbnail.get("name", "")) if x]))
     svc = up.service()

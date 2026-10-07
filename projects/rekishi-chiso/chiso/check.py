@@ -33,6 +33,9 @@ def missing_assets(script, assets: Path) -> list[str]:
     if thumb.get("layout"):                                    # 構図を選んだサムネイルの絵（10-07。classic は今までどおり見ない）
         used.update(str(v) for v in [thumb.get("image")] + [(thumb.get(k) or {}).get("image") if isinstance(thumb.get(k), dict) else None
                                                            for k in ("left", "right")] if v)
+        c = thumb.get("cutout")                                # 手で抜いた人物の絵（透明 PNG）
+        if isinstance(c, str) or (isinstance(c, dict) and c.get("image")):
+            used.add(str(c if isinstance(c, str) else c["image"]))
     return sorted(p for p in used if not (assets / p).exists())
 
 
