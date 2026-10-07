@@ -7,6 +7,7 @@
     python -m chiso.cli build   scripts/x.yaml          # 本番の動画。承認した台本の中身と一致しないと動かない
     python -m chiso.cli shorts  scripts/x.yaml [--draft]  # short: を付けた行からショートを全部作る
     python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典。--keywords で扱う語）
+    python -m chiso.cli assign  scripts/x.yaml --assets research/x_assets.md   # 絵の割り当ての下書き（out/x_assign.md）
     python -m chiso.cli keywords "織田信長" [--all]      # YouTube の検索候補でよく続く語・題名とタグの候補
     python -m chiso.cli kana    scripts/x.yaml          # 全行の読みをカタカナで書き出す（読み違いの点検）
     python -m chiso.cli thumb   scripts/x.yaml [--variants]   # サムネイル（--variants で3案 a・b・c と一覧の大きさの確認用）
@@ -422,6 +423,23 @@ def cmd_keywords(args) -> int:
     return 0
 
 
+def cmd_assign(args) -> int:
+    """絵の一覧（research の *_assets.md）と台本の各行を照らし、どの行でどの絵に替えるかの下書きを out/x_assign.md に。"""
+    from . import assign
+    sc = script_mod.load(args.script)
+    assets = assign.parse_assets(Path(args.assets).read_text(encoding="utf-8"))
+    if not assets:
+        print(f"絵の一覧の表が読めません（「ファイル名」の列がある表）: {args.assets}")
+        return 1
+    picks = assign.draft(sc, assets)
+    text = assign.report(sc, assets, picks)
+    target = out_dir() / f"{sc.path.stem}_assign.md"
+    target.write_text(text, encoding="utf-8")
+    print(text)
+    print(f"控え：{target.as_posix()}")
+    return 0
+
+
 def cmd_kana(args) -> int:
     """全行の読みをカタカナで書き出す。読み違いを音を出す前に見つけるため。"""
     from .voice import apply_readings, split_emphasis
@@ -691,6 +709,10 @@ def main(argv=None) -> int:
     s.add_argument("--no-voice", action="store_true", help="章の時刻を出さない（音声を作らない）")
     s.add_argument("--keywords", action="store_true", help="最後に「この動画で扱うこと：」（検索候補の語のうち台本に出てくるもの）")
     s.set_defaults(fn=cmd_describe)
+    s = sub.add_parser("assign")
+    s.add_argument("script")
+    s.add_argument("--assets", required=True, help="絵の一覧（research/x_assets.md）")
+    s.set_defaults(fn=cmd_assign)
     s = sub.add_parser("keywords")
     s.add_argument("name", help="人物・出来事の名前（例：織田信長）")
     s.add_argument("--all", action="store_true", help="頭文字をあ〜ん全部（46回）。既定は各行の頭の10回")
