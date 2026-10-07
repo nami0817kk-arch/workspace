@@ -45,17 +45,8 @@ def _bg(spec: dict, dark: float = 0.5, blur: int = 2) -> Image.Image:
 
 
 def _wrap(d, text: str, font, width: float) -> list[str]:
-    lines, cur = [], ""
-    for ch in text:
-        if ch == "\n":
-            lines.append(cur); cur = ""; continue
-        cur += ch
-        if d.textlength(cur, font=font) > width:
-            lines.append(cur); cur = ""
-    if cur:
-        lines.append(cur)
-    return lines
-
+    """折り返しは `typo.wrap` に任せる（日本語の組版の決まりを守る）。"""
+    return typo.wrap(d, text, font, width)
 
 def _head(im: Image.Image, title: str, note: str = "") -> ImageDraw.ImageDraw:
     """左上の見出し。金の縦線＋白抜き。どの様式でも共通。"""

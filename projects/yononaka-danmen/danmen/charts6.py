@@ -37,17 +37,8 @@ def _text_w(text: str, size: int) -> float:
 
 
 def _wrap(d, text: str, font, width: float) -> list[str]:
-    lines, cur = [], ""
-    for ch in text:
-        if ch == "\n":
-            lines.append(cur); cur = ""; continue
-        cur += ch
-        if d.textlength(cur, font=font) > width:
-            lines.append(cur); cur = ""
-    if cur:
-        lines.append(cur)
-    return lines
-
+    """折り返しは `typo.wrap` に任せる（日本語の組版の決まりを守る）。"""
+    return typo.wrap(d, text, font, width)
 
 def icon_stats(fig: dict) -> Image.Image:
     """アイコン＋数字を横に並べる。節の頭で「この回の数字」を出すのに使う。"""

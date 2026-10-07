@@ -64,3 +64,92 @@ def rows_fit(n: int, row: int = ROW, band: int = BAND_H, pad: int = 60) -> bool:
 def max_rows(row: int = ROW, band: int = BAND_H, pad: int = 60) -> int:
     """板に入る行の数。"""
     return max((PANEL_H_MAX - band - pad * 2) // row, 1)
+
+
+# ---- 日本語の折り返し ----------------------------------------------------
+
+# 行頭に置いてはいけない字（前の行にぶら下げる）
+NG_HEAD = "、。，．）」』】〉》！？‼⁇・ー々ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶ…"
+# 行末に置いてはいけない字（次の行へ送る）
+NG_TAIL = "（「『【〈《"
+
+
+def wrap(d, text: str, font, width: float, max_lines: int | None = None) -> list[str]:
+    """日本語の決まりを守って折り返す。
+
+    文字数だけで切ると、**行頭に「、」が来る**。実際に試作の字幕で起きた
+    （2026-10-07）。読む速さが落ちるので、次の5つを守る。
+
+      ・行頭に「、」「。」「）」などを置かない（前の行にぶら下げる）
+      ・折り返す位置から**2文字以内に読点があれば、そこまで入れる**
+        （「…始まりました／が、半世紀…」のような切れ方を防ぐ）
+      ・行末に「（」「「」を置かない（次の行へ送る）
+      ・**数字の途中で切らない**（「17」と「5円」に分かれない）
+      ・切れるなら**読点・句点のあと**で切る（2行目が1語だけになるのを防ぐ）
+
+    ぶら下げたぶん少しだけ幅を超えるが、中央寄せの字幕では気づかれない。
+    `d` は ImageDraw、`font` は測るためのフォント。
+    """
+    out: list[str] = []
+    cur = ""
+    i = 0
+    n = len(text)
+    while i < n:
+        ch = text[i]
+        if ch == chr(10):
+            out.append(cur)
+            cur = ""
+            i += 1
+            continue
+        if not cur or d.textlength(cur + ch, font=font) <= width:
+            cur += ch
+            i += 1
+            continue
+        # --- ここで折り返す ---
+        # ① この先2文字以内に読点があれば、そこまで前の行に入れてしまう
+        look = text[i:i + 3]
+        k = -1
+        for mark in ("、", "。"):
+            j = look.find(mark)
+            if j >= 0 and (k < 0 or j < k):
+                k = j
+        if 0 <= k <= 2:
+            out.append(cur + text[i:i + k + 1])
+            cur = ""
+            i += k + 1
+            continue
+        # ② 行頭に来てはいけない字は、前の行にぶら下げる
+        if ch in NG_HEAD:
+            out.append(cur + ch)
+            cur = ""
+            i += 1
+            continue
+        # ③ 前の行に読点があれば、そこで切り直す（2行目が1語だけになるのを防ぐ）
+        cut = max(cur.rfind("、"), cur.rfind("。"))
+        if cut >= len(cur) * 0.45:
+            out.append(cur[:cut + 1])
+            cur = cur[cut + 1:] + ch
+            i += 1
+            continue
+        # ④ 数字の途中なら、その数字の先頭まで戻す
+        if ch.isdigit() and cur[-1].isdigit():
+            m = len(cur)
+            while m > 0 and (cur[m - 1].isdigit() or cur[m - 1] in ".,"):
+                m -= 1
+            if m > len(cur) * 0.3:            # 戻しすぎない
+                out.append(cur[:m])
+                cur = cur[m:] + ch
+                i += 1
+                continue
+        # ⑤ 行末に来てはいけない字は、次の行へ送る
+        if cur[-1] in NG_TAIL:
+            out.append(cur[:-1])
+            cur = cur[-1] + ch
+            i += 1
+            continue
+        out.append(cur)
+        cur = ch
+        i += 1
+    if cur:
+        out.append(cur)
+    return out[:max_lines] if max_lines else out
