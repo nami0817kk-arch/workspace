@@ -140,6 +140,9 @@ def episode(script) -> tuple[list[str], list[str]]:
     warns += reaction_rules(script)
     warns += opening_rules(script)
     warns += short_opening_rules(script)
+    warns += chapter_titles(script)
+    from . import style                                    # 文体（10-08）：AIらしく聞こえる語尾・言い回し・書き言葉
+    warns += style.notes(script, name_words(script))
     if not any("《" in l.text for l in script.lines):
         warns.append("《》の強調が1つもありません")
     if not script.shorts:
@@ -375,3 +378,40 @@ def layout_streak(posted_log: Path, scripts_dir: Path, stem: str, layout: str) -
         return [f"サムネイルの構図「{layout}」が{len(run)}回続いています（{'→'.join(reversed(run))}）。"
                 "題材に合う別の構図（face・scene・versus・number・map・classic）を thumbnail.layout で選ぶ"]
     return []
+
+
+# --- 概要欄の章の題（10-08）-------------------------------------------------------
+# 章（describe の「■ 目次」）は節の題から作る。伸びている長尺18本の調べ（research/benchmark_long.md）で、
+# 章の題に年・人名・場面が入っていると、途中から探して見る人が拾いやすかった。知らせるだけで止めない。
+SCENE_WORDS = ("事件", "の変", "の乱", "戦い", "合戦", "討ち入り", "クーデター", "刃傷", "城", "島", "港",
+               "使節", "条約", "戴冠", "遠征", "行列", "裁判", "処刑", "暗殺", "即位", "葬儀", "結婚", "花嫁")
+
+
+def place_names() -> list[str]:
+    """places.yaml の地名。"""
+    import yaml
+    from .figures import GAZETTEER
+    if not GAZETTEER.exists():
+        return []
+    return [str(k) for k in (yaml.safe_load(GAZETTEER.read_text(encoding="utf-8")) or {})]
+
+
+def chapter_marker(title: str, names: list[str], places: list[str]) -> bool:
+    """章の題に、年・数字・人名・地名・場面（「」の言葉・出来事の語）のどれかが入っているか。"""
+    head = re.sub(r"^(地表|見立て|まとめ)[：:]", "", title)
+    return bool(has_number(head) or "年" in head or has_name(head, names) or any(p in head for p in places)
+                or re.search(r"「[^」]+」", head) or any(w in head for w in SCENE_WORDS)
+                or re.search(r"[一-鿿]{1,4}(?:寺|城|宮|園|藩|湾|峠)", head))
+
+
+def chapter_titles(script, places: list[str] | None = None) -> list[str]:
+    """年・人名・場面のどれも入っていない節の題（＝概要欄の章の題）。
+    名前は people: とその言い換え・サムネの名前、地名は places.yaml と台本に出た地名、
+    場面は「」の言葉・出来事の語・用語の札の言葉（楽市楽座・出島）・寺や城の名。"""
+    names = name_words(script) + [l.term[0] for l in script.lines if getattr(l, "term", None)]
+    places = place_names() if places is None else places
+    places = list(dict.fromkeys(places + [l.place[0] for l in script.lines if getattr(l, "place", None)]))
+    bare = [f"{s.index + 1}節「{s.title}」" for s in script.sections if not chapter_marker(s.title, names, places)]
+    if not bare:
+        return []
+    return [f"章の題に年・人名・場面がありません：{'、'.join(bare)}（概要欄の目次になる。「1582年 本能寺の変」「信長と堺の2万貫」のように）"]

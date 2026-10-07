@@ -34,6 +34,82 @@ def _wrap(text: str, font, width: int) -> list[str]:
 
 
 END_SECONDS = 3.5   # 最後の「続きは本編で」（10-04「視聴者誘導用のショート」。声は入れない）
+
+# --- 頭の大きな問いと、ループしやすい終わり（10-08 ユーザー指示）-------------------------------
+# ショートは最初の2秒で何の話か分からないと流され、最後まで見た人は頭にそのまま戻る（ループ）。
+# hook_intro：頭の約2秒、画面の上半分に short の hook（無ければ title）を特大で出し、いつもの題の位置へ縮める。
+# loop：「続きは本編で」を短くし、最後に頭と同じ画（大きな問い）を1秒置く。最後のコマ＝最初のコマなので、
+#       ループした瞬間に問いがそのまま続いて見える。音は足さない（最後は無音のまま）。
+# どちらも config.yaml の short.hook_intro / short.loop で切れる（書かなければ入）。
+HOOK_HOLD = 1.8            # 特大のまま見せる秒数
+HOOK_SHRINK = 0.4          # いつもの題の位置へ縮む秒数（合わせて約2秒）
+HOOK_SIZES = (132, 118, 104, 92)   # 長い問いは字を小さくして3行に収める
+HOOK_MAX_ROWS = 3
+LOOP_END_SECONDS = 2.0     # loop のときの「続きは本編で」
+LOOP_TAIL = 1.0            # loop のときに最後に置く、頭と同じ画
+TITLE_SIZE, TITLE_TOP, TITLE_STEP = 76, 150, 96   # いつもの題（base と同じ値）
+
+
+def options(config: dict) -> tuple[bool, bool]:
+    """(hook_intro, loop)。config.yaml の short: に書けば切れる。"""
+    sz = config.get("short", {}) or {}
+    return bool(sz.get("hook_intro", True)), bool(sz.get("loop", True))
+
+
+def hook_text(meta: dict) -> str:
+    """頭に大きく出す問い。台本の shorts.sN.hook、無ければ title（「／」で改行）。"""
+    return str(meta.get("hook") or meta.get("title") or "").strip()
+
+
+def hook_size(text: str, font_of, width: int) -> int:
+    """問いの字の大きさ。「／」の区切りがそれぞれ1行に収まる最大（「た」だけの行を作らない）。
+    どれでも収まらなければ、HOOK_MAX_ROWS 行に収まる最大。"""
+    parts = len(text.split("／"))
+    for size in HOOK_SIZES:
+        if len(_wrap(text, font_of(size), width)) == parts:
+            return size
+    for size in HOOK_SIZES:
+        if len(_wrap(text, font_of(size), width)) <= HOOK_MAX_ROWS:
+            return size
+    return HOOK_SIZES[-1]
+
+
+def end_seconds(loop: bool) -> float:
+    """最後の「続きは本編で」と、ループ用の頭の画を合わせた、声の後ろの秒数。"""
+    return (LOOP_END_SECONDS + LOOP_TAIL) if loop else END_SECONDS
+
+
+def _ease(t: float) -> float:
+    return t * t * (3 - 2 * t)
+
+
+def intro_cuts(items: list, fps: int, hold: float = HOOK_HOLD, shrink: float = HOOK_SHRINK) -> list:
+    """頭の (元の画像, 秒数, 縮みの進み t) の並びと、その後ろの元の並び。t=0 は特大、1 に近いほどいつもの題。
+
+    元の並びの区切りを保ったまま、hold 秒までは t=0、そこから shrink 秒は1コマずつ t を進める。"""
+    n = max(1, int(round(shrink * fps)))
+    cuts = {0.0, hold} | {hold + k / fps for k in range(1, n + 1)}
+    t, bounds = 0.0, []
+    for path, dur in items:
+        bounds.append((t, t + dur, path))
+        t += dur
+    end = min(hold + n / fps, t)
+    cuts |= {a for a, _b, _p in bounds if a < end}
+    cuts = sorted(c for c in cuts if c <= end)
+    head = []
+    for a, b in zip(cuts, cuts[1:]):
+        if b - a < 1e-6:
+            continue
+        src = next(p for x, y, p in bounds if x <= a + 1e-9 < y)
+        k = 0 if a < hold - 1e-9 else int(round((a - hold) * fps)) + 1
+        head.append((src, b - a, k / (n + 1)))
+    tail = []
+    for x, y, p in bounds:
+        if y <= end + 1e-9:
+            continue
+        tail.append((p, y - max(x, end)))
+    return head, tail
+
 TEXT_SIZES = (54, 48, 42)   # 長いせりふは字を小さくして全部入れる
 TEXT_MAX_ROWS = 5
 
@@ -91,6 +167,42 @@ class ShortPainter(Painter):
         dr.text((40, 40), names, font=self.font("serif", 24), fill=DIM, anchor="lt")
         return img.convert("RGBA")       # with_cast が立ち絵の光を重ねるので RGBA で返す
 
+    def hook_overlay(self, img: Image.Image, text: str, t: float = 0.0) -> Image.Image:
+        """頭の大きな問い。t=0 で上半分に特大、t→1 でいつもの題の大きさと位置へ縮み、暗い幕は消える。"""
+        W, H = self.W, self.H
+        e = _ease(min(1.0, max(0.0, t)))
+        img = img.convert("RGBA")
+        # 上半分を暗くして、問いだけを読ませる（下の端はぼかす）
+        veil = Image.new("L", (W, H), 0)
+        vd = ImageDraw.Draw(veil)
+        edge = int(H * 0.56)
+        vd.rectangle([0, 0, W, edge - 160], fill=255)
+        for i in range(160):
+            vd.line([(0, edge - 160 + i), (W, edge - 160 + i)], fill=int(255 * (1 - i / 160)))
+        a = 255 * (1 - e)                            # 幕は不透明（下のいつもの題を透かさない）。縮みながら溶かす
+        img.alpha_composite(Image.merge("RGBA", (*Image.new("RGB", (W, H), (10, 8, 6)).split(),
+                                                 veil.point(lambda v: int(v * a / 255)))))
+        big = hook_size(text, lambda n: self.font("serif", n, bold=True), W - 100)
+        size = round(big + (TITLE_SIZE - big) * e)
+        f = self.font("serif", size, bold=True)
+        rows = _wrap(text, f, W - (100 + 40 * e))
+        step = big * 1.22 + (TITLE_STEP - big * 1.22) * e
+        top_big = int(H * 0.27 - step * len(rows) / 2)
+        top = top_big + (TITLE_TOP - top_big) * e
+        layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        ld = ImageDraw.Draw(layer)
+        sw = round(6 * (1 - e)) + 1
+        for i, row in enumerate(rows):
+            ld.text((W / 2, top + step * i), row, font=f, fill=INK, anchor="mt", stroke_width=sw,
+                    stroke_fill=(12, 10, 8))
+        if e < 0.5:                                  # 問いの下に金の細い線（縮み始めたら消す）
+            y = top + step * len(rows) + 24
+            ld.line([(W / 2 - 120, y), (W / 2 + 120, y)], fill=GOLD + (int(255 * (1 - 2 * e)),), width=5)
+        if e > 0:                                    # 縮みながら溶けて、いつもの題に入れ替わる
+            layer.putalpha(layer.getchannel("A").point(lambda v: int(v * (1 - e))))
+        img.alpha_composite(layer)
+        return img.convert("RGB")
+
     def end_card(self, background) -> Image.Image:
         """本編へ誘う締めの画面。本編の題（問いの部分）と、チャンネル名。"""
         W, H = self.W, self.H
@@ -146,6 +258,40 @@ class ShortPainter(Painter):
                                (40, 30, 20))
                 pos = start + len(row)
         return img.convert("RGB")
+
+
+def finish(items: list, painter, text: str, frame_dir, fps: int, loop: bool, workers: int = 8) -> list:
+    """render.frames の並びに、頭の大きな問い（text が空でなければ）とループ用の最後の画を足す。
+
+    頭は元のコマの上に問いを重ねた画像に差し替える（長さは変えない）。loop なら最後に頭の1枚目を LOOP_TAIL 秒。"""
+    import hashlib
+    from concurrent.futures import ThreadPoolExecutor
+    from pathlib import Path
+
+    items = list(items)
+    if text and items:
+        frame_dir = Path(frame_dir)
+        frame_dir.mkdir(parents=True, exist_ok=True)
+        salt = hashlib.sha1(Path(__file__).read_bytes()).hexdigest()[:8]
+        head, tail = intro_cuts(items, fps)
+        todo, new = {}, []
+        for src, dur, t in head:
+            h = hashlib.sha1(repr((salt, Path(src).name, text, round(t, 3), painter.W, painter.H)).encode("utf-8"))
+            dst = frame_dir / f"hook_{h.hexdigest()[:14]}.png"
+            if not dst.exists():
+                todo[dst] = (src, t)
+            new.append((dst, dur))
+        items = new + tail
+
+        def run(kv):
+            dst, (src, t) = kv
+            with Image.open(src) as im:
+                painter.hook_overlay(im.convert("RGB"), text, t).save(dst, compress_level=1)
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            list(ex.map(run, todo.items()))
+    if loop and items:
+        items.append((items[0][0], LOOP_TAIL))
+    return items
 
 
 class _Landscape:

@@ -307,23 +307,31 @@ def cmd_shorts(args) -> int:
     readings = load_readings(ROOT / "readings.yaml")
     cache = work_dir(sc) / "voice"
     sz = config["short"]
+    hook_on, loop_on = shorts_mod.options(config)          # 頭の大きな問い・ループしやすい終わり（10-08）
+    end_s = shorts_mod.LOOP_END_SECONDS if loop_on else shorts_mod.END_SECONDS
+    tail = shorts_mod.LOOP_TAIL if loop_on else 0.0
     for sid, meta in sc.shorts.items():
+        if getattr(args, "only", None) and sid not in args.only.split(","):
+            continue
         lines = sc.short_lines(sid)
         spoken = {line.index: tts.speak_line(engine, line, vs, readings, cache)
                   for line in lines}
         # ショートの中では節の切れ目の長い間を入れない
         flat = [_same_section(line) for line in lines]
         cues, total = mix.plan(flat, spoken)
-        total += shorts_mod.END_SECONDS                     # 最後に「続きは本編で」（声なし）
-        if total > sz["max_seconds"]:
-            print(f"  ! {sid}: {total:.1f}秒で、上限 {sz['max_seconds']}秒を超えています")
+        total += end_s                                      # 最後に「続きは本編で」（声なし）
+        if total + tail > sz["max_seconds"]:
+            print(f"  ! {sid}: {total + tail:.1f}秒で、上限 {sz['max_seconds']}秒を超えています")
         wd = work_dir(sc) / f"short-{sid}"
         audio = wd / "voice.wav"
-        mix.write_audio(cues, total, audio)
+        mix.write_audio(cues, total + tail, audio)          # ループ用の最後の画のあいだも無音
         cls = _stamp(shorts_mod.ShortPainter) if args.draft else shorts_mod.ShortPainter
         painter = cls(config, sc, assets_dir(config), meta.get("title", ""))
         items = render.frames(painter, cues, total, wd / "frames", config["video"]["fps"], with_text=True,
-                              end_card=True, end_seconds=shorts_mod.END_SECONDS)
+                              end_card=True, end_seconds=end_s)
+        items = shorts_mod.finish(items, painter, shorts_mod.hook_text(meta) if hook_on else "", wd / "hook",
+                                  config["video"]["fps"], loop_on)
+        total += tail
         target = out_dir() / f"{path.stem}_short_{sid}{'_draft' if args.draft else ''}.mp4"
         encode(items, audio, target, config["video"]["fps"])
         print(f"{target}（{total:.1f}秒）")
@@ -826,6 +834,7 @@ def main(argv=None) -> int:
     s = sub.add_parser("shorts")
     s.add_argument("script")
     s.add_argument("--draft", action="store_true")
+    s.add_argument("--only", help="作るショートだけ（例 s1,s3）")
     s.set_defaults(fn=cmd_shorts)
     s = sub.add_parser("describe")
     s.add_argument("script")
