@@ -70,6 +70,18 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
   name・lead・main の書き方はどの構図でも同じ。右下の2人は `cast:`（既定は classic と number だけ）。書き方はひな形。
   **同じ構図が3回続くと check が知らせる**（posted.json の本編の順＋今の台本）。構図の名前の誤り・要る項目の不足は ×。
   見本：`dev/output/rekishi-chiso/research/thumb_layouts/`（5枚と一覧の大きさの `_preview.png`）
+- **サムネの作り込み**（10-07 ユーザー「もう少し作り込んだサムネにしたい」、`chiso/thumbfx.py`）：layout を書いた台本（5構図）だけ。classic・3案の b・c は画素まで同じ。
+  既定で構図ごとに入る：黄の主役の語は上下のグラデーション（黄→橙）＋二重の縁取り（内側が濃い色・外側が白。150px 未満の字は外縁なし）＋下右の影、
+  白い字にも影、face・versus の主役の語は少し傾ける／背景は face＝主役の側から斜めの光（暖色）・scene＝上から光＋破れた紙の縁の帯・
+  versus＝右を朱に染める＋放射の光＋境目はひび割れ・number＝放射の光（深い赤）・map＝紺の海と金の海岸線、古地図の紙の陸、最後の区間は赤い矢印／
+  周辺のぼかし／紙の目を全体にうっすら＋下端の地層の帯の上に薄い地層の筋（帯そのものは変えない）。
+  台本で足す・外す：`light: left|right|top|none`・`rays: false|[x, y]`・`tint: right|left|none|{side, color}`・`blur:`・`torn:`・`texture:`・
+  `badge: 1582年`（古文書の切れ端の札。`{text, at, angle}`）・`arrow: {from: [x, y], to: [x, y], bend}`・`circle: [x0, y0, x1, y1]`（手書きの赤丸。並べて複数可）・`fx: false`（全部外す）。
+  **人物の切り抜き**（`cutout:`）：face・versus は既定で入。主役の絵から rembg（isnet-general-use）で人物を抜き、縁（face は白・versus は金）＋影で前に浮かせ、
+  後ろの絵は少しぼかして落とす。いちばん大きい塊だけ残し、穴は埋める。抜けが悪いもの（衣が抜けて首だけ等、`thumbfx.usable`）は使わずに今の形
+  （信長の長興寺本は首だけになり外れる）。控えは `work/<台本>/cutout_<ハッシュ>.png`。rembg は任意（`requirements-cutout.txt`、CI には入れない。無ければ切り抜かない）。
+  `cutout: false` で切る、`cutout: paintings/x.png`（透明 PNG）や `{image, x, y, height}` で手で抜いた絵を重ねる。
+  見本と作り込み前後の一覧（640・320・168px）：`dev/output/rekishi-chiso/research/thumb_layouts2/_before_after.png`
 - **冒頭とショートの出だし**（10-07、check が知らせる・止めない）：最初の4行（約100字）に数字・年・人名が無い／ショートの1行目が「そして・しかも・それ・でも・はい」で始まる、
   または名前（people: とその言い換え・サムネの名前・4字の名前は2字ずつ）も数字も無い
 
