@@ -150,7 +150,7 @@ def flip(spec: dict) -> Image.Image:
         d.text((bx0, by1 + 22), note, font=F(28, 700), fill=(90, 90, 96))
     credit = str(spec.get("credit", ""))
     if credit:
-        f = F(22, 600)
+        f = F(typo.NOTE, 600)
         d.text((fx + fw - d.textlength(credit, font=f) - 20, fy + fh - 40), credit,
                font=f, fill=(120, 120, 126))
 
@@ -179,7 +179,7 @@ def flip(spec: dict) -> Image.Image:
                    font=nf, fill="white")
         role = str(p.get("role", ""))
         if role:
-            rf = F(24, 700)
+            rf = F(typo.NOTE, 700)
             d.text((wx + (ww - d.textlength(role, font=rf)) / 2, wy + wh + 78), role,
                    font=rf, fill=(70, 70, 76))
     return im

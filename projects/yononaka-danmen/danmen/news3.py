@@ -67,7 +67,7 @@ def _head(im: Image.Image, text: str, sub: str = "") -> int:
     d.rectangle([64, 72, 76, 152], fill=GOLD)
     d.text((100, 68), text, font=F(50), fill="white", stroke_width=6, stroke_fill=(6, 10, 18))
     if sub:
-        d.text((102, 132), sub, font=F(26, 700), fill="#C8D3E4")
+        d.text((102, 132), sub, font=F(typo.NOTE, 700), fill="#C8D3E4")
     return 210
 
 
@@ -108,7 +108,7 @@ def qa(spec: dict) -> Image.Image:
         y += bh + 28
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((W - d.textlength(credit, font=cf) - 60, H - 48), credit, font=cf, fill="#9FB0C9")
     return im.convert("RGB")
 
@@ -135,7 +135,7 @@ def points(spec: dict) -> Image.Image:
         for ln in _wrap(d, label, F(42), W - 480)[:2]:
             d.text((260, y + 36), ln, font=F(42), fill="white")
         if note:
-            d.text((262, y + 102), note, font=F(26, 700), fill="#9FB0C9")
+            d.text((262, y + 102), note, font=F(typo.NOTE, 700), fill="#9FB0C9")
         y += 196
     return im.convert("RGB")
 
@@ -147,7 +147,7 @@ def glossary(spec: dict) -> Image.Image:
     word = str(spec.get("word", ""))
     read = str(spec.get("read", ""))
     body = str(spec.get("body", ""))
-    cx, cy, cw, chh = 150, 240, W - 300, 520
+    cx, cy, cw, chh = 150, 190, W - 300, 600
     card = Image.new("RGBA", (cw + 60, chh + 60), (0, 0, 0, 0))
     ImageDraw.Draw(card).rounded_rectangle([30, 30, cw + 30, chh + 30], radius=20,
                                            fill=(252, 251, 247, 250))
@@ -158,17 +158,18 @@ def glossary(spec: dict) -> Image.Image:
     im.alpha_composite(card, (cx - 30, cy - 30))
     d = ImageDraw.Draw(im)
     d.rectangle([cx, cy, cx + 16, cy + chh], fill=GOLD)
-    d.text((cx + 54, cy + 30), "ことばの意味", font=F(26, 800), fill="#B08A20")
-    d.text((cx + 54, cy + 76), word, font=F(76), fill=INK)
+    d.text((cx + 54, cy + 30), "ことばの意味", font=F(typo.NOTE, 800), fill="#B08A20")
+    d.text((cx + 54, cy + 74), word, font=F(104), fill=INK)
     if read:
-        d.text((cx + 58, cy + 172), read, font=F(28, 700), fill=(120, 128, 138))
-    y = cy + 230
-    for ln in _wrap(d, body, F(36, 700), cw - 120)[:6]:
-        d.text((cx + 54, y), ln, font=F(36, 700), fill=(40, 46, 56))
-        y += 54
+        d.text((cx + 62, cy + 200), read, font=F(34, 700), fill=(120, 128, 138))
+    y = cy + 270
+    bf = F(46, 700)
+    for ln in _wrap(d, body, bf, cw - 120)[:4]:
+        d.text((cx + 54, y), ln, font=bf, fill=(40, 46, 56))
+        y += 68
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((cx + cw - d.textlength(credit, font=cf) - 40, cy + chh - 44), credit,
                font=cf, fill=(130, 136, 146))
     return im.convert("RGB")
@@ -200,7 +201,7 @@ def before(spec: dict) -> Image.Image:
             d.text((x0 + 86, H - 158), val, font=F(60), fill=GOLD)
         note = str(it.get("note", ""))
         if note:
-            d.text((x0 + 88, H - 80), note, font=F(26, 700), fill="#9FB0C9")
+            d.text((x0 + 88, H - 80), note, font=F(typo.NOTE, 700), fill="#9FB0C9")
     d.rectangle([half - 4, 0, half + 4, H], fill=GOLD)
     title = str(spec.get("title", ""))
     if title:
@@ -210,7 +211,7 @@ def before(spec: dict) -> Image.Image:
         d.text(((W - tw) / 2, 68), title, font=tf, fill="white")
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((W - d.textlength(credit, font=cf) - 40, 170), credit, font=cf, fill="#9FB0C9")
     return im.convert("RGB")
 
@@ -223,9 +224,9 @@ def statement(spec: dict) -> Image.Image:
     who = str(spec.get("who", ""))
     role = str(spec.get("role", ""))
     when = str(spec.get("when", ""))
-    f = F(46, 800)
+    f = F(56, 800)
     lines = _wrap(d, text, f, W - 440)[:4]
-    bh = 250 + len(lines) * 68      # 発言者と肩書の分も入れる
+    bh = 280 + len(lines) * 82      # 発言者と肩書の分も入れる
     y0 = (H - bh) // 2 - 40
     card = Image.new("RGBA", (W - 260, bh), (0, 0, 0, 0))
     ImageDraw.Draw(card).rounded_rectangle([0, 0, W - 300, bh], radius=18,
@@ -233,24 +234,24 @@ def statement(spec: dict) -> Image.Image:
     im.alpha_composite(card, (130, y0))
     d = ImageDraw.Draw(im)
     d.rectangle([130, y0, 146, y0 + bh], fill=NAVY)
-    d.text((190, y0 + 28), "“", font=F(90), fill=(200, 205, 212))
-    y = y0 + 84
+    d.text((190, y0 + 24), "“", font=F(110), fill=(200, 205, 212))
+    y = y0 + 100
     for ln in lines:
         d.text((190, y), ln, font=f, fill=INK)
-        y += 68
+        y += 82
     # 誰の発言か
     if who:
         d.rectangle([190, y + 16, 190 + 10, y + 70], fill=GOLD)
-        d.text((216, y + 12), who, font=F(36), fill=INK)
+        d.text((216, y + 10), who, font=F(44), fill=INK)
         if role:
-            d.text((218, y + 60), role, font=F(24, 700), fill=(120, 128, 138))
+            d.text((218, y + 60), role, font=F(typo.NOTE, 700), fill=(120, 128, 138))
     if when:
-        wf = F(24, 700)
+        wf = F(typo.NOTE, 700)
         d.text((W - 300 - d.textlength(when, font=wf) + 130 - 40, y + 16), when,
                font=wf, fill=(120, 128, 138))
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((W - d.textlength(credit, font=cf) - 60, H - 48), credit, font=cf, fill="#9FB0C9")
     return im.convert("RGB")
 

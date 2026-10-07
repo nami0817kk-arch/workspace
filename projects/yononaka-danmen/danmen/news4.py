@@ -64,13 +64,13 @@ def _head(im: Image.Image, title: str, note: str = "") -> ImageDraw.ImageDraw:
     d.text((100, 56), title, font=F(52), fill="white",
            stroke_width=6, stroke_fill=(6, 10, 18))
     if note:
-        d.text((102, 120), note, font=F(26, 700), fill="#C8D3E4")
+        d.text((102, 120), note, font=F(typo.NOTE, 700), fill="#C8D3E4")
     return d
 
 
 def _foot(d: ImageDraw.ImageDraw, credit: str) -> None:
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((W - d.textlength(credit, font=cf) - 60, H - 48), credit, font=cf, fill="#9FB0C9")
 
 
@@ -142,7 +142,7 @@ def recap(spec: dict) -> Image.Image:
             y += 52
         note = str(it.get("note", "")) if isinstance(it, dict) else ""
         if note:
-            d.text((bx0 + 140, y + 4), note, font=F(26, 600), fill=(110, 118, 128))
+            d.text((bx0 + 140, y + 4), note, font=F(typo.NOTE, 600), fill=(110, 118, 128))
             y += 42
         y += 46
     nxt = str(spec.get("next", ""))
@@ -185,7 +185,7 @@ def live(spec: dict) -> Image.Image:
         d.text((56, H - 86), cap, font=cf, fill="white")
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d.text((W - d.textlength(credit, font=cf) - 56, H - 44), credit, font=cf, fill="#9FB0C9")
     return im.convert("RGB")
 

@@ -117,7 +117,7 @@ def talk(spec: dict) -> Image.Image:
         _bubble(im, s, W - rw - 90 - bw, 560, 920, size=38, tail="right")
     credit = str(spec.get("credit", ""))
     if credit:
-        cf = F(22, 600)
+        cf = F(typo.NOTE, 600)
         d = ImageDraw.Draw(im)
         d.text((W - d.textlength(credit, font=cf) - 60, H - 48), credit, font=cf,
                fill="#9FB0C9")
@@ -208,7 +208,7 @@ def reaction(spec: dict) -> Image.Image:
     credit = str(spec.get("credit", ""))
     if credit:
         # 右下は立ち絵がいるので、出典は左下に出す
-        d.text((110, H - 56), credit, font=F(22, 600), fill="#9FB0C9")
+        d.text((110, H - 56), credit, font=F(typo.NOTE, 600), fill="#9FB0C9")
     return im.convert("RGB")
 
 
