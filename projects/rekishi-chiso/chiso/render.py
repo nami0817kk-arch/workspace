@@ -667,27 +667,68 @@ class Painter:
             dr.rectangle([self.W / 2 - 300, y + i * 6, self.W / 2 + 300, y + i * 6 + 5], fill=c)
         return img if self.layered else img.convert("RGB")
 
+    END_RIGHT = 1060          # 次回予告の字の右の端。右側（x 1080〜1800）は YouTube の終了画面の場所
+    TEASER_SIZES = (40, 28)   # 紹介文の字の大きさ（収まるまで縮める）
+
+    def end_cast_top(self) -> int:
+        """次回予告の画面で、左下の立ち絵（ヘルメットの先）の上端の y。"""
+        for who, cast in self.config["cast"].items():
+            if cast.get("side", "left") == "left":
+                return self.H - self.character(who).height + 10
+        return self.H
+
+    def teaser_rows(self, teaser: str, top: int, bottom: int) -> tuple[int, int, list[str]]:
+        """次回予告の紹介文の (字の大きさ, 行の高さ, 行)。文ごとに改行し、1文は2行まで、
+        2行目が2字以下にならないように（10-09「…小説だっ／た。」の「た。」だけが落ちて立ち絵に重なった）。
+        収まるまで字を縮め、行は top〜bottom に入るだけにする。"""
+        import re
+        sents = re.findall(r"[^。]+。?", teaser) or [teaser]
+        width = self.END_RIGHT - 120
+        big, small = self.TEASER_SIZES
+        for size in range(big, small - 1, -2):
+            f = self.font("serif", size)
+            rows, ok = [], True
+            for sent in sents:
+                r = wrap(sent, f, width)
+                if len(r) == 2 and len(r[-1]) <= 2:
+                    r = wrap_balanced(sent, f, width)             # 最後の1・2字だけが落ちるなら、半分ずつに割り直す
+                if len(r) > 2 or (len(r) == 2 and len(r[-1]) <= 2):
+                    ok = False
+                    break
+                rows += r
+            lh = int(size * 1.4)
+            if ok and top + lh * (len(rows) - 1) + size * 1.25 <= bottom:
+                return size, lh, rows
+        f = self.font("serif", small)
+        rows = [r for sent in sents for r in wrap_balanced(sent, f, width)]
+        lh = int(small * 1.4)
+        n = max(1, int((bottom - top - small * 1.25) // lh) + 1)
+        return small, lh, rows[:n]
+
     def end_card(self, background) -> Image.Image:
-        """次回予告とお礼。右側は YouTube の終了画面（動画・登録ボタン）を置く場所として空ける。"""
+        """次回予告とお礼。右側は YouTube の終了画面（動画・登録ボタン）を置く場所として空ける。
+        字は左下の立ち絵（剣崎のヘルメット）より上に収める（10-09）。"""
         nxt = getattr(self.script, "next", {}) or {}
         img = self._canvas(background)
         img.alpha_composite(Image.new("RGBA", img.size, (8, 6, 4, 150)))
         dr = ImageDraw.Draw(img, "RGBA")
         x = 120
-        dr.text((x, 150), "ご視聴ありがとうございました", font=self.font("gothic", 34), fill=DIM)
+        dr.text((x, 100), "ご視聴ありがとうございました", font=self.font("gothic", 34), fill=DIM)
         if nxt:
-            dr.rounded_rectangle([x, 230, x + 190, 290], radius=10, fill=(176, 40, 40))
-            dr.text((x + 95, 260), "次回予告", font=self.font("gothic", 34), fill=(255, 255, 255), anchor="mm")
+            dr.rounded_rectangle([x, 170, x + 190, 230], radius=10, fill=(176, 40, 40))
+            dr.text((x + 95, 200), "次回予告", font=self.font("gothic", 34), fill=(255, 255, 255), anchor="mm")
             series = nxt.get("series", self.script.series)      # 次の回が別のシリーズなら next.series で（"" で出さない）
             if series:
-                dr.text((x, 330), series, font=self.font("gothic", 30), fill=GOLD)
-            dr.text((x, 380), nxt.get("title", ""), font=self.font("serif", 76, bold=True), fill=INK,
+                dr.text((x, 260), series, font=self.font("gothic", 30), fill=GOLD)
+            size = 76
+            while size > 48 and self.font("serif", size, bold=True).getlength(nxt.get("title", "")) > self.END_RIGHT - x:
+                size -= 4
+            dr.text((x, 305), nxt.get("title", ""), font=self.font("serif", size, bold=True), fill=INK,
                     stroke_width=3, stroke_fill=(12, 10, 8))
-            teaser = nxt.get("teaser", "")
-            rows = [r for sent in __import__("re").findall(r"[^。]+。?", teaser)      # 文の切れ目で改行する
-                    for r in wrap(sent, self.font("serif", 40), 760)]       # （10-06「本当だったの／か。」と割れた）
-            for k, row in enumerate(rows[:3]):
-                dr.text((x, 500 + 56 * k), row, font=self.font("serif", 40), fill=INK)
+            top = 305 + size + 34
+            fs, lh, rows = self.teaser_rows(nxt.get("teaser", ""), top, self.end_cast_top() - 14)
+            for k, row in enumerate(rows):
+                dr.text((x, top + lh * k), row, font=self.font("serif", fs), fill=INK)
         # 右側（x 1080〜1800, y 200〜605）は、YouTube の終了画面（次の動画・登録ボタン）を置くために空けておく
         return img
 

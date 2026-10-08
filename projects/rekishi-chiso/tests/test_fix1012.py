@@ -71,3 +71,40 @@ def test_waiting_place_comes_back_when_mentioned_after_a_year_change():
     got = _places([{"語り": "京都と奈良を回る。", "year": 1590}, {"語り": "1600年、話は変わります。", "year": 1600},
                    {"語り": "奈良の町へ。"}])
     assert got == ["京都", None, "奈良"]
+
+
+# --- 3. 次回予告の紹介文の割れ -----------------------------------------------------
+def _end_painter(tmp_path, teaser):
+    from test_port import _painter
+    sc = script.parse({"title": "t", "next": {"title": "豊臣秀長", "teaser": teaser},
+                       "sections": [{"title": "一", "lines": [{"語り": "a"}]}]})
+    return _painter(tmp_path, sc)
+
+
+def test_teaser_never_leaves_one_or_two_chars_on_the_last_row(tmp_path):
+    p = _end_painter(tmp_path, "")
+    long = "その姿を広めたのは、1985年の小説だった。" * 3
+    for teaser in ("秀吉を支えた「補佐役」。その姿を広めたのは、1985年の小説だった。",
+                   "申年生まれだから「猿」。いま有力な生まれ年は、申年ではありません。", long):
+        size, lh, rows = p.teaser_rows(teaser, 440, 576)
+        assert all(p.font("serif", size).getlength(r) <= p.END_RIGHT - 120 for r in rows)
+        assert all(len(r) > 2 for r in rows), rows
+        assert 440 + lh * (len(rows) - 1) + size * 1.25 <= 576
+
+
+def test_teaser_shrinks_to_keep_each_sentence_within_two_rows(tmp_path):
+    p = _end_painter(tmp_path, "")
+    text = "あ" * 100 + "。"                # 内蔵フォントは1字が字の大きさの半分
+    size, _lh, rows = p.teaser_rows(text, 440, 700)
+    assert len(rows) <= 2 and size < p.TEASER_SIZES[0]
+
+
+def test_end_card_text_stays_above_the_left_cast_and_left_of_the_end_screen(tmp_path):
+    from PIL import ImageChops
+    teaser = "秀吉を支えた「補佐役」。その姿を広めたのは、1985年の小説だった。"
+    p = _end_painter(tmp_path, teaser)
+    with_text = p.end_card(None)
+    p.script.next = {}
+    plain = p.end_card(None)
+    box = ImageChops.difference(with_text.convert("RGB"), plain.convert("RGB")).getbbox()
+    assert box is not None and box[3] < p.end_cast_top() and box[2] <= 1080
