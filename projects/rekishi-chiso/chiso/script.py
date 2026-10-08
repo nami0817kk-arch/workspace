@@ -28,6 +28,7 @@
             who: マリー
 
 画面の指定（background / portrait / card / year）は「次に変えるまで続く」。
+紀元前の年は負の数で書く（year: -221、timeline も負、札は「紀元前221年」、people は born: -259。chiso/years.py）。
 portrait と card は節が変わると消える。null を書けばその行で消せる。
 """
 from __future__ import annotations
@@ -184,11 +185,11 @@ def _picture(raw, where: str) -> Picture | None:
 
 
 def _card_year(card) -> int | None:
-    """札の見出しの年（「1774年5月」→1774）。年で始まらない札（「首飾りの値段」）は None。"""
-    import re
-    # 「1760年代半ば」は1つの年ではないので数えない
-    m = re.match(r"(\d{3,4})年(?!代)", card.head) if card is not None else None
-    return int(m.group(1)) if m else None
+    """札の見出しの年（「1774年5月」→1774、「紀元前221年」「前221年」→-221）。年で始まらない札（「首飾りの値段」）は None。
+    「1760年代半ば」は1つの年ではないので数えない（chiso/years.py）。"""
+    from .years import head_date
+    d = head_date(card.head) if card is not None else None
+    return d[0] if d else None
 
 
 def _card(raw, where: str) -> Card | None:
@@ -464,7 +465,14 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
     people = {}
     for name, v in (data.get("people") or {}).items():
         if not isinstance(v, dict) or "born" not in v:
-            raise ScriptError(f"people の {name} には born（生まれた日 YYYY-MM-DD）が要ります")
+            raise ScriptError(f"people の {name} には born（生まれた日 YYYY-MM-DD。紀元前は -259 か \"-0259-01-01\"）が要ります")
+        from .years import parse_date
+        try:
+            parse_date(v["born"])
+            if v.get("died") not in (None, ""):
+                parse_date(v["died"], end=True)
+        except ValueError as e:
+            raise ScriptError(f"people の {name}: {e}") from None
         people[str(name)] = {"born": str(v["born"]), "died": str(v.get("died", "")),
                              "match": [str(name)] + [str(m) for m in v.get("match", [])]}
     return Script(
@@ -544,20 +552,22 @@ def person_of(people: dict, pic) -> str | None:
 
 
 def age_at(info: dict, year: int | None, card=None) -> int | None:
-    """その場面の年での満年齢。月は、同じ年の札（「1774年5月」など）があればそれを使い、無ければ年の半ば（7月1日）とみなす。
-    生まれる前・1歳未満・亡くなったあとは None。"""
-    import re
+    """その場面の年での満年齢。月は、同じ年の札（「1774年5月」「紀元前210年7月」など）があればそれを使い、無ければ年の半ば（7月1日）とみなす。
+    紀元前は負の年（0年は無いので、前259年生まれは前221年に38歳。chiso/years.py）。
+    生まれが年だけなら1月1日、亡くなったのが年だけなら12月31日とみなす。生まれる前・1歳未満・亡くなったあとは None。"""
+    from .years import astro, head_date, parse_date
     if year is None:
         return None
     month, day = 7, 1
     if card is not None:
-        m = re.match(r"(\d{3,4})年\s*(?:(\d{1,2})月)?\s*(?:(\d{1,2})日)?", card.head)
-        if m and int(m.group(1)) == year and m.group(2):
-            month, day = int(m.group(2)), int(m.group(3) or 1)
-    by, bm, bd = (int(x) for x in info["born"].split("-"))
+        d = head_date(card.head)
+        if d and d[0] == year and d[1]:
+            month, day = d[1], d[2] or 1
+    by, bm, bd = parse_date(info["born"])
+    y = astro(year)
     if info.get("died"):
-        dy, dm, dd = (int(x) for x in info["died"].split("-"))
-        if (year, month, day) > (dy, dm, dd):
+        dy, dm, dd = parse_date(info["died"], end=True)
+        if (y, month, day) > (astro(dy), dm, dd):
             return None
-    age = year - by - (1 if (month, day) < (bm, bd) else 0)
+    age = int(y - astro(by)) - (1 if (month, day) < (bm, bd) else 0)
     return age if age >= 1 else None
