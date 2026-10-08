@@ -1,0 +1,314 @@
+# 取材メモ（10/9 金、シリーズ「比べる」、key: compare_bellingham_musiala、型は news）。
+# 材料の控えは research/raw/20261009_compare_bellingham_musiala_material.md。**この控えの外へ出ていない。**
+#
+# 軸は「同じ2003年生まれの2人を、生後8502日（＝どちらも23歳101日）で切りそろえる」こと。
+#   山場の頭に置く強い一点は、**2人がイングランドの年代別代表で15試合、同じチームにいた**こと
+#   （2016-12〜2019-09、材料 9-1。10/6 のベリンガム紹介でも 9/11 のムシアラの回でも一度も出していない）。
+# 既出を避けたもの（材料 0・0-B の表をそのまま守った）:
+#   10/6 ベリンガム紹介… 背番号22の足し算・永久欠番・入団時の言葉・父マークの700点・16歳38日デビュー・
+#     19歳で主将・1年目リーグ19点・プレースタイルのレーダー・10/3 クロアチア戦の1点3アシスト・
+#     バロンドール・2025年夏の肩の手術の物語。どれも一度も出していない。移籍金にも触れていない。
+#   9/11 ムシアラの回… 本人がSNSで公表した診断名・プレシーズンに倒れた場面・本人とコンパニとケインの言葉・
+#     クラブの欧州通算900点目・「帰ってきた男」という筋。**病名は画面にも読み上げにも出していない。**
+#     体調による欠場は「3試合」という数字としてだけ出し、こちらで深刻さを足していない。
+#   10/2 エムバペ×ハーランド… PK抜き・26歳の誕生日まで・「誕生日の前日までの通算得点」の棒グラフ・
+#     「早く頂点に着いた線と、いま頂点にいる線」の締め。言い回しも締め方も重ねていない。
+#   10/4 ヤマル×メッシ… 19歳83日・デビュー年齢の表・「どの一歩も1年以上早い」。使っていない。
+# **言い切っていないもの**:
+#   どちらが上かは一度も言わない。90分あたりの差は「点の出方が違う」までにして、リーグの形（材料10節）を添えた。
+#   アシストの数は Transfermarkt と FotMob で食い違う（ムシアラのバイエルンが46対38）ので**表にも語りにも入れていない**。
+#   ベリンガムの2026年2月の負傷部位は「左脚の筋肉」までにした（「半腱筋」は二次情報だけ。材料11）。
+#   ムシアラがドイツを選んだときの言葉は**英語版**（The Athletic の取材を Sky Sports が引用）から訳した。
+#   ドイツ語の原文は kicker が 403 で読めず未確認なので使っていない。
+#   タイトルの数は「クラブの力の話で、2人の優劣ではない」と節の中で声に出して添えた。
+#   16冠のうち5つは1分も出ていないので、割り直しは**クラブの出場（235試合）だけ**を11で割ったと言ってある。
+# 自分で計算した数（材料 2-A・6-D・7・9 に式と元の数字がある）:
+#   90分あたり 91×90/29196=0.2805／78×90/15915=0.4411 と比 1.57倍、出場時間差 13281分＝147.6試合ぶん、
+#   出場時間の割合 24894÷(381×90)=72.6%／13550÷(322×90)=46.8%／4302÷(88×90)=54.3%／2849÷(76×90)=41.7%、
+#   235÷11=21.4、1.6億÷8000万=2.0倍。
+# 数字の基準日はすべて **2026年10月8日**（イングランド対チェコまで反映）。
+# 反応は入れていない（シリーズの回。ブラウザの道具を使っていないので集めていない）。
+#   他人の声は、ムシアラが進路を決めたときの言葉2行だけ。**山場（main）には声を置いていない**
+#   （置くと「ショートで16秒まで」に収まらず、強い一点を頭から押しのけるため）。
+# 写真: ベリンガムは Commons の2026年6月（イングランド対ガーナ、CC BY-SA 4.0 / Bryan Berlin）、
+#   ムシアラは Commons の2026年6月（エクアドル対ドイツ、CC BY-SA 4.0 / Bryan Berlin・YantsImages）。
+#   **10/6 の回で使った9枚（real2026・birmingham・laureus・croatia・panama・ghana・espanyol・pair_tuchel・thumbfull）は
+#   1枚も使っていない。**冒頭と見立ては tools/pairphoto.py で横に並べた1枚（縦版 01_v.jpg がショート用）。
+# サムネは構図 versus（2人の比べはこの構図、と CLAUDE.md にある）。同じ日の他の本は number・scene・scene・versus。
+#   伏せるのは「15試合を共にした●●代表」＝イングランド。作り込みの tint と rays は切ってある。
+# **draft のヒントで直さずに残したもの**:
+#   ①「出典12本のうち8本が transfermarkt」… この回は試合ごとの記録を自分で足して作った数字が芯なので、
+#     出どころが1つに寄るのは中身のとおり。怪我と復帰は Bundesliga 公式、負傷部位は beIN、
+#     ムシアラの言葉は Sky Sports、評点は FotMob と、別の出どころも当てている。
+#   ②「ネットの反応が1件もありません」… シリーズの回で、ブラウザの道具を使わない約束なので集めていない。
+#     声が1件も無い台本は通してよい（2026-09-28 の整理）。
+#   ③「01_face.jpg が縦長」… これは **サムネ（versus の左）専用の切り抜き**で、本文にも冒頭にも使っていない
+#     （冒頭は theme.opening_image の横並び1枚、本文は各節の image で横長を指定している）。preview4 の冒頭も横並びの1枚だった。
+# **preview4 で残した △**: 山場（13.1秒）で、ムシアラの顎のすぐ下にテロップの帯が接する。
+#   年表の板を右へ寄せる・顔を右に動かす、の両方を試したが、顔を右に寄せると今度は板が顔に26%かかって × になった。
+#   帯が接するだけで顔は隠れていないので、この形にした。
+# 写真のファイル: eng2026/01.jpg（元）→ 01_w.jpg（16:9）→ 01_r.jpg（表を左に置くので右を落としてベリンガムを右寄りに）
+#   ・01_r_v.jpg（ショート用の縦）・01_face.jpg（サムネ用）。ムシアラ側も wide/01_w.jpg → 01_r.jpg。
+#   横並びの1枚（cmp_pair/01.jpg）はベリンガム左・ムシアラ右。その縦版 01_v.jpg は **ムシアラが上**にしてある
+#   （ベリンガムを上にすると、下に来たムシアラの顔にショートのテロップの帯がかかった）。
+date: 2026年10月09日
+slot: other_1
+format: news
+series: 比べる
+people:
+- ジュード・ベリンガム
+- ジャマル・ムシアラ
+theme:
+  id: compare_bellingham_musiala
+  league: spain
+  league_name: 欧州5大リーグ
+  kind: other
+  topic: ベリンガムとムシアラ
+  title: ベリンガムとムシアラを同じ日数で並べる。2人がそろって出ていた試合
+  question: 同じ年に生まれた2人を同じ日数で切ると、数字のどこが違うのか
+  lead: 同じ2003年生まれ。片方はイングランド、片方はドイツ。
+  hook: 生まれてからの日数をそろえて、数字を並べ直します。
+  takeaway: ベリンガムとムシアラは、イングランドの年代別代表で15試合、同じチームにいた（2016年12月〜2019年9月、アンダー15で4、アンダー16で9、アンダー17で2）。2018年11月の日本のアンダー15との試合には2人とも出て、ムシアラが1点を決めている。その3週間前、ムシアラはドイツのアンダー16としても2試合に出ていた。生後8502日＝どちらも23歳101日で切ると、出場は384と273、先発の割合は85.9%と63.4%、出場時間は2万9196分と1万5915分で147試合ぶんの差がある。得点は91と78だが、90分あたりに直すと0.28と0.44で1.57倍。ただしリーグの形が違い、昨季の1試合あたりの得点はラ・リーガがおよそ2.7点、ブンデスリーガがおよそ3.2点だった。チームが戦った時間のうち立っていたのはクラブで72.6%と46.8%、代表で54.3%と41.7%。怪我は8件193日31試合と24件501日83試合で、ムシアラは2025年の夏から33試合195日を続けて欠場している。市場価値は2022年11月9日の同じ更新で2人とも1億ユーロだったが、いまは1.6億ユーロと8000万ユーロでちょうど2.0倍。タイトル1つあたりの試合数は64.0と17.6で、ムシアラの16のうち5つは1分も出ていないため、クラブの出場だけを出場のある11で割り直すと21.4になる。次の物差しは10月15日とされるムシアラの復帰で、そこから出られた時間の割合がどう動くか
+  opening_image: assets/images/20261009_cmp_pair/01.jpg
+  bgm: assets/audio/bgm_calm.wav
+short_title: ベリンガムとムシアラ、10代のころ同じチームで15試合
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261009_cmp_bellingham/eng2026/01_face.jpg
+  - assets/images/20261009_cmp_musiala/01.jpg
+  names:
+  - ベリンガム
+  - ムシアラ
+  line1: ベリンガムとムシアラ
+  line2: 15試合を共にした●●代表
+  cutout: false
+  tint: none
+  rays: false
+  short_photo: assets/images/20261009_cmp_bellingham/eng2026/01_v.jpg
+  tags:
+  - ジュード・ベリンガム
+  - ジャマル・ムシアラ
+  - レアル・マドリード
+  - バイエルン
+  - 比べる
+sections:
+- id: together
+  main: true
+  heading: 同じチームで15試合、戦っていた
+  tier: 報道
+  telop: イングランドの年代別代表で15試合、2人は同じチームにいた
+  narrator: キャスター
+  card: &tl
+    type: timeline
+    title: 2人の分かれ道
+    rows:
+    - &t0 [2016年12月, イングランドのアンダー15で、初めて同じチームに]
+    - &t1 [2018年10月, ムシアラがドイツのアンダー16でも2試合に出る]
+    - &t2 [2018年11月, 日本のアンダー15との試合に2人とも出場。ムシアラが得点]
+    - &t3 [2019年9月, アンダー17での2試合。ここまでで15試合]
+    - &t4 [2021年2月, ムシアラがドイツ代表を選ぶ]
+    - &t5 [2026年10月, イングランドとドイツ、それぞれの代表で]
+    source: Transfermarkt の試合ごとの記録
+  say:
+  - text: レアルのベリンガムと、バイエルンのムシアラ。どちらも2003年生まれです。
+    short_only: true
+  - text: 2人は10代のころ、イングランドの年代別代表で15試合を共にしました。
+    image: assets/images/20261009_cmp_pair/01.jpg
+    card: *tl
+  - text: アンダー15で4試合、アンダー16で9試合、アンダー17で2試合。
+    card: {type: timeline, title: 2人の分かれ道, rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 2016年12月, source: Transfermarkt の試合ごとの記録}
+  - text: 2018年11月、日本のアンダー15と対戦。ベリンガムも出て、ムシアラが得点。
+    card: {type: timeline, title: 2人の分かれ道, rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 2018年11月, source: Transfermarkt の試合ごとの記録}
+  - text: その3週間前には、ドイツのアンダー16としても2試合に出ています。
+    card: {type: timeline, title: 2人の分かれ道, rows: [*t0, *t1, *t2, *t3, *t4, *t5], highlight_row: 2018年10月, source: Transfermarkt の試合ごとの記録}
+  - text: そして2021年2月、18歳の誕生日の2日前に、ムシアラはドイツを選びました。
+    card: none
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+  - https://www.transfermarkt.com/jamal-musiala/leistungsdatendetails/spieler/580195
+  - https://www.skysports.com/football/news/11890/12227535/jamal-musiala-bayern-munich-midfielder-to-represent-germany-and-not-england
+- id: numbers
+  heading: 23歳101日でそろえた数字
+  tier: 報道
+  telop: 生後8502日で切ると、出場は384と273。90分あたりの得点は0.28と0.44
+  narrator: 解説
+  card: &nt
+    type: table
+    title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）
+    columns: [項目, ベリンガム, ムシアラ]
+    rows:
+    - &n0 [出場, '384試合', '273試合']
+    - &n1 [先発の割合, 85.9%, 63.4%]
+    - &n2 [出場時間, 29196分, 15915分]
+    - &n3 [得点, '91', '78']
+    - &n4 [90分あたりの得点, '0.28', '0.44']
+    source: Transfermarkt の試合ごとの記録を足した
+  say:
+  - text: そろえる物差しは、同じ日付ではなく、生きてきた日数です。
+    image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
+    card: *nt
+  - text: どちらも生後8502日、23歳101日の時点までを数えました。
+    card: *nt
+  - text: 出場はベリンガムが384試合、ムシアラは273試合。
+    card: {type: table, title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）, columns: [項目, ベリンガム, ムシアラ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 0, source: Transfermarkt の試合ごとの記録を足した}
+  - text: 先発の割合は85.9%と63.4%。20ポイント以上の開きがあります。
+    card: {type: table, title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）, columns: [項目, ベリンガム, ムシアラ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 1, source: Transfermarkt の試合ごとの記録を足した}
+  - text: 出場時間は2万9196分と1万5915分。差は147試合ぶんになります。
+    card: {type: table, title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）, columns: [項目, ベリンガム, ムシアラ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 2, source: Transfermarkt の試合ごとの記録を足した}
+  - text: 16歳からの1年、ベリンガムは2部で44試合、ムシアラはトップで1試合でした。
+    card: {type: table, title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）, columns: [項目, ベリンガム, ムシアラ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 2, source: Transfermarkt の試合ごとの記録を足した}
+  - text: 得点は91と78。合計では13しか違いません。
+    card: {type: table, title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）, columns: [項目, ベリンガム, ムシアラ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 3, source: Transfermarkt の試合ごとの記録を足した}
+  - text: ところが90分あたりに直すと、0.28と0.44。
+    emph: true
+    card: {type: table, title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）, columns: [項目, ベリンガム, ムシアラ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 4, source: Transfermarkt の試合ごとの記録を足した}
+  - text: 同じ90分に置き換えると、点の出方は1.57倍ちがう計算になります。
+    card: {type: table, title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）, columns: [項目, ベリンガム, ムシアラ], rows: [*n0, *n1, *n2, *n3, *n4], highlight_row: 4, source: Transfermarkt の試合ごとの記録を足した}
+  - text: ただし、戦っている舞台の形が違います。
+    card: &lg
+      type: table
+      title: 昨シーズンのリーグの形
+      columns: ['', ラ・リーガ, ブンデスリーガ]
+      rows:
+      - &g0 [チーム数, 20チーム, 18チーム]
+      - &g1 [リーグの試合数, 38試合, 34試合]
+      - &g2 [1試合あたりの得点, 2.695点, 3.235点]
+      source: Transfermarkt の順位表から足して割った
+  - text: ラ・リーガは20チームで38試合、ブンデスリーガは18チームで34試合。
+    card: {type: table, title: 昨シーズンのリーグの形, columns: ['', ラ・リーガ, ブンデスリーガ], rows: [*g0, *g1, *g2], highlight_row: 1, source: Transfermarkt の順位表から足して割った}
+  - text: 1試合あたりの得点は、昨シーズンでおよそ2.7点とおよそ3.2点でした。
+    card: {type: table, title: 昨シーズンのリーグの形, columns: ['', ラ・リーガ, ブンデスリーガ], rows: [*g0, *g1, *g2], highlight_row: 2, source: Transfermarkt の順位表から足して割った}
+  - text: 点の入りやすさが2割違う舞台に、同じ物差しを当てていることになります。
+    card: {type: table, title: 昨シーズンのリーグの形, columns: ['', ラ・リーガ, ブンデスリーガ], rows: [*g0, *g1, *g2], highlight_row: 2, source: Transfermarkt の順位表から足して割った}
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/leistungsdatendetails/spieler/581678
+  - https://www.transfermarkt.com/jamal-musiala/leistungsdatendetails/spieler/580195
+  - https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1
+  - https://www.transfermarkt.com/bundesliga/startseite/wettbewerb/L1
+- id: minutes
+  heading: 出られた割合と、怪我
+  tier: 報道
+  telop: チームが戦った時間のうち、ピッチに立っていたのは72.6%と46.8%
+  narrator: 解説
+  card: &bar
+    type: bars
+    title: チームの公式戦の時間に占めた出場時間
+    unit: '%'
+    items:
+    - {label: ベリンガム クラブ, value: 72.6}
+    - {label: ムシアラ クラブ, value: 46.8}
+    - {label: ベリンガム 代表, value: 54.3}
+    - {label: ムシアラ 代表, value: 41.7}
+    note: 在籍したあいだのチームの全公式戦を90分として割った
+  say:
+  - text: 次は、在籍したあいだにチームが戦った時間のうち、どれだけ立っていたかです。
+    image: assets/images/20261009_cmp_musiala/wide/01_r.jpg
+    card: *bar
+  - text: クラブの公式戦では、ベリンガムが72.6%、ムシアラが46.8%。
+    emph: true
+    card: {type: bars, title: チームの公式戦の時間に占めた出場時間, unit: '%', items: [{label: ベリンガム クラブ, value: 72.6, highlight: true}, {label: ムシアラ クラブ, value: 46.8, highlight: true}, {label: ベリンガム 代表, value: 54.3}, {label: ムシアラ 代表, value: 41.7}], note: 在籍したあいだのチームの全公式戦を90分として割った}
+  - text: 代表では54.3%と41.7%です。
+    card: {type: bars, title: チームの公式戦の時間に占めた出場時間, unit: '%', items: [{label: ベリンガム クラブ, value: 72.6}, {label: ムシアラ クラブ, value: 46.8}, {label: ベリンガム 代表, value: 54.3, highlight: true}, {label: ムシアラ 代表, value: 41.7, highlight: true}], note: 在籍したあいだのチームの全公式戦を90分として割った}
+  - text: この開きは、怪我だけの話ではありません。
+  - text: 先に見た先発の割合の差、つまり途中から入る試合の多さも重なっています。
+  - text: そのうえで、失った時間を数えます。
+    card: &ic
+      type: table
+      title: 怪我で失ったもの（通算）
+      columns: [項目, ベリンガム, ムシアラ]
+      rows:
+      - &c0 [怪我の件数, 8件, 24件]
+      - &c1 [離脱した日数, 193日, 501日]
+      - &c2 [怪我で欠場した試合, 31試合, 83試合]
+      - &c3 [いちばん長い連続欠場, 9試合・49日, 33試合・195日]
+      source: Transfermarkt の負傷の一覧
+  - text: 件数は8件と24件、離脱した日数は193日と501日。
+    card: {type: table, title: 怪我で失ったもの（通算）, columns: [項目, ベリンガム, ムシアラ], rows: [*c0, *c1, *c2, *c3], highlight_row: 1, source: Transfermarkt の負傷の一覧}
+  - text: 欠場した試合は31試合と83試合です。
+    card: {type: table, title: 怪我で失ったもの（通算）, columns: [項目, ベリンガム, ムシアラ], rows: [*c0, *c1, *c2, *c3], highlight_row: 2, source: Transfermarkt の負傷の一覧}
+  - text: ムシアラは2025年の夏、足首の骨折にともなって腓骨を折りました。
+    card: {type: table, title: 怪我で失ったもの（通算）, columns: [項目, ベリンガム, ムシアラ], rows: [*c0, *c1, *c2, *c3], highlight_row: 3, source: Transfermarkt の負傷の一覧}
+  - text: そこから33試合、195日を続けて欠場。戻った試合でピッチにいたのは3分でした。
+    card: {type: table, title: 怪我で失ったもの（通算）, columns: [項目, ベリンガム, ムシアラ], rows: [*c0, *c1, *c2, *c3], highlight_row: 3, source: Transfermarkt の負傷の一覧}
+  - text: 今季の初めには、体調のために3試合を欠場しています。
+    card: {type: table, title: 怪我で失ったもの（通算）, columns: [項目, ベリンガム, ムシアラ], rows: [*c0, *c1, *c2, *c3], highlight_row: 2, source: Transfermarkt の負傷の一覧}
+  - text: ベリンガムのいちばん長い連続欠場は、今年2月からの9試合、49日。
+    card: {type: table, title: 怪我で失ったもの（通算）, columns: [項目, ベリンガム, ムシアラ], rows: [*c0, *c1, *c2, *c3], highlight_row: 3, source: Transfermarkt の負傷の一覧}
+  - text: クラブの発表では、左脚の筋肉の負傷でした。
+  - text: そしてムシアラは、9月24日の代表戦のウォームアップで右の太ももを痛めています。
+  - text: 先発の名前に入っていながら、ピッチに出られないまま退きました。
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/verletzungen/spieler/581678
+  - https://www.transfermarkt.com/jamal-musiala/verletzungen/spieler/580195
+  - https://www.bundesliga.com/en/bundesliga/news/jamal-musiala-surgery-bayern-munich-germany-world-cup-38118
+  - https://www.bundesliga.com/en/bundesliga/news/jurgen-klopp-bayern-munich-jamal-musiala-scan-thigh-injury-germany-39347
+  - https://www.beinsports.com/en-us/soccer/la-liga/articles/the-worst-is-confirmed-for-jude-bellingham-real-madrid-loses-him-to-injury-2026-02-02
+- id: view
+  heading: 19歳のときは、同じ値段だった
+  tier: 背景
+  viewpoint: true
+  telop: 2022年11月の同じ更新で、2人とも1億ユーロだった
+  narrator: 解説
+  card: &mv
+    type: line
+    title: 推定の市場価値の歩み
+    unit: 億ユーロ
+    x: ['2022年11月', '2023年12月', '2024年12月', '2025年12月', '2026年10月']
+    series:
+    - [ベリンガム, [1.0, 1.8, 1.8, 1.6, 1.6]]
+    - [ムシアラ, [1.0, 1.1, 1.4, 1.3, 0.8]]
+    focus: ムシアラ
+    source: Transfermarkt の市場価値の推移
+  say:
+  - text: 同じように、推定の市場価値の線も並べてみます。
+    image: assets/images/20261009_cmp_pair/01.jpg
+    card: *mv
+  - text: 2022年11月9日の更新で、2人はそろって1億ユーロになりました。
+    card: {type: line, title: 推定の市場価値の歩み, unit: 億ユーロ, x: ['2022年11月', '2023年12月', '2024年12月', '2025年12月', '2026年10月'], series: [[ベリンガム, [1.0, 1.8, 1.8, 1.6, 1.6]], [ムシアラ, [1.0, 1.1, 1.4, 1.3, 0.8]]], focus: ムシアラ, highlight: '2022年11月', source: Transfermarkt の市場価値の推移}
+  - text: 19歳のベリンガムと、19歳のムシアラ。ここまでは同じ高さでした。
+    card: {type: line, title: 推定の市場価値の歩み, unit: 億ユーロ, x: ['2022年11月', '2023年12月', '2024年12月', '2025年12月', '2026年10月'], series: [[ベリンガム, [1.0, 1.8, 1.8, 1.6, 1.6]], [ムシアラ, [1.0, 1.1, 1.4, 1.3, 0.8]]], focus: ムシアラ, highlight: '2022年11月', source: Transfermarkt の市場価値の推移}
+  - text: その1年9か月前、進路を決めたときにムシアラが残した言葉です。
+  - voice: ムシアラ
+    text: ドイツのための心と、イングランドのための心がある。
+    card: none
+  - voice: ムシアラ
+    text: どちらの心も、これからも打ち続ける。
+    cont: true
+    pause: 0.5
+  - text: 線が離れていくのは、ここからです。
+    card: {type: line, title: 推定の市場価値の歩み, unit: 億ユーロ, x: ['2022年11月', '2023年12月', '2024年12月', '2025年12月', '2026年10月'], series: [[ベリンガム, [1.0, 1.8, 1.8, 1.6, 1.6]], [ムシアラ, [1.0, 1.1, 1.4, 1.3, 0.8]]], focus: ムシアラ, highlight: '2023年12月', source: Transfermarkt の市場価値の推移}
+  - text: ベリンガムは1年あまりで1.8億ユーロへ。
+    card: {type: line, title: 推定の市場価値の歩み, unit: 億ユーロ, x: ['2022年11月', '2023年12月', '2024年12月', '2025年12月', '2026年10月'], series: [[ベリンガム, [1.0, 1.8, 1.8, 1.6, 1.6]], [ムシアラ, [1.0, 1.1, 1.4, 1.3, 0.8]]], focus: ムシアラ, highlight: '2023年12月', source: Transfermarkt の市場価値の推移}
+  - text: ムシアラの最高額1.4億ユーロは、さらに1年あとでした。
+    card: {type: line, title: 推定の市場価値の歩み, unit: 億ユーロ, x: ['2022年11月', '2023年12月', '2024年12月', '2025年12月', '2026年10月'], series: [[ベリンガム, [1.0, 1.8, 1.8, 1.6, 1.6]], [ムシアラ, [1.0, 1.1, 1.4, 1.3, 0.8]]], focus: ムシアラ, highlight: '2024年12月', source: Transfermarkt の市場価値の推移}
+  - text: いまは1.6億ユーロと8000万ユーロ。ちょうど2.0倍の開きです。
+    emph: true
+    card: {type: line, title: 推定の市場価値の歩み, unit: 億ユーロ, x: ['2022年11月', '2023年12月', '2024年12月', '2025年12月', '2026年10月'], series: [[ベリンガム, [1.0, 1.8, 1.8, 1.6, 1.6]], [ムシアラ, [1.0, 1.1, 1.4, 1.3, 0.8]]], focus: ムシアラ, highlight: '2026年10月', source: Transfermarkt の市場価値の推移}
+  - text: もうひとつ、自分で割ってみた数があります。タイトル1つあたりの試合数です。
+  - text: 通算の出場をタイトルの数で割ると、ベリンガムは64.0、ムシアラは17.6。
+  - text: ただしムシアラの16のタイトルのうち5つは、その大会に1分も出ていません。
+  - text: 出場のある11のタイトルで、クラブの試合だけを割り直すと21.4です。
+    card: &calc
+      type: calc
+      title: 出場のあるタイトルで割り直す（ムシアラ）
+      terms:
+      - ['235試合', クラブの出場]
+      - ['11', 出場のあるタイトル]
+      - ['21.4試合', 1つあたり]
+      ops: ['÷', '＝']
+  - text: これは毎年のように勝つクラブに16歳からいた、というクラブの力の話です。
+    card: *calc
+  - text: 2人の優劣ではありません。
+    card: *calc
+  - text: 次の物差しは、10月15日とされているムシアラの復帰です。
+  - text: そこから、出られる時間の割合がどこまで戻るか。
+  - text: 同じ年に生まれた2人の線が、また近づくのかどうかが見えます。
+  quotes_from:
+  - スカイスポーツ https://www.skysports.com/football/news/11890/12227535/jamal-musiala-bayern-munich-midfielder-to-represent-germany-and-not-england
+  sources:
+  - https://www.transfermarkt.com/jude-bellingham/marktwertverlauf/spieler/581678
+  - https://www.transfermarkt.com/jamal-musiala/marktwertverlauf/spieler/580195
+  - https://www.skysports.com/football/news/11890/12227535/jamal-musiala-bayern-munich-midfielder-to-represent-germany-and-not-england
+  - https://www.fotmob.com/players/1077894
+  - https://www.fotmob.com/players/1156141

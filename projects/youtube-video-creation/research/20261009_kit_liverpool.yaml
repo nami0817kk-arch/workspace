@@ -1,0 +1,390 @@
+# ユニフォームとエンブレムの歴史 第1回：リヴァプール（10/9 公開）。材料の控えは research/raw/20261009_kit_liverpool_material.md。
+# **このシリーズ（毎日の枠7）の1本目。節の並びが114本ぶんの雛形になる。**
+#   ①オープニング（一言→題→引き）②エンブレムの年表（main・頭に強い一点・timeline の板・読み上げは5行）
+#   ③色の歴史（本人の言葉を原文から訳して引く）④胸スポンサーと用具メーカー（金額の伸びは折れ線）⑤見立て（自分で数えた比べ3つ）
+# 材料から出ない。材料に無いことは書かない。食い違いの扱いは材料の注記どおり:
+#   赤へ変わった年は **1896年**（クラブ公式の「4年間」＋Wikipedia＋Historical Football Kits が一致）。1894年説も世にあるが採らない。
+#   オール・レッドは **1964年11月25日（赤パンツ）→ 12月16日（赤ソックスで完成）** と分けて言う。クラブ公式の別記事の「1965年」は採らない。
+#   **adidas の契約年数は言わない**（公式は multi-year、報道は5年、Wikipedia は10年）。「2025年から3度目」で止める。
+#   1896年に赤へ決めた人物名は分からなかったので、人物を出さない（「街の色」まで）。
+# ヒルズボロ：**炎がエンブレムに入った経緯として事実だけを2行**。表に組まない・数を並べない（97人は1度だけ）。
+# 数字の重なり対策（別の節で同じ数字を読まない）：『6000万』は語りで一度も読まない（calc の板に出すだけ）。
+#   胸の額は④が「5年で3億ポンド超」、⑤は倍率と時間だけ読む。『68年』は⑤だけ（③は「ずっとあと」で受ける）。
+# 板：②timeline（9代のうち6行）④line（胸スポンサー料の伸び。単位は万ポンドで、語りの数字と板の数字をそろえた。
+#     百万ポンド＋0.05 にすると、点の札『0.05』が縦軸の目盛り『20』に重なって読めなくなる＝実際に描いて見つけた）
+#   ⑤calc 2枚（1200倍／7時間18分）＋ table 2枚（色の長さ／胸の社数）。書き込みは1つ（④の1979年に赤丸）。
+# 写真は手元の2枚だけ。下地の入れ替えは1回（②③＝観客席の1枚 → ④⑤＝スタンドの広告板が写る1枚）。
+#   stadium_リヴァプール.png には Standard Chartered と new balance の看板が写っているので、スポンサーの節に当てた。
+# サムネ：構図 scene（これまで全部 classic なので、同じ構図を3回続けない決まりの初回）。横長 1920x1080、クラブ名入り、答えは ●● で伏せた。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月9日
+series: ユニフォームとエンブレムの歴史
+people:
+- リヴァプール
+- ビル・シャンクリー
+- イアン・セント・ジョン
+- ジョン・スミス
+short_title: リヴァプールの胸の鳥は、1950年から何回描き直されてきたのか
+theme:
+  id: kit_liverpool
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: リヴァプールの赤は、一度に完成していない。全身が赤くなった夜に何が起きたか
+  question: リヴァプールのユニフォームとエンブレムは、どうやっていまの形になったのか
+  hook: ただ、その赤は三度に分けて揃いました。
+  lead: 赤いシャツ、赤いパンツ、赤いソックス。ヨーロッパでいちばん知られた赤。
+  takeaway: リヴァプールの赤は一度にできたものではない。創立の1892年は青と白で、赤に変わったのは1896年。パンツまで赤くしたのが1964年11月25日のアンデルレヒト戦で、ソックスまで揃ったのは3週間後の12月16日だった。赤いソックスを言い出したのは監督ではなく選手のイアン・セント・ジョンで、シャンクリーは選手が巨人に見えたと振り返っている。赤に白いパンツの時代は68年、全身が赤になってからはまだ61年10か月で、追い抜くのは2032年11月25日。シャツのエンブレムは1950年から9代で、8.4年に1回の割で変わってきた。胸の広告は1979年の日立が最初で、イングランドのプロクラブで初めての胸スポンサーは日本の会社だった。1年5万ポンドだったその額は、2027年から始まるトルコ航空の契約ならおよそ7時間18分で届く。胸に入った名前は48シーズンで5社、1社あたり9.6シーズンで、マンチェスター・ユナイテッドの6.4シーズンの約1.5倍長い
+  opening_image: assets/backgrounds/stadium_リヴァプール_in.png
+thumbnail:
+  layout: scene
+  photo: assets/backgrounds/stadium_リヴァプール_in.png
+  band: bottom
+  line1: リヴァプール
+  line2: 全身が赤くなったのは●●年
+  crests:
+  - リヴァプール
+  tags:
+  - リヴァプール
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: crest
+  main: true
+  heading: 胸の鳥は、8回描き直されている
+  tier: 確定
+  official: true
+  telop: シャツに付いたエンブレムは1950年から9代。8.4年に1回の割で変わってきた
+  narrator: キャスター
+  card: &crest_board
+    type: timeline
+    title: シャツのエンブレム
+    rows:
+    - ['1892年', 市の紋章を会章に。シャツには付けない]
+    - ['1950年', リヴァーバード1羽が初めてシャツへ]
+    - ['1955年', LFCの文字を足してホームの赤へ]
+    - ['1987年', 盾の形に。クラブ名の文字が入る]
+    - ['1992年', 創立100年の記念章。1季だけ]
+    - ['1993年', 両脇に2つの永遠の炎]
+    focus: '1993年'
+  say:
+  - text: この赤いシャツの胸にいるのは、リヴァプールの鳥。初めて付いたのは1950年です。
+    short_only: true
+    image: assets/backgrounds/stadium_リヴァプール_in.png
+  - text: シャツのエンブレムは1950年から9代。平均8.4年に1回、描き直されています。
+    image: assets/backgrounds/stadium_リヴァプール_in.png
+    card: *crest_board
+    emph: true
+  - text: 始まりは市の紋章。アンフィールドに掲げた旗でした。
+    card:
+      <<: *crest_board
+      highlight_row: 0
+  - text: 1987年に盾の形になり、クラブ名の文字がシャツに入ります。
+    card:
+      <<: *crest_board
+      highlight_row: 3
+  - text: 1993年、エンブレムの両脇に、初めて2つの炎が加わります。
+    card:
+      <<: *crest_board
+      highlight_row: 5
+  - text: ヒルズボロで亡くなった97人を悼み、アンフィールドで燃え続ける炎です。
+    card:
+      <<: *crest_board
+      highlight_row: 5
+  sources:
+  - https://legacy.liverpoolfc.com/news/125/261454-in-pictures-a-short-history-of-the-liverpool-fc-crest
+  - https://www.liverpoolfc.com/news/how-lfcs-liver-bird-emblem-originally-looked-75-years-ago
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://www.bbc.co.uk/news/uk-england-merseyside-58099651
+- id: colour
+  heading: 青と白から、全身の赤へ
+  tier: 確定
+  official: true
+  telop: 創立のときは青と白。赤になったのは1896年で、全身が赤く揃うのは1964年
+  narrator: キャスター
+  card: &colour_board
+    type: table
+    title: 赤が揃うまで
+    columns:
+    - いつ
+    - 格好
+    rows:
+    - ['1892年', 青と白。パンツとソックスは紺]
+    - ['1896年', 赤いシャツに、白いパンツ]
+    - ['1964年11月25日', シャツとパンツが赤。ソックスは白]
+    - ['1964年12月16日', ソックスも赤。全身が赤に]
+  say:
+  - text: 1892年に生まれたとき、リヴァプールは青と白でした。
+    image: assets/backgrounds/stadium_リヴァプール_in.png
+    card: *colour_board
+  - text: 上が青と白、下は紺。この色を4年間使います。
+    card:
+      <<: *colour_board
+      highlight_row: 0
+  - text: 赤に変わったのは1896年。街の色でした。
+    card:
+      <<: *colour_board
+      highlight_row: 1
+  - text: ただしパンツは白のまま。全身が赤くなるのは、ずっとあとです。
+    card:
+      <<: *colour_board
+      highlight_row: 1
+  - text: 動かしたのは、ビル・シャンクリー監督でした。
+    card: none
+  - text: 更衣室に赤いパンツを持ちこみ、主将のロン・イェーツに履かせます。
+  - text: そして、こう言いました。
+  # 原文（材料 6-①、イアン・セント・ジョンの自伝）:
+  #   "Christ, Ronnie, you look awesome, terrifying. You look 7 ft tall."
+  - voice: ビル・シャンクリー
+    text: ロニー、おそろしいくらいだ。
+    card: none
+  - voice: ビル・シャンクリー
+    text: 7フィートの大男に見えるぞ。
+    cont: true
+  - text: そこへ、聞いていたイアン・セント・ジョンが口を挟みます。
+    card: none
+  # 原文:
+  #   "Why not go the whole hog, boss? Why not wear red socks? Let's go out all in red."
+  - voice: イアン・セント・ジョン
+    text: 監督、どうせなら全部やりませんか。
+    card: none
+  - voice: イアン・セント・ジョン
+    text: ソックスも赤にして、全身、赤で出ましょう。
+    cont: true
+  - text: 赤いソックスを言い出したのは、監督ではなく選手でした。
+    card: none
+    emph: true
+  - text: 1964年11月25日、アンフィールド。ヨーロッパの大会の1回戦です。
+    card:
+      <<: *colour_board
+      highlight_row: 2
+  - text: 相手はベルギーのアンデルレヒト。ここでシャツとパンツが赤に。
+    card:
+      <<: *colour_board
+      highlight_row: 2
+  - text: ソックスはまだ白です。この試合は3対0で勝ちました。
+    card:
+      <<: *colour_board
+      highlight_row: 2
+  - text: 次の週末には、白いパンツに戻されました。
+    card:
+      <<: *colour_board
+      highlight_row: 2
+  - text: シーズン途中にユニフォームを変えることが、リーグで認められていなかったためです。
+    card:
+      <<: *colour_board
+      highlight_row: 2
+  - text: 上下とも赤で揃うのは3週間後。ブリュッセルでの第2戦、12月16日でした。
+    card:
+      <<: *colour_board
+      highlight_row: 3
+  - text: シャンクリーは、こう振り返っています。
+    card: none
+  # 原文:
+  #   "It was fantastic. The introduction of the all-red strip had a huge psychological effect.
+  #    The players looked like giants. And we played like giants."
+  - voice: ビル・シャンクリー
+    text: 全身を赤にした効き目は、とても大きかった。
+    card: none
+  - voice: ビル・シャンクリー
+    text: 選手たちが、巨人のように見えたんだ。
+    cont: true
+  - voice: ビル・シャンクリー
+    text: そして、巨人のようにプレーした。
+    cont: true
+    emph: true
+  sources:
+  - https://www.liverpoolfc.com/news/60-years-liverpool-wear-all-red-strip-first-time
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://www.historicalkits.co.uk/Liverpool/Liverpool.htm
+  - https://museumofjerseys.com/2018/10/13/liverpools-gradual-switch-to-all-red/
+  - https://www.11v11.com/matches/liverpool-v-anderlecht-25-november-1964-219323/
+  quotes_from:
+  - リヴァプール公式 https://www.liverpoolfc.com/news/60-years-liverpool-wear-all-red-strip-first-time
+- id: money
+  heading: 胸の広告は、日本の会社から始まった
+  tier: 報道
+  telop: イングランドのプロクラブで初めての胸スポンサーは日立。1979年、1年5万ポンド
+  narrator: 解説
+  card: &money_board
+    type: line
+    title: 胸スポンサー料の1年あたり
+    x: ['1979', '2010', '2018', '2022', '2027']
+    series:
+    - [1年あたりの額, [5, 2000, 4000, 5000, 6000]]
+    unit: 万ポンド
+    note: 1979年の日立は5万ポンド。目盛りの上ではほとんど0に見える
+  say:
+  - text: リヴァプールの胸に広告が入ったのは、1979年7月です。
+    image: assets/backgrounds/stadium_リヴァプール.png
+    card: *money_board
+  - text: 相手は、日本の日立。イングランドのプロクラブでは最初の例でした。
+    card: *money_board
+    emph: true
+  - text: 契約は1年で、5万ポンド。
+    card:
+      <<: *money_board
+      highlight: '1979'
+    mark: {kind: circle, item: 0, text: 日本の会社}
+  - text: 会長のジョン・スミスは、発表の場でこう話しています。
+    card: none
+  # 原文（Daily Express 1979-07-25。材料 6-③）:
+  #   "We are fighting for our existence."
+  #   "From a turnover of £2-4 million last year, Liverpool's profit at the end of the day was a meagre £71,000."
+  #   "The days are gone when a club like ours could control their destiny on the money coming through the turnstiles."
+  - voice: ジョン・スミス
+    text: 我々は、生き残りをかけて戦っている。
+    card: none
+  - voice: ジョン・スミス
+    text: 去年の売り上げは200万から400万ポンド。
+    cont: true
+  - voice: ジョン・スミス
+    text: 手元に残った利益は、たった7万1000ポンドだった。
+    cont: true
+  - voice: ジョン・スミス
+    text: 入場料だけで行く先を決められる時代は、終わった。
+    cont: true
+    emph: true
+  - text: その広告は、しばらくテレビに映せませんでした。
+    card: none
+  - text: テレビ局が広告を映さない方針で、認められたあとも小さくするよう求められます。
+  - text: ここからの伸びを、折れ線にしました。
+    card: *money_board
+  - text: あいだにクラウン・ペインツ、キャンディ、カールスバーグが入ります。
+    card: *money_board
+  - text: 2010年からは、イギリスの銀行スタンダードチャータード。1年2000万ポンド。
+    card:
+      <<: *money_board
+      highlight: '2010'
+  - text: 2022年の更新で、1年5000万ポンド超へ。12年で2倍以上です。
+    card:
+      <<: *money_board
+      highlight: '2022'
+  - text: そして2027年から、胸はトルコ航空に替わります。
+    card:
+      <<: *money_board
+      highlight: '2027'
+  - text: 5年で3億ポンド超。48年前の日立とは、桁が3つ違います。
+    card:
+      <<: *money_board
+      highlight: '2027'
+  - text: シャツを作る側も動いています。2012年のワリアーは1年2500万ポンド。
+    card: none
+  - text: 当時のプレミアで最高額。ユナイテッドのナイキを150万上回りました。
+  - text: いま作っているのはアディダス。2025年から、3度目の付き合いです。
+  sources:
+  - https://playupliverpool.com/1979/07/25/liverpool-sign-deal-with-hitachi/
+  - https://www.theguardian.com/football/2005/jul/06/theknowledge.sport
+  - https://the1888letter.com/the-first-shirt-sponsors-in-the-football-league/
+  - https://www.liverpoolfc.com/news/liverpool-fc-announces-turkish-airlines-main-club-partner-2027-28-season
+  - https://www.bbc.co.uk/sport/football/articles/cde0zxy6599o
+  - https://www.sportcal.com/sponsorship/standard-chartered-and-liverpool-renew-to-clock-up-17-years/
+  - https://www.campaignlive.co.uk/article/liverpool-nets-record-80m-shirt-sponsorship-deal/937941
+  - https://sponsorship.sportbusiness.com/2012/03/warrior-sports-draws-strength-from-liverpool-deal/
+  - https://www.liverpoolfc.com/news/lfc-and-adidas-reunite-new-multi-year-partnership
+  quotes_from:
+  - デイリー・エクスプレス https://playupliverpool.com/1979/07/25/liverpool-sign-deal-with-hitachi/
+- id: view
+  viewpoint: true
+  heading: 赤白の68年と、全身が赤の62年目
+  tier: 報道
+  telop: 胸の値段は48年で1200倍。赤白の時代に並ぶのは2032年11月25日
+  narrator: 解説
+  card: &rate_calc
+    type: calc
+    title: 胸の値段は何倍になったか
+    terms:
+    - ['6000万ポンド', 2027年からの1年]
+    - ['5万ポンド', 1979年の1年]
+    - [1200倍, 48年でついた差]
+    ops: ['÷', ＝]
+  say:
+  - text: ここからは、自分で数えた比べを3つ並べます。
+    image: assets/backgrounds/stadium_リヴァプール.png
+    card: *rate_calc
+  - text: ひとつ目。1979年と2027年、胸の値段を割ってみます。
+    card: *rate_calc
+  - text: 48年をはさんで、答えは1200倍でした。
+    card: *rate_calc
+  - text: 2027年からの額を日割りにして、日立の1年ぶんを当てはめます。
+    card: &hours_calc
+      type: calc
+      title: 日立の1年ぶんは、いまの何時間ぶんか
+      terms:
+      - ['5万ポンド', 1979年の1年ぶん]
+      - ['1日16万4384ポンド', 2027年からの日割り]
+      - [約7時間18分, 2027年なら]
+      ops: ['÷', ＝]
+  - text: およそ7時間18分。1年ぶんの額が、半日より早く出てしまいます。
+    card: *hours_calc
+    emph: true
+  - text: ふたつ目。色が続いた長さを数えました。
+    card: &era_board
+      type: table
+      title: 赤白と、全身が赤（自分で数えた）
+      columns:
+      - 格好
+      - 続いた長さ
+      rows:
+      - [赤シャツに白いパンツ, 1896年から68年]
+      - [全身が赤, 1964年11月から61年10か月]
+      - [並ぶ日, '2032年11月25日']
+  - text: 赤に白いパンツで68年。全身が赤になってからは61年10か月です。
+    card:
+      <<: *era_board
+      highlight_row: 1
+  - text: まだ赤白のほうが、6年2か月ぶん長い。
+    card:
+      <<: *era_board
+      highlight_row: 1
+  - text: 追いつくのは2032年11月25日。そこでようやく並びます。
+    card:
+      <<: *era_board
+      highlight_row: 2
+    emph: true
+  - text: みっつ目。胸に入った名前の数を、よそと比べました。
+    card: &firm_board
+      type: table
+      title: 胸の名前が居座った長さ（自分で数えた）
+      columns:
+      - クラブ
+      - シーズンと社数
+      - 1社あたり
+      rows:
+      - [リヴァプール, 48シーズンで5社, 9.6シーズン]
+      - [マンチェスター・ユナイテッド, 45シーズンで7社, 6.4シーズン]
+  - text: リヴァプールは48シーズンで5社。1社あたり9.6シーズンです。
+    card:
+      <<: *firm_board
+      highlight_row: 0
+  - text: ユナイテッドは45シーズンで7社、1社あたり6.4シーズン。
+    card:
+      <<: *firm_board
+      highlight_row: 1
+  - text: 同じ名前が居座る長さは、およそ1.5倍でした。
+    card:
+      <<: *firm_board
+      highlight_row: 0
+    emph: true
+  - text: 長かったのはカールスバーグの18シーズン。次が、いまの17シーズン。
+    card:
+      <<: *firm_board
+      highlight_row: 0
+  - text: この2社だけで、48シーズンのうち7割を超えます。
+    card:
+      <<: *firm_board
+      highlight_row: 0
+  - text: そのスタンダードチャータードも、2027年6月で胸を離れます。
+    card: none
+  - text: 次に胸の名前が変わるのは、2027-28シーズンからです。
+  sources:
+  - https://www.liverpoolfc.com/news/liverpool-fc-announces-turkish-airlines-main-club-partner-2027-28-season
+  - https://www.bbc.co.uk/sport/football/articles/cde0zxy6599o
+  - https://playupliverpool.com/1979/07/25/liverpool-sign-deal-with-hitachi/
+  - https://lfchistory.net/articles/4483
+  - https://www.skysports.com/football/news/11095/12250656/manchester-united-agree-235m-shirt-sponsorship-contract-with-teamviewer-from-next-season-in-five-year-deal
+  - https://nbcsports.com/soccer/news/manchester-united-announces-sixth-shirt-sponsor-in-club-history

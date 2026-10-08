@@ -1,0 +1,353 @@
+# 2026-10-08 流れの点検（output/flow/20261009_transfer_neymar.md）を反映。
+#   事実の誤りは無かった（割り算・倍率・換算はすべて材料と一致）。直したのは流れと言い回し：
+#   ②に2位の額（1億8000万ユーロ）を入れた（「4200万の差」が耳で出せなかった）／
+#   「違約金」「連帯貢献金」「供託」「源泉徴収」「パルク・デ・プランス」「ヨーロッパの財務の決まり」に一言の説明を足した／
+#   「1年以内に契約すれば」の主語の入れ替わりを直した／④の為替からその後の移籍へのつなぎを足した／
+#   「いまもそこにいます」は⑤と同じなので落とした／④から⑤へ話が戻ることを言う言葉を足した／
+#   ⑤の「5人ではなく5件です」の行を落とした（表の数え方の但し書きで、聞くと逆に混乱する）。
+# 移籍の深掘り 第1回：ネイマール バルセロナ → パリ・サンジェルマン（2017年）。10/9 公開。
+# 材料の控えは research/raw/20261009_transfer_neymar_material.md。**材料から出ない。**
+# **このシリーズ（毎日の枠8）の1本目。節の並びがこれから何十本ぶんの雛形になる。**
+#   ①オープニング（一言→題→引き）②金額の中身（main・頭に強い一点・waterfall・読み上げは5行）
+#   ③どう払ったか（この回の芯・勅令1006/1985 第16条・timeline）④その後どうなったか（calc と convert）
+#   ⑤見立て（歴代上位の table ＋ calc。市場に何をしたか）
+# いちばん強い一点：2億2200万ユーロはいまも歴代1位で、2位のエムバペ1億8000万に9年たっても抜かれていない。
+# **クラブが公表した額と、報じられただけの額を言い分ける**（材料 0 の表）:
+#   クラブ公表＝違約金 2億2200万ユーロ（バルセロナ公式 2017-08-03 と同クラブの決算）。
+#   報じられた額＝パリ・サンジェルマンの支出 2億5200万ユーロ（代理人2人に1070万ずつ、連帯貢献金870万）。
+#   **パリ・サンジェルマンは内訳を一度も公表していない**ので「クラブが発表した」とは言わない。板にも「報道」と書く。
+# **仏金融検察の捜査は「捜査中」までしか言わない**（材料 2-3 の注意）。脱税と断定しない。確度は④の「報道」に置く。
+#   ④で読むのは「給与の前払いにあたるのではないか」「源泉徴収40%＝8800万ユーロが払われずに済んだとされる」
+#   「2020年から調べている」「結論はまだ出ていない」の4点まで。政治家の名前は出さない。
+# スペインの税（IRPF）は、2017年当時どちらの扱いだったかを確定できなかった（材料 2-4）ので**台本に出さない**。
+# 2600万ユーロの更新ボーナスの裁判（材料 1-3）は違約金の内訳ではないので**入れない**。年俸も使わない（公式が無い）。
+# 為替は ECB 参照相場。2017-08-03＝1ユーロ130.91円、2026-10-07＝176.85円。**どちらの為替かを必ず言う**（④の換算の板2枚）。
+#   1ドル換算は使わない（当時の各紙が $262m/$263m/$257m で食い違う）。⑤の FIFA の 63億7000万ドルは FIFA 自身の単位なのでそのまま。
+# 自分で割った数：2億2200万 ÷ 173試合 ＝ 約128万3000ユーロ／2億2200万 ÷ 118ゴール ＝ 約188万1000ユーロ／
+#   222 ÷ 105（ポグバ）＝ 約2.11倍／180 ÷ 222 ＝ 81%／400（デンベレの条項）÷ 222 ＝ 約1.8倍／
+#   128万3000 × 130.91 ＝ 約1億6800万円／128万3000 × 176.85 ＝ 約2億2700万円。
+# ⑤の表は **4位が1億4500万ユーロで2件並ぶ**ので「上位5人」と言わず「上位5件」と読む（材料 5 の注）。
+#   Transfermarkt の額は成功報酬の達成分を含むので「報じられた額」と言う（デンベレはバルサ公式が1億500万＋成功報酬）。
+# 数字の重なり対策（別の節で同じ数字を読まない）：『2億2200万ユーロ』は②だけ。③④⑤では「違約金」「2017年に付いた値段」で受ける。
+#   『1億8000万ユーロ』は②だけ（⑤は「81%」で受ける）。『173試合』『118ゴール』は④だけ。
+#   **題には金額を入れない**（題と節で同じ数字を読むと draft が止まる）。
+# 板：②waterfall（違約金＋内訳）③timeline（6行）④stats・calc・convert2枚 ⑤table・calc。書き込み（赤ペン）は使っていない。
+# 写真：Commons の2枚だけ。01（CC BY-SA 2.0 / Balkan Photos、2018年、パリ・サンジェルマン時代の試合前）＋ facecrop の 01_w / 01_v。
+#   **板の下地はカンプ・ノウの客席**（assets/backgrounds/stadium_バルセロナ_in.png。顔が無いので板が顔にかからない）。
+#   入れ替えは1回（①②＝01_w → ③以降＝カンプ・ノウ）。代理店の写真は使っていない。サントスのエンブレムは手元に無いので出さない。
+#   **見逃し**：01_w は本人が遠く、顔が約124px。冒頭の顔の判定（facecheck）で「顔なし」と出るかもしれない。preview4 で見ること。
+# 声：テバス（リーガ会長）の1件だけ。山場の節に声は無いが、シリーズの回なので本編の46秒の決まりは見ない。
+# サムネ：構図 number（2億2200万ユーロの数字が主役）。10/8 のリヴァプールが scene、それ以外は classic なので3回続きにならない。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月9日
+series: 移籍の深掘り
+people:
+- ネイマール
+- バルセロナ
+- パリ・サンジェルマン
+- ハビエル・テバス
+short_title: ネイマールの2億2200万ユーロ。9年たっても、まだ誰も超えていない
+theme:
+  id: transfer_neymar
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ネイマール
+  title: ネイマール、9年たっても誰も超えない移籍金。バルセロナが交渉できなかった事情
+  question: ネイマールの移籍金は、誰が誰に、どうやって払われたのか
+  lead: サッカーの歴史で、いちばん高く売れた選手。
+  hook: ただ、その額をバルセロナと話し合った人は、ひとりもいません。
+  takeaway: ネイマールの移籍金2億2200万ユーロは、2017年から9年たったいまも歴代1位のままで、2位のエムバペ1億8000万ユーロに4200万ユーロの差を付けている。バルセロナが公表しているのはこの違約金だけで、代理人2人への手数料と連帯貢献金を足した2億5200万ユーロは報じられた額。払い方はクラブ同士の売買ではなく、スペインの勅令1006/1985 第16条にある「選手が自分の意思で契約を切り、補償金を自分で払う」形で、新しいクラブは連帯保証人として後ろに立つだけだった。だからバルセロナには断ることも値を上げることもできず、8月3日の午前にリーグが受け取りを拒んでも移籍は止まらなかった。パリ・サンジェルマンでの6シーズンは173試合118ゴールでタイトルは13、ただし移籍の目的だったチャンピオンズリーグだけが無い。違約金を出場試合で割ると1試合あたり約128万3000ユーロで、2017年8月3日の為替なら約1億6800万円、いまの為替なら約2億2700万円。前の世界記録ポグバの1億500万ユーロから一度に約2.11倍へ跳ね、翌年のエムバペはその81%、22日後にバルセロナが新加入選手に付けた違約金条項は約1.8倍の4億ユーロになった。払い方をめぐってはフランスの金融検察が2020年から調べていて、結論はまだ出ていない
+  opening_image: assets/images/20261009_transfer_neymar/01_w.jpg
+thumbnail:
+  layout: number
+  photo: assets/images/20261009_transfer_neymar/01_w.jpg
+  short_photo: assets/images/20261009_transfer_neymar/01_v.jpg
+  number: 2億2200万
+  line1: ネイマールの移籍金 ユーロ
+  line2: バルサは●●していない
+  crests:
+  - バルセロナ
+  - パリサンジェルマン
+  tags:
+  - ネイマール
+  - バルセロナ
+  - パリ・サンジェルマン
+  - 移籍金
+  - 移籍の深掘り
+sections:
+- id: money
+  main: true
+  heading: 2億2200万ユーロの中身
+  tier: 報道
+  telop: 2億2200万ユーロはいまも歴代1位。2位のエムバペ1億8000万に9年抜かれていない
+  narrator: キャスター
+  card: &money_board
+    type: waterfall
+    title: パリ・サンジェルマンが出した額
+    start: [違約金, 222]
+    steps:
+    - [代理人（父）, 10.7]
+    - [代理人（ザハビ）, 10.7]
+    - [連帯貢献金, 8.7]
+    total: [合計, 252.1]
+    unit: 百万ユーロ
+  say:
+  - text: 2017年の夏、ネイマールがバルセロナからパリ・サンジェルマンへ移りました。
+    short_only: true
+    image: assets/images/20261009_transfer_neymar/01_w.jpg
+  - text: 2億2200万ユーロ。9年たったいまも、これを超えた移籍はありません。
+    emph: true
+    image: assets/images/20261009_transfer_neymar/01_r.jpg
+    card:
+      <<: *money_board
+      highlight: 違約金
+  - text: 2位はエムバペの1億8000万ユーロ。4200万の差が9年そのままです。
+    card:
+      <<: *money_board
+      highlight: 違約金
+  - text: ただ、バルセロナが公表しているのは、契約を切るための違約金だけです。
+    card:
+      <<: *money_board
+      highlight: 違約金
+  - text: パリ・サンジェルマン側が出した総額は、2億5200万ユーロと伝えられています。
+    card:
+      <<: *money_board
+      highlight: 合計
+  - text: 違約金より3000万多い。代理人2人の手数料と、育てたクラブへの連帯貢献金。
+    card:
+      <<: *money_board
+      highlight: 連帯貢献金
+  sources:
+  - https://www.fcbarcelona.com/en/football/first-team/news/748497/fc-barcelona-communique-on-neymar-jr
+  - https://www.elespanol.com/elbernabeu/real-madrid/futbol/20181109/fichaje-neymar-costo-psg-millones-football-leaks/351965964_0.html
+  - https://www.insideworldfootball.com/2018/10/04/1bn-barca-set-new-revenue-records-promise-come/
+  - https://www.transfermarkt.com/statistik/transferrekorde
+- id: how
+  heading: 払ったのは、クラブではなく本人だった
+  tier: 確定
+  official: true
+  telop: スペインの勅令1006号 第16条。選手が自分の意思で契約を切り、補償金を自分で払う
+  narrator: 解説
+  card: &how_board
+    type: timeline
+    title: 2017年8月、決着までの3日間
+    rows:
+    - ['8月2日', 本人が退団を通告。クラブは「全額を先に預けよ」]
+    - ['8月3日 午前', 弁護士がリーグ本部へ。リーグが受け取りを拒否]
+    - ['8月3日 午後', バルセロナのオフィスで直接支払い。クラブが受領を公表]
+    - ['8月3〜4日', 移籍証明書がフランスへ。5年契約を発表]
+    - ['8月4日', パルク・デ・プランスで入団会見]
+    focus: '8月3日 午後'
+  say:
+  - text: では、その金はどうやって動いたのでしょうか。
+    image: assets/backgrounds/stadium_バルセロナ_in.png
+    card: none
+  - text: 鍵は、スペインの勅令1006号です。
+    card: *how_board
+  - text: 1985年に決まった、プロ選手の働き方の決まりです。
+    card: *how_board
+  - text: その第16条に、こう書いてあります。
+    card: *how_board
+  - text: 選手は、自分の意思で契約を終わらせられる。
+    card: *how_board
+  - text: そのときクラブには、補償金を受け取る権利がある。
+    card: *how_board
+  - text: 額は、先に取り決めてあればその額です。
+    card: *how_board
+  - text: つまり払うのは選手本人。クラブ同士の売り買いではありません。
+    emph: true
+    card: *how_board
+  - text: 選手が1年以内に別のクラブと契約すれば、そのクラブが保証人になります。
+    card: *how_board
+  - text: だからバルセロナには、断ることも値を上げることもできません。
+    emph: true
+    card: *how_board
+  - text: ネイマールが退団を伝えたのは、2017年8月2日の朝でした。
+    card:
+      <<: *how_board
+      highlight_row: 0
+  - text: クラブは、7月1日時点の違約金を全額、先に預けよと答えます。
+    card:
+      <<: *how_board
+      highlight_row: 0
+  - text: 翌3日の午前、弁護士がマドリードのリーグ本部へ向かいます。
+    card:
+      <<: *how_board
+      highlight_row: 1
+  - text: ところが、リーグが受け取りを拒みました。
+    card:
+      <<: *how_board
+      highlight_row: 1
+  - voice: ハビエル・テバス
+    text: リーグに属さないクラブが、我々の決まりを使おうとするなら、
+  - voice: ハビエル・テバス
+    text: その金は受け取りません。
+    cont: true
+  - text: 挙げた理由は、支出を収入の範囲に収める欧州の決まりへの疑いでした。
+    card:
+      <<: *how_board
+      highlight_row: 1
+  - text: それでも移籍は止まりません。
+    card:
+      <<: *how_board
+      highlight_row: 2
+  - text: 勅令の権利は、選手とクラブのあいだのものだからです。
+    card:
+      <<: *how_board
+      highlight_row: 2
+  - text: 同じ日の午後、弁護士はバルセロナのオフィスへ行き、直接払いました。
+    card:
+      <<: *how_board
+      highlight_row: 2
+  - text: クラブは受領を認め、資料をヨーロッパの連盟へ出す、と書き添えました。
+    card:
+      <<: *how_board
+      highlight_row: 2
+  - text: 翌4日、本拠地パルク・デ・プランスで入団会見が開かれます。
+    card:
+      <<: *how_board
+      highlight_row: 4
+  quotes_from:
+  - Mail & Guardian https://mg.co.za/2017-08-03-la-liga-rejects-payment-of-neymar-buyout-clause/
+  sources:
+  - https://www.fcbarcelona.com/en/football/first-team/news/748497/fc-barcelona-communique-on-neymar-jr
+  - https://www.boe.es/buscar/act.php?id=BOE-A-1985-12313
+  - https://www.skysports.com/football/news/11820/10972051/la-liga-refuse-to-accept-psg-payment-for-neymar
+  - https://www.cbssports.com/soccer/news/neymar-officially-joins-psg-in-world-record-transfer-deal/
+  - https://mg.co.za/2017-08-03-la-liga-rejects-payment-of-neymar-buyout-clause/
+- id: after
+  heading: 6年と13個。1試合あたりに直すと
+  tier: 報道
+  telop: パリでの6シーズンは173試合118ゴール。タイトルは13、ただし狙った大会だけが無い
+  narrator: キャスター
+  card: &after_board
+    type: stats
+    title: パリ・サンジェルマンでの6シーズン
+    items:
+    - ['173', 試合, 2017年8月〜2023年8月]
+    - ['118', ゴール, 同じ期間]
+    - ['13', タイトル, チャンピオンズリーグは無し]
+    focus: 2
+  say:
+  - text: ネイマールは、ここから6シーズンをパリで過ごします。
+    card: *after_board
+  - text: 公式戦173試合で118ゴール。1シーズンあたり29試合、20ゴールの計算です。
+    card: *after_board
+  - text: 獲ったタイトルは13。ただし、チャンピオンズリーグはありません。
+    emph: true
+    card: *after_board
+  - text: クラブがこの移籍で狙っていたのが、まさにその大会でした。
+    card: *after_board
+  - text: 違約金を、出場した試合の数で割ってみます。
+    card: &after_calc
+      type: calc
+      title: 1試合あたりの違約金
+      terms:
+      - ['2億2200万ユーロ', 違約金]
+      - ['173試合', パリでの出場]
+      - ['約128万3000ユーロ', 1試合あたり]
+      ops: ['÷', ＝]
+  - text: 1試合あたり、およそ128万3000ユーロ。
+    card: *after_calc
+  - text: 1ゴールあたりなら、およそ188万1000ユーロです。
+    card: *after_calc
+  - text: 2017年8月3日の為替、1ユーロ130円91銭で円に直すと、
+    card: &after_then
+      type: convert
+      title: 1試合あたりを円に（移籍の当日の為替）
+      from: ['128万3000', ユーロ, 1試合あたり]
+      to: ['約1億6800万', 円, 2017年8月3日]
+      via: 1ユーロ＝130.91円
+  - text: 1試合で、およそ1億6800万円になります。
+    card: *after_then
+  - text: いまの為替、1ユーロ176円85銭なら、
+    card: &after_now
+      type: convert
+      title: 1試合あたりを円に（いまの為替）
+      from: ['128万3000', ユーロ, 1試合あたり]
+      to: ['約2億2700万', 円, 2026年10月7日]
+      via: 1ユーロ＝176.85円
+  - text: 同じ1試合が、およそ2億2700万円に変わります。
+    card: *after_now
+  - text: 本人の値段はその後も動きます。2023年、アル・ヒラルへ9000万ユーロ。
+    card: none
+  - text: 2025年にサントスへは、移籍金なしで戻りました。
+  - text: もう1つ、2017年の払い方そのものが、いまもフランスで調べられています。
+  - text: 本人がバルセロナに払い、クラブがそれを本人に戻す形でした。
+  - text: この戻しが給与の前払いにあたれば、税と社会保険料がかかります。
+  - text: 給与から先に引かれる税は40%。8800万ユーロが払われずに済んだとされ、
+  - text: フランスの金融検察が2020年から調べています。結論は、まだ出ていません。
+  sources:
+  - https://en.news.psg.fr/press-releases/first-team/paris-saint-germain-thank-neymar-jr-a-club-legend
+  - https://www.transfermarkt.com/neymar/profil/spieler/68290
+  - https://www.euronews.com/business/2024/01/18/french-authorities-investigate-alleged-neymar-psg-transfer-tax-scandal
+  - https://www.franceinfo.fr/politique/gerald-darmanin/transfert-de-neymar-au-psg-on-vous-explique-pourquoi-gerald-darmanin-est-soupconne-de-complicite-de-fraude-fiscale_6296634.html
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A
+- id: view
+  viewpoint: true
+  heading: この1件が、移籍金の天井をどこまで上げたか
+  tier: 報道
+  telop: 歴代上位5件のうち4件は、この移籍のあと。前の記録から一度に約2.11倍へ跳ねた
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 歴代の移籍金 上位5件（報じられた額）
+    columns: &view_cols
+    - ''
+    - 選手
+    - 移籍
+    - 百万ユーロ
+    rows: &view_rows
+    - ['1', ネイマール, バルセロナ → パリ, '222.0']
+    - ['2', エムバペ, モナコ → パリ, '180.0']
+    - ['3', デンベレ, ドルトムント → バルセロナ, '148.0']
+    - ['4', エンソ, チェルシー → シティ, '145.0']
+    - ['4', イサク, ニューカッスル → リヴァプール, '145.0']
+  say:
+  - text: この1件は、市場そのものを押し上げました。
+    card: *view_table
+  - text: 歴代の移籍金を並べると、上位5件のうち4件は、このあとの出来事です。
+    card: *view_table
+  - text: ネイマールの前の世界記録は、1年前のポグバが持っていました。
+    card: &view_calc
+      type: calc
+      title: 世界記録は一度に何倍になったか
+      terms:
+      - ['2億2200万ユーロ', 2017年 ネイマール]
+      - ['1億500万ユーロ', 2016年 ポグバ]
+      - [約2.11倍, 上がった幅]
+      ops: ['÷', ＝]
+  - text: その額で割ると約2.11倍。世界記録が、一度に2倍を超えました。
+    emph: true
+    card: *view_calc
+  - text: 翌年のエムバペでも、ネイマールの81%の額でした。
+    card: *view_calc
+  - text: 違約金の条項そのものも、上がりました。
+    card: *view_table
+  - text: この移籍の22日後、バルセロナが新加入選手に付けた条項は4億ユーロ。
+    card: *view_table
+  - text: ネイマールに付いていた額の、およそ1.8倍です。
+    card: *view_table
+  - text: 2017年に世界で動いた移籍金は、過去最高を更新します。
+    card: *view_table
+  - text: 前の年より32.7%多い、およそ64億ドル。
+    card: *view_table
+  - text: 1件の移籍で説明できる増え方ではありません。
+    card: *view_table
+  - text: ただ、その年のいちばん前にいたのが、この移籍でした。
+    card: *view_table
+  - text: ネイマールはいまサントスにいて、契約は2026年12月31日まで。
+    card: *view_table
+  - text: 延長に向けた話し合いが、すでに始まっているそうです。
+    card: *view_table
+  - text: 一方、2017年に付いた値段のほうは、9年動いていません。
+    emph: true
+    card: *view_table
+  sources:
+  - https://www.transfermarkt.com/statistik/transferrekorde
+  - https://inside.fifa.com/transfer-system/media-releases/fifa-global-transfer-market-report-a-new-dimension-in-transfer-spendin-2927376
+  - https://www.fcbarcelona.com/en/football/first-team/news/748188/ousmane-dembele-fc-barcelonas-new-signing
+  - https://www.espn.com/soccer/story/_/id/47533505/neymar-signs-santos-renewal-2026-world-cup

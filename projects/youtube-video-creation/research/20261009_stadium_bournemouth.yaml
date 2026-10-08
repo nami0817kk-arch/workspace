@@ -1,0 +1,556 @@
+# スタジアム紹介シリーズ①：ヴァイタリティ・スタジアム（ディーン・コート／ボーンマス、10/9）。材料の控えは research/raw/20261009_stadium_bournemouth_material.md。
+# **このシリーズの型の1本目。節の並びは オープニング → 基礎DATA(main・強い一点を頭に) → この競技場だけの話(年表) → ここで起きた試合(表) → 見立て(viewpoint・自分で数えた比べ)。**
+# 収容人数は資料がばらついている（プレミア公式X 2026-06-16 の 12,357／報道 11,286／実入場の最大 11,316）。
+#   台本は **12,357人** を使い、「ちょうど○人」とは言わない。実際の入りは見立ての節で別に出す。
+#   12,357 の原出典はプレミアリーグ公式Xの投稿（2026-06-16 https://x.com/premierleague/status/2066889039584600109 ）。
+#   **sources には入れていない**（登録済みのアカウントではなく、確度を上げる根拠にしないため）。節の確度は Wikipedia と地元紙で報道どまり。
+# 20クラブの比べは research/pl_data/rank.json（各クラブの基礎DATAの板の字から数えたもの、2026-09 時点）。
+#   オールド・トラフォード 74,158 ÷ 12,357 = 6.00 → 「およそ6倍」。拡張後の順位はこちらで並べ直した
+#   （2万席でも19番目、2万3000席でも18位ハルシティ 24,983 に届かない＝下から2番目のまま）。
+# **90度の向き替えは一次情報まで辿れていない**（Wikipedia の出典がリンク切れの専門サイト）。台本は「伝えられています」の線を越えない。
+# 1984-01-07 の得点者と入場者数（14,782）は非公式の記録サイトまでしか辿れていない。日付・スコア・会場は Wikipedia のシーズン記事。**確度は報道どまり**。
+# 2015-04-27 ボルトン戦は、得点時間が資料で食い違い入場者数も不明なので**使っていない**。
+# 女子の国際試合（2013年）はチャンネルの決まりで入れない。
+# 媒体名は画面にも読み上げにも出さない。出典は節の sources に置く（画面には出ない）。
+# 写真は手元の2枚（01_w＝満員のスタンド、02_w＝外観）。どちらも Commons・CC BY-SA 2.0 で、credits.json を同じ場所に置いてある。サムネは layout: scene（場面の全景）。
+# **assets/backgrounds/ から assets/images/20261009_stadium_bournemouth/ へ写してから使っている。**
+#   `shorts._drop_boards` は `assets/backgrounds/` で始まる絵を板と見なし、縦版（assets/stats/<名前>_v.png）があれば差し替える。
+#   stadium_ボーンマス.png と同じ名前で**クラブ紹介①の基礎DATAの縦板**（創立1899年・愛称・オーナー…）が assets/stats にあり、ショートがその板に化けた（preview4 で見つけた）。
+#   作り直すとき: stadium_ボーンマス_in.png → 01_w.png、stadium_ボーンマス.png → 02_w.png を複製し、credits.json は backgrounds の控えから写す。
+# 9/20 のクラブ紹介①ボーンマスと重ならないようにした：あちらの一言「プレミアリーグで、いちばん小さなスタジアム。」と
+#   「マンチェスター・ユナイテッドの6分の1」は使わず、こちらは「20クラブの中でこれより小さい本拠地はない」
+#   「オールド・トラフォードのおよそ6倍」と言い換えている。勝ち点マイナス17・買収額・登録選手・名選手の話は一切扱わない。
+date: 2026年10月09日
+slot: other_1
+format: news
+series: スタジアム紹介
+people: []
+theme:
+  id: stadium_bournemouth
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ボーンマス
+  title: ボーンマスの本拠地、プレミア20クラブでいちばん小さい。この家が来週迎えるもの
+  question: プレミアでいちばん小さいこの競技場は、どんな場所で、これからどうなるのか
+  lead: 赤と黒のクラブが、海辺の町で使い続けている競技場。
+  hook: 6日後、ここに初めてヨーロッパがやって来ます。
+  takeaway: ヴァイタリティ・スタジアムは収容1万2357人で、プレミアリーグ20クラブの中でいちばん小さい。最大のオールド・トラフォード7万4158人のおよそ6分の1にあたる。1910年に砂利を掘った跡地で開場し、2001年に立ち見の辺を閉鎖すると当局に告げられて丸ごと建て直され、このときピッチの向きを90度変えたと伝えられる。2005年に建物を売って借り直し、2025年4月に買い戻した。2026年7月に始まった工事で2万席超、上限2万3000席まで広げる計画だが、いまの20クラブの収容人数に当てはめると2万席でも19番目、2万3000席でも18位のハルシティ2万4983人に届かず、下から2番目のままになる。ここ10年の平均入場は1万人台で頭打ちで、今季のリーグ戦ホーム3試合の平均は1万1211人、収容の9割ほど。6日後の10月15日、この競技場でクラブの歴史で初めての欧州の大会のホーム戦、シュトゥルム・グラーツ戦が行われる
+  opening_image: assets/images/20261009_stadium_bournemouth/01_w.png
+short_title: ボーンマスの本拠地、プレミアで最も小さい。最大との差は
+thumbnail:
+  layout: scene
+  photo: assets/images/20261009_stadium_bournemouth/01_w.png
+  line1: ボーンマスの本拠地
+  line2: プレミア最小 ●万●●●●人
+  crests:
+  - ボーンマス
+  tags:
+  - ボーンマス
+  - ヴァイタリティ・スタジアム
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ヴァイタリティ・スタジアムの基礎DATA
+  tier: 報道
+  telop: 収容1万2357人。プレミアリーグの20クラブで、これより小さい本拠地は無い
+  narrator: キャスター
+  card:
+    type: table
+    title: ヴァイタリティ・スタジアムの基礎DATA
+    columns: &cols_data
+    - 項目
+    - 内容
+    rows: &rows_data
+    - - 収容人数
+      - 1万2357人（20クラブで最小）
+    - - 開場
+      - 1910年
+    - - ピッチ
+      - 縦105×横68メートル
+    - - 場所
+      - イングランド南部 ドーセット州ボスコム
+    - - 正式な名前
+      - ディーン・コート
+    - - 持ち主
+      - クラブ自身（2025年4月〜）
+  say:
+  - text: イングランド南部の海辺にある、ボーンマスというクラブの競技場の話です。
+    short_only: true
+    image: assets/images/20261009_stadium_bournemouth/01_w.png
+  - text: 6日後、ここでクラブの歴史で初めての欧州の試合が行われます。
+    short_only: true
+    image: assets/images/20261009_stadium_bournemouth/01_w.png
+  - text: 収容人数は1万2357人。20クラブの中で、これより小さい本拠地はありません。
+    emph: true
+    image: assets/images/20261009_stadium_bournemouth/01_w.png
+    card: &id_stats
+      type: stats
+      title: プレミアリーグで、いちばん小さい器
+      items:
+      - - 1万2357
+        - 人
+        - ヴァイタリティ・スタジアム
+      - - 7万4158
+        - 人
+        - 最大のオールド・トラフォード
+      - - '6'
+        - 倍
+        - 最大との開き
+      focus: 0
+  - text: いちばん大きいオールド・トラフォードは7万4158人。およそ6倍の開きがあります。
+    card: *id_stats
+  - text: 開場は1910年。それからずっと、ボーンマスの本拠地です。
+    card:
+      type: table
+      title: ヴァイタリティ・スタジアムの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 1
+  - text: ピッチは縦105メートル、横68メートル。リーグが定めた標準と同じ大きさです。
+    card:
+      type: table
+      title: ヴァイタリティ・スタジアムの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 2
+  - text: 場所はイングランド南部、ドーセット州のボスコム地区。
+    card:
+      type: table
+      title: ヴァイタリティ・スタジアムの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 3
+  - text: 正式な名前はディーン・コート。土地を貸したクーパー・ディーン家の名です。
+    card:
+      type: table
+      title: 呼び名の移り変わり
+      columns: &cols_names
+      - 期間
+      - 呼び名
+      rows: &rows_names
+      - - 1910年〜
+        - ディーン・コート（正式名）
+      - - 2001年〜
+        - フィットネス・ファースト
+      - - 2011年〜
+        - スワード
+      - - 2012年〜
+        - ゴールドサンズ
+      - - 2015年〜
+        - ヴァイタリティ
+      highlight_row: 0
+  - text: いまの呼び名はスポンサーのもので、2001年から数えて4つ目です。
+    card:
+      type: table
+      title: 呼び名の移り変わり
+      columns: *cols_names
+      rows: *rows_names
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Dean_Court
+  - https://resources.premierleague.com/premierleague/document/2022/07/19/40085fed-1e9e-4c33-9f14-0bcf57857da2/PL_Handbook_2022-23_DIGITAL_18.07.pdf
+  - https://www.bournemouthecho.co.uk/news/25117073.afc-bournemouth-confirm-purchase-vitality-stadium/
+- id: rebuilt
+  heading: 90度、向きを変えた競技場
+  tier: 報道
+  telop: 2001年、立ち見の側の席を閉鎖すると告げられて、丸ごと建て直した
+  narrator: 解説
+  card: &id_time
+    type: timeline
+    title: ディーン・コートの歩み
+    rows: &rows_time
+    - - 1910年
+      - 砂利を掘った跡地に開場。選手はホテルで着替えた
+    - - 1923年
+      - リーグ初戦は7000人で0-0。のち博覧会の部材で3700席
+    - - 1984年
+      - 建てかけのスタンドで資金が尽き、壊して住宅地に
+    - - 2001年
+      - 丸ごと建て直し。最初の8試合は別の町で戦った
+    - - 2005年
+      - 残る一方に、ようやく席が入る
+    - - 2022年
+      - 嵐でスタンドが壊れ、試合が中止に
+    focus: 2001年
+  say:
+  - text: この競技場には、ほかの家には無い来歴があります。
+    image: assets/images/20261009_stadium_bournemouth/02_w.png
+    card: *id_time
+  - text: 譲り受けた土地は、砂利を掘ったあとの穴でした。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 0
+  - text: 1910年の開幕に間に合わず、最初の数か月は隣の公園で試合をしています。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 0
+  - text: 更衣室も無く、選手は近くのホテルで着替えてから来ていました。
+    card: none
+  - text: イングランドのリーグ戦での初戦は1923年。7000人が見て、0対0の引き分け。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 1
+  - text: 席が増えたのはそのあと。ウェンブリーの博覧会の部材で、3700席を足しました。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 1
+  - text: 1984年には、建てかけのスタンドで資金が尽きます。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 2
+  - text: 骨組みは壊され、その場所には家が建ちました。
+    card: none
+  - text: そして2001年。立ち見のままだった側の席を閉鎖せよ、と当局が告げます。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 3
+  - text: クラブが選んだのは、丸ごと建て直すことでした。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 3
+  - text: このとき、ピッチの向きを90度変えた、と伝わっています。
+    card: none
+  - text: 4分の1周ぶんです。この建て直しで、まわりの家からも離れました。
+    card: none
+    emph: true
+  - text: このとき指揮を執っていた監督の言葉です。
+    card: none
+  - voice: ショーン・オドリスコル
+    text: 地面を掘り下げたもの、屋根で覆ったもの、
+  - voice: ショーン・オドリスコル
+    text: 町の別の場所に建てるものまで見てきました
+    cont: true
+  - text: 工事は、シーズンの開幕までに終わりませんでした。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 3
+  - text: 2001年から2002年のシーズン、最初の8試合は別の町を借りて戦っています。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 3
+  - text: その8試合のうち、5つに勝ちました。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 3
+  - text: 建て直した直後は、四方のうち三方だけに席がありました。収容は9600人。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 4
+  - text: 残る一方に席が入るのは、4年後の2005年です。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 4
+  - text: 2022年の2月には、嵐でスタンドが壊れ、試合が中止になりました。
+    card:
+      type: timeline
+      title: ディーン・コートの歩み
+      rows: *rows_time
+      focus: 2001年
+      highlight_row: 5
+  quotes_from:
+  - BBC Sport https://news.bbc.co.uk/sport2/hi/football/teams/b/bournemouth/1644825.stm
+  sources:
+  - https://en.wikipedia.org/wiki/Dean_Court
+  - https://news.bbc.co.uk/sport2/hi/football/teams/b/bournemouth/1644825.stm
+  - https://en.wikipedia.org/wiki/2001%E2%80%9302_AFC_Bournemouth_season
+  - https://www.nottinghampost.com/sport/football/football-news/nottingham-forest-bournemouth-postponed-statement-6685772
+- id: matches
+  heading: この器で起きた3つの夜
+  tier: 報道
+  telop: 3部の21位が、前の年のFAカップ優勝クラブを倒した日
+  narrator: キャスター
+  card: &id_match
+    type: table
+    title: ディーン・コートで起きた3つの夜
+    columns: &cols_match
+    - 日付
+    - 相手
+    - 結果
+    - 得点者
+    rows: &rows_match
+    - - 1984年1月7日
+      - マンチェスター・U（FA杯）
+      - 2-0
+      - グレアム、トンプソン
+    - - 2004年2月24日
+      - レクサム（3部）
+      - 6-0
+      - ヘイターが3点
+    - - 2015年9月19日
+      - サンダーランド（プレミア）
+      - 2-0
+      - ウィルソン、リッチー
+  say:
+  - text: この小さな器では、プレミアに上がるよりずっと前から、大きな夜がありました。
+    image: assets/images/20261009_stadium_bournemouth/01_w.png
+    card: *id_match
+  - text: 1つ目は1984年1月7日、下のリーグも一緒に戦うFAカップの3回戦。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 相手は前の年にこの大会を制した、マンチェスター・ユナイテッドです。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: ボーンマスは3部の21位。降格の側にいたクラブでした。
+    card: none
+  - text: 結果は2対0でボーンマスの勝ち。グレアムとトンプソンが決めます。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 入ったのは1万4782人。いまの収容人数より2425人も多い数字です。
+    emph: true
+    card:
+      type: stats
+      title: 1984年1月7日の入り
+      items:
+      - - 1万4782
+        - 人
+        - この日の入場
+      - - 1万2357
+        - 人
+        - いまの収容人数
+      - - '2425'
+        - 人
+        - その差
+      focus: 2
+  - text: 就任して3か月だった監督の名は、ハリー・レッドナップ。
+    card: none
+  - text: 2つ目は2004年2月24日。同じ3部のレクサムに6対0で勝った試合です。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 84分から出たジェームズ・ヘイターが、2分20秒で3点を決めました。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: イングランドのリーグの長い歴史で、これより速いハットトリックはありません。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 1943年からの記録を、10秒上回りました。
+    emph: true
+    card: none
+  - text: 3つ目は2015年9月19日。プレミアリーグに上がった年の秋です。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: サンダーランドに2対0で勝ちます。決めたのはカラム・ウィルソンとマット・リッチー。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: プレミアリーグでの勝ち点3をこの競技場で得たのは、これが初めてでした。
+    card:
+      type: table
+      title: ディーン・コートで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/1983%E2%80%9384_AFC_Bournemouth_season
+  - https://www.mufcinfo.com/manupag/match_data/match_sql.php?my_match_date=1984-01-07
+  - https://news.bbc.co.uk/sport2/hi/football/3485602.stm
+  - https://en.wikipedia.org/wiki/2015%E2%80%9316_AFC_Bournemouth_season
+  - https://www.bbc.com/sport/football/34191881
+- id: view
+  viewpoint: true
+  heading: 2万席への工事と、それでも下から2番目という話
+  tier: 報道
+  telop: 2万席に広げても、いまの20クラブに当てはめると19番目。下から2番目のまま
+  narrator: 解説
+  card: &id_view
+    type: table
+    title: いまと、工事のあと（自分で並べた）
+    columns: &cols_view
+    - 項目
+    - いま
+    - 工事のあと
+    rows: &rows_view
+    - - 収容人数
+      - 1万2357人
+      - 2万席超（上限2万3000席）
+    - - 20クラブでの順位
+      - 20位
+      - 19位
+    - - 今季リーグ戦ホームの平均
+      - 1万1211人
+      - ―
+    - - 増える席
+      - ―
+      - 9000席以上
+    - - 工事
+      - 2026年7月に着工
+      - 2027年に完成の見込み
+  say:
+  - text: この家は、いま建て替えの途中にあります。
+    image: assets/images/20261009_stadium_bournemouth/02_w.png
+    card: *id_view
+  - text: 去年の春、クラブは自分たちの家を買い戻しました。
+    card: *id_view
+  - text: その20年ほど前に建物を売り、借りる側になっていたからです。
+    card: none
+  - text: 別の場所に新しい競技場を建てるのではなく、試合を続けながら広げます。
+    card: none
+  - text: 目指すのは2万席。上限まで広げれば2万3000席になります。
+    card:
+      type: table
+      title: いまと、工事のあと（自分で並べた）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 0
+  - text: いまより9000席以上の上乗せ。およそ1.6倍になります。
+    emph: true
+    card: &id_calc
+      type: calc
+      title: 2万席は、いまの何倍か
+      terms:
+      - - 2万席
+        - 工事のあと
+      - - 1万2357席
+        - いま
+      - - 約1.6倍
+        - 増える割合
+      ops:
+      - ÷
+      - ＝
+  - text: では、その2万席はプレミアでどのくらいの大きさなのでしょうか。
+    card: *id_calc
+  - text: いまの20クラブの収容人数に当てはめて、自分で並べ直してみました。
+    card:
+      type: table
+      title: いまと、工事のあと（自分で並べた）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 1
+  - text: 2万席でも19番目。下から2番目のままです。
+    emph: true
+    card:
+      type: table
+      title: いまと、工事のあと（自分で並べた）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 1
+    mark: {kind: circle, row: 1, col: 2}
+  - text: 上限の2万3000席まで広げても、18位のハルシティ2万4983人には届きません。
+    card:
+      type: table
+      title: いまと、工事のあと（自分で並べた）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 1
+  - text: つまりこの工事は、追い抜くためではなく、残るためのものです。
+    image: assets/images/20261009_stadium_bournemouth/01_w.png
+    card: none
+  - text: 議会の委員会で、クラブの担当者はこう述べました。
+    card: none
+  - voice: ジム・フレヴォラ
+    text: 1万1000人の器のままで、
+  - voice: ジム・フレヴォラ
+    text: プレミアリーグに長くとどまるのは、ほとんど不可能です
+    cont: true
+    emph: true
+  - text: ここ10年、1試合の平均は1万人台で止まったままです。
+    card:
+      type: table
+      title: いまと、工事のあと（自分で並べた）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 2
+  - text: 今季のリーグ戦のホーム3試合は、平均1万1211人。収容の9割ほどです。
+    card:
+      type: table
+      title: いまと、工事のあと（自分で並べた）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 2
+  - text: 建て直してからの最多は2017年の1万1388人で、今季はまだ超えていません。
+    card:
+      type: table
+      title: いまと、工事のあと（自分で並べた）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 2
+  - text: 工事が始まったのは今年の7月。終わるのは2027年の見込みです。
+    card:
+      type: table
+      title: いまと、工事のあと（自分で並べた）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 4
+  - text: そして6日後の10月15日。
+    card: none
+  - text: ボーンマスにとって初めての、欧州の大会のホーム戦がここで行われます。
+  - text: 相手はオーストリアのシュトゥルム・グラーツです。
+  - text: 新しく席を入れた南東の角は、その日、相手側の席に使われる見込みです。
+  quotes_from:
+  - StadiumDB https://stadiumdb.com/news/2026/05/england_city_council_approves_vitality_stadium_expansion_plans_when_will_construction_begin
+  sources:
+  - https://www.bbc.co.uk/sport/football/articles/c0jz6273l6xo
+  - https://stadiumdb.com/news/2026/05/england_city_council_approves_vitality_stadium_expansion_plans_when_will_construction_begin
+  - https://www.bournemouthecho.co.uk/news/26108088.afc-bournemouths-vitality-stadium-expansion-plans-set-approved/
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_AFC_Bournemouth_season
+  - https://www.uefa.com/uefaeuropaleague/match/2050086/
+  - https://footballgroundguide.com/news/vitality-stadium-expansion-could-hit-key-target-before-bournemouths-first-europa-league-home-game.html

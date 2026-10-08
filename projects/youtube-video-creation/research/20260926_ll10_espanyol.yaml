@@ -1,3 +1,14 @@
+# 2026-10-08 流れの点検（output/flow/20260926_ll10_espanyol.md）と、2026-10-06 の「シリーズの回の質」⑩を反映。
+#   **基礎DATAの読み上げを13行 → 4行**（創立・愛称・タイトル歴・1部89シーズン）。残り9項目は板だけに出す
+#   （オープニングの3行が一覧板 ll_espanyol_data_t.png を敷いているので、9項目は画面に出ている）。
+#   落としたのは：愛称の由来の3行・ホームタウン・本拠地・オーナー・最多出場・直近タイトル・昨季の勝ち点。
+#   ほかに直したもの：山場の節の頭に、ショート単体で分かる1行（主役の名前もここで出る）／
+#   冒頭で2007年の決勝を見せたあとに1988年が来るので「その19年前」を足した／ウエファカップに一言の説明／
+#   「エースの後継ぎ」が誰か分からないので「クラブ最多出場の後を継ぎました」に／
+#   「1部に戻ったここへ」「セカンドチーム」「ペーニャはおよそ200」を分かる言い方に／
+#   「今季の監督」が3度目の初紹介になっていたのをやめた／最後の行の勝ち点7は前の行から出るので昨季との比べに替えた。
+#   直していないもの：見立ての節が無い（20クラブ共通の並びを崩すので手を付けない）／
+#   数字の行が並ぶ2節に表が無い（どちらも板が表の役。板の上にカードは重ねない決まり）。
 # プレミアリーグ20クラブ紹介 ⑩エスパニョール（2026-09-20 ヴィラの見本の形で作り直し）
 # tools/plbuild.py で組み立て。材料は research/ll_data/espanyol*.json と旧台本 -
 format: news
@@ -34,7 +45,10 @@ sections:
   telop: 元バス運転手の監督と、無敗で逃した頂点
   narrator: キャスター
   say:
-  - text: 監督は元市バスの運転手、マノロ・ゴンサレス。9月のエルチェ戦に敗れ、こう話しました。
+  - text: エスパニョールは、バルセロナで生まれたもう1つのラ・リーガのクラブ。
+    image: assets/stats/ll_espanyol_data_r1.png
+    no_telop: true
+  - text: 監督は元市バスの運転手、マノロ・ゴンサレス。9月の敗戦後にこう話しました。
     image: assets/stats/ll_espanyol_data_r1.png
     no_telop: true
   - voice: マノロ・ゴンサレス
@@ -49,10 +63,10 @@ sections:
   - text: 今季も、ここまで7試合で**2勝**です。
     image: assets/stats/ll_espanyol_data_r2.png
     no_telop: true
-  - text: そして2007年のウエファカップ。一度も負けずに、決勝まで進みました。
+  - text: そして2007年、ウエファカップ。いまのヨーロッパリーグの前の大会です。
     image: assets/stats/ll_espanyol_data_r3.png
     no_telop: true
-  - text: それでも最後のピーケー戦で、欧州の頂点を逃しています。
+  - text: 一度も負けずに決勝へ。それでもピーケー戦で、欧州の頂点を逃します。
     image: assets/stats/ll_espanyol_data_r3.png
     no_telop: true
   - image: assets/stats/ll_espanyol_data0.png
@@ -61,37 +75,11 @@ sections:
   - image: assets/stats/ll_espanyol_data1.png
     text: 愛称は「ペリキートス」、インコのこと。もとは、からかいの言葉です。
     no_telop: true
-  - image: assets/stats/ll_espanyol_data1.png
-    text: 会員が少なく、ファンは「4匹のネコ」と笑われていました。
-    no_telop: true
-  - image: assets/stats/ll_espanyol_data1.png
-    text: そのころ人気のネコ、フィリックスは、カタルーニャで「インコのネコ」と呼ばれます。
-    no_telop: true
-  - image: assets/stats/ll_espanyol_data1.png
-    text: そこでファンも、「4匹のインコのネコ」と呼ばれるようになりました。
-    no_telop: true
-  - image: assets/stats/ll_espanyol_data2.png
-    text: ホームタウンはコルネリャ。バルセロナの南西にある、人口**9万**ほどの町です。
-    no_telop: true
-  - image: assets/backgrounds/stadium_エスパニョール.png
-    text: 本拠地は、コルネリャ・エル・プラットのスタジアム。クラブの発表では、**4万人**が入ります。
-  - image: assets/stats/ll_espanyol_data4.png
-    text: オーナーは**2025年**から、アメリカのアラン・ペイスの投資会社。バーンリーも持っています。
+  - image: assets/stats/ll_espanyol_cups.png
+    text: 1部の優勝は**0回**。国王杯は**4回**。ヨーロッパのタイトルも、まだありません。
     no_telop: true
   - image: assets/stats/ll_espanyol_cups.png
-    text: 1部の優勝は**0回**。国王杯は**4回**。スーペルコパとヨーロッパは、まだありません。
-    no_telop: true
-  - image: assets/stats/ll_espanyol_cups.png
-    text: 1部は**89シーズン**。優勝の無いクラブでは、いちばん長く戦っています。
-    no_telop: true
-  - image: assets/stats/ll_espanyol_data6.png
-    text: 最多出場はフォワードのラウール・タムード。このクラブで**389試合**に出ました。
-    no_telop: true
-  - image: assets/stats/ll_espanyol_data7.png
-    text: 直近のタイトルは**2006年**の国王杯。決勝でサラゴサを**4対1**で破りました。
-    no_telop: true
-  - image: assets/stats/ll_espanyol_data8.png
-    text: 昨季のリーグ戦は、勝ち点**46**で終えました。
+    text: 1部を**89シーズン**戦ってきました。優勝の無いクラブでは、最も多い数です。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/RCD_Espanyol
@@ -146,7 +134,7 @@ sections:
     - - 1戦目 ホーム
       - 3対0で勝利
   say:
-  - 1988年、ウエファカップの決勝。相手は西ドイツのレバークーゼンです。
+  - その19年前、同じウエファカップの決勝。1988年、相手はレバークーゼンです。
   - ホームの1戦目は**3対0**。優勝に手がかかりました。
   - text: ところが敵地の2戦目で、そっくり追いつかれます。
     card:
@@ -178,9 +166,9 @@ sections:
     - - 試合
       - 10人で延長、2対2
   say:
-  - 2007年、ふたたびウエファカップの決勝へ。グループの試合は、すべて勝っていました。
+  - 19年後の2007年、ふたたび同じ決勝へ。グループの試合は全勝でした。
   - 相手は同じスペインのセビージャ。**68分**に、エスパニョールの1人が退場します。
-  - text: 10人のまま延長の終盤に追いつき、**2対2**の引き分け。ピーケー戦で敗れました。
+  - text: 10人のまま延長の終盤に追いつき、**2対2**。ピーケー戦で、杯はセビージャへ。
     card:
       type: table
       title: 2007年 ウエファカップ決勝
@@ -249,8 +237,8 @@ sections:
       - &id005
         - 運営の型
         - 育てて売る
-  - 下部組織育ちのゴールキーパー、ジョアン・ガルシアは昨年、**2500万ユーロ**でバルセロナへ。
-  - text: スタンドを支える公認の応援団、ペーニャはおよそ**200**。日本にもあります。
+  - 育てたゴールキーパー、ジョアン・ガルシアが昨年**2500万ユーロ**でバルセロナへ。
+  - text: 公認の応援団ペーニャは、およそ**200**の団体。日本にもあります。
     card:
       type: table
       title: このクラブの特徴
@@ -285,10 +273,12 @@ sections:
     - - 毎試合21分
       - 背番号にちなんで1分間の拍手
   say:
-  - text: 2009年8月、主将のダニエル・ハルケが、心臓の発作で亡くなりました。**26歳**でした。
+  - text: 2009年8月、主将のダニエル・ハルケが亡くなりました。
+    image: assets/images/ll_espanyol_episode/scene.jpg
+  - text: 心臓の発作。**26歳**でした。
     image: assets/images/ll_espanyol_episode/scene.jpg
   - それから毎試合、背番号と同じ**21分**に、スタンドが1分間の拍手を送ります。
-  - text: 翌年のワールドカップ決勝。親友イニエスタは自分の決勝点のあと、ユニフォームを脱ぎます。
+  - text: 翌年のワールドカップ決勝。決勝点を決めたのは、親友のイニエスタでした。
     card:
       type: table
       title: 21分の拍手
@@ -296,6 +286,7 @@ sections:
       rows:
       - - 2010年
         - 親友イニエスタが決勝で追悼
+  - その直後、彼はユニフォームを脱ぎます。
   - 下のシャツには「ダニ・ハルケはいつも一緒に」と書いてありました。
   sources:
   - https://en.wikipedia.org/wiki/RCD_Espanyol
@@ -320,10 +311,10 @@ sections:
       - 1994-2006
       - 選手と監督で
   say:
-  - text: ポチェッティーノはアルゼンチンのセンターバック。**1994年**、1部に戻ったここへ来ました。
+  - text: アルゼンチンのセンターバック、ポチェッティーノ。**1994年**の加入です。
     image: assets/photos/ll/espanyol/espanyol_legend_09d12f05.jpg
-  - 2000年の国王杯を制し、クラブに**60年**ぶりの主要タイトルをもたらしました。
-  - リーグ戦で**275試合**。2009年には監督の道をここで始め、今はアメリカ代表を率いています。
+  - 2000年の国王杯を制覇。クラブに**60年**ぶりのタイトルが戻りました。
+  - リーグ戦**275試合**。2009年に監督の道をここで始め、今はアメリカの代表監督。
   sources:
   - https://en.wikipedia.org/wiki/Mauricio_Pochettino
   - https://en.wikipedia.org/wiki/Sergio_Garc%C3%ADa_(footballer,_born_1983)
@@ -349,10 +340,10 @@ sections:
       - 2010-2019
       - 2度在籍した主将
   say:
-  - text: セルヒオ・ガルシアは地元生まれのフォワード。**2010年**、エースの後継ぎに来ました。
+  - text: 地元生まれのフォワード、セルヒオ・ガルシア。クラブ最多出場の後を継ぎました。
     image: assets/photos/ll/espanyol/espanyol_legend_4fc04e00.jpg
-  - 2013年、敵地のラージョ戦で3得点。次のシーズンには、リーグ戦で**14得点**を挙げました。
-  - 2度の在籍で、リーグ戦**207試合45得点**。主将も務め、今はクラブの若手チームの監督です。
+  - 2013年、敵地のラージョ戦で3得点。翌シーズンはリーグ戦で**14得点**です。
+  - 2度の在籍でリーグ戦**207試合45得点**。主将も務め、今は2軍の監督です。
   sources:
   - https://en.wikipedia.org/wiki/Mauricio_Pochettino
   - https://en.wikipedia.org/wiki/Sergio_Garc%C3%ADa_(footballer,_born_1983)
@@ -378,10 +369,10 @@ sections:
       - 2019-2022
       - 中国人初の1部得点
   say:
-  - text: 中国のフォワード、ウー・レイ。**2019年**のデビュー戦は、中国で**4000万人**以上が見ました。
+  - text: 中国のフォワード、ウー・レイ。デビュー戦を母国の**4000万人**以上が見ました。
     image: assets/photos/ll/espanyol/espanyol_legend_c7c3d74d.jpg
-  - その年の3月、中国の選手として初めて、スペインの1部でゴールを決めます。
-  - 2020年1月には、バルセロナとの試合で同点弾。リーグ戦は**103試合10得点**でした。
+  - "**2019年**3月、中国の選手として初めてスペインの1部でゴールを決めます。"
+  - 2020年1月、バルセロナとの試合で同点弾。リーグ戦は**103試合10得点**です。
   sources:
   - https://en.wikipedia.org/wiki/Mauricio_Pochettino
   - https://en.wikipedia.org/wiki/Sergio_Garc%C3%ADa_(footballer,_born_1983)
@@ -407,8 +398,8 @@ sections:
     - - 前職
       - エスパニョールB
   say:
-  - 今季の監督はマノロ・ゴンサレス。スペイン出身で、**2024年3月**の就任です。
-  - 前はこのクラブのセカンドチーム。この9月、トップで**100試合**を迎えました。
+  - ゴンサレス監督が1軍を率いるのは、**2024年3月**からです。
+  - その前は、このクラブの2軍。この9月、1軍で**100試合**を迎えました。
   sources:
   - https://en.wikipedia.org/wiki/RCD_Espanyol
   - https://en.wikipedia.org/wiki/Manolo_Gonz%C3%A1lez
@@ -500,7 +491,7 @@ sections:
       - 1対3
   say:
   - ラ・リーガは7試合を終えて、**2勝1引き分け4敗**です。
-  - 順位は**15位**、勝ち点は**7**です。
+  - いまは**15位**。この調子だと、昨季の勝ち点**46**には届きません。
   sources:
   - https://www.espn.com/soccer/team/results/_/name/espanyol
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard

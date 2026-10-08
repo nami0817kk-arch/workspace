@@ -1,0 +1,630 @@
+# 2026-10-08 流れの点検（output/flow/20261009_player_683840.md）を反映。
+#   必ず直したもの2つ：①直近5試合の評点は7.9/7.9/7.4/6.4/8.1 なので7点台は「4試合」ではなく**3試合**。
+#   ②今季の内訳が合計と合わなかった（12試合1得点3アシストに対し、読み上げはリーグ7試合＋代表4試合＝11試合2アシスト）。
+#   材料 553行の内訳（クラブ8試合1得点2アシスト＋代表4試合1アシスト）で読み直した。
+#   ほかに直したもの：島の引用の前にカナリア諸島を置いた／センターバックと背番号8をつないだ／
+#   「そして2021年」が時間を戻すので言葉を足した／「その初ゴール」を「2部での初ゴール」に／
+#   パーセンタイル（98・97・12・下から3分の1）が比べた位置の値だと分かる言い方に／
+#   44試合の期間が材料でも不明なので「4試合に3試合」に／「欧州の初戦」をチャンピオンズリーグに。
+# ペドリ（バルセロナ）の紹介。8節の型（2026-09-28）を、ネヴェス（research/20261008_player_670681.yaml）・
+# ヴィニシウス（research/20261007_player_371998.yaml）の形にそろえた（2026-10-09）。雛形は tools/player_intro.py 683840。
+# 材料は research/raw/20261009_pedri_material.md。**ここから出ない**。
+# 「ボールを失わない選手」とは言わない：101タッチに1回で、ヴィティーニャ（183.7）・ネヴェス（306）より多く失っている（材料 2-3）。
+#   使えるのは「パス成功率92.4%」と「90分で90.7回触って、失うのは0.90回」まで。
+# クロースの「1試合11〜12回」は Opta 系の「置いていった相手の数」。**ドリブル数と言い換えない**（材料 5-3）。今回は使っていない。
+# ラス・パルマス初ゴールの年齢は、生年月日から計算すると16歳9か月25日で、公式の「23日」と2日合わない。**「16歳9か月」までにした**（材料 7-3）。
+# 「レアル・マドリードが先に動いていた」は本人が自分で書いている（材料 3-1）。**「雪」は地元の友達の冗談**なので本人の話として語らない。
+# 市場価値は出どころで違う（1.5億／1億890万）。読み上げでは1.5億とだけ言い、表の行に添え書き（mark: note）で断る（材料 7-1）。
+# 生まれた町は公式の「テゲステ」。英語版Wikipedia の「バハマール」は使わない（材料 7-2）。
+# 最高速度・走行距離は FotMob に無い。身長174cmと「1試合11.5km」だけにして、走行距離には「昨季までの数字」と添える（材料 7-8）。
+# 雛形の冒頭コメントの「弱点 守備アクション18」は最下位ではない。レーダーの6軸は最上位ボールタッチ98・最下位空中戦12なので、
+#   棒グラフの4本もレーダーと同じ軸（98/97/46/12）に直した。板と読み上げが食い違わないようにするため（材料 7-7）。
+# 2020/21 の「73試合」（五輪の決勝まで）と、過去5シーズンの表の 24/25 の「73試合」は**別の73**。
+#   読み上げで73を言うのは 24/25 の行だけにして、2020/21 のほうは calc の板の中だけに置いた（混ざると聞く人が取り違える）。
+# 英語の直し：UD Las Palmas → ラス・パルマス、Czechia → チェコ。
+# 写真は Commons の W杯2026 の3枚だけ使えた（準決勝の横長・決勝の横長・決勝の縦）。
+#   コパ・デル・レイ決勝2025 の2枚・代表2025（Pedri.jpg）・世界一の集合写真は **Commons の被写体（P180）にペドリが入っていない**ので portrait が落とす。
+#   バルサ2021（736x736）は放送映像のコマに見えるので使わない（放送映像は静止画でも入れない決まり）。
+#   → **バルサのユニフォーム姿の写真は1枚も無い。**時期の切り替えは、この3枚と板4枚（レーダー・ヒート・シュート・市場価値）で付けている。
+# 昨日のネヴェス（20261008）・一昨日のヴィニシウス（20261007）と、節の導入の文を1つも重ねないように書き換えた。
+date: 2026年10月09日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- ペドリ
+theme:
+  id: player_683840
+  league: spain
+  kind: other
+  topic: バルセロナ
+  title: ペドリってどんな選手？点を取ると双眼鏡の仕草をする、その本当の意味
+  question: ペドリはどういう作りの選手で、なぜ数字が出るのか
+  takeaway: 23歳になった季の終わりまでのラ・リーガ出場を数えると、ペドリ165・シャビ125・イニエスタ124で、1.3倍の速さで積んでいる。その代わり負傷での離脱は14件561日、欠場は102試合あり、18歳で駆け抜けた1年に出た試合より多くを失った。同じ中盤の中での位置はボールタッチ98が最上位、空中戦12が最下位で、触って前へ出すことに寄せた形。今季はクラブと代表で12試合1得点3アシスト・771分。10月11日のヘタフェ戦が次の節目
+  nameplate: ペドリ｜バルセロナ MF／スペイン代表
+  opening_image: assets/images/20261009_player_683840/wc2026semi/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑩フリアン・アルバレス
+short_title: ペドリってどんな選手？
+thumbnail:
+  line1: ペドリ、23歳
+  line2: 得点の仕草は双眼鏡ではなく●●
+  tags:
+  - バルセロナ
+  - ペドリ
+  - スペイン代表
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261009_player_683840/thumbfull/01.jpg
+  photos: []
+  short_photo: assets/images/20261009_player_683840/wc2026final_v/01.jpg
+sections:
+- id: hook
+  heading: 触る回数で、いちばん上にいる中盤
+  tier: 報道
+  telop: 90分で90.7回、ボールに触る
+  narrator: キャスター
+  card:
+    type: stats
+    title: ペドリの23歳
+    items:
+    - ['90.7', 回, 90分あたりのボールタッチ]
+    - ['92.4', '%', パスの成功率]
+    - ['12', 歳, までセンターバックだった]
+    focus: 0
+  say:
+  - text: バルセロナの背番号8、ペドリ。23歳のスペイン代表です。
+    image: assets/images/20261009_player_683840/wc2026semi/01_r.jpg
+  - text: 90分あたりでボールに触る回数は、90.7回。
+    card: &hook_stats
+      type: stats
+      title: ペドリの23歳
+      items:
+      - ['90.7', 回, 90分あたりのボールタッチ]
+      - ['92.4', '%', パスの成功率]
+      - ['12', 歳, までセンターバックだった]
+      focus: 0
+  - text: この回数は、同じ位置の中盤でいちばん多い側です。
+    emph: true
+    card: *hook_stats
+  - text: パスの成功率は、92.4パーセント。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: その中盤が、12歳までセンターバックだったとご存じですか。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 位置を変えたあとに着けた背番号8は、憧れたイニエスタの番号です。
+    card: none
+  - text: 育ったのは大西洋のカナリア諸島。本人はこう記しています。
+  - voice: ペドリ
+    text: カナリアの選手は、ピッチの上に
+  - voice: ペドリ
+    text: 特別なリズムを持っている
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.theplayerstribune.com/pedri-soccer-la-liga-barcelona-spain-es
+  sources:
+  - https://www.fotmob.com/players/1083323
+  - https://www.fcbarcelona.com/en/news/2670767/pedri-is-the-new-barca-number-8
+  - https://en.wikipedia.org/wiki/Pedri
+  - https://www.theplayerstribune.com/pedri-soccer-la-liga-barcelona-spain-es
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: ペドリの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: ペドリ（バルセロナ）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - バルセロナ（8番）
+    - - ポジション
+      - セントラルMF
+    - - 生年月日
+      - 2002年11月25日（23歳）
+    - - 生まれ
+      - テゲステ（テネリフェ島）
+    - - 体格
+      - 174cm・右利き
+    - - 契約
+      - 2030年6月まで
+    - - 市場価値
+      - 1.5億ユーロ
+    source: Transfermarkt・FCバルセロナ公式
+  say:
+  - text: ペドリが構えるのは中盤の底寄り。組み立ての起点です。
+    image: assets/images/20261009_player_683840/wc2026final_v/01.jpg
+    card: &data_card
+      type: table
+      title: ペドリ（バルセロナ）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・FCバルセロナ公式
+      highlight_row: 1
+  - text: 生まれたのは、テネリフェ島のテゲステという町です。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長は174センチ、右利き。けっして大柄ではありません。
+    card:
+      <<: *data_card
+      highlight_row: 4
+  - text: 契約は2030年6月まで。違約金は10億ユーロと決めてあります。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は1億5000万ユーロ。今年6月に付いた最高額です。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 6
+    mark: {kind: note, row: 6, col: 1, text: 別の集計では1億890万}
+  sources:
+  - https://www.transfermarkt.com/pedri/profil/spieler/683840
+  - https://www.fcbarcelona.com/en/football/first-team/joueurs/70486/pedri
+  - https://www.fcbarcelona.es/es/noticias/2289638/pedri-espero-que-sean-muchos-mas-anos-mas-alla-del-2026
+  - https://www.fotmob.com/players/1083323
+- id: career
+  heading: 先に声をかけたのは、マドリードだった
+  tier: 報道
+  telop: 2018年2月、入団テストは1週間で終わった
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns: [季, クラブ, 年齢, 最高評価額]
+    rows: &career_rows
+    - ['19/20', ラス・パルマス, 16〜17歳, 800万ユーロ]
+    - ['20/21〜26/27', バルセロナ, 17〜23歳, 1.5億ユーロ]
+    source: Transfermarkt
+  say:
+  - text: 16歳でプロ契約を結んだ先は、同じ諸島のラス・パルマスでした。
+    image: assets/images/20261009_player_683840/wc2026semi/01_v.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [季, クラブ, 年齢, 最高評価額]
+      rows: *career_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 2部でのデビューは2019年8月。16歳と266日のことです。
+    card: *career_card
+  - text: 翌月には初ゴール。16歳9か月で、クラブ史上の最年少でした。
+    emph: true
+    card: *career_card
+  - text: ただ、その手前にうまくいかなかった1週間があります。
+    card: *career_card
+  - text: 2018年2月。先に声をかけたのは、レアル・マドリードでした。
+    card: *career_card
+  - text: 父に連れられて行ったものの、練習に入れたのは2回だけ。
+    card: *career_card
+  - text: 1週間で家に帰されます。本人は、こう書き残しています。
+    card: none
+  - voice: ペドリ
+    text: 正直に言えば、あれは謙虚さの薬だった
+    pause: 0.5
+  - text: バルサが動いたのは、2部での初ゴールの17日前でした。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 移籍期限の日の夜10時27分に合意。固定で500万ユーロです。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 出来高を入れて、最大は2500万ユーロでした。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: そこから6年。評価額は800万ユーロから、18倍を超えました。
+    image: assets/stats/player_20261009_1083323_value.png
+    no_telop: true
+  - text: ここで2021年まで戻ります。18歳の彼は、五輪の決勝まで走り切りました。
+    image: assets/images/20261009_player_683840/wc2026semi/01_w.jpg
+    card: none
+  - text: その1か月後、チャンピオンズリーグの初戦で左の太ももを痛めました。
+  - text: ここから、長い離脱が繰り返されることになります。
+  quotes_from:
+  - https://www.theplayerstribune.com/pedri-soccer-la-liga-barcelona-spain-es
+  sources:
+  - https://www.transfermarkt.com/pedri/profil/spieler/683840
+  - https://www.theplayerstribune.com/pedri-soccer-la-liga-barcelona-spain-es
+  - https://elespanol.com/elbernabeu/real-madrid/futbol/20201120/pedri-no-real-madrid-motivo-pruebas-descubierto/537446806_0.html
+  - https://www.football-espana.net/2020/12/29/the-behind-the-scenes-scoop-on-how-barcelona-signed-pedri
+  - https://www.laliga.com/en-GB/news/five-things-you-may-not-know-about-pedri
+  - https://www.goal.com/en/news/pedri-and-alba-add-to-barcelonas-injury-crisis-after-bayern-munich-defeat/133z99i5zq9tx1o2o9md1j8oyc
+- id: style
+  heading: 受けて、開いて、前へ出す
+  tier: 報道
+  telop: ボールタッチ98、空中戦12
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じMFの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: ボールタッチ
+      value: 98
+      highlight: true
+    - label: チャンス創出
+      value: 97
+      highlight: false
+    - label: 得点
+      value: 46
+      highlight: false
+    - label: 空中戦
+      value: 12
+    source: FotMob
+  say:
+  - text: では、ペドリの形です。同じ位置の中盤を物差しに、図で見ます。
+    image: assets/stats/player_20261009_1083323_radar.png
+    no_telop: true
+  - text: 100が最上位の目安で、いちばん外へ張り出すのがボールタッチの98。
+    image: assets/stats/player_20261009_1083323_radar.png
+    no_telop: true
+  - text: チャンスを作る数も97。ほぼ同じ高さに並びます。
+    image: assets/stats/player_20261009_1083323_radar.png
+    no_telop: true
+  - text: 反対に、いちばん小さいのが空中戦の12でした。
+    image: assets/stats/player_20261009_1083323_radar.png
+    no_telop: true
+  - text: 高さの競り合いではなく、足もとで勝ってきた選手です。
+    image: assets/stats/player_20261009_1083323_radar.png
+    no_telop: true
+  - text: では、どこに立っているのか。
+    image: assets/stats/player_20261009_1083323_heat.png
+    no_telop: true
+    card: none
+  - text: 色がいちばん濃いのは、相手陣に入ってすぐの中央です。
+    image: assets/stats/player_20261009_1083323_heat.png
+    no_telop: true
+  - text: 自陣の深い所にも色がある。4試合に3試合は守備的な中盤の位置。
+    image: assets/stats/player_20261009_1083323_heat.png
+    no_telop: true
+  - text: 低い位置で体を開いて受け、そのまま前へ出す。これが武器です。
+    emph: true
+    image: assets/stats/player_20261009_1083323_heat.png
+    no_telop: true
+  - text: 今季のリーグ7試合で、パスの成功は391本。90分で70.1本です。
+    image: assets/images/20261009_player_683840/wc2026final/01_w.jpg
+    card: none
+  - text: 前へ進めるパスの数は、昨季までの集計でリーグの1位でした。
+  - text: 奪い返す回数も90分で7.9回。この数字は最上位です。
+  - text: 一方で、自分が撃つ数は多く取りません。
+    image: assets/stats/player_20261009_1083323_shots.png
+    no_telop: true
+  - text: 今季のリーグのシュートは6本で、1得点。
+    image: assets/stats/player_20261009_1083323_shots.png
+    no_telop: true
+  - text: 90分あたり1.08本。同じ位置の選手の中では少ない側です。
+    image: assets/stats/player_20261009_1083323_shots.png
+    no_telop: true
+  - text: 撃つより、味方に撃たせる位置へ届ける。そこへ寄せた作りです。
+    image: assets/stats/player_20261009_1083323_shots.png
+    no_telop: true
+  - text: 弱みを1つ挙げるなら、相手に置き去りにされる回数。
+    image: assets/images/20261009_player_683840/wc2026final/01_w.jpg
+    card: none
+  - text: 90分で2.15回あり、ここは同じ中盤の中で下の側にいます。
+  - text: 走る距離は1試合11.5キロ。こちらは昨季までの数字です。
+  sources:
+  - https://www.fotmob.com/players/1083323
+  - https://learning.coachesvoice.com/cv/hansi-flick-tactics-barcelona/
+  - https://www.football-espana.net/2025/04/10/pedri-statistics-continue-to-make-case-for-barcelona-star-as-best-there-is
+- id: past
+  heading: 5年で、アシストが増えていった
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: ペドリ 直近5シーズン（代表を含む全公式戦）
+    columns:
+    - シーズン
+    - 試合
+    - 得点
+    - アシスト
+    - 出場時間
+    rows: &season_rows
+    - - 21/22
+      - '29'
+      - '5'
+      - '1'
+      - 2187分
+    - - 22/23
+      - '37'
+      - '7'
+      - '1'
+      - 2815分
+    - - 23/24
+      - '40'
+      - '6'
+      - '6'
+      - 2339分
+    - - 24/25
+      - '73'
+      - '9'
+      - '10'
+      - 5406分
+    - - 25/26
+      - '54'
+      - '3'
+      - '12'
+      - 3745分
+    source: Transfermarkt
+  rows_total:
+  - &t1 [バルセロナ, '253', '29']
+  - &t2 [ラス・パルマス, '37', '4']
+  - &t3 [スペイン代表, '53', '6']
+  - &t4 [合計, '343', '39']
+  say:
+  - text: 代表戦も入れた、ペドリの季ごとの5年ぶんです。
+    image: assets/images/20261009_player_683840/wc2026final_v/01.jpg
+    card: &past_card
+      type: table
+      title: ペドリ 直近5シーズン（代表を含む全公式戦）
+      columns: [シーズン, 試合, 得点, アシスト, 出場時間]
+      rows: *season_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 2021年からの季は29試合5得点。アシストは1つでした。
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: いちばん出たのが24/25の73試合。9得点10アシストです。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 5406分は、21/22の2倍を超える出場時間になります。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 昨季は54試合3得点。それでもアシストは12で、自己最多です。
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: 点より、点を生む側へ。5年で役割が移ってきました。
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: 通算を見ます。バルセロナでは253試合29得点。
+    card: &total_card
+      type: table
+      title: ペドリ 通算（2026年10月8日まで）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4]
+      source: Transfermarkt・FotMob
+      highlight_row: 0
+  - text: ラス・パルマスの37試合を足すと、クラブで290試合です。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: スペイン代表は53試合6得点。18歳で呼ばれています。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: 合わせて343試合39得点。23歳での数字です。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 3
+  sources:
+  - https://www.transfermarkt.com/pedri/profil/spieler/683840
+  - https://www.fotmob.com/players/1083323
+- id: season
+  heading: 今季の12試合と、直近5試合
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows: &recent_rows
+    - - 10/6
+      - クロアチア
+      - 87分
+      - 0G 0A
+      - '7.9'
+    - - 10/3
+      - チェコ
+      - 67分
+      - 0G 0A
+      - '7.9'
+    - - 9/29
+      - クロアチア
+      - 33分
+      - 0G 1A
+      - '7.4'
+    - - 9/26
+      - イングランド
+      - 20分
+      - 0G 0A
+      - '6.4'
+    - - 9/19
+      - セビージャ
+      - 86分
+      - 0G 0A
+      - '8.1'
+    source: FotMob
+  say:
+  - text: 今季のペドリは、クラブと代表で12試合1得点3アシスト。
+    image: assets/images/20261009_player_683840/wc2026semi/01_v.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns: [日付, 相手, 出場, 得点, 評点]
+      rows: *recent_rows
+      source: FotMob
+  - text: 出た時間は771分。クラブで8試合、1得点2アシストです。
+    card: *recent_card
+  - text: 残る4試合は代表。欧州の国同士が戦うネーションズリーグで1アシスト。
+    card: *recent_card
+  - text: 直近の5試合では、10月6日のクロアチア戦が87分。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 10点満点の評点は7.9。5試合のうち3試合が7点台です。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: いちばん高いのは9月19日のセビージャ戦で8.1でした。
+    card:
+      <<: *recent_card
+      highlight_row: 4
+  sources:
+  - https://www.transfermarkt.com/pedri/profil/spieler/683840
+  - https://www.fotmob.com/players/1083323
+- id: story
+  heading: 得点のあとの、見えないサングラス
+  tier: 報道
+  main: true
+  telop: 双眼鏡ではなく、祖父のサングラス
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - [得点の仕草, 双眼鏡ではなく祖父のサングラス]
+    - [2026年7月19日, 世界一の夜、父をゴールに立たせた]
+    source: 本人の寄稿（2026年9月8日）
+  say:
+  - text: バルセロナのペドリが、点のあとに見せる仕草です。
+    short_only: true
+    image: assets/images/20261009_player_683840/wc2026final_v/01.jpg
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: 本人の寄稿（2026年9月8日）
+      highlight_row: 0
+  - text: 両手で輪を作り、双眼鏡をのぞく形。
+    card: *story_card
+  - text: でも本人は、双眼鏡ではないと書いています。
+    card: *story_card
+  - voice: ペドリ
+    text: あれは双眼鏡じゃない。
+  - voice: ペドリ
+    text: 本当は、祖父のサングラスをかけているんだ
+    cont: true
+    pause: 0.6
+  - text: 祖父はテネリフェで、バルサの応援団の店をやっていました。
+    card: *story_card
+  - text: その店の正面の壁には、古い写真がたくさん貼ってあります。
+    card: *story_card
+  - text: スーツに、バルサのネクタイ。笑っている祖父がそこにいます。
+    card: *story_card
+  - text: かけているのは、色の入った昔風のサングラスでした。
+    emph: true
+    card: *story_card
+  - text: もう1つは、世界一になった2026年7月19日の夜の話です。
+    image: assets/images/20261009_player_683840/wc2026semi/01_v.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 父は、家の商売を続けるために自分の夢をあきらめた人でした。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 決勝のあと、ペドリはその父をピッチへ連れ出します。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: ゴールに立たせて、ペナルティキックを蹴りました。
+    emph: true
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - voice: ペドリ
+    text: いま父は、こう言える。
+  - voice: ペドリ
+    text: 「私の息子はワールドカップを獲った」
+    cont: true
+    pause: 0.5
+  - text: あれは言葉にする方法さえ分からない、とも書き添えています。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  quotes_from:
+  - https://www.theplayerstribune.com/pedri-soccer-la-liga-barcelona-spain-es
+  sources:
+  - https://www.theplayerstribune.com/pedri-soccer-la-liga-barcelona-spain-es
+  - https://www.theplayerstribune.com/pedri-soccer-la-liga-barcelona-spain
+  - https://www.laliga.com/en-GB/news/five-things-you-may-not-know-about-pedri
+- id: view
+  heading: 23歳までのラ・リーガ出場を、シャビ・イニエスタと比べる
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月11日、バルセロナ対ヘタフェ
+  card:
+    type: table
+    title: 23歳になった季の終わりまでのラ・リーガ出場
+    columns: [選手, 23歳になった季, 出場]
+    rows: &pace_rows
+    - [ペドリ, '25/26', '165']
+    - [シャビ, '02/03', '125']
+    - [イニエスタ, '06/07', '124']
+    source: 英語版Wikipedia・FotMob（こちらで数えた）
+  say:
+  - text: 最後に、自分で数えた数字から、この先を見ます。
+    image: assets/images/20261009_player_683840/wc2026final_v/01.jpg
+    card: &pace_card
+      type: table
+      title: 23歳になった季の終わりまでのラ・リーガ出場
+      columns: [選手, 23歳になった季, 出場]
+      rows: *pace_rows
+      source: 英語版Wikipedia・FotMob（こちらで数えた）
+      highlight_row: 0
+  - text: 23歳になった季の終わりまでの、ラ・リーガの出場数です。
+    card: *pace_card
+  - text: ペドリは165試合。シャビは125、イニエスタは124でした。
+    emph: true
+    card:
+      <<: *pace_card
+      highlight_row: 1
+  - text: 40試合ほど多い。1.3倍の速さで、すでに積んでいます。
+    card:
+      <<: *pace_card
+      highlight_row: 2
+  - text: ただ、その速さには代償もありました。
+    card: &calc_card
+      type: calc
+      title: 負傷で失った試合
+      terms:
+      - ['102試合', 負傷での欠場]
+      - ['73試合', 2020/21に出た試合]
+      - ['1.40倍', 失ったほうが多い]
+      ops: ['÷', '＝']
+  - text: 離脱は14件、日数にすると561日。欠場は102試合あります。
+    card: *calc_card
+  - text: 18歳で走り切ったあの1年より、多くを失った計算です。
+    emph: true
+    card: *calc_card
+    mark: {kind: circle, item: 2}
+  - text: 空中での勝負は、これから先も彼の戦い方ではないでしょう。
+    image: assets/images/20261009_player_683840/wc2026final/01_w.jpg
+    card: none
+  - text: それでも、触って前へ出す役では代わりがいません。
+  - text: クラブの次の試合は10月11日。本拠地にヘタフェを迎えます。
+  - text: 何回触って、どれだけ前へ出せるか。そこを見ます。
+  sources:
+  - https://www.transfermarkt.com/pedri/verletzungen/spieler/683840
+  - https://www.fotmob.com/players/1083323
+  - https://en.wikipedia.org/wiki/Pedri
+  - https://en.wikipedia.org/wiki/Xavi_Hern%C3%A1ndez
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
