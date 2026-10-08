@@ -128,7 +128,9 @@ def preflight(sc, config) -> bool:
                 warns += text_room(sc.thumbnail, config, assets_dir(config))
     if not errors:                                       # 節の題が右上の札・肖像の額に隠れないか（10-09）
         from .render import Painter
-        errors += check_mod.section_title_fit(Painter(config, sc, assets_dir(config), (1920, 1080)))
+        painter = Painter(config, sc, assets_dir(config), (1920, 1080))
+        errors += check_mod.section_title_fit(painter)
+        warns += check_mod.timeline_crowding(painter)
     warns += check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60))
     for who, (hit, n) in check_mod.saturation(sc, voices(config)).items():
         if hit:

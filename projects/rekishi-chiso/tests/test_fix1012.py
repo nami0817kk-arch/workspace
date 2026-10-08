@@ -202,3 +202,32 @@ def test_qc_does_not_count_the_recap_gap_as_silence():
                     sections=[(0.0, "第1節 一"), (49.9, "第2節 二")])
     text = "\n".join(qc.summarize(rep))
     assert "無音（-45dB 未満）：1か所" in text and "2:00" in text
+
+
+# --- 7. 年表の名札が詰まって字幕の箱に隠れる ------------------------------------------------
+def _timeline_painter(tmp_path):
+    from test_port import _painter
+    ev = [[1537, "誕生"], [1573, "長浜城主"], [1582, "大返し"], [1585, "関白"], [1590, "天下一統"], [1598, "死去"],
+          [1797, "絵本太閤記"]]
+    sc = script.parse({"title": "t", "timeline": {"start": 1530, "end": 1810, "events": ev},
+                       "sections": [{"title": "一", "lines": [{"語り": "a"}]}]})
+    return _painter(tmp_path, sc)
+
+
+def test_timeline_labels_use_two_rows_at_most_and_always_show_the_current_one(tmp_path):
+    from chiso import render
+    p = _timeline_painter(tmp_path)
+    rows = p.timeline_rows(470, 1450, None)
+    assert all(r is None or 0 <= r < render.TIMELINE_ROWS for r in rows)
+    assert None in rows                                            # 詰まった所は出さない
+    for k, (y, _l) in enumerate(p.script.events):
+        assert p.timeline_rows(470, 1450, y)[k] == 0               # いまの年の名札は必ず、すぐ下の段に
+
+
+def test_check_tells_when_timeline_events_are_too_close(tmp_path):
+    from chiso import check
+    p = _timeline_painter(tmp_path)
+    got = check.timeline_crowding(p)
+    assert len(got) == 1 and "年表の出来事が近すぎて" in got[0]
+    p.script.events = [(1537, "誕生"), (1598, "死去"), (1797, "絵本太閤記")]
+    assert check.timeline_crowding(p) == []

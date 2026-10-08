@@ -610,3 +610,17 @@ def section_title_fit(painter) -> list[str]:
                    f"いちばん小さい字でも{w:.0f}px、置ける幅{room:.0f}px。右上の札・肖像の額に隠れる。題を短くする）")
     return out
 
+
+def timeline_crowding(painter) -> list[str]:
+    """年表の出来事が近すぎて、ふだん（いまの年がどの出来事でもないとき）名札が出ないもの（10-09。秀吉の回で
+    1573〜1598 に5つ集まり、名札が3段に詰まって字幕の箱に隠れた）。その年の行のあいだだけは出る。"""
+    sc = painter.script
+    if sc.timeline_start is None or sc.timeline_end is None or not sc.events:
+        return []
+    rows = painter.timeline_rows(470, painter.W - 470, None)
+    hidden = [f"{label}（{y}年）" for (y, label), r in zip(sc.events, rows) if r is None]
+    if not hidden:
+        return []
+    return [f"年表の出来事が近すぎて、名札が出ないものがあります：{'、'.join(hidden)}"
+            "（その年の行だけ出る。timeline.events を減らすか、名札を短くする）"]
+

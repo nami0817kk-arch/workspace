@@ -40,6 +40,8 @@ SHAKE_PX = 10        # 揺れの大きさ
 WIPE_FRAMES = 14     # 節の頭の地層のワイプ（フレーム数）
 FIG_FRAMES = 45      # 図が出たときに描き進める長さ（フレーム数。1.5秒）
 ICON_FRAMES = 8      # 挿絵が出るときに大きくなる長さ（フレーム数）
+TIMELINE_ROWS = 2    # 年表の名札の段の数（3段目は字幕の箱にかかる。10-09）
+TIMELINE_ROW_H = 34  # 名札の段の高さ
 TITLE_X = 120        # 節の題の左の端
 TITLE_BAND = (140, 215)   # 節の題の上下（64px の題が入る高さ）
 TITLE_MIN = 36       # 節の題はこの大きさまで縮める（収まらなければ check が止める）
@@ -212,7 +214,6 @@ class Painter:
                 color = tuple(int(c * 0.45) for c in color)
             dr.rectangle([X(a), yb - 14, X(b), yb + 14], fill=color + (255,))
         u = self.H / 1080
-        placed: list[tuple[float, float]] = []           # ラベルの重なりを避ける
         years: list[tuple[float, float]] = []            # 年の数字の重なりを避ける（10-05「1894189 1900」と重なった）
         for y, _ in sc.events:                           # いまの年を先に場所取り（10-06 明智で 1566 と 1582 がくっついた）
             if year is not None and round(year) == y:
@@ -227,14 +228,12 @@ class Painter:
                 dr.text((X(y), yb - 40 * u), tick(y), font=yf, fill=GOLD if on else DIM, anchor="ms")
                 if not on:
                     years.append((X(y) - half, X(y) + half))
+        for (y, label), row in zip(sc.events, self.timeline_rows(x0, x1, year)):
+            if row is None:
+                continue                                  # 近い出来事に押し出された名札は出さない（10-09）
+            on = (year is not None and round(year) == y)
             lf = self.font("serif", int((30 if on else 24) * u))
-            lw = lf.getlength(label)
-            ly = yb + 44 * u
-            for (px0, px1) in placed:
-                if X(y) - lw / 2 < px1 + 8 and X(y) + lw / 2 > px0 - 8:
-                    ly += 34 * u
-            placed.append((X(y) - lw / 2, X(y) + lw / 2))
-            dr.text((X(y), ly), label, font=lf, fill=INK if on else DIM, anchor="mt",
+            dr.text((X(y), yb + (44 + TIMELINE_ROW_H * row) * u), label, font=lf, fill=INK if on else DIM, anchor="mt",
                     stroke_width=3, stroke_fill=(12, 10, 8))
         if year is not None and y0 <= year <= y1:
             cx = X(year)
@@ -245,6 +244,35 @@ class Painter:
             dr.rounded_rectangle([cx - pw / 2, yb - 150 * u, cx + pw / 2, yb - 114 * u], radius=8,
                                  fill=(20, 16, 10, 220), outline=GOLD, width=2)
             dr.text((cx, yb - 132 * u), txt, font=pf, fill=GOLD, anchor="mm")
+
+    def timeline_rows(self, x0: float, x1: float, year) -> list[int | None]:
+        """年表の出来事の名札を置く段（0＝すぐ下、1＝その下）。重なる名札は下の段へ。2段でも重なる名札は出さない
+        （10-09 秀吉の回で「長浜城主・大返し・関白」が3段まで下がり、字幕の箱に隠れた）。いまの年の名札は先に置くので必ず出る。"""
+        sc = self.script
+        from .years import astro
+        y0, y1 = sc.timeline_start, sc.timeline_end
+        X = lambda y: x0 + (x1 - x0) * (astro(y) - astro(y0)) / max(1, (astro(y1) - astro(y0)))
+        u = self.H / 1080
+        spans = []
+        on = []
+        for y, label in sc.events:
+            hot = year is not None and round(year) == y
+            w = self.font("serif", int((30 if hot else 24) * u)).getlength(label)
+            spans.append((X(y) - w / 2, X(y) + w / 2))
+            on.append(hot)
+        rows: list[int | None] = [None] * len(spans)
+        taken: list[list[tuple[float, float]]] = [[] for _ in range(TIMELINE_ROWS)]
+        for i in sorted(range(len(spans)), key=lambda k: not on[k]):
+            a, b = spans[i]
+            for r in range(TIMELINE_ROWS):
+                if not any(a < q1 + 8 and b > q0 - 8 for q0, q1 in taken[r]):
+                    rows[i] = r
+                    taken[r].append((a, b))
+                    break
+            else:
+                if on[i]:
+                    rows[i] = 0                            # いまの年が2つ以上重なるときも出す
+        return rows
 
     # --- 本編の画面（立ち絵と字幕より下の層） ------------------------------
     def base(self, state: State, year=None, slide: float = 1.0, fig: float = 1.0, icon_t: float = 1.0,
