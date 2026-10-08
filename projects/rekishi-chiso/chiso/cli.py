@@ -114,6 +114,7 @@ def preflight(sc, config) -> bool:
     errors = [f"素材がありません: {m}" for m in check_mod.missing_assets(sc, assets_dir(config))]
     from .people import unknown_roles
     errors += [f"人物「{who}」の声が config.yaml の roles にありません" for who in unknown_roles(config, sc)]
+    errors += check_mod.glyph_errors(sc, config.get("fonts") or {})   # フォントに無い字（10-09「毐」が□で出た）
     warns: list[str] = []
     if not str(sc.path.name).startswith("sample"):
         e, w = check_mod.episode(sc)
