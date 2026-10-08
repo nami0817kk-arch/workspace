@@ -57,8 +57,12 @@ SLOT_PORTRAIT = 983     # ショート 1080×1920
 
 # **出典の字**（2026-10-08）。22px は本編で縮まなくてもスマホ 4.5pt で、
 # 読める下限（5.7pt＝28px）を割っていた。どの型でも板の右下に1行で出る
-SOURCE_PX = 28
-SOURCE_ROOM = 26        # 出典のぶん板の下に足す高さ（字が 22→28 に太ったので 18→26）
+# 出典は画面に出さない（2026-10-08 ユーザー「出典は動画に出さなくていいからね」）。
+# 「出典は概要欄に書く。画面にも読み上げにも出さない」（2026-09-10）の決まりに、板だけが
+# 従っていなかった。取材メモ・台本の `source:` / `credit:` は**控えとして残す**（どこの数字かは
+# 作る側が辿れる必要がある）が、描かない。描かないので板の下に足す高さも0。
+SOURCE_PX = 28          # 残してあるのは、万一また描くことにしたときの下限（スマホ5.7pt）
+SOURCE_ROOM = 0
 
 # **単位・言葉の下限**（2026-10-08）。`put_number` は単位を数字の半分で描くので、
 # 数字が 46px に縮むと単位が 23px（スマホ 4.7pt）になっていた。半分より小さくしない
@@ -182,7 +186,11 @@ def mark_columns(spec: dict | None) -> list[str]:
 
 
 def source_room(spec: dict) -> int:
-    """出典の1行のために板の下へ足す高さ（出典が無ければ0）。"""
+    """出典のために板の下へ足す高さ。**いまは常に0**（画面に出さないため）。
+
+    呼び出し側（表・散らばり図・換算…の高さの計算）はそのまま残してあるので、
+    また描くことになったら SOURCE_ROOM を戻すだけで効く。
+    """
     return SOURCE_ROOM if str(spec.get("source") or "").strip() else 0
 
 
@@ -301,13 +309,8 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     # 左端のアクセント帯
     draw.rounded_rectangle([0, RADIUS, 8, height - RADIUS], radius=4, fill=accent + (255,))
 
-    if source:
-        # 出典を右下に小さく（品質100回の65）。自作の図だと分かり、数字の出どころが画面に残る。
-        # **22px だとスマホで 4.5pt（読める下限 5.7pt を割る）**ので 28px に（2026-10-08）。
-        # 字が太ったぶん下の余白（SOURCE_ROOM）も 18→26 にして、置く位置は上へ 8px ずらす
-        src_font = ImageFont.truetype(font_path, SOURCE_PX)
-        sw = draw.textlength(source, font=src_font)
-        draw.text((width - PAD - sw, height - PAD - 12), source, font=src_font, fill=(120, 130, 146, 255))
+    # 出典は描かない（2026-10-08 ユーザー「出典は動画に出さなくていいからね」）。
+    # `source` は取材メモ・台本の控えとして読んだままにしてあり、概要欄と credits.json で出す。
     y = PAD
     shown_rows = 0
     for block in blocks:
@@ -3072,16 +3075,8 @@ def render_versus(spec: dict, size: tuple[int, int], font_path: str, out_path: P
         box = [width / 2 - tw_title / 2 - 40, top, width / 2 + tw_title / 2 + 40, top + band]
         draw.rounded_rectangle(box, radius=16, fill=BRAND_GREEN, outline=BRAND_GOLD, width=3)
         draw.text((width / 2, (box[1] + box[3]) / 2), title, font=title_font, fill=BRAND_GOLD, anchor="mm")
-    credit = str(spec.get("credit") or "").strip()
-    if credit:
-        # **22px だと本編（1920）でスマホ 4.5pt**＝読める下限（5.7pt）を割る（2026-10-08）。
-        # 板の出典と同じ 28px にして、字が太ったぶん置く位置を上へ 8px ずらす
-        credit_font = _font(font_path, SOURCE_PX)
-        cw = draw.textlength(credit, font=credit_font)
-        # 右下に小さく（写真の表示は概要欄にも出す。ショートでは下の操作の帯に隠れてよい）
-        y = height - 42
-        draw.text((width - 24 - cw, y), credit, font=credit_font, fill=(200, 206, 214, 255),
-                  stroke_width=2, stroke_fill=stroke)
+    # 写真の表示（credit）も画面には描かない（2026-10-08、板の出典と同じ）。
+    # CC BY / BY-SA の表示は**概要欄**（`tts` の帳簿）が出すので、そちらで条件は満たしている。
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(out_path)

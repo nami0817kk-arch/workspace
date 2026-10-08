@@ -127,11 +127,14 @@ def test_table_card_renders(tmp_path, fonts):
     assert path.exists()
 
 
-def test_表の出典は右下に小さく出て_その分だけ背が伸びる(tmp_path, fonts):
-    """`source:` を書いた表は右下に出典の字が入る（品質100回の65）。自作の図だと分かり、数字の出どころが画面に残る。
+def test_表の出典は画面に描かない(tmp_path, fonts):
+    """`source:` を書いても、板には出典を描かない。
 
-    2026-10-08 に出典の字を 22px → 28px にした（22px は本編でスマホ 4.5pt＝読める下限
-    5.7pt を割る）。伸びる高さも 18 → `cards.SOURCE_ROOM`（26）に増えている。
+    2026-10-08 ユーザー「出典は動画に出さなくていいからね」。
+    「出典は概要欄に書く。画面にも読み上げにも出さない」（2026-09-10）という決まりが
+    元からあるのに、**板だけが従っていなかった**（品質100回の65で右下に描いていた）。
+    `source:` は取材メモ・台本の控えとして残す（どこの数字かを作る側が辿れる必要がある）が、
+    **絵は出典の有る無しで1pxも変わらない**。
     """
     from PIL import Image
 
@@ -139,17 +142,36 @@ def test_表の出典は右下に小さく出て_その分だけ背が伸びる(
     spec = {"type": "table", "title": "順位", "columns": ["順位", "クラブ", "勝点"], "rows": [["1", "A", "12"], ["2", "B", "10"]]}
     plain = Image.open(render(dict(spec), WIDTH, font, tmp_path / "plain.png", latin))
     marked = Image.open(render(dict(spec, source="FotMob"), WIDTH, font, tmp_path / "marked.png", latin))
-    assert marked.height == plain.height + cards.SOURCE_ROOM
-    corner = marked.crop((marked.width - 200, marked.height - 48, marked.width - 10, marked.height - 4))
-    assert any(px[3] > 0 and 100 <= px[0] <= 140 for px in corner.getdata()), "右下に灰色の字が無い"
+    assert marked.height == plain.height, "出典のぶん板が伸びている"
+    assert list(marked.getdata()) == list(plain.getdata()), "出典を書くと絵が変わっている"
 
 
-def test_出典の字はスマホで読める下限を下回らない():
-    """出典はどの板でもいちばん小さい字。**本編（1920）で 28px＝スマホ 5.7pt が下限**。
+def test_versus_の写真の表示も画面に描かない(tmp_path, fonts):
+    """全画面の比べ（versus）の `credit:` も描かない（板の出典と同じ、2026-10-08）。
 
-    2026-10-08 の実測で 22px＝3.2〜4.5pt だった（`tools/typecheck.py`）。
-    ここを下げると、板のどこかが必ず読めなくなる。
+    CC BY / BY-SA の表示は**概要欄**（`tts` の帳簿）が出すので、そちらで条件は満たしている。
     """
+    from PIL import Image
+
+    font, latin = fonts
+    photo = tmp_path / "p.png"
+    Image.new("RGB", (600, 800), (90, 110, 130)).save(photo)
+    spec = {"type": "versus", "title": "比べる",
+            "left": {"image": str(photo), "name": "A", "number": "1"},
+            "right": {"image": str(photo), "name": "B", "number": "2"}}
+    plain = Image.open(cards.render_versus(dict(spec), (1920, 1080), font, tmp_path / "plain.png", latin))
+    marked = Image.open(cards.render_versus(dict(spec, credit="©どこか"), (1920, 1080), font,
+                                            tmp_path / "marked.png", latin))
+    assert list(marked.getdata()) == list(plain.getdata()), "写真の表示を書くと絵が変わっている"
+
+
+def test_出典のぶん板は伸びない():
+    """出典を描かないので、板の下に足す高さは0（2026-10-08）。
+
+    また描くことにしたときのために `SOURCE_PX`（スマホで読める下限 28px）は残してある。
+    22px だと本編でスマホ 3.2〜4.5pt で、読める下限 5.7pt を割る（`tools/typecheck.py` の実測）。
+    """
+    assert cards.SOURCE_ROOM == 0
     assert cards.SOURCE_PX >= 28
 
 
