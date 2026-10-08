@@ -1,0 +1,6 @@
+title: ジョアン・ネヴェスの今季のシュート
+unit: xG
+shots=10
+goals=0
+xg=1.51
+source: FotMob

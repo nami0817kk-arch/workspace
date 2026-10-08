@@ -197,8 +197,8 @@ domains:
 leagues:
   england:
     name: プレミアリーグ
-    official: [premierleague.com, arsenal.com, chelseafc.com, manutd.com,
-               liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
+    official: [premierleague.com, thefa.com, efl.com, arsenal.com, chelseafc.com,
+               manutd.com, liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
     media: english
     utc_offset: 1          # BST（夏時間）
     active_local: "09:00-23:30"

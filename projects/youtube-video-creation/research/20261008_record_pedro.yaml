@@ -1,0 +1,668 @@
+# 取材メモ（10/8 シリーズ「記録」、key: record_pedro、型は news）。材料の控えは research/raw/20261008_record_pedro.md。
+# 何の回か: 2026年10月7日、ペドロ（ペドロ・エリエセル・ロドリゲス・レデスマ、1987年7月28日生まれ）が39歳で現役引退を発表した。
+#   バルサ321試合99得点・獲った大会の優勝25個・通算902試合215得点。柱に据えるのは「2009年に6大会すべてで得点した史上初」。
+# 数字の出どころ: バルセロナ公式（99得点・6大会すべてで得点した史上初・2011年CL決勝の先制点・10月9日のお別れの催し）、
+#   英語版ウィキペディアの季ごとの表（クラブ別・代表の出場と得点、honours の全件）、シャビの767試合85得点はバルサ公式。
+#   **足し直しは全部自分でやった**（バルサ 204+38+61+18=321／58+20+15+6=99、通算 776+126=902／187+28=215、代表 65／17）。
+#   1試合あたりの得点・18年268日・25個・約9か月に1つ も自分で割った値。検算は research/raw に残した。
+# 報道との食い違い: サッカーキングは引退の言葉を前半だけ訳していた（原文の「そばにいてくれたすべての人に」「ありがとう」が落ちていた）ので、
+#   スペイン語の原文から訳し直した。チェルシー以降の試合数・得点は日本語記事に無いので季ごとの表から自分で足した。
+#   オランダの媒体の見出し「25 prijzen」は、自分で数えた25個と一致した（バルサ20・チェルシー3・代表2）。
+# 言葉: ペドロ本人の引退の声明（スペイン語の原文を確認して訳した）。ほかの人の言葉は取っていない。
+# 反応: この回は入れない（サッカーキングの記事の配信先にコメント欄が見つからなかった）。シリーズの回は反応が無くてよい。
+# 重ならないようにしたもの: 10/7 のケインの回（記録・代表の最多出場）とは、題材も数字も別。
+#   「歴代◯位」「1試合あたり」の言い回しが近いので、ケインの回で使った「1年あたりの試合」「◯年◯日早い」の形は使っていない。
+# 写真: すべて Commons（代理店なし）。バルサ2014・チェルシー2015・2009年クラブW杯（シャビと一緒）・スペイン2013。
+#   チェルシー2015（1920x1080）は表情がよく頭も入っているので、冒頭とサムネに使う。バルサ2014は縦なので表のある節だけ。
+#   ショート用は 03_chelsea2015_w_v.jpg（同じ中身の縦）。
+# サムネ: layout を number にした（見どころが1つの数字＝獲った銀器の数。答えは ●● で伏せる）。直前2本は classic。
+date: 2026年10月8日
+slot: other_1
+format: news
+series: 記録
+people:
+- ペドロ
+theme:
+  id: record_pedro
+  league: spain
+  league_name: スペイン
+  kind: other
+  topic: バルセロナ
+  title: ペドロが39歳で引退。バルサ321試合99得点、誰も並んでいない1年とは
+  question: 18年268日を走り終えたペドロが、ほかの誰にもない記録として残したものは何か
+  takeaway: ペドロは2026年10月7日に39歳で現役引退を発表した。バルセロナでは321試合99得点、3試合に1点の割合で決めている。獲った大会の優勝は自分で数えて25個で、バルセロナ20・チェルシー3・スペイン代表2の内訳。トップチームのデビュー2008年1月12日から引退発表まで18年268日で、25個を割るとおよそ9か月に1つになる。柱は2009年で、スーペルコパ・ウエファスーパーカップ・チャンピオンズリーグ・クラブワールドカップ・ラ・リーガ・コパデルレイの6大会すべてで得点した史上初の選手になった。2度の3冠を両方で経験した7人のうち、バルサでの出場は321試合で最も少なく、得点99はメッシの672に次ぐ2番目で、3位のシャビの85より14点多い。10月9日の金曜、日本時間18時30分からバルセロナがお別れの催しを開く
+  opening_image: assets/images/20261008_record_pedro/03_chelsea2015_w.jpg
+short_title: ペドロ、39歳で現役引退。バルサ321試合99得点と銀器25個
+thumbnail:
+  layout: number
+  photo: assets/images/20261008_record_pedro/03_chelsea2015_w.jpg
+  short_photo: assets/images/20261008_record_pedro/03_chelsea2015_v.jpg
+  number: 99得点
+  line1: ペドロ、39歳で引退
+  line2: 銀器は●●個
+  tags:
+  - ペドロ
+  - バルセロナ
+  - スペイン代表
+  - チェルシー
+  - 記録
+sections:
+- id: words
+  main: true
+  heading: ついに、その時が来た
+  tier: 確定
+  official: true
+  telop: 39歳で現役引退。バルサ321試合99得点、獲った大会の優勝は25
+  narrator: キャスター
+  say:
+  - text: 元スペイン代表のペドロが、39歳で現役を退きました。
+    short_only: true
+    card: none
+    image: assets/images/20261008_record_pedro/03_chelsea2015_w.jpg
+  - text: ついに、その時が来たと感じている。
+    voice: ペドロ
+    card: none
+  - text: 一歩を踏み出して、人生の新しい章を始める時だ。
+    voice: ペドロ
+    cont: true
+    card: none
+  - text: 夢を生きられたことを、誇りに思う。
+    voice: ペドロ
+    cont: true
+    card: none
+  - text: そして、それを叶えるためにそばにいてくれた人に。
+    voice: ペドロ
+    cont: true
+    card: none
+  - text: フットボール、こんなに幸せにしてくれてありがとう。
+    voice: ペドロ
+    cont: true
+    card: none
+  - text: 2008年1月のデビューから、18年268日の現役でした。
+    image: assets/images/20261008_record_pedro/06_spain2013_rw.jpg
+    card: &pedro_stats
+      type: stats
+      title: ペドロの18年268日
+      items:
+      - - '321'
+        - 試合
+        - バルセロナで
+      - - '99'
+        - 点
+        - バルセロナで
+      - - '25'
+        - 個
+        - 獲った大会の優勝
+      focus: 2
+  - text: バルセロナでの7年半は、3試合に1点の割合で決めています。
+    card: *pedro_stats
+  - text: 手にした銀器は25個。1年に1つを超える数になります。
+    card: *pedro_stats
+    mark:
+      kind: circle
+      item: 2
+  - text: そのなかに、いまも誰ひとり並べていない1年があります。
+    card: *pedro_stats
+  - text: 2009年。ペドロは6つの大会すべてで点を取りました。
+    card: *pedro_stats
+    emph: true
+  quotes_from:
+  - デルビーデルビーデルビー https://www.derbyderbyderby.it/calcio-estero/pedro-saluta-il-calcio-giocato-me-ne-vado-orgoglioso-e-il-momento-di-fare-un-passo-avanti/
+  sources:
+  - https://www.fcbarcelona.com/en/football/first-team/news/4587927/pedro-rodriguez-announces-retirement
+  - https://www.soccer-king.jp/news/world/ita/20261007/2214206.html
+  - https://www.derbyderbyderby.it/calcio-estero/pedro-saluta-il-calcio-giocato-me-ne-vado-orgoglioso-e-il-momento-di-fare-un-passo-avanti/
+  - https://en.wikipedia.org/wiki/Pedro_(footballer,_born_1987)
+  card: *pedro_stats
+- id: record2009
+  heading: 2009年、6つの大会すべてで決めた
+  tier: 確定
+  official: true
+  telop: スーペルコパ・欧州スーパーカップ・CL・クラブW杯・リーグ・国内杯。史上初
+  narrator: 解説
+  card: &six_verdict
+    type: verdict
+    title: 2009年 6大会すべてで得点
+    columns: &six_cols
+    - 大会
+    - 得点
+    - いつ
+    rows: &six_rows
+    - - スーペルコパ
+      - ✓
+      - 8月16日
+    - - ウエファ・スーパーカップ
+      - ✓
+      - 8月28日
+    - - チャンピオンズリーグ
+      - ✓
+      - 9月28日
+    - - クラブワールドカップ
+      - ✓
+      - 12月16日
+    - - ラ・リーガ
+      - ✓
+      - 34試合12点
+    - - コパ・デル・レイ
+      - ✓
+      - 4試合3点
+  say:
+  - text: ここに至る出発点は、2008年1月12日の初出場です。
+    card: *six_verdict
+  - text: 出場時間はわずか1分。トップでの776試合は、ここから始まります。
+    card: *six_verdict
+  - text: 公式戦で初めて点を取ったのは、2009年の夏でした。
+    card: *six_verdict
+  - text: そこから年末まで、ペドロは止まりませんでした。
+    card: *six_verdict
+  - text: 8月16日、リーグと杯の王者が戦うスーペルコパで1点。
+    card:
+      type: verdict
+      title: 2009年 6大会すべてで得点
+      columns: *six_cols
+      rows: *six_rows
+      highlight_row: 0
+  - text: 12日後のヨーロッパのスーパーカップでは、延長で決勝点。
+    card:
+      type: verdict
+      title: 2009年 6大会すべてで得点
+      columns: *six_cols
+      rows: *six_rows
+      highlight_row: 1
+  - text: 9月28日、チャンピオンズリーグでも初めて決めました。
+    card:
+      type: verdict
+      title: 2009年 6大会すべてで得点
+      columns: *six_cols
+      rows: *six_rows
+      highlight_row: 2
+  - text: 12月16日、クラブワールドカップの準決勝でも1点。
+    card:
+      type: verdict
+      title: 2009年 6大会すべてで得点
+      columns: *six_cols
+      rows: *six_rows
+      highlight_row: 3
+  - text: リーグ戦は34試合で12得点。前の季は6試合で0得点でした。
+    card:
+      type: verdict
+      title: 2009年 6大会すべてで得点
+      columns: *six_cols
+      rows: *six_rows
+      highlight_row: 4
+  - text: 国内の杯、コパ・デル・レイも4試合で3得点です。
+    card:
+      type: verdict
+      title: 2009年 6大会すべてで得点
+      columns: *six_cols
+      rows: *six_rows
+      highlight_row: 5
+  - text: この並びを成し遂げた選手は、それまでひとりもいません。
+    card: *six_verdict
+    emph: true
+  - text: この季の数字は52試合23得点。前の季の14試合0得点からの跳躍でした。
+    card: *six_verdict
+  sources:
+  - https://www.fcbarcelona.com/en/football/first-team/news/4587927/pedro-rodriguez-announces-retirement
+  - https://en.wikipedia.org/wiki/Pedro_(footballer,_born_1987)
+- id: titles
+  heading: 銀器25個の、その中身
+  tier: 背景
+  telop: バルサ20個・チェルシー3個・代表2個。18年268日で割るとおよそ9か月に1つ
+  narrator: 解説
+  card: &club_titles
+    type: table
+    title: 獲った大会の優勝 25個
+    columns: &ct_cols
+    - 所属
+    - 個数
+    - 年
+    rows: &ct_rows
+    - - バルセロナ
+      - '20'
+      - 2008〜2015年
+    - - チェルシー
+      - '3'
+      - 2015〜2020年
+    - - スペイン代表
+      - '2'
+      - 2010年・2012年
+    - - ローマとラツィオ
+      - '0'
+      - 2020〜2026年
+  say:
+  - text: ペドロが手にした銀器25個を、所属ごとに並べ直します。
+    card: *club_titles
+    image: assets/images/20261008_record_pedro/02_barca2014.jpg
+  - text: バルセロナで20個。25個のうち、8割がここです。
+    card:
+      type: table
+      title: 獲った大会の優勝 25個
+      columns: *ct_cols
+      rows: *ct_rows
+      highlight_row: 0
+  - text: リーグが5回、チャンピオンズリーグが3回、国内杯が3回。
+    card:
+      type: table
+      title: 獲った大会の優勝 25個
+      columns: *ct_cols
+      rows: *ct_rows
+      highlight_row: 0
+  - text: スーペルコパなど残る9回も、すべてここで獲っています。
+    card:
+      type: table
+      title: 獲った大会の優勝 25個
+      columns: *ct_cols
+      rows: *ct_rows
+      highlight_row: 0
+  - text: チェルシーでは3個。5年で、3つの大会を1つずつ。
+    card:
+      type: table
+      title: 獲った大会の優勝 25個
+      columns: *ct_cols
+      rows: *ct_rows
+      highlight_row: 1
+  - text: スペイン代表でも2個。25個のうち、ここが1割です。
+    card:
+      type: table
+      title: 獲った大会の優勝 25個
+      columns: *ct_cols
+      rows: *ct_rows
+      highlight_row: 2
+  - text: イタリアでの6年だけは、優勝に手が届きませんでした。
+    card:
+      type: table
+      title: 獲った大会の優勝 25個
+      columns: *ct_cols
+      rows: *ct_rows
+      highlight_row: 3
+  - text: 届いたものと、あと一歩だったものを並べてみます。
+    card: &reach_verdict
+      type: verdict
+      title: 届いたもの、届かなかったもの
+      columns: &rv_cols
+      - 大会
+      - 判定
+      - 結果
+      rows: &rv_rows
+      - - ワールドカップ
+        - ✓
+        - 2010年 優勝
+      - - ヨーロッパ選手権
+        - ✓
+        - 2012年 優勝
+      - - チャンピオンズリーグ
+        - ✓
+        - 3回 優勝
+      - - プレミアリーグ
+        - ✓
+        - 2016-17 優勝
+      - - コッパ・イタリア
+        - ✗
+        - 2025-26 準優勝
+      - - コンフェデレーションズカップ
+        - ✗
+        - 2013年 準優勝
+  - text: ワールドカップが2010年、ヨーロッパ選手権が2012年。
+    card:
+      type: verdict
+      title: 届いたもの、届かなかったもの
+      columns: *rv_cols
+      rows: *rv_rows
+      highlight_row: 0
+  - text: クラブではチャンピオンズリーグが3回、プレミアが1回。
+    card:
+      type: verdict
+      title: 届いたもの、届かなかったもの
+      columns: *rv_cols
+      rows: *rv_rows
+      highlight_row: 2
+  - text: 一方、最後の季のコッパ・イタリアは決勝で敗れました。
+    card:
+      type: verdict
+      title: 届いたもの、届かなかったもの
+      columns: *rv_cols
+      rows: *rv_rows
+      highlight_row: 4
+  - text: 各大陸の王者が集まる大会も、2013年は準優勝でした。
+    card:
+      type: verdict
+      title: 届いたもの、届かなかったもの
+      columns: *rv_cols
+      rows: *rv_rows
+      highlight_row: 5
+  - text: 25個を、現役の年月で割ると、どうなるか。
+    card: &nine_calc
+      type: calc
+      title: 優勝1つあたりの年月
+      terms:
+      - - 18年268日
+        - デビューから引退まで
+      - - 25個
+        - 獲った大会の優勝
+      - - 約9か月
+        - 優勝1つあたり
+      ops:
+      - ÷
+      - ＝
+  - text: およそ9か月に1つ。ずっと優勝争いの中にいた計算です。
+    card: *nine_calc
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Pedro_(footballer,_born_1987)
+  - https://www.vi.nl/nieuws/pedro-39-stopt-met-25-prijzen-op-zak-voetbal-je-hebt-me-gelukkig-gemaakt
+- id: after
+  heading: バルサのあとの11年と、決勝で決めた9点
+  tier: 背景
+  telop: チェルシー206試合43点、ラツィオ209試合39点。決勝での得点は通算9
+  narrator: 解説
+  card: &after_table
+    type: table
+    title: バルサのあとの数字
+    columns: &at_cols
+    - 所属
+    - 出場
+    - 得点
+    rows: &at_rows
+    - - チェルシー
+      - '206'
+      - '43'
+    - - ローマ
+      - '40'
+      - '6'
+    - - ラツィオ
+      - '209'
+      - '39'
+    - - スペイン代表
+      - '65'
+      - '17'
+  say:
+  - text: 2015年8月、28歳のペドロはチェルシーへ移ります。
+    card: *after_table
+    image: assets/images/20261008_record_pedro/03_chelsea2015_v.jpg
+  - text: デビュー戦で、いきなり得点とアシストを記録しました。
+    card:
+      type: table
+      title: バルサのあとの数字
+      columns: *at_cols
+      rows: *at_rows
+      highlight_row: 0
+  - text: 5年で206試合43得点。1試合0.21点で、バルサに次ぐ割合です。
+    card:
+      type: table
+      title: バルサのあとの数字
+      columns: *at_cols
+      rows: *at_rows
+      highlight_row: 0
+  - text: ローマでの1年は40試合6得点。およそ7試合に1点。
+    card:
+      type: table
+      title: バルサのあとの数字
+      columns: *at_cols
+      rows: *at_rows
+      highlight_row: 1
+  - text: ラツィオでは5年で209試合39得点。4クラブで2番目に多い出場。
+    card:
+      type: table
+      title: バルサのあとの数字
+      columns: *at_cols
+      rows: *at_rows
+      highlight_row: 2
+  - text: 最後の2季は、2年続けてクラブの最多得点に並びました。
+    card:
+      type: table
+      title: バルサのあとの数字
+      columns: *at_cols
+      rows: *at_rows
+      highlight_row: 2
+  - text: 今年1月には、38歳163日でクラブの最年長得点者に。
+    card:
+      type: table
+      title: バルサのあとの数字
+      columns: *at_cols
+      rows: *at_rows
+      highlight_row: 2
+  - text: 代表は65試合17得点。4試合に1点を超える割合です。
+    card:
+      type: table
+      title: バルサのあとの数字
+      columns: *at_cols
+      rows: *at_rows
+      highlight_row: 3
+  - text: 4つのクラブを、出場と得点で置き直すとこうなります。
+    card: &club_scatter
+      type: scatter
+      title: クラブごとの出場と得点
+      x:
+        label: 出場
+        unit: 試合
+      y:
+        label: 得点
+        unit: 点
+      points:
+      - - バルセロナ
+        - 321
+        - 99
+      - - チェルシー
+        - 206
+        - 43
+      - - ラツィオ
+        - 209
+        - 39
+      - - ローマ
+        - 40
+        - 6
+      focus: バルセロナ
+  - text: 出場でも得点でも、バルセロナの7年半が抜けています。
+    card: *club_scatter
+  - text: もうひとつ、ペドロには決勝だけの記録があります。
+    card: &final_pre
+      type: table
+      title: 決勝で決めた主な得点
+      columns: &ft_cols0
+      - 決勝
+      - ペドロ
+      - 結果
+      rows: &ft_rows0
+      - - 2009年 欧州スーパーカップ
+        - 延長の決勝点
+        - 1対0
+      - - 2011年 チャンピオンズリーグ
+        - 先制点
+        - 3対1
+      - - 2012年 コパ・デル・レイ
+        - 2得点
+        - 3対0
+      - - 2019年 ヨーロッパリーグ
+        - 得点
+        - 4対1
+  - text: 2019年の時点で、決勝戦での得点は通算9。歴代7位でした。
+    card: &final_table
+      type: table
+      title: 決勝で決めた主な得点
+      columns: &ft_cols
+      - 決勝
+      - ペドロ
+      - 結果
+      rows: &ft_rows
+      - - 2009年 欧州スーパーカップ
+        - 延長の決勝点
+        - 1対0
+      - - 2011年 チャンピオンズリーグ
+        - 先制点
+        - 3対1
+      - - 2012年 コパ・デル・レイ
+        - 2得点
+        - 3対0
+      - - 2019年 ヨーロッパリーグ
+        - 得点
+        - 4対1
+  - text: 2011年、ウェンブリーの決勝で先制点。3対1で勝ちました。
+    card:
+      type: table
+      title: 決勝で決めた主な得点
+      columns: *ft_cols
+      rows: *ft_rows
+      highlight_row: 1
+  - text: 2019年のヨーロッパリーグ決勝でも、点を取っています。
+    card:
+      type: table
+      title: 決勝で決めた主な得点
+      columns: *ft_cols
+      rows: *ft_rows
+      highlight_row: 3
+  - text: この2つの決勝で決めた選手は、ペドロが史上5人目です。
+    card:
+      type: table
+      title: 決勝で決めた主な得点
+      columns: *ft_cols
+      rows: *ft_rows
+      highlight_row: 3
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Pedro_(footballer,_born_1987)
+  - https://www.soccer-king.jp/news/world/ita/20261007/2214206.html
+- id: view
+  viewpoint: true
+  heading: 2度の3冠を知る面々と、数字を並べると
+  tier: 背景
+  telop: 7人のうち出場は321試合で最も少なく、得点99はメッシに次ぐ2番目
+  narrator: 解説
+  card: &treble_table
+    type: table
+    title: 2度の3冠を知る面々 バルサ通算
+    columns: &tt_cols
+    - 選手
+    - 出場
+    - 得点
+    rows: &tt_rows
+    - - メッシ
+      - '778'
+      - '672'
+    - - シャビ
+      - '767'
+      - '85'
+    - - ブスケツ
+      - '722'
+      - '18'
+    - - イニエスタ
+      - '674'
+      - '57'
+    - - ピケ
+      - '616'
+      - '52'
+    - - ペドロ
+      - '321'
+      - '99'
+  say:
+  - text: バルセロナは2009年と2015年に3冠を獲りました。
+    card: *treble_table
+    image: assets/images/20261008_record_pedro/02_barca2014.jpg
+  - text: 2度の3冠は、クラブとして史上初めてのことです。
+    card: *treble_table
+  - text: その両方のチームにいたのは、わずか7人。
+    card: *treble_table
+  - text: ペドロ、メッシ、シャビ、イニエスタ、ピケ、ブスケツ。
+    card: *treble_table
+  - text: そしてダニ・アウベス。表には6人を並べます。
+    card: *treble_table
+  - text: メッシが778試合672得点、シャビが767試合85得点。
+    card:
+      type: table
+      title: 2度の3冠を知る面々 バルサ通算
+      columns: *tt_cols
+      rows: *tt_rows
+      highlight_row: 0
+  - text: ブスケツは722試合18得点、イニエスタは674試合57得点。
+    card:
+      type: table
+      title: 2度の3冠を知る面々 バルサ通算
+      columns: *tt_cols
+      rows: *tt_rows
+      highlight_row: 2
+  - text: ピケが616試合52得点。いちばん下の行がペドロです。
+    card:
+      type: table
+      title: 2度の3冠を知る面々 バルサ通算
+      columns: *tt_cols
+      rows: *tt_rows
+      highlight_row: 5
+  - text: 出場は、この6人のなかでいちばん少ない数字です。
+    card:
+      type: table
+      title: 2度の3冠を知る面々 バルサ通算
+      columns: *tt_cols
+      rows: *tt_rows
+      highlight_row: 5
+  - text: それでも得点は、メッシに次ぐ2番目。
+    card:
+      type: table
+      title: 2度の3冠を知る面々 バルサ通算
+      columns: *tt_cols
+      rows: *tt_rows
+      highlight_row: 5
+    emph: true
+  - text: 3位のシャビの85点より、14点多いんです。
+    card:
+      type: table
+      title: 2度の3冠を知る面々 バルサ通算
+      columns: *tt_cols
+      rows: *tt_rows
+      highlight_row: 1
+  - text: バルサでの得点を出場で割ると、1試合0.31点になります。
+    card: &rate_calc
+      type: calc
+      title: バルサでの1試合あたりの得点
+      terms:
+      - - 99点
+        - バルサでの得点
+      - - 321試合
+        - バルサでの出場
+      - - 0.31点
+        - 1試合あたり
+      ops:
+      - ÷
+      - ＝
+  - text: メッシの0.86点に次ぐ数字で、ほかの4人は0.12点に届きません。
+    card: *rate_calc
+    mark:
+      kind: circle
+      item: 2
+  - text: そのペドロのために、バルセロナが場を用意しました。
+    card: &farewell_table
+      type: table
+      title: お別れの催し
+      columns:
+      - いつ
+      - どこ
+      - 何
+      rows:
+      - - 10月9日 金曜
+        - バルセロナ
+        - お別れの催し
+      - - 日本時間
+        - 18時30分から
+        - クラブの施設で
+    image: assets/images/20261008_record_pedro/02_barca2014.jpg
+  - text: 10月9日の金曜、日本時間では18時30分からです。
+    card:
+      type: table
+      title: お別れの催し
+      columns:
+      - いつ
+      - どこ
+      - 何
+      rows:
+      - - 10月9日 金曜
+        - バルセロナ
+        - お別れの催し
+      - - 日本時間
+        - 18時30分から
+        - クラブの施設で
+      highlight_row: 1
+  - text: ペドロの現役は、ここで区切りを迎えます。
+    card: *farewell_table
+  sources:
+  - https://www.fcbarcelona.com/en/football/first-team/news/4587927/pedro-rodriguez-announces-retirement
+  - https://en.wikipedia.org/wiki/Pedro_(footballer,_born_1987)
+  - https://www.fcbarcelona.com/en/news/1671809/stat-of-the-day-767-xavi-hernandezs-appearances-for-barca

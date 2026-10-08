@@ -286,8 +286,8 @@
     "videos.update": 30,
     "channels.list": 2,
     "playlistItems.list": 2,
-    "videos.insert": 1,
-    "thumbnails.set": 1,
+    "videos.insert": 2,
+    "thumbnails.set": 2,
     "playlists.insert": 1,
     "playlistItems.insert": 1
   }

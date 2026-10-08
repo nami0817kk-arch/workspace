@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 41
+  seen: 42
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -24,6 +24,7 @@ sites:
   - '2026-09-29'
   - '2026-09-30'
   - '2026-10-04'
+  - '2026-10-08'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -67,20 +68,8 @@ sites:
   - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
-- host: dailymail.com
-  seen: 18
-  days:
-  - '2026-09-02'
-  - '2026-09-03'
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-07'
-  examples:
-  - https://www.dailymail.com/sport/football/article-16097269/Tottenham-sign-Chelsea-winger-Mykhailo-Mudryk-season-long-loan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
-  - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
-  - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: calcionapoli1926.it
-  seen: 18
+  seen: 19
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -93,12 +82,25 @@ sites:
   - '2026-10-04'
   - '2026-10-06'
   - '2026-10-07'
+  - '2026-10-08'
   examples:
   - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
+- host: dailymail.com
+  seen: 18
+  days:
+  - '2026-09-02'
+  - '2026-09-03'
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-07'
+  examples:
+  - https://www.dailymail.com/sport/football/article-16097269/Tottenham-sign-Chelsea-winger-Mykhailo-Mudryk-season-long-loan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+  - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+  - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: blog.domesoccer.jp
-  seen: 16
+  seen: 17
   days:
   - '2026-09-04'
   - '2026-09-05'
@@ -109,6 +111,7 @@ sites:
   - '2026-09-30'
   - '2026-10-03'
   - '2026-10-04'
+  - '2026-10-08'
   examples:
   - https://blog.domesoccer.jp/archives/60253571.html
   - https://blog.domesoccer.jp/archives/60253934.html
@@ -177,6 +180,22 @@ sites:
   - https://www.transfermarkt.co.uk/folarin-balogun-transfer-to-everton-collapses-monaco-miss-out-on-euro-45m-fee-plus-add-ons/view/news/486066
   - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
   - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
+- host: pianetamilan.it
+  seen: 14
+  days:
+  - '2026-09-08'
+  - '2026-09-09'
+  - '2026-09-12'
+  - '2026-09-16'
+  - '2026-09-25'
+  - '2026-09-29'
+  - '2026-09-30'
+  - '2026-10-05'
+  - '2026-10-08'
+  examples:
+  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
+  - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
+  - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
 - host: sportsmole.co.uk
   seen: 13
   days:
@@ -191,23 +210,8 @@ sites:
   - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
   - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
   - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
-- host: pianetamilan.it
-  seen: 13
-  days:
-  - '2026-09-08'
-  - '2026-09-09'
-  - '2026-09-12'
-  - '2026-09-16'
-  - '2026-09-25'
-  - '2026-09-29'
-  - '2026-09-30'
-  - '2026-10-05'
-  examples:
-  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
-  - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
-  - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
 - host: cittaceleste.it
-  seen: 11
+  seen: 12
   days:
   - '2026-09-10'
   - '2026-09-12'
@@ -215,6 +219,7 @@ sites:
   - '2026-09-24'
   - '2026-09-26'
   - '2026-10-06'
+  - '2026-10-08'
   examples:
   - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
   - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
@@ -316,6 +321,18 @@ sites:
   - https://www.barcablaugranes.com/barcelona-team-news/131554/gabriel-jesus-not-100-yet-but-ready-to-make-barcelona-debut-against-valencia
   - https://www.barcablaugranes.com/barcelona-team-news/132388/lamine-yamal-says-he-deserves-to-beat-kylian-mbappe-to-the-ballon-dor
   - https://www.barcablaugranes.com/fc-barcelona-transfer-rumors-news/133512/prioritizing-two-summer-2027-sales
+- host: milanistichannel.com
+  seen: 6
+  days:
+  - '2026-09-16'
+  - '2026-09-29'
+  - '2026-09-30'
+  - '2026-10-06'
+  - '2026-10-08'
+  examples:
+  - https://www.milanistichannel.com/news-milan/riconoscimento-importante-per-franco-baresi-il-suo-nome-nel-famedio-di-milano/?intcmp=gazzanet-milanistichannel
+  - https://www.milanistichannel.com/news-milan/ex-milan-senti-rafa-leao-il-galatasaray-mi-voleva-davvero-sono-felice/?intcmp=gazzanet-milanistichannel
+  - https://www.milanistichannel.com/casa-milan-societa-rossonera-news/esclusiva-mc-shevchenko-50-anni-da-campione-tassotti-uno-dei-primi-4-o-5-attaccanti-del-milan/?intcmp=gazzanet-milanistichannel
 - host: espn.co.uk
   seen: 5
   days:
@@ -419,17 +436,6 @@ sites:
   - https://www.france24.com/en/live-news/20260904-winner-fernandez-fundamental-to-maresca-s-man-city-rebuild
   - https://www.france24.com/en/sport/20260920-torres-strikes-again-as-psg-beat-bitter-rivals-marseille-2-1
   - https://www.france24.com/en/live-news/20260927-england-closing-the-gap-on-spain-says-kane
-- host: milanistichannel.com
-  seen: 5
-  days:
-  - '2026-09-16'
-  - '2026-09-29'
-  - '2026-09-30'
-  - '2026-10-06'
-  examples:
-  - https://www.milanistichannel.com/news-milan/riconoscimento-importante-per-franco-baresi-il-suo-nome-nel-famedio-di-milano/?intcmp=gazzanet-milanistichannel
-  - https://www.milanistichannel.com/news-milan/ex-milan-senti-rafa-leao-il-galatasaray-mi-voleva-davvero-sono-felice/?intcmp=gazzanet-milanistichannel
-  - https://www.milanistichannel.com/casa-milan-societa-rossonera-news/esclusiva-mc-shevchenko-50-anni-da-campione-tassotti-uno-dei-primi-4-o-5-attaccanti-del-milan/?intcmp=gazzanet-milanistichannel
 - host: thesun.my
   seen: 4
   days:
