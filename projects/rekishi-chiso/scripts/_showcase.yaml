@@ -28,7 +28,7 @@ thumbnail:
   crop: [0, 0, 1300, 1000]
   name: 織田信長
   contrast: [天下人, 供は100人]
-  reactor: {who: tsumugi, face: 驚き, side: left, size: medium}
+  reactor: {who: tsumugi, face: 驚き, side: right, size: medium}   # 文字の側に置くと文字が狭くなる（check が知らせる）
 
 people:
   織田信長: {born: 1534-06-23, died: 1582-06-21, match: [信長]}

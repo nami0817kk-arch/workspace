@@ -235,8 +235,8 @@ def draw_one(painter, layer: Image.Image, m: dict, box, area, i: int, p: float) 
         if text and p >= 1:                                     # 線の右の端の上（下線は下）に書く
             if kind == "underline":
                 _write(painter, layer, text, x1 + 8, y + 52, 1.0, "rs")
-            else:
-                _write(painter, layer, text, x1 + 8, y - 26, 1.0, "rs")
+            else:                                               # 取り消し線は真ん中の上（右の端だと図の数字に重なった。10-08）
+                _write(painter, layer, text, (x0 + x1) / 2, y - 26, 1.0, "ms")
     elif kind == "arrow":
         ax0, ay0, ax1, ay1 = area
         if m.get("from"):

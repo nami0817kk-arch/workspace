@@ -233,6 +233,8 @@ def run(ffmpeg: str, script, video: Path, out_png: Path, out_md: Path, font_path
         end_seconds: float = 12.0) -> list[str]:
     rep, frames = analyze(ffmpeg, video)
     srt = video.with_suffix(".srt")
+    if not srt.exists() and getattr(script, "path", None) is not None:   # 確認用（x_draft.mp4）も字幕は out/x.srt（10-08）
+        srt = video.parent / f"{script.path.stem}.srt"
     if srt.exists():
         cues = parse_srt(srt.read_text(encoding="utf-8"))
         rep.subs_end = cues[-1][1] if cues else None

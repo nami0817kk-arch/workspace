@@ -5,11 +5,10 @@
 """
 from __future__ import annotations
 
-import math
 
 from PIL import Image, ImageDraw
 
-from .render import DIM, GOLD, INK, LISTENER_DIM, Painter, State
+from .render import DIM, GOLD, INK, Painter, State
 from . import people
 from .subs import emphasis_mask
 
@@ -119,11 +118,10 @@ class ShortPainter(Painter):
         sz = config["short"]
         super().__init__(config, script, assets, (sz["width"], sz["height"]))
         self.title = title
-        self.current_text = ""
 
     def base(self, state: State, year=None, slide: float = 1.0, fig: float = 1.0, icon_t: float = 1.0) -> Image.Image:
         """縦長の画面。引数は本編の Painter.base と同じ形にそろえる（10-04、そろっていなくて止まった）。"""
-        W, H = self.W, self.H
+        W = self.W
         img = self._background(state.background)
         dr = ImageDraw.Draw(img, "RGBA")
         # 上：ショートの題
@@ -205,7 +203,7 @@ class ShortPainter(Painter):
 
     def end_card(self, background) -> Image.Image:
         """本編へ誘う締めの画面。本編の題（問いの部分）と、チャンネル名。"""
-        W, H = self.W, self.H
+        W = self.W
         img = self._background(background).convert("RGBA")
         img.alpha_composite(Image.new("RGBA", img.size, (8, 6, 4, 170)))
         dr = ImageDraw.Draw(img, "RGBA")
@@ -303,6 +301,3 @@ class _Landscape:
     def __getattr__(self, name):
         return getattr(self._p, name)
 
-
-def seconds_ok(total: float, limit: float) -> bool:
-    return total <= limit + 1e-6 and not math.isnan(total)

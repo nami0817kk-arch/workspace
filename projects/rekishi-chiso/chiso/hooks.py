@@ -267,16 +267,9 @@ def hide(img: Image.Image, t: dict, gothic, cache: Path | None = None) -> None:
     mark = h.get("mark", "？")
     if mark:
         size = int(min(y1 - y0, (x1 - x0) * 1.3) * 0.72)
-        f = thumbfx_font(gothic, max(60, size))
+        f = thumbfx.font(gothic, max(60, size))
         thumbfx.text(img, ((x0 + x1) / 2, (y0 + y1) / 2), str(mark), f, YEL, ORANGE, (40, 14, 0), max(8, size // 14),
                      WHITE if size >= 150 else None, max(3, size // 28) if size >= 150 else 0, angle=-6, anchor="mm")
-
-
-def thumbfx_font(path, size):
-    from PIL import ImageFont
-    if not path:
-        return ImageFont.load_default(size)
-    return ImageFont.truetype(path, size)
 
 
 # --- 事件の瞬間の赤い光（flash） ----------------------------------------------------------
@@ -359,7 +352,7 @@ def contrast_plan(spec: dict, zone, gothic):
         k = FROM_K[style]
         top = min(200, int(zh * 0.92) if style == "arrow" else int(zh / (k * 1.15 + 1.0)))
         for s in range(top, 47, -4):
-            fa, fb = thumbfx_font(gothic, int(s * k)), thumbfx_font(gothic, s)
+            fa, fb = thumbfx.font(gothic, int(s * k)), thumbfx.font(gothic, s)
             if style == "arrow":
                 width = fa.getlength(a) + s * ARROW_K + fb.getlength(b) + 20
             else:
@@ -377,7 +370,7 @@ def draw_contrast(img: Image.Image, t: dict, zone, gothic, center: bool = False)
     x0, y0, x1, y1 = zone
     a, b = spec["from"], spec["to"]
     k = FROM_K[style]
-    fa, fb = thumbfx_font(gothic, int(s * k)), thumbfx_font(gothic, s)
+    fa, fb = thumbfx.font(gothic, int(s * k)), thumbfx.font(gothic, s)
     if style == "arrow":
         total = fa.getlength(a) + s * ARROW_K + fb.getlength(b)
         x = x0 + ((x1 - x0) - total) / 2 if center else x0

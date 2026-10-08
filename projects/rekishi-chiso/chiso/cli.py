@@ -122,6 +122,9 @@ def preflight(sc, config) -> bool:
             from .thumb import layout_of
             warns += check_mod.layout_streak(ROOT / "posted.json", ROOT / "scripts", sc.path.stem,
                                              layout_of(sc.thumbnail))
+            if not errors:                               # 引きの要素と構図の組み合わせで文字が狭くならないか（10-08）
+                from .thumb import text_room
+                warns += text_room(sc.thumbnail, config, assets_dir(config))
     warns += check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60))
     for who, (hit, n) in check_mod.saturation(sc, voices(config)).items():
         if hit:
@@ -267,10 +270,16 @@ def make_video(args, draft: bool) -> int:
     items = render.frames(painter, cues, total, wd / ("frames-draft" if draft else "frames"), v["fps"],
                           end_card=end_card)
     clock.lap("前景")
-    print("背景を動かしています…")
-    bg = video.background_track(ffmpeg(), painter, video.runs_of(cues, total), wd / "bg", v["fps"], size,
-                                wd / "background.mp4", workers=v.get("bg_workers", 5),
-                                motion=v.get("bg_motion", True))
+    runs = video.runs_of(cues, total)
+    if v.get("bg_motion", True):
+        print("背景を動かしています…")
+        bg = video.background_track(ffmpeg(), painter, runs, wd / "bg", v["fps"], size, wd / "background.mp4",
+                                    workers=v.get("bg_workers", 5))
+    else:                                                 # 止まった背景は動画にせず、画像の並びのまま重ねる（10-08）
+        print("背景を並べています…")
+        bg = wd / "background.txt"
+        bg.write_text(render.concat_list(video.still_frames(ffmpeg(), painter, runs, wd / "bg", v["fps"], size,
+                                                            workers=v.get("bg_workers", 5))), encoding="utf-8")
     clock.lap("背景")
     suffix = ("_draft" if draft else "") + (f"_{limit}lines" if limit else "")
     target = out_dir() / f"{path.stem}{suffix}.mp4"
@@ -282,7 +291,8 @@ def make_video(args, draft: bool) -> int:
     got = video.media_seconds(ffmpeg(), target)
     if got is None or abs(got - total) > 2.0:               # 10-05：3分しかない本編が「30.7分」と出て通っていた
         raise video.LengthError(f"仕上がりの長さが合いません: {got}秒（予定 {total:.1f}秒）。work/<台本>/bg を消して作り直す")
-    bg.unlink()
+    if bg.suffix == ".mp4":                               # 動かした背景の動画は大きいので消す（並びの .txt は残す）
+        bg.unlink()
     names = {k: people.label(config, k) for k in list(config["cast"]) + sc.roles}
     (out_dir() / f"{path.stem}.srt").write_text(mix.srt(cues, names), encoding="utf-8")
     print(f"{target}（{total / 60:.1f}分）")
@@ -525,7 +535,7 @@ def cmd_check(args) -> int:
     config = load_config()
     sc = script_mod.load(args.script)
     ok = preflight(sc, config)
-    print("点検は終わりました" + ("" if ok else "（素材が足りません）"))
+    print("点検は終わりました" + ("" if ok else "（× を直すまで draft・build は止まります）"))
     return 0 if ok else 3
 
 

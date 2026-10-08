@@ -1,10 +1,14 @@
-"""背景の絵をゆっくり動かす動画を作り、前景（透明な画像の並び）と重ねる。
+"""背景（絵画）と前景（透明な画像の並び）を重ねて仕上げる。
 
-背景と前景を分けるのは、絵だけを毎コマ動かすため。前景（肖像・メモ・年表・字幕・2人）は
-変わったときだけ描けばよく、背景の動きは ffmpeg に任せる。
+背景と前景を分けるのは、前景（肖像・メモ・年表・字幕・2人）を変わったときだけ描けばよくするため。
 
-背景の動き：絵ごとに「寄る」「引く」「右へ流れる」「左へ流れる」を順に使い分ける。
-拡大率を毎コマ計算して拡大してから 1920x1080 に切り抜く（zoompan より震えにくい）。
+背景を動かさないとき（config の video.bg_motion: false。10-06 から本編はこれ）は still_frames：
+絵ごとに止まった1枚と、替わり目の溶け合い（XFADE 秒＝18コマ）だけの画像の並びにして、重ねるときに
+ffmpeg が読む。背景の動画を別に作らない（10-08。前は30秒ずつの断片を作ってつなぎ、溶け合わせてから
+重ねていて、本編1本の背景に約50分かかっていた）。溶け合いの式は ffmpeg の xfade（fade・smoothleft）と同じ。
+
+背景を動かすとき（bg_motion: true）は background_track：絵ごとに「寄る」「引く」「右へ流れる」「左へ流れる」を
+順に使い分け、拡大率を毎コマ計算して拡大してから 1920x1080 に切り抜く（zoompan より震えにくい）。
 絵が替わるところは溶け合わせ、節が替わるところは横に流れて替わる。
 """
 from __future__ import annotations
@@ -191,15 +195,94 @@ def background_track(ffmpeg: str, painter, runs: list[Run], work: Path, fps: int
     return target
 
 
+# --- 背景を動かさないとき（10-08）-----------------------------------------------------------
+
+def _plate(ffmpeg: str, painter, pic, work: Path, size) -> Path:
+    """絵1枚ぶんの止まった背景（画面の大きさ）。前と同じく 1.2 倍の絵を ffmpeg の bicubic で縮める
+    （motion_filter("still") と同じ縮め方なので、出来上がりの画は前と同じ）。"""
+    import hashlib
+    key = hashlib.sha1(repr((pic, size, OVER, "plate1")).encode()).hexdigest()[:12]
+    out = work / f"plate_{key}.png"
+    if out.exists():
+        return out
+    big = work / f"plate_{key}.big.png"
+    still(painter, pic, big, size)
+    subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-i", str(big), "-vf",
+                    f"scale={size[0]}:{size[1]}:flags=bicubic", "-pix_fmt", "rgb24", str(out)], check=True)
+    big.unlink()
+    return out
+
+
+def _smooth(x: float) -> float:
+    x = max(0.0, min(1.0, x))
+    return x * x * (3 - 2 * x)
+
+
+def blend(a: Image.Image, b: Image.Image, kind: str, progress: float) -> Image.Image:
+    """ffmpeg の xfade と同じ式で、溶け合いの途中の1枚を作る。progress は 1（a だけ）→ 0（b だけ）。
+    fade：a×p＋b×(1−p)。smoothleft：左から右へ smoothstep(1＋x/w−2p) の割合で b（右から新しい絵が入る）。"""
+    if kind == "fade":
+        return Image.blend(a, b, 1.0 - progress)
+    w = a.width
+    row = Image.new("L", (w, 1))
+    row.putdata([round(255 * _smooth(1.0 + x / w - progress * 2.0)) for x in range(w)])
+    return Image.composite(b, a, row.resize(a.size, Image.NEAREST))
+
+
+def still_frames(ffmpeg: str, painter, runs: list[Run], work: Path, fps: int, size,
+                 workers: int = 4) -> list[tuple[Path, float]]:
+    """止まった背景の (画像, 秒数) の並び。絵が替わるところは XFADE 秒のあいだ1コマずつ溶け合わせる
+    （同じ節の中は fade、節が替わるところは smoothleft。前の background_track と同じ）。"""
+    import hashlib
+    work.mkdir(parents=True, exist_ok=True)
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        plates = list(ex.map(lambda r: _plate(ffmpeg, painter, r.picture, work, size), runs))
+    n = max(1, round(XFADE * fps))
+    items: list[tuple[Path, float]] = []
+    todo = []
+    for i, r in enumerate(runs):
+        length = r.end - r.start
+        if i == 0 or plates[i] == plates[i - 1]:
+            items.append((plates[i], length))
+            continue
+        kind = "smoothleft" if r.section != runs[i - 1].section else "fade"
+        m = max(1, min(n, int(length * fps)))              # 短い区間は溶け合いも短く
+        for k in range(m):                                   # k=0 は前の絵のまま（xfade の最初のコマ）
+            if k == 0:
+                items.append((plates[i - 1], 1 / fps))
+                continue
+            name = hashlib.sha1(repr((plates[i - 1].name, plates[i].name, kind, k, n)).encode()).hexdigest()[:14]
+            path = work / f"mix_{name}.png"
+            if not path.exists():
+                todo.append((path, plates[i - 1], plates[i], kind, 1.0 - k / n))
+            items.append((path, 1 / fps))
+        items.append((plates[i], max(0.0, length - m / fps)))
+
+    def run(job):
+        path, a, b, kind, p = job
+        with Image.open(a) as ia, Image.open(b) as ib:
+            blend(ia.convert("RGB"), ib.convert("RGB"), kind, p).save(path, compress_level=1)
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        list(ex.map(run, todo))
+    return [(p, d) for p, d in items if d > 0]
+
+
 def compose(ffmpeg: str, background: Path, overlay_list: Path, audio: Path, target: Path, fps: int,
             preset: str = "medium") -> None:
-    """動く背景＋前景（透明な画像の並び）＋声を重ねて仕上げる。"""
+    """背景（動画、または止まった背景の画像の並び .txt）＋前景（透明な画像の並び）＋声を重ねて仕上げる。"""
+    if background.suffix == ".txt":                          # 止まった背景：画像は替わったときだけ読む
+        bg_in = ["-f", "concat", "-safe", "0", "-i", str(background)]
+        bg_chain = f"[0:v]setsar=1,format=yuv420p,fps={fps}[b];"
+    else:
+        bg_in = ["-i", str(background)]
+        bg_chain = "[0:v]null[b];"
     subprocess.run([
         ffmpeg, "-y", "-loglevel", "error",
-        "-i", str(background),
+        *bg_in,
+        "-threads", "8",                                     # 前景の PNG を並べて読む（10-08。読むのが重ねる段の半分近くかかっていた）
         "-f", "concat", "-safe", "0", "-i", str(overlay_list),
         "-i", str(audio),
-        "-filter_complex", "[1:v]format=rgba,fps=" + str(fps) + "[o];[0:v][o]overlay=0:0:format=auto:shortest=1,format=yuv420p[v]",
+        "-filter_complex", bg_chain + "[1:v]format=rgba,fps=" + str(fps) + "[o];[b][o]overlay=0:0:format=auto:shortest=1,format=yuv420p[v]",
         "-map", "[v]", "-map", "2:a",
         "-c:v", "libx264", "-preset", preset, "-crf", "20", "-g", str(fps * 2),
         "-af", loudnorm_filter(ffmpeg, audio), "-c:a", "aac", "-b:a", "192k", "-ar", "48000",

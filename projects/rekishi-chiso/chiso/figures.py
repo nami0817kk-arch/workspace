@@ -35,7 +35,7 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
 
 PANEL = (300, 235, 1620, 840)            # 図の板（画面の真ん中。メモ・肖像・年表は図のあいだ隠す）
 PAPER = (232, 218, 186)
@@ -260,6 +260,7 @@ def _map(painter, img, spec, t):
         _route_line(dr, [places[n] for n in names[:lo]], 1.0)
     _route_line(dr, [places[n] for n in names[max(lo, 1) - 1:hi]], _ease(t))
     f = painter.font("serif", 28, bold=True)
+    labels: list[tuple] = [(x - 10, y - 10, x + 10, y + 10) for x, y in places.values()]   # 点と、置いた地名の範囲
     for i, (name, lon, lat) in enumerate(spec.get("places", [])):
         x, y = places[name]
         if name in names and names.index(name) >= hi:
@@ -270,14 +271,37 @@ def _map(painter, img, spec, t):
         else:
             reached = name not in spec.get("route", []) or _route_reached(spec, name, t)
         dr.ellipse([x - 9, y - 9, x + 9, y + 9], fill=(RED if reached else COAST), outline=(255, 248, 230), width=3)
-        dr.text((x + 14, y - 4), name, font=f, fill=INKD, anchor="lm", stroke_width=4, stroke_fill=(245, 236, 210))
-        note_item(i, (x - 12, y - 24, x + 18 + f.getlength(name), y + 16))
+        lx, ly, anchor = _label_spot(f, name, x, y, labels)
+        dr.text((lx, ly), name, font=f, fill=INKD, anchor=anchor, stroke_width=4, stroke_fill=(245, 236, 210))
+        note_item(i, (min(x - 12, labels[-1][0]), min(y - 24, labels[-1][1]), max(x + 12, labels[-1][2]),
+                      max(y + 16, labels[-1][3])))
     if spec.get("note") and t >= 1 and hi >= len(names):
         nf = painter.font("gothic", 30)
         w = nf.getlength(spec["note"]) + 40
         bx, by = box[2] - w - 14, box[3] - 64
         dr.rounded_rectangle([bx, by, bx + w, by + 48], radius=10, fill=RED)
         dr.text((bx + w / 2, by + 24), spec["note"], font=nf, fill=(255, 255, 255), anchor="mm")
+
+
+def _label_spot(f, name: str, x: float, y: float, taken: list) -> tuple[float, float, str]:
+    """地名を置く所：ふだんは点の右。ほかの地名・点に重なるなら左→下→上の順に試す（10-08、近い地点の名前が重なった）。
+    置いた範囲を taken に足す。"""
+    w = f.getlength(name)
+    tries = [((x + 14, y - 4), "lm", (x + 10, y - 24, x + 18 + w, y + 16)),
+             ((x - 14, y - 4), "rm", (x - 18 - w, y - 24, x - 10, y + 16)),
+             ((x, y + 14), "mt", (x - w / 2, y + 10, x + w / 2, y + 48)),
+             ((x, y - 14), "ms", (x - w / 2, y - 52, x + w / 2, y - 10))]
+    own = (x - 10, y - 10, x + 10, y + 10)
+
+    def hits(b):
+        return any(b[0] < t[2] and t[0] < b[2] and b[1] < t[3] and t[1] < b[3] for t in taken if t != own)
+    for (lx, ly), anchor, box in tries:
+        if not hits(box):
+            taken.append(box)
+            return lx, ly, anchor
+    (lx, ly), anchor, box = tries[0]
+    taken.append(box)
+    return lx, ly, anchor
 
 
 def _route_line(dr, route: list, frac: float) -> None:
@@ -327,8 +351,11 @@ def with_places(spec: dict, _unused=None) -> dict:
     if not spec.get("bounds"):
         lons = [p[1] for p in spec["places"]]
         lats = [p[2] for p in spec["places"]]
-        mx = max(1.5, (max(lons) - min(lons)) * 0.25)
-        my = max(1.0, (max(lats) - min(lats)) * 0.35)
+        # 余白は広がりに合わせる。前は最低でも経度1.5度とり、桶狭間のような近い3地点が点の団子になった（10-08）。
+        # 広がりが経度2.5度・緯度約1.7度より大きい地図は前と同じ
+        dlon, dlat = max(lons) - min(lons), max(lats) - min(lats)
+        mx = max(min(1.5, max(0.15, dlon * 0.6)), dlon * 0.25)
+        my = max(min(1.0, max(0.1, dlat * 0.6)), dlat * 0.35)
         spec["bounds"] = [min(lons) - mx, max(lons) + mx, min(lats) - my, max(lats) + my]
     return spec
 

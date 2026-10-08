@@ -215,6 +215,7 @@ def episode(script) -> tuple[list[str], list[str]]:
             warns.append(f"{l.index + 1}行目：絵の一部（detail）と挿絵（icon）が同じ行にあります（挿絵は出ません）")
         if getattr(l, "mark", None) and not getattr(l, "detail", None) and not l.figure and l.portrait is None                 and (l.icon or l.background is None):
             warns.append(f"{l.index + 1}行目：赤ペン（mark）を乗せる絵・図がありません（出ません）")
+    warns += combo_rules(script)
     for name in sorted({l.icon for l in script.lines if l.icon}):
         if name not in extras.known_icons():
             errors.append(f"挿絵の名前が分かりません: {name}")
@@ -229,6 +230,21 @@ def episode(script) -> tuple[list[str], list[str]]:
     if not script.shorts:
         warns.append("ショート（shorts:）がありません")
     return errors, warns
+
+
+def combo_rules(script) -> list[str]:
+    """道具どうしが同じ行で重なり、片方が出ないもの（10-08、見本の台本 _showcase.yaml の通し確認で洗い出した）。
+    画面はどれか1つを優先して描く：寄り（reaction）→ 絵の一部（detail）→ 図（figure）→ 肖像・挿絵・額。"""
+    out = []
+    for l in script.lines:
+        n = l.index + 1
+        if getattr(l, "detail", None) and l.figure:
+            out.append(f"{n}行目：絵の一部（detail）と図（figure）が同じ行にあります（図は出ません）")
+        if l.icon and l.figure and not getattr(l, "detail", None):
+            out.append(f"{n}行目：図が出ている行の挿絵（icon）は出ません（figure: null のあとに置く）")
+        if getattr(l, "reaction", None) and (l.bubble or l.icon or getattr(l, "detail", None)):
+            out.append(f"{n}行目：つむぎの寄り（reaction）の行では、吹き出し・挿絵・絵の一部は出ません")
+    return out
 
 
 def reaction_rules(script) -> list[str]:
