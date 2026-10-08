@@ -231,3 +231,44 @@ def test_check_tells_when_timeline_events_are_too_close(tmp_path):
     assert len(got) == 1 and "年表の出来事が近すぎて" in got[0]
     p.script.events = [(1537, "誕生"), (1598, "死去"), (1797, "絵本太閤記")]
     assert check.timeline_crowding(p) == []
+
+
+# --- 8. 折れ線の端の目盛りの字が枠で欠ける ------------------------------------------------
+def test_line_end_labels_stay_inside_the_panel(tmp_path):
+    from chiso import numbers
+    from test_port import _painter
+    p = _painter(tmp_path)
+    labels = ["1567年ごろ 結婚", "1570年 金ヶ崎", "1573年 小谷落城", "1582年 再婚", "1583年 北ノ庄"]
+    xs = [400 + 275 * k for k in range(5)]
+    f, cx = numbers.line_labels(p, labels, xs, 330, 1590)
+    ws = [f.getlength(t) for t in labels]
+    assert cx[0] - ws[0] / 2 >= 330 and cx[-1] + ws[-1] / 2 <= 1590
+    assert all(cx[i] + ws[i] / 2 < cx[i + 1] - ws[i + 1] / 2 for i in range(4))
+    f2, cx2 = numbers.line_labels(p, ["1565年", "1598年"], [400, 1500], 330, 1590)
+    assert cx2 == [400, 1500]                                  # 収まる字は動かさない
+
+
+# --- 9. 赤ペンの丸が地図の地名に掛かる -------------------------------------------------------
+def test_map_labels_move_out_of_the_red_circle(tmp_path):
+    import json
+    from chiso import figures, pen
+    from test_tools import _painter as tools_painter
+    m = {"type": "map", "title": "賤ヶ岳から北ノ庄へ", "bounds": [135.6, 136.9, 35.25, 36.25],
+         "places": [["賤ヶ岳", 136.21, 35.53], ["北ノ庄", 136.22, 36.06], ["小谷", 136.28, 35.46]],
+         "route": ["賤ヶ岳", "北ノ庄"], "note": "10年前の小谷城のすぐ北"}
+    sc = script.parse({"title": "t", "sections": [{"title": "一", "lines": [
+        {"語り": "a", "figure": m, "mark": {"type": "circle", "at": 3}}]}]})
+    p = tools_painter(tmp_path, sc)
+    (tmp_path / "maps").mkdir(exist_ok=True)
+    for name in ("land_50m.geojson", "rivers_50m.geojson"):
+        (tmp_path / "maps" / name).write_text(json.dumps({"type": "FeatureCollection", "features": []}))
+    spec = dict(m, _ring=[2])
+    boxes = figures.item_boxes(p, spec)
+    ring = pen.circle_bounds(boxes[2])
+    def inter(a, b):
+        return max(0, min(a[2], b[2]) - max(a[0], b[0])) * max(0, min(a[3], b[3]) - max(a[1], b[1]))
+    plain = figures.item_boxes(p, m)[0]
+    assert boxes[0] != plain                                        # 丸のそばの「賤ヶ岳」の名札は動く
+    assert inter(boxes[0], ring) < inter(plain, ring)               # 丸に掛かる所が減る（残るのは点そのもの）
+    from chiso import render
+    p.base(render.state_of(sc.lines[0]))                                           # 描いて落ちない

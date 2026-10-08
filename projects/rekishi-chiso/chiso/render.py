@@ -333,8 +333,14 @@ class Painter:
         else:                                              # 図のあいだは、メモと肖像を隠して図を大きく
             import json as _json
             from . import figures
-            img = figures.draw(self, img, _json.loads(state.figure), fig)
-            on = ("fig", _json.loads(state.figure))
+            spec = _json.loads(state.figure)
+            if spec.get("type") == "map" and state.mark:      # 赤ペンの丸が付く地点（ほかの地名・注を丸の外へ。10-09）
+                rings = sorted({m["at"] - 1 for m in _json.loads(state.mark)["items"]
+                                if m.get("type") == "circle" and isinstance(m.get("at"), int)})
+                if rings:
+                    spec["_ring"] = rings
+            img = figures.draw(self, img, spec, fig)
+            on = ("fig", spec)
         if state.mark and on is not None:
             img = self._marks(img, state.mark, on, mark_t)
         from . import extras

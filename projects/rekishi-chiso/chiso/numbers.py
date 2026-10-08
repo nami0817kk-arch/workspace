@@ -202,6 +202,18 @@ def draw_numberline(painter, img, spec, t):
 
 
 # --- 折れ線 ---------------------------------------------------------------------
+def line_labels(painter, labels: list[str], xs: list[float], left: float, right: float):
+    """折れ線の目盛りの字の (フォント, 真ん中の x)。端の字は図の枠の内側に寄せ（10-09 お市の「1567年ごろ 結婚」の
+    「1」が枠で欠けた）、隣と重なるなら字を縮める。"""
+    for size in range(28, 19, -2):
+        f = painter.font("gothic", size)
+        ws = [f.getlength(t) for t in labels]
+        cx = [min(max(x, left + w / 2), right - w / 2) for x, w in zip(xs, ws)]
+        if all(cx[i] + ws[i] / 2 + 10 <= cx[i + 1] - ws[i + 1] / 2 for i in range(len(cx) - 1)):
+            break
+    return f, cx
+
+
 def draw_line(painter, img, spec, t):
     """移り変わり（石高・人口）。点が左から順に打たれ、線がのびる。最後（または focus）の値だけ大きく朱。"""
     dr, box = _panel(painter, img, spec.get("title", ""))
@@ -245,12 +257,12 @@ def draw_line(painter, img, spec, t):
         ImageDraw.Draw(layer).polygon(area + [(area[-1][0], pb), (area[0][0], pb)], fill=RED + (36,))
         img.alpha_composite(layer)
         dr = ImageDraw.Draw(img, "RGBA")
-    lf = painter.font("gothic", 28)
+    lf, label_x = line_labels(painter, [str(p["label"]) for p in pts_raw], [p[0] for p in P], ax0, ax1)
     for i in range(hi):
         x, y = P[i]
         if i > reach + 1e-6:
             continue                                         # 線がまだ届いていない点は、目盛りの字も出さない
-        dr.text((x, pb + 18), str(pts_raw[i]["label"]), font=lf, fill=SUB, anchor="mt")
+        dr.text((label_x[i], pb + 18), str(pts_raw[i]["label"]), font=lf, fill=SUB, anchor="mt")
         hot = i == hot_i
         r = 16 if hot else 10
         dr.ellipse([x - r, y - r, x + r, y + r], fill=RED if hot else PAPER, outline=RED, width=4)
