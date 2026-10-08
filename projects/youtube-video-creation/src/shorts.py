@@ -216,7 +216,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _fit(short, max_seconds - _reserved(script, short, max_seconds) / ESTIMATE_SLACK)
     _add_voices_tail(short, script, max_seconds)
     _add_more_body(short, script, max_seconds)
-    _drop_boards(short)
+    _drop_boards(short, script)
     _add_face(short)
     _add_subscribe(short)
     if not short.scenes[-1].lines:
@@ -249,7 +249,7 @@ def _retitle(short: Script, body: Scene) -> None:
     short.meta = dict(meta)
 
 
-def _drop_boards(short: Script) -> None:
+def _drop_boards(short: Script, script: Script | None = None) -> None:
     """**板は縦版に差し替える。無ければ外す**（2026-09-23 指示「基礎データも見して」）。
 
     16:9 の板を縦（9:16）に敷くと真ん中しか映らず、「マス 基礎DATA」のように
@@ -258,10 +258,25 @@ def _drop_boards(short: Script) -> None:
     画面にその中身が出ない。`tools/clubdata.py --portrait` が同じ中身の
     縦版（`<名前>_v.png`）を書き出すので、**あれば差し替える**。
     **写真は外さない**（顔は縦でも成立する）。
+
+    **`assets/stats/<名前>_v.png` への差し替えは、クラブ紹介の回だけ**（2026-10-08）。
+    この縦版は `clubdata.py --portrait` が書く**基礎DATAの板**で、名前は差し替える相手
+    （`assets/backgrounds/stadium_<クラブ>.png`）から取っている。つまり
+    **「同じ名前＝同じ中身」ではなく、「この下地のときはこの板を出す」という決め事**。
+    ところが 10/9 に始めたスタジアム紹介シリーズは、同じ
+    `assets/backgrounds/stadium_<クラブ>.png` を**本物の写真として**敷く。
+    そのままだと、ショートの画面が**クラブ紹介の基礎DATAの板**（創立年・愛称・オーナー…）に
+    丸ごと化けていた（preview4 で見つけた）。縦版は40クラブぶんあるので、
+    **このシリーズは20本すべてで踏む**。
+    クラブ紹介以外では、**隣に `_v.png` があればそれを使い、無ければ写真のまま残す**。
     """
     from pathlib import Path as _P
 
     from .render import _is_board
+
+    # クラブ紹介の回か（`series:` に「チーム紹介」が入る。ラ・リーガ版も同じ）
+    series = str(((script.meta if script is not None else None) or {}).get("series") or "")
+    club_intro = "チーム紹介" in series
 
     for scene in short.scenes:
         for line in scene.lines:
@@ -277,12 +292,15 @@ def _drop_boards(short: Script) -> None:
                 if (root / tall).exists():
                     line.image = tall.as_posix()
                 continue
-            # 縦版は隣か、**まとめて assets/stats** に置いてある
+            # 縦版は隣か、**クラブ紹介のときだけ** まとめて assets/stats にも置いてある
             name = _P(str(line.image))
             root = _P(__file__).resolve().parents[1]
-            line.image = None
-            for tall in (name.with_name(name.stem + "_v.png"),
-                         _P("assets/stats") / (name.stem + "_v.png")):
+            photo = not _is_board(line.image)      # 下地の置き場の「写真」か
+            line.image = None if (club_intro or not photo) else line.image
+            places = [name.with_name(name.stem + "_v.png")]
+            if club_intro or _is_board(str(name)):
+                places.append(_P("assets/stats") / (name.stem + "_v.png"))
+            for tall in places:
                 if (root / tall).exists():
                     line.image = tall.as_posix()
                     # **ショートでは字幕を出す**（2026-09-23 指摘「たまに、字幕で

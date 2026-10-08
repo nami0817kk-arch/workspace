@@ -1535,3 +1535,40 @@ def test_締めの一言に前の行の確度の札を引き継がない():
     _add_subscribe(short)
     tail = short.scenes[-1].lines[-2:]
     assert [l.source for l in tail] == [None, None]
+
+
+def _board_fixture(series: str, tmp_path, monkeypatch):
+    """`assets/backgrounds/stadium_X.png` を敷いた回のショートを作る。
+
+    `assets/stats/stadium_X_v.png`（クラブ紹介の基礎DATAの縦板）が隣にある状態を仕込む。
+    """
+    from pathlib import Path
+    from src import shorts as _shorts
+
+    root = tmp_path
+    (root / "assets" / "backgrounds").mkdir(parents=True)
+    (root / "assets" / "stats").mkdir(parents=True)
+    (root / "assets" / "backgrounds" / "stadium_X.png").write_bytes(b"photo")
+    (root / "assets" / "stats" / "stadium_X_v.png").write_bytes(b"board")
+    monkeypatch.setattr(_shorts, "__file__", str(root / "src" / "shorts.py"))
+
+    head = "---\ntitle: T\n" + (f"series: {series}\n" if series else "") + "---\n\n"
+    body = (head
+            + "## オープニング\n\nキャスター: つかみです。\n\n"
+            + "## 何が起きたか\n\nキャスター: いち。\n  image: assets/backgrounds/stadium_X.png\n")
+    script = parse_script(body)
+    short = trim(script)
+    _shorts._drop_boards(short, script)
+    return short.scenes[1].lines[0]
+
+
+def test_クラブ紹介いがいの回で下地の写真を別の回の板に差し替えない(tmp_path, monkeypatch):
+    """**10/9 に始めたスタジアム紹介が、ショートでクラブ紹介の基礎DATAの板に化けていた。**
+
+    `assets/stats/stadium_<クラブ>_v.png` は `clubdata.py --portrait` が書く基礎DATAの板で、
+    名前は差し替える相手（`assets/backgrounds/stadium_<クラブ>.png`）から取っている。
+    つまり「同じ名前＝同じ中身」ではなく、**クラブ紹介のときだけ成り立つ決め事**。
+    縦版は40クラブぶんあるので、放っておくとスタジアム紹介20本すべてで踏む。
+    """
+    line = _board_fixture("", tmp_path, monkeypatch)
+    assert line.image == "assets/backgrounds/stadium_X.png", "写真が別の回の板に化けた"

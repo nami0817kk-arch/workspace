@@ -639,15 +639,6 @@
   "club": "レアルマドリード"
  },
  {
-  "file": "stadium_レアルマドリード.png",
-  "source": "wikimedia",
-  "title": "File:Estadio Santiago Bernabéu - 01.jpg",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Estadio_Santiago_Bernab%C3%A9u_-_01.jpg",
-  "author": "Carlos Delgado",
-  "license": "CC BY-SA 3.0",
-  "club": "レアルマドリード"
- },
- {
   "file": "stadium_セビージャ_in.png",
   "source": "wikimedia",
   "title": "File:Seville Ramón Sánchez Pizjuán Stadium 4.jpg",
@@ -952,5 +943,14 @@
   "author": "Kaupson",
   "license": "CC0",
   "club": "フライブルク"
+ },
+ {
+  "file": "stadium_レアルマドリード.png",
+  "source": "wikimedia",
+  "title": "File:M-estadio-santiago-bernabeu-diciembre-2024-a.jpg",
+  "page_url": "https://commons.wikimedia.org/wiki/File:M-estadio-santiago-bernabeu-diciembre-2024-a.jpg",
+  "author": "MottaW",
+  "license": "CC BY 4.0",
+  "club": "レアルマドリード"
  }
 ]
