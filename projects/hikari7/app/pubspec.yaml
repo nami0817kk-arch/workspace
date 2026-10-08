@@ -3,7 +3,7 @@ description: "ひかりの指名 — オーディション番組プロデュー�
 publish_to: 'none'
 
 # 版とビルド番号。App Store Connect は同じビルド番号を二度受け付けない
-version: 1.0.0+8
+version: 1.0.0+9
 
 environment:
   sdk: ^3.13.2
