@@ -90,23 +90,81 @@ TERM_LINES = 3        # 用語の札を出しておく行数（初めて出た�
 TERM_MAX = 40         # 説明の字数の上限（右上の狭い札に収める）
 ERA_TAILS = ("時代", "幕府", "の初め", "初期", "前期", "中期", "後期", "末期", "の末", "っ子")   # 地名＋これは時代の名
 
+# --- 地名を場所として拾うか（10-09 点検。「江戸の浮世絵」「北京大学」「堺屋太一」で地図が出た）-------------
+# 地名のすぐ後がこれなら、地名ではなく人名・大学名の一部（堺屋太一・北京大学・京都大）
+NOT_PLACE_TAILS = ("屋", "大学", "大")
+NOT_PLACE_KEEP = ("屋敷", "大火", "大仏", "大地震", "大通り", "大路", "大坂", "大阪")   # 上の例外（場所の使い方）
+# 時代の名にもなる地名は、場所の使い方のときだけ拾う（10-09。「江戸」が時代の意味で出るほうが多い）
+ERA_PLACES = ("江戸",)
+PLACE_USES = ("城", "湾", "参府", "上り", "入り", "屋敷", "市中", "の町", "の屋敷", "の城", "の街", "の港", "の海",
+              "の中心", "の市中", "の郊外", "の北", "の南", "の東", "の西", "の将軍", "の大火", "の藩邸", "の上屋敷",
+              "へ", "に", "で", "から", "まで", "を")
+ERA_USES = ("時代", "幕府", "初期", "前期", "中期", "後期", "末期", "っ子", "の初め", "の初期", "の終わり", "の末",
+            "の世", "の頃", "のころ", "の昔", "の人", "の庶民", "の文化", "の浮世絵", "の軍記", "の読み物", "の本",
+            "の書物", "の物語", "の小説", "の学者", "の作家", "の芝居", "の歌舞伎", "の絵", "の記録", "の話",
+            "の日本", "の鎖国", "では", "にかけて", "から明治", "までの")   # 「江戸の＋これ」は時代
 
-def attach_terms(lines: list, glossary: dict, attr: str = "term", value=None, mask=()) -> None:
+
+def place_blank(text: str, places) -> str:
+    """地名として拾わない所を「＿」で消した文。字数は変えない（位置がそのまま使える）。
+    次の2つを消す：地名のすぐ後が「屋」「大学」「大」（堺屋太一・北京大学）／時代の名にもなる地名（江戸）で、
+    後ろが場所の使い方（江戸城・江戸へ・江戸の町…）でないもの（江戸の浮世絵・江戸時代）。"""
+    out = list(text)
+    for p in sorted(places, key=len, reverse=True):
+        start = 0
+        while True:
+            i = text.find(p, start)
+            if i < 0:
+                break
+            start = i + 1
+            tail = text[i + len(p):]
+            if p in ERA_PLACES:
+                drop = tail.startswith(ERA_USES) or not tail.startswith(PLACE_USES)
+            else:
+                drop = tail.startswith(NOT_PLACE_TAILS) and not tail.startswith(NOT_PLACE_KEEP)
+            if drop:
+                out[i:i + len(p)] = "＿" * len(p)
+    return "".join(out)
+
+
+# 場所の地図は、話している年（line.year）が変われば消す（10-09。小田原の地図が秀長の最期「1591年1月22日」の行まで残った）。
+# 行が自分で年を言い出したとき（「1591年」「翌年」）は1年でも、言わずに札だけ進んだときは10年以上で
+PLACE_YEAR_GAP = (1, 10)
+
+
+def says_year(text: str) -> bool:
+    """行が自分で年を言っているか（「1591年」「紀元前221年」「翌年」「その年」）。"""
+    from .match import years_in
+    return bool(years_in(text)) or any(w in text for w in ("翌年", "翌々年", "その年", "同じ年"))
+
+
+def attach_terms(lines: list, glossary: dict, attr: str = "term", value=None, mask=(), blank=None,
+                 year_gap: tuple | None = None) -> None:
     """その回で初めて出た用語（地名）に、札（小さな地図）を付ける。新しい言葉が出たらすぐ差し替え、
-    同じ行に2つ以上あれば、前の札が終わってから順に出す。節が変わると札は消える。"""
+    同じ行に2つ以上あれば、前の札が終わってから順に出す。節が変わると札は消える。
+    blank は拾わない所を消す関数（地名なら place_blank）。year_gap=(近い, 遠い) を渡すと、札を出した行から
+    話している年（line.year）が「遠い」だけ変わった行、または行が自分で年を言い「近い」だけ変わった行で札を消す
+    （待っている次の地名の札も出さない）。"""
     import re
     if not glossary:
         return
     words = sorted(glossary, key=len, reverse=True)       # 長い言葉を先に（王太子妃の中の王太子より先に）
     seen: set[str] = set()
     pending: list[str] = []
-    cur, left, sec = None, 0, None
+    cur, left, sec, since = None, 0, None, None
     for line in lines:
         if line.section != sec:
             cur, left, sec, pending = None, 0, line.section, []
+        if year_gap is not None and (left > 0 or pending) and since is not None and line.year is not None:
+            moved = abs(line.year - since)
+            if moved >= year_gap[1] or (moved >= year_gap[0] and says_year(line.text)):
+                seen.difference_update(pending)            # まだ出していない地名は、あとで出てきたら出す
+                cur, left, pending = None, 0, []           # 話が別の年へ移った（同じ場面ではない）
         plain = re.sub(r"[《》]", "", line.text)
         for m in sorted(mask, key=len, reverse=True):      # 「神聖ローマ皇帝」の中の「ローマ」は地名にしない
             plain = plain.replace(m, "＿" * len(m))
+        if blank is not None:
+            plain = blank(plain)
         found = []
         for w in words:
             pos = plain.find(w)
@@ -115,10 +173,10 @@ def attach_terms(lines: list, glossary: dict, attr: str = "term", value=None, ma
         found = [w for _, w in sorted(found)]
         seen.update(found)
         if found:
-            cur, left = found[0], TERM_LINES
+            cur, left, since = found[0], TERM_LINES, line.year
             pending = found[1:] + pending
         elif left <= 0 and pending:
-            cur, left = pending.pop(0), TERM_LINES
+            cur, left, since = pending.pop(0), TERM_LINES, line.year
         if cur is not None and left > 0:
             setattr(line, attr, value(cur) if value else (cur, glossary[cur]))
             left -= 1
@@ -461,7 +519,8 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         # 次回予告の行（「次回は江戸の鎖国」）の地名は、いまの話の場所ではないので地図を出さない（10-08 ユーザー指摘）
         from .match import is_teaser
         attach_terms([l for l in lines if not is_teaser(l.text)], places, "place", lambda w: (w, *places[w]),
-                     mask=[k for k in gl if k not in places] + eras)
+                     mask=[k for k in gl if k not in places] + eras, blank=lambda t: place_blank(t, places),
+                     year_gap=PLACE_YEAR_GAP)
     people = {}
     for name, v in (data.get("people") or {}).items():
         if not isinstance(v, dict) or "born" not in v:

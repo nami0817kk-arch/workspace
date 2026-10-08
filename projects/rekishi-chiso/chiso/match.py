@@ -193,7 +193,7 @@ def line_notes(script, catalog: dict | None = None, places: list[str] | None = N
     そこで「年＋場所・出来事」で場面を言い出した行（「1582年6月、京都の本能寺」）だけを見る。
     場面を言い出した行が食い違っていれば、続く行も画面が替わらず別の場面を言わないあいだ（3行まで）同じ食い違いとして並べる。"""
     from .check import place_names
-    from .script import ERA_TAILS
+    from .script import ERA_TAILS, place_blank
     from .years import label
     catalog = default_catalog() if catalog is None else catalog
     events = event_words(script)
@@ -213,7 +213,8 @@ def line_notes(script, catalog: dict | None = None, places: list[str] | None = N
             carry = None
             continue
         said_ev = _found(l.text, events)
-        said_pl = _found(l.text, places, masks + list(said_ev)) - said_ev
+        # 地名の拾い方は場所の地図と同じ（「江戸の浮世絵」「北京大学」「堺屋太一」は場所ではない。chiso/script.py）
+        said_pl = _found(place_blank(re.sub(r"[《》]", "", l.text), places), places, masks + list(said_ev)) - said_ev
         said_yr = _in_story(years_in(l.text), script)
         if not (said_ev or said_pl or said_yr):
             if carry and carry[1] == (scene, over) and carry[2] > 0:   # 同じ画面のまま、前の行の話が続いている

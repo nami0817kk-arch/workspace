@@ -1,0 +1,73 @@
+"""10-09 点検（qc_1012）で見つかった画面の不具合の直し。"""
+from chiso import match, script
+
+PL = {"江戸": (139.77, 35.68), "北京": (116.4, 39.9), "堺": (135.48, 34.57), "小田原": (139.15, 35.25),
+      "奈良": (135.8, 34.68), "京都": (135.77, 35.01)}
+
+
+def _places(lines, **sec):
+    d = {"title": "t", "timeline": {"start": 1500, "end": 2100},
+         "sections": [{"title": "一", "lines": lines, **sec}]}
+    sc = script.parse(d, places=PL)
+    return [l.place[0] if l.place else None for l in sc.lines]
+
+
+# --- 1. 場所の小さな地図の誤反応 -------------------------------------------------
+def test_edo_as_an_era_is_not_a_place():
+    for said in ("だから江戸の浮世絵にも、船団が描かれてる。", "江戸の軍記から今の小説まで。", "江戸の読み物で形になった。",
+                 "江戸時代の本です。", "江戸の初めに書かれた。", "江戸の人たちは知っていた。", "儒学を重んじた江戸では暴君に。"):
+        assert _places([{"語り": said}]) == [None], said
+
+
+def test_edo_as_a_place_is_picked():
+    for said in ("江戸城の松之大廊下で。", "使いが江戸へやって来ます。", "1641年、江戸で生まれました。", "江戸の町に火が出た。",
+                 "江戸の屋敷に入る。", "江戸湾に船が来た。", "江戸に潜む。", "江戸から京都まで。"):
+        assert _places([{"語り": said}]) == ["江戸"], said
+
+
+def test_university_and_person_names_are_not_places():
+    assert _places([{"語り": "2009年に北京大学が受け入れた竹簡。"}]) == [None]
+    assert _places([{"語り": "1985年の、堺屋太一の小説です。"}]) == [None]
+    assert _places([{"語り": "京都大の研究です。"}]) == [None]
+    assert _places([{"語り": "北京に戻ります。"}]) == ["北京"]
+    assert _places([{"語り": "堺の商人たち。"}]) == ["堺"]
+    assert _places([{"語り": "江戸屋敷で。"}]) == ["江戸"]            # 屋敷は場所
+
+
+def test_place_blank_keeps_length():
+    t = "北京大学と堺屋太一と江戸の本と江戸城"
+    out = script.place_blank(t, PL)
+    assert len(out) == len(t) and "北京" not in out and "堺" not in out and out.endswith("江戸城")
+
+
+def test_match_uses_the_same_place_rules():
+    # 点検（話と画面）でも「堺屋太一」「江戸の読み物」は場所として数えない
+    d = {"title": "t", "timeline": {"start": 1500, "end": 2100}, "sections": [
+        {"title": "京都の町", "background": {"image": "p/x.jpg", "credit": "京都の町"},
+         "lines": [{"語り": "1600年の、堺屋太一の話です。"}, {"語り": "1600年、江戸の読み物になりました。"},
+                   {"語り": "1600年、堺に来ました。"}]}]}
+    sc = script.parse(d, places=PL)
+    why = dict(match.line_notes(sc, {}, list(PL)))
+    assert 0 not in why and 1 not in why and "堺" in why[2]
+
+
+# --- 2. 地図が長く残る ---------------------------------------------------------
+def test_place_map_ends_when_the_line_moves_to_another_year():
+    # 秀長の回：「3月、兄は小田原へ」の地図が「1591年1月22日、秀長は郡山城で亡くなりました」まで残った
+    got = _places([{"語り": "3月、兄は小田原へ出陣する前に、弟を見舞います。", "card": {"head": "1590年3月"}},
+                   {"聞き": "母ちゃんが会いに来るの、つらいね。"},
+                   {"語り": "1591年1月22日、秀長は郡山城で亡くなりました。", "card": {"head": "1591年1月"}}])
+    assert got == ["小田原", "小田原", None]
+
+
+def test_place_map_stays_when_the_year_moves_without_saying_it_unless_far():
+    lines = [{"語り": "小田原へ向かう。", "year": 1590}, {"語り": "長い道のり。", "year": 1591}, {"語り": "まだ道中。"}]
+    assert _places(lines) == ["小田原"] * 3                            # 行が年を言わない1年は同じ場面
+    lines[1]["year"] = 1600
+    assert _places(lines) == ["小田原", None, None]                     # 10年以上は別の場面
+
+
+def test_waiting_place_comes_back_when_mentioned_after_a_year_change():
+    got = _places([{"語り": "京都と奈良を回る。", "year": 1590}, {"語り": "1600年、話は変わります。", "year": 1600},
+                   {"語り": "奈良の町へ。"}])
+    assert got == ["京都", None, "奈良"]
