@@ -282,13 +282,16 @@
     "videos.list": 1
   },
   "2026-10-07": {
-    "videos.list": 8,
+    "videos.list": 26,
     "videos.update": 60,
-    "channels.list": 16,
-    "playlistItems.list": 16,
+    "channels.list": 18,
+    "playlistItems.list": 32,
     "videos.insert": 16,
     "thumbnails.set": 16,
     "playlists.insert": 2,
-    "playlistItems.insert": 8
+    "playlistItems.insert": 11,
+    "playlists.list": 3,
+    "playlists.update": 1,
+    "playlistItems.delete": 3
   }
 }
