@@ -457,7 +457,10 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
     if places:
         # 「江戸時代」「江戸の初め」の江戸は時代の名で、場所ではない（10-08 見本で、本の話に江戸の地図が出た）
         eras = [p + t for p in places for t in ERA_TAILS]
-        attach_terms(lines, places, "place", lambda w: (w, *places[w]), mask=[k for k in gl if k not in places] + eras)
+        # 次回予告の行（「次回は江戸の鎖国」）の地名は、いまの話の場所ではないので地図を出さない（10-08 ユーザー指摘）
+        from .match import is_teaser
+        attach_terms([l for l in lines if not is_teaser(l.text)], places, "place", lambda w: (w, *places[w]),
+                     mask=[k for k in gl if k not in places] + eras)
     people = {}
     for name, v in (data.get("people") or {}).items():
         if not isinstance(v, dict) or "born" not in v:
