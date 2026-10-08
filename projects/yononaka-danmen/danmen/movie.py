@@ -37,7 +37,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from danmen import typo
 
-from danmen import cast, sfx, tts
+from danmen import cast, reading, sfx, tts
 
 W, H = 1920, 1080
 FONT_PATH = "C:/Windows/Fonts/NotoSansJP-VF.ttf"
@@ -350,7 +350,11 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
             raise SystemExit("最初の話者の行より前に screen: がありません")
         style_id, params = tts.params_for(cfg, step["who"], step["tone"])
         wav = work / "{:03d}.wav".format(n)
-        wav.write_bytes(tts.synth(cfg["engine_url"], step["text"], style_id, **params))
+        # **読み上げるときだけ数字を漢数字に直す。字幕は算用数字のまま。**
+        # 単位のあとに数字が続くと桁として読めない（「1リットル175円」→
+        # 「イチナナゴエン」。2026-10-08 に実際に起きた）
+        say = reading.reading(step["text"])
+        wav.write_bytes(tts.synth(cfg["engine_url"], say, style_id, **params))
         wavs.append(wav)
         # 次の話者の行を先に見て、間を決める
         nxt = None
@@ -400,6 +404,8 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
             too_fast.append((n + 1, step["text"], cps))
         print("  {:>3}  {:>5.2f}秒  {:>4.1f}字/秒  [{}]  {}{}".format(
             n + 1, sec, cps, current_name, step["text"][:26], fast))
+        if say != step["text"]:
+            print("           読み: {}".format(say[:46]))
         n += 1
 
     if not shots:
