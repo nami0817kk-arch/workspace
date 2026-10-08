@@ -20,7 +20,7 @@ OUT = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
 PHOTO = str(ASSETS / "photos" / "pexels_18569250_A_contemporary_gas_station_wit.jpeg")
 
 W, H = 1920, 1080
-SAFE_BOTTOM = 420            # 字幕と、左右の立ち絵のために空ける
+SAFE_BOTTOM = 326            # 字幕と、左右の立ち絵のために空ける（立ち絵 320px）
 
 
 def place(panel: Image.Image, bg: Image.Image, width: int = 1740,
@@ -28,7 +28,9 @@ def place(panel: Image.Image, bg: Image.Image, width: int = 1740,
     """板を背景の上に、**字幕と立ち絵の場所を避けて**置く。
 
     立ち絵は**左右の下に2人とも**出るので、板は画面の上半分に置く。
-    下 420px は字幕と立ち絵のために空ける（2026-10-08）。
+    下 326px は字幕と立ち絵のために空ける。**この数字は板の縮み方で決めた**：
+    420 だと板（高さ778）が 0.81倍に縮み、本文 48px が画面上で 38.9px になっていた
+    （2026-10-08 に実測）。立ち絵を 400→320 に小さくして 0.93倍まで戻した。
     """
     out = bg.copy()
     # 立ち絵（右下）と字幕（下）の場所を空けるため、板は上に寄せる

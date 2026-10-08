@@ -124,7 +124,7 @@ def parse_cast(text: str) -> dict | None:
     if not t or t[0] in ("なし", "none", "-"):
         return None
     style = "wipe" if t[0] in ("wipe", "箱", "ワイプ") else "bottom"
-    h = 190 if style == "wipe" else 400
+    h = 190 if style == "wipe" else 320
     pos = "右上"
     for a in t[1:]:
         if a.isdigit():
