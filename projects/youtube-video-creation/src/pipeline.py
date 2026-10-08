@@ -92,7 +92,8 @@ def build_script(
     # 縦型（ショート）は同じ絵を出しておける時間が短い
     from .review import hold_limit
 
-    spread_long_cards(script, hold_limit(config.video.height > config.video.width))
+    tall = config.video.height > config.video.width
+    spread_long_cards(script, hold_limit(tall), portrait=tall)
     # **冒頭だけは、もっと早く変える**（2026-09-15）。spread_long_cards の
     # あとに置く。先に置くと、こちらが挟んだ1枚で「絵が変わった」ことになり、
     # そのあと20秒の判定が効かなくなる
@@ -271,7 +272,7 @@ def open_early(script: Script, within: float = OPENING_WINDOW,
             elapsed += seconds
     return 0
 
-def spread_long_cards(script: Script, limit: float | None = None) -> int:
+def spread_long_cards(script: Script, limit: float | None = None, portrait: bool = False) -> int:
     """同じ絵が続きすぎるところに、サムネイルの写真を挟む。
 
     カードは指定した行で差し替わり、それ以外の行では出たまま残る。そのため
@@ -298,6 +299,9 @@ def spread_long_cards(script: Script, limit: float | None = None) -> int:
     photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
     if not photo:
         return 0
+    # 縦の画面（ショート）では、隣にある縦版を使う（上の `tall_twin` に理由）
+    if portrait:
+        photo = tall_twin(photo)
 
     from .marks import on_screen
 
@@ -367,6 +371,31 @@ def photo_key(path: str | None) -> str:
             if stem.endswith(suffix) and len(stem) > len(suffix):
                 stem, changed = stem[: -len(suffix)], True
     return f"{pure.parent.as_posix()}/{stem}"
+
+
+def tall_twin(photo: str) -> str:
+    """縦の画面のために、その写真の**縦版**（隣の `_v`）を返す。無ければそのまま。
+
+    **縦の画面では、板と顔は共存できない**（2026-10-08 夜に実測して分かった）。
+    板は画面の 11〜62% を占めるので、顔を上へ逃がすと頭が切れ、下へ逃がすと板が乗る。
+    ところが `spread_long_cards` は縦横の別を見ずに**サムネの写真（たいてい顔が主役）**を
+    差し込むので、**板の長い節があるショートでは誰の回でも顔が板に潰される**
+    （ネイマールの回の 39.0〜50.4秒で見つけた。4コマは27.7秒を見るので当たらなかった）。
+
+    縦版（`tools/facecrop.py` や `tools/pairphoto.py` が書く `<名前>_v.<拡張子>`）は
+    縦の画面に合わせて切ってあるので、そちらを使う。`shorts._drop_boards` が
+    台本の写真に対してやっているのと同じ差し替えを、**あとから挟む写真にも当てる**。
+    """
+    from pathlib import Path as _P
+
+    if not photo:
+        return photo
+    name = _P(photo)
+    if name.stem.endswith("_v"):
+        return photo
+    twin = name.with_name(name.stem + "_v" + name.suffix)
+    root = _P(__file__).resolve().parents[1]
+    return twin.as_posix() if (root / twin).exists() else photo
 
 
 def _change_photo(scene, number: int, stage: str, photo: str) -> bool:

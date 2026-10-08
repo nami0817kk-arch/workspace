@@ -391,3 +391,27 @@ def test_反応の節は表を求めない():
                      say=["1点目がひどい", "2点目もだめ", "3失点は重い"])
     notes = Notes(date="2026年9月17日", title="t", question="q", sections=[voices])
     assert _advise_cards(notes) == []
+
+
+def test_縦の画面では挟む写真も縦版を使う(tmp_path, monkeypatch):
+    """**縦の画面では、板と顔は共存できない**（2026-10-08 夜に実測）。
+
+    板は画面の 11〜62% を占めるので、顔を上へ逃がすと頭が切れ、下へ逃がすと板が乗る。
+    ところが `spread_long_cards` は縦横の別を見ずにサムネの写真（たいてい顔が主役）を
+    差し込むので、**板の長い節があるショートでは誰の回でも顔が板に潰される**
+    （ネイマールの回の 39.0〜50.4秒で見つけた。4コマは27.7秒を見るので当たらなかった）。
+    隣に縦版（`_v`）があれば、そちらを挟む。
+    """
+    from src import pipeline
+
+    root = tmp_path
+    (root / "assets" / "images" / "x").mkdir(parents=True)
+    (root / "assets" / "images" / "x" / "01_w.jpg").write_bytes(b"wide")
+    (root / "assets" / "images" / "x" / "01_w_v.jpg").write_bytes(b"tall")
+    monkeypatch.setattr(pipeline, "__file__", str(root / "src" / "pipeline.py"))
+
+    assert pipeline.tall_twin("assets/images/x/01_w.jpg") == "assets/images/x/01_w_v.jpg"
+    # 縦版が無ければそのまま。すでに縦版ならそのまま
+    assert pipeline.tall_twin("assets/images/x/02_w.jpg") == "assets/images/x/02_w.jpg"
+    assert pipeline.tall_twin("assets/images/x/01_w_v.jpg") == "assets/images/x/01_w_v.jpg"
+    assert pipeline.tall_twin("") == ""
