@@ -156,7 +156,8 @@ def synthesize(sc, config) -> tuple[list[mix.Cue], float]:
         print(f"\r音声 {i}/{len(sc.lines)}", end="", flush=True)
     print()
     voicevox_guard(config)
-    return mix.plan(sc.lines, spoken)
+    from .render import recap_sections
+    return mix.plan(sc.lines, spoken, recap_sections(config, sc))
 
 
 VOICEVOX_MAX_GB = 6.0

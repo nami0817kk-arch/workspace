@@ -46,6 +46,12 @@ TITLE_MIN = 36       # 節の題はこの大きさまで縮める（収まらな
 BASE_CACHE = 24      # 前景の下の層（base）を控えておく数。1枚 8MB（1920x1080 RGBA）
 
 
+def look(config: dict, script, name: str) -> bool:
+    """画面の道具（texture・recap）を使うか。台本の一番上に書いたものが config.yaml より優先。"""
+    mine = getattr(script, "look", None) or {}
+    return bool(mine[name]) if name in mine else bool(config.get(name, False))
+
+
 @dataclass(frozen=True)
 class State:
     section: int
@@ -78,8 +84,7 @@ class Painter:
 
     def look(self, name: str) -> bool:
         """画面の道具（texture・recap）を使うか。台本の一番上に書いたものが config.yaml より優先。"""
-        mine = getattr(self.script, "look", None) or {}
-        return bool(mine[name]) if name in mine else bool(self.config.get(name, False))
+        return look(self.config, self.script, name)
 
     # --- 素材 -------------------------------------------------------------
     def font(self, kind: str, size: int, bold: bool = False):
@@ -788,6 +793,13 @@ def recap_cards(script, section: int) -> tuple:
         n = len(cards)
         cards = [cards[round(k * (n - 1) / (RECAP_MAX - 1))] for k in range(RECAP_MAX)]
     return tuple(cards)
+
+
+def recap_sections(config: dict, script) -> set[int]:
+    """「ここまでの地層」の札が出る節の番号。その節の頭は間を長くとる（chiso/voice.py の GAP_RECAP）。"""
+    if not look(config, script, "recap"):
+        return set()
+    return {k for k in range(len(script.sections)) if recap_cards(script, k)}
 
 
 def end_key(script) -> tuple:

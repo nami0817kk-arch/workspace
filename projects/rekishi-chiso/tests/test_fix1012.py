@@ -167,3 +167,38 @@ def test_check_stops_when_a_section_title_cannot_fit(tmp_path):
     assert len(got) == 1 and "1節" in got[0] and "1〜2行目" in got[0]
     p.script.sections[0].title = "1591年 秀長の死"
     assert check.section_title_fit(p) == []
+
+
+# --- 5. 節の頭の「ここまでの地層」が1.2秒で読めない ---------------------------------------
+def test_recap_section_head_gets_a_longer_gap_unless_pause_is_written(tmp_path):
+    from types import SimpleNamespace as NS
+    from chiso import mix, voice
+    L = lambda i, sec, pause=None: NS(index=i, speaker="語り", text="あ", tone="普通", section=sec, pause=pause)
+    assert voice.gap_before(L(0, 0), L(1, 1), recap={1}) == voice.GAP_RECAP >= 2.5
+    assert voice.gap_before(L(0, 0), L(1, 1)) == voice.GAP_SECTION
+    assert voice.gap_before(L(0, 0), L(1, 1, pause=1.5), recap={1}) == 1.5          # 台本の pause が優先
+    lines = [L(0, 0), L(1, 1), L(2, 2)]
+    spoken = {i: NS(wav=None, seconds=1.0) for i in range(3)}
+    cues, _ = mix.plan(lines, spoken, recap={1})
+    assert round(cues[1].start - cues[0].end, 3) == voice.GAP_RECAP
+    assert round(cues[2].start - cues[1].end, 3) == voice.GAP_SECTION
+
+
+def test_recap_sections_follow_the_look_switch():
+    from chiso import render
+    card = lambda h: {"head": h, "body": "x"}
+    secs = [{"title": t, "lines": [{"語り": "a", "card": card("1600年")}, {"語り": "b", "card": card("1601年")}]}
+            for t in ("一", "二", "三", "まとめ")]
+    sc = script.parse({"title": "t", "recap": True, "sections": secs})
+    assert render.recap_sections({}, sc) == {1, 2}                  # 最初の節・まとめの節の頭は出さない
+    sc.look = {}
+    assert render.recap_sections({}, sc) == set()                   # recap を使わない回は今までどおり
+    assert render.recap_sections({"recap": True}, sc) == {1, 2}
+
+
+def test_qc_does_not_count_the_recap_gap_as_silence():
+    from chiso import qc
+    rep = qc.Report(duration=200.0, silences=[(49.8, 3.1), (120.0, 3.0)], subs_end=188.0,
+                    sections=[(0.0, "第1節 一"), (49.9, "第2節 二")])
+    text = "\n".join(qc.summarize(rep))
+    assert "無音（-45dB 未満）：1か所" in text and "2:00" in text
