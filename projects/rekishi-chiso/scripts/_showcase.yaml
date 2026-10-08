@@ -110,7 +110,7 @@ sections:
         detail: {box: [0, 150, 1100, 960], label: 左下に「今川義元」の名札}
       - 聞き: 2千で、10倍以上の相手の大将を。舞ってから出ていったの、かっこよすぎでしょ。
         detail: {box: [0, 150, 1100, 960], label: 左下に「今川義元」の名札}
-        mark: {type: circle, at: [200, 700, 290, 900]}
+        mark: {type: circle, at: [190, 690, 310, 910]}
       - 語り: 8年後、信長は、ある町に、とんでもない額のお金を求めます。
         hook: true
 
@@ -131,6 +131,7 @@ sections:
       - 語り: 同じ1568年、信長は堺の町に、戦の費用として2万貫を求めました。これを《矢銭》と言います。
         background: {image: paintings/nobunaga_teppo_sakai_gunsmith.jpg, credit: "『和泉名所図会』堺の鉄砲鍛冶（1796年）"}
         portrait: null
+        card: {head: 1568年, body: 堺に矢銭2万貫}
         short: s2
       - 語り: 京都の大工の日当100文を、今の1万円として数えると、こうなります。
         figure: {type: calc, title: 堺に求めた矢銭, terms: [[2万貫, 1568年], [約10万円, 1貫あたり], [約20億円]], ops: [×, ＝]}
