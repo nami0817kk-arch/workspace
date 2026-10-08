@@ -23,7 +23,7 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
    `keywords "織田信長"` で検索候補によく続く語・題名3・タグ15の下書き（out/keywords_<名前>.md）。
    事実は資料で確かめて research/<題材>_facts.md に出典ごと控える。絵は Commons のパブリックドメインだけ（撮影者の CC 付きは使わない）。
    取ったら**1枚ずつ目で見る**（別人の絵が混じる）。地名は places.yaml、用語は terms.yaml に足す
-2. **台本**：`scripts/_template.yaml` を写して上から埋める（texture・recap・サムネの layout・ショートの hook が正しい既定で入る）。
+2. **台本**：`scripts/_template.yaml` を写して上から埋める（texture・recap・サムネの layout・ショートの hook・tease が正しい既定で入る）。
    題名は名前を先頭に。最後の節は「まとめ：〇〇とは何者だったのか」。図は3つ以上。同じ背景は40秒まで・20秒に1回は新しいもの。
    絵の割り当ての下書きは `assign scripts/x.yaml --assets research/x_assets.md`（out/x_assign.md。台本は書き換えない。見て採るものだけ写す）
 3. **kana**：`kana scripts/x.yaml` で全行の読みを見る。読み違いは readings.yaml に足す
@@ -39,7 +39,8 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
    直す → 直した所の確認 → 最後の通し確認で「公開してよい水準」が出るまで回す。記録は dev/output/rekishi-chiso/review/<題材>/
 8. **approve**：`approve scripts/x.yaml`（台本のハッシュを控える。台本を変えたら打ち直し）
 9. **build**：`build scripts/x.yaml`。終わったら本番の `out/x.mp4` にも **qc** を掛けて一覧を見る
-10. **shorts**：`shorts scripts/x.yaml`（`--only s1` で1本、`--draft` で確認用）。頭の約2秒に問いを特大、最後は頭と同じ画でループ。1本60秒以内
+10. **shorts**：`shorts scripts/x.yaml`（`--only s1` で1本、`--draft` で確認用）。台本の shorts.sN に hook（頭の問い）と tease（最後のもう一つの問い、答えは本編に）を必ず書く。どちらも？で終わる。
+    hook はつむぎが読んで特大で出し、最後は tease＋「答えは本編で」「本編は概要欄から」。本文＋hook＋tease で約360字・1本60秒以内
 11. **thumb --variants**：構図は題材で選ぶ（face／scene／versus／number／map。3回続けない）。引きの要素（reactor・hide・contrast・flip・flash）は1つか2つ、
     **台本で答えが出ることだけ**。和服・文字・紋の入った絵は反転しない。`thumb scripts/x.yaml --variants` で3案と一覧の大きさの確認用を作り、読めるか見る
     （YouTube Studio の「テストと比較」に3枚載せる。API では載せられない）

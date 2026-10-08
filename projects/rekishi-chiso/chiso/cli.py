@@ -30,6 +30,7 @@ import json
 import os
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import yaml
@@ -354,38 +355,54 @@ def cmd_shorts(args) -> int:
     cache = work_dir(sc) / "voice"
     sz = config["short"]
     hook_on, loop_on = shorts_mod.options(config)          # 頭の大きな問い・ループしやすい終わり（10-08）
-    end_s = shorts_mod.LOOP_END_SECONDS if loop_on else shorts_mod.END_SECONDS
-    tail = shorts_mod.LOOP_TAIL if loop_on else 0.0
+    say_hook = shorts_mod.hook_say(config)                 # 頭の問いを つむぎの声でも読む（10-08）
+    fps = config["video"]["fps"]
     for sid, meta in sc.shorts.items():
         if getattr(args, "only", None) and sid not in args.only.split(","):
             continue
-        lines = sc.short_lines(sid)
+        body = sc.short_lines(sid)
+        hook_line, tease_line = shorts_mod.extra_lines(body, meta, say_hook and hook_on)
+        lines = ([hook_line] if hook_line else []) + body + ([tease_line] if tease_line else [])
         spoken = {line.index: tts.speak_line(engine, line, vs, readings, cache)
                   for line in lines}
         # ショートの中では節の切れ目の長い間を入れない
         flat = [_same_section(line) for line in lines]
         cues, total = mix.plan(flat, spoken)
-        total += end_s                                      # 最後に「続きは本編で」（声なし）
-        if total + tail > sz["max_seconds"]:
-            print(f"  ! {sid}: {total + tail:.1f}秒で、上限 {sz['max_seconds']}秒を超えています")
         wd = work_dir(sc) / f"short-{sid}"
-        audio = wd / "voice.wav"
-        mix.write_audio(cues, total + tail, audio)          # ループ用の最後の画のあいだも無音
         cls = _stamp(shorts_mod.ShortPainter) if args.draft else shorts_mod.ShortPainter
         painter = cls(config, sc, assets_dir(config), meta.get("title", ""))
-        items = render.frames(painter, cues, total, wd / "frames", config["video"]["fps"], with_text=True,
-                              end_card=True, end_seconds=end_s)
-        items = shorts_mod.finish(items, painter, shorts_mod.hook_text(meta) if hook_on else "", wd / "hook",
-                                  config["video"]["fps"], loop_on)
+        # 頭の問いの行は、下のせりふの箱を出さない（問いは上に特大で出ている）
+        shown = [replace(c, line=replace(c.line, text="")) if c.line.index == -1 else c for c in cues]
+        hold = (cues[0].end + shorts_mod.HOOK_AFTER) if hook_line else shorts_mod.HOOK_HOLD
+        if tease_line:                                      # 最後のもう一つの疑問（10-08）。「続きは本編で」とループの画の代わり
+            tc = shown.pop()
+            total = tc.end + shorts_mod.TEASE_AFTER
+            items = render.frames(painter, shown, tc.start, wd / "frames", fps, with_text=True)
+            items = shorts_mod.finish(items, painter, shorts_mod.hook_text(meta) if hook_on else "", wd / "hook",
+                                      fps, False, hold=hold)
+            items += shorts_mod.tease_items(painter, tc.line.background, shorts_mod.tease_text(meta),
+                                            total - tc.start, wd / "tease")
+            tail = 0.0
+        else:
+            end_s = shorts_mod.LOOP_END_SECONDS if loop_on else shorts_mod.END_SECONDS
+            tail = shorts_mod.LOOP_TAIL if loop_on else 0.0
+            total += end_s                                  # 最後に「続きは本編で」（声なし）
+            items = render.frames(painter, shown, total, wd / "frames", fps, with_text=True,
+                                  end_card=True, end_seconds=end_s)
+            items = shorts_mod.finish(items, painter, shorts_mod.hook_text(meta) if hook_on else "", wd / "hook",
+                                      fps, loop_on, hold=hold)
         total += tail
+        if total > sz["max_seconds"]:
+            print(f"  ! {sid}: {total:.1f}秒で、上限 {sz['max_seconds']}秒を超えています")
+        audio = wd / "voice.wav"
+        mix.write_audio(cues, total, audio)                 # 最後の画面の残り・ループ用の画のあいだは無音
         target = out_dir() / f"{path.stem}_short_{sid}{'_draft' if args.draft else ''}.mp4"
-        encode(items, audio, target, config["video"]["fps"])
+        encode(items, audio, target, fps)
         print(f"{target}（{total:.1f}秒）")
     return 0
 
 
 def _same_section(line):
-    from dataclasses import replace
     return replace(line, section=0)
 
 

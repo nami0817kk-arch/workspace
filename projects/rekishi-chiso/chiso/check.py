@@ -35,6 +35,9 @@ HEAD_TIMES = 3           # つむぎの返しが「え、」「へえ、」で�
 COMMAS_MAX = 5           # 1文の読点がこの数以上なら長い
 COMMAS_LONG = 4          # 読点がこの数で、
 LONG_CHARS = 60          # この字数以上の文も長いと数える
+# ショート（10-08：頭の問い hook と最後の問い tease も声で読むので、字数に含めて数える）
+SHORT_CHARS_MAX = 360    # 本文＋hook＋tease の字数の目安の上限（約60秒。7字／秒＋間＋最後の画面）
+SHORT_CHARS_MIN = 200    # これより短いと、本編へ誘う前に話が立たない
 # サムネイル
 THUMB_HOOKS_MAX = 2      # 引きの要素（reactor・hide・contrast・flip・flash）は1枚にこの数まで
 
@@ -71,11 +74,16 @@ def lint(script, short_limit: float = 60.0) -> list[str]:
             warns.append(f"{line.index + 1}行目：せりふが{n}字（{LINE_WARN}字まで推奨）")
         if line.card is not None and len(line.card.body or "") > CARD_BODY_WARN:
             warns.append(f"{line.index + 1}行目：札の本文が{len(line.card.body)}字（{CARD_BODY_WARN}字まで推奨）")
-    for sid in script.shorts:
-        chars = sum(len(display_text(l.text)) for l in script.short_lines(sid))
+    for sid, meta in script.shorts.items():
+        body = sum(len(display_text(l.text)) for l in script.short_lines(sid))
+        extra = sum(len(display_text(str((meta or {}).get(k) or "").replace("／", ""))) for k in ("hook", "tease"))
+        chars = body + extra
         est = chars / CHARS_PER_SEC
-        if est > short_limit:
-            warns.append(f"ショート {sid}：見積もり約{est:.0f}秒（{short_limit:.0f}秒を超えそう）")
+        if chars > SHORT_CHARS_MAX or est > short_limit:
+            warns.append(f"ショート {sid}：本文＋問いで{chars}字・見積もり約{est:.0f}秒"
+                         f"（{SHORT_CHARS_MAX}字・{short_limit:.0f}秒まで）")
+        elif body and body < SHORT_CHARS_MIN:
+            warns.append(f"ショート {sid}：本文が{body}字（{SHORT_CHARS_MIN}字くらいから）")
         # 見立ての「段階N」の札は、ショート単体では唐突（10-06 ナポレオン s10）。札は次に替えるまで続くので、
         # 行ごとに出すと同じ札で5〜6件並んだ（10-08）。札ごとに1件
         staged: dict[str, list[int]] = {}
@@ -222,6 +230,7 @@ def episode(script) -> tuple[list[str], list[str]]:
     warns += reaction_rules(script)
     warns += opening_rules(script)
     warns += short_opening_rules(script)
+    warns += short_question_rules(script)
     warns += chapter_titles(script)
     from . import match                                    # 話と画面の一致（10-08 ユーザー指摘「会話している内容と画面の内容が合ってない」）
     warns += match.notes(script)
@@ -445,6 +454,60 @@ def short_opening_rules(script) -> list[str]:
         warns.append(f"ショートの1行目がつなぎの言葉で始まります：{'・'.join(weak)}（単体で見ると前が無い。最初の2秒で何の話か分かる一言に）")
     if bare:
         warns.append(f"ショートの1行目に名前も数字もありません：{'・'.join(bare)}（最初の2秒で誰の何の話か分かるように）")
+    return warns
+
+
+def _hira(text: str) -> str:
+    return "".join(chr(ord(c) - 0x60) if "ァ" <= c <= "ヶ" else c for c in text)
+
+
+_NOUN = re.compile(r"[一-鿿々〆ヵヶ]{2,}|[ァ-ヴー]{2,}|[A-Za-z0-9]{2,}")
+_QUOTED = re.compile(r"[『「](.+?)[』」]")
+
+
+def question_nouns(text: str) -> list[str]:
+    """問いの中の名詞らしい語（かっこの中・2字以上の漢字・カタカナ・英数字）。ひらがなは拾わない（形態素解析は入れていない）。"""
+    plain = display_text(str(text).replace("／", ""))
+    out = [q for q in _QUOTED.findall(plain)]
+    for q in list(out):
+        out += _NOUN.findall(q)
+    out += _NOUN.findall(_QUOTED.sub(" ", plain))
+    return list(dict.fromkeys(w for w in out if w))
+
+
+def short_question_rules(script) -> list[str]:
+    """ショートの頭の問い（hook）と最後の問い（tease）（10-08 ユーザー決定）。
+    無い・？で終わらない・同じ問い・tease の語が本編の台本に見当たらない（答えが本編に無さそう）を知らせる。
+    既存の台本には無いので × にはしない。"""
+    lacks, notq, same, noans = [], [], [], []
+    for sid, meta in (getattr(script, "shorts", {}) or {}).items():
+        meta = meta or {}
+        hook = str(meta.get("hook") or "").replace("／", "").strip()
+        tease = str(meta.get("tease") or "").replace("／", "").strip()
+        miss = [k for k, v in (("hook", hook), ("tease", tease)) if not v]
+        if miss:
+            lacks.append(f"{sid}（{'・'.join(miss)}）")
+        bad = [k for k, v in (("hook", hook), ("tease", tease)) if v and not v.endswith(("？", "?"))]
+        if bad:
+            notq.append(f"{sid}（{'・'.join(bad)}）")
+        if hook and tease and display_text(hook) == display_text(tease):
+            same.append(sid)
+        if tease:
+            rest = _hira("".join(display_text(l.text) for l in script.lines if sid not in l.shorts))
+            words = question_nouns(tease)
+            if not words or not any(_hira(w) in rest for w in words):
+                noans.append(f"{sid}（{'・'.join(words) or '語なし'}）")
+    warns = []
+    if lacks:
+        warns.append(f"ショートに頭の問い（hook）・最後の問い（tease）がありません：{'・'.join(lacks)}"
+                     "（頭で疑問を出し、最後にもう一つの疑問で本編へ）")
+    if notq:
+        warns.append(f"ショートの問いが？で終わっていません：{'・'.join(notq)}")
+    if same:
+        warns.append(f"ショートの hook と tease が同じ問いです：{'・'.join(same)}（最後はもう一つ別の疑問に）")
+    if noans:
+        warns.append(f"ショートの tease の語が、そのショートの外の台本に見当たりません：{'・'.join(noans)}"
+                     "（答えが本編に無いと、本編へ誘っても答えが出ない）")
     return warns
 
 

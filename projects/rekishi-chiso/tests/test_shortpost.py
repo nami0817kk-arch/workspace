@@ -34,3 +34,13 @@ def test_tags_fit_youtube_limit():
 
 def test_schedule_hourly():
     assert shortpost.schedule("2026-10-05 11:00", 60, 3) == ["2026-10-05 11:00", "2026-10-05 12:00", "2026-10-05 13:00"]
+
+
+def test_description_opens_with_tease_and_main_link():
+    sc = _sc()
+    sc.shorts["s1"]["tease"] = "じゃあ、／誰が描いた？"
+    d = shortpost.description(sc, CONFIG, "s1", "ABC").splitlines()
+    assert d[0] == "じゃあ、誰が描いた？" and d[1] == "答えは本編で→ https://youtu.be/ABC"
+    assert sum("https://youtu.be/ABC" in x for x in d) == 1             # 本編のリンクは1回だけ
+    d2 = shortpost.description(sc, CONFIG, "s1", None).splitlines()
+    assert d2[0] == "じゃあ、誰が描いた？" and "答えは本編で" in d2[1] and "youtu.be" not in "".join(d2)

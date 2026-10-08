@@ -33,9 +33,14 @@ def title(sc, sid: str) -> str:
 def description(sc, config: dict, sid: str, main_id: str | None) -> str:
     meta = sc.shorts[sid]
     lines = sc.short_lines(sid)
-    out = [str(meta.get("lead", "")).strip()] if meta.get("lead") else []
+    out = []
+    tease = str(meta.get("tease") or "").replace("／", "").strip()
+    if tease:                       # 10-08：冒頭に最後の問いと本編への道（ショートの最後の画面と同じ言葉）
+        out += [tease, f"答えは本編で→ https://youtu.be/{main_id}" if main_id else "答えは本編で（チャンネルの動画一覧から）", ""]
+    if meta.get("lead"):
+        out.append(str(meta.get("lead", "")).strip())
     if main_id:
-        out += ["", f"▶ 本編（約30分・聞き流し）「{sc.question}」", f"https://youtu.be/{main_id}"]
+        out += ["", f"▶ 本編（約30分・聞き流し）「{sc.question}」"] + ([] if tease else [f"https://youtu.be/{main_id}"])
     out += ["", "■ 音声"]
     used = {l.speaker for l in lines}
     names = [config["cast"][k]["name"] for k in config["cast"]]
