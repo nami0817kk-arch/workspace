@@ -223,6 +223,8 @@ def episode(script) -> tuple[list[str], list[str]]:
     warns += opening_rules(script)
     warns += short_opening_rules(script)
     warns += chapter_titles(script)
+    from . import match                                    # 話と画面の一致（10-08 ユーザー指摘「会話している内容と画面の内容が合ってない」）
+    warns += match.notes(script)
     from . import style                                    # 文体（10-08）：AIらしく聞こえる語尾・言い回し・書き言葉
     warns += style.notes(script, name_words(script))
     if not any("《" in l.text for l in script.lines):

@@ -297,7 +297,19 @@ def make_video(args, draft: bool) -> int:
     (out_dir() / f"{path.stem}.srt").write_text(mix.srt(cues, names), encoding="utf-8")
     print(f"{target}（{total / 60:.1f}分）")
     print(f"かかった時間：{clock}")
+    remind_mismatch(sc)
     return 0
+
+
+def remind_mismatch(sc) -> None:
+    """話と画面の食い違いの知らせ（10-08）を、作り終えたあとにもう一度並べる。点検の知らせは作る前に流れて読まれないので、
+    コマを見る前に目に入るように。"""
+    from . import match
+    rows = match.notes(sc)
+    if rows:
+        print(f"話と画面の食い違いが{len(rows)}件あります（コマで確かめる）：")
+        for r in rows:
+            print(f"  ! {r}")
 
 
 class Clock:
