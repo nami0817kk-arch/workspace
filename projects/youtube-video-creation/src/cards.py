@@ -1655,6 +1655,8 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str,
     highlight だけ替えても開き直さない（same_table）。注目（focus）だけ黄で大きく、ほかは緑。
     名前の札は点・ほかの札・枠にかからない場所へ逃がし、離れたら細い線で結ぶ。
     """
+    import math
+
     problems = check_scatter(spec)
     if problems:
         raise CardError(problems[0])
@@ -1678,18 +1680,8 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str,
 
     xs = [p["x"] for p in points]
     ys = [p["y"] for p in points]
-    if diagonal:
-        # 斜めの線（y＝x）を角から角へ通すため、2つの軸の幅をそろえる
-        lo, hi = _scatter_range(xs + ys)
-        x_ticks = y_ticks = nice_ticks(lo, hi)
-    else:
-        x_ticks = nice_ticks(*_scatter_range(xs))
-        y_ticks = nice_ticks(*_scatter_range(ys))
-    x_lo, x_hi, y_lo, y_hi = x_ticks[0], x_ticks[-1], y_ticks[0], y_ticks[-1]
 
     left = PAD + 12
-    y_tick_w = max(ruler.textlength(_tick_text(t), font=tick_font) for t in y_ticks)
-    plot_left = left + y_tick_w + 16
     plot_right = width - PAD - 14
     head = 56                       # 縦軸の名前の段（48 に詰めると、いちばん上の目盛りの字と重なった）
     tail = 46                       # 横軸の目盛りの段
@@ -1707,6 +1699,24 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str,
     plot_h = max(SCATTER_PLOT_MIN_H, min(cap, slot - overhead)) if slot else cap
     plot_top, plot_bottom = head, head + plot_h
     height = plot_bottom + tail
+
+    # **目盛りの数は図の高さから決める**（2026-10-08）。字を小さくして詰めるのではなく、
+    # 1段 70px を切らない数まで減らす。低い図（本編は 239px）に 7段 並べると、28px の字が
+    # 40px 間隔になって行同士がくっつき、札の逃げ場も全部ふさがれていた
+    target = max(3, min(5, int(plot_h // 70)))
+    if diagonal:
+        # 斜めの線（y＝x）を角から角へ通すため、2つの軸の幅をそろえる
+        lo, hi = _scatter_range(xs + ys)
+        x_ticks = y_ticks = nice_ticks(lo, hi, target)
+    else:
+        x_ticks = nice_ticks(*_scatter_range(xs), target)
+        y_ticks = nice_ticks(*_scatter_range(ys), target)
+    x_lo, x_hi, y_lo, y_hi = x_ticks[0], x_ticks[-1], y_ticks[0], y_ticks[-1]
+
+    # 目盛りの字はどの段も同じ大きさ（tick_font）で描く。いちばん広い字がそのまま入る幅を
+    # 左に取るので、字を縮めて収めることはしない（縮めると桁を読み違える）
+    y_tick_w = max(ruler.textlength(_tick_text(t), font=tick_font) for t in y_ticks)
+    plot_left = left + y_tick_w + 16
 
     def px(value: float) -> float:
         return plot_left + (value - x_lo) / (x_hi - x_lo) * (plot_right - plot_left)
@@ -1726,10 +1736,16 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str,
     # 札は縦軸の目盛りの列まで使ってよい（目盛りの字は避ける）。枠の内に限ると、左端の点の札を
     # 押し戻した先が自分の点に重なった（10/7 の見本のペドロ、ショートの幅）
     area = (left - 2, plot_top + 2, plot_right - 2, plot_bottom - 4)
+    # **目盛りの字の列を外した置き場**（2026-10-08）。板の左端まで押し戻すと、札の地（板の地の色）が
+    # 縦軸の目盛りの数字を塗りつぶす。「1000」の最後の 0 が消えて「100」に読めた（桁が1つ違う）。
+    # 押し戻し先を2通り（板の左端まで／目盛りの字の右まで）作り、目盛りにかかるほうは下で捨てる
+    inner = (plot_left - 4, area[1], area[2], area[3])
     tick_boxes = []
     for t in y_ticks:
         tw = ruler.textlength(_tick_text(t), font=tick_font)
-        tick_boxes.append((plot_left - 12 - tw - 2, py(t) - 16, plot_left - 8, py(t) + 16))
+        # 上下は 18（28px の字の高さ 32 の半分 16 に、見切れを防ぐ 2 を足す）、
+        # 右は plot_left - 6（字は plot_left - 12 で終わる。6 のすき間を空ける）
+        tick_boxes.append((plot_left - 12 - tw - 2, py(t) - 18, plot_left - 6, py(t) + 18))
     # 札の長いものから置く（長い札ほど置き場が少ない。キャルバート＝ルーウィンを後に回すと、
     # 空いているのが隣の点の上だけになった）。注目の点はいつも先
     sizes = {k: ruler.textbbox((0, 0), points[k]["name"], font=fonts[k], anchor="ls") for k in range(n)}
@@ -1756,33 +1772,56 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str,
             dy = step * (bh + 6)
             for side, cost in ((cx + r + 30, 30), (cx - r - 30 - bw, 31)):
                 spots.append((side, cy - bh / 2 + dy, 24 + abs(step) * 26, cost))
-        best = None
+        # **どこにも逃げられないときの倒し方**（2026-10-08）＝**図の中の空いた段へ逃がして
+        # 引き出し線で結ぶ**。図の外（下）へ出す案は採らない：下の段は横軸の目盛りと添えで
+        # 埋まっていて、場所を作るには板を高くするしかないが、高さは置き場（slot）から
+        # 決めているので図がさらに低くなる。札を出さずに線だけ引く案も採らない：
+        # どの点の名前なのかが分からなくなり、札を出す意味が無くなる。
+        # 段は目盛りの字の列より右（plot_left + 8 以降）にしか作らないので、必ず目盛りを避けられる
+        ly = plot_top + 4
+        while ly <= plot_bottom - bh - 2:
+            for lx in (plot_right - 6 - bw, plot_left + 8):
+                if lx < plot_left + 8:
+                    continue
+                far = math.hypot(lx + bw / 2 - cx, ly + bh / 2 - cy)
+                spots.append((lx, ly, 120, 2000 + far * 1.2))
+            ly += bh + 8
+        best = None          # 目盛りの字にかからない置き場のうち、いちばん軽いもの
+        stained = None       # 目盛りにかかるものだけの控え（上が1つも無いときのため）
         for bx, by, reach, cost in spots:
-            # はみ出しは枠の内側へ押し戻してから当たりを見る（押し戻した先で自分の点に重なった。
-            # 10/7 の見本のペドロ）。押し戻した量は点から離れた分として数える
-            dx = max(0, area[0] - bx) - max(0, bx + bw - area[2])
-            dy = max(0, area[1] - by) - max(0, by + bh - area[3])
-            rect = (bx + dx, by + dy, bx + dx + bw, by + dy + bh)
-            outside = abs(dx) + abs(dy)
-            hit_labels = sum(1 for t in taken if _overlap(rect, t, 4))
-            hit_dots = sum(1 for d in dot_boxes if _overlap(rect, d, 2))
-            hit_ticks = sum(1 for d in tick_boxes if _overlap(rect, d, 2))
-            # 離した札を結ぶ線が、ほかの札・点を横切らないか（横切るとどの点の札か読み違える）
-            crossing = 0
-            if reach > 0 or outside > 8:
-                ex, ey = min(max(cx, rect[0]), rect[2]), min(max(cy, rect[1]), rect[3])
-                # 札は少し広げて見る（札と点のすき間を線が通っても、どちらの線か読み違えた）
-                others = ([(t[0] - 12, t[1] - 8, t[2] + 12, t[3] + 8) for t in taken]
-                          + [d for j, d in enumerate(dot_boxes) if j != k])
-                crossing = sum(1 for box in others if _segment_hits((cx, cy), (ex, ey), box))
-            # 横（右・左）を先に、上下、斜めは後に。真下に置いた長い札は隣の点の札に見えた（10/7 の見本のペドロ）。
-            # 少しの押し戻しは軽く、大きな押し戻しは重く（点から離れる）。目盛りの字にかかるのは点より軽い
-            score = ((outside if outside <= 14 else 400 + outside * 40)
-                     + hit_labels * 5000 + hit_dots * 3000 + hit_ticks * 1500 + crossing * 2000
-                     + reach * 6 + cost)
-            if best is None or score < best[0]:
-                best = (score, rect, reach, outside)
-        _, rect, reach, moved = best
+            for box in (area, inner):
+                # はみ出しは枠の内側へ押し戻してから当たりを見る（押し戻した先で自分の点に重なった。
+                # 10/7 の見本のペドロ）。押し戻した量は点から離れた分として数える
+                dx = max(0, box[0] - bx) - max(0, bx + bw - box[2])
+                dy = max(0, box[1] - by) - max(0, by + bh - box[3])
+                rect = (bx + dx, by + dy, bx + dx + bw, by + dy + bh)
+                outside = abs(dx) + abs(dy)
+                hit_labels = sum(1 for t in taken if _overlap(rect, t, 4))
+                hit_dots = sum(1 for d in dot_boxes if _overlap(rect, d, 2))
+                hit_ticks = sum(1 for d in tick_boxes if _overlap(rect, d, 2))
+                # 離した札を結ぶ線が、ほかの札・点を横切らないか（横切るとどの点の札か読み違える）
+                crossing = 0
+                if reach > 0 or outside > 8:
+                    ex, ey = min(max(cx, rect[0]), rect[2]), min(max(cy, rect[1]), rect[3])
+                    # 札は少し広げて見る（札と点のすき間を線が通っても、どちらの線か読み違えた）
+                    others = ([(t[0] - 12, t[1] - 8, t[2] + 12, t[3] + 8) for t in taken]
+                              + [d for j, d in enumerate(dot_boxes) if j != k])
+                    crossing = sum(1 for other in others if _segment_hits((cx, cy), (ex, ey), other))
+                # 横（右・左）を先に、上下、斜めは後に。真下に置いた長い札は隣の点の札に見えた（10/7 の見本のペドロ）。
+                # 少しの押し戻しは軽く、大きな押し戻しは重く（点から離れる）
+                score = ((outside if outside <= 14 else 400 + outside * 40)
+                         + hit_labels * 5000 + hit_dots * 3000 + crossing * 2000
+                         + reach * 6 + cost)
+                # **目盛りの字に重なる置き場は使わない**（2026-10-08）。点より軽い罰にしていたので、
+                # 図が低くなって逃げ場が減ったときに真っ先に選ばれ、数字を塗りつぶした
+                if hit_ticks:
+                    if stained is None or score + hit_ticks * 1500 < stained[0]:
+                        stained = (score + hit_ticks * 1500, rect, reach, outside)
+                    continue
+                if best is None or score < best[0]:
+                    best = (score, rect, reach, outside)
+        # 退避の段があるので best が空になることは無いが、万一（札が図より広い）は控えを使う
+        _, rect, reach, moved = best or stained
         taken.append(rect)
         places[k] = (rect, reach > 0 or moved > 8, -bbox[0], -bbox[1] + pad_y + 2)
 

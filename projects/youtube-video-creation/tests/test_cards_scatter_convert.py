@@ -4,10 +4,11 @@
 合わせて移した。壊れた例（点11個・数でない値・知らない鍵）が止まること、札が重ならないこと、
 縦型（1080幅）で字が切れないことを見る。
 """
+import contextlib
 import json
 
 import pytest
-from PIL import Image, ImageStat
+from PIL import Image, ImageDraw, ImageStat
 
 from src import cards, marks
 from src.cards import CardError, render, row_count
@@ -480,3 +481,123 @@ def test_判定の印は丸地に対して読める濃さ(fonts):
         white = typecheck.contrast((255, 255, 255), back)
         dark = typecheck.contrast(cards.PANEL[:3], back)
         assert white < 4.0 < dark, back
+
+
+# ------------------------------------------------- 札が縦軸の目盛りを隠さない（2026-10-08）
+
+# **壊れた例**。2026-10-08、この並びで「1000」の最後の 0 が「マレスカ」の札の地に塗りつぶされ、
+# 「100」に読めた（桁が1つ違う）。デ・ゼルビとマレスカが同じ x に重なっていて、
+# 右・左・上のどこへ逃がしても何かに当たるため、札が縦軸の目盛りの列へ押し戻されていた
+BOSS = {"type": "scatter", "title": "在任の長さと年俸", "x": {"label": "在任", "unit": "年"},
+        "y": {"label": "年俸", "unit": "万ポンド"},
+        "points": [["アルテタ", 6.8, 2500], ["エメリ", 3.9, 700], ["デ・ゼルビ", 0.3, 500],
+                   ["マレスカ", 0.3, 600]],
+        "focus": "アルテタ", "note": "年俸は報じられた額"}
+# 点が縦に密集する並び（y が 500〜700 の4点）。目盛りの段が増えて左の余白が全部ふさがる
+TIGHT = {"type": "scatter", "title": "年俸が近い4人", "x": {"label": "在任", "unit": "年"},
+         "y": {"label": "年俸", "unit": "万ポンド"},
+         "points": [["アルテタ", 6.8, 700], ["エメリ", 3.9, 650], ["デ・ゼルビ", 0.3, 500],
+                    ["マレスカ", 1.2, 600]],
+         "focus": "アルテタ", "note": "年俸は報じられた額"}
+# 左端・下端に寄った長い札（逃げ場がいちばん少ない）
+CORNER = {"type": "scatter", "title": "出場時間と得点", "x": {"label": "出場", "unit": "分"},
+          "y": {"label": "得点", "unit": "点"},
+          "points": [["キャルバート＝ルーウィン", 120, 1], ["ジョアン・ペドロ", 150, 2],
+                     ["イゴール・チアゴ", 180, 1], ["ハーランド", 450, 9], ["サカ", 430, 3]],
+          "focus": "ハーランド"}
+
+SCATTER_CASES = (("boss", BOSS), ("tight", TIGHT), ("corner", CORNER), ("sample", SCATTER))
+SCATTER_SLOTS = ((WIDTH, cards.SLOT_LANDSCAPE), (PHOTO, cards.SLOT_LANDSCAPE),
+                 (998, cards.SLOT_LANDSCAPE), (PORTRAIT, cards.SLOT_PORTRAIT))
+
+
+@contextlib.contextmanager
+def _spy_draw():
+    """描いた字と角丸の箱を控える。画素を読まずに「どこに何を描いたか」で見るため。"""
+    texts, rects = [], []
+    real_text = ImageDraw.ImageDraw.text
+    real_rect = ImageDraw.ImageDraw.rounded_rectangle
+
+    def text(self, xy, content="", *args, **kw):
+        font, anchor = kw.get("font"), kw.get("anchor")
+        texts.append({"text": content, "size": getattr(font, "size", None), "anchor": anchor,
+                      "box": self.textbbox(tuple(xy), content, font=font, anchor=anchor)})
+        return real_text(self, xy, content, *args, **kw)
+
+    def rect(self, xy, *args, **kw):
+        rects.append({"box": tuple(xy), "radius": kw.get("radius")})
+        return real_rect(self, xy, *args, **kw)
+
+    ImageDraw.ImageDraw.text = text
+    ImageDraw.ImageDraw.rounded_rectangle = rect
+    try:
+        yield texts, rects
+    finally:
+        ImageDraw.ImageDraw.text = real_text
+        ImageDraw.ImageDraw.rounded_rectangle = real_rect
+
+
+def _scatter_parts(texts, rects):
+    """（縦軸の目盛りの字, 点の名前の札の箱）。目盛りだけが anchor='rm'、札だけが radius=10。"""
+    ticks = [t for t in texts if t["anchor"] == "rm"]
+    labels = [r["box"] for r in rects if r["radius"] == 10]
+    return ticks, labels
+
+
+def test_点の名前の札は縦軸の目盛りに重ねない(tmp_path, fonts):
+    """**2026-10-08 の不具合。**図の高さを置き場から決めるようにして図が低くなり（380→239px）、
+    札の逃げ場が減った。目盛りの字に重なるのを「点より軽い罰」で許していたので、
+    混んだところでは真っ先に目盛りの上へ逃げ、数字を塗りつぶしていた。
+    """
+    for name, spec in SCATTER_CASES:
+        for width, slot in SCATTER_SLOTS:
+            with _spy_draw() as (texts, rects):
+                render(spec, width, fonts[0], tmp_path / f"{name}_{width}.png", fonts[1], slot=slot)
+            ticks, labels = _scatter_parts(texts, rects)
+            assert len(ticks) >= 3 and labels, (name, width, len(ticks), len(labels))
+            for tick in ticks:
+                for box in labels:
+                    assert not _overlap(tick["box"], box), (name, width, tick["text"], box)
+
+
+def test_縦軸の目盛りの字はどの段も同じ大きさ(tmp_path, fonts):
+    """1つだけ小さいと桁を読み違える（「100」と「1000」）。入らないときは**数を減らす**側に倒す。"""
+    for name, spec in SCATTER_CASES:
+        for width, slot in SCATTER_SLOTS:
+            with _spy_draw() as (texts, rects):
+                render(spec, width, fonts[0], tmp_path / f"{name}_{width}.png", fonts[1], slot=slot)
+            ticks, _ = _scatter_parts(texts, rects)
+            assert {t["size"] for t in ticks} == {28}, (name, width, [t["size"] for t in ticks])
+            # 段が詰まりすぎないこと（28px の字の高さ 32 が並ぶので 1段 36px は空ける）
+            rows = sorted((t["box"][1] + t["box"][3]) / 2 for t in ticks)
+            gaps = [b - a for a, b in zip(rows, rows[1:])]
+            assert min(gaps) >= 36, (name, width, gaps)
+
+
+def test_目盛りの数字は札に塗りつぶされない_画素(tmp_path, fonts):
+    """画素で見る。点を1つも出していない絵（reveal=0）の、枠より左の字が、
+    全部出した絵でも1画素も変わらないこと。
+    """
+    for name, spec in SCATTER_CASES:
+        for width, slot in SCATTER_SLOTS:
+            axes = render(spec, width, fonts[0], tmp_path / f"{name}_{width}_0.png", fonts[1],
+                          reveal=0, slot=slot)
+            full = render(spec, width, fonts[0], tmp_path / f"{name}_{width}_a.png", fonts[1],
+                          slot=slot)
+            with Image.open(axes) as a, Image.open(full) as b:
+                before, after = a.convert("RGB"), b.convert("RGB")
+                # 枠の左の縦線＝目盛りの線の色が縦に並ぶいちばん左の列
+                counts = [sum(1 for y in range(before.height)
+                              if _near(before.getpixel((x, y)), cards.GRID[:3]))
+                          for x in range(before.width)]
+                plot_left = next(x for x, c in enumerate(counts) if c >= before.height // 4)
+                back = cards.PANEL[:3]
+                ink = [(x, y) for x in range(20, plot_left - 2) for y in range(before.height)
+                       if not _near(before.getpixel((x, y)), back, 18)]
+                assert len(ink) > 200, (name, width, len(ink))
+                bad = [p for p in ink if before.getpixel(p) != after.getpixel(p)]
+                assert not bad, (name, width, len(bad), bad[:4])
+
+
+def _near(pixel, target, tol: int = 10) -> bool:
+    return sum(abs(a - b) for a, b in zip(pixel, target)) <= tol
