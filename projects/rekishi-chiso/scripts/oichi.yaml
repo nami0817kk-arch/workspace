@@ -26,7 +26,7 @@ en:
     - "1582: Second Marriage to Shibata Katsuie"
     - "1583: The Last Days at Kitanoshō Castle"
     - "1586-1615: Three Daughters and the Siege of Osaka"
-    - "Verdict: Why Was the Tragic Beauty Made?"
+    - "Verdict: Who Made the Beauty and the Tragedy?"
 
 texture: true
 recap: true
@@ -264,18 +264,25 @@ sections:
       - 聞き: 袋のねずみ、っていう謎かけは？ そこが一番おもしろいところなのに。
         tone: 疑問
       - 語り: それは、あとの時代の読み方です。両はしを縛った袋を、前と後ろをはさまれた信長に重ねたんですね。
+        background: {image: paintings/nobunaga_portrait_chokoji.jpg, credit: "狩野宗秀《織田信長像》1583年（長興寺蔵）"}
+        card: {head: "袋のねずみ", body: "後の時代の読み方"}
       - 聞き: 袋のねずみは、後の人の読み方なんだ。じゃあ、もとは、ただ小豆の入った袋？
         tone: 疑問
       - 語り: 書かれているのは、そこまでです。軍記がいつ書かれたのかも、はっきりしません。研究者のあいだでは、小豆袋は後の創作、という見方が今の主流です。
+        card: {head: "今の主流", body: "小豆袋は後の創作"}
+        detail: {box: [0.1, 0.05, 0.9, 0.62], label: 浅井長政を名を変えて描いた武者絵（歌川国芳）}
         background: {image: paintings/oichi_nagamasa_kuniyoshi.jpg, credit: "歌川国芳《太平記英勇伝 阿佐井備前守仲政》（浅井長政を名を変えて描いた武者絵）1848〜50年ごろ"}
       - 聞き: でも、お市が何かの方法で知らせようとした、って可能性は残るでしょ？
         tone: 疑問
       - 語り: そこまでは否定できません。分かっていない、が正直なところです。
+        background: {image: paintings/oichi_portrait_jimyoin_bust.jpg, credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半"}
       - 語り: 別の軍記『朝倉記』は、松永久秀が気づいて知らせた、と記します。ただ、これも確かな話ではありません。
+        figure: {type: stats, title: 浅井の裏切りを知らせたのは, items: [[信長公記, 名前なし], [朝倉家記, 小豆袋], [朝倉記, 松永久秀]]}
         card: {head: "朝倉記", body: "松永久秀が知らせたとする"}
       - 聞き: 知らせた人、結局だれか分からないんだ。あーしの好きな場面、急に霧の中。
         tone: しみじみ
       - 語り: 同じ年、信長は姉川で浅井・朝倉の軍とぶつかります。お市は、夫の城に残りました。兄と夫が戦う、そのあいだにいたことになります。
+        figure: null
         background: {image: paintings/nobunaga_anegawa_screen.jpg, credit: "姉川合戦図屏風（部分、江戸時代）"}
         card: {head: "1570年", body: "姉川の戦い。お市は小谷に残る"}
       - 聞き: 兄の家に帰らなかったんだ。やっぱり、夫を愛してたから？
@@ -500,7 +507,7 @@ sections:
         background: {image: paintings/oichi_katsuie_portrait.jpg, credit: "《柴田勝家像》桃山〜江戸初期"}
       - 聞き: 勇猛な武将も、2日で囲まれて、1日で終わっちゃった。戦国って、ほんとに容赦ない。
         tone: しみじみ
-      - 語り: 墓は、福井市の西光寺に、勝家と並んでいます。娘たちの行く末を住職に託した、という寺の言い伝えも残っています。
+      - 語り: 墓は、福井市の西光寺に、勝家と並んでいます。娘たちの行く末を住職に託した、という言い伝えのある寺です。
         background: {image: paintings/oichi_katsuie_utamaro.jpg, credit: "喜多川歌麿《柴田修理進勝家と小谷の方》1803〜04年ごろ"}
         card: {head: "西光寺（福井市）", body: "勝家と並ぶお市の墓"}
       - 聞き: 最後の最後まで、娘たちのことを考えてたんだ。弔われてるのは、そこだけ？
@@ -536,9 +543,12 @@ sections:
     year: 1586
     lines:
       - 語り: 北ノ庄を出た3人の娘は、秀吉のもとで育ちます。
+        portrait: {image: paintings/akechi_hideyoshi_kodaiji.jpg, caption: "豊臣秀吉（狩野光信画、高台寺蔵）"}
       - 聞き: 父の城を落とした人のところで……。娘たちは、その後どうなったの？
         tone: 疑問
       - 語り: 母を亡くして3年後の1586年10月、茶々は「茶々の御方」として、秀吉の母を訪ねています。この呼ばれ方から、このころには秀吉の妻になっていた、と見られています。
+        portrait: null
+        detail: {box: [0.03, 0.5, 0.97, 0.97], label: 伝 淀殿（茶々）の肖像（奈良県立美術館蔵）}
         card: {head: "1586年10月", body: "「茶々の御方」として記録に出る"}
       - 聞き: 両親の仇の、奥さんに……。茶々、まだ18歳くらいだよね。
         tone: しみじみ
@@ -546,8 +556,10 @@ sections:
         short: s4
         background: {image: paintings/nene_taiko_gosai_lccn.jpg, credit: "喜多川歌麿《太閤五妻洛東遊観之図》（秀吉と淀殿ほか）1804〜06年ごろ"}
       - 聞き: 自分より先に、妹たちの行き先を決めさせたんだ。母が娘たちを城から出したのと、ちょっと似てる。
+        portrait: {image: paintings/oichi_portrait_jimyoin_bust.jpg, caption: "お市の方（高野山持明院蔵）"}
         tone: しみじみ
       - 語り: 次女の初は、京極高次の妻になりました。秀吉の取り持ちです。
+        portrait: null
         short: s4
         background: {image: paintings/oichi_hatsu_jokoin.jpg, credit: "《常高院（初）像》江戸時代"}
         card: {head: "次女・初", body: "京極高次の妻に"}
@@ -562,9 +574,11 @@ sections:
       - 聞き: 3度も……。お母さんの2度の結婚より多い。あーしなら、2回目で疲れちゃう。
         tone: しみじみ
       - 語り: その翌年の1593年、大坂では、茶々が秀頼を産みます。
+        icon: baby
         background: {image: paintings/oichi_hideyori.jpg, credit: "伝《豊臣秀頼像》（養源院本の模写、1914年）"}
         card: {head: "1593年", body: "茶々が秀頼を産む"}
       - 聞き: 江の3人目の相手、まさか、あの家の人？
+        icon: question
         tone: 疑問
       - 語り: そのまさかです。1595年、江は3度目の結婚で、徳川秀忠の妻になりました。
         background: {image: paintings/oichi_hidetada.jpg, credit: "《徳川秀忠像》江戸時代"}
@@ -575,6 +589,7 @@ sections:
       - 聞き: 九条家って、聞いたことある。お公家さんだよね。そこから今の皇室まで？
         tone: 疑問
       - 語り: そう言われています。九条家から、のちに大正天皇の皇后、貞明皇后が出ています。このつながりで、お市の血筋は今の皇室にも続いている、という話です。
+        figure: {type: people, title: 江から今の皇室へ（と言われる線）, nodes: [[江, お市の三女], [完子, 江の娘], [九条家, 公家], [貞明皇后, 大正天皇の皇后], [今の皇室, 研究者の留保つき]], edges: [[江, 完子, 母], [完子, 九条家, 嫁ぐ], [九条家, 貞明皇后, 子孫], [貞明皇后, 今の皇室, 子孫]]}
       - 聞き: 400年以上も、血がつながってるんだ。スケールがちがう。
         tone: しみじみ
       - 語り: ただ、何代もの家系なので、たどりきれるか心もとない、と断る研究者もいて、ここは留保つきです。
@@ -603,7 +618,7 @@ sections:
         hook: true
 
   # ---------------------------------------------------------------- 10 見立て
-  - title: 見立て：「戦国一の美女」と悲劇の像は、なぜ作られたか
+  - title: 見立て：お市の美女と悲劇は誰が作ったか
     background: {image: paintings/oichi_portrait_jimyoin_full.jpg, credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半"}
     year: 1589
     lines:
@@ -652,7 +667,9 @@ sections:
       - 聞き: 負けた朝倉の側の本なんだよね。朝倉の人たちにとって、何がうれしい話なんだろう。
         tone: 疑問
       - 語り: 信長の妹でさえ、本当は朝倉の味方をしてくれた。それほど自分たちは正しかった。そういう、負けた側の自分たちを正しく見せる話だ、と読む書き手もいます。
+        background: {image: paintings/nobunaga_portrait_chokoji.jpg, credit: "狩野宗秀《織田信長像》1583年（長興寺蔵）"}
       - 聞き: 裏切った浅井の家にいた妹が、実は兄の味方だった。そういう話のほうが、聞く人の胸にも残るよね。
+        background: {image: paintings/oichi_portrait_jimyoin_bust.jpg, credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半"}
         tone: 納得
       - 語り: そう思います。兄を助ける妹、という分かりやすい筋は、物語として語り継がれやすかったのかもしれません。
       - 語り: 3つ目は、悲劇のヒロインです。北ノ庄の最期を書いた『柴田合戦記』は、秀吉に仕えた大村由己の作、と伝わる本です。
@@ -687,16 +704,21 @@ sections:
       - 聞き: 美人のお市は、娘や、娘に仕えた人たちが、大事に伝えてきた姿なのかも。
         tone: しみじみ
       - 語り: 3つ目。お市は、ただ流された人ではありません。2度目の落城では、自分で残ると決めた、と伝わります。
+        card: {head: "3つ目", body: "2度目は自分で残ると決めた"}
         background: {image: paintings/oichi_portrait_jimyoin_full.jpg, credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半"}
       - 聞き: 戦国一の美女っていうより、2回、城の落ちる日を見て、2回目は自分で道を選んだ人。あーしは、そう覚えとく。
         tone: しみじみ
       - 語り: その母の姿を、絵にして残したのが、長女の茶々でした。
+        background: {image: paintings/oichi_chacha_yodo_portrait.jpg, credit: "伝 淀殿（茶々）像（奈良県立美術館蔵）17世紀"}
         tone: しみじみ
       - 語り: 今日の地層は、ここまでです。
+        background: {image: paintings/oichi_portrait_jimyoin_bust.jpg, credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半"}
         tone: 明るい
       - 聞き: 次回は豊臣秀吉。申年生まれだから「猿」って言われてるけど……本当？
+        background: {image: paintings/akechi_hideyoshi_kodaiji.jpg, credit: "狩野光信《豊臣秀吉像》1601年ごろ（高台寺蔵）"}
         tone: 疑問
       - 語り: あなたが最初に聞いたお市の話は、小豆袋でしたか、美女の話でしたか。コメントで教えてください。
+        background: {image: paintings/oichi_portrait_jimyoin_full.jpg, credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半"}
       - 二人: また一緒に、掘りましょう！
         tone: 明るい
 
