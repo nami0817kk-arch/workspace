@@ -761,6 +761,20 @@ class Renderer:
                 for item in items
             ]
             total_w = sum(item.width for item in items) + gap
+        # **置き場より高いものは、1つずつ縮めて収める**（2026-10-08 の歯止め）。
+        # 横並びは幅でしか縮めていなかったので、高い板が置き場からはみ出して
+        # 字幕の帯（下 250px）に落ちていた（`tools/typecheck.py` が scatter 833px・
+        # line 755px・convert 744px・table 662px で知らせていた）。
+        # **字幕にかぶるより、縮んで小さくなるほうがまし**という倒し方。
+        # ただし板は `cards.render(slot=…)` で置き場に収まる高さに作り直したので、
+        # ここが効くのは置き場より高い写真が来たときだけ（＝ふだんは何もしない）
+        items = [
+            item if item.height <= slot_height else
+            item.resize((max(1, int(item.width * slot_height / item.height)), slot_height),
+                        Image.LANCZOS)
+            for item in items
+        ]
+        total_w = sum(item.width for item in items) + gap
         x = (self.layout.width - total_w) // 2
         placed = []
         for item in items:
@@ -843,14 +857,27 @@ class Renderer:
             self._mark_heads[key] = heads
         return self._mark_heads[key]
 
+    @property
+    def _card_slot(self) -> int:
+        """板を置ける高さ（`Layout.media_slot`）。板はこれに収まる高さで描く。
+
+        **これを `cards.render` と `cards.layout` の両方に同じ値で渡す。**
+        片方だけだと、表・図の行の高さが食い違って書き込み（赤ペン）の的がずれる
+        （2026-10-08）。
+        """
+        top, bottom = self.layout.media_slot
+        return bottom - top
+
     def _card_layout(self, name: str, width: int) -> dict | None:
         spec = self.script_cards.get(name)
         if not spec or str(spec.get("type", "")).lower() not in cards.MARKABLE_TYPES:
             return None
-        key = cards.card_key(spec, width)
+        slot = self._card_slot
+        key = f"{cards.card_key(spec, width)}_{slot}"
         if key not in self._card_layouts:
             self._card_layouts[key] = cards.layout(spec, width, str(self.config.video.font_path()),
-                                                   str(self.config.video.latin_font_path()))
+                                                   str(self.config.video.latin_font_path()),
+                                                   slot=slot)
         return self._card_layouts[key]
 
     def mark_targets(self, marks, stage_path: str | None = None, stage: Image.Image | None = None) -> list:
@@ -922,7 +949,12 @@ class Renderer:
             width = int(self.layout.width * (0.74 if not self.layout.with_characters else 0.46))
         if limit:
             width = min(width, limit)
-        target = self.card_dir / f"{cards.card_key(spec, width, reveal)}.png"
+        # **板は置き場に収まる高さで描く**（2026-10-08）。収まらない板は `_draw_media` が
+        # 全体を縮めて貼るので、板の中の 28px が画面では 21px になっていた
+        # （`tools/typecheck.py` の実測。出典は 16px＝スマホ 3.2pt）。
+        # 控えの名前に置き場の高さも入れる（同じ幅でも置き場が違えば別の絵）
+        slot = self._card_slot
+        target = self.card_dir / f"{cards.card_key(spec, width, reveal)}_{slot}.png"
         if not target.exists():
             cards.render(
                 spec,
@@ -931,6 +963,7 @@ class Renderer:
                 target,
                 str(self.config.video.latin_font_path()),
                 reveal=reveal,
+                slot=slot,
             )
         return Image.open(target).convert("RGBA")
 

@@ -70,11 +70,14 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_caption_load(out_dir / "subtitles.srt"))
     findings.append(_caption_badges(out_dir / "subtitles.srt"))
     findings.append(_still_length(out_dir / "script.json"))
-    findings.append(_screen_change(out_dir / "script.json"))
+    # **台本のカードの中身も渡す**（2026-10-08）。script.json にはカードの名前しか
+    # 残らないので、光らせる行だけが違う同じ表を見分けられない（`card_look`）
+    specs = dict(getattr(script, "cards", None) or {})
+    findings.append(_screen_change(out_dir / "script.json", specs))
     findings.append(_telop_coverage(out_dir / "script.json"))
     size = _dimensions(out_dir / "video.mp4")
     portrait = bool(size and size[1] > size[0])
-    findings.append(check_card_hold(out_dir / "script.json", hold_limit(portrait)))
+    findings.append(check_card_hold(out_dir / "script.json", hold_limit(portrait), specs))
     reaction = check_reaction_layer(script)
     if reaction is not None:
         findings.append(reaction)
@@ -217,13 +220,48 @@ SHORT_CARD_HOLD_MAX = 8.0
 TELOP_SHARE_MIN = 0.70
 
 
-def _screen_change(script_json: Path) -> Finding:
+def card_look(name: str | None, specs: dict | None = None) -> str:
+    """**画面に出ている絵として見たカードの見分け**（2026-10-08）。
+
+    光らせる行（`highlight_row` / 散らばり図の `highlight`）だけが違う同じ表は、
+    **同じ絵**として数える。`cards.same_table`（「同じ表なら開き直さない」）と
+    同じ決まりを、停滞の数え方の側にも当てる。
+
+    **なぜ要るか。**2026-10-07 から、数字を読む行が続く節では
+    `research` が**行ごとに別のカード**（`rivals_0_card`〜`rivals_9_card`）を
+    作る。中身は同じ表で、違うのは光らせる行だけ。ところが停滞を数える側は
+    **カードの名前**で見分けていたので、**行が替わるたびに「絵が変わった」と
+    数え直して**いた。20秒の上限に一度も届かず、`spread_long_cards` は
+    写真を挟まず、`review` は ○ を返していた。
+    実物（`output/20261008_finance_arteta` 第4節）は、同じ散らばり図のまま
+    **37秒**動いていない（`tools/qc.py` が書き出した絵で見つけた）。
+
+    `specs`（台本の `cards`）が無ければ、今までどおり名前で見分ける。
+    """
+    import json as _json
+
+    from . import cards as cards_mod
+
+    key = str(name or "").strip()
+    if key in ("", "none", "なし"):
+        return ""
+    spec = (specs or {}).get(key)
+    if not isinstance(spec, dict):
+        return key
+    body = {k: v for k, v in spec.items() if k not in cards_mod.HIGHLIGHT_KEYS}
+    return _json.dumps(body, sort_keys=True, ensure_ascii=False, default=str)
+
+
+def _screen_change(script_json: Path, specs: dict | None = None) -> Finding:
     """見た目が変わらないまま続く時間。
 
     1枚あたりの秒数が短くても、**カードもテロップも同じなら画面は止まって
     見える。**2026-09-04 に contact で一覧にして初めて気づいた。
     「なぜ外れたのか」の節は7枚つづけて同じカードと同じテロップで、
     約40秒ぶん見た目が変わっていなかった。
+
+    `specs` には台本の `cards` を渡す。光らせる行だけが違う同じ表を
+    「同じ絵」と数えるため（`card_look`）。
     """
     import json
 
@@ -237,8 +275,8 @@ def _screen_change(script_json: Path) -> Finding:
     for scene in data.get("scenes", []):
         for line in scene.get("lines", []):
             # 書き込み（2026-10-07）を足した行は画面が変わる。数に入れる
-            now = (line.get("telop") or "", line.get("card") or "", line.get("image") or "",
-                   len(line.get("marks") or []))
+            now = (line.get("telop") or "", card_look(line.get("card"), specs),
+                   line.get("image") or "", len(line.get("marks") or []))
             if now == look:
                 span += float(line.get("duration") or 0)
             else:
@@ -1489,7 +1527,8 @@ def check_quote_speed(out_dir: Path, portrait: bool) -> Finding:
     return Finding(True, "言葉の早さ", "語りだけの回なので見ません")
 
 
-def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
+def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX,
+                    specs: dict | None = None) -> Finding:
     """**カード**が同じまま続く時間。テロップの変化は数えない。
 
     カードは書かれた行で差し替わり、次の地の文にも残る。引用が10行続く回で
@@ -1503,6 +1542,10 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
 
     画面がほんとうに止まっていないかは `見た目の変化`（カードもテロップも
     変わらないまま20秒）が見る。実測でこの3本は 9〜11秒だった。
+
+    **光らせる行だけが違う同じ表は、同じ絵として数える**（2026-10-08。`card_look`）。
+    `specs` に台本の `cards` を渡さないと、今までどおり名前で見分ける
+    （＝行ごとにカードを分けた回を素通りする）。
     """
     import json
 
@@ -1516,7 +1559,8 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
         for line in scene.get("lines", []):
             if line.get("image"):
                 seen_photo = True
-            card = line.get("card") or ""
+            name = line.get("card") or ""
+            card = name
             # カードが出ていない行は数えない。**止まっているのはカードの話**で、
             # カードが無い行の画面はテロップが1行ごとに変わっている
             if card in ("", "none", "なし"):
@@ -1530,15 +1574,23 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
             if not seen_photo:
                 current, span = None, 0.0
                 continue
-            # **書き込みを足した行は同じ絵ではない**（2026-10-07）。赤ペンが1つ増えると目が行く。
-            # 同じ表で光らせる行を替えるのと同じく、そこで数え直す
-            card = card + "#" * len(line.get("marks") or [])
+            # **書き込みを足した行は同じ絵ではない**（2026-10-07）。赤ペンが1つ増えると目が行く
+            # **光らせる行を替えただけなら、同じ絵**（2026-10-08）。
+            # 10/8 に実物を測ったら、散らばり図の光らせる点を替えても表の行を
+            # 光らせ替えても、画面の変化は `qc` のしきい値（0.08）に届いていなかった。
+            # 名前で見分けていたので、行ごとにカードを分けた節を全部素通りしていた
+            # **写真が替わった行も同じ絵ではない**（2026-10-08）。「写真は数えない」のは
+            # **出したままでも鳴らさない**という意味で（2026-09-15）、
+            # **替わった**ところまで素通りすると、`spread_long_cards` が写真を替えて
+            # 止まりを割った節でも × が残り、**人には直しようの無い検査**になる
+            card = (card_look(name, specs) + "#" * len(line.get("marks") or [])
+                    + "@" + str(line.get("image") or ""))
             if card == current:
                 span += float(line.get("duration") or 0)
             else:
                 current, span = card, float(line.get("duration") or 0)
             if span > worst:
-                worst, label = span, card
+                worst, label = span, name
 
     if worst > limit:
         return Finding(

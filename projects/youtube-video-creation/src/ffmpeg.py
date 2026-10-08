@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -312,3 +313,94 @@ def encode_video(
     args.append(str(out_path))
     run(args)
     return out_path
+
+
+# --- 出来上がった動画を点検するための読み取り（2026-10-08、tools/qc.py が使う） --------------
+
+SCAN_SCENE_FPS = 5        # 画面の変化を見るときの1秒あたりのコマ数（溶け合いもこれで拾える）
+SCAN_SCENE_BASE = 0.001   # これを超えた変化だけ記録する（判定のしきい値は後から当てる）
+SCAN_WINDOW = 0.5         # 音の大きさを測る刻み（秒）
+
+
+def probe(path: Path) -> dict | None:
+    """動画の尺・幅・高さ・音の有無。**絵は読み込まない**（`ffmpeg -i` の表示を読むだけ）。
+
+    一覧に並べるコマの大きさは、縦型（ショート）と横型（本編）で変えないと潰れる。
+    それを決めるためだけに動画を丸ごと読むのは無駄なので、ここだけ先に軽く見る。
+    読めなければ None（点検そのものは落とさない）。
+    """
+    path = Path(path)
+    if not path.exists():
+        return None
+    result = subprocess.run([ffmpeg_exe(), "-i", str(path)], **CAPTURE)
+    err = result.stderr or ""
+    found = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", err)
+    if not found:
+        return None
+    hours, minutes, seconds = found.groups()
+    size = re.search(r"Video:[^\n]*?\s(\d{2,5})x(\d{2,5})", err)
+    return {
+        "duration": int(hours) * 3600 + int(minutes) * 60 + float(seconds),
+        "width": int(size.group(1)) if size else 0,
+        "height": int(size.group(2)) if size else 0,
+        "audio": "Audio:" in err,
+    }
+
+
+def scan(
+    path: Path,
+    *,
+    step: float,
+    thumb: tuple[int, int],
+    scene_fps: int = SCAN_SCENE_FPS,
+    scene_base: float = SCAN_SCENE_BASE,
+    window: float = SCAN_WINDOW,
+    audio: bool = True,
+) -> tuple[str, bytes]:
+    """**動画を1回だけ読んで**、点検に要るものをまとめて取る。
+
+    返すのは (ffmpeg の出力, 一定間隔のコマの生データ)。読み解くのは tools/qc.py。
+    1本の mp4 は 40〜50MB あるので、scene 検出・音の大きさ・コマ抜きで3回起こすと
+    その回数ぶん丸ごと読み直すことになる。filter_complex で枝を分けて1回で済ませる。
+
+    枝は4つ:
+      [s] 画面の変化（scene の点数を metadata で出す。しきい値は後から当てる）
+      [t] `step` 秒ごとのコマ（`thumb` の大きさの生データを pipe:1 に流す。
+          何秒のコマなのかは showinfo が出す＝番号×step と決め打ちにしない）
+      [x] 音の大きさ（loudnorm の測定値）
+      [y] `window` 秒ごとの音の大きさ（astats の RMS。語りの切れ目を後から探す）
+    """
+    width, height = thumb
+    chains = [
+        "[0:v]split=2[sv][tv]",
+        f"[sv]fps={scene_fps},scale=320:-2,select='gt(scene,{scene_base})',metadata=mode=print[s]",
+        # **`fps=1/step` は使わない。**あれは区間ごとに「最後に来たコマ」を残すので、
+        # 出てくる絵が区間の終わりのもの（＝1つ後ろ）になる。select なら狙った時刻の
+        # コマがそのまま出て、showinfo が**元の動画での時刻**を出す
+        f"[tv]select='isnan(prev_selected_t)+gte(t-prev_selected_t,{step:g})',"
+        f"scale={width}:{height}:flags=bicubic,format=rgb24,showinfo[t]",
+    ]
+    maps = ["-map", "[s]", "-f", "null", "-"]
+    if audio:
+        samples = max(1, int(48000 * window))
+        chains += [
+            "[0:a]asplit=2[la][sa]",
+            "[la]loudnorm=print_format=json[x]",
+            f"[sa]aresample=48000,asetnsamples=n={samples},"
+            "astats=metadata=1:reset=1:measure_perchannel=none:measure_overall=RMS_level,"
+            "ametadata=mode=print:key=lavfi.astats.Overall.RMS_level[y]",
+        ]
+        maps += ["-map", "[x]", "-f", "null", "-", "-map", "[y]", "-f", "null", "-"]
+    # **`-fps_mode passthrough` が要る。**rawvideo は既定で元のコマ数に合わせて
+    # 同じ絵を水増しするので、14枚のつもりが8,399枚（1.4GB）流れてくる
+    maps += ["-map", "[t]", "-fps_mode", "passthrough", "-f", "rawvideo", "pipe:1"]
+    command = [
+        ffmpeg_exe(), "-hide_banner", "-nostats", "-i", str(path),
+        "-filter_complex", ";".join(chains), *maps,
+    ]
+    done = subprocess.run(command, capture_output=True)
+    err = (done.stderr or b"").decode("utf-8", errors="replace")
+    if done.returncode != 0:
+        tail = "\n".join(err.strip().splitlines()[-15:])
+        raise FfmpegError(f"ffmpeg が失敗しました（点検の読み取り、exit {done.returncode}）:\n{tail}")
+    return err, done.stdout or b""

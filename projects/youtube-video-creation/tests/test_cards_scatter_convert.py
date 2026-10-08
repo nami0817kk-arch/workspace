@@ -396,3 +396,87 @@ def test_下見は散らばり図の行も写真だけの絵と比べる(tmp_pat
         item = renderer.frame(line, scene, False, panel=("", None, name))
         base, exact = renderer.photo_layer(item, [], 0.0)
         assert base is not None and exact, name
+
+
+# ---------------------------------------------------------------- 置き場に収まる高さ（2026-10-08）
+
+
+def test_板は置き場に収まる高さで描く(tmp_path, fonts):
+    """**「大きく描いてから縮める」をやめた。**（2026-10-08）
+
+    `render.py` は置き場（`Layout.media_slot`）より高い板を**全体を縮めて**貼るので、
+    板の中の 28px が画面では 20〜23px になっていた（`tools/typecheck.py` の実測）。
+    `slot` を渡したら、本編の2つの幅のどちらでもその高さに収まる。
+    """
+    for width in (WIDTH, 998):      # 単独（0.74）と写真と横並び（0.52）
+        for name, spec in (("scatter", SCATTER), ("convert3", CONVERT3), ("convert2", CONVERT2)):
+            path = render(spec, width, fonts[0], tmp_path / f"{name}_{width}.png", fonts[1],
+                          slot=cards.SLOT_LANDSCAPE)
+            with Image.open(path) as image:
+                assert image.height <= cards.SLOT_LANDSCAPE, (name, width, image.height)
+
+
+def test_ショートの置き場は広いので図を詰めない(tmp_path, fonts):
+    """ショートは置き場が 983px あるので、本編に合わせて低くしない（縦の図が小さくなる）。"""
+    tall = render(SCATTER, PORTRAIT, fonts[0], tmp_path / "s.png", fonts[1],
+                  slot=cards.SLOT_PORTRAIT)
+    flat = render(SCATTER, WIDTH, fonts[0], tmp_path / "m.png", fonts[1],
+                  slot=cards.SLOT_LANDSCAPE)
+    with Image.open(tall) as a, Image.open(flat) as b:
+        assert a.height > b.height
+
+
+def test_本編の3段の換算は横に並べる(tmp_path, fonts):
+    """縦に積むと 744px で置き場（539px）に収まらない。**段の高さは数字の大きさでほぼ決まる**ので、
+    縦のまま収めるには数字を 41px まで落とすしかなく、縮めるのと同じことになる。
+    """
+    across = cards._convert(CONVERT3, WIDTH, fonts[0], fonts[1], cards.SLOT_LANDSCAPE)
+    down = cards._convert(CONVERT3, PORTRAIT, fonts[0], fonts[1], cards.SLOT_PORTRAIT)
+    # 横に並べると、箱の高さを持つのは最後の1つだけ（出ていない段も場所は空けておく）
+    assert sum(1 for b in across if b["height"] > 0 and b.get("row")) == 1
+    assert sum(1 for b in down if b["height"] > 0 and b.get("row")) == 5   # 箱3つ＋矢印2つ
+    assert cards.row_count(CONVERT3) == 5          # 出る順番は変えていない
+
+
+def test_箱が狭ければ単位を次の行に落とす(tmp_path, fonts):
+    """「1820万ポンド」は幅 998 の3段では1行に入らない。**数字を縮めるのではなく単位を下へ。**
+
+    `fit_number` の床は 40px で、そこでの単位は 20px＝スマホ 4.1pt。
+    縮める側に倒すと読める下限（5.7pt）を割るので、単位を次の行に落とす。
+    **狭いほうが背が高くなる**（単位の行が1つ増えるため）のが、落とした印。
+    """
+    long_unit = {"type": "convert", "title": "週給を円に直すと",
+                 "steps": [["35万", "ポンド", "サカの週給"], ["1820万", "ポンド", "52週ぶん"],
+                           ["約38", "億円", "1ポンド＝209円"]],
+                 "via": ["×52週", "×209円"], "source": "報道"}
+    narrow = render(long_unit, 998, fonts[0], tmp_path / "n.png", fonts[1],
+                    slot=cards.SLOT_LANDSCAPE)
+    wide = render(long_unit, WIDTH, fonts[0], tmp_path / "w.png", fonts[1],
+                  slot=cards.SLOT_LANDSCAPE)
+    with Image.open(narrow) as a, Image.open(wide) as b:
+        assert a.height > b.height      # 単位の行のぶんだけ箱が高い
+        assert a.height <= cards.SLOT_LANDSCAPE
+    # 単位を落とさなくても入る板は、今までどおり1行のまま（狭いほうが低い）
+    plain_n = render(CONVERT3, 998, fonts[0], tmp_path / "pn.png", fonts[1],
+                     slot=cards.SLOT_LANDSCAPE)
+    plain_w = render(CONVERT3, WIDTH, fonts[0], tmp_path / "pw.png", fonts[1],
+                     slot=cards.SLOT_LANDSCAPE)
+    with Image.open(plain_n) as a, Image.open(plain_w) as b:
+        assert a.height < b.height
+
+
+def test_単位は30pxより小さくしない(fonts):
+    """`put_number` は単位を数字の半分で描くので、46px の数字で 23px（スマホ 4.7pt）になっていた。"""
+    assert cards.chunk_size(46, cards.UNIT_RATIO) == cards.UNIT_MIN_PX
+    assert cards.chunk_size(120, cards.UNIT_RATIO) == 60      # 大きい数字は半分のまま
+    assert cards.chunk_size(120, 1.0) == 120
+
+
+def test_判定の印は丸地に対して読める濃さ(fonts):
+    """緑の丸地（74,200,128）に白は 2.1:1 で、WCAG の下限（大きい字は 3:1）を割っていた。"""
+    from tools import typecheck
+
+    for back in ((74, 200, 128), (226, 80, 80)):
+        white = typecheck.contrast((255, 255, 255), back)
+        dark = typecheck.contrast(cards.PANEL[:3], back)
+        assert white < 4.0 < dark, back

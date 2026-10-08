@@ -884,6 +884,10 @@ NEW_CARD_KEYS = {
     # 2026-10-07 夜（③2軸の散らばり図・⑤換算の板）。鍵の一覧は cards の側に1つだけ置く
     "scatter": _cards.SCATTER_KEYS,
     "convert": _cards.CONVERT_KEYS,
+    # 2026-10-08（折れ線・増減の内訳・年表）。鍵の一覧は cards の側に1つだけ置く
+    "line": _cards.LINE_KEYS,
+    "waterfall": _cards.WATERFALL_KEYS,
+    "timeline": _cards.TIMELINE_KEYS,
 }
 
 
@@ -959,6 +963,12 @@ def _check_number_card(section: Section, card: dict, kind: str) -> list[str]:
         problems += [f"{section.id}: {p}" for p in cards_mod.check_scatter(card)]
     elif kind == "convert":
         problems += [f"{section.id}: {p}" for p in cards_mod.check_convert(card)]
+    elif kind in ("line", "waterfall", "timeline"):
+        # 2026-10-08。上限を超えた項目数・数でない値・知らない focus/highlight は、
+        # 書き出しの途中ではなくここで止める（落ちる条件は cards の側と同じ）
+        checker = {"line": cards_mod.check_line, "waterfall": cards_mod.check_waterfall,
+                   "timeline": cards_mod.check_timeline}[kind]
+        problems += [f"{section.id}: {p}" for p in checker(card)]
     return problems
 
 
@@ -1513,6 +1523,9 @@ def _check_line_images_wide(notes: Notes) -> list[str]:
     return problems
 
 
+# 上から伸びて、下から伸びるテロップとぶつかる板（2026-10-08 に折れ線・増減・年表を足した）
+TALL_CARD_NAMES = {"table": "表", "verdict": "判定表", "scatter": "散らばり図",
+                   "line": "折れ線", "waterfall": "増減の内訳", "timeline": "年表"}
 TABLE_ROWS_WITH_LONG_LINE = 4     # これより多い行の表と
 LONG_TELOP_CHARS = 40             # これより長い1行（テロップが3行になる）を同じ節に置かない
 
@@ -1530,9 +1543,16 @@ def _advise_card_telop_overlap(notes: Notes) -> list[str]:
         # 判定表（verdict、2026-10-07）も表と同じく上から伸びる。散らばり図（scatter）は
         # 行の数によらず背が高い（本編で約660px）ので、いつも行の多い表と同じに見る
         kind = str(card.get("type", "")).lower()
-        if kind not in ("table", "verdict", "scatter"):
+        if kind not in TALL_CARD_NAMES:
             continue
-        rows = len(card.get("rows") or []) if kind != "scatter" else TABLE_ROWS_WITH_LONG_LINE
+        if kind in ("table", "verdict", "timeline"):
+            rows = len(card.get("rows") or [])
+        elif kind == "waterfall":
+            from . import cards as cards_mod       # _cards は後ろで関数に上書きされている
+            rows = len(cards_mod.waterfall_rows(card))
+        else:
+            # 散らばり図・折れ線は行の数によらず背が高い（本編で約660px）ので、いつも当てる
+            rows = TABLE_ROWS_WITH_LONG_LINE
         if rows < TABLE_ROWS_WITH_LONG_LINE:
             continue
         for number, sentence in enumerate(section.say):
@@ -1542,7 +1562,8 @@ def _advise_card_telop_overlap(notes: Notes) -> list[str]:
             text = _bare_text(sentence if isinstance(sentence, str) else str((sentence or {}).get("text", "")))
             if len(text) > LONG_TELOP_CHARS:
                 hints.append(
-                    f"節『{section.heading}』: {'散らばり図があり' if kind == 'scatter' else f'表が{rows}行あり'}、"
+                    f"節『{section.heading}』: "
+                    f"{TALL_CARD_NAMES[kind] + 'があり' if kind in ('scatter', 'line') else f'{TALL_CARD_NAMES[kind]}が{rows}行あり'}、"
                     f"{len(text)}字の行（『{text[:16]}…』）の"
                     "テロップが3行になって表の下にかかります。行を2つに割るか、表を減らしてください"
                     "（2026-09-25 ラフィーニャ）")
@@ -1571,6 +1592,30 @@ def _advise_convert_math(notes: Notes) -> list[str]:
                         "計算し直すか、via の倍率を直してください")
                 if hint not in hints:
                     hints.append(hint)
+    return hints
+
+
+def _advise_waterfall_math(notes: Notes) -> list[str]:
+    """**増減の内訳の検算**（2026-10-08）。`total` を書いてあれば、もと＋各段の足し算と比べる。
+
+    換算の板（`_advise_convert_math`）と同じ考え方。合計は書いた人が決めてよい
+    （税や丸めで合わないこともある）ので**止めない**。`total` を書かなければ足し算で埋まるので、
+    そもそも鳴らない。
+    """
+    from . import cards as cards_mod
+
+    hints: list[str] = []
+    for section in notes.sections:
+        for card in [section.card] + list(section.line_cards or []):
+            if not (isinstance(card, dict) and str(card.get("type", "")).lower() == "waterfall"):
+                continue
+            gap = cards_mod.waterfall_mismatch(card)
+            if not gap:
+                continue
+            hint = (f"節『{section.heading}』: 増減の内訳の合計が段の足し算と合いません（{gap}）。"
+                    "数え直すか、total を外して足し算に任せてください")
+            if hint not in hints:
+                hints.append(hint)
     return hints
 
 
@@ -1980,8 +2025,10 @@ def _view_comparison(text: str) -> bool:
 def _has_count_table(section: Section) -> bool:
     """見立ての節に表があるか。節の card（表・棒）か、行ごとの card。引用カード（見立ての一言）は数えない。"""
     card = section.card if isinstance(section.card, dict) else {}
-    # 判定表・数字の板・計算の式・散らばり図・換算の板（2026-10-07）も自分で数えた表に数える
-    if str(card.get("type", "")).lower() in ("table", "bars", "verdict", "stats", "calc", "scatter", "convert"):
+    # 判定表・数字の板・計算の式・散らばり図・換算の板（2026-10-07）と
+    # 折れ線・増減の内訳・年表（2026-10-08）も自分で数えた表に数える
+    if str(card.get("type", "")).lower() in ("table", "bars", "verdict", "stats", "calc", "scatter",
+                                             "convert", "line", "waterfall", "timeline"):
         return True
     return any(isinstance(c, dict) and c for c in section.line_cards)
 
@@ -2484,6 +2531,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_placeholders(notes)
                         + _advise_offtopic_section(notes)
                         + _advise_card_telop_overlap(notes) + _advise_convert_math(notes)
+                        + _advise_waterfall_math(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
                         + _advise_layout_streak(notes)

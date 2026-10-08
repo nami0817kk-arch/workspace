@@ -16,7 +16,8 @@ from PIL import Image, ImageDraw, ImageFont
 TEAM_SIZES = (46, 42, 38, 34, 30, 26, 22)
 
 CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions", "kit",
-              "stats", "verdict", "calc", "versus", "scatter", "convert")
+              "stats", "verdict", "calc", "versus", "scatter", "convert",
+              "line", "waterfall", "timeline")
 # **画面いっぱいの絵になる型**（2026-10-07）。板（カード）ではなく、写真の下地の代わりに敷く。
 # render.py は板と同じ扱い（上に節の名前・見出し・ほかのカードを重ねない）で描く
 FULL_SCREEN_TYPES = ("versus",)
@@ -44,6 +45,24 @@ DEFAULT_ACCENT = "#ffd54a"   # 板の左の縦帯もチャンネルの黄に（2
 
 PAD = 44
 RADIUS = 22
+
+# **板の置き場の高さ**（2026-10-08）。
+# `render.py` の `_draw_media` は、板が置き場（`Layout.media_slot`）より高いと
+# **全体を縮めて**貼る。だから板の中で 28px で描いた字が、画面では 21px になっていた
+# （`tools/typecheck.py` の実測で、出典は 16px＝スマホ 3.2pt まで落ちていた）。
+# **字を小さくして収めるのは逆**なので、板を**はじめから置き場に収まる高さで描く**。
+# 2026-09-23 にプレミア紹介で一度直した所（「カードははじめからその幅で描く」）の、高さ版。
+SLOT_LANDSCAPE = 539    # 本編 1920×1080（0.11〜0.64 の帯から 34 引いた高さ）
+SLOT_PORTRAIT = 983     # ショート 1080×1920
+
+# **出典の字**（2026-10-08）。22px は本編で縮まなくてもスマホ 4.5pt で、
+# 読める下限（5.7pt＝28px）を割っていた。どの型でも板の右下に1行で出る
+SOURCE_PX = 28
+SOURCE_ROOM = 26        # 出典のぶん板の下に足す高さ（字が 22→28 に太ったので 18→26）
+
+# **単位・言葉の下限**（2026-10-08）。`put_number` は単位を数字の半分で描くので、
+# 数字が 46px に縮むと単位が 23px（スマホ 4.7pt）になっていた。半分より小さくしない
+UNIT_MIN_PX = 30
 
 
 class CardError(ValueError):
@@ -76,6 +95,13 @@ def row_count(spec: dict) -> int:
         return min(SCATTER_MAX, len(spec.get("points") or []))
     if kind == "convert":
         return max(0, len(convert_values(spec)) * 2 - 1)
+    # 2026-10-08 に足した3つ。折れ線は左から点1つずつ、増減と年表は上から1段・1行ずつ
+    if kind == "line":
+        return min(LINE_POINTS_MAX, len(line_x(spec)))
+    if kind == "waterfall":
+        return len(waterfall_rows(spec))
+    if kind == "timeline":
+        return min(TIMELINE_ROWS_MAX, len(timeline_rows(spec)))
     return 0
 
 
@@ -97,7 +123,8 @@ def same_table(a: dict | None, b: dict | None) -> bool:
 
 
 # **書き込み（赤ペン）を足せる型**（2026-10-07、src/marks.py）。項目の番号・列で指す
-MARKABLE_TYPES = ("table", "verdict", "bars", "stats", "calc", "points", "scatter", "convert")
+MARKABLE_TYPES = ("table", "verdict", "bars", "stats", "calc", "points", "scatter", "convert",
+                  "line", "waterfall", "timeline")
 
 
 def mark_units(spec: dict | None) -> int:
@@ -119,6 +146,12 @@ def mark_units(spec: dict | None) -> int:
         return min(SCATTER_MAX, len(spec.get("points") or []))
     if kind == "convert":
         return len(convert_values(spec))
+    if kind == "line":
+        return min(LINE_POINTS_MAX, len(line_x(spec)))
+    if kind == "waterfall":
+        return len(waterfall_rows(spec))
+    if kind == "timeline":
+        return min(TIMELINE_ROWS_MAX, len(timeline_rows(spec)))
     return 0
 
 
@@ -138,23 +171,39 @@ def mark_columns(spec: dict | None) -> list[str]:
         return ["数字", "注記"]
     if kind == "scatter":
         return ["点", "名前"]
+    # 2026-10-08。折れ線は主役の線の点（`col: 年` で横軸の札）、増減は棒グラフと同じ3列、年表は2列
+    if kind == "line":
+        return ["点", "値", "年"]
+    if kind == "waterfall":
+        return ["名前", "段", "値"]
+    if kind == "timeline":
+        return ["年", "できごと"]
     return []
 
 
-def layout(spec: dict, width: int, font_path: str, latin_font_path: str | None = None) -> dict:
+def source_room(spec: dict) -> int:
+    """出典の1行のために板の下へ足す高さ（出典が無ければ0）。"""
+    return SOURCE_ROOM if str(spec.get("source") or "").strip() else 0
+
+
+def layout(spec: dict, width: int, font_path: str, latin_font_path: str | None = None,
+           slot: int | None = None) -> dict:
     """カードの中の項目の位置（`render` と同じ寸法で、描かずに測る）。書き込みの的に使う。
 
     返すのは ``{"size": (幅, 高さ), "units": [{"box": 行の枠, "cells": [列ごとの字の枠 or None], "text": 字の枠}]}``。
     座標はカードの左上が原点（px）。
+
+    `slot` は画面の置き場の高さ。**`render` と同じ値を渡さないと的がずれる**
+    （表・図はこの高さに収まるよう行や図を詰めるので、寸法が変わる）。
     """
     kind = str(spec.get("type", "quote")).lower()
     builder = {"bars": _bars, "table": _table, "stats": _stats, "verdict": _verdict,
-               "calc": _calc, "points": _points, "scatter": _scatter, "convert": _convert}.get(kind)
+               "calc": _calc, "points": _points, "scatter": _scatter, "convert": _convert,
+               "line": _line, "waterfall": _waterfall, "timeline": _timeline}.get(kind)
     if builder is None:
         raise CardError(f"{kind} カードには書き込みを足せません（{'・'.join(MARKABLE_TYPES)}）")
-    blocks = builder(spec, width, font_path, latin_font_path or font_path)
-    source = str(spec.get("source") or "").strip()
-    height = PAD * 2 + sum(block["height"] for block in blocks) + (18 if source else 0)
+    blocks = builder(spec, width, font_path, latin_font_path or font_path, slot)
+    height = PAD * 2 + sum(block["height"] for block in blocks) + source_room(spec)
     units = []
     y = PAD
     for block in blocks:
@@ -196,18 +245,24 @@ def _number_box(x: float, baseline: float, text: str, size: int, font_path: str)
     """put_number で描いた数字の枠。"""
     boxes = []
     for chunk, ratio in _segments(text):
-        font = _font(font_path, size * ratio)
+        font = _chunk_font(font_path, size, ratio)
         boxes.append(_text_box(x, baseline, chunk, font, "ls"))
         x += _ruler().textlength(chunk, font=font)
     return _union(boxes)
 
 
 def render(spec: dict, width: int, font_path: str, out_path: Path,
-           latin_font_path: str | None = None, reveal: int | None = None) -> Path:
+           latin_font_path: str | None = None, reveal: int | None = None,
+           slot: int | None = None) -> Path:
     """カード1枚を透過PNGで書き出す。高さは中身に合わせて決まる。
 
     reveal を渡すと、表・棒グラフの行を**その数だけ**描く（残りの行は空けておく）。
     行が1本ずつ現れる出現アニメの1コマ（2026-09-28 動きの段2）。
+
+    `slot` は画面の置き場の高さ（`SLOT_LANDSCAPE` / `SLOT_PORTRAIT`）。
+    表・散らばり図・折れ線・換算は**この高さに収まるよう行と図を詰める**ので、
+    `render.py` が貼るときに縮まない＝板の中の px がそのまま画面の px になる。
+    渡さなければ今までどおり（置き場を考えず、中身なりの高さ）。
     """
     kind = str(spec.get("type", "quote")).lower()
     if kind not in CARD_TYPES:
@@ -229,11 +284,14 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
         "calc": _calc,
         "scatter": _scatter,
         "convert": _convert,
+        "line": _line,
+        "waterfall": _waterfall,
+        "timeline": _timeline,
     }[kind]
-    blocks = builder(spec, width, font_path, latin_font_path or font_path)
+    blocks = builder(spec, width, font_path, latin_font_path or font_path, slot)
 
     source = str(spec.get("source") or "").strip()
-    height = PAD * 2 + sum(block["height"] for block in blocks) + (18 if source else 0)
+    height = PAD * 2 + sum(block["height"] for block in blocks) + source_room(spec)
     canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(canvas)
 
@@ -244,10 +302,12 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     draw.rounded_rectangle([0, RADIUS, 8, height - RADIUS], radius=4, fill=accent + (255,))
 
     if source:
-        # 出典を右下に小さく（品質100回の65）。自作の図だと分かり、数字の出どころが画面に残る
-        src_font = ImageFont.truetype(font_path, 22)
+        # 出典を右下に小さく（品質100回の65）。自作の図だと分かり、数字の出どころが画面に残る。
+        # **22px だとスマホで 4.5pt（読める下限 5.7pt を割る）**ので 28px に（2026-10-08）。
+        # 字が太ったぶん下の余白（SOURCE_ROOM）も 18→26 にして、置く位置は上へ 8px ずらす
+        src_font = ImageFont.truetype(font_path, SOURCE_PX)
         sw = draw.textlength(source, font=src_font)
-        draw.text((width - PAD - sw, height - PAD - 4), source, font=src_font, fill=(120, 130, 146, 255))
+        draw.text((width - PAD - sw, height - PAD - 12), source, font=src_font, fill=(120, 130, 146, 255))
     y = PAD
     shown_rows = 0
     for block in blocks:
@@ -267,7 +327,8 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
 # ------------------------------------------------------------------ 種類ごと
 
 
-def _quote(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _quote(spec: dict, width: int, font_path: str, latin_path: str,
+          slot: int | None = None) -> list[dict]:
     """引用カード。海外紙の見出しを原文で出し、下に訳を添える。"""
     inner = width - PAD * 2 - 12
     # 名前は欧文とは限らない。**日本語だと豆腐になる**（2026-09-05 実測。
@@ -314,7 +375,8 @@ def _quote(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
     return blocks
 
 
-def _transfer(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _transfer(spec: dict, width: int, font_path: str, latin_path: str,
+             slot: int | None = None) -> list[dict]:
     """移籍カード。誰がどこからどこへ、いくらで。"""
     name_font = ImageFont.truetype(font_path, 52)
     club_font = ImageFont.truetype(font_path, 42)
@@ -358,7 +420,8 @@ def _transfer(spec: dict, width: int, font_path: str, latin_path: str) -> list[d
     return blocks
 
 
-def _score(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _score(spec: dict, width: int, font_path: str, latin_path: str,
+          slot: int | None = None) -> list[dict]:
     """スコアカード。どちらが何点で、誰が決めたか。
 
     スコアを大きく置き、得点者を左右に分けて並べる。試合結果の動画では
@@ -468,7 +531,8 @@ def _shorten(ruler, text: str, font, limit: float) -> str:
     return "…"
 
 
-def _points(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _points(spec: dict, width: int, font_path: str, latin_path: str,
+           slot: int | None = None) -> list[dict]:
     """箇条書きカード。整理して見せたいときに。"""
     inner = width - PAD * 2 - 60
     title_font = ImageFont.truetype(font_path, 44)
@@ -507,7 +571,8 @@ def _points(spec: dict, width: int, font_path: str, latin_path: str) -> list[dic
     return blocks
 
 
-def _kit(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _kit(spec: dict, width: int, font_path: str, latin_path: str,
+        slot: int | None = None) -> list[dict]:
     """ユニフォーム風の図。誰が入って誰が外れたかを、背番号で並べる。
 
     **試合中の写真は自由ライセンスでは手に入らない。**スタジアム内の撮影が
@@ -595,7 +660,11 @@ def _kit(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
                 font = mark_small if ok else mark_font
                 w = draw.textlength(glyph, font=font)
                 top = cy - (30 if ok else 34)
-                draw.text((cx - w / 2, top), glyph, font=font, fill=(255, 255, 255, 255))
+                # **印の字は板の地の色**（2026-10-08）。白だと緑の丸地（74,200,128）に対して
+                # 2.1:1、赤（226,80,80）でも 3.8:1 で、WCAG の下限（大きい字は 3:1）を
+                # 割っていた。板の地（12,18,28）なら緑 8.9:1・赤 5.0:1 で、どちらも目安の
+                # 4:1 を越える。**色は増やしていない**（板の地と同じ色を使うだけ）
+                draw.text((cx - w / 2, top), glyph, font=font, fill=PANEL[:3] + (255,))
 
     blocks.append({"height": shirt_h + 62, "draw": draw_row})
     return blocks
@@ -621,7 +690,8 @@ def _shirt(draw, x: int, y: int, w: int, h: int, body, stripe=None) -> None:
                  fill=(245, 245, 245, 235))
 
 
-def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _bars(spec: dict, width: int, font_path: str, latin_path: str,
+         slot: int | None = None) -> list[dict]:
     """横棒で数量を比べるカード。
 
     同じ指標どうしの比較なので棒は1色で通し、注目させたい1本だけ明るくする。
@@ -741,9 +811,14 @@ def _fit_cell(draw, text: str, font, room: float) -> str:
 
 
 TABLE_ROWS_FULL = 6   # この行数までは行の高さ72・字40のまま。超えたら詰めて全部出す
+TABLE_ROW_MIN_H = 42  # 行の高さの下限。これより詰めると 28px の字が行の帯からはみ出す
+TABLE_CELL_MIN_PX = 28    # 行の字の下限（スマホ 5.7pt＝読める下限）。これ以下にはしない
+TABLE_HEAD_H = 58     # 見出し行（緑の帯 50＋すき間 8）
+TABLE_TITLE_H = 66    # 題の段（字44＋すき間22）
 
 
-def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _table(spec: dict, width: int, font_path: str, latin_path: str,
+          slot: int | None = None) -> list[dict]:
     """順位表のような表。1行だけ強調できる。"""
     # 字を一回り大きく（2026-09-28「もう少し見やすく」）。34 → 40。入らなければ縮む
     title_font = ImageFont.truetype(font_path, 44)
@@ -758,14 +833,29 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
         raise CardError("table の各行は columns と同じ数にしてください")
 
     highlight = spec.get("highlight_row")
+    title = str(spec.get("title") or "").strip()
     inner = width - PAD * 2 - 12
     # **行は全部出す**（2026-09-30）。7行目から先を黙って捨てていて、ソシエダの回で
     # 「7試合を終えて」と読みながら表には6試合しか無かった。6行を超えたら、
     # 表の高さが6行ぶんに収まるよう行と字を詰める
-    many = len(rows) > TABLE_ROWS_FULL
-    row_h = 72 if not many else max(44, int(72 * TABLE_ROWS_FULL / len(rows)))
-    if many:
-        cell_font = ImageFont.truetype(font_path, max(22, min(40, row_h - 22)))
+    #
+    # **行の高さは置き場から決める**（2026-10-08）。72 のままだと6行で板が 662px になり、
+    # 置き場（539px）に収まるまで render.py が 0.81 倍に縮めるので、画面では
+    # 出典が 18px・列の見出しが 24px になっていた（スマホ 3.6pt / 5.0pt）。
+    # **行を間引かずに**行の高さを詰めて倍率1.00で収める：6行なら 72 → 50、
+    # 字は 40 → 36 で、縮んだときの実効 33px より大きい。字の下限は TABLE_CELL_MIN_PX
+    overhead = (PAD * 2 + (TABLE_TITLE_H if title else 0) + TABLE_HEAD_H
+                + source_room(spec))
+    room_for_rows = (slot - overhead) if slot else None
+    if room_for_rows:
+        row_h = max(TABLE_ROW_MIN_H, min(72, int(room_for_rows / len(rows))))
+    elif len(rows) > TABLE_ROWS_FULL:
+        row_h = max(TABLE_ROW_MIN_H, int(72 * TABLE_ROWS_FULL / len(rows)))
+    else:
+        row_h = 72
+    if row_h < 72:
+        # 行の帯は row_h - 4 なので、字は 14 だけ空けて入るところまで使う
+        cell_font = ImageFont.truetype(font_path, max(TABLE_CELL_MIN_PX, min(40, row_h - 14)))
     # **中身の長さで列幅を決める**（2026-09-14 指摘「サッカー部門CEOが被ってる」）。
     # 1列目を14%の決め打ちにしていたので、「ロン・ゴーレイ」のような長い名前が
     # はみ出して2列目の字に重なっていた。実際に測って、足りない列を広げる
@@ -803,11 +893,10 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
             over -= take
 
     blocks: list[dict] = []
-    title = str(spec.get("title") or "").strip()
     if title:
         blocks.append(
             {
-                "height": 66,
+                "height": TABLE_TITLE_H,
                 "draw": lambda draw, y: draw.text(
                     (PAD + 12, y), title, font=title_font, fill=TEXT
                 ),
@@ -829,9 +918,10 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
                 draw.text((x, y + 2), name, font=head_font, fill=BRAND_GOLD)
             x += widths[index]
 
-    blocks.append({"height": 58, "draw": draw_head})
+    blocks.append({"height": TABLE_HEAD_H, "draw": draw_head})
 
-    text_dy = 10 if not many else max(4, (row_h - 8 - cell_font.size) // 2 - 2)
+    # 行の帯（y-4 〜 y+row_h-8）の真ん中に字を置く。72 のときは今までどおり 10
+    text_dy = 10 if row_h >= 72 else max(4, (row_h - 8 - cell_font.size) // 2 - 2)
     for number, row in enumerate(rows):
         def draw_row(draw, y, row=row, number=number):
             if number == highlight:
@@ -874,7 +964,8 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
     return blocks
 
 
-def _reactions(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _reactions(spec: dict, width: int, font_path: str, latin_path: str,
+              slot: int | None = None) -> list[dict]:
     """短い反応を並べて見せるカード。
 
     1件ずつ吹き出しに入れ、どこの発言かを右端に小さく出す。
@@ -991,9 +1082,25 @@ def _font(path: str, size: float) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(path, max(8, int(size)))
 
 
+def chunk_size(size: float, ratio: float) -> int:
+    """数字のかたまりの大きさ。**単位・言葉は `UNIT_MIN_PX` より小さくしない**（2026-10-08）。
+
+    半分（`UNIT_RATIO`）のままだと、数字が 46px に縮んだ板（本編で写真と横に並べた
+    stats）で単位が 23px＝スマホ 4.7pt になり、読める下限（5.7pt）を割っていた。
+    **単位も意味の一部**（「万ポンド」か「億円」かで額が変わる）なので下限を置く。
+    """
+    if ratio >= 1.0:
+        return max(8, int(size))
+    return max(8, int(max(UNIT_MIN_PX, size * ratio)))
+
+
+def _chunk_font(font_path: str, size: float, ratio: float) -> ImageFont.FreeTypeFont:
+    return ImageFont.truetype(font_path, chunk_size(size, ratio))
+
+
 def number_width(text: str, size: int, font_path: str) -> float:
     ruler = ImageDraw.Draw(Image.new("RGB", (4, 4)))
-    return sum(ruler.textlength(chunk, font=_font(font_path, size * ratio))
+    return sum(ruler.textlength(chunk, font=_chunk_font(font_path, size, ratio))
                for chunk, ratio in _segments(text))
 
 
@@ -1006,9 +1113,12 @@ def fit_number(text: str, size: int, room: float, font_path: str, floor: int = 4
 
 def put_number(draw, x: float, baseline: float, text: str, size: int, fill, font_path: str,
                stroke: int = 0, stroke_fill=(0, 0, 0, 255)) -> float:
-    """数字を大きく、単位を半分の大きさで、下の線をそろえて描く。右端の x を返す。"""
+    """数字を大きく、単位を半分の大きさで、下の線をそろえて描く。右端の x を返す。
+
+    単位は `UNIT_MIN_PX` より小さくしない（`chunk_size`）。
+    """
     for chunk, ratio in _segments(text):
-        font = _font(font_path, size * ratio)
+        font = _chunk_font(font_path, size, ratio)
         draw.text((x, baseline), chunk, font=font, fill=fill, anchor="ls",
                   stroke_width=stroke if ratio == 1.0 else max(0, stroke * 2 // 3),
                   stroke_fill=stroke_fill)
@@ -1063,7 +1173,8 @@ def focus_index(spec: dict, count: int) -> int:
     return count - 1
 
 
-def _stats(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _stats(spec: dict, width: int, font_path: str, latin_path: str,
+          slot: int | None = None) -> list[dict]:
     """数字3つの大きな板（2026-10-07）。シリーズの冒頭の「いちばん強い一点」に。
 
     ```yaml
@@ -1151,7 +1262,8 @@ def calc_ops(spec: dict, count: int) -> list[str]:
     return [str(op).strip() for op in ops]
 
 
-def _calc(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _calc(spec: dict, width: int, font_path: str, latin_path: str,
+         slot: int | None = None) -> list[dict]:
     """計算の式（2026-10-07）。見立ての「この回だけの数字」に。
 
     ```yaml
@@ -1234,15 +1346,18 @@ def _draw_mark(draw, cx: float, cy: float, mark: str, r: int = 26) -> None:
     """判定の印。字ではなく図形で描く（フォントに ✓ が無い環境がある・大きさがそろう）。"""
     color = MARK_COLORS.get(mark, TEXT)
     if mark in ("✓", "✗"):
-        # 塗った丸に白い印（断面図の checklist と同じ。輪郭だけだと小さい画面で見えない）
+        # 塗った丸に印（断面図の checklist と同じ。輪郭だけだと小さい画面で見えない）。
+        # **印は白ではなく板の地の色**（2026-10-08、`_kit` の丸地と同じ理由）。
+        # 白だと緑の丸地に対して 2.1:1、赤でも 3.8:1 で読める濃さに足りない
+        glyph = PANEL[:3] + (255,)
         draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=color)
         if mark == "✓":
             draw.line([(cx - r * 0.5, cy + 1), (cx - r * 0.12, cy + r * 0.42), (cx + r * 0.55, cy - r * 0.42)],
-                      fill=(255, 255, 255, 255), width=7, joint="curve")
+                      fill=glyph, width=7, joint="curve")
         else:
             k = r * 0.42
-            draw.line([(cx - k, cy - k), (cx + k, cy + k)], fill=(255, 255, 255, 255), width=7)
-            draw.line([(cx + k, cy - k), (cx - k, cy + k)], fill=(255, 255, 255, 255), width=7)
+            draw.line([(cx - k, cy - k), (cx + k, cy + k)], fill=glyph, width=7)
+            draw.line([(cx + k, cy - k), (cx - k, cy + k)], fill=glyph, width=7)
         return
     if mark == "◎":
         draw.ellipse([cx - r, cy - r, cx + r, cy + r], outline=color, width=7)
@@ -1259,7 +1374,8 @@ def _draw_mark(draw, cx: float, cy: float, mark: str, r: int = 26) -> None:
         draw.line([(cx + k, cy - k), (cx - k, cy + k)], fill=color, width=10)
 
 
-def _verdict(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _verdict(spec: dict, width: int, font_path: str, latin_path: str,
+            slot: int | None = None) -> list[dict]:
     """判定表（2026-10-07）。◎○△×（checklist 形は ✓✗）を色つきの印で。
 
     ```yaml
@@ -1361,6 +1477,9 @@ def _verdict(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
 # 箱と矢印）を、こちらの「縦に積むブロック＋reveal で1つずつ出す」作りに書き直した。
 
 SCATTER_MAX = 10          # 点は10まで。それより多いと札が逃げきれず、目で追えない
+# 図の高さの下限（2026-10-08）。置き場が狭くてもここまでは残す。
+# 190 は、札（34px＋余白＝48px）を縦に3段ずらせる高さ
+SCATTER_PLOT_MIN_H = 190
 SCATTER_KEYS = frozenset({"type", "title", "x", "y", "points", "focus", "highlight", "diagonal",
                           "note", "source", "color"})
 AXIS_KEYS = frozenset({"label", "unit"})
@@ -1521,7 +1640,8 @@ def _tick_text(value: float) -> str:
     return f"{value:g}" if abs(value) < 1e6 else f"{value:.3g}"
 
 
-def _scatter(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _scatter(spec: dict, width: int, font_path: str, latin_path: str,
+            slot: int | None = None) -> list[dict]:
     """2軸の散らばり図（2026-10-07 夜）。比較の回・若手の数字・得点王レース（得点×期待値）に。
 
     ```yaml
@@ -1544,9 +1664,13 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
     wide = width >= 1050
     ruler = _ruler()
 
-    tick_font = _font(font_path, 28 if wide else 27)
-    axis_font = _font(font_path, 30 if wide else 29)
-    label_size = 34 if wide else 33
+    # **字は幅で変えない**（2026-10-08）。狭いほうを1px 小さくしていたので、本編で
+    # 写真と横に並べると目盛りが 27px＝スマホ 5.5pt になり、読める下限を割っていた。
+    # 1px 得ても入る字数はほぼ変わらないので、28/30/34 で通す（28px が下限）
+    tick_font = _font(font_path, 28)
+    axis_font = _font(font_path, 30)
+    note_font = _font(font_path, 28)
+    label_size = 34
     fonts = [_font(font_path, label_size + (2 if k == focus else 0)) for k in range(n)]
 
     xs = [p["x"] for p in points]
@@ -1564,11 +1688,21 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
     y_tick_w = max(ruler.textlength(_tick_text(t), font=tick_font) for t in y_ticks)
     plot_left = left + y_tick_w + 16
     plot_right = width - PAD - 14
-    head = 56                       # 縦軸の名前の段（上の目盛りの字とぶつけない）
+    head = 56                       # 縦軸の名前の段（48 に詰めると、いちばん上の目盛りの字と重なった）
+    tail = 46                       # 横軸の目盛りの段
+    foot = 44                       # 添え（左）と横軸の名前（右）を1行に並べる段
     # 縦（ショート）は 0.50。0.60 だと板が画面の半分を超え、上に寄せた顔（_v.jpg）の目元までかかった
-    plot_h = min(380, int(width * 0.34)) if wide else int(width * 0.50)
+    cap = min(380, int(width * 0.34)) if wide else int(width * 0.50)
+    # **図の高さは置き場から決める**（2026-10-08）。上限のままだと板が 714〜833px になり、
+    # 置き場（539px）に収まるまで 0.75 倍に縮められて、軸・目盛りが 21px、点の札が
+    # 26px、添えが 21px になっていた（スマホ 4.3〜5.2pt）。**字を小さくするのではなく
+    # 図を低くする。**ショートの置き場（983px）では上限のままなので見た目は変わらない。
+    # あわせて、**横軸の名前と添えを1行にまとめた**（別々の段だと 40px ぶん図が低くなる）
+    note = str(spec.get("note") or "").strip()
+    overhead = (PAD * 2 + (66 if str(spec.get("title") or "").strip() else 0)
+                + head + tail + foot + source_room(spec))
+    plot_h = max(SCATTER_PLOT_MIN_H, min(cap, slot - overhead)) if slot else cap
     plot_top, plot_bottom = head, head + plot_h
-    tail = 76                       # 横軸の目盛り＋名前の段
     height = plot_bottom + tail
 
     def px(value: float) -> float:
@@ -1666,8 +1800,6 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
             xx = px(t)
             draw.line([(xx, y + plot_top), (xx, y + plot_bottom)], fill=GRID, width=1 if t != x_lo else 2)
             draw.text((xx, y + plot_bottom + 8), _tick_text(t), font=tick_font, fill=SUB, anchor="ma")
-        xlabel = x_axis["label"] + (f"（{x_axis['unit']}）" if x_axis["unit"] else "")
-        draw.text((plot_right, y + plot_bottom + 42), xlabel, font=axis_font, fill=SUB, anchor="ra")
         if diagonal:
             lo, hi = max(x_lo, y_lo), min(x_hi, y_hi)
             _dashed(draw, (px(lo), y + py(lo)), (px(hi), y + py(hi)), DIAGONAL, 3)
@@ -1710,7 +1842,20 @@ def _scatter(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
 
         blocks.append({"height": 0, "draw": draw_point, "row": True, "unit": unit_point})
     blocks.append({"height": height, "draw": lambda draw, y: None})
-    return blocks + _note_blocks(spec, width, font_path)
+
+    # 添え（左）と横軸の名前（右）を1行にまとめる。別々の段にすると 40px ぶん図が低くなる
+    xlabel = x_axis["label"] + (f"（{x_axis['unit']}）" if x_axis["unit"] else "")
+
+    def draw_foot(draw, y):
+        xw = ruler.textlength(xlabel, font=axis_font)
+        draw.text((plot_right, y + 8), xlabel, font=axis_font, fill=SUB, anchor="ra")
+        if note:
+            # 横軸の名前にかからないところまで（切るときは末尾を … に）
+            shown = _fit_cell(draw, note, note_font, plot_right - xw - 30 - left)
+            draw.text((left, y + 10), shown, font=note_font, fill=SUB)
+
+    blocks.append({"height": foot, "draw": draw_foot})
+    return blocks
 
 
 SPOT_COST = (0, 1, 24, 26, 60, 61, 62, 63)    # 札の置き場の順（右・左・上・下・右上・右下・左上・左下）
@@ -1858,7 +2003,8 @@ def _round_amount(value: float) -> str:
     return f"{value:.4g}"
 
 
-def _convert(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+def _convert(spec: dict, width: int, font_path: str, latin_path: str,
+            slot: int | None = None) -> list[dict]:
     """換算の板（2026-10-07 夜）。クラブの財政・移籍金・年俸を、ポンド・ユーロから円へ、週給から年俸へ。
 
     ```yaml
@@ -1868,6 +2014,12 @@ def _convert(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
     左（縦の画面では上）に元の数字、右（下）に換算した数字を黄で大きく、あいだに矢印と式（via）。
     `reveal` で 元 → 矢印 → 換算 の順に出る。**換算の値は書いた人が計算する**（via に倍率が数で
     あれば draft がずれを知らせるが、止めない）。
+
+    **横に並べるか縦に積むかは、置き場に入るかで決める**（2026-10-08）。縦に積んだ3段は
+    744px あり、本編の置き場（539px）では 0.72 倍に縮められて注記が 20px＝スマホ 4.1pt に
+    なっていた。段の高さは数字の大きさでほぼ決まる（1段＝数字＋48px）ので、**3段を 539px に
+    縦積みするには数字を 41px まで落とすしかなく、縮めるのと同じことになる。**だから
+    本編（置き場 539px）は3段でも横に並べ、ショート（983px）は今までどおり縦に積む。
     """
     problems = check_convert(spec)
     if problems:
@@ -1876,81 +2028,134 @@ def _convert(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
     vias = convert_vias(spec, len(values))
     n = len(values)
     wide = width >= 1050
+    blocks = _title_block(spec, font_path)
+    notes = _note_blocks(spec, width, font_path)
+    fixed = (PAD * 2 + sum(b["height"] for b in blocks)
+             + sum(b["height"] for b in notes) + source_room(spec))
+
+    down = _convert_down(values, vias, n, width, font_path)
+    if (wide and n == 2) or (slot is not None
+                             and fixed + sum(b["height"] for b in down) > slot):
+        return blocks + _convert_across(values, vias, n, width, font_path) + notes
+    return blocks + down + notes
+
+
+CONVERT_UNIT_LINE_PX = 34   # 単位を次の行に落とすときの大きさ（スマホ 6.9pt）
+
+
+def _convert_across(values: list[dict], vias: list[str], n: int, width: int,
+                    font_path: str) -> list[dict]:
+    """横に並べる（本編）。箱を n 個、あいだに矢印と式（via）。"""
+    ruler = _ruler()
+    inner = width - PAD * 2 - 24
+    left = PAD + 12
+    via_font = _font(font_path, 30)
+    note_font = _font(font_path, 28)
+    unit_font = _font(font_path, CONVERT_UNIT_LINE_PX)
+    texts = [v["number"] + v["unit"] for v in values]
+
+    via_lines = [_wrap(vias[k], via_font, int(inner * 0.26))[:2] if vias[k] else []
+                 for k in range(n - 1)]
+    arrow_w = max([130.0] + [max(ruler.textlength(c, font=via_font) for c in lines) + 36
+                             for lines in via_lines if lines])
+    box_w = (inner - arrow_w * (n - 1)) / n
+    room = box_w - 44
+
+    def _sizes(labels: list[str]) -> list[int]:
+        last = fit_number(labels[-1], 118, room, font_path)
+        if n == 1:
+            return [last]
+        rest = min([fit_number(t, 92, room, font_path) for t in labels[:-1]] + [last])
+        return [rest] * (n - 1) + [last]
+
+    sizes = _sizes(texts)
+    # **箱が狭いと「1820万ポンド」が1行に入らない**（3段を横に並べると箱は 209px）。
+    # 数字をこれ以上縮める（fit_number の床は 40px＝単位 20px）のではなく、
+    # **単位を次の行に落とす**。落としたら全部の箱で落とす（箱ごとに形が変わると読みにくい）
+    stack = any(number_width(texts[k], sizes[k], font_path) > room for k in range(n))
+    if stack:
+        shown = [v["number"] for v in values]
+        sizes = _sizes(shown)
+    else:
+        shown = texts
+    units = [v["unit"] for v in values] if stack else [""] * n
+
+    note_lines = [_wrap(v["note"], note_font, int(box_w - 32))[:2] if v["note"] else []
+                  for v in values]
+    note_h = max(len(x) for x in note_lines) * 38
+    num_h = sizes[-1] + 20
+    unit_h = (CONVERT_UNIT_LINE_PX + 8) if stack else 0
+    box_h = 26 + num_h + unit_h + note_h + (18 if note_h else 6)
+    xs = [left + k * (box_w + arrow_w) for k in range(n)]
+
+    def value_parts(k, y):
+        w = number_width(shown[k], sizes[k], font_path)
+        baseline = y + 26 + num_h - 22
+        return xs[k] + box_w / 2 - w / 2, baseline
+
+    def note_top(y):
+        return y + 26 + num_h + unit_h + 4
+
+    blocks: list[dict] = []
+    for k in range(n):
+        def draw_value(draw, y, k=k):
+            hot = k == n - 1
+            x0 = xs[k]
+            draw.rounded_rectangle([x0, y, x0 + box_w, y + box_h], radius=16,
+                                   fill=BRAND_GREEN if hot else BOX,
+                                   outline=BRAND_GOLD if hot else GRID, width=4 if hot else 2)
+            nx, baseline = value_parts(k, y)
+            put_number(draw, nx, baseline, shown[k], sizes[k], BRAND_GOLD if hot else TEXT, font_path)
+            if units[k]:
+                uw = draw.textlength(units[k], font=unit_font)
+                draw.text((x0 + box_w / 2 - uw / 2, y + 26 + num_h - 6), units[k],
+                          font=unit_font, fill=BRAND_GOLD if hot else TEXT)
+            for j, chunk in enumerate(note_lines[k]):
+                tw = draw.textlength(chunk, font=note_font)
+                draw.text((x0 + box_w / 2 - tw / 2, note_top(y) + j * 38), chunk,
+                          font=note_font, fill=TEXT if hot else SUB)
+
+        def unit_value(y, k=k):
+            nx, baseline = value_parts(k, y)
+            number = _number_box(nx, baseline, shown[k], sizes[k], font_path)
+            note = _union([_text_box(xs[k] + box_w / 2 - ruler.textlength(c, font=note_font) / 2,
+                                     note_top(y) + j * 38, c, note_font)
+                           for j, c in enumerate(note_lines[k])])
+            return {"box": (xs[k], y, xs[k] + box_w, y + box_h), "cells": [number, note]}
+
+        # 横に並ぶので、高さは最後の箱だけが持つ（出ていない段も場所は空けておく）
+        blocks.append({"height": box_h + 14 if k == n - 1 else 0, "draw": draw_value, "row": True,
+                       "unit": unit_value})
+        if k < n - 1:
+            def draw_arrow(draw, y, k=k):
+                a0, a1 = xs[k] + box_w + 14, xs[k + 1] - 14
+                mid = y + box_h / 2
+                draw.line([(a0, mid), (a1 - 22, mid)], fill=ARROW, width=7)
+                draw.polygon([(a1 - 28, mid - 18), (a1 - 28, mid + 18), (a1, mid)], fill=ARROW)
+                for j, chunk in enumerate(reversed(via_lines[k])):
+                    tw = draw.textlength(chunk, font=via_font)
+                    draw.text(((a0 + a1) / 2 - tw / 2, mid - 18 - (j + 1) * 40), chunk,
+                              font=via_font, fill=TEXT)
+
+            blocks.append({"height": 0, "draw": draw_arrow, "row": True})
+    return blocks
+
+
+def _convert_down(values: list[dict], vias: list[str], n: int, width: int,
+                  font_path: str) -> list[dict]:
+    """縦に積む（ショート）。数字は左、注記は右。あいだに下向きの矢印、式は矢印の右。"""
     ruler = _ruler()
     inner = width - PAD * 2 - 24
     left = PAD + 12
     via_font = _font(font_path, 30)
     note_font = _font(font_path, 28)
     texts = [v["number"] + v["unit"] for v in values]
-    blocks = _title_block(spec, font_path)
-
-    if wide and n == 2:
-        # 横に並べる（本編の2段）。矢印の幅は式の長さで（2行まで）、残りを2つの箱で等分。
-        # **3段は横に並べない**：本編で写真の上に置くと板は幅900まで縮み、「1560万ポンド」が40px を切った
-        lines = _wrap(vias[0], via_font, int(inner * 0.26))[:2] if vias[0] else []
-        arrow_w = max(130, max((ruler.textlength(c, font=via_font) for c in lines), default=0) + 36)
-        box_w = (inner - arrow_w) / 2
-        room = box_w - 44
-        last = fit_number(texts[1], 118, room, font_path)
-        first = min(fit_number(texts[0], 92, room, font_path), last)
-        sizes = [first, last]
-        notes = [_wrap(v["note"], note_font, int(box_w - 32))[:2] if v["note"] else [] for v in values]
-        note_h = max(len(x) for x in notes) * 38
-        num_h = last + 20
-        box_h = 26 + num_h + note_h + (18 if note_h else 6)
-        xs = [left, left + box_w + arrow_w]
-
-        def value_parts(k, y):
-            w = number_width(texts[k], sizes[k], font_path)
-            baseline = y + 26 + num_h - 22
-            return xs[k] + box_w / 2 - w / 2, baseline
-
-        for k in range(2):
-            def draw_value(draw, y, k=k):
-                hot = k == 1
-                x0 = xs[k]
-                draw.rounded_rectangle([x0, y, x0 + box_w, y + box_h], radius=16,
-                                       fill=BRAND_GREEN if hot else BOX,
-                                       outline=BRAND_GOLD if hot else GRID, width=4 if hot else 2)
-                nx, baseline = value_parts(k, y)
-                put_number(draw, nx, baseline, texts[k], sizes[k], BRAND_GOLD if hot else TEXT, font_path)
-                for j, chunk in enumerate(notes[k]):
-                    tw = draw.textlength(chunk, font=note_font)
-                    draw.text((x0 + box_w / 2 - tw / 2, y + 26 + num_h + 4 + j * 38), chunk,
-                              font=note_font, fill=TEXT if hot else SUB)
-
-            def unit_value(y, k=k):
-                nx, baseline = value_parts(k, y)
-                number = _number_box(nx, baseline, texts[k], sizes[k], font_path)
-                note = _union([_text_box(xs[k] + box_w / 2 - ruler.textlength(c, font=note_font) / 2,
-                                         y + 26 + num_h + 4 + j * 38, c, note_font)
-                               for j, c in enumerate(notes[k])])
-                return {"box": (xs[k], y, xs[k] + box_w, y + box_h), "cells": [number, note]}
-
-            # 横に並ぶので、高さは最後の箱だけが持つ（出ていない段も場所は空けておく）
-            blocks.append({"height": box_h + 14 if k == 1 else 0, "draw": draw_value, "row": True,
-                           "unit": unit_value})
-            if k == 0:
-                def draw_arrow(draw, y):
-                    a0, a1 = xs[0] + box_w + 14, xs[1] - 14
-                    mid = y + box_h / 2
-                    draw.line([(a0, mid), (a1 - 22, mid)], fill=ARROW, width=7)
-                    draw.polygon([(a1 - 28, mid - 18), (a1 - 28, mid + 18), (a1, mid)], fill=ARROW)
-                    for j, chunk in enumerate(reversed(lines)):
-                        tw = draw.textlength(chunk, font=via_font)
-                        draw.text(((a0 + a1) / 2 - tw / 2, mid - 18 - (j + 1) * 40), chunk,
-                                  font=via_font, fill=TEXT)
-
-                blocks.append({"height": 0, "draw": draw_arrow, "row": True})
-        return blocks + _note_blocks(spec, width, font_path)
-
-    # 縦に積む（ショートと、本編の3段）。数字は左、注記は右。あいだに下向きの矢印、式は矢印の右
     room = inner - 40
     # 3段で板が画面の半分を超えないよう、縦の数字は本編の横並びより一回り小さく（ショートで顔の目元が残る高さ）
     last = fit_number(texts[-1], 112, room, font_path)
     rest = min([fit_number(t, 86, room, font_path) for t in texts[:-1]] + [last])
     sizes = [rest] * (n - 1) + [last]
-    blocks_out = []
+    blocks_out: list[dict] = []
     for k in range(n):
         hot = k == n - 1
         size = sizes[k]
@@ -2011,7 +2216,711 @@ def _convert(spec: dict, width: int, font_path: str, latin_path: str) -> list[di
                     draw.text((cx + 44, first + j * 40), chunk, font=via_font, fill=TEXT)
 
             blocks_out.append({"height": arrow_h, "draw": draw_arrow, "row": True})
-    return blocks + blocks_out + _note_blocks(spec, width, font_path)
+    return blocks_out
+
+
+# ------------------------------------------------------------------ 折れ線・増減の内訳・年表（2026-10-08）
+#
+# 別チャンネルにあって、こちらに無かった3つ。世の中の断面図の charts2.line（折れ線）・
+# charts2.waterfall（増減の内訳）・charts4.schedule（年表の下敷き）から移した。
+# **あちらの作りはそのまま使えない。**あちらは白地の板に影を付けて横並びで描くが、
+# こちらは「縦に積むブロック＋`reveal` で1つずつ出す・深い緑と黄の2色・不透明の板」なので、
+# 10/7 に移した6つ（stats・verdict・calc・versus・scatter・convert）と同じ骨格で書き直した。
+#
+# 字の大きさは、いちばん小さい注記でも28px を切らない（あちらの typo.py の基準。
+# 1920 の画面での 48px がスマホで 10pt なので、28px＝5.7pt が読める下限）。
+# 入らないときは字を縮めるのではなく、**項目の数の上限で止める**（draft が知らせる）。
+
+LINE_KEYS = frozenset({"type", "title", "x", "series", "unit", "focus", "highlight",
+                       "note", "source", "color"})
+LINE_SERIES_MAX = 3       # 線は3本まで。4本目は黄＋緑の2色では描き分けられない
+LINE_POINTS_MAX = 8       # 点は8つまで。ショート（幅972）で年の札が隣とぶつからない上限
+# 図の高さの下限（2026-10-08）。置き場が狭くてもここまでは残す。
+# 180 は、目盛り5本のあいだが 45px 空く高さ（値の札 30px が隣の線にかからない）
+LINE_PLOT_MIN_H = 180
+WATERFALL_KEYS = frozenset({"type", "title", "start", "steps", "total", "unit", "highlight",
+                            "note", "source", "color"})
+WATERFALL_STEPS_MAX = 6   # 段は6つまで（もと＋6段＋合計＝8行）
+TIMELINE_KEYS = frozenset({"type", "title", "rows", "focus", "highlight_row",
+                           "note", "source", "color"})
+TIMELINE_ROWS_MAX = 6     # 行は6つまで。これより多いと1行の高さが54を切り、字が28を割る
+
+LINE_DIM = (46, 140, 96, 255)      # 主役でない線（棒グラフの明るいほうと同じ緑）
+UP = (74, 200, 128, 255)           # 増えた段・年表の点（判定の○と同じ緑）
+DOWN = (226, 80, 80, 255)          # 減った段（判定の×と同じ赤）
+BASE_BAR = (72, 84, 104, 255)      # 増減の「もと」の段（灰。増えも減りもしていない）
+
+
+def _pair(value) -> tuple[str, object]:
+    """`[名前, 数]` か `{name, value}` を (名前, 値) に。形が違えば ("", None)。"""
+    if isinstance(value, dict):
+        return str(value.get("name", "") or "").strip(), value.get("value")
+    if isinstance(value, (list, tuple)) and len(value) == 2:
+        return str(value[0] if value[0] is not None else "").strip(), value[1]
+    return "", None
+
+
+def _pick_by_name(value, names: list[str]) -> int | None:
+    """名前か 0 始まりの番号を番号に。無ければ None、合わなければ -1。
+
+    **名前を先に見る。**年を書く形（`focus: 2002`・`highlight: 2023`）だと、数で書いた
+    名前と番号が見分けられない。年表・折れ線は名前が数なので、番号より名前を優先する。
+    """
+    if value is None or value == "":
+        return None
+    text = str(value).strip()
+    if text in names:
+        return names.index(text)
+    if isinstance(value, int) and not isinstance(value, bool) and 0 <= value < len(names):
+        return value
+    return -1
+
+
+# ---- 折れ線（推移）
+
+
+def line_x(spec: dict) -> list[str]:
+    """横軸の札（年・節）。等間隔に置くだけなので数でなくてよい。"""
+    xs = spec.get("x")
+    if not isinstance(xs, (list, tuple)):
+        return []
+    return [str(v if v is not None else "").strip() for v in xs]
+
+
+def line_series(spec: dict) -> list[dict]:
+    """series を {name, values} の並びに。数でない値は None のまま（check_line が止める）。"""
+    out = []
+    for item in spec.get("series") or []:
+        if isinstance(item, dict):
+            name, values = item.get("name"), item.get("values")
+        elif isinstance(item, (list, tuple)) and len(item) == 2:
+            name, values = item
+        else:
+            out.append({"name": "", "values": None, "raw": item})
+            continue
+        numbers = [to_number(v) for v in values] if isinstance(values, (list, tuple)) else None
+        out.append({"name": str(name if name is not None else "").strip(),
+                    "values": numbers, "raw": item})
+    return out
+
+
+def line_focus(spec: dict, series: list[dict]) -> int:
+    """主役の線（`focus` は名前か番号）。無ければ1つ目。合わなければ -1。"""
+    found = _pick_by_name(spec.get("focus"), [s["name"] for s in series])
+    return 0 if found is None else found
+
+
+def line_highlight(spec: dict, xs: list[str]) -> int | None:
+    """話している位置（`highlight` は x の札か番号）。無ければ None、合わなければ -1。"""
+    return _pick_by_name(spec.get("highlight"), xs)
+
+
+def check_line(spec: dict) -> list[str]:
+    """折れ線の形の誤り（描く前に止める。research の draft も同じものを見る）。"""
+    problems = []
+    unknown = sorted(str(k) for k in spec if k not in LINE_KEYS)
+    if unknown:
+        problems.append(f"line カードに知らない鍵があります（{unknown[0]}）。"
+                        f"使えるのは {'・'.join(sorted(LINE_KEYS))}")
+    xs = line_x(spec)
+    if len(xs) < 2:
+        problems.append("line には x（年・節の札）を2つ以上書いてください")
+    elif len(xs) > LINE_POINTS_MAX:
+        problems.append(f"line の x は{LINE_POINTS_MAX}つまでです（{len(xs)}）。"
+                        "軸の札が隣とぶつかって読めません")
+    if any(not x for x in xs):
+        problems.append("line の x に空の札があります")
+    series = line_series(spec)
+    if not series:
+        problems.append("line には series（[名前, [数, …]] の並び）が必要です")
+    elif len(series) > LINE_SERIES_MAX:
+        problems.append(f"line の series は{LINE_SERIES_MAX}本までです（{len(series)}本）。"
+                        "黄と緑の2色では描き分けられません")
+    for item in series:
+        if not item["name"] or item["values"] is None:
+            problems.append(f"line の series は [名前, [数, …]] で書いてください（{str(item['raw'])[:30]}）")
+            break
+        if any(v is None for v in item["values"]):
+            problems.append(f"line の『{item['name']}』の値は数だけで書いてください（{str(item['raw'])[:40]}）")
+            break
+        if xs and len(item["values"]) != len(xs):
+            problems.append(f"line の『{item['name']}』は値が{len(item['values'])}つ、"
+                            f"x は{len(xs)}つです。同じ数にしてください")
+            break
+    names = [s["name"] for s in series if s["name"]]
+    if len(set(names)) != len(names):
+        problems.append("line の series の名前が重なっています（focus で指せません）")
+    if series and line_focus(spec, series) == -1:
+        problems.append(f"line の focus『{spec.get('focus')}』は series の名前か "
+                        f"0〜{len(series) - 1} の番号で書いてください")
+    if xs and line_highlight(spec, xs) == -1:
+        problems.append(f"line の highlight『{spec.get('highlight')}』は x の札か "
+                        f"0〜{len(xs) - 1} の番号で書いてください")
+    return problems
+
+
+def _line_range(values: list[float]) -> tuple[float, float]:
+    """折れ線の縦軸の範囲。**推移は 0 から始めなくてよい**（0 から描くと動きが潰れる）。
+
+    ただし低いほうが 0 に近ければ 0 から始める（そのほうが大きさが正しく見える）。
+    0 から始めなかったことは `_break_mark` と破線の目盛りが画面に出す。
+    """
+    lo, hi = min(values), max(values)
+    span = (hi - lo) or max(abs(hi), 1.0)
+    if lo >= 0 and lo <= hi * 0.25:
+        return 0.0, hi + span * 0.12
+    return lo - span * 0.18, hi + span * 0.18
+
+
+def _break_mark(draw, x: float, y: float) -> None:
+    """軸を途中から始めた印。縦軸を2本の斜線で切る（目盛りの数字だけでは気づかれない）。"""
+    for offset in (0, 9):
+        draw.line([(x - 9, y + 10 + offset), (x + 9, y - 4 + offset)], fill=SUB, width=3)
+
+
+def _line_styles(count: int, focus: int) -> list[str]:
+    """線の描き方。主役は太い実線、ほかは細い実線 → 破線 → 点線（色は2つしか無い）。"""
+    rest = ("solid", "dash", "dot")
+    out, k = [], 0
+    for index in range(count):
+        if index == focus:
+            out.append("hero")
+        else:
+            out.append(rest[min(k, len(rest) - 1)])
+            k += 1
+    return out
+
+
+def _stroke(draw, start, end, style: str, color) -> None:
+    if style == "hero":
+        draw.line([start, end], fill=color, width=7)
+    elif style == "dash":
+        _dashed(draw, start, end, color, 5, dash=16.0, gap=10.0)
+    elif style == "dot":
+        _dashed(draw, start, end, color, 5, dash=4.0, gap=9.0)
+    else:
+        draw.line([start, end], fill=color, width=5)
+
+
+def _line(spec: dict, width: int, font_path: str, latin_path: str,
+         slot: int | None = None) -> list[dict]:
+    """折れ線（推移）。記録の解説（得点の推移）・クラブの財政（収益の5年）に。
+
+    ```yaml
+    card: {type: line, title: 収益の5年, x: [2021, 2022, 2023, 2024, 2025],
+           series: [[バルセロナ, [631, 638, 800, 859, 1045]], [レアル, [653, 714, 831, 843, 1046]]],
+           unit: 百万ユーロ, focus: バルセロナ, highlight: 2023}
+    ```
+    左から1点ずつ出る（`reveal`）。主役（`focus`、無ければ1つ目）は黄の太い線、ほかは緑の
+    細い線・破線・点線。主役の値だけ点のそばに出す。`highlight`（x の札か番号）の位置に
+    黄の縦線が立ち、その点が大きくなる。行ごとにカードを分けて `highlight` だけ替えても
+    開き直さない（`same_table`）。**縦軸は 0 から始めなくてよい**（途中から始めたら
+    縦軸を斜線2本で切り、いちばん下の目盛り線を破線にする）。
+    """
+    problems = check_line(spec)
+    if problems:
+        raise CardError(problems[0])
+    xs = line_x(spec)
+    series = line_series(spec)
+    n, m = len(xs), len(series)
+    focus = line_focus(spec, series)
+    lit = line_highlight(spec, xs)
+    unit = str(spec.get("unit") or "").strip()
+    wide = width >= 1050
+    ruler = _ruler()
+
+    tick_font = _font(font_path, 28)
+    axis_font = _font(font_path, 30)
+    value_font = _font(font_path, 30)
+    legend_font = _font(font_path, 30)
+    styles = _line_styles(m, focus)
+    colors = [BRAND_GOLD if k == focus else (UP if styles[k] == "solid" else LINE_DIM)
+              for k in range(m)]
+
+    values = [v for item in series for v in item["values"]]
+    ticks = nice_ticks(*_line_range(values))
+    y_lo, y_hi = ticks[0], ticks[-1]
+    broken = y_lo > 0          # 0 から始めなかった（印を出す）
+
+    left = PAD + 12
+    inner = width - PAD * 2 - 24
+    tick_w = max(ruler.textlength(_tick_text(t), font=tick_font) for t in ticks)
+    # 両端の点の上下に置く札（年・値）は真ん中そろえなので、**その半分だけ左右を空ける**。
+    # 空けないと、いちばん右の年と値が板からはみ出す（PAD の余白に食い込む）
+    edge = max(max(ruler.textlength(x, font=tick_font) for x in xs),
+               max(number_width(_tick_text(v), 30, font_path)
+                   for item in series for v in item["values"])) / 2 + 6
+    plot_left = left + max(tick_w + 16, edge)
+    plot_right = width - PAD - 12 - edge
+    # ---- 凡例（2本以上のとき）。1行に並べ、入らなければ2行まで
+    legend_h, legend_rows = 0, []
+    if m >= 2:
+        row, used = [], 0.0
+        for index in range(m):
+            text_w = ruler.textlength(series[index]["name"], font=legend_font)
+            need = 62 + text_w + (30 if row else 0)
+            if row and used + need > inner:
+                legend_rows.append(row)
+                row, used = [], 0.0
+                need = 62 + text_w
+            row.append(index)
+            used += need
+        if row:
+            legend_rows.append(row)
+        if len(legend_rows) > 2:
+            raise CardError("line の凡例が2行に入りません。series の名前を短くするか、本数を減らしてください")
+        legend_h = 44 * len(legend_rows)
+
+    head = 64                  # 単位の行（いちばん上の目盛りの字と重ねない）
+    tail = 54                  # 横軸の札の段
+    # ショートは横が狭いぶん縦に伸ばす（scatter と同じ考え。板が画面の半分を超えない高さ）
+    cap = min(340, int(width * 0.30)) if wide else int(width * 0.44)
+    # **図の高さは置き場から決める**（2026-10-08）。上限のままだと板が 656〜755px になり、
+    # 置き場（539px）に収まるまで 0.82 倍に縮められて、軸・目盛り・凡例・点の値が
+    # 23〜25px になっていた（スマホ 4.7〜5.0pt）。**字は 28/30 のまま図を低くする。**
+    # ショートの置き場（983px）では上限のままなので見た目は変わらない
+    notes = _note_blocks(spec, width, font_path)
+    overhead = (PAD * 2 + (66 if str(spec.get("title") or "").strip() else 0)
+                + legend_h + head + tail + sum(b["height"] for b in notes)
+                + source_room(spec))
+    plot_h = max(LINE_PLOT_MIN_H, min(cap, slot - overhead)) if slot else cap
+    plot_top, plot_bottom = head, head + plot_h
+    step = (plot_right - plot_left) / max(n - 1, 1)
+
+    def px(index: int) -> float:
+        return plot_left + step * index
+
+    def py(value: float) -> float:
+        return plot_bottom - (value - y_lo) / (y_hi - y_lo) * (plot_bottom - plot_top)
+
+    # ---- 横軸の札は、隣とぶつかるなら間引く（ショートの幅で4桁の年が8つ並ぶと重なる）
+    label_w = max(ruler.textlength(x, font=tick_font) for x in xs)
+    if label_w + 14 <= step:
+        shown = set(range(n))
+    elif label_w + 14 <= step * 2:
+        shown = set(range(0, n, 2)) | {n - 1}
+    else:
+        shown = {0, n - 1}
+    if lit is not None:
+        shown.add(lit)
+
+    # ---- 主役の値の札。全部置けなければ、端と話している点だけ
+    hero = series[focus]["values"]
+    value_texts = [_tick_text(v) for v in hero]
+    value_w = max(ruler.textlength(t, font=value_font) for t in value_texts)
+    if value_w + 16 <= step:
+        value_at = set(range(n))
+    else:
+        value_at = {0, n - 1} | ({lit} if lit is not None else set())
+
+    radius = [[(14 if k == lit else 10) if i == focus else (9 if k == lit else 7)
+               for k in range(n)] for i in range(m)]
+
+    height = plot_bottom + tail
+
+    def draw_legend(draw, y):
+        for line_no, row in enumerate(legend_rows):
+            x = left
+            for index in row:
+                mid = y + line_no * 44 + 20
+                _stroke(draw, (x, mid), (x + 52, mid), styles[index], colors[index])
+                draw.text((x + 62, mid), series[index]["name"], font=legend_font,
+                          fill=BRAND_GOLD if index == focus else SUB, anchor="lm")
+                x += 62 + ruler.textlength(series[index]["name"], font=legend_font) + 30
+
+    def draw_axes(draw, y):
+        if unit:
+            draw.text((left, y + 4), unit, font=axis_font, fill=SUB)
+        for t in ticks:
+            yy = y + py(t)
+            if t == y_lo and broken:
+                # いちばん下が 0 でないことを線でも示す（数字だけでは気づかれない）
+                _dashed(draw, (plot_left, yy), (plot_right, yy), GRID, 2, dash=12.0, gap=8.0)
+            else:
+                draw.line([(plot_left, yy), (plot_right, yy)], fill=GRID,
+                          width=2 if t == y_lo else 1)
+            draw.text((plot_left - 12, yy), _tick_text(t), font=tick_font, fill=SUB, anchor="rm")
+        draw.line([(plot_left, y + plot_top), (plot_left, y + plot_bottom)], fill=GRID, width=2)
+        if broken:
+            _break_mark(draw, plot_left, y + plot_bottom - 30)
+        for index, label in enumerate(xs):
+            if index in shown:
+                draw.text((px(index), y + plot_bottom + 10), label, font=tick_font,
+                          fill=BRAND_GOLD if index == lit else SUB, anchor="ma")
+
+    def hero_label(index: int, y: float) -> tuple[float, float, str]:
+        """主役の値の札を置く位置（真ん中の x, 下の線の y, 字）。
+
+        **その位置でいちばん下の線なら、札も下に置く。**上に固定すると、札の下地
+        （板の地で塗る）がすぐ上を通るほかの線を消してしまう（バルサ 631 の札が
+        レアルの緑の線を切っていた）。枠からはみ出すときは反対側へ戻す。
+        """
+        cx, cy = px(index), y + py(hero[index])
+        r = radius[focus][index]
+        others = [item["values"][index] for i, item in enumerate(series) if i != focus]
+        below = bool(others) and hero[index] <= min(others)
+        above_y = cy - r - 14
+        below_y = cy + r + 14 + value_font.size
+        if below and below_y + 7 > y + plot_bottom + 4:
+            below = False
+        if not below and above_y - value_font.size < y + plot_top:
+            below = True
+        return cx, below_y if below else above_y, value_texts[index]
+
+    blocks = _title_block(spec, font_path)
+    if legend_h:
+        blocks.append({"height": legend_h, "draw": draw_legend})
+    blocks.append({"height": 0, "draw": draw_axes})
+
+    for index in range(n):
+        def draw_step(draw, y, index=index):
+            if index == lit:
+                draw.line([(px(index), y + plot_top), (px(index), y + plot_bottom)],
+                          fill=BRAND_GOLD, width=3)
+            for i, item in enumerate(series):
+                if index:
+                    _stroke(draw, (px(index - 1), y + py(item["values"][index - 1])),
+                            (px(index), y + py(item["values"][index])), styles[i], colors[i])
+                cx, cy = px(index), y + py(item["values"][index])
+                r = radius[i][index]
+                draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=colors[i],
+                             outline=DOT_RING, width=3)
+            if index in value_at:
+                cx, baseline, text = hero_label(index, y)
+                tw = ruler.textlength(text, font=value_font)
+                # 札の下は板の地で塗る（線・目盛りが字を横切らない）
+                draw.rounded_rectangle([cx - tw / 2 - 8, baseline - value_font.size - 4,
+                                        cx + tw / 2 + 8, baseline + 7], radius=8,
+                                       fill=PANEL[:3] + (255,))
+                draw.text((cx, baseline), text, font=value_font, fill=BRAND_GOLD, anchor="ms")
+
+        def unit_step(y, index=index):
+            cx, cy = px(index), y + py(hero[index])
+            r = radius[focus][index]
+            dot = (cx - r - 12, cy - r - 12, cx + r + 12, cy + r + 12)
+            label = None
+            if index in value_at:
+                lx, baseline, text = hero_label(index, y)
+                tw = ruler.textlength(text, font=value_font)
+                label = _text_box(lx - tw / 2, baseline, text, value_font, "ls")
+            tick = (_text_box(cx, y + plot_bottom + 10, xs[index], tick_font, "ma")
+                    if index in shown else None)
+            # 端の点の枠は板の外へ出さない（書き込みの的が板からはみ出す）
+            return {"box": (max(left, cx - step / 2), y + plot_top,
+                            min(width - PAD, cx + step / 2), y + plot_bottom + tail),
+                    "cells": [dot, label, tick]}
+
+        blocks.append({"height": 0, "draw": draw_step, "row": True, "unit": unit_step})
+    blocks.append({"height": height, "draw": lambda draw, y: None})
+    return blocks + notes
+
+
+# ---- 増減の内訳
+
+
+def waterfall_rows(spec: dict) -> list[dict]:
+    """もと・各段・合計を {name, value, kind} の並びに。kind は base / up / down / total。
+
+    `total` を書かなければ、もと＋各段の足し算で埋める（名前は「合計」）。
+    """
+    out = []
+    broken = False
+    if spec.get("start") is not None:
+        name, value = _pair(spec.get("start"))
+        number = to_number(value)
+        out.append({"name": name, "value": number, "kind": "base", "raw": spec.get("start")})
+        broken = number is None
+    running = out[0]["value"] if out and out[0]["value"] is not None else 0.0
+    for item in spec.get("steps") or []:
+        name, value = _pair(item)
+        number = to_number(value)
+        out.append({"name": name, "value": number,
+                    "kind": "down" if (number or 0) < 0 else "up", "raw": item})
+        if number is None:
+            broken = True
+        else:
+            running += number
+    if spec.get("total") is not None:
+        name, value = _pair(spec.get("total"))
+        out.append({"name": name, "value": to_number(value), "kind": "total",
+                    "raw": spec.get("total")})
+    elif not broken:
+        out.append({"name": "合計", "value": running, "kind": "total", "raw": None})
+    return out
+
+
+def check_waterfall(spec: dict) -> list[str]:
+    """増減の内訳の形の誤り（描く前に止める。research の draft も同じものを見る）。"""
+    problems = []
+    unknown = sorted(str(k) for k in spec if k not in WATERFALL_KEYS)
+    if unknown:
+        problems.append(f"waterfall カードに知らない鍵があります（{unknown[0]}）。"
+                        f"使えるのは {'・'.join(sorted(WATERFALL_KEYS))}")
+    steps = spec.get("steps")
+    if not isinstance(steps, (list, tuple)) or not steps:
+        problems.append("waterfall には steps（[[名前, ±数], …]）が必要です")
+    elif len(steps) > WATERFALL_STEPS_MAX:
+        problems.append(f"waterfall の steps は{WATERFALL_STEPS_MAX}段までです（{len(steps)}段）。"
+                        "名前の札が入りません")
+    for key in ("start", "total"):
+        if spec.get(key) is not None:
+            name, value = _pair(spec.get(key))
+            if not name or to_number(value) is None:
+                problems.append(f"waterfall の {key} は [名前, 数] で書いてください"
+                                f"（{str(spec.get(key))[:30]}）")
+    rows = waterfall_rows(spec)
+    for row in rows:
+        if not row["name"] or row["value"] is None:
+            problems.append(f"waterfall の段は [名前, 数]（数だけ）で書いてください（{str(row['raw'])[:30]}）")
+            break
+    names = [r["name"] for r in rows if r["name"]]
+    if len(set(names)) != len(names):
+        problems.append("waterfall の段の名前が重なっています（highlight・書き込みで指せません）")
+    if rows and _pick_by_name(spec.get("highlight"), names) == -1:
+        problems.append(f"waterfall の highlight『{spec.get('highlight')}』は段の名前か "
+                        f"0〜{len(rows) - 1} の番号で書いてください")
+    return problems
+
+
+WATERFALL_TOLERANCE = 0.01   # 書いた合計と足し算のずれ（これより大きければ知らせる）
+
+
+def waterfall_mismatch(spec: dict) -> str:
+    """`total` を書いてあれば、もと＋各段の足し算と比べる（止めない。draft が知らせる）。"""
+    if spec.get("total") is None or check_waterfall(spec):
+        return ""
+    rows = waterfall_rows(spec)
+    adds = sum(r["value"] for r in rows if r["kind"] != "total")
+    total = rows[-1]["value"]
+    if not total or abs(adds - total) / abs(total) <= WATERFALL_TOLERANCE:
+        return ""
+    return f"足すと {_tick_text(adds)}、書いた {rows[-1]['name']} は {_tick_text(total)}"
+
+
+def _waterfall(spec: dict, width: int, font_path: str, latin_path: str,
+              slot: int | None = None) -> list[dict]:
+    """増減の内訳。クラブの財政（何が上げて何が下げたか）・移籍金の中身（固定＋ボーナス＋歩合）に。
+
+    ```yaml
+    card: {type: waterfall, title: 移籍金の中身, start: [固定, 7500],
+           steps: [[ボーナス, 1500], [歩合, -500]], total: [合計, 8500], unit: 万ユーロ}
+    ```
+    **横に寝かせて上から積む**（棒グラフと同じ置き場）。あちらの縦の柱は、ショートの幅では
+    名前の札が3字しか入らなかった。段が上から1つずつ出て（`reveal`）、増えた段は緑・
+    減った段は赤・合計は黄。段は前の段の先から始まり、破線でつながる。`highlight`（名前か番号）
+    の行が光る（行ごとにカードを分けても `same_table` で開き直さない）。
+    **合計は書いた人が決めてよい**（書かなければ足し算で埋め、書いた値がずれたら draft が知らせる）。
+    """
+    problems = check_waterfall(spec)
+    if problems:
+        raise CardError(problems[0])
+    rows = waterfall_rows(spec)
+    n = len(rows)
+    unit = str(spec.get("unit") or "").strip()
+    highlight = _pick_by_name(spec.get("highlight"), [r["name"] for r in rows])
+    ruler = _ruler()
+
+    label_font = _font(font_path, 36)
+    value_font = _font(font_path, 40)
+    unit_font = _font(font_path, 28)
+
+    texts = []
+    for row in rows:
+        if row["kind"] == "up":
+            texts.append("＋" + _tick_text(row["value"]))
+        elif row["kind"] == "down":
+            texts.append("－" + _tick_text(abs(row["value"])))
+        else:
+            texts.append(_tick_text(row["value"]))
+
+    left = PAD + 12
+    label_w = min(max(ruler.textlength(r["name"], font=label_font) for r in rows) + 24,
+                  width * 0.34)
+    while label_font.size > 28 and max(ruler.textlength(r["name"], font=label_font)
+                                       for r in rows) > label_w - 16:
+        label_font = _font(font_path, label_font.size - 2)
+    bar_left = left + label_w + 24
+    value_col = width - PAD - 12
+    value_w = max(ruler.textlength(t, font=value_font) for t in texts)
+    bar_span = value_col - bar_left - value_w - 30
+
+    tops, running = [], 0.0
+    for row in rows:
+        if row["kind"] == "total":
+            tops.append((0.0, row["value"]))
+        else:
+            tops.append((running, running + row["value"]))
+            running += row["value"]
+    lo = min(0.0, min(min(a, b) for a, b in tops))
+    hi = max(0.0, max(max(a, b) for a, b in tops)) or 1.0
+
+    def bx(value: float) -> float:
+        return bar_left + (value - lo) / (hi - lo) * bar_span
+
+    row_h = 70 if n <= 6 else 60
+    bar_top = 12
+    bar_bottom = bar_top + (46 if n <= 6 else 38)
+    mid_y = (bar_top + bar_bottom) / 2
+
+    def draw_head(draw, y):
+        if unit:
+            tw = draw.textlength(f"（{unit}）", font=unit_font)
+            draw.text((value_col - tw, y + 4), f"（{unit}）", font=unit_font, fill=SUB)
+        if lo < 0:
+            # 0 の位置。負の段があるときだけ出す（0 が左端なら線は要らない）
+            draw.line([(bx(0), y + 30), (bx(0), y + 30 + row_h * n)], fill=GRID, width=2)
+
+    blocks = _title_block(spec, font_path)
+    blocks.append({"height": 38, "draw": draw_head})
+
+    for number, row in enumerate(rows):
+        def draw_row(draw, y, number=number, row=row):
+            if number == highlight:
+                draw.rounded_rectangle([PAD - 8, y - 2, width - PAD + 8, y + row_h - 8],
+                                       radius=10, fill=HILITE)
+                draw.rectangle([PAD - 8, y + 6, PAD - 2, y + row_h - 18], fill=BRAND_GOLD)
+            color = {"base": BASE_BAR, "up": UP, "down": DOWN, "total": BRAND_GOLD}[row["kind"]]
+            a, b = tops[number]
+            x0, x1 = min(bx(a), bx(b)), max(bx(a), bx(b))
+            if number and row["kind"] in ("up", "down") and rows[number - 1]["kind"] != "total":
+                # 前の段の先から始まることを破線で示す
+                _dashed(draw, (bx(a), y + bar_top - (row_h - bar_bottom) - bar_top + 4),
+                        (bx(a), y + bar_top), GRID, 2, dash=7.0, gap=6.0)
+            draw.rounded_rectangle([x0, y + bar_top, max(x1, x0 + 6), y + bar_bottom],
+                                   radius=8, fill=color)
+            name = _fit_cell(draw, row["name"], label_font, label_w - 16)
+            draw.text((left, y + mid_y), name, font=label_font, anchor="lm",
+                      fill=BRAND_GOLD if (row["kind"] == "total" or number == highlight) else TEXT)
+            tw = draw.textlength(texts[number], font=value_font)
+            draw.text((value_col - tw, y + mid_y), texts[number], font=value_font, anchor="lm",
+                      fill=TEXT if row["kind"] == "base" else color)
+
+        def unit_row(y, number=number, row=row):
+            a, b = tops[number]
+            x0, x1 = min(bx(a), bx(b)), max(bx(a), bx(b))
+            name = _fit_cell(ruler, row["name"], label_font, label_w - 16)
+            tw = ruler.textlength(texts[number], font=value_font)
+            return {"box": (PAD - 8, y - 2, width - PAD + 8, y + row_h - 8),
+                    "cells": [_text_box(left, y + mid_y, name, label_font, "lm"),
+                              (x0, y + bar_top, max(x1, x0 + 6), y + bar_bottom),
+                              _text_box(value_col - tw, y + mid_y, texts[number], value_font, "lm")]}
+
+        blocks.append({"height": row_h, "draw": draw_row, "row": True, "unit": unit_row})
+    return blocks + _note_blocks(spec, width, font_path)
+
+
+# ---- 年表
+
+
+def timeline_rows(spec: dict) -> list[list[str]]:
+    return [[str(c if c is not None else "").strip() for c in row]
+            for row in (spec.get("rows") or []) if isinstance(row, (list, tuple))]
+
+
+def check_timeline(spec: dict) -> list[str]:
+    """年表の形の誤り（描く前に止める。research の draft も同じものを見る）。"""
+    problems = []
+    unknown = sorted(str(k) for k in spec if k not in TIMELINE_KEYS)
+    if unknown:
+        problems.append(f"timeline カードに知らない鍵があります（{unknown[0]}）。"
+                        f"使えるのは {'・'.join(sorted(TIMELINE_KEYS))}")
+    raw = spec.get("rows") or []
+    rows = timeline_rows(spec)
+    if len(rows) != len(raw) or len(rows) < 2:
+        problems.append("timeline には rows（[[年, できごと], …]）を2行以上書いてください")
+    elif len(rows) > TIMELINE_ROWS_MAX:
+        problems.append(f"timeline の rows は{TIMELINE_ROWS_MAX}行までです（{len(rows)}行）。"
+                        "これより多いと字が小さくなって読めません")
+    for row in rows:
+        if len(row) != 2 or not row[0] or not row[1]:
+            problems.append(f"timeline の各行は [年, できごと] の2つで書いてください（{str(row)[:30]}）")
+            break
+    years = [r[0] for r in rows if r and r[0]]
+    if len(set(years)) != len(years):
+        problems.append("timeline の年が重なっています（focus・書き込みで指せません）")
+    if rows:
+        for key in ("focus", "highlight_row"):
+            if _pick_by_name(spec.get(key), years) == -1:
+                problems.append(f"timeline の {key}『{spec.get(key)}』は年か "
+                                f"0〜{len(rows) - 1} の番号で書いてください")
+    return problems
+
+
+def _timeline(spec: dict, width: int, font_path: str, latin_path: str,
+             slot: int | None = None) -> list[dict]:
+    """年表。ユニフォームとエンブレムの歴史（変遷）・移籍の深掘り（交渉の経過）に。
+
+    ```yaml
+    card: {type: timeline, title: エンブレムの変遷,
+           rows: [[1899, 創立], [1910, 盾の形に], [2002, 文字を外した]], focus: 2002}
+    ```
+    縦の線に点を打ち、左に年、右にできごと（2行まで）。上から1行ずつ出て（`reveal`）、
+    線も一緒に伸びる。`focus`（年か番号）の点だけ黄で大きく、ほかは緑。`highlight_row`
+    の行が光る（行ごとにカードを分けても `same_table` で開き直さない）。
+    """
+    problems = check_timeline(spec)
+    if problems:
+        raise CardError(problems[0])
+    rows = timeline_rows(spec)
+    n = len(rows)
+    years = [r[0] for r in rows]
+    focus = _pick_by_name(spec.get("focus"), years)
+    highlight = _pick_by_name(spec.get("highlight_row"), years)
+    ruler = _ruler()
+
+    # 行が多い回は縦に詰める（ショートでも6行が板の半分に収まる）
+    many = n > 4
+    when_font = _font(font_path, 40 if not many else 36)
+    what_font = _font(font_path, 36 if not many else 34)
+    left = PAD + 12
+    inner = width - PAD * 2 - 24
+    when_w = min(max(ruler.textlength(r[0], font=when_font) for r in rows) + 20, inner * 0.30)
+    while when_font.size > 28 and max(ruler.textlength(r[0], font=when_font)
+                                      for r in rows) > when_w - 12:
+        when_font = _font(font_path, when_font.size - 2)
+    spine = left + when_w + 38
+    text_x = spine + 46
+    text_w = width - PAD - 12 - text_x
+    chunks = [_wrap(r[1], what_font, int(text_w))[:2] for r in rows]
+    lines = max(len(c) for c in chunks)
+    line_h = what_font.size + 10
+    # 行の高さは全部そろえる（線を1行ずつ伸ばすので、まちまちだと点の間隔が狂う）
+    row_h = max(76 if not many else 64, 26 + lines * line_h)
+
+    blocks = _title_block(spec, font_path)
+    for number, row in enumerate(rows):
+        def draw_row(draw, y, number=number, row=row):
+            cy = y + row_h / 2 - 4
+            if number == highlight:
+                draw.rounded_rectangle([PAD - 8, y - 2, width - PAD + 8, y + row_h - 10],
+                                       radius=10, fill=HILITE)
+                draw.rectangle([PAD - 8, y + 6, PAD - 2, y + row_h - 20], fill=BRAND_GOLD)
+            if number:
+                draw.line([(spine, cy - row_h), (spine, cy)], fill=GRID, width=3)
+            hot = number == focus
+            r = 15 if hot else 10
+            if hot:
+                draw.ellipse([spine - r - 9, cy - r - 9, spine + r + 9, cy + r + 9],
+                             outline=BRAND_GOLD, width=4)
+            draw.ellipse([spine - r, cy - r, spine + r, cy + r],
+                         fill=BRAND_GOLD if hot else UP, outline=DOT_RING, width=3)
+            draw.text((spine - 38, cy), row[0], font=when_font, anchor="rm",
+                      fill=BRAND_GOLD if hot else (TEXT if number == highlight else SUB))
+            first = cy - (len(chunks[number]) - 1) * line_h / 2
+            for k, chunk in enumerate(chunks[number]):
+                draw.text((text_x, first + k * line_h), chunk, font=what_font, anchor="lm",
+                          fill=TEXT)
+
+        def unit_row(y, number=number, row=row):
+            cy = y + row_h / 2 - 4
+            first = cy - (len(chunks[number]) - 1) * line_h / 2
+            what = _union([_text_box(text_x, first + k * line_h, chunk, what_font, "lm")
+                           for k, chunk in enumerate(chunks[number])])
+            return {"box": (PAD - 8, y - 2, width - PAD + 8, y + row_h - 10),
+                    "cells": [_text_box(spine - 38, cy, row[0], when_font, "rm"), what]}
+
+        blocks.append({"height": row_h, "draw": draw_row, "row": True, "unit": unit_row})
+    return blocks + _note_blocks(spec, width, font_path)
 
 
 # ------------------------------------------------------------------ 左右の全画面比べ（2026-10-07）
@@ -2165,10 +3074,12 @@ def render_versus(spec: dict, size: tuple[int, int], font_path: str, out_path: P
         draw.text((width / 2, (box[1] + box[3]) / 2), title, font=title_font, fill=BRAND_GOLD, anchor="mm")
     credit = str(spec.get("credit") or "").strip()
     if credit:
-        credit_font = _font(font_path, 22)
+        # **22px だと本編（1920）でスマホ 4.5pt**＝読める下限（5.7pt）を割る（2026-10-08）。
+        # 板の出典と同じ 28px にして、字が太ったぶん置く位置を上へ 8px ずらす
+        credit_font = _font(font_path, SOURCE_PX)
         cw = draw.textlength(credit, font=credit_font)
         # 右下に小さく（写真の表示は概要欄にも出す。ショートでは下の操作の帯に隠れてよい）
-        y = height - 34
+        y = height - 42
         draw.text((width - 24 - cw, y), credit, font=credit_font, fill=(200, 206, 214, 255),
                   stroke_width=2, stroke_fill=stroke)
 

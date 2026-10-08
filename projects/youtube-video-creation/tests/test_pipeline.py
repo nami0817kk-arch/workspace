@@ -27,22 +27,80 @@ def test_長く止まる絵に写真を挟む():
     assert [bool(line.image) for line in script.lines] == [False, False, True, False]
 
 
+def _screen_runs(script, specs=None):
+    """**画面に出ている絵**が変わらないまま続く秒数の並び（2026-10-08）。
+
+    カードも写真も「書いた行で替わり、次の行からは引き継がれて残る」ので、
+    生の `line.card` / `line.image` で数えると、引き継いでいる行が
+    「絵が戻った」ように見えて区間が切れる。`spread_long_cards` と同じ数え方。
+    """
+    from src.pipeline import _stage_of
+    from src.review import card_look
+
+    runs = []
+    for scene in script.scenes:
+        showing, stage, look, span = None, "", None, 0.0
+        for line in scene.lines:
+            if line.card is not None:
+                showing = None if line.card in ("none", "なし") else line.card
+            stage = _stage_of(line, stage)
+            now = (card_look(showing, specs or script.cards or {}), stage)
+            if now != look:
+                if look is not None:
+                    runs.append(span)
+                look, span = now, float(line.duration or 0)
+            else:
+                span += float(line.duration or 0)
+        if look is not None:
+            runs.append(span)
+    return runs
+
+
+def _long_screens(script, limit, specs=None):
+    """上限を超えて止まっている区間の (秒数, そのとき出ている写真)。"""
+    from src.pipeline import _stage_of
+    from src.review import card_look
+
+    out = []
+    for scene in script.scenes:
+        showing, stage, look, span = None, "", None, 0.0
+        for line in scene.lines:
+            if line.card is not None:
+                showing = None if line.card in ("none", "なし") else line.card
+            stage = _stage_of(line, stage)
+            now = (card_look(showing, specs or script.cards or {}), stage)
+            if now != look:
+                if look is not None and span > limit:
+                    out.append((span, look[1]))
+                look, span = now, float(line.duration or 0)
+            else:
+                span += float(line.duration or 0)
+        if look is not None and span > limit:
+            out.append((span, look[1]))
+    return out
+
+
 def test_挟んだあとも上限を超えさせない():
-    """後追いで挟むと、超過ぶんがそのまま残る（実測で23秒→16秒どまりだった）。"""
+    """後追いで挟むと、超過ぶんがそのまま残る（実測で23秒→16秒どまりだった）。
+
+    **画面に出ている絵で数える**（2026-10-08）。それまでは生の `line.image` で
+    数えていたので、挟んだ次の行で「絵が戻った」ように見えて区間が切れ、
+    **実際には写真を挟んだあとも30秒止まっている画面が通っていた**。
+    サムネの写真は1枚しか無いので替えられるのは1回で、**残りは機械では縮まない**。
+    そこは `review` の「カードの持ち」が × を出し、人がカードを2枚に割る
+    （CLAUDE.md の直し方の1つめ）。
+    """
     from src.pipeline import spread_long_cards
     from src.review import CARD_HOLD_MAX
 
     lines = [_talk(f"行{i}", 5.0, card="c1") for i in range(10)]
     script = _script(lines)
-    spread_long_cards(script, limit=CARD_HOLD_MAX)
+    assert spread_long_cards(script, limit=CARD_HOLD_MAX) == 1
 
-    span, look, worst = 0.0, None, 0.0
-    for line in script.lines:
-        now = (line.card or "", line.image or "")
-        span = span + line.duration if now == look else line.duration
-        look = now
-        worst = max(worst, span)
-    assert worst <= CARD_HOLD_MAX
+    runs = _screen_runs(script)
+    # **超える行に先回りする**ので、1つめの区間は上限に収まる
+    assert runs[0] <= CARD_HOLD_MAX, runs
+    assert len(runs) >= 2, runs
 
 
 def test_短いままなら何もしない():
@@ -167,6 +225,121 @@ def test_絵の入れ替えは1本1回のまま():
             switches += 1
         look = now
     assert switches == 1, [l.image for l in script.lines]
+
+
+def _row_cards(prefix: str, rows: int):
+    """**実物と同じ形**：中身が同じ表を行ごとに分け、光らせる行だけ替えたカード。
+
+    2026-10-07 から `research` がこの形を作る（`rivals_0_card`〜`rivals_9_card`）。
+    """
+    table = {"type": "table", "title": "在任の長さと年俸",
+             "columns": ["監督", "在任", "年俸"],
+             "rows": [[f"監督{i}", f"{i}年", f"{i}00万"] for i in range(rows)]}
+    return {f"{prefix}_{i}_card": dict(table, highlight_row=i) for i in range(rows)}
+
+
+def test_光らせる行だけ違う同じ表は同じ絵として数える():
+    """**実物4本の点検（`tools/qc.py`）で出た停滞**（2026-10-08）。
+
+    `output/20261008_finance_arteta` 第4節は、同じ散らばり図のまま**37秒**動いて
+    いなかった。`spread_long_cards` は「カードの名前」で絵を見分けていたので、
+    行ごとにカードを分けた節では**行が替わるたびに数え直して**いて、
+    20秒に一度も届かず、写真を挟む処理が走らなかった。
+    """
+    from src.pipeline import spread_long_cards
+    from src.review import CARD_HOLD_MAX
+
+    specs = _row_cards("rivals", 10)
+    lines = [_talk(f"行{i}", 4.0, card=f"rivals_{i}_card",
+                   image="assets/images/x/04_w.jpg") for i in range(10)]
+    script = _script(lines)
+    script.cards = specs
+
+    # 直す前の数え方（カードの名前）では、どの区間も4秒にしか見えない
+    names = [(l.card, l.image) for l in script.lines]
+    assert len(set(names)) == len(names)
+
+    assert spread_long_cards(script, limit=CARD_HOLD_MAX) == 1, "40秒の停滞に手が入っていない"
+    runs = _screen_runs(script, specs)
+    assert max(runs) <= CARD_HOLD_MAX, runs
+
+
+def test_替えられる写真が無ければ黙って直さない():
+    """同じ写真を切り直しただけ（`_w` と `_v`）では画面が変わらない。
+
+    手を出さずに `review` の「カードの持ち」に × を出させ、人がカードを2枚に割る。
+    """
+    from src.pipeline import spread_long_cards
+    from src.review import CARD_HOLD_MAX
+
+    specs = _row_cards("after", 10)
+    lines = [_talk(f"行{i}", 4.0, card=f"after_{i}_card",
+                   image="assets/images/x/03_chelsea_v.jpg") for i in range(10)]
+    script = _script(lines, photo="assets/images/x/03_chelsea_w.jpg")
+    script.cards = specs
+    assert spread_long_cards(script, limit=CARD_HOLD_MAX) == 0
+    assert {l.image for l in script.lines} == {"assets/images/x/03_chelsea_v.jpg"}
+
+
+def test_写真を替えたら台本の次の指定まで持ち越す():
+    """**1行だけ替えると明滅する**（2026-09-15 に `hold_photo` を作った理由と同じ）。"""
+    from src.pipeline import spread_long_cards
+    from src.review import CARD_HOLD_MAX
+
+    specs = _row_cards("rivals", 8)
+    lines = [_talk(f"行{i}", 4.0, card=f"rivals_{i}_card",
+                   image="assets/images/x/04_w.jpg") for i in range(8)]
+    lines += [_talk("別の絵", 4.0, card="none", image="assets/images/x/03_w.jpg")]
+    script = _script(lines, photo="assets/images/x/01.jpg")
+    script.cards = specs
+    spread_long_cards(script, limit=CARD_HOLD_MAX)
+
+    got = [l.image for l in script.lines]
+    assert got[-1] == "assets/images/x/03_w.jpg", "台本が指定した写真を上書きしている"
+    swapped = [i for i, p in enumerate(got) if p == "assets/images/x/01.jpg"]
+    assert swapped, got
+    # 替えたところから、台本が次の写真を指定する手前まで続いている（1行だけにしない）
+    assert swapped == list(range(swapped[0], len(got) - 1)), got
+
+
+def test_実物の台本でも同じ板が20秒を超えない():
+    """**作り物ではなく、実際に37秒止まった台本で試す**（2026-10-08）。
+
+    `scripts/` にある本編の台本を、書き出しと同じ順
+    （`spread_long_cards` → `open_early` → `hold_photo`）で通し、画面に出ている絵が
+    上限を超えて止まる区間に**手が入っているか**を見る。替える写真が無い回
+    （サムネの写真が、その節で出ている写真と同じ）は `review` に任せるので数えない。
+    """
+    from pathlib import Path
+
+    import pytest
+
+    from src.pipeline import (drop_short_only, hold_photo, open_early, photo_key,
+                              spread_long_cards)
+    from src.review import CARD_HOLD_MAX
+    from src.script_model import load_script
+
+    root = Path(__file__).resolve().parents[1] / "scripts"
+    target = root / "20261008_finance_arteta.md"
+    if not target.exists():
+        pytest.skip("実物の台本がありません")
+
+    script = drop_short_only(load_script(target))
+    for line in script.lines:                   # 実測の平均（書き出し済みの script.json より）
+        line.duration = 3.7
+
+    photo = str((script.meta or {}).get("thumbnail_photo") or "")
+    before = _long_screens(script, CARD_HOLD_MAX)
+    assert before, "この台本では停滞が起きない"
+
+    spread_long_cards(script, limit=CARD_HOLD_MAX)
+    open_early(script)
+    hold_photo(script)
+    after = _long_screens(script, CARD_HOLD_MAX)
+    assert len(after) < len(before), f"{before} -> {after}"
+    # 残ってよいのは「替える写真が無い」区間だけ（すでにサムネの写真が出ている）
+    for seconds, stage in after:
+        assert photo_key(stage) == photo_key(photo), f"{seconds:.1f}秒 の停滞が残っている: {stage}"
 
 
 def test_写真が無い回には何もしない():

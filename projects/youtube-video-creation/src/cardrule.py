@@ -20,6 +20,13 @@ POINT_MARKS = ("つあり", "つの", "まず", "ひとつ", "ふたつ", "以�
 # お金の換算（2026-10-07 夜、換算の板）。外貨の額と、円・週給・年俸が同じ文に出る
 CURRENCY_MARKS = ("ポンド", "ユーロ", "ドル")
 CONVERT_MARKS = ("円", "週給", "年俸", "年収", "換算")
+# 増減の内訳（2026-10-08、waterfall）。「内訳」と、数が続く「うち」の言い方
+WATERFALL_MARKS = ("内訳", "うちわけ")
+# 年号（1800年代〜2000年代）。年表（timeline）と折れ線（line）はここから分ける
+import re as _re
+
+YEAR = _re.compile(r"(?:18|19|20)[0-9]{2}")
+YEAR_MIN = 3              # 年号がこれだけ並べば、年を横軸にした図にできる
 
 # 画面が変わらない時間の上限（秒）。**20秒では長すぎた**ので詰める
 SAME_LOOK_MAX = 8.0
@@ -43,6 +50,18 @@ def suggest(text: str, voice: str = "") -> str:
     if (len(numbers) >= 2 and any(m in body for m in CURRENCY_MARKS)
             and any(m in body for m in CONVERT_MARKS)):
         return "convert"        # 週給→年俸、ポンド→円。換算の板で元の数字と換算を並べる
+    # **年号の数と、年号でない数の数で分ける**（2026-10-08）。
+    # 年が3つ以上あり、年でない数も3つ以上並べば推移（折れ線）、年だけなら年表。
+    # どちらも「数が3つ以上なら棒グラフ」より先に見る（棒は並べて比べるもので、推移は追うもの）
+    years = YEAR.findall(body)
+    others = [n for n in numbers if n not in years]
+    if len(years) >= YEAR_MIN and len(others) >= 3:
+        return "line"
+    if len(years) >= YEAR_MIN:
+        return "timeline"
+    if (len(numbers) >= 2
+            and (any(m in body for m in WATERFALL_MARKS) or _re.search(r"うち[^0-9]{0,6}[0-9]", body))):
+        return "waterfall"      # 「内訳」「うち◯◯が△△」。何が上げて何が下げたかを段で見せる
     if any(m in body for m in TABLE_MARKS) and len(numbers) >= 2:
         return "table"          # 時系列は表。棒より先に見る
     if len(numbers) >= 3 or (len(numbers) >= 2 and any(m in body for m in BAR_MARKS)):

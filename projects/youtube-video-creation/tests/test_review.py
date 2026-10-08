@@ -1368,6 +1368,53 @@ def test_カードの持ちは写真を数えない():
         assert check_card_hold(build(tmp, early)).ok, "写真が出る前のカードで鳴っている"
 
 
+def test_行ごとに分けた同じ表の持ちを見逃さない(tmp_path):
+    """**実物4本の点検（`tools/qc.py`）で出た停滞**（2026-10-08）。
+
+    2026-10-07 から、数字を読む行が続く節では `research` が**行ごとに別のカード**を
+    作り、光らせる行だけを替える（`rivals_0_card`〜`rivals_9_card`）。
+    `check_card_hold` は**カードの名前**で見分けていたので、行が替わるたびに
+    数え直して ○ を返していた。`output/20261008_finance_arteta` 第4節は、
+    同じ散らばり図のまま 37秒 動いていない。
+    """
+    import json
+
+    from src.review import check_card_hold, _screen_change
+
+    table = {"type": "table", "columns": ["監督", "年俸"],
+             "rows": [["監督A", "1"], ["監督B", "2"], ["監督C", "3"]]}
+    specs = {f"rivals_{i}_card": dict(table, highlight_row=i % 3) for i in range(8)}
+    lines = [{"card": f"rivals_{i}_card", "image": "a.jpg", "duration": 4.0,
+              "telop": f"見出し{i}", "marks": []} for i in range(8)]
+    path = tmp_path / "script.json"
+    path.write_text(json.dumps({"scenes": [{"lines": lines}]}), encoding="utf-8")
+
+    # 名前で見分けると、どの区間も4秒にしか見えない（直す前の素通り）
+    assert check_card_hold(path).ok
+    # 中身で見分ければ 32秒
+    assert not check_card_hold(path, specs=specs).ok
+
+    # 表そのものが替わる行では、ちゃんと数え直す
+    other = dict(table, rows=[["別の表", "9"]])
+    specs2 = dict(specs)
+    for i in range(4, 8):
+        specs2[f"rivals_{i}_card"] = dict(other, highlight_row=i % 3)
+    assert check_card_hold(path, specs=specs2).ok
+
+    # 「見た目の変化」はテロップも数えるので、テロップまで同じときに鳴る
+    flat = [dict(line, telop="同じ見出し") for line in lines]
+    path.write_text(json.dumps({"scenes": [{"lines": flat}]}), encoding="utf-8")
+    assert _screen_change(path).ok                      # 名前で見分けた頃は素通り
+    assert not _screen_change(path, specs).ok
+
+    # **途中で写真が替われば数え直す**（2026-10-08）。`spread_long_cards` は
+    # 写真を替えて止まりを割るので、ここで数え直さないと直しようが無い × が残る
+    swapped = [dict(line, image=("a.jpg" if i < 4 else "b.jpg"))
+               for i, line in enumerate(lines)]
+    path.write_text(json.dumps({"scenes": [{"lines": swapped}]}), encoding="utf-8")
+    assert check_card_hold(path, specs=specs).ok
+
+
 def test_したのはで止める形も答えを隠している():
     """**3度目の同じ壊れ方**（2026-09-15）。
 

@@ -237,30 +237,35 @@ def open_early(script: Script, within: float = OPENING_WINDOW,
 
     写真を持たない回（エンブレムで作る回）は何もしない。
     """
+    from .review import card_look
+
     photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
     if not photo:
         return 0
 
+    specs = script.cards or {}
     elapsed = 0.0
     span = 0.0
     look = None
-    showing = None
     for scene in script.scenes:
         showing = None            # カードは節をまたいで引き継がない
-        for line in scene.lines:
+        stage = ""                # 画面に出ている写真（書いた行から引き継がれる）
+        for number, line in enumerate(scene.lines):
             if elapsed >= within:
                 return 0
             seconds = float(line.duration or 0)
             if line.card is not None:
                 showing = None if line.card in ("none", "なし") else line.card
-            now = (showing or "", line.image or "")
+            # 光らせる行だけが違う同じ表は、同じ絵（`card_look`）。
+            # 写真も引き継ぎ後の姿で見る（`spread_long_cards` と同じ数え方）
+            stage = _stage_of(line, stage)
+            now = (card_look(showing, specs), stage)
             if now != look:
                 look, span = now, seconds
                 elapsed += seconds
                 continue
             # **超える行に先回りする。**超えてから挟むと、崖のあとになる
-            if span + seconds > limit and not line.image:
-                line.image = photo
+            if span + seconds > limit and _change_photo(scene, number, stage, photo):
                 return 1
             span += seconds
             elapsed += seconds
@@ -276,8 +281,18 @@ def spread_long_cards(script: Script, limit: float | None = None) -> int:
 
     写真を持たない台本では何もしない。その場合は `review` の「カードの持ち」が
     × を出すので、人が節を分けるなり写真を足すなりする。**黙って直さない。**
+
+    **行ごとにカードを分けた節にも効かせる**（2026-10-08）。見分けは名前ではなく
+    中身（`review.card_look`）。光らせる行だけが違う同じ表は同じ絵として数える。
+
+    **すでに写真が出ている行でも挟めるようにした**（2026-10-08）。それまでは
+    「写真の無い行」にしか挟めず、`output/20261008_finance_arteta` 第4節のように
+    **全部の行に写真が書いてある節**では、数え方を直しても手が出せなかった
+    （10/7〜10/8 の本編15本は、長く止まる区間がすべてこの形）。
+    その場合は**別の写真へ替え、次に台本が写真を指定するまで持ち越す**ので、
+    入れ替えの回数は増えても1回（`_change_photo`）。
     """
-    from .review import CARD_HOLD_MAX
+    from .review import CARD_HOLD_MAX, card_look
 
     limit = CARD_HOLD_MAX if limit is None else limit
     photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
@@ -286,14 +301,15 @@ def spread_long_cards(script: Script, limit: float | None = None) -> int:
 
     from .marks import on_screen
 
+    specs = script.cards or {}
     inserted = 0
     look = None
     span = 0.0
-    showing = None      # いま画面に出ているカード
     for scene in script.scenes:
         showing = None  # カードは節をまたいで引き継がない
+        stage = ""      # いま画面に出ている写真（書いた行から引き継がれる）
         # **書き込みを足した行は画面が変わる**（2026-10-07）。review の「カードの持ち」と同じ数え方
-        drawn = on_screen(scene, script.cards or {})
+        drawn = on_screen(scene, specs)
         for number, line in enumerate(scene.lines):
             seconds = float(line.duration or 0)
             # **カードは書かれた行で切り替わり、次の行からは引き継がれて残る。**
@@ -302,16 +318,79 @@ def spread_long_cards(script: Script, limit: float | None = None) -> int:
             # 9.1秒と14秒に割って数えていた）。script_model._scene_lines と同じ扱いにする。
             if line.card is not None:
                 showing = None if line.card in ("none", "なし") else line.card
-            now = (showing or "", line.image or "", len(drawn[number]))
+            # **写真も同じ**（2026-10-08）。`hold_photo` はこのあとに動くので、ここでは
+            # 引き継ぎ前の台本を見ている。生の `line.image` で数えると、写真を書いた行だけが
+            # 「別の絵」に見えて区間が切れ、長く止まっている所を見落としていた
+            stage = _stage_of(line, stage)
+            now = (card_look(showing, specs), stage, len(drawn[number]))
             if now != look:
                 look, span = now, seconds
                 continue
             # **超えてから挟むと手遅れ。**超える行に先回りして画面を変える
             # （後追いにしたら 23秒→16秒 までしか縮まなかった。2026-09-07 実測）
-            if span + seconds > limit and not line.image:
-                line.image = photo
+            if span + seconds > limit and _change_photo(scene, number, stage, photo):
                 inserted += 1
-                look, span = (showing or "", photo, len(drawn[number])), seconds
+                stage = photo
+                look, span = (now[0], photo, now[2]), seconds
                 continue
             span += seconds
     return inserted
+
+
+def _stage_of(line, stage: str) -> str:
+    """その行で画面に出ている写真。板（`assets/stats/`）は引き継がない（`hold_photo` と同じ）。"""
+    from .render import _is_board
+
+    if line.image:
+        return "" if _is_board(line.image) else line.image
+    return stage
+
+
+# 写真の切り方の後ろ書き（`tools/facecrop.py` が付ける）。`03_x_w.jpg` と `03_x_v.jpg` は
+# **同じ1枚の写真を切り直しただけ**なので、入れ替えても画面はほとんど変わらない
+_CROP_SUFFIXES = ("_w", "_v", "_r", "_h")
+
+
+def photo_key(path: str | None) -> str:
+    """同じ写真かどうかの見分け。切り方の後ろ書き（`_w` `_v` …）を落とした名前。"""
+    from pathlib import PurePosixPath
+
+    text = str(path or "").strip().replace("\\", "/")
+    if not text:
+        return ""
+    pure = PurePosixPath(text)
+    stem = pure.stem
+    changed = True
+    while changed:
+        changed = False
+        for suffix in _CROP_SUFFIXES:
+            if stem.endswith(suffix) and len(stem) > len(suffix):
+                stem, changed = stem[: -len(suffix)], True
+    return f"{pure.parent.as_posix()}/{stem}"
+
+
+def _change_photo(scene, number: int, stage: str, photo: str) -> bool:
+    """`number` 行目で画面の写真を `photo` に替える（2026-10-08）。
+
+    写真が出ていない所では、今までどおり1枚挟むだけ（`hold_photo` が後ろへ引き継ぐ）。
+    **すでに写真が出ている所でも替えられるようにした。**実物で長く止まっている区間は、
+    どれも**全部の行に写真が書いてある節**で、挟む隙間が無かった。
+
+    **1行だけ替えると明滅する**（2026-09-15 に `hold_photo` を作った理由と同じ）。
+    いまの写真を書いている後ろの行も同じだけ替え、**台本が別の写真を指定した行で止める**。
+    節はまたがない。替えても画面が変わらないとき（同じ写真を切り直しただけ・すでに
+    その写真）は **False** を返して何もしない——`review` の「カードの持ち」が × を出すので、
+    人がカードを2枚に割る（CLAUDE.md の直し方の1つめ）。
+    """
+    if photo_key(stage) == photo_key(photo):
+        return False
+    scene.lines[number].image = photo
+    if stage:
+        for line in scene.lines[number + 1:]:
+            if not line.image:
+                continue            # 引き継ぎの行。そのままで新しい写真が出る
+            if line.image != stage:
+                break               # 台本が指定した別の写真。そこで戻す
+            line.image = photo
+    return True
+

@@ -1378,12 +1378,17 @@ def test_上下に割る写真は縦版があればそちらを使う(tmp_path, 
         assert abs(r - 30) < 8 and abs(g - 200) < 8 and abs(b_ - 30) < 8
 
 
-def test_ニュースのショートは読み終えたら終わる():
+def test_ショートは読み終えたら終わる():
     """**読み終えたあとに無音のカードを付けない**（2026-09-29 指摘「ショートに変な画面がはいる」）。
 
     9/18 に締めの読み上げ枠を5秒に広げたとき、最後のカードの長さにも同じ数字を
     使っていた。伊東のショートは「チャンネル登録もお願いします」のあと、
     スタジアムの実写に小さな字のカードが5秒、音も無く出ていた。
+
+    **シリーズの回にも付けない**（2026-10-08）。9/29 は「続き物の回だけ3秒」として
+    `SERIES_END_CARD = 3.0` を残し、**このテストがその3秒を正しいものとして縛っていた。**
+    10月に `series:` がほぼ全部の回に付くようになって、例外が既定になった
+    （10/8 の実物2本とも、読み終えたあと3.4秒の無音で終わっていた）。
     """
     from src import inserts as inserts_mod
     from src.config import load_config
@@ -1394,10 +1399,69 @@ def test_ニュースのショートは読み終えたら終わる():
     _add_subscribe(short)
     assert inserts_mod.plan(short, config).outro == 0.0, "ニュースのショートに最後のカードが付いている"
 
-    series = trim(parse_script(BODY), "何が起きたか")
-    series.meta = dict(series.meta or {}, series="プレミアリーグチーム紹介")
-    _add_subscribe(series)
-    assert inserts_mod.plan(series, config).outro > 0, "続き物の回の「続きは本編で」が消えた"
+    for name in ("プレミアリーグチーム紹介", "記録", "クラブの財布", "有名選手の紹介"):
+        series = trim(parse_script(BODY), "何が起きたか")
+        series.meta = dict(series.meta or {}, series=name)
+        _add_subscribe(series)
+        plan = inserts_mod.plan(series, config)
+        assert plan.outro == 0.0, f"{name} の回に最後のカードが付いている"
+        assert plan.total == 0.0, f"{name} の回に無音の差し込みがある"
+
+
+def _real_series_scripts(limit: int = 6):
+    """**実物の台本**のうち `series:` のあるものを新しい順に。無ければ空。"""
+    from pathlib import Path
+
+    from src.script_model import load_script
+
+    root = Path(__file__).resolve().parents[1] / "scripts"
+    out = []
+    for path in sorted(root.glob("2026*.md"), reverse=True):
+        try:
+            script = load_script(path)
+        except Exception:                       # 書きかけの台本は飛ばす
+            continue
+        if str((script.meta or {}).get("series") or "").strip():
+            out.append((path.name, script))
+        if len(out) >= limit:
+            break
+    return out
+
+
+def test_実物のシリーズの台本でもショートの末尾に無音が残らない():
+    """**作り物の台本で試していたから素通りした**（2026-10-08）。
+
+    前のテストは `inserts.plan(...).outro` という**部品の値**だけを見ていて、しかも
+    シリーズの回は「3秒付いているのが正しい」と縛っていた。実物の台本を、書き出しと
+    同じ道筋（`portrait` → `trim` → `_add_subscribe` → `inserts.plan` →
+    `inserts.audio_segments`）で通して、**最後の音が読み上げで終わる**ことを見る。
+    `review.TAIL_SILENCE_MAX`（1.5秒）が見ているのと同じもの。
+    """
+    from src import inserts as inserts_mod
+    from src.config import load_config
+    from src.shorts import portrait, _add_subscribe
+    from src.review import TAIL_SILENCE_MAX
+
+    found = _real_series_scripts()
+    if not found:
+        pytest.skip("scripts/ にシリーズの台本がありません")
+
+    config = portrait(load_config())
+    for name, script in found:
+        try:
+            short = trim(script)
+        except ShortError:
+            continue
+        _add_subscribe(short)
+        inserts = inserts_mod.plan(short, config)
+        assert inserts.total <= TAIL_SILENCE_MAX, f"{name}: 無音が {inserts.total:.1f}秒 入っている"
+        # 合成はしないので、音のつなぎを見るために控えの場所だけ埋める
+        for number, line in enumerate(short.lines):
+            line.audio_path = f"{number:04d}.wav"
+            line.duration = 2.0
+        segments = inserts_mod.audio_segments(short, inserts)
+        assert segments, name
+        assert segments[-1][0] is not None, f"{name}: 読み上げのあとに無音が付いている"
 
 
 def test_クラブ紹介でないシリーズは締めでクラブの歩みを言わない():

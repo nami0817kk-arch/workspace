@@ -185,7 +185,8 @@ def check_target(mark: dict, spec: dict | None) -> list[str]:
         return [f"{what}：{kind} カードには書き込みを足せません（{'・'.join(cards.MARKABLE_TYPES)}）"]
     count = cards.mark_units(spec)
     if index_of(mark) >= count:
-        return [f"{what}：{kind} カードの{'行' if kind in ('table', 'verdict', 'bars') else '項目'}は"
+        return [f"{what}：{kind} カードの"
+                f"{'行' if kind in ('table', 'verdict', 'bars', 'waterfall', 'timeline') else '項目'}は"
                 f" 0〜{count - 1} です（{spec.get('title') or kind}）"]
     try:
         column_of(mark, spec)
@@ -300,9 +301,10 @@ def card_target(mark: dict, spec: dict, geo: dict, origin: tuple[float, float], 
             return None
         return (ox + box[0] * scale, oy + box[1] * scale, ox + box[2] * scale, oy + box[3] * scale)
 
-    if col is None and str(spec.get("type", "")).lower() in ("stats", "calc", "convert", "scatter"):
+    if col is None and str(spec.get("type", "")).lower() in ("stats", "calc", "convert", "scatter",
+                                                             "line"):
         col = 0          # 数字の板・式・換算は、指さなければ数字そのもの（注記まで囲むと板の縁にかかる）。
-        #                  散らばり図は点そのもの（名前の札は col: 名前）
+        #                  散らばり図と折れ線は点そのもの（名前の札は col: 名前、折れ線の値は col: 値）
     box = unit["cells"][col] if col is not None and col < len(unit["cells"]) else unit["text"]
     if not box:
         box = unit["box"]

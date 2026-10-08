@@ -1,6 +1,7 @@
 import pytest
 from PIL import Image
 
+from src import cards
 from src.cards import CardError, card_key, render
 from src.config import load_config
 
@@ -127,16 +128,29 @@ def test_table_card_renders(tmp_path, fonts):
 
 
 def test_表の出典は右下に小さく出て_その分だけ背が伸びる(tmp_path, fonts):
-    """`source:` を書いた表は右下に出典の字が入る（品質100回の65）。自作の図だと分かり、数字の出どころが画面に残る。"""
+    """`source:` を書いた表は右下に出典の字が入る（品質100回の65）。自作の図だと分かり、数字の出どころが画面に残る。
+
+    2026-10-08 に出典の字を 22px → 28px にした（22px は本編でスマホ 4.5pt＝読める下限
+    5.7pt を割る）。伸びる高さも 18 → `cards.SOURCE_ROOM`（26）に増えている。
+    """
     from PIL import Image
 
     font, latin = fonts
     spec = {"type": "table", "title": "順位", "columns": ["順位", "クラブ", "勝点"], "rows": [["1", "A", "12"], ["2", "B", "10"]]}
     plain = Image.open(render(dict(spec), WIDTH, font, tmp_path / "plain.png", latin))
     marked = Image.open(render(dict(spec, source="FotMob"), WIDTH, font, tmp_path / "marked.png", latin))
-    assert marked.height == plain.height + 18
-    corner = marked.crop((marked.width - 200, marked.height - 40, marked.width - 10, marked.height - 4))
+    assert marked.height == plain.height + cards.SOURCE_ROOM
+    corner = marked.crop((marked.width - 200, marked.height - 48, marked.width - 10, marked.height - 4))
     assert any(px[3] > 0 and 100 <= px[0] <= 140 for px in corner.getdata()), "右下に灰色の字が無い"
+
+
+def test_出典の字はスマホで読める下限を下回らない():
+    """出典はどの板でもいちばん小さい字。**本編（1920）で 28px＝スマホ 5.7pt が下限**。
+
+    2026-10-08 の実測で 22px＝3.2〜4.5pt だった（`tools/typecheck.py`）。
+    ここを下げると、板のどこかが必ず読めなくなる。
+    """
+    assert cards.SOURCE_PX >= 28
 
 
 def test_table_rejects_mismatched_row_length(tmp_path, fonts):
@@ -386,3 +400,39 @@ def test_表は7行目から先も捨てない(tmp_path, fonts):
     six = Image.open(render(dict(spec, rows=rows6), WIDTH, font, tmp_path / "six.png", latin))
     seven = Image.open(render(dict(spec, rows=rows7), WIDTH, font, tmp_path / "seven.png", latin))
     assert seven.height <= six.height + 12
+
+
+# ---------------------------------------------------------------- 置き場に収まる高さ（2026-10-08）
+
+
+def test_表は置き場に収まるよう行を詰める(tmp_path, fonts):
+    """6行の表は 72px の行だと 662px で、置き場（539px）に収まるまで 0.81 倍に縮んでいた。
+
+    縮むと出典が 18px・列の見出しが 24px になる（スマホ 3.6pt / 5.0pt）。
+    **行を間引かずに**（2026-09-30 の決まり）行の高さと字を詰めて、倍率1.00で収める。
+    """
+    font, latin = fonts
+    spec = {"type": "table", "title": "アルテタの新しい契約", "columns": ["項目", "内容"],
+            "rows": [[f"行{i}", f"中身{i}"] for i in range(6)], "source": "報道"}
+    fitted = Image.open(render(dict(spec), 1420, font, tmp_path / "fit.png", latin,
+                               slot=cards.SLOT_LANDSCAPE))
+    free = Image.open(render(dict(spec), 1420, font, tmp_path / "free.png", latin))
+    assert fitted.height <= cards.SLOT_LANDSCAPE
+    assert free.height > cards.SLOT_LANDSCAPE      # 置き場を渡さなければ今までどおり
+    assert len(spec["rows"]) == 6                  # 行は1つも捨てていない
+
+
+def test_表の行の字は読める下限を割らない(tmp_path, fonts):
+    """行を詰めても、字は `TABLE_CELL_MIN_PX`（28px＝スマホ 5.7pt）より小さくしない。"""
+    assert cards.TABLE_CELL_MIN_PX >= 28
+    assert cards.TABLE_ROW_MIN_H >= cards.TABLE_CELL_MIN_PX + 14   # 行の帯から字がはみ出さない
+
+
+def test_置き場を渡さなければ今までどおりの高さ(tmp_path, fonts):
+    """`slot` は後から足した任意の引数。渡さない呼び出し（statboard など）の絵は変えない。"""
+    font, latin = fonts
+    spec = {"type": "table", "title": "順位", "columns": ["順位", "クラブ"],
+            "rows": [["1", "A"], ["2", "B"]]}
+    a = Image.open(render(dict(spec), 1080, font, tmp_path / "a.png", latin))
+    b = Image.open(render(dict(spec), 1080, font, tmp_path / "b.png", latin, slot=None))
+    assert a.tobytes() == b.tobytes()

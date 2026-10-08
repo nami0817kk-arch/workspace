@@ -449,8 +449,15 @@ def _pick(script: Script, section: str) -> Scene:
 # **ショートから本編へ渡す道が、これまで無かった。**本編の再生は登録者からが
 # 86%で、ショートを見た人が本編へ回る経路はどこにも作っていない
 SHORT_OUTRO = 5.0
-# 続き物の回の最後のカード（秒）。ニュースの回は出さない
-SERIES_END_CARD = 3.0
+# **ショートに最後のカードは付けない**（2026-10-08、`tools/qc.py` が実物2本で見つけた）。
+# 9/29 に「続き物の回の『続きは本編で』だけ3秒」として `SERIES_END_CARD = 3.0` を残したが、
+# あのときの「続き物」は**プレミア20クラブ紹介のことだけ**だった。10月に入って
+# シリーズ中心に切り替えたので `series:` はほぼ全部の回に付き、**例外が既定になった。**
+# 10/8 の実物（記録・クラブの財布）は2本とも、読み終えたあと**3.4秒の無音**で終わっていた
+# （上限は `review.TAIL_SILENCE_MAX` の1.5秒）。カードが言う「続きは本編で」は、
+# その手前で読み上げている `_series_outro`（＋同じ文のテロップ）がすでに言っている。
+# **ショートは最後の一言で終える。**ここに秒数の定数を戻さない
+SERIES_END_CARD = 0.0
 
 # 最後に読み上げる一言（2026-09-15）。**短くする。**8秒使っていた頃の
 # 「続報はチャンネル登録してお待ちください」には戻さない
@@ -723,20 +730,18 @@ def _add_subscribe(short: Script) -> None:
     やめた理由（毎回同じ文句に8秒）にも、2秒なら当たらない。
 
     **写真とテロップは前の行のものを引き継ぐ**（画面は止めない）。
+
+    **最後のカード（無音の静止画）はどの回にも付けない**（2026-10-08）。
+    シリーズの回だけ `end_card` を頼んでいたが、10月は `series:` がほぼ全部の回に
+    付くので、**読み終えたあとの3秒の無音が既定になっていた**（`SERIES_END_CARD` の注記）。
+    「続きは本編で」は `_series_outro` が声とテロップで言う。
     """
     lines = short.scenes[-1].lines
     if not lines:
         return
     series = str((short.meta or {}).get("series") or "").strip()
-    if series:
-        short.meta = dict(short.meta or {}, end_card=SERIES_END_CARD)
     if _has_outro(lines):
         return
-    if series:
-        # **最後のカードも本編へ向ける**（2026-09-23 指示「本編に繋いで」）。
-        # 続き物の回に「続報は次回お伝えします」は合わない（次回は別のクラブ）
-        short.meta = dict(short.meta or {}, outro_title="続きは本編で",
-                          outro_sub="チャンネルから見られます")
     first = _series_outro(series) if series else SHORT_SUBSCRIBE
     for words in (first, SHORT_SUBSCRIBE_2):
         last = copy.deepcopy(lines[-1])

@@ -1024,3 +1024,53 @@ def test_ぶら下げは1文字まで_2文字目は追い出す():
                 assert draw.textlength(line, font=font) <= width + one + 1, (width, line)
             for line in lines[1:]:
                 assert line[0] not in render.LINE_START_FORBIDDEN, (width, line)
+
+
+# ---------------------------------------------------------------- 板は置き場に収まる高さで描く（2026-10-08）
+
+
+def test_板は置き場の高さを渡して描く(tmp_path):
+    """`_draw_media` は置き場より高い板を**全体を縮めて**貼るので、板の中の 28px が
+    画面では 21px になっていた（`tools/typecheck.py` の実測）。`_card` が置き場の高さを
+    `cards.render` に渡して、**はじめからそこに収まる高さ**で描かせる。
+    """
+    from src import cards
+    from src.render import Renderer
+
+    config = load_config()
+    config.video.show_characters = False
+    renderer = Renderer(config, tmp_path)
+    renderer.script_cards = {"t": {"type": "table", "title": "長い表",
+                                   "columns": ["項目", "内容"],
+                                   "rows": [[f"行{i}", f"中身{i}"] for i in range(6)],
+                                   "source": "報道"}}
+    top, bottom = renderer.layout.media_slot
+    assert renderer._card_slot == bottom - top
+    card = renderer._card("t")
+    assert card is not None
+    assert card.height <= renderer._card_slot        # 貼るときに縮まない
+    # 書き込みの的（layout）も同じ置き場で測る。片方だけだと行の高さが食い違う
+    geo = renderer._card_layout("t", card.width)
+    assert geo["size"] == (card.width, card.height)
+
+
+def test_写真と横に並べる板も置き場からはみ出さない(tmp_path):
+    """横並びは幅でしか縮めていなかったので、高い板が字幕の帯（下 250px）に落ちていた。
+
+    板は置き場に収まるよう作り直したので、ふだんは何も起きない。ここで見るのは
+    **歯止めが効くこと**（置き場より高い絵が来ても、字幕にかぶらない）。
+    """
+    from PIL import Image as PILImage
+
+    from src.render import Renderer
+
+    config = load_config()
+    config.video.show_characters = False
+    renderer = Renderer(config, tmp_path)
+    top, bottom = renderer.layout.media_slot
+    room = bottom - top
+    canvas = PILImage.new("RGBA", (renderer.layout.width, renderer.layout.height))
+    tall = PILImage.new("RGBA", (400, room + 400), (255, 0, 0, 255))
+    short = PILImage.new("RGBA", (400, room - 100), (0, 255, 0, 255))
+    placed = renderer._place_beside(canvas, [short, tall], top, room, 26, 1.0)
+    assert all(y1 <= bottom for _, _, _, y1 in placed), placed
