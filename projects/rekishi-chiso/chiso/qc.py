@@ -25,7 +25,7 @@ from pathlib import Path
 STEP = 20.0             # 一覧に抜く間隔（秒）
 SCENE = 0.08            # scene 検出のしきい値（0〜1。字幕の切り替えだけでは超えない程度）
 SCENE_FPS = 5           # scene を見るときのコマ数（溶け合いのようなゆっくりした変化も拾う）
-STILL_WARN = 40.0       # これより長く画面が大きく変わらない区間を知らせる
+from .check import BG_MAX_SEC as STILL_WARN  # noqa: E402  これより長く画面が大きく変わらない区間を知らせる
 SILENCE_DB = -45        # これより小さい音を無音とみなす
 SILENCE_SEC = 2.0       # これより長い無音を知らせる（節の切れ目の間は1.2秒）
 TARGET_LUFS = -14.0     # YouTube の基準
@@ -233,6 +233,8 @@ def run(ffmpeg: str, script, video: Path, out_png: Path, out_md: Path, font_path
         end_seconds: float = 12.0) -> list[str]:
     rep, frames = analyze(ffmpeg, video)
     srt = video.with_suffix(".srt")
+    if not srt.exists() and getattr(script, "path", None) is not None:   # 確認用（x_draft.mp4）も字幕は out/x.srt（10-08）
+        srt = video.parent / f"{script.path.stem}.srt"
     if srt.exists():
         cues = parse_srt(srt.read_text(encoding="utf-8"))
         rep.subs_end = cues[-1][1] if cues else None

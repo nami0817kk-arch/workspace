@@ -60,6 +60,14 @@ AUTO_CUTOUT = ("face", "versus")           # 人物を自動で切り抜いて�
 OUTLINE = {"face": WHITE, "versus": (236, 196, 96)}         # 切り抜いた人物の縁（face は白、versus は金）
 
 
+def font(path: str | None, size: int):
+    """サムネイルの字形。path が無ければ内蔵のフォント（CI に日本語フォントが無い）。thumb・hooks が使う。"""
+    from PIL import ImageFont
+    if not path:
+        return ImageFont.load_default(size)
+    return ImageFont.truetype(path, size)
+
+
 def options(t: dict, layout: str) -> dict:
     """台本の thumbnail: から、作り込みの設定を作る（書いていないものは構図の既定）。fx: false なら全部切る。"""
     if layout not in DEFAULTS or t.get("fx") is False:

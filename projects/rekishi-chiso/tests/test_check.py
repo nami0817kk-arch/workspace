@@ -122,3 +122,40 @@ def test_pacing_warns_long_same_background_and_host_share():
                        "lines": [{"語り": long}] * 6 + [{"聞き": "うん"}]}]})
     w = check.pacing(sc)
     assert any("同じ背景" in x for x in w) and any("剣崎の字数" in x for x in w)
+
+
+# --- 知らせの並べ方（10-08）：同じ種類は1件に、止める → 直すと効く → 参考 ---------------------------
+
+def test_report_folds_same_kind_and_orders_levels():
+    warns = ["文体：書き言葉が1か所 「である」[3]（話し言葉に言い換える）",
+             "1行目から同じ背景が40秒を超えます（場面ごとに絵を替える）",
+             "13行目から同じ背景が40秒を超えます（場面ごとに絵を替える）",
+             "12行目：せりふが92字（90字まで推奨）", "40行目：せりふが104字（90字まで推奨）",
+             "3〜4行目：つむぎが2行続いています"]
+    rows = check.report(["次回予告（next: {title, teaser}）がありません"], warns)
+    assert rows[0].startswith("× ")
+    assert rows[-1].startswith("・文体")                                     # 参考は最後
+    bg = [r for r in rows if "同じ背景" in r]
+    assert bg == ["! 1・13行目から同じ背景が40秒を超えます（場面ごとに絵を替える）［2か所］"]
+    long = [r for r in rows if "せりふ" in r]
+    assert len(long) == 1 and "12行目（92）" in long[0] and "40行目（104）" in long[0]
+    assert any("3〜4行目：つむぎ" in r for r in rows)                        # 1件だけならそのまま
+
+
+def test_report_keeps_messages_whose_other_numbers_differ():
+    rows = check.report([], ["ショート s1：1行目（4行目）が…", "ショート s2：1行目（9行目）が…"])
+    assert len(rows) == 2                                                    # 行の番号で始まらないものはまとめない
+
+
+def test_span():
+    assert check.span([9, 3, 4, 5]) == "3〜5・9"
+    assert check.span([7]) == "7"
+
+
+def test_staged_card_reported_once_per_card():
+    from chiso import script
+    lines = [{"語り": "一つ目です。", "short": "s1", "card": {"head": "段階1", "body": "宣伝"}},
+             {"聞き": "うん。", "short": "s1"}, {"語り": "そうです。", "short": "s1"}]
+    sc = script.parse({"title": "t", "shorts": {"s1": {"title": "x"}}, "sections": [{"title": "a", "lines": lines}]})
+    w = [x for x in check.lint(sc) if "段階1" in x]
+    assert len(w) == 1 and "1〜3行目" in w[0]

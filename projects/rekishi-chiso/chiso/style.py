@@ -22,14 +22,9 @@ from .voice import display_text
 HOST = "語り"
 LISTENER = "聞き"
 
-ENDING_RUN = 4           # 剣崎の同じ語尾がこの数だけ続いたら知らせる（文単位。つむぎの短い返しを挟んでも数え続け、節で数え直す）
-PHRASE_LEN = 8           # この字数以上の言い回しを数える
-PHRASE_TIMES = 4         # 1本の中でこの回数以上出たら知らせる
+from .check import (COMMAS_LONG, COMMAS_MAX, ENDING_RUN, HEAD_TIMES, LONG_CHARS,  # noqa: E402  目安は check.py の頭
+                    PHRASE_LEN, PHRASE_TIMES)
 PHRASE_SHOW = 5          # 知らせる言い回しの数の上限（多い順）
-HEAD_TIMES = 3           # つむぎの返しが「え、」「へえ、」で始まるのが1節にこの回数以上
-COMMAS_MAX = 5           # 1文の読点がこの数以上なら長い（4つだと6本で4〜15か所出て多すぎた。10-08）
-COMMAS_LONG = 4          # 読点がこの数で、
-LONG_CHARS = 60          # この字数以上の文も長いと数える
 
 # 文末の形。長いものから当てる（「でした」を「た」と数えない）
 ENDINGS = ("でしょうか", "でしょう", "ですよね", "ですね", "ですか", "でした", "ました", "ません", "です", "ます")
@@ -191,7 +186,11 @@ def stiff_words(script) -> list[str]:
         for name, rx in _STIFF:
             if rx.search(t):
                 found.setdefault(name, []).append(l.index + 1)
-    return [f"書き言葉の「{name}」{len(rows)}か所 {rows[:8]}（話し言葉に言い換える）" for name, rows in found.items()]
+    if not found:                                  # 語ごとに1件ずつ出すと1本で4〜5件になった（10-08）。1件にまとめる
+        return []
+    n = sum(len(rows) for rows in found.values())
+    parts = "・".join(f"「{name}」{rows[:8]}" for name, rows in found.items())
+    return [f"書き言葉が{n}か所 {parts}（話し言葉に言い換える）"]
 
 
 def listener_heads(script) -> list[str]:

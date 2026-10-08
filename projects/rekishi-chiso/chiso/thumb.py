@@ -39,7 +39,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter
 
 from . import hooks, thumbfx
 
@@ -52,10 +52,7 @@ STRATA = [(70, 58, 44), (92, 74, 52), (120, 96, 62), (150, 118, 74), (110, 52, 4
 TIME_BADGE = (W - 170, H - 70, W, H)     # 再生時間の表示が重なる範囲（文字を置かない）
 
 
-def _font(path: str | None, size: int):
-    if not path:                       # テスト（CI に日本語フォントが無い）は内蔵のフォントで
-        return ImageFont.load_default(size)
-    return ImageFont.truetype(path, size)
+_font = thumbfx.font                  # 字形（path が無ければ内蔵のフォント。テストは CI に日本語フォントが無い）
 
 
 def _fit(path: str, text: str, size: int, width: int, minimum: int = 40):
@@ -738,6 +735,30 @@ def contrast_zone(t: dict, layout: str):
     else:
         z = CONTRAST_ZONE[layout]
     return (_lo(t, z[0]), z[1], _hi(t, z[2]), z[3])
+
+
+TEXT_ROOM_MIN = 480      # 文字（lead・main・落差の二語）に使える幅がこれより狭いと、字が小さくなって一覧で読めない
+
+
+def text_room(t: dict, config: dict, assets: Path) -> list[str]:
+    """引きの要素どうし・構図との組み合わせで、文字の置き場が狭くなっていないか（10-08、見本の通し確認で
+    face（肖像が右）＋ reactor（左）＋ contrast の文字が約230px に押し込まれた）。check が知らせる。"""
+    if not t:
+        return []
+    try:
+        tt = _prepare(t, config, assets)
+    except Exception:                                     # 構図の誤りは problems が × にする
+        return []
+    layout = layout_of(tt)
+    layout = "a" if layout == "classic" else layout
+    if layout == "versus" or layout not in LAYOUTS + ("a",):
+        return []
+    x0, _, x1, _ = contrast_zone(tt, layout)
+    if x1 - x0 >= TEXT_ROOM_MIN:
+        return []
+    why = "聞き手の大きな顔（reactor）" if tt.get("_reactor") else "構図"
+    return [f"サムネイルの文字の置き場が {int(x1 - x0)}px しかありません（{why}と重なる側。"
+            f"reactor の side を肖像の側にするか size: medium／構図の side を変える）"]
 
 
 def render_spec(t: dict, config: dict, assets: Path, cache: Path | None = None) -> Image.Image:

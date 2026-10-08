@@ -1,6 +1,8 @@
-"""作る前の点検。素材の有無・台本の書きすぎ・読みの確認・抑揚の張りつき。
+"""作る前の点検。素材の有無・台本の書きすぎ・読みの確認・抑揚の張りつき・1本ぶんの決まり。
 
 どれも音声や画面を作る前に安く見つけられるもの。作ってから気づくと、作り直しに時間がかかる。
+結果は report() が「止めるもの（×）→ 直すと効くもの（!）→ 参考（・）」の順に並べ、
+同じ種類の知らせは1件にまとめて行の番号を並べる（10-08。1本に数十件出て読まれなくなっていた）。
 """
 from __future__ import annotations
 
@@ -10,10 +12,31 @@ from pathlib import Path
 
 from .voice import TONES, display_text
 
-LINE_WARN = 90          # 1行のせりふがこれより長いと、字幕が3枚以上に分かれて追いにくい
-CARD_BODY_WARN = 22     # 札の本文がこれより長いと、メモ欄からはみ出しやすい
-SPEED_WARN = 1.2        # これより速いと早口に聞こえる
-CHARS_PER_SEC = 7.0     # 合成音声のおおよその速さ（字／秒）。ショートの長さの見積もりに使う
+# --- 目安の数字（10-08 に1か所へ集めた。style.py・reaction.py・hooks.py・assign.py・qc.py もここを読む）------------
+# 台本
+LINE_WARN = 90           # 1行のせりふがこれより長いと、字幕が3枚以上に分かれて追いにくい
+CARD_BODY_WARN = 22      # 札の本文がこれより長いと、メモ欄からはみ出しやすい
+CHARS_PER_SEC = 7.0      # 合成音声のおおよその速さ（字／秒）。ショートの長さ・画面の替わりの見積もりに使う
+HOOK_WINDOW = 2          # 節の終わりから何行以内に「引き」（hook: true）を置くか
+MIN_FIGURES = 3          # 図（地図・グラフ・相関図…）を1本に3つ以上
+# 声
+SPEED_WARN = 1.2         # これより速いと早口に聞こえる
+# 画面の替わり方（10-07。信長の回で同じ絵が2分前後動かない区間が6か所あった）
+BG_MAX_SEC = 40.0        # 同じ背景の絵は長くても40秒まで
+NOVELTY_MAX_SEC = 20.0   # 20秒に1回は新しいもの（絵・札・図・挿絵・肖像）。知らせるのは2倍（40秒）を超えたとき
+REACTION_MAX = 2         # つむぎの寄り（reaction）は1本に2回まで
+# 掛け合い（10-04・10-07）
+HOST_SHARE_MAX = 0.70    # 剣崎の字数の割合（10-07 の5本は72〜79%で講義に近かった）
+# 文体（10-08、chiso/style.py。既存6本に掛けて決めた）
+ENDING_RUN = 4           # 剣崎の同じ語尾がこの数だけ続いたら知らせる
+PHRASE_LEN = 8           # この字数以上の言い回しを数える
+PHRASE_TIMES = 4         # 1本の中でこの回数以上出たら知らせる
+HEAD_TIMES = 3           # つむぎの返しが「え、」「へえ、」で始まるのが1節にこの回数以上
+COMMAS_MAX = 5           # 1文の読点がこの数以上なら長い
+COMMAS_LONG = 4          # 読点がこの数で、
+LONG_CHARS = 60          # この字数以上の文も長いと数える
+# サムネイル
+THUMB_HOOKS_MAX = 2      # 引きの要素（reactor・hide・contrast・flip・flash）は1枚にこの数まで
 
 
 def missing_assets(script, assets: Path) -> list[str]:
@@ -53,10 +76,72 @@ def lint(script, short_limit: float = 60.0) -> list[str]:
         est = chars / CHARS_PER_SEC
         if est > short_limit:
             warns.append(f"ショート {sid}：見積もり約{est:.0f}秒（{short_limit:.0f}秒を超えそう）")
-        for l in script.short_lines(sid):               # 見立ての「段階N」の札は、ショート単体では唐突（10-06 ナポレオン s10）
+        # 見立ての「段階N」の札は、ショート単体では唐突（10-06 ナポレオン s10）。札は次に替えるまで続くので、
+        # 行ごとに出すと同じ札で5〜6件並んだ（10-08）。札ごとに1件
+        staged: dict[str, list[int]] = {}
+        for l in script.short_lines(sid):
             if l.card is not None and l.card.head.startswith("段階"):
-                warns.append(f"ショート {sid}：{l.index + 1}行目に「{l.card.head}」の札が出ます（ショートに入れない行に移す）")
+                staged.setdefault(l.card.head, []).append(l.index + 1)
+        for head, rows in staged.items():
+            warns.append(f"ショート {sid}：「{head}」の札が出ます {span(rows)}行目（札をショートに入れない行に移す）")
     return warns
+
+
+def span(rows: list[int]) -> str:
+    """行の番号の並びを短く（[3, 4, 5, 9] → 「3〜5・9」）。"""
+    out, start, prev = [], None, None
+    for r in sorted(set(rows)):
+        if start is None:
+            start = prev = r
+        elif r == prev + 1:
+            prev = r
+        else:
+            out.append(f"{start}〜{prev}" if prev != start else str(start))
+            start = prev = r
+    if start is not None:
+        out.append(f"{start}〜{prev}" if prev != start else str(start))
+    return "・".join(out)
+
+
+# --- 知らせの並べ方（10-08）-----------------------------------------------------------
+# 既存7本で1本28〜44件の「!」が出て、読まれなくなっていた。同じ種類をまとめ、効くものから並べる。
+REFERENCE = ("文体：", "章の題に", "《》の強調が", "サムネイルの落差の二語", "サムネイルの隠した")  # 参考（直すかは内容しだい）
+_ROW = re.compile(r"(\d+(?:〜\d+)?)行目")
+
+
+def report(errors: list[str], warns: list[str]) -> list[str]:
+    """点検の結果を、止めるもの（×）→ 直すと効くもの（!）→ 参考（・）の順に。
+    行の番号だけが違う同じ種類の知らせは1件にまとめ、番号を並べる（「1・13・31行目から同じ背景が…［3か所］」）。"""
+    def fold(items: list[str]) -> list[str]:
+        groups: dict[str, list[str]] = {}
+        for w in dict.fromkeys(items):                         # 全く同じ知らせは1つに
+            key = re.sub(r"\d+", "#", _ROW.sub("@", w))
+            groups.setdefault(key, []).append(w)
+        out = []
+        for members in groups.values():
+            if len(members) == 1 or not _ROW.search(members[0]):
+                out += members
+                continue
+            rows = [_ROW.search(m).group(1) for m in members]
+            rest = [_ROW.sub("@", m, count=1) for m in members]
+            if len(set(rest)) == 1:                           # 行の番号だけが違う
+                text = rest[0].replace("@", "・".join(rows) + "行目", 1)
+            else:                                             # ほかの数（字数など）も違う：行ごとに添える
+                parts = [re.split(r"(\d+)", r) for r in rest]
+                same = [all(p[i] == parts[0][i] for p in parts) if all(len(p) == len(parts[0]) for p in parts) else False
+                        for i in range(len(parts[0]))]
+                if not all(len(p) == len(parts[0]) for p in parts) or not all(_ROW.match(m) for m in members):
+                    out += members                            # 行の番号で始まる知らせだけをまとめる
+                    continue
+                vary = [i for i, ok in enumerate(same) if not ok]
+                body = "".join(x if same[i] else "…" for i, x in enumerate(parts[0]))
+                each = "・".join(f"{r}行目（{'/'.join(p[i] for i in vary)}）" for r, p in zip(rows, parts))
+                text = body.replace("@", "", 1).lstrip("：") + "：" + each
+            out.append(f"{text}［{len(members)}か所］")
+        return out
+    fix = [w for w in warns if not w.startswith(REFERENCE)]
+    ref = [w for w in warns if w.startswith(REFERENCE)]
+    return ([f"× {e}" for e in fold(errors)] + [f"! {w}" for w in fold(fix)] + [f"・{w}" for w in fold(ref)])
 
 
 def saturation(script, voices: dict) -> dict[str, tuple[int, int]]:
@@ -81,10 +166,6 @@ def saturation(script, voices: dict) -> dict[str, tuple[int, int]]:
     return {k: (a, b) for k, (a, b) in out.items()}
 
 
-# --- 1本ぶんの決まり（2026-10-04 に固めたコンセプト） ---------------------------
-MIN_FIGURES = 3          # 地図・グラフ・相関図を合わせて3つ以上
-MIN_MINUTES = 25.0
-HOOK_WINDOW = 2          # 節の終わりから何行以内に「引き」（hook: true）を置くか       # 本編の長さの下限の目安（目標は30〜40分）
 
 
 def episode(script) -> tuple[list[str], list[str]]:
@@ -134,6 +215,7 @@ def episode(script) -> tuple[list[str], list[str]]:
             warns.append(f"{l.index + 1}行目：絵の一部（detail）と挿絵（icon）が同じ行にあります（挿絵は出ません）")
         if getattr(l, "mark", None) and not getattr(l, "detail", None) and not l.figure and l.portrait is None                 and (l.icon or l.background is None):
             warns.append(f"{l.index + 1}行目：赤ペン（mark）を乗せる絵・図がありません（出ません）")
+    warns += combo_rules(script)
     for name in sorted({l.icon for l in script.lines if l.icon}):
         if name not in extras.known_icons():
             errors.append(f"挿絵の名前が分かりません: {name}")
@@ -150,9 +232,24 @@ def episode(script) -> tuple[list[str], list[str]]:
     return errors, warns
 
 
+def combo_rules(script) -> list[str]:
+    """道具どうしが同じ行で重なり、片方が出ないもの（10-08、見本の台本 _showcase.yaml の通し確認で洗い出した）。
+    画面はどれか1つを優先して描く：寄り（reaction）→ 絵の一部（detail）→ 図（figure）→ 肖像・挿絵・額。"""
+    out = []
+    for l in script.lines:
+        n = l.index + 1
+        if getattr(l, "detail", None) and l.figure:
+            out.append(f"{n}行目：絵の一部（detail）と図（figure）が同じ行にあります（図は出ません）")
+        if l.icon and l.figure and not getattr(l, "detail", None):
+            out.append(f"{n}行目：図が出ている行の挿絵（icon）は出ません（figure: null のあとに置く）")
+        if getattr(l, "reaction", None) and (l.bubble or l.icon or getattr(l, "detail", None)):
+            out.append(f"{n}行目：つむぎの寄り（reaction）の行では、吹き出し・挿絵・絵の一部は出ません")
+    return out
+
+
 def reaction_rules(script) -> list[str]:
     """つむぎの寄り（reaction）は1本に2回まで（10-07。毎回使うと安くなる）。続けて同じ寄りを書いた行は1回と数える。"""
-    from .reaction import MAX_PER_EPISODE
+    MAX_PER_EPISODE = REACTION_MAX
     runs, prev = [], None
     for l in script.lines:
         r = getattr(l, "reaction", None)
@@ -218,9 +315,6 @@ def cast_rules(script) -> tuple[list[str], list[str]]:
 
 # --- 画面の替わり方（10-07）：信長の回で同じ絵が2分前後動かない区間が6か所あった。
 #     伸びている歴史動画を18本調べた上で、目安を数字にした。行の秒数は字数から見積もる。
-BG_MAX_SEC = 40.0        # 同じ背景の絵は長くても40秒まで
-NOVELTY_MAX_SEC = 20.0   # 20秒に1回は新しいもの（絵・札・図・挿絵・肖像）を出す
-HOST_SHARE_MAX = 0.70    # 剣崎の字数の割合（10-07 の5本は72〜79%で講義に近かった）
 
 
 def _new_mark(line, prev_mark) -> bool:
@@ -329,8 +423,9 @@ def opening_rules(script) -> list[str]:
 
 
 def short_opening_rules(script) -> list[str]:
-    """ショートの1行目：つなぎの言葉で始まらないこと、名前か数字が入っていること（最初の2秒で何の話か分かるように）。"""
-    warns = []
+    """ショートの1行目：つなぎの言葉で始まらないこと、名前か数字が入っていること（最初の2秒で何の話か分かるように）。
+    同じ種類はショートをまとめて1件に（10-08。1本に5件並んだ）。"""
+    weak, bare = [], []
     names = name_words(script)
     for sid in getattr(script, "shorts", {}) or {}:
         lines = script.short_lines(sid)
@@ -340,9 +435,14 @@ def short_opening_rules(script) -> list[str]:
         plain = display_text(first.text).lstrip("「『（ 　")
         head = next((w for w in WEAK_STARTS if plain.startswith(w)), None)
         if head:
-            warns.append(f"ショート {sid}：1行目（{first.index + 1}行目）が「{head}」で始まります（単体で見ると前が無い。最初の2秒で何の話か分かる一言に）")
+            weak.append(f"{sid}（{first.index + 1}行目「{head}」）")
         elif not (has_number(first.text) or has_name(first.text, names)):
-            warns.append(f"ショート {sid}：1行目（{first.index + 1}行目）に名前も数字もありません（最初の2秒で誰の何の話か分かるように）")
+            bare.append(f"{sid}（{first.index + 1}行目）")
+    warns = []
+    if weak:
+        warns.append(f"ショートの1行目がつなぎの言葉で始まります：{'・'.join(weak)}（単体で見ると前が無い。最初の2秒で何の話か分かる一言に）")
+    if bare:
+        warns.append(f"ショートの1行目に名前も数字もありません：{'・'.join(bare)}（最初の2秒で誰の何の話か分かるように）")
     return warns
 
 

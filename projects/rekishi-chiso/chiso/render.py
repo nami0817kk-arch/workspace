@@ -14,6 +14,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
+from .figures import _ease  # noqa: F401  ゆるい出入り（図・寄り・赤ペンと同じ式）
 from .subs import chunks as subtitle_chunks, emphasis_mask, wrap, wrap_balanced
 from . import people
 
@@ -39,6 +40,7 @@ SHAKE_PX = 10        # 揺れの大きさ
 WIPE_FRAMES = 14     # 節の頭の地層のワイプ（フレーム数）
 FIG_FRAMES = 45      # 図が出たときに描き進める長さ（フレーム数。1.5秒）
 ICON_FRAMES = 8      # 挿絵が出るときに大きくなる長さ（フレーム数）
+BASE_CACHE = 24      # 前景の下の層（base）を控えておく数。1枚 8MB（1920x1080 RGBA）
 
 
 @dataclass(frozen=True)
@@ -58,10 +60,6 @@ class State:
     reaction: str | None = None
     detail: str | None = None
     mark: str | None = None
-
-
-def _ease(t: float) -> float:
-    return 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, t)))
 
 
 class Painter:
@@ -101,15 +99,18 @@ class Painter:
             self._images[rel] = Image.open(path).convert("RGBA")
         return self._images[rel]
 
+    def _bust(self, im: Image.Image, cast: dict) -> Image.Image:
+        """立ち絵を中身だけに詰め、cast の height に縮めて、上から bust の割合だけ切る。"""
+        im = im.crop(im.getbbox())
+        h = int(cast.get("height", 1150) * self.H / 1080)
+        im = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
+        return im.crop((0, 0, im.width, int(h * cast.get("bust", 0.4))))
+
     def character(self, speaker: str) -> Image.Image:
         key = ("char", speaker)
         if key not in self._images:
             cast = self.config["cast"][speaker]
-            im = self.image(cast["image"])
-            im = im.crop(im.getbbox())
-            h = int(cast.get("height", 1150) * self.H / 1080)
-            im = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
-            self._images[key] = im.crop((0, 0, im.width, int(h * cast.get("bust", 0.4))))
+            self._images[key] = self._bust(self.image(cast["image"]), cast)
         return self._images[key]
 
     def face(self, speaker: str, tone: str, mouth_open: bool, blink: bool) -> Image.Image:
@@ -125,25 +126,12 @@ class Painter:
             path = self.assets / folder / f"{face_key(tone, mouth_open, blink)}.png"
             if not path.exists():
                 return self.character(speaker)
-            im = Image.open(path).convert("RGBA")
-            im = im.crop(im.getbbox())
-            h = int(cast.get("height", 1150) * self.H / 1080)
-            im = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
-            self._images[key] = im.crop((0, 0, im.width, int(h * cast.get("bust", 0.4))))
+            self._images[key] = self._bust(Image.open(path).convert("RGBA"), cast)
         return self._images[key]
 
     def listener(self, speaker: str) -> Image.Image:
         """聞いている側の立ち絵：少し暗く、少し色を落とす。"""
-        key = ("listen", speaker)
-        if key not in self._images:
-            ch = self.character(speaker)
-            a = ch.split()[3]
-            rgb = ImageEnhance.Brightness(ch.convert("RGB")).enhance(LISTENER_DIM)
-            rgb = ImageEnhance.Color(rgb).enhance(0.75)
-            out = rgb.convert("RGBA")
-            out.putalpha(a)
-            self._images[key] = out
-        return self._images[key]
+        return self._dim(self.character(speaker), ("listen", speaker))
 
     # --- 背景 -------------------------------------------------------------
     def _cover(self, im: Image.Image) -> Image.Image:
@@ -436,12 +424,10 @@ class Painter:
         return px, py, p.width, p.height
 
     def _portrait(self, img: Image.Image, pic) -> None:
-        W = self.W
+        from .extras import portrait_box
         dr = ImageDraw.Draw(img, "RGBA")
-        p = self.image(pic.image).convert("RGB")
-        ph = 440
-        p = p.resize((int(p.width * ph / p.height), ph), Image.LANCZOS)
-        px, py = W - p.width - 330, 70
+        px, py, pw, ph = portrait_box(self, pic)
+        p = self.image(pic.image).convert("RGB").resize((pw, ph), Image.LANCZOS)
         dr.rectangle([px - 20, py - 20, px + p.width + 20, py + ph + 20], fill=(30, 24, 16, 255),
                      outline=GOLD, width=2)                     # 額は二重の金の線
         dr.rectangle([px - 8, py - 8, px + p.width + 8, py + ph + 8], outline=GOLD, width=3)
@@ -529,9 +515,8 @@ class Painter:
         x0, x1, y1 = 440, self.W - 440, self.H - 34
         h = 34 + 60 * SUB_ROWS
         y0 = y1 - h
-        shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
-        ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, y0 + 10, x1 + 6, y1 + 10], radius=14, fill=(0, 0, 0, 140))
-        img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
+        from .figures import soft_shadow                     # 影はいつも同じ。毎コマぼかすと1コマ約0.14秒かかっていた（10-08）
+        img.alpha_composite(soft_shadow(img.size, (x0 + 6, y0 + 10, x1 + 6, y1 + 10), 14, 140, 8))
         dr = ImageDraw.Draw(img, "RGBA")
         side = self.config["cast"].get(speaker, {}).get("side", "center")
         color = SPEAKER_COLORS.get(side, GOLD if speaker == "二人" else ROLE_COLOR)
@@ -631,6 +616,11 @@ class Painter:
         dr = ImageDraw.Draw(img, "RGBA")
         hf = self.font("gothic", 22)
         cy = self.H * 0.40 + 128
+        # 下に暗い帯：肖像の名札や真ん中の額の上に札が重なって読みにくかった（10-08 見本の通し確認）
+        band = Image.new("L", (1, 140), 0)
+        band.putdata([int(200 * min(1.0, k / 20, (139 - k) / 20)) for k in range(140)])
+        img.paste((10, 8, 6), (0, int(cy - 30)), band.resize((self.W, 140)))
+        dr = ImageDraw.Draw(img, "RGBA")
         dr.text((self.W / 2, cy), f"▼ ここまでの地層（第{section}節）", font=self.font("gothic", 24), fill=DIM,
                 anchor="mm")
         ws = []
@@ -783,6 +773,26 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
     plain_len = lambda x: len(emphasis_mask(x)[0])
     has_faces = lambda who: (who == "二人" or bool(painter.config["cast"].get(who, {}).get("faces")))   # 人物の行は誰も口を動かさない
 
+    import threading
+    from collections import OrderedDict
+    _bases: OrderedDict = OrderedDict()
+    _lock = threading.Lock()
+
+    def base_of(s, **kw):
+        """painter.base の控え（10-08）。口パク・まばたき・字幕のかたまりごとにコマが分かれても、下の層は同じなので
+        1回だけ描く。描いた画像は with_cast・pop・blend が写してから使う（書き換えない）。"""
+        key = (s, tuple(sorted(kw.items())))
+        with _lock:
+            if key in _bases:
+                _bases.move_to_end(key)
+                return _bases[key]
+        img = painter.base(s, **kw)
+        with _lock:
+            _bases[key] = img
+            while len(_bases) > BASE_CACHE:
+                _bases.popitem(last=False)
+        return img
+
     def _rk(s) -> dict:                  # つむぎの寄り（本編だけ。ショートはいつもの画面）
         return {"reaction": s.reaction} if (special and s.reaction) else {}
 
@@ -834,7 +844,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             new_section = special and prev_state is not None and prev_state.section != state.section
             title = painter.script.sections[state.section].title
             def base_lead(s=state):
-                return painter.with_cast(painter.base(s), s.speaker, 0, "", "聞く", **_rk(s))
+                return painter.with_cast(base_of(s), s.speaker, 0, "", "聞く", **_rk(s))
             if new_section:
                 rc = recap_cards(painter.script, state.section) if painter.look("recap") else ()
                 more = ("recap", rc) if rc else ()
@@ -885,9 +895,11 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
         m_items, m_from = spec_of(state.mark)
         n_mark = MARK_FRAMES * (len(m_items) - m_from) if (special and state.mark and (
             prev_state is None or prev_state.mark != state.mark)) else 0
+        # 図が描き進むのと同じ行で印を足すと、伸びきる前の棒に取り消し線が引かれた（10-08 見本の通し確認）。図が出終わってから描く
+        m_wait = FIG_FRAMES if (n_mark and fig_new) else 0
         n_fx = max(n_hop, TRANS_FRAMES if changed else 0, SHAKE_FRAMES if surprised else 0,
                    POP_FRAMES if words else 0, FIG_FRAMES if fig_new else 0, ICON_FRAMES if icon_new else 0,
-                   n_mark)
+                   m_wait + n_mark)
         for k in range(1, n_fx + 1):
             cuts.add(min(talk_len, k / fps))
         pop_len = POP_SECONDS if words else 0.0
@@ -914,7 +926,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
             pop_t = (min(1.0, k / (POP_FRAMES + 1)) if k else 1.0) if (words and a < pop_len) else None
             fig_t = (k / (FIG_FRAMES + 1)) if (fig_new and k and k <= FIG_FRAMES) else 1.0
             icon_t = (k / (ICON_FRAMES + 1)) if (icon_new and k and k <= ICON_FRAMES) else 1.0
-            mark_t = (k / (n_mark + 1)) if (n_mark and k and k <= n_mark) else 1.0
+            mark_t = (max(0, k - m_wait) / (n_mark + 1)) if (n_mark and k and k <= m_wait + n_mark) else 1.0
 
             def make(s=state, ps=prev_state, text=text, hop_k=hop_k, n_hop=n_hop, tr=tr, shake_k=shake_k,
                      pop_t=pop_t, mouth_open=mouth_open, blink=blink, tone=line.tone, opening=opening,
@@ -925,15 +937,15 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                     if ps.year is not None and s.year is not None:
                         year = ps.year + (s.year - ps.year) * _ease(tr)
                     slide = tr if (s.memo and s.memo != ps.memo) else 1.0
-                    base = painter.base(s, year=year, slide=slide, fig=fig_t, icon_t=icon_t, **_mk(mark_t))
+                    base = base_of(s, year=year, slide=slide, fig=fig_t, icon_t=icon_t, **_mk(mark_t))
                     from .figures import base_key       # 同じ図が1項目増えただけなら溶け合わせない（前の項目は動かさない）
                     changed_pic = (((ps.background, ps.portrait, base_key(ps.figure), ps.icon, ps.detail)
                                     != (s.background, s.portrait, base_key(s.figure), s.icon, s.detail)) if painter.layered
                                    else (ps.background, ps.portrait, ps.detail) != (s.background, s.portrait, s.detail))
                     if changed_pic:
-                        base = Image.blend(painter.base(ps), base, _ease(tr))
+                        base = Image.blend(base_of(ps), base, _ease(tr))
                 else:
-                    base = painter.base(s, fig=fig_t, icon_t=icon_t, **_mk(mark_t))
+                    base = base_of(s, fig=fig_t, icon_t=icon_t, **_mk(mark_t))
                 if pop_t is not None:
                     base = painter.pop(base, words[0], pop_t, s.speaker)
                 im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink, **_rk(s))
@@ -960,6 +972,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
              lambda: painter.with_cast(painter.end_card(bg), "語り", 0, "", "明るい"), end_seconds)
 
     # まとめて描く（同じ画像は1回だけ）。Pillow の描画は GIL を外すので、スレッドを並べると速くなる
+    # （10-08 に PNG を書くのを別プロセスに分けても測って速くならなかったので、スレッドのまま）
     def run(item):
         path, make = item
         make().save(path, compress_level=1)

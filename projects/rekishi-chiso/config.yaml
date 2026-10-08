@@ -1,5 +1,9 @@
 # 歴史の地層 — 制作の設定
 #
+# 注意（10-08）：ここの値を1つでも変えると、本編・ショートの前景のコマが全部描き直しになる
+# （コマの控えの名前に設定全体のハッシュが入るため。コメントだけの変更は描き直しにならない）。
+# 点検の目安の数字（背景40秒など）はここではなく chiso/check.py の頭。
+#
 # 素材（立ち絵・絵画）はリポジトリに入れない。立ち絵は規約で再配布が禁止されていて、
 # workspace は public なので。置き場は assets_dir（環境変数 CHISO_ASSETS で上書きできる）。
 assets_dir: ../../../output/rekishi-chiso/assets
@@ -140,7 +144,7 @@ fonts:
   gothic: C:/Windows/Fonts/YuGothB.ttc
 
 video:
-  bg_workers: 5      # 背景を同時に作る本数。10 だと空きメモリ5GB台で ffmpeg が落ちた（10-05、西太后の回）
+  bg_workers: 5      # 背景を同時に作る本数（止まった背景は絵1枚ずつ・溶け合いのコマ）。10 だと空きメモリ5GB台で ffmpeg が落ちた（10-05）
   width: 1920
   height: 1080
   fps: 30

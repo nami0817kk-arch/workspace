@@ -17,9 +17,9 @@ from __future__ import annotations
 
 import math
 
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
+from PIL import Image, ImageDraw, ImageEnhance
 
-from .figures import (COAST, INKD, PAPER, RED, _ease, _grow, _items, _panel, _steps, fit_number, note_item,
+from .figures import (COAST, soft_shadow, INKD, PAPER, RED, _ease, _grow, _items, _panel, _steps, fit_number, note_item,
                       number_width, put_number)
 
 SUB = (110, 90, 60)          # 見出し・説明（薄い墨）
@@ -343,9 +343,7 @@ def draw_versus(painter, img, spec, t):
         tf = painter.font("serif", 48, bold=True)
         tw = tf.getlength(title)
         x0, x1 = W / 2 - tw / 2 - 44, W / 2 + tw / 2 + 44
-        shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
-        ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, 58, x1 + 6, 142], radius=12, fill=(0, 0, 0, 150))
-        img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
+        img.alpha_composite(soft_shadow(img.size, (x0 + 6, 58, x1 + 6, 142), 12, 150, 8))
         dr = ImageDraw.Draw(img, "RGBA")
         dr.rounded_rectangle([x0, 50, x1, 134], radius=12, fill=(120, 30, 26, 245), outline=GOLD, width=3)
         dr.text((W / 2, 92), title, font=tf, fill=(255, 248, 230), anchor="mm")

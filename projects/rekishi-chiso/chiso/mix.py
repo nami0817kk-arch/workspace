@@ -5,7 +5,7 @@ import wave
 from dataclasses import dataclass
 from pathlib import Path
 
-from .voice import display_text, gap_before
+from .voice import gap_before
 
 TAIL = 1.5        # 最後の行のあとに残す無音（秒）
 

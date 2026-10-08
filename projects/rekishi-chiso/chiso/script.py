@@ -87,6 +87,7 @@ MEMO_SIZE = 3
 LOOK_KEYS = ("texture", "recap")   # 台本の一番上に書くと config.yaml の同じ名前より優先（10-07）
 TERM_LINES = 3        # 用語の札を出しておく行数（初めて出た行から）
 TERM_MAX = 40         # 説明の字数の上限（右上の狭い札に収める）
+ERA_TAILS = ("時代", "幕府", "の初め", "初期", "前期", "中期", "後期", "末期", "の末", "っ子")   # 地名＋これは時代の名
 
 
 def attach_terms(lines: list, glossary: dict, attr: str = "term", value=None, mask=()) -> None:
@@ -415,6 +416,10 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
                 shorts = (shorts,)
             pause = raw.get("pause")
             detail = _detail(raw.get("detail"), where, background)
+            if detail and figure is not None and "figure" not in raw:
+                # 図のあいだに detail を書くと、その行だけ図が隠れて次の行でまた図が出ていた（10-08 見本の通し確認）。
+                # 絵の一部に移ったら図は終わりにする（続けたいときは detail のあとの行に同じ figure を書き直す）
+                figure = None
             # 赤ペンは、同じもの（大きく見せた絵・図・背景）の上にいるあいだ足していく。替わると消える
             target = _mark_target(detail, figure, background, portrait, s_index)
             if target != mark_on:
@@ -450,7 +455,9 @@ def parse(data: dict, path: Path | None = None, glossary: dict[str, str] | None 
         raise ScriptError(f"用語の説明は{TERM_MAX}字までです: {long}")
     attach_terms(lines, gl)
     if places:
-        attach_terms(lines, places, "place", lambda w: (w, *places[w]), mask=[k for k in gl if k not in places])
+        # 「江戸時代」「江戸の初め」の江戸は時代の名で、場所ではない（10-08 見本で、本の話に江戸の地図が出た）
+        eras = [p + t for p in places for t in ERA_TAILS]
+        attach_terms(lines, places, "place", lambda w: (w, *places[w]), mask=[k for k in gl if k not in places] + eras)
     people = {}
     for name, v in (data.get("people") or {}).items():
         if not isinstance(v, dict) or "born" not in v:

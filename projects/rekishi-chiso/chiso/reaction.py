@@ -20,7 +20,7 @@ import math
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from .figures import fit_number, number_width, put_number
+from .figures import _ease, fit_number, number_width, put_number
 
 GOLD = (214, 178, 110)
 NUM_GOLD = (236, 196, 96)
@@ -28,15 +28,12 @@ INK = (244, 236, 220)
 WAIST = 0.47          # 立ち絵の上から何割を見せるか（腰から上。ヘルメットの上端から数える）
 SHOW_H = 940          # 見せる部分の高さ（px、1080 の画面で）
 RIGHT = 70            # 右の余白
-MAX_PER_EPISODE = 2   # 1本に何回まで
 
 
 def spec_of(raw) -> dict:
     return json.loads(raw) if isinstance(raw, str) else dict(raw)
 
 
-def _ease(t: float) -> float:
-    return 0.5 - 0.5 * math.cos(math.pi * max(0.0, min(1.0, t)))
 
 
 def backdrop(painter, img: Image.Image, raw, t: float = 1.0) -> Image.Image:

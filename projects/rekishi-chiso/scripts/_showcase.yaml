@@ -1,0 +1,160 @@
+# 道具を全部使う見本（2026-10-08）。投稿しない。道具を足したり描き方を変えたりしたら、これで
+# check → draft → qc → shorts --draft を通し、節ごとのコマを目で見る（組み合わせの不具合を探すため）。
+# 使っている道具：真ん中の額・detail・mark・図の upto・stats・calc・numberline・line・versus・reaction・
+# recap・texture・用語の札・場所の地図・肖像（この時○歳）・吹き出し・挿絵・人物の言葉・年表・次回予告、
+# サムネの layout と hooks（reactor・contrast）、ショートの hook と loop。
+# 事実は nobunaga.yaml の控え（research/nobunaga_facts.md）から。お金は「京都の大工の日当100文を今の1万円」。
+title: 織田信長の49年｜桶狭間・長篠・本能寺を記録で掘る
+series: ""
+texture: true
+recap: true
+timeline:
+  start: 1530
+  end: 1590
+  events: [[1534, 誕生], [1560, 桶狭間], [1575, 長篠], [1582, 本能寺]]
+tags: [織田信長, 見本]
+
+shorts:
+  s1: {title: "三段撃ちは／記録にない", hook: "長篠の三段撃ち／本当にあった？"}
+  s2: {title: "天下人の供は／たった100人"}
+
+next:
+  title: 江戸の鎖国
+  teaser: 日本は本当に、国を閉ざしていたのか。
+
+thumbnail:
+  layout: face
+  image: paintings/nobunaga_chokoji_bust.jpg
+  crop: [0, 0, 1300, 1000]
+  name: 織田信長
+  contrast: [天下人, 供は100人]
+  reactor: {who: tsumugi, face: 驚き, side: right, size: medium}   # 文字の側に置くと文字が狭くなる（check が知らせる）
+
+people:
+  織田信長: {born: 1534-06-23, died: 1582-06-21, match: [信長]}
+
+terms:
+  矢銭: 戦の費用として町や寺に出させたお金
+
+sections:
+  # ---------------------------------------------------------------- 1 導入：肖像・吹き出し・挿絵・用語・場所
+  - title: 1582年 天下人・織田信長
+    background: {image: paintings/nobunaga_rakuchu_uesugi_right.jpg, credit: "上杉本洛中洛外図屏風（狩野永徳、16世紀）"}
+    portrait: {image: paintings/nobunaga_chokoji_bust.jpg, caption: "織田信長（狩野宗秀画、長興寺蔵、1583年）"}
+    year: 1582
+    lines:
+      - 語り: 1582年6月、京都の本能寺。天下統一を目前にした織田信長は、百人ほどの供と泊まっていました。
+        tone: 重い
+        short: s2
+      - 聞き: 天下人なのに、供が百人だけ？ それ、少なすぎない？
+        tone: 疑問
+        short: s2
+      - 語り: 今日は、その信長の49年を、《記録》から掘っていきます。
+      - 聞き: あーしが知ってるのは、「うつけ」と本能寺くらいかも。
+      - 語り: まず、肖像です。亡くなった翌年に描かれた、信長の姿と言われています。
+      - 聞き: 思ってたより、やさしそうな顔してるじゃん。
+      - 語り: 家臣の太田牛一が書いた『信長公記』には、信長の口ぐせが残っています。
+        bubble: {text: "であるか", x: 0.5, y: 0.3}
+      - 語り: 手紙もたくさん残っていて、家臣の妻にあてて、励ます手紙まであります。
+        icon: envelope-simple
+      - 聞き: 天下人が、部下の奥さんに手紙？ マメなとこあるんだ。
+
+  # ---------------------------------------------------------------- 2 真ん中の額・地図の upto と mark・detail と mark
+  - title: 1560年 桶狭間の戦い
+    background: {image: paintings/nobunaga_okehazama_toyonobu.jpg, credit: "歌川豊宣《桶狭間合戦》1882年"}
+    lines:
+      - 語り: 1560年、駿河の今川義元が、大軍で尾張に攻め込みます。
+        card: {head: "1560年5月", body: 今川義元が尾張へ}
+      - 聞き: 信長、そのとき何歳？
+      - 語り: 満で25歳。まだ尾張もまとめきれていない、若い殿様です。
+      - 語り: 道のりを、地図で見てみましょう。まず、清洲の城から熱田へ。
+        figure: {type: map, title: 桶狭間への道, places: [[清洲城, 136.84, 35.22], [熱田, 136.91, 35.13], [桶狭間, 136.98, 35.06]], route: [清洲城, 熱田, 桶狭間], upto: 2}
+      - 聞き: 熱田って、神社のあるとこ？
+        figure: {type: map, title: 桶狭間への道, places: [[清洲城, 136.84, 35.22], [熱田, 136.91, 35.13], [桶狭間, 136.98, 35.06]], route: [清洲城, 熱田, 桶狭間], upto: 2}
+      - 語り: はい。そこから、今川の本陣のある桶狭間へ向かいます。
+        figure: {type: map, title: 桶狭間への道, places: [[清洲城, 136.84, 35.22], [熱田, 136.91, 35.13], [桶狭間, 136.98, 35.06]], route: [清洲城, 熱田, 桶狭間], upto: 3}
+        mark: {type: circle, at: 3}
+      - 聞き: 地図だと近いけど、相手は大軍でしょ？
+        figure: null
+      - 語り: 絵の、この部分を見てください。
+        detail: {box: [0.2, 0.15, 0.7, 0.85], label: 本陣に迫る織田勢}
+      - 聞き: 雨の中を、まっすぐ突っ込んでる。
+        detail: {box: [0.2, 0.15, 0.7, 0.85], label: 本陣に迫る織田勢}
+        mark: {type: arrow, at: [0.45, 0.5], text: 雨}
+      - 語り: 『信長公記』には、急な大雨が上がったあとに、信長が攻めかかったと書かれています。
+        card: {head: "1560年5月19日", body: 大雨のあと攻めかかる}
+      - 語り: 今川義元は討たれ、信長の名は、一気に広まりました。
+        card: {head: 1560年, body: 今川義元が討たれる}
+      - 聞き: 25歳で大逆転じゃん。でも、ここからどうするの？
+      - 語り: 15年後、信長は鉄砲で、もっと大きな戦いに挑みます。
+        hook: true
+
+  # ---------------------------------------------------------------- 3 recap・bars の upto＋strike・stats・calc・reaction・detail
+  - title: 1575年 長篠の戦い
+    background: {image: paintings/nobunaga_nagashino_screen_full.jpg, credit: "長篠合戦図屏風（江戸時代）"}
+    portrait: {image: paintings/nobunaga_chokoji_bust.jpg, caption: "織田信長（狩野宗秀画、長興寺蔵、1583年）"}
+    lines:
+      - 語り: 1575年、三河の長篠。信長と徳川家康の軍が、武田勝頼の軍とぶつかります。
+        card: {head: "1575年5月", body: 長篠の戦い}
+        short: s1
+      - 聞き: 鉄砲の三段撃ちのやつでしょ！
+        short: s1
+      - 語り: その鉄砲の数を、記録ごとに比べます。家臣の記録では、千ほど。
+        figure: {type: bars, title: 長篠の鉄砲の数, bars: [[信長公記, 1000], [甫庵信長記, 3000]], labels: [千挺ばかり, 三千挺], upto: 1}
+        short: s1
+      - 語り: 江戸の初めの本になると、三千に増えます。
+        figure: {type: bars, title: 長篠の鉄砲の数, bars: [[信長公記, 1000], [甫庵信長記, 3000]], labels: [千挺ばかり, 三千挺], upto: 2}
+        mark: {type: strike, at: 2, text: 後の本}
+        short: s1
+      - 聞き: 時代が下ると増えるって、話を盛ってない？
+        short: s1
+      - 語り: 数字をまとめると、こうなります。
+        figure: {type: stats, title: 長篠の鉄砲, items: [[信長公記, 約1000挺, 家臣の記録], [甫庵信長記, 3000挺, 江戸の初め], [差, 3倍]]}
+      - 語り: ちなみに、上洛した1568年、信長は堺に、戦の費用を求めています。
+        figure: {type: calc, title: 堺に求めた矢銭, terms: [[2万貫, 1568年], [約10万円, 1貫あたり], [約20億円]], ops: [×, ＝]}
+      - 聞き: 20億円！？ ひとつの町に？
+        tone: 驚き
+        reaction: {number: 約20億円, lead: 堺への矢銭は, say: 桁がちがう！}
+      - 語り: 京都の大工の日当100文を、今の1万円として数えた目安です。
+      - 語り: 屏風には、鉄砲隊の前に、木の柵が描かれています。
+        detail: {box: [1240, 200, 1880, 760], label: 柵と鉄砲隊}
+      - 聞き: ほんとだ、柵の後ろにずらっと並んでる。
+        detail: {box: [1240, 200, 1880, 760], label: 柵と鉄砲隊}
+        mark: {type: circle, at: [1430, 330, 1640, 560]}
+      - 語り: ただ、三段に分かれて順に撃った、という書き方は、『信長公記』にはありません。
+        short: s1
+      - 聞き: じゃあ、三段撃ちの話は、どこから来たの？
+      - 語り: 7年後の1582年、信長は、京都の本能寺に泊まります。
+        hook: true
+
+  # ---------------------------------------------------------------- 4 まとめ：人物の言葉・versus・numberline＋mark・line
+  - title: まとめ：織田信長とは何者だったのか
+    background: {image: paintings/nobunaga_honnoji_yoshitoshi.jpg, credit: "月岡芳年《本能寺焼討之図》"}
+    lines:
+      - 語り: 1582年6月2日の明け方、明智光秀の軍が、本能寺を囲みました。
+        card: {head: "1582年6月2日", body: 本能寺の変}
+        short: s2
+      - 語り: 謀反と聞いた信長は、こう言ったと伝えられています。
+      - 人物: 「是非に及ばず」
+        who: 信長
+      - 語り: 2人のその後を、並べてみます。
+        figure: {type: versus, title: 1582年の2人, credit: "左：狩野宗秀画（長興寺蔵）　右：本徳寺蔵",
+                 left: {image: paintings/nobunaga_chokoji_bust.jpg, name: 織田信長, number: 6月2日, note: 本能寺で死す},
+                 right: {image: paintings/akechi_portrait_hontokuji.jpg, name: 明智光秀, number: 6月13日, note: 山崎で敗れる, focus: false}}
+      - 聞き: 光秀も、たった11日後なんだ。
+      - 語り: 三英傑の享年を、数えで並べると、信長がいちばん短いんです。
+        figure: {type: numberline, title: 三英傑の享年（数え）, items: [[織田信長, 49], [豊臣秀吉, 62], [徳川家康, 75]], unit: 歳, focus: 織田信長}
+      - 聞き: 秀吉と家康は、信長よりずっと長生きしたんだ。
+        figure: {type: numberline, title: 三英傑の享年（数え）, items: [[織田信長, 49], [豊臣秀吉, 62], [徳川家康, 75]], unit: 歳, focus: 織田信長}
+        mark: {type: circle, at: 1}
+      - 語り: 今日の大きな出来事を、信長の歳で並べてみます。
+        figure: {type: line, title: 出来事と信長の歳（満）, points: [[1560年, 25], [1568年, 34], [1575年, 40], [1582年, 47]], unit: 歳}
+      - 聞き: 20代から40代まで、ずっと戦ってたんだね。
+        figure: null
+      - 語り: 記録に残る信長は、手紙で家臣の家族まで気づかう、細やかな人でもありました。
+      - 聞き: あーし的には、天下人は手紙を書くマメな人、って覚えとく。
+      - 語り: 今日の地層は、ここまでです。
+      - 聞き: 次回は江戸の鎖国。日本って、ほんとに国を閉じてたの？
+      - 語り: 知っている通説があれば、コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい
