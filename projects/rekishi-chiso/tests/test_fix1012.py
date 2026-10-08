@@ -108,3 +108,62 @@ def test_end_card_text_stays_above_the_left_cast_and_left_of_the_end_screen(tmp_
     plain = p.end_card(None)
     box = ImageChops.difference(with_text.convert("RGB"), plain.convert("RGB")).getbbox()
     assert box is not None and box[3] < p.end_cast_top() and box[2] <= 1080
+
+
+# --- 4・6. 節の題が寄りのヘルメット・右上の札・額に隠れる ------------------------------------
+def _title_painter(tmp_path, lines, title="一"):
+    from PIL import Image
+    from test_port import _painter
+    (tmp_path / "p").mkdir(exist_ok=True)
+    Image.new("RGB", (300, 400), (200, 180, 150)).save(tmp_path / "p" / "tall.png")
+    Image.new("RGB", (1100, 500), (120, 140, 90)).save(tmp_path / "p" / "byobu.png")
+    sc = script.parse({"title": "t", "terms": {"唐入り": "明を従えようとした構想"},
+                       "sections": [{"title": title, "lines": lines}]})
+    return _painter(tmp_path, sc)
+
+
+def test_title_room_stops_before_the_term_card_and_the_reaction_figure(tmp_path):
+    from chiso import render
+    p = _title_painter(tmp_path, [{"語り": "a"}, {"語り": "唐入りです"},
+                                  {"聞き": "えっ", "reaction": {"number": "70km"}}])
+    free, term, react = (p.title_room(render.state_of(l)) for l in p.script.lines)
+    assert free == 1920 - 240
+    from chiso.extras import TERM_BOX
+    assert term == TERM_BOX[0] - 24 - 120
+    from chiso import reaction
+    edge = reaction.left_edge(p, p.script.lines[2].reaction, *render.TITLE_BAND)
+    assert react == edge - 30 - 120 and react < free
+
+
+def test_long_title_is_not_drawn_over_the_reaction_figure(tmp_path):
+    from PIL import ImageChops
+    from chiso import render
+    long = "長い題" * 80
+    p = _title_painter(tmp_path, [{"聞き": "えっ", "reaction": {"number": "70km"}}], title=long)
+    st = render.state_of(p.script.lines[0])
+    assert p.title_size(long, p.title_room(st)) is None
+    with_title = p.base(st)
+    p.script.sections[0].title = ""
+    without = p.base(st)
+    box = ImageChops.difference(with_title.convert("RGB"), without.convert("RGB")).crop((0, 140, 1920, 215)).getbbox()
+    assert box is None                                       # 収まらない題は寄りのあいだ出さない
+
+
+def test_wide_portrait_moves_below_the_title(tmp_path):
+    from chiso import extras, render
+    p = _title_painter(tmp_path, [{"語り": "a", "portrait": {"image": "p/tall.png", "caption": "人"}},
+                                  {"語り": "b", "portrait": {"image": "p/byobu.png", "caption": "屏風"}}])
+    tall, wide = (p.script.lines[i].portrait for i in (0, 1))
+    assert extras.portrait_box(p, tall)[1] == 70                         # 縦長の肖像は今までどおり上
+    px, py, pw, ph = extras.portrait_box(p, wide)
+    assert py - 34 >= render.TITLE_BAND[1] and px - 20 > 640              # 横長の額は題の下、メモにかからない
+    assert p.title_room(render.state_of(p.script.lines[1])) == 1920 - 240  # 題は右の端まで使える
+
+
+def test_check_stops_when_a_section_title_cannot_fit(tmp_path):
+    from chiso import check
+    p = _title_painter(tmp_path, [{"語り": "a"}, {"語り": "唐入りです"}], title="あ" * 150)
+    got = check.section_title_fit(p)
+    assert len(got) == 1 and "1節" in got[0] and "1〜2行目" in got[0]
+    p.script.sections[0].title = "1591年 秀長の死"
+    assert check.section_title_fit(p) == []

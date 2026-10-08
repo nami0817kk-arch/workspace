@@ -97,6 +97,20 @@ def figure(painter, who: str, tone: str = "驚き", mouth: bool = False, blink: 
     return painter._images[key]
 
 
+def left_edge(painter, raw, y0: float, y1: float) -> float:
+    """寄りの立ち絵が、画面の y0〜y1 の高さで左にいちばん出ている x（節の題をその手前で止める。10-09
+    秀吉の回で、ヘルメットが節の題「山崎の戦い」「天下一統」にかぶった）。跳ねたときの分も見込む。"""
+    spec = spec_of(raw)
+    ch = figure(painter, spec.get("who") or "聞き", "驚き")
+    W, H = painter.W, painter.H
+    x, y = W - ch.width - RIGHT, H - ch.height + 10
+    top, bottom = max(0, int(y0 - y - 18)), min(ch.height, int(y1 - y))
+    if bottom <= top:
+        return float(W)
+    box = ch.split()[3].crop((0, top, ch.width, bottom)).point(lambda v: 255 if v > 40 else 0).getbbox()
+    return float(W) if box is None else float(x + box[0])
+
+
 def put_figure(painter, img: Image.Image, raw, talking: bool, mouth: bool, blink: bool, hop: float) -> None:
     """立ち絵を右に大きく置き、縁を少し光らせ、吹き出し（say）を左に出す。"""
     spec = spec_of(raw)

@@ -40,6 +40,9 @@ SHAKE_PX = 10        # 揺れの大きさ
 WIPE_FRAMES = 14     # 節の頭の地層のワイプ（フレーム数）
 FIG_FRAMES = 45      # 図が出たときに描き進める長さ（フレーム数。1.5秒）
 ICON_FRAMES = 8      # 挿絵が出るときに大きくなる長さ（フレーム数）
+TITLE_X = 120        # 節の題の左の端
+TITLE_BAND = (140, 215)   # 節の題の上下（64px の題が入る高さ）
+TITLE_MIN = 36       # 節の題はこの大きさまで縮める（収まらなければ check が止める）
 BASE_CACHE = 24      # 前景の下の層（base）を控えておく数。1枚 8MB（1920x1080 RGBA）
 
 
@@ -258,12 +261,11 @@ class Painter:
             fill = GOLD if k <= state.section else (90, 80, 66)
             dr.ellipse([cx - r, 117 - r, cx + r, 117 + r], fill=fill)
         dr.text((250 + n_sec * 30 + 6, 117), f"全{n_sec}節", font=self.font("gothic", 22), fill=DIM, anchor="lm")
-        limit = (W - 330 - 400 - 40 - 120) if state.portrait is not None else (W - 240)
-        size = 64
-        while size > 36 and self.font("serif", size, bold=True).getlength(title) > limit:
-            size -= 2
-        dr.text((120, 145 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK,
-                stroke_width=2, stroke_fill=(12, 10, 8))
+        size = self.title_size(title, self.title_room(state))
+        if size is not None or not state.reaction:          # 寄りのあいだは、立ち絵の左に収まらない題は出さない（10-09）
+            size = size or TITLE_MIN
+            dr.text((TITLE_X, 145 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK,
+                    stroke_width=2, stroke_fill=(12, 10, 8))
 
         is_versus = state.figure is not None and '"type": "versus"' in state.figure
         on = None                                          # 赤ペンの乗る所（chiso/pen.py）
@@ -320,6 +322,34 @@ class Painter:
         dr.text((W - 40, 34), names, font=self.font("serif", 20), fill=DIM, anchor="rs",
                 stroke_width=2, stroke_fill=(12, 10, 8))
         return img
+
+    def title_room(self, state: State) -> float:
+        """節の題を置ける幅（x 120 から、右の札・肖像の額・寄りの立ち絵の手前まで）。10-09 点検で、
+        長い題が右上の用語の札・場所の地図・横長の額・寄りのヘルメットに隠れた。"""
+        right = self.W - TITLE_X
+        fig = state.figure or ""
+        is_versus = '"type": "versus"' in fig
+        is_map = '"type": "map"' in fig
+        if state.reaction:
+            from . import reaction
+            right = min(right, reaction.left_edge(self, state.reaction, *TITLE_BAND) - 30)
+            return right - TITLE_X
+        if not is_versus and (state.term or (state.place and not is_map)):
+            from .extras import TERM_BOX
+            right = min(right, TERM_BOX[0] - 24)
+        if state.portrait is not None and state.figure is None and not state.detail:
+            from .extras import portrait_box
+            px, py, _pw, _ph = portrait_box(self, state.portrait)
+            if py - 34 < TITLE_BAND[1]:                       # 額（と「この時○歳」）が題の高さにかかる
+                right = min(right, px - 34 - 24)
+        return right - TITLE_X
+
+    def title_size(self, title: str, room: float) -> int | None:
+        """節の題の字の大きさ（64 から縮める）。TITLE_MIN でも room に収まらなければ None。"""
+        size = 64
+        while size > TITLE_MIN and self.font("serif", size, bold=True).getlength(title) > room:
+            size -= 2
+        return size if self.font("serif", size, bold=True).getlength(title) <= room else None
 
     def _memo(self, img: Image.Image, state: State, slide: float) -> None:
         """掘り出したメモ：その節で出た札が新しい順に3枚まで。いまの札は明るく、前の札は暗く。"""
