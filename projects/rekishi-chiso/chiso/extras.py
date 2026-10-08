@@ -201,9 +201,8 @@ def draw_term(painter, img: Image.Image, word: str, note: str) -> Image.Image:
     rows = wrap(note, nf, w - 56)        # 小さい「っ」などを行末に残す折り返しでも、枠からはみ出さない幅
     h = 46 + size + 18 + 36 * len(rows) + 16
     y1 = min(ymax, y0 + h)
-    shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, y0 + 8, x1 + 6, y1 + 8], radius=12, fill=(0, 0, 0, 140))
-    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
+    from .figures import soft_shadow
+    img.alpha_composite(soft_shadow(img.size, (x0 + 6, y0 + 8, x1 + 6, y1 + 8), 12, 140, 8))
     dr = ImageDraw.Draw(img, "RGBA")
     dr.rounded_rectangle([x0, y0, x1, y1], radius=12, fill=(24, 20, 14, 225), outline=GOLD, width=3)
     dr.rounded_rectangle([x0 + 14, y0 - 14, x0 + 104, y0 + 16], radius=6, fill=GOLD)
@@ -233,10 +232,8 @@ def draw_minimap(painter, img: Image.Image, place: tuple, top: int) -> Image.Ima
     if key not in painter._images:
         painter._images[key] = _minimap_tile(painter, name, lon, lat, x1 - x0 - 16, MINIMAP_H)
     tile = painter._images[key]
-    shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, y0 + 8, x1 + 6, y0 + MINIMAP_H + 52], radius=12,
-                                             fill=(0, 0, 0, 140))
-    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
+    from .figures import soft_shadow
+    img.alpha_composite(soft_shadow(img.size, (x0 + 6, y0 + 8, x1 + 6, y0 + MINIMAP_H + 52), 12, 140, 8))
     dr = ImageDraw.Draw(img, "RGBA")
     dr.rounded_rectangle([x0, y0, x1, y0 + MINIMAP_H + 44], radius=12, fill=(24, 20, 14, 225), outline=GOLD, width=3)
     img.alpha_composite(tile, (x0 + 8, y0 + 8))

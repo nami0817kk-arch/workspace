@@ -176,11 +176,27 @@ def item_boxes(painter, spec: dict) -> dict[int, tuple]:
     return painter._images[key]
 
 
+_SHADOWS: dict = {}
+
+
+def soft_shadow(size, box, radius: int, alpha: int, blur: float) -> Image.Image:
+    """角丸の板のぼかした影（画面1枚の透明な層）。同じ形は1回だけぼかして控える（10-08。画面1枚のぼかしは1回約0.14秒で、
+    札・図の板・字幕の影を毎コマ作っていた）。図の板・用語の札・場所の地図・字幕・左右比べの題が使う。"""
+    key = (tuple(size), tuple(box), radius, alpha, blur)
+    layer = _SHADOWS.get(key)
+    if layer is None:
+        if len(_SHADOWS) > 64:
+            _SHADOWS.clear()
+        layer = Image.new("RGBA", tuple(size), (0, 0, 0, 0))
+        ImageDraw.Draw(layer).rounded_rectangle(list(box), radius=radius, fill=(0, 0, 0, alpha))
+        layer = layer.filter(ImageFilter.GaussianBlur(blur))
+        _SHADOWS[key] = layer
+    return layer
+
+
 def _plate(img: Image.Image) -> None:
     x0, y0, x1, y1 = PANEL
-    shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle([x0 + 10, y0 + 14, x1 + 10, y1 + 14], radius=16, fill=(0, 0, 0, 150))
-    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(10)))
+    img.alpha_composite(soft_shadow(img.size, (x0 + 10, y0 + 14, x1 + 10, y1 + 14), 16, 150, 10))
     dr = ImageDraw.Draw(img, "RGBA")
     dr.rounded_rectangle([x0, y0, x1, y1], radius=16, fill=PAPER + (250,), outline=(150, 118, 74), width=4)
 

@@ -81,3 +81,33 @@ def test_small_map_bounds_are_tight():
     assert lon1 - lon0 < 1.0                                                  # 前は最低でも経度3度の幅
     big = figures.with_places({"places": [["a", 0.0, 40.0], ["b", 10.0, 50.0]]})
     assert big["bounds"] == [-2.5, 12.5, 36.5, 53.5]                          # 広い地図は前と同じ
+
+
+def test_soft_shadow_is_reused_and_same_as_before():
+    from PIL import ImageDraw, ImageFilter
+    a = figures.soft_shadow((200, 100), (10, 10, 120, 80), 12, 140, 8)
+    assert figures.soft_shadow((200, 100), (10, 10, 120, 80), 12, 140, 8) is a      # 2回目はぼかさない
+    ref = Image.new("RGBA", (200, 100), (0, 0, 0, 0))
+    ImageDraw.Draw(ref).rounded_rectangle([10, 10, 120, 80], radius=12, fill=(0, 0, 0, 140))
+    assert ref.filter(ImageFilter.GaussianBlur(8)).tobytes() == a.tobytes()          # 前の描き方と画素まで同じ
+
+
+def test_text_room_warns_when_reactor_takes_the_text_side(tmp_path):
+    from chiso import thumb
+    t = {"layout": "face", "image": "x.jpg", "crop": [0, 0, 10, 10], "name": "n", "main": "m"}
+    assert thumb.text_room(t, {}, tmp_path) == []                                   # reactor が無ければ広い
+    narrow = dict(t, _reactor=(0, 200, 560, 720))                         # 左に大きな顔
+    from unittest import mock
+    with mock.patch.object(thumb, "_prepare", lambda t, c, a: t):
+        assert thumb.text_room(narrow, {}, tmp_path)
+
+
+def test_qc_reads_main_srt_for_draft(tmp_path, monkeypatch):
+    from chiso import qc
+    (tmp_path / "x.srt").write_text("1\n00:00:00,000 --> 00:00:02,000\nあ\n", encoding="utf-8")
+    seen = {}
+    monkeypatch.setattr(qc, "analyze", lambda ff, v: (qc.Report(duration=3.0), []))
+    monkeypatch.setattr(qc, "sheet", lambda frames, sections, font: Image.new("RGB", (4, 4)))
+    sc = NS(path=tmp_path / "x.yaml", lines=[NS(text="あ", section=0)], sections=[NS(title="t")])
+    lines = qc.run("ffmpeg", sc, tmp_path / "x_draft.mp4", tmp_path / "q.png", tmp_path / "q.md")
+    assert not any("見つかりません" in l for l in lines)

@@ -279,7 +279,6 @@ def compose(ffmpeg: str, background: Path, overlay_list: Path, audio: Path, targ
     subprocess.run([
         ffmpeg, "-y", "-loglevel", "error",
         *bg_in,
-        "-threads", "8",                                     # 前景の PNG を並べて読む（10-08。読むのが重ねる段の半分近くかかっていた）
         "-f", "concat", "-safe", "0", "-i", str(overlay_list),
         "-i", str(audio),
         "-filter_complex", bg_chain + "[1:v]format=rgba,fps=" + str(fps) + "[o];[b][o]overlay=0:0:format=auto:shortest=1,format=yuv420p[v]",

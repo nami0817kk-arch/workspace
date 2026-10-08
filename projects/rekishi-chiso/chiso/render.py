@@ -515,9 +515,8 @@ class Painter:
         x0, x1, y1 = 440, self.W - 440, self.H - 34
         h = 34 + 60 * SUB_ROWS
         y0 = y1 - h
-        shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
-        ImageDraw.Draw(shadow).rounded_rectangle([x0 + 6, y0 + 10, x1 + 6, y1 + 10], radius=14, fill=(0, 0, 0, 140))
-        img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(8)))
+        from .figures import soft_shadow                     # 影はいつも同じ。毎コマぼかすと1コマ約0.14秒かかっていた（10-08）
+        img.alpha_composite(soft_shadow(img.size, (x0 + 6, y0 + 10, x1 + 6, y1 + 10), 14, 140, 8))
         dr = ImageDraw.Draw(img, "RGBA")
         side = self.config["cast"].get(speaker, {}).get("side", "center")
         color = SPEAKER_COLORS.get(side, GOLD if speaker == "二人" else ROLE_COLOR)
@@ -973,6 +972,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
              lambda: painter.with_cast(painter.end_card(bg), "語り", 0, "", "明るい"), end_seconds)
 
     # まとめて描く（同じ画像は1回だけ）。Pillow の描画は GIL を外すので、スレッドを並べると速くなる
+    # （10-08 に PNG を書くのを別プロセスに分けても測って速くならなかったので、スレッドのまま）
     def run(item):
         path, make = item
         make().save(path, compress_level=1)
