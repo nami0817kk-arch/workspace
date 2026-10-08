@@ -3966,5 +3966,29 @@
     "video_id": "upilbpRDE7M",
     "at": "2026-10-08T02:21:41+00:00",
     "publish_at": "2026-10-08T07:30:00Z"
+  },
+  {
+    "build": "20261008_finance_arteta",
+    "video_id": "CI1GYYk5Yzg",
+    "at": "2026-10-08T04:17:42+00:00",
+    "publish_at": "2026-10-08T08:00:00Z"
+  },
+  {
+    "build": "20261008_finance_arteta_short",
+    "video_id": "OYh9SiWEplc",
+    "at": "2026-10-08T04:18:01+00:00",
+    "publish_at": "2026-10-08T08:30:00Z"
+  },
+  {
+    "build": "20261008_record_pedro",
+    "video_id": "oq9PiHrLerU",
+    "at": "2026-10-08T04:18:34+00:00",
+    "publish_at": "2026-10-08T09:00:00Z"
+  },
+  {
+    "build": "20261008_record_pedro_short",
+    "video_id": "cqEJiUI3_nM",
+    "at": "2026-10-08T04:18:53+00:00",
+    "publish_at": "2026-10-08T09:30:00Z"
   }
 ]

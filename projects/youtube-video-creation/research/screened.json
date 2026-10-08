@@ -2086,5 +2086,21 @@
  "20261008_spy_ban_short": {
   "at": "2026-10-08T11:16:36+09:00",
   "digest": "9011da3a58e96a3e"
+ },
+ "20261008_finance_arteta": {
+  "at": "2026-10-08T13:17:01+09:00",
+  "digest": "ece769ba4e8a260d"
+ },
+ "20261008_finance_arteta_short": {
+  "at": "2026-10-08T13:17:03+09:00",
+  "digest": "ae65533cfc4a29d3"
+ },
+ "20261008_record_pedro": {
+  "at": "2026-10-08T13:17:04+09:00",
+  "digest": "8c236f14c7c21bab"
+ },
+ "20261008_record_pedro_short": {
+  "at": "2026-10-08T13:17:05+09:00",
+  "digest": "af8ddae5a669bb30"
  }
 }
