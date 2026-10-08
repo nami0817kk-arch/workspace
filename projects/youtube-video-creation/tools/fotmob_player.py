@@ -226,7 +226,9 @@ def radar_board(group: str, items: list[tuple[str, float]], out: Path, name: str
         chip = [x0 + tw + 14, ly - 20, x0 + tw + 14 + vw + 28, ly + 20]
         draw.rounded_rectangle(chip, radius=20, fill=BRAND_GOLD + (255,))
         draw.text((chip[0] + 14, ly - 17), value, font=f_val, fill=(16, 18, 24, 255))
-    draw.text((px + pw - 130, py + ph - 50), "FotMob", font=f_val, fill=(120, 130, 146, 255))
+    # 出典は画面に出さない（2026-10-08 ユーザー「出典は動画に出さなくていいからね」）。
+    # 「出典は概要欄に書く。画面にも読み上げにも出さない」（2026-09-10）の決まりで、
+    # `cards.render` は同じ日に直したが、この道具が作る板だけ焼き込まれたままだった
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)
     statboard._write_mark(out, f"{name}のプレースタイル", "percentile", [(l, round(v * 100)) for l, v in items], "FotMob")
@@ -310,7 +312,9 @@ def shotmap_board(shot_list: list[dict], out: Path, name: str, season_label: str
             draw.ellipse([lx, ly, lx + 26, ly + 26], fill=(90, 96, 108, 200), outline=(200, 200, 200, 160), width=2)
         draw.text((lx + 40, ly - 2), label, font=f, fill=(255, 255, 255, 255))
         ly += 38
-    draw.text((px + pw - 130, py + ph - 50), "FotMob", font=_font(26), fill=(120, 130, 146, 255))
+    # 出典は画面に出さない（2026-10-08 ユーザー「出典は動画に出さなくていいからね」）。
+    # 「出典は概要欄に書く。画面にも読み上げにも出さない」（2026-09-10）の決まりで、
+    # `cards.render` は同じ日に直したが、この道具が作る板だけ焼き込まれたままだった
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)
     statboard._write_mark(out, f"{name}の{season_label}のシュート", "xG", [("shots", len(shot_list)), ("goals", len(goals)), ("xg", round(xg, 2))], "FotMob")
@@ -474,7 +478,9 @@ def heatmap_board(coords: list[dict], out: Path, name: str, size: tuple[int, int
         for (mx, my), col in (((PITCH_LEN, PITCH_WID / 2), (255, 0, 0, 255)), ((0, PITCH_WID / 2), (0, 120, 255, 255))):
             cx, cy = gx + gw * mx / PITCH_LEN, gy + gh * my / PITCH_WID
             draw.ellipse([cx - 14, cy - 14, cx + 14, cy + 14], fill=col)
-    draw.text((px + pw - 130, py + ph - 50), "FotMob", font=_font(26), fill=(120, 130, 146, 255))
+    # 出典は画面に出さない（2026-10-08 ユーザー「出典は動画に出さなくていいからね」）。
+    # 「出典は概要欄に書く。画面にも読み上げにも出さない」（2026-09-10）の決まりで、
+    # `cards.render` は同じ日に直したが、この道具が作る板だけ焼き込まれたままだった
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)
     statboard._write_mark(out, f"{name}の今季のヒートマップ", "touches", [("points", len(coords))], "FotMob")
