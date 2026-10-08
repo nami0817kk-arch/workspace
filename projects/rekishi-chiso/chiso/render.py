@@ -32,7 +32,7 @@ TRANS_FRAMES = 8     # 絵・札・年号が替わるときの移り変わり（
 LISTENER_DIM = 0.72  # 聞いている側の明るさ
 SUB_ROWS = 2         # 本編の字幕は2行まで
 END_SECONDS = 12.0   # 最後の次回予告の画面の長さ（YouTube の終了画面を置ける長さ）
-OPENING_CUES = 2     # 冒頭で題名の問いを大きく出す行数
+OPENING_CUES = 1     # 冒頭で題名の問いを大きく出す行数（10-08 に2→1。長く出て字幕が読めなかった）
 POP_SECONDS = 1.6    # 強調語が画面の真ん中に飛び出している長さ
 POP_FRAMES = 6       # 飛び出すときの大きくなる動き（フレーム数）
 SHAKE_FRAMES = 6     # 驚きで画面が揺れる長さ（フレーム数）
@@ -948,12 +948,12 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                     base = base_of(s, fig=fig_t, icon_t=icon_t, **_mk(mark_t))
                 if pop_t is not None:
                     base = painter.pop(base, words[0], pop_t, s.speaker)
+                if opening:                         # 冒頭の題は字幕と2人の下に敷く（10-08「字幕が見えない」）
+                    base = painter.overlay_title(base, painter.script.series, painter.script.question, 0.8).convert("RGBA")
                 im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink, **_rk(s))
                 if shake_k:
                     im = painter.burst(im, side, shake_k / (SHAKE_FRAMES + 1))
                     im = painter.shake(im, shake_k)
-                if opening:
-                    im = painter.overlay_title(im, painter.script.series, painter.script.question, 0.8)
                 return im
 
             key = ("f2", state, prev_state if tr < 1.0 else None, round(tr, 3), hop_k, n_hop, text, shake_k,
