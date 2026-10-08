@@ -3906,5 +3906,65 @@
     "video_id": "6fOQRsvF7BQ",
     "at": "2026-10-07T15:14:58+00:00",
     "publish_at": "2026-10-08T00:30:00Z"
+  },
+  {
+    "build": "20260926_ll09_elche",
+    "video_id": "M4ec7UgYPbA",
+    "at": "2026-10-08T02:17:25+00:00",
+    "publish_at": "2026-10-08T03:00:00Z"
+  },
+  {
+    "build": "20260926_ll09_elche_short",
+    "video_id": "LCm10Z9xiqc",
+    "at": "2026-10-08T02:18:02+00:00",
+    "publish_at": "2026-10-08T03:30:00Z"
+  },
+  {
+    "build": "20261008_player_670681",
+    "video_id": "z_M-lXmWKRk",
+    "at": "2026-10-08T02:18:34+00:00",
+    "publish_at": "2026-10-08T04:00:00Z"
+  },
+  {
+    "build": "20261008_player_670681_short",
+    "video_id": "AZgDpar8WJ4",
+    "at": "2026-10-08T02:19:00+00:00",
+    "publish_at": "2026-10-08T04:30:00Z"
+  },
+  {
+    "build": "20261008_palace_ranking",
+    "video_id": "spHu5Yt7DDM",
+    "at": "2026-10-08T02:19:34+00:00",
+    "publish_at": "2026-10-08T05:00:00Z"
+  },
+  {
+    "build": "20261008_palace_ranking_short",
+    "video_id": "8RwS2iYPQEY",
+    "at": "2026-10-08T02:19:54+00:00",
+    "publish_at": "2026-10-08T05:30:00Z"
+  },
+  {
+    "build": "20261008_ronaldo_statement",
+    "video_id": "wgha1ZCIrp8",
+    "at": "2026-10-08T02:20:46+00:00",
+    "publish_at": "2026-10-08T06:00:00Z"
+  },
+  {
+    "build": "20261008_ronaldo_statement_short",
+    "video_id": "dL7omelFrD8",
+    "at": "2026-10-08T02:21:01+00:00",
+    "publish_at": "2026-10-08T06:30:00Z"
+  },
+  {
+    "build": "20261008_spy_ban",
+    "video_id": "biPsmCCYqU8",
+    "at": "2026-10-08T02:21:26+00:00",
+    "publish_at": "2026-10-08T07:00:00Z"
+  },
+  {
+    "build": "20261008_spy_ban_short",
+    "video_id": "upilbpRDE7M",
+    "at": "2026-10-08T02:21:41+00:00",
+    "publish_at": "2026-10-08T07:30:00Z"
   }
 ]

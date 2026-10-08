@@ -284,11 +284,11 @@
   "2026-10-07": {
     "videos.list": 4,
     "videos.update": 30,
-    "channels.list": 2,
-    "playlistItems.list": 2,
-    "videos.insert": 2,
-    "thumbnails.set": 2,
+    "channels.list": 12,
+    "playlistItems.list": 12,
+    "videos.insert": 12,
+    "thumbnails.set": 12,
     "playlists.insert": 1,
-    "playlistItems.insert": 1
+    "playlistItems.insert": 6
   }
 }
