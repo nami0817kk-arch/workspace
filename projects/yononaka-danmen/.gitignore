@@ -2,3 +2,5 @@
 __pycache__/
 research/candidates/*.json
 out/
+approvals/
+posted.json

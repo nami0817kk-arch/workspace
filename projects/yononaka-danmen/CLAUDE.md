@@ -652,6 +652,31 @@ python scripts/audit_script.py 台本.yaml
 - ffmpeg は `imageio_ffmpeg` 同梱のものを使う。別に入れなくてよい
 - 30秒で 1.6MB。30分なら 100MB 前後の見込み
 
+## 投稿する（2026-10-08 に作った）
+
+```bash
+python scripts/post.py whoami                             # どのチャンネルに繋がっているか
+python scripts/post.py describe 台本.yaml                  # 概要欄の文面を見る
+python scripts/post.py screen 台本.yaml                    # 動画を見せた控え（**関門**）
+python scripts/post.py upload 台本.yaml --at "2026-10-09 19:00"
+```
+
+**歴史の地層（`chiso/upload.py`）から写した。** 向こうで踏んで直したことが全部入っている。
+
+- **関門を外さない。** `upload` は、動画をユーザーに見せて OK をもらい `screen` を打った
+  控え（`approvals/<台本>.screened.json`）が無いと動かない。動画を作り直すと
+  sha256 が変わるので確認もやり直し
+- **チャンネルの取り違えを機械で止める。** `upload` は投稿の前にチャンネル名を確かめ、
+  「日本のなぜ」でなければ止まる。2026-10-08、Studio を開いたら「歴史の地層」の
+  カスタマイズ画面が出て、危うくそちらのアイコンを差し替えるところだった
+- 予約公開は `private` ＋ `publishAt`。公開は**日本時間 9〜24時**、15分以上先
+- 同じ題名が3時間以内に上がっていると止まる（二重投稿の防止）
+- 投稿の控えは `posted.json`。同じ台本は二度出ない
+
+**鍵と許可はリポジトリの外**（`dev/output/yononaka-danmen/secrets/`）。
+Google Cloud は**チャンネルごとに別のプロジェクト**（API の枠を分ける。10-04 決定）。
+**下ごしらえの手順は `docs/youtube-setup.md`**（1回だけ・ユーザーの作業・課金なし）。
+
 ### 素材の置き場（リポジトリには入れない）
 
 `output/yononaka-danmen/assets/` の下に置く。workspace は public なので。
