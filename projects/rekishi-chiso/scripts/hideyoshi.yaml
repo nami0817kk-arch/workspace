@@ -107,6 +107,8 @@ thumbnail:
   lead: 信長の手紙では
   main: はげねずみ
   reactor: {who: tsumugi, face: 驚き, side: right, size: medium}
+  variants:
+    c: {lead: 信長が手紙で, main: 呼んだ名}
 
 sections:
   # ---------------------------------------------------------------- 1 導入：はげねずみ
