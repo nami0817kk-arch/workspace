@@ -26,6 +26,15 @@ void main() {
     expect(body, contains('Google-adstxt'));
     expect(body, isNot(contains('Disallow: /\n')),
         reason: '全部を塞ぐと app-ads.txt まで読まれなくなる');
+
+    // **中身は英数字だけにする。** 手順書（ios-app-release）の指示で、
+    // 護送ボートが「確認済み」になったときの形もそうだった。こちらは
+    // 日本語のコメントを書いていたので 2026-10-08 に外した——AdMob の
+    // 確認は一度外すと読み直しに最大24時間かかるので、押す前に揃えた。
+    final nonAscii = body.runes.where((r) => r > 127).toList();
+    expect(nonAscii, isEmpty,
+        reason: 'robots.txt に ASCII 以外が入っている: '
+            '${String.fromCharCodes(nonAscii)}');
   });
 
   test('404.html が実体として置いてある', () {
