@@ -25,7 +25,8 @@ CARRY_LINES = 3          # 食い違った行のあと、画面が替わらず�
 _YEAR = re.compile(r"(?<![0-9０-９])([0-9]{3,4})年(?![代後前間分続ぶほもか])")
 # 出来事の語：「本能寺の変」「長篠の戦い」「桶狭間合戦」「比叡山焼き討ち」。頭（本能寺・長篠）を鍵にする
 _EVENT = re.compile(r"([一-鿿ヶ]{2,6})(?:の変(?![わえ化更身動貌])|の戦い|の乱(?![れし暴雑])|の役(?![人目割者所立柄職])|合戦"
-                    r"|焼き討ち|焼討|の陣|宗論|事件|の和議)")
+                    r"|焼き討ち|焼討|の陣|宗論|事件|の和議)(?![記録図])")      # 「柴田合戦記」のような書名は出来事にしない（10-09）
+_BOOK = re.compile(r"『[^』]*』")                           # 『』の中（書名）は出来事の語を拾わない
 _LANDMARK = re.compile(r"[一-鿿]{1,4}(?:寺|城)(?![下主])")
 FIXED_EVENTS = ("本能寺", "長篠", "桶狭間", "関ヶ原", "関ケ原", "比叡山")
 TEASER = "次回"
@@ -98,7 +99,7 @@ def event_words(script) -> list[str]:
     """その回の出来事の語：決まった語（本能寺・長篠…）＋本文・節の題・用語から「〜の変」「〜の戦い」「〜合戦」の頭を拾ったもの。"""
     words = set(FIXED_EVENTS)
     for t in _texts(script):
-        words.update(m.group(1) for m in _EVENT.finditer(t))
+        words.update(m.group(1) for m in _EVENT.finditer(_BOOK.sub("", t)))
     return sorted((w for w in words if w not in NOT_EVENTS and len(w) >= 2), key=len, reverse=True)
 
 
