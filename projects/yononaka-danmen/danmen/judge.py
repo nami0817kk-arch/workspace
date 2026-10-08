@@ -17,7 +17,7 @@ ENV = pathlib.Path(r"C:/Users/なみ/dev/workspace/projects/gemini-api/.env")
 MODELS = ["gemini-3.5-flash", "gemini-3.6-flash", "gemini-3.7-flash",
           "gemini-3.1-flash-lite", "gemini-flash-latest"]
 
-PROMPT = """あなたは YouTube チャンネル「世の中の断面図」の題材を選ぶ人です。
+PROMPT = """あなたは YouTube チャンネル「日本のなぜ」の題材を選ぶ人です。
 このチャンネルは、ニュースや世の中の疑問を1つ選び、制度・歴史・数字の断面を見せます。
 
 【採る条件】次のどれかに強く当てはまるものだけ採ります。

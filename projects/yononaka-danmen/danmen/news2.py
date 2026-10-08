@@ -67,7 +67,7 @@ def breaking(spec: dict) -> Image.Image:
         d.text((tw + 124, y + 142), sub, font=F(38), fill=INK)
     # チャンネルの名と日付。**左上に置く**。
     # 右上は立ち絵のワイプが来るので空けておく（2026-10-08）
-    name = str(spec.get("channel", "世の中の断面図"))
+    name = str(spec.get("channel", "日本のなぜ"))
     nf = F(30, 800)
     d.rectangle([32, 36, 32 + d.textlength(name, font=nf) + 32, 92], fill=(0, 0, 0, 150))
     d.text((48, 46), name, font=nf, fill="white")

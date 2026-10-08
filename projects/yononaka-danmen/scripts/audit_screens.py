@@ -54,7 +54,7 @@ def spec_for(kind: str) -> dict:
                 "wipes": [{"name": "切島", "role": "語り手"}]}
     if kind == "breaking":
         return {**b, "tag": "速報", "head": "ガソリン175円に", "sub": "先週より2円高い",
-                "channel": "世の中の断面図", "when": "2026年10月6日"}
+                "channel": "日本のなぜ", "when": "2026年10月6日"}
     if kind == "lshape":
         return {**b, "head": "ガソリン175円", "sub": "4割が税金",
                 "side_title": "いま分かっていること",

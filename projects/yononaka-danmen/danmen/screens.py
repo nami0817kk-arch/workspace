@@ -81,7 +81,7 @@ def title(spec: dict) -> Image.Image:
     d = ImageDraw.Draw(im)
     _logo(im, 54, 44)
     d = ImageDraw.Draw(im)
-    d.text((158, 48), "世の中の断面図", font=F(30, 800), fill="#D6E0F0")
+    d.text((158, 48), "日本のなぜ", font=F(30, 800), fill="#D6E0F0")
     d.text((158, 86), "ニュースを数字で切る", font=F(typo.NOTE, 500), fill="#8FA3C4")
 
     lines = spec.get("lines", [])
@@ -256,7 +256,7 @@ def agenda(spec: dict) -> Image.Image:
     d = ImageDraw.Draw(im)
     _logo(im, 64, 44, box=72)
     d = ImageDraw.Draw(im)
-    d.text((152, 50), "世の中の断面図", font=F(typo.NOTE, 800), fill="#D6E0F0")
+    d.text((152, 50), "日本のなぜ", font=F(typo.NOTE, 800), fill="#D6E0F0")
     d.text((64, 150), str(spec.get("title", "今日みる断面")), font=F(50), fill="white")
     d.line([(64, 230), (W - 64, 230)], fill=GOLD, width=3)
 
