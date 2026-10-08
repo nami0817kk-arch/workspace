@@ -193,8 +193,10 @@ class Painter:
         sc = self.script
         if sc.timeline_start is None or sc.timeline_end is None:
             return
+        from .years import astro, label as year_label, tick
         y0, y1 = sc.timeline_start, sc.timeline_end
-        X = lambda y: x0 + (x1 - x0) * (y - y0) / max(1, (y1 - y0))
+        # 紀元前は負の年。0年が無いので位置は天文学の年で（古い方が左。chiso/years.py）
+        X = lambda y: x0 + (x1 - x0) * (astro(y) - astro(y0)) / max(1, (astro(y1) - astro(y0)))
         marks = sorted({y for y, _ in sc.events} | {y0, y1})
         for i, (a, b) in enumerate(zip(marks, marks[1:])):
             color = STRATA[min(i, len(STRATA) - 2)] if b != y1 or len(marks) < 3 else STRATA[-1]
@@ -206,15 +208,15 @@ class Painter:
         years: list[tuple[float, float]] = []            # 年の数字の重なりを避ける（10-05「1894189 1900」と重なった）
         for y, _ in sc.events:                           # いまの年を先に場所取り（10-06 明智で 1566 と 1582 がくっついた）
             if year is not None and round(year) == y:
-                half = self.font("gothic", int(30 * u)).getlength(str(y)) / 2
+                half = self.font("gothic", int(30 * u)).getlength(tick(y)) / 2
                 years.append((X(y) - half, X(y) + half))
         for y, label in sc.events:
             on = (year is not None and round(year) == y)
             dr.line([X(y), yb - 26, X(y), yb + 26], fill=(GOLD if on else DIM) + (255,), width=4 if on else 2)
             yf = self.font("gothic", int((30 if on else 26) * u))
-            half = yf.getlength(str(y)) / 2
+            half = yf.getlength(tick(y)) / 2
             if on or not any(X(y) - half < b + 12 and X(y) + half > a - 12 for a, b in years):
-                dr.text((X(y), yb - 40 * u), str(y), font=yf, fill=GOLD if on else DIM, anchor="ms")
+                dr.text((X(y), yb - 40 * u), tick(y), font=yf, fill=GOLD if on else DIM, anchor="ms")
                 if not on:
                     years.append((X(y) - half, X(y) + half))
             lf = self.font("serif", int((30 if on else 24) * u))
@@ -230,7 +232,7 @@ class Painter:
             cx = X(year)
             dr.polygon([(cx - 14, yb - 108 * u), (cx + 14, yb - 108 * u), (cx, yb - 88 * u)], fill=GOLD)
             pf = self.font("gothic", int(26 * u))
-            txt = f"{round(year)}年"
+            txt = year_label(year)
             pw = pf.getlength(txt) + 24
             dr.rounded_rectangle([cx - pw / 2, yb - 150 * u, cx + pw / 2, yb - 114 * u], radius=8,
                                  fill=(20, 16, 10, 220), outline=GOLD, width=2)

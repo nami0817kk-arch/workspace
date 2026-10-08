@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .voice import display_text
+from .years import bc_in, label
 
 from .check import BG_MAX_SEC, CHARS_PER_SEC  # noqa: E402  check.pacing と同じ目安
 MIN_HOLD_SEC = 15.0        # 替えたばかりの絵は、これより短くは替えない（目がうるさくなる。節の頭は別）
@@ -82,8 +83,8 @@ def words(text: str) -> set[str]:
 
 
 def years(text: str) -> set[int]:
-    """出来事の年（3〜4桁＋「年」、または「1805〜1807」「1796-97」の範囲）。"""
-    out = set()
+    """出来事の年（3〜4桁＋「年」、または「1805〜1807」「1796-97」の範囲）。紀元前（「紀元前221年」）は負の数。"""
+    out, text = bc_in(text)
     for a, b in re.findall(r"(\d{4})\s*[-〜～]\s*(\d{2,4})(?!\d)", text):
         lo = int(a)
         hi = int(b) if len(b) == 4 else int(a[:2] + b)
@@ -120,7 +121,7 @@ def score(asset: Asset, text: str, line_years: set[int], weights: dict[str, floa
     hit = sorted(asset.years & line_years)
     if hit:
         pts += YEAR_POINTS
-        why.append(f"{hit[0]}年")
+        why.append(label(hit[0]))
     return pts, why
 
 
@@ -141,7 +142,8 @@ def draft(script, assets: list[Asset]) -> list[Pick]:
     for line in script.lines:
         sec_title = script.sections[line.section].title if script.sections else ""
         text = line_text(line)
-        ly = set(int(y) for y in re.findall(r"(\d{3,4})年", text))
+        bc, rest = bc_in(text)
+        ly = bc | set(int(y) for y in re.findall(r"(\d{3,4})年", rest))
         if getattr(line, "year", None):
             ly.add(int(line.year))
         ranked = []

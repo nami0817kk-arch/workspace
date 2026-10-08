@@ -121,7 +121,10 @@ def _terms(script) -> list[str]:
 
 
 def years_in(text: str) -> set[int]:
-    return {int(m.group(1)) for m in _YEAR.finditer(text) if 500 <= int(m.group(1)) <= 2100}
+    """文の中の年。紀元前（「紀元前221年」「前221年」「紀元前230〜221年」）は負の数（chiso/years.py）。"""
+    from .years import bc_in
+    bc, rest = bc_in(text)
+    return bc | {int(m.group(1)) for m in _YEAR.finditer(rest) if 500 <= int(m.group(1)) <= 2100}
 
 
 def _found(text: str, words: list[str], masks: list[str] = ()) -> set[str]:
@@ -190,6 +193,7 @@ def line_notes(script, catalog: dict | None = None, places: list[str] | None = N
     場面を言い出した行が食い違っていれば、続く行も画面が替わらず別の場面を言わないあいだ（3行まで）同じ食い違いとして並べる。"""
     from .check import place_names
     from .script import ERA_TAILS
+    from .years import label
     catalog = default_catalog() if catalog is None else catalog
     events = event_words(script)
     places = (place_names() if places is None else list(places)) + landmark_words(script, events)
@@ -240,11 +244,11 @@ def line_notes(script, catalog: dict | None = None, places: list[str] | None = N
             why.append("年")
         if not why:
             continue
-        what = "・".join(sorted(scene_pl) + [f"{y}年" for y in sorted(years_in(title))]) or "別のもの"
-        extra = "・".join(sorted(over_pl - scene_pl) + [f"{y}年" for y in sorted(shown_yr - years_in(title))])
+        what = "・".join(sorted(scene_pl) + [label(y) for y in sorted(years_in(title))]) or "別のもの"
+        extra = "・".join(sorted(over_pl - scene_pl) + [label(y) for y in sorted(shown_yr - years_in(title))])
         if extra:
             what += f"（重ねた札・図・肖像：{extra}）"
-        heard = "・".join([f"{y}年" for y in sorted(said_yr)] + sorted(said))
+        heard = "・".join([label(y) for y in sorted(said_yr)] + sorted(said))
         reason = f"「{heard}」と話すあいだ、画面は「{what}」（{'・'.join(why)}が違う）"
         out.append((l.index, reason))
         carry = (reason, (scene, over), CARRY_LINES)
