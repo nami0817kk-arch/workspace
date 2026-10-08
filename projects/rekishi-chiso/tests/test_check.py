@@ -159,3 +159,39 @@ def test_staged_card_reported_once_per_card():
     sc = script.parse({"title": "t", "shorts": {"s1": {"title": "x"}}, "sections": [{"title": "a", "lines": lines}]})
     w = [x for x in check.lint(sc) if "段階1" in x]
     assert len(w) == 1 and "1〜3行目" in w[0]
+
+
+def _q(shorts, extra=()):
+    lines = [L("ナポレオンの身長は168センチ", shorts=("s1",)), L("ギルレイがちびのボニーと描いた")] + list(extra)
+    for i, l in enumerate(lines):
+        l.index = i
+    return _sc(lines, shorts)
+
+
+def test_short_questions_missing_and_not_question():
+    w = check.short_question_rules(_q({"s1": {"title": "x"}}))
+    assert any("hook" in x and "tease" in x and "s1" in x for x in w)
+    w = check.short_question_rules(_q({"s1": {"hook": "低かった。", "tease": "誰が描いた？"}}))
+    assert any("？で終わっていません" in x and "hook" in x for x in w)
+
+
+def test_short_questions_same_and_answer_in_main():
+    w = check.short_question_rules(_q({"s1": {"hook": "背は低い？", "tease": "背は低い？"}}))
+    assert any("同じ問い" in x for x in w)
+    ok = check.short_question_rules(_q({"s1": {"hook": "本当に低い？", "tease": "『チビ』の絵を描いたのは誰？"}}))
+    assert ok == []                                    # チビ → ちび（カタカナとひらがなは同じに見る）
+    w = check.short_question_rules(_q({"s1": {"hook": "本当に低い？", "tease": "ワーテルローで勝ったのは誰？"}}))
+    assert any("見当たりません" in x and "ワーテルロー" in x for x in w)
+
+
+def test_question_nouns():
+    assert check.question_nouns("じゃあ、『チビの独裁者』の絵を／描き続けたのは誰？")[:3] == ["チビの独裁者", "チビ", "独裁者"]
+
+
+def test_short_length_counts_hook_and_tease():
+    body = [L("あ" * 300, shorts=("s1",))]
+    assert not any("ショート s1" in x for x in check.lint(_sc(body, {"s1": {}})))
+    w = check.lint(_sc(body, {"s1": {"hook": "い" * 40 + "？", "tease": "う" * 30 + "？"}}))
+    assert any("ショート s1" in x and "372字" in x for x in w)
+    w = check.lint(_sc([L("あ" * 120, shorts=("s1",))], {"s1": {}}))
+    assert any("本文が120字" in x for x in w)

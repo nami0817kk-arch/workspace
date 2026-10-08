@@ -55,6 +55,69 @@ def options(config: dict) -> tuple[bool, bool]:
     return bool(sz.get("hook_intro", True)), bool(sz.get("loop", True))
 
 
+# --- 冒頭の疑問と、最後のもう一つの疑問（10-08 ユーザー決定）--------------------------------------
+# 「ショートは興味を惹きつける内容で冒頭に疑問を出す。最後にもう一つの疑問を出して本編見てくださいとする」
+# hook：台本の shorts.sN.hook（問いの形、？で終わる）。画面に特大で出し、hook_say なら聞き手（つむぎ）の声でも読む。
+#       読み終えるまで特大のまま、そのあと いつもの題の位置へ縮む。
+# tease：shorts.sN.tease（問いの形）。最後の行のあと、つむぎの声で読み、画面に大きく出して、
+#       その下に「答えは本編で」「本編は概要欄から」。読み終えてから TEASE_AFTER 秒残す。
+#       tease がある回は「続きは本編で」の画面とループ用の頭の画（loop）は使わない（見本 research/shorts_look2/ で比べて決めた。
+#       最後に頭の画を1秒足すと、「本編は概要欄から」を読む前に画面が替わってしまう）。
+# 声は本編と同じ cast の聞き手の設定・readings.yaml を通す（tts.speak_line）。
+TEASER = "聞き"            # hook・tease を読む話者（config の cast のキー）
+TEASE_GAP = 0.6            # 最後の行から tease までの間（秒）
+TEASE_AFTER = 2.2          # tease を読み終えてから画面を残す秒数（下の2行を読む時間）
+TEASE_SIZES = (104, 94, 84, 76, 68)
+TEASE_MAX_ROWS = 4
+HOOK_AFTER = 0.3           # hook を読み終えてから縮み始めるまで
+
+
+def tease_size(text: str, font_of, width: int) -> int:
+    """最後の問いの字の大きさ。「／」の区切りがそれぞれ1行に収まる最大（語の途中で折らない）。
+    どれでも収まらなければ TEASE_MAX_ROWS 行に収まる最大。"""
+    parts = len(text.split("／"))
+    for size in TEASE_SIZES:
+        if len(_wrap(text, font_of(size), width)) == parts:
+            return size
+    for size in TEASE_SIZES:
+        if len(_wrap(text, font_of(size), width)) <= TEASE_MAX_ROWS:
+            return size
+    return TEASE_SIZES[-1]
+
+
+def hook_say(config: dict) -> bool:
+    """hook を声でも読むか（config の short.hook_say、既定は入）。"""
+    return bool((config.get("short", {}) or {}).get("hook_say", True))
+
+
+def spoken(text: str) -> str:
+    """画面の改行（／）を除いた、読む文。"""
+    return str(text or "").replace("／", "").strip()
+
+
+def is_question(text: str) -> bool:
+    return spoken(text).endswith(("？", "?"))
+
+
+def tease_text(meta: dict) -> str:
+    return str(meta.get("tease") or "").strip()
+
+
+def extra_lines(lines: list, meta: dict, say_hook: bool) -> tuple:
+    """(hook の行 or None, tease の行 or None)。画面の状態（絵・札）は隣の行と同じにして、絵が替わらないように。
+    行の番号は台本の行と重ならない負の数（音声の控えの鍵）。"""
+    from dataclasses import replace
+    if not lines:
+        return None, None
+    hook = tease = None
+    common = dict(speaker=TEASER, tone="疑問", reaction=None, mark=None, bubble=None, icon=None, hook=False)
+    if say_hook and meta.get("hook"):
+        hook = replace(lines[0], index=-1, text=spoken(meta["hook"]), pause=None, **common)
+    if tease_text(meta):
+        tease = replace(lines[-1], index=-2, text=spoken(tease_text(meta)), pause=TEASE_GAP, **common)
+    return hook, tease
+
+
 def hook_text(meta: dict) -> str:
     """頭に大きく出す問い。台本の shorts.sN.hook、無ければ title（「／」で改行）。"""
     return str(meta.get("hook") or meta.get("title") or "").strip()
@@ -201,6 +264,27 @@ class ShortPainter(Painter):
         img.alpha_composite(layer)
         return img.convert("RGB")
 
+    def tease_card(self, background, text: str) -> Image.Image:
+        """最後のもう一つの疑問。問いを大きく、その下に「答えは本編で」（赤い札）と「本編は概要欄から」。"""
+        W = self.W
+        img = self._background(background).convert("RGBA")
+        img.alpha_composite(Image.new("RGBA", img.size, (8, 6, 4, 196)))
+        dr = ImageDraw.Draw(img, "RGBA")
+        dr.text((W / 2, 200), "もう一つの謎", font=self.font("gothic", 46), fill=GOLD, anchor="mm")
+        size = tease_size(text, lambda n: self.font("serif", n, bold=True), W - 120)
+        f = self.font("serif", size, bold=True)
+        rows = _wrap(text, f, W - 120)
+        step = int(size * 1.25)
+        y = 270
+        for row in rows:
+            dr.text((W / 2, y), row, font=f, fill=INK, anchor="mt", stroke_width=4, stroke_fill=(12, 10, 8))
+            y += step
+        y += 50
+        dr.rounded_rectangle([W / 2 - 270, y, W / 2 + 270, y + 120], radius=18, fill=(176, 40, 40))
+        dr.text((W / 2, y + 60), "答えは本編で", font=self.font("gothic", 66), fill=(255, 255, 255), anchor="mm")
+        dr.text((W / 2, y + 160), "本編は概要欄から", font=self.font("gothic", 52), fill=INK, anchor="mt")
+        return img
+
     def end_card(self, background) -> Image.Image:
         """本編へ誘う締めの画面。本編の題（問いの部分）と、チャンネル名。"""
         W = self.W
@@ -258,7 +342,8 @@ class ShortPainter(Painter):
         return img.convert("RGB")
 
 
-def finish(items: list, painter, text: str, frame_dir, fps: int, loop: bool, workers: int = 8) -> list:
+def finish(items: list, painter, text: str, frame_dir, fps: int, loop: bool, workers: int = 8,
+           hold: float = HOOK_HOLD) -> list:
     """render.frames の並びに、頭の大きな問い（text が空でなければ）とループ用の最後の画を足す。
 
     頭は元のコマの上に問いを重ねた画像に差し替える（長さは変えない）。loop なら最後に頭の1枚目を LOOP_TAIL 秒。"""
@@ -271,7 +356,7 @@ def finish(items: list, painter, text: str, frame_dir, fps: int, loop: bool, wor
         frame_dir = Path(frame_dir)
         frame_dir.mkdir(parents=True, exist_ok=True)
         salt = hashlib.sha1(Path(__file__).read_bytes()).hexdigest()[:8]
-        head, tail = intro_cuts(items, fps)
+        head, tail = intro_cuts(items, fps, hold=hold)
         todo, new = {}, []
         for src, dur, t in head:
             h = hashlib.sha1(repr((salt, Path(src).name, text, round(t, 3), painter.W, painter.H)).encode("utf-8"))
@@ -290,6 +375,21 @@ def finish(items: list, painter, text: str, frame_dir, fps: int, loop: bool, wor
     if loop and items:
         items.append((items[0][0], LOOP_TAIL))
     return items
+
+
+def tease_items(painter, background, text: str, seconds: float, frame_dir) -> list:
+    """最後の問いの画面（つむぎが話している形）を seconds 秒。"""
+    import hashlib
+    from pathlib import Path
+    frame_dir = Path(frame_dir)
+    frame_dir.mkdir(parents=True, exist_ok=True)
+    salt = hashlib.sha1(Path(__file__).read_bytes()).hexdigest()[:8]
+    h = hashlib.sha1(repr((salt, "tease", background, text, painter.W, painter.H,
+                           type(painter).__name__)).encode("utf-8")).hexdigest()[:14]
+    dst = frame_dir / f"tease_{h}.png"
+    if not dst.exists():
+        painter.with_cast(painter.tease_card(background, text), TEASER, 0, "", "疑問").save(dst, compress_level=1)
+    return [(dst, seconds)]
 
 
 class _Landscape:
