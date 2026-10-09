@@ -625,3 +625,154 @@ def timeline_crowding(painter) -> list[str]:
     return [f"年表の出来事が近すぎて、名札が出ないものがあります：{'、'.join(hidden)}"
             "（その年の行だけ出る。timeline.events を減らすか、名札を短くする）"]
 
+# --- フォントに無い字（10-09）---------------------------------------------------------------
+# 始皇帝の回の「嫪毐」の「毐」が明朝・ゴシックのどちらにも無く、字幕・札・年表の名札で□（豆腐）になっていた。
+# 画面に出る字だけを集め、render・thumb・shorts が使うフォント（config の fonts。明朝・ゴシック）それぞれに形があるかを見る。
+# 声で読むだけの字（readings.yaml の読み・kana）は画面に出ないので見ない。
+FONT_LABEL = {"serif": "明朝", "gothic": "ゴシック"}
+_NOT_TEXT = {"image", "cutout", "crop", "layout", "reactor", "box", "at", "type", "upto", "grow_from", "from",
+             "side", "size", "who", "face", "yt_title", "tags", "lead", "description"}   # 絵の置き場・位置・投稿の文面は画面に出ない
+_SKIP_CATS = {"Zs", "Zl", "Zp", "Cc", "Cf"}          # 空白・改行・ゼロ幅の字は形が無くてよい
+_ABSENT = "\U0010FFFD"                                # どのフォントにも無い字（Pillow の方法で .notdef の形を取る）
+
+
+def _strings(v) -> list[str]:
+    """図・吹き出し・サムネイルの指定（辞書・並び）から、画面に出る文字列を集める。"""
+    import json
+    if isinstance(v, str) and v[:1] in "{[":
+        try:
+            v = json.loads(v)
+        except ValueError:
+            pass
+    if isinstance(v, dict):
+        return [s for k, x in v.items() if k not in _NOT_TEXT for s in _strings(x)]
+    if isinstance(v, (list, tuple)):
+        return [s for x in v for s in _strings(x)]
+    if isinstance(v, str):
+        return [v]
+    return []
+
+
+SERIF, GOTHIC, ANY = ("serif",), ("gothic", "hand"), None    # その文字列を描くフォント（ANY＝どれでも描きうる）
+
+
+def _fig_texts(fig: str) -> list[tuple[str, tuple | None]]:
+    """図の文字列。お金の図の前提（basis）はゴシック、題と金額は明朝（chiso/extras.py）。ほかの図はどちらでも描きうる。"""
+    import json
+    spec = json.loads(fig)
+    if spec.get("type") == "money":
+        return ([(s, SERIF) for k in ("title", "then") for s in _strings(spec.get(k))]
+                + [(s, GOTHIC) for s in _strings(spec.get("basis"))]
+                + [(s, ANY) for k, v in spec.items() if k not in ("title", "then", "basis") for s in _strings(v)])
+    return [(s, ANY) for s in _strings(spec)]
+
+
+def screen_texts(script) -> list[tuple[str, str, tuple | None]]:
+    """台本の中で画面に出る文字列と、その場所（「12行目」「サムネイル」…）と、描くフォントの種類。
+    続いている指定（札・肖像・背景・図・用語・場所）は、変わった行で1回だけ数える。"""
+    out: list[tuple[str, str, tuple | None]] = [("題名", script.question, SERIF), ("題名", script.series, GOTHIC)]
+    out += [(f"{s.index + 1}節の題", s.title, SERIF) for s in script.sections]
+    out += [("年表", label, SERIF) for _, label in script.events]
+    prev: dict[str, object] = {}
+    for l in script.lines:
+        at = f"{l.index + 1}行目"
+        out.append((at, display_text(l.text), SERIF))   # 字幕
+        if l.speaker not in ("語り", "聞き", "二人"):
+            out.append((at, l.speaker, GOTHIC))          # 人物の言葉の話し手の名前（字幕の札）
+        now = {"card": l.card, "portrait": l.portrait.caption if l.portrait else None,
+               "background": l.background.credit if l.background else None,
+               "figure": l.figure, "term": l.term, "place": l.place[0] if l.place else None}
+        new = {k: v for k, v in now.items() if v is not None and v != prev.get(k)}
+        prev = now
+        if "card" in new:
+            out += [(at, new["card"].head, GOTHIC), (at, new["card"].body, SERIF)]
+        out += [(at, new[k], SERIF) for k in ("portrait", "background", "place") if k in new]
+        if "term" in new:
+            out += [(at, new["term"][0], SERIF), (at, new["term"][1], GOTHIC)]
+        if "figure" in new:
+            out += [(at, s, k) for s, k in _fig_texts(new["figure"])]
+        out += [(at, s, GOTHIC) for s in _strings(l.bubble)]
+        out += [(at, s, ANY) for s in _strings(l.reaction)]
+        out += [(at, s, SERIF) for s in _strings(l.detail)]
+        if l.mark:
+            import json
+            m = json.loads(l.mark)
+            out += [(at, str(it.get("text", "")), GOTHIC) for it in m["items"][m.get("from", 0):]]
+    for sid, meta in (script.shorts or {}).items():
+        out += [(f"ショート {sid}", str((meta or {}).get(k) or ""), SERIF) for k in ("title", "hook", "tease")]
+    out += [("サムネイル", s, GOTHIC) for s in _strings(script.thumbnail or {})]   # サムネイルはゴシックだけ（chiso/thumb.py）
+    nxt = script.next or {}
+    out += [("次回予告", str(nxt.get(k) or ""), SERIF) for k in ("title", "teaser")]
+    out += [("次回予告", str(nxt.get("series") or ""), GOTHIC)]
+    return [(w, t, k) for w, t, k in out if t]
+
+
+_GLYPHS: dict[str, object] = {}
+
+
+def _has_glyph(font):
+    """その字の形がフォントにあるかを返す関数。fontTools があれば cmap を見る。
+    無ければ Pillow で描いて、どのフォントにも無い字（.notdef＝豆腐）と同じ形かを比べる。"""
+    key = font if isinstance(font, str) else id(font)
+    if key in _GLYPHS:
+        return _GLYPHS[key]
+    fn = None
+    if isinstance(font, str):
+        try:
+            from fontTools.ttLib import TTFont
+            kw = {"fontNumber": 0} if font.lower().endswith((".ttc", ".otc")) else {}
+            cmap = TTFont(font, lazy=True, **kw).getBestCmap() or {}
+            fn = lambda ch, cmap=cmap: ord(ch) in cmap
+        except ImportError:
+            pass
+    if fn is None:
+        from PIL import ImageFont
+        f = font if not isinstance(font, str) else ImageFont.truetype(font, 48, layout_engine=ImageFont.Layout.BASIC)
+
+        def shape(ch):
+            m = f.getmask(ch, mode="L")
+            return m.size, bytes(m)
+        tofu = shape(_ABSENT)
+        fn = lambda ch: shape(ch) != tofu
+    _GLYPHS[key] = fn
+    return fn
+
+
+def missing_glyphs(chars, font) -> set[str]:
+    """chars（字のセット）のうち、font（ファイルの場所か Pillow のフォント）に形が無い字。"""
+    import unicodedata
+    has = _has_glyph(font)
+    return {c for c in chars if unicodedata.category(c) not in _SKIP_CATS and not has(c)}
+
+
+def glyph_errors(script, fonts: dict) -> list[str]:
+    """画面に出る字のうち、フォントに無く□で出るもの（止める ×）。同じ字は1件にまとめて場所を並べる。
+    fonts は config の fonts（{"serif": 場所, "gothic": 場所}）。ファイルが無いフォント（CI など）は見ない。"""
+    usable = {k: v for k, v in (fonts or {}).items() if v and (not isinstance(v, str) or Path(v).exists())}
+    if not usable:
+        return []
+    where: dict[str, dict[str, list[str]]] = {kind: {} for kind in usable}   # フォントごとの字のセットと、その字の場所
+    for at, text, kinds in screen_texts(script):
+        for kind in usable:
+            if kinds is None or kind in kinds:
+                for ch in set(text):
+                    rows = where[kind].setdefault(ch, [])
+                    if at not in rows:
+                        rows.append(at)
+    lacking: dict[str, list[str]] = {}
+    for kind, font in usable.items():                     # フォントごとに1回だけ調べる
+        for ch in missing_glyphs(set(where[kind]), font):
+            lacking.setdefault(ch, []).append(kind)
+    out = []
+    for ch, kinds in lacking.items():
+        ats = list(dict.fromkeys(a for k in kinds for a in where[k][ch]))
+        rows = [_order(a) for a in ats if a.endswith("行目")]
+        places = ([f"{span(rows)}行目"] if rows else []) + [a for a in ats if not a.endswith("行目")]
+        names = "・".join(FONT_LABEL.get(k, k) for k in kinds)
+        out.append((min(rows) if rows else 0,
+                    f"{'・'.join(places)}：『{ch}』がフォント（{names}）に無く□で出ます（かなで書くか言い換える）"))
+    return [m for _, m in sorted(out)]
+
+
+def _order(at: str) -> int:
+    return int(at[:-2]) if at.endswith("行目") else 0
