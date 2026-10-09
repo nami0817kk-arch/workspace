@@ -160,6 +160,50 @@ def demand(word: str) -> dict[str, list[str]]:
     return {"Google": suggest(word), "YouTube": suggest(word, youtube=True)}
 
 
+TRENDS_RSS = "https://trends.google.co.jp/trending/rss?geo=JP"
+_TRENDS_CACHE: list[tuple[str, int]] | None = None
+
+
+def trends(limit: int = 40) -> list[tuple[str, int]]:
+    """Google の**急上昇ワード**と、その検索数の目安。(語, 件数) の並び。
+
+    2026-10-09 に足した。それまで「新しさ」は**由来だけ**で決めていて
+    （ニュース由来なら3点）、実際にいま検索されているかを見ていなかった。
+
+    旧 URL（/trends/trendingsearches/daily/rss）は 404。今は /trending/rss。
+    """
+    global _TRENDS_CACHE
+    if _TRENDS_CACHE is not None:
+        return _TRENDS_CACHE[:limit]
+    import re as _re
+    out: list[tuple[str, int]] = []
+    try:
+        raw = _get(TRENDS_RSS).decode("utf-8", "replace")
+        pat = r"<title>(.*?)</title>.*?approx_traffic>([0-9,]+)\+?<"
+        for m in _re.finditer(pat, raw, _re.S):
+            word = _re.sub(r"<[^>]+>", "", m.group(1)).strip()
+            if word and word != "Daily Search Trends":
+                out.append((word, int(m.group(2).replace(",", ""))))
+    except Exception:
+        out = []
+    _TRENDS_CACHE = out
+    return out[:limit]
+
+
+def trend_hit(text: str, limit: int = 40) -> int:
+    """その題材が、いま急上昇している語を含むか。含めば検索数の目安を返す。
+
+    **急上昇ワードの側を分けて照合する。** 丸ごとの一致を見ると、
+    「ホワイトソックス 監督」が「ホワイトソックスの試合」に当たらない（2026-10-09）。
+    """
+    best = 0
+    for word, n in trends(limit):
+        parts = [w for w in word.split() if len(w) >= 2]
+        if (word and word in text) or any(p in text for p in parts):
+            best = max(best, n)
+    return best
+
+
 def gather_all() -> list[Item]:
     ns = news()
     hs = hatena()

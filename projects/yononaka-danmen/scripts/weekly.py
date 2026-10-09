@@ -54,7 +54,14 @@ def collect(n_rounds: int = 2) -> list[dict]:
         items = sources.gather_all()
         for it in items:
             it.score, it.hits = rough_score(it.text)
-        rough = sorted([i for i in items if i.score > 0], key=lambda i: -i.score)[:70]
+        # **枠を分けて取る。** まとめて上位を取ると、ニュースが補完に埋もれて
+        # 時事が1件も残らなかった（2026-10-09。ニュース388件中42件に点が付いたのに0件）。
+        # ニュースの見出しは「なぜ」と書かないので、言葉での点が低く出る。
+        pos = [i for i in items if i.score > 0]
+        news_like = [i for i in pos if getattr(i, "kind", "") in ("news", "hatena")]
+        rest = [i for i in pos if getattr(i, "kind", "") not in ("news", "hatena")]
+        rough = (sorted(news_like, key=lambda i: -i.score)[:35]
+                 + sorted(rest, key=lambda i: -i.score)[:35])
         for r in judge.judge(rough):
             t = str(r.get("title") or "")
             if not t or t in seen:

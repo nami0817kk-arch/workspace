@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """候補のどれを作るかを決める。勘ではなく、測れるもので点を付ける。
 
-5つの物差しで測る。満点は 23点。
+6つの物差しで測る。満点は 23点。
 
 | 物差し | 満点 | 測り方 |
 |---|---|---|
@@ -9,7 +9,8 @@
 | 問いの濃さ | 5 | 補完のうち「なぜ・いつ・とは・どうなる」などの疑問が占める割合 |
 | 原典の堅さ | 5 | 当たるべき原典が公的機関（go.jp 等）か |
 | 30分もつか | 5 | 断面が4つ立つか（Gemini に見出しを出させて数える） |
-| 新しさ   | 3 | 今日のニュース由来なら加点。常在の疑問は 0 |
+| 新しさ   | 2 | 今日のニュース由来なら加点。常在の疑問は 0 |
+| いまの勢い | 3 | **Google の急上昇ワード**に当たるか（1000件以上で3点、500で2点、100で1点） |
 
 **他人の動画の再生数は見ない。** 見ると、既にある動画の後追いになる（2026-10-06 ユーザー指摘）。
 """
@@ -35,12 +36,13 @@ class Scored:
     depth: int = 0          # 問いの濃さ
     source: int = 0         # 原典の堅さ
     length: int = 0         # 30分もつか
-    fresh: int = 0          # 新しさ
+    fresh: int = 0          # 新しさ（由来）
+    trend: int = 0          # いまの検索の勢い（Google の急上昇）
     cuts: list[str] = field(default_factory=list)
 
     @property
     def total(self) -> int:
-        return self.breadth + self.depth + self.source + self.length + self.fresh
+        return self.breadth + self.depth + self.source + self.length + self.fresh + self.trend
 
 
 def candidate_words(row: dict) -> list[str]:
@@ -115,9 +117,18 @@ def score(row: dict, ask_ai: bool = True) -> Scored:
         except SystemExit:
             s.length = 0
 
-    # 5. 新しさ
+    # 5. 新しさ＝**由来 ＋ いまの検索の勢い**
+    # 2026-10-09 まで由来だけで決めていた（ニュース由来なら3点）。
+    # それだと「ニュースに出たが誰も検索していない」題材に点が付く。
+    # Google の急上昇ワードに当たるかを見て、実際の勢いを足す。
     feed = str(row.get("source_feed", ""))
-    s.fresh = 3 if feed and "サジェスト" not in feed and "YouTube" not in feed else 0
+    s.fresh = 2 if feed and "サジェスト" not in feed and "YouTube" not in feed else 0
+    title = str(row.get("title") or "")
+    try:
+        hits = sources.trend_hit(title + " " + " ".join(str(w) for w in (row.get("words") or [])))
+    except Exception:
+        hits = 0
+    s.trend = 3 if hits >= 1000 else (2 if hits >= 500 else (1 if hits >= 100 else 0))
     return s
 
 
