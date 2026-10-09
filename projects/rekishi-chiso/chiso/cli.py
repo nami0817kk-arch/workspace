@@ -32,6 +32,7 @@ import subprocess
 import sys
 from dataclasses import replace
 from pathlib import Path
+from urllib.parse import unquote
 
 import yaml
 
@@ -414,7 +415,8 @@ def _same_section(line):
 
 # --- 概要欄 -------------------------------------------------------------
 
-def description(sc, config, cues) -> str:
+def description(sc, config, cues, reserve: int = 0) -> str:
+    """reserve：あとに足す行（この動画で扱うこと）の字数。そのぶん絵の出典の欄を詰める。"""
     out = []
     if cues:
         chs = mix.chapters(cues, [s.title for s in sc.sections])
@@ -437,16 +439,44 @@ def description(sc, config, cues) -> str:
         out += ["", "■ 画面の絵（いずれも著作権の切れた作品）"] + pics
     if sc.next:
         out += ["", f"■ 次回：{sc.next.get('title', '')}", sc.next.get("teaser", "")]
-    sources = picture_sources(sc, config)
-    if sources:
-        out += ["", "■ 絵の出典（Wikimedia Commons）"] + sources
+    tail = []
     if sc.series:
-        out += ["", f"#歴史の地層 #{sc.series} #世界史 #日本史 #聞き流し"]
-    out += ["", f"運営：{config.get('operator', '')}"]
-    return "\n".join(out) + "\n"
+        tail += ["", f"#歴史の地層 #{sc.series} #世界史 #日本史 #聞き流し"]
+    tail += ["", f"運営：{config.get('operator', '')}"]
+    room = DESC_ROOM - reserve - len("\n".join(out)) - len("\n".join(tail)) - 2
+    return "\n".join(out + source_lines(picture_sources(sc, config), room) + tail) + "\n"
 
 
-def picture_sources(sc, config) -> list[str]:
+DESC_ROOM = 4900   # YouTube の概要欄は5000字まで。超えると後ろ（運営・扱う語）が切れる（10-09、絵の多い回で1万字を超えた）
+
+
+def source_lines(sources: list[tuple[str, str]], room: int) -> list[str]:
+    """絵の出典の欄。同じ許諾をまとめて見出しの行に書く（URL のすぐ後ろに字を付けるとリンクが壊れる）。
+    room 字に入らない分は件数だけ書く。"""
+    if not sources:
+        return []
+    groups: dict[str, list[str]] = {}
+    for url, lic in sources:
+        groups.setdefault(lic, []).append(url)
+    lines, shown = ["", "■ 絵の出典（Wikimedia Commons）"], 0
+    rest = f"ほか{len(sources)}点（いずれも Wikimedia Commons。上の「画面の絵」の作品名で探せます）"
+    for lic, urls in groups.items():
+        head = [f"［{lic}］"] if lic else []
+        for url in urls:
+            if len("\n".join(lines + head + [url, rest])) > room:
+                break
+            lines += head + [url]
+            head = []
+            shown += 1
+        else:
+            continue
+        break
+    if shown < len(sources):
+        lines.append(rest.replace(str(len(sources)), str(len(sources) - shown), 1))
+    return lines
+
+
+def picture_sources(sc, config) -> list[tuple[str, str]]:
     """使った絵の Commons のページ。素材の置き場の credits.json（取得時に控えたもの）から引く。"""
     cf = assets_dir(config) / "paintings" / "credits.json"
     if not cf.exists():
@@ -460,8 +490,31 @@ def picture_sources(sc, config) -> list[str]:
             key = Path(pic.image).stem
             if key in credits and key not in seen:
                 seen.add(key)
-                out.append(f"{credits[key]['source']}（{credits[key].get('license', '')}）")
+                out.append((unquote(credits[key]["source"]), credits[key].get("license", "")))
     return out
+
+
+def keyword_line(sc) -> str:
+    """検索候補から拾った語のうち、台本で扱っているもの（「この動画で扱うこと：」の1行）。"""
+    from . import keywords as kw
+    name = sc.thumbnail.get("name") or next(iter(sc.people), "") or sc.question
+    cache = kw.cache_path(out_dir(), name)
+    if cache.exists():
+        data = json.loads(cache.read_text(encoding="utf-8"))
+    else:
+        _, data = kw.report(name, kw.collect(name))
+        cache.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    line = kw.description_line(kw.covered_words([w for w, _ in data["words"]], sc))
+    if not line:
+        print(f"  ! 「{name}」の検索候補の語で、台本に出てくるものがありませんでした")
+    return line
+
+
+def full_description(sc, config, cues, keywords: bool = True) -> str:
+    """概要欄。describe と upload で同じものを作る（前は upload に扱う語の行が入らなかった）。5000字に収める。"""
+    line = keyword_line(sc) if keywords else ""
+    text = description(sc, config, cues, reserve=len(line) + 2 if line else 0)
+    return text + ("\n" + line + "\n" if line else "")
 
 
 def cmd_describe(args) -> int:
@@ -470,21 +523,7 @@ def cmd_describe(args) -> int:
     cues = []
     if not args.no_voice:
         cues, _ = synthesize(sc, config)
-    text = description(sc, config, cues)
-    if args.keywords:                     # 検索候補から拾った語のうち、台本で扱っているものを最後に
-        from . import keywords as kw
-        name = sc.thumbnail.get("name") or next(iter(sc.people), "") or sc.question
-        cache = kw.cache_path(out_dir(), name)
-        if cache.exists():
-            data = json.loads(cache.read_text(encoding="utf-8"))
-        else:
-            _, data = kw.report(name, kw.collect(name))
-            cache.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-        line = kw.description_line(kw.covered_words([w for w, _ in data["words"]], sc))
-        if line:
-            text += "\n" + line + "\n"
-        else:
-            print(f"  ! 「{name}」の検索候補の語で、台本に出てくるものがありませんでした")
+    text = full_description(sc, config, cues, keywords=args.keywords)
     target = out_dir() / f"{sc.path.stem}_description.txt"
     target.write_text(text, encoding="utf-8")
     print(text)
@@ -710,7 +749,7 @@ def cmd_upload(args) -> int:
         return 1
     publish_at = up.publish_time(args.at)
     cues, _ = synthesize(sc, config)
-    desc = description(sc, config, cues)
+    desc = full_description(sc, config, cues)
     thumb_p = out_dir() / f"{path.stem}_thumbnail.png"
     if not thumb_p.exists():
         from . import thumb

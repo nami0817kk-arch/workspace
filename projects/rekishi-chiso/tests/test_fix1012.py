@@ -272,3 +272,14 @@ def test_map_labels_move_out_of_the_red_circle(tmp_path):
     assert inter(boxes[0], ring) < inter(plain, ring)               # 丸に掛かる所が減る（残るのは点そのもの）
     from chiso import render
     p.base(render.state_of(sc.lines[0]))                                           # 描いて落ちない
+
+
+def test_source_lines_fit_and_group_by_license():
+    from chiso.cli import source_lines
+    src = [(f"https://commons.wikimedia.org/wiki/File:A{i}.jpg", "PD") for i in range(50)] + [("https://x/y.jpg", "CC0")]
+    lines = source_lines(src, 600)
+    assert len("\n".join(lines)) <= 600
+    assert lines.count("［PD］") == 1                       # 許諾は見出しの行に1回
+    assert not any(l.startswith("http") and "（" in l for l in lines)   # URL の後ろに字を付けない
+    assert lines[-1].startswith("ほか") and "点" in lines[-1]
+    assert source_lines(src[:2], 5000)[-1].endswith("A1.jpg")   # 入るときは全部
