@@ -360,7 +360,6 @@ sections:
         background: {image: paintings/hideyoshi_shizugatake_chikanobu.jpg, credit: "楊洲周延《賤ヶ嶽合戦》加藤虎之助（清正）の場面（1897年ごろ）"}
         short: s5
       - 聞き: 七本槍って、名前がかっこいい。戦国の推しグループ、って感じ。
-        short: s5
       - 語り: ところが、この戦いの手柄で、秀吉から感状、つまり褒める書状をもらったのは、9人でした。
         card: {head: 1583年, body: 感状をもらったのは9人}
         short: s5
@@ -375,7 +374,6 @@ sections:
       - 語り: 秀吉の右筆が書いたと伝わる『柴田合戦記』には、9人が並んでいます。7は、語呂のよさで決まった、と見られています。
         short: s5
       - 聞き: 推しグループから外されたメンバー、切ない。今からでも九本槍にしてあげて。
-        short: s5
       - 語り: 敗れた勝家は越前に退き、お市の方とともに最期を迎えました。
         background: {image: paintings/hideyoshi_shizugatake_screen_2.jpg, credit: "《賤ヶ岳合戦図屏風》左隻（江戸時代）"}
       - 聞き: そこは、今日のお昼のお市さんの回で掘ったところだね。『柴田合戦記』も、そこで出てきた。
@@ -437,10 +435,8 @@ sections:
       - 語り: 1588年7月8日、秀吉は、もう一つ有名な命令を出します。《刀狩令》です。この写しの左に、その日付と朱印があります。
         background: {image: paintings/hideyoshi_katanagari_p2.jpg, credit: "刀狩令（天正16年7月8日）の写し（早稲田大学図書館蔵）"}
         card: {head: "1588年7月8日", body: 刀狩令}
-        short: s3
       - 聞き: 刀狩って、百姓から刀を全部取り上げて、丸腰にしたやつでしょ？
         detail: {box: [0.2, 0.25, 0.4, 0.75], label: 「天正十六年七月八日」と朱印}
-        short: s3
       - 語り: 中身は3か条です。1つ目は、百姓が武器を持つことの禁止。刀に脇差、弓、槍、鉄砲です。
         figure: {type: stats, title: 刀狩令の3か条, items: [[1つ目, 武器の禁止, 刀・脇差・弓・槍・鉄砲], [2つ目, 大仏の釘に, 方広寺の大仏], [3つ目, 農具で耕す, 子孫まで栄える]], upto: 1}
         short: s3
@@ -522,7 +518,6 @@ sections:
         card: {head: "1593年8月3日", body: 秀頼が生まれる}
         short: s4
       - 聞き: 57歳で、また子どもを。鶴松くんのことがあったから、うれしかっただろうね。
-        short: s4
       - 語り: 知らせを聞いた秀吉は、おねに自筆の手紙を書きました。
         icon: envelope-simple
         short: s4
@@ -530,7 +525,6 @@ sections:
         background: {image: paintings/hideyoshi_hideyori_edo.jpg, credit: "伝 花野光明《豊臣秀頼像》17世紀"}
         short: s4
       - 聞き: 拾ったから、ひろい。名前の付け方、まっすぐすぎる。
-        short: s4
       - 語り: 続きを、今の言葉にすると、こうです。
         short: s4
       - 人物: 「下々の者まで、『お』の字は付けずに、ひろい、ひろいと呼ぶように。すぐに、すぐに帰ります。安心してください」

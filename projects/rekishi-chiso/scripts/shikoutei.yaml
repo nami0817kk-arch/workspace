@@ -577,7 +577,6 @@ sections:
         tone: 疑問
       - 語り: 以前の土の調査でも、同じ場所で水銀が多く出ています。墓の本体は、まだ掘られていません。
         figure: null
-        short: s1
       - 聞き: 開けたら、本当に水銀の川が流れてるかもしれないんだ。あーし、見たいけど、近づきたくない。
       - 語り: その墓の東、約1.5キロ。1974年、井戸を掘っていた農民が、焼き物のかけらを見つけます。兵馬俑の始まりです。
         background: {image: paintings/shikoutei_terracotta_warrior_todd.jpg, credit: "兵馬俑の鎧を着た俑（秦代。写真 Gary Lee Todd、CC0）"}

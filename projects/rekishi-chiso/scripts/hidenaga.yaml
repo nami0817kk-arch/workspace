@@ -386,7 +386,6 @@ sections:
       - 聞き: 城を預かる役から、8年で100万石。グラフが、ほぼ垂直なんだけど。
         tone: 驚き
         reaction: {number: 100万石, lead: 城代から8年で, say: ほぼ垂直！}
-        short: s4
       - 語り: 100万石は、100万人を1年養える米です。1石を今の5万円ほどとすると、米の値打ちで、約500億円分になります。
         background: {image: paintings/hidenaga_six_provinces_map.jpg, credit: "『紀伊・大和・河内・伊賀・山城・伊勢 六ヶ国絵図』江戸時代（国立国会図書館蔵）"}
         figure: {type: money, title: 秀長の100万石, then: "100万石", yen: 50000000000, basis: "1石＝500文前後、日当100文を今の1万円とした目安（1石は約5万円）。米の値段は短い間に数倍動く"}
