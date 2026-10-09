@@ -78,9 +78,12 @@ def read_script(path: Path) -> list[dict]:
     out: list[dict] = []
     for sec in data.get("sections", []):
         for line in sec.get("lines", []):
-            if not isinstance(line, dict) or len(line) != 1:
+            # `short:` はショートに切り出すための印。**本編では読み飛ばす**
+            keys = [k for k in line if k != "short"] if isinstance(line, dict) else []
+            if len(keys) != 1:
                 raise SystemExit("読めない行です（節 {}）: {}".format(sec.get("id"), line))
-            key, val = next(iter(line.items()))
+            key = keys[0]
+            val = line[key]
             if key == "screen":
                 out.append({"screen": str(val)})
                 continue
