@@ -155,14 +155,38 @@ cards:
     - - 8月4日
       - パルク・デ・プランスで入団会見
     focus: 8月3日 午後
-  how_1_card: *id004
   how_2_card: *id004
   how_3_card: *id004
-  how_4_card: *id004
-  how_5_card: *id004
-  how_6_card: *id004
-  how_7_card: *id004
-  how_8_card: *id004
+  how_4_card:
+    type: timeline
+    title: 2017年8月、決着までの3日間
+    rows: *id005
+    focus: 8月3日 午後
+    highlight_row: 0
+  how_5_card:
+    type: timeline
+    title: 2017年8月、決着までの3日間
+    rows: *id005
+    focus: 8月3日 午後
+    highlight_row: 2
+  how_6_card:
+    type: timeline
+    title: 2017年8月、決着までの3日間
+    rows: *id005
+    focus: 8月3日 午後
+    highlight_row: 0
+  how_7_card:
+    type: timeline
+    title: 2017年8月、決着までの3日間
+    rows: *id005
+    focus: 8月3日 午後
+    highlight_row: 2
+  how_8_card:
+    type: timeline
+    title: 2017年8月、決着までの3日間
+    rows: *id005
+    focus: 8月3日 午後
+    highlight_row: 3
   how_9_card: *id004
   how_10_card:
     type: timeline
@@ -398,7 +422,7 @@ cards:
   image: assets/backgrounds/stadium_バルセロナ_in.png
 解説: 鍵は、スペインの勅令1006号です。
   telop: 鍵は、スペインの勅令1006号です
-  card: how_1_card
+  card: none
   image: assets/backgrounds/stadium_バルセロナ_in.png
 解説: 1985年に決まった、プロ選手の働き方の決まりです。
   telop: 1985年に決まった、プロ選手の働き方の決まりです

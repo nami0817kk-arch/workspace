@@ -170,7 +170,6 @@ cards:
       - '0.28'
       - '0.44'
     source: Transfermarkt の試合ごとの記録を足した
-  numbers_0_card: *id008
   numbers_1_card: *id008
   numbers_2_card:
     type: table
@@ -230,7 +229,7 @@ cards:
     - *id011
     - *id012
     - *id013
-    highlight_row: 3
+    highlight_row: 2
     source: Transfermarkt の試合ごとの記録を足した
   numbers_6_card:
     type: table
@@ -245,7 +244,7 @@ cards:
     - *id011
     - *id012
     - *id013
-    highlight_row: 4
+    highlight_row: 3
     source: Transfermarkt の試合ごとの記録を足した
   numbers_7_card:
     type: table
@@ -263,6 +262,21 @@ cards:
     highlight_row: 4
     source: Transfermarkt の試合ごとの記録を足した
   numbers_8_card:
+    type: table
+    title: 生後8502日＝23歳101日まで（クラブと代表の公式戦）
+    columns:
+    - 項目
+    - ベリンガム
+    - ムシアラ
+    rows:
+    - *id009
+    - *id010
+    - *id011
+    - *id012
+    - *id013
+    highlight_row: 4
+    source: Transfermarkt の試合ごとの記録を足した
+  numbers_9_card:
     type: table
     title: 昨シーズンのリーグの形
     columns:
@@ -283,7 +297,7 @@ cards:
       - 2.695点
       - 3.235点
     source: Transfermarkt の順位表から足して割った
-  numbers_9_card:
+  numbers_10_card:
     type: table
     title: 昨シーズンのリーグの形
     columns:
@@ -296,7 +310,7 @@ cards:
     - *id016
     highlight_row: 1
     source: Transfermarkt の順位表から足して割った
-  numbers_10_card:
+  numbers_11_card:
     type: table
     title: 昨シーズンのリーグの形
     columns:
@@ -309,7 +323,7 @@ cards:
     - *id016
     highlight_row: 2
     source: Transfermarkt の順位表から足して割った
-  numbers_11_card:
+  numbers_12_card:
     type: table
     title: 昨シーズンのリーグの形
     columns:
@@ -729,7 +743,7 @@ cards:
 解説: そろえる物差しは、同じ日付ではなく、生きてきた日数です。
   telop: そろえる物差しは、同じ日付ではなく、生きてきた日数です
   source: 報道
-  card: numbers_0_card
+  card: none
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: どちらも生後8502日、23歳101日の時点までを数えました。
   telop: どちらも生後8502日、23歳101日の時点までを数えました
@@ -749,36 +763,36 @@ cards:
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: 16歳からの1年、ベリンガムは2部で44試合、ムシアラはトップで1試合でした。
   telop: 16歳からの1年、ベリンガムは2部で44試合、ムシアラはトップで1試合でした
-  card: numbers_4_card
+  card: numbers_5_card
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: 得点は91と78。合計では13しか違いません。
   telop: 得点は91と78。合計では13しか違いません
-  card: numbers_5_card
+  card: numbers_6_card
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: ところが90分あたりに直すと、0.28と0.44。
   emph: true
   telop: ところが90分あたりに直すと、0.28と0.44
-  card: numbers_6_card
+  card: numbers_7_card
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: 同じ90分に置き換えると、点の出方は1.57倍ちがう計算になります。
   telop: 同じ90分に置き換えると、点の出方は1.57倍ちがう計算になります
-  card: numbers_7_card
+  card: numbers_8_card
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: ただし、戦っている舞台の形が違います。
   telop: ただし、戦っている舞台の形が違います
-  card: numbers_8_card
+  card: numbers_9_card
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: ラ・リーガは20チームで38試合、ブンデスリーガは18チームで34試合。
   telop: ラ・リーガは20チームで38試合、ブンデスリーガは18チームで34試合
-  card: numbers_9_card
+  card: numbers_10_card
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: 1試合あたりの得点は、昨シーズンでおよそ2.7点とおよそ3.2点でした。
   telop: 1試合あたりの得点は、昨シーズンでおよそ2.7点とおよそ3.2点でした
-  card: numbers_10_card
+  card: numbers_11_card
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 解説: 点の入りやすさが2割違う舞台に、同じ物差しを当てていることになります。
   telop: 点の入りやすさが2割違う舞台に、同じ物差しを当てていることになります
-  card: numbers_11_card
+  card: numbers_12_card
   image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
 
 ## 出られた割合と、怪我

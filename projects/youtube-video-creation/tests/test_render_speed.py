@@ -146,10 +146,11 @@ def test_最後の_mp4_は_preset_だけ速くして_crf_は変えない(tmp_pat
     seen = []
     monkeypatch.setattr(ffmpeg, "run", lambda args, quiet=True: seen.append(args))
     if encode == "encode_video":
-        ffmpeg.encode_video(tmp_path / "l.txt", tmp_path / "a.m4a", tmp_path / "o.mp4")
+        ffmpeg.encode_video(tmp_path / "l.txt", tmp_path / "a.m4a", tmp_path / "o.mp4",
+                            duration=10.0)
     else:
         ffmpeg.encode_video_over_clip(tmp_path / "l.txt", tmp_path / "c.mp4", tmp_path / "a.m4a",
-                                      tmp_path / "o.mp4", (1920, 1080))
+                                      tmp_path / "o.mp4", (1920, 1080), duration=10.0)
     args = seen[0]
     assert args[args.index("-preset") + 1] == "veryfast"
     assert args[args.index("-crf") + 1] == "20"

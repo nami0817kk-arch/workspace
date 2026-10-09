@@ -209,6 +209,58 @@ def grab_frame(clip: Path, out_path: Path, at: float = 1.0) -> Path:
 
 PROGRESS_COLOR = "0xffd54a"   # 進捗バーの色（チャンネルの黄）
 
+# 音の入力の番号は経路で違う（動画に重ねる回は 2:a、静止画だけの回は 1:a）。
+# 伸ばすチェーンを1か所で書いて、ここだけ差し替える
+AUDIO_LABEL = "@audio@"
+
+# 書き出した動画の尺が、計画した尺とこれ以上ずれていたら止める（秒）。
+# 1コマ（30fps で 0.034秒）と、concat の作法で最後の1枚が足す端数を見込んだ幅
+LENGTH_TOLERANCE = 0.5
+
+
+def length_args(duration: float, audio_path: Path | None) -> tuple[list[str], list[str]]:
+    """**音が足りなければ足す。切らない**（2026-10-10）。
+    返すのは (音を伸ばすチェーン, 出力オプション)。
+
+    `-shortest` は「絵の列」ではなく**音の実尺で動画の長さを決める**。
+    音が少しでも足りないと**後ろから黙って切られる**。切られるのは必ず末尾＝
+    **15秒の終了画面の置き場**なので、そこだけが回によって消えていた
+    （2026-10-10 に実物3本で確認。音の末尾の無音が 0.4〜0.6秒しか無く、
+    動画も同じ長さで終わっていた）。
+
+    **`-shortest` は外さない。**外すと長い音に引かれて尺が伸びる。
+    代わりに `apad=whole_dur=<計画の秒数>` で、音を**計画の長さまで無音で埋める**。
+    こうすると `-shortest` が見る「いちばん短い流れ」は必ず絵の列になるので、
+    足りない音で絵が切られることがない（音のほうが長い回は今までどおり切る）。
+
+    **`-t` で切る形は採らない。**concat で並べた静止画の最後のコマは
+    計画した秒数ちょうどに来るので、`-t` がそのコマを落とし、
+    直前のコマを埋めないまま終わる（実測で17秒が2秒になった）。
+    """
+    if audio_path is None:
+        return [], []
+    return [f"[{AUDIO_LABEL}]apad=whole_dur={duration:.3f}[a]"], ["-shortest"]
+
+
+def check_length(path: Path, duration: float, tolerance: float = LENGTH_TOLERANCE) -> None:
+    """書き出した動画が、計画した尺になっているか確かめる。
+
+    **黙って通さない。**`-t` を付けたので普通はずれないが、ずれたときに
+    気づかないのが一番まずい（15秒の終了画面が消えた回は、公開予約のあとに
+    ユーザーが見つけた）。読めなければ何も言わない（点検では落とさない）。
+    """
+    info = probe(path)
+    actual = (info or {}).get("duration")
+    if actual is None:
+        return
+    if abs(actual - duration) > tolerance:
+        raise FfmpegError(
+            f"書き出した動画の尺が計画と合いません: {actual:.2f}秒"
+            f"（計画 {duration:.2f}秒・許容 {tolerance:.2f}秒）\n"
+            f"  {path}\n"
+            "絵の列（frames.txt）と音（voice.wav）の長さを突き合わせてください。"
+        )
+
 
 def progress_chains(source: str, size: tuple[int, int], fps: int,
                     progress: tuple[float, int] | None) -> tuple[list[str], str]:
@@ -237,10 +289,13 @@ def encode_video_over_clip(
     size: tuple[int, int],
     fps: int = 30,
     progress: tuple[float, int] | None = None,
+    *,
+    duration: float,
 ) -> Path:
     """背景動画の上に、透過PNGのフレーム列を重ねて書き出す。
 
     背景クリップは尺に足りなければループし、画面いっぱいになるよう拡大して中央を切り出す。
+    `duration` は絵の列の合計秒数。**ここで尺を決める**（`length_args` を見る）。
     """
     width, height = size
     args = [
@@ -258,10 +313,12 @@ def encode_video_over_clip(
     ]
     extra, label = progress_chains("v", size, fps, progress)
     chains += extra
+    pad, tail = length_args(duration, audio_path)
+    chains += [chain.replace(AUDIO_LABEL, "2:a") for chain in pad]
     args += [
         "-filter_complex", ";".join(chains),
         "-map", f"[{label}]",
-        *(["-map", "2:a"] if audio_path is not None else []),
+        *(["-map", "[a]"] if audio_path is not None else []),
         "-c:v", "libx264",
         # **preset だけ速くする**（2026-10-08）。crf は 20 のまま＝絵の細かさは変えない。
         # 実測で書き出しが 348秒 → 222秒、mp4 は 42.6MB → 40.4MB
@@ -272,9 +329,11 @@ def encode_video_over_clip(
         "-movflags", "+faststart",
     ]
     if audio_path is not None:
-        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest"]
+        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000"]
+    args += tail
     args.append(str(out_path))
     run(args)
+    check_length(out_path, duration)
     return out_path
 
 
@@ -285,20 +344,29 @@ def encode_video(
     fps: int = 30,
     size: tuple[int, int] | None = None,
     progress: tuple[float, int] | None = None,
+    *,
+    duration: float,
 ) -> Path:
-    """静止画リスト（+音声）を YouTube 向けの MP4 にエンコードする。"""
+    """静止画リスト（+音声）を YouTube 向けの MP4 にエンコードする。
+
+    `duration` は絵の列の合計秒数。**ここで尺を決める**（`length_args` を見る）。
+    """
     args = ["-f", "concat", "-safe", "0", "-i", str(frame_list)]
     if audio_path is not None:
         args += ["-i", str(audio_path)]
     video_map = ["-map", "0:v"]
+    chains: list[str] = []
     if progress and size:
         chains, label = progress_chains("0:v", size, fps, progress)
         chains[0] = chains[0].replace("[0:v]", "[0:v]fps=" + str(fps) + ",")
-        args += ["-filter_complex", ";".join(chains)]
         video_map = ["-map", f"[{label}]"]
+    pad, tail = length_args(duration, audio_path)
+    chains += [chain.replace(AUDIO_LABEL, "1:a") for chain in pad]
+    if chains:
+        args += ["-filter_complex", ";".join(chains)]
     args += [
         *video_map,
-        *(["-map", "1:a"] if audio_path is not None else []),
+        *(["-map", "[a]"] if audio_path is not None else []),
         "-c:v", "libx264",
         # preset だけ速くする（crf は 20 のまま）。上の encode_video_over_clip と同じ
         "-preset", "veryfast",
@@ -309,9 +377,11 @@ def encode_video(
         "-movflags", "+faststart",
     ]
     if audio_path is not None:
-        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest"]
+        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000"]
+    args += tail
     args.append(str(out_path))
     run(args)
+    check_length(out_path, duration)
     return out_path
 
 

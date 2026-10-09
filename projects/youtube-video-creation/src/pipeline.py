@@ -103,11 +103,13 @@ def build_script(
     # タイトルカードのぶんの無音を挟み、各セリフの開始時刻を振り直す
     inserts = inserts_mod.plan(script, config)
     inserts_mod.apply_timing(script, inserts)
+    segments = inserts_mod.audio_segments(script, inserts)
     voice_track = ffmpeg.concat_audio(
-        inserts_mod.realize_audio(inserts_mod.audio_segments(script, inserts), work_dir / "gaps"),
+        inserts_mod.realize_audio(segments, work_dir / "gaps"),
         work_dir / "voice.wav",
         work_dir,
     )
+    verify_voice_length(voice_track, sum(seconds for _, seconds in segments))
 
     # **音の混ぜは、絵を描くあいだに別スレッドで回す**（2026-10-08）。どちらも相手の
     # 結果を要らないので、順に待つ意味が無い。`build_video` が ffmpeg に渡す手前で待つ
@@ -178,6 +180,34 @@ def build_script(
         duration=script.duration + inserts.total,
         backend=backend.name,
     )
+
+
+# つないだ音の実尺が、計画した秒数とこれ以上ずれていたら止める（秒）
+VOICE_TOLERANCE = 0.25
+
+
+def verify_voice_length(voice_track: Path, planned: float,
+                        tolerance: float = VOICE_TOLERANCE) -> None:
+    """**つないだ音が、計画どおりの長さになっているか確かめる**（2026-10-10）。
+
+    `concat_audio` は `-c copy` なので、**中身が足りない wav でも何も言わずに通る**
+    （ffmpeg はヘッダではなく実際のバイト数で尺を決め、警告は `-loglevel error`
+    で見えない）。黙って短い音ができると、動画の末尾＝**15秒の終了画面の置き場**が
+    消える。ここで止めておけば、公開予約のあとに人が気づくことにならない。
+    読めなければ何も言わない（点検では落とさない）。
+    """
+    info = ffmpeg.probe(voice_track)
+    actual = (info or {}).get("duration")
+    if actual is None:
+        return
+    if abs(actual - planned) > tolerance:
+        raise ffmpeg.FfmpegError(
+            f"つないだ音の長さが計画と合いません: {actual:.2f}秒"
+            f"（計画 {planned:.2f}秒・許容 {tolerance:.2f}秒）\n"
+            f"  {voice_track}\n"
+            "途中で止まった書き出しが残した、書きかけの wav が無いか見てください"
+            f"（{voice_track.parent / 'gaps'} と音声の控え）。"
+        )
 
 
 def hold_photo(script: Script) -> int:

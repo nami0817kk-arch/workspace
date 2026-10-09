@@ -1870,6 +1870,10 @@ class Renderer:
         list_path = ffmpeg.write_concat_list(entries, work_dir / "frames.txt")
         out_path.parent.mkdir(parents=True, exist_ok=True)
         size = (self.layout.width, self.layout.height)
+        # **動画の長さは、絵の列の合計で決める**（2026-10-10）。音の実尺に任せる
+        # （`-shortest`）と、音が足りない回だけ末尾が黙って切られ、
+        # **15秒の終了画面の置き場**が消える。ここには `inserts.outro` が入っている
+        total = sum(seconds for _, seconds in entries)
         # **混ぜている途中の音は、ffmpeg に渡す前に待つ**（2026-10-08）。音の混ぜは
         # 絵を描くあいだに別スレッドで回している（pipeline）。渡すのは出来上がった音のパス
         if isinstance(audio_path, Future):
@@ -1893,10 +1897,11 @@ class Renderer:
                 )
             return ffmpeg.encode_video_over_clip(
                 list_path, track, audio_path, out_path, size, self.config.video.fps,
-                progress=self._progress_spec(entries),
+                progress=self._progress_spec(entries), duration=total,
             )
         return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps,
-                                   size=size, progress=self._progress_spec(entries))
+                                   size=size, progress=self._progress_spec(entries),
+                                   duration=total)
 
     def _progress_spec(self, entries: list[tuple[Path, float]]) -> tuple[float, int] | None:
         """画面下端の進捗バー（2026-09-28）。ffmpeg が時間で動かすので、フレームは増えない。

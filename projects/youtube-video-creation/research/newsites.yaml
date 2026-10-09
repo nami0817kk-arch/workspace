@@ -30,7 +30,7 @@ sites:
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
 - host: forzaroma.info
-  seen: 27
+  seen: 28
   days:
   - '2026-09-02'
   - '2026-09-05'
@@ -47,6 +47,7 @@ sites:
   - '2026-10-05'
   - '2026-10-06'
   - '2026-10-07'
+  - '2026-10-10'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
@@ -117,7 +118,7 @@ sites:
   - https://blog.domesoccer.jp/archives/60253934.html
   - https://blog.domesoccer.jp/archives/60253949.html
 - host: tuttobolognaweb.it
-  seen: 16
+  seen: 17
   days:
   - '2026-09-05'
   - '2026-09-08'
@@ -127,6 +128,7 @@ sites:
   - '2026-09-29'
   - '2026-09-30'
   - '2026-10-06'
+  - '2026-10-10'
   examples:
   - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
