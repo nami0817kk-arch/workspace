@@ -37,7 +37,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from danmen import typo
 
-from danmen import cast, reading, sfx, tts
+from danmen import cast, lipsync, reading, sfx, tts
 
 W, H = 1920, 1080
 FONT_PATH = "C:/Windows/Fonts/NotoSansJP-VF.ttf"
@@ -99,18 +99,19 @@ def read_script(path: Path) -> list[dict]:
 
 # 行の強さから表情を決める。**語り手と聞き手で意味が違う。**
 # 語り手の「強」は力をこめて話すこと、聞き手の「強」は驚くこと。
+# 表情の顔のまま口を動かす（cast.face が表情の目と口パクを組み合わせる）
 AUTO_MOOD = {
-    "katari": {"ふつう": "setsumei", "強": "shinken", "特強": "shinken", "抑": ""},
-    "kikite": {"ふつう": "", "強": "odoroki", "特強": "odoroki", "抑": "nattoku"},
+    "katari": {"ふつう": "normal", "強": "serious", "特強": "serious", "抑": "normal"},
+    "kikite": {"ふつう": "normal", "強": "surprise", "特強": "surprise", "抑": "wonder"},
 }
 # 画面の左右に、いつも同じ人が立つ（入れ替わらない）
 SEATS = [("left", "katari"), ("right", "kikite")]
-LISTEN_MOOD = {"katari": "", "kikite": "nattoku"}      # 聞いているときの顔
+LISTEN_MOOD = {"katari": "normal", "kikite": "normal"}      # 聞いているときの顔（瞬きはする）
 
 
 def auto_mood(art: str, tone: str) -> str:
     """その人の、その強さに合う表情。無ければ素の顔。"""
-    return AUTO_MOOD.get(art, {}).get(tone, "")
+    return AUTO_MOOD.get(art, {}).get(tone, "normal")
 
 
 def parse_cast(text: str) -> dict | None:
@@ -141,9 +142,7 @@ def cast_width(height: int) -> int:
     """その高さで立ち絵を出したときの、画面の左右それぞれの占有幅。"""
     w = 0
     for _, who in SEATS:
-        ch = cast.load(who, "", height, "bust")
-        if ch is not None:
-            w = max(w, ch.width)
+        w = max(w, cast.bust(who, height).width)
     return w
 
 
@@ -157,7 +156,7 @@ WIPE_POS = {
 
 
 def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
-             pos: str = "右上") -> Image.Image:
+             pos: str = "右上", mouth="closed", blinking: frozenset = frozenset()) -> Image.Image:
     """右上の箱に2人を縦に並べる。**全画面の様式**で使う。
 
     画面いっぱいに描く様式（速報の帯・左右の比べ・おさらい）では、下に立ち絵を
@@ -170,8 +169,8 @@ def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
     for i, (_, who) in enumerate(SEATS):
         y = y0 + i * (bh + 24)
         speaking = who == speaker
-        mood = auto_mood(who, tone) if speaking else LISTEN_MOOD.get(who, "")
-        ch = cast.load(who, mood, int(bh * 2.0), "bust")
+        mood = auto_mood(who, tone) if speaking else LISTEN_MOOD.get(who, "normal")
+        ch = cast.bust(who, int(bh * 1.3), mood, mouth if speaking else "closed", who in blinking)
         d = ImageDraw.Draw(im)
         # 枠。しゃべっている人は金、聞いている人は灰
         edge = (231, 185, 63) if speaking else (96, 104, 118)
@@ -179,7 +178,7 @@ def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
         tile = Image.new("RGBA", (bw, bh), (20, 28, 44, 255))
         if ch is not None:
             # 顔が箱の中に収まるよう、上のほうを切り出す
-            face = ch.crop((0, 0, ch.width, min(int(ch.height * 0.60), ch.height)))
+            face = ch.crop((0, 0, ch.width, min(int(ch.height * 0.80), ch.height)))
             sc = bh / face.height
             face = face.resize((max(int(face.width * sc), 1), bh), Image.LANCZOS)
             tile.alpha_composite(face, ((bw - face.width) // 2, 0))
@@ -189,38 +188,48 @@ def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
     return im.convert("RGB")
 
 
-def put_cast(base: Image.Image, height: int, speaker: str, tone: str) -> Image.Image:
+_halo: dict = {}
+_dim: dict = {}
+
+
+def put_cast(base: Image.Image, height: int, speaker: str, tone: str,
+             mouth="closed", blinking: frozenset = frozenset()) -> Image.Image:
     """画面に立ち絵を重ねる。**2人とも常に出す。**
 
     片方だけ出すと、話者が変わるたびに画面の人が入れ替わって落ち着かない
     （2026-10-08 ユーザー指示）。左に語り手、右に聞き手で固定し、
     **しゃべっている人を明るく、聞いている人を少し暗く小さく**する。
 
-    口は動かさない（画像処理で開ける方法は3通り試して、どれも浮いた）。
+    口はしゃべっている人だけ動かす（mouth は lipsync の口の形）。瞬きは2人とも
+    （blinking に入っている人が目を閉じる）。
     """
     im = base.convert("RGBA").copy()
     for side, who in SEATS:
         speaking = who == speaker
         h = height if speaking else int(height * 0.90)
-        mood = auto_mood(who, tone) if speaking else LISTEN_MOOD.get(who, "")
-        ch = cast.load(who, mood, h, "bust")
-        if ch is None:
-            continue
+        mood = auto_mood(who, tone) if speaking else LISTEN_MOOD.get(who, "normal")
+        ch = cast.bust(who, h, mood, mouth if speaking else "closed", who in blinking)
         x = 62 if side == "left" else (W - 62 - ch.width)
-        y = H - 6 - ch.height
+        y = H - ch.height                       # 切り口を画面の下端にそろえる
         if speaking:
-            # 縁をうっすら光らせる
-            a = ch.split()[3]
-            ring = a.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(7))
-            halo = Image.new("RGBA", ch.size, (255, 248, 226, 0))
-            halo.putalpha(ring.point(lambda v: int(v * 0.50)))
-            im.alpha_composite(halo, (x, y))
+            # 縁をうっすら光らせる（形は口で変わらないので、人と高さごとに1回だけ作る）
+            key = (who, h)
+            if key not in _halo:
+                a = ch.split()[3]
+                ring = a.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(7))
+                halo = Image.new("RGBA", ch.size, (255, 248, 226, 0))
+                halo.putalpha(ring.point(lambda v: int(v * 0.50)))
+                _halo[key] = halo
+            im.alpha_composite(_halo[key], (x, y))
         else:
             # 聞いている人は少し暗く落とす（誰がしゃべっているかを見失わないように）
-            rgb = ImageEnhance.Brightness(ch.convert("RGB")).enhance(0.72)
-            dim = rgb.convert("RGBA")
-            dim.putalpha(ch.split()[3].point(lambda v: int(v * 0.88)))
-            ch = dim
+            key = (who, h, mood, who in blinking)
+            if key not in _dim:
+                rgb = ImageEnhance.Brightness(ch.convert("RGB")).enhance(0.72)
+                dim = rgb.convert("RGBA")
+                dim.putalpha(ch.split()[3].point(lambda v: int(v * 0.88)))
+                _dim[key] = dim
+            ch = _dim[key]
         im.alpha_composite(ch, (x, y))
     return im.convert("RGB")
 
@@ -335,6 +344,11 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
     wavs: list[Path] = []
     shots: list[tuple[Path, float]] = []      # (画像, 出す秒数)
     n = 0
+    frame_no = 0                               # いまのコマ番号（30コマ/秒）
+    n_unique = 0
+    # 瞬き。**2人とも、それぞれ不規則な間隔で**（同時に瞬くと機械に見える）
+    blink_at = {"katari": lipsync.blinks30(3 * 3600, FPS, seed=11),
+                "kikite": lipsync.blinks30(3 * 3600, FPS, seed=29)}
     for step in steps:
         if "cast" in step:
             cast_spec = parse_cast(step["cast"])
@@ -377,28 +391,55 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         room = 0
         if cast_spec and cast_spec["style"] == "bottom":
             room = int(cast_width(cast_spec["height"]) * 0.76)
-        shot = work / "{:03d}.jpg".format(n)
-        if cast_spec:
-            if cast_spec["style"] == "wipe":
-                frame = put_wipe(current, cast_spec["height"], art, step["tone"],
-                                 cast_spec.get("pos", "右上"))
+        # **口パクと瞬き。** 行の中をコマに分け、絵が変わるところだけ画像を作る
+        # （同じ絵が続くあいだは1枚を長く出す）。字幕は行の頭で1回だけ焼く
+        q = tts.timing_query(say)
+        exact = tts.engine_for(cfg, step["who"]).endswith(":50021")
+        shapes, _ = lipsync.visemes(wav, q, exact=exact, fps=FPS)
+        capped = caption(current, step["text"], side_room=room)
+        f0 = frame_no
+        f1 = int(round((at + sec) * FPS))      # この行の終わりのコマ（積み重ねで丸めがずれない）
+        line_shots: list[tuple[Path, float]] = []
+        prev_key = None
+        for k in range(f1 - f0):
+            g = f0 + k
+            mouth = shapes[k] if k < len(shapes) else "closed"
+            blinking = frozenset(w for w, bl in blink_at.items() if g in bl)
+            key = (mouth, blinking)
+            if key == prev_key:
+                p, d0 = line_shots[-1]
+                line_shots[-1] = (p, d0 + 1.0 / FPS)
+                continue
+            if cast_spec:
+                if cast_spec["style"] == "wipe":
+                    painted = put_wipe(capped, cast_spec["height"], art, step["tone"],
+                                       cast_spec.get("pos", "右上"), mouth, blinking)
+                else:
+                    painted = put_cast(capped, cast_spec["height"], art, step["tone"], mouth, blinking)
             else:
-                frame = put_cast(current, cast_spec["height"], art, step["tone"])
-        else:
-            frame = current
-        painted = caption(frame, step["text"], side_room=room)
-        painted.save(shot, quality=93)
-        # 画面が変わるところに、短い重なりを挟む
+                painted = capped
+            shot = work / "{:03d}_{:04d}.jpg".format(n, k)
+            painted.save(shot, quality=93)
+            line_shots.append((shot, 1.0 / FPS))
+            prev_key = key
+        # 画面が変わるところに、短い重なりを挟む。**前の行の終わり（間）から時間を借りる**
+        # （足すと、そのぶん画面だけが声より遅れていく。2026-10-10 に見つけた）
         if shots and screen_changed:
             prev = Image.open(shots[-1][0]).convert("RGB")
-            for p in fade_frames(prev, painted, work, "{:03d}".format(n)):
+            first = Image.open(line_shots[0][0]).convert("RGB")
+            fades = fade_frames(prev, first, work, "{:03d}".format(n))
+            lp, ld = shots[-1]
+            take = min(len(fades) / FPS, max(ld - 1.0 / FPS, 0))
+            shots[-1] = (lp, ld - take)
+            for p in fades[:int(round(take * FPS))]:
                 shots.append((p, 1.0 / FPS))
-            at += FADE_FRAMES / FPS
-        shots.append((shot, sec))
+        shots.extend(line_shots)
+        frame_no = f1
         cues.append({"start": at, "screen_changed": screen_changed,
                      "who": step["who"], "tone": step["tone"]})
         at += sec
         screen_changed = False
+        n_unique += len(line_shots)
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。
         # これを超えると、聞けても読めない（読み終わる前に次へ行く）。
         cps = len(step["text"]) / sec if sec else 0
@@ -416,7 +457,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
 
     # 音声をつなぐ
     voice = work / "voice.wav"
-    tts.join_wavs(wavs, voice, gap_sec=gap)
+    tts.join_wavs(wavs, voice, gap_sec=gaps)
     # 効果音を重ねる。**BGM は入れない。** 画面が変わるところと、
     # 聞き手が驚くところにだけ、声よりずっと小さく置く
     evs = sfx.events(cues)
@@ -451,7 +492,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         print(r.stderr[-2500:], file=sys.stderr)
         raise SystemExit("ffmpeg が失敗しました")
     total = sum(s for _, s in shots)
-    print("書き出しました: {}（{:.1f}秒 / 画面 {}枚）".format(out, total, len(shots)))
+    print("書き出しました: {}（{:.1f}秒 / 絵 {}枚）".format(out, total, n_unique))
     if too_fast:
         print()
         print("字幕が速すぎる行が {} つあります（目安は {} 字/秒まで）。".format(

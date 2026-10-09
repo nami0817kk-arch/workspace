@@ -150,23 +150,28 @@ def _swap(who: str, base: Image.Image, name: str, lower: bool) -> Image.Image:
     return Image.composite(src, base, m)
 
 
-def face(who: str, expr: str = "normal", mouth: int = 0, blink: bool = False) -> Image.Image:
+def face(who: str, expr: str = "normal", mouth="closed", blink: bool = False) -> Image.Image:
     """その瞬間の絵。
 
-    expr  … normal / surprise / smile / wonder / pout / trouble
-    mouth … 口の形 closed / a / i / u / e / o（lipsync.visemes）。古い 0〜3 も受ける。
-            ふつうの顔のときだけ効く。口のあたりだけ替える
-    blink … True で目を閉じる（ふつうの顔のときだけ効く。目のあたりだけ替える）
+    expr  … 表情（EXPR の名前）
+    mouth … 口の形 closed / a / a- / i / u / e / o（lipsync.visemes）。古い 0〜3 も受ける。
+            **表情の顔のまま喋らせられる**：表情の絵の「目のあたり」と、ふつうの顔の口パクを
+            組み合わせる（驚いた目のまま「127億?」と言う、など）。9枚とも同じ位置に重ねてあるので
+            継ぎ目は出ない
+    blink … True で目を閉じる（ふつうの顔のときだけ。表情の目を瞬きで消すと眉が跳ねる）
     """
-    if expr != "normal":
-        name = EXPR.get(expr, "normal")
-        if not (BASE / who / (name + ".png")).exists():
-            name = "normal"
-        return _img(who, name)
-    key = ("face", who, mouth, bool(blink))
+    name = EXPR.get(expr, "normal")
+    if not (BASE / who / (name + ".png")).exists():
+        name = "normal"
+    talking = mouth not in ("closed", 0, None)
+    if name != "normal" and not talking:
+        return _img(who, name)                 # 黙っているときは表情の絵そのまま
+    key = ("face", who, name, mouth, bool(blink))
     if key not in _cache:
         im = _img(who, "normal")
-        if blink:
+        if name != "normal":
+            im = _swap(who, im, name, lower=False)     # 表情の目・眉
+        elif blink:
             im = _swap(who, im, BLINK, lower=False)
         if isinstance(mouth, str):
             talk = "normal" if mouth == "closed" else MOUTH[who][mouth]
@@ -178,12 +183,53 @@ def face(who: str, expr: str = "normal", mouth: int = 0, blink: bool = False) ->
     return _cache[key]
 
 
-def load(who: str, height: int, expr: str = "normal", mouth: int = 0,
-         blink: bool = False) -> Image.Image:
-    """指定の高さに縮めて返す。同じ組み合わせは使い回す。"""
+# 胸から上の切り出し。**2人の顔の大きさをそろえる**ため、顔の幅の何倍の高さで切るかで決める
+FACE_W = {"kikite": 330, "katari": 272}
+CROP_K = {"bust": 2.3, "half": 3.4}
+
+# 古い表情の名前（2026-10-09 以前の絵）→ 今の名前。サムネや短い動画の古い呼び出しのため
+LEGACY = {"": "normal", "setsumei": "normal", "sumashi": "normal", "shinken": "serious",
+          "odoroki": "surprise", "nattoku": "wonder", "egao": "smile", "warai": "smile",
+          "yorokobi": "smile", "komari": "trouble", "fuman": "pout", "naki": "sad",
+          "rakutan": "sad", "tere": "smile", "hakushu": "smile", "ikari": "grimace"}
+
+
+def bust(who: str, height: int, expr: str = "normal", mouth="closed", blink: bool = False,
+         crop: str = "bust") -> Image.Image:
+    """胸から上を切り出して、指定の高さにする。同じ組み合わせは使い回す。"""
+    key = ("bust", who, height, expr, mouth, bool(blink), crop)
+    if key not in _cache:
+        im = face(who, expr, mouth, blink)
+        ch = min(int(FACE_W.get(who, im.width * 0.4) * CROP_K.get(crop, 2.3)), im.height)
+        im = im.crop((0, 0, im.width, ch))
+        s = height / im.height
+        _cache[key] = im.resize((max(int(im.width * s), 1), height), Image.LANCZOS)
+    return _cache[key]
+
+
+def load(who: str, height, expr="normal", mouth="closed", blink: bool = False):
+    """指定の高さに縮めて返す。
+
+    古い呼び方 `load(who, 表情, 高さ, "bust")` も受ける（サムネ・talk.py）。
+    """
+    if isinstance(height, str):                 # 古い呼び方
+        mood, h, crop = height, int(expr), (mouth if isinstance(mouth, str) and mouth in CROP_K else "bust")
+        return bust(who, h, LEGACY.get(mood, mood), crop=crop)
     key = ("load", who, height, expr, mouth, bool(blink))
     if key not in _cache:
         im = face(who, expr, mouth, blink)
         s = height / im.height
         _cache[key] = im.resize((max(int(im.width * s), 1), height), Image.LANCZOS)
     return _cache[key]
+
+
+def put(im: Image.Image, who: str, mood: str, h: int, part: str = "bust",
+        right: int | None = None, left: int | None = None, bottom: int | None = None) -> None:
+    """古い呼び方（talk.py）。im に立ち絵を重ねる。"""
+    ch = bust(who, h, LEGACY.get(mood, mood), crop=part)
+    b = im.height if bottom is None else bottom
+    if right is not None:
+        x = im.width - right - ch.width
+    else:
+        x = left or 0
+    im.alpha_composite(ch, (x, b - ch.height))

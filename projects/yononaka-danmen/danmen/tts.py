@@ -98,16 +98,34 @@ def engine_for(cfg: dict, who: str) -> str:
     return cfg["cast"][who].get("engine_url") or cfg["engine_url"]
 
 
-def join_wavs(files: list[Path], dst: Path, gap_sec: float = 0.25) -> None:
+TIMING_URL = "http://127.0.0.1:50021"   # 音ごとの長さは VOICEVOX に聞く（AivisSpeech は 0 を返す）
+TIMING_ID = 21
+
+
+def timing_query(text: str) -> dict:
+    """その文の、音ごとの長さ（口パク用）。VOICEVOX の audio_query をそのまま返す。"""
+    q = urllib.request.Request(
+        f"{TIMING_URL}/audio_query?text={urllib.parse.quote(text)}&speaker={TIMING_ID}", method="POST")
+    with urllib.request.urlopen(q, timeout=120) as res:
+        return json.load(res)
+
+
+def join_wavs(files: list[Path], dst: Path, gap_sec=0.25) -> None:
+    """声をつなぐ。gap_sec は一律の秒数か、**行ごとの秒数の並び**。
+
+    画面は行ごとに間を変えているのに、声を一律の間でつなぐと、行を重ねるほど
+    口と声がずれていく（2026-10-10 に見つけた）。
+    """
+    gaps = gap_sec if isinstance(gap_sec, (list, tuple)) else [gap_sec] * len(files)
     with wave.open(str(files[0]), "rb") as w0:
         params = w0.getparams()
-    gap = b"\x00" * int(params.framerate * params.sampwidth * params.nchannels * gap_sec)
+    unit = params.sampwidth * params.nchannels
     with wave.open(str(dst), "wb") as out:
         out.setparams(params)
-        for f in files:
+        for f, g in zip(files, gaps):
             with wave.open(str(f), "rb") as w:
                 out.writeframes(w.readframes(w.getnframes()))
-            out.writeframes(gap)
+            out.writeframes(b"\x00" * int(params.framerate * g) * unit)
 
 
 def main() -> int:
