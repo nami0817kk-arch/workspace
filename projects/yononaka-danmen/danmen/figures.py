@@ -254,7 +254,9 @@ def hero(fig: dict) -> Image.Image:
 
     ニュース調にするなら `news.big_number`、画面いっぱいなら `fullscreen.number`。
     """
-    w, h = typo.PANEL_W, 360
+    # **注記（sub）と出典（note）が両方あると、高さ 360 では重なった**（2026-10-10、カルテルの回の
+    # 「6558万円」）。両方あるときは、そのぶん高くする
+    w, h = typo.PANEL_W, 360 + (56 if fig.get("sub") and fig.get("note") else 0)
     im, d, top = _card(w, h, fig.get("title", ""))
     value = str(fig.get("value", ""))
     f = F(130)

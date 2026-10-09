@@ -139,10 +139,20 @@ def parse_cast(text: str) -> dict | None:
 
 
 def cast_width(height: int) -> int:
-    """その高さで立ち絵を出したときの、画面の左右それぞれの占有幅。"""
+    """その高さで立ち絵を出したときに、**人が実際に描かれている所**が画面の端から何 px まで来るか。
+
+    絵の矩形には透明な余白があり、その割合は絵ごとに違う。前は「矩形の幅 × 0.76」で決めていて、
+    新しい絵（2026-10-10）では字幕の端が小倉の髪にかかった。不透明な所の内側の端から測る。
+    """
     w = 0
-    for _, who in SEATS:
-        w = max(w, cast.bust(who, height).width)
+    for side, who in SEATS:
+        ch = cast.bust(who, height)
+        cols = [x for x in range(ch.width) if ch.getpixel((x, ch.height - 1))[3] > 0 or
+                any(ch.getpixel((x, y))[3] > 40 for y in range(0, ch.height, 6))]
+        if not cols:
+            continue
+        inner = (ch.width - min(cols)) if side == "right" else (max(cols) + 1)
+        w = max(w, 62 + inner)
     return w
 
 
@@ -298,6 +308,63 @@ def fade_frames(before: Image.Image, after: Image.Image, work: Path,
     return out
 
 
+class Sink:
+    """コマを ffmpeg に直接流し込む（**画像をディスクに置かない**）。
+
+    口パクを入れると絵が 30分で1万枚を超え、JPEG で置くと 3GB 近くになって
+    ドライブが一杯になった（2026-10-10）。同じ絵が続くあいだは同じバイト列を流すだけ。
+
+    いちばん新しい絵は送らずに持っておく。次の行で画面が変わるとき、その絵の
+    終わりのコマを、切り替えの重なりに回す（時間を足さない）ため。
+    """
+
+    def __init__(self, path: Path):
+        self.path = path
+        self.p = subprocess.Popen(
+            [ffmpeg(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
+             "-s", "{}x{}".format(W, H), "-r", str(FPS), "-i", "-",
+             "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", str(path)],
+            stdin=subprocess.PIPE)
+        self.pending: tuple[Image.Image, int] | None = None
+        self.frames = 0
+        self.unique = 0
+
+    def _write(self, im: Image.Image, n: int) -> None:
+        b = im.convert("RGB").tobytes()
+        for _ in range(n):
+            self.p.stdin.write(b)
+        self.frames += n
+
+    def add(self, im: Image.Image, n: int = 1) -> None:
+        if self.pending is not None and self.pending[0] is im:
+            self.pending = (im, self.pending[1] + n)
+            return
+        if self.pending is not None:
+            self._write(*self.pending)
+        self.pending = (im, n)
+        self.unique += 1
+
+    def last(self) -> Image.Image | None:
+        return self.pending[0] if self.pending else None
+
+    def borrow(self, n: int) -> int:
+        """持っている絵の終わりから n コマを返してもらう（1コマは残す）。"""
+        if not self.pending:
+            return 0
+        im, c = self.pending
+        k = max(min(n, c - 1), 0)
+        self.pending = (im, c - k)
+        return k
+
+    def close(self) -> None:
+        if self.pending is not None:
+            self._write(*self.pending)
+            self.pending = None
+        self.p.stdin.close()
+        if self.p.wait() != 0:
+            raise SystemExit("ffmpeg が失敗しました（映像）")
+
+
 def gap_after(text: str, nxt: dict | None, base: float) -> float:
     """その行のあとに空ける間。**一律にしない。**
 
@@ -342,10 +409,11 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
                for k, v in cfg.get("cast", {}).items()}
     too_fast: list[tuple[int, str, float]] = []
     wavs: list[Path] = []
-    shots: list[tuple[Path, float]] = []      # (画像, 出す秒数)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    video_only = work / "video.mp4"
+    sink = Sink(video_only)
     n = 0
     frame_no = 0                               # いまのコマ番号（30コマ/秒）
-    n_unique = 0
     # 瞬き。**2人とも、それぞれ不規則な間隔で**（同時に瞬くと機械に見える）
     blink_at = {"katari": lipsync.blinks30(3 * 3600, FPS, seed=11),
                 "kikite": lipsync.blinks30(3 * 3600, FPS, seed=29)}
@@ -390,7 +458,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         # ワイプは画面の上にいるので、字幕の幅は狭めなくてよい
         room = 0
         if cast_spec and cast_spec["style"] == "bottom":
-            room = int(cast_width(cast_spec["height"]) * 0.76)
+            room = cast_width(cast_spec["height"]) + 16 - 80      # 字幕は左右 80px の余白込み
         # **口パクと瞬き。** 行の中をコマに分け、絵が変わるところだけ画像を作る
         # （同じ絵が続くあいだは1枚を長く出す）。字幕は行の頭で1回だけ焼く
         q = tts.timing_query(say)
@@ -399,7 +467,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         capped = caption(current, step["text"], side_room=room)
         f0 = frame_no
         f1 = int(round((at + sec) * FPS))      # この行の終わりのコマ（積み重ねで丸めがずれない）
-        line_shots: list[tuple[Path, float]] = []
+        line: list[list] = []                  # [絵, コマ数]
         prev_key = None
         for k in range(f1 - f0):
             g = f0 + k
@@ -407,8 +475,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
             blinking = frozenset(w for w, bl in blink_at.items() if g in bl)
             key = (mouth, blinking)
             if key == prev_key:
-                p, d0 = line_shots[-1]
-                line_shots[-1] = (p, d0 + 1.0 / FPS)
+                line[-1][1] += 1
                 continue
             if cast_spec:
                 if cast_spec["style"] == "wipe":
@@ -418,28 +485,23 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
                     painted = put_cast(capped, cast_spec["height"], art, step["tone"], mouth, blinking)
             else:
                 painted = capped
-            shot = work / "{:03d}_{:04d}.jpg".format(n, k)
-            painted.save(shot, quality=93)
-            line_shots.append((shot, 1.0 / FPS))
+            line.append([painted, 1])
             prev_key = key
         # 画面が変わるところに、短い重なりを挟む。**前の行の終わり（間）から時間を借りる**
         # （足すと、そのぶん画面だけが声より遅れていく。2026-10-10 に見つけた）
-        if shots and screen_changed:
-            prev = Image.open(shots[-1][0]).convert("RGB")
-            first = Image.open(line_shots[0][0]).convert("RGB")
-            fades = fade_frames(prev, first, work, "{:03d}".format(n))
-            lp, ld = shots[-1]
-            take = min(len(fades) / FPS, max(ld - 1.0 / FPS, 0))
-            shots[-1] = (lp, ld - take)
-            for p in fades[:int(round(take * FPS))]:
-                shots.append((p, 1.0 / FPS))
-        shots.extend(line_shots)
+        if sink.last() is not None and screen_changed:
+            prev = sink.last().convert("RGB")
+            take = sink.borrow(FADE_FRAMES)
+            first = line[0][0].convert("RGB")
+            for i in range(take):
+                sink.add(Image.blend(prev, first, (i + 1) / (take + 1)))
+        for im_, c in line:
+            sink.add(im_, c)
         frame_no = f1
         cues.append({"start": at, "screen_changed": screen_changed,
                      "who": step["who"], "tone": step["tone"]})
         at += sec
         screen_changed = False
-        n_unique += len(line_shots)
         # 字幕が読める速さか。日本語の字幕は **1秒あたり 4〜6文字**が目安。
         # これを超えると、聞けても読めない（読み終わる前に次へ行く）。
         cps = len(step["text"]) / sec if sec else 0
@@ -452,7 +514,8 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
             print("           読み: {}".format(say[:46]))
         n += 1
 
-    if not shots:
+    sink.close()
+    if sink.frames == 0:
         raise SystemExit("話者の行が1つもありません")
 
     # 音声をつなぐ
@@ -473,26 +536,15 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
             w.writeframes(a.tobytes())
         print("  効果音 {} か所（画面の変わり目と、聞き手の驚き）".format(len(evs)))
 
-    # 画像の並びを ffmpeg の concat で渡す
-    lst = work / "list.txt"
-    with lst.open("w", encoding="utf-8") as fh:
-        for p, sec in shots:
-            fh.write("file '{}'\n".format(p.as_posix()))
-            fh.write("duration {:.3f}\n".format(sec))
-        fh.write("file '{}'\n".format(shots[-1][0].as_posix()))   # 最後は1回多く要る
-
-    out.parent.mkdir(parents=True, exist_ok=True)
-    # preset は veryfast。medium（45分）より速く（29分）、しかも容量が小さい
-    cmd = [ffmpeg(), "-y", "-f", "concat", "-safe", "0", "-i", str(lst),
-           "-i", str(voice), "-c:v", "libx264", "-preset", "veryfast",
-           "-pix_fmt", "yuv420p",
-           "-r", str(FPS), "-c:a", "aac", "-b:a", "192k", "-shortest", str(out)]
+    # 映像（声なし）に声を重ねる。映像は作り直さずにそのまま写す
+    cmd = [ffmpeg(), "-y", "-i", str(video_only), "-i", str(voice), "-c:v", "copy",
+           "-c:a", "aac", "-b:a", "192k", "-shortest", str(out)]
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0:
         print(r.stderr[-2500:], file=sys.stderr)
         raise SystemExit("ffmpeg が失敗しました")
-    total = sum(s for _, s in shots)
-    print("書き出しました: {}（{:.1f}秒 / 絵 {}枚）".format(out, total, n_unique))
+    video_only.unlink()
+    print("書き出しました: {}（{:.1f}秒 / 絵 {}枚）".format(out, sink.frames / FPS, sink.unique))
     if too_fast:
         print()
         print("字幕が速すぎる行が {} つあります（目安は {} 字/秒まで）。".format(
