@@ -18,7 +18,8 @@ SRC = Path(sys.argv[1]); DST = Path(sys.argv[2])
 # 顔の範囲（のっぺらぼうの肌を塗りつぶして作ったもの）。目の外には触らないための囲い
 face = np.asarray(Image.open(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/characters/kikite_face_mask.png")) > 0
 dry = "--dry" in sys.argv
-for n in ["normal","talk_small","talk_big","blink","surprise","smile","wonder","pout","trouble"]:
+# フォルダの中の絵を全部（表情を足しても書き換えずに済むように）
+for n in sorted(q.stem for q in SRC.glob("*.png")):
     a = np.asarray(Image.open(SRC / (n + ".png")).convert("RGBA")).copy()
     rgb = a[..., :3].astype(np.int16)
     lum = rgb.mean(axis=2)

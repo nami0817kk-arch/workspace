@@ -44,7 +44,15 @@ EXPR = {
     "wonder": "wonder",      # 感心
     "pout": "pout",          # 不満
     "trouble": "trouble",    # 困る
+    "grimace": "grimace",    # 歯を食いしばる
+    "laugh": "laugh",        # 大笑い（岬）
+    "serious": "serious",    # 真剣（岬）
+    "pucker": "pucker",      # 口をすぼめる（小倉）
+    "huh": "huh",            # 「え？」（小倉）
+    "oh": "oh",              # 小さく「お」（小倉）
+    "sad": "sad",            # しょんぼり（小倉）
 }
+# その人に絵の無い表情は、ふつうの顔で出す（岬に pout は無い、など）
 # 口パクの絵（ふつうの顔のときだけ）。0 閉じ / 1・2 小 / 3 大
 # **2 を「大」にすると叫んでいるように見える**（2026-10-09。喋っているコマの55%が大だった）
 TALK = {0: "normal", 1: "talk_small", 2: "talk_small", 3: "talk_big"}
@@ -84,7 +92,7 @@ def _rows_split(who: str) -> int:
         r = d.sum(axis=1)
         return r
 
-    # 口 大との差は「眉」「目」「口」の帯に分かれる。**いちばん下の帯が口**。
+    # 口 大との差は「眉」「目」「口」（岬は「あご」も）の帯に分かれる。
     # その上の帯の下端と、口の帯の上端のあいだを境目にする
     # （最初は瞬きの差のいちばん強い行から辿ったら、眉の帯で止まって y319 になった）
     r = band("talk_big")
@@ -95,7 +103,11 @@ def _rows_split(who: str) -> int:
             bands.append((b0, a)); b0 = b
     bands.append((b0, on[-1]))
     bands = [bd for bd in bands if r[bd[0]:bd[1] + 1].sum() > 200]
-    end, start = bands[-2][1], bands[-1][0]
+    # **いちばん差の大きい帯が口。** 岬は口の下にあごの線の差の帯があり、
+    # 最後の帯を口とみなすと境目があごになった（2026-10-10）
+    sums = [int(r[a:b + 1].sum()) for a, b in bands]
+    mi = max(range(1, len(bands)), key=lambda i: sums[i])
+    end, start = bands[mi - 1][1], bands[mi][0]
     _cache[key] = (end + start) // 2
     return _cache[key]
 
@@ -133,7 +145,10 @@ def face(who: str, expr: str = "normal", mouth: int = 0, blink: bool = False) ->
     blink … True で目を閉じる（ふつうの顔のときだけ効く。目のあたりだけ替える）
     """
     if expr != "normal":
-        return _img(who, EXPR.get(expr, "normal"))
+        name = EXPR.get(expr, "normal")
+        if not (BASE / who / (name + ".png")).exists():
+            name = "normal"
+        return _img(who, name)
     key = ("face", who, int(mouth), bool(blink))
     if key not in _cache:
         im = _img(who, "normal")

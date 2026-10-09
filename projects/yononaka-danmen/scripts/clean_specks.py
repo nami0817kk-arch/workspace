@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 使い方: python scripts/clean_specks.py <元> <出力> [--gray]
+# 使い方: python scripts/clean_specks.py <元> <出力> [--gray | --brown]
 # **順番は clean_highlights → clean_specks → clean_specks --gray**（2026-10-09 に確立）
 """黒い点（透明が黒に化けた跡）を、まわりから塗り直して消す。
 
@@ -18,11 +18,13 @@ from scipy import ndimage as ndi
 
 src = Path(sys.argv[1]); dst = Path(sys.argv[2])
 GRAY = "--gray" in sys.argv
+BROWN = "--brown" in sys.argv
 # 顔の範囲（のっぺらぼうの肌を塗りつぶして作ったもの）。目の外には触らないための囲い
 face = np.asarray(Image.open(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/characters/kikite_face_mask.png")) > 0
 from skimage.morphology import disk
 DISK4, DISK2 = disk(4).astype(bool), disk(2).astype(bool)
-for n in ["normal","talk_small","talk_big","blink","surprise","smile","wonder","pout","trouble"]:
+# フォルダの中の絵を全部（表情を足しても書き換えずに済むように）
+for n in sorted(q.stem for q in src.glob("*.png")):
     a = np.asarray(Image.open(src / (n + ".png")).convert("RGBA")).copy()
     rgb = a[..., :3].astype(np.int16)
     mx = rgb.max(axis=2); lum = rgb.mean(axis=2)
@@ -36,6 +38,11 @@ for n in ["normal","talk_small","talk_big","blink","surprise","smile","wonder","
     # 大きな塊になり、拾えなくなった（ふつうの顔の白目の点が戻った）
     if GRAY:
         core = (mx >= 45) & (mx < 130) & band & neutral & face
+    elif BROWN:
+        # 茶色の点（しょんぼりの顔で瞳の下の縁に出た）。線と取り違えやすいので
+        # 目の高さだけ・とても暗い所だけ。**口 大の顔の輪郭が細切れに当たるので、
+        # 使うのは点が見えた絵だけにする**
+        core = (lum < 35) & band & face & ~neutral
     else:
         core = (mx < 45) & neutral & face
     lab, k = ndi.label(core, structure=np.ones((3, 3)))
@@ -70,7 +77,8 @@ for n in ["normal","talk_small","talk_big","blink","surprise","smile","wonder","
         if (ndi.binary_dilation(c, iterations=1) & big).any():
             # **瞳の縁に接した点は、白でなく周りの色（白と茶の両方）で埋める。**
             # 白で埋めると瞳が欠けたり、白目と瞳の反射がつながった（感心の顔）
-            edge |= c | (ndi.binary_dilation(c, iterations=1) & neutral & (lum < med - 25))
+            # 点のすぐ隣の、瞳の縁より暗いにじみ（茶色でも）も一緒に塗る。残すと縁のこぶに見えた
+            edge |= c | (ndi.binary_dilation(c, iterations=1) & ((neutral & (lum < med - 25)) | (lum < 45)))
         else:
             mask |= (ndi.binary_dilation(c, structure=DISK4) & ~big & ~brown) | c
             solid |= ndi.binary_dilation(c, structure=DISK2) | c
@@ -91,7 +99,7 @@ for n in ["normal","talk_small","talk_big","blink","surprise","smile","wonder","
     if edge.any():
         cur = a[..., :3].astype(float)
         # 点のふちの灰色（無彩色で暗め）は手本にしない。灰色のしみになった
-        v = ~edge & ~(neutral & (lum < 170))
+        v = ~edge & ~(neutral & (lum < 170)) & (lum >= 45)
         num2 = np.stack([ndi.gaussian_filter(cur[..., ch] * v, 1.2) for ch in range(3)], axis=2)
         den2 = ndi.gaussian_filter(v.astype(float), 1.2)[..., None]
         a[..., :3][edge] = np.clip(num2[edge] / den2[edge], 0, 255).astype(np.uint8)
