@@ -147,7 +147,7 @@ sections:
   say:
   - text: そろえる物差しは、同じ日付ではなく、生きてきた日数です。
     image: assets/images/20261009_cmp_bellingham/eng2026/01_r.jpg
-    card: *nt
+    card: none
   - text: どちらも生後8502日、23歳101日の時点までを数えました。
     card: *nt
   - text: 出場はベリンガムが384試合、ムシアラは273試合。

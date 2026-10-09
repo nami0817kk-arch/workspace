@@ -293,5 +293,13 @@
     "playlists.list": 3,
     "playlists.update": 1,
     "playlistItems.delete": 3
+  },
+  "2026-10-08": {
+    "channels.list": 10,
+    "playlistItems.list": 10,
+    "videos.insert": 10,
+    "thumbnails.set": 10,
+    "playlistItems.insert": 5,
+    "playlists.insert": 1
   }
 }

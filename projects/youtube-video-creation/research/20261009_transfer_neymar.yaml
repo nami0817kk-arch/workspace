@@ -146,22 +146,32 @@ sections:
     image: assets/backgrounds/stadium_バルセロナ_in.png
     card: none
   - text: 鍵は、スペインの勅令1006号です。
-    card: *how_board
+    card: none
   - text: 1985年に決まった、プロ選手の働き方の決まりです。
     card: *how_board
   - text: その第16条に、こう書いてあります。
     card: *how_board
   - text: 選手は、自分の意思で契約を終わらせられる。
-    card: *how_board
+    card:
+      <<: *how_board
+      highlight_row: 0
   - text: そのときクラブには、補償金を受け取る権利がある。
-    card: *how_board
+    card:
+      <<: *how_board
+      highlight_row: 2
   - text: 額は、先に取り決めてあればその額です。
-    card: *how_board
+    card:
+      <<: *how_board
+      highlight_row: 0
   - text: つまり払うのは選手本人。クラブ同士の売り買いではありません。
     emph: true
-    card: *how_board
+    card:
+      <<: *how_board
+      highlight_row: 2
   - text: 選手が1年以内に別のクラブと契約すれば、そのクラブが保証人になります。
-    card: *how_board
+    card:
+      <<: *how_board
+      highlight_row: 3
   - text: だからバルセロナには、断ることも値を上げることもできません。
     emph: true
     card: *how_board

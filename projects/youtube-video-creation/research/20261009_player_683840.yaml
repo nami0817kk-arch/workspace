@@ -523,14 +523,30 @@ sections:
     cont: true
     pause: 0.6
   - text: 祖父はテネリフェで、バルサの応援団の店をやっていました。
-    card: *story_card
+    card: &shop_card
+      type: table
+      title: 祖父の店と、壁の写真
+      columns: [どこ, 何が]
+      rows: &shop_rows
+      - [店, テネリフェのバルサ応援団]
+      - [正面の壁, 古い写真がたくさん]
+      - [写真の祖父, スーツにバルサのネクタイ]
+      - [その目もと, 色の入った昔風のサングラス]
+      source: 本人の寄稿（2026年9月8日）
+      highlight_row: 0
   - text: その店の正面の壁には、古い写真がたくさん貼ってあります。
-    card: *story_card
+    card:
+      <<: *shop_card
+      highlight_row: 1
   - text: スーツに、バルサのネクタイ。笑っている祖父がそこにいます。
-    card: *story_card
+    card:
+      <<: *shop_card
+      highlight_row: 2
   - text: かけているのは、色の入った昔風のサングラスでした。
     emph: true
-    card: *story_card
+    card:
+      <<: *shop_card
+      highlight_row: 3
   - text: もう1つは、世界一になった2026年7月19日の夜の話です。
     image: assets/images/20261009_player_683840/wc2026semi/01_v.jpg
     card:

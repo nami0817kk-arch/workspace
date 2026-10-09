@@ -2102,5 +2102,45 @@
  "20261008_record_pedro_short": {
   "at": "2026-10-08T13:17:05+09:00",
   "digest": "af8ddae5a669bb30"
+ },
+ "20260926_ll10_espanyol": {
+  "at": "2026-10-09T10:41:45+09:00",
+  "digest": "4dca1954bfee8a2e"
+ },
+ "20260926_ll10_espanyol_short": {
+  "at": "2026-10-09T10:41:51+09:00",
+  "digest": "20585cca1848d090"
+ },
+ "20261009_stadium_bournemouth": {
+  "at": "2026-10-09T10:41:54+09:00",
+  "digest": "717905ff76a98b31"
+ },
+ "20261009_stadium_bournemouth_short": {
+  "at": "2026-10-09T10:41:59+09:00",
+  "digest": "8a6708e77cf244c4"
+ },
+ "20261009_finance_realmadrid": {
+  "at": "2026-10-09T10:42:02+09:00",
+  "digest": "fb91062abc18e982"
+ },
+ "20261009_finance_realmadrid_short": {
+  "at": "2026-10-09T10:42:06+09:00",
+  "digest": "607cddbd21c3478b"
+ },
+ "20261009_record_topscore": {
+  "at": "2026-10-09T10:42:11+09:00",
+  "digest": "fff561ee55507e3b"
+ },
+ "20261009_record_topscore_short": {
+  "at": "2026-10-09T10:42:19+09:00",
+  "digest": "637a0c99a9d642d8"
+ },
+ "20261009_kit_liverpool": {
+  "at": "2026-10-09T10:42:25+09:00",
+  "digest": "f16592547c9e82ea"
+ },
+ "20261009_kit_liverpool_short": {
+  "at": "2026-10-09T10:42:30+09:00",
+  "digest": "764db4b00b023729"
  }
 }
