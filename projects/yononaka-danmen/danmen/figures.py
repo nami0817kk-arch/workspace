@@ -19,6 +19,7 @@
 """
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
@@ -71,9 +72,23 @@ def _card(w: int, h: int, title: str):
     return _panel(w, h + 34, title)
 
 
-def _note(d, text: str, x: int, y: int) -> None:
-    if text:
-        d.text((x, y), text, font=F(typo.NOTE, 600), fill=INK_SUB)
+def _note(d, text: str, x: int, y: int, room: int | None = None) -> None:
+    """板の下の添え。**折り返さないので、長いと右端で黙って切れる。**
+
+    2026-10-09 に compare の添え（75字）が切れていたのに気づかなかった。
+    縮めても 28px が下限で足りないので、直すのは呼ぶ側（添えを短くする）。
+    ここでは気づけるように言うだけにする。
+
+    `room` は使える幅。**箱の中に置く添えは板の幅ではない**ので、flow の
+    ように箱ごとに置くときは箱の幅を渡す。
+    """
+    if not text:
+        return
+    f = F(typo.NOTE, 600)
+    limit = room if room is not None else typo.PANEL_W - x - 40
+    if d.textlength(text, font=f) > limit:
+        warnings.warn("添えが入りません（{}字・幅{}）: {}…".format(len(text), int(limit), text[:24]))
+    d.text((x, y), text, font=f, fill=INK_SUB)
 
 
 def stack(fig: dict) -> Image.Image:
@@ -121,12 +136,17 @@ def compare(fig: dict) -> Image.Image:
     im, d, top = _card(w, h, fig.get("title", ""))
     mx = max(float(i["value"]) for i in items) or 1
     y = top
+    bx = int(w * 0.26)
+    nf = F(typo.BODY, 800)
+    # **棒の右に置く添えの幅を、実際に測って空ける。** 300px 固定だったため、
+    # 「127億9780万円（3割引いた後）」が右端で切れていた（2026-10-09）
+    room = max(d.textlength(str(i.get("note", i["value"])), font=nf) for i in items) + 40
+    span = max(int(w - bx - room), 200)
     for it in items:
         is_focus = str(it["label"]) == focus
         col = SERIES[0] if is_focus else MUTED
         d.text((58, y + 14), str(it["label"]), font=F(30, 900 if is_focus else 700), fill=INK)
-        bx = int(w * 0.26)
-        bw = int((w - bx - 300) * float(it["value"]) / mx)
+        bw = int(span * float(it["value"]) / mx)
         d.rounded_rectangle([bx, y + 8, bx + max(bw, 4), y + 66], radius=6, fill=col)
         note = str(it.get("note", it["value"]))
         d.text((bx + max(bw, 4) + 20, y + 14), note, font=F(typo.BODY, 800),
@@ -142,7 +162,9 @@ def timeline(fig: dict) -> Image.Image:
     これからの予定なら `charts4.schedule`。
     """
     items = fig["items"]
-    w, h = typo.PANEL_W, 400
+    # **note を書いても黙って消えていた**（2026-10-09）。書いたときだけ板を伸ばす
+    _extra = 36 if fig.get("note") else 0
+    w, h = typo.PANEL_W, 400 + _extra
     im, d, top = _card(w, h, fig.get("title", ""))
     y = top + 160
     x0, x1 = 150, w - 110
@@ -157,18 +179,15 @@ def timeline(fig: dict) -> Image.Image:
         note = str(it.get("note", ""))
         if note:
             width = min(step - 40, 210)
-            lines, cur = [], ""
-            for ch in note:
-                cur += ch
-                if d.textlength(cur, font=F(typo.NOTE, 600)) > width:
-                    lines.append(cur)
-                    cur = ""
-            if cur:
-                lines.append(cur)
-            for i, ln in enumerate(lines[:4]):
-                tw = d.textlength(ln, font=F(typo.NOTE, 600))
-                d.text((x - tw / 2, y - 54 - (len(lines[:4]) - 1 - i) * 30), ln,
-                       font=F(typo.NOTE, 600), fill=INK_SUB)
+            nf = F(typo.NOTE, 600)
+            # **文字数だけで切ると、行頭に「）」や「。」が来る**（2026-10-09 に年表で踏んだ）。
+            # 折り返しは typo.wrap に一本化する決まりなのに、ここだけ守っていなかった
+            lines = typo.wrap(d, note, nf, width, 4)
+            for i, ln in enumerate(lines):
+                tw = d.textlength(ln, font=nf)
+                d.text((x - tw / 2, y - 54 - (len(lines) - 1 - i) * 30), ln,
+                       font=nf, fill=INK_SUB)
+    _note(d, fig.get("note", ""), 58, h - 4)
     return im
 
 
@@ -179,7 +198,9 @@ def flow(fig: dict) -> Image.Image:
     """
     items = fig["items"]
     n = len(items)
-    w, h = typo.PANEL_W, 420
+    # **note を書いても黙って消えていた**（2026-10-09）。書いたときだけ板を伸ばす
+    _extra = 36 if fig.get("note") else 0
+    w, h = typo.PANEL_W, 420 + _extra
     im, d, top = _card(w, h, fig.get("title", ""))
     bw = max((w - 140 - (n - 1) * 80) // max(n, 1), 220)
     y = top + 16
@@ -195,12 +216,13 @@ def flow(fig: dict) -> Image.Image:
         else:
             d.text((x + 20, y + 52), str(it["label"]), font=F(typo.BODY), fill="white",
                    stroke_width=3, stroke_fill=(16, 20, 28))
-        _note(d, str(it.get("note", "")), x, y + 170)
+        _note(d, str(it.get("note", "")), x, y + 170, bw + 60)
         if i < n - 1:
             ax = x + bw + 16
             d.line([(ax, y + 76), (ax + 44, y + 76)], fill=INK_SUB, width=5)
             d.polygon([(ax + 44, y + 62), (ax + 44, y + 90), (ax + 68, y + 76)], fill=INK_SUB)
         x += bw + 80
+    _note(d, fig.get("note", ""), 58, h - 4)
     return im
 
 
@@ -210,7 +232,9 @@ def bars(fig: dict) -> Image.Image:
     アイコンを添えるなら `charts6.icon_list`。
     """
     items = fig["items"]
-    w, h = typo.PANEL_W, 120 + len(items) * 116
+    # **note を書いても黙って消えていた**（2026-10-09）。書いたときだけ板を伸ばす
+    _extra = 36 if fig.get("note") else 0
+    w, h = typo.PANEL_W, 120 + len(items) * 116 + _extra
     im, d, top = _card(w, h, fig.get("title", ""))
     y = top
     for n, it in enumerate(items, 1):
@@ -221,6 +245,7 @@ def bars(fig: dict) -> Image.Image:
         d.text((140, y - 2), str(it["label"]), font=F(typo.BODY), fill=INK)
         _note(d, str(it.get("note", "")), 140, y + 54)
         y += 116
+    _note(d, fig.get("note", ""), 58, h - 4)
     return im
 
 
@@ -249,9 +274,11 @@ def table(fig: dict) -> Image.Image:
     """
     cols = fig.get("cols", [])
     items = fig["items"]
-    w, h = typo.PANEL_W, 180 + len(items) * (typo.ROW + 14)
+    w, h = typo.PANEL_W, 180 + len(items) * (typo.ROW + 14) + (36 if fig.get("note") else 0)
     im, d, top = _card(w, h, fig.get("title", ""))
-    label_w = int(w * 0.32)
+    # **見出しの列が広すぎて、値の列が 371px しかなかった**（2026-10-09）。
+    # 値が 28px まで縮んで、見出しだけ 48px という不揃いな表になっていた
+    label_w = int(w * 0.28)
     cw = (w - label_w - 80) // max(len(cols), 1)
     for i, c in enumerate(cols):
         d.text((label_w + i * cw, top), str(c), font=F(typo.NOTE + 4, 800), fill=INK_SUB)
@@ -264,10 +291,19 @@ def table(fig: dict) -> Image.Image:
         d.text((58, y + 4), str(it["label"]), font=F(typo.BODY, 800), fill=INK)
         for i, v in enumerate(it.get("values", [])):
             strong = bool(it.get("strong")) and i == len(it.get("values", [])) - 1
-            d.text((label_w + i * cw, y + 2), str(v),
-                   font=F(typo.BODY + (4 if strong else 0), 900 if strong else 700),
+            weight = 900 if strong else 700
+            # **列の幅を超えた値が、隣の列に重なって読めなくなっていた**（2026-10-09）。
+            # 入るまで下げる。28px でも入らないなら、言葉のほうが長すぎる
+            size = typo.BODY + (4 if strong else 0)
+            while size > 28 and d.textlength(str(v), font=F(size, weight)) > cw - 20:
+                size -= 2
+            if d.textlength(str(v), font=F(size, weight)) > cw - 20:
+                warnings.warn("表の値が列に入りません（幅{}）: {}".format(int(cw - 20), v))
+            d.text((label_w + i * cw, y + 2), str(v), font=F(size, weight),
                    fill=SERIES[1] if strong else INK)
         y += typo.ROW + 14
+    # **table だけ添えを描いていなかった**（2026-10-09）。台本に書いた note が黙って消えていた
+    _note(d, fig.get("note", ""), 58, h - 4)
     return im
 
 
@@ -277,7 +313,9 @@ def pie(fig: dict) -> Image.Image:
     真ん中に数字を置きたいなら `charts4.donut`（そちらのほうが使いでがある）。
     """
     items = fig["items"][:5]
-    w, h = typo.PANEL_W, 460
+    # **note を書いても黙って消えていた**（2026-10-09）。書いたときだけ板を伸ばす
+    _extra = 36 if fig.get("note") else 0
+    w, h = typo.PANEL_W, 460 + _extra
     im, d, top = _card(w, h, fig.get("title", ""))
     total = sum(float(i["value"]) for i in items) or 1
     cx, cy, r = int(w * 0.21), top + 160, 150
@@ -298,6 +336,7 @@ def pie(fig: dict) -> Image.Image:
         d.text((w - d.textlength(pct, font=pf) + 10, y - 2), pct, font=pf, fill=INK_SUB)
         _note(d, str(it.get("note", "")), lx + 52, y + 46)
         y += 92
+    _note(d, fig.get("note", ""), 58, h - 4)
     return im
 
 

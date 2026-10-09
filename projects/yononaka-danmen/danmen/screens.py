@@ -139,14 +139,11 @@ def quote(spec: dict) -> Image.Image:
     pad = 70
     box_w = W - pad * 2
     f = F(44, 700)
-    lines, cur = [], ""
-    for ch in body:
-        cur += ch
-        if d.textlength(cur, font=f) > box_w - 160 or ch == "\n":
-            lines.append(cur.rstrip("\n"))
-            cur = ""
-    if cur:
-        lines.append(cur)
+    # **文字数だけで切ると行頭に「、」が来る**（2026-10-09）。折り返しは typo.wrap に一本化する。
+    # 書き手が入れた改行は残したいので、そこで割ってから掛ける
+    lines = []
+    for para in body.split("\n"):
+        lines.extend(typo.wrap(d, para, f, box_w - 160) if para else [""])
     h = 150 + len(lines) * 68
     y0 = (H - h) // 2
     d.rounded_rectangle([pad, y0, W - pad, y0 + h], radius=18, fill=(252, 251, 247))

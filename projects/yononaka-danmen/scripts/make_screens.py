@@ -15,6 +15,8 @@ from PIL import Image
 
 from danmen import charts5, charts6, screens, sequence, talk, texture
 
+import build_screens
+
 ASSETS = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets")
 OUT = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
 PHOTO = str(ASSETS / "photos" / "pexels_18569250_A_contemporary_gas_station_wit.jpeg")
@@ -87,7 +89,8 @@ def main() -> int:
 
     # 板を背景に置いて書き出す
     for i, panel in enumerate(frames, 1):
-        im = place(texture.finish(panel.convert("RGB"), "panel").convert("RGBA"), bg)
+        # **RGB にすると板の落ち影が黒い枠になる**（2026-10-09）。質感のあとアルファを戻す
+        im = place(build_screens.finish_panel(panel), bg)
         texture.finish(im.convert("RGB"), "screen").save(OUT / "s{:02d}.png".format(i))
 
     # ④ 聞き手が割り込むときの画面。**立ち絵は入れない**。
