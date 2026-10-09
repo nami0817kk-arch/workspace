@@ -81,15 +81,19 @@ def starts_of(figs: list[dict], texts: list[str]) -> list[int]:
     return [min(x, max(len(texts) - 1, 0)) for x in at]
 
 
-def section_plan(sec: dict, texts: list[str]) -> dict[int, str]:
-    """{台詞の番号: 画面の名前}。"""
+def section_plan(sec: dict, texts: list[str], head: int = 0) -> dict[int, str]:
+    """{台詞の番号: 画面の名前}。`head` は節の前に置く画面の数（冒頭の掴み）。"""
     sid = str(sec["id"])
     figs = figures_of(sec)
-    out: dict[int, str] = {0: "s{}01".format(sid)}      # 中扉
+    out: dict[int, str] = {}
+    for i in range(head):                               # 冒頭の掴み。1行に1枚
+        out[i] = "s{}{:02d}".format(sid, i + 1)
+    out[head] = "s{}{:02d}".format(sid, head + 1)       # 中扉
     if not figs:
         return out
-    starts = starts_of(figs, texts)
-    k = 2                                                # 画面の通番（中扉の次から）
+    starts = starts_of(figs[:], texts[head:])
+    starts = [x + head for x in starts]
+    k = head + 2                                         # 画面の通番（中扉の次から）
     for i, fig in enumerate(figs):
         lo = starts[i]
         hi = starts[i + 1] if i + 1 < len(figs) else len(texts)
@@ -131,23 +135,34 @@ def main() -> int:
 
     plan, rows, lost = {}, [], 0
     for s, idxs in spots.items():
-        pl = section_plan(secs[s], says[s])
+        head = 2 if s == "00" and doc.get("hook") else 0
+        pl = section_plan(secs[s], says[s], head)
         for at, name in pl.items():
             plan[idxs[at]] = name
-        n = 1 + sum(sheets(f) for f in figures_of(secs[s]))
+        n = head + 1 + sum(sheets(f) for f in figures_of(secs[s]))
         lost += n - len(pl)
         rows.append("  {} 台詞{:>3}行 / 画面{:>3}枚 → {:>3}か所{}".format(
             s, len(idxs), n, len(pl), "  ← {}枚が余る".format(n - len(pl)) if n > len(pl) else ""))
 
-    first = {idxs[0] for idxs in spots.values() if idxs}
+    # **節の頭で立ち絵を出す。** ただし冒頭の掴みは全画面なので、人は出さない
+    first, none_at = {}, set()
+    for sid2, idxs in spots.items():
+        if not idxs:
+            continue
+        head = 2 if sid2 == "00" and doc.get("hook") else 0
+        if head:
+            none_at.add(idxs[0])
+        first[idxs[head]] = "auto"
     out = []
     for i, ln in enumerate(src):
         indent = " " * (len(ln) - len(ln.lstrip()))
         if i in plan:
             out.append("{}- screen: {}".format(indent, plan[i]))
+        if i in none_at:
+            out.append("{}- cast: なし".format(indent))
         if i in first:
             # **`cast:` が無いと movie.py は立ち絵を1人も重ねない**（2026-10-09）
-            out.append("{}- cast: auto".format(indent))
+            out.append("{}- cast: {}".format(indent, first[i]))
         out.append(ln)
     p.write_text("\n".join(out) + "\n", encoding="utf-8")
 

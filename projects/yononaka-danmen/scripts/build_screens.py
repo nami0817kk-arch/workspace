@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from PIL import Image
 
-from danmen import figures, screens, sequence, texture
+from danmen import figures, fullscreen, screens, sequence, texture
 
 OUT = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
 PHOTOS = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/photos")
@@ -106,6 +106,14 @@ def build(path: Path, only: str | None) -> int:
         kind = KINDS.get(sid, "")
         secs = sequence.SECTIONS.get(kind, 0)
         frames: list[Image.Image] = []
+
+        # ⓪ 冒頭の10秒。**ここで離脱が決まる**（CLAUDE.md）。
+        #    いちばん強い数字を理由を言わずに出し、その数字から問いを立てる
+        if sid == "00" and doc.get("hook"):
+            h = dict(doc["hook"])
+            h["photo"] = photo
+            frames.append(fullscreen.number(h).convert("RGB"))
+            frames.append(screens.title({"photo": photo, "lines": h.get("question", [])}))
 
         # ① 節の中扉。何節目で何を見るのか
         frames.append(screens.chapter({
