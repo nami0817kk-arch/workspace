@@ -11,6 +11,10 @@
 3. 返ってきた絵を、**顔の外（髪・服）が一致するように**拡大率とずれを自動で探して
    のっぺらぼうに重ねる（`scripts/align_faces.py`。誤差は19前後に収まる）
 4. **顔の範囲だけ**を取り出して、のっぺらぼうに載せる（肌の色の差は平均で補正）
+5. **白目・瞳のハイライトの黒い点を消す。** Gemini の絵は透明だった所が黒い点になって
+   返ってくる（小倉の9枚中7枚にあった）。`scripts/clean_highlights.py` →
+   `scripts/clean_specks.py` → `scripts/clean_specks.py --gray` の順に通し、
+   目を3倍以上に拡大して前後を見比べる。消したあとは動画のコマでも見る
 
 **パーツを切り貼りする方式はやめた。** 目・眉・口を別々に描かせて私が座標を測って
 貼ると、縮尺・位置・左右・太さがずれ続け、30回以上直しても正しくならなかった。
@@ -19,14 +23,16 @@
     face(who, expr="normal", mouth=0, blink=False)   … その瞬間の絵
     load(who, height, ...)                            … 高さを指定して読む
 
-口パクと瞬きは「ふつう」の顔のときだけ動かす（口 小・口 大・目を閉じた絵がある）。
+口パクと瞬きは「ふつう」の顔のときだけ動かす。**口のあたり・目のあたりだけを差し替える**
+（まるごと替えると目まで替わってちらつく）。
 ほかの表情は口を開け閉めしない。表情を出している数秒は、その絵を止めて見せる。
 """
 from __future__ import annotations
 
 from pathlib import Path
 
-from PIL import Image
+import numpy as np
+from PIL import Image, ImageFilter
 
 BASE = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/characters")
 
@@ -39,8 +45,9 @@ EXPR = {
     "pout": "pout",          # 不満
     "trouble": "trouble",    # 困る
 }
-# 口パクの絵（ふつうの顔のときだけ）。0 閉じ / 1 小 / 2・3 大
-TALK = {0: "normal", 1: "talk_small", 2: "talk_big", 3: "talk_big"}
+# 口パクの絵（ふつうの顔のときだけ）。0 閉じ / 1・2 小 / 3 大
+# **2 を「大」にすると叫んでいるように見える**（2026-10-09。喋っているコマの55%が大だった）
+TALK = {0: "normal", 1: "talk_small", 2: "talk_small", 3: "talk_big"}
 BLINK = "blink"
 
 _cache: dict = {}
@@ -61,18 +68,82 @@ def has(who: str) -> bool:
     return (BASE / who / "normal.png").exists()
 
 
+def _rows_split(who: str) -> int:
+    """目と口の境目の高さ。**絵の差分から自動で決める**（座標を測らない）。
+
+    瞬きの絵とふつうの絵の差は目のあたりに、口 大の絵との差は口のあたりに出る。
+    その2つの帯のあいだを境目にする。
+    """
+    key = ("split", who)
+    if key in _cache:
+        return _cache[key]
+    nm = np.asarray(_img(who, "normal").convert("RGB")).astype(np.int16)
+
+    def band(name):
+        d = (np.abs(np.asarray(_img(who, name).convert("RGB")).astype(np.int16) - nm).sum(axis=2) > 60)
+        r = d.sum(axis=1)
+        return r
+
+    # 口 大との差は「眉」「目」「口」の帯に分かれる。**いちばん下の帯が口**。
+    # その上の帯の下端と、口の帯の上端のあいだを境目にする
+    # （最初は瞬きの差のいちばん強い行から辿ったら、眉の帯で止まって y319 になった）
+    r = band("talk_big")
+    on = [i for i, v in enumerate(r) if v > 8]
+    bands, b0 = [], on[0]
+    for a, b in zip(on, on[1:]):
+        if b - a > 6:
+            bands.append((b0, a)); b0 = b
+    bands.append((b0, on[-1]))
+    bands = [bd for bd in bands if r[bd[0]:bd[1] + 1].sum() > 200]
+    end, start = bands[-2][1], bands[-1][0]
+    _cache[key] = (end + start) // 2
+    return _cache[key]
+
+
+def _swap(who: str, base: Image.Image, name: str, lower: bool) -> Image.Image:
+    """base の、目のあたり（lower=False）か口のあたり（lower=True）だけを name の絵に替える。
+
+    **表情の絵をまるごと替えると、目まで替わる。** 口 小・口 大の目は Gemini が描いた目で、
+    ふつうの顔の目と形やほくろが違い、喋るたびに目がちらついた（2026-10-09）。
+    9枚とも同じ位置に重ねてあるので、差のある所だけを切り替えれば足りる。
+    """
+    key = ("swap", who, name, lower)
+    if key not in _cache:
+        src = _img(who, name)
+        a = np.asarray(src.convert("RGB")).astype(np.int16)
+        n = np.asarray(_img(who, "normal").convert("RGB")).astype(np.int16)
+        d = (np.abs(a - n).sum(axis=2) > 40)
+        split = _rows_split(who)
+        if lower:
+            d[:split] = False
+        else:
+            d[split:] = False
+        m = Image.fromarray((d * 255).astype(np.uint8))
+        m = m.filter(ImageFilter.MaxFilter(11)).filter(ImageFilter.GaussianBlur(3))
+        _cache[key] = (src, m)
+    src, m = _cache[key]
+    return Image.composite(src, base, m)
+
+
 def face(who: str, expr: str = "normal", mouth: int = 0, blink: bool = False) -> Image.Image:
     """その瞬間の絵。
 
     expr  … normal / surprise / smile / wonder / pout / trouble
-    mouth … 0〜3（ふつうの顔のときだけ効く）
-    blink … True で目を閉じた絵（ふつうの顔で口を閉じているときだけ効く）
+    mouth … 0〜3（ふつうの顔のときだけ効く。口のあたりだけ替える）
+    blink … True で目を閉じる（ふつうの顔のときだけ効く。目のあたりだけ替える）
     """
     if expr != "normal":
         return _img(who, EXPR.get(expr, "normal"))
-    if blink and not mouth:
-        return _img(who, BLINK)
-    return _img(who, TALK.get(int(mouth), "normal"))
+    key = ("face", who, int(mouth), bool(blink))
+    if key not in _cache:
+        im = _img(who, "normal")
+        if blink:
+            im = _swap(who, im, BLINK, lower=False)
+        talk = TALK.get(int(mouth), "normal")
+        if talk != "normal":
+            im = _swap(who, im, talk, lower=True)
+        _cache[key] = im
+    return _cache[key]
 
 
 def load(who: str, height: int, expr: str = "normal", mouth: int = 0,
