@@ -1605,3 +1605,45 @@ def test_名前の途中に普通名詞があっても名前とみなす():
     from src.script_model import Script
     assert check_title_subject(Script(title="ジャンニ・インファンティーノ会長に、欧州4大リーグが突きつけたもの")).ok
     assert check_title_subject(Script(title="インファンティーノ会長に、欧州4大リーグが突きつけたもの")).ok
+
+
+def test_シリーズの回は尺が6分まで():
+    """ニュースの210秒をシリーズに当てると、全部 × になる（2026-10-09 未明に8本で踏んだ）。
+
+    シリーズの回は本編4〜6分が決まり（2026-09-28「共通の作り」）。
+    8本中8本に出る × は、読む側が無視するようになるだけで害になる。
+    """
+    from src.review import _duration
+
+    assert _duration(259.0).ok is False                      # ニュースなら長すぎる
+    assert _duration(259.0, "ユニフォームとエンブレムの歴史").ok is True
+    assert _duration(400.0, "ユニフォームとエンブレムの歴史").ok is False   # 6分は超えられない
+    assert _duration(30.0, "スタジアム紹介").ok is False       # 短すぎる側は変わらない
+
+
+def test_シリーズの回は一言のぶん1行だけ待つ():
+    """シリーズの回は「クラブを表す一言 → タイトル → つかみ」の3行（2026-09-21 指示）。
+
+    1行目だけを見ると、一言を読んでいる回が全部 × になる。2行目までにタイトルがあればよい。
+    **ニュースの回は今までどおり1行目だけ**（待つと冒頭の1行が死ぬ）。
+    """
+    from src.review import check_opening_title
+    from src.script_model import parse_script
+
+    body = ("---\ntitle: {t}\n{s}---\n\n## オープニング\n\n"
+            "キャスター: 赤いシャツ、赤いパンツ、赤いソックス。\n"
+            "キャスター: リヴァプールの赤は、一度に完成していない。\n")
+    title = "リヴァプールの赤は、一度に完成していない"
+
+    news = parse_script(body.format(t=title, s=""))
+    assert check_opening_title(news).ok is False, "ニュースの回で一言を許してはいけない"
+
+    series = parse_script(body.format(t=title, s="series: ユニフォームとエンブレムの歴史\n"))
+    got = check_opening_title(series)
+    assert got.ok is True and "2行目" in got.detail
+
+    # 2行目にもタイトルが無ければ、シリーズでも ×
+    far = parse_script(
+        "---\ntitle: {t}\nseries: X\n---\n\n## オープニング\n\n"
+        "キャスター: ひとこと。\nキャスター: ふたこと。\n".format(t=title))
+    assert check_opening_title(far).ok is False

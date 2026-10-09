@@ -30,6 +30,9 @@ MIN_SECONDS = 60
 # メッシの代表引退のように、引用が主役で中身が濃い回は3分でも成立する。
 # 短く詰めるために発言を削るのは本末転倒
 MAX_SECONDS = 210
+# シリーズの回は本編4〜6分（2026-09-28「共通の作り」）。ニュースの210秒を当てると
+# シリーズが全部 × になる（2026-10-09 未明に8本で踏んだ）
+SERIES_MAX_SECONDS = 360
 
 
 @dataclass
@@ -125,7 +128,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(check_quote_speed(out_dir, portrait))
     findings.append(check_tail_silence(script, out_dir))
     if duration is not None:
-        findings.append(_duration(duration))
+        findings.append(_duration(duration, str((script.meta or {}).get("series") or "")))
     return findings
 
 
@@ -1185,23 +1188,34 @@ def check_opening_title(script: Script) -> Finding:
     参考4本は全部、最初の2〜5秒でタイトルをそのまま読み上げていた。
     クリックした人が「これで合っている」と確かめられる作りになっている。
     """
-    first = ""
+    # **シリーズの回は「クラブを表す一言 → タイトル → つかみ」の3行**（2026-09-21 指示
+    # 「最初にクラブを表す一言を述べてから始める」）。1行目だけを見ると、一言を
+    # 読んでいる回が全部 × になる（2026-10-09 未明に8本で踏んだ）。
+    # **一言のぶん1行だけ待つ**。2行目にもタイトルが無ければ、今までどおり ×
+    heads: list[str] = []
     for scene in script.scenes:
         for line in scene.lines:
             if (line.text or "").strip():
-                first = line.text.strip()
+                heads.append(line.text.strip())
+            if len(heads) >= 2:
                 break
-        if first:
+        if len(heads) >= 2:
             break
-    if not first:
+    if not heads:
         return Finding(False, "1行目", "読み上げる文がありません")
+    first = heads[0]
+    series = str((script.meta or {}).get("series") or "")
+    look = heads[:2] if series else heads[:1]
 
-    said, title = _bare(first), _bare(script.title)
-    # タイトルの一部を拾っただけ（「アーセナル」だけ読んで本題に入らない）を
-    # 通さないため、含まれる側には長さを求める
-    enough = len(said) >= max(4, len(title) * 0.6)
-    if said and title and (title in said or (said in title and enough)):
-        return Finding(True, "1行目", "タイトルを読んでいます")
+    title = _bare(script.title)
+    for number, text in enumerate(look):
+        said = _bare(text)
+        # タイトルの一部を拾っただけ（「アーセナル」だけ読んで本題に入らない）を
+        # 通さないため、含まれる側には長さを求める
+        enough = len(said) >= max(4, len(title) * 0.6)
+        if said and title and (title in said or (said in title and enough)):
+            where = "1行目" if number == 0 else "2行目（1行目はクラブを表す一言）"
+            return Finding(True, "1行目", f"タイトルを読んでいます（{where}）")
     return Finding(
         False, "1行目",
         f"タイトルと違います（1行目『{first[:20]}…』）。"
@@ -1717,13 +1731,22 @@ def _marks(script: Script) -> Finding:
     return Finding(True, "チャプター", f"{len(marks)}章")
 
 
-def _duration(seconds: float) -> Finding:
+def _duration(seconds: float, series: str = "") -> Finding:
+    """尺。**シリーズの回は6分まで**（2026-10-09 未明に直した）。
+
+    210秒はニュースの回の上限（2026-09-07「尺は1〜3分半」）。ところが
+    シリーズの回は **本編4〜6分** が決まり（2026-09-28「共通の作り」）なので、
+    10/9 のシリーズ8本が**全部この × で止まっていた**。
+    8本中8本に出る × は、読む側が無視するようになるだけで害になる
+    （「✓ しか出ない点検は、壊れていても気づけない」の裏返し）。
+    """
     shown = f"{int(seconds) // 60}分{int(seconds) % 60}秒"
+    limit = SERIES_MAX_SECONDS if series else MAX_SECONDS
     if seconds < MIN_SECONDS:
         return Finding(False, "尺", f"{shown}　短すぎます（{MIN_SECONDS // 60}分以上に）")
-    if seconds > MAX_SECONDS:
-        return Finding(False, "尺", f"{shown}　長すぎます（{MAX_SECONDS // 60}分まで）")
-    return Finding(True, "尺", shown)
+    if seconds > limit:
+        return Finding(False, "尺", f"{shown}　長すぎます（{limit // 60}分まで）")
+    return Finding(True, "尺", shown + ("　シリーズの回（6分まで）" if series else ""))
 
 
 def check_sources(urls: list[str], fetch=None) -> list[Finding]:

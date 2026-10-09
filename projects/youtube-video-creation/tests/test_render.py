@@ -1074,3 +1074,29 @@ def test_写真と横に並べる板も置き場からはみ出さない(tmp_pat
     short = PILImage.new("RGBA", (400, room - 100), (0, 255, 0, 255))
     placed = renderer._place_beside(canvas, [short, tall], top, room, 26, 1.0)
     assert all(y1 <= bottom for _, _, _, y1 in placed), placed
+
+
+def test_亡くなった人の数は自動で黄色くしない():
+    """**追悼の数を見出しの色で飾らない**（2026-10-09 未明）。
+
+    リヴァプールのユニフォームの回で「ヒルズボロで亡くなった**97人**を悼み」の 97人 が、
+    語りの数字を自動で強調する仕組み（`AUTO_STRONG`）で黄色く出ていた
+    （ショートの `qc.png` を目で見て気づいた）。
+    同じ行のほかの数字（年号など）は今までどおり強調する。
+    """
+    from src.render import AUTO_STRONG, MOURNING, PEOPLE_COUNT
+
+    def strong(text):
+        spans = [(m.start(), m.end()) for m in AUTO_STRONG.finditer(text)]
+        if MOURNING.search(text):
+            spans = [(a, b) for a, b in spans if not PEOPLE_COUNT.fullmatch(text[a:b])]
+        return [text[a:b] for a, b in spans]
+
+    got = strong("ヒルズボロで亡くなった97人を悼み、1993年に2つの永遠の炎が加わります")
+    assert "97人" not in got, "追悼の数が黄色のまま"
+    assert "1993年" in got, "同じ行の年号まで落としてはいけない"
+
+    # 追悼の言葉が無い行は、今までどおり「◯人」も強調する
+    assert "2357人" in strong("収容は1万2357人。20クラブでいちばん小さい本拠地です")
+    # 死者・犠牲・遺族でも効く
+    assert "96人" not in strong("この事故で96人が犠牲になりました")
