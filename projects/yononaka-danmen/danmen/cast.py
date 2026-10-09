@@ -57,6 +57,14 @@ EXPR = {
 # **2 を「大」にすると叫んでいるように見える**（2026-10-09。喋っているコマの55%が大だった）
 TALK = {0: "normal", 1: "talk_small", 2: "talk_small", 3: "talk_big"}
 BLINK = "blink"
+# 口の形（lipsync.visemes が返す名前）→ 口の絵。**人ごとに使える絵が違う**（2026-10-10）
+# 岬の surprise / grimace は鼻まで描き直されているので、喋りには使わない
+MOUTH = {
+    # a- … 中くらいの「あ」（声が小さめの所）。小倉は「え？」の口がもともと中くらいなので同じ絵
+    "kikite": {"a": "huh", "a-": "huh", "i": "talk_small", "e": "talk_small", "u": "oh", "o": "oh"},
+    "katari": {"a": "talk_big", "a-": "trouble", "i": "talk_small", "e": "trouble",
+               "u": "wonder", "o": "wonder"},
+}
 
 _cache: dict = {}
 
@@ -146,7 +154,8 @@ def face(who: str, expr: str = "normal", mouth: int = 0, blink: bool = False) ->
     """その瞬間の絵。
 
     expr  … normal / surprise / smile / wonder / pout / trouble
-    mouth … 0〜3（ふつうの顔のときだけ効く。口のあたりだけ替える）
+    mouth … 口の形 closed / a / i / u / e / o（lipsync.visemes）。古い 0〜3 も受ける。
+            ふつうの顔のときだけ効く。口のあたりだけ替える
     blink … True で目を閉じる（ふつうの顔のときだけ効く。目のあたりだけ替える）
     """
     if expr != "normal":
@@ -154,12 +163,15 @@ def face(who: str, expr: str = "normal", mouth: int = 0, blink: bool = False) ->
         if not (BASE / who / (name + ".png")).exists():
             name = "normal"
         return _img(who, name)
-    key = ("face", who, int(mouth), bool(blink))
+    key = ("face", who, mouth, bool(blink))
     if key not in _cache:
         im = _img(who, "normal")
         if blink:
             im = _swap(who, im, BLINK, lower=False)
-        talk = TALK.get(int(mouth), "normal")
+        if isinstance(mouth, str):
+            talk = "normal" if mouth == "closed" else MOUTH[who][mouth]
+        else:
+            talk = TALK.get(int(mouth), "normal")
         if talk != "normal":
             im = _swap(who, im, talk, lower=True)
         _cache[key] = im
@@ -169,7 +181,7 @@ def face(who: str, expr: str = "normal", mouth: int = 0, blink: bool = False) ->
 def load(who: str, height: int, expr: str = "normal", mouth: int = 0,
          blink: bool = False) -> Image.Image:
     """指定の高さに縮めて返す。同じ組み合わせは使い回す。"""
-    key = ("load", who, height, expr, int(mouth), bool(blink))
+    key = ("load", who, height, expr, mouth, bool(blink))
     if key not in _cache:
         im = face(who, expr, mouth, blink)
         s = height / im.height
