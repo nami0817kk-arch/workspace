@@ -106,6 +106,11 @@ def _rows_split(who: str) -> int:
     # **いちばん差の大きい帯が口。** 岬は口の下にあごの線の差の帯があり、
     # 最後の帯を口とみなすと境目があごになった（2026-10-10）
     sums = [int(r[a:b + 1].sum()) for a, b in bands]
+    if len(bands) == 1:
+        # 口 大の絵の目がふつうと同じなら、差は口の帯だけ。その少し上を境目にする
+        # （小倉の口 大を「え？」の絵に替えたとき、2026-10-10）
+        _cache[key] = max(bands[0][0] - 8, 0)
+        return _cache[key]
     mi = max(range(1, len(bands)), key=lambda i: sums[i])
     end, start = bands[mi - 1][1], bands[mi][0]
     _cache[key] = (end + start) // 2
