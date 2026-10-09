@@ -300,6 +300,7 @@
     "videos.insert": 10,
     "thumbnails.set": 10,
     "playlistItems.insert": 5,
-    "playlists.insert": 1
+    "playlists.insert": 1,
+    "videos.list": 1
   }
 }
