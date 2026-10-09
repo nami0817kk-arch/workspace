@@ -4,25 +4,35 @@
 # 置き場: ../../../output/yononaka-danmen/assets
 assets_dir: ../../../output/yononaka-danmen/assets
 
-# 声は AivisSpeech（VOICEVOX ではない）。起動していないと作れない。
+# 声のエンジン。人ごとに engine_url があればそちらを使う（岬は VOICEVOX、小倉は AivisSpeech）。
+# どちらも起動していないと作れない。
 engine_url: http://127.0.0.1:10101
+# **2つのエンジンで出てくる音の形式が違う**（VOICEVOX 24000Hz / AivisSpeech 44100Hz）。
+# つなぐと壊れるので、どちらもこの値で出させる
+sample_rate: 44100
 
 cast:
   語り:
-    name: 阿井田 茂          # クレジットに出す名前
-    style_id: 1310138977     # Calm
-    license: ACML 1.0        # 商用可（2026-10-06 に規約の見出しで確認）
+    # 2026-10-10 ユーザー決定「剣崎にする」（阿井田茂 Calm から変更）。
+    # 歴史の地層の語りと同じ声。チャンネルが違えば同じ声でよい（2026-09-19 の決め事）
+    name: 剣崎雌雄
+    credit: VOICEVOX:剣崎雌雄   # 規約でクレジット必須。概要欄に出す
+    engine_url: http://127.0.0.1:50021   # VOICEVOX（AivisSpeech ではない）
+    style_id: 21
     speed: 1.0
     pitch: 0.0
-    # 2026-10-06 ユーザー決定「基本は1で、文ごとに変える」
     intonation: 1.0
-    tempo_dynamics: 1.0
+    tempo_dynamics: 1.0      # VOICEVOX には無い項目（送っても無視される）
+    # 歴史の地層で「男性側は、抑揚はかなり控えめ」と言われた声。強さの効きを3割にし、上限を置く
+    tone_strength: 0.3
+    max_intonation: 1.15
     pre: 0.10
     post: 0.25
     image: characters/katari.png
     side: left
   聞き:
     name: 花音
+    credit: AivisSpeech:花音
     style_id: 1325133120     # ノーマル（2026-10-06 ユーザーが まお・まい・花音 を聴き比べて選んだ）
     license: ACML 1.0       # 商用可
     speed: 1.0

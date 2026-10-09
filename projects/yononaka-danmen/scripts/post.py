@@ -75,6 +75,14 @@ def description(sc: dict) -> str:
     when = str(sc.get("date", "")).strip()
     if when:
         lines += ["価格・数字は {} 時点のものです。".format(when), ""]
+    # 声のクレジット（VOICEVOX:剣崎雌雄 は規約で必須）。config.yaml の credit から
+    try:
+        cfg = yaml.safe_load((ROOT / "config.yaml").read_text(encoding="utf-8"))
+        credits = [str(p["credit"]) for p in cfg.get("cast", {}).values() if p.get("credit")]
+    except FileNotFoundError:
+        credits = []
+    if credits:
+        lines += ["声：" + "、".join(credits), ""]
     lines += ["図はすべて自作です。", "運営：のこぎり社"]
     return "\n".join(lines).strip()
 

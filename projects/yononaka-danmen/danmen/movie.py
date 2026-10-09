@@ -357,7 +357,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         # 単位のあとに数字が続くと桁として読めない（「1リットル175円」→
         # 「イチナナゴエン」。2026-10-08 に実際に起きた）
         say = reading.reading(step["text"])
-        wav.write_bytes(tts.synth(cfg["engine_url"], say, style_id, **params))
+        wav.write_bytes(tts.synth(tts.engine_for(cfg, step["who"]), say, style_id, **params))
         wavs.append(wav)
         # 次の話者の行を先に見て、間を決める
         nxt = None

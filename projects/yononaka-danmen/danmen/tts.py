@@ -81,10 +81,21 @@ def params_for(cfg: dict, who: str, tone: str) -> tuple[int, dict]:
     t = cfg["tones"].get(tone)
     if t is None:
         raise SystemExit(f"強さ「{tone}」は config.yaml の tones にありません")
-    if "intonation" in t:     base["intonationScale"] = t["intonation"]
+    # tone_strength … 強さの効き（1 で tones の値そのまま、0.3 なら差の3割だけ）
+    k = float(person.get("tone_strength", 1.0))
+    if "intonation" in t:
+        base["intonationScale"] = person["intonation"] + (t["intonation"] - 1.0) * k
     if "tempo_dynamics" in t: base["tempoDynamicsScale"] = t["tempo_dynamics"]
-    if "speed" in t:          base["speedScale"] = t["speed"]
+    if "speed" in t:          base["speedScale"] = person["speed"] + (t["speed"] - 1.0) * k
+    if "max_intonation" in person:
+        base["intonationScale"] = min(base["intonationScale"], person["max_intonation"])
+    base["outputSamplingRate"] = int(cfg.get("sample_rate", 44100))
     return person["style_id"], base
+
+
+def engine_for(cfg: dict, who: str) -> str:
+    """その人の声を作るエンジンの URL（人ごとの指定が無ければ共通のもの）。"""
+    return cfg["cast"][who].get("engine_url") or cfg["engine_url"]
 
 
 def join_wavs(files: list[Path], dst: Path, gap_sec: float = 0.25) -> None:
@@ -122,7 +133,7 @@ def main() -> int:
     for i, (who, tone, text) in enumerate(lines):
         style_id, params = params_for(cfg, who, tone)
         p = work / f"{i:03d}_{who}_{tone}.wav"
-        p.write_bytes(synth(cfg["engine_url"], text, style_id, **params))
+        p.write_bytes(synth(engine_for(cfg, who), text, style_id, **params))
         made.append(p)
         print(f"  {i+1:>3}/{len(lines)}  {who}({tone})  {text[:28]}")
     join_wavs(made, out)
