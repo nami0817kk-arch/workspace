@@ -278,6 +278,232 @@ def test_控えは日本語で結果と一覧を並べる():
     assert "review" in text          # どれが review と同じ物差しかを控えにも書く
 
 
+# --- 台本と突き合わせて、板の中の変化を数に入れる（2026-10-09） ------------------------
+
+# 光らせる行だけが違う同じ年表。`card_look` は同じで、`highlight_row` だけが違う
+ROWS = [["1892年", "青と白"], ["1896年", "赤へ"], ["1964年", "全身の赤"]]
+CARDS = {
+    "crest_card": {"type": "timeline", "title": "エンブレム", "rows": ROWS},
+    "crest_1_card": {"type": "timeline", "title": "エンブレム", "rows": ROWS},
+    "crest_2_card": {"type": "timeline", "title": "エンブレム", "rows": ROWS, "highlight_row": 0},
+    "crest_3_card": {"type": "timeline", "title": "エンブレム", "rows": ROWS, "highlight_row": 2},
+    "colour_card": {"type": "table", "title": "ユニフォーム", "rows": ROWS},
+}
+
+
+def _lines(*rows) -> dict:
+    """(始まり, 長さ, カード, 写真, テロップ) の並びから script.json の形を作る。"""
+    return {"scenes": [{"title": "山場", "main": True, "lines": [
+        {"start": start, "duration": length, "card": card, "image": image, "telop": telop}
+        for start, length, card, image, telop in rows]}]}
+
+
+def test_光らせる行だけ替えたカードは画面が動いていると数える():
+    """**この回を × にしていた。**暗い板の中で1行の色が変わっても scene は 0.046 しか上がらない。"""
+    data = _lines(
+        (10.0, 5.0, "crest_1_card", "", "あ"),
+        (15.0, 5.0, "crest_2_card", "", "い"),
+        (20.0, 5.0, "crest_3_card", "", "う"),
+    )
+    moves = qc.visual_moves(data, CARDS)
+    assert [(at, tag) for at, _, tag in moves] == [(15.0, "光る行"), (20.0, "光る行")]
+    assert "光る行・光る点が動いた（crest_2_card）" in moves[0][1]
+
+
+def test_同じ中身のカードは名前が違っても動いたことにしない():
+    """`crest_card` と `crest_1_card` は中身が1字も違わない（台本の別名）。絵は変わらない。"""
+    data = _lines(
+        (10.0, 5.0, "crest_card", "", "あ"),
+        (15.0, 5.0, "crest_1_card", "", "い"),
+    )
+    assert qc.visual_moves(data, CARDS) == []
+
+
+def test_言葉だけ替わった行は動いたことにしない():
+    """テロップは行ごとに変わる。数に入れると「止まっている区間」が1つも出なくなる。"""
+    data = _lines(
+        (10.0, 5.0, "crest_2_card", "", "あ"),
+        (15.0, 5.0, "crest_2_card", "", "まったく別の言葉"),
+    )
+    assert qc.visual_moves(data, CARDS) == []
+
+
+def test_板の絵も写真も替わったら動いたと数える():
+    data = _lines(
+        (0.0, 5.0, None, "assets/stats/ll_espanyol_data0.png", "あ"),
+        (5.0, 5.0, None, "assets/stats/ll_espanyol_data1.png", "い"),
+        (10.0, 5.0, None, "assets/backgrounds/stadium_in.png", "う"),
+    )
+    moves = qc.visual_moves(data, CARDS)
+    assert [(at, tag) for at, _, tag in moves] == [(5.0, "板の絵替わり"), (10.0, "写真替わり")]
+    assert "ll_espanyol_data1.png" in moves[0][1]
+
+
+def test_カードの絵そのものが替わったら動いたと数える():
+    data = _lines(
+        (0.0, 5.0, "crest_2_card", "", "あ"),
+        (5.0, 5.0, "colour_card", "", "い"),
+    )
+    assert [tag for _, _, tag in qc.visual_moves(data, CARDS)] == ["カード替わり"]
+
+
+def test_台本にカードの中身が無ければ名前で見分ける():
+    """`cards` を渡さないときは `review.card_look` と同じく名前に落ちる。控えにもそう書く。"""
+    data = _lines(
+        (0.0, 5.0, "crest_1_card", "", "あ"),
+        (5.0, 5.0, "crest_2_card", "", "い"),
+    )
+    moves = qc.visual_moves(data, {})
+    assert len(moves) == 1
+    assert "名前で見分けた" in moves[0][1]
+
+
+def test_書き込みが増えた行も動いたと数える():
+    data = {"scenes": [{"title": "山場", "lines": [
+        {"start": 0.0, "duration": 5.0, "card": "crest_2_card", "marks": []},
+        {"start": 5.0, "duration": 5.0, "card": "crest_2_card", "marks": [{"kind": "circle"}]},
+    ]}]}
+    assert [tag for _, _, tag in qc.visual_moves(data, CARDS)] == ["赤ペン"]
+
+
+def test_start_の無い古い書き出しは長さを積んで数える_台本の根拠():
+    data = {"scenes": [{"title": "山場", "lines": [
+        {"duration": 4.0, "card": "crest_2_card"},
+        {"duration": 2.0, "card": "crest_3_card"},
+    ]}]}
+    assert [at for at, _, _ in qc.visual_moves(data, CARDS)] == [4.0]
+
+
+def test_台本に根拠のある時刻で区間を割る():
+    scores = [(6.0, 0.5), (24.0, 0.5)]
+    moves = [(12.0, "カードの光る行が動いた（crest_2_card）", "光る行"),
+             (18.0, "カードの光る行が動いた（crest_3_card）", "光る行")]
+    found = qc.stalls(scores, 30.0, threshold=0.06, moves=moves)
+    middle = next(s for s in found if s.start == 6.0)
+    assert middle.length == pytest.approx(18.0)
+    assert [(round(a, 1), round(d, 1)) for a, d in middle.pieces] == [
+        (6.0, 6.0), (12.0, 6.0), (18.0, 6.0)]
+    assert middle.worst == pytest.approx(6.0)
+
+
+def test_根拠が無い区間は割らない():
+    """**短いほうに倒さない。**台本に根拠が無ければ、今までどおり長いまま出す。"""
+    found = qc.stalls([(6.0, 0.5), (24.0, 0.5)], 30.0, threshold=0.06, moves=[])
+    middle = next(s for s in found if s.start == 6.0)
+    assert middle.pieces == [(6.0, 18.0)] and middle.worst == pytest.approx(18.0)
+
+
+def test_区間の端にかかる変化では割らない():
+    """0秒の切れ端を作らない（区間の始まりは、もともと scene が拾った変わり目）。"""
+    found = qc.stalls([(6.0, 0.5)], 30.0, threshold=0.06,
+                      moves=[(6.05, "板の絵が替わった", "板の絵替わり")])
+    assert found[-1].pieces == [(6.0, 24.0)]
+
+
+def _short(**kw) -> qc.Report:
+    base = dict(duration=54.0, portrait=True, step=5.0, outro=0.0, scene=qc.SCENE_SHORT,
+                subs_end=52.8, levels=[(k * 0.5, -17.0) for k in range(108)],
+                # 6秒ごとに大きく変わるが、0:06〜0:24 の18秒だけ scene が動かない
+                scores=[(6.0, 0.5)] + [(24.0 + k * 6.0, 0.5) for k in range(5)])
+    base.update(kw)
+    return _report(**base)
+
+
+def test_光る行が動いた区間は_バツ_にしない():
+    """壊れた例の裏返し。18秒のうち 6秒ごとに板の光る行が動いていれば、画面は動いている。"""
+    moves = [(12.0, "カードの光る行・光る点が動いた（crest_2_card）", "光る行"),
+             (18.0, "カードの光る行・光る点が動いた（crest_3_card）", "光る行")]
+    findings = qc.judge(_short(moves=moves, specs=5))
+    stuck = next(f for f in findings if f.label.startswith("画面が大きく変わらない"))
+    assert stuck.mark == "○"
+    assert "超え 0か所" in stuck.detail
+    # **黙って通さない。**何か所を割ったか、何を根拠に動いていると数えたかが出る
+    assert "台本の根拠で割った区間 1か所" in stuck.detail
+    assert any("台本では動いている" in line and "光る行・光る点が動いた" in line
+               for line in stuck.extra)
+
+
+def test_本当に何も変わらない区間は_バツ_のまま():
+    """同じ18秒でも、台本に根拠が無ければ ×。**これがこの道具の値打ち。**"""
+    stuck = next(f for f in qc.judge(_short(moves=[]))
+                 if f.label.startswith("画面が大きく変わらない"))
+    assert stuck.mark == "×"
+    assert "超え 1か所" in stuck.detail
+    assert "台本の根拠で割った区間" not in stuck.detail
+
+
+def test_割っても上限を超えて残る区間は_バツ_のまま():
+    """根拠が1つあっても、割った切れ端が上限を超えていれば ×（短いほうに倒さない）。"""
+    moves = [(8.1, "板の絵が替わった（a.png）", "板の絵替わり")]
+    stuck = next(f for f in qc.judge(_short(moves=moves, specs=5))
+                 if f.label.startswith("画面が大きく変わらない"))
+    assert stuck.mark == "×"
+    assert "超え 1か所" in stuck.detail          # 8.1〜24.0 の 15.9秒が残る
+    assert "台本の根拠で割った区間 1か所" in stuck.detail
+
+
+def test_台本のカードの中身が読めなければ控えにもそう書く():
+    moves = [(12.0, "カードが替わった（crest_2_card・台本にカードの中身が無いので名前で見分けた）",
+              "カード名替わり"),
+             (18.0, "カードが替わった（crest_3_card・台本にカードの中身が無いので名前で見分けた）",
+              "カード名替わり")]
+    stuck = next(f for f in qc.judge(_short(moves=moves, specs=0))
+                 if f.label.startswith("画面が大きく変わらない"))
+    assert "名前で見分けています" in stuck.detail
+
+
+def test_台本の中身は元の台本から読む(tmp_path: Path):
+    """`script.json` にはカードの名前しか残らないので、`scripts/<名前>.md` を見に行く。"""
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts" / "20261009_kit.md").write_text(
+        "---\ntitle: 見本\ncards:\n  crest_2_card:\n    type: timeline\n"
+        "    highlight_row: 0\n---\n\nキャスター: あ\n", encoding="utf-8")
+    (tmp_path / "output" / "20261009_kit_short").mkdir(parents=True)
+    # ショートは本編の台本から切り出すので、同じファイルを見る
+    specs = qc.card_specs(tmp_path / "output" / "20261009_kit_short")
+    assert specs["crest_2_card"]["highlight_row"] == 0
+    # 台本が無ければ空（今までどおりの数え方に落ちる）
+    (tmp_path / "output" / "20261009_other").mkdir()
+    assert qc.card_specs(tmp_path / "output" / "20261009_other") == {}
+
+
+def test_一覧は赤枠を出さずに金の札を添える():
+    """根拠のある所は「停滞」の赤枠ではなく、金の枠と札（「光る行」）。"""
+    frames = _frames([0.0, 5.0, 10.0], size=(180, 320))
+    plain = qc.sheet(frames, [(0.0, "第1節 あ")])
+    noted = qc.sheet(frames, [(0.0, "第1節 あ")], notes=[(5.0, 5.0, "光る行")])
+    alerted = qc.sheet(frames, [(0.0, "第1節 あ")], alerts=[(5.0, 5.0)])
+    assert qc.ALERT in [c for _, c in alerted.getcolors(maxcolors=1 << 20)]
+    assert qc.ALERT not in [c for _, c in noted.getcolors(maxcolors=1 << 20)]
+    assert noted.tobytes() != plain.tobytes()
+
+
+def test_赤枠と金の札は重ならない():
+    """上限を超えて残った切れ端には札を出さない（赤枠が出るので）。"""
+    moves = [(12.0, "板の絵が替わった（a.png）", "板の絵替わり"),
+             (14.0, "板の絵が替わった（b.png）", "板の絵替わり")]
+    found = qc.stalls([(6.0, 0.5), (24.0, 0.5)], 30.0, threshold=0.06, moves=moves)
+    # 切れ端は 6秒・2秒・10秒。札が付くのは真ん中の2秒だけで、10秒のほうは赤枠
+    assert qc.sheet_notes(found, 8.0) == [
+        (pytest.approx(12.0), pytest.approx(2.0), "板の絵替わり")]
+
+
+def test_控えに何を根拠に動いていると数えたかが出る():
+    moves = [(12.0, "カードの光る行・光る点が動いた（crest_2_card）", "光る行")]
+    rep = _short(moves=moves, specs=5)
+    text = qc.markdown(rep, qc.judge(rep), Path("output/x/qc.png"))
+    assert "台本の上で画面が動いた時刻 1か所" in text
+    assert "台本から読めたカードの中身 5件" in text
+    assert "光る行・光る点が動いた" in text
+    assert "金の枠と札" in text
+
+
+def test_台本の根拠が無い回は控えにもそう書く():
+    rep = _short(moves=[])
+    text = qc.markdown(rep, qc.judge(rep), Path("output/x/qc.png"))
+    assert "台本の根拠は使っていない" in text
+
+
 def test_時刻の書き方():
     assert qc.clock(0) == "0:00"
     assert qc.clock(287.0) == "4:47"
