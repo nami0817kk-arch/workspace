@@ -224,8 +224,8 @@ def load(who: str, height, expr="normal", mouth="closed", blink: bool = False):
 
 
 def put(im: Image.Image, who: str, mood: str, h: int, part: str = "bust",
-        right: int | None = None, left: int | None = None, bottom: int | None = None) -> None:
-    """古い呼び方（talk.py）。im に立ち絵を重ねる。"""
+        right: int | None = None, left: int | None = None, bottom: int | None = None) -> int:
+    """古い呼び方（talk.py）。im に立ち絵を重ねて、**置いた立ち絵の幅を返す**（吹き出しの位置に使う）。"""
     ch = bust(who, h, LEGACY.get(mood, mood), crop=part)
     b = im.height if bottom is None else bottom
     if right is not None:
@@ -233,3 +233,4 @@ def put(im: Image.Image, who: str, mood: str, h: int, part: str = "bust",
     else:
         x = left or 0
     im.alpha_composite(ch, (x, b - ch.height))
+    return ch.width

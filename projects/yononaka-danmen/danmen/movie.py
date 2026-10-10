@@ -79,7 +79,8 @@ def read_script(path: Path) -> list[dict]:
     for sec in data.get("sections", []):
         for line in sec.get("lines", []):
             # `short:` はショートに切り出すための印。**本編では読み飛ばす**
-            keys = [k for k in line if k != "short"] if isinstance(line, dict) else []
+            # `face:` は話す人の表情、`react:` は聞いている人の反応（どちらも書かなければ自動）
+            keys = [k for k in line if k not in ("short", "face", "react")] if isinstance(line, dict) else []
             if len(keys) != 1:
                 raise SystemExit("読めない行です（節 {}）: {}".format(sec.get("id"), line))
             key = keys[0]
@@ -93,25 +94,82 @@ def read_script(path: Path) -> list[dict]:
             m = re.match(r"^(?P<who>[^\s(（]+)\s*(?:[（(](?P<tone>[^）)]+)[）)])?$", key)
             if not m:
                 raise SystemExit("話者の書き方が読めません: {}".format(key))
-            out.append({"who": m["who"], "tone": m["tone"] or "ふつう", "text": str(val)})
+            out.append({"who": m["who"], "tone": m["tone"] or "ふつう", "text": str(val),
+                        "face": FACE_NAME.get(str(line.get("face", "")), line.get("face")),
+                        "react": FACE_NAME.get(str(line.get("react", "")), line.get("react"))})
     return out
 
 
-# 行の強さから表情を決める。**語り手と聞き手で意味が違う。**
-# 語り手の「強」は力をこめて話すこと、聞き手の「強」は驚くこと。
-# 表情の顔のまま口を動かす（cast.face が表情の目と口パクを組み合わせる）
-AUTO_MOOD = {
-    "katari": {"ふつう": "normal", "強": "serious", "特強": "serious", "抑": "normal"},
-    "kikite": {"ふつう": "normal", "強": "surprise", "特強": "surprise", "抑": "wonder"},
-}
-# 画面の左右に、いつも同じ人が立つ（入れ替わらない）
-SEATS = [("left", "katari"), ("right", "kikite")]
-LISTEN_MOOD = {"katari": "normal", "kikite": "normal"}      # 聞いているときの顔（瞬きはする）
+# ---- 表情（2026-10-10 に作り直した）----------------------------------------
+#
+# **岬はほとんど変えない**（ユーザー「男の表情はほとんど変わらずだよ」）。淡々と事実を置く人なので、
+# 台本に `face:` を書いた所だけ変える。
+# **小倉は台詞の中身で変える**（驚く・考え込む・むっとする・感心する）。聞いている間も、
+# 相手の台詞の**後半で**反応する（人は聞き終わる前に顔に出る。最初から変えると先回りに見える）。
+# 前は「行の強さ」だけで決めていて、作った絵の大半（困る・不満・しょんぼり…）が一度も出なかった。
+#
+# 台本の書き方（どちらも省略可。書けば自動より優先）:
+#     - 聞き: それ、ずるくないですか。
+#       face: 不満            ← 話す人の表情
+#     - 語り: 127億9780万円です。
+#       react: 驚き           ← 聞いている人の反応
+
+FACE_NAME = {"ふつう": "normal", "驚き": "surprise", "にっこり": "smile", "感心": "wonder",
+             "不満": "pout", "困る": "trouble", "くやしい": "grimace", "すぼめる": "pucker",
+             "え": "huh", "お": "oh", "しょんぼり": "sad", "真剣": "serious", "大笑い": "laugh",
+             "": None, "None": None}
+SEATS = [("left", "katari"), ("right", "kikite")]       # 左右に、いつも同じ人が立つ
+REACT_FROM = 0.55                                      # 聞き手が反応し始めるのは、台詞のこの割合から
+_NUM = re.compile(r"\d")
+# 驚く数字は、金額・人数・件数・倍だけ（日付や年数で反応すると、ずっと口が開いている）
+_BIG = re.compile(r"\d[\d,.]*\s*(億|万|円|人|件|倍)")
 
 
-def auto_mood(art: str, tone: str) -> str:
-    """その人の、その強さに合う表情。無ければ素の顔。"""
-    return AUTO_MOOD.get(art, {}).get(tone, "normal")
+def speak_face(art: str, step: dict) -> str:
+    """話している人の表情。"""
+    if step.get("face"):
+        return step["face"]
+    if art == "katari":
+        return "normal"                     # 岬は台本で書いた所だけ
+    t, tone = step["text"], step["tone"]
+    if tone in ("強", "特強"):
+        return "surprise"
+    if any(w in t for w in ("ずるい", "ずるく", "ひどい", "おかしくないですか")):
+        return "pout"
+    if "納得いかな" in t:
+        return "pout"
+    # 「〜じゃないんですね」「〜ないんですね」は、納得していない気づき。目を輝かせない
+    if t.rstrip("。").endswith(("ないんですね", "ないんだ")):
+        return "trouble"
+    # 気づいた台詞（「……そうなんですね」）は感心。「……」で始まっても困り顔にしない
+    if t.rstrip("。").endswith(("んですね", "んだ", "なるほど", "そういうことか", "そういうことですか")):
+        return "wonder"
+    if any(w in t for w in ("正直", "ピンとこない", "分からない", "わからない", "えっと", "どうしよう")):
+        return "trouble"
+    if t.startswith("……"):
+        return "trouble"
+    if any(w in t for w in ("よかった", "うれしい", "助かる")):
+        return "smile"
+    return "normal"
+
+
+def listen_face(art: str, step: dict, nxt: dict | None, prev: dict | None = None) -> str:
+    """聞いている人の反応（台詞の後半に出す）。"""
+    if step.get("react"):
+        return step["react"]
+    if art == "katari":
+        return "normal"                     # 岬は聞いていても顔を変えない
+    t = step["text"]
+    # 次に小倉が驚くなら、その手前で目を丸くし始める
+    if nxt and nxt.get("who") == "聞き" and nxt.get("tone") in ("強", "特強"):
+        return "surprise"
+    # 大きな数字を聞いたら、口が小さく「お」の形になる。**数字が続く所では最初の1回だけ**
+    if _BIG.search(t) and len(t) <= 30 and not (prev and prev.get("who") == step["who"] and _BIG.search(prev["text"])):
+        return "oh"
+    # 短い否定（「違います。」「書いてありません。」）には「え？」
+    if len(t) <= 12 and t.rstrip("。").endswith(("違います", "ありません", "いません", "ないです")):
+        return "huh"
+    return "normal"
 
 
 def parse_cast(text: str) -> dict | None:
@@ -167,7 +225,7 @@ WIPE_POS = {
 }
 
 
-def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
+def put_wipe(base: Image.Image, height: int, speaker: str, faces: dict,
              pos: str = "右上", mouth="closed", blinking: frozenset = frozenset()) -> Image.Image:
     """右上の箱に2人を縦に並べる。**全画面の様式**で使う。
 
@@ -181,7 +239,7 @@ def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
     for i, (_, who) in enumerate(SEATS):
         y = y0 + i * (bh + 24)
         speaking = who == speaker
-        mood = auto_mood(who, tone) if speaking else LISTEN_MOOD.get(who, "normal")
+        mood = faces.get(who, "normal")
         ch = cast.bust(who, int(bh * 1.3), mood, mouth if speaking else "closed", who in blinking)
         d = ImageDraw.Draw(im)
         # 枠。しゃべっている人は金、聞いている人は灰
@@ -203,7 +261,7 @@ def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
 _dim: dict = {}
 
 
-def put_cast(base: Image.Image, height: int, speaker: str, tone: str,
+def put_cast(base: Image.Image, height: int, speaker: str, faces: dict,
              mouth="closed", blinking: frozenset = frozenset()) -> Image.Image:
     """画面に立ち絵を重ねる。**2人とも常に出す。**
 
@@ -218,7 +276,7 @@ def put_cast(base: Image.Image, height: int, speaker: str, tone: str,
     for side, who in SEATS:
         speaking = who == speaker
         h = height if speaking else int(height * 0.90)
-        mood = auto_mood(who, tone) if speaking else LISTEN_MOOD.get(who, "normal")
+        mood = faces.get(who, "normal")
         ch = cast.bust(who, h, mood, mouth if speaking else "closed", who in blinking)
         x = 62 if side == "left" else (W - 62 - ch.width)
         y = H - ch.height                       # 切り口を画面の下端にそろえる
@@ -406,6 +464,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
     sink = Sink(video_only)
     n = 0
     frame_no = 0                               # いまのコマ番号（30コマ/秒）
+    prev_step = None
     # 瞬き。**2人とも、それぞれ不規則な間隔で**（同時に瞬くと機械に見える）
     blink_at = {"katari": lipsync.blinks30(3 * 3600, FPS, seed=11),
                 "kikite": lipsync.blinks30(3 * 3600, FPS, seed=29)}
@@ -461,20 +520,28 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         f1 = int(round((at + sec) * FPS))      # この行の終わりのコマ（積み重ねで丸めがずれない）
         line: list[list] = []                  # [絵, コマ数]
         prev_key = None
+        listener = [w for _, w in SEATS if w != art]
+        sp_face = speak_face(art, step)
+        li_face = {w: listen_face(w, step, nxt, prev_step) for w in listener}
+        react_at = int(len(shapes) * REACT_FROM)
         for k in range(f1 - f0):
             g = f0 + k
             mouth = shapes[k] if k < len(shapes) else "closed"
-            blinking = frozenset(w for w, bl in blink_at.items() if g in bl)
-            key = (mouth, blinking)
+            # 瞬きはふつうの顔のときだけ（表情の目を瞬きで消すと眉が跳ねる）
+            faces = {art: sp_face}
+            for w in listener:
+                faces[w] = li_face[w] if k >= react_at else "normal"
+            blinking = frozenset(w for w, bl in blink_at.items() if g in bl and faces.get(w) == "normal")
+            key = (mouth, blinking, tuple(sorted(faces.items())))
             if key == prev_key:
                 line[-1][1] += 1
                 continue
             if cast_spec:
                 if cast_spec["style"] == "wipe":
-                    painted = put_wipe(capped, cast_spec["height"], art, step["tone"],
+                    painted = put_wipe(capped, cast_spec["height"], art, faces,
                                        cast_spec.get("pos", "右上"), mouth, blinking)
                 else:
-                    painted = put_cast(capped, cast_spec["height"], art, step["tone"], mouth, blinking)
+                    painted = put_cast(capped, cast_spec["height"], art, faces, mouth, blinking)
             else:
                 painted = capped
             line.append([painted, 1])
@@ -490,6 +557,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         for im_, c in line:
             sink.add(im_, c)
         frame_no = f1
+        prev_step = step
         cues.append({"start": at, "screen_changed": screen_changed,
                      "who": step["who"], "tone": step["tone"]})
         at += sec

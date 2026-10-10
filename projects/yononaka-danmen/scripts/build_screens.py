@@ -69,7 +69,7 @@ def find_photo(key: str | None) -> Path | None:
     if not key:
         return None
     for p in sorted(PHOTOS.glob("*.jpeg")) + sorted(PHOTOS.glob("*.jpg")):
-        if key.lower() in p.name.lower():
+        if str(key).lower() in p.name.lower():
             return p
     return None
 
@@ -106,6 +106,16 @@ def build(path: Path, only: str | None) -> int:
         kind = KINDS.get(sid, "")
         secs = sequence.SECTIONS.get(kind, 0)
         frames: list[Image.Image] = []
+        # **節ごとに背景の写真を変えられる**（`photo:`）。1本を同じ写真で通すと30分変化が無い
+        # （2026-10-10 ユーザー「直して」）。`photo: なし` は写真を敷かない（濃紺）。
+        # 書かなければ台本全体の写真（サムネと同じ）
+        sec_photo = photo
+        if "photo" in sec:
+            key = sec.get("photo")
+            sec_photo = None if key in (None, "なし", "none") else find_photo(key)
+            if key not in (None, "なし", "none") and sec_photo is None:
+                raise SystemExit("節{} の写真「{}」が見つかりません".format(sid, key))
+        sec_bg = screens.backdrop(sec_photo, dark=0.44, blur=9).convert("RGBA")
 
         # ⓪ 冒頭の10秒。**ここで離脱が決まる**（CLAUDE.md）。
         #    いちばん強い数字を理由を言わずに出し、その数字から問いを立てる
@@ -118,11 +128,11 @@ def build(path: Path, only: str | None) -> int:
         # ① 節の中扉。何節目で何を見るのか
         frames.append(screens.chapter({
             "no": sid, "name": sec.get("name", ""),
-            "lead": sec.get("lead", ""), "photo": photo}))
+            "lead": sec.get("lead", ""), "photo": sec_photo}))
 
         # ② 図。項目が1つずつ増える
         for _, panel in panels_of(sec):
-            frames.append(place(finish_panel(panel), bg))
+            frames.append(place(finish_panel(panel), sec_bg))
 
         for i, im in enumerate(frames, 1):
             name = "s{}{:02d}".format(sid, i)
