@@ -296,8 +296,139 @@ def put_cast(base: Image.Image, height: int, speaker: str, faces: dict,
 
 # ---- 字幕 -------------------------------------------------------------------
 
+def _is_hira(c: str) -> bool:
+    return "\u3041" <= c <= "\u309f"
+
+
+_CONTENT = {"名詞", "動詞", "形容詞", "副詞", "代名詞", "連体詞", "接続詞", "感動詞", "形状詞", "接頭辞"}
+# 前の語とひと続きに読む言葉。この手前では割らない（「聞いた｜こと」「書いて｜ある」）
+_FORMAL = {"こと", "もの", "ところ", "よう", "わけ", "ため", "はず", "とき", "ほう", "くらい", "ぐらい",
+           "など", "ん", "の", "まま", "うち", "ごと", "ぶん", "分", "方", "中", "目", "的"}
+_tagger = None
+
+
+def _tag(text: str):
+    """fugashi（unidic-lite）で単語に分ける。入っていなければ None。"""
+    global _tagger
+    try:
+        if _tagger is None:
+            import fugashi
+            _tagger = fugashi.Tagger()
+        out, pos = [], 0
+        for w in _tagger(text):
+            i = text.find(w.surface, pos)
+            if i < 0:
+                return None
+            out.append((i, w.surface, w.feature.pos1, w.feature.pos2))
+            pos = i + len(w.surface)
+        return out
+    except Exception:
+        return None
+
+
+def _breaks(text: str) -> list[int]:
+    """字幕を2行に割ってよい位置（その文字の手前で割る）。
+
+    **文節の頭でだけ割る。** 単語に分けて（fugashi）、中身のある単語（名詞・動詞…）の手前を候補にする。
+    ただし名詞が続く所（「受け取り｜手」）、「〜こと」「〜てある」の手前、かぎかっこの中では割らない。
+    文字の種類だけで決めていたときは「ありますけ｜ど」「受け取り｜手」になった（2026-10-10）。
+    """
+    toks = _tag(text)
+    if toks is None:
+        return _breaks_by_char(text)
+    out, depth = [], 0
+    for n, (i, surf, p1, p2) in enumerate(toks):
+        opens = surf and surf[0] in "「『（("
+        if n and depth == 0:
+            pi, psurf, pp1, pp2 = toks[n - 1]
+            ok = False
+            if pp1 == "補助記号" and psurf[-1] in "、。？?！!…」』）)" and surf[0] not in "、。」』）)ー…":
+                ok = True
+            elif opens:
+                ok = pp1 not in ("接頭辞",)
+            elif surf == "って" and pp1 in ("助動詞", "動詞", "形容詞"):
+                ok = True                           # 「分からない｜ってことですか」
+            elif p1 in _CONTENT and pp1 not in ("接頭辞",):
+                ok = True
+                if p1 in ("名詞", "代名詞") and pp1 in ("名詞", "代名詞", "接頭辞"):
+                    ok = False                      # 名詞が続く（複合語）
+                if surf in _FORMAL:
+                    ok = False
+                if p1 == "動詞" and p2 == "非自立可能" and psurf in ("て", "で"):
+                    ok = False                      # 「書いて｜ある」
+                if pp1 in ("名詞",) and p1 == "動詞" and surf[0] in "しすさせ":
+                    ok = False                      # 「申請｜し」「納付｜する」
+                if p1 == "動詞" and psurf in ("と", "って") and surf.startswith(("いう", "いっ", "いわ")):
+                    ok = False                      # 「〜と｜いう」（漢字の「言う」は割ってよい）
+            if ok:
+                out.append(i)
+        for c in surf:
+            if c in "「『（(":
+                depth += 1
+            elif c in "」』）)":
+                depth = max(depth - 1, 0)
+    return out
+
+
+def _breaks_by_char(text: str) -> list[int]:
+    """fugashi が無いときの代わり。ひらがなから漢字・カタカナ・数字に変わる所で割る。"""
+    out, depth = [], 0
+    for i, c in enumerate(text):
+        if c in "「『（(":
+            if i and depth == 0 and (_is_hira(text[i - 1]) or text[i - 1] in "、。？?！!…"):
+                out.append(i)
+            depth += 1
+            continue
+        if c in "」』）)":
+            depth = max(depth - 1, 0)
+            continue
+        if depth or i == 0:
+            continue
+        prev = text[i - 1]
+        if prev in "、。？?！!" or (prev == "…" and c != "…"):
+            if c not in "、。」』）)ー…":
+                out.append(i)
+        elif _is_hira(prev) and not _is_hira(c) and c not in "、。？?！!」』）)ーっゃゅょ…":
+            out.append(i)
+    return out
+
+
+def _split2(d, text: str, font, width: float) -> list[str] | None:
+    """1行か、言葉の切れ目で2行に割れるなら、その行。割れなければ None。"""
+    if d.textlength(text, font=font) <= width:
+        return [text]
+    best = None
+    for i in _breaks(text):
+        a, b = text[:i], text[i:]
+        wa, wb = d.textlength(a, font=font), d.textlength(b, font=font)
+        if wa <= width and wb <= width:
+            score = abs(wa - wb)
+            if best is None or score < best[0]:
+                best = (score, [a, b])
+    return best[1] if best else None
+
+
+CAP_SIZES = (74, 70, 66)     # 言葉の切れ目で2行に入れるために、ここまでは字を小さくしてよい
+
+
 def _wrap(d, text: str, font, width: float) -> list[str]:
-    """折り返しは `typo.wrap` に任せる（日本語の組版の決まりを守る）。"""
+    """字幕の折り返し。**2行で収まるなら、言葉の切れ目のうち真ん中に近い所で割る。**
+
+    文字数で割ると「ライバルどう｜し」「「不当｜な取引制限」」のように言葉の途中で切れた
+    （2026-10-10。立ち絵を大きくして字幕の幅が狭まったとき）。割れないときだけ `typo.wrap` に任せる。
+    """
+    if d.textlength(text, font=font) <= width:
+        return [text]
+    best = None
+    for i in _breaks(text):
+        a, b = text[:i], text[i:]
+        wa, wb = d.textlength(a, font=font), d.textlength(b, font=font)
+        if wa <= width and wb <= width:
+            score = abs(wa - wb)
+            if best is None or score < best[0]:
+                best = (score, [a, b])
+    if best:
+        return best[1]
     return typo.wrap(d, text, font, width)
 
 def caption(im: Image.Image, text: str, size: int = 74,
@@ -313,12 +444,21 @@ def caption(im: Image.Image, text: str, size: int = 74,
     # **3行目は捨てずに、字を小さくして2行に収める。**
     # 2人の立ち絵で字幕の幅が狭まったとき、文末が切れていた（2026-10-08）
     f = F(size)
-    lines = _wrap(d, text, f, width)
+    lines = None
+    for sz in CAP_SIZES:
+        lines = _split2(d, text, F(sz), width)
+        if lines:
+            size, f = sz, F(sz)
+            break
+    if not lines:
+        lines = _wrap(d, text, f, width)
     while len(lines) > 2 and size > 52:
         size -= 4
         f = F(size)
         lines = _wrap(d, text, f, width)
-    lines = lines[:2]
+    # **それでも収まらないときも、字は捨てない**（3行で出す）。前は2行で切っていて、
+    # 立ち絵を大きくしたとき台詞の後ろが消えた（2026-10-10）。split_caption で先に割るので、
+    # ここに来るのは句読点の無い長い一続きの言葉だけ
     y0 = H - 60 - len(lines) * int(size * 1.34)
     # 置き場所を先に決めておく（文字ごとの x）
     place: list[tuple[str, float, float, bool]] = []
@@ -339,6 +479,48 @@ def caption(im: Image.Image, text: str, size: int = 74,
     for part, x, y, is_num in place:
         d.text((x, y), part, font=f, fill=GOLD if is_num else (255, 255, 255))
     return out
+
+
+_measure = ImageDraw.Draw(Image.new("RGB", (8, 8)))
+
+
+def _fits(text: str, side_room: int) -> bool:
+    """1行で収まるか、**言葉の切れ目で**2行に割って収まるか（字は CAP_SIZES まで小さくしてよい）。"""
+    width = W - 160 - side_room * 2
+    return any(_split2(_measure, text, F(sz), width) for sz in CAP_SIZES)
+
+
+_PUNCT = "。、？?！!」』"
+
+
+def split_caption(text: str, side_room: int) -> list[str]:
+    """字幕が2行に収まらないとき、**何枚かに分ける**。
+
+    テレビの字幕と同じく、話している途中で次の字幕に送る。字を小さくして詰めると読みにくく、
+    捨てると台詞が消える（2026-10-10、立ち絵を 420 にして字幕の幅が 788px になったとき）。
+    区切る場所は**句読点を先に**探し、無ければ言葉の切れ目（`_breaks`）。
+    1枚ずつ、言葉の切れ目で2行に収まるいちばん長いところまで取る。
+    """
+    if _fits(text, side_room):
+        return [text]
+    cuts_all = sorted(set(_breaks(text)) | {i + 1 for i, c in enumerate(text) if c in _PUNCT})
+    chunks, st = [], 0
+    while st < len(text):
+        rest = text[st:]
+        if _fits(rest, side_room):
+            chunks.append(rest)
+            break
+        cand = [c for c in cuts_all if c > st]
+        ok = [c for c in cand if _fits(text[st:c], side_room)]
+        if not ok:                                 # どこで切っても入らない（とても長い一続きの言葉）
+            chunks.append(rest)
+            break
+        punct = [c for c in ok if text[c - 1] in _PUNCT]
+        e = max(punct) if punct and (max(punct) - st) >= (max(ok) - st) * 0.6 else max(ok)
+        # 句読点で切ると短すぎるときは、言葉の切れ目でより長く取る
+        chunks.append(text[st:e])
+        st = e
+    return chunks
 
 
 def fade_frames(before: Image.Image, after: Image.Image, work: Path,
@@ -509,13 +691,20 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         # ワイプは画面の上にいるので、字幕の幅は狭めなくてよい
         room = 0
         if cast_spec and cast_spec["style"] == "bottom":
-            room = cast_width(cast_spec["height"]) + 16 - 80      # 字幕は左右 80px の余白込み
+            room = cast_width(cast_spec["height"]) + 4 - 80       # 字幕は左右 80px の余白込み。立ち絵とは 4px 空ける
         # **口パクと瞬き。** 行の中をコマに分け、絵が変わるところだけ画像を作る
         # （同じ絵が続くあいだは1枚を長く出す）。字幕は行の頭で1回だけ焼く
         q = tts.timing_query(say)
         exact = tts.engine_for(cfg, step["who"]).endswith(":50021")
         shapes, _ = lipsync.visemes(wav, q, exact=exact, fps=FPS)
-        capped = caption(current, step["text"], side_room=room)
+        # 長い台詞は字幕を何枚かに分け、話している時間を文字数で割って送る
+        chunks = split_caption(step["text"], room)
+        capped_list = [caption(current, c, side_room=room) for c in chunks]
+        weights = [len(c) for c in chunks]
+        cut_at, acc = [], 0
+        for wgt in weights[:-1]:
+            acc += wgt
+            cut_at.append(int(len(shapes) * acc / sum(weights)))
         f0 = frame_no
         f1 = int(round((at + sec) * FPS))      # この行の終わりのコマ（積み重ねで丸めがずれない）
         line: list[list] = []                  # [絵, コマ数]
@@ -532,7 +721,9 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
             for w in listener:
                 faces[w] = li_face[w] if k >= react_at else "normal"
             blinking = frozenset(w for w, bl in blink_at.items() if g in bl and faces.get(w) == "normal")
-            key = (mouth, blinking, tuple(sorted(faces.items())))
+            ci = sum(1 for c in cut_at if k >= c)
+            capped = capped_list[ci]
+            key = (mouth, blinking, tuple(sorted(faces.items())), ci)
             if key == prev_key:
                 line[-1][1] += 1
                 continue
