@@ -160,7 +160,12 @@ def plan(script_path: str | Path, short: bool = False, section: str = "",
     lines = len(script.lines)
     dropped = shorts.enforce_limit(script, limit, config) if limit else 0
     # ここから下は pipeline.build_script と同じ並び
-    spread_long_cards(script, hold_limit(config.video.height > config.video.width))
+    # **縦の画面では、挟む写真も縦版（`_v`）を使う**（2026-10-08 の決まり）。
+    # ここだけ `portrait=` を渡し忘れていたので、下見では横長の写真が縦に
+    # 中央だけ切り出されて敷かれ、**書き出しと違う絵**になっていた
+    # （2026-10-10 に、ロナウドの回のショートで顔が目元だけになって見つけた）
+    _tall = config.video.height > config.video.width
+    spread_long_cards(script, hold_limit(_tall), portrait=_tall)
     open_early(script)
     hold_photo(script)
     inserts = inserts_mod.plan(script, config)

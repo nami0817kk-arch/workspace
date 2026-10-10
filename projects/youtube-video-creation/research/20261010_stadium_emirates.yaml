@@ -1,0 +1,522 @@
+# スタジアム紹介シリーズ②：エミレーツ・スタジアム（アーセナル、10/10）。材料の控えは research/raw/20261010_stadium_emirates_material.md。
+# **節の並びは1本目（ヴァイタリティ／ボーンマス 10/9）と同じ型**：オープニング → 基礎DATA(main・強い一点を頭に) →
+#   この競技場だけの話(年表) → ここで起きた試合(表) → 見立て(viewpoint・自分で数えた比べ)。**文は全部言い換えてある**（重なり対策は材料の §9）。
+# 強い一点：**公開日の5日前（2026-10-03 報道）に、アーセナルが約5億ポンドの拡張計画をやめた。**
+#   7万〜8万席を検討していたが、ホスピタリティ・物販・観戦日の設備へ振り向けることにした。
+#   **確度は報道。クラブの公式発表は見つかっていない**（arsenal.com に当たる発表が無い。原報は The Times）。
+#   台本は「伝えられています」「報じられました」の線を越えない。
+# **最多入場の記述が Wikipedia 内で食い違っている**（Infobox＝2024-10-27 リヴァプール戦／Records 節＝2019-11-02 ウルヴス戦。どちらも 60,383）。
+#   → 台本では**最多入場そのものを言わない**。収容に対する入りの割合（99%台）だけを使う。
+# 20クラブの比べは research/pl_data/rank.json（各クラブの基礎DATAの板の字から数えたもの、2026-09 時点）。
+#   74,158 ÷ 60,704 = 1.2216 →「1.22倍」「82%」／中央値 38,838.5 → 1.5630 →「1.56倍」／12,357 → 4.9125 →「4.91倍」。
+#   **いちばん小さい器（ボーンマス）は名前を出さず「いちばん小さい器」と言う**（自分のチャンネルの過去回に触れない決まり）。
+# 2006-08-19 ヴィラ戦：**最初の得点は相手のメルベリ53分**。ジウベルトの得点時間は BBC が「six minutes before the end」としか書いていないので
+#   **分を断定しない**（「終了まで6分というところで」）。**入場者数は記事に無いので言わない**。
+# 2026-05-05 アトレティコ戦は「20年ぶり、クラブ史2度目の決勝進出」までにとどめ、**決勝そのもの（PSG戦）には触れない**。
+#   → 同じ日に公開するもう1本（クラブの財政・パリ・サンジェルマン）と**同じ試合でつながるため**、2本とも決勝の試合には触れていない。
+# 日本との接点：**冨安健洋が2023-10-28 に96分で初得点**（アーセナルの選手としてプレミアで得点した最初のアジアの選手）。
+#   **題にもサムネにも出さない**。試合の節の最後に3行だけ。**その試合の入場者数は確認できなかったので言わない**。
+# ヴェンゲルの言葉は Wikipedia 本文に残る引用で、**確度は報道**。
+# 10/8 のアルテタ回が「10月10日、ホームでのリーズ戦」で締めているので、**当日のリーズ戦には触れず、3日後のリール戦で締める**。
+# 媒体名は画面にも読み上げにも出さない。出典は節の sources に置く。
+# 写真は assets/backgrounds/ から assets/images/20261010_stadium_emirates/ へ写した2枚
+#   （01_w＝ピッチと4層のスタンド／02_w＝上空からの外観。どちらも Commons・CC BY-SA、credits.json も同じ場所に置いた）。
+#   **assets/backgrounds/ のまま使うと、ショートが assets/stats/stadium_アーセナル_v.png（クラブ紹介②の基礎DATAの縦板）に化ける**（1本目で踏んだ）。
+# サムネは構図 number（1本目は scene なので替えた。同じ日のもう1本は scene）。
+date: 2026年10月10日
+slot: other_1
+format: news
+series: スタジアム紹介
+people: []
+theme:
+  id: stadium_emirates
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アーセナル
+  title: アーセナルの本拠地、3季つづけて99%が埋まる。それでも席を増やさないのか
+  question: 毎試合ほぼ満席のこの競技場で、なぜ席を増やさないことになったのか
+  lead: 前の家から、わずか450メートルの場所に建った器。
+  hook: 5日前、この器をめぐる大きな計画が1つ消えました。
+  takeaway: エミレーツ・スタジアムは収容6万704人で、プレミアリーグ20クラブの中では5番目。最大のオールド・トラフォード7万4158人の82%にあたり、2位から5位までの差は数百人しかない。2026年10月3日、アーセナルが7万席を超える規模への拡張をやめ、ホスピタリティ・物販・観戦日の設備へ投資先を移したと報じられた。費用は5億ポンド規模とされ、工事のあいだ本拠地を一時的に移す必要があることも理由に挙げられている。2004年の建設では建設費3億9000万ポンドをハイバリーから増えた2万2285席で割ると1席あたり約1万7500ポンドだったが、7万席にするために増える9296席で5億ポンドを割ると1席あたり約5万3800ポンド、3.07倍になる。公的な補助はゼロで、2004年に銀行団から2億6000万ポンドを借り、2006年に欧州のクラブとして初めて公募の資産担保債へ切り替えて年間の返済を約2000万ポンドに下げた経緯がある。リーグ戦ホームの平均は2024-25が6万251人、2025-26が6万217人、今季の2試合が6万169人で、3季つづけて収容の99%台。3日後の10月13日、ここでチャンピオンズリーグのリーグフェーズのリール戦が行われる
+  opening_image: assets/images/20261010_stadium_emirates/01_w.png
+short_title: アーセナルの本拠地、席はほぼ毎試合埋まる。5日前に消えた計画
+thumbnail:
+  layout: number
+  photo: assets/images/20261010_stadium_emirates/02_w.png
+  number: ●億ポンド
+  line1: アーセナルがやめた拡張
+  line2: 消えた計画の値段
+  crests:
+  - アーセナル
+  tags:
+  - アーセナル
+  - エミレーツ・スタジアム
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: エミレーツ・スタジアムの基礎DATA
+  tier: 報道
+  telop: 5日前、5億ポンド規模の拡張をやめたと報じられた。収容6万704人は20クラブで5番目
+  narrator: キャスター
+  card:
+    type: table
+    title: エミレーツ・スタジアムの基礎DATA
+    columns: &cols_data
+    - 項目
+    - 内容
+    rows: &rows_data
+    - - 収容人数
+      - 6万704人（20クラブで5番目）
+    - - 開場
+      - 2006年7月22日
+    - - 建設費
+      - 3億9000万ポンド
+    - - ピッチ
+      - 縦105×横68メートル
+    - - 場所
+      - ロンドン北部 ホロウェイ
+    - - 持ち主
+      - クロエンキー家（アメリカ）
+  say:
+  - text: ロンドン北部にある、アーセナルの本拠地の話です。
+    short_only: true
+    image: assets/images/20261010_stadium_emirates/01_w.png
+  - text: 5億ポンドほどをかけて1万席ちかく足す計画が、5日前に消えたと報じられました。
+    emph: true
+    image: assets/images/20261010_stadium_emirates/01_w.png
+    card: &id_stats
+      type: stats
+      title: 埋まっているのに、広げない
+      items:
+      - - '99'
+        - ％台
+        - 収容に対する入り（3季つづけて）
+      - - '5'
+        - 億ポンド
+        - やめた拡張の費用
+      - - '0'
+        - 席
+        - これから増える席
+      focus: 2
+  - text: 入りは3季つづけて収容の99%台。埋まっているのに、広げないほうを選んでいます。
+    card: *id_stats
+  - text: 広げるなら1席あたり5万ポンド超。20年前に建てたときの3倍です。
+    short_only: true
+    card:
+      type: calc
+      title: 広げるなら、1席いくらか
+      terms:
+      - - 5億ポンド
+        - かかるはずだった額
+      - - 9296席
+        - 増えるはずだった席
+      - - 約5万3800ポンド
+        - 1席あたり
+      ops:
+      - ÷
+      - ＝
+  - text: 収容は6万704人。20クラブの中では、上に4つ、下に15という位置です。
+    card:
+      type: table
+      title: エミレーツ・スタジアムの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 0
+  - text: 最大の器と比べれば82%。3位、4位との差は、数百人しかありません。
+    card: &id_rank
+      type: table
+      title: 20クラブの中での位置（自分で割った）
+      columns: &cols_rank
+      - 比べ
+      - 答え
+      rows: &rows_rank
+      - - 20クラブでの順位
+        - 5番目（6万704人）
+      - - 最大のオールド・トラフォードとの比
+        - その82%（1.22倍の差）
+      - - 3位アンフィールドとの差
+        - 572人
+      - - 4位エティハドとの差
+        - 334人
+      - - 真ん中の値との比
+        - 1.56倍
+      - - いちばん小さい器との比
+        - 4.91倍
+      highlight_row: 1
+  - text: 4位エティハドとは334人の差。真ん中の値と比べれば1.56倍です。
+    card:
+      type: table
+      title: 20クラブの中での位置（自分で割った）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 3
+  - text: いちばん小さい器と比べると、4.91倍にあたります。
+    card:
+      type: table
+      title: 20クラブの中での位置（自分で割った）
+      columns: *cols_rank
+      rows: *rows_rank
+      highlight_row: 5
+  - text: 開場は2006年7月22日。こけら落としは、ベルカンプの引退試合でした。
+    card:
+      type: table
+      title: エミレーツ・スタジアムの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 1
+  sources:
+  - https://en.wikipedia.org/wiki/Emirates_Stadium
+  - https://www.insideworldfootball.com/2026/10/05/arsenal-decide-against-emirates-expansion/
+  - https://footballgroundguide.com/news/how-mikel-arteta-played-crucial-role-in-arsenal-scrapping-500m-emirates-stadium-expansion-plans.html
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Arsenal_F.C._season
+- id: moved
+  heading: 壊せなくなった家から、450メートル
+  tier: 報道
+  telop: 1997年、イースト・スタンドが指定建造物になり、建て替えの道が消えた
+  narrator: 解説
+  card: &id_time
+    type: timeline
+    title: ハイバリーを出るまでと、出てから
+    rows: &rows_time
+    - - 1997年7月
+      - イースト・スタンドが指定建造物に。建て替えの道が消える
+    - - 1999年11月
+      - 450メートル先、ゴミ処理場の跡地を調べ始める
+    - - 2001年12月
+      - 区議会が計画を承認。公的な補助はゼロ
+    - - 2004年2月
+      - 銀行団から2億6000万ポンドを借りて着工
+    - - 2006年7月
+      - 欧州のクラブで初の、公募の資産担保債へ切り替え
+    focus: 2006年7月
+  say:
+  - text: アーセナルがここへ来たのは、前の家を建て替えられなくなったからです。
+    image: assets/images/20261010_stadium_emirates/02_w.png
+    card: *id_time
+  - text: 1997年7月、ハイバリーのイースト・スタンドが指定建造物になります。
+    card:
+      type: timeline
+      title: ハイバリーを出るまでと、出てから
+      rows: *rows_time
+      focus: 2006年7月
+      highlight_row: 0
+  - text: 広げても4万8000席。4万を割っていた当時より、1万席ほど多いだけです。
+    card:
+      type: timeline
+      title: ハイバリーを出るまでと、出てから
+      rows: *rows_time
+      focus: 2006年7月
+      highlight_row: 0
+  - text: 選んだのは、450メートル先の空き地です。ゴミ処理場と工業団地の跡地でした。
+    card:
+      type: timeline
+      title: ハイバリーを出るまでと、出てから
+      rows: *rows_time
+      focus: 2006年7月
+      highlight_row: 1
+  - text: 2001年12月、区議会が計画を通します。当時の監督は、こう評しました。
+    card:
+      type: timeline
+      title: ハイバリーを出るまでと、出てから
+      rows: *rows_time
+      focus: 2006年7月
+      highlight_row: 2
+  - voice: アーセン・ヴェンゲル
+    text: 1920年代に理事会がチャップマンを招いて以来、
+  - voice: アーセン・ヴェンゲル
+    text: このクラブの歴史でいちばん大きな決断です
+    cont: true
+    emph: true
+  - text: ただし、国からも市からも補助はありません。土地ごと買う必要がありました。
+    card: none
+  - text: 工面したのは、選手の売却と、銀行団からの2億6000万ポンドの借り入れです。
+    card:
+      type: timeline
+      title: ハイバリーを出るまでと、出てから
+      rows: *rows_time
+      focus: 2006年7月
+      highlight_row: 3
+  - text: 開場の年に、それを債券へ切り替えます。公募の資産担保債は欧州で初でした。
+    card:
+      type: timeline
+      title: ハイバリーを出るまでと、出てから
+      rows: *rows_time
+      focus: 2006年7月
+      highlight_row: 4
+  - text: この借り換えで、年の返済はおよそ2000万ポンドまで下がりました。
+    emph: true
+    card:
+      type: timeline
+      title: ハイバリーを出るまでと、出てから
+      rows: *rows_time
+      focus: 2006年7月
+      highlight_row: 4
+  - text: 返済はそこから25年。選手の補強より先に、まず家の代金でした。
+    card: none
+  - text: 移った当時について、ヴェンゲルはこう話しています。
+    card: none
+  - voice: アーセン・ヴェンゲル
+    text: 5年のうち3年はチャンピオンズリーグに出て、
+  - voice: アーセン・ヴェンゲル
+    text: 平均5万4000人を入れる必要がありました。
+    cont: true
+  - voice: アーセン・ヴェンゲル
+    text: それができるかどうかは、分かっていませんでした
+    cont: true
+  quotes_from:
+  - en.wikipedia.org https://en.wikipedia.org/wiki/Emirates_Stadium
+  sources:
+  - https://en.wikipedia.org/wiki/Emirates_Stadium
+  - https://en.wikipedia.org/wiki/Arsenal_Stadium
+- id: matches
+  heading: この器で起きた3つの夜
+  tier: 報道
+  telop: 公式戦の最初の得点は、相手チームの主将のものだった
+  narrator: キャスター
+  card: &id_match
+    type: table
+    title: エミレーツで起きた3つの夜
+    columns: &cols_match
+    - 日付
+    - 相手
+    - 結果
+    - 得点者
+    rows: &rows_match
+    - - 2006年8月
+      - アストン・ヴィラ
+      - 1-1
+      - メルベリ／ジウベルト
+    - - 2025年4月
+      - レアル・マドリード
+      - 3-0
+      - ライス2／メリーノ
+    - - 2026年5月
+      - アトレティコ
+      - 1-0
+      - サカ
+  say:
+  - text: この器では、いまも語られる夜がいくつか起きています。
+    image: assets/images/20261010_stadium_emirates/01_w.png
+    card: *id_match
+  - text: 1つ目は2006年8月19日、ここでの最初の公式戦です。
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 相手はアストン・ヴィラ。先に決めたのは、相手の主将メルベリでした。
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: この器での最初の得点者は、ホームの選手ではありません。53分のことです。
+    emph: true
+    card: none
+  - text: 終了まで6分というところで、ジウベルト・シウヴァが追いつきます。1対1の引き分け。
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 2つ目は2025年4月8日、チャンピオンズリーグの準々決勝。
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 相手は15回優勝しているレアル・マドリード。結果は3対0でした。
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: デクラン・ライスが58分と70分、メリーノが75分。入ったのは6万110人。
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 第2戦は1対2で落としましたが、合計5対1で勝ち上がります。
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 3つ目は今年の5月5日。アトレティコ・マドリードとの準決勝、第2戦です。
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: サカが44分に決めて1対0。合計2対1で、20年ぶりの決勝進出が決まりました。
+    emph: true
+    card:
+      type: table
+      title: エミレーツで起きた3つの夜
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: クラブの歴史では、2度目の決勝です。入ったのは5万8874人でした。
+    card: none
+  - text: もう1つ。日本から来た選手も、この器でゴールを挙げています。
+    card: &id_tomi
+      type: stats
+      title: 冨安健洋がここで決めた1点
+      items:
+      - - '96'
+        - 分
+        - 後半アディショナルタイムの得点
+      - - '65'
+        - 試合
+        - アーセナルでの公式戦
+      - - '1'
+        - 人目
+        - プレミアで決めたアーセナルのアジアの選手
+      focus: 2
+  - text: 冨安健洋です。2023年10月28日、96分。クラブでの初得点でした。
+    card: *id_tomi
+  - text: アーセナルの選手としてプレミアリーグで得点した、最初のアジアの選手になりました。
+    emph: true
+    card: *id_tomi
+  sources:
+  - https://news.bbc.co.uk/sport2/hi/football/eng_prem/4786655.stm
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_UEFA_Champions_League_knockout_phase
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Arsenal_F.C._season
+  - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Arsenal_F.C._season
+- id: view
+  viewpoint: true
+  heading: 見立て・1席あたりの値段が、3倍になっていた
+  tier: 報道
+  telop: 2004年は1席1万7500ポンド。いま広げるなら1席5万3800ポンドで、3.07倍
+  narrator: 解説
+  card: &id_calc
+    type: calc
+    title: いま広げるなら、1席いくらか（自分で割った）
+    terms:
+    - - 5億ポンド
+      - かかるはずだった額
+    - - 9296席
+      - 増えるはずだった席
+    - - 約5万3800ポンド
+      - 1席あたり
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: では、埋まっているのになぜ広げないのか。値段を自分で割ってみました。
+    image: assets/images/20261010_stadium_emirates/02_w.png
+    card: *id_calc
+  - text: 検討されていたのは7万席。いまの6万704席から、増えるのは9296席です。
+    card: *id_calc
+  - text: 報じられた費用は5億ポンド。割ると、1席あたり約5万3800ポンドです。
+    emph: true
+    card: *id_calc
+    mark:
+      kind: circle
+      item: 2
+  - text: 20年前はどうだったか。こちらも割ってみます。
+    card: &id_view
+      type: table
+      title: 1席あたりの値段を並べた（自分で割った）
+      columns: &cols_view
+      - 比べ
+      - 答え
+      rows: &rows_view
+      - - 建設費 ÷ 増えた2万2285席
+        - 1席 約1万7500ポンド
+      - - 5億ポンド ÷ 9296席
+        - 1席 約5万3800ポンド
+      - - 1席の値段の比
+        - 3.07倍
+      - - 5億ポンド ÷ 建設費
+        - 1.28倍
+      - - 7万席にしたときの順位
+        - 2番目（やめて5番目のまま）
+  - text: ハイバリーの3万8419席から6万704席へ。増えたのは2万2285席でした。
+    card:
+      type: table
+      title: 1席あたりの値段を並べた（自分で割った）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 0
+  - text: 建設費3億9000万ポンドを席数で割ると、1席あたり約1万7500ポンドです。
+    card:
+      type: table
+      title: 1席あたりの値段を並べた（自分で割った）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 0
+  - text: 1万7500ポンドが5万3800ポンドへ。1席の値段は3.07倍です。
+    emph: true
+    card:
+      type: table
+      title: 1席あたりの値段を並べた（自分で割った）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 1
+      text: 3倍を超える
+  - text: 5億ポンドは、器そのものを建てたときの額の1.28倍にもあたります。
+    card:
+      type: table
+      title: 1席あたりの値段を並べた（自分で割った）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 3
+  - text: 建てるより、広げるほうが高い。これがやめた側の答えだと見ています。
+    card: none
+  - text: 工事のあいだ、ウェンブリーなどへ一時的に移る必要も理由に挙がっています。
+    card: none
+  - text: かわりに進むのは、立ち見の区画と、ケータリングや物販の作り替えです。
+    card: none
+  - text: 7万席にしていれば、20クラブで2番目の器になるはずでした。
+    card:
+      type: table
+      title: 1席あたりの値段を並べた（自分で割った）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 4
+  - text: やめたので、5番目のまま。ここまでは、すべて報じられた内容です。
+    card:
+      type: table
+      title: 1席あたりの値段を並べた（自分で割った）
+      columns: *cols_view
+      rows: *rows_view
+      highlight_row: 4
+  - text: クラブ自身の発表は、いまのところ出ていません。
+    card: none
+  - text: はっきりしているのは、入りのほうです。2024-25は平均6万251人。
+    image: assets/images/20261010_stadium_emirates/01_w.png
+    card: none
+  - text: 2025-26は6万217人、今季のホーム2試合は6万169人でした。
+    card: none
+  - text: どれも収容の99%台です。増やさなくても、席は毎回うまっていきます。
+    card: none
+  - text: ヴェンゲルが挙げた平均5万4000人の線を、いまは毎試合6000人上回っています。
+    card: none
+  - text: 次にここが埋まるのは3日後、10月13日。
+    card: none
+  - text: チャンピオンズリーグのリーグフェーズ、リールとの試合です。
+  sources:
+  - https://en.wikipedia.org/wiki/Emirates_Stadium
+  - https://dailycannon.com/2026/10/arsenal-emirates-expansion/
+  - https://www.insideworldfootball.com/2026/10/05/arsenal-decide-against-emirates-expansion/
+  - https://footballgroundguide.com/news/how-mikel-arteta-played-crucial-role-in-arsenal-scrapping-500m-emirates-stadium-expansion-plans.html
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Arsenal_F.C._season
+  - https://en.wikipedia.org/wiki/Arsenal_Stadium

@@ -1,0 +1,341 @@
+# 取材メモ（10/10 題材 break_debate、型は news、その他枠）。材料の控えは research/raw/20261010_break_debate_material.md。
+# **ショートだけ作る**（台本は1本。`short` が山場の節を切り出す）。
+# **題材の前提の誤りを2つ直して使っている**（材料 0）：
+#   ① **2人は同じ会見で話していない。**フリックは10月9日のヘタフェ戦前の会見、
+#      シメオネは同じ10月9日のアラベス戦前の会見。**別々の会見**で、互いに相手に言及していない。
+#      台本では「同じ日に、別々の会見で」と**必ず言う**。②の見出しにも「別々の会見」と入れた。
+#   ② **2人とも「見直すべきだ」とは言っていない。**原文は
+#      シメオネ「habría que valorarlo（評価すべきだろう）」「ojalá hablen algún día con los jugadores」、
+#      フリック「Debemos reflexionar si era necesario que jugase en Australia」「No es la mejor manera」。
+#      **2人の言葉はそのまま引き、「近いことを言った」という受けはこちらの言葉として別に置く。**
+# フリックの会見は**英語で行われ、スペインの媒体がスペイン語に訳して出している**（材料 2 の但し書き）。
+#   英語の原文は取れていないので、**訳の形から日本語にした**ことが分かるよう、②で「英語で答えた」と言っている。
+# **「3万キロ」は Libertad Digital の表記にだけある**（材料 7-1）ので使わず、
+#   FútbolFantasy の「何千キロも」の形に揃えた。**どちらを採ったかはここに残す。**
+# シメオネの英語訳はファンのアカウントのもの（材料 3-2）なので**使っていない**。
+#   新華社にだけある「ほとんどが4試合、何人かは3試合」（材料 7-2）も**使っていない**。
+# **離脱した選手の総数はどの媒体も出していない**（材料 8）。だから③はクラブ単位・リーグ単位の数字だけにした。
+#   **PSVの17人は使っていない**（同じ日の psv_sano で使うため。材料 7 の指示どおり、こちらは
+#   UEFA・フリック・シメオネを軸にして、リヴァプールとプレミアの集計で受ける）。
+# 数字の重なり対策：『16日間』『55』『54』は①だけ。『20クラブ』『17クラブ』『6人』『51試合』は③だけ。
+#   『19日』『2.3週間』『4回』は④だけ。
+# 写真は Commons の2枚。フリック＝File:2022 Hansi Flick (cropped).jpg（CC BY-SA 4.0 / Steffen Prößdorf、2022年）、
+#   シメオネ＝File:25th Laureus World Sports Awards …(cropped).jpg（CC BY-SA 4.0 / Barcex、2024年）。
+#   **会見の写真は記事から取れなかった**（スペインの媒体の og:image は当たったが人物が別だった）ので、この2枚で通す。
+#   本文の下地はフリックの1枚で通し、シメオネの節で1回だけ入れ替える（入れ替えは1回）。
+# サムネ：構図 versus（2人を左右に並べる。別々の会見で近いことを言った、という題に合う）。
+# ネットの反応は集めていない（材料の方針）。
+date: 2026年10月10日
+slot: other_2
+format: news
+voice_min: 0
+people:
+- ハンジ・フリック
+- ディエゴ・シメオネ
+- ニコ・コヴァチ
+theme:
+  id: break_debate
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: 代表ウィーク
+  title: 16日間つづいた代表ウィーク。2人の監督が同じ日に口にしたこと
+  question: 今年の代表ウィークは何が変わり、現場の監督は何と言ったのか
+  takeaway: 2026年から、9月と10月に分かれていた代表ウィークが1つにまとまり、9月21日から10月6日までの16日間に最大4試合が入る形になった。10月の窓は無くなり、この仕組みは2030年まで決まっている。10月8日にベルリンで開かれたUEFAの非公開の会合では、加盟55連盟のうちこの運用を擁護したのはアゼルバイジャン1つだけだった。翌9日、バルセロナのフリックはヘタフェ戦の前日会見で「オーストラリアでプレーする必要があったのか、我々は考えるべきだ」「最善のやり方ではない。私には変えられない」と話し、同じ日にアトレティコ・マドリードのシメオネはアラベス戦の前日会見で「競技の面では、連続性が壊れる」「選手たちと話して評価すべきだろう」と話した。別々の会見で、近いことを言った形になる。実際にプレミアリーグでは20クラブのうち17クラブが誰かをけがで失い、無事だったのはフルアム、ノッティンガム・フォレスト、イプスウィッチの3クラブだけだった。制度上は16日だが、クラブの試合の間隔で数えると19日あり、シメオネの言う3週間に近い
+  opening_image: assets/images/20261010_break_flick/03.png
+short_title: 別々の会見で、フリックとシメオネが代表ウィークについて言ったこと
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261010_break_flick/03.png
+  - assets/images/20261010_break_simeone/02.jpg
+  short_photo: assets/images/20261010_break_flick/03_v.jpg
+  face_link: 同じ日
+  names:
+  - フリック
+  - シメオネ
+  line1: 代表ウィーク 16日間
+  line2: 別々の会見で●●
+  tags:
+  - ハンジ・フリック
+  - ディエゴ・シメオネ
+  - 代表ウィーク
+sections:
+- id: rule
+  heading: 2つの窓が、1つの16日間になった
+  tier: 報道
+  telop: 9月21日から10月6日までの16日間に最大4試合。10月の窓は無くなり、2030年まで決まっている
+  narrator: キャスター
+  card: &rule
+    type: table
+    title: 代表ウィークの形が変わった
+    columns:
+    - 項目
+    - 前
+    - 今年から
+    rows:
+    - - 窓の数
+      - 9月と10月の2つ
+      - 1つにまとめた
+    - - 期間
+      - 1回につき約1週間
+      - 16日間
+    - - 試合数
+      - 1つの窓で2試合
+      - 最大4試合
+  say:
+  - text: フリックとシメオネが話したのは、今年から形が変わったこの期間のことです。
+    card: *rule
+  - text: 9月と10月に分かれていた2つの窓が、1つにまとまっています。
+    card:
+      <<: *rule
+      highlight_row: 0
+  - text: 今回は9月21日から10月6日までの16日間で、試合は最大4つ。
+    card:
+      <<: *rule
+      highlight_row: 1
+    emph: true
+  - text: 10月の窓は無くなりました。この形は2030年まで決まっています。
+    card:
+      <<: *rule
+      highlight_row: 2
+  - text: 10月8日には、ベルリンで欧州の連盟の非公開の会合がありました。
+    card: none
+  - text: 加盟する55の連盟のうち、この運用を擁護したのは1つだけだったと伝えられています。
+    card: &votes
+      type: stats
+      title: ベルリンの会合（10月8日）
+      items:
+      - - '55'
+        - 連盟
+        - 欧州の加盟数
+      - - '1'
+        - 連盟
+        - この運用を擁護
+      - - 98.2%
+        - ''
+        - 残りの割合
+      focus: 1
+    emph: true
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50139079/uefa-member-nations-call-fifa-international-break-disaster
+  - https://www.beinsports.com/en-us/soccer/articles/when-is-the-next-fifa-international-break-and-why-is-it-longer-than-usual-2026-08-24
+- id: words
+  main: true
+  heading: 同じ日に、別々の会見で
+  tier: 報道
+  telop: フリックはヘタフェ戦の前、シメオネはアラベス戦の前。別々の会見で近いことを言った
+  narrator: キャスター
+  card: &pressers
+    type: table
+    title: 10月9日、別々の会見で
+    columns:
+    - 誰
+    - どこで
+    - 何の前
+    rows:
+    - - シメオネ
+      - アトレティコの会見
+      - アラベス戦
+    - - フリック
+      - バルセロナの会見
+      - ヘタフェ戦
+  say:
+  - text: 今年から16日間に延びた代表ウィークに、スペインの監督たちが口を開きました。
+    short_only: true
+  - voice: シメオネ
+    text: 競技の面では、連続性が壊れる。
+    emph: true
+    card: *pressers
+    image: assets/images/20261010_break_simeone/02.jpg
+  - voice: シメオネ
+    text: いつか選手たちと話して、この最初の経験を評価してほしい。
+    cont: true
+  - text: アトレティコ・マドリードのシメオネ。アラベス戦の前日の会見です。
+    card:
+      <<: *pressers
+      highlight_row: 0
+  - voice: シメオネ
+    text: 人々は彼らの最高の姿を求めている。
+    card: none
+  - voice: シメオネ
+    text: そしてその場面が起きることは、どんどん遠ざかっている。
+    cont: true
+    card: none
+  - voice: シメオネ
+    text: 経済的に代表チームに都合がいいのは明らかだが、
+    cont: true
+    card:
+      <<: *pressers
+      highlight_row: 0
+  - voice: シメオネ
+    text: 選手たちと話して評価すべきだろう。
+    cont: true
+    card: none
+  - voice: シメオネ
+    text: プレーしているのは彼らなのだから。
+    cont: true
+    card:
+      <<: *pressers
+      highlight_row: 0
+  - text: 同じ日、バルセロナのフリックはヘタフェ戦の前の会見で答えています。
+    card:
+      <<: *pressers
+      highlight_row: 1
+    image: assets/images/20261010_break_flick/03.png
+  - voice: フリック
+    text: オーストラリアでプレーする必要があったのか、
+    card:
+      <<: *pressers
+      highlight_row: 1
+  - voice: フリック
+    text: 何千キロも移動する必要があったのか、我々は考えるべきだ。
+    cont: true
+    card: none
+  - voice: フリック
+    text: これは受け入れなければならない状況だ。
+    card:
+      <<: *pressers
+      highlight_row: 1
+  - voice: フリック
+    text: いつも増えていくばかりだから。
+    cont: true
+    card:
+      <<: *pressers
+      highlight_row: 1
+  - voice: フリック
+    text: 最善のやり方ではない。私には変えられない。
+    cont: true
+    card: none
+  - text: 2人は対談したわけではなく、互いに相手の名前も出していません。
+    card: none
+  - text: 別々の場所で、近いことを言った。そういう1日でした。
+    card: none
+    emph: true
+  quotes_from:
+  - Infobae／EFE（シメオネ、2026-10-09 のアラベス戦前日会見） https://www.infobae.com/america/agencias/2026/10/09/diego-pablo-simeone-las-tres-semanas-de-paron-rompen-la-continuidad-en-lo-deportivo/
+  - FútbolFantasy（フリック、2026-10-09 のヘタフェ戦前日会見。英語の答えをスペイン語に訳したもの） https://www.futbolfantasy.com/laliga/noticias/152484-rueda-de-prensa-de-hansi-flick-en-directo
+  sources:
+  - https://www.infobae.com/america/agencias/2026/10/09/diego-pablo-simeone-las-tres-semanas-de-paron-rompen-la-continuidad-en-lo-deportivo/
+  - https://www.futbolfantasy.com/laliga/noticias/152484-rueda-de-prensa-de-hansi-flick-en-directo
+  - https://www.libertaddigital.com/deportes/futbol/2026-10-09/flick-elogia-a-de-la-fuente-por-cuidar-a-sus-jugadores-es-perfecto-7473266/
+- id: cost
+  heading: 20クラブのうち、17クラブがけが人を抱えて戻った
+  tier: 報道
+  telop: プレミアで無事だったのは3クラブだけ。アーセナルは6人が離脱して戻ってきた
+  narrator: キャスター
+  card: &hurt
+    type: table
+    title: 代表ウィーク明けのプレミアリーグ
+    columns:
+    - クラブ
+    - けが人
+    rows:
+    - - アーセナル
+      - 6人
+    - - リヴァプール
+      - 4人
+    - - マンチェスター・シティ
+      - 3人
+    - - サンダーランド
+      - 2人
+    - - 無事だったクラブ
+      - 3つだけ
+  say:
+  - text: フリックの言葉だけでなく、数のほうも残っています。
+    card: *hurt
+  - text: 20クラブのうち17クラブが、誰かをけがで失って戻ってきました。
+    card:
+      <<: *hurt
+      highlight_row: 4
+    emph: true
+  - text: 無事だったのはフルアム、ノッティンガム・フォレスト、イプスウィッチの3つだけ。
+    card:
+      <<: *hurt
+      highlight_row: 4
+  - text: いちばん多かったアーセナルは6人。リヴァプールが4人と続きます。
+    card:
+      <<: *hurt
+      highlight_row: 0
+  - text: そのリヴァプールは17人を送り出し、その17人が合わせて51試合に出ています。
+    card: &lfc
+      type: calc
+      title: リヴァプールの代表ウィーク
+      terms:
+      - - '51'
+        - 17人が出た試合
+      - - '17'
+        - 送り出した人数
+      - - '3.0'
+        - 1人あたり
+      ops:
+      - ÷
+      - ＝
+  - text: 1人あたり3試合。上位のクラブほど重く受けることになります。
+    card: *lfc
+  - voice: ニコ・コヴァチ
+    text: 2週間から2週間半、勢いがまったく無い状態で過ごす。
+    card: none
+  - voice: ニコ・コヴァチ
+    text: そういう問題もある。
+    cont: true
+    card: none
+  - voice: ニコ・コヴァチ
+    text: ある意味、我々は全員いまゼロから始めている。
+    cont: true
+    card: none
+  quotes_from:
+  - ESPN（コヴァチ、2026-10-09） https://www.espn.com/soccer/story/_/id/50139079/uefa-member-nations-call-fifa-international-break-disaster
+  sources:
+  - https://www.soccer-king.jp/news/world/world_other/20261009/2214558.html
+  - https://www.espn.com/soccer/story/_/id/50139079/uefa-member-nations-call-fifa-international-break-disaster
+- id: view
+  viewpoint: true
+  heading: 「3週間」と「16日」がずれている理由
+  tier: 背景
+  telop: 現場が数えているのはクラブの試合の間隔。それなら19日で、約2.7週間になる
+  narrator: 解説
+  card: &gap
+    type: calc
+    title: どこからどこまでを数えるか
+    terms:
+    - - '19'
+      - クラブの試合の間隔
+    - - '7'
+      - 1週間の日数
+    - - '2.7'
+      - 週にすると
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: シメオネは「3週間の中断」と言いました。制度の上では16日です。
+    card: *gap
+  - text: 数え方が違います。現場が数えているのは、クラブの試合と試合の間隔です。
+    card: *gap
+  - text: 9月20日の試合から10月9日の試合まで19日。約2.7週間になります。
+    card: *gap
+    emph: true
+  - text: つまり誇張ではなく、監督が立っている場所からはそう見えるということです。
+    card: none
+    image: assets/images/20261010_break_flick/03.png
+  - text: もうひとつ、フリックは制度を批判しながら、代表の監督は褒めています。
+    card: &praise
+      type: points
+      title: フリックが分けて話していたこと
+      items:
+      - 仕組みは「最善のやり方ではない」
+      - 代表の監督は「完璧だ。出場時間を管理してくれた」
+      - 自分には変えられない、受け入れるしかない
+  - voice: フリック
+    text: 彼が私の選手たちにしていることも評価している。完璧だ。
+    card: *praise
+  - text: 代表が悪い、という話にはしていません。仕組みが削っている、という立て方です。
+    card: *praise
+  - text: そして同じ16日間が、あと4回来ます。
+  - text: 今年を入れれば、5回目までが決まっている計算です。
+    card: none
+    emph: true
+  sources:
+  - https://www.libertaddigital.com/deportes/futbol/2026-10-09/flick-elogia-a-de-la-fuente-por-cuidar-a-sus-jugadores-es-perfecto-7473266/
+  - https://en.wikipedia.org/wiki/FIFA_International_Match_Calendar

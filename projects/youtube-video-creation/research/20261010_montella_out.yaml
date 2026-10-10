@@ -1,0 +1,320 @@
+# 取材メモ（10/10 題材 montella_out、型は news、その他枠）。材料の控えは research/raw/20261010_montella_out_material.md。
+# **ショートだけ作る**（台本は1本。`short` が山場の節を切り出す）。
+# **一次情報はトルコサッカー連盟（TFF）公式の「Kamuoyuna Duyuru（公告）」2026年10月9日付**。
+#   原文: "A Milli Takım Teknik Direktörümüz Sayın Vincenzo Montella ile devam etmeme kararı alınmıştır."
+#   https://www.tff.org/default.aspx?pageID=285&ftxtID=51615
+#   **この公告は解任だけの文書ではない**（材料 0）。同じ1枚に、理事会の留任、辞任した2名の正理事の補充、
+#   事務総長の交代、事務次長の新任が並んでいる。**そこを①の切り口にした。報道はここを切り出していない。**
+# **題材の前提の誤りを直した**（材料 2-5、5）：
+#   **解任に「W杯予選」は関係ない。**2026年W杯は終わっていて、トルコは出場し、勝ち点3でグループ最下位。
+#   引き金は **2026-27 ネーションズリーグA の4連敗**。次に来るのは2027年のユーロ2028予選。
+#   台本では「W杯予選」という言葉を一度も使っていない。
+# **ロマーノの投稿は確認できていない**（材料 8）ので、根拠は**連盟の公式発表**に置いた。記者の名前は出さない。
+# **解任の4日前、最後の会見がTFF公式に残っている**（材料 3）。見出しは
+#   「Gelişmeye Devam Ederek İstediğimiz Noktaya Geleceğiz（成長を続けて、我々が望む地点に到達する）」。
+#   **その3日後に切られた**という形を②に置いた。
+# 数字の食い違い（材料 7）の扱い：
+#   ・解任の日付は **TFF公式の10月9日**（goal.com の「10月10日」は誤り）。
+#   ・通算成績は **40試合21勝5分14敗**（Wikipedia と beIN Sports が一致）。「37試合」は採らない。
+#   ・**違約金の約91万5000ユーロは報道の数字**で、TFF の公告には金額が書かれていない。④でそう言う。
+#   ・W杯の敗退の言い方は**「勝ち点3でグループ最下位」の側に1つに決めた**（「最初に敗退した国」は混ぜない）。
+#   ・後任は**発表されていない**。アルダ・トゥランの名前は**報道として**④で1度だけ触れ、断定しない。
+#     トゥランの経歴（代表100試合以上）は裏を取っていないので**出さない**。
+# 数字の重なり対策：『4試合』『2得点』『11失点』『2.75』は③だけ。『1,114日』『40試合』『1.70』は④だけ。
+#   『91万5000ユーロ』も④だけ。
+# 写真は記事の横長を先に当たった。02＝football-italia の og:image（ベンチで頬杖をついたモンテッラ、1200x800）。
+#   facecrop は顔を見つけられなかったので `--center 0.52 --top 0` で手で切って 02_w / 02_v を作り、**目で見て確かめた**。
+#   01（Commons、CC BY-SA 3.0 / Roberto Vicario、2012年、251x349）は**小さすぎて古いので使わない**。入れ替えは無し。
+# サムネ：構図 number（最後の4試合が全敗）。
+# ネットの反応は集めていない（材料の方針）。
+date: 2026年10月10日
+slot: other_3
+format: news
+voice_min: 0
+people:
+- ヴィンチェンツォ・モンテッラ
+theme:
+  id: montella_out
+  league: ''
+  league_name: トルコ代表
+  kind: other
+  topic: ヴィンチェンツォ・モンテッラ
+  title: トルコがモンテッラを解任。連盟が同じ日に出した公告に並んでいたもの
+  question: モンテッラはなぜ切られ、連盟が同じ日に出した公告には何が並んでいたのか
+  takeaway: トルコサッカー連盟は2026年10月9日、公式サイトの公告でヴィンチェンツォ・モンテッラとの契約を継続しないと発表した。ただしこの公告は解任だけの文書ではなく、理事会が総会まで留任すること、辞任した2名の正理事の補充、事務総長の交代、事務次長の新任が同じ1枚に並んでいる。事務総長が辞表を出したのは10月5日、イタリアに1-3で負けた日で、審判委員会の委員長も10月4日に辞任していた。引き金になったのは2026-27ネーションズリーグAの4連敗で、4試合で2得点11失点、1試合2.75失点。2026年のワールドカップはすでに終わっており、トルコは出場して勝ち点3でグループ最下位だった。次に来るのは2027年のユーロ2028予選になる。モンテッラの在任は2023年9月21日から1,114日、3年18日で40試合21勝5分14敗。最後の4試合は全体の10%にすぎないが、3年ぶんの敗戦の28.6%がそこに入っている。解任の4日前、イタリア戦のあとの会見の見出しは「成長を続けて、我々が望む地点に到達する」だった。契約は2025年6月に2028年まで延長されており、そのとき会長は「近いうちにモンテッラをトルコ国籍にすることもできる」と言っていた。後任は発表されていない
+  opening_image: assets/images/20261010_montella_out/06.jpg
+short_title: モンテッラ解任。トルコ連盟が出した公告は、解任だけの文書ではなかった
+thumbnail:
+  layout: number
+  photo: assets/images/20261010_montella_out/06.jpg
+  short_photo: assets/images/20261010_montella_out/06_v.jpg
+  number: 4連敗
+  line1: モンテッラ トルコ代表
+  line2: 公告には●●も並んでいた
+  tags:
+  - ヴィンチェンツォ・モンテッラ
+  - トルコ代表
+  - ネーションズリーグ
+sections:
+- id: notice
+  heading: 公告に並んでいたのは、解任だけではない
+  tier: 確定
+  official: true
+  telop: 同じ1枚に、理事2名の補充・事務総長の交代・事務次長の新任が並んでいる
+  narrator: キャスター
+  card: &notice
+    type: table
+    title: 10月9日の公告に書かれていたこと
+    columns:
+    - 順
+    - 中身
+    rows:
+    - - '1'
+      - 理事会は総会まで職務を続ける
+    - - '2'
+      - 辞任した2名の正理事を補欠から補充
+    - - '3'
+      - モンテッラとは継続しない
+    - - '4'
+      - 事務総長を交代させる
+    - - '5'
+      - 事務次長を新しく任命する
+  say:
+  - text: トルコサッカー連盟が、代表監督のモンテッラとの契約を終えると発表しました。
+    card: *notice
+  - voice: 連盟の公告
+    text: A代表の監督であるヴィンチェンツォ・モンテッラ氏とは、
+    card: *notice
+  - voice: 連盟の公告
+    text: 継続しないことを決定した。
+    cont: true
+    card:
+      <<: *notice
+      highlight_row: 2
+  - text: ここで目を引くのは、同じ1枚に並んでいる残りの4つです。
+    card: *notice
+  - text: 理事会の留任、辞任した2名の理事の補充、事務総長の交代、事務次長の新任。
+    card:
+      <<: *notice
+      highlight_row: 3
+    emph: true
+  - text: 事務総長が辞表を出したのは10月5日。イタリアに1対3で負けた日でした。
+    card: none
+  - text: 審判委員会の委員長も、その前日に辞任しています。
+    card: none
+  sources:
+  - https://www.tff.org/default.aspx?pageID=285&ftxtID=51615
+  - https://www.tff.org/default.aspx?pageID=687&ftxtID=51593
+  - https://www.tff.org/default.aspx?pageID=687&ftxtID=51549
+- id: last
+  main: true
+  heading: 3日前の会見の見出し
+  tier: 確定
+  official: true
+  telop: 「成長を続けて、我々が望む地点に到達する」。その3日後に切られた
+  narrator: キャスター
+  card: &spoke
+    type: table
+    title: 10月6日の会見で、モンテッラが言ったこと
+    columns:
+    - 問われたこと
+    - 答え
+    rows:
+    - - これからの目標
+      - 欧州選手権を忘れずに進む
+    - - 4試合をどう見るか
+      - 3.5試合は互角だった
+    - - 足りなかったもの
+      - ゴールだけ
+    - - 陣容について
+      - 差を作る選手が足りなかった
+    - - ワールドカップの結果
+      - 均衡を崩したかもしれない
+  say:
+  - text: トルコ代表のモンテッラが解任されました。その3日前の会見です。
+    short_only: true
+    card: none
+  - voice: モンテッラ
+    text: 我々の確かな目標が欧州選手権であることを忘れずに、
+    emph: true
+    card: none
+  - voice: モンテッラ
+    text: この経験を自分たちを成長させるために使う。
+    cont: true
+    card:
+      <<: *spoke
+      highlight_row: 0
+  - text: 連盟の公式サイトに残っているその会見の見出しが、この言葉です。
+    card: &headline
+      type: quote
+      source: トルコサッカー連盟の公式サイト
+      color: '#c8102e'
+      text: Gelişmeye Devam Ederek İstediğimiz Noktaya Geleceğiz
+      translation: 成長を続けて、我々が望む地点に到達する
+  - text: 会見は10月6日。切られたのは、その3日後です。
+    card: *headline
+    emph: true
+  - voice: モンテッラ
+    text: 4試合のうち、3.5試合は互角の価値でプレーした。
+    card:
+      <<: *spoke
+      highlight_row: 1
+  - voice: モンテッラ
+    text: 足りなかったのはゴールだけだと言える。
+    card:
+      <<: *spoke
+      highlight_row: 2
+  - text: 負けの理由として本人が挙げたのは、陣容の薄さでした。
+    card: none
+    image: assets/images/20261010_montella_out/06.jpg
+  - voice: モンテッラ
+    text: どのチームでも差を作るような選手が、
+    card:
+      <<: *spoke
+      highlight_row: 3
+  - voice: モンテッラ
+    text: 我々の陣容には足りなかった。
+    cont: true
+    card: none
+  - voice: モンテッラ
+    text: 確かに、ワールドカップでの結果が、
+    card:
+      <<: *spoke
+      highlight_row: 4
+  - voice: モンテッラ
+    text: 我々の均衡を崩したかもしれない。
+    cont: true
+    card: none
+  quotes_from:
+  - トルコサッカー連盟公式（2026-10-06 の記者会見） https://www.tff.org/default.aspx?pageID=202&ftxtID=51571
+  sources:
+  - https://www.tff.org/default.aspx?pageID=202&ftxtID=51571
+- id: why
+  heading: 引き金になった4試合
+  tier: 報道
+  telop: ネーションズリーグAで4戦全敗。4試合で2得点11失点、1試合2.75失点
+  narrator: キャスター
+  card: &four
+    type: table
+    title: 2026-27 ネーションズリーグA
+    columns:
+    - 日付
+    - 相手
+    - 結果
+    rows:
+    - - 9月25日
+      - フランス
+      - 0-1
+    - - 9月28日
+      - イタリア
+      - 1-4
+    - - 10月2日
+      - ベルギー
+      - 0-3
+    - - 10月5日
+      - イタリア
+      - 1-3
+  say:
+  - text: モンテッラが落ちたのは、ここ2週間ほどの4試合です。
+    card: *four
+  - text: フランス、イタリア、ベルギー、そしてまたイタリア。4つとも負けました。
+    card: *four
+  - text: 2得点11失点。1試合あたり2.75点を失った計算です。
+    card: &conceded
+      type: calc
+      title: 4試合の失点
+      terms:
+      - - '11'
+        - 失点
+      - - '4'
+        - 試合
+      - - '2.75'
+        - 1試合あたり
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: ここで、よくある取り違えを1つ外しておきます。
+    card: none
+  - text: この4試合はワールドカップの予選ではありません。予選はもう終わっています。
+    card: none
+  - text: トルコは本大会に出て、勝ち点3。同じ組ではいちばん下でした。
+    card: none
+  - text: 次に来るのは、2027年に始まる欧州選手権の予選です。
+    card: none
+  sources:
+  - https://www.tff.org/default.aspx?pageID=202&ftxtID=51557
+  - https://en.wikipedia.org/wiki/Vincenzo_Montella
+- id: view
+  viewpoint: true
+  heading: 3年18日の10%に、敗戦の28.6%が入っていた
+  tier: 背景
+  telop: 在任1,114日・40試合で21勝。通算1試合1.70ポイントが、最後の4試合では0.00
+  narrator: 解説
+  card: &career
+    type: stats
+    title: モンテッラの3年
+    items:
+    - - 1,114
+      - 日
+      - 在任した長さ
+    - - '40'
+      - 試合
+      - 指揮した数
+    - - '21'
+      - 勝
+      - 勝率52.5%
+    focus: 0
+  say:
+  - text: モンテッラが就任したのは2023年9月21日です。
+    card: *career
+  - text: 在任は1,114日。3年と18日でした。
+    card: *career
+  - text: 40試合で21勝5分14敗。勝ち点に直すと1試合あたり1.70です。
+    card:
+      <<: *career
+      focus: 1
+  - text: 最後の4試合は、その10%にすぎません。
+    card: &share
+      type: calc
+      title: 敗戦はどこに集まったか
+      terms:
+      - - '4'
+        - 最後の4試合の敗戦
+      - - '14'
+        - 3年間の敗戦
+      - - 28.6%
+        - その割合
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: この3年で、16年ぶりの欧州選手権8強を届けました。
+  - text: 2002年以来の本大会出場も、この3年のうちです。
+    card: none
+    image: assets/images/20261010_montella_out/06.jpg
+  - text: 契約は去年の6月に2028年まで延ばされたばかりでした。
+    card: none
+  - text: その調印式で、連盟のハジュオスマンオール会長はこう言っています。
+    card: none
+  - voice: ハジュオスマンオール会長
+    text: 彼はイタリア人だが、話していると、
+  - voice: ハジュオスマンオール会長
+    text: 我々のようにトルコ人になって、受け入れている。
+    cont: true
+  - voice: ハジュオスマンオール会長
+    text: 近いうちにモンテッラをトルコ国籍にすることもできる。
+    cont: true
+  - text: その1年3か月後に切られました。
+    card: none
+  - text: 違約金は5か月ぶんの、約91万5000ユーロ。これは報道で出た数字です。
+  - text: 40試合で割れば、1試合あたり2万3000ユーロです。
+    card: none
+  - text: ただし連盟は、金額について何も明かしていません。後任も発表されていません。
+    card: none
+  quotes_from:
+  - トルコサッカー連盟公式（2025-06-30 の契約延長の発表） https://www.tff.org/default.aspx?pageID=202&ftxtID=47927
+  sources:
+  - https://www.tff.org/default.aspx?pageID=202&ftxtID=47927
+  - https://www.beinsports.com/en-us/soccer/uefa-nations-league/articles/vincenzo-montella-on-the-verge-of-being-sacked-by-t%C3%BCrkiye-2026-10-07
+  - https://www.goal.com/en/news/officially-turkey-announce-montella-s-departure-as-turan-closes-in-on-succeeding-him/blt6df337cec39549aa

@@ -2142,5 +2142,77 @@
  "20261009_kit_liverpool_short": {
   "at": "2026-10-09T10:42:30+09:00",
   "digest": "764db4b00b023729"
+ },
+ "20261009_player_683840": {
+  "at": "2026-10-10T10:54:21+09:00",
+  "digest": "ceefaf08cd4d5032"
+ },
+ "20261009_compare_bellingham_musiala": {
+  "at": "2026-10-10T10:54:25+09:00",
+  "digest": "56a74f44410b5a69"
+ },
+ "20261009_transfer_neymar": {
+  "at": "2026-10-10T10:54:27+09:00",
+  "digest": "462c9d056bd35e8f"
+ },
+ "20261010_city_maresca_short": {
+  "at": "2026-10-10T16:31:24+09:00",
+  "digest": "8ef20b32578a6598"
+ },
+ "20261010_stadium_emirates": {
+  "at": "2026-10-10T16:31:26+09:00",
+  "digest": "fe24c5ece9268648"
+ },
+ "20261010_finance_psg": {
+  "at": "2026-10-10T16:31:28+09:00",
+  "digest": "ab106def38dcf7f5"
+ },
+ "20261010_psv_sano_short": {
+  "at": "2026-10-10T16:42:51+09:00",
+  "digest": "9aea5e5ccf827022"
+ },
+ "20261010_lyon_nakamura_short": {
+  "at": "2026-10-10T16:45:37+09:00",
+  "digest": "a646b11c1231b089"
+ },
+ "20261010_city_carrick_short": {
+  "at": "2026-10-10T17:06:08+09:00",
+  "digest": "f9a2fb1de036cb2b"
+ },
+ "20261010_city_around_short": {
+  "at": "2026-10-10T17:06:25+09:00",
+  "digest": "9999d9a06bbf9437"
+ },
+ "20261010_record_caps": {
+  "at": "2026-10-10T17:26:27+09:00",
+  "digest": "91a0fe38a9b160b6"
+ },
+ "20261010_kit_manutd": {
+  "at": "2026-10-10T17:27:25+09:00",
+  "digest": "9cb55e99fd8cc6aa"
+ },
+ "20261010_city_carrick": {
+  "at": "2026-10-10T17:27:49+09:00",
+  "digest": "3aef56045f6217c5"
+ },
+ "20261010_moyes_everton_short": {
+  "at": "2026-10-10T17:50:53+09:00",
+  "digest": "d66ef84e313a7a86"
+ },
+ "20261010_break_debate_short": {
+  "at": "2026-10-10T17:51:06+09:00",
+  "digest": "e188d0258eae9426"
+ },
+ "20261010_montella_out_short": {
+  "at": "2026-10-10T17:51:19+09:00",
+  "digest": "286e2dc5e4bcda9e"
+ },
+ "20261010_flick_yamal_short": {
+  "at": "2026-10-10T17:51:33+09:00",
+  "digest": "b6cf55cb8a0fb4fa"
+ },
+ "20261010_city_around": {
+  "at": "2026-10-10T17:51:48+09:00",
+  "digest": "f2f12d63b3393da9"
  }
 }

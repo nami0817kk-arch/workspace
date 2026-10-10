@@ -1,0 +1,487 @@
+# 取材メモ（10/10 土、シリーズ「記録の解説」、key: record_caps、型は news）。
+# 材料の控えは research/raw/20261010_record_caps_material.md。**この控えの外へ出ていない。**
+#
+# 軸は「**代表の通算出場は、何年かけた数字なのかまで見ないと順番が決まらない**」。
+#   山場の頭に置く強い一点は、材料 §9 が推した (c)。
+#   **1年あたりに直すと先頭はロナウドではなく、1984年に代表を終えたソー・チンアン**（13.08 対 10.13）。
+#   表の1位と比べの1位が入れ替わるので、②の表の板がそのまま効く。
+#
+# **材料 §0 の枠をそのまま守った**:
+#   1. 数えたのは「フィファが公式と認めた試合」だけ。**「A マッチ」の条文は取れていない**ので
+#      （材料 §5(1)・§8）、語りは「フィファが公式と認めた試合」という言い方だけにした。
+#   2. **食い違いは必ず両方出す**。ソー・チンアン 195 と 219、アルムタワ 196 と 202 を
+#      ④の表（card: table）に並べ、語りでも両方読む。片方だけにしていない。
+#   3. **主役は日本人にしない**（10-05 の決まり）。日本は③の1行だけで、名前も出さない。
+#      題にもサムネにも出さない。
+#   4. **女子の記録は一切入れていない**（材料にも書かれていない）。
+#   6. アルファベットは読み上げに出さない（FIFA →「フィファ」、UEFA は「ヨーロッパ」で言い換え）。
+#
+# 直前2本と重ねないようにしたもの（材料 §9）:
+#   10/6 ケインの回… 「歴代◯位」「あと1つ」「◯年かけた数に、◯年半で迫った」「同じ◯試合の時点で比べると」
+#     「1年に直すと、◯◯は◯試合ほど」「塗り替わる日」「王手」は**一度も使っていない**。
+#     順位は「上位」「2番目」「表の5番目」と言い換えた。ケインは③の1行（シルトンと並んだ事実）だけ。
+#     ケインの得点記録・監督・契約の話は出さない。120試合時点の比べも出さない。
+#   10/9 1シーズン最多得点の回… 「点の数だけでは順番が決まらない」「◯試合あたりでは上回る」
+#     「リーグ戦だけで数えた」「全公式戦では」「いまの試合数に置き直すと」「順番が入れ替わります」は使わない。
+#     calc は**あちらが ÷ × ＝ の3段なので、こちらは ÷ ＝ の2段と「◯倍」**にした（§9 の指示どおり）。
+#     レヴァンドフスキは出さない（あちらの主役）。メッシは①の表と語りで「208試合」としてだけ出し、
+#     1シーズン50得点の話はしない。
+#
+# 数字の時点: **すべて2026年10月6日時点**（英語版 Wikipedia の一覧が止まっている日）。
+#   ②の読み上げで「10月6日時点」と声に出している。
+#
+# 自分で計算した数（材料 §6 に式と元の数字がある）:
+#   1年あたり（出場 ÷ 期間の長さ。1年＝365.2425日）、10.13 ÷ 6.37 ＝ 1.59倍、
+#   13.57 ÷ 8.5 ＝ 1.60倍、大陸ごとの1国あたり（201÷26＝7.73 ほか）。
+#   §4(A) の年代ごとの試合数は、材料を作った側が Wikipedia の原文から年ごとに数えたもの。
+#
+# **言い切っていないもの**:
+#   交代5人は**制度が変わった事実までで止めた**（材料 §4(D) の注意。通算出場が伸びた原因だと言わない）。
+#   1試合あたりの得点は**上位10人ぶん取れていない**ので出していない（材料 §6 比べ⑤の注記）。
+#   モドリッチ・アルハイドスが200に届くかの見込みは言わない（材料 §7）。
+# 反応は入れない（シリーズの回。ブラウザの道具を使っていないので集めていない）。
+# **本人の言葉は1つも無い**（材料 §7。引用したい言葉が取材できていない）。だから voice_min: 0。
+#
+# 写真は2枚。入れ替えは1本1回（冒頭＝ロナウド → 山場の2行目から下地のスタジアム）。
+#   ロナウドは `src.cli portrait` で取った 2026年7月のポルトガル戦の1枚で、
+#   **10/8 の回とは別のファイル**（-075 cropped と -154）。`tools/facecrop.py` で 01_w / 01_v を切り、
+#   ショートの差し替え用に 01_w_v も置いた（無いと `01_w` が縦に中央だけ切られて目元だけになる）。
+#   **表の節はロナウドを敷かない**（本編の板は幅0.74・左寄せなので、真ん中の顔を丸ごと覆う。
+#   preview4 で × が出た）。代わりに `tools/stadiumbg.py` で取ったリスボンのスタジアム
+#   （assets/backgrounds/stadium_ポルトガル代表.png、CC BY 3.0 / Massimo Catarinella）を敷いている。
+# **同じ板が20秒以上続かないように、節の中で板の種類を替えてある**（表 → 棒グラフ → 表、など）。
+#   続くと `spread_long_cards` がサムネの写真（ロナウドの顔）を割り込ませ、その顔を板が覆う。
+# サムネは構図 face（thumblayout の _list.png を見て number から変えた。number は大きな「234」が
+#   顔をほとんど隠していた）。答えの名前は ●● で伏せ、文字に人名を入れてある。
+#   もう1本（マンチェスター・ユナイテッドのユニフォーム）は scene なので、2本で構図が違う。
+date: 2026年10月10日
+slot: other_1
+format: news
+series: 記録の解説
+voice_min: 0
+people:
+- クリスティアーノ・ロナウド
+- リオネル・メッシ
+- ルカ・モドリッチ
+- ソー・チンアン
+- ピーター・シルトン
+theme:
+  id: record_caps
+  # league は集計の鍵。中身はポルトガル代表（ロナウド）が主役なので league_name で上書きする
+  league: england
+  league_name: ポルトガル代表
+  kind: other
+  topic: ポルトガル代表
+  title: ロナウドの代表234試合、1年あたりに直すと先頭ではない。前に出てくる選手
+  question: 代表の通算出場は、どこまでを数えた数字で、何が順番を決めているのか
+  lead: 代表の試合に出た数で、世界のいちばん上にいる記録。
+  hook: その数字が何年かけたものかまで見ると、並びが変わります。
+  takeaway: 代表の通算出場は、2026年10月6日時点でロナウドの234試合が世界の先頭。ただし出場を期間の長さで割ると1年あたり10.13試合で、1984年に代表を終えたマレーシアのソー・チンアンの13.08に届かない。ロナウドの234は23年かけた数字で、ソー・チンアンは15年で積んでいる。時代の違いは数字で追える。イングランド代表の試合は1930年代の1年5.7から2020年代は13.6へ2.4倍になり、親善試合の割合は51%から18%へ下がった。2018年のネーションズリーグでヨーロッパの公式戦は142から168に増え、48か国になった2026年のワールドカップでは準決勝まで進むチームの試合が7から8になっている。シルトンの1年あたり6.37がロナウドの10.13になった1.59倍は、代表の試合そのものの伸び1.60倍とほぼ同じで、伸びたのは選手ではなく出番の数のほうだと読める。数え方そのものも団体で食い違っていて、ソー・チンアンは公式に認められた195に対し統計団体は219、アルムタワは2022年に196で先頭に立ったあと数え直しで202に改められている。100試合を超えた699人を大陸で割ると1国あたりはアジアが7.73人で、ヨーロッパの5.31人より多い
+  opening_image: assets/images/20261010_record_caps/01_w.jpg
+short_title: ロナウドの234試合は23年ぶん。1年あたりなら上にソー・チンアンがいる
+thumbnail:
+  layout: face
+  photo: assets/images/20261010_record_caps/01_w.jpg
+  line1: ロナウド 代表234試合
+  line2: 1年あたりで上は●●
+  short_photo: assets/images/20261010_record_caps/01_v.jpg
+  tags:
+  - クリスティアーノ・ロナウド
+  - ポルトガル代表
+  - ルカ・モドリッチ
+  - 記録の解説
+sections:
+- id: top10
+  main: true
+  heading: 代表にいちばん多く出た選手
+  tier: 報道
+  telop: 10月6日時点の先頭はロナウドの234試合。1年あたりに直すと先頭が変わる
+  narrator: キャスター
+  card: &top_board
+    type: table
+    title: 代表の通算出場（10月6日時点）
+    columns: &topc
+    - 選手
+    - 国
+    - 出場
+    - 期間
+    rows: &topr
+    - - ロナウド
+      - ポルトガル
+      - '234'
+      - 2003–2026
+    - - メッシ
+      - アルゼンチン
+      - '208'
+      - 2005–2026
+    - - モドリッチ
+      - クロアチア
+      - '206'
+      - 2006–2026
+    - - アルムタワ
+      - クウェート
+      - '202'
+      - 2003–2022
+    - - ソー・チンアン
+      - マレーシア
+      - '195'
+      - 1969–1984
+    - - アルハイドス
+      - カタール
+      - '193'
+      - 2008–2026
+  say:
+  - text: ポルトガル代表のロナウドが持つ、代表の最多出場の記録を見ます。
+    short_only: true
+    image: assets/images/20261010_record_caps/01_w.jpg
+  - text: ロナウドがその234に届くまで、23年かかっています。
+    image: assets/backgrounds/stadium_ポルトガル代表.png
+    card: &ron_stats
+      type: stats
+      title: ロナウドの代表通算（10月6日時点）
+      items:
+      - ['234', 試合, 世界でいちばん多い]
+      - ['23', 年, 初出場から最後の試合まで]
+      focus: 1
+    emph: true
+  - text: 1年ぶんに割り直すと、上に出るのは1984年に代表を終えたソー・チンアン。
+    card:
+      <<: *top_board
+      highlight_row: 4
+  - text: 10月6日時点の上位は、ロナウド、メッシの208試合、モドリッチの206試合。
+    card: *top_board
+  - text: 4番目はクウェートのアルムタワ。ここまでの4人が、200を超えた全員です。
+    card:
+      <<: *top_board
+      highlight_row: 3
+  # 板を置かない行。山場の節で同じ板が20秒以上続かないようにする（`spread_long_cards` が
+  # サムネの写真を割り込ませると、縦の画面で板が顔にかかる）
+  - text: 数えたのは、フィファが公式と認めた試合だけです。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_men%27s_footballers_with_100_or_more_international_caps
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Lionel_Messi
+  - https://en.wikipedia.org/wiki/Luka_Modri%C4%87
+  - https://en.wikipedia.org/wiki/Bader_Al-Mutawa
+  - https://digitalhub.fifa.com/m/7a29d8a2cac79416/original/Century-Club-01112021.pdf
+- id: nations
+  heading: ヨーロッパ6か国の、いちばん多く出た選手
+  tier: 報道
+  telop: ポルトガルだけ桁が違う。ロナウドの234は2番目より88試合多い
+  narrator: キャスター
+  card: &nat_board
+    type: table
+    title: ヨーロッパ6か国の最多出場
+    columns: &natc
+    - 国
+    - 選手
+    - 出場
+    - 2番目
+    rows: &natr
+    - - ポルトガル
+      - ロナウド
+      - '234'
+      - モウチーニョ 146
+    - - スペイン
+      - ラモス
+      - '180'
+      - カシージャス 167
+    - - イタリア
+      - ブッフォン
+      - '176'
+      - カンナバーロ 136
+    - - ドイツ
+      - マテウス
+      - '150'
+      - クローゼ 137
+    - - フランス
+      - ロリス
+      - '145'
+      - テュラム 142
+    - - イングランド
+      - シルトンとケイン
+      - '125'
+      - ルーニー 120
+  say:
+  - text: 国ごとに見ると、ヨーロッパの主な6か国はこうなります。
+    card: *nat_board
+  - text: ポルトガルだけ、ひとつ抜けています。ロナウドは2番目より88試合多い。
+    card:
+      <<: *nat_board
+      highlight_row: 0
+    emph: true
+  - text: スペインはラモスの180試合。2番目のカシージャスとの差は13試合です。
+    card:
+      <<: *nat_board
+      highlight_row: 1
+  - text: イタリアはブッフォンの176試合で、2番目との差は40試合まで開きます。
+    card: &nat_bars
+      type: bars
+      title: ヨーロッパ6か国の最多出場
+      unit: 試合
+      items:
+      - {label: ポルトガル ロナウド, value: 234, highlight: true}
+      - {label: スペイン ラモス, value: 180}
+      - {label: イタリア ブッフォン, value: 176}
+      - {label: ドイツ マテウス, value: 150}
+      - {label: フランス ロリス, value: 145}
+      - {label: イングランド シルトンとケイン, value: 125}
+  - text: ドイツはマテウスの150試合。うち83は、統一前の西ドイツ代表での出場です。
+    card:
+      type: bars
+      title: ヨーロッパ6か国の最多出場
+      unit: 試合
+      items:
+      - {label: ポルトガル ロナウド, value: 234}
+      - {label: スペイン ラモス, value: 180}
+      - {label: イタリア ブッフォン, value: 176}
+      - {label: ドイツ マテウス, value: 150, highlight: true}
+      - {label: フランス ロリス, value: 145}
+      - {label: イングランド シルトンとケイン, value: 125}
+  - text: フランスはロリスの145試合。テュラムとの差は、わずか3試合しかありません。
+    card:
+      type: bars
+      title: ヨーロッパ6か国の最多出場
+      unit: 試合
+      items:
+      - {label: ポルトガル ロナウド, value: 234}
+      - {label: スペイン ラモス, value: 180}
+      - {label: イタリア ブッフォン, value: 176}
+      - {label: ドイツ マテウス, value: 150}
+      - {label: フランス ロリス, value: 145, highlight: true}
+      - {label: イングランド シルトンとケイン, value: 125}
+  - text: イングランドは125試合で2人が並び、この6か国でいちばん小さい数字です。
+    card:
+      <<: *nat_board
+      highlight_row: 5
+  - text: シルトンの125は1990年7月7日で止まり、36年たってケインが並びました。
+    card:
+      <<: *nat_board
+      highlight_row: 5
+  - text: 日本でいちばん多いのは152試合。この6か国のうち3か国より多い数です。
+    card: *nat_bars
+  - text: それでも、世界の上位20人には届きません。
+    card: *nat_bars
+  sources:
+  - https://en.wikipedia.org/wiki/England_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Spain_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Germany_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Italy_national_football_team
+  - https://en.wikipedia.org/wiki/France_national_football_team_records_and_statistics
+  - https://en.wikipedia.org/wiki/Portugal_national_football_team
+  - https://en.wikipedia.org/wiki/Lothar_Matth%C3%A4us
+  - https://en.wikipedia.org/wiki/Peter_Shilton
+  - https://en.wikipedia.org/wiki/Japan_national_football_team
+- id: era
+  heading: 数字の後ろで動いていたもの
+  tier: 報道
+  telop: イングランド代表の試合は1年5.7から13.6へ。親善試合の割合は51%から18%
+  narrator: 解説
+  card: &era_line
+    type: line
+    title: イングランド代表の1年あたりの試合数
+    x: &erax ['1930年代', '1950年代', '1970年代', '1990年代', '2010年代', '2020年代']
+    series: &eras
+    - [1年あたりの試合数, [5.7, 8.5, 10.0, 11.3, 11.8, 13.6]]
+    unit: 試合
+    note: 1930年代と2020年代で2.4倍。同じ「1試合」の重みが変わっている
+  say:
+  - text: ここからは、数字だけでは見えないところを見ます。
+    card: *era_line
+  - text: イングランド代表の試合は、1930年代が1年に5.7でした。
+    card: *era_line
+  - text: 2020年代は1年に13.6。90年で2.4倍まで増えています。
+    card:
+      type: line
+      title: イングランド代表の1年あたりの試合数
+      x: *erax
+      series: *eras
+      unit: 試合
+      highlight: '2020年代'
+    emph: true
+  - text: 親善試合の割合も、51%から18%まで下がっています。
+    card: *era_line
+  - text: ヨーロッパでは2018年に、ネーションズリーグという大会が始まりました。
+    card: &rules_board
+      type: points
+      title: 出番が増えた決まりごと
+      items:
+      - 2018年 ネーションズリーグ。公式戦が142から168へ
+      - 2026年 ワールドカップが48か国。準決勝まで進む側は7試合から8試合へ
+      - 2022年7月 交代は3人から5人へ
+  - text: 2020年の形の変更で、この大会の試合は142から168に増えています。
+    card: *rules_board
+  - text: 2026年のワールドカップは48か国。準決勝まで進むチームの試合は7から8へ。
+    card: *rules_board
+  - text: 交代できる人数も、2022年7月から3人ではなく5人に変わりました。
+    card: *rules_board
+  - text: もうひとつ、数え方そのものが団体によって食い違っています。
+    card: &gap_board
+      type: table
+      title: 数え方の食い違い
+      columns: &gapc
+      - 選手
+      - 公式と認められた数
+      - もうひとつの数
+      - 差
+      rows: &gapr
+      - - ソー・チンアン
+        - '195'
+        - '219'
+        - 24試合
+      - - アルムタワ
+        - '202'
+        - '196'
+        - 6試合
+  - text: ソー・チンアンは公式に認められた数が195。統計の団体は219まで数えます。
+    card:
+      <<: *gap_board
+      highlight_row: 0
+  - text: 219と195の差は24試合。五輪の試合などが公式と認められていないためです。
+    card:
+      <<: *gap_board
+      highlight_row: 0
+  - text: 195が公式に認められたのは2021年8月です。
+    card:
+      <<: *gap_board
+      highlight_row: 0
+  - text: 本人が代表で最後に出たのは、1984年10月18日でした。
+    card:
+      <<: *gap_board
+      highlight_row: 0
+  - text: アルムタワは2022年6月14日に196で先頭に立ち、その試合で代表を終えます。
+    card: &almutawa
+      type: stats
+      title: アルムタワの通算は、あとから動いた
+      items:
+      - ['196', 試合, 2022年6月14日に先頭へ]
+      - ['202', 試合, 数え直したあとの通算]
+      - ['6', 試合, 代表を離れてから増えた数]
+      focus: 2
+  - text: ところが、そのあとの数え直しで通算は202に改められました。
+    card: *almutawa
+  - text: 代表を離れたあとに、記録が6つ増えたことになります。
+    card: *almutawa
+    emph: true
+  - text: 一方でロナウドは、2023年6月20日に200試合へ届いています。
+    card: *gap_board
+  - text: こちらは、男子のプロ選手として初めてだとされました。
+    card: *gap_board
+  - text: アルムタワの202と、いまの初めてという記述が、食い違ったままです。
+    card: *gap_board
+  sources:
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(1930%E2%80%931959)
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(1960%E2%80%931979)
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(1980%E2%80%931999)
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(2000%E2%80%932019)
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(2020%E2%80%93present)
+  - https://en.wikipedia.org/wiki/UEFA_Nations_League
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup
+  - https://www.theifab.com/news/the-ifab-permanently-approves-five-substitute-option-in-top-level-competitions/
+  - https://en.wikipedia.org/wiki/Progression_of_association_football_caps_record
+  - https://www.rsssf.org/miscellaneous/soh-intl.html
+- id: view
+  viewpoint: true
+  heading: 1年あたりでそろえると、何が見えるか
+  tier: 背景
+  telop: 1年あたりは6.37から10.13へ1.59倍。試合そのものの伸び1.60倍と重なる
+  narrator: 解説
+  card: &rate_calc
+    type: calc
+    title: 1年あたりの出場は何倍になったか
+    terms:
+    - ['10.13試合', ロナウドの1年あたり]
+    - ['6.37試合', シルトンの1年あたり]
+    - [1.59倍, 56年でついた差]
+    ops: ['÷', ＝]
+  say:
+  - text: 最後に、こちらで数え直した比べを置きます。
+    card: *rate_calc
+  - text: シルトンは1年あたり6.37試合、ロナウドは10.13試合。
+    card: *rate_calc
+  - text: 割ると1.59倍。56年でついた差にあたります。
+    card: *rate_calc
+  - text: 代表の試合そのものも、1950年代の8.5から13.57へ。こちらも1.60倍。
+    card: &games_calc
+      type: calc
+      title: 代表の試合そのものは何倍になったか
+      terms:
+      - ['13.57試合', 2020年代の1年あたり]
+      - ['8.5試合', 1950年代の1年あたり]
+      - [1.60倍, 70年でついた差]
+      ops: ['÷', ＝]
+  - text: 選手ひとりが出られる数の伸びと、試合そのものの伸びが、ほぼ同じ倍率で重なります。
+    card: *games_calc
+    emph: true
+  - text: 増えたのは選手の丈夫さではなく、出番の数のほうだと読めます。
+    card: *games_calc
+  - text: その1年あたりでそろえ直すと、並びはこうなります。
+    card: &peryear
+      type: table
+      title: 1年あたりに直した出場（自分で数えた）
+      columns: &pyc
+      - 選手
+      - 出場
+      - 期間の長さ
+      - 1年あたり
+      rows: &pyr
+      - - ソー・チンアン
+        - '195'
+        - 14.91年
+        - '13.08'
+      - - カノ
+        - '193'
+        - 16.19年
+        - '11.92'
+      - - ラモス
+        - '180'
+        - 16.01年
+        - '11.24'
+      - - アルムタワ
+        - '202'
+        - 18.78年
+        - '10.76'
+      - - ロナウド
+        - '234'
+        - 23.10年
+        - '10.13'
+      - - モドリッチ
+        - '206'
+        - 20.60年
+        - '10.00'
+  - text: 先頭はソー・チンアンの13.08。15年で届いた数です。
+    card:
+      <<: *peryear
+      highlight_row: 0
+    emph: true
+  - text: ロナウドは表の5番目。こちらは23年かけての数になります。
+    card:
+      <<: *peryear
+      highlight_row: 4
+  - text: 並んだ6人のうち3人が、アジアの代表です。
+    card: *peryear
+  - text: 100試合を超えたのは122か国で699人。1つの国あたりにしてみます。
+    card: &conf_bars
+      type: bars
+      title: 100試合を超えた選手 1国あたり
+      unit: 人
+      items:
+      - {label: アジア, value: 7.73, highlight: true}
+      - {label: 南米, value: 7.20}
+      - {label: 北中米カリブ, value: 6.92}
+      - {label: ヨーロッパ, value: 5.31}
+      - {label: アフリカ, value: 3.05}
+  - text: アジアは1国あたり7.73人。ヨーロッパの5.31人より多いんです。
+    card: *conf_bars
+    emph: true
+  - text: その差は、およそ1.5倍になります。
+    card: *conf_bars
+  - text: オセアニアからは、まだひとりも出ていません。
+    card: *conf_bars
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_men%27s_footballers_with_100_or_more_international_caps
+  - https://en.wikipedia.org/wiki/Peter_Shilton
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Progression_of_association_football_caps_record
+  - https://en.wikipedia.org/wiki/England_national_football_team_results_(2020%E2%80%93present)

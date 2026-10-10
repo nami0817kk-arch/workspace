@@ -3,10 +3,6 @@ observed:
 - site: premierleague.com
   max: 4698606
   at: 2026-08-30T15:41
-- site: skysports.com
-  max: 12476234
-  at: 2026-09-10T03:00
-  exact: true
 - site: kicker.de
   max: 1238720
   at: 2026-09-10T15:47
@@ -111,12 +107,12 @@ observed:
   max: 1252214
   at: 2026-09-13T17:29
   exact: true
-- site: skysports.com
-  max: 13025496
-  at: 2026-09-13T18:24
-  exact: true
 - site: espn.com
   max: 49890784
+  at: 2026-09-13T18:24
+  exact: true
+- site: skysports.com
+  max: 13025496
   at: 2026-09-13T18:24
   exact: true
 - site: skysports.com
@@ -691,6 +687,10 @@ observed:
   max: 13591795
   at: 2026-10-09T02:01
   exact: true
+- site: skysports.com
+  max: 13596740
+  at: 2026-10-09T16:38
+  exact: true
 - site: espn.com
   max: 50134447
   at: 2026-10-09T17:58
@@ -707,7 +707,19 @@ observed:
   max: 1258783
   at: 2026-10-10T01:37
   exact: true
+- site: kicker.de
+  max: 1259645
+  at: 2026-10-10T01:42
+  exact: true
 - site: espn.com
   max: 50132069
   at: 2026-10-10T01:58
+  exact: true
+- site: skysports.com
+  max: 13597035
+  at: 2026-10-10T06:30
+  exact: true
+- site: kicker.de
+  max: 1259724
+  at: 2026-10-10T08:26
   exact: true
