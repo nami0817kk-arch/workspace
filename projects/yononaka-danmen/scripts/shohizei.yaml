@@ -73,7 +73,7 @@ sections:
       - 語り: そこを、数字で見ます。
 
   - id: "01"
-    photo: なし
+    photo: Sushi_selection
     name: 問い
     lead: 税込1080円は、いくらになるか
     figure:
@@ -298,7 +298,7 @@ sections:
       - 語り: 外国にも、食べ物の税率に線を引いている国があります。
 
   - id: "05"
-    photo: なし
+    photo: Borough_Market
     name: 世界と比べる
     lead: 外国は、食べ物の税率に線をどう引いているか
     figure:
@@ -350,7 +350,7 @@ sections:
       - 語り: そこが、次です。2年たったら、どうなるのか。
 
   - id: "06"
-    photo: なし
+    photo: Munich_square
     name: 2年後
     lead: 2029年4月1日に何が起きるか
     figure:
@@ -380,6 +380,7 @@ sections:
         point: 下げて、戻して、また下げた
       - kind: table
         from: ポーランドは2022年の2月
+        photo: Hala_Mirowska       # ワルシャワの市場。この表だけ背景を変える
         title: ポーランドの食べ物の税率
         cols: [税率]
         items:
@@ -413,7 +414,7 @@ sections:
       - 語り: ここまでを見たうえで、私の見立てです。
 
   - id: "07"
-    photo: なし
+    photo: Interior_of_Supermarket_in_Japan
     name: 見立て
     lead: 食料品の消費税を下げると、何が変わるのか
     figure:

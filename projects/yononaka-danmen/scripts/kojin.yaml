@@ -249,7 +249,7 @@ sections:
       - 語り: そういう狙われ方です。では、その弱い所は、どこから入られているのか。
 
   - id: "04"
-    photo: なし
+    photo: BalticServers     # サーバー室（Wikimedia・CC BY-SA 3.0。概要欄に作者名）
     name: 入口
     lead: 入口はメールではなかった
     figure:

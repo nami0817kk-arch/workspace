@@ -62,6 +62,57 @@ def sha256(p: Path) -> str:
     return h.hexdigest()
 
 
+PHOTO_DIR = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/photos")
+
+
+def photo_keys(sc: dict) -> list[str]:
+    """台本で使っている写真の名前（サムネ・節・図）。"""
+    keys = [(sc.get("thumbnail") or {}).get("photo")]
+    for sec in sc.get("sections", []):
+        keys.append(sec.get("photo"))
+        for fig in [sec.get("figure") or {}] + list(sec.get("more") or []):
+            keys.append(fig.get("photo"))
+    out = []
+    for k in keys:
+        k = str(k or "").strip()
+        if k and k != "なし" and k not in out:
+            out.append(k)
+    return out
+
+
+def photo_credits(sc: dict) -> list[str]:
+    """**作者名の表示が要る写真**（CC BY・CC BY-SA）を「題・作者・ライセンス」で返す。
+    2026-10-10 に足した。それまで概要欄に写真の作者を出しておらず、CC BY の写真が無表示だった。
+    Pexels は表示不要なので出さない。"""
+    # 控えは2か所ある（fetch_assets が書く credits.json と、手で取ったときの sources.json）。両方を見る
+    cred = []
+    try:
+        cred += json.loads((PHOTO_DIR / "credits.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        pass
+    try:
+        for c in json.loads((PHOTO_DIR.parent / "sources.json").read_text(encoding="utf-8")):
+            cred.append({"file": c.get("file"), "source": c.get("site"), "title": c.get("title"),
+                         "creator": c.get("author"), "license": c.get("license")})
+    except (FileNotFoundError, AttributeError):
+        pass
+    out = []
+    for k in photo_keys(sc):
+        for c in cred:
+            f = str(c.get("file", ""))
+            if str(k).lower() not in f.lower() or c.get("source") == "pexels":
+                continue
+            lic = str(c.get("license", ""))
+            if lic.upper().startswith("CC0") or "public domain" in lic.lower():
+                continue
+            title = str(c.get("title", "")).rsplit(".", 1)[0]
+            line = "・{}／{}／{}（Wikimedia Commons）".format(title, c.get("creator") or "作者不明", lic)
+            if line not in out:
+                out.append(line)
+            break
+    return out
+
+
 def description(sc: dict) -> str:
     """概要欄。**出典を必ず載せる**（このチャンネルの決まり）。"""
     lines = [str(sc.get("question", "")).strip(), ""]
@@ -86,6 +137,9 @@ def description(sc: dict) -> str:
         credits = []
     if credits:
         lines += ["声：" + "、".join(credits), ""]
+    pc = photo_credits(sc)
+    if pc:
+        lines += ["写真"] + pc + [""]
     lines += ["図はすべて自作です。", "運営：のこぎり社"]
     return "\n".join(lines).strip()
 
