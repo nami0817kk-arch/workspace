@@ -22,13 +22,13 @@ sources:
   - 英国 ICO「British Airways」「Marriott International」制裁金通知
 
 thumbnail:
-  layout: number            # カルテルの回は term。続けない
+  layout: term              # 2026-10-10 ユーザー「重要ワードがわかるように」。題材の言葉を主役に
   photo: 33175667
-  lead: ランサムウェアの入口が「メール」だったのは
-  main: 2件
-  tail: 92件のうち。いちばんは
-  tail2: VPN 61件
-  bubble: メールじゃない!?
+  main: 個人情報の流出
+  lead: 1週間で、1000万件規模が次々
+  tail: なぜ今？
+  tail2: 入口はメールじゃない
+  bubble: なんで続くの!?
 
 shorts: {}
 
