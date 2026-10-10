@@ -10,6 +10,8 @@
     python scripts/post.py upload 台本.yaml --at "2026-10-09 19:00"
     python scripts/post.py describe 台本.yaml              # 概要欄の文面だけ見る
     python scripts/post.py thumb-set 台本.yaml             # 投稿済みの動画のサムネイルを差し替える
+    python scripts/post.py screen-shorts 台本.yaml         # ショートを見せた控え（**関門**）
+    python scripts/post.py upload-shorts 台本.yaml --from "2026-10-10 21:00"   # ショートを枠に順に予約
 
 **関門を外さない。** upload は、動画をユーザーに見せて OK をもらい `screen` を打った
 控え（approvals/<台本>.screened.json）が無いと動かない。動画を作り直すと
@@ -191,6 +193,99 @@ def cmd_thumb_set(args) -> int:
     return 0
 
 
+SHORTS_DIR = OUT / "shorts"
+# ショートの公開時刻（CLAUDE.md「出す時間」。9時より前には出さない）
+SHORT_HOURS = [9, 11, 12, 13, 16, 17, 18, 19, 20, 21]   # 2026-10-10 ユーザー指示
+
+
+def short_video(path: Path, sid: str) -> Path:
+    return SHORTS_DIR / "{}_short_{}.mp4".format(path.stem, sid)
+
+
+def short_ids(sc: dict) -> list[str]:
+    return [k for k in (sc.get("shorts") or {}) if k not in ("intro", "top")]
+
+
+def short_title(spec: dict) -> str:
+    return "{} #shorts".format(str(spec.get("title", "")).replace("／", " ").strip())
+
+
+def short_description(sc: dict, spec: dict) -> str:
+    """ショートの概要欄。**リンクは貼らない**（CLAUDE.md。内容で本編へ引っぱる）。本編の題名だけ書く。"""
+    lines = [str(spec.get("tease", "")).replace("／", ""), "",
+             "答えは本編「{}」で。".format(str(sc.get("title", "")).strip()), ""]
+    src = [str(s) for s in sc.get("sources", []) if str(s).strip()]
+    if src:
+        lines += ["出典（本編と同じ）"] + ["・{}".format(s) for s in src] + [""]
+    try:
+        cfg = yaml.safe_load((ROOT / "config.yaml").read_text(encoding="utf-8"))
+        credits = [str(p["credit"]) for p in cfg.get("cast", {}).values() if p.get("credit")]
+    except FileNotFoundError:
+        credits = []
+    if credits:
+        lines += ["声：" + "、".join(credits), ""]
+    lines += ["運営：のこぎり社", "#shorts"]
+    return "\n".join(lines).strip()
+
+
+def cmd_screen_shorts(args) -> int:
+    """**ショートをユーザーが見て OK と言ったときだけ打つ。** 1本ずつ控える。"""
+    path = Path(args.script)
+    sc = load(path)
+    APPROVALS.mkdir(parents=True, exist_ok=True)
+    got = {}
+    for sid in short_ids(sc):
+        v = short_video(path, sid)
+        if not v.exists():
+            print("ショートの動画がありません: {}".format(v))
+            return 1
+        got[sid] = {"video": v.name, "sha256": sha256(v)}
+    (APPROVALS / "{}.shorts.screened.json".format(path.stem)).write_text(
+        json.dumps(got, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print("ショート {} 本の確認を控えました".format(len(got)))
+    return 0
+
+
+def cmd_upload_shorts(args) -> int:
+    """ショートを、`--from` の時刻から SHORT_HOURS の枠に順に予約する。"""
+    from datetime import datetime, timedelta
+    path = Path(args.script)
+    sc = load(path)
+    a = APPROVALS / "{}.shorts.screened.json".format(path.stem)
+    if not a.exists():
+        print("ショートをユーザーに見せて OK をもらってから screen-shorts してください")
+        return 2
+    ok = json.loads(a.read_text(encoding="utf-8"))
+    start = datetime.strptime(args.start, "%Y-%m-%d %H:%M")
+    slots, day = [], start.replace(hour=0, minute=0)
+    while len(slots) < len(short_ids(sc)):
+        for h in SHORT_HOURS:
+            t = day.replace(hour=h)
+            if t >= start:
+                slots.append(t)
+        day += timedelta(days=1)
+    svc = _service()
+    if svc is None:
+        return 2
+    for sid, at in zip(short_ids(sc), slots):
+        v = short_video(path, sid)
+        if sid not in ok or ok[sid]["sha256"] != sha256(v):
+            print("{}: 見せた動画と違います（作り直したら確認し直し）".format(sid))
+            return 2
+        key = "{}:short:{}".format(path.stem, sid)
+        if up.already_posted(POSTED, key):
+            print("{}: もう予約してあります".format(sid))
+            continue
+        spec = sc["shorts"][sid]
+        when = at.strftime("%Y-%m-%d %H:%M")
+        tags = list(dict.fromkeys(["shorts", "カルテル"] + TAGS))
+        print("{} {} → {}".format(sid, short_title(spec), when))
+        vid = up.upload(svc, v, short_title(spec), short_description(sc, spec), tags, up.publish_time(when))
+        up.record(POSTED, {"key": key, "video_id": vid, "title": short_title(spec), "publish_at": when})
+        print("  予約しました: https://youtu.be/{}".format(vid))
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="YouTube へ予約投稿する（日本のなぜ）")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -199,6 +294,10 @@ def main() -> int:
     s = sub.add_parser("describe"); s.add_argument("script"); s.set_defaults(fn=cmd_describe)
     s = sub.add_parser("screen"); s.add_argument("script"); s.set_defaults(fn=cmd_screen)
     s = sub.add_parser("thumb-set"); s.add_argument("script"); s.set_defaults(fn=cmd_thumb_set)
+    s = sub.add_parser("screen-shorts"); s.add_argument("script"); s.set_defaults(fn=cmd_screen_shorts)
+    s = sub.add_parser("upload-shorts"); s.add_argument("script")
+    s.add_argument("--from", dest="start", required=True, help="最初の枠の時刻 'YYYY-MM-DD HH:MM' 以降に順に置く")
+    s.set_defaults(fn=cmd_upload_shorts)
     s = sub.add_parser("upload")
     s.add_argument("script")
     s.add_argument("--at", required=True, help="公開時刻 'YYYY-MM-DD HH:MM'（日本時間・9〜24時）")
