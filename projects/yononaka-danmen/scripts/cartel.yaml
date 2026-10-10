@@ -23,14 +23,14 @@ sources:
   - 米国連邦法 15 U.S.C. §1・18 U.S.C. §3571
 
 thumbnail:
-  layout: number
+  # 2026-10-10 ユーザー「サムネはもっとカルテルとは？を強くする」→ 言葉を主役にする構図
+  layout: term
   photo: businessmen            # スーツの2人。道路の写真だと「道路の話」に見える
-  icon: scales
-  lead: 同じカルテルをした9社。1社だけ
-  main: 0円
-  tail: ほかは最大127億円
-  tail2: なぜ?
-  bubble: 同じことしたのに
+  main: カルテルとは？
+  lead: 同じカルテルをした9社のうち
+  tail: 1社だけ0円
+  tail2: ほかは最大127億円
+  bubble: そもそも何？
   credit: 公正取引委員会（令和元年7月30日）報道発表・別表
 
 # 冒頭の10秒。**ここで離脱が決まる**（CLAUDE.md）。数字を先に出し、そこから問いを立てる

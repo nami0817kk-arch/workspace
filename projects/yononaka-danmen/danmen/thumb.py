@@ -45,7 +45,7 @@ VF = r"C:/Windows/Fonts/NotoSansJP-VF.ttf"
 PHOTOS = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/photos")
 GOLD, CREAM, RED, NAVY = (255, 206, 72), (252, 250, 245), (214, 48, 49), (10, 16, 34)
 BAR_COLORS = [(116, 136, 178), GOLD, (214, 152, 60), (156, 112, 66), (96, 150, 140)]
-LAYOUTS = ("classic", "number", "versus")
+LAYOUTS = ("classic", "number", "versus", "term")
 
 
 def F(size: int, weight: int = 900):
@@ -330,10 +330,45 @@ def _versus(spec):
     return im.convert("RGB")
 
 
+def _term(spec):
+    """**言葉そのものを主役にする**（2026-10-10 ユーザー「カルテルとは？を強くする」）。
+
+    上に問いの言葉を画面いっぱいの金で（`main`）。その下に、その言葉で起きた事実を白で
+    （`lead` 小・`tail` 大・`tail2`）。右下に2人。人と文字が重ならないよう、下の文字は左半分に収める。
+    """
+    im = backdrop(spec.get("photo"), 0.40).convert("RGBA")
+    _vignette(im)
+    _speed_lines(im, 640, 200, 150, 60)
+    main = str(spec.get("main", ""))
+    if main:
+        # 画面の幅に合わせて大きさを決める（左右 40px）
+        size = 260
+        while size > 120 and ImageDraw.Draw(im).textlength(main, font=F(size)) > W - 80:
+            size -= 4
+        w = ImageDraw.Draw(im).textlength(main, font=F(size))
+        _glow_text(im, (int((W - w) / 2), 18), main, size, GOLD, stroke=24)
+    d = ImageDraw.Draw(im)
+    y = 300
+    if spec.get("lead"):
+        d.text((48, y), str(spec["lead"]), font=F(48, 800), fill=(214, 226, 246),
+               stroke_width=10, stroke_fill=(6, 10, 18))
+        y += 66
+    if spec.get("tail"):
+        d.text((44, y), str(spec["tail"]), font=F(112), fill=CREAM,
+               stroke_width=18, stroke_fill=(6, 10, 18))
+        y += 138
+    if spec.get("tail2"):
+        d.text((48, y), str(spec["tail2"]), font=F(64), fill=CREAM,
+               stroke_width=13, stroke_fill=(6, 10, 18))
+    _two(im, 340, 368, str(spec.get("bubble", "")))
+    _band(im, str(spec.get("credit", "")))
+    return im.convert("RGB")
+
+
 def make(spec: dict) -> Image.Image:
     """台本の `thumbnail:` 欄からサムネイルを作る。"""
     layout = str(spec.get("layout", "classic"))
-    fn = {"classic": _classic, "number": _number, "versus": _versus}.get(layout)
+    fn = {"classic": _classic, "number": _number, "versus": _versus, "term": _term}.get(layout)
     if fn is None:
         raise ValueError("知らない構図です: {}（使えるのは {}）".format(layout, "／".join(LAYOUTS)))
     return fn(spec)

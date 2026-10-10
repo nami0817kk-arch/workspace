@@ -9,6 +9,7 @@
     python scripts/post.py screen 台本.yaml                # 動画を見せた控え（**関門**）
     python scripts/post.py upload 台本.yaml --at "2026-10-09 19:00"
     python scripts/post.py describe 台本.yaml              # 概要欄の文面だけ見る
+    python scripts/post.py thumb-set 台本.yaml             # 投稿済みの動画のサムネイルを差し替える
 
 **関門を外さない。** upload は、動画をユーザーに見せて OK をもらい `screen` を打った
 控え（approvals/<台本>.screened.json）が無いと動かない。動画を作り直すと
@@ -169,6 +170,25 @@ def cmd_upload(args) -> int:
     return 0
 
 
+def cmd_thumb_set(args) -> int:
+    """投稿済みの動画のサムネイルを差し替える（台本からサムネイルを作り直してから）。"""
+    path = Path(args.script)
+    done = up.already_posted(POSTED, "{}:main".format(path.stem))
+    if not done:
+        print("まだ投稿していません")
+        return 1
+    thumb = OUT / "{}_thumbnail.png".format(path.stem)
+    if not thumb.exists():
+        print("サムネイルがありません: {}".format(thumb))
+        return 1
+    svc = _service()
+    if svc is None:
+        return 2
+    svc.thumbnails().set(videoId=done["video_id"], media_body=str(thumb)).execute()
+    print("サムネイルを差し替えました: https://youtu.be/{}".format(done["video_id"]))
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="YouTube へ予約投稿する（日本のなぜ）")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -176,6 +196,7 @@ def main() -> int:
     sub.add_parser("reauth").set_defaults(fn=cmd_reauth)
     s = sub.add_parser("describe"); s.add_argument("script"); s.set_defaults(fn=cmd_describe)
     s = sub.add_parser("screen"); s.add_argument("script"); s.set_defaults(fn=cmd_screen)
+    s = sub.add_parser("thumb-set"); s.add_argument("script"); s.set_defaults(fn=cmd_thumb_set)
     s = sub.add_parser("upload")
     s.add_argument("script")
     s.add_argument("--at", required=True, help="公開時刻 'YYYY-MM-DD HH:MM'（日本時間・9〜24時）")
