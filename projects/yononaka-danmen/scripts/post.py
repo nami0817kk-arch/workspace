@@ -106,6 +106,9 @@ def photo_credits(sc: dict) -> list[str]:
             if lic.upper().startswith("CC0") or "public domain" in lic.lower():
                 continue
             title = str(c.get("title", "")).rsplit(".", 1)[0]
+            # 出典の欄に手で書いてある写真は出さない（カルテルの回は sources: に入れてあり、二重に出た）
+            if any(title and title in str(src) for src in sc.get("sources", [])):
+                break
             line = "・{}／{}／{}（Wikimedia Commons）".format(title, c.get("creator") or "作者不明", lic)
             if line not in out:
                 out.append(line)
