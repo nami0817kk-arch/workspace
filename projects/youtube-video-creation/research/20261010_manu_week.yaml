@@ -1,0 +1,296 @@
+# 取材メモ（10/10 題材 manu_week＝題材一覧の⑪「キャリックとマンUにとって大きな1週間」、型は news、プレミア枠）。
+# **同じ日の 20261010_city_carrick と軸を分けている。**
+#   city_carrick ＝ 9月29日の判定についてキャリックが語ったこと（判定・9季・控訴の期限・剥奪）。
+#   この本 ＝ **今週の2試合と、いまの順位と、間に合わない選手**。
+#   判定・控訴・剥奪・9季・5,252日の話は一行も入れない。会見から引くのも「すねの痛みの見通し」だけにした
+#   （判定についての発言は city_carrick に置いてあるので、この本では引かない）。
+#   読み上げの言い回しも突き合わせて、10字以上そのまま重なるものが無いことを確かめた。
+# 事実の土台はすべて報道・公式の表から取った。検索の要約は根拠にしていない:
+#   ・ESPN（Rob Dawson、10月9日17:30 ET）＝セシュコの発言2つ、ドルグ・マズラウイ・バレバの状態、
+#     セシュコがトッテナム戦に出られないこと、フラム戦（1-1）も欠場していたこと
+#   ・ESPN の試合前情報（国際試合明け）＝トッテナム戦に欠ける3人の確認
+#   ・ESPN の順位表（2026-27、5試合終了時点）＝順位・勝ち点・得点・失点・得失点差
+#   ・ESPN の順位表（2025-26 最終）＝ユナイテッドは3位で勝ち点71
+#   ・ESPN の日程と結果＝10月10日トッテナム、10月13日アトレティコ、9月10日サバフ戦0-4、
+#     8月1日のアトレティコとの親善試合1-2
+#   ・ESPN の10月13日の欧州の組み合わせ＝「アトレティコ・マドリード 対 マンチェスター・ユナイテッド」＝**敵地**
+# **使わないと決めたもの**:
+#   ・キャリックの年齢・就任の時期・契約の長さ（当たったのが検索結果の要約だけで、記事の原文に辿れなかった）
+#   ・会場の名前（スポンサー名の入った呼び名なので「敵地マドリード」までにした）
+#   ・「批判」「解任」に当たる言葉（当たった記事のどれにも本人の言葉として無い。評論家の見立ては引かない）
+#   ・サバフの国名（結果の表に国が書かれていないので「初戦」までにした）
+# 1試合あたりの数字（1.86・5試合で9の目安・6試合で11の目安・4倍・中2日・4日で2試合）は、
+#   上の表の数字からこの回で自分で割った。報道の中の計算を写したものではない。
+# **板について**：山場（week）は発言が続く区間なので、行ごとに分けた表を置いて `highlight_row` を動かす。
+#   いちばん強い1行（「いまの時点ではまだはっきりしない」）だけ板を外して顔にする。
+#   節に `card:` を書くと全行へ展開されて行の `card: none` が効かないので、**節の card は置かず、行ごとに書いた**。
+# 写真は Commons の CC0（Timmy96、2025年。Wikidata が本人の画像として挙げている1枚）。
+#   記事の写真を先に当たったが、**ショートに敷ける高さ1200px以上のものが無かった**
+#   （ESPN の og:image は 1296x729、Read Man Utd は 1200x882。どちらも9:16に切ると2.0倍を超える）。
+#   さらに ESPN の og:image は**キャリックではなく選手が写っていた**ので取り込んでいない。
+#   この1枚はミドルズブラ時代の服装だが、[[写真の決まり]]の「他に無ければそのまま使う」に当たる。
+#   切るのは手でやらず facecrop.py（01_w＝16:9・01_v＝9:16）。どちらも開いて目で見た。
+#   代理店（Getty・AFLO・AFP・ロイター・IMAGO・AP・PA・EPA・共同）のものは1枚も取り込んでいない。
+# ネットの反応は集めていない（この題材で実在する投稿を当たっていないため、作らない）。
+date: 2026年10月10日
+slot: premier_2
+format: news
+people: []
+theme:
+  id: manu_week
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: マンU、キャリックの4日で2試合。去年3位のチームがいる場所
+  question: 5試合を終えたマンチェスター・ユナイテッドは、この4日の2試合をどんな状態で迎えるのか
+  takeaway: 去年38試合で勝ち点71を取って3位だったクラブが、今年は5試合で勝ち点5の12位にいる。1試合あたり1.86という去年の取り方なら5試合で9に届いていた計算で、4つ足りない。首位との差は開幕5試合でもう10。そこへ土曜の最下位トッテナム戦と、中2日あけた火曜の敵地アトレティコ戦が続く。トッテナムは5試合で勝ちが無く、得点は2で1試合0.4、ユナイテッドの8得点はその4倍。欠けるのはセシュコ・ドルグ・マズラウイの3人で、セシュコの戻りは監督自身が「まだはっきりしない」と言っている。土曜に勝っても勝ち点は8で、6試合ぶんの目安11には3足りない
+  opening_image: assets/images/20261010_manu_week/01_w.jpg
+short_title: マンU、中2日で2試合。キャリックが語った戻りの見通し
+thumbnail:
+  layout: face
+  photo: assets/images/20261010_manu_week/01_w.jpg
+  short_photo: assets/images/20261010_manu_week/01_v.jpg
+  line1: マンU キャリック監督
+  line2: 去年3位。いまは●位
+  tags:
+  - マンチェスター・ユナイテッド
+  - トッテナム
+  - プレミアリーグ
+sections:
+- id: now
+  heading: 去年3位、いまは12位
+  tier: 報道
+  telop: 5試合で1勝2分2敗、勝ち点5。去年は38試合で71を取って3位だった
+  narrator: キャスター
+  say:
+  - text: ユナイテッドは、5試合を終えて12位にいます。
+    image: assets/images/20261010_manu_week/01_w.jpg
+    card: &standing
+      type: table
+      title: 5試合を終えた並び
+      columns:
+      - 順位
+      - クラブ
+      - 勝ち点
+      rows:
+      - - 1位
+        - マンチェスター・シティ
+        - 15
+      - - 12位
+        - マンチェスター・ユナイテッド
+        - 5
+      - - 20位
+        - トッテナム
+        - 2
+  - text: 1勝2分2敗で勝ち点5。得点が8、失点も8です。
+    card:
+      <<: *standing
+      highlight_row: 1
+  - text: いちばん上は5試合全勝で15。開幕から10も離れています。
+    card:
+      <<: *standing
+      highlight_row: 0
+  - text: 去年のこのクラブは、38試合で勝ち点71の3位でした。
+    card: &pace
+      type: calc
+      title: 去年の取り方を5試合に当てると
+      terms:
+      - - 71
+        - 去年の勝ち点
+      - - 38
+        - 去年の試合数
+      - - 1.86
+        - 1試合あたり
+      ops:
+      - ÷
+      - ＝
+  - text: 1試合あたり1.86。5試合なら、9に届いていた計算です。
+    card: *pace
+    emph: true
+  - text: いまは5。4つ足りていません。
+    card: *pace
+  sources:
+  - https://www.espn.com/soccer/standings/_/league/eng.1
+  - https://www.espn.com/soccer/standings/_/league/eng.1/season/2025
+- id: week
+  main: true
+  heading: 4日で2試合、そこに3人が間に合わない
+  tier: 報道
+  telop: 土曜にトッテナム、中2日で火曜に敵地アトレティコ。セシュコの戻りは未定
+  narrator: キャスター
+  say:
+  - text: キャリックのマンチェスター・ユナイテッド。去年3位から12位です。
+    short_only: true
+    card: none
+    image: assets/images/20261010_manu_week/01_w.jpg
+  - text: 土曜にトッテナム、火曜は敵地でアトレティコ。4日で2試合です。
+    card: &two
+      type: table
+      title: この4日の2試合
+      columns:
+      - 日
+      - 相手
+      - 大会
+      rows:
+      - - 10月10日
+        - トッテナム（本拠地）
+        - プレミアリーグ
+      - - 10月13日
+        - アトレティコ（敵地）
+        - 欧州の大会
+  - text: その2試合に、3人が間に合いません。
+    card: &out
+      type: table
+      title: 土曜の試合に向けた3人と1人
+      columns:
+      - 名前
+      - 状態
+      rows:
+      - - セシュコ
+        - すねの痛みで欠場
+      - - ドルグ
+        - 代表で痛めて数週間
+      - - マズラウイ
+        - 代表で痛めて欠場
+      - - バレバ
+        - 初出場の見込み
+  - text: ひとりは、すねを痛めているセシュコです。
+    card:
+      <<: *out
+      highlight_row: 0
+  - voice: キャリック
+    text: どのくらいかかるのか、まだ見極めているところだ。
+    card:
+      <<: *out
+      highlight_row: 0
+  - voice: キャリック
+    text: 早いうちに、とは思っている。
+    cont: true
+    card:
+      <<: *out
+      highlight_row: 0
+  - voice: キャリック
+    text: ただ、いまの時点では、まだはっきりしない。
+    cont: true
+    emph: true
+    card: none
+    image: assets/images/20261010_manu_week/01_w.jpg
+  - text: 代表の活動を離れ、前の節のフラム戦にも出ていません。
+    card:
+      <<: *out
+      highlight_row: 0
+  - text: 代表に行った2人は、そこで痛めて帰ってきています。
+    card:
+      <<: *out
+      highlight_row: 1
+  - text: ドルグは数週間。マズラウイも土曜には出られません。
+    card:
+      <<: *out
+      highlight_row: 2
+  - text: 入れ替わりに、夏に加わったバレバが初めて出そうです。
+    card:
+      <<: *out
+      highlight_row: 3
+  - text: 中2日で、リーグと欧州が続きます。
+    card:
+      <<: *two
+      highlight_row: 1
+  quotes_from:
+  - ESPN（Rob Dawson、10月9日） https://www.espn.com/soccer/story/_/id/50142759/man-united-injury-news-benjamin-sesko-michael-carrick
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50142759/man-united-injury-news-benjamin-sesko-michael-carrick
+  - https://www.espn.com/soccer/story/_/id/50138142/premier-league-team-news-injury-updates-international-break
+  - https://www.espn.com/soccer/team/fixtures/_/id/360/manchester-united
+  - https://www.espn.com/soccer/fixtures/_/date/20261013/league/uefa.champions
+- id: spurs
+  heading: 土曜に来るのは最下位
+  tier: 報道
+  telop: トッテナムは5試合で勝ちが無く、得点は2。1試合あたり0.4
+  narrator: 解説
+  say:
+  - text: 土曜の相手は、いちばん下にいます。
+    card: &spurs
+      type: table
+      title: トッテナムの5試合
+      columns:
+      - 項目
+      - 数
+      rows:
+      - - 順位
+        - 20位
+      - - 勝った試合
+        - 0
+      - - 得点
+        - 2
+      - - 得失点差
+        - マイナス6
+  - text: 5試合で、まだ勝った試合がありません。
+    card:
+      <<: *spurs
+      highlight_row: 1
+  - text: 得点は2。1試合あたり0.4しか取れていません。
+    card:
+      <<: *spurs
+      highlight_row: 2
+  - text: ユナイテッドの得点は8。5試合で割ると1.6。4倍です。
+    card:
+      <<: *spurs
+      highlight_row: 2
+  - text: 得失点差はマイナス6で、下から2番目です。
+    card:
+      <<: *spurs
+      highlight_row: 3
+  sources:
+  - https://www.espn.com/soccer/standings/_/league/eng.1
+- id: view
+  viewpoint: true
+  heading: この4日で動く数字
+  tier: 背景
+  telop: 土曜に勝っても勝ち点は8。6試合ぶんの目安11には3足りない
+  narrator: 解説
+  say:
+  - text: 土曜に勝つと、リーグの勝ち点は8になります。
+    card: &ifwin
+      type: calc
+      title: 土曜に勝ったときの勝ち点
+      terms:
+      - - 5
+        - いまの勝ち点
+      - - 3
+        - 勝ったら足される
+      - - 8
+        - 土曜のあと
+      ops:
+      - ＋
+      - ＝
+  - text: 去年の取り方なら6試合で11の目安なので、3足りません。
+    card: *ifwin
+    emph: true
+  - text: 分ければ6、負ければ5のままです。
+    card: *ifwin
+  - text: 欧州のほうは、初戦に4対0で勝って勝ち点3を持っています。
+    image: assets/images/20261010_manu_week/01_w.jpg
+    card: &euro
+      type: table
+      title: 欧州の大会で、ここまでと次
+      columns:
+      - いつ
+      - 相手
+      - 結果
+      rows:
+      - - 9月10日
+        - サバフ
+        - 4対0で勝ち
+      - - 10月13日
+        - アトレティコ（敵地）
+        - これから
+  - text: 火曜のアトレティコには、8月1日の親善試合で2対1で勝っています。
+    card:
+      <<: *euro
+      highlight_row: 1
+  - text: ただ、あれは夏の話。順位も欠場者も、いまとは違います。
+    card: none
+  sources:
+  - https://www.espn.com/soccer/team/results/_/id/360/manchester-united
+  - https://www.espn.com/soccer/fixtures/_/date/20261013/league/uefa.champions
