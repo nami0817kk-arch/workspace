@@ -372,7 +372,9 @@ def cmd_upload_shorts(args) -> int:
             continue
         spec = sc["shorts"][sid]
         when = at.strftime("%Y-%m-%d %H:%M")
-        tags = list(dict.fromkeys(["shorts", "カルテル"] + TAGS))
+        # 題材のタグは上の帯の1つ目の言葉から（前は「カルテル」と決め打ちで、ほかの回にも付くところだった）
+        word = str((sc.get("shorts") or {}).get("top", "")).split("／")[0].replace("とは？", "").strip()
+        tags = list(dict.fromkeys(["shorts"] + ([word] if word else []) + TAGS))
         print("{} {} → {}".format(sid, short_title(spec), when))
         vid = up.upload(svc, v, short_title(spec), short_description(sc, spec), tags, up.publish_time(when))
         up.record(POSTED, {"key": key, "video_id": vid, "title": short_title(spec), "publish_at": when})
