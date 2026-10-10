@@ -207,6 +207,13 @@ def _write(painter, layer: Image.Image, text: str, x: float, y: float, p: float,
     layer.alpha_composite(tile, (int(tx), int(ty)))
 
 
+def circle_bounds(box) -> tuple[float, float, float, float]:
+    """丸（circle）の外の枠。指す範囲を少し広げた楕円（図の地名を丸の外へ逃がすのにも使う。chiso/figures.py）。"""
+    x0, y0, x1, y1 = box
+    px, py = (x1 - x0) * 0.12 + 12, (y1 - y0) * 0.18 + 12
+    return x0 - px, y0 - py, x1 + px, y1 + py
+
+
 def draw_one(painter, layer: Image.Image, m: dict, box, area, i: int, p: float) -> None:
     """書き込み1つ。box は指す範囲（点なら幅0）、area は描いてよい範囲（矢印の向き・字の置き場に使う）。"""
     d = ImageDraw.Draw(layer)
@@ -219,8 +226,9 @@ def draw_one(painter, layer: Image.Image, m: dict, box, area, i: int, p: float) 
     if kind == "circle":
         if point:
             x0, y0, x1, y1 = cx - 60, cy - 50, cx + 60, cy + 50
-        px, py = (x1 - x0) * 0.12 + 12, (y1 - y0) * 0.18 + 12
-        pts = _wobble(_ellipse_pts((x0 - px, y0 - py, x1 + px, y1 + py), rnd), rnd, 1.2)
+        ring = circle_bounds((x0, y0, x1, y1))
+        px, py = x0 - ring[0], y0 - ring[1]
+        pts = _wobble(_ellipse_pts(ring, rnd), rnd, 1.2)
         _line(d, _part(pts, p))
         if text and p >= 1:
             _write(painter, layer, text, x1 + px - 10, y0 - py + 8, 1.0, "ls")

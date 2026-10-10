@@ -76,8 +76,25 @@ def portrait_box(painter, pic) -> tuple[int, int, int, int]:
     p = painter.image(pic.image)
     ph = 440
     pw = int(p.width * ph / p.height)
+    if pw > PORTRAIT_TOP_W:
+        # 横長の絵（屏風など）は、そのままだと額が左へ広がって節の題にかぶる（10-09 秀吉の《肥前名護屋城図屏風》）。
+        # 少し横長なら上のまま幅を抑え、それより横長なら題の下から始めて下の端をそろえる
+        if PORTRAIT_TOP_W / pw * ph >= PORTRAIT_MIN_H:
+            pw, ph = PORTRAIT_TOP_W, int(p.height * PORTRAIT_TOP_W / p.width)
+        else:
+            ph = 70 + 440 - PORTRAIT_LOW_Y
+            pw = int(p.width * ph / p.height)
+            if pw > PORTRAIT_LOW_W:
+                pw, ph = PORTRAIT_LOW_W, int(p.height * PORTRAIT_LOW_W / p.width)
+            return painter.W - pw - 330, PORTRAIT_LOW_Y, pw, ph
     px, py = painter.W - pw - 330, 70
     return px, py, pw, ph
+
+
+PORTRAIT_TOP_W = 530      # 上（y 70）に置く肖像の幅の上限。額の左の端が x≈1040 より右（節の題の場所を残す）
+PORTRAIT_MIN_H = 330      # 幅を抑えたときの高さの下限。これより低くなる横長の絵は題の下へ
+PORTRAIT_LOW_Y = 250      # 題の下に置くときの上の端（「この時○歳」の札 y-34 も題にかからない）
+PORTRAIT_LOW_W = 890      # 題の下に置くときの幅の上限（左のメモの札にかからない）
 
 
 def draw_bubble(painter, img: Image.Image, pic, bubble: dict) -> Image.Image:

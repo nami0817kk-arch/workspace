@@ -18,14 +18,15 @@ class Cue:
     wav: Path
 
 
-def plan(lines: list, spoken: dict[int, object]) -> tuple[list[Cue], float]:
-    """行の並びと音声の長さから、各行の開始・終了時刻を決める。全体の長さも返す。"""
+def plan(lines: list, spoken: dict[int, object], recap=()) -> tuple[list[Cue], float]:
+    """行の並びと音声の長さから、各行の開始・終了時刻を決める。全体の長さも返す。
+    recap は「ここまでの地層」を出す節の番号（その節の頭の間を長くする。render.recap_sections）。"""
     cues: list[Cue] = []
     t = 0.0
     prev = None
     for line in lines:
         s = spoken[line.index]
-        t += gap_before(prev, line)
+        t += gap_before(prev, line, recap)
         cues.append(Cue(line, round(t, 3), round(t + s.seconds, 3), s.wav))
         t += s.seconds
         prev = line

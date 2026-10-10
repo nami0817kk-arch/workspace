@@ -235,8 +235,10 @@ def still_frames(ffmpeg: str, painter, runs: list[Run], work: Path, fps: int, si
     （同じ節の中は fade、節が替わるところは smoothleft。前の background_track と同じ）。"""
     import hashlib
     work.mkdir(parents=True, exist_ok=True)
+    uniq = list(dict.fromkeys(r.picture for r in runs))     # 同じ絵は1回だけ作る（10-09、同じ絵を並列で作ると一時ファイルの奪い合いで落ちた）
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        plates = list(ex.map(lambda r: _plate(ffmpeg, painter, r.picture, work, size), runs))
+        made = dict(zip(uniq, ex.map(lambda pic: _plate(ffmpeg, painter, pic, work, size), uniq)))
+    plates = [made[r.picture] for r in runs]
     n = max(1, round(XFADE * fps))
     items: list[tuple[Path, float]] = []
     todo = []

@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yomi"
+version = "0.1.0"
+description = "合成音声（VOICEVOX など）の読み違いを、音を出す前に見つける共有ライブラリ（rekishi-chiso が使う）"
+requires-python = ">=3.11"
+dependencies = [
+    "fugashi>=1.3",
+    "unidic-lite>=1.0.8",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+yomi = ["data/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-v"
+markers = [
+    "voicevox: VOICEVOX のエンジン（127.0.0.1:50021）が要る。手元だけで回る（繋がらなければ飛ばす。CI には無い）",
+]

@@ -3,7 +3,8 @@
     python -m chiso.cli prepare-characters --tsumugi <公式立ち絵png> --kenzaki <公式イラストpng>
     python -m chiso.cli voice   scripts/x.yaml          # 音声だけ作って1本にする（抑揚の確認用）
     python -m chiso.cli draft   scripts/x.yaml          # 確認用の動画（右上に「確認用」と出る）。承認は要らない
-    python -m chiso.cli approve scripts/x.yaml          # 台本の承認を控える（ユーザーの OK が出たときだけ）
+    python -m chiso.cli reading-ok scripts/x.yaml       # 全行の kana を1行ずつ確かめたあとの控え（approve の前に要る）
+    python -m chiso.cli approve scripts/x.yaml          # 台本の承認を控える（自分の確認を回しきったあとだけ。reading-ok が要る）
     python -m chiso.cli build   scripts/x.yaml          # 本番の動画。承認した台本の中身と一致しないと動かない
     python -m chiso.cli shorts  scripts/x.yaml [--draft]  # short: を付けた行からショートを全部作る
     python -m chiso.cli describe scripts/x.yaml [--keywords]   # 概要欄（章・クレジット・絵の出典。--keywords で扱う語）
@@ -22,6 +23,11 @@
 
 台本確認は必ず通す（チャンネル共通の決まり）。approve を打つのは、ユーザーが台本に
 はっきり「OK」と言ったときだけ。「見せて」「出す」は承認ではない。
+
+読みの確認も関門（10-10。10/12〜13 の4本で聞いて分かる誤読が約50か所あった）：check が「読み：」で
+辞書との食い違い・読みが割れる語・readings.yaml の巻き込み（共有ライブラリ libs/yomi）を出す（chiso/reading.py）。kana を全行確かめたら
+reading-ok を打つ。approve は、その控え（台本と readings.yaml のハッシュ）が無いか合わないと止まる。
+readings.yaml を変えると全台本の控えが外れる。予約・公開済みの回（posted.json に main がある回）は対象外。
 """
 from __future__ import annotations
 
@@ -32,6 +38,7 @@ import subprocess
 import sys
 from dataclasses import replace
 from pathlib import Path
+from urllib.parse import unquote
 
 import yaml
 
@@ -95,9 +102,60 @@ def is_approved(path: Path) -> bool:
     return json.loads(a.read_text(encoding="utf-8")).get("sha256") == script_mod.digest(path)
 
 
+def reading_ok_path(path: Path, root: Path | None = None) -> Path:
+    return (root or ROOT) / "approvals" / f"{path.stem}.reading.json"
+
+
+def _file_sha(p: Path) -> str:
+    """ファイルの中身のハッシュ（改行は LF にそろえる。Windows の CRLF の取り出しと CI で同じ値に）。"""
+    import hashlib
+    return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest() if p.exists() else ""
+
+
+def is_posted(path: Path, root: Path | None = None) -> bool:
+    """予約・公開済みの本編か（posted.json に <名前>:main がある）。読みの関門の対象外。"""
+    log = (root or ROOT) / "posted.json"
+    if not log.exists():
+        return False
+    return any(str(e.get("key", "")) == f"{path.stem}:main" for e in json.loads(log.read_text(encoding="utf-8")))
+
+
+def reading_ok_problem(path: Path, root: Path | None = None) -> str | None:
+    """読みの確認の控えが使えないときの理由（使えるなら None）。予約・公開済みの回は見ない。"""
+    root = root or ROOT
+    if is_posted(path, root):
+        return None
+    a = reading_ok_path(path, root)
+    if not a.exists():
+        return "読みの確認の控えがありません。kana を全行確かめてから reading-ok を打ってください"
+    got = json.loads(a.read_text(encoding="utf-8"))
+    if got.get("sha256") != script_mod.digest(path):
+        return "読みの確認のあとで台本が変わっています。変えた行の kana を確かめて reading-ok を打ち直してください"
+    if got.get("readings_sha256") != _file_sha(root / "readings.yaml"):
+        return "読みの確認のあとで readings.yaml が変わっています。kana を確かめて reading-ok を打ち直してください"
+    return None
+
+
+def cmd_reading_ok(args) -> int:
+    """全行の kana を1行ずつ確かめたあとだけ打つ。台本と readings.yaml のハッシュを控える。"""
+    path = Path(args.script)
+    script_mod.load(path)
+    a = reading_ok_path(path)
+    a.parent.mkdir(exist_ok=True)
+    a.write_text(json.dumps({"script": path.name, "sha256": script_mod.digest(path),
+                             "readings_sha256": _file_sha(ROOT / "readings.yaml")}, ensure_ascii=False, indent=1)
+                 + "\n", encoding="utf-8")
+    print(f"読みの確認を控えました: {a.name}（台本か readings.yaml を変えたら確かめ直し）")
+    return 0
+
+
 def cmd_approve(args) -> int:
     path = Path(args.script)
     script_mod.load(path)  # 壊れた台本は承認しない
+    why = reading_ok_problem(path)
+    if why:
+        print(why)
+        return 2
     a = approval_path(path)
     a.parent.mkdir(exist_ok=True)
     a.write_text(json.dumps({"script": path.name, "sha256": script_mod.digest(path)}, ensure_ascii=False, indent=1)
@@ -127,7 +185,16 @@ def preflight(sc, config) -> bool:
             if not errors:                               # 引きの要素と構図の組み合わせで文字が狭くならないか（10-08）
                 from .thumb import text_room
                 warns += text_room(sc.thumbnail, config, assets_dir(config))
+    if not errors:                                       # 節の題が右上の札・肖像の額に隠れないか（10-09）
+        from .render import Painter
+        painter = Painter(config, sc, assets_dir(config), (1920, 1080))
+        errors += check_mod.section_title_fit(painter)
+        warns += check_mod.timeline_crowding(painter)
     warns += check_mod.lint(sc, config.get("short", {}).get("max_seconds", 60))
+    from . import reading                                # 読み違い（10-10）：辞書との食い違い・割れる字・辞書の巻き込み
+    e, w = reading.notes(sc, load_readings(ROOT / "readings.yaml"), kana_source(config))
+    errors += e
+    warns += w
     for who, (hit, n) in check_mod.saturation(sc, voices(config)).items():
         if hit:
             warns.append(f"{people.label(config, who)}：{n}行中{hit}行で抑揚が上限2.0を超えるか、1.2倍より早口です")
@@ -138,6 +205,21 @@ def preflight(sc, config) -> bool:
         n = {k: sum(r.startswith(k) for r in rows) for k in ("×", "!", "・")}
         print(f"  （止める {n['×']}件・直すと効く {n['!']}件・参考 {n['・']}件）")
     return not errors
+
+
+def kana_source(config):
+    """読みの点検に使う VOICEVOX のカナ（control は work/kana_cache.json）。"""
+    from .reading import kana_source as source
+    return source(config["voicevox_url"], config["cast"]["語り"]["style_id"])
+
+
+def readings_for(sc) -> dict:
+    """readings.yaml を読み、この台本で辞書のキーが長い語を巻き込んでいれば知らせる（10-10。「露: つゆ」が「披露」に）。"""
+    readings = load_readings(ROOT / "readings.yaml")
+    from . import reading
+    for row in reading.collision_lines(readings, reading.items(sc)):
+        print(f"  ! 読み：{row}")
+    return readings
 
 
 def synthesize(sc, config) -> tuple[list[mix.Cue], float]:
@@ -154,7 +236,8 @@ def synthesize(sc, config) -> tuple[list[mix.Cue], float]:
         print(f"\r音声 {i}/{len(sc.lines)}", end="", flush=True)
     print()
     voicevox_guard(config)
-    return mix.plan(sc.lines, spoken)
+    from .render import recap_sections
+    return mix.plan(sc.lines, spoken, recap_sections(config, sc))
 
 
 VOICEVOX_MAX_GB = 6.0
@@ -352,7 +435,7 @@ def cmd_shorts(args) -> int:
         return 1
     engine = tts.Voicevox(config["voicevox_url"])
     vs = voices(config)
-    readings = load_readings(ROOT / "readings.yaml")
+    readings = readings_for(sc)
     cache = work_dir(sc) / "voice"
     sz = config["short"]
     hook_on, loop_on = shorts_mod.options(config)          # 頭の大きな問い・ループしやすい終わり（10-08）
@@ -409,7 +492,8 @@ def _same_section(line):
 
 # --- 概要欄 -------------------------------------------------------------
 
-def description(sc, config, cues) -> str:
+def description(sc, config, cues, reserve: int = 0) -> str:
+    """reserve：あとに足す行（この動画で扱うこと）の字数。そのぶん絵の出典の欄を詰める。"""
     out = []
     if cues:
         chs = mix.chapters(cues, [s.title for s in sc.sections])
@@ -432,16 +516,44 @@ def description(sc, config, cues) -> str:
         out += ["", "■ 画面の絵（いずれも著作権の切れた作品）"] + pics
     if sc.next:
         out += ["", f"■ 次回：{sc.next.get('title', '')}", sc.next.get("teaser", "")]
-    sources = picture_sources(sc, config)
-    if sources:
-        out += ["", "■ 絵の出典（Wikimedia Commons）"] + sources
+    tail = []
     if sc.series:
-        out += ["", f"#歴史の地層 #{sc.series} #世界史 #日本史 #聞き流し"]
-    out += ["", f"運営：{config.get('operator', '')}"]
-    return "\n".join(out) + "\n"
+        tail += ["", f"#歴史の地層 #{sc.series} #世界史 #日本史 #聞き流し"]
+    tail += ["", f"運営：{config.get('operator', '')}"]
+    room = DESC_ROOM - reserve - len("\n".join(out)) - len("\n".join(tail)) - 2
+    return "\n".join(out + source_lines(picture_sources(sc, config), room) + tail) + "\n"
 
 
-def picture_sources(sc, config) -> list[str]:
+DESC_ROOM = 4900   # YouTube の概要欄は5000字まで。超えると後ろ（運営・扱う語）が切れる（10-09、絵の多い回で1万字を超えた）
+
+
+def source_lines(sources: list[tuple[str, str]], room: int) -> list[str]:
+    """絵の出典の欄。同じ許諾をまとめて見出しの行に書く（URL のすぐ後ろに字を付けるとリンクが壊れる）。
+    room 字に入らない分は件数だけ書く。"""
+    if not sources:
+        return []
+    groups: dict[str, list[str]] = {}
+    for url, lic in sources:
+        groups.setdefault(lic, []).append(url)
+    lines, shown = ["", "■ 絵の出典（Wikimedia Commons）"], 0
+    rest = f"ほか{len(sources)}点（いずれも Wikimedia Commons。上の「画面の絵」の作品名で探せます）"
+    for lic, urls in groups.items():
+        head = [f"［{lic}］"] if lic else []
+        for url in urls:
+            if len("\n".join(lines + head + [url, rest])) > room:
+                break
+            lines += head + [url]
+            head = []
+            shown += 1
+        else:
+            continue
+        break
+    if shown < len(sources):
+        lines.append(rest.replace(str(len(sources)), str(len(sources) - shown), 1))
+    return lines
+
+
+def picture_sources(sc, config) -> list[tuple[str, str]]:
     """使った絵の Commons のページ。素材の置き場の credits.json（取得時に控えたもの）から引く。"""
     cf = assets_dir(config) / "paintings" / "credits.json"
     if not cf.exists():
@@ -455,8 +567,31 @@ def picture_sources(sc, config) -> list[str]:
             key = Path(pic.image).stem
             if key in credits and key not in seen:
                 seen.add(key)
-                out.append(f"{credits[key]['source']}（{credits[key].get('license', '')}）")
+                out.append((unquote(credits[key]["source"]), credits[key].get("license", "")))
     return out
+
+
+def keyword_line(sc) -> str:
+    """検索候補から拾った語のうち、台本で扱っているもの（「この動画で扱うこと：」の1行）。"""
+    from . import keywords as kw
+    name = sc.thumbnail.get("name") or next(iter(sc.people), "") or sc.question
+    cache = kw.cache_path(out_dir(), name)
+    if cache.exists():
+        data = json.loads(cache.read_text(encoding="utf-8"))
+    else:
+        _, data = kw.report(name, kw.collect(name))
+        cache.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    line = kw.description_line(kw.covered_words([w for w, _ in data["words"]], sc))
+    if not line:
+        print(f"  ! 「{name}」の検索候補の語で、台本に出てくるものがありませんでした")
+    return line
+
+
+def full_description(sc, config, cues, keywords: bool = True) -> str:
+    """概要欄。describe と upload で同じものを作る（前は upload に扱う語の行が入らなかった）。5000字に収める。"""
+    line = keyword_line(sc) if keywords else ""
+    text = description(sc, config, cues, reserve=len(line) + 2 if line else 0)
+    return text + ("\n" + line + "\n" if line else "")
 
 
 def cmd_describe(args) -> int:
@@ -465,21 +600,7 @@ def cmd_describe(args) -> int:
     cues = []
     if not args.no_voice:
         cues, _ = synthesize(sc, config)
-    text = description(sc, config, cues)
-    if args.keywords:                     # 検索候補から拾った語のうち、台本で扱っているものを最後に
-        from . import keywords as kw
-        name = sc.thumbnail.get("name") or next(iter(sc.people), "") or sc.question
-        cache = kw.cache_path(out_dir(), name)
-        if cache.exists():
-            data = json.loads(cache.read_text(encoding="utf-8"))
-        else:
-            _, data = kw.report(name, kw.collect(name))
-            cache.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-        line = kw.description_line(kw.covered_words([w for w, _ in data["words"]], sc))
-        if line:
-            text += "\n" + line + "\n"
-        else:
-            print(f"  ! 「{name}」の検索候補の語で、台本に出てくるものがありませんでした")
+    text = full_description(sc, config, cues, keywords=args.keywords)
     target = out_dir() / f"{sc.path.stem}_description.txt"
     target.write_text(text, encoding="utf-8")
     print(text)
@@ -525,13 +646,18 @@ def cmd_kana(args) -> int:
     config = load_config()
     sc = script_mod.load(args.script)
     engine = tts.Voicevox(config["voicevox_url"])
-    readings = load_readings(ROOT / "readings.yaml")
+    readings = readings_for(sc)
     vs = voices(config)
     for line in sc.lines:
         q = engine.query(apply_readings(split_emphasis(line.text)[0], readings), vs.get(line.speaker, vs["語り"]).style_id)
         phrases, _ = __import__("chiso.voice", fromlist=["join_n_phrases"]).join_n_phrases(q["accent_phrases"])
         kana = "／".join("".join(m["text"] for m in p["moras"]) for p in phrases)
         print(f"{line.index + 1:3} {people.label(config, line.speaker)[:2]} {kana}")
+    from .reading import items
+    for label, text in items(sc)[len(sc.lines):]:          # ショートの頭の問い・最後の問い（つむぎが読む。10-10）
+        q = engine.query(apply_readings(split_emphasis(text)[0], readings), vs[shorts_mod.TEASER].style_id)
+        phrases, _ = __import__("chiso.voice", fromlist=["join_n_phrases"]).join_n_phrases(q["accent_phrases"])
+        print(f"{label} {'／'.join(''.join(m['text'] for m in p['moras']) for p in phrases)}")
     return 0
 
 
@@ -705,7 +831,7 @@ def cmd_upload(args) -> int:
         return 1
     publish_at = up.publish_time(args.at)
     cues, _ = synthesize(sc, config)
-    desc = description(sc, config, cues)
+    desc = full_description(sc, config, cues)
     thumb_p = out_dir() / f"{path.stem}_thumbnail.png"
     if not thumb_p.exists():
         from . import thumb
@@ -918,7 +1044,7 @@ def main(argv=None) -> int:
     s.add_argument("--variants", action="store_true", help="3案（a・b・c）と一覧の大きさの確認用を作る")
     s.add_argument("--out", help="書き出す場所（省けば out/）")
     s.set_defaults(fn=cmd_thumb)
-    for name, fn in [("kana", cmd_kana), ("check", cmd_check), ("screen", cmd_screen)]:
+    for name, fn in [("kana", cmd_kana), ("check", cmd_check), ("screen", cmd_screen), ("reading-ok", cmd_reading_ok)]:
         s = sub.add_parser(name)
         s.add_argument("script")
         s.set_defaults(fn=fn)

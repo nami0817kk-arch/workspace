@@ -40,7 +40,18 @@ SHAKE_PX = 10        # 揺れの大きさ
 WIPE_FRAMES = 14     # 節の頭の地層のワイプ（フレーム数）
 FIG_FRAMES = 45      # 図が出たときに描き進める長さ（フレーム数。1.5秒）
 ICON_FRAMES = 8      # 挿絵が出るときに大きくなる長さ（フレーム数）
+TIMELINE_ROWS = 2    # 年表の名札の段の数（3段目は字幕の箱にかかる。10-09）
+TIMELINE_ROW_H = 34  # 名札の段の高さ
+TITLE_X = 120        # 節の題の左の端
+TITLE_BAND = (140, 215)   # 節の題の上下（64px の題が入る高さ）
+TITLE_MIN = 36       # 節の題はこの大きさまで縮める（収まらなければ check が止める）
 BASE_CACHE = 24      # 前景の下の層（base）を控えておく数。1枚 8MB（1920x1080 RGBA）
+
+
+def look(config: dict, script, name: str) -> bool:
+    """画面の道具（texture・recap）を使うか。台本の一番上に書いたものが config.yaml より優先。"""
+    mine = getattr(script, "look", None) or {}
+    return bool(mine[name]) if name in mine else bool(config.get(name, False))
 
 
 @dataclass(frozen=True)
@@ -75,8 +86,7 @@ class Painter:
 
     def look(self, name: str) -> bool:
         """画面の道具（texture・recap）を使うか。台本の一番上に書いたものが config.yaml より優先。"""
-        mine = getattr(self.script, "look", None) or {}
-        return bool(mine[name]) if name in mine else bool(self.config.get(name, False))
+        return look(self.config, self.script, name)
 
     # --- 素材 -------------------------------------------------------------
     def font(self, kind: str, size: int, bold: bool = False):
@@ -204,7 +214,6 @@ class Painter:
                 color = tuple(int(c * 0.45) for c in color)
             dr.rectangle([X(a), yb - 14, X(b), yb + 14], fill=color + (255,))
         u = self.H / 1080
-        placed: list[tuple[float, float]] = []           # ラベルの重なりを避ける
         years: list[tuple[float, float]] = []            # 年の数字の重なりを避ける（10-05「1894189 1900」と重なった）
         for y, _ in sc.events:                           # いまの年を先に場所取り（10-06 明智で 1566 と 1582 がくっついた）
             if year is not None and round(year) == y:
@@ -219,14 +228,12 @@ class Painter:
                 dr.text((X(y), yb - 40 * u), tick(y), font=yf, fill=GOLD if on else DIM, anchor="ms")
                 if not on:
                     years.append((X(y) - half, X(y) + half))
+        for (y, label), row in zip(sc.events, self.timeline_rows(x0, x1, year)):
+            if row is None:
+                continue                                  # 近い出来事に押し出された名札は出さない（10-09）
+            on = (year is not None and round(year) == y)
             lf = self.font("serif", int((30 if on else 24) * u))
-            lw = lf.getlength(label)
-            ly = yb + 44 * u
-            for (px0, px1) in placed:
-                if X(y) - lw / 2 < px1 + 8 and X(y) + lw / 2 > px0 - 8:
-                    ly += 34 * u
-            placed.append((X(y) - lw / 2, X(y) + lw / 2))
-            dr.text((X(y), ly), label, font=lf, fill=INK if on else DIM, anchor="mt",
+            dr.text((X(y), yb + (44 + TIMELINE_ROW_H * row) * u), label, font=lf, fill=INK if on else DIM, anchor="mt",
                     stroke_width=3, stroke_fill=(12, 10, 8))
         if year is not None and y0 <= year <= y1:
             cx = X(year)
@@ -237,6 +244,35 @@ class Painter:
             dr.rounded_rectangle([cx - pw / 2, yb - 150 * u, cx + pw / 2, yb - 114 * u], radius=8,
                                  fill=(20, 16, 10, 220), outline=GOLD, width=2)
             dr.text((cx, yb - 132 * u), txt, font=pf, fill=GOLD, anchor="mm")
+
+    def timeline_rows(self, x0: float, x1: float, year) -> list[int | None]:
+        """年表の出来事の名札を置く段（0＝すぐ下、1＝その下）。重なる名札は下の段へ。2段でも重なる名札は出さない
+        （10-09 秀吉の回で「長浜城主・大返し・関白」が3段まで下がり、字幕の箱に隠れた）。いまの年の名札は先に置くので必ず出る。"""
+        sc = self.script
+        from .years import astro
+        y0, y1 = sc.timeline_start, sc.timeline_end
+        X = lambda y: x0 + (x1 - x0) * (astro(y) - astro(y0)) / max(1, (astro(y1) - astro(y0)))
+        u = self.H / 1080
+        spans = []
+        on = []
+        for y, label in sc.events:
+            hot = year is not None and round(year) == y
+            w = self.font("serif", int((30 if hot else 24) * u)).getlength(label)
+            spans.append((X(y) - w / 2, X(y) + w / 2))
+            on.append(hot)
+        rows: list[int | None] = [None] * len(spans)
+        taken: list[list[tuple[float, float]]] = [[] for _ in range(TIMELINE_ROWS)]
+        for i in sorted(range(len(spans)), key=lambda k: not on[k]):
+            a, b = spans[i]
+            for r in range(TIMELINE_ROWS):
+                if not any(a < q1 + 8 and b > q0 - 8 for q0, q1 in taken[r]):
+                    rows[i] = r
+                    taken[r].append((a, b))
+                    break
+            else:
+                if on[i]:
+                    rows[i] = 0                            # いまの年が2つ以上重なるときも出す
+        return rows
 
     # --- 本編の画面（立ち絵と字幕より下の層） ------------------------------
     def base(self, state: State, year=None, slide: float = 1.0, fig: float = 1.0, icon_t: float = 1.0,
@@ -258,12 +294,11 @@ class Painter:
             fill = GOLD if k <= state.section else (90, 80, 66)
             dr.ellipse([cx - r, 117 - r, cx + r, 117 + r], fill=fill)
         dr.text((250 + n_sec * 30 + 6, 117), f"全{n_sec}節", font=self.font("gothic", 22), fill=DIM, anchor="lm")
-        limit = (W - 330 - 400 - 40 - 120) if state.portrait is not None else (W - 240)
-        size = 64
-        while size > 36 and self.font("serif", size, bold=True).getlength(title) > limit:
-            size -= 2
-        dr.text((120, 145 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK,
-                stroke_width=2, stroke_fill=(12, 10, 8))
+        size = self.title_size(title, self.title_room(state))
+        if size is not None or not state.reaction:          # 寄りのあいだは、立ち絵の左に収まらない題は出さない（10-09）
+            size = size or TITLE_MIN
+            dr.text((TITLE_X, 145 + (64 - size) // 2), title, font=self.font("serif", size, bold=True), fill=INK,
+                    stroke_width=2, stroke_fill=(12, 10, 8))
 
         is_versus = state.figure is not None and '"type": "versus"' in state.figure
         on = None                                          # 赤ペンの乗る所（chiso/pen.py）
@@ -298,8 +333,14 @@ class Painter:
         else:                                              # 図のあいだは、メモと肖像を隠して図を大きく
             import json as _json
             from . import figures
-            img = figures.draw(self, img, _json.loads(state.figure), fig)
-            on = ("fig", _json.loads(state.figure))
+            spec = _json.loads(state.figure)
+            if spec.get("type") == "map" and state.mark:      # 赤ペンの丸が付く地点（ほかの地名・注を丸の外へ。10-09）
+                rings = sorted({m["at"] - 1 for m in _json.loads(state.mark)["items"]
+                                if m.get("type") == "circle" and isinstance(m.get("at"), int)})
+                if rings:
+                    spec["_ring"] = rings
+            img = figures.draw(self, img, spec, fig)
+            on = ("fig", spec)
         if state.mark and on is not None:
             img = self._marks(img, state.mark, on, mark_t)
         from . import extras
@@ -320,6 +361,34 @@ class Painter:
         dr.text((W - 40, 34), names, font=self.font("serif", 20), fill=DIM, anchor="rs",
                 stroke_width=2, stroke_fill=(12, 10, 8))
         return img
+
+    def title_room(self, state: State) -> float:
+        """節の題を置ける幅（x 120 から、右の札・肖像の額・寄りの立ち絵の手前まで）。10-09 点検で、
+        長い題が右上の用語の札・場所の地図・横長の額・寄りのヘルメットに隠れた。"""
+        right = self.W - TITLE_X
+        fig = state.figure or ""
+        is_versus = '"type": "versus"' in fig
+        is_map = '"type": "map"' in fig
+        if state.reaction:
+            from . import reaction
+            right = min(right, reaction.left_edge(self, state.reaction, *TITLE_BAND) - 30)
+            return right - TITLE_X
+        if not is_versus and (state.term or (state.place and not is_map)):
+            from .extras import TERM_BOX
+            right = min(right, TERM_BOX[0] - 24)
+        if state.portrait is not None and state.figure is None and not state.detail:
+            from .extras import portrait_box
+            px, py, _pw, _ph = portrait_box(self, state.portrait)
+            if py - 34 < TITLE_BAND[1]:                       # 額（と「この時○歳」）が題の高さにかかる
+                right = min(right, px - 34 - 24)
+        return right - TITLE_X
+
+    def title_size(self, title: str, room: float) -> int | None:
+        """節の題の字の大きさ（64 から縮める）。TITLE_MIN でも room に収まらなければ None。"""
+        size = 64
+        while size > TITLE_MIN and self.font("serif", size, bold=True).getlength(title) > room:
+            size -= 2
+        return size if self.font("serif", size, bold=True).getlength(title) <= room else None
 
     def _memo(self, img: Image.Image, state: State, slide: float) -> None:
         """掘り出したメモ：その節で出た札が新しい順に3枚まで。いまの札は明るく、前の札は暗く。"""
@@ -667,27 +736,68 @@ class Painter:
             dr.rectangle([self.W / 2 - 300, y + i * 6, self.W / 2 + 300, y + i * 6 + 5], fill=c)
         return img if self.layered else img.convert("RGB")
 
+    END_RIGHT = 1060          # 次回予告の字の右の端。右側（x 1080〜1800）は YouTube の終了画面の場所
+    TEASER_SIZES = (40, 28)   # 紹介文の字の大きさ（収まるまで縮める）
+
+    def end_cast_top(self) -> int:
+        """次回予告の画面で、左下の立ち絵（ヘルメットの先）の上端の y。"""
+        for who, cast in self.config["cast"].items():
+            if cast.get("side", "left") == "left":
+                return self.H - self.character(who).height + 10
+        return self.H
+
+    def teaser_rows(self, teaser: str, top: int, bottom: int) -> tuple[int, int, list[str]]:
+        """次回予告の紹介文の (字の大きさ, 行の高さ, 行)。文ごとに改行し、1文は2行まで、
+        2行目が2字以下にならないように（10-09「…小説だっ／た。」の「た。」だけが落ちて立ち絵に重なった）。
+        収まるまで字を縮め、行は top〜bottom に入るだけにする。"""
+        import re
+        sents = re.findall(r"[^。]+。?", teaser) or [teaser]
+        width = self.END_RIGHT - 120
+        big, small = self.TEASER_SIZES
+        for size in range(big, small - 1, -2):
+            f = self.font("serif", size)
+            rows, ok = [], True
+            for sent in sents:
+                r = wrap(sent, f, width)
+                if len(r) == 2 and len(r[-1]) <= 2:
+                    r = wrap_balanced(sent, f, width)             # 最後の1・2字だけが落ちるなら、半分ずつに割り直す
+                if len(r) > 2 or (len(r) == 2 and len(r[-1]) <= 2):
+                    ok = False
+                    break
+                rows += r
+            lh = int(size * 1.4)
+            if ok and top + lh * (len(rows) - 1) + size * 1.25 <= bottom:
+                return size, lh, rows
+        f = self.font("serif", small)
+        rows = [r for sent in sents for r in wrap_balanced(sent, f, width)]
+        lh = int(small * 1.4)
+        n = max(1, int((bottom - top - small * 1.25) // lh) + 1)
+        return small, lh, rows[:n]
+
     def end_card(self, background) -> Image.Image:
-        """次回予告とお礼。右側は YouTube の終了画面（動画・登録ボタン）を置く場所として空ける。"""
+        """次回予告とお礼。右側は YouTube の終了画面（動画・登録ボタン）を置く場所として空ける。
+        字は左下の立ち絵（剣崎のヘルメット）より上に収める（10-09）。"""
         nxt = getattr(self.script, "next", {}) or {}
         img = self._canvas(background)
         img.alpha_composite(Image.new("RGBA", img.size, (8, 6, 4, 150)))
         dr = ImageDraw.Draw(img, "RGBA")
         x = 120
-        dr.text((x, 150), "ご視聴ありがとうございました", font=self.font("gothic", 34), fill=DIM)
+        dr.text((x, 100), "ご視聴ありがとうございました", font=self.font("gothic", 34), fill=DIM)
         if nxt:
-            dr.rounded_rectangle([x, 230, x + 190, 290], radius=10, fill=(176, 40, 40))
-            dr.text((x + 95, 260), "次回予告", font=self.font("gothic", 34), fill=(255, 255, 255), anchor="mm")
+            dr.rounded_rectangle([x, 170, x + 190, 230], radius=10, fill=(176, 40, 40))
+            dr.text((x + 95, 200), "次回予告", font=self.font("gothic", 34), fill=(255, 255, 255), anchor="mm")
             series = nxt.get("series", self.script.series)      # 次の回が別のシリーズなら next.series で（"" で出さない）
             if series:
-                dr.text((x, 330), series, font=self.font("gothic", 30), fill=GOLD)
-            dr.text((x, 380), nxt.get("title", ""), font=self.font("serif", 76, bold=True), fill=INK,
+                dr.text((x, 260), series, font=self.font("gothic", 30), fill=GOLD)
+            size = 76
+            while size > 48 and self.font("serif", size, bold=True).getlength(nxt.get("title", "")) > self.END_RIGHT - x:
+                size -= 4
+            dr.text((x, 305), nxt.get("title", ""), font=self.font("serif", size, bold=True), fill=INK,
                     stroke_width=3, stroke_fill=(12, 10, 8))
-            teaser = nxt.get("teaser", "")
-            rows = [r for sent in __import__("re").findall(r"[^。]+。?", teaser)      # 文の切れ目で改行する
-                    for r in wrap(sent, self.font("serif", 40), 760)]       # （10-06「本当だったの／か。」と割れた）
-            for k, row in enumerate(rows[:3]):
-                dr.text((x, 500 + 56 * k), row, font=self.font("serif", 40), fill=INK)
+            top = 305 + size + 34
+            fs, lh, rows = self.teaser_rows(nxt.get("teaser", ""), top, self.end_cast_top() - 14)
+            for k, row in enumerate(rows):
+                dr.text((x, top + lh * k), row, font=self.font("serif", fs), fill=INK)
         # 右側（x 1080〜1800, y 200〜605）は、YouTube の終了画面（次の動画・登録ボタン）を置くために空けておく
         return img
 
@@ -717,6 +827,13 @@ def recap_cards(script, section: int) -> tuple:
         n = len(cards)
         cards = [cards[round(k * (n - 1) / (RECAP_MAX - 1))] for k in range(RECAP_MAX)]
     return tuple(cards)
+
+
+def recap_sections(config: dict, script) -> set[int]:
+    """「ここまでの地層」の札が出る節の番号。その節の頭は間を長くとる（chiso/voice.py の GAP_RECAP）。"""
+    if not look(config, script, "recap"):
+        return set()
+    return {k for k in range(len(script.sections)) if recap_cards(script, k)}
 
 
 def end_key(script) -> tuple:

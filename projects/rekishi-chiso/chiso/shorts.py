@@ -25,11 +25,39 @@ def _wrap(text: str, font, width: int) -> list[str]:
             if font.getlength(cur + ch) > width and cur and ch not in NO_HEAD:
                 out.append(cur)
                 cur = ch
+            elif font.getlength(cur + ch) > width and cur:
+                # 行頭禁則の字。前の行にぶら下げると箱からはみ出すので（10-09「ピンチに！？」の？が箱の外）、
+                # 前の行の最後の字（と続く禁則の字）ごと次の行へ送る
+                cur += ch
+                k = len(cur) - 1
+                while k > 0 and cur[k] in NO_HEAD:
+                    k -= 1
+                if k > 0:
+                    out.append(cur[:k])
+                    cur = cur[k:]
             else:
                 cur += ch
         if cur:
             out.append(cur)
     return out
+
+
+def card_head(head: str) -> str:
+    """札の見出し。本編の節の呼び名「地表4」はショートだけ見る人に通じないので「よく聞く話4」にする（10-09）。"""
+    import re
+    m = re.fullmatch(r"地表(\d+)", head.strip())
+    return f"よく聞く話{m.group(1)}" if m else head
+
+
+def credit_rows(names: list[str], font, width: int) -> list[str]:
+    """上の VOICEVOX のクレジット。1行に収まらなければ名前の切れ目で折る（10-09、4人分で右端が切れた）。"""
+    rows: list[str] = []
+    for n in names:
+        if rows and font.getlength(rows[-1] + "　" + n) <= width:
+            rows[-1] += "　" + n
+        else:
+            rows.append(n)
+    return rows
 
 
 END_SECONDS = 3.5   # 最後の「続きは本編で」（10-04「視聴者誘導用のショート」。声は入れない）
@@ -42,7 +70,7 @@ END_SECONDS = 3.5   # 最後の「続きは本編で」（10-04「視聴者誘�
 # どちらも config.yaml の short.hook_intro / short.loop で切れる（書かなければ入）。
 HOOK_HOLD = 1.8            # 特大のまま見せる秒数
 HOOK_SHRINK = 0.4          # いつもの題の位置へ縮む秒数（合わせて約2秒）
-HOOK_SIZES = (132, 118, 104, 92)   # 長い問いは字を小さくして3行に収める
+HOOK_SIZES = (132, 118, 104, 92, 84)   # 長い問いは字を小さくして3行に収める（84 は 10-09、禁則で送ると「いた？」だけの行ができたため）
 HOOK_MAX_ROWS = 3
 LOOP_END_SECONDS = 2.0     # loop のときの「続きは本編で」
 LOOP_TAIL = 1.0            # loop のときに最後に置く、頭と同じ画
@@ -221,11 +249,13 @@ class ShortPainter(Painter):
             dr = ImageDraw.Draw(img, "RGBA")
         elif state.card is not None:
             dr.rounded_rectangle([90, y + 160, W - 90, y + 360], radius=14, fill=(20, 16, 10, 200), outline=GOLD, width=3)
-            dr.text((W / 2, y + 200), state.card.head, font=self.font("gothic", 48), fill=GOLD, anchor="mt")
+            dr.text((W / 2, y + 200), card_head(state.card.head), font=self.font("gothic", 48), fill=GOLD, anchor="mt")
             if state.card.body:
                 dr.text((W / 2, y + 275), state.card.body, font=self.font("serif", 52), fill=INK, anchor="mt")
-        names = "　".join(f"VOICEVOX:{n}" for n in people.credit_names(self.config, self.script))
-        dr.text((40, 40), names, font=self.font("serif", 24), fill=DIM, anchor="lt")
+        names = [f"VOICEVOX:{n}" for n in people.credit_names(self.config, self.script)]
+        cf = self.font("serif", 24)
+        for i, row in enumerate(credit_rows(names, cf, W - 80)):
+            dr.text((40, 40 + 30 * i), row, font=cf, fill=DIM, anchor="lt")
         return img.convert("RGBA")       # with_cast が立ち絵の光を重ねるので RGBA で返す
 
     def hook_overlay(self, img: Image.Image, text: str, t: float = 0.0) -> Image.Image:

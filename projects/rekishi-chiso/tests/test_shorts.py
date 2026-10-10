@@ -9,7 +9,26 @@ class FakeFont:
 def test_wrap_keeps_punctuation_off_line_heads():
     rows = _wrap("あいうえ、かき", FakeFont(), 40)
     assert all(not r.startswith("、") for r in rows)
-    assert rows[0] == "あいうえ、"
+    assert rows[0] == "あいう"                     # ぶら下げると幅を超えるので「え、」ごと次の行へ（10-09）
+
+
+def test_wrap_never_exceeds_width_with_line_head_rules():
+    # 10-09：「自分がピンチに！？」の「？」が箱の外に出た。禁則の字が続いても幅を超えない
+    text = "自分の国の決まりで、自分がピンチに！？　あーしなら、その決まり、その場で変える。"
+    for width in (90, 100, 180, 190):
+        rows = _wrap(text, FakeFont(), width)
+        assert "".join(rows) == text
+        assert all(FakeFont().getlength(r) <= width for r in rows), rows
+        assert all(r[0] not in shorts.NO_HEAD for r in rows), rows
+
+
+def test_credit_rows_fit_width_for_four_voices():
+    # 10-09：4人分を1行に書いて右端の「玄野武宏」が画面の外で切れた
+    names = ["VOICEVOX:剣崎雌雄", "VOICEVOX:春日部つむぎ", "VOICEVOX:冥鳴ひまり", "VOICEVOX:玄野武宏"]
+    rows = shorts.credit_rows(names, FakeFont(), 400)
+    assert len(rows) >= 2 and all(FakeFont().getlength(r) <= 400 for r in rows)
+    assert "　".join(rows) == "　".join(names)
+    assert shorts.credit_rows(names[:2], FakeFont(), 1000) == ["　".join(names[:2])]
 
 
 def test_wrap_forced_break():
@@ -80,3 +99,8 @@ def test_tease_items_cached(tmp_path):
     a = shorts.tease_items(P(), None, "誰？", 4.5, tmp_path)
     b = shorts.tease_items(P(), None, "誰？", 4.5, tmp_path)
     assert a == b and a[0][1] == 4.5 and P.calls == 1
+
+
+def test_card_head_renames_section_word_for_shorts():
+    assert shorts.card_head("地表4") == "よく聞く話4"
+    assert shorts.card_head("1583年") == "1583年" and shorts.card_head("地表の下") == "地表の下"

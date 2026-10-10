@@ -194,16 +194,18 @@ GAP_ANSWER = 0.14            # 問い（？で終わる）にすぐ答える
 GAP_REACTION = 0.06          # 驚きの反応は、ほぼ間を置かずにかぶせる
 GAP_AFTER_HEAVY = 0.7        # 重い・しみじみの後は、余韻を残す
 GAP_SECTION = 1.2            # 節の切れ目
+GAP_RECAP = 3.0              # 節の切れ目に「ここまでの地層」の札が出るとき（10-09。1.2秒では札が読めなかった）
 
 
-def gap_before(prev, line) -> float:
-    """prev の行のあと、line を話し始めるまでの間（秒）。"""
+def gap_before(prev, line, recap=()) -> float:
+    """prev の行のあと、line を話し始めるまでの間（秒）。recap は「ここまでの地層」を出す節の番号
+    （その節の頭は長く空ける。台本の pause が優先）。"""
     if line.pause is not None:
         return line.pause
     if prev is None:
         return 0.3
     if prev.section != line.section:
-        return GAP_SECTION
+        return GAP_RECAP if line.section in recap else GAP_SECTION
     if prev.tone in ("重い", "しみじみ"):
         return GAP_AFTER_HEAVY
     if prev.speaker == line.speaker:

@@ -277,8 +277,9 @@ def _map(painter, img, spec, t):
     _route_line(dr, [places[n] for n in names[max(lo, 1) - 1:hi]], _ease(t))
     f = painter.font("serif", 28, bold=True)
     labels: list[tuple] = [(x - 10, y - 10, x + 10, y + 10) for x, y in places.values()]   # 点と、置いた地名の範囲
+    rings = set(spec.get("_ring", []))         # 赤ペンの丸が付く地点（0から）。ほかの地名を丸の外へ逃がす（10-09）
+    shown, ring_boxes = [], []
     for i, (name, lon, lat) in enumerate(spec.get("places", [])):
-        x, y = places[name]
         if name in names and names.index(name) >= hi:
             continue                                       # まだ着いていない先の地点は出さない
         if "upto" in spec and name in names:
@@ -286,27 +287,44 @@ def _map(painter, img, spec, t):
             reached = names.index(name) <= first + _ease(t) * (hi - 1 - first) + 1e-6
         else:
             reached = name not in spec.get("route", []) or _route_reached(spec, name, t)
+        shown.append((i, name, reached))
+    spots = {}
+    from .pen import circle_bounds
+    for i, name, _r in sorted(shown, key=lambda s: s[0] not in rings):   # 丸の付く地点を先に置く
+        x, y = places[name]
+        spots[i] = _label_spot(f, name, x, y, labels)        # 置いた範囲は labels に足される
+        lb = spots[i][3]
+        item = (min(x - 12, lb[0]), min(y - 24, lb[1]), max(x + 12, lb[2]), max(y + 16, lb[3]))
+        spots[i] = spots[i] + (item,)
+        if i in rings:
+            ring_boxes.append(circle_bounds(item))
+            labels.append(ring_boxes[-1])                    # あとの地名は丸の外へ
+    for i, name, reached in shown:
+        x, y = places[name]
         dr.ellipse([x - 9, y - 9, x + 9, y + 9], fill=(RED if reached else COAST), outline=(255, 248, 230), width=3)
-        lx, ly, anchor = _label_spot(f, name, x, y, labels)
+        lx, ly, anchor, _lb, item = spots[i]
         dr.text((lx, ly), name, font=f, fill=INKD, anchor=anchor, stroke_width=4, stroke_fill=(245, 236, 210))
-        note_item(i, (min(x - 12, labels[-1][0]), min(y - 24, labels[-1][1]), max(x + 12, labels[-1][2]),
-                      max(y + 16, labels[-1][3])))
+        note_item(i, item)
     if spec.get("note") and t >= 1 and hi >= len(names):
         nf = painter.font("gothic", 30)
         w = nf.getlength(spec["note"]) + 40
-        bx, by = box[2] - w - 14, box[3] - 64
+        hit = lambda b: any(b[0] < r[2] and r[0] < b[2] and b[1] < r[3] and r[1] < b[3] for r in ring_boxes)
+        spots_note = [(box[2] - w - 14, box[3] - 64), (box[0] + 14, box[3] - 64), (box[2] - w - 14, box[1] + 16)]
+        bx, by = next((p for p in spots_note if not hit((p[0], p[1], p[0] + w, p[1] + 48))), spots_note[0])
         dr.rounded_rectangle([bx, by, bx + w, by + 48], radius=10, fill=RED)
         dr.text((bx + w / 2, by + 24), spec["note"], font=nf, fill=(255, 255, 255), anchor="mm")
 
 
-def _label_spot(f, name: str, x: float, y: float, taken: list) -> tuple[float, float, str]:
-    """地名を置く所：ふだんは点の右。ほかの地名・点に重なるなら左→下→上の順に試す（10-08、近い地点の名前が重なった）。
-    置いた範囲を taken に足す。"""
+def _label_spot(f, name: str, x: float, y: float, taken: list) -> tuple[float, float, str, tuple]:
+    """地名を置く所：ふだんは点の右。ほかの地名・点（・赤ペンの丸）に重なるなら左→下→上→少し離して、の順に試す
+    （10-08、近い地点の名前が重なった）。(x, y, anchor, 置いた範囲) を返し、置いた範囲を taken に足す。"""
     w = f.getlength(name)
-    tries = [((x + 14, y - 4), "lm", (x + 10, y - 24, x + 18 + w, y + 16)),
-             ((x - 14, y - 4), "rm", (x - 18 - w, y - 24, x - 10, y + 16)),
-             ((x, y + 14), "mt", (x - w / 2, y + 10, x + w / 2, y + 48)),
-             ((x, y - 14), "ms", (x - w / 2, y - 52, x + w / 2, y - 10))]
+    tries = []
+    for gap in (0, 26):
+        tries += [((x + 14 + gap, y - 4), "lm", (x + 10 + gap, y - 24, x + 18 + gap + w, y + 16)),
+                  ((x - 14 - gap, y - 4), "rm", (x - 18 - gap - w, y - 24, x - 10 - gap, y + 16)),
+                  ((x, y + 14 + gap), "mt", (x - w / 2, y + 10 + gap, x + w / 2, y + 48 + gap)),
+                  ((x, y - 14 - gap), "ms", (x - w / 2, y - 52 - gap, x + w / 2, y - 10 - gap))]
     own = (x - 10, y - 10, x + 10, y + 10)
 
     def hits(b):
@@ -314,10 +332,10 @@ def _label_spot(f, name: str, x: float, y: float, taken: list) -> tuple[float, f
     for (lx, ly), anchor, box in tries:
         if not hits(box):
             taken.append(box)
-            return lx, ly, anchor
+            return lx, ly, anchor, box
     (lx, ly), anchor, box = tries[0]
     taken.append(box)
-    return lx, ly, anchor
+    return lx, ly, anchor, box
 
 
 def _route_line(dr, route: list, frac: float) -> None:

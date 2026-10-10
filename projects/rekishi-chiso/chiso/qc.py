@@ -27,7 +27,7 @@ SCENE = 0.08            # scene 検出のしきい値（0〜1。字幕の切り�
 SCENE_FPS = 5           # scene を見るときのコマ数（溶け合いのようなゆっくりした変化も拾う）
 from .check import BG_MAX_SEC as STILL_WARN  # noqa: E402  これより長く画面が大きく変わらない区間を知らせる
 SILENCE_DB = -45        # これより小さい音を無音とみなす
-SILENCE_SEC = 2.0       # これより長い無音を知らせる（節の切れ目の間は1.2秒）
+SILENCE_SEC = 2.0       # これより長い無音を知らせる（節の切れ目の間は1.2秒。「ここまでの地層」の節の頭は約3秒で、数えない）
 TARGET_LUFS = -14.0     # YouTube の基準
 THUMB = (320, 180)      # 一覧の1コマの大きさ
 COLS = 8
@@ -154,7 +154,10 @@ def summarize(rep: Report, end_seconds: float = 12.0) -> list[str]:
     long_sil = [(s, d if d >= 0 else rep.duration - s) for s, d in rep.silences]
     long_sil = [(s, d) for s, d in long_sil if d >= SILENCE_SEC]
     tail = [(s, d) for s, d in long_sil if s + d >= rep.duration - 0.5 and d <= end_seconds + 2]
-    body = [x for x in long_sil if x not in tail]
+    from .voice import GAP_RECAP
+    heads = [t for t, _ in rep.sections]                 # 節の頭の間（「ここまでの地層」は約3秒。10-09）
+    body = [x for x in long_sil if x not in tail
+            and not (x[1] <= GAP_RECAP + 1.0 and any(abs(x[0] - h) <= 0.6 for h in heads))]
     out.append(f"- {SILENCE_SEC:.0f}秒以上の無音（{SILENCE_DB}dB 未満）：{len(body)}か所"
                + (f"（ほかに最後の次回予告 {tail[0][1]:.0f}秒）" if tail else ""))
     for s, d in sorted(body, key=lambda x: -x[1])[:5]:
