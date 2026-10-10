@@ -225,8 +225,10 @@ def build(script: Path, sid: str, screens: Path, out: Path, config: Path, gap: f
     work.mkdir(parents=True, exist_ok=True)
     for old in work.glob("*"):
         old.unlink()
-    title_band = top_band(spec.get("title", ""))
-    hook_band = top_band(spec.get("hook", "")) if spec.get("hook") else title_band
+    # 一番上の文字は、shorts.top があれば全部の回で固定（2026-10-10 ユーザー「固定で良い」）
+    fixed = doc["shorts"].get("top")
+    title_band = top_band(fixed or spec.get("title", ""))
+    hook_band = title_band if fixed else (top_band(spec.get("hook", "")) if spec.get("hook") else title_band)
     video = work / "video.mp4"
     sink = Sink(video)
     blink_at = {"katari": lipsync.blinks30(600, FPS, seed=7), "kikite": lipsync.blinks30(600, FPS, seed=19)}
@@ -324,7 +326,7 @@ def main() -> int:
     a = ap.parse_args()
     script = Path(a.script)
     doc = yaml.safe_load(script.read_text(encoding="utf-8"))
-    ids = [a.only] if a.only else [k for k in doc["shorts"] if k != "intro"]
+    ids = [a.only] if a.only else [k for k in doc["shorts"] if k not in ("intro", "top")]
     for sid in ids:
         print("■ {} {}".format(sid, doc["shorts"][sid].get("title", "")))
         build(script, sid, Path(a.screens), Path(a.out) / "{}_short_{}.mp4".format(script.stem, sid), Path(a.config))
