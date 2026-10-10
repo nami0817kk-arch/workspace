@@ -2520,6 +2520,53 @@ def _advise_reactions(notes: Notes) -> list[str]:
     return out
 
 
+def _advise_short_boards(notes: Notes) -> list[str]:
+    """**山場が発言ばかりで、板が1枚も出ない回**（2026-10-10）。
+
+    ショートは山場（`main: true`）の節だけを切り出すので、そこに板が無いと
+    **50秒まるごと同じ写真1枚**になる。原因は決まりどうしの噛み合わせで、
+    「代弁の行に引用カードを出さない」（2026-09-14、画面に同じ字を二度出さないため）が
+    効くと、**発言の行には板が1枚も付かない**。
+
+    2026-10-10 に**1日で5本**出た（キャリック51秒・コンパニ53秒・モイーズ35秒・
+    代表ウィーク11秒・佐野8秒）。10月から**ニュースはショートだけ**作る形にしたので、
+    会見の発言が主役の回は毎日この型になる。
+
+    **`tools/preview4.py`（書き出す前の4コマ）では見つからない**——見る4つの時点が
+    たまたま板の無い所に当たる。見つかるのは `tools/qc.py`（通しで見る）だけで、
+    それは**書き出したあと**なので、ここで先に知らせる。**止めはしない**
+    （板を置けない回もある。縦の画面では顔と板が共存できないことがある）。
+    """
+    main = next((s for s in notes.sections if s.main), None)
+    if not main:
+        return []
+    says = [s for s in main.say if str(s).strip()]
+    if len(says) < 4:
+        return []
+    # 節の板も、行ごとの板も無いか（`card: none` は「下ろす」なので板ではない）
+    has_board = bool(main.card) or any(
+        c for c in (main.line_cards or []) if c and not _card_off(c))
+    if has_board:
+        return []
+    voices = [v for v in (main.voices or []) if str(v).strip()]
+    if len(voices) * 2 < len(says):      # 発言が半分に満たなければ別の型
+        return []
+    # **写真を入れ替えている回は鳴らさない**（2026-10-10）。板の代わりに写真を
+    # 替えても画面は動く。実際、フリックとヤマルの回は板を入れると顔が潰れたので
+    # 2枚並べ↔ヤマル1枚を3往復させてあり、通しの点検（qc）でも最長6.6秒で通った
+    shots = {str(x).strip() for x in (main.line_images or []) if str(x).strip()}
+    if len(shots) >= 2:
+        return []
+    return [
+        f"山場『{main.heading or main.id}』に板が1枚もありません。"
+        f"**ショートはこの節だけを切り出す**ので、{len(says)}行のあいだ"
+        "同じ写真1枚のままになります（2026-10-10 に1日で5本出ました）。"
+        "発言が続く区間に**行ごとに分けた表**を置き、`highlight_row` を動かしてください。"
+        "**いちばん強い1行だけ板を外して顔だけ**にします。"
+        "縦の画面では板が画面の11〜62%を占めるので、顔が上にある写真を選んでください"
+    ]
+
+
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
     hints: list[str] = (_advise_volume(notes) + _advise_material(notes) + _advise_cards(notes)
@@ -2537,7 +2584,8 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_layout_streak(notes)
                         + _advise_ear(notes) + _advise_readings(notes)
                         + _advise_yardstick(notes)
-                        + _advise_series_opening(notes) + _advise_series_numbers(notes))
+                        + _advise_series_opening(notes) + _advise_series_numbers(notes)
+                        + _advise_short_boards(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":

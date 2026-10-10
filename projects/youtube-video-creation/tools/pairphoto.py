@@ -67,6 +67,15 @@ def pair(paths: list[Path], out_dir: Path, focus: float = 0.38) -> Path:
         if not book.exists():
             continue
         for row in json.loads(book.read_text(encoding="utf-8")):
+            # **その写真の行だけを引き継ぐ**（2026-10-10）。帳簿を丸ごと写していたので、
+            # `assets/backgrounds/credits.json`（20クラブぶん109件）から取ると
+            # **109件すべてが file: 01.jpg** になり、概要欄が16,769字になって
+            # 投稿が弾かれた（上限5000字。使った写真は3枚だった）。
+            # 読む側（`tts._ledger_lines`）には「どのフォルダも中身は 01.jpg なので
+            # ファイル名だけで突き合わせない」と直してあるのに、**書く側**が同じ罠に落ちた形
+            name = str(row.get("file") or row.get("filename") or "")
+            if Path(name).name != path.name:
+                continue
             row = {**row, "file": "01.jpg", "note": "横に2枚並べた1枚に組んだ"}
             credits.append(row)
     if credits:

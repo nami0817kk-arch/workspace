@@ -36,6 +36,19 @@ def crop_wide(src: Path, out_dir: Path, top: float = 0.08, min_width: int = 1200
         note = f"{src.parent.name} の写真を 16:9 に切ったもの（上端 {top:.2f}）"
         if isinstance(data, dict):
             data["note"] = note
+        else:
+            # **切った写真の行だけを引き継ぐ**（2026-10-10）。帳簿を丸ごと写していたので、
+            # 元が `assets/backgrounds/credits.json` のように何十件もある置き場だと、
+            # 使っていない写真のクレジットまで概要欄に並ぶ（`tools/pairphoto.py` で
+            # 実際に109件が出て、概要欄16,769字で投稿が弾かれた）
+            data = [
+                {**row, "file": "01.jpg", "note": note}
+                for row in data
+                if isinstance(row, dict)
+                and Path(str(row.get("file") or row.get("filename") or "")).name == src.name
+            ]
+            if not data:
+                return out
         (out_dir / "credits.json").write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     return out
 
