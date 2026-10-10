@@ -308,6 +308,9 @@ def short_description(sc: dict, spec: dict) -> str:
     src = [str(s) for s in sc.get("sources", []) if str(s).strip()]
     if src:
         lines += ["出典（本編と同じ）"] + ["・{}".format(s) for s in src] + [""]
+    pc = photo_credits(sc)          # 出典の欄に無い写真の作者名（CC BY は表示が条件）
+    if pc:
+        lines += ["写真"] + pc + [""]
     try:
         cfg = yaml.safe_load((ROOT / "config.yaml").read_text(encoding="utf-8"))
         credits = [str(p["credit"]) for p in cfg.get("cast", {}).values() if p.get("credit")]
