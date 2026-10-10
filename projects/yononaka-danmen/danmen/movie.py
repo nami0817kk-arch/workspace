@@ -326,6 +326,32 @@ def _tag(text: str):
         return None
 
 
+def _in_number(text: str, i: int) -> bool:
+    """i の手前で割ると数字が切れるか（「30.｜6兆円」。小数点は fugashi が句点として返す。2026-10-10）。"""
+    num = "0123456789０１２３４５６７８９.．,，"
+    return 0 < i < len(text) and text[i - 1] in num and text[i] in num
+
+
+def _loose_breaks(text: str) -> list[int]:
+    """**最後の手段。** 単語の切れ目ならどこでも（複合語の中も）。数字の途中とかぎかっこの中は除く。
+    1語で字幕の幅を超える言葉（「スカラコミュニケーションズという」）を、文字数で「〜とい｜う」と
+    切っていた（2026-10-10）。それよりは「スカラ｜コミュニケーションズ」のほうが読める。"""
+    toks = _tag(text)
+    if toks is None:
+        return _breaks_by_char(text)
+    out, depth = set(_breaks(text)), 0
+    for n, (i, surf, p1, p2) in enumerate(toks):
+        # 足すのは**名詞と名詞のあいだだけ**（「スカラ｜コミュニケーションズ」）。数字と単位（「7139｜件」）は除く
+        if n and depth == 0 and p1 in ("名詞", "代名詞") and toks[n - 1][2] in ("名詞", "代名詞")                 and p2 != "数詞" and toks[n - 1][3] != "数詞" and not _in_number(text, i):
+            out.add(i)
+        for c in surf:
+            if c in "「『（(":
+                depth += 1
+            elif c in "」』）)":
+                depth = max(depth - 1, 0)
+    return sorted(out)
+
+
 def _breaks(text: str) -> list[int]:
     """字幕を2行に割ってよい位置（その文字の手前で割る）。
 
@@ -360,7 +386,7 @@ def _breaks(text: str) -> list[int]:
                     ok = False                      # 「申請｜し」「納付｜する」
                 if p1 == "動詞" and psurf in ("と", "って") and surf.startswith(("いう", "いっ", "いわ")):
                     ok = False                      # 「〜と｜いう」（漢字の「言う」は割ってよい）
-            if ok:
+            if ok and not _in_number(text, i):
                 out.append(i)
         for c in surf:
             if c in "「『（(":
@@ -393,12 +419,13 @@ def _breaks_by_char(text: str) -> list[int]:
     return out
 
 
-def _split2(d, text: str, font, width: float) -> list[str] | None:
-    """1行か、言葉の切れ目で2行に割れるなら、その行。割れなければ None。"""
+def _split2(d, text: str, font, width: float, loose: bool = False) -> list[str] | None:
+    """1行か、言葉の切れ目で2行に割れるなら、その行。割れなければ None。
+    `loose` は複合語の中でも割る（文節で割れないときだけ使う）。"""
     if d.textlength(text, font=font) <= width:
         return [text]
     best = None
-    for i in _breaks(text):
+    for i in (_loose_breaks(text) if loose else _breaks(text)):
         a, b = text[:i], text[i:]
         wa, wb = d.textlength(a, font=font), d.textlength(b, font=font)
         if wa <= width and wb <= width:
@@ -450,10 +477,13 @@ def caption(im: Image.Image, text: str, size: int = 74,
     # 2人の立ち絵で字幕の幅が狭まったとき、文末が切れていた（2026-10-08）
     f = F(size)
     lines = None
-    for sz in CAP_SIZES:
-        lines = _split2(d, text, F(sz), width)
+    for loose in (False, True):          # 文節で割れなければ、複合語の中で割る（文字数で切るよりまし）
+        for sz in CAP_SIZES:
+            lines = _split2(d, text, F(sz), width, loose)
+            if lines:
+                size, f = sz, F(sz)
+                break
         if lines:
-            size, f = sz, F(sz)
             break
     if not lines:
         lines = _wrap(d, text, f, width)
@@ -501,10 +531,11 @@ def caption(im: Image.Image, text: str, size: int = 74,
 _measure = ImageDraw.Draw(Image.new("RGB", (8, 8)))
 
 
-def _fits(text: str, side_room: int) -> bool:
+def _fits(text: str, side_room: int, loose: bool = False) -> bool:
     """1行で収まるか、**言葉の切れ目で**2行に割って収まるか（字は CAP_SIZES まで小さくしてよい）。"""
     width = W - 160 - side_room * 2
-    return any(_split2(_measure, text, F(sz), width) for sz in CAP_SIZES)
+    # 収まるかの判定は文節の切れ目だけで見る（複合語の中で割る手は、caption の最後の手段）
+    return any(_split2(_measure, text, F(sz), width, loose) for sz in CAP_SIZES)
 
 
 _PUNCT = "。、？?！!」』"
@@ -520,7 +551,7 @@ def split_caption(text: str, side_room: int) -> list[str]:
     """
     if _fits(text, side_room):
         return [text]
-    cuts_all = sorted(set(_breaks(text)) | {i + 1 for i, c in enumerate(text) if c in _PUNCT})
+    cuts_all = sorted(set(_breaks(text)) | {i + 1 for i, c in enumerate(text) if c in _PUNCT and not _in_number(text, i + 1)})
     chunks, st = [], 0
     while st < len(text):
         rest = text[st:]
@@ -529,6 +560,8 @@ def split_caption(text: str, side_room: int) -> list[str]:
             break
         cand = [c for c in cuts_all if c > st]
         ok = [c for c in cand if _fits(text[st:c], side_room)]
+        if not ok:                                 # 1語が長すぎて文節では割れない。複合語の中で割ってよい
+            ok = [c for c in cand if _fits(text[st:c], side_room, loose=True)]
         if not ok:                                 # どこで切っても入らない（とても長い一続きの言葉）
             chunks.append(rest)
             break
