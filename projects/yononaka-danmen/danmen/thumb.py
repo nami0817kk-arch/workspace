@@ -145,14 +145,18 @@ def _arrow(im, x0, y0, x1, y1, w=15):
     im.alpha_composite(lay)
 
 
-def _bubble(text, size=44):
+def _bubble(text, size=44, tip=None):
+    """`tip` はしっぽの先の x（吹き出しの左端から）。**話す人の頭を指す**
+    （2026-10-10「男のセリフみたいになってない」。左下を向けていて、後ろの岬を指していた）。"""
     f = F(size)
     bw = int(f.getbbox(text)[2]) + 76
+    tip = bw * 0.5 if tip is None else max(40, min(bw - 40, tip))
+    base = max(30, min(bw - 70, tip - 20))
     im = Image.new("RGBA", (bw, size + 66), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     d.rounded_rectangle((0, 0, bw - 1, size + 40), 20, fill=(255, 255, 255, 247),
                         outline=(20, 28, 48, 255), width=6)
-    d.polygon([(bw * 0.26, size + 38), (bw * 0.42, size + 38), (bw * 0.24, size + 64)],
+    d.polygon([(base, size + 38), (base + 44, size + 38), (tip, size + 64)],
               fill=(255, 255, 255, 247), outline=(20, 28, 48, 255))
     d.text((bw // 2, (size + 40) // 2), text, font=f, fill=(24, 30, 48), anchor="mm")
     return im
@@ -212,7 +216,11 @@ def _two(im, h_back=400, h_front=430, bubble_text=""):
         im.alpha_composite(dim, (bx - int(k.width * 0.64), H - k.height - 14))
     im.alpha_composite(c, (bx, H - c.height - 14))
     if bubble_text:
-        im.alpha_composite(_bubble(bubble_text), (bx - 76, H - c.height - 64))
+        # 吹き出しは小倉の頭の真上。しっぽは小倉の頭（立ち絵の幅の真ん中）を指す
+        bw = _bubble(bubble_text).width
+        head = bx + c.width // 2
+        x = max(12, min(W - 12 - bw, head - bw // 2))
+        im.alpha_composite(_bubble(bubble_text, tip=head - x), (x, H - c.height - 64))
 
 
 def _bars(d, x, y, w, h, parts):
