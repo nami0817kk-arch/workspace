@@ -99,8 +99,35 @@ def section_plan(sec: dict, texts: list[str], head: int = 0) -> dict[int, str]:
         hi = starts[i + 1] if i + 1 < len(figs) else len(texts)
         n = sheets(fig)
         room = max(hi - lo, 1)
+        # **行が出るのは、台詞でその行の名前が出たところ。** 等分すると、話していない行に印が付き、
+        # 会話と画面が合わなかった（2026-10-10 ユーザー指摘）。名前が台詞に無い行だけ等分で埋める
+        items = fig.get("items") if isinstance(fig.get("items"), list) and n > 1 else None
+        spots = []
         for m in range(n):
-            at = min(lo + round(room * m / n), len(texts) - 1)
+            hit = None
+            if items:
+                it = items[m]
+                keys = [str(it.get("from", "")).strip(), str(it.get("label", "")).strip()]
+                for key in [x for x in keys if len(x) >= 2]:
+                    lo2 = spots[-1] + 1 if spots and spots[-1] is not None else lo
+                    hit = next((j for j in range(max(lo2, lo), hi) if key in texts[j]), None)
+                    if hit is not None:
+                        break
+            spots.append(hit)
+        if spots:
+            spots[0] = lo                       # 1行目は図が出るところ（`from:` の台詞）で出す
+        for m in range(n):                      # 見つからない行は、前後のあいだを等分
+            if spots[m] is None:
+                prev = spots[m - 1]
+                nxt = next((spots[j] for j in range(m + 1, n) if spots[j] is not None), hi)
+                run = 1
+                while m + run < n and spots[m + run] is None:
+                    run += 1
+                spots[m] = prev + max(1, round((nxt - prev) / (run + 1)))
+        for m in range(1, n):
+            spots[m] = max(spots[m], spots[m - 1] + 1)
+        for m in range(n):
+            at = min(spots[m], len(texts) - 1)
             out[at] = "s{}{:02d}".format(sid, k + m)
         k += n
     return out

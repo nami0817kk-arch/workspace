@@ -19,7 +19,7 @@ cast:
     credit: VOICEVOX:剣崎雌雄   # 規約でクレジット必須。概要欄に出す
     engine_url: http://127.0.0.1:50021   # VOICEVOX（AivisSpeech ではない）
     style_id: 21
-    speed: 1.0
+    speed: 1.1            # 2026-10-10 ユーザー「話すスピードを1.1倍にして」
     pitch: 0.0
     intonation: 1.0
     tempo_dynamics: 1.0      # VOICEVOX には無い項目（送っても無視される）
@@ -35,7 +35,7 @@ cast:
     credit: AivisSpeech:花音
     style_id: 1325133120     # ノーマル（2026-10-06 ユーザーが まお・まい・花音 を聴き比べて選んだ）
     license: ACML 1.0       # 商用可
-    speed: 1.0
+    speed: 1.1            # 2026-10-10 ユーザー「話すスピードを1.1倍にして」
     pitch: 0.0
     intonation: 1.0
     tempo_dynamics: 1.0

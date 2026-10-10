@@ -125,6 +125,28 @@ def stack(fig: dict) -> Image.Image:
     return im
 
 
+GHOST = "#B9C0CB"        # まだ説明していない行の字
+GHOST_BAR = "#E3E6EB"    # まだ説明していない行の棒
+NOW = (255, 241, 196)    # いま話している行の下地（薄い金）
+
+
+def _reveal(fig: dict, n_items: int) -> tuple[int, int]:
+    """(何行目まで見せるか, いま話している行)。reveal が無ければ全部見せて印は付けない。
+
+    **まだ説明していない行も、名前だけ薄く出す。** 1行ずつ増やすと、表がいつまでも1行で
+    全体の形が分からなかった（2026-10-10 ユーザー指摘）。値は伏せるので、目が先に行かない。
+    """
+    r = fig.get("reveal")
+    if r is None:
+        return n_items, -1
+    return int(r), int(r) - 1
+
+
+def _now_band(d, y0: int, y1: int, w: int) -> None:
+    d.rounded_rectangle([44, y0, w + 14, y1], radius=10, fill=NOW)
+    d.rectangle([44, y0, 52, y1], fill=SERIES[1])
+
+
 def compare(fig: dict) -> Image.Image:
     """横棒で比べる。項目を並べて、長さで大小を見せる。
 
@@ -142,7 +164,15 @@ def compare(fig: dict) -> Image.Image:
     # 「127億9780万円（3割引いた後）」が右端で切れていた（2026-10-09）
     room = max(d.textlength(str(i.get("note", i["value"])), font=nf) for i in items) + 40
     span = max(int(w - bx - room), 200)
-    for it in items:
+    shown, now = _reveal(fig, len(items))
+    for k, it in enumerate(items):
+        if k == now:
+            _now_band(d, y - 2, y + 76, w)
+        if k >= shown:                      # まだ説明していない行: 名前だけ薄く、棒と値は伏せる
+            d.text((58, y + 14), str(it["label"]), font=F(30, 700), fill=GHOST)
+            d.rounded_rectangle([bx, y + 26, bx + span, y + 48], radius=6, fill=GHOST_BAR)
+            y += 92
+            continue
         is_focus = str(it["label"]) == focus
         col = SERIES[0] if is_focus else MUTED
         d.text((58, y + 14), str(it["label"]), font=F(30, 900 if is_focus else 700), fill=INK)
@@ -237,13 +267,21 @@ def bars(fig: dict) -> Image.Image:
     w, h = typo.PANEL_W, 120 + len(items) * 116 + _extra
     im, d, top = _card(w, h, fig.get("title", ""))
     y = top
+    shown, now = _reveal(fig, len(items))
     for n, it in enumerate(items, 1):
-        col = SERIES[(n - 1) % len(SERIES)]
+        if n - 1 == now:
+            _now_band(d, y - 12, y + 100, w)
+        ghost = n - 1 >= shown
+        col = GHOST_BAR if ghost else SERIES[(n - 1) % len(SERIES)]
         d.ellipse([58, y, 112, y + 54], fill=col)
         num, f = str(n), F(30)
-        d.text((58 + 27 - d.textlength(num, font=f) / 2, y + 8), num, font=f, fill="white")
-        d.text((140, y - 2), str(it["label"]), font=F(typo.BODY), fill=INK)
-        _note(d, str(it.get("note", "")), 140, y + 54)
+        d.text((58 + 27 - d.textlength(num, font=f) / 2, y + 8), num, font=f,
+               fill=GHOST if ghost else "white")
+        if ghost:                           # まだ説明していない項目: 番号の丸だけ。中身は伏せる
+            d.text((140, y - 2), "……", font=F(typo.BODY), fill=GHOST)
+        else:
+            d.text((140, y - 2), str(it["label"]), font=F(typo.BODY), fill=INK)
+            _note(d, str(it.get("note", "")), 140, y + 54)
         y += 116
     _note(d, fig.get("note", ""), 58, h - 4)
     return im
@@ -287,9 +325,16 @@ def table(fig: dict) -> Image.Image:
     top += 44
     d.line([(58, top), (w, top)], fill=RULE, width=2)
     y = top + 14
+    shown, now = _reveal(fig, len(items))
     for n, it in enumerate(items):
-        if n % 2 == 0:
+        if n == now:
+            _now_band(d, y - 10, y + typo.ROW, w)
+        elif n % 2 == 0:
             d.rectangle([48, y - 10, w + 10, y + typo.ROW], fill="#F2F4F7")
+        if n >= shown:                      # まだ説明していない行: 見出しだけ薄く。値は伏せる
+            d.text((58, y + 4), str(it["label"]), font=F(typo.BODY, 800), fill=GHOST)
+            y += typo.ROW + 14
+            continue
         d.text((58, y + 4), str(it["label"]), font=F(typo.BODY, 800), fill=INK)
         for i, v in enumerate(it.get("values", [])):
             strong = bool(it.get("strong")) and i == len(it.get("values", [])) - 1

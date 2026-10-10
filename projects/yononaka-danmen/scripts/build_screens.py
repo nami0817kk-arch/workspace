@@ -33,20 +33,38 @@ OUT = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
 PHOTOS = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/photos")
 
 W, H = 1920, 1080
-SAFE_BOTTOM = 326            # 字幕と、左右の立ち絵（320px）のために空ける
+# 字幕と、左右の立ち絵（420px）と、言いたいことの帯のために空ける。
+# **立ち絵を 420 にしたのに 320 のときの値のままで、大きな表の下が2人の頭にかかっていた**（2026-10-10）
+SAFE_BOTTOM = 484
 
 # 節の番号と、sequence.SECTIONS の名前。長さの目安はそこから引く
 KINDS = {"00": "surface", "01": "question", "02": "cut1", "03": "cut2", "04": "cut3",
          "05": "world", "06": "myth", "07": "reading", "08": "close"}
 
 
-def place(panel: Image.Image, bg: Image.Image, width: int = 1740) -> Image.Image:
-    """板を背景の上に、字幕と立ち絵の場所を避けて置く（make_screens.py と同じ）。"""
+def place(panel: Image.Image, bg: Image.Image, width: int = 1740, point: str = "") -> Image.Image:
+    """板を背景の上に、字幕と立ち絵の場所を避けて置く。
+
+    `point` は**その板で言いたいこと**を1行で（2026-10-10 ユーザー「表でも何を伝えたいか分かるように」）。
+    板のすぐ下、2人のあいだに金の帯で出す。
+    """
     out = bg.copy()
     room_h = H - SAFE_BOTTOM - 30
     s = min(width / panel.width, room_h / panel.height, 1.0)
     p = panel.resize((int(panel.width * s), int(panel.height * s)), Image.LANCZOS)
-    out.alpha_composite(p.convert("RGBA"), ((W - p.width) // 2, 34 + (room_h - p.height) // 2))
+    top = 34 + (room_h - p.height) // 2
+    out.alpha_composite(p.convert("RGBA"), ((W - p.width) // 2, top))
+    if point:
+        from PIL import ImageDraw
+        from danmen.figures import F as FF
+        d = ImageDraw.Draw(out)
+        size = 46
+        while size > 32 and d.textlength(point, font=FF(size)) > 980:
+            size -= 2
+        tw = d.textlength(point, font=FF(size))
+        bx0, by0 = int((W - tw) / 2) - 34, top + p.height + 14
+        d.rounded_rectangle([bx0, by0, bx0 + tw + 68, by0 + size + 30], radius=14, fill=(255, 206, 72))
+        d.text((bx0 + 34, by0 + 10), point, font=FF(size), fill=(16, 22, 36))
     return out
 
 
@@ -74,9 +92,9 @@ def find_photo(key: str | None) -> Path | None:
     return None
 
 
-def panels_of(sec: dict) -> list[tuple[str, Image.Image]]:
-    """その節で出す板を、出す順に返す。(役割, 画像)。"""
-    out: list[tuple[str, Image.Image]] = []
+def panels_of(sec: dict, with_point: bool = False) -> list:
+    """その節で出す板を、出す順に返す。(役割, 画像)。with_point なら (役割, 画像, 言いたいこと)。"""
+    out: list = []
     for n, fig in enumerate([sec.get("figure")] + list(sec.get("more") or [])):
         if not fig:
             continue
@@ -85,10 +103,14 @@ def panels_of(sec: dict) -> list[tuple[str, Image.Image]]:
             raise SystemExit("節{} の図「{}」は知りません".format(sec.get("id"), kind))
         fn = figures.KINDS[kind]
         # 項目を1つずつ増やす。項目を持たない図（hero など）は1枚だけ
+        point = str(fig.get("point", "") or "")
         if isinstance(fig.get("items"), list) and len(fig["items"]) > 1:
-            out += [(kind, im) for im in sequence.grow(fn, fig)]
+            ims = sequence.grow(fn, fig)
+            # 言いたいことの帯は、最後の1枚（全部の行が出たところ）だけに出す
+            out += [(kind, im, point if k == len(ims) - 1 else "") if with_point else (kind, im)
+                    for k, im in enumerate(ims)]
         else:
-            out.append((kind, fn(fig)))
+            out.append((kind, fn(fig), point) if with_point else (kind, fn(fig)))
     return out
 
 
@@ -131,8 +153,8 @@ def build(path: Path, only: str | None) -> int:
             "lead": sec.get("lead", ""), "photo": sec_photo}))
 
         # ② 図。項目が1つずつ増える
-        for _, panel in panels_of(sec):
-            frames.append(place(finish_panel(panel), sec_bg))
+        for _, panel, point in panels_of(sec, with_point=True):
+            frames.append(place(finish_panel(panel), sec_bg, point=point))
 
         for i, im in enumerate(frames, 1):
             name = "s{}{:02d}".format(sid, i)

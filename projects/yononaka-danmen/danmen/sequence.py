@@ -31,8 +31,15 @@ def grow(draw_fn, fig: dict, key: str = "items", start: int = 1) -> list[Image.I
     """
     items = list(fig[key])
     out = []
+    # **表・比べる図・箇条書きは、全部の行を最初から薄く出す**（2026-10-10）。図の側が reveal を見る
+    whole = getattr(draw_fn, "__name__", "") in ("compare", "bars", "table")
     for n in range(max(start, 1), len(items) + 1):
         f = dict(fig)
+        if whole:
+            f[key] = items
+            f["reveal"] = n
+            out.append(draw_fn(f))
+            continue
         f[key] = items[:n]
         # 最終的な数を渡す。これが無いと、増えるたびに既に出ている項目が動いて
         # 映像で跳ねて見える（図の側が `slots` を見る）

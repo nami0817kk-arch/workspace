@@ -431,8 +431,13 @@ def _wrap(d, text: str, font, width: float) -> list[str]:
         return best[1]
     return typo.wrap(d, text, font, width)
 
+# 話す人の名札。**字幕だけだと、どちらが話しているか分からない**（2026-10-10 ユーザー指摘）。
+# 名前と色を札にして、話す人のいる側に寄せる（岬は左、小倉は右）。字幕の文字の色は変えない
+SPEAKER_TAG = {"katari": ("岬", (52, 108, 196)), "kikite": ("小倉", (222, 92, 120))}
+
+
 def caption(im: Image.Image, text: str, size: int = 74,
-            side_room: int = 0) -> Image.Image:
+            side_room: int = 0, who: str = "") -> Image.Image:
     """字幕を焼く。縁を全部描いてから本体を描く（潰れを避けるため）。
 
     `side_room` は、**左右それぞれ**に空ける幅。立ち絵が2人いる画面で
@@ -478,6 +483,18 @@ def caption(im: Image.Image, text: str, size: int = 74,
     #    金の上に金を重ねると輪郭がぼやけ、黒の縁も細くなって読みにくかった。
     for part, x, y, is_num in place:
         d.text((x, y), part, font=f, fill=GOLD if is_num else (255, 255, 255))
+    if who in SPEAKER_TAG and lines:
+        name, col = SPEAKER_TAG[who]
+        tf = F(34, 900)
+        tw = d.textlength(name, font=tf) + 36
+        xs = [x for _, x, _, _ in place]
+        left = min(xs)
+        right = max(x + d.textlength(p, font=f) for p, x, _, _ in place)
+        tx = left if who == "katari" else right - tw
+        ty = y0 - 58
+        d.rounded_rectangle([tx, ty, tx + tw, ty + 48], radius=24, fill=col,
+                            outline=(255, 255, 255), width=3)
+        d.text((tx + 18, ty + 4), name, font=tf, fill=(255, 255, 255))
     return out
 
 
@@ -699,7 +716,7 @@ def build(script: Path, screens_dir: Path, out: Path, config: Path,
         shapes, _ = lipsync.visemes(wav, q, exact=exact, fps=FPS)
         # 長い台詞は字幕を何枚かに分け、話している時間を文字数で割って送る
         chunks = split_caption(step["text"], room)
-        capped_list = [caption(current, c, side_room=room) for c in chunks]
+        capped_list = [caption(current, c, side_room=room, who=art if cast_spec else "") for c in chunks]
         weights = [len(c) for c in chunks]
         cut_at, acc = [], 0
         for wgt in weights[:-1]:
