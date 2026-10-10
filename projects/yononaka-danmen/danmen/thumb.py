@@ -227,10 +227,9 @@ def _bars(d, x, y, w, h, parts):
 
 def _band(im, credit=""):
     """下端の細い帯。**これだけが毎回そろう目印。**"""
+    # **サムネイルに出典は書かない**（2026-10-10 ユーザー「サムネに出典は不要」）。
+    # 出典は本編の板と概要欄に出す。台本の credit: は残っていても描かない
     d = ImageDraw.Draw(im)
-    if credit:
-        d.text((44, H - 56), credit, font=F(24, 700), fill=(170, 185, 212),
-               stroke_width=5, stroke_fill=(6, 10, 18))
     d.rectangle([0, H - 14, W, H], fill=NAVY)
     d.rectangle([0, H - 17, W, H - 14], fill=GOLD)
 
