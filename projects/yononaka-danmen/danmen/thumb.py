@@ -211,9 +211,8 @@ def _two(im, h_back=400, h_front=430, bubble_text=""):
         return
     bx = W - 24 - c.width
     if k is not None:
-        dim = ImageEnhance.Brightness(k.convert("RGB")).enhance(0.82).convert("RGBA")
-        dim.putalpha(k.split()[3])
-        im.alpha_composite(dim, (bx - int(k.width * 0.64), H - k.height - 14))
+        # 岬も暗くしない（2026-10-10 ユーザー「男も明るくしておいて」。前は 0.82 倍に落としていた）
+        im.alpha_composite(k, (bx - int(k.width * 0.64), H - k.height - 14))
     im.alpha_composite(c, (bx, H - c.height - 14))
     if bubble_text:
         # 吹き出しは小倉の頭の真上。しっぽは小倉の頭（立ち絵の幅の真ん中）を指す
