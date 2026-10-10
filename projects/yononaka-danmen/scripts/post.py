@@ -146,7 +146,9 @@ def cmd_upload(args) -> int:
         print("本番の動画をユーザーに見せて OK をもらってから screen してください"
               "（動画を作り直したら確認し直し）")
         return 2
-    key = "{}:main".format(path.stem)
+    # **作り直した版は --remake で別の控えにする**（2026-10-10、カルテルの回を組み直して出し直した）。
+    # 同じ台本の二重投稿は、版ごとに止まる
+    key = "{}:main".format(path.stem) + (":{}".format(args.remake) if getattr(args, "remake", None) else "")
     done = up.already_posted(POSTED, key)
     if done:
         print("もう投稿してあります: https://youtu.be/{}（{}）".format(done["video_id"], done["publish_at"]))
@@ -200,6 +202,7 @@ def main() -> int:
     s = sub.add_parser("upload")
     s.add_argument("script")
     s.add_argument("--at", required=True, help="公開時刻 'YYYY-MM-DD HH:MM'（日本時間・9〜24時）")
+    s.add_argument("--remake", help="作り直した版の名前（例 v2）。投稿の控えを分ける")
     s.set_defaults(fn=cmd_upload)
     args = ap.parse_args()
     try:
