@@ -319,12 +319,14 @@ def build(script: Path, sid: str, screens: Path, out: Path, config: Path, gap: f
 def main() -> int:
     ap = argparse.ArgumentParser(description="ショート（縦）を本編の台詞から作る")
     ap.add_argument("script")
-    ap.add_argument("--screens", default=r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
+    ap.add_argument("--screens", help="既定は screens/<台本名>（build_screens.py の出力先）")
     ap.add_argument("--out", default=r"C:/Users/なみ/dev/output/yononaka-danmen/shorts")
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--only", help="この1本だけ（例 s1）")
     a = ap.parse_args()
     script = Path(a.script)
+    if not a.screens:
+        a.screens = r"C:/Users/なみ/dev/output/yononaka-danmen/screens/" + script.stem
     doc = yaml.safe_load(script.read_text(encoding="utf-8"))
     ids = [a.only] if a.only else [k for k in doc["shorts"] if k not in ("intro", "top")]
     for sid in ids:

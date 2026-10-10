@@ -188,6 +188,7 @@ python scripts/gather.py --out research/candidates/<日付>.json
 
 **題材の言葉をいちばん大きく出す**（2026-10-10、2回続けて指摘された。「カルテルとは？を強く」「重要ワードがわかるように」）。
 数字を主役にすると、何の話か分からない（「2件」だけ大きくして直された）。いまは `term` で題材の言葉を特大の金にする。
+**構図を変えることより、こちらが先。** `term` が3回続いて警告が出ても、題材の言葉を小さくしない。
 
 **量産型に見せない肝は「構図を毎回変えること」。** そろえるものを増やすほど、
 並べたときに同じ顔に見える。`thumb.layout_streak()` が**同じ構図3回で警告**する。
@@ -609,7 +610,7 @@ sections:
 台本から組めるようにした。
 
 ```bash
-python scripts/build_screens.py 台本.yaml          # 画面を作る（--only 02 で1節だけ）
+python scripts/build_screens.py 台本.yaml          # 画面を作る（--only 02 で1節だけ）。出力は screens/<台本名>/（10-10 に回ごとに分けた）
 python scripts/assign_screens.py 台本.yaml         # 台本の行に screen: と cast: を割り当てる
 python scripts/assign_screens.py 台本.yaml --clear # 割り当てを消す（何度でも掛け直せる）
 ```

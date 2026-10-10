@@ -29,7 +29,10 @@ from PIL import Image
 
 from danmen import figures, fullscreen, screens, sequence, texture
 
-OUT = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
+# **台本ごとにフォルダを分ける**（screens/<台本名>/）。1つのフォルダだと、次の回を作るたびに
+# 前の回の画面を消していた（2026-10-10、消費税の回を作ると個人情報の回の50枚が消えるところだった）
+BASE = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/screens")
+OUT = BASE
 PHOTOS = Path(r"C:/Users/なみ/dev/output/yononaka-danmen/assets/photos")
 
 W, H = 1920, 1080
@@ -116,6 +119,8 @@ def panels_of(sec: dict, with_point: bool = False) -> list:
 
 
 def build(path: Path, only: str | None) -> int:
+    global OUT
+    OUT = BASE / path.stem
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
     OUT.mkdir(parents=True, exist_ok=True)
     # **前に作った画面を消してから作る。** 消さないと、台本で減った画面や別の回の画面が残って
