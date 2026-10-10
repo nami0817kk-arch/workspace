@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 42
+  seen: 43
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -25,12 +25,13 @@ sites:
   - '2026-09-30'
   - '2026-10-04'
   - '2026-10-08'
+  - '2026-10-10'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
 - host: forzaroma.info
-  seen: 28
+  seen: 29
   days:
   - '2026-09-02'
   - '2026-09-05'
@@ -100,6 +101,22 @@ sites:
   - https://www.dailymail.com/sport/football/article-16097269/Tottenham-sign-Chelsea-winger-Mykhailo-Mudryk-season-long-loan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+- host: tuttobolognaweb.it
+  seen: 18
+  days:
+  - '2026-09-05'
+  - '2026-09-08'
+  - '2026-09-12'
+  - '2026-09-14'
+  - '2026-09-23'
+  - '2026-09-29'
+  - '2026-09-30'
+  - '2026-10-06'
+  - '2026-10-10'
+  examples:
+  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
+  - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
+  - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
 - host: blog.domesoccer.jp
   seen: 17
   days:
@@ -117,22 +134,6 @@ sites:
   - https://blog.domesoccer.jp/archives/60253571.html
   - https://blog.domesoccer.jp/archives/60253934.html
   - https://blog.domesoccer.jp/archives/60253949.html
-- host: tuttobolognaweb.it
-  seen: 17
-  days:
-  - '2026-09-05'
-  - '2026-09-08'
-  - '2026-09-12'
-  - '2026-09-14'
-  - '2026-09-23'
-  - '2026-09-29'
-  - '2026-09-30'
-  - '2026-10-06'
-  - '2026-10-10'
-  examples:
-  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
-  - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
-  - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
 - host: mondoudinese.it
   seen: 15
   days:

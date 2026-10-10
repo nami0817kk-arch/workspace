@@ -1,0 +1,319 @@
+# 取材メモ（10/10 題材 city_around、型は news、日本人以外の枠。**ショートだけ出す**）。
+#   材料の控えは research/raw/20261010_city_around_material.md。
+# **4人は「周りの第三者」ではない**。コンパニ＝バイエルンの監督でシティの元キャプテン、
+#   ハーランド＝シティの選手、シャビ・アロンソ＝**チェルシー**の監督（2026-07-01 就任）、
+#   イラオラ＝**リヴァプール**の監督（2026-06-04 就任）で、**10月11日にシティを迎える側**。
+#   シャビ・アロンソをレアル・マドリード、イラオラをボーンマスと書かない。
+# 事実の土台（判定の中身・一次情報・控訴の期限）は **city_carrick の本に置いた**。この本では繰り返さない。
+# **件数は言わない**（判断の本文は「100を超える」だけ）。
+# **タイトル剥奪ができるかは、公開された文書から確かめられていない**。「8個が消える」と言わず、
+#   「8個が問われている季の中にある」までにする。剥奪の見通しは報道の見立てなので台本に置かない。
+# 発言は各媒体の原文から。移籍情報の記者の投稿は、ハーランドの1行が写し間違い
+#   （"We matter what happens in life" → 原文は **"No matter what happens in life"**）なので使わない。
+#   シャビ・アロンソの2文も投稿では1文につながれているので、原文どおり分けて引く。
+#   イラオラの原文にある補いの丸括弧は、括弧ごと引かない。
+# **ハーランドは会見ではなく単独インタビュー（10月8日）**。台本で「会見で」と言わない。
+# ハーランドの通算得点は1つの出典で日付つきに固められなかったので、**数字そのものを台本に置かない**。
+# ESPN の20クラブのまとめは「全員が中身を避けた」という傾向を言うためだけに使い、個々の発言は引かない。
+# **会見の場所は書かれていない**。媒体名は画面にも読み上げにも出さない。
+# 写真：kompany/01＝Commons（CC0 / Timmy96、2023年）、haaland/01＝記事の og:image（シティの試合後、横1600）、
+#   pair/01＝2枚を横に並べた1枚（冒頭と本文）、pair/01_v＝その縦版。サムネは versus で2人を左右に。
+# ネットの反応は集めていない（この題材で実在する投稿を当たっていないため、作らない）。
+date: 2026年10月10日
+slot: world_1
+format: news
+people: []
+theme:
+  id: city_around
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: コンパニとハーランドがシティ判定に。同じクラブの2人を分けたもの
+  question: シティの判定について、4人はそれぞれ何を語り、何を語らなかったのか
+  takeaway: 同じ48時間に4人が聞かれて、4人とも判定の中身には触れなかった。違ったのは避け方で、それは過去の置き場所で分かれている。コンパニはシティで11年・360試合、12個のタイトルのうち8個が問われた9季の中にあり、ハーランドは2022年加入で6個のうち0個。コンパニは過去を誇ると言って現在へ切り、ハーランドは中身ではなくファンへ呼びかけ、2026年夏に来たばかりのシャビ・アロンソとイラオラは手続きを待てと言った。タイトル剥奪ができるかは公開された文書からは確かめられていない
+  opening_image: assets/images/20261010_city_around/pair/01.jpg
+short_title: コンパニとハーランドがシティ判定に。答え方が割れた理由
+thumbnail:
+  layout: versus
+  photo: assets/images/20261010_city_around/pair/01.jpg
+  photos:
+  - assets/images/20261010_city_around/kompany2/01.jpg
+  - assets/images/20261010_city_around/haaland/01.jpg
+  short_photo: assets/images/20261010_city_around/pair/01_v.jpg
+  names:
+  - コンパニ
+  - ハーランド
+  numbers:
+  - '8'
+  - ●
+  line1: シティ判定 同じクラブの2人
+  line2: 問われた9季のタイトル
+  tags:
+  - マンチェスター・シティ
+  - アーリング・ハーランド
+  - プレミアリーグ
+sections:
+- id: two
+  heading: 同じクラブ、違う過去
+  tier: 背景
+  telop: コンパニは12個のうち8個が問われた9季の中。ハーランドは6個のうち0個
+  narrator: 解説
+  say:
+  - text: 判定のあと、シティに関わった2人が、まったく違うことを言いました。
+    image: assets/images/20261010_city_around/pair/01.jpg
+    card: &medals
+      type: versus
+      title: 問われた9季の中にあるタイトル
+      left:
+        image: assets/images/20261010_city_around/kompany2/01.jpg
+        name: コンパニ
+        number: 8
+        note: シティで取った12個のうち
+      right:
+        image: assets/images/20261010_city_around/haaland/01.jpg
+        name: ハーランド
+        number: 0
+        note: シティで取った6個のうち
+  - text: コンパニはこのクラブで11年、公式戦360試合に出ています。
+    card: *medals
+  - text: 11季のうち8季で主将でした。
+    card: *medals
+  - text: 取ったタイトルは12。そのうち8つが、問われた9季のタイトルです。
+    card: *medals
+    emph: true
+  - text: ハーランドが来たのは2022年7月。今季が5季目です。
+    image: assets/images/20261010_city_around/pair/01.jpg
+    card: none
+  - text: シティで取った6つのうち、問われた季に入るものはゼロ。
+    card: *medals
+  - text: 12のうち8と、6のうち0。同じクラブで、過去の置き場所がまるで違います。
+    card: *medals
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  - https://en.wikipedia.org/wiki/Erling_Haaland
+  - https://www.goal.com/en-us/lists/bayern-munich-vincent-kompany-manchester-city-guilty-verdict/blt4600101893cd6763
+- id: words
+  main: true
+  heading: 48時間で出た、2通りの答え方
+  tier: 報道
+  telop: コンパニは「それ以外は、いまの私の現実には無い」。ハーランドは「笑っていよう」
+  narrator: キャスター
+  card: &avoid
+    type: verdict
+    title: 4人は、判定の中身に触れたか
+    columns:
+    - 誰
+    - 触れたか
+    - 言ったこと
+    rows:
+    - - コンパニ
+      - ×
+      - 誇りに思う。それ以外は現実に無い
+    - - ハーランド
+      - ×
+      - 一緒にいよう。笑っていよう
+    - - シャビ・アロンソ
+      - ×
+      - 辛抱して処分を待つ
+    - - イラオラ
+      - ×
+      - 不確かさは誰にとっても良くない
+  say:
+  - text: 財務の違反が9月29日に認められ、シティは控訴しました。
+    short_only: true
+    card: none
+  - text: 元主将のコンパニは金曜、バイエルンの監督として会見で聞かれました。
+    image: assets/images/20261010_city_around/pair/01.jpg
+    card: none
+  - voice: コンパニ
+    text: 私にとっては単純な話だ。11年、あのクラブでプレーした。
+    card: none
+  - voice: コンパニ
+    text: あそこで過ごした時間が大好きだった。
+    cont: true
+    card: none
+  - voice: コンパニ
+    text: チームとして成し遂げたすべてを誇りに思う。
+    cont: true
+    emph: true
+    card: none
+  - voice: コンパニ
+    text: それ以外のことは、いまの私の現実には無い。
+    cont: true
+    card: none
+  - text: 罰にもタイトルにも、一言も触れずに現在へ切り替えました。
+    card: none
+  - text: ハーランドは前日、単独のインタビューでファンに向けて話しています。
+    image: assets/images/20261010_city_around/haaland/01.jpg
+    card: none
+  - voice: ハーランド
+    text: 僕たちは一緒にいなければいけない。
+    card:
+      <<: *avoid
+      highlight_row: 1
+  - voice: ハーランド
+    text: 互いのそばにいて、前向きでいなければいけない。
+    cont: true
+    card:
+      <<: *avoid
+      highlight_row: 1
+  - voice: ハーランド
+    text: 人生で何が起きても、いつも笑っていなければいけない。
+    cont: true
+    emph: true
+    card: none
+  - voice: ハーランド
+    text: この街のことを、とても大事に思っている。
+    card:
+      <<: *avoid
+      highlight_row: 1
+  - voice: ハーランド
+    text: 自分もファンだから、彼らと同じように感じている。
+    cont: true
+    card:
+      <<: *avoid
+      highlight_row: 1
+  - text: こちらも、判定そのものには一言も触れていません。
+    card: none
+  quotes_from:
+  - goal.com https://www.goal.com/en-us/lists/bayern-munich-vincent-kompany-manchester-city-guilty-verdict/blt4600101893cd6763
+  - Sky Sports https://www.skysports.com/football/news/13596522/man-city-charges-erling-haaland-encourages-clubs-fans-to-stay-positive-after-guilty-verdict
+  sources:
+  - https://www.goal.com/en-us/lists/bayern-munich-vincent-kompany-manchester-city-guilty-verdict/blt4600101893cd6763
+  - https://www.skysports.com/football/news/13596522/man-city-charges-erling-haaland-encourages-clubs-fans-to-stay-positive-after-guilty-verdict
+- id: outside
+  heading: メダルが1つも懸かっていない2人
+  tier: 報道
+  telop: シャビ・アロンソとイラオラは2026年夏に来たばかり。どちらも辛抱を求めた
+  narrator: キャスター
+  card: &newcomers
+    type: table
+    title: 同じ週に答えた監督の立場
+    columns:
+    - 誰
+    - いまのクラブ
+    - 就任
+    rows:
+    - - シャビ・アロンソ
+      - チェルシー
+      - 2026年7月
+    - - イラオラ
+      - リヴァプール
+      - 2026年6月
+  say:
+  - text: 同じ金曜、ほかの監督も同じ問いを受けています。
+    image: assets/images/20261010_city_around/pair/01.jpg
+    card: *newcomers
+  - text: チェルシーのシャビ・アロンソと、リヴァプールのイラオラ。
+    card: *newcomers
+  - text: 2人とも、今年の夏に今のクラブへ来たばかりです。
+    card: *newcomers
+  - text: 問われた9季に、イングランドで指揮した経験はありません。
+    card: *newcomers
+  - voice: シャビ・アロンソ
+    text: 確かに、決定は出ている。
+    card:
+      <<: *newcomers
+      highlight_row: 0
+  - voice: シャビ・アロンソ
+    text: だが、私たちは辛抱しなければならない。
+    cont: true
+    card:
+      <<: *newcomers
+      highlight_row: 0
+  - voice: シャビ・アロンソ
+    text: 委員会からの最終的な処分を待たなければならない。
+    cont: true
+    card:
+      <<: *newcomers
+      highlight_row: 0
+  - voice: シャビ・アロンソ
+    text: すべての状況を判断できるだけの独立性は、彼らにあると思う。
+    card:
+      <<: *newcomers
+      highlight_row: 0
+  - text: イラオラ監督は、11日にシティを迎える側です。
+    card:
+      <<: *newcomers
+      highlight_row: 1
+  - voice: イラオラ監督
+    text: 不確かさは、誰にとっても、
+    card:
+      <<: *newcomers
+      highlight_row: 1
+  - voice: イラオラ監督
+    text: 関わっている誰にとっても良くないと思う。
+    cont: true
+    card:
+      <<: *newcomers
+      highlight_row: 1
+  - voice: イラオラ監督
+    text: だが手続きは続いていて、
+    cont: true
+    card:
+      <<: *newcomers
+      highlight_row: 1
+  - voice: イラオラ監督
+    text: 私たちもみんなと同じように辛抱して、
+    cont: true
+    card:
+      <<: *newcomers
+      highlight_row: 1
+  - voice: イラオラ監督
+    text: 最後に何が起きるかを見なければならない。
+    cont: true
+    card:
+      <<: *newcomers
+      highlight_row: 1
+  quotes_from:
+  - Sports Mole https://www.sportsmole.co.uk/football/chelsea/news/alonso-calls-for-patience-over-man-city-114-charges-saga_606562.html
+  - football365 https://www.football365.com/news/andoni-iraola-michael-carrick-enzo-maresca-liverpool-manchester-united-manchester-city
+  sources:
+  - https://www.sportsmole.co.uk/football/chelsea/news/alonso-calls-for-patience-over-man-city-114-charges-saga_606562.html
+  - https://www.football365.com/news/andoni-iraola-michael-carrick-enzo-maresca-liverpool-manchester-united-manchester-city
+- id: view
+  viewpoint: true
+  heading: 全員が避けたことと、答え方が分かれた理由
+  tier: 背景
+  telop: コンパニが去ってから2,707日。過去の栄誉が動くかは公開された文書では確かめられない
+  narrator: 解説
+  card: &gapdays
+    type: stats
+    title: 2人の過去の置き場所
+    items:
+    - - 8
+      - 個
+      - コンパニの12個のうち問われた季の中
+    - - 0
+      - 個
+      - ハーランドの6個のうち問われた季の中
+    - - 2707
+      - 日
+      - コンパニの最後の季から会見まで
+    focus: 2
+  say:
+  - text: 4人とも聞かれて、4人とも判定の中身には踏み込みませんでした。
+    card: *avoid
+  - text: 分かれたのは答え方だけで、その分かれ方は過去の置き場所と重なります。
+    card: *avoid
+  - text: コンパニの最後の季が終わってから、この会見まで2,707日。7年5か月です。
+    card: *gapdays
+    emph: true
+  - text: 7年半前に出ていった人のほうが、いまいる選手より多くを背負わされています。
+    card: *gapdays
+  - text: ただし、過去の栄誉が動くかどうかは、公開された文書からは確かめられません。
+    image: assets/images/20261010_city_around/pair/01.jpg
+    card: none
+  - text: リーグが挙げた罰は、罰金と勝ち点の剥奪、そのほかの競技上の罰です。
+    card: none
+  - text: タイトルを取り上げられるかは、そこに書かれていません。
+    card: none
+  - text: はっきりするのは、まず11日のアンフィールドです。
+    card: none
+  - text: イラオラのリヴァプールと、5試合5勝で首位のシティが当たります。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Premier_League

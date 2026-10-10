@@ -71,7 +71,10 @@ domains:
              # 2026-09-28 に追加。オランダサッカー協会（KNVB）の代表の公式サイト
              www.onsoranje.nl,
              # 2026-09-29 に追加。競技規則（VAR の手順）の原文
-             www.theifab.com]
+             www.theifab.com,
+             # 2026-10-10 に追加。PSV（佐野航大の所属。選手ページ・試合後会見の原文を引く）と
+             # トルコサッカー連盟（モンテッラ解任の公告が一次情報）。どちらも到達を実測
+             www.psv.nl, www.tff.org]
 
   # 日本の公式。Jリーグの話をここまで辿れば確定にできる
   official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,
@@ -97,7 +100,9 @@ domains:
             # 2026-09-06 に追加。どちらもブラウザで直接開いて本文が読めることを
             # 確認した。フィードに載らない話（会見の発言、退団メッセージの全文）が
             # ここにしか無く、網に無いせいで確度を決められない候補が毎日出ていた
-            mirror.co.uk, bbc.co.uk, espn.co.uk, dailymail.co.uk]
+            mirror.co.uk, bbc.co.uk, espn.co.uk, dailymail.co.uk,
+            # 2026-10-10 に追加。クラブ名義の声明を全文に近い形で引く英語媒体。到達を実測
+            www.sportsmole.co.uk]
 
   # 記録・数字。「数字で見ると」の節で使う。順位・得点・出場数はここ
   stats: [fbref.com, understat.com, worldfootball.net, sofascore.com,
@@ -140,7 +145,10 @@ domains:
   portuguese: [abola.pt, record.pt]
   # スペイン語圏。南米(ole / tycsports)もここで引く。検索はスペイン語で書く
   spanish: [besoccer.com, marca.com, as.com, mundodeportivo.com, relevo.com,
-            sport.es, ole.com.ar, tycsports.com, eldebate.com]
+            sport.es, ole.com.ar, tycsports.com, eldebate.com,
+            # 2026-10-10 に追加。会見の答えを項目ごとに全部載せる媒体（FútbolFantasy）と、
+            # EFE の配信をそのまま載せる媒体（Infobae）、同じ会見を切った Libertad Digital。到達を実測
+            www.futbolfantasy.com, www.infobae.com, www.libertaddigital.com]
 
   # ウクライナ。代表と、東欧に散った選手の話はここでしか出ない（2026-09-24 に追加）
   ukrainian: [sport.ua, sport-express.ua, ukrfootball.ua, nv.ua, english.nv.ua]

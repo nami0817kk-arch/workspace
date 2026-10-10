@@ -1,0 +1,334 @@
+# 取材メモ（10/10 題材 city_carrick、型は news、プレミア枠）。材料の控えは research/raw/20261010_city_carrick_material.md。
+# **判決・処分の回**なので、事実の土台は 10/1〜10/3 に一次情報まで辿った控え
+#   research/raw/20261002_city_verdict.md（委員会の判断の黒塗り版 PDF 40ページ・10の告発の項ごと）と
+#   research/raw/20261003_city_appeal.md（控訴と規則 Section W の原文）から取っている。
+#   この回で土台を作り直していない。記事の要約は根拠にしていない。
+# **件数は言わない**。判断の本文は「100を超える個々の違反」だけで、「115件中114件」は公開された文書に無い。
+# **「すべての告発で有罪」とは言わない**。財務の告発はすべて認定、調査への非協力は4つのうち3つ（4(B) は不成立）。
+# **判決を断定しない**。言うのは「上訴中」「処分は確定していない」まで。
+#   手続きの期限（10/1 申し立て → 84日 → 12/24、+30日 → 2027-01-23）は**規則の原文**から計算した数字なので使う。
+#   報道の1社が書いている 2027年2月8日 は、根拠の条文が全文検索で見つからなかったので使わない。
+# キャリックの発言は**媒体の原文**から。移籍情報の記者の投稿にある3行（早さについての1行・過去は過去という1行・
+#   トッテナム戦の重圧についての1行）は、当たった4媒体のどこにも無いので使わない。
+#   「取り返せない」系の3つの引用は同じ1つの問いへの答えなので、**つなげず1つだけ**使う。
+#   本人は処分の見通しを避けているので、「剥奪を求めた」と読める形にしない。
+# **会見の場所は書かれていない**ので「試合前の記者会見で」とだけ言う。媒体名は画面にも読み上げにも出さない。
+# 同じ日の別の2本（city_maresca・city_around）とは、事実の土台をこの本にだけ置いて重ねない。
+# 写真は記事の横長を先に当たった。01＝Commons の選手時代（CC BY 2.0 / Gordon Flood）、
+#   04＝記事の og:image（監督としてのタッチライン、横1200）。04_w が冒頭とサムネ、01 がショートの縦。
+# ネットの反応は集めていない（この題材で実在する投稿を当たっていないため、作らない）。
+date: 2026年10月10日
+slot: premier_1
+format: news
+people: []
+theme:
+  id: city_carrick
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: キャリック、シティの判定に答えた。問われた9季を彼はどこで過ごしたか
+  question: 判定を受けて、マンチェスター・ユナイテッドのキャリック監督は何を語ったのか
+  takeaway: 問われているのは2009-10から2017-18までの9季で、キャリックはその9つをすべてユナイテッドの選手として過ごしている。9分の9。正面からぶつかった2011-12は勝ち点が89と89で差はゼロ、分けたのは得失点差の8だけだった。その最終節から判定まで5,252日、約14年5か月。本人は処分の見通しを避け、言ったのは「どちらの方向にも、それを取り返す道は無い」だけ。控訴は10月1日に申し立てられ、規則どおりなら審理は12月24日まで、判断は2027年1月23日までに出る
+  opening_image: assets/images/20261010_city_carrick/04_w.jpg
+short_title: キャリックがシティの判定に答えた。取り返せないと言った意味
+thumbnail:
+  layout: face
+  photo: assets/images/20261010_city_carrick/04_w.jpg
+  short_photo: assets/images/20261010_city_carrick/manager/01.jpg
+  line1: キャリック マンU監督
+  line2: 9季すべて●●にいた
+  tags:
+  - マンチェスター・ユナイテッド
+  - マンチェスター・シティ
+  - プレミアリーグ
+sections:
+- id: what
+  heading: 9月29日に認められたもの
+  tier: 確定
+  official: true
+  telop: 財務の規則をめぐる告発はすべて認定。調査への非協力は4つのうち3つ。対象は9季
+  narrator: キャスター
+  card: &decided
+    type: verdict
+    title: 独立委員会が9月29日に出した判断
+    columns:
+    - 何が
+    - 認められたか
+    - 中身
+    rows:
+    - - 財務の規則の告発
+      - ◎
+      - すべて認められた
+    - - 調査への非協力
+      - △
+      - 4つのうち3つ
+    - - 対象の期間
+      - ○
+      - 2009-10から2017-18
+    - - 罰の中身
+      - ×
+      - まだ決まっていない
+  say:
+  - text: プレミアリーグの独立委員会が、マンチェスター・シティへの判断を出しました。
+    image: assets/images/20261010_city_carrick/04_w.jpg
+    card: *decided
+  - text: 財務の規則をめぐる告発は、すべて認められました。
+    card:
+      <<: *decided
+      highlight_row: 0
+  - text: 調査に協力しなかったという告発は、4つのうち3つが認められています。
+    card:
+      <<: *decided
+      highlight_row: 1
+  - text: すべてが認められたわけではない、というのがここの正確なところです。
+    card:
+      <<: *decided
+      highlight_row: 1
+  - text: 問われているのは、2009-10から2017-18までの9つの季です。
+    card:
+      <<: *decided
+      highlight_row: 2
+    emph: true
+  - text: 罰の中身はまだ決まっていません。シティは10月1日に控訴を申し立てています。
+    card:
+      <<: *decided
+      highlight_row: 3
+  sources:
+  - https://www.premierleague.com/en/news/4727779/premier-league-statement-manchester-city-fc
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/09/29/9bb3f063-6312-4d15-a1f1-77280d356a49/Premier-League-Manchester-City-independent-Commission-Redacted-Core-Decision.pdf
+  - https://www.premierleague.com/en/news/4729207/premier-league-statement-manchester-city-fc-appeal-decision-of-independent-commission-02-october-2026
+- id: words
+  main: true
+  heading: キャリックが10日後に口を開いた
+  tier: 報道
+  telop: 「どちらの方向にも、それを取り返す道は無い」。処分の見通しは避けた
+  narrator: キャスター
+  card: &asked
+    type: table
+    title: 10月9日の会見で、キャリックが答えたこと
+    columns:
+    - 問われたこと
+    - 答え
+    rows:
+    - - 判定をどう見るか
+      - とても言いにくい
+    - - 自分への影響
+      - 個人として影響してきた
+    - - さかのぼって動いたら
+      - 取り返す道は無い
+    - - 処分の見通し
+      - 後にとっておく
+  say:
+  - text: 争った側のユナイテッドの監督が、シティの判定について語りました。
+    short_only: true
+    card: none
+  - text: 判定から10日後の金曜、マンチェスター・ユナイテッドの試合前の記者会見です。
+    card: none
+  - voice: キャリック
+    text: いろいろな意味で、とても言いにくい。
+    card:
+      <<: *asked
+      highlight_row: 0
+  - voice: キャリック
+    text: たくさんの問いが浮かび上がった。
+    cont: true
+    card:
+      <<: *asked
+      highlight_row: 0
+  - voice: キャリック
+    text: 答えが出たものもあるし、出ていないものもある。
+    cont: true
+    card: none
+  - text: その問いは、よそごとではないと続けました。
+    card:
+      <<: *asked
+      highlight_row: 1
+  - voice: キャリック
+    text: 確かに、自分自身の問いがある。
+    card:
+      <<: *asked
+      highlight_row: 1
+  - voice: キャリック
+    text: 長いあいだ、いろいろな形で、
+    cont: true
+    card: none
+  - voice: キャリック
+    text: 自分に個人として影響してきた。
+    cont: true
+    card: none
+  - text: さかのぼってタイトルやメダルが動いたら、という問いも出ました。
+    image: assets/images/20261010_city_carrick/04b.jpg
+    card:
+      <<: *asked
+      highlight_row: 2
+  - voice: キャリック
+    text: どちらの方向にも、それを取り返す道は無い。
+    emph: true
+    card: none
+  - voice: キャリック
+    text: 私たちみんなが渇くように求めている感覚は、
+    cont: true
+    card:
+      <<: *asked
+      highlight_row: 2
+  - voice: キャリック
+    text: いちばん上に出ることだ。
+    cont: true
+    card:
+      <<: *asked
+      highlight_row: 2
+  - text: 剥奪や罰に当たる言葉は、この会見で一度も使っていません。
+    card: none
+  - voice: キャリック
+    text: いまのところ、まだ確定していないので、
+    card:
+      <<: *asked
+      highlight_row: 3
+  - voice: キャリック
+    text: それについては後にとっておく。
+    cont: true
+    card:
+      <<: *asked
+      highlight_row: 3
+  quotes_from:
+  - The Independent（Yahoo Sports 転載） https://sports.yahoo.com/articles/michael-carrick-reacts-unprecedented-manchester-134322299.html
+  - Read Man Utd https://readmanutd.com/2026/10/09/michael-carrick-man-city-charges-verdict/
+  sources:
+  - https://sports.yahoo.com/articles/michael-carrick-reacts-unprecedented-manchester-134322299.html
+  - https://readmanutd.com/2026/10/09/michael-carrick-man-city-charges-verdict/
+  - https://www.sportsmole.co.uk/football/man-utd/news/it-has-affected-me-personally-carrick-reacts-to-man-city-charges_606554.html
+- id: nine
+  heading: 9つの季と、彼の9つの季
+  tier: 背景
+  telop: キャリックのユナイテッド在籍は2006年から2018年。問われた9季は9つとも中にある
+  narrator: 解説
+  card: &rival
+    type: table
+    title: 2つのクラブが1位と2位で並んだ季
+    columns:
+    - 季
+    - 優勝
+    - 2位
+    rows:
+    - - 2011-12
+      - シティ
+      - ユナイテッド
+    - - 2012-13
+      - ユナイテッド
+      - シティ
+    - - 2017-18
+      - シティ
+      - ユナイテッド
+  say:
+  - text: キャリックがユナイテッドの選手だったのは、2006年から2018年までです。
+    image: assets/images/20261010_city_carrick/01.jpg
+    card: none
+  - text: 問われた9つの季は、その在籍の中にすっぽり入ります。9つのうち9つ。
+    emph: true
+    card: none
+  - text: この9季で、2つのクラブは合わせて5回優勝しています。
+    card: *rival
+  - text: シティが3回、ユナイテッドが2回です。
+    card: *rival
+  - text: 2011-12は、勝ち点が89と89。差はゼロでした。
+    card: &pts
+      type: calc
+      title: 2011-12 の最終順位
+      terms:
+      - - 89
+        - シティの勝ち点
+      - - 89
+        - ユナイテッドの勝ち点
+      - - 0
+        - 勝ち点の差
+      ops:
+      - －
+      - ＝
+  - text: 分けたのは得失点差の8だけ。プラス64とプラス56でした。
+    card: *pts
+  - text: 優勝が得失点差で決まったのは、プレミアリーグでこの1度だけです。
+    card:
+      <<: *rival
+      highlight_row: 0
+  - text: 2017-18は勝ち点100と81。こちらは19も離れていました。
+    card:
+      <<: *rival
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/2011%E2%80%9312_Premier_League
+  - https://en.wikipedia.org/wiki/List_of_English_football_champions
+  - https://en.wikipedia.org/wiki/Michael_Carrick
+- id: view
+  viewpoint: true
+  heading: 取り返せないという言葉が指している長さ
+  tier: 背景
+  telop: あの最終節から判定まで5,252日。控訴の判断は規則どおりなら2027年1月23日まで
+  narrator: 解説
+  card: &days
+    type: timeline
+    title: 得失点差の8から、判定までの道のり
+    rows:
+    - - 2012年5月
+      - 得失点差でシティが優勝
+    - - 2018年5月
+      - 勝ち点100でシティが優勝
+    - - 2023年2月
+      - リーグがシティを告発
+    - - 2026年9月
+      - 財務の告発が認められる
+    - - 2026年10月
+      - シティが控訴を申し立て
+    focus: 2026年10月
+  say:
+  - text: あの得失点差の最終節から、判定まで5,252日がたっています。
+    card: *days
+  - text: 14年5か月です。2017-18の最終節からでも、3,061日。
+    card:
+      <<: *days
+      highlight_row: 1
+  - text: 告発から判定までだけでも1,331日かかっています。
+    card:
+      <<: *days
+      highlight_row: 2
+  - text: 3年8か月。最終節から数えた14年の、4分の1より長い計算です。
+    card:
+      <<: *days
+      highlight_row: 2
+  - text: そして、まだ終わっていません。
+    card:
+      <<: *days
+      highlight_row: 4
+  - text: 規則では、控訴の審理は申し立てから12週間以内。12月24日までです。
+    card: &limit
+      type: table
+      title: 規則が定めている期限
+      columns:
+      - 段階
+      - 期限
+      rows:
+      - - 控訴の申し立て
+        - 10月1日に済み
+      - - 審理を終える
+        - 12月24日まで
+      - - 控訴の判断
+        - 2027年1月23日まで
+      - - 罰を決める審理
+        - 日程は未発表
+  - text: 判断はその最終日から30日以内なので、いちばん遅くて2027年1月23日。
+    card:
+      <<: *limit
+      highlight_row: 2
+    emph: true
+  - text: 罰を決める審理はこれとは別で、日程は発表されていません。
+    card:
+      <<: *limit
+      highlight_row: 3
+  - text: 早いことが誰にとっても欠かせない、とキャリックは言いました。
+    image: assets/images/20261010_city_carrick/04_w.jpg
+    card: none
+  - text: すでに14年待った人の勘定に、あと3か月半が足されることになります。
+    card: none
+  sources:
+  - https://resources.premierleague.pulselive.com/premierleague/document/2026/07/31/8a890ff9-176c-4364-a8ff-e08f995e2c86/TM2040_PL-Handbook-and-Collateral-2026-27_Digital_31.07.pdf
+  - https://www.premierleague.com/en/news/4729207/premier-league-statement-manchester-city-fc-appeal-decision-of-independent-commission-02-october-2026
