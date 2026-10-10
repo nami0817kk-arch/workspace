@@ -185,7 +185,8 @@ def face(who: str, expr: str = "normal", mouth="closed", blink: bool = False) ->
 
 # 胸から上の切り出し。**2人の顔の大きさをそろえる**ため、顔の幅の何倍の高さで切るかで決める
 FACE_W = {"kikite": 330, "katari": 272}
-CROP_K = {"bust": 2.3, "half": 3.4}
+# bust は「おなかまで」（2026-10-10 ユーザーが 胸から上 2.3／おなか 2.9／腰 3.5 を画面で見比べて選んだ）
+CROP_K = {"bust": 2.9, "half": 3.4}
 
 # 古い表情の名前（2026-10-09 以前の絵）→ 今の名前。サムネや短い動画の古い呼び出しのため
 LEGACY = {"": "normal", "setsumei": "normal", "sumashi": "normal", "shinken": "serious",
