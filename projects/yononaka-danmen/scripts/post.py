@@ -247,6 +247,40 @@ def cmd_thumb_set(args) -> int:
     return 0
 
 
+def cmd_desc_set(args) -> int:
+    """投稿済みの本編の概要欄を、今の台本から作り直して差し替える（題名・タグ・公開設定は触らない）。
+    2026-10-10、公開済みのカルテルの回に写真の作者名を足すために作った。"""
+    path = Path(args.script)
+    sc = load(path)
+    # 作り直した回は「:main:v2」で控えてある。**いちばん新しい版**に当てる（古い版は非公開にしてある）
+    key = "{}:main".format(path.stem)
+    log = json.loads(POSTED.read_text(encoding="utf-8")) if POSTED.exists() else []
+    hits = [e for e in log if e.get("key") == key or str(e.get("key", "")).startswith(key + ":v")]
+    if not hits:
+        print("まだ投稿していません")
+        return 1
+    done = hits[-1]
+    svc = _service(need_manage=True)
+    if svc is None:
+        return 2
+    vid = done["video_id"]
+    items = svc.videos().list(part="snippet", id=vid).execute().get("items", [])
+    if not items:
+        print("動画が見つかりません: {}".format(vid))
+        return 1
+    sn = items[0]["snippet"]
+    new = description(sc)
+    if sn.get("description", "") == new:
+        print("概要欄は今のままで同じです")
+        return 0
+    body = {"id": vid, "snippet": {"title": sn["title"], "categoryId": sn["categoryId"],
+                                   "description": new, "tags": sn.get("tags", []),
+                                   "defaultLanguage": sn.get("defaultLanguage", "ja")}}
+    svc.videos().update(part="snippet", body=body).execute()
+    print("概要欄を差し替えました: https://youtu.be/{}".format(vid))
+    return 0
+
+
 SHORTS_DIR = OUT / "shorts"
 # ショートの公開時刻（CLAUDE.md「出す時間」。9時より前には出さない）
 SHORT_HOURS = [9, 11, 12, 13, 16, 17, 18, 19, 20, 21]   # 2026-10-10 ユーザー指示
@@ -348,6 +382,7 @@ def main() -> int:
     s = sub.add_parser("describe"); s.add_argument("script"); s.set_defaults(fn=cmd_describe)
     s = sub.add_parser("screen"); s.add_argument("script"); s.set_defaults(fn=cmd_screen)
     s = sub.add_parser("thumb-set"); s.add_argument("script"); s.set_defaults(fn=cmd_thumb_set)
+    s = sub.add_parser("desc-set"); s.add_argument("script"); s.set_defaults(fn=cmd_desc_set)
     s = sub.add_parser("screen-shorts"); s.add_argument("script"); s.set_defaults(fn=cmd_screen_shorts)
     s = sub.add_parser("upload-shorts"); s.add_argument("script")
     s.add_argument("--from", dest="start", required=True, help="最初の枠の時刻 'YYYY-MM-DD HH:MM' 以降に順に置く")
