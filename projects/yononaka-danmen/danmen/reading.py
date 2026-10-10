@@ -64,6 +64,26 @@ def num_to_kanji(s: str) -> str:
     return int_to_kanji(int(s))
 
 
+_READINGS: dict[str, str] | None = None
+
+
+def readings() -> dict[str, str]:
+    """読み替え辞書（readings.yaml）。長い語から順に置き換える。"""
+    global _READINGS
+    if _READINGS is None:
+        from pathlib import Path
+        import yaml
+        p = Path(__file__).resolve().parents[1] / "readings.yaml"
+        data = yaml.safe_load(p.read_text(encoding="utf-8")) if p.exists() else None
+        _READINGS = {str(k): str(v) for k, v in (data or {}).items()}
+    return _READINGS
+
+
 def reading(text: str) -> str:
-    """読み上げ用のテキスト。**字幕には使わない**（字幕は算用数字のまま）。"""
+    """読み上げ用のテキスト。**字幕には使わない**（字幕は算用数字のまま）。
+
+    読み替え辞書で語を置き換えてから、数字を漢数字にする。
+    """
+    for k in sorted(readings(), key=len, reverse=True):
+        text = text.replace(k, readings()[k])
     return NUM.sub(lambda m: num_to_kanji(m.group(0)), text)

@@ -104,19 +104,25 @@ def panels_of(sec: dict, with_point: bool = False) -> list:
         fn = figures.KINDS[kind]
         # 項目を1つずつ増やす。項目を持たない図（hero など）は1枚だけ
         point = str(fig.get("point", "") or "")
-        if isinstance(fig.get("items"), list) and len(fig["items"]) > 1:
+        photo = fig.get("photo")                # 図ごとの背景（無ければ節の背景）
+        if isinstance(fig.get("items"), list) and len(fig["items"]) > 1 and fig.get("step") is not False:
             ims = sequence.grow(fn, fig)
             # 言いたいことの帯は、最後の1枚（全部の行が出たところ）だけに出す
-            out += [(kind, im, point if k == len(ims) - 1 else "") if with_point else (kind, im)
+            out += [(kind, im, point if k == len(ims) - 1 else "", photo) if with_point else (kind, im)
                     for k, im in enumerate(ims)]
         else:
-            out.append((kind, fn(fig), point) if with_point else (kind, fn(fig)))
+            out.append((kind, fn(fig), point, photo) if with_point else (kind, fn(fig)))
     return out
 
 
 def build(path: Path, only: str | None) -> int:
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
     OUT.mkdir(parents=True, exist_ok=True)
+    # **前に作った画面を消してから作る。** 消さないと、台本で減った画面や別の回の画面が残って
+    # 割り当てに混ざった（2026-10-10、カルテルの回にガソリンの画面 s02 が残っていた）
+    if not only:
+        for p in OUT.glob("s*.png"):
+            p.unlink()
     photo = find_photo((doc.get("thumbnail") or {}).get("photo"))
     bg = screens.backdrop(photo, dark=0.44, blur=9).convert("RGBA")
 
@@ -153,8 +159,17 @@ def build(path: Path, only: str | None) -> int:
             "lead": sec.get("lead", ""), "photo": sec_photo}))
 
         # ② 図。項目が1つずつ増える
-        for _, panel, point in panels_of(sec, with_point=True):
-            frames.append(place(finish_panel(panel), sec_bg, point=point))
+        bgs = {}
+        for _, panel, point, fphoto in panels_of(sec, with_point=True):
+            bg_ = sec_bg
+            if fphoto:
+                if fphoto not in bgs:
+                    fp = find_photo(fphoto)
+                    if fp is None:
+                        raise SystemExit("図の写真「{}」が見つかりません".format(fphoto))
+                    bgs[fphoto] = screens.backdrop(fp, dark=0.44, blur=9).convert("RGBA")
+                bg_ = bgs[fphoto]
+            frames.append(place(finish_panel(panel), bg_, point=point))
 
         for i, im in enumerate(frames, 1):
             name = "s{}{:02d}".format(sid, i)

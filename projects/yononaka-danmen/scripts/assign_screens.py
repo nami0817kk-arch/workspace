@@ -42,8 +42,14 @@ def figures_of(sec: dict) -> list[dict]:
 
 
 def sheets(fig: dict) -> int:
-    """その図が何枚になるか。項目が複数あれば1つずつ増やすので項目数。"""
+    """その図が何枚になるか。項目が複数あれば1つずつ増やすので項目数。
+
+    `step: false` の図は1枚（全部の行を一度に出す）。台詞で何行かをまとめて読む所に使う
+    （「前田道路、大成ロテック、鹿島道路…」を1行で言うのに、6段の図を1段ずつ出すと台詞が足りない）。
+    """
     items = fig.get("items")
+    if fig.get("step") is False:
+        return 1
     return len(items) if isinstance(items, list) and len(items) > 1 else 1
 
 
