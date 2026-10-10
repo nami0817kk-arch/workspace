@@ -121,14 +121,16 @@ def parse_cast(text: str) -> dict | None:
     `wipe`  … **箱**に2人。全画面の様式で（画面いっぱいに描くので、
               下に置くと中身と重なる）。場所を足せる（`wipe 右下`）。
               **画面ごとに空いている場所が違うので、画面を見て決める**
-    どちらも数字を足すと大きさを変えられる（`auto 460` / `wipe 210`）。
+    どちらも数字を足すと大きさを変えられる（`auto 460` / `wipe 210`）。下の既定は 420。
     `なし`  … 消す
     """
     t = text.split()
     if not t or t[0] in ("なし", "none", "-"):
         return None
     style = "wipe" if t[0] in ("wipe", "箱", "ワイプ") else "bottom"
-    h = 190 if style == "wipe" else 320
+    # 下に置くときの高さは 420（2026-10-10 ユーザーが 320/380/420/480 を画面で見比べて選んだ。
+    # 480 だと字幕の幅が足りず字が小さくなる）
+    h = 190 if style == "wipe" else 420
     pos = "右上"
     for a in t[1:]:
         if a.isdigit():
@@ -198,7 +200,6 @@ def put_wipe(base: Image.Image, height: int, speaker: str, tone: str,
     return im.convert("RGB")
 
 
-_halo: dict = {}
 _dim: dict = {}
 
 
@@ -221,18 +222,9 @@ def put_cast(base: Image.Image, height: int, speaker: str, tone: str,
         ch = cast.bust(who, h, mood, mouth if speaking else "closed", who in blinking)
         x = 62 if side == "left" else (W - 62 - ch.width)
         y = H - ch.height                       # 切り口を画面の下端にそろえる
-        if speaking:
-            # 縁をうっすら光らせる（形は口で変わらないので、人と高さごとに1回だけ作る）
-            key = (who, h)
-            if key not in _halo:
-                a = ch.split()[3]
-                ring = a.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(7))
-                halo = Image.new("RGBA", ch.size, (255, 248, 226, 0))
-                halo.putalpha(ring.point(lambda v: int(v * 0.50)))
-                _halo[key] = halo
-            im.alpha_composite(_halo[key], (x, y))
-        else:
-            # 聞いている人は少し暗く落とす（誰がしゃべっているかを見失わないように）
+        if not speaking:
+            # 聞いている人は少し暗く落とす（誰がしゃべっているかを見失わないように）。
+            # **話している人の縁を光らせるのはやめた**（2026-10-10 ユーザー「白い線は何で？」→「外して」）
             key = (who, h, mood, who in blinking)
             if key not in _dim:
                 rgb = ImageEnhance.Brightness(ch.convert("RGB")).enhance(0.72)
