@@ -1,0 +1,558 @@
+# ユニフォームとエンブレムの歴史 第3回：ハル・シティ（10/11 公開）。
+#
+# **節の並びを、第1回（リヴァプール 10/9）・第2回（マンU 10/10）から1つ入れ替えた。**
+#   あちら：①オープニング ②**エンブレムの年表（main）** ③色の歴史 ④胸スポンサーと用具メーカー ⑤見立て
+#   こちら：①オープニング ②**色の歴史（main）** ③エンブレムの年表 ④柄の話 ⑤見立て
+#   **理由は2つ。**
+#   (a) 第2回の強い一点が「紋章から Football Club の文字が消えた」で、ハルの紋章の山場も
+#       「2014年にクラブの名前が消え、2019年に戻った」なので、**2回続けて同じ形**になる。
+#       審査の「続けて数本視聴した後、繰り返しのように感じられる」に正面から当たる。
+#   (b) **このクラブだけの強い一点は色のほうにある**（服の配給で縞が作れず、水色を着た季）。
+#   **④を「胸スポンサーと用具メーカー」から「柄の話」に替えたのも材料の都合**（下の「薄かったところ」）。
+#
+# 強い一点：**黒と琥珀を着ていなかったと確かめられるのは、122年のうち2つの時期だけ。**
+#   1935-36 の群青と白（市の紋章つき、1季で戻した）と、戦後の水色。
+#   **水色になった理由は服の配給**（新しい縞のシャツが手に入らなかった）。確度は**背景**。
+#
+# **材料の確度と、言わないと決めたもの**
+#   **色の歴史は Historical Football Kits の本文が唯一の出どころ**（第1回・第2回でも使った専門の資料）。
+#   クラブ公式にも Wikipedia 本文にも、この経緯は書かれていない。**だから台本は「とされています」の線を越えない。**
+#   **1945年12月にクラブを買い取った人が「クラブの名前も変えようとした」ことは言わない**
+#   （HFK にはあるが、クラブ紹介⑪が2013年の改名騒動を読み上げているので、名前の話は丸ごと外した）。
+#   **水色を着ていた季の数は言わない**（HFK は「代わりに水色を着た」までで、何季かを書いていない。
+#   季ごとの一覧は記号だけで色が分からず、数えられなかった）。
+#   衣料の配給は 1941年6月開始・1949年3月15日終了（英国の配給の記事で裏取り）。**7年9か月**を「8年近く」と言った。
+#   **紋章の変遷で年が確かめられたのは1935・1949年ごろ・1970年代・2001・2014・2019 の6つだけ。**
+#   1998年ごろの意匠は資料が見つからないので年表に入れていない。
+#   **アルファベットは読み上げに出さない**（紋章から消えたのは「クラブの名前」と言う。
+#   板にも英字を書いていない）。**用具メーカーと胸スポンサーの金額は出していない**（下記）。
+#
+# **クラブ紹介⑪（2026-09-24 公開）と重ねない**
+#   あちらが読み上げたのは「創立1904年」「愛称タイガース・黒と琥珀の縞模様」「本拠地と収容」
+#   「2013年の改名騒動とイングランドサッカー協会の63.5%」「4部から5シーズンで1部へ（2008年）」
+#   「ウィンダス・アシュビー・バームビー」「オーナーと監督」「守田英正」「今季の順位」。
+#   **この回で使ったのは創立の1904年だけ**（色の年表の起点に要る）。
+#   愛称・改名騒動の中身・63.5%・オーナーの名前・4部から5年・2008年という年・選手名・守田は**一度も出していない**。
+#   「1部に上がった季、縦縞は1部でここだけだった」は**年を言わずに柄の話としてだけ**使った。
+#
+# **薄かったところ（無理に埋めていない）**
+#   **④を第1回・第2回と同じ「胸スポンサーと用具メーカーの金額」にはできなかった。**
+#   当たった先：クラブ公式（wearehullcity.co.uk の紋章とシャツの発表）・Wikipedia の
+#   「Kit sponsors and manufacturers」節・HFK・スポンサー契約を扱う業界媒体・用具メーカーの発表。
+#   **金額が1件も公表されていない。**胸スポンサーは会社名と季だけが分かり（2002年からの5季・2008-09・
+#   2014-16・2016-19・いま）、「record deal」と書いた記事は本文に当たれなかった（403）。
+#   第2回のような折れ線（1982年の10万ポンド→いまの6000万ポンド）は、ハルでは**1点も置けない**。
+#   **用具メーカーの一覧も作れなかった**（1982年のアドミラル・90年代前半のマッチウィナーとペラーダ・
+#   2014〜2023年のアンブロ・いまのオクセン、までは辿れたが、あいだが埋まらない）。
+#   → **金の節は作らず、柄の節に替えた。**折れ線・増減の内訳の板も、置く数字が無いので使っていない。
+#
+# 写真は assets/backgrounds/ から assets/images/20261011_kit_hull/ へ写した2枚
+#   （01_w＝本拠地の中／02_w＝ノース・スタンド側。どちらも Commons・CC BY-SA、credits.json も同じ場所）。
+#   **assets/backgrounds/ のまま使うと、ショートが assets/stats/stadium_ハルシティ_v.png
+#   （クラブ紹介⑪の基礎DATAの縦板）に化ける**（スタジアム紹介①で踏んだ穴）。
+#   **シャツと紋章そのものの画像は使えない**（クラブの商標。手元にも無い）。
+#
+# 自分で数えた数（検算した）: 5 ÷ 122 = 0.04098 →「4.1%」／2001-02 から 2026-27 で 26季／
+#   26 ÷ 5 = 5.2倍／名前が無かった5季のリーグは Prem・2部・Prem・2部・2部（プレミア2季・2部3季）。
+#
+# ネットの反応は入れない（シリーズの回。ブラウザの道具を使っていない）→ voice_min: 0。
+# **サムネは案を3つ出してユーザーに決めてもらう**（2026-10-11「サムネは相談して決めよう」）。
+#   ここに書いた thumbnail は案A（number）。B・C は報告に書いた。
+#   **scene は使えない**（第1回・第2回がどちらも scene で、3回続く）。
+date: 2026年10月11日
+slot: other_2
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- ハル・シティ
+theme:
+  id: kit_hull
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ハル・シティ
+  title: ハル・シティの黒と琥珀、122年で2度だけ消えた。2度目の理由は
+  question: 黒と琥珀を着てきたクラブが、なぜ2度だけ別の色を着たのか
+  lead: 創立から縞を着つづけてきた、黒と琥珀のクラブ。
+  hook: その色が消えた2度を見ます。
+  takeaway: ハル・シティは1904年の創立から黒と琥珀を着ていて、その色を着ていなかったと確かめられるのは122年のうち2つの時期だけである。1つは1935年で、市の色の群青と白にキングストン・アポン・ハルの市の紋章を付けたが1季で戻した。2つ目は戦後で、1945年12月にクラブを買い取った側はオレンジと青と白を考えていたが、衣料の配給のために新しいシャツが手に入らず、水色のシャツを着た。英国の衣料の配給は1941年6月から1949年3月15日までの8年近く続いた仕組みで、1949年には琥珀色の無地に太い虎の頭を付けて2部へ戻っている。紋章は1935年に市のもの、1949年ごろに太い虎の頭、1970年代にいまにつながる虎の頭が使われ、2001年からは虎が一度も外れていない。2014年6月に紋章からクラブの名前が消え、2019年にサポーターの投票で形と中身を決め直して名前が戻った。柄では1960年代の琥珀に黒い横帯が「バナナ」と呼ばれて嫌われ、縞が戻った1975年に初めて白が入り、1992年の全面の虎の柄は史上最悪のシャツの1つと言われながら、のちにサポーターに受け入れられた。自分で数えると、紋章にクラブの名前が無かった5季は創立からの122年の4.1%で、その5季のうちプレミアリーグにいたのは2季、残る3季は2部だった。虎の頭は2001年から26季つづけて胸にあり、名前が無かった5季の5.2倍の長さになる
+  opening_image: assets/images/20261011_kit_hull/01_w.png
+short_title: ハル・シティの黒と琥珀が消えた2度。2度目の理由は
+thumbnail:
+  layout: number
+  photo: assets/images/20261011_kit_hull/02_w.png
+  number: 2度
+  line1: ハル・シティの黒と琥珀の縞
+  line2: 122年で消えた理由は●●
+  crests:
+  - ハルシティ
+  tags:
+  - ハル・シティ
+  - プレミアリーグ
+  - ユニフォーム
+  - エンブレム
+sections:
+- id: colour
+  main: true
+  heading: 黒と琥珀が消えた2度
+  tier: 背景
+  telop: 戦後、クラブは水色のシャツを着た。服の配給で、新しい縞が手に入らなかった
+  narrator: キャスター
+  card: &id_col
+    type: table
+    title: 黒と琥珀と、その例外
+    columns: &cols_col
+    - いつ
+    - 着ていたもの
+    rows: &rows_col
+    - - 1904年
+      - 創立から黒と琥珀の縞。白は替えのシャツ
+    - - 1921年
+      - パンツを黒と白に替える
+    - - 1935年
+      - 市の色の群青と白。胸に市の紋章
+    - - 1936年
+      - 1季で縞に戻す
+    - - 戦後
+      - 水色のシャツ。配給で縞が手に入らず
+    - - 1949年
+      - 琥珀色の無地に、太い虎の頭
+  say:
+  - text: ハル・シティのシャツと紋章の話です。
+    short_only: true
+    image: assets/images/20261011_kit_hull/01_w.png
+  - text: 黒と琥珀を着ていなかったのは、122年のうち2つの時期だけ。
+    emph: true
+    image: assets/images/20261011_kit_hull/01_w.png
+    card: &id_two
+      type: stats
+      title: 色が消えた2度
+      items:
+      - - '122'
+        - 年
+        - 創立からの長さ
+      - - '2'
+        - 回
+        - 黒と琥珀でなかった時期
+      - - '1'
+        - 季
+        - 1度目の長さ
+      focus: 1
+  - text: 1度目は1935年の1季。2度目は、服が配給だった戦後です。
+    card: *id_two
+  - text: 創立の1904年から、シャツは黒と琥珀の縞。白は替えでした。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 0
+  - text: 長いあいだ、始まりは白いシャツだったと思われていました。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 0
+  - text: 写真を調べ直すと、縞は最初からあったとされています。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 0
+  - text: 1921年には、パンツを黒と白に替えています。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 1
+  - text: そして1935年、クラブは街の色に着替えます。群青と白。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 2
+  - text: 胸に付けたのは、キングストン・アポン・ハルの市の紋章でした。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 2
+  - text: ところが、これは1季で終わります。翌シーズンには縞へ戻しました。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 3
+  - text: 2度目は戦後。1945年12月、クラブを買い取った側に考えがありました。
+    card: none
+  - text: 用意したかったのは、オレンジと青と白のシャツです。
+  - text: ところが、その新しいシャツが手に入りません。
+  - text: イギリスでは1941年6月から、服が配給になっていたからです。
+    card: &id_ration
+      type: calc
+      title: 服の配給は、どれだけ続いたか
+      terms:
+      - - 1941年6月
+        - 配給が始まった月
+      - - 1949年3月
+        - 配給が終わった月
+      - - 7年9か月
+        - 続いた長さ
+      ops:
+      - →
+      - ＝
+  - text: 終わったのは1949年3月15日。7年9か月、8年近く続いた仕組みです。
+    main_only: true
+    card: *id_ration
+  - text: 代わりに着たのが水色のシャツ。縞でも琥珀色でもありません。
+    emph: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 4
+  - text: 配給が終わる1949年には、琥珀色の無地に戻っていました。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 5
+  - text: その胸には、太い虎の頭が付いています。2部へ戻った季のことです。
+    main_only: true
+    card:
+      type: table
+      title: 黒と琥珀と、その例外
+      columns: *cols_col
+      rows: *rows_col
+      highlight_row: 5
+  sources:
+  - https://www.historicalkits.co.uk/Hull_City/Hull_City.htm
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://en.wikipedia.org/wiki/Rationing_in_the_United_Kingdom
+  - https://en.wikipedia.org/wiki/Harold_Needler
+- id: crest
+  heading: 紋章から名前が消えた5季
+  tier: 報道
+  telop: 2014年に紋章からクラブの名前が消え、2019年にサポーターの投票で戻った
+  narrator: キャスター
+  card: &id_crest
+    type: timeline
+    title: 胸に付いたもの
+    rows: &rows_crest
+    - - 1935年
+      - 市の紋章。クラブのものでない
+    - - 1949年ごろ
+      - 太い虎の頭の記章
+    - - 1970年代
+      - いまの虎の頭が初めて
+    - - 2001年
+      - 以後、虎は外れていない
+    - - 2014年6月
+      - クラブの名前が消える
+    - - 2019年
+      - 投票で名前が戻る
+    focus: 2019年
+  say:
+  - text: ここからは、胸の紋章そのものの話です。
+    image: assets/images/20261011_kit_hull/01_w.png
+    card: *id_crest
+  - text: ハル・シティのいまの紋章には、虎の頭と創立の年と名前があります。
+    card: *id_crest
+  - text: この3つが揃ったのは、2019年からでした。
+    emph: true
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 5
+  - text: 虎の頭が初めて使われたのは1970年代です。
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 2
+  - text: 2001年からは、どの紋章からも外れていません。
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 3
+  - text: その前、1935年に胸にあったのは市のものでした。
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 0
+  - text: 1949年ごろには、太い虎の頭が記章として付いています。
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 1
+  - text: そして2014年6月、紋章からクラブの名前が消えました。
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 4
+  - text: 残ったのは、虎の頭と創立の年の数字だけです。
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 4
+  - text: クラブの呼び名を変える案が通らなかった、そのすぐあとでした。
+    card: none
+  - text: 名前が戻るのは5季あと、2019年です。
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 5
+  - text: 形も、何を入れるかも、サポーターの投票で決めています。
+    emph: true
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 5
+  - text: 虎の頭の上に名前が並ぶ紋章が、翌シーズンのシャツに付きました。
+    card:
+      type: timeline
+      title: 胸に付いたもの
+      rows: *rows_crest
+      focus: 2019年
+      highlight_row: 5
+  sources:
+  - https://www.footyheadlines.com/2019/02/new-hull-city-crest-2019.html
+  - https://news.sportslogos.net/2014/06/23/hull-city-afc-cannot-change-name-so-they-change-crest-instead/soccer/
+  - https://www.historicalkits.co.uk/Hull_City/Hull_City.htm
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+- id: pattern
+  heading: 嫌われた柄と、愛された柄
+  tier: 背景
+  telop: 1992年の全面の虎の柄は、史上最悪と言われながら、のちに受け入れられた
+  narrator: 解説
+  card: &id_pat
+    type: table
+    title: 柄と、その受け取られ方
+    columns: &cols_pat
+    - いつ
+    - 柄
+    - 受け取られ方
+    rows: &rows_pat
+    - - 1960年代
+      - 琥珀に黒い横帯
+      - 「バナナ」と呼ばれ嫌われた
+    - - 1975年
+      - 縞に白が入る
+      - 白が入ったのは初めて
+    - - 1992年
+      - 全面の虎の柄
+      - 史上最悪と言われた
+    - - その翌季
+      - 細かい虎の柄
+      - 濁った茶色に見えると不評
+    - - 1部に上がった季
+      - 縞のまま1部へ
+      - 1部で縞はここだけ
+  say:
+  - text: ハル・シティには、柄そのものが語られたシャツもあります。
+    image: assets/images/20261011_kit_hull/02_w.png
+    card: *id_pat
+  - text: 1960年代、琥珀色に黒い横帯を入れたシャツが出ました。
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 0
+  - text: サポーターはこれを「バナナ」と呼びます。評判はよくありません。
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 0
+  - text: 縞が戻ったのは1975年。このとき初めて、縞に白が入ります。
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 1
+  - text: そして1992年。全面に虎の柄が入ったシャツが出ました。
+    emph: true
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 2
+  - text: 史上最悪のシャツの1つ、とまで言われたものです。
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 2
+  - text: ところが時間がたつと、サポーターはこの柄を受け入れました。
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 2
+  - text: この柄には、もう一つ話が付いています。
+    card: none
+  - text: シャツを作る会社が替わったとき、前の会社が型紙を渡しませんでした。
+  - text: 次の会社は、自分たちで作り直すことになります。
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 3
+  - text: 柄は細かくなり、色は濁った茶色に見えました。評判は落ちます。
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 3
+  - text: 時代が下って1部へ上がった季も、シャツは縞のままです。
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 4
+  - text: そのとき、1部で縦縞を着ていたクラブはここだけでした。
+    emph: true
+    card:
+      type: table
+      title: 柄と、その受け取られ方
+      columns: *cols_pat
+      rows: *rows_pat
+      highlight_row: 4
+  sources:
+  - https://www.historicalkits.co.uk/Hull_City/Hull_City.htm
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+- id: view
+  viewpoint: true
+  heading: 見立て・名前が無かった5季に、クラブはどこにいたか
+  tier: 背景
+  telop: 名前が無かった5季は122年の4.1%。プレミアリーグにいたのは2季
+  narrator: 解説
+  card: &id_pct
+    type: calc
+    title: 名前が無かったのは、歴史のどれだけか
+    terms:
+    - - 5季
+      - 紋章に名前が無かった季
+    - - 122年
+      - 1904年から2026年まで
+    - - 4.1%
+      - 歴史に占める割合
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: ここから3つ、自分で数えた数字を出します。
+    image: assets/images/20261011_kit_hull/02_w.png
+    card: *id_pct
+  - text: ひとつ目。ハル・シティの紋章に名前が無かったのは5季です。
+    card: *id_pct
+  - text: 創立からの122年で割ると4.1%。歴史のごく一部にあたります。
+    emph: true
+    card: *id_pct
+  - text: ふたつ目。その5季に、クラブがどのリーグにいたかを数えました。
+    card: &id_div
+      type: table
+      title: 名前の無い紋章で戦った5季（自分で並べた）
+      columns: &cols_div
+      - 季
+      - リーグ
+      rows: &rows_div
+      - - 2014-15
+        - プレミアリーグ
+      - - 2015-16
+        - 2部
+      - - 2016-17
+        - プレミアリーグ
+      - - 2017-18
+        - 2部
+      - - 2018-19
+        - 2部
+  - text: プレミアリーグにいたのは2季。残る3季は2部でした。
+    card:
+      type: table
+      title: 名前の無い紋章で戦った5季（自分で並べた）
+      columns: *cols_div
+      rows: *rows_div
+      highlight_row: 0
+  - text: 名前の無い胸で1部を戦ったのは、2014-15と2016-17です。
+    emph: true
+    card:
+      type: table
+      title: 名前の無い紋章で戦った5季（自分で並べた）
+      columns: *cols_div
+      rows: *rows_div
+      highlight_row: 2
+  - text: みっつ目。虎の頭が胸にいる長さを数えます。
+    card: &id_tiger
+      type: calc
+      title: 虎がいる長さは、名前が消えた長さの何倍か
+      terms:
+      - - 26季
+        - 虎が外れていない季
+      - - 5季
+        - 名前が無かった季
+      - - 5.2倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 虎の頭は2001年から2026年まで、26季つづけて胸にあります。
+    card: *id_tiger
+  - text: 名前が消えていた5季も、虎だけは外れていません。5.2倍の長さです。
+    emph: true
+    card: *id_tiger
+    mark:
+      kind: circle
+      item: 2
+  - text: 消えたのは字で、残ったのは絵でした。
+    card: none
+  - text: その字を戻したのは、投票に加わったサポーターです。
+  - text: いま胸に並ぶ3つは、どれも一度は無かったものでした。
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_Hull_City_A.F.C._seasons
+  - https://www.footyheadlines.com/2019/02/new-hull-city-crest-2019.html
+  - https://news.sportslogos.net/2014/06/23/hull-city-afc-cannot-change-name-so-they-change-crest-instead/soccer/
+  - https://www.historicalkits.co.uk/Hull_City/Hull_City.htm

@@ -393,7 +393,10 @@ def value_board(history: list[dict], out: Path, name: str, club_of=None, size: t
         label = _compact(pts[-1][1])
         lw = draw.textlength(label, font=_font(32))
         draw.text((min(x - lw - 14, gx + gw - lw), max(gy - 44, y - 50)), label, font=_font(32), fill=BRAND_GOLD + (255,))
-    draw.text((px + pw - 210, py + ph - 50), "Transfermarkt", font=_font(26), fill=(120, 130, 146, 255))
+    # 出典は画面に出さない（2026-10-08 ユーザー「出典は動画に出さなくていいからね」）。
+    # 同じ日にレーダー・シュートマップ・ヒートマップからは消したが、この板だけ
+    # 「Transfermarkt」が焼き込まれたまま残っていた（2026-10-11 に見つけた）。
+    # どこの数字かは下の `_write_mark` の控え（.statboard.txt）で辿れる。
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out)
     statboard._write_mark(out, f"{name}の市場価値の推移", "EUR", [(d, v) for d, v, _ in pts[-6:]], "Transfermarkt")

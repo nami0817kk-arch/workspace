@@ -826,7 +826,52 @@ def stacked_photo(meta: dict) -> str:
             canvas.paste(_cover(image.convert("RGB"), width, band), (0, band * index))
     out.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(out, quality=95)
+    _carry_credits(tiles[:3], out)
     return out.as_posix()
+
+
+def _carry_credits(tiles: list[str], out: Path) -> None:
+    """組んだ1枚へ、**元の写真の出典だけ**を引き継ぐ（2026-10-11）。
+
+    **CC BY / BY-SA は表示が利用の条件**なので、組んだ絵に帳簿が無いと
+    概要欄から撮影者が落ちる（`tts._ledger_lines` は使った絵の置き場を見る）。
+    ベンフィカの回のショートで、組んだ1枚に `credits.json` の行が無く、
+    **表示が落ちるところだった**。
+
+    **引き継ぐのは、その写真の行だけ。**置き場の帳簿を丸ごと写すと、
+    使っていない写真のクレジットまで概要欄に並ぶ（10/10 に `tools/pairphoto.py` が
+    109件を引き継いで概要欄が16,769字になり、投稿が弾かれた）。**同じ穴の3か所目**。
+    """
+    import json
+
+    rows: list[dict] = []
+    for tile in tiles:
+        book = Path(tile).parent / "credits.json"
+        if not book.exists():
+            continue
+        try:
+            data = json.loads(book.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for row in data if isinstance(data, list) else []:
+            if not isinstance(row, dict):
+                continue
+            name = str(row.get("file") or row.get("filename") or "")
+            if Path(name).name != Path(tile).name:
+                continue
+            rows.append({**row, "file": out.name, "note": "ショート用に上下へ組んだ1枚"})
+    if not rows:
+        return
+    book = out.parent / "credits.json"
+    have: list[dict] = []
+    if book.exists():
+        try:
+            data = json.loads(book.read_text(encoding="utf-8"))
+            have = [r for r in data if isinstance(r, dict)] if isinstance(data, list) else []
+        except (OSError, ValueError):
+            have = []
+    keep = [r for r in have if str(r.get("file") or "") != out.name]
+    book.write_text(json.dumps(keep + rows, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 def _add_face(script: Script) -> None:

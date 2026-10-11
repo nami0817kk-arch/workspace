@@ -93,3 +93,33 @@ def test_16対9に切った帳簿も使った写真の行だけを引き継ぐ(t
     assert len(rows) == 1, f"切った写真以外まで引き継いでいます（{len(rows)}件）"
     assert rows[0]["title"] == "File:これを切る.jpg"
     assert rows[0]["file"] == "01.jpg", "切った先のファイル名に直っていません"
+
+
+def test_ショート用に上下へ組んだ1枚も出典を引き継ぐ(tmp_path, monkeypatch):
+    """`shorts.stacked_photo` も帳簿を引き継いでいなかった（同じ穴の3か所目）。
+
+    **CC BY / BY-SA は表示が利用の条件**なので、組んだ絵に帳簿が無いと
+    概要欄から撮影者が落ちる。2026-10-11 にベンフィカの回で見つけた。
+    """
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from src import shorts
+
+    left = tmp_path / "a"
+    right = tmp_path / "b"
+    _photo(left / "01.jpg", (1080, 1400))
+    _photo(right / "01.jpg", (1080, 1400))
+    # 置き場には使っていない写真の行も入っている（丸ごと写すと概要欄が壊れる）
+    _ledger(left, [{"file": "01.jpg", "title": "File:左の人.jpg", "license": "CC BY-SA 4.0"},
+                   {"file": "09.jpg", "title": "File:使っていない.jpg", "license": "CC0"}])
+    _ledger(right, [{"file": "01.jpg", "title": "File:右の人.jpg", "license": "CC BY 2.0"}])
+
+    monkeypatch.setattr(shorts, "STACK_DIR", tmp_path / "_stack")
+    out = shorts.stacked_photo({"thumbnail_photos": [str(left / "01.jpg"), str(right / "01.jpg")]})
+    assert out, "組んだ1枚ができていません"
+
+    rows = json.loads((Path(out).parent / "credits.json").read_text(encoding="utf-8"))
+    titles = [r["title"] for r in rows]
+    assert "File:左の人.jpg" in titles and "File:右の人.jpg" in titles, "元の出典が落ちています"
+    assert "File:使っていない.jpg" not in titles, "使っていない写真まで引き継いでいます"
+    assert all(r["file"] == Path(out).name for r in rows), "組んだ先のファイル名に直っていません"

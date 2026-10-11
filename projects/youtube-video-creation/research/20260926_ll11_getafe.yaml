@@ -1,5 +1,23 @@
-# プレミアリーグ20クラブ紹介 ⑪ヘタフェ（2026-09-20 ヴィラの見本の形で作り直し）
+# ラ・リーガ20クラブ紹介 ⑪ヘタフェ（2026-09-20 ヴィラの見本の形で作り直し）
 # tools/plbuild.py で組み立て。材料は research/ll_data/getafe*.json と旧台本 -
+# 2026-10-11 に出すために直した（⑧デポルティーボ・⑨エルチェと同じ直し方）:
+#   ・「今季のここまで」を見立ての節にした（自分で数えた1試合あたりの表＋計算の板）。
+#     昨季38試合と今季7試合を1試合あたりに直すと、失点は1.00で同じ・得点は0.84→0.57（0.68倍）。
+#     数字は research/ll_data/last_season.json（昨季 7位・勝ち点51・得点32・失点38）と
+#     standings.json（第7節終了 11位・勝ち点8・得点4・失点7）から自分で割った
+#   ・基礎DATAの読み上げを9行→5行に減らした（創立・愛称・本拠地・優勝ゼロ・昨季の順位。
+#     残りの4項目は板の右の一覧に出たまま読まない。2026-10-06 ⑩）
+#   ・監督の言葉（Marca 2026-09-20 マラガ戦のあと）を基礎DATAから「今季の監督」の節へ移した
+#     （2026-10-06「シリーズの本人の言葉は、話の流れで置くべき節に置く」）
+#   ・板を3つ入れ替えた（2026-10-07〜08 ⑪⑬⑭）:
+#     7部からの出発＝timeline（年表）／2年続けて決勝へ＝waterfall（2戦合計の得失点差）／
+#     10人の120分＝stats（数字3つ）。板を下ろす行は card: none を明示した（2026-10-10）
+#   ・主役（ヘタフェ）の名前が一度も出ない節が11あったので、各節に入れた
+#   ・写真を2枚取り直した（どちらも引き伸ばしが1.6倍を超えていた）:
+#     監督 471x793→620x700（Commons の切っていない原版 José Bordalás 2019.jpg から切り出し）、
+#     逸話の場面 1077x734→1280x960（File:Getafe0-0Lega2018.jpg。コリセウムの試合中）。
+#     カスケロの写真は Commons に 231x341 しか無く、4.16倍になるので**写真を出さない**（表だけ）
+#   ・出典は画面に出さない決まり（2026-10-08）に合わせ、板に出典の行は入れていない
 format: news
 voice_min: 0
 slot: laliga_1
@@ -18,11 +36,14 @@ theme:
   title: ヘタフェ。あのカーンが「信じられない」と言った夜
   question: どんなクラブなのか
   hook: 監督の口ぐせが、ファンの合言葉になっています。
-  lead: 創立**1983年**。20クラブで、いちばん若い。
+  lead: 創立**1983年**。ラ・リーガでいちばん新しい。
+  takeaway: 1983年に7部から出発したヘタフェは、20クラブでいちばん若い。1部も国王杯も優勝は無く、いちばん近づいたのが2008年、10人でバイエルンを延長の最後まで追い詰めた夜だった。今季は第7節を終えて11位・勝ち点8。1試合あたりに直すと失点は昨季と同じ1.00で守りは変わらず、得点だけが0.84から0.57へ0.68倍に落ちている。昨季と同じ勝ち点51に届くには残る31試合を1試合1.39、いまの1.14を上回る歩みが要る
   opening_image: assets/stats/ll_getafe_data_t.png
 thumbnail:
-  line1: カーンが驚いた夜
-  line2: いちばん若いヘタフェ
+  # **構図はユーザーと相談して決める**（2026-10-11 指示）。ここに書いてあるのは案A（classic）で、
+  # 案B（number）・案C（scene）は報告に出した。決まったら差し替える
+  line1: ヘタフェ ●●人の120分
+  line2: カーンが驚いた夜
   crest_main:
   - ヘタフェ
   board: assets/stats/ll_getafe_data_t.png
@@ -34,18 +55,12 @@ sections:
   telop: 2020年以来の欧州と、10シーズン目の監督
   narrator: キャスター
   say:
-  - text: ヨーロッパは**2020年**以来。パルチザンを合計**4対3**で破りました。
+  - text: ヘタフェのヨーロッパは**2020年**以来。パルチザンを合計**4対3**で破りました。
     image: assets/stats/ll_getafe_data_r1.png
     no_telop: true
-  - text: 通算**10シーズン目**のボルダラス監督。マラガに競り勝ったあと、こう話しました。
+  - text: 通算**10シーズン目**のボルダラス監督。クラブを2度ヨーロッパへ導いた、初めての人です。
     image: assets/stats/ll_getafe_data_r2.png
     no_telop: true
-  - voice: ホセ・ボルダラス
-    text: 選手たちは、とてつもない努力をしている
-    image: assets/stats/ll_getafe_data_r2.png
-  - voice: ホセ・ボルダラス
-    text: 多くの選手が、ぎりぎりの力でピッチに立っている
-    image: assets/stats/ll_getafe_data_r2.png
   - text: '**2008年**には、あのバイエルンを10人で延長の最後まで追い詰めました。'
     image: assets/stats/ll_getafe_data_r3.png
     no_telop: true
@@ -53,35 +68,22 @@ sections:
     image: assets/stats/ll_getafe_data_r3.png
     no_telop: true
   - image: assets/stats/ll_getafe_data0.png
-    text: 前のクラブが借金で解散した**1週間後**に、今のクラブが生まれました。
+    text: 前のクラブが借金で解散した**1週間後**に、いまのヘタフェが生まれています。
     no_telop: true
   - image: assets/stats/ll_getafe_data1.png
     text: 愛称は「アスロネス」。濃い青のことで、工場の作業着の色から、とも言われます。
     no_telop: true
-  - image: assets/stats/ll_getafe_data2.png
-    text: ホームタウンは、マドリードの中心から南へ**13キロ**のヘタフェです。
-    no_telop: true
   - image: assets/backgrounds/stadium_ヘタフェ.png
     text: 本拠地はコリセウム。いまは改修中で、完成すると**1万8500人**ほどが入ります。
-  - image: assets/stats/ll_getafe_data4.png
-    text: オーナーは**2002年**からアンヘル・トーレス。町長に頼まれて、クラブを買いました。
-    no_telop: true
   - image: assets/stats/ll_getafe_cups.png
-    text: 1部も国王杯も、まだ優勝がありません。ヨーロッパのタイトルも無し。
-    no_telop: true
-  - image: assets/stats/ll_getafe_data6.png
-    text: 最多出場は、キーパーのペドロ・カバジェロで**335試合**。今の主将ジェネが迫ります。
-    no_telop: true
-  - image: assets/stats/ll_getafe_data7.png
-    text: 直近のタイトルは、**1998年**から99年のシーズン、当時の3部リーグの優勝。
+    text: 1部の優勝は**0回**。国王杯もヨーロッパも、まだ手にしていません。
     no_telop: true
   - image: assets/stats/ll_getafe_data8.png
-    text: 昨シーズンは**7位**。得点**32**は、リーグで2番目に少ない数でした。
+    text: 昨シーズンは**7位**。それでも得点は、リーグで**2番目**に少ない数でした。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Getafe_CF
   - https://en.wikipedia.org/wiki/2026–27_Getafe_CF_season
-  - https://www.marca.com/futbol/getafe/2026/09/20/bordalas-contento-esto-sinvivir.html
   - https://www.marca.com/futbol/getafe/2026/09/26/decada-futbol-papa.html
   - https://www.superdeporte.es/futbol/2026/08/27/getafe-sufre-pierde-belgrado-partizan-133720081.html
   - https://en.wikipedia.org/wiki/2007%E2%80%9308_UEFA_Cup_knockout_stage
@@ -93,23 +95,34 @@ sections:
   tier: 背景
   telop: 7部の地域リーグから、4年続けて昇格
   narrator: 解説
-  card:
-    type: table
-    title: 7部からの出発
-    columns:
-    - ''
-    - ''
+  card: &climb
+    type: timeline
+    title: 7部から4年で
     rows:
     - - 1983年
-      - 7部にあたる地域リーグ
-    - - 最初の選手
-      - 決まった給料なし
-    - - 1987年まで
-      - 4年続けて昇格
+      - 7部にあたる地域リーグで出発
+    - - 1986年まで
+      - 3年続けて優勝して昇格
+    - - 1987年
+      - 4年目の昇格で3部へ
+    focus: 1987年
   say:
-  - 1983年、最初に戦ったのは、7部にあたる地域リーグでした。
-  - 選手に決まった給料は無く、結果に応じた手当だけ。
-  - それでも勝ち続け、**4年**続けて昇格します。
+  - text: '**1983年**、ヘタフェが最初に戦ったのは、7部にあたる地域リーグでした。'
+    card:
+      <<: *climb
+      highlight_row: 0
+  - text: 選手に決まった給料は無く、結果に応じた手当だけ。
+    card:
+      <<: *climb
+      highlight_row: 0
+  - text: それでも1年目から**16連勝**。**3年**続けて優勝して、上へ上がります。
+    card:
+      <<: *climb
+      highlight_row: 1
+  - text: '**4年**目の昇格で、3部までたどり着きました。'
+    card:
+      <<: *climb
+      highlight_row: 2
   sources:
   - https://en.wikipedia.org/wiki/Getafe_CF
   - https://es.wikipedia.org/wiki/Getafe_Club_de_F%C3%BAtbol
@@ -132,9 +145,9 @@ sections:
     - - 結果
       - 5対3で勝利
   say:
-  - 2004年6月、2部の最終節。勝てば、初めての1部です。
+  - 2004年6月、2部の最終節。ヘタフェは勝てば、初めての1部です。
   - 敵地のテネリフェで**5対3**の勝ち。セルヒオ・パチョンが、**5点**すべてを決めました。
-  - text: マドリード州では、市の外のクラブとして初めての1部です。
+  - text: マドリード州では、市の外のクラブとして初めての1部でした。
     card:
       type: table
       title: 2004年6月19日
@@ -154,29 +167,45 @@ sections:
   tier: 背景
   telop: バルサに4対0。2年続けて国王杯の決勝へ
   narrator: 解説
-  card:
-    type: table
-    title: 国王杯の2年
-    columns: &id002
-    - ''
-    - ''
-    rows:
-    - - 2007年 準決勝
-      - バルサに2対5、4対0
-    - - 2007年 決勝
-      - セビージャに0対1
+  card: &semi
+    type: waterfall
+    title: 2007年 国王杯 準決勝の得失点差
+    start:
+    - 1戦目 敵地で2対5
+    - -3
+    steps:
+    - - ホームの2戦目 4対0
+      - 4
+    total:
+    - 2戦合計 6対5
+    - 1
   say:
-  - 2007年の国王杯の準決勝。1戦目は、敵地でバルセロナに**2対5**の負け。
-  - この試合でメッシは、マラドーナの伝説のゴールに似た一撃を決めています。
-  - text: ところがホームの2戦目は**4対0**の勝ち。合計でひっくり返し、初めての決勝へ。
+  - text: 2007年の国王杯の準決勝。ヘタフェは敵地でバルセロナに**2対5**で負けます。
+    card:
+      <<: *semi
+      highlight: 1戦目 敵地で2対5
+  - text: この試合でメッシは、マラドーナの伝説のゴールに似た一撃を決めています。
+    card: *semi
+  - text: ところがホームの2戦目は**4対0**の勝ち。**3点**の差をひっくり返します。
+    card:
+      <<: *semi
+      highlight: ホームの2戦目 4対0
+  - text: 2戦合計**6対5**で勝ち上がり、初めての決勝へ。
+    card:
+      <<: *semi
+      highlight: 2戦合計 6対5
+  - text: 決勝はセビージャに**0対1**。翌年もバレンシアとの決勝に敗れました。
     card:
       type: table
       title: 国王杯の2年
-      columns: *id002
+      columns:
+      - ''
+      - ''
       rows:
+      - - 2007年 決勝
+        - セビージャに0対1
       - - 2008年 決勝
         - バレンシアに1対3
-  - 決勝はセビージャに**0対1**で敗戦。翌年もバレンシアとの決勝に敗れました。
   sources:
   - https://en.wikipedia.org/wiki/2007_Copa_del_Rey_final
   - https://en.wikipedia.org/wiki/2008_Copa_del_Rey_final
@@ -199,7 +228,7 @@ sections:
       - プレーの色
       - 荒々しく、しぶとい
   say:
-  - text: ボルダラス監督のサッカーは、荒々しく、しぶとい。
+  - text: ヘタフェのサッカーは、ボルダラス監督のもとで荒々しく、しぶとい。
     image: assets/photos/ll/getafe/getafe_manager_b5e6eb46.jpg
   - 口ぐせの「これがサッカーだ、パパ」は、スタンドの決まり文句になりました。
   - 昨シーズンの失点は**38**。少ないほうから、リーグで3番目でした。
@@ -237,32 +266,43 @@ sections:
   tier: 背景
   telop: 10人で延長へ。最後の5分で追いつかれた
   narrator: 解説
-  card:
-    type: table
+  card: &bayern
+    type: stats
     title: 2008年 ヨーロッパの準々決勝
-    columns: &id006
-    - ''
-    - ''
-    rows:
-    - - 相手
-      - バイエルン
-    - - ホームの2戦目
-      - 延長で3対1から3対3
+    items:
+    - - '10'
+      - 人
+      - 早々の退場から120分
+    - - 3対1
+      - ''
+      - 延長の93分。突破が見えた
+    - - 4対4
+      - ''
+      - 2戦合計。敵地の得点で敗退
+    focus: 0
   say:
-  - text: 2008年、ヨーロッパの大会の準々決勝。相手はバイエルンでした。
+  - text: '**2008年**、ヨーロッパの準々決勝。ヘタフェの相手はバイエルンでした。'
     image: assets/images/ll_getafe_episode/scene.jpg
-  - 1戦目は、敵地で**1対1**の引き分けでした。
-  - ホームの2戦目は、開始早々に1人が退場。それでも延長で**3対1**、勝ちが見えていました。
-  - text: ところが**115分**と**120分**に、バイエルンのトニが2点。アウェーゴールの差で敗れました。
+    card: *bayern
+  - text: 1戦目は、敵地で**1対1**の引き分けでした。
+    card: *bayern
+  - text: ホームの2戦目は開始早々に1人が退場。それでも延長で**3対1**と勝ち越します。
     card:
-      type: table
-      title: 2008年 ヨーロッパの準々決勝
-      columns: *id006
-      rows:
-      - - 結果
-        - アウェーゴールの差で敗退
-  - 試合後、カーンはこうも話しています。
-  - 「40年で、こんな経験は無かった」
+      <<: *bayern
+      focus: 1
+  - text: ところが**115分**と**120分**に、トニが2点。**3対3**の引き分けです。
+    card:
+      <<: *bayern
+      focus: 1
+  - text: 2戦合計**4対4**。敵地で多く取ったバイエルンが勝ち上がりました。
+    card:
+      <<: *bayern
+      focus: 2
+  - text: 試合後、カーンはこうつけ加えました。
+    card: none
+    image: assets/images/ll_getafe_episode/scene.jpg
+  - text: 「40年で、こんな経験は無かった」
+    image: assets/images/ll_getafe_episode/scene.jpg
   sources:
   - https://en.wikipedia.org/wiki/Getafe_CF
   - https://en.wikipedia.org/wiki/2007%E2%80%9308_UEFA_Cup_knockout_stage
@@ -289,10 +329,9 @@ sections:
       - 2006-2012
       - 欧州8強の中盤
   say:
-  - text: ハビエル・カスケロは、**30歳**で加わった中盤。すぐに先発に定着しました。
-    image: assets/photos/ll/getafe/getafe_legend_34a0af96.jpg
+  - ハビエル・カスケロは、**30歳**でヘタフェに来た中盤の選手です。
   - ヨーロッパで8強に進んだシーズンは、公式戦**50試合**で**8得点**。
-  - リーグ戦で**190試合21得点**。**36歳**になるまで、このクラブで戦いました。
+  - リーグ戦で**190試合21得点**。**36歳**まで、このクラブで戦いました。
   sources:
   - https://en.wikipedia.org/wiki/Javier_Casquero
   - https://en.wikipedia.org/wiki/Jaime_Mata
@@ -318,10 +357,11 @@ sections:
       - 2018-2024
       - 29歳で1部デビュー
   say:
-  - text: ハイメ・マタは、**29歳**で初めて1部の試合に出たストライカーです。
+  - text: ハイメ・マタがヘタフェで1部デビューしたのは、**29歳**のときでした。
     image: assets/photos/ll/getafe/getafe_legend_a5359426.jpg
   - 1年目にリーグ戦で**14得点**。2019年には、スペイン代表にも選ばれました。
-  - リーグ戦で**176試合37得点**。遅咲きの点取り屋が、この町で花開きました。
+  - text: リーグ戦で**176試合37得点**。遅咲きの点取り屋が、この町で花開きました。
+    image: assets/photos/ll/getafe/getafe_legend_a5359426.jpg
   sources:
   - https://en.wikipedia.org/wiki/Javier_Casquero
   - https://en.wikipedia.org/wiki/Jaime_Mata
@@ -347,10 +387,11 @@ sections:
       - 2019-2021
       - のちの世界王者
   say:
-  - text: ククレジャは2019年、バルセロナから期限付きで来た左サイドの選手。
+  - text: '**2019年**、バルセロナからヘタフェへ。左サイドのククレジャです。'
     image: assets/photos/ll/getafe/getafe_legend_d54bf9cd.jpg
-  - ヨーロッパリーグでは16強まで戦い、翌年に完全移籍しました。
-  - リーグ戦で**75試合4得点**。その後、スペイン代表で世界の頂点に立ちました。
+  - 1年目は期限付き。ヨーロッパリーグの**16強**まで戦い、翌年に完全移籍しました。
+  - text: リーグ戦で**75試合4得点**。ここからスペイン代表で世界一まで駆け上がります。
+    image: assets/photos/ll/getafe/getafe_legend_d54bf9cd.jpg
   sources:
   - https://en.wikipedia.org/wiki/Javier_Casquero
   - https://en.wikipedia.org/wiki/Jaime_Mata
@@ -376,13 +417,21 @@ sections:
     - - 前職
       - バレンシア
   say:
-  - text: 今シーズンの監督はホセ・ボルダラス。スペイン出身で、2度目の就任は**2023年4月**です。
+  - text: ヘタフェの監督はホセ・ボルダラス。スペイン出身の**62歳**です。
     image: assets/photos/ll/getafe/getafe_manager_b5e6eb46.jpg
-  - 前はバレンシア。6月には、契約を**2年**延ばしました。
+  - 1度目は**2016年**から。いまは**2023年4月**からの2度目です。
+  - 前はバレンシア。この6月には、契約を**2年**延ばしました。
+  - text: マラガに競り勝ったあと、ボルダラスはこう話しています。
+    image: assets/photos/ll/getafe/getafe_manager_b5e6eb46.jpg
+  - voice: ホセ・ボルダラス
+    text: 選手たちは、とてつもない努力をしている
+  - voice: ホセ・ボルダラス
+    text: 多くの選手が、ぎりぎりの力でピッチに立っている
   sources:
   - https://en.wikipedia.org/wiki/Getafe_CF
   - https://en.wikipedia.org/wiki/Jos%C3%A9_Bordal%C3%A1s
   - https://www.marca.com/futbol/getafe/2026/09/26/decada-futbol-papa.html
+  - https://www.marca.com/futbol/getafe/2026/09/20/bordalas-contento-esto-sinvivir.html
   bg: assets/backgrounds/stadium_ヘタフェ_in.png
   official: false
 - id: squad
@@ -391,7 +440,7 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - text: 今季の登録選手は22人です。
+  - text: ヘタフェの今季の登録選手は22人です。
     image: assets/stats/ll_getafe_gk.png
     no_telop: true
   - image: assets/stats/ll_getafe_gk_f.png
@@ -404,10 +453,10 @@ sections:
     text: ディフェンダーは10人。
     no_telop: true
   - image: assets/stats/ll_getafe_df_f.png
-    text: 主将を務めるのが**ジェネ**。
+    text: 主将は、ディフェンダーの**ジェネ**です。
     no_telop: true
   - image: assets/stats/ll_getafe_df_f.png
-    text: リーグ戦で**304試合**に出ています。
+    text: リーグ戦**304試合**は、いまの22人でいちばん多い数です。
     no_telop: true
   - image: assets/stats/ll_getafe_df_f.png
     text: ヨハン・モヒカはコロンビア代表で**49試合**。
@@ -435,9 +484,10 @@ sections:
   bg: assets/backgrounds/stadium_ヘタフェ_in.png
   official: false
 - id: season
-  heading: 今季のここまで
+  viewpoint: true
+  heading: 失点は昨季のまま、得点だけが減った7試合
   tier: 報道
-  telop: 7試合で2勝2引き分け3敗。11位
+  telop: 第7節を終えて11位。1試合あたりの得点は昨季の0.68倍
   narrator: 解説
   card:
     type: table
@@ -469,11 +519,72 @@ sections:
       - マラガ（ホーム）
       - 1対0
   say:
-  - ラ・リーガは7試合を終えて、**2勝2引き分け3敗**です。
-  - 順位は**11位**、勝ち点は**8**です。
+  - 今季のヘタフェは、第7節を終えて**2勝2引き分け3敗**。
+  - 勝ち点は**8**、順位は**11位**です。
+  - text: 1試合あたりに直すと、守りは昨季のままでした。
+    card: &perg
+      type: table
+      title: 1試合あたりに直すと
+      columns: &pergc
+      - ''
+      - 昨季38試合
+      - 今季7試合
+      rows: &pergr
+      - - 得点
+        - '0.84'
+        - '0.57'
+      - - 失点
+        - '1.00'
+        - '1.00'
+      - - 勝ち点
+        - '1.34'
+        - '1.14'
+      highlight_row: 1
+  - text: 失点は昨季**1.00**、今季も**1.00**。1試合あたりは同じです。
+    card: *perg
+    mark:
+      kind: box
+      row: 1
+      col: 2
+  - text: ところが得点は**0.84**から**0.57**へ。**0.68倍**に落ちました。
+    emph: true
+    card:
+      type: table
+      title: 1試合あたりに直すと
+      columns: *pergc
+      rows: *pergr
+      highlight_row: 0
+  - text: 勝ち点も**1.34**から**1.14**へ下がっています。
+    card:
+      type: table
+      title: 1試合あたりに直すと
+      columns: *pergc
+      rows: *pergr
+      highlight_row: 2
+  - text: 昨季と同じ勝ち点**51**まで、足りないのは**43**。
+    card: &goal
+      type: calc
+      title: 昨季と同じ勝ち点51まで
+      terms:
+      - - '43'
+        - 足りない勝ち点
+      - - 31試合
+        - 残り
+      - - '1.39'
+        - 1試合あたり
+      ops:
+      - ÷
+      - ＝
+  - text: のこりは**31試合**。1試合**1.39**ずつ積む計算になります。
+    card: *goal
+  - text: いまの**1.14**を、**2割**あまり上回る歩みです。
+    card: *goal
+  - text: 守りはできている。あとは、点をどこまで戻せるかです。
+    card: none
   sources:
   - https://www.espn.com/soccer/team/results/_/name/getafe
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
   - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_La_Liga
   bg: assets/backgrounds/stadium_ヘタフェ_in.png
   official: false

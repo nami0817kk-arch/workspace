@@ -1930,6 +1930,12 @@ def _side_shade(canvas: Image.Image, side: str, alpha: int, reach: float) -> Non
     canvas.alpha_composite(layer)
 
 
+# 角に添えるエンブレムの高さ（1280x720 の中で）。**84px では一覧でどのクラブか分からなかった**
+# （2026-10-11 ユーザー「クラブロゴ大きくして」）。classic の右下は `crest.CREST_PX` = 300。
+# 2026-09-09 に 44px → 300px へ上げたのと同じ所で、新しい構図だけ小さいまま残っていた
+CORNER_CREST_HEIGHT = 180
+
+
 def _corner_crests(canvas: Image.Image, names: list[str], side: str, top: int = 30,
                    height: int = 92) -> int:
     """エンブレム・国旗を上の角に並べる（2つまで）。使った下端を返す（置けなければ top）。"""
@@ -2028,7 +2034,7 @@ def _layout_face(spec, o, photo, source, line1, line2, marks, focus, focus_x, fo
     _shade(canvas, bottom=150, bottom_alpha=110)
     width = int(SIZE[0] * FACE_TEXT_W)
     x0 = 48 if right else SIZE[0] - width - 40
-    top = _corner_crests(canvas, marks, text_side, top=34, height=84)
+    top = _corner_crests(canvas, marks, text_side, top=34, height=CORNER_CREST_HEIGHT)
     f1, rows1 = _fit_rows(line1, font_path, (104, 96, 88, 80, 72, 64, 58, 52), width, 2)
     f2, rows2 = _fit_rows(line2, font_path, (156, 144, 132, 120, 110, 100, 92, 84, 76, 68, 60),
                           width, 2)
@@ -2082,7 +2088,7 @@ def _layout_scene(spec, o, photo, source, line1, line2, marks, focus, focus_x, f
             draw.line([(0, yy), (SIZE[0], yy)], fill=(0, 0, 0, int(110 * (1 - i / 28))))
     draw.rectangle([0, y0, SIZE[0], y0 + SCENE_BAND], fill=(6, 8, 12, 232))
     canvas.alpha_composite(band)
-    _corner_crests(canvas, marks, "right", top=(30 if bottom else SCENE_BAND + 30), height=84)
+    _corner_crests(canvas, marks, "right", top=(30 if bottom else SCENE_BAND + 30), height=CORNER_CREST_HEIGHT)
     if line1:
         size = 50
         tag_h = int(size * 1.5)
@@ -2248,7 +2254,7 @@ def _layout_number(spec, o, photo, source, line1, line2, marks, focus, focus_x, 
         if o.get("rays"):
             thumbfx.rays(canvas, (int(x + measure(big, small) / 2), int(baseline - size * 0.38)),
                          color=(255, 240, 120), alpha=0.20, hole=150)
-    _corner_crests(canvas, marks, "right", top=34, height=84)
+    _corner_crests(canvas, marks, "right", top=34, height=CORNER_CREST_HEIGHT)
     f1, rows1 = _fit_rows(line1, font_path, (84, 78, 72, 66, 60, 54, 48), SIZE[0] - 96 - 230, 1)
     if rows1:
         _say(canvas, o, (48, 92), rows1[0], f1, WHITE, anchor="lm")

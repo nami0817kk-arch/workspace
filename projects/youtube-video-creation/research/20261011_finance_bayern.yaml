@@ -1,0 +1,531 @@
+# クラブの財政：バイエルン・ミュンヘン（10/11 日、シリーズ「クラブの財政」、key: finance_bayern、型は news）。
+#
+# 軸は「**稼いだお金の持ち主が、株主ではなく会員である**」。
+#   10/10 の PSG 回の軸（関連当事者取引・公正価値・連盟の値付け直し）は**1行も出さない**。
+#   10/9 のレアル回の軸（スクワッド・コスト・ルール／ベルナベウの改修費）も出さない。
+#   PSG 回の「1席あたりの入場料」「器の大きさで割る」、レアル回の「稼ぎは世界の頂点」は使わない。
+#
+# **PSG 回と同じ形にそろえた所**（ユーザー指示）:
+#   冒頭の節に stats の板（3つの数字）、2つ目の節に waterfall（収入の内訳）。
+#   ただし**中身の出どころが違う**。PSG は放映権の額が非公表で「総額から2つを引いた」が、
+#   こちらは**クラブ自身が6項目を全部出している**ので、引き算をしていない。
+#   その代わり「集計の8億6100万と、クラブの帳簿の線の引き方が違う」という形にした。
+#
+# ★**数字が3種類あるので混ぜない**:
+#   (1) **8億6100万ユーロ** … デロイト・フットボール・マネーリーグ2026（2024/25）の集計。世界3位。
+#   (2) **9億7830万ユーロ** … クラブが出した**連結**の売上（FCバイエルン・ミュンヘンAG グループ）。
+#   (3) **9億2650万ユーロ** … クラブが出した**AG単体**の収入の項目の合計（waterfall の合計。260.7+240.4+150.5+117.7+105.3+51.9）。
+#   **(1)(2)(3) を足し引きして橋をかけない。**台本では「線の引き方が違う」とだけ言う。
+#
+# ★**放映権1億530万ユーロは「AG単体の媒体収入」**で、**チャンピオンズリーグとクラブW杯の分は
+#   「試合の興行（2億6070万ユーロ）」に入っている**（クラブの発表の原文にそう書いてある）。
+#   だから「放映権が11.4%しかない」と言うときは、**必ず次の行でこの線引きを言う**。言わないと誤解になる。
+#
+# 自分で計算した数（機械は検算しない）:
+#   waterfall の合計 926.5 ＝ 260.7＋240.4＋150.5＋117.7＋105.3＋51.9（足し算を確かめた）
+#   放映権の割合 105.3 ÷ 926.5 ＝ 11.4%
+#   会員1人あたり 861,000,000 ÷ 432,500 ＝ 1,990.75 →「およそ1991ユーロ」
+#   円 1991 × 177 ＝ 352,407 →「およそ35万2000円」（1ユーロ＝177円。ECB 2026-10-09 の 177.34 を丸めた）
+#   税金 ÷ 放映権 257.7 ÷ 105.3 ＝ 2.447 →「2.4倍」
+#   人件費 ÷ 連結の売上 408.3 ÷ 978.3 ＝ 41.74% →「41.7%」
+#   5季の増加 861.0 − 611.4 ＝ 249.6 →「2億4960万ユーロ」
+#   3社の払った額 77＋90＋110 ＝ 277 →「2億7700万ユーロ」で株の25%
+#   **「1.41倍」「1年あたり◯%」は使わない**（PSG 回が「1.50倍・1年あたり10.8%」でそろえていたため）。
+#
+# **言い切っていないもの**:
+#   50プラス1の**条文そのものは取れていない**（dfl.de は画面を組み立てる作りで本文が取れず、
+#   Satzung の PDF は 403）。だから語りは「元のクラブが議決権の過半を持っていなければライセンスが出ない」
+#   という**決まりの中身まで**にとどめ、条番号も原文の引用もしていない。
+#   競争当局の決定も**当局自身の発表は取れていない**（bundeskartellamt.de は 404／403）ので、
+#   「8年かけた審査が今年8月に終わり、決まりはそのまま残る」「リーグには運用を直すよう求めがついた」
+#   までにした。**処分・罰・個別クラブの名前は出していない**。
+#   2025-26 の決算は**まだ外に出ていない**（会計年度は7月1日〜6月30日。前回の発表は2025年11月2日）。
+#
+# **50プラス1の例外の節（④）について**（2026-10-11 追記）:
+#   例外のあるクラブは レバークーゼン（バイエル）・ヴォルフスブルク（フォルクスワーゲン）の2つで、
+#   どちらも**サッカー部門の会社を100%持っている**。ホッフェンハイムも同じ形だったが2023年の終わりに戻した。
+#   ★**例外が認められる条件（長く支えてきた会社がある場合の決まり）は、原文に届いていない**ので
+#     **台本では理由を一切書いていない**。「例外がある」「これ以上は認めない」「2026年8月の決定で
+#     いまある2つは決まりに合っていないとされた」までで止め、**条番号も、認められたときの経緯も出していない**。
+#   競争当局自身の発表も取れていないので、語りは「〜とされています」の形のまま（tier は 報道）。
+#   8年の審査の話は③から④へ移した（同じ決定を2つの節で言わないため）。③の年表は4行にして focus を2025年11月にした。
+#
+# 写真は2枚、入れ替えは1本1回（冒頭＝外から見たアリアンツ・アレーナ → ②の節から中の写真）。
+#   どちらも Commons・CC BY-SA で、credits.json は assets/backgrounds/ にある。
+#   **顔が入っていないので板が顔にかからない**（PSG 回と同じ理由）。
+#   stadium_バイエルン.png は 10/11 にこのセッションで取った（CC BY-SA 2.5 / Richard Bartz）。
+#   stadium_バイエルン_in.png は前からある（CC BY-SA 2.0 / Michal Osmenda）。
+# アルファベットは読み上げに出さない（AG →「株式会社」、DFL →「ドイツのリーグ」、
+#   e.V. →「会員の組織」、UEFA →「ヨーロッパの大会」と言い換え）。板の題にも出していない。
+# サムネは構図 number（10/10 の PSG は scene、10/9 のレアルは number、10/8 のアルテタは face）。
+#   **ユーザーと相談して決める**ので、ここに書いたのは案A。案B・Cは報告に出す。
+date: 2026年10月11日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+people:
+- バイエルン・ミュンヘン
+theme:
+  id: finance_bayern
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: バイエルン・ミュンヘン
+  title: バイエルン・ミュンヘン、収入は世界で3番目。その株の4分の3は誰のものか
+  question: 世界で3番目に稼ぐクラブの株は、誰が持っているのか
+  lead: 会員の数が、世界のどのスポーツクラブよりも多いクラブ。
+  hook: 稼いだお金の使い道を決める側にも、その人たちがいます。
+  takeaway: バイエルン・ミュンヘンの2024-25の収入は、集計で8億6100万ユーロ。世界のクラブで3番目で、5季前の6億1140万ユーロから2億4960万ユーロ増えた。クラブ自身が出した連結の売上は9億7830万ユーロ、営業の利益は1億8780万ユーロ、最終の利益は2710万ユーロ。収入の項目はクラブが6つとも公表していて、試合の興行2億6070万ユーロ、スポンサーと広告2億4040万ユーロ、物販1億5050万ユーロ、移籍1億1770万ユーロ、放映権1億530万ユーロ、そのほか5190万ユーロで合計9億2650万ユーロ。放映権が全体の11.4%にとどまるのは、ヨーロッパの大会とクラブ世界一を決める大会の分が「試合の興行」に入っているため。株は会員の組織が75%を持ち、アディダス・アウディ・アリアンツが8.33%ずつ。外へ出たのは2002年のアディダス7700万ユーロ、2011年のアウディ9000万ユーロ、2014年2月のアリアンツ1億1000万ユーロの3回だけで、合計2億7700万ユーロで25%。会員は2025年11月の総会で43万2500人。ドイツのリーグには会社が過半を持てる例外もあり、レバークーゼンはバイエル、ヴォルフスブルクはフォルクスワーゲンがサッカー部門の会社を100%持っている（ホッフェンハイムは2023年末に元へ戻した）。2026年8月の決定で、50+1の決まりそのものは残る一方、この2つの例外は決まりに合っていないとされ、リーグは使い方をそろえるよう求められた。収入を会員の数で割ると1人あたりおよそ1991ユーロ、円でおよそ35万2000円。納めた税金2億5770万ユーロは放映権から入った分の2.4倍で、人件費4億830万ユーロは連結の売上の41.7%にあたる
+  opening_image: assets/backgrounds/stadium_バイエルン.png
+short_title: バイエルンの株主は、43万2500人の会員と3つの会社だけ
+thumbnail:
+  layout: number
+  photo: assets/backgrounds/stadium_バイエルン.png
+  number: ●●万人
+  line1: バイエルンの持ち主は誰か
+  line2: 株の75%を持つ会員の数
+  crests:
+  - バイエルン
+  tags:
+  - バイエルン・ミュンヘン
+  - ブンデスリーガ
+  - アリアンツ・アレーナ
+  - クラブの財政
+sections:
+- id: data
+  main: true
+  heading: 収益の基礎DATA
+  tier: 報道
+  telop: 2024-25の収入は8億6100万ユーロで世界3位。会員は43万2500人
+  narrator: キャスター
+  card: &line_card
+    type: line
+    title: 収入の5季（百万ユーロ）
+    x:
+    - 2020-21
+    - 2021-22
+    - 2022-23
+    - 2023-24
+    - 2024-25
+    series:
+    - - 収入
+      - [611.4, 653.6, 744.0, 765.0, 861.0]
+    unit: 百万ユーロ
+  say:
+  - text: ドイツのバイエルン・ミュンヘン。その株を誰が持っているかの話です。
+    short_only: true
+    image: assets/backgrounds/stadium_バイエルン.png
+  - text: 会員が43万2500人。世界のスポーツクラブで、いちばん多い数です。
+    emph: true
+    image: assets/backgrounds/stadium_バイエルン.png
+    card: &data_stats
+      type: stats
+      title: バイエルン・ミュンヘンの2024-25
+      items:
+      - - '861'
+        - 百万ユーロ
+        - 収入（世界で3番目）
+      - - 43万2500
+        - 人
+        - 会員の数
+      - - '75'
+        - '%'
+        - 会員の組織が持つ株
+      focus: 1
+  - text: その会員の集まりが、クラブの筆頭株主でもあります。
+    card:
+      <<: *data_stats
+      focus: 2
+  - text: 集計で見た2024-25の収入は8億6100万ユーロ。世界で3番目です。
+    card:
+      <<: *data_stats
+      focus: 0
+  - text: 5季前は6億1140万ユーロで、4季の上積みは2億4960万ユーロ。
+    card:
+      <<: *line_card
+      highlight: 2020-21
+  - text: 前の季から1億ユーロ近く伸びました。夏のクラブ世界一の大会の分です。
+    card:
+      <<: *line_card
+      highlight: 2024-25
+  - text: クラブ自身が出した、子会社まで合わせた売上は9億7830万ユーロです。
+    card: none
+  sources:
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league..html
+  - https://www.deloitte.com/tr/en/Industries/tmt/perspectives/deloitte-football-money-league-2025.html
+  - https://static.poder360.com.br/2025/11/Bayern-Munique-balanco.pdf
+  - https://www.insideworldfootball.com/2025/11/03/bayern-munich-post-record-e978-3m-despite-turbulent-times/
+- id: breakdown
+  heading: 何で稼いでいるのか
+  tier: 確定
+  official: true
+  telop: 試合の興行2億6070万ユーロ、スポンサーと広告2億4040万ユーロ。放映権は11.4%
+  narrator: 解説
+  card: &fall_card
+    type: waterfall
+    title: 収入の項目（2024-25、百万ユーロ）
+    start:
+    - 試合の興行
+    - 260.7
+    steps:
+    - - スポンサーと広告
+      - 240.4
+    - - 物販
+      - 150.5
+    - - 移籍
+      - 117.7
+    - - 放映権
+      - 105.3
+    - - そのほか
+      - 51.9
+    total:
+    - 項目の合計
+    - 926.5
+  say:
+  - text: バイエルン・ミュンヘンが出した数字には、何で稼いだのかが項目ごとに並んでいます。
+    image: assets/backgrounds/stadium_バイエルン_in.png
+    card:
+      <<: *fall_card
+      highlight: 試合の興行
+  - text: いちばん大きいのは試合の興行で、2億6070万ユーロ。
+    card:
+      <<: *fall_card
+      highlight: 試合の興行
+  - text: ホームの試合と、国内のカップ戦と、ヨーロッパの大会の分がここに入ります。
+    card:
+      <<: *fall_card
+      highlight: 試合の興行
+  - text: 次がスポンサーと広告で、2億4040万ユーロ。
+    card:
+      <<: *fall_card
+      highlight: スポンサーと広告
+  - text: 物販が1億5050万ユーロ、移籍が1億1770万ユーロと続きます。
+    card:
+      <<: *fall_card
+      highlight: 物販
+  - text: 放映権は1億530万ユーロ。項目の合計に対して11.4%にとどまります。
+    emph: true
+    card:
+      <<: *fall_card
+      highlight: 放映権
+    mark:
+      kind: circle
+      row: 4
+  - text: そのうち1億290万ユーロが、リーグがまとめて売った分の配分です。
+    card:
+      <<: *fall_card
+      highlight: 放映権
+  - text: 放映権が低く見えるのは、ヨーロッパで稼いだ分が試合の興行に入るからです。
+    card: none
+  - text: 6つの項目を足すと9億2650万ユーロ。
+    card:
+      <<: *fall_card
+      highlight: 項目の合計
+  - text: 順位を出す側の集計とは、線の引き方が違います。
+    card:
+      <<: *fall_card
+      highlight: 項目の合計
+  sources:
+  - https://static.poder360.com.br/2025/11/Bayern-Munique-balanco.pdf
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league..html
+- id: owner
+  heading: 株が3社にしか渡っていない
+  tier: 報道
+  telop: 会員の組織が75%。アディダス・アウディ・アリアンツが8.33%ずつ
+  narrator: 解説
+  card: &own_table
+    type: table
+    title: 株を持っている側
+    columns: &own_cols
+    - 持ち主
+    - 割合
+    rows: &own_rows
+    - - 会員の組織
+      - '75%'
+    - - アディダス
+      - '8.33%'
+    - - アウディ
+      - '8.33%'
+    - - アリアンツ
+      - '8.33%'
+  say:
+  - text: ドイツのリーグには、50プラス1と呼ばれる決まりがあります。
+    card: none
+  - text: プロの部門を切り出して、会社にすることはできます。
+    card: none
+  - text: ただし元のクラブが、票の過半を押さえていなければ認められません。
+    card: none
+  - text: バイエルンで、その元のクラブにあたるのが会員の組織です。
+    card:
+      <<: *own_table
+      highlight_row: 0
+  - text: 株の75%を持っていて、残りは3社が8.33%ずつ分け合っています。
+    card:
+      <<: *own_table
+      highlight_row: 0
+  - text: アディダス、アウディ、アリアンツ。どれもドイツの会社です。
+    card:
+      <<: *own_table
+      highlight_row: 1
+  - text: 外へ株が出たのは、これまでに3回だけでした。
+    card: &time_card
+      type: timeline
+      title: 株が動いた3回と、いま
+      rows: &time_rows
+      - - 2002年
+        - 株式会社に。アディダスが7700万ユーロで10%
+      - - 2011年
+        - アウディが9000万ユーロで9.09%
+      - - 2014年2月
+        - アリアンツが1億1000万ユーロで8.33%
+      - - 2025年11月
+        - 総会で会員43万2500人
+      focus: 2025年11月
+  - text: 2002年、プロの部門を株式会社にしたときにアディダスが7700万ユーロ。
+    card:
+      type: timeline
+      title: 株が動いた3回と、いま
+      rows: *time_rows
+      focus: 2025年11月
+      highlight_row: 0
+  - text: 2011年には、アウディが9000万ユーロで9.09%。
+    card:
+      type: timeline
+      title: 株が動いた3回と、いま
+      rows: *time_rows
+      focus: 2025年11月
+      highlight_row: 1
+  - text: 2014年2月に、アリアンツが1億1000万ユーロを入れました。
+    card:
+      type: timeline
+      title: 株が動いた3回と、いま
+      rows: *time_rows
+      focus: 2025年11月
+      highlight_row: 2
+  - text: 3回で合わせて2億7700万ユーロ。それで渡ったのが、ちょうど25%です。
+    emph: true
+    card:
+      type: timeline
+      title: 株が動いた3回と、いま
+      rows: *time_rows
+      focus: 2025年11月
+      highlight_row: 2
+  - text: アディダスとアウディは、初めはもう少し多く持っていました。
+    card:
+      <<: *own_table
+      highlight_row: 1
+  - text: アリアンツが入るときに新しく出た株を買わず、3社とも同じ割合に下がりました。
+    card:
+      <<: *own_table
+      highlight_row: 3
+  - text: 会員のほうは増え続けていて、去年11月の総会でその数が示されています。
+    card:
+      type: timeline
+      title: 株が動いた3回と、いま
+      rows: *time_rows
+      focus: 2025年11月
+      highlight_row: 3
+  sources:
+  - https://www.rosepartner.de/bayern-muenchen-verein-ag.html
+  - https://www.horizont.net/marketing/nachrichten/Bayern-Muenchen-Allianz-Chef-Markus-Riess-wird-Aufsichtsrat-130880
+  - https://www.thelocal.de/20091126/23545
+  - https://fcbayern.com/de/news/2014/02/allianz-beteiligt-sich-an-fc-bayern-munchen-ag
+- id: exception
+  heading: 同じリーグに、会社が全部持っているクラブがある
+  tier: 報道
+  telop: レバークーゼンはバイエル、ヴォルフスブルクはフォルクスワーゲンが全部を持つ
+  narrator: 解説
+  card: &exc_table
+    type: table
+    title: サッカー部門の会社を持っているのは
+    columns: &exc_cols
+    - クラブ
+    - 持ち主
+    - 割合
+    rows: &exc_rows
+    - - バイエルン・ミュンヘン
+      - 会員の組織
+      - '75%'
+    - - レバークーゼン
+      - バイエル
+      - '100%'
+    - - ヴォルフスブルク
+      - フォルクスワーゲン
+      - '100%'
+  say:
+  - text: ドイツのリーグには、この決まりの外にいるクラブもあります。
+    card: *exc_table
+  - text: レバークーゼンは、サッカー部門の会社をバイエルが全部持っています。
+    card:
+      <<: *exc_table
+      highlight_row: 1
+  - text: ヴォルフスブルクは、フォルクスワーゲンが全部です。
+    card:
+      <<: *exc_table
+      highlight_row: 2
+  - text: バイエルンが外へ出したのは4分の1。この2つは、すべてが会社のものです。
+    emph: true
+    card:
+      <<: *exc_table
+      highlight_row: 0
+    mark:
+      kind: circle
+      row: 0
+      col: 2
+  - text: ホッフェンハイムも同じ形でしたが、2023年の終わりに元へ戻しました。
+    card: none
+  - text: そして、新しくこの形を認めることは、もうありません。
+    card: &exc_verdict
+      type: verdict
+      title: いまの扱い
+      columns: &vcols
+      - 何
+      - 判定
+      - 一言
+      rows: &vrows
+      - - 50プラス1の決まり
+        - ○
+        - 競争法の上では問題なし
+      - - いまある2つの例外
+        - ×
+        - 合っていないとされた
+      - - 新しい例外
+        - ×
+        - これ以上は認めない
+      highlight_row: 2
+  - text: 決まりそのものは、8年かけた審査のすえに残ることになりました。
+    card:
+      type: verdict
+      title: いまの扱い
+      columns: *vcols
+      rows: *vrows
+      highlight_row: 0
+  - text: 今年8月の決定では、残る2つの例外にも判断がつきました。
+    card:
+      type: verdict
+      title: いまの扱い
+      columns: *vcols
+      rows: *vrows
+      highlight_row: 1
+  - text: 50プラス1に合っていない、とされています。
+    emph: true
+    card:
+      type: verdict
+      title: いまの扱い
+      columns: *vcols
+      rows: *vrows
+      highlight_row: 1
+  - text: あわせてリーグには、使い方をそろえるよう求めがついています。
+    card: none
+  - text: ファンが、票を持つ正会員になれないクラブがある、というのが理由です。
+    card: none
+  - text: バイエルンの会員は、その票を持っている側にあたります。
+    card: none
+  sources:
+  - https://www.lto.de/recht/hintergruende/h/50-1-regel-kartellamt-entscheidung-fussball-dfl
+  - https://www.beck-aktuell.de/heute-im-recht/rechtsgeschehen/50%2B1-regel-fussball-kartellrecht-bundeskartellamt-dfl-bundesliga-2026-08-12
+  - https://www.boerse-online.de/dpa-afx/roundupausnahmen-leverkusen-und-wolfsburg-dfl-muss-nachbessern-452755.html
+  - https://en.wikipedia.org/wiki/Bayer_04_Leverkusen
+  - https://en.wikipedia.org/wiki/VfL_Wolfsburg
+- id: view
+  viewpoint: true
+  heading: 見立て・稼ぎを持ち主の数で割ってみる
+  tier: 背景
+  telop: 会員1人あたりおよそ1991ユーロ。納めた税金は放映権から入った分の2.4倍
+  narrator: 解説
+  card: &calc_card
+    type: calc
+    title: 会員1人あたりの収入（自分で割った）
+    terms:
+    - - 8億6100万ユーロ
+      - 2024-25の収入
+    - - 43万2500人
+      - 2025年11月の会員
+    - - 約1991ユーロ
+      - 1人あたり
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: 最後に、自分で割った数をいくつか置きます。
+    card: *calc_card
+  - text: バイエルン・ミュンヘンの1年の稼ぎを、会員の数で割ってみました。
+    card: *calc_card
+  - text: 1人あたり、およそ1991ユーロになります。
+    card: *calc_card
+  - text: 円に直すと、1人あたりおよそ35万2000円です。
+    emph: true
+    card: &yen_card
+      type: convert
+      title: 会員1人あたりを円で見る
+      from:
+      - '1991'
+      - ユーロ
+      - 会員1人あたり
+      to:
+      - 約35万2000
+      - 円
+      - 2026年10月9日の相場
+      via: 1ユーロ＝177円
+  - text: 出どころの違う数字をこちらで割ったものなので、目安として見てください。
+    card: none
+  - text: もうひとつ。この季にクラブが納めた税金は2億5770万ユーロです。
+    card: &view_table
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: &view_cols
+      - 比べ
+      - 答え
+      rows: &view_rows
+      - - 会員1人あたりの収入
+        - 約1991ユーロ
+      - - 納めた税金 ÷ 放映権から入った分
+        - 2.4倍
+      - - 人件費 ÷ 連結の売上
+        - '41.7%'
+      - - 最終の利益 ÷ 連結の売上
+        - '2.8%'
+      highlight_row: 1
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+      text: 税のほうが重い
+  - text: 放映権から入った分の、2.4倍にあたります。
+    emph: true
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 1
+  - text: 出ていく側でいちばん重いのは人件費で、4億830万ユーロ。
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 2
+  - text: 全体の売上に対して41.7%にあたります。
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 2
+  - text: それでも最終の利益は2710万ユーロ残りました。売上に対して2.8%です。
+    card:
+      type: table
+      title: 自分で割ってみた（2024-25）
+      columns: *view_cols
+      rows: *view_rows
+      highlight_row: 3
+  - text: 株を外へ出さずに、ここまで積み上げてきたクラブです。
+    card: none
+  - text: 次の季の決算は、まだ外に出ていません。前の発表は去年の11月2日でした。
+    card: none
+  sources:
+  - https://static.poder360.com.br/2025/11/Bayern-Munique-balanco.pdf
+  - https://www.deloitte.com/uk/en/services/financial-advisory/analysis/deloitte-football-money-league..html
+  - https://api.frankfurter.app/2026-10-09?from=EUR&to=JPY

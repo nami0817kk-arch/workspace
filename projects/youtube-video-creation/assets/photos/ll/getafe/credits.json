@@ -38,15 +38,16 @@
   "note": "切り出し 150,0,1070,1230"
  },
  {
-  "title": "File:José Bordalás 2019 (cropped).jpg",
+  "title": "File:José Bordalás 2019.jpg",
   "author": "Дмитрий Пукалик",
   "license": "CC BY-SA 3.0",
-  "page_url": "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Bordal%C3%A1s_2019_(cropped).jpg",
-  "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Jos%C3%A9_Bordal%C3%A1s_2019_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+  "page_url": "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Bordal%C3%A1s_2019.jpg",
+  "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Jos%C3%A9_Bordal%C3%A1s_2019.jpg/1280px-Jos%C3%A9_Bordal%C3%A1s_2019.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
   "page": "José Bordalás",
   "file": "getafe_manager_b5e6eb46.jpg",
   "source": "wikimedia",
   "person": "ホセ・ボルダラス",
-  "subject_check": "未確認（取り込んだ人が目で確かめること）"
+  "subject_check": "未確認（取り込んだ人が目で確かめること）",
+  "note": "切り出し 365,60,985,760"
  }
 ]

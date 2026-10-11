@@ -1,0 +1,365 @@
+# 取材メモ（10/11 土、シリーズ「比べる」、key: compare_malen_lautaro、型は news）。
+# 材料の控えは research/raw/20261011_compare_malen_lautaro.md。**この控えの外へ出ていない。**
+#
+# **「比べる」の3つ（選手／クラブ／同じ年齢）のうち「選手」で組んだ。**人選は市場価値の一覧
+#   （`player_pool.py list --count 31`）の14位ラウタロ・28位マレンで、どちらもセンターフォワード。
+#   軸は「セリエAの得点ランキングで1位と2位に並ぶ2人を、得点ではなくシュートの中身で並べ直す」こと。
+#   山場の頭に置く強い一点は、**3週間前（9月19日）の ローマ対インテル に2人とも先発していた**こと。
+#   その試合でラウタロが2点、マレンは0点。それでも得点の順番は動いていない。
+#
+# **重なりの確認（直近30日、research/posted.json の題と research/covered.yaml を人名・クラブ名で引いた）**:
+#   ローマ 0件／マレン 0件／ラウタロ 0件（最後は 2026-09-07 の inter_napoli ＝34日前で窓の外）。
+#   **インテルだけ1件**（2026-09-15 inter_udinese_comeback「インテルが0対2から」。主役はバレッラで、
+#   ラウタロもマレンも出てこない）。**ユーザーに報告して、外すかどうかは判断してもらう。**
+#   同じ日の他の枠（マンC・ヴィラ・ハルシティ・バイエルン・ヘタフェ・アーセナル）とは重ならない。
+#   PSG の選手は使っていない（10/9 ネイマール・10/10 PSG の財政と3日続きにしない）。
+# **10/9 の「ベリンガム×ムシアラ」と型を重ねない**ようにした:
+#   ・「生後◯日でそろえる」という切り口は**使っていない**（2日前に使ったばかり）
+#   ・題の形も変えた（10/9 は「AとBを同じ日数で並べる。2人がそろって出ていた試合」）
+#   ・怪我の一覧・年表（timeline）・市場価値の線も使っていない（線は**節ごとの得点の積み上がり**にした）
+#
+# **数字はすべて自分で数えた。**Transfermarkt の1試合ずつの記録（tmapi の performance-game、season=2026）を足したもの。
+#   **クラブの公式戦だけ**（代表戦 isNationalGame と親善試合 FS は除く）。基準は **2026年10月11日の朝**＝セリエA第5節まで。
+#   マレン: 6試合6先発 432分 6得点 1アシスト、シュート24本・枠内10本（セリエA5試合345分6点／CL1試合87分1アシスト）
+#   ラウタロ: 出場5試合5先発 414分 4得点 1アシスト、シュート26本・枠内7本（第4節はベンチで出番なし。セリエA4試合324分4点）
+#   自分で割った数: 6×90÷432＝1.25／4×90÷414＝0.8696（0.87）／1.25÷0.87＝1.44倍／
+#     10÷24＝41.7%／7÷26＝26.9%／41.7−26.9＝14.8ポイント（小数から引くと14.7。**台本は14.7**）／
+#     6÷10＝0.60／4÷7＝0.571（0.57）／24÷6＝4.0本／26÷4＝6.5本／432÷6＝72.0分／414÷5＝82.8分／
+#     8500万÷5500万＝1.545（約1.55倍）／3000万ユーロ×177.34＝53億2020万円（約53億円）
+#   セリエAの節ごとの積み上げ（得点）: マレン 3・5・5・6・6 ／ ラウタロ 0・0・2・2・4。
+#     開幕2試合は5点と0点、直近3試合は1点と4点。**向きが入れ替わっている**のが見立て。
+#   **食い違いの控え**: 10/1 に取った得点ランキングの控え（research/scorers/2026-10-01.json）はラウタロのセリエAを
+#     「4試合323分」としている。tmapi の1試合ずつを足すと **324分**。1分の差なので**こちらの数え（324分）に揃えた**。
+#     マレンの345分は両方で一致。
+# **言い切っていないもの**: どちらが上かは一度も言わない。枠内1本あたりの得点（0.60と0.57）は
+#   「ほとんど同じ」までにして、差を作っているのは「その手前」と言うに留めた。評点は使っていない
+#   （tmapi の grade がセリエAでは null で、自分で確かめられないため）。
+#   9月19日の試合は、2人の出場分・得点・シュートだけを使い、試合の流れや他の選手には触れていない。
+# 板：①versus（3行だけ。20秒を超えないように**4行目から stats に替えた**）②table（6行）③table（4行）と calc
+#   ④line（2本）と convert。**`card: none` は明示してある**（`card:` の行を消すだけでは前の板が残る）。
+#   赤ペン（mark）は使っていない。
+# 写真：Commons の2枚だけ。マレン（File:DONYELL MALEN – 2023.08.12 (02).jpg、CC BY-SA 4.0 / Sandro Halank、2023年）、
+#   ラウタロ（File:Lautaro Martinez Argentina v Spain 19 July 2026-263.jpg、CC BY-SA 4.0 / Bryan Berlin、2026年）。
+#   冒頭と見立ては `tools/pairphoto.py --focus 0.26` で横に並べた1枚（頭が上端で切れるのを和らげた）。
+#   **マレンの元は785px幅**なので 16:9 へ引き伸ばす `widecrop` は作っていない（1.6倍を超える）。
+#   節③の下地は、横長のマレン（Commons「2021-11-06 … RB Leipzig - Borussia Dortmund 1DX 1664 by Stepro.jpg」
+#   CC BY-SA 4.0 / Steffen Prößdorf、2021年、3354×2236）。代理店の写真は無し。
+#   **残った × はショートだけ**：縦に2人を上下で割ると、下に来たほうの顔に字幕の帯がかかる（59%）。
+#   2人とも顔の寄った写真なので、上下を入れ替えても同じところに当たる。
+#   **シリーズの回にショートは作らない決まり（2026-10-10）**なので、ここは直していない。本編は ✓ と △ だけ。
+# 声：1件も無い（シリーズの回。ブラウザの道具を使わない約束なので反応は集めていない）。
+# サムネ：**ユーザーと相談して決める。**ここに書いてあるのは案A（構図 versus、伏せるのは「同じ試合」）。
+#   伏せた答えは節①の読み上げに出てくる。10/9 が versus・number、10/10 が scene と classic。
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年10月11日
+series: 比べる
+people:
+- ドニエル・マレン
+- ラウタロ・マルティネス
+short_title: マレンとラウタロ、3週間前は同じ試合に立っていた
+theme:
+  id: compare_malen_lautaro
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: マレンとラウタロ
+  title: マレンとラウタロ、セリエAの得点を競う2人。シュートが枠に飛んだ割合
+  question: 得点ランキングで1位と2位に並ぶ2人は、シュートの中身でどこが違うのか
+  lead: セリエAの得点ランキングで、1位と2位に並んでいる2人。
+  hook: 3週間前には、同じ試合でピッチに立っていました。
+  takeaway: 9月19日のローマ対インテルに、マレンとラウタロはそろって先発していた。結果は2対2で、インテルの2点はどちらもラウタロのもの。マレンはこの日3本撃って無得点だったが、今季の得点はマレンが6、ラウタロが4のまま動いていない。10月11日の朝までのクラブの公式戦で、出場時間は432分と414分とほぼ同じで、90分あたりの得点は1.25と0.87、点の出方は1.44倍ちがう。撃ったシュートは24本と26本でほとんど変わらないのに、枠に飛んだのは10本と7本、割合では41.7%と26.9%で14.7ポイントの開きがある。一方で枠に飛んだ1本あたりの得点は0.60と0.57でほとんど同じ。差がついているのは決める段ではなく、その手前にある。1点を入れるのに要したシュートは4.0本と6.5本。リーグ戦の得点を節ごとに積み上げると、開幕2試合でマレンが5点・ラウタロが0点、直近3試合ではマレンが1点・ラウタロが4点と向きが入れ替わっている。推定の市場価値は5500万ユーロと8500万ユーロで1.55倍、差の3000万ユーロは円でおよそ53億円。次の物差しは第6節で、インテルはパルマ、ローマはコモと当たる
+  opening_image: assets/images/20261011_cmp_pair/01.jpg
+  bgm: assets/audio/bgm_calm.wav
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261011_cmp_malen/01.jpg
+  - assets/images/20261011_cmp_lautaro/01.jpg
+  names:
+  - マレン
+  - ラウタロ
+  line1: マレンとラウタロ
+  line2: 3週間前は●●にいた
+  cutout: false
+  tint: none
+  rays: false
+  short_photo: assets/images/20261011_cmp_pair/01_v.jpg
+  tags:
+  - ドニエル・マレン
+  - ラウタロ・マルティネス
+  - ローマ
+  - セリエA
+  - 比べる
+sections:
+- id: same
+  main: true
+  heading: 3週間前、同じ試合に立っていた
+  tier: 報道
+  telop: 9月19日のローマ対インテルに2人とも先発。ラウタロが2点、マレンは0点
+  narrator: キャスター
+  card: &vs
+    type: versus
+    title: 9月19日 ローマ対インテル
+    left:
+      image: assets/images/20261011_cmp_malen/01.jpg
+      name: マレン
+      number: 0点
+      note: 90分・シュート3本
+    right:
+      image: assets/images/20261011_cmp_lautaro/01.jpg
+      name: ラウタロ
+      number: 2点
+      note: 90分・シュート6本
+  say:
+  - text: ローマのマレンと、インテルのラウタロ。セリエAで得点を競う2人です。
+    short_only: true
+    image: assets/images/20261011_cmp_pair/01.jpg
+  - text: 9月19日、ローマ対インテル。2人はこの試合に先発していました。
+    card: *vs
+  - text: 2対2の引き分け。インテルの2点は、どちらもラウタロのものです。
+    card: *vs
+  - text: マレンはこの日3本。今季の1試合あたり4本を下回りました。
+    card: *vs
+  - text: それでも今季の得点は、マレンが6、ラウタロが4。
+    emph: true
+    image: assets/images/20261011_cmp_pair/01.jpg
+    card: &tot
+      type: stats
+      title: 今季のクラブの公式戦（10月11日の朝まで）
+      items:
+      - ['6', 点, マレン 6試合]
+      - ['4', 点, ラウタロ 5試合]
+      - ['90', 分, 9月19日は2人ともフル出場]
+      focus: 2
+  - text: ランキングの順番は、この試合のあとも動いていません。
+    card: *tot
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://www.transfermarkt.com/lautaro-martinez/leistungsdatendetails/spieler/406625
+- id: numbers
+  heading: 今季の数字を並べる
+  tier: 報道
+  telop: 出場時間は432分と414分。90分あたりの得点は1.25と0.87
+  narrator: 解説
+  card: &nt
+    type: table
+    title: 今季のクラブの公式戦（10月11日の朝まで）
+    columns: [項目, マレン, ラウタロ]
+    rows:
+    - &n1 [試合, '6', '5']
+    - &n2 [先発, '6', '5']
+    - &n3 [出場時間, '432分', '414分']
+    - &n4 [得点, '6', '4']
+    - &n5 [アシスト, '1', '1']
+    - &n6 ['90分あたりの得点', '1.25', '0.87']
+  say:
+  - text: どちらも右利きのセンターフォワードで、年齢は27歳と29歳。
+    image: assets/images/20261011_cmp_malen_w/01.jpg
+    card: none
+  - text: ラウタロは、出場した5試合すべてで主将の腕章を巻いています。
+    card: none
+  - text: 数えたのは、10月11日の朝までのクラブの公式戦です。
+    card: none
+  - text: マレンは6試合すべてに先発。ラウタロは5試合に出て、すべて先発でした。
+    card: *nt
+  - text: ラウタロは1試合、ベンチに座ったまま出番がありません。
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 0}
+  - text: 出場時間は432分と414分。差は18分しかありません。
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 2}
+  - text: 得点は6と4、アシストはどちらも1つずつ。
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 3}
+  - text: 90分あたりでは、1.25と0.87です。
+    emph: true
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 5}
+  - text: 点の出方にすると、1.44倍の開きになります。
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 5}
+  - text: ただ、マレンは4試合で90分より前に退いています。
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 1}
+  - text: 1試合あたりの出場時間は、72.0分と82.8分でした。
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 2}
+  - text: この6試合と5試合には、チャンピオンズリーグが1つずつ入っています。
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 0}
+  - text: そこでは2人とも、得点が0でアシストが1。まったく同じ数字でした。
+    card: {type: table, title: 今季のクラブの公式戦（10月11日の朝まで）, columns: [項目, マレン, ラウタロ], rows: [*n1, *n2, *n3, *n4, *n5, *n6], highlight_row: 4}
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://www.transfermarkt.com/lautaro-martinez/leistungsdatendetails/spieler/406625
+- id: shots
+  heading: 撃った本数は、ほとんど同じ
+  tier: 報道
+  telop: シュートは24本と26本。枠に飛んだのは10本と7本で14.7ポイントの差
+  narrator: 解説
+  card: &st
+    type: table
+    title: シュートの中身（今季のクラブの公式戦）
+    columns: [項目, マレン, ラウタロ]
+    rows:
+    - &s1 [シュート, '24本', '26本']
+    - &s2 [枠内, '10本', '7本']
+    - &s3 [枠に飛んだ割合, 41.7%, 26.9%]
+    - &s4 [枠内1本あたりの得点, '0.60', '0.57']
+  say:
+  - text: 得点の数だけでは分からないので、シュートまで数えました。
+    image: assets/images/20261011_cmp_lautaro_w/01.jpg
+    card: none
+  - text: 撃った本数は、マレンが24本、ラウタロが26本。
+    card: {type: table, title: シュートの中身（今季のクラブの公式戦）, columns: [項目, マレン, ラウタロ], rows: [*s1, *s2, *s3, *s4], highlight_row: 0}
+  - text: ここは2本しか変わりません。
+  - text: 1試合あたりに直しても、4.0本と5.2本です。
+  - text: マレンはどの試合でも撃っていて、いちばん多い日でも5本。
+  - text: ラウタロは1本も撃てなかった試合と、10本撃った試合がありました。
+    card: {type: table, title: シュートの中身（今季のクラブの公式戦）, columns: [項目, マレン, ラウタロ], rows: [*s1, *s2, *s3, *s4], highlight_row: 0}
+  - text: ところが枠に飛んだのは、10本と7本でした。
+    card: {type: table, title: シュートの中身（今季のクラブの公式戦）, columns: [項目, マレン, ラウタロ], rows: [*s1, *s2, *s3, *s4], highlight_row: 1}
+  - text: 割合に直すと41.7%と26.9%。14.7ポイントの開きです。
+    emph: true
+    card: {type: table, title: シュートの中身（今季のクラブの公式戦）, columns: [項目, マレン, ラウタロ], rows: [*s1, *s2, *s3, *s4], highlight_row: 2}
+  - text: ただし、枠に飛んだ1本あたりの得点は0.60と0.57。
+    card: {type: table, title: シュートの中身（今季のクラブの公式戦）, columns: [項目, マレン, ラウタロ], rows: [*s1, *s2, *s3, *s4], highlight_row: 3}
+  - text: こちらは0.03しか違いません。
+    card: {type: table, title: シュートの中身（今季のクラブの公式戦）, columns: [項目, マレン, ラウタロ], rows: [*s1, *s2, *s3, *s4], highlight_row: 3}
+  - text: 分かれているのは決める段ではなく、その手前のようです。
+    card: *st
+  - text: 1点に要したシュートは、4.0本と6.5本という計算になります。
+    card: &sc
+      type: calc
+      title: 1点に要したシュート
+      terms:
+      - ['26本', ラウタロのシュート]
+      - ['4点', ラウタロの得点]
+      - ['6.5本', '1点あたり']
+      ops: ['÷', ＝]
+  - text: その差は2.5本。同じ1点までの距離が、それだけ違います。
+    card: *sc
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://www.transfermarkt.com/lautaro-martinez/leistungsdatendetails/spieler/406625
+- id: start
+  heading: 差がついたのは、開幕の2試合
+  tier: 報道
+  telop: 9月19日を迎えた時点で6点と2点。あの日2点決めても2点の差が残った
+  narrator: 解説
+  card: &mt
+    type: table
+    title: リーグ戦の1試合ずつ（得点）
+    columns: [節, マレン, ラウタロ]
+    rows:
+    - &m1 [第1節, 3点, 0点]
+    - &m2 [第2節, 2点, 0点]
+    - &m3 [第3節, 0点, 2点]
+    - &m4 [第4節, 1点, 出番なし]
+    - &m5 [第5節, 0点, 2点]
+  say:
+  - text: では、あの日の2点で順番が動かなかったのはなぜか。
+    image: assets/images/20261011_cmp_malen_w/01.jpg
+    card: none
+  - text: 1試合ずつに割ると、理由はその前にありました。
+    card: *mt
+  - text: マレンは開幕戦でいきなり3点。しかも68分で退いています。
+    emph: true
+    card: {type: table, title: リーグ戦の1試合ずつ（得点）, columns: [節, マレン, ラウタロ], rows: [*m1, *m2, *m3, *m4, *m5], highlight_row: 0}
+  - text: 次の試合でも2点。開幕の2試合だけで5点を入れました。
+    card: {type: table, title: リーグ戦の1試合ずつ（得点）, columns: [節, マレン, ラウタロ], rows: [*m1, *m2, *m3, *m4, *m5], highlight_row: 1}
+  - text: 同じ2試合、ラウタロは0点です。
+    card: {type: table, title: リーグ戦の1試合ずつ（得点）, columns: [節, マレン, ラウタロ], rows: [*m1, *m2, *m3, *m4, *m5], highlight_row: 1}
+  - text: 第1節はシュートが1本もなく、第2節は枠に1本しか飛びませんでした。
+    card: {type: table, title: リーグ戦の1試合ずつ（得点）, columns: [節, マレン, ラウタロ], rows: [*m1, *m2, *m3, *m4, *m5], highlight_row: 1}
+  - text: 第3節でラウタロに2点が入り、ここで初めて差が縮みます。
+    card: {type: table, title: リーグ戦の1試合ずつ（得点）, columns: [節, マレン, ラウタロ], rows: [*m1, *m2, *m3, *m4, *m5], highlight_row: 2}
+  - text: 第4節はマレンが1点。ラウタロはこの日ベンチのままでした。
+    card: {type: table, title: リーグ戦の1試合ずつ（得点）, columns: [節, マレン, ラウタロ], rows: [*m1, *m2, *m3, *m4, *m5], highlight_row: 3}
+  - text: こうして9月19日を迎えた時点で、6点と2点。
+    card: {type: table, title: リーグ戦の1試合ずつ（得点）, columns: [節, マレン, ラウタロ], rows: [*m1, *m2, *m3, *m4, *m5], highlight_row: 4}
+  - text: 4点の開きがあったので、あの日2点決めても2点残る計算でした。
+    emph: true
+    card: {type: table, title: リーグ戦の1試合ずつ（得点）, columns: [節, マレン, ラウタロ], rows: [*m1, *m2, *m3, *m4, *m5], highlight_row: 4}
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://www.transfermarkt.com/lautaro-martinez/leistungsdatendetails/spieler/406625
+- id: clubs
+  heading: クラブも勝ち点13で並んでいる
+  tier: 報道
+  telop: ローマとインテルは勝ち点13、4勝1分。分けているのは得失点差だけ
+  narrator: キャスター
+  card: &ct
+    type: table
+    title: セリエA 第5節まで
+    columns: [クラブ, 勝ち点, 得失点差, 順位]
+    rows:
+    - &c1 [ローマ, '13', '+11', 1位]
+    - &c2 [インテル, '13', '+7', 2位]
+  say:
+  - text: 実は、マレンとラウタロのクラブも、ここまで並んでいます。
+    image: assets/images/20261011_cmp_pair/01.jpg
+    card: none
+  - text: 勝ち点はどちらも13。5試合で4勝1分けです。
+    card: *ct
+  - text: 順番を分けているのは得失点差だけで、プラス11とプラス7。
+    emph: true
+    card: {type: table, title: セリエA 第5節まで, columns: [クラブ, 勝ち点, 得失点差, 順位], rows: [*c1, *c2], highlight_row: 0}
+  - text: ローマが1位、インテルが2位に立っています。
+    card: {type: table, title: セリエA 第5節まで, columns: [クラブ, 勝ち点, 得失点差, 順位], rows: [*c1, *c2], highlight_row: 1}
+  - text: どちらも4勝1分けで、まだ負けていないところも同じです。
+    card: *ct
+  - text: 得点ランキングと同じ並びが、順位表のほうにもできている形です。
+    card: *ct
+  sources:
+  - https://www.transfermarkt.com/serie-a/tabelle/wettbewerb/IT1
+- id: view
+  viewpoint: true
+  heading: 向きが入れ替わった、直近の3試合
+  tier: 報道
+  telop: 第3節から第5節の3試合だけを数えると、マレンが1点、ラウタロが4点
+  narrator: 解説
+  card: &ln
+    type: line
+    title: リーグ戦の得点の積み上がり
+    unit: 点
+    x: ['第1節', '第2節', '第3節', '第4節', '第5節']
+    series:
+    - [マレン, [3, 5, 5, 6, 6]]
+    - [ラウタロ, [0, 0, 2, 2, 4]]
+    focus: マレン
+  say:
+  - text: リーグ戦の得点を、節ごとに積み上げてみます。
+    image: assets/images/20261011_cmp_pair/01.jpg
+    card: *ln
+  - text: 2本の線がいちばん離れるのは、さきほど見た第2節です。
+    card:
+      <<: *ln
+      highlight: 第2節
+  - text: そこから先の3試合だけを数え直すと、マレンが1点、ラウタロが4点。
+    emph: true
+    card:
+      <<: *ln
+      highlight: 第5節
+  - text: 開幕の並びと、直近の並び。向きが入れ替わっています。
+    card:
+      <<: *ln
+      highlight: 第5節
+  - text: 推定の市場価値は、5500万ユーロと8500万ユーロで1.55倍。
+    card: *ln
+  - text: 差の3000万ユーロは、9日の為替でおよそ53億円になります。
+    card: &cv
+      type: convert
+      title: 2人の市場価値の差を円に
+      from: ['3000万', ユーロ, 推定の市場価値の差]
+      to: [約53億, 円, 10月9日の相場]
+      via: 1ユーロ＝177.34円
+  - text: マレンの5500万は、本人のこれまでで最も高い額です。
+    card: *cv
+  - text: ラウタロの8500万は、2023年末の1億1000万から下がった数字でした。
+    card: *cv
+  - text: 次の物差しは、第6節です。
+    card: none
+  - text: インテルはパルマ、ローマはコモと当たります。
+  - text: 得点で2つ差のこの順番が、6節目でどう動くか。
+  - text: 枠に飛ぶ割合のほうが先に動くのかも、そこで見えてきます。
+  sources:
+  - https://www.transfermarkt.com/donyell-malen/leistungsdatendetails/spieler/326029
+  - https://www.transfermarkt.com/lautaro-martinez/leistungsdatendetails/spieler/406625
+  - https://www.transfermarkt.com/donyell-malen/marktwertverlauf/spieler/326029
+  - https://www.transfermarkt.com/lautaro-martinez/marktwertverlauf/spieler/406625
+  - https://data-api.ecb.europa.eu/service/data/EXR/D.JPY.EUR.SP00.A

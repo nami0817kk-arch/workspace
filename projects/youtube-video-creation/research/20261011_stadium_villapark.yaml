@@ -1,0 +1,546 @@
+# スタジアム紹介シリーズ③：ヴィラ・パーク（アストン・ヴィラ、10/11）。
+# **節の並びは①ヴァイタリティ（10/9）②エミレーツ（10/10）と同じ型**：
+#   オープニング → 基礎DATA(main・強い一点を頭に) → この競技場だけの話(年表) → ここで起きた試合(表) →
+#   見立て(viewpoint・自分で数えた比べ)。**文は全部言い換えてある。**
+#
+# 強い一点：**今季（2026-27）は北スタンドを1シーズン丸ごと閉じていて、収容が 43,205 → 36,887 に落ちている**
+#   （差は6318席＝14.6%）。工事が終わるのは2027年8月、そのとき5万65人。確度は**報道**
+#   （2026-04-22 の各社。クラブの発表文そのものには当たれていない。名前のある人の言葉も見つからなかった → 声は0件）。
+#   台本は「報じられました」「とされています」の線を越えない。
+#
+# **重なりで外したもの（クラブ紹介③ヴィラ 2026-09-24 公開・17日前／zion_mvp 10/01・10日前）**
+#   **創立1874年・ウィリアム・マクレガーとリーグ創設・鈴木彩艶は一度も出していない。**
+#   クラブ紹介が読み上げた「ホルト・エンドは1995年の完成時、イギリス最大のゴール裏スタンド」も使わない
+#   → ホルト・エンドは**名前の由来**（サー・トマス・ホルトの菜園だった土地）でだけ触れる。
+#   エメリ・サウィリス・1982年の欧州制覇・昨季のEL優勝・ホルト・エンドの大きさも出していない。
+#
+# **エミレーツの回（10/10）と重ねないようにしたもの**
+#   あちらは「拡張をやめた」、こちらは「拡張のために1季閉めた」で**向きが逆**。
+#   **1席あたりの値段を割る形は使わない**（あちらの見立て）。こちらは**最多入場との比**と**閉じた席の割合**。
+#   **20クラブの収容の順位表（rank.json）も使わない**（あちらが表1枚まるごと使った）。
+#   締めも変えた（あちらは「3日後のCLのリール戦」。こちらは2027年8月の完成と2028年の欧州選手権で締める。
+#   次の試合＝10月14日のフェネルバフチェ戦には触れない。2本続けて「3日後のCL」で終わると同じ形になる）。
+#
+# **言わないと決めたもの**
+#   **最多入場の 76,588人が「1946年3月2日のFA杯6回戦 対ダービー」なのは Wikipedia 本文のみ**で、
+#   その試合の結果まで辿れていないので**結果は言わない**（表の列も「入場」だけにした）。
+#   **「3つの世紀で国際試合を開いた最初のイングランドの競技場」は言わない**（どの3世紀かが原文にも無い）。
+#   1914年のライチの構想「12万人」は**実現していない計画**なので、必ず「構想」と言う。
+#   トリニティ・ロード・スタンドの建設費は**89,000ポンド（1922年の発表は41,775ポンド）**と食い違うので、
+#   台本では**8万9000ポンド**だけを言い、発表額には触れない。
+#   工事費の**1億ポンド**はバーミンガム市の見通しで、クラブの数字ではないので「およそ」を付けた。
+#   ホルト・エンドの立ち見がいつ終わったかは原文に無いので言わない（テイラー報告の1994年8月も当てない）。
+#   オジー・オズボーンの最後の公演（2025-07-05）は入れていない（亡くなった人の話になるので外した）。
+#
+# 写真は assets/backgrounds/ から assets/images/20261011_stadium_villapark/ へ写した2枚
+#   （01_w＝ピッチとスタンドの中／02_w＝上空からの外観。どちらも Commons・CC BY-SA、credits.json も同じ場所）。
+#   **assets/backgrounds/ のまま使うと、ショートが assets/stats/stadium_アストンヴィラ_v.png
+#   （クラブ紹介③の基礎DATAの縦板）に化ける**（スタジアム紹介①で踏んだ）。
+#
+# 自分で割った数（検算した）: 76,588 ÷ 43,205 = 1.7727 →「1.77倍」／43,205 − 36,887 = 6,318席／
+#   6,318 ÷ 43,205 = 0.14624 →「14.6%」／50,065 ÷ 36,887 = 1.3573 →「1.36倍」／50,065 − 43,205 = 6,860席。
+#
+# **サムネは案を3つ出してユーザーに決めてもらう**（2026-10-11「サムネは相談して決めよう」）。
+#   ここに書いた thumbnail は案A（scene）。B（number）・C（face）は報告に書いた。
+date: 2026年10月11日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+theme:
+  id: stadium_villapark
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: アストン・ヴィラの本拠地、今季は6318席が閉じている。何が建っているのか
+  question: 129年つづくこの器で、いま何が起きているのか
+  lead: ヴィクトリア時代の遊び場と、観賞用の池があった土地。
+  hook: 今季のこの器には、入れない区画があります。
+  takeaway: ヴィラ・パークは収容4万3205人だが、今季2026-27は北スタンドを1シーズン丸ごと閉じているため3万6887人に落ちている。消えた席は6318で、収容の14.6%にあたる。2026年4月に、工事を2季にまたがせず1季で終わらせるために丸ごと閉じると報じられた。開場は1897年4月17日、ブラックバーンとの親善試合で、その場所は18世紀のアストン・ホールの菜園から、ヴィクトリア時代の水族館と大広間のある遊び場になり、1889年に池を抜いて自転車と陸上の競技場になった土地だった。1911年に8250ポンドで土地を買い、1914年にはアーチボルド・ライチが12万人まで広げる構想を描いた。1924年1月26日に開いたトリニティ・ロード・スタンドはステンドグラスとイタリアのモザイクを備え、イギリスの競技場で最初のレストランが入っていたが、2000年に取り壊された。最多入場は1946年の7万6588人で、いまの収容の1.77倍。全席が椅子になってからの最多は2025年12月21日の4万3157人。FA杯の準決勝を55回開いていて、どの競技場より多い。1966年のワールドカップで3試合、1996年の欧州選手権で4試合、1999年にはカップウィナーズカップの最後の決勝を開いた。工事が終わるのは2027年8月で、収容は5万65人、いま閉じている6318席が戻り、さらに6860席増える。2028年の欧州選手権では、ここで4試合が行われる
+  opening_image: assets/images/20261011_stadium_villapark/01_w.png
+short_title: アストン・ヴィラの本拠地、今季は6318席が閉じている
+thumbnail:
+  layout: scene
+  photo: assets/images/20261011_stadium_villapark/02_w.png
+  band: bottom
+  line1: ヴィラの6318席が閉じた
+  line2: いま建っているのは●●
+  crests:
+  - アストンヴィラ
+  tags:
+  - アストン・ヴィラ
+  - ヴィラ・パーク
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ヴィラ・パークの基礎DATA
+  tier: 報道
+  telop: 今季は北スタンドを丸ごと閉じ、6318席が消えた。収容は4万3205人から3万6887人へ
+  narrator: キャスター
+  card: &id_data
+    type: table
+    title: ヴィラ・パークの基礎DATA
+    columns: &cols_data
+    - 項目
+    - 内容
+    rows: &rows_data
+    - - 収容人数
+      - 4万3205人（今季は3万6887人）
+    - - 開場
+      - 1897年4月17日
+    - - 場所
+      - バーミンガム アストン
+    - - ピッチ
+      - 縦105×横68メートル
+    - - 最多入場
+      - 7万6588人（1946年）
+    - - 持ち主
+      - Vスポーツ
+  say:
+  - text: バーミンガムにある、アストン・ヴィラの本拠地の話です。
+    short_only: true
+    image: assets/images/20261011_stadium_villapark/01_w.png
+  - text: 今季のこの器は、6318席を閉じています。収容の14.6%です。
+    emph: true
+    image: assets/images/20261011_stadium_villapark/01_w.png
+    card: &id_stats
+      type: stats
+      title: 今季だけ、小さくなっている
+      items:
+      - - '6318'
+        - 席
+        - 今季のあいだ閉じている席
+      - - '14.6'
+        - ％
+        - 収容に占める割合
+      - - '1'
+        - シーズン
+        - 閉じている長さ
+      focus: 1
+  - text: 1シーズン丸ごと北スタンドを閉じ、いま建て替えています。
+    card: *id_stats
+  - text: 工事が終わる2027年には、5万65人まで増える予定です。
+    short_only: true
+    card:
+      type: table
+      title: ヴィラ・パークの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 0
+  - text: 収容は4万3205人。今季に使えるのは3万6887人ぶんです。
+    card:
+      type: table
+      title: ヴィラ・パークの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 0
+  - text: 開場は1897年4月17日。ブラックバーンに3対0で勝った親善試合でした。
+    card:
+      type: table
+      title: ヴィラ・パークの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 1
+  - text: 建っているのはバーミンガムのアストン。もとは池だった窪地です。
+    card:
+      type: table
+      title: ヴィラ・パークの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 2
+  - text: ピッチは縦105メートル、横68メートル。いまの標準の大きさ。
+    card:
+      type: table
+      title: ヴィラ・パークの基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Villa_Park
+  - https://www.greaterbirminghamchambers.com/resource/aston-villa-announce-north-stand-closure-for-2026-27-season-to-accelerate-redevelopment-plans.html
+  - https://footballgroundguide.com/news/villa-park-expansion-everything-aston-villa-fans-need-to-know-about-north-stand-closure-in-2026-27.html
+- id: ground
+  heading: 水族館と自転車競技場があった土地
+  tier: 背景
+  telop: 池を抜いて1889年に競技場が開き、その8年後にヴィラが移ってきた
+  narrator: 解説
+  card: &id_time
+    type: timeline
+    title: この土地に建ったもの
+    rows: &rows_time
+    - - 1889年6月
+      - 池を抜いて競技場が開く
+    - - 1897年4月
+      - ヴィラが移り、最初の試合
+    - - 1911年
+      - 土地を8250ポンドで買う
+    - - 1914年
+      - 12万人に広げる構想
+    - - 1924年1月
+      - トリニティ・ロードが開場
+    - - 2000年
+      - その建物を取り壊す
+    focus: 1924年1月
+  say:
+  - text: この場所は、もともとサッカーのための土地ではありませんでした。
+    image: assets/images/20261011_stadium_villapark/02_w.png
+    card: *id_time
+  - text: 18世紀の屋敷、アストン・ホールの菜園でした。
+    card: none
+  - text: 持ち主の名はサー・トマス・ホルト。いまのゴール裏の名前になっています。
+  - text: ヴィクトリア時代には、水族館と大広間のある遊び場に変わります。
+  - text: 1889年、観賞用の池を抜いて、自転車と陸上の競技場が開きました。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 0
+  - text: 6月10日のこけら落としには、1万5000人が集まっています。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 0
+  - text: いまのピッチは、その抜いた池の上にあります。
+    card: none
+  - text: ヴィラが移ってきたのは、その8年後。前の家に3つの不満がありました。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 1
+  - text: ピッチが凸凹で、見る側の設備が貧弱で、借地の値段が高すぎました。
+  - text: 借りた値段は年300ポンド。21年の約束で、途中で買う権利が付いていました。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 1
+  - text: その権利を使ったのが1911年です。8250ポンドで土地を買っています。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 2
+  - text: 1914年、建築家アーチボルド・ライチが広げる構想を描きます。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 3
+  - text: 描かれていたのは12万人。実際には、ここまで建っていません。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 3
+  - text: 建ったのは、そのうちの1つのスタンドです。
+    card: none
+  - text: 1924年1月26日、トリニティ・ロード・スタンドが開きました。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 4
+  - text: 8万9000ポンド。ステンドグラスと、イタリアのモザイクが入っていました。
+    emph: true
+  - text: イギリスの競技場で最初のレストランも、この建物の中にありました。
+  - text: 76年たった2000年、この建物は取り壊されます。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 5
+  - text: かわりに建った3層のスタンドで、収容は4万2682人になりました。
+    card:
+      type: timeline
+      title: この土地に建ったもの
+      rows: *rows_time
+      focus: 1924年1月
+      highlight_row: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Villa_Park
+  - https://en.wikipedia.org/wiki/Archibald_Leitch
+- id: matches
+  heading: この器で起きた4つの日
+  tier: 報道
+  telop: 1946年の7万6588人は、いまの収容より3万人以上多い
+  narrator: キャスター
+  card: &id_match
+    type: table
+    title: ヴィラ・パークで起きた4つの日
+    columns: &cols_match
+    - 日付
+    - 試合
+    - 入場
+    rows: &rows_match
+    - - 1946年3月
+      - FA杯 ダービー戦
+      - 7万6588人
+    - - 1966年7月
+      - W杯 アルゼンチン対西ドイツ
+      - 4万6587人
+    - - 1999年5月
+      - カップウィナーズカップ決勝
+      - 3万3021人
+    - - 2025年12月
+      - マンチェスター・ユナイテッド戦
+      - 4万3157人
+  say:
+  - text: この器には、いまだに抜かれていない数字が残っています。
+    image: assets/images/20261011_stadium_villapark/01_w.png
+    card: *id_match
+  - text: 1946年3月2日、FA杯の6回戦。相手はダービー・カウンティでした。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 入ったのは7万6588人。この器の最多入場です。
+    emph: true
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 立って見る区画があった時代の数字で、いまの収容を3万人以上超えています。
+    card: none
+  - text: 1966年7月、ワールドカップの3試合がここで行われました。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: いちばん入ったのは16日のアルゼンチン対西ドイツ。4万6587人です。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: どちらも点を取れないまま終わりました。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 30年後の欧州選手権でも、ここは会場の1つになりました。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 1999年5月19日は、ヨーロッパの大会の決勝でした。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: 各国のカップ戦の王者が集まる、カップウィナーズカップです。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: ラツィオがマジョルカに2対1で勝ちました。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: ヴィエリが7分、ダニが11分、ネドヴェドが81分。3万3021人が見ました。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: この大会は、この試合を最後に無くなりました。最後の決勝です。
+    emph: true
+    card: none
+  - text: 4つ目は昨季、2025年12月21日。相手はマンチェスター・ユナイテッド。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: 4万3157人。全席が椅子になってからは、これが最多です。
+    card:
+      type: table
+      title: ヴィラ・パークで起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: もう1つ、この器がいちばん多く預かっているものがあります。
+    card: &id_semi
+      type: stats
+      title: どの競技場より多いもの
+      items:
+      - - '55'
+        - 回
+        - 開いたFA杯の準決勝
+      - - '16'
+        - 試合
+        - 預かったイングランド代表の試合
+      - - '1899'
+        - 年
+        - その最初の年
+      focus: 0
+  - text: FA杯の準決勝です。55回。どの競技場より多い回数です。
+    emph: true
+    card: *id_semi
+  - text: イングランド代表の試合も16試合。最初は1899年のことでした。
+    card: *id_semi
+  sources:
+  - https://en.wikipedia.org/wiki/Villa_Park
+  - https://en.wikipedia.org/wiki/1999_UEFA_Cup_Winners%27_Cup_final
+  - https://en.wikipedia.org/wiki/1966_FIFA_World_Cup
+- id: view
+  viewpoint: true
+  heading: 見立て・閉じた6318席は、どこへ戻るのか
+  tier: 報道
+  telop: 2027年8月に5万65人。今季の3万6887人の1.36倍になる
+  narrator: 解説
+  card: &id_fall
+    type: waterfall
+    title: 今季、収容はこう減った（自分で引いた）
+    start:
+    - もとの収容
+    - 43205
+    steps:
+    - - 北スタンドを閉じた
+      - -6318
+    total:
+    - 今季の収容
+    - 36887
+    unit: 人
+  say:
+  - text: では、閉じた席はどこへ行くのか。数字を自分で並べました。
+    image: assets/images/20261011_stadium_villapark/02_w.png
+    card: *id_fall
+  - text: もとの数から、閉じた6318席を引いてみます。
+    card: *id_fall
+  - text: 残るのが、今季のヴィラ・パークに入れる人数になります。
+    emph: true
+    card: *id_fall
+    mark:
+      kind: circle
+      row: 1
+  - text: 2026年4月、丸ごと1季閉めると報じられました。理由は工事の進め方です。
+    card: none
+  - text: 開けたまま2季かけるのではなく、閉めて1季で終わらせる形を選んでいます。
+  - text: 工事は今季のあいだ続き、終わるのは2027年の夏とされています。
+  - text: では、戻ったあとはどうなるか。こちらも足してみます。
+    card: &id_back
+      type: waterfall
+      title: 工事が終わると、こう増える（自分で足した）
+      start:
+      - 今季の収容
+      - 36887
+      steps:
+      - - 閉じた席が戻る
+        - 6318
+      - - 新しく増える席
+        - 6860
+      total:
+      - 2027年8月から
+      - 50065
+      unit: 人
+  - text: 閉じた6318席が戻り、そこへ6860席が足されます。
+    card: *id_back
+  - text: 5万65人。今季の3万6887人と比べて、1.36倍になります。
+    emph: true
+    card: *id_back
+    mark:
+      kind: circle
+      row: 2
+      text: 1.36倍になる
+  - text: 車椅子で見る区画も、50以上増える予定だと伝えられています。
+    card: none
+  - text: 工事の費用は、市の見通しでおよそ1億ポンドとされています。
+  - text: ここで、昔の数字と並べてみます。
+    card: &id_line
+      type: line
+      title: 収容はこう動いてきた（自分で並べた）
+      x: &lx
+      - '2000'
+      - '2001'
+      - 昨季
+      - 今季
+      - '2027'
+      series: &ls
+      - - 収容
+        - [39399, 42682, 43205, 36887, 50065]
+      unit: 人
+      focus: 収容
+      highlight: 今季
+  - text: 2000年までは3万9399人。建て替えで3283人ぶん増えました。
+    card:
+      type: line
+      title: 収容はこう動いてきた（自分で並べた）
+      x: *lx
+      series: *ls
+      unit: 人
+      focus: 収容
+      highlight: '2001'
+  - text: 昨季までが4万3205人。今季だけ3万6887人まで下がります。
+    card: *id_line
+  - text: そして2027年に5万65人。27年で1万666人ふえる計算です。
+    card:
+      type: line
+      title: 収容はこう動いてきた（自分で並べた）
+      x: *lx
+      series: *ls
+      unit: 人
+      focus: 収容
+      highlight: '2027'
+  - text: それでも、1946年の7万6588人には届きません。
+    card: &id_calc
+      type: calc
+      title: 1946年の入りは、いまの収容の何倍か（自分で割った）
+      terms:
+      - - 7万6588人
+        - 1946年の最多入場
+      - - 4万3205人
+        - もとの収容
+      - - 1.77倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+  - text: 7万6588人を4万3205人で割ると、1.77倍です。
+    emph: true
+    card: *id_calc
+  - text: 立って見る区画が無くなったぶんは、増築では埋まらない計算になります。
+    card: none
+  - text: 工事が終わるのは2027年8月、新しいシーズンの始めとされています。
+  - text: その翌年、1966年と1996年に続いて3度目の大きな大会が来ます。
+  - text: 2028年の欧州選手権。ここで4試合が行われます。
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Villa_Park
+  - https://www.greaterbirminghamchambers.com/resource/aston-villa-announce-north-stand-closure-for-2026-27-season-to-accelerate-redevelopment-plans.html
+  - https://footballgroundguide.com/news/villa-park-expansion-everything-aston-villa-fans-need-to-know-about-north-stand-closure-in-2026-27.html
+  - https://growth.birmingham.gov.uk/news/article/17/birmingham-to-host-uefa-mens-euro-2028

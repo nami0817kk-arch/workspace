@@ -1,0 +1,668 @@
+# デクラン・ライス（アーセナル）の紹介。8節の型（2026-09-28）を、ペドリ（research/20261009_player_683840.yaml）の形にそろえた。
+# 雛形は tools/player_intro.py 357662。材料は research/raw/20261011_rice_material.md（604行）。
+# 数字は FotMob（654096）・プレミアリーグ公式（選手id 15202）・英語版Wikipedia・Transfermarkt（市場価値の推移）。
+#
+# **鍵の付け方**：指示は「20261011_player_<FotMobの番号>」だったが、「既存の回の鍵の付け方に合わせる」ほうを採って
+#   **Transfermarkt の番号（357662）** にした。ペドリ 683840・ネヴェス 670681・ヴィニシウス 371998 はどれも
+#   Transfermarkt の番号で、`tools/player_intro.py <TM番号>` がこの名前でファイルを書く。
+#   FotMob の番号（654096）は板のファイル名に入っている。
+#
+# **この回で避けたもの（ユーザー指示）**
+# - **アーセナルというクラブの話をしない。**10/8 に財政（アルテタ）、10/10 に本拠地を出しているので、
+#   クラブの歴史・財政・本拠地・オーナー・観客数・「22年ぶりの優勝のクラブ側の意味」は1行も入れていない。
+#   クラブ名が出るのは「どこに所属しているか」「移籍の相手」「次の試合の主語」だけ。
+#   カンファレンスリーグ優勝も**本人が主将として掲げた話**にして、クラブ側の年数（1965年以来）は言っていない。
+# - **9/13 の `rice_workload` と同じ発言を使わない。**あの回はサッカーキングが伝えたガーディアンの記事から
+#   「100パーセントの状態ではない」「ハムストリングの神経系」「毎シーズン60試合近く」「調子が良くて」の4つを引いている。
+#   **この回ではその記事を出典にも使っていない。**出場数の話も、あの回の「昨季55試合・4,456分」ではなく
+#   季ごとの表の中の1行（25/26 の55試合）にとどめた。
+#
+# **過去5シーズンの表は、雛形（Transfermarkt）から FotMob のクラブだけの数字に差し替えた。**
+#   雛形は「代表を含む全公式戦」として 57/63/62/65/64 を出すが、FotMob のクラブ数（50/50/51/52/55）との差が
+#   21/22 だけ7試合で、同じ期間の代表の試合数（13前後）と合わない。**出どころをまたいだ足し算の裏が取れなかった**ので、
+#   **1つの出どころ（FotMob のクラブ公式戦）で通した**。出場時間の列は、全公式戦ぶんが無料では取れない
+#   （FotMob の試合一覧APIは400、FBref は403、Transfermarkt は WebFetch 拒否）ので外し、採点の列に替えた。
+#
+# **今季（26/27）の数字はクラブだけ。**FotMob はワールドカップ2026（6〜7月）を 26/27 の季に入れているが、
+#   日本で「今季」と言えば8月からのことなので、W杯は**マル秘話の節で別に**扱って混ぜていない。
+#
+# **数字の食い違い（材料 §8。読み上げは片方だけにして、表に添え書きで断る）**
+# - 市場価値：Transfermarkt 1.2億ユーロ ／ FotMob 1億120万ユーロ。読み上げは1.2億、表に添え書き。
+# - 身長：英語版Wikipedia・Wikidata 188cm ／ FotMob 185cm。**188センチ**にした（2つが一致するほう）。
+# - ポジション：Transfermarkt は「セントラルMF」、FotMob の主位置は「守備的MF」（直近の内訳 DM43／CM16／RB1）。
+#   表は**守備的MF**にして、語りで「中盤の底」と言う。
+# - キャリア通算：英語版Wikipedia の "Career total" 413試合は**ウェストハムU23の3試合を含む**。
+#   トップチームだけなら **411試合36得点**（ウェストハム245/15＋アーセナル166/21、10月10日時点）。こちらを使う。
+# - レアル・マドリード戦の1点目：**ゲキサカだけ47分**と書いている。11v11・Sky Sports・CNN はすべて**58分**。58分を使う。
+# - 移籍金：固定1億ポンド＋出来高500万ポンドで各社一致。**円換算は媒体で違う**（190億円／182億＋9億）ので円は言わない。
+# - 代表：イングランド80試合8得点は**2026年7月18日時点**（Wikipedia）。アイルランド3試合0得点（2018年、すべて親善試合）。
+#   通算の表の題を「2026年10月」にして、語りでは日付を言わずに表で見せる。
+#
+# **入れなかった材料**
+# - 年俸・新契約の週給（交渉中の数字。材料 §8）。
+# - 2015年のSNSの書き込みと謝罪（政治に触れる。材料 §4-8）。
+# - 背番号41の由来（用具係にもらった話。**背番号は埋め草**という 2026-09-10 の決まりに当たるので外した）。
+# - スーネス／スコールズの批評（**発言の年が特定できない**・二次媒体のまとめ。材料 §2-5）。
+# - エンケティアと「同じ日に放出」説（材料が誤りだと指摘している。材料 §3-1）。
+# - 交際相手への中傷に応えた一言（私人の話なので入れない）。
+#
+# **パーセンタイルを数として読まない**（10/01 の指摘）。棒グラフとレーダーは**同じ6軸**にそろえ
+#   （チャンス創出92・ボールタッチ87・空中戦71・シュート数54）、板と読み上げが食い違わないようにした。
+#   雛形が出した「得点 0」は**今季の得点が0だからパーセンタイルも0**になっているだけなので棒から外した。
+#   本数を言う行には必ず期間（「今季のリーグで」）を付けている。
+#
+# **板の出典の焼き込みを消した。**`tools/fotmob_player.py` の市場価値の板だけ「Transfermarkt」が右下に残っていた
+#   （2026-10-08 にレーダー・シュートマップ・ヒートマップからは消したが、この板が漏れていた）。同じ決まりで消した。
+#
+# **写真は時期ごとに4つ**（材料 §6 の推しの順）。2017年のウェストハム（18歳、41番が写る）→
+#   2023年6月のプラハ（カンファレンスリーグ決勝の夜）→ 2023年10月のアーセナル（顔のアップ、CC0）→
+#   2026年のイングランド代表（ガーナ戦・パナマ戦）。**同じ選手を横に並べていない。スタジアムの写真は出していない。**
+#   Commons の「2024 Emirates Cup - Declan Rice.jpg」は**画面のほとんどがスタンドで顔が分からない**ので外した。
+#   2022年W杯の1枚は 230x384 で小さすぎる。**アーセナル在籍中の試合写真は Commons にほとんど無い**ので、
+#   アーセナル期は 902x914 の1枚（表のある節は縦のまま、表の無い節は 16:9 に切った `01_w.jpg`）で通している。
+#
+# **本人の言葉は3つ**（どれも W杯の負荷の話ではない）
+#   ①14歳でチェルシーを離れたこと（footballista の訳をそのまま）
+#   ②代表を変えた決断（2019年3月1日、London Football Awards。自訳）
+#   ③レアル・マドリード戦のあと（ゲキサカの訳をそのまま）
+date: 2026年10月11日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- デクラン・ライス
+theme:
+  id: player_357662
+  league: england
+  kind: other
+  topic: アーセナル
+  title: デクラン・ライスってどんな選手？ イングランド代表の前に、別の国で3試合出ていた
+  question: デクラン・ライスはどういう作りの選手で、27歳で494試合に届いたのはなぜか
+  takeaway: 27歳までの出場はウェストハム245試合・アーセナル166試合・代表83試合で、合わせて494試合44得点。プレミアリーグでの5季を並べると、インターセプトは63から37へ減り、決定機の演出は2から17へ8.5倍になっている。奪う役から作る役へ寄せてきた選手で、今季のリーグのシュート4本はすべて相手のエリアの外から、相手の守備の列を破るパスは118本で90分あたり21本。10月14日のリール戦が次の節目
+  nameplate: デクラン・ライス｜アーセナル MF／イングランド代表
+  opening_image: assets/images/20261011_player_357662/eng2026/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑩フリアン・アルバレス
+short_title: ライスってどんな選手？
+thumbnail:
+  line1: ライス、27歳
+  line2: 1試合で直接FK2本。相手は●●
+  tags:
+  - アーセナル
+  - デクラン・ライス
+  - イングランド代表
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261011_player_357662/thumbfull/01.jpg
+  photos: []
+  short_photo: assets/images/20261011_player_357662/eng2026c/01_v.jpg
+sections:
+- id: hook
+  heading: 90分で21本、相手の列を破る
+  tier: 報道
+  telop: 今季のリーグでラインを破るパス118本
+  narrator: キャスター
+  card:
+    type: stats
+    title: デクラン・ライスの27歳
+    items:
+    - ['118', 本, 今季リーグでラインを破るパス]
+    - ['494', 試合, クラブと代表の通算出場]
+    - ['14', 歳, チェルシーを離れた年齢]
+    focus: 0
+  say:
+  - text: アーセナルの背番号41、デクラン・ライス。27歳です。
+    image: assets/images/20261011_player_357662/eng2026/01_w.jpg
+  - text: 今季のリーグ戦で、相手の守備の列を破ったパスは118本。
+    card: &hook_stats
+      type: stats
+      title: デクラン・ライスの27歳
+      items:
+      - ['118', 本, 今季リーグでラインを破るパス]
+      - ['494', 試合, クラブと代表の通算出場]
+      - ['14', 歳, チェルシーを離れた年齢]
+      focus: 0
+  - text: 90分で21本。同じ位置の中盤では、いちばん多い側にいます。
+    emph: true
+    card: *hook_stats
+  - text: クラブと代表を合わせると、通算の出場は500に迫ります。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: その始まりは、14歳で告げられた「ここまで」でした。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 7歳から通ったチェルシーの下部組織を、2013年に離れています。
+    card: none
+  - text: 翌日に迎え入れたのがウェストハム。本人の言葉です。
+  - voice: ライス
+    text: 正直、放出された理由は
+  - voice: ライス
+    text: 分からない
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.footballista.jp/news/163764
+  sources:
+  - https://www.fotmob.com/players/654096
+  - https://en.wikipedia.org/wiki/Declan_Rice
+  - https://www.footballista.jp/news/163764
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: デクラン・ライスの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: デクラン・ライス（アーセナル）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - アーセナル（41番）
+    - - ポジション
+      - 守備的MF
+    - - 生年月日
+      - 1999年1月14日（27歳）
+    - - 生まれ
+      - ロンドン・キングストン
+    - - 体格
+      - 188cm・右利き
+    - - 契約
+      - 2028年6月まで
+    - - 市場価値
+      - 1.2億ユーロ
+    source: 英語版Wikipedia・FotMob・Transfermarkt
+  say:
+  - text: ライスが立つのは中盤の底。守りの手前で組み立てます。
+    image: assets/images/20261011_player_357662/arsenal2023/01.jpg
+    card: &data_card
+      type: table
+      title: デクラン・ライス（アーセナル）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: 英語版Wikipedia・FotMob・Transfermarkt
+      highlight_row: 1
+  - text: 生まれはロンドン南西のキングストン・アポン・テムズ。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 身長188センチ、右利き。中盤では大きいほう。
+    card:
+      <<: *data_card
+      highlight_row: 4
+    mark: {kind: note, row: 4, col: 1, text: 別の集計では185cm}
+  - text: 契約は2028年6月まで。残りは今季を入れて2季です。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は1億2000万ユーロ。2024年5月からこの額が続きます。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 6
+  sources:
+  - https://en.wikipedia.org/wiki/Declan_Rice
+  - https://www.fotmob.com/players/654096
+  - https://www.transfermarkt.com/declan-rice/profil/spieler/357662
+- id: career
+  heading: 50万ユーロの18歳が、1億ポンドになるまで
+  tier: 報道
+  telop: 2023年7月15日、固定1億ポンド
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns: [季, クラブ, 年齢, 最高評価額]
+    rows: &career_rows
+    - ['17/18〜22/23', ウェストハム, 18〜24歳, 9000万ユーロ]
+    - ['23/24〜26/27', アーセナル, 24〜27歳, 1.2億ユーロ]
+    source: Transfermarkt
+  say:
+  - text: ライスがウェストハムのトップに出たのは、18歳のときです。
+    image: assets/images/20261011_player_357662/whu2017/01.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [季, クラブ, 年齢, 最高評価額]
+      rows: *career_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 2017年10月についた評価額は、50万ユーロでした。
+    card: *career_card
+  - text: 2019年12月28日には、20歳で主将の腕章を巻きました。
+    card: *career_card
+  - text: 2022年5月、ノーブルの引退を受けて正式な主将になります。
+    card: *career_card
+  - text: そして2023年6月7日、プラハ。欧州で3番目の大会の決勝です。
+    image: assets/images/20261011_player_357662/whu2023/01.jpg
+    card: *career_card
+  - text: フィオレンティーナに2対1の勝ち。主将としてカップを掲げました。
+    card: *career_card
+  - text: 翌日には、その大会の最優秀選手にも選ばれています。
+    emph: true
+    card: *career_card
+  - text: 1か月後の7月15日、アーセナルへ移ります。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 固定で1億ポンド、出来高を入れて1億500万ポンド。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: イングランドの選手では、当時いちばん高い移籍金でした。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 50万ユーロから、いまの額へ。240倍になりました。
+    image: assets/stats/player_20261011_654096_value.png
+    no_telop: true
+  - text: 転機は2025年4月8日。レアル・マドリードを迎えた夜です。
+    image: assets/images/20261011_player_357662/arsenal2023/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: チャンピオンズリーグの準々決勝、58分と70分に直接フリーキック。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: それまでの12本は、1本も決まっていませんでした。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 決勝トーナメントで1試合に2本決めたのは、史上初です。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 3対0の勝ち。本人は試合のあと、こう話しました。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - voice: ライス
+    text: 数年後には、今夜の自分のプレーが
+  - voice: ライス
+    text: 本当に特別だったと実感するだろう
+    cont: true
+    pause: 0.6
+  quotes_from:
+  - https://web.gekisaka.jp/news/ucl/detail/?427553-427553-fl=
+  sources:
+  - https://en.wikipedia.org/wiki/Declan_Rice
+  - https://www.transfermarkt.com/declan-rice/profil/spieler/357662
+  - https://www.11v11.com/matches/arsenal-v-real-madrid-08-april-2025-388500/
+  - https://www.skysports.com/football/news/11670/13344980/declan-rice-free-kicks-vs-real-madrid-arsenal-midfielders-champions-league-set-piece-masterclass
+  - https://web.gekisaka.jp/news/ucl/detail/?427553-427553-fl=
+- id: style
+  heading: 受けて、通して、角から蹴る
+  tier: 報道
+  telop: チャンス創出92、シュート数54
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じMFの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: チャンス創出
+      value: 92
+      highlight: true
+    - label: ボールタッチ
+      value: 87
+      highlight: false
+    - label: 空中戦
+      value: 71
+      highlight: false
+    - label: シュート数
+      value: 54
+    source: FotMob
+  say:
+  - text: ここからはライスの形。同じ位置の中盤と比べた図です。
+    image: assets/stats/player_20261011_654096_radar.png
+    no_telop: true
+  - text: 100が最上位の目安。いちばん外へ出るのがチャンス創出の92。
+    image: assets/stats/player_20261011_654096_radar.png
+    no_telop: true
+  - text: ボールタッチが87、空中戦が71と続きます。
+    image: assets/stats/player_20261011_654096_radar.png
+    no_telop: true
+  - text: いちばん内側がシュート数の54。真ん中あたりの高さです。
+    image: assets/stats/player_20261011_654096_radar.png
+    no_telop: true
+  - text: 自分で撃つより、撃たせる側へ寄った作りだと分かります。
+    image: assets/stats/player_20261011_654096_radar.png
+    no_telop: true
+  - text: では、どこでボールに触っているのか。
+    image: assets/stats/player_20261011_654096_heat.png
+    no_telop: true
+    card: none
+  - text: 色がつくのは自陣の真ん中から、敵陣の左右の深い所まで。
+    image: assets/stats/player_20261011_654096_heat.png
+    no_telop: true
+  - text: いちばん濃いのはピッチの角。コーナーを蹴る場所です。
+    emph: true
+    image: assets/stats/player_20261011_654096_heat.png
+    no_telop: true
+  - text: 今季のリーグでパスの成功は380本、成功率90.7パーセント。
+    image: assets/images/20261011_player_357662/eng2026c/01_w.jpg
+    card: none
+  - text: 長いボールの成功は20本。同じ中盤の中では上の側です。
+  - text: 味方の決定機につながったパスは8本。90分で1.4本です。
+  - text: 一方、自分のシュートは今季のリーグで4本でした。
+    image: assets/stats/player_20261011_654096_shots.png
+    no_telop: true
+  - text: そして、その4本とも相手のエリアの外から蹴っています。
+    emph: true
+    image: assets/stats/player_20261011_654096_shots.png
+    no_telop: true
+  - text: 決まりやすさを足したゴール期待値は0.12。遠くから狙った数です。
+    image: assets/stats/player_20261011_654096_shots.png
+    no_telop: true
+  - text: 相手のエリアの中で触った回数も、今季のリーグで4回。
+    image: assets/images/20261011_player_357662/eng2026c/01_w.jpg
+    card: none
+  - text: 中へ入るより、外から通す。そちらへ磨いてきた選手です。
+  sources:
+  - https://www.fotmob.com/players/654096
+- id: past
+  heading: 5年、50試合を割らずに
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: デクラン・ライス 直近5シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - アシスト
+    rows: &season_rows
+    - - 21/22
+      - ウェストハム
+      - '50'
+      - '5'
+      - '4'
+    - - 22/23
+      - ウェストハム
+      - '50'
+      - '5'
+      - '4'
+    - - 23/24
+      - アーセナル
+      - '51'
+      - '7'
+      - '9'
+    - - 24/25
+      - アーセナル
+      - '52'
+      - '9'
+      - '10'
+    - - 25/26
+      - アーセナル
+      - '55'
+      - '5'
+      - '9'
+    source: FotMob
+  rows_total:
+  - &t1 [ウェストハム, '245', '15']
+  - &t2 [アーセナル, '166', '21']
+  - &t3 [イングランド代表, '80', '8']
+  - &t4 [アイルランド代表, '3', '0']
+  - &t5 [合計, '494', '44']
+  say:
+  - text: まずは5シーズンぶん。ライスのクラブでの公式戦です。
+    image: assets/images/20261011_player_357662/eng2026/01.jpg
+    card: &past_card
+      type: table
+      title: デクラン・ライス 直近5シーズン（クラブの全公式戦）
+      columns: [シーズン, クラブ, 試合, 得点, アシスト]
+      rows: *season_rows
+      source: FotMob
+      highlight_row: 0
+  - text: 2021年からの季は50試合5得点4アシストでした。
+    card:
+      <<: *past_card
+      highlight_row: 0
+  - text: 5季つづけて50試合以上。出場が一度も途切れていません。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: 昨季はクラブで55試合。5年でいちばん多い出場でした。
+    card:
+      <<: *past_card
+      highlight_row: 4
+  - text: ウェストハムでの通算は245試合15得点でした。
+    card: &total_card
+      type: table
+      title: デクラン・ライス 通算（2026年10月）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5]
+      source: FotMob・英語版Wikipedia
+      highlight_row: 0
+  - text: アーセナルでは166試合21得点。クラブで411試合です。
+    card:
+      <<: *total_card
+      highlight_row: 1
+  - text: イングランド代表は80試合8得点。デビューは20歳のとき。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: そしてもう1行、別の国の代表での3試合があります。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: 全部で494試合44得点。27歳でこの数です。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 4
+  sources:
+  - https://www.fotmob.com/players/654096
+  - https://en.wikipedia.org/wiki/Declan_Rice
+- id: season
+  heading: 今季の8試合と、直近5試合
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows: &recent_rows
+    - - 10/10
+      - リーズ
+      - 90分
+      - 0G 1A
+      - '8.3'
+    - - 9/19
+      - ブライトン
+      - 90分
+      - 0G 0A
+      - '6.7'
+    - - 9/12
+      - サンダーランド
+      - 81分
+      - 0G 1A
+      - '8.3'
+    - - 9/9
+      - ナポリ
+      - 90分
+      - 0G 0A
+      - '7.3'
+    - - 9/6
+      - チェルシー
+      - 90分
+      - 0G 1A
+      - '7.9'
+    source: FotMob
+  say:
+  - text: 今季のライスはクラブの公式戦8試合で、0得点3アシスト。
+    image: assets/images/20261011_player_357662/eng2026c/01.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合
+      columns: [日付, 相手, 出場, 得点, 評点]
+      rows: *recent_rows
+      source: FotMob
+  - text: 出た時間は639分。リーグが6試合で、3アシストはそこから。
+    card: *recent_card
+  - text: 残りの2試合はチャンピオンズリーグと、開幕前の一戦です。
+    card: *recent_card
+  - text: 直近では、10月10日のリーズ戦に90分出ています。
+    card:
+      <<: *recent_card
+      highlight_row: 0
+  - text: 10点満点の評点は8.3。9月12日と並ぶ、5試合の最高でした。
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  - text: この5試合のうち3試合で、アシストを記録しています。
+    emph: true
+    card: *recent_card
+  - text: リーグ6試合の平均評点は7.68。昨季のリーグの7.56より上です。
+    card: *recent_card
+  sources:
+  - https://www.fotmob.com/players/654096
+- id: story
+  heading: 緑のユニフォームと、134秒のゴール
+  tier: 報道
+  main: true
+  telop: 2018年の3試合と、2026年7月18日
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['2018年', アイルランドの代表として3試合]
+    - ['2026年7月18日', ワールドカップで主将、134秒で得点]
+    source: 英語版Wikipedia
+  say:
+  - text: アーセナルのデクラン・ライス。数字の外に、2つの話があります。
+    short_only: true
+    image: assets/images/20261011_player_357662/eng2026b/01.jpg
+    card: none
+  - text: いまはイングランドの代表。でも、別の色を着ていました。
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: 英語版Wikipedia
+      highlight_row: 0
+  - text: 2018年、アイルランドの代表として3試合。初めての代表でした。
+    card: *story_card
+  - text: 代表を変えると決めたとき、本人はこう言いました。
+    card: *story_card
+  - voice: ライス
+    text: キャリアでこれまでに下した中で
+  - voice: ライス
+    text: いちばん難しい決断だった
+    cont: true
+    pause: 0.6
+  - text: 資格の元は、父方の祖父母。アイルランドのコーク州の出身です。
+    card: none
+  - text: 2019年2月13日に表明、3月5日に国際サッカー連盟が認めます。
+  - text: 3月22日、チェコ戦の63分から代表デビューを果たしました。
+  - text: この2つの代表を行き来したのは、1890年代以来のことです。
+    emph: true
+    card: *story_card
+  - text: もう1つは、2026年7月18日、マイアミでの話です。
+    image: assets/images/20261011_player_357662/eng2026d/01.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: ワールドカップの3位決定戦、相手はフランスでした。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: この試合で、ライスはワールドカップで初めて主将を務めます。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: そしてキックオフから134秒。いきなり先制点を決めました。
+    emph: true
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: イングランド代表のワールドカップの得点では、1982年に次ぐ速さ。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: アシストも記録して、試合は6対4の勝ちでした。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  quotes_from:
+  - https://www.irishpost.com/sport/toughest-decision-ive-ever-make-declan-rice-speaks-first-time-switching-ireland-england-164909
+  sources:
+  - https://www.fotmob.com/players/654096
+  - https://en.wikipedia.org/wiki/Declan_Rice
+  - https://www.irishpost.com/sport/toughest-decision-ive-ever-make-declan-rice-speaks-first-time-switching-ireland-england-164909
+  - https://www.itv.com/news/2019-03-05/fifa-approve-declan-rices-switch-of-international-allegiance-from-republic-of-ireland-to-england
+- id: view
+  heading: 奪う役から作る役へ。5季の変わり方を数える
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月14日、アーセナル対リール
+  card:
+    type: table
+    title: プレミアリーグでの5季（リーグ戦のみ）
+    columns: [シーズン, インターセプト, 決定機の演出]
+    rows: &pace_rows
+    - ['21/22', '63', '2']
+    - ['22/23', '63', '3']
+    - ['23/24', '44', '9']
+    - ['24/25', '25', '16']
+    - ['25/26', '37', '17']
+    source: プレミアリーグ公式（こちらで並べた）
+  say:
+  - text: 最後に、リーグ戦だけの数字を5季ぶん並べてみます。
+    image: assets/images/20261011_player_357662/eng2026c/01_w.jpg
+    card: &pace_card
+      type: table
+      title: プレミアリーグでの5季（リーグ戦のみ）
+      columns: [シーズン, インターセプト, 決定機の演出]
+      rows: *pace_rows
+      source: プレミアリーグ公式（こちらで並べた）
+      highlight_row: 0
+  - text: ライスが相手のパスを断ち切った回数は、63から37へ。
+    card:
+      <<: *pace_card
+      highlight_row: 4
+  - text: 代わりに、味方の決定機を作った数が2から17へ。
+    emph: true
+    card:
+      <<: *pace_card
+      highlight_row: 4
+  - text: 5年で8.5倍です。奪う役から、作る役へ寄ってきました。
+    card: &calc_card
+      type: calc
+      title: 決定機の演出、5年の伸び
+      terms:
+      - ['17', 25/26のリーグ戦]
+      - ['2', 21/22のリーグ戦]
+      - ['8.5倍', 5年での伸び]
+      ops: ['÷', '＝']
+  - text: 今季もその向きのまま。リーグの6試合はすべて先発です。
+    card: *calc_card
+    mark: {kind: circle, item: 2}
+  - text: 点を取る役は、この先も彼の主な仕事ではないはずです。
+    image: assets/images/20261011_player_357662/eng2026c/01_w.jpg
+    card: none
+  - text: それでも、前へ通す1本では代わりが見当たりません。
+  - text: 次の試合は10月14日。チャンピオンズリーグでリールと戦います。
+  - text: 列を何本破り、そこから何が生まれるか。そこを数えます。
+  sources:
+  - https://www.premierleague.com/players/15202/declan-rice/stats
+  - https://www.fotmob.com/players/654096
