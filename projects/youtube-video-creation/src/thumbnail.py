@@ -245,6 +245,13 @@ def _short_thumbnail(
             still = out_path.parent / "thumbnail_bg.png"
             still.parent.mkdir(parents=True, exist_ok=True)
             path = ffmpeg.grab_frame(path, still)
+        # **隣に縦版（`<名前>_v`）があれば、そちらを使う**（2026-10-11）。動画の冒頭
+        # （`shorts._add_face`）は顔を探して切った縦版を敷くのに、縦サムネだけが
+        # 横長の写真の真ん中を切っていて、本人が端に落ちた（マクトミネイは右に切れて
+        # 左のチームメイトが大きく、旗手は頭が切れて胴体だけになった）
+        tall = path.with_name(path.stem + "_v" + path.suffix)
+        if path.exists() and not path.stem.endswith("_v") and tall.exists():
+            path = tall
         if path.exists():
             source = path
             break

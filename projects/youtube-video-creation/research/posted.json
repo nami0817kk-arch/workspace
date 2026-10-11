@@ -4175,42 +4175,114 @@
     "build": "20261011_player_357662",
     "video_id": "AcNPDjsls-0",
     "at": "2026-10-10T19:30:12+00:00",
-    "publish_at": "2026-10-11T00:40:00Z"
+    "publish_at": "2026-10-11T01:00:00Z"
   },
   {
     "build": "20261011_stadium_villapark",
     "video_id": "mqZFni8JIFc",
     "at": "2026-10-10T19:30:53+00:00",
-    "publish_at": "2026-10-11T01:20:00Z"
+    "publish_at": "2026-10-11T02:00:00Z"
   },
   {
     "build": "20261011_kit_hull",
     "video_id": "sQeenMbTPG4",
     "at": "2026-10-10T19:31:25+00:00",
-    "publish_at": "2026-10-11T02:00:00Z"
+    "publish_at": "2026-10-11T03:00:00Z"
   },
   {
     "build": "20261011_finance_bayern",
     "video_id": "4oi2BiE1u2M",
     "at": "2026-10-10T19:32:01+00:00",
-    "publish_at": "2026-10-11T02:40:00Z"
+    "publish_at": "2026-10-11T04:00:00Z"
   },
   {
     "build": "20261011_record_streak",
     "video_id": "CL1uhp4Rd_s",
     "at": "2026-10-10T19:32:35+00:00",
-    "publish_at": "2026-10-11T03:20:00Z"
+    "publish_at": "2026-10-11T05:00:00Z"
   },
   {
     "build": "20261011_transfer_mancity",
     "video_id": "1vSO7-yHOuQ",
     "at": "2026-10-10T19:33:14+00:00",
-    "publish_at": "2026-10-11T04:00:00Z"
+    "publish_at": "2026-10-11T06:00:00Z"
   },
   {
     "build": "20261011_compare_malen_lautaro",
     "video_id": "DFmrBog3vZs",
     "at": "2026-10-10T19:33:46+00:00",
-    "publish_at": "2026-10-11T04:40:00Z"
+    "publish_at": "2026-10-11T07:00:00Z"
+  },
+  {
+    "build": "20261011_palmer_deal_short",
+    "video_id": "nS6IrBPdpdw",
+    "at": "2026-10-11T02:20:42+00:00",
+    "publish_at": "2026-10-11T03:30:00Z"
+  },
+  {
+    "build": "20261011_seko_red_short",
+    "video_id": "7q_NDFYg5zY",
+    "at": "2026-10-11T02:21:06+00:00",
+    "publish_at": "2026-10-11T04:30:00Z"
+  },
+  {
+    "build": "20261011_rayo_abandoned_short",
+    "video_id": "7FipKed--i4",
+    "at": "2026-10-11T02:21:41+00:00",
+    "publish_at": "2026-10-11T05:30:00Z"
+  },
+  {
+    "build": "20261011_maeda_ipswich_short",
+    "video_id": "SItEvGLR_lU",
+    "at": "2026-10-11T02:40:05+00:00",
+    "publish_at": "2026-10-11T06:30:00Z"
+  },
+  {
+    "build": "20261011_ueda_lille_short",
+    "video_id": "KntZCZBatUU",
+    "at": "2026-10-11T02:40:32+00:00",
+    "publish_at": "2026-10-11T07:30:00Z"
+  },
+  {
+    "build": "20261011_vini_red_short",
+    "video_id": "VtUk_E2WORw",
+    "at": "2026-10-11T02:40:55+00:00",
+    "publish_at": "2026-10-11T08:30:00Z"
+  },
+  {
+    "build": "20261011_spurs_dezerbi_short",
+    "video_id": "bznHZ1tY7kA",
+    "at": "2026-10-11T02:41:09+00:00",
+    "publish_at": "2026-10-11T09:30:00Z"
+  },
+  {
+    "build": "20261011_mctominay_return_short",
+    "video_id": "EXFsVm3YdJs",
+    "at": "2026-10-11T02:42:16+00:00",
+    "publish_at": "2026-10-11T10:30:00Z"
+  },
+  {
+    "build": "20261011_hatate_goal_short",
+    "video_id": "XkTor5LN_UE",
+    "at": "2026-10-11T02:42:38+00:00",
+    "publish_at": "2026-10-11T11:30:00Z"
+  },
+  {
+    "build": "20261011_tanaka_rating_short",
+    "video_id": "SnSnZuy0bPg",
+    "at": "2026-10-11T02:51:51+00:00",
+    "publish_at": "2026-10-11T12:30:00Z"
+  },
+  {
+    "build": "20261011_vini_red",
+    "video_id": "PshQ3qlHP5U",
+    "at": "2026-10-11T02:52:37+00:00",
+    "publish_at": "2026-10-11T08:00:00Z"
+  },
+  {
+    "build": "20261011_mctominay_return",
+    "video_id": "zLFDpSsb7ZQ",
+    "at": "2026-10-11T02:53:06+00:00",
+    "publish_at": "2026-10-11T09:00:00Z"
   }
 ]

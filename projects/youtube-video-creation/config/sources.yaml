@@ -66,6 +66,8 @@ domains:
              ligue1.com, www.ligaportugal.pt, www.the-afc.com, www.fifa.com,
              spfl.co.uk, eredivisie.nl,
              losc.fr, asmonaco.com, feyenoord.nl,
+             # 2026-10-11 に追加。クラブ公式サイトの声明をそのまま引ける（到達を実測）
+             www.rayovallecano.es,
              premierleague.com, laliga.com, bundesliga.com, legaseriea.it,
              mlssoccer.com, uefa.com,
              # 2026-09-28 に追加。オランダサッカー協会（KNVB）の代表の公式サイト
@@ -74,7 +76,10 @@ domains:
              www.theifab.com,
              # 2026-10-10 に追加。PSV（佐野航大の所属。選手ページ・試合後会見の原文を引く）と
              # トルコサッカー連盟（モンテッラ解任の公告が一次情報）。どちらも到達を実測
-             www.psv.nl, www.tff.org]
+             www.psv.nl, www.tff.org,
+             # 2026-10-11 に追加。ナポリ公式（マクトミネイの心臓の処置は、病名も経過も
+             # クラブの「ノータ・メディカ」が一次情報。英語版 /en/ も同じ文面を出す）。到達を実測
+             sscnapoli.it]
 
   # 日本の公式。Jリーグの話をここまで辿れば確定にできる
   official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,
@@ -137,7 +142,10 @@ domains:
   # 検索はその言語で書く（kicker をドイツ語以外で引いても返らない）
   german: [kicker.de, sport1.de]
   italian: [football-italia.net, calciomercato.com, tuttomercatoweb.com,
-            gazzetta.it]
+            gazzetta.it,
+            # 2026-10-11 に追加。試合の実況（交代の分・シュートの場面）と会見の答えを
+            # 時刻つきで全部載せる。到達を実測
+            sport.sky.it]
   french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com, lyonfoot.com]
   # nos.nl はオランダの公共放送（2026-09-28 に追加）
   dutch: [voetbalzone.nl, vi.nl, nos.nl]

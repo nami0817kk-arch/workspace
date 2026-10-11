@@ -313,10 +313,12 @@
     "playlists.insert": 1
   },
   "2026-10-10": {
-    "channels.list": 26,
-    "playlistItems.list": 26,
-    "videos.insert": 24,
-    "thumbnails.set": 24,
-    "playlistItems.insert": 14
+    "channels.list": 38,
+    "playlistItems.list": 38,
+    "videos.insert": 36,
+    "thumbnails.set": 36,
+    "playlistItems.insert": 16,
+    "videos.list": 9,
+    "videos.update": 7
   }
 }

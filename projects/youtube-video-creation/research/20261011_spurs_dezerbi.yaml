@@ -1,0 +1,258 @@
+# 取材メモ（10/11 題材 spurs_dezerbi、型は news、プレミア枠）。材料の控えは research/raw/20261011_spurs_dezerbi_material.md。
+# **ショートだけ作る**（台本は1本。`short` が山場 words の節を切り出す）。
+# **主語はトッテナム側だけ。**10/10 にマンチェスター・ユナイテッド側を3本出している（キャリック／マンUの1週間／
+#   ユニフォームの歴史）ので、**マンUの順位・勝ち点・調子・監督・補強には一切触れていない**。
+#   相手側は「先制された」「ルーク・ショーに頭突きをした」の2点だけに留めた（材料 5）。
+# **「ありがとうと言った」は入れていない**（材料 2）。これは kicker の見出しの形だが、
+#   **kicker は読めなかった**（requests は403「Please enable JS」、WebFetch も403）。
+#   ESPN が引いた形には「ありがとう」が無く、「ロッカールームでキスをした」までは一致している。
+#   **2つの媒体の文言を混ぜない**という決まりのとおり、読めたほう（ESPN）1つに決めた。
+# **出場停止の長さは書かない**（材料 4）。どの媒体にも出ていない。「3試合」などの数字を置かない。
+# 試合の分は ESPN の試合データ feed から取った（66分出場・73分に失点・78分に退場・90+2分にソランケ）。
+# 数字の重なり対策：『66分』『78分』『12分』は①だけ。『90分＋2』は①だけ。
+#   『6試合』『1勝』『3得点』『勝ち点3』『18位』『19位』は③だけ。
+# **読み上げにアルファベットを残さない**。
+# **山場に板を入れた**（10/10 に5本で踏んだ「ショートが50秒ずっと同じ写真」への手当て）。
+#   ②は表を行ごとに分けて highlight_row を 0→1→2 と動かし、
+#   **いちばん強い1行（「ロッカールームでキスをした」）だけ card: none にして顔だけ**にした。
+#   板を下ろす行には必ず `card: none` を書いた（消すだけでは前の板が引き継がれる）。
+#   顔が上にある写真（デ・ゼルビとベンタンクールを横に並べた 1920x1080。縦版 01_v もある）を使う。
+# 写真は代理店のものを入れていない（材料 6）。**ESPN の og:image は取り込んでいない**（ほぼ Getty のため）。
+#   デ・ゼルビは2019年、ベンタンクールは2017年で所属が違うが、Commons の 2026年の写真21枚は
+#   **全部スタジアム全景で顔が無い**ことを目で確かめたうえで、「他に無ければそのまま使ってよい」に乗せた。
+#   **入れ替えは1回**（②の山場の頭で、横に並べた1枚 → **縦に積んだ1枚**（01_v）へ。以後そのまま）。
+#   デ・ゼルビ単体に差し替える案は取り下げた。元が 1366x768 しか無く、**ショートの縦版が 2.5倍**になるため。
+# ネットの反応は集めていない（この日の方針）。
+date: 2026年10月11日
+slot: premier_1
+format: news
+voice_min: 0
+people:
+- ロベルト・デ・ゼルビ
+- ロドリゴ・ベンタンクール
+theme:
+  id: spurs_dezerbi
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: トッテナム
+  title: デ・ゼルビが、退場した選手にロッカールームでしたこと
+  question: 10人になって引き分けた夜、デ・ゼルビはベンタンクールをどう扱ったのか
+  takeaway: 10月10日のオールド・トラフォード、トッテナムは1対1で引き分けた。66分に途中出場したベンタンクールが、78分にルーク・ショーへの頭突きで一発退場になる。10人になったトッテナムは後半アディショナルタイム2分、キャプテンのソランケがトナーリのクロスをヘディングで決めて追いついた。試合後、デ・ゼルビは「ロドリゴのレッドカードの場面は好ましく思った。レッドカードを出せという意味ではない。負けを受け入れない、失点を受け入れない、ということだ」「悪い形だ、正しい形ではない。それでも私はロッカールームでベンタンクールにキスをした。気持ちのこもったこの種の反応が、我々には要るから」「サッカーとは気持ちだ」と語った。さらに「今日、我々は今季はじめて、自分たちがチームであることを示した」とも言っている。トッテナムは6試合で1勝もできておらず、勝ち点3はすべて引き分けから。6試合で3得点しかなく、ソランケのこの1点はそのうちの1つだった。順位は18位で、次は10月19日にホームで19位のコヴェントリーと当たる。ベンタンクールの出場停止の長さはまだ出ていない
+  opening_image: assets/images/20261011_spurs_pair/01.jpg
+short_title: デ・ゼルビ「ロッカールームでキスをした」。10人で追いついた夜の言葉
+thumbnail:
+  photo: assets/images/20261011_spurs_pair/01.jpg
+  short_photo: assets/images/20261011_spurs_pair/01_v.jpg
+  line1: ベンタンクール退場
+  line2: 監督は●●した
+  tags:
+  - トッテナム
+sections:
+- id: night
+  heading: 12分で退場、そして90分すぎの同点
+  tier: 報道
+  telop: 66分に出たベンタンクールが78分に退場。10人で追いついた
+  narrator: キャスター
+  card: &clock
+    type: timeline
+    title: オールド・トラフォードの夜（10月10日）
+    rows:
+    - - 66分
+      - ベンタンクールが途中出場
+    - - 73分
+      - トッテナムが先制される
+    - - 78分
+      - ショーへの頭突きで一発退場
+    - - 90分＋2
+      - ソランケのヘディングで1対1
+    focus: 90分＋2
+  say:
+  - text: トッテナムが1対1で引き分けた夜の、デ・ゼルビ監督の言葉です。
+    card: *clock
+  - text: 10月10日、アウェイでの一戦でした。
+    card:
+      <<: *clock
+      highlight_row: 66分
+  - text: ベンタンクールがベンチから出たのは66分でした。
+    card:
+      <<: *clock
+      highlight_row: 66分
+  - text: その7分後に、トッテナムが先制されます。
+    card:
+      <<: *clock
+      highlight_row: 73分
+  - text: そして78分、ルーク・ショーへの頭突きで退場を命じられます。
+    card:
+      <<: *clock
+      highlight_row: 78分
+  - text: ピッチにいたのは12分間だけでした。
+    emph: true
+    card:
+      <<: *clock
+      highlight_row: 78分
+  - text: 10人になったトッテナムは、後半アディショナルタイム2分に追いつきます。
+    card:
+      <<: *clock
+      highlight_row: 90分＋2
+  - text: キャプテンのソランケが、トナーリのクロスをヘディングで押し込みました。
+    card:
+      <<: *clock
+      highlight_row: 90分＋2
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50150532/roberto-de-zerbi-kissed-rodrigo-bentancur-red-card-character-spurs-need
+  - https://www.espn.com/soccer/standings/_/league/eng.1
+- id: words
+  main: true
+  heading: 監督は、退場した選手にキスをしたと言った
+  tier: 報道
+  telop: 「悪い形だ、正しい形ではない。それでも私はキスをした」
+  narrator: キャスター
+  card: &said
+    type: table
+    title: 試合後、デ・ゼルビが言ったこと
+    columns:
+    - 何について
+    - 言ったこと
+    rows:
+    - - あの退場の場面
+      - 好ましく思った
+    - - ロッカールームで
+      - ベンタンクールにキスをした
+    - - サッカーとは
+      - 気持ちだ
+  say:
+  - text: ベンタンクールが頭突きで退場になり、トッテナムが10人で引き分けた夜の話です。
+    short_only: true
+    card: none
+    image: assets/images/20261011_spurs_pair/01_v.jpg
+  - text: 試合のあと、監督はまずベンタンクールの名前を挙げました。
+    card:
+      <<: *said
+      highlight_row: 0
+  - voice: デ・ゼルビ
+    text: ロドリゴのレッドカードの場面は、私は好ましく思った。
+    card:
+      <<: *said
+      highlight_row: 0
+  - voice: デ・ゼルビ
+    text: いまの我々には、あの場面が要る。
+    cont: true
+    card:
+      <<: *said
+      highlight_row: 0
+  - voice: デ・ゼルビ
+    text: レッドカードを出せという意味ではない。
+    cont: true
+    card: none
+  - voice: デ・ゼルビ
+    text: 負けを受け入れない、失点を受け入れない、ということだ。
+    cont: true
+    card: none
+  - text: そのうえで、ロッカールームでの話を自分から明かしました。
+    card:
+      <<: *said
+      highlight_row: 1
+  - voice: デ・ゼルビ
+    text: できるかぎりの形で反応しなければいけない。
+    card:
+      <<: *said
+      highlight_row: 1
+  - voice: デ・ゼルビ
+    text: あれは悪い形だ、正しい形ではない。
+    cont: true
+    card:
+      <<: *said
+      highlight_row: 1
+  - voice: デ・ゼルビ
+    text: それでも私はロッカールームで、ベンタンクールにキスをした。
+    cont: true
+    emph: true
+    card: none
+  - voice: デ・ゼルビ
+    text: 気持ちのこもったこの種の反応が、我々には要るから。
+    cont: true
+    card: none
+  - voice: デ・ゼルビ
+    text: サッカーとは気持ちだ。
+    emph: true
+    card:
+      <<: *said
+      highlight_row: 2
+  - text: 退場そのものを正しいとは言わず、戦う姿勢のほうを取り出して褒めた形です。
+    card:
+      <<: *said
+      highlight_row: 2
+  - text: 同じ会見で、チームについてもこう言っています。
+    card: none
+  - voice: デ・ゼルビ
+    text: 今日、我々は今季はじめて、
+    card: none
+  - voice: デ・ゼルビ
+    text: 自分たちがチームであることを示した。
+    cont: true
+    card: none
+  - voice: デ・ゼルビ
+    text: 耐えたし、試合を支配もした。
+    cont: true
+    card: none
+  - text: 出場停止が何試合になるかは、まだ出ていません。
+    card: none
+  quotes_from:
+  - ESPN https://www.espn.com/soccer/story/_/id/50150532/roberto-de-zerbi-kissed-rodrigo-bentancur-red-card-character-spurs-need
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50150532/roberto-de-zerbi-kissed-rodrigo-bentancur-red-card-character-spurs-need
+  - https://www.espn.com/soccer/standings/_/league/eng.1
+- id: view
+  viewpoint: true
+  heading: 「この反応が要る」と言わせている数字
+  tier: 背景
+  telop: 6試合で1勝もなく、得点は3。そのうちの1点が10人で生まれた
+  narrator: 解説
+  card: &table
+    type: table
+    title: トッテナムの6試合（第6節を終えて）
+    columns:
+    - 項目
+    - 数
+    rows:
+    - - 勝ち
+      - '0'
+    - - 引き分け
+      - '3'
+    - - 負け
+      - '3'
+    - - 得点
+      - '3'
+  say:
+  - text: デ・ゼルビが「この反応が要る」と言った背景を、数字で見ておきます。
+    card: *table
+  - text: トッテナムは6試合を終えて、まだ1勝もしていません。
+    card:
+      <<: *table
+      highlight_row: 0
+  - text: 勝ち点3は、すべて引き分けから積んだものです。
+    card:
+      <<: *table
+      highlight_row: 1
+  - text: 得点は6試合でわずか3。1試合あたり0.5点しか取れていません。
+    emph: true
+    card:
+      <<: *table
+      highlight_row: 3
+  - text: ソランケのヘディングは、その3点のうちの1つです。
+    card:
+      <<: *table
+      highlight_row: 3
+  - text: しかも、10人になってから生まれた1点でした。
+    card:
+      <<: *table
+      highlight_row: 3
+  - text: 順位は18位。次は10月19日、ホームで19位のコヴェントリーと当たります。
+    card: none
+  - text: 相手も勝ち点3ですが、1勝はしています。勝ちが無いのはトッテナムです。
+    emph: true
+    card: none
+  sources:
+  - https://www.espn.com/soccer/story/_/id/50150532/roberto-de-zerbi-kissed-rodrigo-bentancur-red-card-character-spurs-need
+  - https://www.espn.com/soccer/standings/_/league/eng.1

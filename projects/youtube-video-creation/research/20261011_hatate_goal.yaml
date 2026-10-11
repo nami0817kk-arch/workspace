@@ -1,0 +1,234 @@
+# 取材メモ（10/11 題材 hatate_goal、型は news、japan_2 の枠）。
+# **ショートだけ作る**（本編は作らない。台本は1本で、`short` が山場の節を切り出す）。
+# **リーグ名に注意。**これは**イングランド2部＝チャンピオンシップ**で、プレミアリーグではない。
+#   `theme.league` は空にして（`england` と書くとプレミアのタグが付く）、
+#   **`theme.league_name` に「イングランド2部」**と書いてある。9/15 に松木の回で踏んだところ。
+#   読み上げでも「イングランド2部」「チャンピオンシップ」としか言っていない。
+# **確かめた数字**:
+#   ・得点の時間と関与は、サッカーキング・フットボールチャンネルと
+#     ESPN の試合データ（Opta）の3つが一致している。
+#     13分 ブルン・ラーセン（旗手のラストパス）／19分 アムドゥニ／25分 旗手／87分 エドワーズ（ピレスのクロス）。
+#   ・**旗手の2点への関与は13分と25分で、あいだは12分**。記事の「わずか12分間で2得点に関与」と合う。
+#   ・バーンリーは第9節を終えて 1勝4分4敗、13得点17失点、勝ち点7、22位（ESPN の順位表）。
+#     記事の「勝ち点7、最下位から22位」と一致する。
+#   ・**今季の得点13のうち4点がこの1試合**＝30.8%。試合数では1／9＝11.1%。
+#     これは ESPN の順位表の得点合計から自分で割った。記事には無い比べ。
+# **本人・監督の言葉は取れなかった。**当たったのはサッカーキング／フットボールチャンネル／
+#   バーンリー公式のニュース一覧（burnleyfootballclub.com/news/、中身がJSで出てこない）／ESPN。
+#   試合後のコメントは見つからなかったので `voice_min: 0` で語りだけにしてある。
+# **ネットの反応は集めていない**（ユーザー指示で、この3本は反応なしでよい）。
+# 写真：サッカーキングもフットボールチャンネルも **写真は Getty**（本文に明記）なので使わない。
+#   代わりに **Commons の CC BY-SA 4.0**（Hameltion、2024年）を2枚取った。
+#   01.jpg＝File:Celtic-20240722-037 (cropped).jpg（1193x1814、顔の寄り）、
+#   02.jpg＝File:Celtic-20240722-037.jpg（1920x1280、上半身が入る横長）。
+#   セルティック時代の姿で、バーンリーのユニフォームではない（「他に無ければそのまま使ってよい」）。
+#   `facecrop.py` で 02_w（1920x1080）・02_v（720x1280）・01_v（1020x1814）を作り、**開いて目で見た**。
+#   ショートに敷くのは高さ1814pxの 01_v と 1280px の 02_v で、どちらも下限1200pxを超えている。
+#   File:Reo Hatate 2.jpg（背中からで顔が無い）と File:日本足球運動員旗手怜央.jpg（2017年）は見て外した。
+#   File:Celtic-20240722-020.jpg は旗手が左奥の小さな人影だったので外した。
+# 数字の重なり対策：『第9節』『1ゴール1アシスト』は①だけ。『13分』『19分』『25分』『87分』『12分』『4対0』は②だけ。
+#   『8試合』『4分4敗』『勝ち点7』『13点』『31パーセント』『11パーセント』『5試合』は③だけ。
+# サムネ：**点検を通すために1案だけ書いてある。決めるのはユーザー**（報告に3案を出す）。
+date: 2026年10月11日
+slot: japan_2
+format: news
+voice_min: 0
+people:
+- 旗手怜央
+theme:
+  id: hatate_goal
+  league: ''
+  league_name: イングランド2部
+  kind: match
+  topic: 旗手怜央
+  title: 旗手怜央が移籍後初ゴール。バーンリーの9試合目を変えたのは何分間か
+  question: 旗手怜央の12分間は、勝ちの無かったバーンリーに何をもたらしたのか
+  takeaway: イングランド2部チャンピオンシップ第9節、バーンリーが敵地でワトフォードに4対0で勝ち、旗手怜央が1ゴール1アシストを記録した。13分にこぼれ球を拾ってラストパスを出し、ブルン・ラーセンが先制。19分にアムドゥニが2点目を入れ、25分にはピレスの折り返しをペナルティエリアの左で受け、ワントラップから右足でファーサイドのサイドネットへ流し込んだ。これが今夏セルティックから加入して以来の初ゴールで、2つの得点への関与は13分と25分、あいだはわずか12分だった。バーンリーはここまで8試合で4分4敗と勝ちが無く最下位にいたが、9試合目で今季初勝利。勝ち点は7になり、順位は22位に上がった。今季の得点を数えると9試合で13点で、そのうち4点がこの1試合に入っている。割合にすると31パーセントで、試合数の11パーセントに今季の得点の3割が集まったことになる。旗手の新天地での成績は公式戦5試合で1ゴール2アシストの、合わせて3つの得点関与になった
+  opening_image: assets/images/20261011_hatate_goal/03_w.jpg
+short_title: 旗手怜央が移籍後初ゴール。バーンリーの9試合目を変えた時間
+thumbnail:
+  photo: assets/images/20261011_hatate_goal/03_w.jpg
+  short_photo: assets/images/20261011_hatate_goal/03_v.jpg
+  line1: 旗手怜央 イングランド2部
+  line2: 12分で●●点に関与
+  tags:
+  - 旗手怜央
+  - バーンリー
+  - チャンピオンシップ
+sections:
+- id: what
+  heading: 敵地で4点。そのうち2つに名前が残った
+  tier: 報道
+  telop: バーンリーの旗手怜央が、チャンピオンシップ第9節で1点と1アシスト
+  narrator: キャスター
+  card: &where
+    type: table
+    title: バーンリーのここまで
+    columns:
+    - いつ
+    - 中身
+    rows:
+    - - 昨季
+      - プレミアリーグ19位で2部へ
+    - - 今季の8試合
+      - 4分4敗。勝ちなしで最下位
+    - - この試合
+      - 敵地で4点を取って勝つ
+  say:
+  - text: バーンリーの旗手怜央が、イングランド2部の第9節で1点と1アシストを記録しました。
+    card: *where
+  - text: この2部リーグは、チャンピオンシップと呼ばれています。
+    card:
+      <<: *where
+      highlight_row: 0
+  - text: バーンリーは去年、プレミアリーグから落ちてきたクラブです。
+    card:
+      <<: *where
+      highlight_row: 0
+  - text: 1年でのトップリーグ復帰をねらっています。
+    card:
+      <<: *where
+      highlight_row: 0
+  - text: ところが今季は、ここまで勝ちがありませんでした。
+    card:
+      <<: *where
+      highlight_row: 1
+  - text: 相手は敵地のワトフォード。旗手は先発で、最後までピッチに立ちました。
+    card:
+      <<: *where
+      highlight_row: 2
+  sources:
+  - https://www.soccer-king.jp/news/world/eng/20261011/2215281.html
+  - https://www.footballchannel.jp/2026/10/11/post1030653/
+- id: main
+  main: true
+  heading: 2つの得点のあいだは12分しかない
+  tier: 報道
+  telop: 13分にアシスト、25分に移籍後初ゴール。あいだは12分
+  narrator: キャスター
+  card: &scored
+    type: table
+    title: バーンリーの4得点
+    columns:
+    - 時間
+    - 決めた選手
+    - 旗手
+    rows:
+    - - 13分
+      - ブルン・ラーセン
+      - ラストパス
+    - - 19分
+      - アムドゥニ
+      - ―
+    - - 25分
+      - 旗手怜央
+      - 移籍後初ゴール
+    - - 87分
+      - エドワーズ
+      - ―
+  say:
+  - text: イングランド2部のバーンリーで、旗手怜央が移籍後初ゴールを決めました。
+    short_only: true
+    card: none
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 動き出しは早く、13分でした。
+    card:
+      <<: *scored
+      highlight_row: 0
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 敵陣でこぼれ球を拾った旗手が、ラストパスを出します。
+    card:
+      <<: *scored
+      highlight_row: 0
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 受けたブルン・ラーセンがゴールの右隅へ流し込み、バーンリーが先制しました。
+    card:
+      <<: *scored
+      highlight_row: 0
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 19分にはアムドゥニが押し込んで、リードは2点になります。
+    card:
+      <<: *scored
+      highlight_row: 1
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: ここまでの8試合は合わせて9点。1試合に1点ほどでした。
+    card:
+      <<: *scored
+      highlight_row: 1
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: この日はその2点を、19分で取っています。
+    card:
+      <<: *scored
+      highlight_row: 1
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: そして25分。ピレスの折り返しを、ペナルティエリアの左で受けました。
+    card:
+      <<: *scored
+      highlight_row: 2
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: ワントラップから右足。ボールはファーサイドのサイドネットに吸い込まれます。
+    card: none
+    emph: true
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 新しいクラブでの初めての得点です。アシストから、ここまで12分しかたっていません。
+    card:
+      <<: *scored
+      highlight_row: 2
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 87分にエドワーズが4点目を加え、4対0でバーンリーの勝ちです。
+    card:
+      <<: *scored
+      highlight_row: 3
+  sources:
+  - https://www.footballchannel.jp/2026/10/11/post1030653/
+  - https://www.soccer-king.jp/news/world/eng/20261011/2215281.html
+- id: view
+  viewpoint: true
+  heading: 今季の得点の31パーセントが、この1試合に入った
+  tier: 背景
+  telop: 今季9試合で13点。そのうち4点がこの日に入っている
+  narrator: 解説
+  card: &ratio
+    type: calc
+    title: 今季の得点はどこに入ったか
+    terms:
+    - - '4'
+      - この日の得点
+    - - '13'
+      - 今季の得点
+    - - 31%
+      - その割合
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: 開幕からの8試合は4分4敗。勝ち点は4つだけで、いちばん下にいました。
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: それがこの日、今季初勝利です。勝ち点は7になりました。
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 順位も1つ上がって、22位です。
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: ここで、今季の得点を数えてみます。
+    card: *ratio
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 9試合で13点。そのうち4点が、この1試合に入っています。
+    card: *ratio
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 割合にして31パーセント。試合数では11パーセントの1試合です。
+    card: *ratio
+    emph: true
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 点が取れていなかったチームです。
+    card: none
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: その今季の得点の3分の1近くが、1日で出た形になります。
+    card: none
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 旗手は今夏にセルティックから移ってきた選手です。
+    card: none
+    image: assets/images/20261011_hatate_goal/03_w.jpg
+  - text: 新天地での得点への関与はこれで3つ。そのうち2つが、この日に出ています。
+    card: none
+  sources:
+  - https://site.api.espn.com/apis/v2/sports/soccer/eng.2/standings
+  - https://www.soccer-king.jp/news/world/eng/20261011/2215281.html

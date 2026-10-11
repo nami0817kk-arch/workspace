@@ -2250,5 +2250,53 @@
  "20261011_compare_malen_lautaro": {
   "at": "2026-10-11T04:33:17+09:00",
   "digest": "238152f7cf153b35"
+ },
+ "20261011_palmer_deal_short": {
+  "at": "2026-10-11T11:20:21+09:00",
+  "digest": "b1bf766037fbb268"
+ },
+ "20261011_seko_red_short": {
+  "at": "2026-10-11T11:20:46+09:00",
+  "digest": "e646eaabeac9dc0e"
+ },
+ "20261011_rayo_abandoned_short": {
+  "at": "2026-10-11T11:21:13+09:00",
+  "digest": "056e9e18dfafac6e"
+ },
+ "20261011_maeda_ipswich_short": {
+  "at": "2026-10-11T11:39:41+09:00",
+  "digest": "07abbcd357fa2153"
+ },
+ "20261011_ueda_lille_short": {
+  "at": "2026-10-11T11:40:10+09:00",
+  "digest": "f58aac1a9d535261"
+ },
+ "20261011_vini_red_short": {
+  "at": "2026-10-11T11:40:37+09:00",
+  "digest": "ba8b985c3fd64b0f"
+ },
+ "20261011_spurs_dezerbi_short": {
+  "at": "2026-10-11T11:40:56+09:00",
+  "digest": "3db4715697fe5820"
+ },
+ "20261011_mctominay_return_short": {
+  "at": "2026-10-11T11:41:59+09:00",
+  "digest": "f8713262474327e4"
+ },
+ "20261011_hatate_goal_short": {
+  "at": "2026-10-11T11:42:19+09:00",
+  "digest": "c10f6b5186456300"
+ },
+ "20261011_tanaka_rating_short": {
+  "at": "2026-10-11T11:51:36+09:00",
+  "digest": "be692f0306395bcd"
+ },
+ "20261011_vini_red": {
+  "at": "2026-10-11T11:52:08+09:00",
+  "digest": "da07f6260a42aba3"
+ },
+ "20261011_mctominay_return": {
+  "at": "2026-10-11T11:52:39+09:00",
+  "digest": "b19e240e7d8a7fcd"
  }
 }

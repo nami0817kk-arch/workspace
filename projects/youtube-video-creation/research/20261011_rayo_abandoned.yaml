@@ -1,0 +1,275 @@
+# 取材メモ（10/11 題材 rayo_abandoned、型は news、laliga_1 の枠）。
+# **ショートだけ作る**（本編は作らない。台本は1本で、`short` が山場の節を切り出す）。
+#
+# ■ 原文は取れた（ここがこの回のいちばん大事なところ）
+#   WebFetch は弾かれるが、**requests に普通のブラウザの User-Agent を付けると 200 で返る**。
+#   BBC も marca も本文を最後まで読んだうえで書いている。さらに、
+#   **クラブの声明はラージョの公式サイトに同じ文が丸ごと載っていた**ので、
+#   marca 経由ではなく**クラブの一次情報**として扱っている。
+#     ・https://www.rayovallecano.es/noticias/comunicado-oficial-athletic-club （声明の全文・公式）
+#     ・https://www.bbc.co.uk/sport/football/articles/cw99zy27x0rro （BBC）
+#     ・https://www.marca.com/futbol/rayo/2026/10/10/rayo-vallecano-habla-atentado-planificado-suspension-partido-athletic.html
+#     ・https://www.marca.com/futbol/rayo/2026/10/10/acta-suspension-rayo-athletic.html （**主審の試合報告書＝acta の引用**）
+#   原文で確かめた言い回し:
+#     "No se trata de hechos fortuitos u ocasionales, sino de actuaciones previamente ideadas y planificadas…"
+#     "Este atentado contra Rayo Vallecano de Madrid ha sido minuciosamente planificado, ya que, para su ejecución,
+#      ha sido necesario coordinar una logística de medios materiales, como los papeles impresos y las esferas de 2 cm…"
+#     "…son todos víctimas de un atentado contra sus derechos y libertades, cometido por un grupo organizado de intolerantes"
+#   主審（Sánchez Martínez）の報告書の原文:
+#     "En el minuto 13 … se activó el Protocolo 1 por lanzamiento de objetos … pelotas de plástico de aproximadamente
+#      2 cm de diámetro … sin que ninguno de estos objetos llegaran a impactar sobre persona alguna … el partido
+#      permaneció detenido durante diez minutos"
+#     "En el minuto 24 se activó el Protocolo 2 … se ordenó la retirada de ambos equipos a vestuarios durante un
+#      periodo de diez minutos"
+#     "Una vez reanudado el encuentro, transcurridos 16 segundos, se produjo un nuevo lanzamiento…"
+#     "…restaban por disputarse 20 minutos y 44 segundos de tiempo reglamentario, además de un mínimo de 10 minutos
+#      de tiempo añadido"
+#
+# ■ 扱い方（ユーザー指示：煽らない。誰かを責める言い方にしない）
+#   ・**投げ込んだ人たちの団体名は出していない。**クラブの声明は特定の団体の名前を3つ挙げているが、
+#     それは**クラブが名指しした主張**であって、まだ誰の処分も決まっていない。
+#     台本では「組織された集団」というクラブの言い方だけを使う。
+#   ・**「ビー玉」とは言っていない。**報告書とクラブの声明はどちらも
+#     「直径2センチほどのプラスチックの球」と書いている。そのまま言う。
+#   ・報告書が3回とも「人に当たってはいない」と書いているので、**その一行を必ず入れる。**
+#   ・会長の名前は出さない。抗議の相手は「クラブの運営」としか言わない。
+#   ・**放送映像は使っていない。**写真はスタンドとピッチの実写2枚だけ。
+#
+# ■ 数字
+#   ・中止の時点で 0対0。規定の残りが20分44秒、最初の中断ぶんの追加時間が最低10分。
+#     **足して30分44秒**。90分に対しておよそ3分の1。これは報告書の2つの数字を自分で足しただけ。
+#   ・止まっていた時間は、報告書に出てくるだけで10分＋10分＝20分。
+#   ・クラブの声明は「15年で3度目」と書き、2012年9月のレアル・マドリード戦と2019年のアルバセテ戦を挙げている。
+#   ・ラ・リーガの順位は**出していない**（BBC は13位、ESPN の順位表は12位で食い違ううえ、問いに答えない）。
+#
+# ■ 写真
+#   記事の写真は BBC が Getty、marca が EFE で、**どちらも代理店なので取り込まない。**
+#   代わりに Commons のバジェカスの実写2枚を使う。人物が主役の写真ではない。
+#     01.jpg = File:Estadio del Rayo Vallecano.jpg（CC0 / 4theliberty、1448x2172。縦。スタンドとピッチ）
+#     02.jpg = File:Estadiovallecas1.JPG（CC BY-SA 3.0 / N Kirk、1920x1440。横。ゴール裏のスタンド）
+#   `facecrop.py` で 01_w / 01_v / 02_w / 02_v を作り、**4枚とも開いて目で見た**。
+#   ショートに敷く 01_v は 1222x2172 で、高さの下限1200pxを超えている。
+#   **その日の試合の写真ではない**ので、台本でも「この試合の写真」とは言っていない。
+# **ネットの反応は集めていない**（ユーザー指示で、この3本は反応なしでよい）。
+# 数字の重なり対策：『第8節』は①だけ。『13分』『24分』『16秒』『0対0』は②だけ。
+#   『20分44秒』『30分44秒』『15年』『2012年』『2019年』は③だけ。
+# サムネ：**点検を通すために1案だけ書いてある。決めるのはユーザー**（報告に3案を出す）。
+date: 2026年10月11日
+slot: laliga_1
+format: news
+voice_min: 0
+people: []
+theme:
+  id: rayo_abandoned
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ラージョ・バジェカーノ
+  title: ラージョ対ビルバオが13分で止まり、そのまま中止。クラブが声明に使った一語
+  question: ラージョ対ビルバオはなぜ中止になり、クラブは声明に何と書いたのか
+  takeaway: ラ・リーガ第8節、ラージョ・バジェカーノ対アスレティック・ビルバオが、スタンドからの物の投げ込みで中止になった。主審サンチェス・マルティネスの試合報告書によれば、13分に紙飛行機と直径2センチほどのプラスチックの球が投げ込まれて最初の手順が取られ、試合は10分間止まった。24分に二度目があって両チームがロッカーに下がり、再開の16秒後に三度目が起きている。報告書は3回とも物が人に当たってはいないと書いており、最後は国家警察の警備責任者が主審に、続けるための安全を確保できないと伝えて中止が決まった。中止の時点で0対0、規定の残りは20分44秒で、最初の中断のぶんの追加時間が最低10分。足すと30分44秒で、90分のおよそ3分の1がまだ残っていたことになる。試合のあと、ラージョは公式サイトの声明で偶発的な出来事ではなく前もって計画された行為だと書き、「計画された襲撃」という強い言葉を使った。印刷された紙と直径2センチの球を用意し、同時に動く仕組みが要ったことを根拠に挙げ、選手も審判も大多数のファンも被害を受けた側だと結んでいる。声明は、こうした中止が15年で3度目で、2012年9月のレアル・マドリード戦と2019年のアルバセテ戦に続くものだとも書いた
+  opening_image: assets/images/20261011_rayo_abandoned/02_w.jpg
+short_title: ラージョ対ビルバオが中止。クラブが声明に使った言葉
+thumbnail:
+  layout: scene
+  photo: assets/images/20261011_rayo_abandoned/02_w.jpg
+  short_photo: assets/images/20261011_rayo_abandoned/01_v.jpg
+  line1: ラージョ バジェカス
+  line2: クラブは●●と書いた
+  tags:
+  - ラージョ・バジェカーノ
+  - アスレティック・ビルバオ
+  - ラ・リーガ
+sections:
+- id: what
+  heading: 主審の報告書に残っている、3回の投げ込み
+  tier: 報道
+  telop: 13分に最初の中断、24分に二度目、再開の16秒後に三度目。0対0で中止
+  narrator: キャスター
+  card: &acta
+    type: table
+    title: 主審の試合報告書
+    columns:
+    - 時点
+    - 書かれていること
+    rows:
+    - - 13分
+      - 投げ込みで最初の手順。10分間止める
+    - - 24分
+      - 二度目。両チームをロッカーへ10分
+    - - 再開の16秒後
+      - 三度目の投げ込み
+    - - 中止の時点
+      - 0対0。残りは20分44秒
+  say:
+  - text: ラ・リーガ第8節、ラージョ・バジェカーノ対アスレティック・ビルバオ。
+    card: *acta
+  - text: この試合が、途中で中止になりました。
+    card: *acta
+  - text: 場所はラージョの本拠地、エスタディオ・デ・バジェカスです。
+    card: *acta
+  - text: スタンドから投げ込まれたのは、紙飛行機と、プラスチックの球でした。
+    card:
+      <<: *acta
+      highlight_row: 0
+  - text: 球は直径2センチほど。ピンポン球の半分ほどの大きさです。
+    card:
+      <<: *acta
+      highlight_row: 0
+  - text: 投げ込みは、このあと3回くり返されます。
+    card:
+      <<: *acta
+      highlight_row: 0
+  - text: 主審の試合報告書は、そのどれについてもこう書いています。
+    card:
+      <<: *acta
+      highlight_row: 0
+  - voice: 主審の報告書
+    text: いずれの物も、人に当たることはなかった。
+    card: &none_hit
+      type: quote
+      source: 主審の試合報告書
+      color: '#c8102e'
+      text: sin que ninguno de estos objetos llegaran a impactar sobre persona alguna
+      translation: いずれの物も、人に当たることはなかった
+  - text: 13分に試合が止まり、場内放送で投げ込みをやめるよう伝えられます。
+    card:
+      <<: *acta
+      highlight_row: 0
+  - text: 止まっていたのは10分間でした。
+    card:
+      <<: *acta
+      highlight_row: 0
+  - text: 24分、再開したあとにまた投げ込まれ、両チームはロッカーに下がりました。
+    card:
+      <<: *acta
+      highlight_row: 1
+  - text: 三度目は、戻ってきてから16秒後でした。
+    card:
+      <<: *acta
+      highlight_row: 2
+  - text: 国家警察の警備責任者が主審に、続けるための安全を確保できないと伝えます。
+    card:
+      <<: *acta
+      highlight_row: 3
+  - text: 試合は0対0。勝ち負けのつかないまま打ち切られました。
+    card: none
+    image: assets/images/20261011_rayo_abandoned/02_w.jpg
+  sources:
+  - https://www.marca.com/futbol/rayo/2026/10/10/acta-suspension-rayo-athletic.html
+  - https://www.bbc.co.uk/sport/football/articles/cw99zy27x0rro
+- id: main
+  main: true
+  heading: クラブが声明に使った「計画された襲撃」
+  tier: 確定
+  official: true
+  telop: クラブは公式サイトの声明で「偶発的な出来事ではない」と書いた
+  narrator: キャスター
+  card: &state
+    type: table
+    title: ラージョの声明に書かれていること
+    columns:
+    - 順
+    - 中身
+    rows:
+    - - '1'
+      - 偶発的な出来事ではない
+    - - '2'
+      - 前もって考えられ、計画された行為だ
+    - - '3'
+      - 目的は試合を止めて中止させることだった
+    - - '4'
+      - 紙と直径2センチの球をそろえる必要があった
+    - - '5'
+      - 選手も審判もファンも被害を受けた側だ
+  say:
+  - text: ラ・リーガのラージョ対ビルバオが、物の投げ込みで中止になりました。
+    short_only: true
+    card: none
+  - text: 試合のあと、ラージョ・バジェカーノが公式サイトに声明を出しました。
+    card: *state
+  - voice: クラブの声明
+    text: 偶発的な、たまたま起きた出来事ではない。
+    card:
+      <<: *state
+      highlight_row: 0
+  - voice: クラブの声明
+    text: 前もって考えられ、計画された行為だ。
+    cont: true
+    card:
+      <<: *state
+      highlight_row: 1
+  - text: クラブはこれを「計画された襲撃」と書きました。
+    card: none
+    image: assets/images/20261011_rayo_abandoned/01_w.jpg
+    emph: true
+  - text: 声明は、そう書いた理由も並べています。
+    card:
+      <<: *state
+      highlight_row: 2
+  - voice: クラブの声明
+    text: 印刷された紙と、直径2センチの球をそろえる必要があった。
+    card:
+      <<: *state
+      highlight_row: 3
+  - voice: クラブの声明
+    text: 同時に動けるように、まとめる仕組みも要った。
+    cont: true
+    card:
+      <<: *state
+      highlight_row: 3
+  - text: そのうえで、声明はこう結んでいます。
+    card:
+      <<: *state
+      highlight_row: 4
+  - voice: クラブの声明
+    text: 選手も、審判も、大多数のファンも、みな被害を受けた側だ。
+    card:
+      <<: *state
+      highlight_row: 4
+  quotes_from:
+  - ラージョ・バジェカーノ公式（2026-10-10 の声明） https://www.rayovallecano.es/noticias/comunicado-oficial-athletic-club
+  sources:
+  - https://www.rayovallecano.es/noticias/comunicado-oficial-athletic-club
+  - https://www.marca.com/futbol/rayo/2026/10/10/rayo-vallecano-habla-atentado-planificado-suspension-partido-athletic.html
+- id: view
+  viewpoint: true
+  heading: 報告書の数字を足すと、まだ30分以上が残っていた
+  tier: 背景
+  telop: 規定の残り20分44秒に、最低10分の追加時間。足すと30分44秒
+  narrator: 解説
+  card: &left
+    type: calc
+    title: 中止の時点で残っていた時間
+    terms:
+    - - 20分44秒
+      - 規定の残り
+    - - 10分
+      - 最低限の追加時間
+    - - 30分44秒
+      - 合わせて
+    ops:
+    - ＋
+    - ＝
+  say:
+  - text: 報告書には、残っていた時間も書いてあります。
+    card: *left
+  - text: 規定の時間があと20分44秒。それに、最初の中断のぶんで最低10分の追加時間。
+    card: *left
+  - text: 足すと30分44秒です。90分のうち、まだ3分の1ほどが残っていました。
+    card: *left
+    emph: true
+  - text: 中止になった試合には、ビルバオから来たファンもいました。
+    card: none
+    image: assets/images/20261011_rayo_abandoned/02_w.jpg
+  - text: クラブは、その人たちに払い戻しの連絡をすると発表しています。
+    card: none
+  - text: ラージョの声明は、こうした中止が15年で3度目だとも書いていました。
+    card: none
+  - text: 2012年9月のレアル・マドリード戦、2019年のアルバセテ戦。
+  - text: この日が、3度目でした。
+    card: none
+  sources:
+  - https://www.rayovallecano.es/noticias/comunicado-oficial-athletic-club
+  - https://www.marca.com/futbol/rayo/2026/10/10/acta-suspension-rayo-athletic.html
+  - https://www.bbc.co.uk/sport/football/articles/cw99zy27x0rro

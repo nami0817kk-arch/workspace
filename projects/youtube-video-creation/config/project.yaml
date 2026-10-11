@@ -238,6 +238,20 @@ cast:
     position: none
     color: "#f0c419"
 
+  # **クラブ名義の発表文**（2026-10-11、マクトミネイの回）。人ではなく文書なので
+  # 群衆のプールから引かせない。**ハッシュだと 52 になり、同じ回のマクトミネイとぶつかる**
+  # （draft が止めた）。94 は voice_pool の外の男性。talkSPORT・アロンソと同じ番号なので、
+  # **同じ回に出さない**
+  ナポリの発表文:
+    key: napoli_statement
+    aliases: [ナポリの声明, SSCナポリの発表]
+    style_id: 94       # 中部つるぎ。硬い男性。クラブ名義の文を読む
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
   ベルギーの地元紙:
     key: belgian_press
     aliases: [ベルギー紙, VoetbalBelgie, HBVL]

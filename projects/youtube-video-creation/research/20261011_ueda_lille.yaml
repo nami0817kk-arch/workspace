@@ -1,0 +1,248 @@
+# 取材メモ（10/11 題材 ③ ueda_lille、型は news、日本人枠）。**ショートだけ作る**（本編は作らない）。
+# 効く一点：**上田綺世が先発を外れた理由を、監督が自分で説明している**。
+#   リール公式（試合後の談話、2026-10-10 19:43）のダビデ・アンチェロッティ監督の原文:
+#     « Ma priorité était de faire jouer les joueurs qui sont restés ici pendant 3 semaine,
+#       qui avaient beaucoup d'énergie. Et de faire reposer les internationaux. »
+#     « Je ne suis pas satisfait du niveau de l'équipe avec le ballon, ça c'est sûr. »
+#     « Mais si on est déçu quand on gagne, alors on sera tout le temps triste.
+#       Il faut être satisfait pour les trois points »
+#   https://www.losc.fr/actualites/2026-10-10/il-faut-etre-satisfait-pour-les-trois-points
+#   訳は自分で起こした（フットメルカートやサッカーキングの訳は使っていない）。
+# **キリンカップはリール公式が書いている**（2026-10-06）: 上田は代表ウィークの4試合で4得点、
+#   決勝のニュージーランド戦（2対1）で先制点を決め、大会の最優秀選手に選ばれた。
+# **上田本人の言葉は 10/11 10:00 時点で見つかっていない**（クラブ公式・サッカーキング・ゲキサカ・
+#   フットメルカート・ル・プチ・リロワ・本人のSNSを当たった）。無いまま作る。推測で書かない。
+# **数字の食い違い（必ず見る）**
+#   ・上田の投入：**リール公式は56分**（« Hakon Haraldsson et Ayase Ueda (56') »）。サッカーキングも56分。
+#     ところが**リーグ・アン公式のAPI（ma-api.ligue1.fr）は57分**。**クラブ公式の56分を採った**
+#     （ユーザーの○にも56分と書かれている）。1分の差なので、台本では「56分」で通す。
+#   ・相手の退場：**リーグ・アン公式もリール公式も61分**。サッカーキングは62分。**61分を採った**。
+#   ・節の番号：**リーグ・アン公式は第6節**（game-week 6）。サッカーキングも第6節。
+#     フットメルカートだけ「8e journée（第8節）」と書いているが、**これは誤り**。公式を採った。
+#   ・先制点のアシスト：**リーグ・アン公式の記録ではアシスト無し**。リール公式とフットメルカートは
+#     「タンギ・ニアンズーのロングパス」。サッカーキングは「タンギ・クアシ」と書いているが、
+#     **クアシとニアンズーは別人**。台本ではアシストの名前を出していない（公式に無いので）。
+# **瀬古歩夢の退場は、今日の別の回（20261011_seko_red）が扱う。**
+#   こちらは「相手が1人退場して10人になった」とだけ言い、**名前も場面も出さない**（重なりを作らない）。
+# **暫定首位の扱い**：リールが試合を終えた時点では勝ち点13で先頭。ただし**同じ日の夜にモナコが
+#   引き分けて14**になり、**いまは1差の2位**。「首位」と言い切らず、そのまま順に話す。
+#   リーグ・アン公式の第6節のデータでは、リールの**節の開始時点の順位は4位**（gameWeekStartingRank）。
+#   いまの順位は FotMob の表（src.standings）で確認：1位モナコ 6試合14 / 2位リール 6試合13 / 3位リヨン 6試合11。
+# **2026年に入ってからのリーグ戦の無失点11回（PSGと並んでリーグ最多）**はフットメルカートの記述。
+# 写真は Le Petit Lillois の1枚（Ayase-Ueda-3-1.jpg、2048x1365、記事の表記「Photo : Le Petit Lillois /
+#   Quentin Delcourt」）。**代理店ではない**（媒体の自前の撮影）。リールのビブス姿で顔が大きく写っている。
+#   サッカーキング・ウルトラサッカーの写真は Getty 配信、リール公式とフットメルカートの写真は
+#   ICON SPORT / MaxPPP の配信だったので、どれも使っていない。
+#   facecrop で 01_w（16:9・2048x1152）と 01_v（9:16・768x1365）を切り、どちらも目で見た。
+# サムネ：構図 scene（**ユーザーと相談して決める**。ここに書いたのは点検を通すための1案）。
+# ネットの反応は集めていない。反応の節は無い。
+# 数字の重なり対策：『56分』『34分』は①だけ、『5分』『77分』『80分』は②だけ、『13』『14』『11回』は③だけ。
+date: 2026年10月11日
+slot: japan_3
+format: news
+voice_min: 0
+people:
+- 上田綺世
+- ダビデ・アンチェロッティ
+- オリヴィエ・ジルー
+- リール
+theme:
+  id: ueda_lille
+  league: france
+  league_name: リーグ・アン
+  kind: match
+  topic: 上田綺世
+  title: 上田綺世の出番は56分から。リールの監督がそれを選んだ理由
+  question: 上田綺世はなぜ先発を外れ、56分から入って何をしたのか
+  takeaway: 上田綺世はベンチから始まり、56分にオリヴィエ・ジルーと代わって1トップに入った。先発でなかった理由を、リールの監督は自分で説明している。3週間クラブに残っていた選手を先に使い、代表へ行った選手は休ませた、というもの。上田が入ったあとの34分で、リールに追加点は生まれなかった。74分には抜け出したところでオフサイドを取られ、80分に得たペナルティキックも、味方のオフサイドで取り消されている。守り切ったのは5分にバクワが決めた1点で、1対0。リールはこの節を4位で迎え、勝って勝ち点13。試合を終えた時点ではリーグの先頭だったが、同じ日の夜にモナコが14へ伸ばし、いまは1差の2位。2026年に入ってからのリーグ戦の無失点は11回で、これはリーグでいちばん多い側に並ぶ
+  opening_image: assets/images/20261011_ueda_lille/01_w.jpg
+short_title: 上田綺世の出番は56分から。リールの監督が自分で話した中身
+thumbnail:
+  layout: scene
+  photo: assets/images/20261011_ueda_lille/01_w.jpg
+  short_photo: assets/images/20261011_ueda_lille/01_v.jpg
+  line1: 上田綺世 リール
+  line2: 先発から外れた理由は●●
+  tags:
+  - 上田綺世
+  - リール
+  - リーグ・アン
+sections:
+- id: why
+  main: true
+  heading: 3週間ここにいた選手から使った
+  tier: 確定
+  official: true
+  telop: 上田綺世は56分から1トップ。先発を外れた理由を、監督が自分で説明した
+  narrator: キャスター
+  card: &after
+    type: table
+    title: 上田綺世が入ってからの34分
+    columns: &c_after
+    - 時間
+    - その場面
+    rows: &r_after
+    - - 56分
+      - ジルーに代わって1トップへ
+    - - 61分
+      - 相手が退場し10人に
+    - - 74分
+      - 抜け出すもオフサイド
+    - - 80分
+      - 得たPKが取り消し
+  say:
+  - text: リーグ・アン第6節。リールが1対0で勝ちました。
+    short_only: true
+    card: none
+    image: assets/images/20261011_ueda_lille/01_w.jpg
+  - text: 上田綺世はベンチから始まり、56分に1トップへ入っています。
+    short_only: true
+    card: none
+  - voice: アンチェロッティ監督
+    text: 3週間ここに残っていた選手たちを、先に使うのが優先でした。
+    card: none
+  - voice: アンチェロッティ監督
+    text: そして、代表に行った選手は休ませました。
+    cont: true
+    card: none
+  - text: 上田綺世が先発に名前の無かった理由を、リールの監督は自分でそう説明しています。
+    card: none
+    image: assets/images/20261011_ueda_lille/01_w.jpg
+  - text: 上田はその3週間、日本代表でキリンカップを戦っていました。
+    card: none
+  - text: 4試合で4得点。1試合に1点の計算で、この大会の最優秀選手は上田でした。
+    card: none
+  - text: 入ったのは56分。オリヴィエ・ジルーと代わって、1トップの位置に立ちました。
+    card:
+      <<: *after
+      highlight_row: 0
+  - text: その5分後、相手が1人退場。ここから11人対10人になります。
+    card:
+      <<: *after
+      highlight_row: 1
+  - text: 残りの30分を、リールは1人多い状態で戦いました。
+    card:
+      <<: *after
+      highlight_row: 1
+  - text: 74分、上田は相手の背後へ抜け出しますが、旗が上がります。
+    card:
+      <<: *after
+      highlight_row: 2
+  - text: 80分にはバクワがペナルティキックを得ます。
+    card:
+      <<: *after
+      highlight_row: 3
+  - text: ところが、これもオフサイドの判定で取り消されました。
+    card: none
+    image: assets/images/20261011_ueda_lille/01_w.jpg
+  - text: 上田が入ってからの34分間、リールの得点は増えていません。
+    card: none
+    image: assets/images/20261011_ueda_lille/01_w.jpg
+    emph: true
+  quotes_from:
+  - リール公式（試合後の談話、2026-10-10） https://www.losc.fr/actualites/2026-10-10/il-faut-etre-satisfait-pour-les-trois-points
+  sources:
+  - https://www.losc.fr/actualites/2026-10-10/il-faut-etre-satisfait-pour-les-trois-points
+  - https://www.losc.fr/actualites/2026-10-10/losc-le-havre-le-compte-rendu
+  - https://www.losc.fr/actualites/2026-10-06/une-nouvelle-coupe-au-palmares-de-ueda-et-verdonk
+  - https://www.soccer-king.jp/news/world/fra/20261011/2215197.html
+- id: match
+  heading: 5分の1点を、最後まで守った
+  tier: 確定
+  official: true
+  telop: 5分にバクワ。リールはその1点を90分間守り切った
+  narrator: キャスター
+  card: &score
+    type: score
+    competition: リーグ・アン 第6節
+    home: リール
+    away: ル・アーヴル
+    score: 1 - 0
+    home_scorers:
+    - 5分 バクワ
+    away_scorers: []
+    note: スタッド・ピエール＝モーロワ
+  say:
+  - text: 上田綺世が入る51分前、試合は立ち上がりの5分に動いていました。
+    card: *score
+  - text: 後ろからの長いボールが、守備の裏へ通ります。追いついたのはディラン・バクワでした。
+    card: *score
+  - text: そのまま持ち込み、遠いほうのサイドネットへ流し込みます。
+    card: *score
+  - text: リールの得点は、この1本だけで終わります。
+    card: none
+  - text: 77分にはベンタレブの直接フリーキックがバーをたたきました。
+    card: *score
+  - text: 入っていれば2点目でした。試合はそのまま1対0、リールの勝ちで終わります。
+    card: *score
+    emph: true
+  sources:
+  - https://www.losc.fr/actualites/2026-10-10/losc-le-havre-le-compte-rendu
+  - https://www.footmercato.net/a280288194685812207-ligue-1-le-losc-vient-a-bout-du-havre-et-prend-provisoirement-la-tete-du-championnat
+  - https://www.soccer-king.jp/news/world/fra/20261011/2215197.html
+- id: view
+  viewpoint: true
+  heading: その夜のうちに、首位ではなくなった
+  tier: 背景
+  telop: 勝って勝ち点13。試合を終えた時点では先頭だったが、いまは1差の2位
+  narrator: 解説
+  card: &table
+    type: table
+    title: リーグ・アンの順位（10月11日の時点）
+    columns:
+    - 順位
+    - クラブ
+    - 試合
+    - 勝点
+    rows:
+    - - '1'
+      - モナコ
+      - '6'
+      - '14'
+    - - '2'
+      - リール
+      - '6'
+      - '13'
+    - - '3'
+      - リヨン
+      - '6'
+      - '11'
+    highlight_row: 1
+  say:
+  - text: リールはこの節を4位で迎え、勝って勝ち点を13に伸ばしました。
+    card: *table
+  - text: 自分たちの試合を終えた時点では、この13がリーグの先頭でした。
+    card:
+      <<: *table
+      highlight_row: 1
+  - text: ただ、同じ日の夜にモナコが引き分けて14に。順位は1差の2位です。
+    card: *table
+  - text: 2026年に入ってからのリーグ戦で、リールが無失点に抑えた試合は11。
+    card: &clean
+      type: stats
+      title: 2026年のリール
+      items:
+      - - '11'
+        - 試合
+        - リーグ戦で無失点だった数
+      - - '13'
+        - 勝ち点
+        - 今季6試合で積んだ数
+      - - '1'
+        - 差
+        - 首位との開き
+      focus: 0
+  - text: これはリーグでいちばん多い側に並ぶ数字です。
+    card:
+      <<: *clean
+      focus: 0
+  - text: 点を取る役として入った34分で、上田綺世に得点はありませんでした。
+    card: none
+    image: assets/images/20261011_ueda_lille/01_w.jpg
+  - text: それでもチームは勝ち点3を積み、6試合で4勝1分1敗としました。
+    card: none
+    emph: true
+  sources:
+  - https://www.footmercato.net/a280288194685812207-ligue-1-le-losc-vient-a-bout-du-havre-et-prend-provisoirement-la-tete-du-championnat
+  - https://www.ligue1.com/en/matches
+  - https://www.fotmob.com/leagues/53/table
