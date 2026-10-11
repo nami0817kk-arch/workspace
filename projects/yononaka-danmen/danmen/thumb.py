@@ -63,7 +63,7 @@ def find_photo(key: str | None) -> Path | None:
     if not key or not PHOTOS.exists():
         return None
     k = str(key).lower()
-    for p in sorted(PHOTOS.glob("*.jpe*g")) + sorted(PHOTOS.glob("*.png")):
+    for p in sorted(PHOTOS.glob("*.jpe*g")) + sorted(PHOTOS.glob("*.jpg")) + sorted(PHOTOS.glob("*.png")):  # .jpg も（Wikimedia の写真。10-11 に漏れていた）
         if k in p.name.lower():
             return p
     return None

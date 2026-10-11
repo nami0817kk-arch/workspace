@@ -15,7 +15,7 @@ sources:
 
 thumbnail:
   layout: term              # 題材の言葉をいちばん大きく（CLAUDE.md）
-  photo: なし
+  photo: Shogi_board
   main: 女性の「棋士」
   lead: 将棋で52年、ずっと0人
   tail: 初の権利
@@ -26,7 +26,7 @@ shorts: {}
 
 sections:
   - id: "00"
-    photo: なし
+    photo: Shogi_kaikan
     name: 表面
     lead: 女性で初めて、棋士になれる権利
     figure:
@@ -65,7 +65,7 @@ sections:
       - 聞き: でも正直、女流棋士と棋士の違いが、まず分からないです。
 
   - id: "01"
-    photo: なし
+    photo: ono_ore
     name: 問い
     lead: 棋士になるのに、性別の条件はあるか
     figure:
@@ -87,7 +87,7 @@ sections:
       - 語り: 今日の問いは、これです。なぜ将棋の棋士に、女性がいなかったのか。
 
   - id: "02"
-    photo: なし
+    photo: Shogi_board
     name: 2つの制度
     lead: 棋士と女流棋士は、別の制度
     figure:
@@ -123,7 +123,7 @@ sections:
       - 語り: 女性の棋士が出なかったのか。棋士になる道を見ます。
 
   - id: "03"
-    photo: なし
+    photo: ono_ore
     name: 奨励会
     lead: 棋士になる、いちばん太い道
     figure:
@@ -171,7 +171,7 @@ sections:
       - 語り: 奨励会のほかにも、道はあります。
 
   - id: "04"
-    photo: なし
+    photo: Shogi_kaikan
     name: 編入試験
     lead: もうひとつの道、棋士編入試験
     figure:
@@ -208,7 +208,7 @@ sections:
       - 語り: そして去年、3つ目の道ができました。
 
   - id: "05"
-    photo: なし
+    photo: Shogi_board
     name: 3つ目の道
     lead: 女流タイトルから、棋士へ
     figure:
@@ -282,7 +282,7 @@ sections:
       - 語り: そこが、いまの姿です。
 
   - id: "07"
-    photo: なし
+    photo: Shogi_kaikan
     name: 締め
     lead: きょうの断面をたたむ
     figure:
