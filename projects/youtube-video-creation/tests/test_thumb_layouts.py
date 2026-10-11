@@ -125,7 +125,10 @@ def test_作り込みを外すと絵が変わる(tmp_path, monkeypatch):
     assert not _same(on, off)
     assert thumb.fx_options({"layout": "face", "fx": False})["on"] is False
     assert thumb.fx_options({"layout": "versus"})["tint"] == "right"
-    assert thumb.fx_options({"layout": "number"})["rays"] is True
+    # 集中線は既定でやめた（2026-10-11 ユーザー「サムネの集中線はやめて」）。書けば出せる
+    assert thumb.fx_options({"layout": "number"})["rays"] is False
+    assert thumb.fx_options({"layout": "versus"})["rays"] is False
+    assert thumb.fx_options({"layout": "number", "rays": True})["rays"] is True
     assert thumb.fx_options({"layout": "face", "cutout": False})["cutout"] is False
 
 

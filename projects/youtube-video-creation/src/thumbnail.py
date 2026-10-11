@@ -1589,12 +1589,13 @@ RULE_GREEN_H = 5          # その上の緑の線
 LAYOUT_ZOOM_MAX = 1.5     # 顔に寄せるときの拡大の上限（決まりは1.6倍まで。少し手前で止める）
 WIDE_MIN = 1.2            # 横に広い写真とみなす横÷縦（face・scene・number は全面に敷くので要る）
 
+# **集中線は既定でやめた**（2026-10-11 ユーザー「サムネの集中線はやめて」）。`rays: true` と書けば出せる。
 # 作り込みの既定（構図ごと）。台本で light・rays・tint・cutout を書けば上書き、fx: false で全部外す
 FX_DEFAULTS = {
     "face": {"light": "auto", "rays": False, "tint": "none", "cutout": True},
     "scene": {"light": "none", "rays": False, "tint": "none", "cutout": False},
-    "versus": {"light": "none", "rays": True, "tint": "right", "cutout": True},
-    "number": {"light": "none", "rays": True, "tint": "none", "cutout": False},
+    "versus": {"light": "none", "rays": False, "tint": "right", "cutout": True},
+    "number": {"light": "none", "rays": False, "tint": "none", "cutout": False},
 }
 
 

@@ -316,7 +316,7 @@
     "channels.list": 38,
     "playlistItems.list": 38,
     "videos.insert": 36,
-    "thumbnails.set": 36,
+    "thumbnails.set": 42,
     "playlistItems.insert": 16,
     "videos.list": 9,
     "videos.update": 7
