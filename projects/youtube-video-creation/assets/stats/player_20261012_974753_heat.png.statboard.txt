@@ -1,0 +1,4 @@
+title: フリアン・アルバレスの今季のヒートマップ
+unit: touches
+points=113
+source: FotMob

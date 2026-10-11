@@ -377,22 +377,34 @@ def value_board(history: list[dict], out: Path, name: str, club_of=None, size: t
         draw.line(line, fill=BRAND_GOLD + (255,), width=6, joint="curve")
         # クラブが替わったところに縦の点線と名前
         last_club = None
-        last_label_x = -999
-        row = 0
+        row_end = [-999.0, -999.0, -999.0]  # 段ごとに、札の右端（字の長さで見る。2026-10-12 に直した）
+        club_boxes: list[tuple[float, float, float, float]] = []
+        f_club = _font(24)
         for (d, v, club), (x, y) in zip(pts, line):
             if club != last_club and last_club is not None and club_of:
                 for yy in range(int(gy), int(gy + gh), 14):
                     draw.line([(x, yy), (x, yy + 7)], fill=(255, 255, 255, 120), width=2)
-                # 近い札は段をずらして重ねない
-                row = (row + 1) % 3 if x - last_label_x < 150 else 0
-                draw.text((x + 8, gy + 4 + row * 30), club_of(club), font=_font(24), fill=(230, 234, 240, 255))
-                last_label_x = x
+                # 札は、前の札の右端より先から始まる段を選ぶ。「近い」を距離で決めると、
+                # 長い名前（マンチェスター・シティ）が次の札（アトレティコ・マドリード）に食い込んだ
+                name_ja = club_of(club)
+                tw = draw.textlength(name_ja, font=f_club)
+                row = next((r for r in range(3) if x + 8 > row_end[r] + 10), min(range(3), key=lambda r: row_end[r]))
+                tx, ty = min(x + 8, px + pw - 24 - tw), gy + 4 + row * 30  # 板の右端からはみ出さない
+                draw.text((tx, ty), name_ja, font=f_club, fill=(230, 234, 240, 255))
+                row_end[row] = tx + tw
+                club_boxes.append((tx, ty, tx + tw, ty + 30))
             last_club = club
         x, y = line[-1]
         draw.ellipse([x - 10, y - 10, x + 10, y + 10], fill=BRAND_GOLD + (255,), outline=(20, 24, 32, 255), width=2)
         label = _compact(pts[-1][1])
         lw = draw.textlength(label, font=_font(32))
-        draw.text((min(x - lw - 14, gx + gw - lw), max(gy - 44, y - 50)), label, font=_font(32), fill=BRAND_GOLD + (255,))
+        lx, ly = min(x - lw - 14, gx + gw - lw), max(gy - 44, y - 50)
+        # 最新の額の札が、クラブの札に重なるときは枠の上（題の右の空き）へ逃がす
+        hit_box = any(lx < bx1 and lx + lw > bx0 and ly < by1 and ly + 40 > by0 for bx0, by0, bx1, by1 in club_boxes)
+        hit_line = any(lx - 6 < lxp < lx + lw + 6 and ly - 4 < lyp < ly + 44 for lxp, lyp in line)  # 折れ線の頂点にも重ねない
+        if hit_box or hit_line:
+            ly = gy - 44
+        draw.text((lx, ly), label, font=_font(32), fill=BRAND_GOLD + (255,))
     # 出典は画面に出さない（2026-10-08 ユーザー「出典は動画に出さなくていいからね」）。
     # 同じ日にレーダー・シュートマップ・ヒートマップからは消したが、この板だけ
     # 「Transfermarkt」が焼き込まれたまま残っていた（2026-10-11 に見つけた）。

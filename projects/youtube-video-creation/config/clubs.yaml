@@ -192,6 +192,8 @@ clubs:
   - {canonical: PSV, league: netherlands, big: false, aka: [PSV Eindhoven, PSVアイントホーフェン]}
   - {canonical: フェイエノールト, league: netherlands, big: false, aka: [Feyenoord]}
   - {canonical: ベンフィカ, league: "", big: false, aka: [Benfica, SLベンフィカ]}
+  # 2026-10-12 に追加。選手紹介の市場価値の板・歩みの表で、Transfermarkt の英語名のままだったため（アルバレスの前所属）
+  - {canonical: リーベル・プレート, league: "", big: false, aka: [CA River Plate, River Plate, リーベルプレート]}
   - {canonical: ポルト, league: "", big: false, aka: [FC Porto, Porto]}
   - {canonical: スポルティング, league: "", big: false, aka: [Sporting CP, Sporting Lisbon]}
 

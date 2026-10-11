@@ -1,0 +1,616 @@
+# スタジアム紹介シリーズ④：ブレントフォード（ジーテック・コミュニティ・スタジアム、10/12）。
+# **節の並びは①ボーンマス②エミレーツ③ヴィラ・パーク（10/11）と同じ型**：
+#   オープニング → 基礎DATA(main・強い一点を頭に) → この土地と計画(年表) → 建て方(板) → ここで起きた試合(表) →
+#   手を入れてきた器(年表) → 見立て(viewpoint・自分で数えた比べ)。**文は全部この回のために書いた。**
+#
+# 強い一点：**クラブは来年（2027年）の夏から、この器で年に最大6回、最大2万4000人のコンサートを開く案を出している**
+#   （サッカーの日の収容は1万7250人。差は6750人＝1.39倍。ピッチを保護材で覆い、立ち見が最大1万3900人。
+#   建物の工事はしない。ハウンズロー区の許可が要る）。確度は**報道**
+#   （チャンネルが使った出どころ：Chiswick Calendar 2026-05-27／06-26、Time Out 2026-06-29、City AM 2026-05-27、
+#   クラブの説明資料を伝えた Roundtable 2026-07-21。クラブの発表文そのもの〔brentfordfc.com〕には当たれていない。
+#   許可の申請書そのものも未確認。6月に出たのは環境影響の「審査範囲の報告書」まで。台本は「案」「計画」の線を越えない）。
+#   名前のある人の言葉は Sally Stephens（クラブの広報担当）の「慎重に計画し、運営する必要がある」だけで、
+#   台本には引いていない → 声は0件。
+#
+# **重なりで外したもの（クラブ紹介④ブレントフォード 2026-09-20 公開が読んだ話）**
+#   **創立1889年・愛称ビーズ・オーナー・プレーオフ9敗・1967年の吸収話・ホーム全勝21試合・主将コリンズ・トニー・エンベウモ・
+#   アンドリュース監督は一度も出していない。**クラブ紹介が読んだ「グリフィン・パークは四つ角すべてにパブ」も使わない。
+#   「収容1万7250人は20クラブで2番目に小さい」の言い方も使わない（建物の数字として1万7250人だけを出す）。
+#   グリフィン・パークは**収容の数字が食い違う**（12,573〜12,763）ので、旧スタジアムの収容は言わない。
+#
+# **同じ日の他の回とクラブ・人名を重ねない**
+#   リヴァプール・最年少の記録・イプスウィッチ・アトレティコ・アルバレスは出していない。
+#   出した固有名：アーセナル（プレミア初戦の相手）／オックスフォード／ハダースフィールド／ブラックバーン／ダービー・カウンティ
+#   ／セルジ・カノス／クリスティアン・ノアゴー（どちらもプレミア初戦の得点者）。
+#
+# **言わないと決めたもの**
+#   **女子の欧州選手権（2022）・女子代表戦は扱わない**（2026-09-16 指示。この器の歴史には入っているが落とした）。
+#   ラグビー（ロンドン・アイリッシュ）の本拠地としての歩みは、のちに管理下に入ったので言わない。
+#   工事費7100万ポンドは**stadiumdb の記事（2014年）と各サイトの転載だけ**で、クラブ・施工者の発表に辿れなかったので言わない。
+#   1席あたりの値段は割らない（②エミレーツの見立て）。20クラブの収容の順位表も使わない。
+#   2012年の発表は「1万5000人（のち2万人まで）」、英語版Wikipediaは「2万人（のち2万5000人まで）」と**食い違う**ので、
+#   2012年の収容は言わない。確かな数字は2002年の構想（2万3000〜2万5000人、Bees United 2002-11-06）と、
+#   2018年の起工時の1万7250人だけ。
+#   起工式の日付は 3月19日（Wikipedia）／3月20日（地元紙の記事の日付）と割れるので「2018年3月」までにした。
+#   「設計から開場まで3年足らず（Arup）／3年あまり（SSDA）」も食い違うので「3年ほど」にした。
+#   旧スタジアムの最後の試合・取り壊し・跡地の75戸の住宅は、建物そのものの話ではないので入れていない。
+#   オープニングの親善試合のゴールは「カノスが2点」（Bees United の試合記録・Wikipedia）。別の要約に
+#   「2対1で先行」とあったが、試合記録は2点とも彼とするので、点の順は言わない。
+#
+# 数字は自分で割った・引いた（検算した）:
+#   2002-11-06 → 2020-09-01 ＝ 17年9か月（6532日）／24,000 ÷ 17,250 = 1.3913 →「1.39倍」／24,000 − 17,250 = 6,750／
+#   16,479 ÷ 17,250 = 0.9553 →「95.5%」／2020-09-01 → 2021-08-13 ＝ 346日／
+#   2020-21 のホームのリーグ戦23試合のうち21試合は観客0（ESPN）、2000人が入ったのは12/5（ブラックバーン）と12/9（ダービー）の2試合
+#   → 合計4000人／16,479 ÷ 4,000 = 4.1198 →「4.1倍」／
+#   17,250 ÷ 25,000 = 0.69 →「69%」／3,000 − 1,874 = 1,126／敷地 31,000㎡ ÷ ピッチ 7,140㎡（105×68）= 4.34。
+#
+# 写真は Commons の原版から取り直した4枚（assets/images/20261012_stadium_brentford/、credits.json も同じ場所）。
+#   **見本どおり assets/backgrounds/stadium_ブレントフォード_in.png と同名の外観を使うと、両方とも元が小さかった**
+#   （in＝geograph 640x296 を1920幅に拡大済み／外観＝geograph 768x1024 の縦写真を横に切って拡大済み）。
+#   precheck の引き伸ばしは**拡大済みの PNG を見るので 1.0倍と出て素通りする**が、実物は3倍近い。取り直した：
+#   01_w＝満員に近い夜のスタンド（Jim Linwood・CC BY 2.0・2024-12-21 対ノッティンガム・フォレスト・4000x3000）／
+#   02_w＝線路の脇から見た外観（AndyScott・CC BY-SA 4.0・2020-05・4000x2660。サムネ・自動の入れ替えもこの1枚）／
+#   03_w＝キュー・ブリッジ駅と建設中の器（AndyScott・CC BY-SA 4.0・2019-05・2500x2348）／
+#   04_w＝ジーテックの看板が付いた入口（AndyScott・CC BY-SA 4.0・2023-10・3000x2004）。
+#   01 は観客が入った写真なので、観客のいなかった1年の話には使わず、`spread_long_cards` が挟む「サムネの写真」を
+#   02 にして、長い節の途中で観客入りの写真に化けないようにした。
+#   **assets/backgrounds/ のまま使うと、ショートが assets/stats/stadium_ブレントフォード_v.png
+#   （クラブ紹介④の基礎DATAの縦板）に化ける**（スタジアム紹介①で踏んだ）ので、写真は images/ に置く。
+#
+# **サムネは案を3つ出してユーザーに決めてもらう**（2026-10-11「サムネは相談して決めよう」）。
+#   ここに書いた thumbnail は案A（scene）。B（number）・C（scene・外観）は報告に書いた。
+date: 2026年10月12日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+theme:
+  id: stadium_brentford
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブレントフォード
+  title: ブレントフォードの本拠地、来夏は2万4000人が入る計画。何が起きるのか
+  question: 17年9か月かけて開いたこの器で、いま何が起きているのか
+  lead: 線路に囲まれた、開いてまだ6年の器。
+  hook: この器は、開いた年に、ほとんど客が入りませんでした。
+  takeaway: ブレントフォードの本拠地は収容1万7250人で、2002年の構想は2万3000〜2万5000人だった。計画の始まりから最初の試合まで17年9か月かかり、2020年9月1日に開いた。最初の1年はホームのリーグ戦23試合のうち21試合が無観客で、入場の合計は2000人の2試合ぶんの4000人。2021年8月13日のプレミア初戦、アーセナル戦の1万6479人は、その4.1倍にあたる。クラブは2027年の夏から年に最大6回、ピッチも使って最大2万4000人のコンサートを開く案を出していて、サッカーの日の1.39倍になる。この数字は2002年の構想の幅に収まる。建物の工事はしない案で、ハウンズロー区の許可が要る
+  opening_image: assets/images/20261012_stadium_brentford/01_w.jpg
+short_title: ブレントフォードの本拠地、来夏は2万4000人が入る計画
+thumbnail:
+  layout: scene
+  photo: assets/images/20261012_stadium_brentford/02_w.jpg
+  band: bottom
+  line1: ブレントフォード本拠地
+  line2: 来夏2万4000人が集まる●●
+  crests:
+  - ブレントフォード
+  tags:
+  - ブレントフォード
+  - ジーテック・コミュニティ・スタジアム
+  - プレミアリーグ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ブレントフォードの本拠地の基礎DATA
+  tier: 報道
+  telop: 来夏、収容1万7250人の器に最大2万4000人。コンサートの案が出ている
+  narrator: キャスター
+  card: &id_data
+    type: table
+    title: ブレントフォードの本拠地の基礎DATA
+    columns: &cols_data
+    - 項目
+    - 内容
+    rows: &rows_data
+    - - 収容人数
+      - 1万7250人
+    - - 開場
+      - 2020年9月1日
+    - - 場所
+      - 西ロンドン キュー・ブリッジ駅の隣
+    - - 敷地
+      - 約3万1000平方メートル
+    - - 名前の権利
+      - ジーテック（2022年から10年）
+  say:
+  - text: ロンドン西部、ブレントフォードの本拠地の話です。
+    short_only: true
+    image: assets/images/20261012_stadium_brentford/01_w.jpg
+  - text: 来年の夏、この本拠地にコンサートで2万4000人を入れる計画が出ています。
+    emph: true
+    image: assets/images/20261012_stadium_brentford/01_w.jpg
+    card: &id_stats
+      type: stats
+      title: 来夏の計画。サッカーの日より多い
+      items:
+      - - '24000'
+        - 人
+        - コンサートの日の最大（クラブの案）
+      - - '17250'
+        - 人
+        - サッカーの日の収容
+      - - '6'
+        - 回
+        - 来夏から、年に最大
+      focus: 0
+  - text: サッカーの日の収容は1万7250人。その1.39倍にあたります。
+    card:
+      <<: *id_stats
+      focus: 1
+  - text: 建物には手を入れません。ピッチを覆って、そこに最大1万3900人が立つ案です。
+    card: *id_stats
+  - text: 決めるのは、地元のハウンズロー区です。許可が出るかは、これからです。
+    short_only: true
+    card:
+      type: table
+      title: ブレントフォードの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 0
+  - text: この器は、サッカーとラグビーの、両方に使える作り。
+    card:
+      type: table
+      title: ブレントフォードの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 0
+  - text: 開場は2020年9月1日。場所は西ロンドン、キュー・ブリッジ駅のすぐ隣です。
+    card:
+      type: table
+      title: ブレントフォードの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 1
+  - text: 敷地は約3万1000平方メートル。ピッチ4枚ぶんより、少し広い土地。
+    card:
+      type: table
+      title: ブレントフォードの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 3
+  - text: 器の名前は、2022年7月から、ジーテックという会社が10年間持っています。
+    card:
+      type: table
+      title: ブレントフォードの本拠地の基礎DATA
+      columns: *cols_data
+      rows: *rows_data
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Gtech_Community_Stadium
+  - https://chiswickcalendar.co.uk/brentford-fc-files-for-permission-to-host-summer-concerts-at-the-gtech/
+  - https://www.timeout.com/london/news/brentford-gtech-stadium-gigs-062926
+  - https://www.cityam.com/brentford-to-seek-permission-for-six-concerts-at-stadium/
+  - https://roundtable.io/sports/soccer/premier-league/brentford/news/brentford-reveal-full-plans-for-24-000-capacity-gtech-concerts
+  - https://insidersport.com/2022/07/29/home-of-brentford-fc-becomes-gtech-community-stadium/
+- id: ground
+  heading: 17年9か月の計画
+  tier: 背景
+  telop: 2002年の構想から、最初の試合まで。起工式は2018年3月
+  narrator: 解説
+  card: &id_time
+    type: timeline
+    title: 計画から最初の試合まで
+    rows: &rows_time
+    - - 2002年11月
+      - ライオネル・ロードに新しい本拠地の構想
+    - - 2012年6月
+      - クラブがその土地を買う
+    - - 2014年12月
+      - 建設会社と開発の契約
+    - - 2016年9月
+      - 最後の1区画の取得が終わる
+    - - 2018年3月
+      - 起工式
+    - - 2020年9月
+      - 最初の試合
+    focus: 2020年9月
+  say:
+  - text: この器の計画は、最初の試合の17年9か月前に始まっています。
+    image: assets/images/20261012_stadium_brentford/03_w.jpg
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: 2002年11月、サポーターの団体が、新しい本拠地の構想を発表します。
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: 場所はライオネル・ロード。収容は2万3000人から2万5000人でした。
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: 近くを走るモノレールの終点にする話まで、付いていました。
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: そのモノレールの話は、のちに消えています。
+    card:
+      <<: *id_time
+      highlight_row: 0
+  - text: 2012年6月、クラブがその土地を買いました。
+    card:
+      <<: *id_time
+      highlight_row: 1
+  - text: それまでは、廃棄物の中継などに使われていた土地です。
+    card:
+      <<: *id_time
+      highlight_row: 1
+  - text: 当時の目標は、2016-17シーズンの開幕に間に合わせること。
+    card:
+      <<: *id_time
+      highlight_row: 1
+  - text: 2014年12月には、建設会社との開発の契約まで進みます。
+    card:
+      <<: *id_time
+      highlight_row: 2
+  - text: ところが、最後の用地が手に入ったのは2016年9月。
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: 目標にした開幕は、もう過ぎていました。
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: 持ち主が異議を唱え、区が強制的に買い取る手続きに、時間がかかったためです。
+    card:
+      <<: *id_time
+      highlight_row: 3
+  - text: 起工式は2018年3月でした。
+    card:
+      <<: *id_time
+      highlight_row: 4
+  - text: 最初の鍬入れは、長年のサポーター、マティット家が行いました。
+    card:
+      <<: *id_time
+      highlight_row: 4
+  - text: いちばん下は、1歳の孫娘でした。
+    emph: true
+    card:
+      <<: *id_time
+      highlight_row: 4
+  - text: 完成の予定は2019年12月でした。
+    card:
+      <<: *id_time
+      highlight_row: 5
+  - text: 使える状態になったのは、2020年8月30日。8か月のおくれです。
+    card:
+      <<: *id_time
+      highlight_row: 5
+  - text: 2020年9月1日、最初の試合が開きました。
+    card:
+      <<: *id_time
+      highlight_row: 5
+  sources:
+  - https://www.beesunited.org.uk/in-focus/bees-united-announce-plans-for-new-stadium
+  - https://www.beesunited.org.uk/?p=487
+  - https://chiswickw4.com/shared/lionelroad002.htm
+  - https://en.wikipedia.org/wiki/Gtech_Community_Stadium
+  - https://en.wikipedia.org/wiki/Griffin_Park
+- id: build
+  heading: 三方を線路にはさまれた土地に建てる
+  tier: 背景
+  telop: 線路に削られた敷地で、鉄を3分の1減らして成り立たせた
+  narrator: 解説
+  card: &id_build
+    type: stats
+    title: この器をつくった数字
+    items:
+    - - '45'
+      - ％
+      - 全体の費用のうち、構造そのものの割合
+    - - 3分の1
+      - ''
+      - 減らした主な鉄骨（はじめの案から）
+    - - '8400'
+      - トン
+      - 減らせた二酸化炭素
+    focus: 0
+  say:
+  - text: ブレントフォードの本拠地の敷地は、三方を鉄道の線路にはさまれた土地でした。
+    image: assets/images/20261012_stadium_brentford/03_w.jpg
+    card: none
+  - text: そのため、スタンドの四隅のうち2つが、角を切り落とした形になっています。
+  - text: 南スタンドだけが高く、ほかの3つは低い。高さの違う4つを、つなぐ必要がありました。
+  - text: 南スタンドの両端を斜めに切って、屋根の先を1つの面につなぎました。
+  - text: その先に、キュー・ブリッジの古い給水塔が見える形になっています。
+  - text: もう1つの難題は、お金でした。
+  - text: 全体の費用のうち、構造そのものが45％を占めました。ふつうの建物より高い割合です。
+    card: *id_build
+  - text: 設計を見直して、鉄筋コンクリートは、はじめの案の半分にしました。
+    card:
+      <<: *id_build
+      focus: 1
+  - text: 主な鉄骨も、3分の1減らしています。
+    card:
+      <<: *id_build
+      focus: 1
+  - text: この節約が、事業をお金の面で成り立たせたとされています。
+    emph: true
+    card:
+      <<: *id_build
+      focus: 1
+  - text: 二酸化炭素では、8400トンの削減になりました。
+    card:
+      <<: *id_build
+      focus: 2
+  - text: 客席の中身も、見直しました。
+    card: none
+  - text: 企業向けの席は、はじめの計画の1874席から、3000席に増えています。
+    emph: true
+    card: &id_hosp
+      type: waterfall
+      title: 企業向けの席は、こう増えた（自分で引いた）
+      start:
+      - はじめの計画
+      - 1874
+      steps:
+      - - 増やした席
+        - 1126
+      total:
+      - 開場のとき
+      - 3000
+      unit: 席
+  - text: ラグビーのクラブとの共用も考えて、設計されています。
+    card: none
+  - text: 設計から開場まで、3年ほどでした。
+  sources:
+  - https://www.steelconstruction.info/case-studies/leisure-buildings/brentford-community-stadium/
+  - https://www.arup.com/projects/brentford-community-stadium/
+  - https://en.wikipedia.org/wiki/Gtech_Community_Stadium
+- id: matches
+  heading: 客のいなかった1年
+  tier: 報道
+  telop: 最初の試合は無観客。満員に近い客が入ったのは346日後
+  narrator: キャスター
+  card: &id_match
+    type: table
+    title: ブレントフォードの本拠地で起きた4つの日
+    columns: &cols_match
+    - 日付
+    - 試合
+    - 入場
+    rows: &rows_match
+    - - 2020年9月1日
+      - 親善 オックスフォード
+      - 無観客
+    - - 2020年9月19日
+      - リーグ初戦 ハダースフィールド
+      - 無観客
+    - - 2020年12月5日
+      - ブラックバーン
+      - 2000人
+    - - 2021年8月13日
+      - プレミア初戦 アーセナル
+      - 1万6479人
+  say:
+  - text: この器が最初に迎えたのは、客のいない試合でした。
+    image: assets/images/20261012_stadium_brentford/04_w.jpg
+    card: *id_match
+  - text: 2020年9月1日、オックスフォードとの親善試合。2対2の引き分けでした。
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 器でのいちばん最初のゴールは、セルジ・カノス。2点とも、彼が決めています。
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 新型コロナの規制で、満員になるはずだったスタンドは空でした。
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 0
+  - text: 9月19日、リーグ戦の初戦。ハダースフィールドに3対0の勝ちでした。
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: これも、観客はいません。
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 1
+  - text: 客が入ったのは12月5日。ブラックバーンと2対2の引き分けでした。
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: 入れたのは2000人だけ。規制で、上限がその数だったからです。
+    emph: true
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 2
+  - text: 12月9日のダービー・カウンティ戦にも、同じ2000人が入りました。
+    card: none
+  - text: この年のホームのリーグ戦は、2部の23試合。客が入ったのは、その2試合だけです。
+    card: &id_empty
+      type: stats
+      title: 開場1年目、ホームのリーグ戦23試合
+      items:
+      - - '21'
+        - 試合
+        - 観客のいなかった試合
+      - - '2'
+        - 試合
+        - 2000人が入った試合
+      - - '4000'
+        - 人
+        - 23試合の入場の合計
+      focus: 2
+  - text: 満員に近い客が入ったのは、2021年8月13日。プレミアの初戦、アーセナル戦です。
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: 入場は1万6479人。収容の95.5％にあたります。
+    emph: true
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: セルジ・カノスと、クリスティアン・ノアゴーが決めて、2対0の勝ちでした。
+    card:
+      type: table
+      title: ブレントフォードの本拠地で起きた4つの日
+      columns: *cols_match
+      rows: *rows_match
+      highlight_row: 3
+  - text: 開場から346日たっていました。
+    card: none
+  sources:
+  - https://www.beesunited.org.uk/match-reports/the-first-game-at-brentfords-new-stadium/
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.2/teams/337/schedule?season=2020
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=606029
+  - https://uk.sports.yahoo.com/news/brentford-fans-first-taste-stadium-173010489.html
+  - https://en.wikipedia.org/wiki/Gtech_Community_Stadium
+- id: reform
+  heading: 手を入れてきた器
+  tier: 背景
+  telop: 2022年に立って見られる席と、名前の権利。次は使い方
+  narrator: 解説
+  card: &id_reform
+    type: timeline
+    title: 開場のあとの、器の変わり方
+    rows: &rows_reform
+    - - 2020年9月
+      - 開場
+    - - 2021年8月
+      - プレミア初戦。入場1万6479人
+    - - 2022年7月
+      - 名前の権利を10年で預ける
+    - - 2022-23
+      - 西スタンドに手すり。立って見られる席に
+    focus: 2022-23
+  say:
+  - text: 開いたあとも、ブレントフォードの本拠地には少しずつ手が入っています。
+    image: assets/images/20261012_stadium_brentford/04_w.jpg
+    card:
+      <<: *id_reform
+      highlight_row: 0
+  - text: 2022年7月、器の名前を10年間、ジーテックに預ける契約が結ばれました。
+    card:
+      <<: *id_reform
+      highlight_row: 2
+  - text: クラブの歴史でいちばん大きなスポンサー契約だった、とクラブは発表しています。
+    card:
+      <<: *id_reform
+      highlight_row: 2
+  - text: 2022-23シーズンからは、西スタンドの座席の前に、手すりが付きました。
+    card:
+      <<: *id_reform
+      highlight_row: 3
+  - text: 座席はそのままです。手すりを付けて、立って見られる区画にしたものです。
+    card:
+      <<: *id_reform
+      highlight_row: 3
+  - text: 建物を建て直さずに、使い方で変える。次の手も、同じ形です。
+    emph: true
+    card: none
+  sources:
+  - https://insidersport.com/2022/07/29/home-of-brentford-fc-becomes-gtech-community-stadium/
+  - https://www.brentfordfc.com/en/news/safe-standing-for-next-season-630362
+  - https://en.wikipedia.org/wiki/Gtech_Community_Stadium
+- id: view
+  viewpoint: true
+  heading: 見立て・17年待った器は、来夏どこまで広がるのか
+  tier: 報道
+  telop: 2002年の構想の幅に、来夏の案が収まる
+  narrator: 解説
+  card: &id_first
+    type: calc
+    title: 1年目の23試合と、プレミア初戦1試合（自分で割った）
+    terms:
+    - - 1万6479人
+      - プレミア初戦1試合の入場
+    - - 4000人
+      - 1年目、ホーム23試合の入場の合計
+    - - 4.1倍
+      - 割った答え
+    ops:
+    - ÷
+    - ＝
+  say:
+  - text: では、この器の数字を、自分で並べ直してみます。
+    image: assets/images/20261012_stadium_brentford/01_w.jpg
+    card: *id_first
+  - text: プレミア初戦の1試合の客を、開いた1年目の客の合計で割ってみます。
+    card: *id_first
+  - text: 答えは4.1倍。1年かけて入った客の、4倍あまりが、たった1試合に入りました。
+    emph: true
+    card: *id_first
+  - text: 次に、収容そのものの動きを並べます。
+    card: &id_cap
+      type: table
+      title: 収容の動き（自分で並べた）
+      columns: &cols_cap
+      - 時点
+      - 収容
+      rows: &rows_cap
+      - - 2002年の構想
+        - 2万3000〜2万5000人
+      - - 2020年の開場
+        - 1万7250人
+      - - 来夏のコンサート案
+        - 最大2万4000人
+  - text: いちばん上が、2002年の構想です。いまの収容より、ずっと大きな器でした。
+    card:
+      type: table
+      title: 収容の動き（自分で並べた）
+      columns: *cols_cap
+      rows: *rows_cap
+      highlight_row: 0
+  - text: 出来上がったのは、その上の端の69％です。
+    emph: true
+    card:
+      type: table
+      title: 収容の動き（自分で並べた）
+      columns: *cols_cap
+      rows: *rows_cap
+      highlight_row: 1
+  - text: ところが、来夏のコンサート案は、その構想の幅に入っています。
+    emph: true
+    card:
+      type: table
+      title: 収容の動き（自分で並べた）
+      columns: *cols_cap
+      rows: *rows_cap
+      highlight_row: 2
+    mark:
+      kind: circle
+      row: 2
+      col: 1
+      text: 構想の幅の中
+  - text: 開くのは、6月と7月の週末。夜は遅くとも11時まで。建物の工事は、しない案です。
+  - text: ハウンズロー区の判断は、まだ出ていません。
+  - text: クラブは、環境への影響を調べる報告の書類を出したところです。
+  - text: 許可が出れば、最初の公演は2027年の夏。
+    emph: true
+  - text: 17年9か月かけて開いた器が、使われ方で、もう一度大きくなるのかどうか。
+  sources:
+  - https://chiswickcalendar.co.uk/brentford-fc-files-for-permission-to-host-summer-concerts-at-the-gtech/
+  - https://chiswickcalendar.co.uk/brentford-fc-proposing-to-stage-concerts-at-the-gtech-stadium/
+  - https://www.timeout.com/london/news/brentford-gtech-stadium-gigs-062926
+  - https://roundtable.io/sports/soccer/premier-league/brentford/news/brentford-concert-plans-could-deliver-3-8m-local-economy-boost
+  - https://www.beesunited.org.uk/in-focus/bees-united-announce-plans-for-new-stadium

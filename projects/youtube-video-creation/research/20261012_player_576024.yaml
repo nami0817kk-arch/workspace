@@ -1,0 +1,621 @@
+# フリアン・アルバレス（アトレティコ・マドリード）の紹介。8節の型（2026-09-28）を、ライス（research/20261011_player_357662.yaml）の形にそろえた。
+# 雛形は tools/player_intro.py 576024。材料は research/raw/20261012_alvarez_material.md。
+# 数字は FotMob（974753）・Transfermarkt API（576024）・英語版Wikipedia・ESPN の試合記録。
+#
+# **鍵の付け方**：ライスと同じく Transfermarkt の番号（576024）。FotMob の番号（974753）は板のファイル名に入っている。
+#
+# **この回で避けたもの（ユーザー指示）**
+# - **アトレティコというクラブの話をしない。**財政・本拠地・ユニフォーム・クラブの歴史・オーナーは1行も入れていない。
+#   クラブ名が出るのは「どこに所属しているか」「移籍先」「次の試合」「本人の成績の主語」だけ。
+# - **直近30日に出した話と重ねない。**9/25 に「バルサのデコがアルバレスについて初めて口にしたこと」（deco_summit）、
+#   9/20 に「アトレティコ対レアル・マドリード 2対1」の回を出している。**デコの発言も、バルセロナの名前も、9/20 の試合の中身も入れていない。**
+#   夏の移籍騒動は「本人が移籍を望むと語った／クラブは交渉に応じず、残っている」の1行だけ（今季の出番を読むのに要る）。
+#   ブーイング・契約解除金・代理人の話は入れていない。
+# - **同じ日に出す他の回と重ねない。**リヴァプール・ブレントフォード・イプスウィッチ・レバンテの名前は台本のどこにも出していない。
+#   **同じ日の移籍の回（アザール：レアル・マドリード・チェルシー）とも重ねない**ため、レアル・マドリード・チェルシー・ベルナベウの名前は台本から外した（相手は「同じマドリードのライバル」）。
+#   マンチェスター・シティは「前所属」として、マンチェスター・ユナイテッドは「次の試合の相手」として出る。
+#
+# **数字の食い違い・直したこと（材料 §8）**
+# - **市場価値：雛形は 1.2億ユーロ（「前回の1億から、さらに上がりました」）と書いたが、古かった。**
+#   雛形の元の選手控え（research/player_pool/profiles/576024.json、9/28 作成）は 7/22 の 1.2億ユーロのまま。
+#   Transfermarkt API を引き直すと **2026-10-05 に 1.1億ユーロへ下がっている**（直前は 7/22 の 1.2億＝最高額）。
+#   **1.1億ユーロ（10/5 更新、最高は 1.2億）に直した。**「さらに上がりました」も外した。FotMob は 1億1250万ユーロ（別の集計）。
+# - 身長：Transfermarkt 1.70m・FotMob 170cm・英語版Wikipedia 1.70m で一致。**170センチ**。
+# - クラブの通算：FotMob も英語版Wikipedia も **336試合139得点**（リーベル 122/54・シティ 103/36・アトレティコ 111/49）で一致。
+#   代表は FotMob 62試合16得点（10/6 ベナン戦まで）。英語版Wikipedia は 61試合（10/3 まで。ベナン戦が未反映）。**62試合16得点を使う。**
+# - **過去5季の表は、雛形（Transfermarkt の「代表を含む全公式戦」）から、クラブだけの数字に差し替えた。**
+#   Transfermarkt の 22/23 は 19得点で、2022年ワールドカップの得点（4点）が入っていない（シティ17点＋W杯4点にならない）。
+#   **FotMob と英語版Wikipedia で合う数字だけ**にした。**2025年6月のクラブワールドカップ（3試合1アシスト）は 24/25 に数える**
+#   （英語版Wikipedia と Transfermarkt がそうしている。FotMob は 25/26 に入れている）。FotMob の 24/25（54試合・7アシスト）に足して 57試合・8アシスト、
+#   25/26 は 52試合・10アシストから引いて 49試合・9アシスト。**この付け替えで、5つの季と2018〜2021年（96試合36得点）を足すと 336試合139得点に合う。**
+#   21/22 はリーベルの2021年（暦年）と2022年前半がまたがるので、**2022年前半（26試合18得点6アシスト）の1行**にした。
+# - 直近5試合の日付は**試合のあった現地の日付**（ESPN）。FotMob は UTC なので 10/1・10/4 になるが、ボリビア戦は 9/30、ブルキナファソ戦は 10/3。
+# - 「ダブルタッチ」のPK順：Goal は2人目、サッカーキングは4人目。**順番は言わない**（Wikipedia は2人目）。PK戦は 2-4 でレアルが勝った。
+# - 「369日」は 2022-12-18（W杯決勝）から 2023-12-22（クラブW杯決勝）の差。City 公式誌も同じ数え方。6つ＝W杯・CL・プレミア・FAカップ・UEFAスーパーカップ・クラブW杯。
+# - アトレティコの1大会10得点がクラブ記録：UEFA の記事は読めなかった（タイムアウト）。El Gráfico・Wikipedia・複数報道で確認。
+#
+# **板の直し（道具）**：市場価値の板で、クラブ名の札が長いとき（「マンチェスター・シティ」と「アトレティコ・マドリード」）に
+#   重なり、最新の額（1.1億€）が折れ線の頂点に被っていた。字の長さで札の段を選び、額は枠の上へ逃がすように直した
+#   （tools/fotmob_player.py）。リーベルが「CA River Plate」のままだったので config/clubs.yaml に足した。
+#
+# **パーセンタイルを数として読まない**（10/01 の指摘）。レーダーの軸は「同じFWの中での位置の目安（100が最上位）」として
+#   位置で言い、「得点 35」は今季0得点との食い違いが出るので読み上げていない。
+#
+# **入れなかった材料**
+# - 夏の移籍騒動の中身（ブーイング・契約解除金・CEO の発言・代理人）。9/25 に出した話と重なり、選手を小さく見せるため。
+# - 兄弟（アグスティンとラファエル）のノンリーグ・アベイヘイの話：Wikipedia だけで裏が取れていない。
+# - レアル・マドリードのユース大会の話・ボカの練習参加：記事で年齢が食い違う（11歳／13歳未満の規則）。
+# - 子どもの誕生・交際相手の話（私人の話）。
+#
+# **写真は2つの時期**：2019年のリーベル（Commons、CC BY-SA）と、2026年のアルゼンチン代表（W杯決勝・エジプト戦、Commons、CC BY-SA、撮影 Bryan Berlin）の4枚。
+#   **シティ期・アトレティコ期の写真は使えなかった**：Commons にある本人の写真は、シティ（503x735、1.9倍に伸びて× ）・アトレティコ（本人は5606px の写真の中の小さな1人。顔が120px）・
+#   2022年W杯（メッシが主役の拡大画像で、粗い）のどれも、本編で伸ばさずに使える大きさ・主役の写真が無かった。2026年のシャツには「2022年の世界王者」の星が付いているので、W杯・シティ期の行にもこの写真を使った。
+#   同じ選手を横に並べていない。スタジアムの写真は出していない。
+#
+# **本人の言葉は3つ**
+#   ①「小さすぎる夢はない。大きすぎる夢もない」（City 公式誌の特集。英語を自訳）
+#   ②「4歳か5歳のときから、アラーニャと呼ばれている」（Billiken、2022-12-19。スペイン語を自訳）
+#   ③「僕はそれを1000回見たよ」「実際、僕は触れた感覚がなかった」（Goal 日本版の訳そのまま。原文は SPORT 経由の ESPN）
+date: 2026年10月12日
+slot: other_1
+format: news
+series: 有名選手の紹介
+people:
+- フリアン・アルバレス
+theme:
+  id: player_576024
+  league: spain
+  kind: other
+  topic: アトレティコ・マドリード
+  title: フリアン・アルバレスってどんな選手？ あだ名の由来は、コーチの一言
+  question: フリアン・アルバレスはどういう作りの選手で、26歳で世界の頂点を何度も経験したのはなぜか
+  takeaway: 25/26シーズンを大会ごとに数えると、1点にかかる試合数はラ・リーガが3.6試合、チャンピオンズリーグは1.5試合で半分以下。ワールドカップも2022年は7試合で4得点で、大きな試合ほど決める選手。同じFWの中でボールタッチとチャンス創出は上の側にいて、点だけを待つ9番ではない。今季はクラブの公式戦5試合で0得点1アシスト、次の節目は日本時間10月14日のマンチェスター・ユナイテッド戦
+  nameplate: フリアン・アルバレス｜アトレティコ・マドリード FW／アルゼンチン代表
+  opening_image: assets/images/20261012_player_576024/open2026/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+watch: 明日は⑪エリオット・アンダーソン
+short_title: アルバレスってどんな選手？
+thumbnail:
+  line1: アルバレス、W杯から369日
+  line2: タイトルを●つ手にした
+  tags:
+  - アトレティコ・マドリード
+  - フリアン・アルバレス
+  - アルゼンチン代表
+  - 選手紹介
+  - プレースタイル
+  photo: assets/images/20261012_player_576024/thumbfull/01.jpg
+  photos: []
+  short_photo: assets/images/20261012_player_576024/arg2026d/01_v.jpg
+sections:
+- id: hook
+  heading: 369日で、6つのタイトル
+  tier: 報道
+  telop: ワールドカップ決勝から369日で6つ
+  narrator: キャスター
+  card:
+    type: stats
+    title: フリアン・アルバレスの26歳
+    items:
+    - ['369', 日, ワールドカップ決勝からクラブ世界一まで]
+    - ['6', つ, その間に手にしたタイトル]
+    - ['170', センチ, 身長]
+    focus: 0
+  say:
+  - text: アトレティコ・マドリードの背番号19、フリアン・アルバレス。26歳です。
+    image: assets/images/20261012_player_576024/arg2026b/01_w.jpg
+  - text: 2022年12月18日、ワールドカップの決勝から。
+    card: none
+  - text: 2023年12月22日、クラブワールドカップの決勝まで。
+    card: none
+  - text: 369日で、6つ。平均すると、61日に1つのタイトルです。
+    emph: true
+    card: &hook_stats
+      type: stats
+      title: フリアン・アルバレスの26歳
+      items:
+      - ['369', 日, ワールドカップ決勝からクラブ世界一まで]
+      - ['6', つ, その間に手にしたタイトル]
+      - ['170', センチ, 身長]
+      focus: 1
+  - text: ワールドカップ、欧州王者、リーグ優勝にカップ優勝、そしてクラブ世界一。
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: それでも背は170センチ。決して大柄ではありません。
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 始まりは、アルゼンチンの小さな村。本人は、夢についてこう語っています。
+    card: none
+  - voice: アルバレス
+    text: 小さすぎる夢はない
+  - voice: アルバレス
+    text: 大きすぎる夢もない
+    cont: true
+    pause: 0.5
+  quotes_from:
+  - https://www.mancity.com/features/alvarez-special
+  sources:
+  - https://www.mancity.com/features/alvarez-special
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Alvarez
+- id: data
+  heading: 基礎DATA
+  tier: 報道
+  telop: フリアン・アルバレスの基礎DATA
+  narrator: キャスター
+  card:
+    type: table
+    title: フリアン・アルバレス（アトレティコ・マドリード）
+    columns:
+    - 項目
+    - 内容
+    rows: &bdata
+    - - 所属
+      - アトレティコ・マドリード（19番）
+    - - ポジション
+      - センターフォワード
+    - - 生年月日
+      - 2000年1月31日（26歳）
+    - - 生まれ
+      - アルゼンチン・コルドバ州カルチン
+    - - 体格
+      - 170cm・右利き
+    - - 契約
+      - 2030年6月まで
+    - - 市場価値
+      - 1.1億ユーロ
+    source: Transfermarkt・FotMob
+  say:
+  - text: アルバレスが立つのは最前線。センターフォワードです。
+    image: assets/images/20261012_player_576024/arg2026a/01.jpg
+    card: &data_card
+      type: table
+      title: フリアン・アルバレス（アトレティコ・マドリード）
+      columns: [項目, 内容]
+      rows: *bdata
+      source: Transfermarkt・FotMob
+      highlight_row: 1
+  - text: 生まれはアルゼンチン中部、コルドバ州のカルチン。人口は3000人ほどの村です。
+    card:
+      <<: *data_card
+      highlight_row: 3
+  - text: 利き足は右。契約は2030年6月まで。
+    card:
+      <<: *data_card
+      highlight_row: 5
+  - text: 市場価値は1億1000万ユーロ。7月につけた最高額は、1億2000万ユーロです。
+    emph: true
+    card:
+      <<: *data_card
+      highlight_row: 6
+  sources:
+  - https://www.transfermarkt.com/julian-alvarez/profil/spieler/576024
+  - https://www.fotmob.com/players/974753
+  - https://www.batimes.com.ar/news/sports/argentinas-world-cup-spider-man-julian-alvarez-the-pride-of-calchin.phtml
+- id: career
+  heading: 村の少年が、世界の頂点に立つまで
+  tier: 報道
+  telop: 2022年12月18日、ワールドカップ優勝
+  narrator: 解説
+  card:
+    type: table
+    title: 歩んできた道
+    columns: [シーズン, クラブ, 年齢, 最高評価額]
+    rows: &career_rows
+    - ['18/19〜21/22', リーベル, 18〜22歳, 2300万ユーロ]
+    - ['22/23〜23/24', シティ, 22〜24歳, 9000万ユーロ]
+    - ['24/25〜26/27', アトレティコ, 24〜26歳, 1.2億ユーロ]
+    source: Transfermarkt
+  say:
+  - text: アルバレスは2016年、地元の村のクラブから、リーベル・プレートの下部組織へ。
+    image: assets/images/20261012_player_576024/river2019/01.jpg
+    card: &career_card
+      type: table
+      title: 歩んできた道
+      columns: [シーズン, クラブ, 年齢, 最高評価額]
+      rows: *career_rows
+      source: Transfermarkt
+      highlight_row: 0
+  - text: 2018年10月にデビュー。12月9日の南米の決勝に、延長の97分から出ます。
+    card: *career_card
+  - text: 2022年1月31日、22歳の誕生日。シティ入りが発表されました。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 移籍金は報道で約1400万ポンド。7月まではリーベルに残る約束でした。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: その5月25日、コパ・リベルタドーレス。アリアンサ・リマ戦で、ひとりで6点。
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - text: リーベルの選手では史上初。大会の1試合の最多にも並びました。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 0
+  - text: 7月にシティへ。その冬のワールドカップは、初戦も2戦目もベンチから。
+    image: assets/images/20261012_player_576024/arg2026c/01_w.jpg
+    card: none
+  - text: 3戦目のポーランド戦から先発に。決めて、次のオーストラリア戦でも決めます。
+  - text: クロアチア戦で2点。22歳でした。
+  - text: 準決勝か決勝で2点を取った選手では、1958年のペレ以来の若さ。
+    emph: true
+  - text: 決勝のフランス戦も先発。PK戦の末に世界の頂点へ。大会は7試合で4得点でした。
+  - text: その5か月後、チャンピオンズリーグ準決勝は4対0。最後の1点を決めました。
+    image: assets/images/20261012_player_576024/arg2026d/01.jpg
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 6月の決勝はベンチでしたが、欧州の頂点に立ちます。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: クラブワールドカップ決勝、キックオフから40秒。決勝で史上最速のゴール。
+    emph: true
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 88分にも決めて、4対0。ワールドカップ優勝から、ちょうど1年と4日でした。
+    card:
+      <<: *career_card
+      highlight_row: 1
+  - text: 2024年8月、アトレティコへ。移籍金は報道で最大8200万ポンド。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: シティが払った額の、およそ6倍です。
+    card:
+      <<: *career_card
+      highlight_row: 2
+  - text: 市場価値は、18歳の100万ユーロから、今年のピークまで。
+    image: assets/stats/player_20261012_974753_value.png
+    no_telop: true
+  sources:
+  - https://www.transfermarkt.com/julian-alvarez/profil/spieler/576024
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Alvarez
+  - https://www.mancity.com/features/alvarez-special
+  - https://www.skysports.com/football/news/11679/13191744/julian-alvarez-transfer-atletico-madrid-agree-lb81m-fee-to-sign-man-city-and-argentina-forward
+  - https://www.mediotiempo.com/futbol/copa-libertadores/julian-alvarez-anota-seis-goles-con-river-plate-alianza-lima
+  - https://www.soccerway.com/news/argentina-s-alvarez-takes-his-chance-and-then-some/QNT77xdM
+  - https://lapaginamillonaria.com/riverplate/Julian-Alvarez-se-consagro-como-el-goleador-de-la-Liga-Profesional-que-jugadores-de-River-lo-lograron-con-su-edad-20211213-0009.html
+- id: style
+  heading: 触って、つないで、ゴール前へ
+  tier: 報道
+  telop: ボールタッチ96、チャンス創出95
+  narrator: 解説
+  card:
+    type: bars
+    title: 同じFWの中での位置（100が最上位）
+    unit: ''
+    items:
+    - label: ボールタッチ
+      value: 96
+      highlight: true
+    - label: チャンス創出
+      value: 95
+      highlight: true
+    - label: シュート数
+      value: 63
+    - label: 守備の関与
+      value: 28
+    - label: 空中戦
+      value: 5
+    source: FotMob
+  say:
+  - text: ここからはアルバレスの形。同じFWと比べた図です。
+    image: assets/stats/player_20261012_974753_radar.png
+    no_telop: true
+  - text: いちばん外側に出るのが、ボールタッチの96とチャンス創出の95。
+    image: assets/stats/player_20261012_974753_radar.png
+    no_telop: true
+  - text: 触る回数も、味方の決定機につなぐパスも、同じFWの中で上の側です。
+    image: assets/stats/player_20261012_974753_radar.png
+    no_telop: true
+  - text: いちばん内側は空中戦の5。競り合うより、足元で勝負する形。
+    image: assets/stats/player_20261012_974753_radar.png
+    no_telop: true
+  - text: ティム・ヴィッカリー記者は、「中盤の魂を持った、ストライカー」と評しました。
+    emph: true
+    image: assets/images/20261012_player_576024/arg2026a/01_w.jpg
+    card: none
+  - text: ボールに触る場所は、敵陣のペナルティエリアのすぐ手前がいちばん濃い。
+    image: assets/stats/player_20261012_974753_heat.png
+    no_telop: true
+    card: none
+  - text: 自陣の中盤にも、色が伸びています。最前線から降りて、組み立てにも加わる。
+    emph: true
+    image: assets/stats/player_20261012_974753_heat.png
+    no_telop: true
+  - text: 今季のシュートは8本。そのうち5本が、ペナルティエリアの中でした。
+    image: assets/stats/player_20261012_974753_shots.png
+    no_telop: true
+  - text: ゴール期待値は、決まりやすさの合計。今季は0.7で、まだ点にはつながっていません。
+    image: assets/stats/player_20261012_974753_shots.png
+    no_telop: true
+  sources:
+  - https://www.fotmob.com/players/974753
+  - https://www.mancity.com/features/alvarez-special
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Alvarez
+- id: past
+  heading: 5つの季と、通算398試合
+  tier: 報道
+  telop: 直近5シーズンの試合と得点
+  narrator: 解説
+  card:
+    type: table
+    title: フリアン・アルバレス 直近5シーズン（クラブの全公式戦）
+    columns:
+    - シーズン
+    - クラブ
+    - 試合
+    - 得点
+    - アシスト
+    rows: &season_rows
+    - ['2022前半', リーベル・プレート, '26', '18', '6']
+    - ['22/23', マンチェスター・シティ, '49', '17', '4']
+    - ['23/24', マンチェスター・シティ, '54', '19', '13']
+    - ['24/25', アトレティコ・マドリード, '57', '29', '8']
+    - ['25/26', アトレティコ・マドリード, '49', '20', '9']
+    source: FotMob・英語版Wikipedia（クラブW杯は24/25に数える）
+  rows_total:
+  - &t1 [リーベル・プレート, '122', '54']
+  - &t2 [マンチェスター・シティ, '103', '36']
+  - &t3 [アトレティコ・マドリード, '111', '49']
+  - &t4 [アルゼンチン代表, '62', '16']
+  - &t5 [合計, '398', '155']
+  say:
+  - text: まずは、アルバレスが5つの季に積んだ、クラブの公式戦の数字。
+    image: assets/images/20261012_player_576024/arg2026c/01.jpg
+    card: &past_card
+      type: table
+      title: フリアン・アルバレス 直近5シーズン（クラブの全公式戦）
+      columns: [シーズン, クラブ, 試合, 得点, アシスト]
+      rows: *season_rows
+      source: FotMob・英語版Wikipedia（クラブW杯は24/25に数える）
+      highlight_row: 0
+  - text: シティは1年目が49試合17得点、2年目が54試合19得点。
+    card:
+      <<: *past_card
+      highlight_row: 2
+  - text: アトレティコの1年目は57試合で29得点。
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 5つの季でいちばん多く、クラブの得点王でした。
+    emph: true
+    card:
+      <<: *past_card
+      highlight_row: 3
+  - text: 通算も見ます。リーベルで122試合54得点、シティで103試合36得点。
+    card: &total_card
+      type: table
+      title: フリアン・アルバレス 通算（2026年10月）
+      columns: [所属, 試合, 得点]
+      rows: [*t1, *t2, *t3, *t4, *t5]
+      source: FotMob・英語版Wikipedia
+      highlight_row: 0
+  - text: アトレティコで111試合49得点。クラブで336試合です。
+    card:
+      <<: *total_card
+      highlight_row: 2
+  - text: アルゼンチン代表は62試合16得点。デビューは2021年6月、21歳でした。
+    card:
+      <<: *total_card
+      highlight_row: 3
+  - text: 合わせて398試合155得点。26歳で、この数です。
+    emph: true
+    card:
+      <<: *total_card
+      highlight_row: 4
+  sources:
+  - https://www.fotmob.com/players/974753
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Alvarez
+- id: season
+  heading: 今季の出番と、直近5試合
+  tier: 報道
+  telop: 今季ここまで
+  narrator: 解説
+  card:
+    type: table
+    title: 直近5試合（代表を含む）
+    columns:
+    - 日付
+    - 相手
+    - 出場
+    - 得点
+    - 評点
+    rows: &recent_rows
+    - - 10/10
+      - アラベス
+      - 45分
+      - 0G 0A
+      - '6.7'
+    - - 10/6
+      - ベナン
+      - 60分
+      - 0G 0A
+      - '7.2'
+    - - 10/3
+      - ブルキナファソ
+      - 45分
+      - 1G 0A
+      - '7.9'
+    - - 9/30
+      - ボリビア
+      - 90分
+      - 0G 0A
+      - '7.3'
+    - - 9/20
+      - マドリードのライバル
+      - 28分
+      - 0G 0A
+      - '6.8'
+    source: FotMob・ESPN
+  say:
+  - text: 今季のアルバレスは、クラブの公式戦5試合で0得点1アシスト。出た時間は218分。
+    image: assets/images/20261012_player_576024/arg2026d/01.jpg
+    card: &recent_card
+      type: table
+      title: 直近5試合（代表を含む）
+      columns: [日付, 相手, 出場, 得点, 評点]
+      rows: *recent_rows
+      source: FotMob・ESPN
+  - text: ラ・リーガの4試合は、すべてベンチから。
+    card: *recent_card
+  - text: 24分、31分、28分、45分と、途中から入っています。
+    card: *recent_card
+  - text: チャンピオンズリーグの1試合は、90分出て1アシスト。
+    card: *recent_card
+  - text: 夏には移籍を望むと語りましたが、クラブは交渉に応じず、残っています。
+    card: *recent_card
+  - text: 代表は3試合で1得点。ブルキナファソ戦の評点7.9が、直近5試合でいちばん高い。
+    emph: true
+    card:
+      <<: *recent_card
+      highlight_row: 2
+  sources:
+  - https://www.fotmob.com/players/974753
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard?dates=20261010
+  - https://www.soccer-king.jp/news/world/esp/20260918/2206281.html
+  - https://www.soccer-king.jp/news/world/esp/20260827/2197588.html
+- id: story
+  heading: 数字の外にある、2つの話
+  tier: 報道
+  main: true
+  telop: カルチンの村と、2025年3月12日
+  narrator: 解説
+  card:
+    type: table
+    title: 数字の外にある、2つの話
+    columns: [いつ, 何があったか]
+    rows: &story_rows
+    - ['子どものころ', 小さな村で「クモ」と呼ばれた]
+    - ['2025年3月12日', PKが取り消された夜]
+    source: 各報道
+  say:
+  - text: アトレティコ・マドリードのフリアン・アルバレス。数字の外に、2つの話があります。
+    short_only: true
+    image: assets/images/20261012_player_576024/arg2026c/01_w.jpg
+    card: none
+  - text: 1つ目は、小さな村、カルチンの話。
+    image: assets/images/20261012_player_576024/river2019/01.jpg
+    card: &story_card
+      type: table
+      title: 数字の外にある、2つの話
+      columns: [いつ, 何があったか]
+      rows: *story_rows
+      source: 各報道
+      highlight_row: 0
+  - text: あだ名は、アラーニャ。スペイン語で、クモです。
+    emph: true
+    card: *story_card
+  - text: 名づけ親は最初のコーチ、バラス。左右へ走る速さで、足が2本より多く見えた、と。
+    card: *story_card
+  - text: 本人は、こう話しています。
+    card: *story_card
+  - voice: アルバレス
+    text: 4歳か5歳のときから、
+  - voice: アルバレス
+    text: アラーニャと呼ばれている。
+    cont: true
+  - voice: アルバレス
+    text: よく覚えていないけど
+    cont: true
+    pause: 0.6
+  - text: アルバレスは、そのバラスさんにトラックを贈りました。配達の仕事に使えるように。
+    card: none
+  - text: もう1つは、2025年3月12日の夜です。
+    image: assets/images/20261012_player_576024/arg2026a/01.jpg
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: チャンピオンズリーグ、ベスト8をかけた第2戦。相手は同じ街のライバル。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 2戦合計は2対2でPK戦に。アルバレスのPKは、キーパーをかわして決まります。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: ところが、ビデオ判定の確認でダブルタッチとされ、得点は取り消しに。
+    emph: true
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: 軸足がボールに触れていた、という判定でした。PK戦は2対4で敗れます。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - text: のちに本人は、こう話しています。
+    card:
+      <<: *story_card
+      highlight_row: 1
+  - voice: アルバレス
+    text: 僕はそれを1000回見たよ
+  - voice: アルバレス
+    text: 実際、僕は触れた感覚がなかった
+    cont: true
+    pause: 0.6
+  - text: それでもそのシーズン、アルバレスはチームの得点王でした。
+    emph: true
+    card: none
+  quotes_from:
+  - https://billiken.lat/interesante/por-que-le-dicen-arana-a-julian-alvarez/
+  - https://www.goal.com/jp/%E3%83%AA%E3%82%B9%E3%83%88/don-t-feel-touch-julian-alvarez-calls-for-uefa-rule-change-after-jp/bltb4d779d1324742af
+  sources:
+  - https://www.batimes.com.ar/news/sports/argentinas-world-cup-spider-man-julian-alvarez-the-pride-of-calchin.phtml
+  - https://billiken.lat/interesante/por-que-le-dicen-arana-a-julian-alvarez/
+  - https://www.goal.com/jp/%E3%83%AA%E3%82%B9%E3%83%88/don-t-feel-touch-julian-alvarez-calls-for-uefa-rule-change-after-jp/bltb4d779d1324742af
+  - https://www.soccer-king.jp/news/world/cl/20250314/1997375.html
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Alvarez
+- id: view
+  heading: 1点にかかる試合数。大会ごとに数えると
+  tier: 背景
+  viewpoint: true
+  narrator: 解説
+  telop: 10月14日、アトレティコ・マドリード対マンチェスター・ユナイテッド
+  card:
+    type: table
+    title: 25/26シーズン、大会ごとの得点
+    columns: [大会, 試合, 得点, 1点あたり]
+    rows: &pace_rows
+    - ['ラ・リーガ', '29', '8', '3.6試合']
+    - ['チャンピオンズリーグ', '15', '10', '1.5試合']
+    - ['国王杯', '4', '2', '2.0試合']
+    source: FotMob・英語版Wikipedia
+  say:
+  - text: 最後に、アルバレスの昨季の得点を、大会ごとに数えてみます。
+    image: assets/images/20261012_player_576024/arg2026c/01_w.jpg
+    card: &pace_card
+      type: table
+      title: 25/26シーズン、大会ごとの得点
+      columns: [大会, 試合, 得点, 1点あたり]
+      rows: *pace_rows
+      source: FotMob・英語版Wikipedia
+      highlight_row: 0
+  - text: ラ・リーガは29試合で8得点。3.6試合に1点。
+    card: *pace_card
+  - text: チャンピオンズリーグは15試合で10得点。1.5試合に1点です。
+    emph: true
+    card:
+      <<: *pace_card
+      highlight_row: 1
+  - text: ラ・リーガの半分以下です。
+    card:
+      <<: *pace_card
+      highlight_row: 1
+  - text: ワールドカップも同じ形です。2022年は7試合で4得点。
+    card: none
+  - text: 2026年は準々決勝の延長112分に、勝ち越しのゴールを決めました。
+  - text: ボールに触り、決定機をつくる側のFWが、大きな試合ではゴール前で決める。
+  - text: 今季は5試合で0得点。90分に直すと、2.4試合分です。
+  - text: 昨季の3.6試合に1点には、まだ届きません。
+  - text: 次の節目は、日本時間10月14日の午前4時。マンチェスター・ユナイテッド戦。
+  - text: 大きな舞台で、何点が積まれていくのか。見届けます。
+  sources:
+  - https://www.fotmob.com/players/974753
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Alvarez
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261013
