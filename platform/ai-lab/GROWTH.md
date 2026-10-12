@@ -2,10 +2,10 @@
 
 このファイルは `growth-loop` ワークフローが自動生成している。手で編集しても次回上書きされる。
 
-- 最終更新: 2026-10-05
-- 平均成熟度: **83** `▁▄▁▇███▇▆`
-- これまでに解決: **121** 件
-- 未対応: **45** 件（ほかに判断待ち 1 件）
+- 最終更新: 2026-10-12
+- 平均成熟度: **81** `▁▄▁▇███▇▆▅`
+- これまでに解決: **122** 件
+- 未対応: **57** 件（ほかに判断待ち 1 件）
 
 ## プロジェクト別の成熟度
 
@@ -17,7 +17,7 @@
 | `workspace/projects/kabu-agari-ranking` | Python | 100 | ±0 | 2 |
 | `workspace/projects/price-tracker` | Python | 100 | ±0 | 1 |
 | `workspace/projects/youtube-video-creation` | Python | 100 | ±0 | 2 |
-| `workspace/projects/goso-boat` | Flutter | 95 | ±0 | 2 |
+| `workspace/projects/goso-boat` | Flutter | 95 | +10 | 2 |
 | `workspace/projects/puzzle-book` | Python | 95 | ±0 | 3 |
 | `workspace/projects/shaho-tekiyo` | Python | 95 | ±0 | 4 |
 | `workspace/projects/soccer-career` | Flutter | 95 | ±0 | 2 |
@@ -28,8 +28,10 @@
 | `workspace/projects/rekishi-chiso` | Python | 85 | ±0 | 6 |
 | `workspace/projects/ipa-kakomon` | Python | 78 | ±0 | 3 |
 | `workspace/projects/dailyquarry-home` | Python | 75 | ±0 | 3 |
+| `workspace/projects/tenbin` | Flutter | 75 | ±0 | 6 |
+| `workspace/projects/working-holiday` | Python | 75 | ±0 | 4 |
 | `workspace/projects/hikari7` | Flutter | 67 | ±0 | 4 |
-| `workspace/projects/tenbin` | Node | 62 | ±0 | 6 |
+| `workspace/projects/yononaka-danmen` | Python | 40 | ±0 | 8 |
 | `workspace/projects/cohabitation-budget` | 雛形のみ | 15 | ±0 | 0 |
 | `workspace/projects/torishirabe` | 雛形のみ | 0 | ±0 | 2 |
 
@@ -46,7 +48,7 @@
 5. **[高] 依存パッケージがどこにも書かれていない** — `workspace/projects/kdp-novel`
    - `requirements.txt`（または `pyproject.toml`）を作り、import しているサードパーティを列挙する。
 
-詳細と依頼文は `docs/growth/2026-10-05.md` を見る。
+詳細と依頼文は `docs/growth/2026-10-12.md` を見る。
 
 ## あなたの判断が要るもの
 
@@ -58,7 +60,7 @@
 
 ## 直近で解決したもの
 
-- `workspace/projects/goso-boat` README に「動かし方」のコマンドが書かれていない
+- `workspace/projects/tenbin` テストはあるが CI で実行されていない
 
 ## 使い方
 
