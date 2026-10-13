@@ -62,6 +62,12 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 - **《》の強調も話者ごとに効きを変える**（config の `emphasis`）。剣崎は0.3（10-05、1.0 だと色文字の語が裏返ったように聞こえた）。つむぎは1.0
 - VOICEVOX は「〜んですか」の「ン」を最高音にする。「ン」で始まる区切りは自動でつなげる（chiso/voice.py）
 - 読み違いは `readings.yaml` に足す。**音を出す前に kana で読みを確かめる**（「いちばん上」を「イチバンジョウ」と読んだ）
+- **読みの点検**（10-10。10/12〜13 の4本で聞いて分かる誤読が約50か所あった）：check の「読み：」が共有ライブラリ libs/yomi で
+  ①辞書（fugashi）との食い違い（!）・②読みが割れる語の一覧（・）と型（名字＋家・数字＋石・名前＋の方・表＋の/に/と・都＋助詞。VOICEVOX が
+  外していれば ×）・③readings.yaml のキーが長い語を巻き込むもの（×）を出す。歴史だけの語は `yomi.yaml`。
+  **両方の辞書が同じ間違いをした所・数字まわり・区切りの崩れは拾えない**ので、kana を全行目で見るのは続ける。
+  見つけた誤読は readings.yaml と `tests/test_reading.py` の MISREADS に足す。**過去の回（予約・公開済み）は直さない**（10-10「過去は修正不要」）。
+  手順はスキル `voice-reading-check`
 
 ### 画面（10-04 に固め、10-07・10-08 に足した）
 
@@ -116,6 +122,8 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 - **台本のユーザー確認は不要**（10-05「今後台本確認は不要です」）。代わりに Claude が自分で何回も確かめてから approve する：
   事実（前半・後半を資料で）・流れとキャラ（初めて聞く人の耳で）・読み（kana を1行ずつ）→ 直す → 直した所の確認 → 最後の通し確認で
   「公開してよい水準」と出るまで回す（マリーの回は3回）。`check` の × も0に。`build` / `shorts` は `approve` の控え（台本のハッシュ）が要る
+- **読みの確認も関門**（10-10）：kana を全行確かめたら `reading-ok`（台本と readings.yaml のハッシュを approvals/x.reading.json に）。
+  `approve` はこの控えが無いか合わないと止まる。readings.yaml を変えると全台本の控えが外れる（それでよい）。予約・公開済みの回（posted.json に main）は対象外
 - **投稿の前に本番の動画を見せる**。`upload` は承認（台本）と `screen`（動画のハッシュ）の両方が無いと動かない
 - Google Cloud は**サッカーと別のプロジェクト「rekishi-chiso」**（API の枠を分ける。10-04）。鍵と許可は `dev/output/rekishi-chiso/secrets/`。`whoami` でチャンネルを確かめる。控えは `posted.json`
 - **本編は1日2本、12時と19時**（10-08。それまでは1日1本・19時）。**ショートは本編の翌日の11・12・13・14・16・17・18・19・20・21時に10本**（10-06。15時は空ける）。1日2本からは**1題材5本ずつ**（ショートは1日10本までしか配られないため）
@@ -176,7 +184,7 @@ YouTube チャンネル「歴史の地層｜日本史・世界史を聞き流し
 
 ## 3. 作り方とコマンド
 
-手順（スキル rekishi-video）：下調べ → 台本 → kana → check → draft → qc → 自分の確認3回 → approve → build → qc → shorts → thumb --variants → describe --keywords → 見せる → screen → upload
+手順（スキル rekishi-video）：下調べ → 台本 → kana → check → draft → qc → 自分の確認3回 → reading-ok → approve → build → qc → shorts → thumb --variants → describe --keywords → 見せる → screen → upload
 
 ```
 python -m chiso.cli check    scripts/x.yaml     # 作る前の点検。止める(×)→直すと効く(!)→参考(・)の順、同じ種類は1件にまとめる
@@ -184,6 +192,7 @@ python -m chiso.cli kana     scripts/x.yaml     # 全行の読みをカタカナ
 python -m chiso.cli voice    scripts/x.yaml     # 音声だけ（抑揚の確認）
 python -m chiso.cli draft    scripts/x.yaml [--lines 40]   # 確認用の動画（右上に「確認用」）。最後に段ごとの時間が出る
 python -m chiso.cli qc       scripts/x.yaml [--video out/x_draft.mp4]   # 出来上がった動画の点検（20秒ごとの一覧・画面の替わり方・音・無音）
+python -m chiso.cli reading-ok scripts/x.yaml   # kana を全行確かめたあとの控え（approve の前に要る）
 python -m chiso.cli approve  scripts/x.yaml     # 自分の確認を回しきったあとだけ
 python -m chiso.cli build    scripts/x.yaml     # 本番
 python -m chiso.cli shorts   scripts/x.yaml [--draft] [--only s1,s3]

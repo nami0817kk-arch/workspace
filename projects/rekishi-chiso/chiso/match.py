@@ -25,7 +25,8 @@ CARRY_LINES = 3          # 食い違った行のあと、画面が替わらず�
 _YEAR = re.compile(r"(?<![0-9０-９])([0-9]{3,4})年(?![代後前間分続ぶほもか])")
 # 出来事の語：「本能寺の変」「長篠の戦い」「桶狭間合戦」「比叡山焼き討ち」。頭（本能寺・長篠）を鍵にする
 _EVENT = re.compile(r"([一-鿿ヶ]{2,6})(?:の変(?![わえ化更身動貌])|の戦い|の乱(?![れし暴雑])|の役(?![人目割者所立柄職])|合戦"
-                    r"|焼き討ち|焼討|の陣|宗論|事件|の和議)")
+                    r"|焼き討ち|焼討|の陣|宗論|事件|の和議)(?![記録図])")      # 「柴田合戦記」のような書名は出来事にしない（10-09）
+_BOOK = re.compile(r"『[^』]*』")                           # 『』の中（書名）は出来事の語を拾わない
 _LANDMARK = re.compile(r"[一-鿿]{1,4}(?:寺|城)(?![下主])")
 FIXED_EVENTS = ("本能寺", "長篠", "桶狭間", "関ヶ原", "関ケ原", "比叡山")
 TEASER = "次回"
@@ -98,7 +99,7 @@ def event_words(script) -> list[str]:
     """その回の出来事の語：決まった語（本能寺・長篠…）＋本文・節の題・用語から「〜の変」「〜の戦い」「〜合戦」の頭を拾ったもの。"""
     words = set(FIXED_EVENTS)
     for t in _texts(script):
-        words.update(m.group(1) for m in _EVENT.finditer(t))
+        words.update(m.group(1) for m in _EVENT.finditer(_BOOK.sub("", t)))
     return sorted((w for w in words if w not in NOT_EVENTS and len(w) >= 2), key=len, reverse=True)
 
 
@@ -192,7 +193,7 @@ def line_notes(script, catalog: dict | None = None, places: list[str] | None = N
     そこで「年＋場所・出来事」で場面を言い出した行（「1582年6月、京都の本能寺」）だけを見る。
     場面を言い出した行が食い違っていれば、続く行も画面が替わらず別の場面を言わないあいだ（3行まで）同じ食い違いとして並べる。"""
     from .check import place_names
-    from .script import ERA_TAILS
+    from .script import ERA_TAILS, place_blank
     from .years import label
     catalog = default_catalog() if catalog is None else catalog
     events = event_words(script)
@@ -212,7 +213,8 @@ def line_notes(script, catalog: dict | None = None, places: list[str] | None = N
             carry = None
             continue
         said_ev = _found(l.text, events)
-        said_pl = _found(l.text, places, masks + list(said_ev)) - said_ev
+        # 地名の拾い方は場所の地図と同じ（「江戸の浮世絵」「北京大学」「堺屋太一」は場所ではない。chiso/script.py）
+        said_pl = _found(place_blank(re.sub(r"[《》]", "", l.text), places), places, masks + list(said_ev)) - said_ev
         said_yr = _in_story(years_in(l.text), script)
         if not (said_ev or said_pl or said_yr):
             if carry and carry[1] == (scene, over) and carry[2] > 0:   # 同じ画面のまま、前の行の話が続いている

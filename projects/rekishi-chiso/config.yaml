@@ -125,6 +125,42 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  秀吉:                      # 10-09。豊臣秀吉の手紙・言葉。玄野武宏（光秀・ナポレオンと同じ声。回が違えば可。秀吉の回の信長は青山龍星で別の声）
+    label: 豊臣秀吉
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀長:                      # 10-09。豊臣秀長の言葉（大友宗麟の書状に残る）。青山龍星（秀長の回の秀吉は玄野武宏で別の声）
+    label: 豊臣秀長
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  お市:                      # 10-09。お市の方の辞世。冥鳴ひまり（落ち着いた女性の声。つむぎと別の声）
+    label: お市の方
+    name: 冥鳴ひまり
+    style_id: 14
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  勝家:                      # 10-09。柴田勝家の辞世。玄野武宏（お市の回では秀吉の声を使わないこと）
+    label: 柴田勝家
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
   上諭:                      # 皇帝の名で出た命令。決めたのは西太后なので同じ声で読み、札は「上諭」にする（10-05 の確認）
     label: 上諭（皇帝の名で出た命令）
     name: 東北イタコ

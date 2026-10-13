@@ -50,3 +50,19 @@ def test_loudnorm_filter_falls_back_when_not_measurable(tmp_path):
     from chiso import video
     f = video.loudnorm_filter("ffmpeg-does-not-exist", tmp_path / "none.wav")
     assert f.startswith("loudnorm=" + video.LOUD)
+
+
+def test_still_frames_makes_each_picture_once(tmp_path, monkeypatch):
+    """同じ絵が何度出ても、止まった背景は1回だけ作る（10-09 並列で同じ一時ファイルを奪い合って落ちた）。"""
+    from chiso import video
+    calls = []
+    def fake_plate(ffmpeg, painter, pic, work, size):
+        calls.append(pic)
+        p = work / f"plate_{pic}.png"
+        from PIL import Image
+        Image.new("RGB", (8, 8)).save(p)
+        return p
+    monkeypatch.setattr(video, "_plate", fake_plate)
+    runs = [video.Run(picture=x, start=i, end=i + 1, section=0) for i, x in enumerate(["a", "b", "a", "b", "a"])]
+    video.still_frames("ffmpeg", None, runs, tmp_path, 30, (8, 8), workers=4)
+    assert sorted(calls) == ["a", "b"]

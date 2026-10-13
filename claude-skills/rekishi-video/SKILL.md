@@ -15,7 +15,7 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
 ## 手順（この順に。2026-10-08 に道具を使う順へ並べ直した）
 
 ```
-下調べ → 台本 → kana → check → draft → qc → 自分の確認3回 → approve → build → qc → shorts → thumb --variants
+下調べ → 台本 → kana → check → draft → qc → 自分の確認3回 → reading-ok → approve → build → qc → shorts → thumb --variants
 → describe --keywords → 見せる → screen → upload
 ```
 
@@ -26,7 +26,9 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
 2. **台本**：`scripts/_template.yaml` を写して上から埋める（texture・recap・サムネの layout・ショートの hook・tease が正しい既定で入る）。
    題名は名前を先頭に。最後の節は「まとめ：〇〇とは何者だったのか」。図は3つ以上。同じ背景は40秒まで・20秒に1回は新しいもの。
    絵の割り当ての下書きは `assign scripts/x.yaml --assets research/x_assets.md`（out/x_assign.md。台本は書き換えない。見て採るものだけ写す）
-3. **kana**：`kana scripts/x.yaml` で全行の読みを見る。読み違いは readings.yaml に足す
+3. **kana**：`kana scripts/x.yaml` で全行の読み（ショートの hook・tease も）を見る。読み違いは readings.yaml に足す。
+   読みの点検の手順は**スキル `voice-reading-check`**（共有ライブラリ libs/yomi。check の「読み：」の × を0に、! と一覧は kana で耳を当てる。
+   見つけた誤読は readings.yaml と tests/test_reading.py の MISREADS に足す。歴史だけの割れる語・型は yomi.yaml）
 4. **check**：`check scripts/x.yaml`。止める（×）→ 直すと効く（!）→ 参考（・）の順に、同じ種類は1件にまとめて行の番号が並ぶ。
    × は全部直す。! の「冒頭15秒に数字がない」「ショートの1行目」「同じ背景が40秒」「剣崎70%」「道具の重なり」「サムネの文字の置き場」は直す。
    ・（文体・章の題）は読んで直すか決める。目安の数字は chiso/check.py の頭
@@ -37,7 +39,9 @@ description: 歴史の聞き流し動画（YouTube チャンネル「歴史の�
    **行ごとに、話していることと映っているものが合っているか**も見る（draft の最後に「話と画面」の知らせがもう一度並ぶ。知らせの無い行も目で見る）
 7. **自分の確認3回**（台本のユーザー確認は不要。10-05）：事実（前半・後半を資料で）・流れとキャラ（初めて聞く人の耳で）・読み（kana）を Agent で並べて確認 →
    直す → 直した所の確認 → 最後の通し確認で「公開してよい水準」が出るまで回す。記録は dev/output/rekishi-chiso/review/<題材>/
-8. **approve**：`approve scripts/x.yaml`（台本のハッシュを控える。台本を変えたら打ち直し）
+8. **reading-ok → approve**：kana を全行確かめ、check の「読み：」の × が0になったら `reading-ok scripts/x.yaml`（台本と readings.yaml の
+   ハッシュを approvals/x.reading.json に。10-10）。`approve scripts/x.yaml` はこの控えが無いか合わないと止まる（台本のハッシュを控える。
+   台本・readings.yaml を変えたら両方打ち直し）。予約・公開済みの回は対象外で、**過去の回は直さない**（10-10「過去は修正不要」）
 9. **build**：`build scripts/x.yaml`。終わったら本番の `out/x.mp4` にも **qc** を掛けて一覧を見る
 10. **shorts**：`shorts scripts/x.yaml`（`--only s1` で1本、`--draft` で確認用）。台本の shorts.sN に hook（頭の問い）と tease（最後のもう一つの問い、答えは本編に）を必ず書く。どちらも？で終わる。
     hook はつむぎが読んで特大で出し、最後は tease＋「答えは本編で」「本編は概要欄から」。本文＋hook＋tease で約360字・1本60秒以内

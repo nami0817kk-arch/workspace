@@ -192,14 +192,18 @@ def en_description(en: dict, ja_description: str) -> str:
         if len(times) != len(chapters):
             raise ValueError(f"日本語の目次の章の数（{len(times)}）と en.chapters（{len(chapters)}）が合いません")
         out += ["", "Chapters"] + [f"{t} {c}" for t, c in zip(times, chapters)]
-    credits = [b for b in _blocks(ja_description) if b[0].startswith(CREDIT_HEADS)]
-    if credits:
-        out += ["", "Credits"]
-        for i, b in enumerate(credits):
-            out += ([""] if i else []) + b
     op = [x for b in _blocks(ja_description) for x in b if x.startswith("運営：")]
-    out += [""] + (op[-1:] if op else []) + [f"{CHANNEL} (Rekishi no Chiso)"]
-    text = "\n".join(out).strip() + "\n"
+    end = [""] + (op[-1:] if op else []) + [f"{CHANNEL} (Rekishi no Chiso)"]
+    credits = [b for b in _blocks(ja_description) if b[0].startswith(CREDIT_HEADS)]
+    for keep in (credits, [b for b in credits if not b[0].startswith("■ 絵の出典")]):   # 入らなければ URL の欄を外す
+        body = list(out)
+        if keep:
+            body += ["", "Credits"]
+            for i, b in enumerate(keep):
+                body += ([""] if i else []) + b
+        text = "\n".join(body + end).strip() + "\n"
+        if len(text) <= DESC_MAX:
+            break
     if len(text) > DESC_MAX:
         raise ValueError(f"英語の説明が {DESC_MAX} 字を超えます（{len(text)}字）。description か画面の絵の欄を短く")
     return text

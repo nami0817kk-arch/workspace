@@ -118,3 +118,12 @@ def test_showcase_has_no_mismatch():
     from pathlib import Path
     sc = script.load(Path(__file__).resolve().parent.parent / "scripts" / "_showcase.yaml")
     assert match.notes(sc, {}) == []
+
+
+def test_book_title_is_not_an_event():
+    """『柴田合戦記』の「柴田」を出来事の語にしない（10-09 秀吉の回で清洲会議の行が誤って知らされた）。"""
+    from chiso import match, script
+    sc = script.parse({"title": "t", "sections": [{"title": "s", "lines": [
+        {"語り": "大村由己が書いたと伝わる『柴田合戦記』には、9人が並んでいます。"},
+        {"語り": "柴田合戦記にも、そう書かれています。"}]}]})
+    assert "柴田" not in match.event_words(sc)

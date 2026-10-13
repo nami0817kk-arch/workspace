@@ -113,7 +113,8 @@ def span(rows: list[int]) -> str:
 
 # --- 知らせの並べ方（10-08）-----------------------------------------------------------
 # 既存7本で1本28〜44件の「!」が出て、読まれなくなっていた。同じ種類をまとめ、効くものから並べる。
-REFERENCE = ("文体：", "章の題に", "《》の強調が", "サムネイルの落差の二語", "サムネイルの隠した")  # 参考（直すかは内容しだい）
+REFERENCE = ("文体：", "章の題に", "《》の強調が", "サムネイルの落差の二語", "サムネイルの隠した",
+             "読みが割れる語", "読み（人名・地名")  # 参考（直すかは内容しだい。読みの2つは reading-ok の前に kana で耳を当てる所）
 _ROW = re.compile(r"(\d+(?:〜\d+)?)行目")
 
 
@@ -581,6 +582,48 @@ def chapter_titles(script, places: list[str] | None = None) -> list[str]:
         return []
     return [f"章の題に年・人名・場面がありません：{'、'.join(bare)}（概要欄の目次になる。「1582年 本能寺の変」「信長と堺の2万貫」のように）"]
 
+
+# --- 画面の幅（10-09 点検。秀吉の第7節の題が右上の札・横長の額に隠れて切れた）------------------------
+def section_title_fit(painter) -> list[str]:
+    """節の題が、その行の画面（肖像の額・用語の札・場所の地図のある状態）で、いちばん小さい字でも
+    置ける幅に収まらない行。止める（×）。寄りの行は題を出さない作りなので数えない。台本の題を短くする。"""
+    from .render import TITLE_MIN, state_of
+    sc = painter.script
+    bad: dict[int, list[int]] = {}
+    need: dict[int, tuple[float, float]] = {}
+    for line in sc.lines:
+        state = state_of(line)
+        if state.reaction:
+            continue
+        try:
+            room = painter.title_room(state)
+        except FileNotFoundError:
+            continue                                      # 素材が無い行は missing_assets が止める
+        title = sc.sections[line.section].title
+        if painter.title_size(title, room) is None:
+            bad.setdefault(line.section, []).append(line.index + 1)
+            w = painter.font("serif", TITLE_MIN, bold=True).getlength(title)
+            need[line.section] = (w, min(room, need.get(line.section, (0, room))[1]))
+    out = []
+    for sec, rows in bad.items():
+        w, room = need[sec]
+        out.append(f"節の題が画面に収まりません：{sec + 1}節「{sc.sections[sec].title}」（{span(rows)}行目。"
+                   f"いちばん小さい字でも{w:.0f}px、置ける幅{room:.0f}px。右上の札・肖像の額に隠れる。題を短くする）")
+    return out
+
+
+def timeline_crowding(painter) -> list[str]:
+    """年表の出来事が近すぎて、ふだん（いまの年がどの出来事でもないとき）名札が出ないもの（10-09。秀吉の回で
+    1573〜1598 に5つ集まり、名札が3段に詰まって字幕の箱に隠れた）。その年の行のあいだだけは出る。"""
+    sc = painter.script
+    if sc.timeline_start is None or sc.timeline_end is None or not sc.events:
+        return []
+    rows = painter.timeline_rows(470, painter.W - 470, None)
+    hidden = [f"{label}（{y}年）" for (y, label), r in zip(sc.events, rows) if r is None]
+    if not hidden:
+        return []
+    return [f"年表の出来事が近すぎて、名札が出ないものがあります：{'、'.join(hidden)}"
+            "（その年の行だけ出る。timeline.events を減らすか、名札を短くする）"]
 
 # --- フォントに無い字（10-09）---------------------------------------------------------------
 # 始皇帝の回の「嫪毐」の「毐」が明朝・ゴシックのどちらにも無く、字幕・札・年表の名札で□（豆腐）になっていた。
