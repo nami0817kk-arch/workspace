@@ -1,0 +1,97 @@
+# 日本人選手 の取材メモ（2026年10月14日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-14。WebFetch で原文を読んだ（サッカーキング・ゲキサカ・オランダ vi.nl のボス監督談話）。
+# 日付・場所: 現地10月13日、レッドブル・アレーナ、CLリーグフェーズ第2節。ライプツィヒ1-0PSV。
+# 資料間のずれ: PKの時間がサッカーキング「15分」・ゲキサカ「17分」。PKを止めたGKの綴りも資料で違う。
+#   ハンドした相手DFの名も未確認 → 台本ではPKの時間・GK名・DF名を言わない。見出しにある「前半のPK失敗」だけ。
+# ゲキサカは「終盤のシュートがオフサイド」と書くが、サッカーキングには無い → 使わない。
+# ボス監督の発言は vi.nl（オランダ語）の見出し「We waren de bovenliggende partij」の訳。ほかの発言は直接引かない。
+# 反応（ネット民・海外のファン）: 今回は探していない／見つからず。実在の投稿が見つかるまで空のまま。
+# ボス監督の言葉は、オランダ語の見出し（We waren de bovenliggende partij）を日本語にしたもの。本文は読んでいない。
+# 反応: X の日本語・オランダ語検索では、この試合の佐野への実在の反応（ファンの投稿）が見つからなかった。作らない。
+slot: japan
+date: "2026年10月14日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [佐野航大, PSV]
+
+theme:
+  id: sano_psv_leipzig
+  league: netherlands
+  prefix: ""
+  title: 佐野航大、CL2試合連続フル出場。PSVを0-1に沈めた前半の誤算とは
+  hook: ""
+  question: 佐野航大がフル出場したPSVは、なぜライプツィヒに勝てなかったのか
+
+thumbnail:
+  line1: 佐野航大 CL2戦連続フル
+  line2: 前半のPK失敗が●●
+  tags: [佐野航大, PSV]
+  photo: assets/images/sano_c/01.jpg
+  focus: 0.9
+
+answer: 前半のPK失敗が響き、ライプツィヒのコーナー絡みの1点を取り返せなかったから
+watch: PSVの次戦はポルトとのアウェイ戦。現地20日
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 佐野航大はフル出場。PSVはPK失敗が響き0-1
+    say:
+      - 試合後、ボス監督はこう振り返りました。
+      - voice: ボス監督
+        text: 我々が優勢な側だった
+      - チャンピオンズリーグ第2節、ライプツィヒ対PSV。PSVの佐野航大は先発で、90分間フルに出場しました。
+      - 中盤の底で攻撃にリズムをつけ、守備でも体を張ったと伝えられています。
+      - 一方でPSVは、前半にPKを得ながら、ペリシッチのキックを止められました。
+      - 決勝点は75分。コーナーのあと、ライプツィヒのブラヤン・グルダが左足で決めました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20261014/2216427.html
+      - https://web.gekisaka.jp/news/ucl/detail/?460955-460955-fl
+      - https://www.vi.nl/nieuws/balende-bosz-wint-weer-niet-in-leipzig-we-waren-de-bovenliggende-partij
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 報道
+    telop: ライプツィヒ1-0PSV。PSVは今大会初黒星
+    say:
+      - 前半は0対0で終わっています。
+      - PSVは第1節がシャフタールと1対1の引き分けで、この敗戦が今大会初めての黒星です。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20261014/2216427.html
+      - https://web.gekisaka.jp/news/ucl/detail/?460955-460955-fl
+
+  - id: next
+    heading: これからどうなる
+    tier: 報道
+    telop: PSV、次はポルトとアウェイ戦
+    say:
+      - PSVの次の試合は、現地20日のポルトとのアウェイ戦です。
+      - 開幕から2試合、まだ勝てていないPSVにとって、佐野航大の中盤は引き続き土台になりそうです。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20261014/2216427.html
+      - https://www.vi.nl/nieuws/balende-bosz-wint-weer-niet-in-leipzig-we-waren-de-bovenliggende-partij
+
+  # ネットの反応: 2026-10-14 に X をオランダ語で検索して引いた実在の投稿。匿名の書き込みなので未確認。
+  # @ハンドルは画面に出さない。原文が「Show more」で切れていたので、文が完結している最初の2文だけを使った（補っていない）。
+  # オランダ語の原文は画面上では英訳で表示されたため、英訳から日本語にした。
+  - id: reactions
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「ばかばかしいほど下手なPK」
+    say:
+      - voice: ネット民
+        text: しっかりしたPSVは、よくつながって、おびえたライプツィヒを楽に受け止めていた。ライプツィヒは、ボス監督のチームを恐れているようにすら見える
+      - voice: ネット民
+        text: 目を引いたのは、ペリシッチの弱いコーナーが何本もあったことと、ばかばかしいほど下手に蹴られたPKだ
+    official: false
+    sources:
+      - https://x.com/psvinside/status/2110098022633812287
+

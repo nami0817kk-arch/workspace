@@ -1,0 +1,107 @@
+# プレミアリーグ の取材メモ（2026年10月14日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+slot: premier
+date: "2026年10月14日"
+format: quote
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [アンドニ・イラオラ, フロリアン・ヴィルツ, ブラッドリー・バルコラ]
+
+theme:
+  id: iraola_wirtz_barcola
+  league: england    # england/spain/germany/italy/france/netherlands/japan
+  league_name: プレミアリーグ
+  kind: other
+  topic: リバプール
+  prefix: ""         # 速報 / 朗報 / 悲報。付けない
+  title: 'イラオラ監督、ヴィルツとバルコラに「100パーセント信頼している」'
+  hook: ""           # 引きの1行は置かない（2026-09-24 指示）
+  question: イラオラは何と言ったのか    # quote は問いを立てない。メモ用
+
+thumbnail:
+  line1: 100%信頼している
+  line2: イラオラ、ヴィルツとバルコラに
+  tags: [ヴィルツ, バルコラ]
+  photo: assets/images/iraola_a/01.jpg
+
+answer: ""           # quote はまとめの節を作らない
+watch: 次はチャンピオンズリーグ、アウェーのLASK戦（14日）
+# follow_up: true    # 前の枠で扱ったテーマを掘り直すとき
+
+sections:
+  - id: said
+    main: true
+    heading: 何を言ったのか
+    tier: 報道
+    telop: 「ブラッドリーもフロも、100%信頼している」
+    say:
+      - {text: 'リヴァプールのイラオラ監督が、会見で二人について聞かれました。二人は得点もアシストも少なく、批判されています。', short_only: true}
+      - voice: アンドニ・イラオラ
+        text: ブラッドリーもフロリアンも、今季は良い試合も悪い試合もあった。ほかのみんなと同じだ。二人の力は分かっているし、必ず良いプレーを見せてくれると分かっている
+      - voice: アンドニ・イラオラ
+        text: 先日、コウマスが会心のシュートを決めていれば、バルコラのアシストが一つ付いていた。
+      - voice: アンドニ・イラオラ
+        text: 内容はまったく同じなのに、みんなが「アシストも付いて素晴らしかった」と言うだろう。
+      - voice: アンドニ・イラオラ
+        text: ときどき、数字だけを見すぎてしまう
+      - voice: アンドニ・イラオラ
+        text: ブラッドリーとフロは、僕が100パーセント信頼している選手だ
+      - voice: アンドニ・イラオラ
+        text: どちらが決めようと構わない。もっとチーム全体の話なんだ
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/13/andoni-iraola-trust-florian-wirtz-bradley-barcola-others-to-step-up-liverpool
+      - https://www.skysports.com/football/news/11661/13598938/andoni-iraola-liverpool-boss-has-100-per-cent-trust-in-florian-wirtz-and-bradley-barcola
+
+  - id: context
+    heading: どういう状況で出た言葉か
+    tier: 報道
+    telop: マンチェスター・シティ戦の敗戦のあと、LASK戦の前日会見
+    say:
+      - 日曜のマンチェスター・シティ戦はホームで負けました。イラオラ体制では初めての黒星です。
+      - ヴィルツは今季ここまでアシスト1。バルコラはパリ・サンジェルマンから加わって6試合、得点もアシストもありません。
+      - 点取り役のイサク、ガクポ、ソボスライが負傷で欠けるなか、水曜のLASK戦を前にした会見で、二人について聞かれました。
+      - voice: アンドニ・イラオラ
+        text: 最高の出来ではなかったかもしれない。でも今季は良い試合もしている。みんな、答えを探し始める
+      - voice: アンドニ・イラオラ
+        text: ドイツ代表では良いプレーをして、1点決めた。良い日も悪い日もある。僕は、二人がチームを良くして結果につなげているかという、もっと全体の見方をしたい
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13598938/andoni-iraola-liverpool-boss-has-100-per-cent-trust-in-florian-wirtz-and-bradley-barcola
+      - https://www.theguardian.com/football/2026/oct/13/andoni-iraola-trust-florian-wirtz-bradley-barcola-others-to-step-up-liverpool
+
+  - id: react
+    heading: 元選手の批判
+    tier: 報道
+    telop: キャラガー「ヴィルツは外れるべきだ」
+    say:
+      - この会見の前、シティ戦のあとには、元リヴァプールのキャラガーが、こう話していました。
+      - voice: ジェイミー・キャラガー
+        text: 申し訳ないが、ヴィルツの獲得はうまくいっていない。今までのところ、うまくいっていない
+      - voice: ジェイミー・キャラガー
+        text: バルコラを批判するのは酷だ。来て6週間で、プレシーズンもなかった。でもヴィルツを批判するのは酷じゃない。もっとやらなければいけない
+      - voice: ジェイミー・キャラガー
+        text: 彼はチームから外れるべきだ。前回もそう言ったし、もう一度言う
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13598938/andoni-iraola-liverpool-boss-has-100-per-cent-trust-in-florian-wirtz-and-bradley-barcola
+
+  # ネットの反応: 2026-10-14 に X で、会見を伝えた記者の投稿へのリヴァプール・ファンの返信から引いた実在の投稿。
+  # 匿名の書き込みなので未確認。@ハンドルは画面に出さない。英語の原文から訳した。批判と擁護の両方から選んだ。
+  - id: reactions
+    heading: リヴァプール・ファンの返信
+    tier: 未確認
+    telop: 「バルコラを心配するのはまだ早い」
+    say:
+      - voice: ネット民
+        text: バルコラを心配するのは、まだ早い。でもヴィルツは、もうとっくに、ずっとよくなっているはずだ
+      - voice: ネット民
+        text: バルコラは何試合出たんだ？ ばかげた批判だ
+      - voice: ネット民
+        text: アトレティコ戦では確かに当てはまる。何本かアシストを取り損ねたから。でもそれ以外は、本当にひどい。それでも、ぼくは盲目的に信じている
+    official: false
+    sources:
+      - https://x.com/thsoulis/status/2110057468525232364
+      - https://x.com/ChrisRGollop/status/2110063980379246999
+      - https://x.com/up_lfc/status/2110051797822046445
+

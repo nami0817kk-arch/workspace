@@ -57,6 +57,18 @@ def test_lines_are_dropped_from_the_back_until_it_fits():
     assert short.scenes[1].lines[0].text == "いち。"
 
 
+def test_本編を出さない回は締めで本編を案内しない():
+    """**ニュースは本編を出さない**（2026-10-14 ユーザー指示「本編はない」）。
+    「本編はチャンネルから見られます」は、存在しない動画への案内になる。
+    登録の依頼だけを残す。"""
+    script = parse_script(BODY)
+    script.meta = dict(script.meta or {}, no_main=True)
+    short = trim(script, "何が起きたか", max_seconds=1.0)
+    texts = [line.text for line in short.scenes[1].lines]
+    assert SHORT_SUBSCRIBE not in texts
+    assert texts[-1] == SHORT_SUBSCRIBE_2
+
+
 def test_a_one_scene_script_is_refused():
     with pytest.raises(ShortError, match="節が1つ"):
         trim(parse_script("---\ntitle: T\n---\n\n## だけ\n\nキャスター: あ。\n"))

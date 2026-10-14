@@ -20,7 +20,11 @@ from .config import ProjectConfig
 from .script_model import Scene, Script
 
 # ショートの上限。ぎりぎりを狙うと音声の長さのぶれで超える
-MAX_SECONDS = 58.0
+# **58秒 → 120秒**（2026-10-14 ユーザー「ショートは1分超えてもいいんだよね？」→ 上限を2分に）。
+# YouTube ショートは2024年10月から3分まで。58秒に収めるために、取材メモにある数字・次の試合の行を
+# 落としていた。`_add_more_body` が続きの節から足して、尺を使い切る。
+# 2分で止めるのは、3分まで行くと冒頭の離脱（8秒で半分）を引きずったまま長くなるため
+MAX_SECONDS = 120.0
 SHORT_SPEED = 1.1      # ショートの話速の倍率。本編は変えない
 SIZE = (1080, 1920)
 
@@ -645,7 +649,12 @@ def _add_subscribe(short: Script) -> None:
         short.meta = dict(short.meta or {}, outro_title="続きは本編で",
                           outro_sub="チャンネルから見られます")
     first = SHORT_SUBSCRIBE_SERIES if series else SHORT_SUBSCRIBE
-    for words in (first, SHORT_SUBSCRIBE_2):
+    words_list = (first, SHORT_SUBSCRIBE_2)
+    # **本編が無い回は、本編へ渡す一言を言わない**（2026-10-14 指示「本編はない」）。
+    # ニュースはショートだけを出す。「本編はチャンネルから」は存在しないものへの案内になる
+    if (short.meta or {}).get("no_main"):
+        words_list = (SHORT_SUBSCRIBE_2,)
+    for words in words_list:
         last = copy.deepcopy(lines[-1])
         last.text = words
         last.speaker = NARRATORS[0]

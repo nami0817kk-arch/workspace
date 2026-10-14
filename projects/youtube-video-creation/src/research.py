@@ -229,6 +229,9 @@ class Notes:
     # いなかったので、節のテロップが題名になっていた（「試合登録は20人。2人が
     # 外れる」が題名で並んでいた）
     short_title: str = ""
+    # **本編を出さない回**（2026-10-14 指示「本編はない」。ニュースはショートだけ）。
+    # ショートの締めから「本編はチャンネルから見られます」を外す（`shorts._add_subscribe`）
+    no_main: bool = False
     # **シリーズ名を公開する題の後ろに付ける**（2026-09-23 指示「サブタイトルにプレミアリーグチーム紹介として」）。
     # 「題｜シリーズ名」の形。**読み上げの1行目には入れない**（ショートの16秒を食うだけ）。
     # 2026-09-21 の「②プレミア20クラブ紹介はいらない」は連番を頭に置く形の話で、こちらは末尾の名札
@@ -418,6 +421,7 @@ def build_notes(raw: dict) -> Notes:
         format=chosen,
         voice_min=(float(raw["voice_min"]) if raw.get("voice_min") is not None else None),
         short_title=str(raw.get("short_title", "")).strip(),
+        no_main=bool(raw.get("no_main", False)),
         series=str(raw.get("series", "")).strip(),
         people=[str(x).strip() for x in (raw.get("people") or []) if str(x).strip()],
         title=str(theme.get("title", "")).strip(),
@@ -1900,6 +1904,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
         **({"voice_min": notes.voice_min} if notes.voice_min is not None else {}),
         # ショートだけ別の題名にする（2026-09-09）。shorts._retitle がここを見る
         **({"short_title": notes.short_title} if notes.short_title else {}),
+        **({"no_main": True} if notes.no_main else {}),
         # シリーズ名（2026-09-23）。subtitles.write_outputs が公開する題の後ろに付ける
         **({"series": notes.series} if notes.series else {}),
         # **話のまとまり**を台本にも残す（2026-09-15）。`clubs.yaml` に無いクラブは

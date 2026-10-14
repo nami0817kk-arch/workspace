@@ -1,0 +1,107 @@
+# プレミアリーグ の取材メモ（2026年10月14日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+slot: premier
+date: "2026年10月14日"
+format: quote
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [リサンドロ・マルティネス]
+
+theme:
+  id: martinez_hierarchy
+  league: england    # england/spain/germany/italy/france/netherlands/japan
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  prefix: ""         # 速報 / 朗報 / 悲報。付けない
+  title: 'マルティネス、アトレティコ戦の直後にクラブの上層部へ向けた言葉'
+  hook: ""           # 引きの1行は置かない（2026-09-24 指示）
+  question: マルティネスは何と言ったのか    # quote は問いを立てない。メモ用
+
+thumbnail:
+  line1: 上にもっと期待した
+  line2: マルティネス、アトレティコ戦後
+  tags: [リサンドロ・マルティネス, マンU]
+  photo: assets/images/martinez/01.jpg
+
+answer: ""           # quote はまとめの節を作らない
+watch: 次は日曜18日、プレミアのリーズ戦（アウェー）
+# follow_up: true    # 前の枠で扱ったテーマを掘り直すとき
+
+sections:
+  - id: said
+    main: true
+    heading: 試合直後の言葉
+    tier: 報道
+    telop: 「上から、もっと期待している」
+    say:
+      - 'マンUのディフェンダーが語りました。試合は0対2の敗戦でした。'
+      - voice: リサンドロ・マルティネス
+        text: ずいぶん自分を抑えているけれど、ときどき、今のクラブの状態がそのまま表に出てしまう
+      - voice: リサンドロ・マルティネス
+        text: 去年は素晴らしいシーズンだった。だから今は、上の人たちにもっと期待している。競い合える選手をもっと連れてきてほしい。ほかの多くのチームが、たくさん補強しているんだから
+      - 補強をもっと期待していたか、と聞かれて。
+      - voice: リサンドロ・マルティネス
+        text: 期待していた。100パーセントだ。テクニカルディレクターには、もっと期待している。正直に言わせてもらう。もちろん、選手の僕らももっとやらなきゃいけない
+      - voice: リサンドロ・マルティネス
+        text: こういう夜に備えて、強い戦力を作ることも大事なんだ
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13598950/man-utd-defender-lisandro-martinez-extraordinarily-calls-out-clubs-hierarchy-after-atletico-madrid-loss-in-champions-league
+      - https://www.espn.com/soccer/story/_/id/50177021/lisandro-martinez-slams-man-united-hierarchys-decisions-not-champions-league-quality-squad
+
+  - id: context
+    heading: どういう状況で出た言葉か
+    tier: 報道
+    telop: 試合直後、Amazon Prime のインタビュー
+    say:
+      - 場所はマドリード。開始53秒で先制され、74分にはヨロが退場。ユナイテッドは公式戦で5試合勝てていません。
+      - 監督のカリックについて聞かれると、こう答えました。
+      - voice: リサンドロ・マルティネス
+        text: 監督ばかり代えて、代えて、代えて。でも、ほかの部分はどうなんだ。これ以上は言えない
+      - voice: リサンドロ・マルティネス
+        text: 今夜は、監督のせいにするのも、選手のせいにするのも簡単だ。でも、ほかの部分も見なきゃいけない
+      - voice: リサンドロ・マルティネス
+        text: 監督は最善を尽くしている。でもシーズンごとに状況は違う。去年と同じままではいられない。相手は自分たちのやり方も細かいところも知っている。変わらなければ、来シーズンは大きな問題になる
+      - 名指ししたのは「テクニカルディレクター」という役職までで、報道はジェイソン・ウィルコックスを指すとしています。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13598950/man-utd-defender-lisandro-martinez-extraordinarily-calls-out-clubs-hierarchy-after-atletico-madrid-loss-in-champions-league
+      - https://www.espn.com/soccer/story/_/id/50177021/lisandro-martinez-slams-man-united-hierarchys-decisions-not-champions-league-quality-squad
+      - https://www.theguardian.com/football/2026/oct/13/atletico-madrid-manchester-united-champions-league-match-report
+
+  - id: react
+    heading: 元選手の見方
+    tier: 報道
+    telop: ルーニー「行き過ぎた」 キャラガー「ひどい」
+    say:
+      - 元ユナイテッドのルーニーは、こう語りました。
+      - voice: ウェイン・ルーニー
+        text: クラブがもっと投資すべきだという点では、彼にも一理あると思う。でも、ちょっと行き過ぎたんじゃないか。それは監督が扱うことで、内側にとどめておくべきだった
+      - リヴァプールで活躍したキャラガーは、もっと強い言い方でした。
+      - voice: ジェイミー・キャラガー
+        text: 今あんなことを言い出したのは、ひどいと思う。本当にそう思う
+      - voice: ジェイミー・キャラガー
+        text: 「去年は素晴らしいシーズンだった」と言っているが、そうじゃなかった。3位になれたのは、リヴァプールとチェルシーが同じくらい悪かったからだ
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13598950/man-utd-defender-lisandro-martinez-extraordinarily-calls-out-clubs-hierarchy-after-atletico-madrid-loss-in-champions-league
+
+  # ネットの反応: 2026-10-14 に X を英語で検索して引いた実在の投稿（アイルランドの投稿者）。匿名の書き込みなので未確認。
+  # @ハンドルは出さない。英語の原文から訳した。
+  - id: reactions
+    heading: ファンの声
+    tier: 未確認
+    telop: 「チーム全体の思いを代弁している」
+    say:
+      - voice: ネット民
+        text: 度胸のある発言だ。
+      - voice: ネット民
+        text: インタビュアーは幸運が信じられなかっただろう。
+      - voice: ネット民
+        text: 試合のことを聞いたら、いきなり上層部への疑問に直行したんだから。
+      - voice: ネット民
+        text: チーム全体の思いを代弁しているのは明らかだ
+    official: false
+    sources:
+      - https://x.com/GH_Gaelic/status/2110128413373521977

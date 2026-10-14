@@ -1,0 +1,80 @@
+# 日本人選手 の取材メモ（2026年10月14日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-14。WebFetch で原文を読んだ（ゲキサカ・サッカーキング・フットボールチャンネル2本）。
+# 日付・場所: 現地10月13日、エミレーツ・スタジアム、CLリーグフェーズ第2節。
+# 資料間のずれ: 幻のゴールの時間がゲキサカ「22分」・サッカーキング「23分」と割れた。足を気にした場面もゲキサカ「後半5分過ぎ」、
+#   フットボールチャンネル「74分のシュートの後」と割れた。→ 台本では時間を言わない。78分の交代だけが全社一致（見出しにもある）。
+# 負傷の程度・診断・本人/監督のコメントはどの資料にも無し → 「分かっていない」と書く。
+# 反応（ネット民・海外のファン）: 今回は探していない／見つからず。実在の投稿が見つかるまで空のまま。
+# 反応: X の日本語検索から1件（3行）。ゴール取り消しの直後に、引用として置いた（誰かの言葉を46秒までに出す決まりのため）。匿名の書き込みなので未確認。
+slot: japan
+date: "2026年10月14日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [上田綺世, アーセナル, リール]
+
+theme:
+  id: ueda_lille_arsenal
+  league: france
+  prefix: ""
+  title: 上田綺世、アーセナル戦で幻のゴールのあと78分で交代。足を気にした場面とは
+  hook: ""
+  question: 上田綺世の途中交代は、負傷によるものなのか
+
+thumbnail:
+  line1: 上田綺世、幻の先制弾
+  line2: 78分、足を気にして●●
+  tags: [上田綺世, リール]
+  photo: assets/images/ueda/01.jpg
+
+answer: 足を気にしていたと伝えられたが、負傷かどうか、程度は分かっていない
+watch: 次の試合で上田綺世が先発に戻るか、リールの発表があるか
+# follow_up: true
+
+sections:
+  - id: what
+    main: true
+    heading: 何が起きたか
+    tier: 報道
+    telop: 上田綺世は先発。幻の先制弾のあと、足を気にして途中交代
+    say:
+      - {text: 'リールの上田綺世は、アーセナル戦に先発しました。', short_only: true}
+      - 前半、こぼれ球を押し込みましたが、オフサイドで取り消されました。
+      - voice: ネット民
+        text: 上田綺世のゴールはオフサイドに
+      - voice: ネット民
+        text: いや、ティンバーのラインコントロールうますぎるって
+      - 後半、上田は足を気にする様子を見せ、オリビエ・ジルーと途中交代しました。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/ucl/detail/?460952-460952-fl
+      - https://www.soccer-king.jp/news/world/cl/20261014/2216401.html
+      - https://www.footballchannel.jp/2026/10/14/post1031922/
+      - https://x.com/sushitony00/status/2110152790790303908
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 報道
+    telop: アーセナル3-0リール。上田は78分まで
+    say:
+      - アーセナルが3対0でリールに勝ちました。
+      - 3点はいずれも後半で、7分間に集中しています。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/ucl/detail/?460952-460952-fl
+      - https://www.soccer-king.jp/news/world/cl/20261014/2216401.html
+      - https://www.footballchannel.jp/2026/10/14/post1031967/
+
+  - id: next
+    heading: これからどうなる
+    tier: 報道
+    telop: 負傷かどうかは、まだ分かっていない
+    say:
+      - 負傷の可能性も伝えられています。
+      - ただ、足の状態の診断は出ていません。
+      - 本人と監督のコメントも、いまのところ伝わっていません。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/10/14/post1031967/
+      - https://www.footballchannel.jp/2026/10/14/post1031922/

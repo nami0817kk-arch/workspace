@@ -1,0 +1,150 @@
+# 試合結果 の取材メモ（2026年10月14日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+# 取材: 2026-10-14。出典はすべて WebFetch / requests で原文を読んだもの。
+#  - 試合: CL リーグフェーズ第2節 インテル 3-4 クラブ・ブルッヘ（サン・シーロ、10/13 夜）
+#  - 得点者と時間: inter.it の試合記録（クラブ公式）に合わせた。ラウタロの2点目だけ
+#    inter.it は82分、football-italia と Guardian は81分。公式の82分を採った（台本では分を言わなくてよい）
+#  - 読めなかったもの: as.com（403）、kicker.de（403）、UEFA 公式（読み込めず）。
+#    WebFetch で gazzetta / marca / guardian は拒否されたので requests で本文を読んだ
+#  - 反応（ネットの声）: footballnet / サカサカ10 の検索はこの試合の記事を返さなかった（古い記事のみ）。
+#    実在の投稿が取れていないので反応の節は空欄にしてある。作らない
+slot: match
+date: "2026年10月14日"
+format: news
+no_main: true      # ニュースはショートだけ（2026-10-14）。締めで本編を案内しない
+people: [トレゾルディ, キヴ監督, インテル]
+
+theme:
+  id: tresoldi_brugge_inter
+  league: italy
+  prefix: ""
+  title: "トレゾルディの3ゴール、サン・シーロでインテルに4-3。キヴ監督が口にした敗因"
+  hook: ""
+  question: インテルはなぜ、ホームで4点を取られたのか
+
+thumbnail:
+  line1: トレゾルディ3発
+  line2: インテル、勝ち点0の2連敗
+  tags: [トレゾルディ, キヴ監督]
+  photo: assets/images/tresoldi/01.jpg
+
+answer: 監督は「慌てて距離とバランスを失った」と説明した。GKのミスなど個人の失点も重なった
+watch: 次はホームでシャフタール。勝ち点0のインテルが立て直せるか
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 報道
+    telop: インテル 3-4 ブルッヘ
+    say:
+      - チャンピオンズリーグ第2節、インテルはホームのサン・シーロでクラブ・ブルッヘに3対4で敗れました。
+      - 点を取ったのは、30分にPKでトレゾルディ。44分にラウタロ・マルティネスが追いつきます。
+      - 後半はトレゾルディが63分と74分に決めて、ハットトリック。
+      - ラウタロが82分に追い上げましたが、87分にヴェルマント。インテルのボニーが90分すぎに決めましたが、3対4で終わりました。
+    official: false
+    sources:
+      - https://www.inter.it/en/news/inter-club-brugge-champions-league-2026-27
+      - https://www.theguardian.com/football/2026/oct/13/champions-league-lens-sporting-inter-barcelona-bayern-napoli
+      - https://football-italia.net/ucl-inter-3-4-club-brugge-terrific-tresoldi/
+
+  - id: voices
+    main: true
+    heading: 試合後の言葉
+    tier: 報道
+    telop: キヴ監督「責任は私にある」
+    say:
+      - {text: 'チャンピオンズリーグ、ホームのインテルは2連敗でした。', short_only: true}
+      - 敗れたインテルのキヴ監督は、クラブを通じて試合を振り返りました。
+      - voice: キヴ
+        text: 後半は少し慌ててしまった。プレスでバランスと形を失い、1対2とリードされたことで勢いも落ち着きも削られた
+      - voice: キヴ
+        text: 相手は強度も個性も技術も、外のスピードもあった。敬意を払わなければならない
+      - voice: キヴ
+        text: 責任は私にある。試合によって、うまくバランスを見つけられていないのかもしれない
+      - voice: キヴ
+        text: ハーフタイムに、もっと落ち着きと冷静さを伝えるべきだったのかもしれない
+      - voice: キヴ
+        text: 何より、自分たちへの信頼を失ってはいけない。まだ6試合残っている
+      - 点を取った側のトレゾルディは、イタリアのスカイ・スポーツでこう話しています。
+      - voice: トレゾルディ
+        text: ぼくにとってはダービーのようなものだった。ここサン・シーロでプレーするのは、ずっと夢だった
+      - voice: トレゾルディ
+        text: ミラニスタのぼくには、インテル相手なら、なおさら。夢が叶った子どもみたいな気持ちだ
+    official: false
+    sources:
+      - https://www.inter.it/en/news/chivu-interview-post-inter-club-brugge-champions-league-2026-27
+      - https://football-italia.net/chivu-inter-champions-league-record-worrying/
+      - https://www.gazzetta.it/Calcio/Serie-A/Inter/14-10-2026/chivu-inter-bruges-conferenza.shtml
+      - https://football-italia.net/tresoldi-a-dream-come-true-feels-like-a-derby/
+
+  - id: turning
+    heading: 試合が決まった場面
+    tier: 報道
+    telop: PK、GKのミス、こぼれ球
+    say:
+      - 最初の1点は、カルハノールがフォルブスを倒して取られたPKでした。
+      - トレゾルディは、ゴール上を射抜いて決めています。
+      - インテルも前半のうちに、ディマルコのヒールパスからラウタロが同点にしました。ここまでは互角です。
+      - 流れが変わったのは後半。GKジョゼップ・マルティネスのミスのあと、トレゾルディが2点目。
+      - 3点目はGKが止めたシュートのこぼれ球に、インテルの守備陣より先に反応しました。
+      - 3対1のあと、インテルは同点のチャンスを2回つくりました。
+      - しかしカウンターで、ヴェルマントに決められました。
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/13/champions-league-lens-sporting-inter-barcelona-bayern-napoli
+      - https://football-italia.net/ucl-inter-3-4-club-brugge-terrific-tresoldi/
+      - https://www.marca.com/futbol/champions-league/cronica/2026/10/13/tresoldi-estelariza-autentica-noche-brujas-milan.html
+      - https://www.inter.it/en/news/inter-club-brugge-champions-league-2026-27
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 報道
+    telop: 8試合で14失点
+    say:
+      - インテルは今季、セリエAとチャンピオンズリーグを合わせた8試合で14失点しています。
+      - チャンピオンズリーグでは、直近8試合で7敗。今大会はまだ勝ち点0です。
+      - キヴ監督は、この成績を「心配でないとは言えない」と認めています。
+      - 一方のトレゾルディは22歳。イタリア生まれで、ドイツで育ち、ミランのファンだと自分で話しています。
+      - 今季はこれで、ブルッヘで11試合9ゴールです。
+    official: false
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Inter/14-10-2026/chivu-inter-bruges-conferenza.shtml
+      - https://football-italia.net/chivu-inter-champions-league-record-worrying/
+      - https://www.gazzetta.it/Calcio/Champions-League/14-10-2026/tresoldi-sulla-nazionale-ho-parlato-con-mancini-e-klopp-vedremo.shtml
+      - https://football-italia.net/tresoldi-a-dream-come-true-feels-like-a-derby/
+
+  - id: next
+    heading: 順位と次の一戦
+    tier: 報道
+    telop: 次はホームでシャフタール
+    say:
+      - インテルは初戦でレアル・マドリードに1対2で負けていて、2試合を終えて勝ち点は0です。
+      - 次の試合は、来週ホームでシャフタール・ドネツク戦。
+      - ブルッヘは初戦でアストン・ヴィラにホームで敗れていましたが、次はホームで、フランスのランスを迎えます。
+      - トレゾルディは、代表をドイツにするかイタリアにするか、まだ決めていません。両方と話したと語りました。
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/oct/13/champions-league-lens-sporting-inter-barcelona-bayern-napoli
+      - https://football-italia.net/tresoldi-an-incredible-night-italy-germany/
+      - https://www.marca.com/futbol/champions-league/cronica/2026/10/13/tresoldi-estelariza-autentica-noche-brujas-milan.html
+
+  # ネットの反応: 2026-10-14 に X を現地語（イタリア語）で検索して引いた実在の投稿。
+  # 匿名の書き込みなので未確認。@ハンドルは画面に出さない。件数は3件まで（2026-09-28 決定）。
+  # イタリア語の原文から訳した。「普通の選手」「7番手」は原文のまま。
+  - id: reactions
+    heading: インテル・ファンの嘆き
+    tier: 未確認
+    telop: 「インテルの新しい公共の敵ナンバー1」
+    say:
+      - voice: ネット民
+        text: 守備は見ていられないし、キーパーもひどい。トレゾルディみたいな普通の選手に3点も取らせた。インテルの陣容なら、最低でも7番手のフォワードなのに
+      - voice: ネット民
+        text: トレゾルディは今夜、ゲルト・ミュラーとヨハン・クライフの中間みたいだった。インテルはチャンスを2つ逃して、その流れでそのまま失点した。呪われた試合だ。ブルッヘの功績も同じだけ大きい
+      - voice: ネット民
+        text: インテルの新しい公共の敵ナンバー1
+    official: false
+    sources:
+      - https://x.com/JTriplete/status/2110158260783493532
+      - https://x.com/ChristianConte_/status/2110107031583531221
+      - https://x.com/perofamm_/status/2110121390259277854
