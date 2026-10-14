@@ -1,0 +1,632 @@
+# 徳川慶喜（10/14 19時公開・大政奉還の上表の日）。型：掘り下げ型（見どころ → 生まれから順に → まとめ：徳川慶喜とは何者だったのか）
+# 事実の出どころは dev/output/rekishi-chiso/research/yoshinobu_facts.md（確実／有力／説の言い分けもそこ）。絵は research/yoshinobu_assets.md
+# 慶喜は史料が多い人物。ただし『昔夢会筆記』『徳川慶喜公伝』は本人側の言い分なので、「本人はこう語った」と「記録ではこうだった」を分ける。
+# 年齢は満年齢（肖像の「この時○歳」と同じ）で言い、冒頭で断る。和暦の月日は旧暦なので、西暦で言うときは換算した日を言う。
+# 前後の回と重ねない：秀吉の回の最後で次回は新選組と予告したが、新選組は10/26へ回ったので、この回の次回予告はベートーヴェン（10/15 12時）。
+# 弱めて言うもの：「二心殿」（出どころ未確認）・木戸孝允の「家康の再来」（原文未確認）・「千騎が一騎になろうとも」の演説（同時代史料なし）・
+#   西周「議題草案」と慶喜本人の意図・大坂脱出の理由（決め手なし）・写真の「名人」（言わない）・東京へ移った日と行き先（月までにとどめる）。
+# 数字を出さないもの：辞官納地の石高・静岡での生活費の額・幕府の借金・旗本領を含む総石高。
+# 広告の点：戦闘の細部・流血は語らない。鳥羽伏見は兵の数と結果だけ。桜田門外の変は「井伊が討たれた」の一言。
+title: 徳川慶喜の76年｜大政奉還は「降参」ではなかった 大坂城の夜と静岡の30年
+series: ""
+playlists: [日本史を掘る（聞き流し）, 幕末を掘る]
+shorts_playlists: [日本史ショート]
+tags: [徳川慶喜, 慶喜, 大政奉還, 最後の将軍, 幕末, 鳥羽伏見の戦い, 大坂城, 小御所会議, 王政復古, 静岡, 浮月楼, 日本史, 歴史, 歴史解説, 歴史の地層]
+en:
+  title: "Tokugawa Yoshinobu: 76 Years of the Last Shogun | The Return of Power Was Not a Surrender"
+  description: |-
+    On the 14th day of the 10th month of 1867 (November 9 in today's calendar), Tokugawa Yoshinobu submitted the memorial returning political power to the imperial court. Dictionaries describe the aim as keeping the initiative for the Tokugawa in the new order, not simply giving up.
+    We follow his life in order: born in 1837 in the Mito domain's residence in Edo and raised in Mito, adopted into the Hitotsubashi family at 10, the shogunal succession dispute and the Ansei Purge, the Kinmon Incident, a shogun for about one year who never entered Edo Castle, the Taisei Hokan and the Kogosho Conference, the night he left Osaka Castle after the Battle of Toba-Fushimi, and about 30 years in Shizuoka with photography and bicycles, until he died in 1913.
+    We separate what Yoshinobu said later in life from what the records show, and we say plainly where historians disagree.
+    A Japanese history video to listen to while you work (Japanese audio).
+  chapters:
+    - "1867: The Return of Power and Why It Was Not a Surrender"
+    - "1837-1847: Shichirōmaro of Mito"
+    - "1858-1862: The Man Who Missed the Shogunate"
+    - "1864: Guardian of the Court and the Man of Two Minds"
+    - "1866-1867: The Last Shogun and the Keiō Reforms"
+    - "1867: Taisei Hōkan and the Kogosho Conference"
+    - "1868: The Night He Left Osaka Castle"
+    - "1868-1897: Thirty Years in Shizuoka"
+    - "1897-1913: Tokyo, the Emperor and the End"
+    - "Summary: Who Was Tokugawa Yoshinobu?"
+
+texture: true
+recap: true
+
+timeline:
+  start: 1830
+  end: 1920
+  events: [[1837, 誕生], [1858, 継嗣問題], [1867, 大政奉還], [1868, 鳥羽伏見], [1913, 死去]]
+
+people:
+  徳川慶喜: {born: 1837-10-28, died: 1913-11-22, match: [慶喜, 七郎麻呂]}
+
+terms:
+  大政奉還: 1867年、将軍が政権を朝廷に返したこと。上表は旧暦10月14日（11月9日）
+  将軍後見職: 幼い将軍や若い将軍を助ける役。慶喜は1862年に就いた
+  禁裏御守衛総督: 京都の御所を守る軍の総指揮。慶喜は1864年に就いた
+  慶応の改革: 1867年、慶喜がフランスの助けを借りて進めた幕府の立て直し
+  諸侯会議: 大名が集まって国の政治を決める会。慶喜の狙いはここでの主導権と説明される
+  議題草案: 1867年、西周が書いた新しい政治の設計図。将軍が「大君」になる案
+  王政復古: 1868年1月3日、将軍職をなくして天皇中心の政府を作ると宣言したこと
+  小御所会議: 王政復古の夜に開かれた会議。慶喜の扱いが決まった
+  辞官納地: 官職を辞めて領地を返すこと。小御所会議で慶喜に求められた
+  錦の御旗: 天皇の軍のしるしの旗。立てられた側が官軍になった
+  開陽丸: 幕府がオランダに造らせた最新の軍艦。1867年に横浜に着いた
+  恭順: 戦わず、相手の言うことに従う態度をとること
+  昔夢会筆記: 晩年の慶喜が、渋沢栄一たちに昔を語った聞き取りの記録
+  家扶日記: 慶喜の家の家扶がつけた日記。静岡時代の暮らしが分かる
+
+shorts:
+  s1:
+    title: "大政奉還は／降参だったのか"
+    yt_title: "大政奉還は本当に「降参」だったのか｜徳川慶喜が返したもの"
+    hook: "大政奉還は、／将軍の降参だった？"
+    tease: "じゃあ、その2か月後の夜、／慶喜は何を求められた？"
+    lead: "1867年11月9日、慶喜は政権を朝廷に返す上表を出しました。『日本大百科全書』は、形の上では返しても、新しい政治で主導権を握り続けるねらいがあったと説明します。"
+    tags: [大政奉還, 徳川慶喜, 最後の将軍, 幕末]
+  s2:
+    title: "大坂城の夜／置き去りの艦長"
+    yt_title: "徳川慶喜はなぜ大坂城を夜に出たのか｜兵を残して"
+    hook: "兵を残して、／総大将が夜に消えた？"
+    tease: "あの夜、／置き去りにされた艦長は／誰だった？"
+    lead: "1868年1月、鳥羽伏見の戦いのあと。旧幕府軍は約1万5千で戦いました。そのあと慶喜は老中や会津藩主たちを連れて城を出ました。"
+    tags: [徳川慶喜, 大坂城, 鳥羽伏見の戦い, 開陽丸]
+  s3:
+    title: "1年だけの／15代将軍"
+    yt_title: "徳川慶喜は将軍なのに江戸城に入らなかった？｜1年だけの15代将軍"
+    hook: "将軍なのに、／江戸城に一度も入らなかった？"
+    tease: "その1年で、／慶喜は何を／変えようとした？"
+    lead: "徳川慶喜が将軍だったのは、1867年1月から翌年1月までの約1年。将軍の期間は、京都と大坂にいました。"
+    tags: [徳川慶喜, 15代将軍, 二条城, 幕末]
+  s4:
+    title: "元将軍の／静岡の30年"
+    yt_title: "元将軍・徳川慶喜が静岡で夢中になったもの｜自転車とカメラ"
+    hook: "元将軍は、静岡で／何に夢中だった？"
+    tease: "その写真は、／のちに何という本に／なった？"
+    lead: "大政奉還のあと、徳川慶喜は静岡でおよそ30年を過ごしました。政治から退いて、狩りや釣り、油絵、自転車、写真を楽しんだことが分かっています。"
+    tags: [徳川慶喜, 静岡, 自転車, 写真]
+  s5:
+    title: "木戸孝允が恐れた／将軍"
+    yt_title: "木戸孝允は徳川慶喜を何と評したのか｜「一橋の胆略、決して侮るべからず」"
+    hook: "維新の志士は、／慶喜を何と恐れた？"
+    tease: "そんな慶喜が、／30年ぶりに会った天皇は／誰だった？"
+    lead: "長州の木戸孝允は、一橋慶喜のことを、決して侮ってはならない人物だと言った、と伝わります。一方で、意見をよく変えるので「二心殿」と陰で言われた、という話もあります。"
+    tags: [徳川慶喜, 木戸孝允, 二心殿, 幕末]
+
+next:
+  title: ベートーヴェン
+  series: ""
+  teaser: 『運命』で知られる作曲家。耳の病と向き合った56年を、記録で掘ります。
+
+thumbnail:
+  layout: face
+  image: paintings/yoshinobu_portrait_sutton_osaka_1867.jpg
+  crop: [80, 20, 780, 720]
+  side: right
+  name: 徳川慶喜
+  lead: 大政奉還は
+  main: 降参じゃない
+  variants:
+    b: {crop: [190, 70, 650, 530]}
+
+sections:
+  # ---------------------------------------------------------------- 1 導入：大政奉還
+  - title: 1867年11月9日 大政奉還の上表を出した日
+    background: {image: paintings/yoshinobu_kimbei_nijo_castle.jpg, credit: "日下部金兵衛《二条城》1890年ごろ（明治の写真）"}
+    portrait: {image: paintings/yoshinobu_portrait_shogun.jpg, caption: "将軍時代の徳川慶喜（写真、幕末）"}
+    year: 1867
+    lines:
+      - 語り: 1867年、最後の将軍・徳川慶喜は、自分から政権を朝廷に返しました。ところが『日本大百科全書』は、降参ではなく、主導権を握り続けるための一手だった、と説明します。《大政奉還》です。
+        card: {head: "1867年11月9日", body: 将軍が政権を朝廷に返す}
+        short: s1
+      - 聞き: 政権を返したのに、握り続ける？ 将軍が政権を返したら、普通は負けを認めたってことでしょ？
+        tone: 疑問
+        short: s1
+      - 語り: 上表を出したのは、慶応3年10月14日。二条城で、満30歳でした。月日の数字は今の10月14日と同じですが、旧暦で、今の暦だと11月9日です。
+        background: {image: paintings/yoshinobu_taisei_hokan_tanryo.jpg, credit: "邨田丹陵《大政奉還》聖徳記念絵画館壁画（後世の想像画）"}
+      - 語り: ここからしばらくは、当時の暦のまま月日を言います。
+      - 語り: その答えは、このあと掘ります。この人は、ほかにも、答えの分かれる場面をいくつも残しました。
+      - 語り: 鳥羽伏見の戦いで、約1万5千の兵を率いた旧幕府軍が敗れます。そのあと、総大将が夜のうちに、大坂城から姿を消します。
+        background: {image: paintings/yoshinobu_osaka_palace_butt_1868.jpg, credit: "J.H.バット《大坂城》水彩、1868年1月"}
+        portrait: null
+        card: {head: 1868年1月, body: 大坂城を夜に出る}
+        short: s2
+      - 聞き: 兵を置いて、自分だけ？ それって、逃げたってことじゃん。
+        tone: 驚き
+        short: s2
+      - 語り: なぜ出たのか。今も、研究者の見方が分かれています。そして江戸に戻ったあと、政治の表舞台から退き、静岡でおよそ30年を過ごしました。カメラや自転車を楽しみながら。
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城（家康の時代の図）"}
+      - 聞き: 将軍が、カメラと自転車？ 落差がすごい。あーしだったら、どっちかで毎日出かけてそう。
+        tone: 驚き
+      - 語り: 今日は、この徳川慶喜を、生まれた順に掘っていきます。年齢は、今と同じ満年齢で言います。
+        background: {image: paintings/yoshinobu_portrait_shogun.jpg, credit: "将軍時代の徳川慶喜（写真、幕末）"}
+      - 語り: ただ、慶喜は、自分で昔を語った人です。聞き取りの記録も、渋沢栄一が編んだ伝記も残っています。でも、どちらも本人側の言い分です。自分を弁護している面もあります。
+        card: {head: 本人の言い分, body: 『昔夢会筆記』など。自己弁護の面あり}
+      - 聞き: 本人が言ってることと、記録に残ってることを、分けて聞けばいいんだね。裁判で、証言と証拠を分けるみたいな感じか。
+      - 語り: そうです。《本人の言い分》と《記録》を分けながら、大政奉還が降参だったのか、掘っていきましょう。
+
+  # ---------------------------------------------------------------- 2 水戸の七郎麻呂
+  - title: 1837年〜1847年 小石川に生まれ、水戸で育つ
+    background: {image: paintings/yoshinobu_nariaki_self_portrait.jpg, credit: "徳川斉昭の自画像（1838年）"}
+    year: 1837
+    lines:
+      - 語り: 慶喜が生まれたのは、天保8年9月29日。今の暦だと1837年の10月28日です。場所は、江戸の小石川にあった水戸藩の上屋敷。今の小石川後楽園のあたりです。
+        background: {image: paintings/kira_edo_birdseye_keisai_1803.jpg, credit: "渓斎英泉らの江戸鳥瞰図（1803年）"}
+        card: {head: 1837年10月28日, body: 江戸の水戸藩上屋敷に生まれる}
+      - 聞き: 水戸藩って、御三家の一つだよね。じゃあ、生まれたときから、すごい家の子なんだ。
+      - 語り: 父は、水戸藩主の徳川斉昭。慶喜は、その七男でした。母の登美宮吉子は、有栖川宮織仁親王の王女、つまり皇族の娘です。
+        background: {image: paintings/yoshinobu_nariaki_portrait.jpg, credit: "徳川斉昭の肖像（幕末〜明治の図版）"}
+        figure: {type: people, title: 慶喜の生まれ, nodes: [[徳川斉昭, 父・水戸藩主], [登美宮吉子, 母・有栖川宮家の王女], [徳川慶喜, 七男]], edges: [[徳川斉昭, 徳川慶喜, 父と子], [登美宮吉子, 徳川慶喜, 母と子]]}
+      - 聞き: 七男？ 七番目なら、自分が大きな役になるなんて、本人も思ってなかったかも。
+      - 語り: 幼いころの名前は、七郎麻呂。生まれて間もなく、水戸に移されます。
+        figure: null
+        portrait: null
+        background: {image: paintings/yoshinobu_nariaki_self_portrait.jpg, credit: "徳川斉昭の自画像（1838年）"}
+      - 語り: 斉昭の方針で、子どもは江戸ではなく国元の水戸で育てられました。慶喜は、およそ9年を水戸で過ごし、藩校の弘道館で学びます。
+        background: {image: paintings/yoshinobu_nariaki_self_portrait.jpg, credit: "徳川斉昭の自画像（1838年）"}
+        card: {head: 1838年ごろ, body: 水戸で育つ。藩校の弘道館で学ぶ}
+      - 聞き: 9年って、ほとんど小学生の間じゃん。生まれは江戸でも、心は水戸の子だったのかもね。
+      - 語り: 慶喜は後年、水戸の家には、朝廷に弓を引いてはならない、という教えがあった、と語っています。父の斉昭から、そう教えられた、と。
+        background: {image: paintings/yoshinobu_nariaki_portrait.jpg, credit: "徳川斉昭の肖像（幕末〜明治の図版）"}
+        portrait: {image: paintings/yoshinobu_nariaki_portrait.jpg, caption: "徳川斉昭の肖像（幕末〜明治の図版）", age: false}
+      - 聞き: 後年、ってことは、それも「本人の言い分」の一つだね。
+        tone: 疑問
+      - 語り: はい。のちの大きな場面で、この話が出てきます。覚えておいてください。
+      - 語り: 1847年、満9歳の七郎麻呂は江戸に呼ばれ、徳川一族の一橋家を継ぎます。
+        background: {image: paintings/yoshinobu_portrait_rifle.jpg, credit: "若いころの徳川慶喜（写真、撮影年不詳）"}
+        card: {head: 1847年, body: 9歳で一橋家を継ぐ}
+      - 聞き: 9歳で家を継ぐって、今なら小学3年生が当主ってことでしょ？ 大変すぎ。
+        tone: 驚き
+      - 語り: 元服のとき、12代将軍・徳川家慶の「慶」の字をもらい、名前は《慶喜》になりました。一橋慶喜の誕生です。
+        card: {head: 1847年, body: 元服して「慶喜」と名乗る}
+      - 聞き: 将軍の名前の一字をもらうって、期待されてる証拠だよね。
+      - 語り: のちに慶喜は、一橋家の当主として豚肉を好んだことから、「豚一」と陰で呼ばれた、と伝わります。
+        card: {head: 伝わる呼び名, body: 「豚一」（豚肉好きの一橋）}
+      - 聞き: 豚一！ 急に庶民的なあだ名だね。
+        tone: 笑い
+      - 語り: ただし、同じ時代の記録で確かめられた呼び名ではありません。水戸の家は、肉を食べることに積極的だった、とは言われています。
+        background: {image: paintings/yoshinobu_nariaki_portrait.jpg, credit: "徳川斉昭の肖像（幕末〜明治の図版）"}
+        portrait: {image: paintings/yoshinobu_nariaki_portrait.jpg, caption: "徳川斉昭の肖像（幕末〜明治の図版）", age: false}
+      - 語り: 水戸で育った少年が、このあと、将軍の座をめぐる争いの真ん中に押し出されていきます。
+        hook: true
+        background: {image: paintings/yoshinobu_portrait_rifle.jpg, credit: "若いころの徳川慶喜（写真、撮影年不詳）"}
+        portrait: {image: paintings/yoshinobu_portrait_rifle.jpg, caption: "若いころの徳川慶喜（写真、撮影年不詳）"}
+      - 聞き: 将軍の座の争いって……まだ若いよね？
+        tone: 疑問
+        hook: true
+
+  # ---------------------------------------------------------------- 3 継嗣問題と安政の大獄
+  - title: 1858年〜1862年 将軍になれなかった男と安政の大獄
+    background: {image: paintings/yoshinobu_ii_naosuke_eigaku.jpg, credit: "狩野永岳《井伊直弼像》1860年"}
+    portrait: {image: paintings/yoshinobu_portrait_rifle.jpg, caption: "若いころの徳川慶喜（写真、撮影年不詳）"}
+    year: 1858
+    lines:
+      - 語り: 1858年、13代将軍の家定に跡継ぎがおらず、次の将軍を誰にするかで幕府が割れました。《将軍継嗣問題》です。
+        card: {head: 1858年, body: 将軍継嗣問題が起きる}
+      - 聞き: 次の将軍を決める争い。慶喜は、その候補だったの？
+        tone: 疑問
+      - 語り: はい。一橋派と呼ばれる人たちが、慶喜を推しました。父の斉昭、福井藩の松平慶永（のちの春嶽）、薩摩藩の島津斉彬たちです。このとき慶喜は、20歳でした。
+        background: {image: paintings/yoshinobu_nariaki_portrait.jpg, credit: "徳川斉昭の肖像（幕末〜明治の図版）"}
+        figure: {type: people, title: 次の将軍をめぐる2つの派, nodes: [[一橋派, 慶喜を推す（斉昭・松平慶永・島津斉彬）], [徳川慶喜, 20歳], [井伊直弼, 大老], [紀州の慶福, もう一人の候補（のちの家茂）]], edges: [[一橋派, 徳川慶喜, 推す], [井伊直弼, 紀州の慶福, 推す]]}
+      - 聞き: 有力な人たちが推してたんだ。しかも母方は皇族でしょ？ じゃあ、決まりじゃないの？
+      - 語り: ところが、大老の井伊直弼は、紀州の徳川慶福を選びました。のちの14代将軍・家茂です。
+        figure: null
+        portrait: {image: paintings/yoshinobu_ii_naosuke_eigaku.jpg, caption: "井伊直弼（狩野永岳画、1860年）", age: false}
+        background: {image: paintings/yoshinobu_ii_naosuke_eigaku.jpg, credit: "狩野永岳《井伊直弼像》1860年"}
+        card: {head: 1858年, body: 井伊直弼が紀州の慶福を選ぶ}
+      - 聞き: 争いに負けたってことか。将軍になれる人は、一人しかいないんだもんね。
+        tone: 重い
+      - 語り: 負けただけで終わりません。翌1859年、安政の大獄で、慶喜は隠居と謹慎を命じられます。満21歳でした。
+        background: {image: paintings/yoshinobu_portrait_rifle.jpg, credit: "若いころの徳川慶喜（写真、撮影年不詳）"}
+        card: {head: 1859年, body: 安政の大獄。隠居・謹慎を命じられる}
+        tone: 重い
+      - 語り: 安政の大獄は、大老の井伊直弼が、幕府のやり方に反対した人たちを、次々に罰した事件です。
+      - 聞き: 反対した人を、まとめて処分したってこと？ 強引だね。しかも21歳で隠居……。今なら、大学生が、家業の跡取りを外されるようなもんだよ。
+        tone: 驚き
+      - 語り: 1860年3月、井伊直弼が桜田門外で討たれます。そして同じ年の秋、慶喜の謹慎は解かれました。
+        card: {head: 1860年, body: 井伊が討たれ、謹慎が解かれる}
+      - 聞き: 自分を追いつめた人が亡くなって、戻れるようになったんだ。運がいいのか、悪いのか、分かんないけど。
+      - 語り: 1862年の夏、満24歳の慶喜は、《将軍後見職》になります。将軍家茂を助ける役です。
+        background: {image: paintings/yoshinobu_iemochi_kawamura_oil.jpg, credit: "川村清雄《徳川家茂像》1884年"}
+        card: {head: 1862年, body: 将軍後見職になる}
+        portrait: {image: paintings/yoshinobu_iemochi_kawamura_oil.jpg, caption: "徳川家茂（川村清雄画、1884年）", age: false}
+      - 語り: 福井藩の松平春嶽と組んで、幕府の仕組みを変えていきます。これを《文久の改革》と呼びます。
+        portrait: {image: paintings/yoshinobu_portrait_rifle.jpg, caption: "若いころの徳川慶喜（写真、撮影年不詳）"}
+      - 聞き: 将軍になれなかった人が、将軍を支える役に。でも、本人はどう思ってたのかな。
+        tone: 疑問
+      - 語り: 気持ちは分かりません。ただ、それからの慶喜は、京都で、もっと大きな役目を担っていきます。
+        hook: true
+      - 聞き: 京都って……ここから、いよいよ幕末の中心だね。
+        hook: true
+
+  # ---------------------------------------------------------------- 4 京都の実力者
+  - title: 1864年 禁裏御守衛総督と禁門の変
+    background: {image: paintings/yoshinobu_kimbei_mikado_garden.jpg, credit: "日下部金兵衛《京都御所》1890年ごろ（明治の彩色写真）"}
+    portrait: {image: paintings/yoshinobu_portrait_rifle.jpg, caption: "若いころの徳川慶喜（写真、撮影年不詳）"}
+    year: 1864
+    lines:
+      - 語り: 1864年の春、慶喜は後見職を辞めて、自分から、京都の御所を守る役を望みました。《禁裏御守衛総督》です。満26歳でした。
+        card: {head: 1864年, body: 禁裏御守衛総督になる}
+      - 聞き: 将軍を支える役を、自分から辞めて？ なんで御所の守りなんだろ。
+        tone: 疑問
+      - 語り: 理由は、はっきりしません。幕府の中ではなく、朝廷の近くで力を使いたかった、と見る人もいます。
+      - 語り: その年の8月、長州藩の兵が京都に攻め上ります。御所の近くの蛤御門で戦いになりました。《禁門の変》です。
+        background: {image: paintings/yoshinobu_matsudaira_katamori.jpg, credit: "松平容保の肖像（甲冑姿、1863年）"}
+        card: {head: 1864年8月20日, body: 禁門の変。長州勢を退ける}
+      - 聞き: 慶喜が、自分で戦ったの？
+        tone: 疑問
+      - 語り: 戦ったのは、おもに会津藩と薩摩藩の兵です。慶喜は、指揮をとり、朝廷の引き締めにも動きました。長州勢は、退けられます。
+        figure: {type: people, title: 禁門の変の顔ぶれ, nodes: [[徳川慶喜, 御所を守る総督], [会津藩, 主力の一つ], [薩摩藩, 主力の一つ], [長州藩, 京都に攻め上る]], edges: [[徳川慶喜, 会津藩, 連携], [徳川慶喜, 薩摩藩, 連携], [長州藩, 徳川慶喜, 御所へ攻める]]}
+      - 聞き: 総大将として、うまくやったってことだね。戦った人と、指揮した人が別なのか。
+      - 語り: 慶喜は、意見をよく変えるので、《二心殿》と陰口をたたかれた、と伝わります。
+        figure: null
+        background: {image: paintings/yoshinobu_portrait_shogun.jpg, credit: "将軍時代の徳川慶喜（写真、幕末）"}
+        card: {head: 伝わる呼び名, body: 「二心殿」（意見をよく翻した）}
+        short: s5
+      - 聞き: 二心って、二つの心？ あーし、そういう人、ちょっと苦手かも。でも、状況に合わせて意見を変えるのって、悪いことなのかな。
+        short: s5
+      - 語り: ただ、この呼び名は、誰が、いつ、どの史料で言ったのかが分かっていません。小説やテレビ番組の紹介にも出てきます。
+        short: s5
+      - 聞き: 出どころが分からないあだ名なんだ。それなのに、広まっちゃうんだね。
+        short: s5
+      - 語り: 一方で、長州の木戸孝允は、慶喜を警戒していました。度胸と知恵を、決して侮ってはならない、と言った、と伝わります。いつの言葉かは分かりません。
+        background: {image: paintings/yoshinobu_portrait_kawamura_oil.jpg, credit: "川村清雄《徳川慶喜像》油絵（1934年以前）"}
+        card: {head: 木戸孝允の評, body: 「決して侮ってはならない」}
+        short: s5
+      - 聞き: 敵だった人に、そこまで言われるってことは、よっぽど手強かったんだ。味方より、敵のほうが、その人の力をよく見てるのかも。
+      - 語り: 敵だった人にも、一目置かれた慶喜に、1866年、思いがけない知らせが届きます。
+        background: {image: paintings/yoshinobu_choshu_samurai_troops_1865.jpg, credit: "第二次長州征討の行軍の絵巻（1865年）"}
+        hook: true
+      - 聞き: 思いがけない知らせって……ついに、将軍になるの？
+        tone: 疑問
+        hook: true
+
+  # ---------------------------------------------------------------- 5 最後の将軍と慶応の改革
+  - title: 1866年〜1867年 15代将軍と慶応の改革
+    background: {image: paintings/yoshinobu_kimbei_nijo_castle.jpg, credit: "日下部金兵衛《二条城》1890年ごろ（明治の写真）"}
+    portrait: {image: paintings/yoshinobu_portrait_shogun.jpg, caption: "将軍時代の徳川慶喜（写真、幕末）"}
+    year: 1866
+    lines:
+      - 語り: 1866年の夏、将軍の家茂が、大坂城で亡くなります。長州への攻めのさなかでした。満20歳でした。
+        card: {head: 1866年, body: 将軍家茂が大坂城で亡くなる}
+        background: {image: paintings/yoshinobu_iemochi_kawamura_oil.jpg, credit: "川村清雄《徳川家茂像》1884年"}
+        portrait: {image: paintings/yoshinobu_iemochi_kawamura_oil.jpg, caption: "徳川家茂（川村清雄画、1884年）", age: false}
+      - 聞き: 20歳で！？ 若すぎる……。じゃあ、次の将軍は、慶喜が？
+        tone: 驚き
+      - 語り: 慶喜は、徳川宗家を継ぎます。ただ、将軍の位は、しばらく受けませんでした。
+        portrait: {image: paintings/yoshinobu_portrait_shogun.jpg, caption: "将軍時代の徳川慶喜（写真、幕末）"}
+      - 聞き: 宗家を継いだのに、将軍にはならなかったの？ なんで？
+        tone: 疑問
+      - 語り: 理由は、はっきりしません。将軍になるまで、半年近くかかりました。
+      - 語り: 将軍になったのは、1867年1月10日。当時の暦では、慶応2年の12月5日です。二条城で、15代将軍の宣下を受けました。
+        background: {image: paintings/yoshinobu_kimbei_nijo_castle.jpg, credit: "日下部金兵衛《二条城》1890年ごろ（明治の写真）"}
+        portrait: {image: paintings/yoshinobu_portrait_shogun.jpg, caption: "将軍時代の徳川慶喜（写真、幕末）"}
+        card: {head: 1867年1月10日, body: 15代将軍になる}
+        short: s3
+      - 聞き: 1月に将軍になって、11月には政権を返したのか……早い。
+        tone: 驚き
+        short: s3
+      - 語り: そして慶喜は、将軍になった日から、約1年しか将軍でいられませんでした。
+        background: {image: paintings/yoshinobu_portrait_1867_1.jpg, credit: "馬上の徳川慶喜（フランス式軍装、1867年）"}
+        figure: {type: stats, title: 慶喜の将軍の1年, items: [[就任, 1867年1月10日, 二条城で将軍宣下], [在任, 約1年, 358日ほど], [江戸城, 入らず, 将軍の間は上方にいた]]}
+        short: s3
+      - 語り: しかも、将軍だった間は、ずっと京都や大坂にいました。江戸城に将軍として入ったことは、一度もない、と言われます。
+        background: {image: paintings/yoshinobu_portrait_sutton_osaka_1867.jpg, credit: "フレデリック・サットン《徳川慶喜》1867年（大坂城）"}
+        short: s3
+      - 聞き: 将軍なのに、江戸のお城には入ってない。あーし的には、すごく不思議。
+        tone: 疑問
+        short: s3
+      - 語り: その代わりに、慶喜は幕府を立て直そうとします。就任の20日後、孝明天皇が亡くなり、新しい天皇の世になる中で、です。
+        figure: null
+        card: {head: 1867年1月30日, body: 孝明天皇が亡くなる}
+      - 語り: それが《慶応の改革》です。フランス公使のロッシュの意見を聞いて、陸軍を洋式に変えます。小栗忠順らが始めた横須賀の製鉄所も、引き継いで進めました。
+        background: {image: paintings/yoshinobu_leon_roches_1865.jpg, credit: "レオン・ロッシュ（1865年ごろ）"}
+        card: {head: 1867年, body: 慶応の改革。洋式の軍隊と製鉄所}
+      - 聞き: フランスの人に相談したんだ。幕府なのに、すごく思い切ってるね。外国のやり方を、将軍が自分から取り入れたってことでしょ？
+      - 語り: ほかにも、老中を専任にして、役所の仕組みを整えます。旗本の兵を出す代わりに、お金を納めさせる改革もしました。
+        background: {image: paintings/yoshinobu_portrait_1867_full.jpg, credit: "フランス式軍装の徳川慶喜（1867年）"}
+      - 聞き: 将軍の1年で、これだけやったんだ。江戸城に入らないで、思ってたより忙しい将軍だね。
+      - 語り: ところが、この改革は、王政復古で途中のまま終わります。なぜ、そうなったのか。いよいよ、大政奉還の話です。
+        hook: true
+      - 聞き: 降参じゃなかった、って話のところだよね。気になる。
+        hook: true
+
+  # ---------------------------------------------------------------- 6 大政奉還のねらいと小御所会議
+  - title: 1867年10月 大政奉還と12月 小御所会議
+    background: {image: paintings/yoshinobu_taisei_hokan_tanryo.jpg, credit: "邨田丹陵《大政奉還》聖徳記念絵画館壁画（後世の想像画）"}
+    portrait: {image: paintings/yoshinobu_portrait_shogun.jpg, caption: "将軍時代の徳川慶喜（写真、幕末）", age: false}
+    year: 1867
+    lines:
+      - 語り: 10月3日、土佐藩が、政権を朝廷に返すよう申し出ます。藩の前の殿様、山内容堂の名で。動いたのは、後藤象二郎でした。
+        background: {image: paintings/yoshinobu_goto_shojiro_1866.png, credit: "後藤象二郎の写真（後から彩色、1866年ごろ）"}
+        card: {head: 慶応3年10月3日, body: 土佐藩が大政奉還を建白する}
+      - 聞き: 土佐藩が？ 慶喜が自分で考えたんじゃないの？
+        tone: 疑問
+      - 語り: 申し出たのは土佐ですが、慶喜はそれを受け入れました。そこには、考えがありました。
+        background: {image: paintings/yoshinobu_yamauchi_yodo.jpg, credit: "山内容堂の肖像写真（幕末）"}
+      - 語り: 背景には、幕府を武力で倒そうとする、薩摩と長州の動きがありました。慶喜が政権を返せば、その名分が消えます。
+        background: {image: paintings/yoshinobu_okubo_toshimichi.jpg, credit: "大久保利通の肖像（1872年）"}
+        short: s1
+      - 聞き: 戦いを避けるための返し方、ってこと？
+        tone: 疑問
+      - 語り: それだけではありません。返したあとの新しい政治では、大名たちが集まる《諸侯会議》で主導権を握れる、と見込んだ、と百科事典は説明します。
+        background: {image: paintings/yoshinobu_portrait_shogun.jpg, credit: "将軍時代の徳川慶喜（写真、幕末）"}
+        short: s1
+      - 聞き: 返して、また握る。さっき言ってた、そういうことか。
+      - 語り: 10月13日、慶喜は二条城に、40あまりの藩の重臣を集めます。大広間で、老中の板倉勝静が、政権を返すつもりだと伝えました。
+        background: {image: paintings/yoshinobu_kimbei_nijo_castle.jpg, credit: "日下部金兵衛《二条城》1890年ごろ（明治の写真）"}
+        card: {head: 慶応3年10月13日, body: 二条城に諸藩の重臣を集める}
+      - 語り: 翌14日、慶喜は朝廷に、上表という正式な文書を出します。初めの部分を、今の言葉にすると、こうです。
+        card: {head: 慶応3年10月14日, body: 大政奉還の上表を出す}
+      - 人物: 「従来の古いやり方を改め、政権を朝廷にお返しし」
+        who: 徳川慶喜
+      - 語り: そして15日、朝廷は、これを認めます。
+        figure: {type: stats, title: 大政奉還の3日間, items: [[10月13日, 諮問, 二条城に諸藩の重臣を集める], [10月14日, 上表, 朝廷に政権を返す], [10月15日, 勅許, 朝廷が認める]]}
+      - 聞き: 13日に相談して、14日に出して、15日に許可……会社の稟議より早くない？
+        tone: 驚き
+      - 語り: ところが、ここに、もう一つの動きがありました。13日と14日の日付で、薩摩と長州に、幕府を討て、という密勅が出ていたんです。
+        figure: null
+        background: {image: paintings/yoshinobu_saigo_takamori.jpg, credit: "西郷隆盛の肖像"}
+        card: {head: 慶応3年10月13日〜14日, body: 薩長に討幕の密勅が出る}
+      - 聞き: 同じ日に、反対のことが起きてたの？ どっちが先に動くか、って競争みたいじゃん。
+        tone: 驚き
+      - 語り: 慶喜の上表が先を制した形になり、討幕の名分は、いったん消えた、と見られています。ただ、この密勅は、正式の手続きを欠いていた、とも言われています。
+      - 語り: 実は、慶喜は、将軍職もすぐには辞めていません。11月、側近の西周が、新しい政治の設計図を書きました。《議題草案》です。
+        background: {image: paintings/yoshinobu_nishi_amane_1880.jpg, credit: "西周の肖像写真（1880年）"}
+        card: {head: 慶応3年11月, body: 西周が「議題草案」を書く}
+      - 聞き: 設計図って、どんな国を作ろうとしたの？
+        tone: 疑問
+      - 語り: 将軍は《大君》と呼ばれ、国の行政を握ります。議会は、上と下の二院に分かれます。そして天皇は、実際の力を持たない地位になる案でした。
+        figure: {type: stats, title: 議題草案（西周・1867年11月）, items: [[行政, 大君（慶喜）, 将軍が握る], [議会, 上下の二院, 大名と藩士が集まる], [天皇, 象徴的な地位, 実権は持たない]]}
+      - 聞き: 返したのに、実際は全部握る設計になってる……ってこと？
+        background: {image: paintings/yoshinobu_portrait_sutton_osaka_1867.jpg, credit: "フレデリック・サットン《徳川慶喜》1867年（大坂城）"}
+        tone: 驚き
+      - 語り: ただし、これは側近の案です。慶喜が、この通りにするつもりだったかどうかは、分かっていません。
+        figure: null
+      - 聞き: 設計図は慶喜じゃなくて、周りの人が書いたんだ。じゃあ、慶喜本人は、どこまで考えてたんだろう。
+      - 語り: そこは、研究者の間でも見方が割れています。でも、結果は、思い通りになりませんでした。
+      - 語り: 上表の2か月後、1868年1月3日。王政復古の大号令が出され、将軍の職は廃止されます。天皇中心の新しい政府を作る、という宣言です。
+        background: {image: paintings/yoshinobu_iwakura_tomomi.jpg, credit: "岩倉具視の肖像"}
+        card: {head: 1868年1月3日, body: 王政復古の大号令。将軍職を廃止}
+      - 語り: その夜、御所の小御所で開かれた会議で、慶喜の扱いが決まります。山内容堂と松平春嶽は、慶喜をかばいました。
+        background: {image: paintings/yoshinobu_kimbei_mikado_garden.jpg, credit: "日下部金兵衛《京都御所》1890年ごろ（明治の彩色写真）"}
+        card: {head: 同じ夜, body: 小御所会議が開かれる}
+      - 語り: しかし、岩倉具視や大久保利通たちが押し切り、慶喜には《辞官納地》、つまり内大臣を辞めて、領地を返すことが求められます。
+        figure: {type: people, title: 小御所会議の2つの立場, nodes: [[山内容堂, 慶喜をかばう], [松平春嶽, 慶喜をかばう], [岩倉具視, 押し切る], [大久保利通, 押し切る], [徳川慶喜, 辞官納地を求められる]], edges: [[山内容堂, 徳川慶喜, かばう], [松平春嶽, 徳川慶喜, かばう], [岩倉具視, 徳川慶喜, 辞官納地を求める], [大久保利通, 徳川慶喜, 辞官納地を求める]]}
+      - 聞き: 返して主導権を握るつもりだったのに、逆に、領地まで返せって言われたんだ。
+        tone: 驚き
+      - 語り: 慶喜は、二条城から大坂城に移ります。そこで、事態は一気に戦いへ向かっていきます。
+        background: {image: paintings/yoshinobu_kimbei_nijo_castle.jpg, credit: "日下部金兵衛《二条城》1890年ごろ（明治の写真）"}
+        figure: null
+        hook: true
+      - 聞き: 戦いへ、って……大坂城で何があったの？
+        tone: 疑問
+        hook: true
+
+  # ---------------------------------------------------------------- 7 鳥羽伏見と大坂城の夜
+  - title: 1868年1月 鳥羽伏見の戦いと大坂城の夜
+    background: {image: paintings/yoshinobu_osaka_palace_butt_1868.jpg, credit: "J.H.バット《大坂城》水彩、1868年1月"}
+    portrait: {image: paintings/yoshinobu_portrait_shogun.jpg, caption: "将軍時代の徳川慶喜（写真、幕末）"}
+    year: 1868
+    lines:
+      - 語り: 大坂城に入った慶喜のもとへ、年が明けて1868年1月、京都の南、鳥羽と伏見で、旧幕府軍と薩摩・長州の軍がぶつかった知らせが届きます。《鳥羽伏見の戦い》です。
+        card: {head: 1868年1月, body: 鳥羽伏見の戦い}
+      - 聞き: 旧幕府軍って、どっちが多かったの？
+        tone: 疑問
+      - 語り: 旧幕府軍が約1万5千。薩摩・長州の新政府軍が約4千5百です。
+        background: {image: paintings/yoshinobu_toba_koedabashi.jpg, credit: "小枝橋の写真（鳥羽、1867年）"}
+        figure: {type: bars, title: 鳥羽伏見の戦いの兵の数, bars: [[旧幕府軍, 15000], [新政府軍, 4500]], labels: [約1万5千人, 約4千5百人]}
+      - 聞き: 3倍以上で、負けちゃったの？
+        tone: 驚き
+      - 語り: はい。途中で、新政府軍が《錦の御旗》を掲げ、旧幕府軍は朝廷の敵にされてしまいます。戦いは、旧幕府軍の敗北に終わりました。
+        figure: null
+        background: {image: paintings/yoshinobu_toba_banner_1868.jpg, credit: "錦の御旗（1868年）"}
+        card: {head: 1868年1月, body: 錦の御旗が掲げられ、旧幕府軍が敗れる}
+      - 聞き: 数だけじゃなくて、旗も効いたんだ。
+      - 語り: ここからが、慶喜の最大の謎です。1月30日の夜、慶喜は、大坂城を出ました。
+        background: {image: paintings/yoshinobu_osaka_palace_butt_1868.jpg, credit: "J.H.バット《大坂城》水彩、1868年1月"}
+        card: {head: 1868年1月30日夜, body: 慶喜が大坂城を出る}
+        short: s2
+      - 聞き: 夜か……城には、まだ兵がたくさんいたんだよね。
+      - 語り: 同行したのは、老中たちと、会津藩主の松平容保、桑名藩主の松平定敬です。二人は兄弟です。
+        figure: {type: map, title: 慶喜の1868年, bounds: [134.5, 141.0, 34.0, 36.9], route: [大坂, 江戸, 水戸, 駿府], note: 大坂城から駿府まで}
+        short: s2
+      - 語り: 小舟で天保山沖に出て、いったんアメリカの船に乗り、そのあと幕府の軍艦、開陽丸に移って、江戸に向かいました。
+        background: {image: paintings/yoshinobu_escape_yoshitoshi.jpg, credit: "月岡芳年《慶喜 大坂湾の小舟から軍艦へ》1877年ごろ（後世の場面）"}
+        short: s2
+      - 聞き: 兵を置いて、藩主たちと一緒に船で？ それは、だいぶ印象悪いよ。
+        tone: 驚き
+        short: s2
+      - 語り: 開陽丸の艦長は榎本武揚でしたが、そのとき榎本は大坂城にいて、艦にいませんでした。副長の沢太郎左衛門に命じて、艦を出したと伝わります。
+        background: {image: paintings/yoshinobu_kaiyo_maru_dordrecht_1866.png, credit: "開陽丸の写真（1866年、オランダ・ドルドレヒト）"}
+        figure: null
+        card: {head: 開陽丸, body: 艦長の榎本武揚は城にいて不在}
+      - 聞き: 艦長を置いていって、艦って動かせるの？ そもそも開陽丸って、どんな船だったの？
+        background: {image: paintings/yoshinobu_enomoto_holland.png, credit: "オランダ留学中の榎本武揚（1863〜66年）"}
+        tone: 驚き
+      - 語り: オランダで造られた、約2,590トンの軍艦です。1867年に横浜に着いた、幕府海軍の最新の旗艦でした。
+      - 聞き: 最新の船に乗って、兵は置いてきた、ってことになるんだ。
+      - 語り: 脱出の前、慶喜は将兵に「千騎が一騎になろうとも戦う」と励ました、という話もあります。ただ、同じ時代の史料で確かめられていません。
+        background: {image: paintings/yoshinobu_portrait_shogun.jpg, credit: "将軍時代の徳川慶喜（写真、幕末）"}
+      - 聞き: もし本当にそう言ってたなら、部下はついていけないよね。
+        tone: 重い
+      - 語り: では、なぜ慶喜は出たのでしょう。主な見方を、3つ挙げます。
+      - 語り: 1つ目は、本人の言い分です。水戸の家で教えられた、朝廷に弓を引いてはならない、という教え。朝敵にされた以上、戦えなかった、と後年に語りました。
+        background: {image: paintings/yoshinobu_nariaki_portrait.jpg, credit: "徳川斉昭の肖像（幕末〜明治の図版）"}
+        figure: {type: stats, title: 慶喜が大坂城を出た理由（見方）, items: [[本人の言い分, 朝廷に弓を引けない, 父・斉昭の教え], [近年の研究, 戦う大義が崩れた, 天皇の権威に立つ自分の立場], [厳しい見方, 敗勢から逃げた, 立て直しではなく逃走]], upto: 1}
+      - 語り: 江戸で立て直すつもりだった、内乱を避けたかった、という説明も、本人の言い分に入ります。
+      - 聞き: 最初に出てきた水戸の教えが、ここで来るんだ。伏線回収だ。でも、それは本人の言い分なんだよね。
+      - 語り: はい。後年の回想ですから、自分を弁護する面もある、と研究者は読みます。
+        background: {image: paintings/yoshinobu_komei_emperor.jpg, credit: "小山正太郎《孝明天皇宸影》1902年"}
+        figure: {type: stats, title: 慶喜が大坂城を出た理由（見方）, items: [[本人の言い分, 朝廷に弓を引けない, 父・斉昭の教え], [近年の研究, 戦う大義が崩れた, 天皇の権威に立つ自分の立場], [厳しい見方, 敗勢から逃げた, 立て直しではなく逃走]], upto: 2}
+      - 語り: 2つ目は近年の研究です。慶喜は、天皇の権威を後ろ盾にしていました。その天皇の軍と戦うことになった以上、戦う大義がなくなった、という見方です。
+      - 語り: そして3つ目が、敗れそうになって逃げただけだ、という厳しい見方です。
+        figure: {type: stats, title: 慶喜が大坂城を出た理由（見方）, items: [[本人の言い分, 朝廷に弓を引けない, 父・斉昭の教え], [近年の研究, 戦う大義が崩れた, 天皇の権威に立つ自分の立場], [厳しい見方, 敗勢から逃げた, 立て直しではなく逃走]], upto: 3}
+      - 聞き: どれか一つ、って決まってないんだ。パズルのピースが足りないみたい。
+        background: {image: paintings/yoshinobu_osaka_defense_kiyochika.jpg, credit: "小林清親の錦絵 馬上の一橋慶喜公（1870年代）"}
+      - 語り: 決め手はありません。ただ、総大将が夜に出たことで、慶喜の声望が一気に落ちた、と言われます。
+        figure: null
+      - 語り: 慶喜が江戸に着いたのは、2月5日です。船の中で、戦わず従う道を固めていた、と伝えられています。
+        background: {image: paintings/yoshinobu_beato_yedo_castle_moat.jpg, credit: "フェリーチェ・ベアト《江戸城の濠と櫓》1863〜68年"}
+        card: {head: 1868年2月5日, body: 江戸に着く}
+      - 聞き: 江戸に着いてから、どうしたの？ 戦いは続けたの？
+        tone: 疑問
+      - 語り: 戦いませんでした。3月5日、江戸城を出て、上野の寛永寺で謹慎します。事態の収拾は、勝海舟たちに任せました。
+        background: {image: paintings/yoshinobu_katsu_kaishu.jpg, credit: "勝海舟の肖像写真"}
+        card: {head: 1868年3月5日, body: 寛永寺で謹慎。勝海舟らに任せる}
+      - 語り: 4月、勝海舟と西郷隆盛が会談し、5月3日、江戸城は戦わずに新政府に渡されます。江戸の無血開城です。
+        card: {head: 1868年5月3日, body: 江戸城が無血開城}
+      - 聞き: 戦いにならなかったのは、慶喜が動かなかったから、って言えなくもないよね。
+      - 語り: そう見る人もいます。勝海舟と西郷隆盛の会談の結果だ、という見方もあります。
+        background: {image: paintings/yoshinobu_nariaki_self_portrait.jpg, credit: "徳川斉昭の自画像（1838年）"}
+        hook: true
+      - 聞き: 水戸に戻ったんだ。生まれ育った場所で謹慎って、どんな気持ちだったんだろう。……そのあとは、どこに行くの？
+        hook: true
+
+  # ---------------------------------------------------------------- 8 静岡の30年
+  - title: 1868年〜1897年 静岡の30年
+    background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城（家康の時代の図）"}
+    portrait: {image: paintings/yoshinobu_portrait_shogun.jpg, caption: "将軍時代の徳川慶喜（写真、幕末）"}
+    year: 1868
+    lines:
+      - 語り: 1868年の9月、水戸を出た慶喜は、海路で清水に着き、駿府の宝台院に入ります。
+        card: {head: 1868年9月, body: 静岡の宝台院に入る}
+      - 聞き: 静岡かあ。徳川の古い土地だよね。ここで駿府城の殿様になるの？
+        tone: 疑問
+      - 語り: いいえ。駿府藩70万石の藩主になったのは、養子の徳川家達です。このとき、数えで6歳でした。
+        card: {head: 駿府藩70万石, body: 藩主は養子の家達（数え6歳）}
+      - 語り: 慶喜は、謹慎・隠居の身で、住まいも駿府城ではありません。
+      - 聞き: 数えで6歳が殿様で、元の将軍は隠居。なんだか不思議な立場だね。
+      - 語り: 1869年11月、謹慎は解けます。慶喜は、紺屋町にあった元代官屋敷に移りました。今の浮月楼です。
+        figure: {type: stats, title: 静岡での3つの住まい, items: [[宝台院, 1868年〜, 最初の謹慎先], [紺屋町, 1869年〜, 今の浮月楼], [西草深, 1888年〜, 東京へ移るまで]]}
+        card: {head: 1869年11月, body: 謹慎が解け、紺屋町の屋敷へ（今の浮月楼）}
+      - 聞き: 浮月楼って、今も料亭として残ってるんだよね。庭がきれいだって聞いたことある。
+        background: {image: paintings/yoshinobu_fugetsu_pond_enami.jpg, credit: "榎並《浮月楼の庭の池》明治〜大正"}
+        detail: {box: [0.0, 0.0, 0.5, 1.0], label: 浮月楼の庭の池（明治〜大正の写真）}
+      - 語り: はい。明治の初めに慶喜の屋敷にあった池が元になった庭で、今は国の登録記念物になっています。
+      - 語り: 静岡に住んだのは、1868年から1897年まで。およそ29年、足かけ30年なので、《静岡の30年》と言います。
+        figure: null
+      - 聞き: 30年も！ その間、何してたの？
+        tone: 驚き
+      - 語り: 政治の話は、ほとんどしなかった、と言われます。旧幕臣とも距離を置いた、とも。その代わり、いろいろな趣味に打ち込みました。
+        background: {image: paintings/yoshinobu_portrait_hunting.png, credit: "狩猟姿の徳川慶喜（1870年代）"}
+        portrait: {image: paintings/yoshinobu_portrait_late_14.jpg, caption: "晩年の徳川慶喜（写真、1913年以前）"}
+      - 語り: 狩猟、投網、鵜飼、釣り。釣りは、針だけで1,000本以上用意した、という話があります。能の謡曲や小鼓、囲碁、将棋、ビリヤードも楽しんでいます。
+        portrait: {image: paintings/yoshinobu_portrait_hunting.png, caption: "狩猟姿の徳川慶喜（1870年代）"}
+        card: {head: 静岡時代の趣味, body: 狩猟・釣り・能・囲碁・ビリヤード・油絵}
+      - 聞き: 趣味の数が、尋常じゃない。元将軍、遊び方がガチすぎない？
+        tone: 笑い
+      - 語り: 油絵も描きました。1870年、明治3年に、松平春嶽へ贈った『西洋雪景図』が残っています。
+      - 語り: 慶喜は、自転車にも夢中になりました。日本に洋式の自転車が入ってきたのは、1881年から82年ごろ、明治14、15年ごろです。慶喜は、それを早くに手に入れた人の一人でした。
+        year: 1881
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城（家康の時代の図）"}
+        card: {head: 1881〜82年ごろ, body: 日本に洋式自転車が入る}
+        short: s4
+      - 聞き: 自転車！ 明治なのに？ 想像つかないんだけど。
+        tone: 驚き
+      - 語り: 慶喜の家には、家の使用人がつけた日記があります。1872年の正月から、1日おきに書かれた、と紹介されています。慶喜の暮らしが、細かく分かる記録です。
+        background: {image: paintings/yoshinobu_fugetsu_pond_enami.jpg, credit: "榎並《浮月楼の庭の池》明治〜大正"}
+      - 聞き: 毎日の暮らしが150年後に読まれるって、ちょっと恥ずかしいかも。
+      - 語り: その日記に、こんな記事があります。1887年、明治20年の2月、自転車のお供で走る家来4人に、1人3円ずつ靴代を出した。紹介記事は、そう伝えています。
+        year: 1887
+        card: {head: 1887年2月, body: 家来4人に靴代3円ずつ（紹介記事より）}
+        short: s4
+      - 聞き: 家来が、自転車のお供で走ってる！ 元将軍が自転車で、その後ろを靴で追いかけるって、すごい光景。
+        tone: 笑い
+        short: s4
+      - 語り: 慶喜がいちばん有名なのは写真です。明治20年代の後半に、本格的に打ち込みました。
+        background: {image: paintings/yoshinobu_cat_photo.jpg, credit: "徳川慶喜が撮影した写真《猫》19世紀"}
+        card: {head: 明治20年代後半, body: 写真に打ち込む}
+      - 語り: コダックのパノラマ写真機や、ツァイスの立体写真機を使い、夜を徹して研究して、自分で色を塗ることもあったと伝わります。
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城（家康の時代の図）"}
+        short: s4
+      - 聞き: 夜通し研究って、完全にオタクじゃん。静岡の風景を撮ってたの？
+      - 語り: はい。弟の徳川昭武も、同じように写真に熱中していて、兄弟で楽しんだ、と松戸の戸定歴史館の資料にあります。
+        background: {image: paintings/yoshinobu_fugetsu_pond_enami.jpg, credit: "榎並《浮月楼の庭の池》明治〜大正"}
+      - 語り: 慶喜が撮った写真は、のちに『将軍が撮った明治』という写真集にまとめられ、1986年に出版されました。
+      - 語り: 一方で、お金のことも見えます。生活費は、徳川宗家から定期的に受け取っていた、と紹介されています。見た目ほど、豊かな暮らしではなかった、と言われます。
+        card: {head: 暮らし, body: 生活費は宗家から（紹介記事より）}
+      - 聞き: 見た目ほど豊かじゃなかったんだ。元将軍でも、そうなんだ。
+        background: {image: paintings/yoshinobu_portrait_hunting.png, credit: "狩猟姿の徳川慶喜（1870年代）"}
+      - 語り: 子どもも多く、静岡時代には10男11女が生まれた、とされます。
+        card: {head: 子どもたち, body: 静岡時代に10男11女が生まれる}
+      - 聞き: 21人！ 趣味に、子ども。静岡の暮らし、思ったよりにぎやか。毎日、予定がびっしりだったんじゃない？
+        tone: 驚き
+      - 語り: 正室の美賀子には、子どもがいませんでした。1894年7月、美賀子は亡くなります。
+        background: {image: paintings/yoshinobu_mikako_before_1868.jpg, credit: "一条美賀子（慶喜の正室、幕末）"}
+      - 聞き: 家族の記録も、ちゃんと残ってるんだね。
+      - 語り: 静岡市歴史博物館は、静岡を慶喜の「安寧の地」と位置づけています。この静かな暮らしは、およそ30年続きました。その慶喜を、東京で、ある人が待っていました。
+        background: {image: paintings/yoshinobu_suruga_castle_map.jpg, credit: "《駿州府中之城図》駿府城（家康の時代の図）"}
+        hook: true
+      - 聞き: ある人？ 将軍だった人が会う相手って、誰……？
+        tone: 疑問
+        hook: true
+
+  # ---------------------------------------------------------------- 9 東京へ・晩年
+  - title: 1897年〜1913年 東京へ、明治天皇との対面と最期
+    background: {image: paintings/yoshinobu_portrait_jakonoma.jpg, credit: "公爵・徳川慶喜（明治後期〜大正初）"}
+    portrait: {image: paintings/yoshinobu_portrait_late_14.jpg, caption: "晩年の徳川慶喜（写真、1913年以前）"}
+    year: 1897
+    lines:
+      - 語り: 1897年11月、満60歳の慶喜は、静岡を出て東京に移ります。細かい日付は、資料で分かれます。
+        card: {head: 1897年11月, body: 東京へ移る}
+      - 聞き: 30年ぶりに東京かあ。江戸だったころとは、もう全然違ったんだろうな。
+        tone: しみじみ
+      - 語り: 翌1898年3月2日、慶喜は皇居に入り、明治天皇に会います。皇后にも拝謁しました。大政奉還から、およそ30年ぶりのことでした。
+        background: {image: paintings/yoshinobu_meiji_emperor_1873.jpg, credit: "内田九一《明治天皇》1873年"}
+        card: {head: 1898年3月2日, body: 皇居で明治天皇に拝謁}
+      - 聞き: 30年かあ。生まれた赤ちゃんが、働き盛りになるくらいの時間だね。
+      - 語り: 1902年6月、慶喜は《公爵》になります。徳川宗家とは別に、徳川慶喜家という新しい家を立てました。
+        background: {image: paintings/yoshinobu_portrait_late_13.jpg, credit: "晩年の徳川慶喜（大礼服）"}
+        card: {head: 1902年6月, body: 公爵になる。徳川慶喜家を立てる}
+      - 聞き: 将軍をやめた人が公爵？ 普通は逆じゃない？ 負けた側なのに。あーし的には、そこが一番ふしぎ。
+      - 語り: そこで効いたのが、大政奉還の評価でした。世界大百科事典は、明治の国が大政奉還を高く評価する歴史観をとったことが、名誉回復につながった、と説明しています。
+      - 聞き: 返したことが、あとから点数になったんだ。
+      - 語り: 1910年、七男の慶久に家督を譲って隠居します。そして1913年11月22日、小日向の屋敷で、かぜから急性肺炎になり、亡くなりました。満76歳でした。
+        background: {image: paintings/yoshinobu_portrait_jakonoma.jpg, credit: "公爵・徳川慶喜（明治後期〜大正初）"}
+        card: {head: 1913年11月22日, body: 小日向の屋敷で死去（満76歳）}
+        tone: しみじみ
+      - 聞き: 76歳。将軍をやめてから、45年以上たってたんだね。
+        tone: しみじみ
+      - 語り: 墓は、谷中霊園にある徳川家の墓所の一角です。亡くなった小日向のあたりは、文京区で「徳川慶喜終焉の地」として紹介されています。
+      - 語り: 亡くなってから5年後には、渋沢栄一が編んだ『徳川慶喜公伝』も出ています。ただ、これも、本人側の言い分に寄る面があると言われます。
+        background: {image: paintings/yoshinobu_portrait_late_13.jpg, credit: "晩年の徳川慶喜（大礼服）"}
+        card: {head: 1918年, body: 渋沢栄一編『徳川慶喜公伝』が出る}
+      - 聞き: 死んだあとも、語り直されたんだ。
+      - 語り: では、最後に、この徳川慶喜とは何者だったのか、まとめてみましょう。
+        hook: true
+      - 聞き: 降参だったのか、逃げたのか……答え、聞きたい。
+        hook: true
+
+  # ---------------------------------------------------------------- 10 まとめ
+  - title: まとめ：徳川慶喜とは何者だったのか
+    background: {image: paintings/yoshinobu_portrait_late_14.jpg, credit: "晩年の徳川慶喜（写真、1913年以前）"}
+    year: 1913
+    lines:
+      - 語り: 要点を3つにまとめます。1つ目は、大政奉還です。形では、政権を返しました。ただ、百科事典は、新しい政治で主導権を握り続けるねらいがあった、と説明します。
+        figure: {type: stats, title: 徳川慶喜の3つの地層, items: [[大政奉還, 返したのは形, 主導権を握るねらい], [大坂城の夜, 理由は3つの見方, 決め手はない], [静岡の30年, 趣味に打ち込む, 自転車・写真・油絵]], upto: 1}
+      - 聞き: 降参っていうより、一歩下がって、次の主導権を狙った、ってことだね。小御所の夜で逆転されたけど。
+      - 語り: 答えは、少なくとも、ただの降参ではありませんでした。ただ、そのねらいが慶喜本人の考えだったのかは、分かっていません。そして、小御所の夜で、思い通りにはなりませんでした。
+      - 語り: 2つ目は、大坂城の夜です。理由は今も割れていて、本人の回想には、自己弁護の面もあります。逃げた将軍と見る人もいれば、内戦を小さくした将軍と見る人もいます。
+        figure: {type: stats, title: 徳川慶喜の3つの地層, items: [[大政奉還, 返したのは形, 主導権を握るねらい], [大坂城の夜, 理由は3つの見方, 決め手はない], [静岡の30年, 趣味に打ち込む, 自転車・写真・油絵]], upto: 2}
+        background: {image: paintings/yoshinobu_osaka_palace_butt_1868.jpg, credit: "J.H.バット《大坂城》水彩、1868年1月"}
+      - 聞き: 決め手がないから、逃げた、って決めつけるのも、立て直しのためだった、って信じるのも、どっちも言い切れないんだ。
+      - 語り: 3つ目は、静岡の30年です。政治から退いても、人生は終わっていませんでした。自転車に乗り、写真を撮り、油絵を描いた時間の記録が残っています。
+        figure: {type: stats, title: 徳川慶喜の3つの地層, items: [[大政奉還, 返したのは形, 主導権を握るねらい], [大坂城の夜, 理由は3つの見方, 決め手はない], [静岡の30年, 趣味に打ち込む, 自転車・写真・油絵]], upto: 3}
+        background: {image: paintings/yoshinobu_cat_photo.jpg, credit: "徳川慶喜が撮影した写真《猫》19世紀"}
+      - 聞き: 負けた人の、その後の人生が、日記や写真で残ってるんだね。
+      - 語り: 記録に残るのは、将軍としての顔だけではありません。静岡で、夜を徹して写真機を研究し、自分の手で色を塗っていた、一人の趣味人の姿も残っています。
+        background: {image: paintings/yoshinobu_portrait_hunting.png, credit: "狩猟姿の徳川慶喜（1870年代）"}
+        figure: null
+        tone: しみじみ
+      - 聞き: あーし的には、慶喜は、政権は返したけど、主導権は手放したくなかった人、って覚えとく。思い通りにはいかなかったけど。静岡の30年は、やっと自分の時間だったのかも。
+        tone: しみじみ
+      - 語り: 今日の地層は、ここまでです。
+        background: {image: paintings/yoshinobu_portrait_shogun.jpg, credit: "将軍時代の徳川慶喜（写真、幕末）"}
+      - 聞き: 次回はベートーヴェン。「運命」を書いた人ってことしか知らないけど……耳が聞こえなくなっても、曲を書き続けたって、本当？
+        tone: 疑問
+      - 語り: 大政奉還は、あなたには降参に見えましたか、それとも次の一手に見えましたか。コメントで教えてください。
+      - 二人: また一緒に、掘りましょう！
+        tone: 明るい
