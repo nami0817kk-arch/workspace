@@ -92,13 +92,13 @@ next:
   teaser: あなたが気になる歴史の分かれ道を、コメントで教えてください。
 
 thumbnail:
-  layout: face
+  layout: mask            # 10-14 ユーザー決定：伏せ字の構図（「ほんとにあった日本史」風の枠・特大の黄・斜めの赤札）。答えは本編の運命表・まとめで出る
   image: paintings/akechi_portrait_hontokuji.jpg
-  crop: [0, 0, 1000, 1000]
-  side: right
+  top: 本能寺の変がなかった世界
+  main: [もし光秀が, 動かなかったら]
+  blanks: [[秀頼は, 5], [江戸幕府は, 3]]
+  tags: [信長は？, 秀吉は？]
   name: 明智光秀
-  lead: もし裏切らなかったら
-  main: 日本は？
 
 sections:
 
